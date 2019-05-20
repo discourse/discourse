@@ -107,18 +107,12 @@ cs:
       random_mention:
         reply: |-
           Ahoj! Pokud chceš zjistit, co umím, napiš `@%{discobot_username} %{help_trigger}`.
-        tracks: |-
-          Zatím umím následující věci:
-
-          `@%{discobot_username} %{reset_trigger} %{default_track}`
-          > Začít jedním z následujících interaktivních průvodců: %{tracks}.
       do_not_understand:
         first_response: |-
           Dík za odpověď!
 
           Bohužel nejsem naprogramován nijak skvěle, takže jsem tomuhle neporozumněl. :frowning:
     new_user_narrative:
-      reset_trigger: "nový uživatel"
       hello:
         message: |-
           Díky, že jste se rozhodli zaregistrovat do fóra %{title} a vítejte!
@@ -131,5 +125,3 @@ cs:
       bookmark:
         instructions: |-
           Pokud by ses chtěl dozvědět víc, klikni na <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> níže  a <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-bookmark.png" width="16" height="16"> **ulož si tuto soukromou zprávu do záložek**.  Pokud to uděláš, je možný, že tam v budoucnu najdeš :gift:!
-    advanced_user_narrative:
-      reset_trigger: 'pokročilý uživatel'

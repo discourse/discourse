@@ -309,7 +309,6 @@ pt:
       settings:
         save_changes: "Guardar alterações"
         title: "Configurações"
-      title: "Pendente Revisão"
       topic: "Tópico:"
       user:
         username: "Nome de utilizador"
@@ -587,6 +586,7 @@ pt:
       private_message: "Mensagem"
       private_messages: "Mensagens"
       user_notifications:
+        ignore_duration_username: "Nome de utilizador"
         ignore_duration_save: "Ignorar"
         ignore_duration_time_frame_required: "Por favor selecione um intervalo de tempo"
         ignore_option: "Ignorados"
@@ -1317,7 +1317,6 @@ pt:
       remove_featured_link: "Remover hiperligação do tópico."
       reply_placeholder: "Digite aqui. Utilize Markdown, BBCode, ou HTML para formatar. Arraste ou cole imagens."
       reply_placeholder_no_images: "Digite aqui. Utilize Markdown, BBCode, ou HTML para formatar."
-      reply_placeholder_choose_category: "Tem de selecionar uma categoria antes de escrever aqui."
       view_new_post: "Ver a sua nova publicação."
       saving: "A Guardar"
       saved: "Guardado!"
@@ -1718,7 +1717,6 @@ pt:
         jump_bottom: "ir para a última publicação"
         jump_prompt: "ir para..."
         jump_prompt_of: "de %{count} publicações"
-        jump_prompt_long: "Para que publicação gostaria de ir?"
         jump_bottom_with_number: "ir para a publicação %{post_number}"
         jump_prompt_to_date: "ir para data"
         jump_prompt_or: "ou"
@@ -2025,50 +2023,6 @@ pt:
           notify_user: "Enviou uma mensagem a este utilizador"
           bookmark: "Adicionou um marcador a esta publicação"
           like: "Gostou disto"
-        by_you_and_others:
-          off_topic:
-            one: "Para além de si, 1 pessoa denunciou isto como fora de contexto"
-            other: "Para além de si, {{count}} pessoas denunciaram isto como fora de contexto"
-          spam:
-            one: "Para além de si, 1 pessoa denunciou isto como spam"
-            other: "Para além de si, {{count}} pessoas denunciaram isto como spam"
-          inappropriate:
-            one: "Para além de si, 1 pessoa denunciou isto como inapropriado"
-            other: "Para além de si, {{count}} pessoas denunciaram isto como inapropriado"
-          notify_moderators:
-            one: "Para além de si, 1 pessoa denunciou isto para moderação"
-            other: "Para além de si, {{count}} pessoas denunciaram isto para moderação"
-          notify_user:
-            one: "Para além de si, 1 outro utilizador enviaram uma mensagem a este utilizador"
-            other: "Para além de si, {{count}} outros utilizadores enviaram uma mensagem a este utilizador"
-          bookmark:
-            one: "Para além de si, 1 pessoa adicionou um marcador a esta publicação"
-            other: "Para além de si, {{count}} adicionaram um marcador a esta publicação"
-          like:
-            one: "Para além de si, 1 pessoa gostou disto"
-            other: "Para além de si, {{count}} pessoas gostaram disto"
-        by_others:
-          off_topic:
-            one: "1 pessoa denunciou isto como fora de contexto"
-            other: "{{count}} pessoas denunciaram isto como fora de contexto"
-          spam:
-            one: "1 pessoa denunciou isto como spam"
-            other: "{{count}} pessoas denunciaram isto como spam"
-          inappropriate:
-            one: "1 pessoa denunciou isto como impróprio"
-            other: "{{count}} pessoas denunciaram isto como inapropriado"
-          notify_moderators:
-            one: "1 pessoa denunciou isto para moderação"
-            other: "{{count}} pessoas denunciaram isto para moderação"
-          notify_user:
-            one: "1 pessoa enviou uma mensagem a este utilizador"
-            other: "{{count}} enviaram uma mensagem a este utilizador"
-          bookmark:
-            one: "1 pessoa adicionou um marcador a esta publicação"
-            other: "{{count}} pessoas adicionaram um marcador a esta publicação"
-          like:
-            one: "1 pessoa gostou disto"
-            other: "{{count}} pessoas gostaram disto"
       revisions:
         controls:
           first: "Primeira revisão"
@@ -2141,6 +2095,7 @@ pt:
       email_in_disabled_click: 'ative a definição "email em".'
       allow_badges_label: "Permitir a atribuição de crachás nesta categoria"
       edit_permissions: "Editar Permissões"
+      review_group_name: "nome do grupo"
       this_year: "este ano"
       default_position: "Posição Padrão"
       position_disabled: "As categorias serão exibidas por ordem de actividade. Para controlar a ordenação das categorias nas listas,"
@@ -2544,7 +2499,6 @@ pt:
       moderator: "Moderador"
       dashboard:
         title: "Painel de Administração"
-        last_updated: "Painel atualizado em:"
         version: "Versão"
         up_to_date: "Está atualizado!"
         critical_available: "Uma atualização crítica está disponível."
@@ -2586,6 +2540,11 @@ pt:
           start_date: "Data de Início"
           end_date: "Data final"
           groups: "Todos os grupos"
+          filters:
+            group:
+              label: Grupo
+            category:
+              label: Categoria
       commits:
         latest_changes: "Últimas alterações: atualize com frequência!"
         by: "por"

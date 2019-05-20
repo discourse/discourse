@@ -111,11 +111,6 @@ nb_NO:
       random_mention:
         reply: |-
           Hei! Finn ut hva jeg kan gjøre, si `@%{discobot_username} %{help_trigger}`.
-        tracks: |-
-          For tiden vet jeg hvordan man gjør følgende oppgaver:
-
-          `@%{discobot_username} %{reset_trigger} %{default_track}`
-          > Starter en av de følgende interaktive narrativene: %{tracks}.
         bot_actions: |-
           `@%{discobot_username} %{dice_trigger} 2d6`
           > :game_die: 3, 6
@@ -138,7 +133,6 @@ nb_NO:
 
           I mellomtiden skal jeg ikke plage deg mer.
     new_user_narrative:
-      reset_trigger: "ny bruker"
       cert_title: "Som bevis for vellykket gjennomføring av introduksjonen for nye brukere"
       onebox:
         reply: |-
@@ -269,7 +263,6 @@ nb_NO:
       certificate:
         alt: 'Bevis for Utmerkelse'
     advanced_user_narrative:
-      reset_trigger: 'avansert bruker'
       cert_title: "Som vitnesbyrd på bestått gjennomgang av den avanserte brukeropplæringen"
       title: ':arrow_up: Avanserte brukerfunksjoner'
       edit:
@@ -305,10 +298,6 @@ nb_NO:
           Kan du gjøre meg en tjeneste og <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-rotate-left.png" width="16" height="16"> **gjenopprette** det?
         not_found: |-
           Fikk du trøbbel? Husk at <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> "vis mer" vil vise knappen <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-rotate-left.png" width="16" height="16"> "genopprett"
-        reply: |-
-          Puh, det var nære på! Takk for at du ordnet opp :wink:
-
-          Men husk at du bare kan gjenopprette innlegget innen det har gått 24 timer.
       category_hashtag:
         instructions: |-
           Visste du at du kan ha referanser til kategorier og stikkord i innlegget ditt? For eksempel, har du sett %{category} kategorien?

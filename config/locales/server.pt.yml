@@ -1470,11 +1470,6 @@ pt:
       title: "Transferência de Imagens Remotas Desativada"
       subject_template: "Transferência de imagens remotas desativada"
       text_body_template: "A configuração `download_remote_images_to_local` foi desativada porque o limite de espaço em disco em `download_remote_images_threshold` foi alcançado."
-    queued_posts_reminder:
-      text_body_template: |
-        Olá,
-
-        Existem publicações de novos utilizadores que estão à espera de revisão. [Podem ser aprovadas ou rejeitadas aqui](%{base_url}/queued-posts).
   unsubscribe_link: |2
 
     Para cancelar as subscrições a estes emails, [clique aqui](%{unsubscribe_url}).
@@ -1662,7 +1657,6 @@ pt:
       unread_messages: "Mensagens Não Lidas"
       unread_notifications: "Notificações Não Lidas"
       liked_received: "Gostos Recebidos"
-      new_posts: "Novas Publicações"
       new_users: "Novos Utilizadores"
       popular_topics: "Tópicos Populares"
       follow_topic: "Acompanhar este tópico"
@@ -2097,14 +2091,10 @@ pt:
         fields:
           logo:
             label: "Logo Primário"
-          logo_small:
-            label: "Logo Compacto"
       icons:
         title: "Ícones"
         fields:
-          favicon:
-            label: "Ícone Pequeno"
-          apple_touch_icon:
+          large_icon:
             label: "Ícone Grande"
       homepage:
         title: "Página de início"
@@ -2138,6 +2128,8 @@ pt:
         title: "Utilizador Suspenso"
       delete_spammer:
         title: "Eliminar Spammer"
+      delete_single:
+        title: "Eliminar"
       disagree:
         title: "Discordar"
       ignore:

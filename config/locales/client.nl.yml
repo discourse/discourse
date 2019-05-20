@@ -307,6 +307,15 @@ nl:
         search: "Zoeken naar een bericht op titel:"
         placeholder: "typ hier de titel van het bericht"
     review:
+      claim_help:
+        optional: "U kunt dit item opeisen om te voorkomen dat anderen het beoordelen."
+        required: "U moet items opeisen voordat u ze kunt beoordelen."
+        claimed_by_you: "U hebt dit item opgeëist en kunt het beoordelen."
+        claimed_by_other: "Dit item kan alleen worden beoordeeld door <b>{{username}}</b>."
+      claim:
+        title: "dit topic opeisen"
+      unclaim:
+        help: "deze claim verwijderen"
       awaiting_approval: "Wacht op goedkeuring"
       delete: "Verwijderen"
       settings:
@@ -324,7 +333,7 @@ nl:
       topic_has_pending:
         one: "Dit topic heeft<b>1</b> bericht dat op goedkeuring wacht"
         other: "Dit topic heeft <b>{{count}}</b> berichten die op goedkeuring wachten"
-      title: "Beoordeling nodig"
+      title: "Beoordelen"
       topic: "Topic:"
       filtered_topic: "U hebt op beoordeelbare inhoud in één topic gefilterd."
       filtered_user: "Gebruiker:"
@@ -374,10 +383,15 @@ nl:
         refresh: "Vernieuwen"
         status: "Status:"
         category: "Categorie:"
+        priority:
+          title: "Minimale prioriteit:"
+          low: "Laag"
+          medium: "Gemiddeld"
+          high: "Hoog"
       conversation:
         view_full: "volledige conversatie bekijken"
       scores:
-        about: "Deze score wordt berekend op basis van het vertrouwen van de melder, de nauwkeurigheid van zijn of haar eerdere markeringen, en de prioriteit van item dat wordt gemeld."
+        about: "Deze score wordt berekend op basis van het vertrouwen van de melder, de nauwkeurigheid van zijn of haar eerdere markeringen, en de prioriteit van het item dat wordt gemeld."
         score: "Score"
         date: "Datum"
         type: "Type"
@@ -671,12 +685,15 @@ nl:
       private_messages: "Berichten"
       user_notifications:
         ignore_duration_title: "Negeertimer"
+        ignore_duration_username: "Gebruikersnaam"
         ignore_duration_when: "Tijdsduur:"
         ignore_duration_save: "Negeren"
         ignore_duration_note: "Houd er rekening mee dat alle negeeracties na het verlopen van de tijdsduur automatisch worden verwijderd."
         ignore_duration_time_frame_required: "Selecteer een tijdsbestek"
+        ignore_no_users: "U hebt geen genegeerde gebruikers."
         ignore_option: "Genegeerd"
         ignore_option_title: "U ontvangt geen meldingen met betrekking tot deze gebruiker, en alle topics en antwoorden ervan worden verborgen."
+        add_ignored_user: "Toevoegen..."
         mute_option: "Gedempt"
         mute_option_title: "U ontvangt geen meldingen met betrekking tot deze gebruiker."
         normal_option: "Normaal"
@@ -1417,7 +1434,7 @@ nl:
       remove_featured_link: "Koppeling uit topic verwijderen."
       reply_placeholder: "Typ hier. Gebruik Markdown, BBCode of HTML voor opmaak. Sleep of plak afbeeldingen."
       reply_placeholder_no_images: "Typ hier. Gebruik Markdown, BBCode of HTML voor opmaak."
-      reply_placeholder_choose_category: "U moet een categorie selecteren voordat u hier kunt typen."
+      reply_placeholder_choose_category: "Selecteer een categorie voordat u hier typt."
       view_new_post: "Uw nieuwe bericht bekijken"
       saving: "Opslaan"
       saved: "Opgeslagen!"
@@ -1823,7 +1840,6 @@ nl:
         jump_bottom: "naar laatste bericht"
         jump_prompt: "springen naar..."
         jump_prompt_of: "van %{count} berichten"
-        jump_prompt_long: "Naar welk bericht wilt u springen?"
         jump_bottom_with_number: "naar bericht %{post_number}"
         jump_prompt_to_date: "tot datum"
         jump_prompt_or: "of"
@@ -2182,50 +2198,6 @@ nl:
           notify_user: "U hebt een bericht naar deze gebruiker gestuurd"
           bookmark: "U hebt een bladwijzer voor dit bericht gemaakt"
           like: "U hebt dit geliket"
-        by_you_and_others:
-          off_topic:
-            one: "U en 1 andere persoon hebben dit als off-topic gemarkeerd"
-            other: "U en {{count}} andere personen hebben dit als off-topic gemarkeerd"
-          spam:
-            one: "U en 1 andere persoon hebben dit als spam gemarkeerd"
-            other: "U en {{count}} andere personen hebben dit als spam gemarkeerd"
-          inappropriate:
-            one: "U en 1 andere persoon hebben dit als ongepast gemarkeerd"
-            other: "U en {{count}} andere personen hebben dit als ongepast gemarkeerd"
-          notify_moderators:
-            one: "U en 1 andere persoon hebben dit voor moderatie gemarkeerd"
-            other: "U en {{count}} andere personen hebben dit voor moderatie gemarkeerd"
-          notify_user:
-            one: "U en 1 andere persoon hebben een bericht naar deze gebruiker gestuurd"
-            other: "U en {{count}} andere personen hebben een bericht naar deze gebruiker gestuurd"
-          bookmark:
-            one: "U en 1 andere persoon hebben een bladwijzer voor dit bericht gemaakt"
-            other: "U en {{count}} andere personen hebben een bladwijzer voor dit bericht gemaakt"
-          like:
-            one: "U en 1 andere persoon hebben dit geliket"
-            other: "U en {{count}} andere personen hebben dit geliket"
-        by_others:
-          off_topic:
-            one: "1 persoon heeft dit als off-topic gemarkeerd"
-            other: "{{count}} personen hebben dit als off-topic gemarkeerd"
-          spam:
-            one: "1 persoon heeft dit als spam gemarkeerd"
-            other: "{{count}} personen hebben dit als spam gemarkeerd"
-          inappropriate:
-            one: "1 persoon heeft dit als ongepast gemarkeerd"
-            other: "{{count}} personen hebben dit als ongepast gemarkeerd"
-          notify_moderators:
-            one: "1 persoon heeft dit voor moderatie gemarkeerd"
-            other: "{{count}} personen hebben dit voor moderatie gemarkeerd"
-          notify_user:
-            one: "1 persoon stuurde een bericht naar deze gebruiker"
-            other: "{{count}} stuurden een bericht naar deze gebruiker"
-          bookmark:
-            one: "1 persoon heeft een bladwijzer voor dit bericht gemaakt"
-            other: "{{count}} personen hebben een bladwijzer voor dit bericht gemaakt"
-          like:
-            one: "1 persoon heeft dit geliket"
-            other: "{{count}} personen hebben dit geliket"
       delete:
         confirm:
           one: "Weet u zeker dat u dat bericht wilt verwijderen?"
@@ -2332,6 +2304,8 @@ nl:
       default_top_period: "Standaard topperiode:"
       allow_badges_label: "Badges laten toekennen in deze categorie"
       edit_permissions: "Toestemmingen wijzigen"
+      reviewable_by_group: "Naast stafleden kunnen berichten en markeringen in deze categorie ook worden beoordeeld door:"
+      review_group_name: "groepsnaam"
       require_topic_approval: "Goedkeuring van moderator voor alle nieuwe topics vereisen"
       require_reply_approval: "Goedkeuring van moderator voor alle nieuwe antwoorden vereisen"
       this_year: "dit jaar"
@@ -2788,7 +2762,6 @@ nl:
         title: "Lijst van beschikbare rapporten"
       dashboard:
         title: "Dashboard"
-        last_updated: "Dashboard laatst bijgewerkt:"
         version: "Versie"
         up_to_date: "U bent up-to-date!"
         critical_available: "Er is een kritieke update beschikbaar."
@@ -2862,6 +2835,13 @@ nl:
           trending_search:
             more: '<a href="%{basePath}/admin/logs/search_logs">Zoeklogboeken</a>'
             disabled: 'Rapport voor populaire zoekopdrachten is uitgeschakeld. Schakel <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">zoekopdrachten registreren</a> in om gegevens te verzamelen.'
+          filters:
+            file-extension:
+              label: Bestandsextensie
+            group:
+              label: Groep
+            category:
+              label: Categorie
       commits:
         latest_changes: "Laatste wijzigingen: werk regelmatig bij!"
         by: "door"
@@ -3124,7 +3104,7 @@ nl:
         new_style: "Nieuwe stijl"
         install: "Installeren"
         delete: "Verwijderen"
-        delete_confirm: "Dit thema verwijderen?"
+        delete_confirm: 'Weet u zeker dat u ''%{theme_name}'' wilt verwijderen?'
         color: "Kleur"
         opacity: "Ondoorzichtigheid"
         copy: "Kopiëren"
@@ -3158,6 +3138,8 @@ nl:
           long_title: "Kleuren, CSS en HTML-inhoud van uw website aanpassen"
           edit: "Bewerken"
           edit_confirm: "Dit is een extern thema; als u CSS/HTML bewerkt, worden uw wijzigingen de volgende keer dat u het thema bijwerkt gewist."
+          update_confirm: "Deze lokale wijzigingen worden door de update gewist. Weet u zeker dat u wilt doorgaan?"
+          update_confirm_yes: "Ja, doorgaan met de update"
           common: "Algemeen"
           desktop: "Desktop"
           mobile: "Mobiel"
@@ -3828,6 +3810,7 @@ nl:
         clear_filter: "Wissen"
         add_url: "URL toevoegen"
         add_host: "host toevoegen"
+        add_group: "groep toevoegen"
         uploaded_image_list:
           label: "Lijst bewerken"
           empty: "Er zijn nog geen afbeeldingen. Upload er een."
@@ -3839,6 +3822,7 @@ nl:
         categories:
           all_results: "Alle"
           required: "Vereist"
+          branding: "Branding"
           basic: "Basisinstellingen"
           users: "Gebruikers"
           posting: "Schrijven"
@@ -3976,6 +3960,7 @@ nl:
         save: "Inbeddingsinstellingen opslaan"
       permalink:
         title: "Permalinks"
+        description: "Houd er rekening mee dat dit alleen van toepassing is op externe bronnen; op uw forum geplaatste koppelingen worden niet omgeleid."
         url: "URL"
         topic_id: "Topic-ID"
         topic_title: "Topic"

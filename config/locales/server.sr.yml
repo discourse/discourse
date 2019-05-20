@@ -391,6 +391,8 @@ sr:
         title: "Suspenduj Korisnika"
       delete_spammer:
         title: "Obriši korisnika"
+      delete_single:
+        title: "Obriši"
       disagree:
         title: "Odbaci"
       approve:

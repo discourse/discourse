@@ -75,11 +75,9 @@ pt:
       skip_trigger: 'ignorar'
       help_trigger: 'exibir ajuda'
     new_user_narrative:
-      reset_trigger: "novo utilizador"
       certificate:
         alt: 'Certificado de Realização'
     advanced_user_narrative:
-      reset_trigger: 'utilizador avançado'
       title: ':arrow_up: Funcionalidades de utilizador avançadas'
       details:
         reply: |-

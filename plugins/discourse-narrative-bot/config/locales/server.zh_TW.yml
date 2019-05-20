@@ -10,5 +10,3 @@ zh_TW:
     magic_8_ball:
       answers:
         '9': "是"
-    new_user_narrative:
-      reset_trigger: "新使用者"

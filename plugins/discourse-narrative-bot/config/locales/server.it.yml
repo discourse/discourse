@@ -140,8 +140,7 @@ it:
 
           Nel frattempo io me ne starò in disparte.
     new_user_narrative:
-      reset_trigger: "nuovo utente"
-      title: "Certificato di completamento del training per nuovi utenti"
+      reset_trigger: "lezione"
       cert_title: "In riconoscimento del successo nel completamento del tutorial come nuovo utente"
       hello:
         title: "Saluti!"
@@ -302,7 +301,7 @@ it:
       certificate:
         alt: 'Attestato di Merito'
     advanced_user_narrative:
-      reset_trigger: 'utente avanzato'
+      reset_trigger: 'lezione avanzata'
       cert_title: "In riconoscimento del completamento con successo del tutorial utente avanzato"
       title: ':arrow_up: Funzioni utente avanzato'
       start_message: |-
@@ -345,7 +344,7 @@ it:
         reply: |-
           Pfff, questa è fatta! Grazie per averlo sistemato :wink:
 
-          Ti faccio notare che hai solo 24 ore di tempo per ripristinare un messaggio.
+          Ti faccio notare che hai solo %{deletion_after}ore di tempo per ripristinare un messaggio.
       category_hashtag:
         instructions: |-
           Lo sapevi che è possibile fare riferimento a categorie ed etichette in un messaggio? Per esempio, hai visto la categoria %{category}?

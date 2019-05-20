@@ -210,20 +210,6 @@ sl:
       Vašem prejšnem odgovoru lahko dodate citat tako da označite besedilo in izberete gumb <b>Citiraj</b>, ki se bo pojavil nad označenim besedilom.
 
       Lažje je slediti razpravi, kjer je manj bolj poglobljenih prispevkov, kot pa tam kjer je več manjših, ločenih prispevkov.
-    dominating_topic: |
-      ### Dovolite drugim, da sodelujejo v razpravi
-
-      Ta tema vam je očitno zelo pomembna &ndash; objavili ste več kot %{percent}% vseh odgovorov v tej temi.
-
-      Ali ste prepričani, da pustite dovolj časa tudi ostalim, da z nami delijo svoje poglede?
-    get_a_room: |
-      ### Odgovorite tudi ostalim
-
-      Odgovorili ste %{count} krat @%{reply_username} v tej temi.
-
-      Ali ste razmišljali, da bi odgovorili tudi *ostalim* ljudem v razpravi? Dobra razprava vključuje veliko mnenj in pogledov.
-
-      Če hočete nadaljevati pogovor z tem uporabnikom v večjem obsegu, lahko [pošljete zasebno sporočilo](%{base_path}/u/%{reply_username}).
     too_many_replies: |
       ### Dosegli ste omejitev odgovorov v tej temi
 
@@ -465,27 +451,33 @@ sl:
       title: "Potrebuje odobritev"
   post_action_types:
     off_topic:
+      title: "Ne ustreza temi"
       description: "Prispevek ne ustreza pogovoru v tej temi kot je definiran z naslovom teme in prvim prispevkom v temi in bi verjetno sodil nekam drugam."
       long_form: "prijavljeno kot ne ustreza temi"
     spam:
+      title: "Neželeno"
       description: "Prispevek sodi med oglaševanje ali vandalizem. Prispevek ni uporaben in bistven za to temo."
       short_description: "To je oglas ali vandalizem"
       long_form: "prijavljeno kot neželeno"
+      email_body: "%{link}\n\n%{message}"
     inappropriate:
+      title: "Neprimerno"
       description: 'Prispevek vključuje vsebino, ki bi jo razumna oseba označila kot žaljivo, nesramno ali kot kršitev <a href="%{base_path}/guidelines">pravil skupnosti</a>.'
       short_description: 'Kršitev <a href="%{base_path}/guidelines">pravil skupnosti</a>'
       long_form: "prijavljeno kot neprimerno"
     notify_user:
-      title: "Pošlji zasebno sporočilo uporabniku @{{username}}"
+      title: "Pošlji uporabniku @{{username}} ZS"
       description: "Rad bi osebno opozoril uporabnika o njegovem prispevku preko zasebnega sporočila."
       short_description: "Rad bi osebno opozoril uporabnika o njegovem prispevku preko zasebnega sporočila."
       long_form: "opozorjen uporabnik"
+      email_body: "%{link}\n\n%{message}"
     notify_moderators:
       title: "Drug razlog"
       description: "Prispevek potrebuje pregled osebja iz drugega razloga."
       short_description: "Potrebuje pregled osebja iz drugega razloga"
       long_form: "prijavljeno za pregled osebja"
       email_title: 'Prispevek v "%{title}" potrebuje pregled osebja'
+      email_body: "%{link}\n\n%{message}"
     bookmark:
       title: "Zaznamek"
     like:
@@ -503,17 +495,25 @@ sl:
       self: "Nimate nobenih osnutkov; začnite pisati odgovor v katerokoli temo in se bo sam shranil kot nov osnutek."
   topic_flag_types:
     spam:
+      title: "Neželeno"
       description: "Tema sodi med oglaševanje ali vandalizem. Ni uporabna in bistvena za ta forum."
       long_form: "prijavljeno kot neželeno"
       short_description: "To je oglas"
     inappropriate:
+      title: "Neprimerno"
       description: 'Tema vključuje vsebino, ki bi jo razumna oseba označila kot žaljivo, nesramno ali kot kršitev <a href="%{base_path}/guidelines">pravil skupnosti</a>.'
       long_form: "prijavljeno kot neprimerno"
       short_description: 'Kršitev <a href="%{base_path}/guidelines">pravil skupnosti</a>'
     notify_moderators:
       title: "Drug razlog"
       description: 'Prispevek potrebuje pregled osebja na podlagi <a href="%{base_path}/guidelines">pravil skupnosti</a>, <a href="%{tos_url}">pogojev uporabe</a>, ali iz drugega razloga, ki ni naveden zgoraj.'
+      long_form: "prijavljeno za pregled moderatorja"
       short_description: "Potrebuje pregled osebja iz drugega razloga"
+      email_title: 'Tema "%{title}" potrebuje pregled moderatorja'
+      email_body: "%{link}\n\n%{message}"
+  flagging:
+    you_must_edit: '<p>Vaš prispevek je bil prijavljen s strani skupnosti. <a href="%{path}">Preverite vaša sporočila</a>.</p>'
+    user_must_edit: "<p>Ta prispevek je bil prijavljen s strani skupnosti in je začasno skrit.</p>"
   ignored:
     hidden_content: "<p>Prezrta vsebina</p>"
   archetypes:
@@ -542,6 +542,9 @@ sl:
       every_six_months: "vsakih 6 mesecev"
   user_api_key:
     otp_description: 'Hočete dovoliti "%{application_name}" da dostopa do te strani?'
+  flags:
+    errors:
+      already_handled: "Prijava je bila že obdelana"
   reports:
     default:
       labels:
@@ -552,8 +555,12 @@ sl:
         editor: Urednik
         edit_reason: Razlog
     user_flagging_ratio:
+      title: "Uporabnikovo razmerje prijav"
       labels:
         user: Uporabnik
+        agreed_flags: Strinjanje s prijavo
+        disagreed_flags: Nestrinjanje s prijavo
+        ignored_flags: Prezrte prijave
         score: Ocena
     moderators_activity:
       labels:
@@ -631,6 +638,8 @@ sl:
     top_uploads:
       labels:
         filename: Ime datoteke
+  dashboard:
+    out_of_date_themes: "Posodobitve so na voljo za naslednje prilagoditve:"
   site_settings:
     avatar_sizes: "Seznam samodejno ustvarjenih velikosti avatarjev."
   search:
@@ -867,6 +876,7 @@ sl:
 
       (Če je zgornja povezava potekla, izberite "Pozabil sem geslo" pri prijavi z e-naslovom.)
   flag_reasons:
+    off_topic: "Vaš prispevek je prijavljen kot **ne ustreza**: skupnost je mnenja, da ne ustreza temi kakor je določena z naslovom in prvim prispevkom."
     inappropriate: "Vaš prispevek je bil prijavljen kot **ni primeren**: skupnost meni da je žaljiv, nesramen ali krši [pravila skupnosti](%{base_path}/guidelines)."
     spam: "Vaš prispevek je bil prijavljen kot **nezaželen**: skupnost meni da je prispevek oglas ali vsebuje preveč oglaševalske vsebine, da bi bil uporaben in bistven za temo."
     notify_moderators: "Vaš prispevek je bil prijavljen za **pregled osebja**: skupnost meni, da prispevek zahteva poseg člana osebja foruma."
@@ -952,7 +962,7 @@ sl:
     welcome_tl1_user:
       title: "Dobrodošli na nivoju zaupanja 1!"
       subject_template: "Zahvala za vaš čas z nami"
-      text_body_template: "Pozdravljeni! \n\nOpazili smo, da pridno spremljate naš forum, kar je super. Zato smo vam povišali [nivo zaupanja!](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/)\n\nVeseli smo, da ste med nami in zato bi radi izvedeli več o vas. Vzemite si čas in [izpolnite svoj profil](%{base_url}/my/preferences/profile) ali [ustvarite novo temo](%{base_url}/categories).\n"
+      text_body_template: "Pozdravljeni! \n\nVeseli nas, da pridno spremljate naš forum. Zato smo vam povišali [nivo zaupanja!](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/)\n\nVeseli smo, da ste med nami in zato bi radi izvedeli več o vas. Vzemite si čas in [izpolnite svoj profil](%{base_url}/my/preferences/profile) ali [ustvarite novo temo](%{base_url}/categories).\n"
     welcome_invite:
       title: "Dobrodošel povabljeni"
       subject_template: "Dobrodošli na %{site_name}!"
@@ -1343,10 +1353,6 @@ sl:
         two: "%{count} prispevka čakata na pregled"
         few: "%{count} prispevki čakajo na pregled"
         other: "%{count} prispevkov čaka na pregled"
-      text_body_template: |
-        Pozdravljeni,
-
-        Prispevki novih uporabnikov so bili zadržani in čakajo na pregled in potrditev. [Potrdite ali zavrnete jih tukaj](%{base_url}/queued-posts).
   unsubscribe_link: |
     Za odjavo od takšnih e-sporočil [kliknite tukaj](%{unsubscribe_url}).
   unsubscribe_link_and_mail: |
@@ -1593,7 +1599,6 @@ sl:
       unread_messages: "Neprebrana zasebna sporočila"
       unread_notifications: "Neprebrana obvestila"
       liked_received: "Prejeti všečki"
-      new_posts: "Novi prispevki"
       new_users: "Novi uporabniki"
       popular_topics: "Zanimive teme"
       follow_topic: "Sledi tej temi"
@@ -1754,6 +1759,9 @@ sl:
   image: "slika"
   upload:
     edit_reason: "prenos slik v lokalno kopijo"
+  flag_reason:
+    sockpuppet: "Nov uporabnik je ustvaril temo in drugi novi uporabnik z enakim IP naslovom (%{ip_address}) je odgovoril. Preverite <a href='%{base_path}/admin/site_settings/category/spam'>`flag_sockpuppets`</a> nastavitev strani."
+    spam_hosts: "Ta novi uporabnik je poskusil ustvariti več prispevkov z povezavami na enako domeno (%{domain}). Preverite <a href='%{base_path}/admin/site_settings/category/spam'>`newuser_spam_host_threshold`</a> nastavitev strani."
   about: "O nas"
   guidelines: "Navodila"
   privacy: "Zasebnost"
@@ -2107,16 +2115,16 @@ sl:
     missing_version: "Podati morate verzijo parametra"
     conflict: "Prišlo je do konflikta, ki to preprečuje. "
     reasons:
-      post_count: "Avtor ne dosega `approve_post_count` zahteve."
-      trust_level: "Avtor ne dosega `approve_unless_trust_level` zahteve."
-      new_topics_unless_trust_level: "Avtor ne dosega  `approve_new_topics_unless_trust_level` zahteve."
-      fast_typer: "Avtor je tipkal prispevek sumljivo hitro. Glej: `min_first_post_typing_time`."
-      auto_silence_regexp: "Prispevek ustreza `auto_silence_first_post_regex` nastavitvi."
-      watched_word: "Ta prispevek vključuje Watched Word."
-      staged: "Avtor je prirejen in `approve_unless_staged` je nastavljen."
-      category: "Ta kategorija prispevka zahteva potrditev."
-      must_approve_users: "Uporabnik mora biti potrjen, ker je `must_approve_users` vključen."
-      invite_only: "Uporabnik mora biti potrjen, ker je `invite_only` vključen."
+      post_count: "Prvih nekaj prispevkov od vsakega uporabnika mora biti odobrenih s strani osebja. Glej `approve_post_count`."
+      trust_level: "Uporabniki na nizkih nivojih zaupanja rabijo odobritev prispevka s strani osebja.Glej `approve_unless_trust_level`."
+      new_topics_unless_trust_level: "Uporabniki na nizkih nivojih zaupanja potrebujejo odobritev teme s strani osebja. Glej `approve_new_topics_unless_trust_level`."
+      fast_typer: "Nov uporabnik je svoj prvi prispevek natipkal sumljivo hitro zato sumimo bota ali spammerja. Glej `min_first_post_typing_time`."
+      auto_silence_regexp: "Nov uporabnik katerega prvi prispevek ustreza `auto_silence_first_post_regex` nastavitvi."
+      watched_word: "Prispevek vsebuje nadzorovano besedo."
+      staged: "Nove teme in prispevki prirejenih uporabnikov morajo biti odobreni s strani osebja. Glej `approve_unless_staged`."
+      category: "Prispevki v tej kategoriji zahtevajo odobritev s strani osebja. Glej nastavitve kategorije."
+      must_approve_users: "Vsi novi uporabniki morajo biti odobreni s strani osebja. Glej `must_approve_users`."
+      invite_only: "Vsi novi uporavbniki morajo biti povabljeni. Glej `invite_only`."
     actions:
       agree:
         title: "Strinjam se..."
@@ -2139,6 +2147,8 @@ sl:
         title: "Izbriši spamerja"
         description: "Izbriši uporabnika in vse njihove prispevke in teme."
         confirm: "Ali ste prepričani, da hočete izbrisati vse uporabnikove prispevke, teme in blokirati njegovo IP naslov in e-naslove?"
+      delete_single:
+        title: "Izbriši"
       delete:
         title: "Izbriši..."
       delete_and_ignore:

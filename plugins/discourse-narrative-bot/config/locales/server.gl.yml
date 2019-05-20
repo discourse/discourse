@@ -10,5 +10,3 @@ gl:
     magic_8_ball:
       answers:
         '9': "Si"
-    new_user_narrative:
-      reset_trigger: "novo usuario"

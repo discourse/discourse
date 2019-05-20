@@ -423,6 +423,7 @@ gl:
       private_message: "Mensaxe"
       private_messages: "Mensaxes"
       user_notifications:
+        ignore_duration_username: "Nome do usuario"
         mute_option: "Silenciado"
         normal_option: "Normal"
       activity_stream: "Actividade"
@@ -1329,50 +1330,6 @@ gl:
           notify_user: "Enviaches unha mensaxe a este usuario"
           bookmark: "Marcaches esta publicación"
           like: "Gustouche isto"
-        by_you_and_others:
-          off_topic:
-            one: "Ti e outro máis informastes disto como non relacionado"
-            other: "Ti e {{count}} máis informastes disto como non relacionado"
-          spam:
-            one: "Ti e outro máis denunciastes isto como spam"
-            other: "Ti e {{count}} máis denunciastes isto com spam"
-          inappropriate:
-            one: "Ti e outro máis denunciastes isto como inapropiado"
-            other: "Ti e {{count}} máis denunciastes isto como inapropiado"
-          notify_moderators:
-            one: "Ti e outro máis denunciastes isto para moderación"
-            other: "Ti e {{count}} máis denunciastes isto para moderación"
-          notify_user:
-            one: "Ti e unha persoa máis enviastes unha mensaxe a este usuario"
-            other: "Ti e {{count}} persoas máis enviastes unha mensaxe a este usuario"
-          bookmark:
-            one: "Ti e outra persoa marcastes esta publicación"
-            other: "Ti e {{count}} persoas máis marcastes esta publicación"
-          like:
-            one: "A ti e a un máis gustouvos isto"
-            other: "A ti e a {{count}} máis gustouvos isto"
-        by_others:
-          off_topic:
-            one: "Unha persoa marcou isto como non relacionado"
-            other: "{{count}} persoas informaron disto como non relacionado"
-          spam:
-            one: "Unha persoa marcou isto como spam"
-            other: "{{count}} persoas denunciaron isto como spam"
-          inappropriate:
-            one: "Unha persoa denunciou isto como inapropiado"
-            other: "{{count}} persoas denunciaron isto como inapropiado"
-          notify_moderators:
-            one: "Unha persoa denunciou isto para moderación"
-            other: "{{count}} persoas denunciaron isto para moderación"
-          notify_user:
-            one: "Unha persoa enviou unha mensaxe a este usuario"
-            other: "{{count}} persoas enviaron unha mensaxe a este usuario"
-          bookmark:
-            one: "Unha persoa marcou esta publicación"
-            other: "{{count}} persoas marcaron esta publicación"
-          like:
-            one: "A unha persoa gustoulle isto"
-            other: "A {{count}} persoas gustoulles isto"
       revisions:
         controls:
           first: "Primeira revisión"
@@ -1431,6 +1388,7 @@ gl:
       email_in_disabled_click: 'activar o axuste «email in».'
       allow_badges_label: "Permitir adxudicar insignias nesta categoría"
       edit_permissions: "Editar permisos"
+      review_group_name: "nome do grupo"
       this_year: "este ano"
       default_position: "Posición predeterminada"
       position_disabled: "As categorías amosaranse en orde de actividade. Para controlar a orde das categorías nas listas."
@@ -1737,7 +1695,6 @@ gl:
       moderator: "Moderador"
       dashboard:
         title: "Panel"
-        last_updated: "Última actualización de Panel:"
         version: "Versión"
         up_to_date: "Estás actualizado."
         critical_available: "Está dispoñíbel unha actualización crítica."
@@ -1775,6 +1732,11 @@ gl:
           start_date: "Data de inicio"
           end_date: "Data de remate"
           groups: "Todos os grupos"
+          filters:
+            group:
+              label: Grupo
+            category:
+              label: Categoría
       commits:
         latest_changes: "Últimos cambios: por favor, actualiza a miúdo."
         by: "por"

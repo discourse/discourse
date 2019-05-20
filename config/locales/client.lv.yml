@@ -495,6 +495,7 @@ lv:
       private_message: "Ziņa"
       private_messages: "Ziņas"
       user_notifications:
+        ignore_duration_username: "Lietotājvārds"
         mute_option: "Noklusināts"
         normal_option: "Normāls"
       activity_stream: "Aktivitāte"
@@ -1382,7 +1383,6 @@ lv:
         jump_bottom: "pāriet pie pēdējā ieraksta"
         jump_prompt: "pāriet pie..."
         jump_prompt_of: "no %{count} ierakstiem"
-        jump_prompt_long: "Pie kura ieraksta jūs vēlētos pāriet?"
         jump_bottom_with_number: "pāriet pie ieraksta %{post_number}"
         jump_prompt_or: "vai"
         total: kopējais ierakstu skaits
@@ -1682,64 +1682,6 @@ lv:
           notify_user: "Jūs nosūtījāt ziņu šim lietotājam"
           bookmark: "Jūs pievienojāt šo ierakstu grāmatzīmēm"
           like: "Jūs izteicāt atzinību šim"
-        by_you_and_others:
-          off_topic:
-            zero: "Jūs un {{count}} citi cilvēki ziņoja par šo kā novirzīšanos no tēmas"
-            one: "Jūs un 1 cits cilvēks ziņoja par šo kā novirzīšanos no tēmas"
-            other: "Jūs un {{count}} citi cilvēki ziņoja par šo kā novirzīšanos no tēmas"
-          spam:
-            zero: "Jūs un {{count}} citi cilvēki ziņoja par šo kā spamu"
-            one: "Jūs un 1 cits cilvēks ziņoja par šo kā spamu"
-            other: "Jūs un {{count}} citi cilvēki ziņoja par šo kā spamu"
-          inappropriate:
-            zero: "Jūs un {{count}} citi cilvēki ziņoja par šo kā nepiedienīgu"
-            one: "Jūs un 1 cits cilvēks ziņoja par šo kā nepiedienīgu"
-            other: "Jūs un {{count}} citi cilvēki ziņoja par šo kā nepiedienīgu"
-          notify_moderators:
-            zero: "Jūs un {{count}} citi cilvēki ziņoja par šo moderācijai"
-            one: "Jūs un 1 cits cilvēks ziņoja par šo moderācijai"
-            other: "Jūs un {{count}} citi cilvēki ziņoja par šo moderācijai"
-          notify_user:
-            zero: "Jūs un {{count}} citi cilvēki nosūtīja ziņu šim lietotājam"
-            one: "Jūs un 1 cits cilvēks nosūtīja ziņu šim lietotājam"
-            other: "Jūs un {{count}} citi cilvēki nosūtīja ziņu šim lietotājam"
-          bookmark:
-            zero: "Jūs un {{count}} citi cilvēki pievienoja šo ierakstu grāmatzīmēm"
-            one: "Jūs un 1 cits cilvēks pievienoja šo ierakstu grāmatzīmēm"
-            other: "Jūs un {{count}} citi cilvēki pievienoja šo ierakstu grāmatzīmēm"
-          like:
-            zero: "Jūs un {{count}} citiem cilvēkiem patika šis"
-            one: "Jūs un 1 citam cilvēkam patika šis"
-            other: "Jūs un {{count}} citiem cilvēkiem patika šis"
-        by_others:
-          off_topic:
-            zero: "{{count}} cilvēki ziņoja par šo kā novirzīšanos no tēmas"
-            one: "1 cilvēks ziņoja par šo kā novirzīšanos no tēmas"
-            other: "{{count}} cilvēki ziņoja par šo kā novirzīšanos no tēmas"
-          spam:
-            zero: "{{count}} cilvēki ziņoja par šo kā spamu"
-            one: "1 cilvēks ziņoja par šo kā spamu"
-            other: "{{count}} cilvēki ziņoja par šo kā spamu"
-          inappropriate:
-            zero: "{{count}} cilvēki ziņoja par šo kā nepiedienīgu"
-            one: "1 cilvēks ziņoja par šo kā nepiedienīgu"
-            other: "{{count}} cilvēki ziņoja par šo kā nepiedienīgu"
-          notify_moderators:
-            zero: "{{count}} cilvēki ziņoja par šo moderācijai"
-            one: "1 cilvēks ziņoja par šo moderācijai"
-            other: "{{count}} cilvēki ziņoja par šo moderācijai"
-          notify_user:
-            zero: "{{count}} cilvēki nosūtīja ziņu šim lietotājam"
-            one: "1 cilvēks nosūtīja ziņu šim lietotājam"
-            other: "{{count}} cilvēki nosūtīja ziņu šim lietotājam"
-          bookmark:
-            zero: "{{count}} cilvēki pievienoja šo ierakstu grāmatzīmēm"
-            one: "1 cilvēks pievienoja šo ierakstu grāmatzīmēm"
-            other: "{{count}} cilvēki pievienoja šo ierakstu grāmatzīmēm"
-          like:
-            zero: "{{count}} cilvēkiem patika šis"
-            one: "1 cilvēkam patika šis"
-            other: "{{count}} cilvēkiem patika šis"
       merge:
         confirm:
           zero: "Vai jūs esat drošs, ka vēlaties apvienot šos {{count}} ierakstus?"
@@ -1818,6 +1760,7 @@ lv:
       default_top_period: "Noklusējuma topa periods:"
       allow_badges_label: "Atļaut apbalvot ar žetoniem šai sadaļā"
       edit_permissions: "Mainīt atļaujas"
+      review_group_name: "grupas nosaukums"
       this_year: "šogad"
       default_position: "Noklusētā pozīcija"
       position_disabled: "Sadaļas tiks sakārtotas pēc aktivitātes. Lai kontrolētu sadaļu secību sarakstos,"
@@ -2228,7 +2171,6 @@ lv:
       moderator: "Moderators"
       dashboard:
         title: "Administrācijas panelis"
-        last_updated: "Pēdējais administrācijas paneļa atjauninājums:"
         version: "Versija"
         up_to_date: "Tu seko līdzi laikam!"
         critical_available: "Ir pieejams kritisks atjauninājums."
@@ -2270,6 +2212,11 @@ lv:
           start_date: "Sākuma datums"
           end_date: "Beigu datums"
           groups: "Visas grupas"
+          filters:
+            group:
+              label: Grupa
+            category:
+              label: Sadaļa
       commits:
         latest_changes: "Pēdējās izmaiņas: lūdzu atjauniniet bieži!"
         by: " "
@@ -2464,7 +2411,6 @@ lv:
         new: "Jauns"
         new_style: "Jauns stils"
         delete: "Dzēst"
-        delete_confirm: "Dzēst šo dizainu?"
         color: "Krāsa"
         opacity: "Caurspīdīgums"
         copy: "Kopēt"

@@ -1281,7 +1281,6 @@ bg:
     title: "Тагове"
     staff_tag_disallowed: 'Тагът "%{tag}" може да бъде приложен само от персонала.'
     staff_tag_remove_disallowed: 'Тагът "%{tag}" може да бъде премахнат само от персонала.'
-    minimum_required_tags: "Трябва да изберете поне %{count} тагове."
   finish_installation:
     register:
       button: "Регистриране"
@@ -1321,13 +1320,8 @@ bg:
         fields:
           logo:
             label: "Главно лого"
-          logo_small:
-            label: "Компактно лого"
       icons:
         title: "Икони"
-        fields:
-          favicon:
-            label: "Малка икона"
       homepage:
         title: "Начална страница"
         fields:
@@ -1366,6 +1360,8 @@ bg:
         description: "Скрий тази публикация и автоматично изпрати съобщение към потребителия спешно да я редактира."
       delete_spammer:
         title: "Изтрий спамера "
+      delete_single:
+        title: "Изтрий"
       disagree_and_restore:
         description: "Възстанови тази публикация така че всички потребители да могат да я виждат."
       disagree:

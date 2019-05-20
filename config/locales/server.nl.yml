@@ -200,6 +200,7 @@ nl:
   read_only_mode_enabled: "De website bevindt zich in alleen-lezenmodus. Interacties zijn uitgeschakeld."
   invalid_grant_badge_reason_link: "Externe of ongeldige Discourse-koppeling is niet toegestaan in badge-reden"
   email_template_cant_be_modified: "Deze e-mailsjabloon kan niet worden aangepast."
+  invalid_whisper_access: "Fluisterberichten zijn niet ingeschakeld, of u kunt geen fluisterberichten maken"
   reading_time: "Leestijd"
   likes: "Likes"
   too_many_replies:
@@ -363,20 +364,6 @@ nl:
       U kunt uw eerdere antwoord bewerken om een citaat toe te voegen door tekst te accentueren en de knop <b>Bericht citeren</b> die verschijnt te selecteren.
 
       Het is voor iedereen makkelijker om topics te lezen die minder uitgebreide antwoorden bevatten dan die met veel kleine, individuele antwoorden.
-    dominating_topic: |
-      ### Laat anderen aan de conversatie deelnemen
-
-      Dit topic is duidelijk belangrijk voor u &ndash; u hebt hier meer dan %{percent}% van de antwoorden geplaatst.
-
-      Weet u zeker dat u anderen voldoende tijd geeft om ook hun gedachten te delen?
-    get_a_room: |
-      ### Overweeg meerdere mensen te beantwoorden
-
-      U hebt al %{count} keer in dit bepaalde topic op @%{reply_username} geantwoord.
-
-      Hebt u overwogen *andere* mensen in de discussie ook te beantwoorden? Een goede discussie omvat veel stemmen en perspectieven.
-
-      Als u uw discussie met deze bepaalde gebruiker uitvoerig wilt voortzetten, [stuur deze dan een persoonlijk bericht](%{base_path}/u/%{reply_username}).
     too_many_replies: |
       ### U hebt de antwoordlimiet voor dit topic bereikt
 
@@ -423,7 +410,12 @@ nl:
               same_as_username: "is hetzelfde als uw gebruikersnaam. Gebruik een veiliger wachtwoord."
               same_as_email: "is hetzelfde als uw e-mailadres. Gebruik een veiliger wachtwoord."
               same_as_current: "is hetzelfde als uw huidige wachtwoord."
+              same_as_name: "is hetzelfde als uw naam."
               unique_characters: "heeft te veel herhaalde tekens. Gebruik een veiliger wachtwoord."
+            username:
+              same_as_password: "is hetzelfde als uw wachtwoord."
+            name:
+              same_as_password: "is hetzelfde als uw wachtwoord."
             ip_address:
               signup_not_allowed: "Registratie vanaf deze account is niet toegestaan."
         user_email:
@@ -1156,12 +1148,12 @@ nl:
         filesize: Bestandsgrootte
       description: "Lijst van alle uploads op extensie, bestandsgrootte en maker."
     top_ignored_users:
-      title: "Meest genegeerde gebruikers"
+      title: "Meest Genegeerde / Gedempte Gebruikers"
       labels:
         ignored_user: Genegeerde gebruiker
         ignores_count: Aantal genegeerd
         mutes_count: Aantal gedempt
-      description: "Lijst van meest genegeerde gebruikers."
+      description: "Gebruikers die gedempt en/of genegeerd worden door vele andere gebruikers."
   dashboard:
     rails_env_warning: "Uw server werkt in de modus voor %{env}."
     host_names_warning: "Uw bestand config/database.yml gebruikt de standaardhostnaam localhost. Werk deze bij naar de hostnaam van uw website."
@@ -1173,8 +1165,6 @@ nl:
     facebook_config_warning: 'De server is geconfigureerd om registratie en aanmelding via Facebook to te staan (enable_facebook_logins), maar de waarden voor app-ID en app-geheim zijn niet ingesteld. Ga naar <a href="%{base_path}/admin/site_settings">de Website-instellingen</a> en werk de instellingen bij. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">Bekijk deze handleiding voor meer info</a>.'
     twitter_config_warning: 'De server is geconfigureerd om registratie en aanmelding via Twitter toe te staan (enable_twitter_logins), maar de waarden voor sleutel en geheim zijn niet ingesteld. Ga naar <a href="%{base_path}/admin/site_settings">de Website-instellingen</a> en werk de instellingen bij. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">Bekijk deze handleiding voor meer info</a>.'
     github_config_warning: 'De server is geconfigureerd om registratie en aanmelding via GitHub toe te staan (enable_github_logins), maar de waarden voor client-ID en -geheim zijn niet ingesteld. Ga naar <a href="%{base_path}/admin/site_settings">de Website-instellingen</a> en werk de instellingen bij. <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">Bekijk deze handleiding voor meer info</a>.'
-    pwa_config_icon_warning: 'Uw website mist een pictogram van 512 × 512 pixels, waarmee gebruikers een snelkoppeling op het startscherm naar deze website op Android-apparaten kunnen toevoegen. Ga naar <a href="%{base_path}/admin/site_settings/category/all_results?filter=large_icon">de Website-instellingen</a> en upload een pictogram van 512 × 512 pixels.'
-    pwa_config_title_warning: 'Uw website mist een korte titel, waarmee gebruikers een snelkoppeling op het startscherm naar uw website op Android-apparaten kunnen toevoegen. Ga naar <a href="%{base_path}/admin/site_settings/category/all_results?filter=short_title">de Website-instellingen</a> en voeg een korte titel toe, beperkt tot 12 tekens.'
     s3_config_warning: 'De server is geconfigureerd om bestanden naar S3 te uploaden, maar minstens één van de volgende waarden is niet ingesteld: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile, of s3_upload_bucket. Ga naar <a href="%{base_path}/admin/site_settings">de Website-instellingen</a> en werk de instellingen bij. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Bekijk ''How to set up image uploads to S3?'' voor meer info</a>.'
     s3_backup_config_warning: 'De server is geconfigureerd om back-ups naar S3 te uploaden, maar minstens één van de volgende waarden is niet ingesteld: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile, of s3_backup_bucket. Ga naar <a href="%{base_path}/admin/site_settings">de Website-instellingen</a> en werk de instellingen bij. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Bekijk ''How to set up image uploads to S3?'' voor meer info</a>.'
     image_magick_warning: 'De server is geconfigureerd om miniaturen van grote afbeeldingen te maken, maar ImageMagick is niet geïnstalleerd. Installeer ImageMagick met uw favoriete pakketbeheerder, of <a href="https://www.imagemagick.org/script/download.php" target="_blank">download de nieuwste versie</a>.'
@@ -1259,11 +1249,12 @@ nl:
     logo_small: "De kleine logoafbeelding links bovenaan op uw website, zichtbaar bij omlaag scrollen. Gebruik een vierkante afbeelding van 120 × 120. Bij leeg laten wordt een startpaginasymbool getoond."
     digest_logo: "De alternatieve logoafbeelding bovenaan de e-mailsamenvatting van uw website. Gebruik een brede rechthoekige afbeelding. Gebruik geen SVG-afbeelding. Bij leeg laten wordt de afbeelding van de instelling `logo` gebruikt."
     mobile_logo: "Het logo dat op de mobiele versie van uw website wordt gebruikt. Gebruik een brede rechthoekige afbeelding met een hoogte van 120 en een hoogte-breedteverhouding groter dan 3:1. Bij leeg laten wordt de afbeelding van de instelling `logo` gebruikt."
-    large_icon: "Afbeelding gebruikt als logo/splash-afbeelding op Android. Vereiste grootte is 512 × 512."
-    favicon: "Een favicon voor uw website, zie <a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>https://nl.wikipedia.org/wiki/Favicon</a>. Om goed te werken via een CDN moet dit een png zijn."
-    apple_touch_icon: "Pictogram gebruikt voor Apple touch-apparaten. Vereiste grootte is 144 × 144."
-    opengraph_image: "Standaard opengraph-afbeelding, gebruikt wanneer de pagina geen andere passende afbeelding of websitelogo bevat."
-    twitter_summary_large_image: "Standaardafbeelding voor Twitter-summarycard (dient minstens 280 in breedte, en minstens 150 in hoogte te zijn)."
+    large_icon: "Afbeelding die als basis wordt gebruikt voor andere metadata iconen. Moet idealiter groter zijn dan 512 x 512. Als het leeg gelaten wordt, dan zal logo_small worden gebruikt."
+    manifest_icon: "Afbeelding gebruikt als logo/splash-afbeelding op Android. Zal vanzelf worden geschaald naar 512 x 512. Als het leeg gelaten wordt, dan zal large_icon gebruikt worden."
+    favicon: "Een favicon voor jouw website, zie <a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>https://en.wikipedia.org/wiki/Favicon</a>. Om correct te werken via een CDN, moet dit een png zijn. Zal worden geschaald naar 32x32. Als het leeg gelaten wordt, dan zal large_icon gebruikt worden."
+    apple_touch_icon: "Icoon gebruikt voor Apple touch-apparaten. Zal geschaald worden naar 180x180. Als het leeg gelaten wordt, dan zal large_icon worden gebruikt."
+    opengraph_image: "Standaard opengraph-afbeelding, gebruikt wanneer de pagina geen andere afbeelding bevat. Als het leeg gelaten wordt, dan zal large_icon worden gebruikt"
+    twitter_summary_large_image: "'summary large image' van Twitter-card (dient minstens 280 in breedte, en minstens 150 in hoogte te zijn). Bij leeg laten worden reguliere kaartmetagegevens gegenereerd via de opengraph_image."
     notification_email: "Het Van:-e-mailadres adres dat wordt gebruikt voor het verzenden van alle essentiële systeem-e-mails. Het hier opgegeven domein moet goed ingestelde SPF-, DKIM- en reverse-PTR-records hebben om e-mails te doen aankomen."
     email_custom_headers: "Een door een pipe (|) gescheiden lijst van aangepaste e-mailheaders"
     email_subject: "Aanpasbare onderwerpnotatie voor standaard-e-mails. Zie <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801</a>"
@@ -1315,7 +1306,7 @@ nl:
     blacklist_ip_blocks: "Een lijst van private IP-blokken die nooit door Discourse mogen worden verkend"
     whitelist_internal_hosts: "Een lijst van interne hosts die Discourse veilig kan verkennen voor oneboxing en andere doeleinden"
     allowed_iframes: "Een lijst van 'iframe src'-domeinvoorvoegsels die Discourse veilig kan toestaan in berichten"
-    whitelisted_crawler_user_agents: "Useragents van webcrawlers die toegang tot de website dienen te hebben."
+    whitelisted_crawler_user_agents: "Useragents van webcrawlers die toegang tot de website dienen te hebben. WAARSCHUWING! INSTELLEN HIERVAN BLOKKEERT ALLE CRAWLERS DIE HIER NIET WORDEN VERMELD!"
     blacklisted_crawler_user_agents: "Uniek hoofdlettergevoelig woord in de useragent-string waarmee webcrawlers worden herkend die geen toegang tot de website mogen hebben. Niet van toepassing als whitelist is opgegeven."
     slow_down_crawler_user_agents: "Useragents van webcrawlers waarvan aanvragen beperkt moeten zijn in robots.txt via de Crawl-delay-instructie"
     slow_down_crawler_rate: "Als slow_down_crawler_user_agents is opgegeven, is deze beperking op alle crawlers van toepassing (aantal seconden vertraging tussen aanvragen)"
@@ -1576,7 +1567,9 @@ nl:
     auto_silence_fast_typers_on_first_post: "Automatisch gebruikers dempen die niet aan min_first_post_typing_time voldoen"
     auto_silence_fast_typers_max_trust_level: "Maximale vertrouwensniveau om snelle typers automatisch te dempen"
     auto_silence_first_post_regex: "Hoofdlettergevoelige regex die bij overeenkomst het eerste bericht van een gebruiker dempt en in de wachtrij voor goedkeuring zet. Voorbeeld: raging|a[bc]a zorgt ervoor dat alle eerste berichten die raging, aba of aca bevatten worden gedempt. Alleen van toepassing op het eerste bericht."
-    flags_default_topics: "Gemarkeerde topics standaard in de beheersectie tonen"
+    reviewable_claiming: "Dient beoordeelbare inhoud te worden opgeëist voordat er een handeling op kan worden uitgevoerd?"
+    reviewable_default_topics: "Beoordeelbare inhoud standaard gegroepeerd op topic tonen"
+    reviewable_default_visibility: "Geen beoordeelbare items tonen, tenzij ze aan deze prioriteit voldoen"
     reply_by_email_enabled: "Antwoorden op topics via e-mail inschakelen."
     reply_by_email_address: "Sjabloon voor adres voor inkomende e-mail bij antwoorden per e-mail, bijvoorbeeld: %%{reply_key}@reply.example.com of replies+%%{reply_key}@example.com"
     alternative_reply_by_email_addresses: "Lijst van alternatieve sjablonen voor adressen voor inkomende e-mail bij antwoorden per e-mail. Voorbeeld: %%{reply_key}@reply.example.com|replies+%%{reply_key}@example.com"
@@ -1606,7 +1599,6 @@ nl:
     attachment_filename_blacklist: "Lijst van trefwoorden voor het blacklisten van bijlagen op basis van de bestandsnaam."
     enable_forwarded_emails: "[BETA] Gebruikers mogen een topic maken door een e-mail door te sturen."
     always_show_trimmed_content: "Altijd afgekapt deel van inkomende e-mails tonen. WAARSCHUWING: kan e-mailadressen onthullen."
-    private_email: "Geen inhoud van berichten of topics in e-mails opnemen voor extra privacy. OPMERKING: schakelt ook samenvattingsmails uit."
     manual_polling_enabled: "E-mails pushen via de API voor e-mailantwoorden."
     pop3_polling_enabled: "Pollen via POP3 voor e-mailantwoorden."
     pop3_polling_ssl: "SSL gebruiken bij verbinden met de POP3-server. (Aanbevolen)"
@@ -1652,6 +1644,7 @@ nl:
     staff_user_custom_fields: "Een lijst van aangepaste gebruikersvelden die voor stafleden met de API kan worden opgehaald."
     enable_user_directory: "Een lijst van gebruikers aanbieden om door te bladeren"
     enable_group_directory: "Een lijst van groepen aanbieden om door te bladeren"
+    enable_category_group_review: "Groepen mogen inhoud in specifieke categorieën beoordelen"
     group_in_subject: "%%{optional_pm} in e-mailonderwerp instellen op naam van eerste groep in PM; zie <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>Customize subject format for standard emails</a>"
     allow_anonymous_posting: "Gebruikers mogen naar anonieme modus overschakelen"
     anonymous_posting_min_trust_level: "Het minimale vertrouwensniveau dat nodig is om anonieme berichtplaatsing in te schakelen"
@@ -1662,7 +1655,7 @@ nl:
     log_personal_messages_views: "PM-weergaven door Admin voor andere gebruikers/groepen in logboek opslaan."
     ignored_users_count_message_threshold: "Moderators inlichten als een bepaalde gebruiker door dit aantal andere gebruikers wordt genegeerd."
     ignored_users_message_gap_days: "Wachttijd voordat moderators opnieuw worden ingelicht over een gebruiker die door veel andere wordt genegeerd."
-    clean_up_inactive_users_after_days: "Aantal dagen voordat een inactieve gebruiker (vertrouwensniveau 0 zonder berichten) wordt verwijderd."
+    clean_up_inactive_users_after_days: "Aantal dagen voordat een inactieve gebruiker (vertrouwensniveau 0 zonder berichten) wordt verwijderd. Stel 0 in om opschonen uit te schakelen."
     user_website_domains_whitelist: "Website van gebruiker wordt op deze domeinen gecontroleerd. Door pipes gescheiden lijst."
     allow_profile_backgrounds: "Gebruikers mogen profielachtergronden uploaden."
     sequential_replies_threshold: "Aantal berichten dat een gebruiker achter elkaar in één topic moet plaatsen voordat deze aan te veel opeenvolgende reacties wordt herinnerd."
@@ -1987,8 +1980,46 @@ nl:
     destroy_reasons:
       same_ip_address: "Zelfde IP-adres (%{ip_address}) als andere gebruikers"
       inactive_user: "Inactieve gebruiker"
+  reviewables_reminder:
+    subject_template:
+      one: "1 item moet worden beoordeeld"
+      other: "%{count} items moeten beoordeeld worden"
+  unsubscribe_mailer:
+    title: "Mailer Uitschrijven"
+    subject_template: "Bevestig dat je niet langer email-updates wilt krijgen van %{site_title}"
+    text_body_template: |
+      Iemand (mogelijk jij?) vroeg aan om niet langer email-updates te krijgen van %{site_domain_name} naar dit adres.
+      Als je dit wilt bevestigen, klik dan op de link:
+
+      %{confirm_unsubscribe_link}
+
+      Als je nogsteeds email-updates wilt krijgen, dan mag je deze mail negeren.
+  invite_mailer:
+    title: "Mailer Uitnodigen"
+    subject_template: "%{inviter_name} heeft jouw uitgenodigd in '%{topic_title}' op %{site_domain_name}"
+    text_body_template: |
+      %{inviter_name} heeft jouw uitgenodigd bij een discussie
+
+      > **%{topic_title}**
+      >
+      > %{topic_excerpt}
+
+      bij
+
+      > %{site_title} -- %{site_description}
+
+      Als je geïnteresseerd bent, klik dan op onderstaande link:
+
+      %{invite_link}
+  custom_invite_mailer:
+    subject_template: "%{inviter_name} heeft jouw uitgenodigd in '%{topic_title}' op %{site_domain_name}"
   invite_password_instructions:
     subject_template: "Stel het wachtwoord in voor uw %{site_name}-account"
+  download_backup_mailer:
+    no_token: |
+      Sorry, deze backup-downloadlink is al gebruikt of is verlopen.
+  admin_confirmation_mailer:
+    subject_template: "[%{email_prefix}] Bevestig nieuw Admin-Account"
   flag_reasons:
     off_topic: "Uw bericht is gemarkeerd als **off-topic**: de gemeenschap vindt dat het niet goed bij het onderwerp past, zoals momenteel bepaald door de titel en het eerste bericht."
     inappropriate: "Uw bericht is gemarkeerd als **ongepast**: de gemeenschap vindt het bericht beledigend, grof, of een schending van [onze gemeenschapsrichtlijnen](%{base_path}/guidelines)."
@@ -2001,7 +2032,15 @@ nl:
     ignored: "Bedankt voor het informeren. We gaan ernaar kijken."
     ignored_and_deleted: "Bedankt voor het informeren. We hebben het bericht verwijderd."
   system_messages:
+    private_topic_title: "Topic #%{id}"
+    post_hidden:
+      title: "Bericht Verborgen"
+      subject_template: "Bericht verborgen door gemeenschapsmarkeringen"
+    flags_agreed_and_post_deleted:
+      title: "Gemarkeerd bericht verwijderd door personeel"
+      subject_template: "Gemarkeerd bericht verwijderd door personeel"
     welcome_user:
+      title: "Welkom Gebruiker"
       subject_template: "Welkom bij %{site_name}!"
       text_body_template: |
         Fijn dat u lid bent geworden van %{site_name}, en welkom!
@@ -2011,7 +2050,11 @@ nl:
         We geloven altijd in [beschaafd gemeenschappelijk gedrag](%{base_url}/guidelines).
 
         Geniet van uw verblijf!
+    welcome_tl1_user:
+      title: "Welkom TL1 Gebruiker"
+      subject_template: "Bedankt dat je tijd met ons doorbrengt"
     welcome_invite:
+      title: "Welkom Uitnodiging"
       subject_template: "Welkom bij %{site_name}!"
     backup_succeeded:
       title: "Back-up geslaagd"
@@ -2019,6 +2062,14 @@ nl:
     backup_failed:
       title: "Back-up mislukt"
       subject_template: "Back-up mislukt"
+      text_body_template: |
+        De back-up heeft gefaald.
+
+        Hier is de log:
+
+        ``` text
+        %{logs}
+        ```
     restore_succeeded:
       title: "Back-up teruggezet"
       subject_template: "Back-up voltooid"
@@ -2117,11 +2168,6 @@ nl:
       subject_template: "Het downloaden van externe afbeeldingen is uitgeschakeld"
     dashboard_problems:
       title: "Dashboardproblemen"
-    queued_posts_reminder:
-      text_body_template: |
-        Hallo,
-
-        Er zijn berichten van nieuwe gebruikers voor moderatie achtergehouden die momenteel op goedkeuring wachten. [Keur ze goed of weiger ze hier](%{base_url}/queued-posts).
   subject_re: "Re:"
   subject_pm: "[PM]"
   user_notifications:
@@ -2166,7 +2212,6 @@ nl:
       unread_messages: "Ongelezen berichten"
       unread_notifications: "Ongelezen meldingen"
       liked_received: "Ontvangen likes"
-      new_posts: "Nieuwe berichten"
       new_users: "Nieuwe gebruikers"
       popular_topics: "Populaire topics"
       follow_topic: "Dit topic volgen"
@@ -2429,18 +2474,11 @@ nl:
           logo:
             label: "Primair logo"
             description: "De logoafbeelding links bovenaan op uw website. Gebruik een brede rechthoekige afbeelding met een hoogte van 120 en een hoogte-breedteverhouding groter dan 3:1"
-          logo_small:
-            label: "Compact logo"
-            description: "Een compacte versie van uw logo, links bovenaan op uw website, zichtbaar bij omlaag scrollen. Gebruik een vierkante afbeelding van 120 × 120."
       icons:
         title: "Pictogrammen"
         fields:
-          favicon:
-            label: "Klein pictogram"
-            description: "Pictogramafbeelding die uw website vertegenwoordigt in webbrowsers en er goed uitziet bij kleine afmetingen zoals 32 × 32. Aanbevolen afbeeldingsextensies zijn PNG of JPG."
-          apple_touch_icon:
+          large_icon:
             label: "Groot pictogram"
-            description: "Pictogramafbeelding die uw website vertegenwoordigt op moderne apparaten en er goed uitziet bij grotere afmetingen. Vereiste grootte is minstens 512 × 512."
       homepage:
         description: "Het tonen van de nieuwste topics op uw startpagina wordt aanbevolen, maar als u dat liever hebt, kunt u ook categorieën (groepen of topics) op de startpagina tonen."
         title: "Startpagina"
@@ -2492,6 +2530,8 @@ nl:
     unknown: "onbekend"
     user_merged: "%{username} is met deze account samengevoegd"
   reviewables:
+    must_claim: "U moet items opeisen voordat u er handelingen op kunt uitvoeren."
+    user_claimed: "Dit item is door een andere gebruiker opgeëist."
     missing_version: "U moet een versieparameter opgeven"
     conflict: "Een updateconflict heeft ervoor gezorgd dat u dit niet kon doen."
     actions:
@@ -2516,6 +2556,8 @@ nl:
         title: "Spammer verwijderen"
         description: "De gebruiker en alle berichten en topics ervan verwijderen."
         confirm: "Weet u zeker dat u alle berichten en topics van die gebruiker wilt verwijderen en het IP-nummer en e-mailadressen ervan wilt blokkeren?"
+      delete_single:
+        title: "Verwijderen"
       delete:
         title: "Verwijderen..."
       delete_and_ignore:

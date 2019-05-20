@@ -751,6 +751,8 @@ te:
         title: "సభ్యుడిని సస్పెండు చేయి"
       delete_spammer:
         title: "స్పామరును తొలగించు"
+      delete_single:
+        title: "తొలగించు"
       disagree:
         title: "ఒప్పుకోకు"
       approve:

@@ -7,4 +7,4 @@
 
 es:
   site_settings:
-    details_enabled: "Habilitar el plugin details. Si cambias esto, debes hacer un rebake en todos los posts con: \"rake post:rebake\"."
+    details_enabled: "Habilitar la característica de detalles. Si cambias esto, debes rehacer todos los mensajes con: \"rake posts:rebake\"."

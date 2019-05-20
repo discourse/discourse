@@ -1378,10 +1378,6 @@ sv:
       title: "Instrumentpanels problem"
     queued_posts_reminder:
       title: "Påminnelse om köande inlägg"
-      text_body_template: |
-        Hej!
-
-        Meddelanden från nya användare väntar för närvarande på att granskas. [Godkänn eller avvisa dem här](%{base_url}/queued-posts).
   unsubscribe_link: |
     [Klicka här ](%{unsubscribe_url}) för att avprenumerera från de här e-postmeddelandena.
   unsubscribe_link_and_mail: |
@@ -1549,7 +1545,6 @@ sv:
       unread_messages: "olästa meddelanden"
       unread_notifications: "Olästa meddelanden"
       liked_received: "Gillanden mottagna"
-      new_posts: "Nytt meddelande"
       new_users: "Ny användare"
       popular_topics: "Populära ämnen"
       follow_topic: "Glöm detta ämne"
@@ -1887,14 +1882,10 @@ sv:
         fields:
           logo:
             label: "Primär logo"
-          logo_small:
-            label: "Kompakt logo"
       icons:
         title: "Ikoner"
         fields:
-          favicon:
-            label: "Små ikoner"
-          apple_touch_icon:
+          large_icon:
             label: "Stora ikoner"
       homepage:
         title: "Hemsida"
@@ -1923,6 +1914,8 @@ sv:
         title: "Stäng av användare"
       delete_spammer:
         title: "Radera spammare"
+      delete_single:
+        title: "Radera"
       disagree:
         title: "Håll inte med"
       approve:

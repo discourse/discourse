@@ -10,5 +10,3 @@ sq:
     magic_8_ball:
       answers:
         '9': "Po"
-    new_user_narrative:
-      reset_trigger: "anëtar i ri"

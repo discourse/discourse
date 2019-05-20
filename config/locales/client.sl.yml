@@ -376,7 +376,7 @@ sl:
         two: "Ta tema ima <b>{{count}}</b> prispevka za potrditev"
         few: "Ta tema ima <b>{{count}}</b> prispevke za potrditev"
         other: "Ta tema ima <b>{{count}}</b> prispevkov za potrditev"
-      title: "Za odobritev"
+      title: "Pregled"
       topic: "Tema:"
       filtered_user: "Uporabnik:"
       show_all_topics: "prikaži vse teme"
@@ -422,6 +422,11 @@ sl:
         refresh: "Osveži"
         status: "Stanje:"
         category: "Kategorija:"
+        priority:
+          title: "Najnižja prioriteta:"
+          low: "Nizka"
+          medium: "Srednja"
+          high: "Visoka"
       conversation:
         view_full: "prikaži celo razpravo"
       scores:
@@ -731,12 +736,15 @@ sl:
       private_messages: "Zasebna sporočila"
       user_notifications:
         ignore_duration_title: "Prezri opomnik"
+        ignore_duration_username: "Uporabniško ime"
         ignore_duration_when: "Trajanje:"
         ignore_duration_save: "Prezri"
         ignore_duration_note: "Vsi prezrti opomniki so samodejno odstranjeni ko poteče čas za preziranje."
         ignore_duration_time_frame_required: "Izberite časovni okvir"
+        ignore_no_users: "Nimate prezrtih uporabnikov"
         ignore_option: "Prezrti"
         ignore_option_title: "Ne boste prejemali obvestil povezanih z tem uporabnikom in vse njihove teme in odgovori bodo skriti."
+        add_ignored_user: "Dodaj..."
         mute_option: "Utišani"
         mute_option_title: "Ne boste prejemali obvestil povezanih s tem uporabnikom."
         normal_option: "Običajno"
@@ -1507,7 +1515,7 @@ sl:
       remove_featured_link: "Odstrani povezavo iz teme."
       reply_placeholder: "Tu lahko pišeš. Možna je uporaba Markdown, BBcode ali HTML za oblikovanje. Sem lahko povlečeš ali prilepiš sliko."
       reply_placeholder_no_images: "Tipkajte tukaj. Uporabite Markdown, BBCode ali HTML za oblikovanje."
-      reply_placeholder_choose_category: "Najprej morate izbrati kategorijo, preden lahko napišete vsebino prispevka."
+      reply_placeholder_choose_category: "Izberite kategorijo preden vnašate besedilo tukaj."
       view_new_post: "Oglej si tvoj nov prispevek "
       saving: "Shranjujem"
       saved: "Shranjeno!"
@@ -1943,7 +1951,6 @@ sl:
         jump_bottom: "skoči na zadnji prispevek"
         jump_prompt: "skoči na..."
         jump_prompt_of: "od %{count} prispevkov"
-        jump_prompt_long: "Na kateri prispevek bi radi skočili?"
         jump_bottom_with_number: "skoči na prispevek %{post_number}"
         jump_prompt_to_date: "na datum"
         jump_prompt_or: "ali"
@@ -2304,8 +2311,8 @@ sl:
         delete_topic_disallowed_modal: "Nimate pravic da izbrišete to temo. Če jo bi res radi izbrisali, jo prijavite osebju skupaj z razlogi."
         delete_topic_disallowed: "nimate pravic za brisanje te teme"
         delete_topic: "izbriši temo"
-        add_post_notice: "Dodaj opombo osebja"
-        remove_post_notice: "Odstrani opombo osebja"
+        add_post_notice: "Dodaj obvestilo osebja"
+        remove_post_notice: "Odstrani obvestilo osebja"
       actions:
         flag: "Prijavi"
         defer_flags:
@@ -2340,78 +2347,6 @@ sl:
           notify_user: "Poslali ste opozorilo avtorju"
           bookmark: "Zaznamovali ste ta prispevek"
           like: "Vam je všeč"
-        by_you_and_others:
-          off_topic:
-            one: "Vi in {{count}} uporabnik sta prijavila kot ne ustreza temi"
-            two: "Vi in {{count}} uporabnika ste prijavili kot ne ustreza temi"
-            few: "Vi in {{count}} uporabniki ste prijavili kot ne ustreza temi"
-            other: "Vi in {{count}} uporabnikov ste prijavili kot ne ustreza temi"
-          spam:
-            one: "Vi in {{count}} uporabnik sta prijavila kot neželeno"
-            two: "Vi in {{count}} uporabnika ste prijavili kot neželeno"
-            few: "Vi in {{count}} uporabniki ste prijavili kot neželeno"
-            other: "Vi in {{count}} uporabnikov ste prijavili kot neželeno"
-          inappropriate:
-            one: "Vi in {{count}} uporabnik sta prijavila kot neprimerno"
-            two: "Vi in {{count}} uporabnika ste prijavili kot neprimerno"
-            few: "Vi in {{count}} uporabniki ste prijavili kot neprimerno"
-            other: "Vi in {{count}} uporabnikov ste prijavili kot neprimerno"
-          notify_moderators:
-            one: "Vi in {{count}} drug uporabnik sta prispevek prijavila moderatorjem"
-            two: "Vi in {{count}} druga uporabnika ste prispevek prijavili moderatorjem"
-            few: "Vi in {{count}} drugi uporabniki ste prispevek prijavili moderatorjem"
-            other: "Vi in {{count}} drugih uporabnikov ste prispevek prijavili moderatorjem"
-          notify_user:
-            one: "Vi in še {{count}} drug uporabnik sta poslala opozorilo avtorju"
-            two: "Vi in še {{count}} druga uporabnika ste poslali opozorilo avtorju"
-            few: "Vi in še {{count}} drugi uporabniki ste poslali opozorilo avtorju"
-            other: "Vi in še {{count}} drugih uporabnikov ste poslali opozorilo avtorju"
-          bookmark:
-            one: "Vi in {{count}} drug uporabnik je zaznamoval ta prispevek"
-            two: "Vi in {{count}} druga uporabnika sta zaznamovala ta prispevek"
-            few: "Vi in {{count}} drugi uporabniki je zaznamovalo ta prispevek"
-            other: "Vi in {{count}} drugih uporabnikov je zaznamovalo ta prispevek"
-          like:
-            one: "Vam in {{count}} drugemu uporabniku je prispevek všeč"
-            two: "Vam in {{count}} drugima uporabnikoma je prispevek všeč"
-            few: "Vam in {{count}} drugim uporabnikom je prispevek všeč"
-            other: "Vam in {{count}} drugim uporabnikom je prispevek všeč"
-        by_others:
-          off_topic:
-            one: "{{count}} uporabnik je prijavil kot ne ustreza temi"
-            two: "{{count}} uporabnika sta prijavila kot ne ustreza temi"
-            few: "{{count}} uporabniki so prijavili kot ne ustreza temi"
-            other: "{{count}} uporabnikov je prijavilo kot ne ustreza temi"
-          spam:
-            one: "{{count}} uporabnik je prijavil kot neželeno"
-            two: "{{count}} uporabnika sta prijavila kot neželeno"
-            few: "{{count}} uporabniki so prijavili kot neželeno"
-            other: "{{count}} uporabnikov je prijavilo kot neželeno"
-          inappropriate:
-            one: "{{count}} uporabnik je prijavil kot neprimerno"
-            two: "{{count}} uporabnika sta prijavila kot neprimerno"
-            few: "{{count}} uporabniki so prijavili kot neprimerno"
-            other: "{{count}} uporabnikov je prijavilo kot neprimerno"
-          notify_moderators:
-            one: "{{count}} uporabnik je ta prispevek prijavil moderatorjem"
-            two: "{{count}} uporabnika sta ta prispevek prijavila moderatorjem"
-            few: "{{count}} uporabniki so ta prispevek prijavili moderatorjem"
-            other: "{{count}} uporabnikov je ta prispevek prijavilo moderatorjem"
-          notify_user:
-            one: "{{count}} uporabnik je opozoril avtorja"
-            two: "{{count}} uporabnika sta opozorila avtorja"
-            few: "{{count}} uporabniki so opozorili avtorja"
-            other: "{{count}} uporabnikov je opozorilo avtorja"
-          bookmark:
-            one: "{{count}} uporabnik je zaznamoval ta prispevek"
-            two: "{{count}} uporabnika sta zaznamovala ta prispevek"
-            few: "{{count}} uporabniki so zaznamovali ta prispevek"
-            other: "{{count}} uporabnikov je zaznamovalo ta prispevek"
-          like:
-            one: "{{count}} uporabniku je všeč"
-            two: "{{count}} uporabnikoma je všeč"
-            few: "{{count}} uporabnikom je všeč"
-            other: "{{count}} uporabnikom je všeč"
       delete:
         confirm:
           one: "Ali ste prepričani da hočete izbrisati ta {{count}} prispevek?"
@@ -2522,6 +2457,8 @@ sl:
       default_top_period: "Privzeto obdobje za najboljše:"
       allow_badges_label: "Omogoči nagrajevanje z značkami v tej kategoriji"
       edit_permissions: "Uredi dovoljenja"
+      reviewable_by_group: "Poleg osebja bo prispevke in prijave v tej kategoriji lahko pregledoval tudi:"
+      review_group_name: "ime skupine"
       require_topic_approval: "Zahtevaj moderatorjevo potrditev vseh novih tem"
       require_reply_approval: "Zahteva odobritev moderatorja za vse nove odgovore"
       this_year: "to leto"
@@ -3022,7 +2959,6 @@ sl:
         title: "Seznam poročil"
       dashboard:
         title: "Nadzorna plošča"
-        last_updated: "Nadzorna plošča nazadnje osvežena:"
         version: "Verzija"
         up_to_date: "Imate zadnjo verzijo!"
         critical_available: "Nujna posodobitev je na voljo."
@@ -3097,6 +3033,13 @@ sl:
           no_data: "Ni podatkov za prikaz."
           trending_search:
             more: '<a href="%{basePath}/admin/logs/search_logs">Dnevnik iskanj</a>'
+          filters:
+            file-extension:
+              label: Pripona datoteke
+            group:
+              label: Skupina
+            category:
+              label: Kategorija
       groups:
         new:
           title: "Nova skupina"
@@ -3234,7 +3177,6 @@ sl:
         save: "Shrani"
         new: "Novi"
         delete: "Izbriši"
-        delete_confirm: "Izbriši ta videz?"
         color: "Barva"
         opacity: "Transparentnost"
         copy: "Kopiraj"
@@ -3256,6 +3198,8 @@ sl:
           create_type: "Tip"
           create_name: "Polno ime"
           edit: "Uredi"
+          update_confirm: "Te lokalne spremembe bodo izbrisane po nadgradnji. Ali ste prepričani, da želite nadaljevati?"
+          update_confirm_yes: "Da, nadaljuj z nadgradnjo"
           common: "Skupno"
           desktop: "Namizno"
           mobile: "Mobilno"
@@ -3695,17 +3639,30 @@ sl:
         title: "Nastavitve"
         no_results: "Iskanje nima zadetkov."
         clear_filter: "Počisti"
+        add_group: "dodaj skupino"
         uploaded_image_list:
           upload:
             label: "Naloži"
         categories:
           all_results: "Vsi"
+          required: "Zahtevano"
+          basic: "Osnovne nastavitve"
           users: "Uporabniki"
           posting: "Prispevki"
           email: "E-sporočila"
+          files: "Datoteke"
+          trust: "Nivo zaupanja"
           security: "Varnost"
+          onebox: "Onebox"
+          seo: "SEO"
+          spam: "Neželeno"
+          rate_limits: "Omejitve"
+          developer: "Razvijalci"
+          embedding: "Vdelovanje"
+          legal: "Pravno"
           api: "API"
-          uncategorized: "Druge"
+          user_api: "Uporabniški API"
+          uncategorized: "Drugo"
           backups: "Varnostne kopije"
           login: "Prijava"
           plugins: "Vtičniki"
@@ -3789,6 +3746,7 @@ sl:
         image: "Slika"
         delete_confirm: "Ali ste prepričani, da hočete izbrisati emoji :%{name}:?"
       embedding:
+        title: "Vdelovanje"
         edit: "uredi"
         category: "Objavi v kategorijo"
         embed_by_username: "Uporabniško ime za kreiranje teme"

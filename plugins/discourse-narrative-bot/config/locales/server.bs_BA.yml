@@ -107,11 +107,6 @@ bs_BA:
       random_mention:
         reply: |-
           Pozdrav! Kako bi saznali šta sve mogu raditi, recite  `@%{discobot_username} %{help_trigger}`.
-        tracks: |-
-          Trenutno znam kako uraditi sljedeće stvari:
-
-          `@%{discobot_username} %{reset_trigger} %{default_track}`
-          > Započinje jedno od ovih sljedećih dijaloga: %{tracks}.
         bot_actions: |-
           `@%{discobot_username} %{dice_trigger} 2d6`
           > :game_die: 3, 6
@@ -126,5 +121,3 @@ bs_BA:
           Hej, hvala za odgovor!
 
           Nažalost, kako sam programiran ograničenim mogućnostima, ne mogu jasno razumjeti na što ste mislili. :frowning:
-    new_user_narrative:
-      reset_trigger: "novi korisnik"

@@ -957,7 +957,6 @@ cs:
       new_topics: "Nová témata"
       unread_messages: "Nepřečtené zprávy"
       liked_received: "Obdržených 'líbí se'"
-      new_posts: "Nové příspěvky"
       new_users: "Noví uživatelé"
       popular_topics: "Populární témata"
       join_the_discussion: "Číst dále"
@@ -1131,9 +1130,7 @@ cs:
       icons:
         title: "Ikony"
         fields:
-          favicon:
-            label: "Malá ikona"
-          apple_touch_icon:
+          large_icon:
             label: "Velká ikona"
       homepage:
         title: "Domovská stránka"
@@ -1179,6 +1176,8 @@ cs:
         description: "Schovat tento příspěvek a automaticky poslat uživateli zprávu, aby ho urychleně upravil."
       delete_spammer:
         title: "Odstranit spamera"
+      delete_single:
+        title: "Smazat"
       disagree_and_restore:
         description: "Obnov příspěvek, aby ho mohli vidět všichni ostatní uživatelé."
       disagree:

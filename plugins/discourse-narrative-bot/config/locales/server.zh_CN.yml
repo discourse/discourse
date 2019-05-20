@@ -117,7 +117,7 @@ zh_CN:
           我现在知道怎么做这些：
 
           `@%{discobot_username} %{reset_trigger} %{default_track}`
-          > 试试这些交互模式：%{tracks}。
+          > 试试这些交互教程：%{tracks}。
         bot_actions: |-
           `@%{discobot_username} %{dice_trigger} 2d6`
           > :game_die: 3，6
@@ -131,7 +131,7 @@ zh_CN:
         first_response: |-
           你好，感谢回复！
 
-          不幸的是，我是别人随手写的机器人，我其实不太懂这个。:fronwing:
+          不幸的是，我是别人随手写的机器人，我其实不太懂这个。:frowning:
         track_response: 你可以再试一次，或者你想要跳过这个步骤，说`%{skip_trigger}`。不然的话，说`%{reset_trigger}`重新开始。
         second_response: |-
           啊，抱歉。我还是没懂。 :anguished:
@@ -140,8 +140,7 @@ zh_CN:
 
           同时，我不会再烦你。
     new_user_narrative:
-      reset_trigger: "新用户"
-      title: "新用户欢迎教程完毕证明"
+      reset_trigger: "教程"
       cert_title: "你已经成功完成新用户教程了"
       hello:
         title: "欢迎！"
@@ -154,6 +153,14 @@ zh_CN:
 
           - 我们始终相信[文明社区行为准则](%{base_uri}/guidelines)。
       onebox:
+        instructions: |-
+          接下来，你能分享下列链接给我么？回复**单独一行的链接**，然后它会自动展开显示一个有用的摘要。
+
+          要复制链接，在移动端点击并且保持，或者用你的鼠标右键：
+
+          <https://en.wikipedia.org/wiki/Inherently_funny_word>
+          <https://en.wikipedia.org/wiki/Death_by_coconut>
+          <https://en.wikipedia.org/wiki/Calculator_spelling>
         reply: |-
           酷！这对许多<img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-link.png" width="16" height="16">链接都管用。请记住，它必须占**单独的一行**，前后都没东西。
         not_found: |-
@@ -294,7 +301,7 @@ zh_CN:
       certificate:
         alt: '成就证明'
     advanced_user_narrative:
-      reset_trigger: '高级用户'
+      reset_trigger: '高级教程'
       cert_title: "你已经成功完成高级用户教程了"
       title: ':arrow_up: 高级用户特性'
       start_message: |-
@@ -334,10 +341,6 @@ zh_CN:
           你可以帮我<img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-rotate-left.png" width="16" height="16">**恢复**它么？
         not_found: |-
           碰到麻烦了？记住点击<img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16">显示更多可以找到<img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-rotate-left.png" width="16" height="16">恢复按钮。
-        reply: |-
-          呼，差点啊！感谢你帮忙 :wink:
-
-          注意你只有 24 小时时间恢复一个帖子。
       category_hashtag:
         instructions: |-
           你知道你可以在你的帖子中提到分类和标签么？例如，你看到过%{category}分类了吗？

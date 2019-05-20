@@ -307,6 +307,15 @@ de:
         search: "Suche eine Nachricht anhand der Überschrift:"
         placeholder: "Gib hier die Überschrift der Nachricht ein"
     review:
+      claim_help:
+        optional: "Du kannst dieses Element reservieren, damit andere es nicht überprüfen."
+        required: "Du musst Elemente reservieren, bevor du sie überprüfen kannst."
+        claimed_by_you: "Du hast dieses Element reserviert und kannst es überprüfen."
+        claimed_by_other: "Dieses Element kann nur von <b>{{username}}</b> überprüft werden."
+      claim:
+        title: "Reserviere dieses Thema"
+      unclaim:
+        help: "Entferne diese Reservierung"
       awaiting_approval: "Wartet auf Genehmigung"
       delete: "Löschen"
       settings:
@@ -324,11 +333,13 @@ de:
       topic_has_pending:
         one: "Dieses Thema hat <b>1</b> Beitrag, der auf Genehmigung wartet."
         other: "Dieses Thema hat <b>{{count}}</b> Beiträge, die auf Genehmigung warten."
-      title: "Überprüfung nötig"
+      title: "Überprüfen"
       topic: "Thema:"
       filtered_topic: "Du hast nach zu prüfenden Inhalten in einem einzelnen Thema gefiltert."
       filtered_user: "Benutzer:"
       show_all_topics: "Zeige alle Themen"
+      deleted_post: "Beitrag gelöscht"
+      deleted_user: "Benutzer gelöscht"
       user:
         username: "Benutzername"
         email: "E-Mail"
@@ -372,9 +383,15 @@ de:
         refresh: "Aktualisieren"
         status: "Status:"
         category: "Kategorie:"
+        priority:
+          title: "Minimale Priorität:"
+          low: "Niedrig"
+          medium: "Mittel"
+          high: "Hoch"
       conversation:
         view_full: "zeige vollständige Unterhaltung"
       scores:
+        about: "Dieser Wert wird basierend auf der Vertrauensstufe des Meldenden, der Richtigkeit der vorhergehenden Meldungen sowie der Priorität des gemeldeten Elements errechnet."
         score: "Wertung"
         date: "Datum"
         type: "Typ"
@@ -668,12 +685,15 @@ de:
       private_messages: "Nachrichten"
       user_notifications:
         ignore_duration_title: "Zeitschaltuhr ignorieren"
+        ignore_duration_username: "Benutzername"
         ignore_duration_when: "Dauer:"
         ignore_duration_save: "Ignorieren"
         ignore_duration_note: "Bitte beachte, dass alle Ignorierungen automatisch entfernt werden, wenn die Ignorierungsdauer verstreicht."
         ignore_duration_time_frame_required: "Bitte wähle einen Zeitrahmen aus"
+        ignore_no_users: "Du hast keine Benutzer ignoriert."
         ignore_option: "Ignoriert"
         ignore_option_title: "Du wirst keine Benachrichtigungen zu diesem Benutzer erhalten, und seine Themen und Antworten werden ausgeblendet."
+        add_ignored_user: "Hinzufügen..."
         mute_option: "Stummgeschaltet"
         mute_option_title: "Du wirst keine Benachrichtigungen zu diesem Benutzer bekommen."
         normal_option: "Normal"
@@ -1414,7 +1434,7 @@ de:
       remove_featured_link: "Link aus Thema entfernen."
       reply_placeholder: "Schreib hier. Verwende Markdown, BBCode oder HTML zur Formatierung. Füge Bilder ein oder ziehe sie herein."
       reply_placeholder_no_images: "Schreib hier. Verwende Markdown, BBCode oder HTML zur Formatierung."
-      reply_placeholder_choose_category: "Du musst eine Kategorie auswählen, bevor du hier schreiben kannst."
+      reply_placeholder_choose_category: "Wähle vor dem Tippen eine Kategorie."
       view_new_post: "Sieh deinen neuen Beitrag an."
       saving: "Wird gespeichert"
       saved: "Gespeichert!"
@@ -1497,6 +1517,8 @@ de:
       none: "Die Benachrichtigungen können derzeit nicht geladen werden."
       empty: "Keine Benachrichtigungen gefunden."
       more: "ältere Benachrichtigungen anzeigen"
+      post_approved: "Dein Beitrag wurde genehmigt."
+      reviewable_items: "Elemente, die eine Überprüfung benötigen"
       mentioned: "<span>{{username}}</span> {{description}}"
       group_mentioned: "<span>{{username}}</span> {{description}}"
       quoted: "<span>{{username}}</span> {{description}}"
@@ -1535,6 +1557,7 @@ de:
         watching_first_post: '{{username}} hat ein neues Thema "{{topic}}" - {{site_title}} erstellt'
         confirm_title: "Benachrichtigungen aktiviert – %{site_title}"
         confirm_body: "Erfolgreich! Benachrichtigungen wurden aktiviert."
+        custom: "Benachrichtigung von {{username}} auf %{site_title}"
     upload_selector:
       title: "Ein Bild hinzufügen"
       title_with_attachments: "Ein Bild oder eine Datei hinzufügen"
@@ -1817,7 +1840,6 @@ de:
         jump_bottom: "springe zum letzten Beitrag"
         jump_prompt: "springe zu..."
         jump_prompt_of: "von %{count} Beiträgen"
-        jump_prompt_long: "Zu welchem Beitrag möchtest du springen?"
         jump_bottom_with_number: "springe zu Beitrag %{post_number}"
         jump_prompt_to_date: "zu Datum"
         jump_prompt_or: "oder"
@@ -2144,6 +2166,8 @@ de:
         delete_topic_disallowed_modal: "Du hast keine Berechtigung, dieses Thema zu löschen. Wenn du wirklich möchtest, dass es gelöscht wird, melde es mit einer Begründung, um einen Moderator darauf aufmerksam zu machen."
         delete_topic_disallowed: "du hast keine Berechtigung, dieses Thema zu löschen"
         delete_topic: "Thema löschen"
+        add_post_notice: "Team Notiz hinzufügen"
+        remove_post_notice: "Team Notiz entfernen"
       actions:
         flag: "Melden"
         defer_flags:
@@ -2174,50 +2198,6 @@ de:
           notify_user: "Du hast diesem Benutzer eine Nachricht gesendet"
           bookmark: "Du hast bei diesem Beitrag ein Lesezeichen gesetzt"
           like: "Dir gefällt dieser Beitrag"
-        by_you_and_others:
-          off_topic:
-            one: "Du und eine weitere Person haben das als „am Thema vorbei“ gemeldet"
-            other: "Du und {{count}} weitere Personen haben das als „am Thema vorbei“ gemeldet"
-          spam:
-            one: "Du und eine weitere Person haben das als Spam gemeldet"
-            other: "Du und {{count}} weitere Personen haben das als Spam gemeldet"
-          inappropriate:
-            one: "Du und eine weitere Person haben das als Unangemessen gemeldet"
-            other: "Du und {{count}} weitere Personen haben das als Unangemessen gemeldet"
-          notify_moderators:
-            one: "Du und eine weitere Person haben dies den Moderatoren gemeldet"
-            other: "Du und {{count}} weitere Personen haben dies den Moderatoren gemeldet"
-          notify_user:
-            one: "Du und eine weitere Person haben diesem Benutzer eine Nachricht gesendet"
-            other: "Du und {{count}} weitere Personen haben diesem Benutzer eine Nachricht gesendet"
-          bookmark:
-            one: "Du und eine weitere Person haben bei diesem Beitrag ein Lesezeichen gesetzt"
-            other: "Du und {{count}} weitere Personen haben bei diesem Beitrag ein Lesezeichen gesetzt"
-          like:
-            one: "Dir und einer weiteren Person gefällt dieser Beitrag"
-            other: "Dir und {{count}} weiteren Personen gefällt dieser Beitrag"
-        by_others:
-          off_topic:
-            one: "Eine Person hat das als „am Thema vorbei“ gemeldet"
-            other: "{{count}} Personen haben das als „am Thema vorbei“ gemeldet"
-          spam:
-            one: "Eine Person hat das als Spam gemeldet"
-            other: "{{count}} Personen haben das als Spam gemeldet"
-          inappropriate:
-            one: "Eine Person hat das als Unangemessen gemeldet"
-            other: "{{count}} Personen haben das als Unangemessen gemeldet"
-          notify_moderators:
-            one: "Eine Person hat dies den Moderatoren gemeldet"
-            other: "{{count}} Personen haben dies den Moderatoren gemeldet"
-          notify_user:
-            one: "Eine Person hat diesem Benutzer eine Nachricht gesendet"
-            other: "{{count}} Personen haben diesem Benutzer eine Nachricht gesendet"
-          bookmark:
-            one: "Eine Person hat bei diesem Beitrag ein Lesezeichen gesetzt"
-            other: "{{count}} Personen haben bei diesem Beitrag ein Lesezeichen gesetzt"
-          like:
-            one: "Einer Person gefällt dieser Beitrag"
-            other: "{{count}} Personen gefällt dieser Beitrag"
       delete:
         confirm:
           one: "Möchtest du wirklich diesen Beitrag löschen?"
@@ -2324,6 +2304,8 @@ de:
       default_top_period: "Standard-Zeitraum für Top-Beiträge:"
       allow_badges_label: "Erlaube das Verleihen von Abzeichen in dieser Kategorie."
       edit_permissions: "Berechtigungen bearbeiten"
+      reviewable_by_group: "Zusätzlich zum Team können Beiträge und Meldungen in dieser Kategorie auch überprüft werden von:"
+      review_group_name: "Gruppenname"
       require_topic_approval: "Erfordere Moderator-Genehmigung für alle neuen Themen"
       require_reply_approval: "Erfordere Moderator-Genehmigung für alle neuen Antworten"
       this_year: "dieses Jahr"
@@ -2564,6 +2546,12 @@ de:
       readonly: "Ansehen"
     lightbox:
       download: "herunterladen"
+      previous: "Vorhergehend (linke Pfeiltaste)"
+      next: "Nächste (rechte Pfeiltaste)"
+      counter: "%curr% von %total% "
+      close: "Schließen (Esc)"
+      content_load_error: '<a href="%url%">Der Inhalt</a> konnte nicht geladen werden.'
+      image_load_error: '<a href="%url%">Das Bild</a> konnte nicht geladen werden. '
     keyboard_shortcuts_help:
       title: "Tastenkombinationen"
       jump_to:
@@ -2770,7 +2758,6 @@ de:
         title: "Verfügbare Berichte"
       dashboard:
         title: "Übersicht"
-        last_updated: "Übersicht zuletzt aktualisiert:"
         version: "Version"
         up_to_date: "Du verwendest die neueste Version!"
         critical_available: "Ein kritisches Update ist verfügbar."
@@ -2844,6 +2831,13 @@ de:
           trending_search:
             more: '<a href="%{basePath}/admin/logs/search_logs">Suchprotokoll</a>'
             disabled: 'Der Bericht über beliebte Suchen ist deaktiviert. Aktiviere <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">Suchanfragen protokollieren</a>, um die Daten zu erheben.'
+          filters:
+            file-extension:
+              label: Dateiendung
+            group:
+              label: Gruppe
+            category:
+              label: Kategorie
       commits:
         latest_changes: "Letzte Änderungen: bitte häufig updaten!"
         by: "von"
@@ -3106,7 +3100,6 @@ de:
         new_style: "Neuer Style"
         install: "Installieren"
         delete: "Löschen"
-        delete_confirm: "Dieses Theme löschen?"
         color: "Farbe"
         opacity: "Transparenz"
         copy: "Kopieren"
@@ -3140,6 +3133,8 @@ de:
           long_title: "Farben, CSS und HTML-Inhalte deiner Seite erweitern"
           edit: "Bearbeiten"
           edit_confirm: "Dies ist ein Remote-Theme, wenn du CSS/HTML bearbeitest, werden deine Änderungen zurückgesetzt, wenn du das Theme das nächste Mal aktualisierst."
+          update_confirm: "Diese lokalen Änderungen werden vom Update gelöscht. Bist du sicher, dass du fortfahren willst?"
+          update_confirm_yes: "Ja, fahrte mit dem Update fort"
           common: "Gemeinsam"
           desktop: "Desktop"
           mobile: "Mobil"
@@ -3471,6 +3466,7 @@ de:
             web_hook_create: "Webhook anlegen"
             web_hook_update: "Webhook aktualisieren"
             web_hook_destroy: "Webhook entfernen"
+            web_hook_deactivate: "Webhook deaktivieren"
             embeddable_host_create: "Einbettbaren Host erstellen"
             embeddable_host_update: "Einbettbaren Host aktualisieren"
             embeddable_host_destroy: "Einbettbaren Host entfernen"
@@ -3809,6 +3805,7 @@ de:
         clear_filter: "Filter zurücksetzen"
         add_url: "URL hinzufügen"
         add_host: "Host hinzufügen"
+        add_group: "Gruppe hinzufügen"
         uploaded_image_list:
           label: "Liste bearbeiten"
           empty: "Es gibt noch keine Bilder. Bitte lade eines hoch."
@@ -3820,6 +3817,7 @@ de:
         categories:
           all_results: "Alle"
           required: "Erforderlich"
+          branding: "Branding"
           basic: "Grundeinstellungen"
           users: "Benutzer"
           posting: "Beiträge"
@@ -3957,6 +3955,7 @@ de:
         save: "Einbettungseinstellungen speichern"
       permalink:
         title: "Permanentlinks"
+        description: "Bitte beachte: dies trifft nur auf externe Quellen zu, in deinem Forum gepostete Links werden nicht umgeleitet."
         url: "URL"
         topic_id: "Themen-ID"
         topic_title: "Thema"

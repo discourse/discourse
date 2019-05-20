@@ -289,7 +289,6 @@ fa_IR:
       settings:
         save_changes: "ذخیره تغییرات"
         title: "تنظیمات"
-      title: "نیاز ها برای برسی"
       topic: "موضوع:"
       user:
         username: "نام‌کاربری"
@@ -548,6 +547,7 @@ fa_IR:
       private_message: "پیام"
       private_messages: "پیام‌ها"
       user_notifications:
+        ignore_duration_username: "نام‌کاربری"
         ignore_duration_save: "چشم پوشی"
         mute_option: "بی صدا شد"
         normal_option: "معمولی"
@@ -1433,7 +1433,6 @@ fa_IR:
         jump_bottom: "پرش به آخرین نوشته"
         jump_prompt: "پرش به..."
         jump_prompt_of: "از %{count} نوشته"
-        jump_prompt_long: "می‌خواهید به کدام نوشته منتقل شوید؟"
         jump_bottom_with_number: "رفتن به نوشته ی %{post_number}"
         jump_prompt_or: "یا"
         total: همه نوشته‌ها
@@ -1721,50 +1720,6 @@ fa_IR:
           notify_user: "شما یک پیام به این کاربر ارسال کردید"
           bookmark: "شما  روی این نوشته نشانک گذاشتید"
           like: "شما این نوشته را پسند کردید"
-        by_you_and_others:
-          off_topic:
-            one: "شما و {{count}} کاربر دیگر این مورد را خارج از بحث گزارش کردید"
-            other: "شما و {{count}} کاربر دیگر این مورد را خارج از بحث گزارش کردید"
-          spam:
-            one: "شما و {{count}} کاربر دیگر این مورد را هرزنامه گزارش کردید"
-            other: "شما و {{count}} کاربر دیگر این مورد را هرزنامه گزارش کردید"
-          inappropriate:
-            one: "شما و {{count}} کاربر دیگر این مورد را نامناسب گزارش کردید"
-            other: "شما و {{count}} کاربر دیگر این مورد را نامناسب گزارش کردید"
-          notify_moderators:
-            one: "شما و {{count}} کاربر دیگر این مورد را برای بررسی گزارش کردید"
-            other: "شما و {{count}} کاربر دیگر این مورد را برای بررسی گزارش کردید"
-          notify_user:
-            one: "شما و {{count}} افراد دیگر به این کاربر پیام فرستاده اید"
-            other: "شما و {{count}} افراد دیگر به این کاربر پیام فرستاده اید"
-          bookmark:
-            one: "شما و {{count}} کاربر دیگر روی این نوشته نشانک گذاشتید"
-            other: "شما و {{count}} کاربر دیگر روی این نوشته نشانک گذاشتید"
-          like:
-            one: "شما و {{count}} کاربر دیگر این مورد را پسند کردید"
-            other: "شما و {{count}} کاربر دیگر این مورد را پسند کردید"
-        by_others:
-          off_topic:
-            one: "{{count}} کاربر ین مورد را خارج از بحث گزارش کردند"
-            other: "{{count}} کاربر ین مورد را خارج از بحث گزارش کردند"
-          spam:
-            one: "{{count}} کاربر ین مورد را هرزنامه گزارش کردند"
-            other: "{{count}} کاربر ین مورد را هرزنامه گزارش کردند"
-          inappropriate:
-            one: "{{count}} کاربر این مورد را نامناسب گزارش کردند"
-            other: "{{count}} کاربر این مورد را نامناسب گزارش کردند"
-          notify_moderators:
-            one: "{{count}} کاربر این مورد را برای بررسی گزارش کردند"
-            other: "{{count}} کاربر این مورد را برای بررسی گزارش کردند"
-          notify_user:
-            one: "{{count}} ارسال پیام به این کاربر"
-            other: "{{count}} ارسال پیام به این کاربر"
-          bookmark:
-            one: "{{count}} کاربر روی این نوشته نشانک گذاشتند"
-            other: "{{count}} کاربر روی این نوشته نشانک گذاشتند"
-          like:
-            one: "{{count}} کاربر این مورد را پسند کردند"
-            other: "{{count}} کاربر این مورد را پسند کردند"
       revisions:
         controls:
           first: "بازبینی نخست"
@@ -1850,6 +1805,7 @@ fa_IR:
       default_top_period: "دوره زمانی پیشفرض برترین‌ها:"
       allow_badges_label: "امکان  اهدای نشان در این دسته‌بندی را بده"
       edit_permissions: "ویرایش دسترسی‌ها"
+      review_group_name: "نام گروه"
       this_year: "امسال"
       default_position: "موقعیت پیش‌فرض"
       position_disabled: "دسته‌‌بندی‌ها به‌ترتیب فعالیت نمایش داده می‌شوند. برای کنترل ترتیب دسته‌بندی‌ها"
@@ -2249,7 +2205,6 @@ fa_IR:
       moderator: "مدیر"
       dashboard:
         title: "پیشخوان"
-        last_updated: "آخرین به‌ روزرسانی پیشخوان"
         version: "نسخه"
         up_to_date: "شما به روز هستید!"
         critical_available: "به روز رسانی مهم در دسترس است."
@@ -2294,6 +2249,11 @@ fa_IR:
           start_date: "تاریخ شروع"
           end_date: "تاریخ پایان"
           groups: "همه گروه‌ها"
+          filters:
+            group:
+              label: گروه
+            category:
+              label: دسته‌بندی
       commits:
         latest_changes: "آخرین تغییرات: لطفا بیشتر به‌روز‌رسانی کنید!"
         by: "توسط"
@@ -2513,7 +2473,6 @@ fa_IR:
         new: "تازه"
         new_style: "سبک جدید"
         delete: "پاک کردن"
-        delete_confirm: "حذف قالب"
         color: "رنگ"
         opacity: "تاری"
         copy: "کپی"

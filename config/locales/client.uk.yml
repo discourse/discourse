@@ -178,7 +178,6 @@ uk:
       settings:
         save_changes: "Зберегти зміни"
         title: "Налаштування"
-      title: "Потребує перегляду"
       topic: "Тема:"
       user:
         username: "Ім'я користувача"
@@ -344,6 +343,7 @@ uk:
       private_message: "Повідомлення"
       private_messages: "Повідомлення"
       user_notifications:
+        ignore_duration_username: "Ім'я користувача"
         mute_option: "Ігнорувати"
       activity_stream: "Активність"
       preferences: "Налаштування"
@@ -1052,6 +1052,7 @@ uk:
       email_in: "Custom incoming email address:"
       allow_badges_label: "Дозволити нагороджувати значками у цій категорії"
       edit_permissions: "Редагувати дозволи"
+      review_group_name: "назва групи"
       this_year: "цього року"
       default_position: "Default Position"
       parent: "Батьківська категорія"
@@ -1241,7 +1242,6 @@ uk:
       moderator: "Модератор"
       dashboard:
         title: "Майстерня"
-        last_updated: "Майстерню востаннє оновлено:"
         version: "Версія"
         up_to_date: "У вас остання версія!"
         critical_available: "Доступне критичне оновлення."
@@ -1274,6 +1274,11 @@ uk:
           all: "Все"
           start_date: "Дата початку"
           end_date: "Дата завершення"
+          filters:
+            group:
+              label: Група
+            category:
+              label: Категорія
       commits:
         latest_changes: "Останні зміни: оновлюйте Вашу копію часто!"
         by: "від"

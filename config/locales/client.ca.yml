@@ -531,6 +531,7 @@ ca:
       private_message: "Missatge"
       private_messages: "Missatges"
       user_notifications:
+        ignore_duration_username: "Nom de persona usuària"
         mute_option: "Silenciades"
         normal_option: "Normal"
       activity_stream: "Activitat"
@@ -1384,7 +1385,6 @@ ca:
         jump_bottom: "salta a la darrera publicació"
         jump_prompt: "salta a..."
         jump_prompt_of: "de %{count} publicacions"
-        jump_prompt_long: "A quina publicació voldries saltar?"
         jump_bottom_with_number: "salta a la publicació "
         jump_prompt_or: "o"
         total: total de publicacions
@@ -1670,50 +1670,6 @@ ca:
           notify_user: "Has enviat un missatge a aquesta persona"
           bookmark: "Has marcat aquesta publicació com a preferit"
           like: "Això t'ha agradat"
-        by_you_and_others:
-          off_topic:
-            one: "Tu i 1 altra persona més heu marcat això amb bandera de fora de context"
-            other: "Tu i {{count}} persones més heu marcat això amb bandera de fora de context"
-          spam:
-            one: "Tu i 1 persona més heu marcat això amb bandera de brossa"
-            other: "Tu i {{count}} persones més heu marcat això amb bandera de brossa"
-          inappropriate:
-            one: "Tu i 1 persona més heu marcat això amb bandera d'inapropiat"
-            other: "Tu i {{count}} persones més heu marcat això amb bandera d'inapropiat"
-          notify_moderators:
-            one: "Tu i 1 persona més heu marcat això amb bandera per moderar"
-            other: "Tu i {{count}} persones més heu marcat això amb bandera per moderar"
-          notify_user:
-            one: "Tu i 1 persona més li heu enviat un missatge"
-            other: "Tu i {{count}} persones més li heu enviat un missatge"
-          bookmark:
-            one: "Tu i 1 persona més heu marcat aquesta publicació com a preferit"
-            other: "Tu i {{count}} persones més heu marcat aquesta publicació com a preferit"
-          like:
-            one: "Aquesta publicació us ha agradat a tu i a 1 persona més"
-            other: "Aquesta publicació us ha agradat a tu i a {{count}} persones més"
-        by_others:
-          off_topic:
-            one: "1 person ha marcat aquesta publicació amb bandera de fora de context"
-            other: "{{count}} persones han marcat aquesta publicació amb bandera de fora de context"
-          spam:
-            one: "1 persona ha marcat aquesta publicació amb bandera de brossa"
-            other: "{{count}} persones han marcat aquesta publicació amb bandera de brossa"
-          inappropriate:
-            one: "1 persona ha marcat aquesta publicació amb bandera d'inapropiat"
-            other: "{{count}} persones han marcat aquesta publicació amb bandera d'inapropiat"
-          notify_moderators:
-            one: "1 persona ha marcat aquesta publicació per moderar"
-            other: "{{count}} persones han marcat aquesta publicació per moderar"
-          notify_user:
-            one: "1 ha enviat un missatge a aquesta persona"
-            other: "{{count}} han enviat un missatge a aquesta persona"
-          bookmark:
-            one: "1 persona ha marcat aquesta publicació com a preferit"
-            other: "{{count}} persones han marcat aquesta publicació com a preferit"
-          like:
-            one: "això ha agradat a 1 persona"
-            other: "això ha agradat a {{count}} persones"
       revisions:
         controls:
           first: "Primera revisió"
@@ -1791,6 +1747,7 @@ ca:
       subcategory_list_style: "Estil de llista de la subcategoria:"
       allow_badges_label: "Permet concedir distintius dins aquesta categoria"
       edit_permissions: "Edita permisos"
+      review_group_name: "nom del grup"
       this_year: "aquest any"
       default_position: "Posició per defecte"
       position_disabled: "Les categories es mostraran per ordre d'activitat. Per controlar l'ordre de les categories en llistes, "
@@ -2181,7 +2138,6 @@ ca:
       moderator: "Moderació"
       dashboard:
         title: "Tauler de control"
-        last_updated: "Darrera actualització del tauler de control"
         version: "Versió"
         up_to_date: "Estàs al dia!"
         critical_available: "Hi ha una actualització important."
@@ -2225,6 +2181,11 @@ ca:
           start_date: "Data d'inici"
           end_date: "Finalitza data"
           groups: "Tots els grups"
+          filters:
+            group:
+              label: Grup
+            category:
+              label: Categoria
       commits:
         latest_changes: "Darrers canvis: si us plau actualitza sovint!"
         by: "per"

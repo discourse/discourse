@@ -109,8 +109,12 @@ fi:
       next_month: "Seuraava kuukausi"
       placeholder: päivämäärä
     share:
+      topic_html: 'Ketju: <span class="topic-title">%{topicTitle}</span>'
       post: "%{postNumber}. viesti"
       close: "sulje"
+      twitter: "Jaa linkki Twitterissä"
+      facebook: "Jaa linkki Facebookissa"
+      email: "Jaa linkki sähköpostissa"
     action_codes:
       public_topic: "teki ketjusta julkisen %{when}"
       private_topic: "muutti ketjun yksityiskeskusteluksi %{when}"
@@ -156,14 +160,18 @@ fi:
         ap_south_1: "Aasia ja Tyynimeri (Mumbai)"
         ap_southeast_1: "Aasia ja Tyynimeri (Singapore)"
         ap_southeast_2: "Aasia ja Tyynimeri (Sydney)"
+        ca_central_1: "Kanada (keskinen)"
         cn_north_1: "Kiina (Peking)"
         cn_northwest_1: "Kiina (Ningxia)"
         eu_central_1: "EU (Frankfurt)"
+        eu_north_1: "EU (Tukholma)"
         eu_west_1: "EU (Irlanti)"
         eu_west_2: "EU (Lontoo)"
         eu_west_3: "EU (Pariisi)"
+        sa_east_1: "Etelä-Amerikka (São Paulo)"
         us_east_1: "itäinen USA (Pohjois-Virginia)"
         us_east_2: "Itäinen USA (Ohio)"
+        us_gov_east_1: "AWS GovCloud (Itä-USA)"
         us_gov_west_1: "AWS GovCloud (USA)"
         us_west_1: "Läntinen USA (Pohjois-Kalifornia)"
         us_west_2: "Läntinen USA (Oregon)"
@@ -207,6 +215,8 @@ fi:
     every_hour: "tunnin välein"
     daily: "päivittäin"
     weekly: "viikottain"
+    every_month: "kuukausittain"
+    every_six_months: "puolen vuoden välein"
     max_of_count: "korkeintaan {{count}}"
     alternation: "tai"
     character_count:
@@ -297,17 +307,57 @@ fi:
         search: "Etsi keskustelua otsikon perusteella:"
         placeholder: "kirjoita keskustelun otsikko tähän"
     review:
+      claim_help:
+        optional: "Voit vaatia tämän itsellesi, jolloin muut eivät voi käsitellä sitä."
+        required: "Sinun täytyy osoittaa asia itsellesi ennen kuin voit käsitellä sen."
+        claimed_by_you: "Osoitit tämän itsellesi ja voit nyt käsitellä sen."
+        claimed_by_other: "Tämän voi käsitellä vain <b>{{username}}</b>."
+      claim:
+        title: "osoita ketju itsellesi"
+      unclaim:
+        help: "peru osoitus"
+      awaiting_approval: "Odottaa hyväksyntä"
       delete: "Poista"
       settings:
+        saved: "Tallennettu"
         save_changes: "Tallenna muutokset"
         title: "Asetukset"
+        score_bonuses:
+          title: "Pisteytysbonukset"
+          description: "Bonuksilla voi painottaa tietyntyyppisiä toisten yli. Huomioi: arvojen muuttaminen ei vaikuta aiemmin pisteytettyihin."
       moderation_history: "Valvontahistoria"
-      title: "Arvioitava"
+      view_all: "Katso kaikki"
+      grouped_by_topic: "Järjestetty ketjun mukaan"
+      none: "Ei ole tarkastettavaa."
+      view_pending: "tarkastele jonoa"
+      topic_has_pending:
+        one: "<b>1</b>  viesti tähän ketjuun odottaa hyväksyntää"
+        other: "<b>{{count}}</b> viestiä tähän ketjuun odottaa hyväksyntää"
+      title: "Käsittele"
       topic: "Ketju:"
+      filtered_topic: "Olet suodattanut käsiteltävän sisällön yhdestä ketjusta."
+      filtered_user: "Käyttäjä"
+      show_all_topics: "näytä kaikki ketjut"
+      deleted_post: "(viesti poistettu)"
+      deleted_user: "(käyttäjä poistettu)"
       user:
         username: "Käyttäjätunnus"
         email: "Sähköposti"
         name: "Nimi"
+        fields: "Kentät"
+      user_percentage:
+        summary:
+          one: "{{agreed}}, {{disagreed}}, {{ignored}} ({{count}} lippu kaikkiaan)"
+          other: "{{agreed}}, {{disagreed}}, {{ignored}} ({{count}} lippua kaikkiaan)"
+        agreed:
+          one: "{{count}}% samaa mieltä"
+          other: "{{count}}% samaa mieltä"
+        disagreed:
+          one: "{{count}}% eri mieltä"
+          other: "{{count}}% eri mieltä"
+        ignored:
+          one: "{{count}}% sivuutettu"
+          other: "{{count}}% sivuutettu"
       topics:
         topic: "Ketju"
         reviewable_count: "Lukumäärä"
@@ -582,6 +632,7 @@ fi:
       private_message: "Viesti"
       private_messages: "Viestit"
       user_notifications:
+        ignore_duration_username: "Käyttäjätunnus"
         ignore_duration_save: "Sivuuta"
         mute_option: "Vaimenna"
         normal_option: "Normaali"
@@ -857,6 +908,8 @@ fi:
         every_hour: "tunneittain"
         daily: "päivittäin"
         weekly: "viikottain"
+        every_month: "kuukausittain"
+        every_six_months: "puolen vuoden välein"
       email_level:
         title: "Lähetä minulle sähköposti, jos joku lainaa viestiäni, vastaa viestiini, maintsee @nimeni tai kutsuu minut viestiketjuun"
         always: "aina"
@@ -1292,7 +1345,6 @@ fi:
       remove_featured_link: "Poista ketjulinkki"
       reply_placeholder: "Kirjoita tähän. Käytä Markdownia, BBCodea tai HTML:ää muotoiluun. Raahaa tai liitä kuvia."
       reply_placeholder_no_images: "Kirjoita tähän. Muotoile Markdown, BBCode tai HTML-syntaksilla."
-      reply_placeholder_choose_category: "Valitse alue ennen kuin kirjoitat tähän."
       view_new_post: "Katsele uutta viestiäsi."
       saving: "Tallennetaan"
       saved: "Tallennettu!"
@@ -1691,7 +1743,6 @@ fi:
         jump_bottom: "hyppää viimeisimpään viestiin"
         jump_prompt: "hyppää..."
         jump_prompt_of: "%{count} viestistä"
-        jump_prompt_long: "Mihin viestiin haluat siirtyä?"
         jump_bottom_with_number: "hyppää viestiin %{post_number}"
         jump_prompt_to_date: "päivämäärään"
         jump_prompt_or: "tai"
@@ -2038,50 +2089,6 @@ fi:
           notify_user: "Lähetit viestin tälle käyttäjälle"
           bookmark: "Olet lisännyt viestin kirjainmerkkeihisi"
           like: "Tykkäsit tästä"
-        by_you_and_others:
-          off_topic:
-            one: "Sinä ja toinen käyttäjä liputitte tämän eksyvän aiheesta"
-            other: "Sinä ja {{count}} muuta liputitte tämän eksyvän aiheesta"
-          spam:
-            one: "Sinä ja toinen käyttäjä liputitte tämän roskapostiksi"
-            other: "Sinä ja {{count}} muuta liputitte tämän roskapostiksi"
-          inappropriate:
-            one: "Sinä ja toinen käyttäjä liputitte tämän sopimattomaksi"
-            other: "Sinä ja {{count}} muuta liputitte tämän sopimattomaksi"
-          notify_moderators:
-            one: "Sinä ja toinen käyttäjä liputitte tämän valvojille tiedoksi"
-            other: "Sinä ja {{count}} muuta liputitte tämän valvojille tiedoksi"
-          notify_user:
-            one: "Sinä ja toinen käyttäjä lähetitte tälle käyttäjälle yksityisviestin"
-            other: "Sinä ja {{count}} muuta lähetitte tälle käyttäjälle viestin"
-          bookmark:
-            one: "Sinä ja toinen käyttäjä lisäsitte tämän kirjanmerkkeihinne"
-            other: "Sinä ja {{count}} muuta lisäsitte tämän kirjanmerkkeihinne"
-          like:
-            one: "Sinä ja toinen käyttäjä tykkäsitte tästä"
-            other: "Sinä ja {{count}} muuta tykkäsitte tästä"
-        by_others:
-          off_topic:
-            one: "Yksi liputti tämän eksyvän aiheesta"
-            other: "{{count}} käyttäjää liputtivat tämän eksyvän aiheesta"
-          spam:
-            one: "yksi käyttäjä liputti tämän roskapostiksi"
-            other: "{{count}} käyttäjää liputti tämän roskapostiksi"
-          inappropriate:
-            one: "yksi liputti tämän sopimattomaksi"
-            other: "{{count}} käyttäjää liputti tämän sopimattomaksi"
-          notify_moderators:
-            one: "yksi käyttäjä liputti tämän tiedoksi valvojille"
-            other: "{{count}} käyttäjää liputti tämän tiedoksi valvojille"
-          notify_user:
-            one: "1 henkilö lähetti tälle käyttäjälle yksityisviestin"
-            other: "{{count}} henkilöä on lähettänyt tälle käyttäjälle yksityisviestin"
-          bookmark:
-            one: "yksi käyttäjä lisäsi tämän viestin kirjanmerkkeihinsä"
-            other: "{{count}} käyttäjää lisäsi tämän veistin kirjanmerkkeihinsä"
-          like:
-            one: "yksi käyttäjä tykkäsi tästä"
-            other: "{{count}} käyttäjää tykkäsi tästä"
       delete:
         confirm:
           one: "Oletko varma, että haluat poistaa viestin?"
@@ -2180,6 +2187,7 @@ fi:
       default_top_period: "Kuumat-listauksen oletusajanjakso:"
       allow_badges_label: "Salli ansiomerkkien myöntäminen tältä alueelta"
       edit_permissions: "Muokkaa oikeuksia"
+      review_group_name: "ryhmän nimi"
       require_topic_approval: "Edellytä valvojan hyväksyntää kaikille uusille ketjuille"
       require_reply_approval: "Edellytä valvojan hyväksyntää kaikille uusille vastauksille"
       this_year: "tänä vuonna"
@@ -2623,7 +2631,6 @@ fi:
         title: "Saatavilla olevat raportit"
       dashboard:
         title: "Hallintapaneeli"
-        last_updated: "Hallintapaneeli on päivitetty viimeksi:"
         version: "Versio"
         up_to_date: "Sivusto on ajan tasalla!"
         critical_available: "Kriittinen päivitys on saatavilla."
@@ -2697,6 +2704,11 @@ fi:
           trending_search:
             more: '<a href="%{basePath}/admin/logs/search_logs">Hakulokit</a>'
             disabled: 'Trendaavat haut eivät ole käytössä. Kerää dataa ottamalla käyttöön asetus <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">log search queries</a>.'
+          filters:
+            group:
+              label: Ryhmä
+            category:
+              label: Alue
       commits:
         latest_changes: "Viimeisimmät muutokset: päivitä usein!"
         by: "käyttäjältä"
@@ -2952,7 +2964,6 @@ fi:
         new: "Uusi"
         new_style: "Uusi tyyli"
         delete: "Poista"
-        delete_confirm: "Poista tämä teema?"
         color: "Väri"
         opacity: "Läpinäkyvyys"
         copy: "Kopioi"

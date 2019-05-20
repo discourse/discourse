@@ -575,6 +575,7 @@ ro:
       private_message: "Mesaj"
       private_messages: "Mesaje"
       user_notifications:
+        ignore_duration_username: "Nume utilizator"
         ignore_duration_save: "Ignoră"
         mute_option: "Setate pe silențios"
         normal_option: "Normal"
@@ -1193,7 +1194,6 @@ ro:
       topic_featured_link_placeholder: "Introdu link afișat cu titlu."
       remove_featured_link: "Eliminați link-ul din discuție"
       reply_placeholder: "Scrie aici. Utilizează formatarea Markdown, BBCode sau HTML. Trage sau lipește imagini."
-      reply_placeholder_choose_category: "Trebuie să selectați o categorie înainte de a scrie aici."
       view_new_post: "Vezi noua ta postare."
       saving: "Se salvează"
       saved: "Salvat!"
@@ -1552,7 +1552,6 @@ ro:
         jump_bottom: "sari la ultimul mesaj"
         jump_prompt: "sari la..."
         jump_prompt_of: "din %{count} postări"
-        jump_prompt_long: "La ce postare dorești să sari?"
         jump_bottom_with_number: "sari la mesajul %{post_number}"
         jump_prompt_or: "sau"
         total: toate postările
@@ -1873,64 +1872,6 @@ ro:
           notify_user: "Ai trimis un mesaj către acest utilizator"
           bookmark: "Ai marcat ca semn de carte această postare"
           like: "Ai apreciat"
-        by_you_and_others:
-          off_topic:
-            one: "Tu şi încă o persoană aţi marcat acest mesaj ca fiind în afară subiectului"
-            few: "Tu şi alte {{count}} persoane aţi marcat acest mesaj ca fiind în afara subiectului."
-            other: "Tu şi alte {{count}} de persoane aţi marcat acest mesaj ca fiind în afara subiectului."
-          spam:
-            one: "Tu şi încă o persoană aţi marcat acest mesaj ca spam. "
-            few: "Tu şi alte {{count}} persoane aţi marcat acest mesaj ca spam. "
-            other: "Tu şi alte {{count}} de persoane aţi marcat acest mesaj ca spam. "
-          inappropriate:
-            one: "Tu şi încă o persoană aţi marcat acest mesaj ca inadecvat. "
-            few: "Tu şi alte {{count}} persoane aţi marcat acest mesaj ca inadecvat. "
-            other: "Tu şi alte {{count}} de persoane aţi marcat acest mesaj ca inadecvat. "
-          notify_moderators:
-            one: "Tu şi încă o persoană aţi marcat acest mesaj pentru moderare."
-            few: "Tu şi alte {{count}} persoane aţi marcat acest mesaj pentru moderare."
-            other: "Tu şi alte {{count}} de persoane aţi marcat acest mesaj pentru moderare."
-          notify_user:
-            one: "Tu şi încă o persoană aţi trimis un mesaj către acest utilizator."
-            few: "Tu şi alte {{count}}  persoane aţi trimis un mesaj către acest utilizator."
-            other: "Tu şi alte {{count}} de persoane aţi trimis un mesaj către acest utilizator."
-          bookmark:
-            one: "Tu şi încă o persoană aţi pus un semn de carte pentru această postare."
-            few: "Tu şi alte {{count}} persoane aţi pus un semn de carte pentru această postare."
-            other: "Tu şi alte {{count}} de persoane aţi pus un semn de carte pentru această postare."
-          like:
-            one: "Tu şi încă o persoană aţi apreciat aceasta."
-            few: "Tu şi alte {{count}} persoane aţi apreciat asta."
-            other: "Tu şi alte {{count}} de persoane aţi apreciat asta."
-        by_others:
-          off_topic:
-            one: "O persoană a marcat acesta ca fiind în afară discuţiei"
-            few: "{{count}} persoane au marcat acesta ca fiind în afară discuţiei"
-            other: "{{count}} de persoane au marcat acesta ca fiind în afară discuţiei"
-          spam:
-            one: "O persoană a marcat acesta ca spam"
-            few: "{{count}} persoane au marcat acesta ca spam"
-            other: "{{count}} de persoane au marcat acesta ca spam"
-          inappropriate:
-            one: "o persoană a marcat acesta ca inadecvat"
-            few: "{{count}} persoane au marcat acesta ca inadecvat"
-            other: "{{count}} de persoane au marcat acesta ca inadecvat"
-          notify_moderators:
-            one: "O persoană a marcat acest mesaj pentru moderare"
-            few: "{{count}} persoane au marcat acest mesaj pentru moderare"
-            other: "{{count}} de persoane au marcat acest mesaj pentru moderare"
-          notify_user:
-            one: "o persoană a trimis un mesaj către acest utilizator"
-            few: "{{count}} persoane au trimis un mesaj către acest utilizator"
-            other: "{{count}} de persoane au trimis un mesaj către acest utilizator"
-          bookmark:
-            one: "O persoană a pus un semn de carte la acest mesaj"
-            few: "{{count}} persoane au pus un semn de carte la acest mesaj"
-            other: "{{count}} de persoane au pus un semn de carte la acest mesaj"
-          like:
-            one: "o persoană a apreciat aceasta"
-            few: "{{count}} persoane au apreciat aceasta"
-            other: "{{count}} de persoane au apreciat aceasta"
       delete:
         confirm:
           one: "Ești sigur că vrei să ștergi aca postare?"
@@ -2016,6 +1957,7 @@ ro:
       default_view: "Listă implicită de subiecte:"
       allow_badges_label: "Permite acordarea de ecusoane în această categorie"
       edit_permissions: "Editează permisiuni"
+      review_group_name: "numele grupului"
       require_topic_approval: "Cere obligatoriu aprobarea moderatorilor pentru toate discuțiile noi"
       this_year: "anul acesta"
       default_position: "Poziție inițială"
@@ -2443,7 +2385,6 @@ ro:
       moderator: "Moderator"
       dashboard:
         title: "Panou de control"
-        last_updated: "Panou de control actualizat ultima dată:"
         version: "Versiune"
         up_to_date: "Ești la zi!"
         critical_available: "O actualizare importantă este disponibilă."
@@ -2488,6 +2429,11 @@ ro:
           start_date: "Data de început "
           end_date: "Data de sfârşit"
           groups: "Toate grupurile"
+          filters:
+            group:
+              label: Grup
+            category:
+              label: Categorie
       commits:
         latest_changes: "Cele mai recente schimbări: te rugăm actualizează frecvent!"
         by: "de către"
@@ -2708,7 +2654,6 @@ ro:
         new: "Nou"
         new_style: "Stil nou"
         delete: "Șterge"
-        delete_confirm: "Șterge această temă"
         color: "Culoare"
         opacity: "Opacitate"
         copy: "Copiază"

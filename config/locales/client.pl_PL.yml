@@ -362,7 +362,6 @@ pl_PL:
       grouped_by_topic: "Grupuj tematycznie"
       none: "Brak elementów do przejrzenia."
       view_pending: "pokaż oczekujące"
-      title: "Oczekuje akceptacji"
       topic: "Temat:"
       filtered_user: "Użytkownik:"
       show_all_topics: "pokaż wszystkie tematy"
@@ -646,6 +645,7 @@ pl_PL:
       private_message: "Wiadomość"
       private_messages: "Wiadomości"
       user_notifications:
+        ignore_duration_username: "Nazwa użytkownika"
         ignore_duration_save: "Ignoruj"
         mute_option: "Wyciszenie"
         normal_option: "Normalny"
@@ -1708,7 +1708,6 @@ pl_PL:
         jump_bottom: "Przejdź na koniec"
         jump_prompt: "skocz do..."
         jump_prompt_of: "%{count} postów"
-        jump_prompt_long: "Do którego postu chcesz się przenieść ?"
         jump_bottom_with_number: "przeskocz do wpisu %{post_number}"
         jump_prompt_or: "lub"
         total: w sumie wpisów
@@ -2036,78 +2035,6 @@ pl_PL:
           notify_user: "Wysłano wiadomość do tego użytkownika"
           bookmark: "Dodano zakładkę w tym wpisie"
           like: "Lajkujesz ten wpis"
-        by_you_and_others:
-          off_topic:
-            one: "Ty i 1 inna osoba oznaczyliście to jako nie-na-temat."
-            few: "Ty i {{count}} inne osoby oznaczyliście to jako nie-na-temat."
-            many: "Ty i {{count}} innych osób oznaczyliście to jako nie-na-temat."
-            other: "Ty i {{count}} innych osób oznaczyliście to jako nie-na-temat."
-          spam:
-            one: "Ty i 1 inna osoba oflagowaliście to jako spam."
-            few: "Ty i {{count}} inne osoby oflagowaliście to jako spam."
-            many: "Ty i {{count}} innych osób oflagowaliście to jako spam."
-            other: "Ty i {{count}} innych osób oflagowaliście to jako spam."
-          inappropriate:
-            one: "Ty i 1 inna osoba oflagowaliście to jako niewłaściwe."
-            few: "Ty i {{count}} inne osoby oflagowaliście to jako niewłaściwe."
-            many: "Ty i {{count}} innych osób oflagowaliście to jako niewłaściwe."
-            other: "Ty i {{count}} innych osób oflagowaliście to jako niewłaściwe."
-          notify_moderators:
-            one: "Ty i 1 inna osoba oflagowaliście to do moderacji."
-            few: "Ty i {{count}} inne osoby oflagowaliście to do moderacji."
-            many: "Ty i {{count}} innych osób oflagowaliście to do moderacji."
-            other: "Ty i {{count}} innych osób oflagowaliście to do moderacji."
-          notify_user:
-            one: "Ty i 1 inna osoba wysłaliście wiadomość do tego użytkownika"
-            few: "Ty i {{count}} inne osoby wysłaliście wiadomość do tego użytkownika"
-            many: "Ty i {{count}} innych osób wysłaliście wiadomość do tego użytkownika"
-            other: "Ty i {{count}} innych osób wysłaliście wiadomość do tego użytkownika"
-          bookmark:
-            one: "Ty i 1 inna osoba dodaliście ten wpis do zakładek."
-            few: "Ty i {{count}} inne osoby dodaliście ten wpis do zakładek."
-            many: "Ty i {{count}} innych osób dodaliście ten wpis do zakładek."
-            other: "Ty i {{count}} innych osób dodaliście ten wpis do zakładek."
-          like:
-            one: "Ty i 1 inna osoba lajkujecie to."
-            few: "Ty i {{count}} inne osoby lajkują to."
-            many: "Ty i {{count}} innych osób lajkuje to."
-            other: "Ty i {{count}} innych osób lajkuje to."
-        by_others:
-          off_topic:
-            one: "1 osoba oflagowała to jako nie-na-temat"
-            few: "{{count}} osoby oflagowały to jako nie-na-temat"
-            many: "{{count}} osób oflagowało to jako nie-na-temat"
-            other: "{{count}} osób oflagowało to jako nie-na-temat"
-          spam:
-            one: "1 osoba oflagowała to jako spam"
-            few: "{{count}} osoby oflagowały to jako spam"
-            many: "{{count}} osób oflagowało to jako spam"
-            other: "{{count}} osób oflagowało to jako spam"
-          inappropriate:
-            one: "1 osoba oflagowała to jako niewłaściwe"
-            few: "{{count}} osoby oflagowały to jako niewłaściwe"
-            many: "{{count}} osób oflagowało to jako niewłaściwe"
-            other: "{{count}} osób oflagowało to jako niewłaściwe"
-          notify_moderators:
-            one: "1 osoba oflagowała to do moderacji"
-            few: "{{count}} osoby oflagowały to do moderacji"
-            many: "{{count}} osób oflagowało to do moderacji"
-            other: "{{count}} osób oflagowało to do moderacji"
-          notify_user:
-            one: "1 osoba wysłała wiadomość do tego użytkownika"
-            few: "{{count}} osoby wysłały wiadomość do tego użytkownika"
-            many: "{{count}} osób wysłało wiadomość do tego użytkownika"
-            other: "{{count}} osób wysłało wiadomość do tego użytkownika"
-          bookmark:
-            one: "1 osoba dodała ten wpis do zakładek"
-            few: "{{count}} osoby dodały ten wpis do zakładek"
-            many: "{{count}} osób dodało ten wpis do zakładek"
-            other: "{{count}} osób dodało ten wpis do zakładek"
-          like:
-            one: "1 osoba lajkuje to"
-            few: "{{count}} osoby lajkują to"
-            many: "{{count}} osób lajkuje to"
-            other: "{{count}} osób lajkuje to"
       merge:
         confirm:
           one: "Czy na pewno chcesz połączyć te posty?"
@@ -2200,6 +2127,7 @@ pl_PL:
       default_top_period: "Domyślny okres wyświetlania najlepszych postów:"
       allow_badges_label: "Włącz przyznawanie odznak na podstawie aktywności w tej kategorii"
       edit_permissions: "Edytuj uprawnienia"
+      review_group_name: "nazwa grupy"
       this_year: "ten rok"
       default_position: "Domyślna pozycja"
       position_disabled: "Kolejność kategorii będzie uzależniona od aktywności. Aby kontrolować ich kolejność,"
@@ -2643,7 +2571,6 @@ pl_PL:
       moderator: "Moderator"
       dashboard:
         title: "Raporty"
-        last_updated: "Ostatnia aktualizacja panelu kontrolnego:"
         version: "Wersja"
         up_to_date: "Wersja Aktualna!"
         critical_available: "Ważna aktualizacja jest dostępna."
@@ -2689,6 +2616,11 @@ pl_PL:
           start_date: "Data początkowa"
           end_date: "Data końcowa"
           groups: "Wszystkie grupy"
+          filters:
+            group:
+              label: Grupa
+            category:
+              label: Kategoria
       commits:
         latest_changes: "Ostatnie zmiany: aktualizuj często!"
         by: "przez"
@@ -2919,7 +2851,6 @@ pl_PL:
         new: "Nowy"
         new_style: "Nowy styl"
         delete: "Usuń"
-        delete_confirm: "Usunąć ten motyw?"
         color: "Kolor"
         opacity: "Widoczność"
         copy: "Kopiuj"

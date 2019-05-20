@@ -285,7 +285,6 @@ sw:
         save_changes: "Hifadhi Mabadiliko"
         title: "Mpangilio"
       moderation_history: "Historia ya Usimamizi"
-      title: "Inahitaji Uhariri"
       topic: "Mada:"
       user:
         username: "Jina la mtumiaji"
@@ -549,6 +548,7 @@ sw:
       private_message: "Ujumbe"
       private_messages: "Ujumbe"
       user_notifications:
+        ignore_duration_username: "Jina la mtumiaji"
         ignore_duration_save: "Puuzia"
         mute_option: "Imenyamazishwa"
         normal_option: "Kawaida"
@@ -1209,7 +1209,6 @@ sw:
       remove_featured_link: "Ondoa kiungo kwenye mada."
       reply_placeholder: "Andika hapa. tumia Markdown, BBCode au HTML kuweka kwenye muundo mzuri. Vuta na kuweka picha"
       reply_placeholder_no_images: "Andika hapa. Tumia Markdown, BBCode, au HTML kuumbiza."
-      reply_placeholder_choose_category: "Unatakiwa kuchagua kundi kabla ya kuanza kuandika hapa"
       view_new_post: "Angalia chapisho lako jipya"
       saving: "Inahifadhiwa"
       saved: "Imehifadhiwa!"
@@ -1591,7 +1590,6 @@ sw:
         jump_bottom: "fikia chapisho la mwisho"
         jump_prompt: "ruka kwenda..."
         jump_prompt_of: "machapisho %{count} ya"
-        jump_prompt_long: "Ungependa ufikie chapisho gani?"
         jump_bottom_with_number: "fikia chapisho %{post_number}"
         jump_prompt_or: "au"
         total: jumla ya machapisho
@@ -1881,17 +1879,6 @@ sw:
           notify_user: "Umetuma ujumbe kwa mtumiaji huyu"
           bookmark: "Umealamisha chapisho hili"
           like: "Umeipenda hii"
-        by_you_and_others:
-          notify_user:
-            one: "Wewe na 1 mwingine mmetuma ujumbe kwa mtumiaji huyu"
-            other: "Wewe na {{count}} wengine mmetuma ujumbe kwa mtumiaji huyu"
-          like:
-            one: "Wewe na 1 mwingine mmevutiwa na hii"
-            other: "Wewe na  {{count}} wengine mmevutiwa na hii"
-        by_others:
-          like:
-            one: "Mtu 1 amevutiwa na hii"
-            other: "Watu {{count}} wamevutiwa na hii"
       delete:
         confirm:
           one: "Je, umeridhia kufuta chapisho hili?"
@@ -1974,6 +1961,7 @@ sw:
       default_view: "Orodha ya Mada Chaguo Msingi:"
       allow_badges_label: "Ruhusu beji hizi zitolewe kwenye kategoria hii:"
       edit_permissions: "Hariri Vibali"
+      review_group_name: "jina la kikundi"
       this_year: "mwaka huu"
       default_position: "Chaguo Msingi la Nafasi"
       position_disabled: "Kategoria zitaonyeshwa kulingana na oda ya shughuli. Kudhibiti oda ya kategoria kwenye orodha,"
@@ -2341,7 +2329,6 @@ sw:
         title: "Orodha ya ripoti zilizopo"
       dashboard:
         title: "Ubao"
-        last_updated: "Mara ya mwisho ubao umesasishwa:"
         version: "Toleo"
         up_to_date: "Una toleo la sasa!"
         critical_available: "Sasisho muhimu linapatikana."
@@ -2394,6 +2381,11 @@ sw:
           disabled: "Hii ripoti imezuiwa"
           total: "Jumla ya wakati wote"
           no_data: "Hakuna data za kuoneshwa"
+          filters:
+            group:
+              label: Kikundi
+            category:
+              label: Kategoria
       commits:
         latest_changes: "Mabadiliko ya mwisho: tafadhali sasisha mara kwa mara!"
         by: "na"
@@ -2615,7 +2607,6 @@ sw:
         new: "Mpya"
         new_style: "Style Mpya"
         delete: "Ondoa"
-        delete_confirm: "Ondoa mandhari hii?"
         color: "Rangi"
         copy: "Nakili"
         copy_to_clipboard: "Umenakili kwenye Ubao Nakili"

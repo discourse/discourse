@@ -589,6 +589,8 @@ id:
   joined: "Joined"
   reviewables:
     actions:
+      delete_single:
+        title: "Hapus"
       approve:
         title: "Terima"
       reject_user:

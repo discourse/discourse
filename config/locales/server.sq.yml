@@ -1172,7 +1172,6 @@ sq:
       why: "Një përmbledhje e shkurtër e temave tek %{site_link} që prej vizitës tuaj të fundit më %{last_seen_at}"
       new_topics: "Diskutimet e Reja"
       liked_received: "Pëlqime të marra"
-      new_posts: "Postimet e Reja"
       new_users: "Përdorues të rinj"
       join_the_discussion: "Më shumë"
       subject_template: "[%{email_prefix}] Përmbledhja"
@@ -1462,6 +1461,8 @@ sq:
         title: "Pezullo anëtarin"
       delete_spammer:
         title: "Elimino Spammer"
+      delete_single:
+        title: "Fshij"
       disagree:
         title: "Jo dakord"
       approve:

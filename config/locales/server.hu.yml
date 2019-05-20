@@ -27,7 +27,7 @@ hu:
   topics: "Témák"
   posts: "Bejegyzések"
   loading: "Töltés"
-  powered_by_html: '<a href="https://www.discourse.org">Discourse</a> által működtetve, legjobb megtekintés JavaScript engedélyezésével '
+  powered_by_html: 'A motorháztető alatt: <a href="https://www.discourse.org">Discourse</a>, megtekintése JavaScript engedélyezésével ajánlott'
   log_in: "Bejelentkezés"
   submit: "Beküldés"
   purge_reason: "Automatikusan törölve, mint elhagyott, deaktivált account"
@@ -511,7 +511,7 @@ hu:
     daily_engaged_users:
       xaxis: "Nap"
     profile_views:
-      title: "Felhasználói Profil Megtekintések"
+      title: "Felhasználói profil megtekintések"
       xaxis: "Nap"
       yaxis: "Felhasználói profil megtekintések száma"
     topics:
@@ -608,17 +608,17 @@ hu:
     page_view_logged_in_reqs:
       title: "Bejelentkezve"
       xaxis: "Nap"
-      yaxis: "Bejelentkezett Oldalmegtekintések"
+      yaxis: "Bejelentkezett oldalmegtekintések"
     page_view_crawler_reqs:
       xaxis: "Nap"
     page_view_total_reqs:
       title: "Oldalmegtekintések"
       xaxis: "Nap"
-      yaxis: "Összes Oldalmegtekintés"
+      yaxis: "Összes oldalmegtekintés"
     page_view_logged_in_mobile_reqs:
-      title: "Bejelentkezett Oldalmegtekintések"
+      title: "Bejelentkezett oldalmegtekintések"
       xaxis: "Nap"
-      yaxis: "Mobilos Bejelentkezett Oldalmegtekintések"
+      yaxis: "Mobilról bejelentkezett oldalmegtekintések"
     page_view_anon_mobile_reqs:
       xaxis: "Nap"
     http_background_reqs:
@@ -939,7 +939,6 @@ hu:
       unread_messages: "Olvasatlan üzenetek"
       unread_notifications: "Olvasatlan értesítések"
       liked_received: "Kapott kedvelések"
-      new_posts: "Új bejegyzések"
       new_users: "Új felhasználók"
       popular_topics: "Népszerű témák"
       follow_topic: "Téma követése"
@@ -1045,7 +1044,6 @@ hu:
     submit_button: "Email küldése"
   tags:
     title: "Címkék"
-    minimum_required_tags: "Választanod kell legalább %{count} címkét."
   rss_by_tag: "Téma meg lett jelölve %{tag}"
   finish_installation:
     congratulations: "Gratulálunk, telepítetted a Discourse-t!"
@@ -1090,14 +1088,10 @@ hu:
         fields:
           logo:
             label: "Elsődleges logó"
-          logo_small:
-            label: "Kompakt logó"
       icons:
         title: "Ikonok"
         fields:
-          favicon:
-            label: "Kicsi ikon"
-          apple_touch_icon:
+          large_icon:
             label: "Nagy ikon"
       homepage:
         title: "Főoldal"
@@ -1142,6 +1136,8 @@ hu:
         title: "Bejegyzés elrejtése"
       delete_spammer:
         title: "Spammer törlése"
+      delete_single:
+        title: "Töröl"
       disagree:
         title: "Elutasítás"
       ignore:

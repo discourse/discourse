@@ -112,11 +112,6 @@ ko:
       random_mention:
         reply: |-
           내가 뭘 할 수 있는지 알고 싶다면 `@%{discobot_username} %{help_trigger}` 라고 말하렴.
-        tracks: |-
-          나는 아래의 일을 할 수 있어.
-
-          `@%{discobot_username} %{reset_trigger} %{default_track}`
-          > 아래의 서로 이야기하기 중 하나를 골라서 시작해봐. %{tracks}.
         bot_actions: |-
           `@%{discobot_username} %{dice_trigger} 2d6`
           > :game_die: 3, 6
@@ -139,7 +134,6 @@ ko:
 
           그럼, 난 잠시 자리를 비워줄게.
     new_user_narrative:
-      reset_trigger: "새로운 사용자"
       cert_title: "새로운 사용자 튜토리얼을 성공적으로 마친 것에 대한 보상으로"
       onebox:
         reply: |-
@@ -269,7 +263,6 @@ ko:
       certificate:
         alt: '목표달성 인증'
     advanced_user_narrative:
-      reset_trigger: '고급 사용자'
       cert_title: "고급 사용자 튜토리얼을 훌륭하게 완료한 것에 대한 보상으로"
       title: ':arrow_up: 고급 사용자 기능'
       edit:
@@ -305,10 +298,6 @@ ko:
           <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-rotate-left.png" width="16" height="16"> **삭제 취소하기**를 부탁해도 될까?
         not_found: |-
           잘 안되니? <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> 더 보기를 누르면 <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-rotate-left.png" width="16" height="16"> 삭제 취소하기가 보일거야.
-        reply: |-
-          휴, 큰일날 뻔 했네! 바로 잡아줘서 고마워 :wink:
-
-          삭제 취소하기는 24시간 내에만 가능하다는 거 기억해 둬.
       category_hashtag:
         instructions: |-
           포스트에 카테고리나 태그를 언급할 수 있다는 거 알고 있어? 예를 들어, %{category} 카테고리가 보이니?

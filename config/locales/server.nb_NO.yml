@@ -324,20 +324,6 @@ nb_NO:
       Du kan redigere det forrige svaret ditt om du ønsker å legge til et sitat ved å merke teksten som skal siteres og velge <b>Sitat</b> knappen som spretter opp.
 
       Det er lettere for alle å lese emner som har færre og mer dyptgående innlegg enn et stort antall små, individuelle svar.
-    dominating_topic: |
-      ### La andre delta i diskusjonen
-
-      Dette emnet er helt klart viktig for deg &ndash; du har skrevet mer enn %{percent}% av svarene her.
-
-      Er du sikker på at du gir andre folk nok tid til å dele sine synspunkter også?
-    get_a_room: |
-      ### Vurder å svare flere personer
-
-      Du har allerede svart %{count}ganger til @%{reply_username} i dette ene emnet.
-
-      Har du vurdert å skrive svar til *andre* folk i diskusjonen også? En bra diskusjon involverer mange stemmer og perspektiv.
-
-      Hvis du vil fortsette en lang samtale med denne ene personen kan det være bedre å [sende dem en personlig melding](%{base_path}/u/%{reply_username}).
     too_many_replies: |
       ### Du har nådd grensen for svar i dette emnet
 
@@ -1236,7 +1222,6 @@ nb_NO:
       unread_messages: "Uleste meldinger"
       unread_notifications: "Uleste varslinger."
       liked_received: "Likes mottatt"
-      new_posts: "Nye innlegg"
       new_users: "Nye brukere"
       popular_topics: "Populære emner"
       follow_topic: "Følg dette emnet"
@@ -1503,14 +1488,10 @@ nb_NO:
         fields:
           logo:
             label: "Primær logo"
-          logo_small:
-            label: "Kompakt logo"
       icons:
         title: "Ikoner"
         fields:
-          favicon:
-            label: "Lite ikon"
-          apple_touch_icon:
+          large_icon:
             label: "Stort ikon"
       homepage:
         title: "Hjemmeside"
@@ -1552,6 +1533,8 @@ nb_NO:
         description: "Gjem dette innlegget og send en melding til brukeren automatisk med en forespørsel om gjøre endringer."
       delete_spammer:
         title: "Slett spammer"
+      delete_single:
+        title: "Slett"
       disagree_and_restore:
         description: "Gjenopprett innlegget slik at alle brukere kan se det."
       disagree:

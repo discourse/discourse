@@ -283,7 +283,6 @@ et:
       settings:
         save_changes: "Salvesta muudatused"
         title: "Seaded"
-      title: "Vajab ülevaatamist"
       topic: "Teema:"
       user:
         username: "Kasutajanimi"
@@ -547,6 +546,7 @@ et:
       private_message: "Sõnum"
       private_messages: "Sõnumid"
       user_notifications:
+        ignore_duration_username: "Kasutajanimi"
         ignore_duration_save: "Ignoreeri"
         mute_option: "Vaigistatud"
         normal_option: "Normaalne"
@@ -1516,7 +1516,6 @@ et:
         jump_bottom: "hüppa viimase postituse juurde"
         jump_prompt: "mine..."
         jump_prompt_of: "%{count} postitusest"
-        jump_prompt_long: "Millise postituse juurde soovid hüpata?"
         jump_bottom_with_number: "hüppa postituse %{post_number} juurde"
         jump_prompt_or: "või"
         total: postitusi kokku
@@ -1807,50 +1806,6 @@ et:
           notify_user: "Saatsid sellele kasutajale sõnumi"
           bookmark: "Lisasid sellele postitusele järjehoidja"
           like: "Märkisid selle kui meeldiva"
-        by_you_and_others:
-          off_topic:
-            one: "Sina ja 1 teine kasutaja tähistasite selle kui teemavälise"
-            other: "Sina ja {{count}} teist kasutajat tähistasite selle kui teemavälise"
-          spam:
-            one: "Sina ja 1 teine kasutaja tähistasite selle kui spämmi"
-            other: "Sina ja {{count}} teist kasutajat tähistasite selle kui spämmi"
-          inappropriate:
-            one: "Sina ja 1 teine kasutaja tähistasite selle kui sobimatu"
-            other: "Sina ja {{count}} teist kasutajat tähistasite selle kui sobimatu"
-          notify_moderators:
-            one: "Sina ja 1 teine kasutaja tähistasite selle modereerimiseks"
-            other: "Sina ja {{count}} teist kasutajat tähistasite selle modereerimiseks"
-          notify_user:
-            one: "Sina ja 1 teine kasutaja saatsite sellele kasutajale sõnumi"
-            other: "Sina ja {{count}} teist kasutajat saatsite sellele kasutajale sõnumi"
-          bookmark:
-            one: "Sina ja 1 teine kasutaja lisasite sellele postitusele järjehoidja"
-            other: "Sina ja {{count}} teist kasutajat lisasite sellele postitusele järjehoidja"
-          like:
-            one: "Sina ja 1 teine kasutaja märkisite selle kui meeldiva"
-            other: "Sina ja {{count}} teist kasutajat märkisite selle kui meeldiva"
-        by_others:
-          off_topic:
-            one: "1 kasutaja tähistas selle kui teemavälise"
-            other: "{{count}} kasutajat tähistasid selle kui teemavälise"
-          spam:
-            one: "1 kasutaja tähistas selle kui spämmi"
-            other: "{{count}} kasutajat tähistas selle kui spämmi"
-          inappropriate:
-            one: "1 kasutaja tähistas selle kui sobimatu"
-            other: "{{count}} kasutajat tähistas selle kui sobimatu"
-          notify_moderators:
-            one: "1 kasutaja tähistas selle modereerimiseks"
-            other: "{{count}} kasutajat tähistasid selle modereerimiseks"
-          notify_user:
-            one: "1 kasutaja saatis sellele kasutajale sõnumi"
-            other: "{{count}} kasutajat saatsid sellele kasutajale sõnumi"
-          bookmark:
-            one: "1 kasutaja lisas sellele postitusele järjehoidja"
-            other: "{{count}} kasutajat lisasid sellele postitusele järjehoidja"
-          like:
-            one: "ühele see meeldis"
-            other: "{{count}}-le see meeldis"
       delete:
         confirm:
           one: "Oled sa kindel, et soovid seda postitust kustutada?"
@@ -1935,6 +1890,7 @@ et:
       show_subcategory_list: "Näita selles foorumis alamfoorumite nimekirja teemadest üleval pool."
       allow_badges_label: "Luba selles foorumis autasustamist märgistega"
       edit_permissions: "Muuda kasutusõigusi"
+      review_group_name: "grupi nimi"
       this_year: "sel aastal"
       default_position: "Vaikepositsioon"
       position_disabled: "Foorumid kuvatakse aktiivsuse järjekorras. Foorumite järjestuse seadistamiseks loeteludes,"
@@ -2328,7 +2284,6 @@ et:
       moderator: "Moderaator"
       dashboard:
         title: "Armatuurlaud"
-        last_updated: "Armatuurlaud viimati värskendatud:"
         version: "Versioon"
         up_to_date: "Oled aja tasemel!"
         critical_available: "Kriitiline uuendus on saadaval."
@@ -2379,6 +2334,11 @@ et:
           end_date: "Lõpukuupäev"
           groups: "Kõik grupid"
           no_data: "Pole andmeid, mida näidata."
+          filters:
+            group:
+              label: Grupp
+            category:
+              label: Foorum
       commits:
         latest_changes: "Viimased muudatused: palun värskenda tihti!"
         by: "autor"
@@ -2602,7 +2562,6 @@ et:
         new: "Uus"
         new_style: "Uus stiil"
         delete: "Kustuta"
-        delete_confirm: "Kustutan selle teema?"
         color: "Värv"
         opacity: "Läbipaistvus"
         copy: "Kopeeri"

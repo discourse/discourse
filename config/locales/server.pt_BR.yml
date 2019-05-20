@@ -327,20 +327,6 @@ pt_BR:
       Você pode editar sua resposta anterior para adicionar uma citação selecionando um texto e clicando no botão <b>responder citação</b> que aparecerá.
 
       Fica mais fácil para todo mundo ler tópicos que possuem poucas respostas com muita informação em vez de muitas respostas individuais com pouca informação cada.
-    dominating_topic: |
-      ### Deixe outros entrarem na conversa
-
-      Este tópico claramente é importante para você &ndash; você postou mais de %{percent}% das respostas aqui.
-
-      Tem certeza que você está dando tempo para que outras pessoas também compartilhem seus pontos de vista?
-    get_a_room: |
-      ### Considere responder a mais pessoas
-
-      Você já respondeu %{count} vezes à @%{reply_username} neste tópico particular.
-
-      Você já pensou em responder a * outras * pessoas na discussão? Uma grande discussão envolve muitas vozes e perspectivas.
-
-      Se você quiser continuar sua conversa com esse usuário em particular, [envie-lhes uma mensagem pessoal](%{base_path}/u/%{reply_username}).
     too_many_replies: |
       ### Você atingiu o limite de respostas para este tópico
 
@@ -717,6 +703,8 @@ pt_BR:
       every_hour: "a cada hora"
       daily: "diário"
       weekly: "semanal"
+      every_month: "a cada mês"
+      every_six_months: "a cada seis meses"
   user_api_key:
     title: "Autorizar acesso à aplicação"
     authorize: "Autorizar"
@@ -747,6 +735,7 @@ pt_BR:
     user_flagging_ratio:
       labels:
         user: Usuário
+        score: Nota
     moderators_activity:
       labels:
         moderator: Moderador
@@ -1077,7 +1066,6 @@ pt_BR:
     blacklist_ip_blocks: "Uma lista de blocos IP privados que nunca devem ser rastreados pelo Discourse"
     whitelist_internal_hosts: "Uma lista de hosts internos que o discurso pode rastrear com segurança para o oneboxing e outros fins"
     allowed_iframes: "Uma lista de prefixos de domínio iframe src que o discurso pode permitir com segurança em postagens"
-    whitelisted_crawler_user_agents: "Agentes do usuário de rastreadores da Web que devem ter permissão para acessar o site."
     blacklisted_crawler_user_agents: "Palavra insensível a maiúsculas e minúsculas na sequência do agente do usuário que identifica os rastreadores da Web que não devem ter permissão para acessar o site. Não se aplica se a lista de permissões estiver definida."
     slow_down_crawler_user_agents: "Agentes do usuário de rastreadores da web que devem ter uma taxa limitada em robots.txt usando a diretiva de rastreamento atrasado"
     slow_down_crawler_rate: "Se slow_down_crawler_user_agents for especificado, essa taxa será aplicada a todos os rastreadores (número de segundos de atraso entre as solicitações)"
@@ -1295,7 +1283,6 @@ pt_BR:
     auto_silence_fast_typers_on_first_post: "Silenciar automaticamente usuários que não atendem a min_first_post_typing_time"
     auto_silence_fast_typers_max_trust_level: "Nível máximo de confiança para silenciar automaticamente os tipos rápidos"
     auto_silence_first_post_regex: "Regex insensitivo a maiúsculas e minúsculas que, se for transmitido, fará com que o primeiro post do usuário seja silenciado e enviado para a fila de aprovação. Exemplo: raging | a [bc] a, fará com que todas as mensagens contendo raging ou aba ou aca sejam silenciadas primeiro. Aplica-se apenas ao primeiro post."
-    flags_default_topics: "Mostrar os tópicos sinalizados por padrão na seção admin"
     reply_by_email_enabled: "Habilitar responder tópicos via email"
     reply_by_email_address: "Template de resposta por email, por exemplo: %%{reply_key}@reply.example.com or replies+%%{reply_key}@example.com"
     alternative_reply_by_email_addresses: "Lista de modelos alternativos para responder por e-mail a endereços de e-mail recebidos. Exemplo:%%{reply_key}@reply.example.com|replies+%%{reply_key}@example.com"
@@ -2107,10 +2094,6 @@ pt_BR:
       subject_template:
         one: "1 post esperando para ser revisado"
         other: "%{count} postagens esperando para serem revisadas"
-      text_body_template: |
-        Olá,
-
-        Mensagens de novos usuários foram mantidas para moderação e estão atualmente aguardando revisão. [Aprovar ou rejeitá-los aqui](%{base_url}/postagens enfileiradas).
   unsubscribe_link: |
     Para cancelar a subscrição destes e-mails, [clique aqui](%{unsubscribe_url}).
   unsubscribe_link_and_mail: |
@@ -2365,7 +2348,6 @@ pt_BR:
       unread_messages: "Mensagens Não-lidas"
       unread_notifications: "Notificações Não-lidas"
       liked_received: "Curtidas Recebidas"
-      new_posts: "Novas Mensagens"
       new_users: "Usuários Novos"
       popular_topics: "Tópicos Populares"
       follow_topic: "Seguir esse tópico"
@@ -2675,7 +2657,7 @@ pt_BR:
       name: Bem-Vindo
       description: Recebeu uma curtida
       long_description: |
-        Este crachá é concedido quando você recebe seu primeiro como em um post. Parabéns, você postou algo que seus colegas da comunidade acharam interessante, interessante ou útil.
+        Este emblema é concedido quando você recebe sua primeira curtida numa postagem. Parabéns, você postou algo que sua comunidade achou interessante, legal ou útil!.
     autobiographer:
       name: Autobiógrafo
       description: "Preencher <a href=\"%{base_uri}/my/preferences/profile\">Perfil</a> informação"
@@ -2893,7 +2875,6 @@ pt_BR:
     title: "Marcações"
     staff_tag_disallowed: 'A marcação "%{tag}" pode ser aplicada somente pelo pessoal de apoio.'
     staff_tag_remove_disallowed: 'A marcação "%{tag}" pode ser removida somente pelo pessoal de apoio.'
-    minimum_required_tags: "Você deve selecionar pelo menos %{count} tags."
   rss_by_tag: "Tópicos marcados com %{tag}"
   finish_installation:
     congratulations: "Parabéns, você instalou o Discourse!"
@@ -2971,14 +2952,10 @@ pt_BR:
         fields:
           logo:
             label: "Logotipo Primário"
-          logo_small:
-            label: "Logotipo Compacto "
       icons:
         title: "Ícones"
         fields:
-          favicon:
-            label: "Ícone pequeno"
-          apple_touch_icon:
+          large_icon:
             label: "Ícone Largo"
       homepage:
         description: "Recomendamos que você mostre os tópicos mais recentes em sua página inicial, mas também pode mostrar categorias (grupos de tópicos) na página inicial, se preferir."
@@ -3041,6 +3018,8 @@ pt_BR:
         description: "Esconder esta publicação e enviar automaticamente ao usuário uma mensagem pedindo-lhe para editá-lo."
       delete_spammer:
         title: "Deletar Spammer"
+      delete_single:
+        title: "Excluir"
       disagree_and_restore:
         description: "Restaure a postagem para que todos os usuários possam vê-la."
       disagree:

@@ -285,7 +285,6 @@ nb_NO:
         save_changes: "Lagre endringer"
         title: "Innstillinger"
       moderation_history: "Moderatorhistorikk"
-      title: "Må ses gjennom"
       topic: "Emne:"
       user:
         username: "Brukernavn"
@@ -551,6 +550,7 @@ nb_NO:
       private_message: "Melding"
       private_messages: "Meldinger"
       user_notifications:
+        ignore_duration_username: "Brukernavn"
         ignore_duration_save: "Ignorer"
         mute_option: "Ignorert"
         normal_option: "Normal"
@@ -1223,7 +1223,6 @@ nb_NO:
       remove_featured_link: "Fjern lenke fra emnet."
       reply_placeholder: "Skriv her. Bruk Markdown, BBCode eller HTML for å formatere innholdet. Dra bilder hit eller lim dem inn."
       reply_placeholder_no_images: "Skriv her. Bruk Markdown, BBkode, eller HTML for å formatere."
-      reply_placeholder_choose_category: "Du må velge en kategori før du skriver her."
       view_new_post: "Se ditt nye innlegg."
       saving: "Lagrer"
       saved: "Lagret!"
@@ -1614,7 +1613,6 @@ nb_NO:
         jump_bottom: "Hopp til nyeste innlegg"
         jump_prompt: "hopp til…"
         jump_prompt_of: "av %{count} innlegg"
-        jump_prompt_long: "Hvilket innlegg vil du gå til?"
         jump_bottom_with_number: "hopp til innlegg %{post_number}"
         jump_prompt_to_date: "til dato"
         jump_prompt_or: "eller"
@@ -1935,50 +1933,6 @@ nb_NO:
           notify_user: "Du sendte en melding til denne brukeren"
           bookmark: "Du bokmerket dette innlegget"
           like: "Du likte dette"
-        by_you_and_others:
-          off_topic:
-            one: "Du og 1 annen markerte dette som irrelevant"
-            other: "Du og {{count}} andre rapporterte dette som utenfor temaet"
-          spam:
-            one: "Du og 1 annen markerte dette som spam"
-            other: "Du og {{count}} andre rapporterte dette som spam"
-          inappropriate:
-            one: "Du og 1 annen markerte dette som upassende"
-            other: "Du og {{count}} andre rapporterte dette som upassende"
-          notify_moderators:
-            one: "Du og 1 annen markerte dette for moderering"
-            other: "Du og {{count}} andre rapporterte dette for moderering"
-          notify_user:
-            one: "Du og 1 annen bruker sendte en melding til denne brukeren"
-            other: "Du og {{count}} andre brukere har sendt en melding til denne brukeren"
-          bookmark:
-            one: "Du og 1 annen bokmerket dette innlegget"
-            other: "Du og {{count}} andre bokmerket dette innlegget"
-          like:
-            one: "Du og 1 annen likte dette"
-            other: "Du og {{count}} andre likte dette"
-        by_others:
-          off_topic:
-            one: "1 bruker markerte dette som irrelevant"
-            other: "{{count}} brukere rapporterte dette som irrelevant"
-          spam:
-            one: "1 bruker markerte dette som spam"
-            other: "{{count}} brukere rapporterte dette som spam"
-          inappropriate:
-            one: "1 bruker markerte dette som upassende"
-            other: "{{count}} brukere rapporterte dette som upassende"
-          notify_moderators:
-            one: "1 bruker markerte dette for moderering"
-            other: "{{count}} brukere rapporterte dette for moderering"
-          notify_user:
-            one: "1 person har sendt en melding til denne brukeren"
-            other: "{{count}} har sendt en melding til denne brukeren"
-          bookmark:
-            one: "1 bruker bokmerket dette innlegget"
-            other: "{{count}} brukere bokmerket dette innlegget"
-          like:
-            one: "1 bruker likte dette"
-            other: "{{count}} brukere likte dette"
       delete:
         confirm:
           one: "Er du sikker på at du ønsker å slette dette innlegget?"
@@ -2076,6 +2030,7 @@ nb_NO:
       default_top_period: "Forvalgt topp-periode:"
       allow_badges_label: "Tillat merker å bli tildelt i denne kategorien"
       edit_permissions: "Rediger tillatelser"
+      review_group_name: "gruppenavn"
       require_topic_approval: "Krev godkjennelse fra moderator for alle nye emner"
       require_reply_approval: "Krev godkjennelse fra moderator for alle nye svar"
       this_year: "dette året"
@@ -2506,7 +2461,6 @@ nb_NO:
         title: "Liste over tilgjengelige rapporter"
       dashboard:
         title: "Dashbord"
-        last_updated: "Dashboardet var sist oppdatert:"
         version: "Versjon"
         up_to_date: "Du har den seneste versjonen!"
         critical_available: "En kritisk oppdatering er tilgjengelig."
@@ -2570,6 +2524,11 @@ nb_NO:
           trending_search:
             more: '<a href="%{basePath}/admin/logs/search_logs">Logg for søk</a>'
             disabled: 'Rapporten for trending av søk er deaktivert. Aktiver <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">logging av søkeord</a> for å samle inn data.'
+          filters:
+            group:
+              label: Gruppe
+            category:
+              label: Kategori
       commits:
         latest_changes: "Siste endringer: Oppdater ofte!"
         by: "av"
@@ -2821,7 +2780,6 @@ nb_NO:
         new: "Ny"
         new_style: "Ny stil"
         delete: "Slett"
-        delete_confirm: "Slett denne drakten?"
         color: "Farge"
         opacity: "Opacity"
         copy: "Kopier"

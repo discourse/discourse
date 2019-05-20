@@ -1679,14 +1679,10 @@ tr_TR:
         fields:
           logo:
             label: "Birincil Görsel"
-          logo_small:
-            label: "Sadeleştirilmiş Görsel"
       icons:
         title: "Simgeler"
         fields:
-          favicon:
-            label: "Simgecik"
-          apple_touch_icon:
+          large_icon:
             label: "Büyük Simge"
       homepage:
         title: "Ana Sayfa"
@@ -1732,6 +1728,8 @@ tr_TR:
         description: "Bu gönderiyi sakla ve kullanıcıya otomatik olarak uyarı mesajı gönder."
       delete_spammer:
         title: "İstenmeyen e-postayı göndereni sil"
+      delete_single:
+        title: "Sil"
       disagree_and_restore:
         description: "Tüm kullanıcılar tarafından görülebilmesi için gönderiyi geri yükle. "
       disagree:

@@ -331,20 +331,6 @@ it:
       Puoi modificare la risposta precedente per aggiungere una citazione evidenziando il testo e selezionando il bottone <b>Cita<b> che comparirà.
 
       E' più facile per chiunque leggere argomenti che hanno poche risposte ma più dettagliate, rispetto a molte brevi risposte individuali.
-    dominating_topic: |
-      ### Permetti agli altri di partecipare alla conversazione
-
-      Questo argomento è evidentemente importante per te &ndash; hai inviato più del %{percent}% delle risposte.
-
-      Sei sicuro di lasciare anche agli altri abbastanza tempo per esprimere il loro punto di vista?
-    get_a_room: |
-      ### Considera la risposta a più persone
-
-      Hai già risposto %{count}volte a @%{reply_username} in questo argomento.
-
-      Hai già considerato di rispondere ad *altre* persone nella stessa discussione? Una buona discussione coinvolge più voci e prospettive.
-
-      Se vuoi continuare più a lungo la conversazione con questa persona in particolare, [inviagli un messaggio privato](%{base_path}/u/%{reply_username}).
     too_many_replies: |
       ### Hai raggiungo il limite di risposte per questo argomento
 
@@ -391,7 +377,12 @@ it:
               same_as_username: "è la stessa del tuo nome utente. Per favore usa una password più sicura."
               same_as_email: "coincide con la tua email. Per favore scegli una password più sicura."
               same_as_current: "è la tua stessa password attuale."
+              same_as_name: "corrisponde al tuo nome."
               unique_characters: "ha troppi caratteri ripetuti. Per favore usa una password più sicura."
+            username:
+              same_as_password: "corrisponde alla tua password."
+            name:
+              same_as_password: "corrisponde alla tua password."
             ip_address:
               signup_not_allowed: "L'iscrizione non è permessa da questo account."
         user_email:
@@ -662,6 +653,7 @@ it:
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: "Inappropriato"
+      description: 'Questo messaggio ha dei contenuti che una persona ragionevole considererebbe offensivi, aggressivi o una violazione delle<a href="%{base_path}/guidelines"> linee guida della comunità</a>.'
       long_form: "segnalato come inappropriato"
     notify_user:
       title: "Invia un messaggio a @{{username}}"
@@ -745,6 +737,8 @@ it:
       every_hour: "ogni ora"
       daily: "ogni giorno"
       weekly: "ogni settimana"
+      every_month: "ogni mese"
+      every_six_months: "ogni sei mesi"
   user_api_key:
     title: "Autorizza accesso dell'applicazione"
     authorize: "Autorizza"
@@ -1275,7 +1269,6 @@ it:
     auto_silence_fast_typers_on_first_post: "Silenzia automaticamente gli utenti che non soddisfano min_first_post_typing_time"
     auto_silence_fast_typers_max_trust_level: "Livello di esperienza massimo per silenziare automaticamente i digitatori veloci"
     auto_silence_first_post_regex: "Regex senza distinzione tra maiuscole e minuscole che, se passato, causerà il silenziamento del primo messaggio dell'utente e che sarà inviato nella coda dei messaggi da approvare. Esempio: rabbia|a[bc]a, fa in modo che tutti i messaggi contenenti le parole rabbia o aba o aca siano silenziati in un primo momento. Si applica solo al primo messaggio."
-    flags_default_topics: "Di default, mostra gli argomenti segnalati nella sezione di amministrazione"
     reply_by_email_enabled: "Abilita la possibilità di rispondere ai messaggi tramite email."
     reply_by_email_address: "Modello per rispondere via email, per esempio: %%{reply_key}@risposta.esempio.com o risposte+%%{reply_key}@esempio.com"
     alternative_reply_by_email_addresses: "Elenco dei template alternativi per la risposta via email in arrivo da indirizzi email. Esempio: %%{reply_key}@reply.example.com|replies+%%{reply_key}@example.com"
@@ -1958,10 +1951,6 @@ it:
       subject_template:
         one: "messaggi in attesa di essere revisionati "
         other: "%{count} messaggi in attesa di essere revisionati"
-      text_body_template: |
-        Ciao,
-
-        dei messaggi di nuovi utenti sono stati trattenuti per la moderazione e attualmente sono in attesa di essere rivisti. [Approvali o rifiutali qui](%{base_url}/queued-posts).
   unsubscribe_link: |
     Per annullare l'iscrizione a queste email, [clicca qui](%{unsubscribe_url}).
   unsubscribe_link_and_mail: |
@@ -2205,7 +2194,6 @@ it:
       unread_messages: "Messaggi Non Letti"
       unread_notifications: "Notifiche Non Lette"
       liked_received: "Like ricevuti"
-      new_posts: "Nuovi Messaggi"
       new_users: "Nuovi utenti"
       popular_topics: "Argomenti Di Successo"
       follow_topic: "Segui questo topic"
@@ -2742,6 +2730,8 @@ it:
     empathetic:
       name: Empatico
       description: Ha ricevuto 500 mi piace sui messaggi e dato 1000 mi piace
+      long_description: |
+        Questo distintivo è assegnato quando hai ricevuto 500 mi piace sui messaggi e hai dato 1000 o più mi piace in cambio. Sei un modello di generosità e di apprezzamento reciproco :two_hearts:.
     first_emoji:
       name: Prima Emoji
       description: Ha usato una Emoji in un messaggio
@@ -2792,7 +2782,6 @@ it:
     title: "Etichette"
     staff_tag_disallowed: 'L''etichetta "%{tag}" può essere applicata solo dallo staff.'
     staff_tag_remove_disallowed: 'L''etichetta "%{tag}" può essere cancellata soltanto dallo staff.'
-    minimum_required_tags: "Devi selezionare almeno %{count} Etichette."
   rss_by_tag: "Argomenti etichettati %{tag}"
   finish_installation:
     congratulations: "Congratulazioni, hai installato Discourse!"
@@ -2869,14 +2858,10 @@ it:
         fields:
           logo:
             label: "Logo Primario"
-          logo_small:
-            label: "Logo Piccolo"
       icons:
         title: "Icone"
         fields:
-          favicon:
-            label: "Icona Piccola"
-          apple_touch_icon:
+          large_icon:
             label: "Icona Grande"
       homepage:
         description: "Ti consigliamo di mostrare gli ultimi argomenti nella tua homepage, ma puoi anche visualizzare le categorie (gruppi di argomenti) sulla homepage, se preferisci."
@@ -2907,6 +2892,7 @@ it:
     popup:
       confirm_title: "Notifiche abilitate - %{site_title}"
       confirm_body: "Successo! Le notifiche sono state abilitate."
+      custom: "Notifica da %{username} su %{site_title}"
   staff_action_logs:
     not_found: "non trovato"
     unknown: "sconosciuto"
@@ -2928,6 +2914,8 @@ it:
         description: "Nascondi questo messaggio e invia automaticamente all'utente un messaggio privato che lo invita a modificarlo."
       delete_spammer:
         title: "Cancella Spammer"
+      delete_single:
+        title: "Elimina"
       disagree_and_restore:
         description: "Ripristina il messaggio in modo che tutti gli utenti possano vederlo."
       disagree:

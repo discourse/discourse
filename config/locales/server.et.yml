@@ -820,7 +820,6 @@ et:
       unread_messages: "Lugemata sõnumid"
       unread_notifications: "Lugemata teavitused"
       liked_received: "Meeldimisi saadud"
-      new_posts: "Uued postitused"
       new_users: "Uued kasutajad"
       popular_topics: "Populaarsed teemad"
       follow_topic: "Jälgi seda teemat"
@@ -1063,14 +1062,10 @@ et:
         fields:
           logo:
             label: "Peamine logo"
-          logo_small:
-            label: "Kompaktne logo"
       icons:
         title: "Ikoonid"
         fields:
-          favicon:
-            label: "Väike ikoon"
-          apple_touch_icon:
+          large_icon:
             label: "Suur ikoon"
       homepage:
         title: "Avaleht"
@@ -1105,6 +1100,8 @@ et:
         title: "Peida postitus"
       delete_spammer:
         title: "Kustuta spämmija"
+      delete_single:
+        title: "Kustuta"
       disagree:
         title: "Ei nõustu"
       ignore:

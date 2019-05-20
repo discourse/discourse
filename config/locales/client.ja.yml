@@ -287,7 +287,6 @@ ja:
         title: "設定"
       view_all: "すべて見る"
       grouped_by_topic: "トピックによってグループ分けされた"
-      title: "レビューが必要"
       topic: "トピック:"
       filtered_user: "ユーザー:"
       show_all_topics: "すべてのトピックを表示"
@@ -572,6 +571,7 @@ ja:
       private_message: "メッセージ"
       private_messages: "メッセージ"
       user_notifications:
+        ignore_duration_username: "ユーザー名"
         ignore_duration_save: "無視する"
         mute_option: "通知しない"
         normal_option: "通常"
@@ -1223,7 +1223,6 @@ ja:
       remove_featured_link: "トピックからリンクを削除する。"
       reply_placeholder: "文章を入力してください。 Markdown, BBコード, HTMLが使用出来ます。 画像はドラッグアンドドロップで貼り付けられます。"
       reply_placeholder_no_images: "文章を入力してください。 Markdown, BBコード, HTMLが使用出来ます。"
-      reply_placeholder_choose_category: "ここに入力する前にカテゴリを選択する必要があります。"
       view_new_post: "新しい投稿を見る。"
       saving: "保存中"
       saved: "保存しました!"
@@ -1563,7 +1562,6 @@ ja:
         jump_bottom: "最後の投稿へ"
         jump_prompt: "ジャンプする..."
         jump_prompt_of: "%{count} 投稿"
-        jump_prompt_long: "どの投稿へジャンプしますか？"
         jump_bottom_with_number: "%{post_number}番へジャンプ"
         jump_prompt_or: "または"
         total: 投稿の合計
@@ -1847,36 +1845,6 @@ ja:
           notify_user: "このユーザにメッセージを送信しました"
           bookmark: "この投稿をブックマークしました"
           like: "あなたが「いいね！」しました"
-        by_you_and_others:
-          off_topic:
-            other: "あなたと他{{count}}名が関係無い話題として通報しました"
-          spam:
-            other: "あなたと他{{count}}名がスパム報告として通報しました"
-          inappropriate:
-            other: "あなたと他{{count}}名が不適切な発言として通報しました"
-          notify_moderators:
-            other: "あなたと他{{count}}名がスタッフの確認が必要として通報しました"
-          notify_user:
-            other: "あなたと他{{count}}人がこのユーザにメッセージを送信しました"
-          bookmark:
-            other: "あなたと他{{count}}人がこの投稿をブックマークしました"
-          like:
-            other: "あなたと他{{count}}人が「いいね！」しました"
-        by_others:
-          off_topic:
-            other: "{{count}}名のユーザが関係無い話題として通報しました"
-          spam:
-            other: "{{count}}名のユーザがスパム報告として通報しました"
-          inappropriate:
-            other: "{{count}}名のユーザが不適切な発言として通報しました"
-          notify_moderators:
-            other: "{{count}}名のユーザがスタッフの確認が必要として通報しました"
-          notify_user:
-            other: "{{count}} 人がこのユーザにメッセージを送信しました"
-          bookmark:
-            other: "{{count}}人のユーザがこの投稿をブックマークしました"
-          like:
-            other: "{{count}}人のユーザが「いいね！」しました"
       merge:
         confirm:
           other: "これらの{{count}}の投稿を統合したいですか?"
@@ -1958,6 +1926,7 @@ ja:
       email_in_disabled_click: '"email in"設定を有効にしてください'
       allow_badges_label: "このカテゴリでバッジが付与されることを許可"
       edit_permissions: "パーミッションを編集"
+      review_group_name: "グループ名"
       this_year: "今年"
       default_position: "デフォルトポジション"
       position_disabled: "カテゴリはアクティビティで並び替えられます。カテゴリ一覧の順番を制御するには"
@@ -2312,7 +2281,6 @@ ja:
       moderator: "モデレータ"
       dashboard:
         title: "ダッシュボード"
-        last_updated: "ダッシュボード最終更新:"
         version: "Version"
         up_to_date: "最新のバージョンです!"
         critical_available: "重要度の高いアップデートが存在します。"
@@ -2358,6 +2326,11 @@ ja:
           end_date: "End Date"
           groups: "すべてのグループ"
           disabled: "このレポートは利用不可"
+          filters:
+            group:
+              label: グループ
+            category:
+              label: カテゴリ
       commits:
         latest_changes: "最新の更新内容:"
         by: "by"
@@ -2523,7 +2496,6 @@ ja:
         new: "新規"
         new_style: "新しいスタイル"
         delete: "削除"
-        delete_confirm: "このテーマを削除しますか?"
         color: "カラー"
         opacity: "透明度"
         copy: "コピー"

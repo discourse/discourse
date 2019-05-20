@@ -111,6 +111,9 @@ tr_TR:
     share:
       post: "#%{postNumber} numaralı gönderiyi paylaş"
       close: "kapat"
+      twitter: "bu linki Twitter'da paylaş"
+      facebook: "bu linki Facebook'ta paylaş"
+      email: "bu linki epostayla yolla"
     action_codes:
       public_topic: "bu konuyu %{when} herkese açık yaptı"
       private_topic: "bu konuyu %{when} kişisel mesaj yaptı"
@@ -292,7 +295,6 @@ tr_TR:
         save_changes: "Değişiklikleri Kaydet"
         title: "Ayarlar"
       moderation_history: "Moderasyon Tarihi"
-      title: "İnceleme Gerekiyor"
       topic: "Konu:"
       user:
         username: "Kullanıcı Adı"
@@ -561,6 +563,7 @@ tr_TR:
       private_message: "Mesaj"
       private_messages: "Mesajlar"
       user_notifications:
+        ignore_duration_username: "Kullanıcı Adı"
         ignore_duration_save: "Yoksay"
         mute_option: "Sessiz"
         normal_option: "Normal"
@@ -1236,7 +1239,6 @@ tr_TR:
       remove_featured_link: "Konudan bağlantıyı kaldır."
       reply_placeholder: "Buraya yaz. Biçimlendirmek için Markdown, BBCode ya da HTML kullanabilirsin. Resimleri sürükleyebilir ya da yapıştırabilirsin."
       reply_placeholder_no_images: "Buraya yaz. Biçimlendirme için Markdown, BBCode ya da HTML kullan."
-      reply_placeholder_choose_category: "Buraya yazmadan önce bir kategori seçmelisiniz."
       view_new_post: "Yeni gönderini görüntüle."
       saving: "Kaydediliyor"
       saved: "Kaydedildi!"
@@ -1616,7 +1618,6 @@ tr_TR:
         jump_bottom: "son gönderiye geç"
         jump_prompt: "geç"
         jump_prompt_of: " %{count}  gönderinin"
-        jump_prompt_long: "Hangi gönderiye gitmek istersin?"
         jump_bottom_with_number: "%{post_number} numaralı gönderiye geç"
         jump_prompt_to_date: "şimdiye kadar"
         jump_prompt_or: "ya da"
@@ -1927,50 +1928,6 @@ tr_TR:
           notify_user: "Bu kullanıcıya mesaj gönderdin"
           bookmark: "Bu gönderiyi işaretledin"
           like: "Bunu beğendin"
-        by_you_and_others:
-          off_topic:
-            one: "Siz ve {{count}} diğer kişi bunu konu dışı olarak bildirdi"
-            other: "Sen ve {{count}} kişi bunu bayrakla \"konu dışı\" olarak işaretledi"
-          spam:
-            one: "Siz ve {{count}} diğer kişi bunu istenmeyen olarak bildirdi"
-            other: "Sen ve {{count}} kişi bunu bayrakla \"istenmeyen\" olarak işaretledi"
-          inappropriate:
-            one: "Siz ve {{count}} diğer kişi bunu uygunsuz olarak bildirdi"
-            other: "Sen ve {{count}} kişi bunu bayrakla \"uygunsuz\" olarak işaretledi"
-          notify_moderators:
-            one: "Siz ve {{count}} diğer kişi bunu denetlenmesi için bildirdi"
-            other: "Sen ve {{count}} kişi bunu moderatörün denetlemesi için bayrakla işaretledi"
-          notify_user:
-            one: "Siz ve {{count}} diğer kişi bu kullanıcıya ileti yolladı"
-            other: "Sen ve {{count}} kişi bu kullanıcıya mesaj gönderdi"
-          bookmark:
-            one: "Siz ve {{count}} diğer kişi bu gönderiyi imledi"
-            other: "Sen ve {{count}} kişi bu gönderiyi işaretledi"
-          like:
-            one: "Siz ve {{count}} başka kişi bunu beğendi"
-            other: "Sen ve {{count}} kişi bunu beğendi"
-        by_others:
-          off_topic:
-            one: "{{count}} kişi bunu konu dışı olarak bildirdi"
-            other: "{{count}} kişi bunu bayrakla \"konu dışı\" olarak işaretledi"
-          spam:
-            one: "{{count}} kişi bunu istenmeyen olarak bildirdi"
-            other: "{{count}} kişi bunu bayrakla \"istenmeyen\" olarak işaretledi"
-          inappropriate:
-            one: "{{count}} kişi bunu uygunsuz olarak bildirdi"
-            other: "{{count}} kişi bunu bayrakla \"uygunsuz\" olarak işaretledi"
-          notify_moderators:
-            one: "{{count}} kişi bunu moderasyon için bildirdi"
-            other: "{{count}} kişi bunu moderasyon için bayrakla işaretledi"
-          notify_user:
-            one: "{{count}} bu kullanıcıya ileti yolladı"
-            other: "{{count}} bu kullanıcıya ileti yolladı"
-          bookmark:
-            one: "{{count}} kişi bu gönderiyi imledi"
-            other: "{{count}} kişi bu gönderiyi işaretledi"
-          like:
-            one: "{{count}} kişi bunu beğendi"
-            other: "{{count}} kişi bunu beğendi"
       revisions:
         controls:
           first: "İlk revizyon"
@@ -2060,6 +2017,7 @@ tr_TR:
       default_top_period: "Varsayılan Üst Periyot:"
       allow_badges_label: "Bu kategoride rozetle ödüllendirilmesine izin ver"
       edit_permissions: "İzinleri Düzenle"
+      review_group_name: "grup adı"
       require_topic_approval: "Tüm yeni konular moderatör onayını gerektirir"
       require_reply_approval: "Tüm yeni cevaplar moderatör onayı gerektirir"
       this_year: "bu yıl"
@@ -2482,7 +2440,6 @@ tr_TR:
         title: "Mevcut raporlar listesi"
       dashboard:
         title: "Gösterge Paneli"
-        last_updated: "Göstergelerin son güncellenmesi:"
         version: "Sürüm"
         up_to_date: "Sistemin güncel durumda!"
         critical_available: "Önemli bir güncelleme var."
@@ -2544,6 +2501,11 @@ tr_TR:
           no_data: "Gösterilecek bilgi yok."
           trending_search:
             more: '<a href="%{basePath}/admin/logs/search_logs">Arama Günlükleri</a>'
+          filters:
+            group:
+              label: Grup
+            category:
+              label: Kategori
       commits:
         latest_changes: "En son değişiklikler: lütfen sık sık güncelle!"
         by: "tarafından"
@@ -2794,7 +2756,6 @@ tr_TR:
         new: "Yeni"
         new_style: "Yeni Biçim"
         delete: "Sil"
-        delete_confirm: "Bu tema silinsin mi?"
         color: "Renk"
         opacity: "Saydam"
         copy: "Kopyala"

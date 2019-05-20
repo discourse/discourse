@@ -494,6 +494,7 @@ sv:
       private_message: "Meddelande"
       private_messages: "Meddelanden"
       user_notifications:
+        ignore_duration_username: "Användarnamn"
         mute_option: "Tystad"
         normal_option: "Normal"
       activity_stream: "Aktivitet"
@@ -1323,7 +1324,6 @@ sv:
         jump_bottom: "hoppa till sista inlägget"
         jump_prompt: "hoppa till"
         jump_prompt_of: "av %{count} inlägg"
-        jump_prompt_long: "Vilket inlägg vill du hoppa till?"
         jump_bottom_with_number: "hoppa till inlägg %{post_number}"
         jump_prompt_or: "eller"
         total: antal inlägg
@@ -1608,50 +1608,6 @@ sv:
           notify_user: "Du skickade ett meddelande till denna användare"
           bookmark: "Du bokmärkte detta inlägg"
           like: "Du gillade detta"
-        by_you_and_others:
-          off_topic:
-            one: "Du och 1 annan flaggade detta som orelevant"
-            other: "Du och {{count}} andra personer flaggade detta som orelevant"
-          spam:
-            one: "Du och 1 annan flaggade detta som spam"
-            other: "Du och {{count}} andra personer flaggade detta som spam"
-          inappropriate:
-            one: "Du och 1 annan flaggade detta som olämpligt"
-            other: "Du och {{count}} andra personer flaggade detta som olämpligt"
-          notify_moderators:
-            one: "Du och 1 annan person har flaggat detta för moderation"
-            other: "Du och {{count}} andra personer har flaggat detta för moderation"
-          notify_user:
-            one: "Du och 1 person till skickade ett meddelande till denna användare"
-            other: "Du och {{count}} andra personer skickade ett meddelande till denna användare"
-          bookmark:
-            one: "Du och 1 annan bokmärkte detta inlägg"
-            other: "Du och {{count}} andra personer bokmärkte detta inlägg"
-          like:
-            one: "Du och 1 annan gillade detta"
-            other: "Du och {{count}} andra personer gillade detta"
-        by_others:
-          off_topic:
-            one: "1 person flaggade detta som orelevant"
-            other: "{{count}} personer flaggade detta som orelevant"
-          spam:
-            one: "1 person flaggade detta som spam"
-            other: "{{count}} personer flaggade detta som spam"
-          inappropriate:
-            one: "1 person flaggade detta som olämpligt"
-            other: "{{count}} personer flaggade detta som olämpligt"
-          notify_moderators:
-            one: "1 person flaggade detta för granskning"
-            other: "{{count}} personer flaggade detta för granskning"
-          notify_user:
-            one: "1 person skickade ett meddelande till denna användare"
-            other: "{{count}} skickade ett meddelande till denna användare"
-          bookmark:
-            one: "1 person bokmärkte detta inlägg"
-            other: "{{count}} personer bokmärkte detta inlägg"
-          like:
-            one: "1 person gillade detta"
-            other: "{{count}} personer gillade detta"
       revisions:
         controls:
           first: "Första revision"
@@ -1734,6 +1690,7 @@ sv:
       default_view: "Förvald ämneslista"
       allow_badges_label: "Tillåt utmärkelser i den här kategorin"
       edit_permissions: "Redigera behörigheter"
+      review_group_name: "gruppnamn"
       this_year: "i år"
       default_position: "Standardposition"
       position_disabled: "Kategorier kommer att sorteras efter deras aktivitet. För att ställa in sorteringen av kategorier i den här listan,"
@@ -2128,7 +2085,6 @@ sv:
       moderator: "Moderator"
       dashboard:
         title: "Översiktspanel"
-        last_updated: "Dashboard senast uppdaterad:"
         version: "Version"
         up_to_date: "Du är aktuell!"
         critical_available: "En kritisk uppdatering är tillgänglig."
@@ -2172,6 +2128,11 @@ sv:
           start_date: "Startdatum"
           end_date: "Slutdatum"
           groups: "Alla grupper"
+          filters:
+            group:
+              label: Grupp
+            category:
+              label: Kategori
       commits:
         latest_changes: "Senaste ändringarna: snälla uppdatera ofta!"
         by: "av"

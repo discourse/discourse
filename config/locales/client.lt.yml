@@ -596,6 +596,7 @@ lt:
       private_message: "Žinutės"
       private_messages: "Žinutės"
       user_notifications:
+        ignore_duration_username: "Slapyvardis"
         ignore_duration_save: "Ignoruoti"
         mute_option: "Nutildyta"
         normal_option: "Įprastas"
@@ -1845,78 +1846,6 @@ lt:
           notify_user: "Jūs išsiuntėt žinutę šiam vartotojui"
           bookmark: "Jūs uždėjot žymą ant šio įrašo"
           like: "Jūs tai mėgstate"
-        by_you_and_others:
-          off_topic:
-            one: "Tu ir dar 1 žmogus pažymėjo tai, kaip \"ne į temą\"."
-            few: "Tu ir {{count}} žmonės pažymėjo tai kaip \"ne į temą\"."
-            many: "Tu ir {{count}} žmonės pažymėjo tai kaip \"ne į temą\"."
-            other: "Tu ir {{count}} žmonės pažymėjo tai kaip \"ne į temą\"."
-          spam:
-            one: "Tu ir dar 1 žmogus pažymėjo tai, kaip šiukšlę."
-            few: "Tu ir {{count}} žmonės pažymėjo tai kaip šiukšlę"
-            many: "Tu ir {{count}} žmonės pažymėjo tai kaip šiukšlę"
-            other: "Tu ir {{count}} žmonės pažymėjo tai kaip šiukšlę"
-          inappropriate:
-            one: "Tu ir dar 1 žmogus pažymėjo tai kaip nepriimtiną."
-            few: "Tu ir {{count}} žmonės pažymėjo tai kaip nepriimtiną."
-            many: "Tu ir {{count}} žmonės pažymėjo tai kaip nepriimtiną."
-            other: "Tu ir {{count}} žmonės pažymėjo tai kaip nepriimtiną."
-          notify_moderators:
-            one: "Tu ir dar vienas žmogus siūlo moderavimą"
-            few: "Tu ir {{count}} žmonės siūlo moderavimą"
-            many: "Tu ir {{count}} žmonės siūlo moderavimą"
-            other: "Tu ir {{count}} žmonės siūlo moderavimą"
-          notify_user:
-            one: "Tu ir dar 1 žmogus išsiuntė žinutę šiam vartotojui"
-            few: "Tu ir {{count}} žmonės išsiuntė žinutę šiam vartotojui"
-            many: "Tu ir {{count}} žmonės išsiuntė žinutę šiam vartotojui"
-            other: "Tu ir {{count}} žmonės išsiuntė žinutę šiam vartotojui"
-          bookmark:
-            one: "Tu ir dar vienas žmogus pridėjo žymą šiam įrašui"
-            few: "Jūs ir {{count}} kitų žmonių pridėjo šį įrašą prie žymių"
-            many: "Jūs ir {{count}} kitų žmonių pridėjo šį įrašą prie žymių"
-            other: "Jūs ir {{count}} kitų žmonių pridėjo šį įrašą prie žymių"
-          like:
-            one: "Jūs ir {{count}} kitas žmogus mėgsta šį pranešimą"
-            few: "Jūs ir {{count}} kiti žmonės mėgsta šį pranešimą"
-            many: "Jūs ir {{count}} kitų žmonių mėgsta šį pranešimą"
-            other: "Jūs ir {{count}} kitų žmonių mėgsta šį pranešimą"
-        by_others:
-          off_topic:
-            one: "1 žmogus pažymėjo tai kaip \"ne į temą\"."
-            few: "{{count}} žmonės pažymėjo tai kaip \"ne į temą\"."
-            many: "{{count}} žmonės pažymėjo tai kaip \"ne į temą\"."
-            other: "{{count}} žmonės pažymėjo tai kaip \"ne į temą\"."
-          spam:
-            one: "1 žmogus pažymėjo tai kaip šiukšlę"
-            few: "{{count}} žmonės pažymėjo tai kaip šiukšlę"
-            many: "{{count}} žmonės pažymėjo tai kaip šiukšlę"
-            other: "{{count}} žmonės pažymėjo tai kaip šiukšlę"
-          inappropriate:
-            one: "1 žmogus pažymėjo tai kaip nepriimtiną"
-            few: "{{count}} žmonės pažymėjo tai kaip nepriimtiną"
-            many: "{{count}} žmonės pažymėjo tai kaip nepriimtiną"
-            other: "{{count}} žmonės pažymėjo tai kaip nepriimtiną"
-          notify_moderators:
-            one: "1 žmogus siūlo moderavimą"
-            few: "{{count}} žmonės siūlo moderavimą"
-            many: "{{count}} žmonės siūlo moderavimą"
-            other: "{{count}} žmonės siūlo moderavimą"
-          notify_user:
-            one: "1 žmogus išsiuntė žinutę šiam vartotojui"
-            few: "{{count}} žmonės išsiuntė žinutę šiam vartotojui"
-            many: "{{count}} žmonės išsiuntė žinutę šiam vartotojui"
-            other: "{{count}} žmonės išsiuntė žinutę šiam vartotojui"
-          bookmark:
-            one: "{{count}} žmogus pridėjo šį pranešimą prie žymių"
-            few: "{{count}} žmonės pridėjo šį pranešimą prie žymių"
-            many: "{{count}} žmonių pridėjo žymą šiam įrašui"
-            other: "{{count}} žmonių pridėjo žymą šiam įrašui"
-          like:
-            one: "{{count}} žmogus tai mėgsta"
-            few: "{{count}} žmonės tai mėgsta"
-            many: "{{count}} žmonių tai mėgsta"
-            other: "{{count}} žmonių tai mėgsta"
       revisions:
         controls:
           first: "Pirmoji peržiūra"
@@ -1987,6 +1916,7 @@ lt:
       sort_order: "Temų sąrasą rūšiuoti oagal\""
       allow_badges_label: "Leisti trofėjų apdovanojimus šioje kategorijoje"
       edit_permissions: "Redaguoti leidimus"
+      review_group_name: "grupės pavadinimas"
       this_year: "šiais metais"
       default_position: "Numatyta pozicija"
       position_disabled: "Kategorijos bus rodomos pagal aktyvumą. Tam, kad nustatytum kategorijų rodymo tvarką,"
@@ -2383,7 +2313,6 @@ lt:
       moderator: "Moderatorius"
       dashboard:
         title: "Apžvalga"
-        last_updated: "Apžvalga paskutinį karta atnaujinta:"
         version: "Versija"
         up_to_date: "Jūs turite naujausią versiją!"
         critical_available: "Yra kritinių atnaujinimų."
@@ -2437,6 +2366,11 @@ lt:
           groups: "Visos grupės"
           trending_search:
             more: '<a href="%{basePath}/admin/logs/search_logs">Paieškos įrašai</a>'
+          filters:
+            group:
+              label: Grupė
+            category:
+              label: Kategorija
       commits:
         latest_changes: "Paskutiniai pakeitimai:"
         by: "nuo"

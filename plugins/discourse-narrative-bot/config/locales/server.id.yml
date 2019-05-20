@@ -110,11 +110,6 @@ id:
       random_mention:
         reply: |-
           Hei! Untuk tahu saya bisa melakukan apa, ketik `@%{discobot_username} %{help_trigger}`.
-        tracks: |-
-          Saat ini yang saya tahu saya bisa melakukan ini:
-
-          `@%{discobot_username} %{reset_trigger} %{default_track}`
-          > Mulai dengan salah satu petunjuk interaktif berikut ini: %{tracks}.
         bot_actions: |-
           `@%{discobot_username} %{dice_trigger} 2d6`
           > :game_die: 3, 6
@@ -137,7 +132,6 @@ id:
 
           Sementara ini, saya akan mendampingi Anda.
     new_user_narrative:
-      reset_trigger: "pengguna baru"
       cert_title: "Tercatat telah berhasil menyelesaikan panduan pengguna baru."
       images:
         reply: |-
@@ -211,7 +205,6 @@ id:
       certificate:
         alt: 'Sertifikat Pencapaian'
     advanced_user_narrative:
-      reset_trigger: 'anggota lanjutan'
       cert_title: "Tercatat telah berhasil menyelesaikan panduan pengguna lanjutan."
       title: ':arrow_up: Fasilitas pengguna lanjutan'
       edit:
@@ -231,10 +224,6 @@ id:
           Agar diskusi bisa terus berjalan, hapus segara komentar atau pos Anda sesegara mungkin. Pos akan terhapus dalam beberapa saat.
       recover:
         deleted_post_raw: 'Kenapa @%{discobot_username} menghapus pos saya? :anguished:'
-        reply: |-
-          Fiuh, itu yang saya maksud! Terima kasih sudah memperbaikinya :wink:
-
-          Ingat, Anda hanya memiliki waktu selama 24 jam untuk menghapus pos Anda.
       category_hashtag:
         instructions: |-
           Apakah Anda tahu kalau bisa mengunjungi kategori atau label dalam pos? Contohnya, sudah melihat kategori %{category}?

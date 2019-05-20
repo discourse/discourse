@@ -1397,6 +1397,8 @@ vi:
         title: "Tạm khóa Thành viên"
       delete_spammer:
         title: "Xóa người Spam"
+      delete_single:
+        title: "Xóa"
       disagree:
         title: "Không đồng ý"
       approve:
