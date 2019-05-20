@@ -133,8 +133,20 @@ TestProf::BeforeAll.configure do |config|
   end
 end
 
-TestProf::LetItBe.configure do |config|
-  config.alias_to :fab!, refind: true
+if ENV['PREFABRICATION'] == '0'
+  module Prefabrication
+    def fab!(name, &blk)
+      let!(name, &blk)
+    end
+  end
+
+  RSpec.configure do |config|
+    config.extend Prefabrication
+  end
+else
+  TestProf::LetItBe.configure do |config|
+    config.alias_to :fab!, refind: true
+  end
 end
 
 RSpec.configure do |config|
