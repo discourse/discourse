@@ -209,7 +209,16 @@ task "uploads:migrate_to_s3" => :environment do
 end
 
 def migrate_to_s3_all_sites
-  RailsMultisite::ConnectionManagement.each_connection { migrate_to_s3 }
+  RailsMultisite::ConnectionManagement.each_connection do
+    begin
+      migrate_to_s3
+    rescue e
+      if ENV["SKIP_FAILED"]
+        puts e
+      else
+        raise e unless ENV["SKIP_FAILED"]
+      end
+  end
 end
 
 def migration_successful?(db, should_raise = false)
