@@ -460,8 +460,10 @@ def migrate_to_s3
       puts "Rebaking posts with lightboxes..."
 
       Post.where("cooked LIKE '%class=\"lightbox\"%'").find_each do |post|
+        putc "."
         post.rebake!(priority: :ultra_low)
       end
+      puts
     end
   end
 
