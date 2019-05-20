@@ -213,6 +213,10 @@ def migrate_to_s3_all_sites
 end
 
 def migrate_to_s3
+
+  # we don't want have migrated state, ensure we run all jobs here
+  Jobs.run_immediately!
+
   db = RailsMultisite::ConnectionManagement.current_db
 
   dry_run = !!ENV["DRY_RUN"]
