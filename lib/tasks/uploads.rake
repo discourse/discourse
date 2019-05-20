@@ -441,7 +441,7 @@ def migrate_to_s3
   end
 
   base_url = File.join(SiteSetting.Upload.s3_base_url, prefix)
-  count = Upload.where("url NOT LIKE '#{base_url}%'").count
+  count = Upload.where("id >= 0 AND url NOT LIKE '#{base_url}%'").count
   raise "#{count} of #{Upload.count} uploads are not migrated to S3. #{failure_message}" if count > 0
 
   cdn_path = SiteSetting.cdn_path("/uploads/#{db}").sub(/https?:/, "")
