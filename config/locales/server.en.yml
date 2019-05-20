@@ -171,19 +171,19 @@ en:
         one: "Cannot delete record because a dependent %{record} exists"
         many: "Cannot delete record because dependent %{record} exist"
       too_long:
-        one: is too long (maximum is 1 character)
+        one: is too long (maximum is %{count} character)
         other: is too long (maximum is %{count} characters)
       too_short:
-        one: is too short (minimum is 1 character)
+        one: is too short (minimum is %{count} character)
         other: is too short (minimum is %{count} characters)
       wrong_length:
-        one: is the wrong length (should be 1 character)
+        one: is the wrong length (should be %{count} character)
         other: is the wrong length (should be %{count} characters)
       other_than: "must be other than %{count}"
     template:
       body: ! "There were problems with the following fields:"
       header:
-        one: 1 error prohibited this %{model} from being saved
+        one: "%{count} error prohibited this %{model} from being saved"
         other: ! "%{count} errors prohibited this %{model} from being saved"
     embed:
       load_from_remote: "There was an error loading that post."
@@ -249,7 +249,7 @@ en:
   likes: "Likes"
 
   too_many_replies:
-    one: "We're sorry, but new users are temporarily limited to 1 reply in the same topic."
+    one: "We're sorry, but new users are temporarily limited to %{count} reply in the same topic."
     other: "We're sorry, but new users are temporarily limited to %{count} replies in the same topic."
 
   max_consecutive_replies:
@@ -265,7 +265,7 @@ en:
     no_hosts: "No hosts were set up for embedding."
     configure: "Configure Embedding"
     more_replies:
-      one: "1 more reply"
+      one: "%{count} more reply"
       other: "%{count} more replies"
 
     loading: "Loading Discussion..."
@@ -382,7 +382,7 @@ en:
 
   education:
     until_posts:
-      one: "1 post"
+      one: "%{count} post"
       other: "%{count} posts"
 
     "new-topic": |
@@ -437,7 +437,7 @@ en:
 
       You’ve replied %{count} times to @%{reply_username} in this particular topic!
 
-      A great discussion involves many voices and perspectives. Can you get anybody else involved? 
+      A great discussion involves many voices and perspectives. Can you get anybody else involved?
 
       And don’t forget, if you’d like to continue your conversation with this particular user at length outside of public view, [send them a personal message](%{base_path}/u/%{reply_username}).
 
@@ -604,7 +604,7 @@ en:
       uncategorized: "This category is special. It is intended as a holding area for topics that have no category; it cannot be deleted."
       has_subcategories: "Can't delete this category because it has sub-categories."
       topic_exists:
-        one: "Can't delete this category because it has 1 topic. Oldest topic is %{topic_link}."
+        one: "Can't delete this category because it has %{count} topic. Oldest topic is %{topic_link}."
         other: "Can't delete this category because it has %{count} topics. Oldest topic is %{topic_link}."
       topic_exists_no_oldest: "Can't delete this category because topic count is %{count}."
     uncategorized_description: "Topics that don't need a category, or don't fit into any other existing category."
@@ -648,13 +648,13 @@ en:
       topic_invitations_per_day: "You’ve reached the maximum number of topic invitations. Please wait %{time_left} before trying again."
 
     hours:
-      one: "1 hour"
+      one: "%{count} hour"
       other: "%{count} hours"
     minutes:
-      one: "1 minute"
+      one: "%{count} minute"
       other: "%{count} minutes"
     seconds:
-      one: "1 second"
+      one: "%{count} second"
       other: "%{count} seconds"
     short_time: "a few seconds"
 
@@ -662,37 +662,37 @@ en:
     distance_in_words:
       half_a_minute: "< 1m"
       less_than_x_seconds:
-        one: "< 1s"
+        one: "< %{count}s"
         other: "< %{count}s"
       x_seconds:
-        one: "1s"
+        one: "%{count}s"
         other: "%{count}s"
       less_than_x_minutes:
-        one: "< 1m"
+        one: "< %{count}m"
         other: "< %{count}m"
       x_minutes:
-        one: "1m"
+        one: "%{count}m"
         other: "%{count}m"
       about_x_hours:
-        one: "1h"
+        one: "%{count}h"
         other: "%{count}h"
       x_days:
-        one: "1d"
+        one: "%{count}d"
         other: "%{count}d"
       about_x_months:
-        one: "1mon"
+        one: "%{count}mon"
         other: "%{count}mon"
       x_months:
-        one: "1mon"
+        one: "%{count}mon"
         other: "%{count}mon"
       about_x_years:
-        one: "1y"
+        one: "%{count}y"
         other: "%{count}y"
       over_x_years:
-        one: "> 1y"
+        one: "> %{count}y"
         other: "> %{count}y"
       almost_x_years:
-        one: "1y"
+        one: "%{count}y"
         other: "%{count}y"
 
     distance_in_words_verbose:
@@ -701,34 +701,34 @@ en:
         one: "just now"
         other: "just now"
       x_seconds:
-        one: "1 second ago"
+        one: "%{count} second ago"
         other: "%{count} seconds ago"
       less_than_x_minutes:
-        one: "less than 1 minute ago"
+        one: "less than %{count} minute ago"
         other: "less than %{count} minutes ago"
       x_minutes:
-        one: "1 minute ago"
+        one: "%{count} minute ago"
         other: "%{count} minutes ago"
       about_x_hours:
-        one: "1 hour ago"
+        one: "%{count} hour ago"
         other: "%{count} hours ago"
       x_days:
-        one: "1 day ago"
+        one: "%{count} day ago"
         other: "%{count} days ago"
       about_x_months:
-        one: "about 1 month ago"
+        one: "about %{count} month ago"
         other: "about %{count} months ago"
       x_months:
-        one: "1 month ago"
+        one: "%{count} month ago"
         other: "%{count} months ago"
       about_x_years:
-        one: "about 1 year ago"
+        one: "about %{count} year ago"
         other: "about %{count} years ago"
       over_x_years:
-        one: "over 1 year ago"
+        one: "over %{count} year ago"
         other: "over %{count} years ago"
       almost_x_years:
-        one: "almost 1 year ago"
+        one: "almost %{count} year ago"
         other: "almost %{count} years ago"
 
   password_reset:
@@ -2138,47 +2138,47 @@ en:
 
   topic_statuses:
     autoclosed_message_max_posts:
-      one: "This message was automatically closed after reaching the maximum limit of 1 reply."
+      one: "This message was automatically closed after reaching the maximum limit of %{count} reply."
       other: "This message was automatically closed after reaching the maximum limit of %{count} replies."
     autoclosed_topic_max_posts:
-      one: "This topic was automatically closed after reaching the maximum limit of 1 reply."
+      one: "This topic was automatically closed after reaching the maximum limit of %{count} reply."
       other: "This topic was automatically closed after reaching the maximum limit of %{count} replies."
     autoclosed_enabled_days:
-      one: "This topic was automatically closed after 1 day. New replies are no longer allowed."
+      one: "This topic was automatically closed after %{count} day. New replies are no longer allowed."
       other: "This topic was automatically closed after %{count} days. New replies are no longer allowed."
     autoclosed_enabled_hours:
-      one: "This topic was automatically closed after 1 hour. New replies are no longer allowed."
+      one: "This topic was automatically closed after %{count} hour. New replies are no longer allowed."
       other: "This topic was automatically closed after %{count} hours. New replies are no longer allowed."
     autoclosed_enabled_minutes:
-      one: "This topic was automatically closed after 1 minute. New replies are no longer allowed."
+      one: "This topic was automatically closed after %{count} minute. New replies are no longer allowed."
       other: "This topic was automatically closed after %{count} minutes. New replies are no longer allowed."
     autoclosed_enabled_lastpost_days:
-      one: "This topic was automatically closed 1 day after the last reply. New replies are no longer allowed."
+      one: "This topic was automatically closed %{count} day after the last reply. New replies are no longer allowed."
       other: "This topic was automatically closed %{count} days after the last reply. New replies are no longer allowed."
     autoclosed_enabled_lastpost_hours:
-      one: "This topic was automatically closed 1 hour after the last reply. New replies are no longer allowed."
+      one: "This topic was automatically closed %{count} hour after the last reply. New replies are no longer allowed."
       other: "This topic was automatically closed %{count} hours after the last reply. New replies are no longer allowed."
     autoclosed_enabled_lastpost_minutes:
-      one: "This topic was automatically closed 1 minute after the last reply. New replies are no longer allowed."
+      one: "This topic was automatically closed %{count} minute after the last reply. New replies are no longer allowed."
       other: "This topic was automatically closed %{count} minutes after the last reply. New replies are no longer allowed."
 
     autoclosed_disabled_days:
-      one: "This topic was automatically opened after 1 day."
+      one: "This topic was automatically opened after %{count} day."
       other: "This topic was automatically opened after %{count} days."
     autoclosed_disabled_hours:
-      one: "This topic was automatically opened after 1 hour."
+      one: "This topic was automatically opened after %{count} hour."
       other: "This topic was automatically opened after %{count} hours."
     autoclosed_disabled_minutes:
-      one: "This topic was automatically opened after 1 minute."
+      one: "This topic was automatically opened after %{count} minute."
       other: "This topic was automatically opened after %{count} minutes."
     autoclosed_disabled_lastpost_days:
-      one: "This topic was automatically opened 1 day after the last reply."
+      one: "This topic was automatically opened %{count} day after the last reply."
       other: "This topic was automatically opened %{count} days after the last reply."
     autoclosed_disabled_lastpost_hours:
-      one: "This topic was automatically opened 1 hour after the last reply."
+      one: "This topic was automatically opened %{count} hour after the last reply."
       other: "This topic was automatically opened %{count} hours after the last reply."
     autoclosed_disabled_lastpost_minutes:
-      one: "This topic was automatically opened 1 minute after the last reply."
+      one: "This topic was automatically opened %{count} minute after the last reply."
       other: "This topic was automatically opened %{count} minutes after the last reply."
 
     autoclosed_disabled: "This topic is now opened. New replies are allowed."
@@ -2259,10 +2259,10 @@ en:
 
   reviewables_reminder:
     submitted:
-      one: "Items were submitted over 1 hour ago. [Please review them](%{base_path}/review)."
+      one: "Items were submitted over %{count} hour ago. [Please review them](%{base_path}/review)."
       other: "Items were submitted over %{count} hours ago. [Please review them](%{base_path}/review)."
     subject_template:
-      one: "1 item needs to be reviewed"
+      one: "%{count} item needs to be reviewed"
       other: "%{count} items need to be reviewed"
 
   unsubscribe_mailer:
@@ -2473,7 +2473,7 @@ en:
     ignored_and_deleted: "Thanks for letting us know. We've removed the post."
 
   temporarily_closed_due_to_flags:
-    one: "This topic is temporarily closed for at least 1 hour due to a large number of community flags."
+    one: "This topic is temporarily closed for at least %{count} hour due to a large number of community flags."
     other: "This topic is temporarily closed for at least %{count} hours due to a large number of community flags."
 
   system_messages:
@@ -2974,7 +2974,7 @@ en:
     pending_users_reminder:
       title: "Pending Users Reminder"
       subject_template:
-        one: "1 user waiting for approval"
+        one: "%{count} user waiting for approval"
         other: "%{count} users waiting for approval"
       text_body_template: |
         There are new user signups waiting to be approved (or rejected) before they can access this forum.
@@ -3007,7 +3007,7 @@ en:
     queued_posts_reminder:
       title: "Queued Posts Reminder"
       subject_template:
-        one: "1 post waiting to be reviewed"
+        one: "%{count} post waiting to be reviewed"
         other: "%{count} posts waiting to be reviewed"
       text_body_template: |
         Hello,
@@ -3032,7 +3032,7 @@ en:
   user_notifications:
     previous_discussion: "Previous Replies"
     reached_limit:
-      one: "Heads up: We send a maximum of 1 daily email. Check the site to see the ones that might be held back."
+      one: "Heads up: We send a maximum of %{count} daily email. Check the site to see the ones that might be held back."
       other: "Heads up: We send a maximum of %{count} daily emails. Check the site to see the ones that might be held back. PS thanks for being popular!"
     in_reply_to: "In Reply To"
     unsubscribe:
