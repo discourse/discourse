@@ -2798,7 +2798,7 @@ sl:
         print: "<b>ctrl</b>+<b>p</b> Natisni temo"
     badges:
       earned_n_times:
-        one: "Prislužili to značko 1 krat"
+        one: "Prislužili to značko %{count} krat"
         two: "Prislužili to značko %{count} krat"
         few: "Prislužili to značko %{count} krat"
         other: "Prislužili to značko %{count} krat"
@@ -3781,7 +3781,7 @@ sl:
       upload_error: "Prišlo je do napake med nalaganjem te datoteke. Poskusite ponovno."
       quit: "Morda kasneje"
       staff_count:
-        one: "Vaša skupnost ima 1 člana osebja (vas)."
+        one: "Vaša skupnost ima %{count} člana osebja (vas)."
         two: "Vaša skupnost ima %{count} člana osebja, vključno z vami."
         few: "Vaša skupnost ima %{count} člane osebja, vključno z vami."
         other: "Vaša skupnost ima %{count} članov osebja, vključno z vami."

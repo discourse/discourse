@@ -48,7 +48,7 @@ ar:
         half_a_minute: "< دقيقة"
         less_than_x_seconds:
           zero: "< 0 ثانية"
-          one: "< 1 ثانية"
+          one: "< %{count} ثانية"
           two: "< ثانيتين"
           few: "< %{count}ث"
           many: "< %{count}ث"
@@ -1728,7 +1728,7 @@ ar:
         not_pinned: "لا يوجد موضوعات مثبتة في {{categoryLink}}."
         already_pinned:
           zero: "المواضيع مثبتة حالياً في {{categoryLink}}: <strong class='badge badge-notification unread'>{{count}}</strong>"
-          one: "المواضيع مثبتة حالياً في {{categoryLink}}: <strong class='badge badge-notification unread'>1</strong>"
+          one: "المواضيع مثبتة حالياً في {{categoryLink}}: <strong class='badge badge-notification unread'>%{count}</strong>"
           two: "المواضيع مثبتة حالياً في {{categoryLink}}: <strong class='badge badge-notification unread'>{{count}}</strong>"
           few: "المواضيع مثبتة حالياً في {{categoryLink}}: <strong class='badge badge-notification unread'>{{count}}</strong>"
           many: "المواضيع مثبتة حالياً في {{categoryLink}}: <strong class='badge badge-notification unread'>{{count}}</strong>"
@@ -1741,7 +1741,7 @@ ar:
         not_pinned_globally: "لا يوجد موضوعات مثبتة للعموم."
         already_pinned_globally:
           zero: "الموضوعات المثبتة علي عموم الموقع حاليا: <strong class='badge badge-notification unread'>{{count}}</strong>"
-          one: "الموضوعات المثبتة علي عموم الموقع حاليا: <strong class='badge badge-notification unread'>1</strong>"
+          one: "الموضوعات المثبتة علي عموم الموقع حاليا: <strong class='badge badge-notification unread'>%{count}</strong>"
           two: "الموضوعات المثبتة علي عموم الموقع حاليا: <strong class='badge badge-notification unread'>{{count}}</strong>"
           few: "الموضوعات المثبتة علي عموم الموقع حاليا: <strong class='badge badge-notification unread'>{{count}}</strong>"
           many: "الموضوعات المثبتة علي عموم الموقع حاليا: <strong class='badge badge-notification unread'>{{count}}</strong>"
@@ -2282,7 +2282,7 @@ ar:
         help: "الموضوعات التي تتابعها (أو تراقبها) والتي فيها منشورات غير مقروءة"
         lower_title_with_count:
           zero: "1 غير مقررء "
-          one: "1 غير مقروء"
+          one: "%{count} غير مقروء"
           two: "{{count}} غير مقروء "
           few: "{{count}} غير مقروء "
           many: "{{count}} غير مقروء"
@@ -2290,7 +2290,7 @@ ar:
       new:
         lower_title_with_count:
           zero: "لا جديد"
-          one: "1 جديد"
+          one: "%{count} جديد"
           two: "{{count}} جديد"
           few: "{{count}} جديد"
           many: "{{count}} جديد"

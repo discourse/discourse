@@ -170,7 +170,7 @@ sl:
       staff: "osebje"
   education:
     until_posts:
-      one: "1 prispevek"
+      one: "%{count} prispevek"
       two: "%{count} prispevka"
       few: "%{count} prispevkov"
       other: "%{count} prispevkov"

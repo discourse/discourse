@@ -15,10 +15,10 @@ hu:
     default_poll_must_have_at_least_2_options: "Legalább 2 választható tételt kell tartalmaznia a szavazásnak."
     named_poll_must_have_at_least_2_options: "<strong>%{name}</strong> nevű szavazásnak legalább 2 választható tételt kell tartalmaznia."
     default_poll_must_have_less_options:
-      one: "Szavazásnak kevesebb, mint 1 lehetőséget kell tartalmaznia."
+      one: "Szavazásnak kevesebb, mint %{count} lehetőséget kell tartalmaznia."
       other: "Szavazásnak legalább %{count} lehetőséget kell tartalmaznia."
     named_poll_must_have_less_options:
-      one: "<strong>%{name}</strong> nevű  szavazásnak kevesebb mint 1 változót kell tartalmaznia"
+      one: "<strong>%{name}</strong> nevű  szavazásnak kevesebb mint %{count} változót kell tartalmaznia"
       other: "<strong>%{name}</strong> nevű  szavazásnak kevesebb mint %{count}válaszható lehetőséget kell tartalmaznia."
     default_poll_must_have_different_options: "A szavazásnak több különböző megszavazható tételt kell tartalmaznia."
     named_poll_must_have_different_options: "A <strong>%[name]</strong> nevű szavazásnak több különböző megszavazható tételt kell tartalmaznia."

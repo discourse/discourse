@@ -201,7 +201,7 @@ bs_BA:
     change_failed_explanation: "You attempted to demote %{user_name} to '%{new_trust_level}'. However their trust level is already '%{current_trust_level}'. %{user_name} will remain at '%{current_trust_level}' - if you wish to demote user lock trust level first"
   rate_limiter:
     hours:
-      one: "1 sat"
+      one: "%{count} sat"
       few: "Par sati"
       other: "%{count} sati"
   datetime:
@@ -210,7 +210,7 @@ bs_BA:
     distance_in_words_verbose:
       half_a_minute: "just now"
       about_x_hours:
-        one: "Pred 1 sat"
+        one: "Pred %{count} sat"
         few: "Pred par sati"
         other: "Pred %{count} sata"
   password_reset:

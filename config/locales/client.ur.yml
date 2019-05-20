@@ -43,67 +43,67 @@ ur:
       tiny:
         half_a_minute: "< 1منٹ"
         less_than_x_seconds:
-          one: "< 1 سیکنڈ"
+          one: "< %{count} سیکنڈ"
           other: "< %{count} سیکنڈ"
         x_seconds:
-          one: "1 سیکنڈ"
+          one: "%{count} سیکنڈ"
           other: "%{count} سیکنڈ"
         less_than_x_minutes:
-          one: "< 1منٹ"
+          one: "< %{count}منٹ"
           other: "< %{count}منٹ "
         x_minutes:
-          one: "1 منٹ"
+          one: "%{count} منٹ"
           other: "%{count} منٹس"
         about_x_hours:
-          one: "1 گھنٹا"
+          one: "%{count} گھنٹا"
           other: "%{count} گھنٹے"
         x_days:
-          one: "1 دن"
+          one: "%{count} دن"
           other: "%{count} دن"
         x_months:
-          one: "1ماہ"
+          one: "%{count}ماہ"
           other: "%{count}مہینے"
         about_x_years:
-          one: "1 سال"
+          one: "%{count} سال"
           other: "%{count} سال"
         over_x_years:
-          one: "> 1 سال"
+          one: "> %{count} سال"
           other: "> %{count} سال"
         almost_x_years:
-          one: "1 سال"
+          one: "%{count} سال"
           other: "%{count} سال"
         date_month: "MMM D"
         date_year: "MMM 'YY"
       medium:
         x_minutes:
-          one: "1 منٹ"
+          one: "%{count} منٹ"
           other: "%{count} منٹس"
         x_hours:
-          one: "1 گھنٹا"
+          one: "%{count} گھنٹا"
           other: "%{count} گھنٹے"
         x_days:
-          one: "1 دن"
+          one: "%{count} دن"
           other: "%{count} دن"
         date_year: "MMM D, 'YY"
       medium_with_ago:
         x_minutes:
-          one: "1 منٹ قبل"
+          one: "%{count} منٹ قبل"
           other: "%{count} منٹ قبل"
         x_hours:
-          one: "1 گھنٹہ قبل "
+          one: "%{count} گھنٹہ قبل "
           other: " %{count} گھنٹے قبل "
         x_days:
-          one: "1 دن قبل"
+          one: "%{count} دن قبل"
           other: "%{count} دن قبل"
       later:
         x_days:
-          one: "1 دن بعد"
+          one: "%{count} دن بعد"
           other: "%{count} دن بعد"
         x_months:
-          one: "1 مہینے بعد"
+          one: "%{count} مہینے بعد"
           other: "%{count} مہینے بعد"
         x_years:
-          one: "1 سال بعد"
+          one: "%{count} سال بعد"
           other: "%{count} سال بعد"
       previous_month: "پچھلے ماہ"
       next_month: "اگلے ماہ"
@@ -331,7 +331,7 @@ ur:
       none: "جائزہ لینے کے لئے کوئی اشیاء نہیں ہیں۔"
       view_pending: "زیرِاِلتوَاء دیکھیں"
       topic_has_pending:
-        one: "اِس ٹاپک کی <b>1</b> پوسٹ کی منظوری زیر التواء ہے"
+        one: "اِس ٹاپک کی <b>%{count}</b> پوسٹ کی منظوری زیر التواء ہے"
         other: "اِس ٹاپک کی <b>{{count}}</b> پوسٹس کی منظوری زیر التواء ہے"
       title: "جائزہ لیں"
       topic: "ٹاپک:"
@@ -366,10 +366,10 @@ ur:
         original: "(حقیقی ٹاپک)"
         details: "تفصیلات"
         unique_users:
-          one: "1 صارف"
+          one: "%{count} صارف"
           other: "{{count}} صارفین"
       replies:
-        one: "1 جواب"
+        one: "%{count} جواب"
         other: "{{count}} جوابات"
       edit: "ترمیم"
       save: "محفوظ کریں"
@@ -425,7 +425,7 @@ ur:
         title: "پوسٹ کو منظوری کی ضرورت ہے"
         description: "ہمیں آپ کی نئی پوسٹ موصول ہو چکی ہے لیکن یہ ظاہر ہونے سے پہلے ایک منتظم سے منظور ہونا ضروری ہے۔ براہ مہربانی صبر کریں۔"
         pending_posts:
-          one: "آپ کی <strong>1</strong> پوسٹ زیرِاِلتوَاء ہے۔"
+          one: "آپ کی <strong>%{count}</strong> پوسٹ زیرِاِلتوَاء ہے۔"
           other: "آپ کی <strong>{{count}}</strong> پوسٹس زیرِاِلتوَاء ہیں۔"
         ok: "ٹھیک"
     user_action:
@@ -460,7 +460,7 @@ ur:
       posts_read: "پڑھ لیا گیا"
       posts_read_long: "پڑھی گئیں پوسٹس"
       total_rows:
-        one: "1 صارف"
+        one: "%{count} صارف"
         other: "%{count} صارفین"
     group_histories:
       actions:
@@ -642,7 +642,7 @@ ur:
       toggle_ordering: "ترتیب کاری کا کنٹرول ٹاگل کریں"
       subcategories: "ذیلی زمرے"
       topic_sentence:
-        one: "1 ٹاپک"
+        one: "%{count} ٹاپک"
         other: "%{count} ٹاپک"
       topic_stat_sentence_week:
         one: "%{count}  نیا ٹاپک گزشتہ ہفتے میں۔"
@@ -1165,7 +1165,7 @@ ur:
       reached: "<b>%{relativeAge}</b> – <a href='%{url}' target='_blank'>%{rate}</a> سائٹ سیٹِنگ لِمٹ %{siteSettingRate} تک پہنچ گئی۔"
       exceeded: "<b>%{relativeAge}</b> – <a href='%{url}' target='_blank'>%{rate}</a> سائٹ سیٹِنگ لِمٹ %{siteSettingRate} سے تجاوز کر گئی۔"
       rate:
-        one: "1 خرابی/%{duration}"
+        one: "%{count} خرابی/%{duration}"
         other: "%{count} خرابیاں/%{duration}"
     learn_more: "اورجانیے..."
     all_time: "کُل"
@@ -1255,9 +1255,13 @@ ur:
       second_factor_title: "دو فیکٹر توثیق"
       second_factor_description: "براہ مہربانی اپنی اَیپ میں سے توثیقی کَوڈ درج کریں:"
       second_factor_backup: "<a href>بیک اپ کوڈ کا استعمال کرتے ہوئے لاگ اِن کریں</a>"
+      second_factor_backup_title: "دو فیکٹر بیک اپ"
+      second_factor_backup_description: "براہ مہربانی اپنے بیک اپ کوڈز میں سے ایک درج کریں:"
+      second_factor: "<a href>اَوتھینٹیکَیٹر اَیپ کا استعمال کرتے ہوئے لاگ اِن کریں</a>"
       email_placeholder: "اِی میل یا صارف نام"
       caps_lock_warning: "کیپس لاک آن ہے"
       error: "نامعلوم خرابی"
+      cookies_error: "آپ کے براؤزر پر کُوکِیز غیر فعال لگ رہے ہیں۔ اُن کو فعال کیے بغیر آپ لاگ اِن شائد نہ کر سکیں۔"
       rate_limit: "دوبارہ لاگ اِن کرنے کی کوشش کرنے سے پہلے براہ کرم تھوڑا انتظار کریں۔"
       blank_username: "براہ مہربانی اپنا اِیمیل یا صارف نام درج کریں۔"
       blank_username_or_password: "براہ مہربانی اپنا اِیمیل یا صارف نام، اور پاسورڈ درج کریں۔"
@@ -1278,6 +1282,7 @@ ur:
       provide_new_email: "ایک نیا ایڈریس فراہم کریں اور ہم آپ کی تصدیقی ای میل دوبارہ بھیجیں گے۔"
       submit_new_email: "اِیمیل ایڈریس اَپ ڈَیٹ کریں"
       sent_activation_email_again: "ہم نے آپ کو <b>{{currentEmail}}</b> پر ایک اور ایکٹیویشن اِی میل بھیجی ہے۔ اسے پہنچنے میں چند منٹ لگ سکتے ہیں؛ اپنے سپیم فولڈر کو چیک کرنا نہ بھولیے گا۔"
+      sent_activation_email_again_generic: "ہم نے ایک اور ایکٹیویشن اِی میل بھیجی ہے۔ اسے پہنچنے میں چند منٹ لگ سکتے ہیں؛ اپنے سپیم فولڈر کو چیک کرنا نہ بھولیے گا۔"
       to_continue: "برائے مہربانی لاگ اِن کریں"
       preferences: "آپ کا اپنی صارف ترجیحات کو تبدیل کرنے کے لیے لاگ اِن ہونا ضروری ہے۔"
       forgot: "مجھے اپنے اکاؤنٹ کی تفصیلات یاد نہیں ہیں"
@@ -1371,7 +1376,7 @@ ur:
       drafts_offline: "ڈرافٹس آف لائن"
       group_mentioned_limit: "<b>انتباہ!</b> آپ نے <a href='{{group_link}}'>{{group}}</a> کا ذکر کیا ہے، تاہم اس گروپ کے ممبران کی تعداد، منتظم کی طرف سے مقرر کردہ {{max}} صارفین کے ذکر کی حد سے زیادہ ہے ۔ کسی کو بھی اطلاع نہیں دی جائے گی۔"
       group_mentioned:
-        one: "{{group}} کا ذکر کر کہ، آپ <a href='{{group_link}}'>1 شخص</a> کو مطلع کرنے لگے ہیں - کیا آپ واقعی یہ کرنا چاہتے ہیں؟"
+        one: "{{group}} کا ذکر کر کہ، آپ <a href='{{group_link}}'>%{count} شخص</a> کو مطلع کرنے لگے ہیں - کیا آپ واقعی یہ کرنا چاہتے ہیں؟"
         other: "{{group}} کا ذکر کر کہ، آپ <a href='{{group_link}}'>{{count}} لوگوں</a> کو مطلع کرنے لگے ہیں - کیا آپ واقعی یہ کرنا چاہتے ہیں؟"
       cannot_see_mention:
         category: "آپ نے {{username}} کا زکر کیا ہے لیکن چونکہ اُن کو اِس زمرے تک رسائی حاصل نہیں، اُن کو مطلع نہیں کیا جائے گا۔ آپ کو انہیں ایک ایسے گروپ میں شامل کرنے کی ضرورت ہے جسے اِس زمرے تک رسائی حاصل ہے۔"
@@ -1469,10 +1474,10 @@ ur:
     notifications:
       tooltip:
         regular:
-          one: "1 اندیکھی اطلاع"
+          one: "%{count} اندیکھی اطلاع"
           other: "{{count}} اندیکھی اطلاعات"
         message:
-          one: "1 غیر پڑھا پیغام"
+          one: "%{count} غیر پڑھا پیغام"
           other: "{{count}} غیر پڑھے پیغامات"
       title: "@نام کے ذکر، آپ کی پوسٹ اور ٹاپک پر جوابات، پیغامات، وغیرہ کی اطلاعات"
       none: "اِس وقت ویب سائٹ اطلاعات لوڈ کرنے سے قاصر ہے۔"
@@ -1487,7 +1492,7 @@ ur:
       liked: "<span>{{username}}</span> {{description}}"
       liked_2: "<span>{{username}}, {{username2}}</span> {{description}}"
       liked_many:
-        one: "<span>{{username2}}، {{username}} اور 1 مزید</span> {{description}}"
+        one: "<span>{{username2}}، {{username}} اور %{count} مزید</span> {{description}}"
         other: "<span>{{username2}}، {{username}} اور {{count}} مزید</span> {{description}}"
       liked_consolidated: "<span>{{username}}</span> {{description}}"
       private_message: "<span>{{username}}</span> {{description}}"
@@ -1623,7 +1628,7 @@ ur:
         notification_level: "اطلاعات"
         choose_new_category: "ٹاپکس کیلئے نئے زمرہ کا انتخاب کریں:"
         selected:
-          one: "آپ نے <b>1</b> ٹاپک منتخب کیا ہے۔"
+          one: "آپ نے <b>%{count}</b> ٹاپک منتخب کیا ہے۔"
           other: "آپ نے <b>{{count}}</b> ٹاپک منتخب کیے ہیں۔"
         change_tags: "ٹیگز بدلیں"
         append_tags: "ٹیگز میں اضافہ کریں"
@@ -1657,7 +1662,7 @@ ur:
         search: "سرچ کے مزید کوئی نتائج نہیں۔"
     topic:
       filter_to:
-        one: "ٹاپک میں 1 پوسٹ"
+        one: "ٹاپک میں %{count} پوسٹ"
         other: "ٹاپک میں {{count}} پوسٹس"
       create: "نیا ٹاپک"
       create_long: "نیا ٹاپک بنائیں"
@@ -1675,10 +1680,10 @@ ur:
       new: "نیا ٹاپک"
       unread: "بغیر پڑھے"
       new_topics:
-        one: "1 نیا ٹاپک"
+        one: "%{count} نیا ٹاپک"
         other: "{{count}} نئے ٹاپک"
       unread_topics:
-        one: "1 بغیر پڑھا گیا ٹاپک"
+        one: "%{count} بغیر پڑھا گیا ٹاپک"
         other: "{{count}} بغیر پڑھے گئے ٹاپک"
       title: "ٹاپک"
       invalid_access:
@@ -1692,16 +1697,16 @@ ur:
         title: "ٹاپک نہیں ملا"
         description: "معزرت، ہم یہ ٹاپک نہیں ڈھونڈ سکے۔ شاید یہ کسی ماڈریٹر نے ہٹا دیا ہو؟"
       total_unread_posts:
-        one: "آپ کے پاس اِس ٹاپک میں 1 بغیر پڑھی پوسٹ موجود ہے"
+        one: "آپ کے پاس اِس ٹاپک میں %{count} بغیر پڑھی پوسٹ موجود ہے"
         other: "آپ کے پاس اِس ٹاپک میں {{count}} بغیر پڑھی پوسٹ موجود ہیں"
       unread_posts:
-        one: "آپ کے پاس اِس ٹاپک میں 1 بغیر پڑھی پرانی پوسٹ موجود ہے"
+        one: "آپ کے پاس اِس ٹاپک میں %{count} بغیر پڑھی پرانی پوسٹ موجود ہے"
         other: "آپ کے پاس اِس ٹاپک میں {{count}} بغیر پڑھی پرانی پوسٹ موجود ہیں"
       new_posts:
-        one: "آپ کے آخری دفع یہ ٹاپک پڑھنے کے بعد 1 نئی پوسٹ شائع ہوئی"
+        one: "آپ کے آخری دفع یہ ٹاپک پڑھنے کے بعد %{count} نئی پوسٹ شائع ہوئی"
         other: "آپ کے آخری دفع یہ ٹاپک پڑھنے کے بعد {{count}} نئی پوسٹ شائع ہوئیں"
       likes:
-        one: "اِس ٹاپک میں 1 لائیک ہے"
+        one: "اِس ٹاپک میں %{count} لائیک ہے"
         other: "اِس ٹاپک میں {{count}} لائیکس ہیں"
       back_to_list: "واپس ٹاپک فہرست پر"
       options: "ٹاپک اختیارات"
@@ -1767,7 +1772,7 @@ ur:
         auto_reminder: "آپ کو اس ٹاپک کے بارے میں یاد دہانی کرائی جائے گا %{timeLeft}۔"
       auto_close_title: "خود کار طریقے سے بند کر نے کی سیٹِنگ"
       auto_close_immediate:
-        one: "ٹاپک کی آخری پوسٹ ابھی سے 1 گھنٹا پرانی ہے، اِسلیئے ٹاپک فوری طور پر بند کر دیا جائے گا۔"
+        one: "ٹاپک کی آخری پوسٹ ابھی سے %{count} گھنٹا پرانی ہے، اِسلیئے ٹاپک فوری طور پر بند کر دیا جائے گا۔"
         other: "ٹاپک کی آخری پوسٹ ابھی سے %{count} گھنٹے پرانی ہے، اِسلیئے ٹاپک فوری طور پر بند کر دیا جائے گا۔"
       timeline:
         back: "واپس"
@@ -1876,7 +1881,7 @@ ur:
         pin_validation: "اس ٹاپک کو پِن کرنے کیلئے ایک تاریخ کی ضرورت ہے۔"
         not_pinned: "{{categoryLink}} میں کوئی ٹاپک پِن نہیں ہیں۔"
         already_pinned:
-          one: "فی الحال {{categoryLink}} میں پِن ہوے ٹاپک: <strong class='badge badge-notification unread'>1</strong>"
+          one: "فی الحال {{categoryLink}} میں پِن ہوے ٹاپک: <strong class='badge badge-notification unread'>%{count}</strong>"
           other: "فی الحال {{categoryLink}} میں پِن ہوے ٹاپک: <strong class='badge badge-notification unread'>{{count}}</strong>"
         pin_globally: "اِس ٹاپک کو تمام ٹاپکس کی فہرست کے سب سے اُپر ظاہر کریں جب تک کہ"
         confirm_pin_globally: "آپ کے پاس پہلے ہی سے {{count}} عالمی سطح پر پِن ہوے ٹاپک موجود ہیں۔ بہت سارے پِن ہوے ٹاپک نئے اور گمنام صارفین کے لئے ایک بوجھ ثابت ہو سکتے ہیں۔ کیا آپ واقعی عالمی سطح پر ایک اور ٹاپک پِن کرنا چاہتے ہیں؟"
@@ -1885,7 +1890,7 @@ ur:
         global_pin_note: "صارفین خود سے انفرادی طور پر ٹاپک سے پن ہٹا سکتے ہیں۔"
         not_pinned_globally: "کوئی ٹاپک عالمی سطح پر پِن نہیں ہوئے ہیں۔"
         already_pinned_globally:
-          one: "فی الحال عالمی سطح پر پِن ہوئے ٹاپک: <strong class='badge badge-notification unread'>1</strong>"
+          one: "فی الحال عالمی سطح پر پِن ہوئے ٹاپک: <strong class='badge badge-notification unread'>%{count}</strong>"
           other: "فی الحال عالمی سطح پر پِن ہوئے ٹاپک: <strong class='badge badge-notification unread'>{{count}}</strong>"
         make_banner: "اِس ٹاپک کو ایک بَینر بنا دیں جو تمام صفحات کے سب سے اوپر ظاہر ہو۔"
         remove_banner: "بَینر ہٹا دیں جو تمام صفحات کے سب سے اوپر ظاہر ہوتا ہے۔"
@@ -1923,7 +1928,7 @@ ur:
       login_reply: "جواب دینے کیلئے لاگ اِن کریں"
       filters:
         n_posts:
-          one: "1 پوسٹ"
+          one: "%{count} پوسٹ"
           other: "{{count}} پوسٹس"
         cancel: "فِلٹر ہٹائیں"
       split_topic:
@@ -1977,7 +1982,7 @@ ur:
         select_all: تمام منتخب کریں
         deselect_all: تمام غیر منتخب کریں
         description:
-          one: آپ نے <b>1</b> پوسٹ منتخب کی ہے۔
+          one: آپ نے <b>%{count}</b> پوسٹ منتخب کی ہے۔
           other: "آپ نے <b>{{count}}</b> پوسٹس منتخب کی ہیں۔"
     post:
       quote_reply: "اقتباس کریں"
@@ -1997,18 +2002,18 @@ ur:
       expand_collapse: "کھولیں/بند کریں"
       locked: "ایک اسٹاف کے رکن نے اِس پوسٹ کو ترمیم ہونے سے روک دیا ہے"
       gap:
-        one: "1 چھپایا ہوا جواب دیکھیں"
+        one: "%{count} چھپایا ہوا جواب دیکھیں"
         other: "{{count}} چھپائے ہوے جوابات دیکھیں"
       unread: "پوسٹ بغیر پڑھی ہے"
       has_replies:
         one: "{{count}} جواب"
         other: "{{count}} جوابات"
       has_likes_title:
-        one: "1 شخص نے اِس پوسٹ کو لائیک کیا"
+        one: "%{count} شخص نے اِس پوسٹ کو لائیک کیا"
         other: "{{count}} لوگوں نے اِس پوسٹ کو لائیک کیا"
       has_likes_title_only_you: " آپ نے اِس پوسٹ کو لائیک کیا"
       has_likes_title_you:
-        one: "آپ اور 1 دوسرے شخص نے اِس پوسٹ کو لائیک کیا"
+        one: "آپ اور %{count} دوسرے شخص نے اِس پوسٹ کو لائیک کیا"
         other: "آپ اور {{count}} دوسرے لوگوں نے اِس پوسٹ کو لائیک کیا"
       errors:
         create: "معذرت، آپ کی پوسٹ بنانے میں ایک خرابی کا سامنا کرنا پڑا۔  براہ مہربانی دوبارہ کوشش کریں۔"
@@ -2047,10 +2052,10 @@ ur:
         delete_replies:
           confirm: "کیا آپ اِس پوسٹ پر جوابات بھی حذف کرنا چاہتے ہیں؟"
           direct_replies:
-            one: "جی ہاں، اور براہ راست 1 جواب"
+            one: "جی ہاں، اور براہ راست %{count} جواب"
             other: "جی ہاں، اور براہ راست {{count}} جوابات"
           all_replies:
-            one: "جی ہاں، اور 1 جواب"
+            one: "جی ہاں، اور %{count} جواب"
             other: "جی ہاں، اور تمام {{count}} جوابات"
           just_the_post: "نہیں، صرف یہ پوسٹ"
         admin: "پوسٹ ایڈمن کے ایکشن"
@@ -2262,13 +2267,13 @@ ur:
       custom_placeholder_notify_moderators: "ہمیں خاص طور پر اُس چیز کے بارے میں مطلع کریں جس سے آپ فکر مند ہیں، اور جہاں ممکن ہو سکے متعلقہ لنکس اور مثالیں فراہم کریں۔"
       custom_message:
         at_least:
-          one: "کم از کم 1 حرف درج کریں"
+          one: "کم از کم %{count} حرف درج کریں"
           other: "کم از کم {{count}} حروف درج کریں"
         more:
-          one: "1 اور آگے بچا ہے..."
+          one: "%{count} اور آگے بچا ہے..."
           other: "{{count}} اور آگے بچے ہیں..."
         left:
-          one: "1 باقی رہتا ہے..."
+          one: "%{count} باقی رہتا ہے..."
           other: "{{count}} باقی رہتے ہیں..."
     flagging_topic:
       title: "ہماری کمیونٹی کو مہذب رکھنے کے لئے مدد کا شکریہ!"
@@ -2280,12 +2285,12 @@ ur:
       links_title: "مقبول لنکس"
       links_shown: "مزید لِنکس دکھایے"
       clicks:
-        one: "1 کلک"
+        one: "%{count} کلک"
         other: "%{count} کلکس"
     post_links:
       about: "اِس پوسٹ کے لئے مزید لنکس دکھائیں"
       title:
-        one: "1 مزید"
+        one: "%{count} مزید"
         other: "%{count}مزید "
     topic_statuses:
       warning:
@@ -2324,7 +2329,7 @@ ur:
       other: "وِیوز"
     replies: "جوابات"
     views_long:
-      one: "اِس ٹاپک کو 1 دفعہ دیکھا جا چکا ہے"
+      one: "اِس ٹاپک کو %{count} دفعہ دیکھا جا چکا ہے"
       other: "اِس ٹاپک کو {{number}} دفعہ دیکھا جا چکا ہے"
     activity: "سرگرمی"
     likes: "لائیکس"
@@ -2349,7 +2354,7 @@ ur:
       latest:
         title: "تازہ ترین"
         title_with_count:
-          one: "تازہ ترین (1)"
+          one: "تازہ ترین (%{count})"
           other: "تازہ ترین ({{count}})"
         help: "حالیہ پوسٹ والے ٹاپک"
       hot:
@@ -2368,20 +2373,20 @@ ur:
       unread:
         title: "بغیر پڑھے"
         title_with_count:
-          one: "بغیر پڑھا (1)"
+          one: "بغیر پڑھا (%{count})"
           other: "بغیر پڑھے ({{count}})"
         help: " ٹاپک جن پر فی الحال آپ نے نظر رکھی ہوئی ہے یا بغیر پڑھی پوسٹس کے ساتھ ٹریک کر رہے ہیں"
         lower_title_with_count:
-          one: "1 بغیر پڑھا ہوا"
+          one: "%{count} بغیر پڑھا ہوا"
           other: "{{count}} بغیر پڑھے ہوئے"
       new:
         lower_title_with_count:
-          one: "1 نیا"
+          one: "%{count} نیا"
           other: "{{count}} نئے"
         lower_title: "نئے"
         title: "نیا"
         title_with_count:
-          one: "نیا (1)"
+          one: "نیا (%{count})"
           other: "نئے ({{count}})"
         help: "پچھلے چند دنوں میں بنائے گئے ٹاپک"
       posted:
@@ -2393,7 +2398,7 @@ ur:
       category:
         title: "{{categoryName}}"
         title_with_count:
-          one: "{{categoryName}} (1)"
+          one: "{{categoryName}} (%{count})"
           other: "{{categoryName}} ({{count}})"
         help: "{{categoryName}} زمرہ میں تازہ تریں ٹاپک"
       top:
@@ -2481,7 +2486,7 @@ ur:
         print: "<b>ctrl</b>+<b>p</b> ٹاپک پرِنٹ کریں"
     badges:
       earned_n_times:
-        one: "یہ بَیج 1 دفعہ حاصل کیا"
+        one: "یہ بَیج %{count} دفعہ حاصل کیا"
         other: "یہ بَیج %{count} مرتبہ حاصل کیا"
       granted_on: "عطا کیا گیا %{date}"
       others_count: "دوسرے جن کے پاس یہ بَیج ہے (%{count})"
@@ -2489,13 +2494,13 @@ ur:
       allow_title: "آپ اِس بَیج کو عنوان کے طور پر استعمال کر سکتے ہیں"
       multiple_grant: "آپ اِس کو ایک سے زیادہ مرتبہ حاصل کر سکتے ہیں"
       badge_count:
-        one: "1 بَیج"
+        one: "%{count} بَیج"
         other: "%{count} بَیج"
       more_badges:
-        one: "+1 مزید"
+        one: "+%{count} مزید"
         other: "+%{count} مزید"
       granted:
-        one: "1 عطا کیا گیا"
+        one: "%{count} عطا کیا گیا"
         other: "%{count} عطا کیے گئے"
       select_badge_for_title: اپنے عنوان کے طور پر استعمال کرنے کے لئے ایک بیج منتخب کریں
       none: "(کوئی نہیں)"
@@ -2530,7 +2535,7 @@ ur:
       choose_for_topic: "اختیاری ٹیگز"
       delete_tag: "ٹیگ حذف کریں"
       delete_confirm:
-        one: "کیا آپ واقعی اس ٹیگ کو حذف اور 1 ٹاپک، جس کو یہ آسائین ہواوا ہے، سے ہٹا دینا چاہتے ہیں؟"
+        one: "کیا آپ واقعی اس ٹیگ کو حذف اور %{count} ٹاپک، جس کو یہ آسائین ہواوا ہے، سے ہٹا دینا چاہتے ہیں؟"
         other: "کیا آپ واقعی اس ٹیگ کو حذف اور {{count}} ٹاپکس، جن کو یہ آسائین ہواوا ہے، سے ہٹا دینا چاہتے ہیں؟"
       delete_confirm_no_topics: "کیا آپ واقعی اِس ٹَیگ کو حذف کرنا چاہتے ہیں؟"
       rename_tag: "ٹیگ کا نام تبدیل کریں"
@@ -2793,7 +2798,7 @@ ur:
             one: "ایک نیا واقعہ موجود ہے۔"
             other: "{{count}} نئے واقعات موجود ہیں۔"
           completed_in:
-            one: "1 سیکنڈ میں مکمل ہوا۔"
+            one: "%{count} سیکنڈ میں مکمل ہوا۔"
             other: "{{count}} سیکنڈ میں مکمل ہوا۔"
           request: "ریکویسٹ"
           response: "جواب"
@@ -2962,7 +2967,7 @@ ur:
           theme_settings: "تھیم کی ترتیبات"
           no_settings: "اِس تھیم کی کوئی ترتیبات نہیں ہیں۔"
           commits_behind:
-            one: "تِھیم 1 کَمِٹ پیچھے ہے!"
+            one: "تِھیم %{count} کَمِٹ پیچھے ہے!"
             other: "تِھیم {{count}} کَمِٹس پیچھے ہے!"
           scss:
             text: "CSS"
@@ -3224,7 +3229,7 @@ ur:
         clear_filter: "صاف کریں"
         show_words: "الفاظ دکھائیں"
         word_count:
-          one: "1 لفظ"
+          one: "%{count} لفظ"
           other: "%{count}الفاظ "
         actions:
           block: "بلاک کریں"
@@ -3368,7 +3373,7 @@ ur:
           one: "تمام پوسٹس کو حذف نہیں کیا جاسکتا۔ کچھ پوسٹس %{count} دن پرانی سے زیادہ پرانی ہیں۔(delete_user_max_post_age سیٹِنگ۔)"
           other: "تمام پوسٹس کو حذف نہیں کیا جاسکتا۔ کچھ پوسٹس %{count} دن پرانی سے زیادہ پرانی ہیں۔(delete_user_max_post_age سیٹِنگ۔)"
         cant_delete_all_too_many_posts:
-          one: "تمام پوسٹس کو حذف نہیں کیا جاسکتا کیونکہ صارف کی 1 سے زیادہ پوسٹس ہیں۔ (delete_all_posts_max)"
+          one: "تمام پوسٹس کو حذف نہیں کیا جاسکتا کیونکہ صارف کی %{count} سے زیادہ پوسٹس ہیں۔ (delete_all_posts_max)"
           other: "تمام پوسٹس کو حذف نہیں کیا جاسکتا کیونکہ صارف کی %{count} سے زیادہ پوسٹس ہیں۔ (delete_all_posts_max)"
         delete_and_block: "اِس اِیمیل اور IP ایڈریس کو حذف اور <b>بلاک</b> کریں"
         delete_dont_block: "صرف حذف کریں"
@@ -3584,7 +3589,7 @@ ur:
             text: "کچھ گرانٹ سامپل لاپتہ ہیں۔ یہ اُس وقت ہوتا ہے جب بَیج قُوَیری وہ صارف IDs یا پوسٹ IDs واپس بھیجتا ہے جو موجود نہیں ہوتیں۔ یہ بعد میں غیر متوقع نتائج کا سبب بن سکتا ہے - آپ اپنی قُوَیری کو دوبارہ چیک کرلیں۔"
           no_grant_count: "کوئی بَیج تفویض کرنے کیلئے موجود نہیں۔"
           grant_count:
-            one: "تفویض  کرنے کیلئے <b>1</b> بَیج موجود ہے۔"
+            one: "تفویض  کرنے کیلئے <b>%{count}</b> بَیج موجود ہے۔"
             other: "تفویض  کرنے کیلئے <b>%{count}</b> بَیج موجود ہیں۔"
           sample: "نمونہ:"
           grant:
@@ -3657,7 +3662,7 @@ ur:
       upload_error: "معذرت، یہ فائل اَپ لوڈ کرنے میں ایک خرابی کا سامنا کرنا پڑا۔  براہ مہربانی دوبارہ کوشش کریں۔"
       quit: "شاید بعد میں"
       staff_count:
-        one: "آپ کی کمیونٹی میں 1 اسٹاف کا رکن ہے (آپ)۔"
+        one: "آپ کی کمیونٹی میں %{count} اسٹاف کا رکن ہے (آپ)۔"
         other: "آپ کی کمیونٹی میں آپ سمیت، %{count} سٹاف کے ارکان ہیں۔"
       invites:
         add_user: "شامل کریں"

@@ -130,19 +130,19 @@ fi:
         one: "Tietuetta ei voi poistaa, koska siitä riippuva tietue %{record} on olemassa"
         many: "Tietueita ei voi poistaa, koska siitä riippuva tietue %{record} on olemassa."
       too_long:
-        one: on liian pitkä (enintään 1 merkki)
+        one: on liian pitkä (enintään %{count} merkki)
         other: on liian pitkä (enintään %{count}  merkkiä)
       too_short:
-        one: on liian lyhyt (vähintään 1 merkki)
+        one: on liian lyhyt (vähintään %{count} merkki)
         other: on liian lyhyt (vähintään %{count} merkkiä)
       wrong_length:
-        one: on väärän mittainen (pitäisi olla 1 merkki)
+        one: on väärän mittainen (pitäisi olla %{count} merkki)
         other: on väärän mittainen (pitäisi olla %{count} merkkiä)
       other_than: "pitää olla muu kuin %{count}"
     template:
       body: "Seuraavien kenttien kanssa oli ongelmia:"
       header:
-        one: 1 virhe esti tallentamasta tätä %{model}
+        one: "%{count} virhe esti tallentamasta tätä %{model}"
         other: "%{count} virhettä esti tallentamasta tätä %{model}"
     embed:
       load_from_remote: "Viestin lataamisessa tapahtui virhe."
@@ -210,7 +210,7 @@ fi:
     no_hosts: "Isäntiä ei ole määritetty upotusta varten."
     configure: "Määritä upottaminen"
     more_replies:
-      one: "1 muu kommentti"
+      one: "%{count} muu kommentti"
       other: "%{count} muuta kommenttia"
     loading: "Haetaan kommentteja..."
     permalink: "Ikilinkki"
@@ -496,7 +496,7 @@ fi:
     cannot_delete:
       has_subcategories: "Aluetta ei voi poistaa, koska sillä on tytäralueita."
       topic_exists:
-        one: "Aluetta ei voi poistaa, koska siellä on 1 ketju. Vanhin ketju on %{topic_link}."
+        one: "Aluetta ei voi poistaa, koska siellä on %{count} ketju. Vanhin ketju on %{topic_link}."
         other: "Aluetta ei voi poistaa, koska siellä on %{count} ketjua. Vanhin ketju on %{topic_link}."
       topic_exists_no_oldest: "Aluetta ei voi poistaa, koska ketjujen lukumäärä on #{count}."
     uncategorized_description: "Ketjut, jotka eivät tarvitse aluetta tai eivät sovi muihin alueisiin."
@@ -534,50 +534,50 @@ fi:
       unsubscribe_via_email: "Olet perunut enimmäismäärän sähköpostitse. Odota %{time_left} ja yritä sitten uudelleen."
       topic_invitations_per_day: "Olet kutsunut enimmäismäärän käyttäjiä ketjuihin. Odota %{time_left} ja yritä sitten uudelleen."
     hours:
-      one: "1 tunti"
+      one: "%{count} tunti"
       other: "%{count} tuntia"
     minutes:
-      one: "1 minuutti"
+      one: "%{count} minuutti"
       other: "%{count} minuuttia"
     seconds:
-      one: "1 sekunti"
+      one: "%{count} sekunti"
       other: "%{count} sekuntia"
     short_time: "muutama sekunti"
   datetime:
     distance_in_words:
       half_a_minute: "< 1 min"
       less_than_x_seconds:
-        one: "< 1 s"
+        one: "< %{count} s"
         other: "< %{count} s"
       x_seconds:
-        one: "1 s"
+        one: "%{count} s"
         other: "%{count} s"
       less_than_x_minutes:
-        one: "< 1 min"
+        one: "< %{count} min"
         other: "< %{count} min"
       x_minutes:
-        one: "1 min"
+        one: "%{count} min"
         other: "%{count} min"
       about_x_hours:
-        one: "1 t"
+        one: "%{count} t"
         other: "%{count} t"
       x_days:
-        one: "1 pv"
+        one: "%{count} pv"
         other: "%{count} pv"
       about_x_months:
-        one: "1 kk"
+        one: "%{count} kk"
         other: "%{count} kk"
       x_months:
-        one: "1 kk"
+        one: "%{count} kk"
         other: "%{count} kk"
       about_x_years:
-        one: "1 v"
+        one: "%{count} v"
         other: "%{count} v"
       over_x_years:
-        one: "> 1 v"
+        one: "> %{count} v"
         other: "> %{count} v"
       almost_x_years:
-        one: "1 v"
+        one: "%{count} v"
         other: "%{count} v"
     distance_in_words_verbose:
       half_a_minute: "hetki sitten"
@@ -585,7 +585,7 @@ fi:
         one: "hetki sitten"
         other: "hetki sitten"
       x_seconds:
-        one: "1 sekunti sitten"
+        one: "%{count} sekunti sitten"
         other: "%{count} sekuntia sitten"
       less_than_x_minutes:
         one: "alle minuutti sitten"
@@ -597,7 +597,7 @@ fi:
         one: "tunti sitten"
         other: "%{count} tuntia sitten"
       x_days:
-        one: "1 päivä sitten"
+        one: "%{count} päivä sitten"
         other: "%{count} päivää sitten"
       about_x_months:
         one: "noin kuukausi sitten"
@@ -1732,46 +1732,46 @@ fi:
     post_revision_text: "Vaihtoi omistajaa"
   topic_statuses:
     autoclosed_message_max_posts:
-      one: "Tämä yksityisketju suljettiin automaattisesti sen saavutettua vastausten maksimimäärän 1."
+      one: "Tämä yksityisketju suljettiin automaattisesti sen saavutettua vastausten maksimimäärän %{count}."
       other: "Tämä yksityisketju suljettiin automaattisesti sen saavutettua vastausten maksimimäärän %{count}."
     autoclosed_topic_max_posts:
-      one: "Tämä viestiketju suljettiin automaattisesti sen saavutettua vastausten maksimimäärän 1."
+      one: "Tämä viestiketju suljettiin automaattisesti sen saavutettua vastausten maksimimäärän %{count}."
       other: "Tämä viestiketju suljettiin automaattisesti sen saavutettua vastausten maksimimäärän %{count}."
     autoclosed_enabled_days:
-      one: "Tämä ketju suljettiin automaattisesti 1 päivän kuluttua. Uusia vastauksia ei voi enää kirjoittaa."
+      one: "Tämä ketju suljettiin automaattisesti %{count} päivän kuluttua. Uusia vastauksia ei voi enää kirjoittaa."
       other: "Ketju suljettiin ajastetusti %{count} päivän kuluttua. Uusia vastauksia ei voi enää kirjoittaa."
     autoclosed_enabled_hours:
-      one: "Tämä ketju suljettiin automaattisesti 1 tunnin kuluttua. Uusia vastauksia ei voi enää kirjoittaa."
+      one: "Tämä ketju suljettiin automaattisesti %{count} tunnin kuluttua. Uusia vastauksia ei voi enää kirjoittaa."
       other: "Ketju suljettiin ajastetusti %{count} tunnin kuluttua. Uusia vastauksia ei voi enää kirjoittaa."
     autoclosed_enabled_minutes:
-      one: "Tämä ketju suljettiin automaattisesti 1 minuutin kuluttua. Uusia vastauksia ei voi enää kirjoittaa."
+      one: "Tämä ketju suljettiin automaattisesti %{count} minuutin kuluttua. Uusia vastauksia ei voi enää kirjoittaa."
       other: "Ketju suljettiin ajastetusti %{count} minuutin kuluttua. Uusia vastauksia ei voi enää kirjoittaa."
     autoclosed_enabled_lastpost_days:
-      one: "Tämä ketju suljettiin automaattisesti 1 päivän kuluttua viimeisestä viestistä. Uusia vastauksia ei voi enää kirjoittaa."
+      one: "Tämä ketju suljettiin automaattisesti %{count} päivän kuluttua viimeisestä viestistä. Uusia vastauksia ei voi enää kirjoittaa."
       other: "Ketju suljettiin automaattisesti %{count} päivän kuluttua viimeisestä viestistä. Uusia vastauksia ei voi enää kirjoittaa."
     autoclosed_enabled_lastpost_hours:
-      one: "Tämä ketju suljettiin automaattisesti 1 tunnin kuluttua viimeisestä viestistä. Uusia vastauksia ei voi enää kirjoittaa."
+      one: "Tämä ketju suljettiin automaattisesti %{count} tunnin kuluttua viimeisestä viestistä. Uusia vastauksia ei voi enää kirjoittaa."
       other: "Ketju suljettiin automaattisesti %{count} tunnin kuluttua viimeisestä viestistä. Uusia vastauksia ei voi enää kirjoittaa."
     autoclosed_enabled_lastpost_minutes:
-      one: "Tämä ketju suljettiin automaattisesti 1 minuutin kuluttua viimeisestä viestistä. Uusia vastauksia ei voi enää kirjoittaa."
+      one: "Tämä ketju suljettiin automaattisesti %{count} minuutin kuluttua viimeisestä viestistä. Uusia vastauksia ei voi enää kirjoittaa."
       other: "Ketju suljettiin automaattisesti %{count} minuutin kuluttua viimeisestä viestistä. Uusia vastauksia ei voi enää kirjoittaa."
     autoclosed_disabled_days:
-      one: "Ketju avattiin ajastetusti 1 päivän kuluttua."
+      one: "Ketju avattiin ajastetusti %{count} päivän kuluttua."
       other: "Ketju avattiin ajastetusti %{count} päivän kuluttua."
     autoclosed_disabled_hours:
-      one: "Ketju avattiin ajastetusti 1 tunnin kuluttua."
+      one: "Ketju avattiin ajastetusti %{count} tunnin kuluttua."
       other: "Ketju avattiin ajastetusti %{count} tunnin kuluttua."
     autoclosed_disabled_minutes:
-      one: "Ketju avattiin ajastetusti 1 minuutin kuluttua."
+      one: "Ketju avattiin ajastetusti %{count} minuutin kuluttua."
       other: "Ketju avattiin ajastetusti %{count} minuutin kuluttua."
     autoclosed_disabled_lastpost_days:
-      one: "Ketju avattiin automaattisesti 1 päivän kuluttua viimeisimmästä viestistä."
+      one: "Ketju avattiin automaattisesti %{count} päivän kuluttua viimeisimmästä viestistä."
       other: "Ketju avattiin automaattisesti %{count} päivän kuluttua viimeisimmästä viestistä."
     autoclosed_disabled_lastpost_hours:
-      one: "Ketju avattiin automaattisesti 1 tunnin kuluttua viimeisimmästä viestistä."
+      one: "Ketju avattiin automaattisesti %{count} tunnin kuluttua viimeisimmästä viestistä."
       other: "Ketju avattiin automaattisesti %{count} tunnin kuluttua viimeisimmästä viestistä."
     autoclosed_disabled_lastpost_minutes:
-      one: "Ketju avattiin automaattisesti 1 minuutin kuluttua viimeisimmästä viestistä."
+      one: "Ketju avattiin automaattisesti %{count} minuutin kuluttua viimeisimmästä viestistä."
       other: "Ketju avattiin automaattisesti %{count} minuutin kuluttua viimeisimmästä viestistä."
     autoclosed_disabled: "Tämä ketju on nyt avattu. Uusia vastauksia voi taas kirjoittaa."
     autoclosed_disabled_lastpost: "Tämä ketju on nyt avattu. Uusia vastauksia voi taas kirjoittaa."
@@ -2476,7 +2476,7 @@ fi:
     pending_users_reminder:
       title: "Käyttäjiä jonossa"
       subject_template:
-        one: "1 käyttäjä odottaa hyväksymistä"
+        one: "%{count} käyttäjä odottaa hyväksymistä"
         other: "%{count} käyttäjää odottaa hyväksymistä"
     download_remote_images_disabled:
       title: "Linkattuja kuvia ei ladata"

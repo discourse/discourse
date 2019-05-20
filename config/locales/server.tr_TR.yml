@@ -86,7 +86,7 @@ tr_TR:
     template:
       body: "Şu alanlarla ilgili problem yaşandı:"
       header:
-        one: '%{count} hata bu %{model} kaydının alınmasını engelledi'
+        one: "%{count} hata bu %{model} kaydının alınmasını engelledi"
         other: "%{count} hata bu %{model} kaydının alınmasını engelledi"
     embed:
       load_from_remote: "Gönderi yüklenirken bir hata oluştu."

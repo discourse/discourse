@@ -43,67 +43,67 @@ et:
       tiny:
         half_a_minute: "< 1m"
         less_than_x_seconds:
-          one: "< 1s"
+          one: "< %{count}s"
           other: "< %{count}s"
         x_seconds:
-          one: "1s"
+          one: "%{count}s"
           other: "%{count}s"
         less_than_x_minutes:
-          one: "< 1m"
+          one: "< %{count}m"
           other: "< %{count}m"
         x_minutes:
-          one: "1m"
+          one: "%{count}m"
           other: "%{count}m"
         about_x_hours:
-          one: "1h"
+          one: "%{count}h"
           other: "%{count}h"
         x_days:
-          one: "1p"
+          one: "%{count}p"
           other: "%{count}p"
         x_months:
-          one: "1kuu"
+          one: "%{count}kuu"
           other: "%{count}kuud"
         about_x_years:
-          one: "1a"
+          one: "%{count}a"
           other: "%{count}a"
         over_x_years:
-          one: "> 1a"
+          one: "> %{count}a"
           other: "> %{count}a"
         almost_x_years:
-          one: "1a"
+          one: "%{count}a"
           other: "%{count}a"
         date_month: "D. MMMM"
         date_year: "MMMM 'YY"
       medium:
         x_minutes:
-          one: "1 min"
+          one: "%{count} min"
           other: "%{count} min"
         x_hours:
-          one: "1 tund"
+          one: "%{count} tund"
           other: "%{count} tundi"
         x_days:
-          one: "1 päev"
+          one: "%{count} päev"
           other: "%{count} päeva"
         date_year: "D. MMMM, 'YY"
       medium_with_ago:
         x_minutes:
-          one: "1 min tagasi"
+          one: "%{count} min tagasi"
           other: "%{count} min tagasi"
         x_hours:
-          one: "1 tund tagasi"
+          one: "%{count} tund tagasi"
           other: "%{count} tundi tagasi"
         x_days:
-          one: "1 päev tagasi"
+          one: "%{count} päev tagasi"
           other: "%{count} päeva tagasi"
       later:
         x_days:
-          one: "1 päev hiljem"
+          one: "%{count} päev hiljem"
           other: "%{count} päeva hiljem"
         x_months:
-          one: "1 kuu hiljem"
+          one: "%{count} kuu hiljem"
           other: "%{count} kuud hiljem"
         x_years:
-          one: "1 aasta hiljem"
+          one: "%{count} aasta hiljem"
           other: "%{count} aastat hiljem"
       previous_month: "Eelmine Kuu"
       next_month: "Järgmine Kuu"
@@ -346,7 +346,7 @@ et:
       posts_read: "Loetud"
       posts_read_long: "Positusi loetud"
       total_rows:
-        one: "1 kasutaja"
+        one: "%{count} kasutaja"
         other: "%{count} kasutajat"
     group_histories:
       actions:
@@ -511,7 +511,7 @@ et:
       toggle_ordering: "lülita järjestus"
       subcategories: "Alamfoorumid"
       topic_sentence:
-        one: "1 teema"
+        one: "%{count} teema"
         other: "%{count} teemat"
       n_more: "Kategooriad (veel %{count}) ..."
     ip_lookup:
@@ -957,7 +957,7 @@ et:
       reached: "<b>%{relativeAge}</b> – <a href='%{url}' target='_blank'>%{rate}</a> on saavutanud saidi sätetes kehtestatud limiidi %{siteSettingRate}."
       exceeded: "<b>%{relativeAge}</b> – <a href='%{url}' target='_blank'>%{rate}</a> ületab saidi sätetes kehtestatud limiiti %{siteSettingRate}."
       rate:
-        one: "1 viga/%{duration}"
+        one: "%{count} viga/%{duration}"
         other: "%{count} viga/%{duration}"
     learn_more: "uuri veel..."
     all_time: "kokku"
@@ -1141,7 +1141,7 @@ et:
       drafts_offline: "mustandid vallasrežiimis"
       edit_conflict: "muuda konflikti"
       group_mentioned:
-        one: "Mainides {{group}}, oled teavitamas <a href='{{group_link}}'>1 inimest</a> – oled selles kindel?"
+        one: "Mainides {{group}}, oled teavitamas <a href='{{group_link}}'>%{count} inimest</a> – oled selles kindel?"
         other: "Mainides {{group}}, oled teavitamas <a href='{{group_link}}'>{{count}} inimest</a> – oled selles kindel?"
       cannot_see_mention:
         category: "Mainisid kasutajat {{username}} kuid teda ei teavitata, kuna tal puudub juurdepääs siia foorumisse. Lisa ta gruppi, kellel on siia foorumisse ligipääs."
@@ -1228,10 +1228,10 @@ et:
     notifications:
       tooltip:
         regular:
-          one: "1 nägemata teavitus"
+          one: "%{count} nägemata teavitus"
           other: "{{count}} nägemata teavitust"
         message:
-          one: "1 lugemata sõnum"
+          one: "%{count} lugemata sõnum"
           other: "{{count}} lugemata sõnumit"
       title: "teavitused @name mainimiste, oma postitustele ja teemadele vastamiste, sõnumite, jne kohta"
       none: "Hetkel ei saa teavitusi laadida."
@@ -1365,7 +1365,7 @@ et:
         notification_level: "Teavitus"
         choose_new_category: "Vali teemadele uus foorum:"
         selected:
-          one: "Märkisid ära <b>1</b> teema."
+          one: "Märkisid ära <b>%{count}</b> teema."
           other: "Märkisid ära <b>{{count}}</b> teemat."
         change_tags: "Asenda sildid"
         append_tags: "Lisa sildid"
@@ -1399,7 +1399,7 @@ et:
         search: "Rohkem otsingutulemusi pole."
     topic:
       filter_to:
-        one: "1 postitus teemas"
+        one: "%{count} postitus teemas"
         other: "{{count}} postitust teemas"
       create: "Uus teema"
       create_long: "Loo uus teema"
@@ -1417,10 +1417,10 @@ et:
       new: "uus teema"
       unread: "lugemata"
       new_topics:
-        one: "1 uus teema"
+        one: "%{count} uus teema"
         other: "{{count}} uut teemat"
       unread_topics:
-        one: "1 lugemata teema"
+        one: "%{count} lugemata teema"
         other: "{{count}} lugemata teemat"
       title: "Teema"
       invalid_access:
@@ -1434,16 +1434,16 @@ et:
         title: "Teemat ei leitud"
         description: "Vabanda, meil ei õnnestunud seda teemat leida. Võimalik, et moderaator eemaldas selle?"
       total_unread_posts:
-        one: "Sul on selles teemas 1 lugemata postitus"
+        one: "Sul on selles teemas %{count} lugemata postitus"
         other: "Sul on selles teemas {{count}} lugemata postitust"
       unread_posts:
-        one: "Sul on selles teemas 1 lugemata vana postitus"
+        one: "Sul on selles teemas %{count} lugemata vana postitus"
         other: "Sul on selles teemas {{count}} lugemata vana postitust"
       new_posts:
-        one: "selles teemas on 1 uus postitus Sinu viimasest külastusest"
+        one: "selles teemas on %{count} uus postitus Sinu viimasest külastusest"
         other: "selles teemas on {{count}} uut postitust Sinu viimasest külastusest"
       likes:
-        one: "selles teemas on 1 meeldimine"
+        one: "selles teemas on %{count} meeldimine"
         other: "selles teemas on {{count}} meeldimist"
       back_to_list: "Tagasi Teemade Loendisse"
       options: "Teema Suvandid"
@@ -1502,7 +1502,7 @@ et:
         auto_close_based_on_last_post: "See teema sulgub %{duration} peale viimast vastust."
       auto_close_title: "Automaatse sulgumise sätted"
       auto_close_immediate:
-        one: "Viimane postitus selles teemas on juba 1 tund aega vana, seega sulgub see teema nüüd."
+        one: "Viimane postitus selles teemas on juba %{count} tund aega vana, seega sulgub see teema nüüd."
         other: "Viimane postitus selles teemas on juba %{hours} tundi vana, seega sulgub see teema nüüd."
       timeline:
         back: "Tagasi"
@@ -1607,7 +1607,7 @@ et:
         pin_validation: "Selle teema esiletõstmiseks on kuupäev nõutav."
         not_pinned: "Liigis {{categoryLink}} ei ole ühtegi esiletõstetud teemat."
         already_pinned:
-          one: "Liigis {{categoryLink}} hetkel kinnitatud teemad: <strong class='badge badge-notification unread'>1</strong>"
+          one: "Liigis {{categoryLink}} hetkel kinnitatud teemad: <strong class='badge badge-notification unread'>%{count}</strong>"
           other: "Liigis {{categoryLink}} hetkel esiletõstetud teemad: <strong class='badge badge-notification unread'>{{count}}</strong>"
         pin_globally: "Lisa see teema kõikide teemaloetelude tippu kuni"
         confirm_pin_globally: "Sul on juba {{count}} igal pool esiletõstetud teemat. Liiga palju esiletõstetud teemasid võib olla uutele või anonüümsetele kasutajatele koormav. Kas soovid kindlasti selles foorumis veel ühe teema igal pool esile tõsta?"
@@ -1616,7 +1616,7 @@ et:
         global_pin_note: "Kasutajad saavad teema esiletõstmise enda jaoks individuaalselt eemaldada."
         not_pinned_globally: "Ühtegi igal pool esiletõstetud teemat pole."
         already_pinned_globally:
-          one: "Hetkel globaalselt kinnitatud teemad: <strong class='badge badge-notification unread'>1</strong>"
+          one: "Hetkel globaalselt kinnitatud teemad: <strong class='badge badge-notification unread'>%{count}</strong>"
           other: "Igal pool esiletõstetud teemad hetkel: <strong class='badge badge-notification unread'>{{count}}</strong>"
         make_banner: "Tee sellest teemast bänner mis on nähtav iga lehe päises."
         remove_banner: "Eemalda bänner kõikide lehtede päistest."
@@ -1653,7 +1653,7 @@ et:
       login_reply: "Vastamiseks logi sisse"
       filters:
         n_posts:
-          one: "1 postitus"
+          one: "%{count} postitus"
           other: "{{count}} postitust"
         cancel: "Eemalda filter"
       split_topic:
@@ -1703,7 +1703,7 @@ et:
         select_all: vali kõik
         deselect_all: eemalda valik kõigilt
         description:
-          one: Oled valinud <b>1</b> postituse.
+          one: Oled valinud <b>%{count}</b> postituse.
           other: "Oled valinud <b>{{count}}</b> postitust."
     post:
       quote_reply: "Tsitaat"
@@ -1722,7 +1722,7 @@ et:
       collapse: "ahenda"
       expand_collapse: "laienda/ahenda"
       gap:
-        one: "vaata 1 peidetud vastust"
+        one: "vaata %{count} peidetud vastust"
         other: "vaata {{count}} peidetud vastust"
       unread: "Postitus on lugemata"
       has_replies:
@@ -1954,13 +1954,13 @@ et:
       custom_placeholder_notify_moderators: "Anna meile teada, mis Sulle täpsemalt muret teeb ja võimalusel lisa asjassepuutuvaid viiteid ning näiteid."
       custom_message:
         at_least:
-          one: "sisesta vähemalt 1 sümbol"
+          one: "sisesta vähemalt %{count} sümbol"
           other: "sisesta vähemalt {{count}} sümbolit"
         more:
-          one: "1 veel"
+          one: "%{count} veel"
           other: "{{count}} veel..."
         left:
-          one: "1 jäänud"
+          one: "%{count} jäänud"
           other: "{{count}} jäänud"
     flagging_topic:
       title: "Täname, et aitad meie kogukonna viisakust säilitada!"
@@ -1972,12 +1972,12 @@ et:
       links_title: "Populaarsed viited"
       links_shown: "kuva veel viiteid..."
       clicks:
-        one: "1 klikk"
+        one: "%{count} klikk"
         other: "%{count} klikki"
     post_links:
       about: "laienda veel selles postuses olevaid viiteid"
       title:
-        one: "1 veel"
+        one: "%{count} veel"
         other: "%{count} veel"
     topic_statuses:
       warning:
@@ -2016,7 +2016,7 @@ et:
       other: "vaatamisi"
     replies: "Vastuseid"
     views_long:
-      one: "seda teemat on vaadatud 1 kord"
+      one: "seda teemat on vaadatud %{count} kord"
       other: "seda teemat on vaadatud {{number}} korda"
     activity: "Aktiivsus"
     likes: "Meeldimisi"
@@ -2040,7 +2040,7 @@ et:
       latest:
         title: "Värskeimad"
         title_with_count:
-          one: "Värskeim (1)"
+          one: "Värskeim (%{count})"
           other: "Värskeimad ({{count}})"
         help: "teemad hiljutiste postitustega"
       hot:
@@ -2059,20 +2059,20 @@ et:
       unread:
         title: "Lugemata"
         title_with_count:
-          one: "Lugemata (1)"
+          one: "Lugemata (%{count})"
           other: "Lugemata ({{count}})"
         help: "teemad, mida vaatled või jälgid koos lugemata postitustega"
         lower_title_with_count:
-          one: "1 lugemata"
+          one: "%{count} lugemata"
           other: "{{count}} lugemata"
       new:
         lower_title_with_count:
-          one: "1 uus"
+          one: "%{count} uus"
           other: "{{count}} uut"
         lower_title: "uus"
         title: "Uus"
         title_with_count:
-          one: "Uus (1)"
+          one: "Uus (%{count})"
           other: "Uusi ({{count}})"
         help: "viimase paari päeva jooksul loodud teemad"
       posted:
@@ -2084,7 +2084,7 @@ et:
       category:
         title: "{{categoryName}}"
         title_with_count:
-          one: "{{categoryName}} (1)"
+          one: "{{categoryName}} (%{count})"
           other: "{{categoryName}} ({{count}})"
         help: "värskeimad teemad foorumis {{categoryName}}"
       top:
@@ -2168,19 +2168,19 @@ et:
         print: "<b>ctrl</b>+<b>p</b> Prindi teema"
     badges:
       earned_n_times:
-        one: "Teenis selle märgise 1 kord"
+        one: "Teenis selle märgise %{count} kord"
         other: "Teenis selle märgise %{count} korda"
       granted_on: "Märgistatud %{date}"
       others_count: "Teised selle märgisega (%{count})"
       title: Märgised
       badge_count:
-        one: "1 märgis"
+        one: "%{count} märgis"
         other: "%{count} märgist"
       more_badges:
-        one: "+1 veel"
+        one: "+%{count} veel"
         other: "+%{count} veel"
       granted:
-        one: "1 lubatud"
+        one: "%{count} lubatud"
         other: "%{count} lubatud"
       select_badge_for_title: "Vali märgis, mida kasutada oma pealkirjana"
       none: "(pole)"
@@ -2461,7 +2461,7 @@ et:
             one: "On tekkinud uus sündmus."
             other: "On tekkinud {{count}} uut sündmust."
           completed_in:
-            one: "Lõpetatud 1 sekundiga."
+            one: "Lõpetatud %{count} sekundiga."
             other: "Lõpetatud {{count}} sekundiga."
           request: "Päring"
           response: "Vastus"
@@ -2958,7 +2958,7 @@ et:
           one: "Ei saa kustutada kõiki postitusi. Osa postitusi on vanemad, kui  %{count} päev. (delete_user_max_post_age säte.) "
           other: "Ei saa kustutada kõiki postitusi. Osa postitusi on vanemad, kui  %{count} päeva. (delete_user_max_post_age säte.) "
         cant_delete_all_too_many_posts:
-          one: "Ei saa kustutada kõiki postitusi, sest kasutajal on rohkem, kui  1 postitus. (delete_all_posts_max)"
+          one: "Ei saa kustutada kõiki postitusi, sest kasutajal on rohkem, kui  %{count} postitus. (delete_all_posts_max)"
           other: "Ei saa kustutada kõiki postitusi, sest kasutajal on rohkem, kui  %{count} postitust. (delete_all_posts_max)"
         delete_and_block: "Kustuta ja <b>blokeeri</b> see meiliaadress ja  IP-aadress"
         delete_dont_block: "Kustuta vaid"
@@ -3168,7 +3168,7 @@ et:
             text: "Märgise andmise eksemplare on puudu. See juhtub, kui märgiste päring tagastab olematuid kasutaja või postisuse ID-sid. Sellega võivad hiljem kaasneda ettearvamatud tagajärjed - palun kontrolli oma päringut."
           no_grant_count: "Ei ole märgiseid, mida määrata."
           grant_count:
-            one: "<b>1</b> märgis, mida määrata."
+            one: "<b>%{count}</b> märgis, mida määrata."
             other: "<b>%{count}</b> märgist, mida määrata."
           sample: "Näidis:"
           grant:

@@ -45,32 +45,32 @@ sk:
       tiny:
         half_a_minute: "< 1m"
         less_than_x_seconds:
-          one: "< 1s"
+          one: "< %{count}s"
           few: "< %{count}s"
           many: "< %{count}s"
           other: "< %{count}s"
         x_seconds:
-          one: "1s"
+          one: "%{count}s"
           few: "1s"
           many: "%{count}s"
           other: "%{count}s"
         less_than_x_minutes:
-          one: "< 1m"
+          one: "< %{count}m"
           few: "< 1m"
           many: "< %{count}m"
           other: "< %{count}m"
         x_minutes:
-          one: "1m"
+          one: "%{count}m"
           few: "%{count}m"
           many: "%{count}m"
           other: "%{count}m"
         about_x_hours:
-          one: "1h"
+          one: "%{count}h"
           few: "%{count}h"
           many: "%{count}h"
           other: "%{count}h"
         x_days:
-          one: "1d"
+          one: "%{count}d"
           few: "%{count}d"
           many: "%{count}d"
           other: "%{count}d"
@@ -80,17 +80,17 @@ sk:
           many: "%{count} mesiace"
           other: "%{count} mesiace"
         about_x_years:
-          one: "1r"
+          one: "%{count}r"
           few: "%{count}r"
           many: "%{count}r"
           other: "%{count}r"
         over_x_years:
-          one: "> 1r"
+          one: "> %{count}r"
           few: "> %{count}r"
           many: "> %{count}r"
           other: "> %{count}r"
         almost_x_years:
-          one: "1r"
+          one: "%{count}r"
           few: "%{count}r"
           many: "%{count}r"
           other: "%{count}r"
@@ -98,50 +98,50 @@ sk:
         date_year: "MMM 'YY"
       medium:
         x_minutes:
-          one: "1 minúta"
+          one: "%{count} minúta"
           few: "%{count} minúty"
           many: "%{count} minút"
           other: "%{count} minút"
         x_hours:
-          one: "1 hodina"
+          one: "%{count} hodina"
           few: "%{count} hodiny"
           many: "%{count} hodín"
           other: "%{count} hodín"
         x_days:
-          one: "1 deň"
+          one: "%{count} deň"
           few: "%{count} dni"
           many: "%{count} dní"
           other: "%{count} dní"
         date_year: "MMM D, 'YY"
       medium_with_ago:
         x_minutes:
-          one: "pred 1 minútou"
+          one: "pred %{count} minútou"
           few: "pred %{count} minútami"
           many: "pred %{count} minútami"
           other: "pred %{count} minútami"
         x_hours:
-          one: "pred 1 hodinou"
+          one: "pred %{count} hodinou"
           few: "pred %{count} hodinami"
           many: "pred %{count} hodinami"
           other: "pred %{count} hodinami"
         x_days:
-          one: "pred 1 dňom"
+          one: "pred %{count} dňom"
           few: "pred %{count} dňami"
           many: "pred %{count} dňami"
           other: "pred %{count} dňami"
       later:
         x_days:
-          one: "1 deň neskôr"
+          one: "%{count} deň neskôr"
           few: "%{count} dni neskôr"
           many: "%{count} dní neskôr"
           other: "%{count} dní neskôr"
         x_months:
-          one: "1 mesiac neskôr"
+          one: "%{count} mesiac neskôr"
           few: "%{count} mesiace neskôr"
           many: "%{count} mesiacov neskôr"
           other: "%{count} mesiacov neskôr"
         x_years:
-          one: "1 rok neskôr"
+          one: "%{count} rok neskôr"
           few: "%{count} roky neskôr"
           many: "%{count} rokov neskôr"
           other: "%{count} rokov neskôr"
@@ -251,7 +251,7 @@ sk:
     max_of_count: "najviac {{count}}"
     alternation: "alebo"
     character_count:
-      one: "1 znak"
+      one: "%{count} znak"
       few: "{{count}} znakov"
       many: "{{count}} znakov"
       other: "{{count}} znakov"
@@ -405,7 +405,7 @@ sk:
       posts_read: "Prečítané"
       posts_read_long: "Prečítaných príspevkov"
       total_rows:
-        one: "1 používateľ"
+        one: "%{count} používateľ"
         few: "%{count} používatelia"
         many: "%{count} používateľov"
         other: "%{count} používateľov"
@@ -580,7 +580,7 @@ sk:
       toggle_ordering: "zmeniť radenie"
       subcategories: "Podkategórie"
       topic_sentence:
-        one: "1 téma"
+        one: "%{count} téma"
         few: "%{count} témy"
         many: "%{count} tém"
         other: "%{count} tém"
@@ -1212,7 +1212,7 @@ sk:
       similar_topics: "Vaša téma je podobná..."
       drafts_offline: "offline koncepty"
       group_mentioned:
-        one: "Zmienením {{group}}, upozorníte <a href='{{group_link}}'>1 človeka</a> – ste si istý?"
+        one: "Zmienením {{group}}, upozorníte <a href='{{group_link}}'>%{count} človeka</a> – ste si istý?"
         few: "Zmienením {{group}}, upozorníte <a href='{{group_link}}'>{{count}} ľudí</a> – ste si istý?"
         many: "Zmienením {{group}}, upozorníte <a href='{{group_link}}'>{{count}} ľudí</a> – ste si istý?"
         other: "Zmienením {{group}}, upozorníte <a href='{{group_link}}'>{{count}} ľudí</a> – ste si istý?"
@@ -1383,7 +1383,7 @@ sk:
         notification_level: "Upozornenia"
         choose_new_category: "Vyberte pre tému novú kategóriu:"
         selected:
-          one: "Označíli ste <b>1</b> tému."
+          one: "Označíli ste <b>%{count}</b> tému."
           few: "Označíli ste <b>{{count}}</b> tém.y"
           many: "Označíli ste <b>{{count}}</b> tém."
           other: "Označíli ste <b>{{count}}</b> tém."
@@ -1416,7 +1416,7 @@ sk:
         search: "Nenašlo sa viac výsledkov."
     topic:
       filter_to:
-        one: "1 príspevok k téme"
+        one: "%{count} príspevok k téme"
         few: "{{count}} príspevky k téme"
         many: "{{count}} príspevkov k téme"
         other: "{{count}} príspevkov k téme"
@@ -1433,12 +1433,12 @@ sk:
       new: "nová téma"
       unread: "neprečítané"
       new_topics:
-        one: "1 nová téma"
+        one: "%{count} nová téma"
         few: "{{count}} nové témy"
         many: "{{count}} nových tém"
         other: "{{count}} nových tém"
       unread_topics:
-        one: "1 neprečítaná téma"
+        one: "%{count} neprečítaná téma"
         few: "{{count}} neprečítané témy"
         many: "{{count}} neprečítaných tém"
         other: "{{count}} neprečítaných tém"
@@ -1454,17 +1454,17 @@ sk:
         title: "Téma sa nenašla"
         description: "Ľutujeme, hľadaná téma nebola nájdená. Možno bola odstránená moderátorom?"
       total_unread_posts:
-        one: "máte 1 neprečítaný príspevok k tejto téme"
+        one: "máte %{count} neprečítaný príspevok k tejto téme"
         few: "máte {{count}} neprečítanépríspevky k tejto téme"
         many: "máte {{count}} neprečítaných príspevkov k tejto téme"
         other: "máte {{count}} neprečítaných príspevkov k tejto téme"
       unread_posts:
-        one: "máte 1 starší neprečítaný príspevok k tejto téme"
+        one: "máte %{count} starší neprečítaný príspevok k tejto téme"
         few: "máte {{count}} staršie neprečítané príspevky k tejto téme"
         many: "máte {{count}} starších neprečítaných príspevkov k tejto téme"
         other: "máte {{count}} starších neprečítaných príspevkov k tejto téme"
       new_posts:
-        one: "pribudol 1 nový príspevok odkedy ste čítali túto tému naposledy "
+        one: "pribudol %{count} nový príspevok odkedy ste čítali túto tému naposledy "
         few: "pribudlo  {{count}}  nové príspevky odkedy ste čítali túto tému naposledy "
         many: "pribudlo  {{count}}  nových príspevkov odkedy ste čítali túto tému naposledy "
         other: "pribudlo  {{count}}  nových príspevkov odkedy ste čítali túto tému naposledy "
@@ -1512,7 +1512,7 @@ sk:
         auto_close_based_on_last_post: "Táto téma bude uzavretá %{duration} po poslednej odpovedi."
       auto_close_title: "Nastavenia automatického zatvárania"
       auto_close_immediate:
-        one: "Posledný príspevok k téme je starý už 1 hodinu, takže téma bude okamžite uzavretá. "
+        one: "Posledný príspevok k téme je starý už %{count} hodinu, takže téma bude okamžite uzavretá. "
         few: "Posledný príspevok k téme je starý už %{hours} hodiny, takže téma bude okamžite uzavretá. "
         many: "Posledný príspevok k téme je starý už %{hours} hodín, takže téma bude okamžite uzavretá. "
         other: "Posledný príspevok k téme je starý už %{hours} hodín, takže téma bude okamžite uzavretá. "
@@ -1612,7 +1612,7 @@ sk:
         pin_validation: "Dátum je vyžadovaný k pripnutiu tejto témy."
         not_pinned: "V {{categoryLink}} nie sú pripnuté žiadne témy."
         already_pinned:
-          one: "Téma pripnutá k {{categoryLink}}: <strong class='badge badge-notification unread'>1</strong>"
+          one: "Téma pripnutá k {{categoryLink}}: <strong class='badge badge-notification unread'>%{count}</strong>"
           few: "Témy pripnuté ku {{categoryLink}}: <strong class='badge badge-notification unread'>{{count}}</strong>"
           many: "Tém pripnutých k {{categoryLink}}: <strong class='badge badge-notification unread'>{{count}}</strong>"
           other: "Tém pripnutých k {{categoryLink}}: <strong class='badge badge-notification unread'>{{count}}</strong>"
@@ -1623,7 +1623,7 @@ sk:
         global_pin_note: "Užívatelia si môžu sami odopnúť tému."
         not_pinned_globally: "Nie sú pripnuté žiadne globálne témy."
         already_pinned_globally:
-          one: "Globálne pripnutá téma : <strong class='badge badge-notification unread'>1</strong>"
+          one: "Globálne pripnutá téma : <strong class='badge badge-notification unread'>%{count}</strong>"
           few: "Globálne pripnuté témy : <strong class='badge badge-notification unread'>{{count}}</strong>"
           many: "Globálne pripnutých tém : <strong class='badge badge-notification unread'>{{count}}</strong>"
           other: "Globálne pripnutých tém : <strong class='badge badge-notification unread'>{{count}}</strong>"
@@ -1661,7 +1661,7 @@ sk:
       login_reply: "Príhláste sa ak chcete odpovedať"
       filters:
         n_posts:
-          one: "1 príspevok"
+          one: "%{count} príspevok"
           few: "{{count}} príspevky"
           many: "{{count}} príspevkov"
           other: "{{count}} príspevkov"
@@ -1713,7 +1713,7 @@ sk:
         select_all: označ všetko
         deselect_all: odznač všetko
         description:
-          one: Označili ste <b>1</b> príspevok
+          one: Označili ste <b>%{count}</b> príspevok
           few: "Označili ste <b>{{count}}</b> príspevky"
           many: "Označili ste <b>{{count}}</b> príspevkov"
           other: "Označili ste <b>{{count}}</b> príspevkov"
@@ -1940,12 +1940,12 @@ sk:
       custom_placeholder_notify_moderators: "Dajte nám vedieť, z čoho konkrétne máte obavy, a priložte príslušné odkazy a príklady, ak je to možné."
       custom_message:
         more:
-          one: "ešte 1 ..."
+          one: "ešte %{count} ..."
           few: "ešte {{count}} ..."
           many: "ešte {{count}} ..."
           other: "ešte {{count}} ..."
         left:
-          one: "1 zostáva"
+          one: "%{count} zostáva"
           few: "{{count}} zostávajú"
           many: "{{count}} zostáva"
           other: "{{count}} zostáva"
@@ -1965,7 +1965,7 @@ sk:
         other: "%{count} klikov"
     post_links:
       title:
-        one: "1 ďalší"
+        one: "%{count} ďalší"
         few: "%{count} ďalšie"
         many: "%{count} ďalších"
         other: "%{count} ďalších"
@@ -2038,7 +2038,7 @@ sk:
       latest:
         title: "Najnovšie"
         title_with_count:
-          one: "Posledný (1)"
+          one: "Posledný (%{count})"
           few: "Posledné ({{count}})"
           many: "Posledných ({{count}})"
           other: "Posledných ({{count}})"
@@ -2059,26 +2059,26 @@ sk:
       unread:
         title: "Neprečítané"
         title_with_count:
-          one: "Neprečítaná (1)"
+          one: "Neprečítaná (%{count})"
           few: "Neprečítané ({{count}})"
           many: "Neprečítaných ({{count}})"
           other: "Neprečítaných ({{count}})"
         help: "témy ktorých neprečítané príspevky v súčastnosti sledujete alebo pozorujete "
         lower_title_with_count:
-          one: "1 neprečítaná"
+          one: "%{count} neprečítaná"
           few: "{{count}} neprečítané"
           many: "{{count}} neprečítaných"
           other: "{{count}} neprečítaných"
       new:
         lower_title_with_count:
-          one: "1 nová"
+          one: "%{count} nová"
           few: "{{count}} nové"
           many: "{{count}} nových"
           other: "{{count}} nových"
         lower_title: "nový"
         title: "Nové"
         title_with_count:
-          one: "Nová (1)"
+          one: "Nová (%{count})"
           few: "Nové ({{count}})"
           many: "Nových ({{count}})"
           other: "Nových ({{count}})"
@@ -2177,7 +2177,7 @@ sk:
         mark_watching: "<b>m</b>, <b>w</b> Pozorovať tému"
     badges:
       earned_n_times:
-        one: "Získal tento odkaz 1-krát"
+        one: "Získal tento odkaz %{count}-krát"
         few: "Získal tento odkaz %{count}-krát"
         many: "Získal tento odkaz %{count}-krát"
         other: "Získal tento odkaz %{count}-krát"
@@ -2185,7 +2185,7 @@ sk:
       others_count: "Ostatní s týmto odznakom (%{count})"
       title: Odznaky
       granted:
-        one: "1 udelený"
+        one: "%{count} udelený"
         few: "%{count} udelené"
         many: "%{count} udelených"
         other: "%{count} udelených"
@@ -2859,7 +2859,7 @@ sk:
           many: "Nepodarilo sa zmazať všetky príspevky. Niektoré príspevky sú staršie ako %{count} dní. (Nastavenie delete_user_max_post_age )"
           other: "Nepodarilo sa zmazať všetky príspevky. Niektoré príspevky sú staršie ako %{count} dní. (Nastavenie delete_user_max_post_age )"
         cant_delete_all_too_many_posts:
-          one: "Nedá sa zmazať všetky píspevky, pretože používateľ má viac ako 1 príspevok.  (delete_all_posts_max)"
+          one: "Nedá sa zmazať všetky píspevky, pretože používateľ má viac ako %{count} príspevok.  (delete_all_posts_max)"
           few: "Nedá sa zmazať všetky píspevky, pretože používateľ má viac ako %{count} príspevky.  (delete_all_posts_max)"
           many: "Nedá sa zmazať všetky píspevky, pretože používateľ má viac ako %{count} príspevkov.  (delete_all_posts_max)"
           other: "Nedá sa zmazať všetky píspevky, pretože používateľ má viac ako %{count} príspevkov.  (delete_all_posts_max)"
@@ -3053,7 +3053,7 @@ sk:
             text: "Chýbajú ukážky práv. Toto sa stane, ak dotaz na odznak vráti ID používateľa alebo príspevku, ktorý neexistuje. Toto môže zapríčiniť neskoršie neočakávané výsledky - prosíme znovu overte Váš dotaz."
           no_grant_count: "Žiadne odznaky na pridelenie."
           grant_count:
-            one: "<b>1</b> odznak na pridelenie"
+            one: "<b>%{count}</b> odznak na pridelenie"
             few: "<b>%{count}</b> odznaky na pridelenie"
             many: "<b>%{count}</b> odznakov na pridelenie"
             other: "<b>%{count}</b> odznakov na pridelenie"

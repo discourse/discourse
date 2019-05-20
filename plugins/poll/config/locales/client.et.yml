@@ -18,13 +18,13 @@ et:
       multiple:
         help:
           at_least_min_options:
-            one: "Tee vähemalt <strong>1</strong> valik"
+            one: "Tee vähemalt <strong>%{count}</strong> valik"
             other: "Tee vähemalt <strong>%{count}</strong> valikut"
           up_to_max_options:
-            one: "Võid teha <strong>1</strong> valiku"
+            one: "Võid teha <strong>%{count}</strong> valiku"
             other: "Võid teha kuni <strong>%{count}</strong> valikut"
           x_options:
-            one: "Tee <strong>1</strong> valik"
+            one: "Tee <strong>%{count}</strong> valik"
             other: "Tee <strong>%{count}</strong> valikut"
           between_min_and_max_options: "Tee <strong>%{min}</strong> kuni <strong>%{max}</strong> valikut"
       cast-votes:

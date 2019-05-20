@@ -44,58 +44,58 @@ ro:
       tiny:
         half_a_minute: "< 1m"
         less_than_x_seconds:
-          one: "< 1s"
+          one: "< %{count}s"
           few: "< %{count}s"
           other: "< %{count} s"
         x_seconds:
-          one: "1s"
+          one: "%{count}s"
           few: "%{count} s"
           other: "%{count} s"
         less_than_x_minutes:
-          one: "< 1m"
+          one: "< %{count}m"
           few: "< 1m"
           other: "< %{count}m"
         x_minutes:
-          one: "1m"
+          one: "%{count}m"
           few: "%{count} m"
           other: "%{count} m"
         about_x_hours:
-          one: "1h"
+          one: "%{count}h"
           few: "%{count} h"
           other: "%{count} h"
         x_days:
-          one: "1z"
+          one: "%{count}z"
           few: "%{count} z"
           other: "%{count} z"
         x_months:
-          one: "1mon"
+          one: "%{count}mon"
           few: "1mon"
           other: "%{count}mon"
         about_x_years:
-          one: "1a"
+          one: "%{count}a"
           few: "%{count} a"
           other: "%{count} a"
         over_x_years:
-          one: "> 1a"
+          one: "> %{count}a"
           few: "> %{count} a"
           other: "> %{count} a"
         almost_x_years:
-          one: "1a"
+          one: "%{count}a"
           few: "%{count} a"
           other: "%{count} de a"
         date_month: "DD MMMM"
         date_year: "MMM 'YY"
       medium:
         x_minutes:
-          one: "1 min"
+          one: "%{count} min"
           few: "%{count} min"
           other: "%{count} de min"
         x_hours:
-          one: "1 oră"
+          one: "%{count} oră"
           few: "%{count} ore"
           other: "%{count} de ore"
         x_days:
-          one: "1 zi"
+          one: "%{count} zi"
           few: "%{count} zile"
           other: "%{count} de zile"
         date_year: "D MM YYYY"
@@ -370,7 +370,7 @@ ro:
       posts_read: "Citite"
       posts_read_long: "Postări citite"
       total_rows:
-        one: "1 utilizator"
+        one: "%{count} utilizator"
         few: "%{count} utilizatori"
         other: "%{count} de utilizatori"
     group_histories:
@@ -1251,7 +1251,7 @@ ro:
     notifications:
       tooltip:
         message:
-          one: "1 mesaj necitit"
+          one: "%{count} mesaj necitit"
           few: "{{count}} mesaje necitite"
           other: "{{count}} mesaje necitite"
       title: "notificări la menționările @numelui tău, răspunsuri la postările sau subiectele tale, mesaje, etc."
@@ -1826,7 +1826,7 @@ ro:
             few: "Da, și {{count}} răspunsuri directe"
             other: "Da, și {{count}} răspunsuri directe"
           all_replies:
-            one: "Da, și 1 răspuns"
+            one: "Da, și %{count} răspuns"
             few: "Da, și toate {{count}} răspunsurile"
             other: "Da, și toate {{count}} răspunsurile"
           just_the_post: "Nu, doare această postare"
@@ -2047,7 +2047,7 @@ ro:
       links_title: "Legături populare"
       links_shown: "arată mai multe link-uri..."
       clicks:
-        one: "1 click"
+        one: "%{count} click"
         few: "%{count} click-uri"
         other: "%{count} de click-uri"
     post_links:
@@ -2094,7 +2094,7 @@ ro:
       other: "de vizualizări"
     replies: "Răspunsuri"
     views_long:
-      one: "această discuție a fost afișată 1 dată"
+      one: "această discuție a fost afișată %{count} dată"
       few: "această discuție a fost afișată de {{number}} de ori."
       other: "această discuție a fost afișată de {{number}} de ori"
     activity: "Activitate"
@@ -2121,7 +2121,7 @@ ro:
       latest:
         title: "Cele mai recente"
         title_with_count:
-          one: "Cel mai recent (1)"
+          one: "Cel mai recent (%{count})"
           few: "Cele mai recente ({{count}})"
           other: "Cele mai recente ({{count}})"
         help: "subiecte cu postări recente"
@@ -2141,7 +2141,7 @@ ro:
       unread:
         title: "Necitite"
         title_with_count:
-          one: "Necitit (1)"
+          one: "Necitit (%{count})"
           few: "Necitite ({{count}})"
           other: "Necitite ({{count}})"
         help: "subiecte pe care le urmărești activ sau cele pe care le urmărești și care includ postări necitite"
@@ -2157,7 +2157,7 @@ ro:
         lower_title: "nou"
         title: "Noi"
         title_with_count:
-          one: "Nou (1)"
+          one: "Nou (%{count})"
           few: "Noi ({{count}})"
           other: "Noi ({{count}})"
         help: "subiecte create în ultimele zile"
@@ -2170,7 +2170,7 @@ ro:
       category:
         title: "{{categoryName}}"
         title_with_count:
-          one: "{{categoryName}} (1)"
+          one: "{{categoryName}} (%{count})"
           few: "{{categoryName}} ({{count}})"
           other: "{{categoryName}} ({{count}})"
         help: "subiecte recente din categoria {{categoryName}}"
@@ -3053,15 +3053,15 @@ ro:
         delete_forbidden_because_staff: "Adminii și moderatorii nu pot fi sterși."
         delete_posts_forbidden_because_staff: "Nu poți șterge mesajele administratorilor și moderatorilor."
         delete_forbidden:
-          one: "Utilizatorii nu pot fi șterși dacă au postări. Șterge toate postările înainte de a încerca ștergerea unui utilizator. (Postările mai vechi de 1 zi nu pot fi șterse)"
+          one: "Utilizatorii nu pot fi șterși dacă au postări. Șterge toate postările înainte de a încerca ștergerea unui utilizator. (Postările mai vechi de %{count} zi nu pot fi șterse)"
           few: "Utilizatorii nu pot fi șterși dacă au postări. Şterge toate postările înainte de a încerca ștergerea unui utilizator. (Postările mai vechi de %{count} zile nu pot fi șterse)"
           other: "Utilizatorii nu pot fi șterși dacă au postări. Șterge toate postările înainte de a încerca ștergerea unui utilizator. (Postările mai vechi de %{count} de zile nu pot fi șterse)"
         cant_delete_all_posts:
-          one: "Nu pot fi şterse toate postările. Unele postări sunt mai vechi de 1 zi. (Setarea delete_user_max_post_age)"
+          one: "Nu pot fi şterse toate postările. Unele postări sunt mai vechi de %{count} zi. (Setarea delete_user_max_post_age)"
           few: "Nu pot fi şterse toate postările. Unele postări sunt mai vechi de %{count} zile. (Setarea delete_user_max_post_age)"
           other: "Nu pot fi șterse toate postările. Unele postări sunt mai vechi de %{count} de zile. (Setarea delete_user_max_post_age)"
         cant_delete_all_too_many_posts:
-          one: "Nu pot fi şterse toate postările deoarece utilizatorul are mai mult de 1 postare. (Setarea delete_all_posts_max)"
+          one: "Nu pot fi şterse toate postările deoarece utilizatorul are mai mult de %{count} postare. (Setarea delete_all_posts_max)"
           few: "Nu pot fi şterse toate postările deoarece utilizatorul are mai mult de %{count} postări. (Setarea delete_all_posts_max)"
           other: "Nu pot fi şterse toate postările deoarece utilizatorul are mai mult de %{count} de postări. (Setarea delete_all_posts_max)"
         delete_and_block: "<b>Da</b>, și <b>blochează</b> viitoarele autentificări cu acest email și această adresă IP"
@@ -3348,7 +3348,7 @@ ro:
       upload_error: "Ne pare rău, a apărut o eroare la încărcarea fișierului. Te rugăm să încerci iar."
       quit: "Poate mai târziu"
       staff_count:
-        one: "Comunitatea ta are 1 membru (tu)."
+        one: "Comunitatea ta are %{count} membru (tu)."
         few: "Comunitatea ta are %{count} membri cu tot cu tine."
         other: "Comunitatea ta are %{count} membri cu tot cu tine."
       invites:

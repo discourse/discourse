@@ -45,52 +45,52 @@ ru:
       tiny:
         half_a_minute: "< 1мин"
         less_than_x_seconds:
-          one: "< 1сек"
+          one: "< %{count}сек"
           few: "< %{count}сек"
           many: "< %{count}сек"
           other: "< %{count}с"
         x_seconds:
-          one: "1с"
+          one: "%{count}с"
           few: "%{count}с"
           many: "%{count}с"
           other: "%{count}с"
         less_than_x_minutes:
-          one: "< 1мин"
+          one: "< %{count}мин"
           few: "~ 1m"
           many: "> 1m"
           other: "< %{count}мин"
         x_minutes:
-          one: "1мин"
+          one: "%{count}мин"
           few: "%{count}мин"
           many: "%{count}мин"
           other: "%{count}мин"
         about_x_hours:
-          one: "1ч"
+          one: "%{count}ч"
           few: "%{count}ч"
           many: "%{count}ч"
           other: "%{count}ч"
         x_days:
-          one: "1д"
+          one: "%{count}д"
           few: "%{count}д"
           many: "%{count}д"
           other: "%{count}д"
         x_months:
-          one: "1 мес"
+          one: "%{count} мес"
           few: "%{count}мес"
           many: "%{count}мес"
           other: "%{count}мес"
         about_x_years:
-          one: "1год"
+          one: "%{count}год"
           few: "%{count}года"
           many: "%{count}лет"
           other: "%{count}лет"
         over_x_years:
-          one: "> 1 года"
+          one: "> %{count} года"
           few: "> %{count} лет"
           many: "> %{count} лет"
           other: "> %{count} лет"
         almost_x_years:
-          one: "1 год"
+          one: "%{count} год"
           few: "%{count} года"
           many: "%{count} лет"
           other: "%{count} лет"
@@ -98,50 +98,50 @@ ru:
         date_year: "MMM YYYY"
       medium:
         x_minutes:
-          one: "1 минута"
+          one: "%{count} минута"
           few: "%{count} минуты"
           many: "%{count} минут"
           other: "%{count} минут"
         x_hours:
-          one: "1 час"
+          one: "%{count} час"
           few: "%{count} часа"
           many: "%{count} часов"
           other: "%{count} часов"
         x_days:
-          one: "1 день"
+          one: "%{count} день"
           few: "%{count} дня"
           many: "%{count} дней"
           other: "%{count} дней"
         date_year: "D MMM, YYYY"
       medium_with_ago:
         x_minutes:
-          one: "1 минуту назад"
+          one: "%{count} минуту назад"
           few: "%{count} минуты назад"
           many: "%{count} минут назад"
           other: "%{count} минут назад"
         x_hours:
-          one: "1 час назад"
+          one: "%{count} час назад"
           few: "%{count} часа назад"
           many: "%{count} часов назад"
           other: "%{count} часов назад"
         x_days:
-          one: "1 день назад"
+          one: "%{count} день назад"
           few: "%{count} дня назад"
           many: "%{count} дней назад"
           other: "%{count} дней назад"
       later:
         x_days:
-          one: "1 день спустя"
+          one: "%{count} день спустя"
           few: "%{count} дня спустя"
           many: "%{count} дней спустя"
           other: "%{count} дней спустя"
         x_months:
-          one: "1 месяц спустя"
+          one: "%{count} месяц спустя"
           few: "%{count} месяца спустя"
           many: "%{count} месяцев спустя"
           other: "%{count} месяцев спустя"
         x_years:
-          one: "1 год спустя"
+          one: "%{count} год спустя"
           few: "%{count} года спустя"
           many: "%{count} лет спустя"
           other: "%{count} лет спустя"
@@ -381,7 +381,7 @@ ru:
       none: "Нет пунктов для обзора."
       view_pending: "просмотр в ожидании"
       topic_has_pending:
-        one: "В этой теме <b>1</b> пост, ожидающий проверки"
+        one: "В этой теме <b>%{count}</b> пост, ожидающий проверки"
         few: "В этой теме <b>{{count}}</b> поста, ожидающих проверки"
         many: "В этой теме <b>{{count}}</b> постов, ожидающих проверки"
         other: "В этой теме <b>{{count}}</b> постов, ожидающих проверки"
@@ -426,12 +426,12 @@ ru:
         original: "(оригинальная тема)"
         details: "подробности"
         unique_users:
-          one: "1 пользователь"
+          one: "%{count} пользователь"
           few: "{{count}} пользователя"
           many: "{{count}} пользователей"
           other: "{{count}} пользователь"
       replies:
-        one: "1 ответ"
+        one: "%{count} ответ"
         few: "{{count}} ответа"
         many: "{{count}} ответов"
         other: "{{count}} ответ"
@@ -489,7 +489,7 @@ ru:
         title: "Сообщения для проверки"
         description: "Ваше сообщение отправлено, но требует проверки и утверждения модератором. Пожалуйста, будьте терпеливы."
         pending_posts:
-          one: "У вас есть <strong>1</strong> сообщение в ожидании."
+          one: "У вас есть <strong>%{count}</strong> сообщение в ожидании."
           few: "У вас есть <strong>{{count}}</strong> сообщения в ожидании."
           many: "У вас есть <strong>{{count}}</strong> сообщений в ожидании."
           other: "У вас есть <strong>{{count}}</strong> сообщение в ожидании."
@@ -712,7 +712,7 @@ ru:
       toggle_ordering: "изменить сортировку"
       subcategories: "Подразделы"
       topic_sentence:
-        one: "1 тема"
+        one: "%{count} тема"
         few: "%{count} тем"
         many: "%{count} тем"
         other: "%{count} тем"
@@ -1261,7 +1261,7 @@ ru:
       reached: "<b>%{relativeAge}</b> – <a href='%{url}' target='_blank'>%{rate}</a> достигнут установленный для сайта предел %{siteSettingRate}."
       exceeded: "<b>%{relativeAge}</b> – <a href='%{url}' target='_blank'>%{rate}</a> превышен установленный для сайта предел %{siteSettingRate}."
       rate:
-        one: "1 ошибка/%{duration}"
+        one: "%{count} ошибка/%{duration}"
         few: "%{count} ошибок/%{duration}"
         many: "%{count} ошибок/%{duration}"
         other: "%{count} ошибок/%{duration}"
@@ -1502,7 +1502,7 @@ ru:
       edit_conflict: "редактировать конфликт"
       group_mentioned_limit: "<b>Внимание!</b> Вы упомянули <a href='{{group_link}}'>{{group}}</a>, в которой больше участников, чем установленный администратором лимит упоминаний на {{max}} пользователей. Никто не получит оповещение."
       group_mentioned:
-        one: "Упоминая группу {{group}}, вы тем самым отправите уведомление <a href='{{group_link}}'>1му пользователю</a> – вы уверены?"
+        one: "Упоминая группу {{group}}, вы тем самым отправите уведомление <a href='{{group_link}}'>%{count}му пользователю</a> – вы уверены?"
         few: "Упоминая группу {{group}}, вы тем самым отправите уведомление <a href='{{group_link}}'>{{count}} пользователям</a> – вы уверены?"
         many: "Упоминая группу {{group}}, вы тем самым отправите уведомление <a href='{{group_link}}'>{{count}} пользователям</a> – вы уверены?"
         other: "Упоминая группу {{group}}, вы тем самым отправите уведомление <a href='{{group_link}}'>{{count}} пользователям</a> – вы уверены?"
@@ -1614,12 +1614,12 @@ ru:
     notifications:
       tooltip:
         regular:
-          one: "1 невидимое уведомление"
+          one: "%{count} невидимое уведомление"
           few: "{{count}} невидимые уведомления"
           many: "{{count}} невидимых уведомлений"
           other: "{{count}} невидимые уведомления"
         message:
-          one: "1 непрочитанное сообщение"
+          one: "%{count} непрочитанное сообщение"
           few: "{{count}} непрочитанных сообщений"
           many: "{{count}} непрочитанных сообщений"
           other: "{{count}} непрочитанных сообщений"
@@ -1638,7 +1638,7 @@ ru:
       liked: "<span>{{username}}</span> {{description}}"
       liked_2: "<span>{{username}}, {{username2}}</span> {{description}}"
       liked_many:
-        one: "<span>{{username}}, {{username2}} и 1 другой</span> {{description}}"
+        one: "<span>{{username}}, {{username2}} и %{count} другой</span> {{description}}"
         few: "<span>{{username}}, {{username2}} и {{count}} другие</span> {{description}}"
         many: "<span>{{username}}, {{username2}} и {{count}} другие</span> {{description}}"
         other: "<span>{{username}}, {{username2}} и {{count}} другие</span> {{description}}"
@@ -1700,7 +1700,7 @@ ru:
       clear_all: "Сбросить все"
       too_short: "Слишком короткое слово для поиска."
       result_count:
-        one: "<span>1 результат для </span><span class='term'>{{term}}</span>"
+        one: "<span>%{count} результат для </span><span class='term'>{{term}}</span>"
         few: "<span>{{count}}{{plus}} результатов для </span><span class='term'>{{term}}</span>"
         many: "<span>{{count}}{{plus}} результат для </span><span class='term'>{{term}}</span>"
         other: "<span>{{count}}{{plus}} результатов для </span><span class='term'>{{term}}</span>"
@@ -1830,7 +1830,7 @@ ru:
         search: "Больше ничего не найдено."
     topic:
       filter_to:
-        one: "1 сообщение в теме"
+        one: "%{count} сообщение в теме"
         few: "{{count}} сообщения в теме"
         many: "{{count}} сообщений в теме"
         other: "{{count}} сообщений в теме"
@@ -1960,7 +1960,7 @@ ru:
         auto_reminder: "Вам придёт напоминание об этой теме через %{timeLeft}."
       auto_close_title: "Настройки закрытия темы"
       auto_close_immediate:
-        one: "Последнее сообщение в этой теме отправлено 1 час назад, поэтому данная тема будет закрыта незамедлительно."
+        one: "Последнее сообщение в этой теме отправлено %{count} час назад, поэтому данная тема будет закрыта незамедлительно."
         few: "Последнее сообщение в этой теме отправлено %{count} часа назад, поэтому данная тема будет закрыта незамедлительно."
         many: "Последнее сообщение в этой теме отправлено %{count} часов назад, поэтому данная тема будет закрыта незамедлительно."
         other: "Последнее сообщение в этой теме отправлено %{count} часов назад, поэтому данная тема будет закрыта незамедлительно."
@@ -2074,7 +2074,7 @@ ru:
         pin_validation: "Чтобы закрепить эту тему, требуется дата."
         not_pinned: "В разделе {{categoryLink}} нет закрепленных тем."
         already_pinned:
-          one: "Глобально закрепленных тем в разделе {{categoryLink}}: <strong class='badge badge-notification unread'>1</strong>"
+          one: "Глобально закрепленных тем в разделе {{categoryLink}}: <strong class='badge badge-notification unread'>%{count}</strong>"
           few: "Глобально закрепленных тем в разделе {{categoryLink}}: <strong class='badge badge-notification unread'>{{count}}</strong>"
           many: "Глобально закрепленных тем в разделе {{categoryLink}}: <strong class='badge badge-notification unread'>{{count}}</strong>"
           other: "Глобально закрепленных тем в разделе {{categoryLink}}: <strong class='badge badge-notification unread'>{{count}}</strong>"
@@ -2085,7 +2085,7 @@ ru:
         global_pin_note: "Пользователи могут открепить тему, каждый сам для себя."
         not_pinned_globally: "Нет глобально закрепленных тем."
         already_pinned_globally:
-          one: "Глобально закрепленных тем: <strong class='badge badge-notification unread'>1</strong>"
+          one: "Глобально закрепленных тем: <strong class='badge badge-notification unread'>%{count}</strong>"
           few: "Глобально закрепленных тем: <strong class='badge badge-notification unread'>{{count}}</strong>"
           many: "Глобально закрепленных тем: <strong class='badge badge-notification unread'>{{count}}</strong>"
           other: "Глобально закрепленных тем: <strong class='badge badge-notification unread'>{{count}}</strong>"
@@ -2267,7 +2267,7 @@ ru:
         other: "Это сообщение понравилось {{count}} людям"
       has_likes_title_only_you: "Вам понравилось это сообщение"
       has_likes_title_you:
-        one: "Вам и ещё 1 человеку понравилось это сообщение"
+        one: "Вам и ещё %{count} человеку понравилось это сообщение"
         few: "Вам и ещё {{count}} людям понравилось это сообщение"
         many: "Вам и ещё {{count}} людям понравилось это сообщение"
         other: "Вам и ещё {{count}} людям понравилось это сообщение"
@@ -2310,12 +2310,12 @@ ru:
         delete_replies:
           confirm: "Вы также хотите удалить ответы на этот пост?"
           direct_replies:
-            one: "Да, и 1 прямой ответ"
+            one: "Да, и %{count} прямой ответ"
             few: "Да, и {{count}} прямых ответов"
             many: "Да, и {{count}} прямых ответов"
             other: "Да, и {{count}} прямой ответ"
           all_replies:
-            one: "Да, и 1 ответ"
+            one: "Да, и %{count} ответ"
             few: "Да, и все {{count}} ответа"
             many: "Да, и все {{count}} ответы"
             other: "Да, и все {{count}} ответы"
@@ -2565,17 +2565,17 @@ ru:
       custom_placeholder_notify_moderators: "Поясните суть проблемы: на что нам следует обратить внимание. Предоставьте соответствующие ссылки, если это возможно."
       custom_message:
         at_least:
-          one: "Введите хотя бы 1 символ"
+          one: "Введите хотя бы %{count} символ"
           few: "Введите хотя бы {{count}} символа"
           many: "Введите хотя бы {{count}} символов"
           other: "Введите хотя бы {{count}} символов"
         more:
-          one: "Еще 1 символ..."
+          one: "Еще %{count} символ..."
           few: "Еще хотя бы {{count}} символа..."
           many: "Еще хотя бы {{count}} символов..."
           other: "Еще хотя бы {{count}} символов..."
         left:
-          one: "Осталось не более 1 символа"
+          one: "Осталось не более %{count} символа"
           few: "Осталось не более {{count}} символов"
           many: "Осталось не более {{count}} символов"
           other: "Осталось не более {{count}} символов"
@@ -2589,14 +2589,14 @@ ru:
       links_title: "Популярные ссылки"
       links_shown: "показать больше ссылок..."
       clicks:
-        one: "1 клик"
+        one: "%{count} клик"
         few: "%{count} клика"
         many: "%{count} кликов"
         other: "%{count} кликов"
     post_links:
       about: "gjrfpf"
       title:
-        one: "ещё 1"
+        one: "ещё %{count}"
         few: "ещё %{count}"
         many: "ещё %{count}"
         other: "ещё %{count}"
@@ -2639,7 +2639,7 @@ ru:
       other: "просмотров"
     replies: "Ответов"
     views_long:
-      one: "тема просмотрена 1 раз"
+      one: "тема просмотрена %{count} раз"
       few: "тема просмотрена {{number}} раза"
       many: "тема просмотрена {{number}} раз"
       other: "тема просмотрена {{number}} раз"
@@ -2670,7 +2670,7 @@ ru:
       latest:
         title: "Последние"
         title_with_count:
-          one: "Последние (1)"
+          one: "Последние (%{count})"
           few: "Последние ({{count}})"
           many: "Последние ({{count}})"
           other: "Последние ({{count}})"
@@ -2823,7 +2823,7 @@ ru:
         print: "<b>ctrl</b>+<b>p</b> Печатать тему"
     badges:
       earned_n_times:
-        one: "Заработал эту награду 1 раз"
+        one: "Заработал эту награду %{count} раз"
         few: "Заработали эту награду %{count} раз"
         many: "Заработали эту награду %{count} раз"
         other: "Заработали эту награду %{count} раз"
@@ -2833,17 +2833,17 @@ ru:
       allow_title: "Вы можете использовать эту награду в качестве титула."
       multiple_grant: "Вы можете получить её несколько раз"
       badge_count:
-        one: "1 награда"
+        one: "%{count} награда"
         few: "%{count} наград"
         many: "%{count} наград"
         other: "%{count} наград"
       more_badges:
-        one: "ещё +1"
+        one: "ещё +%{count}"
         few: "+ ещё %{count}"
         many: "+ ещё %{count}"
         other: "+ ещё %{count}"
       granted:
-        one: "выдано 1"
+        one: "выдано %{count}"
         few: "выдано %{count}"
         many: "выдано %{count}"
         other: "выдано %{count}"
@@ -2880,7 +2880,7 @@ ru:
       choose_for_topic: "Выберите теги для этой темы (опционально)"
       delete_tag: "Удалить тег"
       delete_confirm:
-        one: "Вы действительно хотите удалить этот тэг и удалить его из 1 топика, которому он присвоен?"
+        one: "Вы действительно хотите удалить этот тэг и удалить его из %{count} топика, которому он присвоен?"
         few: "Вы действительно хотите удалить этот тэг и удалить его из {{count}} топиков, которым он присвоен?"
         many: "Вы действительно хотите удалить этот тэг и удалить его из {{count}} топиков, которым он присвоен?"
         other: "Вы действительно хотите удалить этот тэг и удалить его из {{count}} топиков, которым он присвоен?"
@@ -3217,7 +3217,7 @@ ru:
             many: "{{count}} новых событий."
             other: "{{count}} новых событий."
           completed_in:
-            one: "Завершится через 1 секунду."
+            one: "Завершится через %{count} секунду."
             few: "Завершится через {{count}} секунд."
             many: "Завершится через {{count}} секунд."
             other: "Завершится через {{count}} секунд."
@@ -3447,7 +3447,7 @@ ru:
           theme_translations: "Перевод Темы"
           empty: "Нет элементов"
           commits_behind:
-            one: "Тема находится на 1 коммит сзади!"
+            one: "Тема находится на %{count} коммит сзади!"
             few: "Тема находится на {{count}} коммитов сзади!"
             many: "Тема находится на {{count}} коммитов сзади!"
             other: "Тема находится на {{count}} коммитов сзади!"
@@ -3754,7 +3754,7 @@ ru:
         clear_filter: "Очистить"
         show_words: "показать слова"
         word_count:
-          one: "1 слово"
+          one: "%{count} слово"
           few: "%{count}слова"
           many: "%{count}слов"
           other: "%{count}слов"
@@ -4238,7 +4238,7 @@ ru:
       upload_error: "К сожалению, не удалось загрузить файл. Попробуйте ещё раз."
       quit: "Может быть позже"
       staff_count:
-        one: "В вашем сообществе 1 сотрудник (это вы)."
+        one: "В вашем сообществе %{count} сотрудник (это вы)."
         few: "В вашем сообществе %{count} сотрудника, включая вас."
         many: "В вашем сообществе %{count} сотрудников, включая вас."
         other: "В вашем сообществе %{count} сотрудников, включая вас."

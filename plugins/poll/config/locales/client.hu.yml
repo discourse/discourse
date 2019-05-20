@@ -18,10 +18,10 @@ hu:
       multiple:
         help:
           at_least_min_options:
-            one: "Válassz legalább <strong>1</strong> lehetőséget"
+            one: "Válassz legalább <strong>%{count}</strong> lehetőséget"
             other: "Válasst legalább <strong>%{count}</strong> lehetőséget"
           x_options:
-            one: "Válassz <strong>1</strong> lehetőséget"
+            one: "Válassz <strong>%{count}</strong> lehetőséget"
             other: "Válassz <strong>%{count}</strong> lehetőséget"
       cast-votes:
         title: "Szavazatod leadása"

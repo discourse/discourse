@@ -97,7 +97,7 @@ sq:
     start_discussion: "Fillo Diskutim"
     continue: "Vazhdo Diskutimin"
     more_replies:
-      one: "edhe 1 përgjigje "
+      one: "edhe %{count} përgjigje "
       other: "janë %{count} përgjigje"
     loading: "Duke Ngarkuar Diskutimin..."
     permalink: "Permalink"
@@ -106,7 +106,7 @@ sq:
   no_mentions_allowed: "Na vjen keq, por s'mund të citosh anëtarë të tjerë."
   no_mentions_allowed_newuser: "Na vjen keq, anëtarët e rinj nuk mund të citojnë anëtarë të tjerë."
   too_many_mentions_newuser:
-    one: "Na vjen keq, anëtarët e rinj mund të citojnë vetëm 1 anëtar në një postim."
+    one: "Na vjen keq, anëtarët e rinj mund të citojnë vetëm %{count} anëtar në një postim."
     other: "Na vjen keq, anëtarët e rinj mund të citojnë vetëm %{count} anëtarë në një postim."
   no_images_allowed: "Na vjen keq, anëtarët e rinj nuk kanë të drejtë të vendosin imazhe në një postim."
   no_attachments_allowed: "Na vjen keq, new users can't put attachments in posts."
@@ -149,7 +149,7 @@ sq:
       trust_level_4: "trust_level_4"
   education:
     until_posts:
-      one: "1 postim"
+      one: "%{count} postim"
       other: "%{count} postime"
     "new-topic": |
       Mirë se vini te %{site_name} &mdash; **faleminderit që nisët një bisedë të re!**
@@ -234,49 +234,49 @@ sq:
     change_failed_explanation: "You attempted to demote %{user_name} to '%{new_trust_level}'. However their trust level is already '%{current_trust_level}'. %{user_name} will remain at '%{current_trust_level}' - if you wish to demote user lock trust level first"
   rate_limiter:
     hours:
-      one: "1 orë"
+      one: "%{count} orë"
       other: "%{count} orë"
     minutes:
-      one: "1 minutë"
+      one: "%{count} minutë"
       other: "%{count} minuta"
     seconds:
-      one: "1 sekondë"
+      one: "%{count} sekondë"
       other: "%{count} sekonda"
   datetime:
     distance_in_words:
       half_a_minute: "< 1m"
       less_than_x_seconds:
-        one: "< 1s"
+        one: "< %{count}s"
         other: "< %{count}s"
       x_seconds:
-        one: "1s"
+        one: "%{count}s"
         other: "%{count}s"
       less_than_x_minutes:
-        one: "< 1m"
+        one: "< %{count}m"
         other: "< %{count}m"
       x_minutes:
-        one: "1m"
+        one: "%{count}m"
         other: "%{count}m"
       about_x_hours:
-        one: "1h"
+        one: "%{count}h"
         other: "%{count}h"
       x_days:
-        one: "1d"
+        one: "%{count}d"
         other: "%{count}d"
       about_x_months:
-        one: "1muaj"
+        one: "%{count}muaj"
         other: "%{count}muaj"
       x_months:
-        one: "1muaj"
+        one: "%{count}muaj"
         other: "%{count}muaj"
       about_x_years:
-        one: "1y"
+        one: "%{count}y"
         other: "%{count}y"
       over_x_years:
-        one: "> 1v"
+        one: "> %{count}v"
         other: "> %{count}v"
       almost_x_years:
-        one: "1v"
+        one: "%{count}v"
         other: "%{count}v"
     distance_in_words_verbose:
       half_a_minute: "tani"
@@ -284,34 +284,34 @@ sq:
         one: "tani"
         other: "tani"
       x_seconds:
-        one: "1 sekondë më parë"
+        one: "%{count} sekondë më parë"
         other: "%{count} sekonda më parë"
       less_than_x_minutes:
-        one: "më pak se 1 minutë më parë"
+        one: "më pak se %{count} minutë më parë"
         other: "më pak se %{count} minuta më parë"
       x_minutes:
-        one: "1 minutë më parë"
+        one: "%{count} minutë më parë"
         other: "%{count} minuta më parë"
       about_x_hours:
-        one: "para 1 ore"
+        one: "para %{count} ore"
         other: "para %{count} orësh"
       x_days:
-        one: "para 1 dite"
+        one: "para %{count} dite"
         other: "para %{count} ditësh"
       about_x_months:
-        one: "rreth 1 muaj më parë"
+        one: "rreth %{count} muaj më parë"
         other: "rreth %{count} muaj më parë"
       x_months:
-        one: "1 muaj më parë"
+        one: "%{count} muaj më parë"
         other: "%{count} muaj më parë"
       about_x_years:
-        one: "rreth 1 vit më parë"
+        one: "rreth %{count} vit më parë"
         other: "rreth %{count} vjet më parë"
       over_x_years:
-        one: "mbi 1 vit më parë"
+        one: "mbi %{count} vit më parë"
         other: "mbi %{count} vite më parë"
       almost_x_years:
-        one: "pothuajse 1 vit më parë"
+        one: "pothuajse %{count} vit më parë"
         other: "pothuajse %{count} vite më parë"
   password_reset:
     no_token: "Ndjesë, kjo lidhje për ndryshimin e fjalëkalimit është shumë e vjetër. Kliko butonin 'Identifikohu' dhe përdorni 'Kam harruar fjalëkalimin' për të marrë një lidhje të re."
@@ -870,28 +870,28 @@ sq:
     not_seen_in_a_month: "Welcome back! We haven't seen you in a while. These are the most popular topics since you've been away."
   topic_statuses:
     autoclosed_message_max_posts:
-      one: "Ky mesazh u mbyll automatikisht pasi arriti kufirin e lejueshëm të 1 përgjigjeje."
+      one: "Ky mesazh u mbyll automatikisht pasi arriti kufirin e lejueshëm të %{count} përgjigjeje."
       other: "Ky mesazh u mbyll automatikisht pasi arriti kufirin e lejueshëm të %{count} përgjigjeve."
     autoclosed_topic_max_posts:
-      one: "Kjo temë është mbyllur automatikisht pasi arriti kufirin e lejueshëm të 1 përgjigjeje."
+      one: "Kjo temë është mbyllur automatikisht pasi arriti kufirin e lejueshëm të %{count} përgjigjeje."
       other: "Kjo temë është mbyllur automatikisht pasi arriti kufirin e lejueshëm të %{count} përgjigjeve."
     autoclosed_enabled_days:
-      one: "This topic was automatically closed after 1 day. New replies are no longer allowed."
+      one: "This topic was automatically closed after %{count} day. New replies are no longer allowed."
       other: "This topic was automatically closed after %{count} days. New replies are no longer allowed."
     autoclosed_enabled_hours:
-      one: "This topic was automatically closed after 1 hour. New replies are no longer allowed."
+      one: "This topic was automatically closed after %{count} hour. New replies are no longer allowed."
       other: "This topic was automatically closed after %{count} hours. New replies are no longer allowed."
     autoclosed_enabled_minutes:
-      one: "This topic was automatically closed after 1 minute. New replies are no longer allowed."
+      one: "This topic was automatically closed after %{count} minute. New replies are no longer allowed."
       other: "This topic was automatically closed after %{count} minutes. New replies are no longer allowed."
     autoclosed_enabled_lastpost_days:
-      one: "This topic was automatically closed 1 day after the last reply. New replies are no longer allowed."
+      one: "This topic was automatically closed %{count} day after the last reply. New replies are no longer allowed."
       other: "This topic was automatically closed %{count} days after the last reply. New replies are no longer allowed."
     autoclosed_enabled_lastpost_hours:
-      one: "This topic was automatically closed 1 hour after the last reply. New replies are no longer allowed."
+      one: "This topic was automatically closed %{count} hour after the last reply. New replies are no longer allowed."
       other: "This topic was automatically closed %{count} hours after the last reply. New replies are no longer allowed."
     autoclosed_enabled_lastpost_minutes:
-      one: "This topic was automatically closed 1 minute after the last reply. New replies are no longer allowed."
+      one: "This topic was automatically closed %{count} minute after the last reply. New replies are no longer allowed."
       other: "This topic was automatically closed %{count} minutes after the last reply. New replies are no longer allowed."
     autoclosed_disabled: "This topic is now opened. New replies are allowed."
     autoclosed_disabled_lastpost: "This topic is now opened. New replies are allowed."
@@ -1001,7 +1001,7 @@ sq:
       subject_template: "New user %{username} posts blocked due to repeated links"
     pending_users_reminder:
       subject_template:
-        one: "1 user waiting for approval"
+        one: "%{count} user waiting for approval"
         other: "%{count} users waiting for approval"
     download_remote_images_disabled:
       subject_template: "Downloading remote images disabled"

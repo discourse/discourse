@@ -18,13 +18,13 @@ ca:
       multiple:
         help:
           at_least_min_options:
-            one: "Tria com a mínim <strong>1</strong> opció"
+            one: "Tria com a mínim <strong>%{count}</strong> opció"
             other: "Tria com a mínim <strong>%{count}</strong> opcions"
           up_to_max_options:
-            one: "Tria més d'<strong>1</strong> opció"
+            one: "Tria més d'<strong>%{count}</strong> opció"
             other: "Tria més de <strong>%{count}</strong> opcions"
           x_options:
-            one: "Tria <strong>1</strong> opció"
+            one: "Tria <strong>%{count}</strong> opció"
             other: "Tria <strong>%{count}</strong> opcions"
           between_min_and_max_options: "Tria entre <strong>%{min}</strong> i <strong>%{max}</strong> opcions"
       cast-votes:

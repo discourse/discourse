@@ -43,46 +43,46 @@ de:
       tiny:
         half_a_minute: "< 1min"
         less_than_x_seconds:
-          one: "< 1s"
+          one: "< %{count}s"
           other: "< %{count}s"
         x_seconds:
-          one: "1s"
+          one: "%{count}s"
           other: "%{count}s"
         less_than_x_minutes:
-          one: "< 1 Min."
+          one: "< %{count} Min."
           other: "< %{count} Min."
         x_minutes:
-          one: "1min"
+          one: "%{count}min"
           other: "%{count}min"
         about_x_hours:
-          one: "1h"
+          one: "%{count}h"
           other: "%{count}h"
         x_days:
-          one: "1d"
+          one: "%{count}d"
           other: "%{count}d"
         x_months:
-          one: "1 Monat"
+          one: "%{count} Monat"
           other: "%{count}m"
         about_x_years:
-          one: "1a"
+          one: "%{count}a"
           other: "%{count}a"
         over_x_years:
-          one: "> 1a"
+          one: "> %{count}a"
           other: "> %{count}a"
         almost_x_years:
-          one: "1a"
+          one: "%{count}a"
           other: "%{count}a"
         date_month: "D. MMM"
         date_year: "MMM 'YY"
       medium:
         x_minutes:
-          one: "1 Minute"
+          one: "%{count} Minute"
           other: "%{count} Minuten"
         x_hours:
-          one: "1 Stunde"
+          one: "%{count} Stunde"
           other: "%{count} Stunden"
         x_days:
-          one: "1 Tag"
+          one: "%{count} Tag"
           other: "%{count} Tage"
         date_year: "D. MMM 'YY"
       medium_with_ago:
@@ -331,7 +331,7 @@ de:
       none: "Es sind keine Einträge zur Überprüfung vorhanden."
       view_pending: "zeige verbleibende"
       topic_has_pending:
-        one: "Dieses Thema hat <b>1</b> Beitrag, der auf Genehmigung wartet."
+        one: "Dieses Thema hat <b>%{count}</b> Beitrag, der auf Genehmigung wartet."
         other: "Dieses Thema hat <b>{{count}}</b> Beiträge, die auf Genehmigung warten."
       title: "Überprüfen"
       topic: "Thema:"
@@ -366,10 +366,10 @@ de:
         original: "(usprüngliches Thema)"
         details: "Details"
         unique_users:
-          one: "1 Benutzer"
+          one: "%{count} Benutzer"
           other: "{{count}} Benutzer"
       replies:
-        one: "1 Antwort"
+        one: "%{count} Antwort"
         other: "{{count}} Antworten"
       edit: "Bearbeiten"
       save: "Speichern"
@@ -425,7 +425,7 @@ de:
         title: "Beitrag muss genehmigt werden"
         description: "Wir haben deinen neuen Beitrag erhalten. Dieser muss allerdings zunächst durch einen Moderator freigeschaltet werden. Bitte habe etwas Geduld. "
         pending_posts:
-          one: "Du hast <strong>1</strong> verbleibenden Beitrag."
+          one: "Du hast <strong>%{count}</strong> verbleibenden Beitrag."
           other: "Du hast <strong>{{count}}</strong> verbleibende Beiträge."
         ok: "OK"
     user_action:
@@ -460,7 +460,7 @@ de:
       posts_read: "Gelesen"
       posts_read_long: "Gelesene Beiträge"
       total_rows:
-        one: "1 Benutzer"
+        one: "%{count} Benutzer"
         other: "%{count} Benutzer"
     group_histories:
       actions:
@@ -642,7 +642,7 @@ de:
       toggle_ordering: "Reihenfolge ändern"
       subcategories: "Unterkategorien"
       topic_sentence:
-        one: "1 Thema"
+        one: "%{count} Thema"
         other: "%{count} Themen"
       topic_stat_sentence_week:
         one: "%{count} neues Thema in der letzten Woche."
@@ -1508,10 +1508,10 @@ de:
     notifications:
       tooltip:
         regular:
-          one: "1 nicht gesehene Benachrichtigung"
+          one: "%{count} nicht gesehene Benachrichtigung"
           other: "{{count}} nicht gesehene Benachrichtigungen"
         message:
-          one: "1 ungelesene Nachricht"
+          one: "%{count} ungelesene Nachricht"
           other: "{{count}} ungelesene Nachrichten"
       title: "Benachrichtigung über @Name-Erwähnungen, Antworten auf deine Beiträge und Themen, Nachrichten, usw."
       none: "Die Benachrichtigungen können derzeit nicht geladen werden."
@@ -1584,7 +1584,7 @@ de:
       clear_all: "Auswahl aufheben"
       too_short: "Der Suchbegriff ist zu kurz."
       result_count:
-        one: "<span>1 Ergebnis für </span><span class='term'>{{term}}</span>"
+        one: "<span>%{count} Ergebnis für </span><span class='term'>{{term}}</span>"
         other: "<span>{{count}}{{plus}} Ergebnisse für </span><span class='term'>{{term}}</span>"
       title: "suche nach Themen, Beiträgen, Benutzern oder Kategorien"
       full_page_title: "suche nach Themen oder Beiträgen"
@@ -1710,7 +1710,7 @@ de:
         search: "Es gibt keine weiteren Suchergebnisse."
     topic:
       filter_to:
-        one: "1 Beitrag im Thema"
+        one: "%{count} Beitrag im Thema"
         other: "{{count}} Beiträge im Thema"
       create: "Neues Thema"
       create_long: "Ein neues Thema erstellen"
@@ -1729,10 +1729,10 @@ de:
       new: "neues Thema"
       unread: "ungelesen"
       new_topics:
-        one: "1 neues Thema"
+        one: "%{count} neues Thema"
         other: "{{count}} neue Themen"
       unread_topics:
-        one: "1 ungelesenes Thema"
+        one: "%{count} ungelesenes Thema"
         other: "{{count}} ungelesene Themen"
       title: "Thema"
       invalid_access:
@@ -1938,7 +1938,7 @@ de:
         pin_validation: "Ein Datum wird benötigt um diesen Beitrag anzuheften."
         not_pinned: "Es sind in {{categoryLink}} keine Themen angeheftet."
         already_pinned:
-          one: "Momentan in {{categoryLink}} angeheftete Themen: <strong class='badge badge-notification unread'>1</strong>"
+          one: "Momentan in {{categoryLink}} angeheftete Themen: <strong class='badge badge-notification unread'>%{count}</strong>"
           other: "Momentan in {{categoryLink}} angeheftete Themen: <strong class='badge badge-notification unread'>{{count}}</strong>"
         pin_globally: "Dieses Thema am Anfang aller Themenlisten anzeigen bis"
         confirm_pin_globally: "Es gibt bereits {{count}} global angeheftete Themen. Zu viele angeheftete Themen könnten neue und unbekannte Benutzer leicht überwältigen. Willst du wirklich noch ein weiteres Thema global anheften?"
@@ -1947,7 +1947,7 @@ de:
         global_pin_note: "Benutzer können das Thema für sich selbst loslösen."
         not_pinned_globally: "Es sind keine Themen global angeheftet."
         already_pinned_globally:
-          one: "Momentan global angeheftete Themen: <strong class='badge badge-notification unread'>1</strong>"
+          one: "Momentan global angeheftete Themen: <strong class='badge badge-notification unread'>%{count}</strong>"
           other: "Momentan global angeheftete Themen: <strong class='badge badge-notification unread'>{{count}}</strong>"
         make_banner: "Macht das Thema zu einem Ankündigungsbanner, welcher am Anfang aller Seiten angezeigt wird."
         remove_banner: "Entfernt das Ankündigungsbanner vom Anfang aller Seiten."
@@ -1985,7 +1985,7 @@ de:
       login_reply: "Anmelden, um zu antworten"
       filters:
         n_posts:
-          one: "1 Beitrag"
+          one: "%{count} Beitrag"
           other: "{{count}} Beiträge"
         cancel: "Filter entfernen"
       move_to:
@@ -2064,7 +2064,7 @@ de:
         select_all: alle auswählen
         deselect_all: keine auswählen
         description:
-          one: Du hast <b>1</b> Beitrag ausgewählt.
+          one: Du hast <b>%{count}</b> Beitrag ausgewählt.
           other: "Du hast <b>{{count}}</b> Beiträge ausgewählt."
       deleted_by_author:
         one: "(Thema von Autor zurückgezogen, wird automatisch in %{count} Stunde gelöscht, außer es wird gemeldet)"
@@ -2099,7 +2099,7 @@ de:
         one: "{{count}} Antwort"
         other: "{{count}} Antworten"
       has_likes_title:
-        one: "dieser Beitrag gefällt 1 Person"
+        one: "dieser Beitrag gefällt %{count} Person"
         other: "dieser Beitrag gefällt {{count}} Personen"
       has_likes_title_only_you: "dir gefällt dieser Beitrag"
       has_likes_title_you:
@@ -2405,7 +2405,7 @@ de:
       links_title: "Beliebte Links"
       links_shown: "mehr Links anzeigen…"
       clicks:
-        one: "1 Klick"
+        one: "%{count} Klick"
         other: "%{count} Klicks"
     post_links:
       about: "weitere Links für diesen Beitrag aufklappen"
@@ -2445,7 +2445,7 @@ de:
       other: "Aufrufe"
     replies: "Antworten"
     views_long:
-      one: "dieses Thema wurde 1-mal betrachtet"
+      one: "dieses Thema wurde %{count}-mal betrachtet"
       other: "dieses Thema wurde {{number}}-mal betrachtet"
     activity: "Aktivität"
     likes: "Likes"
@@ -2470,7 +2470,7 @@ de:
       latest:
         title: "Aktuell"
         title_with_count:
-          one: "Aktuell (1)"
+          one: "Aktuell (%{count})"
           other: "Aktuell ({{count}})"
         help: "die zuletzt geänderten Themen"
       hot:
@@ -2489,20 +2489,20 @@ de:
       unread:
         title: "Ungelesen"
         title_with_count:
-          one: "Ungelesen (1)"
+          one: "Ungelesen (%{count})"
           other: "Ungelesen ({{count}})"
         help: "Themen mit ungelesenen Beiträgen, die du derzeit beobachtest oder verfolgst"
         lower_title_with_count:
-          one: "1 ungelesenes"
+          one: "%{count} ungelesenes"
           other: "{{count}} ungelesene"
       new:
         lower_title_with_count:
-          one: "1 neues"
+          one: "%{count} neues"
           other: "{{count}} neue"
         lower_title: "neu"
         title: "Neu"
         title_with_count:
-          one: "Neu (1)"
+          one: "Neu (%{count})"
           other: "Neu ({{count}})"
         help: "Themen, die in den letzten paar Tagen erstellt wurden"
       posted:
@@ -2514,7 +2514,7 @@ de:
       category:
         title: "{{categoryName}}"
         title_with_count:
-          one: "{{categoryName}} (1)"
+          one: "{{categoryName}} (%{count})"
           other: "{{categoryName}} ({{count}})"
         help: "aktuelle Themen in der Kategorie {{categoryName}}"
       top:
@@ -2611,7 +2611,7 @@ de:
         print: "<b>strg</b>+<b>p</b> Thema ausdrucken"
     badges:
       earned_n_times:
-        one: "Abzeichen 1-mal erhalten"
+        one: "Abzeichen %{count}-mal erhalten"
         other: "Abzeichen %{count}-mal erhalten"
       granted_on: "Verliehen %{date}"
       others_count: "Andere mit diesem Abzeichen (%{count})"
@@ -2619,13 +2619,13 @@ de:
       allow_title: "Du kannst dieses Abzeichen als Titel verwenden"
       multiple_grant: "Du kannst dieses Abzeichen mehrmals verliehen bekommen"
       badge_count:
-        one: "1 Abzeichen"
+        one: "%{count} Abzeichen"
         other: "%{count} Abzeichen"
       more_badges:
-        one: "+1 weiteres"
+        one: "+%{count} weiteres"
         other: "+%{count} weitere"
       granted:
-        one: "1-mal verliehen"
+        one: "%{count}-mal verliehen"
         other: "%{count}-mal verliehen"
       select_badge_for_title: Wähle ein Abzeichen als deinen Titel aus
       none: "(keine)"
@@ -2987,7 +2987,7 @@ de:
             one: "Es gibt ein neues Ereignis"
             other: "Es gibt {{count}} neue Ereignisse."
           completed_in:
-            one: "In 1 Sekunde fertiggestellt."
+            one: "In %{count} Sekunde fertiggestellt."
             other: "In {{count}} Sekunden fertiggestellt."
           request: "Request"
           response: "Response"
@@ -3214,7 +3214,7 @@ de:
           theme_translations: "Theme-Übersetzungen"
           empty: "Keine Teile"
           commits_behind:
-            one: "Theme liegt 1 Commit zurück!"
+            one: "Theme liegt %{count} Commit zurück!"
             other: "Theme liegt {{count}} Commits zurück!"
           compare_commits: "(Siehe neue Beiträge)"
           repo_unreachable: "Das Git-Repository dieses Themes konnte nicht kontaktiert werden. Fehlermeldung:"
@@ -3519,7 +3519,7 @@ de:
         clear_filter: "Zurücksetzen"
         show_words: "Wörter anzeigen"
         word_count:
-          one: "1 Wort"
+          one: "%{count} Wort"
           other: "%{count} Wörter"
         actions:
           block: "Blockieren"
@@ -3673,7 +3673,7 @@ de:
           one: "Nicht alle Beiträge können gelöscht werden. Einige Beiträge sind älter als %{count} Tag (die „delete_user_max_post_age“ Einstellung)."
           other: "Nicht alle Beiträge können gelöscht werden. Einige Beiträge sind älter als %{count} Tage (die „delete_user_max_post_age“ Einstellung)."
         cant_delete_all_too_many_posts:
-          one: "Nicht alle Beiträge konnten gelöscht werden, da der Benutzer mehr als 1 Beitrag hat (die „delete_all_posts_max“ Einstellung)."
+          one: "Nicht alle Beiträge konnten gelöscht werden, da der Benutzer mehr als %{count} Beitrag hat (die „delete_all_posts_max“ Einstellung)."
           other: "Nicht alle Beiträge konnten gelöscht werden, da der Benutzer mehr als %{count} Beiträge hat (die „delete_all_posts_max“ Einstellung)."
         delete_confirm: "Es ist grundsätzlich vorzuziehen, Benutzer zu anonymisieren statt sie zu löschen, um zu vermeiden, dass Inhalt aus bestehenden Diskussionen entfernt wird. <br><br>Bist du SICHER, dass du diesen Benutzer löschen möchtest? Dies lässt sich nicht rückgängig machen."
         delete_and_block: "Löschen und diese E-Mail-Adresse und IP-Adresse <b>blockieren</b>"
@@ -3906,7 +3906,7 @@ de:
             text: "Es fehlen Beispieldaten. Das passiert, wenn die Abzeichen-Abfrage IDs von Benutzern oder Beiträgen liefert, die nicht existieren. Das kann in weiterer Folge zu unerwarteten Ergebnissen führen. Bitte überprüfe nochmals deine Abfrage."
           no_grant_count: "Es werden keine Abzeichen verliehen."
           grant_count:
-            one: "Es wird <b>1</b> Abzeichen verliehen."
+            one: "Es wird <b>%{count}</b> Abzeichen verliehen."
             other: "Es werden <b>%{count}</b> Abzeichen verliehen."
           sample: "Beispiel:"
           grant:

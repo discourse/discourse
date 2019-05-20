@@ -97,7 +97,7 @@ ro:
     template:
       body: "Au apărut probleme cu următoarele câmpuri:"
       header:
-        one: O eroare a împiedicat acest %{model} să fie salvat
+        one: "O eroare a împiedicat acest %{model} să fie salvat"
         few: "%{count} erori au împiedicat acest %{model} să fie salvat"
         other: "%{count} de erori au împiedicat acest %{model} să fie salvat"
     embed:
@@ -125,7 +125,7 @@ ro:
   reading_time: "Durata citirii"
   likes: "Aprecieri"
   too_many_replies:
-    one: "Ne pare rău, dar utilizatorii noi sunt limitați la 1 răspuns pe discuție."
+    one: "Ne pare rău, dar utilizatorii noi sunt limitați la %{count} răspuns pe discuție."
     few: "Ne pare rău, dar utilizatorii noi sunt limitați la %{count} răspunsuri pe discuție."
     other: "Ne pare rău, dar utilizatori noi sunt limitați la %{count} de răspunsuri pe discuție."
   embed:
@@ -353,27 +353,27 @@ ro:
     distance_in_words:
       half_a_minute: "de < 1m"
       less_than_x_seconds:
-        one: "de < 1s"
+        one: "de < %{count}s"
         few: "de < %{count}s"
         other: "de < %{count}s"
       x_seconds:
-        one: "de 1s"
+        one: "de %{count}s"
         few: "de %{count}s"
         other: "de %{count}s"
       less_than_x_minutes:
-        one: "de < 1m"
+        one: "de < %{count}m"
         few: " < %{count}m"
         other: "de < %{count}m"
       x_minutes:
-        one: "de 1m"
+        one: "de %{count}m"
         few: " de %{count}m"
         other: "de %{count}m"
       about_x_hours:
-        one: "de 1h"
+        one: "de %{count}h"
         few: " %{count}h"
         other: "de %{count}h"
       x_days:
-        one: "de 1z"
+        one: "de %{count}z"
         few: " %{count}z"
         other: "de %{count}z"
       about_x_months:
@@ -389,7 +389,7 @@ ro:
         few: "de %{count} ani"
         other: "de %{count} de ani"
       over_x_years:
-        one: "de > 1an"
+        one: "de > %{count}an"
         few: "de > %{count}ani"
         other: "de > %{count} de ani"
       almost_x_years:
@@ -407,7 +407,7 @@ ro:
         few: "cu %{count} secunde în urmă"
         other: "cu %{count} de secunde în urmă"
       less_than_x_minutes:
-        one: "cu mai puțin de 1 minut în urmă"
+        one: "cu mai puțin de %{count} minut în urmă"
         few: "cu mai puțin de %{count} minute în urmă"
         other: "mai puțin de %{count} de minute în urmă"
       x_minutes:

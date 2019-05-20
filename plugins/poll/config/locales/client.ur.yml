@@ -9,7 +9,7 @@ ur:
   js:
     poll:
       voters:
-        one: "1 ووٹر"
+        one: "%{count} ووٹر"
         other: "ووٹرز"
       total_votes:
         one: "کُل ووٹ"
@@ -18,13 +18,13 @@ ur:
       multiple:
         help:
           at_least_min_options:
-            one: "کم از کم <strong>1</strong> آپشن کا انتخاب کریں"
+            one: "کم از کم <strong>%{count}</strong> آپشن کا انتخاب کریں"
             other: "کم از کم <strong>%{شمار}</strong> آپشنس کا انتخاب کریں"
           up_to_max_options:
-            one: "<strong>1</strong> آپشن کا انتخاب کریں"
+            one: "<strong>%{count}</strong> آپشن کا انتخاب کریں"
             other: "<strong>%{شمار}</strong> تک آپشنس کا انتخاب کریں"
           x_options:
-            one: "<strong>1</strong> آپشن انتخاب کریں"
+            one: "<strong>%{count}</strong> آپشن انتخاب کریں"
             other: "<strong>%{شمار}</strong> آپشنس انتخاب کریں"
           between_min_and_max_options: "<strong>%{کم از کم}</strong> سے <strong>%{زیادہ سے زیادہ}</strong> آپشنس کا انتخاب کریں"
       cast-votes:

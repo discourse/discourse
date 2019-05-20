@@ -83,19 +83,19 @@ sv:
         one: "Kan inte radera förteckning på grund av att ett beroende %{record} existerar"
         many: "Kan inte radera förteckning på grund av att beroende %{record} existerar"
       too_long:
-        one: är för långt (högsta tillåtna är 1 tecken)
+        one: är för långt (högsta tillåtna är %{count} tecken)
         other: är för långt (högsta tillåtna är %{count} tecken)
       too_short:
-        one: är för kort (minsta tillåtna är 1 tecken)
+        one: är för kort (minsta tillåtna är %{count} tecken)
         other: är för kort (minsta tillåtna är %{count} tecken)
       wrong_length:
-        one: har fel längd (borde vara 1 tecken)
+        one: har fel längd (borde vara %{count} tecken)
         other: har fel längd (borde vara %{count} tecken)
       other_than: "måste vara skilt från %{count}"
     template:
       body: "Det uppstod problem med följande fält:"
       header:
-        one: Ett fel förhindrade %{model} från att sparas
+        one: "Ett fel förhindrade %{model} från att sparas"
         other: "%{count} fel förhindrade %{model} från att sparas"
     embed:
       load_from_remote: "Det uppstod ett fel vid laddning av inlägget."
@@ -124,7 +124,7 @@ sv:
   reading_time: "Lästid"
   likes: "Gillningar"
   too_many_replies:
-    one: "Vi är ledsna men nya användare är tillfälligt begränsade till 1 svar i samma ämne."
+    one: "Vi är ledsna men nya användare är tillfälligt begränsade till %{count} svar i samma ämne."
     other: "Vi är ledsna men nya användare är tillfälligt begränsade till &{count} svar i samma ämne."
   embed:
     start_discussion: "Starta diskussion"
@@ -134,7 +134,7 @@ sv:
     no_hosts: "Inga värdar var uppsatta för textinbäddningen"
     configure: "konfigurera inbäddningen"
     more_replies:
-      one: "1 till svar"
+      one: "%{count} till svar"
       other: "%{count} till svar"
     loading: "Laddar diskussion..."
     permalink: "Permalänk"
@@ -211,7 +211,7 @@ sv:
       trust_level_4: "trust_level_4"
   education:
     until_posts:
-      one: "1 inlägg"
+      one: "%{count} inlägg"
       other: "%{count} inlägg"
     "new-topic": |
       Välkommen till %{site_name} &mdash; **tack för att du startade en ny konversation!**
@@ -315,49 +315,49 @@ sv:
     change_failed_explanation: "Du försökte degradera %{user_name} till '%{new_trust_level}'. Användarens förtroendenivå är redan '%{current_trust_level}'. %{user_name} kommer behålla '%{current_trust_level}'. Om du vill degradera användaren, lås förtroendenivån först"
   rate_limiter:
     hours:
-      one: "1 timme"
+      one: "%{count} timme"
       other: "%{count} timmar"
     minutes:
-      one: "1 minut"
+      one: "%{count} minut"
       other: "%{count} minuter"
     seconds:
-      one: "1 sekund"
+      one: "%{count} sekund"
       other: "%{count} sekunder"
   datetime:
     distance_in_words:
       half_a_minute: "< 1m"
       less_than_x_seconds:
-        one: "< 1s"
+        one: "< %{count}s"
         other: "< %{count}s"
       x_seconds:
-        one: "1s"
+        one: "%{count}s"
         other: "%{count}s"
       less_than_x_minutes:
-        one: "< 1m"
+        one: "< %{count}m"
         other: "< %{count}m"
       x_minutes:
-        one: "1m"
+        one: "%{count}m"
         other: "%{count}m"
       about_x_hours:
-        one: "1h"
+        one: "%{count}h"
         other: "%{count}h"
       x_days:
-        one: "1d"
+        one: "%{count}d"
         other: "%{count}d"
       about_x_months:
-        one: "1mån"
+        one: "%{count}mån"
         other: "%{count}mån"
       x_months:
-        one: "1mån"
+        one: "%{count}mån"
         other: "%{count}mån"
       about_x_years:
-        one: "1år"
+        one: "%{count}år"
         other: "%{count}år"
       over_x_years:
-        one: "> 1år"
+        one: "> %{count}år"
         other: "> %{count}år"
       almost_x_years:
-        one: "1år"
+        one: "%{count}år"
         other: "%{count}år"
     distance_in_words_verbose:
       half_a_minute: "nyss"
@@ -365,34 +365,34 @@ sv:
         one: "nyss"
         other: "nyss"
       x_seconds:
-        one: "1 sekund sedan"
+        one: "%{count} sekund sedan"
         other: "%{count} sekunder sedan"
       less_than_x_minutes:
-        one: "mindre än 1 minut sedan"
+        one: "mindre än %{count} minut sedan"
         other: "mindre än %{count} minuter sedan"
       x_minutes:
-        one: "1 minut sedan"
+        one: "%{count} minut sedan"
         other: "%{count} minuter sedan"
       about_x_hours:
-        one: "1 timme sedan"
+        one: "%{count} timme sedan"
         other: "%{count} timmar sedan"
       x_days:
-        one: "1 dag sedan"
+        one: "%{count} dag sedan"
         other: "%{count} dagar sedan"
       about_x_months:
-        one: "ungefär 1 månad sedan"
+        one: "ungefär %{count} månad sedan"
         other: "ungefär %{count} månader sedan"
       x_months:
-        one: "1 månad sedan"
+        one: "%{count} månad sedan"
         other: "%{count} månader sedan"
       about_x_years:
-        one: "ungefär 1 år sedan"
+        one: "ungefär %{count} år sedan"
         other: "ungefär %{count} år sedan"
       over_x_years:
-        one: "över 1 år sedan"
+        one: "över %{count} år sedan"
         other: "över %{count} år sedan"
       almost_x_years:
-        one: "nästan 1 år sedan"
+        one: "nästan %{count} år sedan"
         other: "nästan %{count} år sedan"
   password_reset:
     no_token: "Tyvärr, din lösenordslänk har löpt ut. Klicka på inloggningsknappen och välj \"jag har glömt mitt lösenord\" för att få en ny länk."
@@ -1147,28 +1147,28 @@ sv:
       different_users: "Inlägg som hör till olika användare kan inte lägga ihop."
   topic_statuses:
     autoclosed_message_max_posts:
-      one: "Det här ämnet stängdes automatiskt efter att ha nått den övre gränsen av 1 inlägg."
+      one: "Det här ämnet stängdes automatiskt efter att ha nått den övre gränsen av %{count} inlägg."
       other: "Det här ämnet stängdes automatiskt efter att ha uppnått den övre gränsen av %{count} inlägg. "
     autoclosed_topic_max_posts:
-      one: "Det här ämnet stängdes automatiskt efter att ha uppnått den övre gränsen av 1 inlägg."
+      one: "Det här ämnet stängdes automatiskt efter att ha uppnått den övre gränsen av %{count} inlägg."
       other: "Det här ämnet stängdes automatiskt efter att ha uppnått den övre gränsen av %{count} inlägg. "
     autoclosed_enabled_days:
-      one: "Detta ämne stängdes automatiskt efter 1 dag. Nya svar är ej längre tillåtet."
+      one: "Detta ämne stängdes automatiskt efter %{count} dag. Nya svar är ej längre tillåtet."
       other: "Detta ämne stängdes automatiskt efter %{count} dagar. Nya svar är ej längre tillåtna."
     autoclosed_enabled_hours:
-      one: "Detta ämne stängdes automatiskt efter 1 timme. Nya svar är ej längre tillåtna."
+      one: "Detta ämne stängdes automatiskt efter %{count} timme. Nya svar är ej längre tillåtna."
       other: "Detta ämne stängdes automatiskt efter %{count} timmar. Nya svar är ej längre tillåtna."
     autoclosed_enabled_minutes:
-      one: "Detta ämne stängdes automatiskt efter 1 minut. Nya svar är ej längre tillåtna."
+      one: "Detta ämne stängdes automatiskt efter %{count} minut. Nya svar är ej längre tillåtna."
       other: "Detta ämne stängdes automatiskt efter %{count} minuter. Nya svar är ej längre tillåtna."
     autoclosed_enabled_lastpost_days:
-      one: "Detta ämne stängdes automatiskt 1 dag efter det senaste svaret. Nya svar är ej längre tillåtna."
+      one: "Detta ämne stängdes automatiskt %{count} dag efter det senaste svaret. Nya svar är ej längre tillåtna."
       other: "Detta ämne stängdes automatiskt %{count} dagar efter det senaste svaret. Nya svar är ej längre tillåtna."
     autoclosed_enabled_lastpost_hours:
-      one: "Detta ämne stängdes automatiskt 1 timme efter det senaste svaret. Nya svar är ej längre tillåtna."
+      one: "Detta ämne stängdes automatiskt %{count} timme efter det senaste svaret. Nya svar är ej längre tillåtna."
       other: "Detta ämne stängdes automatiskt %{count} timmar efter det senaste svaret. Nya svar är ej längre tillåtna."
     autoclosed_enabled_lastpost_minutes:
-      one: "Detta ämne stängdes automatiskt 1 minut efter det senaste svaret. Nya svar är ej längre tillåtna."
+      one: "Detta ämne stängdes automatiskt %{count} minut efter det senaste svaret. Nya svar är ej längre tillåtna."
       other: "Detta ämne stängdes automatiskt %{count} minuter efter det senaste svaret. Nya svar är ej längre tillåtna."
     autoclosed_disabled: "Detta ämne är nu öppet. Nya svar är tillåtna."
     autoclosed_disabled_lastpost: "Detta ämne är nu öppnat. Nya svar är tillåtna."
@@ -1368,7 +1368,7 @@ sv:
     pending_users_reminder:
       title: "Påminnelse om väntande användare"
       subject_template:
-        one: "1 användare väntar på godkännande"
+        one: "%{count} användare väntar på godkännande"
         other: "%{count} användare väntar på godkännande"
     download_remote_images_disabled:
       title: "Nerladdningen av externa bilder är avaktiverad"

@@ -41,7 +41,7 @@ lv:
     continue: "Turpināt Diskusiju"
     more_replies:
       zero: "vel %{count} atbildes"
-      one: "vel 1 atbilde"
+      one: "vel %{count} atbilde"
       other: "vel %{count} atbildes"
     loading: "Diskusijas Ielādēšana..."
     in_reply_to: "▶ %{username}"
@@ -68,7 +68,7 @@ lv:
   education:
     until_posts:
       zero: "%{count} raksti"
-      one: "1 raksts"
+      one: "%{count} raksts"
       other: "%{count} raksti"
   activerecord:
     attributes:

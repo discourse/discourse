@@ -1006,7 +1006,7 @@ sr:
       new: "nova tema"
       unread: "nepročitano"
       new_topics:
-        one: "1 nova tema"
+        one: "%{count} nova tema"
         few: "{{count}} nove teme"
         other: "{{count}} nove teme"
       unread_topics:
@@ -1155,7 +1155,7 @@ sr:
       login_reply: "Prijavi se da bi odgovorio"
       filters:
         n_posts:
-          one: "1 poruka"
+          one: "%{count} poruka"
           few: "{{count}} poruka"
           other: "{{count}} poruka"
         cancel: "Uklonite filter"
@@ -1437,18 +1437,18 @@ sr:
           other: "Nepročitane ({{count}})"
         help: "teme koje trenutno posmatrate ili pratite s nepročitanim porukama"
         lower_title_with_count:
-          one: "1 nepročitana"
+          one: "%{count} nepročitana"
           few: "{{count}} nepročitanih"
           other: "{{count}} nepročitanih"
       new:
         lower_title_with_count:
-          one: "1 nova"
+          one: "%{count} nova"
           few: "{{count}} novih"
           other: "{{count}} novih"
         lower_title: "novo"
         title: "Novo"
         title_with_count:
-          one: "Nove (1)"
+          one: "Nove (%{count})"
           few: "Nove ({{count}})"
           other: "Nove ({{count}})"
         help: "teme otvorene u zadnjih par dana"
@@ -2237,7 +2237,7 @@ sr:
       upload_error: "Žao nam je, dogodila se greška pri učitavanju te datoteke. Molimo pokušajte ponovo."
       quit: "Možda kasnije"
       staff_count:
-        one: "Tvoja zajednica ima 1 člana tima (tebe). "
+        one: "Tvoja zajednica ima %{count} člana tima (tebe). "
         few: "Vaša zajednica ima  %{count} članova tima, uključujući i vas."
         other: "Vaša zajednica ima %{count} članova tima, uključujući i vas."
       invites:

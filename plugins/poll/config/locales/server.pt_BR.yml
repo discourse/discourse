@@ -18,10 +18,10 @@ pt_BR:
     default_poll_must_have_at_least_2_options: "A votação precisa ter no mínimo 2 opções."
     named_poll_must_have_at_least_2_options: "A votação de nome <strong>%{name}</strong> precisa ter pelo menos 2 opções."
     default_poll_must_have_less_options:
-      one: "A votação precisa ter menos de 1 opção."
+      one: "A votação precisa ter menos de %{count} opção."
       other: "A votação precisa ter menos de %{count} opções."
     named_poll_must_have_less_options:
-      one: "A votação de nome <strong>%{name}</strong> precisa ter menos de 1 opção."
+      one: "A votação de nome <strong>%{name}</strong> precisa ter menos de %{count} opção."
       other: "A votação de nome <strong>%{name}</strong> precisa ter menos de %{count} opções."
     default_poll_must_have_different_options: "A votação precisa ter opções diferentes."
     named_poll_must_have_different_options: "A votação de nome <strong>%{name}</strong> precisa ter opções diferentes."

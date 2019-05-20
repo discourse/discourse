@@ -91,19 +91,19 @@ ca:
         one: "No es pot esborrar el registre perquè existeix un %{record} que en depèn."
         many: "No es pot esborrar el registre perquè existeix %{record} que en depèn."
       too_long:
-        one: és massa llarg (el màxim són 1 caràcter)
+        one: és massa llarg (el màxim són %{count} caràcter)
         other: és massa llarg (el màxim són %{count} caràcters)
       too_short:
-        one: és massa curt (el mínimu és 1 caràcter)
+        one: és massa curt (el mínimu és %{count} caràcter)
         other: és massa curt (el mínim són %{count} caràcters)
       wrong_length:
-        one: té una mida errònia (hauria de contenir 1 caràcter)
+        one: té una mida errònia (hauria de contenir %{count} caràcter)
         other: té una mida errònia (hauria de contenir %{count} caràcters)
       other_than: "ha de ser diferent de %{count}"
     template:
       body: "Hi ha hagut problemes amb els següents camps:"
       header:
-        one: '1 errada ha impedit desar aquest %{model} '
+        one: "%{count} errada ha impedit desar aquest %{model} "
         other: "%{count} errades han impedit desar aquest %{model} "
     embed:
       load_from_remote: "Hi ha hagut una errada en carregar aquest escrit."
@@ -132,7 +132,7 @@ ca:
   reading_time: "Temps de lectura."
   likes: "M'agrades"
   too_many_replies:
-    one: "Ho lamentem, però les noves persones usuàries ara estan de moment limitades a 1 resposta al mateix tema."
+    one: "Ho lamentem, però les noves persones usuàries ara estan de moment limitades a %{count} resposta al mateix tema."
     other: "Ho lamentem, però les noves persones usuàries ara estan de moment limitades a %{count} respostes al mateix tema."
   embed:
     start_discussion: "Comença una discussió"
@@ -142,7 +142,7 @@ ca:
     no_hosts: "No s'hi han establert amfitrions per inscrustar."
     configure: "Configurar la incrustació"
     more_replies:
-      one: "1 resposta més"
+      one: "%{count} resposta més"
       other: "%{count} respostes més "
     loading: "Carregant la discussió..."
     permalink: "Enllaç permanent "
@@ -221,7 +221,7 @@ ca:
       trust_level_4: "trust_level_4"
   education:
     until_posts:
-      one: "1 publicació"
+      one: "%{count} publicació"
       other: "%{count} publicacions"
     "new-topic": |
       Et donem la benvinguda a %{site_name} &mdash; **gràcies per encetar una nova conversa!**
@@ -358,49 +358,49 @@ ca:
     change_failed_explanation: "Has provat de degradar %{user_name} a '%{new_trust_level}'. En qualsevol cas, el seu nivell de confiança ja és '%{current_trust_level}'. %{user_name} restarà a '%{current_trust_level}' - Si vols degradar una persona usuària, bloca-li abans el nivell de confiança"
   rate_limiter:
     hours:
-      one: "1 hora"
+      one: "%{count} hora"
       other: "%{count} hores"
     minutes:
-      one: "1 minut"
+      one: "%{count} minut"
       other: "%{count} minuts"
     seconds:
-      one: "1 segon"
+      one: "%{count} segon"
       other: "%{count} segons"
   datetime:
     distance_in_words:
       half_a_minute: "< 1m"
       less_than_x_seconds:
-        one: "< 1s"
+        one: "< %{count}s"
         other: "< %{count}s"
       x_seconds:
-        one: "1s"
+        one: "%{count}s"
         other: "%{count}s"
       less_than_x_minutes:
-        one: "< 1m"
+        one: "< %{count}m"
         other: "< %{count}m"
       x_minutes:
-        one: "1m"
+        one: "%{count}m"
         other: "%{count}m"
       about_x_hours:
-        one: "1h"
+        one: "%{count}h"
         other: "%{count}h"
       x_days:
-        one: "1d"
+        one: "%{count}d"
         other: "%{count}d"
       about_x_months:
-        one: "1mes"
+        one: "%{count}mes"
         other: "%{count}mes"
       x_months:
-        one: "1mes"
+        one: "%{count}mes"
         other: "%{count}mes"
       about_x_years:
-        one: "1a"
+        one: "%{count}a"
         other: "%{count}a"
       over_x_years:
-        one: "> 1a"
+        one: "> %{count}a"
         other: "> %{count}a"
       almost_x_years:
-        one: "1a"
+        one: "%{count}a"
         other: "%{count}a"
     distance_in_words_verbose:
       half_a_minute: "ara mateix"
@@ -408,34 +408,34 @@ ca:
         one: "ara mateix"
         other: "ara mateix"
       x_seconds:
-        one: "fa 1 segon"
+        one: "fa %{count} segon"
         other: "fa %{count} segons"
       less_than_x_minutes:
-        one: "fa menys d'1 minut "
+        one: "fa menys d'%{count} minut "
         other: "fa menys de %{count} minuts "
       x_minutes:
-        one: "fa 1 minut"
+        one: "fa %{count} minut"
         other: "fa %{count} minuts"
       about_x_hours:
-        one: "fa 1 hora"
+        one: "fa %{count} hora"
         other: "fa %{count} houres"
       x_days:
-        one: "fa 1 dia"
+        one: "fa %{count} dia"
         other: "fa %{count} dies"
       about_x_months:
-        one: "fa més o menys 1 mes"
+        one: "fa més o menys %{count} mes"
         other: "fa més o menys %{count} mesos"
       x_months:
-        one: "fa 1 mes"
+        one: "fa %{count} mes"
         other: "fa %{count} mesos"
       about_x_years:
-        one: "fa més o menys 1 any"
+        one: "fa més o menys %{count} any"
         other: "fa més o menys %{count} anys"
       over_x_years:
-        one: "fa més d'1 any"
+        one: "fa més d'%{count} any"
         other: "fa més de %{count} anys"
       almost_x_years:
-        one: "fa ben bé 1 any"
+        one: "fa ben bé %{count} any"
         other: "fa ben bé %{count} any"
   password_reset:
     no_token: "Disculpa, aquest enllaç de canvi de contrasenya és massa antic. Tria el botó de Registre i fes servir 'He oblidat la meva contrasenya' per obtenir-ne un nou enllaç."
@@ -1207,28 +1207,28 @@ ca:
       different_users: "Les publicacions que pertanyen a diferents participants no es poden fusionar."
   topic_statuses:
     autoclosed_message_max_posts:
-      one: "Aquest missatge es va tancar automàticament després d'arribar al límit màxim d'1 resposta."
+      one: "Aquest missatge es va tancar automàticament després d'arribar al límit màxim d'%{count} resposta."
       other: "Aquest missatge es va tancar automàticament després d'arribar al límit màxim de %{count} respostes."
     autoclosed_topic_max_posts:
-      one: "Aquest missatge es va tancar automàticament després d'arribar al límit màxim d'1 resposta."
+      one: "Aquest missatge es va tancar automàticament després d'arribar al límit màxim d'%{count} resposta."
       other: "Aquest tema es va tancar automàticament després d'arribar al límit màxim de %{count} respostes."
     autoclosed_enabled_days:
-      one: "Aquest missatge es va tancar automàticament després d'1 dia. Ja no es permeten les noves respostes."
+      one: "Aquest missatge es va tancar automàticament després d'%{count} dia. Ja no es permeten les noves respostes."
       other: "Aquest missatge es va tancar automàticament després de %{count} dies. Ja no es permeten les noves respostes."
     autoclosed_enabled_hours:
-      one: "Aquest missatge es va tancar automàticament després d'1 hora. Ja no es permeten les noves respostes."
+      one: "Aquest missatge es va tancar automàticament després d'%{count} hora. Ja no es permeten les noves respostes."
       other: "Aquest missatge es va tancar automàticament després de %{count} hores. Ja no es permeten les noves respostes."
     autoclosed_enabled_minutes:
-      one: "Aquest missatge es va tancar automàticament després d'1 minut. Ja no es permeten les noves respostes."
+      one: "Aquest missatge es va tancar automàticament després d'%{count} minut. Ja no es permeten les noves respostes."
       other: "Aquest missatge es va tancar automàticament després de %{count} minuts. Ja no es permeten les noves respostes."
     autoclosed_enabled_lastpost_days:
-      one: "Aquest missatge es va tancar automàticament 1 dia després de la darrera resposta. Ja no es permeten les noves respostes."
+      one: "Aquest missatge es va tancar automàticament %{count} dia després de la darrera resposta. Ja no es permeten les noves respostes."
       other: "Aquest missatge es va tancar automàticament %{count} dies després de la darrera resposta. Ja no es permeten les noves respostes."
     autoclosed_enabled_lastpost_hours:
-      one: "Aquest missatge es va tancar automàticament 1 hora després de la darrera resposta. Ja no es permeten les noves respostes."
+      one: "Aquest missatge es va tancar automàticament %{count} hora després de la darrera resposta. Ja no es permeten les noves respostes."
       other: "Aquest missatge es va tancar automàticament %{count} hores després de la darrera resposta. Ja no es permeten les noves respostes."
     autoclosed_enabled_lastpost_minutes:
-      one: "Aquest missatge es va tancar automàticament 1 minut després de la darrera resposta. Ja no es permeten les noves respostes."
+      one: "Aquest missatge es va tancar automàticament %{count} minut després de la darrera resposta. Ja no es permeten les noves respostes."
       other: "Aquest missatge es va tancar automàticament %{count} minuts després de la darrera resposta. Ja no es permeten les noves respostes."
     autoclosed_disabled: "Aquest tema ara està obert. Es permeten les noves respostes."
     autoclosed_disabled_lastpost: "Aquest tema ara està obert. Es permeten les noves respostes."
@@ -1435,7 +1435,7 @@ ca:
     pending_users_reminder:
       title: "Recordatori de persones pendents"
       subject_template:
-        one: "1 persona esperant aprovació"
+        one: "%{count} persona esperant aprovació"
         other: "%{count} persones esperant aprovació"
     download_remote_images_disabled:
       title: "Descarrega imatges remotes inhabilitades"
