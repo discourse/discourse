@@ -4,10 +4,11 @@ import {
   default as computed,
   observes
 } from "ember-addons/ember-computed-decorators";
+import FocusEvent from "discourse-common/mixins/focus-event";
 
 const _pluginCallbacks = [];
 
-const Discourse = Ember.Application.extend({
+const Discourse = Ember.Application.extend(FocusEvent, {
   rootElement: "#main",
   _docTitle: document.title,
   RAW_TEMPLATES: {},
