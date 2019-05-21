@@ -127,37 +127,30 @@ module TestSetup
   end
 end
 
-module ActiveRecordAdapterWithSetup
-  class << self
-    ACTIVE_RECORD_ADAPTER = TestProf::BeforeAll::Adapters::ActiveRecord
-
-    def begin_transaction
-      TestSetup.test_setup
-
-      ACTIVE_RECORD_ADAPTER.begin_transaction
-    end
-
-    def rollback_transaction
-      ACTIVE_RECORD_ADAPTER.rollback_transaction
-    end
+TestProf::BeforeAll.configure do |config|
+  config.before(:begin) do
+    TestSetup.test_setup
   end
 end
 
-TestProf::BeforeAll.adapter = ActiveRecordAdapterWithSetup
-
-module Prefabrication
-  def fab!(name, &blk)
-    if ENV['PREFABRICATION'] == '0'
+if ENV['PREFABRICATION'] == '0'
+  module Prefabrication
+    def fab!(name, &blk)
       let!(name, &blk)
-    else
-      let_it_be(name, refind: true, &blk)
     end
+  end
+
+  RSpec.configure do |config|
+    config.extend Prefabrication
+  end
+else
+  TestProf::LetItBe.configure do |config|
+    config.alias_to :fab!, refind: true
   end
 end
 
 RSpec.configure do |config|
   config.fail_fast = ENV['RSPEC_FAIL_FAST'] == "1"
-  config.extend Prefabrication
   config.include Helpers
   config.include MessageBus
   config.include RSpecHtmlMatchers
