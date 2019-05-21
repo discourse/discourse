@@ -411,6 +411,14 @@ def migrate_to_s3
         "src='#{SiteSetting.Upload.s3_base_url}/#{prefix}\\1"
       ],
       [
+        "href=\"/uploads/#{db}/original/(\\dX/(?:[a-f0-9]/)*[a-f0-9]{40}[a-z0-9\\.]*)",
+        "href=\"#{SiteSetting.Upload.s3_base_url}/#{prefix}\\1"
+      ],
+      [
+        "href='/uploads/#{db}/original/(\\dX/(?:[a-f0-9]/)*[a-f0-9]{40}[a-z0-9\\.]*)",
+        "href='#{SiteSetting.Upload.s3_base_url}/#{prefix}\\1"
+      ],
+      [
         "\\[img\\]/uploads/#{db}/original/(\\dX/(?:[a-f0-9]/)*[a-f0-9]{40}[a-z0-9\\.]*)\\[/img\\]",
         "[img]#{SiteSetting.Upload.s3_base_url}/#{prefix}\\1[/img]"
       ]
