@@ -29,7 +29,7 @@ const path = require("path");
 
   const takeFailureScreenshot = function() {
     const screenshotPath = `${process.env.SMOKE_TEST_SCREENSHOT_PATH ||
-      "tmp/smoke-test-screenshots"}/smoke-test-${Date.now()}.png`;
+    "tmp/smoke-test-screenshots"}/smoke-test-${Date.now()}.png`;
     console.log(`Screenshot of failure taken at ${screenshotPath}`);
     return page.screenshot({ path: screenshotPath, fullPage: true });
   };
@@ -219,6 +219,8 @@ const path = require("path");
       return promise;
     });
 
+    await page.waitFor(1000);
+
     await exec("submit the topic", () => {
       return page.click(".submit-panel .create");
     });
@@ -248,6 +250,8 @@ const path = require("path");
         { visible: true }
       );
     });
+
+    await page.waitFor(5000);
 
     await exec("submit the topic", () => {
       return page.click("#reply-control .create");
