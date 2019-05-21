@@ -235,7 +235,12 @@ module PrettyText
     protect do
       v8.eval(<<~JS)
         __paths = #{paths_json};
-        __performEmojiUnescape(#{title.inspect}, { getURL: __getURL, emojiSet: #{set}, customEmoji: #{custom} });
+        __performEmojiUnescape(#{title.inspect}, {
+          getURL: __getURL,
+          emojiSet: #{set},
+          customEmoji: #{custom},
+          enableEmojiShortcuts: #{SiteSetting.enable_emoji_shortcuts}
+        });
       JS
     end
   end
@@ -243,9 +248,11 @@ module PrettyText
   def self.escape_emoji(title)
     return unless title
 
+    replace_emoji_shortcuts = SiteSetting.enable_emoji && SiteSetting.enable_emoji_shortcuts
+
     protect do
       v8.eval(<<~JS)
-        __performEmojiEscape(#{title.inspect});
+        __performEmojiEscape(#{title.inspect}, { emojiShortcuts: #{replace_emoji_shortcuts} });
       JS
     end
   end
