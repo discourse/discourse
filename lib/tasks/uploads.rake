@@ -245,9 +245,9 @@ def migration_successful?(db, should_raise = false)
 
   count = Post.where('baked_version <> ? OR baked_version IS NULL', Post::BAKED_VERSION).count
   if count > 0
-    puts "No posts require rebaking"
-  else
     puts "#{count} posts still require rebaking and will be rebaked during regular job"
+  else
+    puts "No posts require rebaking"
   end
 
   success
