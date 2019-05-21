@@ -4,6 +4,14 @@ class UserExport < ActiveRecord::Base
   belongs_to :user
   belongs_to :upload, dependent: :destroy
 
+  around_destroy :ignore_missing_post_uploads
+
+  def ignore_missing_post_uploads
+    post_ids = upload.post_uploads.pluck(:post_id)
+    yield
+    post_ids.each { |post_id| PostCustomField.create!(post_id: post_id, name: Post::MISSING_UPLOADS_IGNORED, value: "t") }
+  end
+
   def self.remove_old_exports
     UserExport.where('created_at < ?', 2.days.ago).find_each do |user_export|
       user_export.destroy!
