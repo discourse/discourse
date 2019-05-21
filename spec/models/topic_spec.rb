@@ -292,6 +292,7 @@ describe Topic do
     let(:topic_script) { build_topic_with_title("Topic with <script>alert('title')</script> script in its title") }
     let(:topic_emoji) { build_topic_with_title("I 💖 candy alot") }
     let(:topic_modifier_emoji) { build_topic_with_title("I 👨‍🌾 candy alot") }
+    let(:topic_shortcut_emoji) { build_topic_with_title("I love candy :)") }
 
     it "escapes script contents" do
       expect(topic_script.fancy_title).to eq("Topic with &lt;script&gt;alert(&lsquo;title&rsquo;)&lt;/script&gt; script in its title")
@@ -320,6 +321,29 @@ describe Topic do
       expect(topic_script.fancy_title).not_to include("<script>")
     end
 
+    context "emoji shortcuts enabled" do
+      before { SiteSetting.enable_emoji_shortcuts = true }
+
+      it "converts emoji shortcuts into emoji" do
+        expect(topic_shortcut_emoji.fancy_title).to eq("I love candy :slight_smile:")
+      end
+
+      context "emojis disabled" do
+        before { SiteSetting.enable_emoji = false }
+
+        it "does not convert emoji shortcuts" do
+          expect(topic_shortcut_emoji.fancy_title).to eq("I love candy :)")
+        end
+      end
+    end
+
+    context "emoji shortcuts disabled" do
+      before { SiteSetting.enable_emoji_shortcuts = false }
+
+      it "does not convert emoji shortcuts" do
+        expect(topic_shortcut_emoji.fancy_title).to eq("I love candy :)")
+      end
+    end
   end
 
   context 'fancy title' do
