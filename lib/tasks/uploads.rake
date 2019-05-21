@@ -475,13 +475,10 @@ def migrate_to_s3
         .where("u.id IS NOT NULL AND u.url LIKE '//%' AND optimized_images.url NOT LIKE '//%'")
         .delete_all
 
-      puts "Rebaking posts with lightboxes..."
+      puts "Flagging all posts containing oneboxes for rebake..."
 
-      Post.where("cooked LIKE '%class=\"lightbox\"%'").find_each do |post|
-        putc "."
-        post.rebake!(priority: :ultra_low)
-      end
-      puts
+      count = Post.where("cooked LIKE '%class=\"lightbox\"%'").update_all(baked_version: Post::BAKED_VERSION - 1)
+      puts "#{count} posts were flagged for a rebake"
     end
   end
 
