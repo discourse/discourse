@@ -1383,7 +1383,7 @@ en:
       email_placeholder: "email or username"
       caps_lock_warning: "Caps Lock is on"
       error: "Unknown error"
-      cookies_error: "Your browsers seems to have cookies disabled. You might not be able to log in without enabling them first."
+      cookies_error: "Your browser seems to have cookies disabled. You might not be able to log in without enabling them first."
       rate_limit: "Please wait before trying to log in again."
       blank_username: "Please enter your email or username."
       blank_username_or_password: "Please enter your email or username, and password."
