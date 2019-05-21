@@ -392,8 +392,7 @@ task 'posts:reorder_posts', [:topic_id] => [:environment] do |_, args|
   puts "", "Done.", ""
 end
 
-desc 'Finds missing post upload records from cooked HTML content'
-task 'posts:missing_uploads' => :environment do
+def missing_uploads
   old_scheme_upload_count = 0
 
   missing = Post.find_missing_uploads do |post, src, path, sha1|
@@ -440,15 +439,45 @@ task 'posts:missing_uploads' => :environment do
     upload_id
   end
 
+  puts "Database name: #{RailsMultisite::ConnectionManagement.current_db}"
   puts "", "#{missing[:count]} post uploads are missing.", ""
 
   if missing[:count] > 0
     puts "#{missing[:uploads].count} uploads are missing."
     puts "#{old_scheme_upload_count} of #{missing[:uploads].count} are old scheme uploads." if old_scheme_upload_count > 0
     puts "#{missing[:post_uploads].count} of #{Post.count} posts are affected.", ""
+
+    if ENV['VERBOSE'] == "1"
+      puts "missing uploads!"
+      missing[:uploads].each do |path|
+        puts "#{path}"
+      end
+
+      if missing[:post_uploads].count > 0
+        puts
+        puts "Posts with missing uploads"
+        missing[:post_uploads].each do |id, uploads|
+          post = Post.with_deleted.find_by(id: id)
+          if post
+            puts "#{post.url} missing #{uploads.join(", ")}"
+          else
+            puts "could not find post #{id}"
+          end
+        end
+      end
+    end
   end
+
+  missing[:count] == 0
 end
 
 desc 'Finds missing post upload records from cooked HTML content'
-task 'posts:missing_uploads' => :environment do
+task 'posts:missing_uploads', [:single_site] => :environment do |_, args|
+  if args[:single_site].to_s.downcase == "single_site"
+    missing_uploads
+  else
+    RailsMultisite::ConnectionManagement.each_connection do
+      missing_uploads
+    end
+  end
 end
