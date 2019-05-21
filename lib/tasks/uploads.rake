@@ -589,7 +589,11 @@ task "uploads:missing" => :environment do
     list_missing_uploads(skip_optimized: ENV['SKIP_OPTIMIZED'])
   else
     RailsMultisite::ConnectionManagement.each_connection do |db|
-      list_missing_uploads(skip_optimized: ENV['SKIP_OPTIMIZED'])
+      if ENV["SKIP_EXTERNAL"] == "1" && Discourse.store.external?
+        puts "#{RailsMultisite::ConnectionManagement.current_db} has uploads stored externally skipping!"
+      else
+        list_missing_uploads(skip_optimized: ENV['SKIP_OPTIMIZED'])
+      end
     end
   end
 end
