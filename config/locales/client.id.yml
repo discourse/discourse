@@ -1056,8 +1056,8 @@ id:
         title: "Navigasi"
       application:
         title: "Aplikasi"
-        create: "<b>c</b> Buat topik baru"
-        notifications: "<b>n</b> Buka notifikasi"
+        create: "%{shortcut} Buat topik baru"
+        notifications: "%{shortcut} Buka notifikasi"
       actions:
         title: "Aksi"
     badges:
