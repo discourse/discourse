@@ -270,6 +270,55 @@ const path = require("path");
         return output === 2;
       }
     );
+
+    await page.waitFor(1000);
+
+    await exec("open composer to edit first post", () => {
+      return page.click(".post-controls:first-of-type .edit");
+    });
+
+    await exec("update post raw in composer", () => {
+      let promise = page.waitForSelector("#reply-control .d-editor-input", {
+        visible: true
+      });
+
+      promise = promise.then(() => page.waitFor(1000));
+
+      promise = promise.then(() => {
+        const post = `I edited this post`;
+        return page.type("#reply-control .d-editor-input", post);
+      });
+
+      return promise;
+    });
+
+    await exec("submit the edit", () => {
+      return page.click("#reply-control .create");
+    });
+
+    await assert(
+      "reply is created",
+      () => {
+        let promise = page.waitForSelector("#reply-control.closed", {
+          visible: false
+        });
+
+        promise = promise.then(() => {
+          return page.waitForSelector("#post_1", { visible: true });
+        });
+
+        promise = promise.then(() => {
+          return page.evaluate(() => {
+            return document.querySelector("#post_1 .cooked").textContent;
+          });
+        });
+
+        return promise;
+      },
+      output => {
+        return output.includes(`I edited this post`);
+      }
+    );
   }
 
   await exec("close browser", () => {
