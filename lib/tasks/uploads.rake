@@ -243,7 +243,7 @@ def migration_successful?(db, should_raise = false)
   raise "rake posts:missing_uploads identified #{count} issues. #{failure_message}" if count > 0 && should_raise
   success &&= count == 0
 
-  count = Post.where('baked_version <> ?', Post::BAKED_VERSION).count
+  count = Post.where('baked_version <> ? OR baked_version IS NULL', Post::BAKED_VERSION).count
   if count > 0
     puts "No posts require rebaking"
   else
@@ -498,7 +498,7 @@ def migrate_to_s3
 
       puts "Flagging all posts containing oneboxes for rebake..."
 
-      count = Post.where("cooked LIKE '%class=\"lightbox\"%'").update_all(baked_version: Post::BAKED_VERSION - 1)
+      count = Post.where("cooked LIKE '%class=\"lightbox\"%'").update_all(baked_version: nil)
       puts "#{count} posts were flagged for a rebake"
     end
   end

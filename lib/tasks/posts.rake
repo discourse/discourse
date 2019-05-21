@@ -8,7 +8,7 @@ task 'posts:rebake' => :environment do
 end
 
 task 'posts:rebake_uncooked_posts' => :environment do
-  uncooked = Post.where(baked_version: nil)
+  uncooked = Post.where('baked_version <> ? or baked_version IS NULL', Post::BAKED_VERSION)
 
   rebaked = 0
   total = uncooked.count
