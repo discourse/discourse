@@ -393,10 +393,17 @@ task 'posts:reorder_posts', [:topic_id] => [:environment] do |_, args|
 end
 
 def missing_uploads
+  puts "Looking for missing uploads on: #{RailsMultisite::ConnectionManagement.current_db}"
+
   old_scheme_upload_count = 0
+
+  count_missing = 0
 
   missing = Post.find_missing_uploads(include_local_upload: true) do |post, src, path, sha1|
     next if sha1.present?
+    puts "Fixing missing uploads: " if count_missing == 0
+    count_missing += 1
+    print "."
 
     upload_id = nil
 
@@ -439,7 +446,6 @@ def missing_uploads
     upload_id
   end
 
-  puts "Database name: #{RailsMultisite::ConnectionManagement.current_db}"
   puts "", "#{missing[:count]} post uploads are missing.", ""
 
   if missing[:count] > 0

@@ -223,25 +223,46 @@ def migrate_to_s3_all_sites
 end
 
 def migration_successful?(db, should_raise = false)
+  success = true
+
   failure_message = "S3 migration failed for db '#{db}'."
   prefix = ENV["MIGRATE_TO_MULTISITE"] ? "uploads/#{db}/original/" : "original/"
 
   base_url = File.join(SiteSetting.Upload.s3_base_url, prefix)
   count = Upload.where("id >= 0 AND url NOT LIKE '#{base_url}%'").count
   raise "#{count} of #{Upload.count} uploads are not migrated to S3. #{failure_message}" if count > 0 && should_raise
-  return false if count > 0
+  success &&= count == 0
 
   cdn_path = SiteSetting.cdn_path("/uploads/#{db}/original").sub(/https?:/, "")
   count = Post.where("cooked LIKE '%#{cdn_path}%'").count
   raise "#{count} posts are not remapped to new S3 upload URL. #{failure_message}" if count > 0 && should_raise
-  return false if count > 0
+  success &&= count == 0
 
   Rake::Task['posts:missing_uploads'].invoke('single_site')
   count = PostCustomField.where(name: Post::MISSING_UPLOADS).count
   raise "rake posts:missing_uploads identified #{count} issues. #{failure_message}" if count > 0 && should_raise
-  return false if count > 0
+  success &&= count == 0
 
-  return true
+  count = Post.where('baked_version <> ?', Post::BAKED_VERSION).count
+  if count > 0
+    puts "No posts require rebaking"
+  else
+    puts "#{count} posts still require rebaking and will be rebaked during regular job"
+  end
+
+  success
+end
+
+task "uploads:s3_migration_status" => :environment do
+  success = true
+  RailsMultisite::ConnectionManagement.each_connection do
+    db = RailsMultisite::ConnectionManagement.current_db
+    success &&= migration_successful?(db)
+  end
+
+  exit 1 if !success
+
+  puts "All sites appear to have uploads in order!"
 end
 
 def migrate_to_s3
