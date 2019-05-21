@@ -395,7 +395,7 @@ end
 def missing_uploads
   old_scheme_upload_count = 0
 
-  missing = Post.find_missing_uploads do |post, src, path, sha1|
+  missing = Post.find_missing_uploads(include_local_upload: true) do |post, src, path, sha1|
     next if sha1.present?
 
     upload_id = nil
