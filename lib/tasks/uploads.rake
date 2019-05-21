@@ -236,7 +236,7 @@ def migration_successful?(db, should_raise = false)
   raise "#{count} posts are not remapped to new S3 upload URL. #{failure_message}" if count > 0 && should_raise
   return false if count > 0
 
-  Rake::Task['posts:missing_uploads'].invoke
+  Rake::Task['posts:missing_uploads'].invoke('single_site')
   count = PostCustomField.where(name: Post::MISSING_UPLOADS).count
   raise "rake posts:missing_uploads identified #{count} issues. #{failure_message}" if count > 0 && should_raise
   return false if count > 0
