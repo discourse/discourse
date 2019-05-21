@@ -592,6 +592,17 @@ task "uploads:missing" => :environment do
       if ENV["SKIP_EXTERNAL"] == "1" && Discourse.store.external?
         puts "#{RailsMultisite::ConnectionManagement.current_db} has uploads stored externally skipping!"
       else
+        if Discourse.store.external?
+          puts "-" * 80
+          puts "WARNING! WARNING! WARNING!"
+          puts "-" * 80
+          puts
+          puts <<~TEXT
+            #{RailsMultisite::ConnectionManagement.current_db} has uploads on S3!
+            validating without inventory is likely to take an enormous amount of time.
+            We recommend you run SKIP_EXTERNAL=1 rake uploads:missing to skip validating if on a multisite.
+          TEXT
+        end
         list_missing_uploads(skip_optimized: ENV['SKIP_OPTIMIZED'])
       end
     end
