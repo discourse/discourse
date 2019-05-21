@@ -33,4 +33,22 @@ RSpec.describe UserExport do
       expect(Upload.exists?(id: csv_file_2.id)).to eq(true)
     end
   end
+
+  describe '#destroy!' do
+    it 'should create post custom field for ignored missing uploads' do
+      upload = Fabricate(:upload, created_at: 3.days.ago)
+      export = UserExport.create!(
+        file_name: "test",
+        user: user,
+        upload_id: upload.id,
+        created_at: 3.days.ago
+      )
+      post = Fabricate(:post, raw: "![#{upload.original_filename}](#{upload.short_url})")
+      post.link_post_uploads
+
+      export.destroy!
+
+      expect(PostCustomField.exists?(post_id: post.id, name: Post::MISSING_UPLOADS_IGNORED)).to eq(true)
+    end
+  end
 end
