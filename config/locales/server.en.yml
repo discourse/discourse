@@ -3833,7 +3833,7 @@ en:
 
       You and the company agree to seek injunctions related to these terms only in state or federal court in %{city_for_disputes}.  Neither you nor the company will object to jurisdiction, forum, or venue in those courts.
 
-      ***Other than to seek an injunction or for claims under the Computer Fraud and Abuse Act, you and the company will resolve any Dispute by binding American Arbitration Association arbitration.  Arbitration will follow the AAA's Commercial Arbitration Rules and Supplementary Procedures for Consumer Related Disputes.  Arbitration will happen in San Francisco, California.  You will settle any dispute as an individual, and not as part of a class action or other representative proceeding, whether as the plaintiff or a class member.  No arbitrator will consolidate any dispute with any other arbitration without the company's permission.***
+      ***Other than to seek an injunction or for claims under the Computer Fraud and Abuse Act, you and the company will resolve any dispute by binding American Arbitration Association arbitration.  Arbitration will follow the AAA's Commercial Arbitration Rules and Supplementary Procedures for Consumer Related Disputes.  Arbitration will happen in %{city_for_disputes}.  You will settle any dispute as an individual, and not as part of a class action or other representative proceeding, whether as the plaintiff or a class member.  No arbitrator will consolidate any dispute with any other arbitration without the company's permission.***
 
       Any arbitration award will include costs of the arbitration, reasonable attorneys' fees, and reasonable costs for witnesses.  You and the company may enter arbitration awards in any court with jurisdiction.
 
