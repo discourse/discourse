@@ -246,6 +246,10 @@ def migration_successful?(db, should_raise = false)
   count = Post.where('baked_version <> ? OR baked_version IS NULL', Post::BAKED_VERSION).count
   if count > 0
     puts "#{count} posts still require rebaking and will be rebaked during regular job"
+    if count > 100
+      puts "To speed up migrations of posts we recommend you run 'rake posts:rebake_uncooked_posts'"
+    end
+    success = false
   else
     puts "No posts require rebaking"
   end
@@ -258,6 +262,12 @@ task "uploads:s3_migration_status" => :environment do
   RailsMultisite::ConnectionManagement.each_connection do
     db = RailsMultisite::ConnectionManagement.current_db
     success &&= migration_successful?(db)
+  end
+
+  queued_jobs = Sidekiq::Stats.new.queues.sum { |_ , x| x }
+  if queued_jobs > 50
+    puts "WARNING: There are #{queued_jobs} jobs queued! Wait till Sidekiq clears backlog prior to migrating site to a new host"
+    exit 1
   end
 
   exit 1 if !success
