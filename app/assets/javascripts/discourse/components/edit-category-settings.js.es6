@@ -67,12 +67,14 @@ export default buildCategoryPanel("settings", {
   searchPrioritiesOptions() {
     const options = [];
 
-    for (const [name, value] of Object.entries(searchPriorities)) {
+    Object.entries(searchPriorities).forEach(entry => {
+      const [name, value] = entry;
+
       options.push({
         name: I18n.t(`category.search_priority.options.${name}`),
-        value: value
+        value
       });
-    }
+    });
 
     return options;
   },
