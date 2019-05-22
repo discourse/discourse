@@ -1,19 +1,32 @@
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import computed from "ember-addons/ember-computed-decorators";
 
 export default Ember.Controller.extend({
   saving: false,
   saved: false,
 
+  @computed
+  reviewablePriorities() {
+    return [
+      { id: 0, name: "low" },
+      { id: 5, name: "medium" },
+      { id: 10, name: "high" }
+    ];
+  },
+
   actions: {
     save() {
-      let bonuses = {};
+      let priorities = {};
       this.get("settings.reviewable_score_types").forEach(st => {
-        bonuses[st.id] = parseFloat(st.score_bonus);
+        priorities[st.id] = parseFloat(st.reviewable_priority);
       });
 
       this.set("saving", true);
-      ajax("/review/settings", { method: "PUT", data: { bonuses } })
+      ajax("/review/settings", {
+        method: "PUT",
+        data: { reviewable_priorities: priorities }
+      })
         .then(() => {
           this.set("saved", true);
         })

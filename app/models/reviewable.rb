@@ -41,6 +41,15 @@ class Reviewable < ActiveRecord::Base
     Jobs.enqueue(:notify_reviewable, reviewable_id: self.id) if pending?
   end
 
+  # The gaps are in case we want more accuracy in the future
+  def self.priorities
+    @priorities ||= Enum.new(
+      low: 0,
+      medium: 5,
+      high: 10
+    )
+  end
+
   def self.statuses
     @statuses ||= Enum.new(
       pending: 0,
@@ -157,15 +166,18 @@ class Reviewable < ActiveRecord::Base
     rs
   end
 
-  def self.set_priorities(medium: nil, high: nil)
-    PluginStore.set('reviewables', 'priority_medium', medium) if medium
-    PluginStore.set('reviewables', 'priority_high', high) if high
+  def self.set_priorities(values)
+    values.each do |k, v|
+      id = Reviewable.priorities[k]
+      PluginStore.set('reviewables', "priority_#{id}", v) unless id.nil?
+    end
   end
 
   def self.min_score_for_priority(priority = nil)
     priority ||= SiteSetting.reviewable_default_visibility
-    return 0.0 unless ['medium', 'high'].include?(priority)
-    return PluginStore.get('reviewables', "priority_#{priority}").to_f
+    id = Reviewable.priorities[priority.to_sym]
+    return 0.0 if id.nil?
+    return PluginStore.get('reviewables', "priority_#{id}").to_f
   end
 
   def history
@@ -502,6 +514,7 @@ end
 #  created_by_id           :integer          not null
 #  reviewable_by_moderator :boolean          default(FALSE), not null
 #  reviewable_by_group_id  :integer
+#  claimed_by_id           :integer
 #  category_id             :integer
 #  topic_id                :integer
 #  score                   :float            default(0.0), not null
