@@ -601,9 +601,7 @@ fr:
         other: "%{count} ans"
     distance_in_words_verbose:
       half_a_minute: "à l'instant"
-      less_than_x_seconds:
-        one: "à l'instant"
-        other: "à l'instant"
+      less_than_x_seconds: "à l'instant"
       x_seconds:
         one: "il y a une seconde"
         other: "il y a %{count} secondes"

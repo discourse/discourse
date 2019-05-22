@@ -460,11 +460,7 @@ pl_PL:
         other: "%{count}l"
     distance_in_words_verbose:
       half_a_minute: "przed chwilą"
-      less_than_x_seconds:
-        one: "przed chwilą"
-        few: "przed chwilą"
-        many: "przed chwilą"
-        other: "przed chwilą"
+      less_than_x_seconds: "przed chwilą"
       x_seconds:
         one: "%{count} sekundę temu"
         few: "%{count} sekundy temu"

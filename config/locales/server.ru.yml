@@ -574,11 +574,7 @@ ru:
         other: "%{count} лет"
     distance_in_words_verbose:
       half_a_minute: "только что"
-      less_than_x_seconds:
-        one: "только что"
-        few: "только что"
-        many: "только что"
-        other: "только что"
+      less_than_x_seconds: "только что"
       x_seconds:
         one: "%{count} секунду назад"
         few: "%{count} секунды назад"

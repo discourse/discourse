@@ -326,7 +326,6 @@ en:
 
   rss_description:
     latest: "Latest topics"
-    hot: "Hot topics"
     top: "Top topics"
     top_all: "All time top topics"
     top_yearly: "Yearly top topics"
@@ -697,9 +696,7 @@ en:
 
     distance_in_words_verbose:
       half_a_minute: "just now"
-      less_than_x_seconds:
-        one: "just now"
-        other: "just now"
+      less_than_x_seconds: "just now"
       x_seconds:
         one: "%{count} second ago"
         other: "%{count} seconds ago"

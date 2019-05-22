@@ -443,9 +443,7 @@ el:
         other: "%{count}ε"
     distance_in_words_verbose:
       half_a_minute: "μόλις τώρα"
-      less_than_x_seconds:
-        one: "μόλις τώρα"
-        other: "μόλις τώρα"
+      less_than_x_seconds: "μόλις τώρα"
       x_seconds:
         one: "πριν %{count} δευτερόλεπτο"
         other: "πριν %{count} δευτερόλεπτα"

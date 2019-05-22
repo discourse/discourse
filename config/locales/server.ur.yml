@@ -499,9 +499,7 @@ ur:
         other: "%{count}سال"
     distance_in_words_verbose:
       half_a_minute: "ابھی"
-      less_than_x_seconds:
-        one: "ابھی"
-        other: "ابھی"
+      less_than_x_seconds: "ابھی"
       x_seconds:
         one: "%{count} سیکنڈ قبل"
         other: "%{count} سیکنڈ قبل"

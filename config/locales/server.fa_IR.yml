@@ -431,9 +431,7 @@ fa_IR:
         other: "%{count} سال"
     distance_in_words_verbose:
       half_a_minute: "هم اکنون"
-      less_than_x_seconds:
-        one: "هم اکنون"
-        other: "هم اکنون"
+      less_than_x_seconds: "هم اکنون"
       x_seconds:
         one: "%{count} ثانیه قبل"
         other: "%{count} ثانیه قبل"

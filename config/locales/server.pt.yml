@@ -432,9 +432,7 @@ pt:
         other: "%{count}anos"
     distance_in_words_verbose:
       half_a_minute: "mesmo agora"
-      less_than_x_seconds:
-        one: "mesmo agora"
-        other: "mesmo agora"
+      less_than_x_seconds: "mesmo agora"
       x_seconds:
         one: "%{count} segundo atrás"
         other: "%{count} segundos atrás"

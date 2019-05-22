@@ -207,7 +207,7 @@ en:
         us_east_1: "US East (N. Virginia)"
         us_east_2: "US East (Ohio)"
         us_gov_east_1: "AWS GovCloud (US-East)"
-        us_gov_west_1: "AWS GovCloud (US)"
+        us_gov_west_1: "AWS GovCloud (US-West)"
         us_west_1: "US West (N. California)"
         us_west_2: "US West (Oregon)"
 
@@ -1842,17 +1842,14 @@ en:
         read: "You haven't read any topics yet."
         posted: "You haven't posted in any topics yet."
         latest: "There are no latest topics. That's sad."
-        hot: "There are no hot topics."
         bookmarks: "You have no bookmarked topics yet."
         category: "There are no {{category}} topics."
         top: "There are no top topics."
-        search: "There are no search results."
         educate:
           new: '<p>Your new topics appear here.</p><p>By default, topics are considered new and will show a <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">new</span> indicator if they were created in the last 2 days.</p><p>Visit your <a href="%{userPrefsUrl}">preferences</a> to change this.</p>'
           unread: '<p>Your unread topics appear here.</p><p>By default, topics are considered unread and will show unread counts <span class="badge new-posts badge-notification">1</span> if you:</p><ul><li>Created the topic</li><li>Replied to the topic</li><li>Read the topic for more than 4 minutes</li></ul><p>Or if you have explicitly set the topic to Tracked or Watched via the notification control at the bottom of each topic.</p><p>Visit your <a href="%{userPrefsUrl}">preferences</a> to change this.</p>'
       bottom:
         latest: "There are no more latest topics."
-        hot: "There are no more hot topics."
         posted: "There are no more posted topics."
         read: "There are no more read topics."
         new: "There are no more new topics."
@@ -1860,7 +1857,6 @@ en:
         category: "There are no more {{category}} topics."
         top: "There are no more top topics."
         bookmarks: "There are no more bookmarked topics."
-        search: "There are no more search results."
 
     topic:
       filter_to:
@@ -2709,15 +2705,9 @@ en:
           one: "Latest (%{count})"
           other: "Latest ({{count}})"
         help: "topics with recent posts"
-      hot:
-        title: "Hot"
-        help: "a selection of the hottest topics"
       read:
         title: "Read"
         help: "topics you've read, in the order that you last read them"
-      search:
-        title: "Search"
-        help: "search all topics"
       categories:
         title: "Categories"
         title_in: "Category - {{categoryName}}"
@@ -2978,20 +2968,16 @@ en:
           read: "You haven't read any topics yet."
           posted: "You haven't posted in any topics yet."
           latest: "There are no latest topics."
-          hot: "There are no hot topics."
           bookmarks: "You have no bookmarked topics yet."
           top: "There are no top topics."
-          search: "There are no search results."
         bottom:
           latest: "There are no more latest topics."
-          hot: "There are no more hot topics."
           posted: "There are no more posted topics."
           read: "There are no more read topics."
           new: "There are no more new topics."
           unread: "There are no more unread topics."
           top: "There are no more top topics."
           bookmarks: "There are no more bookmarked topics."
-          search: "There are no more search results."
 
     invite:
       custom_message: "Make your invite a little bit more personal by writing a <a href>custom message</a>."

@@ -423,11 +423,7 @@ sk:
         other: "%{count}r"
     distance_in_words_verbose:
       half_a_minute: "práve teraz"
-      less_than_x_seconds:
-        one: "práve teraz"
-        few: "práve teraz"
-        many: "práve teraz"
-        other: "práve teraz"
+      less_than_x_seconds: "práve teraz"
       x_seconds:
         one: "pred sekundou"
         few: "pred %{count} sekundami"

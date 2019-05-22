@@ -398,10 +398,7 @@ ro:
         other: "de %{count} de ani"
     distance_in_words_verbose:
       half_a_minute: "chiar acum"
-      less_than_x_seconds:
-        one: "chiar acum"
-        few: "chiar acum"
-        other: "chiar acum"
+      less_than_x_seconds: "chiar acum"
       x_seconds:
         one: "cu o secundă în urmă"
         few: "cu %{count} secunde în urmă"

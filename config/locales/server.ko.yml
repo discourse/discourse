@@ -448,8 +448,7 @@ ko:
         other: "약 %{count}년"
     distance_in_words_verbose:
       half_a_minute: "방금 전"
-      less_than_x_seconds:
-        other: "방금 전"
+      less_than_x_seconds: "방금 전"
       x_seconds:
         other: "%{count}초 전"
       less_than_x_minutes:

@@ -361,9 +361,7 @@ sv:
         other: "%{count}år"
     distance_in_words_verbose:
       half_a_minute: "nyss"
-      less_than_x_seconds:
-        one: "nyss"
-        other: "nyss"
+      less_than_x_seconds: "nyss"
       x_seconds:
         one: "%{count} sekund sedan"
         other: "%{count} sekunder sedan"

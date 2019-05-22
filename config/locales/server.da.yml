@@ -417,9 +417,7 @@ da:
         other: "%{count} år"
     distance_in_words_verbose:
       half_a_minute: "lige nu"
-      less_than_x_seconds:
-        one: "lige nu"
-        other: "lige nu"
+      less_than_x_seconds: "lige nu"
       x_seconds:
         one: "%{count} sekund siden"
         other: "%{count} sekunder siden"

@@ -541,9 +541,7 @@ it:
         other: "%{count}a"
     distance_in_words_verbose:
       half_a_minute: "proprio ora"
-      less_than_x_seconds:
-        one: "adesso"
-        other: "proprio ora"
+      less_than_x_seconds: "proprio ora"
       x_seconds:
         one: "%{count} secondo fa"
         other: "%{count} secondi fa"
