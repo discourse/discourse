@@ -249,7 +249,7 @@ export default Ember.Mixin.create({
       return;
     }
 
-    if (!this.get("selection").length) return;
+    if (!this.selection || !this.selection.length) return;
 
     if (!Ember.isEmpty(this.get("filter"))) {
       this.clearHighlightSelection();
