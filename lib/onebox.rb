@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "openssl"
 require "open-uri"
 require "multi_json"

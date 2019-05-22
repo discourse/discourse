@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative '../mixins/git_blob_onebox'
 
 module Onebox

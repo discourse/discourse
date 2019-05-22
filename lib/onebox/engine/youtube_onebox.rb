@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'onebox/oembed'
 
 module Onebox

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'htmlentities'
 
 module Onebox
@@ -255,7 +257,9 @@ module Onebox
       def rewrite_https(html)
         return unless html
         uri = URI(@url)
-        html.gsub!("http://", "https://") if WhitelistedGenericOnebox.host_matches(uri, WhitelistedGenericOnebox.rewrites)
+        if WhitelistedGenericOnebox.host_matches(uri, WhitelistedGenericOnebox.rewrites)
+          html = html.gsub("http://", "https://")
+        end
         html
       end
 

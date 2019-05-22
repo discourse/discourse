@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative '../mixins/twitch_onebox'
 
 class Onebox::Engine::TwitchClipsOnebox

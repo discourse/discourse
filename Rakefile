@@ -1,4 +1,6 @@
 #!/usr/bin/env rake
+# frozen_string_literal: true
+
 require "rspec/core/rake_task"
 require 'bundler'
 

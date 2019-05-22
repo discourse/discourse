@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'haml'
 require 'yaml'
 require 'sinatra/base'

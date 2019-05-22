@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Onebox
   module Mixins
     module TwitchOnebox

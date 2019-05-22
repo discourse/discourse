@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module HTMLSpecHelper
   def fake(uri, response, verb = :get)
     FakeWeb.register_uri(verb, uri, response: header(response))

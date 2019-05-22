@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Onebox
   module Engine
     class WikipediaOnebox
@@ -63,7 +65,7 @@ module Onebox
             end
 
             paragraph.gsub!(/\[\d+\]/mi, "")
-            text << paragraph
+            text += paragraph
             cnt += 1
           end
         end
