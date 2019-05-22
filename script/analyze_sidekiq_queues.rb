@@ -30,4 +30,4 @@ dupes.each do |k, jobs|
 end
 
 puts
-puts "#{total} dupelicate jobs found!"
+puts "#{total} duplicate jobs found!"
