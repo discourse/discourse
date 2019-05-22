@@ -102,7 +102,7 @@
     p {
       display: inline-block;
 
-      span {
+      span:first-child {
         color: $primary;
       }
     }
