@@ -230,18 +230,31 @@ def migration_successful?(db, should_raise = false)
 
   base_url = File.join(SiteSetting.Upload.s3_base_url, prefix)
   count = Upload.by_users.where("url NOT LIKE '#{base_url}%'").count
-  raise "#{count} of #{Upload.count} uploads are not migrated to S3. #{failure_message}" if count > 0 && should_raise
+
+  error_message = "#{count} of #{Upload.count} uploads are not migrated to S3. #{failure_message}"
+
+  raise error_message if count > 0 && should_raise
   success &&= count == 0
+
+  puts error_message if count > 0
 
   cdn_path = SiteSetting.cdn_path("/uploads/#{db}/original").sub(/https?:/, "")
   count = Post.where("cooked LIKE '%#{cdn_path}%'").count
-  raise "#{count} posts are not remapped to new S3 upload URL. #{failure_message}" if count > 0 && should_raise
+  error_message = "#{count} posts are not remapped to new S3 upload URL. #{failure_message}"
+
+  raise error_message if count > 0 && should_raise
   success &&= count == 0
+
+  puts error_message if count > 0
 
   Rake::Task['posts:missing_uploads'].invoke('single_site')
   count = PostCustomField.where(name: Post::MISSING_UPLOADS).count
-  raise "rake posts:missing_uploads identified #{count} issues. #{failure_message}" if count > 0 && should_raise
+  error_message = "rake posts:missing_uploads identified #{count} issues. #{failure_message}"
+  raise error_message if count > 0 && should_raise
+
   success &&= count == 0
+
+  puts error_message if count > 0
 
   count = Post.where('baked_version <> ? OR baked_version IS NULL', Post::BAKED_VERSION).count
   if count > 0
@@ -270,7 +283,10 @@ task "uploads:s3_migration_status" => :environment do
     exit 1
   end
 
-  exit 1 if !success
+  if !success
+    puts "Site is not ready for migration"
+    exit 1
+  end
 
   puts "All sites appear to have uploads in order!"
 end
