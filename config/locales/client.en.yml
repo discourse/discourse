@@ -377,9 +377,8 @@ en:
         saved: "Saved"
         save_changes: "Save Changes"
         title: "Settings"
-        score_bonuses:
-          title: "Score Bonuses"
-          description: "Bonuses allow certain types to be scored higher than others so they can be prioritized. Note: changing these values will not apply to previously scored items."
+        priorities:
+          title: "Reviewable Priorities"
 
       moderation_history: "Moderation History"
       view_all: "View All"

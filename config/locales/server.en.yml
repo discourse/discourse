@@ -4414,6 +4414,11 @@ en:
     webhook_deactivation_reason: "Your webhook has been automatically deactivated. We received multiple '%{status}' HTTP status failure responses."
 
   reviewables:
+    priorities:
+      low: "Low"
+      medium: "Medium"
+      high: "High"
+
     must_claim: "You must claim items before acting on them."
     user_claimed: "This item has been claimed by another user."
     missing_version: "You must supply a version parameter"

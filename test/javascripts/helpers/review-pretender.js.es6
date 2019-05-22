@@ -95,17 +95,22 @@ export default function(helpers) {
         {
           id: 3,
           title: "Off-Topic",
-          score_bonus: 0.0
+          reviewable_priority: 0
         },
         {
           id: 4,
           title: "Inappropriate",
-          score_bonus: 0.0
+          reviewable_priority: 5
         }
       ],
       reviewable_settings: {
         id: 13870,
-        reviewable_score_type_ids: [3, 4]
+        reviewable_score_type_ids: [3, 4],
+        reviewable_priorities: [
+          { id: 0, name: "Low" },
+          { id: 5, name: "Medium" },
+          { id: 10, name: "High" }
+        ]
       },
       __rest_serializer: "1"
     });
