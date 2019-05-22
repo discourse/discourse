@@ -886,3 +886,36 @@ task "uploads:recover" => :environment do
     end
   end
 end
+
+def inline_uploads(post)
+  replaced = false
+
+  original_raw = post.raw
+
+  post.raw = post.raw.gsub(/(\((\/uploads\S+).*\))/) do
+    upload = Upload.find_by(url: $2)
+    result = $1
+
+    if upload&.id
+      result.sub!($2, upload.short_url)
+      replaced = true
+    else
+      puts "Upload not found #{$2} in Post #{post.id} - #{post.url}"
+    end
+    result
+  end
+
+  if replaced
+    puts "Corrected image urls in #{post.url} raw backup stored in custom field"
+    post.custom_fields["BACKUP_POST_RAW"] = original_raw
+    post.save_custom_fields
+    post.save!
+    post.rebake!
+  end
+end
+
+task "uploads:fix_relative_upload_links" => :environment do
+  Post.where('raw like ?', '%](/uploads%').find_each do |post|
+    inline_uploads(post)
+  end
+end
