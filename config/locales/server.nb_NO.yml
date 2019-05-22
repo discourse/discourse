@@ -529,9 +529,7 @@ nb_NO:
         other: "%{count}år"
     distance_in_words_verbose:
       half_a_minute: "Nå nettopp"
-      less_than_x_seconds:
-        one: "nå nettopp"
-        other: "nå nettopp"
+      less_than_x_seconds: "nå nettopp"
       x_seconds:
         one: "%{count} sekund siden"
         other: "%{count} sekunder siden"

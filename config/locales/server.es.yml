@@ -597,9 +597,7 @@ es:
         other: "%{count}y"
     distance_in_words_verbose:
       half_a_minute: "ahora mismo"
-      less_than_x_seconds:
-        one: "ahora mismo"
-        other: "ahora mismo"
+      less_than_x_seconds: "ahora mismo"
       x_seconds:
         one: "hace %{count} segundo"
         other: "hace %{count} segundos"

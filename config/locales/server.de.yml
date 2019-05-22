@@ -578,9 +578,7 @@ de:
         other: "%{count} Jahre"
     distance_in_words_verbose:
       half_a_minute: "gerade eben"
-      less_than_x_seconds:
-        one: "gerade eben"
-        other: "gerade eben"
+      less_than_x_seconds: "gerade eben"
       x_seconds:
         one: "vor einer Sekunde"
         other: "vor %{count} Sekunden"

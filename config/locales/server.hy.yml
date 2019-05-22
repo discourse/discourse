@@ -552,9 +552,7 @@ hy:
         other: "%{count}տ"
     distance_in_words_verbose:
       half_a_minute: "հենց նոր"
-      less_than_x_seconds:
-        one: "հենց նոր"
-        other: "հենց նոր"
+      less_than_x_seconds: "հենց նոր"
       x_seconds:
         one: "%{count} վայրկյան առաջ"
         other: "%{count} վայրկյան առաջ"

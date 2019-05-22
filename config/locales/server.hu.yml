@@ -333,9 +333,7 @@ hu:
         other: "%{count}év"
     distance_in_words_verbose:
       half_a_minute: "éppen most"
-      less_than_x_seconds:
-        one: "éppen most"
-        other: "éppen most"
+      less_than_x_seconds: "éppen most"
       x_seconds:
         one: "%{count} másodperce"
         other: "%{count} másodperce"

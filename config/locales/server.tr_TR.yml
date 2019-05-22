@@ -337,9 +337,7 @@ tr_TR:
         other: "%{count}yıl"
     distance_in_words_verbose:
       half_a_minute: "hemen şimdi"
-      less_than_x_seconds:
-        one: "hemen şimdi"
-        other: "hemen şimdi"
+      less_than_x_seconds: "hemen şimdi"
       x_seconds:
         one: "%{count} saniye önce"
         other: "%{count} saniye önce"

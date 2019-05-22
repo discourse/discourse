@@ -312,11 +312,7 @@ lt:
         other: "beveik %{count} metų"
     distance_in_words_verbose:
       half_a_minute: "ką tik"
-      less_than_x_seconds:
-        one: "ką tik"
-        few: "ką tik"
-        many: "ką tik"
-        other: "ką tik"
+      less_than_x_seconds: "ką tik"
       x_seconds:
         one: "prieš %{count} sekundę"
         few: "prieš %{count} sekundes"

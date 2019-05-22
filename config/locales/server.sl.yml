@@ -337,11 +337,7 @@ sl:
       half_a_minute: "< 1 min"
     distance_in_words_verbose:
       half_a_minute: "pravkar"
-      less_than_x_seconds:
-        one: "pravkar"
-        two: "pravkar"
-        few: "pravkar"
-        other: "pravkar"
+      less_than_x_seconds: "pravkar"
       x_seconds:
         one: "%{count} sekundo nazaj"
         two: "%{count} sekundi nazaj"

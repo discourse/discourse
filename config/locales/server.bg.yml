@@ -329,9 +329,7 @@ bg:
         other: "%{count}y"
     distance_in_words_verbose:
       half_a_minute: "преди малко"
-      less_than_x_seconds:
-        one: "преди малко"
-        other: "преди малко"
+      less_than_x_seconds: "преди малко"
       x_seconds:
         one: "преди %{count} секунда"
         other: "преди %{count} секунди"

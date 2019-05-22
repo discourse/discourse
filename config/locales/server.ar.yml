@@ -488,13 +488,7 @@ ar:
         other: "%{count}عام"
     distance_in_words_verbose:
       half_a_minute: "منذ لحظات"
-      less_than_x_seconds:
-        zero: "منذ لحظات"
-        one: "منذ لحظات"
-        two: "منذ لحظات"
-        few: "منذ لحظات"
-        many: "منذ لحظات"
-        other: "منذ لحظات"
+      less_than_x_seconds: "منذ لحظات"
       x_seconds:
         zero: "قبل لحظات"
         one: "قبل ثانية واحدة"

@@ -642,11 +642,7 @@ he:
         other: "%{count} שנים"
     distance_in_words_verbose:
       half_a_minute: "ממש עכשיו"
-      less_than_x_seconds:
-        one: "ממש עכשיו"
-        two: "ממש עכשיו"
-        many: "ממש עכשיו"
-        other: "ממש עכשיו"
+      less_than_x_seconds: "ממש עכשיו"
       x_seconds:
         one: "לפני שנייה"
         two: "לפני %{count} שניות"

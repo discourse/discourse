@@ -378,9 +378,7 @@ et:
         other: "%{count}a"
     distance_in_words_verbose:
       half_a_minute: "just praegu"
-      less_than_x_seconds:
-        one: "hetk tagasi"
-        other: "hetk tagasi"
+      less_than_x_seconds: "hetk tagasi"
       x_seconds:
         one: "%{count} sekund tagasi"
         other: "%{count} sekundit tagasi"

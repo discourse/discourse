@@ -471,11 +471,7 @@ cs:
         other: "%{count}let"
     distance_in_words_verbose:
       half_a_minute: "právě teď"
-      less_than_x_seconds:
-        one: "právě teď"
-        few: "právě teď"
-        many: "právě teď"
-        other: "právě teď"
+      less_than_x_seconds: "právě teď"
       x_seconds:
         one: "před %{count} sekundou"
         few: "před %{count} sekundami"

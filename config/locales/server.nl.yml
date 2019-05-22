@@ -603,9 +603,7 @@ nl:
         other: "%{count}j"
     distance_in_words_verbose:
       half_a_minute: "zojuist"
-      less_than_x_seconds:
-        one: "zojuist"
-        other: "zojuist"
+      less_than_x_seconds: "zojuist"
       x_seconds:
         one: "%{count} seconde geleden"
         other: "%{count} seconden geleden"

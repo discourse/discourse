@@ -404,9 +404,7 @@ ca:
         other: "%{count}a"
     distance_in_words_verbose:
       half_a_minute: "ara mateix"
-      less_than_x_seconds:
-        one: "ara mateix"
-        other: "ara mateix"
+      less_than_x_seconds: "ara mateix"
       x_seconds:
         one: "fa %{count} segon"
         other: "fa %{count} segons"

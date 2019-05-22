@@ -584,8 +584,7 @@ zh_CN:
         other: "%{count}年"
     distance_in_words_verbose:
       half_a_minute: "刚刚"
-      less_than_x_seconds:
-        other: "刚刚"
+      less_than_x_seconds: "刚刚"
       x_seconds:
         other: "%{count}秒之前"
       less_than_x_minutes:

@@ -244,9 +244,7 @@ te:
         other: "%{count}సం"
     distance_in_words_verbose:
       half_a_minute: "ఇప్పుడే"
-      less_than_x_seconds:
-        one: "ఇప్పుడే"
-        other: "ఇప్పుడే"
+      less_than_x_seconds: "ఇప్పుడే"
       x_seconds:
         one: "%{count} సెకన్ వెనుక"
         other: "%{count} సెకన్ల వెనుక"

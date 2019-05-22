@@ -316,8 +316,7 @@ ja:
         other: "%{count} 年"
     distance_in_words_verbose:
       half_a_minute: "たった今"
-      less_than_x_seconds:
-        other: "現在"
+      less_than_x_seconds: "現在"
       x_seconds:
         other: "%{count} 秒前"
       less_than_x_minutes:

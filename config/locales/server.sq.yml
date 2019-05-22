@@ -280,9 +280,7 @@ sq:
         other: "%{count}v"
     distance_in_words_verbose:
       half_a_minute: "tani"
-      less_than_x_seconds:
-        one: "tani"
-        other: "tani"
+      less_than_x_seconds: "tani"
       x_seconds:
         one: "%{count} sekondë më parë"
         other: "%{count} sekonda më parë"

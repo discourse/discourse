@@ -581,9 +581,7 @@ fi:
         other: "%{count} v"
     distance_in_words_verbose:
       half_a_minute: "hetki sitten"
-      less_than_x_seconds:
-        one: "hetki sitten"
-        other: "hetki sitten"
+      less_than_x_seconds: "hetki sitten"
       x_seconds:
         one: "%{count} sekunti sitten"
         other: "%{count} sekuntia sitten"
