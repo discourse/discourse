@@ -319,7 +319,9 @@
     }
     > tr > th,
     > tr > td {
-      padding: 0.5em 1em 0.5em 0;
+      &:not(:empty) {
+        padding: 0.5em 1em 0.5em 0;
+      }
       @include breakpoint("mobile") {
         overflow: hidden;
         text-overflow: ellipsis;
@@ -465,7 +467,6 @@
   tr.reviewable-score {
     display: grid;
     grid-template-columns: auto auto 1fr;
-    grid-template-rows: 1fr 1fr;
   }
   td.reviewable-score-spacer {
     display: none;
