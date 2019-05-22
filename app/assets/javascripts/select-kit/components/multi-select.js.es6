@@ -198,12 +198,17 @@ export default SelectKitComponent.extend({
     return this._super() && !this.get("hasReachedMaximum");
   },
 
-  @computed("computedValues.[]", "computedContent.[]")
-  selection(computedValues, computedContent) {
+  @computed(
+    "computedValues.[]",
+    "computedContent.[]",
+    "computedAsyncContent.[]"
+  )
+  selection(computedValues, computedContent, computedAsyncContent) {
     const selected = [];
+    const content = this.isAsync ? computedAsyncContent : computedContent;
 
     computedValues.forEach(v => {
-      const value = computedContent.findBy("value", v);
+      const value = content.findBy("value", v);
       if (value) selected.push(value);
     });
 
