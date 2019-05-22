@@ -135,8 +135,8 @@ describe StaticController do
     end
 
     [
-      ['tos', :tos_url, I18n.t('terms_of_service.title')],
-      ['privacy', :privacy_policy_url, I18n.t('privacy')]
+      ['tos', :tos_url, I18n.t('js.tos')],
+      ['privacy', :privacy_policy_url, I18n.t('js.privacy')]
     ].each do |id, setting_name, text|
 
       context "#{id}" do
@@ -222,7 +222,7 @@ describe StaticController do
           get "/#{page_name}"
 
           expect(response.status).to eq(200)
-          expect(response.body).to include(I18n.t('guidelines'))
+          expect(response.body).to include(I18n.t('js.guidelines'))
         end
       end
     end
