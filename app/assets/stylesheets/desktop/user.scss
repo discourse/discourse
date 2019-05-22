@@ -122,6 +122,12 @@
           a[href] {
             text-decoration: underline;
           }
+          h1 {
+            max-width: 100%;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+          }
           .location-and-website {
             display: flex;
             max-width: 100%;
