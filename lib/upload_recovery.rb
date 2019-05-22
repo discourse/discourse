@@ -63,15 +63,27 @@ class UploadRecovery
     end
   end
 
+  def ensure_upload!(post:, sha1:, upload:)
+    return if !upload.persisted?
+
+    if upload.sha1 != sha1
+      STDERR.puts "Warning #{post.url} had an incorrect sha, remapping #{sha1} to #{upload.sha1}"
+      post.raw = post.raw.gsub(sha1, upload.sha1)
+      post.save!
+    end
+
+    post.rebake!
+  end
+
   def recover_post_upload_from_local(post:, sha1:)
     recover_from_local(sha1: sha1, user_id: post.user_id) do |upload|
-      post.rebake! if upload.persisted?
+      ensure_upload!(post: post, sha1: sha1, upload: upload)
     end
   end
 
   def recover_post_upload_from_s3(post:, sha1:)
     recover_from_s3(sha1: sha1, user_id: post.user_id) do |upload|
-      post.rebake! if upload.persisted?
+      ensure_upload!(post: post, sha1: sha1, upload: upload)
     end
   end
 
