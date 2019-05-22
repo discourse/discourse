@@ -32,6 +32,8 @@ module JsonError
       return { errors: [message] } if message.present?
     end
 
+    return { errors: [I18n.t('not_found')] } if obj.not_found
+
     # Log a warning (unless obj is nil)
     Rails.logger.warn("create_errors_json called with unrecognized type: #{obj.inspect}") if obj
 
