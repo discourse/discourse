@@ -229,7 +229,7 @@ def migration_successful?(db, should_raise = false)
   prefix = ENV["MIGRATE_TO_MULTISITE"] ? "uploads/#{db}/original/" : "original/"
 
   base_url = File.join(SiteSetting.Upload.s3_base_url, prefix)
-  count = Upload.where("id >= 0 AND url NOT LIKE '#{base_url}%'").count
+  count = Upload.by_users.where("url NOT LIKE '#{base_url}%'").count
   raise "#{count} of #{Upload.count} uploads are not migrated to S3. #{failure_message}" if count > 0 && should_raise
   success &&= count == 0
 
