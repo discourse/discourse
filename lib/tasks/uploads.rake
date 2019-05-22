@@ -894,6 +894,18 @@ def inline_uploads(post)
 
   post.raw = post.raw.gsub(/(\((\/uploads\S+).*\))/) do
     upload = Upload.find_by(url: $2)
+    if !upload
+      data = Upload.extract_url($2)
+      if data && sha1 = data[2]
+        upload = Upload.find_by(sha1: sha1)
+        if !upload
+          sha_map = JSON.parse(post.custom_fields["UPLOAD_SHA1_MAP"] || "{}")
+          if mapped_sha = sha_map[sha1]
+            upload = Upload.find_by(sha1: mapped_sha)
+          end
+        end
+      end
+    end
     result = $1
 
     if upload&.id
