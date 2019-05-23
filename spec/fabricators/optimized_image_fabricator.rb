@@ -9,6 +9,8 @@ Fabricator(:optimized_image) do
   version OptimizedImage::VERSION
 
   after_build do |optimized_image, _|
-    optimized_image.url = Discourse.store.get_path_for_optimized_image(optimized_image)
+    unless optimized_image.url
+      optimized_image.url = Discourse.store.get_path_for_optimized_image(optimized_image)
+    end
   end
 end
