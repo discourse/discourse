@@ -49,7 +49,7 @@ class DiscourseIpInfo
       end
 
     rescue => e
-      Rails.logger.warn("There was an error downloading MaxMindDB (#{name}): #{e}")
+      STDERR.puts("There was an error downloading MaxMindDB (#{name}): #{e}")
     ensure
       FileUtils.rm_rf(dest) if dest
       FileUtils.rm(tar_gz_file) if tar_gz_file
