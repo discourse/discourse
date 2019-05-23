@@ -140,8 +140,9 @@
   height: 100%;
   z-index: z("modal", "content");
   overflow: auto;
+
   &:not(.history-modal) {
-    .modal-body {
+    .modal-body:not(.reorder-categories) {
       max-height: none !important;
     }
   }
