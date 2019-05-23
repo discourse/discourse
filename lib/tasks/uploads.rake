@@ -918,16 +918,70 @@ def inline_uploads(post)
   end
 
   if replaced
-    puts "Corrected image urls in #{post.url} raw backup stored in custom field"
+    puts "Corrected image urls in #{post.full_url} raw backup stored in custom field"
     post.custom_fields["BACKUP_POST_RAW"] = original_raw
     post.save_custom_fields
-    post.save!
+    post.save!(validate: false)
     post.rebake!
   end
 end
 
-task "uploads:fix_relative_upload_links" => :environment do
+def inline_img_tags(post)
+  replaced = false
+
+  original_raw = post.raw
+  post.raw = post.raw.gsub(/(<img\s+src=["'](\/uploads\/[^'"]*)["'].*>)/i) do
+    next if $2.include?("..")
+
+    upload = Upload.find_by(url: $2)
+    if !upload
+      data = Upload.extract_url($2)
+      if data && sha1 = data[2]
+        upload = Upload.find_by(sha1: sha1)
+      end
+    end
+    if !upload
+      local_file = File.join(Rails.root, "public", $2)
+      if File.exist?(local_file)
+	File.open(local_file) do |f|
+          upload = UploadCreator.new(f,"image").create_for(post.user_id)
+        end
+      end
+    end
+
+    if upload
+      replaced = true
+      "![image](#{upload.short_url})"
+    else
+      puts "skipping missing upload in #{post.full_url} #{$1}"
+      $1
+    end
+  end
+
+  if replaced
+    puts "Corrected image urls in #{post.full_url} raw backup stored in custom field"
+    post.custom_fields["BACKUP_POST_RAW"] = original_raw
+    post.save_custom_fields
+    post.save!(validate: false)
+    post.rebake!
+  end
+end
+
+def fix_relative_links
   Post.where('raw like ?', '%](/uploads%').find_each do |post|
     inline_uploads(post)
+  end
+  Post.where("raw ilike ?", '%<img%src=%/uploads/%>%').find_each do |post|
+    inline_img_tags(post)
+  end
+end
+
+task "uploads:fix_relative_upload_links" => :environment do
+  if RailsMultisite::ConnectionManagement.current_db != "default"
+    fix_relative_links
+  else
+    RailsMultisite::ConnectionManagement.each_connection do
+      fix_relative_links
+    end
   end
 end
