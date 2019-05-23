@@ -25,9 +25,6 @@ class DiscourseIpInfo
   end
 
   def self.mmdb_download(name)
-    require 'rubygems/package'
-    require 'zlib'
-
     FileUtils.mkdir_p(path)
 
     uri = URI("https://geolite.maxmind.com/download/geoip/database/#{name}.tar.gz")
