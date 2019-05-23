@@ -16,6 +16,10 @@ module FileStore
       source = "#{public_dir}#{url}"
       return unless File.exists?(source)
       destination = "#{public_dir}#{url.sub("/uploads/", "/uploads/tombstone/")}"
+      move_file(source, destination)
+    end
+
+    def move_file(source, destination)
       dir = Pathname.new(destination).dirname
       FileUtils.mkdir_p(dir) unless Dir.exists?(dir)
       FileUtils.remove(destination) if File.exists?(destination)

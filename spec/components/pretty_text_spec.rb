@@ -508,41 +508,6 @@ describe PrettyText do
     end
   end
 
-  describe "private s3 uploads" do
-    let(:text_filename) { "utf-8.txt" }
-    let(:text_file) { file_from_fixtures(text_filename, "encodings") }
-    fab!(:user) { Fabricate(:user) }
-
-    before do
-      SiteSetting.enable_s3_uploads = true
-      SiteSetting.s3_upload_bucket = "s3-upload-bucket"
-      SiteSetting.s3_access_key_id = "s3-access-key-id"
-      SiteSetting.s3_secret_access_key = "s3-secret-access-key"
-      SiteSetting.s3_region = 'us-west-1'
-      SiteSetting.authorized_extensions = 'txt'
-
-      store = FileStore::S3Store.new
-      s3_helper = store.instance_variable_get(:@s3_helper)
-      client = Aws::S3::Client.new(stub_responses: true)
-      s3_helper.stubs(:s3_client).returns(client)
-      Discourse.stubs(:store).returns(store)
-    end
-
-    it "should use local urls for private s3 uploads" do
-      SiteSetting.prevent_anons_from_downloading_files = true
-      UploadCreator.new(text_file, text_filename).create_for(user.id)
-      upload = Upload.last
-      cooked = PrettyText.cook("<a class=\"attachment\" href=\"#{upload.url}\">#{upload.original_filename}</a>")
-
-      expect(cooked).not_to match(/amazonaws/)
-      expect(cooked).to include(Discourse.store.get_local_path_for_upload(upload))
-
-      SiteSetting.prevent_anons_from_downloading_files = false
-
-      expect(PrettyText.cook("<a class=\"attachment\" href=\"#{upload.url}\">#{upload.original_filename}</a>")).to match(/amazonaws/)
-    end
-  end
-
   describe "Excerpt" do
 
     it "sanitizes attempts to inject invalid attributes" do

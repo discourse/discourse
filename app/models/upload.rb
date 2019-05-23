@@ -328,6 +328,38 @@ class Upload < ActiveRecord::Base
     problems
   end
 
+  def make_private
+    return false if !self.private?
+    return if self.private? && /private/.match(self.url)
+
+    move("original/", "private/")
+  end
+
+  def make_public
+    return false if self.private?
+    if !self.private? && /private/.match(self.url)
+      move("private/", "original/")
+    end
+  end
+
+  def move(from, to)
+    if SiteSetting.enable_s3_uploads
+      s3_source = self.url.sub Discourse.store.absolute_base_url + "/", ""
+      s3_destination = s3_source.dup.sub from, to
+      Discourse.store.move_file(s3_source, s3_destination)
+    end
+
+    local_store = FileStore::LocalStore.new
+    source = local_store.path_for(self)
+    if source
+      destination = source.dup.sub from, to
+      local_store.move_file(source, destination)
+    end
+
+    self.url.sub! from, to
+    self.save!
+    self.posts.find_each(&:rebake!)
+  end
 end
 
 # == Schema Information

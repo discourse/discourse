@@ -5,11 +5,23 @@ require_dependency 'file_store/base_store'
 
 RSpec.describe FileStore::BaseStore do
   fab!(:upload) { Fabricate(:upload, id: 9999, sha1: Digest::SHA1.hexdigest('9999')) }
+  fab!(:file_upload) { Fabricate(:upload, id: 9998, sha1: Digest::SHA1.hexdigest('9998'), extension: "pdf") }
 
   describe '#get_path_for_upload' do
     it 'should return the right path' do
       expect(FileStore::BaseStore.new.get_path_for_upload(upload))
         .to eq('original/2X/4/4170ac2a2782a1516fe9e13d7322ae482c1bd594.png')
+    end
+
+    it 'should return the right path for non-image uploads' do
+      expect(FileStore::BaseStore.new.get_path_for_upload(file_upload))
+        .to eq('original/2X/b/bc85daf847620bcb9f88a09dee8880d6677a7e9d.pdf')
+    end
+
+    it 'should return the right path for private non-image uploads' do
+      SiteSetting.prevent_anons_from_downloading_files = true
+      expect(FileStore::BaseStore.new.get_path_for_upload(file_upload))
+        .to eq('private/2X/b/bc85daf847620bcb9f88a09dee8880d6677a7e9d.pdf')
     end
 
     describe 'when Upload#extension has not been set' do

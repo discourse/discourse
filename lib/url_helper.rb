@@ -59,7 +59,9 @@ class UrlHelper
 
     url = absolute_without_cdn(url)
 
-    unless is_attachment && no_cdn
+    if is_attachment && no_cdn
+      url = Discourse.store.private_upload_url(uri.path)
+    else
       url = Discourse.store.cdn_url(url)
       url = local_cdn_url(url) if Discourse.store.external?
     end

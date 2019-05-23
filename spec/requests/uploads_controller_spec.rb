@@ -248,11 +248,11 @@ describe UploadsController do
         expect(response.status).to eq(200)
       end
 
-      it "returns presigned URL only for authed users when private uploads enabled" do
+      it "returns presigned URL only for authed users when private uploads are enabled" do
         SiteSetting.prevent_anons_from_downloading_files = true
         upload_file("spec.txt", "md")
         upload = Upload.last
-        upload_url = "/uploads/#{site}/#{upload.sha1}.#{upload.extension}"
+        upload_url = "/uploads/#{site}/private/1X/#{upload.sha1}.#{upload.extension}"
 
         get upload_url
 
@@ -262,9 +262,25 @@ describe UploadsController do
 
         # does not redirect to presigned S3 URL for private uploads for anons
         delete "/session/#{user.username}.json" # sign out
+
         get upload_url
 
         expect(response.status).to eq(404)
+      end
+
+      it "returns 404 when requesting a private upload from a non-private route" do
+        SiteSetting.prevent_anons_from_downloading_files = true
+        upload_file("spec.txt", "md")
+        upload = Upload.last
+
+        get "/uploads/#{site}/#{upload.sha1}.#{upload.extension}"
+        expect(response.response_code).to eq(404)
+
+        get "/uploads/#{site}/original/1X/#{upload.sha1}.#{upload.extension}"
+        expect(response.response_code).to eq(404)
+
+        get "/uploads/#{site}/#{upload.id}/#{upload.sha1}"
+        expect(response.response_code).to eq(404)
       end
     end
 

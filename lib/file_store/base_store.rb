@@ -30,6 +30,10 @@ module FileStore
       not_implemented
     end
 
+    def move_file(source, destination)
+      not_implemented
+    end
+
     def upload_path
       File.join("uploads", RailsMultisite::ConnectionManagement.current_db)
     end
@@ -110,11 +114,22 @@ module FileStore
           File.extname(upload.original_filename)
         end
 
-      get_path_for("original".freeze, upload.id, upload.sha1, extension)
+      if SiteSetting.prevent_anons_from_downloading_files
+        get_path_for("private".freeze, upload.id, upload.sha1, extension)
+      else
+        get_path_for("original".freeze, upload.id, upload.sha1, extension)
+      end
     end
 
     def get_local_path_for_upload(upload)
-      File.join(Discourse.base_uri, upload_path, get_path_for_upload(upload))
+      File.join(Discourse.base_uri, get_path_for_upload(upload))
+    end
+
+    def private_upload_url(path)
+      sha1 = File.basename(path, File.extname(path))
+      if upload = Upload.find_by(sha1: sha1)
+        get_local_path_for_upload(upload)
+      end
     end
 
     def get_path_for_optimized_image(optimized_image)

@@ -76,6 +76,8 @@ class UploadsController < ApplicationController
           return render_404 unless local_store.has_been_uploaded?(upload.url)
         end
 
+        return render_404 if upload.private? && !params[:private]
+
         opts = {
           filename: upload.original_filename,
           content_type: MiniMime.lookup_by_filename(upload.original_filename)&.content_type,

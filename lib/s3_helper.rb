@@ -79,6 +79,10 @@ class S3Helper
         options[:copy_source] = File.join(@s3_bucket_name, multisite_upload_path, source)
       end
     end
+
+    private_acl = /private\//.match(destination)
+    options[:acl] = private_acl ? "private" : "public-read"
+
     s3_bucket
       .object(destination)
       .copy_from(options)

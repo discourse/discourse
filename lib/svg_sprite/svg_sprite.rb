@@ -202,7 +202,7 @@ module SvgSprite
     ThemeField.where(type_id: ThemeField.types[:theme_upload_var], name: THEME_SPRITE_VAR_NAME, theme_id: Theme.transform_ids(theme_ids))
       .pluck(:upload_id).each do |upload_id|
 
-      upload = Upload.find(upload_id)
+      upload = Upload.find(upload_id) rescue nil
 
       if Discourse.store.external?
         external_copy = Discourse.store.download(upload) rescue nil

@@ -71,6 +71,14 @@ module FileStore
       @s3_helper.copy(source, destination)
     end
 
+    def move_file(source, destination)
+      obj = @s3_helper.object(source)
+      return unless obj.exists?
+
+      @s3_helper.copy(source, destination)
+      @s3_helper.remove(source)
+    end
+
     def has_been_uploaded?(url)
       return false if url.blank?
 
@@ -144,6 +152,10 @@ module FileStore
         list_missing(Upload.by_users, "original/")
         list_missing(OptimizedImage, "optimized/") unless skip_optimized
       end
+    end
+
+    def get_local_path_for_upload(upload)
+      File.join(Discourse.base_uri, upload_path, get_path_for_upload(upload))
     end
 
     private
