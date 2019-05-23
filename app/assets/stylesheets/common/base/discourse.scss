@@ -735,9 +735,9 @@ table {
 
 .broken-theme-alert {
   font-size: $base-font-size;
+  font-weight: bold;
   padding: 5px 0;
-  background: $danger;
-  width: 100%;
+  background: $danger-medium;
   text-align: center;
   z-index: z("max");
   color: $secondary;

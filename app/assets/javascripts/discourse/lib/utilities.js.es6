@@ -1,5 +1,6 @@
 import { escape } from "pretty-text/sanitizer";
 import toMarkdown from "discourse/lib/to-markdown";
+import { ajax } from "discourse/lib/ajax";
 
 const homepageSelector = "meta[name=discourse_current_homepage]";
 
@@ -666,7 +667,7 @@ function reportToLogster(name, error) {
     stacktrace: error.stack
   };
 
-  Ember.$.ajax("/logs" + "/report_js_error", {
+  ajax(`${Discourse.BaseUri}/logs/report_js_error`, {
     data,
     type: "POST",
     cache: false
@@ -676,15 +677,21 @@ function reportToLogster(name, error) {
 export function rescueThemeError(name, error, api) {
   console.error(`"${name}" error:`, error);
   reportToLogster(name, error);
+
   const currentUser = api.getCurrentUser();
-  if (!currentUser || !currentUser.get("admin")) {
+  if (!currentUser || !currentUser.admin) {
     return;
   }
+
+  const path = `${Discourse.BaseUri}/admin/customize/themes`;
   const message = I18n.t("themes.broken_theme_alert", {
-    theme: name
+    theme: name,
+    path: `<a href="${path}">${path}</a>`
   });
-  const html = `<div class="broken-theme-alert"><b>${message}</b></div>`;
-  Ember.$("body").prepend(html);
+  const alertDiv = document.createElement("div");
+  alertDiv.classList.add("broken-theme-alert");
+  alertDiv.innerHTML = message;
+  document.body.prepend(alertDiv);
 }
 
 // This prevents a mini racer crash
