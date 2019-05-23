@@ -471,7 +471,7 @@ def missing_uploads
         missing[:post_uploads].each do |id, uploads|
           post = Post.with_deleted.find_by(id: id)
           if post
-            puts "#{post.url} missing #{uploads.join(", ")}"
+            puts "#{post.full_url} missing #{uploads.join(", ")}"
           else
             puts "could not find post #{id}"
           end
