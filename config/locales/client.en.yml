@@ -1686,6 +1686,9 @@ en:
       moved_post: "<span>{{username}}</span> moved {{description}}"
       linked: "<span>{{username}}</span> {{description}}"
       granted_badge: "Earned '{{description}}'"
+      commit_approved:
+        one: "Your commit was approved"
+        other: "{{num_approved_commits}} of your commits were approved"
       topic_reminder: "<span>{{username}}</span> {{description}}"
       watching_first_post: "<span>New Topic</span> {{description}}"
 

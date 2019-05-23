@@ -17,6 +17,7 @@ const LIKED_TYPE = 5;
 const INVITED_TYPE = 8;
 const GROUP_SUMMARY_TYPE = 16;
 export const LIKED_CONSOLIDATED_TYPE = 19;
+const COMMIT_APPROVED_TYPE = 21;
 
 createWidget("notification-item", {
   tagName: "li",
@@ -116,6 +117,16 @@ createWidget("notification-item", {
       const count = data.inbox_count;
       const group_name = data.group_name;
       return I18n.t(scope, { count, group_name });
+    }
+
+    if (notificationType === COMMIT_APPROVED_TYPE) {
+      const num_approved_commits = data.num_approved_commits;
+
+      if (num_approved_commits == 1) {
+        return I18n.t(scope + '.one');
+      } else {
+        return I18n.t(scope + '.other', { num_approved_commits });
+      }
     }
 
     const username = formatUsername(data.display_username);
