@@ -258,6 +258,8 @@ widgetTest("handlebars d-icon", {
 });
 
 widgetTest("handlebars i18n", {
+  _translations: I18n.translations,
+
   template: `{{mount-widget widget="hbs-i18n-test" args=args}}`,
 
   beforeEach() {
@@ -268,13 +270,19 @@ widgetTest("handlebars i18n", {
         <a href title={{i18n "hbs_test0"}}>test</a>
       `
     });
-    I18n.extras = [
-      {
-        hbs_test0: "evil",
-        hbs_test1: "trout"
+    I18n.translations = {
+      en: {
+        js: {
+          hbs_test0: "evil",
+          hbs_test1: "trout"
+        }
       }
-    ];
+    };
     this.set("args", { key: "hbs_test1" });
+  },
+
+  afterEach() {
+    I18n.translations = this._translations;
   },
 
   test(assert) {
