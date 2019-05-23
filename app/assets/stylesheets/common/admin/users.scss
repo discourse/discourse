@@ -48,7 +48,6 @@
     width: 250px;
     float: left;
     margin-left: 12px;
-    overflow-x: auto;
     @media (max-width: $mobile-breakpoint) {
       width: 75%;
       float: right;
@@ -211,7 +210,6 @@
     .field,
     .value {
       width: unset;
-      max-width: 100%;
     }
     .select-kit {
       width: 300px;
