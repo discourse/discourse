@@ -106,7 +106,6 @@ module Jobs
     def user_list_export
       return enum_for(:user_list_export) unless block_given?
 
-      user_array = []
       user_field_ids = UserField.pluck(:id)
 
       condition = {}
