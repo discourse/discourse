@@ -54,4 +54,31 @@ describe ExtraLocalesController do
       end
     end
   end
+
+  describe ".bundle_js_hash" do
+    it "doesn't call bundle_js more than once for the same locale and bundle" do
+      I18n.locale = :de
+      ExtraLocalesController.expects(:bundle_js).with("admin").returns("admin_js DE").once
+      expected_hash_de = Digest::MD5.hexdigest("admin_js DE")
+
+      expect(ExtraLocalesController.bundle_js_hash("admin")).to eq(expected_hash_de)
+      expect(ExtraLocalesController.bundle_js_hash("admin")).to eq(expected_hash_de)
+
+      I18n.locale = :fr
+      ExtraLocalesController.expects(:bundle_js).with("admin").returns("admin_js FR").once
+      expected_hash_fr = Digest::MD5.hexdigest("admin_js FR")
+
+      expect(ExtraLocalesController.bundle_js_hash("admin")).to eq(expected_hash_fr)
+      expect(ExtraLocalesController.bundle_js_hash("admin")).to eq(expected_hash_fr)
+
+      I18n.locale = :de
+      expect(ExtraLocalesController.bundle_js_hash("admin")).to eq(expected_hash_de)
+
+      ExtraLocalesController.expects(:bundle_js).with("wizard").returns("wizard_js DE").once
+      expected_hash_de = Digest::MD5.hexdigest("wizard_js DE")
+
+      expect(ExtraLocalesController.bundle_js_hash("wizard")).to eq(expected_hash_de)
+      expect(ExtraLocalesController.bundle_js_hash("wizard")).to eq(expected_hash_de)
+    end
+  end
 end
