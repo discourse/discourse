@@ -3,3 +3,7 @@
     <%= PrettyText.cook(I18n.t("login_required.#{SiteSetting.invite_only? ? "welcome_message_invite_only" : "welcome_message"}", title: SiteSetting.title)).html_safe %>
   </div>
 <% end %>
+
+<% content_for :head do %>
+  <%= raw crawlable_meta_data(title: SiteSetting.title, description: SiteSetting.site_description) %>
+<% end %>
