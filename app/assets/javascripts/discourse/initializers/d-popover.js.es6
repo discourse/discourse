@@ -12,7 +12,9 @@ export default {
     router.on("routeWillChange", hidePopover);
 
     $("#main")
-      .on("click.d-popover mouseenter.d-popover", POPOVER_SELECTORS, e => showPopover(e))
+      .on("click.d-popover mouseenter.d-popover", POPOVER_SELECTORS, e =>
+        showPopover(e)
+      )
       .on("mouseleave.d-popover", POPOVER_SELECTORS, e => hidePopover(e));
   }
 };

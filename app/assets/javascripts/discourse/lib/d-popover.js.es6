@@ -16,7 +16,8 @@ const D_ARROW_HEIGHT = 10;
 
 const D_HORIZONTAL_MARGIN = 5;
 
-export const POPOVER_SELECTORS = "[data-html-popover], [data-html-tooltip], [data-popover], [data-tooltip]";
+export const POPOVER_SELECTORS =
+  "[data-html-popover], [data-html-tooltip], [data-popover], [data-tooltip]";
 
 export function hidePopover() {
   getPopover()
