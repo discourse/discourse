@@ -28,7 +28,7 @@ componentTest("updating the content refreshes the list", {
 
   async test(assert) {
     assert.equal(
-      this.get("subject")
+      this.subject
         .header()
         .name(),
       "pinned"
@@ -37,7 +37,7 @@ componentTest("updating the content refreshes the list", {
     await this.set("pinned", false);
 
     assert.equal(
-      this.get("subject")
+      this.subject
         .header()
         .name(),
       "unpinned"

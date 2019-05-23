@@ -6,7 +6,7 @@ export default Ember.Component.extend({
 
   refreshChart() {
     const ctx = this.$()[0].getContext("2d");
-    const model = this.get("model");
+    const model = this.model;
     const rawData = this.get("model.data");
 
     var data = {
@@ -16,7 +16,7 @@ export default Ember.Component.extend({
           data: rawData.map(r => r.y),
           label: model.get("title"),
           backgroundColor: `rgba(200,220,240,${
-            this.get("type") === "bar" ? 1 : 0.3
+            this.type === "bar" ? 1 : 0.3
           })`,
           borderColor: "#08C"
         }
@@ -24,7 +24,7 @@ export default Ember.Component.extend({
     };
 
     const config = {
-      type: this.get("type"),
+      type: this.type,
       data: data,
       options: {
         responsive: true,

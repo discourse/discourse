@@ -23,7 +23,7 @@ export default Ember.Mixin.create({
   // Validate required fields
   @computed("userFields.@each.value")
   userFieldsValidation() {
-    let userFields = this.get("userFields");
+    let userFields = this.userFields;
     if (userFields) {
       userFields = userFields.filterBy("field.required");
     }

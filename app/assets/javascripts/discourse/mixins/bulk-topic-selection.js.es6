@@ -13,12 +13,12 @@ export default Ember.Mixin.create({
   actions: {
     toggleBulkSelect() {
       this.toggleProperty("bulkSelectEnabled");
-      this.get("selected").clear();
+      this.selected.clear();
     },
 
     dismissRead(operationType) {
       const self = this,
-        selected = this.get("selected");
+        selected = this.selected;
 
       let operation;
       if (operationType === "posts") {

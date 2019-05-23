@@ -76,7 +76,7 @@ export default Ember.Component.extend(CardContentsBase, CleansUp, {
     },
 
     cancelFilter() {
-      const postStream = this.get("postStream");
+      const postStream = this.postStream;
       postStream.cancelFilter();
       postStream.refresh();
       this._close();

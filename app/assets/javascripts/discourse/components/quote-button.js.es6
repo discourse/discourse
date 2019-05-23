@@ -10,16 +10,16 @@ export default Ember.Component.extend({
   _reselected: false,
 
   _hideButton() {
-    this.get("quoteState").clear();
+    this.quoteState.clear();
     this.set("visible", false);
   },
 
   _selectionChanged() {
-    const quoteState = this.get("quoteState");
+    const quoteState = this.quoteState;
 
     const selection = window.getSelection();
     if (selection.isCollapsed) {
-      if (this.get("visible")) {
+      if (this.visible) {
         this._hideButton();
       }
       return;
@@ -39,7 +39,7 @@ export default Ember.Component.extend({
       postId = postId || $ancestor.closest(".boxed, .reply").data("post-id");
 
       if ($ancestor.closest(".contents").length === 0 || !postId) {
-        if (this.get("visible")) {
+        if (this.visible) {
           this._hideButton();
         }
         return;
@@ -157,7 +157,7 @@ export default Ember.Component.extend({
   },
 
   click() {
-    const { postId, buffer } = this.get("quoteState");
+    const { postId, buffer } = this.quoteState;
     this.attrs.selectText(postId, buffer).then(() => this._hideButton());
     return false;
   }

@@ -16,7 +16,7 @@ export default Ember.Component.extend({
 
   actions: {
     closeMessage() {
-      this.closeMessage(this.get("message"));
+      this.closeMessage(this.message);
     }
   }
 });

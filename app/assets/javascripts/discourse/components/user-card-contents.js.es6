@@ -133,7 +133,7 @@ export default Ember.Component.extend(
 
     @observes("user.card_background_upload_url")
     addBackground() {
-      if (!this.get("allowBackgrounds")) {
+      if (!this.allowBackgrounds) {
         return;
       }
 
@@ -188,19 +188,19 @@ export default Ember.Component.extend(
       },
 
       cancelFilter() {
-        const postStream = this.get("postStream");
+        const postStream = this.postStream;
         postStream.cancelFilter();
         postStream.refresh();
         this._close();
       },
 
       togglePosts() {
-        this.togglePosts(this.get("user"));
+        this.togglePosts(this.user);
         this._close();
       },
 
       deleteUser() {
-        this.get("user").delete();
+        this.user.delete();
         this._close();
       },
 

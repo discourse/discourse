@@ -107,16 +107,16 @@ export default Ember.Controller.extend(CanCheckEmails, {
   },
 
   groupAdded(added) {
-    this.get("model")
+    this.model
       .groupAdded(added)
       .catch(() => bootbox.alert(I18n.t("generic_error")));
   },
 
   groupRemoved(groupId) {
-    this.get("model")
+    this.model
       .groupRemoved(groupId)
       .then(() => {
-        if (groupId === this.get("originalPrimaryGroupId")) {
+        if (groupId === this.originalPrimaryGroupId) {
           this.set("originalPrimaryGroupId", null);
         }
       })
@@ -125,65 +125,65 @@ export default Ember.Controller.extend(CanCheckEmails, {
 
   actions: {
     impersonate() {
-      return this.get("model").impersonate();
+      return this.model.impersonate();
     },
     logOut() {
-      return this.get("model").logOut();
+      return this.model.logOut();
     },
     resetBounceScore() {
-      return this.get("model").resetBounceScore();
+      return this.model.resetBounceScore();
     },
     approve() {
-      return this.get("model").approve();
+      return this.model.approve();
     },
     deactivate() {
-      return this.get("model").deactivate();
+      return this.model.deactivate();
     },
     sendActivationEmail() {
-      return this.get("model").sendActivationEmail();
+      return this.model.sendActivationEmail();
     },
     activate() {
-      return this.get("model").activate();
+      return this.model.activate();
     },
     revokeAdmin() {
-      return this.get("model").revokeAdmin();
+      return this.model.revokeAdmin();
     },
     grantAdmin() {
-      return this.get("model").grantAdmin();
+      return this.model.grantAdmin();
     },
     revokeModeration() {
-      return this.get("model").revokeModeration();
+      return this.model.revokeModeration();
     },
     grantModeration() {
-      return this.get("model").grantModeration();
+      return this.model.grantModeration();
     },
     saveTrustLevel() {
-      return this.get("model").saveTrustLevel();
+      return this.model.saveTrustLevel();
     },
     restoreTrustLevel() {
-      return this.get("model").restoreTrustLevel();
+      return this.model.restoreTrustLevel();
     },
     lockTrustLevel(locked) {
-      return this.get("model").lockTrustLevel(locked);
+      return this.model.lockTrustLevel(locked);
     },
     unsilence() {
-      return this.get("model").unsilence();
+      return this.model.unsilence();
     },
     silence() {
-      return this.get("model").silence();
+      return this.model.silence();
     },
     deleteAllPosts() {
-      return this.get("model").deleteAllPosts();
+      return this.model.deleteAllPosts();
     },
     anonymize() {
-      return this.get("model").anonymize();
+      return this.model.anonymize();
     },
     disableSecondFactor() {
-      return this.get("model").disableSecondFactor();
+      return this.model.disableSecondFactor();
     },
 
     clearPenaltyHistory() {
-      const user = this.get("model");
+      const user = this.model;
       const path = `/admin/users/${user.get("id")}/penalty_history`;
 
       return ajax(path, { type: "DELETE" })
@@ -194,27 +194,27 @@ export default Ember.Controller.extend(CanCheckEmails, {
     destroy() {
       const postCount = this.get("model.post_count");
       if (postCount <= 5) {
-        return this.get("model").destroy({ deletePosts: true });
+        return this.model.destroy({ deletePosts: true });
       } else {
-        return this.get("model").destroy();
+        return this.model.destroy();
       }
     },
 
     viewActionLogs() {
-      this.get("adminTools").showActionLogs(this, {
+      this.adminTools.showActionLogs(this, {
         target_user: this.get("model.username")
       });
     },
     showSuspendModal() {
-      this.get("adminTools").showSuspendModal(this.get("model"));
+      this.adminTools.showSuspendModal(this.model);
     },
     unsuspend() {
-      this.get("model")
+      this.model
         .unsuspend()
         .catch(popupAjaxError);
     },
     showSilenceModal() {
-      this.get("adminTools").showSilenceModal(this.get("model"));
+      this.adminTools.showSilenceModal(this.model);
     },
 
     saveUsername(newUsername) {
@@ -260,13 +260,13 @@ export default Ember.Controller.extend(CanCheckEmails, {
     },
 
     generateApiKey() {
-      this.get("model").generateApiKey();
+      this.model.generateApiKey();
     },
 
     saveCustomGroups() {
-      const currentIds = this.get("customGroupIds");
-      const bufferedIds = this.get("customGroupIdsBuffer");
-      const availableGroups = this.get("availableGroups");
+      const currentIds = this.customGroupIds;
+      const bufferedIds = this.customGroupIdsBuffer;
+      const availableGroups = this.availableGroups;
 
       bufferedIds
         .filter(id => !currentIds.includes(id))
@@ -294,7 +294,7 @@ export default Ember.Controller.extend(CanCheckEmails, {
     },
 
     resetPrimaryGroup() {
-      this.set("model.primary_group_id", this.get("originalPrimaryGroupId"));
+      this.set("model.primary_group_id", this.originalPrimaryGroupId);
     },
 
     regenerateApiKey() {
@@ -304,7 +304,7 @@ export default Ember.Controller.extend(CanCheckEmails, {
         I18n.t("yes_value"),
         result => {
           if (result) {
-            this.get("model").generateApiKey();
+            this.model.generateApiKey();
           }
         }
       );
@@ -317,7 +317,7 @@ export default Ember.Controller.extend(CanCheckEmails, {
         I18n.t("yes_value"),
         result => {
           if (result) {
-            this.get("model").revokeApiKey();
+            this.model.revokeApiKey();
           }
         }
       );

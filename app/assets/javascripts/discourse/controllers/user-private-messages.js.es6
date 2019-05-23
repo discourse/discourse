@@ -39,10 +39,10 @@ export default Ember.Controller.extend({
   },
 
   bulkOperation(operation) {
-    const selected = this.get("selected");
+    const selected = this.selected;
     var params = { type: operation };
-    if (this.get("isGroup")) {
-      params.group = this.get("groupFilter");
+    if (this.isGroup) {
+      params.group = this.groupFilter;
     }
 
     Topic.bulkOperation(selected, params).then(

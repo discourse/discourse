@@ -6,14 +6,14 @@ const WatchedWord = Discourse.Model.extend({
       "/admin/logs/watched_words" + (this.id ? "/" + this.id : "") + ".json",
       {
         type: this.id ? "PUT" : "POST",
-        data: { word: this.get("word"), action_key: this.get("action") },
+        data: { word: this.word, action_key: this.action },
         dataType: "json"
       }
     );
   },
 
   destroy() {
-    return ajax("/admin/logs/watched_words/" + this.get("id") + ".json", {
+    return ajax("/admin/logs/watched_words/" + this.id + ".json", {
       type: "DELETE"
     });
   }

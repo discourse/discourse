@@ -50,7 +50,7 @@ const Discourse = Ember.Application.extend(FocusEvent, {
 
   @observes("_docTitle", "hasFocus", "contextCount", "notificationCount")
   _titleChanged() {
-    let title = this.get("_docTitle") || Discourse.SiteSettings.title;
+    let title = this._docTitle || Discourse.SiteSettings.title;
 
     // if we change this we can trigger changes on document.title
     // only set if changed.
@@ -58,7 +58,7 @@ const Discourse = Ember.Application.extend(FocusEvent, {
       $("title").text(title);
     }
 
-    var displayCount = this.get("displayCount");
+    var displayCount = this.displayCount;
     if (displayCount > 0 && !Discourse.User.currentProp("dynamic_favicon")) {
       title = `(${displayCount}) ${title}`;
     }
@@ -70,8 +70,8 @@ const Discourse = Ember.Application.extend(FocusEvent, {
   displayCount() {
     return Discourse.User.current() &&
       Discourse.User.currentProp("title_count_mode") === "notifications"
-      ? this.get("notificationCount")
-      : this.get("contextCount");
+      ? this.notificationCount
+      : this.contextCount;
   },
 
   @observes("contextCount", "notificationCount")
@@ -86,7 +86,7 @@ const Discourse = Ember.Application.extend(FocusEvent, {
         url = Discourse.getURL("/favicon/proxied?" + encodeURIComponent(url));
       }
 
-      var displayCount = this.get("displayCount");
+      var displayCount = this.displayCount;
 
       new window.Favcount(url).set(displayCount);
     }
@@ -105,26 +105,26 @@ const Discourse = Ember.Application.extend(FocusEvent, {
   },
 
   updateNotificationCount(count) {
-    if (!this.get("hasFocus")) {
+    if (!this.hasFocus) {
       this.set("notificationCount", count);
     }
   },
 
   incrementBackgroundContextCount() {
-    if (!this.get("hasFocus")) {
+    if (!this.hasFocus) {
       this.set("backgroundNotify", true);
-      this.set("contextCount", (this.get("contextCount") || 0) + 1);
+      this.set("contextCount", (this.contextCount || 0) + 1);
     }
   },
 
   @observes("hasFocus")
   resetCounts() {
-    if (this.get("hasFocus") && this.get("backgroundNotify")) {
+    if (this.hasFocus && this.backgroundNotify) {
       this.set("contextCount", 0);
     }
     this.set("backgroundNotify", false);
 
-    if (this.get("hasFocus")) {
+    if (this.hasFocus) {
       this.set("notificationCount", 0);
     }
   },
@@ -198,17 +198,17 @@ const Discourse = Ember.Application.extend(FocusEvent, {
 
   assetVersion: Ember.computed({
     get() {
-      return this.get("currentAssetVersion");
+      return this.currentAssetVersion;
     },
     set(key, val) {
       if (val) {
-        if (this.get("currentAssetVersion")) {
+        if (this.currentAssetVersion) {
           this.set("desiredAssetVersion", val);
         } else {
           this.set("currentAssetVersion", val);
         }
       }
-      return this.get("currentAssetVersion");
+      return this.currentAssetVersion;
     }
   })
 }).create();

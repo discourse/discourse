@@ -31,7 +31,7 @@ export default Ember.Component.extend(
     @on("init")
     _initialize() {
       this.resumable = new Resumable({
-        target: Discourse.getURL(this.get("target")),
+        target: Discourse.getURL(this.target),
         maxFiles: 1, // only 1 file at a time
         headers: {
           "X-CSRF-Token": document.querySelector("meta[name='csrf-token']")
@@ -100,23 +100,23 @@ export default Ember.Component.extend(
       if (isUploading) {
         return progress + " %";
       } else {
-        return this.get("uploadText");
+        return this.uploadText;
       }
     },
 
     buildBuffer(buffer) {
-      const icon = this.get("isUploading") ? "times" : "upload";
+      const icon = this.isUploading ? "times" : "upload";
       buffer.push(iconHTML(icon));
-      buffer.push("<span class='ru-label'>" + this.get("text") + "</span>");
+      buffer.push("<span class='ru-label'>" + this.text + "</span>");
       buffer.push(
         "<span class='ru-progress' style='width:" +
-          this.get("progress") +
+          this.progress +
           "%'></span>"
       );
     },
 
     click() {
-      if (this.get("isUploading")) {
+      if (this.isUploading) {
         this.resumable.cancel();
         Ember.run.later(() => this._reset());
         return false;

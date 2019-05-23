@@ -9,7 +9,7 @@ export default Ember.Component.extend({
     }
 
     this.$().on("keydown.discourse-create-account", e => {
-      if (!this.get("disabled") && e.keyCode === 13) {
+      if (!this.disabled && e.keyCode === 13) {
         e.preventDefault();
         e.stopPropagation();
         this.action();

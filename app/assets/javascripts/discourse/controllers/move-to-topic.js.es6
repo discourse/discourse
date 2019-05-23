@@ -69,9 +69,9 @@ export default Ember.Controller.extend(ModalFunctionality, {
     if (isPrivateMessage) {
       this.set(
         "selection",
-        this.get("canSplitToPM") ? "new_message" : "existing_message"
+        this.canSplitToPM ? "new_message" : "existing_message"
       );
-    } else if (!this.get("canSplitTopic")) {
+    } else if (!this.canSplitTopic) {
       this.set("selection", "existing_topic");
       Ember.run.next(() => $("#choose-topic-title").focus());
     }
@@ -94,7 +94,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
 
   actions: {
     performMove() {
-      this.get("moveTypes").forEach(type => {
+      this.moveTypes.forEach(type => {
         if (this.get(type)) {
           this.send("movePostsTo", type);
         }
@@ -107,15 +107,15 @@ export default Ember.Controller.extend(ModalFunctionality, {
       let mergeOptions, moveOptions;
 
       if (type === "existingTopic") {
-        mergeOptions = { destination_topic_id: this.get("selectedTopicId") };
+        mergeOptions = { destination_topic_id: this.selectedTopicId };
         moveOptions = Object.assign(
           { post_ids: this.get("topicController.selectedPostIds") },
           mergeOptions
         );
       } else if (type === "existingMessage") {
         mergeOptions = {
-          destination_topic_id: this.get("selectedTopicId"),
-          participants: this.get("participants"),
+          destination_topic_id: this.selectedTopicId,
+          participants: this.participants,
           archetype: "private_message"
         };
         moveOptions = Object.assign(
@@ -125,17 +125,17 @@ export default Ember.Controller.extend(ModalFunctionality, {
       } else if (type === "newTopic") {
         mergeOptions = {};
         moveOptions = {
-          title: this.get("topicName"),
+          title: this.topicName,
           post_ids: this.get("topicController.selectedPostIds"),
-          category_id: this.get("categoryId"),
-          tags: this.get("tags")
+          category_id: this.categoryId,
+          tags: this.tags
         };
       } else {
         mergeOptions = {};
         moveOptions = {
-          title: this.get("topicName"),
+          title: this.topicName,
           post_ids: this.get("topicController.selectedPostIds"),
-          tags: this.get("tags"),
+          tags: this.tags,
           archetype: "private_message"
         };
       }
@@ -147,7 +147,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
       promise
         .then(result => {
           this.send("closeModal");
-          this.get("topicController").send("toggleMultiSelect");
+          this.topicController.send("toggleMultiSelect");
           DiscourseURL.routeTo(result.url);
         })
         .catch(xhr => {

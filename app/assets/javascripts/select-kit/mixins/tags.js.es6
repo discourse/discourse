@@ -6,7 +6,7 @@ export default Ember.Mixin.create({
   willDestroyElement() {
     this._super(...arguments);
 
-    const searchDebounce = this.get("searchDebounce");
+    const searchDebounce = this.searchDebounce;
     if (searchDebounce) run.cancel(searchDebounce);
   },
 
@@ -28,7 +28,7 @@ export default Ember.Mixin.create({
   },
 
   validateCreate(term) {
-    if (this.get("hasReachedMaximum") || !this.site.get("can_create_tag")) {
+    if (this.hasReachedMaximum || !this.site.get("can_create_tag")) {
       return false;
     }
 
@@ -38,7 +38,7 @@ export default Ember.Mixin.create({
       .trim()
       .toLowerCase();
 
-    if (!term.length || this.get("termMatchesForbidden")) {
+    if (!term.length || this.termMatchesForbidden) {
       return false;
     }
 
@@ -50,11 +50,11 @@ export default Ember.Mixin.create({
       return string === undefined ? undefined : string.toLowerCase();
     };
 
-    const inCollection = this.get("collectionComputedContent")
+    const inCollection = this.collectionComputedContent
       .map(c => toLowerCaseOrUndefined(get(c, "id")))
       .includes(term);
 
-    const inSelection = this.get("selection")
+    const inSelection = this.selection
       .map(s => toLowerCaseOrUndefined(get(s, "value")))
       .includes(term);
 

@@ -27,16 +27,16 @@ export default Ember.Controller.extend({
 
   @observes("newUsername")
   checkTaken() {
-    let newUsername = this.get("newUsername");
+    let newUsername = this.newUsername;
 
-    if (newUsername && newUsername.length < this.get("minLength")) {
+    if (newUsername && newUsername.length < this.minLength) {
       this.set("errorMessage", I18n.t("user.name.too_short"));
     } else {
       this.set("taken", false);
       this.set("errorMessage", null);
 
-      if (Ember.isEmpty(this.get("newUsername"))) return;
-      if (this.get("unchanged")) return;
+      if (Ember.isEmpty(this.newUsername)) return;
+      if (this.unchanged) return;
 
       Discourse.User.checkUsername(
         newUsername,
@@ -60,7 +60,7 @@ export default Ember.Controller.extend({
 
   actions: {
     changeUsername() {
-      if (this.get("saveDisabled")) {
+      if (this.saveDisabled) {
         return;
       }
 
@@ -71,12 +71,12 @@ export default Ember.Controller.extend({
         result => {
           if (result) {
             this.set("saving", true);
-            this.get("model")
-              .changeUsername(this.get("newUsername"))
+            this.model
+              .changeUsername(this.newUsername)
               .then(() => {
                 DiscourseURL.redirectTo(
                   userPath(
-                    this.get("newUsername").toLowerCase() + "/preferences"
+                    this.newUsername.toLowerCase() + "/preferences"
                   )
                 );
               })

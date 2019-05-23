@@ -15,14 +15,14 @@ export default Ember.Controller.extend(ModalFunctionality, {
     addMembers() {
       this.set("loading", true);
 
-      const model = this.get("model");
+      const model = this.model;
       const usernames = model.get("usernames");
       if (Ember.isEmpty(usernames)) {
         return;
       }
       let promise;
 
-      if (this.get("setAsOwner")) {
+      if (this.setAsOwner) {
         promise = model.addOwners(usernames, true);
       } else {
         promise = model.addMembers(usernames, true);

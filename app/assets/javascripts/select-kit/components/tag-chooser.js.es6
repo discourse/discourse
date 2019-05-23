@@ -19,11 +19,11 @@ export default MultiSelectComponent.extend(TagsMixin, {
   init() {
     this._super(...arguments);
 
-    if (this.get("allowCreate") !== false) {
+    if (this.allowCreate !== false) {
       this.set("allowCreate", this.site.get("can_create_tag"));
     }
 
-    if (!this.get("blacklist")) {
+    if (!this.blacklist) {
       this.set("blacklist", []);
     }
 
@@ -38,12 +38,12 @@ export default MultiSelectComponent.extend(TagsMixin, {
       });
     });
 
-    if (!this.get("unlimitedTagCount")) {
+    if (!this.unlimitedTagCount) {
       this.set(
         "maximum",
         parseInt(
-          this.get("limit") ||
-            this.get("maximum") ||
+          this.limit ||
+            this.maximum ||
             this.get("siteSettings.max_tags_per_topic")
         )
       );
@@ -76,41 +76,41 @@ export default MultiSelectComponent.extend(TagsMixin, {
     onExpand() {
       this.set(
         "searchDebounce",
-        run.debounce(this, this._prepareSearch, this.get("filter"), 200)
+        run.debounce(this, this._prepareSearch, this.filter, 200)
       );
     },
 
     onDeselect() {
       this.set(
         "searchDebounce",
-        run.debounce(this, this._prepareSearch, this.get("filter"), 200)
+        run.debounce(this, this._prepareSearch, this.filter, 200)
       );
     },
 
     onSelect() {
       this.set(
         "searchDebounce",
-        run.debounce(this, this._prepareSearch, this.get("filter"), 50)
+        run.debounce(this, this._prepareSearch, this.filter, 50)
       );
     }
   },
 
   _prepareSearch(query) {
-    const selectedTags = makeArray(this.get("values")).filter(t => t);
+    const selectedTags = makeArray(this.values).filter(t => t);
 
     const data = {
       q: query,
       limit: this.get("siteSettings.max_tag_search_results"),
-      categoryId: this.get("categoryId")
+      categoryId: this.categoryId
     };
 
-    if (selectedTags.length || this.get("blacklist").length) {
+    if (selectedTags.length || this.blacklist.length) {
       data.selected_tags = _.uniq(
-        selectedTags.concat(this.get("blacklist"))
+        selectedTags.concat(this.blacklist)
       ).slice(0, 100);
     }
 
-    if (!this.get("everyTag")) data.filterForInput = true;
+    if (!this.everyTag) data.filterForInput = true;
 
     this.searchTags("/tags/filter/search", data, this._transformJson);
   },

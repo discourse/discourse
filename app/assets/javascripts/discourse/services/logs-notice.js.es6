@@ -12,7 +12,7 @@ const LogsNotice = Ember.Object.extend({
 
   @on("init")
   _setup() {
-    if (!this.get("isActivated")) return;
+    if (!this.isActivated) return;
 
     const text = this.keyValueStore.getItem(LOGS_NOTICE_KEY);
     if (text) this.set("text", text);
@@ -72,7 +72,7 @@ const LogsNotice = Ember.Object.extend({
 
   @observes("text")
   _updateKeyValueStore() {
-    this.keyValueStore.setItem(LOGS_NOTICE_KEY, this.get("text"));
+    this.keyValueStore.setItem(LOGS_NOTICE_KEY, this.text);
   },
 
   @computed(

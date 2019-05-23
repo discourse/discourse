@@ -56,7 +56,7 @@ export default Ember.Component.extend({
 
   @computed("currentTargetName", "fieldName", "theme.theme_fields.@each.error")
   error(target, fieldName) {
-    return this.get("theme").getError(target, fieldName);
+    return this.theme.getError(target, fieldName);
   },
 
   actions: {
@@ -75,9 +75,9 @@ export default Ember.Component.extend({
     addField(name) {
       if (!name) return;
       name = name.replace(/[^a-zA-Z0-9-_/]/g, "");
-      this.get("theme").setField(this.get("currentTargetName"), name, "");
+      this.theme.setField(this.currentTargetName, name, "");
       this.setProperties({ newFieldName: "", addingField: false });
-      this.fieldAdded(this.get("currentTargetName"), name);
+      this.fieldAdded(this.currentTargetName, name);
     },
 
     toggleMaximize: function() {

@@ -21,7 +21,7 @@ export default Discourse.Model.extend({
   ),
 
   filterBy(opts) {
-    if (this.get("loaded") && this.get("filter") === opts.filter) {
+    if (this.loaded && this.filter === opts.filter) {
       return Ember.RSVP.resolve();
     }
 
@@ -41,13 +41,13 @@ export default Discourse.Model.extend({
 
   findItems() {
     const self = this;
-    if (this.get("loading") || !this.get("canLoadMore")) {
+    if (this.loading || !this.canLoadMore) {
       return Ember.RSVP.reject();
     }
 
     this.set("loading", true);
 
-    return ajax(this.get("url"), { cache: false })
+    return ajax(this.url, { cache: false })
       .then(function(result) {
         if (result) {
           const posts = result.map(function(post) {

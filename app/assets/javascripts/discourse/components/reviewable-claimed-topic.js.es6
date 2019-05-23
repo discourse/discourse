@@ -12,7 +12,7 @@ export default Ember.Component.extend({
 
   actions: {
     unclaim() {
-      ajax(`/reviewable_claimed_topics/${this.get("topicId")}`, {
+      ajax(`/reviewable_claimed_topics/${this.topicId}`, {
         method: "DELETE"
       }).then(() => {
         this.set("claimedBy", null);
@@ -23,7 +23,7 @@ export default Ember.Component.extend({
       let claim = this.store.createRecord("reviewable-claimed-topic");
 
       claim
-        .save({ topic_id: this.get("topicId") })
+        .save({ topic_id: this.topicId })
         .then(() => {
           this.set("claimedBy", this.currentUser);
         })

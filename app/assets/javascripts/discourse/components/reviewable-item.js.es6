@@ -73,7 +73,7 @@ export default Ember.Component.extend({
   },
 
   _performConfirmed(action) {
-    let reviewable = this.get("reviewable");
+    let reviewable = this.reviewable;
 
     let performAction = () => {
       let version = reviewable.get("version");
@@ -122,7 +122,7 @@ export default Ember.Component.extend({
   },
 
   _penalize(adminToolMethod, reviewable, performAction) {
-    let adminTools = this.get("adminTools");
+    let adminTools = this.adminTools;
     if (adminTools) {
       let createdBy = reviewable.get("target_created_by");
       let postId = reviewable.get("post_id");
@@ -157,7 +157,7 @@ export default Ember.Component.extend({
       });
 
       this.set("updating", true);
-      return this.get("reviewable")
+      return this.reviewable
         .update(updates)
         .then(() => this.set("editing", false))
         .catch(popupAjaxError)
@@ -176,7 +176,7 @@ export default Ember.Component.extend({
     },
 
     perform(action) {
-      if (this.get("updating")) {
+      if (this.updating) {
         return;
       }
 

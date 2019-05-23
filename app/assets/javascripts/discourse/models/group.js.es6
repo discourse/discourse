@@ -37,19 +37,19 @@ const Group = RestModel.extend({
   },
 
   findMembers(params) {
-    if (Ember.isEmpty(this.get("name"))) {
+    if (Ember.isEmpty(this.name)) {
       return;
     }
 
     const offset = Math.min(
-      this.get("user_count"),
-      Math.max(this.get("offset"), 0)
+      this.user_count,
+      Math.max(this.offset, 0)
     );
 
     return Group.loadMembers(
-      this.get("name"),
+      this.name,
       offset,
-      this.get("limit"),
+      this.limit,
       params
     ).then(result => {
       var ownerIds = {};
@@ -72,7 +72,7 @@ const Group = RestModel.extend({
 
   removeOwner(member) {
     var self = this;
-    return ajax("/admin/groups/" + this.get("id") + "/owners.json", {
+    return ajax("/admin/groups/" + this.id + "/owners.json", {
       type: "DELETE",
       data: { user_id: member.get("id") }
     }).then(function() {
@@ -82,7 +82,7 @@ const Group = RestModel.extend({
   },
 
   removeMember(member, params) {
-    return ajax("/groups/" + this.get("id") + "/members.json", {
+    return ajax("/groups/" + this.id + "/members.json", {
       type: "DELETE",
       data: { user_id: member.get("id") }
     }).then(() => {
@@ -91,7 +91,7 @@ const Group = RestModel.extend({
   },
 
   addMembers(usernames, filter) {
-    return ajax("/groups/" + this.get("id") + "/members.json", {
+    return ajax("/groups/" + this.id + "/members.json", {
       type: "PUT",
       data: { usernames: usernames }
     }).then(response => {
@@ -104,7 +104,7 @@ const Group = RestModel.extend({
   },
 
   addOwners(usernames, filter) {
-    return ajax(`/admin/groups/${this.get("id")}/owners.json`, {
+    return ajax(`/admin/groups/${this.id}/owners.json`, {
       type: "PUT",
       data: { group: { usernames: usernames } }
     }).then(response => {
@@ -127,15 +127,15 @@ const Group = RestModel.extend({
 
   @computed("flair_bg_color")
   flairBackgroundHexColor() {
-    return this.get("flair_bg_color")
-      ? this.get("flair_bg_color").replace(new RegExp("[^0-9a-fA-F]", "g"), "")
+    return this.flair_bg_color
+      ? this.flair_bg_color.replace(new RegExp("[^0-9a-fA-F]", "g"), "")
       : null;
   },
 
   @computed("flair_color")
   flairHexColor() {
-    return this.get("flair_color")
-      ? this.get("flair_color").replace(new RegExp("[^0-9a-fA-F]", "g"), "")
+    return this.flair_color
+      ? this.flair_color.replace(new RegExp("[^0-9a-fA-F]", "g"), "")
       : null;
   },
 
@@ -151,14 +151,14 @@ const Group = RestModel.extend({
 
   @observes("visibility_level", "canEveryoneMention")
   _updateAllowMembershipRequests() {
-    if (this.get("isPrivate") || !this.get("canEveryoneMention")) {
+    if (this.isPrivate || !this.canEveryoneMention) {
       this.set("allow_membership_requests", false);
     }
   },
 
   @observes("visibility_level")
   _updatePublic() {
-    if (this.get("isPrivate")) {
+    if (this.isPrivate) {
       this.set("public", false);
       this.set("allow_membership_requests", false);
     }
@@ -166,33 +166,33 @@ const Group = RestModel.extend({
 
   asJSON() {
     const attrs = {
-      name: this.get("name"),
-      mentionable_level: this.get("mentionable_level"),
-      messageable_level: this.get("messageable_level"),
-      visibility_level: this.get("visibility_level"),
-      automatic_membership_email_domains: this.get("emailDomains"),
+      name: this.name,
+      mentionable_level: this.mentionable_level,
+      messageable_level: this.messageable_level,
+      visibility_level: this.visibility_level,
+      automatic_membership_email_domains: this.emailDomains,
       automatic_membership_retroactive: !!this.get(
         "automatic_membership_retroactive"
       ),
-      title: this.get("title"),
-      primary_group: !!this.get("primary_group"),
-      grant_trust_level: this.get("grant_trust_level"),
-      incoming_email: this.get("incoming_email"),
-      flair_url: this.get("flair_url"),
-      flair_bg_color: this.get("flairBackgroundHexColor"),
-      flair_color: this.get("flairHexColor"),
-      bio_raw: this.get("bio_raw"),
-      public_admission: this.get("public_admission"),
-      public_exit: this.get("public_exit"),
-      allow_membership_requests: this.get("allow_membership_requests"),
-      full_name: this.get("full_name"),
-      default_notification_level: this.get("default_notification_level"),
-      membership_request_template: this.get("membership_request_template")
+      title: this.title,
+      primary_group: !!this.primary_group,
+      grant_trust_level: this.grant_trust_level,
+      incoming_email: this.incoming_email,
+      flair_url: this.flair_url,
+      flair_bg_color: this.flairBackgroundHexColor,
+      flair_color: this.flairHexColor,
+      bio_raw: this.bio_raw,
+      public_admission: this.public_admission,
+      public_exit: this.public_exit,
+      allow_membership_requests: this.allow_membership_requests,
+      full_name: this.full_name,
+      default_notification_level: this.default_notification_level,
+      membership_request_template: this.membership_request_template
     };
 
-    if (!this.get("id")) {
-      attrs["usernames"] = this.get("usernames");
-      attrs["owner_usernames"] = this.get("ownerUsernames");
+    if (!this.id) {
+      attrs["usernames"] = this.usernames;
+      attrs["owner_usernames"] = this.ownerUsernames;
     }
 
     return attrs;
@@ -214,21 +214,21 @@ const Group = RestModel.extend({
   },
 
   save() {
-    return ajax(`/groups/${this.get("id")}`, {
+    return ajax(`/groups/${this.id}`, {
       type: "PUT",
       data: { group: this.asJSON() }
     });
   },
 
   destroy() {
-    if (!this.get("id")) {
+    if (!this.id) {
       return;
     }
-    return ajax("/admin/groups/" + this.get("id"), { type: "DELETE" });
+    return ajax("/admin/groups/" + this.id, { type: "DELETE" });
   },
 
   findLogs(offset, filters) {
-    return ajax(`/groups/${this.get("name")}/logs.json`, {
+    return ajax(`/groups/${this.name}/logs.json`, {
       data: { offset, filters }
     }).then(results => {
       return Ember.Object.create({
@@ -251,7 +251,7 @@ const Group = RestModel.extend({
       data.category_id = parseInt(opts.categoryId);
     }
 
-    return ajax(`/groups/${this.get("name")}/${type}.json`, { data }).then(
+    return ajax(`/groups/${this.name}/${type}.json`, { data }).then(
       posts => {
         return posts.map(p => {
           p.user = User.create(p.user);
@@ -265,14 +265,14 @@ const Group = RestModel.extend({
 
   setNotification(notification_level, userId) {
     this.set("group_user.notification_level", notification_level);
-    return ajax(`/groups/${this.get("name")}/notifications`, {
+    return ajax(`/groups/${this.name}/notifications`, {
       data: { notification_level, user_id: userId },
       type: "POST"
     });
   },
 
   requestMembership(reason) {
-    return ajax(`/groups/${this.get("name")}/request_membership`, {
+    return ajax(`/groups/${this.name}/request_membership`, {
       type: "POST",
       data: { reason: reason }
     });

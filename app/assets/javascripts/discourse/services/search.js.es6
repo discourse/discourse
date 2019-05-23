@@ -11,7 +11,7 @@ export default Ember.Object.extend({
 
   @observes("term")
   _sethighlightTerm() {
-    this.set("highlightTerm", this.get("term"));
+    this.set("highlightTerm", this.term);
   },
 
   @computed("searchContext")

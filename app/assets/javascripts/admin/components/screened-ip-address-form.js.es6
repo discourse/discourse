@@ -50,11 +50,11 @@ export default Ember.Component.extend({
 
   actions: {
     submit() {
-      if (!this.get("formSubmitted")) {
+      if (!this.formSubmitted) {
         this.set("formSubmitted", true);
         const screenedIpAddress = ScreenedIpAddress.create({
-          ip_address: this.get("ip_address"),
-          action_name: this.get("actionName")
+          ip_address: this.ip_address,
+          action_name: this.actionName
         });
         screenedIpAddress
           .save()

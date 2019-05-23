@@ -130,7 +130,7 @@ export default (filterArg, params) => {
     },
 
     setupController(controller, model) {
-      const topics = this.get("topics"),
+      const topics = this.topics,
         category = model.category,
         canCreateTopic = topics.get("can_create_topic"),
         canCreateTopicOnCategory =

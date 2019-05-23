@@ -74,13 +74,13 @@ export default Ember.Component.extend({
   didReceiveAttrs() {
     this._super(...arguments);
 
-    if (this.get("report")) {
+    if (this.report) {
       this._renderReport(
-        this.get("report"),
-        this.get("forcedModes"),
-        this.get("currentMode")
+        this.report,
+        this.forcedModes,
+        this.currentMode
       );
-    } else if (this.get("dataSourceName")) {
+    } else if (this.dataSourceName) {
       this._fetchReport();
     }
   },
@@ -199,8 +199,8 @@ export default Ember.Component.extend({
 
       this.attrs.onRefresh({
         type: this.get("model.type"),
-        startDate: this.get("startDate"),
-        endDate: this.get("endDate"),
+        startDate: this.startDate,
+        endDate: this.endDate,
         filters: customFilters
       });
     },
@@ -208,8 +208,8 @@ export default Ember.Component.extend({
     refreshReport() {
       this.attrs.onRefresh({
         type: this.get("model.type"),
-        startDate: this.get("startDate"),
-        endDate: this.get("endDate"),
+        startDate: this.startDate,
+        endDate: this.endDate,
         filters: this.get("filters.customFilters")
       });
     },
@@ -219,8 +219,8 @@ export default Ember.Component.extend({
 
       exportEntity("report", {
         name: this.get("model.type"),
-        start_date: this.get("startDate"),
-        end_date: this.get("endDate"),
+        start_date: this.startDate,
+        end_date: this.endDate,
         category_id: customFilters.category,
         group_id: customFilters.group
       }).then(outputExportResult);
@@ -249,16 +249,16 @@ export default Ember.Component.extend({
 
     const sort = r => {
       if (r.length > 1) {
-        return r.findBy("type", this.get("dataSourceName"));
+        return r.findBy("type", this.dataSourceName);
       } else {
         return r;
       }
     };
 
-    if (!this.get("startDate") || !this.get("endDate")) {
+    if (!this.startDate || !this.endDate) {
       report = sort(filteredReports)[0];
     } else {
-      const reportKey = this.get("reportKey");
+      const reportKey = this.reportKey;
 
       report = sort(
         filteredReports.filter(r => r.report_key.includes(reportKey))
@@ -273,8 +273,8 @@ export default Ember.Component.extend({
 
     this._renderReport(
       report,
-      this.get("forcedModes"),
-      this.get("currentMode")
+      this.forcedModes,
+      this.currentMode
     );
   },
 
@@ -317,22 +317,22 @@ export default Ember.Component.extend({
         }
       };
 
-      ReportLoader.enqueue(this.get("dataSourceName"), payload.data, callback);
+      ReportLoader.enqueue(this.dataSourceName, payload.data, callback);
     });
   },
 
   _buildPayload(facets) {
     let payload = { data: { cache: true, facets } };
 
-    if (this.get("startDate")) {
+    if (this.startDate) {
       payload.data.start_date = moment
-        .utc(this.get("startDate"), "YYYY-MM-DD")
+        .utc(this.startDate, "YYYY-MM-DD")
         .toISOString();
     }
 
-    if (this.get("endDate")) {
+    if (this.endDate) {
       payload.data.end_date = moment
-        .utc(this.get("endDate"), "YYYY-MM-DD")
+        .utc(this.endDate, "YYYY-MM-DD")
         .toISOString();
     }
 

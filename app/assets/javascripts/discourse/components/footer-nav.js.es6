@@ -137,20 +137,20 @@ const FooterNavComponent = MountWidget.extend(
     },
 
     goBack() {
-      this.set("currentRouteIndex", this.get("currentRouteIndex") - 1);
+      this.set("currentRouteIndex", this.currentRouteIndex - 1);
       this.backForwardClicked = true;
       window.history.back();
     },
 
     goForward() {
-      this.set("currentRouteIndex", this.get("currentRouteIndex") + 1);
+      this.set("currentRouteIndex", this.currentRouteIndex + 1);
       this.backForwardClicked = true;
       window.history.forward();
     },
 
     @observes("currentRouteIndex")
     setBackForward() {
-      let index = this.get("currentRouteIndex");
+      let index = this.currentRouteIndex;
 
       this.set("canGoBack", index > 1 || document.referrer ? true : false);
       this.set("canGoForward", index < this.routeHistory.length ? true : false);

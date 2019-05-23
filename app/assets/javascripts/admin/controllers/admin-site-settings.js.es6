@@ -8,18 +8,18 @@ export default Ember.Controller.extend({
 
   filterContentNow(category) {
     // If we have no content, don't bother filtering anything
-    if (!!Ember.isEmpty(this.get("allSiteSettings"))) return;
+    if (!!Ember.isEmpty(this.allSiteSettings)) return;
 
     let filter;
-    if (this.get("filter")) {
-      filter = this.get("filter")
+    if (this.filter) {
+      filter = this.filter
         .toLowerCase()
         .trim();
     }
 
-    if ((!filter || 0 === filter.length) && !this.get("onlyOverridden")) {
-      this.set("visibleSiteSettings", this.get("allSiteSettings"));
-      if (this.get("categoryNameKey") === "all_results") {
+    if ((!filter || 0 === filter.length) && !this.onlyOverridden) {
+      this.set("visibleSiteSettings", this.allSiteSettings);
+      if (this.categoryNameKey === "all_results") {
         this.transitionToRoute("adminSiteSettings");
       }
       return;
@@ -33,9 +33,9 @@ export default Ember.Controller.extend({
     const matchesGroupedByCategory = [all];
 
     const matches = [];
-    this.get("allSiteSettings").forEach(settingsCategory => {
+    this.allSiteSettings.forEach(settingsCategory => {
       const siteSettings = settingsCategory.siteSettings.filter(item => {
-        if (this.get("onlyOverridden") && !item.get("overridden")) return false;
+        if (this.onlyOverridden && !item.get("overridden")) return false;
         if (filter) {
           const setting = item.get("setting").toLowerCase();
           return (
@@ -76,7 +76,7 @@ export default Ember.Controller.extend({
   },
 
   filterContent: debounce(function() {
-    if (this.get("_skipBounce")) {
+    if (this._skipBounce) {
       this.set("_skipBounce", false);
     } else {
       this.filterContentNow();

@@ -28,7 +28,7 @@ export default Ember.Component.extend(
 
     @observes("lastShownAt")
     bounce() {
-      if (this.get("lastShownAt")) {
+      if (this.lastShownAt) {
         var $elem = this.$();
         if (!this.animateAttribute) {
           this.animateAttribute =

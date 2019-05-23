@@ -23,7 +23,7 @@ function initializePollUIBuilder(api) {
       showPollBuilder() {
         showModal("poll-ui-builder").set(
           "toolbarEvent",
-          this.get("toolbarEvent")
+          this.toolbarEvent
         );
       }
     }

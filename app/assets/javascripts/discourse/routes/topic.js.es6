@@ -51,9 +51,9 @@ const TopicRoute = Discourse.Route.extend({
     showInvite() {
       let invitePanelTitle;
 
-      if (this.get("isPM")) {
+      if (this.isPM) {
         invitePanelTitle = "topic.invite_private.title";
-      } else if (this.get("invitingToTopic")) {
+      } else if (this.invitingToTopic) {
         invitePanelTitle = "topic.invite_reply.title";
       } else {
         invitePanelTitle = "user.invited.create";

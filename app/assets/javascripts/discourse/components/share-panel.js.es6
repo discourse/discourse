@@ -40,7 +40,7 @@ export default Ember.Component.extend({
   didInsertElement() {
     this._super(...arguments);
 
-    const shareUrl = this.get("shareUrl");
+    const shareUrl = this.shareUrl;
     const $linkInput = this.$(".topic-share-url");
     const $linkForTouch = this.$(".topic-share-url-for-touch a");
 
@@ -67,7 +67,7 @@ export default Ember.Component.extend({
   actions: {
     share(source) {
       Sharing.shareSource(source, {
-        url: this.get("shareUrl"),
+        url: this.shareUrl,
         title: this.get("topic.title")
       });
     }

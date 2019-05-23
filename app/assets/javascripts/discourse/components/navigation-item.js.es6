@@ -23,7 +23,7 @@ export default Ember.Component.extend(
     },
 
     buildBuffer(buffer) {
-      const content = this.get("content");
+      const content = this.content;
 
       let href = content.get("href");
 
@@ -36,7 +36,7 @@ export default Ember.Component.extend(
       }
 
       if (
-        !this.get("active") &&
+        !this.active &&
         this.currentUser &&
         this.currentUser.trust_level > 0 &&
         (content.get("name") === "new" || content.get("name") === "unread") &&
@@ -48,7 +48,7 @@ export default Ember.Component.extend(
       }
 
       buffer.push(
-        `<a href='${href}'` + (this.get("active") ? 'class="active"' : "") + `>`
+        `<a href='${href}'` + (this.active ? 'class="active"' : "") + `>`
       );
 
       if (content.get("hasIcon")) {

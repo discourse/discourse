@@ -49,7 +49,7 @@ export default Ember.Component.extend({
   },
 
   _renderPreview: debounce(function() {
-    const markup = this.get("markup");
+    const markup = this.markup;
 
     if (markup) {
       cookAsync(markup).then(result => {
@@ -104,7 +104,7 @@ export default Ember.Component.extend({
     }
 
     let format = options.format;
-    if (timeInferred && this.get("formats").includes(format)) {
+    if (timeInferred && this.formats.includes(format)) {
       format = "LL";
     }
 
@@ -137,7 +137,7 @@ export default Ember.Component.extend({
     }
 
     let format = options.format;
-    if (timeInferred && this.get("formats").includes(format)) {
+    if (timeInferred && this.formats.includes(format)) {
       format = "LL";
     }
 
@@ -342,11 +342,11 @@ export default Ember.Component.extend({
     },
 
     save() {
-      const markup = this.get("markup");
+      const markup = this.markup;
 
       if (markup) {
         this._closeModal();
-        this.get("toolbarEvent").addText(markup);
+        this.toolbarEvent.addText(markup);
       }
     },
 
@@ -376,7 +376,7 @@ export default Ember.Component.extend({
           format: "YYYY-MM-DD",
           reposition: false,
           firstDay: 1,
-          defaultDate: moment(this.get("date"), this.dateFormat).toDate(),
+          defaultDate: moment(this.date, this.dateFormat).toDate(),
           setDefaultDate: true,
           keyboardInput: false,
           i18n: {
@@ -389,11 +389,11 @@ export default Ember.Component.extend({
           onSelect: date => {
             const formattedDate = moment(date).format("YYYY-MM-DD");
 
-            if (this.get("fromSelected")) {
+            if (this.fromSelected) {
               this.set("date", formattedDate);
             }
 
-            if (this.get("toSelected")) {
+            if (this.toSelected) {
               this.set("toDate", formattedDate);
             }
           }

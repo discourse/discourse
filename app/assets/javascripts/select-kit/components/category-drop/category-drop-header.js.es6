@@ -57,7 +57,7 @@ export default ComboBoxSelectBoxHeaderComponent.extend({
   didRender() {
     this._super(...arguments);
 
-    this.$().attr("style", this.get("categoryStyle"));
-    this.$(".caret-icon").attr("style", this.get("categoryStyle"));
+    this.$().attr("style", this.categoryStyle);
+    this.$(".caret-icon").attr("style", this.categoryStyle);
   }
 });

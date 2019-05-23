@@ -24,14 +24,14 @@ export default Ember.Mixin.create(ModalFunctionality, {
   },
 
   penalize(cb) {
-    let before = this.get("before");
+    let before = this.before;
     let promise = before ? before() : Ember.RSVP.resolve();
 
     return promise
       .then(() => cb())
       .then(result => {
         this.send("closeModal");
-        let callback = this.get("successCallback");
+        let callback = this.successCallback;
         if (callback) {
           callback(result);
         }

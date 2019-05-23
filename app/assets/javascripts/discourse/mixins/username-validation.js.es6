@@ -11,7 +11,7 @@ export default Ember.Mixin.create({
 
   fetchExistingUsername: debounce(function() {
     const self = this;
-    Discourse.User.checkUsername(null, this.get("accountEmail")).then(function(
+    Discourse.User.checkUsername(null, this.accountEmail).then(function(
       result
     ) {
       if (
@@ -29,7 +29,7 @@ export default Ember.Mixin.create({
   basicUsernameValidation(accountUsername) {
     this.set("uniqueUsernameValidation", null);
 
-    if (accountUsername && accountUsername === this.get("prefilledUsername")) {
+    if (accountUsername && accountUsername === this.prefilledUsername) {
       return InputValidation.create({
         ok: true,
         reason: I18n.t("user.username.prefilled")
@@ -52,7 +52,7 @@ export default Ember.Mixin.create({
     }
 
     // If too long
-    if (accountUsername.length > this.get("maxUsernameLength")) {
+    if (accountUsername.length > this.maxUsernameLength) {
       return InputValidation.create({
         failed: true,
         reason: I18n.t("user.username.too_long")
@@ -69,16 +69,16 @@ export default Ember.Mixin.create({
 
   shouldCheckUsernameAvailability: function() {
     return (
-      !Ember.isEmpty(this.get("accountUsername")) &&
-      this.get("accountUsername").length >= this.get("minUsernameLength")
+      !Ember.isEmpty(this.accountUsername) &&
+      this.accountUsername.length >= this.minUsernameLength
     );
   },
 
   checkUsernameAvailability: debounce(function() {
     if (this.shouldCheckUsernameAvailability()) {
       return Discourse.User.checkUsername(
-        this.get("accountUsername"),
-        this.get("accountEmail")
+        this.accountUsername,
+        this.accountEmail
       ).then(result => {
         this.set("isDeveloper", false);
         if (result.available) {
@@ -120,8 +120,8 @@ export default Ember.Mixin.create({
   // Actually wait for the async name check before we're 100% sure we're good to go
   @computed("uniqueUsernameValidation", "basicUsernameValidation")
   usernameValidation() {
-    const basicValidation = this.get("basicUsernameValidation");
-    const uniqueUsername = this.get("uniqueUsernameValidation");
+    const basicValidation = this.basicUsernameValidation;
+    const uniqueUsername = this.uniqueUsernameValidation;
     return uniqueUsername ? uniqueUsername : basicValidation;
   }
 });

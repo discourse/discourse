@@ -68,8 +68,8 @@ export default Ember.Controller.extend(PreferencesTabController, {
   actions: {
     save() {
       this.set("saved", false);
-      return this.get("model")
-        .save(this.get("saveAttrNames"))
+      return this.model
+        .save(this.saveAttrNames)
         .then(() => {
           this.set("saved", true);
         })

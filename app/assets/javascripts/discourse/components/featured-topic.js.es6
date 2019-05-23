@@ -5,7 +5,7 @@ export default Ember.Component.extend({
     const $target = $(e.target);
     if ($target.closest(".last-posted-at").length) {
       this.appEvents.trigger("topic-entrance:show", {
-        topic: this.get("topic"),
+        topic: this.topic,
         position: $target.offset()
       });
       return false;

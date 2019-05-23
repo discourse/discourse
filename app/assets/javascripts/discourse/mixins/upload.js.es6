@@ -82,10 +82,10 @@ export default Ember.Mixin.create({
         this.validateUploadedFilesOptions()
       );
       const isValid = validateUploadedFiles(data.files, opts);
-      const type = this.get("type");
+      const type = this.type;
       let form = type ? { type } : {};
-      if (this.get("data")) {
-        form = $.extend(form, this.get("data"));
+      if (this.data) {
+        form = $.extend(form, this.data);
       }
       data.formData = form;
       this.setProperties({ uploadProgress: 0, uploading: isValid });
@@ -107,7 +107,7 @@ export default Ember.Mixin.create({
 
   _destroy: function() {
     this.messageBus &&
-      this.messageBus.unsubscribe("/uploads/" + this.get("type"));
+      this.messageBus.unsubscribe("/uploads/" + this.type);
 
     const $upload = this.$();
     try {

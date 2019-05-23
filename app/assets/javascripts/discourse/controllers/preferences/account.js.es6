@@ -134,13 +134,13 @@ export default Ember.Controller.extend(
       save() {
         this.set("saved", false);
 
-        const model = this.get("model");
+        const model = this.model;
 
-        model.set("name", this.get("newNameInput"));
-        model.set("title", this.get("newTitleInput"));
+        model.set("name", this.newNameInput);
+        model.set("title", this.newTitleInput);
 
         return model
-          .save(this.get("saveAttrNames"))
+          .save(this.saveAttrNames)
           .then(() => {
             this.set("saved", true);
           })
@@ -148,12 +148,12 @@ export default Ember.Controller.extend(
       },
 
       changePassword() {
-        if (!this.get("passwordProgress")) {
+        if (!this.passwordProgress) {
           this.set(
             "passwordProgress",
             I18n.t("user.change_password.in_progress")
           );
-          return this.get("model")
+          return this.model
             .changePassword()
             .then(() => {
               // password changed
@@ -176,7 +176,7 @@ export default Ember.Controller.extend(
         this.set("deleting", true);
         const self = this,
           message = I18n.t("user.delete_account_confirm"),
-          model = this.get("model"),
+          model = this.model,
           buttons = [
             {
               label: I18n.t("cancel"),
@@ -210,7 +210,7 @@ export default Ember.Controller.extend(
       },
 
       revokeAccount(account) {
-        const model = this.get("model");
+        const model = this.model;
         this.set("revoking", true);
         model
           .revokeAssociatedAccount(account.name)
@@ -228,7 +228,7 @@ export default Ember.Controller.extend(
       },
 
       toggleShowAllAuthTokens() {
-        this.set("showAllAuthTokens", !this.get("showAllAuthTokens"));
+        this.set("showAllAuthTokens", !this.showAllAuthTokens);
       },
 
       revokeAuthToken(token) {

@@ -23,7 +23,7 @@ export default Ember.Component.extend(
     },
 
     buildBuffer(buffer) {
-      buffer.push(iconHTML(this.get("icon"), { class: this.get("class") }));
+      buffer.push(iconHTML(this.icon, { class: this.class }));
       buffer.push(
         I18n.t(`admin.web_hooks.delivery_status.${this.get("status.name")}`)
       );

@@ -17,10 +17,10 @@ componentTest("updating the content refreshes the list", {
   },
 
   async test(assert) {
-    await this.get("subject").expand();
+    await this.subject.expand();
 
     assert.equal(
-      this.get("subject")
+      this.subject
         .rowByValue(1)
         .name(),
       "BEFORE"
@@ -29,7 +29,7 @@ componentTest("updating the content refreshes the list", {
     await this.set("content", [{ id: 1, name: "AFTER" }]);
 
     assert.equal(
-      this.get("subject")
+      this.subject
         .rowByValue(1)
         .name(),
       "AFTER"
@@ -46,19 +46,19 @@ componentTest("accepts a value by reference", {
   },
 
   async test(assert) {
-    await this.get("subject").expand();
+    await this.subject.expand();
 
     assert.equal(
-      this.get("subject")
+      this.subject
         .selectedRow()
         .name(),
       "robin",
       "it highlights the row corresponding to the value"
     );
 
-    await this.get("subject").selectRowByValue(1);
+    await this.subject.selectRowByValue(1);
 
-    assert.equal(this.get("value"), 1, "it mutates the value");
+    assert.equal(this.value, 1, "it mutates the value");
   }
 });
 
@@ -67,7 +67,7 @@ componentTest("no default icon", {
 
   test(assert) {
     assert.equal(
-      this.get("subject")
+      this.subject
         .header()
         .icon().length,
       0,
@@ -80,11 +80,11 @@ componentTest("default search icon", {
   template: "{{single-select filterable=true}}",
 
   async test(assert) {
-    await this.get("subject").expand();
+    await this.subject.expand();
 
     assert.ok(
       exists(
-        this.get("subject")
+        this.subject
           .filter()
           .icon()
       ),
@@ -97,11 +97,11 @@ componentTest("with no search icon", {
   template: "{{single-select filterable=true filterIcon=null}}",
 
   async test(assert) {
-    await this.get("subject").expand();
+    await this.subject.expand();
 
     assert.notOk(
       exists(
-        this.get("subject")
+        this.subject
           .filter()
           .icon()
       ),
@@ -114,10 +114,10 @@ componentTest("custom search icon", {
   template: '{{single-select filterable=true filterIcon="shower"}}',
 
   async test(assert) {
-    await this.get("subject").expand();
+    await this.subject.expand();
 
     assert.ok(
-      this.get("subject")
+      this.subject
         .filter()
         .icon()
         .hasClass("d-icon-shower"),
@@ -129,13 +129,13 @@ componentTest("custom search icon", {
 componentTest("is expandable", {
   template: "{{single-select}}",
   async test(assert) {
-    await this.get("subject").expand();
+    await this.subject.expand();
 
-    assert.ok(this.get("subject").isExpanded());
+    assert.ok(this.subject.isExpanded());
 
-    await this.get("subject").collapse();
+    await this.subject.collapse();
 
-    assert.notOk(this.get("subject").isExpanded());
+    assert.notOk(this.subject.isExpanded());
   }
 });
 
@@ -149,10 +149,10 @@ componentTest("accepts custom value/name keys", {
   },
 
   async test(assert) {
-    await this.get("subject").expand();
+    await this.subject.expand();
 
     assert.equal(
-      this.get("subject")
+      this.subject
         .selectedRow()
         .name(),
       "robin"
@@ -170,7 +170,7 @@ componentTest("doesn’t render collection content before first expand", {
   async test(assert) {
     assert.notOk(exists(find(".select-kit-collection")));
 
-    await this.get("subject").expand();
+    await this.subject.expand();
 
     assert.ok(exists(find(".select-kit-collection")));
   }
@@ -184,19 +184,19 @@ componentTest("dynamic headerText", {
   },
 
   async test(assert) {
-    await this.get("subject").expand();
+    await this.subject.expand();
 
     assert.equal(
-      this.get("subject")
+      this.subject
         .header()
         .name(),
       "robin"
     );
 
-    await this.get("subject").selectRowByValue(2);
+    await this.subject.selectRowByValue(2);
 
     assert.equal(
-      this.get("subject")
+      this.subject
         .header()
         .name(),
       "regis",
@@ -216,10 +216,10 @@ componentTest("supports custom row template", {
   },
 
   async test(assert) {
-    await this.get("subject").expand();
+    await this.subject.expand();
 
     assert.equal(
-      this.get("subject")
+      this.subject
         .rowByValue(1)
         .el()
         .html()
@@ -241,10 +241,10 @@ componentTest("supports converting select value to integer", {
   },
 
   async test(assert) {
-    await this.get("subject").expand();
+    await this.subject.expand();
 
     assert.equal(
-      this.get("subject")
+      this.subject
         .selectedRow()
         .name(),
       "régis"
@@ -253,7 +253,7 @@ componentTest("supports converting select value to integer", {
     await this.set("value", 1);
 
     assert.equal(
-      this.get("subject")
+      this.subject
         .selectedRow()
         .name(),
       "robin",
@@ -274,10 +274,10 @@ componentTest("supports converting string as boolean to boolean", {
   },
 
   async test(assert) {
-    await this.get("subject").expand();
+    await this.subject.expand();
 
     assert.equal(
-      this.get("subject")
+      this.subject
         .selectedRow()
         .name(),
       "ASC"
@@ -286,7 +286,7 @@ componentTest("supports converting string as boolean to boolean", {
     await this.set("value", false);
 
     assert.equal(
-      this.get("subject")
+      this.subject
         .selectedRow()
         .name(),
       "DESC",
@@ -304,65 +304,65 @@ componentTest("supports keyboard events", {
 
   skip: true,
   async test(assert) {
-    await this.get("subject").expand();
-    await this.get("subject").keyboard("down");
+    await this.subject.expand();
+    await this.subject.keyboard("down");
 
     assert.equal(
-      this.get("subject")
+      this.subject
         .highlightedRow()
         .title(),
       "regis",
       "the next row is highlighted"
     );
 
-    await this.get("subject").keyboard("down");
+    await this.subject.keyboard("down");
 
     assert.equal(
-      this.get("subject")
+      this.subject
         .highlightedRow()
         .title(),
       "robin",
       "it returns to the first row"
     );
 
-    await this.get("subject").keyboard("up");
+    await this.subject.keyboard("up");
 
     assert.equal(
-      this.get("subject")
+      this.subject
         .highlightedRow()
         .title(),
       "regis",
       "it highlights the last row"
     );
 
-    await this.get("subject").keyboard("enter");
+    await this.subject.keyboard("enter");
 
     assert.equal(
-      this.get("subject")
+      this.subject
         .selectedRow()
         .title(),
       "regis",
       "it selects the row when pressing enter"
     );
     assert.notOk(
-      this.get("subject").isExpanded(),
+      this.subject.isExpanded(),
       "it collapses the select box when selecting a row"
     );
 
-    await this.get("subject").expand();
-    await this.get("subject").keyboard("escape");
+    await this.subject.expand();
+    await this.subject.keyboard("escape");
 
     assert.notOk(
-      this.get("subject").isExpanded(),
+      this.subject.isExpanded(),
       "it collapses the select box"
     );
 
-    await this.get("subject").expand();
-    await this.get("subject").fillInFilter("regis");
-    await this.get("subject").keyboard("tab");
+    await this.subject.expand();
+    await this.subject.fillInFilter("regis");
+    await this.subject.keyboard("tab");
 
     assert.notOk(
-      this.get("subject").isExpanded(),
+      this.subject.isExpanded(),
       "it collapses the select box when selecting a row"
     );
   }
@@ -382,7 +382,7 @@ componentTest("with allowInitialValueMutation", {
 
   test(assert) {
     assert.equal(
-      this.get("value"),
+      this.value,
       "1",
       "it mutates the value on initial rendering"
     );
@@ -402,11 +402,11 @@ componentTest("support appending content through plugin api", {
     this.set("content", [{ id: "1", name: "robin" }]);
   },
   async test(assert) {
-    await this.get("subject").expand();
+    await this.subject.expand();
 
-    assert.equal(this.get("subject").rows().length, 2);
+    assert.equal(this.subject.rows().length, 2);
     assert.equal(
-      this.get("subject")
+      this.subject
         .rowByIndex(1)
         .name(),
       "regis"
@@ -436,11 +436,11 @@ componentTest("support modifying content through plugin api", {
   },
 
   async test(assert) {
-    await this.get("subject").expand();
+    await this.subject.expand();
 
-    assert.equal(this.get("subject").rows().length, 3);
+    assert.equal(this.subject.rows().length, 3);
     assert.equal(
-      this.get("subject")
+      this.subject
         .rowByIndex(1)
         .name(),
       "sam"
@@ -464,11 +464,11 @@ componentTest("support prepending content through plugin api", {
   },
 
   async test(assert) {
-    await this.get("subject").expand();
+    await this.subject.expand();
 
-    assert.equal(this.get("subject").rows().length, 2);
+    assert.equal(this.subject.rows().length, 2);
     assert.equal(
-      this.get("subject")
+      this.subject
         .rowByIndex(0)
         .name(),
       "regis"
@@ -496,13 +496,13 @@ componentTest("support modifying on select behavior through plugin api", {
   },
 
   async test(assert) {
-    await this.get("subject").expand();
-    await this.get("subject").selectRowByValue(1);
+    await this.subject.expand();
+    await this.subject.selectRowByValue(1);
 
     assert.equal(find(".on-select-test").html(), "1");
 
-    await this.get("subject").expand();
-    await this.get("subject").selectRowByValue(2);
+    await this.subject.expand();
+    await this.subject.selectRowByValue(2);
 
     assert.equal(
       find(".on-select-test").html(),
@@ -529,10 +529,10 @@ componentTest("support modifying on select none behavior through plugin api", {
   },
 
   async test(assert) {
-    await this.get("subject").expand();
-    await this.get("subject").selectRowByValue(1);
-    await this.get("subject").expand();
-    await this.get("subject").selectNoneRow();
+    await this.subject.expand();
+    await this.subject.selectRowByValue(1);
+    await this.subject.expand();
+    await this.subject.selectNoneRow();
 
     assert.equal(find(".on-select-none-test").html(), "NONE");
 
@@ -545,14 +545,14 @@ componentTest("with nameChanges", {
 
   beforeEach() {
     this.set("robin", { id: "1", name: "robin" });
-    this.set("content", [this.get("robin")]);
+    this.set("content", [this.robin]);
   },
 
   async test(assert) {
-    await this.get("subject").expand();
+    await this.subject.expand();
 
     assert.equal(
-      this.get("subject")
+      this.subject
         .header()
         .name(),
       "robin"
@@ -561,7 +561,7 @@ componentTest("with nameChanges", {
     await this.set("robin.name", "robin2");
 
     assert.equal(
-      this.get("subject")
+      this.subject
         .header()
         .name(),
       "robin2"
@@ -577,16 +577,16 @@ componentTest("with null value", {
   },
 
   async test(assert) {
-    await this.get("subject").expand();
+    await this.subject.expand();
 
     assert.equal(
-      this.get("subject")
+      this.subject
         .header()
         .name(),
       "robin"
     );
     assert.equal(
-      this.get("subject")
+      this.subject
         .header()
         .value(),
       undefined
@@ -602,7 +602,7 @@ componentTest("with collection header", {
   },
 
   async test(assert) {
-    await this.get("subject").expand();
+    await this.subject.expand();
 
     assert.ok(exists(".collection-header h2"));
   }
@@ -617,7 +617,7 @@ componentTest("with title", {
 
   test(assert) {
     assert.equal(
-      this.get("subject")
+      this.subject
         .header()
         .title(),
       "My title"
@@ -643,7 +643,7 @@ componentTest("support modifying header computed content through plugin api", {
 
   test(assert) {
     assert.equal(
-      this.get("subject")
+      this.subject
         .header()
         .title(),
       "Not so evil"
@@ -661,10 +661,10 @@ componentTest("with limitMatches", {
   },
 
   async test(assert) {
-    await this.get("subject").expand();
+    await this.subject.expand();
 
     assert.equal(
-      this.get("subject")
+      this.subject
         .el()
         .find(".select-kit-row").length,
       2
@@ -681,17 +681,17 @@ componentTest("with minimum", {
   },
 
   async test(assert) {
-    await this.get("subject").expand();
+    await this.subject.expand();
 
     assert.equal(
-      this.get("subject").validationMessage(),
+      this.subject.validationMessage(),
       "Select at least 1 item."
     );
 
-    await this.get("subject").selectRowByValue("sam");
+    await this.subject.selectRowByValue("sam");
 
     assert.equal(
-      this.get("subject")
+      this.subject
         .header()
         .label(),
       "sam"
@@ -709,14 +709,14 @@ componentTest("with minimumLabel", {
   },
 
   async test(assert) {
-    await this.get("subject").expand();
+    await this.subject.expand();
 
-    assert.equal(this.get("subject").validationMessage(), "min 1");
+    assert.equal(this.subject.validationMessage(), "min 1");
 
-    await this.get("subject").selectRowByValue("jeff");
+    await this.subject.selectRowByValue("jeff");
 
     assert.equal(
-      this.get("subject")
+      this.subject
         .header()
         .label(),
       "jeff"
@@ -732,12 +732,12 @@ componentTest("with accents in filter", {
   },
 
   async test(assert) {
-    await this.get("subject").expand();
-    await this.get("subject").fillInFilter("jéff");
+    await this.subject.expand();
+    await this.subject.fillInFilter("jéff");
 
-    assert.equal(this.get("subject").rows().length, 1);
+    assert.equal(this.subject.rows().length, 1);
     assert.equal(
-      this.get("subject")
+      this.subject
         .rowByIndex(0)
         .name(),
       "jeff"
@@ -753,12 +753,12 @@ componentTest("with accents in content", {
   },
 
   async test(assert) {
-    await this.get("subject").expand();
-    await this.get("subject").fillInFilter("jeff");
+    await this.subject.expand();
+    await this.subject.fillInFilter("jeff");
 
-    assert.equal(this.get("subject").rows().length, 1);
+    assert.equal(this.subject.rows().length, 1);
     assert.equal(
-      this.get("subject")
+      this.subject
         .rowByIndex(0)
         .name(),
       "jéff"
@@ -772,12 +772,12 @@ componentTest("with no content and allowAny", {
   skip: true,
   async test(assert) {
     await click(
-      this.get("subject")
+      this.subject
         .header()
         .el()
     );
 
-    const $filter = this.get("subject")
+    const $filter = this.subject
       .filter()
       .el();
 
@@ -794,9 +794,9 @@ componentTest("with forceEscape", {
   },
 
   async test(assert) {
-    await this.get("subject").expand();
+    await this.subject.expand();
 
-    const row = this.get("subject").rowByIndex(0);
+    const row = this.subject.rowByIndex(0);
     assert.equal(
       row
         .el()
@@ -807,7 +807,7 @@ componentTest("with forceEscape", {
     );
 
     assert.equal(
-      this.get("subject")
+      this.subject
         .header()
         .el()
         .find(".selected-name")
@@ -826,9 +826,9 @@ componentTest("without forceEscape", {
   },
 
   async test(assert) {
-    await this.get("subject").expand();
+    await this.subject.expand();
 
-    const row = this.get("subject").rowByIndex(0);
+    const row = this.subject.rowByIndex(0);
     assert.equal(
       row
         .el()
@@ -839,7 +839,7 @@ componentTest("without forceEscape", {
     );
 
     assert.equal(
-      this.get("subject")
+      this.subject
         .header()
         .el()
         .find(".selected-name")
@@ -863,8 +863,8 @@ componentTest("onSelect", {
   },
 
   async test(assert) {
-    await this.get("subject").expand();
-    await this.get("subject").selectRowByValue("red");
+    await this.subject.expand();
+    await this.subject.selectRowByValue("red");
 
     assert.equal(
       find(".test-external-action")
@@ -888,10 +888,10 @@ componentTest("onDeselect", {
   },
 
   async test(assert) {
-    await this.get("subject").expand();
-    await this.get("subject").selectRowByValue("red");
-    await this.get("subject").expand();
-    await this.get("subject").selectRowByValue("blue");
+    await this.subject.expand();
+    await this.subject.selectRowByValue("red");
+    await this.subject.expand();
+    await this.subject.selectRowByValue("blue");
 
     assert.equal(
       find(".test-external-action")
@@ -915,12 +915,12 @@ componentTest("noopRow", {
   },
 
   async test(assert) {
-    await this.get("subject").expand();
-    await this.get("subject").selectRowByValue("red");
-    assert.equal(this.get("value"), "blue", "it doesn’t change the value");
+    await this.subject.expand();
+    await this.subject.selectRowByValue("red");
+    assert.equal(this.value, "blue", "it doesn’t change the value");
 
-    await this.get("subject").expand();
-    await this.get("subject").selectRowByValue("green");
-    assert.equal(this.get("value"), "green");
+    await this.subject.expand();
+    await this.subject.selectRowByValue("green");
+    assert.equal(this.value, "green");
   }
 });

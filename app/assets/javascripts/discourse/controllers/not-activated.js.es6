@@ -4,9 +4,9 @@ import { resendActivationEmail } from "discourse/lib/user-activation";
 export default Ember.Controller.extend(ModalFunctionality, {
   actions: {
     sendActivationEmail() {
-      resendActivationEmail(this.get("username")).then(() => {
+      resendActivationEmail(this.username).then(() => {
         const modal = this.showModal("activation-resent", { title: "log_in" });
-        modal.set("currentEmail", this.get("currentEmail"));
+        modal.set("currentEmail", this.currentEmail);
       });
     },
 
@@ -15,7 +15,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
         title: "login.change_email"
       });
 
-      const currentEmail = this.get("currentEmail");
+      const currentEmail = this.currentEmail;
       modal.set("currentEmail", currentEmail);
       modal.set("newEmail", currentEmail);
     }

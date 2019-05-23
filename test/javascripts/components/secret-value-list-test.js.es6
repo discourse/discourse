@@ -34,7 +34,7 @@ componentTest("adding a value", {
     );
 
     assert.deepEqual(
-      this.get("values"),
+      this.values,
       "firstKey|FirstValue\nsecondKey|secondValue\nthirdKey|thirdValue",
       "it adds the value to the list of values"
     );
@@ -55,7 +55,7 @@ componentTest("adding an invalid value", {
     );
 
     assert.deepEqual(
-      this.get("values"),
+      this.values,
       undefined,
       "it doesn't add the value to the list of values"
     );
@@ -83,7 +83,7 @@ componentTest("removing a value", {
     );
 
     assert.equal(
-      this.get("values"),
+      this.values,
       "secondKey|secondValue",
       "it removes the expected value"
     );

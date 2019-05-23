@@ -134,8 +134,8 @@ export default Ember.Component.extend({
     },
 
     sortByLabel(label) {
-      if (this.get("sortLabel") === label) {
-        this.set("sortDirection", this.get("sortDirection") === 1 ? -1 : 1);
+      if (this.sortLabel === label) {
+        this.set("sortDirection", this.sortDirection === 1 ? -1 : 1);
       } else {
         this.set("sortLabel", label);
       }

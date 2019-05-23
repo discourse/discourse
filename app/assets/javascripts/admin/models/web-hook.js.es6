@@ -32,7 +32,7 @@ export default RestModel.extend({
 
   @observes("group_ids")
   updateGroupsFilter() {
-    const groupIds = this.get("group_ids");
+    const groupIds = this.group_ids;
     this.set(
       "groupsFilterInName",
       Discourse.Site.currentProp("groups").reduce((groupNames, g) => {
@@ -61,23 +61,23 @@ export default RestModel.extend({
   },
 
   createProperties() {
-    const types = this.get("web_hook_event_types");
-    const categoryIds = this.get("categories").map(c => c.id);
-    const tagNames = this.get("tag_names");
+    const types = this.web_hook_event_types;
+    const categoryIds = this.categories.map(c => c.id);
+    const tagNames = this.tag_names;
 
     // Hack as {{group-selector}} accepts a comma-separated string as data source, but
     // we use an array to populate the datasource above.
-    const groupsFilter = this.get("groupsFilterInName");
+    const groupsFilter = this.groupsFilterInName;
     const groupNames =
       typeof groupsFilter === "string" ? groupsFilter.split(",") : groupsFilter;
 
     return {
-      payload_url: this.get("payload_url"),
-      content_type: this.get("content_type"),
-      secret: this.get("secret"),
-      wildcard_web_hook: this.get("wildcard_web_hook"),
-      verify_certificate: this.get("verify_certificate"),
-      active: this.get("active"),
+      payload_url: this.payload_url,
+      content_type: this.content_type,
+      secret: this.secret,
+      wildcard_web_hook: this.wildcard_web_hook,
+      verify_certificate: this.verify_certificate,
+      active: this.active,
       web_hook_event_type_ids: Ember.isEmpty(types)
         ? [null]
         : types.map(type => type.id),
