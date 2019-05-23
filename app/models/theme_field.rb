@@ -71,7 +71,7 @@ class ThemeField < ActiveRecord::Base
     errors = []
     javascript_cache || build_javascript_cache
 
-    js_compiler = ThemeJavascriptCompiler.new(theme_id)
+    js_compiler = ThemeJavascriptCompiler.new(theme_id, self.theme.name)
 
     doc = Nokogiri::HTML.fragment(html)
 
@@ -153,7 +153,7 @@ class ThemeField < ActiveRecord::Base
   def process_translation
     errors = []
     javascript_cache || build_javascript_cache
-    js_compiler = ThemeJavascriptCompiler.new(theme_id)
+    js_compiler = ThemeJavascriptCompiler.new(theme_id, self.theme.name)
     begin
       data = translation_data
 

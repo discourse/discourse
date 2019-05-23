@@ -732,3 +732,13 @@ table {
     color: $danger;
   }
 }
+
+.broken-theme-alert {
+  font-size: $base-font-size;
+  padding: 5px 0;
+  background: $danger;
+  width: 100%;
+  text-align: center;
+  z-index: z("max");
+  color: $secondary;
+}

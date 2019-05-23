@@ -660,5 +660,32 @@ export function postRNWebviewMessage(prop, value) {
   }
 }
 
+function reportToLogster(name, error) {
+  const data = {
+    message: `${name} theme/component is throwing errors`,
+    stacktrace: error.stack
+  };
+
+  Ember.$.ajax("/logs" + "/report_js_error", {
+    data,
+    type: "POST",
+    cache: false
+  });
+}
+// this function is used in lib/theme_javascript_compiler.rb
+export function rescueThemeError(name, error, api) {
+  console.error(`"${name}" error:`, error);
+  reportToLogster(name, error);
+  const currentUser = api.getCurrentUser();
+  if (!currentUser || !currentUser.get("admin")) {
+    return;
+  }
+  const message = I18n.t("themes.broken_theme_alert", {
+    theme: name
+  });
+  const html = `<div class="broken-theme-alert"><b>${message}</b></div>`;
+  Ember.$("body").prepend(html);
+}
+
 // This prevents a mini racer crash
 export default {};
