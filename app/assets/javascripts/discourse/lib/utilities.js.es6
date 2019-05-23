@@ -675,6 +675,7 @@ function reportToLogster(name, error) {
 }
 // this function is used in lib/theme_javascript_compiler.rb
 export function rescueThemeError(name, error, api) {
+  /* eslint-disable-next-line no-console */
   console.error(`"${name}" error:`, error);
   reportToLogster(name, error);
 
