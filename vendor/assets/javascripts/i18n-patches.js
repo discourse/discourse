@@ -1,10 +1,5 @@
 (function() {
   if (typeof I18n !== "undefined") {
-    var oldI18nlookup = I18n.lookup;
-    I18n.lookup = function(scope, options) {
-      return oldI18nlookup.apply(this, ["js." + scope, options]);
-    };
-
     // Default format for storage units
     var oldI18ntoHumanSize = I18n.toHumanSize;
     I18n.toHumanSize = function(number, options) {

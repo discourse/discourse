@@ -26,23 +26,32 @@ describe ExtraLocalesController do
       expect(response.status).to eq(404)
     end
 
-    it "includes plugin translations" do
-      JsLocaleHelper.expects(:plugin_translations)
-        .with(any_of("en", "en_US"))
-        .returns("admin_js" => {
-          "admin" => {
-            "site_settings" => {
-              "categories" => {
-                "github_badges" => "Github Badges"
+    context "with plugin" do
+      before do
+        JsLocaleHelper.clear_cache!
+        JsLocaleHelper.expects(:plugin_translations)
+          .with(any_of("en", "en_US"))
+          .returns("admin_js" => {
+            "admin" => {
+              "site_settings" => {
+                "categories" => {
+                  "github_badges" => "Github Badges"
+                }
               }
             }
-          }
-        }).at_least_once
+          }).at_least_once
+      end
 
-      get "/extra-locales/admin"
+      after do
+        JsLocaleHelper.clear_cache!
+      end
 
-      expect(response.status).to eq(200)
-      expect(response.body.include?("github_badges")).to eq(true)
+      it "includes plugin translations" do
+        get "/extra-locales/admin"
+
+        expect(response.status).to eq(200)
+        expect(response.body.include?("github_badges")).to eq(true)
+      end
     end
   end
 end

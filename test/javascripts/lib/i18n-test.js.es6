@@ -99,12 +99,68 @@ QUnit.test("translations", assert => {
 });
 
 QUnit.test("extra translations", assert => {
-  I18n.extras = [{ admin: { title: "Discourse Admin" } }];
+  I18n.locale = "pl_PL";
+  I18n.extras = {
+    en: {
+      admin: {
+        dashboard: {
+          title: "Dashboard",
+          backup_count: {
+            one: "%{count} backup",
+            other: "%{count} backups"
+          }
+        },
+        web_hooks: {
+          events: {
+            incoming: {
+              one: "There is a new event.",
+              other: "There are %{count} new events."
+            }
+          }
+        }
+      }
+    },
+    pl_PL: {
+      admin: {
+        dashboard: {
+          title: "Raporty"
+        },
+        web_hooks: {
+          events: {
+            incoming: {
+              one: "Istnieje nowe wydarzenie",
+              few: "Istnieją %{count} nowe wydarzenia.",
+              many: "Istnieje %{count} nowych wydarzeń.",
+              other: "Istnieje %{count} nowych wydarzeń."
+            }
+          }
+        }
+      }
+    }
+  };
+  I18n.pluralizationRules.pl_PL = function(n) {
+    if (n === 1) return "one";
+    if (n % 10 >= 2 && n % 10 <= 4) return "few";
+    if (n % 10 === 0) return "many";
+    return "other";
+  };
 
   assert.equal(
-    I18n.t("admin.title"),
-    "Discourse Admin",
-    "it check extra translations when they exists"
+    I18n.t("admin.dashboard.title"),
+    "Raporty",
+    "it uses extra translations when they exists"
+  );
+
+  assert.equal(
+    I18n.t("admin.web_hooks.events.incoming", { count: 2 }),
+    "Istnieją 2 nowe wydarzenia.",
+    "it uses pluralized extra translation when it exists"
+  );
+
+  assert.equal(
+    I18n.t("admin.dashboard.backup_count", { count: 2 }),
+    "2 backups",
+    "it falls back to English and uses extra translations when they exists"
   );
 });
 

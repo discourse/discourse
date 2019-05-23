@@ -104,28 +104,32 @@ module JsLocaleHelper
     end
   end
 
+  def self.clear_cache!
+    @loaded_translations = nil
+    @plugin_translations = nil
+    @loaded_merges = nil
+  end
+
   def self.translations_for(locale_str)
-    if Rails.env.development?
-      @loaded_translations = nil
-      @plugin_translations = nil
-      @loaded_merges = nil
-    end
+    clear_cache! if Rails.env.development?
 
     locale_sym = locale_str.to_sym
 
-    I18n.with_locale(locale_sym) do
+    translations = I18n.with_locale(locale_sym) do
       if locale_sym == :en
         load_translations(locale_sym)
       else
         load_translations_merged(*I18n.fallbacks[locale_sym])
       end
     end
+
+    Marshal.load(Marshal.dump(translations))
   end
 
   def self.output_locale(locale)
     locale_str = locale.to_s
     fallback_locale_str = LocaleSiteSetting.fallback_locale(locale_str)&.to_s
-    translations = Marshal.load(Marshal.dump(translations_for(locale_str)))
+    translations = translations_for(locale_str)
 
     message_formats = remove_message_formats!(translations, locale)
     mf_locale, mf_filename = find_message_format_locale([locale_str], fallback_to_english: true)
