@@ -40,21 +40,20 @@ class ExtraLocalesController < ApplicationController
 
     translations = JsLocaleHelper.translations_for(locale_str)
 
-    for_key = {}
-    translations.values.each { |v| for_key.deep_merge!(v[bundle_str]) if v.has_key?(bundle_str) }
+    translations.keys.each do |l|
+      translations[l].keys.each do |k|
+        bundle_translations = translations[l].delete(k)
+        translations[l].deep_merge!(bundle_translations) if k == bundle_str
+      end
+    end
 
     js = ""
 
-    if for_key.present?
-      if plugin_for_key = JsLocaleHelper.plugin_translations(locale_str)[bundle_str]
-        for_key.deep_merge!(plugin_for_key)
-      end
-
+    if translations.present?
       js = <<~JS.squish
         (function() {
           if (window.I18n) {
-            window.I18n.extras = window.I18n.extras || [];
-            window.I18n.extras.push(#{for_key.to_json});
+            window.I18n.extras = #{translations.to_json};
           }
         })();
       JS

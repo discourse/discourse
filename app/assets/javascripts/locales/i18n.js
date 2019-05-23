@@ -28,24 +28,6 @@ I18n.isValidNode = function(obj, node, undefined) {
   return obj[node] !== null && obj[node] !== undefined;
 };
 
-function checkExtras(origScope, sep, extras) {
-  if (!extras || extras.length === 0) { return; }
-
-  for (var i = 0; i < extras.length; i++) {
-    var messages = extras[i];
-    scope = origScope.split(sep);
-
-    if (scope[0] === 'js') { scope.shift(); }
-
-    while (messages && scope.length > 0) {
-      currentScope = scope.shift();
-      messages = messages[currentScope];
-    }
-
-    if (messages !== undefined) { return messages; }
-  }
-}
-
 I18n.lookup = function(scope, options) {
   options = options || {};
 
@@ -64,17 +46,26 @@ I18n.lookup = function(scope, options) {
     scope = options.scope.toString() + this.SEPARATOR + scope;
   }
 
-  var origScope = "" + scope;
+  var originalScope = scope;
+  scope = scope.split(this.SEPARATOR);
 
-  scope = origScope.split(this.SEPARATOR);
+  if (scope.length > 0 && scope[0] !== "js") {
+    scope.unshift("js");
+  }
 
   while (messages && scope.length > 0) {
     currentScope = scope.shift();
     messages = messages[currentScope];
   }
 
-  if (messages === undefined) {
-    messages = checkExtras(origScope, this.SEPARATOR, this.extras);
+  if (messages === undefined && this.extras && this.extras[locale]) {
+    messages = this.extras[locale];
+    scope = originalScope.split(this.SEPARATOR);
+
+    while (messages && scope.length > 0) {
+      currentScope = scope.shift();
+      messages = messages[currentScope];
+    }
   }
 
   if (messages === undefined) {
