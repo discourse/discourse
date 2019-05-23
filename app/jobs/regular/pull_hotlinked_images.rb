@@ -56,8 +56,8 @@ module Jobs
       has_new_broken_image = false
       has_downloaded_image = false
 
-      extract_images_from(post.cooked).each do |image|
-        src = original_src = image['src']
+      extract_images_from(post.cooked).each do |node|
+        src = original_src = node['src'] || node['href']
         src = "#{SiteSetting.force_https ? "https" : "http"}:#{src}" if src.start_with?("//")
 
         if should_download_image?(src)
@@ -91,9 +91,20 @@ module Jobs
             if downloaded_urls[src].present?
               url = downloaded_urls[src]
               escaped_src = Regexp.escape(original_src)
+
               # there are 6 ways to insert an image in a post
               # HTML tag - <img src="http://...">
               raw.gsub!(/src=["']#{escaped_src}["']/i, "src='#{url}'")
+
+              if (original_path = Upload.extract_url(original_src)&.to_s) &&
+                 (path = Upload.extract_url(url)&.to_s)
+
+                raw.gsub!(
+                  /src=["']\S*#{Regexp.escape(original_path)}["']/i,
+                  "src='#{url}'"
+                )
+              end
+
               # BBCode tag - [img]http://...[/img]
               raw.gsub!(/\[img\]#{escaped_src}\[\/img\]/i, "[img]#{url}[/img]")
               # Markdown linked image - [![alt](http://...)](http://...)
@@ -136,7 +147,7 @@ module Jobs
 
     def extract_images_from(html)
       doc = Nokogiri::HTML::fragment(html)
-      doc.css("img[src]") - doc.css("img.avatar") - doc.css(".lightbox img[src]")
+      doc.css("img[src], a.lightbox[href]") - doc.css("img.avatar") - doc.css(".lightbox img[src]")
     end
 
     def should_download_image?(src)
