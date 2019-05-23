@@ -16,6 +16,8 @@ const D_ARROW_HEIGHT = 10;
 
 const D_HORIZONTAL_MARGIN = 5;
 
+export const POPOVER_SELECTORS = "[data-html-popover], [data-html-tooltip], [data-popover], [data-tooltip]";
+
 export function hidePopover() {
   getPopover()
     .fadeOut()
@@ -25,7 +27,13 @@ export function hidePopover() {
 }
 
 export function showPopover(event, options = {}) {
-  const $enteredElement = $(event.currentTarget);
+  let $enteredElement = $(event.target)
+    .closest(POPOVER_SELECTORS)
+    .first();
+
+  if (!$enteredElement.length) {
+    $enteredElement = $(event.target);
+  }
 
   if (isRetina()) {
     getPopover().addClass("retina");

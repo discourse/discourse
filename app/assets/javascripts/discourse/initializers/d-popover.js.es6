@@ -1,7 +1,8 @@
-import { showPopover, hidePopover } from "discourse/lib/d-popover";
-
-const SELECTORS =
-  "[data-html-popover],[data-tooltip],[data-popover],[data-html-tooltip]";
+import {
+  showPopover,
+  hidePopover,
+  POPOVER_SELECTORS
+} from "discourse/lib/d-popover";
 
 export default {
   name: "d-popover",
@@ -10,12 +11,8 @@ export default {
     const router = container.lookup("router:main");
     router.on("routeWillChange", hidePopover);
 
-    $("#main").on("click.d-popover mouseenter.d-popover", SELECTORS, event =>
-      showPopover(event)
-    );
-
-    $("#main").on("mouseleave.d-popover", SELECTORS, event =>
-      hidePopover(event)
-    );
+    $("#main")
+      .on("click.d-popover mouseenter.d-popover", POPOVER_SELECTORS, e => showPopover(e))
+      .on("mouseleave.d-popover", POPOVER_SELECTORS, e => hidePopover(e));
   }
 };
