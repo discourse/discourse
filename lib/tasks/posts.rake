@@ -493,3 +493,35 @@ task 'posts:missing_uploads', [:single_site] => :environment do |_, args|
     end
   end
 end
+
+def destroy_old_user_data_exports
+  topics = Topic.with_deleted.where(<<~SQL, 2.days.ago)
+    slug = 'user-archive-data-export-complete' AND
+    archetype = 'private_message' AND
+    posts_count = 1 AND
+    created_at < ? AND
+    user_id = -1
+  SQL
+
+  puts "Found #{topics.count} old user data exports on #{RailsMultisite::ConnectionManagement.current_db}, destroying"
+  puts
+  topics.each do |t|
+    Topic.transaction do
+      t.posts.first.destroy!
+      t.destroy!
+      print "."
+    end
+  end
+  puts "done"
+end
+
+desc 'destroys all user archive PMs (they may contain broken images)'
+task 'posts:destroy_old_user_data_exports' => :environment do
+  if RailsMultisite::ConnectionManagement.current_db != "default"
+    destroy_old_user_data_exports
+  else
+    RailsMultisite::ConnectionManagement.each_connection do
+      destroy_old_user_data_exports
+    end
+  end
+end
