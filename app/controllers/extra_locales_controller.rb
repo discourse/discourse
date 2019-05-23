@@ -23,7 +23,7 @@ class ExtraLocalesController < ApplicationController
 
   def self.bundle_js_hash(bundle)
     @bundle_js_hash ||= {}
-    @bundle_js_hash[bundle] = Digest::MD5.hexdigest(bundle_js(bundle))
+    @bundle_js_hash["#{bundle}_#{I18n.locale}"] ||= Digest::MD5.hexdigest(bundle_js(bundle))
   end
 
   def self.url(bundle)
