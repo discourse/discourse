@@ -943,8 +943,8 @@ def inline_img_tags(post)
     if !upload
       local_file = File.join(Rails.root, "public", $2)
       if File.exist?(local_file)
-	File.open(local_file) do |f|
-          upload = UploadCreator.new(f,"image").create_for(post.user_id)
+        File.open(local_file) do |f|
+          upload = UploadCreator.new(f, "image").create_for(post.user_id)
         end
       end
     end
