@@ -97,7 +97,7 @@ module Jobs
               raw.gsub!(/src=["']#{escaped_src}["']/i, "src='#{url}'")
 
               if (original_path = Upload.extract_url(original_src)&.to_s) &&
-                 (path = Upload.extract_url(url)&.to_s)
+                 Upload.extract_url(url)&.to_s
 
                 raw.gsub!(
                   /src=["']\S*#{Regexp.escape(original_path)}["']/i,
