@@ -525,3 +525,67 @@ task 'posts:destroy_old_data_exports' => :environment do
     end
   end
 end
+
+def recover_uploads_from_index(path)
+  PostCustomField.where(name: Post::MISSING_UPLOADS).pluck(:post_id, :value).each do |post_id, uploads|
+    uploads = JSON.parse(uploads)
+    post = Post.find(post_id)
+    changed = false
+
+    uploads.each do |url|
+      if (n = post.raw.scan(url).length) != 1
+        puts "Skipping #{url} in #{post.full_url} cause it appears #{n} times"
+        next
+      end
+
+      puts "Searching for #{url} in index"
+      name = File.basename(url)
+      if name.length < 40
+        puts "Skipping #{url} in #{post.full_url} cause it appears to have a short file name"
+        next
+      end
+      found = `cat #{path} | grep #{name} | grep original`.split("\n")[0] rescue nil
+      if found.blank?
+        puts "Skipping #{url} in #{post.full_url} cause it missing from index"
+        next
+      end
+
+      found = File.expand_path(File.join(File.dirname(path), found))
+      if !File.exist?(found)
+        puts "Skipping #{url} in #{post.full_url} cause it missing from disk"
+      end
+
+      File.open(found) do |f|
+        upload = UploadCreator.new(f, "upload").create_for(post.user_id)
+        changed = true
+        post.raw = post.raw.sub(url, upload.url)
+      end
+    end
+    if changed
+      puts "Recovered uploads on #{post.full_url}"
+      post.save!(validate: false)
+      post.rebake!
+    end
+  end
+end
+
+# this requires an index file ... you would create it by
+# cd /var/www/discourse/public/uploads
+# find -t file > all_the_files
+#
+# then you would run rake posts:recover_uploads_from_index[/var/www/discourse/public/uploads/all_the_files]
+desc 'Attempts to recover missing uploads from an index file'
+task 'posts:recover_uploads_from_index', [:path] => :environment do |_, args|
+  path = args[:path]
+  if !File.exist?(path)
+    puts "can not find index #{path}"
+    exit 1
+  end
+  if RailsMultisite::ConnectionManagement.current_db != "default"
+    recover_uploads_from_index(path)
+  else
+    RailsMultisite::ConnectionManagement.each_connection do
+      recover_uploads_from_index(path)
+    end
+  end
+end
