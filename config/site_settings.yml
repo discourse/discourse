@@ -1410,10 +1410,7 @@ spam:
     client: true
     type: enum
     default: low
-    choices:
-      - low
-      - medium
-      - high
+    enum: "ReviewablePrioritySetting"
 
 rate_limits:
   unique_posts_mins: 5
