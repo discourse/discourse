@@ -1,6 +1,5 @@
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import computed from "ember-addons/ember-computed-decorators";
 
 export default Ember.Controller.extend({
   saving: false,
