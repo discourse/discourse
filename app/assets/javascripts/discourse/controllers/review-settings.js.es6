@@ -6,15 +6,6 @@ export default Ember.Controller.extend({
   saving: false,
   saved: false,
 
-  @computed
-  reviewablePriorities() {
-    return [
-      { id: 0, name: "low" },
-      { id: 5, name: "medium" },
-      { id: 10, name: "high" }
-    ];
-  },
-
   actions: {
     save() {
       let priorities = {};
