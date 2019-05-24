@@ -1,5 +1,5 @@
 {{#each categories as |c|}}
-  <div class='category category-box category-box-{{unbound c.slug}}' style={{border-color c.color}} data-url={{c.url}}>
+  <a class='category category-box category-box-{{unbound c.slug}}' style={{border-color c.color}} href={{c.url}}>
     <div class='category-box-inner'>
       <div class="category-logo">
         {{#if c.uploaded_logo.url}}
@@ -42,5 +42,5 @@
         {{/if}}
       </div>
     </div>
-  </div>
+  </a>
 {{/each}}
