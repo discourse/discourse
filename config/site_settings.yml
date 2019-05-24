@@ -1374,7 +1374,7 @@ spam:
   silence_new_user_sensitivity:
     type: enum
     enum: "ReviewableSensitivitySetting"
-    default: 9
+    default: 3
   num_users_to_silence_new_user: 3
   notify_mods_when_user_silenced: false
   flag_sockpuppets: false
@@ -1393,7 +1393,7 @@ spam:
   auto_close_topic_sensitivity:
     type: enum
     enum: "ReviewableSensitivitySetting"
-    default: 3
+    default: 9
   num_hours_to_close_topic:
     default: 4
     min: 1
