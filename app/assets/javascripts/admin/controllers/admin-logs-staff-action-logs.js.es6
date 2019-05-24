@@ -1,21 +1,15 @@
 import { exportEntity } from "discourse/lib/export-csv";
 import { outputExportResult } from "discourse/lib/export-result";
-import StaffActionLog from "admin/models/staff-action-log";
 import {
   default as computed,
   on
 } from "ember-addons/ember-computed-decorators";
 
 export default Ember.Controller.extend({
-  loading: false,
-  filters: null,
-  userHistoryActions: [],
   model: null,
-  nextPage: 0,
-  lastPage: null,
-
+  filters: null,
   filtersExists: Ember.computed.gt("filterCount", 0),
-  showTable: Ember.computed.gt("model.length", 0),
+  userHistoryActions: null,
 
   @computed("filters.action_name")
   actionFilter(name) {
@@ -25,34 +19,21 @@ export default Ember.Controller.extend({
   @on("init")
   resetFilters() {
     this.setProperties({
-      filters: Ember.Object.create(),
-      model: [],
-      nextPage: 0,
-      lastPage: null
+      model: Ember.Object.create({ loadingMore: true }),
+      filters: Ember.Object.create()
     });
     this.scheduleRefresh();
   },
 
   _changeFilters(props) {
+    this.set("model", Ember.Object.create({ loadingMore: true }));
     this.filters.setProperties(props);
-    this.setProperties({
-      model: [],
-      nextPage: 0,
-      lastPage: null
-    });
     this.scheduleRefresh();
   },
 
   _refresh() {
-    if (this.lastPage && this.nextPage >= this.lastPage) {
-      return;
-    }
-
-    this.set("loading", true);
-
-    const page = this.nextPage;
     let filters = this.filters;
-    let params = { page };
+    let params = {};
     let count = 0;
 
     // Don't send null values
@@ -65,32 +46,23 @@ export default Ember.Controller.extend({
     });
     this.set("filterCount", count);
 
-    StaffActionLog.findAll(params)
-      .then(result => {
-        this.setProperties({
-          model: this.model.concat(result.staff_action_logs),
-          nextPage: page + 1
-        });
+    this.store.findAll("staff-action-log", params).then(result => {
+      this.set("model", result);
 
-        if (result.staff_action_logs.length === 0) {
-          this.set("lastPage", page);
-        }
-
-        if (this.userHistoryActions.length === 0) {
-          this.set(
-            "userHistoryActions",
-            result.user_history_actions
-              .map(action => ({
-                id: action.id,
-                action_id: action.action_id,
-                name: I18n.t("admin.logs.staff_actions.actions." + action.id),
-                name_raw: action.id
-              }))
-              .sort((a, b) => (a.name > b.name ? 1 : -1))
-          );
-        }
-      })
-      .finally(() => this.set("loading", false));
+      if (!this.userHistoryActions) {
+        this.set(
+          "userHistoryActions",
+          result.extras.user_history_actions
+            .map(action => ({
+              id: action.id,
+              action_id: action.action_id,
+              name: I18n.t("admin.logs.staff_actions.actions." + action.id),
+              name_raw: action.id
+            }))
+            .sort((a, b) => a.name.localeCompare(b.name))
+        );
+      }
+    });
   },
 
   scheduleRefresh() {
@@ -153,7 +125,7 @@ export default Ember.Controller.extend({
     },
 
     loadMore() {
-      this._refresh();
+      this.model.loadMore();
     }
   }
 });
