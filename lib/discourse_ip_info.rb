@@ -38,7 +38,7 @@ class DiscourseIpInfo
 
       path = gz_file.path.sub(/\.gz\z/, "")
       FileUtils.mv(path, mmdb_path(name))
-    rescue HTTPError => e
+    rescue OpenURI::HTTPError => e
       Rails.logger.warn("MaxMindDB (#{name}) could not be downloaded: #{e}")
     end
   ensure
