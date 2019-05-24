@@ -8,8 +8,7 @@ task 'plugin:install_all_official' do
     'customer-flair',
     'discourse-nginx-performance-report',
     'lazyYT',
-    'poll',
-    'discourse-calendar'
+    'poll'
   ])
 
   map = {
@@ -17,7 +16,6 @@ task 'plugin:install_all_official' do
     'discourse-perspective' => 'https://github.com/discourse/discourse-perspective-api'
   }
 
-  #require 'plugin/metadata'
   Plugin::Metadata::OFFICIAL_PLUGINS.each do |name|
     next if skip.include? name
     repo = map[name] || "https://github.com/discourse/#{name}"
