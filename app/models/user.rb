@@ -1029,7 +1029,7 @@ class User < ActiveRecord::Base
       api_key.regenerate!(created_by)
       api_key
     else
-      ApiKey.create(user: self, key: SecureRandom.hex(32), created_by: created_by)
+      ApiKey.create!(user: self, key: SecureRandom.hex(32), created_by: created_by)
     end
   end
 
@@ -1131,7 +1131,7 @@ class User < ActiveRecord::Base
   end
 
   def create_user_profile
-    UserProfile.create(user_id: id)
+    UserProfile.create!(user_id: id)
   end
 
   def set_random_avatar
@@ -1140,7 +1140,7 @@ class User < ActiveRecord::Base
       if urls.present?
         if upload = Upload.find_by(url: urls.sample)
           update_column(:uploaded_avatar_id, upload.id)
-          UserAvatar.create(user_id: id, custom_upload_id: upload.id)
+          UserAvatar.create!(user_id: id, custom_upload_id: upload.id)
         end
       end
     end
@@ -1275,11 +1275,11 @@ class User < ActiveRecord::Base
   end
 
   def create_user_option
-    UserOption.create(user_id: id)
+    UserOption.create!(user_id: id)
   end
 
   def create_email_token
-    email_tokens.create(email: email)
+    email_tokens.create!(email: email)
   end
 
   def ensure_password_is_hashed
