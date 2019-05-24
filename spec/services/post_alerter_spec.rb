@@ -128,7 +128,8 @@ describe PostAlerter do
       coding_horror = Fabricate(:coding_horror)
 
       PostActionNotifier.enable
-      SiteSetting.score_required_to_hide_post = 4.0
+      Reviewable.set_priorities(high: 4.0)
+      SiteSetting.hide_post_sensitivity = Reviewable.sensitivity[:low]
 
       PostActionCreator.spam(evil_trout, post)
       PostActionCreator.spam(walterwhite, post)
