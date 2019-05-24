@@ -69,7 +69,10 @@ RSpec.describe 'Multisite s3 uploads', type: :multisite do
           s3_object = stub
 
           s3_bucket.expects(:object).with("uploads/tombstone/default/original/1X/#{upload.sha1}.png").returns(s3_object)
-          s3_object.expects(:copy_from).with(copy_source: "s3-upload-bucket/uploads/default/original/1X/#{upload.sha1}.png")
+          s3_object.expects(:copy_from).with(
+            copy_source: "s3-upload-bucket/uploads/default/original/1X/#{upload.sha1}.png",
+            acl: "public-read"
+          )
           s3_bucket.expects(:object).with("uploads/default/original/1X/#{upload.sha1}.png").returns(s3_object)
           s3_object.expects(:delete)
 
@@ -86,7 +89,10 @@ RSpec.describe 'Multisite s3 uploads', type: :multisite do
           s3_object = stub
 
           s3_bucket.expects(:object).with("uploads/tombstone/second/original/1X/#{upload.sha1}.png").returns(s3_object)
-          s3_object.expects(:copy_from).with(copy_source: "s3-upload-bucket/uploads/second/original/1X/#{upload.sha1}.png")
+          s3_object.expects(:copy_from).with(
+            copy_source: "s3-upload-bucket/uploads/second/original/1X/#{upload.sha1}.png",
+            acl: "public-read"
+          )
           s3_bucket.expects(:object).with("uploads/second/original/1X/#{upload.sha1}.png").returns(s3_object)
           s3_object.expects(:delete)
 
@@ -108,7 +114,10 @@ RSpec.describe 'Multisite s3 uploads', type: :multisite do
             s3_object = stub
 
             s3_bucket.expects(:object).with("discourse-uploads/uploads/tombstone/default/original/1X/#{upload.sha1}.png").returns(s3_object)
-            s3_object.expects(:copy_from).with(copy_source: "s3-upload-bucket/discourse-uploads/uploads/default/original/1X/#{upload.sha1}.png")
+            s3_object.expects(:copy_from).with(
+              copy_source: "s3-upload-bucket/discourse-uploads/uploads/default/original/1X/#{upload.sha1}.png",
+              acl: "public-read"
+            )
             s3_bucket.expects(:object).with("discourse-uploads/uploads/default/original/1X/#{upload.sha1}.png").returns(s3_object)
             s3_object.expects(:delete)
 

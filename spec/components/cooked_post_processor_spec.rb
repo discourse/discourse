@@ -1015,51 +1015,89 @@ describe CookedPostProcessor do
 
       it "doesn't use CDN when preventing anons from downloading files" do
         SiteSetting.prevent_anons_from_downloading_files = true
+        SiteSetting.authorized_extensions = "txt"
         Rails.configuration.action_controller.stubs(:asset_host).returns("http://my.cdn.com")
+
+        # Fabricated upload here is used when looking up private upload URL
+        upload = Fabricate(:upload,
+          original_filename: "fake.txt",
+          sha1: "af2c2618032c679333bebf745e75f9088748d737",
+          extension: "txt"
+        )
+
         cpp.optimize_urls
+
         expect(cpp.html).to match_html <<~HTML
           <p><a href="//my.cdn.com/uploads/default/original/2X/2345678901234567.jpg">Link</a><br>
           <img src="//my.cdn.com/uploads/default/original/1X/1234567890123456.jpg"><br>
           <a href="http://www.google.com" rel="nofollow noopener">Google</a><br>
           <img src="http://foo.bar/image.png"><br>
-          <a class="attachment" href="//test.localhost/uploads/default/original/1X/af2c2618032c679333bebf745e75f9088748d737.txt">text.txt</a> (20 Bytes)<br>
+          <a class="attachment" href="//test.localhost/uploads/default/private/1X/af2c2618032c679333bebf745e75f9088748d737.txt">text.txt</a> (20 Bytes)<br>
           <img src="//my.cdn.com/images/emoji/twitter/smile.png?v=#{Emoji::EMOJI_VERSION}" title=":smile:" class="emoji" alt=":smile:"></p>
         HTML
       end
 
-      it "uses the right CDN when uploads are on S3" do
-        Rails.configuration.action_controller.stubs(:asset_host).returns("https://local.cdn.com")
+      context "s3 uploads" do
+        before do
+          Rails.configuration.action_controller.stubs(:asset_host).returns("https://local.cdn.com")
 
-        SiteSetting.s3_upload_bucket = "some-bucket-on-s3"
-        SiteSetting.s3_access_key_id = "s3-access-key-id"
-        SiteSetting.s3_secret_access_key = "s3-secret-access-key"
-        SiteSetting.s3_cdn_url = "https://s3.cdn.com"
-        SiteSetting.enable_s3_uploads = true
+          SiteSetting.s3_upload_bucket = "some-bucket-on-s3"
+          SiteSetting.s3_access_key_id = "s3-access-key-id"
+          SiteSetting.s3_secret_access_key = "s3-secret-access-key"
+          SiteSetting.s3_cdn_url = "https://s3.cdn.com"
+          SiteSetting.enable_s3_uploads = true
+        end
 
-        uploaded_file = file_from_fixtures("smallest.png")
-        upload_sha1 = Digest::SHA1.hexdigest(File.read(uploaded_file))
-        upload = Fabricate(:upload,
-          original_filename: "smallest.png",
-          width: 10,
-          height: 20,
-          sha1: upload_sha1,
-          extension: "png",
-        )
+        it "uses the right CDN when uploads are on S3" do
+          uploaded_file = file_from_fixtures("smallest.png")
+          upload_sha1 = Digest::SHA1.hexdigest(File.read(uploaded_file))
+          upload = Fabricate(:upload,
+            original_filename: "smallest.png",
+            width: 10,
+            height: 20,
+            sha1: upload_sha1,
+            extension: "png",
+          )
 
-        stored_path = Discourse.store.get_path_for_upload(upload)
-        upload.update_column(:url, "#{SiteSetting.Upload.absolute_base_url}/#{stored_path}")
+          stored_path = Discourse.store.get_path_for_upload(upload)
+          upload.update_column(:url, "#{SiteSetting.Upload.absolute_base_url}/#{stored_path}")
 
-        the_post = Fabricate(:post, raw: %Q{This post has a local emoji :+1: and an external upload\n\n![smallest.png|10x20](#{upload.short_url})})
+          the_post = Fabricate(:post, raw: %Q{This post has a local emoji :+1: and an external upload\n\n![smallest.png|10x20](#{upload.short_url})})
 
-        cpp = CookedPostProcessor.new(the_post)
-        cpp.optimize_urls
+          cpp = CookedPostProcessor.new(the_post)
+          cpp.optimize_urls
 
-        expect(cpp.html).to match_html <<~HTML
-          <p>This post has a local emoji <img src="https://local.cdn.com/images/emoji/twitter/+1.png?v=#{Emoji::EMOJI_VERSION}" title=":+1:" class="emoji" alt=":+1:"> and an external upload</p>
-          <p><img src="https://s3.cdn.com/#{stored_path}" alt="smallest.png" width="10" height="20"></p>
-        HTML
+          expect(cpp.html).to match_html <<~HTML
+            <p>This post has a local emoji <img src="https://local.cdn.com/images/emoji/twitter/+1.png?v=#{Emoji::EMOJI_VERSION}" title=":+1:" class="emoji" alt=":+1:"> and an external upload</p>
+            <p><img src="https://s3.cdn.com/#{stored_path}" alt="smallest.png" width="10" height="20"></p>
+          HTML
+        end
+
+        it "uses no CDN for private uploads on S3" do
+          SiteSetting.prevent_anons_from_downloading_files = true
+          SiteSetting.authorized_extensions = "pdf"
+          uploaded_file = file_from_fixtures("small.pdf", "pdf")
+          upload_sha1 = Digest::SHA1.hexdigest(File.read(uploaded_file))
+          upload = Fabricate(:upload,
+            original_filename: "small.pdf",
+            sha1: upload_sha1,
+            extension: "pdf",
+          )
+
+          stored_path = Discourse.store.get_path_for_upload(upload)
+          upload.update_column(:url, "#{SiteSetting.Upload.absolute_base_url}/#{stored_path}")
+
+          the_post = Fabricate(:post, raw: %Q{This post has a private attachment\n\n<a class="attachment" href="#{upload.url}">small.pdf (20 Bytes)</a>})
+
+          cpp = CookedPostProcessor.new(the_post)
+          cpp.optimize_urls
+
+          expect(cpp.html).to match_html <<~HTML
+           <p>This post has a private attachment</p>
+           <p><a class="attachment" href="//test.localhost/uploads/default/private/1X/16602f56c15defcafe569b1c9fb21f4cd948836b.pdf" rel="nofollow noopener">small.pdf (20 Bytes)</a></p>
+          HTML
+        end
       end
-
     end
 
   end

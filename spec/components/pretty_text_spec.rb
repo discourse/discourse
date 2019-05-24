@@ -2,7 +2,6 @@
 
 require 'rails_helper'
 require 'pretty_text'
-require 'file_store/s3_store'
 
 describe PrettyText do
 
