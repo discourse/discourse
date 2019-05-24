@@ -38,7 +38,7 @@ class DiscourseIpInfo
 
     FileUtils.mv(path, mmdb_path(name))
   ensure
-    gz_file.close!
+    gz_file&.close!
   end
 
   def mmdb_load(filepath)
