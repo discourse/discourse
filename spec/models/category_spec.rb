@@ -580,7 +580,7 @@ describe Category do
     context 'for uncategorized category' do
       before do
         @uncategorized = Category.find(SiteSetting.uncategorized_category_id)
-        create_post(user: Fabricate(:user), category: @uncategorized.name)
+        create_post(user: Fabricate(:user), category: @uncategorized.id)
         Category.update_stats
         @uncategorized.reload
       end
