@@ -527,8 +527,49 @@ task 'posts:destroy_old_data_exports' => :environment do
 end
 
 def recover_uploads_from_index(path)
+  lookup = []
+
+  db = RailsMultisite::ConnectionManagement.current_db
+  cdn_path = SiteSetting.cdn_path("/uploads/#{db}").sub(/https?:/, "")
+  Post.where("cooked LIKE '%#{cdn_path}%'").each do |post|
+    regex = Regexp.new("((https?)?#{Regexp.escape(cdn_path)}[^,;\t\n\s)\"\']+)")
+    uploads = []
+    post.raw.scan(regex).each do |match|
+      uploads << match[0]
+    end
+
+    if uploads.length > 0
+      lookup << [post.id, uploads]
+    end
+  end
+
   PostCustomField.where(name: Post::MISSING_UPLOADS).pluck(:post_id, :value).each do |post_id, uploads|
     uploads = JSON.parse(uploads)
+    raw = Post.where(id: post_id).pluck(:raw).first
+    uploads.map! do |upload|
+      orig = upload
+      if raw.scan(upload).length == 0
+        upload = upload.sub(SiteSetting.Upload.s3_cdn_url, SiteSetting.Upload.s3_base_url)
+      end
+      if raw.scan(upload).length == 0
+        upload = upload.sub(SiteSetting.Upload.s3_base_url, Discourse.base_url)
+      end
+      if raw.scan(upload).length == 0
+        upload = upload.sub(Discourse.base_url + "/", "/")
+      end
+      if raw.scan(upload).length == 0
+        puts "can not find #{orig} in\n\n#{raw}"
+        upload = nil
+      end
+      upload
+    end
+    uploads.compact!
+    if uploads.length > 0
+      lookup << [post_id, uploads]
+    end
+  end
+
+  lookup.each do |post_id, uploads|
     post = Post.find(post_id)
     changed = false
 
@@ -538,8 +579,8 @@ def recover_uploads_from_index(path)
         next
       end
 
-      puts "Searching for #{url} in index"
-      name = File.basename(url)
+      name = File.basename(url).split("_")[0]
+      puts "Searching for #{url} (#{name}) in index"
       if name.length < 40
         puts "Skipping #{url} in #{post.full_url} cause it appears to have a short file name"
         next
