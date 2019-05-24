@@ -16,6 +16,8 @@ module Jobs
         end
       end
 
+      Post.where("cooked LIKE ?", "%#{match_uploads}%").find_each(&:rebake!)
+
     end
   end
 end

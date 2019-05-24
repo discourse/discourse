@@ -358,7 +358,6 @@ class Upload < ActiveRecord::Base
 
     self.url.sub! from, to
     self.save!
-    self.posts.find_each(&:rebake!)
   end
 end
 
