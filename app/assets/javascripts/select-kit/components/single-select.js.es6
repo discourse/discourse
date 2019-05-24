@@ -223,6 +223,7 @@ export default SelectKitComponent.extend({
       );
 
       this._boundaryActionHandler("onSelect", computedContentItem.value);
+      this._boundaryActionHandler("onSelectAny", computedContentItem);
       return;
     }
 
@@ -239,6 +240,7 @@ export default SelectKitComponent.extend({
         this
       );
       this._boundaryActionHandler("onSelectNone");
+      this._boundaryActionHandler("onSelectAny", computedContentItem);
       this.clearSelection();
       return;
     }
@@ -291,6 +293,7 @@ export default SelectKitComponent.extend({
         );
 
         this._boundaryActionHandler("onSelect", computedContentItem.value);
+        this._boundaryActionHandler("onSelectAny", computedContentItem);
 
         this.autoHighlight();
       });
