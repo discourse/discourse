@@ -114,7 +114,7 @@ module FileStore
           File.extname(upload.original_filename)
         end
 
-      if SiteSetting.prevent_anons_from_downloading_files
+      if upload.private?
         get_path_for("private".freeze, upload.id, upload.sha1, extension)
       else
         get_path_for("original".freeze, upload.id, upload.sha1, extension)
