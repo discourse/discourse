@@ -33,13 +33,13 @@ class DiscourseIpInfo
         max_file_size: 100.megabytes,
         tmp_file_name: "#{name}.gz"
       )
+      
+      Discourse::Utils.execute_command("gunzip", gz_file.path)
+
+      path = gz_file.path.sub(/\.gz\z/, "")
+      FileUtils.mv(path, mmdb_path(name))
     rescue HTTPError => e
       Rails.logger.warn("MaxMindDB (#{name}) could not be downloaded: #{e}")
-    else
-      path = gz_file.path.sub(/\.gz\z/, "")
-      Discourse::Utils.execute_command("gunzip", path)
-
-      FileUtils.mv(path, mmdb_path(name))
     end
   ensure
     gz_file&.close!
