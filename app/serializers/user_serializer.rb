@@ -220,15 +220,15 @@ class UserSerializer < BasicUserSerializer
   end
 
   def bio_raw
-    object.user_profile.bio_raw
+    object.user_profile&.bio_raw
   end
 
   def bio_cooked
-    object.user_profile.bio_processed
+    object.user_profile&.bio_processed
   end
 
   def website
-    object.user_profile.website
+    object.user_profile&.website
   end
 
   def website_name
@@ -246,7 +246,7 @@ class UserSerializer < BasicUserSerializer
   end
 
   def location
-    object.user_profile.location
+    object.user_profile&.location
   end
 
   def can_edit
@@ -300,7 +300,7 @@ class UserSerializer < BasicUserSerializer
   end
 
   def bio_excerpt
-    object.user_profile.bio_excerpt(350 , keep_newlines: true, keep_emoji_images: true)
+    object.user_profile&.bio_excerpt(350 , keep_newlines: true, keep_emoji_images: true)
   end
 
   def include_suspend_reason?
@@ -470,7 +470,7 @@ class UserSerializer < BasicUserSerializer
   end
 
   def profile_view_count
-    object.user_profile.views
+    object.user_profile&.views
   end
 
   def time_read
