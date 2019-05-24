@@ -93,11 +93,11 @@
     {{#if isCurrentUser}}
       {{#if model.second_factor_enabled}}
         {{#link-to "preferences.second-factor" class="btn btn-default"}}
-          {{d-icon "unlock"}} {{i18n 'user.second_factor.disable'}}
+          {{d-icon "unlock"}} <span>{{i18n 'user.second_factor.disable'}}</span>
         {{/link-to}}
       {{else}}
         {{#link-to "preferences.second-factor" class="btn btn-default"}}
-          {{d-icon "lock"}} {{i18n 'user.second_factor.enable'}}
+          {{d-icon "lock"}} <span>{{i18n 'user.second_factor.enable'}}</span>
         {{/link-to}}
       {{/if}}
     {{/if}}
@@ -107,11 +107,13 @@
     {{#if model.second_factor_enabled}}
       {{#if isCurrentUser}}
         {{#link-to "preferences.second-factor-backup"}}
+        <span>
         {{#if model.second_factor_backup_enabled}}
           {{i18n 'user.second_factor_backup.manage'}}
         {{else}}
           {{i18n 'user.second_factor_backup.enable_long'}}
         {{/if}}
+        </span>
         {{/link-to}}
       {{/if}}
     {{/if}}
