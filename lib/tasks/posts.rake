@@ -594,12 +594,23 @@ def recover_uploads_from_index(path)
       found = File.expand_path(File.join(File.dirname(path), found))
       if !File.exist?(found)
         puts "Skipping #{url} in #{post.full_url} cause it missing from disk"
+        next
       end
 
       File.open(found) do |f|
-        upload = UploadCreator.new(f, "upload").create_for(post.user_id)
-        changed = true
-        post.raw = post.raw.sub(url, upload.url)
+        begin
+          upload = UploadCreator.new(f, "upload").create_for(post.user_id)
+          if upload && upload.url
+            post.raw = post.raw.sub(url, upload.url)
+            changed = true
+          else
+            puts "Skipping #{url} in #{post.full_url} unable to create upload (unknown error)"
+            next
+          end
+        rescue Discourse::InvalidAccess
+          puts "Skipping #{url} in #{post.full_url} unable to create upload (bad format)"
+          next
+        end
       end
     end
     if changed
@@ -610,17 +621,14 @@ def recover_uploads_from_index(path)
   end
 end
 
-# this requires an index file ... you would create it by
-# cd /var/www/discourse/public/uploads
-# find -t file > all_the_files
-#
-# then you would run rake posts:recover_uploads_from_index[/var/www/discourse/public/uploads/all_the_files]
 desc 'Attempts to recover missing uploads from an index file'
-task 'posts:recover_uploads_from_index', [:path] => :environment do |_, args|
-  path = args[:path]
-  if !File.exist?(path)
-    puts "can not find index #{path}"
-    exit 1
+task 'posts:recover_uploads_from_index' => :environment do |_, args|
+  path = File.expand_path(Rails.root + "public/uploads/all_the_files")
+  if File.exist?(path)
+    puts "Found existing index file at #{path}"
+  else
+    puts "Can not find index #{path} generating index this could take a while..."
+    `cd #{File.dirname(path)} && find -t file > #{path}`
   end
   if RailsMultisite::ConnectionManagement.current_db != "default"
     recover_uploads_from_index(path)
