@@ -343,10 +343,10 @@ class Upload < ActiveRecord::Base
   end
 
   def move(from, to)
-    if SiteSetting.enable_s3_uploads
-      s3_source = self.url.sub Discourse.store.absolute_base_url + "/", ""
-      s3_destination = s3_source.dup.sub from, to
-      Discourse.store.move_file(s3_source, s3_destination)
+    if Discourse.store.external?
+      source = self.url.sub Discourse.store.absolute_base_url + "/", ""
+      destination = source.dup.sub from, to
+      Discourse.store.move_file(source, destination)
     end
 
     local_store = FileStore::LocalStore.new
@@ -358,6 +358,12 @@ class Upload < ActiveRecord::Base
 
     self.url.sub! from, to
     self.save!
+
+    if Discourse.store.external? && !self.private?
+      # remap urls when disabling private uploads on S3
+      old_private_url = Discourse.store.get_local_path_for_upload(self).sub to, from
+      DbHelper.remap(old_private_url, self.url, excluded_tables: %w{uploads})
+    end
   end
 end
 
