@@ -21,16 +21,5 @@ export default Ember.Component.extend({
     return this.get("categories").any(
       c => !Ember.isEmpty(c.get("subcategories"))
     );
-  },
-
-  click(e) {
-    if (!$(e.target).is("a")) {
-      const url = $(e.target)
-        .closest(".category-box")
-        .data("url");
-      if (url) {
-        DiscourseURL.routeTo(url);
-      }
-    }
   }
 });
