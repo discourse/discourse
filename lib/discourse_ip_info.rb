@@ -27,28 +27,18 @@ class DiscourseIpInfo
   def self.mmdb_download(name)
     FileUtils.mkdir_p(path)
 
-    tar_gz_file = FileHelper.download(
-      "https://geolite.maxmind.com/download/geoip/database/#{name}.tar.gz",
+    gz_file = FileHelper.download(
+      "https://geolite.maxmind.com/geoip/databases/#{name}/update",
       max_file_size: 100.megabytes,
-      tmp_file_name: "#{name}.tar.gz"
+      tmp_file_name: "#{name}.gz"
     )
 
-    dest = File.join(Dir.tmpdir, "maxmind_#{SecureRandom.hex}")
-    FileUtils.mkdir_p(dest)
+    path = gz_file.path.sub(/\.gz\z/, "")
+    Discourse::Utils.execute_command("gunzip", path)
 
-    Discourse::Utils.execute_command('tar', '-xzvf', tar_gz_file.path, "-C", dest)
-
-    Dir.glob("#{dest}/**/*.mmdb").each do |path|
-      if path.include?(name)
-        FileUtils.mv(path, mmdb_path(name))
-      else
-        Rails.logger.warn("Skipping unknown mmdb file during ip database update #{path}")
-      end
-    end
-
+    FileUtils.mv(path, mmdb_path(name))
   ensure
-    FileUtils.rm_rf(dest) if dest
-    FileUtils.rm(tar_gz_file) if tar_gz_file
+    gz_file.close!
   end
 
   def mmdb_load(filepath)
