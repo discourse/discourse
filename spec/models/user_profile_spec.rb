@@ -40,7 +40,7 @@ describe UserProfile do
     end
 
     context "website validation" do
-      let(:user_profile) { Fabricate.build(:user_profile) }
+      let(:user_profile) { Fabricate.build(:user_profile, user: Fabricate(:user)) }
 
       it "should not allow invalid URLs" do
         user_profile.website = "http://https://google.com"
