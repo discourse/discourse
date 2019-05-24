@@ -166,9 +166,9 @@ private
         @post.user&.trust_level != TrustLevel[4]
 
         @post.hide!(@post_action_type_id, Post.hidden_reasons[:flagged_by_tl4_user])
-      elsif SiteSetting.score_required_to_hide_post > 0
+      else
         score = ReviewableFlaggedPost.find_by(target: @post)&.score || 0
-        if score >= SiteSetting.score_required_to_hide_post
+        if score >= Reviewable.score_required_to_hide_post
           @post.hide!(@post_action_type_id)
         end
       end

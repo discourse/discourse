@@ -12,8 +12,9 @@ describe "spam rules for users" do
     fab!(:user2)      { Fabricate(:user) }
 
     before do
-      SiteSetting.score_required_to_hide_post = 0
-      SiteSetting.spam_score_to_silence_new_user = 4.0
+      SiteSetting.hide_post_sensitivity = Reviewable.sensitivity[:disabled]
+      Reviewable.set_priorities(high: 4.0)
+      SiteSetting.silence_new_user_sensitivity = Reviewable.sensitivity[:low]
       SiteSetting.num_users_to_silence_new_user = 2
     end
 
@@ -73,9 +74,10 @@ describe "spam rules for users" do
           end
         end
 
-        context 'score_required_to_hide_post takes effect too' do
+        context 'hide_post_sensitivity' do
           it 'should silence the spammer' do
-            SiteSetting.score_required_to_hide_post = 2.0
+            Reviewable.set_priorities(high: 2.0)
+            SiteSetting.hide_post_sensitivity = Reviewable.sensitivity[:low]
             PostActionCreator.create(user2, spam_post, :spam)
             expect(spammer.reload).to be_silenced
             expect(Guardian.new(spammer).can_create_topic?(nil)).to be false

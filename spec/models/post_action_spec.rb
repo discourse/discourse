@@ -517,7 +517,8 @@ describe PostAction do
       mod = Fabricate(:moderator)
       post = Fabricate(:post, user: mod)
 
-      SiteSetting.score_required_to_hide_post = 2.0
+      Reviewable.set_priorities(high: 2.0)
+      SiteSetting.hide_post_sensitivity = Reviewable.sensitivity[:low]
       Discourse.stubs(:site_contact_user).returns(admin)
 
       PostActionCreator.spam(eviltrout, post)
@@ -531,7 +532,8 @@ describe PostAction do
       mod = Fabricate(:moderator)
       post = Fabricate(:post, user: mod)
 
-      SiteSetting.score_required_to_hide_post = 8.0
+      Reviewable.set_priorities(high: 8.0)
+      SiteSetting.hide_post_sensitivity = Reviewable.sensitivity[:low]
       Discourse.stubs(:site_contact_user).returns(admin)
 
       PostActionCreator.spam(eviltrout, post)
@@ -547,7 +549,8 @@ describe PostAction do
       post = create_post
       walterwhite = Fabricate(:walter_white)
 
-      SiteSetting.score_required_to_hide_post = 3.0
+      Reviewable.set_priorities(high: 3.0)
+      SiteSetting.hide_post_sensitivity = Reviewable.sensitivity[:low]
       Discourse.stubs(:site_contact_user).returns(admin)
 
       PostActionCreator.spam(eviltrout, post)
@@ -707,8 +710,9 @@ describe PostAction do
       fab!(:flagger2) { Fabricate(:user) }
 
       before do
-        SiteSetting.score_required_to_hide_post = 0
-        SiteSetting.score_to_auto_close_topic = 12.0
+        SiteSetting.hide_post_sensitivity = Reviewable.sensitivity[:disabled]
+        Reviewable.set_priorities(high: 4.5)
+        SiteSetting.auto_close_topic_sensitivity = Reviewable.sensitivity[:low]
         SiteSetting.num_flaggers_to_close_topic = 2
         SiteSetting.num_hours_to_close_topic = 1
       end
@@ -769,7 +773,8 @@ describe PostAction do
         freeze_time
 
         SiteSetting.num_flaggers_to_close_topic = 1
-        SiteSetting.score_to_auto_close_topic = 2.0
+        Reviewable.set_priorities(high: 0.5)
+        SiteSetting.auto_close_topic_sensitivity = Reviewable.sensitivity[:low]
 
         post = Fabricate(:post, topic: topic)
         PostActionCreator.spam(flagger1, post)
@@ -792,7 +797,8 @@ describe PostAction do
 
         freeze_time timer.execute_at
         SiteSetting.num_flaggers_to_close_topic = 10
-        SiteSetting.score_to_auto_close_topic = 20.0
+        Reviewable.set_priorities(high: 10.0)
+        SiteSetting.auto_close_topic_sensitivity = Reviewable.sensitivity[:low]
 
         Jobs::ToggleTopicClosed.new.execute(topic_timer_id: timer.id, state: false)
 
