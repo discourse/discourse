@@ -188,14 +188,21 @@ class ReviewablesController < ApplicationController
     raise Discourse::InvalidAccess.new unless current_user.admin?
 
     post_action_types = PostActionType.where(id: PostActionType.flag_types.values).order('id')
-    data = { reviewable_score_types: post_action_types }
 
     if request.put?
-      params[:bonuses].each do |id, bonus|
-        PostActionType.where(id: id).update_all(score_bonus: bonus.to_f)
+      params[:reviewable_priorities].each do |id, priority|
+        if !priority.nil? && Reviewable.priorities.has_value?(priority.to_i)
+          # For now, the score bonus is equal to the priority. In the future we might want
+          # to calculate it a different way.
+          PostActionType.where(id: id).update_all(
+            reviewable_priority: priority.to_i,
+            score_bonus: priority.to_f
+          )
+        end
       end
     end
 
+    data = { reviewable_score_types: post_action_types }
     render_serialized(data, ReviewableSettingsSerializer, rest_serializer: true)
   end
 

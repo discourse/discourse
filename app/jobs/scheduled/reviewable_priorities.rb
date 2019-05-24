@@ -12,6 +12,8 @@ class Jobs::ReviewablePriorities < Jobs::Scheduled
         FROM reviewables
     SQL
 
-    Reviewable.set_priorities(medium: res[0], high: res[1])
+    medium, high = res
+
+    Reviewable.set_priorities(medium: medium, high: high)
   end
 end
