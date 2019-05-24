@@ -33,9 +33,9 @@ class DiscourseIpInfo
       tmp_file_name: "#{name}.gz"
     )
 
-    path = gz_file.path.sub(/\.gz\z/, "")
-    Discourse::Utils.execute_command("gunzip", path)
+    Discourse::Utils.execute_command("gunzip", gz_file.path)
 
+    path = gz_file.path.sub(/\.gz\z/, "")
     FileUtils.mv(path, mmdb_path(name))
   ensure
     gz_file&.close!
