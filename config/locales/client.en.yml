@@ -187,7 +187,7 @@ en:
 
     themes:
       default_description: "Default"
-      broken_theme_alert: "⚠️ Theme/component %{theme} has errors which may prevent your site from working correctly! You can disable it at %{path}."
+      broken_theme_alert: "Theme/component %{theme} has errors which may prevent your site from working correctly! You can disable it at %{path}."
 
     s3:
       regions:

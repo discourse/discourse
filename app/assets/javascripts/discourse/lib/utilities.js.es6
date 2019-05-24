@@ -690,7 +690,7 @@ export function rescueThemeError(name, error, api) {
   });
   const alertDiv = document.createElement("div");
   alertDiv.classList.add("broken-theme-alert");
-  alertDiv.innerHTML = message;
+  alertDiv.innerHTML = `⚠️ ${message}`;
   document.body.prepend(alertDiv);
 }
 
