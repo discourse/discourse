@@ -924,3 +924,37 @@ componentTest("noopRow", {
     assert.equal(this.get("value"), "green");
   }
 });
+
+componentTest("onSelectAny", {
+  template: `<div class='test-external-action'></div>{{single-select none="none" content=content onSelectAny=(action externalAction)}}`,
+
+  beforeEach() {
+    this.set("externalAction", actual => {
+      find(".test-external-action").text(actual.value);
+    });
+
+    this.set("content", ["blue"]);
+  },
+
+  async test(assert) {
+    await this.get("subject").expand();
+    await this.get("subject").selectRowByValue("blue");
+
+    assert.equal(
+      find(".test-external-action")
+        .text()
+        .trim(),
+      "blue"
+    );
+
+    await this.get("subject").expand();
+    await this.get("subject").selectNoneRow();
+
+    assert.equal(
+      find(".test-external-action")
+        .text()
+        .trim(),
+      "__none__"
+    );
+  }
+});
