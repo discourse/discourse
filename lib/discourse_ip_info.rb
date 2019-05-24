@@ -29,6 +29,9 @@ class DiscourseIpInfo
 
     uri = URI("https://geolite.maxmind.com/download/geoip/database/#{name}.tar.gz")
 
+    puts uri
+    puts "SIZE: #{Net::HTTP.get(uri).size}"
+
     tar_gz_file = Tempfile.new
     tar_gz_file.binmode
     tar_gz_file.write(Net::HTTP.get(uri))

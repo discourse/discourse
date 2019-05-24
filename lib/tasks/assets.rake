@@ -169,7 +169,8 @@ task 'assets:precompile' => 'assets:precompile:before' do
           DiscourseIpInfo.mmdb_download('GeoLite2-City')
           DiscourseIpInfo.mmdb_download('GeoLite2-ASN')
         rescue => e
-          puts "Something when wrong while downloading the MaxMindDB: #{e.message}"
+          puts "Something when wrong while downloading the MaxMindDB"
+          puts e.message
           puts e.backtrace.join("\n")
         end
       end
