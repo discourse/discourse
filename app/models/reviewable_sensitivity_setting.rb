@@ -19,4 +19,3 @@ class ReviewableSensitivitySetting < EnumSiteSetting
   end
 
 end
-

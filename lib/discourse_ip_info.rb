@@ -33,7 +33,7 @@ class DiscourseIpInfo
         max_file_size: 100.megabytes,
         tmp_file_name: "#{name}.gz"
       )
-      
+
       Discourse::Utils.execute_command("gunzip", gz_file.path)
 
       path = gz_file.path.sub(/\.gz\z/, "")
