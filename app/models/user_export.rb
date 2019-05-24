@@ -3,6 +3,7 @@
 class UserExport < ActiveRecord::Base
   belongs_to :user
   belongs_to :upload, dependent: :destroy
+  belongs_to :topic, dependent: :destroy
 
   around_destroy :ignore_missing_post_uploads
 
@@ -14,7 +15,14 @@ class UserExport < ActiveRecord::Base
 
   def self.remove_old_exports
     UserExport.where('created_at < ?', 2.days.ago).find_each do |user_export|
-      user_export.destroy!
+      UserExport.transaction do
+        begin
+          Post.where(topic_id: user_export.topic_id).find_each { |p| p.destroy! }
+          user_export.destroy!
+        rescue => e
+          Rails.logger.warn("Failed to remove user_export record with id #{user_export.id}: #{e.message}\n#{e.backtrace.join("\n")}")
+        end
+      end
     end
   end
 
@@ -34,4 +42,5 @@ end
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
 #  upload_id  :integer
+#  topic_id   :integer
 #

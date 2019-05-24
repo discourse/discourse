@@ -15,12 +15,14 @@ describe Jobs::ExportCsvFile do
       begin
         Jobs::ExportCsvFile.new.execute(user_id: user.id, entity: "user_archive")
 
-        expect(user.topics_allowed.last.title).to eq(I18n.t(
+        system_message = user.topics_allowed.last
+        expect(system_message.title).to eq(I18n.t(
           "system_messages.csv_export_succeeded.subject_template",
           export_title: "User Archive"
         ))
-
-        expect(user.topics_allowed.last.first_post.raw).to include("user-archive-john_doe-")
+        expect(system_message.first_post.raw).to include("user-archive-john_doe-")
+        expect(system_message.id).to eq(UserExport.last.topic_id)
+        expect(system_message.closed).to eq(true)
       ensure
         user.uploads.each(&:destroy!)
       end
