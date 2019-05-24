@@ -496,7 +496,7 @@ end
 
 def destroy_old_data_exports
   topics = Topic.with_deleted.where(<<~SQL, 2.days.ago)
-    slug = '%-export-complete' AND
+    slug LIKE '%-export-complete' AND
     archetype = 'private_message' AND
     posts_count = 1 AND
     created_at < ? AND
