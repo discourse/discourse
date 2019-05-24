@@ -165,14 +165,8 @@ task 'assets:precompile' => 'assets:precompile:before' do
     if !mmdb_time || mmdb_time < refresh_days.days.ago
       puts "Downloading MaxMindDB..."
       mmdb_thread = Thread.new do
-        begin
-          DiscourseIpInfo.mmdb_download('GeoLite2-City')
-          DiscourseIpInfo.mmdb_download('GeoLite2-ASN')
-        rescue => e
-          puts "Something when wrong while downloading the MaxMindDB"
-          puts e.message
-          puts e.backtrace.join("\n")
-        end
+        DiscourseIpInfo.mmdb_download('GeoLite2-City')
+        DiscourseIpInfo.mmdb_download('GeoLite2-ASN')
       end
     end
   end

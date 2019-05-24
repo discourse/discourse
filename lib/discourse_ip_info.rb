@@ -27,15 +27,11 @@ class DiscourseIpInfo
   def self.mmdb_download(name)
     FileUtils.mkdir_p(path)
 
-    uri = URI("https://geolite.maxmind.com/download/geoip/database/#{name}.tar.gz")
-
-    puts uri
-    puts "SIZE: #{Net::HTTP.get(uri).size}"
-
-    tar_gz_file = Tempfile.new
-    tar_gz_file.binmode
-    tar_gz_file.write(Net::HTTP.get(uri))
-    tar_gz_file.close
+    tar_gz_file = FileHelper.download(
+      "https://geolite.maxmind.com/download/geoip/database/#{name}.tar.gz",
+      max_file_size: 100.megabytes,
+      tmp_file_name: "#{name}.tar.gz"
+    )
 
     dest = File.join(Dir.tmpdir, "maxmind_#{SecureRandom.hex}")
     FileUtils.mkdir_p(dest)
