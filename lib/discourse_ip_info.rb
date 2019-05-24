@@ -27,16 +27,20 @@ class DiscourseIpInfo
   def self.mmdb_download(name)
     FileUtils.mkdir_p(path)
 
-    gz_file = FileHelper.download(
-      "https://geolite.maxmind.com/geoip/databases/#{name}/update",
-      max_file_size: 100.megabytes,
-      tmp_file_name: "#{name}.gz"
-    )
+    begin
+      gz_file = FileHelper.download(
+        "https://geolite.maxmind.com/geoip/databases/#{name}/update",
+        max_file_size: 100.megabytes,
+        tmp_file_name: "#{name}.gz"
+      )
+    rescue HTTPError => e
+      Rails.logger.warn("MaxMindDB (#{name}) could not be downloaded: #{e}")
+    else
+      path = gz_file.path.sub(/\.gz\z/, "")
+      Discourse::Utils.execute_command("gunzip", path)
 
-    path = gz_file.path.sub(/\.gz\z/, "")
-    Discourse::Utils.execute_command("gunzip", path)
-
-    FileUtils.mv(path, mmdb_path(name))
+      FileUtils.mv(path, mmdb_path(name))
+    end
   ensure
     gz_file&.close!
   end
