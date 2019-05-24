@@ -4420,9 +4420,9 @@ en:
       high: "High"
     sensitivity:
       disabled: "Disabled"
-      low: "Low"
-      medium: "Medium"
-      high: "High"
+      low: "Not Likely"
+      medium: "Somewhat Likely"
+      high: "Very Likely"
     must_claim: "You must claim items before acting on them."
     user_claimed: "This item has been claimed by another user."
     missing_version: "You must supply a version parameter"
