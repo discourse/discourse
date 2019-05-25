@@ -9,7 +9,9 @@ task "site_settings:export" => :environment do
 end
 
 desc "Imports site settings"
-task "site_settings:import" => :environment do
+task "site_settings:import", [:import_hidden] => :environment do |t, args|
+  args.with_defaults(import_hidden: false)
+
   yml = (STDIN.tty?) ? '' : STDIN.read
   if yml == ''
     puts
@@ -22,7 +24,7 @@ task "site_settings:import" => :environment do
   puts "starting import..."
   puts
 
-  log, counts = SiteSettingsTask.import(yml)
+  log, counts = SiteSettingsTask.import(yml, import_hidden: args.import_hidden)
 
   puts log
 

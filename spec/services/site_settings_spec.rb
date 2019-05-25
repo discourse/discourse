@@ -31,6 +31,21 @@ describe SiteSettingsTask do
       expect(SiteSetting.title).to eq "Test"
     end
 
+    it "won't update a hidden setting by default" do
+      yml = "logo_url: /logo.png"
+      log, counts = SiteSettingsTask.import(yml)
+      expect(log[0]).to eq "NOT FOUND: existing site setting not found for logo_url"
+      expect(counts[:not_found]).to eq 1
+    end
+
+    it "allows for updating hidden settings" do
+      yml = "logo_url: /logo.png"
+      log, counts = SiteSettingsTask.import(yml, import_hidden: true)
+      expect(log[0]).to eq "Changed logo_url FROM: /images/d-logo-sketch.png TO: /logo.png"
+      expect(counts[:updated]).to eq 1
+      expect(SiteSetting.logo_url).to eq "/logo.png"
+    end
+
     it "won't update a setting that doesn't exist" do
       yml = "fake_setting: foo"
       log, counts = SiteSettingsTask.import(yml)
