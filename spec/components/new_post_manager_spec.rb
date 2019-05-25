@@ -212,7 +212,7 @@ describe NewPostManager do
       handler = -> { nil }
 
       NewPostManager.add_handler(&handler)
-      expect(NewPostManager.handlers).to eq([default_handler, handler])
+      expect(NewPostManager.handlers).to eq([handler])
     end
 
     it "can be added in high priority" do
@@ -223,7 +223,7 @@ describe NewPostManager do
       NewPostManager.add_handler(100, &a)
       NewPostManager.add_handler(50, &b)
       NewPostManager.add_handler(101, &c)
-      expect(NewPostManager.handlers).to eq([c, a, b, default_handler])
+      expect(NewPostManager.handlers).to eq([c, a, b])
     end
 
   end

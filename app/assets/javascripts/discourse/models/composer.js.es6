@@ -724,6 +724,7 @@ const Composer = RestModel.extend({
     }
 
     const props = {
+      topic_id: this.topic.id,
       raw: this.reply,
       raw_old: this.editConflict ? null : this.originalText,
       edit_reason: opts.editReason,
