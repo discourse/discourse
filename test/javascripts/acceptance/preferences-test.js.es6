@@ -6,12 +6,19 @@ acceptance("User Preferences", {
   pretend(server, helper) {
     server.post("/u/second_factors.json", () => {
       return helper.response({
+        success: "OK",
+        password_required: "true"
+      });
+    });
+
+    server.post("/u/create_second_factor_totp.json", () => {
+      return helper.response({
         key: "rcyryaqage3jexfj",
         qr: '<div id="test-qr">qr-code</div>'
       });
     });
 
-    server.put("/u/second_factor.json", () => {
+    server.post("/u/enable_second_factor_totp.json", () => {
       return helper.response({ error: "invalid token" });
     });
 
@@ -214,12 +221,13 @@ QUnit.test("second factor", async assert => {
 
   await fillIn("#password", "secrets");
   await click(".user-preferences .btn-primary");
-
-  assert.ok(exists("#test-qr"), "shows qr code");
   assert.notOk(exists("#password"), "it hides the password input");
 
+  await click(".new-totp");
+  assert.ok(exists("#test-qr"), "shows qr code");
+
   await fillIn("#second-factor-token", "111111");
-  await click(".btn-primary");
+  await click(".add-totp");
 
   assert.ok(
     find(".alert-error")
@@ -227,20 +235,6 @@ QUnit.test("second factor", async assert => {
       .indexOf("invalid token") > -1,
     "shows server validation error message"
   );
-});
-
-QUnit.test("second factor backup", async assert => {
-  await visit("/u/eviltrout/preferences/second-factor-backup");
-
-  assert.ok(
-    exists("#second-factor-token"),
-    "it has a authentication token input"
-  );
-
-  await fillIn("#second-factor-token", "111111");
-  await click(".user-preferences .btn-primary");
-
-  assert.ok(exists(".backup-codes-area"), "shows backup codes");
 });
 
 QUnit.test("default avatar selector", async assert => {
@@ -256,6 +250,73 @@ QUnit.test("default avatar selector", async assert => {
     6543,
     "it should set the gravatar_avatar_upload_id property"
   );
+});
+
+acceptance("second factor backups", {
+  pretend(server, helper) {
+    server.post("/u/second_factors.json", () => {
+      return helper.response({
+        success: "OK",
+        totps: [{ id: 1, name: "one of them" }]
+      });
+    });
+
+    server.get("/session/current.json", () => {
+      return helper.response({
+        current_user: {
+          id: 19,
+          username: "eviltrout",
+          uploaded_avatar_id: 5275,
+          avatar_template: "/user_avatar/localhost/eviltrout/{size}/5275.png",
+          name: "Robin Ward",
+          unread_notifications: 0,
+          unread_private_messages: 0,
+          admin: true,
+          notification_channel_position: null,
+          site_flagged_posts_count: 1,
+          moderator: true,
+          staff: true,
+          title: "co-founder",
+          reply_count: 859,
+          topic_count: 36,
+          enable_quoting: true,
+          external_links_in_new_tab: false,
+          dynamic_favicon: true,
+          trust_level: 4,
+          can_edit: true,
+          can_invite_to_forum: true,
+          should_be_redirected_to_top: false,
+          custom_fields: {},
+          muted_category_ids: [],
+          dismissed_banner_key: null,
+          akismet_review_count: 0,
+          title_count_mode: "notifications",
+          second_factor_enabled
+        }
+      });
+    });
+
+    server.put("/u/second_factors_backup.json", () => {
+      return helper.response({
+        backup_codes: ["dsffdsd", "fdfdfdsf", "fddsds"]
+      });
+    });
+
+    server.get("/u/eviltrout/activity.json", () => {
+      return helper.response({});
+    });
+  }
+});
+QUnit.test("second factor backup", async assert => {
+  await visit("/u/eviltrout/preferences/second-factor");
+  await click(".edit-2fa-backup");
+  assert.ok(
+    exists(".second-factor-backup-preferences"),
+    "shows the 2fa backup panel"
+  );
+  await click(".second-factor-backup-preferences .btn-primary");
+
+  assert.ok(exists(".backup-codes-area"), "shows backup codes");
 });
 
 acceptance("Avatar selector when selectable avatars is enabled", {

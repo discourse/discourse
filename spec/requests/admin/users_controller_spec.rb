@@ -907,7 +907,7 @@ RSpec.describe Admin::UsersController do
   end
 
   describe '#disable_second_factor' do
-    let(:second_factor) { user.create_totp }
+    let(:second_factor) { user.create_totp(enabled: true) }
     let(:second_factor_backup) { user.generate_backup_codes }
 
     describe 'as an admin' do
@@ -915,7 +915,7 @@ RSpec.describe Admin::UsersController do
         sign_in(admin)
         second_factor
         second_factor_backup
-        expect(user.reload.user_second_factors.totp).to eq(second_factor)
+        expect(user.reload.user_second_factors.totps.first).to eq(second_factor)
       end
 
       it 'should able to disable the second factor for another user' do

@@ -1,9 +1,9 @@
 import { default as computed } from "ember-addons/ember-computed-decorators";
-import { default as DiscourseURL, userPath } from "discourse/lib/url";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { SECOND_FACTOR_METHODS } from "discourse/models/user";
+import ModalFunctionality from "discourse/mixins/modal-functionality";
 
-export default Ember.Controller.extend({
+export default Ember.Controller.extend(ModalFunctionality, {
   loading: false,
   errorMessage: null,
   successMessage: null,
@@ -14,30 +14,20 @@ export default Ember.Controller.extend({
   backupCodes: null,
   secondFactorMethod: SECOND_FACTOR_METHODS.TOTP,
 
-  @computed("secondFactorToken", "secondFactorMethod")
-  isValidSecondFactorToken(secondFactorToken, secondFactorMethod) {
-    if (secondFactorMethod === SECOND_FACTOR_METHODS.TOTP) {
-      return secondFactorToken && secondFactorToken.length === 6;
-    } else if (secondFactorMethod === SECOND_FACTOR_METHODS.BACKUP_CODE) {
-      return secondFactorToken && secondFactorToken.length === 16;
-    }
-  },
-
-  @computed("isValidSecondFactorToken", "backupEnabled", "loading")
-  isDisabledGenerateBackupCodeBtn(isValid, backupEnabled, loading) {
-    return !isValid || loading;
-  },
-
-  @computed("isValidSecondFactorToken", "backupEnabled", "loading")
-  isDisabledDisableBackupCodeBtn(isValid, backupEnabled, loading) {
-    return !isValid || !backupEnabled || loading;
-  },
-
   @computed("backupEnabled")
   generateBackupCodeBtnLabel(backupEnabled) {
     return backupEnabled
       ? "user.second_factor_backup.regenerate"
       : "user.second_factor_backup.enable";
+  },
+
+  onShow() {
+    this.setProperties({
+      loading: false,
+      errorMessage: null,
+      successMessage: null,
+      backupCodes: null
+    });
   },
 
   actions: {
@@ -59,18 +49,10 @@ export default Ember.Controller.extend({
 
     disableSecondFactorBackup() {
       this.set("backupCodes", []);
-
-      if (!this.secondFactorToken) return;
-
       this.set("loading", true);
 
-      this.model
-        .toggleSecondFactor(
-          this.secondFactorToken,
-          this.secondFactorMethod,
-          SECOND_FACTOR_METHODS.BACKUP_CODE,
-          false
-        )
+      this.get("model")
+        .updateSecondFactor(0, "", true, SECOND_FACTOR_METHODS.BACKUP_CODE)
         .then(response => {
           if (response.error) {
             this.set("errorMessage", response.error);
@@ -78,28 +60,28 @@ export default Ember.Controller.extend({
           }
 
           this.set("errorMessage", null);
-
-          const usernameLower = this.model.username.toLowerCase();
-          DiscourseURL.redirectTo(userPath(`${usernameLower}/preferences`));
+          this.get("model").set("second_factor_backup_enabled", false);
+          this.markDirty();
+          this.send("closeModal");
         })
-        .catch(popupAjaxError)
+        .catch(error => {
+          this.send("closeModal");
+          this.onError(error);
+        })
         .finally(() => this.set("loading", false));
     },
 
     generateSecondFactorCodes() {
-      if (!this.secondFactorToken) return;
       this.set("loading", true);
-      this.model
-        .generateSecondFactorCodes(
-          this.secondFactorToken,
-          this.secondFactorMethod
-        )
+      this.get("model")
+        .generateSecondFactorCodes()
         .then(response => {
           if (response.error) {
             this.set("errorMessage", response.error);
             return;
           }
 
+          this.markDirty();
           this.setProperties({
             errorMessage: null,
             backupCodes: response.backup_codes,
@@ -107,11 +89,13 @@ export default Ember.Controller.extend({
             remainingCodes: response.backup_codes.length
           });
         })
-        .catch(popupAjaxError)
+        .catch(error => {
+          this.send("closeModal");
+          this.onError(error);
+        })
         .finally(() => {
           this.setProperties({
-            loading: false,
-            secondFactorToken: null
+            loading: false
           });
         });
     }

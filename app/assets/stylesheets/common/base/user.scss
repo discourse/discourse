@@ -695,6 +695,21 @@
   }
 }
 
+.second-factor {
+  &.instructions {
+    color: $primary-medium;
+    margin-top: 5px;
+    margin-bottom: 10px;
+    font-size: $font-down-1;
+  }
+  .second-factor-item {
+    margin-top: 0.5rem;
+  }
+  .btn.edit {
+    min-height: auto;
+  }
+}
+
 .primary-textual .staged,
 #user-card .staged {
   font-style: italic;

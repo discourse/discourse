@@ -205,17 +205,13 @@ const User = RestModel.extend({
     return suspendedTill && moment(suspendedTill).isAfter();
   },
 
-  @computed("suspended_till")
-  suspendedForever: isForever,
+  @computed("suspended_till") suspendedForever: isForever,
 
-  @computed("silenced_till")
-  silencedForever: isForever,
+  @computed("silenced_till") silencedForever: isForever,
 
-  @computed("suspended_till")
-  suspendedTillDate: longDate,
+  @computed("suspended_till") suspendedTillDate: longDate,
 
-  @computed("silenced_till")
-  silencedTillDate: longDate,
+  @computed("silenced_till") silencedTillDate: longDate,
 
   changeUsername(new_username) {
     return ajax(userPath(`${this.username_lower}/preferences/username`), {
@@ -364,6 +360,40 @@ const User = RestModel.extend({
     });
   },
 
+  createSecondFactorTotp() {
+    return ajax("/u/create_second_factor_totp.json", {
+      type: "POST"
+    });
+  },
+
+  enableSecondFactorTotp(authToken, name) {
+    return ajax("/u/enable_second_factor_totp.json", {
+      data: {
+        second_factor_token: authToken,
+        name
+      },
+      type: "POST"
+    });
+  },
+
+  disableAllSecondFactors() {
+    return ajax("/u/disable_second_factor.json", {
+      type: "PUT"
+    });
+  },
+
+  updateSecondFactor(id, name, disable, targetMethod) {
+    return ajax("/u/second_factor.json", {
+      data: {
+        second_factor_target: targetMethod,
+        name,
+        disable,
+        id
+      },
+      type: "PUT"
+    });
+  },
+
   toggleSecondFactor(authToken, authMethod, targetMethod, enable) {
     return ajax("/u/second_factor.json", {
       data: {
@@ -376,12 +406,8 @@ const User = RestModel.extend({
     });
   },
 
-  generateSecondFactorCodes(authToken, authMethod) {
+  generateSecondFactorCodes() {
     return ajax("/u/second_factors_backup.json", {
-      data: {
-        second_factor_token: authToken,
-        second_factor_method: authMethod
-      },
       type: "PUT"
     });
   },

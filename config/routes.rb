@@ -371,8 +371,11 @@ Discourse::Application.routes.draw do
       end
     end
 
-    post "#{root_path}/second_factors" => "users#create_second_factor"
+    post "#{root_path}/second_factors" => "users#list_second_factors"
     put "#{root_path}/second_factor" => "users#update_second_factor"
+    post "#{root_path}/create_second_factor_totp" => "users#create_second_factor_totp"
+    post "#{root_path}/enable_second_factor_totp" => "users#enable_second_factor_totp"
+    put "#{root_path}/disable_second_factor" => "users#disable_second_factor"
 
     put "#{root_path}/second_factors_backup" => "users#create_second_factor_backup"
 

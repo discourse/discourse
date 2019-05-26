@@ -3,35 +3,39 @@
 module SecondFactorManager
   extend ActiveSupport::Concern
 
-  def totp
-    self.create_totp
-    ROTP::TOTP.new(self.user_second_factors.totp.data, issuer: SiteSetting.title)
-  end
-
   def create_totp(opts = {})
-    if !self.user_second_factors.totp
-      UserSecondFactor.create!({
-        user_id: self.id,
-        method: UserSecondFactor.methods[:totp],
-        data: ROTP::Base32.random_base32
-      }.merge(opts))
-    end
+    UserSecondFactor.create!({
+                               user_id: self.id,
+                               method: UserSecondFactor.methods[:totp],
+                               data: ROTP::Base32.random_base32
+                             }.merge(opts))
   end
 
-  def totp_provisioning_uri
-    self.totp.provisioning_uri(self.email)
+  def get_totp_object(data)
+    ROTP::TOTP.new(data, issuer: SiteSetting.title)
+  end
+
+  def totp_provisioning_uri(data)
+    get_totp_object(data).provisioning_uri(self.email)
   end
 
   def authenticate_totp(token)
-    totp = self.totp
-    last_used = 0
+    totps = self&.user_second_factors.totps
+    authenticated = false
+    totps.each do |totp|
 
-    if self.user_second_factors.totp.last_used
-      last_used = self.user_second_factors.totp.last_used.to_i
+      last_used = 0
+
+      if totp.last_used
+        last_used = totp.last_used.to_i
+      end
+
+      authenticated = !token.blank? && totp.get_totp_object.verify_with_drift_and_prior(token, 30, last_used)
+      if authenticated
+        totp.update!(last_used: DateTime.now)
+        break
+      end
     end
-
-    authenticated = !token.blank? && totp.verify_with_drift_and_prior(token, 30, last_used)
-    self.user_second_factors.totp.update!(last_used: DateTime.now) if authenticated
     !!authenticated
   end
 
