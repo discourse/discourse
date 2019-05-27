@@ -506,19 +506,8 @@ class Group < ActiveRecord::Base
 
   PUBLISH_CATEGORIES_LIMIT = 10
 
-  def add(user, notify: false)
+  def add(user)
     self.users.push(user) unless self.users.include?(user)
-
-    if notify
-      Notification.create!(
-        notification_type: Notification.types[:group_invite],
-        user_id: user.id,
-        data: {
-          group_id: id,
-          group_name: name
-        }.to_json
-      )
-    end
 
     if self.categories.count < PUBLISH_CATEGORIES_LIMIT
       MessageBus.publish('/categories', {

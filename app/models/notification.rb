@@ -63,8 +63,7 @@ class Notification < ActiveRecord::Base
                         watching_first_post: 17,
                         topic_reminder: 18,
                         liked_consolidated: 19,
-                        post_approved: 20,
-                        group_invite: 21
+                        post_approved: 20
                        )
   end
 
