@@ -4330,6 +4330,17 @@ en:
       colors:
         title: "Theme"
 
+      themes_further_reading:
+        title: "Further reading for themes"
+        description:
+          "You can customize many aspects of your community's look-and-feel in just a few clicks (for example by adding a header or footer). Here is a useful list of resources to learn more about themes and theme components in Discourse:
+          <ul>
+          <li><a href='https://meta.discourse.org/t/91966' target='_blank'>Beginner's guide to creating themes and theme components</a></li>
+          <li><a href='https://meta.discourse.org/t/63682' target='_blank'>How do I install a theme or theme component?</a></li>
+          <li><a href='https://meta.discourse.org/t/110448' target='_blank'>Theme Developer Quick Reference Guide</a></li>
+          </ul>
+          And remember to visit the <a href='https://meta.discourse.org/c/theme' target='_blank'>#themes</a> category on <a href='https://meta.discourse.org' target='_blank'>meta.discourse.org</a> regularly to see the newest themes and components posted by staff and contributors."
+
       logos:
         title: "Logos"
         fields:
