@@ -1388,9 +1388,9 @@ en:
     anon_polling_interval: "How often should anonymous clients poll in milliseconds"
     background_polling_interval: "How often should the clients poll in milliseconds (when the window is in the background)"
 
-    hide_post_sensitivity: "The likelyhood that a flagged post will be hidden"
-    silence_new_user_sensitivity: "The likelyhood that a new user will be silenced based on spam flags"
-    auto_close_topic_sensitivity: "The likelyhood that a flagged topic will be automatically closed"
+    hide_post_sensitivity: "The likelihood that a flagged post will be hidden"
+    silence_new_user_sensitivity: "The likelihood that a new user will be silenced based on spam flags"
+    auto_close_topic_sensitivity: "The likelihood that a flagged topic will be automatically closed"
 
     cooldown_minutes_after_hiding_posts: "Number of minutes a user must wait before they can edit a post hidden via community flagging"
 
@@ -4420,9 +4420,9 @@ en:
       high: "High"
     sensitivity:
       disabled: "Disabled"
-      low: "Not Likely"
-      medium: "Somewhat Likely"
-      high: "Very Likely"
+      low: "Low"
+      medium: "Medium"
+      high: "High"
     must_claim: "You must claim items before acting on them."
     user_claimed: "This item has been claimed by another user."
     missing_version: "You must supply a version parameter"
