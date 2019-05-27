@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 def list_files(base_dir, pattern = '*')
   Dir[File.join("#{base_dir}", pattern)]
 end
