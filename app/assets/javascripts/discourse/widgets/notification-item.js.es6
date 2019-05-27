@@ -121,7 +121,7 @@ createWidget("notification-item", {
     if (notificationType === GROUP_SUMMARY_TYPE) {
       const count = data.inbox_count;
       const groupName = data.group_name;
-      return I18n.t(scope, { count, groupName });
+      return I18n.t(scope, { count, group_name: groupName });
     } else if (notificationType === GROUP_INVITE_TYPE) {
       const groupName = data.group_name;
       return I18n.t(scope, { group_name: groupName });
