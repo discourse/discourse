@@ -1926,10 +1926,13 @@ describe UsersController do
       end
 
       it 'can successfully pick a custom avatar' do
-        put "/u/#{user.username}/preferences/avatar/pick.json", params: {
-          upload_id: upload.id, type: "custom"
-        }
+        events = DiscourseEvent.track_events do
+          put "/u/#{user.username}/preferences/avatar/pick.json", params: {
+            upload_id: upload.id, type: "custom"
+          }
+        end
 
+        expect(events.map { |event| event[:event_name] }).to include(:user_updated)
         expect(response.status).to eq(200)
         expect(user.reload.uploaded_avatar_id).to eq(upload.id)
         expect(user.user_avatar.reload.custom_upload_id).to eq(upload.id)
@@ -1981,8 +1984,11 @@ describe UsersController do
           end
 
           it 'can successfully select an avatar' do
-            put "/u/#{user.username}/preferences/avatar/select.json", params: { url: avatar1.url }
+            events = DiscourseEvent.track_events do
+              put "/u/#{user.username}/preferences/avatar/select.json", params: { url: avatar1.url }
+            end
 
+            expect(events.map { |event| event[:event_name] }).to include(:user_updated)
             expect(response.status).to eq(200)
             expect(user.reload.uploaded_avatar_id).to eq(avatar1.id)
             expect(user.user_avatar.reload.custom_upload_id).to eq(avatar1.id)
