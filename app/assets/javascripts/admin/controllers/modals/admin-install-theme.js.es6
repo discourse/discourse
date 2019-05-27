@@ -166,14 +166,14 @@ export default Ember.Controller.extend(ModalFunctionality, {
 
   @observes("privateChecked")
   privateWasChecked() {
-    this.get("privateChecked")
+    this.privateChecked
       ? this.set("urlPlaceholder", "git@github.com:discourse/sample_theme.git")
       : this.set("urlPlaceholder", "https://github.com/discourse/sample_theme");
 
-    const checked = this.get("privateChecked");
+    const checked = this.privateChecked;
     if (checked && !this._keyLoading) {
       this._keyLoading = true;
-      ajax(this.get("keyGenUrl"), { method: "POST" })
+      ajax(this.keyGenUrl, { method: "POST" })
         .then(pair => {
           this.setProperties({
             privateKey: pair.private_key,
@@ -228,13 +228,13 @@ export default Ember.Controller.extend(ModalFunctionality, {
     },
 
     installTheme() {
-      if (this.get("create")) {
+      if (this.create) {
         this.set("loading", true);
-        const theme = this.store.createRecord(this.get("recordType"));
+        const theme = this.store.createRecord(this.recordType);
         theme
-          .save({ name: this.get("name"), component: this.get("component") })
+          .save({ name: this.name, component: this.component })
           .then(() => {
-            this.get("themesController").send("addTheme", theme);
+            this.themesController.send("addTheme", theme);
             this.send("closeModal");
           })
           .catch(popupAjaxError)
@@ -247,21 +247,21 @@ export default Ember.Controller.extend(ModalFunctionality, {
         type: "POST"
       };
 
-      if (this.get("local")) {
+      if (this.local) {
         options.processData = false;
         options.contentType = false;
         options.data = new FormData();
-        options.data.append("theme", this.get("localFile"));
+        options.data.append("theme", this.localFile);
       }
 
-      if (this.get("remote") || this.get("popular")) {
+      if (this.remote || this.popular) {
         options.data = {
-          remote: this.get("uploadUrl"),
-          branch: this.get("branch")
+          remote: this.uploadUrl,
+          branch: this.branch
         };
 
-        if (this.get("privateChecked")) {
-          options.data.private_key = this.get("privateKey");
+        if (this.privateChecked) {
+          options.data.private_key = this.privateKey;
         }
       }
 
@@ -271,13 +271,13 @@ export default Ember.Controller.extend(ModalFunctionality, {
       }
 
       this.set("loading", true);
-      ajax(this.get("importUrl"), options)
+      ajax(this.importUrl, options)
         .then(result => {
           const theme = this.store.createRecord(
-            this.get("recordType"),
+            this.recordType,
             result.theme
           );
-          this.get("adminCustomizeThemes").send("addTheme", theme);
+          this.adminCustomizeThemes.send("addTheme", theme);
           this.send("closeModal");
         })
         .then(() => {

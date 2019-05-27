@@ -8,7 +8,7 @@ const Badge = RestModel.extend({
 
   @computed
   url() {
-    return Discourse.getURL(`/badges/${this.get("id")}/${this.get("slug")}`);
+    return Discourse.getURL(`/badges/${this.id}/${this.slug}`);
   },
 
   /**
@@ -50,9 +50,9 @@ const Badge = RestModel.extend({
       requestType = "POST";
     const self = this;
 
-    if (this.get("id")) {
+    if (this.id) {
       // We are updating an existing badge.
-      url += "/" + this.get("id");
+      url += "/" + this.id;
       requestType = "PUT";
     }
 
@@ -76,8 +76,8 @@ const Badge = RestModel.extend({
     @returns {Promise} A promise that resolves to the server response
   **/
   destroy: function() {
-    if (this.get("newBadge")) return Ember.RSVP.resolve();
-    return ajax("/admin/badges/" + this.get("id"), {
+    if (this.newBadge) return Ember.RSVP.resolve();
+    return ajax("/admin/badges/" + this.id, {
       type: "DELETE"
     });
   }

@@ -66,7 +66,7 @@ export default buildCategoryPanel("general", {
     "category.text_color"
   )
   categoryBadgePreview(parentCategoryId, name, color, textColor) {
-    const category = this.get("category");
+    const category = this.category;
     const c = Category.create({
       name,
       color,

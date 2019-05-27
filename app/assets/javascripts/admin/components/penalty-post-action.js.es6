@@ -17,7 +17,7 @@ export default Ember.Component.extend({
 
   actions: {
     penaltyChanged() {
-      let postAction = this.get("postAction");
+      let postAction = this.postAction;
 
       // If we switch to edit mode, jump to the edit textarea
       if (postAction === "edit") {

@@ -6,7 +6,7 @@ export default Ember.Component.extend({
 
   init() {
     this._super(...arguments);
-    const name = this.get("name");
+    const name = this.name;
     const html = getCustomHTML(name);
 
     if (html) {
@@ -22,15 +22,15 @@ export default Ember.Component.extend({
 
   didInsertElement() {
     this._super(...arguments);
-    if (this.get("triggerAppEvent") === "true") {
-      this.appEvents.trigger(`inserted-custom-html:${this.get("name")}`);
+    if (this.triggerAppEvent === "true") {
+      this.appEvents.trigger(`inserted-custom-html:${this.name}`);
     }
   },
 
   willDestroyElement() {
     this._super(...arguments);
-    if (this.get("triggerAppEvent") === "true") {
-      this.appEvents.trigger(`destroyed-custom-html:${this.get("name")}`);
+    if (this.triggerAppEvent === "true") {
+      this.appEvents.trigger(`destroyed-custom-html:${this.name}`);
     }
   }
 });

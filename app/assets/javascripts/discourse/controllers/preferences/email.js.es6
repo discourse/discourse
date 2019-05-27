@@ -61,8 +61,8 @@ export default Ember.Controller.extend({
       const self = this;
       this.set("saving", true);
 
-      return this.get("model")
-        .changeEmail(this.get("newEmail"))
+      return this.model
+        .changeEmail(this.newEmail)
         .then(
           () => self.set("success", true),
           e => {

@@ -55,7 +55,7 @@ export default DropdownSelectBoxComponent.extend({
   computeHeaderContent() {
     let content = this._super(...arguments);
 
-    switch (this.get("action")) {
+    switch (this.action) {
       case PRIVATE_MESSAGE:
       case CREATE_TOPIC:
       case REPLY:
@@ -296,7 +296,7 @@ export default DropdownSelectBoxComponent.extend({
     onSelect(value) {
       let action = `${Ember.String.camelize(value)}Selected`;
       if (this[action]) {
-        let model = this.get("composerModel");
+        let model = this.composerModel;
         this[action](
           model.getProperties(
             "draftKey",

@@ -13,7 +13,7 @@ export default Ember.Component.extend({
 
   didInsertElement() {
     this._super(...arguments);
-    if (this.get("focusTarget") === "title") {
+    if (this.focusTarget === "title") {
       const $input = this.$("input");
 
       afterTransition(this.$().closest("#reply-control"), () => {
@@ -64,7 +64,7 @@ export default Ember.Component.extend({
   titleMaxLength() {
     // maxLength gets in the way of pasting long links, so don't use it if featured links are allowed.
     // Validation will display a message if titles are too long.
-    return this.get("watchForLink")
+    return this.watchForLink
       ? null
       : this.siteSettings.max_topic_title_length;
   },
@@ -74,7 +74,7 @@ export default Ember.Component.extend({
     if (this.get("composer.titleLength") === 0) {
       this.set("autoPosted", false);
     }
-    if (this.get("autoPosted") || !this.get("watchForLink")) {
+    if (this.autoPosted || !this.watchForLink) {
       return;
     }
 
@@ -91,7 +91,7 @@ export default Ember.Component.extend({
 
   @observes("composer.replyLength")
   _clearFeaturedLink() {
-    if (this.get("watchForLink") && this.bodyIsDefault()) {
+    if (this.watchForLink && this.bodyIsDefault()) {
       this.set("composer.featuredLink", null);
     }
   },
@@ -101,7 +101,7 @@ export default Ember.Component.extend({
       return;
     }
 
-    if (this.get("isAbsoluteUrl") && this.bodyIsDefault()) {
+    if (this.isAbsoluteUrl && this.bodyIsDefault()) {
       // only feature links to external sites
       if (
         this.get("composer.title").match(
@@ -155,7 +155,7 @@ export default Ember.Component.extend({
 
       const $h = $(html),
         heading = $h.find("h3").length > 0 ? $h.find("h3") : $h.find("h4"),
-        composer = this.get("composer");
+        composer = this.composer;
 
       composer.appendText(this.get("composer.title"), null, { block: true });
 

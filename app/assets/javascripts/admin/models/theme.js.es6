@@ -56,7 +56,7 @@ const Theme = RestModel.extend({
       "footer"
     ];
 
-    const scss_fields = (this.get("theme_fields") || [])
+    const scss_fields = (this.theme_fields || [])
       .filter(f => f.target === "extra_scss" && f.name !== "")
       .map(f => f.name);
 
@@ -71,7 +71,7 @@ const Theme = RestModel.extend({
       settings: ["yaml"],
       translations: [
         "en",
-        ...(this.get("theme_fields") || [])
+        ...(this.theme_fields || [])
           .filter(f => f.target === "translations" && f.name !== "en")
           .map(f => f.name)
       ],
@@ -118,7 +118,7 @@ const Theme = RestModel.extend({
 
     let hash = {};
     fields.forEach(field => {
-      if (!field.type_id || this.get("FIELDS_IDS").includes(field.type_id)) {
+      if (!field.type_id || this.FIELDS_IDS.includes(field.type_id)) {
         hash[this.getKey(field)] = field;
       }
     });
@@ -162,7 +162,7 @@ const Theme = RestModel.extend({
     if (name) {
       return !Ember.isEmpty(this.getField(target, name));
     } else {
-      let fields = this.get("theme_fields") || [];
+      let fields = this.theme_fields || [];
       return fields.any(
         field => field.target === target && !Ember.isEmpty(field.value)
       );
@@ -170,20 +170,20 @@ const Theme = RestModel.extend({
   },
 
   hasError(target, name) {
-    return this.get("theme_fields")
+    return this.theme_fields
       .filter(f => f.target === target && (!name || name === f.name))
       .any(f => f.error);
   },
 
   getError(target, name) {
-    let themeFields = this.get("themeFields");
+    let themeFields = this.themeFields;
     let key = this.getKey({ target, name });
     let field = themeFields[key];
     return field ? field.error : "";
   },
 
   getField(target, name) {
-    let themeFields = this.get("themeFields");
+    let themeFields = this.themeFields;
     let key = this.getKey({ target, name });
     let field = themeFields[key];
     return field ? field.value : "";
@@ -200,12 +200,12 @@ const Theme = RestModel.extend({
 
   setField(target, name, value, upload_id, type_id) {
     this.set("changed", true);
-    let themeFields = this.get("themeFields");
+    let themeFields = this.themeFields;
     let field = { name, target, value, upload_id, type_id };
 
     // slow path for uploads and so on
     if (type_id && type_id > 1) {
-      let fields = this.get("theme_fields");
+      let fields = this.theme_fields;
       let existing = fields.find(
         f => f.target === target && f.name === name && f.type_id === type_id
       );
@@ -246,13 +246,13 @@ const Theme = RestModel.extend({
   },
 
   removeChildTheme(theme) {
-    const childThemes = this.get("childThemes");
+    const childThemes = this.childThemes;
     childThemes.removeObject(theme);
     return this.saveChanges("child_theme_ids");
   },
 
   addChildTheme(theme) {
-    let childThemes = this.get("childThemes");
+    let childThemes = this.childThemes;
     if (!childThemes) {
       childThemes = [];
       this.set("childThemes", childThemes);

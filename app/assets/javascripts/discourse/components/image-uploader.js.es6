@@ -80,19 +80,19 @@ export default Ember.Component.extend(UploadMixin, {
   },
 
   _applyLightbox() {
-    if (this.get("imageUrl")) Ember.run.next(() => lightbox(this.$()));
+    if (this.imageUrl) Ember.run.next(() => lightbox(this.$()));
   },
 
   actions: {
     toggleLightbox() {
-      if (this.get("imageFilename")) {
+      if (this.imageFilename) {
         this._openLightbox();
       } else {
         this.set("loadingLightbox", true);
 
         ajax(`/uploads/lookup-metadata`, {
           type: "POST",
-          data: { url: this.get("imageUrl") }
+          data: { url: this.imageUrl }
         })
           .then(json => {
             this.setProperties({

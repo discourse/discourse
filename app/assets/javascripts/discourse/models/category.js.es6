@@ -7,13 +7,13 @@ import PermissionType from "discourse/models/permission-type";
 const Category = RestModel.extend({
   @on("init")
   setupGroupsAndPermissions() {
-    const availableGroups = this.get("available_groups");
+    const availableGroups = this.available_groups;
     if (!availableGroups) {
       return;
     }
     this.set("availableGroups", availableGroups);
 
-    const groupPermissions = this.get("group_permissions");
+    const groupPermissions = this.group_permissions;
     if (groupPermissions) {
       this.set(
         "permissions",
@@ -74,7 +74,7 @@ const Category = RestModel.extend({
 
   @computed("topic_count")
   moreTopics(topicCount) {
-    return topicCount > (this.get("num_featured_topics") || 2);
+    return topicCount > (this.num_featured_topics || 2);
   },
 
   @computed("topic_count", "subcategories")
@@ -89,76 +89,76 @@ const Category = RestModel.extend({
   },
 
   save() {
-    const id = this.get("id");
+    const id = this.id;
     const url = id ? `/categories/${id}` : "/categories";
 
     return ajax(url, {
       data: {
-        name: this.get("name"),
-        slug: this.get("slug"),
-        color: this.get("color"),
-        text_color: this.get("text_color"),
-        secure: this.get("secure"),
+        name: this.name,
+        slug: this.slug,
+        color: this.color,
+        text_color: this.text_color,
+        secure: this.secure,
         permissions: this._permissionsForUpdate(),
-        auto_close_hours: this.get("auto_close_hours"),
+        auto_close_hours: this.auto_close_hours,
         auto_close_based_on_last_post: this.get(
           "auto_close_based_on_last_post"
         ),
-        position: this.get("position"),
-        email_in: this.get("email_in"),
-        email_in_allow_strangers: this.get("email_in_allow_strangers"),
-        mailinglist_mirror: this.get("mailinglist_mirror"),
-        parent_category_id: this.get("parent_category_id"),
+        position: this.position,
+        email_in: this.email_in,
+        email_in_allow_strangers: this.email_in_allow_strangers,
+        mailinglist_mirror: this.mailinglist_mirror,
+        parent_category_id: this.parent_category_id,
         uploaded_logo_id: this.get("uploaded_logo.id"),
         uploaded_background_id: this.get("uploaded_background.id"),
-        allow_badges: this.get("allow_badges"),
-        custom_fields: this.get("custom_fields"),
-        topic_template: this.get("topic_template"),
-        suppress_from_latest: this.get("suppress_from_latest"),
-        all_topics_wiki: this.get("all_topics_wiki"),
-        allowed_tags: this.get("allowed_tags"),
-        allowed_tag_groups: this.get("allowed_tag_groups"),
-        allow_global_tags: this.get("allow_global_tags"),
-        sort_order: this.get("sort_order"),
-        sort_ascending: this.get("sort_ascending"),
-        topic_featured_link_allowed: this.get("topic_featured_link_allowed"),
-        show_subcategory_list: this.get("show_subcategory_list"),
-        num_featured_topics: this.get("num_featured_topics"),
-        default_view: this.get("default_view"),
-        subcategory_list_style: this.get("subcategory_list_style"),
-        default_top_period: this.get("default_top_period"),
-        minimum_required_tags: this.get("minimum_required_tags"),
+        allow_badges: this.allow_badges,
+        custom_fields: this.custom_fields,
+        topic_template: this.topic_template,
+        suppress_from_latest: this.suppress_from_latest,
+        all_topics_wiki: this.all_topics_wiki,
+        allowed_tags: this.allowed_tags,
+        allowed_tag_groups: this.allowed_tag_groups,
+        allow_global_tags: this.allow_global_tags,
+        sort_order: this.sort_order,
+        sort_ascending: this.sort_ascending,
+        topic_featured_link_allowed: this.topic_featured_link_allowed,
+        show_subcategory_list: this.show_subcategory_list,
+        num_featured_topics: this.num_featured_topics,
+        default_view: this.default_view,
+        subcategory_list_style: this.subcategory_list_style,
+        default_top_period: this.default_top_period,
+        minimum_required_tags: this.minimum_required_tags,
         navigate_to_first_post_after_read: this.get(
           "navigate_to_first_post_after_read"
         ),
-        search_priority: this.get("search_priority"),
-        reviewable_by_group_name: this.get("reviewable_by_group_name")
+        search_priority: this.search_priority,
+        reviewable_by_group_name: this.reviewable_by_group_name
       },
       type: id ? "PUT" : "POST"
     });
   },
 
   _permissionsForUpdate() {
-    const permissions = this.get("permissions");
+    const permissions = this.permissions;
     let rval = {};
     permissions.forEach(p => (rval[p.group_name] = p.permission.id));
     return rval;
   },
 
   destroy() {
-    return ajax(`/categories/${this.get("id") || this.get("slug")}`, {
+    return ajax(`/categories/${this.id || this.slug}`, {
       type: "DELETE"
     });
   },
 
   addPermission(permission) {
-    this.get("permissions").addObject(permission);
-    this.get("availableGroups").removeObject(permission.group_name);
+    this.permissions.addObject(permission);
+    this.availableGroups.removeObject(permission.group_name);
   },
 
   removePermission(permission) {
-    this.get("permissions").removeObject(permission);
-    this.get("availableGroups").addObject(permission.group_name);
+    this.permissions.removeObject(permission);
+    this.availableGroups.addObject(permission.group_name);
   },
 
   @computed
@@ -180,7 +180,7 @@ const Category = RestModel.extend({
   @computed("topics")
   featuredTopics(topics) {
     if (topics && topics.length) {
-      return topics.slice(0, this.get("num_featured_topics") || 2);
+      return topics.slice(0, this.num_featured_topics || 2);
     }
   },
 
@@ -196,7 +196,7 @@ const Category = RestModel.extend({
 
   setNotification(notification_level) {
     this.set("notification_level", notification_level);
-    const url = `/category/${this.get("id")}/notifications`;
+    const url = `/category/${this.id}/notifications`;
     return ajax(url, { data: { notification_level }, type: "POST" });
   },
 

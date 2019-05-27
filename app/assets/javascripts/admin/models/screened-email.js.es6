@@ -8,7 +8,7 @@ const ScreenedEmail = Discourse.Model.extend({
   },
 
   clearBlock: function() {
-    return ajax("/admin/logs/screened_emails/" + this.get("id"), {
+    return ajax("/admin/logs/screened_emails/" + this.id, {
       method: "DELETE"
     });
   }

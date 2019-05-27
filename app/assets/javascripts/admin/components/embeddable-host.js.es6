@@ -30,25 +30,25 @@ export default Ember.Component.extend(bufferedProperty("host"), {
     },
 
     save() {
-      if (this.get("cantSave")) {
+      if (this.cantSave) {
         return;
       }
 
-      const props = this.get("buffered").getProperties(
+      const props = this.buffered.getProperties(
         "host",
         "path_whitelist",
         "class_name"
       );
-      props.category_id = this.get("categoryId");
+      props.category_id = this.categoryId;
 
-      const host = this.get("host");
+      const host = this.host;
 
       host
         .save(props)
         .then(() => {
           host.set(
             "category",
-            Discourse.Category.findById(this.get("categoryId"))
+            Discourse.Category.findById(this.categoryId)
           );
           this.set("editToggled", false);
         })
@@ -58,17 +58,17 @@ export default Ember.Component.extend(bufferedProperty("host"), {
     delete() {
       bootbox.confirm(I18n.t("admin.embedding.confirm_delete"), result => {
         if (result) {
-          this.get("host")
+          this.host
             .destroyRecord()
             .then(() => {
-              this.deleteHost(this.get("host"));
+              this.deleteHost(this.host);
             });
         }
       });
     },
 
     cancel() {
-      const host = this.get("host");
+      const host = this.host;
       if (host.get("isNew")) {
         this.deleteHost(host);
       } else {

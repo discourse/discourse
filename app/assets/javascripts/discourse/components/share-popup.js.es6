@@ -32,7 +32,7 @@ export default Ember.Component.extend({
   },
 
   _focusUrl() {
-    const link = this.get("link");
+    const link = this.link;
     if (!this.capabilities.touch) {
       const $linkInput = $("#share-link input");
       $linkInput.val(link);
@@ -173,7 +173,7 @@ export default Ember.Component.extend({
 
     share(source) {
       Sharing.shareSource(source, {
-        url: this.get("link"),
+        url: this.link,
         title: this.get("topic.title")
       });
     }

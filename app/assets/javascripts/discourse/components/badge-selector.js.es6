@@ -13,7 +13,7 @@ export default Ember.Component.extend({
 
   @observes("badgeNames")
   _update() {
-    if (this.get("canReceiveUpdates") === "true")
+    if (this.canReceiveUpdates === "true")
       this._initializeAutocomplete({ updateData: true });
   },
 
@@ -24,10 +24,10 @@ export default Ember.Component.extend({
 
     self.$("input").autocomplete({
       allowAny: false,
-      items: _.isArray(this.get("badgeNames"))
-        ? this.get("badgeNames")
-        : [this.get("badgeNames")],
-      single: this.get("single"),
+      items: _.isArray(this.badgeNames)
+        ? this.badgeNames
+        : [this.badgeNames],
+      single: this.single,
       updateData: opts && opts.updateData ? opts.updateData : false,
       onChangeItems: function(items) {
         selectedBadges = items;

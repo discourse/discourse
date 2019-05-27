@@ -9,7 +9,7 @@ export default Ember.Component.extend({
 
   @computed("categories.[].uploaded_logo.url")
   anyLogos() {
-    return this.get("categories").any(c => {
+    return this.categories.any(c => {
       return !Ember.isEmpty(c.get("uploaded_logo.url"));
     });
   }

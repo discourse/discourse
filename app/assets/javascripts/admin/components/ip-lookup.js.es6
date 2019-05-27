@@ -18,18 +18,18 @@ export default Ember.Component.extend({
     lookup() {
       this.set("show", true);
 
-      if (!this.get("location")) {
-        ajax("/admin/users/ip-info", { data: { ip: this.get("ip") } }).then(
+      if (!this.location) {
+        ajax("/admin/users/ip-info", { data: { ip: this.ip } }).then(
           location => this.set("location", Ember.Object.create(location))
         );
       }
 
-      if (!this.get("other_accounts")) {
+      if (!this.other_accounts) {
         this.set("otherAccountsLoading", true);
 
         const data = {
-          ip: this.get("ip"),
-          exclude: this.get("userId"),
+          ip: this.ip,
+          exclude: this.userId,
           order: "trust_level DESC"
         };
 
@@ -51,8 +51,8 @@ export default Ember.Component.extend({
     },
 
     copy() {
-      let text = `IP: ${this.get("ip")}\n`;
-      const location = this.get("location");
+      let text = `IP: ${this.ip}\n`;
+      const location = this.location;
       if (location) {
         if (location.hostname) {
           text += `${I18n.t("ip_lookup.hostname")}: ${location.hostname}\n`;
@@ -97,8 +97,8 @@ export default Ember.Component.extend({
             ajax("/admin/users/delete-others-with-same-ip.json", {
               type: "DELETE",
               data: {
-                ip: this.get("ip"),
-                exclude: this.get("userId"),
+                ip: this.ip,
+                exclude: this.userId,
                 order: "trust_level DESC"
               }
             }).then(() => this.send("lookup"));

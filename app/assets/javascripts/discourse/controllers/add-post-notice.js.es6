@@ -22,7 +22,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
   },
 
   onClose() {
-    const reject = this.get("reject");
+    const reject = this.reject;
     if (reject) {
       reject();
     }
@@ -32,10 +32,10 @@ export default Ember.Controller.extend(ModalFunctionality, {
     setNotice() {
       this.set("saving", true);
 
-      const post = this.get("post");
-      const resolve = this.get("resolve");
-      const reject = this.get("reject");
-      const notice = this.get("notice");
+      const post = this.post;
+      const resolve = this.resolve;
+      const reject = this.reject;
+      const notice = this.notice;
 
       // Let `updatePostField` handle state.
       this.setProperties({ resolve: null, reject: null });

@@ -137,8 +137,8 @@ export default Ember.Controller.extend({
 
   @observes("model")
   modelChanged() {
-    if (this.get("searchTerm") !== this.get("q")) {
-      this.setSearchTerm(this.get("q"));
+    if (this.searchTerm !== this.q) {
+      this.setSearchTerm(this.q);
     }
   },
 
@@ -149,9 +149,9 @@ export default Ember.Controller.extend({
 
   @observes("q")
   qChanged() {
-    const model = this.get("model");
-    if (model && this.get("model.q") !== this.get("q")) {
-      this.setSearchTerm(this.get("q"));
+    const model = this.model;
+    if (model && this.get("model.q") !== this.q) {
+      this.setSearchTerm(this.q);
       this.send("search");
     }
   },
@@ -170,7 +170,7 @@ export default Ember.Controller.extend({
 
   @observes("loading")
   _showFooter() {
-    this.set("application.showFooter", !this.get("loading"));
+    this.set("application.showFooter", !this.loading);
   },
 
   @computed("resultCount", "noSortQ")
@@ -207,39 +207,39 @@ export default Ember.Controller.extend({
   searchButtonDisabled: Ember.computed.or("searching", "loading"),
 
   _search() {
-    if (this.get("searching")) {
+    if (this.searching) {
       return;
     }
 
     this.set("invalidSearch", false);
-    const searchTerm = this.get("searchTerm");
+    const searchTerm = this.searchTerm;
     if (!isValidSearchTerm(searchTerm)) {
       this.set("invalidSearch", true);
       return;
     }
 
-    let args = { q: searchTerm, page: this.get("page") };
+    let args = { q: searchTerm, page: this.page };
 
     if (args.page === 1) {
       this.set("bulkSelectEnabled", false);
-      this.get("selected").clear();
+      this.selected.clear();
       this.set("searching", true);
     } else {
       this.set("loading", true);
     }
 
-    const sortOrder = this.get("sortOrder");
+    const sortOrder = this.sortOrder;
     if (sortOrder && SortOrders[sortOrder].term) {
       args.q += " " + SortOrders[sortOrder].term;
     }
 
     this.set("q", args.q);
 
-    const skip = this.get("skip_context");
-    if ((!skip && this.get("context")) || skip === "false") {
+    const skip = this.skip_context;
+    if ((!skip && this.context) || skip === "false") {
       args.search_context = {
-        type: this.get("context"),
-        id: this.get("context_id")
+        type: this.context,
+        id: this.context_id
       };
     }
 
@@ -255,9 +255,9 @@ export default Ember.Controller.extend({
 
         if (args.page > 1) {
           if (model) {
-            this.get("model").posts.pushObjects(model.posts);
-            this.get("model").topics.pushObjects(model.topics);
-            this.get("model").set(
+            this.model.posts.pushObjects(model.posts);
+            this.model.topics.pushObjects(model.topics);
+            this.model.set(
               "grouped_search_result",
               results.grouped_search_result
             );
@@ -283,7 +283,7 @@ export default Ember.Controller.extend({
           topicCategory = match[1];
         }
       }
-      this.get("composer").open({
+      this.composer.open({
         action: Composer.CREATE_TOPIC,
         draftKey: Composer.CREATE_TOPIC,
         topicCategory
@@ -291,7 +291,7 @@ export default Ember.Controller.extend({
     },
 
     selectAll() {
-      this.get("selected").addObjects(
+      this.selected.addObjects(
         this.get("model.posts").map(r => r.topic)
       );
       // Doing this the proper way is a HUGE pain,
@@ -303,13 +303,13 @@ export default Ember.Controller.extend({
     },
 
     clearAll() {
-      this.get("selected").clear();
+      this.selected.clear();
       $(".fps-result input[type=checkbox]").prop("checked", false);
     },
 
     toggleBulkSelect() {
       this.toggleProperty("bulkSelectEnabled");
-      this.get("selected").clear();
+      this.selected.clear();
     },
 
     search() {
@@ -323,10 +323,10 @@ export default Ember.Controller.extend({
     },
 
     loadMore() {
-      var page = this.get("page");
+      var page = this.page;
       if (
         this.get("model.grouped_search_result.more_full_page_results") &&
-        !this.get("loading") &&
+        !this.loading &&
         page < PAGE_LIMIT
       ) {
         this.incrementProperty("page");

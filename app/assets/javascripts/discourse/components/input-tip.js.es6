@@ -13,7 +13,7 @@ export default Ember.Component.extend(
       const reason = this.get("validation.reason");
       if (reason) {
         buffer.push(
-          iconHTML(this.get("good") ? "check" : "times") + " " + reason
+          iconHTML(this.good ? "check" : "times") + " " + reason
         );
       }
     }

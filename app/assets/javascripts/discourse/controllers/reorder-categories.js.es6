@@ -29,14 +29,14 @@ export default Ember.Controller.extend(ModalFunctionality, Ember.Evented, {
   @computed("categoriesBuffered.@each.hasBufferedChanges")
   showApplyAll() {
     let anyChanged = false;
-    this.get("categoriesBuffered").forEach(bc => {
+    this.categoriesBuffered.forEach(bc => {
       anyChanged = anyChanged || bc.get("hasBufferedChanges");
     });
     return anyChanged;
   },
 
   moveDir(cat, dir) {
-    const cats = this.get("categoriesOrdered");
+    const cats = this.categoriesOrdered;
     const curIdx = cat.get("position");
     let desiredIdx = curIdx + dir;
     if (desiredIdx >= 0 && desiredIdx < cats.get("length")) {
@@ -84,7 +84,7 @@ export default Ember.Controller.extend(ModalFunctionality, Ember.Evented, {
           parent/c2         other
   **/
   fixIndices() {
-    const categories = this.get("categoriesOrdered");
+    const categories = this.categoriesOrdered;
     const subcategories = {};
 
     categories.forEach(category => {
@@ -113,7 +113,7 @@ export default Ember.Controller.extend(ModalFunctionality, Ember.Evented, {
       let position = parseInt($(e.target).val());
       let amount = Math.min(
         Math.max(position, 0),
-        this.get("categoriesOrdered").length - 1
+        this.categoriesOrdered.length - 1
       );
       this.moveDir(cat, amount - cat.get("position"));
     },
@@ -128,7 +128,7 @@ export default Ember.Controller.extend(ModalFunctionality, Ember.Evented, {
     commit() {
       this.fixIndices();
 
-      this.get("categoriesBuffered").forEach(bc => {
+      this.categoriesBuffered.forEach(bc => {
         if (bc.get("hasBufferedChanges")) {
           bc.applyBufferedChanges();
         }
@@ -140,7 +140,7 @@ export default Ember.Controller.extend(ModalFunctionality, Ember.Evented, {
       this.send("commit");
 
       const data = {};
-      this.get("categoriesBuffered").forEach(cat => {
+      this.categoriesBuffered.forEach(cat => {
         data[cat.get("id")] = cat.get("position");
       });
       ajax("/categories/reorder", {

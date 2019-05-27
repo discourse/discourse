@@ -17,17 +17,17 @@ export default {
             id: "share",
             title: "topic.share.extended_title",
             model: {
-              topic: this.get("topic")
+              topic: this.topic
             }
           }
         ];
 
-        if (this.get("canInviteTo") && !this.get("inviteDisabled")) {
+        if (this.canInviteTo && !this.inviteDisabled) {
           let invitePanelTitle;
 
-          if (this.get("isPM")) {
+          if (this.isPM) {
             invitePanelTitle = "topic.invite_private.title";
-          } else if (this.get("invitingToTopic")) {
+          } else if (this.invitingToTopic) {
             invitePanelTitle = "topic.invite_reply.title";
           } else {
             invitePanelTitle = "user.invited.create";
@@ -37,7 +37,7 @@ export default {
             id: "invite",
             title: invitePanelTitle,
             model: {
-              inviteModel: this.get("topic")
+              inviteModel: this.topic
             }
           });
         }
@@ -113,13 +113,13 @@ export default {
       id: "archive",
       priority: 996,
       icon() {
-        return this.get("archiveIcon");
+        return this.archiveIcon;
       },
       label() {
-        return this.get("archiveLabel");
+        return this.archiveLabel;
       },
       title() {
-        return this.get("archiveTitle");
+        return this.archiveTitle;
       },
       action: "toggleArchiveMessage",
       classNames: ["standard", "archive-topic"],
@@ -131,7 +131,7 @@ export default {
         "toggleArchiveMessage"
       ],
       displayed() {
-        return this.get("canArchive");
+        return this.canArchive;
       }
     });
 
@@ -145,7 +145,7 @@ export default {
       classNames: ["edit-message"],
       dependentKeys: ["editFirstPost", "showEditOnFooter"],
       displayed() {
-        return this.get("showEditOnFooter");
+        return this.showEditOnFooter;
       }
     });
   }

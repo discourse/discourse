@@ -12,7 +12,7 @@ const TopicDetails = RestModel.extend({
   loaded: false,
 
   updateFromJson(details) {
-    const topic = this.get("topic");
+    const topic = this.topic;
 
     if (details.allowed_users) {
       details.allowed_users = details.allowed_users.map(function(u) {
@@ -69,7 +69,7 @@ const TopicDetails = RestModel.extend({
   },
 
   removeAllowedGroup(group) {
-    const groups = this.get("allowed_groups");
+    const groups = this.allowed_groups;
     const name = group.name;
 
     return ajax("/t/" + this.get("topic.id") + "/remove-allowed-group", {
@@ -81,7 +81,7 @@ const TopicDetails = RestModel.extend({
   },
 
   removeAllowedUser(user) {
-    const users = this.get("allowed_users");
+    const users = this.allowed_users;
     const username = user.get("username");
 
     return ajax("/t/" + this.get("topic.id") + "/remove-allowed-user", {

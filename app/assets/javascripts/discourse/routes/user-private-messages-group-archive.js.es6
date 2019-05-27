@@ -4,7 +4,7 @@ export default createPMRoute("groups", "private-messages-groups").extend({
   groupName: null,
 
   titleToken() {
-    const groupName = this.get("groupName");
+    const groupName = this.groupName;
 
     if (groupName) {
       return [

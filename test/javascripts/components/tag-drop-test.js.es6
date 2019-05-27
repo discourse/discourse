@@ -38,10 +38,10 @@ componentTest("default", {
   },
 
   async test(assert) {
-    await this.get("subject").expand();
+    await this.subject.expand();
 
     assert.equal(
-      this.get("subject")
+      this.subject
         .rowByIndex(1)
         .name(),
       "jeff",
@@ -49,25 +49,25 @@ componentTest("default", {
     );
 
     assert.equal(
-      this.get("subject")
+      this.subject
         .rowByIndex(2)
         .name(),
       "neil",
       "it has the correct tag"
     );
 
-    await this.get("subject").fillInFilter("rég");
+    await this.subject.fillInFilter("rég");
     assert.equal(
-      this.get("subject")
+      this.subject
         .rowByIndex(0)
         .name(),
       "régis",
       "it displays the searched tag"
     );
 
-    await this.get("subject").fillInFilter("");
+    await this.subject.fillInFilter("");
     assert.equal(
-      this.get("subject")
+      this.subject
         .rowByIndex(1)
         .name(),
       "jeff",
@@ -75,8 +75,8 @@ componentTest("default", {
     );
 
     sandbox.stub(DiscourseURL, "routeTo");
-    await this.get("subject").fillInFilter("dav");
-    await this.get("subject").keyboard("enter");
+    await this.subject.fillInFilter("dav");
+    await this.subject.keyboard("enter");
     assert.ok(
       DiscourseURL.routeTo.calledWith("/tags/david"),
       "it uses lowercase URLs for tags"
@@ -93,10 +93,10 @@ componentTest("no tags", {
   },
 
   async test(assert) {
-    await this.get("subject").expand();
+    await this.subject.expand();
 
     assert.equal(
-      this.get("subject")
+      this.subject
         .rowByIndex(1)
         .name(),
       undefined,

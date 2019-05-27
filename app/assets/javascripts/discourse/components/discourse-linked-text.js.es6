@@ -10,7 +10,7 @@ export default Ember.Component.extend({
 
   click(event) {
     if (event.target.tagName.toUpperCase() === "A") {
-      this.action(this.get("actionParam"));
+      this.action(this.actionParam);
     }
 
     return false;

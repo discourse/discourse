@@ -43,23 +43,23 @@ export default Ember.Controller.extend(ModalFunctionality, {
 
   @observes("selection")
   _selectionChanged() {
-    if (this.get("local")) {
+    if (this.local) {
       this.set("showMore", false);
     }
   },
 
   actions: {
     upload() {
-      if (this.get("local")) {
+      if (this.local) {
         $(".wmd-controls").fileupload("add", {
           fileInput: $("#filename-input")
         });
       } else {
-        const imageUrl = this.get("imageUrl") || "";
-        const imageLink = this.get("imageLink") || "";
-        const toolbarEvent = this.get("toolbarEvent");
+        const imageUrl = this.imageUrl || "";
+        const imageLink = this.imageLink || "";
+        const toolbarEvent = this.toolbarEvent;
 
-        if (this.get("showMore") && imageLink.length > 3) {
+        if (this.showMore && imageLink.length > 3) {
           toolbarEvent.addText(`[![](${imageUrl})](${imageLink})`);
         } else if (imageUrl.match(/\.(jpg|jpeg|png|gif)$/)) {
           toolbarEvent.addText(`![](${imageUrl})`);

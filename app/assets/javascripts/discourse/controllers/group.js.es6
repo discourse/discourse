@@ -3,9 +3,9 @@ import { default as computed } from "ember-addons/ember-computed-decorators";
 const Tab = Ember.Object.extend({
   init() {
     this._super(...arguments);
-    let name = this.get("name");
-    this.set("route", this.get("route") || `group.` + name);
-    this.set("message", I18n.t(`groups.${this.get("i18nKey") || name}`));
+    let name = this.name;
+    this.set("route", this.route || `group.` + name);
+    this.set("message", I18n.t(`groups.${this.i18nKey || name}`));
   }
 });
 
@@ -119,7 +119,7 @@ export default Ember.Controller.extend({
     },
 
     destroy() {
-      const group = this.get("model");
+      const group = this.model;
       this.set("destroying", true);
 
       bootbox.confirm(

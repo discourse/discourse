@@ -36,20 +36,20 @@ export default Ember.Component.extend({
   @observes("reply", "title")
   typing() {
     if (new Date() - this._lastPublish > keepAliveDuration) {
-      this.publish({ current: this.get("currentState") });
+      this.publish({ current: this.currentState });
     }
   },
 
   @on("willDestroyElement")
   composerClosing() {
-    this.publish({ previous: this.get("currentState") });
+    this.publish({ previous: this.currentState });
     Ember.run.cancel(this._pingTimer);
     Ember.run.cancel(this._clearTimer);
   },
 
   updateState() {
     let state = null;
-    const action = this.get("action");
+    const action = this.action;
 
     if (action === "reply" || action === "edit") {
       state = { action };
@@ -57,29 +57,29 @@ export default Ember.Component.extend({
       if (action === "edit") state.post_id = this.get("post.id");
     }
 
-    this.set("previousState", this.get("currentState"));
+    this.set("previousState", this.currentState);
     this.set("currentState", state);
   },
 
   @observes("currentState")
   currentStateChanged() {
-    if (this.get("channel")) {
-      this.messageBus.unsubscribe(this.get("channel"));
+    if (this.channel) {
+      this.messageBus.unsubscribe(this.channel);
       this.set("channel", null);
     }
 
     this.clear();
 
-    if (!["reply", "edit"].includes(this.get("action"))) {
+    if (!["reply", "edit"].includes(this.action)) {
       return;
     }
 
     this.publish({
       response_needed: true,
-      previous: this.get("previousState"),
-      current: this.get("currentState")
+      previous: this.previousState,
+      current: this.currentState
     }).then(r => {
-      if (this.get("isDestroyed")) {
+      if (this.isDestroyed) {
         return;
       }
       this.set("presenceUsers", r.users);
@@ -92,7 +92,7 @@ export default Ember.Component.extend({
       this.messageBus.subscribe(
         r.messagebus_channel,
         message => {
-          if (!this.get("isDestroyed"))
+          if (!this.isDestroyed)
             this.set("presenceUsers", message.users);
           this._clearTimer = Ember.run.debounce(
             this,
@@ -106,7 +106,7 @@ export default Ember.Component.extend({
   },
 
   clear() {
-    if (!this.get("isDestroyed")) this.set("presenceUsers", []);
+    if (!this.isDestroyed) this.set("presenceUsers", []);
   },
 
   publish(data) {

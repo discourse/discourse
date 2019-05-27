@@ -111,7 +111,7 @@ export default Ember.Component.extend({
 
   @observes("focusTarget")
   setFocus() {
-    if (this.get("focusTarget") === "editor") {
+    if (this.focusTarget === "editor") {
       this.$("textarea").putCursorAtEnd();
     }
   },
@@ -124,7 +124,7 @@ export default Ember.Component.extend({
       formatUsername,
 
       lookupAvatarByPostNumber: (postNumber, topicId) => {
-        const topic = this.get("topic");
+        const topic = this.topic;
         if (!topic) {
           return;
         }
@@ -139,7 +139,7 @@ export default Ember.Component.extend({
       },
 
       lookupPrimaryUserGroupByPostNumber: (postNumber, topicId) => {
-        const topic = this.get("topic");
+        const topic = this.topic;
         if (!topic) {
           return;
         }
@@ -336,7 +336,7 @@ export default Ember.Component.extend({
   },
 
   _syncScroll($callback, $input, $preview) {
-    if (!this.get("scrollMap") || this.get("shouldBuildScrollMap")) {
+    if (!this.scrollMap || this.shouldBuildScrollMap) {
       this.set("scrollMap", this._buildScrollMap($input, $preview));
       this.set("shouldBuildScrollMap", false);
     }
@@ -346,7 +346,7 @@ export default Ember.Component.extend({
       $callback,
       $input,
       $preview,
-      this.get("scrollMap"),
+      this.scrollMap,
       20
     );
   },
@@ -565,7 +565,7 @@ export default Ember.Component.extend({
 
   _warnMentionedGroups($preview) {
     Ember.run.scheduleOnce("afterRender", () => {
-      var found = this.get("warnedGroupMentions") || [];
+      var found = this.warnedGroupMentions || [];
       $preview.find(".mention-group.notify").each((idx, e) => {
         const $e = $(e);
         var name = $e.data("name");
@@ -598,7 +598,7 @@ export default Ember.Component.extend({
     }
 
     Ember.run.scheduleOnce("afterRender", () => {
-      let found = this.get("warnedCannotSeeMentions") || [];
+      let found = this.warnedCannotSeeMentions || [];
 
       $preview.find(".mention.cannot-see").each((idx, e) => {
         const $e = $(e);
@@ -642,7 +642,7 @@ export default Ember.Component.extend({
       if (removePlaceholder) {
         this.appEvents.trigger(
           "composer:replace-text",
-          this.get("uploadPlaceholder"),
+          this.uploadPlaceholder,
           ""
         );
       }
@@ -741,7 +741,7 @@ export default Ember.Component.extend({
 
       this.appEvents.trigger(
         "composer:insert-text",
-        this.get("uploadPlaceholder")
+        this.uploadPlaceholder
       );
 
       if (data.xhr && data.originalFiles.length === 1) {
@@ -758,7 +758,7 @@ export default Ember.Component.extend({
         cacheShortUploadUrl(upload.short_url, upload.url);
         this.appEvents.trigger(
           "composer:replace-text",
-          this.get("uploadPlaceholder").trim(),
+          this.uploadPlaceholder.trim(),
           markdown
         );
         this._resetUpload(false);
@@ -958,22 +958,22 @@ export default Ember.Component.extend({
         id: "quote",
         group: "fontStyles",
         icon: "far-comment",
-        sendAction: this.get("importQuote"),
+        sendAction: this.importQuote,
         title: "composer.quote_post_title",
         unshift: true
       });
 
       if (
-        this.get("allowUpload") &&
-        this.get("uploadIcon") &&
+        this.allowUpload &&
+        this.uploadIcon &&
         !this.site.mobileView
       ) {
         toolbar.addButton({
           id: "upload",
           group: "insertions",
-          icon: this.get("uploadIcon"),
+          icon: this.uploadIcon,
           title: "upload",
-          sendAction: this.get("showUploadModal")
+          sendAction: this.showUploadModal
         });
       }
 

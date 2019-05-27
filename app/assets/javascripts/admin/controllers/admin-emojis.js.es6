@@ -6,7 +6,7 @@ export default Ember.Controller.extend({
   actions: {
     emojiUploaded(emoji) {
       emoji.url += "?t=" + new Date().getTime();
-      this.get("model").pushObject(Ember.Object.create(emoji));
+      this.model.pushObject(Ember.Object.create(emoji));
     },
 
     destroy(emoji) {
@@ -19,7 +19,7 @@ export default Ember.Controller.extend({
             return ajax("/admin/customize/emojis/" + emoji.get("name"), {
               type: "DELETE"
             }).then(() => {
-              this.get("model").removeObject(emoji);
+              this.model.removeObject(emoji);
             });
           }
         }

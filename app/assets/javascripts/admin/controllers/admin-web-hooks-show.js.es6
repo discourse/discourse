@@ -84,7 +84,7 @@ export default Ember.Controller.extend({
       this.set("saved", false);
       const url = this.get("model.payload_url");
       const domain = extractDomainFromUrl(url);
-      const model = this.get("model");
+      const model = this.model;
       const isNew = model.get("isNew");
 
       const saveWebHook = () => {
@@ -92,7 +92,7 @@ export default Ember.Controller.extend({
           .save()
           .then(() => {
             this.set("saved", true);
-            this.get("adminWebHooks")
+            this.adminWebHooks
               .get("model")
               .addObject(model);
 
@@ -131,11 +131,11 @@ export default Ember.Controller.extend({
         I18n.t("yes_value"),
         result => {
           if (result) {
-            const model = this.get("model");
+            const model = this.model;
             model
               .destroyRecord()
               .then(() => {
-                this.get("adminWebHooks")
+                this.adminWebHooks
                   .get("model")
                   .removeObject(model);
                 this.transitionToRoute("adminWebHooks");

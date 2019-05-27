@@ -3,7 +3,7 @@ export default Ember.Controller.extend({
 
   actions: {
     save() {
-      this.get("model").save();
+      this.model.save();
     },
 
     destroy() {
@@ -14,10 +14,10 @@ export default Ember.Controller.extend({
         destroy => {
           if (destroy) {
             const c = this.get("tagGroups.model");
-            return this.get("model")
+            return this.model
               .destroy()
               .then(() => {
-                c.removeObject(this.get("model"));
+                c.removeObject(this.model);
                 this.transitionToRoute("tagGroups");
               });
           }

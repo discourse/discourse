@@ -13,7 +13,7 @@ export default NotificationOptionsComponent.extend({
   },
 
   computeValue() {
-    return this.get("notificationLevel");
+    return this.notificationLevel;
   },
 
   @computed("iconForSelectedDetails")

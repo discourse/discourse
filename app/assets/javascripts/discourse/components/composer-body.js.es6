@@ -88,7 +88,7 @@ export default Ember.Component.extend(KeyEnterEscape, {
   @observes("composeState")
   disableFullscreen() {
     if (
-      this.get("composeState") !== Composer.OPEN &&
+      this.composeState !== Composer.OPEN &&
       positioningWorkaround.blur
     ) {
       positioningWorkaround.blur();

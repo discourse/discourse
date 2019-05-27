@@ -22,22 +22,22 @@ componentTest("default", {
   },
 
   async test(assert) {
-    await this.get("subject").expand();
+    await this.subject.expand();
 
     assert.equal(
-      this.get("subject")
+      this.subject
         .header()
         .title(),
       "Topic Controls"
     );
     assert.equal(
-      this.get("subject")
+      this.subject
         .header()
         .value(),
       null
     );
     assert.notOk(
-      this.get("subject")
+      this.subject
         .selectedRow()
         .exists(),
       "it doesn’t preselect first row"

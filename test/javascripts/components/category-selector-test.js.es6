@@ -17,13 +17,13 @@ componentTest("default", {
 
   test(assert) {
     assert.equal(
-      this.get("subject")
+      this.subject
         .header()
         .value(),
       2
     );
     assert.notOk(
-      this.get("subject")
+      this.subject
         .rowByValue(2)
         .exists(),
       "selected categories are not in the list"
@@ -40,16 +40,16 @@ componentTest("with blacklist", {
   },
 
   async test(assert) {
-    await this.get("subject").expand();
+    await this.subject.expand();
 
     assert.ok(
-      this.get("subject")
+      this.subject
         .rowByValue(6)
         .exists(),
       "not blacklisted categories are in the list"
     );
     assert.notOk(
-      this.get("subject")
+      this.subject
         .rowByValue(8)
         .exists(),
       "blacklisted categories are not in the list"
@@ -66,30 +66,30 @@ componentTest("interactions", {
 
   skip: true,
   async test(assert) {
-    await this.get("subject").expand();
-    await this.get("subject").selectRowByValue(8);
+    await this.subject.expand();
+    await this.subject.selectRowByValue(8);
 
     assert.equal(
-      this.get("subject")
+      this.subject
         .header()
         .value(),
       "2,6,8",
       "it adds the selected category"
     );
-    assert.equal(this.get("categories").length, 3);
+    assert.equal(this.categories.length, 3);
 
-    await this.get("subject").expand();
+    await this.subject.expand();
 
-    await this.get("subject").keyboard("backspace");
-    await this.get("subject").keyboard("backspace");
+    await this.subject.keyboard("backspace");
+    await this.subject.keyboard("backspace");
 
     assert.equal(
-      this.get("subject")
+      this.subject
         .header()
         .value(),
       "2,6",
       "it removes the last selected category"
     );
-    assert.equal(this.get("categories").length, 2);
+    assert.equal(this.categories.length, 2);
   }
 });

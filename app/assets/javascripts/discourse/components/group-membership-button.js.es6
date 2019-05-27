@@ -34,7 +34,7 @@ export default Ember.Component.extend({
     joinGroup() {
       if (this.currentUser) {
         this.set("updatingMembership", true);
-        const model = this.get("model");
+        const model = this.model;
 
         model
           .addMembers(this.currentUser.get("username"))
@@ -52,7 +52,7 @@ export default Ember.Component.extend({
 
     leaveGroup() {
       this.set("updatingMembership", true);
-      const model = this.get("model");
+      const model = this.model;
 
       model
         .removeMember(this.currentUser)
@@ -68,7 +68,7 @@ export default Ember.Component.extend({
     showRequestMembershipForm() {
       if (this.currentUser) {
         showModal("request-group-membership-form", {
-          model: this.get("model")
+          model: this.model
         });
       } else {
         this._showLoginModal();

@@ -13,7 +13,7 @@ export default Ember.Controller.extend({
   showTimeRead: Ember.computed.equal("period", "all"),
 
   _setName: debounce(function() {
-    this.set("name", this.get("nameInput"));
+    this.set("name", this.nameInput);
   }, 500).observes("nameInput"),
 
   _showFooter: function() {
@@ -22,7 +22,7 @@ export default Ember.Controller.extend({
 
   actions: {
     loadMore() {
-      this.get("model").loadMore();
+      this.model.loadMore();
     }
   }
 });

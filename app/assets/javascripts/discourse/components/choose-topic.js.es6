@@ -12,11 +12,11 @@ export default Ember.Component.extend({
       noResults: true,
       selectedTopicId: null
     });
-    this.search(this.get("topicTitle"));
+    this.search(this.topicTitle);
   }.observes("topicTitle"),
 
   topicsChanged: function() {
-    const topics = this.get("topics");
+    const topics = this.topics;
     if (topics) {
       this.set("noResults", topics.length === 0);
     }
@@ -25,7 +25,7 @@ export default Ember.Component.extend({
 
   search: debounce(function(title) {
     const self = this,
-      currentTopicId = this.get("currentTopicId");
+      currentTopicId = this.currentTopicId;
 
     if (Ember.isEmpty(title)) {
       self.setProperties({ topics: null, loading: false });

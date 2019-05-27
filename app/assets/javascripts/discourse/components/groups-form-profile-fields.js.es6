@@ -30,7 +30,7 @@ export default Ember.Component.extend({
 
   @observes("nameInput")
   _validateName() {
-    name = this.get("nameInput");
+    name = this.nameInput;
     if (name === this.get("model.name")) return;
 
     if (name === undefined) {
@@ -62,7 +62,7 @@ export default Ember.Component.extend({
   },
 
   checkGroupName: debounce(function() {
-    name = this.get("nameInput");
+    name = this.nameInput;
     if (Ember.isEmpty(name)) return;
 
     Group.checkName(name).then(response => {
@@ -78,7 +78,7 @@ export default Ember.Component.extend({
         );
 
         this.set("disableSave", false);
-        this.set("model.name", this.get("nameInput"));
+        this.set("model.name", this.nameInput);
       } else {
         let reason;
 

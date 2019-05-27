@@ -11,10 +11,10 @@ export default MountWidget.extend({
 
   buildArgs() {
     return {
-      primary_group_flair_url: this.get("flairURL"),
-      primary_group_flair_bg_color: this.get("flairBgColor"),
-      primary_group_flair_color: this.get("flairColor"),
-      primary_group_name: this.get("groupName")
+      primary_group_flair_url: this.flairURL,
+      primary_group_flair_bg_color: this.flairBgColor,
+      primary_group_flair_color: this.flairColor,
+      primary_group_name: this.groupName
     };
   }
 });

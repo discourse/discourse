@@ -26,7 +26,7 @@ export default Ember.Controller.extend({
 
   @computed("reviewableTypes")
   allTypes() {
-    return (this.get("reviewableTypes") || []).map(type => {
+    return (this.reviewableTypes || []).map(type => {
       return {
         id: type,
         name: I18n.t(`review.types.${type.underscore()}.title`)
@@ -69,7 +69,7 @@ export default Ember.Controller.extend({
         return;
       }
 
-      let newList = this.get("reviewables").reject(reviewable => {
+      let newList = this.reviewables.reject(reviewable => {
         return ids.indexOf(reviewable.id) !== -1;
       });
       this.set("reviewables", newList);
@@ -82,17 +82,17 @@ export default Ember.Controller.extend({
 
     refresh() {
       this.setProperties({
-        type: this.get("filterType"),
-        priority: this.get("filterPriority"),
-        status: this.get("filterStatus"),
-        category_id: this.get("filterCategoryId"),
-        username: this.get("filterUsername")
+        type: this.filterType,
+        priority: this.filterPriority,
+        status: this.filterStatus,
+        category_id: this.filterCategoryId,
+        username: this.filterUsername
       });
       this.send("refreshRoute");
     },
 
     loadMore() {
-      return this.get("reviewables").loadMore();
+      return this.reviewables.loadMore();
     },
 
     toggleFilters() {

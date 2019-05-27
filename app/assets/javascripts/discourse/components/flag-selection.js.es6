@@ -5,7 +5,7 @@ export default Ember.Component.extend({
   _selectRadio() {
     this.$("input[type='radio']").prop("checked", false);
 
-    const nameKey = this.get("nameKey");
+    const nameKey = this.nameKey;
     if (!nameKey) {
       return;
     }

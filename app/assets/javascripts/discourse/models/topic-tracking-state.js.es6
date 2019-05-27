@@ -129,8 +129,8 @@ const TopicTrackingState = Discourse.Model.extend({
       return;
     }
 
-    const filter = this.get("filter");
-    const filterCategory = this.get("filterCategory");
+    const filter = this.filter;
+    const filterCategory = this.filterCategory;
     const categoryId = data.payload && data.payload.category_id;
 
     if (filterCategory && filterCategory.get("id") !== categoryId) {

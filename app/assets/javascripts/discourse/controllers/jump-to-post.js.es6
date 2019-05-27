@@ -14,13 +14,13 @@ export default Ember.Controller.extend(ModalFunctionality, {
 
   actions: {
     jump() {
-      if (this.get("postNumber")) {
+      if (this.postNumber) {
         this._jumpToIndex(
-          this.get("filteredPostsCount"),
-          this.get("postNumber")
+          this.filteredPostsCount,
+          this.postNumber
         );
-      } else if (this.get("postDate")) {
-        this._jumpToDate(this.get("postDate"));
+      } else if (this.postDate) {
+        this._jumpToDate(this.postDate);
       }
     }
   },

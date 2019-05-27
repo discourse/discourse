@@ -8,7 +8,7 @@ import { propertyNotEqual, i18n } from "discourse/lib/computed";
 const ColorSchemeColor = Discourse.Model.extend({
   @on("init")
   startTrackingChanges() {
-    this.set("originals", { hex: this.get("hex") || "FFFFFF" });
+    this.set("originals", { hex: this.hex || "FFFFFF" });
 
     // force changed property to be recalculated
     this.notifyPropertyChange("hex");
@@ -17,8 +17,8 @@ const ColorSchemeColor = Discourse.Model.extend({
   // Whether value has changed since it was last saved.
   @computed("hex")
   changed(hex) {
-    if (!this.get("originals")) return false;
-    if (hex !== this.get("originals").hex) return true;
+    if (!this.originals) return false;
+    if (hex !== this.originals.hex) return true;
 
     return false;
   },
@@ -29,16 +29,16 @@ const ColorSchemeColor = Discourse.Model.extend({
   // Whether the saved value is different than Discourse's default color scheme.
   @computed("default_hex", "hex")
   savedIsOverriden(defaultHex) {
-    return this.get("originals").hex !== defaultHex;
+    return this.originals.hex !== defaultHex;
   },
 
   revert() {
-    this.set("hex", this.get("default_hex"));
+    this.set("hex", this.default_hex);
   },
 
   undo() {
-    if (this.get("originals")) {
-      this.set("hex", this.get("originals").hex);
+    if (this.originals) {
+      this.set("hex", this.originals.hex);
     }
   },
 
@@ -75,10 +75,10 @@ const ColorSchemeColor = Discourse.Model.extend({
 
   @observes("hex")
   hexValueChanged() {
-    if (this.get("hex")) {
+    if (this.hex) {
       this.set(
         "hex",
-        this.get("hex")
+        this.hex
           .toString()
           .replace(/[^0-9a-fA-F]/g, "")
       );

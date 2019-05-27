@@ -17,13 +17,13 @@ export default Ember.Component.extend(
     ],
 
     buildBuffer(buffer) {
-      if (!this.get("executeAt")) return;
+      if (!this.executeAt) return;
 
-      const topicStatus = this.get("topicClosed") ? "close" : "open";
-      const topicStatusKnown = this.get("topicClosed") !== undefined;
-      if (topicStatusKnown && topicStatus === this.get("statusType")) return;
+      const topicStatus = this.topicClosed ? "close" : "open";
+      const topicStatusKnown = this.topicClosed !== undefined;
+      if (topicStatusKnown && topicStatus === this.statusType) return;
 
-      let statusUpdateAt = moment(this.get("executeAt"));
+      let statusUpdateAt = moment(this.executeAt);
 
       let duration = moment.duration(statusUpdateAt - moment());
       let minutesLeft = duration.asMinutes();
@@ -39,7 +39,7 @@ export default Ember.Component.extend(
         rerenderDelay = 60000;
       }
 
-      let autoCloseHours = this.get("duration") || 0;
+      let autoCloseHours = this.duration || 0;
 
       buffer.push(`<h3>${iconHTML("far-clock")} `);
 
@@ -48,7 +48,7 @@ export default Ember.Component.extend(
         duration: moment.duration(autoCloseHours, "hours").humanize()
       };
 
-      const categoryId = this.get("categoryId");
+      const categoryId = this.categoryId;
 
       if (categoryId) {
         const category = Category.findById(categoryId);
@@ -63,7 +63,7 @@ export default Ember.Component.extend(
       }
 
       buffer.push(
-        `<span title="${moment(this.get("executeAt")).format("LLLL")}">${I18n.t(
+        `<span title="${moment(this.executeAt).format("LLLL")}">${I18n.t(
           this._noticeKey(),
           options
         )}</span>`
@@ -87,9 +87,9 @@ export default Ember.Component.extend(
     },
 
     _noticeKey() {
-      const statusType = this.get("statusType");
+      const statusType = this.statusType;
 
-      if (this.get("basedOnLastPost")) {
+      if (this.basedOnLastPost) {
         return `topic.status_update_notice.auto_${statusType}_based_on_last_post`;
       } else {
         return `topic.status_update_notice.auto_${statusType}`;

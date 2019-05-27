@@ -10,7 +10,7 @@ const DiscourseRoute = Ember.Route.extend({
 
   activate() {
     this._super(...arguments);
-    if (this.get("showFooter")) {
+    if (this.showFooter) {
       this.controllerFor("application").set("showFooter", true);
     }
   },

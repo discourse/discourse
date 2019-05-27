@@ -89,7 +89,7 @@ export default Ember.Controller.extend(PreferencesTabController, {
 
   @observes("themeId")
   themeIdChanged() {
-    const id = this.get("themeId");
+    const id = this.themeId;
     previewTheme([id]);
   },
 
@@ -131,18 +131,18 @@ export default Ember.Controller.extend(PreferencesTabController, {
   actions: {
     save() {
       this.set("saved", false);
-      const makeThemeDefault = this.get("makeThemeDefault");
+      const makeThemeDefault = this.makeThemeDefault;
       if (makeThemeDefault) {
-        this.set("model.user_option.theme_ids", [this.get("themeId")]);
+        this.set("model.user_option.theme_ids", [this.themeId]);
       }
 
-      const makeTextSizeDefault = this.get("makeTextSizeDefault");
+      const makeTextSizeDefault = this.makeTextSizeDefault;
       if (makeTextSizeDefault) {
-        this.set("model.user_option.text_size", this.get("textSize"));
+        this.set("model.user_option.text_size", this.textSize);
       }
 
-      return this.get("model")
-        .save(this.get("saveAttrNames"))
+      return this.model
+        .save(this.saveAttrNames)
         .then(() => {
           this.set("saved", true);
 
@@ -150,25 +150,25 @@ export default Ember.Controller.extend(PreferencesTabController, {
             setLocalTheme([]);
           } else {
             setLocalTheme(
-              [this.get("themeId")],
+              [this.themeId],
               this.get("model.user_option.theme_key_seq")
             );
           }
           if (makeTextSizeDefault) {
-            this.get("model").updateTextSizeCookie(null);
+            this.model.updateTextSizeCookie(null);
           } else {
-            this.get("model").updateTextSizeCookie(this.get("textSize"));
+            this.model.updateTextSizeCookie(this.textSize);
           }
 
           this.homeChanged();
 
-          if (this.get("isiPad")) {
-            if (safariHacksDisabled() !== this.get("disableSafariHacks")) {
+          if (this.isiPad) {
+            if (safariHacksDisabled() !== this.disableSafariHacks) {
               Discourse.set("assetVersion", "forceRefresh");
             }
             localStorage.setItem(
               "safari-hacks-disabled",
-              this.get("disableSafariHacks").toString()
+              this.disableSafariHacks.toString()
             );
           }
         })

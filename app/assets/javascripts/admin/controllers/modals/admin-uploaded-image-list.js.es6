@@ -11,15 +11,15 @@ export default Ember.Controller.extend(ModalFunctionality, {
 
   actions: {
     uploadDone({ url }) {
-      this.get("images").addObject(url);
+      this.images.addObject(url);
     },
 
     remove(url) {
-      this.get("images").removeObject(url);
+      this.images.removeObject(url);
     },
 
     close() {
-      this.save(this.get("images").join("\n"));
+      this.save(this.images.join("\n"));
       this.send("closeModal");
     }
   }

@@ -23,10 +23,10 @@ export default Ember.Controller.extend(PreferencesTabController, {
             controller.setProperties({
               onClose: () => {
                 if (!user.get("ignored")) {
-                  const usernames = this.get("ignoredUsernames")
+                  const usernames = this.ignoredUsernames
                     .split(",")
                     .removeAt(
-                      this.get("ignoredUsernames").split(",").length - 1
+                      this.ignoredUsernames.split(",").length - 1
                     )
                     .join(",");
                   this.set("ignoredUsernames", usernames);
@@ -36,15 +36,15 @@ export default Ember.Controller.extend(PreferencesTabController, {
           });
         }
       } else {
-        return this.get("model")
+        return this.model
           .save(["ignored_usernames"])
           .catch(popupAjaxError);
       }
     },
     save() {
       this.set("saved", false);
-      return this.get("model")
-        .save(this.get("saveAttrNames"))
+      return this.model
+        .save(this.saveAttrNames)
         .then(() => this.set("saved", true))
         .catch(popupAjaxError);
     }

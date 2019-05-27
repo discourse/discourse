@@ -26,7 +26,7 @@ export default Ember.Component.extend({
   },
 
   updateField() {
-    const users = this.get("users");
+    const users = this.users;
 
     this.set("field.value", JSON.stringify(users));
 
@@ -39,15 +39,15 @@ export default Ember.Component.extend({
   actions: {
     addUser() {
       const user = {
-        email: this.get("inviteEmail") || "",
-        role: this.get("inviteRole")
+        email: this.inviteEmail || "",
+        role: this.inviteRole
       };
 
       if (!/(.+)@(.+){2,}\.(.+){2,}/.test(user.email)) {
         return this.set("invalid", true);
       }
 
-      const users = this.get("users");
+      const users = this.users;
       if (users.findBy("email", user.email)) {
         return this.set("invalid", true);
       }
@@ -64,7 +64,7 @@ export default Ember.Component.extend({
     },
 
     removeUser(user) {
-      this.get("users").removeObject(user);
+      this.users.removeObject(user);
       this.updateField();
     }
   }

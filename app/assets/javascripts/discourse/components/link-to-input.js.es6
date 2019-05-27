@@ -2,7 +2,7 @@ export default Ember.Component.extend({
   showInput: false,
 
   click() {
-    this.get("onClick")();
+    this.onClick();
 
     Ember.run.schedule("afterRender", () => {
       this.$()

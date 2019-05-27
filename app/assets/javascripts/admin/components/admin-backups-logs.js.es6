@@ -25,7 +25,7 @@ export default Ember.Component.extend(
     @on("init")
     @observes("logs.[]")
     _resetFormattedLogs() {
-      if (this.get("logs").length === 0) {
+      if (this.logs.length === 0) {
         this._reset(); // reset the cached logs whenever the model is reset
         this.rerenderBuffer();
       }
@@ -34,12 +34,12 @@ export default Ember.Component.extend(
     @on("init")
     @observes("logs.[]")
     _updateFormattedLogs: debounce(function() {
-      const logs = this.get("logs");
+      const logs = this.logs;
       if (logs.length === 0) return;
 
       // do the log formatting only once for HELLish performance
-      let formattedLogs = this.get("formattedLogs");
-      for (let i = this.get("index"), length = logs.length; i < length; i++) {
+      let formattedLogs = this.formattedLogs;
+      for (let i = this.index, length = logs.length; i < length; i++) {
         const date = logs[i].get("timestamp"),
           message = escapeExpression(logs[i].get("message"));
         formattedLogs += "[" + date + "] " + message + "\n";
@@ -56,7 +56,7 @@ export default Ember.Component.extend(
     }, 150),
 
     buildBuffer(buffer) {
-      const formattedLogs = this.get("formattedLogs");
+      const formattedLogs = this.formattedLogs;
       if (formattedLogs && formattedLogs.length > 0) {
         buffer.push("<pre>");
         buffer.push(formattedLogs);

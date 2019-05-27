@@ -24,15 +24,15 @@ export default Ember.Controller.extend({
     this.set("channel", channel);
 
     this.messageBus.subscribe(channel, data => {
-      if (this.get("newIncoming").indexOf(data.topic_id) === -1) {
-        this.get("newIncoming").push(data.topic_id);
+      if (this.newIncoming.indexOf(data.topic_id) === -1) {
+        this.newIncoming.push(data.topic_id);
         this.incrementProperty("incomingCount");
       }
     });
   },
 
   unsubscribe() {
-    const channel = this.get("channel");
+    const channel = this.channel;
     if (channel) this.messageBus.unsubscribe(channel);
     this._resetTracking();
     this.set("channel", null);
@@ -47,11 +47,11 @@ export default Ember.Controller.extend({
 
   actions: {
     loadMore: function() {
-      this.get("model").loadMore();
+      this.model.loadMore();
     },
 
     showInserted() {
-      this.get("model").loadBefore(this.get("newIncoming"));
+      this.model.loadBefore(this.newIncoming);
       this._resetTracking();
       return false;
     }

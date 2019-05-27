@@ -4,20 +4,20 @@ export default Ember.Component.extend(Scrolling, {
   didReceiveAttrs() {
     this._super(...arguments);
 
-    this.set("trackerName", `scroll-tracker-${this.get("name")}`);
+    this.set("trackerName", `scroll-tracker-${this.name}`);
   },
 
   didInsertElement() {
     this._super(...arguments);
 
-    this.bindScrolling({ name: this.get("name") });
+    this.bindScrolling({ name: this.name });
   },
 
   didRender() {
     this._super(...arguments);
 
-    const data = this.session.get(this.get("trackerName"));
-    if (data && data.position >= 0 && data.tag === this.get("tag")) {
+    const data = this.session.get(this.trackerName);
+    if (data && data.position >= 0 && data.tag === this.tag) {
       Ember.run.next(() => $(window).scrollTop(data.position + 1));
     }
   },
@@ -25,15 +25,15 @@ export default Ember.Component.extend(Scrolling, {
   willDestroyElement() {
     this._super(...arguments);
 
-    this.unbindScrolling(this.get("name"));
+    this.unbindScrolling(this.name);
   },
 
   scrolled() {
     this._super(...arguments);
 
-    this.session.set(this.get("trackerName"), {
+    this.session.set(this.trackerName, {
       position: $(window).scrollTop(),
-      tag: this.get("tag")
+      tag: this.tag
     });
   }
 });

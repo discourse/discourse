@@ -36,7 +36,7 @@ export default Ember.Controller.extend({
   actions: {
     save() {
       this.set("saving", true);
-      this.get("model")
+      this.model
         .saveChanges("theme_fields")
         .finally(() => {
           this.set("saving", false);
@@ -45,7 +45,7 @@ export default Ember.Controller.extend({
 
     fieldAdded(target, name) {
       this.replaceRoute(
-        this.get("editRouteName"),
+        this.editRouteName,
         this.get("model.id"),
         target,
         name
@@ -55,9 +55,9 @@ export default Ember.Controller.extend({
     onlyOverriddenChanged(onlyShowOverridden) {
       if (onlyShowOverridden) {
         if (
-          !this.get("model").hasEdited(
-            this.get("currentTargetName"),
-            this.get("fieldName")
+          !this.model.hasEdited(
+            this.currentTargetName,
+            this.fieldName
           )
         ) {
           let firstTarget = this.get("model.targets").find(t => t.edited);
@@ -66,7 +66,7 @@ export default Ember.Controller.extend({
           );
 
           this.replaceRoute(
-            this.get("editRouteName"),
+            this.editRouteName,
             this.get("model.id"),
             firstTarget.name,
             firstField.name

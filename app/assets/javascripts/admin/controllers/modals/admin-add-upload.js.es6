@@ -103,7 +103,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
 
   actions: {
     updateName() {
-      let name = this.get("name");
+      let name = this.name;
       if (Ember.isEmpty(name)) {
         name = $("#file-input")[0].files[0].name;
         this.set("name", name.split(".")[0]);
@@ -123,14 +123,14 @@ export default Ember.Controller.extend(ModalFunctionality, {
 
       options.data.append("file", file);
 
-      ajax(this.get("uploadUrl"), options)
+      ajax(this.uploadUrl, options)
         .then(result => {
           const upload = {
             upload_id: result.upload_id,
-            name: this.get("name"),
+            name: this.name,
             original_filename: file.name
           };
-          this.get("adminCustomizeThemesShow").send("addUpload", upload);
+          this.adminCustomizeThemesShow.send("addUpload", upload);
           this.send("closeModal");
         })
         .catch(e => {
