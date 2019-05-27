@@ -198,6 +198,8 @@ class Wizard
         end
       end
 
+      @wizard.append_step('themes-further-reading')
+
       @wizard.append_step('logos') do |step|
         step.add_field(id: 'logo', type: 'image', value: SiteSetting.site_logo_url)
         step.add_field(id: 'logo_small', type: 'image', value: SiteSetting.site_logo_small_url)
