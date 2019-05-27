@@ -36,7 +36,7 @@ import {
 import {
   cacheShortUploadUrl,
   resolveAllShortUrls
-} from "pretty-text/image-short-url";
+} from "pretty-text/upload-short-url";
 
 import {
   INLINE_ONEBOX_LOADING_CSS_CLASS,
