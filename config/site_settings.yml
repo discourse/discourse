@@ -2059,6 +2059,8 @@ tags:
     client: true
   remove_muted_tags_from_latest:
     default: false
+  mute_other_present_tags:
+    default: true
   force_lowercase_tags:
     default: true
     client: true
