@@ -551,6 +551,8 @@ class Admin::UsersController < Admin::AdminController
       case params[:post_action]
       when 'delete'
         PostDestroyer.new(current_user, post).destroy
+      when "delete_replies"
+        PostDestroyer.delete_with_replies(current_user, post)
       when 'edit'
         revisor = PostRevisor.new(post)
 
