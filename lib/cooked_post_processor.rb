@@ -65,15 +65,6 @@ class CookedPostProcessor
     BadgeGranter.grant(Badge.find(Badge::FirstReplyByEmail), @post.user, post_id: @post.id) if @post.is_reply_by_email?
   end
 
-  def post_process_images
-    extract_images.each do |img|
-      unless add_image_placeholder!(img)
-        limit_size!(img)
-        convert_to_link!(img)
-      end
-    end
-  end
-
   def post_process_quotes
     @doc.css("aside.quote").each do |q|
       post_number = q['data-post']
@@ -687,6 +678,15 @@ class CookedPostProcessor
   end
 
   private
+
+  def post_process_images
+    extract_images.each do |img|
+      unless add_image_placeholder!(img)
+        limit_size!(img)
+        convert_to_link!(img)
+      end
+    end
+  end
 
   def process_inline_onebox(element)
     inline_onebox = InlineOneboxer.lookup(
