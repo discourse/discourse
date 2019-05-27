@@ -101,7 +101,9 @@ class ReviewableFlaggedPost < Reviewable
       action.deferred_by_id = performed_by.id
       # so callback is called
       action.save
-      action.add_moderator_post_if_needed(performed_by, :ignored, args[:post_was_deleted])
+      unless args[:expired]
+        action.add_moderator_post_if_needed(performed_by, :ignored, args[:post_was_deleted])
+      end
     end
 
     if actions.first.present?
