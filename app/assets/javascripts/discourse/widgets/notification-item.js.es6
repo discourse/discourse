@@ -147,12 +147,21 @@ createWidget("notification-item", {
   html(attrs) {
     const notificationType = attrs.notification_type;
     const lookup = this.site.get("notificationLookup");
-    const notName = lookup[notificationType];
+    const notificationName = lookup[notificationType];
 
     let { data } = attrs;
-    let infoKey = notName === "custom" ? data.message : notName;
-    let text = emojiUnescape(this.text(notificationType, notName));
+    let infoKey =
+      notificationName === "custom" ? data.message : notificationName;
+    let text = emojiUnescape(this.text(notificationType, notificationName));
     let icon = iconNode(`notification.${infoKey}`);
+
+    let title;
+
+    if (notificationName) {
+      title = I18n.t(`notification.titles.${notificationName}`);
+    } else {
+      title = "";
+    }
 
     // We can use a `<p>` tag here once other languages have fixed their HTML
     // translations.
@@ -162,7 +171,11 @@ createWidget("notification-item", {
 
     const href = this.url();
     return href
-      ? h("a", { attributes: { href, "data-auto-route": true } }, contents)
+      ? h(
+          "a",
+          { attributes: { href, title, "data-auto-route": true } },
+          contents
+        )
       : contents;
   },
 
