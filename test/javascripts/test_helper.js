@@ -30,6 +30,7 @@
 //= require sinon/pkg/sinon
 
 //= require helpers/assertions
+//= require helpers/set-textarea-selection
 //= require helpers/select-kit-helper
 //= require helpers/d-editor-helper
 

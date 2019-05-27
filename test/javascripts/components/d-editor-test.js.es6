@@ -777,11 +777,6 @@ composerTestCase("replace-text event for composer", async function(assert) {
     }
   ];
 
-  function setSelection(textarea, [start, len]) {
-    textarea.selectionStart = start;
-    textarea.selectionEnd = start + len;
-  }
-
   function getSelection(textarea) {
     const start = textarea.selectionStart;
     const end = textarea.selectionEnd;
@@ -802,13 +797,14 @@ composerTestCase("replace-text event for composer", async function(assert) {
       assert.ok(document.activeElement === textarea);
       assert.ok(textarea.value === BEFORE);
 
-      setSelection(textarea, CASE.before);
+      const [start, len] = CASE.before;
+      setTextareaSelection(textarea, start, start + len);
 
       assert.ok(document.activeElement === textarea);
 
       this.container
         .lookup("app-events:main")
-        .trigger("composer:replace-text", "green", "yellow", {forceFocus: true});
+        .trigger("composer:replace-text", "green", "yellow", { forceFocus: true });
 
       assert.ok(document.activeElement === textarea);
 

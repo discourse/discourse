@@ -5,7 +5,7 @@
     "es6": true,
     "jasmine": true,
     "mocha": true,
-    "node": true,
+    "node": true
   },
   "parserOptions": {
     "ecmaVersion": 7,
@@ -57,6 +57,7 @@
     "selectKitSelectRowByIndex": true,
     "selectKitSelectRowByName": true,
     "selectKitSelectRowByValue": true,
+    "setTextareaSelection": true,
     "sinon": true,
     "test": true,
     "triggerEvent": true,
@@ -99,7 +100,7 @@
     "semi": 2,
     "strict": 0,
     "valid-typeof": 2,
-    "wrap-iife": [2, "inside"],
+    "wrap-iife": [2, "inside"]
   },
   "parser": "babel-eslint"
 }
