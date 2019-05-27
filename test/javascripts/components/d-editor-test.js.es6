@@ -248,10 +248,7 @@ testCase("link modal (link with description)", async function(assert) {
   await fillIn(".insert-link input.link-text", "evil trout");
   await click(".insert-link button.btn-primary");
   assert.equal(find(".insert-link.hidden").length, 1);
-  assert.equal(
-    this.value,
-    "hello world.[evil trout](http://eviltrout.com)"
-  );
+  assert.equal(this.value, "hello world.[evil trout](http://eviltrout.com)");
 });
 
 componentTest("advanced code", {
@@ -347,10 +344,7 @@ third line`
     textarea.selectionEnd = 10;
 
     await click("button.code");
-    assert.equal(
-      this.value,
-      "first `line`\n\nsecond line\n\nthird line"
-    );
+    assert.equal(this.value, "first `line`\n\nsecond line\n\nthird line");
     assert.equal(textarea.selectionStart, 7);
     assert.equal(textarea.selectionEnd, 11);
 
@@ -363,10 +357,7 @@ third line`
     textarea.selectionEnd = 23;
 
     await click("button.code");
-    assert.equal(
-      this.value,
-      "    first line\n\n    second line\n\nthird line"
-    );
+    assert.equal(this.value, "    first line\n\n    second line\n\nthird line");
     assert.equal(textarea.selectionStart, 0);
     assert.equal(textarea.selectionEnd, 31);
 

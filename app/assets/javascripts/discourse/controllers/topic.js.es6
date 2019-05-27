@@ -607,16 +607,14 @@ export default Ember.Controller.extend(bufferedProperty("model"), {
       } else if (post) {
         return post.toggleBookmark().catch(popupAjaxError);
       } else {
-        return this.model
-          .toggleBookmark()
-          .then(changedIds => {
-            if (!changedIds) {
-              return;
-            }
-            changedIds.forEach(id =>
-              this.appEvents.trigger("post-stream:refresh", { id })
-            );
-          });
+        return this.model.toggleBookmark().then(changedIds => {
+          if (!changedIds) {
+            return;
+          }
+          changedIds.forEach(id =>
+            this.appEvents.trigger("post-stream:refresh", { id })
+          );
+        });
       }
     },
 
@@ -842,11 +840,9 @@ export default Ember.Controller.extend(bufferedProperty("model"), {
     toggleClosed() {
       const topic = this.model;
 
-      this.model
-        .toggleStatus("closed")
-        .then(result => {
-          topic.set("topic_status_update", result.topic_status_update);
-        });
+      this.model.toggleStatus("closed").then(result => {
+        topic.set("topic_status_update", result.topic_status_update);
+      });
     },
 
     recoverTopic() {
@@ -1044,9 +1040,7 @@ export default Ember.Controller.extend(bufferedProperty("model"), {
       );
     } else {
       postStream.loadPostByPostNumber(postNumber).then(p => {
-        DiscourseURL.routeTo(
-          this.model.urlForPostNumber(p.get("post_number"))
-        );
+        DiscourseURL.routeTo(this.model.urlForPostNumber(p.get("post_number")));
       });
     }
   },
@@ -1197,10 +1191,7 @@ export default Ember.Controller.extend(bufferedProperty("model"), {
   },
 
   postSelected(post) {
-    return (
-      this.selectedAllPost ||
-      this.selectedPostIds.includes(post.id)
-    );
+    return this.selectedAllPost || this.selectedPostIds.includes(post.id);
   },
 
   @computed

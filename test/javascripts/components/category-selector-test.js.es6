@@ -16,16 +16,9 @@ componentTest("default", {
   },
 
   test(assert) {
-    assert.equal(
-      this.subject
-        .header()
-        .value(),
-      2
-    );
+    assert.equal(this.subject.header().value(), 2);
     assert.notOk(
-      this.subject
-        .rowByValue(2)
-        .exists(),
+      this.subject.rowByValue(2).exists(),
       "selected categories are not in the list"
     );
   }
@@ -43,15 +36,11 @@ componentTest("with blacklist", {
     await this.subject.expand();
 
     assert.ok(
-      this.subject
-        .rowByValue(6)
-        .exists(),
+      this.subject.rowByValue(6).exists(),
       "not blacklisted categories are in the list"
     );
     assert.notOk(
-      this.subject
-        .rowByValue(8)
-        .exists(),
+      this.subject.rowByValue(8).exists(),
       "blacklisted categories are not in the list"
     );
   }
@@ -70,9 +59,7 @@ componentTest("interactions", {
     await this.subject.selectRowByValue(8);
 
     assert.equal(
-      this.subject
-        .header()
-        .value(),
+      this.subject.header().value(),
       "2,6,8",
       "it adds the selected category"
     );
@@ -84,9 +71,7 @@ componentTest("interactions", {
     await this.subject.keyboard("backspace");
 
     assert.equal(
-      this.subject
-        .header()
-        .value(),
+      this.subject.header().value(),
       "2,6",
       "it removes the last selected category"
     );

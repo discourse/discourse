@@ -26,11 +26,9 @@ export default Ember.Controller.extend({
 
   @observes("searchTerm")
   _searchTermChanged: debounce(function() {
-    Invite.findInvitedBy(
-      this.user,
-      this.filter,
-      this.searchTerm
-    ).then(invites => this.set("model", invites));
+    Invite.findInvitedBy(this.user, this.filter, this.searchTerm).then(
+      invites => this.set("model", invites)
+    );
   }, 250),
 
   inviteRedeemed: Ember.computed.equal("filter", "redeemed"),

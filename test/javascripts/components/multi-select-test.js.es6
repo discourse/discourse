@@ -18,12 +18,7 @@ componentTest("with objects and values", {
   },
 
   test(assert) {
-    assert.equal(
-      this.subject
-        .header()
-        .value(),
-      "1,2"
-    );
+    assert.equal(this.subject.header().value(), "1,2");
   }
 });
 
@@ -61,24 +56,16 @@ componentTest("interactions", {
     await this.subject.expand();
 
     assert.equal(
-      this.subject
-        .highlightedRow()
-        .name(),
+      this.subject.highlightedRow().name(),
       "robin",
       "it highlights the first content row"
     );
 
     await this.set("none", "test.none");
 
-    assert.ok(
-      this.subject
-        .noneRow()
-        .exists()
-    );
+    assert.ok(this.subject.noneRow().exists());
     assert.equal(
-      this.subject
-        .highlightedRow()
-        .name(),
+      this.subject.highlightedRow().name(),
       "robin",
       "it highlights the first content row"
     );
@@ -87,9 +74,7 @@ componentTest("interactions", {
     await this.subject.expand();
 
     assert.equal(
-      this.subject
-        .highlightedRow()
-        .name(),
+      this.subject.highlightedRow().name(),
       "none",
       "it highlights none row if no content"
     );
@@ -97,9 +82,7 @@ componentTest("interactions", {
     await this.subject.fillInFilter("joffrey");
 
     assert.equal(
-      this.subject
-        .highlightedRow()
-        .name(),
+      this.subject.highlightedRow().name(),
       "joffrey",
       "it highlights create row when filling filter"
     );
@@ -107,9 +90,7 @@ componentTest("interactions", {
     await this.subject.keyboard("enter");
 
     assert.equal(
-      this.subject
-        .highlightedRow()
-        .name(),
+      this.subject.highlightedRow().name(),
       "none",
       "it highlights none row after creating content and no content left"
     );
@@ -140,9 +121,7 @@ componentTest("interactions", {
       "it removes the previous highlighted selected content"
     );
     assert.notOk(
-      this.subject
-        .rowByValue("joffrey")
-        .exists(),
+      this.subject.rowByValue("joffrey").exists(),
       "generated content shouldn’t appear in content when removed"
     );
 
@@ -191,12 +170,7 @@ componentTest("with limitMatches", {
   async test(assert) {
     await this.subject.expand();
 
-    assert.equal(
-      this.subject
-        .el()
-        .find(".select-kit-row").length,
-      2
-    );
+    assert.equal(this.subject.el().find(".select-kit-row").length, 2);
   }
 });
 
@@ -210,19 +184,11 @@ componentTest("with minimum", {
   async test(assert) {
     await this.subject.expand();
 
-    assert.equal(
-      this.subject.validationMessage(),
-      "Select at least 1 item."
-    );
+    assert.equal(this.subject.validationMessage(), "Select at least 1 item.");
 
     await this.subject.selectRowByValue("sam");
 
-    assert.equal(
-      this.subject
-        .header()
-        .label(),
-      "sam"
-    );
+    assert.equal(this.subject.header().label(), "sam");
   }
 });
 
@@ -242,12 +208,7 @@ componentTest("with minimumLabel", {
 
     await this.subject.selectRowByValue("jeff");
 
-    assert.equal(
-      this.subject
-        .header()
-        .label(),
-      "jeff"
-    );
+    assert.equal(this.subject.header().label(), "jeff");
   }
 });
 

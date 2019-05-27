@@ -218,13 +218,10 @@ const User = RestModel.extend({
   silencedTillDate: longDate,
 
   changeUsername(new_username) {
-    return ajax(
-      userPath(`${this.username_lower}/preferences/username`),
-      {
-        type: "PUT",
-        data: { new_username }
-      }
-    );
+    return ajax(userPath(`${this.username_lower}/preferences/username`), {
+      type: "PUT",
+      data: { new_username }
+    });
   },
 
   changeEmail(email) {
@@ -390,13 +387,10 @@ const User = RestModel.extend({
   },
 
   revokeAssociatedAccount(providerName) {
-    return ajax(
-      userPath(`${this.username}/preferences/revoke-account`),
-      {
-        data: { provider_name: providerName },
-        type: "POST"
-      }
-    );
+    return ajax(userPath(`${this.username}/preferences/revoke-account`), {
+      data: { provider_name: providerName },
+      type: "POST"
+    });
   },
 
   loadUserAction(id) {
@@ -528,17 +522,17 @@ const User = RestModel.extend({
   },
 
   pickAvatar(upload_id, type) {
-    return ajax(
-      userPath(`${this.username_lower}/preferences/avatar/pick`),
-      { type: "PUT", data: { upload_id, type } }
-    );
+    return ajax(userPath(`${this.username_lower}/preferences/avatar/pick`), {
+      type: "PUT",
+      data: { upload_id, type }
+    });
   },
 
   selectAvatar(avatarUrl) {
-    return ajax(
-      userPath(`${this.username_lower}/preferences/avatar/select`),
-      { type: "PUT", data: { url: avatarUrl } }
-    );
+    return ajax(userPath(`${this.username_lower}/preferences/avatar/select`), {
+      type: "PUT",
+      data: { url: avatarUrl }
+    });
   },
 
   isAllowedToUploadAFile(type) {
@@ -657,49 +651,47 @@ const User = RestModel.extend({
     // let { store } = this; would fail in tests
     const store = Discourse.__container__.lookup("service:store");
 
-    return ajax(userPath(`${this.username_lower}/summary.json`)).then(
-      json => {
-        const summary = json.user_summary;
-        const topicMap = {};
-        const badgeMap = {};
+    return ajax(userPath(`${this.username_lower}/summary.json`)).then(json => {
+      const summary = json.user_summary;
+      const topicMap = {};
+      const badgeMap = {};
 
-        json.topics.forEach(
-          t => (topicMap[t.id] = store.createRecord("topic", t))
-        );
-        Badge.createFromJson(json).forEach(b => (badgeMap[b.id] = b));
+      json.topics.forEach(
+        t => (topicMap[t.id] = store.createRecord("topic", t))
+      );
+      Badge.createFromJson(json).forEach(b => (badgeMap[b.id] = b));
 
-        summary.topics = summary.topic_ids.map(id => topicMap[id]);
+      summary.topics = summary.topic_ids.map(id => topicMap[id]);
 
-        summary.replies.forEach(r => {
-          r.topic = topicMap[r.topic_id];
-          r.url = r.topic.urlForPostNumber(r.post_number);
-          r.createdAt = new Date(r.created_at);
+      summary.replies.forEach(r => {
+        r.topic = topicMap[r.topic_id];
+        r.url = r.topic.urlForPostNumber(r.post_number);
+        r.createdAt = new Date(r.created_at);
+      });
+
+      summary.links.forEach(l => {
+        l.topic = topicMap[l.topic_id];
+        l.post_url = l.topic.urlForPostNumber(l.post_number);
+      });
+
+      if (summary.badges) {
+        summary.badges = summary.badges.map(ub => {
+          const badge = badgeMap[ub.badge_id];
+          badge.count = ub.count;
+          return badge;
         });
-
-        summary.links.forEach(l => {
-          l.topic = topicMap[l.topic_id];
-          l.post_url = l.topic.urlForPostNumber(l.post_number);
-        });
-
-        if (summary.badges) {
-          summary.badges = summary.badges.map(ub => {
-            const badge = badgeMap[ub.badge_id];
-            badge.count = ub.count;
-            return badge;
-          });
-        }
-
-        if (summary.top_categories) {
-          summary.top_categories.forEach(c => {
-            if (c.parent_category_id) {
-              c.parentCategory = Category.findById(c.parent_category_id);
-            }
-          });
-        }
-
-        return summary;
       }
-    );
+
+      if (summary.top_categories) {
+        summary.top_categories.forEach(c => {
+          if (c.parent_category_id) {
+            c.parentCategory = Category.findById(c.parent_category_id);
+          }
+        });
+      }
+
+      return summary;
+    });
   },
 
   canManageGroup(group) {

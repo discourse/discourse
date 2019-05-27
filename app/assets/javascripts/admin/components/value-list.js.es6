@@ -79,10 +79,7 @@ export default Ember.Component.extend({
       return;
     }
 
-    this.set(
-      "values",
-      this.collection.join(this.inputDelimiter || "\n")
-    );
+    this.set("values", this.collection.join(this.inputDelimiter || "\n"));
   },
 
   _splitValues(values, delimiter) {

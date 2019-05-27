@@ -46,8 +46,7 @@ export default MultiSelectComponent.extend({
     const blacklist = Ember.makeArray(this.blacklist);
     return Category.list().filter(category => {
       return (
-        this.categories.includes(category) ||
-        !blacklist.includes(category)
+        this.categories.includes(category) || !blacklist.includes(category)
       );
     });
   }

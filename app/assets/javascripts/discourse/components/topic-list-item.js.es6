@@ -181,9 +181,7 @@ export default Ember.Component.extend(
 
     actions: {
       toggleBookmark() {
-        this.topic
-          .toggleBookmark()
-          .finally(() => this.rerenderBuffer());
+        this.topic.toggleBookmark().finally(() => this.rerenderBuffer());
       }
     },
 

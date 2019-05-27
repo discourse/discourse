@@ -75,11 +75,7 @@ export default Ember.Component.extend({
     this._super(...arguments);
 
     if (this.report) {
-      this._renderReport(
-        this.report,
-        this.forcedModes,
-        this.currentMode
-      );
+      this._renderReport(this.report, this.forcedModes, this.currentMode);
     } else if (this.dataSourceName) {
       this._fetchReport();
     }
@@ -271,11 +267,7 @@ export default Ember.Component.extend({
       this.set("showFilteringUI", false);
     }
 
-    this._renderReport(
-      report,
-      this.forcedModes,
-      this.currentMode
-    );
+    this._renderReport(report, this.forcedModes, this.currentMode);
   },
 
   _renderReport(report, forcedModes, currentMode) {

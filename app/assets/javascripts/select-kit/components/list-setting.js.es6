@@ -39,9 +39,7 @@ export default MultiSelectComponent.extend({
   },
 
   computeValues() {
-    return this.settingValue
-      .split(this.tokenSeparator)
-      .filter(c => c);
+    return this.settingValue.split(this.tokenSeparator).filter(c => c);
   },
 
   _handleTabOnKeyDown(event) {

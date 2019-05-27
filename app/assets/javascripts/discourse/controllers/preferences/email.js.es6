@@ -61,23 +61,21 @@ export default Ember.Controller.extend({
       const self = this;
       this.set("saving", true);
 
-      return this.model
-        .changeEmail(this.newEmail)
-        .then(
-          () => self.set("success", true),
-          e => {
-            self.setProperties({ error: true, saving: false });
-            if (
-              e.jqXHR.responseJSON &&
-              e.jqXHR.responseJSON.errors &&
-              e.jqXHR.responseJSON.errors[0]
-            ) {
-              self.set("errorMessage", e.jqXHR.responseJSON.errors[0]);
-            } else {
-              self.set("errorMessage", I18n.t("user.change_email.error"));
-            }
+      return this.model.changeEmail(this.newEmail).then(
+        () => self.set("success", true),
+        e => {
+          self.setProperties({ error: true, saving: false });
+          if (
+            e.jqXHR.responseJSON &&
+            e.jqXHR.responseJSON.errors &&
+            e.jqXHR.responseJSON.errors[0]
+          ) {
+            self.set("errorMessage", e.jqXHR.responseJSON.errors[0]);
+          } else {
+            self.set("errorMessage", I18n.t("user.change_email.error"));
           }
-        );
+        }
+      );
     }
   }
 });

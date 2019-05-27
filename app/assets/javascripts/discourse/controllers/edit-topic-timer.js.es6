@@ -85,9 +85,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
           this.set("model.closed", result.closed);
         } else {
           const topicTimer =
-            this.isPublic === "true"
-              ? "topic_timer"
-              : "private_topic_timer";
+            this.isPublic === "true" ? "topic_timer" : "private_topic_timer";
           this.set(`model.${topicTimer}`, Ember.Object.create({}));
 
           this.setProperties({

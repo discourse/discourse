@@ -487,9 +487,7 @@ export default RestModel.extend({
   **/
   undoPost(post) {
     this.stream.removeObject(-1);
-    this.postsWithPlaceholders.removePost(() =>
-      this.posts.removeObject(post)
-    );
+    this.postsWithPlaceholders.removePost(() => this.posts.removeObject(post));
     this._identityMap[-1] = null;
 
     const topic = this.topic;
@@ -520,9 +518,7 @@ export default RestModel.extend({
 
       if (!posts.includes(stored)) {
         if (!this.loadingBelow) {
-          this.postsWithPlaceholders.appendPost(() =>
-            posts.pushObject(stored)
-          );
+          this.postsWithPlaceholders.appendPost(() => posts.pushObject(stored));
         } else {
           posts.pushObject(stored);
         }

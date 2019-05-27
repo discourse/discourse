@@ -3,25 +3,17 @@ import computed from "ember-addons/ember-computed-decorators";
 const LoginMethod = Ember.Object.extend({
   @computed
   title() {
-    return (
-      this.title_override || I18n.t(`login.${this.name}.title`)
-    );
+    return this.title_override || I18n.t(`login.${this.name}.title`);
   },
 
   @computed
   prettyName() {
-    return (
-      this.pretty_name_override ||
-      I18n.t(`login.${this.name}.name`)
-    );
+    return this.pretty_name_override || I18n.t(`login.${this.name}.name`);
   },
 
   @computed
   message() {
-    return (
-      this.message_override ||
-      I18n.t("login." + this.name + ".message")
-    );
+    return this.message_override || I18n.t("login." + this.name + ".message");
   },
 
   doLogin({ reconnect = false, fullScreenLogin = true } = {}) {

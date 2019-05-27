@@ -41,35 +41,27 @@ componentTest("default", {
     await this.subject.expand();
 
     assert.equal(
-      this.subject
-        .rowByIndex(1)
-        .name(),
+      this.subject.rowByIndex(1).name(),
       "jeff",
       "it has the correct tag"
     );
 
     assert.equal(
-      this.subject
-        .rowByIndex(2)
-        .name(),
+      this.subject.rowByIndex(2).name(),
       "neil",
       "it has the correct tag"
     );
 
     await this.subject.fillInFilter("rég");
     assert.equal(
-      this.subject
-        .rowByIndex(0)
-        .name(),
+      this.subject.rowByIndex(0).name(),
       "régis",
       "it displays the searched tag"
     );
 
     await this.subject.fillInFilter("");
     assert.equal(
-      this.subject
-        .rowByIndex(1)
-        .name(),
+      this.subject.rowByIndex(1).name(),
       "jeff",
       "it returns top tags for an empty search"
     );
@@ -96,9 +88,7 @@ componentTest("no tags", {
     await this.subject.expand();
 
     assert.equal(
-      this.subject
-        .rowByIndex(1)
-        .name(),
+      this.subject.rowByIndex(1).name(),
       undefined,
       "it has no tags and doesn’t crash"
     );

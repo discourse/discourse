@@ -39,16 +39,14 @@ const DiscoveryTopicsListComponent = Ember.Component.extend(
     actions: {
       loadMore() {
         Discourse.updateContextCount(0);
-        this.model
-          .loadMore()
-          .then(hasMoreResults => {
-            Ember.run.schedule("afterRender", () => this.saveScrollPosition());
-            if (!hasMoreResults) {
-              this.eyeline.flushRest();
-            } else if ($(window).height() >= $(document).height()) {
-              this.send("loadMore");
-            }
-          });
+        this.model.loadMore().then(hasMoreResults => {
+          Ember.run.schedule("afterRender", () => this.saveScrollPosition());
+          if (!hasMoreResults) {
+            this.eyeline.flushRest();
+          } else if ($(window).height() >= $(document).height()) {
+            this.send("loadMore");
+          }
+        });
       }
     }
   }

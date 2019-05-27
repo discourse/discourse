@@ -291,9 +291,7 @@ export default Ember.Controller.extend({
     },
 
     selectAll() {
-      this.selected.addObjects(
-        this.get("model.posts").map(r => r.topic)
-      );
+      this.selected.addObjects(this.get("model.posts").map(r => r.topic));
       // Doing this the proper way is a HUGE pain,
       // we can hack this to work by observing each on the array
       // in the component, however, when we select ANYTHING, we would force

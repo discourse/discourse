@@ -154,8 +154,7 @@ export default ComboBox.extend(TagsMixin, {
     }
 
     if (!this.hasReachedMinimum && isEmpty(this.selection)) {
-      const key =
-        this.minimumLabel || "select_kit.min_content_not_reached";
+      const key = this.minimumLabel || "select_kit.min_content_not_reached";
       const label = I18n.t(key, { count: this.minimum });
       content.title = content.name = content.label = label;
     }

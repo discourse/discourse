@@ -69,11 +69,7 @@ const Topic = RestModel.extend({
     const maxUserCount = 5;
     const posterCount = users.length;
 
-    if (
-      this.isPrivateMessage &&
-      participants &&
-      posterCount < maxUserCount
-    ) {
+    if (this.isPrivateMessage && participants && posterCount < maxUserCount) {
       let pushOffset = 0;
       if (posterCount > 1) {
         const lastUser = users[posterCount - 1];
