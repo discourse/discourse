@@ -55,11 +55,7 @@ export default Ember.Mixin.create({
   },
 
   _castInteger(value) {
-    if (
-      this.castInteger &&
-      Ember.isPresent(value) &&
-      this._isNumeric(value)
-    ) {
+    if (this.castInteger && Ember.isPresent(value) && this._isNumeric(value)) {
       return parseInt(value, 10);
     }
 

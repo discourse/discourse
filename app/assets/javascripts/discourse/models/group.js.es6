@@ -41,33 +41,27 @@ const Group = RestModel.extend({
       return;
     }
 
-    const offset = Math.min(
-      this.user_count,
-      Math.max(this.offset, 0)
+    const offset = Math.min(this.user_count, Math.max(this.offset, 0));
+
+    return Group.loadMembers(this.name, offset, this.limit, params).then(
+      result => {
+        var ownerIds = {};
+        result.owners.forEach(owner => (ownerIds[owner.id] = true));
+
+        this.setProperties({
+          user_count: result.meta.total,
+          limit: result.meta.limit,
+          offset: result.meta.offset,
+          members: result.members.map(member => {
+            if (ownerIds[member.id]) {
+              member.owner = true;
+            }
+            return User.create(member);
+          }),
+          owners: result.owners.map(owner => User.create(owner))
+        });
+      }
     );
-
-    return Group.loadMembers(
-      this.name,
-      offset,
-      this.limit,
-      params
-    ).then(result => {
-      var ownerIds = {};
-      result.owners.forEach(owner => (ownerIds[owner.id] = true));
-
-      this.setProperties({
-        user_count: result.meta.total,
-        limit: result.meta.limit,
-        offset: result.meta.offset,
-        members: result.members.map(member => {
-          if (ownerIds[member.id]) {
-            member.owner = true;
-          }
-          return User.create(member);
-        }),
-        owners: result.owners.map(owner => User.create(owner))
-      });
-    });
   },
 
   removeOwner(member) {
@@ -251,16 +245,14 @@ const Group = RestModel.extend({
       data.category_id = parseInt(opts.categoryId);
     }
 
-    return ajax(`/groups/${this.name}/${type}.json`, { data }).then(
-      posts => {
-        return posts.map(p => {
-          p.user = User.create(p.user);
-          p.topic = Topic.create(p.topic);
-          p.category = Category.findById(p.category_id);
-          return Ember.Object.create(p);
-        });
-      }
-    );
+    return ajax(`/groups/${this.name}/${type}.json`, { data }).then(posts => {
+      return posts.map(p => {
+        p.user = User.create(p.user);
+        p.topic = Topic.create(p.topic);
+        p.category = Category.findById(p.category_id);
+        return Ember.Object.create(p);
+      });
+    });
   },
 
   setNotification(notification_level, userId) {

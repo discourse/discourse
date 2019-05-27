@@ -180,10 +180,7 @@ export default Ember.Mixin.create({
     const offsetBottom = this.element.getBoundingClientRect().bottom;
     const windowWidth = $(window).width();
 
-    if (
-      this.fullWidthOnMobile &&
-      (this.site && this.site.isMobileDevice)
-    ) {
+    if (this.fullWidthOnMobile && (this.site && this.site.isMobileDevice)) {
       const margin = 10;
       const relativeLeft = this.$().offset().left - $(window).scrollLeft();
       options.left = margin - relativeLeft;
@@ -218,8 +215,7 @@ export default Ember.Mixin.create({
         if (this._isRTL()) {
           options.right = this.horizontalOffset;
         } else {
-          options.left =
-            -bodyWidth + elementWidth - this.horizontalOffset;
+          options.left = -bodyWidth + elementWidth - this.horizontalOffset;
         }
       } else {
         this.$()
@@ -227,16 +223,14 @@ export default Ember.Mixin.create({
           .removeClass("is-left-aligned");
 
         if (this._isRTL()) {
-          options.right =
-            -bodyWidth + elementWidth - this.horizontalOffset;
+          options.right = -bodyWidth + elementWidth - this.horizontalOffset;
         } else {
           options.left = this.horizontalOffset;
         }
       }
     }
 
-    const fullHeight =
-      this.verticalOffset + bodyHeight + componentHeight;
+    const fullHeight = this.verticalOffset + bodyHeight + componentHeight;
     const hasBelowSpace = $(window).height() - offsetBottom - fullHeight >= -1;
     const hasAboveSpace = offsetTop - fullHeight - discourseHeaderHeight >= -1;
     const headerHeight = this._computedStyle(this.$header()[0], "height");

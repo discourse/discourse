@@ -109,9 +109,7 @@ export default Ember.Component.extend(
       buffer.push(iconHTML(icon));
       buffer.push("<span class='ru-label'>" + this.text + "</span>");
       buffer.push(
-        "<span class='ru-progress' style='width:" +
-          this.progress +
-          "%'></span>"
+        "<span class='ru-progress' style='width:" + this.progress + "%'></span>"
       );
     },
 

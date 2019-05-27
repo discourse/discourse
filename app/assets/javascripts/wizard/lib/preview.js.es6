@@ -79,9 +79,7 @@ export function createPreviewComponent(width, height, obj) {
           return false;
         }
 
-        const colors = this.wizard.getCurrentColors(
-          this.colorsId
-        );
+        const colors = this.wizard.getCurrentColors(this.colorsId);
         if (!colors) {
           return;
         }

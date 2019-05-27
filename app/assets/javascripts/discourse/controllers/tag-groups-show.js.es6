@@ -14,12 +14,10 @@ export default Ember.Controller.extend({
         destroy => {
           if (destroy) {
             const c = this.get("tagGroups.model");
-            return this.model
-              .destroy()
-              .then(() => {
-                c.removeObject(this.model);
-                this.transitionToRoute("tagGroups");
-              });
+            return this.model.destroy().then(() => {
+              c.removeObject(this.model);
+              this.transitionToRoute("tagGroups");
+            });
           }
         }
       );

@@ -76,12 +76,7 @@ const ColorSchemeColor = Discourse.Model.extend({
   @observes("hex")
   hexValueChanged() {
     if (this.hex) {
-      this.set(
-        "hex",
-        this.hex
-          .toString()
-          .replace(/[^0-9a-fA-F]/g, "")
-      );
+      this.set("hex", this.hex.toString().replace(/[^0-9a-fA-F]/g, ""));
     }
   },
 

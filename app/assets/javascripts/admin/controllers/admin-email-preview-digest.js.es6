@@ -39,11 +39,7 @@ export default Ember.Controller.extend({
       this.set("sendingEmail", true);
       this.set("sentEmail", false);
 
-      EmailPreview.sendDigest(
-        this.username,
-        this.lastSeen,
-        this.email
-      )
+      EmailPreview.sendDigest(this.username, this.lastSeen, this.email)
         .then(result => {
           if (result.errors) {
             bootbox.alert(result.errors);

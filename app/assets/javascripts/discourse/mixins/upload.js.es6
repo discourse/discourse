@@ -106,8 +106,7 @@ export default Ember.Mixin.create({
   }.on("didInsertElement"),
 
   _destroy: function() {
-    this.messageBus &&
-      this.messageBus.unsubscribe("/uploads/" + this.type);
+    this.messageBus && this.messageBus.unsubscribe("/uploads/" + this.type);
 
     const $upload = this.$();
     try {

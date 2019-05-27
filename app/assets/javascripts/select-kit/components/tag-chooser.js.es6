@@ -105,9 +105,10 @@ export default MultiSelectComponent.extend(TagsMixin, {
     };
 
     if (selectedTags.length || this.blacklist.length) {
-      data.selected_tags = _.uniq(
-        selectedTags.concat(this.blacklist)
-      ).slice(0, 100);
+      data.selected_tags = _.uniq(selectedTags.concat(this.blacklist)).slice(
+        0,
+        100
+      );
     }
 
     if (!this.everyTag) data.filterForInput = true;

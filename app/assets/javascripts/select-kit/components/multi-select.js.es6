@@ -168,14 +168,11 @@ export default SelectKitComponent.extend({
 
     if (this.noneLabel) {
       if (!this.hasSelection) {
-        content.title = content.name = content.label = I18n.t(
-          this.noneLabel
-        );
+        content.title = content.name = content.label = I18n.t(this.noneLabel);
       }
     } else {
       if (!this.hasReachedMinimum) {
-        const key =
-          this.minimumLabel || "select_kit.min_content_not_reached";
+        const key = this.minimumLabel || "select_kit.min_content_not_reached";
         content.title = content.name = content.label = I18n.t(key, {
           count: this.minimum
         });
@@ -243,10 +240,7 @@ export default SelectKitComponent.extend({
       if (isEmpty(this.collectionComputedContent)) {
         if (this.createRowComputedContent) {
           this.highlight(this.createRowComputedContent);
-        } else if (
-          this.noneRowComputedContent &&
-          this.hasSelection
-        ) {
+        } else if (this.noneRowComputedContent && this.hasSelection) {
           this.highlight(this.noneRowComputedContent);
         }
       } else {
@@ -260,10 +254,7 @@ export default SelectKitComponent.extend({
       !computedContentItem ||
       computedContentItem.__sk_row_type === "noneRow"
     ) {
-      applyOnSelectNonePluginApiCallbacks(
-        this.pluginApiIdentifiers,
-        this
-      );
+      applyOnSelectNonePluginApiCallbacks(this.pluginApiIdentifiers, this);
       this._boundaryActionHandler("onSelectNone");
       this.clearSelection();
       return;

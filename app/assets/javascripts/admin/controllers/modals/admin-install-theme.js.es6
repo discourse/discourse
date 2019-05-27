@@ -273,10 +273,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
       this.set("loading", true);
       ajax(this.importUrl, options)
         .then(result => {
-          const theme = this.store.createRecord(
-            this.recordType,
-            result.theme
-          );
+          const theme = this.store.createRecord(this.recordType, result.theme);
           this.adminCustomizeThemes.send("addTheme", theme);
           this.send("closeModal");
         })

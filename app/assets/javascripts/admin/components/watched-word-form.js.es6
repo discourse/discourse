@@ -29,9 +29,7 @@ export default Ember.Component.extend({
   @computed("word")
   isUniqueWord(word) {
     const words = this.filteredContent || [];
-    const filtered = words.filter(
-      content => content.action === this.actionKey
-    );
+    const filtered = words.filter(content => content.action === this.actionKey);
     return filtered.every(
       content => content.word.toLowerCase() !== word.toLowerCase()
     );

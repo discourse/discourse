@@ -19,8 +19,8 @@ export default Ember.Component.extend({
       this.set("show", true);
 
       if (!this.location) {
-        ajax("/admin/users/ip-info", { data: { ip: this.ip } }).then(
-          location => this.set("location", Ember.Object.create(location))
+        ajax("/admin/users/ip-info", { data: { ip: this.ip } }).then(location =>
+          this.set("location", Ember.Object.create(location))
         );
       }
 

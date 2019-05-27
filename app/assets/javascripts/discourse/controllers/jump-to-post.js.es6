@@ -15,10 +15,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
   actions: {
     jump() {
       if (this.postNumber) {
-        this._jumpToIndex(
-          this.filteredPostsCount,
-          this.postNumber
-        );
+        this._jumpToIndex(this.filteredPostsCount, this.postNumber);
       } else if (this.postDate) {
         this._jumpToDate(this.postDate);
       }

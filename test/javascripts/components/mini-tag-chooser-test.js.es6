@@ -43,17 +43,13 @@ componentTest("default", {
     await this.subject.expand();
 
     assert.equal(
-      this.subject
-        .rowByIndex(0)
-        .name(),
+      this.subject.rowByIndex(0).name(),
       "bianca",
       "it has the correct tag"
     );
 
     assert.equal(
-      this.subject
-        .rowByIndex(1)
-        .name(),
+      this.subject.rowByIndex(1).name(),
       "régis",
       "it has the correct tag"
     );

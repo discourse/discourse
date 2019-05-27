@@ -209,9 +209,7 @@ export default Ember.Controller.extend(CanCheckEmails, {
       this.adminTools.showSuspendModal(this.model);
     },
     unsuspend() {
-      this.model
-        .unsuspend()
-        .catch(popupAjaxError);
+      this.model.unsuspend().catch(popupAjaxError);
     },
     showSilenceModal() {
       this.adminTools.showSilenceModal(this.model);

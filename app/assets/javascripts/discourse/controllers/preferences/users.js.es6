@@ -25,9 +25,7 @@ export default Ember.Controller.extend(PreferencesTabController, {
                 if (!user.get("ignored")) {
                   const usernames = this.ignoredUsernames
                     .split(",")
-                    .removeAt(
-                      this.ignoredUsernames.split(",").length - 1
-                    )
+                    .removeAt(this.ignoredUsernames.split(",").length - 1)
                     .join(",");
                   this.set("ignoredUsernames", usernames);
                 }
@@ -36,9 +34,7 @@ export default Ember.Controller.extend(PreferencesTabController, {
           });
         }
       } else {
-        return this.model
-          .save(["ignored_usernames"])
-          .catch(popupAjaxError);
+        return this.model.save(["ignored_usernames"]).catch(popupAjaxError);
       }
     },
     save() {

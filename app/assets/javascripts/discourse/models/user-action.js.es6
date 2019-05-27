@@ -50,13 +50,9 @@ const UserAction = RestModel.extend({
 
     if (this.postReplyType) {
       if (this.reply_to_post_number) {
-        return this.sameUser
-          ? "you_replied_to_post"
-          : "user_replied_to_post";
+        return this.sameUser ? "you_replied_to_post" : "user_replied_to_post";
       } else {
-        return this.sameUser
-          ? "you_replied_to_topic"
-          : "user_replied_to_topic";
+        return this.sameUser ? "you_replied_to_topic" : "user_replied_to_topic";
       }
     }
 
@@ -64,9 +60,7 @@ const UserAction = RestModel.extend({
       if (this.sameUser) {
         return "you_mentioned_user";
       } else {
-        return this.targetUser
-          ? "user_mentioned_you"
-          : "user_mentioned_user";
+        return this.targetUser ? "user_mentioned_you" : "user_mentioned_user";
       }
     }
   },
@@ -102,20 +96,12 @@ const UserAction = RestModel.extend({
 
   @computed()
   postUrl() {
-    return postUrl(
-      this.slug,
-      this.topic_id,
-      this.post_number
-    );
+    return postUrl(this.slug, this.topic_id, this.post_number);
   },
 
   @computed()
   replyUrl() {
-    return postUrl(
-      this.slug,
-      this.topic_id,
-      this.reply_to_post_number
-    );
+    return postUrl(this.slug, this.topic_id, this.reply_to_post_number);
   },
 
   replyType: Ember.computed.equal("action_type", UserActionTypes.replies),

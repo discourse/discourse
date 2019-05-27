@@ -30,10 +30,9 @@ const ScreenedIpAddress = Discourse.Model.extend({
   },
 
   destroy() {
-    return ajax(
-      "/admin/logs/screened_ip_addresses/" + this.id + ".json",
-      { type: "DELETE" }
-    );
+    return ajax("/admin/logs/screened_ip_addresses/" + this.id + ".json", {
+      type: "DELETE"
+    });
   }
 });
 

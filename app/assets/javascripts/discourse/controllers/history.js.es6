@@ -180,9 +180,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
   @computed("model.previous_hidden", "model.current_hidden", "displayingInline")
   hiddenClasses(prevHidden, currentHidden, displayingInline) {
     if (displayingInline) {
-      return this.isEitherRevisionHidden
-        ? "hidden-revision-either"
-        : null;
+      return this.isEitherRevisionHidden ? "hidden-revision-either" : null;
     } else {
       var result = [];
       if (prevHidden) {

@@ -24,11 +24,7 @@ export default RestModel.extend({
   postUrl(topicId) {
     if (!topicId) return;
 
-    return postUrl(
-      this.slug,
-      this.topic_id,
-      this.post_number
-    );
+    return postUrl(this.slug, this.topic_id, this.post_number);
   },
 
   @computed("draft_key")

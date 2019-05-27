@@ -341,14 +341,7 @@ export default Ember.Component.extend({
       this.set("shouldBuildScrollMap", false);
     }
 
-    Ember.run.throttle(
-      this,
-      $callback,
-      $input,
-      $preview,
-      this.scrollMap,
-      20
-    );
+    Ember.run.throttle(this, $callback, $input, $preview, this.scrollMap, 20);
   },
 
   _teardownInputPreviewSync() {
@@ -739,10 +732,7 @@ export default Ember.Component.extend({
 
       this._setUploadPlaceholderSend(data);
 
-      this.appEvents.trigger(
-        "composer:insert-text",
-        this.uploadPlaceholder
-      );
+      this.appEvents.trigger("composer:insert-text", this.uploadPlaceholder);
 
       if (data.xhr && data.originalFiles.length === 1) {
         this.set("isCancellable", true);
@@ -963,11 +953,7 @@ export default Ember.Component.extend({
         unshift: true
       });
 
-      if (
-        this.allowUpload &&
-        this.uploadIcon &&
-        !this.site.mobileView
-      ) {
+      if (this.allowUpload && this.uploadIcon && !this.site.mobileView) {
         toolbar.addButton({
           id: "upload",
           group: "insertions",

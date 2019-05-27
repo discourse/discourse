@@ -19,21 +19,11 @@ componentTest("updating the content refreshes the list", {
   async test(assert) {
     await this.subject.expand();
 
-    assert.equal(
-      this.subject
-        .rowByValue(1)
-        .name(),
-      "BEFORE"
-    );
+    assert.equal(this.subject.rowByValue(1).name(), "BEFORE");
 
     await this.set("content", [{ id: 1, name: "AFTER" }]);
 
-    assert.equal(
-      this.subject
-        .rowByValue(1)
-        .name(),
-      "AFTER"
-    );
+    assert.equal(this.subject.rowByValue(1).name(), "AFTER");
   }
 });
 
@@ -49,9 +39,7 @@ componentTest("accepts a value by reference", {
     await this.subject.expand();
 
     assert.equal(
-      this.subject
-        .selectedRow()
-        .name(),
+      this.subject.selectedRow().name(),
       "robin",
       "it highlights the row corresponding to the value"
     );
@@ -67,9 +55,7 @@ componentTest("no default icon", {
 
   test(assert) {
     assert.equal(
-      this.subject
-        .header()
-        .icon().length,
+      this.subject.header().icon().length,
       0,
       "it doesn’t have an icon if not specified"
     );
@@ -82,14 +68,7 @@ componentTest("default search icon", {
   async test(assert) {
     await this.subject.expand();
 
-    assert.ok(
-      exists(
-        this.subject
-          .filter()
-          .icon()
-      ),
-      "it has an icon"
-    );
+    assert.ok(exists(this.subject.filter().icon()), "it has an icon");
   }
 });
 
@@ -99,14 +78,7 @@ componentTest("with no search icon", {
   async test(assert) {
     await this.subject.expand();
 
-    assert.notOk(
-      exists(
-        this.subject
-          .filter()
-          .icon()
-      ),
-      "it has no icon"
-    );
+    assert.notOk(exists(this.subject.filter().icon()), "it has no icon");
   }
 });
 
@@ -151,12 +123,7 @@ componentTest("accepts custom value/name keys", {
   async test(assert) {
     await this.subject.expand();
 
-    assert.equal(
-      this.subject
-        .selectedRow()
-        .name(),
-      "robin"
-    );
+    assert.equal(this.subject.selectedRow().name(), "robin");
   }
 });
 
@@ -186,19 +153,12 @@ componentTest("dynamic headerText", {
   async test(assert) {
     await this.subject.expand();
 
-    assert.equal(
-      this.subject
-        .header()
-        .name(),
-      "robin"
-    );
+    assert.equal(this.subject.header().name(), "robin");
 
     await this.subject.selectRowByValue(2);
 
     assert.equal(
-      this.subject
-        .header()
-        .name(),
+      this.subject.header().name(),
       "regis",
       "it changes header text"
     );
@@ -243,19 +203,12 @@ componentTest("supports converting select value to integer", {
   async test(assert) {
     await this.subject.expand();
 
-    assert.equal(
-      this.subject
-        .selectedRow()
-        .name(),
-      "régis"
-    );
+    assert.equal(this.subject.selectedRow().name(), "régis");
 
     await this.set("value", 1);
 
     assert.equal(
-      this.subject
-        .selectedRow()
-        .name(),
+      this.subject.selectedRow().name(),
       "robin",
       "it works with dynamic content"
     );
@@ -276,19 +229,12 @@ componentTest("supports converting string as boolean to boolean", {
   async test(assert) {
     await this.subject.expand();
 
-    assert.equal(
-      this.subject
-        .selectedRow()
-        .name(),
-      "ASC"
-    );
+    assert.equal(this.subject.selectedRow().name(), "ASC");
 
     await this.set("value", false);
 
     assert.equal(
-      this.subject
-        .selectedRow()
-        .name(),
+      this.subject.selectedRow().name(),
       "DESC",
       "it works with dynamic content"
     );
@@ -308,9 +254,7 @@ componentTest("supports keyboard events", {
     await this.subject.keyboard("down");
 
     assert.equal(
-      this.subject
-        .highlightedRow()
-        .title(),
+      this.subject.highlightedRow().title(),
       "regis",
       "the next row is highlighted"
     );
@@ -318,9 +262,7 @@ componentTest("supports keyboard events", {
     await this.subject.keyboard("down");
 
     assert.equal(
-      this.subject
-        .highlightedRow()
-        .title(),
+      this.subject.highlightedRow().title(),
       "robin",
       "it returns to the first row"
     );
@@ -328,9 +270,7 @@ componentTest("supports keyboard events", {
     await this.subject.keyboard("up");
 
     assert.equal(
-      this.subject
-        .highlightedRow()
-        .title(),
+      this.subject.highlightedRow().title(),
       "regis",
       "it highlights the last row"
     );
@@ -338,9 +278,7 @@ componentTest("supports keyboard events", {
     await this.subject.keyboard("enter");
 
     assert.equal(
-      this.subject
-        .selectedRow()
-        .title(),
+      this.subject.selectedRow().title(),
       "regis",
       "it selects the row when pressing enter"
     );
@@ -352,10 +290,7 @@ componentTest("supports keyboard events", {
     await this.subject.expand();
     await this.subject.keyboard("escape");
 
-    assert.notOk(
-      this.subject.isExpanded(),
-      "it collapses the select box"
-    );
+    assert.notOk(this.subject.isExpanded(), "it collapses the select box");
 
     await this.subject.expand();
     await this.subject.fillInFilter("regis");
@@ -381,11 +316,7 @@ componentTest("with allowInitialValueMutation", {
   },
 
   test(assert) {
-    assert.equal(
-      this.value,
-      "1",
-      "it mutates the value on initial rendering"
-    );
+    assert.equal(this.value, "1", "it mutates the value on initial rendering");
   }
 });
 
@@ -405,12 +336,7 @@ componentTest("support appending content through plugin api", {
     await this.subject.expand();
 
     assert.equal(this.subject.rows().length, 2);
-    assert.equal(
-      this.subject
-        .rowByIndex(1)
-        .name(),
-      "regis"
-    );
+    assert.equal(this.subject.rowByIndex(1).name(), "regis");
 
     clearCallbacks();
   }
@@ -439,12 +365,7 @@ componentTest("support modifying content through plugin api", {
     await this.subject.expand();
 
     assert.equal(this.subject.rows().length, 3);
-    assert.equal(
-      this.subject
-        .rowByIndex(1)
-        .name(),
-      "sam"
-    );
+    assert.equal(this.subject.rowByIndex(1).name(), "sam");
 
     clearCallbacks();
   }
@@ -467,12 +388,7 @@ componentTest("support prepending content through plugin api", {
     await this.subject.expand();
 
     assert.equal(this.subject.rows().length, 2);
-    assert.equal(
-      this.subject
-        .rowByIndex(0)
-        .name(),
-      "regis"
-    );
+    assert.equal(this.subject.rowByIndex(0).name(), "regis");
 
     clearCallbacks();
   }
@@ -551,21 +467,11 @@ componentTest("with nameChanges", {
   async test(assert) {
     await this.subject.expand();
 
-    assert.equal(
-      this.subject
-        .header()
-        .name(),
-      "robin"
-    );
+    assert.equal(this.subject.header().name(), "robin");
 
     await this.set("robin.name", "robin2");
 
-    assert.equal(
-      this.subject
-        .header()
-        .name(),
-      "robin2"
-    );
+    assert.equal(this.subject.header().name(), "robin2");
   }
 });
 
@@ -579,18 +485,8 @@ componentTest("with null value", {
   async test(assert) {
     await this.subject.expand();
 
-    assert.equal(
-      this.subject
-        .header()
-        .name(),
-      "robin"
-    );
-    assert.equal(
-      this.subject
-        .header()
-        .value(),
-      undefined
-    );
+    assert.equal(this.subject.header().name(), "robin");
+    assert.equal(this.subject.header().value(), undefined);
   }
 });
 
@@ -616,12 +512,7 @@ componentTest("with title", {
   },
 
   test(assert) {
-    assert.equal(
-      this.subject
-        .header()
-        .title(),
-      "My title"
-    );
+    assert.equal(this.subject.header().title(), "My title");
   }
 });
 
@@ -642,12 +533,7 @@ componentTest("support modifying header computed content through plugin api", {
   },
 
   test(assert) {
-    assert.equal(
-      this.subject
-        .header()
-        .title(),
-      "Not so evil"
-    );
+    assert.equal(this.subject.header().title(), "Not so evil");
 
     clearCallbacks();
   }
@@ -663,12 +549,7 @@ componentTest("with limitMatches", {
   async test(assert) {
     await this.subject.expand();
 
-    assert.equal(
-      this.subject
-        .el()
-        .find(".select-kit-row").length,
-      2
-    );
+    assert.equal(this.subject.el().find(".select-kit-row").length, 2);
   }
 });
 
@@ -683,19 +564,11 @@ componentTest("with minimum", {
   async test(assert) {
     await this.subject.expand();
 
-    assert.equal(
-      this.subject.validationMessage(),
-      "Select at least 1 item."
-    );
+    assert.equal(this.subject.validationMessage(), "Select at least 1 item.");
 
     await this.subject.selectRowByValue("sam");
 
-    assert.equal(
-      this.subject
-        .header()
-        .label(),
-      "sam"
-    );
+    assert.equal(this.subject.header().label(), "sam");
   }
 });
 
@@ -715,12 +588,7 @@ componentTest("with minimumLabel", {
 
     await this.subject.selectRowByValue("jeff");
 
-    assert.equal(
-      this.subject
-        .header()
-        .label(),
-      "jeff"
-    );
+    assert.equal(this.subject.header().label(), "jeff");
   }
 });
 
@@ -736,12 +604,7 @@ componentTest("with accents in filter", {
     await this.subject.fillInFilter("jéff");
 
     assert.equal(this.subject.rows().length, 1);
-    assert.equal(
-      this.subject
-        .rowByIndex(0)
-        .name(),
-      "jeff"
-    );
+    assert.equal(this.subject.rowByIndex(0).name(), "jeff");
   }
 });
 
@@ -757,12 +620,7 @@ componentTest("with accents in content", {
     await this.subject.fillInFilter("jeff");
 
     assert.equal(this.subject.rows().length, 1);
-    assert.equal(
-      this.subject
-        .rowByIndex(0)
-        .name(),
-      "jéff"
-    );
+    assert.equal(this.subject.rowByIndex(0).name(), "jéff");
   }
 });
 
@@ -771,15 +629,9 @@ componentTest("with no content and allowAny", {
 
   skip: true,
   async test(assert) {
-    await click(
-      this.subject
-        .header()
-        .el()
-    );
+    await click(this.subject.header().el());
 
-    const $filter = this.subject
-      .filter()
-      .el();
+    const $filter = this.subject.filter().el();
 
     assert.ok($filter.hasClass("is-focused"));
     assert.ok(!$filter.hasClass("is-hidden"));

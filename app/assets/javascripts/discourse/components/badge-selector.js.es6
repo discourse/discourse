@@ -24,9 +24,7 @@ export default Ember.Component.extend({
 
     self.$("input").autocomplete({
       allowAny: false,
-      items: _.isArray(this.badgeNames)
-        ? this.badgeNames
-        : [this.badgeNames],
+      items: _.isArray(this.badgeNames) ? this.badgeNames : [this.badgeNames],
       single: this.single,
       updateData: opts && opts.updateData ? opts.updateData : false,
       onChangeItems: function(items) {

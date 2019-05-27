@@ -50,23 +50,17 @@ export default Discourse.Model.extend({
       topics_viewed: this.topics_viewed >= this.min_topics_viewed,
       posts_read: this.posts_read >= this.min_posts_read,
       topics_viewed_all_time:
-        this.topics_viewed_all_time >=
-        this.min_topics_viewed_all_time,
+        this.topics_viewed_all_time >= this.min_topics_viewed_all_time,
       posts_read_all_time:
         this.posts_read_all_time >= this.min_posts_read_all_time,
-      flagged_posts:
-        this.num_flagged_posts <= this.max_flagged_posts,
-      flagged_by_users:
-        this.num_flagged_by_users <= this.max_flagged_by_users,
+      flagged_posts: this.num_flagged_posts <= this.max_flagged_posts,
+      flagged_by_users: this.num_flagged_by_users <= this.max_flagged_by_users,
       likes_given: this.num_likes_given >= this.min_likes_given,
-      likes_received:
-        this.num_likes_received >= this.min_likes_received,
+      likes_received: this.num_likes_received >= this.min_likes_received,
       likes_received_days:
-        this.num_likes_received_days >=
-        this.min_likes_received_days,
+        this.num_likes_received_days >= this.min_likes_received_days,
       likes_received_users:
-        this.num_likes_received_users >=
-        this.min_likes_received_users,
+        this.num_likes_received_users >= this.min_likes_received_users,
       level_locked: this.trust_level_locked,
       silenced: this.get("penalty_counts.silenced") === 0,
       suspended: this.get("penalty_counts.suspended") === 0
