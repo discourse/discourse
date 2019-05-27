@@ -1,5 +1,5 @@
 /*jshint maxlen:10000000 */
-import { LIKED_CONSOLIDATED_TYPE } from "discourse/widgets/notification-item";
+import { LIKED_CONSOLIDATED_TYPE } from "discourse/components/concerns/notification-types";
 
 export default {
   "/notifications": {

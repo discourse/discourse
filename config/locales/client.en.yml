@@ -1689,6 +1689,7 @@ en:
       granted_badge: "Earned '{{description}}'"
       topic_reminder: "<span>{{username}}</span> {{description}}"
       watching_first_post: "<span>New Topic</span> {{description}}"
+      group_invite: "Invited to '{{group_name}}'"
 
       group_message_summary:
         one: "{{count}} message in your {{group_name}} inbox"
