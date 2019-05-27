@@ -544,7 +544,8 @@ export default Ember.Component.extend({
         $textarea.focus();
       }
       textarea.selectionStart = from;
-      textarea.selectionEnd = textarea.selectionStart + length;
+      textarea.selectionEnd = from + length;
+
       $textarea.scrollTop(oldScrollPos);
     });
   },
