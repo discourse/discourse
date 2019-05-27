@@ -797,7 +797,7 @@ composerTestCase("replace-text event for composer", async function(assert) {
     ) {
       this.set("value", BEFORE);
 
-      textarea.focus();
+      await click(textarea);
 
       assert.ok(document.activeElement === textarea);
       assert.ok(textarea.value === BEFORE);
