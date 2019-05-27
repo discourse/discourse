@@ -114,6 +114,7 @@ export default Ember.Component.extend({
               display: true,
               gridLines: { display: false },
               type: "time",
+              offset: true,
               time: {
                 parser: "YYYY-MM-DD",
                 minUnit: "day"
