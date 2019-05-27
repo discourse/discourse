@@ -11,8 +11,8 @@ class SiteSettingsTask
     h
   end
 
-  def self.import(yml, import_hidden: false)
-    h = SiteSettingsTask.export_to_hash(include_defaults: true, include_hidden: import_hidden)
+  def self.import(yml)
+    h = SiteSettingsTask.export_to_hash(include_defaults: true, include_hidden: true)
     counts = { updated: 0, not_found: 0, errors: 0 }
     log = []
 
