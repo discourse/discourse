@@ -777,12 +777,6 @@ composerTestCase("replace-text event for composer", async function(assert) {
     }
   ];
 
-  function getSelection(textarea) {
-    const start = textarea.selectionStart;
-    const end = textarea.selectionEnd;
-    return [start, end - start];
-  }
-
   for (let i = 0; i < CASES.length; i++) {
     const CASE = CASES[i];
     // prettier-ignore
@@ -792,26 +786,21 @@ composerTestCase("replace-text event for composer", async function(assert) {
     ) {
       this.set("value", BEFORE);
 
-      await click(textarea);
+      await focus(textarea);
 
-      assert.ok(document.activeElement === textarea);
       assert.ok(textarea.value === BEFORE);
 
       const [start, len] = CASE.before;
       setTextareaSelection(textarea, start, start + len);
 
-      assert.ok(document.activeElement === textarea);
-
       this.container
         .lookup("app-events:main")
         .trigger("composer:replace-text", "green", "yellow", { forceFocus: true });
 
-      assert.ok(document.activeElement === textarea);
-
       let expect = await formatTextWithSelection(AFTER, CASE.after); // eslint-disable-line no-undef
       let actual = await formatTextWithSelection( // eslint-disable-line no-undef
         this.value,
-        getSelection(textarea)
+        getTextareaSelection(textarea)
       );
       assert.equal(actual, expect);
     });
