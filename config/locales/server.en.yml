@@ -1708,7 +1708,7 @@ en:
     max_image_megapixels: "Maximum number of megapixels allowed for an image."
 
     title_prettify: "Prevent common title typos and errors, including all caps, lowercase first character, multiple ! and ?, extra . at end, etc."
-    title_remove_extraneous_space: "Remove leading whitespaces in front of the end punctiation."
+    title_remove_extraneous_space: "Remove leading whitespaces in front of the end punctuation."
 
     topic_views_heat_low: "After this many views, the views field is slightly highlighted."
     topic_views_heat_medium: "After this many views, the views field is moderately highlighted."
