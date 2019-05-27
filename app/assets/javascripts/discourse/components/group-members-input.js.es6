@@ -63,9 +63,7 @@ export default Ember.Component.extend({
       if (Ember.isEmpty(this.get("model.usernames"))) {
         return;
       }
-      this.model
-        .addMembers(this.get("model.usernames"))
-        .catch(popupAjaxError);
+      this.model.addMembers(this.get("model.usernames")).catch(popupAjaxError);
       this.set("model.usernames", null);
     },
 

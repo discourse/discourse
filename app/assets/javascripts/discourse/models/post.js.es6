@@ -91,9 +91,7 @@ const Post = RestModel.extend({
   internalLinks() {
     if (Ember.isEmpty(this.link_counts)) return null;
 
-    return this.link_counts
-      .filterBy("internal")
-      .filterBy("title");
+    return this.link_counts.filterBy("internal").filterBy("title");
   },
 
   @computed("actions_summary.@each.can_act")

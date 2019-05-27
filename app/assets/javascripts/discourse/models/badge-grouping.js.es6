@@ -4,9 +4,7 @@ import RestModel from "discourse/models/rest";
 export default RestModel.extend({
   @computed("name")
   i18nNameKey() {
-    return this.name
-      .toLowerCase()
-      .replace(/\s/g, "_");
+    return this.name.toLowerCase().replace(/\s/g, "_");
   },
 
   @computed("name")

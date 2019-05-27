@@ -92,9 +92,7 @@ export default Ember.Controller.extend({
           .save()
           .then(() => {
             this.set("saved", true);
-            this.adminWebHooks
-              .get("model")
-              .addObject(model);
+            this.adminWebHooks.get("model").addObject(model);
 
             if (isNew) {
               this.transitionToRoute("adminWebHooks.show", model.get("id"));
@@ -135,9 +133,7 @@ export default Ember.Controller.extend({
             model
               .destroyRecord()
               .then(() => {
-                this.adminWebHooks
-                  .get("model")
-                  .removeObject(model);
+                this.adminWebHooks.get("model").removeObject(model);
                 this.transitionToRoute("adminWebHooks");
               })
               .catch(popupAjaxError);

@@ -29,8 +29,7 @@ export default Ember.Component.extend({
     },
 
     addValue() {
-      if (this._checkInvalidInput([this.newKey, this.newSecret]))
-        return;
+      if (this._checkInvalidInput([this.newKey, this.newSecret])) return;
       this._addValue(this.newKey, this.newSecret);
       this.setProperties({ newKey: "", newSecret: "" });
     },

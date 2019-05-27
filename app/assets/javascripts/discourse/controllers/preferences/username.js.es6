@@ -75,9 +75,7 @@ export default Ember.Controller.extend({
               .changeUsername(this.newUsername)
               .then(() => {
                 DiscourseURL.redirectTo(
-                  userPath(
-                    this.newUsername.toLowerCase() + "/preferences"
-                  )
+                  userPath(this.newUsername.toLowerCase() + "/preferences")
                 );
               })
               .catch(popupAjaxError)

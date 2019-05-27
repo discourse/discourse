@@ -157,9 +157,7 @@ export default SelectKitComponent.extend({
 
   @computed("selection")
   hasSelection(selection) {
-    return (
-      selection !== this.noneRowComputedContent && !isNone(selection)
-    );
+    return selection !== this.noneRowComputedContent && !isNone(selection);
   },
 
   @computed(
@@ -180,19 +178,12 @@ export default SelectKitComponent.extend({
         return;
       }
 
-      if (
-        !isEmpty(this.filter) &&
-        !isEmpty(this.collectionComputedContent)
-      ) {
+      if (!isEmpty(this.filter) && !isEmpty(this.collectionComputedContent)) {
         this.highlight(this.get("collectionComputedContent.firstObject"));
         return;
       }
 
-      if (
-        !this.isAsync &&
-        this.hasSelection &&
-        isEmpty(this.filter)
-      ) {
+      if (!this.isAsync && this.hasSelection && isEmpty(this.filter)) {
         this.highlight(get(makeArray(this.selection), "firstObject"));
         return;
       }
@@ -235,10 +226,7 @@ export default SelectKitComponent.extend({
       !computedContentItem ||
       computedContentItem.__sk_row_type === "noneRow"
     ) {
-      applyOnSelectNonePluginApiCallbacks(
-        this.pluginApiIdentifiers,
-        this
-      );
+      applyOnSelectNonePluginApiCallbacks(this.pluginApiIdentifiers, this);
       this._boundaryActionHandler("onSelectNone");
       this._boundaryActionHandler("onSelectAny", computedContentItem);
       this.clearSelection();

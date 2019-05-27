@@ -12,9 +12,7 @@ export default Ember.Controller.extend({
 
     let filter;
     if (this.filter) {
-      filter = this.filter
-        .toLowerCase()
-        .trim();
+      filter = this.filter.toLowerCase().trim();
     }
 
     if ((!filter || 0 === filter.length) && !this.onlyOverridden) {

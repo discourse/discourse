@@ -27,10 +27,7 @@ export default Ember.Component.extend({
         }
       });
 
-      if (
-        topicCount < this.requiredTopics ||
-        postCount < this.requiredPosts
-      ) {
+      if (topicCount < this.requiredTopics || postCount < this.requiredPosts) {
         this.set("enabled", true);
         this.fetchLiveStats();
       }

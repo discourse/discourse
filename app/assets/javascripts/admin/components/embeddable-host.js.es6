@@ -46,10 +46,7 @@ export default Ember.Component.extend(bufferedProperty("host"), {
       host
         .save(props)
         .then(() => {
-          host.set(
-            "category",
-            Discourse.Category.findById(this.categoryId)
-          );
+          host.set("category", Discourse.Category.findById(this.categoryId));
           this.set("editToggled", false);
         })
         .catch(popupAjaxError);
@@ -58,11 +55,9 @@ export default Ember.Component.extend(bufferedProperty("host"), {
     delete() {
       bootbox.confirm(I18n.t("admin.embedding.confirm_delete"), result => {
         if (result) {
-          this.host
-            .destroyRecord()
-            .then(() => {
-              this.deleteHost(this.host);
-            });
+          this.host.destroyRecord().then(() => {
+            this.deleteHost(this.host);
+          });
         }
       });
     },

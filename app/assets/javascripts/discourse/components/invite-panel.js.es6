@@ -127,9 +127,7 @@ export default Ember.Component.extend({
 
   @computed("inviteModel", "inviteModel.details.can_invite_via_email")
   canInviteViaEmail(inviteModel, canInviteViaEmail) {
-    return this.inviteModel === this.currentUser
-      ? true
-      : canInviteViaEmail;
+    return this.inviteModel === this.currentUser ? true : canInviteViaEmail;
   },
 
   @computed("isPM", "canInviteViaEmail")
@@ -184,10 +182,7 @@ export default Ember.Component.extend({
 
   @computed("emailOrUsername")
   showCustomMessage(emailOrUsername) {
-    return (
-      this.inviteModel === this.currentUser ||
-      emailValid(emailOrUsername)
-    );
+    return this.inviteModel === this.currentUser || emailValid(emailOrUsername);
   },
 
   // Instructional text for the modal.
@@ -386,11 +381,7 @@ export default Ember.Component.extend({
       }
 
       return model
-        .generateInviteLink(
-          this.emailOrUsername.trim(),
-          groupNames,
-          topicId
-        )
+        .generateInviteLink(this.emailOrUsername.trim(), groupNames, topicId)
         .then(result => {
           model.setProperties({
             saving: false,

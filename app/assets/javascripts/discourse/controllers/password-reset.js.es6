@@ -69,9 +69,7 @@ export default Ember.Controller.extend(PasswordValidation, {
               result.errors.password &&
               result.errors.password.length > 0
             ) {
-              this.rejectedPasswords.pushObject(
-                this.accountPassword
-              );
+              this.rejectedPasswords.pushObject(this.accountPassword);
               this.rejectedPasswordsMessages.set(
                 this.accountPassword,
                 result.errors.password[0]

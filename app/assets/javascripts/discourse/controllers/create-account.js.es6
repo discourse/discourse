@@ -173,8 +173,7 @@ export default Ember.Controller.extend(
       }
       if (
         this.get("emailValidation.ok") &&
-        (Ember.isEmpty(this.accountUsername) ||
-          this.get("authOptions.email"))
+        (Ember.isEmpty(this.accountUsername) || this.get("authOptions.email"))
       ) {
         // If email is valid and username has not been entered yet,
         // or email and username were filled automatically by 3rd parth auth,

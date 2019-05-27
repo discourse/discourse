@@ -27,20 +27,10 @@ componentTest("updating the content refreshes the list", {
   },
 
   async test(assert) {
-    assert.equal(
-      this.subject
-        .header()
-        .name(),
-      "pinned"
-    );
+    assert.equal(this.subject.header().name(), "pinned");
 
     await this.set("pinned", false);
 
-    assert.equal(
-      this.subject
-        .header()
-        .name(),
-      "unpinned"
-    );
+    assert.equal(this.subject.header().name(), "unpinned");
   }
 });
