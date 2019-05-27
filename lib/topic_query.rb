@@ -876,31 +876,41 @@ class TopicQuery
   end
   def remove_muted_tags(list, user, opts = nil)
     if user.nil? || !SiteSetting.tagging_enabled || !SiteSetting.remove_muted_tags_from_latest
-      list
-    else
-      if !TagUser.lookup(user, :muted).exists?
-        list
-      else
-        showing_tag = if opts[:filter]
-          f = opts[:filter].split('/')
-          f[0] == 'tags' ? f[1] : nil
-        else
-          nil
-        end
+      return list
+    end
 
-        if TagUser.lookup(user, :muted).joins(:tag).where('tags.name = ?', showing_tag).exists?
-          list # if viewing the topic list for a muted tag, show all the topics
-        else
-          muted_tag_ids = TagUser.lookup(user, :muted).pluck(:tag_id)
-          list = list.where("
-            EXISTS (
-              SELECT 1
-                FROM topic_tags tt
-               WHERE tt.tag_id NOT IN (:tag_ids)
-                 AND tt.topic_id = topics.id
-            ) OR NOT EXISTS (SELECT 1 FROM topic_tags tt WHERE tt.topic_id = topics.id)", tag_ids: muted_tag_ids)
-        end
-      end
+    muted_tag_ids = TagUser.lookup(user, :muted).pluck(:tag_id)
+    if muted_tag_ids.blank?
+      return list
+    end
+
+    showing_tag = if opts[:filter]
+      f = opts[:filter].split('/')
+      f[0] == 'tags' ? f[1] : nil
+    else
+      nil
+    end
+
+    # if viewing the topic list for a muted tag, show all the topics
+    if showing_tag.present? && TagUser.lookup(user, :muted).joins(:tag).where('tags.name = ?', showing_tag).exists?
+      return list
+    end
+
+    if SiteSetting.mute_other_present_tags
+      list = list.where("
+        NOT EXISTS(
+          SELECT 1
+            FROM topic_tags tt
+           WHERE tt.tag_id IN (:tag_ids)
+             AND tt.topic_id = topics.id)", tag_ids: muted_tag_ids)
+    else
+      list = list.where("
+        EXISTS (
+          SELECT 1
+            FROM topic_tags tt
+           WHERE tt.tag_id NOT IN (:tag_ids)
+             AND tt.topic_id = topics.id
+        ) OR NOT EXISTS (SELECT 1 FROM topic_tags tt WHERE tt.topic_id = topics.id)", tag_ids: muted_tag_ids)
     end
   end
 

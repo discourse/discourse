@@ -2015,7 +2015,8 @@ en:
     allow_staff_to_tag_pms: "Allow staff members to tag any personal message"
     min_trust_level_to_tag_topics: "Minimum trust level required to tag topics"
     suppress_overlapping_tags_in_list: "If tags match exact words in topic titles, don't show the tag"
-    remove_muted_tags_from_latest: "Don't show topics tagged with muted tags in the latest topic list."
+    remove_muted_tags_from_latest: "Don't show topics tagged only with muted tags in the latest topic list."
+    mute_other_present_tags: "Don't show topics tagged with both muted and unmuted tags in the latest topic list."
     force_lowercase_tags: "Force all new tags to be entirely lowercase."
 
     company_name: "Company Name"
