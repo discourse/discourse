@@ -1,0 +1,3 @@
+<% Notification.types.each do |key, value| %>
+export const <%= key.upcase %>_TYPE = <%= value %>;
+<% end %>

@@ -341,7 +341,7 @@ class GroupsController < ApplicationController
       raise Discourse::InvalidParameters.new(:user_id) if user.blank?
 
       if params[:accept]
-        group.add(user)
+        group.add(user, notify: true)
         GroupActionLogger.new(current_user, group).log_add_user_to_group(user)
       end
 

@@ -35,7 +35,8 @@ const REPLACEMENTS = {
   "notification.topic_reminder": "far-clock",
   "notification.watching_first_post": "far-dot-circle",
   "notification.group_message_summary": "group",
-  "notification.post_approved": "check"
+  "notification.post_approved": "check",
+  "notification.group_invite": "user-plus"
 };
 
 // TODO: use lib/svg_sprite/fa4-renames.json here
