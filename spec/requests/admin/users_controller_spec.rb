@@ -185,6 +185,26 @@ RSpec.describe Admin::UsersController do
         expect(response.status).to eq(200)
       end
 
+      it "can delete an associated post and its replies" do
+        reply = PostCreator.create(
+          Fabricate(:user),
+          raw: 'this is the reply text',
+          reply_to_post_number: post.post_number,
+          topic_id: post.topic_id
+        )
+        nested_reply = PostCreator.create(
+          Fabricate(:user),
+          raw: 'this is the reply text2',
+          reply_to_post_number: reply.post_number,
+          topic_id: post.topic_id
+        )
+        put "/admin/users/#{user.id}/suspend.json", params: suspend_params.merge(post_action: 'delete_replies')
+        expect(post.reload.deleted_at).to be_present
+        expect(reply.reload.deleted_at).to be_present
+        expect(nested_reply.reload.deleted_at).to be_present
+        expect(response.status).to eq(200)
+      end
+
       it "can edit an associated post" do
         put "/admin/users/#{user.id}/suspend.json", params: suspend_params.merge(
           post_action: 'edit',

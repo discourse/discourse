@@ -3877,6 +3877,7 @@ en:
         delete_posts_failed: "There was a problem deleting the posts."
         penalty_post_actions: "What would you like to do with the associated post?"
         penalty_post_delete: "Delete the post"
+        penalty_post_delete_replies: "Delete the post + any replies"
         penalty_post_edit: "Edit the post"
         penalty_post_none: "Do nothing"
         penalty_count: "Penalty Count"
