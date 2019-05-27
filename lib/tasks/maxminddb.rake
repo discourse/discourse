@@ -3,7 +3,7 @@
 require_dependency 'discourse_ip_info'
 
 desc "downloads MaxMind's GeoLite2-City database"
-task "maxminddb:get" do
+task "maxminddb:get" => :environment do
   puts "Downloading MaxMindDb's GeoLite2-City..."
   DiscourseIpInfo.mmdb_download('GeoLite2-City')
 
