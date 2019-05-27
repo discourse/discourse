@@ -82,7 +82,7 @@ export default RestModel.extend({
     if (!hasLoadedData) {
       return false;
     }
-    return !!this.get("posts").findBy("id", firstPostId);
+    return !!this.posts.findBy("id", firstPostId);
   },
 
   firstPostNotLoaded: Ember.computed.not("firstPostPresent"),
@@ -109,7 +109,7 @@ export default RestModel.extend({
       return true;
     }
 
-    return !!this.get("posts").findBy("id", lastPostId);
+    return !!this.posts.findBy("id", lastPostId);
   },
 
   lastPostNotLoaded: Ember.computed.not("loadedAllPosts"),
@@ -125,7 +125,7 @@ export default RestModel.extend({
       result.filter = "summary";
     }
 
-    const userFilters = this.get("userFilters");
+    const userFilters = this.userFilters;
     if (!Ember.isEmpty(userFilters)) {
       result.username_filters = userFilters.join(",");
     }
@@ -135,7 +135,7 @@ export default RestModel.extend({
 
   @computed("streamFilters.[]", "topic.posts_count", "posts.length")
   hasNoFilters() {
-    const streamFilters = this.get("streamFilters");
+    const streamFilters = this.streamFilters;
     return !(
       streamFilters &&
       (streamFilters.filter === "summary" || streamFilters.username_filters)
@@ -149,13 +149,13 @@ export default RestModel.extend({
   @computed("posts.[]", "stream.[]")
   previousWindow() {
     // If we can't find the last post loaded, bail
-    const firstPost = _.first(this.get("posts"));
+    const firstPost = _.first(this.posts);
     if (!firstPost) {
       return [];
     }
 
     // Find the index of the last post loaded, if not found, bail
-    const stream = this.get("stream");
+    const stream = this.stream;
     const firstIndex = this.indexOf(firstPost);
     if (firstIndex === -1) {
       return [];
@@ -180,12 +180,12 @@ export default RestModel.extend({
     }
 
     // Find the index of the last post loaded, if not found, bail
-    const stream = this.get("stream");
+    const stream = this.stream;
     const lastIndex = this.indexOf(lastLoadedPost);
     if (lastIndex === -1) {
       return [];
     }
-    if (lastIndex + 1 >= this.get("highest_post_number")) {
+    if (lastIndex + 1 >= this.highest_post_number) {
       return [];
     }
 
@@ -198,27 +198,27 @@ export default RestModel.extend({
 
   cancelFilter() {
     this.set("summary", false);
-    this.get("userFilters").clear();
+    this.userFilters.clear();
   },
 
   toggleSummary() {
-    this.get("userFilters").clear();
+    this.userFilters.clear();
     this.toggleProperty("summary");
     const opts = {};
 
-    if (!this.get("summary")) {
+    if (!this.summary) {
       opts.filter = "none";
     }
 
     return this.refresh(opts).then(() => {
-      if (this.get("summary")) {
+      if (this.summary) {
         this.jumpToSecondVisible();
       }
     });
   },
 
   jumpToSecondVisible() {
-    const posts = this.get("posts");
+    const posts = this.posts;
     if (posts.length > 1) {
       const secondPostNum = posts[1].get("post_number");
       DiscourseURL.jumpToPost(secondPostNum);
@@ -227,7 +227,7 @@ export default RestModel.extend({
 
   // Filter the stream to a particular user.
   toggleParticipant(username) {
-    const userFilters = this.get("userFilters");
+    const userFilters = this.userFilters;
     this.set("summary", false);
 
     let jump = false;
@@ -257,13 +257,13 @@ export default RestModel.extend({
       delete opts.cancelSummary;
     }
 
-    const topic = this.get("topic");
+    const topic = this.topic;
 
     // Do we already have the post in our list of posts? Jump there.
     if (opts.forceLoad) {
       this.set("loaded", false);
     } else {
-      const postWeWant = this.get("posts").findBy("post_number", opts.nearPost);
+      const postWeWant = this.posts.findBy("post_number", opts.nearPost);
       if (postWeWant) {
         return Ember.RSVP.resolve();
       }
@@ -273,7 +273,7 @@ export default RestModel.extend({
     this.set("loadingFilter", true);
     this.set("loadingNearPost", opts.nearPost);
 
-    opts = _.merge(opts, this.get("streamFilters"));
+    opts = _.merge(opts, this.streamFilters);
 
     // Request a topicView
     return loadTopicView(topic, opts)
@@ -297,9 +297,9 @@ export default RestModel.extend({
   // Fill in a gap of posts before a particular post
   fillGapBefore(post, gap) {
     const postId = post.get("id"),
-      stream = this.get("stream"),
+      stream = this.stream,
       idx = stream.indexOf(postId),
-      currentPosts = this.get("posts");
+      currentPosts = this.posts;
 
     if (idx !== -1) {
       // Insert the gap at the appropriate place
@@ -317,8 +317,8 @@ export default RestModel.extend({
           });
 
           delete this.get("gaps.before")[postId];
-          this.get("stream").arrayContentDidChange();
-          this.get("postsWithPlaceholders").arrayContentDidChange(
+          this.stream.arrayContentDidChange();
+          this.postsWithPlaceholders.arrayContentDidChange(
             origIdx,
             0,
             posts.length
@@ -333,14 +333,14 @@ export default RestModel.extend({
   // Fill in a gap of posts after a particular post
   fillGapAfter(post, gap) {
     const postId = post.get("id"),
-      stream = this.get("stream"),
+      stream = this.stream,
       idx = stream.indexOf(postId);
 
     if (idx !== -1) {
       stream.pushObjects(gap);
       return this.appendMore().then(() => {
         delete this.get("gaps.after")[postId];
-        this.get("stream").arrayContentDidChange();
+        this.stream.arrayContentDidChange();
       });
     }
     return Ember.RSVP.resolve();
@@ -349,13 +349,13 @@ export default RestModel.extend({
   // Appends the next window of posts to the stream. Call it when scrolling downwards.
   appendMore() {
     // Make sure we can append more posts
-    if (!this.get("canAppendMore")) {
+    if (!this.canAppendMore) {
       return Ember.RSVP.resolve();
     }
 
-    const postsWithPlaceholders = this.get("postsWithPlaceholders");
+    const postsWithPlaceholders = this.postsWithPlaceholders;
 
-    if (this.get("isMegaTopic")) {
+    if (this.isMegaTopic) {
       this.set("loadingBelow", true);
 
       const fakePostIds = _.range(-1, -this.get("topic.chunk_size"), -1);
@@ -372,7 +372,7 @@ export default RestModel.extend({
         this.set("loadingBelow", false);
       });
     } else {
-      const postIds = this.get("nextWindow");
+      const postIds = this.nextWindow;
       if (Ember.isEmpty(postIds)) return Ember.RSVP.resolve();
       this.set("loadingBelow", true);
       postsWithPlaceholders.appending(postIds);
@@ -392,11 +392,11 @@ export default RestModel.extend({
   // Prepend the previous window of posts to the stream. Call it when scrolling upwards.
   prependMore() {
     // Make sure we can append more posts
-    if (!this.get("canPrependMore")) {
+    if (!this.canPrependMore) {
       return Ember.RSVP.resolve();
     }
 
-    if (this.get("isMegaTopic")) {
+    if (this.isMegaTopic) {
       this.set("loadingAbove", true);
       let prependedIds = [];
 
@@ -408,12 +408,12 @@ export default RestModel.extend({
           prependedIds.push(p.get("id"));
         }
       ).finally(() => {
-        const postsWithPlaceholders = this.get("postsWithPlaceholders");
+        const postsWithPlaceholders = this.postsWithPlaceholders;
         postsWithPlaceholders.finishedPrepending(prependedIds);
         this.set("loadingAbove", false);
       });
     } else {
-      const postIds = this.get("previousWindow");
+      const postIds = this.previousWindow;
       if (Ember.isEmpty(postIds)) return Ember.RSVP.resolve();
       this.set("loadingAbove", true);
 
@@ -422,7 +422,7 @@ export default RestModel.extend({
           posts.forEach(p => this.prependPost(p));
         })
         .finally(() => {
-          const postsWithPlaceholders = this.get("postsWithPlaceholders");
+          const postsWithPlaceholders = this.postsWithPlaceholders;
           postsWithPlaceholders.finishedPrepending(postIds);
           this.set("loadingAbove", false);
         });
@@ -436,13 +436,13 @@ export default RestModel.extend({
   **/
   stagePost(post, user) {
     // We can't stage two posts simultaneously
-    if (this.get("stagingPost")) {
+    if (this.stagingPost) {
       return "alreadyStaging";
     }
 
     this.set("stagingPost", true);
 
-    const topic = this.get("topic");
+    const topic = this.topic;
     topic.setProperties({
       posts_count: (topic.get("posts_count") || 0) + 1,
       last_posted_at: new Date(),
@@ -458,9 +458,9 @@ export default RestModel.extend({
     });
 
     // If we're at the end of the stream, add the post
-    if (this.get("loadedAllPosts")) {
+    if (this.loadedAllPosts) {
       this.appendPost(post);
-      this.get("stream").addObject(post.get("id"));
+      this.stream.addObject(post.get("id"));
       return "staged";
     }
 
@@ -470,13 +470,13 @@ export default RestModel.extend({
   // Commit the post we staged. Call this after a save succeeds.
   commitPost(post) {
     if (this.get("topic.id") === post.get("topic_id")) {
-      if (this.get("loadedAllPosts")) {
+      if (this.loadedAllPosts) {
         this.appendPost(post);
-        this.get("stream").addObject(post.get("id"));
+        this.stream.addObject(post.get("id"));
       }
     }
 
-    this.get("stream").removeObject(-1);
+    this.stream.removeObject(-1);
     this._identityMap[-1] = null;
     this.set("stagingPost", false);
   },
@@ -486,13 +486,13 @@ export default RestModel.extend({
     state we changed.
   **/
   undoPost(post) {
-    this.get("stream").removeObject(-1);
-    this.get("postsWithPlaceholders").removePost(() =>
+    this.stream.removeObject(-1);
+    this.postsWithPlaceholders.removePost(() =>
       this.posts.removeObject(post)
     );
     this._identityMap[-1] = null;
 
-    const topic = this.get("topic");
+    const topic = this.topic;
     this.set("stagingPost", false);
 
     topic.setProperties({
@@ -506,7 +506,7 @@ export default RestModel.extend({
   prependPost(post) {
     const stored = this.storePost(post);
     if (stored) {
-      const posts = this.get("posts");
+      const posts = this.posts;
       posts.unshiftObject(stored);
     }
 
@@ -516,11 +516,11 @@ export default RestModel.extend({
   appendPost(post) {
     const stored = this.storePost(post);
     if (stored) {
-      const posts = this.get("posts");
+      const posts = this.posts;
 
       if (!posts.includes(stored)) {
-        if (!this.get("loadingBelow")) {
-          this.get("postsWithPlaceholders").appendPost(() =>
+        if (!this.loadingBelow) {
+          this.postsWithPlaceholders.appendPost(() =>
             posts.pushObject(stored)
           );
         } else {
@@ -540,12 +540,12 @@ export default RestModel.extend({
       return;
     }
 
-    this.get("postsWithPlaceholders").refreshAll(() => {
-      const allPosts = this.get("posts");
+    this.postsWithPlaceholders.refreshAll(() => {
+      const allPosts = this.posts;
       const postIds = posts.map(p => p.get("id"));
       const identityMap = this._identityMap;
 
-      this.get("stream").removeObjects(postIds);
+      this.stream.removeObjects(postIds);
       allPosts.removeObjects(posts);
       postIds.forEach(id => delete identityMap[id]);
     });
@@ -601,14 +601,14 @@ export default RestModel.extend({
     }
 
     // We only trigger if there are no filters active
-    if (!this.get("hasNoFilters")) {
+    if (!this.hasNoFilters) {
       return resolved;
     }
 
-    const loadedAllPosts = this.get("loadedAllPosts");
+    const loadedAllPosts = this.loadedAllPosts;
 
-    if (this.get("stream").indexOf(postId) === -1) {
-      this.get("stream").addObject(postId);
+    if (this.stream.indexOf(postId) === -1) {
+      this.stream.addObject(postId);
       if (loadedAllPosts) {
         this.set("loadingLastPost", true);
         return this.findPostsByIds([postId])
@@ -636,8 +636,8 @@ export default RestModel.extend({
 
       return ajax(url).then(p => {
         const post = store.createRecord("post", p);
-        const stream = this.get("stream");
-        const posts = this.get("posts");
+        const stream = this.stream;
+        const posts = this.posts;
         this.storePost(post);
 
         // we need to zip this into the stream
@@ -658,7 +658,7 @@ export default RestModel.extend({
         });
 
         if (index < posts.length) {
-          this.get("postsWithPlaceholders").refreshAll(() => {
+          this.postsWithPlaceholders.refreshAll(() => {
             posts.insertAt(index, post);
           });
         } else {
@@ -712,11 +712,11 @@ export default RestModel.extend({
   },
 
   postForPostNumber(postNumber) {
-    if (!this.get("hasPosts")) {
+    if (!this.hasPosts) {
       return;
     }
 
-    return this.get("posts").find(p => {
+    return this.posts.find(p => {
       return p.get("post_number") === postNumber;
     });
   },
@@ -727,12 +727,12 @@ export default RestModel.extend({
     This allows us to set the progress bar with the correct number.
   **/
   closestPostForPostNumber(postNumber) {
-    if (!this.get("hasPosts")) {
+    if (!this.hasPosts) {
       return;
     }
 
     let closest = null;
-    this.get("posts").forEach(p => {
+    this.posts.forEach(p => {
       if (!closest) {
         closest = p;
         return;
@@ -757,9 +757,9 @@ export default RestModel.extend({
   // Get the index in the stream of a post id. (Use this for the topic progress bar.)
   progressIndexOfPostId(post) {
     const postId = post.get("id");
-    const index = this.get("stream").indexOf(postId);
+    const index = this.stream.indexOf(postId);
 
-    if (this.get("isMegaTopic")) {
+    if (this.isMegaTopic) {
       return post.get("post_number");
     } else {
       return index + 1;
@@ -772,12 +772,12 @@ export default RestModel.extend({
     This allows us to set the progress bar with the correct number.
   **/
   closestPostNumberFor(postNumber) {
-    if (!this.get("hasPosts")) {
+    if (!this.hasPosts) {
       return;
     }
 
     let closest = null;
-    this.get("posts").forEach(p => {
+    this.posts.forEach(p => {
       if (closest === postNumber) {
         return;
       }
@@ -797,7 +797,7 @@ export default RestModel.extend({
   },
 
   closestDaysAgoFor(postNumber) {
-    const timelineLookup = this.get("timelineLookup") || [];
+    const timelineLookup = this.timelineLookup || [];
 
     let low = 0;
     let high = timelineLookup.length - 1;
@@ -821,7 +821,7 @@ export default RestModel.extend({
 
   // Find a postId for a postNumber, respecting gaps
   findPostIdForPostNumber(postNumber) {
-    const stream = this.get("stream"),
+    const stream = this.stream,
       beforeLookup = this.get("gaps.before"),
       streamLength = stream.length;
 
@@ -850,9 +850,9 @@ export default RestModel.extend({
   },
 
   updateFromJson(postStreamData) {
-    const posts = this.get("posts");
+    const posts = this.posts;
 
-    const postsWithPlaceholders = this.get("postsWithPlaceholders");
+    const postsWithPlaceholders = this.postsWithPlaceholders;
     postsWithPlaceholders.clear(() => posts.clear());
 
     this.set("gaps", null);
@@ -900,7 +900,7 @@ export default RestModel.extend({
         return existing;
       }
 
-      post.set("topic", this.get("topic"));
+      post.set("topic", this.topic);
       this._identityMap[post.get("id")] = post;
     }
     return post;
@@ -916,7 +916,7 @@ export default RestModel.extend({
       include_suggested: includeSuggested
     };
 
-    data = _.merge(data, this.get("streamFilters"));
+    data = _.merge(data, this.streamFilters);
     const store = this.store;
 
     return ajax(url, { data }).then(result => {
@@ -974,7 +974,7 @@ export default RestModel.extend({
 
   backfillExcerpts(streamPosition) {
     this._excerpts = this._excerpts || [];
-    const stream = this.get("stream");
+    const stream = this.stream;
 
     this._excerpts.loadNext = streamPosition;
 
@@ -1020,11 +1020,11 @@ export default RestModel.extend({
   },
 
   excerpt(streamPosition) {
-    if (this.get("isMegaTopic")) {
+    if (this.isMegaTopic) {
       return new Ember.RSVP.Promise(resolve => resolve(""));
     }
 
-    const stream = this.get("stream");
+    const stream = this.stream;
 
     return new Ember.RSVP.Promise((resolve, reject) => {
       let excerpt = this._excerpts && this._excerpts[stream[streamPosition]];
@@ -1043,7 +1043,7 @@ export default RestModel.extend({
   },
 
   indexOf(post) {
-    return this.get("stream").indexOf(post.get("id"));
+    return this.stream.indexOf(post.get("id"));
   },
 
   // Handles an error loading a topic based on a HTTP status code. Updates
@@ -1051,7 +1051,7 @@ export default RestModel.extend({
   errorLoading(result) {
     const status = result.jqXHR.status;
 
-    const topic = this.get("topic");
+    const topic = this.topic;
     this.set("loadingFilter", false);
     topic.set("errorLoading", true);
 

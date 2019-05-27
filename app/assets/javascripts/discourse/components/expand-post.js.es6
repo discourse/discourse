@@ -10,9 +10,9 @@ export default Ember.Component.extend({
       if (this._loading) {
         return false;
       }
-      const item = this.get("item");
+      const item = this.item;
 
-      if (this.get("expanded")) {
+      if (this.expanded) {
         this.set("expanded", false);
         item.set("expandedExcerpt", null);
         return;

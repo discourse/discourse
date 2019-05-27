@@ -34,13 +34,13 @@ export default Ember.Component.extend({
   },
 
   _closeTop() {
-    const messages = this.get("messages");
+    const messages = this.messages;
     messages.popObject();
     this.set("messageCount", messages.get("length"));
   },
 
   _removeMessage(message) {
-    const messages = this.get("messages");
+    const messages = this.messages;
     messages.removeObject(message);
     this.set("messageCount", messages.get("length"));
   },
@@ -53,15 +53,15 @@ export default Ember.Component.extend({
     hideMessage(message) {
       this._removeMessage(message);
       // kind of hacky but the visibility depends on this
-      this.get("messagesByTemplate")[message.get("templateName")] = undefined;
+      this.messagesByTemplate[message.get("templateName")] = undefined;
     },
 
     popup(message) {
-      const messagesByTemplate = this.get("messagesByTemplate");
+      const messagesByTemplate = this.messagesByTemplate;
       const templateName = message.get("templateName");
 
       if (!messagesByTemplate[templateName]) {
-        const messages = this.get("messages");
+        const messages = this.messages;
         messages.pushObject(message);
         this.set("messageCount", messages.get("length"));
         messagesByTemplate[templateName] = message;
@@ -91,7 +91,7 @@ export default Ember.Component.extend({
       return;
     }
 
-    const composer = this.get("composer");
+    const composer = this.composer;
     if (composer.get("privateMessage")) {
       let usernames = composer.get("targetUsernames");
 
@@ -116,7 +116,7 @@ export default Ember.Component.extend({
       }
     }
 
-    this.get("queuedForTyping").forEach(msg => this.send("popup", msg));
+    this.queuedForTyping.forEach(msg => this.send("popup", msg));
   },
 
   _create(info) {
@@ -125,7 +125,7 @@ export default Ember.Component.extend({
   },
 
   _findSimilar() {
-    const composer = this.get("composer");
+    const composer = this.composer;
 
     // We don't care about similar topics unless creating a topic
     if (!composer.get("creatingTopic")) {
@@ -148,7 +148,7 @@ export default Ember.Component.extend({
     }
     this._lastSimilaritySearch = concat;
 
-    const similarTopics = this.get("similarTopics");
+    const similarTopics = this.similarTopics;
     const message =
       this._similarTopicsMessage ||
       composer.store.createRecord("composer-message", {
@@ -174,11 +174,11 @@ export default Ember.Component.extend({
 
   // Figure out if there are any messages that should be displayed above the composer.
   _findMessages() {
-    if (this.get("checkedMessages")) {
+    if (this.checkedMessages) {
       return;
     }
 
-    const composer = this.get("composer");
+    const composer = this.composer;
     const args = { composer_action: composer.get("action") };
     const topicId = composer.get("topic.id");
     const postId = composer.get("post.id");
@@ -204,7 +204,7 @@ export default Ember.Component.extend({
       }
 
       this.set("checkedMessages", true);
-      const queuedForTyping = this.get("queuedForTyping");
+      const queuedForTyping = this.queuedForTyping;
       messages.forEach(msg =>
         msg.wait_for_typing
           ? queuedForTyping.addObject(msg)

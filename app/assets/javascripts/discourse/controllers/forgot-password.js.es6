@@ -34,18 +34,18 @@ export default Ember.Controller.extend(ModalFunctionality, {
     },
 
     resetPassword() {
-      if (this.get("submitDisabled")) return false;
+      if (this.submitDisabled) return false;
       this.set("disabled", true);
 
       this.clearFlash();
 
       ajax("/session/forgot_password", {
-        data: { login: this.get("accountEmailOrUsername").trim() },
+        data: { login: this.accountEmailOrUsername.trim() },
         type: "POST"
       })
         .then(data => {
           const accountEmailOrUsername = escapeExpression(
-            this.get("accountEmailOrUsername")
+            this.accountEmailOrUsername
           );
           const isEmail = accountEmailOrUsername.match(/@/);
           let key = `forgot_password.complete_${

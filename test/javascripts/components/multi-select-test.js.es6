@@ -19,7 +19,7 @@ componentTest("with objects and values", {
 
   test(assert) {
     assert.equal(
-      this.get("subject")
+      this.subject
         .header()
         .value(),
       "1,2"
@@ -58,10 +58,10 @@ componentTest("interactions", {
   },
 
   async test(assert) {
-    await this.get("subject").expand();
+    await this.subject.expand();
 
     assert.equal(
-      this.get("subject")
+      this.subject
         .highlightedRow()
         .name(),
       "robin",
@@ -71,52 +71,52 @@ componentTest("interactions", {
     await this.set("none", "test.none");
 
     assert.ok(
-      this.get("subject")
+      this.subject
         .noneRow()
         .exists()
     );
     assert.equal(
-      this.get("subject")
+      this.subject
         .highlightedRow()
         .name(),
       "robin",
       "it highlights the first content row"
     );
 
-    await this.get("subject").selectRowByValue(3);
-    await this.get("subject").expand();
+    await this.subject.selectRowByValue(3);
+    await this.subject.expand();
 
     assert.equal(
-      this.get("subject")
+      this.subject
         .highlightedRow()
         .name(),
       "none",
       "it highlights none row if no content"
     );
 
-    await this.get("subject").fillInFilter("joffrey");
+    await this.subject.fillInFilter("joffrey");
 
     assert.equal(
-      this.get("subject")
+      this.subject
         .highlightedRow()
         .name(),
       "joffrey",
       "it highlights create row when filling filter"
     );
 
-    await this.get("subject").keyboard("enter");
+    await this.subject.keyboard("enter");
 
     assert.equal(
-      this.get("subject")
+      this.subject
         .highlightedRow()
         .name(),
       "none",
       "it highlights none row after creating content and no content left"
     );
 
-    await this.get("subject").keyboard("backspace");
+    await this.subject.keyboard("backspace");
 
-    const $lastSelectedName = this.get("subject")
+    const $lastSelectedName = this.subject
       .header()
       .el()
       .find(".selected-name")
@@ -127,9 +127,9 @@ componentTest("interactions", {
       "it highlights the last selected name when using backspace"
     );
 
-    await this.get("subject").keyboard("backspace");
+    await this.subject.keyboard("backspace");
 
-    const $lastSelectedName1 = this.get("subject")
+    const $lastSelectedName1 = this.subject
       .header()
       .el()
       .find(".selected-name")
@@ -140,15 +140,15 @@ componentTest("interactions", {
       "it removes the previous highlighted selected content"
     );
     assert.notOk(
-      this.get("subject")
+      this.subject
         .rowByValue("joffrey")
         .exists(),
       "generated content shouldn’t appear in content when removed"
     );
 
-    await this.get("subject").keyboard("selectAll");
+    await this.subject.keyboard("selectAll");
 
-    const $highlightedSelectedNames2 = this.get("subject")
+    const $highlightedSelectedNames2 = this.subject
       .header()
       .el()
       .find(".selected-name.is-highlighted");
@@ -158,26 +158,26 @@ componentTest("interactions", {
       "it highlights each selected name"
     );
 
-    await this.get("subject").keyboard("backspace");
+    await this.subject.keyboard("backspace");
 
-    const $selectedNames = this.get("subject")
+    const $selectedNames = this.subject
       .header()
       .el()
       .find(".selected-name");
     assert.equal($selectedNames.length, 0, "it removed all selected content");
 
-    assert.ok(this.get("subject").isFocused());
-    assert.ok(this.get("subject").isExpanded());
+    assert.ok(this.subject.isFocused());
+    assert.ok(this.subject.isExpanded());
 
-    await this.get("subject").keyboard("escape");
+    await this.subject.keyboard("escape");
 
-    assert.ok(this.get("subject").isFocused());
-    assert.notOk(this.get("subject").isExpanded());
+    assert.ok(this.subject.isFocused());
+    assert.notOk(this.subject.isExpanded());
 
-    await this.get("subject").keyboard("escape");
+    await this.subject.keyboard("escape");
 
-    assert.notOk(this.get("subject").isFocused());
-    assert.notOk(this.get("subject").isExpanded());
+    assert.notOk(this.subject.isFocused());
+    assert.notOk(this.subject.isExpanded());
   }
 });
 
@@ -189,10 +189,10 @@ componentTest("with limitMatches", {
   },
 
   async test(assert) {
-    await this.get("subject").expand();
+    await this.subject.expand();
 
     assert.equal(
-      this.get("subject")
+      this.subject
         .el()
         .find(".select-kit-row").length,
       2
@@ -208,17 +208,17 @@ componentTest("with minimum", {
   },
 
   async test(assert) {
-    await this.get("subject").expand();
+    await this.subject.expand();
 
     assert.equal(
-      this.get("subject").validationMessage(),
+      this.subject.validationMessage(),
       "Select at least 1 item."
     );
 
-    await this.get("subject").selectRowByValue("sam");
+    await this.subject.selectRowByValue("sam");
 
     assert.equal(
-      this.get("subject")
+      this.subject
         .header()
         .label(),
       "sam"
@@ -236,14 +236,14 @@ componentTest("with minimumLabel", {
   },
 
   async test(assert) {
-    await this.get("subject").expand();
+    await this.subject.expand();
 
-    assert.equal(this.get("subject").validationMessage(), "min 1");
+    assert.equal(this.subject.validationMessage(), "min 1");
 
-    await this.get("subject").selectRowByValue("jeff");
+    await this.subject.selectRowByValue("jeff");
 
     assert.equal(
-      this.get("subject")
+      this.subject
         .header()
         .label(),
       "jeff"
@@ -259,9 +259,9 @@ componentTest("with forceEscape", {
   },
   skip: true,
   async test(assert) {
-    await this.get("subject").expand();
+    await this.subject.expand();
 
-    const row = this.get("subject").rowByIndex(0);
+    const row = this.subject.rowByIndex(0);
     assert.equal(
       row
         .el()
@@ -271,11 +271,11 @@ componentTest("with forceEscape", {
       "&lt;div&gt;sam&lt;/div&gt;"
     );
 
-    await this.get("subject").fillInFilter("<div>jeff</div>");
-    await this.get("subject").keyboard("enter");
+    await this.subject.fillInFilter("<div>jeff</div>");
+    await this.subject.keyboard("enter");
 
     assert.equal(
-      this.get("subject")
+      this.subject
         .header()
         .el()
         .find(".name")
@@ -294,9 +294,9 @@ componentTest("with forceEscape", {
   },
 
   async test(assert) {
-    await this.get("subject").expand();
+    await this.subject.expand();
 
-    const row = this.get("subject").rowByIndex(0);
+    const row = this.subject.rowByIndex(0);
     assert.equal(
       row
         .el()
@@ -306,11 +306,11 @@ componentTest("with forceEscape", {
       "<div>sam</div>"
     );
 
-    await this.get("subject").fillInFilter("<div>jeff</div>");
-    await this.get("subject").keyboard("enter");
+    await this.subject.fillInFilter("<div>jeff</div>");
+    await this.subject.keyboard("enter");
 
     assert.equal(
-      this.get("subject")
+      this.subject
         .header()
         .el()
         .find(".name")
@@ -339,13 +339,13 @@ componentTest("support modifying on select behavior through plugin api", {
   },
 
   async test(assert) {
-    await this.get("subject").expand();
-    await this.get("subject").selectRowByValue(1);
+    await this.subject.expand();
+    await this.subject.selectRowByValue(1);
 
     assert.equal(find(".on-select-test").html(), "1");
 
-    await this.get("subject").expand();
-    await this.get("subject").selectRowByValue(2);
+    await this.subject.expand();
+    await this.subject.selectRowByValue(2);
 
     assert.equal(
       find(".on-select-test").html(),

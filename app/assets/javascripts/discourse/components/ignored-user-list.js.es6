@@ -7,7 +7,7 @@ export default Ember.Component.extend({
   actions: {
     removeIgnoredUser(item) {
       this.set("saved", false);
-      this.get("items").removeObject(item);
+      this.items.removeObject(item);
       User.findByUsername(item).then(user => {
         user
           .updateNotificationLevel("normal")
@@ -17,11 +17,11 @@ export default Ember.Component.extend({
     },
     newIgnoredUser() {
       const modal = showModal("ignore-duration-with-username", {
-        model: this.get("model")
+        model: this.model
       });
       modal.setProperties({
         onUserIgnored: username => {
-          this.get("items").addObject(username);
+          this.items.addObject(username);
         }
       });
     }

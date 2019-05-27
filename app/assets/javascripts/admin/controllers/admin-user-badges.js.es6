@@ -13,7 +13,7 @@ export default Ember.Controller.extend(GrantBadgeController, {
 
   @computed("model", "model.[]", "model.expandedBadges.[]")
   groupedBadges() {
-    const allBadges = this.get("model");
+    const allBadges = this.model;
 
     var grouped = _.groupBy(allBadges, badge => badge.badge_id);
 
@@ -52,22 +52,22 @@ export default Ember.Controller.extend(GrantBadgeController, {
 
   actions: {
     expandGroup: function(userBadge) {
-      const model = this.get("model");
+      const model = this.model;
       model.set("expandedBadges", model.get("expandedBadges") || []);
       model.get("expandedBadges").pushObject(userBadge.badge.id);
     },
 
     grantBadge() {
       this.grantBadge(
-        this.get("selectedBadgeId"),
+        this.selectedBadgeId,
         this.get("user.username"),
-        this.get("badgeReason")
+        this.badgeReason
       ).then(
         () => {
           this.set("badgeReason", "");
           Ember.run.next(() => {
             // Update the selected badge ID after the combobox has re-rendered.
-            const newSelectedBadge = this.get("grantableBadges")[0];
+            const newSelectedBadge = this.grantableBadges[0];
             if (newSelectedBadge) {
               this.set("selectedBadgeId", newSelectedBadge.get("id"));
             }
@@ -87,7 +87,7 @@ export default Ember.Controller.extend(GrantBadgeController, {
         result => {
           if (result) {
             userBadge.revoke().then(() => {
-              this.get("model").removeObject(userBadge);
+              this.model.removeObject(userBadge);
             });
           }
         }

@@ -22,11 +22,11 @@ export default SelectKitComponent.extend({
   _compute() {
     run.scheduleOnce("afterRender", () => {
       this.willComputeAttributes();
-      let content = this.get("content") || [];
-      let asyncContent = this.get("asyncContent") || [];
+      let content = this.content || [];
+      let asyncContent = this.asyncContent || [];
       content = this.willComputeContent(content);
       asyncContent = this.willComputeAsyncContent(asyncContent);
-      let value = this._beforeWillComputeValue(this.get("value"));
+      let value = this._beforeWillComputeValue(this.value);
       content = this.computeContent(content);
       asyncContent = this.computeAsyncContent(asyncContent);
       content = this._beforeDidComputeContent(content);
@@ -39,16 +39,16 @@ export default SelectKitComponent.extend({
       this.didComputeValue(value);
       this.didComputeAttributes();
 
-      if (this.get("allowInitialValueMutation")) this.mutateAttributes();
+      if (this.allowInitialValueMutation) this.mutateAttributes();
     });
   },
 
   mutateAttributes() {
     run.next(() => {
-      if (this.get("isDestroyed") || this.get("isDestroying")) return;
+      if (this.isDestroyed || this.isDestroying) return;
 
-      this.mutateContent(this.get("computedContent"));
-      this.mutateValue(this.get("computedValue"));
+      this.mutateContent(this.computedContent);
+      this.mutateValue(this.computedValue);
     });
   },
   mutateContent() {},
@@ -63,12 +63,12 @@ export default SelectKitComponent.extend({
 
   _beforeWillComputeValue(value) {
     if (
-      !isEmpty(this.get("content")) &&
+      !isEmpty(this.content) &&
       isEmpty(value) &&
-      isNone(this.get("none")) &&
-      this.get("allowAutoSelectFirst")
+      isNone(this.none) &&
+      this.allowAutoSelectFirst
     ) {
-      value = this.valueForContentItem(get(this.get("content"), "firstObject"));
+      value = this.valueForContentItem(get(this.content, "firstObject"));
     }
 
     switch (typeof value) {
@@ -101,15 +101,15 @@ export default SelectKitComponent.extend({
 
   computeHeaderContent() {
     let content = {
-      title: this.get("title"),
+      title: this.title,
       icons: makeArray(this.getWithDefault("headerIcon", [])),
       value: this.get("selection.value"),
       name:
         this.get("selection.name") || this.get("noneRowComputedContent.name")
     };
 
-    if (this.get("noneLabel") && !this.get("hasSelection")) {
-      content.title = content.name = I18n.t(this.get("noneLabel"));
+    if (this.noneLabel && !this.hasSelection) {
+      content.title = content.name = I18n.t(this.noneLabel);
     }
 
     return content;
@@ -121,8 +121,8 @@ export default SelectKitComponent.extend({
       return computedValue !== get(c, "value");
     });
 
-    if (this.get("limitMatches")) {
-      return computedAsyncContent.slice(0, this.get("limitMatches"));
+    if (this.limitMatches) {
+      return computedAsyncContent.slice(0, this.limitMatches);
     }
 
     return computedAsyncContent;
@@ -143,8 +143,8 @@ export default SelectKitComponent.extend({
       );
     }
 
-    if (this.get("limitMatches")) {
-      return computedContent.slice(0, this.get("limitMatches"));
+    if (this.limitMatches) {
+      return computedContent.slice(0, this.limitMatches);
     }
 
     return computedContent;
@@ -158,7 +158,7 @@ export default SelectKitComponent.extend({
   @computed("selection")
   hasSelection(selection) {
     return (
-      selection !== this.get("noneRowComputedContent") && !isNone(selection)
+      selection !== this.noneRowComputedContent && !isNone(selection)
     );
   },
 
@@ -175,40 +175,40 @@ export default SelectKitComponent.extend({
 
   autoHighlight() {
     run.schedule("afterRender", () => {
-      if (this.get("shouldDisplayCreateRow")) {
-        this.highlight(this.get("createRowComputedContent"));
+      if (this.shouldDisplayCreateRow) {
+        this.highlight(this.createRowComputedContent);
         return;
       }
 
       if (
-        !isEmpty(this.get("filter")) &&
-        !isEmpty(this.get("collectionComputedContent"))
+        !isEmpty(this.filter) &&
+        !isEmpty(this.collectionComputedContent)
       ) {
         this.highlight(this.get("collectionComputedContent.firstObject"));
         return;
       }
 
       if (
-        !this.get("isAsync") &&
-        this.get("hasSelection") &&
-        isEmpty(this.get("filter"))
+        !this.isAsync &&
+        this.hasSelection &&
+        isEmpty(this.filter)
       ) {
-        this.highlight(get(makeArray(this.get("selection")), "firstObject"));
+        this.highlight(get(makeArray(this.selection), "firstObject"));
         return;
       }
 
       if (
-        !this.get("isAsync") &&
-        !this.get("hasSelection") &&
-        isEmpty(this.get("filter")) &&
-        !isEmpty(this.get("collectionComputedContent"))
+        !this.isAsync &&
+        !this.hasSelection &&
+        isEmpty(this.filter) &&
+        !isEmpty(this.collectionComputedContent)
       ) {
         this.highlight(this.get("collectionComputedContent.firstObject"));
         return;
       }
 
-      if (isPresent(this.get("noneRowComputedContent"))) {
-        this.highlight(this.get("noneRowComputedContent"));
+      if (isPresent(this.noneRowComputedContent)) {
+        this.highlight(this.noneRowComputedContent);
         return;
       }
     });
@@ -217,7 +217,7 @@ export default SelectKitComponent.extend({
   select(computedContentItem) {
     if (computedContentItem.__sk_row_type === "noopRow") {
       applyOnSelectPluginApiCallbacks(
-        this.get("pluginApiIdentifiers"),
+        this.pluginApiIdentifiers,
         computedContentItem.value,
         this
       );
@@ -227,7 +227,7 @@ export default SelectKitComponent.extend({
       return;
     }
 
-    if (this.get("hasSelection")) {
+    if (this.hasSelection) {
       this.deselect(this.get("selection.value"));
     }
 
@@ -236,7 +236,7 @@ export default SelectKitComponent.extend({
       computedContentItem.__sk_row_type === "noneRow"
     ) {
       applyOnSelectNonePluginApiCallbacks(
-        this.get("pluginApiIdentifiers"),
+        this.pluginApiIdentifiers,
         this
       );
       this._boundaryActionHandler("onSelectNone");
@@ -247,12 +247,12 @@ export default SelectKitComponent.extend({
 
     if (computedContentItem.__sk_row_type === "createRow") {
       if (
-        this.get("computedValue") !== computedContentItem.value &&
+        this.computedValue !== computedContentItem.value &&
         this.validateCreate(computedContentItem.value)
       ) {
         this.willCreate(computedContentItem);
         computedContentItem.__sk_row_type = null;
-        this.get("computedContent").pushObject(computedContentItem);
+        this.computedContent.pushObject(computedContentItem);
 
         run.schedule("afterRender", () => {
           this.didCreate(computedContentItem);
@@ -287,7 +287,7 @@ export default SelectKitComponent.extend({
         this.didSelect(computedContentItem);
 
         applyOnSelectPluginApiCallbacks(
-          this.get("pluginApiIdentifiers"),
+          this.pluginApiIdentifiers,
           computedContentItem.value,
           this
         );

@@ -55,9 +55,9 @@ export default Ember.Controller.extend(
         this.set("saving", true);
 
         this.grantBadge(
-          this.get("selectedBadgeId"),
+          this.selectedBadgeId,
           this.get("post.username"),
-          this.get("badgeReason")
+          this.badgeReason
         )
           .then(
             newBadge => {

@@ -21,12 +21,12 @@ export default Ember.Component.extend({
 
   @computed("bulkSelectEnabled")
   toggleInTitle(bulkSelectEnabled) {
-    return !bulkSelectEnabled && this.get("canBulkSelect");
+    return !bulkSelectEnabled && this.canBulkSelect;
   },
 
   @computed
   sortable() {
-    return !!this.get("changeSort");
+    return !!this.changeSort;
   },
 
   skipHeader: Ember.computed.reads("site.mobileView"),
@@ -44,7 +44,7 @@ export default Ember.Component.extend({
   @observes("topics.[]")
   topicsAdded() {
     // special case so we don't keep scanning huge lists
-    if (!this.get("lastVisitedTopic")) {
+    if (!this.lastVisitedTopic) {
       this.refreshLastVisited();
     }
   },
@@ -57,7 +57,7 @@ export default Ember.Component.extend({
   _updateLastVisitedTopic(topics, order, ascending, top) {
     this.set("lastVisitedTopic", null);
 
-    if (!this.get("highlightLastVisited")) {
+    if (!this.highlightLastVisited) {
       return;
     }
 
@@ -116,10 +116,10 @@ export default Ember.Component.extend({
 
   refreshLastVisited() {
     this._updateLastVisitedTopic(
-      this.get("topics"),
-      this.get("order"),
-      this.get("ascending"),
-      this.get("top")
+      this.topics,
+      this.order,
+      this.ascending,
+      this.top
     );
   },
 

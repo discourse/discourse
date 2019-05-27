@@ -16,7 +16,7 @@ export function showEntrance(e) {
     }
 
     this.appEvents.trigger("topic-entrance:show", {
-      topic: this.get("topic"),
+      topic: this.topic,
       position: target.offset()
     });
     return false;
@@ -104,11 +104,11 @@ export const ListItemDefaults = {
       }
     }
 
-    if (this.get("expandGloballyPinned") && this.get("topic.pinned_globally")) {
+    if (this.expandGloballyPinned && this.get("topic.pinned_globally")) {
       return true;
     }
 
-    if (this.get("expandAllPinned")) {
+    if (this.expandAllPinned) {
       return true;
     }
 
@@ -123,10 +123,10 @@ export const ListItemDefaults = {
       return result;
     }
 
-    const topic = this.get("topic");
+    const topic = this.topic;
     const target = $(e.target);
     if (target.hasClass("bulk-select")) {
-      const selected = this.get("selected");
+      const selected = this.selected;
 
       if (target.is(":checked")) {
         selected.addObject(topic);
@@ -143,7 +143,7 @@ export const ListItemDefaults = {
     }
 
     if (target.closest("a.topic-status").length === 1) {
-      this.get("topic").togglePinnedForUser();
+      this.topic.togglePinnedForUser();
       return false;
     }
 
@@ -181,7 +181,7 @@ export default Ember.Component.extend(
 
     actions: {
       toggleBookmark() {
-        this.get("topic")
+        this.topic
           .toggleBookmark()
           .finally(() => this.rerenderBuffer());
       }

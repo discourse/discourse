@@ -14,7 +14,7 @@ function initializeDetails(api) {
   api.modifyClass("controller:composer", {
     actions: {
       insertDetails() {
-        this.get("toolbarEvent").applySurround(
+        this.toolbarEvent.applySurround(
           "\n" + `[details="${I18n.t("composer.details_title")}"]` + "\n",
           "\n[/details]\n",
           "details_text",

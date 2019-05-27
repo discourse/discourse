@@ -8,7 +8,7 @@ const ApiKey = Discourse.Model.extend({
   regenerate() {
     return ajax(KEY_ENDPOINT, {
       type: "PUT",
-      data: { id: this.get("id") }
+      data: { id: this.id }
     }).then(result => {
       this.set("key", result.api_key.key);
       return this;
@@ -18,7 +18,7 @@ const ApiKey = Discourse.Model.extend({
   revoke() {
     return ajax(KEY_ENDPOINT, {
       type: "DELETE",
-      data: { id: this.get("id") }
+      data: { id: this.id }
     });
   }
 });

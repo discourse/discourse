@@ -20,7 +20,7 @@ export default ComboBoxComponent.extend({
   computeHeaderContent() {
     let content = this._super(...arguments);
 
-    if (!this.get("hasSelection")) {
+    if (!this.hasSelection) {
       content.label = `<span>${I18n.t("groups.index.all")}</span>`;
     }
 

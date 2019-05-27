@@ -16,7 +16,7 @@ export default Ember.Controller.extend(ModalFunctionality, BufferedContent, {
 
   actions: {
     performRename() {
-      const tag = this.get("model"),
+      const tag = this.model,
         self = this;
       tag
         .update({ id: this.get("buffered.id") })

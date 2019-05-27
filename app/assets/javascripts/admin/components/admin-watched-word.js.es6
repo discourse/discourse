@@ -11,10 +11,10 @@ export default Ember.Component.extend(
     },
 
     click() {
-      this.get("word")
+      this.word
         .destroy()
         .then(() => {
-          this.action(this.get("word"));
+          this.action(this.word);
         })
         .catch(e => {
           bootbox.alert(

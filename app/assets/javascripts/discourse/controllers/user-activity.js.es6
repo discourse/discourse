@@ -9,9 +9,9 @@ export default Ember.Controller.extend({
 
   _showFooter: function() {
     var showFooter;
-    if (this.get("userActionType")) {
+    if (this.userActionType) {
       const stat = (this.get("model.stats") || []).find(
-        s => s.action_type === this.get("userActionType")
+        s => s.action_type === this.userActionType
       );
       showFooter = stat && stat.count <= this.get("model.stream.itemsLoaded");
     } else {

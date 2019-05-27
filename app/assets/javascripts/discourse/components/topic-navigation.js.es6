@@ -21,7 +21,7 @@ export default Ember.Component.extend(PanEvents, {
       return;
     }
 
-    let info = this.get("info");
+    let info = this.info;
 
     if (info.get("topicProgressExpanded")) {
       info.setProperties({
@@ -35,7 +35,7 @@ export default Ember.Component.extend(PanEvents, {
         const width = $(window).width();
         let height = $(window).height();
 
-        if (this.get("composerOpen")) {
+        if (this.composerOpen) {
           height -= $("#reply-control").height();
         }
 
@@ -114,7 +114,7 @@ export default Ember.Component.extend(PanEvents, {
         modalClass: "jump-to-post-modal"
       });
       controller.setProperties({
-        topic: this.get("topic"),
+        topic: this.topic,
         jumpToIndex: this.attrs.jumpToIndex,
         jumpToDate: this.attrs.jumpToDate
       });

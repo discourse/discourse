@@ -45,7 +45,7 @@ export default Ember.Controller.extend(PreferencesTabController, {
   @computed()
   mailingListModeOptions() {
     return [
-      { name: this.get("frequencyEstimate"), value: 1 },
+      { name: this.frequencyEstimate, value: 1 },
       { name: I18n.t("user.mailing_list_mode.individual_no_echo"), value: 2 }
     ];
   },
@@ -88,8 +88,8 @@ export default Ember.Controller.extend(PreferencesTabController, {
   actions: {
     save() {
       this.set("saved", false);
-      return this.get("model")
-        .save(this.get("saveAttrNames"))
+      return this.model
+        .save(this.saveAttrNames)
         .then(() => {
           this.set("saved", true);
         })

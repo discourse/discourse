@@ -424,7 +424,7 @@ const DiscourseURL = Ember.Object.extend({
   handleURL(path, opts) {
     opts = opts || {};
 
-    const router = this.get("router");
+    const router = this.router;
 
     if (opts.replaceURL) {
       this.replaceState(path);

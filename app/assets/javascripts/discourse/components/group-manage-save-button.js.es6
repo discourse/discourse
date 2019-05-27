@@ -14,7 +14,7 @@ export default Ember.Component.extend({
     save() {
       this.set("saving", true);
 
-      return this.get("model")
+      return this.model
         .save()
         .then(() => {
           this.set("saved", true);

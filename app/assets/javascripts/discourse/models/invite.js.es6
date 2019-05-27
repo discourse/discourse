@@ -6,7 +6,7 @@ const Invite = Discourse.Model.extend({
   rescind() {
     ajax("/invites", {
       type: "DELETE",
-      data: { email: this.get("email") }
+      data: { email: this.email }
     });
     this.set("rescinded", true);
   },
@@ -15,7 +15,7 @@ const Invite = Discourse.Model.extend({
     const self = this;
     return ajax("/invites/reinvite", {
       type: "POST",
-      data: { email: this.get("email") }
+      data: { email: this.email }
     })
       .then(function() {
         self.set("reinvited", true);

@@ -21,7 +21,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
       spammerDetails: null
     });
 
-    let adminTools = this.get("adminTools");
+    let adminTools = this.adminTools;
     if (adminTools) {
       adminTools.checkSpammer(this.get("model.user_id")).then(result => {
         this.set("spammerDetails", result);
@@ -41,7 +41,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
 
   @computed("post", "flagTopic", "model.actions_summary.@each.can_act")
   flagsAvailable() {
-    if (!this.get("flagTopic")) {
+    if (!this.flagTopic) {
       // flagging post
       let flagsAvailable = this.get("model.flagsAvailable");
 
@@ -58,7 +58,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
     } else {
       // flagging topic
       let lookup = Ember.Object.create();
-      let model = this.get("model");
+      let model = this.model;
       model.get("actions_summary").forEach(a => {
         a.flagTopic = model;
         a.actionType = this.site.topicFlagTypeById(a.id);
@@ -84,7 +84,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
 
   @computed("selected.is_custom_flag", "message.length")
   submitEnabled() {
-    const selected = this.get("selected");
+    const selected = this.selected;
     if (!selected) return false;
 
     if (selected.get("is_custom_flag")) {
@@ -122,7 +122,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
 
   actions: {
     deleteSpammer() {
-      let details = this.get("spammerDetails");
+      let details = this.spammerDetails;
       if (details) {
         details.deleteUser().then(() => window.location.reload());
       }
@@ -136,7 +136,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
     createFlag(opts) {
       let postAction; // an instance of ActionSummary
 
-      if (!this.get("flagTopic")) {
+      if (!this.flagTopic) {
         postAction = this.get("model.actions_summary").findBy(
           "id",
           this.get("selected.id")
@@ -148,7 +148,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
       }
 
       let params = this.get("selected.is_custom_flag")
-        ? { message: this.get("message") }
+        ? { message: this.message }
         : {};
       if (opts) {
         params = $.extend(params, opts);
@@ -157,7 +157,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
       this.send("hideModal");
 
       postAction
-        .act(this.get("model"), params)
+        .act(this.model, params)
         .then(() => {
           this.send("closeModal");
           if (params.message) {

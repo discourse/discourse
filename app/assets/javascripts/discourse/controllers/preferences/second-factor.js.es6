@@ -45,13 +45,13 @@ export default Ember.Controller.extend({
   },
 
   toggleSecondFactor(enable) {
-    if (!this.get("secondFactorToken")) return;
+    if (!this.secondFactorToken) return;
     this.set("loading", true);
 
-    this.get("model")
+    this.model
       .toggleSecondFactor(
-        this.get("secondFactorToken"),
-        this.get("secondFactorMethod"),
+        this.secondFactorToken,
+        this.secondFactorMethod,
         SECOND_FACTOR_METHODS.TOTP,
         enable
       )
@@ -63,7 +63,7 @@ export default Ember.Controller.extend({
 
         this.set("errorMessage", null);
         DiscourseURL.redirectTo(
-          userPath(`${this.get("model").username.toLowerCase()}/preferences`)
+          userPath(`${this.model.username.toLowerCase()}/preferences`)
         );
       })
       .catch(error => {
@@ -74,11 +74,11 @@ export default Ember.Controller.extend({
 
   actions: {
     confirmPassword() {
-      if (!this.get("password")) return;
+      if (!this.password) return;
       this.set("loading", true);
 
-      this.get("model")
-        .loadSecondFactorCodes(this.get("password"))
+      this.model
+        .loadSecondFactorCodes(this.password)
         .then(response => {
           if (response.error) {
             this.set("errorMessage", response.error);
@@ -101,7 +101,7 @@ export default Ember.Controller.extend({
         resetPasswordProgress: ""
       });
 
-      return this.get("model")
+      return this.model
         .changePassword()
         .then(() => {
           this.set(

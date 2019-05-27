@@ -33,7 +33,7 @@ export default Ember.Component.extend({
 
   _scheduleChartRendering() {
     Ember.run.schedule("afterRender", () => {
-      this._renderChart(this.get("model"), this.$(".chart-canvas"));
+      this._renderChart(this.model, this.$(".chart-canvas"));
     });
   },
 

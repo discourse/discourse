@@ -11,7 +11,7 @@ export default Ember.Component.extend({
 
   actions: {
     updateDestinationCategory(category) {
-      return this.get("topic").updateDestinationCategory(category.get("id"));
+      return this.topic.updateDestinationCategory(category.get("id"));
     },
 
     publish() {
@@ -19,7 +19,7 @@ export default Ember.Component.extend({
         if (result) {
           this.set("publishing", true);
           let destId = this.get("topic.destination_category_id");
-          this.get("topic")
+          this.topic
             .publish()
             .then(() => {
               this.set("topic.category_id", destId);

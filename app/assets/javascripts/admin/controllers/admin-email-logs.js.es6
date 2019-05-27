@@ -4,7 +4,7 @@ export default Ember.Controller.extend({
   loading: false,
 
   loadLogs(sourceModel, loadMore) {
-    if ((loadMore && this.get("loading")) || this.get("model.allLoaded")) {
+    if ((loadMore && this.loading) || this.get("model.allLoaded")) {
       return;
     }
 
@@ -13,14 +13,14 @@ export default Ember.Controller.extend({
     sourceModel = sourceModel || EmailLog;
 
     return sourceModel
-      .findAll(this.get("filter"), loadMore ? this.get("model.length") : null)
+      .findAll(this.filter, loadMore ? this.get("model.length") : null)
       .then(logs => {
-        if (this.get("model") && loadMore && logs.length < 50) {
-          this.get("model").set("allLoaded", true);
+        if (this.model && loadMore && logs.length < 50) {
+          this.model.set("allLoaded", true);
         }
 
-        if (this.get("model") && loadMore) {
-          this.get("model").addObjects(logs);
+        if (this.model && loadMore) {
+          this.model.addObjects(logs);
         } else {
           this.set("model", logs);
         }

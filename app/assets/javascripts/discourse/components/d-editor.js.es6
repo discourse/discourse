@@ -234,7 +234,7 @@ export default Ember.Component.extend({
   _readyNow() {
     this.set("ready", true);
 
-    if (this.get("autofocus")) {
+    if (this.autofocus) {
       this.$("textarea").focus();
     }
   },
@@ -289,7 +289,7 @@ export default Ember.Component.extend({
       }
     });
 
-    if (this.get("composerEvents")) {
+    if (this.composerEvents) {
       this.appEvents.on("composer:insert-block", this, "_insertBlock");
       this.appEvents.on("composer:insert-text", this, "_insertText");
       this.appEvents.on("composer:replace-text", this, "_replaceText");
@@ -307,7 +307,7 @@ export default Ember.Component.extend({
 
   @on("willDestroyElement")
   _shutDown() {
-    if (this.get("composerEvents")) {
+    if (this.composerEvents) {
       this.appEvents.off("composer:insert-block", this, "_insertBlock");
       this.appEvents.off("composer:insert-text", this, "_insertText");
       this.appEvents.off("composer:replace-text", this, "_replaceText");
@@ -340,11 +340,11 @@ export default Ember.Component.extend({
       return;
     }
 
-    const value = this.get("value");
-    const markdownOptions = this.get("markdownOptions") || {};
+    const value = this.value;
+    const markdownOptions = this.markdownOptions || {};
 
     cookAsync(value, markdownOptions).then(cooked => {
-      if (this.get("isDestroyed")) {
+      if (this.isDestroyed) {
         return;
       }
       this.set("preview", cooked);
@@ -364,7 +364,7 @@ export default Ember.Component.extend({
 
   @observes("ready", "value")
   _watchForChanges() {
-    if (!this.get("ready")) {
+    if (!this.ready) {
       return;
     }
 
@@ -500,7 +500,7 @@ export default Ember.Component.extend({
   },
 
   _getSelected(trimLeading, opts) {
-    if (!this.get("ready")) {
+    if (!this.ready) {
       return;
     }
 
@@ -676,7 +676,7 @@ export default Ember.Component.extend({
   },
 
   _replaceText(oldVal, newVal, opts = {}) {
-    const val = this.get("value");
+    const val = this.value;
     const needleStart = val.indexOf(oldVal);
 
     if (needleStart === -1) {
@@ -873,12 +873,12 @@ export default Ember.Component.extend({
 
   actions: {
     emoji() {
-      if (this.get("disabled")) {
+      if (this.disabled) {
         return;
       }
 
       this.set("isEditorFocused", $("textarea.d-editor-input").is(":focus"));
-      this.set("emojiPickerIsActive", !this.get("emojiPickerIsActive"));
+      this.set("emojiPickerIsActive", !this.emojiPickerIsActive);
     },
 
     emojiSelected(code) {
@@ -900,7 +900,7 @@ export default Ember.Component.extend({
     },
 
     toolbarButton(button) {
-      if (this.get("disabled")) {
+      if (this.disabled) {
         return;
       }
 
@@ -914,7 +914,7 @@ export default Ember.Component.extend({
           this._applyList(selected, head, exampleKey, opts),
         addText: text => this._addText(selected, text),
         replaceText: text => this._addText({ pre: "", post: "" }, text),
-        getText: () => this.get("value"),
+        getText: () => this.value,
         toggleDirection: () => this._toggleDirection()
       };
 
@@ -926,7 +926,7 @@ export default Ember.Component.extend({
     },
 
     showLinkModal() {
-      if (this.get("disabled")) {
+      if (this.disabled) {
         return;
       }
 
@@ -943,7 +943,7 @@ export default Ember.Component.extend({
     },
 
     formatCode() {
-      if (this.get("disabled")) {
+      if (this.disabled) {
         return;
       }
 
@@ -986,7 +986,7 @@ export default Ember.Component.extend({
     },
 
     insertLink() {
-      const origLink = this.get("linkUrl");
+      const origLink = this.linkUrl;
       const linkUrl =
         origLink.indexOf("://") === -1 ? `http://${origLink}` : origLink;
       const sel = this._lastSel;
@@ -995,7 +995,7 @@ export default Ember.Component.extend({
         return;
       }
 
-      const linkText = this.get("linkText") || "";
+      const linkText = this.linkText || "";
       if (linkText.length) {
         this._addText(sel, `[${linkText}](${linkUrl})`);
       } else {

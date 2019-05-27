@@ -9,9 +9,9 @@ export default Ember.Component.extend({
   },
 
   change() {
-    const warning = this.get("warning");
+    const warning = this.warning;
 
-    if (warning && this.get("checked")) {
+    if (warning && this.checked) {
       this.warning();
       return false;
     }

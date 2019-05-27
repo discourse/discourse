@@ -32,11 +32,11 @@ export default Ember.Controller.extend({
 
   actions: {
     saveChanges() {
-      const embedding = this.get("embedding");
+      const embedding = this.embedding;
       const updates = embedding.getProperties(embedding.get("fields"));
 
       this.set("saved", false);
-      this.get("embedding")
+      this.embedding
         .update(updates)
         .then(() => this.set("saved", true))
         .catch(popupAjaxError);

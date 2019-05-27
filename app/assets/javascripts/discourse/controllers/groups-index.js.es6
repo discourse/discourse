@@ -27,7 +27,7 @@ export default Ember.Controller.extend({
 
   @observes("filterInput")
   _setFilter: debounce(function() {
-    this.set("filter", this.get("filterInput"));
+    this.set("filter", this.filterInput);
   }, 500),
 
   @observes("model.canLoadMore")
@@ -37,7 +37,7 @@ export default Ember.Controller.extend({
 
   actions: {
     loadMore() {
-      this.get("model").loadMore();
+      this.model.loadMore();
     },
 
     new() {

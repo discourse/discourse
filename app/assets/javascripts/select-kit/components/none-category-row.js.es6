@@ -9,7 +9,7 @@ export default CategoryRowComponent.extend({
   @computed("category")
   badgeForCategory(category) {
     return categoryBadgeHTML(category, {
-      link: this.get("categoryLink"),
+      link: this.categoryLink,
       allowUncategorized: true,
       hideParent: true
     }).htmlSafe();

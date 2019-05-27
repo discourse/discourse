@@ -30,7 +30,7 @@ export default Ember.Controller.extend({
     },
 
     search() {
-      const q = this.get("q");
+      const q = this.q;
       if (q !== lastSearch) {
         this.set("searching", true);
         Ember.run.debounce(this, this._performSearch, 400);

@@ -40,7 +40,7 @@ export default DropdownSelectBoxComponent.extend({
 
   actions: {
     onSelect(id) {
-      const action = this.get("actionsMapping")[id];
+      const action = this.actionsMapping[id];
 
       if (action) {
         action();

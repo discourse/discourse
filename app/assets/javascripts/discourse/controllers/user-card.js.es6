@@ -10,7 +10,7 @@ export default Ember.Controller.extend({
 
   actions: {
     togglePosts(user) {
-      const topicController = this.get("topic");
+      const topicController = this.topic;
       topicController.send("toggleParticipant", user);
     },
 

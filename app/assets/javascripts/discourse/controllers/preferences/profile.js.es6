@@ -43,8 +43,8 @@ export default Ember.Controller.extend(PreferencesTabController, {
     save() {
       this.set("saved", false);
 
-      const model = this.get("model"),
-        userFields = this.get("userFields");
+      const model = this.model,
+        userFields = this.userFields;
 
       // Update the user fields
       if (!Ember.isEmpty(userFields)) {
@@ -57,7 +57,7 @@ export default Ember.Controller.extend(PreferencesTabController, {
       }
 
       return model
-        .save(this.get("saveAttrNames"))
+        .save(this.saveAttrNames)
         .then(() => {
           cookAsync(model.get("bio_raw"))
             .then(() => {

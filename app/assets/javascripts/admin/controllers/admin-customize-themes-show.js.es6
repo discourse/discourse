@@ -100,7 +100,7 @@ export default Ember.Controller.extend({
   },
 
   commitSwitchType() {
-    const model = this.get("model");
+    const model = this.model;
     const newValue = !model.get("component");
     model.set("component", newValue);
 
@@ -141,7 +141,7 @@ export default Ember.Controller.extend({
   },
   transitionToEditRoute() {
     this.transitionToRoute(
-      this.get("editRouteName"),
+      this.editRouteName,
       this.get("model.id"),
       "common",
       "scss"
@@ -154,7 +154,7 @@ export default Ember.Controller.extend({
   actions: {
     updateToLatest() {
       this.set("updatingRemote", true);
-      this.get("model")
+      this.model
         .updateToLatest()
         .catch(popupAjaxError)
         .finally(() => {
@@ -164,7 +164,7 @@ export default Ember.Controller.extend({
 
     checkForThemeUpdates() {
       this.set("updatingRemote", true);
-      this.get("model")
+      this.model
         .checkForUpdates()
         .catch(popupAjaxError)
         .finally(() => {
@@ -177,7 +177,7 @@ export default Ember.Controller.extend({
     },
 
     addUpload(info) {
-      let model = this.get("model");
+      let model = this.model;
       model.setField("common", info.name, "", info.upload_id, THEME_UPLOAD_VAR);
       model.saveChanges("theme_fields").catch(e => popupAjaxError(e));
     },
@@ -186,23 +186,23 @@ export default Ember.Controller.extend({
       this.set("colorSchemeId", this.get("model.color_scheme_id"));
     },
     changeScheme() {
-      let schemeId = this.get("colorSchemeId");
+      let schemeId = this.colorSchemeId;
       this.set(
         "model.color_scheme_id",
         schemeId === null ? null : parseInt(schemeId)
       );
-      this.get("model").saveChanges("color_scheme_id");
+      this.model.saveChanges("color_scheme_id");
     },
     startEditingName() {
       this.set("oldName", this.get("model.name"));
       this.set("editingName", true);
     },
     cancelEditingName() {
-      this.set("model.name", this.get("oldName"));
+      this.set("model.name", this.oldName);
       this.set("editingName", false);
     },
     finishedEditingName() {
-      this.get("model").saveChanges("name");
+      this.model.saveChanges("name");
       this.set("editingName", false);
     },
 
@@ -222,10 +222,10 @@ export default Ember.Controller.extend({
     },
 
     applyDefault() {
-      const model = this.get("model");
+      const model = this.model;
       model.saveChanges("default").then(() => {
         if (model.get("default")) {
-          this.get("allThemes").forEach(theme => {
+          this.allThemes.forEach(theme => {
             if (theme !== model && theme.get("default")) {
               theme.set("default", false);
             }
@@ -235,13 +235,13 @@ export default Ember.Controller.extend({
     },
 
     applyUserSelectable() {
-      this.get("model").saveChanges("user_selectable");
+      this.model.saveChanges("user_selectable");
     },
 
     addChildTheme() {
-      let themeId = parseInt(this.get("selectedChildThemeId"));
-      let theme = this.get("allThemes").findBy("id", themeId);
-      this.get("model").addChildTheme(theme);
+      let themeId = parseInt(this.selectedChildThemeId);
+      let theme = this.allThemes.findBy("id", themeId);
+      this.model.addChildTheme(theme);
     },
 
     removeUpload(upload) {
@@ -251,14 +251,14 @@ export default Ember.Controller.extend({
         I18n.t("yes_value"),
         result => {
           if (result) {
-            this.get("model").removeField(upload);
+            this.model.removeField(upload);
           }
         }
       );
     },
 
     removeChildTheme(theme) {
-      this.get("model").removeChildTheme(theme);
+      this.model.removeChildTheme(theme);
     },
 
     destroy() {
@@ -270,9 +270,9 @@ export default Ember.Controller.extend({
         I18n.t("yes_value"),
         result => {
           if (result) {
-            const model = this.get("model");
+            const model = this.model;
             model.destroyRecord().then(() => {
-              this.get("allThemes").removeObject(model);
+              this.allThemes.removeObject(model);
               this.transitionToRoute("adminCustomizeThemes");
             });
           }
@@ -282,12 +282,12 @@ export default Ember.Controller.extend({
 
     switchType() {
       const relatives = this.get("model.component")
-        ? this.get("parentThemes")
+        ? this.parentThemes
         : this.get("model.childThemes");
       if (relatives && relatives.length > 0) {
         const names = relatives.map(relative => relative.get("name"));
         bootbox.confirm(
-          I18n.t(`${this.get("convertKey")}_alert`, {
+          I18n.t(`${this.convertKey}_alert`, {
             relatives: names.join(", ")
           }),
           I18n.t("no_value"),

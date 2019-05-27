@@ -9,11 +9,11 @@ export default Ember.Component.extend({
 
   @on("didReceiveAttrs")
   _setupCollection() {
-    const values = this.get("values");
+    const values = this.values;
 
     this.set(
       "collection",
-      this._splitValues(values, this.get("inputDelimiter") || "\n")
+      this._splitValues(values, this.inputDelimiter || "\n")
     );
   },
 
@@ -29,9 +29,9 @@ export default Ember.Component.extend({
     },
 
     addValue() {
-      if (this._checkInvalidInput([this.get("newKey"), this.get("newSecret")]))
+      if (this._checkInvalidInput([this.newKey, this.newSecret]))
         return;
-      this._addValue(this.get("newKey"), this.get("newSecret"));
+      this._addValue(this.newKey, this.newSecret);
       this.setProperties({ newKey: "", newSecret: "" });
     },
 
@@ -54,18 +54,18 @@ export default Ember.Component.extend({
   },
 
   _addValue(value, secret) {
-    this.get("collection").addObject({ key: value, secret: secret });
+    this.collection.addObject({ key: value, secret: secret });
     this._saveValues();
   },
 
   _removeValue(value) {
-    const collection = this.get("collection");
+    const collection = this.collection;
     collection.removeObject(value);
     this._saveValues();
   },
 
   _replaceValue(index, newValue, keyName) {
-    let item = this.get("collection")[index];
+    let item = this.collection[index];
     Ember.set(item, keyName, newValue);
 
     this._saveValues();
@@ -74,7 +74,7 @@ export default Ember.Component.extend({
   _saveValues() {
     this.set(
       "values",
-      this.get("collection")
+      this.collection
         .map(function(elem) {
           return `${elem.key}|${elem.secret}`;
         })

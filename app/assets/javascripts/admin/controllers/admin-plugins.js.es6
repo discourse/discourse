@@ -3,7 +3,7 @@ import computed from "ember-addons/ember-computed-decorators";
 export default Ember.Controller.extend({
   @computed
   adminRoutes: function() {
-    return this.get("model")
+    return this.model
       .map(p => {
         if (p.get("enabled")) {
           return p.admin_route;

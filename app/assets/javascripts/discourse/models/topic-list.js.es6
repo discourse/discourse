@@ -25,7 +25,7 @@ const TopicList = RestModel.extend({
   forEachNew(topics, callback) {
     const topicIds = [];
 
-    this.get("topics").forEach(topic => (topicIds[topic.get("id")] = true));
+    this.topics.forEach(topic => (topicIds[topic.get("id")] = true));
 
     topics.forEach(topic => {
       if (!topicIds[topic.id]) {
@@ -35,7 +35,7 @@ const TopicList = RestModel.extend({
   },
 
   refreshSort(order, ascending) {
-    let params = this.get("params") || {};
+    let params = this.params || {};
 
     if (params.q) {
       // search is unique, nothing else allowed with it
@@ -49,11 +49,11 @@ const TopicList = RestModel.extend({
   },
 
   loadMore() {
-    if (this.get("loadingMore")) {
+    if (this.loadingMore) {
       return Ember.RSVP.resolve();
     }
 
-    let moreUrl = this.get("more_topics_url");
+    let moreUrl = this.more_topics_url;
     if (moreUrl) {
       let [url, params] = moreUrl.split("?");
 
@@ -103,7 +103,7 @@ const TopicList = RestModel.extend({
   // loads topics with these ids "before" the current topics
   loadBefore(topic_ids, storeInSession) {
     const topicList = this,
-      topics = this.get("topics");
+      topics = this.topics;
 
     // refresh dupes
     topics.removeObjects(
@@ -115,7 +115,7 @@ const TopicList = RestModel.extend({
     )}.json?topic_ids=${topic_ids.join(",")}`;
     const store = this.store;
 
-    return ajax({ url, data: this.get("params") }).then(result => {
+    return ajax({ url, data: this.params }).then(result => {
       let i = 0;
       topicList.forEachNew(TopicList.topicsFrom(store, result), function(t) {
         // highlight the first of the new topics so we can get a visual feedback
