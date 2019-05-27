@@ -148,6 +148,7 @@ createWidget("notification-item", {
     let infoKey = notName === "custom" ? data.message : notName;
     let text = emojiUnescape(this.text(notificationType, notName));
     let icon = iconNode(`notification.${infoKey}`);
+    let title = I18n.t(`notifications.titles.${notName ? notName : "custom"}`);
 
     // We can use a `<p>` tag here once other languages have fixed their HTML
     // translations.
@@ -157,7 +158,11 @@ createWidget("notification-item", {
 
     const href = this.url();
     return href
-      ? h("a", { attributes: { href, "data-auto-route": true } }, contents)
+      ? h(
+          "a",
+          { attributes: { href, title, "data-auto-route": true } },
+          contents
+        )
       : contents;
   },
 
