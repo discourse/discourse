@@ -109,7 +109,7 @@ export default createWidget("post-small-action", {
 
     const description = actionDescriptionHtml(
       attrs.actionCode,
-      attrs.created_at,
+      new Date(attrs.created_at),
       attrs.actionCodeWho
     );
     contents.push(new RawHtml({ html: `<p>${description}</p>` }));
