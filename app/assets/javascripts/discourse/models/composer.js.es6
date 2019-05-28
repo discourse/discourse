@@ -955,7 +955,6 @@ const Composer = RestModel.extend({
       "action",
       "title",
       "categoryId",
-      "postId",
       "archetypeId",
       "whisper",
       "metaData",
@@ -965,9 +964,12 @@ const Composer = RestModel.extend({
       "noBump"
     );
 
-    data = Object.assign(data, { usernames: this.targetUsernames });
+    data = Object.assign(data, {
+      usernames: this.targetUsernames,
+      postId: this.get("post.id")
+    });
 
-    if (this.get("post.id") && !Ember.isEmpty(this.originalText)) {
+    if (data.postId && !Ember.isEmpty(this.originalText)) {
       data.originalText = this.originalText;
     }
 
