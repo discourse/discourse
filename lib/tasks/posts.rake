@@ -628,7 +628,7 @@ task 'posts:recover_uploads_from_index' => :environment do |_, args|
     puts "Found existing index file at #{path}"
   else
     puts "Can not find index #{path} generating index this could take a while..."
-    `cd #{File.dirname(path)} && find -t file > #{path}`
+    `cd #{File.dirname(path)} && find -type f > #{path}`
   end
   if RailsMultisite::ConnectionManagement.current_db != "default"
     recover_uploads_from_index(path)
