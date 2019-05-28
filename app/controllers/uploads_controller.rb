@@ -134,6 +134,7 @@ class UploadsController < ApplicationController
         maximum_upload_size = [SiteSetting.max_image_size_kb, SiteSetting.max_attachment_size_kb].max.kilobytes
         tempfile = FileHelper.download(
           url,
+          follow_redirect: true,
           max_file_size: maximum_upload_size,
           tmp_file_name: "discourse-upload-#{type}"
         ) rescue nil
