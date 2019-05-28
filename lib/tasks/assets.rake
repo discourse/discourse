@@ -158,16 +158,18 @@ def concurrent?
   end
 end
 
+def geolite_dbs
+  @geolite_dbs ||= %w{
+    GeoLite2-City
+    GeoLite2-ASN
+  }
+end
+
 def get_mmdb_time(root_path)
   mmdb_time = nil
 
-  %w{
-    GeoLite2-City
-    GeoLite2-ASN
-  }.map do |name|
-
+  geolite_dbs.each do |name|
     path = File.join(root_path, "#{name}.mmdb")
-
     if File.exist?(path)
       mmdb_time = File.mtime(path)
     else
@@ -182,10 +184,7 @@ end
 def copy_maxmind(from_path, to_path)
   puts "Copying MaxMindDB from #{from_path} to #{to_path}"
 
-  %w{
-    GeoLite2-City
-    GeoLite2-ASN
-  }.each do |name|
+  geolite_dbs.each do |name|
     from = File.join(from_path, "#{name}.mmdb")
     to = File.join(to_path, "#{name}.mmdb")
     FileUtils.cp(from, to, preserve: true)
@@ -214,8 +213,9 @@ task 'assets:precompile' => 'assets:precompile:before' do
       puts "Downloading MaxMindDB..."
       mmdb_thread = Thread.new do
         begin
-          DiscourseIpInfo.mmdb_download('GeoLite2-City')
-          DiscourseIpInfo.mmdb_download('GeoLite2-ASN')
+          geolite_dbs.each do |db|
+            DiscourseIpInfo.mmdb_download(db)
+          end
 
           if GlobalSetting.maxmind_backup_path.present?
             copy_maxmind(DiscourseIpInfo.path, GlobalSetting.maxmind_backup_path)
