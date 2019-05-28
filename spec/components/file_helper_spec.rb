@@ -52,16 +52,19 @@ describe FileHelper do
       stub_request(:get, url).to_return(status: 302, body: "", headers: { location: url2 })
       stub_request(:get, url2).to_return(status: 200, body: "i am the body")
 
-      found = FileHelper.download(
-        url,
-        max_file_size: 10000,
-        tmp_file_name: 'trouttmp',
-        follow_redirect: true
-      )
+      begin
+        found = FileHelper.download(
+          url,
+          max_file_size: 10000,
+          tmp_file_name: 'trouttmp',
+          follow_redirect: true
+        )
 
-      expect(found.read).to eq("i am the body")
-      found.close
-      found.unlink
+        expect(found.read).to eq("i am the body")
+      ensure
+        found&.close
+        found&.unlink
+      end
     end
 
     it "correctly raises an OpenURI HTTP error if it gets a 404" do
@@ -95,6 +98,7 @@ describe FileHelper do
         expect(Base64.encode64(tmpfile.read)).to eq(Base64.encode64(png))
       ensure
         tmpfile&.close
+        tmpfile&.unlink
       end
     end
 
@@ -109,6 +113,7 @@ describe FileHelper do
         expect(Base64.encode64(tmpfile.read)).to eq(Base64.encode64(png))
       ensure
         tmpfile&.close
+        tmpfile&.unlink
       end
     end
 
@@ -135,6 +140,7 @@ describe FileHelper do
           expect(tmpfile.closed?).to eq(false)
         ensure
           tmpfile&.close
+          tmpfile&.unlink
         end
       end
     end
@@ -157,6 +163,7 @@ describe FileHelper do
           expect(File.extname(tmpfile)).to eq('.png')
         ensure
           tmpfile&.close
+          tmpfile&.unlink
         end
       end
     end
