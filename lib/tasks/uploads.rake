@@ -632,11 +632,11 @@ def clean_up_uploads
 end
 
 ################################################################################
-#                                   missing                                    #
+#                                missing files                                 #
 ################################################################################
 
 # list all missing uploads and optimized images
-task "uploads:missing" => :environment do
+task "uploads:missing_files" => :environment do
   if ENV["RAILS_DB"]
     list_missing_uploads(skip_optimized: ENV['SKIP_OPTIMIZED'])
   else
@@ -663,6 +663,10 @@ end
 
 def list_missing_uploads(skip_optimized: false)
   Discourse.store.list_missing_uploads(skip_optimized: skip_optimized)
+end
+
+task "uploads:missing" => :environment do
+  Rake::Task["uploads:missing_files"].invoke
 end
 
 ################################################################################
