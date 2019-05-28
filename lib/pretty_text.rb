@@ -159,7 +159,7 @@ module PrettyText
         __optInput.categoryHashtagLookup = __categoryLookup;
         __optInput.customEmoji = #{custom_emoji.to_json};
         __optInput.emojiUnicodeReplacer = __emojiUnicodeReplacer;
-        __optInput.lookupUploadUrls = __lookupUploadUrls;
+        __optInput.lookupImageUrls = __lookupImageUrls;
         __optInput.censoredWords = #{WordWatcher.words_for_action(:censor).join('|').to_json};
       JS
 

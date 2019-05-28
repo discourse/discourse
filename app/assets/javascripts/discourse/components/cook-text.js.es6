@@ -13,7 +13,7 @@ const CookText = Ember.Component.extend({
       // pretty text may only be loaded now
       Ember.run.next(() =>
         window
-          .requireModule("pretty-text/upload-short-url")
+          .requireModule("pretty-text/image-short-url")
           .resolveAllShortUrls(ajax)
       );
     });

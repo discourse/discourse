@@ -11,4 +11,4 @@
 //= require ./pretty-text/sanitizer
 //= require ./pretty-text/oneboxer
 //= require ./pretty-text/inline-oneboxer
-//= require ./pretty-text/upload-short-url
+//= require ./pretty-text/image-short-url

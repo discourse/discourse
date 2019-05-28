@@ -165,19 +165,14 @@ QUnit.test("allows valid uploads to go through", assert => {
   assert.not(bootbox.alert.calledOnce);
 });
 
-var testUploadMarkdown = function(filename, opts = {}) {
-  return getUploadMarkdown(
-    Object.assign(
-      {
-        original_filename: filename,
-        filesize: 42,
-        thumbnail_width: 100,
-        thumbnail_height: 200,
-        url: "/uploads/123/abcdef.ext"
-      },
-      opts
-    )
-  );
+var testUploadMarkdown = function(filename) {
+  return getUploadMarkdown({
+    original_filename: filename,
+    filesize: 42,
+    thumbnail_width: 100,
+    thumbnail_height: 200,
+    url: "/uploads/123/abcdef.ext"
+  });
 };
 
 QUnit.test("getUploadMarkdown", assert => {
@@ -189,12 +184,9 @@ QUnit.test("getUploadMarkdown", assert => {
     testUploadMarkdown("[foo|bar].png"),
     "![%5Bfoo%7Cbar%5D|100x200](/uploads/123/abcdef.ext)"
   );
-
-  const short_url = "uploads://asdaasd.ext";
-
-  assert.equal(
-    testUploadMarkdown("important.txt", { short_url }),
-    `[important.txt (42 Bytes)|attachment](${short_url})`
+  assert.ok(
+    testUploadMarkdown("important.txt") ===
+      '<a class="attachment" href="/uploads/123/abcdef.ext">important.txt</a> (42 Bytes)\n'
   );
 });
 

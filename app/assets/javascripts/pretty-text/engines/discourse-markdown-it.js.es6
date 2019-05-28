@@ -1,7 +1,6 @@
 import { default as WhiteLister } from "pretty-text/white-lister";
 import { sanitize } from "pretty-text/sanitizer";
 import guid from "pretty-text/guid";
-import { ATTACHMENT_CSS_CLASS } from "pretty-text/upload-short-url";
 
 function deprecate(feature, name) {
   return function() {
@@ -188,26 +187,6 @@ function setupImageDimensions(md) {
   md.renderer.rules.image = renderImage;
 }
 
-function renderAttachment(tokens, idx, options, env, slf) {
-  const linkOpenToken = tokens[idx];
-  const linkTextToken = tokens[idx + 1];
-  const split = linkTextToken.content.split("|");
-  const isValid = !linkOpenToken.attrs[
-    linkOpenToken.attrIndex("data-orig-href")
-  ];
-
-  if (isValid && split.length === 2 && split[1] === ATTACHMENT_CSS_CLASS) {
-    linkOpenToken.attrs.unshift(["class", split[1]]);
-    linkTextToken.content = split[0];
-  }
-
-  return slf.renderToken(tokens, idx, options);
-}
-
-function setupAttachments(md) {
-  md.renderer.rules.link_open = renderAttachment;
-}
-
 let Helpers;
 
 export function setup(opts, siteSettings, state) {
@@ -297,7 +276,6 @@ export function setup(opts, siteSettings, state) {
   setupUrlDecoding(opts.engine);
   setupHoister(opts.engine);
   setupImageDimensions(opts.engine);
-  setupAttachments(opts.engine);
   setupBlockBBCode(opts.engine);
   setupInlineBBCode(opts.engine);
   setupTextPostProcessRuler(opts.engine);
