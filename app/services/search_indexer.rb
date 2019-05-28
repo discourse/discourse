@@ -2,7 +2,7 @@
 require_dependency 'search'
 
 class SearchIndexer
-  INDEX_VERSION = 2
+  INDEX_VERSION = 3
   REINDEX_VERSION = 0
 
   def self.disable
