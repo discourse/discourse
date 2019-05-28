@@ -1260,9 +1260,11 @@ HTML
 
   end
 
-  describe "image decoding" do
+  describe "upload decoding" do
 
     it "can decode upload:// for default setup" do
+      set_cdn_url('https://cdn.com')
+
       upload = Fabricate(:upload)
 
       raw = <<~RAW
@@ -1274,6 +1276,12 @@ HTML
           - ![upload](#{upload.short_url})
 
       ![upload](#{upload.short_url.gsub(".png", "")})
+
+      [some attachment](#{upload.short_url})
+
+      [some attachment|attachment](#{upload.short_url})
+
+      [some attachment|random](#{upload.short_url})
       RAW
 
       cooked = <<~HTML
@@ -1290,6 +1298,9 @@ HTML
         </li>
         </ul>
         <p><img src="#{upload.url}" alt="upload"></p>
+        <p><a href="#{upload.short_path}">some attachment</a></p>
+        <p><a class="attachment" href="#{upload.short_path}">some attachment</a></p>
+        <p><a href="#{upload.short_path}">some attachment|random</a></p>
       HTML
 
       expect(PrettyText.cook(raw)).to eq(cooked.strip)
@@ -1297,10 +1308,15 @@ HTML
 
     it "can place a blank image if we can not find the upload" do
 
-      raw = "![upload](upload://abcABC.png)"
+      raw = <<~MD
+      ![upload](upload://abcABC.png)
+
+      [some attachment|attachment](upload://abcdefg.png)
+      MD
 
       cooked = <<~HTML
-        <p><img src="/images/transparent.png" alt="upload" data-orig-src="upload://abcABC.png"></p>
+      <p><img src="/images/transparent.png" alt="upload" data-orig-src="upload://abcABC.png"></p>
+      <p><a href="/404" data-orig-href="upload://abcdefg.png">some attachment|attachment</a></p>
       HTML
 
       expect(PrettyText.cook(raw)).to eq(cooked.strip)
