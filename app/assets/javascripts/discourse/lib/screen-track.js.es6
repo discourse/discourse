@@ -60,7 +60,7 @@ export default class {
 
   // Reset our timers
   reset() {
-    const now = this._getTime();
+    const now = new Date().getTime();
     this._lastTick = now;
     this._lastScrolled = now;
     this._lastFlush = 0;
@@ -74,7 +74,7 @@ export default class {
   }
 
   scrolled() {
-    this._lastScrolled = this._getTime();
+    this._lastScrolled = new Date().getTime();
   }
 
   registerAnonCallback(cb) {
@@ -223,9 +223,5 @@ export default class {
         this._readPosts[postNumber] = true;
       });
     }
-  }
-
-  _getTime() {
-    return (this._time = this._time || new Date().getTime());
   }
 }
