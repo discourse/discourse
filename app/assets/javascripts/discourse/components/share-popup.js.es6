@@ -88,69 +88,92 @@ export default Ember.Component.extend({
     Ember.run.scheduleOnce("afterRender", this, this._focusUrl);
   },
 
+  _mouseDownHandler(event) {
+    if (!this.element || this.isDestroying || this.isDestroyed) {
+      return;
+    }
+
+    // Use mousedown instead of click so this event is handled before routing occurs when a
+    // link is clicked (which is a click event) while the share dialog is showing.
+    if ($(this.element).has(event.target).length !== 0) {
+      return;
+    }
+
+    this.send("close");
+
+    return true;
+  },
+
+  _clickHandler(event) {
+    if (!this.element || this.isDestroying || this.isDestroyed) {
+      return;
+    }
+
+    // if they want to open in a new tab, let it so
+    if (wantsNewWindow(event)) {
+      return true;
+    }
+
+    event.preventDefault();
+
+    const $currentTarget = $(event.currentTarget);
+    const url = $currentTarget.data("share-url");
+    const postNumber = $currentTarget.data("post-number");
+    const postId = $currentTarget.closest("article").data("post-id");
+    const date = $currentTarget.children().data("time");
+
+    this.setProperties({ postNumber, date, postId });
+
+    // use native webshare only when the user clicks on the "chain" icon
+    if (!$currentTarget.hasClass("post-date")) {
+      nativeShare({ url }).then(null, () => this._showUrl($currentTarget, url));
+    } else {
+      this._showUrl($currentTarget, url);
+    }
+
+    return false;
+  },
+
+  _keydownHandler(event) {
+    if (!this.element || this.isDestroying || this.isDestroyed) {
+      return;
+    }
+
+    if (event.keyCode === 27) {
+      this.send("close");
+    }
+  },
+
+  _shareUrlHandler(url, $target) {
+    this._showUrl($target, url);
+  },
+
   didInsertElement() {
     this._super(...arguments);
 
     const $html = $("html");
-    $html.on("mousedown.outside-share-link", e => {
-      // Use mousedown instead of click so this event is handled before routing occurs when a
-      // link is clicked (which is a click event) while the share dialog is showing.
-      if (this.$().has(e.target).length !== 0) {
-        return;
-      }
-      this.send("close");
-      return true;
-    });
+    $html.on("mousedown.outside-share-link", this._mouseDownHandler.bind(this));
 
     $html.on(
       "click.discourse-share-link",
       "button[data-share-url], .post-info .post-date[data-share-url]",
-      e => {
-        // if they want to open in a new tab, let it so
-        if (wantsNewWindow(e)) {
-          return true;
-        }
-
-        e.preventDefault();
-
-        const $currentTarget = $(e.currentTarget);
-        const url = $currentTarget.data("share-url");
-        const postNumber = $currentTarget.data("post-number");
-        const postId = $currentTarget.closest("article").data("post-id");
-        const date = $currentTarget.children().data("time");
-
-        this.setProperties({ postNumber, date, postId });
-
-        // use native webshare only when the user clicks on the "chain" icon
-        if (!$currentTarget.hasClass("post-date")) {
-          nativeShare({ url }).then(null, () =>
-            this._showUrl($currentTarget, url)
-          );
-        } else {
-          this._showUrl($currentTarget, url);
-        }
-
-        return false;
-      }
+      this._clickHandler.bind(this)
     );
 
-    $html.on("keydown.share-view", e => {
-      if (e.keyCode === 27) {
-        this.send("close");
-      }
-    });
+    $html.on("keydown.share-view", this._keydownHandler);
 
-    this.appEvents.on("share:url", (url, $target) =>
-      this._showUrl($target, url)
-    );
+    this.appEvents.on("share:url", this._shareUrlHandler);
   },
 
   willDestroyElement() {
     this._super(...arguments);
+
     $("html")
-      .off("click.discourse-share-link")
-      .off("mousedown.outside-share-link")
-      .off("keydown.share-view");
+      .off("click.discourse-share-link", this._clickHandler)
+      .off("mousedown.outside-share-link", this._mouseDownHandler)
+      .off("keydown.share-view", this._keydownHandler);
+
+    this.appEvents.off("share:url", this._shareUrlHandler);
   },
 
   actions: {

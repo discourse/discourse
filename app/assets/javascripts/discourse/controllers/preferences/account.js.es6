@@ -16,7 +16,11 @@ export default Ember.Controller.extend(
   CanCheckEmails,
   PreferencesTabController,
   {
-    saveAttrNames: ["name", "title"],
+    init() {
+      this._super(...arguments);
+
+      this.saveAttrNames = ["name", "title"];
+    },
 
     canEditName: setting("enable_names"),
     canSaveUser: true,

@@ -1,10 +1,9 @@
 import { ajax } from "discourse/lib/ajax";
+
 // We use this class to track how long posts in a topic are on the screen.
 const PAUSE_UNLESS_SCROLLED = 1000 * 60 * 3;
 const MAX_TRACKING_TIME = 1000 * 60 * 6;
 const ANON_MAX_TOPIC_IDS = 5;
-
-const getTime = () => new Date().getTime();
 
 export default class {
   constructor(topicTrackingState, siteSettings, session, currentUser) {
@@ -27,7 +26,7 @@ export default class {
     // Create an interval timer if we don't have one.
     if (!this._interval) {
       this._interval = setInterval(() => this.tick(), 1000);
-      $(window).on("scroll.screentrack", () => this.scrolled());
+      $(window).on("scroll.screentrack", this.scrolled.bind(this));
     }
 
     this._topicId = topicId;
@@ -40,7 +39,7 @@ export default class {
       return;
     }
 
-    $(window).off("scroll.screentrack");
+    $(window).off("scroll.screentrack", this.scrolled);
     this.tick();
     this.flush();
     this.reset();
@@ -61,7 +60,7 @@ export default class {
 
   // Reset our timers
   reset() {
-    const now = getTime();
+    const now = this._getTime();
     this._lastTick = now;
     this._lastScrolled = now;
     this._lastFlush = 0;
@@ -75,7 +74,7 @@ export default class {
   }
 
   scrolled() {
-    this._lastScrolled = getTime();
+    this._lastScrolled = this._getTime();
   }
 
   registerAnonCallback(cb) {
@@ -224,5 +223,9 @@ export default class {
         this._readPosts[postNumber] = true;
       });
     }
+  }
+
+  _getTime() {
+    return (this._time = this._time || new Date().getTime());
   }
 }

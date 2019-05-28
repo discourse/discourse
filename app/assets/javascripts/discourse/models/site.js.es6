@@ -8,6 +8,12 @@ import PreloadStore from "preload-store";
 const Site = RestModel.extend({
   isReadOnly: Ember.computed.alias("is_readonly"),
 
+  init() {
+    this._super(...arguments);
+
+    this.topicCountDesc = ["topic_count:desc"];
+  },
+
   @computed("notification_types")
   notificationLookup(notificationTypes) {
     const result = [];
@@ -24,7 +30,6 @@ const Site = RestModel.extend({
     return postActionTypes.filterBy("is_flag", true);
   },
 
-  topicCountDesc: ["topic_count:desc"],
   categoriesByCount: Ember.computed.sort("categories", "topicCountDesc"),
 
   collectUserFields(fields) {

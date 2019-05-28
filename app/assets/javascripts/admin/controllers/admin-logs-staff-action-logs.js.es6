@@ -6,9 +6,13 @@ import computed from "ember-addons/ember-computed-decorators";
 export default Ember.Controller.extend({
   loading: false,
   filters: null,
-  userHistoryActions: [],
-
   filtersExists: Ember.computed.gt("filterCount", 0),
+
+  init() {
+    this._super(...arguments);
+
+    this.userHistoryActions = [];
+  },
 
   filterActionIdChanged: function() {
     const filterActionId = this.filterActionId;

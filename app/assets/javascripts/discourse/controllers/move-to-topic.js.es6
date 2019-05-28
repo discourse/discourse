@@ -16,8 +16,18 @@ export default Ember.Controller.extend(ModalFunctionality, {
   existingTopic: Ember.computed.equal("selection", "existing_topic"),
   newMessage: Ember.computed.equal("selection", "new_message"),
   existingMessage: Ember.computed.equal("selection", "existing_message"),
-  moveTypes: ["newTopic", "existingTopic", "newMessage", "existingMessage"],
   participants: null,
+
+  init() {
+    this._super(...arguments);
+
+    this.saveAttrNames = [
+      "newTopic",
+      "existingTopic",
+      "newMessage",
+      "existingMessage"
+    ];
+  },
 
   topicController: Ember.inject.controller("topic"),
   selectedPostsCount: Ember.computed.alias(
