@@ -599,87 +599,99 @@ QUnit.test(
 );
 
 QUnit.test("Checks for existing draft", async assert => {
-  toggleCheckDraftPopup(true);
+  try {
+    toggleCheckDraftPopup(true);
 
-  // prettier-ignore
-  server.get("/draft.json", () => { // eslint-disable-line no-undef
-    return [ 200, { "Content-Type": "application/json" }, {
-      draft: "{\"reply\":\"This is a draft of the first post\",\"action\":\"reply\",\"categoryId\":1,\"archetypeId\":\"regular\",\"metaData\":null,\"composerTime\":2863,\"typingTime\":200}",
-      draft_sequence: 42
-    } ];
-  });
+    // prettier-ignore
+    server.get("/draft.json", () => { // eslint-disable-line no-undef
+      return [ 200, { "Content-Type": "application/json" }, {
+        draft: "{\"reply\":\"This is a draft of the first post\",\"action\":\"reply\",\"categoryId\":1,\"archetypeId\":\"regular\",\"metaData\":null,\"composerTime\":2863,\"typingTime\":200}",
+        draft_sequence: 42
+      } ];
+    });
 
-  await visit("/t/internationalization-localization/280");
+    await visit("/t/internationalization-localization/280");
 
-  await click(".topic-post:eq(0) button.show-more-actions");
-  await click(".topic-post:eq(0) button.edit");
+    await click(".topic-post:eq(0) button.show-more-actions");
+    await click(".topic-post:eq(0) button.edit");
 
-  assert.equal(find(".modal-body").text(), I18n.t("drafts.abandon.confirm"));
+    assert.equal(find(".modal-body").text(), I18n.t("drafts.abandon.confirm"));
 
-  await click(".modal-footer .btn.btn-default");
-
-  toggleCheckDraftPopup(false);
+    await click(".modal-footer .btn.btn-default");
+  } finally {
+    toggleCheckDraftPopup(false);
+  }
 });
 
 QUnit.test("Can switch states without abandon popup", async assert => {
-  const composerActions = selectKit(".composer-actions");
-  toggleCheckDraftPopup(true);
+  try {
+    const composerActions = selectKit(".composer-actions");
+    toggleCheckDraftPopup(true);
 
-  await visit("/t/internationalization-localization/280");
+    await visit("/t/internationalization-localization/280");
 
-  const longText = "a".repeat(256);
+    const longText = "a".repeat(256);
 
-  await click(".btn-primary.create.btn");
+    await click(".btn-primary.create.btn");
 
-  await fillIn(".d-editor-input", longText);
+    await fillIn(".d-editor-input", longText);
 
-  // prettier-ignore
-  server.get("/draft.json", () => { // eslint-disable-line no-undef
-    return [ 200, { "Content-Type": "application/json" }, {
-      draft: "{\"reply\":\"This is a draft of the first post\",\"action\":\"reply\",\"categoryId\":1,\"archetypeId\":\"regular\",\"metaData\":null,\"composerTime\":2863,\"typingTime\":200}",
-      draft_sequence: 42
-    } ];
-  });
+    // prettier-ignore
+    server.get("/draft.json", () => { // eslint-disable-line no-undef
+      return [ 200, { "Content-Type": "application/json" }, {
+        draft: "{\"reply\":\"This is a draft of the first post\",\"action\":\"reply\",\"categoryId\":1,\"archetypeId\":\"regular\",\"metaData\":null,\"composerTime\":2863,\"typingTime\":200}",
+        draft_sequence: 42
+      } ];
+    });
 
-  await click("article#post_3 button.reply");
+    await click("article#post_3 button.reply");
 
-  await composerActions.expand();
-  await composerActions.selectRowByValue("reply_to_topic");
+    await composerActions.expand();
+    await composerActions.selectRowByValue("reply_to_topic");
 
-  assert.equal(find(".modal-body").text(), "", "abandon popup shouldn't come");
+    assert.equal(
+      find(".modal-body").text(),
+      "",
+      "abandon popup shouldn't come"
+    );
 
-  assert.equal(
-    find(".d-editor-input").val(),
-    longText,
-    "entered text should still be there"
-  );
+    assert.equal(
+      find(".d-editor-input").val(),
+      longText,
+      "entered text should still be there"
+    );
 
-  assert.ok(
-    find('.action-title a[href="/t/internationalization-localization/280"]'),
-    "mode should have changed"
-  );
+    assert.ok(
+      find('.action-title a[href="/t/internationalization-localization/280"]'),
+      "mode should have changed"
+    );
 
-  assert.ok(find(".save-animation"), "save animation should show");
-
-  toggleCheckDraftPopup(false);
+    assert.ok(find(".save-animation"), "save animation should show");
+  } finally {
+    toggleCheckDraftPopup(false);
+  }
 });
 
 QUnit.test("Loading draft also replaces the recipients", async assert => {
-  toggleCheckDraftPopup(true);
+  try {
+    toggleCheckDraftPopup(true);
 
-  // prettier-ignore
-  server.get("/draft.json", () => { // eslint-disable-line no-undef
-    return [ 200, { "Content-Type": "application/json" }, {
-       "draft":"{\"reply\":\"hello\",\"action\":\"privateMessage\",\"title\":\"hello\",\"categoryId\":null,\"archetypeId\":\"private_message\",\"metaData\":null,\"usernames\":\"codinghorror\",\"composerTime\":9159,\"typingTime\":2500}",
-       "draft_sequence":0
-    } ];
-  });
+    // prettier-ignore
+    server.get("/draft.json", () => { // eslint-disable-line no-undef
+      return [ 200, { "Content-Type": "application/json" }, {
+         "draft":"{\"reply\":\"hello\",\"action\":\"privateMessage\",\"title\":\"hello\",\"categoryId\":null,\"archetypeId\":\"private_message\",\"metaData\":null,\"usernames\":\"codinghorror\",\"composerTime\":9159,\"typingTime\":2500}",
+         "draft_sequence":0
+      } ];
+    });
 
-  await visit("/u/charlie");
-  await click("button.compose-pm");
-  await click(".modal .btn-default");
+    await visit("/u/charlie");
+    await click("button.compose-pm");
+    await click(".modal .btn-default");
 
-  assert.equal(find(".users-input .item:eq(0)").text(), "codinghorror");
+    assert.equal(find(".users-input .item:eq(0)").text(), "codinghorror");
+  } finally {
+    toggleCheckDraftPopup(false);
+  }
 });
 
 QUnit.test(

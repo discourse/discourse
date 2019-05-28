@@ -131,39 +131,43 @@ QUnit.test("replying to post - reply_as_new_topic", async assert => {
 });
 
 QUnit.test("shared draft", async assert => {
-  toggleCheckDraftPopup(true);
+  try {
+    toggleCheckDraftPopup(true);
 
-  const composerActions = selectKit(".composer-actions");
-  const tags = selectKit(".mini-tag-chooser");
+    const composerActions = selectKit(".composer-actions");
+    const tags = selectKit(".mini-tag-chooser");
 
-  await visit("/");
-  await click("#create-topic");
+    await visit("/");
+    await click("#create-topic");
 
-  await fillIn(
-    "#reply-title",
-    "This is the new text for the title using 'quotes'"
-  );
-  await fillIn(".d-editor-input", "This is the new text for the post");
-  await tags.expand();
-  await tags.selectRowByValue("monkey");
+    await fillIn(
+      "#reply-title",
+      "This is the new text for the title using 'quotes'"
+    );
 
-  await composerActions.expand();
-  await composerActions.selectRowByValue("shared_draft");
+    await fillIn(".d-editor-input", "This is the new text for the post");
+    await tags.expand();
+    await tags.selectRowByValue("monkey");
+    await composerActions.expand();
+    await composerActions.selectRowByValue("shared_draft");
 
-  assert.equal(tags.header().value(), "monkey", "tags are not reset");
+    assert.equal(tags.header().value(), "monkey", "tags are not reset");
 
-  assert.equal(
-    find("#reply-title").val(),
-    "This is the new text for the title using 'quotes'"
-  );
+    assert.equal(
+      find("#reply-title").val(),
+      "This is the new text for the title using 'quotes'"
+    );
 
-  assert.equal(
-    find("#reply-control .btn-primary.create .d-button-label").text(),
-    I18n.t("composer.create_shared_draft")
-  );
-  assert.ok(find("#reply-control.composing-shared-draft").length === 1);
+    assert.equal(
+      find("#reply-control .btn-primary.create .d-button-label").text(),
+      I18n.t("composer.create_shared_draft")
+    );
 
-  toggleCheckDraftPopup(false);
+    assert.ok(find("#reply-control.composing-shared-draft").length === 1);
+    await click(".modal-footer .btn.btn-default");
+  } finally {
+    toggleCheckDraftPopup(false);
+  }
 });
 
 QUnit.test("hide component if no content", async assert => {
