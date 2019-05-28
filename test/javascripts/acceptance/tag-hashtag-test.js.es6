@@ -4,10 +4,6 @@ acceptance("Tag Hashtag", {
   loggedIn: true,
   settings: { tagging_enabled: true },
   pretend(server, helper) {
-    server.get("/tags/filter/search", () => {
-      return helper.response({ results: [{ text: "monkey", count: 1 }] });
-    });
-
     server.get("/tags/check", () => {
       return helper.response({
         valid: [{ value: "monkey", url: "/tags/monkey" }]
