@@ -95,7 +95,7 @@ MessageBus.on_disconnect do |site_id|
 end
 
 # Point at our redis
-MessageBus.redis_config = GlobalSetting.redis_config
+MessageBus.redis_config = GlobalSetting.message_bus_redis_config
 MessageBus.reliable_pub_sub.max_backlog_size = GlobalSetting.message_bus_max_backlog_size
 
 MessageBus.long_polling_enabled = SiteSetting.enable_long_polling
