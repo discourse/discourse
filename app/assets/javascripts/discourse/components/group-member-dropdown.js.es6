@@ -7,7 +7,12 @@ export default DropdownSelectBoxComponent.extend({
   showFullTitle: false,
   allowInitialValueMutation: false,
   allowAutoSelectFirst: false,
-  headerIcon: ["wrench"],
+
+  init() {
+    this._super(...arguments);
+
+    this.headerIcon = ["wrench"];
+  },
 
   autoHighlight() {},
 

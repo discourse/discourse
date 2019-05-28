@@ -4,8 +4,13 @@ import computed from "ember-addons/ember-computed-decorators";
 
 export default Ember.Controller.extend({
   pingDisabled: false,
-  incomingEventIds: [],
   incomingCount: Ember.computed.alias("incomingEventIds.length"),
+
+  init() {
+    this._super(...arguments);
+
+    this.incomingEventIds = [];
+  },
 
   @computed("incomingCount")
   hasIncoming(incomingCount) {

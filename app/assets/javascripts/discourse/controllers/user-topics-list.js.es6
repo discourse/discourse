@@ -6,10 +6,15 @@ export default Ember.Controller.extend({
 
   hideCategory: false,
   showPosters: false,
-  newIncoming: [],
   incomingCount: 0,
   channel: null,
   tagsForUser: null,
+
+  init() {
+    this._super(...arguments);
+
+    this.newIncoming = [];
+  },
 
   _showFooter: function() {
     this.set("application.showFooter", !this.get("model.canLoadMore"));

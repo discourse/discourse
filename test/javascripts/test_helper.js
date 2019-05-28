@@ -65,8 +65,6 @@ d.write(
   "<style>#ember-testing-container { position: absolute; background: white; bottom: 0; right: 0; width: 640px; height: 384px; overflow: auto; z-index: 9999; border: 1px solid #ccc; } #ember-testing { zoom: 50%; }</style>"
 );
 
-Ember.Test.adapter = window.QUnitAdapter.create();
-
 Discourse.rootElement = "#ember-testing";
 Discourse.setupForTesting();
 Discourse.injectTestHelpers();

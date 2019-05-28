@@ -18,17 +18,45 @@ export default Ember.Controller.extend(PreferencesTabController, {
     EMAIL_LEVELS.ONLY_WHEN_AWAY
   ),
 
-  saveAttrNames: [
-    "email_level",
-    "email_messages_level",
-    "mailing_list_mode",
-    "mailing_list_mode_frequency",
-    "email_digests",
-    "email_in_reply_to",
-    "email_previous_replies",
-    "digest_after_minutes",
-    "include_tl0_in_digests"
-  ],
+  init() {
+    this._super(...arguments);
+
+    this.saveAttrNames = [
+      "email_level",
+      "email_messages_level",
+      "mailing_list_mode",
+      "mailing_list_mode_frequency",
+      "email_digests",
+      "email_in_reply_to",
+      "email_previous_replies",
+      "digest_after_minutes",
+      "include_tl0_in_digests"
+    ];
+
+    this.previousRepliesOptions = [
+      { name: I18n.t("user.email_previous_replies.always"), value: 0 },
+      { name: I18n.t("user.email_previous_replies.unless_emailed"), value: 1 },
+      { name: I18n.t("user.email_previous_replies.never"), value: 2 }
+    ];
+
+    this.emailLevelOptions = [
+      { name: I18n.t("user.email_level.always"), value: EMAIL_LEVELS.ALWAYS },
+      {
+        name: I18n.t("user.email_level.only_when_away"),
+        value: EMAIL_LEVELS.ONLY_WHEN_AWAY
+      },
+      { name: I18n.t("user.email_level.never"), value: EMAIL_LEVELS.NEVER }
+    ];
+
+    this.digestFrequencies = [
+      { name: I18n.t("user.email_digests.every_30_minutes"), value: 30 },
+      { name: I18n.t("user.email_digests.every_hour"), value: 60 },
+      { name: I18n.t("user.email_digests.daily"), value: 1440 },
+      { name: I18n.t("user.email_digests.weekly"), value: 10080 },
+      { name: I18n.t("user.email_digests.every_month"), value: 43200 },
+      { name: I18n.t("user.email_digests.every_six_months"), value: 259200 }
+    ];
+  },
 
   @computed()
   frequencyEstimate() {
@@ -49,30 +77,6 @@ export default Ember.Controller.extend(PreferencesTabController, {
       { name: I18n.t("user.mailing_list_mode.individual_no_echo"), value: 2 }
     ];
   },
-
-  previousRepliesOptions: [
-    { name: I18n.t("user.email_previous_replies.always"), value: 0 },
-    { name: I18n.t("user.email_previous_replies.unless_emailed"), value: 1 },
-    { name: I18n.t("user.email_previous_replies.never"), value: 2 }
-  ],
-
-  emailLevelOptions: [
-    { name: I18n.t("user.email_level.always"), value: EMAIL_LEVELS.ALWAYS },
-    {
-      name: I18n.t("user.email_level.only_when_away"),
-      value: EMAIL_LEVELS.ONLY_WHEN_AWAY
-    },
-    { name: I18n.t("user.email_level.never"), value: EMAIL_LEVELS.NEVER }
-  ],
-
-  digestFrequencies: [
-    { name: I18n.t("user.email_digests.every_30_minutes"), value: 30 },
-    { name: I18n.t("user.email_digests.every_hour"), value: 60 },
-    { name: I18n.t("user.email_digests.daily"), value: 1440 },
-    { name: I18n.t("user.email_digests.weekly"), value: 10080 },
-    { name: I18n.t("user.email_digests.every_month"), value: 43200 },
-    { name: I18n.t("user.email_digests.every_six_months"), value: 259200 }
-  ],
 
   @computed()
   emailFrequencyInstructions() {

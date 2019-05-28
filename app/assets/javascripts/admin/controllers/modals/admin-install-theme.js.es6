@@ -121,12 +121,17 @@ export default Ember.Controller.extend(ModalFunctionality, {
   urlPlaceholder: "https://github.com/discourse/sample_theme",
   advancedVisible: false,
   themesController: Ember.inject.controller("adminCustomizeThemes"),
-  createTypes: [
-    { name: I18n.t("admin.customize.theme.theme"), value: THEMES },
-    { name: I18n.t("admin.customize.theme.component"), value: COMPONENTS }
-  ],
   selectedType: Ember.computed.alias("themesController.currentTab"),
   component: Ember.computed.equal("selectedType", COMPONENTS),
+
+  init() {
+    this._super(...arguments);
+
+    this.createTypes = [
+      { name: I18n.t("admin.customize.theme.theme"), value: THEMES },
+      { name: I18n.t("admin.customize.theme.component"), value: COMPONENTS }
+    ];
+  },
 
   @computed("themesController.installedThemes")
   themes(installedThemes) {

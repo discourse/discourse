@@ -5,9 +5,13 @@ const MAX_FIELDS = 20;
 export default Ember.Controller.extend({
   fieldTypes: null,
   createDisabled: Ember.computed.gte("model.length", MAX_FIELDS),
-
-  fieldSortOrder: ["position"],
   sortedFields: Ember.computed.sort("model", "fieldSortOrder"),
+
+  init() {
+    this._super(...arguments);
+
+    this.fieldSortOrder = ["position"];
+  },
 
   actions: {
     createField() {

@@ -4,7 +4,12 @@ import Category from "discourse/models/category";
 import computed from "ember-addons/ember-computed-decorators";
 
 export default buildCategoryPanel("general", {
-  foregroundColors: ["FFFFFF", "000000"],
+  init() {
+    this._super(...arguments);
+
+    this.foregroundColors = ["FFFFFF", "000000"];
+  },
+
   canSelectParentCategory: Ember.computed.not(
     "category.isUncategorizedCategory"
   ),

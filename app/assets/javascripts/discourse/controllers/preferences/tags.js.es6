@@ -3,12 +3,16 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import computed from "ember-addons/ember-computed-decorators";
 
 export default Ember.Controller.extend(PreferencesTabController, {
-  saveAttrNames: [
-    "muted_tags",
-    "tracked_tags",
-    "watched_tags",
-    "watching_first_post_tags"
-  ],
+  init() {
+    this._super(...arguments);
+
+    this.saveAttrNames = [
+      "muted_tags",
+      "tracked_tags",
+      "watched_tags",
+      "watching_first_post_tags"
+    ];
+  },
 
   @computed(
     "model.watched_tags.[]",

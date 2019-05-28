@@ -7,9 +7,13 @@ export default Ember.Controller.extend(GrantBadgeController, {
   user: Ember.computed.alias("adminUser.model"),
   userBadges: Ember.computed.alias("model"),
   allBadges: Ember.computed.alias("badges"),
-
   sortedBadges: Ember.computed.sort("model", "badgeSortOrder"),
-  badgeSortOrder: ["granted_at:desc"],
+
+  init() {
+    this._super(...arguments);
+
+    this.badgeSortOrder = ["granted_at:desc"];
+  },
 
   @computed("model", "model.[]", "model.expandedBadges.[]")
   groupedBadges() {
