@@ -39,6 +39,8 @@ class PostCreator
   #                             dequeue before the commit finishes. If you do this, be sure to
   #                             call `enqueue_jobs` after the transaction is comitted.
   #   hidden_reason_id        - Reason for hiding the post (optional)
+  #   fake_reads              - If a user has read the previous post, should we pretend they read
+  #                             this one too? (default false)
   #
   #   When replying to a topic:
   #     topic_id              - topic we're replying to
@@ -83,6 +85,10 @@ class PostCreator
 
   def skip_validations?
     @opts[:skip_validations]
+  end
+
+  def fake_reads?
+    @opts.fetch(:fake_reads, false)
   end
 
   def guardian
@@ -224,7 +230,8 @@ class PostCreator
 
     PostJobsEnqueuer.new(@post, @topic, new_topic?,
       import_mode: @opts[:import_mode],
-      post_alert_options: @opts[:post_alert_options]
+      post_alert_options: @opts[:post_alert_options],
+      fake_reads: fake_reads?
     ).enqueue_jobs
   end
 

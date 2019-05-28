@@ -362,6 +362,22 @@ class TopicUser < ActiveRecord::Base
       end
     end
 
+    # Causes user reads on `post_number` if they have read `post_number - 1`
+    def fake_user_reads(topic_id, post_number)
+      DB.exec(
+        "
+          UPDATE topic_users
+            SET
+              last_read_post_number = :post_number,
+              highest_seen_post_number = GREATEST(highest_seen_post_number, :post_number)
+            WHERE
+              topic_id = :topic_id AND
+              last_read_post_number = :post_number - 1
+        ",
+        topic_id: topic_id,
+        post_number: post_number
+      )
+    end
   end
 
   def self.update_post_action_cache(opts = {})

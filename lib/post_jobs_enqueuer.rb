@@ -27,6 +27,10 @@ class PostJobsEnqueuer
 
   private
 
+  def fake_reads?
+    @opts.fetch(:fake_reads, false)
+  end
+
   def enqueue_post_alerts
     Jobs.enqueue(:post_alert,
       post_id: @post.id,
@@ -46,6 +50,7 @@ class PostJobsEnqueuer
   def after_post_create
     TopicTrackingState.publish_unread(@post) if @post.post_number > 1
     TopicTrackingState.publish_latest(@topic, @post.whisper?)
+    TopicUser.fake_user_reads(@topic.id, @post.post_number) if fake_reads?
 
     Jobs.enqueue_in(SiteSetting.email_time_window_mins.minutes,
       :notify_mailing_list_subscribers,

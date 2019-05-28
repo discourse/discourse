@@ -1131,6 +1131,61 @@ describe PostCreator do
     end
   end
 
+  context 'with fake reads' do
+    fab!(:topic) { Fabricate(:topic) }
+    fab!(:first_post) { Fabricate(:post, topic: topic) }
+    fab!(:second_post) { Fabricate(:post, topic: topic) }
+    fab!(:new_poster) { Fabricate(:user) }
+
+    fab!(:avid_watcher) { Fabricate(:user) }
+    fab!(:avid_topic_user) do
+      Fabricate(
+        :topic_user,
+        topic: topic,
+        user: avid_watcher,
+        notification_level: TopicUser.notification_levels[:watching],
+        last_read_post_number: 2,
+        highest_seen_post_number: 2,
+      )
+    end
+
+    fab!(:apathetic_watcher) { Fabricate(:user) }
+    fab!(:apathetic_topic_user) do
+      Fabricate(
+        :topic_user,
+        topic: topic,
+        user: apathetic_watcher,
+        notification_level: TopicUser.notification_levels[:watching],
+        last_read_post_number: 1,
+        highest_seen_post_number: 1,
+      )
+    end
+
+    it "updates the avid watcher" do
+      PostCreator.create!(
+        new_poster,
+        topic_id: topic.id,
+        skip_validations: true,
+        fake_reads: true,
+      )
+
+      expect(avid_topic_user.last_read_post_number).to eq(3)
+      expect(avid_topic_user.highest_seen_post_number).to eq(3)
+    end
+
+    it "does not update the apathetic watcher" do
+      PostCreator.create!(
+        new_poster,
+        topic_id: topic.id,
+        skip_validations: true,
+        fake_reads: true,
+      )
+
+      expect(apathetic_topic_user.last_read_post_number).to eq(1)
+      expect(apathetic_topic_user.highest_seen_post_number).to eq(1)
+    end
+  end
+
   describe '#create!' do
     it "should return the post if it was successfully created" do
       title = "This is a valid title"
