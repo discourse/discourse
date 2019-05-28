@@ -50,7 +50,7 @@ class DiscourseIpInfo
       Rails.logger.warn("MaxMindDB (#{filepath}) could not be found: #{e}")
       nil
     rescue => e
-      Discourse.warn_exception(e, "MaxMindDB (#{filepath}) could not be loaded.")
+      Discourse.warn_exception(e, message: "MaxMindDB (#{filepath}) could not be loaded.")
       nil
     end
   end
