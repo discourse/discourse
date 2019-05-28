@@ -49,7 +49,7 @@ module PrettyText
       end
     end
 
-    def lookup_upload_urls(urls)
+    def lookup_image_urls(urls)
       map = {}
       result = {}
 
@@ -66,16 +66,11 @@ module PrettyText
           reverse_map[value] << key
         end
 
-        Upload.where(sha1: map.values).pluck(:sha1, :url, :extension).each do |row|
-          sha1, url, extension = row
+        Upload.where(sha1: map.values).pluck(:sha1, :url).each do |row|
+          sha1, url = row
 
           if short_urls = reverse_map[sha1]
-            short_urls.each do |short_url|
-              result[short_url] = {
-                url: url,
-                short_path: Upload.short_path(sha1: sha1, extension: extension)
-              }
-            end
+            short_urls.each { |short_url| result[short_url] = url }
           end
         end
       end

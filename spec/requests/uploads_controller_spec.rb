@@ -3,8 +3,6 @@
 require 'rails_helper'
 
 describe UploadsController do
-  fab!(:user) { Fabricate(:user) }
-
   describe '#create' do
     it 'requires you to be logged in' do
       post "/uploads.json"
@@ -12,9 +10,7 @@ describe UploadsController do
     end
 
     context 'logged in' do
-      before do
-        sign_in(user)
-      end
+      let!(:user) { sign_in(Fabricate(:user)) }
 
       let(:logo) do
         Rack::Test::UploadedFile.new(file_from_fixtures("logo.png"))
@@ -199,26 +195,27 @@ describe UploadsController do
     end
   end
 
-  def upload_file(file, folder = "images")
-    fake_logo = Rack::Test::UploadedFile.new(file_from_fixtures(file, folder))
-    SiteSetting.authorized_extensions = "*"
-    sign_in(user)
-
-    post "/uploads.json", params: {
-      file: fake_logo,
-      type: "composer",
-    }
-
-    expect(response.status).to eq(200)
-
-    url = JSON.parse(response.body)["url"]
-    upload = Upload.get_from_url(url)
-    upload
-  end
-
   describe '#show' do
     let(:site) { "default" }
     let(:sha) { Digest::SHA1.hexdigest("discourse") }
+    fab!(:user) { Fabricate(:user) }
+
+    def upload_file(file, folder = "images")
+      fake_logo = Rack::Test::UploadedFile.new(file_from_fixtures(file, folder))
+      SiteSetting.authorized_extensions = "*"
+      sign_in(user)
+
+      post "/uploads.json", params: {
+        file: fake_logo,
+        type: "composer",
+      }
+
+      expect(response.status).to eq(200)
+
+      url = JSON.parse(response.body)["url"]
+      upload = Upload.where(url: url).first
+      upload
+    end
 
     context "when using external storage" do
       fab!(:upload) { upload_file("small.pdf", "pdf") }
@@ -287,7 +284,7 @@ describe UploadsController do
       it "returns 404 when an anonymous user tries to download a file" do
         skip("this only works when nginx/apache is asset server") if Discourse::Application.config.public_file_server.enabled
         upload = upload_file("small.pdf", "pdf")
-        delete "/session/#{user.username}.json"
+        delete "/session/#{user.username}.json" # upload a file, then sign out
 
         SiteSetting.prevent_anons_from_downloading_files = true
         get upload.url
@@ -296,66 +293,9 @@ describe UploadsController do
     end
   end
 
-  describe "#show_short" do
-    describe "local store" do
-      fab!(:image_upload) { upload_file("smallest.png") }
-
-      it "returns the right response" do
-        get image_upload.short_path
-
-        expect(response.status).to eq(200)
-
-        expect(response.headers["Content-Disposition"])
-          .to include("attachment; filename=\"#{image_upload.original_filename}\"")
-      end
-
-      it "returns the right response when `inline` param is given" do
-        get "#{image_upload.short_path}?inline=1"
-
-        expect(response.status).to eq(200)
-
-        expect(response.headers["Content-Disposition"])
-          .to include("inline; filename=\"#{image_upload.original_filename}\"")
-      end
-
-      it "returns the right response when base62 param is invalid " do
-        get "/uploads/short-url/12345.png"
-
-        expect(response.status).to eq(404)
-      end
-
-      it "returns the right response when anon tries to download a file " \
-         "when prevent_anons_from_downloading_files is true" do
-
-        delete "/session/#{user.username}.json"
-        SiteSetting.prevent_anons_from_downloading_files = true
-
-        get image_upload.short_path
-
-        expect(response.status).to eq(404)
-      end
-    end
-
-    describe "s3 store" do
-      let(:upload) { Fabricate(:upload_s3) }
-
-      before do
-        SiteSetting.enable_s3_uploads = true
-        SiteSetting.s3_access_key_id = "fakeid7974664"
-        SiteSetting.s3_secret_access_key = "fakesecretid7974664"
-      end
-
-      it "should redirect to the s3 URL" do
-        get upload.short_path
-
-        expect(response).to redirect_to(upload.url)
-      end
-    end
-  end
-
   describe '#lookup_urls' do
     it 'can look up long urls' do
-      sign_in(user)
+      sign_in(Fabricate(:user))
       upload = Fabricate(:upload)
 
       post "/uploads/lookup-urls.json", params: { short_urls: [upload.short_url] }
@@ -363,7 +303,6 @@ describe UploadsController do
 
       result = JSON.parse(response.body)
       expect(result[0]["url"]).to eq(upload.url)
-      expect(result[0]["short_path"]).to eq(upload.short_path)
     end
   end
 
@@ -388,7 +327,7 @@ describe UploadsController do
 
     describe 'when signed in' do
       before do
-        sign_in(user)
+        sign_in(Fabricate(:user))
       end
 
       describe 'when url is invalid' do

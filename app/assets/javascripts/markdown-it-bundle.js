@@ -14,6 +14,6 @@
 //= require ./pretty-text/engines/discourse-markdown/newline
 //= require ./pretty-text/engines/discourse-markdown/html-img
 //= require ./pretty-text/engines/discourse-markdown/text-post-process
-//= require ./pretty-text/engines/discourse-markdown/upload-protocol
+//= require ./pretty-text/engines/discourse-markdown/image-protocol
 //= require ./pretty-text/engines/discourse-markdown/inject-line-number
 //= require ./pretty-text/engines/discourse-markdown/d-wrap
