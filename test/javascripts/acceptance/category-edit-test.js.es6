@@ -40,7 +40,7 @@ QUnit.test("Editing the category", async assert => {
   );
 });
 
-QUnit.test("Edit the description without loosing progress", async assert => {
+QUnit.skip("Edit the description without loosing progress", async assert => {
   let win = { focus: function() {} };
   let windowOpen = sandbox.stub(window, "open").returns(win);
   sandbox.stub(win, "focus");

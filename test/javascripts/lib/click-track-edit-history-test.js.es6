@@ -89,7 +89,7 @@ QUnit.test("tracks external URLs", async assert => {
   assert.notOk(track(generateClickEventOn("a")));
 });
 
-QUnit.test(
+QUnit.skip(
   "tracks external URLs when opening in another window",
   async assert => {
     assert.expect(3);
