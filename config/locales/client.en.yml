@@ -392,7 +392,7 @@ en:
       title: "Review"
       topic: "Topic:"
       filtered_topic: "You have filtered to reviewable content in a single topic."
-      filtered_user: "User:"
+      filtered_user: "User"
       show_all_topics: "show all topics"
       deleted_post: "(post deleted)"
       deleted_user: "(user deleted)"
@@ -435,14 +435,14 @@ en:
 
       filters:
         type:
-          title: "Type:"
+          title: "Type"
           all: "(all types)"
         minimum_score: "Minimum Score:"
         refresh: "Refresh"
-        status: "Status:"
-        category: "Category:"
+        status: "Status"
+        category: "Category"
         priority:
-          title: "Minimum Priority:"
+          title: "Minimum Priority"
           low: "Low"
           medium: "Medium"
           high: "High"
