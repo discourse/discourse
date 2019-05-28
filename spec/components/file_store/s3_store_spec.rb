@@ -77,6 +77,30 @@ describe FileStore::S3Store do
           expect(upload.etag).to eq(etag)
         end
       end
+
+      describe "when private uploads are enabled" do
+        let(:uploaded_pdf) { file_from_fixtures("small.pdf", "pdf") }
+        fab!(:file_upload) do
+          SiteSetting.prevent_anons_from_downloading_files = true
+          SiteSetting.authorized_extensions = "pdf|png|jpg|gif"
+          Fabricate(:upload, original_filename: "small.pdf", extension: "pdf")
+        end
+
+        it "returns signed URL for private uploads" do
+          SiteSetting.prevent_anons_from_downloading_files = true
+
+          s3_helper.expects(:s3_bucket).returns(s3_bucket).at_least_once
+
+          stub_request(:head, "https://s3-upload-bucket.s3.us-west-1.amazonaws.com/")
+
+          expect(store.store_upload(uploaded_pdf, file_upload)).to eq(
+            "//s3-upload-bucket.s3.dualstack.us-west-1.amazonaws.com/original/1X/#{file_upload.sha1}.pdf"
+          )
+
+          expect(Discourse.store.path_for(file_upload)).to match(/Amz-Credential/)
+          expect(Discourse.store.path_for(file_upload)).to match(/#{file_upload.sha1}/)
+        end
+      end
     end
 
     describe "#store_optimized_image" do

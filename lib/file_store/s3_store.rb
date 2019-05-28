@@ -21,7 +21,7 @@ module FileStore
 
     def store_upload(file, upload, content_type = nil)
       path = get_path_for_upload(upload)
-      url, upload.etag = store_file(file, path, filename: upload.original_filename, content_type: content_type, cache_locally: true)
+      url, upload.etag = store_file(file, path, filename: upload.original_filename, content_type: content_type, cache_locally: true, private: upload.private?)
       url
     end
 
@@ -41,9 +41,8 @@ module FileStore
       filename = opts[:filename].presence || File.basename(path)
       # cache file locally when needed
       cache_file(file, File.basename(path)) if opts[:cache_locally]
-      # stored uploaded are public by default
       options = {
-        acl: "public-read",
+        acl: opts[:private] ? "private" : "public-read",
         content_type: opts[:content_type].presence || MiniMime.lookup_by_filename(filename)&.content_type
       }
       # add a "content disposition" header for "attachments"
@@ -103,6 +102,18 @@ module FileStore
     def path_for(upload)
       url = upload&.url
       FileStore::LocalStore.new.path_for(upload) if url && url[/^\/[^\/]/]
+    end
+
+    def url_for(upload)
+      if upload.private?
+        expires = S3Helper::DOWNLOAD_URL_EXPIRES_AFTER_SECONDS
+        obj = @s3_helper.object(get_path_for_upload(upload))
+        url = obj.presigned_url(:get, expires_in: expires)
+      else
+        url = upload&.url
+      end
+
+      url
     end
 
     def cdn_url(url)
