@@ -3510,6 +3510,7 @@ en:
     png_to_jpg_conversion_failure_message: "An error happened when converting from PNG to JPG."
     attachments:
       too_large: "Sorry, the file you are trying to upload is too big (maximum size is %{max_size_kb}KB)."
+      edit_reason: "corrected attachment links to markdown format"
     images:
       too_large: "Sorry, the image you are trying to upload is too big (maximum size is %{max_size_kb}KB), please resize it and try again."
       larger_than_x_megapixels: "Sorry, the image you are trying to upload is too large (maximum dimension is %{max_image_megapixels}-megapixels), please resize it and try again."

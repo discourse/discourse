@@ -5,17 +5,17 @@ require "cooked_post_processor"
 require "file_store/s3_store"
 
 describe CookedPostProcessor do
-  context "#post_process" do
-    fab!(:upload) { Fabricate(:upload) }
+  fab!(:upload) { Fabricate(:upload) }
 
-    fab!(:post) do
+  context "#post_process" do
+    let(:cpp) { CookedPostProcessor.new(post, disable_loading_image: true) }
+    let(:post_process) { sequence("post_process") }
+
+    let(:post) do
       Fabricate(:post, raw: <<~RAW)
       <img src="#{upload.url}">
       RAW
     end
-
-    let(:cpp) { CookedPostProcessor.new(post, disable_loading_image: true) }
-    let(:post_process) { sequence("post_process") }
 
     it "post process in sequence" do
       cpp.expects(:post_process_oneboxes).in_sequence(post_process)
@@ -404,8 +404,6 @@ describe CookedPostProcessor do
       end
 
       context "with large images" do
-        fab!(:upload) { Fabricate(:upload) }
-
         fab!(:post) do
           Fabricate(:post, raw: <<~HTML)
           <img src="#{upload.url}">
@@ -482,8 +480,6 @@ describe CookedPostProcessor do
       end
 
       context "with tall images" do
-        fab!(:upload) { Fabricate(:upload) }
-
         fab!(:post) do
           Fabricate(:post, raw: <<~HTML)
           <img src="#{upload.url}">
@@ -510,8 +506,6 @@ describe CookedPostProcessor do
       end
 
       context "with iPhone X screenshots" do
-        fab!(:upload) { Fabricate(:upload) }
-
         fab!(:post) do
           Fabricate(:post, raw: <<~HTML)
           <img src="#{upload.url}">
@@ -543,8 +537,6 @@ describe CookedPostProcessor do
       end
 
       context "with large images when using subfolders" do
-        fab!(:upload) { Fabricate(:upload) }
-
         fab!(:post) do
           Fabricate(:post, raw: <<~HTML)
           <img src="/subfolder#{upload.url}">
@@ -592,8 +584,6 @@ describe CookedPostProcessor do
       end
 
       context "with title" do
-        fab!(:upload) { Fabricate(:upload) }
-
         fab!(:post) do
           Fabricate(:post, raw: <<~HTML)
           <img src="#{upload.url}" title="WAT">
@@ -650,6 +640,31 @@ describe CookedPostProcessor do
           reply.reload
           expect(reply.image_url).to be_present
         end
+      end
+    end
+
+    describe 'when posts contains attachment' do
+      it "should enqueue the right job for a post with upload attachment links" do
+        post = Fabricate(:post, raw: <<~RAW)
+        <a class="attachment" href="#{upload.url}">test</a>
+        RAW
+
+        expect { CookedPostProcessor.new(post).post_process }
+          .to change { Jobs::ReviseAttachmentLinks.jobs.count }.by(1)
+
+        post = Fabricate(:post, raw: "<a href=\"#{upload.url}\">test</a>")
+
+        expect { CookedPostProcessor.new(post).post_process }
+          .to change { Jobs::ReviseAttachmentLinks.jobs.count }.by(1)
+      end
+
+      it "should not enqueue job for a post with random links" do
+        post = Fabricate(:post, raw: <<~RAW)
+        <a class="attachment" href="https://somewhere.com/test.png">test</a>
+        RAW
+
+        expect { CookedPostProcessor.new(post).post_process }
+          .to change { Jobs::ReviseAttachmentLinks.jobs.count }.by(0)
       end
     end
   end

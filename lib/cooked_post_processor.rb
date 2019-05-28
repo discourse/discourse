@@ -48,6 +48,7 @@ class CookedPostProcessor
       pull_hotlinked_images(bypass_bump)
       grant_badges
       @post.link_post_uploads(fragments: @doc)
+      correct_raw_attachment_links
       DiscourseEvent.trigger(:post_process_cooked, @doc, @post)
       nil
     end
@@ -678,6 +679,18 @@ class CookedPostProcessor
   end
 
   private
+
+  def correct_raw_attachment_links
+    if @doc.css("a[href]").present? && @post.uploads.present?
+      Jobs.cancel_scheduled_job(:revise_attachment_links, post_id: @post.id)
+
+      Jobs.enqueue_in(
+        SiteSetting.editing_grace_period + 1.seconds.to_i,
+        :revise_attachment_links,
+        post_id: @post.id
+      )
+    end
+  end
 
   def post_process_images
     extract_images.each do |img|
