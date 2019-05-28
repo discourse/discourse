@@ -54,7 +54,7 @@ const isInside = (text, regex) => {
 
 class Toolbar {
   constructor(opts) {
-    const { site, siteSettings } = opts;
+    const { siteSettings } = opts;
     this.shortcuts = {};
     this.context = null;
 
