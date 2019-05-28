@@ -123,7 +123,8 @@ class UserAvatarsController < ApplicationController
       return redirect_to cdn_path(avatar_url)
     elsif upload && optimized = get_optimized_image(upload, size)
       if optimized.local?
-        optimized_path = Discourse.store.path_for(optimized)
+        local_store = FileStore::LocalStore.new
+        optimized_path = local_store.path_for(optimized)
         image = optimized_path if File.exists?(optimized_path)
       else
         return proxy_avatar(Discourse.store.cdn_url(optimized.url), upload.created_at)
