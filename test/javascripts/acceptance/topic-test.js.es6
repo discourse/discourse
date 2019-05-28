@@ -7,18 +7,6 @@ acceptance("Topic", {
     server.put("/posts/398/wiki", () => {
       return helper.response({});
     });
-
-    server.get("/topics/feature_stats.json", () => {
-      return helper.response({
-        pinned_in_category_count: 0,
-        pinned_globally_count: 0,
-        banner_count: 0
-      });
-    });
-
-    server.put("/t/280/make-banner", () => {
-      return helper.response({});
-    });
   }
 });
 

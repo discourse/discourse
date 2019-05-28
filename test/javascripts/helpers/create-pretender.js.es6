@@ -85,6 +85,10 @@ export default function() {
       });
     });
 
+    this.get("/tags/filter/search", () => {
+      return response({ results: [{ text: "monkey", count: 1 }] });
+    });
+
     this.get(`/u/:username/emails.json`, () => {
       return response({ email: "eviltrout@example.com" });
     });
@@ -136,6 +140,25 @@ export default function() {
 
     this.get("/topics/private-messages/eviltrout.json", () => {
       return response({ topic_list: { topics: [] } });
+    });
+
+    this.get("/topics/feature_stats.json", () => {
+      return response({
+        pinned_in_category_count: 0,
+        pinned_globally_count: 0,
+        banner_count: 0
+      });
+    });
+
+    this.put("/t/280/make-banner", () => {
+      return response({});
+    });
+
+    this.put("/t/internationalization-localization/280/status", () => {
+      return response({
+        success: "OK",
+        topic_status_update: null
+      });
     });
 
     this.post("/clicks/track", success);
