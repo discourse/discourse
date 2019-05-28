@@ -84,6 +84,18 @@
       margin-left: auto;
       flex: 1 1 auto;
     }
+
+    .mobile-file-upload {
+      order: 2;
+      &.hidden + .mobile-preview {
+        // Hide preview button while file is uploading to make room for upload progress
+        display: none;
+      }
+    }
+
+    .mobile-preview {
+      margin-left: 0.25em;
+    }
   }
 
   .d-editor-textarea-wrapper {
