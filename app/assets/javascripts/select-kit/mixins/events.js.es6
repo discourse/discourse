@@ -148,17 +148,17 @@ export default Ember.Mixin.create({
   didInsertElement() {
     this._super(...arguments);
 
-    $(document).on("mousedown.select-kit", this._mouseDownHandler);
+    $(document).on("mousedown.select-kit", this._mouseDownHandler.bind(this));
 
     this.$header()
       .on("blur.select-kit", this._blurHeaderHandler.bind(this))
       .on("focus.select-kit", this._focusHeaderHandler.bind(this))
       .on("keydown.select-kit", this._keydownHeaderHandler.bind(this))
-      .on("keypress.select-kit", this._keypressHeaderHandler);
+      .on("keypress.select-kit", this._keypressHeaderHandler.bind(this));
 
     this.$filterInput()
       .on("change.select-kit", this._changeFilterInputHandler.bind(this))
-      .on("keypress.select-kit", this._keypressFilterInputHandler)
+      .on("keypress.select-kit", this._keypressFilterInputHandler.bind(this))
       .on("focusout.select-kit", this._focusoutFilterInputHandler.bind(this))
       .on("keydown.select-kit", this._keydownFilterInputHandler.bind(this));
   },
