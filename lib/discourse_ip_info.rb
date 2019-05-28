@@ -30,7 +30,9 @@ class DiscourseIpInfo
     gz_file = FileHelper.download(
       "https://geolite.maxmind.com/geoip/databases/#{name}/update",
       max_file_size: 100.megabytes,
-      tmp_file_name: "#{name}.gz"
+      tmp_file_name: "#{name}.gz",
+      validate_uri: false,
+      follow_redirect: false
     )
 
     Discourse::Utils.execute_command("gunzip", gz_file.path)

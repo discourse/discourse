@@ -33,6 +33,37 @@ describe FileHelper do
       end.to raise_error(OpenURI::HTTPError, "404 Error: 404")
     end
 
+    it "does not follow redirects if instructed not to" do
+      url2 = "https://test.com/image.png"
+      stub_request(:get, url).to_return(status: 302, body: "", headers: { location: url2 })
+
+      missing = FileHelper.download(
+        url,
+        max_file_size: 10000,
+        tmp_file_name: 'trouttmp',
+        follow_redirect: false
+      )
+
+      expect(missing).to eq(nil)
+    end
+
+    it "does follow redirects if instructed to" do
+      url2 = "https://test.com/image.png"
+      stub_request(:get, url).to_return(status: 302, body: "", headers: { location: url2 })
+      stub_request(:get, url2).to_return(status: 200, body: "i am the body")
+
+      found = FileHelper.download(
+        url,
+        max_file_size: 10000,
+        tmp_file_name: 'trouttmp',
+        follow_redirect: true
+      )
+
+      expect(found.read).to eq("i am the body")
+      found.close
+      found.unlink
+    end
+
     it "correctly raises an OpenURI HTTP error if it gets a 404" do
       url = "http://fourohfour.com/404"
 

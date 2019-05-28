@@ -28,6 +28,7 @@ class FileHelper
                     read_timeout: 5,
                     skip_rate_limit: false,
                     verbose: false,
+                    validate_uri: true,
                     retain_on_max_file_size_exceeded: false)
 
     url = "https:" + url if url.start_with?("//")
@@ -37,9 +38,10 @@ class FileHelper
 
     fd = FinalDestination.new(
       url,
-      max_redirects: follow_redirect ? 5 : 1,
+      max_redirects: follow_redirect ? 5 : 0,
       skip_rate_limit: skip_rate_limit,
-      verbose: verbose
+      verbose: verbose,
+      validate_uri: validate_uri
     )
 
     fd.get do |response, chunk, uri|
