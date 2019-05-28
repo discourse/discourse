@@ -459,6 +459,18 @@ def missing_uploads
     puts "#{old_scheme_upload_count} of #{missing[:uploads].count} are old scheme uploads." if old_scheme_upload_count > 0
     puts "#{missing[:post_uploads].count} of #{Post.count} posts are affected.", ""
 
+    if ENV['GIVE_UP'] == "1"
+      missing[:post_uploads].each do |id, uploads|
+        post = Post.with_deleted.find_by(id: id)
+        if post
+          puts "#{post.full_url} giving up on #{uploads.length} upload/s"
+          PostCustomField.create!(post_id: post.id, name: Post::MISSING_UPLOADS_IGNORED, value: "t")
+        else
+          puts "could not find post #{id}"
+        end
+      end
+    end
+
     if ENV['VERBOSE'] == "1"
       puts "missing uploads!"
       missing[:uploads].each do |path|
@@ -532,7 +544,7 @@ def recover_uploads_from_index(path)
   db = RailsMultisite::ConnectionManagement.current_db
   cdn_path = SiteSetting.cdn_path("/uploads/#{db}").sub(/https?:/, "")
   Post.where("cooked LIKE '%#{cdn_path}%'").each do |post|
-    regex = Regexp.new("((https?)?#{Regexp.escape(cdn_path)}[^,;\t\n\s)\"\']+)")
+    regex = Regexp.new("((https?:)?#{Regexp.escape(cdn_path)}[^,;\\]\\>\\t\\n\\s)\"\']+)")
     uploads = []
     post.raw.scan(regex).each do |match|
       uploads << match[0]
@@ -540,6 +552,9 @@ def recover_uploads_from_index(path)
 
     if uploads.length > 0
       lookup << [post.id, uploads]
+    else
+      print "."
+      post.rebake!
     end
   end
 
@@ -556,6 +571,16 @@ def recover_uploads_from_index(path)
       end
       if raw.scan(upload).length == 0
         upload = upload.sub(Discourse.base_url + "/", "/")
+      end
+      if raw.scan(upload).length == 0
+        # last resort, try for sha
+        sha = upload.split("/")[-1]
+        sha = sha.split(".")[0]
+
+        if sha.length == 40 && raw.scan(sha).length == 1
+          raw.match(Regexp.new("([^\"'<\\s\\n]+#{sha}[^\"'>\\s\\n]+)"))
+          upload = $1
+        end
       end
       if raw.scan(upload).length == 0
         puts "can not find #{orig} in\n\n#{raw}"
@@ -579,9 +604,9 @@ def recover_uploads_from_index(path)
         next
       end
 
-      name = File.basename(url).split("_")[0]
+      name = File.basename(url).split("_")[0].split(".")[0]
       puts "Searching for #{url} (#{name}) in index"
-      if name.length < 40
+      if name.length != 40
         puts "Skipping #{url} in #{post.full_url} cause it appears to have a short file name"
         next
       end
