@@ -971,16 +971,6 @@ export default Ember.Component.extend({
         sendAction: this.onExpandPopupMenuOptions.bind(this),
         popupMenu: true
       });
-
-      if (this.site.mobileView) {
-        toolbar.addButton({
-          id: "preview",
-          group: "mobileExtras",
-          icon: "television",
-          title: "composer.show_preview",
-          sendAction: this.showPreview.bind(this)
-        });
-      }
     },
 
     previewUpdated($preview) {

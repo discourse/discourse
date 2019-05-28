@@ -142,10 +142,6 @@ class Toolbar {
       });
     }
 
-    if (site.mobileView) {
-      this.groups.push({ group: "mobileExtras", buttons: [] });
-    }
-
     this.groups[this.groups.length - 1].lastGroup = true;
   }
 
