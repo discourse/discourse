@@ -13,8 +13,13 @@ export default Ember.Controller.extend(
     loading: true,
     saving: false,
     selectedBadgeId: null,
-    allBadges: [],
-    userBadges: [],
+
+    init() {
+      this._super(...arguments);
+
+      this.allBadges = [];
+      this.userBadges = [];
+    },
 
     @computed("topicController.selectedPosts")
     post() {

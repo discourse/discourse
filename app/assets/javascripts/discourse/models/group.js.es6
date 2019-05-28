@@ -14,7 +14,12 @@ const Group = RestModel.extend({
   limit: 50,
   offset: 0,
   user_count: 0,
-  owners: [],
+
+  init() {
+    this._super(...arguments);
+
+    this.owners = [];
+  },
 
   hasOwners: Ember.computed.notEmpty("owners"),
 

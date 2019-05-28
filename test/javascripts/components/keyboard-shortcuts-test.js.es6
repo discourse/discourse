@@ -64,6 +64,7 @@ QUnit.module("lib:keyboard-shortcuts", {
 
   afterEach() {
     $("#qunit-scratch").html("");
+    testMouseTrap = undefined;
   }
 });
 

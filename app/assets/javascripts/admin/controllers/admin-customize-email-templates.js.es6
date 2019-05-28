@@ -1,6 +1,10 @@
 export default Ember.Controller.extend({
-  titleSorting: ["title"],
   emailTemplates: null,
+  sortedTemplates: Ember.computed.sort("emailTemplates", "titleSorting"),
 
-  sortedTemplates: Ember.computed.sort("emailTemplates", "titleSorting")
+  init() {
+    this._super(...arguments);
+
+    this.titleSorting = ["title"];
+  }
 });

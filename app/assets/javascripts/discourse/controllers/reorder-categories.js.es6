@@ -9,6 +9,12 @@ import {
 import Ember from "ember";
 
 export default Ember.Controller.extend(ModalFunctionality, Ember.Evented, {
+  init() {
+    this._super(...arguments);
+
+    this.categoriesSorting = ["position"];
+  },
+
   @on("init")
   _fixOrder() {
     this.fixIndices();
@@ -20,7 +26,6 @@ export default Ember.Controller.extend(ModalFunctionality, Ember.Evented, {
     return categories.map(c => bufProxy.create({ content: c }));
   },
 
-  categoriesSorting: ["position"],
   categoriesOrdered: Ember.computed.sort(
     "categoriesBuffered",
     "categoriesSorting"
