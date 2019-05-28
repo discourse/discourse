@@ -101,7 +101,12 @@ function resetSite(siteSettings, extras) {
   Discourse.Site.resetCurrent(Discourse.Site.create(siteAttrs));
 }
 
+QUnit.testDone(function(ctx) {
+  console.log("-- " + ctx.runtime);
+});
+
 QUnit.testStart(function(ctx) {
+  console.log(ctx.module + " -> " + ctx.name);
   server = pretender.default();
 
   if (ctx.module.startsWith(acceptanceModulePrefix)) {
@@ -111,7 +116,11 @@ QUnit.testStart(function(ctx) {
       success: pretender.success
     };
 
-    applyPretender(ctx.module.replace(acceptanceModulePrefix, ""), server, helper);
+    applyPretender(
+      ctx.module.replace(acceptanceModulePrefix, ""),
+      server,
+      helper
+    );
   }
 
   // Allow our tests to change site settings and have them reset before the next test
