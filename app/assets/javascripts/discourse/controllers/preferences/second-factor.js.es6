@@ -16,9 +16,14 @@ export default Ember.Controller.extend(CanCheckEmails, {
   newUsername: null,
   backupEnabled: Ember.computed.alias("model.second_factor_backup_enabled"),
   secondFactorMethod: SECOND_FACTOR_METHODS.TOTP,
-  totps: [],
+  totps: null,
 
   loaded: Ember.computed.and("secondFactorImage", "secondFactorKey"),
+
+  init() {
+    this._super(...arguments);
+    this.set("totps", []);
+  },
 
   @computed
   displayOAuthWarning() {
@@ -27,7 +32,7 @@ export default Ember.Controller.extend(CanCheckEmails, {
 
   @computed("currentUser")
   showEnforcedNotice(user) {
-    return user && user.get("enforcedSecondFactor");
+    return user && user.enforcedSecondFactor;
   },
 
   handleError(error) {
@@ -36,7 +41,7 @@ export default Ember.Controller.extend(CanCheckEmails, {
     }
     let parsedJSON = error.responseJSON;
     if (parsedJSON.error_type === "invalid_access") {
-      const usernameLower = this.get("model").username.toLowerCase();
+      const usernameLower = this.model.username.toLowerCase();
       DiscourseURL.redirectTo(
         userPath(`${usernameLower}/preferences/second-factor`)
       );
@@ -46,13 +51,13 @@ export default Ember.Controller.extend(CanCheckEmails, {
   },
 
   loadSecondFactors() {
-    if (this.get("dirty") === false) {
+    if (this.dirty === false) {
       return;
     }
     this.set("loading", true);
 
-    this.get("model")
-      .loadSecondFactorCodes(this.get("password"))
+    this.model
+      .loadSecondFactorCodes(this.password)
       .then(response => {
         if (response.error) {
           this.set("errorMessage", response.error);
@@ -66,7 +71,7 @@ export default Ember.Controller.extend(CanCheckEmails, {
           password: null,
           dirty: false
         });
-        this.get("model").set(
+        this.model.set(
           "second_factor_enabled",
           response.totps && response.totps.length > 0
         );
@@ -81,7 +86,7 @@ export default Ember.Controller.extend(CanCheckEmails, {
 
   actions: {
     confirmPassword() {
-      if (!this.get("password")) return;
+      if (!this.password) return;
       this.markDirty();
       this.loadSecondFactors();
       this.set("password", null);
@@ -106,7 +111,7 @@ export default Ember.Controller.extend(CanCheckEmails, {
     },
 
     disableAllSecondFactors() {
-      if (this.get("loading")) {
+      if (this.loading) {
         return;
       }
       bootbox.confirm(
@@ -115,10 +120,10 @@ export default Ember.Controller.extend(CanCheckEmails, {
         I18n.t("user.second_factor.disable"),
         result => {
           if (result) {
-            this.get("model")
+            this.model
               .disableAllSecondFactors()
               .then(response => {
-                const usernameLower = this.get("model").username.toLowerCase();
+                const usernameLower = this.model.username.toLowerCase();
                 DiscourseURL.redirectTo(
                   userPath(`${usernameLower}/preferences`)
                 );
@@ -132,7 +137,7 @@ export default Ember.Controller.extend(CanCheckEmails, {
 
     createTotp() {
       const controller = showModal("second-factor-add-totp", {
-        model: this.get("model"),
+        model: this.model,
         title: "user.second_factor.totp.add"
       });
       controller.setProperties({
@@ -148,7 +153,7 @@ export default Ember.Controller.extend(CanCheckEmails, {
         title: "user.second_factor.edit_title"
       });
       controller.setProperties({
-        user: this.get("model"),
+        user: this.model,
         onClose: () => this.loadSecondFactors(),
         markDirty: () => this.markDirty(),
         onError: e => this.handleError(e)
@@ -157,7 +162,7 @@ export default Ember.Controller.extend(CanCheckEmails, {
 
     editSecondFactorBackup() {
       const controller = showModal("second-factor-backup-edit", {
-        model: this.get("model"),
+        model: this.model,
         title: "user.second_factor_backup.title"
       });
       controller.setProperties({
