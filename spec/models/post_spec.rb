@@ -1229,29 +1229,11 @@ describe Post do
   end
 
   describe '#link_post_uploads' do
-    fab!(:video_upload) do
-      Fabricate(:upload,
-        url: '/uploads/default/original/1X/1/1234567890123456.mp4'
-      )
-    end
-
-    fab!(:image_upload) do
-      Fabricate(:upload,
-        url: '/uploads/default/original/1X/1/1234567890123456.jpg'
-      )
-    end
-
-    fab!(:audio_upload) do
-      Fabricate(:upload,
-        url: '/uploads/default/original/1X/1/1234567890123456.ogg'
-      )
-    end
-
-    fab!(:attachment_upload) do
-      Fabricate(:upload,
-        url: '/uploads/default/original/1X/1/1234567890123456.csv'
-      )
-    end
+    fab!(:video_upload) { Fabricate(:upload, extension: "mp4") }
+    fab!(:image_upload) { Fabricate(:upload) }
+    fab!(:audio_upload) { Fabricate(:upload, extension: "ogg") }
+    fab!(:attachment_upload) { Fabricate(:upload, extension: "csv") }
+    fab!(:attachment_upload_2) { Fabricate(:upload) }
 
     let(:base_url) { "#{Discourse.base_url_no_prefix}#{Discourse.base_uri}" }
     let(:video_url) { "#{base_url}#{video_upload.url}" }
@@ -1260,6 +1242,7 @@ describe Post do
     let(:raw) do
       <<~RAW
       <a href="#{attachment_upload.url}">Link</a>
+      [test|attachment](#{attachment_upload_2.short_url})
       <img src="#{image_upload.url}">
 
       <video width="100%" height="100%" controls>
@@ -1285,7 +1268,11 @@ describe Post do
       post.link_post_uploads
 
       expect(PostUpload.where(post: post).pluck(:upload_id)).to contain_exactly(
-        video_upload.id, image_upload.id, audio_upload.id, attachment_upload.id
+        video_upload.id,
+        image_upload.id,
+        audio_upload.id,
+        attachment_upload.id,
+        attachment_upload_2.id
       )
     end
 

@@ -117,7 +117,28 @@ class Upload < ActiveRecord::Base
   end
 
   def short_url
-    "upload://#{Base62.encode(sha1.hex)}.#{extension}"
+    "upload://#{short_url_basename}"
+  end
+
+  def short_path
+    self.class.short_path(sha1: self.sha1, extension: self.extension)
+  end
+
+  def self.short_path(sha1:, extension:)
+    @url_helpers ||= Rails.application.routes.url_helpers
+
+    @url_helpers.upload_short_path(
+      base62: self.base62_sha1(sha1),
+      extension: extension
+    )
+  end
+
+  def self.base62_sha1(sha1)
+    Base62.encode(sha1.hex)
+  end
+
+  def base62_sha1
+    Upload.base62_sha1(upload.sha1)
   end
 
   def local?
@@ -180,15 +201,25 @@ class Upload < ActiveRecord::Base
     get_dimension(:thumbnail_height)
   end
 
+  def self.sha1_from_short_path(path)
+    if path =~ /(\/uploads\/short-url\/)([a-zA-Z0-9]+)(\..*)?/
+      self.sha1_from_base62_encoded($2)
+    end
+  end
+
   def self.sha1_from_short_url(url)
     if url =~ /(upload:\/\/)?([a-zA-Z0-9]+)(\..*)?/
-      sha1 = Base62.decode($2).to_s(16)
+      self.sha1_from_base62_encoded($2)
+    end
+  end
 
-      if sha1.length > SHA1_LENGTH
-        nil
-      else
-        sha1.rjust(SHA1_LENGTH, '0')
-      end
+  def self.sha1_from_base62_encoded(encoded_sha1)
+    sha1 = Base62.decode(encoded_sha1).to_s(16)
+
+    if sha1.length > SHA1_LENGTH
+      nil
+    else
+      sha1.rjust(SHA1_LENGTH, '0')
     end
   end
 
@@ -320,6 +351,12 @@ class Upload < ActiveRecord::Base
     end
 
     problems
+  end
+
+  private
+
+  def short_url_basename
+    "#{Upload.base62_sha1(sha1)}.#{extension}"
   end
 
 end

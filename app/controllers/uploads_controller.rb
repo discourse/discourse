@@ -5,9 +5,9 @@ require_dependency 'upload_creator'
 require_dependency "file_store/local_store"
 
 class UploadsController < ApplicationController
-  requires_login except: [:show]
+  requires_login except: [:show, :show_short]
 
-  skip_before_action :preload_json, :check_xhr, :redirect_to_login_if_required, only: [:show]
+  skip_before_action :preload_json, :check_xhr, :redirect_to_login_if_required, only: [:show, :show_short]
 
   def create
     # capture current user for block later on
@@ -56,8 +56,12 @@ class UploadsController < ApplicationController
     uploads = []
 
     if (params[:short_urls] && params[:short_urls].length > 0)
-      PrettyText::Helpers.lookup_image_urls(params[:short_urls]).each do |short_url, url|
-        uploads << { short_url: short_url, url: url }
+      PrettyText::Helpers.lookup_upload_urls(params[:short_urls]).each do |short_url, paths|
+        uploads << {
+          short_url: short_url,
+          url: paths[:url],
+          short_path: paths[:short_path]
+        }
       end
     end
 
@@ -76,20 +80,28 @@ class UploadsController < ApplicationController
           return render_404 unless local_store.has_been_uploaded?(upload.url)
         end
 
-        opts = {
-          filename: upload.original_filename,
-          content_type: MiniMime.lookup_by_filename(upload.original_filename)&.content_type,
-        }
-        opts[:disposition]   = "inline" if params[:inline]
-        opts[:disposition] ||= "attachment" unless FileHelper.is_supported_image?(upload.original_filename)
-
-        file_path = Discourse.store.path_for(upload)
-        return render_404 unless file_path
-
-        send_file(file_path, opts)
+        send_file_local_upload(upload)
       else
         render_404
       end
+    end
+  end
+
+  def show_short
+    if SiteSetting.prevent_anons_from_downloading_files && current_user.nil?
+      return render_404
+    end
+
+    sha1 = Upload.sha1_from_base62_encoded(params[:base62])
+
+    if upload = Upload.find_by(sha1: sha1)
+      if Discourse.store.internal?
+        send_file_local_upload(upload)
+      else
+        redirect_to Discourse.store.path_for(upload)
+      end
+    else
+      render_404
     end
   end
 
@@ -163,6 +175,26 @@ class UploadsController < ApplicationController
     upload.errors.empty? ? upload : { errors: upload.errors.to_hash.values.flatten }
   ensure
     tempfile&.close!
+  end
+
+  private
+
+  def send_file_local_upload(upload)
+    opts = {
+      filename: upload.original_filename,
+      content_type: MiniMime.lookup_by_filename(upload.original_filename)&.content_type
+    }
+
+    if params[:inline]
+      opts[:disposition] = "inline"
+    elsif !FileHelper.is_supported_image?(upload.original_filename)
+      opts[:disposition] = "attachment"
+    end
+
+    file_path = Discourse.store.path_for(upload)
+    return render_404 unless file_path
+
+    send_file(file_path, opts)
   end
 
 end
