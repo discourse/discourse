@@ -257,14 +257,12 @@ describe TopicQuery do
                       notification_level: CategoryUser.notification_levels[:muted])
 
       topic_ids = topic_query.list_latest.topics.map(&:id)
-      expect(topic_ids).not_to include(muted_topic.id)
-      expect(topic_ids).to include(tagged_topic.id)
-      expect(topic_ids).to include(untagged_topic.id)
+
+      expect(topic_ids).to contain_exactly(tagged_topic.id, untagged_topic.id)
 
       topic_ids = topic_query.list_new.topics.map(&:id)
-      expect(topic_ids).not_to include(muted_topic.id)
-      expect(topic_ids).to include(tagged_topic.id)
-      expect(topic_ids).to include(untagged_topic.id)
+
+      expect(topic_ids).to contain_exactly(tagged_topic.id, untagged_topic.id)
     end
   end
 
