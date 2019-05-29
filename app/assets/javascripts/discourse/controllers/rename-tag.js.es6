@@ -6,31 +6,28 @@ import { extractError } from "discourse/lib/ajax-error";
 export default Ember.Controller.extend(ModalFunctionality, BufferedContent, {
   @computed("buffered.id", "id")
   renameDisabled(inputTagName, currentTagName) {
-    const filterRegexp = new RegExp(this.site.tags_filter_regexp, "g"),
-      newTagName = inputTagName
-        ? inputTagName.replace(filterRegexp, "").trim()
-        : "";
+    const filterRegexp = new RegExp(this.site.tags_filter_regexp, "g");
+    const newTagName = inputTagName
+      ? inputTagName.replace(filterRegexp, "").trim()
+      : "";
 
     return newTagName.length === 0 || newTagName === currentTagName;
   },
 
   actions: {
     performRename() {
-      const tag = this.model,
-        self = this;
-      tag
+      this.model
         .update({ id: this.get("buffered.id") })
-        .then(function(result) {
-          self.send("closeModal");
+        .then(result => {
+          this.send("closeModal");
+
           if (result.responseJson.tag) {
-            self.transitionToRoute("tags.show", result.responseJson.tag.id);
+            this.transitionToRoute("tags.show", result.responseJson.tag.id);
           } else {
-            self.flash(extractError(result.responseJson.errors[0]), "error");
+            this.flash(extractError(result.responseJson.errors[0]), "error");
           }
         })
-        .catch(function(error) {
-          self.flash(extractError(error), "error");
-        });
+        .catch(error => this.flash(extractError(error), "error"));
     }
   }
 });
