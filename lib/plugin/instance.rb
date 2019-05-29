@@ -146,6 +146,12 @@ class Plugin::Instance
     end
   end
 
+  def register_editable_group_custom_field(field)
+    reloadable_patch do |plugin|
+      ::Group.register_plugin_editable_group_custom_field(field, plugin) # plugin.enabled? is checked at runtime
+    end
+  end
+
   def custom_avatar_column(column)
     reloadable_patch do |plugin|
       AvatarLookup.lookup_columns << column

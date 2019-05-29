@@ -130,7 +130,7 @@ class Admin::GroupsController < Admin::AdminController
   private
 
   def group_params
-    params.require(:group).permit(
+    permitted = [
       :name,
       :mentionable_level,
       :messageable_level,
@@ -153,6 +153,10 @@ class Admin::GroupsController < Admin::AdminController
       :membership_request_template,
       :owner_usernames,
       :usernames
-    )
+    ]
+    custom_fields = Group.editable_group_custom_fields
+    permitted << { custom_fields: custom_fields } unless custom_fields.blank?
+
+    params.require(:group).permit(permitted)
   end
 end

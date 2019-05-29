@@ -189,6 +189,21 @@ class Group < ActiveRecord::Base
     levels
   end
 
+  def self.plugin_editable_group_custom_fields
+    @plugin_editable_group_custom_fields ||= {}
+  end
+
+  def self.register_plugin_editable_group_custom_field(custom_field_name, plugin)
+    plugin_editable_group_custom_fields[custom_field_name] = plugin
+  end
+
+  def self.editable_group_custom_fields
+    plugin_editable_group_custom_fields.reduce([]) do |fields, (k, v)|
+      next(fields) unless v.enabled?
+      fields << k
+    end.uniq
+  end
+
   def downcase_incoming_email
     self.incoming_email = (incoming_email || "").strip.downcase.presence
   end
