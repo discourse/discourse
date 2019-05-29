@@ -23,9 +23,8 @@ class UserSearch
     users = users.where(staged: false) unless @include_staged_users
 
     if @group
-      users = users.where('users.id IN (
-        SELECT user_id FROM group_users WHERE group_id = ?
-      )', @group.id)
+      users = users.joins("INNER JOIN group_users ON group_users.user_id = users.id")
+        .where("group_users.group_id = ?", @group.id)
     end
 
     unless @searching_user && @searching_user.staff?
