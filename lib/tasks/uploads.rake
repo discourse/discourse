@@ -395,8 +395,9 @@ def migrate_to_s3
     etag = Digest::MD5.file(path).hexdigest unless skip_etag_verify
     key = file[file.index(prefix)..-1]
     key.prepend(folder) if bucket_has_folder_path
+    original_path = file.sub("uploads/#{db}", "")
 
-    if s3_object = s3_objects.find { |obj| file.ends_with?(obj.key) }
+    if s3_object = s3_objects.find { |obj| obj.key.ends_with?(original_path) }
       next if File.size(path) == s3_object.size && (skip_etag_verify || s3_object.etag[etag])
     end
 
@@ -416,6 +417,8 @@ def migrate_to_s3
           %Q{attachment; filename="#{upload.original_filename}"}
       end
     end
+
+    etag ||= Digest::MD5.file(path).hexdigest
 
     if dry_run
       puts "#{file} => #{options[:key]}"
