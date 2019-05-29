@@ -13,6 +13,10 @@ describe StaticController do
       UploadCreator.new(file, filename).create_for(Discourse.system_user.id)
     end
 
+    before_all do
+      DistributedMemoizer.flush!
+    end
+
     after do
       DistributedMemoizer.flush!
     end
