@@ -437,8 +437,13 @@ after_initialize do
 
   on(:reduce_excerpt) do |doc, options|
     post = options[:post]
+
+    replacement = post ?
+      "<a href='#{UrlHelper.escape_uri(post.url)}'>#{I18n.t("poll.poll")}</a>" :
+      "#{I18n.t("poll.poll")}"
+
     doc.css("div.poll").each do |poll|
-      poll.replace "<a href='#{UrlHelper.escape_uri(post.url)}'>#{I18n.t("poll.poll")}</a>"
+      poll.replace(replacement)
     end
   end
 
