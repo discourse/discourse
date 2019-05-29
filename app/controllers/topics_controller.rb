@@ -131,6 +131,9 @@ class TopicsController < ApplicationController
     perform_show_response
 
   rescue Discourse::InvalidAccess => ex
+    if !guardian.can_see_topic?(ex.obj) && guardian.can_get_access_to_topic?(ex.obj)
+      return perform_hidden_topic_show_response(ex.obj)
+    end
 
     if current_user
       # If the user can't see the topic, clean up notifications for it.
@@ -939,6 +942,20 @@ class TopicsController < ApplicationController
       end
     end
   end
+
+  def perform_hidden_topic_show_response(topic)
+    respond_to do |format|
+      format.html do
+        @topic_view = nil
+        render :show
+      end
+
+      format.json do
+        render_serialized(topic, HiddenTopicViewSerializer, root: false)
+      end
+    end
+  end
+
 
   def render_topic_changes(dest_topic)
     if dest_topic.present?

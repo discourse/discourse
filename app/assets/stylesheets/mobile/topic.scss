@@ -143,7 +143,8 @@
   }
 }
 
-.topic-error {
+.topic-error,
+.topic-notice {
   padding: 18px;
   width: 90%;
   margin-left: auto;
@@ -151,7 +152,8 @@
   font-size: $font-up-4;
   line-height: $line-height-medium;
 
-  .topic-retry {
+  .topic-retry,
+  .topic-join-group {
     display: block;
     margin-top: 20px;
     margin-left: auto;

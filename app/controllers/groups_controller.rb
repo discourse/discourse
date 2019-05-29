@@ -416,12 +416,19 @@ class GroupsController < ApplicationController
   end
 
   def request_membership
-    params.require(:reason)
+    params.require(:reason) if !params[:topic_id].present?
 
     group = find_group(:id)
 
+    if params[:topic_id].present?
+      topic_url = Topic.find(params[:topic_id].to_i).url
+      reason = I18n.t("groups.view_hidden_topic_request_reason", topic_url: topic_url)
+    end
+
+    reason ||= params[:reason]
+
     begin
-      GroupRequest.create!(group: group, user: current_user, reason: params[:reason])
+      GroupRequest.create!(group: group, user: current_user, reason: reason)
     rescue ActiveRecord::RecordNotUnique => e
       return render json: failed_json.merge(error: I18n.t("groups.errors.already_requested_membership")), status: 409
     end
@@ -434,7 +441,7 @@ class GroupsController < ApplicationController
     )
 
     raw = <<~EOF
-      #{params[:reason]}
+      #{reason}
 
       ---
       <a href="#{Discourse.base_uri}/g/#{group.name}/requests">

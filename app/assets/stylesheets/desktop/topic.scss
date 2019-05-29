@@ -52,7 +52,8 @@
   display: inline;
 }
 
-.topic-error {
+.topic-error,
+.topic-notice {
   padding: 18px;
   width: 60%;
   margin-left: auto;
@@ -61,7 +62,8 @@
   text-align: center;
   line-height: $line-height-medium;
 
-  .topic-retry {
+  .topic-retry,
+  .topic-join-group {
     display: block;
     margin-top: 28px;
     margin-left: auto;

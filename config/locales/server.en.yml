@@ -378,6 +378,7 @@ en:
     request_membership_pm:
       title: "Membership Request for @%{group_name}"
       handle: "handle membership request"
+    view_hidden_topic_request_reason: "I would like to join the group so I may access [this topic](%{topic_url})"
 
   education:
     until_posts:

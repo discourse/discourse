@@ -1914,6 +1914,9 @@ en:
       toggle_information: "toggle topic details"
       read_more_in_category: "Want to read more? Browse other topics in {{catLink}} or {{latestLink}}."
       read_more: "Want to read more? {{catLink}} or {{latestLink}}."
+      group_request: "You need to request membership to the {{name}} group to see this topic"
+      group_join: "You need join the {{name}} group to see this topic"
+      group_request_sent: "Your group membership request has been sent, you will be informed when it's accepted."
 
       # keys ending with _MF use message format, see https://meta.discourse.org/t/message-format-support-for-localization/7035 for details
       read_more_MF: "There {

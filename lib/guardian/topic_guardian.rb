@@ -149,6 +149,10 @@ module TopicGuardian
     can_see_topic?(topic, false)
   end
 
+  def can_get_access_to_topic?(topic)
+    topic&.access_topic_via_group.present? && authenticated?
+  end
+
   def filter_allowed_categories(records)
     unless is_admin?
       allowed_ids = allowed_category_ids
