@@ -79,6 +79,12 @@ class User < ActiveRecord::Base
     where(method: UserSecondFactor.methods[:totp], enabled: true)
   }, class_name: "UserSecondFactor"
 
+  has_one :anonymous_user_master, class_name: 'AnonymousUser'
+  has_one :anonymous_user_shadow, ->(record) { where(active: true) }, foreign_key: :master_user_id, class_name: 'AnonymousUser'
+
+  has_one :master_user, through: :anonymous_user_master
+  has_one :shadow_user, through: :anonymous_user_shadow, source: :user
+
   has_one :user_stat, dependent: :destroy
   has_one :user_profile, dependent: :destroy, inverse_of: :user
   has_one :profile_background_upload, through: :user_profile
@@ -177,12 +183,9 @@ class User < ActiveRecord::Base
   # excluding fake users like the system user or anonymous users
   scope :real, -> { human_users.where('NOT EXISTS(
                      SELECT 1
-                     FROM user_custom_fields ucf
-                     WHERE
-                       ucf.user_id = users.id AND
-                       ucf.name = ? AND
-                       ucf.value::int > 0
-                  )', 'master_id') }
+                     FROM anonymous_users a
+                     WHERE a.user_id = users.id
+                  )') }
 
   # TODO-PERF: There is no indexes on any of these
   # and NotifyMailingListSubscribers does a select-all-and-loop
@@ -1149,7 +1152,7 @@ class User < ActiveRecord::Base
   def anonymous?
     SiteSetting.allow_anonymous_posting &&
       trust_level >= 1 &&
-      custom_fields["master_id"].to_i > 0
+      !!anonymous_user_master
   end
 
   def is_singular_admin?
