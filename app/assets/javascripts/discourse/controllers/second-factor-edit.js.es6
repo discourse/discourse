@@ -8,12 +8,12 @@ export default Ember.Controller.extend(ModalFunctionality, {
 
   actions: {
     disableSecondFactor() {
-      this.get("user")
+      this.user
         .updateSecondFactor(
-          this.get("model").id,
-          this.get("model").name,
+          this.model.id,
+          this.model.name,
           true,
-          this.get("model").method
+          this.model.method
         )
         .then(response => {
           if (response.error) {
@@ -32,12 +32,12 @@ export default Ember.Controller.extend(ModalFunctionality, {
     },
 
     editSecondFactor() {
-      this.get("user")
+      this.user
         .updateSecondFactor(
-          this.get("model").id,
-          this.get("model").name,
+          this.model.id,
+          this.model.name,
           false,
-          this.get("model").method
+          this.model.method
         )
         .then(response => {
           if (response.error) {

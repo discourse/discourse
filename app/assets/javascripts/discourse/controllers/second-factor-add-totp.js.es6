@@ -21,7 +21,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
       secondFactorImage: null,
       loading: true
     });
-    this.get("model")
+    this.model
       .createSecondFactorTotp()
       .then(response => {
         if (response.error) {
@@ -48,12 +48,12 @@ export default Ember.Controller.extend(ModalFunctionality, {
     },
 
     enableSecondFactor() {
-      if (!this.get("secondFactorToken")) return;
+      if (!this.secondFactorToken) return;
       this.set("loading", true);
 
-      this.get("model")
+      this.model
         .enableSecondFactorTotp(
-          this.get("secondFactorToken"),
+          this.secondFactorToken,
           I18n.t("user.second_factor.totp.default_name")
         )
         .then(response => {

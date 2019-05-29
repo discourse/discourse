@@ -71,8 +71,8 @@ export default Ember.Controller.extend(CanCheckEmails, {
           password: null,
           dirty: false
         });
-        this.model.set(
-          "second_factor_enabled",
+        this.set(
+          "model.second_factor_enabled",
           response.totps && response.totps.length > 0
         );
       })
