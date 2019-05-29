@@ -1,4 +1,5 @@
 import { NotificationLevels } from "discourse/lib/notification-levels";
+import { on } from "ember-addons/ember-computed-decorators";
 
 export default Ember.Mixin.create({
   bulkSelectEnabled: false,
@@ -6,9 +7,10 @@ export default Ember.Mixin.create({
 
   canBulkSelect: Ember.computed.alias("currentUser.staff"),
 
-  resetSelected: function() {
+  @on("init")
+  resetSelected() {
     this.set("selected", []);
-  }.on("init"),
+  },
 
   actions: {
     toggleBulkSelect() {
@@ -17,9 +19,6 @@ export default Ember.Mixin.create({
     },
 
     dismissRead(operationType) {
-      const self = this,
-        selected = this.selected;
-
       let operation;
       if (operationType === "posts") {
         operation = { type: "dismiss_posts" };
@@ -31,8 +30,8 @@ export default Ember.Mixin.create({
       }
 
       let promise;
-      if (selected.length > 0) {
-        promise = Discourse.Topic.bulkOperation(selected, operation);
+      if (this.selected.length > 0) {
+        promise = Discourse.Topic.bulkOperation(this.selected, operation);
       } else {
         promise = Discourse.Topic.bulkOperationByFilter(
           "unread",
@@ -40,16 +39,16 @@ export default Ember.Mixin.create({
           this.get("category.id")
         );
       }
-      promise.then(function(result) {
+
+      promise.then(result => {
         if (result && result.topic_ids) {
-          const tracker = self.topicTrackingState;
-          result.topic_ids.forEach(function(t) {
-            tracker.removeTopic(t);
-          });
+          const tracker = this.topicTrackingState;
+          result.topic_ids.forEach(t => tracker.removeTopic(t));
           tracker.incrementMessageCount();
         }
-        self.send("closeModal");
-        self.send("refresh");
+
+        this.send("closeModal");
+        this.send("refresh");
       });
     }
   }
