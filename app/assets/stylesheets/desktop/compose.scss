@@ -202,12 +202,10 @@
   width: calc(50% - 65px);
 }
 
-.composer-bottom-right {
-  a {
-    color: $primary-high;
-    &:hover {
-      color: $tertiary;
-    }
+a.toggle-preview {
+  color: $primary-high;
+  &:hover {
+    color: $tertiary;
   }
 }
 
