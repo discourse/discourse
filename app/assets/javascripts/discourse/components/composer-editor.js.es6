@@ -694,7 +694,7 @@ export default Ember.Component.extend({
 
       const matchingHandler = uploadHandlers.find(matcher);
       if (data.files.length === 1 && matchingHandler) {
-        if (!matchingHandler.method(data.files[0])) {
+        if (!matchingHandler.method(data.files[0], this)) {
           return false;
         }
       }
