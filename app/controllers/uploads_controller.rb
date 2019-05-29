@@ -98,7 +98,7 @@ class UploadsController < ApplicationController
       if Discourse.store.internal?
         send_file_local_upload(upload)
       else
-        redirect_to Discourse.store.path_for(upload)
+        redirect_to upload.url
       end
     else
       render_404
