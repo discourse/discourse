@@ -28,6 +28,7 @@ class Plugin::Metadata
     "discourse-crowd",
     "discourse-data-explorer",
     "discourse-details",
+    "discourse-encrypt",
     "discourse-footnote",
     "discourse-github",
     "discourse-gradle-issue",
