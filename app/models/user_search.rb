@@ -15,7 +15,7 @@ class UserSearch
     @limit = opts[:limit] || 20
     @groups = opts[:groups]
     @guardian = Guardian.new(@searching_user)
-    @groups.each { |group| @guardian.ensure_can_see_group!(group) } if @groups
+    @guardian.ensure_can_see_groups!(@groups) if @groups
   end
 
   def scoped_users
