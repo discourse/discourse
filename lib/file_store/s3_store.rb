@@ -102,7 +102,12 @@ module FileStore
 
     def path_for(upload)
       url = upload&.url
-      FileStore::LocalStore.new.path_for(upload) if url && url[/^\/[^\/]/]
+
+      if url && url[/^\/[^\/]/]
+        FileStore::LocalStore.new.path_for(upload)
+      else
+        url
+      end
     end
 
     def cdn_url(url)
