@@ -435,6 +435,13 @@ after_initialize do
     end
   end
 
+  on(:reduce_excerpt) do |doc, options|
+    post = options[:post]
+    doc.css("div.poll").each do |poll|
+      poll.replace "<a href='#{UrlHelper.escape_uri(post.url)}'>#{I18n.t("poll.poll")}</a>"
+    end
+  end
+
   on(:post_created) do |post|
     DiscoursePoll::Poll.schedule_jobs(post)
 
