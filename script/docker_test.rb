@@ -10,11 +10,12 @@
 
 puts "travis_fold:end:starting_docker_container" if ENV["TRAVIS"]
 
-def log(msg)
-  STDERR.puts "#{Time.now.iso8601}: #{msg}"
+def log(message)
+  puts "[#{DateTime.now.strftime("%Y-%m-%d %H:%M:%S")}] #{message}"
 end
 
 def run_or_fail(command)
+  log(command)
   pid = Process.spawn(command)
   Process.wait(pid)
   exit 1 unless $?.exitstatus == 0
@@ -23,20 +24,16 @@ end
 unless ENV['NO_UPDATE']
   puts "travis_fold:start:pulling_latest_discourse" if ENV["TRAVIS"]
 
-  log("Reseting git repository")
   run_or_fail("git reset --hard")
 
-  log("Pulling git repository")
   run_or_fail("git pull")
 
-  log("Checking out git branch")
   checkout = ENV['COMMIT_HASH'] || "HEAD"
   run_or_fail("git checkout #{checkout}")
 
   puts "travis_fold:end:pulling_latest_discourse" if ENV["TRAVIS"]
   puts "travis_fold:start:bundle" if ENV["TRAVIS"]
 
-  log("Run bundler")
   run_or_fail("bundle")
 
   puts "travis_fold:end:bundle" if ENV["TRAVIS"]
