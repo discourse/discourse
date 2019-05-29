@@ -292,38 +292,60 @@ describe OptimizedImage do
     end
 
     describe "external store" do
+      let(:s3_upload) { Fabricate(:upload_s3) }
 
-      let(:store) { FakeExternalStore.new }
-      before { Discourse.stubs(:store).returns(store) }
+      before do
+        SiteSetting.enable_s3_uploads = true
+        SiteSetting.s3_upload_bucket = "s3-upload-bucket"
+        SiteSetting.s3_access_key_id = "some key"
+        SiteSetting.s3_secret_access_key = "some secret key"
+
+        tempfile = Tempfile.new(["discourse-external", ".png"])
+
+        %i{head get}.each do |method|
+          stub_request(method, "http://#{s3_upload.url}")
+            .to_return(
+              status: 200,
+              body: tempfile.read
+            )
+        end
+      end
 
       context "when an error happened while generatign the thumbnail" do
-
         it "returns nil" do
           OptimizedImage.expects(:resize).returns(false)
-          expect(OptimizedImage.create_for(upload, 100, 200)).to eq(nil)
+          expect(OptimizedImage.create_for(s3_upload, 100, 200)).to eq(nil)
         end
-
       end
 
       context "when the thumbnail is properly generated" do
-
         before do
           OptimizedImage.expects(:resize).returns(true)
         end
 
         it "downloads a copy of the original image" do
-          Tempfile.any_instance.expects(:close!)
-          store.expects(:download).with(upload).returns(Tempfile.new(["discourse-external", ".png"]))
-          OptimizedImage.create_for(upload, 100, 200)
-        end
+          optimized_path = "/optimized/1X/#{s3_upload.sha1}_2_100x200.png"
 
-        it "works" do
-          oi = OptimizedImage.create_for(upload, 100, 200)
+          stub_request(
+            :head,
+            "https://#{SiteSetting.s3_upload_bucket}.s3.amazonaws.com/"
+          )
+
+          stub_request(
+            :put,
+            "https://#{SiteSetting.s3_upload_bucket}.s3.amazonaws.com#{optimized_path}"
+          ).to_return(
+            status: 200,
+            headers: { "ETag" => "someetag" }
+          )
+
+          oi = OptimizedImage.create_for(s3_upload, 100, 200)
+
           expect(oi.sha1).to eq("da39a3ee5e6b4b0d3255bfef95601890afd80709")
           expect(oi.extension).to eq(".png")
           expect(oi.width).to eq(100)
           expect(oi.height).to eq(200)
-          expect(oi.url).to eq("/externally/stored/optimized/image.png")
+          expect(oi.url).to eq("//#{SiteSetting.s3_upload_bucket}.s3.dualstack.us-east-1.amazonaws.com#{optimized_path}")
         end
 
       end
@@ -358,27 +380,6 @@ class FakeInternalStore
 
   def store_optimized_image(file, optimized_image)
     "/internally/stored/optimized/image#{optimized_image.extension}"
-  end
-
-end
-
-class FakeExternalStore
-
-  def path_for(upload)
-    nil
-  end
-
-  def external?
-    true
-  end
-
-  def store_optimized_image(file, optimized_image)
-    "/externally/stored/optimized/image#{optimized_image.extension}"
-  end
-
-  def download(upload)
-    extension = File.extname(upload.original_filename)
-    Tempfile.new(["discourse-s3", extension])
   end
 
 end
