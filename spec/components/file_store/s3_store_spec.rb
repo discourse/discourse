@@ -303,20 +303,12 @@ describe FileStore::S3Store do
   end
 
   describe ".path_for" do
-    def assert_path(path, expected)
-      upload = Upload.new(url: path)
-
-      path = store.path_for(upload)
-      expected = FileStore::LocalStore.new.path_for(upload) if expected
-
-      expect(path).to eq(expected)
-    end
-
     it "correctly falls back to local" do
-      assert_path("/hello", "/hello")
-      assert_path("//hello", nil)
-      assert_path("http://hello", nil)
-      assert_path("https://hello", nil)
+      local_upload = Fabricate(:upload)
+      s3_upload =  Fabricate(:upload_s3)
+
+      expect(Discourse.store.path_for(local_upload)).to eq(local_upload.url)
+      expect(Discourse.store.path_for(s3_upload)).to eq(s3_upload.url)
     end
   end
 
