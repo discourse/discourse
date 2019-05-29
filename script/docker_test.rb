@@ -11,7 +11,7 @@
 puts "travis_fold:end:starting_docker_container" if ENV["TRAVIS"]
 
 def log(message)
-  puts "[#{DateTime.now.strftime("%Y-%m-%d %H:%M:%S")}] #{message}"
+  puts "[#{Time.now.strftime("%Y-%m-%d %H:%M:%S")}] #{message}"
 end
 
 def run_or_fail(command)

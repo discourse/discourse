@@ -49,7 +49,7 @@ def run_or_fail_prettier(*patterns)
 end
 
 def log(message)
-  puts "[#{DateTime.now.strftime("%Y-%m-%d %H:%M:%S")}] #{message}"
+  puts "[#{Time.now.strftime("%Y-%m-%d %H:%M:%S")}] #{message}"
 end
 
 desc 'Run all tests (JS and code in a standalone environment)'
