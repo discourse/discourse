@@ -388,15 +388,16 @@ def migrate_to_s3
   synced = 0
   failed = []
 
+  skip_etag_verify = ENV["SKIP_ETAG_VERIFY"].present?
   local_files.each do |file|
     path = File.join("public", file)
     name = File.basename(path)
-    etag = Digest::MD5.file(path).hexdigest
+    etag = Digest::MD5.file(path).hexdigest unless skip_etag_verify
     key = file[file.index(prefix)..-1]
     key.prepend(folder) if bucket_has_folder_path
 
     if s3_object = s3_objects.find { |obj| file.ends_with?(obj.key) }
-      next if File.size(path) == s3_object.size && s3_object.etag[etag]
+      next if File.size(path) == s3_object.size && (skip_etag_verify || s3_object.etag[etag])
     end
 
     options = {
