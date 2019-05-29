@@ -204,7 +204,7 @@ module SvgSprite
 
       upload = Upload.find_by(id: upload_id)
 
-      if Discourse.store.local?(upload)
+      if upload&.local?
         original_path = Discourse.store.path_for(upload)
       else
         external_copy = Discourse.store.download(upload) rescue nil

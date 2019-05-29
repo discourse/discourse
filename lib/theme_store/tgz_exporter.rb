@@ -42,7 +42,7 @@ class ThemeStore::TgzExporter
         raise RuntimeError.new("Theme exporter tried to leave directory") unless path.to_s.starts_with?("#{@temp_folder}/#{@export_name}")
 
         if ThemeField.types[field.type_id] == :theme_upload_var
-          if Discourse.store.local?(field.upload)
+          if field.upload.local?
             filename = Discourse.store.path_for(field.upload)
             content = File.read(filename)
           else

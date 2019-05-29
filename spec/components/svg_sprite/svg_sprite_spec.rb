@@ -117,6 +117,11 @@ describe SvgSprite do
 
     expect(Upload.where(id: upload.id)).to be_exist
     expect(SvgSprite.bundle([theme.id])).to match(/my-custom-theme-icon/)
+
+    # missing upload shouldn't break sprite bundle
+    upload.destroy
+    SvgSprite.expire_cache
+    expect(SvgSprite.bundle([theme.id])).not_to match(/my-custom-theme-icon/)
   end
 
   context "s3" do

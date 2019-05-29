@@ -141,10 +141,6 @@ module FileStore
       `ls -tr #{CACHE_DIR} | head -n -#{CACHE_MAXIMUM_SIZE} | awk '$0="#{CACHE_DIR}"$0' | xargs rm -f`
     end
 
-    def local?(upload)
-      !(upload.url =~ /^(https?:)?\/\//)
-    end
-
     private
 
     def not_implemented
