@@ -293,12 +293,14 @@ describe OptimizedImage do
 
     describe "external store" do
       let(:s3_upload) { Fabricate(:upload_s3) }
+      let(:s3_upload_svg) { Fabricate(:upload_s3, extension: "svg", original_filename: "test.svg") }
 
       before do
         SiteSetting.enable_s3_uploads = true
         SiteSetting.s3_upload_bucket = "s3-upload-bucket"
         SiteSetting.s3_access_key_id = "some key"
         SiteSetting.s3_secret_access_key = "some secret key"
+        SiteSetting.authorized_extensions = "svg|png"
 
         tempfile = Tempfile.new(["discourse-external", ".png"])
 
@@ -309,9 +311,18 @@ describe OptimizedImage do
               body: tempfile.read
             )
         end
+
+        %i{head get}.each do |method|
+          stub_request(method, "http://#{s3_upload_svg.url}")
+            .to_return(
+              status: 200,
+              body: "SVG contents"
+            )
+        end
+
       end
 
-      context "when an error happened while generatign the thumbnail" do
+      context "when an error happened while generating the thumbnail" do
         it "returns nil" do
           OptimizedImage.expects(:resize).returns(false)
           expect(OptimizedImage.create_for(s3_upload, 100, 200)).to eq(nil)
@@ -347,7 +358,29 @@ describe OptimizedImage do
           expect(oi.height).to eq(200)
           expect(oi.url).to eq("//#{SiteSetting.s3_upload_bucket}.s3.dualstack.us-east-1.amazonaws.com#{optimized_path}")
         end
+      end
 
+      it "downloads svg and copies to optimized" do
+        optimized_path = "/optimized/1X/#{s3_upload_svg.sha1}_2_100x200.svg"
+
+        stub_request(
+          :head,
+          "https://#{SiteSetting.s3_upload_bucket}.s3.amazonaws.com/"
+        )
+
+        stub_request(
+          :put,
+          "https://#{SiteSetting.s3_upload_bucket}.s3.amazonaws.com#{optimized_path}"
+        ).to_return(
+          status: 200,
+          headers: { "ETag" => "someetag" }
+        )
+
+        oi = OptimizedImage.create_for(s3_upload_svg, 100, 200)
+
+        expect(oi.sha1).to eq("ab59caff0a75d6b44a6522c195800fd1acbacf99")
+        expect(oi.extension).to eq(".svg")
+        expect(oi.url).to eq("//#{SiteSetting.s3_upload_bucket}.s3.dualstack.us-east-1.amazonaws.com#{optimized_path}")
       end
 
     end

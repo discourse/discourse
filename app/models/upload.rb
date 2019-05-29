@@ -90,10 +90,11 @@ class Upload < ActiveRecord::Base
 
     begin
       # this is relatively cheap once cached
-      original_path = Discourse.store.path_for(self)
-      if original_path.blank?
+      if Discourse.store.external?
         external_copy = Discourse.store.download(self) rescue nil
         original_path = external_copy.try(:path)
+      else
+        original_path = Discourse.store.path_for(self)
       end
 
       image_info = FastImage.new(original_path) rescue nil
