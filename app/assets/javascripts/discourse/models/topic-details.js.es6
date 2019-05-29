@@ -41,7 +41,7 @@ const TopicDetails = RestModel.extend({
     if (typeof reason === "number") {
       const tmp = localeString + "_" + reason;
       // some sane protection for missing translations of edge cases
-      if (I18n.lookup(tmp)) {
+      if (I18n.lookup(tmp, { locale: "en" })) {
         localeString = tmp;
       }
     }
