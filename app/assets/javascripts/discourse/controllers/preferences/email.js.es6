@@ -11,6 +11,7 @@ export default Ember.Controller.extend({
   newEmail: null,
 
   newEmailEmpty: Ember.computed.empty("newEmail"),
+
   saveDisabled: Ember.computed.or(
     "saving",
     "newEmailEmpty",
@@ -18,17 +19,8 @@ export default Ember.Controller.extend({
     "unchanged",
     "invalidEmail"
   ),
-  unchanged: propertyEqual("newEmailLower", "currentUser.email"),
 
-  reset() {
-    this.setProperties({
-      taken: false,
-      saving: false,
-      error: false,
-      success: false,
-      newEmail: null
-    });
-  },
+  unchanged: propertyEqual("newEmailLower", "currentUser.email"),
 
   @computed("newEmail")
   newEmailLower(newEmail) {
@@ -56,23 +48,32 @@ export default Ember.Controller.extend({
     }
   },
 
+  reset() {
+    this.setProperties({
+      taken: false,
+      saving: false,
+      error: false,
+      success: false,
+      newEmail: null
+    });
+  },
+
   actions: {
     changeEmail() {
-      const self = this;
       this.set("saving", true);
 
       return this.model.changeEmail(this.newEmail).then(
-        () => self.set("success", true),
+        () => this.set("success", true),
         e => {
-          self.setProperties({ error: true, saving: false });
+          this.setProperties({ error: true, saving: false });
           if (
             e.jqXHR.responseJSON &&
             e.jqXHR.responseJSON.errors &&
             e.jqXHR.responseJSON.errors[0]
           ) {
-            self.set("errorMessage", e.jqXHR.responseJSON.errors[0]);
+            this.set("errorMessage", e.jqXHR.responseJSON.errors[0]);
           } else {
-            self.set("errorMessage", I18n.t("user.change_email.error"));
+            this.set("errorMessage", I18n.t("user.change_email.error"));
           }
         }
       );
