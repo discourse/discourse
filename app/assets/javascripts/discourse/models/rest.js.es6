@@ -16,7 +16,7 @@ const RestModel = Ember.Object.extend({
     this.set("isSaving", true);
     return this.store
       .update(this.__type, this.id, props)
-      .then((res) => {
+      .then(res => {
         const payload = this.__munge(res.payload || res.responseJson);
 
         if (payload.success === "OK") {
@@ -48,7 +48,7 @@ const RestModel = Ember.Object.extend({
     this.set("isSaving", true);
     return adapter
       .createRecord(this.store, this.__type, props)
-      .then((res) => {
+      .then(res => {
         if (!res) {
           throw new Error("Received no data back from createRecord");
         }
