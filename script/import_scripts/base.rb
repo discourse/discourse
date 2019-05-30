@@ -883,6 +883,6 @@ class ImportScripts::Base
   end
 
   def fake_email
-    SecureRandom.hex << "@domain.com"
+    SecureRandom.hex << "@email.invalid"
   end
 end

@@ -118,7 +118,7 @@ class ImportScripts::MyAskBot < ImportScripts::Base
         {
           id: user["id"],
           username: user["username"],
-          email: user["email"] || (SecureRandom.hex << "@domain.com"),
+          email: user["email"] || fake_email,
           admin: user["is_staff"],
           created_at: Time.zone.at(@td.decode(user["date_joined"])),
           last_seen_at: Time.zone.at(@td.decode(user["last_seen"])),

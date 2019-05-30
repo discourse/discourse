@@ -80,7 +80,7 @@ class ImportScripts::Nabble < ImportScripts::Base
       create_users(users, total: total_count, offset: offset) do |row|
         {
           id: row["user_id"],
-          email: row["email"] || (SecureRandom.hex << "@domain.com"),
+          email: row["email"] || fake_email,
           created_at: Time.zone.at(@td.decode(row["joined"])),
           name: row["name"],
           post_create_action: proc do |user|
