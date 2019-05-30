@@ -9,7 +9,7 @@ export default {
 
     $.ajaxPrefilter(function(options, originalOptions, xhr) {
       if (!options.crossDomain) {
-        xhr.setRequestHeader("X-CSRF-Token", session.get("csrfToken"));
+        xhr.setRequestHeader("X-CSRF-Token", session.csrfToken);
       }
     });
   }

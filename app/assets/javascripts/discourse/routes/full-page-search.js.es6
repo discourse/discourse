@@ -20,7 +20,7 @@ export default Discourse.Route.extend({
   titleToken() {
     return I18n.t("search.results_page", {
       term: escapeExpression(
-        this.controllerFor("full-page-search").get("searchTerm")
+        this.controllerFor("full-page-search").searchTerm
       )
     });
   },

@@ -36,13 +36,13 @@ export default Ember.Component.extend({
   _closeTop() {
     const messages = this.messages;
     messages.popObject();
-    this.set("messageCount", messages.get("length"));
+    this.set("messageCount", messages.length);
   },
 
   _removeMessage(message) {
     const messages = this.messages;
     messages.removeObject(message);
-    this.set("messageCount", messages.get("length"));
+    this.set("messageCount", messages.length);
   },
 
   actions: {
@@ -53,17 +53,17 @@ export default Ember.Component.extend({
     hideMessage(message) {
       this._removeMessage(message);
       // kind of hacky but the visibility depends on this
-      this.messagesByTemplate[message.get("templateName")] = undefined;
+      this.messagesByTemplate[message.templateName] = undefined;
     },
 
     popup(message) {
       const messagesByTemplate = this.messagesByTemplate;
-      const templateName = message.get("templateName");
+      const templateName = message.templateName;
 
       if (!messagesByTemplate[templateName]) {
         const messages = this.messages;
         messages.pushObject(message);
-        this.set("messageCount", messages.get("length"));
+        this.set("messageCount", messages.length);
         messagesByTemplate[templateName] = message;
       }
     }
@@ -92,8 +92,8 @@ export default Ember.Component.extend({
     }
 
     const composer = this.composer;
-    if (composer.get("privateMessage")) {
-      let usernames = composer.get("targetUsernames");
+    if (composer.privateMessage) {
+      let usernames = composer.targetUsernames;
 
       if (usernames) {
         usernames = usernames.split(",");
@@ -102,7 +102,7 @@ export default Ember.Component.extend({
       if (
         usernames &&
         usernames.length === 1 &&
-        usernames[0] === this.currentUser.get("username")
+        usernames[0] === this.currentUser.username
       ) {
         const message =
           this._yourselfConfirm ||
@@ -128,13 +128,13 @@ export default Ember.Component.extend({
     const composer = this.composer;
 
     // We don't care about similar topics unless creating a topic
-    if (!composer.get("creatingTopic")) {
+    if (!composer.creatingTopic) {
       return;
     }
 
     // TODO pass the 200 in from somewhere
-    const raw = (composer.get("reply") || "").substr(0, 200);
-    const title = composer.get("title") || "";
+    const raw = (composer.reply || "").substr(0, 200);
+    const title = composer.title || "";
 
     // Ensure we have at least a title
     if (title.length < this.siteSettings.min_title_similar_length) {
@@ -161,9 +161,9 @@ export default Ember.Component.extend({
 
     composer.store.find("similar-topic", { title, raw }).then(topics => {
       similarTopics.clear();
-      similarTopics.pushObjects(topics.get("content"));
+      similarTopics.pushObjects(topics.content);
 
-      if (similarTopics.get("length") > 0) {
+      if (similarTopics.length > 0) {
         message.set("similarTopics", similarTopics);
         this.send("popup", message);
       } else if (message && !(this.isDestroyed || this.isDestroying)) {
@@ -179,7 +179,7 @@ export default Ember.Component.extend({
     }
 
     const composer = this.composer;
-    const args = { composer_action: composer.get("action") };
+    const args = { composer_action: composer.action };
     const topicId = composer.get("topic.id");
     const postId = composer.get("post.id");
 

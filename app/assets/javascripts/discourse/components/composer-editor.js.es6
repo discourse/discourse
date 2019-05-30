@@ -86,7 +86,7 @@ export default Ember.Component.extend({
   @computed
   showLink() {
     return (
-      this.currentUser && this.currentUser.get("link_posting_access") !== "none"
+      this.currentUser && this.currentUser.link_posting_access !== "none"
     );
   },
 
@@ -130,10 +130,10 @@ export default Ember.Component.extend({
         }
 
         const posts = topic.get("postStream.posts");
-        if (posts && topicId === topic.get("id")) {
+        if (posts && topicId === topic.id) {
           const quotedPost = posts.findBy("post_number", postNumber);
           if (quotedPost) {
-            return tinyAvatar(quotedPost.get("avatar_template"));
+            return tinyAvatar(quotedPost.avatar_template);
           }
         }
       },
@@ -145,7 +145,7 @@ export default Ember.Component.extend({
         }
 
         const posts = topic.get("postStream.posts");
-        if (posts && topicId === topic.get("id")) {
+        if (posts && topicId === topic.id) {
           const quotedPost = posts.findBy("post_number", postNumber);
           if (quotedPost) {
             return quotedPost.primary_group_name;
@@ -538,7 +538,7 @@ export default Ember.Component.extend({
     let refresh = false;
 
     // If we are editing a post, we'll refresh its contents once.
-    if (post && !post.get("refreshedPost")) {
+    if (post && !post.refreshedPost) {
       refresh = true;
       post.set("refreshedPost", true);
     }
@@ -648,7 +648,7 @@ export default Ember.Component.extend({
     this._pasted = false;
 
     const $element = this.$();
-    const csrf = this.session.get("csrfToken");
+    const csrf = this.session.csrfToken;
 
     $element.fileupload({
       url: Discourse.getURL(

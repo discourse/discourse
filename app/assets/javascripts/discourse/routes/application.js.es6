@@ -12,7 +12,7 @@ import Composer from "discourse/models/composer";
 
 function unlessReadOnly(method, message) {
   return function() {
-    if (this.site.get("isReadOnly")) {
+    if (this.site.isReadOnly) {
       bootbox.alert(message);
     } else {
       this[method]();
@@ -66,12 +66,12 @@ const ApplicationRoute = Discourse.Route.extend(OpenComposer, {
     },
 
     composePrivateMessage(user, post) {
-      const recipient = user ? user.get("username") : "",
+      const recipient = user ? user.username : "",
         reply = post
           ? window.location.protocol +
             "//" +
             window.location.host +
-            post.get("url")
+            post.url
           : null;
 
       // used only once, one less dependency
@@ -153,7 +153,7 @@ const ApplicationRoute = Discourse.Route.extend(OpenComposer, {
       this.render("hide-modal", { into: "modal", outlet: "modalBody" });
 
       const route = getOwner(this).lookup("route:application");
-      const name = route.controllerFor("modal").get("name");
+      const name = route.controllerFor("modal").name;
       const controller = getOwner(this).lookup(`controller:${name}`);
       if (controller && controller.onClose) {
         controller.onClose();
@@ -174,7 +174,7 @@ const ApplicationRoute = Discourse.Route.extend(OpenComposer, {
     },
 
     editCategory(category) {
-      Category.reloadById(category.get("id")).then(atts => {
+      Category.reloadById(category.id).then(atts => {
         const model = this.store.createRecord("category", atts.category);
         model.setupGroupsAndPermissions();
         this.site.updateCategory(model);

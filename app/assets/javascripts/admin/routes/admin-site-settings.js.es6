@@ -12,7 +12,7 @@ export default Discourse.Route.extend({
   afterModel(siteSettings) {
     const controller = this.controllerFor("adminSiteSettings");
 
-    if (!controller.get("visibleSiteSettings")) {
+    if (!controller.visibleSiteSettings) {
       controller.set("visibleSiteSettings", siteSettings);
     }
   },

@@ -121,7 +121,7 @@ const User = RestModel.extend({
   revokeApiKey(key) {
     return ajax("/user-api-key/revoke", {
       type: "POST",
-      data: { id: key.get("id") }
+      data: { id: key.id }
     }).then(() => {
       key.set("revoked", true);
     });
@@ -130,7 +130,7 @@ const User = RestModel.extend({
   undoRevokeApiKey(key) {
     return ajax("/user-api-key/undo-revoke", {
       type: "POST",
-      data: { id: key.get("id") }
+      data: { id: key.id }
     }).then(() => {
       key.set("revoked", false);
     });
@@ -140,9 +140,9 @@ const User = RestModel.extend({
     const userId = this.id;
     const username = this.username_lower;
 
-    const details = topic && topic.get("details");
-    const allowedUsers = details && details.get("allowed_users");
-    const groups = details && details.get("allowed_groups");
+    const details = topic && topic.details;
+    const allowedUsers = details && details.allowed_users;
+    const groups = details && details.allowed_groups;
 
     // directly targetted so go to inbox
     if (!groups || (allowedUsers && allowedUsers.findBy("id", userId))) {
@@ -304,7 +304,7 @@ const User = RestModel.extend({
             : s + "Categories";
         let cats = this.get(prop);
         if (cats) {
-          let cat_ids = cats.map(c => c.get("id"));
+          let cat_ids = cats.map(c => c.id);
           updatedState[s + "_category_ids"] = cat_ids;
 
           // HACK: denote lack of categories
@@ -405,8 +405,8 @@ const User = RestModel.extend({
 
         ua.title = emojiUnescape(Handlebars.Utils.escapeExpression(ua.title));
         const action = UserAction.collapseStream([UserAction.create(ua)]);
-        stream.set("itemsLoaded", stream.get("itemsLoaded") + 1);
-        stream.get("content").insertAt(0, action[0]);
+        stream.set("itemsLoaded", stream.itemsLoaded + 1);
+        stream.content.insertAt(0, action[0]);
       }
     });
   },
@@ -463,8 +463,8 @@ const User = RestModel.extend({
   findDetails(options) {
     const user = this;
 
-    return PreloadStore.getAndRemove(`user_${user.get("username")}`, () => {
-      return ajax(userPath(`${user.get("username")}.json`), { data: options });
+    return PreloadStore.getAndRemove(`user_${user.username}`, () => {
+      return ajax(userPath(`${user.username}.json`), { data: options });
     }).then(json => {
       if (!Ember.isEmpty(json.user.stats)) {
         json.user.stats = Discourse.User.groupStats(
@@ -494,7 +494,7 @@ const User = RestModel.extend({
       if (!Ember.isEmpty(json.user.featured_user_badge_ids)) {
         const userBadgesMap = {};
         UserBadge.createFromJson(json).forEach(userBadge => {
-          userBadgesMap[userBadge.get("id")] = userBadge;
+          userBadgesMap[userBadge.id] = userBadge;
         });
         json.user.featured_user_badges = json.user.featured_user_badge_ids.map(
           id => userBadgesMap[id]
@@ -695,9 +695,9 @@ const User = RestModel.extend({
   },
 
   canManageGroup(group) {
-    return group.get("automatic")
+    return group.automatic
       ? false
-      : this.admin || group.get("is_group_owner");
+      : this.admin || group.is_group_owner;
   },
 
   @computed("groups.@each.title", "badges.[]")
@@ -705,14 +705,14 @@ const User = RestModel.extend({
     let titles = [];
 
     (this.groups || []).forEach(group => {
-      if (group.get("title")) {
-        titles.push(group.get("title"));
+      if (group.title) {
+        titles.push(group.title);
       }
     });
 
     (this.badges || []).forEach(badge => {
-      if (badge.get("allow_title")) {
-        titles.push(badge.get("name"));
+      if (badge.allow_title) {
+        titles.push(badge.name);
       }
     });
 
@@ -761,7 +761,7 @@ User.reopenClass(Singleton, {
 
   // TODO: Use app.register and junk Singleton
   createCurrent() {
-    const userJson = PreloadStore.get("currentUser");
+    const userJson = PreloadStore.currentUser;
 
     if (userJson && userJson.primary_group_id) {
       const primaryGroup = userJson.groups.find(
@@ -792,7 +792,7 @@ User.reopenClass(Singleton, {
     });
 
     stats.filterBy("isResponse").forEach(stat => {
-      responses.set("count", responses.get("count") + stat.get("count"));
+      responses.set("count", responses.count + stat.count);
     });
 
     const result = Ember.A();

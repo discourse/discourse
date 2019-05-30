@@ -132,7 +132,7 @@ export default Ember.Component.extend(
 
     @observes("Discourse.hasFocus")
     gotFocus() {
-      if (Discourse.get("hasFocus")) {
+      if (Discourse.hasFocus) {
         this.scrolled();
       }
     },

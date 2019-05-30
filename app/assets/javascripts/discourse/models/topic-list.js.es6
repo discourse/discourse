@@ -5,11 +5,11 @@ import Model from "discourse/models/model";
 // Whether to show the category badge in topic lists
 function displayCategoryInList(site, category) {
   if (category) {
-    if (category.get("has_children")) {
+    if (category.has_children) {
       return true;
     }
-    let draftCategoryId = site.get("shared_drafts_category_id");
-    if (draftCategoryId && category.get("id") === draftCategoryId) {
+    let draftCategoryId = site.shared_drafts_category_id;
+    if (draftCategoryId && category.id === draftCategoryId) {
       return true;
     }
 
@@ -25,7 +25,7 @@ const TopicList = RestModel.extend({
   forEachNew(topics, callback) {
     const topicIds = [];
 
-    this.topics.forEach(topic => (topicIds[topic.get("id")] = true));
+    this.topics.forEach(topic => (topicIds[topic.id] = true));
 
     topics.forEach(topic => {
       if (!topicIds[topic.id]) {
@@ -78,7 +78,7 @@ const TopicList = RestModel.extend({
         if (result) {
           // the new topics loaded from the server
           const newTopics = TopicList.topicsFrom(store, result);
-          const topics = self.get("topics");
+          const topics = self.topics;
 
           self.forEachNew(newTopics, function(t) {
             t.set("highlight", topicsAdded++ === 0);
@@ -91,7 +91,7 @@ const TopicList = RestModel.extend({
           });
 
           Discourse.Session.currentProp("topicList", self);
-          return self.get("more_topics_url");
+          return self.more_topics_url;
         }
       });
     } else {
@@ -107,7 +107,7 @@ const TopicList = RestModel.extend({
 
     // refresh dupes
     topics.removeObjects(
-      topics.filter(topic => topic_ids.indexOf(topic.get("id")) >= 0)
+      topics.filter(topic => topic_ids.indexOf(topic.id) >= 0)
     );
 
     const url = `${Discourse.getURL("/")}${this.get(

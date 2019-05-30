@@ -38,7 +38,7 @@ export default Ember.Service.extend({
     return {
       deleteUser: () => this._deleteSpammer(adminUser),
       canDelete:
-        adminUser.get("can_be_deleted") && adminUser.get("can_delete_all_posts")
+        adminUser.can_be_deleted && adminUser.can_delete_all_posts
     };
   },
 
@@ -53,7 +53,7 @@ export default Ember.Service.extend({
 
     return (user.adminUserView
       ? Ember.RSVP.resolve(user)
-      : AdminUser.find(user.get("id"))
+      : AdminUser.find(user.id)
     ).then(loadedUser => {
       controller.setProperties({
         user: loadedUser,
@@ -80,15 +80,15 @@ export default Ember.Service.extend({
 
     return tryEmail.then(() => {
       let message = I18n.messageFormat("flagging.delete_confirm_MF", {
-        POSTS: adminUser.get("post_count"),
-        TOPICS: adminUser.get("topic_count"),
+        POSTS: adminUser.post_count,
+        TOPICS: adminUser.topic_count,
         email:
-          adminUser.get("email") || I18n.t("flagging.hidden_email_address"),
+          adminUser.email || I18n.t("flagging.hidden_email_address"),
         ip_address:
-          adminUser.get("ip_address") || I18n.t("flagging.ip_address_missing")
+          adminUser.ip_address || I18n.t("flagging.ip_address_missing")
       });
 
-      let userId = adminUser.get("id");
+      let userId = adminUser.id;
 
       return new Ember.RSVP.Promise((resolve, reject) => {
         const buttons = [

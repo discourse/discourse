@@ -34,7 +34,7 @@ export default Ember.Component.extend({
       return themes.filter(theme => theme.get("parent_themes.length") <= 0);
     }
     return themes.filter(
-      theme => !theme.get("user_selectable") && !theme.get("default")
+      theme => !theme.user_selectable && !theme.default
     );
   },
 
@@ -49,13 +49,13 @@ export default Ember.Component.extend({
       return themes.filter(theme => theme.get("parent_themes.length") > 0);
     } else {
       themes = themes.filter(
-        theme => theme.get("user_selectable") || theme.get("default")
+        theme => theme.user_selectable || theme.default
       );
       return _.sortBy(themes, t => {
         return [
-          !t.get("default"),
-          !t.get("user_selectable"),
-          t.get("name").toLowerCase()
+          !t.default,
+          !t.user_selectable,
+          t.name.toLowerCase()
         ];
       });
     }

@@ -5,7 +5,7 @@ QUnit.module("model:session");
 QUnit.test("highestSeenByTopic", assert => {
   const session = Session.current();
   assert.deepEqual(
-    session.get("highestSeenByTopic"),
+    session.highestSeenByTopic,
     {},
     "by default it returns an empty object"
   );

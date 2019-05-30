@@ -41,7 +41,7 @@ export default Ember.Controller.extend({
 
   @computed("currentUser")
   showEnforcedNotice(user) {
-    return user && user.get("enforcedSecondFactor");
+    return user && user.enforcedSecondFactor;
   },
 
   toggleSecondFactor(enable) {

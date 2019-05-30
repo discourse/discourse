@@ -23,7 +23,7 @@ createWidget("notification-item", {
 
   buildClasses(attrs) {
     const classNames = [];
-    if (attrs.get("read")) {
+    if (attrs.read) {
       classNames.push("read");
     }
     if (attrs.is_warning) {
@@ -146,7 +146,7 @@ createWidget("notification-item", {
 
   html(attrs) {
     const notificationType = attrs.notification_type;
-    const lookup = this.site.get("notificationLookup");
+    const lookup = this.site.notificationLookup;
     const notName = lookup[notificationType];
 
     let { data } = attrs;

@@ -16,8 +16,8 @@
   Discourse.BaseUrl = setupData.baseUrl;
   Discourse.BaseUri = setupData.baseUri;
   Discourse.Environment = setupData.environment;
-  Discourse.SiteSettings = ps.get("siteSettings");
-  Discourse.ThemeSettings = ps.get("themeSettings");
+  Discourse.SiteSettings = ps.siteSettings;
+  Discourse.ThemeSettings = ps.themeSettings;
   Discourse.LetterAvatarVersion = setupData.letterAvatarVersion;
   Discourse.MarkdownItURL = setupData.markdownItUrl;
   Discourse.ServiceWorkerURL = setupData.serviceWorkerUrl;

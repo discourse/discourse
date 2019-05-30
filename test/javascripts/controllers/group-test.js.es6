@@ -10,7 +10,7 @@ QUnit.test("canEditGroup", function(assert) {
   });
 
   assert.equal(
-    GroupController.get("canEditGroup"),
+    GroupController.canEditGroup,
     false,
     "automatic groups cannot be edited"
   );
@@ -18,7 +18,7 @@ QUnit.test("canEditGroup", function(assert) {
   GroupController.set("model.automatic", false);
 
   assert.equal(
-    GroupController.get("canEditGroup"),
+    GroupController.canEditGroup,
     true,
     "owners can edit groups"
   );
@@ -26,7 +26,7 @@ QUnit.test("canEditGroup", function(assert) {
   GroupController.set("model.is_group_owner", false);
 
   assert.equal(
-    GroupController.get("canEditGroup"),
+    GroupController.canEditGroup,
     false,
     "normal users cannot edit groups"
   );

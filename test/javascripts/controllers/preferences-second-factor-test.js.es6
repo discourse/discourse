@@ -9,5 +9,5 @@ QUnit.test("displayOAuthWarning when OAuth login methods are enabled", function(
     }
   });
 
-  assert.equal(controller.get("displayOAuthWarning"), true);
+  assert.equal(controller.displayOAuthWarning, true);
 });

@@ -5,7 +5,7 @@ export default {
   after: "message-bus",
 
   initialize(container) {
-    const banner = Ember.Object.create(PreloadStore.get("banner") || {}),
+    const banner = Ember.Object.create(PreloadStore.banner || {}),
       site = container.lookup("site:main");
 
     site.set("banner", banner);

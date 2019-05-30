@@ -42,7 +42,7 @@ export default ComboBoxComponent.extend({
     return computedContent.filter(c => {
       const category = Category.findById(get(c, "value"));
       const text = get(c, "name");
-      if (category && category.get("parentCategory")) {
+      if (category && category.parentCategory) {
         const categoryName = category.get("parentCategory.name");
         return (
           _matchFunction(filter, text) || _matchFunction(filter, categoryName)
@@ -74,7 +74,7 @@ export default ComboBoxComponent.extend({
 
     if (this.hasSelection) {
       const category = Category.findById(content.value);
-      const parentCategoryId = category.get("parent_category_id");
+      const parentCategoryId = category.parent_category_id;
       const hasParentCategory = Ember.isPresent(parentCategoryId);
 
       let badge = "";
@@ -123,7 +123,7 @@ export default ComboBoxComponent.extend({
     if (scopedCategoryId) {
       const scopedCat = Category.findById(scopedCategoryId);
       scopedCategoryId =
-        scopedCat.get("parent_category_id") || scopedCat.get("id");
+        scopedCat.parent_category_id || scopedCat.id;
     }
 
     const excludeCategoryId = this.excludeCategoryId;
@@ -139,7 +139,7 @@ export default ComboBoxComponent.extend({
         return false;
       }
 
-      if (this.allowSubCategories === false && c.get("parentCategory")) {
+      if (this.allowSubCategories === false && c.parentCategory) {
         return false;
       }
 

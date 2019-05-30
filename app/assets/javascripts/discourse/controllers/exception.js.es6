@@ -107,7 +107,7 @@ export default Ember.Controller.extend({
       this.set("loading", true);
       var self = this;
       Ember.run.schedule("afterRender", function() {
-        self.get("lastTransition").retry();
+        self.lastTransition.retry();
         self.set("loading", false);
       });
     }

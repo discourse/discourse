@@ -12,7 +12,7 @@ export function transformBasicPost(post) {
   const postAtts = {
     id: post.id,
     hidden: post.hidden,
-    deleted: post.get("deleted"),
+    deleted: post.deleted,
     deleted_at: post.deleted_at,
     user_deleted: post.user_deleted,
     isDeleted: post.deleted_at || post.user_deleted, // xxxxx
@@ -35,7 +35,7 @@ export function transformBasicPost(post) {
     avatar_template: post.avatar_template,
     bookmarked: post.bookmarked,
     yours: post.yours,
-    shareUrl: post.get("shareUrl"),
+    shareUrl: post.shareUrl,
     staff: post.staff,
     admin: post.admin,
     moderator: post.moderator,
@@ -47,7 +47,7 @@ export function transformBasicPost(post) {
     canDelete: post.can_delete,
     canRecover: post.can_recover,
     canEdit: post.can_edit,
-    canFlag: !Ember.isEmpty(post.get("flagsAvailable")),
+    canFlag: !Ember.isEmpty(post.flagsAvailable),
     canReviewTopic: false,
     reviewableId: post.reviewable_id,
     reviewableScoreCount: post.reviewable_score_count,
@@ -90,7 +90,7 @@ export default function transformPost(
   const postType = post.post_type;
   const postTypes = site.post_types;
   const topic = post.topic;
-  const details = topic.get("details");
+  const details = topic.details;
 
   const postAtts = transformBasicPost(post);
 
@@ -107,13 +107,13 @@ export default function transformPost(
   postAtts.isSmallAction =
     postType === postTypes.small_action || post.action_code === "split_topic";
   postAtts.canBookmark = !!currentUser;
-  postAtts.canManage = currentUser && currentUser.get("canManageTopic");
+  postAtts.canManage = currentUser && currentUser.canManageTopic;
   postAtts.canViewRawEmail =
     currentUser && (currentUser.id === post.user_id || currentUser.staff);
   postAtts.canReplyAsNewTopic = details.can_reply_as_new_topic;
   postAtts.canReviewTopic = !!details.can_review_topic;
   postAtts.isWarning = topic.is_warning;
-  postAtts.links = post.get("internalLinks");
+  postAtts.links = post.internalLinks;
   postAtts.replyDirectlyBelow =
     nextPost && nextPost.reply_to_post_number === post.post_number;
   postAtts.replyDirectlyAbove =
@@ -121,7 +121,7 @@ export default function transformPost(
   postAtts.linkCounts = post.link_counts;
   postAtts.actionCode = post.action_code;
   postAtts.actionCodeWho = post.action_code_who;
-  postAtts.topicUrl = topic.get("url");
+  postAtts.topicUrl = topic.url;
   postAtts.isSaving = post.isSaving;
 
   if (post.notice_type) {
@@ -156,15 +156,15 @@ export default function transformPost(
     postAtts.createdByAvatarTemplate = createdBy.avatar_template;
     postAtts.createdByName = createdBy.name;
 
-    postAtts.lastPostUrl = topic.get("lastPostUrl");
+    postAtts.lastPostUrl = topic.lastPostUrl;
     postAtts.lastPostUsername = details.last_poster.username;
     postAtts.lastPostAvatarTemplate = details.last_poster.avatar_template;
     postAtts.lastPostName = details.last_poster.name;
     postAtts.lastPostAt = topic.last_posted_at;
 
-    postAtts.topicReplyCount = topic.get("replyCount");
+    postAtts.topicReplyCount = topic.replyCount;
     postAtts.topicViews = topic.views;
-    postAtts.topicViewsHeat = topic.get("viewsHeat");
+    postAtts.topicViewsHeat = topic.viewsHeat;
 
     postAtts.participantCount = topic.participant_count;
     postAtts.topicLikeCount = topic.like_count;
@@ -176,7 +176,7 @@ export default function transformPost(
 
     postAtts.participants = details.participants;
 
-    const postStream = topic.get("postStream");
+    const postStream = topic.postStream;
     postAtts.userFilters = postStream.userFilters;
     postAtts.topicSummaryEnabled = postStream.summary;
     postAtts.topicWordCount = topic.word_count;
@@ -190,7 +190,7 @@ export default function transformPost(
     postAtts.deletedByUsername = post.get("postDeletedBy.username");
   }
 
-  const replyToUser = post.get("reply_to_user");
+  const replyToUser = post.reply_to_user;
   if (replyToUser) {
     postAtts.replyToUsername = replyToUser.username;
     postAtts.replyToAvatarTemplate = replyToUser.avatar_template;
@@ -217,7 +217,7 @@ export default function transformPost(
   const likeAction = post.likeAction;
   if (likeAction) {
     postAtts.liked = likeAction.acted;
-    postAtts.canToggleLike = likeAction.get("canToggle");
+    postAtts.canToggleLike = likeAction.canToggle;
     postAtts.showLike = postAtts.liked || postAtts.canToggleLike;
     postAtts.likeCount = likeAction.count;
   }

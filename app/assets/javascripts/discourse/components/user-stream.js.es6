@@ -49,7 +49,7 @@ export default Ember.Component.extend(LoadMore, {
   actions: {
     removeBookmark(userAction) {
       const stream = this.stream;
-      Post.updateBookmark(userAction.get("post_id"), false)
+      Post.updateBookmark(userAction.post_id, false)
         .then(() => {
           stream.remove(userAction);
         })
@@ -61,8 +61,8 @@ export default Ember.Component.extend(LoadMore, {
       if (composer.get("model.viewOpen")) {
         composer.close();
       }
-      if (item.get("postUrl")) {
-        DiscourseURL.routeTo(item.get("postUrl"));
+      if (item.postUrl) {
+        DiscourseURL.routeTo(item.postUrl);
       } else {
         Draft.get(item.draft_key)
           .then(d => {

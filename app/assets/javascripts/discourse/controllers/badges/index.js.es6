@@ -5,8 +5,8 @@ export default Ember.Controller.extend({
   badgeGroups(model) {
     var sorted = _.sortBy(model, function(badge) {
       var pos = badge.get("badge_grouping.position");
-      var type = badge.get("badge_type_id");
-      var name = badge.get("name");
+      var type = badge.badge_type_id;
+      var name = badge.name;
 
       return ("000" + pos).slice(-4) + (10 - type) + name;
     });

@@ -48,7 +48,7 @@ export default Ember.Controller.extend({
     Topic.bulkOperation(selected, params).then(
       () => {
         const model = this.get("userTopicsList.model");
-        const topics = model.get("topics");
+        const topics = model.topics;
         topics.removeObjects(selected);
         selected.clear();
         model.loadMore();

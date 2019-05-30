@@ -38,7 +38,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
         name: I18n.t("topic.auto_bump.title")
       }
     ];
-    if (this.currentUser.get("staff")) {
+    if (this.currentUser.staff) {
       types.push({
         id: DELETE_STATUS_TYPE,
         name: I18n.t("topic.auto_delete.title")

@@ -5,7 +5,7 @@ export default Discourse.Route.extend({
 
   model() {
     return this.store.findFiltered("topicList", {
-      filter: `topics/groups/${this.modelFor("group").get("name")}`
+      filter: `topics/groups/${this.modelFor("group").name}`
     });
   }
 });

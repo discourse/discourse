@@ -132,8 +132,8 @@ export default Ember.Object.extend({
 
     hydrated.set(
       "content",
-      hydrated.get("content").map(item => {
-        var staleItem = stale.content.findBy("id", item.get("id"));
+      hydrated.content.map(item => {
+        var staleItem = stale.content.findBy("id", item.id);
         if (staleItem) {
           staleItem.setProperties(item);
         } else {
@@ -161,17 +161,17 @@ export default Ember.Object.extend({
 
       let pageTarget = result.meta || result;
       let totalRows =
-        pageTarget["total_rows_" + typeName] || resultSet.get("totalRows");
+        pageTarget["total_rows_" + typeName] || resultSet.totalRows;
       let loadMoreUrl = pageTarget["load_more_" + typeName];
       let content = result[typeName].map(obj =>
         this._hydrate(type, obj, result)
       );
 
       resultSet.setProperties({ totalRows, loadMoreUrl });
-      resultSet.get("content").pushObjects(content);
+      resultSet.content.pushObjects(content);
 
       // If we've loaded them all, clear the load more URL
-      if (resultSet.get("length") >= totalRows) {
+      if (resultSet.length >= totalRows) {
         resultSet.set("loadMoreUrl", null);
       }
     });
@@ -196,15 +196,15 @@ export default Ember.Object.extend({
 
   destroyRecord(type, record) {
     // If the record is new, don't perform an Ajax call
-    if (record.get("isNew")) {
-      removeMap(type, record.get("id"));
+    if (record.isNew) {
+      removeMap(type, record.id);
       return Ember.RSVP.Promise.resolve(true);
     }
 
     return this.adapterFor(type)
       .destroyRecord(this, type, record)
       .then(function(result) {
-        removeMap(type, record.get("id"));
+        removeMap(type, record.id);
         return result;
       });
   },

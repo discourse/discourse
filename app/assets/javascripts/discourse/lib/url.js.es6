@@ -185,7 +185,7 @@ const DiscourseURL = Ember.Object.extend({
       return;
     }
 
-    if (Discourse.get("requiresRefresh")) {
+    if (Discourse.requiresRefresh) {
       return redirectTo(Discourse.getURL(path));
     }
 
@@ -223,7 +223,7 @@ const DiscourseURL = Ember.Object.extend({
       if (currentUser) {
         path = path.replace(
           myPath,
-          userPath(currentUser.get("username_lower") + "/")
+          userPath(currentUser.username_lower + "/")
         );
       } else {
         return redirectTo("/404");

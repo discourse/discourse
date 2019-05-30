@@ -34,7 +34,7 @@ export default Ember.Mixin.create({
   @computed("setting", "buffered.value")
   preview(setting, value) {
     // A bit hacky, but allows us to use helpers
-    if (setting.get("setting") === "category_style") {
+    if (setting.setting === "category_style") {
       let category = this.site.get("categories.firstObject");
       if (category) {
         return categoryLinkHTML(category, {
@@ -43,7 +43,7 @@ export default Ember.Mixin.create({
       }
     }
 
-    let preview = setting.get("preview");
+    let preview = setting.preview;
     if (preview) {
       return new Handlebars.SafeString(
         "<div class='preview'>" +

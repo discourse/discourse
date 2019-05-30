@@ -76,7 +76,7 @@ export default Ember.Component.extend({
     let reviewable = this.reviewable;
 
     let performAction = () => {
-      let version = reviewable.get("version");
+      let version = reviewable.version;
       this.set("updating", true);
       return ajax(
         `/review/${reviewable.id}/perform/${action.id}?version=${version}`,
@@ -124,9 +124,9 @@ export default Ember.Component.extend({
   _penalize(adminToolMethod, reviewable, performAction) {
     let adminTools = this.adminTools;
     if (adminTools) {
-      let createdBy = reviewable.get("target_created_by");
-      let postId = reviewable.get("post_id");
-      let postEdit = reviewable.get("raw");
+      let createdBy = reviewable.target_created_by;
+      let postId = reviewable.post_id;
+      let postEdit = reviewable.raw;
       return adminTools[adminToolMethod](createdBy, {
         postId,
         postEdit,
@@ -180,7 +180,7 @@ export default Ember.Component.extend({
         return;
       }
 
-      let msg = action.get("confirm_message");
+      let msg = action.confirm_message;
       if (msg) {
         bootbox.confirm(msg, answer => {
           if (answer) {

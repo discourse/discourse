@@ -27,22 +27,22 @@ export default Ember.Controller.extend({
     },
 
     edit(record) {
-      if (!record.get("editing")) {
-        this.set("savedIpAddress", record.get("ip_address"));
+      if (!record.editing) {
+        this.set("savedIpAddress", record.ip_address);
       }
       record.set("editing", true);
     },
 
     cancel(record) {
       const savedIpAddress = this.savedIpAddress;
-      if (savedIpAddress && record.get("editing")) {
+      if (savedIpAddress && record.editing) {
         record.set("ip_address", savedIpAddress);
       }
       record.set("editing", false);
     },
 
     save(record) {
-      const wasEditing = record.get("editing");
+      const wasEditing = record.editing;
       record.set("editing", false);
       record
         .save()
@@ -64,7 +64,7 @@ export default Ember.Controller.extend({
     destroy(record) {
       return bootbox.confirm(
         I18n.t("admin.logs.screened_ips.delete_confirm", {
-          ip_address: record.get("ip_address")
+          ip_address: record.ip_address
         }),
         I18n.t("no_value"),
         I18n.t("yes_value"),

@@ -20,7 +20,7 @@ export default Ember.Controller.extend({
 
   actions: {
     edit(siteText) {
-      this.transitionToRoute("adminSiteText.edit", siteText.get("id"));
+      this.transitionToRoute("adminSiteText.edit", siteText.id);
     },
 
     toggleOverridden() {

@@ -126,7 +126,7 @@ export default Ember.Component.extend({
       const step = this.step;
       step.validate();
 
-      if (step.get("valid")) {
+      if (step.valid) {
         this.set("saving", true);
 
         step
@@ -178,7 +178,7 @@ export default Ember.Component.extend({
         }
       }
 
-      if (step.get("valid")) {
+      if (step.valid) {
         this.advance();
       } else {
         this.animateInvalidFields();

@@ -34,7 +34,7 @@ export default createWidget("user-notifications", {
       limit = 40;
     }
 
-    const silent = this.currentUser.get("enforcedSecondFactor");
+    const silent = this.currentUser.enforcedSecondFactor;
     const stale = this.store.findStale(
       "notification",
       { recent: true, silent, limit },
@@ -43,7 +43,7 @@ export default createWidget("user-notifications", {
 
     if (stale.hasResults) {
       const results = stale.results;
-      let content = results.get("content");
+      let content = results.content;
 
       // we have to truncate to limit, otherwise we will render too much
       if (content && content.length > limit) {

@@ -102,8 +102,8 @@ const AdminUser = Discourse.User.extend({
     const message = I18n.messageFormat(
       "admin.user.delete_all_posts_confirm_MF",
       {
-        POSTS: user.get("post_count"),
-        TOPICS: user.get("topic_count")
+        POSTS: user.post_count,
+        TOPICS: user.topic_count
       }
     );
     const buttons = [
@@ -134,7 +134,7 @@ const AdminUser = Discourse.User.extend({
     };
     const performDelete = () => {
       let deletedPercentage = 0;
-      return ajax(`/admin/users/${user.get("id")}/delete_posts_batch`, {
+      return ajax(`/admin/users/${user.id}/delete_posts_batch`, {
         type: "PUT"
       })
         .then(({ posts_deleted }) => {
@@ -144,7 +144,7 @@ const AdminUser = Discourse.User.extend({
           } else {
             deletedPosts += posts_deleted;
             deletedPercentage = Math.floor(
-              (deletedPosts * 100) / user.get("post_count")
+              (deletedPosts * 100) / user.post_count
             );
             $(".delete-posts-progress .progress-bar > span").css({
               width: `${deletedPercentage}%`
@@ -155,7 +155,7 @@ const AdminUser = Discourse.User.extend({
         .catch(e => {
           bootbox.hideAll();
           let error;
-          AdminUser.find(user.get("id")).then(u => user.setProperties(u));
+          AdminUser.find(user.id).then(u => user.setProperties(u));
           if (e.responseJSON && e.responseJSON.errors) {
             error = e.responseJSON.errors[0];
           }
@@ -408,14 +408,14 @@ const AdminUser = Discourse.User.extend({
     const message = I18n.t("admin.user.anonymize_confirm");
 
     const performAnonymize = function() {
-      return ajax(`/admin/users/${user.get("id")}/anonymize.json`, {
+      return ajax(`/admin/users/${user.id}/anonymize.json`, {
         type: "PUT"
       })
         .then(function(data) {
           if (data.success) {
             if (data.username) {
               document.location = Discourse.getURL(
-                `/admin/users/${user.get("id")}/${data.username}`
+                `/admin/users/${user.id}/${data.username}`
               );
             } else {
               document.location = Discourse.getURL("/admin/users/list/active");
@@ -466,7 +466,7 @@ const AdminUser = Discourse.User.extend({
       if (opts && opts.deletePosts) {
         formData["delete_posts"] = true;
       }
-      return ajax(`/admin/users/${user.get("id")}.json`, {
+      return ajax(`/admin/users/${user.id}.json`, {
         type: "DELETE",
         data: formData
       })
@@ -485,7 +485,7 @@ const AdminUser = Discourse.User.extend({
           }
         })
         .catch(function() {
-          AdminUser.find(user.get("id")).then(u => user.setProperties(u));
+          AdminUser.find(user.id).then(u => user.setProperties(u));
           bootbox.alert(I18n.t("admin.user.delete_failed"));
         });
     };

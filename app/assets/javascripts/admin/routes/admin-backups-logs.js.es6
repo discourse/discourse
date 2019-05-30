@@ -4,7 +4,7 @@ export default Ember.Route.extend({
   // since the logs are pushed via the message bus
   // we only want to preload them (hence the beforeModel hook)
   beforeModel() {
-    const logs = this.controllerFor("adminBackupsLogs").get("logs");
+    const logs = this.controllerFor("adminBackupsLogs").logs;
     // preload the logs if any
     PreloadStore.getAndRemove("logs").then(function(preloadedLogs) {
       if (preloadedLogs && preloadedLogs.length) {

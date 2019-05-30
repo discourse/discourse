@@ -6,7 +6,7 @@ export default Discourse.Route.extend({
   },
 
   afterModel(group) {
-    if (group.get("automatic")) {
+    if (group.automatic) {
       this.replaceWith("group.manage.interaction", group);
     }
   }

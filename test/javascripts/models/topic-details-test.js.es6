@@ -4,13 +4,13 @@ import Topic from "discourse/models/topic";
 
 var buildDetails = function(id) {
   var topic = Topic.create({ id: id });
-  return topic.get("details");
+  return topic.details;
 };
 
 QUnit.test("defaults", assert => {
   var details = buildDetails(1234);
   assert.present(details, "the details are present by default");
-  assert.ok(!details.get("loaded"), "details are not loaded by default");
+  assert.ok(!details.loaded, "details are not loaded by default");
 });
 
 QUnit.test("updateFromJson", assert => {
@@ -25,5 +25,5 @@ QUnit.test("updateFromJson", assert => {
     1,
     "it loaded the allowed users"
   );
-  assert.containsInstance(details.get("allowed_users"), Discourse.User);
+  assert.containsInstance(details.allowed_users, Discourse.User);
 });

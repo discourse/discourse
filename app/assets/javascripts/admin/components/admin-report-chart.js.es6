@@ -44,10 +44,10 @@ export default Ember.Component.extend({
 
     const context = $chartCanvas[0].getContext("2d");
     const chartData = Ember.makeArray(
-      model.get("chartData") || model.get("data")
+      model.chartData || model.data
     );
     const prevChartData = Ember.makeArray(
-      model.get("prevChartData") || model.get("prev_data")
+      model.prevChartData || model.prev_data
     );
 
     const labels = chartData.map(d => d.x);

@@ -82,7 +82,7 @@ const TopicDetails = RestModel.extend({
 
   removeAllowedUser(user) {
     const users = this.allowed_users;
-    const username = user.get("username");
+    const username = user.username;
 
     return ajax("/t/" + this.get("topic.id") + "/remove-allowed-user", {
       type: "PUT",

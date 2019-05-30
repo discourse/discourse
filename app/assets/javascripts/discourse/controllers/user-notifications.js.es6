@@ -20,7 +20,7 @@ export default Ember.Controller.extend({
   @computed("model.content.@each.read")
   allNotificationsRead() {
     return !this.get("model.content").some(
-      notification => !notification.get("read")
+      notification => !notification.read
     );
   },
 

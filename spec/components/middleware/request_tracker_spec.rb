@@ -251,7 +251,7 @@ describe Middleware::RequestTracker do
           User.where(id: -100).pluck(:id)
         end
         redis_calls.times do
-          $redis.get("x")
+          $redis.x
         end
         result
       end

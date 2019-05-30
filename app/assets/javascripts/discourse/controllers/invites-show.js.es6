@@ -68,7 +68,7 @@ export default Ember.Controller.extend(
         let userCustomFields = {};
         if (!Ember.isEmpty(userFields)) {
           userFields.forEach(function(f) {
-            userCustomFields[f.get("field.id")] = f.get("value");
+            userCustomFields[f.get("field.id")] = f.value;
           });
         }
 

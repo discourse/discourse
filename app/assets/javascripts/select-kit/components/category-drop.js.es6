@@ -60,7 +60,7 @@ export default ComboBoxComponent.extend({
       countSubcategories: this.countSubcategories,
       displayCategoryDescription: !(
         this.currentUser &&
-        (this.currentUser.get("staff") || this.currentUser.trust_level > 0)
+        (this.currentUser.staff || this.currentUser.trust_level > 0)
       )
     });
   },

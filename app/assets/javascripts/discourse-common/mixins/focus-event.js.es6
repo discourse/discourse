@@ -1,11 +1,11 @@
 function gotFocus() {
-  if (!Discourse.get("hasFocus")) {
+  if (!Discourse.hasFocus) {
     Discourse.setProperties({ hasFocus: true, notify: false });
   }
 }
 
 function lostFocus() {
-  if (Discourse.get("hasFocus")) {
+  if (Discourse.hasFocus) {
     Discourse.set("hasFocus", false);
   }
 }

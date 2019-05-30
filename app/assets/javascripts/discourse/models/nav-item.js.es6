@@ -167,7 +167,7 @@ NavItem.reopenClass({
     items = items
       .map(i => Discourse.NavItem.fromText(i, args))
       .filter(
-        i => i !== null && !(category && i.get("name").indexOf("categor") === 0)
+        i => i !== null && !(category && i.name.indexOf("categor") === 0)
       );
 
     const extraItems = NavItem.extraNavItems.filter(item => {

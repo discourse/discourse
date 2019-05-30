@@ -184,7 +184,7 @@ export default Ember.Controller.extend(CanCheckEmails, {
 
     clearPenaltyHistory() {
       const user = this.model;
-      const path = `/admin/users/${user.get("id")}/penalty_history`;
+      const path = `/admin/users/${user.id}/penalty_history`;
 
       return ajax(path, { type: "DELETE" })
         .then(() => user.set("tl3_requirements.penalty_counts.total", 0))

@@ -273,7 +273,7 @@ export default MountWidget.extend({
   _posted(staged) {
     this.queueRerender(() => {
       if (staged) {
-        const postNumber = staged.get("post_number");
+        const postNumber = staged.post_number;
         DiscourseURL.jumpToPost(postNumber, { skipIfOnScreen: true });
       }
     });

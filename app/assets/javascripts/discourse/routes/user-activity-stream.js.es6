@@ -6,7 +6,7 @@ export default Discourse.Route.extend(ViewingActionType, {
   },
 
   model() {
-    return this.modelFor("user").get("stream");
+    return this.modelFor("user").stream;
   },
 
   afterModel(model, transition) {

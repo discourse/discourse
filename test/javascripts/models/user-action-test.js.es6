@@ -25,5 +25,5 @@ QUnit.test("collapsing likes", assert => {
   assert.equal(actions.length, 2);
 
   assert.equal(actions[0].get("children.length"), 1);
-  assert.equal(actions[0].get("children")[0].items.length, 2);
+  assert.equal(actions[0].children[0].items.length, 2);
 });

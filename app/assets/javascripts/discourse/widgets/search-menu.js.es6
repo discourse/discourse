@@ -109,7 +109,7 @@ export default createWidget("search-menu", {
         if (
           this.currentUser &&
           ctx.id.toString().toLowerCase() ===
-            this.currentUser.get("username_lower") &&
+            this.currentUser.username_lower &&
           type === "private_messages"
         ) {
           query += " in:private";
@@ -172,7 +172,7 @@ export default createWidget("search-menu", {
 
   searchContext() {
     if (!this._searchContext) {
-      this._searchContext = this.searchService().get("searchContext");
+      this._searchContext = this.searchService().searchContext;
     }
     return this._searchContext;
   },

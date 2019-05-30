@@ -1,6 +1,6 @@
 export default Discourse.Route.extend({
   titleToken() {
-    return [this.modelFor("group").get("name")];
+    return [this.modelFor("group").name];
   },
 
   model(params) {
@@ -8,7 +8,7 @@ export default Discourse.Route.extend({
   },
 
   serialize(model) {
-    return { name: model.get("name").toLowerCase() };
+    return { name: model.name.toLowerCase() };
   },
 
   setupController(controller, model) {

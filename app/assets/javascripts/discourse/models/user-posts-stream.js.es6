@@ -53,10 +53,10 @@ export default Discourse.Model.extend({
           const posts = result.map(function(post) {
             return UserAction.create(post);
           });
-          self.get("content").pushObjects(posts);
+          self.content.pushObjects(posts);
           self.setProperties({
             loaded: true,
-            itemsLoaded: self.get("itemsLoaded") + posts.length,
+            itemsLoaded: self.itemsLoaded + posts.length,
             canLoadMore: posts.length > 0
           });
         }

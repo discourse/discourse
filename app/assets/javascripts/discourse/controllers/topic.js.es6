@@ -76,7 +76,7 @@ export default Ember.Controller.extend(bufferedProperty("model"), {
     return (
       canCreatePost &&
       this.currentUser &&
-      this.currentUser.get("enable_quoting")
+      this.currentUser.enable_quoting
     );
   },
 
@@ -109,7 +109,7 @@ export default Ember.Controller.extend(bufferedProperty("model"), {
   init() {
     this._super(...arguments);
     this.appEvents.on("post:show-revision", (postNumber, revision) => {
-      const post = this.model.get("postStream").postForPostNumber(postNumber);
+      const post = this.model.postStream.postForPostNumber(postNumber);
       if (!post) {
         return;
       }
@@ -163,8 +163,8 @@ export default Ember.Controller.extend(bufferedProperty("model"), {
   @computed("model.isPrivateMessage")
   canEditTags(isPrivateMessage) {
     return (
-      this.site.get("can_tag_topics") &&
-      (!isPrivateMessage || this.site.get("can_tag_pms"))
+      this.site.can_tag_topics &&
+      (!isPrivateMessage || this.site.can_tag_pms)
     );
   },
 
@@ -209,12 +209,12 @@ export default Ember.Controller.extend(bufferedProperty("model"), {
 
     return ajax(url, {
       data: _.merge(
-        { post_number: post.get("post_number") },
-        postStream.get("streamFilters")
+        { post_number: post.post_number },
+        postStream.streamFilters
       )
     })
       .then(result => {
-        result.post_ids.pushObject(post.get("id"));
+        result.post_ids.pushObject(post.id);
         this._updateSelectedPostIds(result.post_ids);
       })
       .finally(() => {
@@ -262,15 +262,15 @@ export default Ember.Controller.extend(bufferedProperty("model"), {
             draftKey: post.get("topic.draft_key")
           };
 
-          if (post.get("post_number") === 1) {
-            composerOpts.topic = post.get("topic");
+          if (post.post_number === 1) {
+            composerOpts.topic = post.topic;
           } else {
             composerOpts.post = post;
           }
 
           // If the composer is associated with a different post, we don't change it.
           const composerPost = composer.get("model.post");
-          if (composerPost && composerPost.get("id") !== this.get("post.id")) {
+          if (composerPost && composerPost.id !== this.get("post.id")) {
             composerOpts.post = composerPost;
           }
 
@@ -278,8 +278,8 @@ export default Ember.Controller.extend(bufferedProperty("model"), {
           if (composer.get("model.viewOpen")) {
             this.appEvents.trigger("composer:insert-block", quotedText);
           } else if (composer.get("model.viewDraft")) {
-            const model = composer.get("model");
-            model.set("reply", model.get("reply") + quotedText);
+            const model = composer.model;
+            model.set("reply", model.reply + quotedText);
             composer.send("openIfDraft");
           } else {
             composer.open(composerOpts);
@@ -301,16 +301,16 @@ export default Ember.Controller.extend(bufferedProperty("model"), {
         return;
       }
 
-      const postNumber = post.get("post_number");
+      const postNumber = post.post_number;
       const topic = this.model;
       topic.set("currentPost", postNumber);
-      if (postNumber > (topic.get("last_read_post_number") || 0)) {
-        topic.set("last_read_post_id", post.get("id"));
+      if (postNumber > (topic.last_read_post_number || 0)) {
+        topic.set("last_read_post_id", post.id);
         topic.set("last_read_post_number", postNumber);
       }
 
       this.send("postChangedRoute", postNumber);
-      this._progressIndex = topic.get("postStream").progressIndexOfPost(post);
+      this._progressIndex = topic.postStream.progressIndexOfPost(post);
 
       this.appEvents.trigger("topic:current-post-changed", { post });
     },
@@ -335,7 +335,7 @@ export default Ember.Controller.extend(bufferedProperty("model"), {
       const postStream = this.get("model.postStream");
       const firstLoadedPost = postStream.get("posts.firstObject");
 
-      if (post.get && post.get("post_number") === 1) {
+      if (post.get && post.post_number === 1) {
         return;
       }
 
@@ -354,7 +354,7 @@ export default Ember.Controller.extend(bufferedProperty("model"), {
       if (
         lastLoadedPost &&
         lastLoadedPost === post &&
-        postStream.get("canAppendMore")
+        postStream.canAppendMore
       ) {
         postStream.appendMore().then(() => refresh());
         // show loading stuff
@@ -392,13 +392,13 @@ export default Ember.Controller.extend(bufferedProperty("model"), {
     toggleArchiveMessage() {
       const topic = this.model;
 
-      if (topic.get("archiving")) {
+      if (topic.archiving) {
         return;
       }
 
-      const backToInbox = () => this.gotoInbox(topic.get("inboxGroupName"));
+      const backToInbox = () => this.gotoInbox(topic.inboxGroupName);
 
-      if (topic.get("message_archived")) {
+      if (topic.message_archived) {
         topic.moveToInbox().then(backToInbox);
       } else {
         topic.archiveMessage().then(backToInbox);
@@ -409,7 +409,7 @@ export default Ember.Controller.extend(bufferedProperty("model"), {
       const postStream = this.get("model.postStream");
       let firstPost = postStream.get("posts.firstObject");
 
-      if (firstPost.get("post_number") !== 1) {
+      if (firstPost.post_number !== 1) {
         const postId = postStream.findPostIdForPostNumber(1);
         // try loading from identity map first
         firstPost = postStream.findLoadedPost(postId);
@@ -427,7 +427,7 @@ export default Ember.Controller.extend(bufferedProperty("model"), {
     // Post related methods
     replyToPost(post) {
       const composerController = this.composer;
-      const topic = post ? post.get("topic") : this.model;
+      const topic = post ? post.topic : this.model;
       const quoteState = this.quoteState;
       const postStream = this.get("model.postStream");
 
@@ -441,7 +441,7 @@ export default Ember.Controller.extend(bufferedProperty("model"), {
       quoteState.clear();
 
       if (
-        composerController.get("model.topic.id") === topic.get("id") &&
+        composerController.get("model.topic.id") === topic.id &&
         composerController.get("model.action") === Composer.REPLY
       ) {
         composerController.set("model.post", post);
@@ -450,15 +450,15 @@ export default Ember.Controller.extend(bufferedProperty("model"), {
       } else {
         const opts = {
           action: Composer.REPLY,
-          draftKey: topic.get("draft_key"),
-          draftSequence: topic.get("draft_sequence")
+          draftKey: topic.draft_key,
+          draftSequence: topic.draft_sequence
         };
 
         if (quotedText) {
           opts.quote = quotedText;
         }
 
-        if (post && post.get("post_number") !== 1) {
+        if (post && post.post_number !== 1) {
           opts.post = post;
         } else {
           opts.topic = topic;
@@ -470,11 +470,11 @@ export default Ember.Controller.extend(bufferedProperty("model"), {
     },
 
     recoverPost(post) {
-      post.get("post_number") === 1 ? this.recoverTopic() : post.recover();
+      post.post_number === 1 ? this.recoverTopic() : post.recover();
     },
 
     deletePost(post) {
-      if (post.get("post_number") === 1) {
+      if (post.post_number === 1) {
         return this.deleteTopic();
       } else if (!post.can_delete) {
         return false;
@@ -482,10 +482,10 @@ export default Ember.Controller.extend(bufferedProperty("model"), {
 
       const user = this.currentUser;
       const refresh = () => this.appEvents.trigger("post-stream:refresh");
-      const hasReplies = post.get("reply_count") > 0;
+      const hasReplies = post.reply_count > 0;
       const loadedPosts = this.get("model.postStream.posts");
 
-      if (user.get("staff") && hasReplies) {
+      if (user.staff && hasReplies) {
         ajax(`/posts/${post.id}/reply-ids.json`).then(replies => {
           const buttons = [];
 
@@ -571,15 +571,15 @@ export default Ember.Controller.extend(bufferedProperty("model"), {
 
       const composer = this.composer;
       let topic = this.model;
-      const composerModel = composer.get("model");
+      const composerModel = composer.model;
       let editingFirst =
         composerModel &&
-        (post.get("firstPost") || composerModel.get("editingFirstPost"));
+        (post.firstPost || composerModel.editingFirstPost);
 
       let editingSharedDraft = false;
       let draftsCategoryId = this.get("site.shared_drafts_category_id");
       if (draftsCategoryId && draftsCategoryId === topic.get("category.id")) {
-        editingSharedDraft = post.get("firstPost");
+        editingSharedDraft = post.firstPost;
       }
 
       const opts = {
@@ -590,7 +590,7 @@ export default Ember.Controller.extend(bufferedProperty("model"), {
       };
 
       if (editingSharedDraft) {
-        opts.destinationCategoryId = topic.get("destination_category_id");
+        opts.destinationCategoryId = topic.destination_category_id;
       }
 
       // Cancel and reopen the composer for the first post
@@ -796,7 +796,7 @@ export default Ember.Controller.extend(bufferedProperty("model"), {
 
     toggleParticipant(user) {
       this.get("model.postStream")
-        .toggleParticipant(user.get("username"))
+        .toggleParticipant(user.username)
         .then(() => this.updateQueryParams);
     },
 
@@ -897,7 +897,7 @@ export default Ember.Controller.extend(bufferedProperty("model"), {
     togglePinnedForUser() {
       if (this.get("model.pinned_at")) {
         const topic = this.model;
-        if (topic.get("pinned")) {
+        if (topic.pinned) {
           topic.clearPin();
         } else {
           topic.rePin();
@@ -949,7 +949,7 @@ export default Ember.Controller.extend(bufferedProperty("model"), {
             this.get("model.title")
           )}](${postUrl})`;
           composerController
-            .get("model")
+            .model
             .prependText(
               `${I18n.t("post.continue_discussion", { postLink })}\n\n${q}`,
               { new_line: true }
@@ -966,7 +966,7 @@ export default Ember.Controller.extend(bufferedProperty("model"), {
     },
 
     toggleWiki(post) {
-      return post.updatePostField("wiki", !post.get("wiki"));
+      return post.updatePostField("wiki", !post.wiki);
     },
 
     togglePostType(post) {
@@ -974,7 +974,7 @@ export default Ember.Controller.extend(bufferedProperty("model"), {
       const moderator = this.site.get("post_types.moderator_action");
       return post.updatePostField(
         "post_type",
-        post.get("post_type") === moderator ? regular : moderator
+        post.post_type === moderator ? regular : moderator
       );
     },
 
@@ -1006,10 +1006,10 @@ export default Ember.Controller.extend(bufferedProperty("model"), {
   _jumpToIndex(index) {
     const postStream = this.get("model.postStream");
 
-    if (postStream.get("isMegaTopic")) {
+    if (postStream.isMegaTopic) {
       this._jumpToPostNumber(index);
     } else {
-      const stream = postStream.get("stream");
+      const stream = postStream.stream;
       const streamIndex = Math.max(1, Math.min(stream.length, index));
       this._jumpToPostId(stream[streamIndex - 1]);
     }
@@ -1022,7 +1022,7 @@ export default Ember.Controller.extend(bufferedProperty("model"), {
       .loadNearestPostToDate(date)
       .then(post => {
         DiscourseURL.routeTo(
-          this.model.urlForPostNumber(post.get("post_number"))
+          this.model.urlForPostNumber(post.post_number)
         );
       })
       .catch(() => {
@@ -1032,15 +1032,15 @@ export default Ember.Controller.extend(bufferedProperty("model"), {
 
   _jumpToPostNumber(postNumber) {
     const postStream = this.get("model.postStream");
-    const post = postStream.get("posts").findBy("post_number", postNumber);
+    const post = postStream.posts.findBy("post_number", postNumber);
 
     if (post) {
       DiscourseURL.routeTo(
-        this.model.urlForPostNumber(post.get("post_number"))
+        this.model.urlForPostNumber(post.post_number)
       );
     } else {
       postStream.loadPostByPostNumber(postNumber).then(p => {
-        DiscourseURL.routeTo(this.model.urlForPostNumber(p.get("post_number")));
+        DiscourseURL.routeTo(this.model.urlForPostNumber(p.post_number));
       });
     }
   },
@@ -1057,15 +1057,15 @@ export default Ember.Controller.extend(bufferedProperty("model"), {
     this.appEvents.trigger("topic:jump-to-post", postId);
 
     const topic = this.model;
-    const postStream = topic.get("postStream");
+    const postStream = topic.postStream;
     const post = postStream.findLoadedPost(postId);
 
     if (post) {
-      DiscourseURL.routeTo(topic.urlForPostNumber(post.get("post_number")));
+      DiscourseURL.routeTo(topic.urlForPostNumber(post.post_number));
     } else {
       // need to load it
       postStream.findPostsByIds([postId]).then(arr => {
-        DiscourseURL.routeTo(topic.urlForPostNumber(arr[0].get("post_number")));
+        DiscourseURL.routeTo(topic.urlForPostNumber(arr[0].post_number));
       });
     }
   },
@@ -1233,7 +1233,7 @@ export default Ember.Controller.extend(bufferedProperty("model"), {
 
         if (data.reload_topic) {
           topic.reload().then(() => {
-            this.send("postChangedRoute", topic.get("post_number") || 1);
+            this.send("postChangedRoute", topic.post_number || 1);
             this.appEvents.trigger("header:update-topic", topic);
             if (data.refresh_stream) postStream.refresh();
           });
@@ -1297,16 +1297,16 @@ export default Ember.Controller.extend(bufferedProperty("model"), {
         // hence the -2 check (dicobot id). We can shift all this code
         // to discobot plugin longer term
         if (
-          topic.get("isPrivateMessage") &&
+          topic.isPrivateMessage &&
           this.currentUser &&
-          this.currentUser.get("id") !== data.user_id &&
+          this.currentUser.id !== data.user_id &&
           data.user_id === -2 &&
           data.type === "created"
         ) {
           const postNumber = data.post_number;
           const notInPostStream =
-            topic.get("highest_post_number") <= postNumber;
-          const postNumberDifference = postNumber - topic.get("currentPost");
+            topic.highest_post_number <= postNumber;
+          const postNumberDifference = postNumber - topic.currentPost;
 
           if (
             notInPostStream &&
@@ -1341,13 +1341,13 @@ export default Ember.Controller.extend(bufferedProperty("model"), {
 
   readPosts(topicId, postNumbers) {
     const topic = this.model;
-    const postStream = topic.get("postStream");
+    const postStream = topic.postStream;
 
-    if (topic.get("id") === topicId) {
-      postStream.get("posts").forEach(post => {
+    if (topic.id === topicId) {
+      postStream.posts.forEach(post => {
         if (!post.read && postNumbers.includes(post.post_number)) {
           post.set("read", true);
-          this.appEvents.trigger("post-stream:refresh", { id: post.get("id") });
+          this.appEvents.trigger("post-stream:refresh", { id: post.id });
         }
       });
 
@@ -1358,7 +1358,7 @@ export default Ember.Controller.extend(bufferedProperty("model"), {
       ) {
         // automatically unpin topics when the user reaches the bottom
         const max = _.max(postNumbers);
-        if (topic.get("pinned") && max >= topic.get("highest_post_number")) {
+        if (topic.pinned && max >= topic.highest_post_number) {
           Ember.run.next(() => topic.clearPin());
         }
       }

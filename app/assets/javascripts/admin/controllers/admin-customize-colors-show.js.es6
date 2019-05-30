@@ -4,7 +4,7 @@ export default Ember.Controller.extend({
   @computed("model.colors", "onlyOverridden")
   colors(allColors, onlyOverridden) {
     if (onlyOverridden) {
-      return allColors.filter(color => color.get("overridden"));
+      return allColors.filter(color => color.overridden);
     } else {
       return allColors;
     }

@@ -64,7 +64,7 @@ export default Ember.Component.extend(bufferedProperty("host"), {
 
     cancel() {
       const host = this.host;
-      if (host.get("isNew")) {
+      if (host.isNew) {
         this.deleteHost(host);
       } else {
         this.rollbackBuffer();

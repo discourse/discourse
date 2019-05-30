@@ -37,7 +37,7 @@ export default Ember.Component.extend({
         const model = this.model;
 
         model
-          .addMembers(this.currentUser.get("username"))
+          .addMembers(this.currentUser.username)
           .then(() => {
             model.set("is_group_user", true);
           })

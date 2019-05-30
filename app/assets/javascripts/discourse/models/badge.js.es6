@@ -26,7 +26,7 @@ const Badge = RestModel.extend({
     }
     if (json.badge_types) {
       json.badge_types.forEach(function(badgeType) {
-        if (badgeType.id === self.get("badge_type_id")) {
+        if (badgeType.id === self.badge_type_id) {
           self.set("badge_type", Object.create(badgeType));
         }
       });
@@ -118,10 +118,10 @@ Badge.reopenClass({
     }
     badges = badges.map(function(badgeJson) {
       const badge = Badge.create(badgeJson);
-      badge.set("badge_type", badgeTypes[badge.get("badge_type_id")]);
+      badge.set("badge_type", badgeTypes[badge.badge_type_id]);
       badge.set(
         "badge_grouping",
-        badgeGroupings[badge.get("badge_grouping_id")]
+        badgeGroupings[badge.badge_grouping_id]
       );
       return badge;
     });

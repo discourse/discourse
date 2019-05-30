@@ -20,21 +20,21 @@ QUnit.test("avatarTemplate", function(assert) {
   });
 
   assert.equal(
-    avatarSelectorController.get("selectedUploadId"),
+    avatarSelectorController.selectedUploadId,
     1,
     "we are using system by default"
   );
 
   avatarSelectorController.set("selected", "gravatar");
   assert.equal(
-    avatarSelectorController.get("selectedUploadId"),
+    avatarSelectorController.selectedUploadId,
     2,
     "we are using gravatar when set"
   );
 
   avatarSelectorController.set("selected", "custom");
   assert.equal(
-    avatarSelectorController.get("selectedUploadId"),
+    avatarSelectorController.selectedUploadId,
     3,
     "we are using custom when set"
   );

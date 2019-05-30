@@ -19,7 +19,7 @@ export default Discourse.Route.extend({
   setupController(controller, model) {
     controller.setProperties({
       model,
-      user: this.controllerFor("user").get("model"),
+      user: this.controllerFor("user").model,
       filter: this.inviteFilter,
       searchTerm: "",
       totalInvites: model.invites.length,

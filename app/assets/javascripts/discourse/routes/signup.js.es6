@@ -4,7 +4,7 @@ const SignupRoute = buildStaticRoute("signup");
 
 SignupRoute.reopen({
   beforeModel() {
-    var canSignUp = this.controllerFor("application").get("canSignUp");
+    var canSignUp = this.controllerFor("application").canSignUp;
 
     if (!this.siteSettings.login_required) {
       this.replaceWith("discovery.latest").then(e => {

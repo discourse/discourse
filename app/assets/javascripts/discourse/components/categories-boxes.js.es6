@@ -16,7 +16,7 @@ export default Ember.Component.extend({
 
   @computed("categories.[].subcategories")
   hasSubcategories() {
-    return this.categories.any(c => !Ember.isEmpty(c.get("subcategories")));
+    return this.categories.any(c => !Ember.isEmpty(c.subcategories));
   },
 
   click(e) {

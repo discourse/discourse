@@ -32,7 +32,7 @@ createWidget("topic-admin-menu-button", {
   },
 
   html(attrs, state) {
-    if (!this.currentUser || !this.currentUser.get("canManageTopic")) {
+    if (!this.currentUser || !this.currentUser.canManageTopic) {
       return;
     }
 
@@ -141,9 +141,9 @@ export default createWidget("topic-admin-menu", {
     });
 
     const topic = attrs.topic;
-    const details = topic.get("details");
+    const details = topic.details;
 
-    if (details.get("can_delete")) {
+    if (details.can_delete) {
       buttons.push({
         className: "topic-admin-delete",
         buttonClass: "btn-danger",
@@ -153,7 +153,7 @@ export default createWidget("topic-admin-menu", {
       });
     }
 
-    if (topic.get("deleted") && details.get("can_recover")) {
+    if (topic.deleted && details.can_recover) {
       buttons.push({
         className: "topic-admin-recover",
         buttonClass: "btn-default",
@@ -163,7 +163,7 @@ export default createWidget("topic-admin-menu", {
       });
     }
 
-    if (topic.get("closed")) {
+    if (topic.closed) {
       buttons.push({
         className: "topic-admin-open",
         buttonClass: "btn-default",
@@ -189,10 +189,10 @@ export default createWidget("topic-admin-menu", {
       label: "actions.timed_update"
     });
 
-    const isPrivateMessage = topic.get("isPrivateMessage");
+    const isPrivateMessage = topic.isPrivateMessage;
 
-    const featured = topic.get("pinned_at") || topic.get("isBanner");
-    if (!isPrivateMessage && (topic.get("visible") || featured)) {
+    const featured = topic.pinned_at || topic.isBanner;
+    if (!isPrivateMessage && (topic.visible || featured)) {
       buttons.push({
         className: "topic-admin-pin",
         buttonClass: "btn-default",
@@ -202,7 +202,7 @@ export default createWidget("topic-admin-menu", {
       });
     }
 
-    if (this.currentUser.get("staff")) {
+    if (this.currentUser.staff) {
       buttons.push({
         className: "topic-admin-change-timestamp",
         buttonClass: "btn-default",
@@ -226,11 +226,11 @@ export default createWidget("topic-admin-menu", {
         buttonClass: "btn-default",
         action: "toggleArchived",
         icon: "folder",
-        label: topic.get("archived") ? "actions.unarchive" : "actions.archive"
+        label: topic.archived ? "actions.unarchive" : "actions.archive"
       });
     }
 
-    const visible = topic.get("visible");
+    const visible = topic.visible;
     buttons.push({
       className: "topic-admin-visible",
       buttonClass: "btn-default",
@@ -239,7 +239,7 @@ export default createWidget("topic-admin-menu", {
       label: visible ? "actions.invisible" : "actions.visible"
     });
 
-    if (details.get("can_convert_topic")) {
+    if (details.can_convert_topic) {
       buttons.push({
         className: "topic-admin-convert",
         buttonClass: "btn-default",
@@ -251,7 +251,7 @@ export default createWidget("topic-admin-menu", {
       });
     }
 
-    if (this.currentUser.get("staff")) {
+    if (this.currentUser.staff) {
       buttons.push({
         icon: "list",
         buttonClass: "btn-default",

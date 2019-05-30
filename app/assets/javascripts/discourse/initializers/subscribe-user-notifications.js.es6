@@ -26,11 +26,11 @@ export default {
       });
 
       bus.subscribe(
-        `/notification/${user.get("id")}`,
+        `/notification/${user.id}`,
         data => {
           const store = container.lookup("service:store");
-          const oldUnread = user.get("unread_notifications");
-          const oldPM = user.get("unread_private_messages");
+          const oldUnread = user.unread_notifications;
+          const oldPM = user.unread_private_messages;
 
           user.setProperties({
             unread_notifications: data.unread_notifications,
@@ -62,7 +62,7 @@ export default {
             data.last_notification && data.last_notification.notification;
 
           if (stale && stale.hasResults && lastNotification) {
-            const oldNotifications = stale.results.get("content");
+            const oldNotifications = stale.results.content;
             const staleIndex = _.findIndex(oldNotifications, {
               id: lastNotification.id
             });
@@ -91,10 +91,10 @@ export default {
               while ((old = oldNotifications[idx])) {
                 const info = data.recent[idx];
 
-                if (old.get("id") !== info[0]) {
+                if (old.id !== info[0]) {
                   oldNotifications.removeAt(idx);
                 } else {
-                  if (old.get("read") !== info[1]) {
+                  if (old.read !== info[1]) {
                     old.set("read", info[1]);
                   }
                   break;

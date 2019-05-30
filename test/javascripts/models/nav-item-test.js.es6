@@ -17,7 +17,7 @@ QUnit.test("href", assert => {
 
   function href(text, expected, label) {
     assert.equal(
-      Discourse.NavItem.fromText(text, {}).get("href"),
+      Discourse.NavItem.fromText(text, {}).href,
       expected,
       label
     );
@@ -32,14 +32,14 @@ QUnit.test("href", assert => {
 QUnit.test("count", assert => {
   const navItem = createStore().createRecord("nav-item", { name: "new" });
 
-  assert.equal(navItem.get("count"), 0, "it has no count by default");
+  assert.equal(navItem.count, 0, "it has no count by default");
 
-  const tracker = navItem.get("topicTrackingState");
+  const tracker = navItem.topicTrackingState;
   tracker.states["t1"] = { topic_id: 1, last_read_post_number: null };
   tracker.incrementMessageCount();
 
   assert.equal(
-    navItem.get("count"),
+    navItem.count,
     1,
     "it updates when a new message arrives"
   );

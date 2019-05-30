@@ -7,13 +7,13 @@ export default RestrictedUserRoute.extend({
   setupController(controller, user) {
     controller.setProperties({
       model: user,
-      textSize: user.get("currentTextSize"),
+      textSize: user.currentTextSize,
       themeId: currentThemeId(),
       makeThemeDefault:
         !user.get("user_option.theme_ids") ||
         currentThemeId() === user.get("user_option.theme_ids")[0],
       makeTextSizeDefault:
-        user.get("currentTextSize") === user.get("user_option.text_size")
+        user.currentTextSize === user.get("user_option.text_size")
     });
   }
 });

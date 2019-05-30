@@ -3,7 +3,7 @@ import Badge from "discourse/models/badge";
 
 export default Discourse.Route.extend({
   model() {
-    const username = this.modelFor("adminUser").get("username");
+    const username = this.modelFor("adminUser").username;
     return UserBadge.findByUsername(username);
   },
 
@@ -13,9 +13,9 @@ export default Discourse.Route.extend({
     Badge.findAll().then(function(badges) {
       controller.set("badges", badges);
       if (badges.length > 0) {
-        var grantableBadges = controller.get("grantableBadges");
+        var grantableBadges = controller.grantableBadges;
         if (grantableBadges.length > 0) {
-          controller.set("selectedBadgeId", grantableBadges[0].get("id"));
+          controller.set("selectedBadgeId", grantableBadges[0].id);
         }
       }
       controller.set("loading", false);

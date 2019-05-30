@@ -55,8 +55,8 @@ export default Ember.Component.extend(
 
         options = Object.assign(
           {
-            categoryName: category.get("slug"),
-            categoryUrl: category.get("url")
+            categoryName: category.slug,
+            categoryUrl: category.url
           },
           options
         );

@@ -104,7 +104,7 @@ export default class {
       highestSeen = Math.max(highestSeen, parseInt(postNumber, 10));
     });
 
-    const highestSeenByTopic = this.session.get("highestSeenByTopic");
+    const highestSeenByTopic = this.session.highestSeenByTopic;
     if ((highestSeenByTopic[topicId] || 0) < highestSeen) {
       highestSeenByTopic[topicId] = highestSeen;
     }
@@ -212,7 +212,7 @@ export default class {
       this.flush();
     }
 
-    if (Discourse.get("hasFocus")) {
+    if (Discourse.hasFocus) {
       this._topicTime += diff;
 
       this._onscreen.forEach(

@@ -4,7 +4,7 @@ import UserBadge from "discourse/models/user-badge";
 export default Discourse.Route.extend(ViewingActionType, {
   model() {
     return UserBadge.findByUsername(
-      this.modelFor("user").get("username_lower"),
+      this.modelFor("user").username_lower,
       { grouped: true }
     );
   },

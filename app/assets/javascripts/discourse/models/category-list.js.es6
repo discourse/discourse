@@ -81,7 +81,7 @@ CategoryList.reopenClass({
 
   listForParent(store, category) {
     return ajax(
-      `/categories.json?parent_category_id=${category.get("id")}`
+      `/categories.json?parent_category_id=${category.id}`
     ).then(result => {
       return CategoryList.create({
         categories: this.categoriesFrom(store, result),

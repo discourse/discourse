@@ -9,7 +9,7 @@ QUnit.test("displayEdit", function(assert) {
   });
 
   assert.equal(
-    HistoryController.get("displayEdit"),
+    HistoryController.displayEdit,
     false,
     "it should not display edit button when user cannot edit the post"
   );
@@ -17,14 +17,14 @@ QUnit.test("displayEdit", function(assert) {
   HistoryController.set("model.can_edit", true);
 
   assert.equal(
-    HistoryController.get("displayEdit"),
+    HistoryController.displayEdit,
     true,
     "it should display edit button when user can edit the post"
   );
 
   HistoryController.set("topicController", null);
   assert.equal(
-    HistoryController.get("displayEdit"),
+    HistoryController.displayEdit,
     false,
     "it should not display edit button when there is not topic controller"
   );
@@ -32,7 +32,7 @@ QUnit.test("displayEdit", function(assert) {
 
   HistoryController.set("model.current_revision", 2);
   assert.equal(
-    HistoryController.get("displayEdit"),
+    HistoryController.displayEdit,
     false,
     "it should only display the edit button on the latest revision"
   );
@@ -83,7 +83,7 @@ QUnit.test("displayEdit", function(assert) {
   });
 
   HistoryController.bodyDiffChanged().then(() => {
-    const output = HistoryController.get("bodyDiff");
+    const output = HistoryController.bodyDiff;
     assert.equal(output, expectedOutput, "it keeps safe HTML");
   });
 });

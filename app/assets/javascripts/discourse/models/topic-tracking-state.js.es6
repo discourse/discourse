@@ -84,7 +84,7 @@ const TopicTrackingState = Discourse.Model.extend({
     this.messageBus.subscribe("/latest", process);
     if (this.currentUser) {
       this.messageBus.subscribe(
-        "/unread/" + this.currentUser.get("id"),
+        "/unread/" + this.currentUser.id,
         process
       );
     }
@@ -133,11 +133,11 @@ const TopicTrackingState = Discourse.Model.extend({
     const filterCategory = this.filterCategory;
     const categoryId = data.payload && data.payload.category_id;
 
-    if (filterCategory && filterCategory.get("id") !== categoryId) {
+    if (filterCategory && filterCategory.id !== categoryId) {
       const category = categoryId && Discourse.Category.findById(categoryId);
       if (
         !category ||
-        category.get("parentCategory.id") !== filterCategory.get("id")
+        category.get("parentCategory.id") !== filterCategory.id
       ) {
         return;
       }
@@ -224,12 +224,12 @@ const TopicTrackingState = Discourse.Model.extend({
 
     const states = this.states;
     topics.forEach(t => {
-      const state = states["t" + t.get("id")];
+      const state = states["t" + t.id];
 
       if (state) {
-        const lastRead = t.get("last_read_post_number");
+        const lastRead = t.last_read_post_number;
         if (lastRead !== state.last_read_post_number) {
-          const postsCount = t.get("posts_count");
+          const postsCount = t.posts_count;
           let newPosts = postsCount - state.highest_post_number,
             unread = postsCount - state.last_read_post_number;
 
@@ -425,7 +425,7 @@ const TopicTrackingState = Discourse.Model.extend({
 });
 
 export function startTracking(tracking) {
-  const data = PreloadStore.get("topicTrackingStates");
+  const data = PreloadStore.topicTrackingStates;
   tracking.loadStates(data);
   tracking.initialStatesLength = data && data.length;
   tracking.establishChannels();

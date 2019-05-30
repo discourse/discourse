@@ -220,7 +220,7 @@ export default RestModel.extend({
   jumpToSecondVisible() {
     const posts = this.posts;
     if (posts.length > 1) {
-      const secondPostNum = posts[1].get("post_number");
+      const secondPostNum = posts[1].post_number;
       DiscourseURL.jumpToPost(secondPostNum);
     }
   },
@@ -296,7 +296,7 @@ export default RestModel.extend({
 
   // Fill in a gap of posts before a particular post
   fillGapBefore(post, gap) {
-    const postId = post.get("id"),
+    const postId = post.id,
       stream = this.stream,
       idx = stream.indexOf(postId),
       currentPosts = this.posts;
@@ -332,7 +332,7 @@ export default RestModel.extend({
 
   // Fill in a gap of posts after a particular post
   fillGapAfter(post, gap) {
-    const postId = post.get("id"),
+    const postId = post.id,
       stream = this.stream,
       idx = stream.indexOf(postId);
 
@@ -405,7 +405,7 @@ export default RestModel.extend({
         false,
         p => {
           this.prependPost(p);
-          prependedIds.push(p.get("id"));
+          prependedIds.push(p.id);
         }
       ).finally(() => {
         const postsWithPlaceholders = this.postsWithPlaceholders;
@@ -444,14 +444,14 @@ export default RestModel.extend({
 
     const topic = this.topic;
     topic.setProperties({
-      posts_count: (topic.get("posts_count") || 0) + 1,
+      posts_count: (topic.posts_count || 0) + 1,
       last_posted_at: new Date(),
       "details.last_poster": user,
-      highest_post_number: (topic.get("highest_post_number") || 0) + 1
+      highest_post_number: (topic.highest_post_number || 0) + 1
     });
 
     post.setProperties({
-      post_number: topic.get("highest_post_number"),
+      post_number: topic.highest_post_number,
       topic: topic,
       created_at: new Date(),
       id: -1
@@ -460,7 +460,7 @@ export default RestModel.extend({
     // If we're at the end of the stream, add the post
     if (this.loadedAllPosts) {
       this.appendPost(post);
-      this.stream.addObject(post.get("id"));
+      this.stream.addObject(post.id);
       return "staged";
     }
 
@@ -469,10 +469,10 @@ export default RestModel.extend({
 
   // Commit the post we staged. Call this after a save succeeds.
   commitPost(post) {
-    if (this.get("topic.id") === post.get("topic_id")) {
+    if (this.get("topic.id") === post.topic_id) {
       if (this.loadedAllPosts) {
         this.appendPost(post);
-        this.stream.addObject(post.get("id"));
+        this.stream.addObject(post.id);
       }
     }
 
@@ -494,8 +494,8 @@ export default RestModel.extend({
     this.set("stagingPost", false);
 
     topic.setProperties({
-      highest_post_number: (topic.get("highest_post_number") || 0) - 1,
-      posts_count: (topic.get("posts_count") || 0) - 1
+      highest_post_number: (topic.highest_post_number || 0) - 1,
+      posts_count: (topic.posts_count || 0) - 1
     });
 
     // TODO unfudge reply count on parent post
@@ -524,7 +524,7 @@ export default RestModel.extend({
         }
       }
 
-      if (stored.get("id") !== -1) {
+      if (stored.id !== -1) {
         this.set("lastAppended", stored);
       }
     }
@@ -538,7 +538,7 @@ export default RestModel.extend({
 
     this.postsWithPlaceholders.refreshAll(() => {
       const allPosts = this.posts;
-      const postIds = posts.map(p => p.get("id"));
+      const postIds = posts.map(p => p.id);
       const identityMap = this._identityMap;
 
       this.stream.removeObjects(postIds);
@@ -698,7 +698,7 @@ export default RestModel.extend({
       const store = this.store;
       return ajax(url).then(p => {
         if (opts.preserveCooked) {
-          p.cooked = existing.get("cooked");
+          p.cooked = existing.cooked;
         }
 
         this.storePost(store.createRecord("post", p));
@@ -713,7 +713,7 @@ export default RestModel.extend({
     }
 
     return this.posts.find(p => {
-      return p.get("post_number") === postNumber;
+      return p.post_number === postNumber;
     });
   },
 
@@ -735,8 +735,8 @@ export default RestModel.extend({
       }
 
       if (
-        Math.abs(postNumber - p.get("post_number")) <
-        Math.abs(closest.get("post_number") - postNumber)
+        Math.abs(postNumber - p.post_number) <
+        Math.abs(closest.post_number - postNumber)
       ) {
         closest = p;
       }
@@ -752,11 +752,11 @@ export default RestModel.extend({
 
   // Get the index in the stream of a post id. (Use this for the topic progress bar.)
   progressIndexOfPostId(post) {
-    const postId = post.get("id");
+    const postId = post.id;
     const index = this.stream.indexOf(postId);
 
     if (this.isMegaTopic) {
-      return post.get("post_number");
+      return post.post_number;
     } else {
       return index + 1;
     }
@@ -778,14 +778,14 @@ export default RestModel.extend({
         return;
       }
       if (!closest) {
-        closest = p.get("post_number");
+        closest = p.post_number;
       }
 
       if (
-        Math.abs(postNumber - p.get("post_number")) <
+        Math.abs(postNumber - p.post_number) <
         Math.abs(closest - postNumber)
       ) {
-        closest = p.get("post_number");
+        closest = p.post_number;
       }
     });
 
@@ -878,16 +878,16 @@ export default RestModel.extend({
 
     const postId = Ember.get(post, "id");
     if (postId) {
-      const existing = this._identityMap[post.get("id")];
+      const existing = this._identityMap[post.id];
 
       // Update the `highest_post_number` if this post is higher.
-      const postNumber = post.get("post_number");
+      const postNumber = post.post_number;
       if (
         postNumber &&
         postNumber > (this.get("topic.highest_post_number") || 0)
       ) {
         this.set("topic.highest_post_number", postNumber);
-        this.set("topic.last_posted_at", post.get("created_at"));
+        this.set("topic.last_posted_at", post.created_at);
       }
 
       if (existing) {
@@ -897,7 +897,7 @@ export default RestModel.extend({
       }
 
       post.set("topic", this.topic);
-      this._identityMap[post.get("id")] = post;
+      this._identityMap[post.id] = post;
     }
     return post;
   },
@@ -1039,7 +1039,7 @@ export default RestModel.extend({
   },
 
   indexOf(post) {
-    return this.stream.indexOf(post.get("id"));
+    return this.stream.indexOf(post.id);
   },
 
   // Handles an error loading a topic based on a HTTP status code. Updates

@@ -59,16 +59,16 @@ export default Ember.Controller.extend(ModalFunctionality, {
       // flagging topic
       let lookup = Ember.Object.create();
       let model = this.model;
-      model.get("actions_summary").forEach(a => {
+      model.actions_summary.forEach(a => {
         a.flagTopic = model;
         a.actionType = this.site.topicFlagTypeById(a.id);
-        lookup.set(a.actionType.get("name_key"), ActionSummary.create(a));
+        lookup.set(a.actionType.name_key, ActionSummary.create(a));
       });
       this.set("topicActionByName", lookup);
 
-      return this.site.get("topic_flag_types").filter(item => {
+      return this.site.topic_flag_types.filter(item => {
         return this.get("model.actions_summary").some(a => {
-          return a.id === item.get("id") && a.can_act;
+          return a.id === item.id && a.can_act;
         });
       });
     }
@@ -87,7 +87,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
     const selected = this.selected;
     if (!selected) return false;
 
-    if (selected.get("is_custom_flag")) {
+    if (selected.is_custom_flag) {
       const len = this.get("message.length") || 0;
       return (
         len >= Discourse.SiteSettings.min_personal_message_post_length &&
@@ -102,7 +102,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
   // Staff accounts can "take action"
   @computed("flagTopic", "selected.is_custom_flag")
   canTakeAction(flagTopic, isCustomFlag) {
-    return !flagTopic && !isCustomFlag && this.currentUser.get("staff");
+    return !flagTopic && !isCustomFlag && this.currentUser.staff;
   },
 
   @computed("selected.is_custom_flag")
@@ -186,7 +186,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
   @computed("flagTopic", "selected.name_key")
   canSendWarning(flagTopic, nameKey) {
     return (
-      !flagTopic && this.currentUser.get("staff") && nameKey === "notify_user"
+      !flagTopic && this.currentUser.staff && nameKey === "notify_user"
     );
   }
 });

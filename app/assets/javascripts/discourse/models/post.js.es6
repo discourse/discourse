@@ -20,7 +20,7 @@ const Post = RestModel.extend({
   @computed("url")
   shareUrl(url) {
     const user = Discourse.User.current();
-    const userSuffix = user ? "?u=" + user.get("username_lower") : "";
+    const userSuffix = user ? "?u=" + user.username_lower : "";
 
     if (this.firstPost) {
       return this.get("topic.url") + userSuffix;
@@ -102,8 +102,8 @@ const Post = RestModel.extend({
       return [];
     }
 
-    return this.site.get("flagTypes").filter(item => {
-      return this.get(`actionByName.${item.get("name_key")}.can_act`);
+    return this.site.flagTypes.filter(item => {
+      return this.get(`actionByName.${item.name_key}.can_act`);
     });
   },
 
@@ -194,7 +194,7 @@ const Post = RestModel.extend({
 
     // Moderators can delete posts. Users can only trigger a deleted at message, unless delete_removed_posts_after is 0.
     if (
-      deletedBy.get("staff") ||
+      deletedBy.staff ||
       Discourse.SiteSettings.delete_removed_posts_after === 0
     ) {
       this.setProperties({
@@ -411,7 +411,7 @@ Post.reopenClass({
   loadQuote(postId) {
     return ajax("/posts/" + postId + ".json").then(result => {
       const post = Discourse.Post.create(result);
-      return Quote.build(post, post.get("raw"), { raw: true, full: true });
+      return Quote.build(post, post.raw, { raw: true, full: true });
     });
   },
 

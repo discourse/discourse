@@ -13,7 +13,7 @@ export default {
     messageBus.subscribe("/global/asset-version", function(version) {
       Discourse.set("assetVersion", version);
 
-      if (!timeoutIsSet && Discourse.get("requiresRefresh")) {
+      if (!timeoutIsSet && Discourse.requiresRefresh) {
         // Since we can do this transparently for people browsing the forum
         //  hold back the message 24 hours.
         Ember.run.later(() => {

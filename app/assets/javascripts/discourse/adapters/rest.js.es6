@@ -124,7 +124,7 @@ export default Ember.Object.extend({
   },
 
   destroyRecord(store, type, record) {
-    return ajax(this.pathFor(store, type, record.get("id")), {
+    return ajax(this.pathFor(store, type, record.id), {
       method: "DELETE"
     });
   }

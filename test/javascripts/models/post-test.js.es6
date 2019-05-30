@@ -15,24 +15,24 @@ var buildPost = function(args) {
 
 QUnit.test("defaults", assert => {
   var post = Discourse.Post.create({ id: 1 });
-  assert.blank(post.get("deleted_at"), "it has no deleted_at by default");
-  assert.blank(post.get("deleted_by"), "there is no deleted_by by default");
+  assert.blank(post.deleted_at, "it has no deleted_at by default");
+  assert.blank(post.deleted_by, "there is no deleted_by by default");
 });
 
 QUnit.test("new_user", assert => {
   var post = Discourse.Post.create({ trust_level: 0 });
-  assert.ok(post.get("new_user"), "post is from a new user");
+  assert.ok(post.new_user, "post is from a new user");
 
   post.set("trust_level", 1);
-  assert.ok(!post.get("new_user"), "post is no longer from a new user");
+  assert.ok(!post.new_user, "post is no longer from a new user");
 });
 
 QUnit.test("firstPost", assert => {
   var post = Discourse.Post.create({ post_number: 1 });
-  assert.ok(post.get("firstPost"), "it's the first post");
+  assert.ok(post.firstPost, "it's the first post");
 
   post.set("post_number", 10);
-  assert.ok(!post.get("firstPost"), "post is no longer the first post");
+  assert.ok(!post.firstPost, "post is no longer the first post");
 });
 
 QUnit.test("updateFromPost", assert => {
@@ -50,7 +50,7 @@ QUnit.test("updateFromPost", assert => {
     })
   );
 
-  assert.equal(post.get("raw"), "different raw", "raw field updated");
+  assert.equal(post.raw, "different raw", "raw field updated");
 });
 
 QUnit.test("destroy by staff", assert => {
@@ -59,20 +59,20 @@ QUnit.test("destroy by staff", assert => {
 
   post.destroy(user);
 
-  assert.present(post.get("deleted_at"), "it has a `deleted_at` field.");
+  assert.present(post.deleted_at, "it has a `deleted_at` field.");
   assert.equal(
-    post.get("deleted_by"),
+    post.deleted_by,
     user,
     "it has the user in the `deleted_by` field"
   );
 
   post.recover();
   assert.blank(
-    post.get("deleted_at"),
+    post.deleted_at,
     "it clears `deleted_at` when recovering"
   );
   assert.blank(
-    post.get("deleted_by"),
+    post.deleted_by,
     "it clears `deleted_by` when recovering"
   );
 });
@@ -84,13 +84,13 @@ QUnit.test("destroy by non-staff", assert => {
 
   return post.destroy(user).then(() => {
     assert.ok(
-      !post.get("can_delete"),
+      !post.can_delete,
       "the post can't be deleted again in this session"
     );
     assert.ok(
-      post.get("cooked") !== originalCooked,
+      post.cooked !== originalCooked,
       "the cooked content changed"
     );
-    assert.equal(post.get("version"), 2, "the version number increased");
+    assert.equal(post.version, 2, "the version number increased");
   });
 });

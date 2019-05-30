@@ -1,6 +1,6 @@
 export default Discourse.Route.extend({
   model() {
-    let userDraftsStream = this.modelFor("user").get("userDraftsStream");
+    let userDraftsStream = this.modelFor("user").userDraftsStream;
     return userDraftsStream.load(this.site).then(() => userDraftsStream);
   },
 

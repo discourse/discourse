@@ -21,14 +21,14 @@ export default class LinkLookup {
       if (post) {
         // Skip edits to the OP
         if (post) {
-          const postNumber = post.get("post_number");
+          const postNumber = post.post_number;
           if (postNumber === 1 || postNumber === linkInfo.post_number) {
             return NO_RESULT;
           }
         }
 
         // Don't warn on older posts
-        const createdAt = moment(post.get("created_at"));
+        const createdAt = moment(post.created_at);
         if (createdAt.isBefore(moment().subtract(2, "weeks"))) {
           return NO_RESULT;
         }

@@ -17,7 +17,7 @@ export default Ember.Component.extend({
   },
 
   _turnOffIfHidden: function() {
-    if (this.session.get("hideSignupCta")) {
+    if (this.session.hideSignupCta) {
       this.session.set("showSignupCta", false);
     }
   }.on("willDestroyElement")

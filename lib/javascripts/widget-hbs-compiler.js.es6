@@ -323,7 +323,7 @@ exports.WidgetHbsCompiler = function(babel) {
           return;
         }
 
-        let tagPath = path.get("tag");
+        let tagPath = path.tag;
         if (tagPath.node.name !== state.importId.name) {
           return;
         }

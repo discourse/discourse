@@ -39,8 +39,8 @@ export default Ember.Component.extend({
 
       const group = this.model;
       const offset = Math.min(
-        group.get("offset") + group.get("limit"),
-        group.get("user_count")
+        group.offset + group.limit,
+        group.user_count
       );
       group.set("offset", offset);
 
@@ -53,7 +53,7 @@ export default Ember.Component.extend({
       }
 
       const group = this.model;
-      const offset = Math.max(group.get("offset") - group.get("limit"), 0);
+      const offset = Math.max(group.offset - group.limit, 0);
       group.set("offset", offset);
 
       return group.findMembers();
@@ -69,7 +69,7 @@ export default Ember.Component.extend({
 
     removeMember(member) {
       const message = I18n.t("groups.manage.delete_member_confirm", {
-        username: member.get("username"),
+        username: member.username,
         group: this.get("model.name")
       });
 

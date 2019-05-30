@@ -28,14 +28,14 @@ QUnit.test("can list themes correctly", function(assert) {
   });
 
   assert.deepEqual(
-    controller.get("fullThemes").map(t => t.get("name")),
-    [strayTheme2, strayTheme1, userTheme, defaultTheme].map(t => t.get("name")),
+    controller.fullThemes.map(t => t.name),
+    [strayTheme2, strayTheme1, userTheme, defaultTheme].map(t => t.name),
     "returns a list of themes without components"
   );
 
   assert.deepEqual(
-    controller.get("childThemes").map(t => t.get("name")),
-    [componentTheme].map(t => t.get("name")),
+    controller.childThemes.map(t => t.name),
+    [componentTheme].map(t => t.name),
     "separate components from themes"
   );
 });

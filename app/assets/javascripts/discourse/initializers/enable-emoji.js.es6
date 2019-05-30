@@ -23,7 +23,7 @@ export default {
       });
     });
 
-    (PreloadStore.get("customEmoji") || []).forEach(emoji =>
+    (PreloadStore.customEmoji || []).forEach(emoji =>
       registerEmoji(emoji.name, emoji.url)
     );
   }

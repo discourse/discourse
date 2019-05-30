@@ -3,8 +3,8 @@ import AdminUser from "admin/models/admin-user";
 export default Discourse.Route.extend({
   serialize(model) {
     return {
-      user_id: model.get("id"),
-      username: model.get("username").toLowerCase()
+      user_id: model.id,
+      username: model.username.toLowerCase()
     };
   },
 

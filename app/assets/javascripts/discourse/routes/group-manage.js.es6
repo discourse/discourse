@@ -12,7 +12,7 @@ export default Discourse.Route.extend({
   afterModel(group) {
     if (
       !this.currentUser ||
-      (!(this.currentUser.admin && group.get("automatic")) &&
+      (!(this.currentUser.admin && group.automatic) &&
         !this.currentUser.canManageGroup(group))
     ) {
       this.transitionTo("group.members", group);

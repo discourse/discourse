@@ -43,7 +43,7 @@ UserBadge.reopenClass({
     }
     var badges = {};
     Badge.createFromJson(json).forEach(function(badge) {
-      badges[badge.get("id")] = badge;
+      badges[badge.id] = badge;
     });
 
     // Create UserBadge object(s).
@@ -59,18 +59,18 @@ UserBadge.reopenClass({
     userBadges = userBadges.map(function(userBadgeJson) {
       var userBadge = UserBadge.create(userBadgeJson);
 
-      var grantedAtDate = Date.parse(userBadge.get("granted_at"));
+      var grantedAtDate = Date.parse(userBadge.granted_at);
       userBadge.set("grantedAt", grantedAtDate);
 
-      userBadge.set("badge", badges[userBadge.get("badge_id")]);
-      if (userBadge.get("user_id")) {
-        userBadge.set("user", users[userBadge.get("user_id")]);
+      userBadge.set("badge", badges[userBadge.badge_id]);
+      if (userBadge.user_id) {
+        userBadge.set("user", users[userBadge.user_id]);
       }
-      if (userBadge.get("granted_by_id")) {
-        userBadge.set("granted_by", users[userBadge.get("granted_by_id")]);
+      if (userBadge.granted_by_id) {
+        userBadge.set("granted_by", users[userBadge.granted_by_id]);
       }
-      if (userBadge.get("topic_id")) {
-        userBadge.set("topic", topics[userBadge.get("topic_id")]);
+      if (userBadge.topic_id) {
+        userBadge.set("topic", topics[userBadge.topic_id]);
       }
       return userBadge;
     });

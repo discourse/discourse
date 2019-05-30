@@ -6,7 +6,7 @@ export default Ember.Route.extend({
   },
 
   serialize(model) {
-    return { scheme_id: model.get("id") };
+    return { scheme_id: model.id };
   },
 
   setupController(controller, model) {

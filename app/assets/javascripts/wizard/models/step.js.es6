@@ -11,7 +11,7 @@ export default Ember.Object.extend(ValidState, {
   @computed("fields.[]")
   fieldsById(fields) {
     const lookup = {};
-    fields.forEach(field => (lookup[field.get("id")] = field));
+    fields.forEach(field => (lookup[field.id] = field));
     return lookup;
   },
 
@@ -21,7 +21,7 @@ export default Ember.Object.extend(ValidState, {
 
     this.fields.forEach(field => {
       allValid = allValid && field.check();
-      const warning = field.get("warning");
+      const warning = field.warning;
       if (warning) {
         result.warnings.push(warning);
       }

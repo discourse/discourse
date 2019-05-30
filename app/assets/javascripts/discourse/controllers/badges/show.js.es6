@@ -20,7 +20,7 @@ export default Ember.Controller.extend(BadgeSelectController, {
   @computed("username")
   user(username) {
     if (username) {
-      return this.userBadges[0].get("user");
+      return this.userBadges[0].user;
     }
   },
 

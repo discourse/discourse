@@ -6,17 +6,17 @@ QUnit.test("createRecord", assert => {
   const store = createStore();
   const widget = store.createRecord("widget", { id: 111, name: "hello" });
 
-  assert.ok(!widget.get("isNew"), "it is not a new record");
-  assert.equal(widget.get("name"), "hello");
-  assert.equal(widget.get("id"), 111);
+  assert.ok(!widget.isNew, "it is not a new record");
+  assert.equal(widget.name, "hello");
+  assert.equal(widget.id, 111);
 });
 
 QUnit.test("createRecord without an `id`", assert => {
   const store = createStore();
   const widget = store.createRecord("widget", { name: "hello" });
 
-  assert.ok(widget.get("isNew"), "it is a new record");
-  assert.ok(!widget.get("id"), "there is no id");
+  assert.ok(widget.isNew, "it is a new record");
+  assert.ok(!widget.id, "there is no id");
 });
 
 QUnit.test("createRecord doesn't modify the input `id` field", assert => {
@@ -35,8 +35,8 @@ QUnit.test("createRecord without attributes", assert => {
   const store = createStore();
   const widget = store.createRecord("widget");
 
-  assert.ok(!widget.get("id"), "there is no id");
-  assert.ok(widget.get("isNew"), "it is a new record");
+  assert.ok(!widget.id, "there is no id");
+  assert.ok(widget.isNew, "it is a new record");
 });
 
 QUnit.test(
@@ -54,9 +54,9 @@ QUnit.test("find", assert => {
   const store = createStore();
 
   return store.find("widget", 123).then(function(w) {
-    assert.equal(w.get("name"), "Trout Lure");
-    assert.equal(w.get("id"), 123);
-    assert.ok(!w.get("isNew"), "found records are not new");
+    assert.equal(w.name, "Trout Lure");
+    assert.equal(w.id, 123);
+    assert.ok(!w.isNew, "found records are not new");
     assert.equal(w.get("extras.hello"), "world", "extra attributes are set");
 
     // A second find by id returns the same object
@@ -116,10 +116,10 @@ QUnit.test("update with a multi world name", function(assert) {
 QUnit.test("findAll", assert => {
   const store = createStore();
   return store.findAll("widget").then(function(result) {
-    assert.equal(result.get("length"), 2);
+    assert.equal(result.length, 2);
     const w = result.findBy("id", 124);
-    assert.ok(!w.get("isNew"), "found records are not new");
-    assert.equal(w.get("name"), "Evil Repellant");
+    assert.ok(!w.isNew, "found records are not new");
+    assert.equal(w.name, "Evil Repellant");
   });
 });
 
@@ -143,14 +143,14 @@ QUnit.test("destroyRecord when new", function(assert) {
 QUnit.test("find embedded", function(assert) {
   const store = createStore();
   return store.find("fruit", 1).then(function(f) {
-    assert.ok(f.get("farmer"), "it has the embedded object");
+    assert.ok(f.farmer, "it has the embedded object");
 
-    const fruitCols = f.get("colors");
+    const fruitCols = f.colors;
     assert.equal(fruitCols.length, 2);
-    assert.equal(fruitCols[0].get("id"), 1);
-    assert.equal(fruitCols[1].get("id"), 2);
+    assert.equal(fruitCols[0].id, 1);
+    assert.equal(fruitCols[1].id, 2);
 
-    assert.ok(f.get("category"), "categories are found automatically");
+    assert.ok(f.category, "categories are found automatically");
   });
 });
 
@@ -159,7 +159,7 @@ QUnit.test("embedded records can be cleared", async assert => {
   let f = await store.find("fruit", 4);
   f.set("farmer", { dummy: "object" });
   f = await store.find("fruit", 4);
-  assert.ok(!f.get("farmer"));
+  assert.ok(!f.farmer);
 });
 
 QUnit.test("meta types", function(assert) {
@@ -178,8 +178,8 @@ QUnit.test("findAll embedded", function(assert) {
   return store.findAll("fruit").then(function(fruits) {
     assert.equal(fruits.objectAt(0).get("farmer.name"), "Old MacDonald");
     assert.equal(
-      fruits.objectAt(0).get("farmer"),
-      fruits.objectAt(1).get("farmer"),
+      fruits.objectAt(0).farmer,
+      fruits.objectAt(1).farmer,
       "points at the same object"
     );
     assert.equal(
@@ -188,10 +188,10 @@ QUnit.test("findAll embedded", function(assert) {
       "it can supply extra information"
     );
 
-    const fruitCols = fruits.objectAt(0).get("colors");
+    const fruitCols = fruits.objectAt(0).colors;
     assert.equal(fruitCols.length, 2);
-    assert.equal(fruitCols[0].get("id"), 1);
-    assert.equal(fruitCols[1].get("id"), 2);
+    assert.equal(fruitCols[0].id, 1);
+    assert.equal(fruitCols[1].id, 2);
 
     assert.equal(fruits.objectAt(2).get("farmer.name"), "Luke Skywalker");
   });

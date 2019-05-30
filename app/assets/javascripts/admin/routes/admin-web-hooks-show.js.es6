@@ -1,6 +1,6 @@
 export default Discourse.Route.extend({
   serialize(model) {
-    return { web_hook_id: model.get("id") || "new" };
+    return { web_hook_id: model.id || "new" };
   },
 
   model(params) {
@@ -12,15 +12,15 @@ export default Discourse.Route.extend({
 
   setupController(controller, model) {
     if (
-      model.get("isNew") ||
-      Ember.isEmpty(model.get("web_hook_event_types"))
+      model.isNew ||
+      Ember.isEmpty(model.web_hook_event_types)
     ) {
-      model.set("web_hook_event_types", controller.get("defaultEventTypes"));
+      model.set("web_hook_event_types", controller.defaultEventTypes);
     }
 
-    model.set("category_ids", model.get("category_ids"));
-    model.set("tag_names", model.get("tag_names"));
-    model.set("group_ids", model.get("group_ids"));
+    model.set("category_ids", model.category_ids);
+    model.set("tag_names", model.tag_names);
+    model.set("group_ids", model.group_ids);
     controller.setProperties({ model, saved: false });
   },
 

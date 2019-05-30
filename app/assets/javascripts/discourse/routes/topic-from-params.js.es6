@@ -19,7 +19,7 @@ export default Discourse.Route.extend({
 
     const self = this,
       topic = this.modelFor("topic"),
-      postStream = topic.get("postStream"),
+      postStream = topic.postStream,
       topicController = this.controllerFor("topic"),
       composerController = this.controllerFor("composer");
 
@@ -40,12 +40,12 @@ export default Discourse.Route.extend({
         const closestPost = postStream.closestPostForPostNumber(
           params.nearPost || 1
         );
-        const closest = closestPost.get("post_number");
+        const closest = closestPost.post_number;
 
         topicController.setProperties({
           "model.currentPost": closest,
           enteredIndex: topic
-            .get("postStream")
+            .postStream
             .progressIndexOfPost(closestPost),
           enteredAt: new Date().getTime().toString()
         });
@@ -63,11 +63,11 @@ export default Discourse.Route.extend({
         }
         DiscourseURL.jumpToPost(closest, opts);
 
-        if (!Ember.isEmpty(topic.get("draft"))) {
+        if (!Ember.isEmpty(topic.draft)) {
           composerController.open({
-            draft: Draft.getLocal(topic.get("draft_key"), topic.get("draft")),
-            draftKey: topic.get("draft_key"),
-            draftSequence: topic.get("draft_sequence"),
+            draft: Draft.getLocal(topic.draft_key, topic.draft),
+            draftKey: topic.draft_key,
+            draftSequence: topic.draft_sequence,
             topic: topic,
             ignoreIfChanged: true
           });

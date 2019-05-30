@@ -19,15 +19,15 @@ function reportWithData(data) {
 QUnit.test("counts", assert => {
   const report = reportWithData([5, 4, 3, 2, 1, 100, 99, 98, 1000]);
 
-  assert.equal(report.get("todayCount"), 5);
-  assert.equal(report.get("yesterdayCount"), 4);
+  assert.equal(report.todayCount, 5);
+  assert.equal(report.yesterdayCount, 4);
   assert.equal(
     report.valueFor(2, 4),
     6,
     "adds the values for the given range of days, inclusive"
   );
   assert.equal(
-    report.get("lastSevenDaysCount"),
+    report.lastSevenDaysCount,
     307,
     "sums 7 days excluding today"
   );
@@ -58,13 +58,13 @@ QUnit.test("percentChangeString", assert => {
 });
 
 QUnit.test("yesterdayCountTitle with valid values", assert => {
-  const title = reportWithData([6, 8, 5, 2, 1]).get("yesterdayCountTitle");
+  const title = reportWithData([6, 8, 5, 2, 1]).yesterdayCountTitle;
   assert.ok(title.indexOf("+60%") !== -1);
   assert.ok(title.match(/Was 5/));
 });
 
 QUnit.test("yesterdayCountTitle when two days ago was 0", assert => {
-  const title = reportWithData([6, 8, 0, 2, 1]).get("yesterdayCountTitle");
+  const title = reportWithData([6, 8, 0, 2, 1]).yesterdayCountTitle;
   assert.equal(title.indexOf("%"), -1);
   assert.ok(title.match(/Was 0/));
 });
@@ -88,7 +88,7 @@ QUnit.test("sevenDaysCountTitle", assert => {
     2,
     100,
     100
-  ]).get("sevenDaysCountTitle");
+  ]).sevenDaysCountTitle;
   assert.ok(title.match(/-50%/));
   assert.ok(title.match(/Was 14/));
 });
@@ -96,7 +96,7 @@ QUnit.test("sevenDaysCountTitle", assert => {
 QUnit.test("thirtyDaysCountTitle", assert => {
   const report = reportWithData([5, 5, 5, 5]);
   report.set("prev30Days", 10);
-  const title = report.get("thirtyDaysCountTitle");
+  const title = report.thirtyDaysCountTitle;
 
   assert.ok(title.indexOf("+50%") !== -1);
   assert.ok(title.match(/Was 10/));
@@ -107,23 +107,23 @@ QUnit.test("sevenDaysTrend", assert => {
   let trend;
 
   report = reportWithData([0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]);
-  trend = report.get("sevenDaysTrend");
+  trend = report.sevenDaysTrend;
   assert.ok(trend === "no-change");
 
   report = reportWithData([0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0]);
-  trend = report.get("sevenDaysTrend");
+  trend = report.sevenDaysTrend;
   assert.ok(trend === "high-trending-up");
 
   report = reportWithData([0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0]);
-  trend = report.get("sevenDaysTrend");
+  trend = report.sevenDaysTrend;
   assert.ok(trend === "trending-up");
 
   report = reportWithData([0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1]);
-  trend = report.get("sevenDaysTrend");
+  trend = report.sevenDaysTrend;
   assert.ok(trend === "high-trending-down");
 
   report = reportWithData([0, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1]);
-  trend = report.get("sevenDaysTrend");
+  trend = report.sevenDaysTrend;
   assert.ok(trend === "trending-down");
 });
 
@@ -132,23 +132,23 @@ QUnit.test("yesterdayTrend", assert => {
   let trend;
 
   report = reportWithData([0, 1, 1]);
-  trend = report.get("yesterdayTrend");
+  trend = report.yesterdayTrend;
   assert.ok(trend === "no-change");
 
   report = reportWithData([0, 1, 0]);
-  trend = report.get("yesterdayTrend");
+  trend = report.yesterdayTrend;
   assert.ok(trend === "high-trending-up");
 
   report = reportWithData([0, 1.1, 1]);
-  trend = report.get("yesterdayTrend");
+  trend = report.yesterdayTrend;
   assert.ok(trend === "trending-up");
 
   report = reportWithData([0, 0, 1]);
-  trend = report.get("yesterdayTrend");
+  trend = report.yesterdayTrend;
   assert.ok(trend === "high-trending-down");
 
   report = reportWithData([0, 1, 1.1]);
-  trend = report.get("yesterdayTrend");
+  trend = report.yesterdayTrend;
   assert.ok(trend === "trending-down");
 });
 
@@ -190,7 +190,7 @@ QUnit.test("thirtyDaysTrend", assert => {
     1
   ]);
   report.set("prev30Days", 30);
-  trend = report.get("thirtyDaysTrend");
+  trend = report.thirtyDaysTrend;
   assert.ok(trend === "no-change");
 
   report = reportWithData([
@@ -227,7 +227,7 @@ QUnit.test("thirtyDaysTrend", assert => {
     1
   ]);
   report.set("prev30Days", 0);
-  trend = report.get("thirtyDaysTrend");
+  trend = report.thirtyDaysTrend;
   assert.ok(trend === "high-trending-up");
 
   report = reportWithData([
@@ -264,7 +264,7 @@ QUnit.test("thirtyDaysTrend", assert => {
     1
   ]);
   report.set("prev30Days", 25);
-  trend = report.get("thirtyDaysTrend");
+  trend = report.thirtyDaysTrend;
   assert.ok(trend === "trending-up");
 
   report = reportWithData([
@@ -301,7 +301,7 @@ QUnit.test("thirtyDaysTrend", assert => {
     0
   ]);
   report.set("prev30Days", 60);
-  trend = report.get("thirtyDaysTrend");
+  trend = report.thirtyDaysTrend;
   assert.ok(trend === "high-trending-down");
 
   report = reportWithData([
@@ -338,7 +338,7 @@ QUnit.test("thirtyDaysTrend", assert => {
     0
   ]);
   report.set("prev30Days", 35);
-  trend = report.get("thirtyDaysTrend");
+  trend = report.thirtyDaysTrend;
   assert.ok(trend === "trending-down");
 });
 
@@ -348,22 +348,22 @@ QUnit.test("higher is better false", assert => {
 
   report = reportWithData([0, 1, 0]);
   report.set("higher_is_better", false);
-  trend = report.get("yesterdayTrend");
+  trend = report.yesterdayTrend;
   assert.ok(trend === "high-trending-down");
 
   report = reportWithData([0, 1.1, 1]);
   report.set("higher_is_better", false);
-  trend = report.get("yesterdayTrend");
+  trend = report.yesterdayTrend;
   assert.ok(trend === "trending-down");
 
   report = reportWithData([0, 0, 1]);
   report.set("higher_is_better", false);
-  trend = report.get("yesterdayTrend");
+  trend = report.yesterdayTrend;
   assert.ok(trend === "high-trending-up");
 
   report = reportWithData([0, 1, 1.1]);
   report.set("higher_is_better", false);
-  trend = report.get("yesterdayTrend");
+  trend = report.yesterdayTrend;
   assert.ok(trend === "trending-up");
 });
 
@@ -372,11 +372,11 @@ QUnit.test("small variation (-2/+2% change) is no-change", assert => {
   let trend;
 
   report = reportWithData([0, 1, 1, 1, 1, 1, 1, 0.9, 1, 1, 1, 1, 1, 1, 1]);
-  trend = report.get("sevenDaysTrend");
+  trend = report.sevenDaysTrend;
   assert.ok(trend === "no-change");
 
   report = reportWithData([0, 1, 1, 1, 1, 1, 1, 1.1, 1, 1, 1, 1, 1, 1, 1]);
-  trend = report.get("sevenDaysTrend");
+  trend = report.sevenDaysTrend;
   assert.ok(trend === "no-change");
 });
 
@@ -386,10 +386,10 @@ QUnit.test("average", assert => {
   report = reportWithData([5, 5, 5, 5, 5, 5, 5, 5]);
 
   report.set("average", true);
-  assert.ok(report.get("lastSevenDaysCount") === 5);
+  assert.ok(report.lastSevenDaysCount === 5);
 
   report.set("average", false);
-  assert.ok(report.get("lastSevenDaysCount") === 35);
+  assert.ok(report.lastSevenDaysCount === 35);
 });
 
 QUnit.test("computed labels", assert => {
@@ -449,7 +449,7 @@ QUnit.test("computed labels", assert => {
   });
 
   const row = report.get("data.0");
-  const computedLabels = report.get("computedLabels");
+  const computedLabels = report.computedLabels;
 
   const usernameLabel = computedLabels[0];
   assert.equal(usernameLabel.mainProperty, "username");

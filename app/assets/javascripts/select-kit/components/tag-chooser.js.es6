@@ -20,7 +20,7 @@ export default MultiSelectComponent.extend(TagsMixin, {
     this._super(...arguments);
 
     if (this.allowCreate !== false) {
-      this.set("allowCreate", this.site.get("can_create_tag"));
+      this.set("allowCreate", this.site.can_create_tag);
     }
 
     if (!this.blacklist) {
@@ -31,7 +31,7 @@ export default MultiSelectComponent.extend(TagsMixin, {
     this.set("termMatchErrorMessage", null);
 
     this.set("templateForRow", rowComponent => {
-      const tag = rowComponent.get("computedContent");
+      const tag = rowComponent.computedContent;
       return renderTag(get(tag, "value"), {
         count: get(tag, "originalContent.count"),
         noHref: true
@@ -122,9 +122,9 @@ export default MultiSelectComponent.extend(TagsMixin, {
     context.set("termMatchesForbidden", json.forbidden ? true : false);
     context.set("termMatchErrorMessage", json.forbidden_message);
 
-    if (context.get("blacklist")) {
+    if (context.blacklist) {
       results = results.filter(result => {
-        return !context.get("blacklist").includes(result.id);
+        return !context.blacklist.includes(result.id);
       });
     }
 

@@ -21,7 +21,7 @@ export default Ember.Component.extend({
       filterMode = "top";
     }
     var item = navItems.find(
-      i => i.get("filterMode").indexOf(filterMode) === 0
+      i => i.filterMode.indexOf(filterMode) === 0
     );
     if (!item) {
       let connectors = this.connectors;

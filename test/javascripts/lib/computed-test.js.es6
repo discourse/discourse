@@ -27,12 +27,12 @@ QUnit.test("setting", assert => {
 
   Discourse.SiteSettings.vehicle = "airplane";
   assert.equal(
-    t.get("vehicle"),
+    t.vehicle,
     "airplane",
     "it has the value of the site setting"
   );
   assert.ok(
-    !t.get("missingProp"),
+    !t.missingProp,
     "it is falsy when the site setting is not defined"
   );
 });
@@ -45,9 +45,9 @@ QUnit.test("propertyEqual", assert => {
     biscuits: 10
   });
 
-  assert.ok(t.get("same"), "it is true when the properties are the same");
+  assert.ok(t.same, "it is true when the properties are the same");
   t.set("biscuits", 9);
-  assert.ok(!t.get("same"), "it isn't true when one property is different");
+  assert.ok(!t.same, "it isn't true when one property is different");
 });
 
 QUnit.test("propertyNotEqual", assert => {
@@ -58,9 +58,9 @@ QUnit.test("propertyNotEqual", assert => {
     biscuits: 10
   });
 
-  assert.ok(!t.get("diff"), "it isn't true when the properties are the same");
+  assert.ok(!t.diff, "it isn't true when the properties are the same");
   t.set("biscuits", 9);
-  assert.ok(t.get("diff"), "it is true when one property is different");
+  assert.ok(t.diff, "it is true when one property is different");
 });
 
 QUnit.test("fmt", assert => {
@@ -73,25 +73,25 @@ QUnit.test("fmt", assert => {
   });
 
   assert.equal(
-    t.get("exclaimyUsername"),
+    t.exclaimyUsername,
     "!!! eviltrout !!!",
     "it inserts the string"
   );
   assert.equal(
-    t.get("multiple"),
+    t.multiple,
     "eviltrout is happy",
     "it inserts multiple strings"
   );
 
   t.set("username", "codinghorror");
   assert.equal(
-    t.get("multiple"),
+    t.multiple,
     "codinghorror is happy",
     "it supports changing properties"
   );
   t.set("mood", "ecstatic");
   assert.equal(
-    t.get("multiple"),
+    t.multiple,
     "codinghorror is ecstatic",
     "it supports changing another property"
   );
@@ -107,25 +107,25 @@ QUnit.test("i18n", assert => {
   });
 
   assert.equal(
-    t.get("exclaimyUsername"),
+    t.exclaimyUsername,
     "%@ translated: !!! eviltrout !!!",
     "it inserts the string and then translates"
   );
   assert.equal(
-    t.get("multiple"),
+    t.multiple,
     "%@ translated: eviltrout is happy",
     "it inserts multiple strings and then translates"
   );
 
   t.set("username", "codinghorror");
   assert.equal(
-    t.get("multiple"),
+    t.multiple,
     "%@ translated: codinghorror is happy",
     "it supports changing properties"
   );
   t.set("mood", "ecstatic");
   assert.equal(
-    t.get("multiple"),
+    t.multiple,
     "%@ translated: codinghorror is ecstatic",
     "it supports changing another property"
   );
@@ -140,7 +140,7 @@ QUnit.test("url", assert => {
 
   t = testClass.create({ username: "eviltrout" });
   assert.equal(
-    t.get("userUrl"),
+    t.userUrl,
     "/u/eviltrout",
     "it supports urls without a prefix"
   );
@@ -148,7 +148,7 @@ QUnit.test("url", assert => {
   Discourse.BaseUri = "/prefixed";
   t = testClass.create({ username: "eviltrout" });
   assert.equal(
-    t.get("userUrl"),
+    t.userUrl,
     "/prefixed/u/eviltrout",
     "it supports urls with a prefix"
   );

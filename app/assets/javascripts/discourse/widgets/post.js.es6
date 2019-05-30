@@ -682,9 +682,9 @@ export default createWidget("post", {
 
   toggleLike() {
     const post = this.model;
-    const likeAction = post.get("likeAction");
+    const likeAction = post.likeAction;
 
-    if (likeAction && likeAction.get("canToggle")) {
+    if (likeAction && likeAction.canToggle) {
       return likeAction
         .togglePromise(post)
         .then(result => this._warnIfClose(result));
@@ -697,7 +697,7 @@ export default createWidget("post", {
     }
 
     const kvs = this.keyValueStore;
-    const lastWarnedLikes = kvs.get("lastWarnedLikes");
+    const lastWarnedLikes = kvs.lastWarnedLikes;
 
     // only warn once per day
     const yesterday = new Date().getTime() - 1000 * 60 * 60 * 24;

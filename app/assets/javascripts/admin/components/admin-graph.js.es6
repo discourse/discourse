@@ -14,7 +14,7 @@ export default Ember.Component.extend({
       datasets: [
         {
           data: rawData.map(r => r.y),
-          label: model.get("title"),
+          label: model.title,
           backgroundColor: `rgba(200,220,240,${this.type === "bar" ? 1 : 0.3})`,
           borderColor: "#08C"
         }

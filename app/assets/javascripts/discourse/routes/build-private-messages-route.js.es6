@@ -20,7 +20,7 @@ export default (viewName, path, channel) => {
     model() {
       return this.store.findFiltered("topicList", {
         filter:
-          "topics/" + path + "/" + this.modelFor("user").get("username_lower")
+          "topics/" + path + "/" + this.modelFor("user").username_lower
       });
     },
 
@@ -37,7 +37,7 @@ export default (viewName, path, channel) => {
         hideCategory: true,
         showPosters: true,
         canBulkSelect: true,
-        tagsForUser: this.modelFor("user").get("username_lower"),
+        tagsForUser: this.modelFor("user").username_lower,
         selected: []
       });
 

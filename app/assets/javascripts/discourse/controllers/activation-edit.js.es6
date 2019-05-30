@@ -20,8 +20,8 @@ export default Ember.Controller.extend(ModalFunctionality, {
       const login = this.login;
 
       changeEmail({
-        username: login.get("loginName"),
-        password: login.get("loginPassword"),
+        username: login.loginName,
+        password: login.loginPassword,
         email: this.newEmail
       })
         .then(() => {

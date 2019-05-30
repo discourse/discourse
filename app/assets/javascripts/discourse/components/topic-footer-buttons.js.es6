@@ -43,7 +43,7 @@ export default Ember.Component.extend({
     return (
       !this.site.mobileView &&
       this.currentUser &&
-      this.currentUser.get("canManageTopic")
+      this.currentUser.canManageTopic
     );
   },
 

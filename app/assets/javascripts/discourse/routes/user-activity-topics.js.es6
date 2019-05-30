@@ -6,7 +6,7 @@ export default UserTopicListRoute.extend({
 
   model: function() {
     return this.store.findFiltered("topicList", {
-      filter: "topics/created-by/" + this.modelFor("user").get("username_lower")
+      filter: "topics/created-by/" + this.modelFor("user").username_lower
     });
   }
 });

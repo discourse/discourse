@@ -23,7 +23,7 @@ createWidget("topic-header-participant", {
         template: user.avatar_template,
         username: user.username
       });
-      url = user.get("path");
+      url = user.path;
     } else {
       content = [iconNode("users")];
       url = Discourse.getURL(`/g/${group.name}`);
@@ -62,7 +62,7 @@ export default createWidget("header-topic-info", {
 
     const heading = [];
 
-    const showPM = !topic.get("is_warning") && topic.get("isPrivateMessage");
+    const showPM = !topic.is_warning && topic.isPrivateMessage;
     if (showPM) {
       const href = this.currentUser && this.currentUser.pmPath(topic);
       if (href) {
@@ -76,8 +76,8 @@ export default createWidget("header-topic-info", {
       }
     }
     const loaded = topic.get("details.loaded");
-    const fancyTitle = topic.get("fancyTitle");
-    const href = topic.get("url");
+    const fancyTitle = topic.fancyTitle;
+    const href = topic.url;
 
     if (fancyTitle && href) {
       heading.push(this.attach("topic-status", attrs));
@@ -88,22 +88,22 @@ export default createWidget("header-topic-info", {
           className: "topic-link",
           action: "jumpToTopPost",
           href,
-          attributes: { "data-topic-id": topic.get("id") },
+          attributes: { "data-topic-id": topic.id },
           contents: () => titleHTML
         })
       );
     }
 
     const title = [h("h1", heading)];
-    const category = topic.get("category");
+    const category = topic.category;
 
     if (loaded || category) {
       if (
         category &&
-        (!category.get("isUncategorizedCategory") ||
+        (!category.isUncategorizedCategory ||
           !this.siteSettings.suppress_uncategorized_badge)
       ) {
-        const parentCategory = category.get("parentCategory");
+        const parentCategory = category.parentCategory;
         const categories = [];
         if (parentCategory) {
           categories.push(
@@ -124,7 +124,7 @@ export default createWidget("header-topic-info", {
       if (showPM) {
         const maxHeaderParticipants = extra.length > 0 ? 5 : 10;
         const participants = [];
-        const topicDetails = topic.get("details");
+        const topicDetails = topic.details;
         const totalParticipants =
           topicDetails.allowed_users.length +
           topicDetails.allowed_groups.length;
@@ -164,7 +164,7 @@ export default createWidget("header-topic-info", {
               className: "more-participants",
               action: "jumpToTopPost",
               href,
-              attributes: { "data-topic-id": topic.get("id") },
+              attributes: { "data-topic-id": topic.id },
               contents: () => `+${remaining}`
             })
           );
@@ -197,7 +197,7 @@ export default createWidget("header-topic-info", {
   jumpToTopPost() {
     const topic = this.attrs.topic;
     if (topic) {
-      DiscourseURL.routeTo(topic.get("firstPostUrl"));
+      DiscourseURL.routeTo(topic.firstPostUrl);
     }
   }
 });

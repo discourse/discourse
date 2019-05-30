@@ -48,7 +48,7 @@ componentTest("current tab is themes", {
     [2, 3].forEach(num => themes[num].set("user_selectable", true));
     themes[4].set("default", true);
     this.set("themes", themes);
-    const names = [4, 2, 3, 0, 1].map(num => themes[num].get("name")); // default theme always on top, followed by user-selectable ones and then the rest
+    const names = [4, 2, 3, 0, 1].map(num => themes[num].name); // default theme always on top, followed by user-selectable ones and then the rest
     assert.deepEqual(
       Array.from(find(".themes-list-item").find(".name")).map(node =>
         node.innerText.trim()

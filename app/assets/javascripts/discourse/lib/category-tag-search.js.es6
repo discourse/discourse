@@ -31,7 +31,7 @@ function searchTags(term, categories, limit) {
 
       oldSearch
         .then(r => {
-          const categoryNames = cats.map(c => c.model.get("name"));
+          const categoryNames = cats.map(c => c.model.name);
 
           const tags = r.results.map(tag => {
             const tagName = tag.text;

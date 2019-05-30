@@ -9,12 +9,12 @@ export default {
     const appEvents = container.lookup("app-events:main");
 
     appEvents.on("show-avatar-select", user => {
-      const avatarTemplate = user.get("avatar_template");
+      const avatarTemplate = user.avatar_template;
       let selected = "uploaded";
 
-      if (avatarTemplate === user.get("system_avatar_template")) {
+      if (avatarTemplate === user.system_avatar_template) {
         selected = "system";
-      } else if (avatarTemplate === user.get("gravatar_avatar_template")) {
+      } else if (avatarTemplate === user.gravatar_avatar_template) {
         selected = "gravatar";
       }
 

@@ -58,8 +58,8 @@ export default Ember.Controller.extend(ModalFunctionality, {
     },
     saveAll() {
       let items = this.workingCopy;
-      const groupIds = items.map(i => i.get("id") || -1);
-      const names = items.map(i => i.get("name"));
+      const groupIds = items.map(i => i.id || -1);
+      const names = items.map(i => i.name);
 
       ajax("/admin/badges/badge_groupings", {
         data: { ids: groupIds, names },

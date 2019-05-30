@@ -340,7 +340,7 @@ export default Ember.Component.extend({
             if (!this.invitingToTopic && userInvitedController) {
               Invite.findInvitedBy(
                 this.currentUser,
-                userInvitedController.get("filter")
+                userInvitedController.filter
               ).then(inviteModel => {
                 userInvitedController.setProperties({
                   model: inviteModel,
@@ -392,7 +392,7 @@ export default Ember.Component.extend({
           if (userInvitedController) {
             Invite.findInvitedBy(
               this.currentUser,
-              userInvitedController.get("filter")
+              userInvitedController.filter
             ).then(inviteModel => {
               userInvitedController.setProperties({
                 model: inviteModel,

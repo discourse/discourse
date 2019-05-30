@@ -44,7 +44,7 @@ export default Ember.Component.extend({
           "messages",
           results.posts
             .mapBy("topic")
-            .filter(t => t.get("id") !== currentTopicId)
+            .filter(t => t.id !== currentTopicId)
         );
       } else {
         this.setProperties({ messages: null, loading: false });

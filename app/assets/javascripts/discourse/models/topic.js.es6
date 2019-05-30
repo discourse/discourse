@@ -17,7 +17,7 @@ import {
 } from "ember-addons/ember-computed-decorators";
 
 export function loadTopicView(topic, args) {
-  const topicId = topic.get("id");
+  const topicId = topic.id;
   const data = _.merge({}, args);
   const url = `${Discourse.getURL("/t/")}${topicId}`;
   const jsonUrl = (data.nearPost ? `${url}/${data.nearPost}` : url) + ".json";
@@ -214,7 +214,7 @@ const Topic = RestModel.extend({
     const categoryName = this.categoryName;
     let category;
     if (categoryName) {
-      category = this.site.get("categories").findBy("name", categoryName);
+      category = this.site.categories.findBy("name", categoryName);
     }
     this.set("category", category);
   },
@@ -229,7 +229,7 @@ const Topic = RestModel.extend({
   @computed("url")
   shareUrl(url) {
     const user = Discourse.User.current();
-    const userQueryString = user ? `?u=${user.get("username_lower")}` : "";
+    const userQueryString = user ? `?u=${user.username_lower}` : "";
     return `${url}${userQueryString}`;
   },
 
@@ -379,7 +379,7 @@ const Topic = RestModel.extend({
     const stream = this.postStream;
     const posts = Ember.get(stream, "posts");
     const firstPost =
-      posts && posts[0] && posts[0].get("post_number") === 1 && posts[0];
+      posts && posts[0] && posts[0].post_number === 1 && posts[0];
     const bookmark = !this.bookmarked;
     const path = bookmark ? "/bookmark" : "/remove_bookmarks";
 
@@ -394,9 +394,9 @@ const Topic = RestModel.extend({
           if (!bookmark && posts) {
             const updated = [];
             posts.forEach(post => {
-              if (post.get("bookmarked")) {
+              if (post.bookmarked) {
                 post.set("bookmarked", false);
-                updated.push(post.get("id"));
+                updated.push(post.id);
               }
             });
             return updated;
@@ -411,7 +411,7 @@ const Topic = RestModel.extend({
     const unbookmarkedPosts = [];
     if (!bookmark && posts) {
       posts.forEach(
-        post => post.get("bookmarked") && unbookmarkedPosts.push(post)
+        post => post.bookmarked && unbookmarkedPosts.push(post)
       );
     }
 
@@ -627,7 +627,7 @@ Topic.reopenClass({
         a.post = result;
         a.actionType = Discourse.Site.current().postActionTypeById(a.id);
         const actionSummary = ActionSummary.create(a);
-        lookup.set(a.actionType.get("name_key"), actionSummary);
+        lookup.set(a.actionType.name_key, actionSummary);
         return actionSummary;
       });
       result.set("actionByName", lookup);
@@ -644,7 +644,7 @@ Topic.reopenClass({
     }
 
     // Make sure we never change the category for private messages
-    if (topic.get("isPrivateMessage")) {
+    if (topic.isPrivateMessage) {
       delete props.category_id;
     }
 
@@ -652,7 +652,7 @@ Topic.reopenClass({
       props.tags = [""];
     }
 
-    return ajax(topic.get("url"), { type: "PUT", data: props }).then(result => {
+    return ajax(topic.url, { type: "PUT", data: props }).then(result => {
       // The title can be cleaned up server side
       props.title = result.basic_topic.title;
       props.fancy_title = result.basic_topic.fancy_title;
@@ -727,7 +727,7 @@ Topic.reopenClass({
     return ajax("/topics/bulk", {
       type: "PUT",
       data: {
-        topic_ids: topics.map(t => t.get("id")),
+        topic_ids: topics.map(t => t.id),
         operation
       }
     });

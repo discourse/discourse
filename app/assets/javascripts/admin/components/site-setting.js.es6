@@ -5,6 +5,6 @@ import SettingComponent from "admin/mixins/setting-component";
 export default Ember.Component.extend(BufferedContent, SettingComponent, {
   _save() {
     const setting = this.buffered;
-    return SiteSetting.update(setting.get("setting"), setting.get("value"));
+    return SiteSetting.update(setting.setting, setting.value);
   }
 });

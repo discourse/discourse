@@ -73,7 +73,7 @@ const Group = RestModel.extend({
     var self = this;
     return ajax("/admin/groups/" + this.id + "/owners.json", {
       type: "DELETE",
-      data: { user_id: member.get("id") }
+      data: { user_id: member.id }
     }).then(function() {
       // reload member list
       self.findMembers();
@@ -83,7 +83,7 @@ const Group = RestModel.extend({
   removeMember(member, params) {
     return ajax("/groups/" + this.id + "/members.json", {
       type: "DELETE",
-      data: { user_id: member.get("id") }
+      data: { user_id: member.id }
     }).then(() => {
       this.findMembers(params);
     });

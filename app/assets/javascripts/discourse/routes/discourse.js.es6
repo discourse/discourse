@@ -23,7 +23,7 @@ const DiscourseRoute = Ember.Route.extend({
     const router = getOwner(this).lookup("router:main");
     if (!router._routerMicrolib.activeTransition) {
       const controller = this.controller,
-        model = controller.get("model"),
+        model = controller.model,
         params = this.controller.getProperties(Object.keys(this.queryParams));
 
       model.set("loading", true);
@@ -77,7 +77,7 @@ const DiscourseRoute = Ember.Route.extend({
 
   redirectIfLoginRequired() {
     const app = this.controllerFor("application");
-    if (app.get("loginRequired")) {
+    if (app.loginRequired) {
       this.replaceWith("login");
     }
   },

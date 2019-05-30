@@ -132,7 +132,7 @@ widgetTest("top categories - anonymous", {
     assert.equal(
       find(".category-link .category-name").text(),
       this.site
-        .get("categoriesByCount")
+        .categoriesByCount
         .slice(0, 8)
         .map(c => c.name)
         .join("")
@@ -154,7 +154,7 @@ widgetTest("top categories - allow_uncategorized_topics", {
     assert.equal(
       find(".category-link .category-name").text(),
       this.site
-        .get("categoriesByCount")
+        .categoriesByCount
         .filter(c => c.name !== "uncategorized")
         .slice(0, 8)
         .map(c => c.name)
@@ -169,7 +169,7 @@ widgetTest("top categories", {
   beforeEach() {
     this.siteSettings.header_dropdown_category_count = 8;
     maxCategoriesToDisplay = this.siteSettings.header_dropdown_category_count;
-    categoriesByCount = this.site.get("categoriesByCount").slice();
+    categoriesByCount = this.site.categoriesByCount.slice();
     categoriesByCount.every(c => {
       if (!topCategoryIds.includes(c.id)) {
         if (mutedCategoryIds.length === 0) {

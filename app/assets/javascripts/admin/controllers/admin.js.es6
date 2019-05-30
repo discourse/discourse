@@ -10,7 +10,7 @@ export default Ember.Controller.extend({
 
   @computed("siteSettings.enable_badges")
   showBadges(enableBadges) {
-    return this.currentUser.get("admin") && enableBadges;
+    return this.currentUser.admin && enableBadges;
   },
 
   @computed("application.currentPath")

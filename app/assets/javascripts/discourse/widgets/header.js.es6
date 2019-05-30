@@ -36,12 +36,12 @@ createWidget("header-notifications", {
     const { user } = attrs;
 
     let avatarAttrs = {
-      template: user.get("avatar_template"),
-      username: user.get("username")
+      template: user.avatar_template,
+      username: user.username
     };
 
     if (this.siteSettings.enable_names) {
-      avatarAttrs.name = user.get("name");
+      avatarAttrs.name = user.name;
     }
 
     const contents = [
@@ -51,7 +51,7 @@ createWidget("header-notifications", {
       )
     ];
 
-    const unreadNotifications = user.get("unread_notifications");
+    const unreadNotifications = user.unread_notifications;
     if (!!unreadNotifications) {
       contents.push(
         this.attach("link", {
@@ -65,11 +65,11 @@ createWidget("header-notifications", {
       );
     }
 
-    const unreadPMs = user.get("unread_private_messages");
+    const unreadPMs = user.unread_private_messages;
     if (!!unreadPMs) {
       if (
-        !user.get("read_first_notification") &&
-        !user.get("enforcedSecondFactor")
+        !user.read_first_notification &&
+        !user.enforcedSecondFactor
       ) {
         contents.push(h("span.ring"));
         if (!attrs.active && attrs.ringBackdrop) {
@@ -119,7 +119,7 @@ createWidget(
           "a.icon",
           {
             attributes: {
-              href: attrs.user.get("path"),
+              href: attrs.user.path,
               "data-auto-route": true
             }
           },
@@ -395,7 +395,7 @@ export default createWidget("header", {
   toggleSearchMenu() {
     if (this.site.mobileView) {
       const searchService = this.register.lookup("search-service:main");
-      const context = searchService.get("searchContext");
+      const context = searchService.searchContext;
       var params = "";
 
       if (context) {
@@ -406,7 +406,7 @@ export default createWidget("header", {
 
       const currentPath = this.register
         .lookup("controller:application")
-        .get("currentPath");
+        .currentPath;
 
       if (currentPath === "full-page-search") {
         scrollTop();
@@ -438,7 +438,7 @@ export default createWidget("header", {
   },
 
   toggleUserMenu() {
-    if (this.currentUser.get("read_first_notification")) {
+    if (this.currentUser.read_first_notification) {
       this.state.ringBackdrop = false;
     }
 
@@ -482,7 +482,7 @@ export default createWidget("header", {
 
     const currentPath = this.register
       .lookup("controller:application")
-      .get("currentPath");
+      .currentPath;
     const blacklist = [/^discovery\.categories/];
     const whitelist = [/^topic\./];
     const check = function(regex) {
@@ -518,7 +518,7 @@ export default createWidget("header", {
   searchMenuContextChanged(value) {
     this.state.contextType = this.register
       .lookup("search-service:main")
-      .get("contextType");
+      .contextType;
     this.state.contextEnabled = value;
   },
 
@@ -557,7 +557,7 @@ export default createWidget("header", {
   searchContextType() {
     const service = this.register.lookup("search-service:main");
     if (service) {
-      const ctx = service.get("searchContext");
+      const ctx = service.searchContext;
       if (ctx) {
         return Ember.get(ctx, "type");
       }

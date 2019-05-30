@@ -14,13 +14,13 @@ export default Ember.Object.extend({
     const results = [];
 
     // TODO, custom statuses? via override?
-    if (topic.get("is_warning")) {
+    if (topic.is_warning) {
       results.push({ icon: "envelope", key: "warning" });
     }
 
-    if (topic.get("bookmarked")) {
-      const postNumbers = topic.get("bookmarked_post_numbers");
-      let url = topic.get("url");
+    if (topic.bookmarked) {
+      const postNumbers = topic.bookmarked_post_numbers;
+      let url = topic.url;
       let extraClasses = "";
       if (postNumbers && postNumbers[0] > 1) {
         url += "/" + postNumbers[0];
@@ -36,23 +36,23 @@ export default Ember.Object.extend({
       });
     }
 
-    if (topic.get("closed") && topic.get("archived")) {
+    if (topic.closed && topic.archived) {
       results.push({ icon: "lock", key: "locked_and_archived" });
-    } else if (topic.get("closed")) {
+    } else if (topic.closed) {
       results.push({ icon: "lock", key: "locked" });
-    } else if (topic.get("archived")) {
+    } else if (topic.archived) {
       results.push({ icon: "lock", key: "archived" });
     }
 
-    if (topic.get("pinned")) {
+    if (topic.pinned) {
       results.push({ icon: "thumbtack", key: "pinned" });
     }
 
-    if (topic.get("unpinned")) {
+    if (topic.unpinned) {
       results.push({ icon: "thumbtack", key: "unpinned" });
     }
 
-    if (topic.get("invisible")) {
+    if (topic.invisible) {
       results.push({ icon: "far-eye-slash", key: "unlisted" });
     }
 

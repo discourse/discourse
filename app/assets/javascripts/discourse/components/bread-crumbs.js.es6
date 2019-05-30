@@ -9,14 +9,14 @@ export default Ember.Component.extend({
 
   parentCategories: Ember.computed.filter("categories", function(c) {
     if (
-      c.id === this.site.get("uncategorized_category_id") &&
+      c.id === this.site.uncategorized_category_id &&
       !this.siteSettings.allow_uncategorized_topics
     ) {
       // Don't show "uncategorized" if allow_uncategorized_topics setting is false.
       return false;
     }
 
-    return !c.get("parentCategory");
+    return !c.parentCategory;
   }),
 
   @computed("parentCategories")
@@ -52,7 +52,7 @@ export default Ember.Component.extend({
     }
 
     return this.categories.filter(
-      c => c.get("parentCategory") === firstCategory
+      c => c.parentCategory === firstCategory
     );
   }
 });

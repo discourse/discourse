@@ -38,7 +38,7 @@ export default Ember.Controller.extend({
     return (
       filter === "pending" &&
       this.model.invites.length > 4 &&
-      this.currentUser.get("staff")
+      this.currentUser.staff
     );
   },
 

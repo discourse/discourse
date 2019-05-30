@@ -11,15 +11,15 @@ QUnit.test("instance", assert => {
 
   assert.present(site, "We have a current site singleton");
   assert.present(
-    site.get("categories"),
+    site.categories,
     "The instance has a list of categories"
   );
   assert.present(
-    site.get("flagTypes"),
+    site.flagTypes,
     "The instance has a list of flag types"
   );
   assert.present(
-    site.get("trustLevels"),
+    site.trustLevels,
     "The instance has a list of trust levels"
   );
 });
@@ -34,22 +34,22 @@ QUnit.test("create categories", assert => {
     ]
   });
 
-  const categories = site.get("categories");
-  site.get("sortedCategories");
+  const categories = site.categories;
+  site.sortedCategories;
 
   assert.present(categories, "The categories are present");
   assert.equal(categories.length, 3, "it loaded all three categories");
 
   const parent = categories.findBy("id", 1234);
   assert.present(parent, "it loaded the parent category");
-  assert.blank(parent.get("parentCategory"), "it has no parent category");
+  assert.blank(parent.parentCategory, "it has no parent category");
 
-  assert.equal(parent.get("subcategories").length, 1);
+  assert.equal(parent.subcategories.length, 1);
 
   const subcategory = categories.findBy("id", 3456);
   assert.present(subcategory, "it loaded the subcategory");
   assert.equal(
-    subcategory.get("parentCategory"),
+    subcategory.parentCategory,
     parent,
     "it has associated the child with the parent"
   );
@@ -60,12 +60,12 @@ QUnit.test("create categories", assert => {
 
   assert.equal(
     categories.length,
-    site.get("categoriesByCount").length,
+    site.categoriesByCount.length,
     "categories by count should change on removal"
   );
   assert.equal(
     categories.length,
-    site.get("sortedCategories").length,
+    site.sortedCategories.length,
     "sorted categories should change on removal"
   );
 });

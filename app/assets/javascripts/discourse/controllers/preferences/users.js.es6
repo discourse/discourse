@@ -20,7 +20,7 @@ export default Ember.Controller.extend(PreferencesTabController, {
         const username = current.pop();
         if (username) {
           User.findByUsername(username).then(user => {
-            if (user.get("ignored")) {
+            if (user.ignored) {
               return;
             }
             const controller = showModal("ignore-duration", {
@@ -28,7 +28,7 @@ export default Ember.Controller.extend(PreferencesTabController, {
             });
             controller.setProperties({
               onClose: () => {
-                if (!user.get("ignored")) {
+                if (!user.ignored) {
                   const usernames = this.ignoredUsernames
                     .split(",")
                     .removeAt(this.ignoredUsernames.split(",").length - 1)

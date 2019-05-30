@@ -23,7 +23,7 @@ export default Ember.Component.extend(PanEvents, {
 
     let info = this.info;
 
-    if (info.get("topicProgressExpanded")) {
+    if (info.topicProgressExpanded) {
       info.setProperties({
         renderTimeline: true,
         renderAdminMenuButton: true

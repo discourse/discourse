@@ -33,7 +33,7 @@ export default Discourse.Route.extend(OpenComposer, {
 
     loadingComplete() {
       this.controllerFor("discovery").set("loading", false);
-      if (!this.session.get("topicListScrollPosition")) {
+      if (!this.session.topicListScrollPosition) {
         scrollTop();
       }
       return false;
@@ -51,7 +51,7 @@ export default Discourse.Route.extend(OpenComposer, {
     },
 
     createTopic() {
-      const model = this.controllerFor("discovery/topics").get("model");
+      const model = this.controllerFor("discovery/topics").model;
       if (model.draft) {
         this.openTopicDraft(model);
       } else {

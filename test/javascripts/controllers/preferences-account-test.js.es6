@@ -16,17 +16,17 @@ QUnit.test("updating of associated accounts", function(assert) {
 
   controller.set("canCheckEmails", false);
 
-  assert.equal(controller.get("canUpdateAssociatedAccounts"), false);
+  assert.equal(controller.canUpdateAssociatedAccounts, false);
 
   controller.set("model.second_factor_enabled", false);
 
-  assert.equal(controller.get("canUpdateAssociatedAccounts"), false);
+  assert.equal(controller.canUpdateAssociatedAccounts, false);
 
   controller.set("model.is_anonymous", false);
 
-  assert.equal(controller.get("canUpdateAssociatedAccounts"), false);
+  assert.equal(controller.canUpdateAssociatedAccounts, false);
 
   controller.set("canCheckEmails", true);
 
-  assert.equal(controller.get("canUpdateAssociatedAccounts"), true);
+  assert.equal(controller.canUpdateAssociatedAccounts, true);
 });

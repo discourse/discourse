@@ -81,7 +81,7 @@ export default Ember.Controller.extend({
         return;
       }
 
-      name = category.get("name");
+      name = category.name;
     }
     return searchContextDescription(context, name);
   },
@@ -163,7 +163,7 @@ export default Ember.Controller.extend({
       this.currentUser &&
       (q.indexOf("in:private") > -1 ||
         q.indexOf(
-          `private_messages:${this.currentUser.get("username_lower")}`
+          `private_messages:${this.currentUser.username_lower}`
         ) > -1)
     );
   },

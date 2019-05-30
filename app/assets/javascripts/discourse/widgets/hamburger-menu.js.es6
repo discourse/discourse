@@ -172,24 +172,24 @@ export default createWidget("hamburger-menu", {
   listCategories() {
     const maxCategoriesToDisplay = this.siteSettings
       .header_dropdown_category_count;
-    let categories = this.site.get("categoriesByCount");
+    let categories = this.site.categoriesByCount;
 
     if (this.currentUser) {
       const allCategories = this.site
-        .get("categories")
+        .categories
         .filter(c => c.notification_level !== NotificationLevels.MUTED);
 
       categories = allCategories
-        .filter(c => c.get("newTopics") > 0 || c.get("unreadTopics") > 0)
+        .filter(c => c.newTopics > 0 || c.unreadTopics > 0)
         .sort((a, b) => {
           return (
-            b.get("newTopics") +
-            b.get("unreadTopics") -
-            (a.get("newTopics") + a.get("unreadTopics"))
+            b.newTopics +
+            b.unreadTopics -
+            (a.newTopics + a.unreadTopics)
           );
         });
 
-      const topCategoryIds = this.currentUser.get("top_category_ids") || [];
+      const topCategoryIds = this.currentUser.top_category_ids || [];
       topCategoryIds.forEach(id => {
         const category = allCategories.find(c => c.id === id);
         if (category && !categories.includes(category)) {

@@ -6,20 +6,20 @@ QUnit.module("model:user");
 QUnit.test("staff", assert => {
   var user = User.create({ id: 1, username: "eviltrout" });
 
-  assert.ok(!user.get("staff"), "user is not staff");
+  assert.ok(!user.staff, "user is not staff");
 
   user.toggleProperty("moderator");
-  assert.ok(user.get("staff"), "moderators are staff");
+  assert.ok(user.staff, "moderators are staff");
 
   user.setProperties({ moderator: false, admin: true });
-  assert.ok(user.get("staff"), "admins are staff");
+  assert.ok(user.staff, "admins are staff");
 });
 
 QUnit.test("searchContext", assert => {
   var user = User.create({ id: 1, username: "EvilTrout" });
 
   assert.deepEqual(
-    user.get("searchContext"),
+    user.searchContext,
     { type: "user", id: "eviltrout", user: user },
     "has a search context"
   );

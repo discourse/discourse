@@ -7,8 +7,8 @@ export default type => {
     },
 
     model() {
-      const groupName = this.modelFor("group").get("name");
-      const username = this.currentUser.get("username_lower");
+      const groupName = this.modelFor("group").name;
+      const username = this.currentUser.username_lower;
       let filter = `topics/private-messages-group/${username}/${groupName}`;
       if (this._isArchive()) filter = `${filter}/archive`;
       return this.store.findFiltered("topicList", { filter });
@@ -17,7 +17,7 @@ export default type => {
     setupController() {
       this._super.apply(this, arguments);
 
-      const groupName = this.modelFor("group").get("name");
+      const groupName = this.modelFor("group").name;
       let channel = `/private-messages/group/${groupName}`;
       if (this._isArchive()) channel = `${channel}/archive`;
       this.controllerFor("user-topics-list").subscribe(channel);

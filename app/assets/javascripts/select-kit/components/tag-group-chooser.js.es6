@@ -17,7 +17,7 @@ export default MultiSelectComponent.extend(TagsMixin, {
     this._super(...arguments);
 
     this.set("templateForRow", rowComponent => {
-      const tag = rowComponent.get("computedContent");
+      const tag = rowComponent.computedContent;
       return renderTag(get(tag, "value"), {
         count: get(tag, "originalContent.count"),
         noHref: true

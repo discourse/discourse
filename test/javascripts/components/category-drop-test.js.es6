@@ -15,8 +15,8 @@ componentTest("subcatgories - no selection", {
   beforeEach() {
     const parentCategory = Category.findById(2);
 
-    const childCategories = this.site.get("categoriesList").filter(c => {
-      return c.get("parentCategory") === parentCategory;
+    const childCategories = this.site.categoriesList.filter(c => {
+      return c.parentCategory === parentCategory;
     });
 
     this.set("childCategories", childCategories);
@@ -50,12 +50,12 @@ componentTest("subcatgories - selection", {
   beforeEach() {
     const parentCategory = Category.findById(2);
 
-    const childCategories = this.site.get("categoriesList").filter(c => {
-      return c.get("parentCategory") === parentCategory;
+    const childCategories = this.site.categoriesList.filter(c => {
+      return c.parentCategory === parentCategory;
     });
 
     this.set("childCategories", childCategories);
-    this.set("category", childCategories.get("firstObject"));
+    this.set("category", childCategories.firstObject);
     this.set("parentCategory", parentCategory);
   },
 

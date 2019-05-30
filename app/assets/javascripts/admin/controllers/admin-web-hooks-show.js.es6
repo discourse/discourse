@@ -85,17 +85,17 @@ export default Ember.Controller.extend({
       const url = this.get("model.payload_url");
       const domain = extractDomainFromUrl(url);
       const model = this.model;
-      const isNew = model.get("isNew");
+      const isNew = model.isNew;
 
       const saveWebHook = () => {
         return model
           .save()
           .then(() => {
             this.set("saved", true);
-            this.adminWebHooks.get("model").addObject(model);
+            this.adminWebHooks.model.addObject(model);
 
             if (isNew) {
-              this.transitionToRoute("adminWebHooks.show", model.get("id"));
+              this.transitionToRoute("adminWebHooks.show", model.id);
             }
           })
           .catch(popupAjaxError);
@@ -133,7 +133,7 @@ export default Ember.Controller.extend({
             model
               .destroyRecord()
               .then(() => {
-                this.adminWebHooks.get("model").removeObject(model);
+                this.adminWebHooks.model.removeObject(model);
                 this.transitionToRoute("adminWebHooks");
               })
               .catch(popupAjaxError);

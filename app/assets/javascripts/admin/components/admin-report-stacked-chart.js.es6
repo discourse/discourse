@@ -43,7 +43,7 @@ export default Ember.Component.extend({
     const context = $chartCanvas[0].getContext("2d");
 
     const chartData = Ember.makeArray(
-      model.get("chartData") || model.get("data")
+      model.chartData || model.data
     );
 
     const data = {

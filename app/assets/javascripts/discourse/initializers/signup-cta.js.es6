@@ -26,11 +26,11 @@ export default {
     if (!siteSettings.enable_signup_cta) return;
 
     function checkSignupCtaRequirements() {
-      if (session.get("showSignupCta")) {
+      if (session.showSignupCta) {
         return; // already shown
       }
 
-      if (session.get("hideSignupCta")) {
+      if (session.hideSignupCta) {
         return; // hidden for session
       }
 

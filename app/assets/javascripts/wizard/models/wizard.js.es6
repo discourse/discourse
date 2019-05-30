@@ -35,12 +35,12 @@ const Wizard = Ember.Object.extend({
       return;
     }
 
-    const themeId = schemeId ? schemeId : themeChoice.get("value");
+    const themeId = schemeId ? schemeId : themeChoice.value;
     if (!themeId) {
       return;
     }
 
-    const choices = themeChoice.get("choices");
+    const choices = themeChoice.choices;
     if (!choices) {
       return;
     }

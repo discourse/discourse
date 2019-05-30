@@ -78,7 +78,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
     post
       .revertToRevision(postVersion)
       .then(result => {
-        this.refresh(post.get("id"), postVersion);
+        this.refresh(post.id, postVersion);
         if (result.topic) {
           post.set("topic.slug", result.topic.slug);
           post.set("topic.title", result.topic.title);
@@ -144,12 +144,12 @@ export default Ember.Controller.extend(ModalFunctionality, {
 
   @computed("model.previous_hidden")
   displayShow(prevHidden) {
-    return prevHidden && this.currentUser && this.currentUser.get("staff");
+    return prevHidden && this.currentUser && this.currentUser.staff;
   },
 
   @computed("model.previous_hidden")
   displayHide(prevHidden) {
-    return !prevHidden && this.currentUser && this.currentUser.get("staff");
+    return !prevHidden && this.currentUser && this.currentUser.staff;
   },
 
   @computed(
@@ -169,7 +169,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
 
   @computed()
   displayRevert() {
-    return this.currentUser && this.currentUser.get("staff");
+    return this.currentUser && this.currentUser.staff;
   },
 
   isEitherRevisionHidden: Ember.computed.or(

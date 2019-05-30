@@ -5,7 +5,7 @@ export default Ember.Component.extend({
 
   @computed("period")
   periods(period) {
-    return this.site.get("periods").filter(p => p !== period);
+    return this.site.periods.filter(p => p !== period);
   },
 
   actions: {

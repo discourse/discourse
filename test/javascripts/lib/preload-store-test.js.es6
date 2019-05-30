@@ -7,9 +7,9 @@ QUnit.module("preload-store", {
 });
 
 QUnit.test("get", assert => {
-  assert.blank(PreloadStore.get("joker"), "returns blank for a missing key");
+  assert.blank(PreloadStore.joker, "returns blank for a missing key");
   assert.equal(
-    PreloadStore.get("bane"),
+    PreloadStore.bane,
     "evil",
     "returns the value for that key"
   );
@@ -17,7 +17,7 @@ QUnit.test("get", assert => {
 
 QUnit.test("remove", assert => {
   PreloadStore.remove("bane");
-  assert.blank(PreloadStore.get("bane"), "removes the value if the key exists");
+  assert.blank(PreloadStore.bane, "removes the value if the key exists");
 });
 
 asyncTestDiscourse(

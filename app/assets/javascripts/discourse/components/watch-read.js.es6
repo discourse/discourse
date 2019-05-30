@@ -11,7 +11,7 @@ export default Ember.Component.extend({
     const path = this.path;
     if (path === "faq" || path === "guidelines") {
       $(window).on("load.faq resize.faq scroll.faq", () => {
-        const faqUnread = !currentUser.get("read_faq");
+        const faqUnread = !currentUser.read_faq;
         if (faqUnread && isElementInViewport($(".contents p").last())) {
           this.action();
         }

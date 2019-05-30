@@ -74,7 +74,7 @@ componentTest("with children", {
         .trim(),
       childrenList
         .splice(0, 4)
-        .map(theme => theme.get("name"))
+        .map(theme => theme.name)
         .join(", "),
       "lists the first 4 children"
     );

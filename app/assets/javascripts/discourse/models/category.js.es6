@@ -82,7 +82,7 @@ const Category = RestModel.extend({
     let count = topicCount;
     if (subcats) {
       subcats.forEach(s => {
-        count += s.get("topic_count");
+        count += s.topic_count;
       });
     }
     return count;
@@ -285,7 +285,7 @@ Category.reopenClass({
         category = categories.find(item => {
           return (
             item &&
-            item.get("parentCategory") === parentCategory &&
+            item.parentCategory === parentCategory &&
             Category.slugFor(item) === parentSlug + "/" + slug
           );
         });
@@ -294,7 +294,7 @@ Category.reopenClass({
       category = Category.findSingleBySlug(slug);
 
       // If we have a parent category, we need to enforce it
-      if (category && category.get("parentCategory")) return;
+      if (category && category.parentCategory) return;
     }
 
     // In case the slug didn't work, try to find it by id instead.
@@ -347,14 +347,14 @@ Category.reopenClass({
     for (i = 0; i < length && !done(); i++) {
       const category = categories[i];
       if (
-        (emptyTerm && !category.get("parent_category_id")) ||
+        (emptyTerm && !category.parent_category_id) ||
         (!emptyTerm &&
           (category
-            .get("name")
+            .name
             .toLowerCase()
             .indexOf(term) === 0 ||
             category
-              .get("slug")
+              .slug
               .toLowerCase()
               .indexOf(slugTerm) === 0))
       ) {
@@ -369,11 +369,11 @@ Category.reopenClass({
         if (
           !emptyTerm &&
           (category
-            .get("name")
+            .name
             .toLowerCase()
             .indexOf(term) > 0 ||
             category
-              .get("slug")
+              .slug
               .toLowerCase()
               .indexOf(slugTerm) > 0)
         ) {
@@ -383,7 +383,7 @@ Category.reopenClass({
     }
 
     return _.sortBy(data, category => {
-      return category.get("read_restricted");
+      return category.read_restricted;
     });
   }
 });

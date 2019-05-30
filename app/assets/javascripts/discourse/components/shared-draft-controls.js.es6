@@ -11,7 +11,7 @@ export default Ember.Component.extend({
 
   actions: {
     updateDestinationCategory(category) {
-      return this.topic.updateDestinationCategory(category.get("id"));
+      return this.topic.updateDestinationCategory(category.id);
     },
 
     publish() {

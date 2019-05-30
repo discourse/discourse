@@ -33,17 +33,17 @@ export default Ember.Controller.extend({
     const matches = [];
     this.allSiteSettings.forEach(settingsCategory => {
       const siteSettings = settingsCategory.siteSettings.filter(item => {
-        if (this.onlyOverridden && !item.get("overridden")) return false;
+        if (this.onlyOverridden && !item.overridden) return false;
         if (filter) {
-          const setting = item.get("setting").toLowerCase();
+          const setting = item.setting.toLowerCase();
           return (
             setting.includes(filter) ||
             setting.replace(/_/g, " ").includes(filter) ||
             item
-              .get("description")
+              .description
               .toLowerCase()
               .includes(filter) ||
-            (item.get("value") || "").toLowerCase().includes(filter)
+            (item.value || "").toLowerCase().includes(filter)
           );
         } else {
           return true;

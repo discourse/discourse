@@ -3,7 +3,7 @@ import PreloadStore from "preload-store";
 
 export default Discourse.Route.extend({
   model() {
-    if (PreloadStore.get("badges")) {
+    if (PreloadStore.badges) {
       return PreloadStore.getAndRemove("badges").then(json =>
         Badge.createFromJson(json)
       );

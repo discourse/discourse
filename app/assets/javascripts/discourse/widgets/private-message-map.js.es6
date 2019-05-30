@@ -77,7 +77,7 @@ createWidget("pm-map-user", {
         template: user.avatar_template,
         username: user.username
       });
-      link = h("a", { attributes: { href: user.get("path") } }, [
+      link = h("a", { attributes: { href: user.path } }, [
         avatar,
         username
       ]);
@@ -89,13 +89,13 @@ createWidget("pm-map-user", {
 
       link = h(
         "a",
-        { attributes: { class: "user-link", href: user.get("path") } },
+        { attributes: { class: "user-link", href: user.path } },
         [avatar, username]
       );
     }
 
     const result = [link];
-    const isCurrentUser = attrs.canRemoveSelfId === user.get("id");
+    const isCurrentUser = attrs.canRemoveSelfId === user.id;
 
     if (attrs.isEditing && (attrs.canRemoveAllowedUsers || isCurrentUser)) {
       result.push(this.attach("pm-remove-link", { user, isCurrentUser }));

@@ -16,8 +16,8 @@ export default Ember.Mixin.create({
     ) {
       if (
         result.suggestion &&
-        (Ember.isEmpty(self.get("accountUsername")) ||
-          self.get("accountUsername") === self.get("authOptions.username"))
+        (Ember.isEmpty(self.accountUsername) ||
+          self.accountUsername === self.get("authOptions.username"))
       ) {
         self.set("accountUsername", result.suggestion);
         self.set("prefilledUsername", result.suggestion);

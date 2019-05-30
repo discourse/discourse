@@ -137,7 +137,7 @@ export default createWidget("user-menu", {
   },
 
   panelContents() {
-    const path = this.currentUser.get("path");
+    const path = this.currentUser.path;
 
     let result = [
       this.attach("user-menu-links", { path }),

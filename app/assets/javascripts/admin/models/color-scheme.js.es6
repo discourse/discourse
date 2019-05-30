@@ -21,7 +21,7 @@ const ColorScheme = Discourse.Model.extend(Ember.Copyable, {
   schemeJson() {
     const buffer = [];
     this.colors.forEach(c => {
-      buffer.push(`  "${c.get("name")}": "${c.get("hex")}"`);
+      buffer.push(`  "${c.name}": "${c.hex}"`);
     });
 
     return [`"${this.name}": {`, buffer.join(",\n"), "}"].join("\n");
@@ -45,7 +45,7 @@ const ColorScheme = Discourse.Model.extend(Ember.Copyable, {
   changed(name) {
     if (!this.originals) return false;
     if (this.originals.name !== name) return true;
-    if (this.colors.any(c => c.get("changed"))) return true;
+    if (this.colors.any(c => c.changed)) return true;
 
     return false;
   },
@@ -56,7 +56,7 @@ const ColorScheme = Discourse.Model.extend(Ember.Copyable, {
       return false;
     }
 
-    return !changed || this.saving || this.colors.any(c => !c.get("valid"));
+    return !changed || this.saving || this.colors.any(c => !c.valid);
   },
 
   newRecord: Ember.computed.not("id"),
@@ -73,7 +73,7 @@ const ColorScheme = Discourse.Model.extend(Ember.Copyable, {
       data.base_scheme_id = this.base_scheme_id;
       data.colors = [];
       this.colors.forEach(c => {
-        if (!this.id || c.get("changed")) {
+        if (!this.id || c.changed) {
           data.colors.pushObject(c.getProperties("name", "hex"));
         }
       });

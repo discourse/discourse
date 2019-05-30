@@ -22,7 +22,7 @@ export default Ember.Controller.extend({
 
   actions: {
     toggleReadOnlyMode() {
-      if (!this.site.get("isReadOnly")) {
+      if (!this.site.isReadOnly) {
         bootbox.confirm(
           I18n.t("admin.backups.read_only.enable.confirm"),
           I18n.t("no_value"),
@@ -40,7 +40,7 @@ export default Ember.Controller.extend({
     },
 
     download(backup) {
-      const link = backup.get("filename");
+      const link = backup.filename;
       ajax(`/admin/backups/${link}`, { type: "PUT" }).then(() =>
         bootbox.alert(I18n.t("admin.backups.operations.download.alert"))
       );

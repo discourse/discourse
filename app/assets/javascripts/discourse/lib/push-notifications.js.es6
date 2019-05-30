@@ -4,7 +4,7 @@ import KeyValueStore from "discourse/lib/key-value-store";
 export const keyValueStore = new KeyValueStore("discourse_push_notifications_");
 
 export function userSubscriptionKey(user) {
-  return `subscribed-${user.get("id")}`;
+  return `subscribed-${user.id}`;
 }
 
 function sendSubscriptionToServer(subscription, sendConfirmation) {

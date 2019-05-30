@@ -26,7 +26,7 @@ QUnit.test("subfolder support", assert => {
   };
   const emailLog = EmailLog.create(attrs);
   assert.equal(
-    emailLog.get("post_url"),
+    emailLog.post_url,
     "/forum/t/some-pro-tips-for-you/41/5",
     "includes the subfolder in the post url"
   );

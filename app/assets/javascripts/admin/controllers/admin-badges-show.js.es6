@@ -91,7 +91,7 @@ export default Ember.Controller.extend(bufferedProperty("model"), {
               if (!adminBadges.includes(model)) {
                 adminBadges.pushObject(model);
               }
-              this.transitionToRoute("adminBadges.show", model.get("id"));
+              this.transitionToRoute("adminBadges.show", model.id);
             } else {
               this.commitBuffer();
               this.set("savingStatus", I18n.t("saved"));
@@ -109,7 +109,7 @@ export default Ember.Controller.extend(bufferedProperty("model"), {
       const adminBadges = this.get("adminBadges.model");
       const model = this.model;
 
-      if (!model.get("id")) {
+      if (!model.id) {
         this.transitionToRoute("adminBadges.index");
         return;
       }

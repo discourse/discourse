@@ -8,7 +8,7 @@ export default Ember.Component.extend({
   loaded() {
     var topicList = this.topicList;
     if (topicList) {
-      return topicList.get("loaded");
+      return topicList.loaded;
     } else {
       return true;
     }
@@ -20,7 +20,7 @@ export default Ember.Component.extend({
 
   _initFromTopicList(topicList) {
     if (topicList !== null) {
-      this.set("topics", topicList.get("topics"));
+      this.set("topics", topicList.topics);
       this.rerender();
     }
   },

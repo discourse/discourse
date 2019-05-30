@@ -540,11 +540,11 @@ describe SiteSettingExtension do
 
     it "works correctly" do
       expect {
-        settings.get("frogs_in_africa")
+        settings.frogs_in_africa
       }.to raise_error(Discourse::InvalidParameters)
 
       expect(settings.get(:title)).to eq("Discourse v1")
-      expect(settings.get("title")).to eq("Discourse v1")
+      expect(settings.title).to eq("Discourse v1")
     end
 
   end

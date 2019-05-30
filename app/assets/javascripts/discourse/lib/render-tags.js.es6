@@ -21,11 +21,11 @@ export default function(topic, params) {
   let tags = topic.tags;
   let buffer = "";
   let tagsForUser = null;
-  const isPrivateMessage = topic.get("isPrivateMessage");
+  const isPrivateMessage = topic.isPrivateMessage;
 
   if (params) {
     if (params.mode === "list") {
-      tags = topic.get("visibleListTags");
+      tags = topic.visibleListTags;
     }
     if (params.tagsForUser) {
       tagsForUser = params.tagsForUser;

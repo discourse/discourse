@@ -25,7 +25,7 @@ export function showEntrance(e) {
 
 export function navigateToTopic(topic, href) {
   this.appEvents.trigger("header:update-topic", topic);
-  DiscourseURL.routeTo(href || topic.get("url"));
+  DiscourseURL.routeTo(href || topic.url);
   return false;
 }
 
@@ -46,23 +46,23 @@ export const ListItemDefaults = {
   unboundClassNames(topic, lastVisitedTopic) {
     let classes = [];
 
-    if (topic.get("category")) {
+    if (topic.category) {
       classes.push("category-" + topic.get("category.fullSlug"));
     }
 
-    if (topic.get("tags")) {
-      topic.get("tags").forEach(tagName => classes.push("tag-" + tagName));
+    if (topic.tags) {
+      topic.tags.forEach(tagName => classes.push("tag-" + tagName));
     }
 
-    if (topic.get("hasExcerpt")) {
+    if (topic.hasExcerpt) {
       classes.push("has-excerpt");
     }
 
-    if (topic.get("unseen")) {
+    if (topic.unseen) {
       classes.push("unseen-topic");
     }
 
-    if (topic.get("displayNewPosts")) {
+    if (topic.displayNewPosts) {
       classes.push("new-posts");
     }
 
@@ -163,7 +163,7 @@ export const ListItemDefaults = {
 
   _highlightIfNeeded: function() {
     // highlight the last topic viewed
-    if (this.session.get("lastTopicIdViewed") === this.get("topic.id")) {
+    if (this.session.lastTopicIdViewed === this.get("topic.id")) {
       this.session.set("lastTopicIdViewed", null);
       this.highlight({ isLastViewedTopic: true });
     } else if (this.get("topic.highlight")) {

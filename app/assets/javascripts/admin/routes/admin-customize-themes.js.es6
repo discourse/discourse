@@ -17,7 +17,7 @@ export default Ember.Route.extend({
 
     addTheme(theme) {
       this.refresh();
-      this.transitionTo("adminCustomizeThemes.show", theme.get("id"));
+      this.transitionTo("adminCustomizeThemes.show", theme.id);
     }
   }
 });

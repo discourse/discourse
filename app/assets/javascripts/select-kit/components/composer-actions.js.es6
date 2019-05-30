@@ -36,7 +36,7 @@ export default DropdownSelectBoxComponent.extend({
     if (
       this.get("composerModel.topic") &&
       (!_topicSnapshot ||
-        this.get("composerModel.topic.id") !== _topicSnapshot.get("id"))
+        this.get("composerModel.topic.id") !== _topicSnapshot.id)
     ) {
       _topicSnapshot = this.get("composerModel.topic");
       _postSnapshot = this.get("composerModel.post");
@@ -46,7 +46,7 @@ export default DropdownSelectBoxComponent.extend({
     if (
       this.get("composerModel.post") &&
       (!_postSnapshot ||
-        this.get("composerModel.post.id") !== _postSnapshot.get("id"))
+        this.get("composerModel.post.id") !== _postSnapshot.id)
     ) {
       _postSnapshot = this.get("composerModel.post");
     }
@@ -102,8 +102,8 @@ export default DropdownSelectBoxComponent.extend({
     ) {
       items.push({
         name: I18n.t("composer.composer_actions.reply_to_post.label", {
-          postNumber: _postSnapshot.get("post_number"),
-          postUsername: _postSnapshot.get("username")
+          postNumber: _postSnapshot.post_number,
+          postUsername: _postSnapshot.username
         }),
         description: I18n.t("composer.composer_actions.reply_to_post.desc"),
         icon: "share",
@@ -194,7 +194,7 @@ export default DropdownSelectBoxComponent.extend({
     const currentUser = Discourse.User.current();
     const showToggleTopicBump =
       currentUser &&
-      (currentUser.get("staff") || currentUser.trust_level === 4);
+      (currentUser.staff || currentUser.trust_level === 4);
 
     if (action === REPLY && showToggleTopicBump) {
       items.push({
@@ -251,18 +251,18 @@ export default DropdownSelectBoxComponent.extend({
   replyAsPrivateMessageSelected(options) {
     let usernames;
 
-    if (_postSnapshot && !_postSnapshot.get("yours")) {
-      const postUsername = _postSnapshot.get("username");
+    if (_postSnapshot && !_postSnapshot.yours) {
+      const postUsername = _postSnapshot.username;
       if (postUsername) {
         usernames = postUsername;
       }
     } else if (this.get("composerModel.topic")) {
       const stream = this.get("composerModel.topic.postStream");
 
-      if (stream.get("firstPostPresent")) {
+      if (stream.firstPostPresent) {
         const post = stream.get("posts.firstObject");
-        if (post && !post.get("yours") && post.get("username")) {
-          usernames = post.get("username");
+        if (post && !post.yours && post.username) {
+          usernames = post.username;
         }
       }
     }

@@ -47,7 +47,7 @@ Invite.reopenClass({
     }
     data.offset = offset || 0;
 
-    return ajax(userPath(user.get("username_lower") + "/invited.json"), {
+    return ajax(userPath(user.username_lower + "/invited.json"), {
       data
     }).then(function(result) {
       result.invites = result.invites.map(function(i) {
@@ -63,7 +63,7 @@ Invite.reopenClass({
       return Ember.RSVP.resolve();
     }
     return ajax(
-      userPath(user.get("username_lower") + "/invited_count.json")
+      userPath(user.username_lower + "/invited_count.json")
     ).then(result => Ember.Object.create(result.counts));
   },
 

@@ -22,7 +22,7 @@ export default Ember.Controller.extend(GrantBadgeController, {
     var grouped = _.groupBy(allBadges, badge => badge.badge_id);
 
     var expanded = [];
-    const expandedBadges = allBadges.get("expandedBadges") || [];
+    const expandedBadges = allBadges.expandedBadges || [];
 
     _(grouped).each(function(badges) {
       var lastGranted = badges[0].granted_at;
@@ -57,8 +57,8 @@ export default Ember.Controller.extend(GrantBadgeController, {
   actions: {
     expandGroup: function(userBadge) {
       const model = this.model;
-      model.set("expandedBadges", model.get("expandedBadges") || []);
-      model.get("expandedBadges").pushObject(userBadge.badge.id);
+      model.set("expandedBadges", model.expandedBadges || []);
+      model.expandedBadges.pushObject(userBadge.badge.id);
     },
 
     grantBadge() {
@@ -73,7 +73,7 @@ export default Ember.Controller.extend(GrantBadgeController, {
             // Update the selected badge ID after the combobox has re-rendered.
             const newSelectedBadge = this.grantableBadges[0];
             if (newSelectedBadge) {
-              this.set("selectedBadgeId", newSelectedBadge.get("id"));
+              this.set("selectedBadgeId", newSelectedBadge.id);
             }
           });
         },

@@ -20,7 +20,7 @@ export default Ember.Controller.extend({
       this.set("loading", true);
       const posts = this.model;
       if (posts && posts.length) {
-        const beforePostId = posts[posts.length - 1].get("id");
+        const beforePostId = posts[posts.length - 1].id;
         const group = this.get("group.model");
 
         let categoryId = this.get("groupActivity.category_id");

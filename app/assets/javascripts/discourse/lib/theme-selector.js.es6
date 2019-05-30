@@ -108,7 +108,7 @@ export function previewTheme(ids = []) {
 }
 
 export function listThemes(site) {
-  let themes = site.get("user_themes");
+  let themes = site.user_themes;
 
   if (!themes) {
     return null;

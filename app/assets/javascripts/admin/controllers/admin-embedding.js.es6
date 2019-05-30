@@ -33,7 +33,7 @@ export default Ember.Controller.extend({
   actions: {
     saveChanges() {
       const embedding = this.embedding;
-      const updates = embedding.getProperties(embedding.get("fields"));
+      const updates = embedding.getProperties(embedding.fields);
 
       this.set("saved", false);
       this.embedding

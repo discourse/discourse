@@ -20,19 +20,19 @@ function findTopicList(store, tracking, filter, filterParams, extras) {
     const session = Discourse.Session.current();
 
     if (extras.cached) {
-      const cachedList = session.get("topicList");
+      const cachedList = session.topicList;
 
       // Try to use the cached version if it exists and is greater than the topics per page
       if (
         cachedList &&
-        cachedList.get("filter") === filter &&
-        (cachedList.get("topics.length") || 0) > cachedList.get("per_page") &&
-        _.isEqual(cachedList.get("listParams"), filterParams)
+        cachedList.filter === filter &&
+        (cachedList.get("topics.length") || 0) > cachedList.per_page &&
+        _.isEqual(cachedList.listParams, filterParams)
       ) {
         cachedList.set("loaded", true);
 
         if (tracking) {
-          tracking.updateTopics(cachedList.get("topics"));
+          tracking.updateTopics(cachedList.topics);
         }
         return resolve(cachedList);
       }
@@ -110,14 +110,14 @@ export default function(filter, extras) {
           model,
           category: null,
           period:
-            model.get("for_period") ||
+            model.for_period ||
             (filter.indexOf("top/") >= 0 ? filter.split("/")[1] : ""),
           selected: [],
           expandAllPinned: false,
           expandGloballyPinned: true
         };
 
-        const params = model.get("params");
+        const params = model.params;
         if (params && Object.keys(params).length) {
           if (params.order !== undefined) {
             topicOpts.order = params.order;
@@ -129,7 +129,7 @@ export default function(filter, extras) {
         this.controllerFor("discovery/topics").setProperties(topicOpts);
         this.controllerFor("navigation/default").set(
           "canCreateTopic",
-          model.get("can_create_topic")
+          model.can_create_topic
         );
       },
 

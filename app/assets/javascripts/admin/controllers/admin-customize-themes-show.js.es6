@@ -52,7 +52,7 @@ export default Ember.Controller.extend({
     if (!this.get("model.component")) {
       const themeId = this.get("model.id");
       return allThemes.filter(
-        theme => theme.get("id") !== themeId && theme.get("component")
+        theme => theme.id !== themeId && theme.component
       );
     }
   },
@@ -101,7 +101,7 @@ export default Ember.Controller.extend({
 
   commitSwitchType() {
     const model = this.model;
-    const newValue = !model.get("component");
+    const newValue = !model.component;
     model.set("component", newValue);
 
     if (newValue) {
@@ -124,8 +124,8 @@ export default Ember.Controller.extend({
         });
 
         this.get("parentController.model.content").forEach(theme => {
-          const children = Ember.makeArray(theme.get("childThemes"));
-          const rawChildren = Ember.makeArray(theme.get("child_themes"));
+          const children = Ember.makeArray(theme.childThemes);
+          const rawChildren = Ember.makeArray(theme.child_themes);
           const index = children ? children.indexOf(model) : -1;
           if (index > -1) {
             children.splice(index, 1);
@@ -224,9 +224,9 @@ export default Ember.Controller.extend({
     applyDefault() {
       const model = this.model;
       model.saveChanges("default").then(() => {
-        if (model.get("default")) {
+        if (model.default) {
           this.allThemes.forEach(theme => {
-            if (theme !== model && theme.get("default")) {
+            if (theme !== model && theme.default) {
               theme.set("default", false);
             }
           });
@@ -285,7 +285,7 @@ export default Ember.Controller.extend({
         ? this.parentThemes
         : this.get("model.childThemes");
       if (relatives && relatives.length > 0) {
-        const names = relatives.map(relative => relative.get("name"));
+        const names = relatives.map(relative => relative.name);
         bootbox.confirm(
           I18n.t(`${this.convertKey}_alert`, {
             relatives: names.join(", ")

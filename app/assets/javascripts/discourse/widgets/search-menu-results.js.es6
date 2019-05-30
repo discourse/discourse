@@ -151,9 +151,9 @@ createSearchResult({
     const topic = result.topic;
     const link = h("span.topic", [
       this.attach("topic-status", { topic, disableActions: true }),
-      h("span.topic-title", new Highlighted(topic.get("fancyTitle"), term)),
+      h("span.topic-title", new Highlighted(topic.fancyTitle, term)),
       this.attach("category-link", {
-        category: topic.get("category"),
+        category: topic.category,
         link: false
       })
     ]);

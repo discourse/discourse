@@ -20,7 +20,7 @@ export default {
     });
 
     const site = Discourse.Site.current();
-    site.get("filters").forEach(filter => {
+    site.filters.forEach(filter => {
       const filterCapitalized = filter.capitalize();
       app[
         `Discovery${filterCapitalized}Controller`
@@ -66,7 +66,7 @@ export default {
       no_subcategories: true
     });
 
-    site.get("periods").forEach(period => {
+    site.periods.forEach(period => {
       const periodCapitalized = period.capitalize();
       app[
         `DiscoveryTop${periodCapitalized}Controller`
@@ -97,7 +97,7 @@ export default {
     app["TagsShowCategoryRoute"] = TagsShowRoute.extend();
     app["TagsShowParentCategoryRoute"] = TagsShowRoute.extend();
 
-    site.get("filters").forEach(function(filter) {
+    site.filters.forEach(function(filter) {
       app["TagsShow" + filter.capitalize() + "Route"] = TagsShowRoute.extend({
         navMode: filter
       });

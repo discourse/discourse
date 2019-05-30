@@ -37,7 +37,7 @@ export default Ember.Component.extend(bufferedProperty("userField"), {
 
   @computed("userField.field_type")
   fieldName(fieldType) {
-    return UserField.fieldTypeById(fieldType).get("name");
+    return UserField.fieldTypeById(fieldType).name;
   },
 
   @computed(

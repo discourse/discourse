@@ -57,7 +57,7 @@ export default (filterArg, params) => {
 
     filter(category) {
       return filterArg === "default"
-        ? category.get("default_view") || "latest"
+        ? category.default_view || "latest"
         : filterArg;
     },
 
@@ -77,8 +77,8 @@ export default (filterArg, params) => {
     _createSubcategoryList(category) {
       this._categoryList = null;
       if (
-        Ember.isNone(category.get("parentCategory")) &&
-        category.get("show_subcategory_list")
+        Ember.isNone(category.parentCategory) &&
+        category.show_subcategory_list
       ) {
         return CategoryList.listForParent(this.store, category).then(
           list => (this._categoryList = list)
@@ -132,9 +132,9 @@ export default (filterArg, params) => {
     setupController(controller, model) {
       const topics = this.topics,
         category = model.category,
-        canCreateTopic = topics.get("can_create_topic"),
+        canCreateTopic = topics.can_create_topic,
         canCreateTopicOnCategory =
-          category.get("permission") === PermissionType.FULL,
+          category.permission === PermissionType.FULL,
         filter = this.filter(category);
 
       this.controllerFor("navigation/category").setProperties({
@@ -147,7 +147,7 @@ export default (filterArg, params) => {
         model: topics,
         category,
         period:
-          topics.get("for_period") ||
+          topics.for_period ||
           (filter.indexOf("/") > 0 ? filter.split("/")[1] : ""),
         selected: [],
         noSubcategories: params && !!params.no_subcategories,
@@ -156,7 +156,7 @@ export default (filterArg, params) => {
         canCreateTopicOnCategory: canCreateTopicOnCategory
       };
 
-      const p = category.get("params");
+      const p = category.params;
       if (p && Object.keys(p).length) {
         if (p.order !== undefined) {
           topicOpts.order = p.order;
@@ -167,7 +167,7 @@ export default (filterArg, params) => {
       }
 
       this.controllerFor("discovery/topics").setProperties(topicOpts);
-      this.searchService.set("searchContext", category.get("searchContext"));
+      this.searchService.set("searchContext", category.searchContext);
       this.set("topics", null);
     },
 

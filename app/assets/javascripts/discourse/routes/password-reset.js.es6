@@ -8,7 +8,7 @@ export default Discourse.Route.extend({
   },
 
   model(params) {
-    if (PreloadStore.get("password_reset")) {
+    if (PreloadStore.password_reset) {
       return PreloadStore.getAndRemove("password_reset").then(json =>
         _.merge(params, json)
       );

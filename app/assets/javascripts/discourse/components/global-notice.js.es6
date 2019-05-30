@@ -15,11 +15,11 @@ export default Ember.Component.extend(
         notices.push([I18n.t("forced_anonymous"), "forced-anonymous"]);
       }
 
-      if (this.session.get("safe_mode")) {
+      if (this.session.safe_mode) {
         notices.push([I18n.t("safe_mode.enabled"), "safe-mode"]);
       }
 
-      if (this.site.get("isReadOnly")) {
+      if (this.site.isReadOnly) {
         notices.push([I18n.t("read_only_mode.enabled"), "alert-read-only"]);
       }
 
@@ -30,7 +30,7 @@ export default Ember.Component.extend(
         notices.push([I18n.t("emails_are_disabled"), "alert-emails-disabled"]);
       }
 
-      if (this.site.get("wizard_required")) {
+      if (this.site.wizard_required) {
         const requiredText = I18n.t("wizard_required", {
           url: Discourse.getURL("/wizard")
         });
@@ -39,7 +39,7 @@ export default Ember.Component.extend(
 
       if (
         this.currentUser &&
-        this.currentUser.get("staff") &&
+        this.currentUser.staff &&
         this.siteSettings.bootstrap_mode_enabled
       ) {
         if (this.siteSettings.bootstrap_mode_min_users > 0) {

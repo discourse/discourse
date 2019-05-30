@@ -11,7 +11,7 @@ export default Ember.Mixin.create({
       return;
     }
 
-    let userFields = this.site.get("user_fields");
+    let userFields = this.site.user_fields;
     if (userFields) {
       userFields = _.sortBy(userFields, "position").map(function(f) {
         return Ember.Object.create({ value: null, field: f });
@@ -29,7 +29,7 @@ export default Ember.Mixin.create({
     }
     if (!Ember.isEmpty(userFields)) {
       const anyEmpty = userFields.any(uf => {
-        const val = uf.get("value");
+        const val = uf.value;
         return !val || Ember.isEmpty(val);
       });
       if (anyEmpty) {

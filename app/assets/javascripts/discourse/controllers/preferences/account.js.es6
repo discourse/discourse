@@ -87,7 +87,7 @@ export default Ember.Controller.extend(
       });
 
       return result.filter(value => {
-        return value.account || value.method.get("can_connect");
+        return value.account || value.method.can_connect;
       });
     },
 
@@ -220,7 +220,7 @@ export default Ember.Controller.extend(
           .revokeAssociatedAccount(account.name)
           .then(result => {
             if (result.success) {
-              model.get("associated_accounts").removeObject(account);
+              model.associated_accounts.removeObject(account);
             } else {
               bootbox.alert(result.message);
             }

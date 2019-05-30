@@ -28,7 +28,7 @@ export default Ember.Route.extend({
     },
 
     editGroupings() {
-      const model = this.controllerFor("admin-badges").get("badgeGroupings");
+      const model = this.controllerFor("admin-badges").badgeGroupings;
       showModal("admin-edit-badge-groupings", { model, admin: true });
     },
 
@@ -37,9 +37,9 @@ export default Ember.Route.extend({
       ajax("/admin/badges/preview.json", {
         method: "post",
         data: {
-          sql: badge.get("query"),
-          target_posts: !!badge.get("target_posts"),
-          trigger: badge.get("trigger"),
+          sql: badge.query,
+          target_posts: !!badge.target_posts,
+          trigger: badge.trigger,
           explain
         }
       })

@@ -4,7 +4,7 @@ export default Ember.Component.extend({
   @computed("user.dismissed_banner_key", "banner.key", "hide")
   visible(dismissedBannerKey, bannerKey, hide) {
     dismissedBannerKey =
-      dismissedBannerKey || this.keyValueStore.get("dismissed_banner_key");
+      dismissedBannerKey || this.keyValueStore.dismissed_banner_key;
 
     if (bannerKey) {
       bannerKey = parseInt(bannerKey, 10);

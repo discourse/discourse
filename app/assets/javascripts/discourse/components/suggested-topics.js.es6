@@ -9,7 +9,7 @@ export default Ember.Component.extend({
   @computed("topic")
   suggestedTitle(topic) {
     const href = this.currentUser && this.currentUser.pmPath(topic);
-    return topic.get("isPrivateMessage") && href
+    return topic.isPrivateMessage && href
       ? `<a href="${href}">${iconHTML("envelope", {
           class: "private-message-glyph"
         })}</a><span>${I18n.t("suggested_topics.pm_title")}</span>`
@@ -19,7 +19,7 @@ export default Ember.Component.extend({
   @computed("topic", "topicTrackingState.messageCount")
   browseMoreMessage(topic) {
     // TODO decide what to show for pms
-    if (topic.get("isPrivateMessage")) {
+    if (topic.isPrivateMessage) {
       return;
     }
 
@@ -28,7 +28,7 @@ export default Ember.Component.extend({
         "topic.view_latest_topics"
       )}</a>`
     };
-    let category = topic.get("category");
+    let category = topic.category;
 
     if (
       category &&

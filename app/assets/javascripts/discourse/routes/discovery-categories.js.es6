@@ -89,8 +89,8 @@ const DiscoveryCategoriesRoute = Discourse.Route.extend(OpenComposer, {
     controller.set("model", model);
 
     this.controllerFor("navigation/categories").setProperties({
-      showCategoryAdmin: model.get("can_create_category"),
-      canCreateTopic: model.get("can_create_topic")
+      showCategoryAdmin: model.can_create_category,
+      canCreateTopic: model.can_create_topic
     });
   },
 
@@ -123,7 +123,7 @@ const DiscoveryCategoriesRoute = Discourse.Route.extend(OpenComposer, {
     },
 
     createTopic() {
-      const model = this.controllerFor("discovery/categories").get("model");
+      const model = this.controllerFor("discovery/categories").model;
       if (model.draft) {
         this.openTopicDraft(model);
       } else {

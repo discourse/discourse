@@ -6,7 +6,7 @@ export default Discourse.Route.extend({
   },
 
   model(params) {
-    if (PreloadStore.get("invite_info")) {
+    if (PreloadStore.invite_info) {
       return PreloadStore.getAndRemove("invite_info").then(json =>
         _.merge(params, json)
       );

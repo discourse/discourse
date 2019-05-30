@@ -20,7 +20,7 @@ export default Discourse.Route.extend({
   },
 
   model(params) {
-    if (PreloadStore.get("badge")) {
+    if (PreloadStore.badge) {
       return PreloadStore.getAndRemove("badge").then(json =>
         Badge.createFromJson(json)
       );
@@ -33,7 +33,7 @@ export default Discourse.Route.extend({
     const username =
       transition.to.queryParams && transition.to.queryParams.username;
 
-    const userBadgesGrant = UserBadge.findByBadgeId(model.get("id"), {
+    const userBadgesGrant = UserBadge.findByBadgeId(model.id, {
       username
     }).then(userBadges => {
       this.userBadgesGrant = userBadges;
@@ -56,7 +56,7 @@ export default Discourse.Route.extend({
   titleToken() {
     const model = this.modelFor("badges.show");
     if (model) {
-      return model.get("name");
+      return model.name;
     }
   },
 

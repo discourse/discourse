@@ -21,7 +21,7 @@ export default Ember.Controller.extend(PreferencesTabController, {
 
   @computed("model.user_fields.@each.value")
   userFields() {
-    let siteUserFields = this.site.get("user_fields");
+    let siteUserFields = this.site.user_fields;
     if (!Ember.isEmpty(siteUserFields)) {
       const userFields = this.get("model.user_fields");
 
@@ -31,7 +31,7 @@ export default Ember.Controller.extend(PreferencesTabController, {
       }
       return siteUserFields.sortBy("position").map(function(field) {
         const value = userFields
-          ? userFields[field.get("id").toString()]
+          ? userFields[field.id.toString()]
           : null;
         return Ember.Object.create({ value, field });
       });
@@ -52,10 +52,10 @@ export default Ember.Controller.extend(PreferencesTabController, {
 
       // Update the user fields
       if (!Ember.isEmpty(userFields)) {
-        const modelFields = model.get("user_fields");
+        const modelFields = model.user_fields;
         if (!Ember.isEmpty(modelFields)) {
           userFields.forEach(function(uf) {
-            modelFields[uf.get("field.id").toString()] = uf.get("value");
+            modelFields[uf.get("field.id").toString()] = uf.value;
           });
         }
       }
@@ -63,7 +63,7 @@ export default Ember.Controller.extend(PreferencesTabController, {
       return model
         .save(this.saveAttrNames)
         .then(() => {
-          cookAsync(model.get("bio_raw"))
+          cookAsync(model.bio_raw)
             .then(() => {
               model.set("bio_cooked");
               this.set("saved", true);

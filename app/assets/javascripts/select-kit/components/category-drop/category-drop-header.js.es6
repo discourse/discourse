@@ -14,7 +14,7 @@ export default ComboBoxSelectBoxHeaderComponent.extend({
   category(value, name) {
     if (Ember.isEmpty(value)) {
       const uncat = Category.findUncategorized();
-      if (uncat && uncat.get("name") === name) {
+      if (uncat && uncat.name === name) {
         return uncat;
       }
     } else {

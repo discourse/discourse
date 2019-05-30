@@ -16,12 +16,12 @@ export default Ember.Route.extend({
       model: wrapper.model,
       target: wrapper.target || "common",
       field_name: wrapper.field_name || "scss",
-      theme_id: wrapper.model.get("id")
+      theme_id: wrapper.model.id
     };
   },
 
   setupController(controller, wrapper) {
-    const fields = wrapper.model.get("fields")[wrapper.target].map(f => f.name);
+    const fields = wrapper.model.fields[wrapper.target].map(f => f.name);
     if (!fields.includes(wrapper.field_name)) {
       this.transitionTo(
         "adminCustomizeThemes.edit",

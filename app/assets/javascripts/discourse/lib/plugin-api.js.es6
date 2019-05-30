@@ -643,7 +643,7 @@ class PluginApi {
    * example:
    *
    * callback = function(topic, params) {
-   *    if (topic.get("created_at") < "2000-00-01") {
+   *    if (topic.created_at < "2000-00-01") {
    *      return "<span class='discourse-tag'>ANCIENT</span>"
    *    }
    * }

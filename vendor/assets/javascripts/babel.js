@@ -4658,8 +4658,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	      this.usedHelpers[name] = true;
 	    }
 
-	    var generator = this.get("helperGenerator");
-	    var runtime = this.get("helpersNamespace");
+	    var generator = this.helperGenerator;
+	    var runtime = this.helpersNamespace;
 	    if (generator) {
 	      var res = generator(name);
 	      if (res) return res;
@@ -6826,7 +6826,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	          boundThis._forceShadow = path;
 
 	          path.ensureBlock();
-	          path.get("body").unshiftContainer("body", t.expressionStatement(t.callExpression(state.addHelper("newArrowCheck"), [t.thisExpression(), boundThis])));
+	          path.body.unshiftContainer("body", t.expressionStatement(t.callExpression(state.addHelper("newArrowCheck"), [t.thisExpression(), boundThis])));
 
 	          path.replaceWith(t.callExpression(t.memberExpression(node, t.identifier("bind")), [t.thisExpression()]));
 	        } else {
@@ -6968,7 +6968,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            scope = path.scope;
 
 	        t.ensureBlock(node);
-	        var blockScoping = new BlockScoping(path, path.get("body"), parent, scope, file);
+	        var blockScoping = new BlockScoping(path, path.body, parent, scope, file);
 	        var replace = blockScoping.run();
 	        if (replace) path.replaceWith(replace);
 	      },
@@ -6976,7 +6976,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        var parent = path.parent,
 	            scope = path.scope;
 
-	        var blockScoping = new BlockScoping(null, path.get("body"), parent, scope, file);
+	        var blockScoping = new BlockScoping(null, path.body, parent, scope, file);
 	        blockScoping.run();
 	      },
 	      "BlockStatement|SwitchStatement|Program": function BlockStatementSwitchStatementProgram(path, file) {
@@ -7427,13 +7427,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	        declarators = declarators.concat(node.declarations || node);
 	      }
 	      if (t.isLabeledStatement(node)) {
-	        addDeclarationsFromChild(path.get("body"), node.body);
+	        addDeclarationsFromChild(path.body, node.body);
 	      }
 	    };
 
 	    if (block.body) {
 	      for (var i = 0; i < block.body.length; i++) {
-	        var declarPath = this.blockPath.get("body")[i];
+	        var declarPath = this.blockPath.body[i];
 	        addDeclarationsFromChild(declarPath);
 	      }
 	    }
@@ -7443,7 +7443,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        var consequents = block.cases[_i].consequent;
 
 	        for (var j = 0; j < consequents.length; j++) {
-	          var _declarPath = this.blockPath.get("cases")[_i];
+	          var _declarPath = this.blockPath.cases[_i];
 	          var declar = consequents[j];
 	          addDeclarationsFromChild(_declarPath, declar);
 	        }
@@ -7594,7 +7594,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  return {
 	    visitor: {
 	      ExportDefaultDeclaration: function ExportDefaultDeclaration(path) {
-	        if (!path.get("declaration").isClassDeclaration()) return;
+	        if (!path.declaration.isClassDeclaration()) return;
 
 	        var node = path.node;
 
@@ -8203,7 +8203,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  return {
 	    visitor: {
 	      ExportNamedDeclaration: function ExportNamedDeclaration(path) {
-	        var declaration = path.get("declaration");
+	        var declaration = path.declaration;
 	        if (!declaration.isVariableDeclaration()) return;
 	        if (!variableDeclarationHasPattern(declaration.node)) return;
 
@@ -8495,7 +8495,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  return {
 	    visitor: {
 	      ForOfStatement: function ForOfStatement(path, state) {
-	        if (path.get("right").isArrayExpression()) {
+	        if (path.right.isArrayExpression()) {
 	          if (path.parentPath.isLabeledStatement()) {
 	            return path.parentPath.replaceWithMultiple(_ForOfStatementArray(path));
 	          } else {
@@ -8654,7 +8654,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      },
 
 	      ObjectProperty: function ObjectProperty(path) {
-	        var value = path.get("value");
+	        var value = path.value;
 	        if (value.isFunction()) {
 	          var newNode = (0, _babelHelperFunctionName2.default)(value);
 	          if (newNode) value.replaceWith(newNode);
@@ -8757,7 +8757,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            return objectRef = objectRef || path.scope.generateUidIdentifier("obj");
 	          };
 
-	          var propPaths = path.get("properties");
+	          var propPaths = path.properties;
 	          for (var _iterator = propPaths, _isArray = Array.isArray(_iterator), _i = 0, _iterator = _isArray ? _iterator : (0, _getIterator3.default)(_iterator);;) {
 	            var _ref2;
 
@@ -8772,7 +8772,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	            var propPath = _ref2;
 
-	            if (propPath.isObjectProperty()) propPath = propPath.get("value");
+	            if (propPath.isObjectProperty()) propPath = propPath.value;
 	            Property(propPath, propPath.node, path.scope, getObjectRef, file);
 	          }
 
@@ -8812,7 +8812,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  return {
 	    visitor: _babelTraverse.visitors.merge([{
 	      ArrowFunctionExpression: function ArrowFunctionExpression(path) {
-	        var params = path.get("params");
+	        var params = path.params;
 	        for (var _iterator = params, _isArray = Array.isArray(_iterator), _i = 0, _iterator = _isArray ? _iterator : (0, _getIterator3.default)(_iterator);;) {
 	          var _ref;
 
@@ -9015,7 +9015,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        var args = node.arguments;
 	        if (!hasSpread(args)) return;
 
-	        var calleePath = path.get("callee");
+	        var calleePath = path.callee;
 	        if (calleePath.isSuper()) return;
 
 	        var contextLiteral = t.identifier("undefined");
@@ -9194,7 +9194,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      TemplateLiteral: function TemplateLiteral(path, state) {
 	        var nodes = [];
 
-	        var expressions = path.get("expressions");
+	        var expressions = path.expressions;
 
 	        for (var _iterator2 = path.node.quasis, _isArray2 = Array.isArray(_iterator2), _i2 = 0, _iterator2 = _isArray2 ? _iterator2 : (0, _getIterator3.default)(_iterator2);;) {
 	          var _ref3;
@@ -9311,7 +9311,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	        if (node.operator === "typeof") {
 	          var call = t.callExpression(this.addHelper("typeof"), [node.argument]);
-	          if (path.get("argument").isIdentifier()) {
+	          if (path.argument.isIdentifier()) {
 	            var undefLiteral = t.stringLiteral("undefined");
 	            var unary = t.unaryExpression("typeof", node.argument);
 	            unary[IGNORE] = true;
@@ -18243,7 +18243,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      specifiers: specifiers
 	    });
 
-	    for (var _iterator = path.get("specifiers"), _isArray = Array.isArray(_iterator), _i = 0, _iterator = _isArray ? _iterator : (0, _getIterator3.default)(_iterator);;) {
+	    for (var _iterator = path.specifiers, _isArray = Array.isArray(_iterator), _i = 0, _iterator = _isArray ? _iterator : (0, _getIterator3.default)(_iterator);;) {
 	      var _ref;
 
 	      if (_isArray) {
@@ -18295,7 +18295,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  var source = node.source ? node.source.value : null;
 	  var exports = file.metadata.modules.exports;
 
-	  var declar = path.get("declaration");
+	  var declar = path.declaration;
 	  if (declar.isStatement()) {
 	    var bindings = declar.getBindingIdentifiers();
 
@@ -19163,10 +19163,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	  function isValidRequireCall(path) {
 	    if (!path.isCallExpression()) return false;
-	    if (!path.get("callee").isIdentifier({ name: "require" })) return false;
+	    if (!path.callee.isIdentifier({ name: "require" })) return false;
 	    if (path.scope.getBinding("require")) return false;
 
-	    var args = path.get("arguments");
+	    var args = path.arguments;
 	    if (args.length !== 1) return false;
 
 	    var arg = args[0];
@@ -19194,10 +19194,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	      path.remove();
 	    },
 	    VariableDeclarator: function VariableDeclarator(path) {
-	      var id = path.get("id");
+	      var id = path.id;
 	      if (!id.isIdentifier()) return;
 
-	      var init = path.get("init");
+	      var init = path.init;
 	      if (!isValidRequireCall(init)) return;
 
 	      var source = init.node.arguments[0];
@@ -19512,7 +19512,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  Declaration: function Declaration(path) {
 	    if (path.isBlockScoped()) return;
 
-	    if (path.isExportDeclaration() && path.get("declaration").isDeclaration()) return;
+	    if (path.isExportDeclaration() && path.declaration.isDeclaration()) return;
 
 	    path.scope.getFunctionParent().registerDeclaration(path);
 	  },
@@ -19520,7 +19520,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    state.references.push(path);
 	  },
 	  ForXStatement: function ForXStatement(path, state) {
-	    var left = path.get("left");
+	    var left = path.left;
 	    if (left.isPattern() || left.isIdentifier()) {
 	      state.constantViolations.push(left);
 	    }
@@ -19571,11 +19571,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	    state.assignments.push(path);
 	  },
 	  UpdateExpression: function UpdateExpression(path, state) {
-	    state.constantViolations.push(path.get("argument"));
+	    state.constantViolations.push(path.argument);
 	  },
 	  UnaryExpression: function UnaryExpression(path, state) {
 	    if (path.node.operator === "delete") {
-	      state.constantViolations.push(path.get("argument"));
+	      state.constantViolations.push(path.argument);
 	    }
 	  },
 	  BlockScoped: function BlockScoped(path) {
@@ -19591,7 +19591,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    path.scope.bindings[name] = path.scope.getBinding(name);
 	  },
 	  Block: function Block(path) {
-	    var paths = path.get("body");
+	    var paths = path.body;
 	    for (var _iterator6 = paths, _isArray6 = Array.isArray(_iterator6), _i6 = 0, _iterator6 = _isArray6 ? _iterator6 : (0, _getIterator3.default)(_iterator6);;) {
 	      var _ref6;
 
@@ -19816,9 +19816,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	    if (path.isLabeledStatement()) {
 	      this.registerLabel(path);
 	    } else if (path.isFunctionDeclaration()) {
-	      this.registerBinding("hoisted", path.get("id"), path);
+	      this.registerBinding("hoisted", path.id, path);
 	    } else if (path.isVariableDeclaration()) {
-	      var declarations = path.get("declarations");
+	      var declarations = path.declarations;
 	      for (var _iterator7 = declarations, _isArray7 = Array.isArray(_iterator7), _i7 = 0, _iterator7 = _isArray7 ? _iterator7 : (0, _getIterator3.default)(_iterator7);;) {
 	        var _ref7;
 
@@ -19838,7 +19838,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    } else if (path.isClassDeclaration()) {
 	      this.registerBinding("let", path);
 	    } else if (path.isImportDeclaration()) {
-	      var specifiers = path.get("specifiers");
+	      var specifiers = path.specifiers;
 	      for (var _iterator8 = specifiers, _isArray8 = Array.isArray(_iterator8), _i8 = 0, _iterator8 = _isArray8 ? _iterator8 : (0, _getIterator3.default)(_iterator8);;) {
 	        var _ref8;
 
@@ -19856,7 +19856,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        this.registerBinding("module", specifier);
 	      }
 	    } else if (path.isExportDeclaration()) {
-	      var _declar = path.get("declaration");
+	      var _declar = path.declaration;
 	      if (_declar.isClassDeclaration() || _declar.isFunctionDeclaration() || _declar.isVariableDeclaration()) {
 	        this.registerDeclaration(_declar);
 	      }
@@ -19887,7 +19887,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    if (!kind) throw new ReferenceError("no `kind`");
 
 	    if (path.isVariableDeclaration()) {
-	      var declarators = path.get("declarations");
+	      var declarators = path.declarations;
 	      for (var _iterator9 = declarators, _isArray9 = Array.isArray(_iterator9), _i9 = 0, _iterator9 = _isArray9 ? _iterator9 : (0, _getIterator3.default)(_iterator9);;) {
 	        var _ref9;
 
@@ -20120,19 +20120,19 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 
 	    if (path.isFunctionExpression() && path.has("id")) {
-	      if (!path.get("id").node[t.NOT_LOCAL_BINDING]) {
-	        this.registerBinding("local", path.get("id"), path);
+	      if (!path.id.node[t.NOT_LOCAL_BINDING]) {
+	        this.registerBinding("local", path.id, path);
 	      }
 	    }
 
 	    if (path.isClassExpression() && path.has("id")) {
-	      if (!path.get("id").node[t.NOT_LOCAL_BINDING]) {
+	      if (!path.id.node[t.NOT_LOCAL_BINDING]) {
 	        this.registerBinding("local", path);
 	      }
 	    }
 
 	    if (path.isFunction()) {
-	      var params = path.get("params");
+	      var params = path.params;
 	      for (var _iterator15 = params, _isArray15 = Array.isArray(_iterator15), _i15 = 0, _iterator15 = _isArray15 ? _iterator15 : (0, _getIterator3.default)(_iterator15);;) {
 	        var _ref15;
 
@@ -20247,7 +20247,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	    if (path.isLoop() || path.isCatchClause() || path.isFunction()) {
 	      t.ensureBlock(path.node);
-	      path = path.get("body");
+	      path = path.body;
 	    }
 
 	    var unique = opts.unique;
@@ -20271,7 +20271,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	    var declarator = t.variableDeclarator(opts.id, opts.init);
 	    declarPath.node.declarations.push(declarator);
-	    this.registerBinding(kind, declarPath.get("declarations").pop());
+	    this.registerBinding(kind, declarPath.declarations.pop());
 	  };
 
 	  Scope.prototype.getProgramParent = function getProgramParent() {
@@ -23066,7 +23066,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	    var nodes = [];
 
-	    var declarations = path.get("declarations");
+	    var declarations = path.declarations;
 	    var firstId = void 0;
 
 	    for (var _iterator = declarations, _isArray = Array.isArray(_iterator), _i = 0, _iterator = _isArray ? _iterator : (0, _getIterator3.default)(_iterator);;) {
@@ -23266,7 +23266,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    var callback = state.specHandle;
 	    if (state.isLoose) callback = state.looseHandle;
 
-	    var isBareSuper = path.isCallExpression() && path.get("callee").isSuper();
+	    var isBareSuper = path.isCallExpression() && path.callee.isSuper();
 
 	    var result = callback.call(state, path);
 
@@ -23378,7 +23378,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    var node = path.node;
 
 	    if (isIllegalBareSuper(node, parent)) {
-	      throw path.buildCodeFrameError(messages.get("classesIllegalBareSuper"));
+	      throw path.buildCodeFrameError(messages.classesIllegalBareSuper);
 	    }
 
 	    if (t.isCallExpression(node)) {
@@ -23771,9 +23771,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	        var isDerived = !!path.node.superClass;
 	        var constructor = void 0;
 	        var props = [];
-	        var body = path.get("body");
+	        var body = path.body;
 
-	        for (var _iterator = body.get("body"), _isArray = Array.isArray(_iterator), _i = 0, _iterator = _isArray ? _iterator : (0, _getIterator3.default)(_iterator);;) {
+	        for (var _iterator = body.body, _isArray = Array.isArray(_iterator), _i = 0, _iterator = _isArray ? _iterator : (0, _getIterator3.default)(_iterator);;) {
 	          var _ref4;
 
 	          if (_isArray) {
@@ -23901,7 +23901,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	              bareSuper.insertAfter(instanceBody);
 	            }
 	          } else {
-	            constructor.get("body").unshiftContainer("body", instanceBody);
+	            constructor.body.unshiftContainer("body", instanceBody);
 	          }
 	        }
 
@@ -23940,11 +23940,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	        path.insertAfter(nodes);
 	      },
 	      ArrowFunctionExpression: function ArrowFunctionExpression(path) {
-	        var classExp = path.get("body");
+	        var classExp = path.body;
 	        if (!classExp.isClassExpression()) return;
 
-	        var body = classExp.get("body");
-	        var members = body.get("body");
+	        var body = classExp.body;
+	        var members = body.body;
 	        if (members.some(function (member) {
 	          return member.isClassProperty();
 	        })) {
@@ -24273,7 +24273,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	  CallExpression: {
 	    exit: function exit(path) {
-	      if (path.get("callee").isSuper()) {
+	      if (path.callee.isSuper()) {
 	        this.hasBareSuper = true;
 
 	        if (!this.isDerived) {
@@ -24435,7 +24435,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      body = t.blockStatement([]);
 	    }
 
-	    this.path.get("body").unshiftContainer("body", t.classMethod("constructor", t.identifier("constructor"), params, body));
+	    this.path.body.unshiftContainer("body", t.classMethod("constructor", t.identifier("constructor"), params, body));
 	  };
 
 	  ClassTransformer.prototype.buildBody = function buildBody() {
@@ -24619,7 +24619,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    if (!this.isDerived) return;
 
 	    var path = this.userConstructorPath;
-	    var body = path.get("body");
+	    var body = path.body;
 
 	    path.traverse(findThisesVisitor, this);
 
@@ -24679,7 +24679,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      return t.callExpression(_this2.file.addHelper("possibleConstructorReturn"), [thisRef].concat(returnArg || []));
 	    };
 
-	    var bodyPaths = body.get("body");
+	    var bodyPaths = body.body;
 	    if (bodyPaths.length && !bodyPaths.pop().isReturnStatement()) {
 	      body.pushContainer("body", t.returnStatement(guaranteedSuperBeforeFinish ? thisRef : wrapReturn()));
 	    }
@@ -24700,9 +24700,9 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	      if (returnPath.node.argument) {
 	        var ref = returnPath.scope.generateDeclaredUidIdentifier("ret");
-	        returnPath.get("argument").replaceWithMultiple([t.assignmentExpression("=", ref, returnPath.node.argument), wrapReturn(ref)]);
+	        returnPath.argument.replaceWithMultiple([t.assignmentExpression("=", ref, returnPath.node.argument), wrapReturn(ref)]);
 	      } else {
-	        returnPath.get("argument").replaceWith(wrapReturn());
+	        returnPath.argument.replaceWith(wrapReturn());
 	      }
 	    }
 	  };
@@ -24823,7 +24823,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      var node = path.node;
 	      if (node[REASSIGN_REMAP_SKIP]) return;
 
-	      var left = path.get("left");
+	      var left = path.left;
 	      if (left.isIdentifier()) {
 	        var name = left.node.name;
 	        var exports = this.exports[name];
@@ -24908,7 +24908,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      }
 	    },
 	    UpdateExpression: function UpdateExpression(path) {
-	      var arg = path.get("argument");
+	      var arg = path.argument;
 	      if (!arg.isIdentifier()) return;
 
 	      var name = arg.node.name;
@@ -24970,7 +24970,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	          var hasExports = false;
 	          var hasImports = false;
 
-	          var body = path.get("body");
+	          var body = path.body;
 	          var imports = (0, _create2.default)(null);
 	          var exports = (0, _create2.default)(null);
 
@@ -25024,7 +25024,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            if (_path.isExportDeclaration()) {
 	              hasExports = true;
 
-	              var specifiers = [].concat(_path.get("declaration"), _path.get("specifiers"));
+	              var specifiers = [].concat(_path.declaration, _path.specifiers);
 	              for (var _iterator6 = specifiers, _isArray6 = Array.isArray(_iterator6), _i6 = 0, _iterator6 = _isArray6 ? _iterator6 : (0, _getIterator3.default)(_iterator6);;) {
 	                var _ref6;
 
@@ -25068,7 +25068,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	              _path.remove();
 	            } else if (_path.isExportDefaultDeclaration()) {
-	              var declaration = _path.get("declaration");
+	              var declaration = _path.declaration;
 	              if (declaration.isFunctionDeclaration()) {
 	                var id = declaration.node.id;
 	                var defNode = t.identifier("default");
@@ -25097,7 +25097,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                _path.parentPath.requeue(_path.get("expression.left"));
 	              }
 	            } else if (_path.isExportNamedDeclaration()) {
-	              var _declaration = _path.get("declaration");
+	              var _declaration = _path.declaration;
 	              if (_declaration.node) {
 	                if (_declaration.isFunctionDeclaration()) {
 	                  var _id2 = _declaration.node.id;
@@ -25110,7 +25110,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                  _path.replaceWithMultiple([_declaration.node, buildExportsAssignment(_id3, _id3)]);
 	                  nonHoistedExportNames[_id3.name] = true;
 	                } else if (_declaration.isVariableDeclaration()) {
-	                  var declarators = _declaration.get("declarations");
+	                  var declarators = _declaration.declarations;
 	                  for (var _iterator7 = declarators, _isArray7 = Array.isArray(_iterator7), _i7 = 0, _iterator7 = _isArray7 ? _iterator7 : (0, _getIterator3.default)(_iterator7);;) {
 	                    var _ref7;
 
@@ -25125,9 +25125,9 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	                    var decl = _ref7;
 
-	                    var _id4 = decl.get("id");
+	                    var _id4 = decl.id;
 
-	                    var init = decl.get("init");
+	                    var init = decl.init;
 	                    var exportsToInsert = [];
 	                    if (!init.node) init.replaceWith(t.identifier("undefined"));
 
@@ -25170,7 +25170,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                continue;
 	              }
 
-	              var _specifiers = _path.get("specifiers");
+	              var _specifiers = _path.specifiers;
 	              var nodes = [];
 	              var _source = _path.node.source;
 	              if (_source) {
@@ -25520,7 +25520,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            return t.expressionStatement(t.callExpression(exportIdent, [t.stringLiteral(name), val]));
 	          }
 
-	          var body = path.get("body");
+	          var body = path.body;
 
 	          var canHoist = true;
 	          for (var _iterator2 = body, _isArray2 = Array.isArray(_iterator2), _i2 = 0, _iterator2 = _isArray2 ? _iterator2 : (0, _getIterator3.default)(_iterator2);;) {
@@ -25537,7 +25537,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	            var _path = _ref3;
 
-	            if (_path.isExportDeclaration()) _path = _path.get("declaration");
+	            if (_path.isExportDeclaration()) _path = _path.declaration;
 	            if (_path.isVariableDeclaration() && _path.node.kind !== "var") {
 	              canHoist = false;
 	              break;
@@ -25573,7 +25573,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	              pushModule(_path2.node.source.value, "exports", _path2.node);
 	              _path2.remove();
 	            } else if (_path2.isExportDefaultDeclaration()) {
-	              var declar = _path2.get("declaration");
+	              var declar = _path2.declaration;
 	              if (declar.isClassDeclaration() || declar.isFunctionDeclaration()) {
 	                var id = declar.node.id;
 	                var nodes = [];
@@ -25596,7 +25596,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                _path2.replaceWith(buildExportCall("default", declar.node));
 	              }
 	            } else if (_path2.isExportNamedDeclaration()) {
-	              var _declar = _path2.get("declaration");
+	              var _declar = _path2.declaration;
 
 	              if (_declar.node) {
 	                _path2.replaceWith(_declar);
@@ -25812,11 +25812,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	  function isValidDefine(path) {
 	    if (!path.isExpressionStatement()) return;
 
-	    var expr = path.get("expression");
+	    var expr = path.expression;
 	    if (!expr.isCallExpression()) return false;
-	    if (!expr.get("callee").isIdentifier({ name: "define" })) return false;
+	    if (!expr.callee.isIdentifier({ name: "define" })) return false;
 
-	    var args = expr.get("arguments");
+	    var args = expr.arguments;
 	    if (args.length === 3 && !args.shift().isStringLiteral()) return false;
 	    if (args.length !== 2) return false;
 	    if (!args.shift().isArrayExpression()) return false;
@@ -25831,7 +25831,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    visitor: {
 	      Program: {
 	        exit: function exit(path, state) {
-	          var last = path.get("body").pop();
+	          var last = path.body.pop();
 	          if (!isValidDefine(last)) return;
 
 	          var call = last.node.expression;
@@ -26223,7 +26223,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	  function replaceRestProperty(parentPath, paramPath, i, numParams) {
 	    if (paramPath.isAssignmentPattern()) {
-	      replaceRestProperty(parentPath, paramPath.get("left"), i, numParams);
+	      replaceRestProperty(parentPath, paramPath.left, i, numParams);
 	      return;
 	    }
 
@@ -26234,7 +26234,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      declar._blockHoist = i ? numParams - i : 1;
 
 	      parentPath.ensureBlock();
-	      parentPath.get("body").unshiftContainer("body", declar);
+	      parentPath.body.unshiftContainer("body", declar);
 	      paramPath.replaceWith(uid);
 	    }
 	  }
@@ -26244,19 +26244,19 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	    visitor: {
 	      Function: function Function(path) {
-	        var params = path.get("params");
+	        var params = path.params;
 	        for (var i = 0; i < params.length; i++) {
 	          replaceRestProperty(params[i].parentPath, params[i], i, params.length);
 	        }
 	      },
 	      VariableDeclarator: function VariableDeclarator(path, file) {
-	        if (!path.get("id").isObjectPattern()) {
+	        if (!path.id.isObjectPattern()) {
 	          return;
 	        }
 
 	        var insertionPath = path;
 
-	        path.get("id").traverse({
+	        path.id.traverse({
 	          RestProperty: function RestProperty(path) {
 	            if (this.originalPath.node.id.properties.length > 1 && !t.isIdentifier(this.originalPath.node.init)) {
 	              var initRef = path.scope.generateUidIdentifierBasedOnNode(this.originalPath.node.init, "ref");
@@ -26304,7 +26304,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        });
 	      },
 	      ExportNamedDeclaration: function ExportNamedDeclaration(path) {
-	        var declaration = path.get("declaration");
+	        var declaration = path.declaration;
 	        if (!declaration.isVariableDeclaration()) return;
 	        if (!hasRestProperty(declaration)) return;
 
@@ -26319,11 +26319,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	        path.insertAfter(t.exportNamedDeclaration(null, specifiers));
 	      },
 	      CatchClause: function CatchClause(path) {
-	        var paramPath = path.get("param");
+	        var paramPath = path.param;
 	        replaceRestProperty(paramPath.parentPath, paramPath);
 	      },
 	      AssignmentExpression: function AssignmentExpression(path, file) {
-	        var leftPath = path.get("left");
+	        var leftPath = path.left;
 	        if (leftPath.isObjectPattern() && hasRestProperty(leftPath)) {
 	          var nodes = [];
 
@@ -26354,7 +26354,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        var node = path.node,
 	            scope = path.scope;
 
-	        var leftPath = path.get("left");
+	        var leftPath = path.left;
 	        var left = node.left;
 
 	        if (t.isObjectPattern(left) && hasRestProperty(leftPath)) {
@@ -26576,7 +26576,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      }
 	    },
 	    post: function post(state, pass) {
-	      state.callee = pass.get("jsxIdentifier")();
+	      state.callee = pass.jsxIdentifier();
 	    }
 	  });
 
@@ -30725,7 +30725,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	  switch (node.type) {
 	    case "Program":
-	      return path.get("body").map(self.explodeStatement, self);
+	      return path.body.map(self.explodeStatement, self);
 
 	    case "VariableDeclarator":
 	      throw getDeclError(node);
@@ -30764,7 +30764,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  // Explode BlockStatement nodes even if they do not contain a yield,
 	  // because we don't want or need the curly braces.
 	  if (t.isBlockStatement(stmt)) {
-	    path.get("body").forEach(function (path) {
+	    path.body.forEach(function (path) {
 	      self.explodeStatement(path);
 	    });
 	    return;
@@ -30782,7 +30782,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	  switch (stmt.type) {
 	    case "ExpressionStatement":
-	      self.explodeExpression(path.get("expression"), true);
+	      self.explodeExpression(path.expression, true);
 	      break;
 
 	    case "LabeledStatement":
@@ -30809,7 +30809,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      // statements are rare, and all of this logic happens at transform
 	      // time, so it has no additional runtime cost.
 	      self.leapManager.withEntry(new leap.LabeledEntry(after, stmt.label), function () {
-	        self.explodeStatement(path.get("body"), stmt.label);
+	        self.explodeStatement(path.body, stmt.label);
 	      });
 
 	      self.mark(after);
@@ -30821,9 +30821,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	      after = loc();
 
 	      self.mark(before);
-	      self.jumpIfNot(self.explodeExpression(path.get("test")), after);
+	      self.jumpIfNot(self.explodeExpression(path.test), after);
 	      self.leapManager.withEntry(new leap.LoopEntry(after, before, labelId), function () {
-	        self.explodeStatement(path.get("body"));
+	        self.explodeStatement(path.body);
 	      });
 	      self.jump(before);
 	      self.mark(after);
@@ -30837,10 +30837,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	      self.mark(first);
 	      self.leapManager.withEntry(new leap.LoopEntry(after, test, labelId), function () {
-	        self.explode(path.get("body"));
+	        self.explode(path.body);
 	      });
 	      self.mark(test);
-	      self.jumpIf(self.explodeExpression(path.get("test")), first);
+	      self.jumpIf(self.explodeExpression(path.test), first);
 	      self.mark(after);
 
 	      break;
@@ -30853,19 +30853,19 @@ return /******/ (function(modules) { // webpackBootstrap
 	      if (stmt.init) {
 	        // We pass true here to indicate that if stmt.init is an expression
 	        // then we do not care about its result.
-	        self.explode(path.get("init"), true);
+	        self.explode(path.init, true);
 	      }
 
 	      self.mark(head);
 
 	      if (stmt.test) {
-	        self.jumpIfNot(self.explodeExpression(path.get("test")), after);
+	        self.jumpIfNot(self.explodeExpression(path.test), after);
 	      } else {
 	        // No test means continue unconditionally.
 	      }
 
 	      self.leapManager.withEntry(new leap.LoopEntry(after, update, labelId), function () {
-	        self.explodeStatement(path.get("body"));
+	        self.explodeStatement(path.body);
 	      });
 
 	      self.mark(update);
@@ -30873,7 +30873,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      if (stmt.update) {
 	        // We pass true here to indicate that if stmt.update is an
 	        // expression then we do not care about its result.
-	        self.explode(path.get("update"), true);
+	        self.explode(path.update, true);
 	      }
 
 	      self.jump(head);
@@ -30883,14 +30883,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	      break;
 
 	    case "TypeCastExpression":
-	      return self.explodeExpression(path.get("expression"));
+	      return self.explodeExpression(path.expression);
 
 	    case "ForInStatement":
 	      head = loc();
 	      after = loc();
 
 	      var keyIterNextFn = self.makeTempVar();
-	      self.emitAssign(keyIterNextFn, t.callExpression(util.runtimeProperty("keys"), [self.explodeExpression(path.get("right"))]));
+	      self.emitAssign(keyIterNextFn, t.callExpression(util.runtimeProperty("keys"), [self.explodeExpression(path.right)]));
 
 	      self.mark(head);
 
@@ -30900,7 +30900,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      self.emitAssign(stmt.left, t.memberExpression(keyInfoTmpVar, t.identifier("value"), false));
 
 	      self.leapManager.withEntry(new leap.LoopEntry(after, head, labelId), function () {
-	        self.explodeStatement(path.get("body"));
+	        self.explodeStatement(path.body);
 	      });
 
 	      self.jump(head);
@@ -30928,7 +30928,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    case "SwitchStatement":
 	      // Always save the discriminant into a temporary variable in case the
 	      // test expressions overwrite values like context.sent.
-	      var disc = self.emitAssign(self.makeTempVar(), self.explodeExpression(path.get("discriminant")));
+	      var disc = self.emitAssign(self.makeTempVar(), self.explodeExpression(path.discriminant));
 
 	      after = loc();
 	      var defaultLoc = loc();
@@ -30949,16 +30949,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	        }
 	      }
 
-	      var discriminant = path.get("discriminant");
+	      var discriminant = path.discriminant;
 	      util.replaceWithOrRemove(discriminant, condition);
 	      self.jump(self.explodeExpression(discriminant));
 
 	      self.leapManager.withEntry(new leap.SwitchEntry(after), function () {
-	        path.get("cases").forEach(function (casePath) {
+	        path.cases.forEach(function (casePath) {
 	          var i = casePath.key;
 	          self.mark(caseLocs[i]);
 
-	          casePath.get("consequent").forEach(function (path) {
+	          casePath.consequent.forEach(function (path) {
 	            self.explodeStatement(path);
 	          });
 	        });
@@ -30976,14 +30976,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	      var elseLoc = stmt.alternate && loc();
 	      after = loc();
 
-	      self.jumpIfNot(self.explodeExpression(path.get("test")), elseLoc || after);
+	      self.jumpIfNot(self.explodeExpression(path.test), elseLoc || after);
 
-	      self.explodeStatement(path.get("consequent"));
+	      self.explodeStatement(path.consequent);
 
 	      if (elseLoc) {
 	        self.jump(after);
 	        self.mark(elseLoc);
-	        self.explodeStatement(path.get("alternate"));
+	        self.explodeStatement(path.alternate);
 	      }
 
 	      self.mark(after);
@@ -30993,7 +30993,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    case "ReturnStatement":
 	      self.emitAbruptCompletion({
 	        type: "return",
-	        value: self.explodeExpression(path.get("argument"))
+	        value: self.explodeExpression(path.argument)
 	      });
 
 	      break;
@@ -31018,7 +31018,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      self.updateContextPrevLoc(tryEntry.firstLoc);
 
 	      self.leapManager.withEntry(tryEntry, function () {
-	        self.explodeStatement(path.get("block"));
+	        self.explodeStatement(path.block);
 
 	        if (catchLoc) {
 	          if (finallyLoc) {
@@ -31052,7 +31052,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	          self.updateContextPrevLoc(self.mark(finallyLoc));
 
 	          self.leapManager.withEntry(finallyEntry, function () {
-	            self.explodeStatement(path.get("finalizer"));
+	            self.explodeStatement(path.finalizer);
 	          });
 
 	          self.emit(t.returnStatement(t.callExpression(self.contextProperty("finish"), [finallyEntry.firstLoc])));
@@ -31064,7 +31064,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      break;
 
 	    case "ThrowStatement":
-	      self.emit(t.throwStatement(self.explodeExpression(path.get("argument"))));
+	      self.emit(t.throwStatement(self.explodeExpression(path.argument)));
 
 	      break;
 
@@ -31247,11 +31247,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	  switch (expr.type) {
 	    case "MemberExpression":
-	      return finish(t.memberExpression(self.explodeExpression(path.get("object")), expr.computed ? explodeViaTempVar(null, path.get("property")) : expr.property, expr.computed));
+	      return finish(t.memberExpression(self.explodeExpression(path.object), expr.computed ? explodeViaTempVar(null, path.property) : expr.property, expr.computed));
 
 	    case "CallExpression":
-	      var calleePath = path.get("callee");
-	      var argsPath = path.get("arguments");
+	      var calleePath = path.callee;
+	      var argsPath = path.arguments;
 
 	      var newCallee = void 0;
 	      var newArgs = [];
@@ -31272,9 +31272,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	          var newObject = explodeViaTempVar(
 	          // Assign the exploded callee.object expression to a temporary
 	          // variable so that we can use it twice without reevaluating it.
-	          self.makeTempVar(), calleePath.get("object"));
+	          self.makeTempVar(), calleePath.object);
 
-	          var newProperty = calleePath.node.computed ? explodeViaTempVar(null, calleePath.get("property")) : calleePath.node.property;
+	          var newProperty = calleePath.node.computed ? explodeViaTempVar(null, calleePath.property) : calleePath.node.property;
 
 	          newArgs.unshift(newObject);
 
@@ -31305,28 +31305,28 @@ return /******/ (function(modules) { // webpackBootstrap
 	      return finish(t.callExpression(newCallee, newArgs));
 
 	    case "NewExpression":
-	      return finish(t.newExpression(explodeViaTempVar(null, path.get("callee")), path.get("arguments").map(function (argPath) {
+	      return finish(t.newExpression(explodeViaTempVar(null, path.callee), path.arguments.map(function (argPath) {
 	        return explodeViaTempVar(null, argPath);
 	      })));
 
 	    case "ObjectExpression":
-	      return finish(t.objectExpression(path.get("properties").map(function (propPath) {
+	      return finish(t.objectExpression(path.properties.map(function (propPath) {
 	        if (propPath.isObjectProperty()) {
-	          return t.objectProperty(propPath.node.key, explodeViaTempVar(null, propPath.get("value")), propPath.node.computed);
+	          return t.objectProperty(propPath.node.key, explodeViaTempVar(null, propPath.value), propPath.node.computed);
 	        } else {
 	          return propPath.node;
 	        }
 	      })));
 
 	    case "ArrayExpression":
-	      return finish(t.arrayExpression(path.get("elements").map(function (elemPath) {
+	      return finish(t.arrayExpression(path.elements.map(function (elemPath) {
 	        return explodeViaTempVar(null, elemPath);
 	      })));
 
 	    case "SequenceExpression":
 	      var lastIndex = expr.expressions.length - 1;
 
-	      path.get("expressions").forEach(function (exprPath) {
+	      path.expressions.forEach(function (exprPath) {
 	        if (exprPath.key === lastIndex) {
 	          result = self.explodeExpression(exprPath, ignoreResult);
 	        } else {
@@ -31343,7 +31343,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        result = self.makeTempVar();
 	      }
 
-	      var left = explodeViaTempVar(result, path.get("left"));
+	      var left = explodeViaTempVar(result, path.left);
 
 	      if (expr.operator === "&&") {
 	        self.jumpIfNot(left, after);
@@ -31352,7 +31352,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        self.jumpIf(left, after);
 	      }
 
-	      explodeViaTempVar(result, path.get("right"), ignoreResult);
+	      explodeViaTempVar(result, path.right, ignoreResult);
 
 	      self.mark(after);
 
@@ -31361,7 +31361,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    case "ConditionalExpression":
 	      var elseLoc = loc();
 	      after = loc();
-	      var test = self.explodeExpression(path.get("test"));
+	      var test = self.explodeExpression(path.test);
 
 	      self.jumpIfNot(test, elseLoc);
 
@@ -31369,11 +31369,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	        result = self.makeTempVar();
 	      }
 
-	      explodeViaTempVar(result, path.get("consequent"), ignoreResult);
+	      explodeViaTempVar(result, path.consequent, ignoreResult);
 	      self.jump(after);
 
 	      self.mark(elseLoc);
-	      explodeViaTempVar(result, path.get("alternate"), ignoreResult);
+	      explodeViaTempVar(result, path.alternate, ignoreResult);
 
 	      self.mark(after);
 
@@ -31383,20 +31383,20 @@ return /******/ (function(modules) { // webpackBootstrap
 	      return finish(t.unaryExpression(expr.operator,
 	      // Can't (and don't need to) break up the syntax of the argument.
 	      // Think about delete a[b].
-	      self.explodeExpression(path.get("argument")), !!expr.prefix));
+	      self.explodeExpression(path.argument), !!expr.prefix));
 
 	    case "BinaryExpression":
-	      return finish(t.binaryExpression(expr.operator, explodeViaTempVar(null, path.get("left")), explodeViaTempVar(null, path.get("right"))));
+	      return finish(t.binaryExpression(expr.operator, explodeViaTempVar(null, path.left), explodeViaTempVar(null, path.right)));
 
 	    case "AssignmentExpression":
-	      return finish(t.assignmentExpression(expr.operator, self.explodeExpression(path.get("left")), self.explodeExpression(path.get("right"))));
+	      return finish(t.assignmentExpression(expr.operator, self.explodeExpression(path.left), self.explodeExpression(path.right)));
 
 	    case "UpdateExpression":
-	      return finish(t.updateExpression(expr.operator, self.explodeExpression(path.get("argument")), expr.prefix));
+	      return finish(t.updateExpression(expr.operator, self.explodeExpression(path.argument), expr.prefix));
 
 	    case "YieldExpression":
 	      after = loc();
-	      var arg = expr.argument && self.explodeExpression(path.get("argument"));
+	      var arg = expr.argument && self.explodeExpression(path.argument);
 
 	      if (arg && expr.delegate) {
 	        var _result = self.makeTempVar();
@@ -32461,7 +32461,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	function buildGlobal(namespace, builder) {
 	  var body = [];
 	  var container = t.functionExpression(null, [t.identifier("global")], t.blockStatement(body));
-	  var tree = t.program([t.expressionStatement(t.callExpression(container, [helpers.get("selfGlobal")]))]);
+	  var tree = t.program([t.expressionStatement(t.callExpression(container, [helpers.selfGlobal]))]);
 
 	  body.push(t.variableDeclaration("var", [t.variableDeclarator(namespace, t.assignmentExpression("=", t.memberExpression(t.identifier("global"), namespace), t.objectExpression([])))]));
 
@@ -32596,7 +32596,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var superVisitor = {
 	  CallExpression: function CallExpression(path) {
-	    if (!path.get("callee").isSuper()) return;
+	    if (!path.callee.isSuper()) return;
 
 	    var node = path.node;
 
@@ -36356,8 +36356,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	  }
 
-	  maybeMemoise(classPath.get("superClass"));
-	  memoiseDecorators(classPath.get("decorators"), true);
+	  maybeMemoise(classPath.superClass);
+	  memoiseDecorators(classPath.decorators, true);
 
 	  var methods = classPath.get("body.body");
 	  for (var _iterator2 = methods, _isArray2 = Array.isArray(_iterator2), _i2 = 0, _iterator2 = _isArray2 ? _iterator2 : (0, _getIterator3.default)(_iterator2);;) {
@@ -36375,11 +36375,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	    var methodPath = _ref2;
 
 	    if (methodPath.is("computed")) {
-	      maybeMemoise(methodPath.get("key"));
+	      maybeMemoise(methodPath.key);
 	    }
 
 	    if (methodPath.has("decorators")) {
-	      memoiseDecorators(classPath.get("decorators"));
+	      memoiseDecorators(classPath.decorators);
 	    }
 	  }
 
@@ -37027,7 +37027,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	        visitor: {
 	            ExportDefaultDeclaration: function ExportDefaultDeclaration(path) {
-	                if (!path.get("declaration").isClassDeclaration()) return;
+	                if (!path.declaration.isClassDeclaration()) return;
 
 	                var node = path.node;
 
@@ -37377,7 +37377,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      var node = path.node;
 	      if (node[REASSIGN_REMAP_SKIP]) return;
 
-	      var left = path.get("left");
+	      var left = path.left;
 	      if (left.isIdentifier()) {
 	        var name = left.node.name;
 	        var exports = this.exports[name];
@@ -37462,7 +37462,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      }
 	    },
 	    UpdateExpression: function UpdateExpression(path) {
-	      var arg = path.get("argument");
+	      var arg = path.argument;
 	      if (!arg.isIdentifier()) return;
 
 	      var name = arg.node.name;
@@ -37524,7 +37524,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	          var hasExports = false;
 	          var hasImports = false;
 
-	          var body = path.get("body");
+	          var body = path.body;
 	          var imports = (0, _create2.default)(null);
 	          var exports = (0, _create2.default)(null);
 
@@ -37578,7 +37578,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            if (_path.isExportDeclaration()) {
 	              hasExports = true;
 
-	              var specifiers = [].concat(_path.get("declaration"), _path.get("specifiers"));
+	              var specifiers = [].concat(_path.declaration, _path.specifiers);
 	              for (var _iterator6 = specifiers, _isArray6 = Array.isArray(_iterator6), _i6 = 0, _iterator6 = _isArray6 ? _iterator6 : (0, _getIterator3.default)(_iterator6);;) {
 	                var _ref6;
 
@@ -37622,7 +37622,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	              _path.remove();
 	            } else if (_path.isExportDefaultDeclaration()) {
-	              var declaration = _path.get("declaration");
+	              var declaration = _path.declaration;
 	              if (declaration.isFunctionDeclaration()) {
 	                var id = declaration.node.id;
 	                var defNode = t.identifier("default");
@@ -37651,7 +37651,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                _path.parentPath.requeue(_path.get("expression.left"));
 	              }
 	            } else if (_path.isExportNamedDeclaration()) {
-	              var _declaration = _path.get("declaration");
+	              var _declaration = _path.declaration;
 	              if (_declaration.node) {
 	                if (_declaration.isFunctionDeclaration()) {
 	                  var _id2 = _declaration.node.id;
@@ -37664,7 +37664,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                  _path.replaceWithMultiple([_declaration.node, buildExportsAssignment(_id3, _id3)]);
 	                  nonHoistedExportNames[_id3.name] = true;
 	                } else if (_declaration.isVariableDeclaration()) {
-	                  var declarators = _declaration.get("declarations");
+	                  var declarators = _declaration.declarations;
 	                  for (var _iterator7 = declarators, _isArray7 = Array.isArray(_iterator7), _i7 = 0, _iterator7 = _isArray7 ? _iterator7 : (0, _getIterator3.default)(_iterator7);;) {
 	                    var _ref7;
 
@@ -37679,9 +37679,9 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	                    var decl = _ref7;
 
-	                    var _id4 = decl.get("id");
+	                    var _id4 = decl.id;
 
-	                    var init = decl.get("init");
+	                    var init = decl.init;
 	                    var exportsToInsert = [];
 	                    if (!init.node) init.replaceWith(t.identifier("undefined"));
 
@@ -37724,7 +37724,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                continue;
 	              }
 
-	              var _specifiers = _path.get("specifiers");
+	              var _specifiers = _path.specifiers;
 	              var nodes = [];
 	              var _source = _path.node.source;
 	              if (_source) {
@@ -38076,7 +38076,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	    var lastNonDefaultParam = (0, _babelHelperGetFunctionArity2.default)(node);
 
-	    var params = path.get("params");
+	    var params = path.params;
 	    for (var i = 0; i < params.length; i++) {
 	      var param = params[i];
 
@@ -38088,8 +38088,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	        continue;
 	      }
 
-	      var left = param.get("left");
-	      var right = param.get("right");
+	      var left = param.left;
+	      var right = param.right;
 
 	      if (i >= lastNonDefaultParam || left.isPattern()) {
 	        var placeholder = scope.generateUidIdentifier("x");
@@ -38125,7 +38125,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      body.push((0, _babelHelperCallDelegate2.default)(path, scope));
 	      path.set("body", t.blockStatement(body));
 	    } else {
-	      path.get("body").unshiftContainer("body", body);
+	      path.body.unshiftContainer("body", body);
 	    }
 	  }
 	};
@@ -38157,7 +38157,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var visitor = exports.visitor = {
 	  Function: function Function(path) {
-	    var params = path.get("params");
+	    var params = path.params;
 
 	    var hoistTweak = t.isRestElement(params[params.length - 1]) ? 1 : 0;
 	    var outputParamsLength = params.length - hoistTweak;
@@ -38171,7 +38171,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        declar._blockHoist = outputParamsLength - i;
 
 	        path.ensureBlock();
-	        path.get("body").unshiftContainer("body", declar);
+	        path.body.unshiftContainer("body", declar);
 
 	        param.replaceWith(uid);
 	      }
@@ -38270,7 +38270,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	        if (argsOptEligible) {
 	          if (parentPath.node.computed) {
-	            if (parentPath.get("property").isBaseType("number")) {
+	            if (parentPath.property.isBaseType("number")) {
 	              state.candidates.push({ cause: "indexGetter", path: path });
 	              return;
 	            }
@@ -38609,8 +38609,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	  return {
 	    visitor: {
 	      CallExpression: function CallExpression(path) {
-	        if (path.get("callee").isIdentifier({ name: "eval" }) && path.node.arguments.length === 1) {
-	          var evaluate = path.get("arguments")[0].evaluate();
+	        if (path.callee.isIdentifier({ name: "eval" }) && path.node.arguments.length === 1) {
+	          var evaluate = path.arguments[0].evaluate();
 	          if (!evaluate.confident) return;
 
 	          var code = evaluate.value;
@@ -38657,7 +38657,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      TypeCastExpression: function TypeCastExpression(path) {
 	        var node = path.node;
 
-	        path.get("expression").addComment("trailing", generateComment(path.get("typeAnnotation")));
+	        path.expression.addComment("trailing", generateComment(path.typeAnnotation));
 	        path.replaceWith(t.parenthesizedExpression(node.expression));
 	      },
 	      Identifier: function Identifier(path) {
@@ -38758,7 +38758,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  return {
 	    visitor: {
 	      CallExpression: function CallExpression(path, file) {
-	        if (path.get("callee").matchesPattern("Object.assign")) {
+	        if (path.callee.matchesPattern("Object.assign")) {
 	          path.node.callee = file.addHelper("extends");
 	        }
 	      }
@@ -38780,7 +38780,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  return {
 	    visitor: {
 	      CallExpression: function CallExpression(path, file) {
-	        if (path.get("callee").matchesPattern("Object.setPrototypeOf")) {
+	        if (path.callee.matchesPattern("Object.setPrototypeOf")) {
 	          path.node.callee = file.addHelper("defaults");
 	        }
 	      }
@@ -39116,7 +39116,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	  visitor.JSXElement = {
 	    exit: function exit(path, file) {
-	      var callExpr = buildElementCall(path.get("openingElement"), file);
+	      var callExpr = buildElementCall(path.openingElement, file);
 
 	      callExpr.arguments = callExpr.arguments.concat(path.node.children);
 
@@ -39611,7 +39611,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            scope = path.scope;
 
 	        if (node.name === "regeneratorRuntime" && state.opts.regenerator !== false) {
-	          path.replaceWith(state.get("regeneratorIdentifier"));
+	          path.replaceWith(state.regeneratorIdentifier);
 	          return;
 	        }
 
@@ -39641,7 +39641,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        if (state.opts.polyfill === false) return;
 
 	        if (path.node.operator !== "in") return;
-	        if (!path.get("left").matchesPattern("Symbol.iterator")) return;
+	        if (!path.left.matchesPattern("Symbol.iterator")) return;
 
 	        var moduleName = getRuntimeModuleName(state.opts);
 	        path.replaceWith(t.callExpression(state.addImport(moduleName + "/core-js/is-iterable", "default", "isIterable"), [path.node.right]));
@@ -40961,7 +40961,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    var node = path.node;
 
 	    if (path.isSequenceExpression()) {
-	      var exprs = path.get("expressions");
+	      var exprs = path.expressions;
 	      return evaluate(exprs[exprs.length - 1]);
 	    }
 
@@ -40977,7 +40977,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      var str = "";
 
 	      var i = 0;
-	      var _exprs = path.get("expressions");
+	      var _exprs = path.expressions;
 
 	      for (var _iterator = node.quasis, _isArray = Array.isArray(_iterator), _i = 0, _iterator = _isArray ? _iterator : (0, _getIterator3.default)(_iterator);;) {
 	        var _ref;
@@ -41006,22 +41006,22 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 
 	    if (path.isConditionalExpression()) {
-	      var testResult = evaluate(path.get("test"));
+	      var testResult = evaluate(path.test);
 	      if (!confident) return;
 	      if (testResult) {
-	        return evaluate(path.get("consequent"));
+	        return evaluate(path.consequent);
 	      } else {
-	        return evaluate(path.get("alternate"));
+	        return evaluate(path.alternate);
 	      }
 	    }
 
 	    if (path.isExpressionWrapper()) {
-	      return evaluate(path.get("expression"));
+	      return evaluate(path.expression);
 	    }
 
 	    if (path.isMemberExpression() && !path.parentPath.isCallExpression({ callee: node })) {
-	      var property = path.get("property");
-	      var object = path.get("object");
+	      var property = path.property;
+	      var object = path.object;
 
 	      if (object.isLiteral() && property.isIdentifier()) {
 	        var _value = object.node.value;
@@ -41068,7 +41068,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        return undefined;
 	      }
 
-	      var argument = path.get("argument");
+	      var argument = path.argument;
 	      if (node.operator === "typeof" && (argument.isFunction() || argument.isClass())) {
 	        return "function";
 	      }
@@ -41091,7 +41091,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	    if (path.isArrayExpression()) {
 	      var arr = [];
-	      var elems = path.get("elements");
+	      var elems = path.elements;
 	      for (var _iterator2 = elems, _isArray2 = Array.isArray(_iterator2), _i2 = 0, _iterator2 = _isArray2 ? _iterator2 : (0, _getIterator3.default)(_iterator2);;) {
 	        var _ref2;
 
@@ -41119,7 +41119,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	    if (path.isObjectExpression()) {
 	      var obj = {};
-	      var props = path.get("properties");
+	      var props = path.properties;
 	      for (var _iterator3 = props, _isArray3 = Array.isArray(_iterator3), _i3 = 0, _iterator3 = _isArray3 ? _iterator3 : (0, _getIterator3.default)(_iterator3);;) {
 	        var _ref3;
 
@@ -41137,7 +41137,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        if (prop.isObjectMethod() || prop.isSpreadProperty()) {
 	          return deopt(prop);
 	        }
-	        var keyPath = prop.get("key");
+	        var keyPath = prop.key;
 	        var key = keyPath;
 	        if (prop.node.computed) {
 	          key = key.evaluate();
@@ -41150,7 +41150,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        } else {
 	          key = key.node.value;
 	        }
-	        var valuePath = prop.get("value");
+	        var valuePath = prop.value;
 	        var _value2 = valuePath.evaluate();
 	        if (!_value2.confident) {
 	          return deopt(valuePath);
@@ -41163,10 +41163,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	    if (path.isLogicalExpression()) {
 	      var wasConfident = confident;
-	      var left = evaluate(path.get("left"));
+	      var left = evaluate(path.left);
 	      var leftConfident = confident;
 	      confident = wasConfident;
-	      var right = evaluate(path.get("right"));
+	      var right = evaluate(path.right);
 	      var rightConfident = confident;
 	      confident = leftConfident && rightConfident;
 
@@ -41192,9 +41192,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 
 	    if (path.isBinaryExpression()) {
-	      var _left = evaluate(path.get("left"));
+	      var _left = evaluate(path.left);
 	      if (!confident) return;
-	      var _right = evaluate(path.get("right"));
+	      var _right = evaluate(path.right);
 	      if (!confident) return;
 
 	      switch (node.operator) {
@@ -41242,7 +41242,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 
 	    if (path.isCallExpression()) {
-	      var callee = path.get("callee");
+	      var callee = path.callee;
 	      var context = void 0;
 	      var func = void 0;
 
@@ -41251,8 +41251,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	      }
 
 	      if (callee.isMemberExpression()) {
-	        var _object = callee.get("object");
-	        var _property = callee.get("property");
+	        var _object = callee.object;
+	        var _property = callee.property;
 
 	        if (_object.isIdentifier() && _property.isIdentifier() && VALID_CALLEES.indexOf(_object.node.name) >= 0 && INVALID_METHODS.indexOf(_property.node.name) < 0) {
 	          context = global[_object.node.name];
@@ -41269,7 +41269,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      }
 
 	      if (func) {
-	        var args = path.get("arguments").map(evaluate);
+	        var args = path.arguments.map(evaluate);
 	        if (!confident) return;
 
 	        return func.apply(context, args);
@@ -41371,18 +41371,18 @@ return /******/ (function(modules) { // webpackBootstrap
 	  };
 
 	  if (this.isIfStatement()) {
-	    add(this.get("consequent"));
-	    add(this.get("alternate"));
+	    add(this.consequent);
+	    add(this.alternate);
 	  } else if (this.isDoExpression() || this.isFor() || this.isWhile()) {
-	    add(this.get("body"));
+	    add(this.body);
 	  } else if (this.isProgram() || this.isBlockStatement()) {
-	    add(this.get("body").pop());
+	    add(this.body.pop());
 	  } else if (this.isFunction()) {
-	    return this.get("body").getCompletionRecords();
+	    return this.body.getCompletionRecords();
 	  } else if (this.isTryStatement()) {
-	    add(this.get("block"));
-	    add(this.get("handler"));
-	    add(this.get("finalizer"));
+	    add(this.block);
+	    add(this.handler);
+	    add(this.finalizer);
 	  } else {
 	    paths.push(this);
 	  }
@@ -41529,7 +41529,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 
 	    if (id.isExportDeclaration()) {
-	      var declaration = id.get("declaration");
+	      var declaration = id.declaration;
 	      if (declaration.isDeclaration()) {
 	        search.push(declaration);
 	      }
@@ -41538,7 +41538,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	    if (outerOnly) {
 	      if (id.isFunctionDeclaration()) {
-	        search.push(id.get("id"));
+	        search.push(id.id);
 	        continue;
 	      }
 	      if (id.isFunctionExpression()) {
@@ -41834,8 +41834,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	function inferAnnotationFromBinaryExpression(name, path) {
 	  var operator = path.node.operator;
 
-	  var right = path.get("right").resolve();
-	  var left = path.get("left").resolve();
+	  var right = path.right.resolve();
+	  var left = path.left.resolve();
 
 	  var target = void 0;
 	  if (left.isIdentifier({ name: name })) {
@@ -41872,7 +41872,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  var typeValue = typePath.node.value;
 	  if (typeof typeValue !== "string") return;
 
-	  if (!typeofPath.get("argument").isIdentifier({ name: name })) return;
+	  if (!typeofPath.argument.isIdentifier({ name: name })) return;
 
 	  return t.createTypeAnnotationBasedOnTypeof(typePath.node.value);
 	}
@@ -41896,7 +41896,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  var ifStatement = getParentConditionalPath(path);
 	  if (!ifStatement) return;
 
-	  var test = ifStatement.get("test");
+	  var test = ifStatement.test;
 	  var paths = [test];
 	  var types = [];
 
@@ -41904,8 +41904,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	    var _path = paths.shift().resolve();
 
 	    if (_path.isLogicalExpression()) {
-	      paths.push(_path.get("left"));
-	      paths.push(_path.get("right"));
+	      paths.push(_path.left);
+	      paths.push(_path.right);
 	    }
 
 	    if (_path.isBinaryExpression()) {
@@ -41985,10 +41985,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	}
 
 	function VariableDeclarator() {
-	  var id = this.get("id");
+	  var id = this.id;
 
 	  if (id.isIdentifier()) {
-	    return this.get("init").getTypeAnnotation();
+	    return this.init.getTypeAnnotation();
 	  } else {
 	    return;
 	  }
@@ -42001,7 +42001,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	TypeCastExpression.validParent = true;
 
 	function NewExpression(node) {
-	  if (this.get("callee").isIdentifier()) {
+	  if (this.callee.isIdentifier()) {
 	    return t.genericTypeAnnotation(node.callee);
 	  }
 	}
@@ -42032,8 +42032,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	  } else if (t.BOOLEAN_BINARY_OPERATORS.indexOf(operator) >= 0) {
 	    return t.booleanTypeAnnotation();
 	  } else if (operator === "+") {
-	    var right = this.get("right");
-	    var left = this.get("left");
+	    var right = this.right;
+	    var left = this.left;
 
 	    if (left.isBaseType("number") && right.isBaseType("number")) {
 	      return t.numberTypeAnnotation();
@@ -42046,19 +42046,19 @@ return /******/ (function(modules) { // webpackBootstrap
 	}
 
 	function LogicalExpression() {
-	  return t.createUnionTypeAnnotation([this.get("left").getTypeAnnotation(), this.get("right").getTypeAnnotation()]);
+	  return t.createUnionTypeAnnotation([this.left.getTypeAnnotation(), this.right.getTypeAnnotation()]);
 	}
 
 	function ConditionalExpression() {
-	  return t.createUnionTypeAnnotation([this.get("consequent").getTypeAnnotation(), this.get("alternate").getTypeAnnotation()]);
+	  return t.createUnionTypeAnnotation([this.consequent.getTypeAnnotation(), this.alternate.getTypeAnnotation()]);
 	}
 
 	function SequenceExpression() {
-	  return this.get("expressions").pop().getTypeAnnotation();
+	  return this.expressions.pop().getTypeAnnotation();
 	}
 
 	function AssignmentExpression() {
-	  return this.get("right").getTypeAnnotation();
+	  return this.right.getTypeAnnotation();
 	}
 
 	function UpdateExpression(node) {
@@ -42112,11 +42112,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.ClassExpression = Func;
 	exports.ClassDeclaration = Func;
 	function CallExpression() {
-	  return resolveCall(this.get("callee"));
+	  return resolveCall(this.callee);
 	}
 
 	function TaggedTemplateExpression() {
-	  return resolveCall(this.get("tag"));
+	  return resolveCall(this.tag);
 	}
 
 	function resolveCall(callee) {
@@ -42476,8 +42476,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	  resolved.push(this);
 
 	  if (this.isVariableDeclarator()) {
-	    if (this.get("id").isIdentifier()) {
-	      return this.get("init").resolve(dangerous, resolved);
+	    if (this.id.isIdentifier()) {
+	      return this.init.resolve(dangerous, resolved);
 	    } else {}
 	  } else if (this.isReferencedIdentifier()) {
 	    var binding = this.scope.getBinding(this.node.name);
@@ -42496,7 +42496,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      return ret;
 	    }
 	  } else if (this.isTypeCastExpression()) {
-	    return this.get("expression").resolve(dangerous, resolved);
+	    return this.expression.resolve(dangerous, resolved);
 	  } else if (dangerous && this.isMemberExpression()) {
 
 	    var targetKey = this.toComputedKey();
@@ -42504,10 +42504,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	    var targetName = targetKey.value;
 
-	    var target = this.get("object").resolve(dangerous, resolved);
+	    var target = this.object.resolve(dangerous, resolved);
 
 	    if (target.isObjectExpression()) {
-	      var props = target.get("properties");
+	      var props = target.properties;
 	      for (var _iterator3 = props, _isArray3 = Array.isArray(_iterator3), _i3 = 0, _iterator3 = _isArray3 ? _iterator3 : (0, _getIterator3.default)(_iterator3);;) {
 	        var _ref3;
 
@@ -42524,16 +42524,16 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	        if (!prop.isProperty()) continue;
 
-	        var key = prop.get("key");
+	        var key = prop.key;
 
 	        var match = prop.isnt("computed") && key.isIdentifier({ name: targetName });
 
 	        match = match || key.isLiteral({ value: targetName });
 
-	        if (match) return prop.get("value").resolve(dangerous, resolved);
+	        if (match) return prop.value.resolve(dangerous, resolved);
 	      }
 	    } else if (target.isArrayExpression() && !isNaN(+targetName)) {
-	      var elems = target.get("elements");
+	      var elems = target.elements;
 	      var elem = elems[targetName];
 	      if (elem) return elem.resolve(dangerous, resolved);
 	    }
@@ -42703,7 +42703,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      if (this.hasOwnParamBindings(scope)) {
 	        if (this.scope === scope) return;
 
-	        return scope.path.get("body").get("body")[0];
+	        return scope.path.body.body[0];
 	      } else {
 	        return this.getNextScopeAttachmentParent();
 	      }
@@ -43393,7 +43393,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    this.replaceWith(t.callExpression(container, []));
 	    this.traverse(hoistVariablesVisitor);
 
-	    var completionRecords = this.get("callee").getCompletionRecords();
+	    var completionRecords = this.callee.getCompletionRecords();
 	    for (var _iterator2 = completionRecords, _isArray2 = Array.isArray(_iterator2), _i2 = 0, _iterator2 = _isArray2 ? _iterator2 : (0, _getIterator3.default)(_iterator2);;) {
 	      var _ref2;
 
@@ -43417,15 +43417,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	        var uid = loop.getData("expressionReplacementReturnUid");
 
 	        if (!uid) {
-	          var callee = this.get("callee");
+	          var callee = this.callee;
 	          uid = callee.scope.generateDeclaredUidIdentifier("ret");
-	          callee.get("body").pushContainer("body", t.returnStatement(uid));
+	          callee.body.pushContainer("body", t.returnStatement(uid));
 	          loop.setData("expressionReplacementReturnUid", uid);
 	        } else {
 	          uid = t.identifier(uid.name);
 	        }
 
-	        path.get("expression").replaceWith(t.assignmentExpression("=", uid, path.node.expression));
+	        path.expression.replaceWith(t.assignmentExpression("=", uid, path.node.expression));
 	      } else {
 	        path.replaceWith(t.returnStatement(path.node.expression));
 	      }
@@ -43780,7 +43780,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  if (visitor._verified) return;
 
 	  if (typeof visitor === "function") {
-	    throw new Error(messages.get("traverseVerifyRootFunction"));
+	    throw new Error(messages.traverseVerifyRootFunction);
 	  }
 
 	  for (var nodeType in visitor) {
@@ -57853,7 +57853,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    return t.sequenceExpression(exprs);
 	  }
 
-	  funPath.get("body").traverse({
+	  funPath.body.traverse({
 	    VariableDeclaration: {
 	      exit: function exit(path) {
 	        var expr = varDeclToExpr(path.node, false);
@@ -57874,12 +57874,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	    ForStatement: function ForStatement(path) {
 	      var init = path.node.init;
 	      if (t.isVariableDeclaration(init)) {
-	        util.replaceWithOrRemove(path.get("init"), varDeclToExpr(init, false));
+	        util.replaceWithOrRemove(path.init, varDeclToExpr(init, false));
 	      }
 	    },
 
 	    ForXStatement: function ForXStatement(path) {
-	      var left = path.get("left");
+	      var left = path.left;
 	      if (left.isVariableDeclaration()) {
 	        util.replaceWithOrRemove(left, varDeclToExpr(left.node, true));
 	      }
@@ -57917,7 +57917,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  });
 
 	  var paramNames = {};
-	  funPath.get("params").forEach(function (paramPath) {
+	  funPath.params.forEach(function (paramPath) {
 	    var param = paramPath.node;
 	    if (t.isIdentifier(param)) {
 	      paramNames[param.name] = param;
@@ -58390,7 +58390,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  // Function AST node path for the function expression we created. we know that
 	  // the FunctionExpression we just created is the value of the ObjectProperty,
 	  // so return the "value" path off of this path.
-	  return path.get("value");
+	  return path.value;
 	}
 
 /***/ }),
@@ -58474,7 +58474,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      var argsId = path.scope.generateUidIdentifier("args");
 
 	      path.ensureBlock();
-	      var bodyBlockPath = path.get("body");
+	      var bodyBlockPath = path.body;
 
 	      if (node.async) {
 	        bodyBlockPath.traverse(awaitVisitor);
@@ -58487,7 +58487,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      var outerBody = [];
 	      var innerBody = [];
 
-	      bodyBlockPath.get("body").forEach(function (childPath) {
+	      bodyBlockPath.body.forEach(function (childPath) {
 	        var node = childPath.node;
 	        if (t.isExpressionStatement(node) && t.isStringLiteral(node.expression)) {
 	          // Babylon represents directives like "use strict" as elements
@@ -58530,7 +58530,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      }
 
 	      var emitter = new _emit.Emitter(contextId);
-	      emitter.explode(path.get("body"));
+	      emitter.explode(path.body);
 
 	      if (vars && vars.declarations.length > 0) {
 	        outerBody.push(vars);

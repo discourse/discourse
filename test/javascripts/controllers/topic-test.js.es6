@@ -17,13 +17,13 @@ QUnit.test("editTopic", function(assert) {
   const model = Topic.create();
   const controller = this.subject({ model });
 
-  assert.not(controller.get("editingTopic"), "we are not editing by default");
+  assert.not(controller.editingTopic, "we are not editing by default");
 
   controller.set("model.details.can_edit", false);
   controller.send("editTopic");
 
   assert.not(
-    controller.get("editingTopic"),
+    controller.editingTopic,
     "calling editTopic doesn't enable editing unless the user can edit"
   );
 
@@ -31,19 +31,19 @@ QUnit.test("editTopic", function(assert) {
   controller.send("editTopic");
 
   assert.ok(
-    controller.get("editingTopic"),
+    controller.editingTopic,
     "calling editTopic enables editing if the user can edit"
   );
-  assert.equal(controller.get("buffered.title"), model.get("title"));
+  assert.equal(controller.get("buffered.title"), model.title);
   assert.equal(
     controller.get("buffered.category_id"),
-    model.get("category_id")
+    model.category_id
   );
 
   controller.send("cancelEditingTopic");
 
   assert.not(
-    controller.get("editingTopic"),
+    controller.editingTopic,
     "cancelling edit mode reverts the property value"
   );
 });
@@ -53,17 +53,17 @@ QUnit.test("toggleMultiSelect", function(assert) {
   const controller = this.subject({ model });
 
   assert.not(
-    controller.get("multiSelect"),
+    controller.multiSelect,
     "multi selection mode is disabled by default"
   );
 
-  controller.get("selectedPostIds").pushObject(1);
+  controller.selectedPostIds.pushObject(1);
   assert.equal(controller.get("selectedPostIds.length"), 1);
 
   controller.send("toggleMultiSelect");
 
   assert.ok(
-    controller.get("multiSelect"),
+    controller.multiSelect,
     "calling 'toggleMultiSelect' once enables multi selection mode"
   );
   assert.equal(
@@ -72,13 +72,13 @@ QUnit.test("toggleMultiSelect", function(assert) {
     "toggling 'multiSelect' clears 'selectedPostIds'"
   );
 
-  controller.get("selectedPostIds").pushObject(2);
+  controller.selectedPostIds.pushObject(2);
   assert.equal(controller.get("selectedPostIds.length"), 1);
 
   controller.send("toggleMultiSelect");
 
   assert.not(
-    controller.get("multiSelect"),
+    controller.multiSelect,
     "calling 'toggleMultiSelect' twice disables multi selection mode"
   );
   assert.equal(
@@ -101,7 +101,7 @@ QUnit.test("selectedPosts", function(assert) {
     "selectedPosts only contains already loaded posts"
   );
   assert.not(
-    controller.get("selectedPosts").some(p => p === undefined),
+    controller.selectedPosts.some(p => p === undefined),
     "selectedPosts only contains valid post objects"
   );
 });
@@ -113,16 +113,16 @@ QUnit.test("selectedAllPosts", function(assert) {
 
   controller.set("selectedPostIds", [1, 2]);
 
-  assert.not(controller.get("selectedAllPosts"), "not all posts are selected");
+  assert.not(controller.selectedAllPosts, "not all posts are selected");
 
-  controller.get("selectedPostIds").pushObject(3);
+  controller.selectedPostIds.pushObject(3);
 
-  assert.ok(controller.get("selectedAllPosts"), "all posts are selected");
+  assert.ok(controller.selectedAllPosts, "all posts are selected");
 
-  controller.get("selectedPostIds").pushObject(42);
+  controller.selectedPostIds.pushObject(42);
 
   assert.ok(
-    controller.get("selectedAllPosts"),
+    controller.selectedAllPosts,
     "all posts (including filtered posts) are selected"
   );
 
@@ -132,7 +132,7 @@ QUnit.test("selectedAllPosts", function(assert) {
   });
 
   assert.ok(
-    controller.get("selectedAllPosts"),
+    controller.selectedAllPosts,
     "it uses the topic's post count for megatopics"
   );
 });
@@ -149,10 +149,10 @@ QUnit.test("selectedPostsUsername", function(assert) {
 
   const model = Topic.create({ postStream });
   const controller = this.subject({ model });
-  const selectedPostIds = controller.get("selectedPostIds");
+  const selectedPostIds = controller.selectedPostIds;
 
   assert.equal(
-    controller.get("selectedPostsUsername"),
+    controller.selectedPostsUsername,
     undefined,
     "no username when no selected posts"
   );
@@ -160,7 +160,7 @@ QUnit.test("selectedPostsUsername", function(assert) {
   selectedPostIds.pushObject(1);
 
   assert.equal(
-    controller.get("selectedPostsUsername"),
+    controller.selectedPostsUsername,
     "gary",
     "username of the selected posts"
   );
@@ -168,7 +168,7 @@ QUnit.test("selectedPostsUsername", function(assert) {
   selectedPostIds.pushObject(2);
 
   assert.equal(
-    controller.get("selectedPostsUsername"),
+    controller.selectedPostsUsername,
     "gary",
     "username of all the selected posts when same user"
   );
@@ -176,7 +176,7 @@ QUnit.test("selectedPostsUsername", function(assert) {
   selectedPostIds.pushObject(3);
 
   assert.equal(
-    controller.get("selectedPostsUsername"),
+    controller.selectedPostsUsername,
     undefined,
     "no username when more than 1 user"
   );
@@ -184,7 +184,7 @@ QUnit.test("selectedPostsUsername", function(assert) {
   selectedPostIds.replace(2, 1, [42]);
 
   assert.equal(
-    controller.get("selectedPostsUsername"),
+    controller.selectedPostsUsername,
     undefined,
     "no username when not already loaded posts are selected"
   );
@@ -195,19 +195,19 @@ QUnit.test("showSelectedPostsAtBottom", function(assert) {
   const model = Topic.create({ posts_count: 3 });
   const controller = this.subject({ model, site });
 
-  assert.not(controller.get("showSelectedPostsAtBottom"), "false on desktop");
+  assert.not(controller.showSelectedPostsAtBottom, "false on desktop");
 
   site.set("mobileView", true);
 
   assert.not(
-    controller.get("showSelectedPostsAtBottom"),
+    controller.showSelectedPostsAtBottom,
     "requires at least 3 posts on mobile"
   );
 
   model.set("posts_count", 4);
 
   assert.ok(
-    controller.get("showSelectedPostsAtBottom"),
+    controller.showSelectedPostsAtBottom,
     "true when mobile and more than 3 posts"
   );
 });
@@ -228,38 +228,38 @@ QUnit.test("canDeleteSelected", function(assert) {
   this.registry.injection("controller", "currentUser", "current-user:main");
   const model = Topic.create({ postStream });
   const controller = this.subject({ model });
-  const selectedPostIds = controller.get("selectedPostIds");
+  const selectedPostIds = controller.selectedPostIds;
 
   assert.not(
-    controller.get("canDeleteSelected"),
+    controller.canDeleteSelected,
     "false when no posts are selected"
   );
 
   selectedPostIds.pushObject(1);
 
   assert.not(
-    controller.get("canDeleteSelected"),
+    controller.canDeleteSelected,
     "false when can't delete one of the selected posts"
   );
 
   selectedPostIds.replace(0, 1, [2, 3]);
 
   assert.ok(
-    controller.get("canDeleteSelected"),
+    controller.canDeleteSelected,
     "true when all selected posts can be deleted"
   );
 
   selectedPostIds.pushObject(1);
 
   assert.not(
-    controller.get("canDeleteSelected"),
+    controller.canDeleteSelected,
     "false when all posts are selected and user is staff"
   );
 
   currentUser.set("admin", true);
 
   assert.ok(
-    controller.get("canDeleteSelected"),
+    controller.canDeleteSelected,
     "true when all posts are selected and user is staff"
   );
 });
@@ -279,36 +279,36 @@ QUnit.test("Can split/merge topic", function(assert) {
     details: { can_move_posts: false }
   });
   const controller = this.subject({ model });
-  const selectedPostIds = controller.get("selectedPostIds");
+  const selectedPostIds = controller.selectedPostIds;
 
   assert.not(
-    controller.get("canMergeTopic"),
+    controller.canMergeTopic,
     "can't merge topic when no posts are selected"
   );
 
   selectedPostIds.pushObject(1);
 
   assert.not(
-    controller.get("canMergeTopic"),
+    controller.canMergeTopic,
     "can't merge topic when can't move posts"
   );
 
   model.set("details.can_move_posts", true);
 
-  assert.ok(controller.get("canMergeTopic"), "can merge topic");
+  assert.ok(controller.canMergeTopic, "can merge topic");
 
   selectedPostIds.removeObject(1);
   selectedPostIds.pushObject(2);
 
   assert.ok(
-    controller.get("canMergeTopic"),
+    controller.canMergeTopic,
     "can merge topic when 1st post is not a regular post"
   );
 
   selectedPostIds.pushObject(3);
 
   assert.ok(
-    controller.get("canMergeTopic"),
+    controller.canMergeTopic,
     "can merge topic when all posts are selected"
   );
 });
@@ -327,28 +327,28 @@ QUnit.test("canChangeOwner", function(assert) {
 
   const model = Topic.create({ postStream, currentUser: { admin: false } });
   const controller = this.subject({ model });
-  const selectedPostIds = controller.get("selectedPostIds");
+  const selectedPostIds = controller.selectedPostIds;
 
   assert.not(
-    controller.get("canChangeOwner"),
+    controller.canChangeOwner,
     "false when no posts are selected"
   );
 
   selectedPostIds.pushObject(1);
 
-  assert.not(controller.get("canChangeOwner"), "false when not admin");
+  assert.not(controller.canChangeOwner, "false when not admin");
 
   currentUser.set("admin", true);
 
   assert.ok(
-    controller.get("canChangeOwner"),
+    controller.canChangeOwner,
     "true when admin and one post is selected"
   );
 
   selectedPostIds.pushObject(2);
 
   assert.not(
-    controller.get("canChangeOwner"),
+    controller.canChangeOwner,
     "false when admin but more than 1 user"
   );
 });
@@ -366,38 +366,38 @@ QUnit.test("canMergePosts", function(assert) {
 
   const model = Topic.create({ postStream });
   const controller = this.subject({ model });
-  const selectedPostIds = controller.get("selectedPostIds");
+  const selectedPostIds = controller.selectedPostIds;
 
   assert.not(
-    controller.get("canMergePosts"),
+    controller.canMergePosts,
     "false when no posts are selected"
   );
 
   selectedPostIds.pushObject(1);
 
   assert.not(
-    controller.get("canMergePosts"),
+    controller.canMergePosts,
     "false when only one post is selected"
   );
 
   selectedPostIds.pushObject(2);
 
   assert.not(
-    controller.get("canMergePosts"),
+    controller.canMergePosts,
     "false when selected posts are from different users"
   );
 
   selectedPostIds.replace(1, 1, [3]);
 
   assert.not(
-    controller.get("canMergePosts"),
+    controller.canMergePosts,
     "false when selected posts can't be deleted"
   );
 
   selectedPostIds.replace(1, 1, [4]);
 
   assert.ok(
-    controller.get("canMergePosts"),
+    controller.canMergePosts,
     "true when all selected posts are deletable and by the same user"
   );
 });
@@ -408,7 +408,7 @@ QUnit.test("Select/deselect all", function(assert) {
   const controller = this.subject({ model });
 
   assert.equal(
-    controller.get("selectedPostsCount"),
+    controller.selectedPostsCount,
     0,
     "no posts selected by default"
   );
@@ -416,7 +416,7 @@ QUnit.test("Select/deselect all", function(assert) {
   controller.send("selectAll");
 
   assert.equal(
-    controller.get("selectedPostsCount"),
+    controller.selectedPostsCount,
     postStream.stream.length,
     "calling 'selectAll' selects all posts"
   );
@@ -424,7 +424,7 @@ QUnit.test("Select/deselect all", function(assert) {
   controller.send("deselectAll");
 
   assert.equal(
-    controller.get("selectedPostsCount"),
+    controller.selectedPostsCount,
     0,
     "calling 'deselectAll' deselects all posts"
   );
@@ -432,7 +432,7 @@ QUnit.test("Select/deselect all", function(assert) {
 
 QUnit.test("togglePostSelection", function(assert) {
   const controller = this.subject();
-  const selectedPostIds = controller.get("selectedPostIds");
+  const selectedPostIds = controller.selectedPostIds;
 
   assert.equal(selectedPostIds[0], undefined, "no posts selected by default");
 
@@ -455,7 +455,7 @@ QUnit.test("togglePostSelection", function(assert) {
 
 // QUnit.test("selectReplies", function(assert) {
 //   const controller = this.subject();
-//   const selectedPostIds = controller.get("selectedPostIds");
+//   const selectedPostIds = controller.selectedPostIds;
 //
 //   assert.equal(selectedPostIds[0], undefined, "no posts selected by default");
 //
@@ -482,7 +482,7 @@ QUnit.test("selectBelow", function(assert) {
 
   const model = Topic.create({ postStream });
   const controller = this.subject({ site, model });
-  let selectedPostIds = controller.get("selectedPostIds");
+  let selectedPostIds = controller.selectedPostIds;
 
   assert.equal(selectedPostIds[0], undefined, "no posts selected by default");
 

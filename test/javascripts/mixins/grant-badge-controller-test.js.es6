@@ -60,7 +60,7 @@ QUnit.test("grantableBadges", function(assert) {
     this.badgeLast.name
   ];
   const badgeNames = this.subject
-    .get("grantableBadges")
+    .grantableBadges
     .map(badge => badge.name);
 
   assert.not(
@@ -76,8 +76,8 @@ QUnit.test("grantableBadges", function(assert) {
 
 QUnit.test("selectedBadgeGrantable", function(assert) {
   this.subject.set("selectedBadgeId", this.badgeDisabled.id);
-  assert.not(this.subject.get("selectedBadgeGrantable"));
+  assert.not(this.subject.selectedBadgeGrantable);
 
   this.subject.set("selectedBadgeId", this.badgeFirst.id);
-  assert.ok(this.subject.get("selectedBadgeGrantable"));
+  assert.ok(this.subject.selectedBadgeGrantable);
 });

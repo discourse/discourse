@@ -12,7 +12,7 @@ const DiscoveryTopicsListComponent = Ember.Component.extend(
     @on("didInsertElement")
     @observes("model")
     _readjustScrollPosition() {
-      const scrollTo = this.session.get("topicListScrollPosition");
+      const scrollTo = this.session.topicListScrollPosition;
       if (scrollTo && scrollTo >= 0) {
         Ember.run.schedule("afterRender", () =>
           $(window).scrollTop(scrollTo + 1)

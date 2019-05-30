@@ -84,18 +84,18 @@ export default Ember.Component.extend({
 
     let lastVisitedTopic, topic;
 
-    let prevVisit = user.get("previousVisitAt");
+    let prevVisit = user.previousVisitAt;
 
     // this is more efficient cause we keep appending to list
     // work backwards
     let start = 0;
-    while (topics[start] && topics[start].get("pinned")) {
+    while (topics[start] && topics[start].pinned) {
       start++;
     }
 
     let i;
     for (i = topics.length - 1; i >= start; i--) {
-      if (topics[i].get("bumpedAt") > prevVisit) {
+      if (topics[i].bumpedAt > prevVisit) {
         lastVisitedTopic = topics[i];
         break;
       }
@@ -107,7 +107,7 @@ export default Ember.Component.extend({
     }
 
     // end of list that was scanned
-    if (topic.get("bumpedAt") > prevVisit) {
+    if (topic.bumpedAt > prevVisit) {
       return;
     }
 

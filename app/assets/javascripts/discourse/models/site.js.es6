@@ -54,7 +54,7 @@ const Site = RestModel.extend({
       remaining = {};
 
     cats.forEach(c => {
-      const parentCategoryId = parseInt(c.get("parent_category_id"), 10);
+      const parentCategoryId = parseInt(c.parent_category_id, 10);
       if (!parentCategoryId) {
         result.pushObject(c);
       } else {
@@ -130,7 +130,7 @@ Site.reopenClass(Singleton, {
   // The current singleton will retrieve its attributes from the `PreloadStore`.
   createCurrent() {
     const store = Discourse.__container__.lookup("service:store");
-    return store.createRecord("site", PreloadStore.get("site"));
+    return store.createRecord("site", PreloadStore.site);
   },
 
   create() {
@@ -155,17 +155,17 @@ Site.reopenClass(Singleton, {
 
       // Associate the categories with their parents
       result.categories.forEach(c => {
-        let subcategoryIds = subcatMap[c.get("id")];
+        let subcategoryIds = subcatMap[c.id];
         if (subcategoryIds) {
           c.set(
             "subcategories",
             subcategoryIds.map(id => result.categoriesById[id])
           );
         }
-        if (c.get("parent_category_id")) {
+        if (c.parent_category_id) {
           c.set(
             "parentCategory",
-            result.categoriesById[c.get("parent_category_id")]
+            result.categoriesById[c.parent_category_id]
           );
         }
       });

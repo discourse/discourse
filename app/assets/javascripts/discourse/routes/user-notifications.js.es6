@@ -13,7 +13,7 @@ export default Discourse.Route.extend(ViewingActionType, {
   },
 
   model() {
-    const username = this.modelFor("user").get("username");
+    const username = this.modelFor("user").username;
 
     if (
       this.get("currentUser.username") === username ||

@@ -46,7 +46,7 @@ QUnit.test("grantableBadges", function(assert) {
   });
 
   const sortedNames = [badgeFirst.name, badgeMiddle.name, badgeLast.name];
-  const badgeNames = controller.get("grantableBadges").map(function(badge) {
+  const badgeNames = controller.grantableBadges.map(function(badge) {
     return badge.name;
   });
 

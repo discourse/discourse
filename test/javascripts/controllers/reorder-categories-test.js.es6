@@ -22,9 +22,9 @@ QUnit.test("fixIndices set unique position number", function(assert) {
   reorderCategoriesController.fixIndices();
 
   reorderCategoriesController
-    .get("categoriesOrdered")
+    .categoriesOrdered
     .forEach((category, index) => {
-      assert.equal(category.get("position"), index);
+      assert.equal(category.position, index);
     });
 });
 
@@ -65,7 +65,7 @@ QUnit.test(
     reorderCategoriesController.fixIndices();
 
     assert.deepEqual(
-      reorderCategoriesController.get("categoriesOrdered").mapBy("slug"),
+      reorderCategoriesController.categoriesOrdered.mapBy("slug"),
       expectedOrderSlugs
     );
   }
@@ -105,7 +105,7 @@ QUnit.test(
     );
 
     assert.deepEqual(
-      reorderCategoriesController.get("categoriesOrdered").mapBy("slug"),
+      reorderCategoriesController.categoriesOrdered.mapBy("slug"),
       ["test", "bar", "foo"]
     );
   }
@@ -152,7 +152,7 @@ QUnit.test(
     );
 
     assert.deepEqual(
-      reorderCategoriesController.get("categoriesOrdered").mapBy("slug"),
+      reorderCategoriesController.categoriesOrdered.mapBy("slug"),
       ["test", "bar", "foo", "foochild"]
     );
   }
@@ -200,7 +200,7 @@ QUnit.test(
     );
 
     assert.deepEqual(
-      reorderCategoriesController.get("categoriesOrdered").mapBy("slug"),
+      reorderCategoriesController.categoriesOrdered.mapBy("slug"),
       ["bar", "foo", "foochild", "test"]
     );
   }

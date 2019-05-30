@@ -9,7 +9,7 @@ export default Discourse.Route.extend({
 
   afterModel(group) {
     if (
-      !group.get("is_group_user") &&
+      !group.is_group_user &&
       !(this.currentUser && this.currentUser.admin)
     ) {
       this.transitionTo("group.members", group);

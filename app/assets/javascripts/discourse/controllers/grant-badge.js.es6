@@ -28,7 +28,7 @@ export default Ember.Controller.extend(
 
     @computed("post")
     badgeReason(post) {
-      const url = post.get("url");
+      const url = post.url;
       const protocolAndHost =
         window.location.protocol + "//" + window.location.host;
 

@@ -18,7 +18,7 @@ export default {
     DiscourseURL.rewrite(/\/admin\/flags/, "/review");
 
     if (currentUser) {
-      const username = currentUser.get("username");
+      const username = currentUser.username;
       DiscourseURL.rewrite(
         new RegExp(`^/u/${username}/?$`, "i"),
         `/u/${username}/activity`

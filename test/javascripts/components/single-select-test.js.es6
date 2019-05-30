@@ -789,8 +789,8 @@ componentTest("onSelectAny", {
   },
 
   async test(assert) {
-    await this.get("subject").expand();
-    await this.get("subject").selectRowByValue("blue");
+    await this.subject.expand();
+    await this.subject.selectRowByValue("blue");
 
     assert.equal(
       find(".test-external-action")
@@ -799,8 +799,8 @@ componentTest("onSelectAny", {
       "blue"
     );
 
-    await this.get("subject").expand();
-    await this.get("subject").selectNoneRow();
+    await this.subject.expand();
+    await this.subject.selectNoneRow();
 
     assert.equal(
       find(".test-external-action")

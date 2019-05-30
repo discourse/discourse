@@ -8,8 +8,8 @@ export default Ember.Route.extend({
       const controller = this.controllerFor("adminSiteSettings");
       this.transitionTo("adminSiteSettingsCategory", "plugins").then(() => {
         if (plugin) {
-          const siteSettingFilter = plugin.get("enabled_setting_filter");
-          const match = /^(.*)_enabled/.exec(plugin.get("enabled_setting"));
+          const siteSettingFilter = plugin.enabled_setting_filter;
+          const match = /^(.*)_enabled/.exec(plugin.enabled_setting);
           const filter = siteSettingFilter || match[1];
 
           if (filter) {

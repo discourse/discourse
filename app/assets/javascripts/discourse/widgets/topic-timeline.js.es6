@@ -145,8 +145,8 @@ createWidget("timeline-scrollarea", {
     const { attrs } = this;
     const percentage = this.state.percentage;
     const topic = attrs.topic;
-    const postStream = topic.get("postStream");
-    const total = postStream.get("filteredPostsCount");
+    const postStream = topic.postStream;
+    const total = postStream.filteredPostsCount;
 
     const current = clamp(Math.floor(total * percentage) + 1, 1, total);
 
@@ -155,10 +155,10 @@ createWidget("timeline-scrollarea", {
 
     if (daysAgo === undefined) {
       const post = postStream
-        .get("posts")
-        .findBy("id", postStream.get("stream")[current]);
+        .posts
+        .findBy("id", postStream.stream[current]);
 
-      if (post) date = new Date(post.get("created_at"));
+      if (post) date = new Date(post.created_at);
     } else if (daysAgo !== null) {
       date = new Date();
       date.setDate(date.getDate() - daysAgo || 0);
@@ -178,7 +178,7 @@ createWidget("timeline-scrollarea", {
     const lastReadNumber = topic.last_read_post_number;
 
     if (lastReadId && lastReadNumber) {
-      const idx = postStream.get("stream").indexOf(lastReadId) + 1;
+      const idx = postStream.stream.indexOf(lastReadId) + 1;
       result.lastRead = idx;
       result.lastReadPercentage = this._percentFor(topic, idx);
     }
@@ -313,7 +313,7 @@ createWidget("timeline-controls", {
     const controls = [];
     const { fullScreen, currentUser, topic } = attrs;
 
-    if (!fullScreen && currentUser && currentUser.get("canManageTopic")) {
+    if (!fullScreen && currentUser && currentUser.canManageTopic) {
       controls.push(this.attach("topic-admin-menu-button", { topic }));
     }
 
@@ -387,7 +387,7 @@ export default createWidget("topic-timeline", {
 
     this.state.position = pos;
     this.state.excerpt = "";
-    const stream = this.attrs.topic.get("postStream");
+    const stream = this.attrs.topic.postStream;
 
     // a little debounce to avoid flashing
     Ember.run.later(() => {
@@ -427,7 +427,7 @@ export default createWidget("topic-timeline", {
       let titleHTML = "";
       if (attrs.mobileView) {
         titleHTML = new RawHtml({
-          html: `<span>${topic.get("fancyTitle")}</span>`
+          html: `<span>${topic.fancyTitle}</span>`
         });
       }
 
@@ -445,7 +445,7 @@ export default createWidget("topic-timeline", {
       // duplicate of the {{topic-category}} component
       let category = [];
 
-      if (!topic.get("isPrivateMessage")) {
+      if (!topic.isPrivateMessage) {
         if (topic.category.parentCategory) {
           category.push(
             this.attach("category-link", {

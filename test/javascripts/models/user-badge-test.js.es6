@@ -29,7 +29,7 @@ QUnit.test("createFromJson array", assert => {
   );
   assert.ok(Array.isArray(userBadges), "returns an array");
   assert.equal(
-    userBadges[0].get("granted_by"),
+    userBadges[0].granted_by,
     null,
     "granted_by reference is not set when null"
   );

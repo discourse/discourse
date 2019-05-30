@@ -6,25 +6,25 @@ export default Ember.Mixin.create({
   @computed("allBadges.[]", "userBadges.[]")
   grantableBadges(allBadges, userBadges) {
     const granted = userBadges.reduce((map, badge) => {
-      map[badge.get("badge_id")] = true;
+      map[badge.badge_id] = true;
       return map;
     }, {});
 
     return allBadges
       .filter(badge => {
         return (
-          badge.get("enabled") &&
-          badge.get("manually_grantable") &&
-          (!granted[badge.get("id")] || badge.get("multiple_grant"))
+          badge.enabled &&
+          badge.manually_grantable &&
+          (!granted[badge.id] || badge.multiple_grant)
         );
       })
       .map(badge => {
-        if (badge.get("icon")) {
+        if (badge.icon) {
           badge.set("icon", convertIconClass(badge.icon));
         }
         return badge;
       })
-      .sort((a, b) => a.get("name").localeCompare(b.get("name")));
+      .sort((a, b) => a.name.localeCompare(b.name));
   },
 
   noGrantableBadges: Ember.computed.empty("grantableBadges"),
@@ -33,7 +33,7 @@ export default Ember.Mixin.create({
   selectedBadgeGrantable(selectedBadgeId, grantableBadges) {
     return (
       grantableBadges &&
-      grantableBadges.find(badge => badge.get("id") === selectedBadgeId)
+      grantableBadges.find(badge => badge.id === selectedBadgeId)
     );
   },
 

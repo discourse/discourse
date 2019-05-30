@@ -14,7 +14,7 @@ acceptance("Plugin Outlet - Connector Class", {
 
     extraConnectorClass("user-profile-primary/dont-render", {
       shouldRender(args) {
-        return args.model.get("username") !== "eviltrout";
+        return args.model.username !== "eviltrout";
       }
     });
 

@@ -12,7 +12,7 @@ export default RestrictedUserRoute.extend({
   },
 
   setupController(controller, model) {
-    controller.setProperties({ model, newUsername: model.get("username") });
+    controller.setProperties({ model, newUsername: model.username });
   },
 
   actions: {
@@ -20,8 +20,8 @@ export default RestrictedUserRoute.extend({
       this._super(...arguments);
 
       const controller = this.controllerFor("preferences/second-factor");
-      const user = controller.get("currentUser");
-      const settings = controller.get("siteSettings");
+      const user = controller.currentUser;
+      const settings = controller.siteSettings;
 
       if (
         transition.targetName === "preferences.second-factor" ||

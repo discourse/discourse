@@ -16,7 +16,7 @@ export default Discourse.Route.extend({
           true
         );
         this.controllerFor("adminBackupsLogs")
-          .get("logs")
+          .logs
           .clear();
       } else if (log.message === "[FAILED]") {
         this.controllerFor("adminBackups").set(
@@ -40,7 +40,7 @@ export default Discourse.Route.extend({
         }
       } else {
         this.controllerFor("adminBackupsLogs")
-          .get("logs")
+          .logs
           .pushObject(Ember.Object.create(log));
       }
     });
@@ -82,7 +82,7 @@ export default Discourse.Route.extend({
           if (confirmed) {
             backup.destroy().then(() =>
               this.controllerFor("adminBackupsIndex")
-                .get("model")
+                .model
                 .removeObject(backup)
             );
           }

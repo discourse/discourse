@@ -22,23 +22,23 @@ const TopicRoute = Discourse.Route.extend({
   titleToken() {
     const model = this.modelFor("topic");
     if (model) {
-      const result = model.get("unicode_title") || model.get("title"),
-        cat = model.get("category");
+      const result = model.unicode_title || model.title,
+        cat = model.category;
 
       // Only display uncategorized in the title tag if it was renamed
       if (
         this.siteSettings.topic_page_title_includes_category &&
         cat &&
         !(
-          cat.get("isUncategorizedCategory") &&
-          cat.get("name").toLowerCase() === "uncategorized"
+          cat.isUncategorizedCategory &&
+          cat.name.toLowerCase() === "uncategorized"
         )
       ) {
-        let catName = cat.get("name");
+        let catName = cat.name;
 
-        const parentCategory = cat.get("parentCategory");
+        const parentCategory = cat.parentCategory;
         if (parentCategory) {
-          catName = parentCategory.get("name") + " / " + catName;
+          catName = parentCategory.name + " / " + catName;
         }
 
         return [result, catName];
@@ -87,12 +87,12 @@ const TopicRoute = Discourse.Route.extend({
     showTopicStatusUpdate() {
       const model = this.modelFor("topic");
 
-      const topicTimer = model.get("topic_timer");
+      const topicTimer = model.topic_timer;
       if (!topicTimer) {
         model.set("topic_timer", {});
       }
 
-      const privateTopicTimer = model.get("private_topic_timer");
+      const privateTopicTimer = model.private_topic_timer;
       if (!privateTopicTimer) {
         model.set("private_topic_timer", {});
       }
@@ -122,7 +122,7 @@ const TopicRoute = Discourse.Route.extend({
         model,
         modalClass: "history-modal"
       });
-      historyController.refresh(model.get("id"), revision || "latest");
+      historyController.refresh(model.id, revision || "latest");
       historyController.set("post", model);
       historyController.set("topicController", this.controllerFor("topic"));
     },
@@ -136,7 +136,7 @@ const TopicRoute = Discourse.Route.extend({
 
     showRawEmail(model) {
       showModal("raw-email", { model });
-      this.controllerFor("raw_email").loadRawEmail(model.get("id"));
+      this.controllerFor("raw_email").loadRawEmail(model.id);
     },
 
     moveToTopic() {
@@ -162,7 +162,7 @@ const TopicRoute = Discourse.Route.extend({
 
       const topic = this.modelFor("topic");
       if (topic && currentPost) {
-        let postUrl = topic.get("url");
+        let postUrl = topic.url;
         if (currentPost > 1) {
           postUrl += "/" + currentPost;
         }
@@ -209,11 +209,11 @@ const TopicRoute = Discourse.Route.extend({
   },
 
   setupParams(topic, params) {
-    const postStream = topic.get("postStream");
+    const postStream = topic.postStream;
     postStream.set("summary", Ember.get(params, "filter") === "summary");
 
     const usernames = Ember.get(params, "username_filters"),
-      userFilters = postStream.get("userFilters");
+      userFilters = postStream.userFilters;
 
     userFilters.clear();
     if (!Ember.isEmpty(usernames) && usernames !== "undefined") {
@@ -233,7 +233,7 @@ const TopicRoute = Discourse.Route.extend({
     const queryParams = transition.to.queryParams;
 
     let topic = this.modelFor("topic");
-    if (topic && topic.get("id") === parseInt(params.id, 10)) {
+    if (topic && topic.id === parseInt(params.id, 10)) {
       this.setupParams(topic, queryParams);
       return topic;
     } else {
@@ -250,7 +250,7 @@ const TopicRoute = Discourse.Route.extend({
     isTransitioning = false;
 
     const topic = this.modelFor("topic");
-    this.session.set("lastTopicIdViewed", parseInt(topic.get("id"), 10));
+    this.session.set("lastTopicIdViewed", parseInt(topic.id, 10));
   },
 
   deactivate() {
@@ -285,17 +285,17 @@ const TopicRoute = Discourse.Route.extend({
 
     TopicRoute.trigger("setupTopicController", this);
 
-    this.searchService.set("searchContext", model.get("searchContext"));
+    this.searchService.set("searchContext", model.searchContext);
 
     // close the multi select when switching topics
     controller.set("multiSelect", false);
-    controller.get("quoteState").clear();
+    controller.quoteState.clear();
 
     this.controllerFor("composer").set("topic", model);
     this.topicTrackingState.trackIncoming("all");
 
     // We reset screen tracking every time a topic is entered
-    this.screenTrack.start(model.get("id"), controller);
+    this.screenTrack.start(model.id, controller);
 
     Ember.run.scheduleOnce("afterRender", () => {
       this.appEvents.trigger("header:update-topic", model);

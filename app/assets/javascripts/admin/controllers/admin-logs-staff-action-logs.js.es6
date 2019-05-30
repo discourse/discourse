@@ -111,9 +111,9 @@ export default Ember.Controller.extend({
 
     filterByAction: function(logItem) {
       this._changeFilters({
-        action_name: logItem.get("action_name"),
-        action_id: logItem.get("action"),
-        custom_type: logItem.get("custom_type")
+        action_name: logItem.action_name,
+        action_id: logItem.action,
+        custom_type: logItem.custom_type
       });
     },
 

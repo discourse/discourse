@@ -26,7 +26,7 @@ describe Cache do
     cache.write("hello1", "world")
     cache.clear
 
-    expect($redis.get("boo")).to eq("boo")
+    expect($redis.boo).to eq("boo")
     expect(cache.read("hello0")).to eq(nil)
   end
 

@@ -36,7 +36,7 @@ export default Ember.Component.extend({
       },
       dataSource: function(term) {
         return self
-          .get("badgeFinder")(term)
+          .badgeFinder(term)
           .then(function(badges) {
             if (!selectedBadges) {
               return badges;

@@ -14,7 +14,7 @@ export default Ember.Component.extend({
       let postId = $(e.target).attr("data-link-post-id");
 
       this.store.find("post", postId).then(p => {
-        DiscourseURL.routeTo(p.get("url"));
+        DiscourseURL.routeTo(p.url);
       });
       return false;
     });

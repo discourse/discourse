@@ -158,7 +158,7 @@ export default {
             "topic",
             result.suggested_topics[0]
           );
-          DiscourseURL.routeTo(topic.get("url"));
+          DiscourseURL.routeTo(topic.url);
         }
       });
     }
@@ -255,7 +255,7 @@ export default {
 
   fullscreenComposer() {
     const composer = this.container.lookup("controller:composer");
-    if (composer.get("model")) {
+    if (composer.model) {
       composer.toggleFullscreen();
     }
   },
@@ -340,7 +340,7 @@ export default {
   currentTopic() {
     const topicController = this.container.lookup("controller:topic");
     if (topicController) {
-      const topic = topicController.get("model");
+      const topic = topicController.model;
       if (topic) {
         return topic;
       }

@@ -31,7 +31,7 @@ export default ComboBoxComponent.extend({
   collectionHeader() {
     if (
       this.siteSettings.enable_group_directory ||
-      (this.currentUser && this.currentUser.get("staff"))
+      (this.currentUser && this.currentUser.staff)
     ) {
       return `
         <a href="${Discourse.getURL("/g")}" class="group-dropdown-filter">

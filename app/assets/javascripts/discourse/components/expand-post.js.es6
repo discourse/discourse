@@ -18,8 +18,8 @@ export default Ember.Component.extend({
         return;
       }
 
-      const topicId = item.get("topic_id");
-      const postNumber = item.get("post_number");
+      const topicId = item.topic_id;
+      const postNumber = item.post_number;
 
       this._loading = true;
       return ajax(`/posts/by_number/${topicId}/${postNumber}.json`)

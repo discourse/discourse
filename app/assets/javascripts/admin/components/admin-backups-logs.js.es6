@@ -40,8 +40,8 @@ export default Ember.Component.extend(
       // do the log formatting only once for HELLish performance
       let formattedLogs = this.formattedLogs;
       for (let i = this.index, length = logs.length; i < length; i++) {
-        const date = logs[i].get("timestamp"),
-          message = escapeExpression(logs[i].get("message"));
+        const date = logs[i].timestamp,
+          message = escapeExpression(logs[i].message);
         formattedLogs += "[" + date + "] " + message + "\n";
       }
       // update the formatted logs & cache index

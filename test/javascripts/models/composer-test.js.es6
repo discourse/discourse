@@ -21,7 +21,7 @@ function openComposer(opts) {
 QUnit.test("replyLength", assert => {
   const replyLength = function(val, expectedLength) {
     const composer = createComposer({ reply: val });
-    assert.equal(composer.get("replyLength"), expectedLength);
+    assert.equal(composer.replyLength, expectedLength);
   };
 
   replyLength("basic reply", 11, "basic reply length");
@@ -53,7 +53,7 @@ QUnit.test("missingReplyCharacters", assert => {
       creatingPrivateMessage: isPM,
       creatingTopic: isFirstPost
     });
-    assert.equal(composer.get("missingReplyCharacters"), expected, message);
+    assert.equal(composer.missingReplyCharacters, expected, message);
   };
 
   missingReplyCharacters(
@@ -87,7 +87,7 @@ QUnit.test("missingReplyCharacters", assert => {
   });
 
   assert.equal(
-    composer.get("missingReplyCharacters"),
+    composer.missingReplyCharacters,
     0,
     "don't require any post content"
   );
@@ -99,7 +99,7 @@ QUnit.test("missingTitleCharacters", assert => {
       title: val,
       creatingPrivateMessage: isPM
     });
-    assert.equal(composer.get("missingTitleCharacters"), expected, message);
+    assert.equal(composer.missingTitleCharacters, expected, message);
   };
 
   missingTitleCharacters(
@@ -118,7 +118,7 @@ QUnit.test("missingTitleCharacters", assert => {
 
 QUnit.test("replyDirty", assert => {
   const composer = createComposer();
-  assert.ok(!composer.get("replyDirty"), "by default it's false");
+  assert.ok(!composer.replyDirty, "by default it's false");
 
   composer.setProperties({
     originalText: "hello",
@@ -126,23 +126,23 @@ QUnit.test("replyDirty", assert => {
   });
 
   assert.ok(
-    !composer.get("replyDirty"),
+    !composer.replyDirty,
     "it's false when the originalText is the same as the reply"
   );
   composer.set("reply", "hello world");
-  assert.ok(composer.get("replyDirty"), "it's true when the reply changes");
+  assert.ok(composer.replyDirty, "it's true when the reply changes");
 });
 
 QUnit.test("appendText", assert => {
   const composer = createComposer();
 
-  assert.blank(composer.get("reply"), "the reply is blank by default");
+  assert.blank(composer.reply, "the reply is blank by default");
 
   composer.appendText("hello");
-  assert.equal(composer.get("reply"), "hello", "it appends text to nothing");
+  assert.equal(composer.reply, "hello", "it appends text to nothing");
   composer.appendText(" world");
   assert.equal(
-    composer.get("reply"),
+    composer.reply,
     "hello world",
     "it appends text to existing text"
   );
@@ -151,39 +151,39 @@ QUnit.test("appendText", assert => {
   composer.appendText("a\n\n\n\nb");
   composer.appendText("c", 3, { block: true });
 
-  assert.equal(composer.get("reply"), "a\n\nc\n\nb");
+  assert.equal(composer.reply, "a\n\nc\n\nb");
 
   composer.clearState();
   composer.appendText("ab");
   composer.appendText("c", 1, { block: true });
 
-  assert.equal(composer.get("reply"), "a\n\nc\n\nb");
+  assert.equal(composer.reply, "a\n\nc\n\nb");
 
   composer.clearState();
   composer.appendText("\nab");
   composer.appendText("c", 0, { block: true });
 
-  assert.equal(composer.get("reply"), "c\n\nab");
+  assert.equal(composer.reply, "c\n\nab");
 });
 
 QUnit.test("prependText", assert => {
   const composer = createComposer();
 
-  assert.blank(composer.get("reply"), "the reply is blank by default");
+  assert.blank(composer.reply, "the reply is blank by default");
 
   composer.prependText("hello");
-  assert.equal(composer.get("reply"), "hello", "it prepends text to nothing");
+  assert.equal(composer.reply, "hello", "it prepends text to nothing");
 
   composer.prependText("world ");
   assert.equal(
-    composer.get("reply"),
+    composer.reply,
     "world hello",
     "it prepends text to existing text"
   );
 
   composer.prependText("before new line", { new_line: true });
   assert.equal(
-    composer.get("reply"),
+    composer.reply,
     "before new line\n\nworld hello",
     "it prepends text with new line to existing text"
   );
@@ -195,13 +195,13 @@ QUnit.test("Title length for regular topics", assert => {
   const composer = createComposer();
 
   composer.set("title", "asdf");
-  assert.ok(!composer.get("titleLengthValid"), "short titles are not valid");
+  assert.ok(!composer.titleLengthValid, "short titles are not valid");
 
   composer.set("title", "this is a long title");
-  assert.ok(!composer.get("titleLengthValid"), "long titles are not valid");
+  assert.ok(!composer.titleLengthValid, "long titles are not valid");
 
   composer.set("title", "just right");
-  assert.ok(composer.get("titleLengthValid"), "in the range is okay");
+  assert.ok(composer.titleLengthValid, "in the range is okay");
 });
 
 QUnit.test("Title length for private messages", assert => {
@@ -210,13 +210,13 @@ QUnit.test("Title length for private messages", assert => {
   const composer = createComposer({ action: Composer.PRIVATE_MESSAGE });
 
   composer.set("title", "asdf");
-  assert.ok(!composer.get("titleLengthValid"), "short titles are not valid");
+  assert.ok(!composer.titleLengthValid, "short titles are not valid");
 
   composer.set("title", "this is a long title");
-  assert.ok(!composer.get("titleLengthValid"), "long titles are not valid");
+  assert.ok(!composer.titleLengthValid, "long titles are not valid");
 
   composer.set("title", "just right");
-  assert.ok(composer.get("titleLengthValid"), "in the range is okay");
+  assert.ok(composer.titleLengthValid, "in the range is okay");
 });
 
 QUnit.test("Title length for private messages", assert => {
@@ -225,13 +225,13 @@ QUnit.test("Title length for private messages", assert => {
   const composer = createComposer({ action: Composer.PRIVATE_MESSAGE });
 
   composer.set("title", "asdf");
-  assert.ok(!composer.get("titleLengthValid"), "short titles are not valid");
+  assert.ok(!composer.titleLengthValid, "short titles are not valid");
 
   composer.set("title", "this is a long title");
-  assert.ok(!composer.get("titleLengthValid"), "long titles are not valid");
+  assert.ok(!composer.titleLengthValid, "long titles are not valid");
 
   composer.set("title", "just right");
-  assert.ok(composer.get("titleLengthValid"), "in the range is okay");
+  assert.ok(composer.titleLengthValid, "in the range is okay");
 });
 
 QUnit.test("Post length for private messages with non human users", assert => {
@@ -239,23 +239,23 @@ QUnit.test("Post length for private messages with non human users", assert => {
     topic: Ember.Object.create({ pm_with_non_human_user: true })
   });
 
-  assert.equal(composer.get("minimumPostLength"), 1);
+  assert.equal(composer.minimumPostLength, 1);
 });
 
 QUnit.test("editingFirstPost", assert => {
   const composer = createComposer();
-  assert.ok(!composer.get("editingFirstPost"), "it's false by default");
+  assert.ok(!composer.editingFirstPost, "it's false by default");
 
   const post = Discourse.Post.create({ id: 123, post_number: 2 });
   composer.setProperties({ post: post, action: Composer.EDIT });
   assert.ok(
-    !composer.get("editingFirstPost"),
+    !composer.editingFirstPost,
     "it's false when not editing the first post"
   );
 
   post.set("post_number", 1);
   assert.ok(
-    composer.get("editingFirstPost"),
+    composer.editingFirstPost,
     "it's true when editing the first post"
   );
 });
@@ -270,10 +270,10 @@ QUnit.test("clearState", assert => {
 
   composer.clearState();
 
-  assert.blank(composer.get("originalText"));
-  assert.blank(composer.get("reply"));
-  assert.blank(composer.get("post"));
-  assert.blank(composer.get("title"));
+  assert.blank(composer.originalText);
+  assert.blank(composer.reply);
+  assert.blank(composer.post);
+  assert.blank(composer.title);
 });
 
 QUnit.test("initial category when uncategorized is allowed", assert => {
@@ -283,7 +283,7 @@ QUnit.test("initial category when uncategorized is allowed", assert => {
     draftKey: "asfd",
     draftSequence: 1
   });
-  assert.ok(!composer.get("categoryId"), "Uncategorized by default");
+  assert.ok(!composer.categoryId, "Uncategorized by default");
 });
 
 QUnit.test("initial category when uncategorized is not allowed", assert => {
@@ -294,7 +294,7 @@ QUnit.test("initial category when uncategorized is not allowed", assert => {
     draftSequence: 1
   });
   assert.ok(
-    !composer.get("categoryId"),
+    !composer.categoryId,
     "Uncategorized by default. Must choose a category."
   );
 });
@@ -312,12 +312,12 @@ QUnit.test("open with a quote", assert => {
   };
 
   assert.equal(
-    newComposer().get("originalText"),
+    newComposer().originalText,
     quote,
     "originalText is the quote"
   );
   assert.equal(
-    newComposer().get("replyDirty"),
+    newComposer().replyDirty,
     false,
     "replyDirty is initally false with a quote"
   );
@@ -336,17 +336,17 @@ QUnit.test("Title length for static page topics as admin", assert => {
   composer.setProperties({ post: post, action: Composer.EDIT });
 
   composer.set("title", "asdf");
-  assert.ok(composer.get("titleLengthValid"), "admins can use short titles");
+  assert.ok(composer.titleLengthValid, "admins can use short titles");
 
   composer.set("title", "this is a long title");
-  assert.ok(composer.get("titleLengthValid"), "admins can use long titles");
+  assert.ok(composer.titleLengthValid, "admins can use long titles");
 
   composer.set("title", "just right");
-  assert.ok(composer.get("titleLengthValid"), "in the range is okay");
+  assert.ok(composer.titleLengthValid, "in the range is okay");
 
   composer.set("title", "");
   assert.ok(
-    !composer.get("titleLengthValid"),
+    !composer.titleLengthValid,
     "admins must set title to at least 1 character"
   );
 });
@@ -354,14 +354,14 @@ QUnit.test("Title length for static page topics as admin", assert => {
 QUnit.test("title placeholder depends on what you're doing", assert => {
   let composer = createComposer({ action: Composer.CREATE_TOPIC });
   assert.equal(
-    composer.get("titlePlaceholder"),
+    composer.titlePlaceholder,
     "composer.title_placeholder",
     "placeholder for normal topic"
   );
 
   composer = createComposer({ action: Composer.PRIVATE_MESSAGE });
   assert.equal(
-    composer.get("titlePlaceholder"),
+    composer.titlePlaceholder,
     "composer.title_placeholder",
     "placeholder for private message"
   );
@@ -370,14 +370,14 @@ QUnit.test("title placeholder depends on what you're doing", assert => {
 
   composer = createComposer({ action: Composer.CREATE_TOPIC });
   assert.equal(
-    composer.get("titlePlaceholder"),
+    composer.titlePlaceholder,
     "composer.title_or_link_placeholder",
     "placeholder invites you to paste a link"
   );
 
   composer = createComposer({ action: Composer.PRIVATE_MESSAGE });
   assert.equal(
-    composer.get("titlePlaceholder"),
+    composer.titlePlaceholder,
     "composer.title_placeholder",
     "placeholder for private message with topic links enabled"
   );
@@ -388,9 +388,9 @@ QUnit.test("allows featured link before choosing a category", assert => {
   Discourse.SiteSettings.allow_uncategorized_topics = false;
   let composer = createComposer({ action: Composer.CREATE_TOPIC });
   assert.equal(
-    composer.get("titlePlaceholder"),
+    composer.titlePlaceholder,
     "composer.title_or_link_placeholder",
     "placeholder invites you to paste a link"
   );
-  assert.ok(composer.get("canEditTopicFeaturedLink"), "can paste link");
+  assert.ok(composer.canEditTopicFeaturedLink, "can paste link");
 });

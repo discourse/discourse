@@ -250,7 +250,7 @@ QUnit.test("search with category name", assert => {
   const child_category1 = store.createRecord("category", {
       id: 3,
       name: "term start",
-      parent_category_id: category1.get("id")
+      parent_category_id: category1.id
     }),
     read_restricted_category = store.createRecord("category", {
       id: 4,

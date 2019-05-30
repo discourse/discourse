@@ -21,26 +21,26 @@ if (extraNavItemProperties) {
 
 if (customNavItemHref) {
   customNavItemHref(function(navItem) {
-    if (navItem.get("tagId")) {
-      const name = navItem.get("name");
+    if (navItem.tagId) {
+      const name = navItem.name;
 
       if (!Discourse.Site.currentProp("filters").includes(name)) {
         return null;
       }
 
       let path = "/tags/";
-      const category = navItem.get("category");
+      const category = navItem.category;
 
       if (category) {
         path += "c/";
         path += Discourse.Category.slugFor(category);
-        if (navItem.get("noSubcategories")) {
+        if (navItem.noSubcategories) {
           path += "/none";
         }
         path += "/";
       }
 
-      path += `${navItem.get("tagId")}/l/`;
+      path += `${navItem.tagId}/l/`;
       return `${path}${name.replace(" ", "-")}`;
     } else {
       return null;

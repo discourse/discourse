@@ -29,7 +29,7 @@ export default SelectKitRowComponent.extend({
   category(value, name) {
     if (Ember.isEmpty(value)) {
       const uncat = Category.findUncategorized();
-      if (uncat && uncat.get("name") === name) {
+      if (uncat && uncat.name === name) {
         return uncat;
       }
     } else {
@@ -66,7 +66,7 @@ export default SelectKitRowComponent.extend({
 
   @computed("category")
   parentCategoryid(category) {
-    return category.get("parent_category_id");
+    return category.parent_category_id;
   },
 
   @computed(

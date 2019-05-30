@@ -82,15 +82,15 @@ export default Ember.Component.extend(
 
     @computed("user.user_fields.@each.value")
     publicUserFields() {
-      const siteUserFields = this.site.get("user_fields");
+      const siteUserFields = this.site.user_fields;
       if (!Ember.isEmpty(siteUserFields)) {
         const userFields = this.get("user.user_fields");
         return siteUserFields
           .filterBy("show_on_user_card", true)
           .sortBy("position")
           .map(field => {
-            Ember.set(field, "dasherized_name", field.get("name").dasherize());
-            const value = userFields ? userFields[field.get("id")] : null;
+            Ember.set(field, "dasherized_name", field.name.dasherize());
+            const value = userFields ? userFields[field.id] : null;
             return Ember.isEmpty(value)
               ? null
               : Ember.Object.create({ value, field });

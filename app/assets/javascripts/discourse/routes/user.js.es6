@@ -1,6 +1,6 @@
 export default Discourse.Route.extend({
   titleToken() {
-    const username = this.modelFor("user").get("username");
+    const username = this.modelFor("user").username;
     if (username) {
       return [I18n.t("user.profile"), username];
     }
@@ -35,7 +35,7 @@ export default Discourse.Route.extend({
     const currentUser = this.currentUser;
     if (
       currentUser &&
-      params.username.toLowerCase() === currentUser.get("username_lower")
+      params.username.toLowerCase() === currentUser.username_lower
     ) {
       return currentUser;
     }
@@ -64,13 +64,13 @@ export default Discourse.Route.extend({
 
   setupController(controller, user) {
     controller.set("model", user);
-    this.searchService.set("searchContext", user.get("searchContext"));
+    this.searchService.set("searchContext", user.searchContext);
   },
 
   activate() {
     this._super(...arguments);
     const user = this.modelFor("user");
-    this.messageBus.subscribe("/u/" + user.get("username_lower"), function(
+    this.messageBus.subscribe("/u/" + user.username_lower, function(
       data
     ) {
       user.loadUserAction(data);
@@ -80,7 +80,7 @@ export default Discourse.Route.extend({
   deactivate() {
     this._super(...arguments);
     this.messageBus.unsubscribe(
-      "/u/" + this.modelFor("user").get("username_lower")
+      "/u/" + this.modelFor("user").username_lower
     );
 
     // Remove the search context

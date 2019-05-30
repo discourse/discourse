@@ -10,7 +10,7 @@ export default Ember.Component.extend({
 
   @computed()
   categories() {
-    return this.site.get("categoriesList");
+    return this.site.categoriesList;
   },
 
   @computed("hasDraft")

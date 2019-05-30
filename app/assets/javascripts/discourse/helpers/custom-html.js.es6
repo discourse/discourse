@@ -8,7 +8,7 @@ export function getCustomHTML(key) {
     return new Handlebars.SafeString(c);
   }
 
-  const html = PreloadStore.get("customHTML");
+  const html = PreloadStore.customHTML;
   if (html && html[key] && html[key].length) {
     return new Handlebars.SafeString(html[key]);
   }

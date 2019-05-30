@@ -13,7 +13,7 @@ export default Ember.Controller.extend(CanCheckEmails, {
   @computed("model.username")
   viewingSelf(username) {
     let currentUser = this.currentUser;
-    return currentUser && username === currentUser.get("username");
+    return currentUser && username === currentUser.username;
   },
 
   @computed("viewingSelf", "model.profile_hidden")
@@ -111,16 +111,16 @@ export default Ember.Controller.extend(CanCheckEmails, {
 
   @computed("model.user_fields.@each.value")
   publicUserFields() {
-    const siteUserFields = this.site.get("user_fields");
+    const siteUserFields = this.site.user_fields;
     if (!Ember.isEmpty(siteUserFields)) {
       const userFields = this.get("model.user_fields");
       return siteUserFields
         .filterBy("show_on_profile", true)
         .sortBy("position")
         .map(field => {
-          Ember.set(field, "dasherized_name", field.get("name").dasherize());
+          Ember.set(field, "dasherized_name", field.name.dasherize());
           const value = userFields
-            ? userFields[field.get("id").toString()]
+            ? userFields[field.id.toString()]
             : null;
           return Ember.isEmpty(value)
             ? null

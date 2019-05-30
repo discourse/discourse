@@ -5,8 +5,8 @@ QUnit.module("model:badge");
 QUnit.test("newBadge", assert => {
   const badge1 = Badge.create({ name: "New Badge" }),
     badge2 = Badge.create({ id: 1, name: "Old Badge" });
-  assert.ok(badge1.get("newBadge"), "badges without ids are new");
-  assert.ok(!badge2.get("newBadge"), "badges with ids are not new");
+  assert.ok(badge1.newBadge, "badges without ids are new");
+  assert.ok(!badge2.newBadge, "badges with ids are not new");
 });
 
 QUnit.test("createFromJson array", assert => {
@@ -18,7 +18,7 @@ QUnit.test("createFromJson array", assert => {
   const badges = Badge.createFromJson(badgesJson);
 
   assert.ok(Array.isArray(badges), "returns an array");
-  assert.equal(badges[0].get("name"), "Badge 1", "badge details are set");
+  assert.equal(badges[0].name, "Badge 1", "badge details are set");
   assert.equal(
     badges[0].get("badge_type.name"),
     "Silver 1",
@@ -44,7 +44,7 @@ QUnit.test("updateFromJson", assert => {
   };
   const badge = Badge.create({ name: "Badge 1" });
   badge.updateFromJson(badgeJson);
-  assert.equal(badge.get("id"), 1126, "id is set");
+  assert.equal(badge.id, 1126, "id is set");
   assert.equal(
     badge.get("badge_type.name"),
     "Silver 1",

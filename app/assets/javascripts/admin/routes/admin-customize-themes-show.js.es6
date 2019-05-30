@@ -3,7 +3,7 @@ import { THEMES, COMPONENTS } from "admin/models/theme";
 
 export default Ember.Route.extend({
   serialize(model) {
-    return { theme_id: model.get("id") };
+    return { theme_id: model.id };
   },
 
   model(params) {
@@ -19,14 +19,14 @@ export default Ember.Route.extend({
 
     parentController.setProperties({
       editingTheme: false,
-      currentTab: model.get("component") ? COMPONENTS : THEMES
+      currentTab: model.component ? COMPONENTS : THEMES
     });
 
     controller.setProperties({
       model: model,
       parentController: parentController,
-      allThemes: parentController.get("model"),
-      colorSchemeId: model.get("color_scheme_id"),
+      allThemes: parentController.model,
+      colorSchemeId: model.color_scheme_id,
       colorSchemes: parentController.get("model.extras.color_schemes"),
       editingName: false
     });
@@ -40,7 +40,7 @@ export default Ember.Route.extend({
 
   handleHighlight(theme) {
     this.get("controller.allThemes")
-      .filter(t => t.get("selected"))
+      .filter(t => t.selected)
       .forEach(t => t.set("selected", false));
     if (theme) {
       theme.set("selected", true);

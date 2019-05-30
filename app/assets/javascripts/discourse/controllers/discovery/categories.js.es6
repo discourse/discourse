@@ -37,7 +37,7 @@ export default DiscoveryController.extend({
     if (parentCategory) {
       style =
         subcategoryStyleComponentNames[
-          parentCategory.get("subcategory_list_style")
+          parentCategory.subcategory_list_style
         ] || style;
     }
 

@@ -60,7 +60,7 @@ QUnit.test("subscribe to category", function(assert) {
   });
 
   assert.equal(
-    state.get("incomingCount"),
+    state.incomingCount,
     2,
     "expect to properly track incoming for category"
   );
@@ -85,7 +85,7 @@ QUnit.test("subscribe to category", function(assert) {
   });
 
   assert.equal(
-    state.get("incomingCount"),
+    state.incomingCount,
     1,
     "expect to properly track incoming for subcategory"
   );

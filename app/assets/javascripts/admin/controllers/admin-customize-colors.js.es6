@@ -15,8 +15,8 @@ export default Ember.Controller.extend({
   @computed("baseColorScheme")
   baseColors(baseColorScheme) {
     const baseColorsHash = Ember.Object.create({});
-    baseColorScheme.get("colors").forEach(color => {
-      baseColorsHash.set(color.get("name"), color);
+    baseColorScheme.colors.forEach(color => {
+      baseColorsHash.set(color.name, color);
     });
     return baseColorsHash;
   },
@@ -27,7 +27,7 @@ export default Ember.Controller.extend({
       const newColorScheme = Ember.copy(base, true);
       newColorScheme.setProperties({
         name: I18n.t("admin.customize.colors.new_name"),
-        base_scheme_id: base.get("base_scheme_id")
+        base_scheme_id: base.base_scheme_id
       });
       newColorScheme.save().then(() => {
         this.model.pushObject(newColorScheme);

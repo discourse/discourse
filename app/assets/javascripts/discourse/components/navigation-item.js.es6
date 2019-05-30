@@ -25,10 +25,10 @@ export default Ember.Component.extend(
     buildBuffer(buffer) {
       const content = this.content;
 
-      let href = content.get("href");
+      let href = content.href;
 
       // Include the category id if the option is present
-      if (content.get("includeCategoryId")) {
+      if (content.includeCategoryId) {
         let categoryId = this.get("category.id");
         if (categoryId) {
           href += `?category_id=${categoryId}`;
@@ -39,8 +39,8 @@ export default Ember.Component.extend(
         !this.active &&
         this.currentUser &&
         this.currentUser.trust_level > 0 &&
-        (content.get("name") === "new" || content.get("name") === "unread") &&
-        content.get("count") < 1
+        (content.name === "new" || content.name === "unread") &&
+        content.count < 1
       ) {
         this.set("hidden", true);
       } else {
@@ -51,8 +51,8 @@ export default Ember.Component.extend(
         `<a href='${href}'` + (this.active ? 'class="active"' : "") + `>`
       );
 
-      if (content.get("hasIcon")) {
-        buffer.push("<span class='" + content.get("name") + "'></span>");
+      if (content.hasIcon) {
+        buffer.push("<span class='" + content.name + "'></span>");
       }
       buffer.push(this.get("content.displayName"));
       buffer.push("</a>");

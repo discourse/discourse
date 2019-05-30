@@ -7,18 +7,18 @@ export default htmlHelper((user, args) => {
     return;
   }
 
-  const name = escapeExpression(user.get("name"));
+  const name = escapeExpression(user.name);
   let currentUser;
   if (args && args.hash) {
     currentUser = args.hash.currentUser;
   }
 
-  if (currentUser && user.get("admin") && currentUser.get("staff")) {
+  if (currentUser && user.admin && currentUser.staff) {
     return iconHTML("shield-alt", {
       label: I18n.t("user.admin", { user: name })
     });
   }
-  if (user.get("moderator")) {
+  if (user.moderator) {
     return iconHTML("shield-alt", {
       label: I18n.t("user.moderator", { user: name })
     });

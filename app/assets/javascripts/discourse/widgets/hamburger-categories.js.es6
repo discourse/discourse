@@ -17,13 +17,13 @@ createWidget("hamburger-category", {
     ];
 
     const unreadTotal =
-      parseInt(c.get("unreadTopics"), 10) + parseInt(c.get("newTopics"), 10);
+      parseInt(c.unreadTopics, 10) + parseInt(c.newTopics, 10);
     if (unreadTotal) {
       results.push(
         h(
           "a.badge.badge-notification",
           {
-            attributes: { href: c.get("url") }
+            attributes: { href: c.url }
           },
           number(unreadTotal)
         )
@@ -33,10 +33,10 @@ createWidget("hamburger-category", {
     if (!this.currentUser) {
       let count;
 
-      if (c.get("show_subcategory_list")) {
-        count = c.get("totalTopicCount");
+      if (c.show_subcategory_list) {
+        count = c.totalTopicCount;
       } else {
-        count = c.get("topic_count");
+        count = c.topic_count;
       }
 
       results.push(h("b.topics-count", number(count)));

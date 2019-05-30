@@ -207,12 +207,12 @@ function requestPermission() {
 function i18nKey(notification_type) {
   return (
     "notifications.popup." +
-    Discourse.Site.current().get("notificationLookup")[notification_type]
+    Discourse.Site.current().notificationLookup[notification_type]
   );
 }
 
 function alertChannel(user) {
-  return `/notification-alert/${user.get("id")}`;
+  return `/notification-alert/${user.id}`;
 }
 
 function unsubscribe(bus, user) {

@@ -47,7 +47,7 @@ const controllerOpts = {
       const tracker = this.topicTrackingState;
 
       // Move inserted into topics
-      this.model.loadBefore(tracker.get("newIncoming"), true);
+      this.model.loadBefore(tracker.newIncoming, true);
       tracker.resetTracking();
       return false;
     },
@@ -135,7 +135,7 @@ const controllerOpts = {
     const category = this.category;
     if (category) {
       return I18n.t("topics.bottom.category", {
-        category: category.get("name")
+        category: category.name
       });
     } else {
       const split = (this.get("model.filter") || "").split("/");
@@ -166,7 +166,7 @@ const controllerOpts = {
 
     return I18n.t("topics.none.educate." + tab, {
       userPrefsUrl: userPath(
-        `${this.currentUser.get("username_lower")}/preferences`
+        `${this.currentUser.username_lower}/preferences`
       )
     });
   }

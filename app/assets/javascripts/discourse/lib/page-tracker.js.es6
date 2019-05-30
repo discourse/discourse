@@ -22,17 +22,17 @@ export function startPageTracking(router, appEvents) {
       transition.urlMethod === "replace" && transition.queryParamsOnly;
 
     router.send("refreshTitle");
-    const url = Discourse.getURL(router.get("url"));
+    const url = Discourse.getURL(router.url);
 
     // Refreshing the title is debounced, so we need to trigger this in the
     // next runloop to have the correct title.
     Ember.run.next(() => {
-      let title = Discourse.get("_docTitle");
+      let title = Discourse._docTitle;
 
       appEvents.trigger("page:changed", {
         url,
         title,
-        currentRouteName: router.get("currentRouteName"),
+        currentRouteName: router.currentRouteName,
         replacedOnlyQueryParams
       });
     });

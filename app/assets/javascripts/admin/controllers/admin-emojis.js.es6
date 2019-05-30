@@ -16,12 +16,12 @@ export default Ember.Controller.extend({
 
     destroy(emoji) {
       return bootbox.confirm(
-        I18n.t("admin.emoji.delete_confirm", { name: emoji.get("name") }),
+        I18n.t("admin.emoji.delete_confirm", { name: emoji.name }),
         I18n.t("no_value"),
         I18n.t("yes_value"),
         destroy => {
           if (destroy) {
-            return ajax("/admin/customize/emojis/" + emoji.get("name"), {
+            return ajax("/admin/customize/emojis/" + emoji.name, {
               type: "DELETE"
             }).then(() => {
               this.model.removeObject(emoji);

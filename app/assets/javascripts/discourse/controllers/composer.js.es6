@@ -202,7 +202,7 @@ export default Ember.Controller.extend({
   @computed
   isStaffUser() {
     const currentUser = this.currentUser;
-    return currentUser && currentUser.get("staff");
+    return currentUser && currentUser.staff;
   },
 
   canUnlistTopic: Ember.computed.and("model.creatingTopic", "isStaffUser"),
@@ -635,7 +635,7 @@ export default Ember.Controller.extend({
           label:
             I18n.t("composer.reply_here") +
             "<br/><div class='topic-title overflow-ellipsis'>" +
-            currentTopic.get("fancyTitle") +
+            currentTopic.fancyTitle +
             "</div>",
           class: "btn btn-reply-here",
           callback: () => {
@@ -735,7 +735,7 @@ export default Ember.Controller.extend({
       this.get("application.currentRouteName").split(".")[0] === "topic" &&
       composer.get("topic.id") === this.get("topicModel.id")
     ) {
-      staged = composer.get("stagedPost");
+      staged = composer.stagedPost;
     }
 
     this.appEvents.trigger("post-stream:posted", staged);

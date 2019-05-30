@@ -14,24 +14,24 @@ QUnit.test("munging", assert => {
   });
 
   var g = Grape.create({ store, percent: 0.4 });
-  assert.equal(g.get("inverse"), 0.6, "it runs `munge` on `create`");
+  assert.equal(g.inverse, 0.6, "it runs `munge` on `create`");
 });
 
 QUnit.test("update", assert => {
   const store = createStore();
   return store.find("widget", 123).then(function(widget) {
-    assert.equal(widget.get("name"), "Trout Lure");
-    assert.ok(!widget.get("isSaving"), "it is not saving");
+    assert.equal(widget.name, "Trout Lure");
+    assert.ok(!widget.isSaving, "it is not saving");
 
     const promise = widget.update({ name: "new name" });
-    assert.ok(widget.get("isSaving"), "it is saving");
+    assert.ok(widget.isSaving, "it is saving");
 
     promise.then(function(result) {
-      assert.ok(!widget.get("isSaving"), "it is no longer saving");
-      assert.equal(widget.get("name"), "new name");
+      assert.ok(!widget.isSaving, "it is no longer saving");
+      assert.equal(widget.name, "new name");
 
       assert.ok(result.target, "it has a reference to the record");
-      assert.equal(result.target.name, widget.get("name"));
+      assert.equal(result.target.name, widget.name);
     });
   });
 });
@@ -57,22 +57,22 @@ QUnit.test("save new", assert => {
   const store = createStore();
   const widget = store.createRecord("widget");
 
-  assert.ok(widget.get("isNew"), "it is a new record");
-  assert.ok(!widget.get("isCreated"), "it is not created");
-  assert.ok(!widget.get("isSaving"), "it is not saving");
+  assert.ok(widget.isNew, "it is a new record");
+  assert.ok(!widget.isCreated, "it is not created");
+  assert.ok(!widget.isSaving, "it is not saving");
 
   const promise = widget.save({ name: "Evil Widget" });
-  assert.ok(widget.get("isSaving"), "it is not saving");
+  assert.ok(widget.isSaving, "it is not saving");
 
   return promise.then(function(result) {
-    assert.ok(!widget.get("isSaving"), "it is no longer saving");
-    assert.ok(widget.get("id"), "it has an id");
-    assert.ok(widget.get("name"), "Evil Widget");
-    assert.ok(widget.get("isCreated"), "it is created");
-    assert.ok(!widget.get("isNew"), "it is no longer new");
+    assert.ok(!widget.isSaving, "it is no longer saving");
+    assert.ok(widget.id, "it has an id");
+    assert.ok(widget.name, "Evil Widget");
+    assert.ok(widget.isCreated, "it is created");
+    assert.ok(!widget.isNew, "it is no longer new");
 
     assert.ok(result.target, "it has a reference to the record");
-    assert.equal(result.target.name, widget.get("name"));
+    assert.equal(result.target.name, widget.name);
   });
 });
 

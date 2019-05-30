@@ -166,7 +166,7 @@ const UserAction = RestModel.extend({
     let rval = [];
     if (g) {
       rval = [g.likes, g.stars, g.edits, g.bookmarks].filter(function(i) {
-        return i.get("items") && i.get("items").length > 0;
+        return i.items && i.items.length > 0;
       });
     }
     return rval;

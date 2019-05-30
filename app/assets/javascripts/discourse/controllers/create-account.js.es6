@@ -158,7 +158,7 @@ export default Ember.Controller.extend(
         return provider.name === providerName;
       });
       return matchingProvider
-        ? matchingProvider.get("prettyName")
+        ? matchingProvider.prettyName
         : providerName;
     },
 
@@ -226,7 +226,7 @@ export default Ember.Controller.extend(
         if (!Ember.isEmpty(userFields)) {
           attrs.userFields = {};
           userFields.forEach(
-            f => (attrs.userFields[f.get("field.id")] = f.get("value"))
+            f => (attrs.userFields[f.get("field.id")] = f.value)
           );
         }
 

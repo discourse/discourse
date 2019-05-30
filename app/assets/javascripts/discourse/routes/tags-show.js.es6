@@ -52,10 +52,10 @@ export default Discourse.Route.extend({
       this.set("parentCategorySlug", params.parent_category);
     }
 
-    if (tag && tag.get("id") !== "none" && this.currentUser) {
+    if (tag && tag.id !== "none" && this.currentUser) {
       // If logged in, we should get the tag's user settings
       return this.store
-        .find("tagNotification", tag.get("id").toLowerCase())
+        .find("tagNotification", tag.id.toLowerCase())
         .then(tn => {
           this.set("tagNotification", tn);
           return tag;
@@ -118,11 +118,11 @@ export default Discourse.Route.extend({
       }
       controller.setProperties({
         list,
-        canCreateTopic: list.get("can_create_topic"),
+        canCreateTopic: list.can_create_topic,
         loading: false,
         canCreateTopicOnCategory:
           this.get("category.permission") === PermissionType.FULL,
-        canCreateTopicOnTag: !tag.get("staff") || this.get("currentUser.staff")
+        canCreateTopicOnTag: !tag.staff || this.get("currentUser.staff")
       });
     });
   },
@@ -185,7 +185,7 @@ export default Discourse.Route.extend({
       const controller = this.controllerFor("tags.show");
 
       if (controller.get("list.draft")) {
-        this.openTopicDraft(controller.get("list"));
+        this.openTopicDraft(controller.list);
       } else {
         this.controllerFor("composer")
           .open({
@@ -197,14 +197,14 @@ export default Discourse.Route.extend({
           .then(() => {
             // Pre-fill the tags input field
             if (controller.get("model.id")) {
-              const composerModel = this.controllerFor("composer").get("model");
+              const composerModel = this.controllerFor("composer").model;
 
               composerModel.set(
                 "tags",
                 _.compact(
                   _.flatten([
                     controller.get("model.id"),
-                    controller.get("additionalTags")
+                    controller.additionalTags
                   ])
                 )
               );

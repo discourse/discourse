@@ -30,11 +30,11 @@ export default ComboBox.extend(TagsMixin, {
     this.selectionSelector = ".selected-tag";
 
     if (this.allowCreate !== false) {
-      this.set("allowCreate", this.site.get("can_create_tag"));
+      this.set("allowCreate", this.site.can_create_tag);
     }
 
     this.set("templateForRow", rowComponent => {
-      const tag = rowComponent.get("computedContent");
+      const tag = rowComponent.computedContent;
       return renderTag(get(tag, "value"), {
         count: get(tag, "originalContent.count"),
         noHref: true
@@ -192,7 +192,7 @@ export default ComboBox.extend(TagsMixin, {
       results = results.sort((a, b) => a.id > b.id);
     }
 
-    results = results.filter(r => !context.get("selection").includes(r.id));
+    results = results.filter(r => !context.selection.includes(r.id));
 
     results = results.map(result => {
       return { id: result.text, name: result.text, count: result.count };

@@ -23,7 +23,7 @@ export default buildCategoryPanel("general", {
   // background colors are available as a pipe-separated string
   @computed
   backgroundColors() {
-    const categories = this.site.get("categoriesList");
+    const categories = this.site.categoriesList;
     return this.siteSettings.category_colors
       .split("|")
       .map(function(i) {
@@ -44,7 +44,7 @@ export default buildCategoryPanel("general", {
 
   @computed("category.id", "category.color")
   usedBackgroundColors(categoryId, categoryColor) {
-    const categories = this.site.get("categoriesList");
+    const categories = this.site.categoriesList;
 
     // If editing a category, don't include its color:
     return categories
@@ -60,8 +60,8 @@ export default buildCategoryPanel("general", {
   @computed
   parentCategories() {
     return this.site
-      .get("categoriesList")
-      .filter(c => !c.get("parentCategory"));
+      .categoriesList
+      .filter(c => !c.parentCategory);
   },
 
   @computed(
@@ -77,7 +77,7 @@ export default buildCategoryPanel("general", {
       color,
       text_color: textColor,
       parent_category_id: parseInt(parentCategoryId),
-      read_restricted: category.get("read_restricted")
+      read_restricted: category.read_restricted
     });
     return categoryBadgeHTML(c, { link: false });
   },

@@ -21,7 +21,7 @@ export default Ember.Component.extend(
       // only pin unpin for now
       if (this.canAct && $(e.target).hasClass("d-icon-thumbtack")) {
         const topic = this.topic;
-        topic.get("pinned") ? topic.clearPin() : topic.rePin();
+        topic.pinned ? topic.clearPin() : topic.rePin();
       }
 
       return false;

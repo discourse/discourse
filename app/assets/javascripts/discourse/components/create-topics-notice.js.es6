@@ -20,10 +20,10 @@ export default Ember.Component.extend({
         postCount = 0;
 
       // Use data we already have before fetching live stats
-      this.site.get("categories").forEach(c => {
-        if (!c.get("read_restricted")) {
-          topicCount += c.get("topic_count");
-          postCount += c.get("post_count");
+      this.site.categories.forEach(c => {
+        if (!c.read_restricted) {
+          topicCount += c.topic_count;
+          postCount += c.post_count;
         }
       });
 
@@ -39,9 +39,9 @@ export default Ember.Component.extend({
     const user = this.currentUser;
     return (
       user &&
-      user.get("admin") &&
+      user.admin &&
       this.siteSettings.show_create_topics_notice &&
-      !this.site.get("wizard_required")
+      !this.site.wizard_required
     );
   },
 
@@ -92,8 +92,8 @@ export default Ember.Component.extend({
 
     LivePostCounts.find().then(stats => {
       if (stats) {
-        this.set("publicTopicCount", stats.get("public_topic_count"));
-        this.set("publicPostCount", stats.get("public_post_count"));
+        this.set("publicTopicCount", stats.public_topic_count);
+        this.set("publicPostCount", stats.public_post_count);
         if (
           this.publicTopicCount >= this.requiredTopics &&
           this.publicPostCount >= this.requiredPosts

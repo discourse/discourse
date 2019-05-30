@@ -6,12 +6,12 @@ export default Ember.Controller.extend({
 
   @computed("model", "model.@each.component")
   fullThemes(themes) {
-    return themes.filter(t => !t.get("component"));
+    return themes.filter(t => !t.component);
   },
 
   @computed("model", "model.@each.component")
   childThemes(themes) {
-    return themes.filter(t => t.get("component"));
+    return themes.filter(t => t.component);
   },
 
   @computed("model", "model.@each.component")

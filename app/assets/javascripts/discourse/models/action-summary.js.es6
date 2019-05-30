@@ -45,7 +45,7 @@ export default RestModel.extend({
     return ajax("/post_actions", {
       type: "POST",
       data: {
-        id: this.flagTopic ? this.get("flagTopic.id") : post.get("id"),
+        id: this.flagTopic ? this.get("flagTopic.id") : post.id,
         post_action_type_id: this.id,
         message: opts.message,
         is_warning: opts.isWarning,
@@ -77,7 +77,7 @@ export default RestModel.extend({
     this.removeAction(post);
 
     // Remove our post action
-    return ajax("/post_actions/" + post.get("id"), {
+    return ajax("/post_actions/" + post.id, {
       type: "DELETE",
       data: { post_action_type_id: this.id }
     }).then(result => {

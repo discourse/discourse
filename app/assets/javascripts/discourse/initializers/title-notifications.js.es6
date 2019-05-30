@@ -10,7 +10,7 @@ export default {
 
     appEvents.on("notifications:changed", () => {
       let notifications =
-        user.get("unread_notifications") + user.get("unread_private_messages");
+        user.unread_notifications + user.unread_private_messages;
 
       Discourse.updateNotificationCount(notifications);
     });

@@ -26,9 +26,9 @@ export default Ember.Controller.extend({
       const idx = this.sortedFields.indexOf(f);
       if (idx) {
         const prev = this.sortedFields.objectAt(idx - 1);
-        const prevPos = prev.get("position");
+        const prevPos = prev.position;
 
-        prev.update({ position: f.get("position") });
+        prev.update({ position: f.position });
         f.update({ position: prevPos });
       }
     },
@@ -37,9 +37,9 @@ export default Ember.Controller.extend({
       const idx = this.sortedFields.indexOf(f);
       if (idx > -1) {
         const next = this.sortedFields.objectAt(idx + 1);
-        const nextPos = next.get("position");
+        const nextPos = next.position;
 
-        next.update({ position: f.get("position") });
+        next.update({ position: f.position });
         f.update({ position: nextPos });
       }
     },
@@ -48,7 +48,7 @@ export default Ember.Controller.extend({
       const model = this.model;
 
       // Only confirm if we already been saved
-      if (f.get("id")) {
+      if (f.id) {
         bootbox.confirm(I18n.t("admin.user_fields.delete_confirm"), function(
           result
         ) {

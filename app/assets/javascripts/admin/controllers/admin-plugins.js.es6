@@ -5,7 +5,7 @@ export default Ember.Controller.extend({
   adminRoutes: function() {
     return this.model
       .map(p => {
-        if (p.get("enabled")) {
+        if (p.enabled) {
           return p.admin_route;
         }
       })

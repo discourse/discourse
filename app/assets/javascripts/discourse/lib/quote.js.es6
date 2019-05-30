@@ -16,7 +16,7 @@ export default {
 
     // Strip the HTML from cooked
     const stripped = $("<div/>")
-      .html(post.get("cooked"))
+      .html(post.cooked)
       .text();
 
     // Let's remove any non-word characters as a kind of hash.
@@ -26,9 +26,9 @@ export default {
       stripped.replace(/\W/g, "") === contents.replace(/\W/g, "");
 
     const params = [
-      post.get("username"),
-      `post:${post.get("post_number")}`,
-      `topic:${post.get("topic_id")}`
+      post.username,
+      `post:${post.post_number}`,
+      `topic:${post.topic_id}`
     ];
 
     opts = opts || {};

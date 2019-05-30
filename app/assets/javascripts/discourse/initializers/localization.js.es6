@@ -21,7 +21,7 @@ export default {
     }
 
     // Merge any overrides into our object
-    const overrides = PreloadStore.get("translationOverrides") || {};
+    const overrides = PreloadStore.translationOverrides || {};
     Object.keys(overrides).forEach(k => {
       const v = overrides[k];
 
