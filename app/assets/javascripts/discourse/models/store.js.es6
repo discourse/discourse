@@ -311,6 +311,8 @@ export default Ember.Object.extend({
           if (hydrated) {
             obj[subType] = hydrated;
             delete obj[k];
+          } else {
+            obj[subType] = null;
           }
         }
       }

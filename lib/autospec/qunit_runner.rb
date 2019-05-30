@@ -1,4 +1,7 @@
+# frozen_string_literal: true
+
 require "demon/rails_autospec"
+require 'rbconfig'
 
 module Autospec
 
@@ -63,7 +66,7 @@ module Autospec
 
       abort
 
-      qunit_url = "http://localhost:#{port}/qunit"
+      qunit_url = +"http://localhost:#{port}/qunit"
 
       if specs != "spec"
         module_or_filename, test_id, _name = specs.strip.split(":::")
@@ -114,13 +117,16 @@ module Autospec
     private
 
     def ensure_chrome_is_installed
-
-      binary = "google-chrome-stable" if system("command -v google-chrome-stable >/dev/null;")
+      if RbConfig::CONFIG['host_os'][/darwin|mac os/]
+        binary = "/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome"
+      elsif system("command -v google-chrome-stable >/dev/null;")
+        binary = "google-chrome-stable"
+      end
       binary ||= "google-chrome" if system("command -v google-chrome >/dev/null;")
 
       raise ChromeNotInstalled.new if !binary
 
-      if Gem::Version.new(`#{binary} --version`.match(/[\d\.]+/)[0]) < Gem::Version.new("59")
+      if Gem::Version.new(`\"#{binary}\" --version`.match(/[\d\.]+/)[0]) < Gem::Version.new("59")
         raise "Chrome 59 or higher is required"
       end
     end

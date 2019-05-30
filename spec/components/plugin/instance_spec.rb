@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 require_dependency 'plugin/instance'
 
@@ -128,9 +130,10 @@ describe Plugin::Instance do
   end
 
   it 'patches the enabled? function for auth_providers if not defined' do
-    SiteSetting.stubs(:ubuntu_login_enabled).returns(false)
-
     plugin = Plugin::Instance.new
+
+    # lets piggy back on another boolean setting, so we don't dirty our SiteSetting object
+    SiteSetting.enable_badges = false
 
     # No enabled_site_setting
     authenticator = Auth::Authenticator.new
@@ -141,26 +144,28 @@ describe Plugin::Instance do
     # With enabled site setting
     plugin = Plugin::Instance.new
     authenticator = Auth::Authenticator.new
-    plugin.auth_provider(enabled_setting: 'ubuntu_login_enabled', authenticator: authenticator)
+    plugin.auth_provider(enabled_setting: 'enable_badges', authenticator: authenticator)
     plugin.notify_before_auth
     expect(authenticator.enabled?).to eq(false)
 
     # Defines own method
     plugin = Plugin::Instance.new
-    SiteSetting.stubs(:ubuntu_login_enabled).returns(true)
+
+    SiteSetting.enable_badges = true
     authenticator = Class.new(Auth::Authenticator) do
       def enabled?
         false
       end
     end.new
-    plugin.auth_provider(enabled_setting: 'ubuntu_login_enabled', authenticator: authenticator)
+    plugin.auth_provider(enabled_setting: 'enable_badges', authenticator: authenticator)
     plugin.notify_before_auth
     expect(authenticator.enabled?).to eq(false)
   end
 
   context "activate!" do
     before do
-      SiteSetting.stubs(:ubuntu_login_enabled).returns(false)
+      # lets piggy back on another boolean setting, so we don't dirty our SiteSetting object
+      SiteSetting.enable_badges = false
     end
 
     it "can activate plugins correctly" do
@@ -309,7 +314,7 @@ describe Plugin::Instance do
 
       expect(called).to eq(1)
 
-      user.update_attributes!(username: 'some_username')
+      user.update!(username: 'some_username')
 
       expect(called).to eq(1)
     end
@@ -325,7 +330,7 @@ describe Plugin::Instance do
 
       expect(called).to eq(1)
 
-      user.update_attributes!(username: 'some_username')
+      user.update!(username: 'some_username')
 
       expect(called).to eq(1)
     end

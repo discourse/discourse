@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "s3_helper"
 require "rails_helper"
 

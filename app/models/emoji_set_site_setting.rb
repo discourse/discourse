@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'enum_site_setting'
 
 class EmojiSetSiteSetting < EnumSiteSetting

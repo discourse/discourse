@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "sidekiq/web"
 require "mini_scheduler/web"
 require_dependency "admin_constraint"
@@ -206,6 +208,7 @@ Discourse::Application.routes.draw do
     post "themes/upload_asset" => "themes#upload_asset"
     post "themes/generate_key_pair" => "themes#generate_key_pair"
     get "themes/:id/preview" => "themes#preview"
+    get "themes/:id/diff_local_changes" => "themes#diff_local_changes"
 
     scope "/customize", constraints: AdminConstraint.new do
       resources :user_fields, constraints: AdminConstraint.new
@@ -326,6 +329,8 @@ Discourse::Application.routes.draw do
   }
   put "review/:reviewable_id" => "reviewables#update", constraints: { reviewable_id: /\d+/ }
   delete "review/:reviewable_id" => "reviewables#destroy", constraints: { reviewable_id: /\d+/ }
+
+  resources :reviewable_claimed_topics
 
   get "session/sso" => "session#sso"
   get "session/sso_login" => "session#sso_login"
@@ -481,6 +486,7 @@ Discourse::Application.routes.draw do
 
   # used to download original images
   get "uploads/:site/:sha(.:extension)" => "uploads#show", constraints: { site: /\w+/, sha: /\h{40}/, extension: /[a-z0-9\.]+/i }
+  get "uploads/short-url/:base62(.:extension)" => "uploads#show_short", constraints: { site: /\w+/, base62: /[a-zA-Z0-9]+/, extension: /[a-z0-9\.]+/i }, as: :upload_short
   # used to download attachments
   get "uploads/:site/original/:tree:sha(.:extension)" => "uploads#show", constraints: { site: /\w+/, tree: /([a-z0-9]+\/)+/i, sha: /\h{40}/, extension: /[a-z0-9\.]+/i }
   # used to download attachments (old route)
@@ -581,7 +587,7 @@ Discourse::Application.routes.draw do
 
   resources :clicks do
     collection do
-      get "track"
+      post "track"
     end
   end
 

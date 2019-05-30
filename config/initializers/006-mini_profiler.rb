@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # If Mini Profiler is included via gem
 if Rails.configuration.respond_to?(:load_mini_profiler) && Rails.configuration.load_mini_profiler
   require 'rack-mini-profiler'

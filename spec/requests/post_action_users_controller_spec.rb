@@ -1,7 +1,10 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 describe PostActionUsersController do
-  let(:post) { Fabricate(:post, user: sign_in(Fabricate(:user))) }
+  fab!(:user) { Fabricate(:user) }
+  let(:post) { Fabricate(:post, user: sign_in(user)) }
 
   context 'with render' do
     it 'always allows you to see your own actions' do

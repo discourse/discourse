@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class TopicsBulkAction
 
   def initialize(user, topic_ids, operation, options = {})
@@ -21,6 +23,7 @@ class TopicsBulkAction
 
   def perform!
     raise Discourse::InvalidParameters.new(:operation) unless TopicsBulkAction.operations.include?(@operation[:type])
+    # careful these are private methods, we need send
     send(@operation[:type])
     @changed_ids
   end

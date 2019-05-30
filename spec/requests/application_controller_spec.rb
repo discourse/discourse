@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe ApplicationController do
@@ -22,7 +24,7 @@ RSpec.describe ApplicationController do
 
   describe '#redirect_to_second_factor_if_required' do
     let(:admin) { Fabricate(:admin) }
-    let(:user) { Fabricate(:user) }
+    fab!(:user) { Fabricate(:user) }
 
     before do
       admin # to skip welcome wizard at home page `/`
@@ -89,7 +91,7 @@ RSpec.describe ApplicationController do
     end
 
     it 'should not raise a 500 (nor should it log a warning) for bad params' do
-      bad_str = "d\xDE".force_encoding('utf-8')
+      bad_str = (+"d\xDE").force_encoding('utf-8')
       expect(bad_str.valid_encoding?).to eq(false)
 
       get "/latest.json", params: { test: bad_str }
@@ -187,10 +189,15 @@ RSpec.describe ApplicationController do
         expect(response).to redirect_to("/forum/t/#{new_topic.slug}/#{new_topic.id}/#{new_topic.posts.last.post_number}")
       end
 
-      it 'should return 404 and show Google search' do
+      it 'should return 404 and show Google search for an invalid topic route' do
         get "/t/nope-nope/99999999"
+
         expect(response.status).to eq(404)
-        expect(response.body).to include(I18n.t('page_not_found.search_button'))
+
+        response_body = response.body
+
+        expect(response_body).to include(I18n.t('page_not_found.search_button'))
+        expect(response_body).to have_tag("input", with: { value: 'nopenope' })
       end
 
       it 'should not include Google search if login_required is enabled' do
@@ -252,11 +259,11 @@ RSpec.describe ApplicationController do
   end
 
   describe "#handle_theme" do
-    let(:theme) { Fabricate(:theme, user_selectable: true) }
-    let(:theme2) { Fabricate(:theme, user_selectable: true) }
-    let(:non_selectable_theme) { Fabricate(:theme, user_selectable: false) }
-    let(:user) { Fabricate(:user) }
-    let(:admin) { Fabricate(:admin) }
+    let!(:theme) { Fabricate(:theme, user_selectable: true) }
+    let!(:theme2) { Fabricate(:theme, user_selectable: true) }
+    let!(:non_selectable_theme) { Fabricate(:theme, user_selectable: false) }
+    fab!(:user) { Fabricate(:user) }
+    fab!(:admin) { Fabricate(:admin) }
 
     before do
       sign_in(user)

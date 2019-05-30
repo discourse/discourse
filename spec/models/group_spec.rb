@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 describe Group do
@@ -436,8 +438,8 @@ describe Group do
   end
 
   describe 'destroy' do
-    let(:user) { Fabricate(:user) }
-    let(:group) { Fabricate(:group, users: [user]) }
+    fab!(:user) { Fabricate(:user) }
+    fab!(:group) { Fabricate(:group, users: [user]) }
 
     before do
       group.add(user)
@@ -514,7 +516,7 @@ describe Group do
   end
 
   context "group management" do
-    let(:group) { Fabricate(:group) }
+    fab!(:group) { Fabricate(:group) }
 
     it "by default has no managers" do
       expect(group.group_users.where('group_users.owner')).to be_empty
@@ -550,15 +552,15 @@ describe Group do
     end
 
     describe 'when a user has qualified for trust level 1' do
-      let(:user) do
+      fab!(:user) do
         Fabricate(:user,
           trust_level: 1,
           created_at: Time.zone.now - 10.years
         )
       end
 
-      let(:group) { Fabricate(:group, grant_trust_level: 1) }
-      let(:group2) { Fabricate(:group, grant_trust_level: 0) }
+      fab!(:group) { Fabricate(:group, grant_trust_level: 1) }
+      fab!(:group2) { Fabricate(:group, grant_trust_level: 0) }
 
       before do
         user.user_stat.update!(
@@ -617,7 +619,7 @@ describe Group do
 
   it 'should cook the bio' do
     group = Fabricate(:group)
-    group.update_attributes!(bio_raw: 'This is a group for :unicorn: lovers')
+    group.update!(bio_raw: 'This is a group for :unicorn: lovers')
 
     expect(group.bio_cooked).to include("unicorn.png")
   end
@@ -724,7 +726,7 @@ describe Group do
     end
 
     context 'when adding a user into a public group' do
-      let(:category) { Fabricate(:category) }
+      fab!(:category) { Fabricate(:category) }
 
       it "should publish the group's categories to the client" do
         group.update!(public_admission: true, categories: [category])
@@ -753,7 +755,7 @@ describe Group do
   end
 
   describe '.search_groups' do
-    let(:group) { Fabricate(:group, name: 'tEsT_more_things', full_name: 'Abc something awesome') }
+    fab!(:group) { Fabricate(:group, name: 'tEsT_more_things', full_name: 'Abc something awesome') }
 
     it 'should return the right groups' do
       group

@@ -1,4 +1,8 @@
+# frozen_string_literal: true
+
 class GroupsController < ApplicationController
+  include ApplicationHelper
+
   requires_login only: [
     :set_notifications,
     :mentionable,
@@ -42,7 +46,7 @@ class GroupsController < ApplicationController
       raise Discourse::InvalidAccess.new(:enable_group_directory)
     end
 
-    page_size = 30
+    page_size = mobile_device? ? 15 : 36
     page = params[:page]&.to_i || 0
     order = %w{name user_count}.delete(params[:order])
     dir = params[:asc] ? 'ASC' : 'DESC'
@@ -317,8 +321,14 @@ class GroupsController < ApplicationController
       ))
     else
       users.each do |user|
-        group.add(user)
-        GroupActionLogger.new(current_user, group).log_add_user_to_group(user)
+        begin
+          group.add(user)
+          GroupActionLogger.new(current_user, group).log_add_user_to_group(user)
+        rescue ActiveRecord::RecordNotUnique
+          # Under concurrency, we might attempt to insert two records quickly and hit a DB
+          # constraint. In this case we can safely ignore the error and act as if the user
+          # was added to the group.
+        end
       end
 
       render json: success_json.merge!(

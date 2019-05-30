@@ -54,7 +54,7 @@ const isInside = (text, regex) => {
 
 class Toolbar {
   constructor(opts) {
-    const { site, siteSettings } = opts;
+    const { siteSettings } = opts;
     this.shortcuts = {};
     this.context = null;
 
@@ -140,10 +140,6 @@ class Toolbar {
         title: "composer.toggle_direction",
         perform: e => e.toggleDirection()
       });
-    }
-
-    if (site.mobileView) {
-      this.groups.push({ group: "mobileExtras", buttons: [] });
     }
 
     this.groups[this.groups.length - 1].lastGroup = true;
@@ -234,7 +230,7 @@ export default Ember.Component.extend({
   _readyNow() {
     this.set("ready", true);
 
-    if (this.get("autofocus")) {
+    if (this.autofocus) {
       this.$("textarea").focus();
     }
   },
@@ -289,7 +285,7 @@ export default Ember.Component.extend({
       }
     });
 
-    if (this.get("composerEvents")) {
+    if (this.composerEvents) {
       this.appEvents.on("composer:insert-block", this, "_insertBlock");
       this.appEvents.on("composer:insert-text", this, "_insertText");
       this.appEvents.on("composer:replace-text", this, "_replaceText");
@@ -307,7 +303,7 @@ export default Ember.Component.extend({
 
   @on("willDestroyElement")
   _shutDown() {
-    if (this.get("composerEvents")) {
+    if (this.composerEvents) {
       this.appEvents.off("composer:insert-block", this, "_insertBlock");
       this.appEvents.off("composer:insert-text", this, "_insertText");
       this.appEvents.off("composer:replace-text", this, "_replaceText");
@@ -340,11 +336,11 @@ export default Ember.Component.extend({
       return;
     }
 
-    const value = this.get("value");
-    const markdownOptions = this.get("markdownOptions") || {};
+    const value = this.value;
+    const markdownOptions = this.markdownOptions || {};
 
     cookAsync(value, markdownOptions).then(cooked => {
-      if (this.get("isDestroyed")) {
+      if (this.isDestroyed) {
         return;
       }
       this.set("preview", cooked);
@@ -364,7 +360,7 @@ export default Ember.Component.extend({
 
   @observes("ready", "value")
   _watchForChanges() {
-    if (!this.get("ready")) {
+    if (!this.ready) {
       return;
     }
 
@@ -426,11 +422,25 @@ export default Ember.Component.extend({
           return `${v.code}:`;
         } else {
           $editorInput.autocomplete({ cancel: true });
-          this.set(
-            "isEditorFocused",
-            $("textarea.d-editor-input").is(":focus")
-          );
-          this.set("emojiPickerIsActive", true);
+          this.setProperties({
+            isEditorFocused: $("textarea.d-editor-input").is(":focus"),
+            emojiPickerIsActive: true
+          });
+
+          Ember.run.schedule("afterRender", () => {
+            const filterInput = document.querySelector(
+              ".emoji-picker input[name='filter']"
+            );
+            if (filterInput) {
+              filterInput.value = v.term;
+
+              Ember.run.later(
+                () => filterInput.dispatchEvent(new Event("input")),
+                50
+              );
+            }
+          });
+
           return "";
         }
       },
@@ -477,7 +487,7 @@ export default Ember.Component.extend({
           )
           .then(list => {
             if (list.length) {
-              list.push({ label: I18n.t("composer.more_emoji") });
+              list.push({ label: I18n.t("composer.more_emoji"), term });
             }
             return list;
           });
@@ -486,7 +496,7 @@ export default Ember.Component.extend({
   },
 
   _getSelected(trimLeading, opts) {
-    if (!this.get("ready")) {
+    if (!this.ready) {
       return;
     }
 
@@ -530,7 +540,8 @@ export default Ember.Component.extend({
         $textarea.focus();
       }
       textarea.selectionStart = from;
-      textarea.selectionEnd = textarea.selectionStart + length;
+      textarea.selectionEnd = from + length;
+
       $textarea.scrollTop(oldScrollPos);
     });
   },
@@ -661,8 +672,8 @@ export default Ember.Component.extend({
     }
   },
 
-  _replaceText(oldVal, newVal, opts) {
-    const val = this.get("value");
+  _replaceText(oldVal, newVal, opts = {}) {
+    const val = this.value;
     const needleStart = val.indexOf(oldVal);
 
     if (needleStart === -1) {
@@ -679,7 +690,7 @@ export default Ember.Component.extend({
       replacement: { start: needleStart, end: needleStart + newVal.length }
     });
 
-    if (opts && opts.index && opts.regex) {
+    if (opts.index && opts.regex) {
       let i = -1;
       const newValue = val.replace(opts.regex, match => {
         i++;
@@ -691,7 +702,7 @@ export default Ember.Component.extend({
       this.set("value", val.replace(oldVal, newVal));
     }
 
-    if ($("textarea.d-editor-input").is(":focus")) {
+    if (opts.forceFocus || $("textarea.d-editor-input").is(":focus")) {
       // Restore cursor.
       this._selectText(
         newSelection.start,
@@ -802,7 +813,16 @@ export default Ember.Component.extend({
     let html = clipboard.getData("text/html");
     let handled = false;
 
-    if (plainText) {
+    const { pre, lineVal } = this._getSelected(null, { lineVal: true });
+    const isInlinePasting = pre.match(/[^\n]$/);
+    const isCodeBlock = isInside(pre, /(^|\n)```/g);
+
+    if (
+      plainText &&
+      this.siteSettings.enable_rich_text_paste &&
+      !isInlinePasting &&
+      !isCodeBlock
+    ) {
       plainText = plainText.trim().replace(/\r/g, "");
       const table = this._extractTable(plainText);
       if (table) {
@@ -810,9 +830,6 @@ export default Ember.Component.extend({
         handled = true;
       }
     }
-
-    const { pre, lineVal } = this._getSelected(null, { lineVal: true });
-    const isInlinePasting = pre.match(/[^\n]$/);
 
     if (canPasteHtml && plainText) {
       if (isInlinePasting) {
@@ -822,7 +839,7 @@ export default Ember.Component.extend({
           lineVal.match(/^    /)
         );
       } else {
-        canPasteHtml = !isInside(pre, /(^|\n)```/g);
+        canPasteHtml = !isCodeBlock;
       }
     }
 
@@ -853,12 +870,12 @@ export default Ember.Component.extend({
 
   actions: {
     emoji() {
-      if (this.get("disabled")) {
+      if (this.disabled) {
         return;
       }
 
       this.set("isEditorFocused", $("textarea.d-editor-input").is(":focus"));
-      this.set("emojiPickerIsActive", !this.get("emojiPickerIsActive"));
+      this.set("emojiPickerIsActive", !this.emojiPickerIsActive);
     },
 
     emojiSelected(code) {
@@ -880,7 +897,7 @@ export default Ember.Component.extend({
     },
 
     toolbarButton(button) {
-      if (this.get("disabled")) {
+      if (this.disabled) {
         return;
       }
 
@@ -894,7 +911,7 @@ export default Ember.Component.extend({
           this._applyList(selected, head, exampleKey, opts),
         addText: text => this._addText(selected, text),
         replaceText: text => this._addText({ pre: "", post: "" }, text),
-        getText: () => this.get("value"),
+        getText: () => this.value,
         toggleDirection: () => this._toggleDirection()
       };
 
@@ -906,7 +923,7 @@ export default Ember.Component.extend({
     },
 
     showLinkModal() {
-      if (this.get("disabled")) {
+      if (this.disabled) {
         return;
       }
 
@@ -923,7 +940,7 @@ export default Ember.Component.extend({
     },
 
     formatCode() {
-      if (this.get("disabled")) {
+      if (this.disabled) {
         return;
       }
 
@@ -966,7 +983,7 @@ export default Ember.Component.extend({
     },
 
     insertLink() {
-      const origLink = this.get("linkUrl");
+      const origLink = this.linkUrl;
       const linkUrl =
         origLink.indexOf("://") === -1 ? `http://${origLink}` : origLink;
       const sel = this._lastSel;
@@ -975,7 +992,7 @@ export default Ember.Component.extend({
         return;
       }
 
-      const linkText = this.get("linkText") || "";
+      const linkText = this.linkText || "";
       if (linkText.length) {
         this._addText(sel, `[${linkText}](${linkUrl})`);
       } else {

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_dependency "file_helper"
 
 module Validators; end
@@ -123,8 +125,9 @@ class Validators::UploadValidator < ActiveModel::Validator
     max_size_kb = if upload.for_export
       SiteSetting.max_export_file_size_kb
     else
-      SiteSetting.send("max_#{type}_size_kb")
+      SiteSetting.get("max_#{type}_size_kb")
     end
+
     max_size_bytes = max_size_kb.kilobytes
 
     if upload.filesize > max_size_bytes

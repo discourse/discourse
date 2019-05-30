@@ -34,7 +34,7 @@ matrix:
   fast_finish: true
 
 rvm:
-  - 2.6.2
+  - 2.6.3
 
 services:
   - redis-server
@@ -75,7 +75,7 @@ script:
     bash -c "
       if [ '$RUN_LINT' == '1' ]; then
         bundle exec rubocop --parallel && \
-        bundle exec danger && \
+        yarn prettier --list-different "app/assets/stylesheets/**/*.scss" "app/assets/javascripts/**/*.es6" "test/javascripts/**/*.es6"
         yarn eslint --ext .es6 app/assets/javascripts && \
         yarn eslint --ext .es6 test/javascripts && \
         yarn eslint --ext .es6 plugins/**/assets/javascripts && \

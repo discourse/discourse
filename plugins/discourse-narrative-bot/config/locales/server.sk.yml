@@ -110,11 +110,6 @@ sk:
       random_mention:
         reply: |-
           Ahoj! Ak chcete zistiť, čo dokážem urobiť, povedzte `@%{discobot_username} %{help_trigger}`.
-        tracks: |-
-          V súčasnosti viem ako robiť nasledujúce veci:
-
-          `@%{discobot_username} %{reset_trigger} %{default_track}`
-          > Zahájiť jednu z nasledujúcich interaktívnych konverzácií: %{tracks}.
         bot_actions: |-
           `@%{discobot_username} %{dice_trigger} 2d6`
           > :game_die: 3, 6
@@ -137,7 +132,6 @@ sk:
 
           Zatiaľ sa Ti nebudem pliesť do cesty.
     new_user_narrative:
-      reset_trigger: "nový používateľ"
       quoting:
         reply: |-
           Pekná práca, vybrali ste môj obľúbený citát! :left_speech_bubble:
@@ -145,7 +139,6 @@ sk:
         reply: |-
           To je :sparkles: _emojitastic!_ :sparkles:
     advanced_user_narrative:
-      reset_trigger: 'pokročilý používateľ'
       title: ':arrow_up: Pokročilé funkcie používateľa'
       details:
         reply: |-

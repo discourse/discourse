@@ -1,6 +1,13 @@
 .share-and-invite.modal {
   .modal-body {
     max-width: 475px;
+    min-width: 320px;
+  }
+
+  .modal-header {
+    .modal-close {
+      padding-left: 0;
+    }
   }
 }
 

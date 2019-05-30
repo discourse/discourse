@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module JsonError
 
   def create_errors_json(obj, opts = nil)
@@ -29,6 +31,8 @@ module JsonError
       message = obj.message.presence || obj.class.name if message.blank?
       return { errors: [message] } if message.present?
     end
+
+    return { errors: [I18n.t('not_found')] } if obj.is_a?(HasErrors) && obj.not_found
 
     # Log a warning (unless obj is nil)
     Rails.logger.warn("create_errors_json called with unrecognized type: #{obj.inspect}") if obj

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class DisableExternalAuthsByDefault < ActiveRecord::Migration[4.2]
 
   def enable_setting_if_default(name)

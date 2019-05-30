@@ -108,7 +108,6 @@ bs_BA:
   private_message_abbrev: "PM"
   rss_description:
     latest: "Latest topics"
-    hot: "Hot topics"
   too_late_to_edit: "That post was created too long ago. It can no longer be edited or deleted."
   excerpt_image: "slika"
   groups:
@@ -201,7 +200,7 @@ bs_BA:
     change_failed_explanation: "You attempted to demote %{user_name} to '%{new_trust_level}'. However their trust level is already '%{current_trust_level}'. %{user_name} will remain at '%{current_trust_level}' - if you wish to demote user lock trust level first"
   rate_limiter:
     hours:
-      one: "1 sat"
+      one: "%{count} sat"
       few: "Par sati"
       other: "%{count} sati"
   datetime:
@@ -209,8 +208,9 @@ bs_BA:
       half_a_minute: "< 1m"
     distance_in_words_verbose:
       half_a_minute: "just now"
+      less_than_x_seconds: "just now"
       about_x_hours:
-        one: "Pred 1 sat"
+        one: "Pred %{count} sat"
         few: "Pred par sati"
         other: "Pred %{count} sata"
   password_reset:
@@ -782,8 +782,6 @@ bs_BA:
     recent_topics: "Nove"
     see_more: "Više"
     search_title: "Pretraži stranicu"
-  terms_of_service:
-    title: "Terms of Service"
   deleted: "obrisano"
   image: "slika"
   upload:
@@ -812,9 +810,6 @@ bs_BA:
     sender_body_blank: "body is blank"
   color_schemes:
     base_theme_name: "Base"
-  about: "O Nama"
-  guidelines: "Guidelines"
-  privacy: "Privacy"
   edit_this_page: "Edit this page"
   csv_export:
     boolean_yes: "Da"
@@ -935,6 +930,8 @@ bs_BA:
         description: "Složij se sa prijavom i utišaj prijavljenog korisnika (silence)"
       delete_spammer:
         title: "Obriši Spamera"
+      delete_single:
+        title: "Delete"
       disagree:
         title: "Disagree"
       approve:

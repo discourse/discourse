@@ -1,3 +1,7 @@
+# frozen_string_literal: true
+
+require_dependency 'theme_store/tgz_exporter'
+
 module ThemeStore; end
 
 class ThemeStore::GitImporter
@@ -20,6 +24,27 @@ class ThemeStore::GitImporter
     else
       import_public!
     end
+  end
+
+  def diff_local_changes(remote_theme_id)
+    theme = Theme.find_by(remote_theme_id: remote_theme_id)
+    raise Discourse::InvalidParameters.new(:id) unless theme
+    local_version = theme.remote_theme&.local_version
+
+    exporter = ThemeStore::TgzExporter.new(theme)
+    local_temp_folder = exporter.export_to_folder
+
+    Dir.chdir(@temp_folder) do
+      Discourse::Utils.execute_command("git", "checkout", local_version)
+      Discourse::Utils.execute_command("rm -rf ./*/")
+      Discourse::Utils.execute_command("cp", "-rf", "#{local_temp_folder}/#{exporter.export_name}/", @temp_folder)
+      Discourse::Utils.execute_command("git", "checkout", "about.json")
+      # adding and diffing on staged so that we catch uploads
+      Discourse::Utils.execute_command("git", "add", "-A")
+      return Discourse::Utils.execute_command("git", "diff", "--staged")
+    end
+  ensure
+    FileUtils.rm_rf local_temp_folder if local_temp_folder
   end
 
   def commits_since(hash)

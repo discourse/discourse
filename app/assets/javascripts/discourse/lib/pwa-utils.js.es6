@@ -1,5 +1,10 @@
 export function nativeShare(data) {
+  const caps = Discourse.__container__.lookup("capabilities:main");
   return new Ember.RSVP.Promise((resolve, reject) => {
+    if (!(caps.isIOS || caps.isAndroid || caps.isWinphone)) {
+      reject();
+      return;
+    }
     if (
       window.location.protocol === "https:" &&
       typeof window.navigator.share !== "undefined"

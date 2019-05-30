@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # bespoke importer for a customer, feel free to borrow ideas
 
 require 'csv'
@@ -44,7 +46,7 @@ class ImportScripts::Bespoke < ImportScripts::Base
 
     def initialize(cols)
       cols.each_with_index do |col, idx|
-        self.class.send(:define_method, col) do
+        self.class.public_send(:define_method, col) do
           @row[idx]
         end
       end

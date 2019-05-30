@@ -18,10 +18,10 @@ hy:
     default_poll_must_have_at_least_2_options: "Հարցումը պետք է ունենա ընտրության առնվազն 2 տարբերակ:"
     named_poll_must_have_at_least_2_options: "<strong>%{name}</strong> անվամբ հարցումը պետք է ունենա ընտրության առնվազն 2 տարբերակներ:"
     default_poll_must_have_less_options:
-      one: "Հարցումը պետք է ունենա ավելի քիչ քան 1 տարբերակ"
+      one: "Հարցումը պետք է ունենա ավելի քիչ քան %{count} տարբերակ"
       other: "Հարցումը պետք է ունենա ավելի քիչ քան %{count} տարբերակ"
     named_poll_must_have_less_options:
-      one: " <strong>%{name}</strong>  անվամբ հարցումը պետք է ունենա ավելի քիչ քան 1 տարբերակ:"
+      one: " <strong>%{name}</strong>  անվամբ հարցումը պետք է ունենա ավելի քիչ քան %{count} տարբերակ:"
       other: " <strong>%{name}</strong> անվամբ հարցումը պետք է ունենա ավելի քիչ քան %{count} տարբերակ:"
     default_poll_must_have_different_options: "Հարցումը պետք է ունենա ընտրության տարբեր տարբերակներ:"
     named_poll_must_have_different_options: " <strong>%{name}</strong> անվամբ հարցումը պետք է ունենա ընտրության տարբեր տարբերակներ:"

@@ -17,7 +17,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
 
   actions: {
     toggleExpanded() {
-      this.set("expanded", !this.get("expanded"));
+      this.set("expanded", !this.expanded);
     },
 
     highlightSecure() {

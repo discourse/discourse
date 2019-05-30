@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # barber patches to re-route raw compilation via ember compat handlebars
 
 class Barber::Precompiler

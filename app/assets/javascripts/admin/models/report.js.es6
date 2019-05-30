@@ -8,7 +8,7 @@ import { renderAvatar } from "discourse/helpers/user-avatar";
 
 // Change this line each time report format change
 // and you want to ensure cache is reset
-export const SCHEMA_VERSION = 3;
+export const SCHEMA_VERSION = 4;
 
 const Report = Discourse.Model.extend({
   average: false,
@@ -69,35 +69,45 @@ const Report = Discourse.Model.extend({
           count++;
         }
       });
-      if (this.get("method") === "average" && count > 0) {
+      if (this.method === "average" && count > 0) {
         sum /= count;
       }
       return round(sum, -2);
     }
   },
 
-  todayCount: function() {
+  @computed("data", "average")
+  todayCount() {
     return this.valueAt(0);
-  }.property("data", "average"),
-  yesterdayCount: function() {
-    return this.valueAt(1);
-  }.property("data", "average"),
-  sevenDaysAgoCount: function() {
-    return this.valueAt(7);
-  }.property("data", "average"),
-  thirtyDaysAgoCount: function() {
-    return this.valueAt(30);
-  }.property("data", "average"),
+  },
 
-  lastSevenDaysCount: function() {
+  @computed("data", "average")
+  yesterdayCount() {
+    return this.valueAt(1);
+  },
+
+  @computed("data", "average")
+  sevenDaysAgoCount() {
+    return this.valueAt(7);
+  },
+
+  @computed("data", "average")
+  thirtyDaysAgoCount() {
+    return this.valueAt(30);
+  },
+
+  @computed("data", "average")
+  lastSevenDaysCount() {
     return this.averageCount(7, this.valueFor(1, 7));
-  }.property("data", "average"),
-  lastThirtyDaysCount: function() {
+  },
+
+  @computed("data", "average")
+  lastThirtyDaysCount() {
     return this.averageCount(30, this.valueFor(1, 30));
-  }.property("data", "average"),
+  },
 
   averageCount(count, value) {
-    return this.get("average") ? value / count : value;
+    return this.average ? value / count : value;
   },
 
   @computed("yesterdayCount", "higher_is_better")
@@ -148,7 +158,7 @@ const Report = Discourse.Model.extend({
 
   @computed("prev_period", "currentTotal", "currentAverage", "higher_is_better")
   trend(prev, currentTotal, currentAverage, higherIsBetter) {
-    const total = this.get("average") ? currentAverage : currentTotal;
+    const total = this.average ? currentAverage : currentTotal;
     return this._computeTrend(prev, total, higherIsBetter);
   },
 
@@ -180,12 +190,12 @@ const Report = Discourse.Model.extend({
 
   @computed("prev_period", "currentTotal", "currentAverage")
   trendTitle(prev, currentTotal, currentAverage) {
-    let current = this.get("average") ? currentAverage : currentTotal;
+    let current = this.average ? currentAverage : currentTotal;
     let percent = this.percentChangeString(prev, current);
 
-    if (this.get("average")) {
+    if (this.average) {
       prev = prev ? prev.toFixed(1) : "0";
-      if (this.get("percent")) {
+      if (this.percent) {
         current += "%";
         prev += "%";
       }
@@ -236,7 +246,7 @@ const Report = Discourse.Model.extend({
 
   @computed("data")
   sortedData(data) {
-    return this.get("xAxisIsDate") ? data.toArray().reverse() : data.toArray();
+    return this.xAxisIsDate ? data.toArray().reverse() : data.toArray();
   },
 
   @computed("data")

@@ -51,9 +51,9 @@ const TopicRoute = Discourse.Route.extend({
     showInvite() {
       let invitePanelTitle;
 
-      if (this.get("isPM")) {
+      if (this.isPM) {
         invitePanelTitle = "topic.invite_private.title";
-      } else if (this.get("invitingToTopic")) {
+      } else if (this.invitingToTopic) {
         invitePanelTitle = "topic.invite_reply.title";
       } else {
         invitePanelTitle = "user.invited.create";
@@ -118,14 +118,13 @@ const TopicRoute = Discourse.Route.extend({
     },
 
     showHistory(model, revision) {
-      showModal("history", { model });
-      const historyController = this.controllerFor("history");
-
+      let historyController = showModal("history", {
+        model,
+        modalClass: "history-modal"
+      });
       historyController.refresh(model.get("id"), revision || "latest");
       historyController.set("post", model);
       historyController.set("topicController", this.controllerFor("topic"));
-
-      this.controllerFor("modal").set("modalClass", "history-modal");
     },
 
     showGrantBadgeModal() {

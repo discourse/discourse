@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 source 'https://rubygems.org'
 # if there is a super emergency and rubygems is playing up, try
 #source 'http://production.cf.rubygems.org'
@@ -44,12 +46,12 @@ gem 'redis-namespace'
 
 gem 'active_model_serializers', '~> 0.8.3'
 
-gem 'onebox', '1.8.86'
+gem 'onebox', '1.8.90'
 
 gem 'http_accept_language', '~>2.0.5', require: false
 
 gem 'ember-rails', '0.18.5'
-gem 'discourse-ember-source', '~> 3.7.0'
+gem 'discourse-ember-source', '~> 3.8.0'
 gem 'ember-handlebars-template', '0.8.0'
 gem 'barber'
 
@@ -87,7 +89,9 @@ gem 'omniauth-github'
 
 gem 'omniauth-oauth2', require: false
 
-gem 'omniauth-google-oauth2'
+# pinned until we test verified email change in the gem
+gem 'omniauth-google-oauth2', '0.6.0'
+
 gem 'oj'
 gem 'pg'
 gem 'mini_sql'
@@ -120,7 +124,6 @@ group :test do
   gem 'webmock', require: false
   gem 'fakeweb', '~> 1.3.0', require: false
   gem 'minitest', require: false
-  gem 'danger'
   gem 'simplecov', require: false
   gem "test-prof"
 end

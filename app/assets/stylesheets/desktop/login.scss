@@ -5,7 +5,7 @@
 .create-account {
   #login-buttons:not(.hidden) {
     display: flex;
-    flex: 0;
+    flex: 0 1 auto;
     flex-direction: column;
     align-items: stretch;
     min-height: 75px;
@@ -136,6 +136,7 @@
     position: relative;
     display: flex;
     overflow: hidden;
+    flex: 1 1 auto;
 
     &:after,
     &:before {

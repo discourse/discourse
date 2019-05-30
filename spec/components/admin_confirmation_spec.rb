@@ -1,10 +1,12 @@
+# frozen_string_literal: true
+
 require 'admin_confirmation'
 require 'rails_helper'
 
 describe AdminConfirmation do
 
-  let(:admin) { Fabricate(:admin) }
-  let(:user) { Fabricate(:user) }
+  fab!(:admin) { Fabricate(:admin) }
+  fab!(:user) { Fabricate(:user) }
 
   describe "create_confirmation" do
     it "raises an error for non-admins" do

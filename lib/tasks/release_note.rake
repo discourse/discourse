@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 desc "generate a release note from the important commits"
 task "release_note:generate", :from, :to do |t, args|
   from = args[:from] || `git describe --tags --abbrev=0`.strip

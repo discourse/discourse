@@ -249,6 +249,7 @@
     .last-dashboard-update {
       text-align: center;
       display: flex;
+      flex-direction: column;
       justify-content: center;
       div {
         align-self: center;

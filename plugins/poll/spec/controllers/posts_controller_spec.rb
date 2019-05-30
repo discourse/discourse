@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "rails_helper"
 
 describe PostsController do
@@ -81,7 +83,7 @@ describe PostsController do
     end
 
     it "should have at most 'SiteSetting.poll_maximum_options' options" do
-      raw = "[poll]\n"
+      raw = +"[poll]\n"
       (SiteSetting.poll_maximum_options + 1).times { |n| raw << "\n- #{n}" }
       raw << "\n[/poll]"
 

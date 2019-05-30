@@ -13,14 +13,14 @@ export default Ember.Component.extend({
 
   @observes("groupNames")
   _update() {
-    if (this.get("canReceiveUpdates") === "true")
+    if (this.canReceiveUpdates === "true")
       this._initializeAutocomplete({ updateData: true });
   },
 
   @on("didInsertElement")
   _initializeAutocomplete(opts) {
     let selectedGroups;
-    let groupNames = this.get("groupNames");
+    let groupNames = this.groupNames;
 
     this.$("input").autocomplete({
       allowAny: false,
@@ -29,8 +29,8 @@ export default Ember.Component.extend({
         : Ember.isEmpty(groupNames)
         ? []
         : [groupNames],
-      single: this.get("single"),
-      fullWidthWrap: this.get("fullWidthWrap"),
+      single: this.single,
+      fullWidthWrap: this.fullWidthWrap,
       updateData: opts && opts.updateData ? opts.updateData : false,
       onChangeItems: items => {
         selectedGroups = items;
@@ -40,7 +40,7 @@ export default Ember.Component.extend({
         return g.name;
       },
       dataSource: term => {
-        return this.get("groupFinder")(term).then(groups => {
+        return this.groupFinder(term).then(groups => {
           if (!selectedGroups) return groups;
 
           return groups.filter(group => {

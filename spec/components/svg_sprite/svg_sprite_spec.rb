@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 describe SvgSprite do
@@ -115,6 +117,30 @@ describe SvgSprite do
 
     expect(Upload.where(id: upload.id)).to be_exist
     expect(SvgSprite.bundle([theme.id])).to match(/my-custom-theme-icon/)
+  end
+
+  context "s3" do
+    let(:upload_s3) { Fabricate(:upload_s3) }
+
+    before do
+      SiteSetting.enable_s3_uploads = true
+      SiteSetting.s3_upload_bucket = "s3bucket"
+      SiteSetting.s3_access_key_id = "s3_access_key_id"
+      SiteSetting.s3_secret_access_key = "s3_secret_access_key"
+
+      stub_request(:get, upload_s3.url).to_return(status: 200, body: "Hello world")
+    end
+
+    it 'includes svg sprites in themes stored in s3' do
+      theme = Fabricate(:theme)
+      theme.set_field(target: :common, name: SvgSprite.theme_sprite_variable_name, upload_id: upload_s3.id, type: :theme_upload_var)
+      theme.save!
+
+      sprite_files = SvgSprite.custom_svg_sprites([theme.id]).join("|")
+
+      expect(sprite_files).to match(/#{upload_s3.sha1}/)
+      expect(sprite_files).not_to match(/amazonaws/)
+    end
   end
 
   it 'includes icons from SiteSettings' do

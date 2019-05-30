@@ -1,8 +1,10 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 require 'theme_store/tgz_exporter'
 
 describe ThemeStore::TgzExporter do
-  let(:theme) do
+  let!(:theme) do
     Fabricate(:theme, name: "Header Icons").tap do |theme|
       theme.set_field(target: :common, name: :body_tag, value: "<b>testtheme1</b>")
       theme.set_field(target: :settings, name: :yaml, value: "somesetting: test")
@@ -107,7 +109,7 @@ describe ThemeStore::TgzExporter do
     # Theme field names should be sanitized before writing to the database,
     # but protection is in place 'just in case'
     expect do
-      theme.set_field(target: :translations, name: "en", value: "hacked")
+      theme.set_field(target: :translations, name: SiteSetting.default_locale, value: "hacked")
       ThemeField.any_instance.stubs(:file_path).returns("../../malicious")
       theme.save!
       package

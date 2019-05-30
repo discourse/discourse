@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'digest/sha1'
 require 'fileutils'
 require_dependency 'plugin/metadata'
@@ -81,7 +83,7 @@ class Plugin::Instance
   end
 
   def enabled?
-    @enabled_site_setting ? SiteSetting.send(@enabled_site_setting) : true
+    @enabled_site_setting ? SiteSetting.get(@enabled_site_setting) : true
   end
 
   delegate :name, to: :metadata
@@ -95,11 +97,11 @@ class Plugin::Instance
 
         if define_include_method
           # Don't include serialized methods if the plugin is disabled
-          klass.send(:define_method, "include_#{attr}?") { plugin.enabled? }
+          klass.public_send(:define_method, "include_#{attr}?") { plugin.enabled? }
         end
       end
 
-      klass.send(:define_method, attr, &block)
+      klass.public_send(:define_method, attr, &block)
     end
   end
 
@@ -170,10 +172,10 @@ class Plugin::Instance
     reloadable_patch do |plugin|
       klass = class_name.to_s.classify.constantize rescue class_name.to_s.constantize
       hidden_method_name = :"#{attr}_without_enable_check"
-      klass.send(:define_method, hidden_method_name, &block)
+      klass.public_send(:define_method, hidden_method_name, &block)
 
-      klass.send(:define_method, attr) do |*args|
-        send(hidden_method_name, *args) if plugin.enabled?
+      klass.public_send(:define_method, attr) do |*args|
+        public_send(hidden_method_name, *args) if plugin.enabled?
       end
     end
   end
@@ -184,10 +186,10 @@ class Plugin::Instance
       klass = klass_name.to_s.classify.constantize rescue klass_name.to_s.constantize
 
       hidden_method_name = :"#{attr}_without_enable_check"
-      klass.send(:define_singleton_method, hidden_method_name, &block)
+      klass.public_send(:define_singleton_method, hidden_method_name, &block)
 
-      klass.send(:define_singleton_method, attr) do |*args|
-        send(hidden_method_name, *args) if plugin.enabled?
+      klass.public_send(:define_singleton_method, attr) do |*args|
+        public_send(hidden_method_name, *args) if plugin.enabled?
       end
     end
   end
@@ -200,10 +202,10 @@ class Plugin::Instance
       method_name = "#{plugin.name}_#{klass.name}_#{callback}#{@idx}".underscore
       @idx += 1
       hidden_method_name = :"#{method_name}_without_enable_check"
-      klass.send(:define_method, hidden_method_name, &block)
+      klass.public_send(:define_method, hidden_method_name, &block)
 
-      klass.send(callback, options) do |*args|
-        send(hidden_method_name, *args) if plugin.enabled?
+      klass.public_send(callback, options) do |*args|
+        public_send(hidden_method_name, *args) if plugin.enabled?
       end
 
       hidden_method_name
@@ -243,7 +245,7 @@ class Plugin::Instance
   # Add validation method but check that the plugin is enabled
   def validate(klass, name, &block)
     klass = klass.to_s.classify.constantize
-    klass.send(:define_method, name, &block)
+    klass.public_send(:define_method, name, &block)
 
     plugin = self
     klass.validate(name, if: -> { plugin.enabled? })
@@ -524,7 +526,7 @@ class Plugin::Instance
       provider = Auth::AuthProvider.new
 
       Auth::AuthProvider.auth_attributes.each do |sym|
-        provider.send "#{sym}=", opts.delete(sym) if opts.has_key?(sym)
+        provider.public_send("#{sym}=", opts.delete(sym)) if opts.has_key?(sym)
       end
 
       begin
@@ -532,7 +534,7 @@ class Plugin::Instance
       rescue NotImplementedError
         provider.authenticator.define_singleton_method(:enabled?) do
           Discourse.deprecate("#{provider.authenticator.class.name} should define an `enabled?` function. Patching for now.")
-          return SiteSetting.send(provider.enabled_setting) if provider.enabled_setting
+          return SiteSetting.get(provider.enabled_setting) if provider.enabled_setting
           Discourse.deprecate("#{provider.authenticator.class.name} has not defined an enabled_setting. Defaulting to true.")
           true
         end
@@ -609,11 +611,11 @@ class Plugin::Instance
   end
 
   def extend_list_method(klass, method, new_attributes)
-    current_list = klass.send(method)
+    current_list = klass.public_send(method)
     current_list.concat(new_attributes)
 
     reloadable_patch do
-      klass.send(:define_singleton_method, method) { current_list }
+      klass.public_send(:define_singleton_method, method) { current_list }
     end
   end
 

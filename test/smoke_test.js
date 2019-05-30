@@ -1,3 +1,5 @@
+/*eslint no-console: "off"*/
+
 const args = process.argv.slice(2);
 
 if (args.length < 1 || args.length > 2) {
@@ -27,7 +29,7 @@ const path = require("path");
 
   const takeFailureScreenshot = function() {
     const screenshotPath = `${process.env.SMOKE_TEST_SCREENSHOT_PATH ||
-      "tmp/smoke-test-screenshots"}/smoke-test-${Date.now()}.png`;
+    "tmp/smoke-test-screenshots"}/smoke-test-${Date.now()}.png`;
     console.log(`Screenshot of failure taken at ${screenshotPath}`);
     return page.screenshot({ path: screenshotPath, fullPage: true });
   };
@@ -181,6 +183,10 @@ const path = require("path");
       );
     });
 
+    await page.evaluate(() => {
+      document.getElementById("reply-title").value = "";
+    });
+
     await exec("compose new topic", () => {
       const date = `(${+new Date()})`;
       const title = `This is a new topic ${date}`;
@@ -213,6 +219,8 @@ const path = require("path");
       return promise;
     });
 
+    await page.waitFor(1000);
+
     await exec("submit the topic", () => {
       return page.click(".submit-panel .create");
     });
@@ -243,6 +251,8 @@ const path = require("path");
       );
     });
 
+    await page.waitFor(5000);
+
     await exec("submit the topic", () => {
       return page.click("#reply-control .create");
     });
@@ -262,6 +272,55 @@ const path = require("path");
       },
       output => {
         return output === 2;
+      }
+    );
+
+    await page.waitFor(1000);
+
+    await exec("open composer to edit first post", () => {
+      return page.click(".post-controls:first-of-type .edit");
+    });
+
+    await exec("update post raw in composer", () => {
+      let promise = page.waitForSelector("#reply-control .d-editor-input", {
+        visible: true
+      });
+
+      promise = promise.then(() => page.waitFor(1000));
+
+      promise = promise.then(() => {
+        const post = `I edited this post`;
+        return page.type("#reply-control .d-editor-input", post);
+      });
+
+      return promise;
+    });
+
+    await exec("submit the edit", () => {
+      return page.click("#reply-control .create");
+    });
+
+    await assert(
+      "reply is created",
+      () => {
+        let promise = page.waitForSelector("#reply-control.closed", {
+          visible: false
+        });
+
+        promise = promise.then(() => {
+          return page.waitForSelector("#post_1", { visible: true });
+        });
+
+        promise = promise.then(() => {
+          return page.evaluate(() => {
+            return document.querySelector("#post_1 .cooked").textContent;
+          });
+        });
+
+        return promise;
+      },
+      output => {
+        return output.includes(`I edited this post`);
       }
     );
   }

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class MigrateFlagHistory < ActiveRecord::Migration[5.2]
   def up
 

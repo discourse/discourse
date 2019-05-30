@@ -18,15 +18,18 @@ fi
 # 2. Add VIM_AUTOSPEC=1 to your environment
 # 3. Add the following to your .vimrc
 #
-# function s:notify_file_change()
-#   let root = rails#app().path()
-#   let notify = root . "/bin/notify_file_change"
+
+# function! s:notify_file_change_discourse()
+#   let notify = getcwd() . "/bin/notify_file_change"
+#   if ! executable(notify)
+#     let root = rails#app().path()
+#     notify = root . "/bin/notify_file_change"
+#   end
 #   if executable(notify)
 #     if executable('socat')
 #       execute "!" . notify . ' ' . expand("%:p") . " " . line(".")
 #     end
 #   end
-#   " redraw!
 # endfunction
 
 # autocmd BufWritePost * silent! call s:notify_file_change()

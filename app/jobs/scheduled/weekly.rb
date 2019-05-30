@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_dependency 'score_calculator'
 
 module Jobs
@@ -8,8 +10,6 @@ module Jobs
     every 1.week
 
     def execute(args)
-      Post.calculate_avg_time
-      Topic.calculate_avg_time
       ScoreCalculator.new.calculate
       MiniScheduler::Stat.purge_old
       Draft.cleanup!

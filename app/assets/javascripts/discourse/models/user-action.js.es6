@@ -28,7 +28,7 @@ Object.keys(UserActionTypes).forEach(
 const UserAction = RestModel.extend({
   @on("init")
   _attachCategory() {
-    const categoryId = this.get("category_id");
+    const categoryId = this.category_id;
     if (categoryId) {
       this.set("category", Discourse.Category.findById(categoryId));
     }
@@ -37,36 +37,30 @@ const UserAction = RestModel.extend({
   @computed("action_type")
   descriptionKey(action) {
     if (action === null || UserAction.TO_SHOW.indexOf(action) >= 0) {
-      if (this.get("isPM")) {
-        return this.get("sameUser") ? "sent_by_you" : "sent_by_user";
+      if (this.isPM) {
+        return this.sameUser ? "sent_by_you" : "sent_by_user";
       } else {
-        return this.get("sameUser") ? "posted_by_you" : "posted_by_user";
+        return this.sameUser ? "posted_by_you" : "posted_by_user";
       }
     }
 
-    if (this.get("topicType")) {
-      return this.get("sameUser") ? "you_posted_topic" : "user_posted_topic";
+    if (this.topicType) {
+      return this.sameUser ? "you_posted_topic" : "user_posted_topic";
     }
 
-    if (this.get("postReplyType")) {
-      if (this.get("reply_to_post_number")) {
-        return this.get("sameUser")
-          ? "you_replied_to_post"
-          : "user_replied_to_post";
+    if (this.postReplyType) {
+      if (this.reply_to_post_number) {
+        return this.sameUser ? "you_replied_to_post" : "user_replied_to_post";
       } else {
-        return this.get("sameUser")
-          ? "you_replied_to_topic"
-          : "user_replied_to_topic";
+        return this.sameUser ? "you_replied_to_topic" : "user_replied_to_topic";
       }
     }
 
-    if (this.get("mentionType")) {
-      if (this.get("sameUser")) {
+    if (this.mentionType) {
+      if (this.sameUser) {
         return "you_mentioned_user";
       } else {
-        return this.get("targetUser")
-          ? "user_mentioned_you"
-          : "user_mentioned_user";
+        return this.targetUser ? "user_mentioned_you" : "user_mentioned_user";
       }
     }
   },
@@ -102,20 +96,12 @@ const UserAction = RestModel.extend({
 
   @computed()
   postUrl() {
-    return postUrl(
-      this.get("slug"),
-      this.get("topic_id"),
-      this.get("post_number")
-    );
+    return postUrl(this.slug, this.topic_id, this.post_number);
   },
 
   @computed()
   replyUrl() {
-    return postUrl(
-      this.get("slug"),
-      this.get("topic_id"),
-      this.get("reply_to_post_number")
-    );
+    return postUrl(this.slug, this.topic_id, this.reply_to_post_number);
   },
 
   replyType: Ember.computed.equal("action_type", UserActionTypes.replies),
@@ -136,7 +122,7 @@ const UserAction = RestModel.extend({
   removableBookmark: Ember.computed.and("bookmarkType", "sameUser"),
 
   addChild(action) {
-    let groups = this.get("childGroups");
+    let groups = this.childGroups;
     if (!groups) {
       groups = {
         likes: UserActionGroup.create({ icon: "heart" }),
@@ -164,16 +150,7 @@ const UserAction = RestModel.extend({
     }
   },
 
-  children: function() {
-    const g = this.get("childGroups");
-    let rval = [];
-    if (g) {
-      rval = [g.likes, g.stars, g.edits, g.bookmarks].filter(function(i) {
-        return i.get("items") && i.get("items").length > 0;
-      });
-    }
-    return rval;
-  }.property(
+  @computed(
     "childGroups",
     "childGroups.likes.items",
     "childGroups.likes.items.[]",
@@ -183,12 +160,22 @@ const UserAction = RestModel.extend({
     "childGroups.edits.items.[]",
     "childGroups.bookmarks.items",
     "childGroups.bookmarks.items.[]"
-  ),
+  )
+  children() {
+    const g = this.childGroups;
+    let rval = [];
+    if (g) {
+      rval = [g.likes, g.stars, g.edits, g.bookmarks].filter(function(i) {
+        return i.get("items") && i.get("items").length > 0;
+      });
+    }
+    return rval;
+  },
 
   switchToActing() {
     this.setProperties({
-      username: this.get("acting_username"),
-      name: this.get("actingDisplayName")
+      username: this.acting_username,
+      name: this.actingDisplayName
     });
   }
 });

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Support for plugins to register custom setting providers. They can do this
 # by having a file, `register_provider.rb` in their root that will be run
 # at this point.

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'net/pop'
 require_dependency 'email/receiver'
 require_dependency 'email/processor'

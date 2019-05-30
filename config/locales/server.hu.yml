@@ -27,7 +27,7 @@ hu:
   topics: "Témák"
   posts: "Bejegyzések"
   loading: "Töltés"
-  powered_by_html: '<a href="https://www.discourse.org">Discourse</a> által működtetve, legjobb megtekintés JavaScript engedélyezésével '
+  powered_by_html: 'A motorháztető alatt: <a href="https://www.discourse.org">Discourse</a>, megtekintése JavaScript engedélyezésével ajánlott'
   log_in: "Bejelentkezés"
   submit: "Beküldés"
   purge_reason: "Automatikusan törölve, mint elhagyott, deaktivált account"
@@ -87,13 +87,13 @@ hu:
         one: "Nem lehet törölni rekordot, mert egy függő %{rekord} létezik"
         many: "Nem lehet törölni rekordot, mert függő %{rekord} léteznek"
       too_long:
-        one: túl hosszú (legfeljebb 1 karakter lehet)
+        one: túl hosszú (legfeljebb %{count} karakter lehet)
         other: túl hosszú (legfeljebb %{count} karakter lehet)
       too_short:
-        one: túl rövid (minimum 1 karakter)
+        one: túl rövid (minimum %{count} karakter)
         other: túl rövid (minimum %{count} karakter)
       wrong_length:
-        one: nem megfelelő hosszúságú. (1 karakter szükséges)
+        one: nem megfelelő hosszúságú. (%{count} karakter szükséges)
         other: nem megfelelő hosszúságú. (%{count} karakter szükséges)
       other_than: "nem lehet %{count}"
     template:
@@ -121,14 +121,14 @@ hu:
   reading_time: "Olvasási Idő"
   likes: "Lájkok"
   too_many_replies:
-    one: "Sajnáljuk, de az új felhasználók ideiglenesen csak 1 választ küldhetnek ugyanabba a témába."
+    one: "Sajnáljuk, de az új felhasználók ideiglenesen csak %{count} választ küldhetnek ugyanabba a témába."
     other: "Sajnáljuk, de az új felhasználók ideiglenesen csak %{replies} választ küldhetnek ugyanabba a témába."
   embed:
     start_discussion: "Csevegés indítása"
     continue: "Csevegés folytatása"
     referer: "Hivatkozó:"
     more_replies:
-      one: "és 1 további válasz"
+      one: "és %{count} további válasz"
       other: "és %{count} további válasz"
     loading: "Csevegés betöltése..."
     permalink: "Közvetlen link"
@@ -174,7 +174,6 @@ hu:
   private_message_abbrev: "Üzenet"
   rss_description:
     latest: "Legutóbbi témák"
-    hot: "Legnépszerűbb témák"
     top: "Top témák"
     top_yearly: "Éves top témák"
     top_quarterly: "3 havi top témák"
@@ -210,7 +209,7 @@ hu:
       trust_level_4: "bizalom_szint_4"
   education:
     until_posts:
-      one: "1 bejegyzés"
+      one: "%{count} bejegyzés"
       other: "%{count} bejegyzés"
   activerecord:
     attributes:
@@ -286,85 +285,83 @@ hu:
     slow_down: "Túl sokszor hajtottad már végre ezt a müveletet, kérlek próbáld újra később."
     too_many_requests: "Túl sokszor hajtottad már végre ezt a müveletet, kérlek várj %{time_left} mielőtt újra próbálnád."
     hours:
-      one: "1 óra"
+      one: "%{count} óra"
       other: "%{count} óra"
     minutes:
-      one: "1 perc"
+      one: "%{count} perc"
       other: "%{count} perc"
     seconds:
-      one: "1 másodperc"
+      one: "%{count} másodperc"
       other: "%{count} másodperc"
     short_time: "néhány másodperc"
   datetime:
     distance_in_words:
       half_a_minute: "< 1p"
       less_than_x_seconds:
-        one: "< 1mp"
+        one: "< %{count}mp"
         other: "< %{count}mp"
       x_seconds:
-        one: "1mp"
+        one: "%{count}mp"
         other: "%{count}mp"
       less_than_x_minutes:
-        one: "< 1p"
+        one: "< %{count}p"
         other: "< %{count}p"
       x_minutes:
-        one: "1p"
+        one: "%{count}p"
         other: "%{count}p"
       about_x_hours:
-        one: "1ó"
+        one: "%{count}ó"
         other: "%{count}ó"
       x_days:
-        one: "1n"
+        one: "%{count}n"
         other: "%{count}n"
       about_x_months:
-        one: "1hó"
+        one: "%{count}hó"
         other: "%{count}hó"
       x_months:
-        one: "1hó"
+        one: "%{count}hó"
         other: "%{count}hó"
       about_x_years:
-        one: "1év"
+        one: "%{count}év"
         other: "%{count}év"
       over_x_years:
-        one: "> 1év"
+        one: "> %{count}év"
         other: "> %{count}év"
       almost_x_years:
-        one: "1év"
+        one: "%{count}év"
         other: "%{count}év"
     distance_in_words_verbose:
       half_a_minute: "éppen most"
-      less_than_x_seconds:
-        one: "éppen most"
-        other: "éppen most"
+      less_than_x_seconds: "éppen most"
       x_seconds:
-        one: "1 másodperce"
+        one: "%{count} másodperce"
         other: "%{count} másodperce"
       less_than_x_minutes:
-        one: "kevesebb, mint 1 perce"
+        one: "kevesebb, mint %{count} perce"
         other: "kevesebb, mint %{count} perce"
       x_minutes:
-        one: "1 perce"
+        one: "%{count} perce"
         other: "%{count} perce"
       about_x_hours:
-        one: "1 órája"
+        one: "%{count} órája"
         other: "%{count} órája"
       x_days:
-        one: "1 napja"
+        one: "%{count} napja"
         other: "%{count} napja"
       about_x_months:
-        one: "kb. 1 hónapja"
+        one: "kb. %{count} hónapja"
         other: "kb. %{count} hónapja"
       x_months:
-        one: "1 hónapja"
+        one: "%{count} hónapja"
         other: "%{count} hónapja"
       about_x_years:
-        one: "kb. 1 éve"
+        one: "kb. %{count} éve"
         other: "kb. %{count} éve"
       over_x_years:
-        one: "több, mint 1 éve"
+        one: "több, mint %{count} éve"
         other: "több, mint %{count} éve"
       almost_x_years:
-        one: "majdnem 1 éve"
+        one: "majdnem %{count} éve"
         other: "majdnem %{count} éve"
   password_reset:
     no_token: "Sajnos a jelszómódosítás link túl régi. Ahhoz, hogy egy új linket kapjál, válaszd ki a Bejelentkezés gombot és használd az 'Elfelejtettem a jelszót' opciót."
@@ -471,6 +468,7 @@ hu:
   reports:
     default:
       labels:
+        count: Számláló
         percent: Százalék
         day: Nap
     post_edits:
@@ -482,6 +480,7 @@ hu:
     user_flagging_ratio:
       labels:
         user: Felhasználó
+        score: Pontszám
     moderators_activity:
       labels:
         moderator: Moderátor
@@ -511,7 +510,7 @@ hu:
     daily_engaged_users:
       xaxis: "Nap"
     profile_views:
-      title: "Felhasználói Profil Megtekintések"
+      title: "Felhasználói profil megtekintések"
       xaxis: "Nap"
       yaxis: "Felhasználói profil megtekintések száma"
     topics:
@@ -608,17 +607,17 @@ hu:
     page_view_logged_in_reqs:
       title: "Bejelentkezve"
       xaxis: "Nap"
-      yaxis: "Bejelentkezett Oldalmegtekintések"
+      yaxis: "Bejelentkezett oldalmegtekintések"
     page_view_crawler_reqs:
       xaxis: "Nap"
     page_view_total_reqs:
       title: "Oldalmegtekintések"
       xaxis: "Nap"
-      yaxis: "Összes Oldalmegtekintés"
+      yaxis: "Összes oldalmegtekintés"
     page_view_logged_in_mobile_reqs:
-      title: "Bejelentkezett Oldalmegtekintések"
+      title: "Bejelentkezett oldalmegtekintések"
       xaxis: "Nap"
-      yaxis: "Mobilos Bejelentkezett Oldalmegtekintések"
+      yaxis: "Mobilról bejelentkezett oldalmegtekintések"
     page_view_anon_mobile_reqs:
       xaxis: "Nap"
     http_background_reqs:
@@ -939,7 +938,6 @@ hu:
       unread_messages: "Olvasatlan üzenetek"
       unread_notifications: "Olvasatlan értesítések"
       liked_received: "Kapott kedvelések"
-      new_posts: "Új bejegyzések"
       new_users: "Új felhasználók"
       popular_topics: "Népszerű témák"
       follow_topic: "Téma követése"
@@ -964,8 +962,6 @@ hu:
     see_more: "Több"
     search_title: "Keresés az oldalon"
     search_button: "Keresés"
-  terms_of_service:
-    title: "Szolgáltatási feltételek"
   deleted: "törölt"
   image: "kép"
   upload:
@@ -991,9 +987,6 @@ hu:
     latte_theme_name: "Latte"
     summer_theme_name: "Summer"
     dark_rose_theme_name: "Dark Rose"
-  about: "About"
-  guidelines: "Irányelvek"
-  privacy: "Adatvédelem"
   csv_export:
     boolean_yes: "Igen"
     boolean_no: "Nem"
@@ -1045,7 +1038,6 @@ hu:
     submit_button: "Email küldése"
   tags:
     title: "Címkék"
-    minimum_required_tags: "Választanod kell legalább %{count} címkét."
   rss_by_tag: "Téma meg lett jelölve %{tag}"
   finish_installation:
     congratulations: "Gratulálunk, telepítetted a Discourse-t!"
@@ -1090,14 +1082,10 @@ hu:
         fields:
           logo:
             label: "Elsődleges logó"
-          logo_small:
-            label: "Kompakt logó"
       icons:
         title: "Ikonok"
         fields:
-          favicon:
-            label: "Kicsi ikon"
-          apple_touch_icon:
+          large_icon:
             label: "Nagy ikon"
       homepage:
         title: "Főoldal"
@@ -1130,6 +1118,15 @@ hu:
     unknown: "ismeretlen"
     user_merged: "%{username} össze lett vonva ezzel a fiókkal"
   reviewables:
+    priorities:
+      low: "Alacsony"
+      medium: "Közepes"
+      high: "Magas"
+    sensitivity:
+      disabled: "Kikapcsolt"
+      low: "Alacsony"
+      medium: "Közepes"
+      high: "Magas"
     actions:
       agree_and_keep:
         title: "Bejegyzés megtartása"
@@ -1142,6 +1139,8 @@ hu:
         title: "Bejegyzés elrejtése"
       delete_spammer:
         title: "Spammer törlése"
+      delete_single:
+        title: "Töröl"
       disagree:
         title: "Elutasítás"
       ignore:

@@ -12,18 +12,18 @@ export default Ember.Controller.extend({
 
   actions: {
     refresh() {
-      const model = this.get("model");
+      const model = this.model;
 
       this.set("loading", true);
       this.set("sentEmail", false);
 
-      let username = this.get("username");
+      let username = this.username;
       if (!username) {
         username = this.currentUser.get("username");
         this.set("username", username);
       }
 
-      EmailPreview.findDigest(username, this.get("lastSeen")).then(email => {
+      EmailPreview.findDigest(username, this.lastSeen).then(email => {
         model.setProperties(
           email.getProperties("html_content", "text_content")
         );
@@ -39,11 +39,7 @@ export default Ember.Controller.extend({
       this.set("sendingEmail", true);
       this.set("sentEmail", false);
 
-      EmailPreview.sendDigest(
-        this.get("username"),
-        this.get("lastSeen"),
-        this.get("email")
-      )
+      EmailPreview.sendDigest(this.username, this.lastSeen, this.email)
         .then(result => {
           if (result.errors) {
             bootbox.alert(result.errors);

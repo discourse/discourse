@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_dependency 'single_sign_on'
 
 class SingleSignOnProvider < SingleSignOn

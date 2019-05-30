@@ -2,7 +2,7 @@
 require_dependency 'search'
 
 class SearchIndexer
-  INDEX_VERSION = 2
+  INDEX_VERSION = 3
   REINDEX_VERSION = 0
 
   def self.disable
@@ -212,8 +212,14 @@ class SearchIndexer
         end
       end
 
+      document.css("img[class='emoji']").each do |node|
+        node.remove_attribute("alt")
+      end
+
       document.css("a[href]").each do |node|
-        node.remove_attribute("href") if node["href"] == node.text
+        if node["href"] == node.text || MENTION_CLASSES.include?(node["class"])
+          node.remove_attribute("href")
+        end
       end
 
       me = new(strip_diacritics: strip_diacritics)
@@ -221,6 +227,7 @@ class SearchIndexer
       me.scrubbed.squish
     end
 
+    MENTION_CLASSES ||= %w{mention mention-group}
     ATTRIBUTES ||= %w{alt title href data-youtube-title}
 
     def start_element(_name, attributes = [])

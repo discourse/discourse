@@ -1,7 +1,8 @@
 import { setting } from "discourse/lib/computed";
 import { buildCategoryPanel } from "discourse/components/edit-category-panel";
 import computed from "ember-addons/ember-computed-decorators";
-import { searchPriorities } from "discourse/components/concerns/category_search_priorities";
+import { searchPriorities } from "discourse/components/concerns/category-search-priorities";
+import Group from "discourse/models/group";
 
 const categorySortCriteria = [];
 export function addCategorySortCriteria(criteria) {
@@ -41,6 +42,10 @@ export default buildCategoryPanel("settings", {
     ];
   },
 
+  groupFinder(term) {
+    return Group.findAll({ term, ignore_automatic: true });
+  },
+
   @computed
   availableViews() {
     return [
@@ -62,12 +67,14 @@ export default buildCategoryPanel("settings", {
   searchPrioritiesOptions() {
     const options = [];
 
-    for (const [name, value] of Object.entries(searchPriorities)) {
+    Object.entries(searchPriorities).forEach(entry => {
+      const [name, value] = entry;
+
       options.push({
         name: I18n.t(`category.search_priority.options.${name}`),
-        value: value
+        value
       });
-    }
+    });
 
     return options;
   },

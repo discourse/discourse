@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Admin::ScreenedEmailsController < Admin::AdminController
 
   def index

@@ -1,9 +1,5 @@
 export default Discourse.Route.extend({
   model(params) {
-    // `0` is a valid query param
-    if (params.min_score != null) {
-      params.min_score = params.min_score.toString();
-    }
     return this.store.findAll("reviewable", params);
   },
 
@@ -22,8 +18,7 @@ export default Discourse.Route.extend({
       filterStatus: meta.status,
       filterTopic: meta.topic_id,
       filterCategoryId: meta.category_id,
-      min_score: meta.min_score,
-      filterScore: meta.min_score,
+      filterPriority: meta.priority,
       reviewableTypes: meta.reviewable_types,
       filterUsername: meta.username
     });

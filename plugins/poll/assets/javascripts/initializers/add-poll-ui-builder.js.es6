@@ -21,10 +21,7 @@ function initializePollUIBuilder(api) {
 
     actions: {
       showPollBuilder() {
-        showModal("poll-ui-builder").set(
-          "toolbarEvent",
-          this.get("toolbarEvent")
-        );
+        showModal("poll-ui-builder").set("toolbarEvent", this.toolbarEvent);
       }
     }
   });

@@ -1,8 +1,9 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 shared_examples 'finding and showing post' do
-  let(:user) { Fabricate(:user) }
-  let(:post) { Fabricate(:post, user: user) }
+  let!(:post) { post_by_user }
 
   it "ensures the user can't see the post" do
     topic = post.topic
@@ -34,13 +35,13 @@ shared_examples 'finding and showing post' do
     end
 
     it "can find posts as a moderator" do
-      sign_in(Fabricate(:moderator))
+      sign_in(moderator)
       get url
       expect(response.status).to eq(200)
     end
 
     it "can find posts as a admin" do
-      sign_in(Fabricate(:admin))
+      sign_in(admin)
       get url
       expect(response.status).to eq(200)
     end
@@ -55,9 +56,12 @@ shared_examples 'action requires login' do |method, url, params = {}|
 end
 
 describe PostsController do
-  let(:user) { Fabricate(:user) }
-  let(:category) { Fabricate(:category) }
-  let(:topic) { Fabricate(:topic) }
+  fab!(:admin) { Fabricate(:admin) }
+  fab!(:moderator) { Fabricate(:moderator) }
+  fab!(:user) { Fabricate(:user) }
+  fab!(:category) { Fabricate(:category) }
+  fab!(:topic) { Fabricate(:topic) }
+  fab!(:post_by_user) { Fabricate(:post, user: user) }
   let(:public_post) { Fabricate(:post, user: user, topic: topic) }
   let(:topicless_post) { Fabricate(:post, user: user, raw: '<p>Car 54, where are you?</p>') }
 
@@ -100,7 +104,7 @@ describe PostsController do
     it 'returns the expected post' do
       first_post = Fabricate(:post, created_at: 10.days.ago)
       second_post = Fabricate(:post, topic: first_post.topic, created_at: 4.days.ago)
-      third_post = Fabricate(:post, topic: first_post.topic, created_at: 3.days.ago)
+      _third_post = Fabricate(:post, topic: first_post.topic, created_at: 3.days.ago)
 
       get "/posts/by-date/#{second_post.topic_id}/#{(second_post.created_at - 2.days).strftime("%Y-%m-%d")}.json"
       json = JSON.parse(response.body)
@@ -111,7 +115,7 @@ describe PostsController do
 
     it 'returns no post if date is > at last created post' do
       get "/posts/by-date/#{post.topic_id}/2245-11-11.json"
-      json = JSON.parse(response.body)
+      _json = JSON.parse(response.body)
       expect(response.status).to eq(404)
     end
   end
@@ -166,8 +170,6 @@ describe PostsController do
 
     describe 'when logged in' do
       let(:topic) { Fabricate(:topic) }
-      let(:user) { Fabricate(:user) }
-      let(:moderator) { Fabricate(:moderator) }
 
       it "raises an error when the user doesn't have permission to see the post" do
         pm = Fabricate(:private_message_topic)
@@ -196,9 +198,9 @@ describe PostsController do
     include_examples 'action requires login', :delete, "/posts/destroy_many.json", params: { post_ids: [123, 345] }
 
     describe 'when logged in' do
-      let(:poster) { Fabricate(:moderator) }
-      let(:post1) { Fabricate(:post, user: poster, post_number: 2) }
-      let(:post2) { Fabricate(:post, topic: post1.topic, user: poster, post_number: 3, reply_to_post_number: post1.post_number) }
+      fab!(:poster) { Fabricate(:moderator) }
+      fab!(:post1) { Fabricate(:post, user: poster, post_number: 2) }
+      fab!(:post2) { Fabricate(:post, topic: post1.topic, user: poster, post_number: 3, reply_to_post_number: post1.post_number) }
 
       it "raises invalid parameters no post_ids" do
         sign_in(poster)
@@ -214,7 +216,7 @@ describe PostsController do
       end
 
       it "raises an error when the user doesn't have permission to delete the posts" do
-        sign_in(Fabricate(:user))
+        sign_in(user)
         delete "/posts/destroy_many.json", params: { post_ids: [post1.id, post2.id] }
         expect(response).to be_forbidden
       end
@@ -245,8 +247,6 @@ describe PostsController do
       end
 
       context "deleting flagged posts" do
-        let(:moderator) { Fabricate(:moderator) }
-
         before do
           sign_in(moderator)
           PostActionCreator.off_topic(moderator, post1)
@@ -276,9 +276,6 @@ describe PostsController do
     include_examples 'action requires login', :put, "/posts/123/recover.json"
 
     describe 'when logged in' do
-      let(:user) { Fabricate(:user) }
-      let(:post) { Fabricate(:post, user: user, post_number: 2) }
-
       it "raises an error when the user doesn't have permission to see the post" do
         post = Fabricate(:post, topic: Fabricate(:private_message_topic), post_number: 3)
         sign_in(user)
@@ -303,16 +300,13 @@ describe PostsController do
   describe '#update' do
     include_examples 'action requires login', :put, "/posts/2.json"
 
-    let(:user) { Fabricate(:user) }
-    let(:post) { Fabricate(:post, user: user) }
+    let!(:post) { post_by_user }
     let(:update_params) do
       {
         post: { raw: 'edited body', edit_reason: 'typo' },
         image_sizes: { 'http://image.com/image.jpg' => { 'width' => 123, 'height' => 456 } },
       }
     end
-
-    let(:moderator) { Fabricate(:moderator) }
 
     describe 'when logged in as a regular user' do
       before do
@@ -445,15 +439,14 @@ describe PostsController do
 
   describe '#bookmark' do
     include_examples 'action requires login', :put, "/posts/2/bookmark.json"
-    let(:post) { Fabricate(:post, user: user) }
-    let(:user) { Fabricate(:user) }
+    let!(:post) { post_by_user }
 
     describe 'when logged in' do
       before do
         sign_in(user)
       end
 
-      let(:private_message) { Fabricate(:private_message_post) }
+      fab!(:private_message) { Fabricate(:private_message_post) }
 
       it "raises an error if the user doesn't have permission to see the post" do
         put "/posts/#{private_message.id}/bookmark.json", params: { bookmarked: "true" }
@@ -470,10 +463,9 @@ describe PostsController do
 
       context "removing a bookmark" do
         let(:post_action) { PostActionCreator.create(user, post, :bookmark).post_action }
-        let(:admin) { Fabricate(:admin) }
 
         it "returns the right response when post is not bookmarked" do
-          put "/posts/#{Fabricate(:post, user: user).id}/bookmark.json"
+          put "/posts/#{post_by_user.id}/bookmark.json"
           expect(response.status).to eq(404)
         end
 
@@ -587,8 +579,7 @@ describe PostsController do
         sign_in(user)
       end
 
-      let(:user) { Fabricate(:user) }
-      let(:post) { Fabricate(:post, user: user) }
+      let!(:post) { post_by_user }
 
       it "raises an error if the user doesn't have permission to wiki the post" do
         put "/posts/#{post.id}/wiki.json", params: { wiki: 'true' }
@@ -596,7 +587,7 @@ describe PostsController do
       end
 
       it "toggle wiki status should create a new version" do
-        sign_in(Fabricate(:admin))
+        sign_in(admin)
         another_user = Fabricate(:user)
         another_post = Fabricate(:post, user: another_user)
 
@@ -616,7 +607,7 @@ describe PostsController do
       end
 
       it "can wiki a post" do
-        sign_in(Fabricate(:admin))
+        sign_in(admin)
         put "/posts/#{post.id}/wiki.json", params: { wiki: 'true' }
 
         post.reload
@@ -625,7 +616,7 @@ describe PostsController do
 
       it "can unwiki a post" do
         wikied_post = Fabricate(:post, user: user, wiki: true)
-        sign_in(Fabricate(:admin))
+        sign_in(admin)
 
         put "/posts/#{wikied_post.id}/wiki.json", params: { wiki: 'false' }
 
@@ -643,8 +634,7 @@ describe PostsController do
         sign_in(user)
       end
 
-      let(:user) { Fabricate(:user) }
-      let(:post) { Fabricate(:post, user: user) }
+      let!(:post) { post_by_user }
 
       it "raises an error if the user doesn't have permission to change the post type" do
         put "/posts/#{post.id}/post_type.json", params: { post_type: 2 }
@@ -652,7 +642,7 @@ describe PostsController do
       end
 
       it "can change the post type" do
-        sign_in(Fabricate(:moderator))
+        sign_in(moderator)
         put "/posts/#{post.id}/post_type.json", params: { post_type: 2 }
 
         post.reload
@@ -665,22 +655,22 @@ describe PostsController do
     include_examples "action requires login", :put, "/posts/2/rebake.json"
 
     describe "when logged in" do
-      let(:post) { Fabricate(:post, user: user) }
+      let!(:post) { post_by_user }
 
       it "raises an error if the user doesn't have permission to rebake the post" do
-        sign_in(Fabricate(:user))
+        sign_in(user)
         put "/posts/#{post.id}/rebake.json"
         expect(response).to be_forbidden
       end
 
       it "can rebake the post" do
-        sign_in(Fabricate(:moderator))
+        sign_in(moderator)
         put "/posts/#{post.id}/rebake.json"
         expect(response.status).to eq(200)
       end
 
       it "will invalidate broken images cache" do
-        sign_in(Fabricate(:moderator))
+        sign_in(moderator)
         post.custom_fields[Post::BROKEN_IMAGES] = ["https://example.com/image.jpg"].to_json
         post.save_custom_fields
         put "/posts/#{post.id}/rebake.json"
@@ -695,16 +685,14 @@ describe PostsController do
 
     before do
       SiteSetting.min_first_post_typing_time = 0
+      SiteSetting.enable_whispers = true
     end
-
-    let(:user) { Fabricate(:user) }
 
     context 'api' do
       it 'memoizes duplicate requests' do
         raw = "this is a test post 123 #{SecureRandom.hash}"
         title = "this is a title #{SecureRandom.hash}"
 
-        user = Fabricate(:user)
         master_key = ApiKey.create_master_key.key
 
         post "/posts.json", params: {
@@ -734,7 +722,6 @@ describe PostsController do
         Jobs.run_immediately!
         NotificationEmailer.enable
         post_1 = Fabricate(:post)
-        user = Fabricate(:user)
         master_key = ApiKey.create_master_key.key
 
         post "/posts.json", params: {
@@ -773,6 +760,40 @@ describe PostsController do
         expect(response.status).to eq(200)
         expect(post_1.topic.user.notifications.count).to eq(1)
       end
+
+      it 'prevents whispers for regular users' do
+        post_1 = Fabricate(:post)
+        user_key = ApiKey.create!(user: user, key: SecureRandom.hex).key
+
+        post "/posts.json", params: {
+          api_username: user.username,
+          api_key: user_key,
+          raw: 'this is test whisper',
+          topic_id: post_1.topic.id,
+          reply_to_post_number: 1,
+          whisper: true
+        }
+        expect(response.status).to eq(403)
+      end
+
+      it 'will raise an error if specified category cannot be found' do
+        user = Fabricate(:admin)
+        master_key = ApiKey.create_master_key.key
+
+        post "/posts.json", params: {
+          api_username: user.username,
+          api_key: master_key,
+          title: 'this is a test title',
+          raw: 'this is test body',
+          category: 'invalid'
+        }
+
+        expect(response.status).to eq(400)
+
+        expect(JSON.parse(response.body)["errors"]).to include(
+          I18n.t("invalid_params", message: "category")
+        )
+      end
     end
 
     describe "when logged in" do
@@ -807,7 +828,7 @@ describe PostsController do
           expect(parsed['pending_post']['id']).to eq(rp.id)
           expect(parsed['pending_post']['raw']).to eq("this is the test content")
 
-          mod = Fabricate(:moderator)
+          mod = moderator
           rp.perform(mod, :approve_post)
 
           user.reload
@@ -864,7 +885,7 @@ describe PostsController do
 
       it "can send a message to a group" do
         group = Group.create(name: 'test_group', messageable_level: Group::ALIAS_LEVELS[:nobody])
-        user1 = Fabricate(:user)
+        user1 = user
         group.add(user1)
 
         post "/posts.json", params: {
@@ -959,6 +980,25 @@ describe PostsController do
         expect(topic.meta_data).to eq("xyz" => 'abc')
       end
 
+      it 'can create an uncategorized topic' do
+        title = 'this is the test title for the topic'
+
+        expect do
+          post "/posts.json", params: {
+            raw: 'this is the test content',
+            title: title,
+            category: ""
+          }
+
+          expect(response.status).to eq(200)
+        end.to change { Topic.count }.by(1)
+
+        topic = Topic.last
+
+        expect(topic.title).to eq(title.capitalize)
+        expect(topic.category_id).to eq(SiteSetting.uncategorized_category_id)
+      end
+
       it 'can create a reply to a post' do
         topic = Fabricate(:private_message_post, user: user).topic
         post_2 = Fabricate(:private_message_post, user: user, topic: topic)
@@ -1040,7 +1080,7 @@ describe PostsController do
 
           context "as staff" do
             before do
-              sign_in(Fabricate(:admin))
+              sign_in(admin)
             end
 
             it "cant create an uncategorized post" do
@@ -1056,7 +1096,7 @@ describe PostsController do
     end
 
     describe 'shared draft' do
-      let(:destination_category) { Fabricate(:category) }
+      fab!(:destination_category) { Fabricate(:category) }
 
       it "will raise an error for regular users" do
         post "/posts.json", params: {
@@ -1070,7 +1110,7 @@ describe PostsController do
 
       describe "as a staff user" do
         before do
-          sign_in(Fabricate(:moderator))
+          sign_in(moderator)
         end
 
         it "will raise an error if there is no shared draft category" do
@@ -1084,7 +1124,7 @@ describe PostsController do
         end
 
         context "with a shared category" do
-          let(:shared_category) { Fabricate(:category) }
+          fab!(:shared_category) { Fabricate(:category) }
           before do
             SiteSetting.shared_drafts_category = shared_category.id
           end
@@ -1107,11 +1147,11 @@ describe PostsController do
     end
 
     describe 'warnings' do
-      let(:user_2) { Fabricate(:user) }
+      fab!(:user_2) { Fabricate(:user) }
 
       context 'as a staff user' do
         before do
-          sign_in(Fabricate(:admin))
+          sign_in(admin)
         end
 
         it 'should be able to mark a topic as warning' do
@@ -1199,7 +1239,7 @@ describe PostsController do
 
       context "admins" do
         before do
-          sign_in(Fabricate(:admin))
+          sign_in(admin)
         end
 
         include_examples "it works"
@@ -1207,22 +1247,24 @@ describe PostsController do
 
       context "moderators" do
         before do
-          sign_in(Fabricate(:moderator))
+          sign_in(moderator)
         end
 
         include_examples "it works"
       end
 
       context "TL4 users" do
+        fab!(:trust_level_4) { Fabricate(:trust_level_4) }
+
         before do
-          sign_in(Fabricate(:trust_level_4))
+          sign_in(trust_level_4)
         end
 
         include_examples "it works"
       end
 
       context "users" do
-        let(:topic) { Fabricate(:topic) }
+        fab!(:topic) { Fabricate(:topic) }
 
         [:user].each do |user|
           it "will raise an error for #{user}" do
@@ -1241,7 +1283,7 @@ describe PostsController do
   end
 
   describe '#revisions' do
-    let(:post) { Fabricate(:post, version: 2) }
+    fab!(:post) { Fabricate(:post, version: 2) }
     let(:post_revision) { Fabricate(:post_revision, post: post) }
 
     it "throws an exception when revision is < 2" do
@@ -1259,13 +1301,13 @@ describe PostsController do
       end
 
       it "ensures regular user cannot see the revisions" do
-        sign_in(Fabricate(:user))
+        sign_in(user)
         get "/posts/#{post.id}/revisions/#{post_revision.number}.json"
         expect(response).to be_forbidden
       end
 
       it "ensures staff can see the revisions" do
-        sign_in(Fabricate(:admin))
+        sign_in(admin)
         get "/posts/#{post.id}/revisions/#{post_revision.number}.json"
         expect(response.status).to eq(200)
       end
@@ -1295,13 +1337,13 @@ describe PostsController do
       }
 
       it "throws an exception for users" do
-        sign_in(Fabricate(:user))
+        sign_in(user)
         get "/posts/#{post.id}/revisions/#{post_revision.number}.json"
         expect(response.status).to eq(404)
       end
 
       it "works for admins" do
-        sign_in(Fabricate(:admin))
+        sign_in(admin)
         get "/posts/#{post.id}/revisions/#{post_revision.number}.json"
         expect(response.status).to eq(200)
       end
@@ -1318,9 +1360,8 @@ describe PostsController do
     end
 
     context "deleted post" do
-      let(:admin) { Fabricate(:admin) }
-      let(:deleted_post) { Fabricate(:post, user: admin, version: 3) }
-      let(:deleted_post_revision) { Fabricate(:post_revision, user: admin, post: deleted_post) }
+      fab!(:deleted_post) { Fabricate(:post, user: admin, version: 3) }
+      fab!(:deleted_post_revision) { Fabricate(:post_revision, user: admin, post: deleted_post) }
 
       before { deleted_post.trash!(admin) }
 
@@ -1332,10 +1373,9 @@ describe PostsController do
     end
 
     context "deleted topic" do
-      let(:admin) { Fabricate(:admin) }
-      let(:deleted_topic) { Fabricate(:topic, user: admin) }
-      let(:post) { Fabricate(:post, user: admin, topic: deleted_topic, version: 3) }
-      let(:post_revision) { Fabricate(:post_revision, user: admin, post: post) }
+      fab!(:deleted_topic) { Fabricate(:topic, user: admin) }
+      fab!(:post) { Fabricate(:post, user: admin, topic: deleted_topic, version: 3) }
+      fab!(:post_revision) { Fabricate(:post_revision, user: admin, post: post) }
 
       before { deleted_topic.trash!(admin) }
 
@@ -1350,18 +1390,17 @@ describe PostsController do
   describe '#revert' do
     include_examples 'action requires login', :put, "/posts/123/revisions/2/revert.json"
 
-    let(:post) { Fabricate(:post, user: Fabricate(:user), raw: "Lorem ipsum dolor sit amet, cu nam libris tractatos, ancillae senserit ius ex") }
+    fab!(:post) { Fabricate(:post, user: Fabricate(:user), raw: "Lorem ipsum dolor sit amet, cu nam libris tractatos, ancillae senserit ius ex") }
     let(:post_revision) { Fabricate(:post_revision, post: post, modifications: { "raw" => ["this is original post body.", "this is edited post body."] }) }
     let(:blank_post_revision) { Fabricate(:post_revision, post: post, modifications: { "edit_reason" => ["edit reason #1", "edit reason #2"] }) }
     let(:same_post_revision) { Fabricate(:post_revision, post: post, modifications: { "raw" => ["Lorem ipsum dolor sit amet, cu nam libris tractatos, ancillae senserit ius ex", "this is edited post body."] }) }
 
     let(:post_id) { post.id }
     let(:revision_id) { post_revision.number }
-    let(:moderator) { Fabricate(:moderator) }
 
     describe 'when logged in as a regular user' do
       it "does not work" do
-        sign_in(Fabricate(:user))
+        sign_in(user)
         put "/posts/#{post_id}/revisions/#{revision_id}/revert.json"
         expect(response).to_not be_successful
       end
@@ -1416,10 +1455,10 @@ describe PostsController do
 
   describe '#expand_embed' do
     before do
-      sign_in(Fabricate(:user))
+      sign_in(user)
     end
 
-    let(:post) { Fabricate(:post) }
+    fab!(:post) { Fabricate(:post) }
 
     it "raises an error when you can't see the post" do
       post = Fabricate(:private_message_post)
@@ -1440,29 +1479,26 @@ describe PostsController do
 
     describe "when logged in" do
       it "raises an error if the user doesn't have permission to see the flagged posts" do
-        sign_in(Fabricate(:user))
+        sign_in(user)
         get "/posts/system/flagged.json"
         expect(response).to be_forbidden
       end
 
       it "can see the flagged posts when authorized" do
-        sign_in(Fabricate(:moderator))
+        sign_in(moderator)
         get "/posts/system/flagged.json"
         expect(response.status).to eq(200)
       end
 
       it "only shows agreed and deferred flags" do
-        user = Fabricate(:user)
         post_agreed = create_post(user: user)
         post_deferred = create_post(user: user)
         post_disagreed = create_post(user: user)
 
-        moderator = Fabricate(:moderator)
         r0 = PostActionCreator.spam(moderator, post_agreed).reviewable
         r1 = PostActionCreator.off_topic(moderator, post_deferred).reviewable
         r2 = PostActionCreator.inappropriate(moderator, post_disagreed).reviewable
 
-        admin = Fabricate(:admin)
         r0.perform(admin, :agree_and_keep)
         r1.perform(admin, :ignore)
         r2.perform(admin, :disagree)
@@ -1481,20 +1517,18 @@ describe PostsController do
 
     describe "when logged in" do
       it "raises an error if the user doesn't have permission to see the deleted posts" do
-        sign_in(Fabricate(:user))
+        sign_in(user)
         get "/posts/system/deleted.json"
         expect(response).to be_forbidden
       end
 
       it "can see the deleted posts when authorized" do
-        sign_in(Fabricate(:moderator))
+        sign_in(moderator)
         get "/posts/system/deleted.json"
         expect(response.status).to eq(200)
       end
 
       it "doesn't return secured categories for moderators if they don't have access" do
-        user = Fabricate(:user)
-        admin = Fabricate(:admin)
         Fabricate(:moderator)
 
         group = Fabricate(:group)
@@ -1504,7 +1538,7 @@ describe PostsController do
         secured_post = create_post(user: user, category: secured_category)
         PostDestroyer.new(admin, secured_post).destroy
 
-        sign_in(Fabricate(:moderator))
+        sign_in(moderator)
         get "/posts/#{user.username}/deleted.json"
         expect(response.status).to eq(200)
 
@@ -1513,14 +1547,12 @@ describe PostsController do
       end
 
       it "doesn't return PMs for moderators" do
-        user = Fabricate(:user)
-        admin = Fabricate(:admin)
         Fabricate(:moderator)
 
         pm_post = create_post(user: user, archetype: 'private_message', target_usernames: [admin.username])
         PostDestroyer.new(admin, pm_post).destroy
 
-        sign_in(Fabricate(:moderator))
+        sign_in(moderator)
         get "/posts/#{user.username}/deleted.json"
         expect(response.status).to eq(200)
 
@@ -1529,9 +1561,6 @@ describe PostsController do
       end
 
       it "only shows posts deleted by other users" do
-        user = Fabricate(:user)
-        admin = Fabricate(:admin)
-
         create_post(user: user)
         post_deleted_by_user = create_post(user: user)
         post_deleted_by_admin = create_post(user: user)
@@ -1539,7 +1568,7 @@ describe PostsController do
         PostDestroyer.new(user, post_deleted_by_user).destroy
         PostDestroyer.new(admin, post_deleted_by_admin).destroy
 
-        sign_in(Fabricate(:admin))
+        sign_in(admin)
         get "/posts/#{user.username}/deleted.json"
         expect(response.status).to eq(200)
 
@@ -1572,8 +1601,8 @@ describe PostsController do
   end
 
   describe '#short_link' do
-    let(:topic) { Fabricate(:topic) }
-    let(:post) { Fabricate(:post, topic: topic) }
+    fab!(:topic) { Fabricate(:topic) }
+    fab!(:post) { Fabricate(:post, topic: topic) }
 
     it "redirects to the topic" do
       get "/p/#{post.id}.json"
@@ -1619,8 +1648,22 @@ describe PostsController do
 
   describe '#latest' do
     context 'private posts' do
+      describe 'when not logged in' do
+        it 'should return the right response' do
+          Fabricate(:post)
+
+          get "/private-posts.rss"
+
+          expect(response.status).to eq(404)
+
+          expect(response.body).to have_tag(
+            "input", with: { value: "private_posts" }
+          )
+        end
+      end
+
       it 'returns private posts rss feed' do
-        sign_in(Fabricate(:admin))
+        sign_in(admin)
 
         public_post
         private_post
@@ -1635,7 +1678,7 @@ describe PostsController do
       end
 
       it 'returns private posts for json' do
-        sign_in(Fabricate(:admin))
+        sign_in(admin)
 
         public_post
         private_post
@@ -1705,14 +1748,14 @@ describe PostsController do
       let(:post) { Fabricate(:post, deleted_at: 2.hours.ago, user: Fabricate(:user), raw_email: 'email_content') }
 
       it "raises an error if the user doesn't have permission to view raw email" do
-        sign_in(Fabricate(:user))
+        sign_in(user)
 
         get "/posts/#{post.id}/raw-email.json"
         expect(response).to be_forbidden
       end
 
       it "can view raw email" do
-        sign_in(Fabricate(:moderator))
+        sign_in(moderator)
 
         get "/posts/#{post.id}/raw-email.json"
         expect(response.status).to eq(200)
@@ -1725,7 +1768,7 @@ describe PostsController do
 
   describe "#locked" do
     before do
-      sign_in(Fabricate(:moderator))
+      sign_in(moderator)
     end
 
     it 'can lock and unlock the post' do

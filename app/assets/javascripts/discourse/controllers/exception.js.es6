@@ -1,3 +1,5 @@
+import computed from "ember-addons/ember-computed-decorators";
+
 var ButtonBackBright = {
     classes: "btn-primary",
     action: "back",
@@ -25,13 +27,14 @@ export default Ember.Controller.extend({
   thrown: null,
   lastTransition: null,
 
+  @computed
   isNetwork: function() {
     // never made it on the wire
     if (this.get("thrown.readyState") === 0) return true;
     // timed out
     if (this.get("thrown.jqTextStatus") === "timeout") return true;
     return false;
-  }.property(),
+  },
 
   isNotFound: Ember.computed.equal("thrown.status", 404),
   isForbidden: Ember.computed.equal("thrown.status", 403),
@@ -48,31 +51,33 @@ export default Ember.Controller.extend({
     this.set("loading", false);
   }.on("init"),
 
-  reason: function() {
-    if (this.get("isNetwork")) {
+  @computed("isNetwork", "isServer", "isUnknown")
+  reason() {
+    if (this.isNetwork) {
       return I18n.t("errors.reasons.network");
-    } else if (this.get("isServer")) {
+    } else if (this.isServer) {
       return I18n.t("errors.reasons.server");
-    } else if (this.get("isNotFound")) {
+    } else if (this.isNotFound) {
       return I18n.t("errors.reasons.not_found");
-    } else if (this.get("isForbidden")) {
+    } else if (this.isForbidden) {
       return I18n.t("errors.reasons.forbidden");
     } else {
       // TODO
       return I18n.t("errors.reasons.unknown");
     }
-  }.property("isNetwork", "isServer", "isUnknown"),
+  },
 
   requestUrl: Ember.computed.alias("thrown.requestedUrl"),
 
-  desc: function() {
-    if (this.get("networkFixed")) {
+  @computed("networkFixed", "isNetwork", "isServer", "isUnknown")
+  desc() {
+    if (this.networkFixed) {
       return I18n.t("errors.desc.network_fixed");
-    } else if (this.get("isNetwork")) {
+    } else if (this.isNetwork) {
       return I18n.t("errors.desc.network");
-    } else if (this.get("isNotFound")) {
+    } else if (this.isNotFound) {
       return I18n.t("errors.desc.not_found");
-    } else if (this.get("isServer")) {
+    } else if (this.isServer) {
       return I18n.t("errors.desc.server", {
         status: this.get("thrown.status") + " " + this.get("thrown.statusText")
       });
@@ -80,17 +85,18 @@ export default Ember.Controller.extend({
       // TODO
       return I18n.t("errors.desc.unknown");
     }
-  }.property("networkFixed", "isNetwork", "isServer", "isUnknown"),
+  },
 
-  enabledButtons: function() {
-    if (this.get("networkFixed")) {
+  @computed("networkFixed", "isNetwork", "isServer", "isUnknown")
+  enabledButtons() {
+    if (this.networkFixed) {
       return [ButtonLoadPage];
-    } else if (this.get("isNetwork")) {
+    } else if (this.isNetwork) {
       return [ButtonBackDim, ButtonTryAgain];
     } else {
       return [ButtonBackBright, ButtonTryAgain];
     }
-  }.property("networkFixed", "isNetwork", "isServer", "isUnknown"),
+  },
 
   actions: {
     back: function() {

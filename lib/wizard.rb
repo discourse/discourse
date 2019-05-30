@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_dependency 'wizard/step'
 require_dependency 'wizard/field'
 require_dependency 'wizard/step_updater'

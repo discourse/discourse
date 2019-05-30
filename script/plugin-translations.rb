@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 if ARGV.empty?
   puts 'Usage: ', ''
   puts '  ruby plugin-translations.rb <plugins_base_dir>'

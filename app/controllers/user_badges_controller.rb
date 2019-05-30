@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class UserBadgesController < ApplicationController
   before_action :ensure_badges_enabled
 

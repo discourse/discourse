@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreateGoogleUserInfos < ActiveRecord::Migration[4.2]
   def change
     create_table :google_user_infos do |t|

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # heavily based off
 # https://github.com/vmg/redcarpet/blob/master/ext/redcarpet/html_smartypants.c
 # and
@@ -97,7 +99,7 @@ class HtmlPrettify < String
     in_pre = false
 
     # Here is the result stored in.
-    result = ""
+    result = +""
 
     # This is a cheat, used to get some context for one-character
     # tokens that consist of just a quote char. What we do is remember

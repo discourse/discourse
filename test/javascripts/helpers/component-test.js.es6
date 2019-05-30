@@ -6,6 +6,10 @@ import TopicTrackingState from "discourse/models/topic-tracking-state";
 export default function(name, opts) {
   opts = opts || {};
 
+  if (opts.skip) {
+    return;
+  }
+
   test(name, function(assert) {
     const appEvents = AppEvents.create();
     this.site = Discourse.Site.current();
@@ -50,6 +54,15 @@ export default function(name, opts) {
     andThen(() => {
       return this.render(opts.template);
     });
-    andThen(() => opts.test.call(this, assert));
+
+    andThen(() => {
+      try {
+        opts.test.call(this, assert);
+      } finally {
+        if (opts.afterEach) {
+          opts.afterEach.call(opts);
+        }
+      }
+    });
   });
 }

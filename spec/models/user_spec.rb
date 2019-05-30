@@ -1,8 +1,14 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 require_dependency 'user'
 
 describe User do
   let(:user) { Fabricate(:user) }
+
+  def user_error_message(*keys)
+    I18n.t(:"activerecord.errors.models.user.attributes.#{keys.join('.')}")
+  end
 
   context 'validations' do
     describe '#username' do
@@ -29,6 +35,36 @@ describe User do
           expect(new_user.errors.full_messages.first)
             .to include(I18n.t(:'user.username.unique'))
         end
+      end
+
+      it 'is not valid if username changes to be same as password' do
+        user.username = 'myawesomepassword'
+        expect(user).to_not be_valid
+        expect(user.errors.full_messages.first)
+          .to include(user_error_message(:username, :same_as_password))
+      end
+
+      it 'is not valid if username lowercase changes to be same as password' do
+        user.username = 'MyAwesomePassword'
+        expect(user).to_not be_valid
+        expect(user.errors.full_messages.first)
+          .to include(user_error_message(:username, :same_as_password))
+      end
+    end
+
+    describe 'name' do
+      it 'is not valid if it changes to be the same as the password' do
+        user.name = 'myawesomepassword'
+        expect(user).to_not be_valid
+        expect(user.errors.full_messages.first)
+          .to include(user_error_message(:name, :same_as_password))
+      end
+
+      it 'is not valid if name lowercase changes to be the same as the password' do
+        user.name = 'MyAwesomePassword'
+        expect(user).to_not be_valid
+        expect(user.errors.full_messages.first)
+          .to include(user_error_message(:name, :same_as_password))
       end
     end
 
@@ -126,7 +162,7 @@ describe User do
 
   describe 'reviewable' do
     let(:user) { Fabricate(:user, active: false) }
-    let(:admin) { Fabricate(:admin) }
+    fab!(:admin) { Fabricate(:admin) }
 
     before do
       Jobs.run_immediately!
@@ -873,7 +909,7 @@ describe User do
   end
 
   describe "last_seen_at" do
-    let(:user) { Fabricate(:user) }
+    fab!(:user) { Fabricate(:user) }
 
     it "should have a blank last seen on creation" do
       expect(user.last_seen_at).to eq(nil)
@@ -940,7 +976,7 @@ describe User do
   end
 
   describe 'email_confirmed?' do
-    let(:user) { Fabricate(:user) }
+    fab!(:user) { Fabricate(:user) }
 
     context 'when email has not been confirmed yet' do
       it 'should return false' do
@@ -966,7 +1002,7 @@ describe User do
   end
 
   describe "flag_linked_posts_as_spam" do
-    let(:user) { Fabricate(:user) }
+    fab!(:user) { Fabricate(:user) }
     let!(:admin) { Fabricate(:admin) }
     let!(:post) { PostCreator.new(user, title: "this topic contains spam", raw: "this post has a link: http://discourse.org").create }
     let!(:another_post) { PostCreator.new(user, title: "this topic also contains spam", raw: "this post has a link: http://discourse.org/asdfa").create }
@@ -1091,9 +1127,9 @@ describe User do
   end
 
   describe 'api keys' do
-    let(:admin) { Fabricate(:admin) }
-    let(:other_admin) { Fabricate(:admin) }
-    let(:user) { Fabricate(:user) }
+    fab!(:admin) { Fabricate(:admin) }
+    fab!(:other_admin) { Fabricate(:admin) }
+    fab!(:user) { Fabricate(:user) }
 
     describe '.generate_api_key' do
 
@@ -1187,7 +1223,7 @@ describe User do
 
   describe "#find_email" do
 
-    let(:user) { Fabricate(:user, email: "bob@example.com") }
+    fab!(:user) { Fabricate(:user, email: "bob@example.com") }
 
     context "when email is exists in the email logs" do
       before { user.stubs(:last_sent_email_address).returns("bob@lastemail.com") }
@@ -1220,7 +1256,6 @@ describe User do
     end
 
     it "returns custom color if restrict_letter_avatar_colors site setting is set" do
-      colors = SiteSetting.restrict_letter_avatar_colors.split("|")
       expect(User.letter_avatar_color("username_one")).to eq("2F70AC")
       expect(User.letter_avatar_color("username_two")).to eq("ED207B")
       expect(User.letter_avatar_color("username_three")).to eq("AAAAAA")
@@ -1481,8 +1516,8 @@ describe User do
 
   describe "number_of_flags_given" do
 
-    let(:user) { Fabricate(:user) }
-    let(:moderator) { Fabricate(:moderator) }
+    fab!(:user) { Fabricate(:user) }
+    fab!(:moderator) { Fabricate(:moderator) }
 
     it "doesn't count disagreed flags" do
       post_agreed = Fabricate(:post)
@@ -1501,8 +1536,8 @@ describe User do
 
   describe "number_of_deleted_posts" do
 
-    let(:user) { Fabricate(:user, id: 2) }
-    let(:moderator) { Fabricate(:moderator) }
+    fab!(:user) { Fabricate(:user, id: 2) }
+    fab!(:moderator) { Fabricate(:moderator) }
 
     it "counts all the posts" do
       # at least 1 "unchanged" post
@@ -1612,7 +1647,7 @@ describe User do
   end
 
   describe "#logged_out" do
-    let(:user) { Fabricate(:user) }
+    fab!(:user) { Fabricate(:user) }
 
     it 'should publish the right message' do
       message = MessageBus.track_publish('/logout') { user.logged_out }.first
@@ -1622,8 +1657,8 @@ describe User do
   end
 
   describe '#read_first_notification?' do
-    let(:user) { Fabricate(:user, trust_level: TrustLevel[0]) }
-    let(:notification) { Fabricate(:private_message_notification) }
+    fab!(:user) { Fabricate(:user, trust_level: TrustLevel[0]) }
+    fab!(:notification) { Fabricate(:private_message_notification) }
 
     describe 'when first notification has not been seen' do
       it 'should return the right value' do
@@ -1633,14 +1668,14 @@ describe User do
 
     describe 'when first notification has been seen' do
       it 'should return the right value' do
-        user.update_attributes!(seen_notification_id: notification.id)
+        user.update!(seen_notification_id: notification.id)
         expect(user.reload.read_first_notification?).to eq(true)
       end
     end
 
     describe 'when user is trust level 1' do
       it 'should return the right value' do
-        user.update_attributes!(trust_level: TrustLevel[1])
+        user.update!(trust_level: TrustLevel[1])
 
         expect(user.read_first_notification?).to eq(false)
       end
@@ -1648,7 +1683,7 @@ describe User do
 
     describe 'when user is trust level 2' do
       it 'should return the right value' do
-        user.update_attributes!(trust_level: TrustLevel[2])
+        user.update!(trust_level: TrustLevel[2])
 
         expect(user.read_first_notification?).to eq(true)
       end
@@ -1656,7 +1691,7 @@ describe User do
 
     describe 'when user is an old user' do
       it 'should return the right value' do
-        user.update_attributes!(first_seen_at: 1.year.ago)
+        user.update!(first_seen_at: 1.year.ago)
 
         expect(user.read_first_notification?).to eq(true)
       end
@@ -1664,7 +1699,7 @@ describe User do
   end
 
   describe "#featured_user_badges" do
-    let(:user) { Fabricate(:user) }
+    fab!(:user) { Fabricate(:user) }
     let!(:user_badge_tl1) { UserBadge.create(badge_id: 1, user: user, granted_by: Discourse.system_user, granted_at: Time.now) }
     let!(:user_badge_tl2) { UserBadge.create(badge_id: 2, user: user, granted_by: Discourse.system_user, granted_at: Time.now) }
 
@@ -1679,7 +1714,7 @@ describe User do
 
   describe ".clear_global_notice_if_needed" do
 
-    let(:user) { Fabricate(:user) }
+    fab!(:user) { Fabricate(:user) }
     let(:admin) { Fabricate(:admin) }
 
     before do
@@ -1879,7 +1914,7 @@ describe User do
   end
 
   describe "#secondary_emails" do
-    let(:user) { Fabricate(:user) }
+    fab!(:user) { Fabricate(:user) }
 
     it "only contains secondary emails" do
       expect(user.user_emails.secondary).to eq([])
@@ -2101,6 +2136,26 @@ describe User do
         expect(User.username_exists?("LO\u0308WE")).to eq(true) # NFD
         expect(User.username_exists?("l\u00D6wE")).to eq(true)  # NFC
         expect(User.username_exists?("foo")).to eq(false)
+      end
+    end
+
+    describe ".system_avatar_template" do
+      context "with external system avatars enabled" do
+        before { SiteSetting.external_system_avatars_enabled = true }
+
+        it "uses the normalized username" do
+          expect(User.system_avatar_template("Lo\u0308we")).to match(%r|/letter_avatar_proxy/v\d/letter/l/71e660/{size}.png|)
+          expect(User.system_avatar_template("L\u00F6wE")).to match(%r|/letter_avatar_proxy/v\d/letter/l/71e660/{size}.png|)
+        end
+
+        it "uses the first grapheme cluster and URL encodes it" do
+          expect(User.system_avatar_template("बहुत")).to match(%r|/letter_avatar_proxy/v\d/letter/%E0%A4%AC/ea5d25/{size}.png|)
+        end
+
+        it "substitues {username} with the URL encoded username" do
+          SiteSetting.external_system_avatars_url = "https://{hostname}/{username}.png"
+          expect(User.system_avatar_template("बहुत")).to eq("https://#{Discourse.current_hostname}/%E0%A4%AC%E0%A4%B9%E0%A5%81%E0%A4%A4.png")
+        end
       end
     end
   end

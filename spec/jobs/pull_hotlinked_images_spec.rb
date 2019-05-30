@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 require 'jobs/regular/pull_hotlinked_images'
 
@@ -64,6 +66,25 @@ describe Jobs::PullHotlinkedImages do
       post.reload
 
       expect(post.raw).to match(/^<img src='\/uploads/)
+    end
+
+    it 'replaces optimized images' do
+      optimized_image = Fabricate(:optimized_image)
+      url = "#{Discourse.base_url}#{optimized_image.url}"
+
+      stub_request(:get, url)
+        .to_return(status: 200, body: file_from_fixtures("smallest.png"))
+
+      post = Fabricate(:post, raw: "<img src='#{url}'>")
+
+      expect { Jobs::PullHotlinkedImages.new.execute(post_id: post.id) }
+        .to change { Upload.count }.by(1)
+
+      upload = Upload.last
+      post.reload
+
+      expect(post.raw).to eq("<img src='#{upload.url}'>")
+      expect(post.uploads).to contain_exactly(upload)
     end
 
     describe 'onebox' do
@@ -169,19 +190,53 @@ describe Jobs::PullHotlinkedImages do
   end
 
   describe "with a lightboxed image" do
-    let(:upload) { Fabricate(:upload) }
+    fab!(:upload) { Fabricate(:upload) }
+    fab!(:user) { Fabricate(:user) }
 
     before do
-      FastImage.expects(:size).returns([1750, 2000])
+      FastImage.expects(:size).returns([1750, 2000]).at_least_once
       OptimizedImage.stubs(:resize).returns(true)
+      Jobs.run_immediately!
+    end
+
+    it 'replaces missing local uploads in lightbox link' do
+      post = PostCreator.create!(
+        user,
+        raw: "<img src='#{Discourse.base_url}#{upload.url}'>",
+        title: "Some title that is long enough"
+      )
+
+      expect(post.reload.cooked).to have_tag(:a, with: { class: "lightbox" })
+
+      stub_request(:get, "#{Discourse.base_url}#{upload.url}")
+        .to_return(status: 200, body: file_from_fixtures("smallest.png"))
+
+      upload.delete
+
+      expect { Jobs::PullHotlinkedImages.new.execute(post_id: post.id) }
+        .to change { Upload.count }.by(1)
+
+      post.reload
+
+      expect(post.raw).to eq("<img src='#{Upload.last.url}'>")
+      expect(post.uploads.count).to eq(1)
     end
 
     it "doesn't remove optimized images from lightboxes" do
-      post = Fabricate(:post, raw: "![alt](#{upload.short_url})")
-      Jobs::ProcessPost.new.execute(post_id: post.id)
+      post = PostCreator.create!(
+        user,
+        raw: "![alt](#{upload.short_url})",
+        title: "Some title that is long enough"
+      )
 
-      expect { Jobs::PullHotlinkedImages.new.execute(post_id: post.id) }.not_to change { Upload.count }
-      expect(post.reload.cooked).to include "/uploads/default/optimized/" # Ensure the lightbox was actually rendered
+      expect(post.reload.cooked).to have_tag(:a, with: { class: "lightbox" })
+
+      expect { Jobs::PullHotlinkedImages.new.execute(post_id: post.id) }
+        .not_to change { Upload.count }
+
+      post.reload
+
+      expect(post.raw).to eq("![alt](#{upload.short_url})")
     end
   end
 

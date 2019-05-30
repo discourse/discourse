@@ -22,6 +22,7 @@
           {{i18n "review.topics.unique_users" count=rt.stats.unique_users}}
         </td>
         <td class="reviewable-details">
+          {{reviewable-claimed-topic topicId=rt.id claimedBy=rt.claimed_by}}
           {{#link-to "review.index" (query-params topic_id=rt.id) class="btn btn-primary btn-small"}}
             {{d-icon "list"}}
             <span>{{i18n "review.topics.details"}}</span>

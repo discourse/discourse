@@ -2,6 +2,7 @@ import { iconHTML } from "discourse-common/lib/icon-library";
 import { bufferedRender } from "discourse-common/lib/buffered-render";
 import { escapeExpression } from "discourse/lib/utilities";
 import TopicStatusIcons from "discourse/helpers/topic-status-icons";
+import computed from "ember-addons/ember-computed-decorators";
 
 export default Ember.Component.extend(
   bufferedRender({
@@ -18,21 +19,22 @@ export default Ember.Component.extend(
 
     click(e) {
       // only pin unpin for now
-      if (this.get("canAct") && $(e.target).hasClass("d-icon-thumbtack")) {
-        const topic = this.get("topic");
+      if (this.canAct && $(e.target).hasClass("d-icon-thumbtack")) {
+        const topic = this.topic;
         topic.get("pinned") ? topic.clearPin() : topic.rePin();
       }
 
       return false;
     },
 
-    canAct: function() {
-      return Discourse.User.current() && !this.get("disableActions");
-    }.property("disableActions"),
+    @computed("disableActions")
+    canAct(disableActions) {
+      return Discourse.User.current() && !disableActions;
+    },
 
     buildBuffer(buffer) {
-      const canAct = this.get("canAct");
-      const topic = this.get("topic");
+      const canAct = this.canAct;
+      const topic = this.topic;
 
       if (!topic) {
         return;

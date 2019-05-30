@@ -60,14 +60,14 @@ export default Ember.Controller.extend({
     disableSecondFactorBackup() {
       this.set("backupCodes", []);
 
-      if (!this.get("secondFactorToken")) return;
+      if (!this.secondFactorToken) return;
 
       this.set("loading", true);
 
-      this.get("model")
+      this.model
         .toggleSecondFactor(
-          this.get("secondFactorToken"),
-          this.get("secondFactorMethod"),
+          this.secondFactorToken,
+          this.secondFactorMethod,
           SECOND_FACTOR_METHODS.BACKUP_CODE,
           false
         )
@@ -79,7 +79,7 @@ export default Ember.Controller.extend({
 
           this.set("errorMessage", null);
 
-          const usernameLower = this.get("model").username.toLowerCase();
+          const usernameLower = this.model.username.toLowerCase();
           DiscourseURL.redirectTo(userPath(`${usernameLower}/preferences`));
         })
         .catch(popupAjaxError)
@@ -87,12 +87,12 @@ export default Ember.Controller.extend({
     },
 
     generateSecondFactorCodes() {
-      if (!this.get("secondFactorToken")) return;
+      if (!this.secondFactorToken) return;
       this.set("loading", true);
-      this.get("model")
+      this.model
         .generateSecondFactorCodes(
-          this.get("secondFactorToken"),
-          this.get("secondFactorMethod")
+          this.secondFactorToken,
+          this.secondFactorMethod
         )
         .then(response => {
           if (response.error) {

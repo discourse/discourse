@@ -71,7 +71,7 @@ export default Ember.Component.extend({
 
   @observes("selection")
   _updateBasedOnLastPost() {
-    if (!this.get("autoClose")) {
+    if (!this.autoClose) {
       Ember.run.schedule("afterRender", () => {
         this.set("topicTimer.based_on_last_post", false);
       });

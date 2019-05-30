@@ -22,10 +22,10 @@ export default Ember.Component.extend({
   init() {
     this._super(...arguments);
 
-    const input = this.get("input");
+    const input = this.input;
 
     if (input) {
-      if (this.get("basedOnLastPost")) {
+      if (this.basedOnLastPost) {
         this.set("selection", "set_based_on_last_post");
       } else {
         this.set("selection", "pick_date_and_time");
@@ -39,14 +39,14 @@ export default Ember.Component.extend({
 
   @observes("date", "time")
   _updateInput() {
-    const date = moment(this.get("date")).format("YYYY-MM-DD");
-    const time = (this.get("time") && ` ${this.get("time")}`) || "";
+    const date = moment(this.date).format("YYYY-MM-DD");
+    const time = (this.time && ` ${this.time}`) || "";
     this.set("input", moment(`${date}${time}`).format(FORMAT));
   },
 
   @observes("isBasedOnLastPost")
   _updateBasedOnLastPost() {
-    this.set("basedOnLastPost", this.get("isBasedOnLastPost"));
+    this.set("basedOnLastPost", this.isBasedOnLastPost);
   },
 
   @computed("input", "isBasedOnLastPost")
@@ -72,7 +72,7 @@ export default Ember.Component.extend({
   },
 
   didReceiveAttrs() {
-    if (this.get("label")) this.set("displayLabel", I18n.t(this.get("label")));
+    if (this.label) this.set("displayLabel", I18n.t(this.label));
   },
 
   @computed(

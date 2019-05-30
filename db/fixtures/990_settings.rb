@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 if SiteSetting.notification_email == SiteSetting.defaults[:notification_email]
   # don't crash for invalid hostname, which is possible in dev
   begin

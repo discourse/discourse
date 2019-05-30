@@ -37,55 +37,55 @@ te:
       tiny:
         half_a_minute: "< 1ని"
         less_than_x_seconds:
-          one: "< 1సె"
+          one: "< %{count}సె"
           other: "< %{count}సె"
         x_seconds:
-          one: "1సె"
+          one: "%{count}సె"
           other: "%{count}సె"
         x_minutes:
-          one: "1ని"
+          one: "%{count}ని"
           other: "%{count}ని"
         about_x_hours:
-          one: "1గ"
+          one: "%{count}గ"
           other: "%{count}గం"
         x_days:
-          one: "1రో"
+          one: "%{count}రో"
           other: "%{count}రో"
         about_x_years:
-          one: "1సం"
+          one: "%{count}సం"
           other: "%{count}సం"
         over_x_years:
-          one: "> 1సం"
+          one: "> %{count}సం"
           other: "> %{count}సం"
         almost_x_years:
-          one: "1సం"
+          one: "%{count}సం"
           other: "%{count}సం"
         date_month: "MMM D"
         date_year: "MMM 'YY"
       medium:
         x_minutes:
-          one: "1 నిమిషం"
+          one: "%{count} నిమిషం"
           other: "%{count} నిమిషాలు"
         x_hours:
-          one: "1 గంట"
+          one: "%{count} గంట"
           other: "%{count} గంటలు"
         x_days:
-          one: "1 రోజు"
+          one: "%{count} రోజు"
           other: "%{count} రోజులు"
         date_year: "MMM D, 'YY"
       medium_with_ago:
         x_minutes:
-          one: "1 నిమిషం ముందు"
+          one: "%{count} నిమిషం ముందు"
           other: "%{count} నిమిషాలు ముందు"
         x_hours:
-          one: "1 గంట క్రితం"
+          one: "%{count} గంట క్రితం"
           other: "%{count} గంటల ముందు"
         x_days:
-          one: "1 రోజు ముందు"
+          one: "%{count} రోజు ముందు"
           other: "%{count} రోజుల ముందు"
       later:
         x_days:
-          one: "1 రోజు తర్వాత"
+          one: "%{count} రోజు తర్వాత"
           other: "%{count} రోజుల తర్వాత"
       previous_month: "గత నెల"
       next_month: "తరువాత నెల"
@@ -193,6 +193,7 @@ te:
       settings:
         save_changes: "మార్పులను భద్రపరచు"
         title: "అమరికలు"
+      filtered_user: "సభ్యుడు"
       user:
         username: "వాడుకరి పేరు"
         email: "ఈమెయిల్"
@@ -203,7 +204,10 @@ te:
       save: "భద్రపరచు"
       cancel: "రద్దుచేయి"
       filters:
+        type:
+          title: "రకం"
         refresh: "తాజా పరుచు"
+        category: "వర్గం"
       scores:
         type: "రకం"
       statuses:
@@ -340,6 +344,7 @@ te:
         rate_limit_error: "టపాలు కేవలం రోజుకు ఒకసారి మాత్రమే దిగుమతించుకోగలరు. దయచేసి రేపు ప్రయత్నించండి."
       private_messages: "సందేశాలు"
       user_notifications:
+        ignore_duration_username: "వాడుకరి పేరు"
         mute_option: "నిశ్శబ్దం"
       activity_stream: "కలాపం"
       preferences: "అభిరుచులు"
@@ -767,7 +772,7 @@ te:
         notification_level: "ప్రకటనలు"
         choose_new_category: "విషయం కొరకు కొత్త వర్గం ఎంచుకొండి:"
         selected:
-          one: "మీరు <b>1</b>  విషయం ఎంచుకున్నారు."
+          one: "మీరు <b>%{count}</b>  విషయం ఎంచుకున్నారు."
           other: " మీరు <b>{{count}}</b> విషయాలు ఎంచుకున్నారు."
       none:
         unread: "మీరు చదవని విషయాలు లేవు"
@@ -775,13 +780,11 @@ te:
         read: "మీరింకా ఏ విషయాలూ చదవలేదు."
         posted: "మీరింకా ఏ విషయాలూ రాయలేదు."
         latest: "కొత్త విషయాలు లేవు. అహో ఎంతటి విపరిణామం."
-        hot: "వేడివేడి విషయాలు లేవు."
         bookmarks: "మీకింకా ఎట్టి పేజీక విషయాలూ లేవు."
         category: "ఎట్టి {{category}}  విషయాలూ లేవు"
         top: "ఎట్టి అగ్ర విషయాలూ లేవు."
       bottom:
         latest: "ఇంకా కొత్త విషయాలు లేవు."
-        hot: "ఇంకా వేడివేడి విషయాలు లేవు."
         posted: "ఇంకా రాసిన విషయాలు లేవు."
         read: "ఇంకా చదవని విషయాలు లేవు."
         new: "కొత్త విషయాలు లేవు."
@@ -796,10 +799,10 @@ te:
       new: "కొత్త విషయం"
       unread: "చదవని"
       new_topics:
-        one: "1 కొత్త విషయం"
+        one: "%{count} కొత్త విషయం"
         other: "{{count}} కొత్త విషయాలు"
       unread_topics:
-        one: "1 చదవని విషయం"
+        one: "%{count} చదవని విషయం"
         other: "{{count}} చదవని విషయాలు"
       title: "విషయం"
       invalid_access:
@@ -813,16 +816,16 @@ te:
         title: "విషయం కనిపించలేదు"
         description: "క్షమించాలి. ఆ విషయం మేము కనుగొనలేకున్నాము. బహుశా నిర్వాహకులు దాన్ని తొలగించారేమో?"
       total_unread_posts:
-        one: "మీకు ఈ విషయంలో 1 చదవని టపా ఉంది"
+        one: "మీకు ఈ విషయంలో %{count} చదవని టపా ఉంది"
         other: "మీకు ఈ విషయంలో {{count}} చదవని టపాలు ఉన్నాయి"
       unread_posts:
-        one: "మీకు ఈ విషయంలో 1 చదవని పాత టపా ఉంది"
+        one: "మీకు ఈ విషయంలో %{count} చదవని పాత టపా ఉంది"
         other: "మీకు ఈ విషయంలో {{count}} చదవని పాత టపాలు ఉన్నాయి"
       new_posts:
-        one: "మీరు చివరసారి చదివాక ఈ విషయంలో  1 కొత్త టపా వచ్చింది"
+        one: "మీరు చివరసారి చదివాక ఈ విషయంలో  %{count} కొత్త టపా వచ్చింది"
         other: "మీరు చివరసారి చదివాక ఈ విషయంలో  {{count}} కొత్త టపాలు వచ్చాయి"
       likes:
-        one: "ఈ విషయానికి 1 ఇష్టం ఉంది"
+        one: "ఈ విషయానికి %{count} ఇష్టం ఉంది"
         other: "ఈ విషయానికి {{count}} ఇష్టాలు ఉన్నాయి"
       back_to_list: "విషయాల జాబితాకు మరలు"
       options: "విషయపు ఐచ్చికాలు"
@@ -929,7 +932,7 @@ te:
       login_reply: "జవాబివ్వడానికి లాగిన్ అవ్వండి"
       filters:
         n_posts:
-          one: "1 టపా"
+          one: "%{count} టపా"
           other: "{{count}} టపాలు"
         cancel: "జల్లెడ తొలగించు"
       split_topic:
@@ -963,7 +966,7 @@ te:
         select_all: అన్నీ ఎంచుకో
         deselect_all: అన్నీ వియెంచుకో
         description:
-          one: మీరు <b>1</b> టపా ఎంచుకున్నారు
+          one: మీరు <b>%{count}</b> టపా ఎంచుకున్నారు
           other: "మీరు <b>{{count}}</b> టపాలు ఎంచుకున్నారు"
     post:
       edit_reason: "కారణం:"
@@ -1037,44 +1040,6 @@ te:
           notify_moderators: "మీరు దీన్ని నిర్వాహకుల దృష్టికి తెచ్చారు"
           bookmark: "మీరు దీనికి పేజీక ఉంచారు"
           like: "మీరు దీన్ని ఇష్టపడ్డారు"
-        by_you_and_others:
-          off_topic:
-            one: "మీరు మరియు ఇంకొకరు దీన్ని విషయాంతరంగా కేతనించారు. "
-            other: "మీరు మరియు [[count]] ఇతర జనులు దీన్ని విషయాంతరంగా కేతనించారు. "
-          spam:
-            one: "మీరు మరియు ఇంకొకరు దీన్ని స్పాముగా కేతనించారు. "
-            other: "మీరు మరియు [[count]] ఇతర జనులు దీన్ని స్పాముగా కేతనించారు. "
-          inappropriate:
-            one: "మీరు మరియు ఇంకొకరు దీన్ని అసమంజసమైనదిగా కేతనించారు. "
-            other: "మీరు మరియు [[count]] ఇతర జనులు దీన్ని అసమంజసమైనదిగా కేతనించారు. "
-          notify_moderators:
-            one: "మీరు మరియు ఇంకొకరు దీన్ని నిర్వాహకుల దృష్టికి తెచ్చారు."
-            other: "మీరు మరియు [[count]] ఇతర జనులు దీన్ని నిర్వాహకుల దృష్టికి తెచ్చారు."
-          bookmark:
-            one: "మీరు మరియు ఇంకొకరు దీనికి పేజీక ఉంచారు."
-            other: "మీరు మరియు {{count}} ఇతరులు దీనికి పేజీక ఉంచారు."
-          like:
-            one: "మీరు మరొకరు దీన్ని ఇష్టపడ్డారు"
-            other: "మీరు మరియు {{count}} గురు దీన్ని ఇష్టపడ్డారు"
-        by_others:
-          off_topic:
-            one: "ఒకరు దీన్ని విషయాంతరంగా కేతనించారు"
-            other: "{{count}} గురు దీన్ని విషయాంతరంగా కేతనించారు"
-          spam:
-            one: "ఒకరు దీన్ని స్పాముగా కేతనించారు"
-            other: "{{count}} గురు దీన్ని స్పాముగా కేతనించారు"
-          inappropriate:
-            one: "ఒకరు దీన్ని అసమంజసంగా కేతనించారు"
-            other: "{{count}} గురు దీన్ని అసమంజసంగా కేతనించారు"
-          notify_moderators:
-            one: "ఒకరు దీన్ని నిర్వాహకుల దృష్టికి తెచ్చారు"
-            other: "{{count}} గురు దీన్ని నిర్వాహకుల దృష్టికి తెచ్చారు"
-          bookmark:
-            one: "ఒకరు ఈ టపాకు పేజీక ఉంచారు"
-            other: "{{count}} గురు ఈ విషయానికి పేజీక ఉంచారు"
-          like:
-            one: "ఒకరు దీన్ని ఇష్టపడ్డారు"
-            other: "{{count}} గురు దీన్నిఇష్టపడ్డారు."
       revisions:
         controls:
           first: "తొలి దిద్దుబాటు"
@@ -1129,6 +1094,7 @@ te:
       email_in_disabled_click: '"ఈమెయిల్ ఇన్" అమరికను చేతనం చేయి.'
       allow_badges_label: "ఈ వర్గంలో బ్యాడ్జిలు బహూకరించుట అనుమతించు"
       edit_permissions: "అనుమతులు సవరించు"
+      review_group_name: "గుంపు పేరు"
       this_year: "ఈ సంవత్సరం"
       default_position: "అప్రమేయ స్థానం"
       position_disabled: "వర్గాలు కలాపం వరుసలో చూపబడతాయి. జాబితాల్లో వర్గాల వరుసను నియంత్రించడానికి,"
@@ -1219,14 +1185,9 @@ te:
       latest:
         title: "తాజా"
         help: "ఇటీవలి టపాలతోని విషయాలు"
-      hot:
-        title: "వేడివేడి"
-        help: "ఎంపికైన వేడివేడి విషయాలు"
       read:
         title: "చదివిన"
         help: "మీరు చదివిన విషయాలు, మీరు చివరిసారి చదివిన వరుసలో"
-      search:
-        title: "వెతుకు"
       categories:
         title: "వర్గాలు"
         title_in: "వర్గం - {{categoryName}}"
@@ -1264,44 +1225,44 @@ te:
       title: "కీబోర్డు షార్ట్ కట్లు"
       jump_to:
         title: "వెళ్లు"
-        home: "<b>g</b>, <b>h</b> ముంగిలి"
-        latest: "<b>g</b>, <b>l</b> తాజా"
-        new: "<b>g</b>, <b>n</b> కొత్త"
-        unread: "<b>g</b>, <b>u</b> చదవనవి"
-        categories: "<b>g</b>, <b>c</b> వర్గాలు"
-        top: "<b>g</b>, <b>t</b> పైన"
+        home: "%{shortcut} ముంగిలి"
+        latest: "%{shortcut} తాజా"
+        new: "%{shortcut} కొత్త"
+        unread: "%{shortcut} చదవనవి"
+        categories: "%{shortcut} వర్గాలు"
+        top: "%{shortcut} పైన"
       navigation:
         title: "నావిగేషను"
-        jump: "<b>#</b> టపాకు వెళ్లు #"
-        back: "<b>u</b> వెనుకకు"
-        open: "<b>o</b> or <b>ప్రవేశం</b> ఎంచుకున్న విషయం తెరువు"
-        next_prev: "<b>మార్పు</b>+<b>j</b>/<b>మార్పు</b>+<b>k</b> తర్వాతి/ముందరి విభాగం"
+        jump: "%{shortcut} టపాకు వెళ్లు #"
+        back: "%{shortcut} వెనుకకు"
+        open: "%{shortcut} ఎంచుకున్న విషయం తెరువు"
+        next_prev: "%{shortcut} తర్వాతి/ముందరి విభాగం"
       application:
         title: "అనువర్తనం"
-        create: "<b>c</b> కొత్త టపా సృష్టించు"
-        notifications: "<b>n</b> తెరచిన ప్రకటనలు"
-        user_profile_menu: "<b>p</b> యూజర్ మెనూ తెరువు"
-        show_incoming_updated_topics: "<b>.</b> నవీకరించిన విషయాలను చూపించండి"
-        help: "<b>?</b> కీ బోర్డ్ సహాయాన్ని తెరువు"
-        dismiss_new_posts: "<b>x</b>, <b>r</b> తీసివేసిన కొత్త/టపాలు"
-        dismiss_topics: "<b>x</b>, <b>t</b> తీసివేసిన విషయాలు"
+        create: "%{shortcut} కొత్త టపా సృష్టించు"
+        notifications: "%{shortcut} తెరచిన ప్రకటనలు"
+        user_profile_menu: "%{shortcut} యూజర్ మెనూ తెరువు"
+        show_incoming_updated_topics: "%{shortcut} నవీకరించిన విషయాలను చూపించండి"
+        help: "%{shortcut} కీ బోర్డ్ సహాయాన్ని తెరువు"
+        dismiss_new_posts: "%{shortcut} తీసివేసిన కొత్త/టపాలు"
+        dismiss_topics: "%{shortcut} తీసివేసిన విషయాలు"
       actions:
         title: "చర్యలు"
-        pin_unpin_topic: "<b>shift</b>+<b>p</b> విషయం చేర్చు/విడదీయు"
-        share_topic: "<b>shift</b>+<b>s</b> విషయం పంచు"
-        share_post: "<b>s</b> టపా పంచు"
-        reply_as_new_topic: "<b>t</b> లంకె విషయంగా సమాధానం"
-        reply_topic: "<b>shift</b>+<b>r</b> టపా కి సమాధానం"
-        reply_post: "<b>r</b> టపా కి సమాధానం"
-        like: "<b>l</b> టపా ని ఇష్టపడు"
-        flag: "<b>!</b> టపా కేతనం"
-        bookmark: "<b>b</b>టపా పేజీక"
-        edit: "<b>e</b> టపా సవరణ"
-        delete: "<b>d</b> టపా తొలగించు"
-        mark_muted: "<b>m</b>, <b>m</b> విషయాన్ని ఆపివేయండి"
-        mark_regular: "<b>m</b>, <b>r</b> నిత్య (అప్రమేయ) విషయం"
-        mark_tracking: "<b>m</b>, <b>t</b> విషయం వెతుకు"
-        mark_watching: "<b>m</b>, <b>w</b> చూసిన విషయం"
+        pin_unpin_topic: "%{shortcut} విషయం చేర్చు/విడదీయు"
+        share_topic: "%{shortcut} విషయం పంచు"
+        share_post: "%{shortcut} టపా పంచు"
+        reply_as_new_topic: "%{shortcut} లంకె విషయంగా సమాధానం"
+        reply_topic: "%{shortcut} టపా కి సమాధానం"
+        reply_post: "%{shortcut} టపా కి సమాధానం"
+        like: "%{shortcut} టపా ని ఇష్టపడు"
+        flag: "%{shortcut} టపా కేతనం"
+        bookmark: "%{shortcut}టపా పేజీక"
+        edit: "%{shortcut} టపా సవరణ"
+        delete: "%{shortcut} టపా తొలగించు"
+        mark_muted: "%{shortcut} విషయాన్ని ఆపివేయండి"
+        mark_regular: "%{shortcut} నిత్య (అప్రమేయ) విషయం"
+        mark_tracking: "%{shortcut} విషయం వెతుకు"
+        mark_watching: "%{shortcut} చూసిన విషయం"
     badges:
       title: బ్యాడ్జీలు
       select_badge_for_title: మీ శీర్షికగా ఉపయోగించడానికి ఒక చిహ్నాన్ని ఎంపిక చేయండి.
@@ -1338,12 +1299,10 @@ te:
           new: "మీకు కొత్త విషయాలు లేవు"
           read: "మీరింకా ఏ విషయాలూ చదవలేదు."
           posted: "మీరింకా ఏ విషయాలూ రాయలేదు."
-          hot: "వేడివేడి విషయాలు లేవు."
           bookmarks: "మీకింకా ఎట్టి పేజీక విషయాలూ లేవు."
           top: "ఎట్టి అగ్ర విషయాలూ లేవు."
         bottom:
           latest: "ఇంకా కొత్త విషయాలు లేవు."
-          hot: "ఇంకా వేడివేడి విషయాలు లేవు."
           posted: "ఇంకా రాసిన విషయాలు లేవు."
           read: "ఇంకా చదవని విషయాలు లేవు."
           new: "కొత్త విషయాలు లేవు."
@@ -1357,7 +1316,6 @@ te:
       moderator: "నిర్వాహకుడు"
       dashboard:
         title: "రంగస్థలం"
-        last_updated: "రంగస్థలం చివరగా నవీకరించినది:"
         version: "రూపాంతరం"
         up_to_date: "మీరు తాజాగా ఉన్నారు! "
         critical_available: "ఒక క్రిటికల్ ఉన్నతీకరణ అందుబాటులో ఉంది."
@@ -1394,6 +1352,11 @@ te:
           refresh_report: "రిపోర్టు తాజాపరుచు"
           start_date: "ఆరంభ తేదీ"
           end_date: "ముగింపు తేదీ"
+          filters:
+            group:
+              label: సమూహం
+            category:
+              label: వర్గం
       commits:
         latest_changes: "తాజా మార్పులు: దయచేసి తరచూ ఉన్నతీకరించండి!"
         by: "నుండి"

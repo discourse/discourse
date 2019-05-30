@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 describe UserSearch do
@@ -28,7 +30,7 @@ describe UserSearch do
     Fabricate :post, user: user6, topic: topic
     Fabricate :post, user: staged, topic: topic4
 
-    user6.update_attributes(suspended_at: 1.day.ago, suspended_till: 1.year.from_now)
+    user6.update(suspended_at: 1.day.ago, suspended_till: 1.year.from_now)
   end
 
   def search_for(*args)
@@ -49,8 +51,20 @@ describe UserSearch do
     _samantha = Fabricate(:user, username: 'samantha')
     group.add(sam)
 
-    results = search_for("sam", group: group)
+    results = search_for("sam", groups: [group])
     expect(results.count).to eq(1)
+  end
+
+  it 'allows filtering by multiple groups' do
+    group_1 = Fabricate(:group)
+    sam = Fabricate(:user, username: 'sam')
+    group_2 = Fabricate(:group)
+    samantha = Fabricate(:user, username: 'samantha')
+    group_1.add(sam)
+    group_2.add(samantha)
+
+    results = search_for("sam", groups: [group_1, group_2])
+    expect(results.count).to eq(2)
   end
 
   # this is a seriously expensive integration test,

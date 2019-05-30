@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 Report.add_report("dau_by_mau") do |report|
   report.labels = [
     {

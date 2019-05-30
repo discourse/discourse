@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 if ARGV.include?('bbcode-to-md')
   # Replace (most) bbcode with markdown before creating posts.
   # This will dramatically clean up the final posts in Discourse.
@@ -103,7 +105,7 @@ class BulkImport::Base
 
   def preload_i18n
     puts "Preloading I18n..."
-    I18n.locale = ENV.fetch("LOCALE") { "en" }.to_sym
+    I18n.locale = ENV.fetch("LOCALE") { SiteSettings::DefaultsProvider::DEFAULT_LOCALE }.to_sym
     I18n.t("test")
     ActiveSupport::Inflector.transliterate("test")
   end

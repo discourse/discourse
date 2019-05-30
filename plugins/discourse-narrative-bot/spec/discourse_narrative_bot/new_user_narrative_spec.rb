@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 describe DiscourseNarrativeBot::NewUserNarrative do
@@ -803,7 +805,7 @@ describe DiscourseNarrativeBot::NewUserNarrative do
 
       it 'should create the right reply' do
         post.update!(
-          raw: '@discobot hello how are you doing today?'
+          raw: '@disCoBot hello how are you doing today?'
         )
 
         narrative.expects(:enqueue_timeout_job).with(user)

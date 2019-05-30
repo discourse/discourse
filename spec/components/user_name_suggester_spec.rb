@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 require 'user_name_suggester'
 
@@ -6,6 +8,15 @@ describe UserNameSuggester do
     before do
       SiteSetting.min_username_length = 3
       SiteSetting.max_username_length = 15
+    end
+
+    it "keeps adding numbers to the username" do
+      Fabricate(:user, username: 'sam')
+      Fabricate(:user, username: 'sAm1')
+      Fabricate(:user, username: 'sam2')
+      Fabricate(:user, username: 'sam4')
+
+      expect(UserNameSuggester.suggest('saM')).to eq('saM3')
     end
 
     it "doesn't raise an error on nil username" do
@@ -136,6 +147,14 @@ describe UserNameSuggester do
 
         # grapheme cluster consists of 3 code points
         expect(UserNameSuggester.suggest('য়া')).to eq('য়া11')
+      end
+
+      it "does not skip ove allowed names" do
+        Fabricate(:user, username: 'sam')
+        Fabricate(:user, username: 'saM1')
+        Fabricate(:user, username: 'sam2')
+
+        expect(UserNameSuggester.suggest('SaM', 'Sam1')).to eq('Sam1')
       end
 
       it "normalizes usernames" do

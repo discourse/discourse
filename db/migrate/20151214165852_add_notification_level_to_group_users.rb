@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddNotificationLevelToGroupUsers < ActiveRecord::Migration[4.2]
   def change
     # defaults to TopicUser.notification_levels[:watching]

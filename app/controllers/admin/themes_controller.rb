@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_dependency 'upload_creator'
 require_dependency 'theme_store/tgz_exporter'
 require 'base64'
@@ -157,7 +159,7 @@ class Admin::ThemesController < Admin::AdminController
 
     [:name, :color_scheme_id, :user_selectable].each do |field|
       if theme_params.key?(field)
-        @theme.send("#{field}=", theme_params[field])
+        @theme.public_send("#{field}=", theme_params[field])
       end
     end
 
@@ -248,6 +250,15 @@ class Admin::ThemesController < Admin::AdminController
       content_type: "application/x-gzip"
   ensure
     exporter.cleanup!
+  end
+
+  def diff_local_changes
+    theme = Theme.find_by(id: params[:id])
+    raise Discourse::InvalidParameters.new(:id) unless theme
+    changes = theme.remote_theme&.diff_local_changes
+    respond_to do |format|
+      format.json { render json: changes || {} }
+    end
   end
 
   private

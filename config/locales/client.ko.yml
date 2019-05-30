@@ -152,7 +152,6 @@ ko:
         us_east_1: "미국 동부 (N. 버지니아)"
         us_east_2: "미국 동부 (오하이오)"
         us_gov_east_1: "AWS GovCloud (미국 동부)"
-        us_gov_west_1: "AWS GovCloud(미국)"
         us_west_1: "미국 서부 (N. 캘리포니아)"
         us_west_2: "미국 서부 (오레곤)"
     edit: "이 토픽의 제목과 카테고리 편집"
@@ -291,10 +290,9 @@ ko:
       view_pending: "보류중 보기"
       topic_has_pending:
         other: "이 토픽에는 승인 대기중인 게시물이 <b>{{count}}</b>개 있습니다"
-      title: "검토 필요"
       topic: "토픽:"
       filtered_topic: "한 토픽에서 검토 가능한 콘텐츠로 필터링 했습니다."
-      filtered_user: "사용자:"
+      filtered_user: "사용자"
       show_all_topics: "모든 토픽 보기"
       user:
         username: "아이디"
@@ -322,12 +320,11 @@ ko:
       new_topic: "새 토픽:"
       filters:
         type:
-          title: "유형:"
+          title: "형식"
           all: "(모든 유형)"
         minimum_score: "최소 점수:"
         refresh: "새로고침"
-        status: "상태:"
-        category: "카테고리:"
+        category: "카테고리"
       conversation:
         view_full: "전체 대화 보기"
       scores:
@@ -583,6 +580,7 @@ ko:
       private_message: "메시지"
       private_messages: "메시지"
       user_notifications:
+        ignore_duration_username: "아이디"
         ignore_duration_save: "무시"
         ignore_option: "무시됨"
         mute_option: "알림끔"
@@ -722,7 +720,6 @@ ko:
           title: "백업 코드가 재생성됨"
       second_factor:
         title: "이중 인증"
-        disable: "이중 인증 해제"
         confirm_password_description: "비밀번호를 확인해주세요."
         label: "코드"
         use: "<a href>OTP 앱 사용</a>"
@@ -989,11 +986,6 @@ ko:
       enabled: "이 사이트는 현재 읽기전용 모드입니다. 브라우징은 가능하지만, 댓글달기, 좋아요 등 다른 행위들은 현재 비활성화 되어있습니다."
       login_disabled: "사이트가 읽기 전용모드로 되면서 로그인은 비활성화되었습니다."
       logout_disabled: "사이트가 읽기 전용모드일 때 로그아웃은 비활성화됩니다."
-    logs_error_rate_notice:
-      reached: "<b>%{relativeAge}</b> – <a href='%{url}' target='_blank'>%{rate}</a> 가 사이트 제한값 %{siteSettingRate}에 도달했습니다."
-      exceeded: "<b>%{relativeAge}</b> – <a href='%{url}' target='_blank'>%{rate}</a> 가 사이트 제한값 %{siteSettingRate}을 초과하였습니다."
-      rate:
-        other: "%{count} 에러/%{duration}"
     learn_more: "더 배우기"
     all_time: "총"
     all_time_desc: "총 토픽"
@@ -1042,7 +1034,6 @@ ko:
     trust_level: "회원등급"
     search_hint: "아이디, 이메일 혹은 IP 주소"
     create_account:
-      disclaimer: "등록하시면 <a href='{{privacy_link}}'>개인정보 정책</a> 과 <a href='{{tos_link}}'>사용자 약관</a>에 동의하시는 것으로 간주합니다."
       title: "회원 가입"
       failed: "뭔가 잘못되었습니다. 이 메일은 등록이 되어있습니다. 비밀번호를 잊으셨다면 비밀번호 찾기를 눌러주세요."
     forgot_password:
@@ -1203,7 +1194,6 @@ ko:
       show_edit_reason: "(수정사유 추가)"
       topic_featured_link_placeholder: "타이틀과 함께 표시될 링크를 입력하세요."
       reply_placeholder: "여기에 타이핑 하세요. 마크다운 또는 BBCode, HTML 포맷을 이용하세요. 이미지를 끌어오거나 붙여넣기 하세요."
-      reply_placeholder_choose_category: "입력하기 전에 카테고리를 먼저 선택해야합니다."
       view_new_post: "새로운 글을 볼 수 있습니다."
       saving: "저장 중..."
       saved: "저장 완료!"
@@ -1407,17 +1397,14 @@ ko:
         read: "아직 어떠한 주제도 읽지 않았습니다."
         posted: "아직 어떠한 주제도 작성되지 않았습니다."
         latest: "최신 주제가 없습니다."
-        hot: "인기있는 주제가 없습니다."
         bookmarks: "아직 북마크한 주제가 없습니다."
         category: "{{category}}에 주제가 없습니다."
         top: "Top 주제가 없습니다."
-        search: "검색 결과가 없습니다."
         educate:
           new: '<p>회원님의 주제는 여기에 나타납니다.</p><p>기본적으로 생긴 지 이틀 안된 주제는 새것으로 간주하고 <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">new</span> 표시가 뜹니다.</p><p>바꾸고 싶으면 <a href="%{userPrefsUrl}">환경설정</a>으로 가보세요.</p>'
           unread: '<p>회원님이 읽지 않은 주제는 여기에 나타납니다.</p><p>기본적으로 주제는 읽지 않은 것으로 간주하고 다음과 같은 조건 중 하나를 만족하면 읽지 않은 글갯수 <span class="badge new-posts badge-notification">1</span> 을 표시합니다:</p><ul><li>주제 만들기</li><li>주제에 댓글달기</li><li>주제를 4분 이상 읽기</li></ul><p>또는 주제를 추적하거나 지켜보기 위해 각 주제의 밑부분에 달린 알림제어판에서 설정하는 경우도 포합됩니다.</p><p>설정을 바꾸려면 <a href="%{userPrefsUrl}">환경설정</a> 페이지로 가세요.</p>'
       bottom:
         latest: "더 이상 읽을 최신 주제가 없습니다"
-        hot: "더 이상 읽을 인기있는 주제가 없습니다"
         posted: "더 이상 작성된 주제가 없습니다"
         read: "더 이상 읽을 주제가 없습니다"
         new: "더 이상 읽을 새로운 주제가 없습니다."
@@ -1425,7 +1412,6 @@ ko:
         category: "더 이상 {{category}}에 주제가 없습니다"
         top: "더 이상 인기 주제가 없습니다."
         bookmarks: "더이상 북마크한 주제가 없습니다."
-        search: "더이상 검색 결과가 없습니다."
     topic:
       filter_to:
         other: "이 토픽에 {{count}}개 게시글"
@@ -1543,7 +1529,6 @@ ko:
         jump_bottom: "최근 글로 이동"
         jump_prompt: "넘어가기"
         jump_prompt_of: "번째, 총 %{count} 개 포스트"
-        jump_prompt_long: "어느 게시글로 점프할까요?"
         jump_bottom_with_number: "jump to post %{post_number}"
         jump_prompt_or: "또는"
         total: 총 글
@@ -1834,36 +1819,6 @@ ko:
           notify_user: "글쓴이에게 메시지를 보냈습니다"
           bookmark: "이 글을 북마크했습니다"
           like: "좋아해요"
-        by_you_and_others:
-          off_topic:
-            other: "당신 외 {{count}}명이 주제에서 벗어났다고 신고했습니다"
-          spam:
-            other: "당신 외 {{count}}명이 스팸이라고 신고했습니다"
-          inappropriate:
-            other: "당신 외 {{count}}명이 부적절한 컨텐츠라고 신고했습니다"
-          notify_moderators:
-            other: "당신 외 {{count}}명이 운영자에게 알렸습니다"
-          notify_user:
-            other: "당신 외 {{count}}명이 글쓴이에게 메시지를 보냈습니다"
-          bookmark:
-            other: "당신 외 {{count}}명이 북마크 했습니다"
-          like:
-            other: "당신 외 {{count}}명이 좋아합니다"
-        by_others:
-          off_topic:
-            other: "{{count}}명이 주제에서 벗어났다고 신고했습니다"
-          spam:
-            other: "{{count}}명의 스팸이라고 신고했습니다"
-          inappropriate:
-            other: "{{count}}명이 부적절한 컨텐츠라고 신고했습니다"
-          notify_moderators:
-            other: "{{count}}명이 운영자에게 알렸습니다"
-          notify_user:
-            other: "{{count}}명이 글쓴이에게 메시지를 보냈습니다"
-          bookmark:
-            other: "{{count}}명이 북마크했습니다"
-          like:
-            other: "{{count}}명이 좋아합니다"
       delete:
         confirm:
           other: "정말로 {{count}}개의 글을 삭제 하시겠습니까?"
@@ -1956,6 +1911,7 @@ ko:
       default_top_period: "기본 Top 기간:"
       allow_badges_label: "배지가 이 카테고리에서 주어질 수 있도록 허용"
       edit_permissions: "권한 수정"
+      review_group_name: "그룹명"
       this_year: "올해"
       default_position: "기본 위치"
       position_disabled: "카테고리는 활동량에 따라서 표시됩니다. 목록 내의 카테고리 순서를 지정하하려면"
@@ -2108,15 +2064,9 @@ ko:
         title_with_count:
           other: "최근글 ({{count}})"
         help: "가장 최근 주제"
-      hot:
-        title: "인기 있는 글"
-        help: "가장 인기있는 주제 중 하나를 선택"
       read:
         title: "읽기"
         help: "마지막으로 순서대로 읽은 주제"
-      search:
-        title: "검색"
-        help: "모든 주제 검색"
       categories:
         title: "카테고리"
         title_in: "카테고리 - {{categoryName}}"
@@ -2179,54 +2129,54 @@ ko:
       title: "키보드 단축키"
       jump_to:
         title: "이동"
-        home: "<b>g</b>, <b>h</b> 홈"
-        latest: "<b>g</b>, <b>l</b> 최신"
-        new: "<b>g</b>, <b>n</b> 새로운"
-        unread: "<b>g</b>, <b>u</b> 읽지 않은"
-        categories: "<b>g</b>, <b>c</b> 카테고리"
-        top: "<b>g</b>, <b>t</b> 인기글"
-        bookmarks: "<b>g</b>, <b>b</b> 북마크"
-        profile: "<b>g</b>, <b>p</b> 프로필"
-        messages: "<b>g</b>, <b>m</b> 메시지"
+        home: "%{shortcut} 홈"
+        latest: "%{shortcut} 최신"
+        new: "%{shortcut} 새로운"
+        unread: "%{shortcut} 읽지 않은"
+        categories: "%{shortcut} 카테고리"
+        top: "%{shortcut} 인기글"
+        bookmarks: "%{shortcut} 북마크"
+        profile: "%{shortcut} 프로필"
+        messages: "%{shortcut} 메시지"
       navigation:
         title: "탐색"
-        jump: "<b>#</b> 글 번호로 이동"
-        back: "<b>u</b> 이전"
-        up_down: "<b>k</b>/<b>j</b> 선택된 글 이동 &uarr; &darr;"
-        open: "<b>o</b> or <b>Enter</b> 선택한 토픽 열기"
-        next_prev: "<b>shift</b>+<b>j</b>/<b>shift</b>+<b>k</b> 이전/다음 섹션"
+        jump: "%{shortcut} 글 번호로 이동"
+        back: "%{shortcut} 이전"
+        up_down: "%{shortcut} 선택된 글 이동 &uarr; &darr;"
+        open: "%{shortcut} 선택한 토픽 열기"
+        next_prev: "%{shortcut} 이전/다음 섹션"
       application:
         title: "어플리케이션"
-        create: "<b>c</b> 새 토픽을 만듭니다."
-        notifications: "<b>n</b> 알림창 열기"
-        hamburger_menu: "<b>=</b> 햄버거 메뉴 열기"
-        user_profile_menu: "<b>p</b> 사용자 메뉴 열기"
-        show_incoming_updated_topics: "<b>.</b> 갱신된 토픽 보기"
-        search: "<b>/</b> 또는 <b>ctrl</b>+<b>alt</b>+<b>f</b> 를 사용하여 검색"
-        help: "<b>?</b> 키보드 도움말 열기"
-        dismiss_new_posts: "<b>x</b>, <b>r</b> 새글을 읽은 상태로 표시하기"
-        dismiss_topics: "<b>x</b>, <b>t</b> 토픽 무시하기"
-        log_out: "<b>shift</b>+<b>z</b> <b>shift</b>+<b>z</b> 로그아웃"
+        create: "%{shortcut} 새 토픽을 만듭니다."
+        notifications: "%{shortcut} 알림창 열기"
+        hamburger_menu: "%{shortcut} 햄버거 메뉴 열기"
+        user_profile_menu: "%{shortcut} 사용자 메뉴 열기"
+        show_incoming_updated_topics: "%{shortcut} 갱신된 토픽 보기"
+        search: "%{shortcut} 를 사용하여 검색"
+        help: "%{shortcut} 키보드 도움말 열기"
+        dismiss_new_posts: "%{shortcut} 새글을 읽은 상태로 표시하기"
+        dismiss_topics: "%{shortcut} 토픽 무시하기"
+        log_out: "%{shortcut} 로그아웃"
       actions:
         title: "액션"
-        bookmark_topic: "<b>f</b> 북마크 토픽 켜고 끄기"
-        pin_unpin_topic: "<b>shift</b>+<b>p</b> 핀고정/핀해제"
-        share_topic: "<b>shift</b>+<b>s</b> 토픽 공유"
-        share_post: "<b>s</b> 게시글 공유"
-        reply_as_new_topic: "<b>t</b> 연결된 토픽으로 답글 작성하기"
-        reply_topic: "<b>shift</b>+<b>r</b> 토픽에 답글 달기"
-        reply_post: "<b>r</b> 글에 답글 달기"
-        quote_post: "<b>q</b> 게시글 인용"
-        like: "<b>l</b> 게시글에 좋아요 표시"
-        flag: "<b>!</b> 게시글에 플래그달기"
-        bookmark: "<b>b</b> 게시글 북마크"
-        edit: "<b>e</b> 게시글 편집"
-        delete: "<b>d</b> 게시글 삭제"
-        mark_muted: "<b>m</b>, <b>m</b> 토픽 알람 : 끄기"
-        mark_regular: "<b>m</b>, <b>r</b> 토픽 알람 : 일반(기본)으로 설정하기"
-        mark_tracking: "<b>m</b>, <b>t</b> 토픽 알람 : 추적하기"
-        mark_watching: "<b>m</b>, <b>w</b> 토픽 알람 : 주시하기"
-        print: "<b>ctrl</b>+<b>p</b> 토픽 인쇄하기"
+        bookmark_topic: "%{shortcut} 북마크 토픽 켜고 끄기"
+        pin_unpin_topic: "%{shortcut} 핀고정/핀해제"
+        share_topic: "%{shortcut} 토픽 공유"
+        share_post: "%{shortcut} 게시글 공유"
+        reply_as_new_topic: "%{shortcut} 연결된 토픽으로 답글 작성하기"
+        reply_topic: "%{shortcut} 토픽에 답글 달기"
+        reply_post: "%{shortcut} 글에 답글 달기"
+        quote_post: "%{shortcut} 게시글 인용"
+        like: "%{shortcut} 게시글에 좋아요 표시"
+        flag: "%{shortcut} 게시글에 플래그달기"
+        bookmark: "%{shortcut} 게시글 북마크"
+        edit: "%{shortcut} 게시글 편집"
+        delete: "%{shortcut} 게시글 삭제"
+        mark_muted: "%{shortcut} 토픽 알람 : 끄기"
+        mark_regular: "%{shortcut} 토픽 알람 : 일반(기본)으로 설정하기"
+        mark_tracking: "%{shortcut} 토픽 알람 : 추적하기"
+        mark_watching: "%{shortcut} 토픽 알람 : 주시하기"
+        print: "%{shortcut} 토픽 인쇄하기"
     badges:
       earned_n_times:
         other: "이 배지를 %{count}번 받았습니다"
@@ -2329,20 +2279,16 @@ ko:
           read: "아직 어떠한 토픽도 읽지 않았습니다."
           posted: "아직 게시글을 하나도 쓰지 않았습니다."
           latest: "최신 토픽이 없습니다."
-          hot: "화제 토픽이 없습니다."
           bookmarks: "북마크한 토픽이 없습니다."
           top: "인기 토픽이 없습니다."
-          search: "검색 결과가 없습니다."
         bottom:
           latest: "더 이상 최신 토픽이 없습니다."
-          hot: "더 이상 화제 토픽이 없습니다."
           posted: "더 이상 작성된 토픽이 없습니다."
           read: "더 이상 읽은 토픽이 없습니다."
           new: "더 이상 새로운 토픽이 없습니다."
           unread: "더 이상 읽지 않은 토픽이 없습니다."
           top: "더 이상 인기 토픽이 없습니다."
           bookmarks: "더 이상 북마크한 토픽이 없습니다."
-          search: "더 이상 검색 결과가 없습니다."
     invite:
       custom_message_placeholder: "사용자 설정 메시지를 입력하세요"
       custom_message_template_forum: "저기요, 이 포럼에 가입하셔야 해요!"
@@ -2356,7 +2302,6 @@ ko:
       moderator: "운영자"
       dashboard:
         title: "대시보드"
-        last_updated: "대시보드 최근 업데이트:"
         version: "버전"
         up_to_date: "최신상태입니다!"
         critical_available: "중요 업데이트를 사용할 수 있습니다."
@@ -2405,6 +2350,11 @@ ko:
           end_date: "종료일"
           groups: "모든 그룹"
           no_data: "표시할 정보가 없습니다."
+          filters:
+            group:
+              label: 그룹
+            category:
+              label: 카테고리
       commits:
         latest_changes: "최근 변경 사항: 자주 업데이트하십시오!"
         by: "에 의해"
@@ -2643,7 +2593,6 @@ ko:
         new: "새 사용자 지정"
         new_style: "새로운 스타일"
         delete: "삭제"
-        delete_confirm: "이 테마를 삭제할까요?"
         color: "색상"
         opacity: "투명도"
         copy: "복사"

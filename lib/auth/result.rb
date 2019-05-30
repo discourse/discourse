@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Auth::Result
   attr_accessor :user, :name, :username, :email, :user,
                 :email_valid, :extra_data, :awaiting_activation,
@@ -71,7 +73,7 @@ class Auth::Result
       result[:destination_url] = destination_url if destination_url.present?
 
       if SiteSetting.enable_names?
-        result[:name] = User.suggest_name(name || username || email)
+        result[:name] = name.presence || User.suggest_name(username || email)
       end
 
       result

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class SpamRule::AutoSilence
 
   attr_reader :group_message
@@ -22,14 +24,9 @@ class SpamRule::AutoSilence
     return false if @user.staged?
     return false if @user.has_trust_level?(TrustLevel[1])
 
-    if SiteSetting.spam_score_to_silence_new_user > 0 &&
-        SiteSetting.num_users_to_silence_new_user > 0 &&
-        user_spam_stats.total_spam_score >= SiteSetting.spam_score_to_silence_new_user &&
-        user_spam_stats.spam_user_count >= SiteSetting.num_users_to_silence_new_user
-      return true
-    end
-
-    false
+    SiteSetting.num_users_to_silence_new_user > 0 &&
+      user_spam_stats.total_spam_score >= Reviewable.spam_score_to_silence_new_user &&
+      user_spam_stats.spam_user_count >= SiteSetting.num_users_to_silence_new_user
   end
 
   def user_spam_stats

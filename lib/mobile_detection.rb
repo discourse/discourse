@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module MobileDetection
   def self.mobile_device?(user_agent)
     user_agent =~ /Mobile/ && !(user_agent =~ /iPad/)
@@ -16,4 +18,9 @@ module MobileDetection
       mobile_device?(user_agent)
     end
   end
+
+  def self.ios_device?(user_agent)
+    user_agent =~ /iPad|iPhone|iPod/
+  end
+
 end

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_dependency 'rate_limiter'
 
 class InvitesController < ApplicationController
@@ -220,6 +222,8 @@ class InvitesController < ApplicationController
 
   def post_process_invite(user)
     user.enqueue_welcome_message('welcome_invite') if user.send_welcome_message
+
+    Group.refresh_automatic_groups!(:admins, :moderators, :staff) if user.staff?
 
     if user.has_password?
       send_activation_email(user) unless user.active

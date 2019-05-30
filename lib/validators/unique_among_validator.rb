@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class UniqueAmongValidator < ActiveRecord::Validations::UniquenessValidator
   def validate_each(record, attribute, value)
     old_errors = record.errors[attribute].size

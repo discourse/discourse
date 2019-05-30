@@ -1,9 +1,11 @@
+# frozen_string_literal: true
+
 module UserNotificationsHelper
   include GlobalPath
 
   def indent(text, by = 2)
     spacer = " " * by
-    result = ""
+    result = +""
     text.each_line do |line|
       result << spacer << line
     end
@@ -32,7 +34,7 @@ module UserNotificationsHelper
   def first_paragraphs_from(html)
     doc = Nokogiri::HTML(html)
 
-    result = ""
+    result = +""
     length = 0
 
     doc.css('body > p, aside.onebox, body > ul, body > blockquote').each do |node|
@@ -49,9 +51,9 @@ module UserNotificationsHelper
     doc.css('div').first
   end
 
-  def email_excerpt(html_arg)
+  def email_excerpt(html_arg, post = nil)
     html = (first_paragraphs_from(html_arg) || html_arg).to_s
-    PrettyText.format_for_email(html).html_safe
+    PrettyText.format_for_email(html, post).html_safe
   end
 
   def normalize_name(name)

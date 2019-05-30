@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "rails_helper"
 require "email/processor"
 
@@ -10,10 +12,10 @@ describe Email::Processor do
 
   context "when reply via email is too short" do
     let(:mail) { file_from_fixtures("chinese_reply.eml", "emails").read }
-    let(:post) { Fabricate(:post) }
-    let(:user) { Fabricate(:user, email: 'discourse@bar.com') }
+    fab!(:post) { Fabricate(:post) }
+    fab!(:user) { Fabricate(:user, email: 'discourse@bar.com') }
 
-    let!(:post_reply_key) do
+    fab!(:post_reply_key) do
       Fabricate(:post_reply_key,
         user: user,
         post: post,
@@ -177,7 +179,7 @@ describe Email::Processor do
 
   describe 'when replying to a post that is too old' do
     let(:mail) { file_from_fixtures("old_destination.eml", "emails").read }
-    let!(:user) { Fabricate(:user, email: "discourse@bar.com") }
+    fab!(:user) { Fabricate(:user, email: "discourse@bar.com") }
     it 'rejects the email with the right response' do
       SiteSetting.disallow_reply_by_email_after_days = 2
 

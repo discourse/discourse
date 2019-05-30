@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 require_dependency 'badge'
 
@@ -18,12 +20,8 @@ describe Badge do
     badge = Badge.find_by_name("Basic User")
     name_english = badge.name
 
-    begin
-      I18n.locale = 'fr'
-
+    I18n.with_locale(:fr) do
       expect(badge.display_name).not_to eq(name_english)
-    ensure
-      I18n.locale = :en
     end
   end
 
@@ -62,7 +60,7 @@ describe Badge do
   end
 
   describe '#manually_grantable?' do
-    let(:badge) { Fabricate(:badge, name: 'Test Badge') }
+    fab!(:badge) { Fabricate(:badge, name: 'Test Badge') }
     subject { badge.manually_grantable? }
 
     context 'when system badge' do

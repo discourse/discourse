@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class TopicViewDetailsSerializer < ApplicationSerializer
 
   def self.can_attributes
@@ -11,7 +13,8 @@ class TopicViewDetailsSerializer < ApplicationSerializer
      :can_create_post,
      :can_reply_as_new_topic,
      :can_flag_topic,
-     :can_convert_topic]
+     :can_convert_topic,
+     :can_review_topic]
   end
 
   attributes(
@@ -75,6 +78,10 @@ class TopicViewDetailsSerializer < ApplicationSerializer
 
   can_attributes.each do |ca|
     define_method(ca) { true }
+  end
+
+  def include_can_review_topic?
+    scope.can_review_topic?(object.topic)
   end
 
   def include_can_move_posts?

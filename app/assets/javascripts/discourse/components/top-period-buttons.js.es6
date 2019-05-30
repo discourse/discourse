@@ -1,10 +1,12 @@
+import computed from "ember-addons/ember-computed-decorators";
+
 export default Ember.Component.extend({
   classNames: ["top-title-buttons"],
 
-  periods: function() {
-    const period = this.get("period");
+  @computed("period")
+  periods(period) {
     return this.site.get("periods").filter(p => p !== period);
-  }.property("period"),
+  },
 
   actions: {
     changePeriod(p) {

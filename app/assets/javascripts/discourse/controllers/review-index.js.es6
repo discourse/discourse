@@ -2,7 +2,7 @@ import computed from "ember-addons/ember-computed-decorators";
 
 export default Ember.Controller.extend({
   queryParams: [
-    "min_score",
+    "priority",
     "type",
     "status",
     "category_id",
@@ -11,7 +11,7 @@ export default Ember.Controller.extend({
   ],
   type: null,
   status: "pending",
-  min_score: null,
+  priority: "low",
   category_id: null,
   reviewables: null,
   topic_id: null,
@@ -20,16 +20,26 @@ export default Ember.Controller.extend({
 
   init(...args) {
     this._super(...args);
-    this.set("min_score", this.siteSettings.min_score_default_visibility);
+    this.set("priority", this.siteSettings.reviewable_default_visibility);
     this.set("filtersExpanded", !this.site.mobileView);
   },
 
   @computed("reviewableTypes")
   allTypes() {
-    return (this.get("reviewableTypes") || []).map(type => {
+    return (this.reviewableTypes || []).map(type => {
       return {
         id: type,
         name: I18n.t(`review.types.${type.underscore()}.title`)
+      };
+    });
+  },
+
+  @computed
+  priorities() {
+    return ["low", "medium", "high"].map(priority => {
+      return {
+        id: priority,
+        name: I18n.t(`review.filters.priority.${priority}`)
       };
     });
   },
@@ -59,7 +69,7 @@ export default Ember.Controller.extend({
         return;
       }
 
-      let newList = this.get("reviewables").reject(reviewable => {
+      let newList = this.reviewables.reject(reviewable => {
         return ids.indexOf(reviewable.id) !== -1;
       });
       this.set("reviewables", newList);
@@ -71,24 +81,18 @@ export default Ember.Controller.extend({
     },
 
     refresh() {
-      // If filterScore is blank use the default
-      let filterScore = this.get("filterScore");
-      if (!filterScore || filterScore.length === 0) {
-        filterScore = this.siteSettings.min_score_default_visibility;
-      }
-
       this.setProperties({
-        type: this.get("filterType"),
-        min_score: filterScore,
-        status: this.get("filterStatus"),
-        category_id: this.get("filterCategoryId"),
-        username: this.get("filterUsername")
+        type: this.filterType,
+        priority: this.filterPriority,
+        status: this.filterStatus,
+        category_id: this.filterCategoryId,
+        username: this.filterUsername
       });
       this.send("refreshRoute");
     },
 
     loadMore() {
-      return this.get("reviewables").loadMore();
+      return this.reviewables.loadMore();
     },
 
     toggleFilters() {

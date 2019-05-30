@@ -1,11 +1,13 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe Admin::FlagsController do
-  let(:user) { Fabricate(:user) }
-  let(:admin) { Fabricate(:admin) }
-  let(:post_1) { Fabricate(:post) }
-  let(:category) { Fabricate(:category) }
-  let(:first_post) { Fabricate(:post, post_number: 1) }
+  fab!(:user) { Fabricate(:user) }
+  fab!(:admin) { Fabricate(:admin) }
+  fab!(:post_1) { Fabricate(:post) }
+  fab!(:category) { Fabricate(:category) }
+  fab!(:first_post) { Fabricate(:post, post_number: 1) }
 
   before do
     sign_in(admin)
@@ -113,7 +115,8 @@ RSpec.describe Admin::FlagsController do
 
   context '#disagree' do
     it "unhides the post and unsilences the user if disagreed" do
-      SiteSetting.spam_score_to_silence_new_user = 1.0
+      Reviewable.set_priorities(high: 1.0)
+      SiteSetting.silence_new_user_sensitivity = Reviewable.sensitivity[:low]
       SiteSetting.num_users_to_silence_new_user = 1
 
       new_user = Fabricate(:newuser)

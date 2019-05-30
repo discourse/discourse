@@ -18,13 +18,13 @@ nb_NO:
       multiple:
         help:
           at_least_min_options:
-            one: "Velg minst <strong>1</strong> alternativ"
+            one: "Velg minst <strong>%{count}</strong> alternativ"
             other: "Velg minst <strong>%{count}</strong> alternativer"
           up_to_max_options:
-            one: "Velg inntil <strong>1</strong> alternativ"
+            one: "Velg inntil <strong>%{count}</strong> alternativ"
             other: "Velg inntil  <strong>%{count}</strong> alternativer"
           x_options:
-            one: "Velg <strong>1</strong> alternativ"
+            one: "Velg <strong>%{count}</strong> alternativ"
             other: "Velg <strong>%{count}</strong> alternativer"
           between_min_and_max_options: "Velg mellom  <strong>%{min}</strong> og <strong>%{max}</strong> alternativer"
       cast-votes:

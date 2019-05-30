@@ -14,13 +14,6 @@ acceptance("Topic - Edit timer", {
         category_id: null
       })
     );
-
-    server.put("/t/internationalization-localization/280/status", () =>
-      helper.response({
-        success: "OK",
-        topic_status_update: null
-      })
-    );
   }
 });
 

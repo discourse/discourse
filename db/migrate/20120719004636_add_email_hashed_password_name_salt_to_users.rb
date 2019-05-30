@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddEmailHashedPasswordNameSaltToUsers < ActiveRecord::Migration[4.2]
   def up
     add_column :users, :email, :string, limit: 256

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class GivenDailyLike < ActiveRecord::Base
   belongs_to :user
 

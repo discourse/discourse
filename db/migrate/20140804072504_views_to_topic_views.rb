@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ViewsToTopicViews < ActiveRecord::Migration[4.2]
   def change
     remove_column :views, :parent_type

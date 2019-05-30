@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class UserApiKeysController < ApplicationController
 
   layout 'no_ember'
@@ -91,7 +93,7 @@ class UserApiKeysController < ApplicationController
     end
 
     if params[:auth_redirect]
-      redirect_path = "#{params[:auth_redirect]}?payload=#{CGI.escape(@payload)}"
+      redirect_path = +"#{params[:auth_redirect]}?payload=#{CGI.escape(@payload)}"
       redirect_path << "&oneTimePassword=#{CGI.escape(otp_payload)}" if scopes.include?("one_time_password")
       redirect_to(redirect_path)
     else

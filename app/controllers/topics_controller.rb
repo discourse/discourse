@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_dependency 'topic_view'
 require_dependency 'promotion'
 require_dependency 'url_helper'
@@ -322,6 +324,7 @@ class TopicsController < ApplicationController
     end
 
     changes = {}
+
     PostRevisor.tracked_topic_fields.each_key do |f|
       changes[f] = params[f] if params.has_key?(f)
     end

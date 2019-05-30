@@ -135,7 +135,6 @@ id:
         eu_west_2: "Eropa (London)"
         us_east_1: "US East (N. Virginia)"
         us_east_2: "Amerika Timur (Ohio)"
-        us_gov_west_1: "AWS GovCloud (US)"
         us_west_1: "US West (N. California)"
         us_west_2: "US West (Oregon)"
     edit: "Ubah judul dan kategori topik ini"
@@ -235,6 +234,7 @@ id:
       settings:
         save_changes: "Simpan perubahan"
       topic: "Topik:"
+      filtered_user: "Pengguna"
       user:
         username: "Nama Pengguna"
         email: "Email"
@@ -245,6 +245,7 @@ id:
       cancel: "Batal"
       filters:
         refresh: "Segarkan"
+        category: "Kategori"
       statuses:
         pending:
           title: "Tertunda"
@@ -447,6 +448,7 @@ id:
       private_message: "pesan"
       private_messages: "Messages"
       user_notifications:
+        ignore_duration_username: "Nama Pengguna"
         mute_option: "Bisukan"
         normal_option: "normal"
       activity_stream: "Activity"
@@ -1055,8 +1057,8 @@ id:
         title: "Navigasi"
       application:
         title: "Aplikasi"
-        create: "<b>c</b> Buat topik baru"
-        notifications: "<b>n</b> Buka notifikasi"
+        create: "%{shortcut} Buat topik baru"
+        notifications: "%{shortcut} Buka notifikasi"
       actions:
         title: "Aksi"
     badges:
@@ -1105,6 +1107,9 @@ id:
         reports:
           all_time: "Sepanjang Waktu"
           all: "Semua"
+          filters:
+            category:
+              label: Kategori
       groups:
         manage:
           interaction:

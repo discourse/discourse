@@ -1,8 +1,10 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe WebHookPostSerializer do
-  let(:admin) { Fabricate(:admin) }
-  let(:post) { Fabricate(:post) }
+  fab!(:admin) { Fabricate(:admin) }
+  fab!(:post) { Fabricate(:post) }
 
   def serialized_for_user(u)
     WebHookPostSerializer.new(post, scope: Guardian.new(u), root: false).as_json
@@ -10,10 +12,10 @@ RSpec.describe WebHookPostSerializer do
 
   it 'should only include the required keys' do
     count = serialized_for_user(admin).keys.count
-    difference = count - 34
+    difference = count - 36
 
     expect(difference).to eq(0), lambda {
-      message = ""
+      message = +""
 
       if difference < 0
         message << "#{difference * -1} key(s) have been removed from this serializer."

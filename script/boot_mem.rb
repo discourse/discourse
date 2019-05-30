@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # simple script to measure memory at boot
 
 if ENV['RAILS_ENV'] != "production"

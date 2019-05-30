@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 describe Admin::UserFieldsController do
@@ -6,7 +8,7 @@ describe Admin::UserFieldsController do
   end
 
   context "when logged in" do
-    let(:admin) { Fabricate(:admin) }
+    fab!(:admin) { Fabricate(:admin) }
 
     before do
       sign_in(admin)
@@ -42,7 +44,7 @@ describe Admin::UserFieldsController do
     end
 
     describe '#index' do
-      let!(:user_field) { Fabricate(:user_field) }
+      fab!(:user_field) { Fabricate(:user_field) }
 
       it "returns a list of user fields" do
         get "/admin/customize/user_fields.json"
@@ -53,7 +55,7 @@ describe Admin::UserFieldsController do
     end
 
     describe '#destroy' do
-      let!(:user_field) { Fabricate(:user_field) }
+      fab!(:user_field) { Fabricate(:user_field) }
 
       it "deletes the user field" do
         expect {
@@ -64,7 +66,7 @@ describe Admin::UserFieldsController do
     end
 
     describe '#update' do
-      let!(:user_field) { Fabricate(:user_field) }
+      fab!(:user_field) { Fabricate(:user_field) }
 
       it "updates the user field" do
         put "/admin/customize/user_fields/#{user_field.id}.json", params: {

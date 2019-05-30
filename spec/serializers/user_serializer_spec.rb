@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 require_dependency 'user'
 
@@ -39,13 +41,11 @@ describe UserSerializer do
   end
 
   context "with a user" do
-    let(:user) { Fabricate.build(:user, user_profile: Fabricate.build(:user_profile)) }
+    fab!(:user) { Fabricate(:user) }
     let(:serializer) { UserSerializer.new(user, scope: Guardian.new, root: false) }
     let(:json) { serializer.as_json }
-
-    it "produces json" do
-      expect(json).to be_present
-    end
+    fab!(:upload) { Fabricate(:upload) }
+    fab!(:upload2) { Fabricate(:upload) }
 
     context "with `enable_names` true" do
       before do
@@ -67,23 +67,15 @@ describe UserSerializer do
       end
     end
 
-    context "with filled out card background" do
+    context "with filled out backgrounds" do
       before do
-        user.user_profile.card_background = 'http://card.com'
+        user.user_profile.upload_card_background(upload)
+        user.user_profile.upload_profile_background(upload2)
       end
 
       it "has a profile background" do
-        expect(json[:card_background]).to eq 'http://card.com'
-      end
-    end
-
-    context "with filled out profile background" do
-      before do
-        user.user_profile.profile_background = 'http://background.com'
-      end
-
-      it "has a profile background" do
-        expect(json[:profile_background]).to eq 'http://background.com'
+        expect(json[:card_background_upload_url]).to eq(upload.url)
+        expect(json[:profile_background_upload_url]).to eq(upload2.url)
       end
     end
 
@@ -176,7 +168,7 @@ describe UserSerializer do
   end
 
   context "with custom_fields" do
-    let(:user) { Fabricate(:user) }
+    fab!(:user) { Fabricate(:user) }
     let(:json) { UserSerializer.new(user, scope: Guardian.new, root: false).as_json }
 
     before do
@@ -214,7 +206,7 @@ describe UserSerializer do
   end
 
   context "with user fields" do
-    let(:user) { Fabricate(:user) }
+    fab!(:user) { Fabricate(:user) }
 
     let! :fields do
       [
@@ -239,7 +231,7 @@ describe UserSerializer do
   end
 
   context "with user_api_keys" do
-    let(:user) { Fabricate(:user) }
+    fab!(:user) { Fabricate(:user) }
 
     it "sorts keys by last used time" do
       freeze_time
@@ -256,6 +248,19 @@ describe UserSerializer do
       expect(json[:user_api_keys][0][:id]).to eq(user_api_key_1.id)
       expect(json[:user_api_keys][1][:id]).to eq(user_api_key_4.id)
       expect(json[:user_api_keys][2][:id]).to eq(user_api_key_2.id)
+    end
+  end
+
+  context "with missing user profile" do
+    fab!(:user) { Fabricate(:user) }
+
+    it "does not throw an error" do
+      id = user.id
+      UserProfile.delete(id)
+      user_b = User.find(id)
+      json = UserSerializer.new(user_b, scope: Guardian.new(user_b), root: false).as_json
+
+      expect(json[:bio_raw]).to eq nil
     end
   end
 end

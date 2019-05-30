@@ -62,6 +62,18 @@ export default function() {
       return response(json);
     });
 
+    this.get("/c/bug/l/latest.json", () => {
+      const json = fixturesByUrl["/c/bug/l/latest.json"];
+
+      if (loggedIn()) {
+        // Stuff to let us post
+        json.topic_list.can_create_topic = true;
+        json.topic_list.draft_key = "new_topic";
+        json.topic_list.draft_sequence = 1;
+      }
+      return response(json);
+    });
+
     this.get("/tags", () => {
       return response({
         tags: [
@@ -71,6 +83,10 @@ export default function() {
           }
         ]
       });
+    });
+
+    this.get("/tags/filter/search", () => {
+      return response({ results: [{ text: "monkey", count: 1 }] });
     });
 
     this.get(`/u/:username/emails.json`, () => {
@@ -126,7 +142,26 @@ export default function() {
       return response({ topic_list: { topics: [] } });
     });
 
-    this.get("/clicks/track", success);
+    this.get("/topics/feature_stats.json", () => {
+      return response({
+        pinned_in_category_count: 0,
+        pinned_globally_count: 0,
+        banner_count: 0
+      });
+    });
+
+    this.put("/t/280/make-banner", () => {
+      return response({});
+    });
+
+    this.put("/t/internationalization-localization/280/status", () => {
+      return response({
+        success: "OK",
+        topic_status_update: null
+      });
+    });
+
+    this.post("/clicks/track", success);
 
     this.get("/search", request => {
       if (request.queryParams.q === "posts") {

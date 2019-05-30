@@ -6,7 +6,7 @@ import PeriodComputationMixin from "admin/mixins/period-computation";
 
 function staticReport(reportType) {
   return function() {
-    return Ember.makeArray(this.get("reports")).find(
+    return Ember.makeArray(this.reports).find(
       report => report.type === reportType
     );
   }.property("reports.[]");
@@ -27,8 +27,8 @@ export default Ember.Controller.extend(PeriodComputationMixin, {
   @computed
   activityMetricsFilters() {
     return {
-      startDate: this.get("lastMonth"),
-      endDate: this.get("today")
+      startDate: this.lastMonth,
+      endDate: this.today
     };
   },
 
@@ -45,7 +45,7 @@ export default Ember.Controller.extend(PeriodComputationMixin, {
       startDate: moment()
         .subtract(6, "days")
         .startOf("day"),
-      endDate: this.get("today")
+      endDate: this.today
     };
   },
 
@@ -55,7 +55,7 @@ export default Ember.Controller.extend(PeriodComputationMixin, {
       startDate: moment()
         .subtract(1, "month")
         .startOf("day"),
-      endDate: this.get("today")
+      endDate: this.today
     };
   },
 
@@ -78,13 +78,13 @@ export default Ember.Controller.extend(PeriodComputationMixin, {
   storageReport: staticReport("storage_report"),
 
   fetchDashboard() {
-    if (this.get("isLoading")) return;
+    if (this.isLoading) return;
 
     if (
-      !this.get("dashboardFetchedAt") ||
+      !this.dashboardFetchedAt ||
       moment()
         .subtract(30, "minutes")
-        .toDate() > this.get("dashboardFetchedAt")
+        .toDate() > this.dashboardFetchedAt
     ) {
       this.set("isLoading", true);
 
@@ -99,7 +99,7 @@ export default Ember.Controller.extend(PeriodComputationMixin, {
           });
         })
         .catch(e => {
-          this.get("exceptionController").set("thrown", e.jqXHR);
+          this.exceptionController.set("thrown", e.jqXHR);
           this.replaceRoute("exception");
         })
         .finally(() => this.set("isLoading", false));
@@ -109,13 +109,6 @@ export default Ember.Controller.extend(PeriodComputationMixin, {
   @computed("startDate", "endDate")
   filters(startDate, endDate) {
     return { startDate, endDate };
-  },
-
-  @computed("model.attributes.updated_at")
-  updatedTimestamp(updatedAt) {
-    return moment(updatedAt)
-      .tz(moment.tz.guess())
-      .format("LLL");
   },
 
   _reportsForPeriodURL(period) {

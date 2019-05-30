@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddEmailStuffToUsers < ActiveRecord::Migration[4.2]
   def change
     add_column :users, :last_emailed_at, :datetime, null: true

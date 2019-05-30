@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 def print_status_with_label(label, current, max)
   print "\r%s%9d / %d (%5.1f%%)" % [label, current, max, ((current.to_f / max.to_f) * 100).round(1)]
 end

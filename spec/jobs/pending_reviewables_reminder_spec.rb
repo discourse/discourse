@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 describe Jobs::PendingReviewablesReminder do
@@ -54,19 +56,21 @@ describe Jobs::PendingReviewablesReminder do
       expect(execute.sent_reminder).to eq(true)
     end
 
-    context "min_score_default_visibility" do
+    context "reviewable_default_visibility" do
       before do
         create_flag(49.hours.ago)
         create_flag(51.hours.ago)
       end
 
-      it "doesn't send a message when min_score_default_visibility is not met" do
-        SiteSetting.min_score_default_visibility = 3.0
+      it "doesn't send a message when `reviewable_default_visibility` is not met" do
+        Reviewable.set_priorities(medium: 3.0)
+        SiteSetting.reviewable_default_visibility = 'medium'
         expect(execute.sent_reminder).to eq(false)
       end
 
-      it "sends a message when min_score_default_visibility is met" do
-        SiteSetting.min_score_default_visibility = 2.0
+      it "sends a message when `reviewable_default_visibility` is met" do
+        Reviewable.set_priorities(medium: 2.0)
+        SiteSetting.reviewable_default_visibility = 'medium'
         expect(execute.sent_reminder).to eq(true)
       end
     end

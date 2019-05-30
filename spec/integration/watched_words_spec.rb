@@ -1,12 +1,14 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 describe WatchedWord do
-  let(:tl2_user) { Fabricate(:user, trust_level: TrustLevel[2]) }
-  let(:admin) { Fabricate(:admin) }
-  let(:moderator) { Fabricate(:moderator) }
+  fab!(:tl2_user) { Fabricate(:user, trust_level: TrustLevel[2]) }
+  fab!(:admin) { Fabricate(:admin) }
+  fab!(:moderator) { Fabricate(:moderator) }
 
-  let(:topic) { Fabricate(:topic) }
-  let(:first_post) { Fabricate(:post, topic: topic) }
+  fab!(:topic) { Fabricate(:topic) }
+  fab!(:first_post) { Fabricate(:post, topic: topic) }
 
   let(:require_approval_word) { Fabricate(:watched_word, action: WatchedWord.actions[:require_approval]) }
   let(:flag_word) { Fabricate(:watched_word, action: WatchedWord.actions[:flag]) }
@@ -35,18 +37,14 @@ describe WatchedWord do
       should_block_post(manager)
     end
 
-    it "should not block the post from admin" do
+    it "should block the post from admin" do
       manager = NewPostManager.new(admin, raw: "Want some #{block_word.word} for cheap?", topic_id: topic.id)
-      result = manager.perform
-      expect(result).to be_success
-      expect(result.action).to eq(:create_post)
+      should_block_post(manager)
     end
 
-    it "should not block the post from moderator" do
+    it "should block the post from moderator" do
       manager = NewPostManager.new(moderator, raw: "Want some #{block_word.word} for cheap?", topic_id: topic.id)
-      result = manager.perform
-      expect(result).to be_success
-      expect(result.action).to eq(:create_post)
+      should_block_post(manager)
     end
 
     it "should block in a private message too" do

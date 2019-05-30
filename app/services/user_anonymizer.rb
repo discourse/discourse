@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class UserAnonymizer
 
   attr_reader :user_history
@@ -47,8 +49,14 @@ class UserAnonymizer
       options.save!
 
       if profile = @user.user_profile
-        profile.update(location: nil, website: nil, bio_raw: nil, bio_cooked: nil,
-                       profile_background: nil, card_background: nil)
+        profile.update!(
+          location: nil,
+          website: nil,
+          bio_raw: nil,
+          bio_cooked: nil,
+          profile_background_upload: nil,
+          card_background_upload: nil
+        )
       end
 
       @user.user_avatar.try(:destroy)

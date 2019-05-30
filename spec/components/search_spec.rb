@@ -1,9 +1,11 @@
 # encoding: utf-8
+# frozen_string_literal: true
 
 require 'rails_helper'
 require_dependency 'search'
 
 describe Search do
+  fab!(:admin) { Fabricate(:admin) }
 
   before do
     SearchIndexer.enable
@@ -208,7 +210,7 @@ describe Search do
       results = Search.execute('mars',
                               type_filter: 'private_messages',
                               search_context: post.user,
-                              guardian: Guardian.new(Fabricate(:admin)))
+                              guardian: Guardian.new(admin))
 
       expect(results.posts.length).to eq(1)
 
@@ -286,7 +288,7 @@ describe Search do
       end
 
       it "works for unlisted topics" do
-        topic.update_attributes(visible: false)
+        topic.update(visible: false)
         _post = new_post('discourse is awesome', topic)
         results = Search.execute('discourse', search_context: topic)
         expect(results.posts.length).to eq(1)
@@ -398,10 +400,10 @@ describe Search do
         end
 
         it 'restricts result to messages' do
-          result = Search.execute(topic.relative_url, search_for_id: true, type_filter: 'private_messages', guardian: Guardian.new(Fabricate(:admin)), restrict_to_archetype: Archetype.private_message)
+          result = Search.execute(topic.relative_url, search_for_id: true, type_filter: 'private_messages', guardian: Guardian.new(admin), restrict_to_archetype: Archetype.private_message)
           expect(result.posts.length).to eq(0)
 
-          result = Search.execute(personal_message.relative_url, search_for_id: true, type_filter: 'private_messages', guardian: Guardian.new(Fabricate(:admin)), restrict_to_archetype: Archetype.private_message)
+          result = Search.execute(personal_message.relative_url, search_for_id: true, type_filter: 'private_messages', guardian: Guardian.new(admin), restrict_to_archetype: Archetype.private_message)
           expect(result.posts.length).to eq(1)
         end
       end
@@ -424,7 +426,7 @@ describe Search do
 
         expect(result(nil).posts).not_to be_present
         expect(result(Fabricate(:user)).posts).not_to be_present
-        expect(result(Fabricate(:admin)).posts).to be_present
+        expect(result(admin).posts).to be_present
 
       end
     end
@@ -566,7 +568,7 @@ describe Search do
 
       context 'staff logged in' do
         it 'shows group' do
-          expect(search(Fabricate(:admin)).groups.map(&:name)).to eq([group.name])
+          expect(search(admin).groups.map(&:name)).to eq([group.name])
         end
       end
 
@@ -630,7 +632,7 @@ describe Search do
       it 'shows staff tags' do
         create_staff_tags(["#{tag.name}9"])
 
-        expect(Search.execute(tag.name, guardian: Guardian.new(Fabricate(:admin))).tags.map(&:name)).to contain_exactly(tag.name, "#{tag.name}9")
+        expect(Search.execute(tag.name, guardian: Guardian.new(admin)).tags.map(&:name)).to contain_exactly(tag.name, "#{tag.name}9")
         expect(search.tags.map(&:name)).to contain_exactly(tag.name, "#{tag.name}9")
       end
 
@@ -641,7 +643,7 @@ describe Search do
         category.allowed_tag_groups = [tag_group.name]
         category.save!
 
-        expect(Search.execute(tag.name, guardian: Guardian.new(Fabricate(:admin))).tags).to contain_exactly(tag, category_tag)
+        expect(Search.execute(tag.name, guardian: Guardian.new(admin)).tags).to contain_exactly(tag, category_tag)
         expect(search.tags).to contain_exactly(tag, category_tag)
       end
     end
@@ -1152,14 +1154,14 @@ describe Search do
 
   context '#ts_query' do
     it 'can parse complex strings using ts_query helper' do
-      str = " grigio:babel deprecated? "
+      str = +" grigio:babel deprecated? "
       str << "page page on Atmosphere](https://atmospherejs.com/grigio/babel)xxx: aaa.js:222 aaa'\"bbb"
 
       ts_query = Search.ts_query(term: str, ts_config: "simple")
-      expect { DB.exec("SELECT to_tsvector('bbb') @@ " << ts_query) }.to_not raise_error
+      expect { DB.exec(+"SELECT to_tsvector('bbb') @@ " << ts_query) }.to_not raise_error
 
       ts_query = Search.ts_query(term: "foo.bar/'&baz", ts_config: "simple")
-      expect { DB.exec("SELECT to_tsvector('bbb') @@ " << ts_query) }.to_not raise_error
+      expect { DB.exec(+"SELECT to_tsvector('bbb') @@ " << ts_query) }.to_not raise_error
       expect(ts_query).to include("baz")
     end
   end

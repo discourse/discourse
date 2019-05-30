@@ -111,6 +111,7 @@ module ApplicationHelper
     list = []
     list << (mobile_view? ? 'mobile-view' : 'desktop-view')
     list << (mobile_device? ? 'mobile-device' : 'not-mobile-device')
+    list << 'ios-device' if ios_device?
     list << 'rtl' if rtl?
     list << text_size_class
     list << 'anon' unless current_user
@@ -220,11 +221,7 @@ module ApplicationHelper
         opts[:twitter_summary_large_image] = twitter_summary_large_image_url
       end
 
-      opts[:image] = SiteSetting.site_opengraph_image_url.presence ||
-        twitter_summary_large_image_url.presence ||
-        SiteSetting.site_large_icon_url.presence ||
-        SiteSetting.site_apple_touch_icon_url.presence ||
-        SiteSetting.site_logo_url.presence
+      opts[:image] = SiteSetting.site_opengraph_image_url
     end
 
     # Use the correct scheme for opengraph/twitter image
@@ -293,7 +290,7 @@ module ApplicationHelper
 
   def application_logo_url
     @application_logo_url ||= begin
-      if mobile_view? && SiteSetting.site_mobile_logo_url
+      if mobile_view? && SiteSetting.site_mobile_logo_url.present?
         SiteSetting.site_mobile_logo_url
       else
         SiteSetting.site_logo_url
@@ -319,6 +316,10 @@ module ApplicationHelper
 
   def mobile_device?
     MobileDetection.mobile_device?(request.user_agent)
+  end
+
+  def ios_device?
+    MobileDetection.ios_device?(request.user_agent)
   end
 
   def customization_disabled?
@@ -447,11 +448,10 @@ module ApplicationHelper
 
   def client_side_setup_data
     service_worker_url = Rails.env.development? ? 'service-worker.js' : Rails.application.assets_manifest.assets['service-worker.js']
-    current_hostname_without_port = RailsMultisite::ConnectionManagement.current_hostname.sub(/:[\d]*$/, '')
 
     setup_data = {
       cdn: Rails.configuration.action_controller.asset_host,
-      base_url: current_hostname_without_port,
+      base_url: Discourse.base_url,
       base_uri: Discourse::base_uri,
       environment: Rails.env,
       letter_avatar_version: LetterAvatar.version,

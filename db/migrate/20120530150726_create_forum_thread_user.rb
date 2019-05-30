@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreateForumThreadUser < ActiveRecord::Migration[4.2]
   def up
     create_table :forum_thread_users, id: false do |t|

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Admin::GroupsController < Admin::AdminController
   def bulk
   end

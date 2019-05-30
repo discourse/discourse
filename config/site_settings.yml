@@ -33,6 +33,7 @@ required:
     default: ""
   short_site_description:
     default: ""
+    client: true
   contact_email:
     client: true
     default: ""
@@ -50,15 +51,26 @@ required:
   site_contact_group_name:
     default: ""
     type: group
+  exclude_rel_nofollow_domains:
+    default: ""
+    type: list
+  company_name:
+    default: ""
+  governing_law:
+    default: ""
+  city_for_disputes:
+    default: ""
+
+branding:
   logo:
-    default: -1
+    default: -5
     client: true
     type: upload
   logo_url:
     hidden: true
     default: "/images/d-logo-sketch.png"
   logo_small:
-    default: -2
+    default: -6
     client: true
     type: upload
   logo_small_url:
@@ -82,18 +94,21 @@ required:
     default: ""
     client: true
     type: upload
+  manifest_icon:
+    default: ""
+    type: upload
   large_icon_url:
     hidden: true
     default: ""
   favicon:
-    default: -3
+    default: ""
     client: true
     type: upload
   favicon_url:
     hidden: true
     default: "/images/default-favicon.ico"
   apple_touch_icon:
-    default: -4
+    default: ""
     client: true
     type: upload
   apple_touch_icon_url:
@@ -110,15 +125,6 @@ required:
     type: upload
   twitter_summary_large_image_url:
     hidden: true
-    default: ""
-  exclude_rel_nofollow_domains:
-    default: ""
-    type: list
-  company_name:
-    default: ""
-  governing_law:
-    default: ""
-  city_for_disputes:
     default: ""
 
 basic:
@@ -185,10 +191,9 @@ basic:
   post_menu:
     client: true
     type: list
-    default: "like-count|like|share|flag|edit|bookmark|delete|admin|reply"
+    default: "like|share|flag|edit|bookmark|delete|admin|reply"
     allow_any: false
     choices:
-      - like-count
       - like
       - edit
       - flag
@@ -552,12 +557,17 @@ users:
     min: 1
   clean_up_inactive_users_after_days:
     default: 730
+    min: 0
+    max: 3650
 
 groups:
   enable_group_directory:
     client: true
     default: true
   group_in_subject:
+    default: false
+  enable_category_group_review:
+    client: true
     default: false
 
 posting:
@@ -629,6 +639,11 @@ posting:
       ja: false
       zh_CN: false
       zh_TW: false
+  title_remove_extraneous_space:
+    default: false
+    locale_default:
+      en: true
+      en_US: true
   title_fancy_entities: true
   min_personal_message_title_length:
     client: true
@@ -1064,6 +1079,7 @@ files:
   enable_s3_uploads:
     default: false
     client: true
+    shadowed_by_global: true
   s3_use_iam_profile: false
   s3_access_key_id:
     default: ""
@@ -1079,7 +1095,8 @@ files:
     shadowed_by_global: true
   s3_upload_bucket:
     default: ""
-    regex: '^[a-z0-9\-\/]+$' # can't use '.' when using HTTPS
+    regex: '^[a-z0-9\-\/_]+$' # can't use '.' when using HTTPS
+    shadowed_by_global: true
   s3_endpoint:
     default: ""
     regex: '^https?:\/\/.+[^\/]$'
@@ -1269,7 +1286,7 @@ security:
     default: false
   non_crawler_user_agents:
     hidden: true
-    default: "trident|webkit|gecko|chrome|safari|msie|opera|goanna"
+    default: "trident|webkit|gecko|chrome|safari|msie|opera|goanna|discourse"
     type: list
     list_type: compact
   crawler_user_agents:
@@ -1349,9 +1366,15 @@ onebox:
 
 spam:
   add_rel_nofollow_to_user_content: true
-  score_required_to_hide_post: 10
+  hide_post_sensitivity:
+    type: enum
+    enum: "ReviewableSensitivitySetting"
+    default: 6
   cooldown_minutes_after_hiding_posts: 10
-  spam_score_to_silence_new_user: 6.0
+  silence_new_user_sensitivity:
+    type: enum
+    enum: "ReviewableSensitivitySetting"
+    default: 3
   num_users_to_silence_new_user: 3
   notify_mods_when_user_silenced: false
   flag_sockpuppets: false
@@ -1367,7 +1390,10 @@ spam:
   max_age_unmatched_emails: 365
   max_age_unmatched_ips: 365
   num_flaggers_to_close_topic: 5
-  score_to_auto_close_topic: 25.0
+  auto_close_topic_sensitivity:
+    type: enum
+    enum: "ReviewableSensitivitySetting"
+    default: 9
   num_hours_to_close_topic:
     default: 4
     min: 1
@@ -1376,12 +1402,24 @@ spam:
   auto_silence_fast_typers_on_first_post: true
   auto_silence_fast_typers_max_trust_level: 0
   auto_silence_first_post_regex: ""
-  flags_default_topics:
+
+  reviewable_claiming:
+    client: true
+    type: enum
+    default: disabled
+    choices:
+      - disabled
+      - optional
+      - required
+
+  reviewable_default_topics:
     default: false
     client: true
-  min_score_default_visibility:
-    default: 0.0
+  reviewable_default_visibility:
     client: true
+    type: enum
+    default: low
+    enum: "ReviewablePrioritySetting"
 
 rate_limits:
   unique_posts_mins: 5
@@ -1496,11 +1534,6 @@ developer:
   enable_safe_mode:
     default: true
     client: true
-  refresh_maxmind_db_during_precompile_days:
-    min: 0
-    max: 120
-    default: 2
-    hidden: true
 
 embedding:
   feed_polling_enabled:
@@ -2026,6 +2059,8 @@ tags:
     client: true
   remove_muted_tags_from_latest:
     default: false
+  mute_other_present_tags:
+    default: true
   force_lowercase_tags:
     default: true
     client: true

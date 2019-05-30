@@ -1,8 +1,10 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe TagGroupsController do
-  let(:user) { Fabricate(:user) }
-  let(:tag_group) { Fabricate(:tag_group) }
+  fab!(:user) { Fabricate(:user) }
+  fab!(:tag_group) { Fabricate(:tag_group) }
 
   describe '#index' do
     describe 'for a non staff user' do
@@ -19,7 +21,7 @@ RSpec.describe TagGroupsController do
     end
 
     describe 'for a staff user' do
-      let(:admin) { Fabricate(:admin) }
+      fab!(:admin) { Fabricate(:admin) }
 
       before do
         sign_in(admin)

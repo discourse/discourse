@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # see: https://github.com/rails/rails/issues/32995
 #
 # Rails 5.2 forces us to add Arel.sql to #order and #pluck
@@ -10,8 +12,18 @@
 module ActiveRecord
   module AttributeMethods
     module ClassMethods
+      # this is for Rails 5
       def enforce_raw_sql_whitelist(*args)
         return
+      end
+
+      BLANK_ARRAY = [].freeze
+
+      # this patch just allows everyting in Rails 6
+      def disallow_raw_sql!(args, permit: nil)
+        # we may consider moving to https://github.com/rails/rails/pull/33330
+        # once all frozen string hints are in place
+        return BLANK_ARRAY
       end
     end
   end

@@ -57,17 +57,18 @@ function AcceptanceModal(option, _relatedTarget) {
 window.bootbox.$body = $("#ember-testing");
 $.fn.modal = AcceptanceModal;
 
-let _pretenderCallbacks = [];
+let _pretenderCallbacks = {};
 
-export function applyPretender(server, helper) {
-  _pretenderCallbacks.forEach(cb => cb(server, helper));
+export function applyPretender(name, server, helper) {
+  const cb = _pretenderCallbacks[name];
+  if (cb) cb(server, helper);
 }
 
 export function acceptance(name, options) {
   options = options || {};
 
   if (options.pretend) {
-    _pretenderCallbacks.push(options.pretend);
+    _pretenderCallbacks[name] = options.pretend;
   }
 
   QUnit.module("Acceptance: " + name, {

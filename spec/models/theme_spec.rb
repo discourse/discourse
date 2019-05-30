@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 describe Theme do
@@ -5,7 +7,7 @@ describe Theme do
     Theme.clear_cache!
   end
 
-  let :user do
+  fab! :user do
     Fabricate(:user)
   end
 
@@ -65,7 +67,7 @@ describe Theme do
     expect(Theme.transform_ids([theme.id])).to be_empty
   end
 
-  it "#transform_ids works with nil values" do
+  xit "#transform_ids works with nil values" do
     # Used in safe mode
     expect(Theme.transform_ids([nil])).to eq([nil])
   end
@@ -105,6 +107,24 @@ describe Theme do
     theme.save!
 
     expect(Theme.lookup_field(theme.id, :desktop, "head_tag")).to eq("<b>I am bold</b>")
+  end
+
+  it "changing theme name should re-transpile HTML theme fields" do
+    theme.update!(name: "old_name")
+    html = <<~HTML
+      <script type='text/discourse-plugin' version='0.1'>
+        const x = 1;
+      </script>
+    HTML
+    theme.set_field(target: :common, name: "head_tag", value: html)
+    theme.save!
+    field = theme.theme_fields.where(value: html).first
+    old_value = field.value_baked
+
+    theme.update!(name: "new_name")
+    field.reload
+    new_value = field.value_baked
+    expect(old_value).not_to eq(new_value)
   end
 
   it 'should precompile fragments in body and head tags' do
@@ -327,6 +347,7 @@ HTML
     end
 
     it "allows values to be used in JS" do
+      theme.name = 'awesome theme"'
       theme.set_field(target: :settings, name: :yaml, value: "name: bob")
       theme_field = theme.set_field(target: :common, name: :after_header, value: '<script type="text/discourse-plugin" version="1.0">alert(settings.name); let a = ()=>{};</script>')
       theme.save!
@@ -341,12 +362,18 @@ HTML
       })();
       (function () {
         if ('Discourse' in window && typeof Discourse._registerPluginCode === 'function') {
+          var __theme_name__ = "awesome theme\\\"";
           var settings = Discourse.__container__.lookup("service:theme-settings").getObjectForTheme(#{theme.id});
           var themePrefix = function themePrefix(key) {
             return 'theme_translations.#{theme.id}.' + key;
           };
           Discourse._registerPluginCode('1.0', function (api) {
-            alert(settings.name);var a = function a() {};
+            try {
+              alert(settings.name);var a = function a() {};
+            } catch (err) {
+              var rescue = require("discourse/lib/utilities").rescueThemeError;
+              rescue(__theme_name__, err, api);
+            }
           });
         }
       })();
@@ -370,12 +397,18 @@ HTML
       })();
       (function () {
         if ('Discourse' in window && typeof Discourse._registerPluginCode === 'function') {
+          var __theme_name__ = "awesome theme\\\"";
           var settings = Discourse.__container__.lookup("service:theme-settings").getObjectForTheme(#{theme.id});
           var themePrefix = function themePrefix(key) {
             return 'theme_translations.#{theme.id}.' + key;
           };
           Discourse._registerPluginCode('1.0', function (api) {
-            alert(settings.name);var a = function a() {};
+            try {
+              alert(settings.name);var a = function a() {};
+            } catch (err) {
+              var rescue = require("discourse/lib/utilities").rescueThemeError;
+              rescue(__theme_name__, err, api);
+            }
           });
         }
       })();
@@ -479,6 +512,31 @@ HTML
     expect(ColorScheme.hex_for_name('header_primary')).to eq('333333')
   end
 
+  it "correctly notifies about theme changes" do
+    cs1 = Fabricate(:color_scheme)
+    cs2 = Fabricate(:color_scheme)
+
+    theme = Fabricate(:theme,
+      user_selectable: true,
+      user: user,
+      color_scheme_id: cs1.id
+    )
+
+    messages = MessageBus.track_publish do
+      theme.save!
+    end.filter { |m| m.channel == "/file-change" }
+    expect(messages.count).to eq(1)
+    expect(messages.first.data.map { |d| d[:target] }).to contain_exactly(:desktop_theme, :mobile_theme)
+
+    # With color scheme change:
+    messages = MessageBus.track_publish do
+      theme.color_scheme_id = cs2.id
+      theme.save!
+    end.filter { |m| m.channel == "/file-change" }
+    expect(messages.count).to eq(1)
+    expect(messages.first.data.map { |d| d[:target] }).to contain_exactly(:admin, :desktop, :desktop_theme, :mobile, :mobile_theme)
+  end
+
   it 'handles settings cache correctly' do
     Theme.destroy_all
 
@@ -572,8 +630,8 @@ HTML
     end
 
     it "can create a hash of overridden values" do
-      en_translation = ThemeField.create!(theme_id: theme.id, name: "en", type_id: ThemeField.types[:yaml], target_id: Theme.targets[:translations], value: <<~YAML)
-        en:
+      en_translation = ThemeField.create!(theme_id: theme.id, name: "en_US", type_id: ThemeField.types[:yaml], target_id: Theme.targets[:translations], value: <<~YAML)
+        en_US:
           group_of_translations:
             translation1: en test1
       YAML
@@ -583,7 +641,7 @@ HTML
       theme.update_translation("group_of_translations.translation1", "overriddentest2")
       theme.reload
       expect(theme.translation_override_hash).to eq(
-        "en" => {
+        "en_US" => {
           "group_of_translations" => {
             "translation1" => "overriddentest1"
           }

@@ -21,9 +21,9 @@ export default Ember.Controller.extend({
 
   actions: {
     changeNotificationLevel() {
-      this.get("topicBulkActions").performAndRefresh({
+      this.topicBulkActions.performAndRefresh({
         type: "change_notification_level",
-        notification_level_id: this.get("notificationLevelId")
+        notification_level_id: this.notificationLevelId
       });
     }
   }

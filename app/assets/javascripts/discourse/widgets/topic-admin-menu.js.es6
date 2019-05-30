@@ -3,9 +3,9 @@ import { h } from "virtual-dom";
 
 createWidget("admin-menu-button", {
   html(attrs) {
-    let className = "btn";
+    let className;
     if (attrs.buttonClass) {
-      className += " " + attrs.buttonClass;
+      className = attrs.buttonClass;
     }
 
     return h(

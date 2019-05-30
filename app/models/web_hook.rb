@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class WebHook < ActiveRecord::Base
   has_and_belongs_to_many :web_hook_event_types
   has_and_belongs_to_many :groups

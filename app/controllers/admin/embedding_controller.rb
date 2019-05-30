@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_dependency 'embedding'
 
 class Admin::EmbeddingController < Admin::AdminController
@@ -14,7 +16,7 @@ class Admin::EmbeddingController < Admin::AdminController
     end
 
     Embedding.settings.each do |s|
-      @embedding.send("#{s}=", params[:embedding][s])
+      @embedding.public_send("#{s}=", params[:embedding][s])
     end
 
     if @embedding.save

@@ -21,6 +21,8 @@ class Group < ActiveRecord::Base
   has_many :users, through: :group_users
   has_many :requesters, through: :group_requests, source: :user
   has_many :group_histories, dependent: :destroy
+  has_many :category_reviews, class_name: 'Category', foreign_key: :reviewable_by_group_id, dependent: :nullify
+  has_many :reviewables, foreign_key: :reviewable_by_group_id, dependent: :nullify
 
   has_and_belongs_to_many :web_hooks
 
@@ -45,6 +47,12 @@ class Group < ActiveRecord::Base
   def expire_cache
     ApplicationSerializer.expire_cache_fragment!("group_names")
     SvgSprite.expire_cache
+  end
+
+  def remove_review_groups
+    puts self.id!
+    Category.where(review_group_id: self.id).update_all(review_group_id: nil)
+    Category.where(review_group_id: self.id).update_all(review_group_id: nil)
   end
 
   validate :name_format_validator
@@ -91,7 +99,7 @@ class Group < ActiveRecord::Base
   validates :messageable_level, inclusion: { in: ALIAS_LEVELS.values }
 
   scope :visible_groups, Proc.new { |user, order, opts|
-    groups = Group.order(order || "name ASC")
+    groups = self.order(order || "name ASC")
 
     if !opts || !opts[:include_everyone]
       groups = groups.where("groups.id > 0")

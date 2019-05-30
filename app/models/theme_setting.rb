@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ThemeSetting < ActiveRecord::Base
   belongs_to :theme
 
@@ -58,7 +60,7 @@ end
 #
 # Table name: theme_settings
 #
-#  id         :bigint(8)        not null, primary key
+#  id         :bigint           not null, primary key
 #  name       :string(255)      not null
 #  data_type  :integer          not null
 #  value      :text

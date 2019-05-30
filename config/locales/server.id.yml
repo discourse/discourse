@@ -142,7 +142,6 @@ id:
   private_message_abbrev: "Psn"
   rss_description:
     latest: "Topik Terbaru"
-    hot: "Topik Terpanas"
     top: "Topik unggulan"
     posts: "Pos terbaru"
     group_posts: "Posting terkini dari %{group_name}"
@@ -237,8 +236,7 @@ id:
       half_a_minute: "< 1m"
     distance_in_words_verbose:
       half_a_minute: "baru saja"
-      less_than_x_seconds:
-        other: "baru saja"
+      less_than_x_seconds: "baru saja"
       x_seconds:
         other: "%{count} detik yang lalu"
       less_than_x_minutes:
@@ -536,8 +534,6 @@ id:
       title: "Atur Kata Sandi"
   page_not_found:
     see_more: "Selengkapnya"
-  terms_of_service:
-    title: "Ketentuan Layanan"
   image: "gambar"
   upload:
     images:
@@ -545,9 +541,6 @@ id:
   skipped_email_log:
     user_email_no_user: "Tidak dapat menemukan pengguna dengan id %{user_id}"
     user_email_post_not_found: "Tidak dapat menemukan post dengan id %{post_id}"
-  about: "Tentang"
-  guidelines: "Petunjuk"
-  privacy: "Privasi"
   csv_export:
     boolean_yes: "Ya"
     boolean_no: "Tidak"
@@ -589,6 +582,8 @@ id:
   joined: "Joined"
   reviewables:
     actions:
+      delete_single:
+        title: "Hapus"
       approve:
         title: "Terima"
       reject_user:

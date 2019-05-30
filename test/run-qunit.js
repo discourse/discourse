@@ -20,6 +20,8 @@ const CDP = require("chrome-remote-interface");
 const QUNIT_RESULT = args[2];
 const fs = require("fs");
 
+const scripts = {};
+
 if (QUNIT_RESULT) {
   (async () => {
     await fs.stat(QUNIT_RESULT, (err, stats) => {
@@ -49,9 +51,23 @@ async function runAllTests() {
   let chrome = await launchChrome();
   let protocol = await CDP({ port: chrome.port });
 
-  const { Page, Runtime } = protocol;
+  const { Debugger, Inspector, Page, Runtime } = protocol;
 
-  await Promise.all([Page.enable(), Runtime.enable()]);
+  await Promise.all([
+    Debugger.enable(),
+    Inspector.enable(),
+    Page.enable(),
+    Runtime.enable()
+  ]);
+
+  Inspector.targetCrashed(entry => {
+    console.log("Chrome target crashed:");
+    console.log(entry);
+  });
+
+  Runtime.exceptionThrown(exceptionInfo => {
+    console.log(exceptionInfo.exceptionDetails.exception.description);
+  });
 
   Runtime.consoleAPICalled(response => {
     const message = response["args"][0].value;
@@ -73,15 +89,22 @@ async function runAllTests() {
   console.log("navigate to " + args[0]);
   Page.navigate({ url: args[0] });
 
-  Page.loadEventFired(async () => {
-    await Runtime.evaluate({ expression: `(${qunit_script})()` });
+  Debugger.scriptParsed(g => {
+    scripts[g.scriptId] = g.url;
+  });
 
+  Page.loadEventFired(async () => {
+    await Runtime.evaluate({
+      expression: `(${qunit_script})()`
+    });
     const timeout = parseInt(args[1] || 300000, 10);
     var start = Date.now();
 
     var interval;
 
     let runTests = async function() {
+      await protocol.Memory.startSampling();
+
       if (Date.now() > start + timeout) {
         console.error("Tests timed out");
         protocol.close();
@@ -94,6 +117,60 @@ async function runAllTests() {
       });
 
       if (numFails && numFails.result && numFails.result.type !== "undefined") {
+        const {
+          root: { nodeId: documentNodeId }
+        } = await protocol.DOM.getDocument();
+
+        const {
+          object: { objectId: remoteObjectId }
+        } = await protocol.DOM.resolveNode({
+          nodeId: documentNodeId
+        });
+
+        const result = await protocol.DOMDebugger.getEventListeners({
+          objectId: remoteObjectId
+        });
+
+        const onceReport = {};
+        const multiReport = {};
+
+        result.listeners.forEach(listener => {
+          const key = `${listener.type}${listener.scriptId}${
+            listener.lineNumber
+          }`;
+
+          if (onceReport[key]) {
+            multiReport[key] = multiReport[key] || onceReport[key];
+            multiReport[key].count += 1;
+          } else {
+            const script = scripts[listener.scriptId];
+
+            onceReport[key] = {
+              listener,
+              file: `${script || "unknown-file"}:${listener.lineNumber}`,
+              count: 1
+            };
+          }
+        });
+
+        if (Object.keys(multiReport).length) {
+          console.log(
+            `\n\nLeaked js event listeners\n----------------------------------------------\n`
+          );
+          Object.keys(multiReport).forEach(reportKey => {
+            const report = multiReport[reportKey];
+            console.log(
+              `${report.listener.type} - ${report.count} times : ${report.file}`
+            );
+          });
+        }
+
+        const { usedSize } = await protocol.Runtime.getHeapUsage();
+        console.log(`\n\nJS used heap\n----------------------------------------------\n${(
+          usedSize / 1073741824
+        ).toFixed(3)}GB
+        `);
+
         clearInterval(interval);
         protocol.close();
         chrome.kill();

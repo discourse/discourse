@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class FeedItemAccessor
   attr_accessor :rss_item
 
@@ -16,10 +18,10 @@ class FeedItemAccessor
   private
 
   def element(element_name)
-    rss_item.respond_to?(element_name) ? rss_item.send(element_name) : nil
+    rss_item.respond_to?(element_name) ? rss_item.public_send(element_name) : nil
   end
 
   def try_attribute_or_self(element, attribute_name)
-    element.respond_to?(attribute_name) ? element.send(attribute_name) : element
+    element.respond_to?(attribute_name) ? element.public_send(attribute_name) : element
   end
 end

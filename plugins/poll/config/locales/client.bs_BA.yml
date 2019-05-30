@@ -20,15 +20,15 @@ bs_BA:
       multiple:
         help:
           at_least_min_options:
-            one: "Odaberi barem <strong>1</strong> opciju"
+            one: "Odaberi barem <strong>%{count}</strong> opciju"
             few: "Odaberi barem <strong>%{name}</strong> opcije"
             other: "Odaberi barem <strong>%{name}</strong> opcija"
           up_to_max_options:
-            one: "Odaberi do <strong>1</strong> opcije"
+            one: "Odaberi do <strong>%{count}</strong> opcije"
             few: "Odaberi do <strong>%{count}</strong> opcije"
             other: "Odaberi do <strong>%{count}</strong> opcija"
           x_options:
-            one: "Odaberi <strong>1</strong> opciju"
+            one: "Odaberi <strong>%{count}</strong> opciju"
             few: "Odaberi <strong>%{count}</strong> opcije"
             other: "Odaberi <strong>%{count}</strong> opcija"
           between_min_and_max_options: "Odaberi između <strong>%{min}</strong> i <strong>%{max}</strong> opcija"

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 describe AdminDashboardData do
@@ -131,37 +133,37 @@ describe AdminDashboardData do
     shared_examples 'problem detection for login providers' do
       context 'when disabled' do
         it 'returns nil' do
-          SiteSetting.public_send("#{enable_setting}=", false)
+          SiteSetting.set(enable_setting, false)
           expect(subject).to be_nil
         end
       end
 
       context 'when enabled' do
         before do
-          SiteSetting.public_send("#{enable_setting}=", true)
+          SiteSetting.set(enable_setting, true)
         end
 
         it 'returns nil when key and secret are set' do
-          SiteSetting.public_send("#{key}=", '12313213')
-          SiteSetting.public_send("#{secret}=", '12312313123')
+          SiteSetting.set(key, '12313213')
+          SiteSetting.set(secret, '12312313123')
           expect(subject).to be_nil
         end
 
         it 'returns a string when key is not set' do
-          SiteSetting.public_send("#{key}=", '')
-          SiteSetting.public_send("#{secret}=", '12312313123')
+          SiteSetting.set(key, '')
+          SiteSetting.set(secret, '12312313123')
           expect(subject).to_not be_nil
         end
 
         it 'returns a string when secret is not set' do
-          SiteSetting.public_send("#{key}=", '123123')
-          SiteSetting.public_send("#{secret}=", '')
+          SiteSetting.set(key, '123123')
+          SiteSetting.set(secret, '')
           expect(subject).to_not be_nil
         end
 
         it 'returns a string when key and secret are not set' do
-          SiteSetting.public_send("#{key}=", '')
-          SiteSetting.public_send("#{secret}=", '')
+          SiteSetting.set(key, '')
+          SiteSetting.set(secret, '')
           expect(subject).to_not be_nil
         end
       end
@@ -192,52 +194,6 @@ describe AdminDashboardData do
     end
   end
 
-  describe 'pwa_config_check' do
-    subject { described_class.new.pwa_config_check }
-
-    it 'alerts for large_icon missing' do
-      SiteSetting.large_icon = nil
-      expect(subject).to eq(I18n.t('dashboard.pwa_config_icon_warning', base_path: Discourse.base_path))
-    end
-
-    it 'alerts for incompatible large_icon' do
-      upload = UploadCreator.new(
-        file_from_fixtures('large_icon_incorrect.png'),
-        'large_icon',
-        for_site_setting: true
-      ).create_for(Discourse.system_user.id)
-      SiteSetting.large_icon = upload
-      expect(subject).to eq(I18n.t('dashboard.pwa_config_icon_warning', base_path: Discourse.base_path))
-    end
-
-    context 'when large_icon is correct' do
-      before do
-        upload = UploadCreator.new(
-          file_from_fixtures('large_icon_correct.png'),
-          'large_icon',
-          for_site_setting: true
-        ).create_for(Discourse.system_user.id)
-        SiteSetting.large_icon = upload
-      end
-
-      it 'alerts for short_title missing' do
-        SiteSetting.short_title = nil
-        expect(subject).to eq(I18n.t('dashboard.pwa_config_title_warning', base_path: Discourse.base_path))
-      end
-
-      it 'returns nil when everything is ok' do
-        upload = UploadCreator.new(
-          file_from_fixtures('large_icon_correct.png'),
-          'large_icon',
-          for_site_setting: true
-        ).create_for(Discourse.system_user.id)
-        SiteSetting.large_icon = upload
-        SiteSetting.short_title = 'title'
-        expect(subject).to be_nil
-      end
-    end
-  end
-
   describe 's3_config_check' do
     shared_examples 'problem detection for s3-dependent setting' do
       subject { described_class.new.s3_config_check }
@@ -249,7 +205,7 @@ describe AdminDashboardData do
         ['a', ''].repeated_permutation(keys.size) do |*values|
           hash = Hash[keys.zip(values)]
           hash.each do |key, value|
-            SiteSetting.public_send("#{key}=", value)
+            SiteSetting.set(key, value)
           end
           yield hash
         end
@@ -257,9 +213,9 @@ describe AdminDashboardData do
 
       context 'when setting is enabled' do
         before do
-          all_setting_keys.each { |key| SiteSetting.public_send("#{key}=", 'foo') }
-          SiteSetting.public_send("#{setting[:key]}=", setting[:enabled_value])
-          SiteSetting.public_send("#{bucket_key}=", bucket_value)
+          all_setting_keys.each { |key| SiteSetting.set(key, 'foo') }
+          SiteSetting.set(setting[:key], setting[:enabled_value])
+          SiteSetting.set(bucket_key, bucket_value)
         end
 
         context 'when bucket is blank' do
@@ -306,7 +262,7 @@ describe AdminDashboardData do
 
       context 'when setting is not enabled' do
         before do
-          SiteSetting.public_send("#{setting[:key]}=", setting[:disabled_value])
+          SiteSetting.set(setting[:key], setting[:disabled_value])
         end
 
         it "always returns nil" do

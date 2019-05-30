@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module FileStore
 
   class BaseStore
@@ -83,6 +85,7 @@ module FileStore
             follow_redirect: true
           )
           cache_file(file, filename)
+          file = get_from_cache(filename)
         end
 
         file

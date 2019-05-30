@@ -22,7 +22,10 @@
           {{/if}}
             {{text-field id="edit-title" value=buffered.title maxlength=siteSettings.max_topic_title_length autofocus="true"}}
             {{#if showCategoryChooser}}
-              {{category-chooser class="small" value=buffered.category_id}}
+              {{category-chooser
+                class="small"
+                value=(unbound buffered.category_id)
+                onSelectAny=(action "topicCategoryChanged")}}
             {{/if}}
 
             {{#if canEditTags}}

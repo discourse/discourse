@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Auth::OpenIdAuthenticator < Auth::Authenticator
 
   attr_reader :name, :identifier
@@ -10,7 +12,7 @@ class Auth::OpenIdAuthenticator < Auth::Authenticator
   end
 
   def enabled?
-    SiteSetting.send(@enabled_site_setting)
+    SiteSetting.get(@enabled_site_setting)
   end
 
   def description_for_user(user)

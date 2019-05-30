@@ -15,10 +15,10 @@ bg:
     default_poll_must_have_at_least_2_options: "Анкетата трябва да има поне 2 опции."
     named_poll_must_have_at_least_2_options: "Анкетата <strong>%{name}</strong> трябва да има поне  2 опции."
     default_poll_must_have_less_options:
-      one: "Анкетата трябва да има по-малко от 1 опция."
+      one: "Анкетата трябва да има по-малко от %{count} опция."
       other: "Анкетата трябва да има по-малко от %{count} опции."
     named_poll_must_have_less_options:
-      one: "Анкетата: <strong>%{name}</strong> трябва да има по-малко от 1 опция."
+      one: "Анкетата: <strong>%{name}</strong> трябва да има по-малко от %{count} опция."
       other: "Анкетата <strong>%{name}</strong> трябва да има по-малко от %{count} опции."
     default_poll_must_have_different_options: "Анкетата трябва да има различни опции."
     named_poll_must_have_different_options: "Анкетата  <strong>%{name}</strong> трябва да има различни възможни отговори."

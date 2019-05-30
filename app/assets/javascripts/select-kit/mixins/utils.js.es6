@@ -7,7 +7,7 @@ export default Ember.Mixin.create({
       case "number":
         return content;
       default:
-        return get(content, this.get("valueAttribute"));
+        return get(content, this.valueAttribute);
     }
   },
 
@@ -17,7 +17,7 @@ export default Ember.Mixin.create({
     }
 
     if (typeof content === "object") {
-      return get(content, this.get("nameProperty"));
+      return get(content, this.nameProperty);
     }
 
     return content;
@@ -44,7 +44,7 @@ export default Ember.Mixin.create({
 
   _castBoolean(value) {
     if (
-      this.get("castBoolean") &&
+      this.castBoolean &&
       Ember.isPresent(value) &&
       typeof value === "string"
     ) {
@@ -55,11 +55,7 @@ export default Ember.Mixin.create({
   },
 
   _castInteger(value) {
-    if (
-      this.get("castInteger") &&
-      Ember.isPresent(value) &&
-      this._isNumeric(value)
-    ) {
+    if (this.castInteger && Ember.isPresent(value) && this._isNumeric(value)) {
       return parseInt(value, 10);
     }
 
@@ -67,15 +63,15 @@ export default Ember.Mixin.create({
   },
 
   _findComputedContentItemByGuid(guid) {
-    if (guidFor(this.get("createRowComputedContent")) === guid) {
-      return this.get("createRowComputedContent");
+    if (guidFor(this.createRowComputedContent) === guid) {
+      return this.createRowComputedContent;
     }
 
-    if (guidFor(this.get("noneRowComputedContent")) === guid) {
-      return this.get("noneRowComputedContent");
+    if (guidFor(this.noneRowComputedContent) === guid) {
+      return this.noneRowComputedContent;
     }
 
-    return this.get("collectionComputedContent").find(c => {
+    return this.collectionComputedContent.find(c => {
       return guidFor(c) === guid;
     });
   },

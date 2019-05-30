@@ -3,7 +3,7 @@ import DiscourseURL from "discourse/lib/url";
 
 acceptance("Group Card - Mobile", { mobileView: true });
 
-QUnit.test("group card", async assert => {
+QUnit.skip("group card", async assert => {
   await visit("/t/301/1");
   assert.ok(
     invisible("#group-card"),

@@ -38,7 +38,7 @@ uk:
       not_a_number: це не цифра
       not_an_integer: має бути цілим числом
       too_long:
-        one: надто довге (максимум 1 символ)
+        one: надто довге (максимум %{count} символ)
         few: надто довге (максимум %{count} символів)
         many: надто довге (максимум %{count} символів)
         other: надто довге (максимум %{count} символів)
@@ -62,7 +62,7 @@ uk:
     start_discussion: "Розпочати Дискусію"
     continue: "Продовжити Дискусію"
     more_replies:
-      one: "1 більше відповідей"
+      one: "%{count} більше відповідей"
       few: "%{count} більше відповідей"
       many: "%{count} більше відповідей"
       other: "%{count} більше відповідей"
@@ -103,7 +103,6 @@ uk:
   read_full_topic: "Читати тему цілком"
   rss_description:
     latest: "Останні теми"
-    hot: "Гарячі теми"
     posts: "Останні дописи"
     group_posts: "Останні дописи від %{group_name}"
     user_posts: "Останні дописи @%{username}"
@@ -162,17 +161,17 @@ uk:
       title: "провідник"
   rate_limiter:
     hours:
-      one: "1 година"
+      one: "%{count} година"
       few: "%{count} години"
       many: "%{count} годин"
       other: "%{count} годин"
     minutes:
-      one: "1 хвилина"
+      one: "%{count} хвилина"
       few: "%{count} хвилини"
       many: "%{count} хвилин"
       other: "%{count} хвилин"
     seconds:
-      one: "1 секунда"
+      one: "%{count} секунда"
       few: "%{count} секунди"
       many: "%{count} секунд"
       other: "%{count} секунд"
@@ -181,8 +180,9 @@ uk:
       half_a_minute: "< 1 хв"
     distance_in_words_verbose:
       half_a_minute: "щойно"
+      less_than_x_seconds: "щойно"
       x_seconds:
-        one: "1 секунда тому"
+        one: "%{count} секунда тому"
         few: "%{count} секунд тому"
         many: "%{count} секунд тому"
         other: "%{count} секунд тому"
@@ -511,7 +511,6 @@ uk:
     digest:
       new_topics: "Нові теми"
       liked_received: "Отримані вподобання"
-      new_posts: "Нові дописи"
       new_users: "Нові користувачі"
       join_the_discussion: "Читати більше"
       click_here: "натисніть тут"
@@ -527,8 +526,6 @@ uk:
     see_more: "Більше"
     search_title: "Пошук на цьому сайті"
     search_button: "Пошук"
-  terms_of_service:
-    title: "Умови Використання"
   deleted: "deleted"
   image: "зображення"
   upload:
@@ -551,9 +548,6 @@ uk:
     sender_message_to_blank: "message.to is blank"
     sender_text_part_body_blank: "text_part.body is blank"
     sender_body_blank: "body is blank"
-  about: "Про"
-  guidelines: "Інструкції"
-  privacy: "Конфіденційність"
   edit_this_page: "Редагувати цю сторінку"
   csv_export:
     boolean_yes: "Так"
@@ -608,6 +602,8 @@ uk:
         title: "Призупинити користувача"
       delete_spammer:
         title: "Видалити спамера"
+      delete_single:
+        title: "Видалити"
       disagree:
         title: "Відмовитися"
       approve:

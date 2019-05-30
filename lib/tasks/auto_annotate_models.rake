@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # NOTE: only doing this in development as some production environments (Heroku)
 # NOTE: are sensitive to local FS writes, and besides -- it's just not proper
 # NOTE: to have a dev-mode tool do its thing in production.
@@ -13,7 +15,7 @@ if (Rails.env.development? || Rails.env.test?)
       'position_in_factory' => "before",
       'show_indexes' => "true",
       'simple_indexes' => "false",
-      'model_dir' => "app/models",
+      'model_dir' => ["app/models"] + Dir.glob("plugins/**/app/models"),
       'include_version' => "false",
       'require' => "",
       'exclude_tests' => "true",
@@ -29,7 +31,8 @@ if (Rails.env.development? || Rails.env.test?)
       'format_markdown' => "false",
       'sort' => "false",
       'force' => "false",
-      'trace' => "false"
+      'trace' => "false",
+      'show_foreign_keys' => "true"
     )
   end
 

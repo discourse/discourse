@@ -153,6 +153,7 @@ export function ajax() {
   if (
     args.type &&
     args.type.toUpperCase() !== "GET" &&
+    url !== "/clicks/track" &&
     !Discourse.Session.currentProp("csrfToken")
   ) {
     promise = new Ember.RSVP.Promise((resolve, reject) => {

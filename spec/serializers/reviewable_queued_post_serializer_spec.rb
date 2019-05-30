@@ -1,10 +1,12 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 describe ReviewableQueuedPostSerializer do
-  let(:admin) { Fabricate(:admin) }
+  fab!(:admin) { Fabricate(:admin) }
 
   context "new topic" do
-    let(:reviewable) { Fabricate(:reviewable_queued_post_topic) }
+    fab!(:reviewable) { Fabricate(:reviewable_queued_post_topic) }
 
     it "allows us to edit category / title" do
       json = ReviewableQueuedPostSerializer.new(reviewable, scope: Guardian.new(admin), root: nil).as_json
@@ -38,7 +40,7 @@ describe ReviewableQueuedPostSerializer do
   end
 
   context "reply to an existing topic" do
-    let(:reviewable) { Fabricate(:reviewable_queued_post) }
+    fab!(:reviewable) { Fabricate(:reviewable_queued_post) }
 
     it "includes correct user fields" do
       json = ReviewableQueuedPostSerializer.new(reviewable, scope: Guardian.new(admin), root: nil).as_json

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # kind of odd, but we need it, we also need to nuke usage of User from inside migrations
 #  very poor form
 user = User.find_by("id <> -1 and username_lower = 'system'")

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 require_dependency 'jobs/regular/process_post'
 
@@ -6,7 +8,6 @@ describe Jobs::PollFeed do
 
   context "execute" do
     let(:url) { "http://eviltrout.com" }
-    let(:embed_by_username) { "eviltrout" }
 
     before do
       $redis.del("feed-polled-recently")
@@ -45,8 +46,8 @@ describe Jobs::PollFeed do
   describe '#poll_feed' do
     let(:embed_by_username) { 'eviltrout' }
     let(:embed_username_key_from_feed) { 'discourse:username' }
-    let!(:default_user) { Fabricate(:evil_trout) }
-    let!(:feed_author) { Fabricate(:user, username: 'xrav3nz', email: 'hi@bye.com') }
+    fab!(:default_user) { Fabricate(:evil_trout) }
+    fab!(:feed_author) { Fabricate(:user, username: 'xrav3nz', email: 'hi@bye.com') }
 
     shared_examples 'topic creation based on the the feed' do
       describe 'author username parsing' do

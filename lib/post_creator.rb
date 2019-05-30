@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Responsible for creating posts and topics
 #
 require_dependency 'rate_limiter'
@@ -54,6 +56,7 @@ class PostCreator
   #     pinned_at             - Topic pinned time (optional)
   #     pinned_globally       - Is the topic pinned globally (optional)
   #     shared_draft          - Is the topic meant to be a shared draft
+  #     topic_opts            - Options to be overwritten for topic
   #
   def initialize(user, opts)
     # TODO: we should reload user in case it is tainted, should take in a user_id as opposed to user
@@ -91,7 +94,7 @@ class PostCreator
     @post = nil
 
     if @user.suspended? && !skip_validations?
-      errors[:base] << I18n.t(:user_is_suspended)
+      errors.add(:base, I18n.t(:user_is_suspended))
       return false
     end
 
@@ -102,8 +105,9 @@ class PostCreator
       max_allowed_message_recipients = SiteSetting.max_allowed_message_recipients
 
       if names.length > max_allowed_message_recipients
-        errors[:base] << I18n.t(:max_pm_recepients,
-          recipients_limit: max_allowed_message_recipients
+        errors.add(
+          :base,
+          I18n.t(:max_pm_recepients, recipients_limit: max_allowed_message_recipients)
         )
 
         return false
@@ -124,7 +128,7 @@ class PostCreator
         ", user_ids: users.keys)
         .pluck(:id).each do |m|
 
-        errors[:base] << I18n.t(:not_accepting_pms, username: users[m])
+        errors.add(:base, I18n.t(:not_accepting_pms, username: users[m]))
       end
 
       return false if errors[:base].present?
@@ -136,7 +140,7 @@ class PostCreator
     else
       @topic = Topic.find_by(id: @opts[:topic_id])
       unless @topic.present? && (@opts[:skip_guardian] || guardian.can_create?(Post, @topic))
-        errors[:base] << I18n.t(:topic_not_found)
+        errors.add(:base, I18n.t(:topic_not_found))
         return false
       end
     end
@@ -147,7 +151,7 @@ class PostCreator
 
     if @post.has_host_spam?
       @spam = true
-      errors[:base] << I18n.t(:spamming_host)
+      errors.add(:base, I18n.t(:spamming_host))
       return false
     end
 
@@ -407,7 +411,8 @@ class PostCreator
   def create_topic
     return if @topic
     begin
-      topic_creator = TopicCreator.new(@user, guardian, @opts)
+      opts = @opts[:topic_opts] ? @opts.merge(@opts[:topic_opts]) : @opts
+      topic_creator = TopicCreator.new(@user, guardian, opts)
       @topic = topic_creator.create
     rescue ActiveRecord::Rollback
       rollback_from_errors!(topic_creator)
@@ -464,7 +469,7 @@ class PostCreator
 
     # Attributes we pass through to the post instance if present
     [:post_type, :no_bump, :cooking_options, :image_sizes, :acting_user, :invalidate_oneboxes, :cook_method, :via_email, :raw_email, :action_code].each do |a|
-      post.send("#{a}=", @opts[a]) if @opts[a].present?
+      post.public_send("#{a}=", @opts[a]) if @opts[a].present?
     end
 
     post.extract_quoted_post_numbers
@@ -515,7 +520,7 @@ class PostCreator
 
     @user.user_stat.save!
 
-    @user.update_attributes(last_posted_at: @post.created_at)
+    @user.update(last_posted_at: @post.created_at)
   end
 
   def create_post_notice

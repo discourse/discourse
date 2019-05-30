@@ -13,6 +13,7 @@ module SiteSettingExtension
   # for site locale
   def self.extended(klass)
     if GlobalSetting.respond_to?(:default_locale) && GlobalSetting.default_locale.present?
+      # protected
       klass.send :setup_shadowed_methods, :default_locale, GlobalSetting.default_locale
     end
   end
@@ -261,6 +262,8 @@ module SiteSettingExtension
   def placeholder(setting)
     if !I18n.t("site_settings.placeholder.#{setting}", default: "").empty?
       I18n.t("site_settings.placeholder.#{setting}")
+    elsif SiteIconManager.respond_to?("#{setting}_url")
+      SiteIconManager.public_send("#{setting}_url")
     end
   end
 
@@ -382,16 +385,20 @@ module SiteSettingExtension
 
   def filter_value(name, value)
     if HOSTNAME_SETTINGS.include?(name)
-      value.split("|").map { |url| get_hostname(url) }.compact.uniq.join("|")
+      value.split("|").map { |url| url.strip!; get_hostname(url) }.compact.uniq.join("|")
     else
       value
     end
   end
 
-  def set(name, value)
+  def set(name, value, options = nil)
     if has_setting?(name)
       value = filter_value(name, value)
-      self.public_send("#{name}=", value)
+      if options
+        self.public_send("#{name}=", value, options)
+      else
+        self.public_send("#{name}=", value)
+      end
       Discourse.request_refresh! if requires_refresh?(name)
     else
       raise Discourse::InvalidParameters.new("Either no setting named '#{name}' exists or value provided is invalid")
@@ -404,6 +411,16 @@ module SiteSettingExtension
       set(name, value)
       value = prev_value = "[FILTERED]" if secret_settings.include?(name.to_sym)
       StaffActionLogger.new(user).log_site_setting_change(name, prev_value, value)
+    else
+      raise Discourse::InvalidParameters.new("No setting named '#{name}' exists")
+    end
+  end
+
+  def get(name)
+    if has_setting?(name)
+      self.public_send(name)
+    else
+      raise Discourse::InvalidParameters.new("No setting named '#{name}' exists")
     end
   end
 
@@ -488,7 +505,6 @@ module SiteSettingExtension
   end
 
   def get_hostname(url)
-    url.strip!
 
     host = begin
       URI.parse(url)&.host

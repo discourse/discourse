@@ -1,4 +1,5 @@
 # encoding: utf-8
+# frozen_string_literal: true
 
 module Slug
 
@@ -36,7 +37,9 @@ module Slug
   end
 
   def self.ascii_generator(string)
-    string.tr("'", "").parameterize
+    I18n.with_locale(SiteSetting.default_locale) do
+      string.tr("'", "").parameterize
+    end
   end
 
   def self.encoded_generator(string, downcase: true)

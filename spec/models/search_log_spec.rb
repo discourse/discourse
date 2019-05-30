@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe SearchLog, type: :model do
@@ -87,7 +89,7 @@ RSpec.describe SearchLog, type: :model do
     end
 
     context "when logged in" do
-      let(:user) { Fabricate(:user) }
+      fab!(:user) { Fabricate(:user) }
 
       it "logs and updates the search" do
         freeze_time
@@ -163,7 +165,7 @@ RSpec.describe SearchLog, type: :model do
 
   describe ".term_details" do
     it "should only use the date for the period" do
-      time = Time.new(2019, 5, 23, 18, 15, 30)
+      time = Time.utc(2019, 5, 23, 18, 15, 30)
       freeze_time(time)
 
       search_log = Fabricate(:search_log, created_at: time - 1.hour)
@@ -203,7 +205,7 @@ RSpec.describe SearchLog, type: :model do
   end
 
   context "trending" do
-    let(:user) { Fabricate(:user) }
+    fab!(:user) { Fabricate(:user) }
     before do
       SearchLog.log(term: 'ruby', search_type: :header, ip_address: '127.0.0.1')
       SearchLog.log(term: 'php', search_type: :header, ip_address: '127.0.0.1')

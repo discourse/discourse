@@ -111,11 +111,6 @@ pl_PL:
       random_mention:
         reply: |-
           Hej! Aby dowiedzieć się, co mogę zrobić, powiedz `@%{discobot_username} %{help_trigger}`.
-        tracks: |-
-          Aktualnie wiem jak zrobić następujące rzeczy:
-
-          `@%{discobot_username} %{reset_trigger} %{default_track}`
-          > Rozpoczyna jedną z następujących akcji: %{tracks}.
         bot_actions: |-
           `@%{discobot_username} %{dice_trigger} 2d6`
           > :game_die: 3, 6
@@ -138,7 +133,6 @@ pl_PL:
 
           W międzyczasie nie będę Ci już przeszkadzał.
     new_user_narrative:
-      reset_trigger: "nowy użytkownik"
       cert_title: "W podziękowaniu za skończony samouczek"
       onebox:
         not_found: |-
@@ -220,7 +214,6 @@ pl_PL:
       certificate:
         alt: 'Certyfikat osiągnięcia'
     advanced_user_narrative:
-      reset_trigger: 'zaawansowany użytkownik'
       cert_title: "W uznaniu za pomyślne ukończenie tutorialu zaawansowanego użytkownika."
       title: ':arrow_up: Zaawansowane opcje użytkownika'
       edit:
@@ -242,10 +235,6 @@ pl_PL:
         deleted_post_raw: 'Dlaczego @%{discobot_username} usunął mój post?
 
           :anguished:'
-        reply: |-
-          Phew, było blisko! Dzięki za pomoc!  :wink:
-
-          Pamiętaj, że masz tylko 24 godziny, aby przywrócić post.
       category_hashtag:
         instructions: |-
           Czy wiesz, że możesz się odwoływać do kategorii i tagów w swoim poście? Na przykład, czy widziałeś kategorię %{category}?

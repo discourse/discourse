@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddAdminOnlyToUserHistories < ActiveRecord::Migration[4.2]
   def up
     add_column :user_histories, :admin_only, :boolean, default: false

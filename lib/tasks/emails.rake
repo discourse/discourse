@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 def process_popmail(popmail)
   begin
     mail_string = popmail.pop

@@ -122,23 +122,25 @@
     {{/links-redirect}}
   </div>
 {{/d-modal-body}}
-<div class="modal-footer">
-    {{#if displayRevert}}
-      {{d-button action=(action "revertToVersion") icon="undo" label="post.revisions.controls.revert" class="btn-danger" disabled=loading}}
-    {{/if}}
+{{#if topicController}}
+  <div class="modal-footer">
+      {{#if displayRevert}}
+        {{d-button action=(action "revertToVersion") icon="undo" label="post.revisions.controls.revert" class="btn-danger" disabled=loading}}
+      {{/if}}
 
-    {{#if displayHide}}
-      {{d-button action=(action "hideVersion") icon="far-eye-slash" label="post.revisions.controls.hide" class="btn-danger" disabled=loading}}
-    {{/if}}
+      {{#if displayHide}}
+        {{d-button action=(action "hideVersion") icon="far-eye-slash" label="post.revisions.controls.hide" class="btn-danger" disabled=loading}}
+      {{/if}}
 
-    {{#if displayShow}}
-      {{d-button action=(action "showVersion") icon="far-eye" label="post.revisions.controls.show" class="btn-default" disabled=loading}}
-    {{/if}}
+      {{#if displayShow}}
+        {{d-button action=(action "showVersion") icon="far-eye" label="post.revisions.controls.show" class="btn-default" disabled=loading}}
+      {{/if}}
 
-    {{#if displayEdit}}
-      {{d-button action=(action "editPost")
-          icon="pencil-alt"
-          class="btn-default"
-          label=editButtonLabel}}
-    {{/if}}
-</div>
+      {{#if displayEdit}}
+        {{d-button action=(action "editPost")
+            icon="pencil-alt"
+            class="btn-default"
+            label=editButtonLabel}}
+      {{/if}}
+  </div>
+{{/if}}

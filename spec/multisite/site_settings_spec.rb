@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe 'Multisite SiteSettings', type: :multisite do
@@ -13,7 +15,7 @@ RSpec.describe 'Multisite SiteSettings', type: :multisite do
   describe '#default_locale' do
     it 'should return the right locale' do
       test_multisite_connection('default') do
-        expect(SiteSetting.default_locale).to eq('en')
+        expect(SiteSetting.default_locale).to eq('en_US')
       end
 
       test_multisite_connection('second') do
@@ -23,7 +25,7 @@ RSpec.describe 'Multisite SiteSettings', type: :multisite do
       end
 
       test_multisite_connection('default') do
-        expect(SiteSetting.default_locale).to eq('en')
+        expect(SiteSetting.default_locale).to eq('en_US')
 
         SiteSetting.default_locale = 'ja'
 

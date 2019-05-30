@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #####
 # Patch to allow open-uri to follow safe (http to https)
 # and unsafe redirections (https to http).

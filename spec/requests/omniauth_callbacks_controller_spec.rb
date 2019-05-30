@@ -1,7 +1,10 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
+require 'single_sign_on'
 
 RSpec.describe Users::OmniauthCallbacksController do
-  let(:user) { Fabricate(:user) }
+  fab!(:user) { Fabricate(:user) }
 
   before do
     OmniAuth.config.test_mode = true
@@ -96,16 +99,16 @@ RSpec.describe Users::OmniauthCallbacksController do
           uid: '123545',
           info: OmniAuth::AuthHash::InfoHash.new(
             email: email,
-            name: 'Some name',
+            name: 'Some Name',
             first_name: "Some",
-            last_name: "name"
+            last_name: "Name"
           ),
           extra: {
             raw_info: OmniAuth::AuthHash.new(
               email_verified: true,
               email: email,
               family_name: 'Huh',
-              given_name: "Some name",
+              given_name: "Some Name",
               gender: 'male',
               name: "Some name Huh",
             )
@@ -116,7 +119,7 @@ RSpec.describe Users::OmniauthCallbacksController do
       end
 
       it 'should return the right response' do
-        destination_url = 'http://thisisasite.com/somepath'
+        destination_url = '/somepath'
         Rails.application.env_config["omniauth.origin"] = destination_url
 
         get "/auth/google_oauth2/callback.json"
@@ -126,7 +129,7 @@ RSpec.describe Users::OmniauthCallbacksController do
         response_body = JSON.parse(response.body)
 
         expect(response_body["email"]).to eq(email)
-        expect(response_body["username"]).to eq("Some_name")
+        expect(response_body["username"]).to eq("Some_Name")
         expect(response_body["auth_provider"]).to eq("google_oauth2")
         expect(response_body["email_valid"]).to eq(true)
         expect(response_body["omit_username"]).to eq(false)
@@ -135,7 +138,7 @@ RSpec.describe Users::OmniauthCallbacksController do
       end
 
       it 'should include destination url in response' do
-        destination_url = 'http://thisisasite.com/somepath'
+        destination_url = '/cookiepath'
         cookies[:destination_url] = destination_url
 
         get "/auth/google_oauth2/callback.json"
@@ -350,6 +353,9 @@ RSpec.describe Users::OmniauthCallbacksController do
 
           expect(response.status).to eq 302
           expect(response.location).to eq "http://test.localhost/"
+
+          cookie_data = JSON.parse(response.cookies['authentication_data'])
+          expect(cookie_data["destination_url"]).to eq('/')
         end
 
         it "redirects to internal origin" do
@@ -358,6 +364,9 @@ RSpec.describe Users::OmniauthCallbacksController do
 
           expect(response.status).to eq 302
           expect(response.location).to eq "http://test.localhost/t/123"
+
+          cookie_data = JSON.parse(response.cookies['authentication_data'])
+          expect(cookie_data["destination_url"]).to eq('/t/123')
         end
 
         it "redirects to relative origin" do
@@ -366,6 +375,9 @@ RSpec.describe Users::OmniauthCallbacksController do
 
           expect(response.status).to eq 302
           expect(response.location).to eq "http://test.localhost/t/123"
+
+          cookie_data = JSON.parse(response.cookies['authentication_data'])
+          expect(cookie_data["destination_url"]).to eq('/t/123')
         end
 
         it "redirects with query" do
@@ -374,6 +386,9 @@ RSpec.describe Users::OmniauthCallbacksController do
 
           expect(response.status).to eq 302
           expect(response.location).to eq "http://test.localhost/t/123?foo=bar"
+
+          cookie_data = JSON.parse(response.cookies['authentication_data'])
+          expect(cookie_data["destination_url"]).to eq('/t/123?foo=bar')
         end
 
         it "removes authentication_data cookie on logout" do
@@ -396,7 +411,7 @@ RSpec.describe Users::OmniauthCallbacksController do
     end
 
     context 'when attempting reconnect' do
-      let(:user2) { Fabricate(:user) }
+      fab!(:user2) { Fabricate(:user) }
       before do
         UserAssociatedAccount.create!(provider_name: "google_oauth2", provider_uid: '12345', user: user)
         UserAssociatedAccount.create!(provider_name: "google_oauth2", provider_uid: '123456', user: user2)

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class GlobalSetting
 
   def self.register(key, default)
@@ -111,7 +113,7 @@ class GlobalSetting
       replica_host
       replica_port
     }.each do |s|
-      if val = self.send("db_#{s}")
+      if val = self.public_send("db_#{s}")
         hash[s] = val
       end
     end
@@ -134,6 +136,7 @@ class GlobalSetting
   # For testing purposes
   def self.reset_redis_config!
     @config = nil
+    @message_bus_config = nil
   end
 
   def self.redis_config
@@ -153,6 +156,29 @@ class GlobalSetting
         c[:db] = redis_db if redis_db != 0
         c[:db] = 1 if Rails.env == "test"
         c[:id] = nil if redis_skip_client_commands
+
+        c.freeze
+      end
+  end
+
+  def self.message_bus_redis_config
+    return redis_config unless message_bus_redis_enabled
+    @message_bus_config ||=
+      begin
+        c = {}
+        c[:host] = message_bus_redis_host if message_bus_redis_host
+        c[:port] = message_bus_redis_port if message_bus_redis_port
+
+        if message_bus_redis_slave_host && message_bus_redis_slave_port
+          c[:slave_host] = message_bus_redis_slave_host
+          c[:slave_port] = message_bus_redis_slave_port
+          c[:connector] = DiscourseRedis::Connector
+        end
+
+        c[:password] = message_bus_redis_password if message_bus_redis_password.present?
+        c[:db] = message_bus_redis_db if message_bus_redis_db != 0
+        c[:db] = 1 if Rails.env == "test"
+        c[:id] = nil if message_bus_redis_skip_client_commands
 
         c.freeze
       end
@@ -225,7 +251,7 @@ class GlobalSetting
 
   class EnvProvider < BaseProvider
     def lookup(key, default)
-      var = ENV["DISCOURSE_" << key.to_s.upcase]
+      var = ENV["DISCOURSE_" + key.to_s.upcase]
       resolve(var , var.nil? ? default : nil)
     end
 

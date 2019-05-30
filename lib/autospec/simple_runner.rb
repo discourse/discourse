@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "autospec/rspec_runner"
 
 module Autospec
@@ -8,7 +10,7 @@ module Autospec
     end
 
     def run(specs)
-      puts "Running Rspec: " << specs
+      puts "Running Rspec: #{specs}"
       # kill previous rspec instance
       @mutex.synchronize do
         self.abort

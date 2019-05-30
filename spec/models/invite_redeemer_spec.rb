@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 describe InviteRedeemer do
@@ -48,7 +50,7 @@ describe InviteRedeemer do
   end
 
   describe "#redeem" do
-    let(:invite) { Fabricate(:invite) }
+    fab!(:invite) { Fabricate(:invite) }
     let(:name) { 'john snow' }
     let(:username) { 'kingofthenorth' }
     let(:password) { 'know5nOthiNG' }

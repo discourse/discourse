@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CorrectCountsOnPosts < ActiveRecord::Migration[4.2]
   def change
     rename_column :posts, :custom_flag_count, :notify_moderators_count

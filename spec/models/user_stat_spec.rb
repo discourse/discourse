@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 describe UserStat do
@@ -23,7 +25,7 @@ describe UserStat do
       end
 
       context 'with a view' do
-        let(:topic) { Fabricate(:topic) }
+        fab!(:topic) { Fabricate(:topic) }
         let!(:view) { TopicViewItem.add(topic.id, '127.0.0.1', user.id) }
 
         before do
@@ -89,7 +91,7 @@ describe UserStat do
   end
 
   describe 'update_time_read!' do
-    let(:user) { Fabricate(:user) }
+    fab!(:user) { Fabricate(:user) }
     let(:stat) { user.user_stat }
 
     it 'always expires redis key' do

@@ -53,7 +53,7 @@ export default Ember.Component.extend({
   ),
 
   @computed("topic.message_archived")
-  archiveIcon: archived => (archived ? "" : "folder"),
+  archiveIcon: archived => (archived ? "envelope" : "folder"),
 
   @computed("topic.message_archived")
   archiveTitle: archived =>

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #
 # Helps us find topics.
 # Returns a TopicList object containing the topics found.
@@ -312,7 +314,7 @@ class TopicQuery
     list = private_messages_for(user, :user)
 
     list = not_archived(list, user)
-      .where('NOT (topics.participant_count = 1 AND topics.user_id = ?)', user.id)
+      .where('NOT (topics.participant_count = 1 AND topics.user_id = ? AND topics.moderator_posts_count = 0)', user.id)
 
     create_list(:private_messages, {}, list)
   end
@@ -393,8 +395,14 @@ class TopicQuery
   end
 
   def prioritize_pinned_topics(topics, options)
-    pinned_clause = options[:category_id] ? "topics.category_id = #{options[:category_id].to_i} AND" : "pinned_globally AND "
+    pinned_clause = if options[:category_id]
+      +"topics.category_id = #{options[:category_id].to_i} AND"
+    else
+      +"pinned_globally AND "
+    end
+
     pinned_clause << " pinned_at IS NOT NULL "
+
     if @user
       pinned_clause << " AND (topics.pinned_at > tu.cleared_pinned_at OR tu.cleared_pinned_at IS NULL)"
     end
@@ -685,17 +693,26 @@ class TopicQuery
     if SiteSetting.tagging_enabled
       result = result.preload(:tags)
 
-      if @options[:tags] && @options[:tags].size > 0
-        @options[:tags] = @options[:tags].split unless @options[:tags].respond_to?('each')
-        @options[:tags].each { |t| t.downcase! if t.is_a? String }
+      tags = @options[:tags]
+
+      if tags && tags.size > 0
+        tags = tags.split if String === tags
+
+        tags = tags.map do |t|
+          if String === t
+            t.downcase
+          else
+            t
+          end
+        end
 
         if @options[:match_all_tags]
           # ALL of the given tags:
-          tags_count = @options[:tags].length
-          @options[:tags] = Tag.where_name(@options[:tags]).pluck(:id) unless @options[:tags][0].is_a?(Integer)
+          tags_count = tags.length
+          tags = Tag.where_name(tags).pluck(:id) unless Integer === tags[0]
 
-          if tags_count == @options[:tags].length
-            @options[:tags].each_with_index do |tag, index|
+          if tags_count == tags.length
+            tags.each_with_index do |tag, index|
               sql_alias = ['t', index].join
               result = result.joins("INNER JOIN topic_tags #{sql_alias} ON #{sql_alias}.topic_id = topics.id AND #{sql_alias}.tag_id = #{tag}")
             end
@@ -705,12 +722,17 @@ class TopicQuery
         else
           # ANY of the given tags:
           result = result.joins(:tags)
-          if @options[:tags][0].is_a?(Integer)
-            result = result.where("tags.id in (?)", @options[:tags])
+          if Integer === tags[0]
+            result = result.where("tags.id in (?)", tags)
           else
-            result = result.where("lower(tags.name) in (?)", @options[:tags])
+            result = result.where("lower(tags.name) in (?)", tags)
           end
         end
+
+        # TODO: this is very side-effecty and should be changed
+        # It is done cause further up we expect normalized tags
+        @options[:tags] = tags
+
       elsif @options[:no_tags]
         # the following will do: ("topics"."id" NOT IN (SELECT DISTINCT "topic_tags"."topic_id" FROM "topic_tags"))
         result = result.where.not(id: TopicTag.distinct.pluck(:topic_id))
@@ -854,31 +876,41 @@ class TopicQuery
   end
   def remove_muted_tags(list, user, opts = nil)
     if user.nil? || !SiteSetting.tagging_enabled || !SiteSetting.remove_muted_tags_from_latest
-      list
-    else
-      if !TagUser.lookup(user, :muted).exists?
-        list
-      else
-        showing_tag = if opts[:filter]
-          f = opts[:filter].split('/')
-          f[0] == 'tags' ? f[1] : nil
-        else
-          nil
-        end
+      return list
+    end
 
-        if TagUser.lookup(user, :muted).joins(:tag).where('tags.name = ?', showing_tag).exists?
-          list # if viewing the topic list for a muted tag, show all the topics
-        else
-          muted_tag_ids = TagUser.lookup(user, :muted).pluck(:tag_id)
-          list = list.where("
-            EXISTS (
-              SELECT 1
-                FROM topic_tags tt
-               WHERE tt.tag_id NOT IN (:tag_ids)
-                 AND tt.topic_id = topics.id
-            ) OR NOT EXISTS (SELECT 1 FROM topic_tags tt WHERE tt.topic_id = topics.id)", tag_ids: muted_tag_ids)
-        end
-      end
+    muted_tag_ids = TagUser.lookup(user, :muted).pluck(:tag_id)
+    if muted_tag_ids.blank?
+      return list
+    end
+
+    showing_tag = if opts[:filter]
+      f = opts[:filter].split('/')
+      f[0] == 'tags' ? f[1] : nil
+    else
+      nil
+    end
+
+    # if viewing the topic list for a muted tag, show all the topics
+    if showing_tag.present? && TagUser.lookup(user, :muted).joins(:tag).where('tags.name = ?', showing_tag).exists?
+      return list
+    end
+
+    if SiteSetting.mute_other_present_tags
+      list = list.where("
+        NOT EXISTS(
+          SELECT 1
+            FROM topic_tags tt
+           WHERE tt.tag_id IN (:tag_ids)
+             AND tt.topic_id = topics.id)", tag_ids: muted_tag_ids)
+    else
+      list = list.where("
+        EXISTS (
+          SELECT 1
+            FROM topic_tags tt
+           WHERE tt.tag_id NOT IN (:tag_ids)
+             AND tt.topic_id = topics.id
+        ) OR NOT EXISTS (SELECT 1 FROM topic_tags tt WHERE tt.topic_id = topics.id)", tag_ids: muted_tag_ids)
     end
   end
 
@@ -1019,6 +1051,6 @@ class TopicQuery
   private
 
   def sanitize_sql_array(input)
-    ActiveRecord::Base.send(:sanitize_sql_array, input.join(','))
+    ActiveRecord::Base.public_send(:sanitize_sql_array, input.join(','))
   end
 end

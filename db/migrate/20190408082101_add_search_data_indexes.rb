@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddSearchDataIndexes < ActiveRecord::Migration[5.2]
   def change
     add_index :topic_search_data, [:topic_id, :version, :locale]

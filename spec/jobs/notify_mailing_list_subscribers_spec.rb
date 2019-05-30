@@ -1,13 +1,15 @@
+# frozen_string_literal: true
+
 require "rails_helper"
 
 describe Jobs::NotifyMailingListSubscribers do
 
-  let(:mailing_list_user) { Fabricate(:user) }
+  fab!(:mailing_list_user) { Fabricate(:user) }
 
   before { mailing_list_user.user_option.update(mailing_list_mode: true, mailing_list_mode_frequency: 1) }
 
-  let(:user) { Fabricate(:user) }
-  let(:post) { Fabricate(:post, user: user) }
+  fab!(:user) { Fabricate(:user) }
+  fab!(:post) { Fabricate(:post, user: user) }
 
   shared_examples "no emails" do
     it "doesn't send any emails" do
@@ -86,7 +88,7 @@ describe Jobs::NotifyMailingListSubscribers do
       end
 
       context "to an anonymous user" do
-        let(:mailing_list_user) { Fabricate(:anonymous) }
+        fab!(:mailing_list_user) { Fabricate(:anonymous) }
         include_examples "no emails"
       end
 
@@ -193,7 +195,7 @@ describe Jobs::NotifyMailingListSubscribers do
     end
 
     context "with a valid post from same user" do
-      let(:post) { Fabricate(:post, user: mailing_list_user) }
+      fab!(:post) { Fabricate(:post, user: mailing_list_user) }
 
       context "to an user who has frequency set to 'daily'" do
         before { mailing_list_user.user_option.update(mailing_list_mode_frequency: 0) }

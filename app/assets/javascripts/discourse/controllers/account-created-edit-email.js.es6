@@ -13,7 +13,7 @@ export default Ember.Controller.extend({
 
   actions: {
     changeEmail() {
-      const email = this.get("newEmail");
+      const email = this.newEmail;
       changeEmail({ email })
         .then(() => {
           this.set("accountCreated.email", email);

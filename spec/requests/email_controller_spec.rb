@@ -1,9 +1,11 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe EmailController do
-  let(:user) { Fabricate(:user) }
-  let(:topic) { Fabricate(:topic) }
-  let(:private_topic) { Fabricate(:private_message_topic) }
+  fab!(:user) { Fabricate(:user) }
+  fab!(:topic) { Fabricate(:topic) }
+  fab!(:private_topic) { Fabricate(:private_message_topic) }
 
   context '.perform unsubscribe' do
     it 'raises not found on invalid key' do
@@ -11,7 +13,7 @@ RSpec.describe EmailController do
       expect(response.status).to eq(404)
     end
 
-    let(:user) { Fabricate(:user) }
+    fab!(:user) { Fabricate(:user) }
     let(:key) { UnsubscribeKey.create_key_for(user, "all") }
 
     it 'can fully unsubscribe' do
@@ -190,7 +192,7 @@ RSpec.describe EmailController do
       expect(response.body).to include(CGI.escapeHTML(I18n.t("unsubscribe.not_found_description")))
     end
 
-    let(:user) { Fabricate(:user) }
+    fab!(:user) { Fabricate(:user) }
     let(:unsubscribe_key) { UnsubscribeKey.create_key_for(user, key_type) }
 
     context 'Unsubscribe from digest' do
@@ -257,7 +259,7 @@ RSpec.describe EmailController do
     end
 
     context 'Unsubscribe from a post' do
-      let(:post) { Fabricate(:post) }
+      fab!(:post) { Fabricate(:post) }
       let(:user) { post.user }
       let(:key_type) { post }
 

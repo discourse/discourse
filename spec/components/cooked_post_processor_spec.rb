@@ -1,16 +1,14 @@
+# frozen_string_literal: true
+
 require "rails_helper"
 require "cooked_post_processor"
 require "file_store/s3_store"
 
 describe CookedPostProcessor do
-  context "#post_process" do
-    let(:upload) do
-      Fabricate(:upload,
-        url: '/uploads/default/original/1X/1/1234567890123456.jpg'
-      )
-    end
+  fab!(:upload) { Fabricate(:upload) }
 
-    let(:post) do
+  context "#post_process" do
+    fab!(:post) do
       Fabricate(:post, raw: <<~RAW)
       <img src="#{upload.url}">
       RAW
@@ -130,9 +128,9 @@ describe CookedPostProcessor do
       end
 
       describe 'internal links' do
-        let(:topic) { Fabricate(:topic) }
+        fab!(:topic) { Fabricate(:topic) }
+        fab!(:post) { Fabricate(:post, raw: "Hello #{topic.url}") }
         let(:url) { topic.url }
-        let(:post) { Fabricate(:post, raw: "Hello #{url}") }
 
         it "includes the topic title" do
           cpp.post_process
@@ -252,409 +250,398 @@ describe CookedPostProcessor do
         end
       end
     end
-  end
 
-  context "#post_process_images" do
-
-    before do
-      SiteSetting.responsive_post_image_sizes = ""
-    end
-
-    context "responsive images" do
-      before { SiteSetting.responsive_post_image_sizes = "1|1.5|3" }
-
-      it "includes responsive images on demand" do
-        upload = Fabricate(:upload, width: 2000, height: 1500, filesize: 10000)
-        post = Fabricate(:post, raw: "hello <img src='#{upload.url}'>")
-
-        # fake some optimized images
-        OptimizedImage.create!(
-          url: '/uploads/default/666x500.jpg',
-          width: 666,
-          height: 500,
-          upload_id: upload.id,
-          sha1: SecureRandom.hex,
-          extension: '.jpg',
-          filesize: 500,
-          version: OptimizedImage::VERSION
-        )
-
-        # fake 3x optimized image, we lose 2 pixels here over original due to rounding on downsize
-        OptimizedImage.create!(
-          url: '/uploads/default/1998x1500.jpg',
-          width: 1998,
-          height: 1500,
-          upload_id: upload.id,
-          sha1: SecureRandom.hex,
-          extension: '.jpg',
-          filesize: 800
-        )
-
-        # Fake a loading image
-        optimized_image = OptimizedImage.create!(
-          url: '/uploads/default/10x10.png',
-          width: CookedPostProcessor::LOADING_SIZE,
-          height: CookedPostProcessor::LOADING_SIZE,
-          upload_id: upload.id,
-          sha1: SecureRandom.hex,
-          extension: '.png',
-          filesize: 123
-        )
-
-        cpp = CookedPostProcessor.new(post)
-
-        cpp.add_to_size_cache(upload.url, 2000, 1500)
-        cpp.post_process_images
-        cpp.optimize_urls
-
-        html = cpp.html
-
-        expect(html).to include(%Q|data-small-upload="//test.localhost/uploads/default/10x10.png"|)
-        # 1.5x is skipped cause we have a missing thumb
-        expect(html).to include('srcset="//test.localhost/uploads/default/666x500.jpg, //test.localhost/uploads/default/1998x1500.jpg 3x"')
-        expect(html).to include('src="//test.localhost/uploads/default/666x500.jpg"')
-
-        # works with CDN
-        set_cdn_url("http://cdn.localhost")
-
-        cpp = CookedPostProcessor.new(post)
-        cpp.add_to_size_cache(upload.url, 2000, 1500)
-        cpp.post_process_images
-        cpp.optimize_urls
-
-        html = cpp.html
-
-        expect(html).to include(%Q|data-small-upload="//cdn.localhost/uploads/default/10x10.png"|)
-        expect(html).to include('srcset="//cdn.localhost/uploads/default/666x500.jpg, //cdn.localhost/uploads/default/1998x1500.jpg 3x"')
-        expect(html).to include('src="//cdn.localhost/uploads/default/666x500.jpg"')
-      end
-
-      it "doesn't include response images for cropped images" do
-        upload = Fabricate(:upload, width: 200, height: 4000, filesize: 12345)
-        post = Fabricate(:post, raw: "hello <img src='#{upload.url}'>")
-
-        # fake some optimized images
-        OptimizedImage.create!(
-          url: 'http://a.b.c/200x500.jpg',
-          width: 200,
-          height: 500,
-          upload_id: upload.id,
-          sha1: SecureRandom.hex,
-          extension: '.jpg',
-          filesize: 500
-        )
-
-        cpp = CookedPostProcessor.new(post)
-        cpp.add_to_size_cache(upload.url, 200, 4000)
-        cpp.post_process_images
-        cpp.optimize_urls
-
-        expect(cpp.html).to_not include('srcset="')
-      end
-    end
-
-    shared_examples "leave dimensions alone" do
-      it "doesn't use them" do
-        expect(cpp.html).to match(/src="http:\/\/foo.bar\/image.png" width="" height=""/)
-        expect(cpp.html).to match(/src="http:\/\/domain.com\/picture.jpg" width="50" height="42"/)
-        expect(cpp).to be_dirty
-      end
-    end
-
-    context "with image_sizes" do
-      let(:post) { Fabricate(:post_with_image_urls) }
-      let(:cpp) { CookedPostProcessor.new(post, image_sizes: image_sizes) }
-
+    context "processing images" do
       before do
-        cpp.post_process_images
-        cpp.optimize_urls
+        SiteSetting.responsive_post_image_sizes = ""
       end
 
-      context "valid" do
-        let(:image_sizes) { { "http://foo.bar/image.png" => { "width" => 111, "height" => 222 } } }
+      context "responsive images" do
+        before { SiteSetting.responsive_post_image_sizes = "1|1.5|3" }
 
-        it "uses them" do
-          expect(cpp.html).to match(/src="http:\/\/foo.bar\/image.png" width="111" height="222"/)
+        it "includes responsive images on demand" do
+          upload.update!(width: 2000, height: 1500, filesize: 10000)
+          post = Fabricate(:post, raw: "hello <img src='#{upload.url}'>")
+
+          # fake some optimized images
+          OptimizedImage.create!(
+            url: '/uploads/default/666x500.jpg',
+            width: 666,
+            height: 500,
+            upload_id: upload.id,
+            sha1: SecureRandom.hex,
+            extension: '.jpg',
+            filesize: 500,
+            version: OptimizedImage::VERSION
+          )
+
+          # fake 3x optimized image, we lose 2 pixels here over original due to rounding on downsize
+          OptimizedImage.create!(
+            url: '/uploads/default/1998x1500.jpg',
+            width: 1998,
+            height: 1500,
+            upload_id: upload.id,
+            sha1: SecureRandom.hex,
+            extension: '.jpg',
+            filesize: 800
+          )
+
+          # Fake a loading image
+          optimized_image = OptimizedImage.create!(
+            url: '/uploads/default/10x10.png',
+            width: CookedPostProcessor::LOADING_SIZE,
+            height: CookedPostProcessor::LOADING_SIZE,
+            upload_id: upload.id,
+            sha1: SecureRandom.hex,
+            extension: '.png',
+            filesize: 123
+          )
+
+          cpp = CookedPostProcessor.new(post)
+
+          cpp.add_to_size_cache(upload.url, 2000, 1500)
+          cpp.post_process
+
+          html = cpp.html
+
+          expect(html).to include(%Q|data-small-upload="//test.localhost/uploads/default/10x10.png"|)
+          # 1.5x is skipped cause we have a missing thumb
+          expect(html).to include('srcset="//test.localhost/uploads/default/666x500.jpg, //test.localhost/uploads/default/1998x1500.jpg 3x"')
+          expect(html).to include('src="//test.localhost/uploads/default/666x500.jpg"')
+
+          # works with CDN
+          set_cdn_url("http://cdn.localhost")
+
+          cpp = CookedPostProcessor.new(post)
+          cpp.add_to_size_cache(upload.url, 2000, 1500)
+          cpp.post_process
+
+          html = cpp.html
+
+          expect(html).to include(%Q|data-small-upload="//cdn.localhost/uploads/default/10x10.png"|)
+          expect(html).to include('srcset="//cdn.localhost/uploads/default/666x500.jpg, //cdn.localhost/uploads/default/1998x1500.jpg 3x"')
+          expect(html).to include('src="//cdn.localhost/uploads/default/666x500.jpg"')
+        end
+
+        it "doesn't include response images for cropped images" do
+          upload.update!(width: 200, height: 4000, filesize: 12345)
+          post = Fabricate(:post, raw: "hello <img src='#{upload.url}'>")
+
+          # fake some optimized images
+          OptimizedImage.create!(
+            url: 'http://a.b.c/200x500.jpg',
+            width: 200,
+            height: 500,
+            upload_id: upload.id,
+            sha1: SecureRandom.hex,
+            extension: '.jpg',
+            filesize: 500
+          )
+
+          cpp = CookedPostProcessor.new(post)
+          cpp.add_to_size_cache(upload.url, 200, 4000)
+          cpp.post_process
+
+          expect(cpp.html).to_not include('srcset="')
+        end
+      end
+
+      shared_examples "leave dimensions alone" do
+        it "doesn't use them" do
+          expect(cpp.html).to match(/src="http:\/\/foo.bar\/image.png" width="" height=""/)
           expect(cpp.html).to match(/src="http:\/\/domain.com\/picture.jpg" width="50" height="42"/)
           expect(cpp).to be_dirty
         end
       end
 
-      context "invalid width" do
-        let(:image_sizes) { { "http://foo.bar/image.png" => { "width" => 0, "height" => 222 } } }
-        include_examples "leave dimensions alone"
-      end
-
-      context "invalid height" do
-        let(:image_sizes) { { "http://foo.bar/image.png" => { "width" => 111, "height" => 0 } } }
-        include_examples "leave dimensions alone"
-      end
-
-      context "invalid width & height" do
-        let(:image_sizes) { { "http://foo.bar/image.png" => { "width" => 0, "height" => 0 } } }
-        include_examples "leave dimensions alone"
-      end
-
-    end
-
-    context "with unsized images" do
-
-      let(:post) { Fabricate(:post_with_unsized_images) }
-      let(:cpp) { CookedPostProcessor.new(post) }
-
-      it "adds the width and height to images that don't have them" do
-        FastImage.expects(:size).returns([123, 456])
-        cpp.post_process_images
-        expect(cpp.html).to match(/width="123" height="456"/)
-        expect(cpp).to be_dirty
-      end
-
-    end
-
-    context "with large images" do
-
-      let(:upload) { Fabricate(:upload) }
-      let(:post) { Fabricate(:post_with_large_image) }
-      let(:cpp) { CookedPostProcessor.new(post, disable_loading_image: true) }
-
-      before do
-        SiteSetting.max_image_height = 2000
-        SiteSetting.create_thumbnails = true
-        FastImage.expects(:size).returns([1750, 2000])
-      end
-
-      it "generates overlay information" do
-        Upload.expects(:get_from_url).returns(upload)
-        OptimizedImage.expects(:resize).returns(true)
-
-        FileStore::BaseStore.any_instance.expects(:get_depth_for).returns(0)
-
-        cpp.post_process_images
-        cpp.optimize_urls
-
-        expect(cpp.html).to match_html <<~HTML
-          <p><div class="lightbox-wrapper"><a class="lightbox" href="//test.localhost/uploads/default/original/1X/1234567890123456.jpg" data-download-href="//test.localhost/uploads/default/#{upload.sha1}" title="logo.png"><img src="//test.localhost/uploads/default/optimized/1X/#{upload.sha1}_#{OptimizedImage::VERSION}_690x788.png" width="690" height="788"><div class="meta">
-          <svg class="fa d-icon d-icon-far-image svg-icon" aria-hidden="true"><use xlink:href="#far-image"></use></svg><span class="filename">logo.png</span><span class="informations">1750×2000 1.21 KB</span><svg class="fa d-icon d-icon-discourse-expand svg-icon" aria-hidden="true"><use xlink:href="#discourse-expand"></use></svg>
-          </div></a></div></p>
-        HTML
-
-        expect(cpp).to be_dirty
-      end
-
-      describe 'when image is inside onebox' do
-        let(:url) { 'https://image.com/my-avatar' }
-        let(:post) { Fabricate(:post, raw: url) }
+      context "with image_sizes" do
+        fab!(:post) { Fabricate(:post_with_image_urls) }
+        let(:cpp) { CookedPostProcessor.new(post, image_sizes: image_sizes) }
 
         before do
-          Oneboxer.stubs(:onebox).with(url, anything).returns("<img class='onebox' src='/uploads/default/original/1X/1234567890123456.jpg' />")
+          cpp.post_process
         end
 
-        it 'should not add lightbox' do
-          cpp.post_process_oneboxes
-          cpp.post_process_images
-          cpp.optimize_urls
+        context "valid" do
+          let(:image_sizes) { { "http://foo.bar/image.png" => { "width" => 111, "height" => 222 } } }
 
-          expect(cpp.html).to match_html <<~HTML
-            <p><img class="onebox" src="//test.localhost/uploads/default/original/1X/1234567890123456.jpg" width="690" height="788"></p>
-          HTML
+          it "uses them" do
+            expect(cpp.html).to match(/src="http:\/\/foo.bar\/image.png" width="111" height="222"/)
+            expect(cpp.html).to match(/src="http:\/\/domain.com\/picture.jpg" width="50" height="42"/)
+            expect(cpp).to be_dirty
+          end
         end
+
+        context "invalid width" do
+          let(:image_sizes) { { "http://foo.bar/image.png" => { "width" => 0, "height" => 222 } } }
+          include_examples "leave dimensions alone"
+        end
+
+        context "invalid height" do
+          let(:image_sizes) { { "http://foo.bar/image.png" => { "width" => 111, "height" => 0 } } }
+          include_examples "leave dimensions alone"
+        end
+
+        context "invalid width & height" do
+          let(:image_sizes) { { "http://foo.bar/image.png" => { "width" => 0, "height" => 0 } } }
+          include_examples "leave dimensions alone"
+        end
+
       end
 
-      describe 'when image is an svg' do
-        let(:post) do
-          Fabricate(:post, raw: '<img src="/uploads/default/original/1X/1234567890123456.svg">')
+      context "with unsized images" do
+
+        fab!(:post) { Fabricate(:post_with_unsized_images) }
+        let(:cpp) { CookedPostProcessor.new(post) }
+
+        it "adds the width and height to images that don't have them" do
+          FastImage.expects(:size).returns([123, 456])
+          cpp.post_process
+          expect(cpp.html).to match(/width="123" height="456"/)
+          expect(cpp).to be_dirty
         end
 
-        it 'should not add lightbox' do
-          cpp.post_process_images
-          cpp.optimize_urls
+      end
 
-          expect(cpp.html).to match_html <<~HTML
-            <p><img src="//test.localhost/uploads/default/original/1X/1234567890123456.svg" width="690" height="788"></p>
+      context "with large images" do
+        fab!(:post) do
+          Fabricate(:post, raw: <<~HTML)
+          <img src="#{upload.url}">
           HTML
         end
 
-        describe 'when image src is an URL' do
-          let(:post) do
-            Fabricate(:post, raw: '<img src="http://test.discourse/uploads/default/original/1X/1234567890123456.svg?somepamas">')
+        let(:cpp) { CookedPostProcessor.new(post, disable_loading_image: true) }
+
+        before do
+          SiteSetting.max_image_height = 2000
+          SiteSetting.create_thumbnails = true
+          FastImage.expects(:size).returns([1750, 2000])
+        end
+
+        it "generates overlay information" do
+          OptimizedImage.expects(:resize).returns(true)
+          FileStore::BaseStore.any_instance.expects(:get_depth_for).returns(0)
+
+          cpp.post_process
+
+          expect(cpp.html).to match_html <<~HTML
+            <p><div class="lightbox-wrapper"><a class="lightbox" href="//test.localhost#{upload.url}" data-download-href="//test.localhost/uploads/default/#{upload.sha1}" title="logo.png"><img src="//test.localhost/uploads/default/optimized/1X/#{upload.sha1}_#{OptimizedImage::VERSION}_690x788.png" width="690" height="788"><div class="meta">
+            <svg class="fa d-icon d-icon-far-image svg-icon" aria-hidden="true"><use xlink:href="#far-image"></use></svg><span class="filename">logo.png</span><span class="informations">1750×2000 1.21 KB</span><svg class="fa d-icon d-icon-discourse-expand svg-icon" aria-hidden="true"><use xlink:href="#discourse-expand"></use></svg>
+            </div></a></div></p>
+          HTML
+
+          expect(cpp).to be_dirty
+        end
+
+        describe 'when image is inside onebox' do
+          let(:url) { 'https://image.com/my-avatar' }
+          let(:post) { Fabricate(:post, raw: url) }
+
+          before do
+            Oneboxer.stubs(:onebox).with(url, anything).returns("<img class='onebox' src='/uploads/default/original/1X/1234567890123456.jpg' />")
           end
 
           it 'should not add lightbox' do
-            SiteSetting.crawl_images = true
-            cpp.post_process_images
-            cpp.optimize_urls
+            cpp.post_process
 
-            expect(cpp.html).to match_html("<p><img src=\"http://test.discourse/uploads/default/original/1X/1234567890123456.svg?somepamas\" width=\"690\"\ height=\"788\"></p>")
+            expect(cpp.html).to match_html <<~HTML
+              <p><img class="onebox" src="//test.localhost/uploads/default/original/1X/1234567890123456.jpg" width="690" height="788"></p>
+            HTML
           end
+        end
+
+        describe 'when image is an svg' do
+          fab!(:post) do
+            Fabricate(:post, raw: '<img src="/uploads/default/original/1X/1234567890123456.svg">')
+          end
+
+          it 'should not add lightbox' do
+            cpp.post_process
+
+            expect(cpp.html).to match_html <<~HTML
+              <p><img src="//test.localhost/uploads/default/original/1X/1234567890123456.svg" width="690" height="788"></p>
+            HTML
+          end
+
+          describe 'when image src is an URL' do
+            let(:post) do
+              Fabricate(:post, raw: '<img src="http://test.discourse/uploads/default/original/1X/1234567890123456.svg?somepamas">')
+            end
+
+            it 'should not add lightbox' do
+              SiteSetting.crawl_images = true
+              cpp.post_process
+
+              expect(cpp.html).to match_html("<p><img src=\"http://test.discourse/uploads/default/original/1X/1234567890123456.svg?somepamas\" width=\"690\"\ height=\"788\"></p>")
+            end
+          end
+        end
+
+      end
+
+      context "with tall images" do
+        fab!(:post) do
+          Fabricate(:post, raw: <<~HTML)
+          <img src="#{upload.url}">
+          HTML
+        end
+
+        let(:cpp) { CookedPostProcessor.new(post, disable_loading_image: true) }
+
+        before do
+          SiteSetting.create_thumbnails = true
+          FastImage.expects(:size).returns([860, 2000])
+          OptimizedImage.expects(:resize).never
+          OptimizedImage.expects(:crop).returns(true)
+          FileStore::BaseStore.any_instance.expects(:get_depth_for).returns(0)
+        end
+
+        it "crops the image" do
+          cpp.post_process
+
+          expect(cpp.html).to match(/width="690" height="500">/)
+          expect(cpp).to be_dirty
+        end
+
+      end
+
+      context "with iPhone X screenshots" do
+        fab!(:post) do
+          Fabricate(:post, raw: <<~HTML)
+          <img src="#{upload.url}">
+          HTML
+        end
+
+        let(:cpp) { CookedPostProcessor.new(post, disable_loading_image: true) }
+
+        before do
+          SiteSetting.create_thumbnails = true
+          FastImage.expects(:size).returns([1125, 2436])
+          OptimizedImage.expects(:resize).returns(true)
+          OptimizedImage.expects(:crop).never
+          FileStore::BaseStore.any_instance.expects(:get_depth_for).returns(0)
+        end
+
+        it "crops the image" do
+          cpp.post_process
+
+          expect(cpp.html).to match_html <<~HTML
+            <p><div class="lightbox-wrapper"><a class="lightbox" href="//test.localhost#{upload.url}" data-download-href="//test.localhost/uploads/default/#{upload.sha1}" title="logo.png"><img src="//test.localhost/uploads/default/optimized/1X/#{upload.sha1}_#{OptimizedImage::VERSION}_230x500.png" width="230" height="500"><div class="meta">
+            <svg class="fa d-icon d-icon-far-image svg-icon" aria-hidden="true"><use xlink:href="#far-image"></use></svg><span class="filename">logo.png</span><span class="informations">1125×2436 1.21 KB</span><svg class="fa d-icon d-icon-discourse-expand svg-icon" aria-hidden="true"><use xlink:href="#discourse-expand"></use></svg>
+            </div></a></div></p>
+          HTML
+
+          expect(cpp).to be_dirty
+        end
+
+      end
+
+      context "with large images when using subfolders" do
+        fab!(:post) do
+          Fabricate(:post, raw: <<~HTML)
+          <img src="/subfolder#{upload.url}">
+          HTML
+        end
+
+        let(:cpp) { CookedPostProcessor.new(post, disable_loading_image: true) }
+        let(:base_url) { "http://test.localhost/subfolder" }
+        let(:base_uri) { "/subfolder" }
+
+        before do
+          SiteSetting.max_image_height = 2000
+          SiteSetting.create_thumbnails = true
+          Discourse.stubs(:base_url).returns(base_url)
+          Discourse.stubs(:base_uri).returns(base_uri)
+          FastImage.expects(:size).returns([1750, 2000])
+          OptimizedImage.expects(:resize).returns(true)
+
+          FileStore::BaseStore.any_instance.expects(:get_depth_for).returns(0)
+        end
+
+        it "generates overlay information" do
+          cpp.post_process
+
+          expect(cpp.html). to match_html <<~HTML
+            <p><div class="lightbox-wrapper"><a class="lightbox" href="//test.localhost/subfolder#{upload.url}" data-download-href="//test.localhost/subfolder/uploads/default/#{upload.sha1}" title="logo.png"><img src="//test.localhost/subfolder/uploads/default/optimized/1X/#{upload.sha1}_#{OptimizedImage::VERSION}_690x788.png" width="690" height="788"><div class="meta">
+            <svg class="fa d-icon d-icon-far-image svg-icon" aria-hidden="true"><use xlink:href="#far-image"></use></svg><span class="filename">logo.png</span><span class="informations">1750×2000 1.21 KB</span><svg class="fa d-icon d-icon-discourse-expand svg-icon" aria-hidden="true"><use xlink:href="#discourse-expand"></use></svg>
+            </div></a></div></p>
+          HTML
+
+          expect(cpp).to be_dirty
+        end
+
+        it "should escape the filename" do
+          upload.update!(original_filename: "><img src=x onerror=alert('haha')>.png")
+          cpp.post_process
+
+          expect(cpp.html).to match_html <<~HTML
+            <p><div class="lightbox-wrapper"><a class="lightbox" href="//test.localhost/subfolder#{upload.url}" data-download-href="//test.localhost/subfolder/uploads/default/#{upload.sha1}" title="&amp;gt;&amp;lt;img src=x onerror=alert(&amp;#39;haha&amp;#39;)&amp;gt;.png"><img src="//test.localhost/subfolder/uploads/default/optimized/1X/#{upload.sha1}_#{OptimizedImage::VERSION}_690x788.png" width="690" height="788"><div class="meta">
+            <svg class="fa d-icon d-icon-far-image svg-icon" aria-hidden="true"><use xlink:href="#far-image"></use></svg><span class="filename">&amp;gt;&amp;lt;img src=x onerror=alert(&amp;#39;haha&amp;#39;)&amp;gt;.png</span><span class="informations">1750×2000 1.21 KB</span><svg class="fa d-icon d-icon-discourse-expand svg-icon" aria-hidden="true"><use xlink:href="#discourse-expand"></use></svg>
+            </div></a></div></p>
+          HTML
+        end
+
+      end
+
+      context "with title" do
+        fab!(:post) do
+          Fabricate(:post, raw: <<~HTML)
+          <img src="#{upload.url}" title="WAT">
+          HTML
+        end
+
+        let(:cpp) { CookedPostProcessor.new(post, disable_loading_image: true) }
+
+        before do
+          SiteSetting.max_image_height = 2000
+          SiteSetting.create_thumbnails = true
+          FastImage.expects(:size).returns([1750, 2000])
+          OptimizedImage.expects(:resize).returns(true)
+          FileStore::BaseStore.any_instance.expects(:get_depth_for).returns(0)
+        end
+
+        it "generates overlay information" do
+          cpp.post_process
+
+          expect(cpp.html).to match_html <<~HTML
+            <p><div class="lightbox-wrapper"><a class="lightbox" href="//test.localhost#{upload.url}" data-download-href="//test.localhost/uploads/default/#{upload.sha1}" title="WAT"><img src="//test.localhost/uploads/default/optimized/1X/#{upload.sha1}_#{OptimizedImage::VERSION}_690x788.png" title="WAT" width="690" height="788"><div class="meta">
+            <svg class="fa d-icon d-icon-far-image svg-icon" aria-hidden="true"><use xlink:href="#far-image"></use></svg><span class="filename">WAT</span><span class="informations">1750×2000 1.21 KB</span><svg class="fa d-icon d-icon-discourse-expand svg-icon" aria-hidden="true"><use xlink:href="#discourse-expand"></use></svg>
+            </div></a></div></p>
+          HTML
+
+          expect(cpp).to be_dirty
+        end
+
+      end
+
+      context "topic image" do
+        let(:topic) { build(:topic, id: 1) }
+        let(:post) { Fabricate(:post_with_uploaded_image, topic: topic) }
+        let(:cpp) { CookedPostProcessor.new(post) }
+
+        it "adds a topic image if there's one in the first post" do
+          FastImage.stubs(:size)
+          expect(post.topic.image_url).to eq(nil)
+
+          cpp.post_process
+          post.topic.reload
+          expect(post.topic.image_url).to be_present
         end
       end
 
-    end
+      context "post image" do
+        let(:reply) { Fabricate(:post_with_uploaded_image, post_number: 2) }
+        let(:cpp) { CookedPostProcessor.new(reply) }
 
-    context "with tall images" do
-
-      let(:upload) { Fabricate(:upload) }
-      let(:post) { Fabricate(:post_with_large_image) }
-      let(:cpp) { CookedPostProcessor.new(post, disable_loading_image: true) }
-
-      before do
-        SiteSetting.create_thumbnails = true
-
-        Upload.expects(:get_from_url).returns(upload)
-        FastImage.expects(:size).returns([860, 2000])
-        OptimizedImage.expects(:resize).never
-        OptimizedImage.expects(:crop).returns(true)
-
-        FileStore::BaseStore.any_instance.expects(:get_depth_for).returns(0)
-      end
-
-      it "crops the image" do
-        cpp.post_process_images
-        expect(cpp.html).to match(/width="690" height="500">/)
-        expect(cpp).to be_dirty
-      end
-
-    end
-
-    context "with iPhone X screenshots" do
-
-      let(:upload) { Fabricate(:upload) }
-      let(:post) { Fabricate(:post_with_large_image) }
-      let(:cpp) { CookedPostProcessor.new(post, disable_loading_image: true) }
-
-      before do
-        SiteSetting.create_thumbnails = true
-
-        Upload.expects(:get_from_url).returns(upload)
-        FastImage.expects(:size).returns([1125, 2436])
-        OptimizedImage.expects(:resize).returns(true)
-        OptimizedImage.expects(:crop).never
-
-        FileStore::BaseStore.any_instance.expects(:get_depth_for).returns(0)
-      end
-
-      it "crops the image" do
-        cpp.post_process_images
-        cpp.optimize_urls
-
-        expect(cpp.html).to match_html <<~HTML
-          <p><div class="lightbox-wrapper"><a class="lightbox" href="//test.localhost/uploads/default/original/1X/1234567890123456.jpg" data-download-href="//test.localhost/uploads/default/#{upload.sha1}" title="logo.png"><img src="//test.localhost/uploads/default/optimized/1X/#{upload.sha1}_#{OptimizedImage::VERSION}_230x500.png" width="230" height="500"><div class="meta">
-          <svg class="fa d-icon d-icon-far-image svg-icon" aria-hidden="true"><use xlink:href="#far-image"></use></svg><span class="filename">logo.png</span><span class="informations">1125×2436 1.21 KB</span><svg class="fa d-icon d-icon-discourse-expand svg-icon" aria-hidden="true"><use xlink:href="#discourse-expand"></use></svg>
-          </div></a></div></p>
-        HTML
-
-        expect(cpp).to be_dirty
-      end
-
-    end
-
-    context "with large images when using subfolders" do
-
-      let(:upload) { Fabricate(:upload) }
-      let(:post) { Fabricate(:post_with_large_image_on_subfolder) }
-      let(:cpp) { CookedPostProcessor.new(post, disable_loading_image: true) }
-      let(:base_url) { "http://test.localhost/subfolder" }
-      let(:base_uri) { "/subfolder" }
-
-      before do
-        SiteSetting.max_image_height = 2000
-        SiteSetting.create_thumbnails = true
-        Discourse.stubs(:base_url).returns(base_url)
-        Discourse.stubs(:base_uri).returns(base_uri)
-
-        Upload.expects(:get_from_url).returns(upload)
-        FastImage.expects(:size).returns([1750, 2000])
-        OptimizedImage.expects(:resize).returns(true)
-
-        FileStore::BaseStore.any_instance.expects(:get_depth_for).returns(0)
-      end
-
-      it "generates overlay information" do
-        cpp.post_process_images
-        cpp.optimize_urls
-
-        expect(cpp.html). to match_html <<~HTML
-          <p><div class="lightbox-wrapper"><a class="lightbox" href="//test.localhost/subfolder/uploads/default/original/1X/1234567890123456.jpg" data-download-href="//test.localhost/subfolder/uploads/default/#{upload.sha1}" title="logo.png"><img src="//test.localhost/subfolder/uploads/default/optimized/1X/#{upload.sha1}_#{OptimizedImage::VERSION}_690x788.png" width="690" height="788"><div class="meta">
-          <svg class="fa d-icon d-icon-far-image svg-icon" aria-hidden="true"><use xlink:href="#far-image"></use></svg><span class="filename">logo.png</span><span class="informations">1750×2000 1.21 KB</span><svg class="fa d-icon d-icon-discourse-expand svg-icon" aria-hidden="true"><use xlink:href="#discourse-expand"></use></svg>
-          </div></a></div></p>
-        HTML
-
-        expect(cpp).to be_dirty
-      end
-
-      it "should escape the filename" do
-        upload.update_attributes!(original_filename: "><img src=x onerror=alert('haha')>.png")
-        cpp.post_process_images
-        cpp.optimize_urls
-
-        expect(cpp.html).to match_html <<~HTML
-          <p><div class="lightbox-wrapper"><a class="lightbox" href="//test.localhost/subfolder/uploads/default/original/1X/1234567890123456.jpg" data-download-href="//test.localhost/subfolder/uploads/default/#{upload.sha1}" title="&amp;gt;&amp;lt;img src=x onerror=alert(&amp;#39;haha&amp;#39;)&amp;gt;.png"><img src="//test.localhost/subfolder/uploads/default/optimized/1X/#{upload.sha1}_#{OptimizedImage::VERSION}_690x788.png" width="690" height="788"><div class="meta">
-          <svg class="fa d-icon d-icon-far-image svg-icon" aria-hidden="true"><use xlink:href="#far-image"></use></svg><span class="filename">&amp;gt;&amp;lt;img src=x onerror=alert(&amp;#39;haha&amp;#39;)&amp;gt;.png</span><span class="informations">1750×2000 1.21 KB</span><svg class="fa d-icon d-icon-discourse-expand svg-icon" aria-hidden="true"><use xlink:href="#discourse-expand"></use></svg>
-          </div></a></div></p>
-        HTML
-      end
-
-    end
-
-    context "with title" do
-
-      let(:upload) { Fabricate(:upload) }
-      let(:post) { Fabricate(:post_with_large_image_and_title) }
-      let(:cpp) { CookedPostProcessor.new(post, disable_loading_image: true) }
-
-      before do
-        SiteSetting.max_image_height = 2000
-        SiteSetting.create_thumbnails = true
-
-        Upload.expects(:get_from_url).returns(upload)
-        FastImage.expects(:size).returns([1750, 2000])
-        OptimizedImage.expects(:resize).returns(true)
-
-        FileStore::BaseStore.any_instance.expects(:get_depth_for).returns(0)
-      end
-
-      it "generates overlay information" do
-        cpp.post_process_images
-        cpp.optimize_urls
-
-        expect(cpp.html).to match_html <<~HTML
-          <p><div class="lightbox-wrapper"><a class="lightbox" href="//test.localhost/uploads/default/original/1X/1234567890123456.jpg" data-download-href="//test.localhost/uploads/default/#{upload.sha1}" title="WAT"><img src="//test.localhost/uploads/default/optimized/1X/#{upload.sha1}_#{OptimizedImage::VERSION}_690x788.png" title="WAT" width="690" height="788"><div class="meta">
-          <svg class="fa d-icon d-icon-far-image svg-icon" aria-hidden="true"><use xlink:href="#far-image"></use></svg><span class="filename">WAT</span><span class="informations">1750×2000 1.21 KB</span><svg class="fa d-icon d-icon-discourse-expand svg-icon" aria-hidden="true"><use xlink:href="#discourse-expand"></use></svg>
-          </div></a></div></p>
-        HTML
-
-        expect(cpp).to be_dirty
-      end
-
-    end
-
-    context "topic image" do
-      let(:topic) { build(:topic, id: 1) }
-      let(:post) { Fabricate(:post_with_uploaded_image, topic: topic) }
-      let(:cpp) { CookedPostProcessor.new(post) }
-
-      it "adds a topic image if there's one in the first post" do
-        FastImage.stubs(:size)
-        expect(post.topic.image_url).to eq(nil)
-        cpp.update_post_image
-        post.topic.reload
-        expect(post.topic.image_url).to be_present
+        it "adds a post image if there's one in the post" do
+          FastImage.stubs(:size)
+          expect(reply.image_url).to eq(nil)
+          cpp.post_process
+          reply.reload
+          expect(reply.image_url).to be_present
+        end
       end
     end
-
-    context "post image" do
-      let(:reply) { Fabricate(:post_with_uploaded_image, post_number: 2) }
-      let(:cpp) { CookedPostProcessor.new(reply) }
-
-      it "adds a post image if there's one in the post" do
-        FastImage.stubs(:size)
-        expect(reply.image_url).to eq(nil)
-        cpp.update_post_image
-        reply.reload
-        expect(reply.image_url).to be_present
-      end
-    end
-
   end
 
   context "#extract_images" do
@@ -836,7 +823,7 @@ describe CookedPostProcessor do
       Oneboxer.stubs(:onebox).with(url, anything).returns("<img class='onebox' src='#{image_url}' />")
 
       post = Fabricate(:post, raw: url)
-      upload = Fabricate(:upload, url: "https://test.s3.amazonaws.com/something.png")
+      upload.update!(url: "https://test.s3.amazonaws.com/something.png")
 
       post.custom_fields[Post::DOWNLOADED_IMAGES] = { "//image.com/avatar.png": upload.id }
       post.save_custom_fields
@@ -865,9 +852,7 @@ describe CookedPostProcessor do
       post.save_custom_fields
 
       cpp = CookedPostProcessor.new(post, invalidate_oneboxes: true)
-      cpp.post_process_oneboxes
-      cpp.post_process_images
-      cpp.optimize_urls
+      cpp.post_process
 
       expect(cpp.doc.to_s).to match(/<div class="large-image-placeholder">/)
     end
@@ -888,6 +873,31 @@ describe CookedPostProcessor do
     it "removes nofollow noopener from links" do
       expect(cpp).to be_dirty
       expect(cpp.html).to match_html '<aside class="onebox"><a href="https://www.youtube.com/watch?v=9bZkp7q19f0">GANGNAM STYLE</a></aside>'
+    end
+  end
+
+  context "#post_process_oneboxes with oneboxed image" do
+    let(:post) { build(:post_with_youtube, id: 123) }
+    let(:cpp) { CookedPostProcessor.new(post, invalidate_oneboxes: true) }
+
+    it "applies aspect ratio to container" do
+      Oneboxer.expects(:onebox)
+        .with("http://www.youtube.com/watch?v=9bZkp7q19f0", invalidate_oneboxes: true, user_id: nil, category_id: post.topic.category_id)
+        .returns("<aside class='onebox'><div class='scale-images'><img src='/img.jpg' width='400' height='500'/></div></div>")
+
+      cpp.post_process_oneboxes
+
+      expect(cpp.html).to match_html('<aside class="onebox"><div class="aspect-image-full-size" style="--aspect-ratio:400/500;"><img src="/img.jpg"></div></aside>')
+    end
+
+    it "applies aspect ratio when wrapped in link" do
+      Oneboxer.expects(:onebox)
+        .with("http://www.youtube.com/watch?v=9bZkp7q19f0", invalidate_oneboxes: true, user_id: nil, category_id: post.topic.category_id)
+        .returns("<aside class='onebox'><div class='scale-images'><a href='https://example.com'><img src='/img.jpg' width='400' height='500'/></a></div></div>")
+
+      cpp.post_process_oneboxes
+
+      expect(cpp.html).to match_html('<aside class="onebox"><div class="aspect-image-full-size" style="--aspect-ratio:400/500;"><a href="https://example.com"><img src="/img.jpg"></a></div></aside>')
     end
   end
 
@@ -1011,7 +1021,8 @@ describe CookedPostProcessor do
 
         uploaded_file = file_from_fixtures("smallest.png")
         upload_sha1 = Digest::SHA1.hexdigest(File.read(uploaded_file))
-        upload = Fabricate(:upload,
+
+        upload.update!(
           original_filename: "smallest.png",
           width: 10,
           height: 20,
@@ -1047,6 +1058,8 @@ describe CookedPostProcessor do
         a tricky link to a topic: #{topic.url}?bob=bob;u=sam&jane=jane
 
         link to an external topic: https://google.com/?u=bar
+
+        a malformed url: https://www.example.com/#123#4
       RAW
     end
 
@@ -1058,6 +1071,7 @@ describe CookedPostProcessor do
       expect(cpp.html).to have_tag('a', with: { href: topic.url })
       expect(cpp.html).to have_tag('a', with: { href: "#{topic.url}?bob=bob&jane=jane" })
       expect(cpp.html).to have_tag('a', with: { href: "https://google.com/?u=bar" })
+      expect(cpp.html).to have_tag('a', with: { href: "https://www.example.com/#123#4" })
     end
   end
 
@@ -1275,14 +1289,16 @@ describe CookedPostProcessor do
 
   end
 
-  context "remove direct reply full quote" do
-    let(:topic) { Fabricate(:topic) }
-    let!(:post) { Fabricate(:post, topic: topic, raw: "this is the first post") }
+  context "full quote on direct reply" do
+    fab!(:topic) { Fabricate(:topic) }
+    let!(:post) { Fabricate(:post, topic: topic, raw: 'this is the "first" post') }
 
     let(:raw) do
       <<~RAW.strip
       [quote="#{post.user.username}, post:#{post.post_number}, topic:#{topic.id}"]
-      this is the first post
+
+      this is the “first” post
+
       [/quote]
 
       and this is the third reply
@@ -1294,7 +1310,7 @@ describe CookedPostProcessor do
       and this is the third reply
 
       [quote="#{post.user.username}, post:#{post.post_number}, topic:#{topic.id}"]
-      this is the first post
+      this is the ”first” post
       [/quote]
       RAW
     end
@@ -1310,7 +1326,7 @@ describe CookedPostProcessor do
 
       freeze_time Time.zone.now do
         topic.bumped_at = 1.day.ago
-        CookedPostProcessor.new(reply).removed_direct_reply_full_quotes
+        CookedPostProcessor.new(reply).remove_full_quote_on_direct_reply
 
         expect(topic.ordered_posts.pluck(:id))
           .to eq([post.id, hidden.id, small_action.id, reply.id])
@@ -1325,7 +1341,7 @@ describe CookedPostProcessor do
 
     it 'does not delete quote if not first paragraph' do
       reply = Fabricate(:post, topic: topic, raw: raw2)
-      CookedPostProcessor.new(reply).removed_direct_reply_full_quotes
+      CookedPostProcessor.new(reply).remove_full_quote_on_direct_reply
       expect(topic.ordered_posts.pluck(:id)).to eq([post.id, reply.id])
       expect(reply.raw).to eq(raw2)
     end
@@ -1335,7 +1351,7 @@ describe CookedPostProcessor do
 
       reply = Fabricate(:post, topic: topic, raw: raw)
 
-      CookedPostProcessor.new(reply).removed_direct_reply_full_quotes
+      CookedPostProcessor.new(reply).remove_full_quote_on_direct_reply
       expect(reply.raw).to eq(raw)
     end
 
@@ -1350,6 +1366,23 @@ describe CookedPostProcessor do
       PostRevisor.new(reply).revise!(Discourse.system_user, raw: raw, edit_reason: "put back full quote")
       CookedPostProcessor.new(reply).post_process(new_post: true)
       expect(reply.raw).to eq("and this is the third reply")
+    end
+
+    it "works with click counters" do
+      post = Fabricate(:post,
+        topic: topic,
+        raw: "[Discourse](https://www.discourse.org) is amazing!",
+        cooked: %{<p><a href="https://www.discourse.org">Discourse <span class="badge badge-notification clicks" title="1 click">1</span></a> is amazing!</p>}
+      )
+
+      reply = Fabricate(:post,
+        topic: topic,
+        raw: "[quote]\n[Discourse](https://www.discourse.org) is amazing!\n[/quote]\nIt sure is :+1:"
+      )
+
+      CookedPostProcessor.new(reply).remove_full_quote_on_direct_reply
+
+      expect(reply.raw).to eq("It sure is :+1:")
     end
 
   end

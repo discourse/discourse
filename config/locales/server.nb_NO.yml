@@ -119,19 +119,19 @@ nb_NO:
         one: "Kunne ikke slette oppføringen, oppføringen %{record} er avhengig av denne"
         many: "Kunne ikke slette oppføringen, oppføringen %{record} er avhengig av denne"
       too_long:
-        one: for lang tekst (maks 1 tegn)
+        one: for lang tekst (maks %{count} tegn)
         other: for lang tekst(maks %{count} tegn)
       too_short:
-        one: for kort tekst (minimum 1 tegn)
+        one: for kort tekst (minimum %{count} tegn)
         other: for kort tekst (minimum %{count} tegn)
       wrong_length:
-        one: feil lengde på tekst (skal være 1 tegn)
+        one: feil lengde på tekst (skal være %{count} tegn)
         other: feil lengde på tekst (skal være %{count} tegn)
       other_than: "må være annet enn %{count}"
     template:
       body: "Dette er problemene med de følgene feltene:"
       header:
-        one: 1 feil forhindret lagring av %{model}
+        one: "%{count} feil forhindret lagring av %{model}"
         other: "%{count} feil forhindret lagring av %{model}"
     embed:
       load_from_remote: "Det oppstod et problem med innlastingen av innlegget."
@@ -176,7 +176,7 @@ nb_NO:
   reading_time: "Lesetid"
   likes: "Likes"
   too_many_replies:
-    one: "Vi beklager, men nye brukere er midlertidig begrenset til 1 svar i det samme tråden."
+    one: "Vi beklager, men nye brukere er midlertidig begrenset til %{count} svar i det samme tråden."
     other: "Vi beklager, men for nye brukere er det en midlertidig begrenset på %{count} svar i samme emne."
   embed:
     start_discussion: "Start diskusjon"
@@ -186,7 +186,7 @@ nb_NO:
     no_hosts: "Vertsnavn for innbygging."
     configure: "Sett opp innbygging"
     more_replies:
-      one: "1 svar til"
+      one: "%{count} svar til"
       other: "%{count} svar til"
     loading: "Laster inn diskusjon…"
     permalink: "Permalink"
@@ -237,7 +237,6 @@ nb_NO:
   private_message_abbrev: "Mld"
   rss_description:
     latest: "Siste emner"
-    hot: "Populære emner"
     top: "Mest populære emner"
     top_all: "Tidenes mest populære emner"
     top_yearly: "Årets mest populære emner"
@@ -286,7 +285,7 @@ nb_NO:
       title: "Ønske om medlemskap i gruppen @%{group_name}"
   education:
     until_posts:
-      one: "1 innlegg"
+      one: "%{count} innlegg"
       other: "%{count} innlegg"
     "new-topic": |
       Velkommen til %{site_name}. **Takk for at du starter en ny samtale!**
@@ -324,20 +323,6 @@ nb_NO:
       Du kan redigere det forrige svaret ditt om du ønsker å legge til et sitat ved å merke teksten som skal siteres og velge <b>Sitat</b> knappen som spretter opp.
 
       Det er lettere for alle å lese emner som har færre og mer dyptgående innlegg enn et stort antall små, individuelle svar.
-    dominating_topic: |
-      ### La andre delta i diskusjonen
-
-      Dette emnet er helt klart viktig for deg &ndash; du har skrevet mer enn %{percent}% av svarene her.
-
-      Er du sikker på at du gir andre folk nok tid til å dele sine synspunkter også?
-    get_a_room: |
-      ### Vurder å svare flere personer
-
-      Du har allerede svart %{count}ganger til @%{reply_username} i dette ene emnet.
-
-      Har du vurdert å skrive svar til *andre* folk i diskusjonen også? En bra diskusjon involverer mange stemmer og perspektiv.
-
-      Hvis du vil fortsette en lang samtale med denne ene personen kan det være bedre å [sende dem en personlig melding](%{base_path}/u/%{reply_username}).
     too_many_replies: |
       ### Du har nådd grensen for svar i dette emnet
 
@@ -458,7 +443,7 @@ nb_NO:
     cannot_delete:
       has_subcategories: "Kan ikke slette denne kategorien fordi den har underkategorier."
       topic_exists:
-        one: "Kan ikke slette denne kategorien fordi den har 1 emne. Eldste emne er %{topic_link}."
+        one: "Kan ikke slette denne kategorien fordi den har %{count} emne. Eldste emne er %{topic_link}."
         other: "Kan ikke slette denne kategorien fordi den har %{count} emner. Eldste emne er %{topic_link}."
       topic_exists_no_oldest: "Kan ikke slette denne kategorien fordi antall emner er %{count}."
     uncategorized_description: "Emne som ikke trenger en kategori eller som ikke passer i noen av de andre kategoriene."
@@ -496,85 +481,83 @@ nb_NO:
       unsubscribe_via_email: "Du har nådd grensen for antall avmeldinger via e-post. Vennligst vent %{time_left} før du prøver igjen."
       topic_invitations_per_day: "Du har nådd grensen for invitasjoner til emner. Vennligst vent %{time_left} før du prøver igjen."
     hours:
-      one: "1 time"
+      one: "%{count} time"
       other: "%{count} timer"
     minutes:
-      one: "1 minutt"
+      one: "%{count} minutt"
       other: "%{count} minutter"
     seconds:
-      one: "1 sekund"
+      one: "%{count} sekund"
       other: "%{count} sekunder"
     short_time: "noen få sekunder"
   datetime:
     distance_in_words:
       half_a_minute: "< 1m"
       less_than_x_seconds:
-        one: "< 1s"
+        one: "< %{count}s"
         other: "< %{count}s"
       x_seconds:
-        one: "1s"
+        one: "%{count}s"
         other: "%{count}s"
       less_than_x_minutes:
-        one: "< 1m"
+        one: "< %{count}m"
         other: "< %{count}m"
       x_minutes:
-        one: "1m"
+        one: "%{count}m"
         other: "%{count}m"
       about_x_hours:
-        one: "1h"
+        one: "%{count}h"
         other: "%{count}h"
       x_days:
-        one: "1d"
+        one: "%{count}d"
         other: "%{count}d"
       about_x_months:
-        one: "1mnd"
+        one: "%{count}mnd"
         other: "%{count}mnd"
       x_months:
-        one: "1mnd"
+        one: "%{count}mnd"
         other: "%{count}mnd"
       about_x_years:
-        one: "1å"
+        one: "%{count}å"
         other: "%{count}å"
       over_x_years:
-        one: "> 1år"
+        one: "> %{count}år"
         other: "> %{count}y"
       almost_x_years:
-        one: "1år"
+        one: "%{count}år"
         other: "%{count}år"
     distance_in_words_verbose:
       half_a_minute: "Nå nettopp"
-      less_than_x_seconds:
-        one: "nå nettopp"
-        other: "nå nettopp"
+      less_than_x_seconds: "nå nettopp"
       x_seconds:
-        one: "1 sekund siden"
+        one: "%{count} sekund siden"
         other: "%{count} sekunder siden"
       less_than_x_minutes:
-        one: "mindre enn 1 minutt siden"
+        one: "mindre enn %{count} minutt siden"
         other: "mindre enn %{count} minutter siden"
       x_minutes:
-        one: "1 minutt siden"
+        one: "%{count} minutt siden"
         other: "%{count} minutter siden"
       about_x_hours:
-        one: "1 time siden"
+        one: "%{count} time siden"
         other: "%{count} timer siden"
       x_days:
-        one: "1 dag siden"
+        one: "%{count} dag siden"
         other: "%{count} dager siden"
       about_x_months:
-        one: "ca 1 måned siden"
+        one: "ca %{count} måned siden"
         other: "ca %{count} måneder siden"
       x_months:
-        one: "1 måned siden"
+        one: "%{count} måned siden"
         other: "%{count} måneder siden"
       about_x_years:
-        one: "omtrent 1 år siden"
+        one: "omtrent %{count} år siden"
         other: "omtrent %{count} år siden"
       over_x_years:
         one: "over et år siden"
         other: "over  %{count} år siden"
       almost_x_years:
-        one: "nesten 1 år siden"
+        one: "nesten %{count} år siden"
         other: "nesten %{count} år siden"
   password_reset:
     no_token: "Beklager, den lenken for å endre passord er for gammel. Velg logg inn-knappen bruk 'Jeg glemte passordet mitt' for å motta en ny lenke."
@@ -1102,7 +1085,6 @@ nb_NO:
     default_categories_tracking: "Liste med kategorier som overvåkes som forvalg"
     default_categories_muted: "Liste med kategorier som er dempet som forvalg"
     default_categories_watching_first_post: "Liste over kategorier hvor det er forvalgt innstilling at det første innlegget i hvert nye emne følges."
-    remove_muted_tags_from_latest: "Ikke vis emner med dempede stikkord i listen over siste emner."
     errors:
       invalid_email: "Ugyldig e-mail adresse"
       invalid_username: "Ingen bruker med det brukernavnet."
@@ -1125,22 +1107,22 @@ nb_NO:
     not_seen_in_a_month: "Velkommen tilbake! Vi har ikke sett deg på en stund. Dette er de mest populære emnene siden du var her sist."
   topic_statuses:
     autoclosed_enabled_days:
-      one: "Denne tråden ble automatisk lukket etter 1 dag. Nye svar er ikke lenger tillatt. "
+      one: "Denne tråden ble automatisk lukket etter %{count} dag. Nye svar er ikke lenger tillatt. "
       other: "Dette emnet ble automatisk lukket etter %{count} dager. Nye svar er ikke lenger tillatt. "
     autoclosed_enabled_hours:
-      one: "Denne tråden ble automatisk lukket etter 1 time. Nye svar er ikke lenger tillatt. "
+      one: "Denne tråden ble automatisk lukket etter %{count} time. Nye svar er ikke lenger tillatt. "
       other: "Dette emnet ble automatisk lukket etter %{count} timer. Nye svar er ikke lenger tillatt. "
     autoclosed_enabled_minutes:
-      one: "Denne tråden ble automatisk lukket etter 1 minutt. Nye svar er ikke lenger tillatt. "
+      one: "Denne tråden ble automatisk lukket etter %{count} minutt. Nye svar er ikke lenger tillatt. "
       other: "Dette emnet ble automatisk lukket etter %{count} minutter. Nye svar er ikke lenger tillatt. "
     autoclosed_enabled_lastpost_days:
-      one: "Denne tråden ble automatisk lukket 1 dag etter siste innlegg. Nye svar er ikke lenger tillatt. "
+      one: "Denne tråden ble automatisk lukket %{count} dag etter siste innlegg. Nye svar er ikke lenger tillatt. "
       other: "Dette emnet ble automatisk lukket %{count} dager etter siste svar. Nye svar er ikke lenger tillatt. "
     autoclosed_enabled_lastpost_hours:
-      one: "Denne tråden ble automatisk lukket 1 time etter siste innlegg. Nye svar er ikke lenger tillatt. "
+      one: "Denne tråden ble automatisk lukket %{count} time etter siste innlegg. Nye svar er ikke lenger tillatt. "
       other: "Dette emnet ble automatisk lukket %{count} timer etter siste svar. Nye svar er ikke lenger tillatt. "
     autoclosed_enabled_lastpost_minutes:
-      one: "Denne tråden ble automatisk lukket 1 minutt etter siste innlegg. Nye svar er ikke lenger tillatt. "
+      one: "Denne tråden ble automatisk lukket %{count} minutt etter siste innlegg. Nye svar er ikke lenger tillatt. "
       other: "Dette emnet ble automatisk lukket %{count} minutter etter siste svar. Nye svar er ikke lenger tillatt. "
     autoclosed_disabled: "Dette emnet er nå åpent. Nye svar er tillatt."
     autoclosed_disabled_lastpost: "Dette emnet er nå åpent. Nye svar er tillatt."
@@ -1236,7 +1218,6 @@ nb_NO:
       unread_messages: "Uleste meldinger"
       unread_notifications: "Uleste varslinger."
       liked_received: "Likes mottatt"
-      new_posts: "Nye innlegg"
       new_users: "Nye brukere"
       popular_topics: "Populære emner"
       follow_topic: "Følg dette emnet"
@@ -1257,8 +1238,6 @@ nb_NO:
     see_more: "Mer"
     search_title: "Søk i denne siden"
     search_button: "Søk"
-  terms_of_service:
-    title: "Bruksvilkår"
   deleted: "slettet"
   image: "bilde"
   upload:
@@ -1282,9 +1261,6 @@ nb_NO:
     default_theme_name: "Lys"
     light_theme_name: "Lys"
     dark_theme_name: "Mørk"
-  about: "Om"
-  guidelines: "Retningslinjer"
-  privacy: "Personvern"
   edit_this_page: "Endre denne siden"
   csv_export:
     boolean_yes: "Ja"
@@ -1503,14 +1479,10 @@ nb_NO:
         fields:
           logo:
             label: "Primær logo"
-          logo_small:
-            label: "Kompakt logo"
       icons:
         title: "Ikoner"
         fields:
-          favicon:
-            label: "Lite ikon"
-          apple_touch_icon:
+          large_icon:
             label: "Stort ikon"
       homepage:
         title: "Hjemmeside"
@@ -1535,6 +1507,8 @@ nb_NO:
       confirm_title: "Varslinger aktivert - %{site_title}"
       confirm_body: "Suksess! Varslinger er nå aktivert."
   reviewables:
+    sensitivity:
+      disabled: "Deaktivert"
     actions:
       agree_and_keep:
         title: "Behold innlegg"
@@ -1552,6 +1526,8 @@ nb_NO:
         description: "Gjem dette innlegget og send en melding til brukeren automatisk med en forespørsel om gjøre endringer."
       delete_spammer:
         title: "Slett spammer"
+      delete_single:
+        title: "Slett"
       disagree_and_restore:
         description: "Gjenopprett innlegget slik at alle brukere kan se det."
       disagree:

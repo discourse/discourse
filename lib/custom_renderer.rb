@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CustomRenderer < AbstractController::Base
   include ActiveSupport::Configurable
   include AbstractController::Rendering
@@ -18,11 +20,11 @@ class CustomRenderer < AbstractController::Base
   end
 
   def cookies
-    @parent.send(:cookies)
+    @parent.public_send(:cookies)
   end
 
   def session
-    @parent.send(:session)
+    @parent.public_send(:session)
   end
 
   def initialize(parent)

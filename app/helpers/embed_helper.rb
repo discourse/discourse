@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module EmbedHelper
 
   def embed_post_date(dt)

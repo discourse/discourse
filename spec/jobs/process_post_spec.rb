@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 require 'jobs/regular/process_post'
 
@@ -9,7 +11,7 @@ describe Jobs::ProcessPost do
 
   context 'with a post' do
 
-    let(:post) { Fabricate(:post) }
+    fab!(:post) { Fabricate(:post) }
 
     it 'does not erase posts when CookedPostProcessor malfunctions' do
       # Look kids, an actual reason why you want to use mocks

@@ -2,7 +2,7 @@
 // Footer nav bar (displayed in DiscourseHub app and PWAs)
 // --------------------------------------------------
 
-$footer-nav-height: 55px;
+$footer-nav-height: 49px;
 
 body.footer-nav-visible {
   #main-outlet {
@@ -37,8 +37,6 @@ body.footer-nav-visible {
 
   &.visible {
     bottom: 0px;
-
-    padding-bottom: env(safe-area-inset-bottom);
   }
 
   .footer-nav-widget {
@@ -47,11 +45,19 @@ body.footer-nav-visible {
     @include unselectable;
     button {
       flex: 1;
-      margin: 12px;
+      margin: 4px;
+      border-radius: 2px;
+      padding: 14px 18px;
       &:disabled {
         opacity: 0.6;
       }
     }
+  }
+}
+
+@supports (padding: max(0px)) {
+  .footer-nav.visible {
+    padding-bottom: unquote("max(5px, env(safe-area-inset-bottom))");
   }
 }
 
@@ -69,6 +75,7 @@ body.footer-nav-ipad {
     top: 0px;
     background-color: $header_background;
     z-index: z("ipad-header-nav");
+    padding-bottom: 0; // resets safe-area-inset-bottom
   }
 
   &.docked .d-header {

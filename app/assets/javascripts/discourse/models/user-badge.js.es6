@@ -1,15 +1,17 @@
 import { ajax } from "discourse/lib/ajax";
 import Badge from "discourse/models/badge";
+import computed from "ember-addons/ember-computed-decorators";
 
 const UserBadge = Discourse.Model.extend({
+  @computed
   postUrl: function() {
-    if (this.get("topic_title")) {
-      return "/t/-/" + this.get("topic_id") + "/" + this.get("post_number");
+    if (this.topic_title) {
+      return "/t/-/" + this.topic_id + "/" + this.post_number;
     }
-  }.property(), // avoid the extra bindings for now
+  }, // avoid the extra bindings for now
 
   revoke() {
-    return ajax("/user_badges/" + this.get("id"), {
+    return ajax("/user_badges/" + this.id, {
       type: "DELETE"
     });
   }

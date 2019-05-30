@@ -1,5 +1,9 @@
-Report.add_report("post_edits") do |report|
-  report.category_filtering = true
+# frozen_string_literal: true
+
+Report.add_report('post_edits') do |report|
+  category_filter = report.filters.dig(:category)
+  report.add_filter('category', default: category_filter)
+
   report.modes = [:table]
 
   report.labels = [
@@ -54,7 +58,7 @@ Report.add_report("post_edits") do |report|
   AND pr.created_at >= '#{report.start_date}'
   AND pr.created_at <= '#{report.end_date}'
   ORDER BY pr.created_at DESC
-  LIMIT 20
+  LIMIT #{report.limit || 20}
   )
   SELECT pr.editor_id,
   pr.editor_username,
@@ -77,14 +81,17 @@ Report.add_report("post_edits") do |report|
   ON u.id = p.user_id
   SQL
 
-  if report.category_id
+  if category_filter
     sql += <<~SQL
     JOIN topics t
     ON t.id = p.topic_id
-    WHERE t.category_id = ? OR t.category_id IN (SELECT id FROM categories WHERE categories.parent_category_id = ?)
+    WHERE p.user_id != editor_id AND t.category_id = ? OR t.category_id IN (SELECT id FROM categories WHERE categories.parent_category_id = ?)
     SQL
+  else
+    sql += "WHERE p.user_id != editor_id"
   end
-  result = report.category_id ? DB.query(sql, report.category_id, report.category_id) : DB.query(sql)
+
+  result = category_filter ? DB.query(sql, category_filter, category_filter) : DB.query(sql)
 
   result.each do |r|
     revision = {}

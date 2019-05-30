@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 describe WebHook do
@@ -35,8 +37,8 @@ describe WebHook do
   end
 
   context 'web hooks' do
-    let!(:post_hook) { Fabricate(:web_hook, payload_url: " https://example.com ") }
-    let!(:topic_hook) { Fabricate(:topic_web_hook) }
+    fab!(:post_hook) { Fabricate(:web_hook, payload_url: " https://example.com ") }
+    fab!(:topic_hook) { Fabricate(:topic_web_hook) }
 
     it "removes whitspace from payload_url before saving" do
       expect(post_hook.payload_url).to eq("https://example.com")
@@ -63,7 +65,7 @@ describe WebHook do
       end
 
       describe 'wildcard web hooks' do
-        let!(:wildcard_hook) { Fabricate(:wildcard_web_hook) }
+        fab!(:wildcard_hook) { Fabricate(:wildcard_web_hook) }
 
         it 'should include wildcard hooks' do
           expect(WebHook.active_web_hooks(:wildcard)).to eq([wildcard_hook])
@@ -92,7 +94,7 @@ describe WebHook do
       end
 
       context 'includes wildcard hooks' do
-        let!(:wildcard_hook) { Fabricate(:wildcard_web_hook) }
+        fab!(:wildcard_hook) { Fabricate(:wildcard_web_hook) }
 
         describe '#enqueue_hooks' do
           it 'enqueues hooks with ids' do

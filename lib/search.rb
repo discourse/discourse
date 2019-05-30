@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_dependency 'search/grouped_search_results'
 
 class Search
@@ -39,19 +41,22 @@ class Search
     # But it may not appear there based on pg extension configuration.
     # base docker config
     #
-    case locale.to_sym
-    when :da     then 'danish'
-    when :de     then 'german'
-    when :en     then 'english'
-    when :es     then 'spanish'
-    when :fr     then 'french'
-    when :it     then 'italian'
-    when :nl     then 'dutch'
-    when :nb_NO  then 'norwegian'
-    when :pt     then 'portuguese'
-    when :pt_BR  then 'portuguese'
-    when :sv     then 'swedish'
-    when :ru     then 'russian'
+    case locale.split("_")[0].to_sym
+    when :da then 'danish'
+    when :nl then 'dutch'
+    when :en then 'english'
+    when :fi then 'finnish'
+    when :fr then 'french'
+    when :de then 'german'
+    when :hu then 'hungarian'
+    when :it then 'italian'
+    when :nb then 'norwegian'
+    when :pt then 'portuguese'
+    when :ro then 'romanian'
+    when :ru then 'russian'
+    when :es then 'spanish'
+    when :sv then 'swedish'
+    when :tr then 'turkish'
     else 'simple' # use the 'simple' stemmer for other languages
     end
   end
@@ -612,6 +617,7 @@ class Search
   def find_grouped_results
     if @results.type_filter.present?
       raise Discourse::InvalidAccess.new("invalid type filter") unless Search.facets.include?(@results.type_filter)
+      # calling protected methods
       send("#{@results.type_filter}_search")
     else
       unless @search_context

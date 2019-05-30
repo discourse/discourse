@@ -18,13 +18,13 @@ sv:
       multiple:
         help:
           at_least_min_options:
-            one: "Välj minst <strong>1</strong> alternativ"
+            one: "Välj minst <strong>%{count}</strong> alternativ"
             other: "Välj minst <strong>%{count}</strong> alternativ"
           up_to_max_options:
-            one: "Välj upp till <strong>1</strong> alternativ"
+            one: "Välj upp till <strong>%{count}</strong> alternativ"
             other: "Välj upp till <strong>%{count}</strong> alternativ"
           x_options:
-            one: "Välj <strong>1</strong> alternativ"
+            one: "Välj <strong>%{count}</strong> alternativ"
             other: "Välj <strong>%{count}</strong> alternativ"
           between_min_and_max_options: "Välj mellan <strong>%{min}</strong> och <strong>%{max}</strong> alternativ"
       cast-votes:

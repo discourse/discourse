@@ -6,7 +6,7 @@ export default MountWidget.extend({
 
   init() {
     this._super(...arguments);
-    this.args = { notifications: this.get("notifications") };
+    this.args = { notifications: this.notifications };
   },
 
   @observes("notifications.length", "notifications.@each.read")

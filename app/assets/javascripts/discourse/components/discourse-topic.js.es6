@@ -39,14 +39,15 @@ export default Ember.Component.extend(
     _lastShowTopic: null,
 
     mobileScrollDirection: null,
+    pauseHeaderTopicUpdate: false,
 
     @observes("enteredAt")
     _enteredTopic() {
       // Ember is supposed to only call observers when values change but something
       // in our view set up is firing this observer with the same value. This check
       // prevents scrolled from being called twice.
-      const enteredAt = this.get("enteredAt");
-      if (enteredAt && this.get("lastEnteredAt") !== enteredAt) {
+      const enteredAt = this.enteredAt;
+      if (enteredAt && this.lastEnteredAt !== enteredAt) {
         this._lastShowTopic = null;
         Ember.run.schedule("afterRender", () => this.scrolled());
         this.set("lastEnteredAt", enteredAt);
@@ -57,20 +58,41 @@ export default Ember.Component.extend(
       Ember.run.scheduleOnce("afterRender", null, highlight, postNumber);
     },
 
-    _updateTopic(topic) {
+    _hideTopicInHeader() {
+      this.appEvents.trigger("header:hide-topic");
+      this._lastShowTopic = false;
+    },
+
+    _showTopicInHeader(topic) {
+      if (this.pauseHeaderTopicUpdate) return;
+      this.appEvents.trigger("header:show-topic", topic);
+      this._lastShowTopic = true;
+    },
+
+    _updateTopic(topic, debounceDuration) {
       if (topic === null) {
-        this._lastShowTopic = false;
-        this.appEvents.trigger("header:hide-topic");
+        this._hideTopicInHeader();
+
+        if (debounceDuration && !this.pauseHeaderTopicUpdate) {
+          this.pauseHeaderTopicUpdate = true;
+          this._lastShowTopic = true;
+
+          Ember.run.later(() => {
+            this._lastShowTopic = false;
+            this.pauseHeaderTopicUpdate = false;
+          }, debounceDuration);
+        }
+
         return;
       }
 
       const offset = window.pageYOffset || $("html").scrollTop();
-      this._lastShowTopic = this.showTopicInHeader(topic, offset);
+      this._lastShowTopic = this.shouldShowTopicInHeader(topic, offset);
 
       if (this._lastShowTopic) {
-        this.appEvents.trigger("header:show-topic", topic);
+        this._showTopicInHeader(topic);
       } else {
-        this.appEvents.trigger("header:hide-topic");
+        this._hideTopicInHeader();
       }
     },
 
@@ -89,7 +111,6 @@ export default Ember.Component.extend(
       );
 
       this.appEvents.on("post:highlight", this, "_highlightPost");
-
       this.appEvents.on("header:update-topic", this, "_updateTopic");
     },
 
@@ -104,7 +125,7 @@ export default Ember.Component.extend(
       this.resetExamineDockCache();
 
       // this happens after route exit, stuff could have trickled in
-      this.appEvents.trigger("header:hide-topic");
+      this._hideTopicInHeader();
       this.appEvents.off("post:highlight", this, "_highlightPost");
       this.appEvents.off("header:update-topic", this, "_updateTopic");
     },
@@ -120,7 +141,7 @@ export default Ember.Component.extend(
       this.set("dockAt", 0);
     },
 
-    showTopicInHeader(topic, offset) {
+    shouldShowTopicInHeader(topic, offset) {
       // On mobile, we show the header topic if the user has scrolled past the topic
       // title and the current scroll direction is down
       // On desktop the user only needs to scroll past the topic title.
@@ -136,7 +157,7 @@ export default Ember.Component.extend(
       }
 
       const offset = window.pageYOffset || $("html").scrollTop();
-      if (this.get("dockAt") === 0) {
+      if (this.dockAt === 0) {
         const title = $("#topic-title");
         if (title && title.length === 1) {
           this.set("dockAt", title.offset().top);
@@ -145,18 +166,17 @@ export default Ember.Component.extend(
 
       this.set("hasScrolled", offset > 0);
 
-      const topic = this.get("topic");
-      const showTopic = this.showTopicInHeader(topic, offset);
+      const topic = this.topic;
+      const showTopic = this.shouldShowTopicInHeader(topic, offset);
+
       if (showTopic !== this._lastShowTopic) {
         if (showTopic) {
-          this.appEvents.trigger("header:show-topic", topic);
-          this._lastShowTopic = true;
+          this._showTopicInHeader(topic);
         } else {
           if (!DiscourseURL.isJumpScheduled()) {
             const loadingNear = topic.get("postStream.loadingNearPost") || 1;
             if (loadingNear === 1) {
-              this.appEvents.trigger("header:hide-topic");
-              this._lastShowTopic = false;
+              this._hideTopicInHeader();
             }
           }
         }
@@ -185,7 +205,7 @@ export default Ember.Component.extend(
     toggleMobileHeaderTopic() {
       return this.appEvents.trigger(
         "header:update-topic",
-        this.mobileScrollDirection === "down" ? this.get("topic") : null
+        this.mobileScrollDirection === "down" ? this.topic : null
       );
     }
   }

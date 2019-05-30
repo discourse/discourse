@@ -178,7 +178,6 @@ sr:
         eu_west_2: "EU (London)"
         us_east_1: "US East (N. Virginia)"
         us_east_2: "US East (Ohio)"
-        us_gov_west_1: "AWS GovCloud (US)"
         us_west_1: "US West (N. California)"
         us_west_2: "US West (Oregon)"
     edit: "Izmeni naziv i kategoriju ove teme"
@@ -285,6 +284,7 @@ sr:
         save_changes: "Sačuvaj izmene"
         title: "Podešavanje"
       topic: "Tema:"
+      filtered_user: "Korisnik"
       user:
         username: "Korisničko ime"
         email: "E-mail"
@@ -296,6 +296,7 @@ sr:
       cancel: "Odustani"
       filters:
         refresh: "Osveži"
+        category: "Kategorija"
       statuses:
         pending:
           title: "U toku"
@@ -450,6 +451,7 @@ sr:
       private_message: "Privatna poruka"
       private_messages: "Poruke"
       user_notifications:
+        ignore_duration_username: "Korisničko ime"
         mute_option: "Utišano"
         normal_option: "Normalno"
       activity_stream: "Aktivnost"
@@ -779,7 +781,6 @@ sr:
     trust_level: "Nivo poverenja"
     search_hint: "korisničko ime, e-mail ili IP adresa"
     create_account:
-      disclaimer: "Registracijom prihvataš <a href='{{privacy_link}}'>pravila privatnosti</a> i <a href='{{tos_link}}'>uslove korišćenja</a>."
       title: "Napravi novi nalog"
       failed: "Nešto nije u redu, možda je ovaj e-mail već registrovan, pokušajte s linkom za zaboravljenu šifru."
     forgot_password:
@@ -982,13 +983,11 @@ sr:
         read: "Niste još pročitali ni jednu temu."
         posted: "Niste se još objavljivali ni u jendoj temi."
         latest: "Nema poslednjih tema. To je tužno."
-        hot: "Nema vrućih tema."
         bookmarks: "Nemate markiranih tema još."
         category: "Nema tema u {{category}}."
         top: "Nema glavnih tema."
       bottom:
         latest: "Nema više najnovijih tema."
-        hot: "Nema više vrućih tema."
         posted: "Nema više objavljenih tema."
         read: "Nema više pročitanih tema."
         new: "Nema više novih tema."
@@ -1005,7 +1004,7 @@ sr:
       new: "nova tema"
       unread: "nepročitano"
       new_topics:
-        one: "1 nova tema"
+        one: "%{count} nova tema"
         few: "{{count}} nove teme"
         other: "{{count}} nove teme"
       unread_topics:
@@ -1154,7 +1153,7 @@ sr:
       login_reply: "Prijavi se da bi odgovorio"
       filters:
         n_posts:
-          one: "1 poruka"
+          one: "%{count} poruka"
           few: "{{count}} poruka"
           other: "{{count}} poruka"
         cancel: "Uklonite filter"
@@ -1264,56 +1263,6 @@ sr:
           notify_moderators: "Označili ste ovo za moderatore"
           bookmark: "Markirali ste ovu poruku"
           like: "Sviđa vam se ovo"
-        by_you_and_others:
-          off_topic:
-            one: "Ti i {{count}} drugi korisnik označili ste ovo kao van teme"
-            few: "Ti i {{count}} drugih korisnika označili ste ovo kao van teme"
-            other: "Ti i {{count}} drugih korisnika označili ste ovo kao van teme"
-          spam:
-            one: "Ti i {{count}} drugi korisnik označili ste ovo kao nepoželjno."
-            few: "Ti i {{count}} drugih korisnika označili ste ovo kao nepoželjno."
-            other: "Ti i {{count}} drugih korisnika označili ste ovo kao nepoželjno."
-          inappropriate:
-            one: "Ti i {{count}} drugi korisnik označili ste ovo kao neprikladno"
-            few: "Ti i {{count}} drugih korisnika označili ste ovo kao neprikladno"
-            other: "Ti i {{count}} drugih korisnika označili ste ovo kao neprikladno"
-          notify_moderators:
-            one: "Ti i {{count}} drugi korisnik označili ste ovo za moderatore."
-            few: "Ti i {{count}} druga korisnika označili ste ovo za moderatore."
-            other: "Ti i {{count}} druga korisnika označili ste ovo za moderatore."
-          bookmark:
-            one: "Ti i {{count}} drugi korisnik ste markirali ovu objavu"
-            few: "Ti i {{count}} drugih korisnika ste markirali ovu objavu"
-            other: "Ti i {{count}} drugih korisnika ste markirali ovu objavu"
-          like:
-            one: "Tebi i {{count}} drugom korisniku se ovo sviđa."
-            few: "Tebi i {{count}} drugih korisnika se ovo sviđa."
-            other: "Tebi i {{count}} drugih korisnika se ovo sviđa."
-        by_others:
-          off_topic:
-            one: "{{count}} korisnika označilo je ovo kao van teme"
-            few: "{{count}} korisnika označilo je ovo kao van teme"
-            other: "{{count}} korisnika označilo je ovo kao van teme"
-          spam:
-            one: "{{count}} korisnik označilo je ovo kao nepoželjno"
-            few: "{{count}} korisnika označilo je ovo kao nepoželjno"
-            other: "{{count}} korisnika označilo je ovo kao nepoželjno"
-          inappropriate:
-            one: "{count}} korisnik označilo je ovo kao neprikladno"
-            few: "{count}} korisnika označilo je ovo kao neprikladno"
-            other: "{{count}} korisnika označilo je ovo kao neprikladno"
-          notify_moderators:
-            one: "{{count}} korisnik označilo je ovo za moderatora"
-            few: "{{count}} korisnika označilo je ovo za moderatora"
-            other: "{{count}} korisnika označilo je ovo za moderatora"
-          bookmark:
-            one: "{{count}} korisnik je markiralo ovu objavu"
-            few: "{{count}} korisnika je markiralo ovu objavu"
-            other: "{{count}} korisnika je markiralo ovu objavu"
-          like:
-            one: "{{count}} korisnik se ovo sviđa"
-            few: "{{count}} korisnika se ovo sviđa"
-            other: "{{count}} korisnika se ovo sviđa"
       revisions:
         controls:
           first: "Prva revizija"
@@ -1367,6 +1316,7 @@ sr:
       email_in_disabled_click: 'omogućite "pošalji email u" podešavanjima.'
       allow_badges_label: "Dozvoli dodjeljivanje značaka u ovoj kategoriji."
       edit_permissions: "Izmeni dozvole"
+      review_group_name: "ime grupe"
       this_year: "ove godine"
       default_position: "Zadana pozicija"
       position_disabled: "Kategorije će u nizu biti prikazivane po nivou aktivnosti. Za kontrolu redosleda kategorija u listi,"
@@ -1467,9 +1417,6 @@ sr:
           few: "Poslednje ({{count}})"
           other: "Poslednje ({{count}})"
         help: "teme sa nedavnim porukama"
-      hot:
-        title: "Vruće"
-        help: "izbor vrućih tema"
       read:
         title: "Pročitano"
         help: "Teme koje ste pročitali, po redu po kojem ste ih zadnji put čitali"
@@ -1485,18 +1432,18 @@ sr:
           other: "Nepročitane ({{count}})"
         help: "teme koje trenutno posmatrate ili pratite s nepročitanim porukama"
         lower_title_with_count:
-          one: "1 nepročitana"
+          one: "%{count} nepročitana"
           few: "{{count}} nepročitanih"
           other: "{{count}} nepročitanih"
       new:
         lower_title_with_count:
-          one: "1 nova"
+          one: "%{count} nova"
           few: "{{count}} novih"
           other: "{{count}} novih"
         lower_title: "novo"
         title: "Novo"
         title_with_count:
-          one: "Nove (1)"
+          one: "Nove (%{count})"
           few: "Nove ({{count}})"
           other: "Nove ({{count}})"
         help: "teme otvorene u zadnjih par dana"
@@ -1541,45 +1488,45 @@ sr:
       title: "Prečice na tastaturi"
       jump_to:
         title: "Skoči Na"
-        latest: "<b>g</b>, <b>l</b> Poslednje"
-        new: "<b>g</b>, <b>n</b> Novo"
-        unread: "<b>g</b>, <b>u</b> Nepročitano"
-        categories: "<b>g</b>, <b>c</b> Kategorije"
-        top: "'<b>g</b>, <b>t</b> Najaktivnije"
+        latest: "%{shortcut} Poslednje"
+        new: "%{shortcut} Novo"
+        unread: "%{shortcut} Nepročitano"
+        categories: "%{shortcut} Kategorije"
+        top: "%{shortcut} Najaktivnije"
       navigation:
         title: "Navigacija"
-        jump: "<b>#</b> Idi na poruku #"
-        back: "<b>u</b> Nazad"
-        up_down: "<b>k</b>/<b>j</b> Premesti odabrano &uarr; &darr;"
-        open: "<b>o</b> or <b>Enter</b> Otvori odabranu temu"
-        next_prev: "<b>shift</b>+<b>j</b>/<b>shift</b>+<b>k</b> Sledeći/predhodni deo"
+        jump: "%{shortcut} Idi na poruku #"
+        back: "%{shortcut} Nazad"
+        up_down: "%{shortcut} Premesti odabrano &uarr; &darr;"
+        open: "%{shortcut} Otvori odabranu temu"
+        next_prev: "%{shortcut} Sledeći/predhodni deo"
       application:
         title: "Aplikacija"
-        create: "<b>c</b> Otvori novu temu"
-        notifications: "<b>n</b> Otvori obaveštenja"
-        user_profile_menu: "<b>p</b> Otvori korisnički meni"
-        show_incoming_updated_topics: "<b>.</b> Pokaži ažurirane teme"
-        help: "<b>?</b> Otvori pomoć za tastaturu"
-        dismiss_new_posts: "<b>x</b>, <b>r</b> Odbaci Nove/Poruke"
-        dismiss_topics: "<b>x</b>, <b>t</b> Odbaci Teme"
+        create: "%{shortcut} Otvori novu temu"
+        notifications: "%{shortcut} Otvori obaveštenja"
+        user_profile_menu: "%{shortcut} Otvori korisnički meni"
+        show_incoming_updated_topics: "%{shortcut} Pokaži ažurirane teme"
+        help: "%{shortcut} Otvori pomoć za tastaturu"
+        dismiss_new_posts: "%{shortcut} Odbaci Nove/Poruke"
+        dismiss_topics: "%{shortcut} Odbaci Teme"
       actions:
         title: "Akcije"
-        pin_unpin_topic: "<b>shift</b>+<b>p</b>  Zakvači/Odkvači temu"
-        share_topic: "<b>shift</b>+<b>s</b> Podeli temu"
-        share_post: "<b>s</b> Podijeli poruku"
-        reply_as_new_topic: "<b>t</b> Odgovori u linkovanoj temi"
-        reply_topic: "<b>shift</b>+<b>r</b> Odgovori u temu"
-        reply_post: "<b>r</b> Odgovori na poruku"
-        quote_post: "<b>q</b> Citiraj poruku"
-        like: "<b>l</b> Lajkuj poruku"
-        flag: "<b>!</b> Označi poruku zastavom"
-        bookmark: "<b>b</b> Markiraj poruku"
-        edit: "<b>e</b> Izmeni poruku"
-        delete: "<b>d</b> Obriši poruku"
-        mark_muted: "<b>m</b>, <b>m</b> Utišaj poruku"
-        mark_regular: "<b>m</b>, <b>r</b> Standardna (Normalna) tema"
-        mark_tracking: "<b>m</b>, <b>t</b> Prati temu"
-        mark_watching: "<b>m</b>, <b>w</b> Posmatraj temu"
+        pin_unpin_topic: "%{shortcut}  Zakvači/Odkvači temu"
+        share_topic: "%{shortcut} Podeli temu"
+        share_post: "%{shortcut} Podijeli poruku"
+        reply_as_new_topic: "%{shortcut} Odgovori u linkovanoj temi"
+        reply_topic: "%{shortcut} Odgovori u temu"
+        reply_post: "%{shortcut} Odgovori na poruku"
+        quote_post: "%{shortcut} Citiraj poruku"
+        like: "%{shortcut} Lajkuj poruku"
+        flag: "%{shortcut} Označi poruku zastavom"
+        bookmark: "%{shortcut} Markiraj poruku"
+        edit: "%{shortcut} Izmeni poruku"
+        delete: "%{shortcut} Obriši poruku"
+        mark_muted: "%{shortcut} Utišaj poruku"
+        mark_regular: "%{shortcut} Standardna (Normalna) tema"
+        mark_tracking: "%{shortcut} Prati temu"
+        mark_watching: "%{shortcut} Posmatraj temu"
     badges:
       title: Značke
       select_badge_for_title: Odaberi značku koju češ koristit kao titulu
@@ -1615,12 +1562,10 @@ sr:
           new: "Nemate novih tema."
           read: "Niste još pročitali ni jednu temu."
           posted: "Niste se još objavljivali ni u jendoj temi."
-          hot: "Nema vrućih tema."
           bookmarks: "Nemate markiranih tema još."
           top: "Nema glavnih tema."
         bottom:
           latest: "Nema više najnovijih tema."
-          hot: "Nema više vrućih tema."
           posted: "Nema više objavljenih tema."
           read: "Nema više pročitanih tema."
           new: "Nema više novih tema."
@@ -1634,7 +1579,6 @@ sr:
       moderator: "Moderator"
       dashboard:
         title: "Komandna Tabla"
-        last_updated: "Kontrolna Tabla zadnje promene:"
         version: "Verzija"
         up_to_date: "Imate trenutnu verziju!"
         critical_available: "Dostupno je kritično ažuriranje."
@@ -1666,6 +1610,11 @@ sr:
           refresh_report: "Osveži Prijave"
           start_date: "Datum početka"
           end_date: "Datum kraja"
+          filters:
+            group:
+              label: Grupa
+            category:
+              label: Kategorija
       commits:
         latest_changes: "Posljednje promene: molimo često nadograđujte!"
         by: "od"
@@ -2281,7 +2230,7 @@ sr:
       upload_error: "Žao nam je, dogodila se greška pri učitavanju te datoteke. Molimo pokušajte ponovo."
       quit: "Možda kasnije"
       staff_count:
-        one: "Tvoja zajednica ima 1 člana tima (tebe). "
+        one: "Tvoja zajednica ima %{count} člana tima (tebe). "
         few: "Vaša zajednica ima  %{count} članova tima, uključujući i vas."
         other: "Vaša zajednica ima %{count} članova tima, uključujući i vas."
       invites:

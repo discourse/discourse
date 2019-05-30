@@ -6,15 +6,10 @@ import { selectedText } from "discourse/lib/utilities";
 export function isValidLink($link) {
   // Do not track:
   //  - lightboxes
-  //  - group mentions
   //  - links with disabled tracking
   //  - category links
   //  - quote back button
-  if (
-    $link.is(
-      ".lightbox, .mention, .mention-group, .no-track-link, .hashtag, .back"
-    )
-  ) {
+  if ($link.is(".lightbox, .no-track-link, .hashtag, .back")) {
     return false;
   }
 
@@ -50,7 +45,15 @@ export default {
     }
 
     const $link = $(e.currentTarget);
-    if (!isValidLink($link)) {
+    const tracking = isValidLink($link);
+
+    // Return early for mentions and group mentions
+    if ($link.is(".mention, .mention-group")) {
+      return true;
+    }
+
+    let href = ($link.attr("href") || $link.data("href") || "").trim();
+    if (!href || href.indexOf("mailto:") === 0) {
       return true;
     }
 
@@ -61,15 +64,14 @@ export default {
         !Discourse.User.current()
       ) {
         bootbox.alert(I18n.t("post.errors.attachment_download_requires_login"));
-        return false;
+      } else if (wantsNewWindow(e)) {
+        const newWindow = window.open(href, "_blank");
+        newWindow.opener = null;
+        newWindow.focus();
+      } else {
+        DiscourseURL.redirectTo(href);
       }
-
-      return true;
-    }
-
-    let href = ($link.attr("href") || $link.data("href") || "").trim();
-    if (!href || href.indexOf("mailto:") === 0) {
-      return true;
+      return false;
     }
 
     const $article = $link.closest(
@@ -81,7 +83,7 @@ export default {
     const ownLink = userId && userId === Discourse.User.currentProp("id");
 
     // Update badge clicks unless it's our own.
-    if (!ownLink) {
+    if (tracking && !ownLink) {
       const $badge = $("span.badge", $link);
       if ($badge.length === 1) {
         const html = $badge.html();
@@ -93,13 +95,25 @@ export default {
       }
     }
 
-    const trackPromise = ajax("/clicks/track", {
-      data: {
-        url: href,
-        post_id: postId,
-        topic_id: topicId
+    let trackPromise = Ember.RSVP.resolve();
+    if (tracking) {
+      if (!Ember.testing && navigator.sendBeacon) {
+        const data = new FormData();
+        data.append("url", href);
+        data.append("post_id", postId);
+        data.append("topic_id", topicId);
+        navigator.sendBeacon("/clicks/track", data);
+      } else {
+        trackPromise = ajax("/clicks/track", {
+          type: "POST",
+          data: {
+            url: href,
+            post_id: postId,
+            topic_id: topicId
+          }
+        });
       }
-    });
+    }
 
     const isInternal = DiscourseURL.isInternal(href);
     const openExternalInNewTab = Discourse.User.currentProp(
@@ -108,7 +122,9 @@ export default {
 
     if (!wantsNewWindow(e)) {
       if (!isInternal && openExternalInNewTab) {
-        window.open(href, "_blank").focus();
+        const newWindow = window.open(href, "_blank");
+        newWindow.opener = null;
+        newWindow.focus();
 
         // Hack to prevent changing current window.location.
         // e.preventDefault() does not work.

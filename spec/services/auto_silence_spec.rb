@@ -1,10 +1,13 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 describe SpamRule::AutoSilence do
 
   before do
-    SiteSetting.score_required_to_hide_post = 0 # never
-    SiteSetting.spam_score_to_silence_new_user = 4.0
+    SiteSetting.hide_post_sensitivity = Reviewable.sensitivity[:disabled]
+    Reviewable.set_priorities(high: 4.0)
+    SiteSetting.silence_new_user_sensitivity = Reviewable.sensitivity[:low]
     SiteSetting.num_users_to_silence_new_user = 2
   end
 
@@ -19,7 +22,8 @@ describe SpamRule::AutoSilence do
     end
 
     it 'delivers punishment when user should be silenced' do
-      SiteSetting.spam_score_to_silence_new_user = 2.0
+      Reviewable.set_priorities(high: 2.0)
+      SiteSetting.silence_new_user_sensitivity = Reviewable.sensitivity[:low]
       SiteSetting.num_users_to_silence_new_user = 1
       PostActionCreator.spam(Discourse.system_user, post)
       subject.perform
@@ -192,8 +196,8 @@ describe SpamRule::AutoSilence do
         expect(subject.should_autosilence?).to eq(false)
       end
 
-      it 'returns false if spam_score_to_silence_new_user is 0' do
-        SiteSetting.spam_score_to_silence_new_user = 0
+      it 'returns false if silence_new_user_sensitivity is disabled' do
+        SiteSetting.silence_new_user_sensitivity = Reviewable.sensitivity[:disabled]
         PostActionCreator.spam(flagger, post)
         PostActionCreator.spam(flagger2, post)
         expect(subject.should_autosilence?).to eq(false)

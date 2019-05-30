@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #
 # HTML emails don't support CSS, so we can use nokogiri to inline attributes based on
 # matchers.

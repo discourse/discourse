@@ -19,21 +19,21 @@ en:
     # Use Moment.js format string: https://momentjs.com/docs/#/displaying/format/
     short_date_no_year: "D MMM"
     # Use Moment.js format string: https://momentjs.com/docs/#/displaying/format/
-    short_date: "D MMM, YYYY"
+    short_date: "D MMM YYYY"
     # Use Moment.js format string: https://momentjs.com/docs/#/displaying/format/
-    long_date: "MMMM D, YYYY h:mma"
+    long_date: "D MMMM YYYY LT"
 
   datetime_formats: &datetime_formats
     formats:
-      # Format directives: https://ruby-doc.org/core-2.6.1/Time.html#method-i-strftime
-      short: "%m-%d-%Y"
-      # Format directives: https://ruby-doc.org/core-2.6.1/Time.html#method-i-strftime
-      short_no_year: "%B %-d"
-      # Format directives: https://ruby-doc.org/core-2.6.1/Time.html#method-i-strftime
-      date_only: "%B %-d, %Y"
-      # Format directives: https://ruby-doc.org/core-2.6.1/Time.html#method-i-strftime
-      long: "%B %-d, %Y, %l:%M%P"
-      # Format directives: https://ruby-doc.org/core-2.6.1/Time.html#method-i-strftime
+      # Format directives: https://ruby-doc.org/core/Time.html#method-i-strftime
+      short: "%d-%m-%Y"
+      # Format directives: https://ruby-doc.org/core/Time.html#method-i-strftime
+      short_no_year: "%-d %B"
+      # Format directives: https://ruby-doc.org/core/Time.html#method-i-strftime
+      date_only: "%-d %B %Y"
+      # Format directives: https://ruby-doc.org/core/Time.html#method-i-strftime
+      long: "%-d %B %Y %H:%M"
+      # Format directives: https://ruby-doc.org/core/Time.html#method-i-strftime
       no_day: "%B %Y"
   date:
     # Do not remove the brackets and commas and do not translate the first month name. It should be "null".
@@ -171,19 +171,19 @@ en:
         one: "Cannot delete record because a dependent %{record} exists"
         many: "Cannot delete record because dependent %{record} exist"
       too_long:
-        one: is too long (maximum is 1 character)
+        one: is too long (maximum is %{count} character)
         other: is too long (maximum is %{count} characters)
       too_short:
-        one: is too short (minimum is 1 character)
+        one: is too short (minimum is %{count} character)
         other: is too short (minimum is %{count} characters)
       wrong_length:
-        one: is the wrong length (should be 1 character)
+        one: is the wrong length (should be %{count} character)
         other: is the wrong length (should be %{count} characters)
       other_than: "must be other than %{count}"
     template:
       body: ! "There were problems with the following fields:"
       header:
-        one: 1 error prohibited this %{model} from being saved
+        one: "%{count} error prohibited this %{model} from being saved"
         other: ! "%{count} errors prohibited this %{model} from being saved"
     embed:
       load_from_remote: "There was an error loading that post."
@@ -243,12 +243,13 @@ en:
   read_only_mode_enabled: "The site is in read only mode. Interactions are disabled."
   invalid_grant_badge_reason_link: "External or invalid discourse link is not allowed in badge reason"
   email_template_cant_be_modified: "This email template can't be modified"
+  invalid_whisper_access: "Either whispers are not enabled or you do not have access to create whisper posts"
 
   reading_time: "Reading time"
   likes: "Likes"
 
   too_many_replies:
-    one: "We're sorry, but new users are temporarily limited to 1 reply in the same topic."
+    one: "We're sorry, but new users are temporarily limited to %{count} reply in the same topic."
     other: "We're sorry, but new users are temporarily limited to %{count} replies in the same topic."
 
   max_consecutive_replies:
@@ -264,7 +265,7 @@ en:
     no_hosts: "No hosts were set up for embedding."
     configure: "Configure Embedding"
     more_replies:
-      one: "1 more reply"
+      one: "%{count} more reply"
       other: "%{count} more replies"
 
     loading: "Loading Discussion..."
@@ -325,7 +326,6 @@ en:
 
   rss_description:
     latest: "Latest topics"
-    hot: "Hot topics"
     top: "Top topics"
     top_all: "All time top topics"
     top_yearly: "Yearly top topics"
@@ -381,7 +381,7 @@ en:
 
   education:
     until_posts:
-      one: "1 post"
+      one: "%{count} post"
       other: "%{count} posts"
 
     "new-topic": |
@@ -429,16 +429,16 @@ en:
 
       This topic is clearly important to you &ndash; you've posted more than %{percent}% of the replies here.
 
-      Are you sure you’re providing adequate time for other people to share their points of view, too?
+      It could be even better if you got other people space to share their points of view, too. Can you invite them over?
 
     get_a_room: |
-      ### Consider replying to more people
+      ### Encourage everyone to get involved in the conversation
 
-      You’ve already replied %{count} times to @%{reply_username} in this particular topic.
+      You’ve replied %{count} times to @%{reply_username} in this particular topic!
 
-      Have you considered replying to *other* people in the discussion, too? A great discussion involves many voices and perspectives.
+      A great discussion involves many voices and perspectives. Can you get anybody else involved?
 
-      If you’d like to continue your conversation with this particular user at length, [send them a personal message](%{base_path}/u/%{reply_username}).
+      And don’t forget, if you’d like to continue your conversation with this particular user at length outside of public view, [send them a personal message](%{base_path}/u/%{reply_username}).
 
     too_many_replies: |
       ### You have reached the reply limit for this topic
@@ -490,7 +490,12 @@ en:
               same_as_username: "is the same as your username. Please use a more secure password."
               same_as_email: "is the same as your email. Please use a more secure password."
               same_as_current: "is the same as your current password."
+              same_as_name: "is the same as your name."
               unique_characters: "has too many repeated characters. Please use a more secure password."
+            username:
+              same_as_password: "is the same as your password."
+            name:
+              same_as_password: "is the same as your password."
             ip_address:
               signup_not_allowed: "Signup is not allowed from this account."
         user_email:
@@ -598,7 +603,7 @@ en:
       uncategorized: "This category is special. It is intended as a holding area for topics that have no category; it cannot be deleted."
       has_subcategories: "Can't delete this category because it has sub-categories."
       topic_exists:
-        one: "Can't delete this category because it has 1 topic. Oldest topic is %{topic_link}."
+        one: "Can't delete this category because it has %{count} topic. Oldest topic is %{topic_link}."
         other: "Can't delete this category because it has %{count} topics. Oldest topic is %{topic_link}."
       topic_exists_no_oldest: "Can't delete this category because topic count is %{count}."
     uncategorized_description: "Topics that don't need a category, or don't fit into any other existing category."
@@ -642,13 +647,13 @@ en:
       topic_invitations_per_day: "You’ve reached the maximum number of topic invitations. Please wait %{time_left} before trying again."
 
     hours:
-      one: "1 hour"
+      one: "%{count} hour"
       other: "%{count} hours"
     minutes:
-      one: "1 minute"
+      one: "%{count} minute"
       other: "%{count} minutes"
     seconds:
-      one: "1 second"
+      one: "%{count} second"
       other: "%{count} seconds"
     short_time: "a few seconds"
 
@@ -656,73 +661,71 @@ en:
     distance_in_words:
       half_a_minute: "< 1m"
       less_than_x_seconds:
-        one: "< 1s"
+        one: "< %{count}s"
         other: "< %{count}s"
       x_seconds:
-        one: "1s"
+        one: "%{count}s"
         other: "%{count}s"
       less_than_x_minutes:
-        one: "< 1m"
+        one: "< %{count}m"
         other: "< %{count}m"
       x_minutes:
-        one: "1m"
+        one: "%{count}m"
         other: "%{count}m"
       about_x_hours:
-        one: "1h"
+        one: "%{count}h"
         other: "%{count}h"
       x_days:
-        one: "1d"
+        one: "%{count}d"
         other: "%{count}d"
       about_x_months:
-        one: "1mon"
+        one: "%{count}mon"
         other: "%{count}mon"
       x_months:
-        one: "1mon"
+        one: "%{count}mon"
         other: "%{count}mon"
       about_x_years:
-        one: "1y"
+        one: "%{count}y"
         other: "%{count}y"
       over_x_years:
-        one: "> 1y"
+        one: "> %{count}y"
         other: "> %{count}y"
       almost_x_years:
-        one: "1y"
+        one: "%{count}y"
         other: "%{count}y"
 
     distance_in_words_verbose:
       half_a_minute: "just now"
-      less_than_x_seconds:
-        one: "just now"
-        other: "just now"
+      less_than_x_seconds: "just now"
       x_seconds:
-        one: "1 second ago"
+        one: "%{count} second ago"
         other: "%{count} seconds ago"
       less_than_x_minutes:
-        one: "less than 1 minute ago"
+        one: "less than %{count} minute ago"
         other: "less than %{count} minutes ago"
       x_minutes:
-        one: "1 minute ago"
+        one: "%{count} minute ago"
         other: "%{count} minutes ago"
       about_x_hours:
-        one: "1 hour ago"
+        one: "%{count} hour ago"
         other: "%{count} hours ago"
       x_days:
-        one: "1 day ago"
+        one: "%{count} day ago"
         other: "%{count} days ago"
       about_x_months:
-        one: "about 1 month ago"
+        one: "about %{count} month ago"
         other: "about %{count} months ago"
       x_months:
-        one: "1 month ago"
+        one: "%{count} month ago"
         other: "%{count} months ago"
       about_x_years:
-        one: "about 1 year ago"
+        one: "about %{count} year ago"
         other: "about %{count} years ago"
       over_x_years:
-        one: "over 1 year ago"
+        one: "over %{count} year ago"
         other: "over %{count} years ago"
       almost_x_years:
-        one: "almost 1 year ago"
+        one: "almost %{count} year ago"
         other: "almost %{count} years ago"
 
   password_reset:
@@ -742,28 +745,30 @@ en:
   user_auth_tokens:
     browser:
       chrome: "Google Chrome"
-      safari: "Safari"
-      firefox: "Firefox"
-      opera: "Opera"
-      ie: "Internet Explorer"
-      edge: "Microsoft Edge"
       discoursehub: "DiscourseHub app"
+      edge: "Microsoft Edge"
+      firefox: "Firefox"
+      ie: "Internet Explorer"
+      opera: "Opera"
+      safari: "Safari"
       unknown: "unknown browser"
     device:
       android: "Android Device"
+      chromebook: "Chromebook"
       ipad: "iPad"
       iphone: "iPhone"
       ipod: "iPod"
-      mobile: "Mobile Device"
-      mac: "Mac"
       linux: "GNU/Linux Computer"
+      mac: "Mac"
+      mobile: "Mobile Device"
       windows: "Windows Computer"
       unknown: "unknown device"
     os:
       android: "Android"
+      chromeos: "ChromeOS"
       ios: "iOS"
-      macos: "macOS"
       linux: "Linux"
+      macos: "macOS"
       windows: "Microsoft Windows"
       unknown: "unknown operating system"
 
@@ -1252,12 +1257,12 @@ en:
         filesize: File size
       description: "List all uploads by extension, filesize and author."
     top_ignored_users:
-      title: "Top Ignored Users"
+      title: "Top Ignored / Muted Users"
       labels:
         ignored_user: Ignored User
         ignores_count: Ignores count
         mutes_count: Mutes count
-      description: "List top ignored users."
+      description: "Users who have been muted and/or ignored by many other users."
 
   dashboard:
     rails_env_warning: "Your server is running in %{env} mode."
@@ -1270,8 +1275,6 @@ en:
     facebook_config_warning: 'The server is configured to allow signup and log in with Facebook (enable_facebook_logins), but the app id and app secret values are not set. Go to <a href="%{base_path}/admin/site_settings">the Site Settings</a> and update the settings. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">See this guide to learn more</a>.'
     twitter_config_warning: 'The server is configured to allow signup and log in with Twitter (enable_twitter_logins), but the key and secret values are not set. Go to <a href="%{base_path}/admin/site_settings">the Site Settings</a> and update the settings. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">See this guide to learn more</a>.'
     github_config_warning: 'The server is configured to allow signup and log in with GitHub (enable_github_logins), but the client id and secret values are not set. Go to <a href="%{base_path}/admin/site_settings">the Site Settings</a> and update the settings. <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">See this guide to learn more</a>.'
-    pwa_config_icon_warning: 'Your site is missing a 512 × 512 icon which allows users to add a homescreen shortcut to this site on Android devices. Go to <a href="%{base_path}/admin/site_settings/category/all_results?filter=large_icon">the Site Settings</a> and upload a 512 × 512 icon.'
-    pwa_config_title_warning: 'Your site is missing a short title which allows users to add a homescreen shortcut to your site on Android devices. Go to <a href="%{base_path}/admin/site_settings/category/all_results?filter=short_title">the Site Settings</a> and add a short title, limited to 12 characters.'
     s3_config_warning: 'The server is configured to upload files to S3, but at least one the following setting is not set: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile, or s3_upload_bucket. Go to <a href="%{base_path}/admin/site_settings">the Site Settings</a> and update the settings. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">See "How to set up image uploads to S3?" to learn more</a>.'
     s3_backup_config_warning: 'The server is configured to upload backups to S3, but at least one the following setting is not set: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile, or s3_backup_bucket. Go to <a href="%{base_path}/admin/site_settings">the Site Settings</a> and update the settings. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">See "How to set up image uploads to S3?" to learn more</a>.'
     image_magick_warning: 'The server is configured to create thumbnails of large images, but ImageMagick is not installed. Install ImageMagick using your favorite package manager or <a href="https://www.imagemagick.org/script/download.php" target="_blank">download the latest release</a>.'
@@ -1359,11 +1362,12 @@ en:
     logo_small: "The small logo image at the top left of your site, seen when scrolling down. Use a square 120 × 120 image. If left blank, a home glyph will be shown."
     digest_logo: "The alternate logo image used at the top of your site's email summary. Use a wide rectangle image. Don't use an SVG image. If left blank, the image from the `logo` setting will be used."
     mobile_logo: "The logo used on mobile version of your site. Use a wide rectangular image with a height of 120 and an aspect ratio greater than 3:1. If left blank, the image from the `logo` setting will be used."
-    large_icon: "Image used as logo/splash image on Android. Required size is 512 × 512."
-    favicon: "A favicon for your site, see <a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>https://en.wikipedia.org/wiki/Favicon</a>. To work correctly over a CDN it must be a png."
-    apple_touch_icon: "Icon used for Apple touch devices. Required size is 144 × 144."
-    opengraph_image: "Default opengraph image, used when the page has no other suitable image or site logo."
-    twitter_summary_large_image: "Default Twitter summary card image (should be at least 280 in width, and at least 150 in height)."
+    large_icon: "Image used as the base for other metadata icons. Should ideally be larger than 512 x 512. If left blank, logo_small will be used."
+    manifest_icon: "Image used as logo/splash image on Android. Will be automatically resized to 512 × 512. If left blank, large_icon will be used."
+    favicon: "A favicon for your site, see <a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>https://en.wikipedia.org/wiki/Favicon</a>. To work correctly over a CDN it must be a png. Will be resized to 32x32. If left blank, large_icon will be used."
+    apple_touch_icon: "Icon used for Apple touch devices. Will be automatically resized to 180x180. If left blank, large_icon will be used."
+    opengraph_image: "Default opengraph image, used when the page has no other suitable image. If left blank, large_icon will be used"
+    twitter_summary_large_image: "Twitter card 'summary large image' (should be at least 280 in width, and at least 150 in height). If left blank, regular card metadata is generated using the opengraph_image."
 
     notification_email: "The from: email address used when sending all essential system emails. The domain specified here must have SPF, DKIM and reverse PTR records set correctly for email to arrive."
     email_custom_headers: "A pipe-delimited list of custom email headers"
@@ -1386,7 +1390,10 @@ en:
     anon_polling_interval: "How often should anonymous clients poll in milliseconds"
     background_polling_interval: "How often should the clients poll in milliseconds (when the window is in the background)"
 
-    score_required_to_hide_post: "Score threshold that causes a post to be automatically hidden and message sent to the user (0 to disable)"
+    hide_post_sensitivity: "The likelihood that a flagged post will be hidden"
+    silence_new_user_sensitivity: "The likelihood that a new user will be silenced based on spam flags"
+    auto_close_topic_sensitivity: "The likelihood that a flagged topic will be automatically closed"
+
     cooldown_minutes_after_hiding_posts: "Number of minutes a user must wait before they can edit a post hidden via community flagging"
 
     max_topics_in_first_day: "The maximum number of topics a user is allowed to create in the 24 hour period after creating their first post"
@@ -1395,8 +1402,6 @@ en:
     tl2_additional_likes_per_day_multiplier: "Increase limit of likes per day for tl2 (member) by multiplying with this number"
     tl3_additional_likes_per_day_multiplier: "Increase limit of likes per day for tl3 (regular) by multiplying with this number"
     tl4_additional_likes_per_day_multiplier: "Increase limit of likes per day for tl4 (leader) by multiplying with this number"
-
-    spam_score_to_silence_new_user: "If a new user's posts receive this score from num_users_to_silence_new_user different users, hide all their posts and prevent future posting. 0 to disable."
     num_users_to_silence_new_user: "If a new user's posts get num_spam_flags_to_silence_new_user spam flags from this many different users, hide all their posts and prevent future posting. 0 to disable."
     num_tl3_flags_to_silence_new_user: "If a new user's posts get this many flags from num_tl3_users_to_silence_new_user different trust level 3 users, hide all their posts and prevent future posting. 0 to disable."
     num_tl3_users_to_silence_new_user: "If a new user's posts get num_tl3_flags_to_silence_new_user flags from this many different trust level 3 users, hide all their posts and prevent future posting. 0 to disable."
@@ -1422,7 +1427,7 @@ en:
     blacklist_ip_blocks: "A list of private IP blocks that should never be crawled by Discourse"
     whitelist_internal_hosts: "A list of internal hosts that discourse can safely crawl for oneboxing and other purposes"
     allowed_iframes: "A list of iframe src domain prefixes that discourse can safely allow in posts"
-    whitelisted_crawler_user_agents: "User agents of web crawlers that should be allowed to access the site."
+    whitelisted_crawler_user_agents: "User agents of web crawlers that should be allowed to access the site. WARNING! SETTING THIS WILL DISALLOW ALL CRAWLERS NOT LISTED HERE!"
     blacklisted_crawler_user_agents: "Unique case insensitive word in the user agent string identifying web crawlers that should not be allowed to access the site. Does not apply if whitelist is defined."
     slow_down_crawler_user_agents: "User agents of web crawlers that should be rate limited in robots.txt using the Crawl-delay directive"
     slow_down_crawler_rate: "If slow_down_crawler_user_agents is specified this rate will apply to all the crawlers (number of seconds delay between requests)"
@@ -1705,6 +1710,7 @@ en:
     max_image_megapixels: "Maximum number of megapixels allowed for an image."
 
     title_prettify: "Prevent common title typos and errors, including all caps, lowercase first character, multiple ! and ?, extra . at end, etc."
+    title_remove_extraneous_space: "Remove leading whitespaces in front of the end punctuation."
 
     topic_views_heat_low: "After this many views, the views field is slightly highlighted."
     topic_views_heat_medium: "After this many views, the views field is moderately highlighted."
@@ -1742,7 +1748,6 @@ en:
     max_age_unmatched_ips: "Delete unmatched screened IP entries after (N) days."
 
     num_flaggers_to_close_topic: "Minimum number of unique flaggers that is required to automatically pause a topic for intervention"
-    score_to_auto_close_topic: "The total flag score of that is required to automatically pause a topic for intervention"
     num_hours_to_close_topic: "Number of hours to pause a topic for intervention."
 
     auto_respond_to_flag_actions: "Enable automatic reply when disposing a flag."
@@ -1750,8 +1755,9 @@ en:
     auto_silence_fast_typers_on_first_post: "Automatically silence users that do not meet min_first_post_typing_time"
     auto_silence_fast_typers_max_trust_level: "Maximum trust level to auto silence fast typers"
     auto_silence_first_post_regex: "Case insensitive regex that if passed will cause first post by user to be silenced and sent to approval queue. Example: raging|a[bc]a , will cause all posts containing raging or aba or aca to be silenced on first. Only applies to first post."
-    flags_default_topics: "Show flagged topics by default in the admin section"
-    min_score_default_visibility: "Don't show reviewable items unless they meet this score"
+    reviewable_claiming: "Does reviewable content need to be claimed before it can be acted upon?"
+    reviewable_default_topics: "Show reviewable content grouped by topic by default"
+    reviewable_default_visibility: "Don't show reviewable items unless they meet this priority"
 
     reply_by_email_enabled: "Enable replying to topics via email."
     reply_by_email_address: "Template for reply by email incoming email address, for example: %%{reply_key}@reply.example.com or replies+%%{reply_key}@example.com"
@@ -1789,7 +1795,7 @@ en:
 
     enable_forwarded_emails: "[BETA] Allow users to create a topic by forwarding an email in."
     always_show_trimmed_content: "Always show trimmed part of incoming emails. WARNING: might reveal email addresses."
-    private_email: "Don't include content from posts or topics in emails for extra privacy. NOTE: also disabled digest emails."
+    private_email: "Don't include content from posts or topics in email title or email body. NOTE: also disables digest emails."
 
     manual_polling_enabled: "Push emails using the API for email replies."
     pop3_polling_enabled: "Poll via POP3 for email replies."
@@ -1841,6 +1847,7 @@ en:
     staff_user_custom_fields: "A list of user custom fields that can be retrieved for staff members with the API."
     enable_user_directory: "Provide a directory of users for browsing"
     enable_group_directory: "Provide a directory of groups for browsing"
+    enable_category_group_review: "Allow groups to review content in specific categories"
     group_in_subject: "Set %%{optional_pm} in email subject to name of first group in PM, see: <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>Customize subject format for standard emails</a>"
     allow_anonymous_posting: "Allow users to switch to anonymous mode"
     anonymous_posting_min_trust_level: "Minimum trust level required to enable anonymous posting"
@@ -1858,7 +1865,7 @@ en:
 
     ignored_users_message_gap_days: "How long to wait before notifying moderators again about a user who has been ignored by many others."
 
-    clean_up_inactive_users_after_days: "Number of days before an inactive user (trust level 0 without any posts) is removed."
+    clean_up_inactive_users_after_days: "Number of days before an inactive user (trust level 0 without any posts) is removed. To disable clean up set to 0."
 
     user_website_domains_whitelist: "User website will be verified against these domains. Pipe-delimited list."
 
@@ -2010,7 +2017,8 @@ en:
     allow_staff_to_tag_pms: "Allow staff members to tag any personal message"
     min_trust_level_to_tag_topics: "Minimum trust level required to tag topics"
     suppress_overlapping_tags_in_list: "If tags match exact words in topic titles, don't show the tag"
-    remove_muted_tags_from_latest: "Don't show topics tagged with muted tags in the latest topic list."
+    remove_muted_tags_from_latest: "Don't show topics tagged only with muted tags in the latest topic list."
+    mute_other_present_tags: "Don't show topics tagged with both muted and unmuted tags in the latest topic list."
     force_lowercase_tags: "Force all new tags to be entirely lowercase."
 
     company_name: "Company Name"
@@ -2130,47 +2138,47 @@ en:
 
   topic_statuses:
     autoclosed_message_max_posts:
-      one: "This message was automatically closed after reaching the maximum limit of 1 reply."
+      one: "This message was automatically closed after reaching the maximum limit of %{count} reply."
       other: "This message was automatically closed after reaching the maximum limit of %{count} replies."
     autoclosed_topic_max_posts:
-      one: "This topic was automatically closed after reaching the maximum limit of 1 reply."
+      one: "This topic was automatically closed after reaching the maximum limit of %{count} reply."
       other: "This topic was automatically closed after reaching the maximum limit of %{count} replies."
     autoclosed_enabled_days:
-      one: "This topic was automatically closed after 1 day. New replies are no longer allowed."
+      one: "This topic was automatically closed after %{count} day. New replies are no longer allowed."
       other: "This topic was automatically closed after %{count} days. New replies are no longer allowed."
     autoclosed_enabled_hours:
-      one: "This topic was automatically closed after 1 hour. New replies are no longer allowed."
+      one: "This topic was automatically closed after %{count} hour. New replies are no longer allowed."
       other: "This topic was automatically closed after %{count} hours. New replies are no longer allowed."
     autoclosed_enabled_minutes:
-      one: "This topic was automatically closed after 1 minute. New replies are no longer allowed."
+      one: "This topic was automatically closed after %{count} minute. New replies are no longer allowed."
       other: "This topic was automatically closed after %{count} minutes. New replies are no longer allowed."
     autoclosed_enabled_lastpost_days:
-      one: "This topic was automatically closed 1 day after the last reply. New replies are no longer allowed."
+      one: "This topic was automatically closed %{count} day after the last reply. New replies are no longer allowed."
       other: "This topic was automatically closed %{count} days after the last reply. New replies are no longer allowed."
     autoclosed_enabled_lastpost_hours:
-      one: "This topic was automatically closed 1 hour after the last reply. New replies are no longer allowed."
+      one: "This topic was automatically closed %{count} hour after the last reply. New replies are no longer allowed."
       other: "This topic was automatically closed %{count} hours after the last reply. New replies are no longer allowed."
     autoclosed_enabled_lastpost_minutes:
-      one: "This topic was automatically closed 1 minute after the last reply. New replies are no longer allowed."
+      one: "This topic was automatically closed %{count} minute after the last reply. New replies are no longer allowed."
       other: "This topic was automatically closed %{count} minutes after the last reply. New replies are no longer allowed."
 
     autoclosed_disabled_days:
-      one: "This topic was automatically opened after 1 day."
+      one: "This topic was automatically opened after %{count} day."
       other: "This topic was automatically opened after %{count} days."
     autoclosed_disabled_hours:
-      one: "This topic was automatically opened after 1 hour."
+      one: "This topic was automatically opened after %{count} hour."
       other: "This topic was automatically opened after %{count} hours."
     autoclosed_disabled_minutes:
-      one: "This topic was automatically opened after 1 minute."
+      one: "This topic was automatically opened after %{count} minute."
       other: "This topic was automatically opened after %{count} minutes."
     autoclosed_disabled_lastpost_days:
-      one: "This topic was automatically opened 1 day after the last reply."
+      one: "This topic was automatically opened %{count} day after the last reply."
       other: "This topic was automatically opened %{count} days after the last reply."
     autoclosed_disabled_lastpost_hours:
-      one: "This topic was automatically opened 1 hour after the last reply."
+      one: "This topic was automatically opened %{count} hour after the last reply."
       other: "This topic was automatically opened %{count} hours after the last reply."
     autoclosed_disabled_lastpost_minutes:
-      one: "This topic was automatically opened 1 minute after the last reply."
+      one: "This topic was automatically opened %{count} minute after the last reply."
       other: "This topic was automatically opened %{count} minutes after the last reply."
 
     autoclosed_disabled: "This topic is now opened. New replies are allowed."
@@ -2251,10 +2259,10 @@ en:
 
   reviewables_reminder:
     submitted:
-      one: "Items were submitted over 1 hour ago. [Please review them](%{base_path}/review)."
+      one: "Items were submitted over %{count} hour ago. [Please review them](%{base_path}/review)."
       other: "Items were submitted over %{count} hours ago. [Please review them](%{base_path}/review)."
     subject_template:
-      one: "1 item needs to be reviewed"
+      one: "%{count} item needs to be reviewed"
       other: "%{count} items need to be reviewed"
 
   unsubscribe_mailer:
@@ -2465,7 +2473,7 @@ en:
     ignored_and_deleted: "Thanks for letting us know. We've removed the post."
 
   temporarily_closed_due_to_flags:
-    one: "This topic is temporarily closed for at least 1 hour due to a large number of community flags."
+    one: "This topic is temporarily closed for at least %{count} hour due to a large number of community flags."
     other: "This topic is temporarily closed for at least %{count} hours due to a large number of community flags."
 
   system_messages:
@@ -2966,7 +2974,7 @@ en:
     pending_users_reminder:
       title: "Pending Users Reminder"
       subject_template:
-        one: "1 user waiting for approval"
+        one: "%{count} user waiting for approval"
         other: "%{count} users waiting for approval"
       text_body_template: |
         There are new user signups waiting to be approved (or rejected) before they can access this forum.
@@ -2999,12 +3007,12 @@ en:
     queued_posts_reminder:
       title: "Queued Posts Reminder"
       subject_template:
-        one: "1 post waiting to be reviewed"
+        one: "%{count} post waiting to be reviewed"
         other: "%{count} posts waiting to be reviewed"
       text_body_template: |
         Hello,
 
-        Posts from new users were held for moderation and are currently waiting to be reviewed. [Approve or reject them here](%{base_url}/queued-posts).
+        Posts from new users were held for moderation and are currently waiting to be reviewed. [Approve or reject them here](%{base_url}/review?type=ReviewableQueuedPost).
 
   unsubscribe_link: |
     To unsubscribe from these emails, [click here](%{unsubscribe_url}).
@@ -3024,7 +3032,7 @@ en:
   user_notifications:
     previous_discussion: "Previous Replies"
     reached_limit:
-      one: "Heads up: We send a maximum of 1 daily email. Check the site to see the ones that might be held back."
+      one: "Heads up: We send a maximum of %{count} daily email. Check the site to see the ones that might be held back."
       other: "Heads up: We send a maximum of %{count} daily emails. Check the site to see the ones that might be held back. PS thanks for being popular!"
     in_reply_to: "In Reply To"
     unsubscribe:
@@ -3292,7 +3300,6 @@ en:
       unread_messages: "Unread Messages"
       unread_notifications: "Unread Notifications"
       liked_received: "Likes Received"
-      new_posts: "New Posts"
       new_users: "New Users"
       popular_topics: "Popular Topics"
       follow_topic: "Follow this topic"
@@ -3492,10 +3499,6 @@ en:
       ## [Welcome to %{title}](#welcome)
       An account is required. Please ask an existing member for an invite or log in to continue.
 
-  terms_of_service:
-    title: "Terms of Service"
-    signup_form_message: 'I have read and accept the <a href="%{base_path}/tos" target="_blank">Terms of Service</a>.'
-
   deleted: "deleted"
 
   image: "image"
@@ -3565,10 +3568,6 @@ en:
     latte_theme_name: "Latte"
     summer_theme_name: "Summer"
     dark_rose_theme_name: "Dark Rose"
-
-  about: "About"
-  guidelines: "Guidelines"
-  privacy: "Privacy"
 
   edit_this_page: "Edit this page"
 
@@ -3829,7 +3828,7 @@ en:
 
       You and the company agree to seek injunctions related to these terms only in state or federal court in %{city_for_disputes}.  Neither you nor the company will object to jurisdiction, forum, or venue in those courts.
 
-      ***Other than to seek an injunction or for claims under the Computer Fraud and Abuse Act, you and the company will resolve any Dispute by binding American Arbitration Association arbitration.  Arbitration will follow the AAA's Commercial Arbitration Rules and Supplementary Procedures for Consumer Related Disputes.  Arbitration will happen in San Francisco, California.  You will settle any dispute as an individual, and not as part of a class action or other representative proceeding, whether as the plaintiff or a class member.  No arbitrator will consolidate any dispute with any other arbitration without the company's permission.***
+      ***Other than to seek an injunction or for claims under the Computer Fraud and Abuse Act, you and the company will resolve any dispute by binding American Arbitration Association arbitration.  Arbitration will follow the AAA's Commercial Arbitration Rules and Supplementary Procedures for Consumer Related Disputes.  Arbitration will happen in %{city_for_disputes}.  You will settle any dispute as an individual, and not as part of a class action or other representative proceeding, whether as the plaintiff or a class member.  No arbitrator will consolidate any dispute with any other arbitration without the company's permission.***
 
       Any arbitration award will include costs of the arbitration, reasonable attorneys' fees, and reasonable costs for witnesses.  You and the company may enter arbitration awards in any court with jurisdiction.
 
@@ -4199,7 +4198,9 @@ en:
     title: "Tags"
     staff_tag_disallowed: 'The tag "%{tag}" may only be applied by staff.'
     staff_tag_remove_disallowed: 'The tag "%{tag}" may only be removed by staff.'
-    minimum_required_tags: "You must select at least %{count} tags."
+    minimum_required_tags:
+      one: "You must select at least %{count} tag."
+      other: "You must select at least %{count} tags."
     upload_row_too_long: "The CSV file should have one tag per line. Optionally the tag can be followed by a comma, then the tag group name."
     forbidden:
       in_this_category: '"%{tag_name}" cannot be used in this category'
@@ -4332,6 +4333,17 @@ en:
       colors:
         title: "Theme"
 
+      themes_further_reading:
+        title: "Further reading for themes"
+        description:
+          "You can customize many aspects of your community's look-and-feel in just a few clicks (for example by adding a header or footer). Here is a useful list of resources to learn more about themes and theme components in Discourse:
+          <ul>
+          <li><a href='https://meta.discourse.org/t/91966' target='_blank'>Beginner's guide to creating themes and theme components</a></li>
+          <li><a href='https://meta.discourse.org/t/63682' target='_blank'>How do I install a theme or theme component?</a></li>
+          <li><a href='https://meta.discourse.org/t/110448' target='_blank'>Theme Developer Quick Reference Guide</a></li>
+          </ul>
+          And remember to visit the <a href='https://meta.discourse.org/c/theme' target='_blank'>#themes</a> category on <a href='https://meta.discourse.org' target='_blank'>meta.discourse.org</a> regularly to see the newest themes and components posted by staff and contributors."
+
       logos:
         title: "Logos"
         fields:
@@ -4339,18 +4351,18 @@ en:
             label: "Primary Logo"
             description: "The logo image at the top left of your site. Use a wide rectangular image with a height of 120 and an aspect ratio greater than 3:1"
           logo_small:
-            label: "Compact Logo"
-            description: "A compact version of your logo, shown at the top left of your site when scrolling down. Use a square 120 × 120 image."
+            label: "Square Logo"
+            description: "A square version of your logo. Shown at the top left of your site when scrolling down, in the browser, and when sharing on social platforms. Ideally larger than 512x512."
 
       icons:
         title: "Icons"
         fields:
           favicon:
-            label: "Small Icon"
-            description: "Icon image used to represent your site in web browsers that looks good at small sizes such as 32 × 32. Recommended image extensions are PNG or JPG."
-          apple_touch_icon:
+            label: "Browser Icon"
+            description: "Icon image used to represent your site in web browsers that looks good at small sizes. Recommended image extensions are PNG or JPG. We'll use the square logo by default."
+          large_icon:
             label: "Large Icon"
-            description: "Icon image used to represent your site on modern devices that looks good at larger sizes. Required size is at least 512 × 512."
+            description: "Icon image used to represent your site on modern devices that looks good at larger sizes. Ideally larger than 512 × 512. We'll use the square logo by default."
 
       homepage:
         description: "We recommend showing the latest topics on your homepage, but you can also show categories (groups of topics) on the homepage if you prefer."
@@ -4416,19 +4428,30 @@ en:
     webhook_deactivation_reason: "Your webhook has been automatically deactivated. We received multiple '%{status}' HTTP status failure responses."
 
   reviewables:
+    priorities:
+      low: "Low"
+      medium: "Medium"
+      high: "High"
+    sensitivity:
+      disabled: "Disabled"
+      low: "Low"
+      medium: "Medium"
+      high: "High"
+    must_claim: "You must claim items before acting on them."
+    user_claimed: "This item has been claimed by another user."
     missing_version: "You must supply a version parameter"
     conflict: "There was an update conflict preventing you from doing that."
     reasons:
-      post_count: "The poster has not met the `approve_post_count` requirements."
-      trust_level: "The poster has not met the `approve_unless_trust_level` requirement."
-      new_topics_unless_trust_level: "The poster has not met the `approve_new_topics_unless_trust_level` requirement."
-      fast_typer: "The poster typed in their post suspiciously fast. See: `min_first_post_typing_time`."
-      auto_silence_regexp: "The post matched the `auto_silence_first_post_regex` setting."
-      watched_word: "The post included a Watched Word."
-      staged: "The poster was staged and `approve_unless_staged` was set."
-      category: "The category of the post requires approval."
-      must_approve_users: "The user must be approved because `must_approve_users` is enabled."
-      invite_only: "The user must be approved because `invite_only` is enabled."
+      post_count: "The first few posts from every user must be approved by staff. See `approve_post_count`."
+      trust_level: "Users at low trust levels must have replies approved by staff. See `approve_unless_trust_level`."
+      new_topics_unless_trust_level: "Users at low trust levels must have topics approved by staff. See `approve_new_topics_unless_trust_level`."
+      fast_typer: "New user typed their first post suspiciously fast, suspected bot or spammer behavior. See `min_first_post_typing_time`."
+      auto_silence_regexp: "New user whose first post matches the `auto_silence_first_post_regex` setting."
+      watched_word: "Post included a Watched Word."
+      staged: "New topics and posts for staged users must be approved by staff. See `approve_unless_staged`."
+      category: "Posts in this category require manual approval by staff. See the category settings."
+      must_approve_users: "All new users must be approved by staff. See `must_approve_users`."
+      invite_only: "All new users should be invited. See `invite_only`."
 
     actions:
       agree:
@@ -4452,6 +4475,8 @@ en:
         title: "Delete Spammer"
         description: "Remove the user and all their posts and topics."
         confirm: "Are you sure you want to delete all that user's posts, topics, and block their IP and email addresses?"
+      delete_single:
+        title: "Delete"
       delete:
         title: "Delete..."
       delete_and_ignore:

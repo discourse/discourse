@@ -87,17 +87,17 @@ pl_PL:
         one: "Nie można usunąć wpisu, ponieważ zależny %{record} istnieje"
         many: "Nie można usunąć wpisu, ponieważ zależny %{record} istnieje"
       too_long:
-        one: jest za długa (maksymalnie 1 znak)
+        one: jest za długa (maksymalnie %{count} znak)
         few: jest za długa (maksymalnie %{count} znaków)
         many: jest za długa (maksymalnie %{count} znaków)
         other: jest za długa (maksymalnie %{count} znaków)
       too_short:
-        one: jest za krótka (minimalnie 1 znak)
+        one: jest za krótka (minimalnie %{count} znak)
         few: jest za krótka (minimalnie %{count} znaków)
         many: jest za długa (minimum to %{count} znaków)
         other: jest za długa (minimum to %{count} znaków)
       wrong_length:
-        one: ma nieprawidłową długość (powinna być 1 znakiem)
+        one: ma nieprawidłową długość (powinna być %{count} znakiem)
         few: jest nieprawidłowej długości (powinna mieć %{count} znaków)
         many: jest nieprawidłowej długości (powinna mieć %{count} znaków)
         other: jest nieprawidłowej długości (powinna mieć %{count} znaków)
@@ -105,7 +105,7 @@ pl_PL:
     template:
       body: "Wystąpiły problemy z następującymi polami:"
       header:
-        one: 1 błąd uniemożliwił zapisanie %{model}
+        one: "%{count} błąd uniemożliwił zapisanie %{model}"
         few: "%{count} błędy uniemożliwiły zapisanie %{model}"
         many: "%{count} błędów uniemożliwiło zapisanie %{model}"
         other: "%{count} błędów uniemożliwiło zapisanie %{model}"
@@ -138,7 +138,7 @@ pl_PL:
   reading_time: "Czas odczytu"
   likes: "Lajki"
   too_many_replies:
-    one: "Przepraszamy, ale nowi użytkownicy są tymczasowo ograniczeni do 1 odpowiedzi w ramach  jednego tematu."
+    one: "Przepraszamy, ale nowi użytkownicy są tymczasowo ograniczeni do %{count} odpowiedzi w ramach  jednego tematu."
     few: "Przepraszamy, ale nowi użytkownicy są tymczasowo ograniczeni do %{count} odpowiedzi w ramach  jednego tematu."
     many: "Przepraszamy, ale nowi użytkownicy są tymczasowo ograniczeni do %{count} odpowiedzi w ramach  jednego tematu."
     other: "Przepraszamy, ale nowi użytkownicy są tymczasowo ograniczeni do %{count} odpowiedzi w ramach  jednego tematu."
@@ -150,7 +150,7 @@ pl_PL:
     no_hosts: "Brak ustawionych hostów do osadzenia."
     configure: "Konfiguracja osadzenia"
     more_replies:
-      one: "1 odpowiedź więcej"
+      one: "%{count} odpowiedź więcej"
       few: "%{count} odpowiedzi więcej"
       many: "%{count} odpowiedzi więcej"
       other: "%{count} odpowiedzi więcej"
@@ -185,7 +185,6 @@ pl_PL:
   private_message_abbrev: "Wiad."
   rss_description:
     latest: "Ostatnie wątki"
-    hot: "Popularne wątki"
     top: "Najlepsze tematy"
     top_all: "Popularne tematy ogółem"
     top_yearly: "Popularnie tematy w tym roku"
@@ -225,7 +224,7 @@ pl_PL:
       title: "Prośba o członkostwo w grupie @%{group_name}"
   education:
     until_posts:
-      one: "1 wpis"
+      one: "%{count} wpis"
       few: "%{count} wpisy"
       many: "%{count} wpisów"
       other: "%{count} wpisów"
@@ -266,20 +265,6 @@ pl_PL:
       Możesz edytować swoje wcześniejsze odpowiedzi, aby dodać cytat, poprzez podświetlenie tekstu i wybranie przycisku <b>cytuj odpowiedź</b> który się pojawi.
 
       Każdemu łatwiej będzie przeczytać temat, który ma kilka pogłębionych odpowiedzi, zamiast wielu niewielkich, indywidualnych.
-    dominating_topic: |
-      ### Pozwól innym dołączyć do rozmowy
-
-      Ten temat jest dla Ciebie istotny  &ndash; napisałeś tu ponad %{percent}% wszystkich odpowiedzi.
-
-      Czy na pewno dajesz innym wystarczająco czasu na przedstawienie swoich punktów widzenia?
-    get_a_room: |
-      ### Odpowiedz wielu osobom
-
-      W tym temacie odpowiedziałeś już %{count} razy do @%{reply_username}
-
-      Czy myślałeś o odpowiedzi do *innych* osób w dyskusji? Dobra dyskusja pozwala wypowiedzieć się wielu osobom z różnymi opiniami.
-
-      Jeżeli chcesz kontynuować dowolnie długą dyskusję z konkretnym użytkownikiem możesz [wysłać prywatną wiadomość](%{base_path}/u/%{reply_username}).
     too_many_replies: |
       ### Osiągnąłeś limit odpowiedzi w tym temacie
 
@@ -400,17 +385,17 @@ pl_PL:
       broken: "Ten obraz jest uszkodzony"
   rate_limiter:
     hours:
-      one: "1 godzina"
+      one: "%{count} godzina"
       few: "%{count} godziny"
       many: "%{count} godzin"
       other: "%{count} godzin"
     minutes:
-      one: "1 minuta"
+      one: "%{count} minuta"
       few: "%{count} minuty"
       many: "%{count} minut"
       other: "%{count} minut"
     seconds:
-      one: "1 sekunda"
+      one: "%{count} sekunda"
       few: "%{count} sekundy"
       many: "%{count} sekund"
       other: "%{count} sekund"
@@ -423,74 +408,70 @@ pl_PL:
         many: "< %{count}s"
         other: "< %{count}s"
       x_seconds:
-        one: "1s"
+        one: "%{count}s"
         few: "%{count}s"
         many: "%{count}s"
         other: "%{count}s"
       less_than_x_minutes:
-        one: "< 1m"
+        one: "< %{count}m"
         few: "< %{count}m"
         many: "< %{count}m"
         other: "< %{count}m"
       x_minutes:
-        one: "1m"
+        one: "%{count}m"
         few: "%{count}m"
         many: "%{count}m"
         other: "%{count}m"
       about_x_hours:
-        one: "1h"
+        one: "%{count}h"
         few: "%{count}h"
         many: "%{count}h"
         other: "%{count}h"
       x_days:
-        one: "1d"
+        one: "%{count}d"
         few: "%{count}d"
         many: "%{count}d"
         other: "%{count}d"
       about_x_months:
-        one: "1mie"
+        one: "%{count}mie"
         few: "%{count}mie"
         many: "%{count}mie"
         other: "%{count}mie"
       x_months:
-        one: "1mie"
+        one: "%{count}mie"
         few: "%{count}mie"
         many: "%{count}mie"
         other: "%{count}mie"
       about_x_years:
-        one: "1r"
+        one: "%{count}r"
         few: "%{count}l"
         many: "%{count}l"
         other: "%{count}l"
       over_x_years:
-        one: "> 1r"
+        one: "> %{count}r"
         few: "> %{count}l"
         many: "> %{count}l"
         other: "> %{count}l"
       almost_x_years:
-        one: "1r"
+        one: "%{count}r"
         few: "%{count}l"
         many: "%{count}l"
         other: "%{count}l"
     distance_in_words_verbose:
       half_a_minute: "przed chwilą"
-      less_than_x_seconds:
-        one: "przed chwilą"
-        few: "przed chwilą"
-        many: "przed chwilą"
-        other: "przed chwilą"
+      less_than_x_seconds: "przed chwilą"
       x_seconds:
-        one: "1 sekundę temu"
+        one: "%{count} sekundę temu"
         few: "%{count} sekundy temu"
         many: "%{count} sekund temu"
         other: "%{count} sekund temu"
       less_than_x_minutes:
-        one: "mniej niż 1 minutę temu"
+        one: "mniej niż %{count} minutę temu"
         few: "mniej niż %{count} minuty temu"
         many: "mniej niż %{count} minut temu"
         other: "mniej niż %{count} minut temu"
       x_minutes:
-        one: "1 minutę temu"
+        one: "%{count} minutę temu"
         few: "%{count} minuty temu"
         many: "%{count} minut temu"
         other: "%{count} minut temu"
@@ -500,32 +481,32 @@ pl_PL:
         many: "%{count} godzin temu"
         other: "%{count} godzin temu"
       x_days:
-        one: "1 dzień temu"
+        one: "%{count} dzień temu"
         few: "%{count} dni temu"
         many: "%{count} dni temu"
         other: "%{count} dni temu"
       about_x_months:
-        one: "około 1 miesiąca temu"
+        one: "około %{count} miesiąca temu"
         few: "około %{count} miesiące temu"
         many: "około %{count} miesięcy temu"
         other: "około %{count} miesięcy temu"
       x_months:
-        one: "1 miesiąc temu"
+        one: "%{count} miesiąc temu"
         few: "%{count} miesiące temu"
         many: "%{count} miesięcy temu"
         other: "%{count} miesięcy temu"
       about_x_years:
-        one: "około 1 rok temu"
+        one: "około %{count} rok temu"
         few: "około %{count} lata temu"
         many: "około %{count} lat temu"
         other: "około %{count} lat temu"
       over_x_years:
-        one: "ponad 1 rok temu"
+        one: "ponad %{count} rok temu"
         few: "ponad %{count} lata temu"
         many: "ponad %{count} lat temu"
         other: "ponad %{count} lat temu"
       almost_x_years:
-        one: "prawie 1 rok temu"
+        one: "prawie %{count} rok temu"
         few: "prawie %{count} lata temu"
         many: "prawie %{count} lat temu"
         other: "prawie %{count} lat temu"
@@ -884,7 +865,7 @@ pl_PL:
     memory_warning: "Twój serwer działa z mniej niż 1 GB pamięci całkowitej. Przynajmniej 1 GB pamięci jest zalecany."
     subfolder_ends_in_slash: "Twoje ustawienie podfolderu jest niepoprawne; DISCOURSE_RELATIVE_URL_ROOT kończy się slashem."
     email_polling_errored_recently:
-      one: "Email polling wygenerował 1 błąd w przeciągu ostatniej doby. Więcej szczegółów w <a href='%{base_path}/logs' target='_blank'>logach</a>."
+      one: "Email polling wygenerował %{count} błąd w przeciągu ostatniej doby. Więcej szczegółów w <a href='%{base_path}/logs' target='_blank'>logach</a>."
       few: "Email polling wygenerował %{count} błędy w przeciągu ostatniej doby. Więcej szczegółów w <a href='%{base_path}/logs' target='_blank'>logach</a>."
       many: "Email polling wygenerował %{count} błędów w przeciągu ostatniej doby. Więcej szczegółów w <a href='%{base_path}/logs' target='_blank'>logach</a>."
       other: "Email polling wygenerował %{count} błędów w przeciągu ostatniej doby. Więcej szczegółów w <a href='%{base_path}/logs' target='_blank'>logach</a>."
@@ -1291,7 +1272,6 @@ pl_PL:
     tag_style: "Styl etykiet tagów"
     min_trust_level_to_tag_topics: "Minimalny poziom zaufania wymagany do tagowania tematów"
     suppress_overlapping_tags_in_list: "Jeśli tagi dopasowane są dokładnie do słów w tytule tematu, nie pokazuj tagu"
-    remove_muted_tags_from_latest: "Nie pokazuj tematów z tagiem z wyciszonymi tagami w ostatniej liście tematów."
     errors:
       invalid_email: "Nieprawidłowy adres email."
       invalid_username: "Użytkownik o takiej nazwie nie istnieje."
@@ -1342,7 +1322,7 @@ pl_PL:
     not_seen_in_a_month: "Witamy ponownie! Długo tu nie zaglądałeś. Oto najpopularniejsze tematy z czasów, kiedy cię tu nie było."
   merge_posts:
     edit_reason:
-      one: "%{username} dołączył 1 post"
+      one: "%{username} dołączył %{count} post"
       few: "%{username} dołączył %{count} posty"
       many: "%{username} dołączył %{count} postów"
       other: "%{username} dołączył %{count} postów"
@@ -1351,42 +1331,42 @@ pl_PL:
       different_users: "Nie można połączyć postów różnych użytkowników."
   topic_statuses:
     autoclosed_message_max_posts:
-      one: "Wiadomość została automatycznie zamknięta po osiągnięciu maksymalnej liczby 1 odpowiedzi."
+      one: "Wiadomość została automatycznie zamknięta po osiągnięciu maksymalnej liczby %{count} odpowiedzi."
       few: "Wiadomość została automatycznie zamknięta po osiągnięciu maksymalnej liczby %{count} odpowiedzi."
       many: "Wiadomość została automatycznie zamknięta po osiągnięciu maksymalnej liczby %{count} odpowiedzi."
       other: "Wiadomość została automatycznie zamknięta po osiągnięciu maksymalnej liczby %{count} odpowiedzi."
     autoclosed_topic_max_posts:
-      one: "Wątek został automatycznie zamknięty po osiągnięciu maksymalnej liczby 1 odpowiedzi."
+      one: "Wątek został automatycznie zamknięty po osiągnięciu maksymalnej liczby %{count} odpowiedzi."
       few: "Wątek został automatycznie zamknięty po osiągnięciu maksymalnej liczby %{count} odpowiedzi."
       many: "Wątek został automatycznie zamknięty po osiągnięciu maksymalnej liczby %{count} odpowiedzi."
       other: "Wątek został automatycznie zamknięty po osiągnięciu maksymalnej liczby %{count} odpowiedzi."
     autoclosed_enabled_days:
-      one: "Ten temat został automatycznie zamknięty po 1 dniu. Tworzenie nowych odpowiedzi nie jest możliwe."
+      one: "Ten temat został automatycznie zamknięty po %{count} dniu. Tworzenie nowych odpowiedzi nie jest możliwe."
       few: "Ten temat został automatycznie zamknięty po %{count} dniach. Tworzenie nowych odpowiedzi nie jest możliwe."
       many: "Ten temat został automatycznie zamknięty po %{count} dniach. Tworzenie nowych odpowiedzi nie jest już możliwe."
       other: "Ten temat został automatycznie zamknięty po %{count} dniach. Tworzenie nowych odpowiedzi nie jest już możliwe."
     autoclosed_enabled_hours:
-      one: "Ten temat został automatycznie zamknięty po 1 godzinie. Tworzenie nowych odpowiedzi nie jest już możliwe."
+      one: "Ten temat został automatycznie zamknięty po %{count} godzinie. Tworzenie nowych odpowiedzi nie jest już możliwe."
       few: "Ten temat został automatycznie zamknięty po %{count} godzinach. Tworzenie nowych odpowiedzi nie jest już możliwe."
       many: "Ten temat został automatycznie zamknięty po %{count} godzinach. Tworzenie nowych odpowiedzi nie jest już możliwe."
       other: "Ten temat został automatycznie zamknięty po %{count} godzinach. Tworzenie nowych odpowiedzi nie jest już możliwe."
     autoclosed_enabled_minutes:
-      one: "Ten temat został automatycznie zamknięty po 1 minucie. Tworzenie nowych odpowiedzi nie jest już możliwe."
+      one: "Ten temat został automatycznie zamknięty po %{count} minucie. Tworzenie nowych odpowiedzi nie jest już możliwe."
       few: "Ten temat został automatycznie zamknięty po %{count} minutach. Tworzenie nowych odpowiedzi nie jest już możliwe."
       many: "Ten temat został automatycznie zamknięty po %{count} minutach. Tworzenie nowych odpowiedzi nie jest już możliwe."
       other: "Ten temat został automatycznie zamknięty po %{count} minutach. Tworzenie nowych odpowiedzi nie jest już możliwe."
     autoclosed_enabled_lastpost_days:
-      one: "Ten temat został automatycznie zamknięty 1 dzień po ostatnim wpisie. Tworzenie nowych odpowiedzi nie jest już możliwe."
+      one: "Ten temat został automatycznie zamknięty %{count} dzień po ostatnim wpisie. Tworzenie nowych odpowiedzi nie jest już możliwe."
       few: "Ten temat został automatycznie zamknięty %{count} dni po ostatnim wpisie. Tworzenie nowych odpowiedzi nie jest już możliwe."
       many: "Ten temat został automatycznie zamknięty %{count} dni po ostatnim wpisie. Tworzenie nowych odpowiedzi nie jest już możliwe."
       other: "Ten temat został automatycznie zamknięty %{count} dni po ostatnim wpisie. Tworzenie nowych odpowiedzi nie jest już możliwe."
     autoclosed_enabled_lastpost_hours:
-      one: "Ten temat został automatycznie zamknięty 1 godzinę po ostatnim wpisie. Tworzenie nowych odpowiedzi nie jest już możliwe."
+      one: "Ten temat został automatycznie zamknięty %{count} godzinę po ostatnim wpisie. Tworzenie nowych odpowiedzi nie jest już możliwe."
       few: "Ten temat został automatycznie zamknięty %{count} godziny po ostatnim wpisie. Tworzenie nowych odpowiedzi nie jest już możliwe."
       many: "Ten temat został automatycznie zamknięty %{count} godzin po ostatnim wpisie. Tworzenie nowych odpowiedzi nie jest już możliwe."
       other: "Ten temat został automatycznie zamknięty %{count} godzin po ostatnim wpisie. Tworzenie nowych odpowiedzi nie jest już możliwe."
     autoclosed_enabled_lastpost_minutes:
-      one: "Ten temat został automatycznie zamknięty 1 minutę po ostatnim wpisie. Tworzenie nowych odpowiedzi nie jest już możliwe."
+      one: "Ten temat został automatycznie zamknięty %{count} minutę po ostatnim wpisie. Tworzenie nowych odpowiedzi nie jest już możliwe."
       few: "Ten temat został automatycznie zamknięty %{count} minuty po ostatnim wpisie. Tworzenie nowych odpowiedzi nie jest już możliwe."
       many: "Ten temat został automatycznie zamknięty %{count} minut po ostatnim wpisie. Tworzenie nowych odpowiedzi nie jest już możliwe."
       other: "Ten temat został automatycznie zamknięty %{count} minut po ostatnim wpisie. Tworzenie nowych odpowiedzi nie jest już możliwe."
@@ -1748,7 +1728,7 @@ pl_PL:
     pending_users_reminder:
       title: "Oczekujący użytkownicy przypomnienie"
       subject_template:
-        one: "1 użytkownik czeka na zatwierdzenie"
+        one: "%{count} użytkownik czeka na zatwierdzenie"
         few: "%{count} użytkowników czeka na zatwierdzenie"
         many: "%{count} użytkowników czeka na zatwierdzenie"
         other: "%{count} użytkowników czeka na zatwierdzenie"
@@ -1763,10 +1743,6 @@ pl_PL:
       subject_template: "Jesteś nowym użytkownikiem miesiąca!"
     queued_posts_reminder:
       title: "Przypomnienie o postach w kolejce"
-      text_body_template: |
-        Witaj,
-
-        Posty od nowych użytkowników zostały przekazane do moderacji i oczekują na przejrzenie. [Zatwierdź lub odrzuć je tutaj](%{base_url}/queued-posts).
   unsubscribe_link: |
     Aby zrezygnować z otrzymywania tych wiadomości e-mail, [Kliknij tutaj](%{unsubscribe_url}).
   unsubscribe_link_and_mail: |
@@ -1964,7 +1940,6 @@ pl_PL:
       unread_messages: "Nieprzeczytane Wiadomości"
       unread_notifications: "Nieprzeczytane Powiadomienia"
       liked_received: "Otrzymane Polubienia"
-      new_posts: "Nowe wpisy"
       new_users: "Nowi użytkownicy"
       popular_topics: "Popularne tematy"
       follow_topic: "Śledź ten temat"
@@ -2062,8 +2037,6 @@ pl_PL:
     welcome_message: |
       #[Witamy na %{title}](#welcome)
       Wymagane konto. Zarejestruj nowe konto lub przejdź do logowania.
-  terms_of_service:
-    title: "Warunki użytkowania serwisu"
   deleted: "usunięte"
   image: "obraz"
   upload:
@@ -2110,9 +2083,6 @@ pl_PL:
     default_theme_name: "Jasny"
     light_theme_name: "Jasny"
     dark_theme_name: "Ciemny"
-  about: "O stronie"
-  guidelines: "Przewodnik"
-  privacy: "Prywatność"
   edit_this_page: "Edytuj tę stronę"
   csv_export:
     boolean_yes: "Tak"
@@ -2553,14 +2523,10 @@ pl_PL:
         fields:
           logo:
             label: "Podstawowe logo"
-          logo_small:
-            label: "Kompaktowe logo"
       icons:
         title: "Ikony"
         fields:
-          favicon:
-            label: "Mała ikona"
-          apple_touch_icon:
+          large_icon:
             label: "Duża ikona"
       homepage:
         description: "Polecamy wyświetlanie ostatnich tematów na twojej stronie domowej, ale jeśli wolisz możesz również wyświetlić kategorie (grupy tematów) na stronie domowej."
@@ -2597,6 +2563,8 @@ pl_PL:
         title: "Wycisz użytkownika"
       delete_spammer:
         title: "Usuń spamera"
+      delete_single:
+        title: "Usuń"
       disagree:
         title: "Wycofaj"
       ignore:

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_dependency 'mem_info'
 
 class AdminDashboardData
@@ -39,7 +41,7 @@ class AdminDashboardData
   def problems
     problems = []
     AdminDashboardData.problem_syms.each do |sym|
-      problems << send(sym)
+      problems << public_send(sym)
     end
     AdminDashboardData.problem_blocks.each do |blk|
       problems << instance_exec(&blk)
@@ -90,7 +92,7 @@ class AdminDashboardData
     add_problem_check :rails_env_check, :host_names_check, :force_https_check,
                       :ram_check, :google_oauth2_config_check,
                       :facebook_config_check, :twitter_config_check,
-                      :github_config_check, :pwa_config_check, :s3_config_check,
+                      :github_config_check, :s3_config_check,
                       :image_magick_check, :failing_emails_check,
                       :subfolder_ends_in_slash_check,
                       :pop3_polling_configuration, :email_polling_errored_recently,
@@ -169,15 +171,6 @@ class AdminDashboardData
   def github_config_check
     if SiteSetting.enable_github_logins && (SiteSetting.github_client_id.blank? || SiteSetting.github_client_secret.blank?)
       I18n.t('dashboard.github_config_warning', base_path: Discourse.base_path)
-    end
-  end
-
-  def pwa_config_check
-    unless SiteSetting.large_icon.present? && SiteSetting.large_icon.width == 512 && SiteSetting.large_icon.height == 512
-      return I18n.t('dashboard.pwa_config_icon_warning', base_path: Discourse.base_path)
-    end
-    unless SiteSetting.short_title.present? && SiteSetting.short_title.size <= 12
-      return I18n.t('dashboard.pwa_config_title_warning', base_path: Discourse.base_path)
     end
   end
 

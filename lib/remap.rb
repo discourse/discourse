@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Remap
   def initialize(from, to, regex: false, verbose: false)
     @from = from
@@ -37,6 +39,7 @@ WHERE table_schema='public' and (data_type like 'char%' or data_type like 'text%
     end
 
     Theme.expire_site_cache!
+    SiteIconManager.ensure_optimized!
   end
 
   def log(message)

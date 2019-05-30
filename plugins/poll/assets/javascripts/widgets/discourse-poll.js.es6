@@ -10,7 +10,13 @@ import round from "discourse/lib/round";
 import { relativeAge } from "discourse/lib/formatter";
 
 function optionHtml(option) {
-  return new RawHtml({ html: `<span>${option.html}</span>` });
+  const $node = $(`<span>${option.html}</span>`);
+
+  $node.find(".discourse-local-date").each((_index, elem) => {
+    $(elem).applyLocalDates();
+  });
+
+  return new RawHtml({ html: `<span>${$node.html()}</span>` });
 }
 
 function infoTextHtml(text) {

@@ -1,9 +1,11 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 describe SpamRule::FlagSockpuppets do
 
-  let(:user1) { Fabricate(:user, ip_address: '182.189.119.174') }
-  let(:post1) { Fabricate(:post, user: user1, topic: Fabricate(:topic, user: user1)) }
+  fab!(:user1) { Fabricate(:user, ip_address: '182.189.119.174') }
+  fab!(:post1) { Fabricate(:post, user: user1, topic: Fabricate(:topic, user: user1)) }
 
   describe 'perform' do
     let(:rule)        { described_class.new(post1) }
@@ -111,7 +113,7 @@ describe SpamRule::FlagSockpuppets do
   end
 
   describe 'flag_sockpuppet_users' do
-    let(:post2) { Fabricate(:post, user: Fabricate(:user, ip_address: user1.ip_address), topic: post1.topic) }
+    fab!(:post2) { Fabricate(:post, user: Fabricate(:user, ip_address: user1.ip_address), topic: post1.topic) }
     let(:system) { Discourse.system_user }
     let(:spam) { PostActionType.types[:spam] }
 

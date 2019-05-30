@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CensoredWordsValidator < ActiveModel::EachValidator
   def validate_each(record, attribute, value)
     if WordWatcher.words_for_action(:censor).present? && (censored_words = censor_words(value, censored_words_regexp)).present?

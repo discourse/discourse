@@ -12,14 +12,15 @@ export default Ember.Controller.extend(BadgeSelectController, {
   application: Ember.inject.controller(),
   hiddenSetTitle: true,
 
-  filteredList: function() {
-    return this.get("userBadgesAll").filterBy("badge.allow_title", true);
-  }.property("userBadgesAll"),
+  @computed("userBadgesAll")
+  filteredList(userBadgesAll) {
+    return userBadgesAll.filterBy("badge.allow_title", true);
+  },
 
   @computed("username")
   user(username) {
     if (username) {
-      return this.get("userBadges")[0].get("user");
+      return this.userBadges[0].get("user");
     }
   },
 
@@ -40,16 +41,16 @@ export default Ember.Controller.extend(BadgeSelectController, {
 
   actions: {
     loadMore() {
-      if (this.get("loadingMore")) {
+      if (this.loadingMore) {
         return;
       }
       this.set("loadingMore", true);
 
-      const userBadges = this.get("userBadges");
+      const userBadges = this.userBadges;
 
       UserBadge.findByBadgeId(this.get("model.id"), {
         offset: userBadges.length,
-        username: this.get("username")
+        username: this.username
       })
         .then(result => {
           userBadges.pushObjects(result);
@@ -82,6 +83,6 @@ export default Ember.Controller.extend(BadgeSelectController, {
 
   @observes("canLoadMore")
   _showFooter() {
-    this.set("application.showFooter", !this.get("canLoadMore"));
+    this.set("application.showFooter", !this.canLoadMore);
   }
 });

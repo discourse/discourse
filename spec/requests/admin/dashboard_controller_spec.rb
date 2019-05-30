@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 require_dependency 'discourse_version_check'
 
@@ -12,7 +14,7 @@ describe Admin::DashboardController do
   end
 
   context 'while logged in as an admin' do
-    let(:admin) { Fabricate(:admin) }
+    fab!(:admin) { Fabricate(:admin) }
 
     before do
       sign_in(admin)

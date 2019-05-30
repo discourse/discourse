@@ -1,8 +1,10 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 describe PermalinksController do
-  let(:topic) { Fabricate(:topic) }
-  let(:permalink) { Fabricate(:permalink, url: "deadroutee/topic/546") }
+  fab!(:topic) { Fabricate(:topic) }
+  fab!(:permalink) { Fabricate(:permalink, url: "deadroutee/topic/546") }
 
   describe 'show' do
     it "should redirect to a permalink's target_url with status 301" do

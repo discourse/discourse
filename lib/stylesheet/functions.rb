@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Stylesheet
   module ScssFunctions
     def asset_url(path)
@@ -9,4 +11,4 @@ module Stylesheet
   end
 end
 
-::SassC::Script::Functions.send :include, Stylesheet::ScssFunctions
+::SassC::Script::Functions.include(Stylesheet::ScssFunctions)

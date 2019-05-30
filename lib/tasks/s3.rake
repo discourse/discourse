@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_dependency "s3_helper"
 
 def brotli_s3_path(path)
@@ -99,7 +101,7 @@ end
 
 def ensure_s3_configured!
   unless GlobalSetting.use_s3? || use_db_s3_config
-    STDERR.puts "ERROR: Ensure S3 is configured in config/discourse.conf of environment vars"
+    STDERR.puts "ERROR: Ensure S3 is configured in config/discourse.conf or environment vars"
     exit 1
   end
 end

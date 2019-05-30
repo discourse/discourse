@@ -37,5 +37,3 @@ hu:
     track_selector:
       reset_trigger: 'start'
       skip_trigger: 'átugrás'
-    new_user_narrative:
-      reset_trigger: "új felhasználó"

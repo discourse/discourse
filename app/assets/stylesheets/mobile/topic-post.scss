@@ -32,35 +32,30 @@ span.badge-posts {
     .actions {
       display: flex;
     }
-    .like-button {
+    // Handles the like and flag buttons in the post menu.
+    .double-button {
       display: flex;
       flex: 0 1 auto;
       button {
-        &.like {
+        &.like,
+        &.create-flag {
           flex: 1 1 auto;
         }
-        &.like-count {
-          padding: 8px 4px 8px 8px;
-          line-height: 1.2;
-          &.regular-likes {
-            margin-right: 0;
+        &.button-count {
+          padding: s(2 1 2 2);
+          + .toggle-like,
+          + .create-flag {
+            padding: s(2 2 2 1);
           }
           &.my-likes {
             display: flex;
             max-width: unset;
-            margin-right: 0;
-            padding: 8px 9px 8px 8px;
+            padding: s(2);
             .d-icon {
-              padding-left: 8px;
+              padding-left: s(2);
             }
           }
         }
-        .d-icon {
-          line-height: $line-height-medium;
-        }
-      }
-      button.like-count + button.toggle-like {
-        padding: 8px 9px 8px 4px;
       }
     }
     .d-icon {

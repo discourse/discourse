@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class MigrateNativeAppBannerSiteSetting < ActiveRecord::Migration[5.2]
   def up
     execute "INSERT INTO site_settings(name, data_type, value, created_at, updated_at)

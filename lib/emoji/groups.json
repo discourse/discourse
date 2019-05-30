@@ -344,6 +344,10 @@
         "diversity": false
       },
       {
+        "name": "yawning_face",
+        "diversity": false
+      },
+      {
         "name": "triumph",
         "diversity": false
       },
@@ -612,6 +616,10 @@
       {
         "name": "ok_hand",
         "diversity": true
+      },
+      {
+        "name": "pinching_hand",
+        "diversity": false
       },
       {
         "name": "v",
@@ -1576,11 +1584,19 @@
         "diversity": false
       },
       {
+        "name": "orangutan",
+        "diversity": false
+      },
+      {
         "name": "dog",
         "diversity": false
       },
       {
         "name": "dog2",
+        "diversity": false
+      },
+      {
+        "name": "service_dog",
         "diversity": false
       },
       {
@@ -2892,6 +2908,10 @@
         "diversity": false
       },
       {
+        "name": "auto_rickshaw",
+        "diversity": false
+      },
+      {
         "name": "bike",
         "diversity": false
       },
@@ -2989,6 +3009,10 @@
       },
       {
         "name": "flight_arrival",
+        "diversity": false
+      },
+      {
+        "name": "parachute",
         "diversity": false
       },
       {
@@ -3563,6 +3587,14 @@
       },
       {
         "name": "dart",
+        "diversity": false
+      },
+      {
+        "name": "yo-yo",
+        "diversity": false
+      },
+      {
+        "name": "kite",
         "diversity": false
       },
       {

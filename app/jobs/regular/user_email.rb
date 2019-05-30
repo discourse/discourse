@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_dependency 'email/sender'
 require_dependency 'user_notifications'
 
@@ -170,7 +172,7 @@ module Jobs
       end
 
       message = EmailLog.unique_email_per_post(post, user) do
-        UserNotifications.send(type, user, email_args)
+        UserNotifications.public_send(type, user, email_args)
       end
 
       # Update the to address if we have a custom one

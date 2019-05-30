@@ -113,11 +113,6 @@ ru:
       random_mention:
         reply: |-
           Привет! Tтобы узнать, что я могу сделать, наберите: `@%{discobot_username} %{help_trigger}`.
-        tracks: |-
-          В настоящее время я знаю, как сделать следующие вещи:
-
-          `@%{discobot_username} %{reset_trigger} %{default_track}`
-          > Начинается одно из следующих интерактивных повествований: %{tracks}.
         bot_actions: |-
           `@%{discobot_username} %{dice_trigger} 2d6`
           > :game_die: 3, 6
@@ -140,18 +135,9 @@ ru:
 
           В то же время, я не буду стоять на вашем пути.
     new_user_narrative:
-      reset_trigger: "новый пользователь"
       cert_title: "В знак признания успешного завершения нового руководство пользователя"
       hello:
         title: "Здравствуйте!"
-        message: |-
-          Спасибо %{title}, и Добро пожаловать!
-
-          - Я всего лишь робот, но [наш дружный коллектив](%{base_uri}/about) готов помочь вам в любое время.
-
-          - По соображениям безопасности, мы временно ограничили то, что новые пользователи могут делать. Вы будете получать новые способности (и [значки](%{base_uri}/badges)) по мере приобретения опыта.
-
-          - Мы верим в [цивилизованном поведении](%{base_uri}/guidelines) в нашем сообществе.
       onebox:
         instructions: |-
           Теперь, не могли бы вы отправить одну из этих ссылок мне? Отправьте **только ссылку**, тогда она автоматически покажет превью.
@@ -301,7 +287,6 @@ ru:
       certificate:
         alt: 'Свидетельство о достижении'
     advanced_user_narrative:
-      reset_trigger: 'продвинутый пользователь'
       cert_title: "В знак признания успешного завершения расширенного руководства пользователя"
       title: ':arrow_up: Расширенные функции пользователя'
       start_message: |-
@@ -341,10 +326,6 @@ ru:
           Можете ли вы сделать мне одолжение и **восстановить** его <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-rotate-left.png" width="16" height="16">?
         not_found: |-
           Возникли проблемы? Помните, что нужно нажать на значок "показать еще" <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> чтобы увидеть опцию "восстановить" <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-rotate-left.png" width="16" height="16">
-        reply: |-
-          Ух, это было отлично! Спасибо за ремонт, что :wink:
-
-          Запомните, что у вас есть только 24 часа, чтобы восстановить пост.
       category_hashtag:
         instructions: |-
           Знаете ли вы, что вы можете обратитесь к категории и теги в вашем посте? Например, вы видели %{category} категорию?

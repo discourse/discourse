@@ -20,7 +20,7 @@ export default createPreviewComponent(305, 165, {
   },
 
   click() {
-    this.onChange(this.get("colorsId"));
+    this.onChange(this.colorsId);
   },
 
   @observes("step.fieldsById.base_scheme_id.value")
@@ -30,7 +30,7 @@ export default createPreviewComponent(305, 165, {
 
   images() {
     return {
-      logo: this.get("wizard").getLogoUrl(),
+      logo: this.wizard.getLogoUrl(),
       avatar: "/images/wizard/trout.png"
     };
   },

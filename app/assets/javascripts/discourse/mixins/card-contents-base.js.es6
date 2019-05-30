@@ -33,14 +33,14 @@ export default Ember.Mixin.create({
       return false;
     }
 
-    const currentUsername = this.get("username");
-    if (username === currentUsername && this.get("loading") === username) {
+    const currentUsername = this.username;
+    if (username === currentUsername && this.loading === username) {
       return;
     }
 
     const postId = $target.parents("article").data("post-id");
-    const wasVisible = this.get("visible");
-    const previousTarget = this.get("cardTarget");
+    const wasVisible = this.visible;
+    const previousTarget = this.cardTarget;
     const target = $target[0];
 
     if (wasVisible) {
@@ -51,8 +51,8 @@ export default Ember.Mixin.create({
     }
 
     const post =
-      this.get("viewingTopic") && postId
-        ? this.get("postStream").findLoadedPost(postId)
+      this.viewingTopic && postId
+        ? this.postStream.findLoadedPost(postId)
         : null;
     this.setProperties({
       username,
@@ -74,8 +74,8 @@ export default Ember.Mixin.create({
   didInsertElement() {
     this._super(...arguments);
     afterTransition(this.$(), this._hide.bind(this));
-    const id = this.get("elementId");
-    const triggeringLinkClass = this.get("triggeringLinkClass");
+    const id = this.elementId;
+    const triggeringLinkClass = this.triggeringLinkClass;
     const clickOutsideEventName = `mousedown.outside-${id}`;
     const clickDataExpand = `click.discourse-${id}`;
     const clickMention = `click.discourse-${id}-${triggeringLinkClass}`;
@@ -93,7 +93,7 @@ export default Ember.Mixin.create({
     $("html")
       .off(clickOutsideEventName)
       .on(clickOutsideEventName, e => {
-        if (this.get("visible")) {
+        if (this.visible) {
           const $target = $(e.target);
           if (
             $target.closest(`[data-${id}]`).data(id) ||
@@ -134,7 +134,7 @@ export default Ember.Mixin.create({
   },
 
   _bindMobileScroll() {
-    const mobileScrollEvent = this.get("mobileScrollEvent");
+    const mobileScrollEvent = this.mobileScrollEvent;
     const onScroll = () => {
       Ember.run.throttle(this, this._close, 1000);
     };
@@ -143,7 +143,7 @@ export default Ember.Mixin.create({
   },
 
   _unbindMobileScroll() {
-    const mobileScrollEvent = this.get("mobileScrollEvent");
+    const mobileScrollEvent = this.mobileScrollEvent;
 
     $(window).off(mobileScrollEvent);
   },
@@ -160,8 +160,8 @@ export default Ember.Mixin.create({
     }
     const width = this.$().width();
     const height = 175;
-    const isFixed = this.get("isFixed");
-    const isDocked = this.get("isDocked");
+    const isFixed = this.isFixed;
+    const isDocked = this.isDocked;
 
     let verticalAdjustments = 0;
 
@@ -245,7 +245,7 @@ export default Ember.Mixin.create({
   },
 
   _hide() {
-    if (!this.get("visible")) {
+    if (!this.visible) {
       this.$().css({ left: -9999, top: -9999 });
       if (this.site.mobileView) {
         $(".card-cloak").addClass("hidden");
@@ -272,10 +272,10 @@ export default Ember.Mixin.create({
 
   willDestroyElement() {
     this._super(...arguments);
-    const clickOutsideEventName = this.get("clickOutsideEventName");
-    const clickDataExpand = this.get("clickDataExpand");
-    const clickMention = this.get("clickMention");
-    const previewClickEvent = this.get("previewClickEvent");
+    const clickOutsideEventName = this.clickOutsideEventName;
+    const clickDataExpand = this.clickDataExpand;
+    const clickMention = this.clickMention;
+    const previewClickEvent = this.previewClickEvent;
 
     $("html").off(clickOutsideEventName);
     $("#main")
@@ -287,7 +287,7 @@ export default Ember.Mixin.create({
   keyUp(e) {
     if (e.keyCode === 27) {
       // ESC
-      const target = this.get("cardTarget");
+      const target = this.cardTarget;
       this._close();
       target.focus();
     }

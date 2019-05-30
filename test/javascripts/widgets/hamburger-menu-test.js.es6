@@ -125,19 +125,38 @@ widgetTest("top categories - anonymous", {
 
   beforeEach() {
     this.siteSettings.header_dropdown_category_count = 8;
-    maxCategoriesToDisplay = this.siteSettings.header_dropdown_category_count;
-    categoriesByCount = this.site.get("categoriesByCount");
   },
 
   test(assert) {
-    const count = categoriesByCount.length;
-    const maximum =
-      count <= maxCategoriesToDisplay ? count : maxCategoriesToDisplay;
-    assert.equal(find(".category-link").length, maximum);
+    assert.equal(find(".category-link").length, 8);
     assert.equal(
       find(".category-link .category-name").text(),
-      categoriesByCount
-        .slice(0, maxCategoriesToDisplay)
+      this.site
+        .get("categoriesByCount")
+        .slice(0, 8)
+        .map(c => c.name)
+        .join("")
+    );
+  }
+});
+
+widgetTest("top categories - allow_uncategorized_topics", {
+  template: '{{mount-widget widget="hamburger-menu"}}',
+  anonymous: true,
+
+  beforeEach() {
+    this.siteSettings.allow_uncategorized_topics = false;
+    this.siteSettings.header_dropdown_category_count = 8;
+  },
+
+  test(assert) {
+    assert.equal(find(".category-link").length, 8);
+    assert.equal(
+      find(".category-link .category-name").text(),
+      this.site
+        .get("categoriesByCount")
+        .filter(c => c.name !== "uncategorized")
+        .slice(0, 8)
         .map(c => c.name)
         .join("")
     );

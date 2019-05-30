@@ -113,11 +113,6 @@ pt_BR:
       random_mention:
         reply: |-
           Oi! Para descobrir o que eu posso fazer diga `@%{discobot_username} %{help_trigger}`.
-        tracks: |-
-          Até agora, eu sei fazer as seguintes coisas:
-
-          `@%{discobot_username} %{reset_trigger} %{default_track}`
-          > Comece uma das seguintes narrativas interativas: %{tracks}.
         bot_actions: |-
           `@%{discobot_username} %{dice_trigger} 2d6`
           > :game_die: 3, 6
@@ -140,19 +135,9 @@ pt_BR:
 
           Enquanto isso, eu vou ficar fora do seu caminho.
     new_user_narrative:
-      reset_trigger: "novo usuário"
-      title: "Certificado de conclusão da narrativa de novo usuário"
       cert_title: "Como forma de reconhecimento por completar com sucesso o tutorial de novo usuário"
       hello:
         title: "Saudações!"
-        message: |-
-          Obrigado por se registrar %{title}, e seja bem vindo!
-
-          - Eu sou só um robô, mas [nossa amigável staff](%{base_uri}/about) também está aqui para ajudar se você precisar falar com uma pessoa.
-
-          - Por razões de segurança, nós temporariamente limitamos o que novos usuários podem fazer. Você irá ganhar novas habilidades (e [emblemas](%{base_uri}/badges)) conforme o conhecemos.
-
-          - Nós acreditamos em um [comportamento civilizado em comunidade](%{base_uri}/guidelines) a todo momento.
       onebox:
         instructions: |-
           Próximo, você pode compartilhar um destes links comigo? Responda com **um link em uma linha por si só**, e ele irá automaticamente expandir para incluir um elegante resumo.
@@ -302,7 +287,6 @@ pt_BR:
       certificate:
         alt: 'Certificado de Conquista'
     advanced_user_narrative:
-      reset_trigger: 'usuário avançado'
       cert_title: "Em reconhecimento à conclusão bem-sucedida do tutorial de usuário avançado"
       title: ':arrow_up: Recursos avançados de usuário'
       start_message: |-
@@ -342,10 +326,6 @@ pt_BR:
           Você pode me fazer um favor e <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-rotate-left.png" width="16" height="16"> **desfazer a exclusão** dela?
         not_found: |-
           Tendo dificuldades? Lembre-se que <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> mostrar mais revelará <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-rotate-left.png" width="16" height="16"> desfazer exclusão.
-        reply: |-
-          Ufa, essa foi por pouco! Obrigado por corrigir aquilo :wink:
-
-          Observe que você só tem 24 horas para desfazer a exclusão de uma postagem.
       category_hashtag:
         instructions: |-
           Você sabia que pode se referir a categorias e etiquetas em sua postagem? Por exemplo, você viu a categoria %{category}?

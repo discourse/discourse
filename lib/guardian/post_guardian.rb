@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #mixin for all guardian methods dealing with post permissions
 module PostGuardian
 
@@ -77,10 +79,6 @@ module PostGuardian
 
   def can_lock_post?(post)
     can_see_post?(post) && is_staff?
-  end
-
-  def can_defer_flags?(post)
-    can_see_post?(post) && is_staff? && post
   end
 
   # Can we see who acted on a post in a particular way?

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class FixIncorrectUserHistory < ActiveRecord::Migration[4.2]
   def up
     # see https://meta.discourse.org/t/old-user-suspension-reasons-have-gone-missing/3730

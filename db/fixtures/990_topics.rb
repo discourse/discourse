@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'seed_data/topics'
 
 User.reset_column_information

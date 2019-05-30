@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module ImportScripts::PhpBB3
   class PollImporter
     # @param lookup [ImportScripts::LookupContainer]
@@ -9,26 +11,19 @@ module ImportScripts::PhpBB3
       @text_processor = text_processor
     end
 
-    # @param poll [ImportScripts::PhpBB3::Poll]
-    def map_poll(topic_id, poll)
-      options = get_poll_options(topic_id)
-      poll_text = get_poll_text(options, poll)
-      extracted_poll = extract_default_poll(topic_id, poll_text)
+    # @param poll_data [ImportScripts::PhpBB3::PollData]
+    def create_raw(topic_id, poll_data)
+      poll_data.options = get_poll_options(topic_id)
+      get_poll_text(poll_data)
+    end
 
-      return if extracted_poll.nil?
-
-      update_poll_metadata(extracted_poll, topic_id, poll)
-      update_poll_options(extracted_poll, options, poll)
-
-      mapped_poll = {
-        raw: poll_text,
-        custom_fields: {}
-      }
-
-      add_poll_to_custom_fields(mapped_poll[:custom_fields], extracted_poll)
-      add_votes_to_custom_fields(mapped_poll[:custom_fields], topic_id, poll)
-
-      mapped_poll
+    # @param post [Post]
+    # @param poll_data [ImportScripts::PhpBB3::PollData]
+    def update_poll(topic_id, post, poll_data)
+      if poll = post.polls.first
+        update_anonymous_voters(topic_id, poll_data, poll)
+        create_votes(topic_id, poll_data, poll)
+      end
     end
 
     protected
@@ -38,7 +33,7 @@ module ImportScripts::PhpBB3
       options_by_text = Hash.new { |h, k| h[k] = { ids: [], total_votes: 0, anonymous_votes: 0 } }
 
       rows.each do |row|
-        option_text = @text_processor.process_raw_text(row[:poll_option_text]).delete("\n")
+        option_text = get_option_text(row)
 
         # phpBB allows duplicate options (why?!) - we need to merge them
         option = options_by_text[option_text]
@@ -51,100 +46,97 @@ module ImportScripts::PhpBB3
       options_by_text.values
     end
 
-    # @param options [Array]
-    # @param poll [ImportScripts::PhpBB3::Poll]
-    def get_poll_text(options, poll)
-      poll_text = "#{poll.title}\n"
+    def get_option_text(row)
+      text = @text_processor.process_raw_text(row[:poll_option_text])
+      text.squish!
+      text.gsub!(/^(\d+)\./, '\1\.')
+      text
+    end
 
-      if poll.max_options > 1
-        poll_text << "[poll type=multiple max=#{poll.max_options}]"
+    # @param poll_data [ImportScripts::PhpBB3::PollData]
+    def get_poll_text(poll_data)
+      title = @text_processor.process_raw_text(poll_data.title)
+      text = "#{title}\n\n"
+
+      arguments = ["results=always"]
+      arguments << "close=#{poll_data.close_time.iso8601}" if poll_data.close_time
+
+      if poll_data.max_options > 1
+        arguments << "type=multiple" << "max=#{poll_data.max_options}"
       else
-        poll_text << '[poll]'
+        arguments << "type=regular"
       end
 
-      options.each do |option|
-        poll_text << "\n- #{option[:text]}"
+      text << "[poll #{arguments.join(' ')}]"
+
+      poll_data.options.each do |option|
+        text << "\n* #{option[:text]}"
       end
 
-      poll_text << "\n[/poll]"
+      text << "\n[/poll]"
     end
 
-    def extract_default_poll(topic_id, poll_text)
-      extracted_polls = DiscoursePoll::Poll::extract(poll_text, topic_id)
-      extracted_polls.each do |poll|
-        return poll if poll['name'] == DiscoursePoll::DEFAULT_POLL_NAME
-      end
-
-      puts "Failed to extract poll for topic id #{topic_id}. The poll text is:"
-      puts poll_text
-    end
-
-    # @param poll [ImportScripts::PhpBB3::Poll]
-    def update_poll_metadata(extracted_poll, topic_id, poll)
+    # @param poll_data [ImportScripts::PhpBB3::PollData]
+    # @param poll [Poll]
+    def update_anonymous_voters(topic_id, poll_data, poll)
       row = @database.get_voters(topic_id)
 
-      extracted_poll['voters'] = row[:total_voters]
-      extracted_poll['anonymous_voters'] = row[:anonymous_voters] if row[:anonymous_voters] > 0
-      extracted_poll['status'] = poll.has_ended? ? :open : :closed
-    end
+      if row[:anonymous_voters] > 0
+        poll.update!(anonymous_voters: row[:anonymous_voters])
 
-    # @param poll [ImportScripts::PhpBB3::Poll]
-    def update_poll_options(extracted_poll, imported_options, poll)
-      extracted_poll['options'].each_with_index do |option, index|
-        imported_option = imported_options[index]
-        option['votes'] = imported_option[:total_votes]
-        option['anonymous_votes'] = imported_option[:anonymous_votes] if imported_option[:anonymous_votes] > 0
-        poll.add_option_id(imported_option[:ids], option['id'])
+        poll.poll_options.each_with_index do |option, index|
+          imported_option = poll_data.options[index]
+
+          if imported_option[:anonymous_votes] > 0
+            option.update!(anonymous_votes: imported_option[:anonymous_votes])
+          end
+        end
       end
     end
 
-    # @param custom_fields [Hash]
-    def add_poll_to_custom_fields(custom_fields, extracted_poll)
-      custom_fields[DiscoursePoll::POLLS_CUSTOM_FIELD] = { DiscoursePoll::DEFAULT_POLL_NAME => extracted_poll }
-    end
+    # @param poll_data [ImportScripts::PhpBB3::PollData]
+    # @param poll [Poll]
+    def map_poll_options(poll_data, poll)
+      option_ids = {}
 
-    # @param custom_fields [Hash]
-    # @param poll [ImportScripts::PhpBB3::Poll]
-    def add_votes_to_custom_fields(custom_fields, topic_id, poll)
-      rows = @database.fetch_poll_votes(topic_id)
-      votes = {}
+      poll.poll_options.each_with_index do |option, index|
+        imported_option = poll_data.options[index]
 
-      rows.each do |row|
-        option_id = poll.option_id_from_imported_option_id(row[:poll_option_id])
-        user_id = @lookup.user_id_from_imported_user_id(row[:user_id])
-
-        if option_id.present? && user_id.present?
-          user_votes = votes["#{user_id}"] ||= {}
-          user_votes = user_votes[DiscoursePoll::DEFAULT_POLL_NAME] ||= []
-          user_votes << option_id
+        imported_option[:ids].each do |imported_id|
+          option_ids[imported_id] = option.id
         end
       end
 
-      custom_fields[DiscoursePoll::VOTES_CUSTOM_FIELD] = votes
+      option_ids
+    end
+
+    # @param poll_data [ImportScripts::PhpBB3::PollData]
+    # @param poll [Poll]
+    def create_votes(topic_id, poll_data, poll)
+      mapped_option_ids = map_poll_options(poll_data, poll)
+      rows = @database.fetch_poll_votes(topic_id)
+
+      rows.each do |row|
+        option_id = mapped_option_ids[row[:poll_option_id]]
+        user_id = @lookup.user_id_from_imported_user_id(row[:user_id])
+
+        if option_id.present? && user_id.present?
+          PollVote.create!(poll: poll, poll_option_id: option_id, user_id: user_id)
+        end
+      end
     end
   end
 
-  class Poll
+  class PollData
     attr_reader :title
     attr_reader :max_options
+    attr_reader :close_time
+    attr_accessor :options
 
     def initialize(title, max_options, end_timestamp)
       @title = title
       @max_options = max_options
-      @end_timestamp = end_timestamp
-      @option_ids = {}
-    end
-
-    def has_ended?
-      @end_timestamp.nil? || Time.zone.at(@end_timestamp) > Time.now
-    end
-
-    def add_option_id(imported_ids, option_id)
-      imported_ids.each { |imported_id| @option_ids[imported_id] = option_id }
-    end
-
-    def option_id_from_imported_option_id(imported_id)
-      @option_ids[imported_id]
+      @close_time = Time.zone.at(end_timestamp) if end_timestamp
     end
   end
 end

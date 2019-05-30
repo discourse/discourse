@@ -1,8 +1,10 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe Jobs::AutoExpireUserApiKeys do
-  let(:key1) { Fabricate(:readonly_user_api_key) }
-  let(:key2) { Fabricate(:readonly_user_api_key) }
+  fab!(:key1) { Fabricate(:readonly_user_api_key) }
+  fab!(:key2) { Fabricate(:readonly_user_api_key) }
 
   context 'when user api key is unused in last 1 days' do
 

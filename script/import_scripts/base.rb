@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 if ARGV.include?('bbcode-to-md')
   # Replace (most) bbcode with markdown before creating posts.
   # This will dramatically clean up the final posts in Discourse.
@@ -95,7 +97,7 @@ class ImportScripts::Base
     @site_settings_during_import = get_site_settings_for_import
 
     @site_settings_during_import.each do |key, value|
-      @old_site_settings[key] = SiteSetting.send(key)
+      @old_site_settings[key] = SiteSetting.get(key)
       SiteSetting.set(key, value)
     end
 
@@ -108,7 +110,7 @@ class ImportScripts::Base
 
   def reset_site_settings
     @old_site_settings.each do |key, value|
-      current_value = SiteSetting.send(key)
+      current_value = SiteSetting.get(key)
       SiteSetting.set(key, value) unless current_value != @site_settings_during_import[key]
     end
 

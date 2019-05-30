@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # This patch performs 2 functions
 #
 # 1. It caches all translations which drastically improves
@@ -56,7 +58,7 @@ module I18n
     end
 
     def ensure_all_loaded!
-      backend.fallbacks(locale).each { |l| ensure_loaded!(l) }
+      I18n.fallbacks[locale].each { |l| ensure_loaded!(l) }
     end
 
     def search(query, opts = {})
@@ -151,7 +153,7 @@ module I18n
       if @overrides_enabled
         overrides = {}
 
-        backend.fallbacks(locale).each do |l|
+        I18n.fallbacks[locale].each do |l|
           overrides[l] = overrides_by_locale(l)
         end
 

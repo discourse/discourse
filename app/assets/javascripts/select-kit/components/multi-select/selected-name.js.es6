@@ -42,12 +42,12 @@ export default Ember.Component.extend({
 
   @computed("computedContent", "highlightedSelection.[]")
   isHighlighted(computedContent, highlightedSelection) {
-    return highlightedSelection.includes(this.get("computedContent"));
+    return highlightedSelection.includes(this.computedContent);
   },
 
   click() {
-    if (this.get("isLocked")) return false;
-    this.onClickSelectionItem([this.get("computedContent")]);
+    if (this.isLocked) return false;
+    this.onClickSelectionItem([this.computedContent]);
     return false;
   }
 });

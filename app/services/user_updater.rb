@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class UserUpdater
 
   CATEGORY_IDS = {
@@ -54,8 +56,18 @@ class UserUpdater
     unless SiteSetting.enable_sso && SiteSetting.sso_overrides_bio
       user_profile.bio_raw = attributes.fetch(:bio_raw) { user_profile.bio_raw }
     end
-    user_profile.profile_background = attributes.fetch(:profile_background) { user_profile.profile_background }
-    user_profile.card_background = attributes.fetch(:card_background) { user_profile.card_background }
+
+    if attributes[:profile_background_upload_url] == ""
+      user_profile.profile_background_upload_id = nil
+    elsif upload = Upload.get_from_url(attributes[:profile_background_upload_url])
+      user_profile.profile_background_upload_id = upload.id
+    end
+
+    if attributes[:card_background_upload_url] == ""
+      user_profile.card_background_upload_id = nil
+    elsif upload = Upload.get_from_url(attributes[:card_background_upload_url])
+      user_profile.card_background_upload_id = upload.id
+    end
 
     old_user_name = user.name.present? ? user.name : ""
     user.name = attributes.fetch(:name) { user.name }
@@ -103,11 +115,11 @@ class UserUpdater
       if attributes.key?(attribute)
         save_options = true
 
-        if [true, false].include?(user.user_option.send(attribute))
+        if [true, false].include?(user.user_option.public_send(attribute))
           val = attributes[attribute].to_s == 'true'
-          user.user_option.send("#{attribute}=", val)
+          user.user_option.public_send("#{attribute}=", val)
         else
-          user.user_option.send("#{attribute}=", attributes[attribute])
+          user.user_option.public_send("#{attribute}=", attributes[attribute])
         end
       end
     end

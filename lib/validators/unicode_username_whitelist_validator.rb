@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class UnicodeUsernameWhitelistValidator
   def initialize(opts = {})
     @opts = opts

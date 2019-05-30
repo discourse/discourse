@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "digest/sha1"
 require_dependency "file_helper"
 require_dependency "url_helper"
@@ -115,7 +117,28 @@ class Upload < ActiveRecord::Base
   end
 
   def short_url
-    "upload://#{Base62.encode(sha1.hex)}.#{extension}"
+    "upload://#{short_url_basename}"
+  end
+
+  def short_path
+    self.class.short_path(sha1: self.sha1, extension: self.extension)
+  end
+
+  def self.short_path(sha1:, extension:)
+    @url_helpers ||= Rails.application.routes.url_helpers
+
+    @url_helpers.upload_short_path(
+      base62: self.base62_sha1(sha1),
+      extension: extension
+    )
+  end
+
+  def self.base62_sha1(sha1)
+    Base62.encode(sha1.hex)
+  end
+
+  def base62_sha1
+    Upload.base62_sha1(upload.sha1)
   end
 
   def local?
@@ -178,15 +201,25 @@ class Upload < ActiveRecord::Base
     get_dimension(:thumbnail_height)
   end
 
+  def self.sha1_from_short_path(path)
+    if path =~ /(\/uploads\/short-url\/)([a-zA-Z0-9]+)(\..*)?/
+      self.sha1_from_base62_encoded($2)
+    end
+  end
+
   def self.sha1_from_short_url(url)
     if url =~ /(upload:\/\/)?([a-zA-Z0-9]+)(\..*)?/
-      sha1 = Base62.decode($2).to_s(16)
+      self.sha1_from_base62_encoded($2)
+    end
+  end
 
-      if sha1.length > SHA1_LENGTH
-        nil
-      else
-        sha1.rjust(SHA1_LENGTH, '0')
-      end
+  def self.sha1_from_base62_encoded(encoded_sha1)
+    sha1 = Base62.decode(encoded_sha1).to_s(16)
+
+    if sha1.length > SHA1_LENGTH
+      nil
+    else
+      sha1.rjust(SHA1_LENGTH, '0')
     end
   end
 
@@ -276,20 +309,29 @@ class Upload < ActiveRecord::Base
               excluded_tables: %w{
                 posts
                 post_search_data
+                incoming_emails
+                notifications
+                single_sign_on_records
+                stylesheet_cache
+                topic_search_data
+                users
+                user_emails
+                draft_sequences
+                optimized_images
               }
             )
 
             remap_scope ||= begin
               Post.with_deleted
                 .where("raw ~ '/uploads/#{db}/\\d+/' OR raw ~ '/uploads/#{db}/original/(\\d|[a-z])/'")
-                .select(:raw, :cooked)
+                .select(:id, :raw, :cooked)
                 .all
             end
 
             remap_scope.each do |post|
               post.raw.gsub!(previous_url, upload.url)
               post.cooked.gsub!(previous_url, upload.url)
-              post.save!(validate: false) if post.changed?
+              Post.with_deleted.where(id: post.id).update_all(raw: post.raw, cooked: post.cooked) if post.changed?
             end
 
             upload.optimized_images.find_each(&:destroy!)
@@ -309,6 +351,12 @@ class Upload < ActiveRecord::Base
     end
 
     problems
+  end
+
+  private
+
+  def short_url_basename
+    "#{Upload.base62_sha1(sha1)}.#{extension}"
   end
 
 end

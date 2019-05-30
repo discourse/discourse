@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class IncomingLinksReport
 
   attr_accessor :type, :data, :y_titles, :start_date, :end_date, :limit, :category_id
@@ -33,7 +35,7 @@ class IncomingLinksReport
     report.limit = _opts[:limit].to_i if _opts[:limit]
     report.category_id = _opts[:category_id] if _opts[:category_id]
 
-    send(report_method, report)
+    public_send(report_method, report)
     report
   end
 

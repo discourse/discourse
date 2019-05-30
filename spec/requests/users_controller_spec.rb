@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 describe UsersController do
@@ -109,7 +111,7 @@ describe UsersController do
   end
 
   describe '#password_reset' do
-    let(:user) { Fabricate(:user) }
+    fab!(:user) { Fabricate(:user) }
     let(:token) { SecureRandom.hex }
 
     context "you can view it even if login is required" do
@@ -388,7 +390,7 @@ describe UsersController do
   end
 
   describe '#confirm_email_token' do
-    let(:user) { Fabricate(:user) }
+    fab!(:user) { Fabricate(:user) }
 
     it "token doesn't match any records" do
       email_token = user.email_tokens.create(email: user.email)
@@ -406,8 +408,8 @@ describe UsersController do
   end
 
   describe '#admin_login' do
-    let(:admin) { Fabricate(:admin) }
-    let(:user) { Fabricate(:user) }
+    fab!(:admin) { Fabricate(:admin) }
+    fab!(:user) { Fabricate(:user) }
 
     context 'enqueues mail' do
       it 'enqueues mail with admin email and sso enabled' do
@@ -462,8 +464,8 @@ describe UsersController do
       end
 
       describe 'when 2 factor authentication is enabled' do
-        let(:second_factor) { Fabricate(:user_second_factor_totp, user: admin) }
-        let(:email_token) { Fabricate(:email_token, user: admin) }
+        fab!(:second_factor) { Fabricate(:user_second_factor_totp, user: admin) }
+        fab!(:email_token) { Fabricate(:email_token, user: admin) }
 
         it 'does not log in when token required' do
           second_factor
@@ -660,8 +662,8 @@ describe UsersController do
       end
 
       context "with a regular api key" do
-        let(:user) { Fabricate(:user) }
-        let(:api_key) { Fabricate(:api_key, user: user) }
+        fab!(:user) { Fabricate(:user) }
+        fab!(:api_key) { Fabricate(:api_key, user: user) }
 
         it "won't create the user as active with a regular key" do
           post "/u.json",
@@ -673,8 +675,8 @@ describe UsersController do
       end
 
       context "with an admin api key" do
-        let(:admin) { Fabricate(:admin) }
-        let(:api_key) { Fabricate(:api_key, user: admin) }
+        fab!(:admin) { Fabricate(:admin) }
+        fab!(:api_key) { Fabricate(:api_key, user: admin) }
 
         it "creates the user as active with a an admin key" do
           SiteSetting.send_welcome_message = true
@@ -748,8 +750,8 @@ describe UsersController do
       end
 
       context "with a regular api key" do
-        let(:user) { Fabricate(:user) }
-        let(:api_key) { Fabricate(:api_key, user: user) }
+        fab!(:user) { Fabricate(:user) }
+        fab!(:api_key) { Fabricate(:api_key, user: user) }
 
         it "won't create the user as staged with a regular key" do
           post "/u.json", params: post_user_params.merge(staged: true, api_key: api_key.key)
@@ -761,8 +763,8 @@ describe UsersController do
       end
 
       context "with an admin api key" do
-        let(:user) { Fabricate(:admin) }
-        let(:api_key) { Fabricate(:api_key, user: user) }
+        fab!(:user) { Fabricate(:admin) }
+        fab!(:api_key) { Fabricate(:api_key, user: user) }
 
         it "creates the user as staged with a regular key" do
           post "/u.json", params: post_user_params.merge(staged: true, api_key: api_key.key)
@@ -832,8 +834,6 @@ describe UsersController do
       end
 
       context 'authentication records for' do
-        let(:user) { Fabricate(:user) }
-
         before do
           OmniAuth.config.test_mode = true
 
@@ -963,6 +963,7 @@ describe UsersController do
     shared_examples 'failed signup' do
       it 'should not create a new User' do
         expect { post "/u.json", params: create_params }.to_not change { User.count }
+        expect(response.status).to eq(200)
       end
 
       it 'should report failed' do
@@ -995,6 +996,15 @@ describe UsersController do
       let(:create_params) { { name: @user.name, username: 'Reserved', email: @user.email, password: "x" * 20 } }
       before { SiteSetting.reserved_usernames = 'a|reserved|b' }
       include_examples 'failed signup'
+    end
+
+    context 'with a missing username' do
+      let(:create_params) { { name: @user.name, email: @user.email, password: "x" * 20 } }
+
+      it 'should not create a new User' do
+        expect { post "/u.json", params: create_params }.to_not change { User.count }
+        expect(response.status).to eq(400)
+      end
     end
 
     context 'when an Exception is raised' do
@@ -1459,7 +1469,8 @@ describe UsersController do
       before do
         sign_in(user)
       end
-      let(:user) { Fabricate(:user, username: 'test.test', name: "Test User") }
+
+      fab!(:user) { Fabricate(:user, username: 'test.test', name: "Test User") }
 
       it "should be able to update a user" do
         put "/u/#{user.username}", params: { name: 'test.test' }
@@ -1494,6 +1505,7 @@ describe UsersController do
 
     context 'with authenticated user' do
       context 'with permission to update' do
+        let(:upload) { Fabricate(:upload) }
         let!(:user) { sign_in(Fabricate(:user)) }
 
         it 'allows the update' do
@@ -1504,7 +1516,9 @@ describe UsersController do
           put "/u/#{user.username}.json", params: {
             name: 'Jim Tom',
             muted_usernames: "#{user2.username},#{user3.username}",
-            watched_tags: "#{tags[0].name},#{tags[1].name}"
+            watched_tags: "#{tags[0].name},#{tags[1].name}",
+            card_background_upload_url: upload.url,
+            profile_background_upload_url: upload.url
           }
 
           expect(response.status).to eq(200)
@@ -1512,8 +1526,8 @@ describe UsersController do
           user.reload
 
           expect(user.name).to eq 'Jim Tom'
-
           expect(user.muted_users.pluck(:username).sort).to eq [user2.username, user3.username].sort
+
           expect(TagUser.where(
             user: user,
             notification_level: TagUser.notification_levels[:watching]
@@ -1532,6 +1546,8 @@ describe UsersController do
           expect(user.muted_users.pluck(:username).sort).to be_empty
           expect(user.user_option.theme_ids).to eq([theme.id])
           expect(user.user_option.email_level).to eq(UserOption.email_level_types[:always])
+          expect(user.profile_background_upload).to eq(upload)
+          expect(user.card_background_upload).to eq(upload)
         end
 
         context 'a locale is chosen that differs from I18n.locale' do
@@ -1660,8 +1676,8 @@ describe UsersController do
   end
 
   describe '#badge_title' do
-    let(:user) { Fabricate(:user) }
-    let(:badge) { Fabricate(:badge) }
+    fab!(:user) { Fabricate(:user) }
+    fab!(:badge) { Fabricate(:badge) }
     let(:user_badge) { BadgeGranter.grant(badge, user) }
 
     it "sets the user's title to the badge name if it is titleable" do
@@ -1670,7 +1686,7 @@ describe UsersController do
       put "/u/#{user.username}/preferences/badge_title.json", params: { user_badge_id: user_badge.id }
 
       expect(user.reload.title).not_to eq(badge.display_name)
-      badge.update_attributes allow_title: true
+      badge.update allow_title: true
 
       put "/u/#{user.username}/preferences/badge_title.json", params: { user_badge_id: user_badge.id }
 
@@ -1684,7 +1700,7 @@ describe UsersController do
     end
 
     context "with overrided name" do
-      let(:badge) { Fabricate(:badge, name: 'Demogorgon', allow_title: true) }
+      fab!(:badge) { Fabricate(:badge, name: 'Demogorgon', allow_title: true) }
       let(:user_badge) { BadgeGranter.grant(badge, user) }
 
       before do
@@ -1930,8 +1946,8 @@ describe UsersController do
     context 'while logged in' do
 
       let!(:user) { sign_in(Fabricate(:user)) }
-      let(:avatar1) { Fabricate(:upload) }
-      let(:avatar2) { Fabricate(:upload) }
+      fab!(:avatar1) { Fabricate(:upload) }
+      fab!(:avatar2) { Fabricate(:upload) }
       let(:url) { "https://www.discourse.org" }
 
       it 'raises an error when url is blank' do
@@ -1984,8 +2000,9 @@ describe UsersController do
     end
 
     context 'while logged in' do
-      let(:another_user) { Fabricate(:user) }
-      let(:user) { Fabricate(:user) }
+      fab!(:another_user) { Fabricate(:user) }
+      fab!(:user) { Fabricate(:user) }
+
       before do
         sign_in(user)
       end
@@ -2008,7 +2025,7 @@ describe UsersController do
       it 'can clear the profile background' do
         delete "/u/#{user.username}/preferences/user_image.json", params: { type: 'profile_background' }
 
-        expect(user.reload.user_profile.profile_background).to eq("")
+        expect(user.reload.profile_background_upload).to eq(nil)
         expect(response.status).to eq(200)
       end
     end
@@ -2021,8 +2038,8 @@ describe UsersController do
     end
 
     context 'while logged in' do
-      let(:user) { Fabricate(:user) }
-      let(:another_user) { Fabricate(:user) }
+      fab!(:user) { Fabricate(:user) }
+      fab!(:another_user) { Fabricate(:user) }
       before do
         sign_in(user)
       end
@@ -2057,8 +2074,8 @@ describe UsersController do
     end
 
     context 'while logged in' do
-      let(:user) { Fabricate(:user, trust_level: 2) }
-      let(:another_user) { Fabricate(:user) }
+      fab!(:user) { Fabricate(:user, trust_level: 2) }
+      fab!(:another_user) { Fabricate(:user) }
       before do
         sign_in(user)
       end
@@ -2107,7 +2124,7 @@ describe UsersController do
   end
 
   describe "for user with period in username" do
-    let(:user_with_period) { Fabricate(:user, username: "myname.test") }
+    fab!(:user_with_period) { Fabricate(:user, username: "myname.test") }
 
     it "still works" do
       sign_in(user_with_period)
@@ -2200,10 +2217,10 @@ describe UsersController do
   end
 
   describe '#is_local_username' do
-    let(:user) { Fabricate(:user) }
-    let(:group) { Fabricate(:group, name: "Discourse") }
-    let(:topic) { Fabricate(:topic) }
-    let(:allowed_user) { Fabricate(:user) }
+    fab!(:user) { Fabricate(:user) }
+    fab!(:group) { Fabricate(:group, name: "Discourse") }
+    fab!(:topic) { Fabricate(:topic) }
+    fab!(:allowed_user) { Fabricate(:user) }
     let(:private_topic) { Fabricate(:private_message_topic, user: allowed_user) }
 
     it "finds the user" do
@@ -2290,7 +2307,7 @@ describe UsersController do
   end
 
   describe '#topic_tracking_state' do
-    let(:user) { Fabricate(:user) }
+    fab!(:user) { Fabricate(:user) }
 
     context 'anon' do
       it "raises an error on anon for topic_tracking_state" do
@@ -2574,7 +2591,6 @@ describe UsersController do
   describe '#show' do
     context "anon" do
       let(:user) { Discourse.system_user }
-      let(:other_user) { Fabricate(:user) }
 
       it "returns success" do
         get "/u/#{user.username}.json"
@@ -2605,7 +2621,7 @@ describe UsersController do
       end
 
       describe "user profile views" do
-        let(:other_user) { Fabricate(:user) }
+        fab!(:other_user) { Fabricate(:user) }
 
         it "should track a user profile view for an anon user" do
           get "/"
@@ -2625,7 +2641,7 @@ describe UsersController do
         sign_in(user)
       end
 
-      let(:user) { Fabricate(:user) }
+      fab!(:user) { Fabricate(:user) }
 
       it 'returns success' do
         get "/u/#{user.username}.json"
@@ -2660,7 +2676,7 @@ describe UsersController do
       end
 
       describe "user profile views" do
-        let(:other_user) { Fabricate(:user) }
+        fab!(:other_user) { Fabricate(:user) }
 
         it "should track a user profile view for a signed in user" do
           UserProfileView.expects(:add).with(other_user.user_profile.id, request.remote_ip, user.id)
@@ -2695,8 +2711,8 @@ describe UsersController do
 
       describe "include_post_count_for" do
 
-        let(:admin) { Fabricate(:admin) }
-        let(:topic) { Fabricate(:topic) }
+        fab!(:admin) { Fabricate(:admin) }
+        fab!(:topic) { Fabricate(:topic) }
 
         before do
           Fabricate(:post, user: user, topic: topic)
@@ -2804,7 +2820,7 @@ describe UsersController do
   end
 
   describe '#search_users' do
-    let(:topic) { Fabricate :topic }
+    fab!(:topic) { Fabricate :topic }
     let(:user)  { Fabricate :user, username: "joecabot", name: "Lawrence Tierney" }
     let(:post1) { Fabricate(:post, user: user, topic: topic) }
 
@@ -3003,6 +3019,54 @@ describe UsersController do
 
           expect(response.status).to eq(200)
           expect(JSON.parse(response.body)).not_to have_key(:groups)
+        end
+      end
+
+      describe 'when searching by group name' do
+        fab!(:exclusive_group) { Fabricate(:group) }
+
+        it 'return results if the user is a group member' do
+          exclusive_group.add(user)
+
+          get "/u/search/users.json", params: {
+            group: exclusive_group.name,
+            term: user.username
+          }
+
+          expect(users_found).to contain_exactly(user.username)
+        end
+
+        it 'does not return results if the user is not a group member' do
+          get "/u/search/users.json", params: {
+            group: exclusive_group.name,
+            term: user.username
+          }
+
+          expect(users_found).to be_empty
+        end
+
+        it 'returns results if the user is member of one of the groups' do
+          exclusive_group.add(user)
+
+          get "/u/search/users.json", params: {
+            groups: [exclusive_group.name],
+            term: user.username
+          }
+
+          expect(users_found).to contain_exactly(user.username)
+        end
+
+        it 'does not return results if the user is not a member of the groups' do
+          get "/u/search/users.json", params: {
+            groups: [exclusive_group.name],
+            term: user.username
+          }
+
+          expect(users_found).to be_empty
+        end
+
+        def users_found
+          JSON.parse(response.body)['users'].map { |u| u['username'] }
         end
       end
     end
@@ -3353,7 +3417,7 @@ describe UsersController do
   end
 
   describe '#revoke_account' do
-    let(:other_user) { Fabricate(:user) }
+    fab!(:other_user) { Fabricate(:user) }
     it 'errors for unauthorised users' do
       post "/u/#{user.username}/preferences/revoke-account.json", params: {
         provider_name: 'facebook'

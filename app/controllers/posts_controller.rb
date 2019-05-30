@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_dependency 'new_post_manager'
 require_dependency 'post_creator'
 require_dependency 'post_action_destroyer'
@@ -200,7 +202,10 @@ class PostsController < ApplicationController
 
     post.image_sizes = params[:image_sizes] if params[:image_sizes].present?
 
-    if !guardian.send("can_edit?", post) && post.user_id == current_user.id && post.edit_time_limit_expired?
+    if !guardian.public_send("can_edit?", post) &&
+       post.user_id == current_user.id &&
+       post.edit_time_limit_expired?
+
       return render_json_error(I18n.t('too_late_to_edit'))
     end
 
@@ -727,7 +732,9 @@ class PostsController < ApplicationController
       result[:shared_draft] = true
     end
 
-    if current_user.staff? && SiteSetting.enable_whispers? && params[:whisper] == "true"
+    if params[:whisper] == "true"
+      raise Discourse::InvalidAccess.new("invalid_whisper_access", nil, custom_message: "invalid_whisper_access") unless guardian.can_create_whisper?
+
       result[:post_type] = Post.types[:whisper]
     end
 
@@ -757,7 +764,7 @@ class PostsController < ApplicationController
   end
 
   def signature_for(args)
-    "post##" << Digest::SHA1.hexdigest(args
+    +"post##" << Digest::SHA1.hexdigest(args
       .to_h
       .to_a
       .concat([["user", current_user.id]])

@@ -1,8 +1,10 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 require_dependency 'theme_serializer'
 
 describe Admin::ThemesController do
-  let(:admin) { Fabricate(:admin) }
+  fab!(:admin) { Fabricate(:admin) }
 
   it "is a subclass of AdminController" do
     expect(Admin::UsersController < Admin::AdminController).to eq(true)
@@ -216,7 +218,7 @@ describe Admin::ThemesController do
   end
 
   describe '#update' do
-    let(:theme) { Fabricate(:theme) }
+    let!(:theme) { Fabricate(:theme) }
 
     it 'returns the right response when an invalid id is given' do
       put "/admin/themes/99999.json"
@@ -346,7 +348,7 @@ describe Admin::ThemesController do
   end
 
   describe '#destroy' do
-    let(:theme) { Fabricate(:theme) }
+    let!(:theme) { Fabricate(:theme) }
 
     it 'returns the right response when an invalid id is given' do
       delete "/admin/themes/9999.json"
@@ -374,6 +376,15 @@ describe Admin::ThemesController do
       get "/admin/themes/9999/preview.json"
 
       expect(response.status).to eq(400)
+    end
+  end
+
+  describe '#diff_local_changes' do
+    let(:theme) { Fabricate(:theme) }
+
+    it "should return empty for a default theme" do
+      get "/admin/themes/#{theme.id}/diff_local_changes.json"
+      expect(response.body).to eq("{}")
     end
   end
 end

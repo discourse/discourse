@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "import_export/base_exporter"
 require "import_export/topic_exporter"
 

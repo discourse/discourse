@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 require_dependency 'crawler_detection'
 
@@ -42,7 +44,6 @@ describe CrawlerDetection do
       crawler! "Mozilla/5.0 (compatible; bingbot/2.0; +http://www.bing.com/bingbot.htm)"
       crawler! "Baiduspider+(+http://www.baidu.com/search/spider.htm)"
       crawler! "Mozilla/5.0 (compatible; YandexBot/3.0; +http://yandex.com/bots)"
-      crawler! "DiscourseAPI Ruby Gem 0.19.0"
       crawler! "Pingdom.com_bot_version_1.4_(http://www.pingdom.com/)"
       crawler! "LogicMonitor SiteMonitor/1.0"
       crawler! "Java/1.8.0_151"
@@ -57,6 +58,7 @@ describe CrawlerDetection do
       not_crawler! "Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:25.0) Gecko/20100101 Firefox/25.0"
       not_crawler! "Mozilla/5.0 (Linux; U; Android 4.0.3; ko-kr; LG-L160L Build/IML74K) AppleWebkit/534.30 (KHTML, like Gecko) Version/4.0 Mobile Safari/534.30"
       not_crawler! "Mozilla/5.0 (Linux; Android 6.0; CUBOT DINOSAUR Build/MRA58K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.87 Mobile Safari/537.36+"
+      not_crawler! "DiscourseAPI Ruby Gem 0.19.0"
     end
 
   end

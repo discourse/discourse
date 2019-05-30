@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class TopicConverter
 
   attr_reader :topic

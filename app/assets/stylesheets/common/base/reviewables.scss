@@ -1,4 +1,10 @@
 .reviewable {
+  .flagged-post-header {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+  }
+
   .status {
     color: $primary-medium;
     span.approved {
@@ -45,8 +51,9 @@
 }
 
 .reviewable-settings {
-  p.description {
-    margin-bottom: 2em;
+  h4 {
+    margin-top: 1em;
+    margin-bottom: 1em;
   }
 
   .saved {
@@ -54,7 +61,11 @@
   }
   .reviewable-score-type {
     display: flex;
+    margin-bottom: 0.5em;
 
+    .select-kit {
+      min-width: 10em;
+    }
     .title {
       width: 30%;
     }
@@ -110,6 +121,30 @@
   }
 }
 
+.reviewable-claimed-topic {
+  display: flex;
+  align-items: center;
+  .btn-small {
+    margin-left: 0.5em;
+  }
+}
+
+.reviewable-actions .claimed-actions {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5em;
+}
+
+.claimed-by {
+  display: flex;
+  align-items: center;
+  .claimed-username {
+    margin-left: 0.5em;
+  }
+}
+
 .reviewable-topics {
   width: 100%;
 
@@ -126,6 +161,7 @@
     .btn {
       display: flex;
       align-items: center;
+      margin-left: 1em;
     }
   }
 }
@@ -288,7 +324,9 @@
     }
     > tr > th,
     > tr > td {
-      padding: 0.5em 1em 0.5em 0;
+      &:not(:empty) {
+        padding: 0.5em 1em 0.5em 0;
+      }
       @include breakpoint("mobile") {
         overflow: hidden;
         text-overflow: ellipsis;
@@ -434,7 +472,6 @@
   tr.reviewable-score {
     display: grid;
     grid-template-columns: auto auto 1fr;
-    grid-template-rows: 1fr 1fr;
   }
   td.reviewable-score-spacer {
     display: none;

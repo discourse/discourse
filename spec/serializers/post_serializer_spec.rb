@@ -1,12 +1,14 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 require_dependency 'post_action'
 
 describe PostSerializer do
+  fab!(:post) { Fabricate(:post) }
 
   context "a post with lots of actions" do
-    let(:post) { Fabricate(:post) }
-    let(:actor) { Fabricate(:user) }
-    let(:admin) { Fabricate(:admin) }
+    fab!(:actor) { Fabricate(:user) }
+    fab!(:admin) { Fabricate(:admin) }
     let(:acted_ids) {
       PostActionType.public_types.values
         .concat([:notify_user, :spam].map { |k| PostActionType.types[k] })
@@ -40,14 +42,40 @@ describe PostSerializer do
       notify_user_action = serializer.actions_summary.find { |a| a[:id] == PostActionType.types[:notify_user] }
       expect(notify_user_action).to be_blank
     end
+
+    it "should not allow user to flag post and notify non human user" do
+      post.update!(user: Discourse.system_user)
+
+      serializer = PostSerializer.new(post,
+        scope: Guardian.new(actor),
+        root: false
+      )
+
+      notify_user_action = serializer.actions_summary.find do |a|
+        a[:id] == PostActionType.types[:notify_user]
+      end
+
+      expect(notify_user_action).to eq(nil)
+    end
+  end
+
+  context "a post with reviewable content" do
+    let!(:reviewable) { PostActionCreator.spam(Fabricate(:user), post).reviewable }
+
+    it "includes the reviewable data" do
+      json = PostSerializer.new(post, scope: Guardian.new(Fabricate(:moderator)), root: false).as_json
+      expect(json[:reviewable_id]).to eq(reviewable.id)
+      expect(json[:reviewable_score_count]).to eq(1)
+      expect(json[:reviewable_score_pending_count]).to eq(1)
+    end
   end
 
   context "a post by a nuked user" do
-    let!(:post) { Fabricate(:post, user: Fabricate(:user), deleted_at: Time.zone.now) }
-
     before do
-      post.user_id = nil
-      post.save!
+      post.update!(
+        user_id: nil,
+        deleted_at: Time.zone.now
+      )
     end
 
     subject { PostSerializer.new(post, scope: Guardian.new(Fabricate(:admin)), root: false).as_json }
@@ -63,8 +91,7 @@ describe PostSerializer do
   end
 
   context "display_username" do
-    let(:user) { Fabricate.build(:user) }
-    let(:post) { Fabricate.build(:post, user: user) }
+    let(:user) { post.user }
     let(:serializer) { PostSerializer.new(post, scope: Guardian.new, root: false) }
     let(:json) { serializer.as_json }
 
@@ -122,7 +149,7 @@ describe PostSerializer do
     end
 
     context "a hidden revised post" do
-      let(:post) { Fabricate(:post, raw: 'Hello world!', hidden: true) }
+      fab!(:post) { Fabricate(:post, raw: 'Hello world!', hidden: true) }
 
       before do
         SiteSetting.editing_grace_period_max_diff = 1
@@ -175,9 +202,9 @@ describe PostSerializer do
   end
 
   context "a post with notices" do
-    let(:user) { Fabricate(:user, trust_level: 1) }
-    let(:user_tl1) { Fabricate(:user, trust_level: 1) }
-    let(:user_tl2) { Fabricate(:user, trust_level: 2) }
+    fab!(:user) { Fabricate(:user, trust_level: 1) }
+    fab!(:user_tl1) { Fabricate(:user, trust_level: 1) }
+    fab!(:user_tl2) { Fabricate(:user, trust_level: 2) }
 
     let(:post) {
       post = Fabricate(:post, user: user)

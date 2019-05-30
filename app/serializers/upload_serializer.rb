@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class UploadSerializer < ApplicationSerializer
   attributes :id,
              :url,

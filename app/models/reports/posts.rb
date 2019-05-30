@@ -1,10 +1,16 @@
-Report.add_report("posts") do |report|
+# frozen_string_literal: true
+
+Report.add_report('posts') do |report|
   report.modes = [:table, :chart]
-  report.category_filtering = true
-  basic_report_about report, Post, :public_posts_count_per_day, report.start_date, report.end_date, report.category_id
+
+  category_filter = report.filters.dig(:category)
+  report.add_filter('category', default: category_filter)
+
+  basic_report_about report, Post, :public_posts_count_per_day, report.start_date, report.end_date, category_filter
+
   countable = Post.public_posts.where(post_type: Post.types[:regular])
-  if report.category_id
-    countable = countable.joins(:topic).merge(Topic.in_category_and_subcategories(report.category_id))
+  if category_filter
+    countable = countable.joins(:topic).merge(Topic.in_category_and_subcategories(category_filter))
   end
   add_counts report, countable, 'posts.created_at'
 end

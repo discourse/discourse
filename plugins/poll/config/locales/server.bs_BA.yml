@@ -16,11 +16,11 @@ bs_BA:
     default_poll_must_have_at_least_2_options: "Anketa mora imati barem 2 opcije."
     named_poll_must_have_at_least_2_options: "Anketa nazvana <strong>%{name}</strong> mora imati barem 2 opcije."
     default_poll_must_have_less_options:
-      one: "Ankete moraju imati manje od 1 opcije."
+      one: "Ankete moraju imati manje od %{count} opcije."
       few: "Ankete moraju imati manje od %{count} opcije."
       other: "Ankete moraju imati manje od %{count} opcija."
     named_poll_must_have_less_options:
-      one: "Anketa nazvana <strong>%{name}</strong> mora imati manje od 1 opcije."
+      one: "Anketa nazvana <strong>%{name}</strong> mora imati manje od %{count} opcije."
       few: "Anketa nazvana <strong>%{name}</strong> mora imati manje od %{count} opcije."
       other: "Anketa nazvana <strong>%{name}</strong> mora imati manje od %{count} opcija."
     default_poll_must_have_different_options: "Ankete moraju imati različite opcije."

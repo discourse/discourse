@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_dependency 'site_serializer'
 
 class SiteController < ApplicationController

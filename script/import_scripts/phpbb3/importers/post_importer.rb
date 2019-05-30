@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module ImportScripts::PhpBB3
   class PostImporter
     # @param lookup [ImportScripts::LookupContainer]
@@ -50,6 +52,8 @@ module ImportScripts::PhpBB3
     end
 
     def map_first_post(row, mapped)
+      poll_data = add_poll(row, mapped) if @settings.import_polls
+
       mapped[:category] = @lookup.category_id_from_imported_category_id(row[:forum_id])
       mapped[:title] = CGI.unescapeHTML(row[:topic_title]).strip[0...255]
       mapped[:pinned_at] = mapped[:created_at] unless row[:topic_type] == Constants::POST_NORMAL
@@ -58,10 +62,10 @@ module ImportScripts::PhpBB3
       mapped[:post_create_action] = proc do |post|
         @permalink_importer.create_for_topic(post.topic, row[:topic_id])
         @permalink_importer.create_for_post(post, row[:post_id])
+        @poll_importer.update_poll(row[:topic_id], post, poll_data) if poll_data
         TopicViewItem.add(post.topic_id, row[:poster_ip], post.user_id, post.created_at, true)
       end
 
-      add_poll(row, mapped) if @settings.import_polls
       mapped
     end
 
@@ -85,13 +89,11 @@ module ImportScripts::PhpBB3
     def add_poll(row, mapped_post)
       return if row[:poll_title].blank?
 
-      poll = Poll.new(row[:poll_title], row[:poll_max_options], row[:poll_end])
-      mapped_poll = @poll_importer.map_poll(row[:topic_id], poll)
+      poll_data = PollData.new(row[:poll_title], row[:poll_max_options], row[:poll_end])
+      poll_raw = @poll_importer.create_raw(row[:topic_id], poll_data)
 
-      if mapped_poll.present?
-        mapped_post[:raw] = mapped_poll[:raw] << "\n" << mapped_post[:raw]
-        mapped_post[:custom_fields] = mapped_poll[:custom_fields]
-      end
+      mapped_post[:raw] = poll_raw << "\n\n" << mapped_post[:raw]
+      poll_data
     end
   end
 end

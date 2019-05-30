@@ -93,11 +93,11 @@ export default Ember.Component.extend({
     },
 
     turnoff() {
-      if (this.get("isEnabledDesktop")) {
+      if (this.isEnabledDesktop) {
         this.set("notificationsDisabled", "disabled");
         this.notifyPropertyChange("notificationsPermission");
       }
-      if (this.get("isEnabledPush")) {
+      if (this.isEnabledPush) {
         unsubscribePushNotification(this.currentUser, () => {
           this.set("isEnabledPush", "");
         });

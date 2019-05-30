@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 require 'mini_racer'
 
@@ -18,7 +20,6 @@ describe JsLocaleHelper do
   JsLocaleHelper.extend StubLoadTranslations
 
   after do
-    I18n.locale = :en
     JsLocaleHelper.clear_cache!
   end
 
@@ -117,6 +118,16 @@ describe JsLocaleHelper do
       message = JsLocaleHelper.compile_message_format(message_format_filename('ru'), 'ru', 'format')
       expect(message).not_to match 'Plural Function not found'
     end
+
+    it "includes uses message formats from fallback locale" do
+      translations = JsLocaleHelper.translations_for(:en_US)
+      en_us_message_formats = JsLocaleHelper.remove_message_formats!(translations, :en_US)
+      expect(en_us_message_formats).to_not be_empty
+
+      translations = JsLocaleHelper.translations_for(:en)
+      en_message_formats = JsLocaleHelper.remove_message_formats!(translations, :en)
+      expect(en_us_message_formats).to eq(en_message_formats)
+    end
   end
 
   it 'performs fallbacks to english if a translation is not available' do
@@ -188,7 +199,7 @@ describe JsLocaleHelper do
     it "finds moment.js locale file for #{locale[:value]}" do
       content = JsLocaleHelper.moment_locale(locale[:value])
 
-      if (locale[:value] == 'en')
+      if (locale[:value] == SiteSettings::DefaultsProvider::DEFAULT_LOCALE)
         expect(content).to eq('')
       else
         expect(content).to_not eq('')

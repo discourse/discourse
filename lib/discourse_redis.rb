@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #
 #  A wrapper around redis that namespaces keys with the current site id
 #
@@ -184,7 +186,7 @@ class DiscourseRedis
   # prefix the key with the namespace
   def method_missing(meth, *args, &block)
     if @redis.respond_to?(meth)
-      DiscourseRedis.ignore_readonly { @redis.send(meth, *args, &block) }
+      DiscourseRedis.ignore_readonly { @redis.public_send(meth, *args, &block) }
     else
       super
     end
@@ -201,7 +203,7 @@ class DiscourseRedis
    :zremrangebyscore, :zrevrange, :zrevrangebyscore, :zrevrank, :zrangebyscore ].each do |m|
     define_method m do |*args|
       args[0] = "#{namespace}:#{args[0]}" if @namespace
-      DiscourseRedis.ignore_readonly { @redis.send(m, *args) }
+      DiscourseRedis.ignore_readonly { @redis.public_send(m, *args) }
     end
   end
 

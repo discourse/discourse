@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Build a test topic full of links to test our replaceState/pushState functionality.
 
 desc 'create pushstate/replacestate test topic'

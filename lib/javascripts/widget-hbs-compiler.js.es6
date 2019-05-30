@@ -5,32 +5,80 @@ function resolve(path) {
   return path;
 }
 
+function sexpValue(value) {
+  if (!value) {
+    return;
+  }
+
+  let pValue = value.original;
+  if (value.type === "StringLiteral") {
+    return JSON.stringify(pValue);
+  } else if (value.type === "SubExpression") {
+    return sexp(value);
+  }
+  return pValue;
+}
+
+function pairsToObj(pairs) {
+  let result = [];
+
+  pairs.forEach(p => {
+    result.push(`"${p.key}": ${sexpValue(p.value)}`);
+  });
+
+  return `{ ${result.join(", ")} }`;
+}
+
+function i18n(node) {
+  let key = sexpValue(node.params[0]);
+
+  let hash = node.hash;
+  if (hash.pairs.length) {
+    return `I18n.t(${key}, ${pairsToObj(hash.pairs)})`;
+  }
+
+  return `I18n.t(${key})`;
+}
+
 function sexp(value) {
   if (value.path.original === "hash") {
+    return pairsToObj(value.hash.pairs);
+  }
+
+  if (value.path.original === "concat") {
     let result = [];
-
-    value.hash.pairs.forEach(p => {
-      let pValue = p.value.original;
-      if (p.value.type === "StringLiteral") {
-        pValue = JSON.stringify(pValue);
-      }
-
-      result.push(`"${p.key}": ${pValue}`);
+    value.params.forEach(p => {
+      result.push(sexpValue(p));
     });
+    return result.join(" + ");
+  }
 
-    return `{ ${result.join(", ")} }`;
+  if (value.path.original === "i18n") {
+    return i18n(value);
   }
 }
 
-function argValue(arg) {
-  let value = arg.value;
+function valueOf(value) {
   if (value.type === "SubExpression") {
-    return sexp(arg.value);
+    return sexp(value);
   } else if (value.type === "PathExpression") {
     return value.original;
   } else if (value.type === "StringLiteral") {
     return JSON.stringify(value.value);
   }
+}
+
+function argValue(arg) {
+  return valueOf(arg.value);
+}
+
+function useHelper(state, name) {
+  let id = state.helpersUsed[name];
+  if (!id) {
+    id = ++state.helperNumber;
+    state.helpersUsed[name] = id;
+  }
+  return `__h${id}`;
 }
 
 function mustacheValue(node, state) {
@@ -51,30 +99,44 @@ function mustacheValue(node, state) {
       return `this.attrs.contents()`;
       break;
     case "i18n":
-      let value;
-      if (node.params[0].type === "StringLiteral") {
-        value = `"${node.params[0].value}"`;
-      } else if (node.params[0].type === "PathExpression") {
-        value = resolve(node.params[0].original);
-      }
-
-      if (value) {
-        return `I18n.t(${value})`;
-      }
-
+      return i18n(node);
       break;
-    case "fa-icon":
+    case "avatar":
+      let template = argValue(node.hash.pairs.find(p => p.key === "template"));
+      let username = argValue(node.hash.pairs.find(p => p.key === "username"));
+      let size = argValue(node.hash.pairs.find(p => p.key === "size"));
+      return `${useHelper(
+        state,
+        "avatar"
+      )}(${size}, { template: ${template}, username: ${username} })`;
+      break;
+    case "date":
+      return `${useHelper(state, "dateNode")}(${valueOf(node.params[0])})`;
+      break;
     case "d-icon":
-      state.helpersUsed.iconNode = true;
-      let icon = node.params[0].value;
-      return `__iN("${icon}")`;
+      return `${useHelper(state, "iconNode")}(${valueOf(node.params[0])})`;
       break;
     default:
+      // Shortcut: If our mustach has hash arguments, we can assume it's attaching.
+      // For example `{{home-logo count=123}}` can become `this.attach('home-logo, { "count": 123 });`
+      let hash = node.hash;
+      if (hash.pairs.length) {
+        let widgetString = JSON.stringify(path);
+        // magic: support applying of attrs. This is commonly done like `{{home-logo attrs=attrs}}`
+        let firstPair = hash.pairs[0];
+        if (firstPair.key === "attrs") {
+          return `this.attach(${widgetString}, ${firstPair.value.original})`;
+        }
+
+        return `this.attach(${widgetString}, ${pairsToObj(hash.pairs)})`;
+      }
+
       if (node.escaped) {
         return `${resolve(path)}`;
       } else {
-        state.helpersUsed.rawHtml = true;
-        return `new __rH({ html: '<span>' + ${resolve(path)} + '</span>'})`;
+        return `new ${useHelper(state, "rawHtml")}({ html: '<span>' + ${resolve(
+          path
+        )} + '</span>'})`;
       }
       break;
   }
@@ -86,7 +148,8 @@ class Compiler {
     this.ast = ast;
 
     this.state = {
-      helpersUsed: {}
+      helpersUsed: {},
+      helperNumber: 0
     };
   }
 
@@ -146,7 +209,7 @@ class Compiler {
       case "MustacheStatement":
         const value = mustacheValue(node, this.state);
         if (value) {
-          instructions.push(`${parentAcc}.push(${value})`);
+          instructions.push(`${parentAcc}.push(${value});`);
         }
         break;
       case "BlockStatement":
@@ -212,12 +275,11 @@ function compile(template) {
   let code = compiler.compile();
 
   let imports = "";
-  if (compiler.state.helpersUsed.iconNode) {
-    imports += "var __iN = Discourse.__widget_helpers.iconNode; ";
-  }
-  if (compiler.state.helpersUsed.rawHtml) {
-    imports += "var __rH = Discourse.__widget_helpers.rawHtml; ";
-  }
+
+  Object.keys(compiler.state.helpersUsed).forEach(h => {
+    let id = compiler.state.helpersUsed[h];
+    imports += `var __h${id} = Discourse.__widget_helpers.${h}; `;
+  });
 
   return `function(attrs, state) { ${imports}var _r = [];\n${code}\nreturn _r; }`;
 }

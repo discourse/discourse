@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_dependency 'reviewable'
 require_dependency 'user_destroyer'
 
@@ -9,28 +11,26 @@ class ReviewableQueuedPost < Reviewable
   end
 
   def build_actions(actions, guardian, args)
-    if guardian.is_staff?
 
-      unless approved?
-        actions.add(:approve_post) do |a|
-          a.icon = 'check'
-          a.label = "reviewables.actions.approve_post.title"
-        end
+    unless approved?
+      actions.add(:approve_post) do |a|
+        a.icon = 'check'
+        a.label = "reviewables.actions.approve_post.title"
       end
+    end
 
-      unless rejected?
-        actions.add(:reject_post) do |a|
-          a.icon = 'times'
-          a.label = "reviewables.actions.reject_post.title"
-        end
+    unless rejected?
+      actions.add(:reject_post) do |a|
+        a.icon = 'times'
+        a.label = "reviewables.actions.reject_post.title"
       end
+    end
 
-      if pending? && guardian.can_delete_user?(created_by)
-        actions.add(:delete_user) do |action|
-          action.icon = 'trash-alt'
-          action.label = 'reviewables.actions.delete_user.title'
-          action.confirm_message = 'reviewables.actions.delete_user.confirm'
-        end
+    if pending? && guardian.can_delete_user?(created_by)
+      actions.add(:delete_user) do |action|
+        action.icon = 'trash-alt'
+        action.label = 'reviewables.actions.delete_user.title'
+        action.confirm_message = 'reviewables.actions.delete_user.confirm'
       end
     end
 
@@ -38,11 +38,14 @@ class ReviewableQueuedPost < Reviewable
   end
 
   def build_editable_fields(fields, guardian, args)
-    return unless guardian.is_staff?
 
     # We can edit category / title if it's a new topic
     if topic_id.blank?
-      fields.add('category_id', :category)
+
+      # Only staff can edit category for now, since in theory a category group reviewer could
+      # post in a category they don't have access to.
+      fields.add('category_id', :category) if guardian.is_staff?
+
       fields.add('payload.title', :text)
       fields.add('payload.tags', :tags)
     end
@@ -120,6 +123,9 @@ class ReviewableQueuedPost < Reviewable
     delete_options = {
       context: I18n.t('reviewables.actions.delete_user.reason'),
       delete_posts: true,
+      block_urls: true,
+      block_email: true,
+      block_ip: true,
       delete_as_spammer: true
     }
 
@@ -138,13 +144,12 @@ end
 #
 # Table name: reviewables
 #
-#  id                      :bigint(8)        not null, primary key
+#  id                      :bigint           not null, primary key
 #  type                    :string           not null
 #  status                  :integer          default(0), not null
 #  created_by_id           :integer          not null
 #  reviewable_by_moderator :boolean          default(FALSE), not null
 #  reviewable_by_group_id  :integer
-#  claimed_by_id           :integer
 #  category_id             :integer
 #  topic_id                :integer
 #  score                   :float            default(0.0), not null
@@ -160,6 +165,7 @@ end
 #
 # Indexes
 #
+#  index_reviewables_on_reviewable_by_group_id                 (reviewable_by_group_id)
 #  index_reviewables_on_status_and_created_at                  (status,created_at)
 #  index_reviewables_on_status_and_score                       (status,score)
 #  index_reviewables_on_status_and_type                        (status,type)

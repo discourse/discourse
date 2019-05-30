@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class UserActionsController < ApplicationController
 
   def index

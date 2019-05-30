@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class PlainTextToMarkdown
   SIGNATURE_SEPARATOR ||= "-- ".freeze
 
@@ -15,7 +17,7 @@ class PlainTextToMarkdown
     prepare_lines
     classify_lines
 
-    markdown = ""
+    markdown = +""
     last_quote_level = 0
     last_line_blank = false
 
@@ -172,7 +174,7 @@ class PlainTextToMarkdown
   end
 
   def escape_special_characters(text)
-    escaped_text = ""
+    escaped_text = +""
 
     text.split(URL_REGEX).each do |text_part|
       if text_part =~ URL_REGEX

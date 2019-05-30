@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Auth::GoogleOAuth2Authenticator < Auth::ManagedAuthenticator
   def name
     "google_oauth2"

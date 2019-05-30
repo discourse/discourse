@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class RemoveSeedColorScheme < ActiveRecord::Migration[4.2]
   def up
     execute "DELETE FROM color_schemes WHERE id = 1"

@@ -1,10 +1,12 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 require 'highline/import'
 require 'highline/simulate'
 
 RSpec.describe "Post rake tasks" do
-  let!(:post) { Fabricate(:post, raw: 'The quick brown fox jumps over the lazy dog') }
-  let!(:tricky_post) { Fabricate(:post, raw: 'Today ^Today') }
+  fab!(:post) { Fabricate(:post, raw: 'The quick brown fox jumps over the lazy dog') }
+  fab!(:tricky_post) { Fabricate(:post, raw: 'Today ^Today') }
 
   before do
     Rake::Task.clear
@@ -45,7 +47,7 @@ RSpec.describe "Post rake tasks" do
 
   describe 'rebake_match' do
     it 'rebakes matched posts' do
-      post.update_attributes(cooked: '')
+      post.update(cooked: '')
 
       HighLine::Simulate.with('y') do
         Rake::Task['posts:rebake_match'].invoke('brown')
@@ -67,6 +69,18 @@ RSpec.describe "Post rake tasks" do
 
       post.reload
       expect(post.custom_fields[Post::MISSING_UPLOADS]).to eq([url])
+    end
+
+    it 'should skip all the posts with "ignored" custom field' do
+      post = Fabricate(:post, raw: "A sample post <img src='#{url}'>")
+      post.custom_fields[Post::MISSING_UPLOADS_IGNORED] = true
+      post.save_custom_fields
+      upload.destroy!
+
+      Rake::Task['posts:missing_uploads'].invoke
+
+      post.reload
+      expect(post.custom_fields[Post::MISSING_UPLOADS]).to be_nil
     end
   end
 end

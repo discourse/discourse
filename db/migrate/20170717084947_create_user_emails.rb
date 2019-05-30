@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'migration/column_dropper'
 
 class CreateUserEmails < ActiveRecord::Migration[4.2]

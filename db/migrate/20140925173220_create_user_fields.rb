@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreateUserFields < ActiveRecord::Migration[4.2]
   def change
     create_table :user_fields do |t|

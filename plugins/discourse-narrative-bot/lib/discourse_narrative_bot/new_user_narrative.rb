@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'distributed_mutex'
 
 module DiscourseNarrativeBot
@@ -532,7 +534,10 @@ module DiscourseNarrativeBot
     end
 
     def url_helpers(url, opts = {})
-      Rails.application.routes.url_helpers.send(url, opts.merge(host: Discourse.base_url))
+      Rails.application.routes.url_helpers.public_send(
+        url,
+        opts.merge(host: Discourse.base_url)
+      )
     end
   end
 end

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'active_record/connection_adapters/abstract_adapter'
 require 'active_record/connection_adapters/postgresql_adapter'
 require 'discourse'
@@ -138,6 +140,7 @@ end
 module ActiveRecord
   module ConnectionHandling
     def postgresql_fallback_connection(config)
+      return postgresql_connection(config) if ARGV.include?("db:migrate")
       fallback_handler = ::PostgreSQLFallbackHandler.instance
       config = config.symbolize_keys
 

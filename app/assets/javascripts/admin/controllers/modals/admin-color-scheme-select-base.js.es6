@@ -5,9 +5,9 @@ export default Ember.Controller.extend(ModalFunctionality, {
 
   actions: {
     selectBase() {
-      this.get("adminCustomizeColors").send(
+      this.adminCustomizeColors.send(
         "newColorSchemeWithBase",
-        this.get("selectedBaseThemeId")
+        this.selectedBaseThemeId
       );
       this.send("closeModal");
     }

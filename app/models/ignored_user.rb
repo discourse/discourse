@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class IgnoredUser < ActiveRecord::Base
   belongs_to :user
   belongs_to :ignored_user, class_name: "User"
@@ -7,7 +9,7 @@ end
 #
 # Table name: ignored_users
 #
-#  id              :bigint(8)        not null, primary key
+#  id              :bigint           not null, primary key
 #  user_id         :integer          not null
 #  ignored_user_id :integer          not null
 #  created_at      :datetime         not null

@@ -200,7 +200,6 @@ ko:
   private_message_abbrev: "메시지"
   rss_description:
     latest: "최신 토픽"
-    hot: "화제 토픽"
     top: "인기 토픽"
     top_all: "역대 최고 인기 토픽"
     top_yearly: "연간 인기 토픽"
@@ -282,22 +281,6 @@ ko:
       글을 드래그해서 선택한 다음에, 표시되는 '답글 인용하기'버튼을 눌러서 답글을 추가하는 식으로 쓰신 답글을 편집할 수 있습니다.
 
       다른 사람도 깨알같이 흩어진 답글을 읽는 것 보다는, 깊이 있게 작성된 몇개의 답글을 읽는 편이 토픽보기에 더 편하답니다.
-    dominating_topic: |2
-
-      ### 다른 사람도 대화에 끼워주세요
-
-      이 토픽이 완전소중하신가 봅니다 &ndash;%{percent}% 넘게 답글을 쓰셨네요.
-
-      다른 사람들이 이 내용에 대해 충분히 생각할 만한 시간을 주셨나요?
-    get_a_room: |2
-
-      ### 다른 사람한테도 답글을 써보세요
-
-      이 토픽안에서만 %{count}번이나 @%{reply_username} 님에게 답글을 쓰셨네요.
-
-      이 토론에서 *다른 사람*에게도 관심을 주시는 건 어떨까요? 무릇 훌륭한 토론이란 여러 목소리와 관점이 어우러지는 법이죠.
-
-      이 주제에 대하여, 개인적으로 더 심도깊은 대화를 이어가고 싶다면 [개인 메시지를 보내보세요](%{base_path}/u/%{reply_username}).
     too_many_replies: |2
 
       ### 이 토픽 답글 제한량을 모두 채우셨습니다
@@ -464,8 +447,7 @@ ko:
         other: "약 %{count}년"
     distance_in_words_verbose:
       half_a_minute: "방금 전"
-      less_than_x_seconds:
-        other: "방금 전"
+      less_than_x_seconds: "방금 전"
       x_seconds:
         other: "%{count}초 전"
       less_than_x_minutes:
@@ -1266,7 +1248,6 @@ ko:
     tag_style: "태그 배지 시각 스타일"
     min_trust_level_to_tag_topics: "토픽에 태깅할 수 있는 최소 신뢰도"
     suppress_overlapping_tags_in_list: "토픽 이름에 태그가 포함되어있으면 그 태그는 숨기기"
-    remove_muted_tags_from_latest: "무시한 태그를 포함한 토픽은 최신 토픽 목록에서 숨기기"
     errors:
       invalid_email: "유효하지 않은 이메일 주소입니다."
       invalid_username: "해당 이름의 사용자가 없습니다."
@@ -1574,7 +1555,6 @@ ko:
       unread_messages: "읽지않은 메시지"
       unread_notifications: "읽지않은 알림"
       liked_received: "받은 좋아요 수"
-      new_posts: "새 포스트"
       new_users: "새로운 사용자"
       popular_topics: "인기 토픽"
       follow_topic: "이 토픽 팔로우"
@@ -1602,8 +1582,6 @@ ko:
     see_more: "더"
     search_title: "이 사이트 검색"
     search_button: "검색"
-  terms_of_service:
-    title: "서비스 이용약관"
   deleted: "삭제되었습니다"
   image: "이미지"
   upload:
@@ -1643,9 +1621,6 @@ ko:
     default_theme_name: "라이트"
     light_theme_name: "라이트"
     dark_theme_name: "다크"
-  about: "소개"
-  guidelines: "가이드라인"
-  privacy: "개인정보처리방침"
   edit_this_page: "이 페이지 수정"
   csv_export:
     boolean_yes: "네"
@@ -1852,7 +1827,6 @@ ko:
     title: "태그"
     staff_tag_disallowed: '"%{tag}" 태그는 운영진만 붙일 수 있습니다.'
     staff_tag_remove_disallowed: '"%{tag}" 태그는 운영진만 제거할 수 있습니다.'
-    minimum_required_tags: "최소 %{count}개의 태그를 선택해야합니다."
   rss_by_tag: "토픽에%{tag}태그가 달렸습니다"
   finish_installation:
     congratulations: "축하합니다. Discourse를 설치하셨습니다!"
@@ -1927,14 +1901,10 @@ ko:
         fields:
           logo:
             label: "기본 로고"
-          logo_small:
-            label: "컴팩트 로고"
       icons:
         title: "아이콘"
         fields:
-          favicon:
-            label: "작은 아이콘"
-          apple_touch_icon:
+          large_icon:
             label: "큰 아이콘"
       homepage:
         description: "저희는 최근 토픽을 홈페이지에 노출하는 것을 추천합니다. 하지만, 원하신다면 홈페이지에 카테고리(토픽의 그룹)를 보이게 할 수도 있습니다."
@@ -1968,6 +1938,8 @@ ko:
     not_found: "찾을 수 없음"
     unknown: "알수없음"
   reviewables:
+    sensitivity:
+      disabled: "비활성"
     actions:
       agree:
         title: "동의..."
@@ -1979,6 +1951,8 @@ ko:
         title: "글 숨기기"
       delete_spammer:
         title: "스패머 삭제"
+      delete_single:
+        title: "삭제"
       delete:
         title: "삭제..."
       disagree:

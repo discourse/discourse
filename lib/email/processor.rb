@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Email
 
   class Processor
@@ -125,7 +127,7 @@ module Email
     end
 
     def set_incoming_email_rejection_message(incoming_email, message)
-      incoming_email.update_attributes!(rejection_message: message) if incoming_email
+      incoming_email.update!(rejection_message: message) if incoming_email
     end
 
     def log_email_process_failure(mail_string, exception)

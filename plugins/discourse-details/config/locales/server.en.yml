@@ -1,3 +1,5 @@
 en:
   site_settings:
     details_enabled: "Enable the details feature. If you change this, you must rebake all posts with: \"rake posts:rebake\"."
+  details:
+    excerpt_details: "(click for more details)"

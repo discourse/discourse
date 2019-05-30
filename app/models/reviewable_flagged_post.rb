@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_dependency 'reviewable'
 
 class ReviewableFlaggedPost < Reviewable
@@ -99,7 +101,9 @@ class ReviewableFlaggedPost < Reviewable
       action.deferred_by_id = performed_by.id
       # so callback is called
       action.save
-      action.add_moderator_post_if_needed(performed_by, :ignored, args[:post_was_deleted])
+      unless args[:expired]
+        action.add_moderator_post_if_needed(performed_by, :ignored, args[:post_was_deleted])
+      end
     end
 
     if actions.first.present?
@@ -211,7 +215,8 @@ class ReviewableFlaggedPost < Reviewable
   def perform_delete_and_ignore_replies(performed_by, args)
     result = perform_ignore(performed_by, args)
 
-    replies = PostReply.where(post_id: post.id).includes(:reply).map(&:reply)
+    reply_ids = post.reply_ids(Guardian.new(performed_by), only_replies_to_single_post: false)
+    replies = Post.where(id: reply_ids.map { |r| r[:id] })
     PostDestroyer.new(performed_by, post).destroy
     replies.each { |reply| PostDestroyer.new(performed_by, reply).destroy }
 
@@ -226,11 +231,7 @@ class ReviewableFlaggedPost < Reviewable
 
   def perform_delete_and_agree_replies(performed_by, args)
     result = agree(performed_by, args)
-
-    replies = PostReply.where(post_id: post.id).includes(:reply).map(&:reply)
-    PostDestroyer.new(performed_by, post).destroy
-    replies.each { |reply| PostDestroyer.new(performed_by, reply).destroy }
-
+    PostDestroyer.delete_with_replies(performed_by, post)
     result
   end
 
@@ -243,12 +244,16 @@ protected
 
     trigger_spam = false
     actions.each do |action|
-      action.agreed_at = Time.zone.now
-      action.agreed_by_id = performed_by.id
-      # so callback is called
-      action.save
-      action.add_moderator_post_if_needed(performed_by, :agreed, args[:post_was_deleted])
-      trigger_spam = true if action.post_action_type_id == PostActionType.types[:spam]
+      ActiveRecord::Base.transaction do
+        action.agreed_at = Time.zone.now
+        action.agreed_by_id = performed_by.id
+        # so callback is called
+        action.save
+        DB.after_commit do
+          action.add_moderator_post_if_needed(performed_by, :agreed, args[:post_was_deleted])
+          trigger_spam = true if action.post_action_type_id == PostActionType.types[:spam]
+        end
+      end
     end
 
     DiscourseEvent.trigger(:confirmed_spam_post, post) if trigger_spam
@@ -282,13 +287,12 @@ end
 #
 # Table name: reviewables
 #
-#  id                      :bigint(8)        not null, primary key
+#  id                      :bigint           not null, primary key
 #  type                    :string           not null
 #  status                  :integer          default(0), not null
 #  created_by_id           :integer          not null
 #  reviewable_by_moderator :boolean          default(FALSE), not null
 #  reviewable_by_group_id  :integer
-#  claimed_by_id           :integer
 #  category_id             :integer
 #  topic_id                :integer
 #  score                   :float            default(0.0), not null
@@ -304,6 +308,7 @@ end
 #
 # Indexes
 #
+#  index_reviewables_on_reviewable_by_group_id                 (reviewable_by_group_id)
 #  index_reviewables_on_status_and_created_at                  (status,created_at)
 #  index_reviewables_on_status_and_score                       (status,score)
 #  index_reviewables_on_status_and_type                        (status,type)

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_dependency 'jobs/base'
 require_dependency 'email'
 require_dependency 'email_token'
@@ -22,8 +24,8 @@ class User < ActiveRecord::Base
   include HasDestroyedWebHook
 
   has_many :posts
-  has_many :notifications, dependent: :destroy
-  has_many :topic_users, dependent: :destroy
+  has_many :notifications, dependent: :delete_all
+  has_many :topic_users, dependent: :delete_all
   has_many :category_users, dependent: :destroy
   has_many :tag_users, dependent: :destroy
   has_many :user_api_keys, dependent: :destroy
@@ -49,7 +51,9 @@ class User < ActiveRecord::Base
   has_many :user_warnings
   has_many :user_archived_messages, dependent: :destroy
   has_many :email_change_requests, dependent: :destroy
-  has_many :directory_items, dependent: :delete_all
+
+  # see before_destroy
+  has_many :directory_items
   has_many :user_auth_tokens, dependent: :destroy
   has_many :user_auth_token_logs, dependent: :destroy
 
@@ -75,8 +79,16 @@ class User < ActiveRecord::Base
     where(method: UserSecondFactor.methods[:totp], enabled: true)
   }, class_name: "UserSecondFactor"
 
+  has_one :anonymous_user_master, class_name: 'AnonymousUser'
+  has_one :anonymous_user_shadow, ->(record) { where(active: true) }, foreign_key: :master_user_id, class_name: 'AnonymousUser'
+
+  has_one :master_user, through: :anonymous_user_master
+  has_one :shadow_user, through: :anonymous_user_shadow, source: :user
+
   has_one :user_stat, dependent: :destroy
   has_one :user_profile, dependent: :destroy, inverse_of: :user
+  has_one :profile_background_upload, through: :user_profile
+  has_one :card_background_upload, through: :user_profile
   has_one :single_sign_on_record, dependent: :destroy
   belongs_to :approved_by, class_name: 'User'
   belongs_to :primary_group, class_name: 'Group'
@@ -100,6 +112,7 @@ class User < ActiveRecord::Base
   validates_presence_of :username
   validate :username_validator, if: :will_save_change_to_username?
   validate :password_validator
+  validate :name_validator, if: :will_save_change_to_name?
   validates :name, user_full_name: true, if: :will_save_change_to_name?, length: { maximum: 255 }
   validates :ip_address, allowed_ip_address: { on: :create, message: :signup_not_allowed }
   validates :primary_email, presence: true
@@ -141,6 +154,12 @@ class User < ActiveRecord::Base
     # we need to bypass the default scope here, which appears not bypassed for :delete_all
     # however :destroy it is bypassed
     PostAction.with_deleted.where(user_id: self.id).delete_all
+
+    # This is a perf optimisation to ensure we hit the index
+    # without this we need to scan a much larger number of rows
+    DirectoryItem.where(user_id: self.id)
+      .where('period_type in (?)', DirectoryItem.period_types.values)
+      .delete_all
   end
 
   # Skip validating email, for example from a particular auth provider plugin
@@ -164,12 +183,9 @@ class User < ActiveRecord::Base
   # excluding fake users like the system user or anonymous users
   scope :real, -> { human_users.where('NOT EXISTS(
                      SELECT 1
-                     FROM user_custom_fields ucf
-                     WHERE
-                       ucf.user_id = users.id AND
-                       ucf.name = ? AND
-                       ucf.value::int > 0
-                  )', 'master_id') }
+                     FROM anonymous_users a
+                     WHERE a.user_id = users.id
+                  )') }
 
   # TODO-PERF: There is no indexes on any of these
   # and NotifyMailingListSubscribers does a select-all-and-loop
@@ -341,7 +357,7 @@ class User < ActiveRecord::Base
 
   def self.unstage(params)
     if user = User.where(staged: true).with_email(params[:email].strip.downcase).first
-      params.each { |k, v| user.send("#{k}=", v) }
+      params.each { |k, v| user.public_send("#{k}=", v) }
       user.active = false
       user.unstage
     end
@@ -737,17 +753,19 @@ class User < ActiveRecord::Base
   end
 
   def self.system_avatar_template(username)
+    normalized_username = normalize_username(username)
+
     # TODO it may be worth caching this in a distributed cache, should be benched
     if SiteSetting.external_system_avatars_enabled
       url = SiteSetting.external_system_avatars_url.dup
-      url = "#{Discourse::base_uri}#{url}" unless url =~ /^https?:\/\//
-      url.gsub! "{color}", letter_avatar_color(username.downcase)
-      url.gsub! "{username}", username
-      url.gsub! "{first_letter}", username[0].downcase
+      url = +"#{Discourse::base_uri}#{url}" unless url =~ /^https?:\/\//
+      url.gsub! "{color}", letter_avatar_color(normalized_username)
+      url.gsub! "{username}", CGI.escape(username)
+      url.gsub! "{first_letter}", CGI.escape(normalized_username.grapheme_clusters.first)
       url.gsub! "{hostname}", Discourse.current_hostname
       url
     else
-      "#{Discourse.base_uri}/letter_avatar/#{username.downcase}/{size}/#{LetterAvatar.version}.png"
+      "#{Discourse.base_uri}/letter_avatar/#{normalized_username}/{size}/#{LetterAvatar.version}.png"
     end
   end
 
@@ -978,7 +996,7 @@ class User < ActiveRecord::Base
   end
 
   def secure_category_ids
-    cats = self.admin? ? Category.where(read_restricted: true) : secure_categories.references(:categories)
+    cats = self.admin? ? Category.unscoped.where(read_restricted: true) : secure_categories.references(:categories)
     cats.pluck('categories.id').sort
   end
 
@@ -1014,7 +1032,7 @@ class User < ActiveRecord::Base
       api_key.regenerate!(created_by)
       api_key
     else
-      ApiKey.create(user: self, key: SecureRandom.hex(32), created_by: created_by)
+      ApiKey.create!(user: self, key: SecureRandom.hex(32), created_by: created_by)
     end
   end
 
@@ -1116,7 +1134,7 @@ class User < ActiveRecord::Base
   end
 
   def create_user_profile
-    UserProfile.create(user_id: id)
+    UserProfile.create!(user_id: id)
   end
 
   def set_random_avatar
@@ -1125,7 +1143,7 @@ class User < ActiveRecord::Base
       if urls.present?
         if upload = Upload.find_by(url: urls.sample)
           update_column(:uploaded_avatar_id, upload.id)
-          UserAvatar.create(user_id: id, custom_upload_id: upload.id)
+          UserAvatar.create!(user_id: id, custom_upload_id: upload.id)
         end
       end
     end
@@ -1134,7 +1152,7 @@ class User < ActiveRecord::Base
   def anonymous?
     SiteSetting.allow_anonymous_posting &&
       trust_level >= 1 &&
-      custom_fields["master_id"].to_i > 0
+      !!anonymous_user_master
   end
 
   def is_singular_admin?
@@ -1260,11 +1278,11 @@ class User < ActiveRecord::Base
   end
 
   def create_user_option
-    UserOption.create(user_id: id)
+    UserOption.create!(user_id: id)
   end
 
   def create_email_token
-    email_tokens.create(email: email)
+    email_tokens.create!(email: email)
   end
 
   def ensure_password_is_hashed
@@ -1319,17 +1337,31 @@ class User < ActiveRecord::Base
 
   def username_validator
     username_format_validator || begin
-      existing = DB.query(
-        USERNAME_EXISTS_SQL,
-        username: self.class.normalize_username(username)
-      )
+      if will_save_change_to_username?
+        existing = DB.query(
+          USERNAME_EXISTS_SQL,
+          username: self.class.normalize_username(username)
+        )
 
-      user_id = existing.select { |u| u.is_user }.first&.id
-      same_user = user_id && user_id == self.id
+        user_id = existing.select { |u| u.is_user }.first&.id
+        same_user = user_id && user_id == self.id
 
-      if will_save_change_to_username? && existing.present? && !same_user
-        errors.add(:username, I18n.t(:'user.username.unique'))
+        if existing.present? && !same_user
+          errors.add(:username, I18n.t(:'user.username.unique'))
+        end
+
+        if confirm_password?(username) || confirm_password?(username.downcase)
+          errors.add(:username, :same_as_password)
+        end
       end
+    end
+  end
+
+  def name_validator
+    if name.present? &&
+      (confirm_password?(name) || confirm_password?(name&.downcase))
+
+      errors.add(:name, :same_as_password)
     end
   end
 
@@ -1339,7 +1371,7 @@ class User < ActiveRecord::Base
     values = []
 
     %w{watching watching_first_post tracking muted}.each do |s|
-      category_ids = SiteSetting.send("default_categories_#{s}").split("|")
+      category_ids = SiteSetting.get("default_categories_#{s}").split("|")
       category_ids.each do |category_id|
         values << "(#{self.id}, #{category_id}, #{CategoryUser.notification_levels[s.to_sym]})"
       end

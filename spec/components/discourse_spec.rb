@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 require 'discourse'
 
@@ -109,8 +111,8 @@ describe Discourse do
 
   context '#site_contact_user' do
 
-    let!(:admin) { Fabricate(:admin) }
-    let!(:another_admin) { Fabricate(:admin) }
+    fab!(:admin) { Fabricate(:admin) }
+    fab!(:another_admin) { Fabricate(:admin) }
 
     it 'returns the user specified by the site setting site_contact_username' do
       SiteSetting.site_contact_username = another_admin.username

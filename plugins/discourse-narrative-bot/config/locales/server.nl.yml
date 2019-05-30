@@ -75,5 +75,3 @@ nl:
       reset_trigger: 'start'
       skip_trigger: 'overslaan'
       help_trigger: 'help weergeven'
-    new_user_narrative:
-      reset_trigger: "nieuwe gebruiker"

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # rake docker:test is designed to be used inside the discourse/docker_test image
 # running it anywhere else will likely fail
 #
@@ -30,6 +32,7 @@
 #       docker run -e SKIP_CORE=1 SINGLE_PLUGIN='my-awesome-plugin' -v $(pwd)/my-awesome-plugin:/var/www/discourse/plugins/my-awesome-plugin discourse/discourse_test:release
 
 def run_or_fail(command)
+  log(command)
   pid = Process.spawn(command)
   Process.wait(pid)
   $?.exitstatus == 0
@@ -43,6 +46,10 @@ def run_or_fail_prettier(*patterns)
     puts "Skipping prettier. Pattern not found."
     true
   end
+end
+
+def log(message)
+  puts "[#{Time.now.strftime("%Y-%m-%d %H:%M:%S")}] #{message}"
 end
 
 desc 'Run all tests (JS and code in a standalone environment)'
@@ -139,7 +146,8 @@ task 'docker:test' do
             spec_partials = Dir["spec/**/*_spec.rb"].sort.in_groups(total, false)
             # quick and dirty load balancing
             if (spec_partials.count > 3)
-              spec_partials[0].concat(spec_partials[total - 1].shift(40))
+              spec_partials[0].concat(spec_partials[total - 1].shift(30))
+              spec_partials[1].concat(spec_partials[total - 2].shift(30))
             end
 
             params << spec_partials[subset].join(' ')
@@ -154,7 +162,7 @@ task 'docker:test' do
           if ENV["SINGLE_PLUGIN"]
             @good &&= run_or_fail("bundle exec rake plugin:spec['#{ENV["SINGLE_PLUGIN"]}']")
           else
-            @good &&= run_or_fail("bundle exec rake plugin:spec")
+            @good &&= run_or_fail("RSPEC_FAILFAST=1 bundle exec rake plugin:spec")
           end
         end
         puts "travis_fold:end:ruby_tests" if ENV["TRAVIS"]

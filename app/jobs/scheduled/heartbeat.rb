@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Jobs
 
   # used to ensure at least 1 sidekiq is running correctly

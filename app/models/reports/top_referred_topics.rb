@@ -1,5 +1,8 @@
-Report.add_report("top_referred_topics") do |report|
-  report.category_filtering = true
+# frozen_string_literal: true
+
+Report.add_report('top_referred_topics') do |report|
+  category_filter = report.filters.dig(:category)
+  report.add_filter('category', default: category_filter)
 
   report.modes = [:table]
 
@@ -10,12 +13,12 @@ Report.add_report("top_referred_topics") do |report|
         title: :topic_title,
         id: :topic_id
       },
-      title: I18n.t("reports.top_referred_topics.labels.topic")
+      title: I18n.t('reports.top_referred_topics.labels.topic')
     },
     {
       property: :num_clicks,
       type: :number,
-      title: I18n.t("reports.top_referred_topics.labels.num_clicks")
+      title: I18n.t('reports.top_referred_topics.labels.num_clicks')
     }
   ]
 
@@ -23,7 +26,7 @@ Report.add_report("top_referred_topics") do |report|
     end_date: report.end_date,
     start_date: report.start_date,
     limit: report.limit || 8,
-    category_id: report.category_id
+    category_id: category_filter
   }
   result = nil
   result = IncomingLinksReport.find(:top_referred_topics, options)

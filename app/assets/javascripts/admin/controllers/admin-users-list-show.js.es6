@@ -2,6 +2,7 @@ import debounce from "discourse/lib/debounce";
 import { i18n } from "discourse/lib/computed";
 import AdminUser from "admin/models/admin-user";
 import CanCheckEmails from "discourse/mixins/can-check-emails";
+import computed from "ember-addons/ember-computed-decorators";
 
 export default Ember.Controller.extend(CanCheckEmails, {
   model: null,
@@ -14,9 +15,10 @@ export default Ember.Controller.extend(CanCheckEmails, {
   selectAll: false,
   searchHint: i18n("search_hint"),
 
-  title: function() {
-    return I18n.t("admin.users.titles." + this.get("query"));
-  }.property("query"),
+  @computed("query")
+  title(query) {
+    return I18n.t("admin.users.titles." + query);
+  },
 
   _filterUsers: debounce(function() {
     this._refreshUsers();
@@ -25,11 +27,11 @@ export default Ember.Controller.extend(CanCheckEmails, {
   _refreshUsers() {
     this.set("refreshing", true);
 
-    AdminUser.findAll(this.get("query"), {
-      filter: this.get("listFilter"),
-      show_emails: this.get("showEmails"),
-      order: this.get("order"),
-      ascending: this.get("ascending")
+    AdminUser.findAll(this.query, {
+      filter: this.listFilter,
+      show_emails: this.showEmails,
+      order: this.order,
+      ascending: this.ascending
     })
       .then(result => this.set("model", result))
       .finally(() => this.set("refreshing", false));

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_dependency 'post_action_destroyer'
 
 class PostOwnerChanger

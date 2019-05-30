@@ -1,13 +1,15 @@
 import { ajax } from "discourse/lib/ajax";
 import BadgeGrouping from "discourse/models/badge-grouping";
 import RestModel from "discourse/models/rest";
+import computed from "ember-addons/ember-computed-decorators";
 
 const Badge = RestModel.extend({
   newBadge: Ember.computed.none("id"),
 
-  url: function() {
-    return Discourse.getURL(`/badges/${this.get("id")}/${this.get("slug")}`);
-  }.property(),
+  @computed
+  url() {
+    return Discourse.getURL(`/badges/${this.id}/${this.slug}`);
+  },
 
   /**
     Update this badge with the response returned by the server on save.
@@ -31,10 +33,11 @@ const Badge = RestModel.extend({
     }
   },
 
-  badgeTypeClassName: function() {
-    const type = this.get("badge_type.name") || "";
+  @computed("badge_type.name")
+  badgeTypeClassName(type) {
+    type = type || "";
     return "badge-type-" + type.toLowerCase();
-  }.property("badge_type.name"),
+  },
 
   /**
     Save and update the badge from the server's response.
@@ -47,9 +50,9 @@ const Badge = RestModel.extend({
       requestType = "POST";
     const self = this;
 
-    if (this.get("id")) {
+    if (this.id) {
       // We are updating an existing badge.
-      url += "/" + this.get("id");
+      url += "/" + this.id;
       requestType = "PUT";
     }
 
@@ -73,8 +76,8 @@ const Badge = RestModel.extend({
     @returns {Promise} A promise that resolves to the server response
   **/
   destroy: function() {
-    if (this.get("newBadge")) return Ember.RSVP.resolve();
-    return ajax("/admin/badges/" + this.get("id"), {
+    if (this.newBadge) return Ember.RSVP.resolve();
+    return ajax("/admin/badges/" + this.id, {
       type: "DELETE"
     });
   }

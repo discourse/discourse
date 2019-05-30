@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Modified version of: https://github.com/steventen/base62-rb
 
 module Base62

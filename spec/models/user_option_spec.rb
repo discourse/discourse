@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 require_dependency 'user_option'
 
@@ -17,7 +19,7 @@ describe UserOption do
   end
 
   describe "should_be_redirected_to_top" do
-    let!(:user) { Fabricate(:user) }
+    fab!(:user) { Fabricate(:user) }
 
     it "should be redirected to top when there is a reason to" do
       user.user_option.expects(:redirected_to_top).returns(reason: "42")
@@ -31,7 +33,7 @@ describe UserOption do
   end
 
   describe "defaults" do
-    let(:user) { Fabricate(:user) }
+    fab!(:user) { Fabricate(:user) }
 
     it "should not hide the profile and presence by default" do
       expect(user.user_option.hide_profile_and_presence).to eq(false)
@@ -39,8 +41,8 @@ describe UserOption do
   end
 
   describe "#mailing_list_mode" do
-    let!(:forum_user) { Fabricate(:user) }
-    let!(:mailing_list_user) { Fabricate(:user) }
+    fab!(:forum_user) { Fabricate(:user) }
+    fab!(:mailing_list_user) { Fabricate(:user) }
 
     before do
       forum_user.user_option.update(mailing_list_mode: false)
@@ -61,7 +63,7 @@ describe UserOption do
   end
 
   describe ".redirected_to_top" do
-    let!(:user) { Fabricate(:user) }
+    fab!(:user) { Fabricate(:user) }
 
     it "should have no reason when `SiteSetting.redirect_users_to_top_page` is disabled" do
       SiteSetting.redirect_users_to_top_page = false

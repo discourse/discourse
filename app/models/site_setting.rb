@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'site_setting_extension'
 require_dependency 'global_path'
 require_dependency 'site_settings/yaml_loader'
@@ -187,6 +189,7 @@ class SiteSetting < ActiveRecord::Base
     digest_logo
     mobile_logo
     large_icon
+    manifest_icon
     favicon
     apple_touch_icon
     twitter_summary_large_image
@@ -194,6 +197,10 @@ class SiteSetting < ActiveRecord::Base
     push_notifications_icon
   }.each do |setting_name|
     define_singleton_method("site_#{setting_name}_url") do
+      if SiteIconManager.respond_to?("#{setting_name}_url")
+        return SiteIconManager.public_send("#{setting_name}_url")
+      end
+
       upload = self.public_send(setting_name)
       upload ? full_cdn_url(upload.url) : ''
     end

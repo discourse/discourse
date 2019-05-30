@@ -60,7 +60,7 @@ te:
     template:
       body: "ఈ దిగువ క్షేత్రాలతో సమస్య ఉంది"
       header:
-        one: ఒక దోషం వల్ల ఈ %[model] భద్రపరుచుట వీలవలేదు
+        one: "ఒక దోషం వల్ల ఈ %[model] భద్రపరుచుట వీలవలేదు"
         other: "%{count} దోషాల వల్ల  %{model} భద్రపరుచుట వీలవలేదు"
     embed:
       load_from_remote: "ఈ టపా లోడింగులో దోషం"
@@ -110,7 +110,6 @@ te:
   read_full_topic: "పూర్తి విషయం చదువు"
   rss_description:
     latest: "తాజా విషయాలు"
-    hot: "వేడివేడి విషయాలు"
   too_late_to_edit: "ఈ టపా పురాతన కాలంలో సృష్టించబడింది. ఇప్పుడు ఇహ సవరించలేము లేదా తొలగించలేము."
   excerpt_image: "బొమ్మ"
   groups:
@@ -210,45 +209,43 @@ te:
     distance_in_words:
       half_a_minute: "< 1ని"
       less_than_x_seconds:
-        one: "< 1సె"
+        one: "< %{count}సె"
         other: "<%{count}సె"
       x_seconds:
-        one: "1సె"
+        one: "%{count}సె"
         other: "%{count}సె"
       less_than_x_minutes:
-        one: "< 1ని"
+        one: "< %{count}ని"
         other: "< %{count}ని"
       x_minutes:
-        one: "1ని"
+        one: "%{count}ని"
         other: "%{count}ని"
       about_x_hours:
-        one: "1గం"
+        one: "%{count}గం"
         other: "%{count}గం"
       x_days:
-        one: "1రో"
+        one: "%{count}రో"
         other: "%{count}రో"
       about_x_months:
-        one: "1నెల"
+        one: "%{count}నెల"
         other: "%{count}నెల"
       x_months:
-        one: "1నెల"
+        one: "%{count}నెల"
         other: "%{count}నెల"
       about_x_years:
-        one: "1సం"
+        one: "%{count}సం"
         other: "%{count}సం"
       over_x_years:
-        one: "> 1సం"
+        one: "> %{count}సం"
         other: "> %{count}సం"
       almost_x_years:
-        one: "1సం"
+        one: "%{count}సం"
         other: "%{count}సం"
     distance_in_words_verbose:
       half_a_minute: "ఇప్పుడే"
-      less_than_x_seconds:
-        one: "ఇప్పుడే"
-        other: "ఇప్పుడే"
+      less_than_x_seconds: "ఇప్పుడే"
       x_seconds:
-        one: "1 సెకన్ వెనుక"
+        one: "%{count} సెకన్ వెనుక"
         other: "%{count} సెకన్ల వెనుక"
       less_than_x_minutes:
         one: "ఒక్క నిమిషం ముందు"
@@ -257,10 +254,10 @@ te:
         one: "ఒక్క నిమిషం ముందు"
         other: "%{count} నిమిషాలు ముందు"
       about_x_hours:
-        one: "1 గంట ముందు"
+        one: "%{count} గంట ముందు"
         other: "%{count} గంటల ముందు"
       x_days:
-        one: "1 రోజు ముందు"
+        one: "%{count} రోజు ముందు"
         other: "%{count} రోజుల ముందు"
       about_x_months:
         one: "రమారమీ ఒక మాసం ముందు"
@@ -632,8 +629,6 @@ te:
     see_more: "ఇంకా"
     search_title: "ఈ సైట్ వెదుకు"
     search_button: "వెతుకు"
-  terms_of_service:
-    title: "సేవా నియమాలు"
   deleted: "తొలగించారు"
   image: "బొమ్మ"
   upload:
@@ -649,9 +644,6 @@ te:
     sender_body_blank: "ముఖ్యభాగం ఖాళీగా ఉంది"
   color_schemes:
     base_theme_name: "ఆధారం"
-  about: "గురించి"
-  guidelines: "మార్గదర్శకాలు"
-  privacy: "ఆంతరంగికం"
   edit_this_page: "ఈ పేజిని సవరించు"
   csv_export:
     boolean_yes: "అవును"
@@ -751,6 +743,8 @@ te:
         title: "సభ్యుడిని సస్పెండు చేయి"
       delete_spammer:
         title: "స్పామరును తొలగించు"
+      delete_single:
+        title: "తొలగించు"
       disagree:
         title: "ఒప్పుకోకు"
       approve:

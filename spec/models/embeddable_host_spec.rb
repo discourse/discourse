@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 describe EmbeddableHost do
@@ -56,7 +58,7 @@ describe EmbeddableHost do
   end
 
   describe "it works with ports" do
-    let!(:host) { Fabricate(:embeddable_host, host: 'localhost:8000') }
+    fab!(:host) { Fabricate(:embeddable_host, host: 'localhost:8000') }
 
     it "works as expected" do
       expect(EmbeddableHost.url_allowed?('http://localhost:8000/eviltrout')).to eq(true)
@@ -64,7 +66,7 @@ describe EmbeddableHost do
   end
 
   describe "url_allowed?" do
-    let!(:host) { Fabricate(:embeddable_host) }
+    fab!(:host) { Fabricate(:embeddable_host) }
 
     it 'works as expected' do
       expect(EmbeddableHost.url_allowed?('http://eviltrout.com')).to eq(true)

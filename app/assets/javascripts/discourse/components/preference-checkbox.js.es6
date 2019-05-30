@@ -1,14 +1,17 @@
+import computed from "ember-addons/ember-computed-decorators";
+
 export default Ember.Component.extend({
   classNames: ["controls"],
 
-  label: function() {
-    return I18n.t(this.get("labelKey"));
-  }.property("labelKey"),
+  @computed("labelKey")
+  label(labelKey) {
+    return I18n.t(labelKey);
+  },
 
   change() {
-    const warning = this.get("warning");
+    const warning = this.warning;
 
-    if (warning && this.get("checked")) {
+    if (warning && this.checked) {
       this.warning();
       return false;
     }

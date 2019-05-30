@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class PollOptionSerializer < ApplicationSerializer
 
   attributes :id, :html, :votes

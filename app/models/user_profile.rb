@@ -1,16 +1,21 @@
+# frozen_string_literal: true
+
 require_dependency 'upload_creator'
 class UserProfile < ActiveRecord::Base
+  self.ignored_columns = %w{
+    card_background
+    profile_background
+  }
 
   belongs_to :user, inverse_of: :user_profile
+  belongs_to :card_background_upload, class_name: "Upload"
+  belongs_to :profile_background_upload, class_name: "Upload"
 
   validates :bio_raw, length: { maximum: 3000 }
   validates :website, url: true, allow_blank: true, if: Proc.new { |c| c.new_record? || c.website_changed? }
   validates :user, presence: true
   before_save :cook
   after_save :trigger_badges
-
-  validates :profile_background, upload_url: true, if: :profile_background_changed?
-  validates :card_background, upload_url: true, if: :card_background_changed?
 
   validate :website_domain_validator, if: Proc.new { |c| c.new_record? || c.website_changed? }
 
@@ -19,6 +24,7 @@ class UserProfile < ActiveRecord::Base
   BAKED_VERSION = 1
 
   def bio_excerpt(length = 350, opts = {})
+    return nil if bio_cooked.blank?
     excerpt = PrettyText.excerpt(bio_cooked, length, opts).sub(/<br>$/, '')
     return excerpt if excerpt.blank? || (user.has_trust_level?(TrustLevel[1]) && !user.suspended?)
     PrettyText.strip_links(excerpt)
@@ -30,7 +36,6 @@ class UserProfile < ActiveRecord::Base
   end
 
   def bio_summary
-    return nil unless bio_cooked.present?
     bio_excerpt(500, strip_links: true, text_entities: true)
   end
 
@@ -40,23 +45,19 @@ class UserProfile < ActiveRecord::Base
   end
 
   def upload_card_background(upload)
-    self.card_background = upload.url
-    self.save!
+    self.update!(card_background_upload: upload)
   end
 
   def clear_card_background
-    self.card_background = ""
-    self.save!
+    self.update!(card_background_upload: nil)
   end
 
   def upload_profile_background(upload)
-    self.profile_background = upload.url
-    self.save!
+    self.update!(profile_background_upload: upload)
   end
 
   def clear_profile_background
-    self.profile_background = ""
-    self.save!
+    self.update!(profile_background_upload: nil)
   end
 
   def self.rebake_old(limit)
@@ -150,21 +151,26 @@ end
 #
 # Table name: user_profiles
 #
-#  user_id              :integer          not null, primary key
-#  location             :string
-#  website              :string
-#  bio_raw              :text
-#  bio_cooked           :text
-#  profile_background   :string(255)
-#  dismissed_banner_key :integer
-#  bio_cooked_version   :integer
-#  badge_granted_title  :boolean          default(FALSE)
-#  card_background      :string(255)
-#  views                :integer          default(0), not null
+#  user_id                      :integer          not null, primary key
+#  location                     :string
+#  website                      :string
+#  bio_raw                      :text
+#  bio_cooked                   :text
+#  dismissed_banner_key         :integer
+#  bio_cooked_version           :integer
+#  badge_granted_title          :boolean          default(FALSE)
+#  views                        :integer          default(0), not null
+#  profile_background_upload_id :integer
+#  card_background_upload_id    :integer
 #
 # Indexes
 #
 #  index_user_profiles_on_bio_cooked_version  (bio_cooked_version)
 #  index_user_profiles_on_card_background     (card_background)
 #  index_user_profiles_on_profile_background  (profile_background)
+#
+# Foreign Keys
+#
+#  fk_rails_...  (card_background_upload_id => uploads.id)
+#  fk_rails_...  (profile_background_upload_id => uploads.id)
 #

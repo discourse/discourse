@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Who can see and use tags belonging to a tag group.
 class TagGroupPermission < ActiveRecord::Base
   belongs_to :tag_group
@@ -12,9 +14,9 @@ end
 #
 # Table name: tag_group_permissions
 #
-#  id              :bigint(8)        not null, primary key
-#  tag_group_id    :bigint(8)        not null
-#  group_id        :bigint(8)        not null
+#  id              :bigint           not null, primary key
+#  tag_group_id    :bigint           not null
+#  group_id        :bigint           not null
 #  permission_type :integer          default(1), not null
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null

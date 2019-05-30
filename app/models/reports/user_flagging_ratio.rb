@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 Report.add_report("user_flagging_ratio") do |report|
   report.data = []
 

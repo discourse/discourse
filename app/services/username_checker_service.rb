@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class UsernameCheckerService
   def initialize(allow_reserved_username: false)
     @allow_reserved_username = allow_reserved_username

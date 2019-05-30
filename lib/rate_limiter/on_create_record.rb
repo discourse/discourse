@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class RateLimiter
 
   # A mixin we can use on ActiveRecord Models to automatically rate limit them
@@ -14,9 +16,9 @@ class RateLimiter
 
       limit_key = "create_#{self.class.name.underscore}"
       max_setting = if user && user.new_user? && SiteSetting.has_setting?("rate_limit_new_user_#{limit_key}")
-        SiteSetting.send("rate_limit_new_user_#{limit_key}")
+        SiteSetting.get("rate_limit_new_user_#{limit_key}")
       else
-        SiteSetting.send("rate_limit_#{limit_key}")
+        SiteSetting.get("rate_limit_#{limit_key}")
       end
       @rate_limiter = RateLimiter.new(user, limit_key, 1, max_setting)
     end
@@ -38,7 +40,7 @@ class RateLimiter
         self.after_create do |*args|
           next if @rate_limits_disabled
 
-          if rate_limiter = send(limiter_method)
+          if rate_limiter = public_send(limiter_method)
             rate_limiter.performed!
             @performed ||= {}
             @performed[limiter_method] = true
@@ -47,14 +49,14 @@ class RateLimiter
 
         self.after_destroy do
           next if @rate_limits_disabled
-          if rate_limiter = send(limiter_method)
+          if rate_limiter = public_send(limiter_method)
             rate_limiter.rollback!
           end
         end
 
         self.after_rollback do
           next if @rate_limits_disabled
-          if rate_limiter = send(limiter_method)
+          if rate_limiter = public_send(limiter_method)
             if @performed.present? && @performed[limiter_method]
               rate_limiter.rollback!
               @performed[limiter_method] = false

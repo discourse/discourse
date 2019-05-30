@@ -1,6 +1,15 @@
-let _topicFooterButtons = [];
+let _topicFooterButtons = {};
 
 export function registerTopicFooterButton(button) {
+  if (!button.id) {
+    Ember.error(`Attempted to register a topic button: ${button} with no id.`);
+    return;
+  }
+
+  if (_topicFooterButtons[button.id]) {
+    return;
+  }
+
   const defaultButton = {
     // id of the button, required
     id: null,
@@ -38,12 +47,11 @@ export function registerTopicFooterButton(button) {
 
   const normalizedButton = Object.assign(defaultButton, button);
 
-  if (!normalizedButton.id) {
-    Ember.error(`Attempted to register a topic button: ${button} with no id.`);
-    return;
-  }
-
-  if (!normalizedButton.icon && !normalizedButton.title) {
+  if (
+    !normalizedButton.icon &&
+    !normalizedButton.title &&
+    !normalizedButton.translatedTitle
+  ) {
     Ember.error(
       `Attempted to register a topic button: ${
         button.id
@@ -52,14 +60,14 @@ export function registerTopicFooterButton(button) {
     return;
   }
 
-  _topicFooterButtons.push(normalizedButton);
-
-  _topicFooterButtons = _topicFooterButtons.uniqBy("id");
+  _topicFooterButtons[normalizedButton.id] = normalizedButton;
 }
 
 export function getTopicFooterButtons() {
   const dependentKeys = [].concat(
-    ..._topicFooterButtons.map(tfb => tfb.dependentKeys).filter(x => x)
+    ...Object.values(_topicFooterButtons)
+      .map(tfb => tfb.dependentKeys)
+      .filter(x => x)
   );
 
   const computedFunc = Ember.computed({
@@ -77,7 +85,7 @@ export function getTopicFooterButtons() {
         return field;
       };
 
-      return _topicFooterButtons
+      return Object.values(_topicFooterButtons)
         .filter(button => _compute(button, "displayed"))
         .map(button => {
           const computedButon = {};

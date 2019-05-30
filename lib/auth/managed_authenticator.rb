@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Auth::ManagedAuthenticator < Auth::Authenticator
   def description_for_user(user)
     info = UserAssociatedAccount.find_by(provider_name: name, user_id: user.id)&.info

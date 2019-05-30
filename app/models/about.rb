@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class About
   include ActiveModel::Serialization
   include StatsCacheable

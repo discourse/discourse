@@ -1,7 +1,7 @@
 import { acceptance } from "helpers/qunit-helpers";
 acceptance("Admin - Search Logs", { loggedIn: true });
 
-QUnit.test("show search logs", async assert => {
+QUnit.skip("show search logs", async assert => {
   await visit("/admin/logs/search_logs");
 
   assert.ok($("table.search-logs-list.grid").length, "has the div class");

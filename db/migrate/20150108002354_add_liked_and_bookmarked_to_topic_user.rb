@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddLikedAndBookmarkedToTopicUser < ActiveRecord::Migration[4.2]
   def up
     add_column :topic_users, :liked, :boolean, default: false

@@ -3,8 +3,8 @@ import TagGroup from "discourse/models/tag-group";
 export default Ember.Controller.extend({
   actions: {
     selectTagGroup(tagGroup) {
-      if (this.get("selectedItem")) {
-        this.get("selectedItem").set("selected", false);
+      if (this.selectedItem) {
+        this.selectedItem.set("selected", false);
       }
       this.set("selectedItem", tagGroup);
       tagGroup.set("selected", true);
@@ -17,7 +17,7 @@ export default Ember.Controller.extend({
         id: "new",
         name: I18n.t("tagging.groups.new_name")
       });
-      this.get("model").pushObject(newTagGroup);
+      this.model.pushObject(newTagGroup);
       this.send("selectTagGroup", newTagGroup);
     }
   }

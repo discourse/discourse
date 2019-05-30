@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 require_dependency 'jobs/scheduled/clean_up_uploads'
@@ -7,8 +9,6 @@ describe Jobs::CleanUpUploads do
   def fabricate_upload(attributes = {})
     Fabricate(:upload, { created_at: 2.hours.ago }.merge(attributes))
   end
-
-  let(:upload) { fabricate_upload }
 
   before do
     SiteSetting.clean_up_uploads = true
@@ -156,7 +156,7 @@ describe Jobs::CleanUpUploads do
 
   it "does not delete profile background uploads" do
     profile_background_upload = fabricate_upload
-    UserProfile.last.update_attributes!(profile_background: profile_background_upload.url)
+    UserProfile.last.upload_profile_background(profile_background_upload)
 
     Jobs::CleanUpUploads.new.execute(nil)
 
@@ -166,7 +166,7 @@ describe Jobs::CleanUpUploads do
 
   it "does not delete card background uploads" do
     card_background_upload = fabricate_upload
-    UserProfile.last.update_attributes!(card_background: card_background_upload.url)
+    UserProfile.last.upload_card_background(card_background_upload)
 
     Jobs::CleanUpUploads.new.execute(nil)
 

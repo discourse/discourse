@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 if ENV['DISCOURSE_DUMP_HEAP'] == "1"
   require 'objspace'
   ObjectSpace.trace_object_allocations_start

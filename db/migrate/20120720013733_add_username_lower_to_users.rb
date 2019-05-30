@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddUsernameLowerToUsers < ActiveRecord::Migration[4.2]
   def up
     add_column :users, :username_lower, :string, limit: 20

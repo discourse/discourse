@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module ThemeStore; end
 
 class ThemeStore::TgzExporter
@@ -9,6 +11,10 @@ class ThemeStore::TgzExporter
     @export_name = "discourse-#{@export_name}" unless @export_name.starts_with?("discourse")
   end
 
+  def export_name
+    @export_name
+  end
+
   def package_filename
     export_package
   end
@@ -17,7 +23,6 @@ class ThemeStore::TgzExporter
     FileUtils.rm_rf(@temp_folder)
   end
 
-  private
   def export_to_folder
     FileUtils.mkdir(@temp_folder)
 
@@ -50,6 +55,7 @@ class ThemeStore::TgzExporter
     @temp_folder
   end
 
+  private
   def export_package
     export_to_folder
     Dir.chdir(@temp_folder) do

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module ImportScripts::PhpBB3
   class BookmarkImporter
     def map_bookmark(row)

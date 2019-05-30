@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class UserSerializer < BasicUserSerializer
 
   attr_accessor :omit_stats,
@@ -27,7 +29,7 @@ class UserSerializer < BasicUserSerializer
       method_name = "include_#{attr}?"
       define_method(method_name) do
         return false if scope.restrict_user_fields?(object)
-        send(attr).present?
+        public_send(attr).present?
       end
     end
   end
@@ -41,8 +43,6 @@ class UserSerializer < BasicUserSerializer
              :created_at,
              :website,
              :website_name,
-             :profile_background,
-             :card_background,
              :location,
              :can_edit,
              :can_edit_username,
@@ -80,7 +80,9 @@ class UserSerializer < BasicUserSerializer
              :second_factor_enabled,
              :second_factor_backup_enabled,
              :second_factor_remaining_backup_codes,
-             :associated_accounts
+             :associated_accounts,
+             :profile_background_upload_url,
+             :card_background_upload_url
 
   has_one :invited_by, embed: :object, serializer: BasicUserSerializer
   has_many :groups, embed: :object, serializer: BasicGroupSerializer
@@ -127,8 +129,8 @@ class UserSerializer < BasicUserSerializer
                        :location,
                        :website,
                        :website_name,
-                       :profile_background,
-                       :card_background
+                       :profile_background_upload_url,
+                       :card_background_upload_url
 
   ###
   ### ATTRIBUTES
@@ -218,15 +220,15 @@ class UserSerializer < BasicUserSerializer
   end
 
   def bio_raw
-    object.user_profile.bio_raw
+    object.user_profile&.bio_raw
   end
 
   def bio_cooked
-    object.user_profile.bio_processed
+    object.user_profile&.bio_processed
   end
 
   def website
-    object.user_profile.website
+    object.user_profile&.website
   end
 
   def website_name
@@ -243,16 +245,8 @@ class UserSerializer < BasicUserSerializer
     website.present?
   end
 
-  def profile_background
-    object.user_profile.profile_background
-  end
-
-  def card_background
-    object.user_profile.card_background
-  end
-
   def location
-    object.user_profile.location
+    object.user_profile&.location
   end
 
   def can_edit
@@ -306,7 +300,7 @@ class UserSerializer < BasicUserSerializer
   end
 
   def bio_excerpt
-    object.user_profile.bio_excerpt(350 , keep_newlines: true, keep_emoji_images: true)
+    object.user_profile&.bio_excerpt(350 , keep_newlines: true, keep_emoji_images: true)
   end
 
   def include_suspend_reason?
@@ -476,7 +470,7 @@ class UserSerializer < BasicUserSerializer
   end
 
   def profile_view_count
-    object.user_profile.views
+    object.user_profile&.views
   end
 
   def time_read
@@ -489,6 +483,14 @@ class UserSerializer < BasicUserSerializer
 
   def include_staged?
     scope.is_staff?
+  end
+
+  def profile_background_upload_url
+    object.profile_background_upload&.url
+  end
+
+  def card_background_upload_url
+    object.card_background_upload&.url
   end
 
 end

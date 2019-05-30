@@ -15,10 +15,10 @@ sq:
     default_poll_must_have_at_least_2_options: "Sondazhi duhet të ketë të paktën 2 opsione. "
     named_poll_must_have_at_least_2_options: "Poll named <strong>%{name}</strong> must have at least 2 options."
     default_poll_must_have_less_options:
-      one: "Sondazhi duhet të ketë të paktën 1 opsion."
+      one: "Sondazhi duhet të ketë të paktën %{count} opsion."
       other: "Sondazhi duhet të ketë më pak se %{count} opsione."
     named_poll_must_have_less_options:
-      one: "Sondazhi <strong>%{name}</strong> duhet të ketë më pak se 1 opsion."
+      one: "Sondazhi <strong>%{name}</strong> duhet të ketë më pak se %{count} opsion."
       other: "Sondazhi <strong>%{name}</strong> duhet të kete më pak se %{count} opsione."
     default_poll_must_have_different_options: "Sondazh duhet të ketë opsione të ndryshme."
     named_poll_must_have_different_options: "Poll named <strong>%{name}</strong> must have different options."

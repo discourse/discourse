@@ -1,26 +1,11 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 describe UserProfile do
   it 'is created automatically when a user is created' do
     user = Fabricate(:evil_trout)
     expect(user.user_profile).to be_present
-  end
-
-  context "url validation" do
-    let(:user) { Fabricate(:user) }
-    let(:upload) { Fabricate(:upload) }
-
-    it "ensures profile_background is valid" do
-      expect(Fabricate.build(:user_profile, user: user, profile_background: "---%")).not_to be_valid
-      expect(Fabricate.build(:user_profile, user: user, profile_background: "http://example.com/made-up.jpg")).not_to be_valid
-      expect(Fabricate.build(:user_profile, user: user, profile_background: upload.url)).to be_valid
-    end
-
-    it "ensures background_url is valid" do
-      expect(Fabricate.build(:user_profile, user: user, card_background: ";test")).not_to be_valid
-      expect(Fabricate.build(:user_profile, user: user, card_background: "http://example.com/no.jpg")).not_to be_valid
-      expect(Fabricate.build(:user_profile, user: user, card_background: upload.url)).to be_valid
-    end
   end
 
   describe 'rebaking' do
@@ -81,7 +66,7 @@ describe UserProfile do
     end
 
     describe 'after save' do
-      let(:user) { Fabricate(:user) }
+      fab!(:user) { Fabricate(:user) }
 
       before do
         user.user_profile.bio_raw = 'my bio'
@@ -99,7 +84,7 @@ describe UserProfile do
   end
 
   describe 'changing bio' do
-    let(:user) { Fabricate(:user) }
+    fab!(:user) { Fabricate(:user) }
 
     before do
       user.user_profile.bio_raw = "**turtle power!**"
@@ -113,8 +98,8 @@ describe UserProfile do
   end
 
   describe 'bio excerpt emojis' do
-    let(:user) { Fabricate(:user) }
-    let(:upload) { Fabricate(:upload) }
+    fab!(:user) { Fabricate(:user) }
+    fab!(:upload) { Fabricate(:upload) }
 
     before do
       CustomEmoji.create!(name: 'test', upload: upload)
@@ -144,7 +129,7 @@ describe UserProfile do
         user
       end
 
-      let(:created_user) do
+      fab!(:created_user) do
         user = Fabricate(:user)
         user.user_profile.bio_raw = 'I love http://discourse.org'
         user.user_profile.save!
@@ -211,7 +196,7 @@ describe UserProfile do
   end
 
   context '.import_url_for_user' do
-    let(:user) { Fabricate(:user) }
+    fab!(:user) { Fabricate(:user) }
 
     before do
       stub_request(:any, "thisfakesomething.something.com")
@@ -226,7 +211,7 @@ describe UserProfile do
 
         user.reload
 
-        expect(user.user_profile.profile_background).to eq(nil)
+        expect(user.profile_background_upload).to eq(nil)
       end
     end
 
@@ -238,7 +223,7 @@ describe UserProfile do
 
         user.reload
 
-        expect(user.user_profile.card_background).to eq(nil)
+        expect(user.card_background_upload).to eq(nil)
       end
     end
 

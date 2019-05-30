@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 require 'topic_view'
 
@@ -9,11 +11,11 @@ describe TopicQuery do
   #  we should remove the let! here and use freeze time to communicate how the clock moves
   let!(:user) { Fabricate(:coding_horror) }
 
-  let(:creator) { Fabricate(:user) }
+  fab!(:creator) { Fabricate(:user) }
   let(:topic_query) { TopicQuery.new(user) }
 
-  let(:moderator) { Fabricate(:moderator) }
-  let(:admin) { Fabricate(:admin) }
+  fab!(:moderator) { Fabricate(:moderator) }
+  fab!(:admin) { Fabricate(:admin) }
 
   context 'secure category' do
     it "filters categories out correctly" do
@@ -163,20 +165,20 @@ describe TopicQuery do
   end
 
   context 'tag filter' do
-    let(:tag)       { Fabricate(:tag) }
-    let(:other_tag) { Fabricate(:tag) }
-    let(:uppercase_tag) { Fabricate(:tag, name: "HeLlO") }
+    fab!(:tag)       { Fabricate(:tag) }
+    fab!(:other_tag) { Fabricate(:tag) }
+    fab!(:uppercase_tag) { Fabricate(:tag, name: "HeLlO") }
 
     before do
       SiteSetting.tagging_enabled = true
     end
 
     context "no category filter" do
-      let!(:tagged_topic1) { Fabricate(:topic, tags: [tag]) }
-      let!(:tagged_topic2) { Fabricate(:topic, tags: [other_tag]) }
-      let!(:tagged_topic3) { Fabricate(:topic, tags: [tag, other_tag]) }
-      let!(:tagged_topic4) { Fabricate(:topic, tags: [uppercase_tag]) }
-      let!(:no_tags_topic) { Fabricate(:topic) }
+      fab!(:tagged_topic1) { Fabricate(:topic, tags: [tag]) }
+      fab!(:tagged_topic2) { Fabricate(:topic, tags: [other_tag]) }
+      fab!(:tagged_topic3) { Fabricate(:topic, tags: [tag, other_tag]) }
+      fab!(:tagged_topic4) { Fabricate(:topic, tags: [uppercase_tag]) }
+      fab!(:no_tags_topic) { Fabricate(:topic) }
 
       it "returns topics with the tag when filtered to it" do
         expect(TopicQuery.new(moderator, tags: tag.name).list_latest.topics)
@@ -248,6 +250,7 @@ describe TopicQuery do
 
       muted_topic = Fabricate(:topic, tags: [muted_tag])
       tagged_topic = Fabricate(:topic, tags: [other_tag])
+      muted_tagged_topic = Fabricate(:topic, tags: [muted_tag, other_tag])
       untagged_topic = Fabricate(:topic)
 
       TagUser.create!(user_id: user.id,
@@ -255,19 +258,23 @@ describe TopicQuery do
                       notification_level: CategoryUser.notification_levels[:muted])
 
       topic_ids = topic_query.list_latest.topics.map(&:id)
-      expect(topic_ids).not_to include(muted_topic.id)
-      expect(topic_ids).to include(tagged_topic.id)
-      expect(topic_ids).to include(untagged_topic.id)
+      expect(topic_ids).to contain_exactly(tagged_topic.id, untagged_topic.id)
 
       topic_ids = topic_query.list_new.topics.map(&:id)
-      expect(topic_ids).not_to include(muted_topic.id)
-      expect(topic_ids).to include(tagged_topic.id)
-      expect(topic_ids).to include(untagged_topic.id)
+      expect(topic_ids).to contain_exactly(tagged_topic.id, untagged_topic.id)
+
+      SiteSetting.mute_other_present_tags = false
+
+      topic_ids = topic_query.list_latest.topics.map(&:id)
+      expect(topic_ids).to contain_exactly(muted_tagged_topic.id, tagged_topic.id, untagged_topic.id)
+
+      topic_ids = topic_query.list_new.topics.map(&:id)
+      expect(topic_ids).to contain_exactly(muted_tagged_topic.id, tagged_topic.id, untagged_topic.id)
     end
   end
 
   context 'a bunch of topics' do
-    let!(:regular_topic) do
+    fab!(:regular_topic) do
       Fabricate(:topic, title: 'this is a regular topic',
                         user: creator,
                         views: 100,
@@ -276,7 +283,7 @@ describe TopicQuery do
                         participant_count: 11,
                         bumped_at: 15.minutes.ago)
     end
-    let!(:pinned_topic) do
+    fab!(:pinned_topic) do
       Fabricate(:topic, title: 'this is a pinned topic',
                         user: creator,
                         views: 10,
@@ -287,7 +294,7 @@ describe TopicQuery do
                         pinned_globally: true,
                         bumped_at: 10.minutes.ago)
     end
-    let!(:archived_topic) do
+    fab!(:archived_topic) do
       Fabricate(:topic, title: 'this is an archived topic',
                         user: creator,
                         views: 50,
@@ -297,7 +304,7 @@ describe TopicQuery do
                         participant_count: 1,
                         bumped_at: 6.minutes.ago)
     end
-    let!(:invisible_topic) do
+    fab!(:invisible_topic) do
       Fabricate(:topic, title: 'this is an invisible topic',
                         user: creator,
                         views: 1,
@@ -307,7 +314,7 @@ describe TopicQuery do
                         participant_count: 3,
                         bumped_at: 5.minutes.ago)
     end
-    let!(:closed_topic) do
+    fab!(:closed_topic) do
       Fabricate(:topic, title: 'this is a closed topic',
                         user: creator,
                         views: 2,
@@ -317,7 +324,7 @@ describe TopicQuery do
                         participant_count: 2,
                         bumped_at: 1.minute.ago)
     end
-    let!(:future_topic) do
+    fab!(:future_topic) do
       Fabricate(:topic, title: 'this is a topic in far future',
                         user: creator,
                         views: 30,
@@ -415,13 +422,13 @@ describe TopicQuery do
   end
 
   context 'categorized' do
-    let(:category) { Fabricate(:category) }
+    fab!(:category) { Fabricate(:category) }
     let(:topic_category) { category.topic }
-    let!(:topic_no_cat) { Fabricate(:topic) }
-    let!(:topic_in_cat1) { Fabricate(:topic, category: category,
+    fab!(:topic_no_cat) { Fabricate(:topic) }
+    fab!(:topic_in_cat1) { Fabricate(:topic, category: category,
                                              bumped_at: 10.minutes.ago,
                                              created_at: 10.minutes.ago) }
-    let!(:topic_in_cat2) { Fabricate(:topic, category: category) }
+    fab!(:topic_in_cat2) { Fabricate(:topic, category: category) }
 
     describe '#list_new_in_category' do
       it 'returns the topic category and the categorized topic' do
@@ -433,19 +440,19 @@ describe TopicQuery do
 
     describe "category default sort order" do
       it "can use category's default sort order" do
-        category.update_attributes!(sort_order: 'created', sort_ascending: true)
+        category.update!(sort_order: 'created', sort_ascending: true)
         topic_ids = TopicQuery.new(user, category: category.id).list_latest.topics.map(&:id)
         expect(topic_ids - [topic_category.id]).to eq([topic_in_cat1.id, topic_in_cat2.id])
       end
 
       it "ignores invalid order value" do
-        category.update_attributes!(sort_order: 'funny')
+        category.update!(sort_order: 'funny')
         topic_ids = TopicQuery.new(user, category: category.id).list_latest.topics.map(&:id)
         expect(topic_ids - [topic_category.id]).to eq([topic_in_cat2.id, topic_in_cat1.id])
       end
 
       it "can be overridden" do
-        category.update_attributes!(sort_order: 'created', sort_ascending: true)
+        category.update!(sort_order: 'created', sort_ascending: true)
         topic_ids = TopicQuery.new(user, category: category.id, order: 'activity').list_latest.topics.map(&:id)
         expect(topic_ids - [topic_category.id]).to eq([topic_in_cat2.id, topic_in_cat1.id])
       end
@@ -484,8 +491,8 @@ describe TopicQuery do
     end
 
     context 'with read data' do
-      let!(:partially_read) { Fabricate(:post, user: creator).topic }
-      let!(:fully_read) { Fabricate(:post, user: creator).topic }
+      fab!(:partially_read) { Fabricate(:post, user: creator).topic }
+      fab!(:fully_read) { Fabricate(:post, user: creator).topic }
 
       before do
         TopicUser.update_last_read(user, partially_read.id, 0, 0, 0)
@@ -525,8 +532,6 @@ describe TopicQuery do
     end
 
     context 'preload api' do
-      let(:topics) {}
-
       it "preloads data correctly" do
         TopicList.preloaded_custom_fields << "tag"
         TopicList.preloaded_custom_fields << "age"
@@ -918,7 +923,7 @@ describe TopicQuery do
   end
 
   describe '#list_group_topics' do
-    let(:group) { Fabricate(:group) }
+    fab!(:group) { Fabricate(:group) }
 
     let(:user) do
       user = Fabricate(:user)
@@ -932,9 +937,9 @@ describe TopicQuery do
       user
     end
 
-    let(:user3) { Fabricate(:user) }
+    fab!(:user3) { Fabricate(:user) }
 
-    let(:private_category) do
+    fab!(:private_category) do
       Fabricate(:private_category, group: group)
     end
 
@@ -970,7 +975,7 @@ describe TopicQuery do
   end
 
   describe '#list_private_messages_group' do
-    let(:group) { Fabricate(:group) }
+    fab!(:group) { Fabricate(:group) }
 
     let!(:group_message) do
       Fabricate(:private_message_topic,
@@ -1011,13 +1016,13 @@ describe TopicQuery do
   end
 
   context "shared drafts" do
-    let(:category) { Fabricate(:category) }
-    let(:shared_drafts_category) { Fabricate(:category) }
-    let!(:topic) { Fabricate(:topic, category: shared_drafts_category) }
-    let!(:shared_draft) { Fabricate(:shared_draft, topic: topic, category: category) }
-    let(:admin) { Fabricate(:admin) }
-    let(:user) { Fabricate(:user) }
-    let(:group) { Fabricate(:group) }
+    fab!(:category) { Fabricate(:category) }
+    fab!(:shared_drafts_category) { Fabricate(:category) }
+    fab!(:topic) { Fabricate(:topic, category: shared_drafts_category) }
+    fab!(:shared_draft) { Fabricate(:shared_draft, topic: topic, category: category) }
+    fab!(:admin) { Fabricate(:admin) }
+    fab!(:user) { Fabricate(:user) }
+    fab!(:group) { Fabricate(:group) }
 
     before do
       shared_drafts_category.set_permissions(group => :full)
@@ -1068,6 +1073,18 @@ describe TopicQuery do
         expect(TopicQuery.new(admin).list_latest.topics).not_to include(partially_read) # Check we set up the topic/category correctly
         expect(TopicQuery.new(admin).list_unread.topics).to include(partially_read)
       end
+    end
+  end
+
+  describe '#list_private_messages' do
+    it "includes topics with moderator posts" do
+      private_message_topic = Fabricate(:private_message_post, user: user).topic
+
+      expect(TopicQuery.new(user).list_private_messages(user).topics).to be_empty
+
+      private_message_topic.add_moderator_post(admin, "Thank you for your flag")
+
+      expect(TopicQuery.new(user).list_private_messages(user).topics).to eq([private_message_topic])
     end
   end
 end

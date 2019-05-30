@@ -19,8 +19,8 @@ export default ComboBoxComponent.extend({
   init() {
     this._super(...arguments);
 
-    this.get("rowComponentOptions").setProperties({
-      allowUncategorized: this.get("allowUncategorized")
+    this.rowComponentOptions.setProperties({
+      allowUncategorized: this.allowUncategorized
     });
   },
 
@@ -29,7 +29,7 @@ export default ComboBoxComponent.extend({
       return computedContent;
     }
 
-    if (this.get("scopedCategoryId")) {
+    if (this.scopedCategoryId) {
       computedContent = this.categoriesByScope().map(c =>
         this.computeContentItem(c)
       );
@@ -57,7 +57,7 @@ export default ComboBoxComponent.extend({
   none(rootNone, rootNoneLabel) {
     if (
       this.siteSettings.allow_uncategorized_topics ||
-      this.get("allowUncategorized")
+      this.allowUncategorized
     ) {
       if (!isNone(rootNone)) {
         return rootNoneLabel || "category.none";
@@ -72,7 +72,7 @@ export default ComboBoxComponent.extend({
   computeHeaderContent() {
     let content = this._super(...arguments);
 
-    if (this.get("hasSelection")) {
+    if (this.hasSelection) {
       const category = Category.findById(content.value);
       const parentCategoryId = category.get("parent_category_id");
       const hasParentCategory = Ember.isPresent(parentCategoryId);
@@ -112,7 +112,7 @@ export default ComboBoxComponent.extend({
   },
 
   computeContent() {
-    return this.categoriesByScope(this.get("scopedCategoryId"));
+    return this.categoriesByScope(this.scopedCategoryId);
   },
 
   categoriesByScope(scopedCategoryId = null) {
@@ -126,7 +126,7 @@ export default ComboBoxComponent.extend({
         scopedCat.get("parent_category_id") || scopedCat.get("id");
     }
 
-    const excludeCategoryId = this.get("excludeCategoryId");
+    const excludeCategoryId = this.excludeCategoryId;
 
     return categories.filter(c => {
       const categoryId = this.valueForContentItem(c);
@@ -139,20 +139,20 @@ export default ComboBoxComponent.extend({
         return false;
       }
 
-      if (this.get("allowSubCategories") === false && c.get("parentCategory")) {
+      if (this.allowSubCategories === false && c.get("parentCategory")) {
         return false;
       }
 
       if (
-        (this.get("allowUncategorized") === false &&
+        (this.allowUncategorized === false &&
           get(c, "isUncategorizedCategory")) ||
         excludeCategoryId === categoryId
       ) {
         return false;
       }
 
-      if (this.get("permissionType")) {
-        return this.get("permissionType") === get(c, "permission");
+      if (this.permissionType) {
+        return this.permissionType === get(c, "permission");
       }
 
       return true;

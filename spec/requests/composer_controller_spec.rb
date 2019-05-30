@@ -1,7 +1,9 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe ComposerController do
-  let(:user) { Fabricate(:user) }
+  fab!(:user) { Fabricate(:user) }
 
   describe '#parse_html' do
 

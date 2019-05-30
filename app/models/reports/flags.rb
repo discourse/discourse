@@ -1,5 +1,9 @@
-Report.add_report("flags") do |report|
-  report.category_filtering = true
+# frozen_string_literal: true
+
+Report.add_report('flags') do |report|
+  category_filter = report.filters.dig(:category)
+  report.add_filter('category', default: category_filter)
+
   report.icon = 'flag'
   report.higher_is_better = false
 
@@ -9,11 +13,14 @@ Report.add_report("flags") do |report|
     :count_by_date,
     report.start_date,
     report.end_date,
-    report.category_id
+    category_filter
   )
 
   countable = ReviewableFlaggedPost.scores_with_topics
-  countable.merge!(Topic.in_category_and_subcategories(report.category_id)) if report.category_id
+
+  if category_filter
+    countable.merge!(Topic.in_category_and_subcategories(category_filter))
+  end
 
   add_counts report, countable, 'reviewable_scores.created_at'
 end

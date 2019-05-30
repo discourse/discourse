@@ -16,7 +16,7 @@ export default createPreviewComponent(659, 320, {
 
   images() {
     return {
-      logo: this.get("wizard").getLogoUrl(),
+      logo: this.wizard.getLogoUrl(),
       avatar: "/images/wizard/trout.png"
     };
   },

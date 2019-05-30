@@ -7,7 +7,7 @@
 <div class="topic-header-extra">
   {{#if siteSettings.tagging_enabled}}
     <div class="list-tags">
-      {{discourse-tags topic mode="list"}}
+      {{discourse-tags topic mode="list" tags=topic.tags}}
     </div>
   {{/if}}
   {{#if siteSettings.topic_featured_link_enabled}}

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class BadgeGrouping < ActiveRecord::Base
 
   GettingStarted = 1

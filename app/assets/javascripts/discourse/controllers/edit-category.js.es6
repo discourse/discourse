@@ -1,8 +1,12 @@
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import DiscourseURL from "discourse/lib/url";
 import { extractError } from "discourse/lib/ajax-error";
+import {
+  default as computed,
+  on,
+  observes
+} from "ember-addons/ember-computed-decorators";
 
-// Modal for editing / creating a category
 export default Ember.Controller.extend(ModalFunctionality, {
   selectedTab: null,
   saving: false,
@@ -10,9 +14,10 @@ export default Ember.Controller.extend(ModalFunctionality, {
   panels: null,
   hiddenTooltip: true,
 
-  _initPanels: function() {
+  @on("init")
+  _initPanels() {
     this.set("panels", []);
-  }.on("init"),
+  },
 
   onShow() {
     this.changeSize();
@@ -20,78 +25,84 @@ export default Ember.Controller.extend(ModalFunctionality, {
     this.set("hiddenTooltip", true);
   },
 
-  changeSize: function() {
+  @observes("model.description")
+  changeSize() {
     if (!Ember.isEmpty(this.get("model.description"))) {
       this.set("modal.modalClass", "edit-category-modal full");
     } else {
       this.set("modal.modalClass", "edit-category-modal small");
     }
-  }.observes("model.description"),
+  },
 
-  title: function() {
-    if (this.get("model.id")) {
+  @computed("model.{id,name}")
+  title(model) {
+    if (model.id) {
       return I18n.t("category.edit_dialog_title", {
-        categoryName: this.get("model.name")
+        categoryName: model.name
       });
     }
     return I18n.t("category.create");
-  }.property("model.id", "model.name"),
+  },
 
-  titleChanged: function() {
-    this.set("modal.title", this.get("title"));
-  }.observes("title"),
+  @observes("title")
+  titleChanged() {
+    this.set("modal.title", this.title);
+  },
 
-  disabled: function() {
-    if (this.get("saving") || this.get("deleting")) return true;
-    if (!this.get("model.name")) return true;
-    if (!this.get("model.color")) return true;
+  @computed("saving", "model.name", "model.color", "deleting")
+  disabled(saving, name, color, deleting) {
+    if (saving || deleting) return true;
+    if (!name) return true;
+    if (!color) return true;
     return false;
-  }.property("saving", "model.name", "model.color", "deleting"),
+  },
 
-  deleteDisabled: function() {
-    return this.get("deleting") || this.get("saving") || false;
-  }.property("disabled", "saving", "deleting"),
+  @computed("saving", "deleting")
+  deleteDisabled(saving, deleting) {
+    return deleting || saving || false;
+  },
 
-  categoryName: function() {
-    const name = this.get("name") || "";
+  @computed("name")
+  categoryName(name) {
+    name = name || "";
     return name.trim().length > 0 ? name : I18n.t("preview");
-  }.property("name"),
+  },
 
-  saveLabel: function() {
-    if (this.get("saving")) return "saving";
-    return this.get("model.id") ? "category.save" : "category.create";
-  }.property("saving", "model.id"),
+  @computed("saving", "model.id")
+  saveLabel(saving, id) {
+    if (saving) return "saving";
+    return id ? "category.save" : "category.create";
+  },
 
   actions: {
     saveCategory() {
-      const self = this,
-        model = this.get("model"),
-        parentCategory = this.site
-          .get("categories")
-          .findBy("id", parseInt(model.get("parent_category_id"), 10));
+      const model = this.model;
+      const parentCategory = this.site.categories.findBy(
+        "id",
+        parseInt(model.parent_category_id, 10)
+      );
 
       this.set("saving", true);
       model.set("parentCategory", parentCategory);
 
-      this.get("model")
+      model
         .save()
-        .then(function(result) {
-          self.set("saving", false);
-          self.send("closeModal");
+        .then(result => {
+          this.set("saving", false);
+          this.send("closeModal");
           model.setProperties({
             slug: result.category.slug,
             id: result.category.id
           });
           DiscourseURL.redirectTo("/c/" + Discourse.Category.slugFor(model));
         })
-        .catch(function(error) {
-          self.flash(extractError(error), "error");
-          self.set("saving", false);
+        .catch(error => {
+          this.flash(extractError(error), "error");
+          this.set("saving", false);
         });
     },
 
     deleteCategory() {
-      const self = this;
       this.set("deleting", true);
 
       this.send("hideModal");
@@ -99,27 +110,24 @@ export default Ember.Controller.extend(ModalFunctionality, {
         I18n.t("category.delete_confirm"),
         I18n.t("no_value"),
         I18n.t("yes_value"),
-        function(result) {
+        result => {
           if (result) {
-            self
-              .get("model")
-              .destroy()
-              .then(
-                function() {
-                  // success
-                  self.send("closeModal");
-                  DiscourseURL.redirectTo("/categories");
-                },
-                function(error) {
-                  self.flash(extractError(error), "error");
-                  self.send("reopenModal");
-                  self.displayErrors([I18n.t("category.delete_error")]);
-                  self.set("deleting", false);
-                }
-              );
+            this.model.destroy().then(
+              () => {
+                // success
+                this.send("closeModal");
+                DiscourseURL.redirectTo("/categories");
+              },
+              error => {
+                this.flash(extractError(error), "error");
+                this.send("reopenModal");
+                this.displayErrors([I18n.t("category.delete_error")]);
+                this.set("deleting", false);
+              }
+            );
           } else {
-            self.send("reopenModal");
-            self.set("deleting", false);
+            this.send("reopenModal");
+            this.set("deleting", false);
           }
         }
       );

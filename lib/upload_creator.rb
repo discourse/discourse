@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "fastimage"
 require_dependency "image_sizer"
 
@@ -130,7 +132,7 @@ class UploadCreator
       end
 
       if @upload.errors.empty? && is_image && @opts[:type] == "avatar" && @upload.extension != "svg"
-        Jobs.enqueue(:create_avatar_thumbnails, upload_id: @upload.id, user_id: user_id)
+        Jobs.enqueue(:create_avatar_thumbnails, upload_id: @upload.id)
       end
 
       if @upload.errors.empty?

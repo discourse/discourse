@@ -3,7 +3,11 @@
 class ExtraLocalesController < ApplicationController
 
   layout :false
-  skip_before_action :check_xhr, :preload_json, :redirect_to_login_if_required
+
+  skip_before_action :check_xhr,
+    :preload_json,
+    :redirect_to_login_if_required,
+    :verify_authenticity_token
 
   def show
     bundle = params[:bundle]
@@ -19,7 +23,7 @@ class ExtraLocalesController < ApplicationController
 
   def self.bundle_js_hash(bundle)
     @bundle_js_hash ||= {}
-    @bundle_js_hash[bundle] = Digest::MD5.hexdigest(bundle_js(bundle))
+    @bundle_js_hash["#{bundle}_#{I18n.locale}"] ||= Digest::MD5.hexdigest(bundle_js(bundle))
   end
 
   def self.url(bundle)
@@ -36,21 +40,20 @@ class ExtraLocalesController < ApplicationController
 
     translations = JsLocaleHelper.translations_for(locale_str)
 
-    for_key = {}
-    translations.values.each { |v| for_key.deep_merge!(v[bundle_str]) if v.has_key?(bundle_str) }
+    translations.keys.each do |l|
+      translations[l].keys.each do |k|
+        bundle_translations = translations[l].delete(k)
+        translations[l].deep_merge!(bundle_translations) if k == bundle_str
+      end
+    end
 
     js = ""
 
-    if for_key.present?
-      if plugin_for_key = JsLocaleHelper.plugin_translations(locale_str)[bundle_str]
-        for_key.deep_merge!(plugin_for_key)
-      end
-
+    if translations.present?
       js = <<~JS.squish
         (function() {
           if (window.I18n) {
-            window.I18n.extras = window.I18n.extras || [];
-            window.I18n.extras.push(#{for_key.to_json});
+            window.I18n.extras = #{translations.to_json};
           }
         })();
       JS

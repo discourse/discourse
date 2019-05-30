@@ -271,7 +271,7 @@ const SiteHeaderComponent = MountWidget.extend(Docking, PanEvents, {
   buildArgs() {
     return {
       topic: this._topic,
-      canSignUp: this.get("canSignUp")
+      canSignUp: this.canSignUp
     };
   },
 

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ThemeJavascriptCompiler
 
   module PrecompilerExtension
@@ -145,9 +147,10 @@ class ThemeJavascriptCompiler
 
   attr_accessor :content
 
-  def initialize(theme_id)
+  def initialize(theme_id, theme_name)
     @theme_id = theme_id
-    @content = ""
+    @content = +""
+    @theme_name = theme_name
   end
 
   def prepend_settings(settings_hash)
@@ -210,12 +213,18 @@ class ThemeJavascriptCompiler
     wrapped = <<~PLUGIN_API_JS
       (function() {
         if ('Discourse' in window && typeof Discourse._registerPluginCode === 'function') {
+          const __theme_name__ = "#{@theme_name.gsub('"', "\\\"")}";
           const settings = Discourse.__container__
             .lookup("service:theme-settings")
             .getObjectForTheme(#{@theme_id});
           const themePrefix = (key) => `theme_translations.#{@theme_id}.${key}`;
           Discourse._registerPluginCode('#{version}', api => {
+            try {
             #{es6_source}
+            } catch(err) {
+              const rescue = require("discourse/lib/utilities").rescueThemeError;
+              rescue(__theme_name__, err, api);
+            }
           });
         }
       })();

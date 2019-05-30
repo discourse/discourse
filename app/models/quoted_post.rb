@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class QuotedPost < ActiveRecord::Base
   belongs_to :post
   belongs_to :quoted_post, class_name: 'Post'

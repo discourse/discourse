@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class TopicPublisher
 
   def initialize(topic, published_by, category_id)

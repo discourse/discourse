@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 desc "stamp the current build with the git hash placed in version.rb"
 task "build:stamp" => :environment do
   git_version  = `git rev-parse HEAD`.strip

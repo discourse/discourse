@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'sanitize'
 
 class Search
@@ -55,12 +57,12 @@ class Search
     def add(object)
       type = object.class.to_s.downcase.pluralize
 
-      if @type_filter.present? && send(type).length == Search.per_filter
+      if @type_filter.present? && public_send(type).length == Search.per_filter
         @more_full_page_results = true
-      elsif !@type_filter.present? && send(type).length == Search.per_facet
+      elsif !@type_filter.present? && public_send(type).length == Search.per_facet
         instance_variable_set("@more_#{type}".to_sym, true)
       else
-        (send type) << object
+        (self.public_send(type)) << object
       end
     end
 

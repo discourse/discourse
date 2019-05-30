@@ -20,7 +20,6 @@ export default {
           reply_count: 1,
           reply_to_post_number: null,
           quote_count: 0,
-          avg_time: 25,
           incoming_link_count: 314,
           reads: 475,
           score: 1702.25,
@@ -89,50 +88,43 @@ export default {
               id: 2,
               count: 0,
               hidden: false,
-              can_act: true,
-              can_defer_flags: false
+              can_act: true
             },
             {
               id: 3,
               count: 0,
               hidden: false,
-              can_act: true,
-              can_defer_flags: false
+              can_act: true
             },
             {
               id: 4,
               count: 0,
               hidden: false,
-              can_act: true,
-              can_defer_flags: false
+              can_act: true
             },
             {
               id: 5,
               count: 0,
               hidden: true,
-              can_act: true,
-              can_defer_flags: false
+              can_act: true
             },
             {
               id: 6,
               count: 0,
               hidden: false,
-              can_act: true,
-              can_defer_flags: false
+              can_act: true
             },
             {
               id: 7,
               count: 0,
               hidden: false,
-              can_act: true,
-              can_defer_flags: false
+              can_act: true
             },
             {
               id: 8,
               count: 0,
               hidden: false,
-              can_act: true,
-              can_defer_flags: false
+              can_act: true
             }
           ],
           moderator: false,
@@ -164,7 +156,6 @@ export default {
           reply_count: 0,
           reply_to_post_number: null,
           quote_count: 0,
-          avg_time: 27,
           incoming_link_count: 16,
           reads: 460,
           score: 308.35,
@@ -193,50 +184,43 @@ export default {
               id: 2,
               count: 4,
               hidden: false,
-              can_act: true,
-              can_defer_flags: false
+              can_act: true
             },
             {
               id: 3,
               count: 0,
               hidden: false,
-              can_act: true,
-              can_defer_flags: false
+              can_act: true
             },
             {
               id: 4,
               count: 0,
               hidden: false,
-              can_act: true,
-              can_defer_flags: false
+              can_act: true
             },
             {
               id: 5,
               count: 0,
               hidden: true,
-              can_act: true,
-              can_defer_flags: false
+              can_act: true
             },
             {
               id: 6,
               count: 0,
               hidden: false,
-              can_act: true,
-              can_defer_flags: false
+              can_act: true
             },
             {
               id: 7,
               count: 0,
               hidden: false,
-              can_act: true,
-              can_defer_flags: false
+              can_act: true
             },
             {
               id: 8,
               count: 0,
               hidden: false,
-              can_act: true,
-              can_defer_flags: false
+              can_act: true
             }
           ],
           moderator: false,
@@ -268,7 +252,6 @@ export default {
           reply_count: 3,
           reply_to_post_number: null,
           quote_count: 0,
-          avg_time: 33,
           incoming_link_count: 5,
           reads: 449,
           score: 191.45,
@@ -307,50 +290,43 @@ export default {
               id: 2,
               count: 4,
               hidden: false,
-              can_act: true,
-              can_defer_flags: false
+              can_act: true
             },
             {
               id: 3,
               count: 0,
               hidden: false,
-              can_act: true,
-              can_defer_flags: false
+              can_act: true
             },
             {
               id: 4,
               count: 0,
               hidden: false,
-              can_act: true,
-              can_defer_flags: false
+              can_act: true
             },
             {
               id: 5,
               count: 0,
               hidden: true,
-              can_act: true,
-              can_defer_flags: false
+              can_act: true
             },
             {
               id: 6,
               count: 1,
               hidden: false,
-              can_act: true,
-              can_defer_flags: false
+              can_act: true
             },
             {
               id: 7,
               count: 0,
               hidden: false,
-              can_act: true,
-              can_defer_flags: false
+              can_act: true
             },
             {
               id: 8,
               count: 0,
               hidden: false,
-              can_act: true,
-              can_defer_flags: false
+              can_act: true
             }
           ],
           moderator: true,
@@ -382,7 +358,6 @@ export default {
           reply_count: 0,
           reply_to_post_number: null,
           quote_count: 0,
-          avg_time: 20,
           incoming_link_count: 15,
           reads: 401,
           score: 291.2,
@@ -411,50 +386,43 @@ export default {
               id: 2,
               count: 7,
               hidden: false,
-              can_act: true,
-              can_defer_flags: false
+              can_act: true
             },
             {
               id: 3,
               count: 0,
               hidden: false,
-              can_act: true,
-              can_defer_flags: false
+              can_act: true
             },
             {
               id: 4,
               count: 0,
               hidden: false,
-              can_act: true,
-              can_defer_flags: false
+              can_act: true
             },
             {
               id: 5,
               count: 0,
               hidden: true,
-              can_act: true,
-              can_defer_flags: false
+              can_act: true
             },
             {
               id: 6,
               count: 0,
               hidden: false,
-              can_act: true,
-              can_defer_flags: false
+              can_act: true
             },
             {
               id: 7,
               count: 0,
               hidden: false,
-              can_act: true,
-              can_defer_flags: false
+              can_act: true
             },
             {
               id: 8,
               count: 0,
               hidden: false,
-              can_act: true,
-              can_defer_flags: false
+              can_act: true
             }
           ],
           moderator: false,
@@ -486,7 +454,6 @@ export default {
           reply_count: 2,
           reply_to_post_number: 3,
           quote_count: 1,
-          avg_time: 22,
           incoming_link_count: 10,
           reads: 386,
           score: 213.3,
@@ -517,50 +484,43 @@ export default {
               id: 2,
               count: 2,
               hidden: false,
-              can_act: true,
-              can_defer_flags: false
+              can_act: true
             },
             {
               id: 3,
               count: 0,
               hidden: false,
-              can_act: true,
-              can_defer_flags: false
+              can_act: true
             },
             {
               id: 4,
               count: 0,
               hidden: false,
-              can_act: true,
-              can_defer_flags: false
+              can_act: true
             },
             {
               id: 5,
               count: 0,
               hidden: true,
-              can_act: true,
-              can_defer_flags: false
+              can_act: true
             },
             {
               id: 6,
               count: 0,
               hidden: false,
-              can_act: true,
-              can_defer_flags: false
+              can_act: true
             },
             {
               id: 7,
               count: 0,
               hidden: false,
-              can_act: true,
-              can_defer_flags: false
+              can_act: true
             },
             {
               id: 8,
               count: 0,
               hidden: false,
-              can_act: true,
-              can_defer_flags: false
+              can_act: true
             }
           ],
           moderator: false,
@@ -592,7 +552,6 @@ export default {
           reply_count: 1,
           reply_to_post_number: 5,
           quote_count: 0,
-          avg_time: 17,
           incoming_link_count: 4,
           reads: 329,
           score: 106.65,
@@ -633,50 +592,43 @@ export default {
               id: 2,
               count: 1,
               hidden: false,
-              can_act: true,
-              can_defer_flags: false
+              can_act: true
             },
             {
               id: 3,
               count: 0,
               hidden: false,
-              can_act: true,
-              can_defer_flags: false
+              can_act: true
             },
             {
               id: 4,
               count: 0,
               hidden: false,
-              can_act: true,
-              can_defer_flags: false
+              can_act: true
             },
             {
               id: 5,
               count: 0,
               hidden: true,
-              can_act: true,
-              can_defer_flags: false
+              can_act: true
             },
             {
               id: 6,
               count: 0,
               hidden: false,
-              can_act: true,
-              can_defer_flags: false
+              can_act: true
             },
             {
               id: 7,
               count: 0,
               hidden: false,
-              can_act: true,
-              can_defer_flags: false
+              can_act: true
             },
             {
               id: 8,
               count: 0,
               hidden: false,
-              can_act: true,
-              can_defer_flags: false
+              can_act: true
             }
           ],
           moderator: true,
@@ -708,7 +660,6 @@ export default {
           reply_count: 1,
           reply_to_post_number: 6,
           quote_count: 1,
-          avg_time: 16,
           incoming_link_count: 0,
           reads: 326,
           score: 86.0,
@@ -737,50 +688,43 @@ export default {
               id: 2,
               count: 1,
               hidden: false,
-              can_act: true,
-              can_defer_flags: false
+              can_act: true
             },
             {
               id: 3,
               count: 0,
               hidden: false,
-              can_act: true,
-              can_defer_flags: false
+              can_act: true
             },
             {
               id: 4,
               count: 0,
               hidden: false,
-              can_act: true,
-              can_defer_flags: false
+              can_act: true
             },
             {
               id: 5,
               count: 0,
               hidden: true,
-              can_act: true,
-              can_defer_flags: false
+              can_act: true
             },
             {
               id: 6,
               count: 0,
               hidden: false,
-              can_act: true,
-              can_defer_flags: false
+              can_act: true
             },
             {
               id: 7,
               count: 0,
               hidden: false,
-              can_act: true,
-              can_defer_flags: false
+              can_act: true
             },
             {
               id: 8,
               count: 0,
               hidden: false,
-              can_act: true,
-              can_defer_flags: false
+              can_act: true
             }
           ],
           moderator: false,
@@ -812,7 +756,6 @@ export default {
           reply_count: 1,
           reply_to_post_number: 7,
           quote_count: 0,
-          avg_time: 11,
           incoming_link_count: 2,
           reads: 296,
           score: 89.75,
@@ -847,50 +790,43 @@ export default {
               id: 2,
               count: 1,
               hidden: false,
-              can_act: true,
-              can_defer_flags: false
+              can_act: true
             },
             {
               id: 3,
               count: 0,
               hidden: false,
-              can_act: true,
-              can_defer_flags: false
+              can_act: true
             },
             {
               id: 4,
               count: 0,
               hidden: false,
-              can_act: true,
-              can_defer_flags: false
+              can_act: true
             },
             {
               id: 5,
               count: 0,
               hidden: true,
-              can_act: true,
-              can_defer_flags: false
+              can_act: true
             },
             {
               id: 6,
               count: 0,
               hidden: false,
-              can_act: true,
-              can_defer_flags: false
+              can_act: true
             },
             {
               id: 7,
               count: 0,
               hidden: false,
-              can_act: true,
-              can_defer_flags: false
+              can_act: true
             },
             {
               id: 8,
               count: 0,
               hidden: false,
-              can_act: true,
-              can_defer_flags: false
+              can_act: true
             }
           ],
           moderator: true,
@@ -922,7 +858,6 @@ export default {
           reply_count: 1,
           reply_to_post_number: 8,
           quote_count: 1,
-          avg_time: 10,
           incoming_link_count: 0,
           reads: 293,
           score: 79.1,
@@ -942,50 +877,43 @@ export default {
               id: 2,
               count: 1,
               hidden: false,
-              can_act: true,
-              can_defer_flags: false
+              can_act: true
             },
             {
               id: 3,
               count: 0,
               hidden: false,
-              can_act: true,
-              can_defer_flags: false
+              can_act: true
             },
             {
               id: 4,
               count: 0,
               hidden: false,
-              can_act: true,
-              can_defer_flags: false
+              can_act: true
             },
             {
               id: 5,
               count: 0,
               hidden: true,
-              can_act: true,
-              can_defer_flags: false
+              can_act: true
             },
             {
               id: 6,
               count: 0,
               hidden: false,
-              can_act: true,
-              can_defer_flags: false
+              can_act: true
             },
             {
               id: 7,
               count: 0,
               hidden: false,
-              can_act: true,
-              can_defer_flags: false
+              can_act: true
             },
             {
               id: 8,
               count: 0,
               hidden: false,
-              can_act: true,
-              can_defer_flags: false
+              can_act: true
             }
           ],
           moderator: false,
@@ -1017,7 +945,6 @@ export default {
           reply_count: 1,
           reply_to_post_number: 9,
           quote_count: 0,
-          avg_time: 7,
           incoming_link_count: 0,
           reads: 275,
           score: 75.35,
@@ -1042,50 +969,43 @@ export default {
               id: 2,
               count: 1,
               hidden: false,
-              can_act: true,
-              can_defer_flags: false
+              can_act: true
             },
             {
               id: 3,
               count: 0,
               hidden: false,
-              can_act: true,
-              can_defer_flags: false
+              can_act: true
             },
             {
               id: 4,
               count: 0,
               hidden: false,
-              can_act: true,
-              can_defer_flags: false
+              can_act: true
             },
             {
               id: 5,
               count: 0,
               hidden: true,
-              can_act: true,
-              can_defer_flags: false
+              can_act: true
             },
             {
               id: 6,
               count: 0,
               hidden: false,
-              can_act: true,
-              can_defer_flags: false
+              can_act: true
             },
             {
               id: 7,
               count: 0,
               hidden: false,
-              can_act: true,
-              can_defer_flags: false
+              can_act: true
             },
             {
               id: 8,
               count: 0,
               hidden: false,
-              can_act: true,
-              can_defer_flags: false
+              can_act: true
             }
           ],
           moderator: false,
@@ -1117,7 +1037,6 @@ export default {
           reply_count: 1,
           reply_to_post_number: 10,
           quote_count: 0,
-          avg_time: 7,
           incoming_link_count: 1,
           reads: 273,
           score: 79.95,
@@ -1142,50 +1061,43 @@ export default {
               id: 2,
               count: 1,
               hidden: false,
-              can_act: true,
-              can_defer_flags: false
+              can_act: true
             },
             {
               id: 3,
               count: 0,
               hidden: false,
-              can_act: true,
-              can_defer_flags: false
+              can_act: true
             },
             {
               id: 4,
               count: 0,
               hidden: false,
-              can_act: true,
-              can_defer_flags: false
+              can_act: true
             },
             {
               id: 5,
               count: 0,
               hidden: true,
-              can_act: true,
-              can_defer_flags: false
+              can_act: true
             },
             {
               id: 6,
               count: 0,
               hidden: false,
-              can_act: true,
-              can_defer_flags: false
+              can_act: true
             },
             {
               id: 7,
               count: 0,
               hidden: false,
-              can_act: true,
-              can_defer_flags: false
+              can_act: true
             },
             {
               id: 8,
               count: 0,
               hidden: false,
-              can_act: true,
-              can_defer_flags: false
+              can_act: true
             }
           ],
           moderator: true,
@@ -1217,7 +1129,6 @@ export default {
           reply_count: 1,
           reply_to_post_number: 11,
           quote_count: 1,
-          avg_time: 7,
           incoming_link_count: 2,
           reads: 273,
           score: 84.95,
@@ -1237,50 +1148,43 @@ export default {
               id: 2,
               count: 1,
               hidden: false,
-              can_act: true,
-              can_defer_flags: false
+              can_act: true
             },
             {
               id: 3,
               count: 0,
               hidden: false,
-              can_act: true,
-              can_defer_flags: false
+              can_act: true
             },
             {
               id: 4,
               count: 0,
               hidden: false,
-              can_act: true,
-              can_defer_flags: false
+              can_act: true
             },
             {
               id: 5,
               count: 0,
               hidden: true,
-              can_act: true,
-              can_defer_flags: false
+              can_act: true
             },
             {
               id: 6,
               count: 0,
               hidden: false,
-              can_act: true,
-              can_defer_flags: false
+              can_act: true
             },
             {
               id: 7,
               count: 0,
               hidden: false,
-              can_act: true,
-              can_defer_flags: false
+              can_act: true
             },
             {
               id: 8,
               count: 0,
               hidden: false,
-              can_act: true,
-              can_defer_flags: false
+              can_act: true
             }
           ],
           moderator: false,
@@ -1312,7 +1216,6 @@ export default {
           reply_count: 0,
           reply_to_post_number: null,
           quote_count: 0,
-          avg_time: 7,
           incoming_link_count: 11,
           reads: 290,
           score: 158.35,
@@ -1332,50 +1235,43 @@ export default {
               id: 2,
               count: 3,
               hidden: false,
-              can_act: true,
-              can_defer_flags: false
+              can_act: true
             },
             {
               id: 3,
               count: 0,
               hidden: false,
-              can_act: true,
-              can_defer_flags: false
+              can_act: true
             },
             {
               id: 4,
               count: 0,
               hidden: false,
-              can_act: true,
-              can_defer_flags: false
+              can_act: true
             },
             {
               id: 5,
               count: 0,
               hidden: true,
-              can_act: true,
-              can_defer_flags: false
+              can_act: true
             },
             {
               id: 6,
               count: 0,
               hidden: false,
-              can_act: true,
-              can_defer_flags: false
+              can_act: true
             },
             {
               id: 7,
               count: 0,
               hidden: false,
-              can_act: true,
-              can_defer_flags: false
+              can_act: true
             },
             {
               id: 8,
               count: 0,
               hidden: false,
-              can_act: true,
-              can_defer_flags: false
+              can_act: true
             }
           ],
           moderator: false,
@@ -1407,7 +1303,6 @@ export default {
           reply_count: 1,
           reply_to_post_number: 12,
           quote_count: 1,
-          avg_time: 9,
           incoming_link_count: 0,
           reads: 283,
           score: 137.05,
@@ -1436,50 +1331,43 @@ export default {
               id: 2,
               count: 3,
               hidden: false,
-              can_act: true,
-              can_defer_flags: false
+              can_act: true
             },
             {
               id: 3,
               count: 0,
               hidden: false,
-              can_act: true,
-              can_defer_flags: false
+              can_act: true
             },
             {
               id: 4,
               count: 0,
               hidden: false,
-              can_act: true,
-              can_defer_flags: false
+              can_act: true
             },
             {
               id: 5,
               count: 0,
               hidden: true,
-              can_act: true,
-              can_defer_flags: false
+              can_act: true
             },
             {
               id: 6,
               count: 0,
               hidden: false,
-              can_act: true,
-              can_defer_flags: false
+              can_act: true
             },
             {
               id: 7,
               count: 0,
               hidden: false,
-              can_act: true,
-              can_defer_flags: false
+              can_act: true
             },
             {
               id: 8,
               count: 0,
               hidden: false,
-              can_act: true,
-              can_defer_flags: false
+              can_act: true
             }
           ],
           moderator: false,
@@ -1511,7 +1399,6 @@ export default {
           reply_count: 1,
           reply_to_post_number: 14,
           quote_count: 1,
-          avg_time: 7,
           incoming_link_count: 0,
           reads: 260,
           score: 72.35,
@@ -1531,50 +1418,43 @@ export default {
               id: 2,
               count: 1,
               hidden: false,
-              can_act: true,
-              can_defer_flags: false
+              can_act: true
             },
             {
               id: 3,
               count: 0,
               hidden: false,
-              can_act: true,
-              can_defer_flags: false
+              can_act: true
             },
             {
               id: 4,
               count: 0,
               hidden: false,
-              can_act: true,
-              can_defer_flags: false
+              can_act: true
             },
             {
               id: 5,
               count: 0,
               hidden: true,
-              can_act: true,
-              can_defer_flags: false
+              can_act: true
             },
             {
               id: 6,
               count: 0,
               hidden: false,
-              can_act: true,
-              can_defer_flags: false
+              can_act: true
             },
             {
               id: 7,
               count: 0,
               hidden: false,
-              can_act: true,
-              can_defer_flags: false
+              can_act: true
             },
             {
               id: 8,
               count: 0,
               hidden: false,
-              can_act: true,
-              can_defer_flags: false
+              can_act: true
             }
           ],
           moderator: false,
@@ -1606,7 +1486,6 @@ export default {
           reply_count: 1,
           reply_to_post_number: 15,
           quote_count: 1,
-          avg_time: 7,
           incoming_link_count: 0,
           reads: 254,
           score: 71.15,
@@ -1626,50 +1505,43 @@ export default {
               id: 2,
               count: 1,
               hidden: false,
-              can_act: true,
-              can_defer_flags: false
+              can_act: true
             },
             {
               id: 3,
               count: 0,
               hidden: false,
-              can_act: true,
-              can_defer_flags: false
+              can_act: true
             },
             {
               id: 4,
               count: 0,
               hidden: false,
-              can_act: true,
-              can_defer_flags: false
+              can_act: true
             },
             {
               id: 5,
               count: 0,
               hidden: true,
-              can_act: true,
-              can_defer_flags: false
+              can_act: true
             },
             {
               id: 6,
               count: 0,
               hidden: false,
-              can_act: true,
-              can_defer_flags: false
+              can_act: true
             },
             {
               id: 7,
               count: 0,
               hidden: false,
-              can_act: true,
-              can_defer_flags: false
+              can_act: true
             },
             {
               id: 8,
               count: 0,
               hidden: false,
-              can_act: true,
-              can_defer_flags: false
+              can_act: true
             }
           ],
           moderator: false,
@@ -1701,7 +1573,6 @@ export default {
           reply_count: 2,
           reply_to_post_number: 16,
           quote_count: 1,
-          avg_time: 7,
           incoming_link_count: 0,
           reads: 255,
           score: 76.35,
@@ -1721,50 +1592,43 @@ export default {
               id: 2,
               count: 1,
               hidden: false,
-              can_act: true,
-              can_defer_flags: false
+              can_act: true
             },
             {
               id: 3,
               count: 0,
               hidden: false,
-              can_act: true,
-              can_defer_flags: false
+              can_act: true
             },
             {
               id: 4,
               count: 0,
               hidden: false,
-              can_act: true,
-              can_defer_flags: false
+              can_act: true
             },
             {
               id: 5,
               count: 0,
               hidden: true,
-              can_act: true,
-              can_defer_flags: false
+              can_act: true
             },
             {
               id: 6,
               count: 0,
               hidden: false,
-              can_act: true,
-              can_defer_flags: false
+              can_act: true
             },
             {
               id: 7,
               count: 0,
               hidden: false,
-              can_act: true,
-              can_defer_flags: false
+              can_act: true
             },
             {
               id: 8,
               count: 0,
               hidden: false,
-              can_act: true,
-              can_defer_flags: false
+              can_act: true
             }
           ],
           moderator: false,
@@ -1796,7 +1660,6 @@ export default {
           reply_count: 2,
           reply_to_post_number: 17,
           quote_count: 0,
-          avg_time: 8,
           incoming_link_count: 0,
           reads: 264,
           score: 168.2,
@@ -1821,50 +1684,43 @@ export default {
               id: 2,
               count: 7,
               hidden: false,
-              can_act: true,
-              can_defer_flags: false
+              can_act: true
             },
             {
               id: 3,
               count: 0,
               hidden: false,
-              can_act: true,
-              can_defer_flags: false
+              can_act: true
             },
             {
               id: 4,
               count: 0,
               hidden: false,
-              can_act: true,
-              can_defer_flags: false
+              can_act: true
             },
             {
               id: 5,
               count: 0,
               hidden: true,
-              can_act: true,
-              can_defer_flags: false
+              can_act: true
             },
             {
               id: 6,
               count: 0,
               hidden: false,
-              can_act: true,
-              can_defer_flags: false
+              can_act: true
             },
             {
               id: 7,
               count: 0,
               hidden: false,
-              can_act: true,
-              can_defer_flags: false
+              can_act: true
             },
             {
               id: 8,
               count: 0,
               hidden: false,
-              can_act: true,
-              can_defer_flags: false
+              can_act: true
             }
           ],
           moderator: true,
@@ -1896,7 +1752,6 @@ export default {
           reply_count: 0,
           reply_to_post_number: 18,
           quote_count: 0,
-          avg_time: 8,
           incoming_link_count: 1,
           reads: 241,
           score: 68.6,
@@ -1921,50 +1776,43 @@ export default {
               id: 2,
               count: 1,
               hidden: false,
-              can_act: true,
-              can_defer_flags: false
+              can_act: true
             },
             {
               id: 3,
               count: 0,
               hidden: false,
-              can_act: true,
-              can_defer_flags: false
+              can_act: true
             },
             {
               id: 4,
               count: 0,
               hidden: false,
-              can_act: true,
-              can_defer_flags: false
+              can_act: true
             },
             {
               id: 5,
               count: 0,
               hidden: true,
-              can_act: true,
-              can_defer_flags: false
+              can_act: true
             },
             {
               id: 6,
               count: 0,
               hidden: false,
-              can_act: true,
-              can_defer_flags: false
+              can_act: true
             },
             {
               id: 7,
               count: 0,
               hidden: false,
-              can_act: true,
-              can_defer_flags: false
+              can_act: true
             },
             {
               id: 8,
               count: 0,
               hidden: false,
-              can_act: true,
-              can_defer_flags: false
+              can_act: true
             }
           ],
           moderator: false,
@@ -1996,7 +1844,6 @@ export default {
           reply_count: 0,
           reply_to_post_number: null,
           quote_count: 0,
-          avg_time: 9,
           incoming_link_count: 2,
           reads: 244,
           score: 74.25,
@@ -2025,50 +1872,43 @@ export default {
               id: 2,
               count: 1,
               hidden: false,
-              can_act: true,
-              can_defer_flags: false
+              can_act: true
             },
             {
               id: 3,
               count: 0,
               hidden: false,
-              can_act: true,
-              can_defer_flags: false
+              can_act: true
             },
             {
               id: 4,
               count: 0,
               hidden: false,
-              can_act: true,
-              can_defer_flags: false
+              can_act: true
             },
             {
               id: 5,
               count: 0,
               hidden: true,
-              can_act: true,
-              can_defer_flags: false
+              can_act: true
             },
             {
               id: 6,
               count: 0,
               hidden: false,
-              can_act: true,
-              can_defer_flags: false
+              can_act: true
             },
             {
               id: 7,
               count: 0,
               hidden: false,
-              can_act: true,
-              can_defer_flags: false
+              can_act: true
             },
             {
               id: 8,
               count: 0,
               hidden: false,
-              can_act: true,
-              can_defer_flags: false
+              can_act: true
             }
           ],
           moderator: false,
@@ -3161,7 +3001,6 @@ export default {
           reply_count: 0,
           reply_to_post_number: null,
           quote_count: 0,
-          avg_time: null,
           incoming_link_count: 14,
           reads: 24,
           score: 224.6,
@@ -3224,7 +3063,6 @@ export default {
           reply_count: 0,
           reply_to_post_number: null,
           quote_count: 0,
-          avg_time: null,
           incoming_link_count: 6,
           reads: 22,
           score: 34.2,
@@ -3277,7 +3115,6 @@ export default {
           reply_count: 1,
           reply_to_post_number: null,
           quote_count: 0,
-          avg_time: null,
           incoming_link_count: 0,
           reads: 14,
           score: 7.2,
@@ -3330,7 +3167,6 @@ export default {
           reply_count: 0,
           reply_to_post_number: null,
           quote_count: 0,
-          avg_time: null,
           incoming_link_count: 6,
           reads: 12,
           score: 31.6,
@@ -3383,7 +3219,6 @@ export default {
           reply_count: 0,
           reply_to_post_number: 3,
           quote_count: 1,
-          avg_time: null,
           incoming_link_count: 0,
           reads: 11,
           score: 16.0,
@@ -3735,7 +3570,6 @@ export default {
           reply_count: 0,
           reply_to_post_number: null,
           quote_count: 0,
-          avg_time: null,
           incoming_link_count: 0,
           reads: 1,
           score: 0,
@@ -3784,7 +3618,6 @@ export default {
           reply_count: 0,
           reply_to_post_number: null,
           quote_count: 0,
-          avg_time: null,
           incoming_link_count: 0,
           reads: 1,
           score: 0,
@@ -3833,7 +3666,6 @@ export default {
           reply_count: 0,
           reply_to_post_number: null,
           quote_count: 0,
-          avg_time: null,
           incoming_link_count: 0,
           reads: 1,
           score: 0,
@@ -4028,7 +3860,6 @@ export default {
           reply_count: 0,
           reply_to_post_number: null,
           quote_count: 0,
-          avg_time: null,
           incoming_link_count: 0,
           reads: 1,
           score: 0,
@@ -4081,7 +3912,6 @@ export default {
           reply_count: 0,
           reply_to_post_number: null,
           quote_count: 0,
-          avg_time: null,
           incoming_link_count: 0,
           reads: 1,
           score: 0,
@@ -4299,7 +4129,6 @@ export default {
           reply_count: 0,
           reply_to_post_number: null,
           quote_count: 0,
-          avg_time: null,
           incoming_link_count: 0,
           reads: 1,
           score: 0,
@@ -4348,7 +4177,6 @@ export default {
           reply_count: 0,
           reply_to_post_number: null,
           quote_count: 0,
-          avg_time: null,
           incoming_link_count: 0,
           reads: 1,
           score: 0,
@@ -4397,7 +4225,6 @@ export default {
           reply_count: 0,
           reply_to_post_number: null,
           quote_count: 0,
-          avg_time: null,
           incoming_link_count: 0,
           reads: 1,
           score: 0,
@@ -4594,7 +4421,6 @@ export default {
           reply_count: 0,
           reply_to_post_number: null,
           quote_count: 0,
-          avg_time: null,
           incoming_link_count: 0,
           reads: 1,
           score: 0,
@@ -4643,7 +4469,6 @@ export default {
           reply_count: 0,
           reply_to_post_number: null,
           quote_count: 0,
-          avg_time: null,
           incoming_link_count: 0,
           reads: 1,
           score: 0,
@@ -4692,7 +4517,6 @@ export default {
           reply_count: 0,
           reply_to_post_number: null,
           quote_count: 0,
-          avg_time: null,
           incoming_link_count: 0,
           reads: 1,
           score: 0,
@@ -4888,7 +4712,6 @@ export default {
           reply_count: 0,
           reply_to_post_number: null,
           quote_count: 0,
-          avg_time: 15,
           incoming_link_count: 0,
           reads: 2,
           score: 1.15,
@@ -4951,7 +4774,6 @@ export default {
           reply_count: 0,
           reply_to_post_number: null,
           quote_count: 0,
-          avg_time: 16,
           incoming_link_count: 0,
           reads: 2,
           score: 1.2,

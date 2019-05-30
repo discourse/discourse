@@ -13,7 +13,7 @@ export default Ember.Component.extend({
       return;
     }
     const slug = this.get("category.fullSlug");
-    const tags = this.get("tags");
+    const tags = this.tags;
 
     this._removeClass();
 

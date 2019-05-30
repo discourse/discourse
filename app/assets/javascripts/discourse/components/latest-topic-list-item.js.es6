@@ -20,7 +20,7 @@ export default Ember.Component.extend({
       return false;
     }
 
-    return this.unhandledRowClick(e, this.get("topic"));
+    return this.unhandledRowClick(e, this.topic);
   },
 
   // Can be overwritten by plugins to handle clicks on other parts of the row

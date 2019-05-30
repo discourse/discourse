@@ -12,7 +12,7 @@ Discourse.SiteSettingsOriginal = {
   ga_universal_tracking_code: "",
   ga_universal_domain_name: "auto",
   top_menu: "latest|new|unread|categories|top",
-  post_menu: "like-count|like|share|flag|edit|bookmark|delete|admin|reply",
+  post_menu: "like|share|flag|edit|bookmark|delete|admin|reply",
   post_menu_hidden_items: "flag|edit|delete|admin",
   share_links: "twitter|facebook|email",
   category_colors:
@@ -91,6 +91,7 @@ Discourse.SiteSettingsOriginal = {
   highlighted_languages:
     "apache|bash|cs|cpp|css|coffeescript|diff|xml|http|ini|json|java|javascript|makefile|markdown|nginx|objectivec|ruby|perl|php|python|sql|handlebars",
   enable_emoji: true,
+  enable_emoji_shortcuts: true,
   emoji_set: "emoji_one",
   desktop_category_page_style: "categories_and_latest_topics",
   enable_mentions: true,

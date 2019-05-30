@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # name: discourse-presence
 # about: Show which users are writing a reply to a topic
 # version: 1.0

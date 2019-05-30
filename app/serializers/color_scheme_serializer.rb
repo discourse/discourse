@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ColorSchemeSerializer < ApplicationSerializer
   attributes :id, :name, :is_base, :base_scheme_id, :theme_id, :theme_name
   has_many :colors, serializer: ColorSchemeColorSerializer, embed: :objects

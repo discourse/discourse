@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Jobs
   class UnsilenceUsers < Jobs::Scheduled
     every 15.minutes

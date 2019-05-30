@@ -172,7 +172,6 @@ fa_IR:
         us_east_1: "شرق ایالات متحده (ویرجینیا شمالی)"
         us_east_2: "شرق ایالات متحده (اوهایو)"
         us_gov_east_1: "AWS GovCloud (ایالات متحده - شرق)"
-        us_gov_west_1: "AWS GovCloud (ایالات متحده)"
         us_west_1: "غرب ایالات متحده (کالیفرنیا شمالی)"
         us_west_2: "غرب ایالات متحده  (اورگان)"
     edit: "موضوع و دسته‌ی این موضوع را ویرایش کنید"
@@ -289,8 +288,8 @@ fa_IR:
       settings:
         save_changes: "ذخیره تغییرات"
         title: "تنظیمات"
-      title: "نیاز ها برای برسی"
       topic: "موضوع:"
+      filtered_user: "کاربر"
       user:
         username: "نام‌کاربری"
         email: "ایمیل"
@@ -301,7 +300,10 @@ fa_IR:
       save: "ذخیره"
       cancel: "لغو کردن"
       filters:
+        type:
+          title: "نوع"
         refresh: "تازه کردن"
+        category: "دسته‌بندی"
       scores:
         date: "تاریخ"
         type: "نوع"
@@ -548,6 +550,7 @@ fa_IR:
       private_message: "پیام"
       private_messages: "پیام‌ها"
       user_notifications:
+        ignore_duration_username: "نام‌کاربری"
         ignore_duration_save: "چشم پوشی"
         mute_option: "بی صدا شد"
         normal_option: "معمولی"
@@ -675,7 +678,6 @@ fa_IR:
         copy_to_clipboard_error: "خطا در کپی اطلاعات"
       second_factor:
         title: "احراز هویت دو مرحله ای"
-        disable: "از کار انداختن احراز هویت دو مرحله ای"
       change_about:
         title: "تغییر «درباره‌ی من»"
         error: "در فرآیند تغییر این مقدار خطایی روی داد."
@@ -925,12 +927,6 @@ fa_IR:
       enabled: "سایت در حال فقط خواندنی است. می‌توانید موضوعات را مشاهده کنید ولی امکان ارسال پاسخ، پسندیدن و سایر عملیات در حال حاضر غیر‌فعال است."
       login_disabled: "ورود به سیستم غیر فعال شده همزمان با اینکه سایت در حال فقط خواندنی است."
       logout_disabled: "سایت در حال فقط خواندنی است و امکان خروج در این حالت وجود ندارد."
-    logs_error_rate_notice:
-      reached: "<b>%{relativeAge}</b> – <a href='%{url}' target='_blank'>%{rate}</a> به حد مجاز از %{siteSettingRate} رسیده است."
-      exceeded: "<b>%{relativeAge}</b> – <a href='%{url}' target='_blank'>%{rate}</a> از حد مجاز %{siteSettingRate} فراتر رفته است"
-      rate:
-        one: "%{count} خطا/%{duration}"
-        other: "%{count} خطا/%{duration}"
     learn_more: "بیشتر بدانید..."
     all_time: "مجموع"
     all_time_desc: "مجموع موضوعات ایجاد شده"
@@ -980,7 +976,6 @@ fa_IR:
     trust_level: "سطح اعتماد"
     search_hint: "نام کاربری ، ایمیل یا ای پی "
     create_account:
-      disclaimer: "با ثبت نام موافقت خود را با <a href='{{privacy_link}}'>سیاست حفظ حریم خصوصی</a>  و <a href='{{tos_link}}'>شرایط استفاده از خدمات</a> اعلام می‌کنید."
       title: "ساختن حساب‌کاربری جدید"
       failed: "اشتباهی روی داده، شاید این نام کاربری پیش‌تر استفاده شده؛ پیوند فراموشی گذرواژه می‌تواند کمک کند."
     forgot_password:
@@ -1299,17 +1294,14 @@ fa_IR:
         read: "هنوز هیچ موضوعی را نخوانده‌اید."
         posted: "هنوز در هیچ موضوعی  نوشته نگذاشته‌اید."
         latest: "هیچ موضوع تازه‌ای نیست. چه بد!"
-        hot: "هیچ موضوع داغی نیست."
         bookmarks: "هنوز هیچ موضوع نشانک‌گذاری شده‌ای ندارید."
         category: "هیچ موضوعی در {{category}} نیست."
         top: "موضوع برتری وجود ندارد."
-        search: "نتیجه‌ای برای جستجو وجود ندارد."
         educate:
           new: "<p>موضوعات جدید در اینجا نمایش داده می‌شوند.</p><p>به صورت پیشفرض موضوعات جدید با علامت  <span class=\"badge new-topic badge-notification\" style=\"vertical-align:middle;line-height:inherit;\">جدید</span>نمایش داده می‌شوند\n موضوعاتی که کمتر از 2 روز از ایجادشان گذشته جدید  هستند. برای تغییر این مقدار روی گزینه</p><p><a href=\"%{userPrefsUrl}\">تنظیمات</a> کلیک کنید.</p>"
           unread: '<p>موضوعات جدید در اینجا قرار می گیرند.</p><p>به طور پیش فرض، موضوعات جدید در نظر گرفته خواهند شد و نشان داده می شوند <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">جدید</span> شاخص اگر آنها در 2 روز گذشته ایجاد شده باشند </p><p>شما می توانید این را در <a href="%{userPrefsUrl}">تنظیمات</a></p>برای خود تغییر دهید.'
       bottom:
         latest: "موضوع تازه‌ی دیگری وجود ندارد."
-        hot: "موضوع داغ دیگری وجود ندارد."
         posted: "هیچ موضوعات نوشته شده  ای وجود ندارد"
         read: "موضوع خوانده شده‌ی دیگری نیست."
         new: "موضوع تازه‌ی دیگری وجود ندارد."
@@ -1317,7 +1309,6 @@ fa_IR:
         category: "هیچ موضوع دیگری در {{category}} نیست."
         top: "موضوع برتر دیگری وجود ندارد"
         bookmarks: "موضوع نشانک‌گذاری شده‌ی دیگری وجود ندارد."
-        search: "نتیجه‌ی جستجوی دیگری وجود ندارد"
     topic:
       filter_to:
         one: "{{count}} نوشته در این موضوع وجود دارد"
@@ -1433,7 +1424,6 @@ fa_IR:
         jump_bottom: "پرش به آخرین نوشته"
         jump_prompt: "پرش به..."
         jump_prompt_of: "از %{count} نوشته"
-        jump_prompt_long: "می‌خواهید به کدام نوشته منتقل شوید؟"
         jump_bottom_with_number: "رفتن به نوشته ی %{post_number}"
         jump_prompt_or: "یا"
         total: همه نوشته‌ها
@@ -1721,50 +1711,6 @@ fa_IR:
           notify_user: "شما یک پیام به این کاربر ارسال کردید"
           bookmark: "شما  روی این نوشته نشانک گذاشتید"
           like: "شما این نوشته را پسند کردید"
-        by_you_and_others:
-          off_topic:
-            one: "شما و {{count}} کاربر دیگر این مورد را خارج از بحث گزارش کردید"
-            other: "شما و {{count}} کاربر دیگر این مورد را خارج از بحث گزارش کردید"
-          spam:
-            one: "شما و {{count}} کاربر دیگر این مورد را هرزنامه گزارش کردید"
-            other: "شما و {{count}} کاربر دیگر این مورد را هرزنامه گزارش کردید"
-          inappropriate:
-            one: "شما و {{count}} کاربر دیگر این مورد را نامناسب گزارش کردید"
-            other: "شما و {{count}} کاربر دیگر این مورد را نامناسب گزارش کردید"
-          notify_moderators:
-            one: "شما و {{count}} کاربر دیگر این مورد را برای بررسی گزارش کردید"
-            other: "شما و {{count}} کاربر دیگر این مورد را برای بررسی گزارش کردید"
-          notify_user:
-            one: "شما و {{count}} افراد دیگر به این کاربر پیام فرستاده اید"
-            other: "شما و {{count}} افراد دیگر به این کاربر پیام فرستاده اید"
-          bookmark:
-            one: "شما و {{count}} کاربر دیگر روی این نوشته نشانک گذاشتید"
-            other: "شما و {{count}} کاربر دیگر روی این نوشته نشانک گذاشتید"
-          like:
-            one: "شما و {{count}} کاربر دیگر این مورد را پسند کردید"
-            other: "شما و {{count}} کاربر دیگر این مورد را پسند کردید"
-        by_others:
-          off_topic:
-            one: "{{count}} کاربر ین مورد را خارج از بحث گزارش کردند"
-            other: "{{count}} کاربر ین مورد را خارج از بحث گزارش کردند"
-          spam:
-            one: "{{count}} کاربر ین مورد را هرزنامه گزارش کردند"
-            other: "{{count}} کاربر ین مورد را هرزنامه گزارش کردند"
-          inappropriate:
-            one: "{{count}} کاربر این مورد را نامناسب گزارش کردند"
-            other: "{{count}} کاربر این مورد را نامناسب گزارش کردند"
-          notify_moderators:
-            one: "{{count}} کاربر این مورد را برای بررسی گزارش کردند"
-            other: "{{count}} کاربر این مورد را برای بررسی گزارش کردند"
-          notify_user:
-            one: "{{count}} ارسال پیام به این کاربر"
-            other: "{{count}} ارسال پیام به این کاربر"
-          bookmark:
-            one: "{{count}} کاربر روی این نوشته نشانک گذاشتند"
-            other: "{{count}} کاربر روی این نوشته نشانک گذاشتند"
-          like:
-            one: "{{count}} کاربر این مورد را پسند کردند"
-            other: "{{count}} کاربر این مورد را پسند کردند"
       revisions:
         controls:
           first: "بازبینی نخست"
@@ -1850,6 +1796,7 @@ fa_IR:
       default_top_period: "دوره زمانی پیشفرض برترین‌ها:"
       allow_badges_label: "امکان  اهدای نشان در این دسته‌بندی را بده"
       edit_permissions: "ویرایش دسترسی‌ها"
+      review_group_name: "نام گروه"
       this_year: "امسال"
       default_position: "موقعیت پیش‌فرض"
       position_disabled: "دسته‌‌بندی‌ها به‌ترتیب فعالیت نمایش داده می‌شوند. برای کنترل ترتیب دسته‌بندی‌ها"
@@ -2007,15 +1954,9 @@ fa_IR:
           one: "آخرین ({{count}})"
           other: "آخرین ({{count}})"
         help: "موضوعات با نوشته‌های تازه"
-      hot:
-        title: "داغ"
-        help: "گزینشی از داغ‌ترین موضوعات"
       read:
         title: "خواندن"
         help: "موضوعاتی که شما خواندید، به ترتیب آخرین خوانده شده‌ها. "
-      search:
-        title: "جستجو"
-        help: "جستجو در تمام موضوعات"
       categories:
         title: "دسته‌‌بندی‌ها"
         title_in: "دسته بندی - {{categoryName}}"
@@ -2083,53 +2024,53 @@ fa_IR:
       title: "میانبر‌های صفحه‌کلید"
       jump_to:
         title: "برو به"
-        home: "<b>g</b>, <b>h</b> خانه"
-        latest: "<b>g</b>, <b>l</b> آخرین"
-        new: "<b>g</b>, <b>n</b> جدید"
-        unread: "<b>g</b>, <b>u</b> خوانده نشده"
-        categories: "<b>g</b>, <b>c</b> دسته‌بندی‌ها"
-        top: "<b>g</b>, <b>t</b> برترین"
-        bookmarks: "<b>g</b>, <b>b</b> نشانه‌گذاری‌ها"
-        profile: "<b>g</b>, <b>p</b> مشخصات"
-        messages: "<b>g</b>, <b>m</b> پیام‌ها"
+        home: "%{shortcut} خانه"
+        latest: "%{shortcut} آخرین"
+        new: "%{shortcut} جدید"
+        unread: "%{shortcut} خوانده نشده"
+        categories: "%{shortcut} دسته‌بندی‌ها"
+        top: "%{shortcut} برترین"
+        bookmarks: "%{shortcut} نشانه‌گذاری‌ها"
+        profile: "%{shortcut} مشخصات"
+        messages: "%{shortcut} پیام‌ها"
       navigation:
         title: "ناوبری"
-        jump: "<b>#</b> برو به نوشته #"
-        back: "<b>u</b> عقب"
-        up_down: "<b>k</b>/<b>j</b> برای تغییر انتخاب شده &uarr; &darr;"
-        open: "<b>o</b> یا <b>Enter</b> برای باز کردن موضوع انتخاب شده"
-        next_prev: "<b>shift</b>+<b>j</b>/<b>shift</b>+<b>k</b> بخش بعدی/قبلی"
+        jump: "%{shortcut} برو به نوشته #"
+        back: "%{shortcut} عقب"
+        up_down: "%{shortcut} برای تغییر انتخاب شده &uarr; &darr;"
+        open: "%{shortcut} برای باز کردن موضوع انتخاب شده"
+        next_prev: "%{shortcut} بخش بعدی/قبلی"
       application:
         title: "برنامه"
         create: "ایجاد موضوع جدید"
-        notifications: "<b>n</b> باز کردن اطلاعیه‌ها"
-        hamburger_menu: "<b>=</b> باز کردن منو همبرگری"
-        user_profile_menu: "<b>p</b> نمایش منو کاربری"
-        show_incoming_updated_topics: "<b>.</b> نمایش موضوعات به‌روز شده"
-        help: "<b>?</b> باز کردن کمک صفحه‌کلید"
-        dismiss_new_posts: "<b>x</b>, <b>r</b> بستن نوشته‌های جدید"
-        dismiss_topics: "<b>x</b>, <b>t</b> بستن موضوعات"
-        log_out: "<b>shift</b>+<b>z</b> <b>shift</b>+<b>z</b> خروج"
+        notifications: "%{shortcut} باز کردن اطلاعیه‌ها"
+        hamburger_menu: "%{shortcut} باز کردن منو همبرگری"
+        user_profile_menu: "%{shortcut} نمایش منو کاربری"
+        show_incoming_updated_topics: "%{shortcut} نمایش موضوعات به‌روز شده"
+        help: "%{shortcut} باز کردن کمک صفحه‌کلید"
+        dismiss_new_posts: "%{shortcut} بستن نوشته‌های جدید"
+        dismiss_topics: "%{shortcut} بستن موضوعات"
+        log_out: "%{shortcut} خروج"
       actions:
         title: "عملیات"
-        bookmark_topic: "<b>f</b> باز کردن موضوع نشانه‌گذاری شده"
-        pin_unpin_topic: "<b>shift</b>+<b>p</b> Pin/Unpin موضوع"
-        share_topic: "<b>shift</b>+<b>s</b> اشتراک‌گذاری موضوع"
-        share_post: "<b>s</b> اشتراک‌گذاری نوشته"
-        reply_as_new_topic: "<b>t</b> پاسخ به عنوان موضوع مرتبط"
-        reply_topic: "<b>shift</b>+<b>r</b> پاسخ به موضوع"
-        reply_post: "<b>q</b> پاسخ به نوشته"
-        quote_post: "<b>q</b> نقل‌قول نوشته"
-        like: "<b>l</b> پسندیدن نوشته"
-        flag: "<b>!</b> علامت‌گذاری نوشته"
-        bookmark: "<b>b</b> نشانه‌گذاری نوشته"
-        edit: "<b>e</b> ویرایش نوشته"
-        delete: "<b>d</b> حذف نوشته"
-        mark_muted: "<b>m</b>, <b>m</b> موضوع بی‌صدا"
-        mark_regular: "<b>m</b>, <b>r</b> موضوع معمولی (پیشفرض)"
-        mark_tracking: "<b>m</b>, <b>t</b> پیگیری موضوع"
-        mark_watching: "<b>m</b>, <b>w</b> نمایش موضوع"
-        print: "<b>ctrl</b>+<b>p</b> چاپ موضوع"
+        bookmark_topic: "%{shortcut} باز کردن موضوع نشانه‌گذاری شده"
+        pin_unpin_topic: "%{shortcut} Pin/Unpin موضوع"
+        share_topic: "%{shortcut} اشتراک‌گذاری موضوع"
+        share_post: "%{shortcut} اشتراک‌گذاری نوشته"
+        reply_as_new_topic: "%{shortcut} پاسخ به عنوان موضوع مرتبط"
+        reply_topic: "%{shortcut} پاسخ به موضوع"
+        reply_post: "%{shortcut} پاسخ به نوشته"
+        quote_post: "%{shortcut} نقل‌قول نوشته"
+        like: "%{shortcut} پسندیدن نوشته"
+        flag: "%{shortcut} علامت‌گذاری نوشته"
+        bookmark: "%{shortcut} نشانه‌گذاری نوشته"
+        edit: "%{shortcut} ویرایش نوشته"
+        delete: "%{shortcut} حذف نوشته"
+        mark_muted: "%{shortcut} موضوع بی‌صدا"
+        mark_regular: "%{shortcut} موضوع معمولی (پیشفرض)"
+        mark_tracking: "%{shortcut} پیگیری موضوع"
+        mark_watching: "%{shortcut} نمایش موضوع"
+        print: "%{shortcut} چاپ موضوع"
     badges:
       earned_n_times:
         one: "این مدال را %{count} بار به دست آورده"
@@ -2222,20 +2163,16 @@ fa_IR:
           read: "شما هیچ موضوعی را نخوانده‌اید."
           posted: "شما هیچ نوشته‌ای در موضوعات ندارید."
           latest: "موضوع اخیری وجود ندارد."
-          hot: "موضوع داغی وجود ندارد."
           bookmarks: "موضوع نشانه گذاری شده‌ای ندارید."
           top: "موضوع برتری وجود ندارد."
-          search: "نتیجه جستجوی دیگری وجود ندارد."
         bottom:
           latest: "موضوع تازه دیگری وجود ندارد."
-          hot: "موضوع داغ دیگری وجود ندارد"
           posted: "موضوع نوشته شده دیگری وجود ندارد"
           read: "موضوع خوانده شده دیگری وجود ندارد."
           new: "موضوع جدید دیگری وجود ندارد."
           unread: "موضوع خوانده نشده دیگری وجود ندارد."
           top: "موضوع دیگری وجود ندارد."
           bookmarks: "موضوع نشانه‌گذاری شده دیگری وجود ندارد."
-          search: "نتیجه جستجوی دیگری وجود ندارد"
     invite:
       custom_message_placeholder: "متن پیام خود را وارد کنید"
       custom_message_template_forum: "سلام، باید عضو این انجمن بشی!"
@@ -2249,7 +2186,6 @@ fa_IR:
       moderator: "مدیر"
       dashboard:
         title: "پیشخوان"
-        last_updated: "آخرین به‌ روزرسانی پیشخوان"
         version: "نسخه"
         up_to_date: "شما به روز هستید!"
         critical_available: "به روز رسانی مهم در دسترس است."
@@ -2294,6 +2230,11 @@ fa_IR:
           start_date: "تاریخ شروع"
           end_date: "تاریخ پایان"
           groups: "همه گروه‌ها"
+          filters:
+            group:
+              label: گروه
+            category:
+              label: دسته‌بندی
       commits:
         latest_changes: "آخرین تغییرات: لطفا بیشتر به‌روز‌رسانی کنید!"
         by: "توسط"
@@ -2513,7 +2454,6 @@ fa_IR:
         new: "تازه"
         new_style: "سبک جدید"
         delete: "پاک کردن"
-        delete_confirm: "حذف قالب"
         color: "رنگ"
         opacity: "تاری"
         copy: "کپی"

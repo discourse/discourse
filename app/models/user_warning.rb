@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class UserWarning < ActiveRecord::Base
   belongs_to :user
   belongs_to :topic

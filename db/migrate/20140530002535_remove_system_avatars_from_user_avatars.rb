@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # This takes all the system avatars out of the upload system, saving us a huge
 # amount of space on backups
 class RemoveSystemAvatarsFromUserAvatars < ActiveRecord::Migration[4.2]

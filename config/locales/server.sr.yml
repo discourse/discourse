@@ -83,7 +83,6 @@ sr:
   read_full_topic: "Pročitajte celu temu"
   rss_description:
     latest: "Poslednje teme"
-    hot: "Vruće teme"
     top: "Top teme"
     user_posts: "Poslednji postovi autora @%{username}"
     user_topics: "Poslednje teme autora @%{username}"
@@ -119,6 +118,7 @@ sr:
       half_a_minute: "< 1m"
     distance_in_words_verbose:
       half_a_minute: "upravo sad"
+      less_than_x_seconds: "upravo sad"
   password_reset:
     save: "Postavi Šifru"
     title: "Resetujte Šifru"
@@ -288,12 +288,7 @@ sr:
       title: "Postavi Šifru"
   page_not_found:
     see_more: "Više"
-  terms_of_service:
-    title: "Uslovi Korišćenja"
   image: "slika"
-  about: "O nama"
-  guidelines: "Smernice"
-  privacy: "Privatnost"
   csv_export:
     boolean_yes: "Da"
     boolean_no: "Ne"
@@ -391,6 +386,8 @@ sr:
         title: "Suspenduj Korisnika"
       delete_spammer:
         title: "Obriši korisnika"
+      delete_single:
+        title: "Obriši"
       disagree:
         title: "Odbaci"
       approve:

@@ -12,7 +12,7 @@ export default DropdownSelectBoxComponent.extend({
   computeHeaderContent() {
     let content = this._super(...arguments);
     const pinnedGlobally = this.get("topic.pinned_globally");
-    const pinned = this.get("computedValue");
+    const pinned = this.computedValue;
     const globally = pinnedGlobally ? "_globally" : "";
     const state = pinned ? `pinned${globally}` : "unpinned";
     const title = I18n.t(`topic_statuses.${state}.title`);
@@ -46,9 +46,9 @@ export default DropdownSelectBoxComponent.extend({
 
   actions: {
     onSelect() {
-      const topic = this.get("topic");
+      const topic = this.topic;
 
-      if (this.get("computedValue") === "unpinned") {
+      if (this.computedValue === "unpinned") {
         topic.clearPin();
       } else {
         topic.rePin();

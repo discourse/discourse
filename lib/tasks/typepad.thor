@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'open-uri'
 
 class Typepad < Thor
@@ -12,7 +14,7 @@ class Typepad < Thor
 
     backup_settings = {}
     %w(email_domains_blacklist).each do |s|
-      backup_settings[s] = SiteSetting.send(s)
+      backup_settings[s] = SiteSetting.get(s)
     end
 
     user = User.where(username_lower: options[:post_as].downcase).first
@@ -26,7 +28,6 @@ class Typepad < Thor
       exit 1
     end
 
-    inside_block = true
     input = ""
 
     entries = []
@@ -103,7 +104,7 @@ class Typepad < Thor
   ensure
     RateLimiter.enable
     backup_settings.each do |s, v|
-      SiteSetting.send("#{s}=", v)
+      SiteSetting.set(s, v)
     end
   end
 

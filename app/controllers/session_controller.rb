@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_dependency 'rate_limiter'
 require_dependency 'single_sign_on'
 require_dependency 'single_sign_on_provider'
@@ -26,7 +28,7 @@ class SessionController < ApplicationController
 
     if destination_url && return_path == path('/')
       uri = URI::parse(destination_url)
-      return_path = "#{uri.path}#{uri.query ? "?" << uri.query : ""}"
+      return_path = "#{uri.path}#{uri.query ? "?#{uri.query}" : ""}"
     end
 
     session.delete(:destination_url)
@@ -69,12 +71,16 @@ class SessionController < ApplicationController
           sso.avatar_url = UrlHelper.absolute Discourse.store.cdn_url(avatar_url)
         end
 
-        if current_user.user_profile.profile_background.present?
-          sso.profile_background_url = UrlHelper.absolute upload_cdn_path(current_user.user_profile.profile_background)
+        if current_user.user_profile.profile_background_upload.present?
+          sso.profile_background_url = UrlHelper.absolute(upload_cdn_path(
+            current_user.user_profile.profile_background_upload.url
+          ))
         end
 
-        if current_user.user_profile.card_background.present?
-          sso.card_background_url = UrlHelper.absolute upload_cdn_path(current_user.user_profile.card_background)
+        if current_user.user_profile.card_background_upload.present?
+          sso.card_background_url = UrlHelper.absolute(upload_cdn_path(
+            current_user.user_profile.card_background_upload.url
+          ))
         end
 
         if request.xhr?
@@ -223,7 +229,7 @@ class SessionController < ApplicationController
       render_sso_error(text: text || I18n.t("sso.unknown_error"), status: 500)
 
     rescue => e
-      message = "Failed to create or lookup user: #{e}."
+      message = +"Failed to create or lookup user: #{e}."
       message << "  "
       message << "  #{sso.diagnostics}"
       message << "  "

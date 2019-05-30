@@ -204,6 +204,45 @@ widgetTest("widget attaching", {
   }
 });
 
+widgetTest("magic attaching by name", {
+  template: `{{mount-widget widget="attach-test"}}`,
+
+  beforeEach() {
+    createWidget("test-embedded", { tagName: "div.embedded" });
+
+    createWidget("attach-test", {
+      tagName: "div.container",
+      template: hbs`{{test-embedded attrs=attrs}}`
+    });
+  },
+
+  test(assert) {
+    assert.ok(find(".container").length, "renders container");
+    assert.ok(find(".container .embedded").length, "renders attached");
+  }
+});
+
+widgetTest("custom attrs to a magic attached widget", {
+  template: `{{mount-widget widget="attach-test"}}`,
+
+  beforeEach() {
+    createWidget("testing", {
+      tagName: "span.value",
+      template: hbs`{{attrs.value}}`
+    });
+
+    createWidget("attach-test", {
+      tagName: "div.container",
+      template: hbs`{{testing value=(concat "hello" " " "world")}}`
+    });
+  },
+
+  test(assert) {
+    assert.ok(find(".container").length, "renders container");
+    assert.equal(find(".container .value").text(), "hello world");
+  }
+});
+
 widgetTest("handlebars d-icon", {
   template: `{{mount-widget widget="hbs-icon-test" args=args}}`,
 
@@ -219,6 +258,8 @@ widgetTest("handlebars d-icon", {
 });
 
 widgetTest("handlebars i18n", {
+  _translations: I18n.translations,
+
   template: `{{mount-widget widget="hbs-i18n-test" args=args}}`,
 
   beforeEach() {
@@ -229,13 +270,19 @@ widgetTest("handlebars i18n", {
         <a href title={{i18n "hbs_test0"}}>test</a>
       `
     });
-    I18n.extras = [
-      {
-        hbs_test0: "evil",
-        hbs_test1: "trout"
+    I18n.translations = {
+      en: {
+        js: {
+          hbs_test0: "evil",
+          hbs_test1: "trout"
+        }
       }
-    ];
+    };
     this.set("args", { key: "hbs_test1" });
+  },
+
+  afterEach() {
+    I18n.translations = this._translations;
   },
 
   test(assert) {

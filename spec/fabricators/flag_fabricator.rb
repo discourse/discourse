@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 Fabricator(:flag, from: :post_action) do
   user
   post

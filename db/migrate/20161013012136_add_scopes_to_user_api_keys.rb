@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddScopesToUserApiKeys < ActiveRecord::Migration[4.2]
   def change
     add_column :user_api_keys, :scopes, :text, array: true, null: false, default: []

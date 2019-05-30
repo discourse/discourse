@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_dependency "onpdiff"
 
 class DiscourseDiff
@@ -176,24 +178,25 @@ class DiscourseDiff
   end
 
   def add_class_or_wrap_in_tags(html_or_text, klass)
-    index_of_next_chevron = html_or_text.index(">")
-    if html_or_text.length > 0 && html_or_text[0] == '<' && index_of_next_chevron
-      index_of_class = html_or_text.index("class=")
+    result = html_or_text.dup
+    index_of_next_chevron = result.index(">")
+    if result.length > 0 && result[0] == '<' && index_of_next_chevron
+      index_of_class = result.index("class=")
       if index_of_class.nil? || index_of_class > index_of_next_chevron
         # we do not have a class for the current tag
         # add it right before the ">"
-        html_or_text.insert(index_of_next_chevron, " class=\"diff-#{klass}\"")
+        result.insert(index_of_next_chevron, " class=\"diff-#{klass}\"")
       else
         # we have a class, insert it at the beginning if not already present
-        classes = html_or_text[/class=(["'])([^\1]*)\1/, 2]
+        classes = result[/class=(["'])([^\1]*)\1/, 2]
         if classes.include?("diff-#{klass}")
-          html_or_text
+          result
         else
-          html_or_text.insert(index_of_class + "class=".length + 1, "diff-#{klass} ")
+          result.insert(index_of_class + "class=".length + 1, "diff-#{klass} ")
         end
       end
     else
-      "<#{klass}>#{html_or_text}</#{klass}>"
+      "<#{klass}>#{result}</#{klass}>"
     end
   end
 

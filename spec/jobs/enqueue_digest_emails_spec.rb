@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 require_dependency 'jobs/base'
 
@@ -30,11 +32,11 @@ describe Jobs::EnqueueDigestEmails do
         expect(Jobs::EnqueueDigestEmails.new.target_user_ids.include?(unapproved_user.id)).to eq(true)
 
         # As an admin
-        unapproved_user.update_attributes(admin: true, moderator: false)
+        unapproved_user.update(admin: true, moderator: false)
         expect(Jobs::EnqueueDigestEmails.new.target_user_ids.include?(unapproved_user.id)).to eq(true)
 
         # As an approved user
-        unapproved_user.update_attributes(admin: false, moderator: false, approved: true)
+        unapproved_user.update(admin: false, moderator: false, approved: true)
         expect(Jobs::EnqueueDigestEmails.new.target_user_ids.include?(unapproved_user.id)).to eq(true)
       end
     end
@@ -74,7 +76,6 @@ describe Jobs::EnqueueDigestEmails do
 
     context 'visited the site this week' do
       let(:user_visited_this_week) { Fabricate(:active_user, last_seen_at: 6.days.ago) }
-      let(:user_visited_this_week_email_always) { Fabricate(:active_user, last_seen_at: 6.days.ago, email_level: UserOption.email_level_types[:always]) }
 
       it "doesn't return users who have been emailed recently" do
         user = user_visited_this_week

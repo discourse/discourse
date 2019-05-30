@@ -99,7 +99,7 @@ fa_IR:
     template:
       body: "مشکلاتی با زمینه‌های دنبال شده وجود دارد:"
       header:
-        one: '%{count} خطا از ذخیره شدن %{model} جلوگیری می‌کنند.'
+        one: "%{count} خطا از ذخیره شدن %{model} جلوگیری می‌کنند."
         other: "%{count} خطا از ذخیره شدن %{model} جلوگیری می‌کنند."
     embed:
       load_from_remote: "خطایی در بارگذاری آن نوشته رخ داده است."
@@ -190,7 +190,6 @@ fa_IR:
   private_message_abbrev: "پیام"
   rss_description:
     latest: "آخرین نوشته‌ها"
-    hot: "موضوعات داغ"
     top: "برترین موضوعات"
     top_all: "برترین موضوعات در همیشه"
     top_yearly: "برترین موضوعات سالانه"
@@ -267,20 +266,6 @@ fa_IR:
       شما می‌توانید پاسخ‌های قبلی را با انتخاب متن و انتخاب گزینه <b>نقل‌قول</b> ویرایش کنید.
 
       برای دیگران راحت‌تر است که تعداد کمی پاسخ طولانی بخوانند تا چندین پاسخ کوتاه جداگانه.
-    dominating_topic: |
-      ### به دیگران اجازه پیوستن به گفتگو را بده
-
-      این موضوع برای شما مهم است &ndash; شما بیش از  %{percent}% o پاسخ‌ها را داده‌اید.
-
-      آیا مطمئنید که به دیگران زمان کافی برای رساندن منظورشان می‌دهید؟
-    get_a_room: |
-      ### در نظر بگیرید که به افراد بیشتری پاسخ دهید
-
-      شما در حال حاضر %{count} بار به @%{reply_username} در این موضوع مشخص پاسخ دادید.
-
-      آیا در نظر دارید که به دیگر کاربران هم در این بحث پاسخ دهید؟ بحث خوب بحثی است که شامل نظرات مختلف باشد.
-
-      اگر می‌خواهید به گفتو با این کاربر ادامه بدهید [پیام خصوصی ارسال کنید](%{base_path}/u/%{reply_username}).
     too_many_replies: |
       شما به حداکثر پاسخ برای این موضوع رسیدید
 
@@ -445,9 +430,7 @@ fa_IR:
         other: "%{count} سال"
     distance_in_words_verbose:
       half_a_minute: "هم اکنون"
-      less_than_x_seconds:
-        one: "هم اکنون"
-        other: "هم اکنون"
+      less_than_x_seconds: "هم اکنون"
       x_seconds:
         one: "%{count} ثانیه قبل"
         other: "%{count} ثانیه قبل"
@@ -1221,7 +1204,6 @@ fa_IR:
     tag_style: "سبک بصری نشان برچسب‌ها."
     min_trust_level_to_tag_topics: "حداقل سطح اعتماد مورد نیاز برای برچسب زدن به موضوع"
     suppress_overlapping_tags_in_list: "اگر برچسب با عنوان موضوع دقیقا یکی بودند، برچسب را نشان نده."
-    remove_muted_tags_from_latest: "موضوعاتی که برچسب غیر‌فعال دارند در قسمت آخرین موضوعات نمایش نده"
     errors:
       invalid_email: "آدرس ایمیل نامعتبر"
       invalid_username: "هیچ کاربری با این نام‌کاربری وجود ندارد."
@@ -1647,10 +1629,6 @@ fa_IR:
       subject_template:
         one: "%{count} نوشته منتظر بررسی است"
         other: "%{count} نوشته منتظر بررسی است"
-      text_body_template: |
-        سلام،
-
-        نوشته‌های کاربران جدید که منتظر تایید و بررسی هستند. [تایید یا رد کنید](%{base_url}/queued-posts).
   unsubscribe_link: |
     برای لغو اشتراک از این ایمیل‌ها،  [کلیک کنید](%{unsubscribe_url}).
   unsubscribe_link_and_mail: |
@@ -1863,7 +1841,6 @@ fa_IR:
       unread_messages: "پیام‌های خوانده نشده"
       unread_notifications: "اطلاعیه‌های خوانده نشده"
       liked_received: "پسند‌های دریافت شده"
-      new_posts: "نوشته جدید"
       new_users: "کاربران جدید"
       popular_topics: "موضوعات محبوب"
       follow_topic: "دنبال کردن موضوع"
@@ -1965,8 +1942,6 @@ fa_IR:
     welcome_message: |
       ## [خوش آمدید به %{title}](#welcome)
       داشتن حساب کاربری الزامی است. لطفا یک حساب کاربری بسازید یا وارد شوید.
-  terms_of_service:
-    title: "شرایط استفاده از خدمات"
   deleted: "حذف شد"
   image: "تصویر"
   upload:
@@ -2013,9 +1988,6 @@ fa_IR:
     default_theme_name: "روشن"
     light_theme_name: "روشن"
     dark_theme_name: "تیره"
-  about: "درباره"
-  guidelines: "دستورالعمل‌ها"
-  privacy: "خصوصی"
   edit_this_page: "ویرایش این صفحه"
   csv_export:
     boolean_yes: "بله"
@@ -2284,14 +2256,10 @@ fa_IR:
         fields:
           logo:
             label: "لوگو اصلی"
-          logo_small:
-            label: "لوگو فشرده"
       icons:
         title: "آیکن‌ها"
         fields:
-          favicon:
-            label: "آیکن کوچک"
-          apple_touch_icon:
+          large_icon:
             label: "آیکن بزرگ"
       homepage:
         description: "توصیه می‌کنیم آخرین موضوعات را در صفحه اصلی سایت نمایش دهید. اما می‌توانید دسته‌بندی‌ها (گروه‌های موضوعات) را نیز نمایش دهید."
@@ -2321,6 +2289,8 @@ fa_IR:
         title: "کاربر تعلیق شده"
       delete_spammer:
         title: "حذف هرزنگار"
+      delete_single:
+        title: "حذف"
       disagree:
         title: "مخالف"
       ignore:

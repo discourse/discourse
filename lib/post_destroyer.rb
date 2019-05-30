@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #
 # How a post is deleted is affected by who is performing the action.
 # this class contains the logic to delete it.
@@ -22,7 +24,7 @@ class PostDestroyer
             WHERE t.deleted_at IS NOT NULL AND
                   t.id = posts.topic_id
         )")
-      .where("updated_at < ? AND post_number > 1", SiteSetting.delete_removed_posts_after.hours.ago)
+      .where("updated_at < ?", SiteSetting.delete_removed_posts_after.hours.ago)
       .where("NOT EXISTS (
                   SELECT 1
                   FROM post_actions pa
@@ -35,6 +37,13 @@ class PostDestroyer
 
       PostDestroyer.new(Discourse.system_user, post, context: context).destroy
     end
+  end
+
+  def self.delete_with_replies(performed_by, post)
+    reply_ids = post.reply_ids(Guardian.new(performed_by), only_replies_to_single_post: false)
+    replies = Post.where(id: reply_ids.map { |r| r[:id] })
+    PostDestroyer.new(performed_by, post).destroy
+    replies.each { |reply| PostDestroyer.new(performed_by, reply).destroy }
   end
 
   def initialize(user, post, opts = {})
@@ -111,7 +120,7 @@ class PostDestroyer
         counts = Post.where(post_type: Post.types[:regular], topic_id: @post.topic_id).where('post_number > 1').group(:user_id).count
         counts.each do |user_id, count|
           if user_stat = UserStat.where(user_id: user_id).first
-            user_stat.update_attributes(post_count: user_stat.post_count + count)
+            user_stat.update(post_count: user_stat.post_count + count)
           end
         end
       end
@@ -176,6 +185,7 @@ class PostDestroyer
       Post.transaction do
         @post.update_column(:user_deleted, true)
         @post.topic_links.each(&:destroy)
+        @post.topic.update_column(:closed, true) if @post.is_first_post?
       end
     end
   end
@@ -186,6 +196,7 @@ class PostDestroyer
     Post.transaction do
       @post.update_column(:user_deleted, false)
       @post.skip_unique_check = true
+      @post.topic.update_column(:closed, false) if @post.is_first_post?
     end
 
     # has internal transactions, if we nest then there are some very high risk deadlocks
@@ -347,7 +358,7 @@ class PostDestroyer
       counts = Post.where(post_type: Post.types[:regular], topic_id: @post.topic_id).where('post_number > 1').group(:user_id).count
       counts.each do |user_id, count|
         if user_stat = UserStat.where(user_id: user_id).first
-          user_stat.update_attributes(post_count: user_stat.post_count - count)
+          user_stat.update(post_count: user_stat.post_count - count)
         end
       end
     end

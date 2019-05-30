@@ -24,8 +24,10 @@ export default {
     // if it is present
     if (typeof window._gaq !== "undefined") {
       appEvents.on("page:changed", data => {
-        window._gaq.push(["_set", "title", data.title]);
-        window._gaq.push(["_trackPageview", data.url]);
+        if (!data.replacedOnlyQueryParams) {
+          window._gaq.push(["_set", "title", data.title]);
+          window._gaq.push(["_trackPageview", data.url]);
+        }
       });
       return;
     }
@@ -33,13 +35,19 @@ export default {
     // Also use Universal Analytics if it is present
     if (typeof window.ga !== "undefined") {
       appEvents.on("page:changed", data => {
-        window.ga("send", "pageview", { page: data.url, title: data.title });
+        if (!data.replacedOnlyQueryParams) {
+          window.ga("send", "pageview", { page: data.url, title: data.title });
+        }
       });
     }
 
     // And Google Tag Manager too
     if (typeof window.dataLayer !== "undefined") {
-      appEvents.on("page:changed", googleTagManagerPageChanged);
+      appEvents.on("page:changed", data => {
+        if (!data.replacedOnlyQueryParams) {
+          googleTagManagerPageChanged(data);
+        }
+      });
     }
   }
 };

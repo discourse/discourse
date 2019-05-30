@@ -3,7 +3,7 @@ import DiscourseURL from "discourse/lib/url";
 
 acceptance("User Card - Mobile", { mobileView: true });
 
-QUnit.test("user card", async assert => {
+QUnit.skip("user card", async assert => {
   await visit("/t/internationalization-localization/280");
   assert.ok(
     invisible("#user-card"),

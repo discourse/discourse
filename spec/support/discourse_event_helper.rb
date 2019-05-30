@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module DiscourseEvent::TestHelper
   def trigger(event_name, *params)
     super(event_name, *params)

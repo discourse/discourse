@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_dependency 'distributed_cache'
 require_dependency 'stylesheet/compiler'
 require_dependency 'stylesheet/manager'
@@ -50,14 +52,24 @@ class Theme < ActiveRecord::Base
     changed_fields.clear
 
     Theme.expire_site_cache! if saved_change_to_user_selectable? || saved_change_to_name?
+    notify_with_scheme = saved_change_to_color_scheme_id?
+    name_changed = saved_change_to_name?
 
     reload
     settings_field&.ensure_baked! # Other fields require setting to be **baked**
     theme_fields.each(&:ensure_baked!)
 
+    if name_changed
+      theme_fields.select { |f| f.basic_html_field? }.each do |f|
+        f.value_baked = nil
+        f.ensure_baked!
+      end
+    end
+
     remove_from_cache!
     clear_cached_settings!
     ColorScheme.hex_cache.clear
+    notify_theme_change(with_scheme: notify_with_scheme)
   end
 
   after_destroy do
@@ -83,10 +95,6 @@ class Theme < ActiveRecord::Base
     CSP::Extension.clear_theme_extensions_cache!
     SvgSprite.expire_cache
   end
-
-  after_commit ->(theme) do
-    theme.notify_theme_change(with_scheme: theme.saved_change_to_color_scheme_id?)
-  end, on: [:create, :update]
 
   def self.get_set_cache(key, &blk)
     if val = @cache[key]

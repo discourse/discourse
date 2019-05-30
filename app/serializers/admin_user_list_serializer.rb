@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AdminUserListSerializer < BasicUserSerializer
 
   attributes :email,
@@ -31,7 +33,7 @@ class AdminUserListSerializer < BasicUserSerializer
   [:days_visited, :posts_read_count, :topics_entered, :post_count].each do |sym|
     attributes sym
     define_method sym do
-      object.user_stat.send(sym)
+      object.user_stat.public_send(sym)
     end
   end
 

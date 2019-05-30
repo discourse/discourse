@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Auth; end
 
 require_dependency 'auth/auth_provider'

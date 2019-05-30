@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class IntegerSettingValidator
   def initialize(opts = {})
     @opts = opts

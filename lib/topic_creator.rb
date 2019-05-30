@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_dependency 'has_errors'
 
 class TopicCreator
@@ -35,6 +37,9 @@ class TopicCreator
   def create
     topic = Topic.new(setup_topic_params)
     setup_tags(topic)
+    if fields = @opts[:custom_fields]
+      topic.custom_fields = fields
+    end
 
     DiscourseEvent.trigger(:before_create_topic, topic, self)
 
@@ -92,7 +97,7 @@ class TopicCreator
           else "track!"
           end
 
-        topic.notifier.send(action, gu.user_id)
+        topic.notifier.public_send(action, gu.user_id)
       end
     end
   end
@@ -119,8 +124,11 @@ class TopicCreator
     topic_params[:subtype] = TopicSubtype.moderator_warning if @opts[:is_warning]
 
     category = find_category
-
     @guardian.ensure_can_create!(Topic, category) unless (@opts[:skip_validations] || @opts[:archetype] == Archetype.private_message)
+
+    if @opts[:category].present? && category.nil?
+      raise Discourse::InvalidParameters.new(:category)
+    end
 
     topic_params[:category_id] = category.id if category.present?
 
@@ -137,20 +145,17 @@ class TopicCreator
   end
 
   def find_category
-    # PM can't have a category
-    @opts.delete(:category) if @opts[:archetype].present? && @opts[:archetype] == Archetype.private_message
+    @category ||= begin
+      # PM can't have a category
+      @opts.delete(:category) if @opts[:archetype].present? && @opts[:archetype] == Archetype.private_message
 
-    if @opts[:shared_draft]
-      return Category.find(SiteSetting.shared_drafts_category)
-    end
+      if @opts[:shared_draft]
+        return Category.find(SiteSetting.shared_drafts_category)
+      end
 
-    # Temporary fix to allow older clients to create topics.
-    # When all clients are updated the category variable should
-    # be set directly to the contents of the if statement.
-    if (@opts[:category].is_a? Integer) || (@opts[:category] =~ /^\d+$/)
-      Category.find_by(id: @opts[:category])
-    else
-      Category.find_by(name_lower: @opts[:category].try(:downcase))
+      if (@opts[:category].is_a? Integer) || (@opts[:category] =~ /^\d+$/)
+        Category.find_by(id: @opts[:category])
+      end
     end
   end
 
@@ -160,7 +165,7 @@ class TopicCreator
         # Validate minimum required tags for a category
         category = find_category
         if category.present? && category.minimum_required_tags > 0
-          topic.errors[:base] << I18n.t("tags.minimum_required_tags", count: category.minimum_required_tags)
+          topic.errors.add(:base, I18n.t("tags.minimum_required_tags", count: category.minimum_required_tags))
           rollback_from_errors!(topic)
         end
       end

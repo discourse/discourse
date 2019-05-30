@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class BadgeType < ActiveRecord::Base
   Gold = 1
   Silver = 2

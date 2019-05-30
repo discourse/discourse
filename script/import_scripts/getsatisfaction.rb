@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # getsatisfaction importer
 #
 # pre-req: You will either get an Excel or a bunch of CSV files. Be sure to rename them all so that

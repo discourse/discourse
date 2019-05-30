@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class TagGroupsController < ApplicationController
 
   requires_login

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 Fabricator(:user_stat) do
 end
 
@@ -99,9 +101,11 @@ Fabricator(:anonymous, from: :user) do
   trust_level TrustLevel[1]
   manual_locked_trust_level TrustLevel[1]
 
-  before_create do |user|
-    user.custom_fields["master_id"] = 1
-    user.save!
+  after_create do
+    # this is not "the perfect" fabricator in that user id -1 is system
+    # but creating a proper account here is real slow and has a huge
+    # impact on the test suite run time
+    create_anonymous_user_master(master_user_id: -1, active: true)
   end
 end
 

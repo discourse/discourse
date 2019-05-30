@@ -88,17 +88,17 @@ sk:
         one: "Nedá sa zmazať záznam pretože existuje %{record} závislých záznamov"
         many: "Záznam nemôže byť zmazaný z dôvodu zavislosti na zázname: %{record} "
       too_long:
-        one: príliš dlhé (maximálne 1 znak)
+        one: príliš dlhé (maximálne %{count} znak)
         few: príliiš dlhé (maximum je %{count} znaky)
         many: príliiš dlhé (maximum je %{count} znakov)
         other: príliiš dlhé (maximum je %{count} znakov)
       too_short:
-        one: príliiš krátke (minimum je 1 znak)
+        one: príliiš krátke (minimum je %{count} znak)
         few: príliiš krátke (minimum je %{count} znaky)
         many: príliiš krátke (minimum je %{count} znakov)
         other: príliiš krátke (minimum je %{count} znakov)
       wrong_length:
-        one: nesprávna dĺžka (musí byť 1 znak)
+        one: nesprávna dĺžka (musí byť %{count} znak)
         few: nesprávna dĺžka (musí byť %{count} znaky)
         many: nesprávna dĺžka (musí byť %{count} znakov)
         other: nesprávna dĺžka (musí byť %{count} znakov)
@@ -106,7 +106,7 @@ sk:
     template:
       body: "Nastal problém s nasledujúcimi položkami:"
       header:
-        one: Uloženie  %{model} zlyhalo kôli chybe
+        one: "Uloženie  %{model} zlyhalo kôli chybe"
         few: "Uloženie  %{model} zlyhalo kôli %{count} chybám"
         many: "Uloženie  %{model} zlyhalo kôli %{count} chybám "
         other: "Uloženie  %{model} zlyhalo kôli %{count} chybám "
@@ -142,7 +142,7 @@ sk:
     start_discussion: "Začať diskusiu"
     continue: "Pokračovať v diskusii"
     more_replies:
-      one: "1 ďalšia odpoveď"
+      one: "%{count} ďalšia odpoveď"
       few: "%{count} ďalšie odpovede"
       many: "%{count} ďalších odpovedí"
       other: "%{count} ďalších odpovedí"
@@ -201,7 +201,6 @@ sk:
   private_message_abbrev: "Správa"
   rss_description:
     latest: "Najnovšie témy"
-    hot: "Horúce témy"
     top: "Top témy"
     top_monthly: "Mesačné najčastejšie témy"
     top_weekly: "Týždenné najčastejšie témy"
@@ -349,17 +348,17 @@ sk:
       broken: "Tento obrázok je poškodený"
   rate_limiter:
     hours:
-      one: "1 hodina"
+      one: "%{count} hodina"
       few: "%{count} hodiny"
       many: "%{count} hodín"
       other: "%{count} hodín"
     minutes:
-      one: "1 minútu"
+      one: "%{count} minútu"
       few: "%{count} minúty"
       many: "%{count} minút"
       other: "%{count} minút"
     seconds:
-      one: " 1 sekundu"
+      one: " %{count} sekundu"
       few: "%{count} sekundy"
       many: "%{count} sekúnd"
       other: "%{count} sekúnd"
@@ -367,67 +366,63 @@ sk:
     distance_in_words:
       half_a_minute: "< 1m"
       less_than_x_seconds:
-        one: "< 1s"
+        one: "< %{count}s"
         few: "< %{count}s"
         many: "< %{count}s"
         other: "< %{count}s"
       x_seconds:
-        one: "1s"
+        one: "%{count}s"
         few: "%{count}s"
         many: "%{count}s"
         other: "%{count}s"
       less_than_x_minutes:
-        one: "< 1m"
+        one: "< %{count}m"
         few: "< %{count}m"
         many: "< %{count}m"
         other: "< %{count}m"
       x_minutes:
-        one: "1m"
+        one: "%{count}m"
         few: "%{count}m"
         many: "%{count}m"
         other: "%{count}m"
       about_x_hours:
-        one: "1h"
+        one: "%{count}h"
         few: "%{count}h"
         many: "%{count}h"
         other: "%{count}h"
       x_days:
-        one: "1d"
+        one: "%{count}d"
         few: "%{count}d"
         many: "%{count}d"
         other: "%{count}d"
       about_x_months:
-        one: " 1mes"
+        one: " %{count}mes"
         few: "%{count}mes"
         many: "%{count}mes"
         other: "%{count}mes"
       x_months:
-        one: "1mes"
+        one: "%{count}mes"
         few: "%{count}mes"
         many: "%{count}mes"
         other: "%{count}mes"
       about_x_years:
-        one: "1r"
+        one: "%{count}r"
         few: "%{count}r"
         many: "%{count}r"
         other: "%{count}r"
       over_x_years:
-        one: "> 1r"
+        one: "> %{count}r"
         few: "> %{count}r"
         many: "> %{count}r"
         other: "> %{count}r"
       almost_x_years:
-        one: "1r"
+        one: "%{count}r"
         few: "%{count}r"
         many: "%{count}r"
         other: "%{count}r"
     distance_in_words_verbose:
       half_a_minute: "práve teraz"
-      less_than_x_seconds:
-        one: "práve teraz"
-        few: "práve teraz"
-        many: "práve teraz"
-        other: "práve teraz"
+      less_than_x_seconds: "práve teraz"
       x_seconds:
         one: "pred sekundou"
         few: "pred %{count} sekundami"
@@ -1086,17 +1081,17 @@ sk:
     not_seen_in_a_month: "Vitajte späť! Nevideli sme Vás už nejaký čas. Toto sú najpopulárnejšie témy odkedy ste boli preč."
   topic_statuses:
     autoclosed_message_max_posts:
-      one: "Táto správa bola automaticky uzavretá po dosiahnutí maximálneho limitu 1 odpovede."
+      one: "Táto správa bola automaticky uzavretá po dosiahnutí maximálneho limitu %{count} odpovede."
       few: "Táto správa bola automaticky uzavretá po dosiahnutí maximálneho limitu %{count} odpovedí."
       many: "Táto správa bola automaticky uzavretá po dosiahnutí maximálneho limitu %{count} odpovedí."
       other: "Táto správa bola automaticky uzavretá po dosiahnutí maximálneho limitu %{count} odpovedí."
     autoclosed_topic_max_posts:
-      one: "Táto téma bola automaticky uzavretá po dosiahnutí maximálneho limitu 1 odpovede."
+      one: "Táto téma bola automaticky uzavretá po dosiahnutí maximálneho limitu %{count} odpovede."
       few: "Táto téma bola automaticky uzavretá po dosiahnutí maximálneho limitu %{count} odpovedí."
       many: "Táto téma bola automaticky uzavretá po dosiahnutí maximálneho limitu %{count} odpovedí."
       other: "Táto téma bola automaticky uzavretá po dosiahnutí maximálneho limitu %{count} odpovedí."
     autoclosed_enabled_days:
-      one: "Táto téma bola automaticky uzavretá po 1 dni . Nové odpovede už nie sú povolené."
+      one: "Táto téma bola automaticky uzavretá po %{count} dni . Nové odpovede už nie sú povolené."
       few: "Táto téma bola automaticky uzavretá po %{count} dňoch . Nové odpovede už nie sú povolené."
       many: "Táto téma bola automaticky uzavretá po %{count} dňoch . Nové odpovede už nie sú povolené."
       other: "Táto téma bola automaticky uzavretá po %{count} dňoch . Nové odpovede už nie sú povolené."
@@ -1111,17 +1106,17 @@ sk:
       many: "Táto téma bola automaticky uzavretá po %{count} minútach. Nové odpovede už nie sú povolené."
       other: "Táto téma bola automaticky uzavretá po %{count} minútach. Nové odpovede už nie sú povolené."
     autoclosed_enabled_lastpost_days:
-      one: "Táto téma bola automaticky uzavretá po 1 dni od poslednej odpovede. Nové odpovede už nie sú povolené."
+      one: "Táto téma bola automaticky uzavretá po %{count} dni od poslednej odpovede. Nové odpovede už nie sú povolené."
       few: "Táto téma bola automaticky uzavretá po %{count} dňoch od poslednej odpovede. Nové odpovede už nie sú povolené."
       many: "Táto téma bola automaticky uzavretá po %{count} dňoch od poslednej odpovede. Nové odpovede už nie sú povolené."
       other: "Táto téma bola automaticky uzavretá po %{count} dňoch od poslednej odpovede. Nové odpovede už nie sú povolené."
     autoclosed_enabled_lastpost_hours:
-      one: "Táto téma bola automaticky uzavretá po1 hodine od poslednej odpovede. Nové odpovede už nie sú povolené."
+      one: "Táto téma bola automaticky uzavretá po%{count} hodine od poslednej odpovede. Nové odpovede už nie sú povolené."
       few: "Táto téma bola automaticky uzavretá po %{count} hodinách od poslednej odpovede. Nové odpovede už nie sú povolené."
       many: "Táto téma bola automaticky uzavretá po %{count} hodinách od poslednej odpovede. Nové odpovede už nie sú povolené."
       other: "Táto téma bola automaticky uzavretá po %{count} hodinách od poslednej odpovede. Nové odpovede už nie sú povolené."
     autoclosed_enabled_lastpost_minutes:
-      one: "Táto téma bola automaticky uzavretá po 1 minúte od poslednej odpovede. Nové odpovede už nie sú povolené."
+      one: "Táto téma bola automaticky uzavretá po %{count} minúte od poslednej odpovede. Nové odpovede už nie sú povolené."
       few: "Táto téma bola automaticky uzavretá po %{count} minútach od poslednej odpovede. Nové odpovede už nie sú povolené."
       many: "Táto téma bola automaticky uzavretá po %{count} minútach od poslednej odpovede. Nové odpovede už nie sú povolené."
       other: "Táto téma bola automaticky uzavretá po %{count} minútach od poslednej odpovede. Nové odpovede už nie sú povolené."
@@ -1247,7 +1242,7 @@ sk:
       subject_template: "Nový uživateľ %{username} je zablokovaný kôli opakovaným odkazom"
     pending_users_reminder:
       subject_template:
-        one: "1 užívateľ čaká na schválenie"
+        one: "%{count} užívateľ čaká na schválenie"
         few: "%{count} užívateľia čakajú na schválenie"
         many: "%{count} užívateľov čaká na schválenie"
         other: "%{count} užívateľov čaká na schválenie"
@@ -1281,8 +1276,6 @@ sk:
     see_more: "Viac"
     search_title: "Prehľadať tieto stránky"
     search_button: "Hľadať"
-  terms_of_service:
-    title: "Podmienky používania"
   deleted: "vymazané"
   image: "Obrázok"
   upload:
@@ -1315,9 +1308,6 @@ sk:
     sender_body_blank: "telo je prázdne"
   color_schemes:
     base_theme_name: "Základ"
-  about: "O stránke"
-  guidelines: "Pravidlá"
-  privacy: "Súkromie"
   edit_this_page: "Upraviť túto stránku"
   csv_export:
     boolean_yes: "Áno"
@@ -1558,6 +1548,8 @@ sk:
         title: "Pozvite členov"
   joined: "Vytvorený"
   reviewables:
+    sensitivity:
+      disabled: "Vypnuté"
     actions:
       agree_and_keep:
         title: "Ponechať príspevok"
@@ -1567,6 +1559,8 @@ sk:
         title: "Tichý užívateľ"
       delete_spammer:
         title: "Zmazať spammera"
+      delete_single:
+        title: "Odstrániť"
       disagree:
         title: "Nesúhlasiť"
       approve:

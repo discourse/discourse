@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Searches for a user by username or full text or name (if enabled in SiteSettings)
 require_dependency 'search'
 
@@ -11,19 +13,18 @@ class UserSearch
     @searching_user = opts[:searching_user]
     @include_staged_users = opts[:include_staged_users] || false
     @limit = opts[:limit] || 20
-    @group = opts[:group]
+    @groups = opts[:groups]
     @guardian = Guardian.new(@searching_user)
-    @guardian.ensure_can_see_group!(@group) if @group
+    @guardian.ensure_can_see_groups!(@groups) if @groups
   end
 
   def scoped_users
     users = User.where(active: true)
     users = users.where(staged: false) unless @include_staged_users
 
-    if @group
-      users = users.where('users.id IN (
-        SELECT user_id FROM group_users WHERE group_id = ?
-      )', @group.id)
+    if @groups
+      users = users.joins("INNER JOIN group_users ON group_users.user_id = users.id")
+        .where("group_users.group_id IN (?)", @groups.map(&:id))
     end
 
     unless @searching_user && @searching_user.staff?

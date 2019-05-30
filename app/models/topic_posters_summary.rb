@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # This is used in topic lists
 require_dependency 'topic_poster'
 
@@ -21,7 +23,7 @@ class TopicPostersSummary
       topic_poster.description = descriptions_for(user)
       topic_poster.primary_group = primary_group_lookup[user.id]
       if topic.last_post_user_id == user.id
-        topic_poster.extras = 'latest'
+        topic_poster.extras = +'latest'
         topic_poster.extras << ' single' if user_ids.uniq.size == 1
       end
     end

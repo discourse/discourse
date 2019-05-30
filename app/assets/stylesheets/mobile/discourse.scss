@@ -9,15 +9,30 @@ body {
   background-color: $secondary;
 }
 
-textarea {
-  background-color: $secondary;
-}
+.ios-device {
+  textarea {
+    background-color: $secondary;
+    font-size: $font-size-ios-input;
+  }
 
-textarea {
-  // this increases font size to above 16px
-  // which is the threshold on iOS to trigger zooming
-  // when focusing on a textarea
-  font-size: $font-up-1;
+  input {
+    &[type="text"],
+    &[type="password"],
+    &[type="datetime"],
+    &[type="datetime-local"],
+    &[type="date"],
+    &[type="month"],
+    &[type="time"],
+    &[type="week"],
+    &[type="number"],
+    &[type="email"],
+    &[type="url"],
+    &[type="search"],
+    &[type="tel"],
+    &[type="color"] {
+      font-size: $font-size-ios-input;
+    }
+  }
 }
 
 blockquote {

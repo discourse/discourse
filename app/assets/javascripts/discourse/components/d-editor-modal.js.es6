@@ -5,7 +5,7 @@ export default Ember.Component.extend({
 
   @observes("hidden")
   _hiddenChanged() {
-    if (!this.get("hidden")) {
+    if (!this.hidden) {
       Ember.run.scheduleOnce("afterRender", () => {
         const $modal = this.$();
         const $parent = this.$().closest(".d-editor");
@@ -28,7 +28,7 @@ export default Ember.Component.extend({
   @on("didInsertElement")
   _listenKeys() {
     this.$().on("keydown.d-modal", key => {
-      if (this.get("hidden")) {
+      if (this.hidden) {
         return;
       }
 

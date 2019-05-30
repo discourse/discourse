@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 require 'text_cleaner'
 
@@ -194,7 +196,11 @@ describe TextCleaner do
       end
 
       it "removes extraneous space before the end punctuation" do
+        SiteSetting.title_remove_extraneous_space = true
         expect(TextCleaner.clean_title("Hello there ?")).to eq("Hello there?")
+
+        SiteSetting.title_remove_extraneous_space = false
+        expect(TextCleaner.clean_title("Hello there ?")).to eq("Hello there ?")
       end
 
       it "replaces all upper case unicode text with regular unicode case letters" do

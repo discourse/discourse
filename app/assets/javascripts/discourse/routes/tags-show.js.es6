@@ -42,7 +42,7 @@ export default Discourse.Route.extend({
       }
       f += `${params.category}/l/`;
     }
-    f += this.get("navMode");
+    f += this.navMode;
     this.set("filterMode", f);
 
     if (params.category) {
@@ -52,7 +52,7 @@ export default Discourse.Route.extend({
       this.set("parentCategorySlug", params.parent_category);
     }
 
-    if (tag && tag.get("id") !== "none" && this.get("currentUser")) {
+    if (tag && tag.get("id") !== "none" && this.currentUser) {
       // If logged in, we should get the tag's user settings
       return this.store
         .find("tagNotification", tag.get("id").toLowerCase())
@@ -73,9 +73,9 @@ export default Discourse.Route.extend({
     params.order = transition.to.queryParams.order || params.order;
     params.ascending = transition.to.queryParams.ascending || params.ascending;
 
-    const categorySlug = this.get("categorySlug");
-    const parentCategorySlug = this.get("parentCategorySlug");
-    const filter = this.get("navMode");
+    const categorySlug = this.categorySlug;
+    const parentCategorySlug = this.parentCategorySlug;
+    const filter = this.navMode;
     const tagId = tag ? tag.id.toLowerCase() : "none";
 
     if (categorySlug) {
@@ -92,7 +92,7 @@ export default Discourse.Route.extend({
         category.setupGroupsAndPermissions();
         this.set("category", category);
       }
-    } else if (this.get("additionalTags")) {
+    } else if (this.additionalTags) {
       params.filter = `tags/intersection/${tagId}/${this.get(
         "additionalTags"
       ).join("/")}`;
@@ -107,7 +107,7 @@ export default Discourse.Route.extend({
       this.topicTrackingState,
       params.filter,
       params,
-      {}
+      { cached: true }
     ).then(list => {
       if (list.topic_list.tags && list.topic_list.tags.length === 1) {
         // Update name of tag (case might be different)
@@ -129,12 +129,12 @@ export default Discourse.Route.extend({
 
   titleToken() {
     const filterText = I18n.t(
-      `filters.${this.get("navMode").replace("/", ".")}.title`
+      `filters.${this.navMode.replace("/", ".")}.title`
     );
     const controller = this.controllerFor("tags.show");
 
     if (controller.get("model.id")) {
-      if (this.get("category")) {
+      if (this.category) {
         return I18n.t("tagging.filters.with_category", {
           filter: filterText,
           tag: controller.get("model.id"),
@@ -147,7 +147,7 @@ export default Discourse.Route.extend({
         });
       }
     } else {
-      if (this.get("category")) {
+      if (this.category) {
         return I18n.t("tagging.filters.untagged_with_category", {
           filter: filterText,
           category: this.get("category.name")
@@ -164,11 +164,11 @@ export default Discourse.Route.extend({
     this.controllerFor("tags.show").setProperties({
       model,
       tag: model,
-      additionalTags: this.get("additionalTags"),
-      category: this.get("category"),
-      filterMode: this.get("filterMode"),
-      navMode: this.get("navMode"),
-      tagNotification: this.get("tagNotification")
+      additionalTags: this.additionalTags,
+      category: this.category,
+      filterMode: this.filterMode,
+      navMode: this.navMode,
+      tagNotification: this.tagNotification
     });
   },
 

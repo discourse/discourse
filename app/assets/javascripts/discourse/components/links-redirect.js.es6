@@ -4,13 +4,13 @@ export default Ember.Component.extend({
   didInsertElement() {
     this._super(...arguments);
 
-    this.$().on("click.discourse-redirect", "#revisions a", function(e) {
+    $(this.element).on("click.discourse-redirect", "a", function(e) {
       return ClickTrack.trackClick(e);
     });
   },
 
   willDestroyElement() {
     this._super(...arguments);
-    this.$().off("click.discourse-redirect", "#revisions a");
+    $(this.element).off("click.discourse-redirect", "a");
   }
 });

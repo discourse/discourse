@@ -1,4 +1,6 @@
 #!/usr/bin/env ruby
+# frozen_string_literal: true
+
 #
 # Increases the version. e.g., from 0.8.5 to 0.8.6.
 # If you want to bump the minor or major version numbers, do it manually

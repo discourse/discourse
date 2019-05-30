@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ExceptionsController < ApplicationController
   skip_before_action :check_xhr, :preload_json
   before_action :hide_search

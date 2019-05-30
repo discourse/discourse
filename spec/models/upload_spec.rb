@@ -1,30 +1,24 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 describe Upload do
 
   let(:upload) { build(:upload) }
-  let(:thumbnail) { build(:optimized_image, upload: upload) }
 
   let(:user_id) { 1 }
-  let(:url) { "http://domain.com" }
 
   let(:image_filename) { "logo.png" }
   let(:image) { file_from_fixtures(image_filename) }
-  let(:image_filesize) { File.size(image) }
-  let(:image_sha1) { Upload.generate_digest(image) }
 
   let(:image_svg_filename) { "image.svg" }
   let(:image_svg) { file_from_fixtures(image_svg_filename) }
-  let(:image_svg_filesize) { File.size(image_svg) }
 
   let(:huge_image_filename) { "huge.jpg" }
   let(:huge_image) { file_from_fixtures(huge_image_filename) }
-  let(:huge_image_filesize) { File.size(huge_image) }
 
   let(:attachment_path) { __FILE__ }
   let(:attachment) { File.new(attachment_path) }
-  let(:attachment_filename) { File.basename(attachment_path) }
-  let(:attachment_filesize) { File.size(attachment_path) }
 
   context ".create_thumbnail!" do
 
@@ -202,8 +196,6 @@ describe Upload do
         end
 
         describe 'when upload bucket contains subfolder' do
-          let(:url) { "#{SiteSetting.Upload.absolute_base_url}/path/path2#{path}" }
-
           before do
             SiteSetting.s3_upload_bucket = "s3-upload-bucket/path/path2"
           end
@@ -258,6 +250,16 @@ describe Upload do
     it "should be able to look up sha1 even with leading zeros" do
       sha1 = '0000c513e1da04f7b4e99230851ea2aafeb8cc4e'
       expect(Upload.sha1_from_short_url('upload://1Eg9p8rrCURq4T3a6iJUk0ri6.png')).to eq(sha1)
+    end
+  end
+
+  describe '.sha1_from_short_path' do
+    it "should be able to lookup sha1" do
+      path = "/uploads/short-url/3UjQ4jHoyeoQndk5y3qHzm3QVTQ.png"
+      sha1 = "1b6453892473a467d07372d45eb05abc2031647a"
+
+      expect(Upload.sha1_from_short_path(path)).to eq(sha1)
+      expect(Upload.sha1_from_short_path(path.sub(".png", ""))).to eq(sha1)
     end
   end
 

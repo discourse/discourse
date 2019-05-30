@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # This job will automatically act on records that have gone unhandled on a
 # queue for a long time.
 module Jobs
@@ -14,7 +16,7 @@ module Jobs
         .each do |reviewable|
 
         if reviewable.is_a?(ReviewableFlaggedPost)
-          reviewable.perform(Discourse.system_user, :ignore)
+          reviewable.perform(Discourse.system_user, :ignore, expired: true)
         elsif reviewable.is_a?(ReviewableQueuedPost)
           reviewable.perform(Discourse.system_user, :reject_post)
         elsif reviewable.is_a?(ReviewableUser)

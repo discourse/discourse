@@ -71,6 +71,7 @@ class Category < ActiveRecord::Base
   after_save :reset_topic_ids_cache
   after_save :clear_url_cache
   after_save :index_search
+  after_save :update_reviewables
 
   after_destroy :reset_topic_ids_cache
   after_destroy :publish_category_deletion
@@ -92,6 +93,7 @@ class Category < ActiveRecord::Base
   has_many :tags, through: :category_tags
   has_many :category_tag_groups, dependent: :destroy
   has_many :tag_groups, through: :category_tag_groups
+  belongs_to :reviewable_by_group, class_name: 'Group'
 
   scope :latest, -> { order('topic_count DESC') }
 
@@ -283,7 +285,7 @@ class Category < ActiveRecord::Base
   def remove_site_settings
     SiteSetting.all_settings.each do |s|
       if s[:type] == 'category' && s[:value].to_i == self.id
-        SiteSetting.send("#{s[:setting]}=", '')
+        SiteSetting.set(s[:setting], '')
       end
     end
 
@@ -518,7 +520,7 @@ class Category < ActiveRecord::Base
       .pluck("topics.id")
       .first
 
-    self.update_attributes(latest_topic_id: latest_topic_id, latest_post_id: latest_post_id)
+    self.update(latest_topic_id: latest_topic_id, latest_post_id: latest_post_id)
   end
 
   def self.query_parent_category(parent_slug)
@@ -610,6 +612,12 @@ class Category < ActiveRecord::Base
 
   def index_search
     SearchIndexer.index(self)
+  end
+
+  def update_reviewables
+    if SiteSetting.enable_category_group_review? && saved_change_to_reviewable_by_group_id?
+      Reviewable.where(category_id: id).update_all(reviewable_by_group_id: reviewable_by_group_id)
+    end
   end
 
   def self.find_by_slug(category_slug, parent_category_slug = nil)
@@ -734,11 +742,13 @@ end
 #  navigate_to_first_post_after_read :boolean          default(FALSE), not null
 #  search_priority                   :integer          default(0)
 #  allow_global_tags                 :boolean          default(FALSE), not null
+#  reviewable_by_group_id            :integer
 #
 # Indexes
 #
-#  index_categories_on_email_in         (email_in) UNIQUE
-#  index_categories_on_search_priority  (search_priority)
-#  index_categories_on_topic_count      (topic_count)
-#  unique_index_categories_on_name      (COALESCE(parent_category_id, '-1'::integer), name) UNIQUE
+#  index_categories_on_email_in                (email_in) UNIQUE
+#  index_categories_on_reviewable_by_group_id  (reviewable_by_group_id)
+#  index_categories_on_search_priority         (search_priority)
+#  index_categories_on_topic_count             (topic_count)
+#  unique_index_categories_on_name             (COALESCE(parent_category_id, '-1'::integer), name) UNIQUE
 #

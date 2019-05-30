@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'seed_data/categories'
 
 if !Rails.env.test?

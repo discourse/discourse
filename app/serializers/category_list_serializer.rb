@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CategoryListSerializer < ApplicationSerializer
 
   attributes :can_create_category,

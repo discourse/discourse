@@ -11,20 +11,20 @@ export default Ember.Controller.extend({
 
   actions: {
     loadMore() {
-      if (!this.get("canLoadMore")) {
+      if (!this.canLoadMore) {
         return;
       }
-      if (this.get("loading")) {
+      if (this.loading) {
         return;
       }
       this.set("loading", true);
-      const posts = this.get("model");
+      const posts = this.model;
       if (posts && posts.length) {
         const beforePostId = posts[posts.length - 1].get("id");
         const group = this.get("group.model");
 
         let categoryId = this.get("groupActivity.category_id");
-        const opts = { beforePostId, type: this.get("type"), categoryId };
+        const opts = { beforePostId, type: this.type, categoryId };
 
         group
           .findPosts(opts)
@@ -43,6 +43,6 @@ export default Ember.Controller.extend({
 
   @observes("canLoadMore")
   _showFooter() {
-    this.set("application.showFooter", !this.get("canLoadMore"));
+    this.set("application.showFooter", !this.canLoadMore);
   }
 });

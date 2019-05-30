@@ -18,6 +18,43 @@ export default Ember.Component.extend({
     return type.dasherize();
   },
 
+  @computed("siteSettings.reviewable_claiming", "reviewable.topic")
+  claimEnabled(claimMode, topic) {
+    return claimMode !== "disabled" && !!topic;
+  },
+
+  @computed(
+    "claimEnabled",
+    "siteSettings.reviewable_claiming",
+    "reviewable.claimed_by"
+  )
+  canPerform(claimEnabled, claimMode, claimedBy) {
+    if (!claimEnabled) {
+      return true;
+    }
+
+    if (claimedBy) {
+      return claimedBy.id === this.currentUser.id;
+    }
+
+    return claimMode !== "required";
+  },
+
+  @computed("siteSettings.reviewable_claiming", "reviewable.claimed_by")
+  claimHelp(claimMode, claimedBy) {
+    if (claimedBy) {
+      return claimedBy.id === this.currentUser.id
+        ? I18n.t("review.claim_help.claimed_by_you")
+        : I18n.t("review.claim_help.claimed_by_other", {
+            username: claimedBy.username
+          });
+    }
+
+    return claimMode === "optional"
+      ? I18n.t("review.claim_help.optional")
+      : I18n.t("review.claim_help.required");
+  },
+
   // Find a component to render, if one exists. For example:
   // `ReviewableUser` will return `reviewable-user`
   @computed("reviewable.type")
@@ -36,7 +73,7 @@ export default Ember.Component.extend({
   },
 
   _performConfirmed(action) {
-    let reviewable = this.get("reviewable");
+    let reviewable = this.reviewable;
 
     let performAction = () => {
       let version = reviewable.get("version");
@@ -85,7 +122,7 @@ export default Ember.Component.extend({
   },
 
   _penalize(adminToolMethod, reviewable, performAction) {
-    let adminTools = this.get("adminTools");
+    let adminTools = this.adminTools;
     if (adminTools) {
       let createdBy = reviewable.get("target_created_by");
       let postId = reviewable.get("post_id");
@@ -120,7 +157,7 @@ export default Ember.Component.extend({
       });
 
       this.set("updating", true);
-      return this.get("reviewable")
+      return this.reviewable
         .update(updates)
         .then(() => this.set("editing", false))
         .catch(popupAjaxError)
@@ -139,7 +176,7 @@ export default Ember.Component.extend({
     },
 
     perform(action) {
-      if (this.get("updating")) {
+      if (this.updating) {
         return;
       }
 

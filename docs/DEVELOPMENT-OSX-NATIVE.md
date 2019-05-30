@@ -6,18 +6,6 @@ OS X has become a popular platform for developing Ruby on Rails applications; as
 
 Obviously, if you **already** develop Ruby on OS X, a lot of this will be redundant, because you'll have already done it, or something like it. If that's the case, you may well be able to just install Ruby 2.6+ using RVM and get started! Discourse has enough dependencies, however (note: not a criticism!) that there's a good chance you'll find **something** else in this document that's useful for getting your Discourse development started!
 
-## Quick Setup
-
-If you don't already have a Ruby environment that's tuned to your liking, you can do most of this set up in just a few steps:
-
-1. Install Xcode and/or the Xcode Command Line Tools from [Apple's developer site](https://developer.apple.com/downloads/index.action). (Please note that you need an Apple Developer account to access this page. If you don't have one, you can use your current iCloud or Apple ID, or [sign up for a new free account](https://appleid.apple.com/account).) This should also install Git.
-2. Clone the Discourse repo and cd into it.
-3. Run `script/osx_dev`.
-4. Review `log/osx_dev.log` to make sure everything finished successfully.
-5. Jump To [Setting up your Discourse](#setting-up-your-discourse)
-
-Of course, it is good to understand what the script is doing and why. The rest of this guide goes through what's happening.
-
 ## UTF-8
 
 OS X 10.8 uses UTF-8 by default. You can, of course, double-check this by examining LANG, which appears to be the only relevant environment variable.

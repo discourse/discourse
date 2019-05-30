@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe TopicTimer, type: :model do
@@ -11,8 +13,8 @@ RSpec.describe TopicTimer, type: :model do
       status_type: TopicTimer.types[:close]
     )
   }
-  let(:topic) { Fabricate(:topic) }
-  let(:admin) { Fabricate(:admin) }
+  fab!(:topic) { Fabricate(:topic) }
+  fab!(:admin) { Fabricate(:admin) }
 
   before do
     freeze_time Time.new(2018)
@@ -82,7 +84,7 @@ RSpec.describe TopicTimer, type: :model do
             )
 
             expect(topic_timer).to_not be_valid
-            expect(topic_timer.errors.keys).to include(:category_id)
+            expect(topic_timer.errors).to include(:category_id)
           end
         end
 
@@ -180,7 +182,7 @@ RSpec.describe TopicTimer, type: :model do
     end
 
     describe 'when a open topic status update is created for an open topic' do
-      let(:topic) { Fabricate(:topic, closed: false) }
+      fab!(:topic) { Fabricate(:topic, closed: false) }
 
       let(:topic_timer) do
         Fabricate(:topic_timer,
@@ -209,7 +211,7 @@ RSpec.describe TopicTimer, type: :model do
     end
 
     describe 'when a close topic status update is created for a closed topic' do
-      let(:topic) { Fabricate(:topic, closed: true) }
+      fab!(:topic) { Fabricate(:topic, closed: true) }
 
       let(:topic_timer) do
         Fabricate(:topic_timer,

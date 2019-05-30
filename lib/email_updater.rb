@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_dependency 'email'
 require_dependency 'has_errors'
 require_dependency 'email_validator'
@@ -30,7 +32,7 @@ class EmailUpdater
       if SiteSetting.hide_email_address_taken
         Jobs.enqueue(:critical_user_email, type: :account_exists, user_id: existing_user.id)
       else
-        error_message = 'change_email.error'
+        error_message = +'change_email.error'
         error_message << '_staged' if existing_user.staged?
         errors.add(:base, I18n.t(error_message))
       end

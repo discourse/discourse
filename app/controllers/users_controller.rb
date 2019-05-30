@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_dependency 'discourse_hub'
 require_dependency 'user_name_suggester'
 require_dependency 'rate_limiter'
@@ -331,6 +333,7 @@ class UsersController < ApplicationController
 
   def create
     params.require(:email)
+    params.require(:username)
     params.permit(:user_fields)
 
     unless SiteSetting.allow_new_registrations
@@ -840,15 +843,17 @@ class UsersController < ApplicationController
     topic_id = topic_id.to_i if topic_id
     topic_allowed_users = params[:topic_allowed_users] || false
 
-    if params[:group].present?
-      @group = Group.find_by(name: params[:group])
+    group_names = params[:groups] || []
+    group_names << params[:group] if params[:group]
+    if group_names.present?
+      @groups = Group.where(name: group_names)
     end
 
     results = UserSearch.new(term,
                              topic_id: topic_id,
                              topic_allowed_users: topic_allowed_users,
                              searching_user: current_user,
-                             group: @group
+                             groups: @groups
                             ).search
 
     user_fields = [:username, :upload_avatar_template]
@@ -1035,7 +1040,7 @@ class UsersController < ApplicationController
     result = {}
 
     %W{number_of_deleted_posts number_of_flagged_posts number_of_flags_given number_of_suspensions warnings_received_count}.each do |info|
-      result[info] = @user.send(info)
+      result[info] = @user.public_send(info)
     end
 
     render json: result
@@ -1241,8 +1246,8 @@ class UsersController < ApplicationController
       :location,
       :website,
       :dismissed_banner_key,
-      :profile_background,
-      :card_background
+      :profile_background_upload_url,
+      :card_background_upload_url
     ]
 
     permitted << { custom_fields: User.editable_user_custom_fields } unless User.editable_user_custom_fields.blank?

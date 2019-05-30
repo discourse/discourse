@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CategorySerializer < BasicCategorySerializer
 
   attributes :read_restricted,
@@ -20,7 +22,16 @@ class CategorySerializer < BasicCategorySerializer
              :allowed_tag_groups,
              :allow_global_tags,
              :topic_featured_link_allowed,
-             :search_priority
+             :search_priority,
+             :reviewable_by_group_name
+
+  def reviewable_by_group_name
+    object.reviewable_by_group.name
+  end
+
+  def include_reviewable_by_group_name?
+    SiteSetting.enable_category_group_review? && object.reviewable_by_group_id.present?
+  end
 
   def group_permissions
     @group_permissions ||= begin

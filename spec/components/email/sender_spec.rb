@@ -1,12 +1,14 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 require 'email/sender'
 
 describe Email::Sender do
-  let(:post) { Fabricate(:post) }
+  fab!(:post) { Fabricate(:post) }
 
   context "disable_emails is enabled" do
-    let(:user) { Fabricate(:user) }
-    let(:moderator) { Fabricate(:moderator) }
+    fab!(:user) { Fabricate(:user) }
+    fab!(:moderator) { Fabricate(:moderator) }
 
     context "disable_emails is enabled for everyone" do
       before { SiteSetting.disable_emails = "yes" }
@@ -136,9 +138,9 @@ describe Email::Sender do
     end
 
     context "adds a List-ID header to identify the forum" do
-      let(:category) { Fabricate(:category, name: 'Name With Space') }
-      let(:topic) { Fabricate(:topic, category: category) }
-      let(:post) { Fabricate(:post, topic: topic) }
+      fab!(:category) { Fabricate(:category, name: 'Name With Space') }
+      fab!(:topic) { Fabricate(:topic, category: category) }
+      fab!(:post) { Fabricate(:post, topic: topic) }
 
       before do
         message.header['X-Discourse-Post-Id']  = post.id
@@ -163,8 +165,8 @@ describe Email::Sender do
     end
 
     context "adds Precedence header" do
-      let(:topic) { Fabricate(:topic) }
-      let(:post) { Fabricate(:post, topic: topic) }
+      fab!(:topic) { Fabricate(:topic) }
+      fab!(:post) { Fabricate(:post, topic: topic) }
 
       before do
         message.header['X-Discourse-Post-Id']  = post.id
@@ -178,8 +180,8 @@ describe Email::Sender do
     end
 
     context "removes custom Discourse headers from topic notification mails" do
-      let(:topic) { Fabricate(:topic) }
-      let(:post) { Fabricate(:post, topic: topic) }
+      fab!(:topic) { Fabricate(:topic) }
+      fab!(:post) { Fabricate(:post, topic: topic) }
 
       before do
         message.header['X-Discourse-Post-Id']  = post.id
@@ -204,12 +206,12 @@ describe Email::Sender do
     end
 
     context "email threading" do
-      let(:topic) { Fabricate(:topic) }
+      fab!(:topic) { Fabricate(:topic) }
 
-      let(:post_1) { Fabricate(:post, topic: topic, post_number: 1) }
-      let(:post_2) { Fabricate(:post, topic: topic, post_number: 2) }
-      let(:post_3) { Fabricate(:post, topic: topic, post_number: 3) }
-      let(:post_4) { Fabricate(:post, topic: topic, post_number: 4) }
+      fab!(:post_1) { Fabricate(:post, topic: topic, post_number: 1) }
+      fab!(:post_2) { Fabricate(:post, topic: topic, post_number: 2) }
+      fab!(:post_3) { Fabricate(:post, topic: topic, post_number: 3) }
+      fab!(:post_4) { Fabricate(:post, topic: topic, post_number: 4) }
 
       let!(:post_reply_1_4) { PostReply.create(post: post_1, reply: post_4) }
       let!(:post_reply_2_4) { PostReply.create(post: post_2, reply: post_4) }
@@ -375,7 +377,7 @@ describe Email::Sender do
       message
     end
 
-    let(:user) { Fabricate(:user) }
+    fab!(:user) { Fabricate(:user) }
     let(:email_sender) { Email::Sender.new(message, :valid_type, user) }
 
     before do
@@ -388,7 +390,7 @@ describe Email::Sender do
     end
 
     describe "post reply keys" do
-      let(:post) { Fabricate(:post) }
+      fab!(:post) { Fabricate(:post) }
 
       before do
         message.header['X-Discourse-Post-Id'] = post.id

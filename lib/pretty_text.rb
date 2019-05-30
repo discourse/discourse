@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'mini_racer'
 require 'nokogiri'
 require 'erb'
@@ -144,7 +146,7 @@ module PrettyText
       custom_emoji = {}
       Emoji.custom.map { |e| custom_emoji[e.name] = e.url }
 
-      buffer = <<~JS
+      buffer = +<<~JS
         __optInput = {};
         __optInput.siteSettings = #{SiteSetting.client_settings_json};
         __paths = #{paths_json};
@@ -157,7 +159,7 @@ module PrettyText
         __optInput.categoryHashtagLookup = __categoryLookup;
         __optInput.customEmoji = #{custom_emoji.to_json};
         __optInput.emojiUnicodeReplacer = __emojiUnicodeReplacer;
-        __optInput.lookupImageUrls = __lookupImageUrls;
+        __optInput.lookupUploadUrls = __lookupUploadUrls;
         __optInput.censoredWords = #{WordWatcher.words_for_action(:censor).join('|').to_json};
       JS
 
@@ -233,7 +235,12 @@ module PrettyText
     protect do
       v8.eval(<<~JS)
         __paths = #{paths_json};
-        __performEmojiUnescape(#{title.inspect}, { getURL: __getURL, emojiSet: #{set}, customEmoji: #{custom} });
+        __performEmojiUnescape(#{title.inspect}, {
+          getURL: __getURL,
+          emojiSet: #{set},
+          customEmoji: #{custom},
+          enableEmojiShortcuts: #{SiteSetting.enable_emoji_shortcuts}
+        });
       JS
     end
   end
@@ -241,9 +248,11 @@ module PrettyText
   def self.escape_emoji(title)
     return unless title
 
+    replace_emoji_shortcuts = SiteSetting.enable_emoji && SiteSetting.enable_emoji_shortcuts
+
     protect do
       v8.eval(<<~JS)
-        __performEmojiEscape(#{title.inspect});
+        __performEmojiEscape(#{title.inspect}, { emojiShortcuts: #{replace_emoji_shortcuts} });
       JS
     end
   end
@@ -286,8 +295,8 @@ module PrettyText
 
         if !uri.host.present? ||
            uri.host == site_uri.host ||
-           uri.host.ends_with?("." << site_uri.host) ||
-           whitelist.any? { |u| uri.host == u || uri.host.ends_with?("." << u) }
+           uri.host.ends_with?(".#{site_uri.host}") ||
+           whitelist.any? { |u| uri.host == u || uri.host.ends_with?(".#{u}") }
           # we are good no need for nofollow
           l.remove_attribute("rel")
         else
@@ -319,7 +328,7 @@ module PrettyText
     # extract quotes
     doc.css("aside.quote[data-topic]").each do |aside|
       if aside["data-topic"].present?
-        url = "/t/topic/#{aside["data-topic"]}"
+        url = +"/t/topic/#{aside["data-topic"]}"
         url << "/#{aside["data-post"]}" if aside["data-post"].present?
         links << DetectedLink.new(url, true)
       end
@@ -338,6 +347,7 @@ module PrettyText
   def self.excerpt(html, max_length, options = {})
     # TODO: properly fix this HACK in ExcerptParser without introducing XSS
     doc = Nokogiri::HTML.fragment(html)
+    DiscourseEvent.trigger(:reduce_excerpt, doc, options)
     strip_image_wrapping(doc)
     html = doc.to_html
 
@@ -375,8 +385,13 @@ module PrettyText
 
   def self.convert_vimeo_iframes(doc)
     doc.css("iframe[src*='player.vimeo.com']").each do |iframe|
-      vimeo_id = iframe['src'].split('/').last
-      iframe.replace "<p><a href='https://vimeo.com/#{vimeo_id}'>https://vimeo.com/#{vimeo_id}</a></p>"
+      if iframe["data-original-href"].present?
+        vimeo_url = UrlHelper.escape_uri(iframe["data-original-href"])
+      else
+        vimeo_id = iframe['src'].split('/').last
+        vimeo_url = "https://vimeo.com/#{vimeo_id}"
+      end
+      iframe.replace "<p><a href='#{vimeo_url}'>#{vimeo_url}</a></p>"
     end
   end
 

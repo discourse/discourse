@@ -1,7 +1,11 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 require 'wizard'
 
 describe Wizard do
+  fab!(:admin) { Fabricate(:admin) }
+
   before do
     SiteSetting.wizard_enabled = true
   end
@@ -116,19 +120,16 @@ describe Wizard do
 
     it "it's false when the wizard is disabled" do
       SiteSetting.wizard_enabled = false
-      admin = Fabricate(:admin)
       expect(build_simple(admin).requires_completion?).to eq(false)
     end
 
     it "its false when the wizard is bypassed" do
       SiteSetting.bypass_wizard_check = true
-      admin = Fabricate(:admin)
       expect(build_simple(admin).requires_completion?).to eq(false)
     end
 
     it "its automatically bypasses after you reach topic limit" do
       Fabricate(:topic)
-      admin = Fabricate(:admin)
       wizard = build_simple(admin)
 
       wizard.max_topics_to_require_completion = Topic.count - 1
@@ -138,7 +139,6 @@ describe Wizard do
     end
 
     it "it's true for the first admin who logs in" do
-      admin = Fabricate(:admin)
       second_admin = Fabricate(:admin)
       UserAuthToken.generate!(user_id: second_admin.id)
 
@@ -147,14 +147,14 @@ describe Wizard do
     end
 
     it "is false for staff when complete" do
-      wizard = build_simple(Fabricate(:admin))
+      wizard = build_simple(admin)
       updater = wizard.create_updater('simple', name: 'Evil Trout')
       updater.update
 
       expect(wizard.requires_completion?).to eq(false)
 
       # It's also false for another user
-      wizard = build_simple(Fabricate(:admin))
+      wizard = build_simple(admin)
       expect(wizard.requires_completion?).to eq(false)
     end
 

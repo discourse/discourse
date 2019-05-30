@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_dependency 'topic_list_responder'
 
 class ListController < ApplicationController
@@ -117,20 +119,20 @@ class ListController < ApplicationController
 
     define_method("category_#{filter}") do
       canonical_url "#{Discourse.base_url_no_prefix}#{@category.url}"
-      self.send(filter, category: @category.id)
+      self.public_send(filter, category: @category.id)
     end
 
     define_method("category_none_#{filter}") do
-      self.send(filter, category: @category.id, no_subcategories: true)
+      self.public_send(filter, category: @category.id, no_subcategories: true)
     end
 
     define_method("parent_category_category_#{filter}") do
       canonical_url "#{Discourse.base_url_no_prefix}#{@category.url}"
-      self.send(filter, category: @category.id)
+      self.public_send(filter, category: @category.id)
     end
 
     define_method("parent_category_category_none_#{filter}") do
-      self.send(filter, category: @category.id)
+      self.public_send(filter, category: @category.id)
     end
   end
 
@@ -142,7 +144,7 @@ class ListController < ApplicationController
     if view_method == 'top'
       top(category: @category.id)
     else
-      self.send(view_method)
+      self.public_send(view_method)
     end
   end
 
@@ -237,7 +239,10 @@ class ListController < ApplicationController
     @link = "#{Discourse.base_url}/u/#{target_user.username}/activity/topics"
     @atom_link = "#{Discourse.base_url}/u/#{target_user.username}/activity/topics.rss"
     @description = I18n.t("rss_description.user_topics", username: target_user.username)
-    @topic_list = TopicQuery.new(nil, order: 'created').send("list_topics_by", target_user)
+
+    @topic_list = TopicQuery
+      .new(nil, order: 'created')
+      .public_send("list_topics_by", target_user)
 
     render 'list', formats: [:rss]
   end
@@ -245,7 +250,7 @@ class ListController < ApplicationController
   def top(options = nil)
     options ||= {}
     period = ListController.best_period_for(current_user.try(:previous_visit_at), options[:category])
-    send("top_#{period}", options)
+    public_send("top_#{period}", options)
   end
 
   def category_top
@@ -285,15 +290,18 @@ class ListController < ApplicationController
     end
 
     define_method("category_top_#{period}") do
-      self.send("top_#{period}", category: @category.id)
+      self.public_send("top_#{period}", category: @category.id)
     end
 
     define_method("category_none_top_#{period}") do
-      self.send("top_#{period}", category: @category.id, no_subcategories: true)
+      self.public_send("top_#{period}",
+        category: @category.id,
+        no_subcategories: true
+      )
     end
 
     define_method("parent_category_category_top_#{period}") do
-      self.send("top_#{period}", category: @category.id)
+      self.public_send("top_#{period}", category: @category.id)
     end
 
     # rss feed
@@ -382,7 +390,9 @@ class ListController < ApplicationController
 
     # hacky columns get special handling
     options[:topic_ids] = param_to_integer_list(:topic_ids)
-    options[:no_subcategories] = options[:no_subcategories] == 'true'
+    if options[:no_subcategories] == 'true'
+      options[:no_subcategories] = true
+    end
 
     options
   end
@@ -396,7 +406,7 @@ class ListController < ApplicationController
   end
 
   def generate_list_for(action, target_user, opts)
-    TopicQuery.new(current_user, opts).send("list_#{action}", target_user)
+    TopicQuery.new(current_user, opts).public_send("list_#{action}", target_user)
   end
 
   def construct_url_with(action, opts, url_prefix = nil)

@@ -14,12 +14,12 @@ export default TextField.extend({
     const $searchInput = this.$();
     applySearchAutocomplete($searchInput, this.siteSettings);
 
-    if (!this.get("hasAutofocus")) {
+    if (!this.hasAutofocus) {
       return;
     }
     // iOS is crazy, without this we will not be
     // at the top of the page
     $(window).scrollTop(0);
-    $searchInput.trigger("touchstart").focus();
+    $searchInput.focus();
   }
 });

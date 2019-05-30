@@ -12,7 +12,7 @@ export default Ember.Component.extend({
   @on("didInsertElement")
   _loadDatePicker() {
     const input = this.$(".date-picker")[0];
-    const container = $("#" + this.get("containerId"))[0];
+    const container = $("#" + this.containerId)[0];
 
     loadScript("/javascripts/pikaday.js").then(() => {
       Ember.run.next(() => {

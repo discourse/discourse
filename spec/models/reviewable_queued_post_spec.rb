@@ -1,9 +1,11 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe ReviewableQueuedPost, type: :model do
 
-  let!(:category) { Fabricate(:category) }
-  let(:moderator) { Fabricate(:moderator) }
+  fab!(:category) { Fabricate(:category) }
+  fab!(:moderator) { Fabricate(:moderator) }
 
   context "creating a post" do
     let!(:topic) { Fabricate(:topic, category: category) }
@@ -85,7 +87,8 @@ RSpec.describe ReviewableQueuedPost, type: :model do
           newuser.update!(trust_level: 0)
           post = Fabricate(:post, user: newuser)
           PostActionCreator.spam(moderator, post)
-          SiteSetting.spam_score_to_silence_new_user = 1
+          Reviewable.set_priorities(high: 1.0)
+          SiteSetting.silence_new_user_sensitivity = Reviewable.sensitivity[:low]
           SiteSetting.num_users_to_silence_new_user = 1
           expect(Guardian.new(newuser).can_create_post?(topic)).to eq(false)
 
@@ -135,11 +138,18 @@ RSpec.describe ReviewableQueuedPost, type: :model do
     let(:reviewable) { Fabricate(:reviewable_queued_post_topic, category: category) }
 
     context "editing" do
-      let(:guardian) { Guardian.new(moderator) }
 
       it "is editable and returns the fields" do
-        fields = reviewable.editable_for(guardian)
+        fields = reviewable.editable_for(Guardian.new(moderator))
         expect(fields.has?('category_id')).to eq(true)
+        expect(fields.has?('payload.raw')).to eq(true)
+        expect(fields.has?('payload.title')).to eq(true)
+        expect(fields.has?('payload.tags')).to eq(true)
+      end
+
+      it "is editable by a category group reviewer" do
+        fields = reviewable.editable_for(Guardian.new(Fabricate(:user)))
+        expect(fields.has?('category_id')).to eq(false)
         expect(fields.has?('payload.raw')).to eq(true)
         expect(fields.has?('payload.title')).to eq(true)
         expect(fields.has?('payload.tags')).to eq(true)

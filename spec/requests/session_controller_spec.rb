@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe SessionController do
@@ -265,11 +267,7 @@ RSpec.describe SessionController do
       SiteSetting.enable_sso = true
       SiteSetting.sso_secret = @sso_secret
 
-      # We have 2 options, either fabricate an admin or don't
-      # send welcome messages
       Fabricate(:admin)
-      # skip for now
-      # SiteSetting.send_welcome_message = false
     end
 
     let(:headers) { { host: Discourse.current_hostname } }
@@ -802,9 +800,13 @@ RSpec.describe SessionController do
         )
 
         @user.update_columns(uploaded_avatar_id: upload.id)
-        @user.user_profile.update_columns(
-          profile_background: "//test.s3.dualstack.us-east-1.amazonaws.com/something",
-          card_background: "//test.s3.dualstack.us-east-1.amazonaws.com/something"
+
+        upload1 = Fabricate(:upload_s3)
+        upload2 = Fabricate(:upload_s3)
+
+        @user.user_profile.update!(
+          profile_background_upload: upload1,
+          card_background_upload: upload2
         )
 
         @user.reload
@@ -1145,7 +1147,6 @@ RSpec.describe SessionController do
       end
 
       context 'when admins are restricted by ip address' do
-        let(:permitted_ip_address) { '111.234.23.11' }
         before do
           SiteSetting.use_admin_ip_whitelist = true
           ScreenedIpAddress.all.destroy_all
@@ -1344,7 +1345,7 @@ RSpec.describe SessionController do
     end
 
     context 'for an existing username' do
-      let(:user) { Fabricate(:user) }
+      fab!(:user) { Fabricate(:user) }
 
       context 'local login is disabled' do
         before do

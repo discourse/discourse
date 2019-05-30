@@ -1,3 +1,4 @@
+import debounce from "discourse/lib/debounce";
 import { CANCELLED_STATUS } from "discourse/lib/autocomplete";
 import { userPath } from "discourse/lib/url";
 import { emailValid } from "discourse/lib/utilities";
@@ -15,7 +16,7 @@ function performSearch(
   includeMentionableGroups,
   includeMessageableGroups,
   allowedUsers,
-  group,
+  groupMembersOf,
   resultsFn
 ) {
   var cached = cache[term];
@@ -39,7 +40,7 @@ function performSearch(
       include_groups: includeGroups,
       include_mentionable_groups: includeMentionableGroups,
       include_messageable_groups: includeMessageableGroups,
-      group: group,
+      groups: groupMembersOf,
       topic_allowed_users: allowedUsers
     }
   });
@@ -61,7 +62,7 @@ function performSearch(
     });
 }
 
-var debouncedSearch = _.debounce(performSearch, 300);
+var debouncedSearch = debounce(performSearch, 300);
 
 function organizeResults(r, options) {
   if (r === CANCELLED_STATUS) {
@@ -139,7 +140,7 @@ export default function userSearch(options) {
     includeMessageableGroups = options.includeMessageableGroups,
     allowedUsers = options.allowedUsers,
     topicId = options.topicId,
-    group = options.group;
+    groupMembersOf = options.groupMembersOf;
 
   if (oldSearch) {
     oldSearch.abort();
@@ -171,7 +172,7 @@ export default function userSearch(options) {
       includeMentionableGroups,
       includeMessageableGroups,
       allowedUsers,
-      group,
+      groupMembersOf,
       function(r) {
         clearTimeout(clearPromise);
         resolve(organizeResults(r, options));

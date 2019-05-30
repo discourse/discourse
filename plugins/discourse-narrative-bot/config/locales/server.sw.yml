@@ -108,11 +108,6 @@ sw:
       random_mention:
         reply: |-
           Habari! kujua ninachoweza kufanya andika `@%{discobot_username}%{help_trigger}`.
-        tracks: |-
-          Kwa sasa najua kufanya vitu vifuatavyo:
-
-          `@%{discobot_username}%{reset_trigger}%{default_track}`
-          >Anzisha mazungumzo: %{tracks}
         bot_actions: |-
           `@%{discobot_username}%{dice_trigger} 2d6`
           > :game_die: 3 ,6
@@ -135,7 +130,6 @@ sw:
 
           Kwa sasa, nitakaa pembeni.
     new_user_narrative:
-      reset_trigger: "mtumiaji mpya"
       cert_title: "Utambulisho wa kumaliza mafunzo ya mtumiaji mpya"
       hello:
         title: "Habari!"
@@ -271,7 +265,6 @@ sw:
       certificate:
         alt: 'Shahada ya Mafanikio'
     advanced_user_narrative:
-      reset_trigger: 'mtumiaji wa hali ya juu'
       cert_title: "Utambulisho wa kumaliza mafunzo ya mtumiaji mpya wa hali ya juu"
       title: ':arrow_up: Vipengele vya mtumiaji wa hali ya juu'
       edit:
@@ -307,10 +300,6 @@ sw:
           Unaweza kunisaidia na<img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-rotate-left.png" width="16" height="16"> **kulirudisha**?
         not_found: |-
           Je unapata tatizo? Kumbuka <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16">onyesha zaidi itaonyesha<img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-rotate-left.png" width="16" height="16">kurudisha.
-        reply: |-
-          Asante kwa kutatua tatizo :wink:
-
-          Jua una masaa 24 kurudisha chapisho.
       category_hashtag:
         instructions: |-
           Unajua unaweza kuongelea kategoria na lebo kwenye chapisho lako? Mfano, umeona kategoria %{category} hii?

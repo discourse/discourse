@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 describe Admin::StaffActionLogsController do
@@ -5,7 +7,7 @@ describe Admin::StaffActionLogsController do
     expect(Admin::StaffActionLogsController < Admin::AdminController).to eq(true)
   end
 
-  let(:admin) { Fabricate(:admin) }
+  fab!(:admin) { Fabricate(:admin) }
 
   before do
     sign_in(admin)

@@ -159,7 +159,6 @@ ja:
   private_message_abbrev: "メッセージ"
   rss_description:
     latest: "最新のトピック"
-    hot: "ホットトピック"
     posts: "最近の投稿"
     group_posts: "%{group_name}からの最新投稿"
     group_mentions: "%{group_name}からの最新メンション"
@@ -316,8 +315,7 @@ ja:
         other: "%{count} 年"
     distance_in_words_verbose:
       half_a_minute: "たった今"
-      less_than_x_seconds:
-        other: "現在"
+      less_than_x_seconds: "現在"
       x_seconds:
         other: "%{count} 秒前"
       less_than_x_minutes:
@@ -728,10 +726,6 @@ ja:
     logo_small: "あなたのサイトの左上にある小さなロゴ画像です。下にスクロールしたときに見えます。 120×120の正方形の画像を使用してください。空白のままにすると、ホームグリフが表示されます。"
     digest_logo: "サイトのメールサマリーの上部で使用されるロゴの代替画像です。広い長方形の画像を使用してください。 SVG画像を使わないでください。空白のままにすると、 `logo`で設定した画像が使用されます。"
     mobile_logo: "あなたのサイトのモバイル版で使用されるロゴです。高さ120、縦横比3：1を超える広い長方形の画像を使用します。空白のままにすると、 'logo'で設定した画像が使用されます。"
-    favicon: "あなたのサイトのためのファビコン、<a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>https://en.wikipedia.org/wiki/Favicon</a>を参照してください。CDN上で正しく動作するためには、pngでなければなりません。"
-    apple_touch_icon: "Apple touch端末で使用されるアイコンです。必要なサイズは144×144です。"
-    opengraph_image: "当該ページに他の適切な画像やサイトロゴがない場合に使用されるデフォルトのopengraph画像です。"
-    twitter_summary_large_image: "デフォルトのTwitter Summary Cardの画像です（幅280、高さ150以上）。"
     notification_email: "システムからの重要なメール送信に使用する from: メールアドレス。メールが届くように、ここに指定されたドメインはSPF、DKIM、逆引きPTRレコードが正しく設定されている必要があります。"
     email_custom_headers: "カスタムメールヘッダのリスト (パイプ(バーティカルバー) 区切り)"
     summary_score_threshold: "'トピックサマリー'に投稿が含まれるために必要な最低スコア"
@@ -1221,7 +1215,6 @@ ja:
       unread_messages: "未読メッセージ"
       unread_notifications: "未読通知"
       liked_received: "いいねを受領"
-      new_posts: "新しいポスト"
       new_users: "新しいユーザー"
       popular_topics: "人気トピック"
       follow_topic: "トピックをフォロー"
@@ -1286,8 +1279,6 @@ ja:
     see_more: "もっと見る"
     search_title: "サイトを検索"
     search_button: "検索"
-  terms_of_service:
-    title: "利用規約"
   deleted: "削除"
   image: "画像"
   upload:
@@ -1317,9 +1308,6 @@ ja:
     sender_body_blank: "本文が空です"
   color_schemes:
     base_theme_name: "ベース"
-  about: "このサイトについて"
-  guidelines: "ガイドライン"
-  privacy: "プライバシー"
   edit_this_page: "ページを編集"
   csv_export:
     boolean_yes: "はい"
@@ -1643,11 +1631,15 @@ ja:
     popup:
       confirm_body: "成功！通知を可能にしました！"
   reviewables:
+    sensitivity:
+      disabled: "利用不可"
     actions:
       agree_and_suspend:
         title: "凍結中のユーザ"
       delete_spammer:
         title: "スパムユーザーを削除"
+      delete_single:
+        title: "削除する"
       disagree:
         title: "反対する"
       ignore:

@@ -18,9 +18,7 @@ QUnit.test("does not display uncategorized if not allowed", async assert => {
   assert.ok(categoryChooser.rowByIndex(0).name() !== "uncategorized");
 });
 
-// TODO: fix the test to work with new code to land on category page
-// (https://github.com/discourse/discourse/commit/7d9c97d66141d35d00258fe544211d9fd7f79a76)
-QUnit.skip("prefill category when category_id is set", async assert => {
+QUnit.test("prefill category when category_id is set", async assert => {
   await visit("/new-topic?category_id=1");
 
   assert.equal(

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_dependency 'theme_store/git_importer'
 require_dependency 'theme_store/tgz_importer'
 require_dependency 'upload_creator'
@@ -167,6 +169,21 @@ class RemoteTheme < ActiveRecord::Base
       importer.cleanup! if cleanup
     rescue => e
       Rails.logger.warn("Failed cleanup remote git #{e}")
+    end
+  end
+
+  def diff_local_changes
+    return unless is_git?
+    importer = ThemeStore::GitImporter.new(remote_url, private_key: private_key, branch: branch)
+    begin
+      importer.import!
+    rescue RemoteTheme::ImportError => err
+      { error: err.message }
+    else
+      changes = importer.diff_local_changes(self.id)
+      return nil if changes.blank?
+
+      { diff: changes }
     end
   end
 

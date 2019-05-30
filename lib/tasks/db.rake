@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # we should set the locale before the migration
 task 'set_locale' do
   begin
@@ -34,6 +36,18 @@ end
 # we need to run seed_fu every time we run rake db:migrate
 task 'db:migrate' => ['environment', 'set_locale'] do |_, args|
   SeedFu.seed(DiscoursePluginRegistry.seed_paths)
+
+  unless Discourse.skip_post_deployment_migrations?
+    puts
+    print "Optimizing site icons... "
+    SiteIconManager.ensure_optimized!
+    puts "Done"
+    puts
+    print "Recompiling theme fields... "
+    ThemeField.force_recompilation!
+    Theme.expire_site_cache!
+    puts "Done"
+  end
 
   if MultisiteTestHelpers.load_multisite?
     system("rake db:schema:dump")

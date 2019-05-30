@@ -8,76 +8,76 @@
 es:
   site_settings:
     discourse_narrative_bot_enabled: 'Habilitar Discourse Narrative Bot (discobot)'
-    disable_discourse_narrative_bot_welcome_post: "Deshabilitar el post de bienvenida por Discourse Narrative Bot"
-    discourse_narrative_bot_ignored_usernames: "Nombres de usuario que el Discourse Narrative Bot debe ignorar"
-    discourse_narrative_bot_disable_public_replies: "Deshabilitar respuestas públicas del Discourse Narrative Bot"
-    discourse_narrative_bot_welcome_post_type: "Tipo de post de bienvenida que el Discourse Narrative Bot debería enviar"
-    discourse_narrative_bot_welcome_post_delay: "Esperar (n) segundos antes de enviar el post de bienvenida del Discourse Narrative Bot."
+    disable_discourse_narrative_bot_welcome_post: "Deshabilitar la publiación de bienvenida de Discourse Narrative Bot"
+    discourse_narrative_bot_ignored_usernames: "Nombres de usuario que el Discourse Narrative Bot debe ignorar."
+    discourse_narrative_bot_disable_public_replies: "Deshabilitar las respuestas públicas de Discourse Narrative Bot"
+    discourse_narrative_bot_welcome_post_type: "Tipo de publicación de bienvenida que debe enviar el Discourse Narrative Bot"
+    discourse_narrative_bot_welcome_post_delay: "Esperer (n) segundos antes de enviar la publicación de bienvenida de Discourse Narrative Bot."
   badges:
     certified:
       name: Certificado
-      description: "Ha completado nuestro tutorial de nuevo usuario"
+      description: "Completaste nuestro tutorial de nuevo usuario"
       long_description: |
-        Este distintivo se otorga a quienes han completado el tutorial de nuevo usuario. Has tomado la iniciativa para aprender las herramientas básicas para el debate, ¡y ahora estás certificado!
+        Esta insignia se otorga al completar con éxito el tutorial interactivo para nuevos usuarios. ¡Has tomado la iniciativa de aprender las herramientas básicas de discusión y ahora estás certificado!
     licensed:
-      name: Licenciatura
-      description: "Ha completado nuestro tutorial de usuario avanzado"
+      name: Con licencia
+      description: "Completaste nuestro tutorial de usuario avanzado"
       long_description: |
-        Este distintivo se otorga a quienes han completado el tutorial de usuario avanzado. Has dominado las herramientas avanzadas de discusión —¡y ahora eres un licenciado!
+        Esta insignia se otorga al completar con éxito el tutorial interactivo para usuarios avanzados. Has dominado las herramientas avanzadas de discusión, ¡y ahora tienes licencia completa!
   discourse_narrative_bot:
-    bio: "Hola, no soy una persona real. Soy un bot que puede enseñarte sobre este sitio. Para interactuar conmigo, me envías un mensaje o me mencionas **`@%{discobot_username}`** en cualquier lugar."
+    bio: "Hola, no soy una persona real. Soy un bot que te puede enseñar sobre este sitio. Para interactuar conmigo, envíame un mensaje o menciona **`%{discobot_username}`** en cualquier lugar."
     timeout:
       message: |-
-        Hey @%{username}, solo estoy verificando si estás porque no he oído de tí en un tiempo.
+        Hey @%{username}, te quería decir que estoy al pediente, porque no he tenido noticias tuyas en mucho tiempo.
 
-        - Para continuar, responde en cualquier momento.
+        - Para continuar, contéstame en cualquier momento.
 
-        - Si gustas de saltar este paso, dime `%{skip_trigger}`.
+        - Si deseas omitir este paso, escribe `%{skip_trigger}`.
 
-        - Para empezar de nuevo, dime `%{reset_trigger}`.
+        - Para empezar de nuevo, escribe `%{reset_trigger}`.
 
-        Si prefieres no continuar, está OK también! Soy un robot. No herirás mis sentimientos. :sob:
+        Si prefieres no hacerlo, también está bien. Soy un bot. No herirás mis sentimientos. :sob:
     dice:
       trigger: "tirar"
       invalid: |-
-        Lo siento, es matemáticamente imposible lanzar esa combinación de dados. :confounded:
+        Lo siento, es matemáticamente imposible tirar esa combinación de dados. :confounded:
       not_enough_dice: |-
-        Solo tengo %{num_of_dice} dados para jugar. Es [vergonzoso]((http://www.therobotsvoice.com/2009/04/the_10_most_shameful_rpg_dice.php)), ¡lo sé!
+        Sólo tengo %{num_of_dice} dados. [Vergonzoso](http://www.therobotsvoice.com/2009/04/the_10_most_shameful_rpg_dice.php), ¡lo sé!
       out_of_range: |-
-        ¿Sabías que [el máximo número de lados](https://www.wired.com/2016/05/mathematical-challenge-of-designing-the-worlds-most-complex-120-sided-dice) para un dado, matemáticamente correcto, es 120?
+        ¿Sabía que [el número máximo de lados](https://www.wired.com/2016/05/mathematical-challenge-of-designing-the-worlds-most-complex-120-sided-dice) para un dado matemáticamente correcto es 120?
       results: |-
         > :game_die: %{results}
     quote:
       trigger: "citar"
       '1':
-        quote: "In the middle of every difficulty lies opportunity"
+        quote: "En medio de cada dificultad se encuentra la oportunidad"
         author: "Albert Einstein"
       '2':
-        quote: "La libertad no vale la pena si no conlleva libertad para equivocarse."
+        quote: "No vale la pena tener libertad si no connota libertad para errar."
         author: "Mahatma Gandhi"
       '3':
-        quote: "Don’t cry because it’s over, smile because it happened."
+        quote: "No llores porque se acabó, sonríe porque sucedió."
         author: "Dr Seuss"
       '4':
-        quote: "If you want something done right, do it yourself."
+        quote: "Si quieres que algo salga bien, hazlo tú mismo."
         author: "Charles-Guillaume Étienne"
       '5':
-        quote: "Believe you can and you’re halfway there."
+        quote: "Cree que puedes y estás a mitad de camino."
         author: "Theodore Roosevelt"
       '6':
-        quote: "Life is like a box of chocolates. You never know what you’re gonna get."
+        quote: "La vida es como una caja de chocolates. Nunca sabes lo que vas a conseguir."
         author: "Forrest Gump’s Mom"
       '7':
-        quote: "That’s one small step for a man, a giant leap for mankind."
+        quote: "Ese es un pequeño paso para un hombre, un gran salto para la humanidad."
         author: "Neil Armstrong"
       '8':
-        quote: "Do one thing every day that scares you."
+        quote: "Haz una cosa todos los días que te asuste."
         author: "Eleanor Roosevelt"
       '9':
-        quote: "Mistakes are always forgivable, if one has the courage to admit them."
+        quote: "Los errores siempre son perdonables, si uno tiene el coraje de admitirlos."
         author: "Bruce Lee"
       '10':
-        quote: "Whatever the mind of man can conceive and believe, it can achieve."
+        quote: "Cualquier cosa que la mente del hombre pueda concebir y creer, puede lograr."
         author: "Napoleon Hill"
       results: |-
         > :left_speech_bubble: _%{quote}_ &mdash; %{author}
@@ -86,23 +86,23 @@ es:
       answers:
         '1': "Es cierto"
         '2': "Es decididamente así"
-        '3': "Sin ninguna duda"
+        '3': "Sin duda"
         '4': "Definitivamente sí"
         '5': "Puedes confiar en ello"
         '6': "Como yo lo veo, sí"
-        '7': "Más probable"
-        '8': "Buena perspectiva"
+        '7': "Probablemente"
+        '8': "La perspectiva es buena"
         '9': "Sí"
         '10': "Las señales apuntan a que sí"
         '11': "Respuesta confusa, intenta otra vez"
         '12': "Pregunta de nuevo más tarde"
         '13': "Mejor no te digo ahora"
         '14': "No se puede predecir ahora"
-        '15': "Concentrate y pregunta de nuevo"
-        '16': "No cuentes con eso"
+        '15': "Concéntrate y pregunta otra vez"
+        '16': "No cuentes con ello"
         '17': "Mi respuesta es no"
-        '18': "Mis fuentes dicen no"
-        '19': "No son buenas las perspectivas"
+        '18': "Mis fuentes dicen que no"
+        '19': "La perspectiva no es tan buena"
         '20': "Muy dudoso"
       result: |-
         > :crystal_ball: %{result}
@@ -112,77 +112,68 @@ es:
       help_trigger: 'mostrar ayuda'
       random_mention:
         reply: |-
-          ¡Hola! Para averiguar qué puedo hacer, escribe `@%{discobot_username} %{help_trigger}`.
+          ¡Hola! Para saber qué puedo hacer, escribe `@%{discobot_username} %{help_trigger}`.
         tracks: |-
-          Hola! Estoy conociendo cómo hacer las siguientes cosas:
+          Actualmente sé cómo hacer las siguientes cosas:
 
           `@%{discobot_username} %{reset_trigger} %{default_track}`
-          > Inicia una de las siguientes narraciones interactivas: %{tracks}.
+          > Iniciar uno de los siguientes tutoriales interactivos: %{tracks}.
         bot_actions: |-
           `@%{discobot_username} %{dice_trigger} 2d6`
-          > :game_die: 3, 6
+          >: game_die: 3, 6
 
           `@%{discobot_username} %{quote_trigger}`
-          > :left_speech_bubble: _Carry out a random act of kindness, with no expectation of reward, safe in the knowledge that one day someone might do the same for you_ &mdash; Princess Diana
+          >: left_speech_bubble: _Realizar un acto aleatorio de bondad, sin esperar recompensa, a sabiendas de que un día alguien podría hacer lo mismo por ti_ &mdash; princesa Diana
 
           `@%{discobot_username} %{magic_8_ball_trigger}`
-          > :crystal_ball: Puedes confiar en ello
+          >: crystal_ball: Puedes confiar en ello
       do_not_understand:
         first_response: |-
-          Oye, ¡gracias por tu respuesta!
+          ¡Hey, gracias por la respuesta!
 
-          Lamentablemente, como un robot con programación muy pobre, no he podido entender lo que me has dicho. :frowning:
-        track_response: Puedes intentarlo de nuevo, o bien para saltar este paso, dime `%{skip_trigger}`. Para empezar de nuevo, dime `%{reset_trigger}`.
+          Desafortunadamente, como un bot mal programado, no puedo entenderlo. :frowning:
+        track_response: Puedes intentarlo de nuevo, o si quieres omitir este paso, escribe `%{skip_trigger}`. De lo contrario, para comenzar de nuevo, escribe `%{reset_trigger}`.
         second_response: |-
-          Vaya, lo siento. Sigo sin entenderlo. :anguished:
+          Oh, lo siento. Todavía no lo entiendo. :anguished:
 
-          Soy solo un robot, pero si quieres contactar a una persona real, mira [nuestra página de contacto](%{base_path}/about).
+          Solo soy un bot, pero si deseas comunicarte con una persona real, consulta [nuestra página de contacto](/about).
 
-          Mientras tanto, me quedaré fuera de tu camino.
+          Mientras tanto, me mantendré fuera de tu camino.
     new_user_narrative:
-      reset_trigger: "usuario nuevo"
-      title: "Certificado de completación para el nuevo usuario"
-      cert_title: "En reconocimiento de la finalización exitosa del tutorial de usuario nuevo"
+      reset_trigger: "tutorial"
+      cert_title: "En reconocimiento a la finalización exitosa del tutorial de nuevo usuario"
       hello:
         title: "¡Saludos!"
-        message: |-
-          Gracias por unirte a %{title}, y bienvenido!
-
-          - Soy solo un robot, pero [nuestro amigable staff](%{base_uri}/about) está también aquí para ayudar si necesitas contactar a una persona.
-
-          - Por razones de seguridad, nosotros temporalmente limitamos lo que los nuevos usuarios pueden hacer. Tú podrás ganar nuevas habilidades (y [distintivos](%{base_uri}/badges)) cuando te vayamos conociendo.
-
-          - Nosotros creemos en el [comportamiento de una comunidad civilizada](%{base_uri}/guidelines) en todo momento.
       onebox:
         instructions: |-
-          Lo que sigue, ¿puedes compartir uno de estos enlaces conmigo? Responde con **el enlace en una línea aparte**, y automáticamente se expandirá con un breve resumen.
+          A continuación, ¿podrías compartir uno de estos enlaces conmigo? Responde con **un enlace en una línea por sí mismo**, y se expandirá automáticamente para incluir un resumen ingenioso.
 
-          Para copiar un enlace, toca y mantiene presionado en el móvil, o haz clic derecho con tu mouse:
+          Para copiar cualquier enlace, toca y mantén presionado en el dispositivo móvil, o haz clic derecho en tu dispositivo señalador:
 
           <https://en.wikipedia.org/wiki/Inherently_funny_word>
           <https://en.wikipedia.org/wiki/Death_by_coconut>
           <https://en.wikipedia.org/wiki/Calculator_spelling>
         reply: |-
-          ¡Genial! Esto funcionará en la mayoría de los <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-link.png" width="16" height="16"> enlaces. Recuerda que debe ser colocado el enlace en una _linea aparte_, sin texto ni espacios delante ni atrás del enlace.
+          ¡Genial! Esto funcionará para la mayoría de los <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-link.png" width="16" height="16"> enlaces. Recuerda, debe estar en una línea _todo por sí mismo_, con nada más delante o detrás.
         not_found: |-
-          Disculpa, ¡no he podido encontrar el enlace en tu respuesta! :cry:
+          Lo siento, ¡no pude encontrar el enlace en tu respuesta! :cry:
 
-          ¿Puedes intentar agregar el siguiente enlace, en una línea aparte, en tu siguiente respuesta?
+          ¿Puedes intentar agregar el siguiente enlace, en su propia línea, en tu próxima respuesta?
 
           <https://en.wikipedia.org/wiki/Exotic_Shorthair>
       images:
         instructions: |-
-          Aquí la imagen de un unicornio:
+          Aquí hay una foto de un unicornio:
 
           <img src="%{base_uri}/plugins/discourse-narrative-bot/images/unicorn.png" width="520" height="520">
 
-          Si te gusta (y a quién no) presiona el botón "me gusta" :heart: debajo del post para hacerme saber que te ha gustado.
+          Si te gusta (¡y a quién no le gustaría!), adelante, presiona el botón "me gusta": heart: debajo de esta publicación para avisarme.
 
-          ¿Puedes **responder con otra imagen??** ¡Cualquier imagen! Arrastra y suelta la imagen desde tu PC al editor, o bien presiona el botón de subir imagen, o también puedes copiar y pegar la imagen al editor!
+          ¿Puedes **responder con una imagen?** ¡Cualquier imagen servirá! Arrastra y suelta, presiona el botón de carga o incluso cópialo y pégalo.
         reply: |-
-          Elegante imagen – He presionado el botón :heart: "me gusta" para hacerte saber cuánto la aprecio :heart_eyes:
+          Ingeniosa imagen – presioné el botón "me gusta" :heart: para hacerte saber cuánto lo aprecié heart_eyes
         like_not_found: |-
-          Te olvidaste de dar "me gusta" :heart: a mi [post?](%{url}) :crying_cat_face:
+          ¿Te olvidaste de dar "me gusta" :heart: a mi [post?](%{url}) :crying_cat_face:
         not_found: |-
           Parece que no subiste ninguna imagen, así que he elegido una imagen que estoy _seguro_ que disfrutarás.
           `%{image_url}`
@@ -297,7 +288,7 @@ es:
       certificate:
         alt: 'Certificado de logro'
     advanced_user_narrative:
-      reset_trigger: 'usuario avanzado'
+      reset_trigger: 'tutorial avanzado'
       cert_title: "En reconocimiento de la finalización exitosa del tutorial de usuario avanzado"
       title: ':arrow_up: Funciones avanzadas del usuario'
       start_message: |-
@@ -336,9 +327,9 @@ es:
         not_found: |-
           ¿Tienes problemas? Recuerda presionar el botón <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> para mostrar más opciones y aparecerá el botón <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-rotate-left.png" width="16" height="16"> para recuperar un mensaje borrado.
         reply: |-
-          Phew, ¡eso estuvo cerca! Gracias por solucionarlo :wink:
+          Uf, ¡eso ha estado cerca! Gracias por arreglarlo :wink:
 
-          Tenga en cuenta que sólo tiene 24 horas para recuperar una publicación.
+          Ten en cuenta que solo tienes %{deletion_after} hora(s) para deshacer la eliminación de una publicación.
       category_hashtag:
         instructions: |-
           ¿Sabía que puede hacer referencia a categorías y etiquetas en su publicación? Por ejemplo, has visto la %{category} categoría?

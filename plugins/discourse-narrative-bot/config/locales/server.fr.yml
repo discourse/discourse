@@ -113,11 +113,6 @@ fr:
       random_mention:
         reply: |-
           Bonjour ! Pour voir ce que je peux faire, dites `@%{discobot_username} `.
-        tracks: |-
-          Actuellement, je sais faire les choses suivantes:
-
-          `@%{discobot_username}%{reset_trigger}%{default_track} `
-          > Démarre l'un des récits interactifs suivants: %{tracks}.
         bot_actions: |-
           `@%{discobot_username} %{dice_trigger} 2d6`
           > :game_die: 3, 6
@@ -140,19 +135,9 @@ fr:
 
           Pendant ce temps là, je serais silencieux.
     new_user_narrative:
-      reset_trigger: "nouvel utilisateur"
-      title: "Certificat de complétion des étapes de nouvel utilisateur"
       cert_title: "En reconnaissance de l'accomplissement avec succès du tutoriel nouvel utilisateur"
       hello:
         title: "Bienvenue !"
-        message: |-
-          Merci de vous être inscrit à %{title}, et bienvenue !
-
-          - Je ne suis qu'un robot, mais [notre équipe](%{base_uri}/about) est également disponible si vous avez besoin de contacter quelqu'un.
-
-          - Pour des raisons de sécurité, nous avons temporairement limité ce que les nouveaux utilisateurs peuvent faire. Vous obtiendrez de nouvelles possibilités (et des [badges](%{base_uri}/badges)) au fur et à mesure que nous vous connaitrons.
-
-          - Nous croyons en [un comportement communautaire civilisé](%{base_uri}/guidelines) de tout temps.
       onebox:
         instructions: |-
           Maintenant, pouvez-vous partager l'un de ces liens avec moi ? Répondez avec **un lien sur une ligne vide**, et il sera automatiquement transformé pour inclure un astucieux résumé.
@@ -303,7 +288,6 @@ fr:
       certificate:
         alt: 'Certificat d''accomplissement'
     advanced_user_narrative:
-      reset_trigger: 'utilisateur avancé'
       cert_title: "En reconnaissance de l'accomplissement avec succès du tutoriel utilisateur avancé "
       title: ':arrow_up: Fonctionnalités utilisateur avancé'
       start_message: |-
@@ -343,10 +327,6 @@ fr:
           Pouvez-vous me faire une faveur et <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-rotate-left.png" width="16" height="16"> le **restaurer** ?
         not_found: |-
           Je ne vois toujours aucun message supprimé ! Rappelez-vous, <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> afficher plus révélera <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-rotate-left.png" width="16" height="16"> supprimer.
-        reply: |-
-          Pfiou, c'était moins une ! Merci d'avoir réparé ça ! :wink:
-
-          Notez que vous n'avez que 24 heures pour restaurer un message supprimé.
       category_hashtag:
         instructions: |-
           Saviez-vous que vous pouviez faire référence aux catégories et étiquettes dans vos messages ? Par exemple avez-vous vu la catégorie %{category}?

@@ -1,14 +1,15 @@
-Report.add_report("top_uploads") do |report|
+# frozen_string_literal: true
+
+Report.add_report('top_uploads') do |report|
   report.modes = [:table]
 
-  report.filter_options = [
-    {
-      id: "file-extension",
-      selected: report.filter_values.fetch("file-extension", "any"),
-      choices: (SiteSetting.authorized_extensions.split("|") + report.filter_values.values).uniq,
-      allowAny: true
-    }
-  ]
+  extension_filter = report.filters.dig(:"file-extension")
+  report.add_filter('file-extension',
+    default: extension_filter || 'any',
+    choices: (
+      SiteSetting.authorized_extensions.split('|') + Array(extension_filter)
+    ).uniq
+  )
 
   report.labels = [
     {
@@ -59,12 +60,15 @@ Report.add_report("top_uploads") do |report|
   LIMIT #{report.limit || 250}
   SQL
 
-  extension_filter = report.filter_values["file-extension"]
   builder = DB.build(sql)
   builder.where("up.id > :seeded_id_threshold", seeded_id_threshold: Upload::SEEDED_ID_THRESHOLD)
   builder.where("up.created_at >= :start_date", start_date: report.start_date)
   builder.where("up.created_at < :end_date", end_date: report.end_date)
-  builder.where("up.extension = :extension", extension: extension_filter) if extension_filter.present?
+
+  if extension_filter
+    builder.where("up.extension = :extension", extension: extension_filter.sub(/^\./, ''))
+  end
+
   builder.query.each do |row|
     data = {}
     data[:author_id] = row.user_id

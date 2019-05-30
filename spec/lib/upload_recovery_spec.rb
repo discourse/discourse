@@ -1,8 +1,10 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 require_dependency "upload_recovery"
 
 RSpec.describe UploadRecovery do
-  let(:user) { Fabricate(:user) }
+  fab!(:user) { Fabricate(:user) }
 
   let(:upload) do
     UploadCreator.new(
@@ -192,60 +194,6 @@ RSpec.describe UploadRecovery do
 
         expect(File.read(Discourse.store.path_for(post.uploads.first)))
           .to eq(File.read(file_from_fixtures("smallest.png")))
-      end
-    end
-  end
-
-  describe "#recover_user_profile_backgrounds" do
-    before do
-      user.user_profile.update!(
-        profile_background: upload.url,
-        card_background: upload.url
-      )
-    end
-
-    it "should recover the background uploads" do
-      user_profile = user.user_profile
-      upload.destroy!
-
-      user_profile.update_columns(
-        profile_background: user_profile.profile_background.sub("default", "X"),
-        card_background: user_profile.card_background.sub("default", "X")
-      )
-
-      expect do
-        upload_recovery.recover_user_profile_backgrounds
-      end.to change { Upload.count }.by(1)
-
-      user_profile.reload
-
-      expect(user_profile.profile_background).to eq(upload.url)
-      expect(user_profile.card_background).to eq(upload.url)
-    end
-
-    describe 'for a bad upload' do
-      it 'should not update the urls' do
-        user_profile = user.user_profile
-        upload.destroy!
-
-        profile_background = user_profile.profile_background.sub("default", "X")
-        card_background = user_profile.card_background.sub("default", "X")
-
-        user_profile.update_columns(
-          profile_background: profile_background,
-          card_background: card_background
-        )
-
-        SiteSetting.authorized_extensions = ''
-
-        expect do
-          upload_recovery.recover_user_profile_backgrounds
-        end.to_not change { Upload.count }
-
-        user_profile.reload
-
-        expect(user_profile.profile_background).to eq(profile_background)
-        expect(user_profile.card_background).to eq(card_background)
       end
     end
   end

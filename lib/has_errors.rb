@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Helper functions for dealing with errors and objects that have
 # child objects with errors
 module HasErrors
@@ -25,7 +27,7 @@ module HasErrors
   end
 
   def add_error(msg)
-    errors[:base] << msg unless errors[:base].include?(msg)
+    errors.add(:base, msg) unless errors[:base].include?(msg)
   end
 
   def add_errors_from(obj)

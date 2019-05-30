@@ -58,5 +58,3 @@ ja:
     magic_8_ball:
       answers:
         '9': "はい"
-    new_user_narrative:
-      reset_trigger: "新しいユーザー"

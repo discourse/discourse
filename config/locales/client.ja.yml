@@ -152,7 +152,6 @@ ja:
         us_east_1: "米東部(バージニア北部)"
         us_east_2: "米東部(オハイオ)"
         us_gov_east_1: "AWS GovCloud (米国東部)"
-        us_gov_west_1: "AWS GovCloud (アメリカ合衆国)"
         us_west_1: "米西部(カリフォルニア北部)"
         us_west_2: "米西部(オレゴン)"
     edit: "このトピックのタイトル/カテゴリを編集"
@@ -287,9 +286,8 @@ ja:
         title: "設定"
       view_all: "すべて見る"
       grouped_by_topic: "トピックによってグループ分けされた"
-      title: "レビューが必要"
       topic: "トピック:"
-      filtered_user: "ユーザー:"
+      filtered_user: "ユーザー"
       show_all_topics: "すべてのトピックを表示"
       user:
         username: "ユーザー名"
@@ -304,12 +302,11 @@ ja:
       new_topic: "新しいトピック:"
       filters:
         type:
-          title: "タイプ:"
+          title: "タイプ"
           all: "(すべてのタイプ)"
         minimum_score: "最小スコア:"
         refresh: "更新"
-        status: "ステータス:"
-        category: "カテゴリ:"
+        category: "カテゴリ"
       scores:
         score: "スコア"
         date: "日付"
@@ -572,6 +569,7 @@ ja:
       private_message: "メッセージ"
       private_messages: "メッセージ"
       user_notifications:
+        ignore_duration_username: "ユーザー名"
         ignore_duration_save: "無視する"
         mute_option: "通知しない"
         normal_option: "通常"
@@ -716,8 +714,6 @@ ja:
           title: "バックアップコードが作られました"
       second_factor:
         title: "2段階認証"
-        disable: "2段階認証を無効にする"
-        enable: "アカウントセキュリティを強化するために2段階認証を有効にする"
         confirm_password_description: "続行するにはパスワードを入力してください"
         label: "コード"
         show_key_description: "手動入力"
@@ -995,11 +991,6 @@ ja:
       enabled: "このサイトは閲覧専用モードになっています。閲覧し続けられますが、返信したりいいねを付けるなどのアクションは現在出来ません。"
       login_disabled: "閲覧専用モードのため、ログインできません。"
       logout_disabled: "閲覧専用モードのため、ログアウトできません。"
-    logs_error_rate_notice:
-      reached: "<b>%{relativeAge}</b> – <a href='%{url}' target='_blank'>%{rate}</a> はサイト設定制限 %{siteSettingRate} に到達しています。"
-      exceeded: "<b>%{relativeAge}</b> – <a href='%{url}' target='_blank'>%{rate}</a> はサイト設定制限 %{siteSettingRate} を超えています。"
-      rate:
-        other: "%{count} エラー/%{duration}"
     learn_more: "より詳しく..."
     all_time: "合計"
     all_time_desc: "作成されたトピックの総数"
@@ -1051,7 +1042,6 @@ ja:
     trust_level: "トラストレベル"
     search_hint: "ユーザ名、メールアドレスまたはIPアドレス"
     create_account:
-      disclaimer: "登録すると<a href='{{privacy_link}}'>プライバシーポリシー</a>と<a href='{{tos_link}}'>利用規約</a>に同意することになります。"
       title: "アカウントの作成"
       failed: "エラーが発生しました。既にこのメールアドレスは使用中かもしれません。「パスワードを忘れました」リンクを試してみてください"
     forgot_password:
@@ -1081,7 +1071,6 @@ ja:
       email_placeholder: "メールアドレスかユーザ名"
       caps_lock_warning: "Caps Lockがオンになっています。"
       error: "不明なエラー"
-      cookies_error: "ブラウザのCookieが無効です。ログインできないかもしれません。"
       rate_limit: "しばらく待ってから再度ログインをお試しください。"
       blank_username: "あなたのメールアドレスかユーザー名を入力してください。"
       blank_username_or_password: "あなたのメールアドレスかユーザ名、そしてパスワードを入力して下さい。"
@@ -1223,7 +1212,6 @@ ja:
       remove_featured_link: "トピックからリンクを削除する。"
       reply_placeholder: "文章を入力してください。 Markdown, BBコード, HTMLが使用出来ます。 画像はドラッグアンドドロップで貼り付けられます。"
       reply_placeholder_no_images: "文章を入力してください。 Markdown, BBコード, HTMLが使用出来ます。"
-      reply_placeholder_choose_category: "ここに入力する前にカテゴリを選択する必要があります。"
       view_new_post: "新しい投稿を見る。"
       saving: "保存中"
       saved: "保存しました!"
@@ -1436,17 +1424,14 @@ ja:
         read: "まだトピックを一つも読んでいません。"
         posted: "トピックは一つもありません。"
         latest: "最新のトピックはありません。"
-        hot: "ホットなトピックはありません。"
         bookmarks: "ブックマークしたトピックはありません。"
         category: "{{category}} トピックはありません。"
         top: "トップトピックはありません。"
-        search: "検索結果はありません。"
         educate:
           new: '<p>新しいトピックがここに表示されます。</p><p>デフォルトでは新しいトピックがある場合に2日間、<span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">new</span>が表示されます。</p><p>設定は<a href="%{userPrefsUrl}">プロフィール設定</a>から変更できます。</p>'
           unread: '<p>新しいトピックがここに表示されます。</p><p>未読のトピックがある場合は、<span class="badge new-posts badge-notification">1</span>が表示されます。 もし、</p><ul><li>トピックを作る</li><li>トピックに返信</li><li>トピックを4分以上読む</li></ul><p>などを行った場合、トピックを追跡してそれぞれのトピックの下にある通知の設定を経由してウォッチします。</p><p><a href="%{userPrefsUrl}">プロフィール</a>から変更できます。</p>'
       bottom:
         latest: "最新のトピックは以上です。"
-        hot: "ホットなトピックは以上です。"
         posted: "投稿のあるトピックは以上です。"
         read: "既読のトピックは以上です。"
         new: "新着トピックは以上です。"
@@ -1454,7 +1439,6 @@ ja:
         category: "{{category}}トピックは以上です。"
         top: "トップトピックはこれ以上ありません。"
         bookmarks: "ブックマーク済みのトピックはこれ以上ありません。"
-        search: "検索結果は以上です。"
     topic:
       filter_to:
         other: "トピック内の {{count}} 件を表示"
@@ -1563,7 +1547,6 @@ ja:
         jump_bottom: "最後の投稿へ"
         jump_prompt: "ジャンプする..."
         jump_prompt_of: "%{count} 投稿"
-        jump_prompt_long: "どの投稿へジャンプしますか？"
         jump_bottom_with_number: "%{post_number}番へジャンプ"
         jump_prompt_or: "または"
         total: 投稿の合計
@@ -1847,36 +1830,6 @@ ja:
           notify_user: "このユーザにメッセージを送信しました"
           bookmark: "この投稿をブックマークしました"
           like: "あなたが「いいね！」しました"
-        by_you_and_others:
-          off_topic:
-            other: "あなたと他{{count}}名が関係無い話題として通報しました"
-          spam:
-            other: "あなたと他{{count}}名がスパム報告として通報しました"
-          inappropriate:
-            other: "あなたと他{{count}}名が不適切な発言として通報しました"
-          notify_moderators:
-            other: "あなたと他{{count}}名がスタッフの確認が必要として通報しました"
-          notify_user:
-            other: "あなたと他{{count}}人がこのユーザにメッセージを送信しました"
-          bookmark:
-            other: "あなたと他{{count}}人がこの投稿をブックマークしました"
-          like:
-            other: "あなたと他{{count}}人が「いいね！」しました"
-        by_others:
-          off_topic:
-            other: "{{count}}名のユーザが関係無い話題として通報しました"
-          spam:
-            other: "{{count}}名のユーザがスパム報告として通報しました"
-          inappropriate:
-            other: "{{count}}名のユーザが不適切な発言として通報しました"
-          notify_moderators:
-            other: "{{count}}名のユーザがスタッフの確認が必要として通報しました"
-          notify_user:
-            other: "{{count}} 人がこのユーザにメッセージを送信しました"
-          bookmark:
-            other: "{{count}}人のユーザがこの投稿をブックマークしました"
-          like:
-            other: "{{count}}人のユーザが「いいね！」しました"
       merge:
         confirm:
           other: "これらの{{count}}の投稿を統合したいですか?"
@@ -1958,6 +1911,7 @@ ja:
       email_in_disabled_click: '"email in"設定を有効にしてください'
       allow_badges_label: "このカテゴリでバッジが付与されることを許可"
       edit_permissions: "パーミッションを編集"
+      review_group_name: "グループ名"
       this_year: "今年"
       default_position: "デフォルトポジション"
       position_disabled: "カテゴリはアクティビティで並び替えられます。カテゴリ一覧の順番を制御するには"
@@ -2093,15 +2047,9 @@ ja:
         title_with_count:
           other: "最新の投稿 ({{count}})"
         help: "最新のトピック"
-      hot:
-        title: "ホット"
-        help: "話題のトピック"
       read:
         title: "既読"
         help: "既読のトピックを、最後に読んだ順に表示"
-      search:
-        title: "検索"
-        help: "すべてのトピックを検索"
       categories:
         title: "カテゴリ"
         title_in: "カテゴリ - {{categoryName}}"
@@ -2164,54 +2112,54 @@ ja:
       title: "ショートカットキー"
       jump_to:
         title: "ページ移動"
-        home: "<b>g</b>, <b>h</b> ホーム"
-        latest: "<b>g</b>, <b>l</b> 最新"
-        new: "<b>g</b>, <b>n</b> 新着"
-        unread: "<b>g</b>, <b>u</b> 未読"
-        categories: "<b>g</b>, <b>c</b> カテゴリ"
-        top: "<b>g</b>, <b>t</b> トップ"
-        bookmarks: "<b>g</b>, <b>b</b> ブックマーク"
-        profile: "<b>g</b>, <b>p</b> プロフィール"
-        messages: "<b>g</b>, <b>m</b> メッセージ"
+        home: "%{shortcut} ホーム"
+        latest: "%{shortcut} 最新"
+        new: "%{shortcut} 新着"
+        unread: "%{shortcut} 未読"
+        categories: "%{shortcut} カテゴリ"
+        top: "%{shortcut} トップ"
+        bookmarks: "%{shortcut} ブックマーク"
+        profile: "%{shortcut} プロフィール"
+        messages: "%{shortcut} メッセージ"
       navigation:
         title: "ナビゲーション"
-        jump: "<b>#</b> # 投稿へ"
-        back: "<b>u</b> 戻る"
-        up_down: "<b>k</b>/<b>j</b> 選択を移動 &uarr; &darr;"
-        open: "<b>o</b> or <b>Enter</b> トピックへ"
-        next_prev: "<b>shift</b>+<b>j</b>/<b>shift</b>+<b>k</b> 選択を次/前へ移動"
+        jump: "%{shortcut} # 投稿へ"
+        back: "%{shortcut} 戻る"
+        up_down: "%{shortcut} 選択を移動 &uarr; &darr;"
+        open: "%{shortcut} トピックへ"
+        next_prev: "%{shortcut} 選択を次/前へ移動"
       application:
         title: "アプリケーション"
-        create: "<b>c</b> 新しいトピックを作成"
-        notifications: "<b>n</b> お知らせを開く"
-        hamburger_menu: "<b>=</b> メニューを開く"
-        user_profile_menu: "<b>p</b> ユーザーメニューを開く"
-        show_incoming_updated_topics: "<b>.</b> 更新されたトピックを表示する"
-        search: "<b>/</b> or <b>ctrl</b>+<b>alt</b>+<b>f</b> 検索"
-        help: "<b>?</b> キーボードヘルプを表示する"
-        dismiss_new_posts: "<b>x</b>, <b>r</b> 新規投稿を非表示にする"
-        dismiss_topics: "<b>x</b>, <b>t</b> トピックを既読にする"
-        log_out: "<b>shift</b>+<b>j</b>/<b>shift</b>+<b>k</b> 次のセクション/前のセクション"
+        create: "%{shortcut} 新しいトピックを作成"
+        notifications: "%{shortcut} お知らせを開く"
+        hamburger_menu: "%{shortcut} メニューを開く"
+        user_profile_menu: "%{shortcut} ユーザーメニューを開く"
+        show_incoming_updated_topics: "%{shortcut} 更新されたトピックを表示する"
+        search: "%{shortcut} 検索"
+        help: "%{shortcut} キーボードヘルプを表示する"
+        dismiss_new_posts: "%{shortcut} 新規投稿を非表示にする"
+        dismiss_topics: "%{shortcut} トピックを既読にする"
+        log_out: "%{shortcut} 次のセクション/前のセクション"
       actions:
         title: "アクション"
-        bookmark_topic: "<b>f</b> トピックのブックマークを切り替え"
-        pin_unpin_topic: "<b>shift</b>+<b>p</b>トピックを 固定表示/解除"
-        share_topic: "<b>shift</b>+<b>s</b> トピックをシェア"
-        share_post: "<b>s</b> 投稿をシェアする"
-        reply_as_new_topic: "<b>t</b> トピックへリンクして返信"
-        reply_topic: "<b>shift</b>+<b>r</b> トピックに返信"
-        reply_post: "<b>r</b> 投稿に返信"
-        quote_post: "<b>q</b> 投稿を引用する"
-        like: "<b>l</b> 投稿を「いいね！」する"
-        flag: "<b>!</b> 投稿を通報"
-        bookmark: "<b>b</b> 投稿をブックマークする"
-        edit: "<b>e</b> 投稿を編集"
-        delete: "<b>d</b> 投稿を削除する"
-        mark_muted: "<b>m</b>, <b>m</b> トピックをミュートする"
-        mark_regular: "<b>m</b>, <b>r</b> レギュラー(デフォルト)トピックにする"
-        mark_tracking: "<b>m</b>, <b>t</b> トピックを追跡する"
-        mark_watching: "<b>m</b>, <b>w</b> トピックをウォッチする"
-        print: "<b>ctrl</b>+<b>p</b> トピックを印刷"
+        bookmark_topic: "%{shortcut} トピックのブックマークを切り替え"
+        pin_unpin_topic: "%{shortcut}トピックを 固定表示/解除"
+        share_topic: "%{shortcut} トピックをシェア"
+        share_post: "%{shortcut} 投稿をシェアする"
+        reply_as_new_topic: "%{shortcut} トピックへリンクして返信"
+        reply_topic: "%{shortcut} トピックに返信"
+        reply_post: "%{shortcut} 投稿に返信"
+        quote_post: "%{shortcut} 投稿を引用する"
+        like: "%{shortcut} 投稿を「いいね！」する"
+        flag: "%{shortcut} 投稿を通報"
+        bookmark: "%{shortcut} 投稿をブックマークする"
+        edit: "%{shortcut} 投稿を編集"
+        delete: "%{shortcut} 投稿を削除する"
+        mark_muted: "%{shortcut} トピックをミュートする"
+        mark_regular: "%{shortcut} レギュラー(デフォルト)トピックにする"
+        mark_tracking: "%{shortcut} トピックを追跡する"
+        mark_watching: "%{shortcut} トピックをウォッチする"
+        print: "%{shortcut} トピックを印刷"
     badges:
       granted_on: "%{date}にゲット!"
       others_count: "その他のバッジ所有者(%{count})"
@@ -2288,20 +2236,16 @@ ja:
           read: "あなたはまだ、どのトピックも読んでいません。"
           posted: "あなたはまだ、どのトピックにも投稿していません。"
           latest: "最新のトピックはありません。"
-          hot: "ホットなトピックはありません。"
           bookmarks: "ブックマークしたトピックはありません。"
           top: "トップトピックはありません。"
-          search: "検索結果はありません。"
         bottom:
           latest: "最新のトピックは以上です。"
-          hot: "ホットなトピックは以上です。"
           posted: "投稿のあるトピックは以上です。"
           read: "既読のトピックは以上です。"
           new: "新着トピックは以上です。"
           unread: "未読のトピックは以上です。"
           top: "トップトピックは以上です。"
           bookmarks: "ブックマーク済みのトピックは以上です。"
-          search: "検索結果は以上です。"
     invite:
       custom_message: "<a href>カスタムメッセージ</a>を作成して、あなたの招待状をもう少し個人的なものにします。"
       custom_message_placeholder: "メッセージを入力"
@@ -2312,7 +2256,6 @@ ja:
       moderator: "モデレータ"
       dashboard:
         title: "ダッシュボード"
-        last_updated: "ダッシュボード最終更新:"
         version: "Version"
         up_to_date: "最新のバージョンです!"
         critical_available: "重要度の高いアップデートが存在します。"
@@ -2358,6 +2301,11 @@ ja:
           end_date: "End Date"
           groups: "すべてのグループ"
           disabled: "このレポートは利用不可"
+          filters:
+            group:
+              label: グループ
+            category:
+              label: カテゴリ
       commits:
         latest_changes: "最新の更新内容:"
         by: "by"
@@ -2523,7 +2471,6 @@ ja:
         new: "新規"
         new_style: "新しいスタイル"
         delete: "削除"
-        delete_confirm: "このテーマを削除しますか?"
         color: "カラー"
         opacity: "透明度"
         copy: "コピー"

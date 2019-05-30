@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class FixOptimizedImagesUrls < ActiveRecord::Migration[4.2]
   def up
     # `AddUrlToOptimizedImages` was wrongly computing the URLs. This fixes it!

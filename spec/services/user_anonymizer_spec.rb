@@ -1,7 +1,8 @@
+# frozen_string_literal: true
+
 require "rails_helper"
 
 describe UserAnonymizer do
-
   let(:admin) { Fabricate(:admin) }
 
   describe "event" do
@@ -25,7 +26,7 @@ describe UserAnonymizer do
   describe "make_anonymous" do
     let(:original_email) { "edward@example.net" }
     let(:user) { Fabricate(:user, username: "edward", email: original_email) }
-    let(:another_user) { Fabricate(:evil_trout) }
+    fab!(:another_user) { Fabricate(:evil_trout) }
     subject(:make_anonymous) { described_class.make_anonymous(user, admin) }
 
     it "changes username" do
@@ -72,16 +73,24 @@ describe UserAnonymizer do
       end
 
       it "resets profile to default values" do
-        user.update_attributes(name: "Bibi", date_of_birth: 19.years.ago, title: "Super Star")
+        user.update!(
+          name: "Bibi",
+          date_of_birth: 19.years.ago,
+          title: "Super Star"
+        )
 
         profile = user.reload.user_profile
-        profile.update_attributes(location: "Moose Jaw",
-                                  website: "www.bim.com",
-                                  bio_raw: "I'm Bibi from Moosejaw. I sing and dance.",
-                                  bio_cooked: "I'm Bibi from Moosejaw. I sing and dance.",
-                                  profile_background: "http://example.com/bg.jpg",
-                                  bio_cooked_version: 2,
-                                  card_background: "http://example.com/cb.jpg")
+        upload = Fabricate(:upload)
+
+        profile.update!(
+          location: "Moose Jaw",
+          website: "http://www.bim.com",
+          bio_raw: "I'm Bibi from Moosejaw. I sing and dance.",
+          bio_cooked: "I'm Bibi from Moosejaw. I sing and dance.",
+          profile_background_upload: upload,
+          bio_cooked_version: 2,
+          card_background_upload: upload
+        )
 
         prev_username = user.username
 
@@ -100,9 +109,9 @@ describe UserAnonymizer do
         expect(profile.location).to eq(nil)
         expect(profile.website).to eq(nil)
         expect(profile.bio_cooked).to eq(nil)
-        expect(profile.profile_background).to eq(nil)
-        expect(profile.bio_cooked_version).to eq(nil)
-        expect(profile.card_background).to eq(nil)
+        expect(profile.profile_background_upload).to eq(nil)
+        expect(profile.bio_cooked_version).to eq(UserProfile::BAKED_VERSION)
+        expect(profile.card_background_upload).to eq(nil)
       end
     end
 
@@ -114,7 +123,7 @@ describe UserAnonymizer do
       it "changes name to anonymized username" do
         prev_username = user.username
 
-        user.update_attributes(name: "Bibi", date_of_birth: 19.years.ago, title: "Super Star")
+        user.update(name: "Bibi", date_of_birth: 19.years.ago, title: "Super Star")
 
         make_anonymous
         user.reload
@@ -287,7 +296,7 @@ describe UserAnonymizer do
     let(:old_ip) { "1.2.3.4" }
     let(:anon_ip) { "0.0.0.0" }
     let(:user) { Fabricate(:user, ip_address: old_ip, registration_ip_address: old_ip) }
-    let(:post) { Fabricate(:post) }
+    fab!(:post) { Fabricate(:post) }
     let(:topic) { post.topic }
 
     it "doesn't anonymize ips by default" do

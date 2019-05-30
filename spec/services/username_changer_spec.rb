@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 describe UsernameChanger do
@@ -54,6 +56,10 @@ describe UsernameChanger do
         expect do
           UsernameChanger.change(myself, "HanSolo", myself)
         end.to change { UserHistory.count }.by(0) # make sure it does not log a dupe
+
+        expect do
+          UsernameChanger.change(myself, user.username, myself)
+        end.to change { UserHistory.count }.by(0) # does not log if the username already exists
       end
     end
 

@@ -188,6 +188,10 @@ body.wizard {
 
   .wizard-step-contents {
     height: 550px;
+    a {
+      text-decoration: none;
+      color: #6699ff;
+    }
   }
 
   .wizard-column-contents {

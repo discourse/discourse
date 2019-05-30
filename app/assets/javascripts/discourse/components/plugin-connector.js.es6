@@ -4,10 +4,10 @@ export default Ember.Component.extend({
   init() {
     this._super(...arguments);
 
-    const connector = this.get("connector");
+    const connector = this.connector;
     this.set("layoutName", connector.templateName);
 
-    const args = this.get("args") || {};
+    const args = this.args || {};
     Object.keys(args).forEach(key => this.set(key, args[key]));
 
     const connectorClass = this.get("connector.connectorClass");
@@ -18,7 +18,7 @@ export default Ember.Component.extend({
 
   @observes("args")
   _argsChanged() {
-    const args = this.get("args") || {};
+    const args = this.args || {};
     Object.keys(args).forEach(key => this.set(key, args[key]));
   },
 

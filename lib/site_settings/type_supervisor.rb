@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_dependency 'site_settings/validations'
 require_dependency 'enum'
 
@@ -33,6 +35,7 @@ class SiteSettings::TypeSupervisor
       uploaded_image_list: 17,
       upload: 18,
       group: 19,
+      group_list: 20,
     )
   end
 
@@ -218,7 +221,7 @@ class SiteSettings::TypeSupervisor
 
     validate_method = "validate_#{name}"
     if self.respond_to? validate_method
-      send(validate_method, val)
+      public_send(validate_method, val)
     end
   end
 

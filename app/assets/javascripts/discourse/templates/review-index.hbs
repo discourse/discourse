@@ -29,8 +29,8 @@
       </div>
 
       <div class='reviewable-filter'>
-        <label class='filter-label'>{{i18n "review.filters.minimum_score"}}</label>
-        {{input value=filterScore class="score-filter"}}
+        <label class='filter-label'>{{i18n "review.filters.priority.title"}}</label>
+        {{combo-box value=filterPriority content=priorities}}
       </div>
 
       <div class='reviewable-filter'>

@@ -19,7 +19,7 @@ export default Ember.Object.extend(ValidState, {
     let allValid = true;
     const result = { warnings: [] };
 
-    this.get("fields").forEach(field => {
+    this.fields.forEach(field => {
       allValid = allValid && field.check();
       const warning = field.get("warning");
       if (warning) {
@@ -33,7 +33,7 @@ export default Ember.Object.extend(ValidState, {
   },
 
   fieldError(id, description) {
-    const field = this.get("fields").findBy("id", id);
+    const field = this.fields.findBy("id", id);
     if (field) {
       field.setValid(false, description);
     }
@@ -41,10 +41,10 @@ export default Ember.Object.extend(ValidState, {
 
   save() {
     const fields = {};
-    this.get("fields").forEach(f => (fields[f.id] = f.value));
+    this.fields.forEach(f => (fields[f.id] = f.value));
 
     return ajax({
-      url: `/wizard/steps/${this.get("id")}`,
+      url: `/wizard/steps/${this.id}`,
       type: "PUT",
       data: { fields }
     }).catch(response => {

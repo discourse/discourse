@@ -1,9 +1,11 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 describe InvitesController do
   context 'show' do
-    let(:invite) { Fabricate(:invite) }
-    let(:user) { Fabricate(:coding_horror) }
+    fab!(:invite) { Fabricate(:invite) }
+    fab!(:user) { Fabricate(:coding_horror) }
 
     it "returns error if invite not found" do
       get "/invites/nopeNOPEnope"
@@ -26,7 +28,7 @@ describe InvitesController do
     end
 
     it "returns error if invite has already been redeemed" do
-      invite.update_attributes!(redeemed_at: 1.day.ago)
+      invite.update!(redeemed_at: 1.day.ago)
       get "/invites/#{invite.invite_key}"
 
       expect(response.status).to eq(200)
@@ -47,7 +49,7 @@ describe InvitesController do
     context 'while logged in' do
       let!(:user) { sign_in(Fabricate(:user))      }
       let!(:invite) { Fabricate(:invite, invited_by: user) }
-      let(:another_invite) { Fabricate(:invite, email: 'anotheremail@address.com') }
+      fab!(:another_invite) { Fabricate(:invite, email: 'anotheremail@address.com') }
 
       it 'raises an error when the email is missing' do
         delete "/invites.json"
@@ -227,7 +229,7 @@ describe InvitesController do
     end
 
     context 'with a deleted invite' do
-      let(:topic) { Fabricate(:topic) }
+      fab!(:topic) { Fabricate(:topic) }
 
       let(:invite) do
         Invite.invite_by_email("iceking@adventuretime.ooo", topic.user, topic)
@@ -249,7 +251,7 @@ describe InvitesController do
     end
 
     context 'with a valid invite id' do
-      let(:topic) { Fabricate(:topic) }
+      fab!(:topic) { Fabricate(:topic) }
       let(:invite) do
         Invite.invite_by_email("iceking@adventuretime.ooo", topic.user, topic)
       end
@@ -261,7 +263,7 @@ describe InvitesController do
       end
 
       context 'when redeem returns a user' do
-        let(:user) { Fabricate(:coding_horror) }
+        fab!(:user) { Fabricate(:coding_horror) }
 
         context 'success' do
           it 'logs in the user' do
@@ -310,11 +312,20 @@ describe InvitesController do
             expect(Jobs::SendSystemMessage.jobs.size).to eq(1)
           end
 
+          it 'refreshes automatic groups if staff' do
+            topic.user.grant_admin!
+            invite.update!(moderator: true)
+
+            put "/invites/show/#{invite.invite_key}.json"
+            expect(response.status).to eq(200)
+
+            expect(invite.reload.user.groups.pluck(:name)).to contain_exactly("moderators", "staff")
+          end
+
           context "without password" do
             it "sends password reset email" do
               put "/invites/show/#{invite.invite_key}.json"
               expect(response.status).to eq(200)
-              expect(JSON.parse(response.body)["success"]).to eq(true)
 
               expect(Jobs::InvitePasswordInstructionsEmail.jobs.size).to eq(1)
               expect(Jobs::CriticalUserEmail.jobs.size).to eq(0)
@@ -325,7 +336,6 @@ describe InvitesController do
               SiteSetting.enable_sso = true
               put "/invites/show/#{invite.invite_key}.json"
               expect(response.status).to eq(200)
-              expect(JSON.parse(response.body)["success"]).to eq(true)
 
               expect(Jobs::InvitePasswordInstructionsEmail.jobs.size).to eq(0)
               expect(Jobs::CriticalUserEmail.jobs.size).to eq(0)
@@ -335,7 +345,6 @@ describe InvitesController do
               SiteSetting.enable_local_logins = false
               put "/invites/show/#{invite.invite_key}.json"
               expect(response.status).to eq(200)
-              expect(JSON.parse(response.body)["success"]).to eq(true)
 
               expect(Jobs::InvitePasswordInstructionsEmail.jobs.size).to eq(0)
               expect(Jobs::CriticalUserEmail.jobs.size).to eq(0)
@@ -400,7 +409,7 @@ describe InvitesController do
     end
 
     context 'new registrations are disabled' do
-      let(:topic) { Fabricate(:topic) }
+      fab!(:topic) { Fabricate(:topic) }
 
       let(:invite) do
         Invite.invite_by_email("iceking@adventuretime.ooo", topic.user, topic)
@@ -419,7 +428,7 @@ describe InvitesController do
     end
 
     context 'user is already logged in' do
-      let(:topic) { Fabricate(:topic) }
+      fab!(:topic) { Fabricate(:topic) }
 
       let(:invite) do
         Invite.invite_by_email("iceking@adventuretime.ooo", topic.user, topic)
@@ -447,7 +456,7 @@ describe InvitesController do
     context 'while logged in' do
       let!(:user) { sign_in(Fabricate(:user)) }
       let!(:invite) { Fabricate(:invite, invited_by: user) }
-      let(:another_invite) { Fabricate(:invite, email: 'last_name@example.com') }
+      fab!(:another_invite) { Fabricate(:invite, email: 'last_name@example.com') }
 
       it 'raises an error when the email is missing' do
         post "/invites/reinvite.json"

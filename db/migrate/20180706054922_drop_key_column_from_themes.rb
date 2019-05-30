@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class DropKeyColumnFromThemes < ActiveRecord::Migration[5.2]
   def up
     add_column :user_options, :theme_ids, :integer, array: true,  null: false, default: []

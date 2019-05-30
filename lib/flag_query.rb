@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'ostruct'
 
 module FlagQuery
@@ -173,7 +175,7 @@ module FlagQuery
 
     params = {
       pending: Reviewable.statuses[:pending],
-      min_score: SiteSetting.min_score_default_visibility
+      min_score: Reviewable.min_score_for_priority
     }
 
     results = DB.query(<<~SQL, params)

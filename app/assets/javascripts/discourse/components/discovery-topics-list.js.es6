@@ -24,7 +24,7 @@ const DiscoveryTopicsListComponent = Ember.Component.extend(
 
     @observes("incomingCount")
     _updateTitle() {
-      Discourse.updateContextCount(this.get("incomingCount"));
+      Discourse.updateContextCount(this.incomingCount);
     },
 
     saveScrollPosition() {
@@ -39,16 +39,14 @@ const DiscoveryTopicsListComponent = Ember.Component.extend(
     actions: {
       loadMore() {
         Discourse.updateContextCount(0);
-        this.get("model")
-          .loadMore()
-          .then(hasMoreResults => {
-            Ember.run.schedule("afterRender", () => this.saveScrollPosition());
-            if (!hasMoreResults) {
-              this.get("eyeline").flushRest();
-            } else if ($(window).height() >= $(document).height()) {
-              this.send("loadMore");
-            }
-          });
+        this.model.loadMore().then(hasMoreResults => {
+          Ember.run.schedule("afterRender", () => this.saveScrollPosition());
+          if (!hasMoreResults) {
+            this.eyeline.flushRest();
+          } else if ($(window).height() >= $(document).height()) {
+            this.send("loadMore");
+          }
+        });
       }
     }
   }

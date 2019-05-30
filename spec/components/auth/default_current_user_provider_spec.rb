@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 require_dependency 'auth/default_current_user_provider'
 
@@ -366,7 +368,7 @@ describe Auth::DefaultCurrentUserProvider do
   end
 
   describe "#current_user" do
-    let(:user) { Fabricate(:user) }
+    fab!(:user) { Fabricate(:user) }
 
     let(:unhashed_token) do
       new_provider = provider('/')
@@ -603,7 +605,7 @@ describe Auth::DefaultCurrentUserProvider do
   end
 
   context "user api" do
-    let :user do
+    fab! :user do
       Fabricate(:user)
     end
 

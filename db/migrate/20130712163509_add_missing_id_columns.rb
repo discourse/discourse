@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddMissingIdColumns < ActiveRecord::Migration[4.2]
   def up
     add_column :category_featured_topics, :id, :primary_key

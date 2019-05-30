@@ -1,8 +1,10 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe Admin::SiteTextsController do
-  let(:admin) { Fabricate(:admin) }
-  let(:user) { Fabricate(:user) }
+  fab!(:admin) { Fabricate(:admin) }
+  fab!(:user) { Fabricate(:user) }
 
   after do
     TranslationOverride.delete_all
@@ -89,6 +91,72 @@ RSpec.describe Admin::SiteTextsController do
         end
       end
 
+      context 'plural keys' do
+        before do
+          I18n.backend.store_translations(:en, colour: { one: '%{count} colour', other: '%{count} colours' })
+        end
+
+        shared_examples 'finds correct plural keys' do
+          it 'finds the correct plural keys for the locale' do
+            SiteSetting.default_locale = locale
+
+            get '/admin/customize/site_texts.json', params: { q: 'colour' }
+            expect(response.status).to eq(200)
+
+            json = ::JSON.parse(response.body, symbolize_names: true)
+            expect(json).to be_present
+
+            site_texts = json[:site_texts]
+            expect(site_texts).to be_present
+
+            expected_search_result = expected_translations.map do |key, value|
+              overridden = defined?(expected_overridden) ? expected_overridden[key] || false : false
+              { id: "colour.#{key}", value: value, can_revert: overridden, overridden: overridden }
+            end
+
+            expect(site_texts).to match_array(expected_search_result)
+          end
+        end
+
+        context 'English' do
+          let(:locale) { :en }
+          let(:expected_translations) { { one: '%{count} colour', other: '%{count} colours' } }
+
+          include_examples 'finds correct plural keys'
+        end
+
+        context 'language with different plural keys and missing translations' do
+          let(:locale) { :ru }
+          let(:expected_translations) { { one: '%{count} colour', few: '%{count} colours', other: '%{count} colours' } }
+
+          include_examples 'finds correct plural keys'
+        end
+
+        context 'language with different plural keys and partial translation' do
+          before do
+            I18n.backend.store_translations(:ru, colour: { few: '%{count} цвета', many: '%{count} цветов' })
+          end
+
+          let(:locale) { :ru }
+          let(:expected_translations) { { one: '%{count} colour', few: '%{count} цвета', other: '%{count} colours' } }
+
+          include_examples 'finds correct plural keys'
+        end
+
+        context 'with overridden translation not in original translation' do
+          before do
+            I18n.backend.store_translations(:ru, colour: { few: '%{count} цвета', many: '%{count} цветов' })
+            TranslationOverride.create!(locale: :ru, translation_key: 'colour.one', value: 'ONE')
+            TranslationOverride.create!(locale: :ru, translation_key: 'colour.few', value: 'FEW')
+          end
+
+          let(:locale) { :ru }
+          let(:expected_translations) { { one: 'ONE', few: 'FEW', other: '%{count} colours' } }
+          let(:expected_overridden) { { one: true, few: true } }
+
+          include_examples 'finds correct plural keys'
+        end
+      end
     end
 
     describe '#show' do
@@ -107,6 +175,59 @@ RSpec.describe Admin::SiteTextsController do
       it 'returns not found for missing keys' do
         get "/admin/customize/site_texts/made_up_no_key_exists.json"
         expect(response.status).to eq(404)
+      end
+
+      context 'plural keys' do
+        before do
+          I18n.backend.store_translations(:en, colour: { one: '%{count} colour', other: '%{count} colours' })
+        end
+
+        shared_examples 'has correct plural keys' do
+          it 'returns the correct plural keys for the locale' do
+            SiteSetting.default_locale = locale
+
+            expected_translations.each do |key, value|
+              id = "colour.#{key}"
+
+              get "/admin/customize/site_texts/#{id}.json"
+              expect(response.status).to eq(200)
+
+              json = ::JSON.parse(response.body)
+              expect(json).to be_present
+
+              site_text = json['site_text']
+              expect(site_text).to be_present
+
+              expect(site_text['id']).to eq(id)
+              expect(site_text['value']).to eq(value)
+            end
+          end
+        end
+
+        context 'English' do
+          let(:locale) { :en }
+          let(:expected_translations) { { one: '%{count} colour', other: '%{count} colours' } }
+
+          include_examples 'has correct plural keys'
+        end
+
+        context 'language with different plural keys and missing translations' do
+          let(:locale) { :ru }
+          let(:expected_translations) { { one: '%{count} colour', few: '%{count} colours', other: '%{count} colours' } }
+
+          include_examples 'has correct plural keys'
+        end
+
+        context 'language with different plural keys and partial translation' do
+          before do
+            I18n.backend.store_translations(:ru, colour: { few: '%{count} цвета' })
+          end
+
+          let(:locale) { :ru }
+          let(:expected_translations) { { one: '%{count} colour', few: '%{count} цвета', other: '%{count} colours' } }
+
+          include_examples 'has correct plural keys'
+        end
       end
     end
 
@@ -150,7 +271,7 @@ RSpec.describe Admin::SiteTextsController do
       end
 
       it "returns the right error message" do
-        I18n.backend.store_translations(:en, some_key: '%{first} %{second}')
+        I18n.backend.store_translations(SiteSetting.default_locale, some_key: '%{first} %{second}')
 
         put "/admin/customize/site_texts/some_key.json", params: {
           site_text: { value: 'hello %{key} %{omg}' }

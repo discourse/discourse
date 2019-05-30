@@ -114,10 +114,9 @@ de:
         reply: |-
           Hallo! Um herauszufinden, was ich kann, schreibe `@%{discobot_username} %{help_trigger}`.
         tracks: |-
-          Ich weiß derzeit, wie man die folgenden Dinge macht:
+          Ich weiß jetzt, wie man die folgenden Dinge macht:
 
-          `@%{discobot_username} %{reset_trigger} %{default_track}
-          > Startet eine der folgenden interaktiven Tutorials: %{tracks}.
+          `@%{discobot_username} %{reset_trigger} %{default_track}`> Startet eins der folgenden interaktiven Tutorials: %{tracks}.
         bot_actions: |-
           `@%{discobot_username} %{dice_trigger} 2d6`
           > :game_die: 3, 6
@@ -140,19 +139,11 @@ de:
 
           In der Zwischenzeit lass ich dich erst mal in Ruhe.
     new_user_narrative:
-      reset_trigger: "neuer Benutzer"
-      title: "Abschlußzertifikat für neue Benutzer Lektionen"
+      reset_trigger: "Tutorial"
+      title: "Abschlußzertifikat für das Tutorial für neue Benutzer"
       cert_title: "In Anerkennung deines erfolgreichen Abschlusses eines Tutorials für neue Benutzer"
       hello:
         title: "Sei gegrüßt!"
-        message: |-
-          Danke, dass du %{title} beigetreten bist. Willkommen!
-
-          - Ich bin nur ein Roboter, aber [unser freundliches Team](%{base_uri}/about) ist auch da um zu helfen, wenn du eine Person erreichen möchtest.
-
-          - Aus Sicherheitsgründen begrenzen wir vorübergehend, was neue Benutzer tun können. Du wirst neue Fähigkeiten (und [Abzeichen](%{base_uri}/badges)) erhalten, während wir uns kennenlernen.
-
-          - Wir glauben an [zivilisiertes Community-Verhalten](%{base_uri}/guidelines) zu allen Zeiten.
       onebox:
         instructions: |-
           Als Nächstes: Kannst du einen dieser Links mit mir teilen? Antworte mit **einem Link auf einer eigenen Zeile**, und er wird automatisch in eine hübsche, kurze Inhaltsangabe erweitert.
@@ -302,7 +293,7 @@ de:
       certificate:
         alt: 'Urkunde'
     advanced_user_narrative:
-      reset_trigger: 'erfahrener Benutzer'
+      reset_trigger: 'fortgeschrittenes Tutorial'
       cert_title: "In Anerkennung des erfolgreichen Abschlusses des Tutorials für fortgeschrittene Benutzer"
       title: ':arrow_up: Fortgeschrittene Benutzerfunktionen'
       start_message: |-
@@ -343,9 +334,9 @@ de:
         not_found: |-
           Hast du Schwierigkeiten? Denk daran, dass <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> „Mehr anzeigen“ auch die Aktion <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-rotate-left.png" width="16" height="16">  „Wiederherstellen“ anzeigt.
         reply: |-
-          Puh, das war knapp! Danke, dass du das korrigiert hast :wink:
+          Puh, dass war knapp! Danke für's Beheben :wink:
 
-          Bitte beachte, dass du nur 24 Stunden hast, um einen Beitrag wiederherzustellen.
+          Bitte beachte, dass du nur %{deletion_after} Stunde(n) hast, um einen Beitrag wiederherzustellen.
       category_hashtag:
         instructions: |-
           Wusstest du, dass du auf Kategorien und Schlagwörter in deinen Beiträgen verweisen kannst? Zum Beispiel, hast du die Kategorie %{category} schon gesehen?

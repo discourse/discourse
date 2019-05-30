@@ -1,8 +1,10 @@
+# frozen_string_literal: true
+
 class Auth::AuthProvider
   include ActiveModel::Serialization
 
   def initialize(params = {})
-    params.each { |key, value| send "#{key}=", value }
+    params.each { |key, value| public_send "#{key}=", value }
   end
 
   def self.auth_attributes
