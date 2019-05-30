@@ -19,16 +19,15 @@ module Stylesheet
       Import.new("#{theme_dir}/theme_field.scss", source: @theme_field)
     end
 
-    register_import "plugins" do
-      import_files(DiscoursePluginRegistry.stylesheets)
-    end
-
-    register_import "plugins_mobile" do
-      import_files(DiscoursePluginRegistry.mobile_stylesheets)
-    end
-
-    register_import "plugins_desktop" do
-      import_files(DiscoursePluginRegistry.desktop_stylesheets)
+    Discourse.plugins.each do |plugin|
+      ["", "_mobile", "_desktop"].each do |type|
+        asset_name = "#{plugin.asset_name}#{type}"
+        if DiscoursePluginRegistry.stylesheets[asset_name].present?
+          register_import asset_name do
+            import_files(DiscoursePluginRegistry.stylesheets[asset_name])
+          end
+        end
+      end
     end
 
     register_import "plugins_variables" do

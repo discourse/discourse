@@ -204,6 +204,22 @@ module Discourse
     plugins.find_all { |p| !p.metadata.official? }
   end
 
+  def self.find_plugins(args)
+    plugins.find_all do |plugin|
+      next if args[:include_official] == false && plugin.metadata.official?
+      next if args[:include_unofficial] == false && !plugin.metadata.official?
+      next if args[:include_disabled] != true && !plugin.enabled?
+
+      true
+    end
+  end
+
+  def self.find_plugin_css_assets(args)
+    self.find_plugins(args).find_all do |plugin|
+      plugin.css_asset_exists?
+    end.map { |plugin| plugin.asset_name }
+  end
+
   def self.assets_digest
     @assets_digest ||= begin
       digest = Digest::MD5.hexdigest(ActionView::Base.assets_manifest.assets.values.sort.join)

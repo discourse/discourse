@@ -12,7 +12,7 @@ module Stylesheet
 
       if Importer.special_imports[asset.to_s]
         filename = "theme_#{options[:theme_id]}.scss"
-        file = "@import \"common/foundation/variables\"; @import \"theme_variables\"; @import \"#{asset}\";"
+        file = "@import \"common/foundation/variables\"; @import \"common/foundation/mixins\"; @import \"theme_variables\"; @import \"#{asset}\";"
       else
         filename = "#{asset}.scss"
         path = "#{ASSET_ROOT}/#{filename}"

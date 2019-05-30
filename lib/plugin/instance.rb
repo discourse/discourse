@@ -414,7 +414,7 @@ class Plugin::Instance
       full_path = File.dirname(path) << "/assets/" << file
     end
 
-    assets << [full_path, opts]
+    assets << [full_path, asset_name, opts]
   end
 
   def register_service_worker(file, opts = nil)
@@ -619,11 +619,19 @@ class Plugin::Instance
     end
   end
 
+  def asset_name
+    @asset_name ||= File.dirname(path).split("/").last
+  end
+
+  def css_asset_exists?
+    DiscoursePluginRegistry.stylesheets_exists?(asset_name)
+  end
+
   protected
 
   def register_assets!
-    assets.each do |asset, opts|
-      DiscoursePluginRegistry.register_asset(asset, opts)
+    assets.each do |asset, asset_name, opts|
+      DiscoursePluginRegistry.register_asset(asset, opts, asset_name)
     end
   end
 
