@@ -12,21 +12,19 @@
         {{/if}}
       </div>
     </div>
-    {{#if reviewable.payload.name}}
-      <div class='reviewable-user-details name'>
-        <div class='name'>{{i18n "review.user.name"}}</div>
-        <div class='value'>{{reviewable.payload.name}}</div>
-      </div>
-    {{/if}}
-    <div class='reviewable-user-details email'>
-      <div class='name'>{{i18n "review.user.email"}}</div>
-      <div class='value'>{{reviewable.payload.email}}</div>
-    </div>
+    
+    {{reviewable-field classes='reviewable-user-details name'
+                               name=(i18n 'review.user.name')
+                               value=reviewable.payload.name}}
+    
+    {{reviewable-field classes='reviewable-user-details email'
+                               name=(i18n 'review.user.email')
+                               value=reviewable.payload.email}}
+    
     {{#each userFields as |f|}}
-      <div class='reviewable-user-details user-field'>
-        <div class='name'>{{f.name}}</div>
-        <div class='value'>{{f.value}}</div>
-      </div>
+      {{reviewable-field classes='reviewable-user-details user-field'
+                                 name=f.name
+                                 value=f.value}}
     {{/each}}
   </div>
 
