@@ -307,7 +307,7 @@ registerButton("delete", attrs => {
       icon: "far-trash-alt",
       className: "delete"
     };
-  } else if (!attrs.canDelete && attrs.firstPost && attrs.yours) {
+  } else if (attrs.showFlagDelete) {
     return {
       id: "delete_topic",
       action: "showDeleteTopicModal",
