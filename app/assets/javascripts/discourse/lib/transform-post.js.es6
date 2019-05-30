@@ -55,7 +55,7 @@ export function transformBasicPost(post) {
     reviewableScorePendingCount: post.reviewable_score_pending_count,
     version: post.version,
     canRecoverTopic: false,
-    canDeletedTopic: false,
+    canDeleteTopic: false,
     canViewEditHistory: post.can_view_edit_history,
     canWiki: post.can_wiki,
     showLike: false,
