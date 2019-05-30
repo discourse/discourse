@@ -50,7 +50,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
       this.set("backupCodes", []);
       this.set("loading", true);
 
-      this.get("model")
+      this.model
         .updateSecondFactor(0, "", true, SECOND_FACTOR_METHODS.BACKUP_CODE)
         .then(response => {
           if (response.error) {
@@ -59,7 +59,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
           }
 
           this.set("errorMessage", null);
-          this.get("model").set("second_factor_backup_enabled", false);
+          this.model.set("second_factor_backup_enabled", false);
           this.markDirty();
           this.send("closeModal");
         })
@@ -72,7 +72,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
 
     generateSecondFactorCodes() {
       this.set("loading", true);
-      this.get("model")
+      this.model
         .generateSecondFactorCodes()
         .then(response => {
           if (response.error) {
