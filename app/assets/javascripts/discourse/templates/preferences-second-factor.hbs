@@ -31,7 +31,7 @@
         <div class="controls">
           <h2>{{i18n "user.second_factor.totp.title"}}</h2>
           {{d-button action=(action "createTotp")
-            class="btn btn-primary new-totp"
+            class="btn-primary new-totp"
             disabled=loading
             label="user.second_factor.totp.add"}}
           {{#each totps as |totp|}}
@@ -39,12 +39,11 @@
               {{totp.name}}
 
               {{#if isCurrentUser}}
-                {{#d-button action=(action "editSecondFactor" totp)
-                   class="btn-default btn-small btn-icon pad-left no-text edit"
-                   disabled=loading
+                {{d-button action=(action "editSecondFactor" totp)
+                  class="btn-default btn-small btn-icon pad-left no-text edit"
+                  disabled=loading
+                  icon="pencil-alt"
                 }}
-                  {{d-icon "pencil-alt"}}
-                {{/d-button}}
               {{/if}}
             </div>
           {{/each}}
@@ -62,12 +61,11 @@
             {{/if}}
 
             {{#if isCurrentUser}}
-              {{#d-button action=(action "editSecondFactorBackup")
-                 class="btn-default btn-small btn-icon pad-left no-text edit edit-2fa-backup"
-                 disabled=loading
+              {{d-button action=(action "editSecondFactorBackup")
+                class="btn-default btn-small btn-icon pad-left no-text edit edit-2fa-backup"
+                disabled=loading
+                icon="pencil-alt"
               }}
-                {{d-icon "pencil-alt"}}
-              {{/d-button}}
             {{/if}}
           {{else}}
             {{i18n "user.second_factor_backup.enable_prerequisites"}}
@@ -109,7 +107,7 @@
       <div class="control-group">
         <div class="controls">
           {{d-button action=(action "confirmPassword")
-            class="btn btn-primary"
+            class="btn-primary"
             disabled=loading
             label="continue"}}
 

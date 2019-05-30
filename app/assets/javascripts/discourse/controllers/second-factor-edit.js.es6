@@ -4,8 +4,6 @@ import ModalFunctionality from "discourse/mixins/modal-functionality";
 import { SECOND_FACTOR_METHODS } from "discourse/models/user";
 
 export default Ember.Controller.extend(ModalFunctionality, {
-  onShow() {},
-
   actions: {
     disableSecondFactor() {
       this.user
