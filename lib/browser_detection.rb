@@ -27,6 +27,8 @@ module BrowserDetection
     case user_agent
     when /Android/i
       :android
+    when /CrOS/i
+      :chromebook
     when /iPad/i
       :ipad
     when /iPhone/i
@@ -50,6 +52,8 @@ module BrowserDetection
     case user_agent
     when /Android/i
       :android
+    when /CrOS/i
+      :chromeos
     when /iPhone|iPad|iPod/i
       :ios
     when /Macintosh/i
