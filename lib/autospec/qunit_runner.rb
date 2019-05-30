@@ -65,7 +65,7 @@ module Autospec
 
       abort
 
-      qunit_url = "http://localhost:#{port}/qunit"
+      qunit_url = +"http://localhost:#{port}/qunit"
 
       if specs != "spec"
         module_or_filename, test_id, _name = specs.strip.split(":::")
