@@ -291,7 +291,7 @@ acceptance("second factor backups", {
           dismissed_banner_key: null,
           akismet_review_count: 0,
           title_count_mode: "notifications",
-          second_factor_enabled
+          second_factor_enabled: true
         }
       });
     });
