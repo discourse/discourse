@@ -182,7 +182,6 @@ bs_BA:
         eu_west_3: "EU (Pariz)"
         us_east_1: "SAD Istok (Sjeverna Virdžinija)"
         us_east_2: "SAD Istok (Ohio)"
-        us_gov_west_1: "AWS GovCloud (US)"
         us_west_1: "SAD Zapad (Sjeverna Kalifornija)"
         us_west_2: "SAD Zapad (Oregon)"
     edit: "izmjeni naslov i kategoriju ove teme"
@@ -306,6 +305,7 @@ bs_BA:
         save_changes: "Spremiti promjene"
         title: "Postavke"
       topic: "Tema:"
+      filtered_user: "User"
       user:
         username: "Ime"
         email: "Email"
@@ -316,7 +316,10 @@ bs_BA:
       save: "Sačuvaj"
       cancel: "Otkaži"
       filters:
+        type:
+          title: "Tip"
         refresh: "Osvježi"
+        category: "Kategorija"
       scores:
         date: "Datum"
         type: "Tip"
@@ -700,7 +703,6 @@ bs_BA:
         enable: "Omogući"
       second_factor:
         title: "Two Factor Authentication"
-        disable: "Isključi two factor authentication"
         confirm_password_description: "Molimo vas da potvrdite šifru kako bi nastavili"
         label: "Šifra"
         disable_description: "Molimo da uneste kod za ovjeru autentičnosti sa vaše aplikacije"
@@ -976,13 +978,6 @@ bs_BA:
       enabled: "Ovaj sajt je u read only mod-u: Dozvoljeno je čitati. Možete nastaviti sa pregledom, ali odgovaranje na objave, lajkanje i ostale akcije su isključene za sada."
       login_disabled: "Ulogovanje je isključeno jer je sajt u read only načinu rada."
       logout_disabled: "Odjava je isključena sve dok je sajt u read only tj. samo čitanje je dozvoljeno načinu rada."
-    logs_error_rate_notice:
-      reached: "<b>%{relativeAge}</b> – <a href='%{url}' target='_blank'>%{rate}</a> dosegnut postavljeni limit sajta od %{siteSettingRate}."
-      exceeded: "<b>%{relativeAge}</b> – <a href='%{url}' target='_blank'>%{rate}</a> prelazi postavljeni limit sajta od %{siteSettingRate}."
-      rate:
-        one: "%{count} greška/%{duration}"
-        few: "%{count} greške/%{duration}"
-        other: "%{count} greške/%{duration}"
     learn_more: "saznaj više..."
     all_time: "ukupno"
     all_time_desc: "ukupno kreiranih tema"
@@ -1035,7 +1030,6 @@ bs_BA:
     trust_level: "Nivo povjerenja"
     search_hint: "ime"
     create_account:
-      disclaimer: "Registracijom, vi se slažete sa <a href='{{privacy_link}}'>policom o privatnosti</a> i <a href='{{tos_link}}'>uslovima korištenja</a>."
       title: "Kreiraj korisnički račun"
       failed: "Nešto je krenulo pogrešno, možda je ovaj email već iskorišten za registraciju, pokušajte sa Zaboravio šifru linkom"
     forgot_password:
@@ -1471,17 +1465,14 @@ bs_BA:
         read: "Niste pročitali nijednu temu."
         posted: "Niste odgovorili ni na jednu temu."
         latest: "Nema više novih tema. To je tužno."
-        hot: "Nema popularnih tema."
         bookmarks: "Nemate još bookmark-iranih tema."
         category: "Nema više tema u {{category}}."
         top: "Nema više popularnih tema."
-        search: "Nema rezultata pretrage"
         educate:
           new: '<p>Vaše nove teme se ovdje pojavljuju.</p><p>Načelno, teme se smatraju novim i prikazivat će<span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">nova</span> indikator u slučaju da su objavljena u zadnja 2 dana.</p><p>Posjetite svoje <a href="%{userPrefsUrl}">postavke</a> ukoliko želite da to izmijenite.</p>'
           unread: '<p>Vaše nepročitane teme se ovdje pojavljuju.</p><p>Načelno, teme su smatrane nepročitanim i prikazivat će brojač nepročitanih poruka<span class="badge new-posts badge-notification">1</span> ukoliko ste:</p><ul><li>Kreirali temu</li><li>Odgovorili na temu</li><li>Čitali temu duže od 4 minuta</li></ul><p>Ili ako ste explicitno označili temu za Praćenje ili Posmatrane preko kontrole obavještenja na dnu svake od tema.</p><p>Posjetite vaše <a href="%{userPrefsUrl}">postavke</a> ukoliko želite da to izmijenite.</p>'
       bottom:
         latest: "Nema više novih tema."
-        hot: "Nema više popularnih tema."
         posted: "There are no more posted topics."
         read: "Nema više pročitanih tema."
         new: "Nema više novih tema."
@@ -1489,7 +1480,6 @@ bs_BA:
         category: "Nema više tema na kategoriji {{category}}."
         top: "Nema više popularnih tema."
         bookmarks: "Nema više bookmark-ovanih tema."
-        search: "Nema više rezultata pretrage."
     topic:
       filter_to:
         one: "%{count} objava u temi"
@@ -2098,9 +2088,6 @@ bs_BA:
       latest:
         title: "Zadnje"
         help: "teme sa nedavnim postovima"
-      hot:
-        title: "Popularne"
-        help: "selekcija popularnih tema"
       read:
         title: "Pročitane"
         help: "teme koje ste pročitali, zadnje pročitane na vrhu."
@@ -2234,20 +2221,16 @@ bs_BA:
           new: "Nemate više novih tema."
           read: "Niste pročitali nijednu temu."
           posted: "Niste odgovorili ni na jednu temu."
-          hot: "Nema popularnih tema."
           bookmarks: "Nemate još bookmark-iranih tema."
           top: "Nema više popularnih tema."
-          search: "Nema rezultata pretrage"
         bottom:
           latest: "Nema više novih tema."
-          hot: "Nema više popularnih tema."
           posted: "There are no more posted topics."
           read: "Nema više pročitanih tema."
           new: "Nema više novih tema."
           unread: "Nema više nepročitanih tema."
           top: "Nema više popularnih tema."
           bookmarks: "Nema više bookmark-ovanih tema."
-          search: "Nema više rezultata pretrage."
   admin_js:
     type_to_filter: "kucaj da sortiraš..."
     admin:

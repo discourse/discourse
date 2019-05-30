@@ -244,7 +244,6 @@ it:
   private_message_abbrev: "MP"
   rss_description:
     latest: "Argomenti più recenti"
-    hot: "Argomenti caldi"
     top: "Argomenti di punta"
     top_all: "Argomenti di punta totali"
     top_yearly: "Argomenti di punta annuali"
@@ -1418,7 +1417,6 @@ it:
     allow_staff_to_tag_pms: "Consenti ai membri dello staff di etichettare qualsiasi Messaggio Personale"
     min_trust_level_to_tag_topics: "Livello di esperienza minimo richiesto per etichettare argomenti"
     suppress_overlapping_tags_in_list: "Se le etichette corrispondono alle esatte parole nei titoli degli argomenti, non mostrare l'etichetta"
-    remove_muted_tags_from_latest: "Non mostrare argomenti contrassegnati con etichette silenziate nella lista degli argomenti recenti."
     errors:
       invalid_email: "Indirizzo email non valido."
       invalid_username: "Non c'è alcun utente con quel nome."
@@ -1477,6 +1475,13 @@ it:
     errors:
       different_topics: "I messaggi appartenenti a diversi argomenti non possono essere fusi."
       different_users: "I messaggi appartenenti a diversi utenti non possono essere fusi."
+  move_posts:
+    existing_topic_moderator_post:
+      one: "Un messaggio è stato unito ad un Argomento esistente: %{topic_link}"
+      other: "%{count} messaggi sono stati uniti ad un Argomento esistente: %{topic_link}"
+    existing_message_moderator_post:
+      one: "Un messaggio è stato unito ad un messaggio esistente: %{topic_link}"
+      other: "%{count} messaggi sono stati uniti ad un messaggio esitente: %{topic_link}"
   topic_statuses:
     autoclosed_message_max_posts:
       one: "Questo messaggio è stato chiuso automaticamente per aver raggiunto il limite massimo di %{count} risposta."
@@ -1879,6 +1884,14 @@ it:
     too_many_spam_flags:
       title: "Troppe Segnalazioni Spam"
       subject_template: "Nuovo account sospeso"
+      text_body_template: |
+        Ciao,
+
+        questo è un messaggio automatico da %{site_name} per farti sapere che i tuoi messaggi sono stati temporaneamente nascosti perché segnalati dalla comunità.
+
+        Per precauzione il tuo nuovo account è stato silenziato e ti sarà impossibile creare risposte o Argomenti fino a quando un membro dello Staff non lo avrà esaminato. Ci scusiamo per l'inconveniente.
+
+        Per ulteriore supporto, per favore riferimento alle [linee guida della comunità](%{base_url}/guidelines).
     too_many_tl3_flags:
       title: "Troppe Segnalazioni Da TL3"
       subject_template: "Nuovo account sospeso"
@@ -2273,6 +2286,21 @@ it:
     signup_after_approval:
       title: "Iscrizione Dopo Approvazione"
       subject_template: "Sei stato ammesso su %{site_name}!"
+      text_body_template: |
+        Benvenuto su %{site_name}!
+
+        Un membro dello staff ha approvato il tuo account su  %{site_name}.
+
+        Ora puoi accedere al tuo nuovo account a questo indirizzo:
+        %{base_url}
+
+        Se il collegamento qui sopra non è cliccabile, prova a copiarlo e incollarlo nella barra degli indirizzi del tuo browser.
+
+        %{new_user_tips}
+
+        Noi crediamo in una comunità che si [comporta civilmente](%{base_url}/guidelines).
+
+        Buona permanenza!
     signup:
       title: "Iscrizione"
       subject_template: "[%{email_prefix}] Conferma il tuo nuovo account"
@@ -2297,8 +2325,6 @@ it:
     welcome_message: |
       ## [Benvenuto su %{title}](#welcome)
       E' richiesto un account. Per continuare, crea un nuovo account oppure connettiti.
-  terms_of_service:
-    title: "Termini di Servizio"
   deleted: "cancellati"
   image: "immagine"
   upload:
@@ -2347,9 +2373,6 @@ it:
     default_theme_name: "Chiaro"
     light_theme_name: "Chiaro"
     dark_theme_name: "Scuro"
-  about: "Informazioni su"
-  guidelines: "Linee Guida"
-  privacy: "Privacy"
   edit_this_page: "Modifica questa pagina"
   csv_export:
     boolean_yes: "Sì"
@@ -2645,6 +2668,8 @@ it:
     champion:
       name: Campione
       description: Ha invitato 5 membri
+      long_description: |
+        Questo distintivo viene assegnato a chi ha invitato 5 persone che successivamente hanno trascorso abbastanza tempo sul sito da diventarne membri veri e propri. Wow! Grazie per aver arricchito la diversità della nostra comunità con nuovi membri!
     first_share:
       name: Prima Condivisione
       description: Ha condiviso un messaggio
@@ -2895,6 +2920,15 @@ it:
     not_found: "non trovato"
     unknown: "sconosciuto"
   reviewables:
+    priorities:
+      low: "Bassa"
+      high: "Alta"
+    sensitivity:
+      disabled: "Disabilitato"
+      low: "Bassa"
+      high: "Alta"
+    reasons:
+      trust_level: "Le risposte degli utenti con un basso Livello di Esperienza devono essere approvate dallo Staff. Vedi `approve_unless_trust_level`."
     actions:
       agree_and_keep:
         title: "Mantieni il messaggio"
@@ -2914,6 +2948,14 @@ it:
         title: "Cancella Spammer"
       delete_single:
         title: "Elimina"
+      delete_and_ignore_replies:
+        title: "Elimina il messaggio e le sue risposte, ed ignora la segnalazione"
+        description: "Cancella il messaggio e tutte le relative risposte; se è il primo messaggio, cancella anche l'argomento"
+        confirm: "Sei sicuro di voler eliminare anche le risposte al messaggio?"
+      delete_and_agree_replies:
+        title: "Elimina il messaggio e le sue risposte, e accetta la segnalazione"
+        description: "Cancella il messaggio e tutte le relative risposte; se è il primo messaggio, cancella anche l'argomento"
+        confirm: "Sei sicuro di voler eliminare anche le risposte al messaggio?"
       disagree_and_restore:
         description: "Ripristina il messaggio in modo che tutti gli utenti possano vederlo."
       disagree:

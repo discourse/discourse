@@ -204,7 +204,6 @@ sk:
         eu_west_3: "EU (Paríž)"
         us_east_1: "USA Východ (S. Virginia)"
         us_east_2: "USA Východ (Ohio)"
-        us_gov_west_1: "AWS GovCloud (USA)"
         us_west_1: "USA Západ (S. Kalifornia)"
         us_west_2: "USA Západ (Oregon)"
     edit: "upraviť názov a kategóriu témy"
@@ -344,6 +343,7 @@ sk:
         save_changes: "Uložiť zmeny"
         title: "Nastavenia"
       topic: "Téma:"
+      filtered_user: "Používateľ"
       user:
         username: "Používateľské meno"
         email: "Email"
@@ -356,8 +356,9 @@ sk:
       cancel: "Zrušiť"
       filters:
         type:
-          title: "Typ:"
+          title: "Typ"
         refresh: "Obnoviť"
+        category: "Kategória"
       scores:
         date: "Dátum"
         type: "Typ"
@@ -762,8 +763,6 @@ sk:
           description: "Každý z týchto záložných kódov sa môže použiť iba raz. Uložte si ich bezpečne, no, aby Vám boli dostupné"
       second_factor:
         title: "Dvojfaktorová autentifikácia"
-        disable: "Vypnúť dvojfaktorovú autentifikáciu"
-        enable: "Aktivujte si dvojfaktorové prihlásenie pre zvýšenie bezpečnosti"
         confirm_password_description: "Pre pokračovanie potvrďte svoje heslo prosím"
         label: "Kód"
         rate_limit: "Prosím čakajte pred zadaním ďalšieho autentifikačného kódu"
@@ -1099,7 +1098,6 @@ sk:
     trust_level: "Stupeň dôvery"
     search_hint: "používateľské meno, email alebo IP adresa"
     create_account:
-      disclaimer: "Registráciou súhlasíte so <a href='{{privacy_link}}'>zásadami ochrany osobných údajov</a> a s<a href='{{tos_link}}'>podmienkami používania</a>."
       title: "Vytvoriť nový účet"
       failed: "Niečo sa pokazilo, možno je tento e-mail už registrovaný, vyskúšajte odkaz pre zabudnuté heslo"
     forgot_password:
@@ -1395,17 +1393,14 @@ sk:
         read: "Neprečítali ste ešte žiadnu tému."
         posted: "Nanapísali ste ešte žiadnu tému."
         latest: "Nie sú žiadne nové témy. To je smutné."
-        hot: "Nie sú žiadne horúce témy."
         bookmarks: "Nemáte zatiaľ žiadne témy v záložkách."
         category: "V kategórii {{category}} nie je žiadna téma"
         top: "Nie sú žiadne populárne témy."
-        search: "Nenašli sa žiadne výsledky"
         educate:
           new: '<p>Tu sa zobrazia Vaše nové témy.</p><p>V predvolenom nastavení sú témy považované za nové a zobrazí indikátor <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">nové</span> ak boli vytvorené za posledné 2 dni.</p><p>Môžete to zmeniť vo Vašich <a href="%{userPrefsUrl}">nastaveniach</a>.</p>'
           unread: '<p>Tu sa zobrazia Vaše neprečítané témy.</p><p>V predvolenom nastavení sú témy považované za neprečítané a zobrazí sa počet neprečítaných <span class="badge new-posts badge-notification">1</span> ak ste:</p><ul><li>Vytvorili tému</li><li>Odpovedali na tému</li><li>Čítali tému viac ako 4 minúty</li></ul><p>Alebo ste explicitne nastavili pozorovanie alebo sledovanie témy prostredníctvom ovládania upozornení na konci každej témy.</p><p>Môžte to zmeniť vo Vašich <a href="%{userPrefsUrl}">nastaveniach</a>.</p>'
       bottom:
         latest: "Nie je už viac najnovšich tém."
-        hot: "Nie je už viac horúcich tém"
         posted: "Žiadne ďalšie témy na čítanie."
         read: "Žiadne ďalšie prečítané témy."
         new: "Žiadne nové témy."
@@ -1413,7 +1408,6 @@ sk:
         category: "Žiadne ďalšie témy v  {{category}}."
         top: "Nie je už viac poulárnych tém"
         bookmarks: "Žiadne ďalšie témy v záložkách."
-        search: "Nenašlo sa viac výsledkov."
     topic:
       filter_to:
         one: "%{count} príspevok k téme"
@@ -2043,15 +2037,9 @@ sk:
           many: "Posledných ({{count}})"
           other: "Posledných ({{count}})"
         help: "témy s nedávnymi príspevkami"
-      hot:
-        title: "Horúca"
-        help: "výber najhorúcejších tém"
       read:
         title: "Prečítaná"
         help: "prečítané témy, zoradené podľa času ich prečítania"
-      search:
-        title: "Hľadať"
-        help: "hľadaj vo všetkych témach"
       categories:
         title: "Kategórie"
         title_in: "Kategória - {{categoryName}}"
@@ -2260,20 +2248,16 @@ sk:
           read: "Neprečítali ste ešte žiadnu tému."
           posted: "Neprispeli ste ešte do žiadnej témy."
           latest: "Nie sú žiadne najnovšie témy."
-          hot: "Nie sú žiadne horúce témy."
           bookmarks: "Nemáte ešte žiadne témy v záložkách."
           top: "Nie sú žiadne top témy."
-          search: "Nenašli sa žiadne výsledky"
         bottom:
           latest: "Žiadne ďalšie najnovšie témy."
-          hot: "Žiadne ďalšie horúce témy."
           posted: "Žiadne ďalšie témy na čítanie."
           read: "Žiadne ďalšie prečítané témy."
           new: "Žiadne ďalšie nové témy."
           unread: "Žiadne ďalšie neprečítané témy."
           top: "Žiadne ďalšie top témy."
           bookmarks: "Žiadne ďalšie zazáložkované témy."
-          search: "Žiadne ďalšie výsledky vyhľadávania."
     invite:
       custom_message_placeholder: "Zadajte Vašu vlastnú správu"
   admin_js:

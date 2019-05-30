@@ -152,7 +152,6 @@ zh_TW:
         us_east_1: "美國東部 (北維珍尼亞州)"
         us_east_2: "美國東部 (俄亥俄州)"
         us_gov_east_1: "AWS 政府專用（US-East）"
-        us_gov_west_1: "AWS GovCloud (美國)"
         us_west_1: "美國西部 (北加州)"
         us_west_2: "美國西部 (奧勒岡州)"
     edit: "編輯此話題的標題與分類"
@@ -297,9 +296,6 @@ zh_TW:
         saved: "已儲存"
         save_changes: "儲存變更"
         title: "設定"
-        score_bonuses:
-          title: "積分獎金"
-          description: "獎金允許某些類型的人比別人的得分更高，使他們可以優先。注意：改變這些值將不會應用到過去的計分項目。"
       moderation_history: "審核歷史"
       view_all: "查看全部"
       grouped_by_topic: "按主題分類"
@@ -310,7 +306,7 @@ zh_TW:
       title: "審核"
       topic: "話題："
       filtered_topic: "您已篩選到單個主題中的可審閱內容。"
-      filtered_user: "使用者："
+      filtered_user: "使用者"
       show_all_topics: "顯示所有話題"
       deleted_post: "（貼文已被刪除）"
       deleted_user: "（使用者已被刪除）"
@@ -345,14 +341,13 @@ zh_TW:
       new_topic: "新增話題"
       filters:
         type:
-          title: "類型："
+          title: "類型"
           all: "（所有類型）"
         minimum_score: "最低分數："
         refresh: "重新整理"
-        status: "狀態："
-        category: "分類："
+        status: "狀態"
+        category: "分類"
         priority:
-          title: "最低優先級："
           low: "低"
           medium: "中間的"
           high: "高"
@@ -807,7 +802,7 @@ zh_TW:
       second_factor:
         title: "兩步驟驗證"
         disable: "停用兩步驟驗證"
-        enable: "啟用二步驟驗證以增強帳號安全性"
+        enable: "啟用兩步驟驗證"
         confirm_password_description: "請確認你的密碼以繼續"
         label: "代碼"
         rate_limit: "嘗試其他驗證代碼前請稍後"
@@ -815,6 +810,8 @@ zh_TW:
           使用可支援的 app 掃描此 QR Code（<a href="https://www.google.com/search?q=authenticator+apps+for+android" target="_blank">安卓</a> – <a href="https://www.google.com/search?q=authenticator+apps+for+ios" target="_blank">iOS</a>）並輸入您的認證碼。
         disable_description: "請從您的應用程式輸入驗證碼"
         show_key_description: "手動輸入"
+        short_description: |
+          以一次性安全碼保護您的帳號
         extended_description: |
           二步驟驗證使用除了密碼外的一次性代碼來加強帳號安全性。可以使用<a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>Android</a>或<a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS</a>設備來產生代碼。
         oauth_enabled_warning: "請注意，一旦啟用二步驟驗證，將自動關閉社群登入。"
@@ -1113,11 +1110,6 @@ zh_TW:
     too_few_topics_and_posts_notice: "一起來<a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>開始討論</a>吧！目前有 <strong>%{currentTopics}/%{requiredTopics}</strong> 個話題與 <strong>%{currentPosts}/%{requiredPosts}</strong> 個貼文。新的訪客需要有一些話題可以閱讀與回覆。"
     too_few_topics_notice: "一起來<a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>開始討論</a>吧！目前有 <strong>%{currentTopics}/%{requiredTopics}</strong> 個話題。新的訪客需要有一些話題可以閱讀與回覆。"
     too_few_posts_notice: "一起來<a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>開始討論</a>吧！目前有 <strong>%{currentPosts}/%{requiredPosts}</strong> 個貼文。新的訪客需要有一些話題可以閱讀與回覆。"
-    logs_error_rate_notice:
-      reached: "<b>%{relativeAge}</b> – <a href='%{url}' target='_blank'>%{rate}</a> 達到了站點設置中的 %{siteSettingRate}。"
-      exceeded: "<b>[%{relativeAge}]</b> 目前的錯誤率 <a href='%{url}' target='_blank'>%{rate}</a> 已超出了站點設置中的 %{siteSettingRate}。"
-      rate:
-        other: "%{count} 錯誤/%{duration}"
     learn_more: "進一步了解..."
     all_time: "總數"
     all_time_desc: "開啟的話題總量"
@@ -1172,7 +1164,6 @@ zh_TW:
     trust_level: "信任等級"
     search_hint: "使用者名稱、電子郵件、或是IP位址"
     create_account:
-      disclaimer: "註冊即表示你同意<a href='{{privacy_link}}'>隱私策略</a>和<a href='{{tos_link}}'>服務條款</a>。"
       title: "建立新帳號"
       failed: "發生了某些錯誤，可能此電子郵件地址已經註冊過，請試試看忘記密碼連結"
     forgot_password:
@@ -1211,7 +1202,6 @@ zh_TW:
       email_placeholder: "電子郵件地址或使用者名稱"
       caps_lock_warning: "大寫鎖定中"
       error: "未知的錯誤"
-      cookies_error: "您的瀏覽器關閉了cookies功能。您可能需要重新啟用才能登入。"
       rate_limit: "嘗試重新登入前請先等待"
       blank_username: "請輸入您的電子郵件或使用者名稱。"
       blank_username_or_password: "請輸入你的電子郵件或者使用者名稱，以及密碼。"
@@ -1629,17 +1619,14 @@ zh_TW:
         read: "你尚未閱讀任何話題。"
         posted: "你尚未在任何話題裡發表貼文。"
         latest: "沒有最近的話題。真令人難過。"
-        hot: "沒有熱門的話題。"
         bookmarks: "您目前沒有把任何話題加入書籤。"
         category: "沒有 {{category}} 的話題。"
         top: "沒有精選話題。"
-        search: "沒有搜尋結果。"
         educate:
           new: '<p>這裡顯示了近期話題列表。</p><p>預設情況下，以下話題將顯示在近期列表。如果是最近 2 天內開啟的，還會顯示一個<span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">近期</span>標誌。<p>你可以在<a href="%{userPrefsUrl}">使用者設置</a>中更改要顯示哪些內容。</p>'
           unread: '<p>這裡顯示你的未讀話題。</p><p>預設情況下，下述話題會被放在未讀中。並且會在旁邊顯示未讀的數量<span class="badge new-posts badge-notification">1</span>。如果你：</p><ul><li>開啟了該話題</li><li>回覆了該話題</li><li>閲讀該話題超過 4 分鐘</li></ul><p>或者你在話題底部的通知控制中選擇了追蹤或關注。</p><p>你可以在<a href="%{userPrefsUrl}">使用者設置</a>中修改未讀設置。</p>'
       bottom:
         latest: "已經沒有其它最近的話題了。"
-        hot: "已經沒有其它熱門的話題了。"
         posted: "已經沒有其它話題了。"
         read: "已經沒有其它已讀的話題了。"
         new: "已經沒有其它新話題了。"
@@ -1647,7 +1634,6 @@ zh_TW:
         category: "{{category}} 分類已經沒有其它話題了。"
         top: "沒有更多精選話題。"
         bookmarks: "書籤裡沒有更多的話題了。"
-        search: "沒有更多搜尋結果了。"
     topic:
       filter_to:
         other: "本話題中的 {{count}} 帖"
@@ -2378,15 +2364,9 @@ zh_TW:
         title_with_count:
           other: "最新 ({{count}})"
         help: "最近的話題"
-      hot:
-        title: "熱門"
-        help: "最熱門的話題"
       read:
         title: "已讀"
         help: "你看過的話題，以閱讀的先後順序排列"
-      search:
-        title: "搜尋"
-        help: "搜尋所有話題"
       categories:
         title: "分類"
         title_in: "分類 - {{categoryName}}"
@@ -2620,20 +2600,16 @@ zh_TW:
           read: "你尚未閲讀任何話題。"
           posted: "你尚未在任何話題中發帖。"
           latest: "沒有最新話題。"
-          hot: "沒有熱門話題。"
           bookmarks: "你還沒有收藏話題。"
           top: "沒有最佳話題。"
-          search: "沒有搜索結果。"
         bottom:
           latest: "沒有更多的最新話題。"
-          hot: "沒有更多的熱門話題。"
           posted: "沒有更多的發佈話題。"
           read: "沒有更多已閲話題可看了。"
           new: "已經沒有其他新話題了。"
           unread: "沒有更多未讀話題了。"
           top: "沒有更多最佳話題了。"
           bookmarks: "沒有更多收藏的話題了。"
-          search: "沒有更多搜索結果了。"
     invite:
       custom_message: "撰寫<a href>自訂訊息</a>，來個人化您的邀請"
       custom_message_placeholder: "輸入留言"

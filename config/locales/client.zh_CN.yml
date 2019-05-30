@@ -152,7 +152,6 @@ zh_CN:
         us_east_1: "美国东部（N. Virginia）"
         us_east_2: "美国东部（俄亥俄州）"
         us_gov_east_1: "AWS政府专用（US-East）"
-        us_gov_west_1: "政府专用（US）"
         us_west_1: "美国西部（N. California）"
         us_west_2: "美国西部（Oregon）"
     edit: "编辑标题和分类"
@@ -297,9 +296,6 @@ zh_CN:
         saved: "已保存！"
         save_changes: "保存更改"
         title: "设置"
-        score_bonuses:
-          title: "分值奖励"
-          description: "分值奖励机制允许赋予某些类型的帖子比其它类型更高的分值，从而提升这些类型的优先级。注意：修改后的新值并不会应用到之前已经奖分的帖子。"
       moderation_history: "管理日志"
       view_all: "查看全部"
       grouped_by_topic: "依据主题分组"
@@ -345,14 +341,13 @@ zh_CN:
       new_topic: "新主题："
       filters:
         type:
-          title: "类型："
+          title: "类型"
           all: "(全部类型)"
         minimum_score: "最低分："
         refresh: "刷新"
         status: "状态"
-        category: "分类："
+        category: "分类"
         priority:
-          title: "最低优先级："
           low: "低"
           medium: "中等"
           high: "高"
@@ -807,7 +802,7 @@ zh_CN:
       second_factor:
         title: "双重验证"
         disable: "停用双重验证"
-        enable: "启用两步认证加强账户安全"
+        enable: "启用双重验证"
         confirm_password_description: "确认密码以继续"
         label: "编码"
         rate_limit: "请等待另一个验证码。"
@@ -1113,11 +1108,6 @@ zh_CN:
     too_few_topics_and_posts_notice: "让我们<a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>开始讨论！</a>目前有<strong>%{currentTopics} / %{requiredTopics}</strong>个主题和<strong>%{currentPosts} / %{requiredPosts}</strong>个帖子。新访客需要能够阅读和回复一些对话。"
     too_few_topics_notice: "让我们<a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>开始讨论！</a>目前有<strong>%{currentTopics} / %{requiredTopics}</strong>个主题。新访客需要能够阅读和回复一些讨论。"
     too_few_posts_notice: "让我们<a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>开始讨论！</a>目前有<strong>%{currentPosts} / %{requiredPosts}</strong>个帖子。新访客需要能够阅读和回复一些讨论。"
-    logs_error_rate_notice:
-      reached: "<b>%{relativeAge}</b> – <a href='%{url}' target='_blank'>%{rate}</a> 达到了站点设置中的 %{siteSettingRate}。"
-      exceeded: "<b>[%{relativeAge}]</b> 目前的错误率 <a href='%{url}' target='_blank'>%{rate}</a> 已超出了站点设置中的 %{siteSettingRate}。"
-      rate:
-        other: "%{count} 错误/%{duration}"
     learn_more: "了解更多…"
     all_time: "总量"
     all_time_desc: "创建的主题总量"
@@ -1172,7 +1162,6 @@ zh_CN:
     trust_level: "用户级别"
     search_hint: "用户名、电子邮件或 IP 地址"
     create_account:
-      disclaimer: "注册即表示你同意<a href='{{privacy_link}}'>隐私策略</a>和<a href='{{tos_link}}'>服务条款</a>。"
       title: "创建新账户"
       failed: "出问题了，有可能这个邮箱已经被注册了。试试忘记密码链接？"
     forgot_password:
@@ -1211,7 +1200,6 @@ zh_CN:
       email_placeholder: "电子邮件或者用户名"
       caps_lock_warning: "大写锁定开启"
       error: "未知错误"
-      cookies_error: "你的浏览器似乎禁用了Cookie。如果不先启用它们，你可能无法登录。"
       rate_limit: "请请稍后再重试"
       blank_username: "请输入你的邮件地址或用户名。"
       blank_username_or_password: "请输入你的邮件地址或用户名，以及密码。"
@@ -1289,6 +1277,7 @@ zh_CN:
       shift: "Shift"
       ctrl: "Ctrl"
       alt: "Alt"
+      enter: "回车"
     conditional_loading_section:
       loading: 载入中……
     category_row:
@@ -1629,17 +1618,14 @@ zh_CN:
         read: "你尚未阅读任何主题。"
         posted: "你尚未在任何主题中发帖。"
         latest: "没有新的主题。"
-        hot: "没有热门主题。"
         bookmarks: "你没有收藏任何主题。"
         category: "{{category}}分类中没有主题。"
         top: "没有热门主题。"
-        search: "没有搜索结果。"
         educate:
           new: '<p>这里显示了近期主题列表。</p><p>默认情况下，最近 2 天内创建的主题将显示在近期列表，还会显示一个<span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">近期</span>标志。<p>你可以在<a href="%{userPrefsUrl}">用户设置</a>中更改要显示哪些内容。</p>'
           unread: '<p>这里显示你的未读主题。</p><p>默认情况下，下述主题会被放在未读中。并且会在旁边显示未读的数量<span class="badge new-posts badge-notification">1</span>。如果你：</p><ul><li>创建了该主题</li><li>回复了该主题</li><li>阅读该主题超过 4 分钟</li></ul><p>或者你在主题底部的通知控制中选择了跟随或关注。</p><p>你可以在<a href="%{userPrefsUrl}">用户设置</a>中修改未读设置。</p>'
       bottom:
         latest: "没有更多主题可看了。"
-        hot: "没有更多热门主题可看了。"
         posted: "没有更多已发布主题可看了。"
         read: "没有更多已阅主题可看了。"
         new: "没有更多的近期主题。"
@@ -1647,7 +1633,6 @@ zh_CN:
         category: "没有更多{{category}}分类的主题了。"
         top: "没有更多的热门主题."
         bookmarks: "没有更多收藏的主题了。"
-        search: "没有更多搜索结果了。"
     topic:
       filter_to:
         other: "本主题中的 {{count}} 帖"
@@ -1772,6 +1757,7 @@ zh_CN:
         jump_bottom: "跳至最后一个帖子"
         jump_prompt: "跳到…"
         jump_prompt_of: "%{count} 帖子"
+        jump_prompt_long: "跳到……"
         jump_bottom_with_number: "跳至第 %{post_number} 帖"
         jump_prompt_to_date: "至今"
         jump_prompt_or: "或"
@@ -2378,15 +2364,9 @@ zh_CN:
         title_with_count:
           other: "最新（{{count}}）"
         help: "有了新帖的活动主题"
-      hot:
-        title: "热门"
-        help: "最近最受欢迎的主题"
       read:
         title: "已读"
         help: "你已经阅读过的主题"
-      search:
-        title: "搜索"
-        help: "搜索所有主题"
       categories:
         title: "分类"
         title_in: "分类 - {{categoryName}}"
@@ -2453,6 +2433,11 @@ zh_CN:
       content_load_error: '<a href="%url%">内容</a>无法加载'
       image_load_error: '<a href="%url%">图像</a>无法加载'
     keyboard_shortcuts_help:
+      shortcut_key_delimiter_comma: "，"
+      shortcut_key_delimiter_plus: "+"
+      shortcut_delimiter_or: "%{shortcut1}或%{shortcut2}"
+      shortcut_delimiter_slash: "%{shortcut1}/%{shortcut2}"
+      shortcut_delimiter_space: "%{shortcut1}%{shortcut2}"
       title: "键盘快捷键"
       jump_to:
         title: "转至"
@@ -2620,20 +2605,16 @@ zh_CN:
           read: "你尚未阅读任何主题。"
           posted: "你尚未在任何主题中发帖。"
           latest: "没有最新主题。"
-          hot: "没有热门主题。"
           bookmarks: "你还没有收藏主题。"
           top: "没有热门主题。"
-          search: "没有搜索结果。"
         bottom:
           latest: "没有更多的最新主题。"
-          hot: "没有更多的热门话题。"
           posted: "没有更多的发布主题。"
           read: "没有更多已阅主题可看了。"
           new: "没有更多的近期主题。"
           unread: "没有更多未读主题了。"
           top: "没有更多的热门主题."
           bookmarks: "没有更多收藏的主题了。"
-          search: "没有更多搜索结果了。"
     invite:
       custom_message: "通过编写<a href>自定义消息</a>，使你的邀请更个性化。"
       custom_message_placeholder: "输入留言"
@@ -2651,6 +2632,8 @@ zh_CN:
         title: "可用报告列表"
       dashboard:
         title: "仪表盘"
+        last_updated: "仪表盘更新于："
+        discourse_last_updated: "Discourse更新于："
         version: "安装的版本"
         up_to_date: "你正在运行最新的论坛版本。"
         critical_available: "有一个关键更新可用。"

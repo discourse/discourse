@@ -189,7 +189,6 @@ ro:
   private_message_abbrev: "Msg"
   rss_description:
     latest: "Ultimele subiecte"
-    hot: "Subiecte fierbinți"
     top: "Subiecte fierbinți"
     posts: "Ultimele postări"
     group_posts: "Ultimele postări de la %{group_name}"
@@ -1162,7 +1161,6 @@ ro:
     tag_style: "Stil vizual pentru ecusoanele etichetă."
     min_trust_level_to_tag_topics: "Nivelul minim de încredere necesar pentru a pune etichete pe subiecte."
     suppress_overlapping_tags_in_list: "Dacă etichetele corespund exact cu cuvintele din titlul subiectelor, nu mai afișa aceste etichete."
-    remove_muted_tags_from_latest: "Nu afișa în lista subiectelor recente, subiectele ce au fost etichetate cu etichete setate pe silențios"
     errors:
       invalid_email: "Adresă de email invalidă."
       invalid_username: "Nu există nici un utilizator cu acest nume de utilizator."
@@ -1655,8 +1653,6 @@ ro:
     see_more: "Mai multe"
     search_title: "Caută în site"
     search_button: "Caută"
-  terms_of_service:
-    title: "Condițiile generale de utilizare"
   deleted: "șters"
   image: "imagine"
   upload:
@@ -1696,9 +1692,6 @@ ro:
     sender_body_blank: "conținutul este gol"
   color_schemes:
     base_theme_name: "Bază"
-  about: "Despre"
-  guidelines: "Ghid"
-  privacy: "Confidențialitate"
   edit_this_page: "Editează această pagină"
   csv_export:
     boolean_yes: "Da"

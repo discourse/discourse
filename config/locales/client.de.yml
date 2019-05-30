@@ -172,7 +172,7 @@ de:
         us_east_1: "USA Ost (Nord-Virginia)"
         us_east_2: "USA Ost (Ohio)"
         us_gov_east_1: "AWS GovCloud (US-Ost)"
-        us_gov_west_1: "AWS GovCloud (USA)"
+        us_gov_west_1: "AWS GovCloud (US-West)"
         us_west_1: "USA West (Nordkalifornien)"
         us_west_2: "USA West (Oregon)"
     edit: "Titel und Kategorie dieses Themas ändern"
@@ -322,9 +322,8 @@ de:
         saved: "Gespeichert"
         save_changes: "Speichern"
         title: "Einstellungen"
-        score_bonuses:
-          title: "Bewertungs-Boni"
-          description: "Boni ermöglicht es, bestimmte Arten höher zu bewerten als andere, damit sie priorisiert werden können. Beachte: Die Änderung dieser Werte hat keinen Einfluss auf bisher bewertete Einträge."
+        priorities:
+          title: "Überprüfbare Prioritäten"
       moderation_history: "Moderationshistorie"
       view_all: "Alle anzeigen"
       grouped_by_topic: "Gruppiert nach Thema"
@@ -336,7 +335,7 @@ de:
       title: "Überprüfen"
       topic: "Thema:"
       filtered_topic: "Du hast nach zu prüfenden Inhalten in einem einzelnen Thema gefiltert."
-      filtered_user: "Benutzer:"
+      filtered_user: "Benutzer"
       show_all_topics: "Zeige alle Themen"
       deleted_post: "Beitrag gelöscht"
       deleted_user: "Benutzer gelöscht"
@@ -377,14 +376,13 @@ de:
       new_topic: "Neues Thema:"
       filters:
         type:
-          title: "Typ:"
+          title: "Typ"
           all: "(alle Arten)"
         minimum_score: "Minimale Bewertung:"
         refresh: "Aktualisieren"
-        status: "Status:"
-        category: "Kategorie:"
+        status: "Status"
+        category: "Kategorie"
         priority:
-          title: "Minimale Priorität:"
           low: "Niedrig"
           medium: "Mittel"
           high: "Hoch"
@@ -845,7 +843,7 @@ de:
       second_factor:
         title: "Zwei-Faktor-Authentifizierung"
         disable: "Zwei-Faktor-Authentifizierung deaktivieren"
-        enable: "Zwei-Faktor-Authentifizierung aktivieren, um das Benutzerkonto besser zu schützen"
+        enable: "Zwei-Faktor-Authentifizierung aktivieren"
         confirm_password_description: "Bitte bestätige dein Passwort um fortzufahren"
         label: "Code"
         rate_limit: "Bitte warte ein wenig, bevor du es mit einem anderen Authentifizierungscode versuchst."
@@ -853,6 +851,8 @@ de:
           Scanne diesen QR-Code mit einer unterstützten App (<a href="https://www.google.com/search?q=authenticator+apps+for+android" target="_blank">Android</a> – <a href="https://www.google.com/search?q=authenticator+apps+for+ios" target="_blank">iOS</a>) und gib deinen Authentifizierungscode ein.
         disable_description: "Bitte gib den Authentifizierungscode aus deiner App ein."
         show_key_description: "Manuell eingeben"
+        short_description: |
+          Schütze dein Konto mit Einweg-Sicherheitscodes.
         extended_description: |
           Zwei-Faktor-Authentifizierung (2FA) sichert dein Konto zusätzlich ab, indem sie zusätzlich zu deinem Passwort einen einmalig gültigen Code anfordert. Codes können auf <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>Android-</a> und <a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS-</a>-Geräten generiert werden.
         oauth_enabled_warning: "Beachte bitte, dass soziale Anmelde-Methoden deaktiviert werden, sobald die Zwei-Faktor-Authentifizierung für dein Konto aktiviert ist."
@@ -1161,12 +1161,6 @@ de:
     too_few_topics_and_posts_notice: "Lass' <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>die Diskussionen starten!</a> Es existieren bisher <strong>%{currentTopics} von %{requiredTopics}</strong> benötigten Themen und <strong>%{currentPosts} von %{requiredPosts}</strong> benötigten Beiträgen. Neue Besucher benötigen bestehende Konversationen, die sie lesen und auf die sie antworten können."
     too_few_topics_notice: "Lass' <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>die Diskussionen starten!</a> Es existieren bisher <strong>%{currentTopics} von %{requiredTopics}</strong> benötigten Themen. Neue Besucher benötigen bestehende Konversationen, die sie lesen und auf die sie antworten können."
     too_few_posts_notice: "Lass' <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>die Diskussionen starten!</a> Es existieren bisher <strong>%{currentPosts} von %{requiredPosts}</strong> benötigten Beiträgen. Neue Besucher benötigen bestehende Konversationen, die sie lesen und auf die sie antworten können."
-    logs_error_rate_notice:
-      reached: "<b>%{relativeAge}</b> – <a href='%{url}' target='_blank'>%{rate}</a> hat die eingestellte Grenze für die Site von %{siteSettingRate} erreicht."
-      exceeded: "<b>%{relativeAge}</b> – <a href='%{url}' target='_blank'>%{rate}</a> hat die eingestellte Grenze für die Site von %{siteSettingRate} überschritten."
-      rate:
-        one: "ein Fehler/%{duration}"
-        other: "%{count} Fehler/%{duration}"
     learn_more: "mehr erfahren…"
     all_time: "gesamt"
     all_time_desc: "Erstellte Themen"
@@ -1222,7 +1216,7 @@ de:
     trust_level: "Vertrauensstufe"
     search_hint: "Benutzername, E-Mail- oder IP-Adresse"
     create_account:
-      disclaimer: "Mit der Registrierung erklären Sie sich mit der <a href='{{privacy_link}}'>Datenschutzerklärung</a> und unseren <a href='{{tos_link}}'>Nutzungsbedingungen</a> einverstanden."
+      disclaimer: "Mit der Registrierung stimmst du <a href='{{privacy_link}}' target='blank'>privacy policy</a> und <a href='{{tos_link}}' target='blank'>terms of service</a> zu."
       title: "Neues Benutzerkonto erstellen"
       failed: "Etwas ist fehlgeschlagen. Vielleicht ist diese E-Mail-Adresse bereits registriert. Versuche den 'Passwort vergessen'-Link."
     forgot_password:
@@ -1261,7 +1255,7 @@ de:
       email_placeholder: "E-Mail oder Benutzername"
       caps_lock_warning: "Feststelltaste ist aktiviert"
       error: "Unbekannter Fehler"
-      cookies_error: "Dein Browser scheint Cookies deaktiviert zu haben. Du kannst dich möglicherweise nicht anmelden, ohne diese zu aktivieren."
+      cookies_error: "Dein Browser scheint Cookies deaktiviert zu haben. Du kannst dich möglicherweise nicht anmelden, ohne diese zuerst zu aktivieren"
       rate_limit: "Warte bitte ein wenig, bevor du erneut versuchst dich anzumelden."
       blank_username: "Bitte gib deine E-Mail-Adresse oder deinen Benutzernamen ein."
       blank_username_or_password: "Bitte gib deine E-Mail-Adresse oder deinen Benutzernamen und dein Passwort ein."
@@ -1339,6 +1333,7 @@ de:
       shift: "Umschalt"
       ctrl: "Strg"
       alt: "Alt"
+      enter: "Enter"
     conditional_loading_section:
       loading: Wird geladen…
     category_row:
@@ -1689,17 +1684,14 @@ de:
         read: "Du hast noch keine Themen gelesen."
         posted: "Du hast noch keine Beiträge verfasst."
         latest: "Es gibt keine aktuellen Themen. Das ist schade."
-        hot: "Es gibt keine beliebten Themen."
         bookmarks: "Du hast noch keine Themen, in denen du ein Lesezeichen gesetzt hast."
         category: "Es gibt keine Themen in {{category}}."
         top: "Es gibt keine Top-Themen."
-        search: "Es wurden keine Suchergebnisse gefunden."
         educate:
           new: '<p>Hier werden neue Themen angezeigt.</p><p>Standardmäßig werden jene Themen als neu angesehen und mit dem <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">neu</span> Indikator versehen, die in den letzten 2 Tagen erstellt wurden.</p><p>Du kannst das in deinen <a href="%{userPrefsUrl}">Einstellungen</a> ändern.</p>'
           unread: '<p>Hier werden deine ungelesenen Themen angezeigt.</p><p>Die Anzahl der ungelesenen Beiträge wird standardmäßig als <span class="badge new-posts badge-notification">1</span> neben den Themen angezeigt, wenn du:</p><ul><li>das Thema erstellt hast</li><li>auf das Thema geantwortet hast</li><li>das Thema länger als 4 Minuten gelesen hast</li></ul><p>Außerdem werden jene Themen berücksichtigt, die du in den Benachrichtigungseinstellungen am Ende eines jeden Themas ausdrücklich auf Beobachten oder Verfolgen gesetzt hast.</p><p>Du kannst das in deinen <a href="%{userPrefsUrl}">Einstellungen</a> ändern.</p>'
       bottom:
         latest: "Das waren die aktuellen Themen."
-        hot: "Das waren alle beliebten Themen."
         posted: "Das waren alle Themen."
         read: "Das waren alle gelesenen Themen."
         new: "Das waren alle neuen Themen."
@@ -1707,7 +1699,6 @@ de:
         category: "Das waren alle Themen in der Kategorie „{{category}}“."
         top: "Das waren alle angesagten Themen."
         bookmarks: "Das waren alle Themen mit Lesezeichen."
-        search: "Es gibt keine weiteren Suchergebnisse."
     topic:
       filter_to:
         one: "%{count} Beitrag im Thema"
@@ -1840,6 +1831,7 @@ de:
         jump_bottom: "springe zum letzten Beitrag"
         jump_prompt: "springe zu..."
         jump_prompt_of: "von %{count} Beiträgen"
+        jump_prompt_long: "Zu ... springen"
         jump_bottom_with_number: "springe zu Beitrag %{post_number}"
         jump_prompt_to_date: "zu Datum"
         jump_prompt_or: "oder"
@@ -2286,7 +2278,7 @@ de:
       security: "Sicherheit"
       special_warning: "Warnung: Diese Kategorie wurde bei der Installation angelegt. Die Sicherheitseinstellungen können daher nicht verändert werden. Wenn du diese Kategorie nicht benötigst, dann solltest du sie löschen anstatt sie für andere Zwecke zu verwenden."
       uncategorized_security_warning: "Diese Kategorie ist etwas Spezielles. Sie dient als Bereich für Themen, die keine Kategorie haben und besitzt keine Sicherheitseinstellungen."
-      uncategorized_general_warning: 'Diese Kategorie ist etwas Spezielles. Sie wird als Standard-Kategorie für neue Themen genutzt, für die keine Kategorie ausgewählt wurde. Deaktiviere <a href="{settingLink}">diese Einstellung</a>, wenn dieses Verhalten verhindert und eine Kategoriewahl erzwungen werden soll. Der Name und die Beschreibung können unter <a href="%{customizeLink}">Anpassen / Textinhalte</a> geändert werden.'
+      uncategorized_general_warning: 'Diese Kategorie ist etwas Spezielles. Sie wird als Standard-Kategorie für neue Themen genutzt, für die keine Kategorie ausgewählt wurde. Deaktiviere <a href="%{settingLink}">diese Einstellung</a>, wenn dieses Verhalten verhindert und eine Kategoriewahl erzwungen werden soll. Der Name und die Beschreibung können unter <a href="%{customizeLink}">Anpassen / Textinhalte</a> geändert werden.'
       images: "Bilder"
       email_in: "Benutzerdefinierte Adresse für eingehende E-Mails:"
       email_in_allow_strangers: "Akzeptiere E-Mails von anonymen Benutzern."
@@ -2473,15 +2465,9 @@ de:
           one: "Aktuell (%{count})"
           other: "Aktuell ({{count}})"
         help: "die zuletzt geänderten Themen"
-      hot:
-        title: "Beliebt"
-        help: "eine Auswahl der beliebtesten Themen"
       read:
         title: "Gelesen"
         help: "Themen, die du gelesen hast; werden in der Reihenfolge angezeigt, in der du diese gelesen hast"
-      search:
-        title: "Suche"
-        help: "alle Themen durchsuchen"
       categories:
         title: "Kategorien"
         title_in: "Kategorie - {{categoryName}}"
@@ -2553,6 +2539,11 @@ de:
       content_load_error: '<a href="%url%">Der Inhalt</a> konnte nicht geladen werden.'
       image_load_error: '<a href="%url%">Das Bild</a> konnte nicht geladen werden. '
     keyboard_shortcuts_help:
+      shortcut_key_delimiter_comma: ", "
+      shortcut_key_delimiter_plus: "+"
+      shortcut_delimiter_or: " %{shortcut1} oder %{shortcut2} "
+      shortcut_delimiter_slash: " %{shortcut1}/%{shortcut2} "
+      shortcut_delimiter_space: " %{shortcut1} %{shortcut2} "
       title: "Tastenkombinationen"
       jump_to:
         title: "Springe zu"
@@ -2727,20 +2718,16 @@ de:
           read: "Du hast noch keine Themen gelesen."
           posted: "Du hast noch keine Beiträge verfasst."
           latest: "Es gibt keine aktuellen Themen."
-          hot: "Es gibt keine beliebten Themen."
           bookmarks: "Du hast noch keine Themen, in denen du ein Lesezeichen gesetzt hast."
           top: "Es gibt keine Top-Themen."
-          search: "Es wurden keine Suchergebnisse gefunden."
         bottom:
           latest: "Das waren die aktuellen Themen."
-          hot: "Das waren alle beliebten Themen."
           posted: "Das waren alle deine Themen."
           read: "Das waren alle gelesenen Themen."
           new: "Das waren alle neuen Themen."
           unread: "Das waren alle ungelesen Themen."
           top: "Das waren alle Top-Themen."
           bookmarks: "Das waren alle Themen mit Lesezeichen."
-          search: "Es gibt keine weiteren Suchergebnisse."
     invite:
       custom_message: "Gestalte deine Einladung etwas mehr persönlicher, in dem du eine <a href>eigene Nachricht</a> schreibst."
       custom_message_placeholder: "Gib deine persönliche Nachricht ein"
@@ -2758,6 +2745,8 @@ de:
         title: "Verfügbare Berichte"
       dashboard:
         title: "Übersicht"
+        last_updated: "Übersicht aktualisiert:"
+        discourse_last_updated: "Discourse aktualisiert:"
         version: "Version"
         up_to_date: "Du verwendest die neueste Version!"
         critical_available: "Ein kritisches Update ist verfügbar."
@@ -3100,6 +3089,7 @@ de:
         new_style: "Neuer Style"
         install: "Installieren"
         delete: "Löschen"
+        delete_confirm: 'Möchtest du wirklich  "%{theme_name}" löschen? '
         color: "Farbe"
         opacity: "Transparenz"
         copy: "Kopieren"

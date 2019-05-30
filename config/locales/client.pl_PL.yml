@@ -210,7 +210,6 @@ pl_PL:
         sa_east_1: "Ameryka Południowa (São Paulo)"
         us_east_1: "US East (N. Virginia)"
         us_east_2: "Wschodnie USA (Ohio)"
-        us_gov_west_1: "AWS GovCloud (US)"
         us_west_1: "US West (N. California)"
         us_west_2: "US West (Oregon)"
     edit: "edytuj tytuł i kategorię tego tematu"
@@ -363,7 +362,7 @@ pl_PL:
       none: "Brak elementów do przejrzenia."
       view_pending: "pokaż oczekujące"
       topic: "Temat:"
-      filtered_user: "Użytkownik:"
+      filtered_user: "Użytkownik"
       show_all_topics: "pokaż wszystkie tematy"
       user:
         username: "Nazwa użytkownika"
@@ -384,7 +383,10 @@ pl_PL:
       save: "Zapisz"
       cancel: "Anuluj"
       filters:
+        type:
+          title: "Typ"
         refresh: "Odśwież"
+        category: "Kategoria"
       scores:
         date: "Data"
         type: "Typ"
@@ -778,7 +780,6 @@ pl_PL:
         copy_to_clipboard_error: "Wystąpił błąd w trakcie kopiowania do schowka"
       second_factor:
         title: "Dwuskładnikowe uwierzytelnianie"
-        disable: "Wyłącz dwuskładnikowe uwierzytelnianie"
         confirm_password_description: "Potwierdź swoje hasło, aby kontynuować"
         label: "Kod"
         disable_description: "Podaj kod uwierzytelniający ze swojej aplikacji"
@@ -1083,14 +1084,6 @@ pl_PL:
       enabled: "Strona jest w trybie tylko-do-odczytu. Możesz nadal przeglądać serwis, ale operacje takie jak postowanie, lajkowanie i inne są wyłączone."
       login_disabled: "Logowanie jest zablokowane, gdy strona jest w trybie tylko do odczytu."
       logout_disabled: "Wylogowanie jest zablokowane gdy strona jest w trybie tylko do odczytu."
-    logs_error_rate_notice:
-      reached: "<b>%{relativeAge}</b> – <a href='%{url}' target='_blank'>%{rate}</a> osiągnął ustawiony limit %{siteSettingRate}."
-      exceeded: "<b>%{relativeAge}</b> – <a href='%{url}' target='_blank'>%{rate}</a> przekroczył ustawiony limit %{siteSettingRate}."
-      rate:
-        one: "%{count} błąd/%{duration}"
-        few: "%{count} błędy/%{duration}"
-        many: "%{count} błędów/%{duration}"
-        other: "%{count} błędów/%{duration}"
     learn_more: "dowiedz się więcej…"
     all_time: "łącznie"
     all_time_desc: "łącznie utworzonych tematów"
@@ -1145,7 +1138,6 @@ pl_PL:
     trust_level: "Poziom zaufania"
     search_hint: "nazwa użytkownika, email lub IP"
     create_account:
-      disclaimer: "Rejestrując się zgadzasz się z <a href='{{privacy_link}}'>polityką prywatności</a> i <a href='{{tos_link}}'>warunkami świadczenia usług</a>."
       title: "Utwórz konto"
       failed: "Coś poszło nie tak, możliwe, że wybrany adres email jest już zarejestrowany, spróbuj użyć odnośnika przypomnienia hasła"
     forgot_password:
@@ -1551,17 +1543,14 @@ pl_PL:
         read: "You haven't read any topics yet."
         posted: "Jeszcze nie zamieściłeś wpisu w żadnym z tematów."
         latest: "Nie ma najnowszych tematów. Smutne."
-        hot: "Nie ma gorących tematów."
         bookmarks: "Nie posiadasz tematów dodanych do zakładek."
         category: "Nie ma tematów w kategorii {{category}}."
         top: "Brak najlepszych tematów."
-        search: "Brak wyników wyszukiwania."
         educate:
           new: '<p>Nowe tematy będą pojawiać się tutaj.</p><p>Domyślnie tematy są określane jako nowe i będą oznaczone jako<span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">nowe</span> jeśli były stworzone w ciągu ostatnich 2 dni.</p><p>Odwiedź swoje <a href="%{userPrefsUrl}">ustawienia</a> by to zmienić.</p>'
           unread: '<p>Twoje nie przeczytane tematy będą pojawiać się tutaj.</p><p>Domyślnie tematy są określane jako nieprzeczytane a ich liczba zostanie wyświetlona<span class="badge new-posts badge-notification">1</span> Jeśli:</p><ul><li>Utworzyłeś temat</li><li>Odpowiedziałeś w temacie</li><li>Czytałeś temat dłużej niż 4 minuty</li></ul><p>Albo ustawiłeś śledzenie lub obserwowanie tematu przez kontrolę powiadomień na dole każdego tematu .</p><p>Odwiedź swoje <a href="%{userPrefsUrl}">ustawienia</a> by to zmienić.</p>'
       bottom:
         latest: "Nie ma więcej najnowszych tematów."
-        hot: "Nie ma więcej gorących tematów."
         posted: "Nie ma więcej tematów w których pisałeś."
         read: "Nie ma więcej przeczytanych tematów."
         new: "Nie ma więcej nowych tematów."
@@ -1569,7 +1558,6 @@ pl_PL:
         category: "Nie ma więcej tematów w kategorii {{category}}."
         top: "Nie ma już więcej najlepszych tematów."
         bookmarks: "Nie ma więcej zakładek."
-        search: "Nie znaleziono więcej wyników."
     topic:
       filter_to:
         one: "%{count} post w temacie"
@@ -2306,15 +2294,9 @@ pl_PL:
           many: "Aktualne ({{count}})"
           other: "Aktualne ({{count}})"
         help: "tematy z ostatnimi wpisami"
-      hot:
-        title: "Gorące"
-        help: "wybrane najbardziej gorące tematy"
       read:
         title: "Przeczytane"
         help: "tematy które przeczytałeś, w kolejności od ostatnio przeczytanych"
-      search:
-        title: "Wyszukiwanie"
-        help: "szukaj we wszystkich tematach"
       categories:
         title: "Kategorie"
         title_in: "Kategoria - {{categoryName}}"
@@ -2544,20 +2526,16 @@ pl_PL:
           read: "Nie przeczytałeś jeszcze żadnych tematów."
           posted: "Jeszcze nie zamieściłeś postów w żadnym z tematów."
           latest: "Brak najnowszych tematów."
-          hot: "Brak gorących tematów."
           bookmarks: "Nie posiadasz tematów dodanych do zakładek."
           top: "Brak najlepszych tematów."
-          search: "Brak wyników wyszukiwania."
         bottom:
           latest: "Nie ma więcej najnowszych tematów."
-          hot: "Nie ma więcej gorących tematów."
           posted: "Nie ma więcej tematów, w których pisałeś."
           read: "Nie ma więcej przeczytanych tematów."
           new: "Nie ma więcej nowych tematów."
           unread: "Nie ma więcej nieprzeczytanych tematów."
           top: "Nie ma już więcej najlepszych tematów."
           bookmarks: "Nie ma więcej dodanych tematów do zakładek."
-          search: "Nie znaleziono więcej wyników wyszukiwania."
     invite:
       custom_message_placeholder: "Wpisz swoją niestandardową wiadomość"
       custom_message_template_forum: "Hej, należy dołączyć do tego forum!"

@@ -167,7 +167,6 @@ tr_TR:
         eu_west_3: "AB (Paris)"
         us_east_1: "Doğu ABD (Kuzey Virjinya)"
         us_east_2: "Doğu ABD (Ohio)"
-        us_gov_west_1: "AWS GovCloud (ABD)"
         us_west_1: "Batı ABD (Kuzey Kaliforniya)"
         us_west_2: "Batı ABD (Oregon)"
     edit: "bu konunun başlığını ve kategorisini düzenle"
@@ -296,6 +295,7 @@ tr_TR:
         title: "Ayarlar"
       moderation_history: "Moderasyon Tarihi"
       topic: "Konu:"
+      filtered_user: "Kullanıcı"
       user:
         username: "Kullanıcı Adı"
         email: "Eposta"
@@ -308,8 +308,9 @@ tr_TR:
       cancel: "İptal"
       filters:
         type:
-          title: "Tür:"
+          title: "Tür"
         refresh: "Yenile"
+        category: "Kategori"
       scores:
         date: "Tarih"
         type: "Tür"
@@ -704,7 +705,6 @@ tr_TR:
           description: "İlgili yedek kodlar sadece bir kez kullanılabilir. Kodları güvenli ama erişilebilir bir yerde tutmalısın. "
       second_factor:
         title: "İki Faktörlü Kimlik Doğrulama"
-        disable: "İki faktörlü kimlik doğrulamayı devre dışı bırak"
         confirm_password_description: "Devam etmek için lütfen şifrenizi onaylayın"
         label: "Kod"
         disable_description: "Lütfen kimlik doğrulama kodunu \"Uygulama\"dan gir"
@@ -990,12 +990,6 @@ tr_TR:
       enabled: "Bu site salt-okunur modda. Lütfen taramaya devam et, ancak yanıtlama, beğenme ve diğer eylemler şu an için devre dışı durumda. "
       login_disabled: "Site salt-okunur modda iken giriş işlemi devre dışı bırakılır ."
       logout_disabled: "Site salt-okunur modda iken çıkış işlemi yapılamaz."
-    logs_error_rate_notice:
-      reached: "<b>%{relativeAge}</b> – <a href='%{url}' target='_blank'>%{rate}</a> , %{siteSettingRate} 'in site ayarları limitine ulaştı."
-      exceeded: "<b>%{relativeAge}</b> – <a href='%{url}' target='_blank'>%{rate}</a> , %{siteSettingRate} 'in site ayarları limitini aştı."
-      rate:
-        one: "%{count} hata/%{duration}"
-        other: "%{count} hata/%{duration}"
     learn_more: "daha fazlasını öğren..."
     all_time: "toplam"
     all_time_desc: "oluşturulan tüm konular "
@@ -1047,7 +1041,6 @@ tr_TR:
     trust_level: "Güven Seviyesi"
     search_hint: "kullanıcı adı, e-posta veya IP adresi"
     create_account:
-      disclaimer: "Kayıt olarak, <a href='{{privacy_link}}'> gizlilik ilkesi </a> ve <a href='{{tos_link}}'>hizmet kullanım şartlarını </a> kabul etmiş bulunuyorsun. "
       title: "Yeni Hesap Oluştur"
       failed: "Bir şeyler ters gitti. Bu e-posta ile daha önce bir kayıt oluşturulmuş olabilir. \"Şifremi unuttum\"  bağlantısına tıklayarak ilerlemeni öneririz. "
     forgot_password:
@@ -1083,7 +1076,6 @@ tr_TR:
       email_placeholder: "e-posta veya kullanıcı adı"
       caps_lock_warning: "Caps Lock açık"
       error: "Bilinmeyen hata"
-      cookies_error: "Tarayıcın çerezleri devre dışı bırakmış gibi görünüyor. Etkinleştirmeden önce giriş yapamayabilirsin. "
       rate_limit: "Tekrar giriş yapmayı denemeden önce lütfen bekle. "
       blank_username: "Lütfen e-posta adresinizi ya da kullanıcı adınızı girin."
       blank_username_or_password: "Lütfen e-posta adresini ya da kullanıcı adını ve şifreni gir."
@@ -1474,17 +1466,14 @@ tr_TR:
         read: "Henüz herhangi bir konu okumadın."
         posted: "Henüz herhangi bir konuda gönderi yapmadın"
         latest: "Güncel bir konu yok. Bu üzücü."
-        hot: "Güncel bir konu yok."
         bookmarks: "Henüz bir konu işaretlememişsin. "
         category: "{{category}} konusu yok."
         top: "Popüler bir konu yok."
-        search: "Arama sonuçları yok."
         educate:
           new: '<p>Yeni konular burada görünecek.</p><p>Öntanımlı olarak son 2 gün içerisinde oluşturulmuş konular yeni olarak nitelendirilir ve <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">yeni</span> ibaresiyle işaretli olarak gösterilir.</p><p> <a href="%{userPrefsUrl}">tercihler</a> sayfanı ziyaret ederek bunu değiştirebilirsin.</p>'
           unread: '<p>Okumadığın konular burada görünecek.</p><p>Öntanımlı olarak, konuların okunmamış sayılması ve kaç tane<span class="badge new-posts badge-notification">1</span> okunmamış mesaj olduğunun gösterilmesi için </p><ul><li>Konuyu oluşturmuş olman</li><li>Konuya cevap vermiş olman</li><li>Konuyu 4 dakikadan fazla okumuş olman</li></ul><p>Veya, konuyu her konunun altında bulunan bildirim kontrol alanından Gözleniyor veya Takip Ediliyor olarak seçmen gerekir.</p><p><a href="%{userPrefsUrl}">tercihler</a> sayfanı ziyaret ederek bunu değiştirebilirsin.</p>'
       bottom:
         latest: "Daha fazla güncel konu yok."
-        hot: "Daha fazla sıcak bir konu yok."
         posted: "Daha fazla gönderilmiş konu yok."
         read: "Daha fazla okunmuş konu yok."
         new: "Daha fazla yeni konu yok."
@@ -1492,7 +1481,6 @@ tr_TR:
         category: "Daha fazla {{category}} konusu yok."
         top: "Daha fazla popüler konu yok."
         bookmarks: "Daha fazla işaretlenmemiş konu yok."
-        search: "Daha fazla arama sonucu yok."
     topic:
       filter_to:
         one: "konuda {{count}} tane gönderi var"
@@ -2181,15 +2169,9 @@ tr_TR:
           one: "En Son ({{count}})"
           other: "En Son ({{count}})"
         help: "yakın zamanda gönderi alan konular"
-      hot:
-        title: "Sıcak"
-        help: "en sıcak konuların seçimi"
       read:
         title: "Okunmuş"
         help: "okunma sırasına göre okuduğun konular"
-      search:
-        title: "Arama"
-        help: "tüm konularda ara"
       categories:
         title: "Kategoriler"
         title_in: "Kategori - {{categoryName}}"
@@ -2410,20 +2392,16 @@ tr_TR:
           read: "Henüz bir konu okumadın."
           posted: "Henüz herhangi bir konuya gönderim yapmadın."
           latest: "Yeni eklenen konu bulunmuyor."
-          hot: "Sıcak bir konu bulunmuyor."
           bookmarks: "Henüz işaretlenmemiş bir konun bulunmuyor."
           top: "Güncel bir konu bulunmuyor."
-          search: "Arama sonucunda hiçbir şey bulunamadı."
         bottom:
           latest: "Yeni eklenmiş konu bulunmuyor."
-          hot: "Daha fazla sıcak bir konu bulunmuyor."
           posted: "Daha fazla gönderilmiş konu bulunmuyor."
           read: "Okunacak daha fazla konu bulunmuyor."
           new: "Daha fazla yeni konu bulunmuyor."
           unread: "Daha fazla okunmamış konu bulunmuyor."
           top: "Daha fazla güncel konu bulunmuyor."
           bookmarks: "Daha fazla işaretlenmiş konu bulunmuyor."
-          search: "Daha fazla arama sonucu bulunmuyor."
     invite:
       custom_message_placeholder: "Kişiselleştirilmiş mesajlarını düzenle"
       custom_message_template_forum: "Hey, bu foruma katılmalısın!"

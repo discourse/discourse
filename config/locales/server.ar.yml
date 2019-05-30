@@ -226,7 +226,6 @@ ar:
   private_message_abbrev: "رسالة"
   rss_description:
     latest: "آخر المواضيع"
-    hot: "مواضيع نَشطة"
     top: "مواضيع مميزة"
     posts: "اخر المنشورات"
     group_posts: "احدث المنشورات من %{group_name} "
@@ -1203,7 +1202,6 @@ ar:
     default_categories_muted: "قائمة الأقسام المضبوطة إفتراضيا علي الوضع \"مكتوم\"."
     default_categories_watching_first_post: "قائمة الأقسام حيث أول منشور من كل موضوع جديد سوف يكون مضبوط افتراضياً علي الوضع  \"مُراقب\"."
     tagging_enabled: "فعّل الأوسمة على المواضيع."
-    remove_muted_tags_from_latest: "لا تظهر الموضوعات الموسومة بأوسمة مكتومة في قائمة أخر الموضوعات."
     errors:
       invalid_email: "عنوان البريد غير صالح."
       invalid_username: "لا مستخدم بهذا الاسم."
@@ -1486,8 +1484,6 @@ ar:
     welcome_message: |
       ## اهلا بك في %{title}
       من فضلك قم بتسجيل الدخول او انشاء حساب جديد للمتابعة.
-  terms_of_service:
-    title: "شروط الخدمة"
   deleted: "حذف"
   image: "صورة"
   upload:
@@ -1523,9 +1519,6 @@ ar:
     sender_body_blank: "محتوى فارغ "
   color_schemes:
     base_theme_name: "قاعدة"
-  about: "حول "
-  guidelines: "ارشادات"
-  privacy: "خصوصية"
   edit_this_page: "تعديل هذه الصفحة"
   csv_export:
     boolean_yes: "نعم"

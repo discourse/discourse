@@ -153,7 +153,6 @@ da:
         eu_west_2: "EU (London)"
         us_east_1: "US East (N. Virginia)"
         us_east_2: "US East (Ohio)"
-        us_gov_west_1: "AWS GovCloud (US)"
         us_west_1: "US West (N. California)"
         us_west_2: "US West (Oregon)"
     edit: "redigér titel og kategori for dette emne"
@@ -259,6 +258,7 @@ da:
         save_changes: "Gem ændringer"
         title: "Indstillinger"
       topic: "Emne:"
+      filtered_user: "bruger"
       user:
         username: "Brugernavn"
         email: "Email"
@@ -269,7 +269,10 @@ da:
       save: "Gem"
       cancel: "Afbryd"
       filters:
+        type:
+          title: "Type"
         refresh: "Opdatér"
+        category: "Kategori"
       scores:
         date: "Dato"
         type: "Type"
@@ -870,12 +873,6 @@ da:
       enabled: "Dette website kan kun læses lige nu. Fortsæt endelig med at kigge, men der kan ikke svares, likes eller andet indtil videre."
       login_disabled: "Log in er deaktiveret midlertidigt, da forummet er i \"kun læsnings\" tilstand."
       logout_disabled: "Log ud er deaktivere mens websitet kun kan læses."
-    logs_error_rate_notice:
-      reached: "<b>%{relativeAge}</b> – <a href='%{url}' target='_blank'>%{rate}</a> nåede grænse for konfiguration af sitet på %{siteSettingRate}."
-      exceeded: "<b>%{relativeAge}</b> – <a href='%{url}' target='_blank'>%{rate}</a> overskred grænse for konfiguration af sitet på %{siteSettingRate}."
-      rate:
-        one: "%{count} fejl/%{duration}"
-        other: "%{count} fejl/%{duration}"
     learn_more: "Læs mere…"
     all_time: "i alt"
     all_time_desc: "emner oprettet i alt"
@@ -923,7 +920,6 @@ da:
     trust_level: "Tillidsniveau"
     search_hint: "brugernavn, email eller IP adresse"
     create_account:
-      disclaimer: "Gennem din tilmelding accepterer du <a href='{{privacy_link}}'>fortrolighedspolitikken</a> og <a href='{{tos_link}}'>servicevilkårene</a>."
       title: "Opret konto"
       failed: "Noget gik galt. Måske er e-mail-adressen allerede registreret – prøv “Jeg har glemt min adgangskode”-linket"
     forgot_password:
@@ -1230,17 +1226,14 @@ da:
         read: "Du har ikke læst nogen emner endnu."
         posted: "Du har ikke skrevet nogen indlæg endnu."
         latest: "Der er ikke nogen nye emner. Det er sørgeligt."
-        hot: "Der er ingen populære emner."
         bookmarks: "Du har ingen bogmærkede emner endnu."
         category: "Der er ingen emner i kategorien {{category}}."
         top: "Der er ingen top emner"
-        search: "Der er ingen søgeresultater."
         educate:
           new: '<p>Dine nye emner vises her.</p><p>Som standard, betragtes emner som ulæste og vil vise en  <span class="badge new-posts badge-notification" style="vertical-align:middle;line-height:inherit;">ny</span> indikator hvis de var oprettet indenfor de sidste 2 dage</p><p>Du kan ændre dette i dine <a href="%{userPrefsUrl}">indstillinger</a></p>'
           unread: '<p>Dine nye emner vises her.</p><p>Som standard, betragtes emner som ulæste og vil vise en  <span class="badge new-posts badge-notification">1</span>  hvis du:</p><ul><li>Oprettede dette emne</li><li>Svarede dette emne</li><li>Læste emnet i mere end 4 minutter</li></ul><p> Eller hvis du udtrykkeligt sat emnet til Sporet eller Følger via notifikations indstillinger i bunden af hvert emne.</p><p> Tilgå dine <a href="%{userPrefsUrl}">indstillinger</a> for at ændre dette.</p>'
       bottom:
         latest: "Der er ikke flere populære emner."
-        hot: "There are no more hot topics."
         posted: "Der er ikke flere emner."
         read: "Der er ikke flere læste emner."
         new: "Der er ikke flere nye emner."
@@ -1248,7 +1241,6 @@ da:
         category: "Der er ikke flere emner i kategorien {{category}}."
         top: "Der er ikke flere top emner"
         bookmarks: "Der er ikke flere bogmærkede emner."
-        search: "Der er ikke flere søgeresultater."
     topic:
       filter_to:
         one: "%{count} indlæg i emnet"
@@ -1893,15 +1885,9 @@ da:
           one: "Seneste (%{count})"
           other: "Seneste ({{count}})"
         help: "de seneste emner"
-      hot:
-        title: "Populære"
-        help: "de mest populære emner"
       read:
         title: "Læste"
         help: "emner du har læst"
-      search:
-        title: "Søg"
-        help: "søg alle emner"
       categories:
         title: "Kategorier"
         title_in: "Kategori - {{categoryName}}"
@@ -2106,20 +2092,16 @@ da:
           read: "Du har ikke læst nogen emner endnu."
           posted: "Du har ikke oprettet nogen emner endnu."
           latest: "Der er ikke nogen seneste emner."
-          hot: "Der er ikke nogen populære emner."
           bookmarks: "Du har ikke bogmærket nogen emner endnu."
           top: "Der er ikke nogen populære emner."
-          search: "Der er ikke nogen søgeresultater."
         bottom:
           latest: "Der er ikke flere seneste emner."
-          hot: "Der er ikke flere populære emner."
           posted: "Der er ikke flere oprettede emner."
           read: "Der er ikke flere læste emner."
           new: "Der er ikke flere nye emner."
           unread: "Der er ikke flere ulæste emner."
           top: "Der er ikke flere populære emner."
           bookmarks: "Der er ikke flere bogmærkede emner."
-          search: "Der er ikke flere søgeresultater."
     invite:
       custom_message_placeholder: "Skriv en personlig besked"
       custom_message_template_forum: "Hej, du burde tilmelde dig dette forum!"

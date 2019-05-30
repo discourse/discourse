@@ -273,7 +273,6 @@ es:
   private_message_abbrev: "Msj"
   rss_description:
     latest: "Temas recientes"
-    hot: "Temas candentes"
     top: "Top temas"
     top_all: "Todos los Temas Top"
     top_yearly: "Anual: Temas Top"
@@ -564,40 +563,40 @@ es:
       half_a_minute: "< 1m"
       less_than_x_seconds:
         one: "< %{count}s"
-        other: "< %{count}s"
+        other: "< %{count} s"
       x_seconds:
         one: "%{count}s"
-        other: "%{count}s"
+        other: "%{count} s"
       less_than_x_minutes:
         one: "< %{count}m"
-        other: "< %{count}m"
+        other: "< %{count} min"
       x_minutes:
         one: "%{count}m"
-        other: "%{count}m"
+        other: "%{count} m"
       about_x_hours:
         one: "%{count}h"
-        other: "%{count}h"
+        other: "%{count} h"
       x_days:
         one: "%{count}d"
-        other: "%{count}d"
+        other: "%{count} d"
       about_x_months:
         one: "%{count}mon"
-        other: "%{count}mon"
+        other: "%{count} m"
       x_months:
         one: "%{count}mon"
         other: "%{count}mon"
       about_x_years:
         one: "%{count}y"
-        other: "%{count}y"
+        other: "%{count} a"
       over_x_years:
         one: "> %{count}y"
-        other: "> %{count}y"
+        other: "> %{count} a"
       almost_x_years:
         one: "%{count}y"
-        other: "%{count}y"
+        other: "%{count} a"
     distance_in_words_verbose:
       half_a_minute: "ahora mismo"
-      less_than_x_seconds: "ahora mismo"
+      less_than_x_seconds: "justo ahora"
       x_seconds:
         one: "hace %{count} segundo"
         other: "hace %{count} segundos"
@@ -1266,14 +1265,12 @@ es:
     polling_interval: "Cuando no este en 'long polling', ¿Qué tan frecuente debe los clientes con sesión iniciada hacer 'poll' en milisegundos?"
     anon_polling_interval: "¿Cuán a menudo deben hacer poll los usuarios anónimos en milisegundos"
     background_polling_interval: "Cada cuántos milisegundos debería hacerse cargarse información (mientras que la ventana esté en segundo plano)"
-    score_required_to_hide_post: "Puntuación a partir de la cual una publicación se oculta y se envía un mensaje al autor automáticamente (0 para desactivar)"
     cooldown_minutes_after_hiding_posts: "Número de minutos que un usuario debe esperar para poder editar un post oculto por los reportes de la comunidad"
     max_topics_in_first_day: "El máximo número de temas que un usuario puede crear en las 24 horas posteriores a publicar su primer post"
     max_replies_in_first_day: "El máximo número de respuestas que un usuario puede crear en las 24 horas posteriores a publicar su primer post"
     tl2_additional_likes_per_day_multiplier: "Incrementar el límite de likes por día para el nivel de confianza 2 (miembro) multiplicando por este número"
     tl3_additional_likes_per_day_multiplier: "Incrementar el límite de likes por día para el nivel de confianza 3 (habitual) multiplicando por este número"
     tl4_additional_likes_per_day_multiplier: "Incrementar el límite de likes por día para el nivel de confianza 4 (líder) multiplicando por este número"
-    spam_score_to_silence_new_user: "Si una publicación de un usuario nuevo recibe esta puntuación de num_users_to_silence_new_user usuarios diferentes, ocultar todas sus publicaciones y evitar que siga publicando más. 0 para desactivar."
     num_users_to_silence_new_user: "Si los posts de un nuevo usuario son reportados como spam por num_spam_flags_to_silence_new_user usuarios diferentes, ocultar todos sus posts y evitar que publique en el futuro. 0 para deshabilitar."
     num_tl3_flags_to_silence_new_user: "Si los posts de un nuevo usuario obtienen este número de reportes de num_tl3_users_to_silence_new_user diferentes usuarios con nivel de confianza 3, se ocultarán todos sus posts y no podrá publicar más en un futuro. 0 para deshabilitar."
     num_tl3_users_to_silence_new_user: "Si los posts de un nuevo usuario reciben num_tl3_flags_to_silence_new_user reportes de este número de usuarios de nivel 3 de confianza, ocultar todos sus posts y prevenir futuras publicaciones. 0 para desactivar esta opción."
@@ -1551,7 +1548,6 @@ es:
     max_age_unmatched_emails: "Eliminar entradas de email que no coincidan después de (N) días."
     max_age_unmatched_ips: "Eliminar entradas de IP que no coincidan después de (N) días."
     num_flaggers_to_close_topic: "Número mínimo de denunciantes únicos requerido para pausar un tema automáticamente para intervención"
-    score_to_auto_close_topic: "La puntuación total de reportes que es necesaria para pausar automáticamente un tema para que sea intervenido"
     num_hours_to_close_topic: "Número de horas a pausar un tema para invervención."
     auto_respond_to_flag_actions: "Activar la respuesta automática al deshacer un reporte."
     min_first_post_typing_time: "Mínimo período de tiempo en milisegundos en el que un usuario debe estar tecleando durante su primer post, si no se llega a este umbral entrará automáticamente a la cola de moderación. Establece esta opción a 0 para desactivarla (no recomendado)."
@@ -1753,7 +1749,6 @@ es:
     allow_staff_to_tag_pms: "Permitir a los miembros del staff etiquetar cualquier mensaje personal"
     min_trust_level_to_tag_topics: "Nivel mínimo requerido para etiquetar temas"
     suppress_overlapping_tags_in_list: "Si alguna etiqueta coinciden con palabras en el título de los temas, ocultarla."
-    remove_muted_tags_from_latest: "No mostrar temas con etiquetas silenciadas en la lista de temas recientes."
     force_lowercase_tags: "Forzar que todas las etiquetas sean completamente en minúscula"
     company_name: "Nombre de Compañía"
     governing_law: "Ley que rige"
@@ -3069,9 +3064,6 @@ es:
     welcome_message_invite_only: |
       ## [Te damos la bienvenida a %{title}](#welcome)
       Necesitas una cuenta. Por favor, pídele a uno de los miembros actuales que te invite o inicia sesión para continuar.
-  terms_of_service:
-    title: "Condiciones Generales de Uso"
-    signup_form_message: 'He leído y acepto los <a href="%{base_path}/tos" target="_blank">Términos del Servicio</a>.'
   deleted: "borrado"
   image: "imagen"
   upload:
@@ -3135,9 +3127,6 @@ es:
     latte_theme_name: "Latte"
     summer_theme_name: "Veraniego"
     dark_rose_theme_name: "Rosa oscuro"
-  about: "Acerca de"
-  guidelines: "Directrices"
-  privacy: "Privacidad"
   edit_this_page: "Edita esta página"
   csv_export:
     boolean_yes: "Sí"
@@ -3329,7 +3318,7 @@ es:
        %{governing_law} regirá cualquier disputa relacionada con estos términos o su uso del foro.
        Usted y la compañía acuerdan solicitar interdictos relacionados con estos términos solo en los tribunales estatales o federales en %{city_for_disputes}.
        Ni usted ni la compañía se opondrán a la jurisdicción, foro o lugar en esos tribunales.
-       ***Además de solicitar una orden judicial o reclamaciones en virtud de la Ley de abuso y fraude informático, usted y la compañía resolverán cualquier disputa vinculando el arbitraje de la Asociación Americana de Arbitraje. El arbitraje seguirá las Reglas de arbitraje comercial de la AAA y los Procedimientos complementarios para disputas relacionadas con el consumidor. El arbitraje se llevará a cabo en San Francisco, California. Resolverá cualquier disputa como un individuo y no como parte de una acción de clase u otro procedimiento representativo, ya sea como demandante o un miembro de la clase. Ningún árbitro consolidará ninguna disputa con ningún otro arbitraje sin el permiso de la compañía.***
+       ***Además de solicitar una orden judicial o reclamaciones en virtud de la Ley de abuso y fraude informático, usted y la compañía resolverán cualquier disputa vinculando el arbitraje de la Asociación Americana de Arbitraje. El arbitraje seguirá las Reglas de arbitraje comercial de la AAA y los Procedimientos complementarios para disputas relacionadas con el consumidor. El arbitraje se llevará a cabo en %{city_for_disputes}. Resolverá cualquier disputa como un individuo y no como parte de una acción de clase u otro procedimiento representativo, ya sea como demandante o un miembro de la clase. Ningún árbitro consolidará ninguna disputa con ningún otro arbitraje sin el permiso de la compañía.***
        Cualquier adjudicación de arbitraje incluirá los costos del arbitraje, los honorarios razonables de abogados y los costos razonables para los testigos. Usted y la compañía pueden ingresar laudos arbitrales en cualquier tribunal con jurisdicción.
        <h2 id="heading--general"><a href="#heading--general">Terminos Generales</a></h2>
        Si una disposición de estos términos no se puede hacer cumplir, tal como está escrita, pero podría modificarse para hacerla ejecutable, esa disposición debería modificarse en la medida mínima necesaria para que sea ejecutable. De lo contrario, esa disposición debería ser eliminada.
@@ -3865,6 +3854,15 @@ es:
     user_delete_self: "Eliminado a si mismo de %{url}"
     webhook_deactivation_reason: "Tu webhook ha sido desactivado automáticamente. Recibimos varias respuestas '%{status}'  HTTP error de status."
   reviewables:
+    priorities:
+      low: "Bajo"
+      medium: "Medio"
+      high: "Alto"
+    sensitivity:
+      disabled: "Desactivado"
+      low: "Bajo"
+      medium: "Medio"
+      high: "Alto"
     missing_version: "Debes incluir un parámetro de versión"
     conflict: "Se ha detectado un conflicto de actualización que no te ha permitido realizar esa acción"
     reasons:

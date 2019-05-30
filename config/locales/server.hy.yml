@@ -272,7 +272,6 @@ hy:
   private_message_abbrev: "Նմկ"
   rss_description:
     latest: "Վերջին թեմաները"
-    hot: "Վառվող թեմաներ"
     top: "Թոփ թեմաները"
     top_all: "Բոլոր ժամանակների թոփ թեմաները"
     top_yearly: "Տարեկան թոփ թեմաներ"
@@ -1669,7 +1668,6 @@ hy:
     allow_staff_to_tag_pms: "Թույլատրել անձնակազմի անդամներին թեգ դնել ցանկացած անձնական նամակի վրա"
     min_trust_level_to_tag_topics: "Թեմաներին թեգ տալու համար պահանջվող նվազագույն վստահության մակարդակը"
     suppress_overlapping_tags_in_list: "Եթե թեգերը համընկնում են թեմաների վերնագրերի կոնկրետ բառերի, չցուցադրել թեգը"
-    remove_muted_tags_from_latest: "Չցուցադրել խլացված թեգերով թեմաները վերջին թեմաների ցանկում:"
     force_lowercase_tags: "Պարտադրել, որ բոլոր նոր թեգերը լինեն ամբողջովին փոքրատառ:"
     company_name: "Ընկերության Անուն"
     governing_law: "Իշխող Օրենք"
@@ -2889,9 +2887,6 @@ hy:
     welcome_message_invite_only: |
       ## [Բարի գալուստ %{title}](#ողջույն)
       Հաշիվը պարտադիր է: Խնդրում ենք գոյություն ունեցող անդամից խնդրել հրավեր կամ մուտք գործել՝ շարունակելու համար:
-  terms_of_service:
-    title: "Օգտագործման Պայմաններ"
-    signup_form_message: 'Ես կարդացել եմ և ընդունում եմ <a href="%{base_path}/tos" target="_blank">Օգտագործման Պայմանները</a>:'
   deleted: "ջնջված"
   image: "նկար"
   upload:
@@ -2955,9 +2950,6 @@ hy:
     latte_theme_name: "Լատտե"
     summer_theme_name: "Ամառ"
     dark_rose_theme_name: "Մուգ Վարդագույն"
-  about: "Տեղեկություններ"
-  guidelines: "Ուղեցույց"
-  privacy: "Գաղտնիություն"
   edit_this_page: "Խմբագրել այս էջը"
   csv_export:
     boolean_yes: "Այո"
@@ -3464,6 +3456,13 @@ hy:
     user_merged: "%{username} -ը միավորվել է այս հաշվին"
     user_delete_self: "Ինքն իրեն ջնջել է այստեղից՝ %{url}"
   reviewables:
+    priorities:
+      low: "Բարձր"
+      high: "Ցածր"
+    sensitivity:
+      disabled: "Անջատված"
+      low: "Բարձր"
+      high: "Ցածր"
     actions:
       agree_and_keep:
         title: "Պահել Գրառումը"

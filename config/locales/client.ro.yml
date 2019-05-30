@@ -183,7 +183,6 @@ ro:
         eu_west_3: "EU (Paris)"
         us_east_1: "US East (N. Virginia)"
         us_east_2: "America de Est (Ohio)"
-        us_gov_west_1: "AWS GovCloud (US)"
         us_west_1: "US West (N. California)"
         us_west_2: "US West (Oregon)"
     edit: "Editează titlul și categoria acestui subiect"
@@ -312,6 +311,7 @@ ro:
         title: "Setări"
       moderation_history: "Istoric de moderare"
       topic: "Subiect:"
+      filtered_user: "Utilizatori"
       user:
         username: "Nume utilizator"
         email: "Email"
@@ -323,7 +323,10 @@ ro:
       save: "Salvează"
       cancel: "Anulează"
       filters:
+        type:
+          title: "Tip"
         refresh: "Reîmprospătează"
+        category: "Categorie"
       scores:
         type: "Tip"
       statuses:
@@ -976,13 +979,6 @@ ro:
       enabled: "Acest site se află în modul exclusiv-citire. Te rugăm să continui să răsfoiești, însă sunt dezactivate acțiunile de răspuns, apreciere și altele. "
       login_disabled: "Autentificarea este dezactivată când siteul este în modul exclusiv-citire."
       logout_disabled: "Deautentificarea este dezactivată cât timp site-ul este în modul exclusiv-citire."
-    logs_error_rate_notice:
-      reached: "<b>%{relativeAge}</b> – <a href='%{url}' target='_blank'>%{rate}</a> a atins limita admisă de %{siteSettingRate}."
-      exceeded: "<b>%{relativeAge}</b> – <a href='%{url}' target='_blank'>%{rate}</a> a depășit  limita admisă de %{siteSettingRate}."
-      rate:
-        one: "o eroare/%{duration}"
-        few: "%{count} erori/%{duration}"
-        other: "%{count} de erori/%{duration}"
     learn_more: "află mai multe..."
     all_time: "total"
     all_time_desc: "total subiecte create"
@@ -1035,7 +1031,6 @@ ro:
     trust_level: "Nivel de încredere"
     search_hint: "Numele de utilizator, email sau adresă IP"
     create_account:
-      disclaimer: "Înregistrându-te, ești de acord cu <a href='{{privacy_link}}'>politica de confidențialitate</a> și <a href='{{tos_link}}'>termenii de utilizare</a>."
       title: "Creează cont"
       failed: "Ceva s-a întâmplat, poate că acest email este deja înregistrat, încearcă să-ți resetezi parola la link-ul respectiv."
     forgot_password:
@@ -1407,17 +1402,14 @@ ro:
         read: "Nu ai citit încă niciun subiect."
         posted: "Nu ai postat încă în niciun subiect."
         latest: "Nu există niciun subiect recent. Asta-i trist."
-        hot: "Nu există niciun subiect fierbinte."
         bookmarks: "Nu ai nici un semn de carte încă."
         category: "Nu există niciun subiect din categoria {{category}}."
         top: "Nu exită niciun subiect de top."
-        search: "Nu sunt rezultate."
         educate:
           new: '<p>Subiectele noi vor apărea aici.</p><p>Implicit, subiectele vor fi considerate noi și vor afișa un indicator că sunt<span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">noi</span> dacă au fost create în ultimele 2 zile.</p><p>Mergi la <a href="%{userPrefsUrl}">preferințe </a> pentru a schimba această setare.</p>'
           unread: '<p>Subiectele necitite vor apărea aici</p><p>Implicit, subiectele sunt considerate necitite și se va afișa numărul celor necitite <span class="badge new-posts badge-notification">1</span>dacă ai:</p><ul><li>Creat subiectul</li><li>Răspuns la subiect</li><li>Citit subiectul de mai mult de 4 minute</li></ul><p>Sau dacă ai setat în mod explicit subiectul pe Urmărire sau Urmărire activă prin intermediul contorului de notificare de la sfârșitul fiecărui subiect.</p><p>Mergi la <a href="%{userPrefsUrl}">preferințe</a> pentru a schimba această setare.</p>'
       bottom:
         latest: "Nu mai există niciun subiect recent."
-        hot: "Nu mai există subiecte importante."
         posted: "Nu mai există subiecte postate."
         read: "Nu mai există subiecte citite."
         new: "Nu mai există subiecte noi."
@@ -1425,7 +1417,6 @@ ro:
         category: "Nu mai există subiecte din categoria {{category}}."
         top: "Nu mai există subiecte de top."
         bookmarks: "Nu mai sunt semne de carte."
-        search: "Nu mai sunt rezultate."
     topic:
       filter_to:
         one: "O postare în subiect"
@@ -2125,15 +2116,9 @@ ro:
           few: "Cele mai recente ({{count}})"
           other: "Cele mai recente ({{count}})"
         help: "subiecte cu postări recente"
-      hot:
-        title: "Interesant"
-        help: "o selecție a celor mai interesante subiecte"
       read:
         title: "Citite"
         help: "Subiecte citite, în ordinea cronologică a citirii"
-      search:
-        title: "Caută"
-        help: "caută în toate subiectele"
       categories:
         title: "Categorii"
         title_in: "Categoria - {{categoryName}}"
@@ -2358,20 +2343,16 @@ ro:
           read: "Nu ai citit nici un subiect până acum."
           posted: "Nu ai postat încă la nici un subiect."
           latest: "Nu există subiecte recente."
-          hot: "Nu există subiecte interesante."
           bookmarks: "Nu există încă subiecte cu semn de carte."
           top: "Nu există încă subiecte de top."
-          search: "Nu există rezultate pentru căutare."
         bottom:
           latest: "Nu mai există alte subiecte recente."
-          hot: "Nu mai există alte subiecte interesante."
           posted: "Nu mai există alte subiecte postate."
           read: "Nu mai exisă subiecte citite."
           new: "Nu mai există alte subiecte noi."
           unread: "Nu mai există subiecte necitite."
           top: "Nu mai există subiecte de top."
           bookmarks: "Nu mai există subiecte cu semn de carte."
-          search: "Nu mai există alte rezultate pentru căutare."
     invite:
       custom_message_placeholder: "Introdu mesajul tău personalizat"
       custom_message_template_forum: "Salutare! Ar trebui să te alături acestui forum!"

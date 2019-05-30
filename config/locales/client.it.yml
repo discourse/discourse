@@ -172,7 +172,6 @@ it:
         us_east_1: "Stati Uniti Est (Virginia del Nord)"
         us_east_2: "USA Est (Ohio)"
         us_gov_east_1: "AWS GovCloud (USA Est)"
-        us_gov_west_1: "AWS GovCloud (US)"
         us_west_1: "Stati Uniti Ovest (California del Nord)"
         us_west_2: "Stati Uniti Ovest (Oregon)"
     edit: "modifica titolo e categoria dell'argomento"
@@ -317,6 +316,7 @@ it:
         one: "Questo argomento ha <b>%{count}</b> messaggio in attesa di approvazione"
         other: "Questo Argomento ha  <b>{{count}}</b> messaggi in attesa di approvazione"
       topic: "Argomento:"
+      filtered_user: "Utente"
       user:
         username: "Nome utente"
         email: "Email"
@@ -325,13 +325,17 @@ it:
         topic: "Argomento"
         reviewable_count: "Conteggio"
         details: "dettagli"
+      replies:
+        one: "%{count} risposta"
+        other: "{{count}} risposte"
       edit: "Modifica"
       save: "Salva"
       cancel: "Annulla"
       filters:
         type:
-          title: "Tipo:"
+          title: "Tipo"
         refresh: "Aggiorna"
+        category: "Categoria"
         priority:
           low: "Bassa"
           high: "Alta"
@@ -759,8 +763,6 @@ it:
           description: "Ciascuno di questi codici di backup può essere usato una sola volta. Conservali in un posto sicuro ma accessibile."
       second_factor:
         title: "Autenticazione a Due Fattori"
-        disable: "Disabilita l'autenticazione a due fattori"
-        enable: "Attiva l'autenticazione a due fattori per migliorare la sicurezza del tuo account"
         confirm_password_description: "Per favore conferma la tua password per continuare"
         label: "Codice"
         rate_limit: "Per favore, attendi prima di provare un altro codice di autenticazione."
@@ -1064,12 +1066,6 @@ it:
       enabled: "Questo sito è in modalità di sola lettura. Puoi continuare a navigare nel sito, ma le risposte, i \"Mi piace\" e altre azioni sono per il momento disabilitate."
       login_disabled: "La connessione è disabilitata quando il sito è in modalità di sola lettura."
       logout_disabled: "La disconnessione è disabilitata quando il sito è in modalità di sola lettura."
-    logs_error_rate_notice:
-      reached: "<b>%{relativeAge}</b> – <a href='%{url}' target='_blank'>%{rate}</a> ha raggiunto i limiti impostati di %{siteSettingRate}."
-      exceeded: "<b>%{relativeAge}</b> – <a href='%{url}' target='_blank'>%{rate}</a> ha ecceduto i limiti impostati di  %{siteSettingRate}."
-      rate:
-        one: "%{count} errore/%{duration}"
-        other: "%{count} errori/%{duration}"
     learn_more: "per saperne di più..."
     all_time: "totale"
     all_time_desc: "totale argomenti creati"
@@ -1125,7 +1121,6 @@ it:
     trust_level: "Livello Esperienza"
     search_hint: "nome utente, email o indirizzo IP"
     create_account:
-      disclaimer: "Registrandoti, accetti la <a href='{{privacy_link}}'>politica di riservatezza</a> e <a href='{{tos_link}}'>i termini di servizio</a>."
       title: "Crea Nuovo Account"
       failed: "Qualcosa non ha funzionato. Forse questa email è già registrata, prova a usare il link di recupero password"
     forgot_password:
@@ -1164,7 +1159,6 @@ it:
       email_placeholder: "email o nome utente"
       caps_lock_warning: "Il Blocco Maiuscole è attivo"
       error: "Errore sconosciuto"
-      cookies_error: "Sembra che il tuo browser abbia i cookie disabilitati. Potresti non riuscire a connetterti senza abilitarli."
       rate_limit: "Per favore attendi prima di provare nuovamente la connessione."
       blank_username: "Per favore, inserisci la tua email o il tuo nome utente."
       blank_username_or_password: "Per favore inserisci la tua email o il tuo nome utente, e la password."
@@ -1570,17 +1564,14 @@ it:
         read: "Non hai ancora letto nessun argomento."
         posted: "Non hai ancora scritto in nessun argomento."
         latest: "Non ci sono argomenti più recenti. Ciò è triste."
-        hot: "Non ci sono argomenti caldi."
         bookmarks: "Non hai ancora argomenti nei segnalibri."
         category: "Non ci sono argomenti in {{category}}."
         top: "Non ci sono argomenti di punta."
-        search: "Non ci sono risultati della ricerca."
         educate:
           new: '<p>Qui compaiono i nuovi argomenti.</p><p>Per difetto, gli argomenti vengono considerati nuovi e mostrano l''indicatore <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">nuovo</span> se sono stati creati negli ultimi 2 giorni.</p><p>Puoi cambiare questa configurazione nelle tue <a href="%{userPrefsUrl}">preferenze</a>.</p>'
           unread: '<p>Qui compaiono gli argomenti che non hai letto.</p><p>Per difetto, gli argomenti sono considerati non letti e ne viene mostrato un conteggio <span class="badge new-posts badge-notification">1</span> se hai:</p><ul><li>Creato l''argomento</li><li>Risposto all''argomento</li><li>Letto l''argomento per più di 4 minuti</li></ul><p>Oppure se hai esplicitamente impostato l''argomento come Seguito o Osservato usando il pannello delle notifiche in fondo ad ogni argomento.</p><p>Puoi cambiare questa configurazione nelle tue <a href="%{userPrefsUrl}">preferenze</a>.</p>'
       bottom:
         latest: "Non ci sono altri argomenti più recenti."
-        hot: "Non ci sono altri argomenti caldi."
         posted: "Non ci sono altri argomenti pubblicati."
         read: "Non ci sono altri argomenti letti."
         new: "Non ci sono altri argomenti nuovi."
@@ -1588,7 +1579,6 @@ it:
         category: "Non ci sono altri argomenti nella categoria {{category}}."
         top: "Non ci sono altri argomenti di punta."
         bookmarks: "Non ci sono ulteriori argomenti nei segnalibri."
-        search: "Non ci sono altri risultati di ricerca."
     topic:
       filter_to:
         one: "%{count} messaggio in questo argomento"
@@ -2334,15 +2324,9 @@ it:
           one: "Recente (%{count})"
           other: "Recenti ({{count}})"
         help: "argomenti con messaggi recenti"
-      hot:
-        title: "Caldo"
-        help: "una selezione degli argomenti più caldi"
       read:
         title: "Letti"
         help: "argomenti che hai letto, in ordine di lettura"
-      search:
-        title: "Cerca"
-        help: "cerca tutti gli argomenti"
       categories:
         title: "Categorie"
         title_in: "Categoria - {{categoryName}}"
@@ -2538,6 +2522,7 @@ it:
           title: "In osservazione"
         watching_first_post:
           title: "Osservando Primo Messaggio"
+          description: "Riceverai una notifica se saranno aperti nuovi Argomenti in questa Etichetta, ma non per le risposte agli Argomenti."
         tracking:
           title: "Seguiti"
         regular:
@@ -2568,20 +2553,16 @@ it:
           read: "Non hai ancora letto nessun argomento."
           posted: "Non hai ancora scritto in nessun argomento."
           latest: "Non ci sono argomenti più recenti."
-          hot: "Non ci sono argomenti importanti."
           bookmarks: "Non hai ancora argomenti nei segnalibri."
           top: "Non ci sono argomenti popolari."
-          search: "Non ci sono risultati di ricerca."
         bottom:
           latest: "Non ci sono ulteriori argomenti più recenti."
-          hot: "Non ci sono ulteriori argomenti importanti."
           posted: "Non ci sono ulteriori argomenti inseriti."
           read: "Non ci sono ulteriori argomenti letti."
           new: "Non ci sono ulteriori nuovi argomenti."
           unread: "Non ci sono ulteriori argomenti non letti."
           top: "Non ci sono ulteriori argomenti popolari."
           bookmarks: "Non ci sono ulteriori argomenti nei segnalibri."
-          search: "Non ci sono ulteriori risultati di ricerca."
     invite:
       custom_message_placeholder: "Inserisci il tuo messaggio personalizzato"
       custom_message_template_forum: "Ehi, unisciti a questo forum!"

@@ -162,7 +162,6 @@ tr_TR:
   private_message_abbrev: "İlt"
   rss_description:
     latest: "En son konular"
-    hot: "Sıcak konular"
     top: "En iyi konular"
     top_all: "Tüm zamanlarda en iyi konular"
     top_yearly: "Yıllık en iyi konular"
@@ -1395,8 +1394,6 @@ tr_TR:
     see_more: "Daha fazla"
     search_title: "Bu sitede ara"
     search_button: "Arama"
-  terms_of_service:
-    title: "Üyelik Sözleşmesi"
   deleted: "silindi"
   image: "resim"
   upload:
@@ -1432,9 +1429,6 @@ tr_TR:
     sender_body_blank: "içerik boş"
   color_schemes:
     base_theme_name: "Baz"
-  about: "Hakkında"
-  guidelines: "Yönergeler"
-  privacy: "Gizlilik İlkeleri"
   edit_this_page: "Bu sayfayı düzenle"
   csv_export:
     boolean_yes: "Evet"
@@ -1709,6 +1703,8 @@ tr_TR:
       confirm_title: "Bildirimler etkin - %{site_title}"
       confirm_body: "Başarılı! Bildirimler etkinleştirildi."
   reviewables:
+    sensitivity:
+      disabled: "Devredışı"
     actions:
       agree_and_keep:
         title: "Gönderiyi Sakla"

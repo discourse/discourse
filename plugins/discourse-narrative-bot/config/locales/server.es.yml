@@ -144,14 +144,6 @@ es:
       cert_title: "En reconocimiento a la finalización exitosa del tutorial de nuevo usuario"
       hello:
         title: "¡Saludos!"
-        message: |-
-          Gracias por unirte %{title}, ¡y bienvenido!
-
-          - Solo soy un bot, pero [nuestro amable staff](%{base_uri}/about) también está aquí para ayudarte si necesitas comunicarte con una persona.
-
-          - Por razones de seguridad, limitamos temporalmente lo que los nuevos usuarios pueden hacer. Obtendrás nuevas habilidades (e [insignias](%{base_uri}/badges)) a medida que te conozcamos.
-
-          - Creemos en [el comportamiento de una comunidad civilizada](%{base_uri}/guidelines) en todo momento.
       onebox:
         instructions: |-
           A continuación, ¿podrías compartir uno de estos enlaces conmigo? Responde con **un enlace en una línea por sí mismo**, y se expandirá automáticamente para incluir un resumen ingenioso.

@@ -163,7 +163,6 @@ nb_NO:
         eu_west_3: "EU (Paris)"
         us_east_1: "USA øst (N. Virginia)"
         us_east_2: "USA øst (Ohio)"
-        us_gov_west_1: "AWS GovCloud (USA)"
         us_west_1: "USA vest (N. California)"
         us_west_2: "USA vest (Oregon)"
     edit: "endre tittelen og kategorien til dette emnet"
@@ -286,6 +285,7 @@ nb_NO:
         title: "Innstillinger"
       moderation_history: "Moderatorhistorikk"
       topic: "Emne:"
+      filtered_user: "Bruker"
       user:
         username: "Brukernavn"
         email: "E-post"
@@ -298,7 +298,10 @@ nb_NO:
       save: "Lagre"
       cancel: "Avbryt"
       filters:
+        type:
+          title: "Type"
         refresh: "Last inn på nytt"
+        category: "Kategori"
       scores:
         date: "Dato"
         type: "Type"
@@ -691,7 +694,6 @@ nb_NO:
           description: "Hver av reservekodene kan kun brukes en gang. Oppbevar dem et trygt men tilgjengelig sted."
       second_factor:
         title: "Totrinnsverifisering"
-        disable: "Skru av totrinnsverifisering"
         confirm_password_description: "Bekreft passordet ditt for å fortsette"
         label: "Kode"
         disable_description: "Vennligst oppgi autentiseringskoden fra appen"
@@ -969,12 +971,6 @@ nb_NO:
     too_few_topics_and_posts_notice: "La oss <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>få i gang denne diskusjonen!</a> Det finnes for øyeblikket <strong>%{currentTopics} / %{requiredTopics}</strong> emner and <strong>%{currentPosts} / %{requiredPosts}</strong> innlegg. Nye besøkende trenger noen samtaler de kan lese og svare på."
     too_few_topics_notice: "La oss<a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>få i gang denne diskusjonen!</a> Det finnes for øyeblikket <strong>%{currentTopics} / %{requiredTopics}</strong> emner. Nye besøkende trenger noen samtaler de kan lese og svare på."
     too_few_posts_notice: "La oss <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>få i gang denne diskusjonen!</a> Det finnes for øyeblikket <strong>%{currentPosts} / %{requiredPosts}</strong> innlegg. Nye besøkende trenger noen samtaler de kan lese og svare på."
-    logs_error_rate_notice:
-      reached: "<b>%{relativeAge}</b> – <a href='%{url}' target='_blank'>%{rate}</a> nådde innstillingsgrensen satt i %{siteSettingRate}."
-      exceeded: "<b>%{relativeAge}</b> – <a href='%{url}' target='_blank'>%{rate}</a> overstiger innstillingsgrensen satt i %{siteSettingRate}."
-      rate:
-        one: "%{count} feil/%{duration}"
-        other: "%{count} feil/%{duration}"
     learn_more: "lær mer…"
     all_time: "totalt"
     all_time_desc: "totalt antall emner opprettet"
@@ -1026,7 +1022,6 @@ nb_NO:
     trust_level: "Tillitsnivå"
     search_hint: "brukernavn, e-post eller IP-adresse"
     create_account:
-      disclaimer: "Ved å registrere deg samtykker du til <a href='{{privacy_link}}'>personvernserklæringen</a> og <a href='{{tos_link}}'>bruksvilkårene</a>."
       title: "Opprett ny konto"
       failed: "Noe gikk galt, kanskje denne e-postadressen allerede er registrert. Prøv lenke for glemt passord"
     forgot_password:
@@ -1065,7 +1060,6 @@ nb_NO:
       email_placeholder: "e-postadresse eller brukernavn"
       caps_lock_warning: "Caps Lock er på"
       error: "Ukjent feil"
-      cookies_error: "Nettleseren din ser ut til å ha deaktivert informasjonskapsler (cookies). Det er mulig du ikke vil kunne logge inn uten å aktivere dem først."
       rate_limit: "Vent litt før du logger inn igjen."
       blank_username: "Vennligst oppgi din e-post eller brukernavn."
       blank_username_or_password: "Oppgi din e-postadresse eller brukernavn og ditt passord."
@@ -1465,17 +1459,14 @@ nb_NO:
         read: "Du har ikke lest noen emner enda."
         posted: "Du har ikke skrevet innlegg i noen emner enda."
         latest: "Det finnes ingen siste emner. Det er sørgelig."
-        hot: "Det finnes ingen populære emner."
         bookmarks: "Du har ingen bokmerkede emner enda."
         category: "Det finnes ingen {{category}}-emner."
         top: "Det finnes ingen populære emner."
-        search: "Det finnes ingen søkeresultater"
         educate:
           new: '<p>Dine nye emner vil vises her.</p><p>Som forvalg anses emner som nye og viser en<span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">ny</span>-indikator hvis de be opprettet i løpet av de siste 2 dagene.</p><p>Gå til <a href="%{userPrefsUrl}">innstillinger</a> for å endre dette.</p>'
           unread: '<p>Dine uleste emner vil vises her.</p><p>Som forvalg anses emner som ulest og vil vise ulest-tall <span class="badge new-posts badge-notification">1</span> dersom du:</p><ul><li>Opprettet emnet</li><li>Svarte på emnet</li><li>Leste emnet i mer enn 4 minutter</li></ul><p>Eller dersom du uttrykkelig har satt emnet som overvåkes eller følges via varselkontrollen nederst i hvert emne.</p><p>Gå til<a href="%{userPrefsUrl}">innstillingene</a> dine for å endre dette.</p>'
       bottom:
         latest: "Det finnes ingen flere siste emner."
-        hot: "Det finnes ingen flere populære emner."
         posted: "Det finnes ingen flere emner med innlegg."
         read: "Det finnes ingen flere leste emner."
         new: "Det finnes ingen flere nye emner."
@@ -1483,7 +1474,6 @@ nb_NO:
         category: "Det finnes ingen {{category}}-emner igjen."
         top: "Det finnes ingen flere populære emner."
         bookmarks: "Det finnes ingen flere bokmerkede emner."
-        search: "Det finnes ingen flere søkeresultater"
     topic:
       filter_to:
         one: "%{count} innlegg i emnet"
@@ -2194,15 +2184,9 @@ nb_NO:
           one: "Siste (%{count})"
           other: "Siste ({{count}})"
         help: "emner med nylige innlegg"
-      hot:
-        title: "Populær"
-        help: "et utvalg av de mest populære emnene"
       read:
         title: "Lest"
         help: "emner du har lest, i den rekkefølgen du sist leste dem"
-      search:
-        title: "Søk"
-        help: "søk i alle emner"
       categories:
         title: "Kategorier"
         title_in: "Kategori - {{categoryName}}"
@@ -2431,20 +2415,16 @@ nb_NO:
           read: "Du har ikke lest noen emner enda."
           posted: "Du har ikke skrevet noe innlegg i emner enda."
           latest: "Det finnes ingen flere siste emner."
-          hot: "Det finnes ingen populære emner."
           bookmarks: "Du har ikke bokmerket noen emner ennå."
           top: "Det finnes ingen populære emner."
-          search: "Det finnes ingen søkeresultater."
         bottom:
           latest: "Det finnes ingen flere siste emner."
-          hot: "Det finnes ingen flere populære emner."
           posted: "Det finnes ingen flere emner med innlegg."
           read: "Det finnes ingen flere leste emner."
           new: "Det finnes ingen flere nye emner."
           unread: "Det finnes ingen flere uleste emner."
           top: "Det finnes ingen flere populære emner."
           bookmarks: "Det finnes ingen bokmerkede emner."
-          search: "Det finnes ingen flere søkeresultater"
     invite:
       custom_message_placeholder: "Skriv inn din egendefinerte melding"
       custom_message_template_forum: "Hei, du burde ta del i dette forumet!"

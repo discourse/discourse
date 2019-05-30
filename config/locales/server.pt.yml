@@ -228,7 +228,6 @@ pt:
   private_message_abbrev: "Msg"
   rss_description:
     latest: "Tópicos recentes"
-    hot: "Tópicos quentes"
     top: "Melhores tópicos"
     top_all: "Melhores tópicos de todos os tempos"
     top_yearly: "Melhores tópicos do ano"
@@ -1178,7 +1177,6 @@ pt:
     tag_style: "Estilo visual dos distintivos das etiquetas."
     min_trust_level_to_tag_topics: "Nível de confiança mínimo necessário para atribuir etiquetas a tópicos."
     suppress_overlapping_tags_in_list: "Se as etiquetas coincidirem exactamente com palavras nos títulos dos tópicos, não mostrar as etiquetas"
-    remove_muted_tags_from_latest: "Não mostrar tópicos etiquetados com etiquetas silenciadas na lista de tópicos recentes."
     errors:
       invalid_email: "Endereço de email inválido."
       invalid_username: "Não existe nenhum utilizador com esse nome de utilizador."
@@ -1688,8 +1686,6 @@ pt:
     see_more: "Mais"
     search_title: "Pesquisar neste sítio"
     search_button: "Pesquisar"
-  terms_of_service:
-    title: "Termos de Serviço"
   deleted: "eliminado"
   image: "imagem"
   upload:
@@ -1729,9 +1725,6 @@ pt:
     sender_body_blank: "corpo está em branco"
   color_schemes:
     base_theme_name: "Base"
-  about: "Sobre"
-  guidelines: "Orientações"
-  privacy: "Privacidade"
   edit_this_page: "Editar esta página"
   csv_export:
     boolean_yes: "Sim"

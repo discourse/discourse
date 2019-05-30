@@ -95,7 +95,6 @@ gl:
   private_message_abbrev: "Msx."
   rss_description:
     latest: "Últimos temas"
-    hot: "Temas quentes"
     posts: "Últimas publicacións"
   too_late_to_edit: "Esta publicación ten moito tempo. Xa non se pode modificar nin eliminar."
   excerpt_image: "imaxe"
@@ -206,6 +205,7 @@ gl:
         other: "%{count}ano"
     distance_in_words_verbose:
       half_a_minute: "agora mesmiño"
+      less_than_x_seconds: "agora mesmiño"
   password_reset:
     update: "Actualizar contrasinal"
     save: "Estabelecer o contrasinal"
@@ -497,12 +497,7 @@ gl:
   page_not_found:
     see_more: "Máis"
     search_button: "Buscar"
-  terms_of_service:
-    title: "Termos do servizo"
   image: "imaxe"
-  about: "Sobre"
-  guidelines: "Directrices"
-  privacy: "Confidencialidade"
   csv_export:
     boolean_yes: "Si"
     boolean_no: "Non"

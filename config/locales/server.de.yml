@@ -274,7 +274,6 @@ de:
   private_message_abbrev: "Nachricht"
   rss_description:
     latest: "Aktuelle Themen"
-    hot: "Beliebte Themen"
     top: "Die besten Themen"
     top_all: "Top-Themen aller Zeiten"
     top_yearly: "Top-Themen der letzten 12 Monate"
@@ -364,6 +363,20 @@ de:
       Du kannst deine letzte Antwort bearbeiten, um ein Zitat hinzuzufügen, indem du den Text auswählst und auf die erscheinende Schaltfläche <b>Zitat</a> klickst.
 
       Es ist für alle einfacher, Themen zu lesen, die wenige tiefgehende Antworten haben statt vielen kleinen und einzelnen Antworten.
+    dominating_topic: |
+      ### Lass auch andere die Konversation mitgestalten
+
+      Dieses Thema ist dir eindeutig wichtig &ndash; du hast mehr als %{percent}% aller Antworten verfasst.
+
+      Es könnte noch besser sein, wenn du anderen Leuten ebenfalls Raum lässt, ihre Sichtweisen darzulegen. Bitte lade sie dazu ein.
+    get_a_room: |
+      ### Ermutige jeden, bei dieser Konversation mitzumachen.
+
+      Du hast @%{reply_username} zu diesem Thema %{count} mal geantwortet!
+
+      Eine großartige Diskkussion bezieht viele Stimmen und Sichtweisen ein. Kannst du noch andere einbeziehen?
+
+      Und vergiss nicht, wenn du ein Gespräch mit dieser bestimmten Person ausserhalb der Öffentlichkeit ausführlich fortsetzen möchtest, [schicke ihr eine persönliche Nachricht](%{base_path} (/u/) %{reply_username}).
     too_many_replies: |
       ### Du hast das Antwort-Beschränkung für dieses Thema erreicht
 
@@ -410,7 +423,12 @@ de:
               same_as_username: "ist mit deinem Benutzernamen identisch. Bitte verwende ein sichereres Passwort."
               same_as_email: "ist mit deiner E-Mail-Adresse identisch. Bitte verwende ein sichereres Passwort."
               same_as_current: "entspricht deinem aktuellen Passwort."
+              same_as_name: "entspricht deinem Namen."
               unique_characters: "hat zu viele sich wiederholende Zeichen. Bitte verwende ein sichereres Passwort."
+            username:
+              same_as_password: "entspricht deinem Passwort."
+            name:
+              same_as_password: "entspricht deinem Passwort."
             ip_address:
               signup_not_allowed: "Eine Registrierung ist von diesem Konto nicht erlaubt."
         user_email:
@@ -1141,7 +1159,7 @@ de:
     s3_config_warning: 'Der Server ist so eingestellt, dass Dateien auf S3 hochgeladen werden, aber mindestens eine der folgenden Einstellungen ist nicht gesetzt: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile, or s3_upload_bucket. Gehe zu <a href="%{base_path}/admin/site_settings">den Seiten-Einstellungen</a> und aktualisiere die Einstellungen. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Siehe „How to set up image uploads to S3?“ um mehr zu erfahren</a>.'
     s3_backup_config_warning: 'Der Server ist so eingestellt, dass Backups auf S3 hochgeladen werden, aber mindestens eine der folgenden Einstellungen ist nicht gesetzt: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile, or s3_backup_bucket. Gehe zu <a href="%{base_path}/admin/site_settings">den Seiten-Einstellungen</a> und aktulisiere die Einstellungen. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Siehe „How to set up image uploads to S3?“ um mehr zu erfahren</a>.'
     image_magick_warning: 'Der Server wurde konfiguriert um Vorschaubilder von grossen Bildern zu erstellen, aber ImageMagick ist nicht installiertd. Installiere ImageMagick mit deinem bevorzugten Packetmanager oder besuche <a href="https://www.imagemagick.org/script/download.php" target="_blank">um das aktuelle Paket herunterzuladen</a>.'
-    failing_emails_warning: "%{num_failed_jobs} E-Mails konnten nicht versendet werden. Überprüfe deine app.yml und stelle sicher, dass die E-Mail Servereinstellungen korrekt gesetzt sind. \n<a href=\"/sidekiq/retries\" target=\"_blank\">Sieh dir hier die nicht versendeten E-Mails an.</a>"
+    failing_emails_warning: "%{num_failed_jobs} E-Mails konnten nicht versendet werden. Überprüfe deine app.yml und stelle sicher, dass die E-Mail Servereinstellungen korrekt gesetzt sind. \n<a href=\"%{base_path}/sidekiq/retries\" target=\"_blank\">Sieh dir hier die nicht versendeten E-Mails an.</a>"
     subfolder_ends_in_slash: "Deine Installation in einem Pfad ist nicht korrekt, DISCOURSE_RELATIVE_URL_ROOT endet mit einem Schrägstrich."
     email_polling_errored_recently:
       one: "Beim Abrufen von E-Mails ist in den letzten 24 Stunden ein Fehler aufgetreten. Weitere Informationen findest du <a href='%{base_path}/logs' target='_blank'>im Fehlerprotokoll</a>."
@@ -1247,14 +1265,12 @@ de:
     polling_interval: "Polling-Intervall in Millisekunden für angemeldete Clients, wenn Long Polling nicht verwendet wird."
     anon_polling_interval: "Polling-Intervall in Millisekunden für anonyme Clients."
     background_polling_interval: "Polling-Intervall in Millisekunden für Clients, wenn sich das Browser-Fenster im Hintergrund befindet."
-    score_required_to_hide_post: "Schwellenwert für die Bewertung, die dafür sorgt, dass ein Beitrag automatisch versteckt und eine Nachricht an den Benutzer geschickt wird (0 zum deaktivieren)"
     cooldown_minutes_after_hiding_posts: "Minuten die ein Benutzer warten muss, bevor ein Beitrag bearbeitet werden kann, der wegen Meldungen anderer Benutzer versteckt wurde"
     max_topics_in_first_day: "Maximale Anzahl an Themen, die ein Benutzer in den ersten 24 Stunden nach dem Schreiben seines ersten Beitrags erstellen kann."
     max_replies_in_first_day: "Maximale Anzahl an Beiträgen, die ein Benutzer in den ersten 24 Stunden nach dem Schreiben seines ersten Beitrags erstellen kann."
     tl2_additional_likes_per_day_multiplier: "Limit für \"Gefällt mir\" für Benutzer auf Vertrauensstufe 2 (Mitglied) mit diesem Faktor multiplizieren"
     tl3_additional_likes_per_day_multiplier: "Limit für \"Gefällt mir\" für Benutzer auf Vertrauensstufe 3 (Stammgast) mit diesem Faktor multiplizieren"
     tl4_additional_likes_per_day_multiplier: "Limit für \"Gefällt mir\" für Benutzer auf Vertrauensstufe 4 (Anführer) mit diesem Faktor multiplizieren"
-    spam_score_to_silence_new_user: "Wenn ein Beitrag eines neuen Benutzers diese Bewertung von num_users_to_silence_new_user verschiedenen Benutzern erhält, verstecke alle seine Beiträge und verhinde weitere Beiträge. 0 deaktiviert die Funktion."
     num_users_to_silence_new_user: "Wenn Beiträge eines neuen Benutzers Spam-Meldungen von num_spam_flags_to_block_new_user verschiedenen Benutzern erhalten, werden alle Beiträge des Benutzers ausgeblendet und weitere Beiträge verhindert. Ein Wert von 0 deaktiviert die Funktion."
     num_tl3_flags_to_silence_new_user: "Wenn Beiträge eines neuen Benutzers von num_tl3_users_to_silence_new_user verschiedenen Benutzern mit Vertrauensstufe 3 gemeldet werden, verstecke alle Beiträge des Benutzers und erlaube keine weiteren Beiträge. Ein Wert von 0 deaktiviert diese Funktion."
     num_tl3_users_to_silence_new_user: "Wenn Beiträge eines neuen Benutzers von num_tl3_users_to_silence_new_user verschiedenen Benutzern mit Vertrauensstufe 3 gemeldet werden, verstecke alle Beiträge des Benutzers und erlaube keine weiteren Beiträge. Ein Wert von 0 deaktiviert diese Funktion."
@@ -1533,7 +1549,6 @@ de:
     max_age_unmatched_emails: "Gefilterte E-Mail-Adressen nach (N) Tagen ohne Treffer löschen."
     max_age_unmatched_ips: "Gefilterte IP-Adressen nach (N) Tagen ohne Treffer löschen."
     num_flaggers_to_close_topic: "Mindestzahl unabhängiger Mitglieder, die ein Thema melden, damit es automatisch für eine Prüfung pausiert wird."
-    score_to_auto_close_topic: "Die Meldung-Gesamtbewertung, die erforderlich ist, um ein Thema automatisch zu pausieren."
     num_hours_to_close_topic: "Anzahl Stunden, um ein Thema als Maßnahme zu pausieren."
     auto_respond_to_flag_actions: "Automatische Antwort auf abgearbeitete Meldungen aktivieren."
     min_first_post_typing_time: "Minimale Zeit die ein Benutzer mindestens aufwenden muss, um einen Beitrag zu schreiben. Wenn diese Zeit unterschritten wird, wird der Beitrag automatisch in die Warteschlange für freizuschaltende Beiträge verschoben. Setze diesen Wert auf 0 um dieses Verhalten zu deaktivieren (nicht empfohlen)."
@@ -1572,6 +1587,7 @@ de:
     attachment_filename_blacklist: "Liste der Schlüsselwörter für die Ablehnung von Anhängen basierend auf dem Dateinamen."
     enable_forwarded_emails: "[Beta] Erlaube Benutzern, ein Thema zu erstellen, indem sie eine E-Mail weiterleiten."
     always_show_trimmed_content: "Immer den gekürzten Teil von eingehenden E-Mails anzeigen. WARNUNG: lässt möglicherweise E-Mail-Adressen erkennen."
+    private_email: "Keine Inhalte von Beiträgen oder Themen in E-Mail Titeln oder E-Mail Bodies einschließen. Außerdem werden Digest E-Mails deaktiviert."
     manual_polling_enabled: "Eingehende E-Mails über die API für E-Mail-Antworten annehmen."
     pop3_polling_enabled: "E-Mail-Antworten über POP3 abholen."
     pop3_polling_ssl: "SSL für die Verbindung zum POP3-Server verwenden. (Empfohlen)"
@@ -1737,7 +1753,6 @@ de:
     allow_staff_to_tag_pms: "Erlaube Team-Mitgliedern, jede Nachricht mit einem Schlagwort zu markieren."
     min_trust_level_to_tag_topics: "Minimale Vertrauensstufe, um Schlagwörter zu Themen hinzuzufügen."
     suppress_overlapping_tags_in_list: "Schlagwort nicht zeigen, wenn es genau so im Thementitel vorkommt"
-    remove_muted_tags_from_latest: "Zeige in der Liste der neuesten Beiträge keine Themen mit stummgeschalteten Schlagwörtern."
     force_lowercase_tags: "Erzwinge alle neuen tags in Kleinschreibung."
     company_name: "Firmenname"
     governing_law: "Anzuwendendes Recht"
@@ -2639,6 +2654,10 @@ de:
       subject_template:
         one: "%{count} Beitrag wartet auf Überprüfung"
         other: "%{count} Beiträge warten auf Überprüfung"
+      text_body_template: |
+        Hallo,
+
+        Beiträge von neuen Benutzern wurden zur Moderation aufgehalten und warten derzeit auf Überprüfung. [Akzeptiere sie oder lehne sie hier ab](%{base_url}/review?type=ReviewableQueuedPost).
   unsubscribe_link: |
     Um diese E-Mails abzubestellen, [klicke hier](%{unsubscribe_url}).
   unsubscribe_link_and_mail: |
@@ -3051,9 +3070,6 @@ de:
     welcome_message_invite_only: |
       ## [Willkommen bei %{title}](#welcome)
       Ein Konto ist erforderlich. Bitte frage ein existierendes Mitglied nach einer Einladung und melde dich an um fortzufahren.
-  terms_of_service:
-    title: "Nutzungsbedingungen"
-    signup_form_message: 'Ich habe die <a href="%{base_path}/tos" target="_blank">Nutzungsbedingungen</a> gelesen und akzeptiert.'
   deleted: "gelöscht"
   image: "Bild"
   upload:
@@ -3117,9 +3133,6 @@ de:
     latte_theme_name: "Latte"
     summer_theme_name: "Sommer"
     dark_rose_theme_name: "Dunkle Rosen"
-  about: "Über uns"
-  guidelines: "Richtlinien"
-  privacy: "Datenschutz"
   edit_this_page: "Diese Seite bearbeiten"
   csv_export:
     boolean_yes: "Ja"
@@ -3740,6 +3753,9 @@ de:
     title: "Schlagwörter"
     staff_tag_disallowed: 'Das Schlagwort "%{tag}" darf nur vom Team verwendet werden.'
     staff_tag_remove_disallowed: 'Das Schlagwort "%{tag}" darf nur vom Team entfernt werden.'
+    minimum_required_tags:
+      one: "Du muss mindestens %{count} Schlagwort auswählen."
+      other: "Du musst mindestens %{count} Schlagwörter auswählen. "
     upload_row_too_long: "Die CSV-Datei sollte ein Schlagwort pro Zeile haben. Optional kann das Schlagwort von einem Komma und dem Namen einer Schlagwortgruppe gefolgt sein."
     forbidden:
       in_this_category: '"%{tag_name}" kann in dieser Kategorie nicht verwendet werden'
@@ -3920,6 +3936,15 @@ de:
     user_delete_self: "Selbst gelöscht von %{url}"
     webhook_deactivation_reason: "Dein Webhook wurde automatisch deaktiviert. Wir bekommen zahlreiche '%{status}' fehlgeschlagene HTTP Status Antworten."
   reviewables:
+    priorities:
+      low: "Niedrig"
+      medium: "Mittel"
+      high: "Hoch"
+    sensitivity:
+      disabled: "Deaktiviert"
+      low: "Niedrig"
+      medium: "Mittel"
+      high: "Hoch"
     must_claim: "Du musst Elemente reservieren, bevor du sie bearbeiten kannst."
     user_claimed: "Dieses Element wurde von einem anderen Benutzer reserviert."
     missing_version: "Du musst eine Version angeben."

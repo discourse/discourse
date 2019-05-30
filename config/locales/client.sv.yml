@@ -157,7 +157,6 @@ sv:
         eu_west_3: "EU (Paris)"
         us_east_1: "Östra USA (N. Virginia)"
         us_east_2: "Öster USA (Ohio)"
-        us_gov_west_1: "AWS GovCloud (US)"
         us_west_1: "Västra USA (N. Kalifornien)"
         us_west_2: "Västra USA (Oregon)"
     edit: "redigera rubrik och kategori för det här ämnet"
@@ -271,6 +270,7 @@ sv:
         save_changes: "Spara ändringar"
         title: "Inställningar"
       topic: "Ämne:"
+      filtered_user: "Användare"
       user:
         username: "Användarnamn"
         email: "E-post"
@@ -281,7 +281,10 @@ sv:
       save: "Spara"
       cancel: "Avbryt"
       filters:
+        type:
+          title: "Typ"
         refresh: "Uppdatera"
+        category: "Kategori"
       scores:
         type: "Typ"
       statuses:
@@ -858,12 +861,6 @@ sv:
       enabled: "Webbplatsen är i skrivskyddat läge. Du kan fortsätta bläddra på sidan, men att skriva inlägg, gilla och andra interaktioner är inaktiverade för tillfället."
       login_disabled: "Det går inte att logga in medan siten är i skrivskyddat läge."
       logout_disabled: "Det går inte att logga ut medan webbplatsen är i skrivskyddat läge. "
-    logs_error_rate_notice:
-      reached: "<b>%{relativeAge}</b> – <a href='%{url}' target='_blank'>%{rate}</a> har uppnått webbplatsinställningarnas gräns på %{siteSettingRate}."
-      exceeded: "<b>%{relativeAge}</b> – <a href='%{url}' target='_blank'>%{rate}</a> har överträffat webbplatsinställningarnas gräns på %{siteSettingRate}."
-      rate:
-        one: "%{count} fel/%{duration}"
-        other: "%{count} fel/%{duration}"
     learn_more: "lär dig mer..."
     all_time: "totalt"
     all_time_desc: "totalt antal ämnen skapade"
@@ -911,7 +908,6 @@ sv:
     trust_level: "Förtroendenivå"
     search_hint: "användarnamn, e-post eller IP-adress"
     create_account:
-      disclaimer: "Genom att registrera dig godkänner du <a href='{{privacy_link}}'>integritetspolicyn</a> och <a href='{{tos_link}}'>användarvillkoren</a>."
       title: "Registrera nytt konto"
       failed: "Något gick fel, kanske är denna e-post redan registrerad, försök glömt lösenordslänken"
     forgot_password:
@@ -1210,17 +1206,14 @@ sv:
         read: "Du har inte läst några ämnen ännu."
         posted: "Du har inte postat i några ämnen ännu."
         latest: "Det finns inga senaste ämnen, tråkigt nog."
-        hot: "Det finns inga heta ämnen."
         bookmarks: "Du har inga bokmärkta ämnen ännu."
         category: "Det finns inga ämnen i {{category}}."
         top: "Det finns inga toppämnen."
-        search: "Inga sökresultat hittades."
         educate:
           new: '<p>Dina nya ämnen hamnar här.</p><p>Standard är att ämnen anses nya och kommer att visa en <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">ny</span> indikator om de skapades de senaste 2 dagarna.</p><p>Besök dina <a href="%{userPrefsUrl}">användarinställningar</a> för att ändra det.</p>'
           unread: '<p>Dina olästa ämnen hamnar här.</p><p>Standard är att inlägg anses olästa och kommer att visa antal olästa inlägg <span class="badge new-posts badge-notification">1</span> om du:</p><ul><li>Skapade ämnet</li><li>Svarade på ämnet</li><li>Läste ämnet i mer än 4 minuter</li></ul><p>Eller om du explicit har markerat ämnet som Följd eller Bevakad via notifieringspanelen längst ned i varje ämne.</p><p>Besök dina <a href="%{userPrefsUrl}">användarinställningar</a> för att ändra det.</p>'
       bottom:
         latest: "Det finns inga fler senaste ämnen."
-        hot: "Det finns inga fler heta ämnen."
         posted: "Det finns inga fler postade ämnen."
         read: "Det finns inga fler lästa ämnen."
         new: "Det finns inga fler nya ämnen."
@@ -1228,7 +1221,6 @@ sv:
         category: "Det finns inga fler ämnen i {{category}}."
         top: "Det finns inga fler toppämnen."
         bookmarks: "Inga fler bokmärkta ämnen hittades."
-        search: "Inga fler sökresultat hittades."
     topic:
       filter_to:
         one: "%{count} inlägg i ämnet"
@@ -1845,15 +1837,9 @@ sv:
           one: "Senaste (%{count})"
           other: "Senaste ({{count}})"
         help: "ämnen med nya inlägg"
-      hot:
-        title: "Hett"
-        help: "ett urval av de hetaste ämnena"
       read:
         title: "Lästa"
         help: "ämnen du har läst, i den ordningen du senast läste dem"
-      search:
-        title: "Sök"
-        help: "sök alla ämnen"
       categories:
         title: "Kategorier"
         title_in: "Kategori - {{categoryName}}"
@@ -2058,20 +2044,16 @@ sv:
           read: "Du har inte lästa några ämnen ännu."
           posted: "Du har inte skrivit i några ämnen ännu."
           latest: "Det finns inga senaste ämnen."
-          hot: "Det finns inga heta ämnen."
           bookmarks: "Du har inga bokmärkta ämnen ännu."
           top: "Det finns inga toppämnen."
-          search: "Inga sökresultat hittades."
         bottom:
           latest: "Det finns inga fler senaste ämnen."
-          hot: "Det finns inga fler heta ämnen."
           posted: "Det finns inga fler postade ämnen."
           read: "Det finns inga fler lästa ämnen."
           new: "Det finns inga fler nya ämnen."
           unread: "Det finns inga fler olästa ämnen."
           top: "Det finns inga fler toppämnen."
           bookmarks: "Det finns inga fler bokmärkta ämnen."
-          search: "Det finns inga fler sökresultat."
     invite:
       custom_message_placeholder: "Skriv ditt personliga meddelande"
       custom_message_template_forum: "Hej! Du borde gå med i det här forumet!"

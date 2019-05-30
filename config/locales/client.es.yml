@@ -47,22 +47,22 @@ es:
           other: "< %{count}s"
         x_seconds:
           one: "%{count}s"
-          other: "%{count}s"
+          other: "%{count} s"
         less_than_x_minutes:
           one: "< %{count}m"
-          other: "< %{count}m"
+          other: "< %{count} min"
         x_minutes:
           one: "%{count}m"
-          other: "%{count}m"
+          other: "%{count} min"
         about_x_hours:
           one: "%{count}h"
-          other: "%{count}h"
+          other: "%{count} h"
         x_days:
           one: "%{count}d"
-          other: "%{count}d"
+          other: "%{count} d"
         x_months:
           one: "%{count} mes"
-          other: "%{count}meses"
+          other: "%{count} meses"
         about_x_years:
           one: "%{count}a"
           other: "%{count}a"
@@ -77,7 +77,7 @@ es:
       medium:
         x_minutes:
           one: "%{count} minuto"
-          other: "%{count} mins"
+          other: "%{count} min"
         x_hours:
           one: "%{count} hora"
           other: "%{count} horas"
@@ -172,7 +172,6 @@ es:
         us_east_1: "US East (N. Virginia)"
         us_east_2: "US East (Ohio)"
         us_gov_east_1: "AWS GovCloud (US-East)"
-        us_gov_west_1: "AWS GovCloud (US)"
         us_west_1: "US West (N. California)"
         us_west_2: "US West (Oregon)"
     edit: "editar el título y la categoría de este tema"
@@ -322,9 +321,6 @@ es:
         saved: "Guardado"
         save_changes: "Guardar cambios"
         title: "Ajustes"
-        score_bonuses:
-          title: "Bonos de puntuación"
-          description: "Los bonos permiten que ciertos tipos se califiquen más alto que otros para que puedan ser priorizados. Nota: el cambio de estos valores no se aplicará a los elementos calificados anteriormente."
       moderation_history: "Historial de moderación"
       view_all: "Ver todo"
       grouped_by_topic: "Agrupados por tema"
@@ -336,7 +332,7 @@ es:
       title: "Revisión"
       topic: "Tema:"
       filtered_topic: "Has filtrado a contenido revisable en un solo tema."
-      filtered_user: "Usuario:"
+      filtered_user: "Usuario"
       show_all_topics: "mostrar todos los temas"
       deleted_post: "(publicación eliminada)"
       deleted_user: "(usuario eliminado)"
@@ -377,14 +373,14 @@ es:
       new_topic: "Nuevo tema:"
       filters:
         type:
-          title: "Tipo:"
+          title: "Tipo"
           all: "(todos los tipos)"
         minimum_score: "Puntuación mínima:"
         refresh: "Actualizar"
-        status: "Estado:"
-        category: "Categoría:"
+        status: "Estado"
+        category: "Categoría"
         priority:
-          title: "Prioridad mínima:"
+          title: "Prioridad mínima"
           low: "Bajo"
           medium: "Medio"
           high: "Alto"
@@ -784,10 +780,10 @@ es:
       watched_topics_link: "Mostrar temas vigilados"
       tracked_topics_link: "Mostrar temas vigilados"
       automatically_unpin_topics: "Dejar de destacar temas automáticamente cuando los leo por completo."
-      apps: "Apps"
+      apps: "Aplicaciones"
       revoke_access: "Revocar acceso"
       undo_revoke_access: "Deshacer revocación de acceso"
-      api_approved: "Aprobado:"
+      api_approved: "Fecha de aprobación:"
       api_last_used_at: "Fecha de último uso:"
       theme: "Tema"
       home: "Página de inicio por defecto"
@@ -819,7 +815,7 @@ es:
         users: "Usuarios"
         tags: "Etiquetas"
         interface: "Interfaz"
-        apps: "Apps"
+        apps: "Aplicaciones"
       change_password:
         success: "(e-mail enviado)"
         in_progress: "(enviando e-mail)"
@@ -844,8 +840,6 @@ es:
           description: "Cada uno de estos códigos de respaldo puede ser usado una única vez. Mantén los códigos en un lugar seguro, pero accesible."
       second_factor:
         title: "Autenticación Dos Factores"
-        disable: "Inhabilitar Autenticación Dos Factores"
-        enable: "Habilita la autenticación en dos pasos para mejorar la seguridad de la cuenta"
         confirm_password_description: "Por favor confirma tu contraseña para continuar"
         label: "Código"
         rate_limit: "Por favor, espera antes de volver a intentar otro código de autenticación."
@@ -1161,12 +1155,6 @@ es:
     too_few_topics_and_posts_notice: "¡Vamos a <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>dar por comenzada la comunidad!</a> Hay <strong>%{currentTopics} / %{requiredTopics}</strong> temas y <strong>%{currentPosts} / %{requiredPosts}</strong> posts. Los nuevos visitantes necesitan algo que leer y a lo que responder."
     too_few_topics_notice: "¡Vamos a <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>dar por comenzada la comunidad!</a> Hay <strong>%{currentTopics} / %{requiredTopics}</strong> temas. Los nuevos visitantes necesitan algo que leer y a lo que responder."
     too_few_posts_notice: "¡Vamos a <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>dar por empezada la comunidad!</a> Hay <strong>%{currentPosts} / %{requiredPosts}</strong> posts. Los nuevos visitantes necesitan algo que leer y a lo que responder."
-    logs_error_rate_notice:
-      reached: "<b>%{relativeAge}</b> – <a href='%{url}' target='_blank'>%{rate}</a> alcanzó el límite establecido en las opciones del sitio del %{siteSettingRate}."
-      exceeded: "<b>%{relativeAge}</b> – <a href='%{url}' target='_blank'>%{rate}</a> excedió el límite establecido en las opciones del sitio del %{siteSettingRate}."
-      rate:
-        one: "%{count} error/%{duration}"
-        other: "%{count} errores/%{duration}"
     learn_more: "saber más..."
     all_time: "total"
     all_time_desc: "temas creados total"
@@ -1222,7 +1210,6 @@ es:
     trust_level: "Nivel de Confianza"
     search_hint: "usuario, email o dirección IP"
     create_account:
-      disclaimer: "Al registrarte, aceptas la <a href='{{privacy_link}}'>política de privacidad</a> y los <a href='{{tos_link}}'>términos de servicio</a>."
       title: "Crear Cuenta Nueva"
       failed: "Algo ha salido mal, tal vez este e-mail ya fue registrado, intenta con el enlace 'olvidé la contraseña'"
     forgot_password:
@@ -1261,7 +1248,6 @@ es:
       email_placeholder: "dirección de e-mail o nombre de usuario"
       caps_lock_warning: "Está activado Bloqueo de Mayúsculas"
       error: "Error desconocido"
-      cookies_error: "Tu navegador parece tener las cookies desactivadas. El inicio de sesión podría no funcionar hasta que las actives."
       rate_limit: "Por favor, espera un poco antes de volver a intentar iniciar sesión."
       blank_username: "Por favor ingresa tu email o nombre de usuario."
       blank_username_or_password: "Por favor, introducir tu e-mail o usuario, y tu contraseña."
@@ -1689,17 +1675,14 @@ es:
         read: "Todavía no has leído ningún tema."
         posted: "Todavía no has publicado en ningún tema."
         latest: "No hay temas recientes. Qué pena."
-        hot: "No hay temas candentes nuevos."
         bookmarks: "No tienes temas guardados en marcadores todavía."
         category: "No hay temas en la categoría {{category}}."
         top: "No hay temas en el top más vistos."
-        search: "No hay resultados de búsqueda."
         educate:
           new: '<p>Tus temas nuevos aparecen aquí.</p><p>Por defecto, los temas se consideran nuevos y mostrarán un indicador <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">nuevo</span> si fueron creados en los últimos 2 días.</p><p>Dirígite a <a href="%{userPrefsUrl}">preferencias</a> para cambiar esto.</p>'
           unread: '<p>Tus temas sin leer aparecen aquí.</p><p>Por defecto, los temas son considerados sin leer y mostrarán contadores de posts sin leer <span class="badge new-posts badge-notification">1</span> si:</p><ul><li>Creaste el tema</li><li>Respondiste al tema</li><li>Leíste el tema por más de 4 minutos</li></ul><p>O si has establecido específicamente el tema como Siguiendo o Vigilando a través del control de notificaciones al pie de cada tema.</p><p>Visita tus <a href="%{userPrefsUrl}">preferencias</a> para cambiar esto.</p>'
       bottom:
         latest: "No hay más temas recientes para leer."
-        hot: "No hay más temas candentes."
         posted: "No hay más temas publicados."
         read: "No hay más temas leídos."
         new: "No hay más nuevos temas."
@@ -1707,7 +1690,6 @@ es:
         category: "No hay más temas en la categoría {{category}}."
         top: "No hay más temas en el top más vistos."
         bookmarks: "No hay más temas guardados en marcadores."
-        search: "No hay más resultados de búsqueda."
     topic:
       filter_to:
         one: "%{count} post en el tema"
@@ -2478,15 +2460,9 @@ es:
           one: "Reciente (%{count})"
           other: "Recientes ({{count}})"
         help: "temas con posts recientes"
-      hot:
-        title: "Candente"
-        help: "una selección de los temas más candentes"
       read:
         title: "Leídos"
         help: "temas que ya has leído"
-      search:
-        title: "Buscar"
-        help: "buscar todos los temas"
       categories:
         title: "Categorías"
         title_in: "Categoría - {{categoryName}}"
@@ -2558,6 +2534,11 @@ es:
       content_load_error: '<a href="%url%">El contenido</a>no pudo ser cargado.'
       image_load_error: '<a href="%url%">La imagen</a>no pudo ser cargada.'
     keyboard_shortcuts_help:
+      shortcut_key_delimiter_comma: ","
+      shortcut_key_delimiter_plus: "+"
+      shortcut_delimiter_or: "%{shortcut1} o %{shortcut2}"
+      shortcut_delimiter_slash: "%{shortcut1}/%{shortcut2}"
+      shortcut_delimiter_space: "%{shortcut1} %{shortcut2}"
       title: "Atajos de teclado"
       jump_to:
         title: "Saltar a"
@@ -2567,7 +2548,7 @@ es:
         unread: "%{shortcut} Sin leer"
         categories: "%{shortcut} Categorías"
         top: "%{shortcut} Top"
-        bookmarks: "%{shortcut} Marcadores"
+        bookmarks: "%{shortcut} marcadores"
         profile: "%{shortcut} Perfil"
         messages: "%{shortcut} Mensajes"
         drafts: "%{shortcut} Borradores"
@@ -2628,7 +2609,7 @@ es:
         other: "%{count} medallas"
       more_badges:
         one: "+%{count} Más"
-        other: "+%{count} Más"
+        other: "+%{count} más"
       granted:
         one: "%{count} concedido"
         other: "%{count} concedidos"
@@ -2732,20 +2713,16 @@ es:
           read: "Todavía no has leído ningún tema."
           posted: "Todavía no has publicado en ningún tema."
           latest: "No hay temas recientes."
-          hot: "No hay temas populares."
           bookmarks: "No tienes temas guardados en marcadores todavía."
           top: "No hay temas en el top más vistos."
-          search: "No hay resultados de búsqueda."
         bottom:
           latest: "No hay más temas recientes para leer."
-          hot: "No hay más temas populares."
           posted: "No hay más temas publicados."
           read: "No hay más temas leídos."
           new: "No hay más temas nuevos."
           unread: "No hay más temas sin leer."
           top: "No hay más temas en el top más vistos."
           bookmarks: "No hay más temas guardados en marcadores."
-          search: "No hay más resultados de búsqueda."
     invite:
       custom_message: "Dale a tu invitación un toque personal escribiendo un <a href>mensaje personalizado</a>."
       custom_message_placeholder: "Introducir un mensaje personalizado"
@@ -2894,7 +2871,7 @@ es:
         about: "Edita los aquí los nombres de los grupos y sus miembros"
         group_members: "Miembros del grupo"
         delete: "Borrar"
-        delete_confirm: "Borrar este grupo?"
+        delete_confirm: "¿Borrar este grupo?"
         delete_failed: "No se pudo borrar el grupo. Si este es un grupo automático, no se puede destruir."
         delete_owner_confirm: "¿Quitar privilegios de propietario para '%{username}'?"
         add: "Añadir"
@@ -3570,7 +3547,7 @@ es:
           silenced: "Silenciado"
           suspect: "Sospechoso"
           staged: "Temporal"
-        approved: "Aprobado/s?"
+        approved: "¿Aprobado/s?"
         titles:
           active: "Usuarios activos"
           new: "Usuarios nuevos"

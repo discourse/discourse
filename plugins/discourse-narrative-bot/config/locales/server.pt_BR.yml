@@ -138,14 +138,6 @@ pt_BR:
       cert_title: "Como forma de reconhecimento por completar com sucesso o tutorial de novo usuário"
       hello:
         title: "Saudações!"
-        message: |-
-          Obrigado por se registrar %{title}, e seja bem vindo!
-
-          - Eu sou só um robô, mas [nossa amigável staff](%{base_uri}/about) também está aqui para ajudar se você precisar falar com uma pessoa.
-
-          - Por razões de segurança, nós temporariamente limitamos o que novos usuários podem fazer. Você irá ganhar novas habilidades (e [emblemas](%{base_uri}/badges)) conforme o conhecemos.
-
-          - Nós acreditamos em um [comportamento civilizado em comunidade](%{base_uri}/guidelines) a todo momento.
       onebox:
         instructions: |-
           Próximo, você pode compartilhar um destes links comigo? Responda com **um link em uma linha por si só**, e ele irá automaticamente expandir para incluir um elegante resumo.

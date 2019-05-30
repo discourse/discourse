@@ -141,7 +141,6 @@ vi:
         eu_west_2: "Châu Âu (London)"
         us_east_1: "US East (N. Virginia)"
         us_east_2: "US East (Ohio)"
-        us_gov_west_1: "AWS GovCloud (US)"
         us_west_1: "US West (N. California)"
         us_west_2: "US West (Oregon)"
     edit: "sửa tiêu đề và chuyên mục của chủ đề"
@@ -245,6 +244,7 @@ vi:
         save_changes: "Lưu thay đổi"
         title: "Xác lập"
       topic: "Chủ đề:"
+      filtered_user: "Người dùng"
       user:
         username: "Tên đăng nhập"
         email: "Email"
@@ -255,7 +255,10 @@ vi:
       save: "Lưu"
       cancel: "Hủy"
       filters:
+        type:
+          title: "Loại"
         refresh: "Tải lại"
+        category: "Danh mục"
       scores:
         type: "Loại"
       statuses:
@@ -836,9 +839,6 @@ vi:
       enabled: "Website đang ở chế độ chỉ đọc, bạn có thể duyệt xem nhưng không thể trả lời, likes, hay thực hiện các hành động khác."
       login_disabled: "Chức năng Đăng nhập đã bị tắt khi website trong trạng thái chỉ đọc"
       logout_disabled: "Chức năng đăng xuất đã bị tắt khi website đang trong trạng thái chỉ đọc."
-    logs_error_rate_notice:
-      rate:
-        other: "%{count} lỗi/%{duration}"
     learn_more: "tìm hiểu thêm..."
     all_time: "tổng cộng"
     all_time_desc: "tổng số chủ đề đã tạo"
@@ -885,7 +885,6 @@ vi:
     trust_level: "Độ tin tưởng"
     search_hint: "username, email or IP address"
     create_account:
-      disclaimer: "Với việc đăng ký, tức là bạn đồng ý với <a href='{{privacy_link}}'>chính sách riêng tư</a> và <a href='{{tos_link}}'>điều khoản dịch vụ</a>."
       title: "Tạo tài khoản mới"
       failed: "Có gì đó không đúng, có thể email này đã được đăng ký, thử liên kết quên mật khẩu"
     forgot_password:
@@ -1168,17 +1167,14 @@ vi:
         read: "Bạn vẫn chưa đọc bất kì chủ đề nào."
         posted: "Bạn vẫn chưa đăng bài trong bất kì một chủ đề nào"
         latest: "Chán quá. Chẳng có chủ đề mới nào hết trơn."
-        hot: "Không có chủ đề nào nổi bật."
         bookmarks: "Bạn chưa chủ đề nào được đánh dấu."
         category: "Không có chủ đề nào trong {{category}} ."
         top: "Không có chủ đề top."
-        search: "Không có kết quả tìm kiếm."
         educate:
           new: '<p>Chủ đề mới của bạn sẽ hiển thị ở đây.</p><p>Mặc định, chủ đề được coi là mới và sẽ hiển thị <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">new</span> cho biết chúng đã được tạo ra trong 2 ngày qua.</p><p>Xem <a href="%{userPrefsUrl}">thiết lập</a> của bạn nếu muốn thay đổi.</p>'
           unread: '<p>Chủ đề chưa đọc của bạn sẽ hiển thị ở đây.</p><p>Mặc định, chủ đề được coi là chưa đọc và sẽ hiển thị số <span class="badge new-posts badge-notification">1</span> nếu bạn:</p><ul><li>Đã tạo chủ đề</li><li>Đã trả lời chủ đề</li><li>Đọc chủ đề trong hơn 4 phút</li></ul><p>Hoặc nếu bạn đã thiết lập một cách rõ ràng các chủ đề Theo dõi hoặc Xem thông qua việc kiểm soát thông báo ở dưới cùng của mỗi chủ đề.</p><p>Xem <a href="%{userPrefsUrl}">thiết lập</a> của bạn nếu muốn thay đổi.</p>'
       bottom:
         latest: "Không còn thêm chủ đề nào nữa."
-        hot: "Không còn của đề nổi bật nào nữa."
         posted: "Ở đây không có thêm chủ đề nào được đăng."
         read: "Không còn thêm chủ đề chưa đọc nào nữa."
         new: "Không còn thêm chủ đề mới nào nữa."
@@ -1186,7 +1182,6 @@ vi:
         category: "Không còn thêm chủ đề nào trong {{category}} ."
         top: "Không còn của đề top nào nữa."
         bookmarks: "Không còn thêm chủ đề được đánh dấu nào nữa."
-        search: "Không có thêm kết quả tìm kiếm nào nữa."
     topic:
       create: "Chủ đề Mới"
       create_long: "Tạo một Chủ đề mới"
@@ -1739,15 +1734,9 @@ vi:
         title_with_count:
           other: "Mới nhất ({{count}})"
         help: "chủ đề với bài viết gần nhất"
-      hot:
-        title: "Nổi bật"
-        help: "chọn các chủ đề nóng nhất"
       read:
         title: "Đọc"
         help: "chủ đề bạn đã đọc, theo thứ tự bạn đọc lần cuối cùng"
-      search:
-        title: "Tìm kiếm"
-        help: "tìm trong tất cả chủ đề"
       categories:
         title: "Danh mục"
         title_in: "Danh mục - {{categoryName}}"
@@ -1927,20 +1916,16 @@ vi:
           read: "Bạn chưa đọc chủ đề nào"
           posted: "Bạn chưa gửi bài trong bất kì chủ đề nào"
           latest: "Không có chủ đề mới nhất"
-          hot: "Không có chủ đề nóng."
           bookmarks: "Bạn chưa chủ đề nào được đánh dấu."
           top: "Không có chủ đề top."
-          search: "Không có kết quả tìm kiếm."
         bottom:
           latest: "Không còn thêm chủ đề nào nữa."
-          hot: "Không còn của đề nổi bật nào nữa."
           posted: "Ở đây không có thêm chủ đề nào được đăng."
           read: "Không còn thêm chủ đề chưa đọc nào nữa."
           new: "Không còn thêm chủ đề mới nào nữa."
           unread: "Không còn thêm chủ đề chưa đọc nào nữa."
           top: "Không còn của đề top nào nữa."
           bookmarks: "Không còn thêm chủ đề được đánh dấu nào nữa."
-          search: "Không có thêm kết quả tìm kiếm nào nữa."
   admin_js:
     type_to_filter: "gõ để lọc..."
     admin:

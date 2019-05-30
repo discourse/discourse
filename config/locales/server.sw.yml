@@ -176,7 +176,6 @@ sw:
   private_message_abbrev: "Msg"
   rss_description:
     latest: "Mada za hivi karibuni"
-    hot: "Mada kali"
     top: "Mada za juu"
     top_all: "Mada za juu Mda Wote"
     top_yearly: "Mada za Juu za Kila Mwaka"
@@ -391,6 +390,7 @@ sw:
       half_a_minute: "< 1d"
     distance_in_words_verbose:
       half_a_minute: "sasa hivi"
+      less_than_x_seconds: "sasa hivi"
   password_reset:
     no_token: "Samahani, kiungo hicho cha kuingia kupitia barua pepe ni cha mda sana. Bonyeza kitufe cha Kuingia na tumia 'Nimesahau nywila' ili upate kiungo kipya."
     choose_new: "Chagua nywila"
@@ -951,7 +951,6 @@ sw:
     allow_staff_to_tag_pms: "Ruhusu wasaidizi walebo ujumbe wowote binafsi"
     min_trust_level_to_tag_topics: "Kiwango cha chini kabisa kinachohitajika kulebo mada"
     suppress_overlapping_tags_in_list: "Kama lebo zina maneno ambayo yapo kwenye vichwa vya mada, usionyeshe lebo"
-    remove_muted_tags_from_latest: "Usionyeshe mada zenye lebo za kunyamazishwa kwenye orodha ya mada za hivi karibuni."
     errors:
       invalid_email: "Barua pepe batili."
       invalid_username: "Hakuna mtumiaji mwenye hilo jina."
@@ -1857,8 +1856,6 @@ sw:
     welcome_message: |
       ## [Karibu kwenye %{title}](#karibu)
       Akaunti inahitajika. Tafadhali tengeneza akaunti au ingia kuendelea.
-  terms_of_service:
-    title: "Masharti ya Huduma"
   deleted: "imefutwa"
   image: "picha"
   upload:
@@ -1906,9 +1903,6 @@ sw:
     default_theme_name: "Hafifu"
     light_theme_name: "Hafifu"
     dark_theme_name: "Nyeusi"
-  about: "Kuhusu"
-  guidelines: "Miongozo"
-  privacy: "Siri"
   edit_this_page: "Hariri ukurasa huu"
   csv_export:
     boolean_yes: "Ndiyo"
@@ -2303,6 +2297,8 @@ sw:
       confirm_title: "Taarifa mubashara zimewezeshwa - %{site_title}"
       confirm_body: "Taarifa mubashara zimewezeshwa kikamilifu"
   reviewables:
+    sensitivity:
+      disabled: "Imezuiwa"
     actions:
       agree_and_keep:
         title: "Tunza Chapisho"

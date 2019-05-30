@@ -180,7 +180,6 @@ et:
   private_message_abbrev: "PS"
   rss_description:
     latest: "Viimased teemad"
-    hot: "Populaarsed teemad"
     top: "Parimad teemad"
     posts: "Viimased postitused"
     group_posts: "Viimased postitused grupilt %{group_name}"
@@ -768,7 +767,6 @@ et:
     tag_style: "Siltide vimplite visuaalne stiil."
     min_trust_level_to_tag_topics: "Teemade sildistamiseks on nõutav minimaalne usaldustase"
     suppress_overlapping_tags_in_list: "Ära näita silti, kui see ühtib täpselt sõnaga teema päses"
-    remove_muted_tags_from_latest: "Ära näita värskete teemade nimistus teemasid, millel on vaigistatud silt."
     errors:
       invalid_integer: "Väärtuseks peab olema täisarv."
       min_username_length_range: "Minimaalne ei tohi olla maksimaalsest suurem."
@@ -842,8 +840,6 @@ et:
     see_more: "Veel"
     search_title: "Otsi sellelt saidilt"
     search_button: "Otsi"
-  terms_of_service:
-    title: "Teenuse tingimused"
   deleted: "kustutatud"
   image: "pilt"
   upload:
@@ -866,9 +862,6 @@ et:
     dark_theme_name: "Tume"
     neutral_theme_name: "Neutraalne"
     summer_theme_name: "Suvi"
-  about: "Teave"
-  guidelines: "Juhendid"
-  privacy: "Privaatsus"
   edit_this_page: "Muuda seda lehekülge"
   csv_export:
     boolean_yes: "Jah"
@@ -1089,6 +1082,8 @@ et:
     not_found: "ei leitud"
     unknown: "tundmatu"
   reviewables:
+    sensitivity:
+      disabled: "Välja lülitatud"
     actions:
       agree_and_suspend:
         title: "Peata kasutaja"

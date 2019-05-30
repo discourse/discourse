@@ -53,7 +53,6 @@ lv:
   read_full_topic: "Lasīt pilnu tēmu"
   rss_description:
     latest: "Jaunākās tēmas"
-    hot: "Aktuālas tēmas"
   groups:
     default_names:
       everyone: "ikviens"
@@ -94,6 +93,7 @@ lv:
       half_a_minute: "< 1 m"
     distance_in_words_verbose:
       half_a_minute: "tikko"
+      less_than_x_seconds: "tikko"
   password_reset:
     choose_new: "Izvēlēties jaunu paroli"
     choose: "Izvēlēties paroli"
@@ -300,11 +300,6 @@ lv:
     see_more: "Vairāk"
     search_title: "Meklēt šajā vietnē"
     search_button: "Meklēt"
-  terms_of_service:
-    title: "Pakalpojuma noteikumi"
-  about: "Par"
-  guidelines: "Vadlīnijas"
-  privacy: "Privātums"
   csv_export:
     boolean_yes: "Jā"
     boolean_no: "Nē"

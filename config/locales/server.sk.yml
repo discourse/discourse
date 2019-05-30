@@ -201,7 +201,6 @@ sk:
   private_message_abbrev: "Správa"
   rss_description:
     latest: "Najnovšie témy"
-    hot: "Horúce témy"
     top: "Top témy"
     top_monthly: "Mesačné najčastejšie témy"
     top_weekly: "Týždenné najčastejšie témy"
@@ -1277,8 +1276,6 @@ sk:
     see_more: "Viac"
     search_title: "Prehľadať tieto stránky"
     search_button: "Hľadať"
-  terms_of_service:
-    title: "Podmienky používania"
   deleted: "vymazané"
   image: "Obrázok"
   upload:
@@ -1311,9 +1308,6 @@ sk:
     sender_body_blank: "telo je prázdne"
   color_schemes:
     base_theme_name: "Základ"
-  about: "O stránke"
-  guidelines: "Pravidlá"
-  privacy: "Súkromie"
   edit_this_page: "Upraviť túto stránku"
   csv_export:
     boolean_yes: "Áno"
@@ -1554,6 +1548,8 @@ sk:
         title: "Pozvite členov"
   joined: "Vytvorený"
   reviewables:
+    sensitivity:
+      disabled: "Vypnuté"
     actions:
       agree_and_keep:
         title: "Ponechať príspevok"

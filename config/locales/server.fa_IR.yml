@@ -190,7 +190,6 @@ fa_IR:
   private_message_abbrev: "پیام"
   rss_description:
     latest: "آخرین نوشته‌ها"
-    hot: "موضوعات داغ"
     top: "برترین موضوعات"
     top_all: "برترین موضوعات در همیشه"
     top_yearly: "برترین موضوعات سالانه"
@@ -1205,7 +1204,6 @@ fa_IR:
     tag_style: "سبک بصری نشان برچسب‌ها."
     min_trust_level_to_tag_topics: "حداقل سطح اعتماد مورد نیاز برای برچسب زدن به موضوع"
     suppress_overlapping_tags_in_list: "اگر برچسب با عنوان موضوع دقیقا یکی بودند، برچسب را نشان نده."
-    remove_muted_tags_from_latest: "موضوعاتی که برچسب غیر‌فعال دارند در قسمت آخرین موضوعات نمایش نده"
     errors:
       invalid_email: "آدرس ایمیل نامعتبر"
       invalid_username: "هیچ کاربری با این نام‌کاربری وجود ندارد."
@@ -1944,8 +1942,6 @@ fa_IR:
     welcome_message: |
       ## [خوش آمدید به %{title}](#welcome)
       داشتن حساب کاربری الزامی است. لطفا یک حساب کاربری بسازید یا وارد شوید.
-  terms_of_service:
-    title: "شرایط استفاده از خدمات"
   deleted: "حذف شد"
   image: "تصویر"
   upload:
@@ -1992,9 +1988,6 @@ fa_IR:
     default_theme_name: "روشن"
     light_theme_name: "روشن"
     dark_theme_name: "تیره"
-  about: "درباره"
-  guidelines: "دستورالعمل‌ها"
-  privacy: "خصوصی"
   edit_this_page: "ویرایش این صفحه"
   csv_export:
     boolean_yes: "بله"

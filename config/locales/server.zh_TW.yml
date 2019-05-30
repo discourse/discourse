@@ -260,7 +260,6 @@ zh_TW:
   private_message_abbrev: "消息"
   rss_description:
     latest: "最新討論話題"
-    hot: "熱門討論話題"
     top: "熱門討論話題"
     top_all: "最熱門話題"
     top_yearly: "每年最熱門話題"
@@ -585,7 +584,7 @@ zh_TW:
         other: "%{count} 年"
     distance_in_words_verbose:
       half_a_minute: "剛剛"
-      less_than_x_seconds: "剛才"
+      less_than_x_seconds: "就在剛才"
       x_seconds:
         other: "%{count} 秒前"
       less_than_x_minutes:
@@ -1243,14 +1242,12 @@ zh_TW:
     polling_interval: "當不再長輪詢時，已登錄的客戶端應該多久輪詢一次（單位 毫秒）"
     anon_polling_interval: "匿名使用者使用者端輪詢時間間隔（單位 毫秒）"
     background_polling_interval: "客戶端輪詢的間隔，以毫秒計（當視窗在後台時）"
-    score_required_to_hide_post: "一個貼文累計多少個標記之後會被自動隱藏，並向貼文作者發送私信通知（0 為不啟用）"
     cooldown_minutes_after_hiding_posts: "如果一個貼文因為標記而隱藏，使用者需要等待多少分鐘才能編輯該貼文"
     max_topics_in_first_day: "新使用者在24小時內在發表第一帖後允許創建的主題數"
     max_replies_in_first_day: "新使用者在24小時內在發表第一帖後允許創建的回覆數"
     tl2_additional_likes_per_day_multiplier: "增加信任等級2（成員）的贊限制，可提供一個乘數與原始值相乘"
     tl3_additional_likes_per_day_multiplier: "增加信任等級3（常規）的每日贊限制，將此設置項與原始值相乘"
     tl4_additional_likes_per_day_multiplier: "增加信任等級4（資深）的贊限制，可提供一個乘數與原始值相乘"
-    spam_score_to_silence_new_user: "如果一個新使用者的貼文被其他 num_users_to_block_new_user 個使用者標記為垃圾，隱藏他們的所有貼文並阻止其之後的貼文。0 表示停用。"
     num_users_to_silence_new_user: "如果新使用者的貼文被不同使用者多次標記為垃圾信息，隱藏他們的所有貼文並不讓其繼續發表內容。0 為禁用。"
     num_tl3_flags_to_silence_new_user: "如果新使用者的貼文被多個不同的信任等級3的使用者標記，隱藏他們的所有貼文並不讓其繼續發表內容。0 為禁用。"
     num_tl3_users_to_silence_new_user: "如果新使用者的貼文被不同的信任等級3的使用者標記多次，隱藏他們的所有貼文子，並不讓其繼續發表內容。0 為禁用。"
@@ -1529,7 +1526,6 @@ zh_TW:
     max_age_unmatched_emails: "在 (N) 天後刪除不匹配的電郵地址。"
     max_age_unmatched_ips: "在 (N) 天後刪除不匹配的 IP 記錄。"
     num_flaggers_to_close_topic: "要自動終止一個主題的討論並介入時所需的最小數量的獨立標記者"
-    score_to_auto_close_topic: "設定需要的總分數，才能自動暫停討論話題"
     num_hours_to_close_topic: "暫停討論話題以進行干預的小時數。"
     auto_respond_to_flag_actions: "啟用自動回覆當加入一個標籤。"
     min_first_post_typing_time: "使用者發表第一帖時打字的最小時間（以毫秒計），如果沒有達到該閾值，貼文將自動進入需要批准隊列。設置為 0 禁用（不推薦）"
@@ -1734,7 +1730,6 @@ zh_TW:
     allow_staff_to_tag_pms: "允許工作人員（具有管理員權限）標記任何的個人訊息"
     min_trust_level_to_tag_topics: "給主題加標籤的最小信任等級"
     suppress_overlapping_tags_in_list: "如果標籤匹配了主題標題中的詞，不顯示該標籤"
-    remove_muted_tags_from_latest: "在最新主題列表中，不顯示有靜音標籤的主題。"
     force_lowercase_tags: "強制所有新標籤完全小寫"
     company_name: "公司名稱"
     governing_law: "適用於法律"
@@ -2968,9 +2963,6 @@ zh_TW:
     welcome_message_invite_only: |
       ## [歡迎來到 %{title}](#welcome)
       必須要有一個帳戶，請向現有會員請求邀請或登入以繼續。
-  terms_of_service:
-    title: "服務條款"
-    signup_form_message: '我已閱讀並接受 <a href="%{base_path}/tos" target="_blank">服務條款</a>。'
   deleted: "已刪除"
   image: "圖片"
   upload:
@@ -3034,9 +3026,6 @@ zh_TW:
     latte_theme_name: "棕色"
     summer_theme_name: "夏季"
     dark_rose_theme_name: "暗紅"
-  about: "關於"
-  guidelines: "指導"
-  privacy: "隱私政策"
   edit_this_page: "編輯此頁"
   csv_export:
     boolean_yes: "是"
@@ -3667,6 +3656,15 @@ zh_TW:
     user_delete_self: "由 %{url} 自行刪除"
     webhook_deactivation_reason: "您的webhook已自動取消啟用，我們收到了多個 %{status} HTTP狀態失敗回應錯誤。"
   reviewables:
+    priorities:
+      low: "低"
+      medium: "中間的"
+      high: "高"
+    sensitivity:
+      disabled: "停用"
+      low: "低"
+      medium: "中間的"
+      high: "高"
     must_claim: "您必須在採取行動之前請求項目"
     user_claimed: "該項目已被其他的使用者要求"
     missing_version: "您必須提供版本參數（Version parameter）"

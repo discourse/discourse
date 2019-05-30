@@ -5,4 +5,6 @@
 # To work with us on translations, join this project:
 # https://www.transifex.com/projects/p/discourse-org/
 
-ur: {}
+ur:
+  site_settings:
+    details_enabled: "تفصیلات کی خصوصیت فعال کریں۔ اگر آپ اس کو تبدیل کرتے ہیں تو، آپ کو تمام پوسٹس کو دوبارہ رِیبَیک کرنا ہوگا: \"rake posts:rebake\""
