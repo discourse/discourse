@@ -550,9 +550,9 @@ class Admin::UsersController < Admin::AdminController
     if post = Post.where(id: params[:post_id]).first
       case params[:post_action]
       when 'delete'
-        PostDestroyer.new(current_user, post).destroy
+        PostDestroyer.new(current_user, post).destroy if guardian.can_delete_post_or_topic?(post)
       when "delete_replies"
-        PostDestroyer.delete_with_replies(current_user, post)
+        PostDestroyer.delete_with_replies(current_user, post) if guardian.can_delete_post_or_topic?(post)
       when 'edit'
         revisor = PostRevisor.new(post)
 
