@@ -639,33 +639,4 @@ RSpec.describe ListController do
       expect(topic_titles).to include(topic_in_sub_category.title)
     end
   end
-
-  describe "safe mode" do
-    before do
-      plugin_fixtures = Plugin::Instance.find_all("#{Rails.root}/spec/fixtures/plugins")
-      Discourse.stubs(:plugins).returns(plugin_fixtures)
-    end
-
-    it "handles safe mode" do
-      get "/latest"
-      expect(response.body).not_to match(/my_plugin/)
-
-      my_plugin = Discourse.plugins.detect { |p| p.asset_name == "my_plugin" }
-      my_plugin.stubs(:js_asset_exists?).returns(true)
-
-      get "/latest"
-      expect(response.body).to match(/my_plugin\.js/)
-
-      get "/latest", params: { safe_mode: "no_plugins" }
-      expect(response.body).not_to match(/my_plugin/)
-
-      get "/latest", params: { safe_mode: "only_official" }
-      expect(response.body).not_to match(/my_plugin/)
-
-      my_plugin.metadata.stubs(:official?).returns(true)
-
-      get "/latest", params: { safe_mode: "only_official" }
-      expect(response.body).to match(/my_plugin\.js/)
-    end
-  end
 end
