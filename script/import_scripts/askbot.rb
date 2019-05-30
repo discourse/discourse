@@ -239,7 +239,7 @@ class ImportScripts::MyAskBot < ImportScripts::Base
     # ask.cvxr.com/question/(\d+)/[^'"}]*
     # I am sure this is incomplete, but we didn't make heavy use of internal
     # links on our site.
-    tmp = Regexp.quote("http://" << OLD_SITE)
+    tmp = Regexp.quote("http://#{OLD_SITE}")
     r1 = /"(#{tmp})?\/question\/(\d+)\/[a-zA-Z-]*\/?"/
     r2 = /\((#{tmp})?\/question\/(\d+)\/[a-zA-Z-]*\/?\)/
     r3 = /<?#tmp\/question\/(\d+)\/[a-zA-Z-]*\/?>?/

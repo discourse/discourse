@@ -56,7 +56,7 @@ module ImportScripts::PhpBB3
     # @param poll_data [ImportScripts::PhpBB3::PollData]
     def get_poll_text(poll_data)
       title = @text_processor.process_raw_text(poll_data.title)
-      text = "#{title}\n\n"
+      text = +"#{title}\n\n"
 
       arguments = ["results=always"]
       arguments << "close=#{poll_data.close_time.iso8601}" if poll_data.close_time
