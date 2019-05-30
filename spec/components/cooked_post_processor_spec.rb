@@ -5,9 +5,9 @@ require "cooked_post_processor"
 require "file_store/s3_store"
 
 describe CookedPostProcessor do
-  context "#post_process" do
-    fab!(:upload) { Fabricate(:upload) }
+  fab!(:upload) { Fabricate(:upload) }
 
+  context "#post_process" do
     fab!(:post) do
       Fabricate(:post, raw: <<~RAW)
       <img src="#{upload.url}">
@@ -260,7 +260,7 @@ describe CookedPostProcessor do
         before { SiteSetting.responsive_post_image_sizes = "1|1.5|3" }
 
         it "includes responsive images on demand" do
-          upload = Fabricate(:upload, width: 2000, height: 1500, filesize: 10000)
+          upload.update!(width: 2000, height: 1500, filesize: 10000)
           post = Fabricate(:post, raw: "hello <img src='#{upload.url}'>")
 
           # fake some optimized images
@@ -324,7 +324,7 @@ describe CookedPostProcessor do
         end
 
         it "doesn't include response images for cropped images" do
-          upload = Fabricate(:upload, width: 200, height: 4000, filesize: 12345)
+          upload.update!(width: 200, height: 4000, filesize: 12345)
           post = Fabricate(:post, raw: "hello <img src='#{upload.url}'>")
 
           # fake some optimized images
@@ -404,8 +404,6 @@ describe CookedPostProcessor do
       end
 
       context "with large images" do
-        fab!(:upload) { Fabricate(:upload) }
-
         fab!(:post) do
           Fabricate(:post, raw: <<~HTML)
           <img src="#{upload.url}">
@@ -482,8 +480,6 @@ describe CookedPostProcessor do
       end
 
       context "with tall images" do
-        fab!(:upload) { Fabricate(:upload) }
-
         fab!(:post) do
           Fabricate(:post, raw: <<~HTML)
           <img src="#{upload.url}">
@@ -510,8 +506,6 @@ describe CookedPostProcessor do
       end
 
       context "with iPhone X screenshots" do
-        fab!(:upload) { Fabricate(:upload) }
-
         fab!(:post) do
           Fabricate(:post, raw: <<~HTML)
           <img src="#{upload.url}">
@@ -543,8 +537,6 @@ describe CookedPostProcessor do
       end
 
       context "with large images when using subfolders" do
-        fab!(:upload) { Fabricate(:upload) }
-
         fab!(:post) do
           Fabricate(:post, raw: <<~HTML)
           <img src="/subfolder#{upload.url}">
@@ -592,8 +584,6 @@ describe CookedPostProcessor do
       end
 
       context "with title" do
-        fab!(:upload) { Fabricate(:upload) }
-
         fab!(:post) do
           Fabricate(:post, raw: <<~HTML)
           <img src="#{upload.url}" title="WAT">
@@ -833,7 +823,7 @@ describe CookedPostProcessor do
       Oneboxer.stubs(:onebox).with(url, anything).returns("<img class='onebox' src='#{image_url}' />")
 
       post = Fabricate(:post, raw: url)
-      upload = Fabricate(:upload, url: "https://test.s3.amazonaws.com/something.png")
+      upload.update!(url: "https://test.s3.amazonaws.com/something.png")
 
       post.custom_fields[Post::DOWNLOADED_IMAGES] = { "//image.com/avatar.png": upload.id }
       post.save_custom_fields
@@ -1031,7 +1021,8 @@ describe CookedPostProcessor do
 
         uploaded_file = file_from_fixtures("smallest.png")
         upload_sha1 = Digest::SHA1.hexdigest(File.read(uploaded_file))
-        upload = Fabricate(:upload,
+
+        upload.update!(
           original_filename: "smallest.png",
           width: 10,
           height: 20,
