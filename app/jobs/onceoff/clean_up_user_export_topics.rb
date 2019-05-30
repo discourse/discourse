@@ -3,11 +3,9 @@
 module Jobs
   class CleanUpUserExportTopics < Jobs::Onceoff
     def execute_onceoff(args)
-      translated_keys = []
-      I18n.available_locales.each do |l|
-        translated_keys << I18n.with_locale(l.to_sym) { I18n.t("system_messages.csv_export_succeeded.subject_template") }
-      end
-      translated_keys = translated_keys.uniq
+      translated_keys = I18n.available_locales.map do |l|
+        I18n.with_locale(:"#{l}") { I18n.t("system_messages.csv_export_succeeded.subject_template") }
+      end.uniq
 
       slugs = []
       translated_keys.each do |k|
@@ -16,7 +14,7 @@ module Jobs
       # "[%{export_title}] 資料匯出已完成" gets converted to "%-topic", do not match that slug.
       slugs = slugs.reject { |s| s == "%-topic" }
 
-      topics = Topic.with_deleted.where(<<~SQL, slugs, 2.days.ago)
+      topics = Topic.with_deleted.where(<<~SQL, slugs, UserExport::DESTROY_CREATED_BEFORE)
         slug LIKE ANY(ARRAY[?]) AND
         archetype = 'private_message' AND
         subtype = 'system_message' AND
