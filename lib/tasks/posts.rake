@@ -649,3 +649,44 @@ task 'posts:invalidate_broken_images' => :environment do
   puts
   puts "", "#{rebaked} posts rebaked!"
 end
+
+desc "Coverts full upload URLs in `Post#raw` to short upload url"
+task 'posts:inline_uploads' => :environment do |_, args|
+  dry_run = ENV["DRY_RUN"] || true
+
+  scope = Post.joins(:post_uploads)
+    .distinct("posts.id")
+    .where("raw LIKE '%class=\"attachment%' OR raw LIKE '%<img src=\"%'")
+
+  affected_posts_count = scope.count
+  fixed_count = 0
+  not_corrected_post_ids = []
+
+  scope.find_each do |post|
+    new_raw = InlineUploads.process(post.raw)
+
+    if post.raw != new_raw
+      if dry_run
+        puts "Post id #{post.id} raw changed!"
+        Diffy::Diff.default_format = :color
+        puts Diffy::Diff.new(post.raw, new_raw, context: 1)
+      else
+        putc "."
+      end
+
+      fixed_count += 1
+    else
+      not_corrected_post_ids << post.id
+    end
+  end
+
+  puts "#{fixed_count} out of #{affected_posts_count} affected posts corrected"
+
+  if fixed_count != affected_posts_count
+    puts "Ids of posts that were not correct: #{not_corrected_post_ids}"
+  end
+
+  if dry_run
+
+  end
+end
