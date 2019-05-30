@@ -1,9 +1,4 @@
-import { default as computed } from "ember-addons/ember-computed-decorators";
-import { default as DiscourseURL, userPath } from "discourse/lib/url";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
-import { popupAjaxError } from "discourse/lib/ajax-error";
-import { findAll } from "discourse/models/login-method";
-import { SECOND_FACTOR_METHODS } from "discourse/models/user";
 
 export default Ember.Controller.extend(ModalFunctionality, {
   loading: false,

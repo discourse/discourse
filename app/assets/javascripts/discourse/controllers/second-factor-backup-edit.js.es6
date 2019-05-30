@@ -1,5 +1,4 @@
 import { default as computed } from "ember-addons/ember-computed-decorators";
-import { popupAjaxError } from "discourse/lib/ajax-error";
 import { SECOND_FACTOR_METHODS } from "discourse/models/user";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 

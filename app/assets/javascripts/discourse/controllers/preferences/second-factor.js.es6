@@ -122,7 +122,7 @@ export default Ember.Controller.extend(CanCheckEmails, {
           if (result) {
             this.model
               .disableAllSecondFactors()
-              .then(response => {
+              .then(() => {
                 const usernameLower = this.model.username.toLowerCase();
                 DiscourseURL.redirectTo(
                   userPath(`${usernameLower}/preferences`)
