@@ -139,7 +139,7 @@ class ImportScripts::Bespoke < ImportScripts::Base
 
       # fake it
       if row.email.blank? || row.email !~ /@/
-        email = SecureRandom.hex << "@domain.com"
+        email = fake_email
       end
 
       name = row.display_name
