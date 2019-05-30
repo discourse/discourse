@@ -159,7 +159,6 @@ ja:
   private_message_abbrev: "メッセージ"
   rss_description:
     latest: "最新のトピック"
-    hot: "ホットトピック"
     posts: "最近の投稿"
     group_posts: "%{group_name}からの最新投稿"
     group_mentions: "%{group_name}からの最新メンション"
@@ -1280,8 +1279,6 @@ ja:
     see_more: "もっと見る"
     search_title: "サイトを検索"
     search_button: "検索"
-  terms_of_service:
-    title: "利用規約"
   deleted: "削除"
   image: "画像"
   upload:
@@ -1311,9 +1308,6 @@ ja:
     sender_body_blank: "本文が空です"
   color_schemes:
     base_theme_name: "ベース"
-  about: "このサイトについて"
-  guidelines: "ガイドライン"
-  privacy: "プライバシー"
   edit_this_page: "ページを編集"
   csv_export:
     boolean_yes: "はい"
@@ -1637,6 +1631,8 @@ ja:
     popup:
       confirm_body: "成功！通知を可能にしました！"
   reviewables:
+    sensitivity:
+      disabled: "利用不可"
     actions:
       agree_and_suspend:
         title: "凍結中のユーザ"

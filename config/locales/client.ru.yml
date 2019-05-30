@@ -193,6 +193,7 @@ ru:
     bootstrap_mode_disabled: "Режим Bootstrap будет отключён в течение 24 часов."
     themes:
       default_description: "По умолчанию"
+      broken_theme_alert: "Ваш сайт может не работать, потому что  в теме / компоненте %{theme} есть ошибки. Отключить это в %{path}."
     s3:
       regions:
         ap_northeast_1: "Asia Pacific (Tokyo)"
@@ -212,7 +213,7 @@ ru:
         us_east_1: "US East (N. Virginia)"
         us_east_2: "US East (Ohio)"
         us_gov_east_1: "AWS GovCloud (США-Восток)"
-        us_gov_west_1: "AWS GovCloud (US)"
+        us_gov_west_1: "AWS GovCloud (US-West)"
         us_west_1: "US West (N. California)"
         us_west_2: "US West (Oregon)"
     edit: "отредактировать название и раздел темы"
@@ -372,9 +373,8 @@ ru:
         saved: "Сохранено"
         save_changes: "Сохранить Изменения"
         title: "Настройки"
-        score_bonuses:
-          title: "Оценка Бонусов"
-          description: "Бонусы позволяют определенным типам быть оцененными выше, чем другие, поэтому они могут быть приоритетными. Примечание: изменение этих значений не будет применяться к ранее оцененным предметам."
+        priorities:
+          title: "Обзорные Приоритеты"
       moderation_history: "История модерации"
       view_all: "Посмотреть Все"
       grouped_by_topic: "Сгруппированы по Темам"
@@ -388,7 +388,7 @@ ru:
       title: "Обзор"
       topic: "Тема:"
       filtered_topic: "Вы отфильтровали для просмотра содержимое в одной теме."
-      filtered_user: "Пользователь:"
+      filtered_user: "Пользователь"
       show_all_topics: "показать все темы"
       deleted_post: "(сообщение удалено)"
       deleted_user: "(пользователь удален)"
@@ -441,12 +441,12 @@ ru:
       new_topic: "Новая тема:"
       filters:
         type:
-          title: "Тип:"
+          title: "Тип"
           all: "(все типы)"
         minimum_score: "Минимальная оценка:"
         refresh: "Обновить"
-        status: "Статус:"
-        category: "Категория:"
+        status: "Статус"
+        category: "Категория"
         priority:
           title: "Минимальный Приоритет:"
           low: "Низкий"
@@ -920,8 +920,8 @@ ru:
           description: "Каждый из этих резервных кодов может быть использован только один раз. Храните их в безопасности."
       second_factor:
         title: "Двухфакторная аутентификация"
-        disable: "Отключить двухфакторную аутентификацию"
-        enable: "Включить двухфакторную аутентификацию для повышения безопасности учетной записи"
+        disable: "Отключить Двухфакторную Аутентификацию"
+        enable: "Включить Двухфакторную Аутентификацию"
         confirm_password_description: "Подтвердите ваш пароль чтобы продолжить"
         label: "Код"
         rate_limit: "Пожалуйста, подождите, прежде чем попробовать другой код аутентификации."
@@ -929,6 +929,8 @@ ru:
           Сканируйте этот QR-код в поддерживаемых приложениях (<a href="https://www.google.com/search?q=authenticator+apps+for+android" target="_blank">Android</a> – <a href="https://www.google.com/search?q=authenticator+apps+for+ios" target="_blank">iOS</a>) и введите свой код аутентификации.
         disable_description: "Пожалуйста, введите код аутентификации из вашего приложения:"
         show_key_description: "Введите вручную"
+        short_description: |
+          Защитите свой аккаунт одноразовыми кодами безопасности.
         extended_description: |
           Двухфакторная аутентификация повышает безопасность вашей учетной записи, требуя одноразовый токен в дополнение к вашему паролю. Токены могут быть сгенерированы на устройствах <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>Android</a> и <a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS</a>.
         oauth_enabled_warning: "Обратите внимание, что социальные логины будут отключены после включения двухфакторной аутентификации в вашей учетной записи."
@@ -1258,13 +1260,10 @@ ru:
     too_few_topics_notice: "Давайте <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>приступим к обсуждению!</a> Сейчас <strong>%{currentTopics} / %{requiredTopics}</strong> тем. Новым пользователям будет интереснее тут, если появится больше тем для обсуждений."
     too_few_posts_notice: "Давайте <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>приступим к обсуждению!</a>  Сейчас <strong>%{currentPosts} / %{requiredPosts}</strong> сообщений. Новым пользователям будет интереснее тут, если появится больше сообщений для обсуждения."
     logs_error_rate_notice:
-      reached: "<b>%{relativeAge}</b> – <a href='%{url}' target='_blank'>%{rate}</a> достигнут установленный для сайта предел %{siteSettingRate}."
-      exceeded: "<b>%{relativeAge}</b> – <a href='%{url}' target='_blank'>%{rate}</a> превышен установленный для сайта предел %{siteSettingRate}."
-      rate:
-        one: "%{count} ошибка/%{duration}"
-        few: "%{count} ошибок/%{duration}"
-        many: "%{count} ошибок/%{duration}"
-        other: "%{count} ошибок/%{duration}"
+      reached_hour_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# error/hour} или {# errors/hour}}</a> достигнут предел настройки сайта {limit, plural, one {# error/hour} или {# errors/hour}}."
+      reached_minute_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# error/minute} или {# errors/minute}}</a> достигнут предел настройки сайта {limit, plural, one {# error/minute} или {# errors/minute}}."
+      exceeded_hour_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# error/hour} или {# errors/hour}}</a> достигнут предел настройки сайта {limit, plural, one {# error/hour} или {# errors/hour}}."
+      exceeded_minute_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# error/minute} или {# errors/minute}}</a> превышен лимит настроек сайта  {limit, plural, one {# error/minute} или {# errors/minute}}."
     learn_more: "подробнее..."
     all_time: "всего"
     all_time_desc: "всего создано тем"
@@ -1322,7 +1321,7 @@ ru:
     trust_level: "Уровень доверия"
     search_hint: "Псевдоним, e-mail или IP адрес"
     create_account:
-      disclaimer: "Регистрируясь, Вы соглашаетесь с <a href='{{privacy_link}}'>политикой конфиденциальности</a> и <a href='{{tos_link}}'>условиями предоставления услуг</a>."
+      disclaimer: "Регистрируясь, вы соглашаетесь с <a href='{{privacy_link}}' target='blank'>политикой конфиденциальности</a> и  <a href='{{tos_link}}' target='blank'> условиями предоставления услуг</a>."
       title: "Зарегистрироваться"
       failed: "Произошла ошибка. Возможно, этот Email уже используется. Попробуйте восстановить пароль"
     forgot_password:
@@ -1439,6 +1438,7 @@ ru:
       shift: "Shift"
       ctrl: "Ctrl"
       alt: "Alt"
+      enter: "Войти"
     conditional_loading_section:
       loading: Загрузка...
     category_row:
@@ -1809,17 +1809,14 @@ ru:
         read: "Вы ещё не прочитали ни одной темы."
         posted: "Вы не принимали участие в обсуждении."
         latest: "Новых тем нет."
-        hot: "Популярных тем нет."
         bookmarks: "У вас нет избранных тем."
         category: "В разделе {{category}} отсутствуют темы."
         top: "Нет обсуждаемых тем."
-        search: "Ничего не найдено."
         educate:
           new: '<p>Ваши новые темы скоро появятся тут.</p><p>По умолчанию, новые темы отмечаются иконкой: <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">Новая</span> , если она была создана в течении 2 недель.</p><p>Перейдите в <a href="%{userPrefsUrl}">настройки</a> для того, чтобы выбрать период активности новых тем.</p>'
           unread: '<p>Ваши непрочитанные темы скоро появятся тут.</p><p>По умолчанию темы получают счётчик <span class="badge new-posts badge-notification">1</span>, если:</p><ul><li>Создана тема</li><li>Ответили на тему</li><li>Тема прочитана по истечении 4 минут, после её создания </li></ul><p>Или можно задать свои настройки отслеживания новых тем.</p><p>Перейдите в свои <a href="%{userPrefsUrl}">настройки</a>.</p>'
       bottom:
         latest: "Тем больше нет."
-        hot: "Популярных тем больше нет."
         posted: "Созданных тем больше нет."
         read: "Прочитанных тем больше нет."
         new: "Больше нет новых тем."
@@ -1827,7 +1824,6 @@ ru:
         category: "В разделе {{category}} больше нет тем."
         top: "Больше нет обсуждаемых тем."
         bookmarks: "Больше нет избранных тем."
-        search: "Больше ничего не найдено."
     topic:
       filter_to:
         one: "%{count} сообщение в теме"
@@ -1976,6 +1972,7 @@ ru:
         jump_bottom: "перейти к последнему сообщению"
         jump_prompt: "перейти к..."
         jump_prompt_of: "из %{count} сообщений"
+        jump_prompt_long: "Перейти к..."
         jump_bottom_with_number: "перейти к сообщению %{post_number}"
         jump_prompt_to_date: "дата"
         jump_prompt_or: "или"
@@ -2675,15 +2672,9 @@ ru:
           many: "Последние ({{count}})"
           other: "Последние ({{count}})"
         help: "темы с недавними сообщениями"
-      hot:
-        title: "Популярные"
-        help: "подборка популярных тем"
       read:
         title: "Прочитанные"
         help: "темы, которые вас заинтересовали (в обратном хронологическом порядке)"
-      search:
-        title: "Поиск"
-        help: "искать во всех темах"
       categories:
         title: "Разделы"
         title_in: "Раздел - {{categoryName}}"
@@ -2765,6 +2756,11 @@ ru:
       content_load_error: '<a href="%url%">Содержимое</a> не удалось загрузить.'
       image_load_error: '<a href="%url%">Изображение</a> не удалось загрузить.'
     keyboard_shortcuts_help:
+      shortcut_key_delimiter_comma: ", "
+      shortcut_key_delimiter_plus: "+"
+      shortcut_delimiter_or: "%{shortcut1} или %{shortcut2}"
+      shortcut_delimiter_slash: "%{shortcut1}/%{shortcut2}"
+      shortcut_delimiter_space: "%{shortcut1} %{shortcut2}"
       title: "Сочетания клавиш"
       jump_to:
         title: "Быстрый переход"
@@ -2953,20 +2949,16 @@ ru:
           read: "Вы еще не прочитали ни одной темы."
           posted: "Вы еще не принимали участие ни в одной теме."
           latest: "Нет последних тем."
-          hot: "Нет популярных тем."
           bookmarks: "У вас пока нет тем в закладках."
           top: "Нет обсуждаемых тем."
-          search: "Поиск не дал результатов."
         bottom:
           latest: "Больше нет последних тем."
-          hot: "Больше нет популярных тем."
           posted: "Больше нет тем с сообщениями."
           read: "Больше нет прочитанных тем."
           new: "Больше нет новых тем."
           unread: "Больше нет непрочитанных тем."
           top: "Больше нет обсуждаемых тем."
           bookmarks: "Больше нет тем в закладках."
-          search: "Больше нет результатов поиска."
     invite:
       custom_message: "Сделать приглашение немного более личным, написав <a href>сообщение пользователю</a>."
       custom_message_placeholder: "Напишите сюда ваше личное сообщение"
@@ -2984,6 +2976,8 @@ ru:
         title: "Список доступных отчетов"
       dashboard:
         title: "Админка"
+        last_updated: "Приборная панель обновленная:"
+        discourse_last_updated: "Discourse обновлен:"
         version: "Версия"
         up_to_date: "Обновлений нет"
         critical_available: "Доступно критическое обновление."
@@ -3846,6 +3840,7 @@ ru:
         delete_posts_failed: "При удалении постов возникла проблема."
         penalty_post_actions: "Что нужно сделать со связанным сообщением?"
         penalty_post_delete: "Удалить сообщение"
+        penalty_post_delete_replies: "Удалить пост + любые ответы"
         penalty_post_edit: "Редактировать сообщение"
         penalty_post_none: "Ничего не делать"
         penalty_count: "Количество нарушений"

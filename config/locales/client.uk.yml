@@ -182,6 +182,7 @@ uk:
         save_changes: "Зберегти зміни"
         title: "Налаштування"
       topic: "Тема:"
+      filtered_user: "Користувач"
       user:
         username: "Ім'я користувача"
         email: "Електронна пошта"
@@ -192,7 +193,10 @@ uk:
       save: "Зберегти"
       cancel: "Скасувати"
       filters:
+        type:
+          title: "Тип"
         refresh: "Оновити"
+        category: "Категорія"
       scores:
         type: "Тип"
       statuses:
@@ -793,12 +797,10 @@ uk:
         read: "Ви ще не прочитали жодної теми."
         posted: "Ви ще не дописували в жодну тему."
         latest: "Останніх тем немає. Шкода."
-        hot: "Гарячих тем немає."
         category: "В категорії {{category}} немає тем."
         top: "There are no top topics."
       bottom:
         latest: "Більше немає останніх тем."
-        hot: "Більше немає гарячих тем."
         posted: "There are no more posted topics."
         read: "Більше немає прочитаних тем."
         new: "Більше немає нових тем."
@@ -1116,14 +1118,9 @@ uk:
       latest:
         title: "Останні"
         help: "теми з найсвіжішими дописами"
-      hot:
-        title: "Гарячі"
-        help: "добірка найгарячіших тем"
       read:
         title: "Прочитані"
         help: "теми, які Ви прочитали, у порядку, в якому Ви їх читали востаннє"
-      search:
-        title: "Пошук"
       categories:
         title: "Категорії"
         title_in: "Категорія - {{categoryName}}"
@@ -1228,11 +1225,9 @@ uk:
           new: "У Вас немає нових тем."
           read: "Ви ще не прочитали жодної теми."
           posted: "Ви ще не дописували в жодну тему."
-          hot: "Гарячих тем немає."
           top: "There are no top topics."
         bottom:
           latest: "Більше немає останніх тем."
-          hot: "Більше немає гарячих тем."
           posted: "There are no more posted topics."
           read: "Більше немає прочитаних тем."
           new: "Більше немає нових тем."

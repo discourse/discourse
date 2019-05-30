@@ -174,7 +174,6 @@ hu:
   private_message_abbrev: "Üzenet"
   rss_description:
     latest: "Legutóbbi témák"
-    hot: "Legnépszerűbb témák"
     top: "Top témák"
     top_yearly: "Éves top témák"
     top_quarterly: "3 havi top témák"
@@ -469,6 +468,7 @@ hu:
   reports:
     default:
       labels:
+        count: Számláló
         percent: Százalék
         day: Nap
     post_edits:
@@ -480,6 +480,7 @@ hu:
     user_flagging_ratio:
       labels:
         user: Felhasználó
+        score: Pontszám
     moderators_activity:
       labels:
         moderator: Moderátor
@@ -961,8 +962,6 @@ hu:
     see_more: "Több"
     search_title: "Keresés az oldalon"
     search_button: "Keresés"
-  terms_of_service:
-    title: "Szolgáltatási feltételek"
   deleted: "törölt"
   image: "kép"
   upload:
@@ -988,9 +987,6 @@ hu:
     latte_theme_name: "Latte"
     summer_theme_name: "Summer"
     dark_rose_theme_name: "Dark Rose"
-  about: "About"
-  guidelines: "Irányelvek"
-  privacy: "Adatvédelem"
   csv_export:
     boolean_yes: "Igen"
     boolean_no: "Nem"
@@ -1122,6 +1118,15 @@ hu:
     unknown: "ismeretlen"
     user_merged: "%{username} össze lett vonva ezzel a fiókkal"
   reviewables:
+    priorities:
+      low: "Alacsony"
+      medium: "Közepes"
+      high: "Magas"
+    sensitivity:
+      disabled: "Kikapcsolt"
+      low: "Alacsony"
+      medium: "Közepes"
+      high: "Magas"
     actions:
       agree_and_keep:
         title: "Bejegyzés megtartása"

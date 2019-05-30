@@ -172,7 +172,6 @@ fr:
         us_east_1: "États-Unis est (Virginie)"
         us_east_2: "États-Unis est (Ohio)"
         us_gov_east_1: "AWS GovCloud (US-Est)"
-        us_gov_west_1: "AWS GovCloud (US)"
         us_west_1: "États-Unis ouest (Californie)"
         us_west_2: "États-Unis ouest (Oregon)"
     edit: "modifier le titre et la catégorie de ce sujet"
@@ -318,7 +317,7 @@ fr:
         one: "Ce sujet a <b>%{count}</b> message en attente de validation"
         other: "Ce sujet a <b>{{count}}</b> messages en attente de validation"
       topic: "Sujet :"
-      filtered_user: "Utilisateur:"
+      filtered_user: "Utilisateur"
       show_all_topics: "afficher tous les sujets"
       user:
         username: "Pseudo"
@@ -352,12 +351,11 @@ fr:
       new_topic: "Nouveau sujet :"
       filters:
         type:
-          title: "Type :"
+          title: "Type"
           all: "(tous les types)"
         minimum_score: "Score minimum :"
         refresh: "Rafraîchir"
-        status: "Etat :"
-        category: "Catégorie :"
+        category: "Catégorie"
         priority:
           low: "Faible"
           high: "Fort"
@@ -813,8 +811,6 @@ fr:
           description: "Chaque code de secours ne peut être utilisé qu'une seule fois. Garder les dans un endroit sûr mais accessible."
       second_factor:
         title: "Authentification à deux facteurs"
-        disable: "Désactiver l'authentification à deux facteurs"
-        enable: "Activer l'authentification à deux facteurs pour une sécurité accrue de votre compte."
         confirm_password_description: "Merci de confirmer votre mot de passe pour continuer"
         label: "Code"
         rate_limit: "Veuillez patienter avant d'essayer un autre code d'identification."
@@ -1125,12 +1121,6 @@ fr:
     too_few_topics_and_posts_notice: "Faites <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>partir la discussion !</a> Il y a actuellement <strong>%{currentTopics} / %{requiredTopics}</strong> sujets et <strong>%{currentPosts} / %{requiredPosts}</strong> messages. Les nouveaux utilisateurs ont besoin de discussions qu'ils peuvent lire et sur lesquelles ils peuvent répondre."
     too_few_topics_notice: "<a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>Démarrons cette discussion !</a> Il y a actuellement <strong>%{currentTopics} / %{requiredTopics}</strong> sujets. Les nouveaux visiteurs ont besoin de quelques conversations à lire et répondre."
     too_few_posts_notice: "<a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>Démarrons cette discussion !</a> Il y a actuellement <strong>%{currentPosts} / %{requiredPosts}</strong> messages. Les nouveaux visiteurs ont besoin de quelques conversations à lire et répondre."
-    logs_error_rate_notice:
-      reached: "<b>%{relativeAge}</b> – <a href='%{url}' target='_blank'>%{rate}</a> a atteint la limite de %{siteSettingRate} définie dans les paramètres du site."
-      exceeded: "<b>%{relativeAge}</b> – <a href='%{url}' target='_blank'>%{rate}</a> a dépassé la limite de %{siteSettingRate} définie dans les paramètres du site."
-      rate:
-        one: "%{count} erreur/%{duration}"
-        other: "%{count} erreurs/%{duration}"
     learn_more: "en savoir plus…"
     all_time: "total"
     all_time_desc: "nombre total de sujets créés"
@@ -1186,7 +1176,6 @@ fr:
     trust_level: "Niveau de confiance"
     search_hint: "pseudo, courriel ou adresse IP"
     create_account:
-      disclaimer: "En vous s'inscrivant, vous acceptez la <a href='{{privacy_link}}'>politique de confidentialité</a> et les <a href='{{tos_link}}'>conditions générales d'utilisation</a>."
       title: "Créer un nouveau compte"
       failed: "Quelque chose s'est mal passé, peut-être que cette adresse de courriel est déjà enregistrée, essayez le lien Mot de passe oublié."
     forgot_password:
@@ -1225,7 +1214,6 @@ fr:
       email_placeholder: "courriel ou pseudo"
       caps_lock_warning: "Majuscules vérrouillées"
       error: "Erreur inconnue"
-      cookies_error: "Les cookies de votre navigateur semblent désactiver. Vous ne pourrez pas vous connecter sans les activer."
       rate_limit: "Merci de patienter avant de vous reconnecter."
       blank_username: "Merci de saisir votre courriel ou pseudo."
       blank_username_or_password: "Merci de saisir votre courriel ou pseudo, et mot de passe."
@@ -1649,17 +1637,14 @@ fr:
         read: "Vous n'avez lu aucun sujet pour le moment."
         posted: "Vous n'avez écrit aucun message pour le moment."
         latest: "Il n'y a aucun sujet pour le moment. C'est triste…"
-        hot: "Il n'y a aucun sujet populaire pour le moment."
         bookmarks: "Vous n'avez pas encore mis de signets à des sujets."
         category: "Il n'y a pas de sujets dans {{category}}."
         top: "Il n'y a pas de meilleurs sujets."
-        search: "Votre recherche ne retourne aucun résultat."
         educate:
           new: '<p>Vos nouveaux sujets apparaissent ici.</p><p>Par défaut, les sujets sont considérés comme nouveaux et affichent l''indicateur <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">nouveau</span> lorsqu''ils ont été créés depuis moins de 2 jours.</p><p>Vous pouvez modifier cela dans vos <a href="%{userPrefsUrl}">préférences</a>.</p>'
           unread: '<p>Vos sujets non lus apparaissent ici.</p><p>Par défaut, les sujets considérés comme non lus et qui affichent le nombre de messages non lus <span class="badge new-posts badge-notification">1</span> sont ceux :</p> <ul><li>que vous avez créés</li><li>auxquels vous avez répondus</li><li>que vous avez lus plus de 4 minutes</li></ul><p>ou que vous avez explicitement suivis ou surveillés.</p><p>Vous pouvez modifier cela dans vos <a href="%{userPrefsUrl}">préférences</a>.</p>'
       bottom:
         latest: "Il n'y a plus de sujets à lire."
-        hot: "Il n'y a plus de sujets populaires à lire."
         posted: "Il n'y a plus de sujets à lire."
         read: "Il n'y a plus de sujets à lire."
         new: "Il n'y a plus de nouveaux sujets."
@@ -1667,7 +1652,6 @@ fr:
         category: "Il n'y a plus de sujets à lire dans {{category}}."
         top: "Il n'y a plus de meilleurs sujets."
         bookmarks: "Il n'y a plus de sujets avec des signets."
-        search: "Il n'y a plus de résultats à votre recherche."
     topic:
       filter_to:
         one: "%{count} message dans le sujet"
@@ -2431,15 +2415,9 @@ fr:
           one: "Récent ({{count}})"
           other: "Récents ({{count}})"
         help: "sujets avec des messages récents"
-      hot:
-        title: "Populaires"
-        help: "une sélection de sujets populaires"
       read:
         title: "Lus"
         help: "sujets que vous avez lus, dans l'ordre de dernière lecture"
-      search:
-        title: "Rechercher"
-        help: "rechercher dans tous les sujets"
       categories:
         title: "Catégories"
         title_in: "Catégorie - {{categoryName}}"
@@ -2687,20 +2665,16 @@ fr:
           read: "Vous n'avez lu aucun sujet pour le moment."
           posted: "Vous n'avez écrit dans aucun sujet pour le moment."
           latest: "Il n'y a pas de sujets récents."
-          hot: "Il n'y a pas de sujets populaires."
           bookmarks: "Vous n'avez pas encore mis de signets à des sujets."
           top: "Il n'y a pas de meilleurs sujets."
-          search: "Il n'y a pas de résultats de recherche."
         bottom:
           latest: "Il n'y a plus de sujets récents."
-          hot: "Il n'y a plus de sujets populaires."
           posted: "Il n'y a plus de sujets publiés."
           read: "Il n'y a plus de sujets lus."
           new: "Il n'y a plus de nouveaux sujets."
           unread: "Il n'y a plus de sujets non lus."
           top: "Il n'y a plus de meilleurs sujets."
           bookmarks: "Il n'y a plus de sujets avec des signets."
-          search: "Il n'y a plus de résultats de recherche."
     invite:
       custom_message: "Rendez votre invitation plus personnelle en écrivant un <a href>message personnalisé</a>."
       custom_message_placeholder: "Entrez votre message personnalisé"

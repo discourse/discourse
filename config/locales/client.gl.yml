@@ -146,7 +146,6 @@ gl:
         eu_west_1: "EU (Irlanda)"
         eu_west_2: "EU (Londres)"
         us_east_1: "EE.UU. Leste (N. Virxinia)"
-        us_gov_west_1: "AWS GovCloud (EE.UU)"
         us_west_1: "EE.UU. Oeste (N. California)"
         us_west_2: "EE.UU. Oeste (Oregón)"
     edit: "editar o título e a categoría deste tema"
@@ -250,6 +249,7 @@ gl:
         save_changes: "Gardar os cambios"
         title: "Axustes"
       topic: "Tema:"
+      filtered_user: "Usuario"
       user:
         username: "Nome do usuario"
         email: "Correo electrónico"
@@ -261,6 +261,7 @@ gl:
       cancel: "Cancelar"
       filters:
         refresh: "Actualizar"
+        category: "Categoría"
       scores:
         date: "Data"
       statuses:
@@ -981,17 +982,14 @@ gl:
         read: "Aínda non liches ningún tema."
         posted: "Aínda non publicaches en ningún tema."
         latest: "Non hai últimos temas. Triste."
-        hot: "Non hai temas quentes."
         bookmarks: "Aínda non marcaches este tema."
         category: "Non hai temas en {{category}}."
         top: "Non hai temas destacados."
-        search: "Non hai resultados da busca."
         educate:
           new: '<p>Aquí aparecen os teus temas novos.</p><p>De xeito predeterminado, os temas considéranse novos e amosan un indicador <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">novo</span> se se crearon nos últimos dous días.</p><p>Podes ir ás <a href="%{userPrefsUrl}">preferencias</a> para cambiar este axuste.</p>'
           unread: '<p>Os teus temas sen ler aparecen aquí.</p><p>De xeito predeterminado, os temas considéranse sen ler e amosarase o número dos non lidos. <span class="badge new-posts badge-notification">1</span> se ti:</p><ul><li>Creaches o tema</li><li>Respondiches o tema</li><li>Liches o tema durante máis de catro minutos</li></ul><p>Ou estabeleciches o tema para ser Seguido ou Visto no control de notificacións na banda inferior de cada tema.</p><p>Vai ás túas <a href="%{userPrefsUrl}">preferencias</a> se queres cambiar isto.</p>'
       bottom:
         latest: "Non hai máis últimos temas."
-        hot: "Non hai máis temas  quentes."
         posted: "Non hai máis temas publicados."
         read: "Non hai máis temas lidos."
         new: "Non hai máis temas novos."
@@ -999,7 +997,6 @@ gl:
         category: "Non hai máis temas en {{category}}."
         top: "Non hai máis temas destacados."
         bookmarks: "Non hai máis temas marcados."
-        search: "Non hai máis resultados da busca."
     topic:
       create: "Novo tema"
       create_long: "Crear un novo tema"
@@ -1509,15 +1506,9 @@ gl:
           one: "Último (%{count})"
           other: "({{count}}) últimos"
         help: "temas con publicacións recentes"
-      hot:
-        title: "Quentes"
-        help: "unha selección dos temas máis quentes"
       read:
         title: "Lidos"
         help: "temas que liches, partindo da última lectura"
-      search:
-        title: "Buscar"
-        help: "buscar todos os temas"
       categories:
         title: "Categorías"
         title_in: "Categoría - {{categoryName}}"
@@ -1674,20 +1665,16 @@ gl:
           new: "Non tes novos temas."
           read: "Aínda non liches ningún tema."
           posted: "Aínda non publicaches en ningún tema."
-          hot: "Non hai temas quentes."
           bookmarks: "Aínda non marcaches este tema."
           top: "Non hai temas destacados."
-          search: "Non hai resultados da busca."
         bottom:
           latest: "Non hai máis últimos temas."
-          hot: "Non hai máis temas  quentes."
           posted: "Non hai máis temas publicados."
           read: "Non hai máis temas lidos."
           new: "Non hai máis temas novos."
           unread: "Non hai máis temas sen ler."
           top: "Non hai máis temas destacados."
           bookmarks: "Non hai máis temas marcados."
-          search: "Non hai máis resultados da busca."
   admin_js:
     type_to_filter: "escribe para filtrar..."
     admin:

@@ -260,7 +260,6 @@ zh_CN:
   private_message_abbrev: "私信"
   rss_description:
     latest: "最新主题"
-    hot: "最热主题"
     top: "热门主题"
     top_all: "所有时间热门主题"
     top_yearly: "年度热门主题"
@@ -1215,6 +1214,14 @@ zh_CN:
     max_oneboxes_per_post: "帖子中最多的 Onebox 数量。"
     logo: "你网站左上角的logo图片。使用高120且宽高比大于3:1的宽矩形图像。如果留空，将显示网站标题文本。"
     logo_small: "出现在你站点左上角的小号标志图片，当滚动后可见。使用方形120×120图像。如果留空，将显示主页图标。"
+    digest_logo: "网站电子邮件摘要顶部使用的备用logo图片。使用宽矩形图像。不要使用SVG图像。 如果留空，将使用“logo”设置中的图像。"
+    mobile_logo: "网站的移动版本上使用的logo。使用高120且宽高比大于3:1的宽矩形图像。 如果留空，将使用“logo”设置中的图像。"
+    large_icon: "用作其他元数据图标的基础的图像。 理想情况下应大于512 x 512。如果留空，将使用logo_small。"
+    manifest_icon: "在Android上用作logo/启动图像的图像。将自动调整为512×512。如果留空，将使用large_icon。"
+    favicon: "你的站点图标（favicon），参考<a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>https://zh.wikipedia.org/wiki/Favicon</a>。如果要正确地通过 CDN 分发，它必须是png图片。将调整为32x32。如果留空，将使用large_icon。"
+    apple_touch_icon: "用于Apple触控设备的图标。将自动调整为180x180。如果留空，将使用large_icon。"
+    opengraph_image: "默认打开的图像，在页面没有其他合适图像时使用。如果留空，将使用large_icon"
+    twitter_summary_large_image: "Twitter卡“摘要大图”（宽度至少应为280，高度至少为150）。如果留空，则使用opengraph_image生成常规卡片元数据。"
     notification_email: "这个表格：被用于发送所有重要系统邮件的邮箱地址。指定的域名必须正确设置 SPF、DKIM 和反向 PTR 记录以发送邮件。"
     email_custom_headers: "一个逗号分离的自定义邮件头部"
     email_subject: "标准邮件的自定义主题格式。参见<a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801</a>"
@@ -1680,7 +1687,6 @@ zh_CN:
     allow_staff_to_tag_pms: "允许管理人员对个人信息打标签"
     min_trust_level_to_tag_topics: "给主题加标签的最小信任等级"
     suppress_overlapping_tags_in_list: "如果标签匹配了主题标题中的词，不显示该标签"
-    remove_muted_tags_from_latest: "在最新主题列表中，不显示有静音标签的主题。"
     force_lowercase_tags: "强制所有新标签完全小写。"
     company_name: "公司名"
     governing_law: "适用法律"
@@ -2922,9 +2928,6 @@ zh_CN:
     welcome_message_invite_only: |
       ##[欢迎来到%{title}](#welcome)
       你需要一个账号。请从现有用户处获取一个邀请或者登录以继续。
-  terms_of_service:
-    title: "服务条款"
-    signup_form_message: '我已经阅读并接受<a href="%{base_path}/tos" target="_blank">服务条款</a>。'
   deleted: "已删除"
   image: "图片"
   upload:
@@ -2988,9 +2991,6 @@ zh_CN:
     latte_theme_name: "棕色"
     summer_theme_name: "夏季"
     dark_rose_theme_name: "黑红"
-  about: "关于"
-  guidelines: "指导"
-  privacy: "隐私"
   edit_this_page: "编辑页面"
   csv_export:
     boolean_yes: "是"
@@ -3777,6 +3777,15 @@ zh_CN:
     user_merged: "%{username}已合并到此账户"
     user_delete_self: "已从%{url}自行删除"
   reviewables:
+    priorities:
+      low: "低"
+      medium: "中等"
+      high: "高"
+    sensitivity:
+      disabled: "停用"
+      low: "低"
+      medium: "中等"
+      high: "高"
     missing_version: "您必须提供一个版本参数"
     actions:
       agree:

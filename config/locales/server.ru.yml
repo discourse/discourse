@@ -284,7 +284,6 @@ ru:
   private_message_abbrev: "Сообщ."
   rss_description:
     latest: "Последние темы"
-    hot: "Популярные темы"
     top: "Лучшие темы"
     top_all: "Лучшие темы за всё время"
     top_yearly: "Лучшие темы за год"
@@ -1732,8 +1731,6 @@ ru:
     search_button: "Поиск"
   offline:
     title: "Не удается загрузить приложение"
-  terms_of_service:
-    title: "Условия предоставления услуг"
   deleted: "удалено"
   image: "изображение"
   upload:
@@ -1794,9 +1791,6 @@ ru:
     latte_theme_name: "Latte Схема"
     summer_theme_name: "Летняя Схема"
     dark_rose_theme_name: "Схема Темной Розы"
-  about: "О нас"
-  guidelines: "Руководство"
-  privacy: "Политика конфиденциальности"
   edit_this_page: "Отредактировать эту страницу"
   csv_export:
     boolean_yes: "Да"
@@ -2094,6 +2088,17 @@ ru:
     user_merged: "%{username} был объединен с этой учетной записью"
     user_delete_self: "Удалено самостоятельно из %{url}"
   reviewables:
+    priorities:
+      low: "Низкий"
+      medium: "Средний"
+      high: "Высокий"
+    sensitivity:
+      disabled: "Отключено"
+      low: "Низкий"
+      medium: "Средний"
+      high: "Высокий"
+    reasons:
+      category: "Посты в этой категории требуют ручного одобрения персоналом. Смотрите настройки категории."
     actions:
       agree:
         title: "Согласен..."
@@ -2122,8 +2127,13 @@ ru:
         description: "Удалить пост; если первый пост, удалится также тема"
       delete_and_ignore_replies:
         title: "Удалить Пост + Ответы и игнорировать"
+        description: "Удалить пост и все его ответы; если первый пост, удалить также тему"
       delete_and_agree:
+        title: "Удалить Пост и Согласиться"
         description: "Удалить пост; если первый пост, удалится также тема"
+      delete_and_agree_replies:
+        title: "Удалить Пост + Ответы и Согласиться"
+        description: "Удалить пост и все его ответы; если первый пост, удалить также тему"
       disagree_and_restore:
         title: "Не согласен и восстановить сообщение"
         description: "Восстановить сообщение, чтобы все пользователи могли его видеть."
@@ -2137,10 +2147,18 @@ ru:
         title: "Одобрить Пост"
       reject_post:
         title: "Отклонить Пост"
+      approve_user:
+        title: "Утвердить Пользователя"
       reject_user:
+        title: "Удалить Пользователя..."
         delete:
           title: "Удалить Пользователя"
+          description: "Пользователь будет удален с форума."
+        block:
+          title: "Удалить и Заблокировать Пользователя"
+          description: "Пользователь будет удален, и мы заблокируем его IP-адрес и e-mail."
       reject:
         title: "Отклонить"
       delete_user:
         title: "Удалить Пользователя"
+        reason: "Удалено через очередь просмотра"

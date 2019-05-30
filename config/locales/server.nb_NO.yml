@@ -237,7 +237,6 @@ nb_NO:
   private_message_abbrev: "Mld"
   rss_description:
     latest: "Siste emner"
-    hot: "Populære emner"
     top: "Mest populære emner"
     top_all: "Tidenes mest populære emner"
     top_yearly: "Årets mest populære emner"
@@ -1086,7 +1085,6 @@ nb_NO:
     default_categories_tracking: "Liste med kategorier som overvåkes som forvalg"
     default_categories_muted: "Liste med kategorier som er dempet som forvalg"
     default_categories_watching_first_post: "Liste over kategorier hvor det er forvalgt innstilling at det første innlegget i hvert nye emne følges."
-    remove_muted_tags_from_latest: "Ikke vis emner med dempede stikkord i listen over siste emner."
     errors:
       invalid_email: "Ugyldig e-mail adresse"
       invalid_username: "Ingen bruker med det brukernavnet."
@@ -1240,8 +1238,6 @@ nb_NO:
     see_more: "Mer"
     search_title: "Søk i denne siden"
     search_button: "Søk"
-  terms_of_service:
-    title: "Bruksvilkår"
   deleted: "slettet"
   image: "bilde"
   upload:
@@ -1265,9 +1261,6 @@ nb_NO:
     default_theme_name: "Lys"
     light_theme_name: "Lys"
     dark_theme_name: "Mørk"
-  about: "Om"
-  guidelines: "Retningslinjer"
-  privacy: "Personvern"
   edit_this_page: "Endre denne siden"
   csv_export:
     boolean_yes: "Ja"
@@ -1514,6 +1507,8 @@ nb_NO:
       confirm_title: "Varslinger aktivert - %{site_title}"
       confirm_body: "Suksess! Varslinger er nå aktivert."
   reviewables:
+    sensitivity:
+      disabled: "Deaktivert"
     actions:
       agree_and_keep:
         title: "Behold innlegg"

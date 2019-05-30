@@ -172,7 +172,6 @@ pt_BR:
         us_east_1: "Leste do EUA (N. da Virgínia)"
         us_east_2: "Leste do EUA (Ohio)"
         us_gov_east_1: "AWS GovCloud (Leste do EUA)"
-        us_gov_west_1: "AWS GovCloud (EUA)"
         us_west_1: "Oeste do EUA (N. da Califórnia)"
         us_west_2: "Oeste do EUA (Oregon)"
     edit: "edite o título e a categoria deste tópico"
@@ -313,15 +312,13 @@ pt_BR:
         saved: "Salvo"
         save_changes: "Salvar Mudanças"
         title: "Configurações"
-        score_bonuses:
-          title: "Pontos de Bônus"
       moderation_history: "Histórico de Moderação"
       view_all: "Visualizar Todos"
       grouped_by_topic: "Agrupado por Tópico"
       none: "Não há itens para revisar."
       view_pending: "visualização pendente"
       topic: "Tópico:"
-      filtered_user: "Usuário:"
+      filtered_user: "Usuário"
       show_all_topics: "mostrar todos os tópicos"
       deleted_post: "(postagem excluída)"
       deleted_user: "(usuário excluído)"
@@ -343,12 +340,11 @@ pt_BR:
       new_topic: "Novo Tópico:"
       filters:
         type:
-          title: "Tipo:"
+          title: "Tipo"
           all: "(todos os tipos)"
         minimum_score: "Pontuação Mínima:"
         refresh: "Atualizar"
-        status: "Status:"
-        category: "Categoria:"
+        category: "Categoria"
       conversation:
         view_full: "visualizar conversa completa"
       scores:
@@ -775,8 +771,6 @@ pt_BR:
           description: "Cada um destes códigos de backup só pode ser usado uma vez. Mantenha-os em algum lugar seguro, mas acessível."
       second_factor:
         title: "Autenticação de Dois Fatores"
-        disable: "Desabilitar autenticação de dois fatores"
-        enable: "Habilitar autenticação de dois fatores para segurança aprimorada da conta"
         confirm_password_description: "Por favor, confirme sua senha para continuar"
         label: "Código"
         rate_limit: "Por favor, aguarde antes de tentar outro código de autenticação."
@@ -1085,12 +1079,6 @@ pt_BR:
     too_few_topics_and_posts_notice: "Vamos <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>começar esta discussão!</a> Há atualmente <strong>%{currentTopics} / %{requiredTopics}</strong> tópicos e <strong>%{currentPosts} / %{requiredPosts}</strong> postagens. Novos visitantes precisam de algumas conversas para ler e responder."
     too_few_topics_notice: "Vamos <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>começar esta discussão!</a> Há atualmente <strong>%{currentTopics} / %{requiredTopics}</strong> tópicos. Novos visitantes precisam de algumas conversar para ler e responder."
     too_few_posts_notice: "Vamos <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>começar esta discussão!</a> Há atualmente <strong>%{currentPosts} / %{requiredPosts}</strong> postagens. Novos visitantes precisam de algumas conversas para ler e responder."
-    logs_error_rate_notice:
-      reached: "<b>%{relativeAge}</b> – <a href='%{url}' target='_blank'>%{rate}</a> alcançou a configuração limite do site de %{siteSettingRate}."
-      exceeded: "<b>%{relativeAge}</b> – <a href='%{url}' target='_blank'>%{rate}</a> excede a configuração limite do site de %{siteSettingRate}."
-      rate:
-        one: "%{count} erro/%{duration}"
-        other: "%{count} erros/%{duration}"
     learn_more: "saber mais..."
     all_time: "total"
     all_time_desc: "total de tópicos criados"
@@ -1146,7 +1134,6 @@ pt_BR:
     trust_level: "Nível de Confiança"
     search_hint: "nome de usuário, e-mail ou endereço IP"
     create_account:
-      disclaimer: "Ao se cadastrar, você concorda com a <a href='{{privacy_link}}'>política de privacidade</a> e os <a href='{{tos_link}}'>termos de serviço</a>."
       title: "Criar Nova Conta"
       failed: "Algo deu errado, talvez este e-mail já esteja cadastrado, tente usar o link de esqueci a senha."
     forgot_password:
@@ -1185,7 +1172,6 @@ pt_BR:
       email_placeholder: "e-mail ou nome de usuário"
       caps_lock_warning: "Caps Lock está ativado"
       error: "Erro desconhecido"
-      cookies_error: "Seu navegador parece ter desabilitado cookies. Você talvez não consiga entrar sem ativá-los primeiro."
       rate_limit: "Por favor, aguarde antes de tentar entrar novamente."
       blank_username: "Por favor, insira seu e-mail ou nome de usuário."
       blank_username_or_password: "Por favor, insira seu e-mail ou nome de usuário, e senha."
@@ -1608,17 +1594,14 @@ pt_BR:
         read: "Você ainda não leu nenhum tópico."
         posted: "Você ainda não postou em nenhum tópico."
         latest: "Não há últimos tópicos. Isto é triste."
-        hot: "Não há tópicos populares."
         bookmarks: "Você ainda não tem nenhum tópico favorito."
         category: "Não há tópicos na categoria {{category}}."
         top: "Não há melhores tópicos."
-        search: "Não há resultados de pesquisa."
         educate:
           new: '<p>Seus novos tópicos aparecem aqui.</p><p>Por padrão, tópicos são considerados novos e mostrarão um indicador de <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">novo</span> se eles foram criados nos últimos 2 dias.</p><p>Visite as suas <a href="%{userPrefsUrl}">preferências</a> para alterar isto.</p>'
           unread: '<p>Seus tópicos não lidos aparecem aqui.</p><p>Por padrão, tópicos são considerados como não lidos e irão mostrar contadores <span class="badge new-posts badge-notification">1</span> se você:</p><ul><li>Criou o tópico</li><li>Respondeu ao tópico</li><li>Leu o tópico por mais de 4 minutos</li></ul><p>Ou se você explicitamente colocou o tópico como Monitorado ou Observado através do controle de notificações na parte inferior de cada tópico.</p><p>Visite suas <a href="%{userPrefsUrl}">preferências</a> para alterar isto.</p>'
       bottom:
         latest: "Não há mais últimos tópicos."
-        hot: "Não há mais tópicos populares."
         posted: "Não há mais tópicos postados."
         read: "Não há mais tópicos lidos."
         new: "Não há mais tópicos novos."
@@ -1626,7 +1609,6 @@ pt_BR:
         category: "Não há mais tópicos na categoria {{category}}."
         top: "Não há mais melhores tópicos."
         bookmarks: "Não há mais tópicos favoritos."
-        search: "Não há mais resultados de pesquisa."
     topic:
       filter_to:
         one: "%{count} postagem no tópico"
@@ -2375,15 +2357,9 @@ pt_BR:
           one: "Recente (%{count})"
           other: "Recentes ({{count}})"
         help: "tópicos com mensagens recentes"
-      hot:
-        title: "Quente"
-        help: "uma seleção dos tópicos mais quentes"
       read:
         title: "Lido"
         help: "tópicos que você leu"
-      search:
-        title: "Pesquisar"
-        help: "procurar todos tópicos"
       categories:
         title: "Categorias"
         title_in: "Categoria - {{categoryName}}"
@@ -2623,20 +2599,16 @@ pt_BR:
           read: "Você ainda não leu nenhum tópico."
           posted: "Você ainda não escreveu em nenhum tópico."
           latest: "Não há tópicos recentes."
-          hot: "Não há tópicos quentes."
           bookmarks: "Você ainda não tem tópicos nos favoritos."
           top: "Não há tópicos em alta."
-          search: "Não foram encontrados resultados."
         bottom:
           latest: "Não há mais tópicos recentes."
-          hot: "Não há mais tópicos quentes."
           posted: "Não há mais tópicos postados."
           read: "Não há mais tópicos lidos."
           new: "Não há mais tópicos novos."
           unread: "Não há mais tópicos não lidos."
           top: "Não há mais tópicos em alta."
           bookmarks: "Não há mais tópicos nos favoritos."
-          search: "Não existem mais resultados."
     invite:
       custom_message: "Faça o seu convite um pouco mais pessoal escrevendo uma <a href>mensagem personalizada</a>."
       custom_message_placeholder: "Insira a sua mensagem personalizada"

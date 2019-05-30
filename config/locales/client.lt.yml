@@ -206,7 +206,6 @@ lt:
         eu_west_3: "EU (Paryžius)"
         us_east_1: "US East (N. Virginia)"
         us_east_2: "US Rytai (Ohajo)"
-        us_gov_west_1: "AWS GovCloud (US)"
         us_west_1: "US West (N. California)"
         us_west_2: "US West (Oregon)"
     edit: "redaguoti šios temos pavadinimą ir kateogoriją"
@@ -334,6 +333,7 @@ lt:
         title: "Nustatymai"
       moderation_history: "Moderavimo istorija"
       topic: "Tema:"
+      filtered_user: "Narys"
       user:
         username: "Slapyvardis"
         email: "Epaštas"
@@ -346,8 +346,9 @@ lt:
       cancel: "Atšaukti"
       filters:
         type:
-          title: "Tipas:"
+          title: "Tipas"
         refresh: "Atnaujinti"
+        category: "Kategorija"
       scores:
         date: "Data"
         type: "Tipas"
@@ -1024,7 +1025,6 @@ lt:
     trust_level: "Patikimumo lygis"
     search_hint: "vartotojo vardas, el. paštas arba IP adresas"
     create_account:
-      disclaimer: "Registruodamiesi jūs sutinkate su <a href='{{privacy_link}}'>privatumo nuostatomis</a> ir <a href='{{tos_link}}'> bendromis naudojimosi taisyklėmis</a>."
       title: "Sukurti naują paskyrą"
       failed: "Įvyko kažkas blogai, gali būti, kad šis el. paštas jau yra užregistruotas, pameginkite pasinaudoti slaptažodžio priminimo nuoroda"
     forgot_password:
@@ -1399,14 +1399,11 @@ lt:
         read: "Jūs dar neperskaitėte jokių temų."
         posted: "Jūs dar nerašėte jokiose temose."
         latest: "Nėra jokių paskutinių temų. Tai liūdina."
-        hot: "Nėra karštų temų."
         bookmarks: "Jūs dar neturite pažymėtų temų."
         category: "Nėra jokių temų kategorijoje {{category}}."
         top: "Nėra jokių TOP temų."
-        search: "Nerasta jokių rezultatų."
       bottom:
         latest: "Daugiau nėra jokių naujausių temų."
-        hot: "Daugiau nėra jokių karštų temų."
         posted: "Daugiau nėra jokių paskelbtų temų."
         read: "Daugiau nėra jokių perskaitytų temų."
         new: "Daugiau nėra jokių naujų temų."
@@ -1414,7 +1411,6 @@ lt:
         category: "Daugiau nėra jokių temų kategorijoje {{category}}."
         top: "Daugiau nėra jokių populiarių temų."
         bookmarks: "Daugiau pažymėtų temų nėra"
-        search: "Daugiau paieškos rezultatų nėra"
     topic:
       filter_to:
         one: "temoje %{count} įrašas"
@@ -2081,15 +2077,9 @@ lt:
           many: "Paskutinės ({{count}})"
           other: "Paskutinės ({{count}})"
         help: "temos su paskutiniais įrašais"
-      hot:
-        title: "Karštos"
-        help: "sąrašas karščiausių temų"
       read:
         title: "Perskaityti"
         help: "Temos, kurias perskaitei, pagal paskutinių perskaitytų temų tvarką"
-      search:
-        title: "Paieška"
-        help: "Ieškoti visose temose"
       categories:
         title: "Kategorijos"
         title_in: "Kategorija - {{categoryName}}"
@@ -2289,20 +2279,16 @@ lt:
           new: "Jūs neturite naujų temų."
           read: "Jūs dar neperskaitėte jokių temų."
           posted: "Jūs dar nerašėte jokiose temose."
-          hot: "Nėra karštų temų."
           bookmarks: "Jūs dar neturite pažymėtų temų."
           top: "Nėra jokių TOP temų."
-          search: "Nerasta jokių rezultatų."
         bottom:
           latest: "Daugiau nėra jokių naujausių temų."
-          hot: "Daugiau nėra jokių karštų temų."
           posted: "Daugiau nėra jokių paskelbtų temų."
           read: "Daugiau nėra jokių perskaitytų temų."
           new: "Daugiau nėra jokių naujų temų."
           unread: "Daugiau nėra jokių neperskaitytų temų."
           top: "Daugiau nėra jokių populiarių temų."
           bookmarks: "Daugiau pažymėtų temų nėra"
-          search: "Daugiau paieškos rezultatų nėra"
     invite:
       custom_message_placeholder: "Įveskite savo pasirinktinę žinutę"
       custom_message_template_forum: "Labas, užsiregistruok ir tu!\nČia bus vienas geriausių forumų..."

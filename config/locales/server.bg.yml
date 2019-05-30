@@ -154,7 +154,6 @@ bg:
   private_message_abbrev: "Съобщение"
   rss_description:
     latest: "Последни теми"
-    hot: "Горещи теми"
     top: "Топ теми"
     top_all: "Топ теми за всички времена"
     top_yearly: "Годишни топ теми"
@@ -1117,8 +1116,6 @@ bg:
     see_more: "Повече"
     search_title: "Търси този сайт"
     search_button: "Търсене"
-  terms_of_service:
-    title: "Правила за ползване"
   deleted: "изтрит"
   image: "изображение"
   upload:
@@ -1148,9 +1145,6 @@ bg:
     sender_body_blank: "съдържанието е празно"
   color_schemes:
     base_theme_name: "Основа"
-  about: "Относно"
-  guidelines: "Насоки"
-  privacy: "Поверителност"
   edit_this_page: "Редактирайте тази страница"
   csv_export:
     boolean_yes: "Да"

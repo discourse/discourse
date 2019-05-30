@@ -169,7 +169,6 @@ lv:
         eu_west_2: "ES (Londona)"
         us_east_1: "ASV austrumi (Z-Virdžīnija)"
         us_east_2: "ASV austrumi (Ohaijo)"
-        us_gov_west_1: "AWS GovCloud (ASV)"
         us_west_1: "ASV rietumi (Z-Kalifornija)"
         us_west_2: "ASV rietumi (Oregona)"
     edit: "labot šīs tēmas nosaukumu un sadaļu"
@@ -276,6 +275,7 @@ lv:
         save_changes: "Saglabāt izmaiņas"
         title: "Iestatījumi"
       topic: "Tēma:"
+      filtered_user: "Lietotājs"
       user:
         username: "Lietotājvārds"
         email: "E-pasts"
@@ -287,6 +287,7 @@ lv:
       cancel: "Atcelt"
       filters:
         refresh: "Pārlādēt"
+        category: "Sadaļa"
       statuses:
         pending:
           title: "Gaidošie"
@@ -871,13 +872,6 @@ lv:
       enabled: "Vietne ir \"tikai lasīšanas\" režīmā. Lūdzu turpiniet lasīt, taču atbildēšana, atzinības izteikšana un citas funkcijas šobrīd ir atslēgtas."
       login_disabled: "Pieslēgšanās ir atslēgta, kamēr vietne ir \"tikai lasīšanas\" režīmā."
       logout_disabled: "Iziešana ir atslēgta, kamēr vietne ir \"tikai lasīšanas\" režīmā."
-    logs_error_rate_notice:
-      reached: "<b>%{relativeAge}</b> – <a href='%{url}' target='_blank'>%{rate}</a> sasniegts vietnes limits %{siteSettingRate}."
-      exceeded: "<b>%{relativeAge}</b> – <a href='%{url}' target='_blank'>%{rate}</a> pārsniegts vietnes limits %{siteSettingRate}."
-      rate:
-        zero: "nav kļūdu"
-        one: "%{count} kļūda/%{duration}"
-        other: "%{count} kļūdas/%{duration}"
     learn_more: "uzzināt vairāk..."
     all_time: "kopā"
     all_time_desc: "pavisam izveidotas tēmas"
@@ -926,7 +920,6 @@ lv:
     trust_level: "Uzticības līmenis"
     search_hint: "lietotājvārds, e-pasts vai IP adrese"
     create_account:
-      disclaimer: "Reģistrējoties jūs piekrītat <a href='{{privacy_link}}'>konfidencialitātes politikai</a> un <a href='{{tos_link}}'>pakalpojumu sniegšanas noteikumiem</a>."
       title: "Izveidot jaunu profilu"
       failed: "Notika neparedzēta kļūda; varbūt šis e-pasts ir jau reģistrēts, pamēģiniet izmantot \"aizmirsu paroli\""
     forgot_password:
@@ -1243,17 +1236,14 @@ lv:
         read: "Jūs vēl neesat izlasījuši nevienu tēmu."
         posted: "Jūs vel neesat rakstījuši nevienā tēmā."
         latest: "Nav jaunu tēmu. Neraža."
-        hot: "Nav populāru tēmu."
         bookmarks: "Jūs vēl neesat pievienojuši grāmatzīmēm nevienu tēmu."
         category: "Sadaļā {{category}} nav tēmu."
         top: "Nav svarīgu tēmu."
-        search: "Nekas netika atrasts."
         educate:
           new: '<p>Jūsu jaunās tēmas parādās šeit.</p> <p>Pēc noklusējuma tēmas tiek uzskatītas par jaunām un parādīsies <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">jauns</span> indikators, ja tās tika izveidotas pēdējo 2 dienu laikā.</p> <p>To var izmainīt jūsu <a href="%{userPrefsUrl}">iestatījumos</a>.</p>'
           unread: '<p>Jūsu nelasītās tēmas parādās šeit.</p><p>Pēc noklusējuma tēmas tiek uzskatītas par nelasītām un tiks uzskaitītas <span class="badge new-posts badge-notification">1</span> ja jūs:</p><ul><li>Izveidojāt tēmu</li><li>Atbildējāt tēmā</li><li>Lasījāt tēmu vairāk nekā 4 minūtes</li></ul><p>Vai jūs atzīmējāt Sekot vai Skatī tēmas apakšā.</p><p>To var izmainīt jūsu <a href="%{userPrefsUrl}">iestatījumos</a>.</p>'
       bottom:
         latest: "Vairāk jaunāko tēmu nav. "
-        hot: "Vairāk populāro tēmu nav. "
         posted: "Vairāk publicēto tēmu nav. "
         read: "Vairāk lasīto tēmu nav. "
         new: "Vairāk jauno tēmu nav. "
@@ -1261,7 +1251,6 @@ lv:
         category: "Vairāk sadaļās {{category}} tēmu nav. "
         top: "Vairāk svarīgu tēmu nav. "
         bookmarks: "Vairāk grāmatzīmēs ievietoto tēmu nav. "
-        search: "Nekas netika atrasts."
     topic:
       filter_to:
         zero: "tēmā ziņu nav"
@@ -1925,15 +1914,9 @@ lv:
           one: "Pēdējais (%{count})"
           other: "Pēdējie ({{count}})"
         help: "tēmas ar neseniem ierakstiem"
-      hot:
-        title: "Populārs"
-        help: "populārāko tēmu apkopojums"
       read:
         title: "Lasīts"
         help: "Jūsu lasītās tēmas tajā secībā, kādā lasījāt"
-      search:
-        title: "Meklēt"
-        help: "meklēt visās tēmās"
       categories:
         title: "Sadaļas"
         title_in: "Kategorija - {{categoryName}}"
@@ -2144,20 +2127,16 @@ lv:
           read: "Jūs vēl neesat lasījis nevienu tēmu."
           posted: "Jūs vēl neesat rakstījis nevienā tēmā."
           latest: "Nav pēdējo tēmu."
-          hot: "Nav populāru tēmu."
           bookmarks: "Jūs vēl neesat pievienojis nevienu tēmu grāmatzīmēm."
           top: "Nav populāru tēmu."
-          search: "Nekas netika atrasts."
         bottom:
           latest: "Vairāk pēdējo tēmu nav."
-          hot: "Vairāk populāru tēmu nav."
           posted: "Vairāk publicētu tēmu nav."
           read: "Vairāk lasītu tēmu nav."
           new: "Vairāk jaunu tēmu nav."
           unread: "Vairāk nelasītu tēmu nav."
           top: "Vairāk populāru tēmu nav."
           bookmarks: "Vairāk tēmu grāmatzīmēs nav."
-          search: "Vairāk nekas netika atrasts."
     invite:
       custom_message_placeholder: "Ievadi savu ziņas tekstu"
       custom_message_template_forum: "Sveiks, Tev ir jāpievienojas šim forumam!"

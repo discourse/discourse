@@ -110,7 +110,6 @@ te:
   read_full_topic: "పూర్తి విషయం చదువు"
   rss_description:
     latest: "తాజా విషయాలు"
-    hot: "వేడివేడి విషయాలు"
   too_late_to_edit: "ఈ టపా పురాతన కాలంలో సృష్టించబడింది. ఇప్పుడు ఇహ సవరించలేము లేదా తొలగించలేము."
   excerpt_image: "బొమ్మ"
   groups:
@@ -630,8 +629,6 @@ te:
     see_more: "ఇంకా"
     search_title: "ఈ సైట్ వెదుకు"
     search_button: "వెతుకు"
-  terms_of_service:
-    title: "సేవా నియమాలు"
   deleted: "తొలగించారు"
   image: "బొమ్మ"
   upload:
@@ -647,9 +644,6 @@ te:
     sender_body_blank: "ముఖ్యభాగం ఖాళీగా ఉంది"
   color_schemes:
     base_theme_name: "ఆధారం"
-  about: "గురించి"
-  guidelines: "మార్గదర్శకాలు"
-  privacy: "ఆంతరంగికం"
   edit_this_page: "ఈ పేజిని సవరించు"
   csv_export:
     boolean_yes: "అవును"

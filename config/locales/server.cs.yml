@@ -204,7 +204,6 @@ cs:
   private_message_abbrev: "Msg"
   rss_description:
     latest: "Poslední témata"
-    hot: "Populární témata"
     top: "Nejlepší témata"
     top_all: "Nejlepší témata za celou dobu"
     top_yearly: "Roční nejlepší témata"
@@ -983,8 +982,6 @@ cs:
     see_more: "Více"
     search_title: "Hledat na tomto webu"
     search_button: "Vyhledat"
-  terms_of_service:
-    title: "Podmínky používání"
   deleted: "smazáno"
   image: "obrázek"
   upload:
@@ -1005,9 +1002,6 @@ cs:
     sender_message_to_blank: "message.to is blank"
     sender_text_part_body_blank: "text_part.body is blank"
     sender_body_blank: "body is blank"
-  about: "O fóru"
-  guidelines: "Pokyny"
-  privacy: "Soukromí"
   csv_export:
     boolean_yes: "Ano"
     boolean_no: "Ne"

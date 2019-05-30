@@ -274,7 +274,6 @@ nl:
   private_message_abbrev: "PB"
   rss_description:
     latest: "Nieuwste topics"
-    hot: "Populaire topics"
     top: "Toptopics"
     top_all: "Toptopics vanaf begin"
     top_yearly: "Jaarlijkse toptopics"
@@ -364,6 +363,20 @@ nl:
       U kunt uw eerdere antwoord bewerken om een citaat toe te voegen door tekst te accentueren en de knop <b>Bericht citeren</b> die verschijnt te selecteren.
 
       Het is voor iedereen makkelijker om topics te lezen die minder uitgebreide antwoorden bevatten dan die met veel kleine, individuele antwoorden.
+    dominating_topic: |
+      ### Laat anderen aan de conversatie deelnemen
+
+      Dit topic is duidelijk belangrijk voor u &ndash; u hebt hier meer dan %{percent}% van de antwoorden geplaatst.
+
+      Het zou nog beter kunnen zijn als u ook anderen de ruimte geeft om hun ideeën te delen. Kunt u ze uitnodigen?
+    get_a_room: |
+      ### Overweeg iedereen aan de conversatie te laten deelnemen
+
+      U hebt in dit specifieke topic %{count} keer op @%{reply_username} geantwoord!
+
+      Een goede discussie omvat veel meningen en perspectieven. Kunt u hier nog anderen bij betrekken?
+
+      Denk eraan: als u uw conversatie met deze bepaalde gebruiker wilt verbergen, kunt u [hem of haar een persoonlijk bericht sturen](%{base_path}/u/%{reply_username}).
     too_many_replies: |
       ### U hebt de antwoordlimiet voor dit topic bereikt
 
@@ -1272,14 +1285,12 @@ nl:
     polling_interval: "Als geen 'long polling' wordt toegepast, hoe vaak aangemelde clients moeten pollen in milliseconden"
     anon_polling_interval: "Hoe vaak anonieme clients moeten pollen in milliseconden"
     background_polling_interval: "Hoe vaak clients moeten pollen in milliseconden (als het venster in de achtergrond staat)"
-    score_required_to_hide_post: "Scoredrempel die zorgt voor het automatisch verbergen van een bericht en het versturen van een bericht naar de gebruiker (0 voor uitschakelen)"
     cooldown_minutes_after_hiding_posts: "Het aantal minuten dat een gebruiker moet wachten voordat deze een via de gemeenschap gemarkeerd bericht kan bewerken"
     max_topics_in_first_day: "Het maximale aantal topics dat een gebruiker in de 24 uursperiode na het schrijven van een eerste bericht mag aanmaken"
     max_replies_in_first_day: "Het maximale aantal antwoorden dat een gebruiker in de 24 uursperiode na het schrijven van een eerste bericht mag aanmaken"
     tl2_additional_likes_per_day_multiplier: "Limiet van likes per dag voor TL2 (lid) verhogen door met dit getal te vermenigvuldigen"
     tl3_additional_likes_per_day_multiplier: "Limiet van likes per dag voor TL3 (vaste gebruiker) verhogen door met dit getal te vermenigvuldigen"
     tl4_additional_likes_per_day_multiplier: "Limiet van likes per dag voor TL4 (leider) verhogen door met dit getal te vermenigvuldigen"
-    spam_score_to_silence_new_user: "Als berichten van een nieuwe gebruiker deze score ontvangen van num_users_to_silence_new_user verschillende gebruikers, alle berichten ervan verbergen en het plaatsen van berichten in de toekomst tegengaan. 0 voor uitschakelen."
     num_users_to_silence_new_user: "Als berichten van een nieuwe gebruiker num_spam_flags_to_silence_new_user spammarkeringen krijgen van dit aantal verschillende gebruikers, alle berichten ervan verbergen en het plaatsen van berichten in de toekomst tegengaan. 0 voor uitschakelen."
     num_tl3_flags_to_silence_new_user: "Als berichten van een nieuwe gebruiker dit aantal markeringen krijgen van num_tl3_users_to_silence_new_user verschillende gebruikers met vertrouwensniveau 3, alle berichten ervan verbergen en het plaatsen van berichten in de toekomst tegengaan. 0 voor uitschakelen."
     num_tl3_users_to_silence_new_user: "Als berichten van een nieuwe gebruiker num_tl3_flags_to_silence_new_user markeringen krijgen van dit aantal verschillende gebruikers met vertrouwensniveau 3, alle berichten ervan verbergen en het plaatsen van berichten in de toekomst tegengaan. 0 voor uitschakelen."
@@ -1558,7 +1569,6 @@ nl:
     max_age_unmatched_emails: "Niet-overeenkomende gecontroleerde e-mailadresvermeldingen na (N) dagen verwijderen."
     max_age_unmatched_ips: "Niet-overeenkomende gecontroleerde IP-adresvermeldingen na (N) dagen verwijderen."
     num_flaggers_to_close_topic: "Minimale aantal unieke melders dat nodig is om automatisch een topic te pauzeren voor interventie."
-    score_to_auto_close_topic: "De totale markeringsscore die nodig is om een topic automatisch te pauzeren voor interventie"
     num_hours_to_close_topic: "Aantal uren om een topic te pauzeren voor interventie."
     auto_respond_to_flag_actions: "Automatisch antwoord inschakelen bij weggooien van een markering."
     min_first_post_typing_time: "Minimale tijd in milliseconden dat een gebruiker moet typen tijdens een eerste bericht. Als de drempelwaarde niet wordt bereikt, wordt het bericht automatisch in de wachtrij voor goedkeuring gezet. Stel dit in op 0 om uit te schakelen (niet aanbevolen)."
@@ -1597,6 +1607,7 @@ nl:
     attachment_filename_blacklist: "Lijst van trefwoorden voor het blacklisten van bijlagen op basis van de bestandsnaam."
     enable_forwarded_emails: "[BETA] Gebruikers mogen een topic maken door een e-mail door te sturen."
     always_show_trimmed_content: "Altijd afgekapt deel van inkomende e-mails tonen. WAARSCHUWING: kan e-mailadressen onthullen."
+    private_email: "Geen inhoud van berichten of topics in titel of tekst van e-mail opnemen. OPMERKING: schakelt ook e-mailsamenvattingen uit."
     manual_polling_enabled: "E-mails pushen via de API voor e-mailantwoorden."
     pop3_polling_enabled: "Pollen via POP3 voor e-mailantwoorden."
     pop3_polling_ssl: "SSL gebruiken bij verbinden met de POP3-server. (Aanbevolen)"
@@ -1762,7 +1773,6 @@ nl:
     allow_staff_to_tag_pms: "Stafleden mogen persoonlijke berichten taggen"
     min_trust_level_to_tag_topics: "Het minimale vertrouwensniveau dat nodig is om topics te taggen"
     suppress_overlapping_tags_in_list: "Als tags exacte overeenkomsten met woorden in topictitels hebben, de tag niet tonen"
-    remove_muted_tags_from_latest: "Topics met gedempte tags niet in de lijst met nieuwste topics tonen."
     force_lowercase_tags: "Gebruik van kleine letters voor alle nieuwe tags afdwingen."
     company_name: "Bedrijfsnaam"
     governing_law: "Toepasselijk recht"
@@ -2276,8 +2286,6 @@ nl:
     search_button: "Zoeken"
   offline:
     title: "Kan app niet laden"
-  terms_of_service:
-    title: "Servicevoorwaarden"
   deleted: "verwijderd"
   image: "afbeelding"
   upload:
@@ -2317,9 +2325,6 @@ nl:
     sender_body_blank: "geen tekst"
   color_schemes:
     base_theme_name: "Basis"
-  about: "Over"
-  guidelines: "Richtlijnen"
-  privacy: "Privacy"
   edit_this_page: "Deze pagina bewerken"
   csv_export:
     boolean_yes: "Ja"
@@ -2528,6 +2533,15 @@ nl:
     unknown: "onbekend"
     user_merged: "%{username} is met deze account samengevoegd"
   reviewables:
+    priorities:
+      low: "Laag"
+      medium: "Gemiddeld"
+      high: "Hoog"
+    sensitivity:
+      disabled: "Uitgeschakeld"
+      low: "Laag"
+      medium: "Gemiddeld"
+      high: "Hoog"
     must_claim: "U moet items opeisen voordat u er handelingen op kunt uitvoeren."
     user_claimed: "Dit item is door een andere gebruiker opgeëist."
     missing_version: "U moet een versieparameter opgeven"

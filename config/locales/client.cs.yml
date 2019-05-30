@@ -204,7 +204,6 @@ cs:
         eu_west_3: "EU (Paříž)"
         us_east_1: "Východ USA (S. Virginie)"
         us_east_2: "Východ USA (Ohio)"
-        us_gov_west_1: "AWS GovCloud (USA)"
         us_west_1: "Západ USA (S. Kalifornie)"
         us_west_2: "Západ USA (Oregon)"
     edit: "upravit název a kategorii příspěvku"
@@ -344,6 +343,7 @@ cs:
         title: "Nastavení"
       moderation_history: "Historie moderování"
       topic: "Téma:"
+      filtered_user: "Uživatel"
       user:
         username: "Uživatelské jméno"
         email: "Email"
@@ -355,7 +355,10 @@ cs:
       save: "Uložit"
       cancel: "Zrušit"
       filters:
+        type:
+          title: "Typ"
         refresh: "Obnovit"
+        category: "Kategorie"
       scores:
         type: "Typ"
       statuses:
@@ -760,8 +763,8 @@ cs:
           description: "Každý z těchto kódů může být použit jen jednou. Uložte si je někde v bezpečí, ale dostupné."
       second_factor:
         title: "Dvoufázové přihlašování"
-        disable: "Vypnout dvoufaktorovou autentizaci"
-        enable: "Povolte dvoufaktorovou autentizaci pro zlepšení zabezpečení vašeho účtu"
+        disable: "Vypnout dvoufázové přihlašování"
+        enable: "Povolit dvoufázové přihlašování"
         confirm_password_description: "Prosíme před dalším krokem potvrďte své heslo"
         label: "Kód"
         rate_limit: "Prosím počkejete před tím, než vyskoušíte další ověřovací kód."
@@ -1072,14 +1075,6 @@ cs:
     too_few_topics_and_posts_notice: "Pojďme <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>rozjet diskuzi!</a> V tuto chvíli je tu <strong>%{currentTopics} / %{requiredTopics}</strong> témat a <strong>%{currentPosts} / %{requiredPosts}</strong> příspěvků. Noví návštěvníci potřebují mít co číst a na co odpovídat."
     too_few_topics_notice: "Pojďme <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>rozjet diskuzi!</a> V tuto chvíli je tu <strong>%{currentTopics} / %{requiredTopics}</strong> témat. Noví návštěvníci potřebují mít co číst a na co odpovídat."
     too_few_posts_notice: "Pojďme <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>rozjet diskuzi!</a> V tuto chvíli je tu <strong>%{currentPosts} / %{requiredPosts}</strong> příspěvků. Noví návštěvníci potřebují mít co číst a na co odpovídat."
-    logs_error_rate_notice:
-      reached: "<b>%{relativeAge}</b> – <a href='%{url}' target='_blank'>%{rate}</a> dosáhlo limitu stránky, který je %{siteSettingRate}."
-      exceeded: "<b>%{relativeAge}</b> – <a href='%{url}' target='_blank'>%{rate}</a> přesahuje limit stránky, který je %{siteSettingRate}."
-      rate:
-        one: "%{count} chyba/%{duration}"
-        few: "%{count} chyby/%{duration}"
-        many: "%{count} chyb/%{duration}"
-        other: "%{count} chyb/%{duration}"
     learn_more: "více informací..."
     all_time: "celkem"
     all_time_desc: "témat vytvořeno"
@@ -1137,7 +1132,6 @@ cs:
     trust_level: "Důvěryhodnost"
     search_hint: "uživatelské jméno, email nebo IP adresa"
     create_account:
-      disclaimer: "Registrací souhlasíš s <a href='{{privacy_link}}'>podmínkami soukromí</a> a <a href='{{tos_link}}'>podmínkami užívání</a>."
       title: "Vytvořit nový účet"
       failed: "Něco se nepovedlo, možná je tato e-mailová adresa již použita. Zkuste použít formulář pro obnovení hesla."
     forgot_password:
@@ -1176,7 +1170,6 @@ cs:
       email_placeholder: "emailová adresa nebo uživatelské jméno"
       caps_lock_warning: "zapnutý Caps Lock"
       error: "Neznámá chyba"
-      cookies_error: "Vypadá to, že váš prohlížeč má zakázané cookies. Bez jejich povolení se nebude možné přihlásit."
       rate_limit: "Počkejte před dalším pokusem se přihlásit."
       blank_username: "Zadejte vaši emailovou adresu a uživatelské jméno."
       blank_username_or_password: "Vyplňte prosím email nebo uživatelské jméno, a heslo."
@@ -1601,17 +1594,14 @@ cs:
         read: "Zatím jste nečetli žádná témata."
         posted: "Zatím jste nepřispěli do žádného tématu."
         latest: "Nejsou tu žádná témata z poslední doby. To je docela smutné."
-        hot: "Nejsou tu žádná populární témata."
         bookmarks: "V tématech nemáte žádné záložky."
         category: "V kategorii {{category}} nejsou žádná témata."
         top: "Nejsou tu žádná populární témata."
-        search: "There are no search results."
         educate:
           new: '<p>Zde se zobrazují vaše nová témata.</p><p>Dle výchozího nastavení se za nové příspěvky, které budou mít štítek<span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">nové</span> , považují příspěvky, které byly vytvořeny během posledních 2 dnů.</p><p>Toto můžete změnit ve svém <a href="%{userPrefsUrl}">nastavení</a>.</p>'
           unread: '<p>Zde se zobrazují vaše nepřečtená témata.</p><p>Podle výchozího nastavení jsou za nepřečtená témata, u kterých se zobrazuje počet nepřečtení  <span class="badge new-posts badge-notification">1</span>, považována ta, která jste:</p><ul><li>Vytvořil toto téma</li><li>Odpověděli v tématu</li><li>Četl téma více než 4 minuty</li></ul><p>Nebo pokud jste nastavil téma jako Hlídané či Sledované pomocí nabídky na spodu každého tématu.</p><p>Toto chování můžete změnit v <a href="%{userPrefsUrl}">nastavení</a>.</p>'
       bottom:
         latest: "Nejsou tu žádná další témata z poslední doby."
-        hot: "Nejsou tu žádná další populární témata k přečtení."
         posted: "Nejsou tu žádná další zaslaná témata k přečtení."
         read: "Nejsou tu žádná další přečtená témata."
         new: "Nejsou tu žádná další nová témata k přečtení."
@@ -1619,7 +1609,6 @@ cs:
         category: "V kategorii {{category}} nejsou žádná další témata."
         top: "Nejsou tu žádná další populární témata."
         bookmarks: "Žádná další oblíbená témata nejsou k dispozici."
-        search: "There are no more search results."
     topic:
       filter_to:
         one: "%{count} příspěvek v tématu"
@@ -2402,15 +2391,9 @@ cs:
           many: "Nedávná ({{count}})"
           other: "Nedávná ({{count}})"
         help: "aktuální témata"
-      hot:
-        title: "Populární"
-        help: "populární témata z poslední doby"
       read:
         title: "Přečtená"
         help: "témata, která jste si přečetli"
-      search:
-        title: "Vyhledat"
-        help: "prohledat všechna témata"
       categories:
         title: "Kategorie"
         title_in: "Kategorie - {{categoryName}}"
@@ -2660,20 +2643,16 @@ cs:
           read: "Zatím jste nečetli žádná témata."
           posted: "Zatím jste nepřispěli do žádného tématu."
           latest: "Nejsou tu žádná další témata z poslední doby k přečtení."
-          hot: "Nejsou tu žádná populární témata."
           bookmarks: "V tématech nemáte žádné záložky."
           top: "Nejsou tu žádná populární témata."
-          search: "Vyhledávání nic nenašlo."
         bottom:
           latest: "Nejsou tu žádná další témata z poslední doby k přečtení."
-          hot: "Nejsou tu žádná další populární témata k přečtení."
           posted: "Nejsou tu žádná další zaslaná témata k přečtení."
           read: "Nejsou tu žádná další přečtená témata."
           new: "Nejsou tu žádná další nová témata k přečtení."
           unread: "Nejsou tu žádná další nepřečtená témata."
           top: "Nejsou tu žádná další populární témata."
           bookmarks: "Žádná další oblíbená témata nejsou k dispozici."
-          search: "Vyhledávání nic nenašlo."
     invite:
       custom_message: "Aby byla pozvánka osobnější, napište <a href>vlastní zprávu</a>"
       custom_message_placeholder: "Vložte vlastní zprávu"

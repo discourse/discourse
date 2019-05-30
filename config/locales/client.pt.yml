@@ -172,7 +172,6 @@ pt:
         us_east_1: "Este dos E.U.A. (Virgínia do Norte)"
         us_east_2: "Este dos E.U.A. (Ohio)"
         us_gov_east_1: "AWS GovCloud (EUA-Este)"
-        us_gov_west_1: "AWS GovCloud (E.U.A.)"
         us_west_1: "Oeste dos E.U.A. (California do Norte)"
         us_west_2: "Oeste dos E.U.A. (Óregon)"
     edit: "editar o título e a categoria deste tópico"
@@ -310,6 +309,7 @@ pt:
         save_changes: "Guardar alterações"
         title: "Configurações"
       topic: "Tópico:"
+      filtered_user: "Utilizador"
       user:
         username: "Nome de utilizador"
         email: "E-mail"
@@ -320,7 +320,10 @@ pt:
       save: "Guardar"
       cancel: "Cancelar"
       filters:
+        type:
+          title: "Tipo"
         refresh: "Atualizar"
+        category: "Categoria"
       scores:
         date: "Data"
         type: "Tipo"
@@ -739,8 +742,6 @@ pt:
           description: "Cada um dos códigos de reserva só pode ser usado uma vez. Guarde-os num sítio seguro mas acessível."
       second_factor:
         title: "Autenticação em Dois Passos"
-        disable: "Desativar autenticação em dois passos"
-        enable: "Ativar autenticação em dois passos para aumentar a segurança da conta"
         confirm_password_description: "Por favor confirme a sua palavra-passe para continuar"
         label: "Código"
         rate_limit: "Por favor espere antes de voltar a tentar um código de autenticação."
@@ -1046,12 +1047,6 @@ pt:
     too_few_topics_and_posts_notice: "Vamos <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>começar a publicar!</a> Existem atualmente <strong>%{currentTopics} / %{requiredTopics}</strong> tópicos e <strong>%{currentPosts} / %{requiredPosts}</strong> publicações. Os novos visitantes precisam de conversas para ler e responder."
     too_few_topics_notice: "Vamos <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>começar a publicar!</a> Existem atualmente <strong>%{currentTopics} / %{requiredTopics}</strong> tópicos. Os novos visitantes precisam de conversas para ler e responder."
     too_few_posts_notice: "Vamos <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>começar a publicar!</a> Existem atualmente <strong>%{currentPosts} / %{requiredPosts}</strong> publicações. Os novos visitantes precisam de conversas para ler e responder."
-    logs_error_rate_notice:
-      reached: "<b>%{relativeAge}</b> – <a href='%{url}' target='_blank'>%{rate}</a> atingiu o limite definido nas configurações do site de %{siteSettingRate}."
-      exceeded: "<b>%{relativeAge}</b> – <a href='%{url}' target='_blank'>%{rate}</a> excede o limite definido nas configurações do site de %{siteSettingRate}."
-      rate:
-        one: "%{count} erro/%{duration}"
-        other: "%{count} erros/%{duration}"
     learn_more: "saber mais..."
     all_time: "total"
     all_time_desc: "total de tópicos criados"
@@ -1107,7 +1102,6 @@ pt:
     trust_level: "Nível de Confiança"
     search_hint: "nome de utilizador, e-mail ou endereço de IP"
     create_account:
-      disclaimer: "Ao registar-se, concorda com a <a href='{{privacy_link}}'>política de privacidade</a> e os <a href='{{tos_link}}'>termos de serviço</a>."
       title: "Criar Nova Conta"
       failed: "Ocorreu algo de errado, este e-mail já pode estar registado. Tente utilizar a hiperligação \"Esqueci-me da Palavra-passe\"."
     forgot_password:
@@ -1146,7 +1140,6 @@ pt:
       email_placeholder: "e-mail ou nome de utilizador"
       caps_lock_warning: "Caps Lock está ligada"
       error: "Erro desconhecido"
-      cookies_error: "O seu browser parece ter as cookies desativadas. Pode não conseguir entrar sem ativar as cookies."
       rate_limit: "Por favor, aguarde antes de tentar iniciar a sessão novamente."
       blank_username: "Por favor, insira o seu e-mail ou nome de utilizador."
       blank_username_or_password: "Por favor, insira o seu e-mail ou nome de utilizador, e a palavra-passe."
@@ -1568,17 +1561,14 @@ pt:
         read: "Ainda não leu nenhum tópico."
         posted: "Ainda não publicou em nenhum tópico."
         latest: "Não há tópicos recentes."
-        hot: "Não há tópicos quentes."
         bookmarks: "Ainda não marcou nenhum tópico."
         category: "Não há tópicos na categoria {{category}}."
         top: "Não existem tópicos recentes."
-        search: "Não há resultados na pesquisa."
         educate:
           new: '<p>Os seus novos tópicos aparecem aqui.</p><p>Por defeito, os tópicos são considerados novos e mostrarão o indicador <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">novo</span> caso tenham sido criados nos últimos 2 dias.</p><p>Pode alterar isto nas suas <a href="%{userPrefsUrl}"> preferências</a>.</p>'
           unread: '<p>As suas publicações não lidas aparecem aqui.</p><p>Por defeito, tópicos são considerados não lidos e mostrarão contadores de não lidos <span class="badge new-posts badge-notification">1</span> se você:</p><ul><li>Criou o tópico</li><li>Respondeu ao tópico</li><li>Leu o tópico durante mais de 4 minutos</li></ul><p>Ou marcou explicitamente  o tópico como Seguido ou Vigiado via o controle de notificações no fundo de cada tópico.</p><p>Visite as suas <a href="%{userPrefsUrl}">preferências</a> para mudar isto.</p>'
       bottom:
         latest: "Não existem mais tópicos recentes."
-        hot: "Não existem mais tópicos quentes."
         posted: "Não existem mais tópicos publicados."
         read: "Não existem mais tópicos lidos."
         new: "Não existem mais tópicos novos."
@@ -1586,7 +1576,6 @@ pt:
         category: "Não existem mais tópicos na categoria {{category}}."
         top: "Não existem mais tópicos recentes."
         bookmarks: "Não há mais tópicos marcados."
-        search: "Não há mais resultados na pesquisa."
     topic:
       filter_to:
         one: "%{count} publicação no tópico"
@@ -2249,15 +2238,9 @@ pt:
           one: "Recente (%{count})"
           other: "Recentes ({{count}})"
         help: "tópicos com publicações recentes"
-      hot:
-        title: "Quente"
-        help: "uma seleção dos tópicos mais quentes"
       read:
         title: "Lido"
         help: "tópicos que leu, na ordem que os leu"
-      search:
-        title: "Pesquisar"
-        help: "pesquisar todos os tópicos"
       categories:
         title: "Categorias"
         title_in: "Categoria - {{categoryName}}"
@@ -2472,20 +2455,16 @@ pt:
           read: "Ainda não leu nenhum tópico."
           posted: "Ainda não publicou em qualquer tópico."
           latest: "Não há tópicos recentes."
-          hot: "Não há tópicos quentes."
           bookmarks: "Ainda não marcou nenhum tópico."
           top: "Não há melhores tópicos."
-          search: "Não há resultados da pesquisa."
         bottom:
           latest: "Não existem mais tópicos recentes."
-          hot: "Não existem mais tópicos quentes."
           posted: "Não existem mais tópicos publicados."
           read: "Não existem mais tópicos lidos."
           new: "Não existem mais tópicos novos."
           unread: "Não existem mais tópicos não lidos."
           top: "Não existem mais melhores tópicos."
           bookmarks: "Não há mais tópicos marcados."
-          search: "Não há mais resultados da pesquisa."
     invite:
       custom_message_placeholder: "Insira a sua mensagem personalizada"
       custom_message_template_forum: "Olá, devia juntar-se a este fórum!"

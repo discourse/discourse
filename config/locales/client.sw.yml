@@ -162,7 +162,6 @@ sw:
         eu_west_3: "EU (Parisi)"
         us_east_1: "Mashariki ya Marekani (Virginia Kaskazini)"
         us_east_2: "Mashariki ya Marekani (Ohio)"
-        us_gov_west_1: "AWS GovCloud (Marekani)"
         us_west_1: "Magharibi ya Marekani (California Kaskazini)"
         us_west_2: "Magharibi ya Marekani (Oregon)"
     edit: "hariri kichwa na kikundi cha mada hii"
@@ -286,6 +285,7 @@ sw:
         title: "Mpangilio"
       moderation_history: "Historia ya Usimamizi"
       topic: "Mada:"
+      filtered_user: "Mtumiaji"
       user:
         username: "Jina la mtumiaji"
         email: "Barua Pepe"
@@ -297,7 +297,10 @@ sw:
       save: "hifadhi"
       cancel: "Ghairi"
       filters:
+        type:
+          title: "Aina"
         refresh: "Rudisha Tena"
+        category: "Kategoria"
       scores:
         date: "Tarehe"
         type: "Aina"
@@ -685,7 +688,6 @@ sw:
         remaining_codes: "Una kodi  <strong>{{count}}</strong> za backup zimebaki."
       second_factor:
         title: "Uhalalalishaji wa Viwango Viwili"
-        disable: "Zuia uhalalalishaji wa Viwango Viwili"
         confirm_password_description: "Thibitisha nywila yako kuendelea"
         label: "Kodi"
         disable_description: "Tafadhali andika kodi ya uthibitisho kutoka kwenye app yako"
@@ -957,12 +959,6 @@ sw:
       enabled: "Tovuti hii ipo kwenye  hali-tumizi ya usomaji tu. Tafadhali endelea kuperuzi, lakini kujibu, kupenda na vitendo vingine vimesitishwa kwa sasa."
       login_disabled: "Kuingia kumesitishwa kipindi tovuti ipo kwenye hali-tumizi ya kusoma tu."
       logout_disabled: "Kutoka kumesitishwa kipindi tovuti ipo kwenye hali-tumizi ya kusoma tu."
-    logs_error_rate_notice:
-      reached: "<b>%{relativeAge}</b> – <a href='%{url}' target='_blank'>%{rate}</a> imefika kipeo cha mpangilio cha %{siteSettingRate}."
-      exceeded: "<b>%{relativeAge}</b> – <a href='%{url}' target='_blank'>%{rate}</a> imepita kiwango cha mpangilio cha tovuti %{siteSettingRate}."
-      rate:
-        one: "%{count} kosa/%{duration}"
-        other: "%{count} makosa/%{duration}"
     learn_more: "jifunze zaidi..."
     all_time: "jumla"
     all_time_desc: "jumla ya mada zilizotengenezwa"
@@ -1014,7 +1010,6 @@ sw:
     trust_level: "Kipimo cha uaminifu"
     search_hint: "jina la mtumiaji, barua pepe au Anwani ya Mtandao"
     create_account:
-      disclaimer: "Kwa kujisajii, unakubaliana na <a href='{{privacy_link}}'>vigezo</a>na <a href='{{tos_link}}'>masharti</a>."
       title: "Unda akaunti mpya"
       failed: "Tatizo limetokea, labda barua pepe imesajiliwa tayari, jaribu kiungo cha kusahau nywila."
     forgot_password:
@@ -1448,17 +1443,14 @@ sw:
         read: "Haujasoma mada yoyote."
         posted: "Bado haujachapisha kwenye mada yoyote."
         latest: "Hakuna mada mpya. Hii ni huzuni."
-        hot: "Hakuna mada nzuri."
         bookmarks: "Hauja alamisha mada yoyote."
         category: "Hakuna {{category}} mada."
         top: "Hakuna mada za juu."
-        search: "Hakuna majibu ya utafiti."
         educate:
           new: '<p>Mada zako mpya zitatokea hapa.</p><p>Kwa chaguo-msingi, mada ni mpya na zitakuwa na indiketa <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">mpya</span>kama zilitengenezwa ndani ya siku 2 zilizopita.</p><p>Tembelea<a href="%{userPrefsUrl}">mipangilio</a>yako kubadilisha hizi.</p>'
           unread: '<p>Mada ambazo haujasoma zitatokea hapa.</p><p>Kwa chaguo-msingi, mada zote zinakuwa hazijasomwa na zitaonyesha jumla ya hizo namba<span class="badge new-posts badge-notification">1</span>Kama uli:</p><ul><li>Tengeneza mada</li><li>Alijibu mada</li><li>Amesoma mada zaidi ya dakika 4</li></ul><p>Au  kama uliseti mada iwe inafuatiliwa au kuangaliwa kwa kupitia udhibiti wa taarifa chini ya kila mada. </p><p>Tembelea <a href="%{userPrefsUrl}">mapendekezo</a>yako kubadilisha hii.</p>'
       bottom:
         latest: "Hakuna mada mpya zingine."
-        hot: "Hakuna mada mpya zingine."
         posted: "Hakuna mada mpya zilizochapishwa."
         read: "Hakuna mada zingine zilizosomwa."
         new: "Hakuna mada mpya zingine."
@@ -1466,7 +1458,6 @@ sw:
         category: "Hakuna {{category}} mada zingine."
         top: "Hakuna mada za juu zingine."
         bookmarks: "Hakuna mada zingine zilizoalamishwa."
-        search: "Hakuna majibu mapya mengine ya utafiti."
     topic:
       filter_to:
         one: "%{count} chapisho kwenye mada"
@@ -2090,15 +2081,9 @@ sw:
           one: "Mada %{count} ya hivi karibuni"
           other: "Mada ({{count}}) za hivi karibuni"
         help: "mada zenye machapisho ya hivi karibuni"
-      hot:
-        title: "Nzuri Sana"
-        help: "chaguo la mada nzuri sana"
       read:
         title: "Soma"
         help: "mada ambazo umezisoma, kwenye oda ulivyosoma"
-      search:
-        title: "Tafuta"
-        help: "tafuta mada zote"
       categories:
         title: "Kategoria"
         title_in: "Kategoria - {{Jinalakategoria}}"
@@ -2302,20 +2287,16 @@ sw:
           read: "Bado haujasoma mada yoyote."
           posted: "Bado haujachapisha kwenye mada yoyote."
           latest: "Hakuna mada zingine za hivi karibuni."
-          hot: "Hakuna mada nzuri."
           bookmarks: "Bado hauja alamisha mada yoyote."
           top: "Hakuna mada za juu."
-          search: "Hakuna majibu ya utafiti."
         bottom:
           latest: "Hakuna mada zingine za hivi karibuni."
-          hot: "Hakuna mada nzuri sana zaidi."
           posted: "Hakuna mada mpya zilizochapishwa."
           read: "Hakuna mada zingine zilizosomwa."
           new: "Hakuna mada mpya zingine."
           unread: "Hakuna mada zingine ambazo hazijasomwa."
           top: "Hakuna mada za juu zingine."
           bookmarks: "Hakuna mada zingine zilizoalamishwa."
-          search: "Hakuna majibu zaidi ya utafiti."
     invite:
       custom_message_placeholder: "Andika ujumbe binafsi"
       custom_message_template_forum: "Habari, jiunge kwenye jumuiya yetu!"

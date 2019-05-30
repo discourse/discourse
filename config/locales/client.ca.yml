@@ -160,7 +160,6 @@ ca:
         eu_west_3: "UE (Paris)"
         us_east_1: "US East (N. Virginia)"
         us_east_2: "EEUU Est (Ohio)"
-        us_gov_west_1: "AWS GovCloud (US)"
         us_west_1: "US West (N. California)"
         us_west_2: "US West (Oregon)"
     edit: "edita el títol i categoria d'aquest tema"
@@ -202,6 +201,8 @@ ca:
     every_hour: "cada hora"
     daily: "diari"
     weekly: "setmanal"
+    every_month: "cada mes"
+    every_six_months: "cada sis mesos"
     max_of_count: "màx de {{count}}"
     alternation: "o"
     character_count:
@@ -254,6 +255,7 @@ ca:
     saved: "Desat!"
     upload: "Actualitza"
     uploading: "Actualitzant..."
+    clipboard: "portaretalls"
     uploaded: "Actualitzat!"
     pasting: "Enganxant..."
     enable: "Activa"
@@ -282,6 +284,7 @@ ca:
         save_changes: "Desa els canvis"
         title: "Configuracions"
       topic: "Tema:"
+      filtered_user: "Persona usuària"
       user:
         username: "Nom de persona usuària"
         email: "Correu electrònic"
@@ -292,10 +295,18 @@ ca:
       save: "Desa"
       cancel: "Cancel·la"
       filters:
+        type:
+          title: "Tipus"
         refresh: "Actualitza"
+        status: "Estat"
+        category: "Categoria"
+      conversation:
+        view_full: "mostra la conversa sencera"
       scores:
+        score: "Puntuació"
         date: "Data"
         type: "Tipus"
+        status: "Estat"
       statuses:
         pending:
           title: "Pendent"
@@ -355,6 +366,7 @@ ca:
         usernames: "Noms d'usuari"
       requests:
         reason: "Raó"
+        accept: "Accepta"
         accepted: "Acceptat"
       manage:
         title: "Gestionar"
@@ -743,6 +755,8 @@ ca:
         every_hour: "cada hora"
         daily: "cada dia"
         weekly: "cada setmana"
+        every_month: "cada mes"
+        every_six_months: "cada sis mesos"
       email_level:
         title: "Envia'm u ncorreu quan algú em citi, contesti una entrada, mencioni el meu @nomdusuari, o m'inviti a un tema"
         always: "sempre"
@@ -903,12 +917,6 @@ ca:
       enabled: "El lloc web es troba en mode només de lectura. Si us plau, continua navegant però per ara estan desactivades respondre i altres accions."
       login_disabled: "S'ha desactivat l'inici de sessió mentre aquest lloc es trobi en mode només de lectura."
       logout_disabled: "S'ha desactivat el tancament de sessió mentre aquest lloc es trobi en mode només de lectura."
-    logs_error_rate_notice:
-      reached: "<b>%{relativeAge}</b> – <a href='%{url}' target='_blank'>%{rate}</a> ha arribat al límit de configuració de %{siteSettingRate}."
-      exceeded: "<b>%{relativeAge}</b> – <a href='%{url}' target='_blank'>%{rate}</a> ha superat el límit de configuració de %{siteSettingRate}."
-      rate:
-        one: "%{count} error/%{duration}"
-        other: "%{count} errors/%{duration}"
     learn_more: "saber-ne més..."
     all_time: "total"
     all_time_desc: "total de temes creats"
@@ -957,7 +965,6 @@ ca:
     trust_level: "Nivell de confiança"
     search_hint: "nom de persona usuària, correu electrònic o adreça IP"
     create_account:
-      disclaimer: "En registrar-te, acceptes la <a href='{{privacy_link}}'>política de privacitat</a> i les<a href='{{tos_link}}'>condicions del servei</a>."
       title: "Crear un compte nou"
       failed: "Alguna cosa ha anat malament, potser aquest correu electrònic ja ha estat registrar; prova-ho amb l'enllaç de contrasenya oblidada"
     forgot_password:
@@ -1279,17 +1286,14 @@ ca:
         read: "Encara no has llegit cap tema."
         posted: "Encara no has publicat cap tema."
         latest: "No hi ha darrers temes. És una llàstima."
-        hot: "No hi ha temes candents."
         bookmarks: "Encara no has marcat temes com a preferits."
         category: "No hi ha temes de {{category}}."
         top: "No hi ha temes principals."
-        search: "No hi ha resultats de la cerca."
         educate:
           new: '<p>Els teus nous temes són aquí.</p><p>Per defecte, els temes es consideren nous i  mostraran una <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">nova</span> indicació si han estat creats durant els passats 2 dies.</p><p>Visita les teves your <a href="%{userPrefsUrl}">preferències</a> per canviar-ho.</p>'
           unread: '<p>Els teus nous temes són aquí.</p><p>Per defecte, els temes es consideren sense llegir i  mostraran recomptes de no llegits <span class="badge new-posts badge-notification">1</span> si tu:</p><ul><li>Vas crear el tema</li><li>Respost al tema</li><li>Vas llegir el tema durant més de 4 minuts</li></ul><p>O si vas marcar explícitament el tema com a Seguit o Vist amb el control d''alerta al final de cada tema.</p><p>Visita les teves <a href="%{userPrefsUrl}">preferències</a> per canviar-ho.</p>'
       bottom:
         latest: "No hi ha més darrers temes."
-        hot: "No hi ha més temes candents."
         posted: "No hi ha més temes publicats."
         read: "No hi ha més temes llegits."
         new: "No hi ha més temes nous."
@@ -1297,7 +1301,6 @@ ca:
         category: "No hi ha més temes de {{category}}."
         top: "No hi ha més temes destacats."
         bookmarks: "No hi ha més temes marcats com a preferits."
-        search: "No hi ha més resultats de la cerca."
     topic:
       filter_to:
         one: "%{count} publicació al tema"
@@ -1898,15 +1901,9 @@ ca:
           one: "Darrer (%{count})"
           other: "Darrers ({{count}})"
         help: "temes amb publicacions recents"
-      hot:
-        title: "Candent"
-        help: "una selecció dels temes més candents"
       read:
         title: "Llegit"
         help: "temes que has llegit, segons l'ordre de lectura"
-      search:
-        title: "Cerca"
-        help: "cerca tots els temes"
       categories:
         title: "Categories"
         title_in: "Categoria - {{categoryName}}"
@@ -2111,20 +2108,16 @@ ca:
           read: "Encara no has llegit cap tema."
           posted: "Encara no has publicat cap tema."
           latest: "No hi ha temes recents."
-          hot: "No hi ha temes candents."
           bookmarks: "Encara no has marcat temes com a preferits."
           top: "No hi ha temes principals."
-          search: "No hi ha resultats de la cerca."
         bottom:
           latest: "No hi ha més darrers temes."
-          hot: "No hi ha més temes candents."
           posted: "No hi ha més temes publicats."
           read: "No hi ha més temes llegits."
           new: "No hi ha més temes nous."
           unread: "No hi ha més temes sense llegir."
           top: "No hi ha més temes destacats."
           bookmarks: "No hi ha més temes marcats com a preferits."
-          search: "No hi ha més resultats de la cerca."
     invite:
       custom_message_placeholder: "Introdueix el teu missatge personalizat"
       custom_message_template_forum: "Ep! Hauries d'unir-te a aquest fòrum!"

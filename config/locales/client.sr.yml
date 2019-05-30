@@ -178,7 +178,6 @@ sr:
         eu_west_2: "EU (London)"
         us_east_1: "US East (N. Virginia)"
         us_east_2: "US East (Ohio)"
-        us_gov_west_1: "AWS GovCloud (US)"
         us_west_1: "US West (N. California)"
         us_west_2: "US West (Oregon)"
     edit: "Izmeni naziv i kategoriju ove teme"
@@ -285,6 +284,7 @@ sr:
         save_changes: "Sačuvaj izmene"
         title: "Podešavanje"
       topic: "Tema:"
+      filtered_user: "Korisnik"
       user:
         username: "Korisničko ime"
         email: "E-mail"
@@ -296,6 +296,7 @@ sr:
       cancel: "Odustani"
       filters:
         refresh: "Osveži"
+        category: "Kategorija"
       statuses:
         pending:
           title: "U toku"
@@ -780,7 +781,6 @@ sr:
     trust_level: "Nivo poverenja"
     search_hint: "korisničko ime, e-mail ili IP adresa"
     create_account:
-      disclaimer: "Registracijom prihvataš <a href='{{privacy_link}}'>pravila privatnosti</a> i <a href='{{tos_link}}'>uslove korišćenja</a>."
       title: "Napravi novi nalog"
       failed: "Nešto nije u redu, možda je ovaj e-mail već registrovan, pokušajte s linkom za zaboravljenu šifru."
     forgot_password:
@@ -983,13 +983,11 @@ sr:
         read: "Niste još pročitali ni jednu temu."
         posted: "Niste se još objavljivali ni u jendoj temi."
         latest: "Nema poslednjih tema. To je tužno."
-        hot: "Nema vrućih tema."
         bookmarks: "Nemate markiranih tema još."
         category: "Nema tema u {{category}}."
         top: "Nema glavnih tema."
       bottom:
         latest: "Nema više najnovijih tema."
-        hot: "Nema više vrućih tema."
         posted: "Nema više objavljenih tema."
         read: "Nema više pročitanih tema."
         new: "Nema više novih tema."
@@ -1419,9 +1417,6 @@ sr:
           few: "Poslednje ({{count}})"
           other: "Poslednje ({{count}})"
         help: "teme sa nedavnim porukama"
-      hot:
-        title: "Vruće"
-        help: "izbor vrućih tema"
       read:
         title: "Pročitano"
         help: "Teme koje ste pročitali, po redu po kojem ste ih zadnji put čitali"
@@ -1567,12 +1562,10 @@ sr:
           new: "Nemate novih tema."
           read: "Niste još pročitali ni jednu temu."
           posted: "Niste se još objavljivali ni u jendoj temi."
-          hot: "Nema vrućih tema."
           bookmarks: "Nemate markiranih tema još."
           top: "Nema glavnih tema."
         bottom:
           latest: "Nema više najnovijih tema."
-          hot: "Nema više vrućih tema."
           posted: "Nema više objavljenih tema."
           read: "Nema više pročitanih tema."
           new: "Nema više novih tema."

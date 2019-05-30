@@ -65,10 +65,10 @@ sl:
           few: "%{count} min"
           other: "%{count} min"
         about_x_hours:
-          one: "%{count} h"
-          two: "%{count} h"
-          few: "%{count} h"
-          other: "%{count} h"
+          one: "%{count} ura"
+          two: "%{count} uri"
+          few: "%{count} ure"
+          other: "%{count} ur"
         x_days:
           one: "%{count} d"
           two: "%{count} d"
@@ -212,7 +212,6 @@ sl:
         us_east_1: "US East (N. Virginia)"
         us_east_2: "US East (Ohio)"
         us_gov_east_1: "AWS GovCloud (US-East)"
-        us_gov_west_1: "AWS GovCloud (US)"
         us_west_1: "US West (N. California)"
         us_west_2: "US West (Oregon)"
     edit: "uredi naslov in kategorijo te teme"
@@ -363,9 +362,6 @@ sl:
         saved: "Shranjeno"
         save_changes: "Shrani spremembe"
         title: "Nastavitve"
-        score_bonuses:
-          title: "Bonus ocene"
-          description: "Bonusi omogočajo posameznim vrstam, da so ocenjeni višje kot drugi in so tako prednostni. Opomba: sprememba teh vrednosti ne bo vplivala na predhodno ocenjene predmete."
       moderation_history: "Zgodovina moderiranja"
       view_all: "Prikaži vse"
       grouped_by_topic: "Združeno po skupinah"
@@ -378,7 +374,7 @@ sl:
         other: "Ta tema ima <b>{{count}}</b> prispevkov za potrditev"
       title: "Pregled"
       topic: "Tema:"
-      filtered_user: "Uporabnik:"
+      filtered_user: "Uporabnik"
       show_all_topics: "prikaži vse teme"
       deleted_post: "(prispevek izbrisan)"
       deleted_user: "(uporabnik izbrisan)"
@@ -416,14 +412,13 @@ sl:
       new_topic: "Nova tema:"
       filters:
         type:
-          title: "Vrsta:"
+          title: "Tip"
           all: "(vse vrste)"
         minimum_score: "Najnižja ocena:"
         refresh: "Osveži"
-        status: "Stanje:"
-        category: "Kategorija:"
+        status: "Stanje"
+        category: "Kategorija"
         priority:
-          title: "Najnižja prioriteta:"
           low: "Nizka"
           medium: "Srednja"
           high: "Visoka"
@@ -895,8 +890,6 @@ sl:
           description: "Vsaka od rezervnih potrditvenih kod se lahko uporabi samo enkrat. Shranite jih na varno, ampak dostopno mesto."
       second_factor:
         title: "Preverjanje v dveh korakih"
-        disable: "Onemogoči preverjanje v dveh korakih"
-        enable: "Vključite preverjanje v dveh korakih za večjo varnost vašega računa"
         confirm_password_description: "Vnesite geslo za nadaljevanje"
         label: "Koda"
         rate_limit: "Počakajte preden uporabite novo potrditveno kodo."
@@ -1232,14 +1225,6 @@ sl:
     too_few_topics_and_posts_notice: "Omogočimo <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>da razprava steče!</a> Trenutno je objavljenih <strong>%{currentTopics} / %{requiredTopics}</strong> tem in <strong>%{currentPosts} / %{requiredPosts}</strong> prispevkov. Novi obiskovalci potrebujejo več pogovorov za branje in odgovarjanje."
     too_few_topics_notice: "Omogočimo <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>da razprava steče!</a> Trenutno je objavljenih <strong>%{currentTopics} / %{requiredTopics}</strong> tem. Novi obiskovalci potrebujejo več pogovorov za branje in odgovarjanje."
     too_few_posts_notice: "Omogočimo <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>da razprava steče!</a> Trenutno je objavljenih <strong>%{currentPosts} / %{requiredPosts}</strong> prispevkov. Novi obiskovalci potrebujejo več pogovorov za branje in odgovarjanje."
-    logs_error_rate_notice:
-      reached: "<b>%{relativeAge}</b> – <a href='%{url}' target='_blank'>%{rate}</a> dosega omejitev strani %{siteSettingRate}."
-      exceeded: "<b>%{relativeAge}</b> – <a href='%{url}' target='_blank'>%{rate}</a> presega omejitev strani %{siteSettingRate}."
-      rate:
-        one: "%{count} napaka/%{duration}"
-        two: "%{count} napaki/%{duration}"
-        few: "%{count} napake/%{duration}"
-        other: "%{count} napak/%{duration}"
     learn_more: "izvedite več..."
     all_time: "skupaj"
     all_time_desc: "skupaj ustvarjenih tem"
@@ -1297,7 +1282,6 @@ sl:
     trust_level: "Nivo zaupanja"
     search_hint: "uporabniško ime, e-naslov ali IP naslov"
     create_account:
-      disclaimer: "Z registracijo sprejemate <a href='{{privacy_link}}'>pravilnik o zasebnosti</a> in <a href='{{tos_link}}'>pogoje uporabe</a>."
       title: "Registracija uporabnika"
       failed: "Nekaj je šlo narobe, morda je ta e-naslov že registriran, poskusite povezavo za pozabljeno geslo."
     forgot_password:
@@ -1336,7 +1320,7 @@ sl:
       email_placeholder: "e-naslov ali uporabniško ime"
       caps_lock_warning: "Caps Lock je vključen"
       error: "Neznana napaka"
-      cookies_error: "Vaš brskalnik ima onemogočene piškotke. Prijava verjetno ne bo uspela, če jih ne boste omogočili."
+      cookies_error: "Brskalnik ima izklopljene piškotke. Mogoče se ne boste uspeli prijaviti, dokler jih ne omogočite."
       rate_limit: "Počakajte preden se poskusite ponovno prijaviti."
       blank_username: "Vnesite uporabniško ime ali e-naslov."
       blank_username_or_password: "Vpišite e-naslov ali uporabniško ime in geslo."
@@ -1414,6 +1398,7 @@ sl:
       shift: "Shift"
       ctrl: "Ctrl"
       alt: "Alt"
+      enter: "Enter"
     conditional_loading_section:
       loading: Nalagam...
     category_row:
@@ -1784,17 +1769,14 @@ sl:
         read: "Niste prebrali še nobene teme."
         posted: "Niste objavili še v nobeni temi."
         latest: "Ni najnovejših tem. "
-        hot: "Ni vročih tem."
         bookmarks: "Nimate tem z zaznamki."
         category: "Ni tem v kategoriji {{category}} ."
         top: "Ni najboljših tem."
-        search: "Ni rezultatov iskanja."
         educate:
           new: '<p>Tu se prikažejo vaše nove teme.</p><p>Privzeto se teme prikažejo kot nove in bodo imele oznako  <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">novo</span> če so bile ustvarjene v zadnjih  2 dneh.</p><p>Obiščite  <a href="%{userPrefsUrl}">nastavitve</a> če želite spremembo.</p>'
           unread: '<p>Tu se prikažejo vaše neprebrane teme.</p><p>Privzeto se teme prikažejo kot neprebrane s prikazom števila <span class="badge new-posts badge-notification">1</span> če ste:</p><ul><li>Ustvarili temo</li><li>Odgovorili na temo</li><li>Brali temo več kot 4 minute</li></ul><p>Izrecno nastavili temo kot "Opazujem" ali "Sledim" preko nastavitev obveščenja na dnu teme.</p><p>Pojdite na  <a href="%{userPrefsUrl}">nastavitve</a> če želite spremembo.</p>'
       bottom:
         latest: "Ni več najnovejših tem."
-        hot: "Ni več vročih tem."
         posted: "Ni več objavljenih tem."
         read: "Ni več prebranih tem."
         new: "Ni več novih tem."
@@ -1802,7 +1784,6 @@ sl:
         category: "Ni več tem v kategoriji  {{category}}."
         top: "Ni več najboljših tem."
         bookmarks: "Ni več tem z zaznamki."
-        search: "Ni več rezultatov iskanja."
     topic:
       filter_to:
         one: "{{count}} prispevek v temi"
@@ -1951,6 +1932,7 @@ sl:
         jump_bottom: "skoči na zadnji prispevek"
         jump_prompt: "skoči na..."
         jump_prompt_of: "od %{count} prispevkov"
+        jump_prompt_long: "Skoči na..."
         jump_bottom_with_number: "skoči na prispevek %{post_number}"
         jump_prompt_to_date: "na datum"
         jump_prompt_or: "ali"
@@ -2650,15 +2632,9 @@ sl:
           few: "Najnovejše ({{count}})"
           other: "Najnovejših ({{count}})"
         help: "teme z nedavnimi prispevki"
-      hot:
-        title: "Vroče"
-        help: "izbira najbolj vročih tem"
       read:
         title: "Prebrano"
         help: "teme, ki jih prebrali, urejene po času zadnjega  branja"
-      search:
-        title: "Iskanje"
-        help: "išči po vseh temah"
       categories:
         title: "Kategorije"
         title_in: "Kategorija - {{categoryName}}"
@@ -2740,6 +2716,11 @@ sl:
       content_load_error: '<a href="%url%">Te vsebina</a> ne moremo naložiti.'
       image_load_error: '<a href="%url%">Te slike</a> ne moremo naložiti.'
     keyboard_shortcuts_help:
+      shortcut_key_delimiter_comma: ","
+      shortcut_key_delimiter_plus: "+"
+      shortcut_delimiter_or: "%{shortcut1} ali %{shortcut2}"
+      shortcut_delimiter_slash: "%{shortcut1}/%{shortcut2}"
+      shortcut_delimiter_space: "%{shortcut1} %{shortcut2}"
       title: "Bližnjice na tipkovnici"
       jump_to:
         title: "Skoči na"
@@ -2928,20 +2909,16 @@ sl:
           read: "Niste prebrali še nobene teme."
           posted: "Niste objavili še v nobeni temi."
           latest: "Ni najnovejših tem."
-          hot: "Ni vročih tem."
           bookmarks: "Nimate tem z zaznamki."
           top: "Ni najboljših tem."
-          search: "Ni rezultatov iskanja."
         bottom:
           latest: "Ni več zadnjih tem."
-          hot: "Ni več vročih tem."
           posted: "Ni več objavljenih tem."
           read: "Ni več prebranih tem."
           new: "Ni več novih tem."
           unread: "Ni več neprebranih tem."
           top: "Ni več najboljših tem."
           bookmarks: "Ni več tem z zaznamki."
-          search: "Ni več rezultatov iskanja."
     invite:
       custom_message: "Naredite vaše povabilo bolj osebno tako da napišete <a href>osebno sporočilo</a>."
       custom_message_placeholder: "Vnesi sporočilo po meri"
@@ -2959,6 +2936,8 @@ sl:
         title: "Seznam poročil"
       dashboard:
         title: "Nadzorna plošča"
+        last_updated: "Nadzorna plošča posodobljena:"
+        discourse_last_updated: "Discourse posodobljen:"
         version: "Verzija"
         up_to_date: "Imate zadnjo verzijo!"
         critical_available: "Nujna posodobitev je na voljo."
@@ -3120,6 +3099,11 @@ sl:
           successful: "Uspešno"
           disabled: "Onemogočeno"
         events:
+          completed_in:
+            one: "Dokončano v %{count} sekundi."
+            two: "Dokončano v {{count}} sekundah."
+            few: "Dokončano v {{count}} sekundah."
+            other: "Dokončano v {{count}} sekundah."
           request: "Zahteva"
           timestamp: "Ustvarjeno"
           actions: "Akcije"

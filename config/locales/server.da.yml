@@ -185,7 +185,6 @@ da:
   private_message_abbrev: "Besked"
   rss_description:
     latest: "Seneste emner"
-    hot: "Populære emner"
     top: "Populære emner"
     top_all: "Top-emner over tid"
     top_yearly: "Top-emner per år"
@@ -1392,8 +1391,6 @@ da:
     see_more: "Flere"
     search_title: "Søg på denne side"
     search_button: "Søg"
-  terms_of_service:
-    title: "Vilkår"
   deleted: "slettet"
   image: "billede"
   upload:
@@ -1427,9 +1424,6 @@ da:
     sender_body_blank: "brødtekst er tom"
   color_schemes:
     base_theme_name: "Base"
-  about: "Om"
-  guidelines: "Retningslinjer"
-  privacy: "Privatliv"
   edit_this_page: "Rediger denne side"
   csv_export:
     boolean_yes: "Ja"

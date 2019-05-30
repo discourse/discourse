@@ -16,6 +16,7 @@ fi:
       short_no_year: "%-d. %B[ta]"
       date_only: "%d. %B[ta] %Y"
       long: "%d. %B[ta] %Y, [klo] %H.%M"
+      no_day: "%B %Y"
   date:
     month_names: [~, Tammikuu, Helmikuu, Maaliskuu, Huhtikuu, Toukokuu, Kesäkuu, Heinäkuu, Elokuu, Syyskuu, Lokakuu, Marraskuu, Joulukuu]
     <<: *datetime_formats
@@ -37,6 +38,7 @@ fi:
   redirect_warning: "Emme pystyneet varmistamaan että klikkaamasi linkki on oikeasti lähetetty palstalle. Jos haluat silti jatkaa, klikkaa alla olevaa linkkiä."
   on_another_topic: "Toisessa ketjussa"
   themes:
+    bad_color_scheme: "Ei voi päivittää teemaa, väripaletti ei kelpaa"
     other_error: "Jotakin meni vikaan, kun teemaa päivitettiin"
     import_error:
       generic: Teeman tuomisessa tapahtui virhe
@@ -48,6 +50,7 @@ fi:
     errors:
       component_no_user_selectable: "Teemakomponentti ei voi olla käyttäjän valittavissa"
       component_no_default: "Teemakomponentti ei voi olla oletusteema"
+      component_no_color_scheme: "Teemakomponentilla ei voi olla väripalettia"
       no_multilevels_components: "Teemat joilla on tytärteemoja eivät voi olla tytärteemoja itse"
     settings_errors:
       invalid_yaml: "Annettu YAML ei kelpaa"
@@ -62,6 +65,7 @@ fi:
       number_value_not_valid_min: "Sen täytyy olla suurempi tai yhtä suuri kuin %{min}."
       number_value_not_valid_max: "Sen täytyy olla pienempi tai yhtä suuri kuin %{max}."
       string_value_not_valid: "Uuden arvon pituus ei ole sallituissa rajoissa."
+      string_value_not_valid_min_max: "Sen tulee olla %{min}-%{max} merkin pituinen."
       string_value_not_valid_min: "Sen täytyy olla vähintään %{min}merkkiä pitkä."
       string_value_not_valid_max: "Sen täytyy olla enintään %{max}merkkiä pitkä"
     locale_errors:
@@ -266,7 +270,6 @@ fi:
   private_message_abbrev: "YV"
   rss_description:
     latest: "Tuoreimmat viestiketjut"
-    hot: "Kuumat ketjut"
     top: "Kuumat ketjut"
     top_all: "Kaikkien aikojen parhaat ketjut"
     top_yearly: "Vuoden parhaat ketjut"
@@ -1651,7 +1654,6 @@ fi:
     allow_staff_to_tag_pms: "Salli henkilökunnan asettaa tunnisteitä mihin tahansa yksityiskeskusteluun"
     min_trust_level_to_tag_topics: "Vähimmäisluottamustaso, jolla voi lisätä tunnisteita ketjuihin"
     suppress_overlapping_tags_in_list: "Jos tunniste esiintyy sanana täsmälleen ketjun otsikossa, älä näytä tunnistetta"
-    remove_muted_tags_from_latest: "Jos tunniste on vaimennettu, älä näytä ketjua Tuoreimmissa."
     force_lowercase_tags: "Salli vain pienet kirjaimet uusissa tunnisteissa."
     company_name: "Yrityksen nimi"
     governing_law: "Minkä lakeja noudatetaan"
@@ -2901,9 +2903,6 @@ fi:
     welcome_message_invite_only: |
       ## [Tervetuloa sivustolle %{title}](#welcome)
       Käyttäjätili vaaditaan. Pyydä yhteisön jäsentä kutsumaan sinut tai kirjaudu sisään.
-  terms_of_service:
-    title: "Käyttöehdot"
-    signup_form_message: 'Olen lukenut ja ymmärtänyt <a href="/tos" target="_blank">käyttöehdot</a>.'
   deleted: "poistettu"
   image: "kuva"
   upload:
@@ -2966,9 +2965,6 @@ fi:
     latte_theme_name: "Latte"
     summer_theme_name: "Kesäinen"
     dark_rose_theme_name: "Tumma ruusu"
-  about: "Tietoja"
-  guidelines: "Ohjeet"
-  privacy: "Tietosuoja"
   edit_this_page: "Muokkaa tätä sivua"
   csv_export:
     boolean_yes: "Kyllä"
@@ -3571,6 +3567,15 @@ fi:
     user_merged: "%{username} yhdistettiin tähän käyttäjätiliin"
     user_delete_self: "Poisti itsensä asetuksistaan %{url}"
   reviewables:
+    priorities:
+      low: "Matala"
+      medium: "Keskiverto"
+      high: "Korkea"
+    sensitivity:
+      disabled: "Pois käytöstä"
+      low: "Matala"
+      medium: "Keskiverto"
+      high: "Korkea"
     actions:
       agree_and_keep:
         title: "Säilytä viesti"

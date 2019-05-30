@@ -185,7 +185,6 @@ pl_PL:
   private_message_abbrev: "Wiad."
   rss_description:
     latest: "Ostatnie wątki"
-    hot: "Popularne wątki"
     top: "Najlepsze tematy"
     top_all: "Popularne tematy ogółem"
     top_yearly: "Popularnie tematy w tym roku"
@@ -1273,7 +1272,6 @@ pl_PL:
     tag_style: "Styl etykiet tagów"
     min_trust_level_to_tag_topics: "Minimalny poziom zaufania wymagany do tagowania tematów"
     suppress_overlapping_tags_in_list: "Jeśli tagi dopasowane są dokładnie do słów w tytule tematu, nie pokazuj tagu"
-    remove_muted_tags_from_latest: "Nie pokazuj tematów z tagiem z wyciszonymi tagami w ostatniej liście tematów."
     errors:
       invalid_email: "Nieprawidłowy adres email."
       invalid_username: "Użytkownik o takiej nazwie nie istnieje."
@@ -2039,8 +2037,6 @@ pl_PL:
     welcome_message: |
       #[Witamy na %{title}](#welcome)
       Wymagane konto. Zarejestruj nowe konto lub przejdź do logowania.
-  terms_of_service:
-    title: "Warunki użytkowania serwisu"
   deleted: "usunięte"
   image: "obraz"
   upload:
@@ -2087,9 +2083,6 @@ pl_PL:
     default_theme_name: "Jasny"
     light_theme_name: "Jasny"
     dark_theme_name: "Ciemny"
-  about: "O stronie"
-  guidelines: "Przewodnik"
-  privacy: "Prywatność"
   edit_this_page: "Edytuj tę stronę"
   csv_export:
     boolean_yes: "Tak"

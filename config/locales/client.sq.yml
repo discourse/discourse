@@ -147,7 +147,6 @@ sq:
         eu_west_1: "EU (Ireland)"
         eu_west_2: "BE (Londër)"
         us_east_1: "US East (N. Virginia)"
-        us_gov_west_1: "AWS GovCloud (US)"
         us_west_1: "US West (N. California)"
         us_west_2: "US West (Oregon)"
     edit: "redakto titullin dhe kategorinë e kësaj teme"
@@ -251,6 +250,7 @@ sq:
         save_changes: "Ruaj ndryshimet"
         title: "Rregullimet"
       topic: "Tema:"
+      filtered_user: "User"
       user:
         username: "Emri i përdoruesit"
         email: "Email"
@@ -261,7 +261,10 @@ sq:
       save: "Ruaj"
       cancel: "Anulo"
       filters:
+        type:
+          title: "Lloji"
         refresh: "Rifresko"
+        category: "Kategori"
       scores:
         type: "Lloji"
       statuses:
@@ -810,10 +813,6 @@ sq:
       enabled: "Faqja lejon vetëm leximet per momentin. Mund të vazhdoni të shfletoni, por përgjigjet, pëlqimet dhe veprime të tjera janë të çaktivizuara përkohësisht."
       login_disabled: "Nuk mund të hyni në faqe sepse faqja është përkohësisht në formatin vetëm-lexim."
       logout_disabled: "Nuk mund të shkëputeni nga faqja sepse faqja është përkohësisht në formatin vetëm-lexim."
-    logs_error_rate_notice:
-      rate:
-        one: "%{count} gabim/%{duration}"
-        other: "%{count} gabime/%{duration}"
     learn_more: "mëso më shumë..."
     all_time: "total"
     all_time_desc: "totali i temave të krijuara"
@@ -1127,17 +1126,14 @@ sq:
         read: "Nuk keni lexuar asnjë temë deri tani."
         posted: "Nuk keni shkruajtur tek asnjë temë deri tani."
         latest: "Nuk ka tema të fundit. Oh sa keq."
-        hot: "Nuk ka tema të nxehta."
         bookmarks: "Nuk keni ende tema të preferuara. "
         category: "Nuk ka tema në: {{category}}."
         top: "Nuk ka tema popullore."
-        search: "Nuk ka rezultate nga kërkimi. "
         educate:
           new: '<p>Temat e reja shfaqen këtu.</p><p>Automatikisht, temat cilësohen si të reja dhe kanë një shënim <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">i ri</span> nëse janë krijuar gjatë dy ditëve të fundit.</p><p>Vizitoni <a href="%{userPrefsUrl}">preferencat</a> për t''a ndryshuar këtë parametër.</p>'
           unread: '<p>Temat e palexuara shfaqen këtu.</p><p>Automatikisht, temat klasifikohen si të palexuara dhe kanë etiketa me numër <span class="badge new-posts badge-notification">1</span> nëse ju:</p><ul><li>krijuat temën</li><li>iu përgjigjët temës</li><li>lexuat temën për më shumë se 4 minuta</li></ul><p>Ose nëse keni zgjedhur të Gjurmoni ose Vëzhgoni temën duke klikuar në butonin përkatës në fund të çdo teme.</p><p>Vizitoni <a href="%{userPrefsUrl}">preferencat tuaja</a> për të bërë ndryshime.</p>'
       bottom:
         latest: "Nuk ka më tema të reja."
-        hot: "Nuk ka më tema të nxehta."
         posted: "Nuk ka më tema të publikuara."
         read: "Nuk ka më tema të lexuara."
         new: "Nuk ka më tema të reja."
@@ -1145,7 +1141,6 @@ sq:
         category: "Nuk ka më tema nga {{category}}."
         top: "Nuk ka më tema popullore."
         bookmarks: "Nuk ka më tema të preferuara."
-        search: "Nuk ka më rezultate nga kërkimi. "
     topic:
       filter_to:
         one: "%{count} postim në temë"
@@ -1706,15 +1701,9 @@ sq:
           one: "Më të fundit (%{count}) "
           other: "Më të fundit ({{count}}) "
         help: "temat me postime të fundit"
-      hot:
-        title: "Të nxehta"
-        help: "disa nga temat më të nxehta"
       read:
         title: "Lexo"
         help: "temat që keni lexuar, radhitur sipas datës më të fundit të leximit"
-      search:
-        title: "Kërko"
-        help: "kërko të gjitha temat"
       categories:
         title: "Kategoritë"
         title_in: "Kategoria - {{categoryName}}"
@@ -1919,20 +1908,16 @@ sq:
           read: "Nuk keni lexuar asnjë temë deri tani."
           posted: "Nuk keni shkruajtur tek asnjë temë deri tani."
           latest: "Nuk ka tema të reja."
-          hot: "Nuk ka tema të nxehta."
           bookmarks: "Nuk keni ende tema të preferuara. "
           top: "Nuk ka tema popullore."
-          search: "Kërkimi nuk ka asnjë rezultat."
         bottom:
           latest: "Nuk ka më tema të reja."
-          hot: "Nuk ka më tema të nxehta."
           posted: "Nuk ka më tema të publikuara."
           read: "Nuk ka më tema të lexuara."
           new: "Nuk ka më tema të reja."
           unread: "Nuk ka më tema të palexuara."
           top: "Nuk ka më tema popullore."
           bookmarks: "Nuk ka më tema të preferuara."
-          search: "Kërkimi nuk ka më rezultate."
     invite:
       custom_message_placeholder: "Vendosni mesazhin"
       custom_message_template_forum: "Hej, hajde bashkoju këtij forumi!"

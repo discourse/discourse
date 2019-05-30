@@ -189,7 +189,6 @@ ca:
   private_message_abbrev: "Missatge"
   rss_description:
     latest: "Darrers temes"
-    hot: "Temes d'interès"
     top: "Principals temes"
     top_yearly: "Temes més actius anualment"
     top_monthly: "Temes més actius mensualment"
@@ -545,6 +544,8 @@ ca:
       every_hour: "cada hora"
       daily: "diari"
       weekly: "setmanal"
+      every_month: "cada mes"
+      every_six_months: "cada sis mesos"
   user_api_key:
     title: "Autoritza l'accés a l'aplicació"
     authorize: "Autoritza"
@@ -572,6 +573,7 @@ ca:
     user_flagging_ratio:
       labels:
         user: Persona usuària
+        score: Puntuació
     moderators_activity:
       labels:
         moderator: Moderació
@@ -1152,7 +1154,6 @@ ca:
     tag_style: "Estil visual per a principals distincions."
     min_trust_level_to_tag_topics: "Nivell de confiança mínim necessari per etiquetar temes"
     suppress_overlapping_tags_in_list: "Si les etiquetes coincideixen exactament amb paraules als títols dels temes, no mostris l'etiqueta"
-    remove_muted_tags_from_latest: "No mostris temes etiquetats amb etiquetes silenciades al darrer llistat de temes."
     errors:
       invalid_email: "Adreça de correu no vàlida."
       invalid_username: "No hi ha cap participant amb aquest nom."
@@ -1670,8 +1671,6 @@ ca:
     see_more: "Més"
     search_title: "Busca aquest lloc"
     search_button: "Cerca"
-  terms_of_service:
-    title: "Condicions d'ús"
   deleted: "esborrat"
   image: "imatge"
   upload:
@@ -1712,9 +1711,6 @@ ca:
     sender_body_blank: "el cos és buit"
   color_schemes:
     base_theme_name: "Base"
-  about: "Sobre"
-  guidelines: "Guies"
-  privacy: "Privacitat"
   edit_this_page: "Edita aquesta pàgina"
   csv_export:
     boolean_yes: "Sí"

@@ -155,7 +155,6 @@ et:
         eu_west_3: "EL (Pariis)"
         us_east_1: "US Ida (N. Virginia)"
         us_east_2: "US Ida (Ohio)"
-        us_gov_west_1: "AWS GovCloud (US)"
         us_west_1: "US Lääs (N. California)"
         us_west_2: "US Lääs (Oregon)"
     edit: "muuda teema pealkirja ja foorumit"
@@ -284,6 +283,7 @@ et:
         save_changes: "Salvesta muudatused"
         title: "Seaded"
       topic: "Teema:"
+      filtered_user: "Kasutaja"
       user:
         username: "Kasutajanimi"
         email: "E-post"
@@ -297,8 +297,9 @@ et:
       cancel: "Tühista"
       filters:
         type:
-          title: "Liik:"
+          title: "Liik"
         refresh: "Värskenda"
+        category: "Foorum"
       scores:
         date: "Date"
         type: "Liik"
@@ -953,12 +954,6 @@ et:
       enabled: "See sait on kirjutuskaitstud režiimis. Sirvimist saab jätkata, kuid vastamine, meeldimine ja teised toimingud on hetkel blokeeritud."
       login_disabled: "Sisselogimine on blokeeritud seni, kuni sait on kirjutuskaitstud režiimis."
       logout_disabled: "Väljalogimine on blokeeritud kuni sait on kirjutuskaitstud režiimis."
-    logs_error_rate_notice:
-      reached: "<b>%{relativeAge}</b> – <a href='%{url}' target='_blank'>%{rate}</a> on saavutanud saidi sätetes kehtestatud limiidi %{siteSettingRate}."
-      exceeded: "<b>%{relativeAge}</b> – <a href='%{url}' target='_blank'>%{rate}</a> ületab saidi sätetes kehtestatud limiiti %{siteSettingRate}."
-      rate:
-        one: "%{count} viga/%{duration}"
-        other: "%{count} viga/%{duration}"
     learn_more: "uuri veel..."
     all_time: "kokku"
     all_time_desc: "kokku teemasid loodud"
@@ -1008,7 +1003,6 @@ et:
     trust_level: "Usaldustase"
     search_hint: "kasutajanimi, meil või IP-aadress"
     create_account:
-      disclaimer: "Registreerudes nõustud nii <a href='{{privacy_link}}'> puutumatusnormide</a> kui ka <a href='{{tos_link}}'>teenuse tingimustega</a>."
       title: "Loo uus konto"
       failed: "Miski läks valesti - võimalik, et see meiliaadress on juba registreeritud. Proovi viidet unustatud parooli lehele"
     forgot_password:
@@ -1378,17 +1372,14 @@ et:
         read: "Sa ei ole veel ühtegi teemat lugenud."
         posted: "Sa ei ole veel ühtegi teemasse postitanud."
         latest: "Ühtegi värsket teemat pole. Nukker."
-        hot: "Ühtegi kuuma teemat pole."
         bookmarks: "Sul ei ole veel ühtegi järjehoidjaga teemal."
         category: "Foorumis {{category}} teemad puuduvad."
         top: "Tippteemad puuduvad."
-        search: "Otsing ei andnud tulemusi."
         educate:
           new: '<p>Sinu uued teemad ilmuvad siia.</p><p>Teemad loetakse vaikimisi uuteks ja tähistatakse indikaatoriga <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">uus</span>, kui nad loodi viimase 2 ööpäeva jooksul.</p><p>Muutmiseks külasta oma <a href="%{userPrefsUrl}">eelistuste</a> lehekülge.</p>'
           unread: '<p>Sinu lugemata teemad ilmuvad siia.</p><p>Teemad loetakse vaikimisi mitteloetuteks ja varustatakse lugemata postituste loenduriga <span class="badge new-posts badge-notification">1</span> kui Sa:</p><ul><li>Lõid uue teema</li><li>Vastasid teemasse</li><li>Lugesid teemat kauem kui 4 minutit</li></ul><p>Või kui seadsid teema Jälgitavaks teavituste juhtpaneelil iga teema lõpus.</p><p>Muutmiseks külasta oma <a href="%{userPrefsUrl}">eelistuste</a> lehekülge.</p>'
       bottom:
         latest: "Rohkem värskeid teemasid pole."
-        hot: "Rohkem kuumi teemasid pole."
         posted: "Rohkem uute postitustega teemasid pole."
         read: "Rohkem loetud teemasid pole."
         new: "Rohkem uusi teemasid pole."
@@ -1396,7 +1387,6 @@ et:
         category: "Foorumis {{category}} rohkem teemasid pole."
         top: "Rohkem tippteemasid pole."
         bookmarks: "Rohkem järjehoidjaga teemasid pole."
-        search: "Rohkem otsingutulemusi pole."
     topic:
       filter_to:
         one: "%{count} postitus teemas"
@@ -2043,15 +2033,9 @@ et:
           one: "Värskeim (%{count})"
           other: "Värskeimad ({{count}})"
         help: "teemad hiljutiste postitustega"
-      hot:
-        title: "Kuum"
-        help: "valik kuumimaid teemasid"
       read:
         title: "Loetud"
         help: "loetud teemad, viimase lugemise järjekorras"
-      search:
-        title: "Otsi"
-        help: "otsi kõigist teemadest"
       categories:
         title: "Foorumid"
         title_in: "Foorum - {{categoryName}}"
@@ -2257,20 +2241,16 @@ et:
           read: "Sa ei ole veel ühtegi teemat lugenud."
           posted: "Sa ei ole veel ühtegi teemasse postitanud."
           latest: "Ühtegi värsket teemat pole."
-          hot: "Ühtegi kuuma teemat pole."
           bookmarks: "Sul ei ole veel ühtegi järjehoidjaga teemal."
           top: "Ühtegi parimat teemat pole."
-          search: "Otsing ei andnud tulemusi."
         bottom:
           latest: "Rohkem värskeid teemasid pole."
-          hot: "Rohkem kuumi teemasid pole."
           posted: "Rohkem uute postitustega teemasid pole."
           read: "Rohkem loetud teemasid pole."
           new: "Rohkem uusi teemasid pole."
           unread: "Rohkem lugemata teemasid pole."
           top: "Rohkem parimaid teemasid pole."
           bookmarks: "Rohkem järjehoidjaga teemasid pole."
-          search: "Rohkem otsingutulemusi pole."
     invite:
       custom_message_placeholder: "Sisesta oma individuaalne sõnum"
       custom_message_template_forum: "Kuule, Sa peaksid selle foorumiga liituma!"

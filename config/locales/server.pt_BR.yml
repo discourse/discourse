@@ -240,7 +240,6 @@ pt_BR:
   private_message_abbrev: "Msg"
   rss_description:
     latest: "Últimos tópicos"
-    hot: "Tópicos quentes"
     top: "Principais tópicos"
     top_all: "Todos os tópicos principais"
     top_yearly: "Tópicos principais anuais"
@@ -1444,7 +1443,6 @@ pt_BR:
     allow_staff_to_tag_pms: "Permitir que os membros da equipe marquem qualquer mensagem pessoal"
     min_trust_level_to_tag_topics: "Nível de confiança mínimo necessário para marcar tópicos"
     suppress_overlapping_tags_in_list: "Se as tags corresponderem a palavras exatas em títulos de tópicos, não mostre a tag"
-    remove_muted_tags_from_latest: "Não exibir na lista de tópicos recentes os tópicos com a etiqueta de Silenciado."
     push_notifications_prompt: "Exibir o prompt de consentimento do usuário."
     errors:
       invalid_email: "Endereço de email inválido"
@@ -2464,8 +2462,6 @@ pt_BR:
     welcome_message: |
       ## [Bem-vindo à %{title}](#bem-vindo)
       Uma conta é necessária. Por favor, crie uma conta ou faça o login para continuar.
-  terms_of_service:
-    title: "Termos de Serviço"
   deleted: "removido"
   image: "imagem"
   upload:
@@ -2527,9 +2523,6 @@ pt_BR:
     latte_theme_name: "Latte"
     summer_theme_name: "Verão"
     dark_rose_theme_name: "Rosa Escura"
-  about: "Sobre"
-  guidelines: "Diretrizes"
-  privacy: "Privacidade"
   edit_this_page: "Editar esta página"
   csv_export:
     boolean_yes: "Sim"
@@ -2999,6 +2992,8 @@ pt_BR:
     user_merged: "%{username} foi mesclado nessa conta"
     user_delete_self: "Excluído por si mesmo de %{url}"
   reviewables:
+    sensitivity:
+      disabled: "Desativado"
     actions:
       agree_and_keep:
         title: "Manter Post"
