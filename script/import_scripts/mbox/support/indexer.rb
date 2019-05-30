@@ -155,7 +155,7 @@ module ImportScripts::Mbox
     end
 
     def each_mail(filename)
-      raw_message = ''
+      raw_message = +''
       first_line_number = 1
       last_line_number = 0
 
@@ -165,7 +165,7 @@ module ImportScripts::Mbox
         if line =~ @split_regex
           if last_line_number > 0
             yield raw_message, first_line_number, last_line_number
-            raw_message = ''
+            raw_message = +''
             first_line_number = last_line_number + 1
           end
         else

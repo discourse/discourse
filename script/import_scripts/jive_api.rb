@@ -129,7 +129,7 @@ class ImportScripts::JiveApi < ImportScripts::Base
       filters = "filter=entityDescriptor(#{entities.join(",")})"
     else
       path = "places/#{place["placeID"]}/contents"
-      filters = "filter=status(published)"
+      filters = +"filter=status(published)"
       if to_import[:filters]
         filters << "&filter=type(#{to_import[:filters][:type]})" if to_import[:filters][:type].present?
         filters << "&filter=creationDate(null,#{to_import[:filters][:created_after].strftime("%Y-%m-%dT%TZ")})" if to_import[:filters][:created_after].present?
