@@ -234,12 +234,10 @@ export default function transformPost(
 
     // Show a "Flag to delete" message if not staff and you can't
     // otherwise delete it.
-    postAtts.showFlagDelete = (
+    postAtts.showFlagDelete =
       !postAtts.canDelete &&
       postAtts.yours &&
-      (currentUser && !currentUser.staff)
-    );
-
+      (currentUser && !currentUser.staff);
   } else {
     postAtts.canRecover = postAtts.isDeleted && postAtts.canRecover;
     postAtts.canDelete =
