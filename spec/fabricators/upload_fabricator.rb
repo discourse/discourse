@@ -24,12 +24,15 @@ end
 Fabricator(:upload_s3, from: :upload) do
   url do |attrs|
     sequence(:url) do |n|
-      File.join(
-        Discourse.store.absolute_base_url,
-        Discourse.store.get_path_for(
-          "original", n + 1, attrs[:sha1], ".#{attrs[:extension]}"
-        )
+      path = +Discourse.store.get_path_for(
+        "original", n + 1, attrs[:sha1], ".#{attrs[:extension]}"
       )
+
+      if Rails.configuration.multisite
+        path.prepend(File.join(Discourse.store.upload_path, "/"))
+      end
+
+      File.join(Discourse.store.absolute_base_url, path)
     end
   end
 end
