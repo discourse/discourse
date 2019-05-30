@@ -45,6 +45,7 @@ export function transformBasicPost(post) {
     created_at: post.created_at,
     updated_at: post.updated_at,
     canDelete: post.can_delete,
+    showFlagDelete: false,
     canRecover: post.can_recover,
     canEdit: post.can_edit,
     canFlag: !Ember.isEmpty(post.get("flagsAvailable")),
@@ -230,6 +231,15 @@ export default function transformPost(
     postAtts.canRecoverTopic = postAtts.isDeleted && details.can_recover;
     postAtts.canDeleteTopic = !postAtts.isDeleted && details.can_delete;
     postAtts.expandablePost = topic.expandable_first_post;
+
+    // Show a "Flag to delete" message if not staff and you can't
+    // otherwise delete it.
+    postAtts.showFlagDelete = (
+      !postAtts.canDelete &&
+      postAtts.yours &&
+      (currentUser && !currentUser.staff)
+    );
+
   } else {
     postAtts.canRecover = postAtts.isDeleted && postAtts.canRecover;
     postAtts.canDelete =
