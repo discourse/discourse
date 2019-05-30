@@ -44,6 +44,16 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
         expect(actions.has?(:disagree_and_restore)).to eq(false)
       end
 
+      it "doesn't include deletes for category topics" do
+        c = Fabricate(:category)
+        flag = PostActionCreator.spam(user, c.topic.posts.first).reviewable
+        actions = flag.actions_for(guardian)
+        expect(actions.has?(:delete_and_ignore)).to eq(false)
+        expect(actions.has?(:delete_and_ignore_replies)).to eq(false)
+        expect(actions.has?(:delete_and_agree)).to eq(false)
+        expect(actions.has?(:delete_and_replies)).to eq(false)
+      end
+
       it "returns `agree_and_restore` if the post is user deleted" do
         post.update(user_deleted: true)
         expect(reviewable.actions_for(guardian).has?(:agree_and_restore)).to eq(true)
