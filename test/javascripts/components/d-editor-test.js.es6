@@ -10,7 +10,7 @@ componentTest("preview updates with markdown", {
     assert.ok(find(".d-editor-button-bar").length);
     await fillIn(".d-editor-input", "hello **world**");
 
-    assert.equal(this.get("value"), "hello **world**");
+    assert.equal(this.value, "hello **world**");
     assert.equal(
       find(".d-editor-preview")
         .html()
@@ -97,7 +97,7 @@ testCase(`selecting the space before a word`, async function(assert, textarea) {
 
   await click(`button.bold`);
 
-  assert.equal(this.get("value"), `hello **w**orld.`);
+  assert.equal(this.value, `hello **w**orld.`);
   assert.equal(textarea.selectionStart, 8);
   assert.equal(textarea.selectionEnd, 9);
 });
@@ -108,7 +108,7 @@ testCase(`selecting the space after a word`, async function(assert, textarea) {
 
   await click(`button.bold`);
 
-  assert.equal(this.get("value"), `**hello** world.`);
+  assert.equal(this.value, `**hello** world.`);
   assert.equal(textarea.selectionStart, 2);
   assert.equal(textarea.selectionEnd, 7);
 });
@@ -117,7 +117,7 @@ testCase(`bold button with no selection`, async function(assert, textarea) {
   await click(`button.bold`);
 
   const example = I18n.t(`composer.bold_text`);
-  assert.equal(this.get("value"), `hello world.**${example}**`);
+  assert.equal(this.value, `hello world.**${example}**`);
   assert.equal(textarea.selectionStart, 14);
   assert.equal(textarea.selectionEnd, 14 + example.length);
 });
@@ -127,12 +127,12 @@ testCase(`bold button with a selection`, async function(assert, textarea) {
   textarea.selectionEnd = 11;
 
   await click(`button.bold`);
-  assert.equal(this.get("value"), `hello **world**.`);
+  assert.equal(this.value, `hello **world**.`);
   assert.equal(textarea.selectionStart, 8);
   assert.equal(textarea.selectionEnd, 13);
 
   await click(`button.bold`);
-  assert.equal(this.get("value"), "hello world.");
+  assert.equal(this.value, "hello world.");
   assert.equal(textarea.selectionStart, 6);
   assert.equal(textarea.selectionEnd, 11);
 });
@@ -144,12 +144,12 @@ testCase(`bold with a multiline selection`, async function(assert, textarea) {
   textarea.selectionEnd = 12;
 
   await click(`button.bold`);
-  assert.equal(this.get("value"), `**hello**\n\n**world**\n\ntest.`);
+  assert.equal(this.value, `**hello**\n\n**world**\n\ntest.`);
   assert.equal(textarea.selectionStart, 0);
   assert.equal(textarea.selectionEnd, 20);
 
   await click(`button.bold`);
-  assert.equal(this.get("value"), `hello\n\nworld\n\ntest.`);
+  assert.equal(this.value, `hello\n\nworld\n\ntest.`);
   assert.equal(textarea.selectionStart, 0);
   assert.equal(textarea.selectionEnd, 12);
 });
@@ -157,7 +157,7 @@ testCase(`bold with a multiline selection`, async function(assert, textarea) {
 testCase(`italic button with no selection`, async function(assert, textarea) {
   await click(`button.italic`);
   const example = I18n.t(`composer.italic_text`);
-  assert.equal(this.get("value"), `hello world.*${example}*`);
+  assert.equal(this.value, `hello world.*${example}*`);
 
   assert.equal(textarea.selectionStart, 13);
   assert.equal(textarea.selectionEnd, 13 + example.length);
@@ -168,12 +168,12 @@ testCase(`italic button with a selection`, async function(assert, textarea) {
   textarea.selectionEnd = 11;
 
   await click(`button.italic`);
-  assert.equal(this.get("value"), `hello *world*.`);
+  assert.equal(this.value, `hello *world*.`);
   assert.equal(textarea.selectionStart, 7);
   assert.equal(textarea.selectionEnd, 12);
 
   await click(`button.italic`);
-  assert.equal(this.get("value"), "hello world.");
+  assert.equal(this.value, "hello world.");
   assert.equal(textarea.selectionStart, 6);
   assert.equal(textarea.selectionEnd, 11);
 });
@@ -185,12 +185,12 @@ testCase(`italic with a multiline selection`, async function(assert, textarea) {
   textarea.selectionEnd = 12;
 
   await click(`button.italic`);
-  assert.equal(this.get("value"), `*hello*\n\n*world*\n\ntest.`);
+  assert.equal(this.value, `*hello*\n\n*world*\n\ntest.`);
   assert.equal(textarea.selectionStart, 0);
   assert.equal(textarea.selectionEnd, 16);
 
   await click(`button.italic`);
-  assert.equal(this.get("value"), `hello\n\nworld\n\ntest.`);
+  assert.equal(this.value, `hello\n\nworld\n\ntest.`);
   assert.equal(textarea.selectionStart, 0);
   assert.equal(textarea.selectionEnd, 12);
 });
@@ -203,7 +203,7 @@ testCase("link modal (cancel)", async function(assert) {
 
   await click(".insert-link button.btn-danger");
   assert.equal(find(".insert-link.hidden").length, 1);
-  assert.equal(this.get("value"), "hello world.");
+  assert.equal(this.value, "hello world.");
 });
 
 testCase("link modal (simple link)", async function(assert, textarea) {
@@ -214,7 +214,7 @@ testCase("link modal (simple link)", async function(assert, textarea) {
   await fillIn(".insert-link input.link-url", url);
   await click(".insert-link button.btn-primary");
   assert.equal(find(".insert-link.hidden").length, 1);
-  assert.equal(this.get("value"), `hello world.[${url}](${url})`);
+  assert.equal(this.value, `hello world.[${url}](${url})`);
   assert.equal(textarea.selectionStart, 13);
   assert.equal(textarea.selectionEnd, 13 + url.length);
 });
@@ -223,7 +223,7 @@ testCase("link modal auto http addition", async function(assert) {
   await click("button.link");
   await fillIn(".insert-link input.link-url", "sam.com");
   await click(".insert-link button.btn-primary");
-  assert.equal(this.get("value"), `hello world.[sam.com](http://sam.com)`);
+  assert.equal(this.value, `hello world.[sam.com](http://sam.com)`);
 });
 
 testCase("link modal (simple link) with selected text", async function(
@@ -239,7 +239,7 @@ testCase("link modal (simple link) with selected text", async function(
   await fillIn(".insert-link input.link-url", "http://eviltrout.com");
   await click(".insert-link button.btn-primary");
   assert.equal(find(".insert-link.hidden").length, 1);
-  assert.equal(this.get("value"), "[hello world.](http://eviltrout.com)");
+  assert.equal(this.value, "[hello world.](http://eviltrout.com)");
 });
 
 testCase("link modal (link with description)", async function(assert) {
@@ -248,10 +248,7 @@ testCase("link modal (link with description)", async function(assert) {
   await fillIn(".insert-link input.link-text", "evil trout");
   await click(".insert-link button.btn-primary");
   assert.equal(find(".insert-link.hidden").length, 1);
-  assert.equal(
-    this.get("value"),
-    "hello world.[evil trout](http://eviltrout.com)"
-  );
+  assert.equal(this.value, "hello world.[evil trout](http://eviltrout.com)");
 });
 
 componentTest("advanced code", {
@@ -277,7 +274,7 @@ function xyz(x, y, z) {
 
     await click("button.code");
     assert.equal(
-      this.get("value"),
+      this.value,
       `
     function xyz(x, y, z) {
       if (y === z) {
@@ -299,7 +296,7 @@ componentTest("code button", {
     const textarea = jumpEnd(find("textarea.d-editor-input")[0]);
 
     await click("button.code");
-    assert.equal(this.get("value"), `    ${I18n.t("composer.code_text")}`);
+    assert.equal(this.value, `    ${I18n.t("composer.code_text")}`);
 
     this.set("value", "first line\n\nsecond line\n\nthird line");
 
@@ -308,7 +305,7 @@ componentTest("code button", {
 
     await click("button.code");
     assert.equal(
-      this.get("value"),
+      this.value,
       `first line
     ${I18n.t("composer.code_text")}
 second line
@@ -320,7 +317,7 @@ third line`
 
     await click("button.code");
     assert.equal(
-      this.get("value"),
+      this.value,
       `first line
 
 second line
@@ -334,7 +331,7 @@ third line\`${I18n.t("composer.code_title")}\``
 
     await click("button.code");
     assert.equal(
-      this.get("value"),
+      this.value,
       `first\`${I18n.t("composer.code_title")}\` line
 
 second line
@@ -347,15 +344,12 @@ third line`
     textarea.selectionEnd = 10;
 
     await click("button.code");
-    assert.equal(
-      this.get("value"),
-      "first `line`\n\nsecond line\n\nthird line"
-    );
+    assert.equal(this.value, "first `line`\n\nsecond line\n\nthird line");
     assert.equal(textarea.selectionStart, 7);
     assert.equal(textarea.selectionEnd, 11);
 
     await click("button.code");
-    assert.equal(this.get("value"), "first line\n\nsecond line\n\nthird line");
+    assert.equal(this.value, "first line\n\nsecond line\n\nthird line");
     assert.equal(textarea.selectionStart, 6);
     assert.equal(textarea.selectionEnd, 10);
 
@@ -363,15 +357,12 @@ third line`
     textarea.selectionEnd = 23;
 
     await click("button.code");
-    assert.equal(
-      this.get("value"),
-      "    first line\n\n    second line\n\nthird line"
-    );
+    assert.equal(this.value, "    first line\n\n    second line\n\nthird line");
     assert.equal(textarea.selectionStart, 0);
     assert.equal(textarea.selectionEnd, 31);
 
     await click("button.code");
-    assert.equal(this.get("value"), "first line\n\nsecond line\n\nthird line");
+    assert.equal(this.value, "first line\n\nsecond line\n\nthird line");
     assert.equal(textarea.selectionStart, 0);
     assert.equal(textarea.selectionEnd, 23);
   }
@@ -388,7 +379,7 @@ componentTest("code fences", {
 
     await click("button.code");
     assert.equal(
-      this.get("value"),
+      this.value,
       `\`\`\`
 ${I18n.t("composer.paste_code_text")}
 \`\`\``
@@ -405,7 +396,7 @@ ${I18n.t("composer.paste_code_text")}
     await click("button.code");
 
     assert.equal(
-      this.get("value"),
+      this.value,
       `\`\`\`
 first line
 second line
@@ -425,7 +416,7 @@ third line
     await click("button.code");
 
     assert.equal(
-      this.get("value"),
+      this.value,
       `\`${I18n.t("composer.code_title")}\`first line
 second line
 third line`
@@ -445,7 +436,7 @@ third line`
     await click("button.code");
 
     assert.equal(
-      this.get("value"),
+      this.value,
       `\`first line\`
 second line
 third line`
@@ -462,7 +453,7 @@ third line`
     await click("button.code");
 
     assert.equal(
-      this.get("value"),
+      this.value,
       `\`\`\`
 first line
 second line
@@ -481,7 +472,7 @@ third line`
     await click("button.code");
 
     assert.equal(
-      this.get("value"),
+      this.value,
       `first \n\`\`\`\nline\nsecond\n\`\`\`\n line\nthird line`
     );
 
@@ -502,12 +493,12 @@ componentTest("quote button - empty lines", {
 
     await click("button.quote");
 
-    assert.equal(this.get("value"), "> one\n> \n> two\n> \n> three");
+    assert.equal(this.value, "> one\n> \n> two\n> \n> three");
     assert.equal(textarea.selectionStart, 0);
     assert.equal(textarea.selectionEnd, 25);
 
     await click("button.quote");
-    assert.equal(this.get("value"), "one\n\ntwo\n\nthree");
+    assert.equal(this.value, "one\n\ntwo\n\nthree");
   }
 });
 
@@ -523,7 +514,7 @@ componentTest("quote button - selecting empty lines", {
     textarea.selectionEnd = 10;
 
     await click("button.quote");
-    assert.equal(this.get("value"), "one\n\n\n> \n> two");
+    assert.equal(this.value, "one\n\n\n> \n> two");
   }
 });
 
@@ -532,13 +523,13 @@ testCase("quote button", async function(assert, textarea) {
   textarea.selectionEnd = 9;
 
   await click("button.quote");
-  assert.equal(this.get("value"), "hello\n\n> wor\n\nld.");
+  assert.equal(this.value, "hello\n\n> wor\n\nld.");
   assert.equal(textarea.selectionStart, 7);
   assert.equal(textarea.selectionEnd, 12);
 
   await click("button.quote");
 
-  assert.equal(this.get("value"), "hello\n\nwor\n\nld.");
+  assert.equal(this.value, "hello\n\nwor\n\nld.");
   assert.equal(textarea.selectionStart, 7);
   assert.equal(textarea.selectionEnd, 10);
 
@@ -546,19 +537,19 @@ testCase("quote button", async function(assert, textarea) {
   textarea.selectionEnd = 15;
 
   await click("button.quote");
-  assert.equal(this.get("value"), "hello\n\nwor\n\nld.\n\n> Blockquote");
+  assert.equal(this.value, "hello\n\nwor\n\nld.\n\n> Blockquote");
 });
 
 testCase(`bullet button with no selection`, async function(assert, textarea) {
   const example = I18n.t("composer.list_item");
 
   await click(`button.bullet`);
-  assert.equal(this.get("value"), `hello world.\n\n* ${example}`);
+  assert.equal(this.value, `hello world.\n\n* ${example}`);
   assert.equal(textarea.selectionStart, 14);
   assert.equal(textarea.selectionEnd, 16 + example.length);
 
   await click(`button.bullet`);
-  assert.equal(this.get("value"), `hello world.\n\n${example}`);
+  assert.equal(this.value, `hello world.\n\n${example}`);
 });
 
 testCase(`bullet button with a selection`, async function(assert, textarea) {
@@ -566,12 +557,12 @@ testCase(`bullet button with a selection`, async function(assert, textarea) {
   textarea.selectionEnd = 11;
 
   await click(`button.bullet`);
-  assert.equal(this.get("value"), `hello\n\n* world\n\n.`);
+  assert.equal(this.value, `hello\n\n* world\n\n.`);
   assert.equal(textarea.selectionStart, 7);
   assert.equal(textarea.selectionEnd, 14);
 
   await click(`button.bullet`);
-  assert.equal(this.get("value"), `hello\n\nworld\n\n.`);
+  assert.equal(this.value, `hello\n\nworld\n\n.`);
   assert.equal(textarea.selectionStart, 7);
   assert.equal(textarea.selectionEnd, 12);
 });
@@ -586,12 +577,12 @@ testCase(`bullet button with a multiple line selection`, async function(
   textarea.selectionEnd = 20;
 
   await click(`button.bullet`);
-  assert.equal(this.get("value"), "Hello\n\nWorld\n\nEvil");
+  assert.equal(this.value, "Hello\n\nWorld\n\nEvil");
   assert.equal(textarea.selectionStart, 0);
   assert.equal(textarea.selectionEnd, 18);
 
   await click(`button.bullet`);
-  assert.equal(this.get("value"), "* Hello\n\n* World\n\n* Evil");
+  assert.equal(this.value, "* Hello\n\n* World\n\n* Evil");
   assert.equal(textarea.selectionStart, 0);
   assert.equal(textarea.selectionEnd, 24);
 });
@@ -600,12 +591,12 @@ testCase(`list button with no selection`, async function(assert, textarea) {
   const example = I18n.t("composer.list_item");
 
   await click(`button.list`);
-  assert.equal(this.get("value"), `hello world.\n\n1. ${example}`);
+  assert.equal(this.value, `hello world.\n\n1. ${example}`);
   assert.equal(textarea.selectionStart, 14);
   assert.equal(textarea.selectionEnd, 17 + example.length);
 
   await click(`button.list`);
-  assert.equal(this.get("value"), `hello world.\n\n${example}`);
+  assert.equal(this.value, `hello world.\n\n${example}`);
   assert.equal(textarea.selectionStart, 14);
   assert.equal(textarea.selectionEnd, 14 + example.length);
 });
@@ -615,12 +606,12 @@ testCase(`list button with a selection`, async function(assert, textarea) {
   textarea.selectionEnd = 11;
 
   await click(`button.list`);
-  assert.equal(this.get("value"), `hello\n\n1. world\n\n.`);
+  assert.equal(this.value, `hello\n\n1. world\n\n.`);
   assert.equal(textarea.selectionStart, 7);
   assert.equal(textarea.selectionEnd, 15);
 
   await click(`button.list`);
-  assert.equal(this.get("value"), `hello\n\nworld\n\n.`);
+  assert.equal(this.value, `hello\n\nworld\n\n.`);
   assert.equal(textarea.selectionStart, 7);
   assert.equal(textarea.selectionEnd, 12);
 });
@@ -632,12 +623,12 @@ testCase(`list button with line sequence`, async function(assert, textarea) {
   textarea.selectionEnd = 18;
 
   await click(`button.list`);
-  assert.equal(this.get("value"), "1. Hello\n\n2. World\n\n3. Evil");
+  assert.equal(this.value, "1. Hello\n\n2. World\n\n3. Evil");
   assert.equal(textarea.selectionStart, 0);
   assert.equal(textarea.selectionEnd, 27);
 
   await click(`button.list`);
-  assert.equal(this.get("value"), "Hello\n\nWorld\n\nEvil");
+  assert.equal(this.value, "Hello\n\nWorld\n\nEvil");
   assert.equal(textarea.selectionStart, 0);
   assert.equal(textarea.selectionEnd, 18);
 });
@@ -646,7 +637,7 @@ componentTest("clicking the toggle-direction button toggles the direction", {
   template: "{{d-editor value=value}}",
   beforeEach() {
     this.siteSettings.support_mixed_text_direction = true;
-    this.siteSettings.default_locale = "en";
+    this.siteSettings.default_locale = "en_US";
   },
 
   async test(assert) {
@@ -699,7 +690,7 @@ componentTest("emoji", {
     await click(
       '.emoji-picker .section[data-section="smileys_&_emotion"] button.emoji[title="grinning"]'
     );
-    assert.equal(this.get("value"), "hello world.:grinning:");
+    assert.equal(this.value, "hello world.:grinning:");
   }
 });
 
@@ -710,7 +701,7 @@ testCase("replace-text event by default", async function(assert) {
     .lookup("app-events:main")
     .trigger("composer:replace-text", "green", "yellow");
 
-  assert.equal(this.get("value"), "red green blue");
+  assert.equal(this.value, "red green blue");
 });
 
 composerTestCase("replace-text event for composer", async function(assert) {
@@ -720,7 +711,7 @@ composerTestCase("replace-text event for composer", async function(assert) {
     .lookup("app-events:main")
     .trigger("composer:replace-text", "green", "yellow");
 
-  assert.equal(this.get("value"), "red yellow blue");
+  assert.equal(this.value, "red yellow blue");
 });
 
 (() => {
@@ -786,17 +777,6 @@ composerTestCase("replace-text event for composer", async function(assert) {
     }
   ];
 
-  function setSelection(textarea, [start, len]) {
-    textarea.selectionStart = start;
-    textarea.selectionEnd = start + len;
-  }
-
-  function getSelection(textarea) {
-    const start = textarea.selectionStart;
-    const end = textarea.selectionEnd;
-    return [start, end - start];
-  }
-
   for (let i = 0; i < CASES.length; i++) {
     const CASE = CASES[i];
     // prettier-ignore
@@ -806,25 +786,21 @@ composerTestCase("replace-text event for composer", async function(assert) {
     ) {
       this.set("value", BEFORE);
 
-      textarea.focus();
+      await focus(textarea);
 
-      assert.ok(document.activeElement === textarea);
       assert.ok(textarea.value === BEFORE);
 
-      setSelection(textarea, CASE.before);
-
-      assert.ok(document.activeElement === textarea);
+      const [start, len] = CASE.before;
+      setTextareaSelection(textarea, start, start + len);
 
       this.container
         .lookup("app-events:main")
-        .trigger("composer:replace-text", "green", "yellow", {forceFocus: true});
-
-      assert.ok(document.activeElement === textarea);
+        .trigger("composer:replace-text", "green", "yellow", { forceFocus: true });
 
       let expect = await formatTextWithSelection(AFTER, CASE.after); // eslint-disable-line no-undef
       let actual = await formatTextWithSelection( // eslint-disable-line no-undef
-        this.get("value"),
-        getSelection(textarea)
+        this.value,
+        getTextareaSelection(textarea)
       );
       assert.equal(actual, expect);
     });

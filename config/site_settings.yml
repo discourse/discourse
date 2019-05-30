@@ -639,6 +639,11 @@ posting:
       ja: false
       zh_CN: false
       zh_TW: false
+  title_remove_extraneous_space:
+    default: false
+    locale_default:
+      en: true
+      en_US: true
   title_fancy_entities: true
   min_personal_message_title_length:
     client: true
@@ -1361,9 +1366,15 @@ onebox:
 
 spam:
   add_rel_nofollow_to_user_content: true
-  score_required_to_hide_post: 10
+  hide_post_sensitivity:
+    type: enum
+    enum: "ReviewableSensitivitySetting"
+    default: 6
   cooldown_minutes_after_hiding_posts: 10
-  spam_score_to_silence_new_user: 6.0
+  silence_new_user_sensitivity:
+    type: enum
+    enum: "ReviewableSensitivitySetting"
+    default: 3
   num_users_to_silence_new_user: 3
   notify_mods_when_user_silenced: false
   flag_sockpuppets: false
@@ -1379,7 +1390,10 @@ spam:
   max_age_unmatched_emails: 365
   max_age_unmatched_ips: 365
   num_flaggers_to_close_topic: 5
-  score_to_auto_close_topic: 25.0
+  auto_close_topic_sensitivity:
+    type: enum
+    enum: "ReviewableSensitivitySetting"
+    default: 9
   num_hours_to_close_topic:
     default: 4
     min: 1
@@ -1405,10 +1419,7 @@ spam:
     client: true
     type: enum
     default: low
-    choices:
-      - low
-      - medium
-      - high
+    enum: "ReviewablePrioritySetting"
 
 rate_limits:
   unique_posts_mins: 5
@@ -1523,12 +1534,6 @@ developer:
   enable_safe_mode:
     default: true
     client: true
-  refresh_maxmind_db_during_precompile_days:
-    min: 0
-    max: 120
-    default: 2
-    hidden: true
-    shadowed_by_global: true
 
 embedding:
   feed_polling_enabled:
@@ -2054,6 +2059,8 @@ tags:
     client: true
   remove_muted_tags_from_latest:
     default: false
+  mute_other_present_tags:
+    default: true
   force_lowercase_tags:
     default: true
     client: true

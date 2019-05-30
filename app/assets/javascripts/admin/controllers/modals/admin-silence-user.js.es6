@@ -19,19 +19,19 @@ export default Ember.Controller.extend(PenaltyController, {
 
   actions: {
     silence() {
-      if (this.get("submitDisabled")) {
+      if (this.submitDisabled) {
         return;
       }
 
       this.set("silencing", true);
       this.penalize(() => {
-        return this.get("user").silence({
-          silenced_till: this.get("silenceUntil"),
-          reason: this.get("reason"),
-          message: this.get("message"),
-          post_id: this.get("postId"),
-          post_action: this.get("postAction"),
-          post_edit: this.get("postEdit")
+        return this.user.silence({
+          silenced_till: this.silenceUntil,
+          reason: this.reason,
+          message: this.message,
+          post_id: this.postId,
+          post_action: this.postAction,
+          post_edit: this.postEdit
         });
       }).finally(() => this.set("silencing", false));
     }

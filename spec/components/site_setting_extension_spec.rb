@@ -766,7 +766,7 @@ describe SiteSettingExtension do
 
   describe '.default_locale' do
     it 'is always loaded' do
-      expect(settings.default_locale).to eq 'en'
+      expect(settings.default_locale).to eq('en_US')
     end
   end
 
@@ -833,7 +833,7 @@ describe SiteSettingExtension do
       settings.refresh!
 
       expect(settings.client_settings_json_uncached).to eq(
-        %Q|{"default_locale":"en","upload_type":"#{upload.url}","string_type":"haha"}|
+        %Q|{"default_locale":"#{SiteSetting.default_locale}","upload_type":"#{upload.url}","string_type":"haha"}|
       )
     end
   end

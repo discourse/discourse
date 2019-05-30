@@ -10,5 +10,3 @@ lv:
     magic_8_ball:
       answers:
         '9': "Jā"
-    new_user_narrative:
-      reset_trigger: "jauns lietotājs"

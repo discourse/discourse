@@ -111,11 +111,6 @@ ur:
       random_mention:
         reply: |-
           ہیلو! جاننے کیلئے کہ میں کیا کر سکتا ہوں، `@%{discobot_username} %{help_trigger}` کہیں۔
-        tracks: |-
-          میں فی الحال مندرجہ ذیل چیزوں کو کرنا جانتا ہوں:
-
-          `@%{discobot_username} %{reset_trigger} %{default_track}`
-          > مندرجہ ذیل انٹرایکٹو نَیرَیٹِو میں سے ایک کو شروع کر دیتا ہے: %{tracks}۔
         bot_actions: |-
           `@%{discobot_username} %{dice_trigger} 2d6`
           > :game_die: 3، 6
@@ -138,7 +133,6 @@ ur:
 
           اِس دوران، میں آپ کے راستے سے دور رہوں گا۔
     new_user_narrative:
-      reset_trigger: "نیا صارف"
       cert_title: "نیا صارف ٹیوٹوریل کی کامیاب تکمیل کے اعتراف میں"
       onebox:
         reply: |-
@@ -269,7 +263,6 @@ ur:
       certificate:
         alt: 'کامیابی کا سرٹیفِکیٹ'
     advanced_user_narrative:
-      reset_trigger: 'اَیڈوانسڈ صارف'
       cert_title: "اَیڈوانسڈ صارف ٹیوٹوریل کی کامیاب تکمیل کے اعتراف میں"
       title: ':arrow_up: اَیڈوانسڈ صارف کی صلاحیتیں'
       edit:
@@ -304,10 +297,6 @@ ur:
           کیا آپ مجھ پر ایک احسان کر سکتے ہیں اور اُسے <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-rotate-left.png" width="16" height="16"> **واپس بحال** کر دیں؟
         not_found: |-
           کوئی دشواری ہو رہی ہے؟ یاد رکھیے کہ <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> مزید دکھایے <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-rotate-left.png" width="16" height="16">واپس بحال کو ظاہر کرے گا۔
-        reply: |-
-          شکر ہے، بال بال بچے! واپس درست کر دینے کیلئے شکریہ :wink:
-
-          نوٹ کریں کہ پوسٹ کو واپس بحال کرنے کیلئے آپ کے پاس صرف 24 گھنٹے ہوتے ہیں۔
       category_hashtag:
         instructions: |-
           کیا آپ جانتے تھے کہ آپ اپنی پوسٹ میں زمرہ جات اور ٹیگز کا حوالہ دے سکتے ہیں؟ مثال کے طور پر، کیا آپ نے %{category} زمرہ دیکھا ہے؟

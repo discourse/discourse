@@ -303,7 +303,6 @@ describe FileStore::S3Store do
   end
 
   describe ".path_for" do
-
     def assert_path(path, expected)
       upload = Upload.new(url: path)
 

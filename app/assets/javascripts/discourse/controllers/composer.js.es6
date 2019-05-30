@@ -673,7 +673,7 @@ export default Ember.Controller.extend({
     });
 
     const promise = composer
-      .save({ imageSizes, editReason: this.get("editReason") })
+      .save({ imageSizes, editReason: this.editReason })
       .then(result => {
         if (result.responseJson.action === "enqueued") {
           this.send("postWasEnqueued", result.responseJson);

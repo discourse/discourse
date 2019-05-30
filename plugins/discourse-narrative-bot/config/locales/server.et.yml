@@ -25,5 +25,3 @@ et:
         '7': "Tõenäoliselt"
         '9': "Jah"
         '12': "Küsi hiljem uuesti"
-    new_user_narrative:
-      reset_trigger: "uus kasutaja"

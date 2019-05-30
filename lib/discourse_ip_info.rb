@@ -7,7 +7,7 @@ class DiscourseIpInfo
   include Singleton
 
   def initialize
-    open_db(File.join(Rails.root, 'vendor', 'data'))
+    open_db(DiscourseIpInfo.path)
   end
 
   def open_db(path)
@@ -16,38 +16,31 @@ class DiscourseIpInfo
     @cache = LruRedux::ThreadSafeCache.new(2000)
   end
 
+  def self.path
+    @path ||= File.join(Rails.root, 'vendor', 'data')
+  end
+
   def self.mmdb_path(name)
-    File.join(Rails.root, 'vendor', 'data', "#{name}.mmdb")
+    File.join(path, "#{name}.mmdb")
   end
 
   def self.mmdb_download(name)
-    require 'rubygems/package'
-    require 'zlib'
+    FileUtils.mkdir_p(path)
 
-    uri = URI("https://geolite.maxmind.com/download/geoip/database/#{name}.tar.gz")
+    gz_file = FileHelper.download(
+      "https://geolite.maxmind.com/geoip/databases/#{name}/update",
+      max_file_size: 100.megabytes,
+      tmp_file_name: "#{name}.gz",
+      validate_uri: false,
+      follow_redirect: false
+    )
 
-    begin
-      tar_gz_file = Tempfile.new
-      tar_gz_file.binmode
-      tar_gz_file.write(Net::HTTP.get(uri))
-      tar_gz_file.close
+    Discourse::Utils.execute_command("gunzip", gz_file.path)
 
-      begin
-        extractor = Gem::Package::TarReader.new(Zlib::GzipReader.open(tar_gz_file.path))
-        extractor.rewind
-
-        extractor.each do |entry|
-          next unless entry.full_name.ends_with?(".mmdb")
-          File.open(mmdb_path(name), "wb") { |f| f.write(entry.read) }
-        end
-      ensure
-        extractor.close
-      end
-
-    ensure
-      tar_gz_file.close
-      tar_gz_file.unlink
-    end
+    path = gz_file.path.sub(/\.gz\z/, "")
+    FileUtils.mv(path, mmdb_path(name))
+  ensure
+    gz_file&.close!
   end
 
   def mmdb_load(filepath)
@@ -57,7 +50,7 @@ class DiscourseIpInfo
       Rails.logger.warn("MaxMindDB (#{filepath}) could not be found: #{e}")
       nil
     rescue => e
-      Discourse.warn_exception(e, "MaxMindDB (#{filepath}) could not be loaded.")
+      Discourse.warn_exception(e, message: "MaxMindDB (#{filepath}) could not be loaded.")
       nil
     end
   end

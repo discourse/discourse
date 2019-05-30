@@ -101,7 +101,7 @@ cs:
     template:
       body: "Nastaly problémy s následujícími poli: "
       header:
-        one: 1 chyba zamezila uložení modelu %{model}
+        one: "%{count} chyba zamezila uložení modelu %{model}"
         few: "%{count} chyb zamezilo uložení modelu %{model}"
         many: "%{count} chyb zamezilo uložení modelu %{model}"
         other: "%{count} chyb zamezilo uložení modelu %{model}"
@@ -135,7 +135,7 @@ cs:
   reading_time: "Čas čtení"
   likes: "Líbí se"
   too_many_replies:
-    one: "Je nám líto, ale noví uživatelé jsou dočasně omezeni na 1 odpověď v tématu."
+    one: "Je nám líto, ale noví uživatelé jsou dočasně omezeni na %{count} odpověď v tématu."
     few: "Je nám líto, ale noví uživatelé jsou dočasně omezeni na %{count} odpovědi v tématu."
     many: "Je nám líto, ale noví uživatelé jsou dočasně omezeni na %{count} odpovědí v tématu."
     other: "Je nám líto, ale noví uživatelé jsou dočasně omezeni na %{count} odpovědí v tématu."
@@ -143,7 +143,7 @@ cs:
     start_discussion: "Začít diskuzi"
     continue: "Pokračovat v diskuzi"
     more_replies:
-      one: "1 další odpověď"
+      one: "%{count} další odpověď"
       few: "%{count} další odpověďi"
       many: "%{count} dalších odpověďí"
       other: "%{count} dalších odpověďí"
@@ -397,17 +397,17 @@ cs:
       broken: "Tento obrázek je rozbitý"
   rate_limiter:
     hours:
-      one: "1 hodina"
+      one: "%{count} hodina"
       few: "%{count} hodiny"
       many: "%{count} hodin"
       other: "%{count} hodin"
     minutes:
-      one: "1 minuta"
+      one: "%{count} minuta"
       few: "%{count} minuty"
       many: "%{count} minut"
       other: "%{count} minut"
     seconds:
-      one: "1 sekunda"
+      one: "%{count} sekunda"
       few: "%{count} sekundy"
       many: "%{count} sekund"
       other: "%{count} sekund"
@@ -415,114 +415,110 @@ cs:
     distance_in_words:
       half_a_minute: "< 1m"
       less_than_x_seconds:
-        one: "< 1s"
+        one: "< %{count}s"
         few: "< %{count}s"
         many: "< %{count}s"
         other: "< %{count}s"
       x_seconds:
-        one: "1s"
+        one: "%{count}s"
         few: "%{count}s"
         many: "%{count}s"
         other: "%{count}s"
       less_than_x_minutes:
-        one: "< 1m"
+        one: "< %{count}m"
         few: "< %{count}m"
         many: "< %{count}m"
         other: "< %{count}m"
       x_minutes:
-        one: "1m"
+        one: "%{count}m"
         few: "%{count}m"
         many: "%{count}m"
         other: "%{count}m"
       about_x_hours:
-        one: "1h"
+        one: "%{count}h"
         few: "%{count}h"
         many: "%{count}h"
         other: "%{count}h"
       x_days:
-        one: "1d"
+        one: "%{count}d"
         few: "%{count}d"
         many: "%{count}d"
         other: "%{count}d"
       about_x_months:
-        one: "1měs"
+        one: "%{count}měs"
         few: "%{count}měs"
         many: "%{count}měs"
         other: "%{count}měs"
       x_months:
-        one: "1měs"
+        one: "%{count}měs"
         few: "%{count}měs"
         many: "%{count}měs"
         other: "%{count}měs"
       about_x_years:
-        one: "1r"
+        one: "%{count}r"
         few: "%{count}r"
         many: "%{count}let"
         other: "%{count}let"
       over_x_years:
-        one: "> 1r"
+        one: "> %{count}r"
         few: "> %{count}r"
         many: "> %{count}let"
         other: "> %{count}let"
       almost_x_years:
-        one: "1r"
+        one: "%{count}r"
         few: "%{count}r"
         many: "%{count}let"
         other: "%{count}let"
     distance_in_words_verbose:
       half_a_minute: "právě teď"
-      less_than_x_seconds:
-        one: "právě teď"
-        few: "právě teď"
-        many: "právě teď"
-        other: "právě teď"
+      less_than_x_seconds: "právě teď"
       x_seconds:
-        one: "před 1 sekundou"
+        one: "před %{count} sekundou"
         few: "před %{count} sekundami"
         many: "před %{count} sekundami"
         other: "před %{count} sekundami"
       less_than_x_minutes:
-        one: "před méně než 1 minutou"
+        one: "před méně než %{count} minutou"
         few: "před méně než %{count} minutami"
         many: "před méně než %{count} minutami"
         other: "před méně než %{count} minutami"
       x_minutes:
-        one: "před 1 minutou"
+        one: "před %{count} minutou"
         few: "před %{count} minutami"
         many: "před %{count} minutami"
         other: "před %{count} minutami"
       about_x_hours:
-        one: "před 1 hodinou"
+        one: "před %{count} hodinou"
         few: "před %{count} hodinami"
         many: "před %{count} hodinami"
         other: "před %{count} hodinami"
       x_days:
-        one: "před 1 dnem"
+        one: "před %{count} dnem"
         few: "před %{count} dny"
         many: "před %{count} dny"
         other: "před %{count} dny"
       about_x_months:
-        one: "asi před 1 měsícem"
+        one: "asi před %{count} měsícem"
         few: "asi před %{count} měsíci"
         many: "asi před %{count} měsíci"
         other: "asi před %{count} měsíci"
       x_months:
-        one: "před 1 měsícem"
+        one: "před %{count} měsícem"
         few: "před %{count} měsíci"
         many: "před %{count} měsíci"
         other: "před %{count} měsíci"
       about_x_years:
-        one: "asi před 1 rokem"
+        one: "asi před %{count} rokem"
         few: "asi před %{count} roky"
         many: "asi před %{count} roky"
         other: "asi před %{count} roky"
       over_x_years:
-        one: "před více než 1 rokem"
+        one: "před více než %{count} rokem"
         few: "před více než %{count} roky"
         many: "před více než %{count} roky"
         other: "před více než %{count} roky"
       almost_x_years:
-        one: "téměř před 1 rokem"
+        one: "téměř před %{count} rokem"
         few: "téměř před %{count} roky"
         many: "téměř před %{count} roky"
         other: "téměř před %{count} roky"
@@ -931,7 +927,7 @@ cs:
       subject_template: "Exportování dat selhalo"
     pending_users_reminder:
       subject_template:
-        one: "1 user waiting for approval"
+        one: "%{count} user waiting for approval"
         few: "%{count} users waiting for approval"
         many: "%{count} users waiting for approval"
         other: "%{count} users waiting for approval"
@@ -957,7 +953,6 @@ cs:
       new_topics: "Nová témata"
       unread_messages: "Nepřečtené zprávy"
       liked_received: "Obdržených 'líbí se'"
-      new_posts: "Nové příspěvky"
       new_users: "Noví uživatelé"
       popular_topics: "Populární témata"
       join_the_discussion: "Číst dále"
@@ -1131,9 +1126,7 @@ cs:
       icons:
         title: "Ikony"
         fields:
-          favicon:
-            label: "Malá ikona"
-          apple_touch_icon:
+          large_icon:
             label: "Velká ikona"
       homepage:
         title: "Domovská stránka"
@@ -1179,6 +1172,8 @@ cs:
         description: "Schovat tento příspěvek a automaticky poslat uživateli zprávu, aby ho urychleně upravil."
       delete_spammer:
         title: "Odstranit spamera"
+      delete_single:
+        title: "Smazat"
       disagree_and_restore:
         description: "Obnov příspěvek, aby ho mohli vidět všichni ostatní uživatelé."
       disagree:

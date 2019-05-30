@@ -47,6 +47,70 @@ describe PrettyText do
         expect(cook("[quote=\"EvilTrout, post:2, topic:#{topic.id}\"]\nddd\n[/quote]", topic_id: 1)).to eq(n(expected))
       end
 
+      context "emojis" do
+        let(:md) do
+          <<~MD
+          > This is a quote with a regular emoji :upside_down_face:
+
+          > This is a quote with an emoji shortcut :)
+
+          > This is a quote with a Unicode emoji 😎
+          MD
+        end
+
+        it "does not unescape emojis when emojis are disabled" do
+          SiteSetting.enable_emoji = false
+
+          html = <<~HTML
+            <blockquote>
+            <p>This is a quote with a regular emoji :upside_down_face:</p>
+            </blockquote>
+            <blockquote>
+            <p>This is a quote with an emoji shortcut :)</p>
+            </blockquote>
+            <blockquote>
+            <p>This is a quote with a Unicode emoji 😎</p>
+            </blockquote>
+          HTML
+
+          expect(cook(md)).to eq(html.strip)
+        end
+
+        it "does not convert emoji shortcuts when emoji shortcuts are disabled" do
+          SiteSetting.enable_emoji_shortcuts = false
+
+          html = <<~HTML
+            <blockquote>
+            <p>This is a quote with a regular emoji <img src="/images/emoji/twitter/upside_down_face.png?v=#{Emoji::EMOJI_VERSION}" title=":upside_down_face:" class="emoji" alt=":upside_down_face:"></p>
+            </blockquote>
+            <blockquote>
+            <p>This is a quote with an emoji shortcut :)</p>
+            </blockquote>
+            <blockquote>
+            <p>This is a quote with a Unicode emoji <img src="/images/emoji/twitter/sunglasses.png?v=#{Emoji::EMOJI_VERSION}" title=":sunglasses:" class="emoji" alt=":sunglasses:"></p>
+            </blockquote>
+          HTML
+
+          expect(cook(md)).to eq(html.strip)
+        end
+
+        it "unescapes all emojis" do
+          html = <<~HTML
+            <blockquote>
+            <p>This is a quote with a regular emoji <img src="/images/emoji/twitter/upside_down_face.png?v=#{Emoji::EMOJI_VERSION}" title=":upside_down_face:" class="emoji" alt=":upside_down_face:"></p>
+            </blockquote>
+            <blockquote>
+            <p>This is a quote with an emoji shortcut <img src="/images/emoji/twitter/slight_smile.png?v=#{Emoji::EMOJI_VERSION}" title=":slight_smile:" class="emoji" alt=":slight_smile:"></p>
+            </blockquote>
+            <blockquote>
+            <p>This is a quote with a Unicode emoji <img src="/images/emoji/twitter/sunglasses.png?v=#{Emoji::EMOJI_VERSION}" title=":sunglasses:" class="emoji" alt=":sunglasses:"></p>
+            </blockquote>
+          HTML
+
+          expect(cook(md)).to eq(html.strip)
+        end
+      end
+
       it "do off topic quoting of posts from secure categories" do
         category = Fabricate(:category, read_restricted: true)
         topic = Fabricate(:topic, title: "this is topic with secret category", category: category)
@@ -1196,9 +1260,11 @@ HTML
 
   end
 
-  describe "image decoding" do
+  describe "upload decoding" do
 
     it "can decode upload:// for default setup" do
+      set_cdn_url('https://cdn.com')
+
       upload = Fabricate(:upload)
 
       raw = <<~RAW
@@ -1210,6 +1276,12 @@ HTML
           - ![upload](#{upload.short_url})
 
       ![upload](#{upload.short_url.gsub(".png", "")})
+
+      [some attachment](#{upload.short_url})
+
+      [some attachment|attachment](#{upload.short_url})
+
+      [some attachment|random](#{upload.short_url})
       RAW
 
       cooked = <<~HTML
@@ -1226,6 +1298,9 @@ HTML
         </li>
         </ul>
         <p><img src="#{upload.url}" alt="upload"></p>
+        <p><a href="#{upload.short_path}">some attachment</a></p>
+        <p><a class="attachment" href="#{upload.short_path}">some attachment</a></p>
+        <p><a href="#{upload.short_path}">some attachment|random</a></p>
       HTML
 
       expect(PrettyText.cook(raw)).to eq(cooked.strip)
@@ -1233,10 +1308,15 @@ HTML
 
     it "can place a blank image if we can not find the upload" do
 
-      raw = "![upload](upload://abcABC.png)"
+      raw = <<~MD
+      ![upload](upload://abcABC.png)
+
+      [some attachment|attachment](upload://abcdefg.png)
+      MD
 
       cooked = <<~HTML
-        <p><img src="/images/transparent.png" alt="upload" data-orig-src="upload://abcABC.png"></p>
+      <p><img src="/images/transparent.png" alt="upload" data-orig-src="upload://abcABC.png"></p>
+      <p><a href="/404" data-orig-href="upload://abcdefg.png">some attachment|attachment</a></p>
       HTML
 
       expect(PrettyText.cook(raw)).to eq(cooked.strip)

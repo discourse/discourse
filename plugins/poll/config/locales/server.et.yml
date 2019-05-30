@@ -15,10 +15,10 @@ et:
     default_poll_must_have_at_least_2_options: "Küsitlusel peab olema vähemalt 2 valikut."
     named_poll_must_have_at_least_2_options: "Küsitlusel nimega <strong>%{name}</strong> peab olema vähemalt 2 valikut."
     default_poll_must_have_less_options:
-      one: "Küsitlusel peab olema vähemalt 1 valik."
+      one: "Küsitlusel peab olema vähemalt %{count} valik."
       other: "Küsitlusel peab olema vähem, kui %{count} valikut."
     named_poll_must_have_less_options:
-      one: "Küsitlusel nimega <strong>%{name}</strong> peab olema vähem kui 1 valik."
+      one: "Küsitlusel nimega <strong>%{name}</strong> peab olema vähem kui %{count} valik."
       other: "Küsitlusel nimega <strong>%{name}</strong> peab olema vähem kui %{count} valikut."
     default_poll_must_have_different_options: "Küsitlusel peavad olema erinevad valikud."
     named_poll_must_have_different_options: "Küsitlus nimega <strong>%{name}</strong> peab sisaldama erinevaid valikuid."

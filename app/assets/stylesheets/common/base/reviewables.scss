@@ -51,8 +51,9 @@
 }
 
 .reviewable-settings {
-  p.description {
-    margin-bottom: 2em;
+  h4 {
+    margin-top: 1em;
+    margin-bottom: 1em;
   }
 
   .saved {
@@ -60,7 +61,11 @@
   }
   .reviewable-score-type {
     display: flex;
+    margin-bottom: 0.5em;
 
+    .select-kit {
+      min-width: 10em;
+    }
     .title {
       width: 30%;
     }
@@ -319,7 +324,9 @@
     }
     > tr > th,
     > tr > td {
-      padding: 0.5em 1em 0.5em 0;
+      &:not(:empty) {
+        padding: 0.5em 1em 0.5em 0;
+      }
       @include breakpoint("mobile") {
         overflow: hidden;
         text-overflow: ellipsis;
@@ -465,7 +472,6 @@
   tr.reviewable-score {
     display: grid;
     grid-template-columns: auto auto 1fr;
-    grid-template-rows: 1fr 1fr;
   }
   td.reviewable-score-spacer {
     display: none;

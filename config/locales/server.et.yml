@@ -83,19 +83,19 @@ et:
         one: "Kirjet ei saa kustutada, kuna leiti seotud kirje %{record}"
         many: "Kirjet ei saa kustutada, kuna leiti seotud kirje %{record}"
       too_long:
-        one: on liiga pikk (maksimum on 1 tähemärk)
+        one: on liiga pikk (maksimum on %{count} tähemärk)
         other: on liiga pikk (maksimum on %{count} tähemärki)
       too_short:
-        one: on liiga lühike (miinimum on 1 tähemärk)
+        one: on liiga lühike (miinimum on %{count} tähemärk)
         other: on liiga lühike (miinimum on %{count} tähemärki)
       wrong_length:
-        one: on vale pikkus (peaks olema 1 tähemärk)
+        one: on vale pikkus (peaks olema %{count} tähemärk)
         other: on vale pikkus (peaks olema %{count} tähemärki)
       other_than: "peab olema midagi muud, kui %{count}"
     template:
       body: "Järgmiste väljadega oli probleeme:"
       header:
-        one: 1 viga takistas mudeli %{model} salvestamist
+        one: "%{count} viga takistas mudeli %{model} salvestamist"
         other: "%{count} viga takistasid mudeli %{model} salvestamist"
     embed:
       load_from_remote: "Selle postituse laadimisel ilmnes üks viga"
@@ -123,7 +123,7 @@ et:
   reading_time: "Lugemise aeg"
   likes: "Meeldimisi"
   too_many_replies:
-    one: "Vabandame, kuid ajutiselt on uutel kasutajatel lubatud 1 vastus teema kohta."
+    one: "Vabandame, kuid ajutiselt on uutel kasutajatel lubatud %{count} vastus teema kohta."
     other: "Vabandame, kuid ajutiselt on uutel kasutajatel lubatud %{count} vastust teema kohta."
   embed:
     start_discussion: "Alusta vestlust"
@@ -133,7 +133,7 @@ et:
     no_hosts: "Sängitamiseks pole ühtegi hosti seadistatud."
     configure: "Sängitamise seadistamine"
     more_replies:
-      one: "veel 1 vastus"
+      one: "veel %{count} vastus"
       other: "veel %{count} vastust"
     loading: "Laen arutelu..."
     permalink: "Püsilink"
@@ -210,7 +210,7 @@ et:
       trust_level_4: "usaldustase_4"
   education:
     until_posts:
-      one: "1 postitus"
+      one: "%{count} postitus"
       other: "%{count} postitust"
     "new-topic": |
       Teretulemast saidile %{site_name} &mdash; **tänud uue vestluse alustamise eest!**
@@ -332,84 +332,82 @@ et:
       broken: "See pilt on katki"
   rate_limiter:
     hours:
-      one: "1 tund"
+      one: "%{count} tund"
       other: "%{count} tundi"
     minutes:
-      one: "1 minut"
+      one: "%{count} minut"
       other: "%{count} minutit"
     seconds:
-      one: "1 sekund"
+      one: "%{count} sekund"
       other: "%{count} sekundit"
   datetime:
     distance_in_words:
       half_a_minute: "< 1m"
       less_than_x_seconds:
-        one: "< 1s"
+        one: "< %{count}s"
         other: "< %{count}s"
       x_seconds:
-        one: "1s"
+        one: "%{count}s"
         other: "%{count}s"
       less_than_x_minutes:
-        one: "< 1m"
+        one: "< %{count}m"
         other: "< %{count}m"
       x_minutes:
-        one: "1m"
+        one: "%{count}m"
         other: "%{count}m"
       about_x_hours:
-        one: "1h"
+        one: "%{count}h"
         other: "%{count}h"
       x_days:
-        one: "1p"
+        one: "%{count}p"
         other: "%{count}p"
       about_x_months:
-        one: "1kuu"
+        one: "%{count}kuu"
         other: "%{count}kuud"
       x_months:
-        one: "1kuu"
+        one: "%{count}kuu"
         other: "%{count}kuud"
       about_x_years:
-        one: "1a"
+        one: "%{count}a"
         other: "%{count}a"
       over_x_years:
-        one: "> 1a"
+        one: "> %{count}a"
         other: "> %{count}a"
       almost_x_years:
-        one: "1a"
+        one: "%{count}a"
         other: "%{count}a"
     distance_in_words_verbose:
       half_a_minute: "just praegu"
-      less_than_x_seconds:
-        one: "hetk tagasi"
-        other: "hetk tagasi"
+      less_than_x_seconds: "hetk tagasi"
       x_seconds:
-        one: "1 sekund tagasi"
+        one: "%{count} sekund tagasi"
         other: "%{count} sekundit tagasi"
       less_than_x_minutes:
-        one: "vähem kui 1 minut tagasi"
+        one: "vähem kui %{count} minut tagasi"
         other: "vähem kui %{count} minutit tagasi"
       x_minutes:
-        one: "1 minut tagasi"
+        one: "%{count} minut tagasi"
         other: "%{count} minutit tagasi"
       about_x_hours:
-        one: "1 tund tagasi"
+        one: "%{count} tund tagasi"
         other: "%{count} tundi tagasi"
       x_days:
-        one: "1 päev tagasi"
+        one: "%{count} päev tagasi"
         other: "%{count} päeva tagasi"
       about_x_months:
-        one: "umbes 1 kuu tagasi"
+        one: "umbes %{count} kuu tagasi"
         other: "umbes%{count} kuud tagasi"
       x_months:
-        one: "1 kuu tagasi"
+        one: "%{count} kuu tagasi"
         other: "%{count} kuud tagasi"
       about_x_years:
-        one: "umbes 1 aasta tagasi"
+        one: "umbes %{count} aasta tagasi"
         other: "umbes %{count} aastat tagasi"
       over_x_years:
-        one: "üle 1 aasta tagasi"
+        one: "üle %{count} aasta tagasi"
         other: "üle %{count} aasta tagasi"
       almost_x_years:
-        one: "peaaegu 1 aasta tagasi"
+        one: "peaaegu %{count} aasta tagasi"
         other: "peaaegu %{count} aastat tagasi"
   password_reset:
     no_token: "Vabandust, see parooli uuendamise link on liiga vana. Vajuta sisselogimise nuppu ja kasuta värske lingi saamiseks 'Unustasin parooli'."
@@ -820,7 +818,6 @@ et:
       unread_messages: "Lugemata sõnumid"
       unread_notifications: "Lugemata teavitused"
       liked_received: "Meeldimisi saadud"
-      new_posts: "Uued postitused"
       new_users: "Uued kasutajad"
       popular_topics: "Populaarsed teemad"
       follow_topic: "Jälgi seda teemat"
@@ -1063,14 +1060,10 @@ et:
         fields:
           logo:
             label: "Peamine logo"
-          logo_small:
-            label: "Kompaktne logo"
       icons:
         title: "Ikoonid"
         fields:
-          favicon:
-            label: "Väike ikoon"
-          apple_touch_icon:
+          large_icon:
             label: "Suur ikoon"
       homepage:
         title: "Avaleht"
@@ -1105,6 +1098,8 @@ et:
         title: "Peida postitus"
       delete_spammer:
         title: "Kustuta spämmija"
+      delete_single:
+        title: "Kustuta"
       disagree:
         title: "Ei nõustu"
       ignore:

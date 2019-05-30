@@ -8,6 +8,7 @@ def extract_locale(path)
 end
 
 PLURALIZATION_KEYS ||= ['zero', 'one', 'two', 'few', 'many', 'other']
+ENGLISH_KEYS ||= ['one', 'other']
 
 def find_pluralizations(hash, parent_key = '', pluralizations = Hash.new)
   hash.each do |key, value|
@@ -90,8 +91,11 @@ describe "i18n integrity checks" do
       expect(yaml.keys).to eq([locale])
 
       expect(yaml[locale]["js"]).to be
-      expect(yaml[locale]["admin_js"]).to be
-      # expect(yaml[locale]["wizard_js"]).to be
+
+      if !LocaleSiteSetting.fallback_locale(locale)
+        expect(yaml[locale]["admin_js"]).to be
+        expect(yaml[locale]["wizard_js"]).to be
+      end
     end
   end
 
@@ -104,11 +108,33 @@ describe "i18n integrity checks" do
         expect(english_duplicates).to be_empty
       end
 
-      find_pluralizations(english_yaml).each do |key, hash|
-        next if key["messages.restrict_dependent_destroy"]
+      context "pluralizations" do
+        wrong_keys = []
+        invald_one_keys = []
 
-        it "has valid pluralizations for '#{key}'" do
-          expect(hash.keys).to contain_exactly("one", "other")
+        find_pluralizations(english_yaml).each do |key, hash|
+          next if key["messages.restrict_dependent_destroy"]
+
+          wrong_keys << key if hash.keys.sort != ENGLISH_KEYS
+
+          if one_value = hash['one']
+            invald_one_keys << key if one_value.include?('1') && !one_value.match?(/%{count}|{{count}}/)
+          end
+        end
+
+        it "has valid pluralizations keys" do
+          keys = wrong_keys.join("\n")
+          expect(wrong_keys).to be_empty, <<~MSG
+            Pluralized strings must have only the sub-keys 'one' and 'other'.
+            The following keys have missing or additional keys:\n\n#{keys}
+          MSG
+        end
+
+        it "should use %{count} instead of 1 in 'one' keys" do
+          keys = invald_one_keys.join(".one\n")
+          expect(invald_one_keys).to be_empty, <<~MSG
+            The following keys contain the number 1 instead of the interpolation key %{count}:\n\n#{keys}
+          MSG
         end
       end
 

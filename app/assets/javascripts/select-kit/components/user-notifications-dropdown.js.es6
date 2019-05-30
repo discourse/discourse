@@ -48,7 +48,7 @@ export default DropdownSelectBox.extend({
   },
 
   changeToNormal() {
-    this.get("updateNotificationLevel")("normal")
+    this.updateNotificationLevel("normal")
       .then(() => {
         this.set("user.ignored", false);
         this.set("user.muted", false);
@@ -57,7 +57,7 @@ export default DropdownSelectBox.extend({
       .catch(popupAjaxError);
   },
   changeToMuted() {
-    this.get("updateNotificationLevel")("mute")
+    this.updateNotificationLevel("mute")
       .then(() => {
         this.set("user.ignored", false);
         this.set("user.muted", true);
@@ -67,7 +67,7 @@ export default DropdownSelectBox.extend({
   },
   changeToIgnored() {
     const controller = showModal("ignore-duration", {
-      model: this.get("user")
+      model: this.user
     });
     controller.setProperties({
       onSuccess: () => {

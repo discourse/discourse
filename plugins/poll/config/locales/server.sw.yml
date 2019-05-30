@@ -17,10 +17,10 @@ sw:
     default_poll_must_have_at_least_2_options: "Chaguzi lazima ziwe angalau na machaguo 2."
     named_poll_must_have_at_least_2_options: "Chaguzi yenye jina <strong>%{name}</strong> lazima iwe na angalau machaguo 2."
     default_poll_must_have_less_options:
-      one: "Chaguzi lazima uwe na chaguo chini ya 1."
+      one: "Chaguzi lazima uwe na chaguo chini ya %{count}."
       other: "Uchaguzi lazima uwe na chaguo chini ya %{count}."
     named_poll_must_have_less_options:
-      one: "Uchaguzi wenye jina <strong>%{name}</strong> lazima uwe na chaguo chini ya 1."
+      one: "Uchaguzi wenye jina <strong>%{name}</strong> lazima uwe na chaguo chini ya %{count}."
       other: "Uchaguzi wenye jina <strong>%{name}</strong> lazima uwe na machaguo chini ya %{count}."
     default_poll_must_have_different_options: "Uchaguzi lazima uwe na machaguo tofauti."
     named_poll_must_have_different_options: "Uchaguzi wenye jina <strong>%{name}</strong> lazima uwe na machaguo tofauti."

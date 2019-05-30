@@ -32,6 +32,7 @@
 #       docker run -e SKIP_CORE=1 SINGLE_PLUGIN='my-awesome-plugin' -v $(pwd)/my-awesome-plugin:/var/www/discourse/plugins/my-awesome-plugin discourse/discourse_test:release
 
 def run_or_fail(command)
+  log(command)
   pid = Process.spawn(command)
   Process.wait(pid)
   $?.exitstatus == 0
@@ -45,6 +46,10 @@ def run_or_fail_prettier(*patterns)
     puts "Skipping prettier. Pattern not found."
     true
   end
+end
+
+def log(message)
+  puts "[#{Time.now.strftime("%Y-%m-%d %H:%M:%S")}] #{message}"
 end
 
 desc 'Run all tests (JS and code in a standalone environment)'

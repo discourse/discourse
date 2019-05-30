@@ -724,6 +724,7 @@ const Composer = RestModel.extend({
     }
 
     const props = {
+      topic_id: this.topic.id,
       raw: this.reply,
       raw_old: this.editConflict ? null : this.originalText,
       edit_reason: opts.editReason,
@@ -954,7 +955,6 @@ const Composer = RestModel.extend({
       "action",
       "title",
       "categoryId",
-      "postId",
       "archetypeId",
       "whisper",
       "metaData",
@@ -964,9 +964,12 @@ const Composer = RestModel.extend({
       "noBump"
     );
 
-    data = Object.assign(data, { usernames: this.targetUsernames });
+    data = Object.assign(data, {
+      usernames: this.targetUsernames,
+      postId: this.get("post.id")
+    });
 
-    if (this.get("post.id") && !Ember.isEmpty(this.originalText)) {
+    if (data.postId && !Ember.isEmpty(this.originalText)) {
       data.originalText = this.originalText;
     }
 

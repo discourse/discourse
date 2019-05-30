@@ -6,16 +6,20 @@ import computed from "ember-addons/ember-computed-decorators";
 export default Ember.Controller.extend({
   loading: false,
   filters: null,
-  userHistoryActions: [],
-
   filtersExists: Ember.computed.gt("filterCount", 0),
 
+  init() {
+    this._super(...arguments);
+
+    this.userHistoryActions = [];
+  },
+
   filterActionIdChanged: function() {
-    const filterActionId = this.get("filterActionId");
+    const filterActionId = this.filterActionId;
     if (filterActionId) {
       this._changeFilters({
         action_name: filterActionId,
-        action_id: this.get("userHistoryActions").findBy("id", filterActionId)
+        action_id: this.userHistoryActions.findBy("id", filterActionId)
           .action_id
       });
     }
@@ -35,7 +39,7 @@ export default Ember.Controller.extend({
   _refresh() {
     this.set("loading", true);
 
-    var filters = this.get("filters"),
+    var filters = this.filters,
       params = {},
       count = 0;
 
@@ -52,7 +56,7 @@ export default Ember.Controller.extend({
     StaffActionLog.findAll(params)
       .then(result => {
         this.set("model", result.staff_action_logs);
-        if (this.get("userHistoryActions").length === 0) {
+        if (this.userHistoryActions.length === 0) {
           let actionTypes = result.user_history_actions.map(action => {
             return {
               id: action.id,
@@ -80,7 +84,7 @@ export default Ember.Controller.extend({
   }.on("init"),
 
   _changeFilters: function(props) {
-    this.get("filters").setProperties(props);
+    this.filters.setProperties(props);
     this.scheduleRefresh();
   },
 

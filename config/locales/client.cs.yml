@@ -45,52 +45,52 @@ cs:
       tiny:
         half_a_minute: "< 1m"
         less_than_x_seconds:
-          one: "< 1s"
+          one: "< %{count}s"
           few: "< %{count}s"
           many: "< %{count}s"
           other: "< %{count}s"
         x_seconds:
-          one: "1s"
+          one: "%{count}s"
           few: "%{count}s"
           many: "%{count}s"
           other: "%{count}s"
         less_than_x_minutes:
-          one: "< 1m"
+          one: "< %{count}m"
           few: "< %{count}m"
           many: "< %{count}m"
           other: "< %{count}m"
         x_minutes:
-          one: "1m"
+          one: "%{count}m"
           few: "%{count}m"
           many: "%{count}m"
           other: "%{count}m"
         about_x_hours:
-          one: "1h"
+          one: "%{count}h"
           few: "%{count}h"
           many: "%{count}h"
           other: "%{count}h"
         x_days:
-          one: "1d"
+          one: "%{count}d"
           few: "%{count}d"
           many: "%{count}d"
           other: "%{count}d"
         x_months:
-          one: "1 měsíc"
+          one: "%{count} měsíc"
           few: "%{count} měsíce"
           many: "%{count} měsíců"
           other: "%{count} měsíců"
         about_x_years:
-          one: "1r"
+          one: "%{count}r"
           few: "%{count}r"
           many: "%{count}let"
           other: "%{count}let"
         over_x_years:
-          one: "> 1r"
+          one: "> %{count}r"
           few: "> %{count}r"
           many: "> %{count}let"
           other: "> %{count}let"
         almost_x_years:
-          one: "1r"
+          one: "%{count}r"
           few: "%{count}r"
           many: "%{count}let"
           other: "%{count}let"
@@ -98,50 +98,50 @@ cs:
         date_year: "MMMM YYYY"
       medium:
         x_minutes:
-          one: "1 minuta"
+          one: "%{count} minuta"
           few: "%{count} minuty"
           many: "%{count} minut"
           other: "%{count} minut"
         x_hours:
-          one: "1 hodina"
+          one: "%{count} hodina"
           few: "%{count} hodiny"
           many: "%{count} hodin"
           other: "%{count} hodin"
         x_days:
-          one: "1 den"
+          one: "%{count} den"
           few: "%{count} dny"
           many: "%{count} dní"
           other: "%{count} dní"
         date_year: "D. M. YYYY"
       medium_with_ago:
         x_minutes:
-          one: "před 1 minutou"
+          one: "před %{count} minutou"
           few: "před %{count} minutami"
           many: "před %{count} minutami"
           other: "před %{count} minutami"
         x_hours:
-          one: "před 1 hodinou"
+          one: "před %{count} hodinou"
           few: "před %{count} hodinami"
           many: "před %{count} hodinami"
           other: "před %{count} hodinami"
         x_days:
-          one: "před 1 dnem"
+          one: "před %{count} dnem"
           few: "před %{count} dny"
           many: "před %{count} dny"
           other: "před %{count} dny"
       later:
         x_days:
-          one: "za 1 den"
+          one: "za %{count} den"
           few: "za %{count} dny"
           many: "o %{count} dní později"
           other: "o %{count} dní později"
         x_months:
-          one: "za 1 měsíc"
+          one: "za %{count} měsíc"
           few: "za %{count} měsíce"
           many: "o %{count} měsíců později"
           other: "o %{count} měsíců později"
         x_years:
-          one: "za 1 rok"
+          one: "za %{count} rok"
           few: "za %{count} roků"
           many: "o %{count} let později"
           other: "o %{count} let později"
@@ -343,7 +343,6 @@ cs:
         save_changes: "Uložit změny"
         title: "Nastavení"
       moderation_history: "Historie moderování"
-      title: "Potřebuje posouzení"
       topic: "Téma:"
       user:
         username: "Uživatelské jméno"
@@ -403,7 +402,7 @@ cs:
       posts_read: "Přečteno"
       posts_read_long: "Příspěvků přečteno"
       total_rows:
-        one: "1 uživatel"
+        one: "%{count} uživatel"
         few: "%{count} uživatelé"
         many: "%{count} uživatelů"
         other: "%{count} uživatelů"
@@ -579,7 +578,7 @@ cs:
       toggle_ordering: "Přepnout editaci pořadí"
       subcategories: "Podkategorie"
       topic_sentence:
-        one: "1 téma"
+        one: "%{count} téma"
         few: "%{count} témata"
         many: "%{count} témat"
         other: "%{count} témat"
@@ -617,6 +616,7 @@ cs:
       private_message: "Zpráva"
       private_messages: "Zprávy"
       user_notifications:
+        ignore_duration_username: "Uživatelské jméno"
         ignore_duration_save: "ignorovat"
         mute_option: "Ztišené"
         normal_option: "Normální"
@@ -1076,7 +1076,7 @@ cs:
       reached: "<b>%{relativeAge}</b> – <a href='%{url}' target='_blank'>%{rate}</a> dosáhlo limitu stránky, který je %{siteSettingRate}."
       exceeded: "<b>%{relativeAge}</b> – <a href='%{url}' target='_blank'>%{rate}</a> přesahuje limit stránky, který je %{siteSettingRate}."
       rate:
-        one: "1 chyba/%{duration}"
+        one: "%{count} chyba/%{duration}"
         few: "%{count} chyby/%{duration}"
         many: "%{count} chyb/%{duration}"
         other: "%{count} chyb/%{duration}"
@@ -1306,7 +1306,7 @@ cs:
       drafts_offline: "koncepty offline"
       group_mentioned_limit: "<b>Varování!</b> Zmínili jste <a href='{{group_link}}'>{{group}}</a>, ale protože má tato skupina více členů než je administrátorem nastavený limit maximálního počtu {{max}} uživatelů, kteří mohou být informováni, nebude informován nikdo."
       group_mentioned:
-        one: "Zmíněním {{group}}, upozorníš <a href='{{group_link}}'>1 člověka</a> – jste si jistý/á?"
+        one: "Zmíněním {{group}}, upozorníš <a href='{{group_link}}'>%{count} člověka</a> – jste si jistý/á?"
         few: "Zmíněním {{group}}, upozorníš <a href='{{group_link}}'>{{count}} lidi</a> – jste si jistý/á?"
         many: "Zmíněním {{group}}, upozorníš <a href='{{group_link}}'>{{count}} lidí</a> – jste si jistý/á?"
         other: "Zmíněním {{group}}, upozorníš <a href='{{group_link}}'>{{count}} lidí</a> – jste si jistý/á?"
@@ -1343,7 +1343,6 @@ cs:
       remove_featured_link: "Odstranit odkaz z tématu."
       reply_placeholder: "Pište sem. Můžete použít Markdown, BBCode nebo HTML. Obrázky nahrajte přetáhnutím nebo vložením ze schránky."
       reply_placeholder_no_images: "Pište sem. Můžete použít Markdown, BBCode nebo HTML."
-      reply_placeholder_choose_category: "Musíte vybrat kategorii, než sem začnete psát."
       view_new_post: "Zobrazit váš nový příspěvek."
       saving: "Ukládám"
       saved: "Uloženo!"
@@ -1416,12 +1415,12 @@ cs:
     notifications:
       tooltip:
         regular:
-          one: "1 nepřečtene upozornění"
+          one: "%{count} nepřečtene upozornění"
           few: "{{count}} nepřečtená upozornění"
           many: "{{count}} nepřečtených upozornění"
           other: "{{count}} nepřečtených upozornění"
         message:
-          one: "1 nepřečtená zpráva"
+          one: "%{count} nepřečtená zpráva"
           few: "{{count}} nepřečtené zprávy"
           many: "{{count}} nepřečtených zpráv"
           other: "{{count}} nepřečtených zpráv"
@@ -1438,7 +1437,7 @@ cs:
       liked: "<span>{{username}}</span> {{description}}"
       liked_2: "<span>{{username}}, {{username2}}</span> {{description}}"
       liked_many:
-        one: "<span>{{username}}, {{username2}} a 1 další</span> {{description}}"
+        one: "<span>{{username}}, {{username2}} a %{count} další</span> {{description}}"
         few: "<span>{{username}}, {{username2}} a {{count}} další</span> {{description}}"
         many: "<span>{{username}}, {{username2}} a {{count}} dalších</span> {{description}}"
         other: "<span>{{username}}, {{username2}} a {{count}} dalších</span> {{description}}"
@@ -1493,7 +1492,7 @@ cs:
       clear_all: "Vymazat vše"
       too_short: "Hledaný výraz je příliš krátký."
       result_count:
-        one: "<span>1 výsledek pro</span><span class='term'>{{term}}</span>"
+        one: "<span>%{count} výsledek pro</span><span class='term'>{{term}}</span>"
         few: "<span>{{count}}{{plus}} výsledky pro</span><span class='term'>{{term}}</span>"
         many: "<span>{{count}}{{plus}} výsledků pro</span><span class='term'>{{term}}</span>"
         other: "<span>{{count}}{{plus}} výsledků pro</span><span class='term'>{{term}}</span>"
@@ -1587,7 +1586,7 @@ cs:
         notification_level: "Upozornění"
         choose_new_category: "Zvolte novou kategorii pro témata:"
         selected:
-          one: "Vybrali jste <b>1</b> téma."
+          one: "Vybrali jste <b>%{count}</b> téma."
           few: "Vybrali jste <b>{{count}}</b> témata."
           many: "Vybrali jste <b>{{count}}</b> témat."
           other: "Vybrali jste <b>{{count}}</b> témat."
@@ -1623,7 +1622,7 @@ cs:
         search: "There are no more search results."
     topic:
       filter_to:
-        one: "1 příspěvek v tématu"
+        one: "%{count} příspěvek v tématu"
         few: "{{count}} příspěvky v tématu"
         many: "{{count}} příspěvků v tématu"
         other: "{{count}} příspěvků v tématu"
@@ -1644,12 +1643,12 @@ cs:
       new: "nové téma"
       unread: "nepřečtený"
       new_topics:
-        one: "1 nové téma"
+        one: "%{count} nové téma"
         few: "{{count}} nová témata"
         many: "{{count}} nových témat"
         other: "{{count}} nových témat"
       unread_topics:
-        one: "1 nepřečtené téma"
+        one: "%{count} nepřečtené téma"
         few: "{{count}} nepřečtená témata"
         many: "{{count}} nepřečtených témat"
         other: "{{count}} nepřečtených témat"
@@ -1665,17 +1664,17 @@ cs:
         title: "Téma nenalezeno"
         description: "Bohužel se nám nepovedlo najít toto téma. Nebylo odstraněno moderátorem?"
       total_unread_posts:
-        one: "máte 1 nepřečtený příspěvek v tomto tématu"
+        one: "máte %{count} nepřečtený příspěvek v tomto tématu"
         few: "máte {{count}} nepřečtené příspěvky v tomto tématu."
         many: "máte {{count}} nepřečtených příspěvků v tomto tématu."
         other: "máte {{count}} nepřečtených příspěvků v tomto tématu."
       unread_posts:
-        one: "máte 1 nepřečtený příspěvěk v tomto tématu"
+        one: "máte %{count} nepřečtený příspěvěk v tomto tématu"
         few: "máte {{count}} nepřečtené příspěvky v tomto tématu"
         many: "máte {{count}} nepřečtených příspěvků v tomto tématu"
         other: "máte {{count}} nepřečtených příspěvků v tomto tématu"
       new_posts:
-        one: "je zde 1 nový příspěvek od doby, kdy jste toto téma naposledy četli"
+        one: "je zde %{count} nový příspěvek od doby, kdy jste toto téma naposledy četli"
         few: "jsou zde {{count}} nové příspěvky od doby, kdy jste toto téma naposledy četli"
         many: "je zde {{count}} nových příspěvků od doby, kdy jste toto téma naposledy četli"
         other: "je zde {{count}} nových příspěvků od doby, kdy jste toto téma naposledy četli"
@@ -1747,7 +1746,7 @@ cs:
         auto_reminder: "Toto téma ti připomeneme %{timeLeft}."
       auto_close_title: "Nastavení automatického zavření"
       auto_close_immediate:
-        one: "Poslední příspěvek v témetu je již 1 hodinu starý, takže toto téma bude okamžitě uzavřeno."
+        one: "Poslední příspěvek v témetu je již %{count} hodinu starý, takže toto téma bude okamžitě uzavřeno."
         few: "Poslední příspěvek v témetu je již %{count} hodiny starý, takže toto téma bude okamžitě uzavřeno."
         many: "Poslední příspěvek v témetu je již %{count} hodin starý, takže toto téma bude okamžitě uzavřeno."
         other: "Poslední příspěvek v témetu je již %{count} hodin starý, takže toto téma bude okamžitě uzavřeno."
@@ -1763,7 +1762,6 @@ cs:
         jump_bottom: "na poslední příspěvek"
         jump_prompt: "přejít na..."
         jump_prompt_of: "%{count} příspěvků"
-        jump_prompt_long: "Na který příspěvek chcete přejít?"
         jump_bottom_with_number: "Skočit na příspěvěk %{post_number}"
         jump_prompt_to_date: "do data"
         jump_prompt_or: "nebo"
@@ -1872,7 +1870,7 @@ cs:
         global_pin_note: "Uživatelé mohou odepnout téma sami pro sebe."
         not_pinned_globally: "Nemáte žádná globálně připevněná témata."
         already_pinned_globally:
-          one: "V současnosti globálně připevněná témata: <strong class='badge badge-notification unread'>1</strong>"
+          one: "V současnosti globálně připevněná témata: <strong class='badge badge-notification unread'>%{count}</strong>"
           few: "V současnosti globálně připevněná témata: <strong class='badge badge-notification unread'>{{count}}</strong>"
           many: "V současnosti globálně připevněná témata: <strong class='badge badge-notification unread'>{{count}}</strong>"
           other: "V současnosti globálně připevněná témata: <strong class='badge badge-notification unread'>{{count}}</strong>"
@@ -1912,7 +1910,7 @@ cs:
       login_reply: "Přihlaste se, chcete-li odpovědět"
       filters:
         n_posts:
-          one: "Je zobrazen pouze 1 příspěvek"
+          one: "Je zobrazen pouze %{count} příspěvek"
           few: "Jsou zobrazeny pouze {{count}} příspěvky"
           many: "Je zobrazeno pouze {{count}} příspěvků"
           other: "Je zobrazeno pouze {{count}} příspěvků"
@@ -1978,7 +1976,7 @@ cs:
         select_all: vybrat všechny
         deselect_all: zrušit výběr
         description:
-          one: Máte označen <b>1</b> příspěvek.
+          one: Máte označen <b>%{count}</b> příspěvek.
           few: "Máte označeny <b>{{count}}</b> příspěvky."
           many: "Máte označeno <b>{{count}}</b> příspěvků."
           other: "Máte označeno <b>{{count}}</b> příspěvků."
@@ -2002,7 +2000,7 @@ cs:
       expand_collapse: "rozbalit/sbalit"
       locked: "Personál znemožnil upravování na tomto příspěvku"
       gap:
-        one: "zobrazit 1 skrytou odpověď"
+        one: "zobrazit %{count} skrytou odpověď"
         few: "zobrazit {{count}} skryté odpovědi"
         many: "zobrazit {{count}} skrytých odpovědí"
         other: "zobrazit {{count}} skrytých odpovědí"
@@ -2013,13 +2011,13 @@ cs:
         many: "{{count}} odpovědí"
         other: "{{count}} odpovědí"
       has_likes_title:
-        one: "1 člověku se líbí tento příspěvek"
+        one: "%{count} člověku se líbí tento příspěvek"
         few: "{{count}} lidem se líbí tento příspěvek"
         many: "{{count}} lidem se líbí tento příspěvek"
         other: "{{count}} lidem se líbí tento příspěvek"
       has_likes_title_only_you: "tento příspěvek se mi líbí"
       has_likes_title_you:
-        one: "vám a 1 dalšímu člověku se tento příspěvek líbí"
+        one: "vám a %{count} dalšímu člověku se tento příspěvek líbí"
         few: "vám a {{count}} dalším lidem se tento příspěvek líbí"
         many: "vám a {{count}} dalším lidem se tento příspěvek líbí"
         other: "vám a {{count}} dalším lidem se tento příspěvek líbí"
@@ -2060,12 +2058,12 @@ cs:
         delete_replies:
           confirm: "Chceš také smazat odpovědi k tomuto příspěvku? "
           direct_replies:
-            one: "Ano a 1 přímá odpověď"
+            one: "Ano a %{count} přímá odpověď"
             few: "Ano a další přímé odpovědi"
             many: "Ano a další {{count}} odpovědi"
             other: "Ano a další {{count}} odpovědi"
           all_replies:
-            one: "Ano a další 1 odpověď"
+            one: "Ano a další %{count} odpověď"
             few: "Ano a dalších {{count}} odpovědí"
             many: "Ano a dalších {{count}} odpovědí"
             other: "Ano a dalších {{count}} odpovědí"
@@ -2120,78 +2118,6 @@ cs:
           notify_user: "Tomuto uživateli jste zaslali zprávu"
           bookmark: "Přidali jste si tento příspěvek do záložek"
           like: "Toto se vám líbí"
-        by_you_and_others:
-          off_topic:
-            one: "Vy a 1 další člověk jste označili tento příspěvek jako off-topic"
-            few: "Vy a {{count}} další lidé jste označili tento příspěvek jako off-topic"
-            many: "Vy a {{count}} dalších lidí jste označili tento příspěvek jako off-topic"
-            other: "Vy a {{count}} dalších lidí jste označili tento příspěvek jako off-topic"
-          spam:
-            one: "Vy a 1 další člověk jste označili tento příspěvek jako spam"
-            few: "Vy a {{count}} další lidé jste označili tento příspěvek jako spam"
-            many: "Vy a {{count}} dalších lidí jste označili tento příspěvek jako spam"
-            other: "Vy a {{count}} dalších lidí jste označili tento příspěvek jako spam"
-          inappropriate:
-            one: "Vy a 1 další člověk jste označili tento příspěvek jako nevhodný"
-            few: "Vy a {{count}} další lidé jste označili tento příspěvek jako nevhodný"
-            many: "Vy a {{count}} dalších lidí jste označili tento příspěvek jako nevhodný"
-            other: "Vy a {{count}} dalších lidí jste označili tento příspěvek jako nevhodný"
-          notify_moderators:
-            one: "Vy a 1 další člověk jste nahlásili tento příspěvek"
-            few: "Vy a {{count}} další lidé jste nahlásili tento příspěvek"
-            many: "Vy a {{count}} dalších lidí jste nahlásili tento příspěvek"
-            other: "Vy a {{count}} dalších lidí jste nahlásili tento příspěvek"
-          notify_user:
-            one: "Vy a 1 další uživatel jste poslali zprávu tomuto uživateli"
-            few: "Vy a {{count}} ostatní lidé jste poslali zprávu tomuto uživateli"
-            many: "Vy a {{count}} ostatních lidí jste poslali zprávu tomuto uživateli"
-            other: "Vy a {{count}} ostatních lidí jste poslali zprávu tomuto uživateli"
-          bookmark:
-            one: "Vy a 1 další člověk jste si přidali tento příspěvek do záložek"
-            few: "Vy a {{count}} další lidé jste si přidali tento příspěvek do záložek"
-            many: "Vy a {{count}} dalších lidí si přidali tento příspěvek do záložek"
-            other: "Vy a {{count}} dalších lidí si přidali tento příspěvek do záložek"
-          like:
-            one: "Vám a 1 dalšímu člověku se tento příspěvek líbí"
-            few: "Vám a {{count}} dalším lidem se tento příspěvek líbí"
-            many: "Vám a {{count}} dalším lidem se tento příspěvek líbí"
-            other: "Vám a {{count}} dalším lidem se tento příspěvek líbí"
-        by_others:
-          off_topic:
-            one: "1 člověk označil tento příspěvek jako off-topic"
-            few: "{{count}} lidé označili tento příspěvek jako off-topic"
-            many: "{{count}} lidí označilo tento příspěvek jako off-topic"
-            other: "{{count}} lidí označilo tento příspěvek jako off-topic"
-          spam:
-            one: "1 člověk označil tento příspěvek jako spam"
-            few: "{{count}} lidé označili tento příspěvek jako spam"
-            many: "{{count}} lidí označilo tento příspěvek jako spam"
-            other: "{{count}} lidí označilo tento příspěvek jako spam"
-          inappropriate:
-            one: "1 člověk označil tento příspěvek jako nevhodný"
-            few: "{{count}} lidé označili tento příspěvek jako nevhodný"
-            many: "{{count}} lidí označilo tento příspěvek jako nevhodný"
-            other: "{{count}} lidí označilo tento příspěvek jako nevhodný"
-          notify_moderators:
-            one: "1 člověk nahlásil tento příspěvek"
-            few: "{{count}} lidé nahlásili tento příspěvek"
-            many: "{{count}} lidí nahlásilo tento příspěvek"
-            other: "{{count}} lidí nahlásilo tento příspěvek"
-          notify_user:
-            one: "1 člověk poslal zprávu tomuto uživateli"
-            few: "{{count}} lidé poslali zprávu tomuto uživateli"
-            many: "{{count}} lidí poslalo zprávu tomuto uživateli"
-            other: "{{count}} lidí poslalo zprávu tomuto uživateli"
-          bookmark:
-            one: "1 člověk si přidal tento příspěvek do záložek"
-            few: "{{count}} lidé si přidali tento příspěvek do záložek"
-            many: "{{count}} lidí si přidalo tento příspěvek do záložek"
-            other: "{{count}} lidí si přidalo tento příspěvek do záložek"
-          like:
-            one: "1 člověku se tento příspěvek líbí"
-            few: "{{count}} lidem se tento příspěvek líbí"
-            many: "{{count}} lidem se tento příspěvek líbí"
-            other: "{{count}} lidem se tento příspěvek líbí"
       delete:
         confirm:
           one: "Jsi si jistý, že chceš smazat tento příspěvek?"
@@ -2293,6 +2219,7 @@ cs:
       default_top_period: "Výchozí hlavní doba:"
       allow_badges_label: "Povolit používání odznaků v této kategorii"
       edit_permissions: "Upravit oprávnění"
+      review_group_name: "název skupiny"
       require_topic_approval: "Požadovat schválení moderátorů pro všechna nová témata"
       require_reply_approval: "Požadovat schválení moderátorů pro všechny nové odpovědi"
       this_year: "letos"
@@ -2365,17 +2292,17 @@ cs:
       custom_placeholder_notify_moderators: "Sdělte nám, co vás přesně trápí a kde to bude možné, tak nám poskytněte související odkazy a příklady."
       custom_message:
         at_least:
-          one: "zadejte alespoň 1 znak"
+          one: "zadejte alespoň %{count} znak"
           few: "zadejte alespoň {{count}} znaky"
           many: "zadejte alespoň {{count}} znaků"
           other: "zadejte alespoň {{count}} znaků"
         more:
-          one: "ještě 1..."
+          one: "ještě %{count}..."
           few: "ještě {{count}}..."
           many: "ještě {{count}}..."
           other: "ještě {{count}}..."
         left:
-          one: "1 zbývá"
+          one: "%{count} zbývá"
           few: "{{count}} zbývají"
           many: "{{count}} zbývá"
           other: "{{count}} zbývá"
@@ -2389,14 +2316,14 @@ cs:
       links_title: "Populární odkazy"
       links_shown: "zobrazit více odkazů..."
       clicks:
-        one: "1 kliknutí"
+        one: "%{count} kliknutí"
         few: "%{count} kliknutí"
         many: "%{count} kliknutí"
         other: "%{count} kliknutí"
     post_links:
       about: "expandovat více odkazů v tomto příspěvku"
       title:
-        one: "1 více"
+        one: "%{count} více"
         few: "%{count} více"
         many: "%{count} více"
         other: "%{count} více"
@@ -2439,7 +2366,7 @@ cs:
       other: "zobrazení"
     replies: "Odpovědi"
     views_long:
-      one: "Toto téma bylo zobrazeno 1 krát"
+      one: "Toto téma bylo zobrazeno %{count} krát"
       few: "Toto téma bylo zobrazeno {{number}} krát"
       many: "Toto téma bylo zobrazeno {{number}} krát"
       other: "Toto téma bylo zobrazeno {{number}} krát"
@@ -2470,7 +2397,7 @@ cs:
       latest:
         title: "Aktuální"
         title_with_count:
-          one: "Nedávné (1)"
+          one: "Nedávné (%{count})"
           few: "Nedávná ({{count}})"
           many: "Nedávná ({{count}})"
           other: "Nedávná ({{count}})"
@@ -2491,7 +2418,7 @@ cs:
       unread:
         title: "Nepřečtená"
         title_with_count:
-          one: "Nepřečtená (1)"
+          one: "Nepřečtená (%{count})"
           few: "Nepřečtená ({{count}})"
           many: "Nepřečtená ({{count}})"
           other: "Nepřečtená ({{count}})"
@@ -2503,7 +2430,7 @@ cs:
           other: "{{count}} nepřečtených"
       new:
         lower_title_with_count:
-          one: "1 nové"
+          one: "%{count} nové"
           few: "{{count}} nová"
           many: "{{count}} nových"
           other: "{{count}} nových"
@@ -2562,59 +2489,59 @@ cs:
       title: "Klávesové zkratky"
       jump_to:
         title: "Přejít na"
-        home: "<b>g</b>, <b>h</b> Domů"
-        latest: "<b>g</b>, <b>l</b> Poslední"
-        new: "<b>g</b>, <b>n</b> Nový"
-        unread: "<b>g</b>, <b>u</b> Nepřečtěné"
-        categories: "<b>g</b>, <b>c</b> Kategorie"
-        top: "<b>g</b>, <b>t</b> Nahoru"
-        bookmarks: "<b>g</b>, <b>b</b> Záložky"
-        profile: "<b>g</b>, <b>p</b> Profil"
-        messages: "<b>g</b>, <b>m</b> Zprávy"
-        drafts: "<b>g</b>, <b>d</b> Koncepty"
+        home: "%{shortcut} Domů"
+        latest: "%{shortcut} Poslední"
+        new: "%{shortcut} Nový"
+        unread: "%{shortcut} Nepřečtěné"
+        categories: "%{shortcut} Kategorie"
+        top: "%{shortcut} Nahoru"
+        bookmarks: "%{shortcut} Záložky"
+        profile: "%{shortcut} Profil"
+        messages: "%{shortcut} Zprávy"
+        drafts: "%{shortcut} Koncepty"
       navigation:
         title: "Navigace"
-        jump: "<b>#</b> Přejdi na příspěvek #"
-        back: "<b>u</b> Zpět"
-        up_down: "<b>k</b>/<b>j</b> Posunout označení &uarr; &darr;"
-        open: "<b>o</b> nebo <b>Enter</b> Otevři vybrané téma"
-        next_prev: "<b>shift</b>+<b>j</b>/<b>shift</b>+<b>k</b> Následující/předchozí výběr"
+        jump: "%{shortcut} Přejdi na příspěvek #"
+        back: "%{shortcut} Zpět"
+        up_down: "%{shortcut} Posunout označení &uarr; &darr;"
+        open: "%{shortcut} Otevři vybrané téma"
+        next_prev: "%{shortcut} Následující/předchozí výběr"
       application:
         title: "Aplikace"
-        create: "<b>c</b> Vytvořit nové téma"
-        notifications: "<b>n</b> Otevře upozornění"
-        hamburger_menu: "<b>=</b> Otevře hamburgerové menu"
-        user_profile_menu: "<b>p</b> Otevře uživatelské menu"
-        show_incoming_updated_topics: "<b>.</b> Ukáže aktualizovaná témata"
-        search: "<b>/</b> nebo <b>ctrl</b>+<b>alt</b>+<b>f</b>Vyhledávání"
-        help: "<b>?</b> Otevře seznam klávesových zkratek"
-        dismiss_new_posts: "<b>x</b>, <b>r</b> Označit jako přečtené nové/příspěvky"
-        dismiss_topics: "<b>x</b>, <b>t</b> Označit témata jako přečtená"
-        log_out: "<b>shift</b>+<b>z</b> <b>shift</b>+<b>z</b> Odhlásit se"
+        create: "%{shortcut} Vytvořit nové téma"
+        notifications: "%{shortcut} Otevře upozornění"
+        hamburger_menu: "%{shortcut} Otevře hamburgerové menu"
+        user_profile_menu: "%{shortcut} Otevře uživatelské menu"
+        show_incoming_updated_topics: "%{shortcut} Ukáže aktualizovaná témata"
+        search: "%{shortcut}Vyhledávání"
+        help: "%{shortcut} Otevře seznam klávesových zkratek"
+        dismiss_new_posts: "%{shortcut} Označit jako přečtené nové/příspěvky"
+        dismiss_topics: "%{shortcut} Označit témata jako přečtená"
+        log_out: "%{shortcut} Odhlásit se"
       composing:
         title: "Skládání"
-        return: "<b>shift</b>+<b>c</b>návrat ke skládání"
-        fullscreen: "<b>shift</b>+<b>F11</b> Editor na celou obrazovku"
+        return: "%{shortcut}návrat ke skládání"
+        fullscreen: "%{shortcut} Editor na celou obrazovku"
       actions:
         title: "Akce"
         bookmark_topic: "Přidat záložku na téma"
-        pin_unpin_topic: "<b>shift</b>+<b>p</b> Připnout/Odepnout téma"
-        share_topic: "<b>shift</b>+<b>s</b> Sdílet téma"
-        share_post: "<b>s</b> Sdílet příspěvek"
-        reply_as_new_topic: "<b>t</b> Odpovědět v propojeném tématu"
-        reply_topic: "<b>shift</b>+<b>r</b> Odpovědět na téma"
-        reply_post: "<b>r</b> Odpovědět na příspěvek"
-        quote_post: "<b>q</b> Citovat příspěvek"
-        like: "<b>l</b> Dát \"líbí se\" k příspěvku"
-        flag: "<b>!</b> Nahlásit příspěvek"
-        bookmark: "<b>b</b> Přidat záložku na příspěvek"
-        edit: "<b>e</b> Upravit příspěvek"
-        delete: "<b>d</b> Smazat příspěvek"
-        mark_muted: "<b>m</b>, <b>m</b> Ztišit téma"
-        mark_regular: "<b>m</b>, <b>r</b>Obvyklé (výchozí) téma"
-        mark_tracking: "<b>m</b>, <b>t</b> Sledovat téma"
-        mark_watching: "<b>m</b>, <b>w</b> Hlídat téma"
-        print: "<b>ctrl</b>+<b>p</b> Vytiskni téma"
+        pin_unpin_topic: "%{shortcut} Připnout/Odepnout téma"
+        share_topic: "%{shortcut} Sdílet téma"
+        share_post: "%{shortcut} Sdílet příspěvek"
+        reply_as_new_topic: "%{shortcut} Odpovědět v propojeném tématu"
+        reply_topic: "%{shortcut} Odpovědět na téma"
+        reply_post: "%{shortcut} Odpovědět na příspěvek"
+        quote_post: "%{shortcut} Citovat příspěvek"
+        like: "%{shortcut} Dát \"líbí se\" k příspěvku"
+        flag: "%{shortcut} Nahlásit příspěvek"
+        bookmark: "%{shortcut} Přidat záložku na příspěvek"
+        edit: "%{shortcut} Upravit příspěvek"
+        delete: "%{shortcut} Smazat příspěvek"
+        mark_muted: "%{shortcut} Ztišit téma"
+        mark_regular: "%{shortcut}Obvyklé (výchozí) téma"
+        mark_tracking: "%{shortcut} Sledovat téma"
+        mark_watching: "%{shortcut} Hlídat téma"
+        print: "%{shortcut} Vytiskni téma"
     badges:
       earned_n_times:
         one: "Získal tento odznak krát"
@@ -2627,17 +2554,17 @@ cs:
       allow_title: "Tento odznak můžeš použít jako titul"
       multiple_grant: "Toto si můžeš zasloužit několikrát"
       badge_count:
-        one: "1 odznak"
+        one: "%{count} odznak"
         few: "%{count} odznaky"
         many: "%{count} odznaků"
         other: "%{count} odznaků"
       more_badges:
-        one: "+1 další"
+        one: "+%{count} další"
         few: "+%{count} další"
         many: "+%{count} dalších"
         other: "+%{count} dalších"
       granted:
-        one: "1 přidělen"
+        one: "%{count} přidělen"
         few: "%{count} přidělen"
         many: "%{count} přidělen"
         other: "%{count} přidělen"
@@ -2764,7 +2691,6 @@ cs:
         title: "Seznam dostupných reportů"
       dashboard:
         title: "Rozcestník"
-        last_updated: "Přehled naposled aktualizován:"
         version: "Verze Discourse"
         up_to_date: "Máte aktuální!"
         critical_available: "Je k dispozici důležitá aktualizace."
@@ -2810,6 +2736,11 @@ cs:
           start_date: "Datum začátku"
           end_date: "Datum konce"
           groups: "Všechny skupiny"
+          filters:
+            group:
+              label: Skupina
+            category:
+              label: Kategorie
       commits:
         latest_changes: "Poslední změny:"
         by: "od"
@@ -2933,12 +2864,12 @@ cs:
           none: "Nejsou zde žádné související události."
           redeliver: "Znovu dodat"
           incoming:
-            one: "1 nová událost"
+            one: "%{count} nová událost"
             few: "{{count}} nové události"
             many: "{{count}} nových událostí"
             other: "{{count}} nových událostí"
           completed_in:
-            one: "Dokončen za 1 sekundu."
+            one: "Dokončen za %{count} sekundu."
             few: "Dokončen za {{count}} sekundy."
             many: "Dokončen za {{count}} sekund."
             other: "Dokončen za {{count}} sekund."
@@ -3045,7 +2976,6 @@ cs:
         new: "Nové"
         new_style: "Nový styl"
         delete: "Smazat"
-        delete_confirm: "Smazat tento motiv? "
         color: "Barva"
         opacity: "Neprůhlednost"
         copy: "Kopírovat"
@@ -3373,7 +3303,7 @@ cs:
         clear_filter: "Zrušit"
         show_words: "zobrazit slova"
         word_count:
-          one: "1 slovo"
+          one: "%{count} slovo"
           few: "%{count} slova"
           many: "%{count} slov"
           other: "%{count} slov"
@@ -3523,7 +3453,7 @@ cs:
           many: "Všechny příspěvky nelze smazat. Některé příspěvky jsou starší než %{count} dní. (Nastavení delete_user_max_post_age.)"
           other: "Všechny příspěvky nelze smazat. Některé příspěvky jsou starší než %{count} dní. (Nastavení delete_user_max_post_age.)"
         cant_delete_all_too_many_posts:
-          one: "Nelze smazat všechny příspěvky, protože uživatel má více než 1 příspěvek. (delete_all_posts_max)"
+          one: "Nelze smazat všechny příspěvky, protože uživatel má více než %{count} příspěvek. (delete_all_posts_max)"
           few: "Nelze smazat všechny příspěvky, protože uživatel má více než %{count} příspěvky. (delete_all_posts_max)"
           many: "Nelze smazat všechny příspěvky, protože uživatel má více než %{count} příspěvků. (delete_all_posts_max)"
           other: "Nelze smazat všechny příspěvky, protože uživatel má více než %{count} příspěvků. (delete_all_posts_max)"
@@ -3743,7 +3673,7 @@ cs:
             text: "Chybí přidělení vzorků. To se stane pokud dotazový odznak vrátí ID uživatele nebo ID příspěvků, které neexistují. Může to později způsobit neočekávané výsledky - prosím zkontrolujte svůj dotaz."
           no_grant_count: "Žádné odznaky k udělení."
           grant_count:
-            one: "<b>1</b> odznak k udělení."
+            one: "<b>%{count}</b> odznak k udělení."
             few: "<b>%{count}</b> odznaků k udělení."
             many: "<b>%{count}</b> odznaků k udělení."
             other: "<b>%{count}</b> odznaků k udělení."

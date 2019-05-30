@@ -60,7 +60,7 @@ const Topic = RestModel.extend({
       )[0];
       user = latest && latest.user;
     }
-    return user || this.get("creator");
+    return user || this.creator;
   },
 
   @computed("posters.[]", "participants.[]")
@@ -69,11 +69,7 @@ const Topic = RestModel.extend({
     const maxUserCount = 5;
     const posterCount = users.length;
 
-    if (
-      this.get("isPrivateMessage") &&
-      participants &&
-      posterCount < maxUserCount
-    ) {
+    if (this.isPrivateMessage && participants && posterCount < maxUserCount) {
       let pushOffset = 0;
       if (posterCount > 1) {
         const lastUser = users[posterCount - 1];
@@ -139,7 +135,7 @@ const Topic = RestModel.extend({
   @computed
   postStream() {
     return this.store.createRecord("postStream", {
-      id: this.get("id"),
+      id: this.id,
       topic: this
     });
   },
@@ -150,7 +146,7 @@ const Topic = RestModel.extend({
       return tags;
     }
 
-    const title = this.get("title");
+    const title = this.title;
     const newTags = [];
 
     tags.forEach(function(tag) {
@@ -194,7 +190,7 @@ const Topic = RestModel.extend({
   @computed
   details() {
     return this.store.createRecord("topicDetails", {
-      id: this.get("id"),
+      id: this.id,
       topic: this
     });
   },
@@ -210,12 +206,12 @@ const Topic = RestModel.extend({
   @on("init")
   @observes("category_id")
   _categoryIdChanged() {
-    this.set("category", Discourse.Category.findById(this.get("category_id")));
+    this.set("category", Discourse.Category.findById(this.category_id));
   },
 
   @observes("categoryName")
   _categoryNameChanged() {
-    const categoryName = this.get("categoryName");
+    const categoryName = this.categoryName;
     let category;
     if (categoryName) {
       category = this.site.get("categories").findBy("name", categoryName);
@@ -250,7 +246,7 @@ const Topic = RestModel.extend({
 
   // Helper to build a Url with a post number
   urlForPostNumber(postNumber) {
-    let url = this.get("url");
+    let url = this.url;
     if (postNumber && postNumber > 0) {
       url += `/${postNumber}`;
     }
@@ -293,7 +289,7 @@ const Topic = RestModel.extend({
 
   @computed("url")
   summaryUrl() {
-    const summaryQueryString = this.get("has_summary") ? "?filter=summary" : "";
+    const summaryQueryString = this.has_summary ? "?filter=summary" : "";
     return `${this.urlForPostNumber(1)}${summaryQueryString}`;
   },
 
@@ -309,7 +305,7 @@ const Topic = RestModel.extend({
   displayNewPosts(newPosts, id) {
     const highestSeen = Discourse.Session.currentProp("highestSeenByTopic")[id];
     if (highestSeen) {
-      const delta = highestSeen - this.get("last_read_post_number");
+      const delta = highestSeen - this.last_read_post_number;
       if (delta > 0) {
         let result = newPosts - delta;
         if (result < 0) {
@@ -352,7 +348,7 @@ const Topic = RestModel.extend({
     if (property === "closed") {
       this.incrementProperty("posts_count");
     }
-    return ajax(`${this.get("url")}/status`, {
+    return ajax(`${this.url}/status`, {
       type: "PUT",
       data: {
         status: property,
@@ -363,32 +359,32 @@ const Topic = RestModel.extend({
   },
 
   makeBanner() {
-    return ajax(`/t/${this.get("id")}/make-banner`, { type: "PUT" }).then(() =>
+    return ajax(`/t/${this.id}/make-banner`, { type: "PUT" }).then(() =>
       this.set("archetype", "banner")
     );
   },
 
   removeBanner() {
-    return ajax(`/t/${this.get("id")}/remove-banner`, {
+    return ajax(`/t/${this.id}/remove-banner`, {
       type: "PUT"
     }).then(() => this.set("archetype", "regular"));
   },
 
   toggleBookmark() {
-    if (this.get("bookmarking")) {
+    if (this.bookmarking) {
       return Ember.RSVP.Promise.resolve();
     }
     this.set("bookmarking", true);
 
-    const stream = this.get("postStream");
+    const stream = this.postStream;
     const posts = Ember.get(stream, "posts");
     const firstPost =
       posts && posts[0] && posts[0].get("post_number") === 1 && posts[0];
-    const bookmark = !this.get("bookmarked");
+    const bookmark = !this.bookmarked;
     const path = bookmark ? "/bookmark" : "/remove_bookmarks";
 
     const toggleBookmarkOnServer = () => {
-      return ajax(`/t/${this.get("id")}${path}`, { type: "PUT" })
+      return ajax(`/t/${this.id}${path}`, { type: "PUT" })
         .then(() => {
           this.toggleProperty("bookmarked");
           if (bookmark && firstPost) {
@@ -435,14 +431,14 @@ const Topic = RestModel.extend({
   },
 
   createGroupInvite(group) {
-    return ajax(`/t/${this.get("id")}/invite-group`, {
+    return ajax(`/t/${this.id}/invite-group`, {
       type: "POST",
       data: { group }
     });
   },
 
   createInvite(user, group_names, custom_message) {
-    return ajax(`/t/${this.get("id")}/invite`, {
+    return ajax(`/t/${this.id}/invite`, {
       type: "POST",
       data: { user, group_names, custom_message }
     });
@@ -463,7 +459,7 @@ const Topic = RestModel.extend({
       "details.can_delete": false,
       "details.can_recover": true
     });
-    return ajax(`/t/${this.get("id")}`, {
+    return ajax(`/t/${this.id}`, {
       data: { context: window.location.pathname },
       type: "DELETE"
     });
@@ -477,7 +473,7 @@ const Topic = RestModel.extend({
       "details.can_delete": true,
       "details.can_recover": false
     });
-    return ajax(`/t/${this.get("id")}/recover`, {
+    return ajax(`/t/${this.id}/recover`, {
       data: { context: window.location.pathname },
       type: "PUT"
     });
@@ -485,7 +481,7 @@ const Topic = RestModel.extend({
 
   // Update our attributes from a JSON result
   updateFromJson(json) {
-    this.get("details").updateFromJson(json.details);
+    this.details.updateFromJson(json.details);
 
     const keys = Object.keys(json);
     keys.removeObject("details");
@@ -495,7 +491,7 @@ const Topic = RestModel.extend({
   },
 
   reload() {
-    return ajax(`/t/${this.get("id")}`, { type: "GET" }).then(topic_json =>
+    return ajax(`/t/${this.id}`, { type: "GET" }).then(topic_json =>
       this.updateFromJson(topic_json)
     );
   },
@@ -509,7 +505,7 @@ const Topic = RestModel.extend({
     // Clear the pin optimistically from the object
     this.setProperties({ pinned: false, unpinned: true });
 
-    ajax(`/t/${this.get("id")}/clear-pin`, {
+    ajax(`/t/${this.id}/clear-pin`, {
       type: "PUT"
     }).then(null, () => {
       // On error, put the pin back
@@ -518,7 +514,7 @@ const Topic = RestModel.extend({
   },
 
   togglePinnedForUser() {
-    if (this.get("pinned")) {
+    if (this.pinned) {
       this.clearPin();
     } else {
       this.rePin();
@@ -529,7 +525,7 @@ const Topic = RestModel.extend({
     // Clear the pin optimistically from the object
     this.setProperties({ pinned: true, unpinned: false });
 
-    ajax(`/t/${this.get("id")}/re-pin`, {
+    ajax(`/t/${this.id}/re-pin`, {
       type: "PUT"
     }).then(null, () => {
       // On error, put the pin back
@@ -554,7 +550,7 @@ const Topic = RestModel.extend({
 
   archiveMessage() {
     this.set("archiving", true);
-    const promise = ajax(`/t/${this.get("id")}/archive-message`, {
+    const promise = ajax(`/t/${this.id}/archive-message`, {
       type: "PUT"
     });
 
@@ -572,7 +568,7 @@ const Topic = RestModel.extend({
 
   moveToInbox() {
     this.set("archiving", true);
-    const promise = ajax(`/t/${this.get("id")}/move-to-inbox`, { type: "PUT" });
+    const promise = ajax(`/t/${this.id}/move-to-inbox`, { type: "PUT" });
 
     promise
       .then(msg => {
@@ -587,7 +583,7 @@ const Topic = RestModel.extend({
   },
 
   publish() {
-    return ajax(`/t/${this.get("id")}/publish`, {
+    return ajax(`/t/${this.id}/publish`, {
       type: "PUT",
       data: this.getProperties("destination_category_id")
     })
@@ -597,20 +593,20 @@ const Topic = RestModel.extend({
 
   updateDestinationCategory(categoryId) {
     this.set("destination_category_id", categoryId);
-    return ajax(`/t/${this.get("id")}/shared-draft`, {
+    return ajax(`/t/${this.id}/shared-draft`, {
       method: "PUT",
       data: { category_id: categoryId }
     });
   },
 
   convertTopic(type) {
-    return ajax(`/t/${this.get("id")}/convert-topic/${type}`, { type: "PUT" })
+    return ajax(`/t/${this.id}/convert-topic/${type}`, { type: "PUT" })
       .then(() => window.location.reload())
       .catch(popupAjaxError);
   },
 
   resetBumpDate() {
-    return ajax(`/t/${this.get("id")}/reset-bump-date`, { type: "PUT" }).catch(
+    return ajax(`/t/${this.id}/reset-bump-date`, { type: "PUT" }).catch(
       popupAjaxError
     );
   }
@@ -652,15 +648,9 @@ Topic.reopenClass({
       delete props.category_id;
     }
 
-    // Annoyingly, empty arrays are not sent across the wire. This
-    // allows us to make a distinction between arrays that were not
-    // sent and arrays that we specifically want to be empty.
-    Object.keys(props).forEach(function(k) {
-      const v = props[k];
-      if (v instanceof Array && v.length === 0) {
-        props[`${k}_empty_array`] = true;
-      }
-    });
+    if (props.tags && props.tags.length === 0) {
+      props.tags = [""];
+    }
 
     return ajax(topic.get("url"), { type: "PUT", data: props }).then(result => {
       // The title can be cleaned up server side

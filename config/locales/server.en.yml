@@ -19,21 +19,21 @@ en:
     # Use Moment.js format string: https://momentjs.com/docs/#/displaying/format/
     short_date_no_year: "D MMM"
     # Use Moment.js format string: https://momentjs.com/docs/#/displaying/format/
-    short_date: "D MMM, YYYY"
+    short_date: "D MMM YYYY"
     # Use Moment.js format string: https://momentjs.com/docs/#/displaying/format/
-    long_date: "MMMM D, YYYY h:mma"
+    long_date: "D MMMM YYYY LT"
 
   datetime_formats: &datetime_formats
     formats:
-      # Format directives: https://ruby-doc.org/core-2.6.1/Time.html#method-i-strftime
-      short: "%m-%d-%Y"
-      # Format directives: https://ruby-doc.org/core-2.6.1/Time.html#method-i-strftime
-      short_no_year: "%B %-d"
-      # Format directives: https://ruby-doc.org/core-2.6.1/Time.html#method-i-strftime
-      date_only: "%B %-d, %Y"
-      # Format directives: https://ruby-doc.org/core-2.6.1/Time.html#method-i-strftime
-      long: "%B %-d, %Y, %l:%M%P"
-      # Format directives: https://ruby-doc.org/core-2.6.1/Time.html#method-i-strftime
+      # Format directives: https://ruby-doc.org/core/Time.html#method-i-strftime
+      short: "%d-%m-%Y"
+      # Format directives: https://ruby-doc.org/core/Time.html#method-i-strftime
+      short_no_year: "%-d %B"
+      # Format directives: https://ruby-doc.org/core/Time.html#method-i-strftime
+      date_only: "%-d %B %Y"
+      # Format directives: https://ruby-doc.org/core/Time.html#method-i-strftime
+      long: "%-d %B %Y %H:%M"
+      # Format directives: https://ruby-doc.org/core/Time.html#method-i-strftime
       no_day: "%B %Y"
   date:
     # Do not remove the brackets and commas and do not translate the first month name. It should be "null".
@@ -171,19 +171,19 @@ en:
         one: "Cannot delete record because a dependent %{record} exists"
         many: "Cannot delete record because dependent %{record} exist"
       too_long:
-        one: is too long (maximum is 1 character)
+        one: is too long (maximum is %{count} character)
         other: is too long (maximum is %{count} characters)
       too_short:
-        one: is too short (minimum is 1 character)
+        one: is too short (minimum is %{count} character)
         other: is too short (minimum is %{count} characters)
       wrong_length:
-        one: is the wrong length (should be 1 character)
+        one: is the wrong length (should be %{count} character)
         other: is the wrong length (should be %{count} characters)
       other_than: "must be other than %{count}"
     template:
       body: ! "There were problems with the following fields:"
       header:
-        one: 1 error prohibited this %{model} from being saved
+        one: "%{count} error prohibited this %{model} from being saved"
         other: ! "%{count} errors prohibited this %{model} from being saved"
     embed:
       load_from_remote: "There was an error loading that post."
@@ -249,7 +249,7 @@ en:
   likes: "Likes"
 
   too_many_replies:
-    one: "We're sorry, but new users are temporarily limited to 1 reply in the same topic."
+    one: "We're sorry, but new users are temporarily limited to %{count} reply in the same topic."
     other: "We're sorry, but new users are temporarily limited to %{count} replies in the same topic."
 
   max_consecutive_replies:
@@ -265,7 +265,7 @@ en:
     no_hosts: "No hosts were set up for embedding."
     configure: "Configure Embedding"
     more_replies:
-      one: "1 more reply"
+      one: "%{count} more reply"
       other: "%{count} more replies"
 
     loading: "Loading Discussion..."
@@ -326,7 +326,6 @@ en:
 
   rss_description:
     latest: "Latest topics"
-    hot: "Hot topics"
     top: "Top topics"
     top_all: "All time top topics"
     top_yearly: "Yearly top topics"
@@ -382,7 +381,7 @@ en:
 
   education:
     until_posts:
-      one: "1 post"
+      one: "%{count} post"
       other: "%{count} posts"
 
     "new-topic": |
@@ -437,7 +436,7 @@ en:
 
       You’ve replied %{count} times to @%{reply_username} in this particular topic!
 
-      A great discussion involves many voices and perspectives. Can you get anybody else involved? 
+      A great discussion involves many voices and perspectives. Can you get anybody else involved?
 
       And don’t forget, if you’d like to continue your conversation with this particular user at length outside of public view, [send them a personal message](%{base_path}/u/%{reply_username}).
 
@@ -604,7 +603,7 @@ en:
       uncategorized: "This category is special. It is intended as a holding area for topics that have no category; it cannot be deleted."
       has_subcategories: "Can't delete this category because it has sub-categories."
       topic_exists:
-        one: "Can't delete this category because it has 1 topic. Oldest topic is %{topic_link}."
+        one: "Can't delete this category because it has %{count} topic. Oldest topic is %{topic_link}."
         other: "Can't delete this category because it has %{count} topics. Oldest topic is %{topic_link}."
       topic_exists_no_oldest: "Can't delete this category because topic count is %{count}."
     uncategorized_description: "Topics that don't need a category, or don't fit into any other existing category."
@@ -648,13 +647,13 @@ en:
       topic_invitations_per_day: "You’ve reached the maximum number of topic invitations. Please wait %{time_left} before trying again."
 
     hours:
-      one: "1 hour"
+      one: "%{count} hour"
       other: "%{count} hours"
     minutes:
-      one: "1 minute"
+      one: "%{count} minute"
       other: "%{count} minutes"
     seconds:
-      one: "1 second"
+      one: "%{count} second"
       other: "%{count} seconds"
     short_time: "a few seconds"
 
@@ -662,73 +661,71 @@ en:
     distance_in_words:
       half_a_minute: "< 1m"
       less_than_x_seconds:
-        one: "< 1s"
+        one: "< %{count}s"
         other: "< %{count}s"
       x_seconds:
-        one: "1s"
+        one: "%{count}s"
         other: "%{count}s"
       less_than_x_minutes:
-        one: "< 1m"
+        one: "< %{count}m"
         other: "< %{count}m"
       x_minutes:
-        one: "1m"
+        one: "%{count}m"
         other: "%{count}m"
       about_x_hours:
-        one: "1h"
+        one: "%{count}h"
         other: "%{count}h"
       x_days:
-        one: "1d"
+        one: "%{count}d"
         other: "%{count}d"
       about_x_months:
-        one: "1mon"
+        one: "%{count}mon"
         other: "%{count}mon"
       x_months:
-        one: "1mon"
+        one: "%{count}mon"
         other: "%{count}mon"
       about_x_years:
-        one: "1y"
+        one: "%{count}y"
         other: "%{count}y"
       over_x_years:
-        one: "> 1y"
+        one: "> %{count}y"
         other: "> %{count}y"
       almost_x_years:
-        one: "1y"
+        one: "%{count}y"
         other: "%{count}y"
 
     distance_in_words_verbose:
       half_a_minute: "just now"
-      less_than_x_seconds:
-        one: "just now"
-        other: "just now"
+      less_than_x_seconds: "just now"
       x_seconds:
-        one: "1 second ago"
+        one: "%{count} second ago"
         other: "%{count} seconds ago"
       less_than_x_minutes:
-        one: "less than 1 minute ago"
+        one: "less than %{count} minute ago"
         other: "less than %{count} minutes ago"
       x_minutes:
-        one: "1 minute ago"
+        one: "%{count} minute ago"
         other: "%{count} minutes ago"
       about_x_hours:
-        one: "1 hour ago"
+        one: "%{count} hour ago"
         other: "%{count} hours ago"
       x_days:
-        one: "1 day ago"
+        one: "%{count} day ago"
         other: "%{count} days ago"
       about_x_months:
-        one: "about 1 month ago"
+        one: "about %{count} month ago"
         other: "about %{count} months ago"
       x_months:
-        one: "1 month ago"
+        one: "%{count} month ago"
         other: "%{count} months ago"
       about_x_years:
-        one: "about 1 year ago"
+        one: "about %{count} year ago"
         other: "about %{count} years ago"
       over_x_years:
-        one: "over 1 year ago"
+        one: "over %{count} year ago"
         other: "over %{count} years ago"
       almost_x_years:
-        one: "almost 1 year ago"
+        one: "almost %{count} year ago"
         other: "almost %{count} years ago"
 
   password_reset:
@@ -1391,7 +1388,10 @@ en:
     anon_polling_interval: "How often should anonymous clients poll in milliseconds"
     background_polling_interval: "How often should the clients poll in milliseconds (when the window is in the background)"
 
-    score_required_to_hide_post: "Score threshold that causes a post to be automatically hidden and message sent to the user (0 to disable)"
+    hide_post_sensitivity: "The likelihood that a flagged post will be hidden"
+    silence_new_user_sensitivity: "The likelihood that a new user will be silenced based on spam flags"
+    auto_close_topic_sensitivity: "The likelihood that a flagged topic will be automatically closed"
+
     cooldown_minutes_after_hiding_posts: "Number of minutes a user must wait before they can edit a post hidden via community flagging"
 
     max_topics_in_first_day: "The maximum number of topics a user is allowed to create in the 24 hour period after creating their first post"
@@ -1400,8 +1400,6 @@ en:
     tl2_additional_likes_per_day_multiplier: "Increase limit of likes per day for tl2 (member) by multiplying with this number"
     tl3_additional_likes_per_day_multiplier: "Increase limit of likes per day for tl3 (regular) by multiplying with this number"
     tl4_additional_likes_per_day_multiplier: "Increase limit of likes per day for tl4 (leader) by multiplying with this number"
-
-    spam_score_to_silence_new_user: "If a new user's posts receive this score from num_users_to_silence_new_user different users, hide all their posts and prevent future posting. 0 to disable."
     num_users_to_silence_new_user: "If a new user's posts get num_spam_flags_to_silence_new_user spam flags from this many different users, hide all their posts and prevent future posting. 0 to disable."
     num_tl3_flags_to_silence_new_user: "If a new user's posts get this many flags from num_tl3_users_to_silence_new_user different trust level 3 users, hide all their posts and prevent future posting. 0 to disable."
     num_tl3_users_to_silence_new_user: "If a new user's posts get num_tl3_flags_to_silence_new_user flags from this many different trust level 3 users, hide all their posts and prevent future posting. 0 to disable."
@@ -1710,6 +1708,7 @@ en:
     max_image_megapixels: "Maximum number of megapixels allowed for an image."
 
     title_prettify: "Prevent common title typos and errors, including all caps, lowercase first character, multiple ! and ?, extra . at end, etc."
+    title_remove_extraneous_space: "Remove leading whitespaces in front of the end punctuation."
 
     topic_views_heat_low: "After this many views, the views field is slightly highlighted."
     topic_views_heat_medium: "After this many views, the views field is moderately highlighted."
@@ -1747,7 +1746,6 @@ en:
     max_age_unmatched_ips: "Delete unmatched screened IP entries after (N) days."
 
     num_flaggers_to_close_topic: "Minimum number of unique flaggers that is required to automatically pause a topic for intervention"
-    score_to_auto_close_topic: "The total flag score of that is required to automatically pause a topic for intervention"
     num_hours_to_close_topic: "Number of hours to pause a topic for intervention."
 
     auto_respond_to_flag_actions: "Enable automatic reply when disposing a flag."
@@ -2017,7 +2015,8 @@ en:
     allow_staff_to_tag_pms: "Allow staff members to tag any personal message"
     min_trust_level_to_tag_topics: "Minimum trust level required to tag topics"
     suppress_overlapping_tags_in_list: "If tags match exact words in topic titles, don't show the tag"
-    remove_muted_tags_from_latest: "Don't show topics tagged with muted tags in the latest topic list."
+    remove_muted_tags_from_latest: "Don't show topics tagged only with muted tags in the latest topic list."
+    mute_other_present_tags: "Don't show topics tagged with both muted and unmuted tags in the latest topic list."
     force_lowercase_tags: "Force all new tags to be entirely lowercase."
 
     company_name: "Company Name"
@@ -2137,47 +2136,47 @@ en:
 
   topic_statuses:
     autoclosed_message_max_posts:
-      one: "This message was automatically closed after reaching the maximum limit of 1 reply."
+      one: "This message was automatically closed after reaching the maximum limit of %{count} reply."
       other: "This message was automatically closed after reaching the maximum limit of %{count} replies."
     autoclosed_topic_max_posts:
-      one: "This topic was automatically closed after reaching the maximum limit of 1 reply."
+      one: "This topic was automatically closed after reaching the maximum limit of %{count} reply."
       other: "This topic was automatically closed after reaching the maximum limit of %{count} replies."
     autoclosed_enabled_days:
-      one: "This topic was automatically closed after 1 day. New replies are no longer allowed."
+      one: "This topic was automatically closed after %{count} day. New replies are no longer allowed."
       other: "This topic was automatically closed after %{count} days. New replies are no longer allowed."
     autoclosed_enabled_hours:
-      one: "This topic was automatically closed after 1 hour. New replies are no longer allowed."
+      one: "This topic was automatically closed after %{count} hour. New replies are no longer allowed."
       other: "This topic was automatically closed after %{count} hours. New replies are no longer allowed."
     autoclosed_enabled_minutes:
-      one: "This topic was automatically closed after 1 minute. New replies are no longer allowed."
+      one: "This topic was automatically closed after %{count} minute. New replies are no longer allowed."
       other: "This topic was automatically closed after %{count} minutes. New replies are no longer allowed."
     autoclosed_enabled_lastpost_days:
-      one: "This topic was automatically closed 1 day after the last reply. New replies are no longer allowed."
+      one: "This topic was automatically closed %{count} day after the last reply. New replies are no longer allowed."
       other: "This topic was automatically closed %{count} days after the last reply. New replies are no longer allowed."
     autoclosed_enabled_lastpost_hours:
-      one: "This topic was automatically closed 1 hour after the last reply. New replies are no longer allowed."
+      one: "This topic was automatically closed %{count} hour after the last reply. New replies are no longer allowed."
       other: "This topic was automatically closed %{count} hours after the last reply. New replies are no longer allowed."
     autoclosed_enabled_lastpost_minutes:
-      one: "This topic was automatically closed 1 minute after the last reply. New replies are no longer allowed."
+      one: "This topic was automatically closed %{count} minute after the last reply. New replies are no longer allowed."
       other: "This topic was automatically closed %{count} minutes after the last reply. New replies are no longer allowed."
 
     autoclosed_disabled_days:
-      one: "This topic was automatically opened after 1 day."
+      one: "This topic was automatically opened after %{count} day."
       other: "This topic was automatically opened after %{count} days."
     autoclosed_disabled_hours:
-      one: "This topic was automatically opened after 1 hour."
+      one: "This topic was automatically opened after %{count} hour."
       other: "This topic was automatically opened after %{count} hours."
     autoclosed_disabled_minutes:
-      one: "This topic was automatically opened after 1 minute."
+      one: "This topic was automatically opened after %{count} minute."
       other: "This topic was automatically opened after %{count} minutes."
     autoclosed_disabled_lastpost_days:
-      one: "This topic was automatically opened 1 day after the last reply."
+      one: "This topic was automatically opened %{count} day after the last reply."
       other: "This topic was automatically opened %{count} days after the last reply."
     autoclosed_disabled_lastpost_hours:
-      one: "This topic was automatically opened 1 hour after the last reply."
+      one: "This topic was automatically opened %{count} hour after the last reply."
       other: "This topic was automatically opened %{count} hours after the last reply."
     autoclosed_disabled_lastpost_minutes:
-      one: "This topic was automatically opened 1 minute after the last reply."
+      one: "This topic was automatically opened %{count} minute after the last reply."
       other: "This topic was automatically opened %{count} minutes after the last reply."
 
     autoclosed_disabled: "This topic is now opened. New replies are allowed."
@@ -2258,10 +2257,10 @@ en:
 
   reviewables_reminder:
     submitted:
-      one: "Items were submitted over 1 hour ago. [Please review them](%{base_path}/review)."
+      one: "Items were submitted over %{count} hour ago. [Please review them](%{base_path}/review)."
       other: "Items were submitted over %{count} hours ago. [Please review them](%{base_path}/review)."
     subject_template:
-      one: "1 item needs to be reviewed"
+      one: "%{count} item needs to be reviewed"
       other: "%{count} items need to be reviewed"
 
   unsubscribe_mailer:
@@ -2472,7 +2471,7 @@ en:
     ignored_and_deleted: "Thanks for letting us know. We've removed the post."
 
   temporarily_closed_due_to_flags:
-    one: "This topic is temporarily closed for at least 1 hour due to a large number of community flags."
+    one: "This topic is temporarily closed for at least %{count} hour due to a large number of community flags."
     other: "This topic is temporarily closed for at least %{count} hours due to a large number of community flags."
 
   system_messages:
@@ -2973,7 +2972,7 @@ en:
     pending_users_reminder:
       title: "Pending Users Reminder"
       subject_template:
-        one: "1 user waiting for approval"
+        one: "%{count} user waiting for approval"
         other: "%{count} users waiting for approval"
       text_body_template: |
         There are new user signups waiting to be approved (or rejected) before they can access this forum.
@@ -3006,7 +3005,7 @@ en:
     queued_posts_reminder:
       title: "Queued Posts Reminder"
       subject_template:
-        one: "1 post waiting to be reviewed"
+        one: "%{count} post waiting to be reviewed"
         other: "%{count} posts waiting to be reviewed"
       text_body_template: |
         Hello,
@@ -3031,7 +3030,7 @@ en:
   user_notifications:
     previous_discussion: "Previous Replies"
     reached_limit:
-      one: "Heads up: We send a maximum of 1 daily email. Check the site to see the ones that might be held back."
+      one: "Heads up: We send a maximum of %{count} daily email. Check the site to see the ones that might be held back."
       other: "Heads up: We send a maximum of %{count} daily emails. Check the site to see the ones that might be held back. PS thanks for being popular!"
     in_reply_to: "In Reply To"
     unsubscribe:
@@ -3498,10 +3497,6 @@ en:
       ## [Welcome to %{title}](#welcome)
       An account is required. Please ask an existing member for an invite or log in to continue.
 
-  terms_of_service:
-    title: "Terms of Service"
-    signup_form_message: 'I have read and accept the <a href="%{base_path}/tos" target="_blank">Terms of Service</a>.'
-
   deleted: "deleted"
 
   image: "image"
@@ -3571,10 +3566,6 @@ en:
     latte_theme_name: "Latte"
     summer_theme_name: "Summer"
     dark_rose_theme_name: "Dark Rose"
-
-  about: "About"
-  guidelines: "Guidelines"
-  privacy: "Privacy"
 
   edit_this_page: "Edit this page"
 
@@ -3835,7 +3826,7 @@ en:
 
       You and the company agree to seek injunctions related to these terms only in state or federal court in %{city_for_disputes}.  Neither you nor the company will object to jurisdiction, forum, or venue in those courts.
 
-      ***Other than to seek an injunction or for claims under the Computer Fraud and Abuse Act, you and the company will resolve any Dispute by binding American Arbitration Association arbitration.  Arbitration will follow the AAA's Commercial Arbitration Rules and Supplementary Procedures for Consumer Related Disputes.  Arbitration will happen in San Francisco, California.  You will settle any dispute as an individual, and not as part of a class action or other representative proceeding, whether as the plaintiff or a class member.  No arbitrator will consolidate any dispute with any other arbitration without the company's permission.***
+      ***Other than to seek an injunction or for claims under the Computer Fraud and Abuse Act, you and the company will resolve any dispute by binding American Arbitration Association arbitration.  Arbitration will follow the AAA's Commercial Arbitration Rules and Supplementary Procedures for Consumer Related Disputes.  Arbitration will happen in %{city_for_disputes}.  You will settle any dispute as an individual, and not as part of a class action or other representative proceeding, whether as the plaintiff or a class member.  No arbitrator will consolidate any dispute with any other arbitration without the company's permission.***
 
       Any arbitration award will include costs of the arbitration, reasonable attorneys' fees, and reasonable costs for witnesses.  You and the company may enter arbitration awards in any court with jurisdiction.
 
@@ -4340,6 +4331,17 @@ en:
       colors:
         title: "Theme"
 
+      themes_further_reading:
+        title: "Further reading for themes"
+        description:
+          "You can customize many aspects of your community's look-and-feel in just a few clicks (for example by adding a header or footer). Here is a useful list of resources to learn more about themes and theme components in Discourse:
+          <ul>
+          <li><a href='https://meta.discourse.org/t/91966' target='_blank'>Beginner's guide to creating themes and theme components</a></li>
+          <li><a href='https://meta.discourse.org/t/63682' target='_blank'>How do I install a theme or theme component?</a></li>
+          <li><a href='https://meta.discourse.org/t/110448' target='_blank'>Theme Developer Quick Reference Guide</a></li>
+          </ul>
+          And remember to visit the <a href='https://meta.discourse.org/c/theme' target='_blank'>#themes</a> category on <a href='https://meta.discourse.org' target='_blank'>meta.discourse.org</a> regularly to see the newest themes and components posted by staff and contributors."
+
       logos:
         title: "Logos"
         fields:
@@ -4424,6 +4426,15 @@ en:
     webhook_deactivation_reason: "Your webhook has been automatically deactivated. We received multiple '%{status}' HTTP status failure responses."
 
   reviewables:
+    priorities:
+      low: "Low"
+      medium: "Medium"
+      high: "High"
+    sensitivity:
+      disabled: "Disabled"
+      low: "Low"
+      medium: "Medium"
+      high: "High"
     must_claim: "You must claim items before acting on them."
     user_claimed: "This item has been claimed by another user."
     missing_version: "You must supply a version parameter"

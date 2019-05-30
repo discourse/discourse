@@ -76,15 +76,15 @@ const AdminUser = Discourse.User.extend({
     return ajax(`/admin/users/${this.id}/groups`, {
       type: "POST",
       data: { group_id: added.id }
-    }).then(() => this.get("groups").pushObject(added));
+    }).then(() => this.groups.pushObject(added));
   },
 
   groupRemoved(groupId) {
     return ajax(`/admin/users/${this.id}/groups/${groupId}`, {
       type: "DELETE"
     }).then(() => {
-      this.set("groups.[]", this.get("groups").rejectBy("id", groupId));
-      if (this.get("primary_group_id") === groupId) {
+      this.set("groups.[]", this.groups.rejectBy("id", groupId));
+      if (this.primary_group_id === groupId) {
         this.set("primary_group_id", null);
       }
     });
@@ -240,7 +240,7 @@ const AdminUser = Discourse.User.extend({
   },
 
   setOriginalTrustLevel() {
-    this.set("originalTrustLevel", this.get("trust_level"));
+    this.set("originalTrustLevel", this.trust_level);
   },
 
   dirty: propertyNotEqual("originalTrustLevel", "trustLevel.id"),
@@ -266,7 +266,7 @@ const AdminUser = Discourse.User.extend({
   },
 
   restoreTrustLevel() {
-    this.set("trustLevel.id", this.get("originalTrustLevel"));
+    this.set("trustLevel.id", this.originalTrustLevel);
   },
 
   lockTrustLevel(locked) {
@@ -316,14 +316,14 @@ const AdminUser = Discourse.User.extend({
   logOut() {
     return ajax("/admin/users/" + this.id + "/log_out", {
       type: "POST",
-      data: { username_or_email: this.get("username") }
+      data: { username_or_email: this.username }
     }).then(() => bootbox.alert(I18n.t("admin.user.logged_out")));
   },
 
   impersonate() {
     return ajax("/admin/impersonate", {
       type: "POST",
-      data: { username_or_email: this.get("username") }
+      data: { username_or_email: this.username }
     })
       .then(() => (document.location = Discourse.getURL("/")))
       .catch(e => {
@@ -397,7 +397,7 @@ const AdminUser = Discourse.User.extend({
   sendActivationEmail() {
     return ajax(userPath("action/send_activation_email"), {
       type: "POST",
-      data: { username: this.get("username") }
+      data: { username: this.username }
     })
       .then(() => bootbox.alert(I18n.t("admin.user.activation_email_sent")))
       .catch(popupAjaxError);
@@ -518,7 +518,7 @@ const AdminUser = Discourse.User.extend({
   },
 
   loadDetails() {
-    if (this.get("loadedDetails")) {
+    if (this.loadedDetails) {
       return Ember.RSVP.resolve(this);
     }
 

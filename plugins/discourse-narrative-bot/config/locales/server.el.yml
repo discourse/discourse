@@ -111,11 +111,6 @@ el:
       random_mention:
         reply: |-
           Γεια σου! Για να μάθεις τι μπορώ να κάνω, πες `@%{discobot_username} %{help_trigger}`.
-        tracks: |-
-          Για την ώρα ξέρω να κάνω τα παρακάτω:
-
-          `@%{discobot_username} %{reset_trigger} %{default_track}`
-          > Ξεκινά μία από τις εξής διαδραστικές αφηγήσεις: %{tracks}.
         bot_actions: |-
           `@%{discobot_username} %{dice_trigger} 2d6`
           > :game_die: 3, 6
@@ -138,7 +133,6 @@ el:
 
           Για την ώρα, δεν θα σε ξαναενοχλήσω.
     new_user_narrative:
-      reset_trigger: "νέος χρήστης"
       cert_title: "Σε αναγνώριση της επιτυχούς ολοκλήρωσης\nτης εκπαίδευσης νέου χρήστη."
       onebox:
         reply: |-
@@ -266,7 +260,6 @@ el:
       certificate:
         alt: 'Πιστοποιητικό Προόδου'
     advanced_user_narrative:
-      reset_trigger: 'προχωρημένος χρήστης'
       cert_title: "Σε αναγνώριση της επιτυχούς ολοκλήρωσης\nτης εκπαίδευσης προχωρημένου χρήστη"
       title: ':arrow_up: Χαρακτηριστικά προχωρημένου χρήστη'
       edit:
@@ -302,10 +295,6 @@ el:
           Μπορείς να μου κάνεις την χάρη και να την <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-rotate-left.png" width="16" height="16"> **επαναφέρεις**;
         not_found: |-
           Έχεις πρόβλημα; Θυμήσου το <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> περισσότερα θα εμφανίσει την επιλογή <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-rotate-left.png" width="16" height="16"> επαναφοράς.
-        reply: |-
-          Ουφ, αυτό πέρασε ξυστά! Ευχαριστώ που το έφτιαξες :wink:
-
-          Σημείωσε ότι έχεις μόνο 24 ώρες για να επαναφέρεις μια διεγραμμένη ανάρτηση.
       category_hashtag:
         instructions: |-
           Ήξερες ότι μπορείς να αναφερθείς σε κατηγορίες και ετικέττες στις αναρτήσεις σου; Για παράδειγμα, έχεις δει την %{category} κατηγορία;

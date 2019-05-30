@@ -36,7 +36,7 @@ import {
 import {
   cacheShortUploadUrl,
   resolveAllShortUrls
-} from "pretty-text/image-short-url";
+} from "pretty-text/upload-short-url";
 
 import {
   INLINE_ONEBOX_LOADING_CSS_CLASS,
@@ -111,7 +111,7 @@ export default Ember.Component.extend({
 
   @observes("focusTarget")
   setFocus() {
-    if (this.get("focusTarget") === "editor") {
+    if (this.focusTarget === "editor") {
       this.$("textarea").putCursorAtEnd();
     }
   },
@@ -124,7 +124,7 @@ export default Ember.Component.extend({
       formatUsername,
 
       lookupAvatarByPostNumber: (postNumber, topicId) => {
-        const topic = this.get("topic");
+        const topic = this.topic;
         if (!topic) {
           return;
         }
@@ -139,7 +139,7 @@ export default Ember.Component.extend({
       },
 
       lookupPrimaryUserGroupByPostNumber: (postNumber, topicId) => {
-        const topic = this.get("topic");
+        const topic = this.topic;
         if (!topic) {
           return;
         }
@@ -336,19 +336,12 @@ export default Ember.Component.extend({
   },
 
   _syncScroll($callback, $input, $preview) {
-    if (!this.get("scrollMap") || this.get("shouldBuildScrollMap")) {
+    if (!this.scrollMap || this.shouldBuildScrollMap) {
       this.set("scrollMap", this._buildScrollMap($input, $preview));
       this.set("shouldBuildScrollMap", false);
     }
 
-    Ember.run.throttle(
-      this,
-      $callback,
-      $input,
-      $preview,
-      this.get("scrollMap"),
-      20
-    );
+    Ember.run.throttle(this, $callback, $input, $preview, this.scrollMap, 20);
   },
 
   _teardownInputPreviewSync() {
@@ -565,7 +558,7 @@ export default Ember.Component.extend({
 
   _warnMentionedGroups($preview) {
     Ember.run.scheduleOnce("afterRender", () => {
-      var found = this.get("warnedGroupMentions") || [];
+      var found = this.warnedGroupMentions || [];
       $preview.find(".mention-group.notify").each((idx, e) => {
         const $e = $(e);
         var name = $e.data("name");
@@ -598,7 +591,7 @@ export default Ember.Component.extend({
     }
 
     Ember.run.scheduleOnce("afterRender", () => {
-      let found = this.get("warnedCannotSeeMentions") || [];
+      let found = this.warnedCannotSeeMentions || [];
 
       $preview.find(".mention.cannot-see").each((idx, e) => {
         const $e = $(e);
@@ -642,7 +635,7 @@ export default Ember.Component.extend({
       if (removePlaceholder) {
         this.appEvents.trigger(
           "composer:replace-text",
-          this.get("uploadPlaceholder"),
+          this.uploadPlaceholder,
           ""
         );
       }
@@ -739,10 +732,7 @@ export default Ember.Component.extend({
 
       this._setUploadPlaceholderSend(data);
 
-      this.appEvents.trigger(
-        "composer:insert-text",
-        this.get("uploadPlaceholder")
-      );
+      this.appEvents.trigger("composer:insert-text", this.uploadPlaceholder);
 
       if (data.xhr && data.originalFiles.length === 1) {
         this.set("isCancellable", true);
@@ -758,7 +748,7 @@ export default Ember.Component.extend({
         cacheShortUploadUrl(upload.short_url, upload.url);
         this.appEvents.trigger(
           "composer:replace-text",
-          this.get("uploadPlaceholder").trim(),
+          this.uploadPlaceholder.trim(),
           markdown
         );
         this._resetUpload(false);
@@ -958,22 +948,18 @@ export default Ember.Component.extend({
         id: "quote",
         group: "fontStyles",
         icon: "far-comment",
-        sendAction: this.get("importQuote"),
+        sendAction: this.importQuote,
         title: "composer.quote_post_title",
         unshift: true
       });
 
-      if (
-        this.get("allowUpload") &&
-        this.get("uploadIcon") &&
-        !this.site.mobileView
-      ) {
+      if (this.allowUpload && this.uploadIcon && !this.site.mobileView) {
         toolbar.addButton({
           id: "upload",
           group: "insertions",
-          icon: this.get("uploadIcon"),
+          icon: this.uploadIcon,
           title: "upload",
-          sendAction: this.get("showUploadModal")
+          sendAction: this.showUploadModal
         });
       }
 
@@ -985,16 +971,6 @@ export default Ember.Component.extend({
         sendAction: this.onExpandPopupMenuOptions.bind(this),
         popupMenu: true
       });
-
-      if (this.site.mobileView) {
-        toolbar.addButton({
-          id: "preview",
-          group: "mobileExtras",
-          icon: "television",
-          title: "composer.show_preview",
-          sendAction: this.showPreview.bind(this)
-        });
-      }
     },
 
     previewUpdated($preview) {

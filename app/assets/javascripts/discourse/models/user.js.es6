@@ -57,7 +57,7 @@ const User = RestModel.extend({
   staff: Ember.computed.or("admin", "moderator"),
 
   destroySession() {
-    return ajax(`/session/${this.get("username")}`, { type: "DELETE" });
+    return ajax(`/session/${this.username}`, { type: "DELETE" });
   },
 
   @computed("username_lower")
@@ -95,12 +95,12 @@ const User = RestModel.extend({
   @computed()
   path() {
     // no need to observe, requires a hard refresh to update
-    return userPath(this.get("username_lower"));
+    return userPath(this.username_lower);
   },
 
   @computed()
   userApiKeys() {
-    const keys = this.get("user_api_keys");
+    const keys = this.user_api_keys;
     if (keys) {
       return keys.map(raw => {
         let obj = Ember.Object.create(raw);
@@ -137,8 +137,8 @@ const User = RestModel.extend({
   },
 
   pmPath(topic) {
-    const userId = this.get("id");
-    const username = this.get("username_lower");
+    const userId = this.id;
+    const username = this.username_lower;
 
     const details = topic && topic.get("details");
     const allowedUsers = details && details.get("allowed_users");
@@ -218,17 +218,14 @@ const User = RestModel.extend({
   silencedTillDate: longDate,
 
   changeUsername(new_username) {
-    return ajax(
-      userPath(`${this.get("username_lower")}/preferences/username`),
-      {
-        type: "PUT",
-        data: { new_username }
-      }
-    );
+    return ajax(userPath(`${this.username_lower}/preferences/username`), {
+      type: "PUT",
+      data: { new_username }
+    });
   },
 
   changeEmail(email) {
-    return ajax(userPath(`${this.get("username_lower")}/preferences/email`), {
+    return ajax(userPath(`${this.username_lower}/preferences/email`), {
       type: "PUT",
       data: { email }
     });
@@ -332,14 +329,14 @@ const User = RestModel.extend({
 
     // TODO: We can remove this when migrated fully to rest model.
     this.set("isSaving", true);
-    return ajax(userPath(`${this.get("username_lower")}.json`), {
+    return ajax(userPath(`${this.username_lower}.json`), {
       data: data,
       type: "PUT"
     })
       .then(result => {
         this.set("bio_excerpt", result.user.bio_excerpt);
         const userProps = Ember.getProperties(
-          this.get("user_option"),
+          this.user_option,
           "enable_quoting",
           "external_links_in_new_tab",
           "dynamic_favicon"
@@ -355,7 +352,7 @@ const User = RestModel.extend({
   changePassword() {
     return ajax("/session/forgot_password", {
       dataType: "json",
-      data: { login: this.get("username") },
+      data: { login: this.username },
       type: "POST"
     });
   },
@@ -390,17 +387,14 @@ const User = RestModel.extend({
   },
 
   revokeAssociatedAccount(providerName) {
-    return ajax(
-      userPath(`${this.get("username")}/preferences/revoke-account`),
-      {
-        data: { provider_name: providerName },
-        type: "POST"
-      }
-    );
+    return ajax(userPath(`${this.username}/preferences/revoke-account`), {
+      data: { provider_name: providerName },
+      type: "POST"
+    });
   },
 
   loadUserAction(id) {
-    const stream = this.get("stream");
+    const stream = this.stream;
     return ajax(`/user_actions/${id}.json`, { cache: "false" }).then(result => {
       if (result && result.user_action) {
         const ua = result.user_action;
@@ -428,7 +422,7 @@ const User = RestModel.extend({
 
   @computed("groups.[]")
   filteredGroups() {
-    const groups = this.get("groups") || [];
+    const groups = this.groups || [];
 
     return groups.filter(group => {
       return !group.automatic || group.name === "moderators";
@@ -449,9 +443,9 @@ const User = RestModel.extend({
   // The user's stat count, excluding PMs.
   @computed("statsExcludingPms.@each.count")
   statsCountNonPM() {
-    if (Ember.isEmpty(this.get("statsExcludingPms"))) return 0;
+    if (Ember.isEmpty(this.statsExcludingPms)) return 0;
     let count = 0;
-    this.get("statsExcludingPms").forEach(val => {
+    this.statsExcludingPms.forEach(val => {
       if (this.inAllStream(val)) {
         count += val.count;
       }
@@ -462,8 +456,8 @@ const User = RestModel.extend({
   // The user's stats, excluding PMs.
   @computed("stats.@each.isPM")
   statsExcludingPms() {
-    if (Ember.isEmpty(this.get("stats"))) return [];
-    return this.get("stats").rejectBy("isPM");
+    if (Ember.isEmpty(this.stats)) return [];
+    return this.stats.rejectBy("isPM");
   },
 
   findDetails(options) {
@@ -520,7 +514,7 @@ const User = RestModel.extend({
     if (!Discourse.User.currentProp("staff")) {
       return Ember.RSVP.resolve(null);
     }
-    return ajax(userPath(`${this.get("username_lower")}/staff-info.json`)).then(
+    return ajax(userPath(`${this.username_lower}/staff-info.json`)).then(
       info => {
         this.setProperties(info);
       }
@@ -528,23 +522,23 @@ const User = RestModel.extend({
   },
 
   pickAvatar(upload_id, type) {
-    return ajax(
-      userPath(`${this.get("username_lower")}/preferences/avatar/pick`),
-      { type: "PUT", data: { upload_id, type } }
-    );
+    return ajax(userPath(`${this.username_lower}/preferences/avatar/pick`), {
+      type: "PUT",
+      data: { upload_id, type }
+    });
   },
 
   selectAvatar(avatarUrl) {
-    return ajax(
-      userPath(`${this.get("username_lower")}/preferences/avatar/select`),
-      { type: "PUT", data: { url: avatarUrl } }
-    );
+    return ajax(userPath(`${this.username_lower}/preferences/avatar/select`), {
+      type: "PUT",
+      data: { url: avatarUrl }
+    });
   },
 
   isAllowedToUploadAFile(type) {
     return (
-      this.get("staff") ||
-      this.get("trust_level") > 0 ||
+      this.staff ||
+      this.trust_level > 0 ||
       Discourse.SiteSettings[`newuser_max_${type}s`] > 0
     );
   },
@@ -605,8 +599,8 @@ const User = RestModel.extend({
   },
 
   delete: function() {
-    if (this.get("can_delete_account")) {
-      return ajax(userPath(this.get("username") + ".json"), {
+    if (this.can_delete_account) {
+      return ajax(userPath(this.username + ".json"), {
         type: "DELETE",
         data: { context: window.location.pathname }
       });
@@ -616,16 +610,16 @@ const User = RestModel.extend({
   },
 
   updateNotificationLevel(level, expiringAt) {
-    return ajax(`${userPath(this.get("username"))}/notification_level.json`, {
+    return ajax(`${userPath(this.username)}/notification_level.json`, {
       type: "PUT",
       data: { notification_level: level, expiring_at: expiringAt }
     }).then(() => {
       const currentUser = Discourse.User.current();
       if (currentUser) {
         if (level === "normal" || level === "mute") {
-          currentUser.ignored_users.removeObject(this.get("username"));
+          currentUser.ignored_users.removeObject(this.username);
         } else if (level === "ignore") {
-          currentUser.ignored_users.addObject(this.get("username"));
+          currentUser.ignored_users.addObject(this.username);
         }
       }
     });
@@ -633,14 +627,14 @@ const User = RestModel.extend({
 
   dismissBanner(bannerKey) {
     this.set("dismissed_banner_key", bannerKey);
-    ajax(userPath(this.get("username") + ".json"), {
+    ajax(userPath(this.username + ".json"), {
       type: "PUT",
       data: { dismissed_banner_key: bannerKey }
     });
   },
 
   checkEmail() {
-    return ajax(userPath(`${this.get("username_lower")}/emails.json`), {
+    return ajax(userPath(`${this.username_lower}/emails.json`), {
       data: { context: window.location.pathname }
     }).then(result => {
       if (result) {
@@ -657,68 +651,66 @@ const User = RestModel.extend({
     // let { store } = this; would fail in tests
     const store = Discourse.__container__.lookup("service:store");
 
-    return ajax(userPath(`${this.get("username_lower")}/summary.json`)).then(
-      json => {
-        const summary = json.user_summary;
-        const topicMap = {};
-        const badgeMap = {};
+    return ajax(userPath(`${this.username_lower}/summary.json`)).then(json => {
+      const summary = json.user_summary;
+      const topicMap = {};
+      const badgeMap = {};
 
-        json.topics.forEach(
-          t => (topicMap[t.id] = store.createRecord("topic", t))
-        );
-        Badge.createFromJson(json).forEach(b => (badgeMap[b.id] = b));
+      json.topics.forEach(
+        t => (topicMap[t.id] = store.createRecord("topic", t))
+      );
+      Badge.createFromJson(json).forEach(b => (badgeMap[b.id] = b));
 
-        summary.topics = summary.topic_ids.map(id => topicMap[id]);
+      summary.topics = summary.topic_ids.map(id => topicMap[id]);
 
-        summary.replies.forEach(r => {
-          r.topic = topicMap[r.topic_id];
-          r.url = r.topic.urlForPostNumber(r.post_number);
-          r.createdAt = new Date(r.created_at);
+      summary.replies.forEach(r => {
+        r.topic = topicMap[r.topic_id];
+        r.url = r.topic.urlForPostNumber(r.post_number);
+        r.createdAt = new Date(r.created_at);
+      });
+
+      summary.links.forEach(l => {
+        l.topic = topicMap[l.topic_id];
+        l.post_url = l.topic.urlForPostNumber(l.post_number);
+      });
+
+      if (summary.badges) {
+        summary.badges = summary.badges.map(ub => {
+          const badge = badgeMap[ub.badge_id];
+          badge.count = ub.count;
+          return badge;
         });
-
-        summary.links.forEach(l => {
-          l.topic = topicMap[l.topic_id];
-          l.post_url = l.topic.urlForPostNumber(l.post_number);
-        });
-
-        if (summary.badges) {
-          summary.badges = summary.badges.map(ub => {
-            const badge = badgeMap[ub.badge_id];
-            badge.count = ub.count;
-            return badge;
-          });
-        }
-
-        if (summary.top_categories) {
-          summary.top_categories.forEach(c => {
-            if (c.parent_category_id) {
-              c.parentCategory = Category.findById(c.parent_category_id);
-            }
-          });
-        }
-
-        return summary;
       }
-    );
+
+      if (summary.top_categories) {
+        summary.top_categories.forEach(c => {
+          if (c.parent_category_id) {
+            c.parentCategory = Category.findById(c.parent_category_id);
+          }
+        });
+      }
+
+      return summary;
+    });
   },
 
   canManageGroup(group) {
     return group.get("automatic")
       ? false
-      : this.get("admin") || group.get("is_group_owner");
+      : this.admin || group.get("is_group_owner");
   },
 
   @computed("groups.@each.title", "badges.[]")
   availableTitles() {
     let titles = [];
 
-    (this.get("groups") || []).forEach(group => {
+    (this.groups || []).forEach(group => {
       if (group.get("title")) {
         titles.push(group.get("title"));
       }
     });
 
-    (this.get("badges") || []).forEach(badge => {
+    (this.badges || []).forEach(badge => {
       if (badge.get("allow_title")) {
         titles.push(badge.get("name"));
       }

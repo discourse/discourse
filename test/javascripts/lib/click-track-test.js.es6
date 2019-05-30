@@ -99,7 +99,7 @@ QUnit.test("tracks external URLs", async assert => {
   assert.notOk(track(generateClickEventOn("a")));
 });
 
-QUnit.test(
+QUnit.skip(
   "tracks external URLs when opening in another window",
   async assert => {
     assert.expect(3);
@@ -152,7 +152,7 @@ QUnit.test("does not track clicks on mailto", async assert => {
   assert.ok(track(generateClickEventOn(".mailto")));
 });
 
-QUnit.test("removes the href and put it as a data attribute", async assert => {
+QUnit.skip("removes the href and put it as a data attribute", async assert => {
   Discourse.User.currentProp("external_links_in_new_tab", true);
 
   assert.notOk(track(generateClickEventOn("a")));

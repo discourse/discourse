@@ -7,7 +7,12 @@ export default DropdownSelectBoxComponent.extend({
   showFullTitle: false,
   allowInitialValueMutation: false,
   allowAutoSelectFirst: false,
-  headerIcon: ["wrench"],
+
+  init() {
+    this._super(...arguments);
+
+    this.headerIcon = ["wrench"];
+  },
 
   autoHighlight() {},
 
@@ -52,13 +57,13 @@ export default DropdownSelectBoxComponent.extend({
   mutateValue(id) {
     switch (id) {
       case "removeMember":
-        this.removeMember(this.get("member"));
+        this.removeMember(this.member);
         break;
       case "makeOwner":
         this.makeOwner(this.get("member.username"));
         break;
       case "removeOwner":
-        this.removeOwner(this.get("member"));
+        this.removeOwner(this.member);
         break;
     }
   }

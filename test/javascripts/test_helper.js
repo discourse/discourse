@@ -16,7 +16,7 @@
 //= require preload-store
 
 //= require locales/i18n
-//= require locales/en
+//= require locales/en_US
 
 // Stuff we need to load first
 //= require vendor
@@ -30,6 +30,7 @@
 //= require sinon/pkg/sinon
 
 //= require helpers/assertions
+//= require helpers/textarea-selection
 //= require helpers/select-kit-helper
 //= require helpers/d-editor-helper
 
@@ -64,8 +65,6 @@ d.write(
   "<style>#ember-testing-container { position: absolute; background: white; bottom: 0; right: 0; width: 640px; height: 384px; overflow: auto; z-index: 9999; border: 1px solid #ccc; } #ember-testing { zoom: 50%; }</style>"
 );
 
-Ember.Test.adapter = window.QUnitAdapter.create();
-
 Discourse.rootElement = "#ember-testing";
 Discourse.setupForTesting();
 Discourse.injectTestHelpers();
@@ -87,7 +86,8 @@ var origDebounce = Ember.run.debounce,
   _DiscourseURL = require("discourse/lib/url", null, null, false).default,
   applyPretender = require("helpers/qunit-helpers", null, null, false)
     .applyPretender,
-  server;
+  server,
+  acceptanceModulePrefix = "Acceptance: ";
 
 function dup(obj) {
   return jQuery.extend(true, {}, obj);
@@ -101,16 +101,27 @@ function resetSite(siteSettings, extras) {
   Discourse.Site.resetCurrent(Discourse.Site.create(siteAttrs));
 }
 
+QUnit.testDone(function(ctx) {
+  console.log("-- " + ctx.runtime);
+});
+
 QUnit.testStart(function(ctx) {
+  console.log(ctx.module + " -> " + ctx.name);
   server = pretender.default();
 
-  var helper = {
-    parsePostData: pretender.parsePostData,
-    response: pretender.response,
-    success: pretender.success
-  };
+  if (ctx.module.startsWith(acceptanceModulePrefix)) {
+    var helper = {
+      parsePostData: pretender.parsePostData,
+      response: pretender.response,
+      success: pretender.success
+    };
 
-  applyPretender(server, helper);
+    applyPretender(
+      ctx.module.replace(acceptanceModulePrefix, ""),
+      server,
+      helper
+    );
+  }
 
   // Allow our tests to change site settings and have them reset before the next test
   Discourse.SiteSettings = dup(Discourse.SiteSettingsOriginal);

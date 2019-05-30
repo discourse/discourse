@@ -13,7 +13,8 @@ export default Ember.Component.extend({
     "disabled",
     "translatedTitle:title",
     "translatedLabel:aria-label",
-    "tabindex"
+    "tabindex",
+    "type"
   ],
 
   btnIcon: Ember.computed.notEmpty("icon"),
@@ -52,15 +53,12 @@ export default Ember.Component.extend({
   },
 
   click() {
-    if (typeof this.get("action") === "string") {
-      this.sendAction("action", this.get("actionParam"));
-    } else if (
-      typeof this.get("action") === "object" &&
-      this.get("action").value
-    ) {
-      this.get("action").value(this.get("actionParam"));
-    } else if (typeof this.get("action") === "function") {
-      this.get("action")(this.get("actionParam"));
+    if (typeof this.action === "string") {
+      this.sendAction("action", this.actionParam);
+    } else if (typeof this.action === "object" && this.action.value) {
+      this.action.value(this.actionParam);
+    } else if (typeof this.action === "function") {
+      this.action(this.actionParam);
     }
 
     return false;

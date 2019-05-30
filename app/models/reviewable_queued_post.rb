@@ -123,6 +123,9 @@ class ReviewableQueuedPost < Reviewable
     delete_options = {
       context: I18n.t('reviewables.actions.delete_user.reason'),
       delete_posts: true,
+      block_urls: true,
+      block_email: true,
+      block_ip: true,
       delete_as_spammer: true
     }
 

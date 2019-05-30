@@ -26,7 +26,7 @@ export function buildOptions(state) {
     lookupPrimaryUserGroupByPostNumber,
     formatUsername,
     emojiUnicodeReplacer,
-    lookupImageUrls,
+    lookupUploadUrls,
     previewing,
     linkify,
     censoredWords
@@ -65,7 +65,7 @@ export function buildOptions(state) {
     lookupPrimaryUserGroupByPostNumber,
     formatUsername,
     emojiUnicodeReplacer,
-    lookupImageUrls,
+    lookupUploadUrls,
     censoredWords,
     allowedHrefSchemes: siteSettings.allowed_href_schemes
       ? siteSettings.allowed_href_schemes.split("|")

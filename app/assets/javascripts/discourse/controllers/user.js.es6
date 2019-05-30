@@ -140,18 +140,18 @@ export default Ember.Controller.extend(CanCheckEmails, {
     },
 
     showSuspensions() {
-      this.get("adminTools").showActionLogs(this, {
+      this.adminTools.showActionLogs(this, {
         target_user: this.get("model.username"),
         action_name: "suspend_user"
       });
     },
 
     adminDelete() {
-      this.get("adminTools").deleteUser(this.get("model.id"));
+      this.adminTools.deleteUser(this.get("model.id"));
     },
 
     updateNotificationLevel(level) {
-      const user = this.get("model");
+      const user = this.model;
       return user.updateNotificationLevel(level);
     }
   }

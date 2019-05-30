@@ -387,9 +387,23 @@ describe ReviewablesController do
       end
 
       it "allows the settings to be updated" do
-        put "/review/settings.json", params: { bonuses: { 8 => 3.45 } }
+        put "/review/settings.json", params: { reviewable_priorities: { 8 => Reviewable.priorities[:medium] } }
         expect(response.code).to eq("200")
-        expect(PostActionType.find_by(id: 8).score_bonus).to eq(3.45)
+        pa = PostActionType.find_by(id: 8)
+        expect(pa.reviewable_priority).to eq(Reviewable.priorities[:medium])
+        expect(pa.score_bonus).to eq(5.0)
+
+        put "/review/settings.json", params: { reviewable_priorities: { 8 => Reviewable.priorities[:low] } }
+        expect(response.code).to eq("200")
+        pa = PostActionType.find_by(id: 8)
+        expect(pa.reviewable_priority).to eq(Reviewable.priorities[:low])
+        expect(pa.score_bonus).to eq(0.0)
+
+        put "/review/settings.json", params: { reviewable_priorities: { 8 => Reviewable.priorities[:high] } }
+        expect(response.code).to eq("200")
+        pa = PostActionType.find_by(id: 8)
+        expect(pa.reviewable_priority).to eq(Reviewable.priorities[:high])
+        expect(pa.score_bonus).to eq(10.0)
       end
     end
 

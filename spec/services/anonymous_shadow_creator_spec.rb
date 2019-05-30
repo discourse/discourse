@@ -34,6 +34,9 @@ describe AnonymousShadowCreator do
       expect(shadow.id).to eq(shadow2.id)
       create_post(user: shadow)
 
+      user.reload
+      shadow.reload
+
       freeze_time 4.minutes.from_now
       shadow3 = AnonymousShadowCreator.get(user)
 
@@ -56,6 +59,7 @@ describe AnonymousShadowCreator do
       expect(shadow.created_at).not_to eq(user.created_at)
 
       p = create_post
+
       expect(Guardian.new(shadow).post_can_act?(p, :like)).to eq(false)
       expect(Guardian.new(user).post_can_act?(p, :like)).to eq(true)
 

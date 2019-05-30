@@ -6,8 +6,24 @@ describe Jobs::AutoQueueHandler do
 
   subject { Jobs::AutoQueueHandler.new.execute({}) }
 
-  context "old flag" do
-    fab!(:old) { Fabricate(:reviewable_flagged_post, created_at: 61.days.ago) }
+  context "old flagged post" do
+    # fab!(:old) { Fabricate(:reviewable_flagged_post, created_at: 61.days.ago) }
+
+    fab!(:spam_result) do
+      PostActionCreator.new(
+        Fabricate(:user),
+        Fabricate(:post),
+        PostActionType.types[:spam],
+        message: 'this is the initial message'
+      ).perform
+    end
+
+    fab!(:post_action) { spam_result.post_action }
+    fab!(:old) {
+      spam_result.reviewable.update_column(:created_at, 61.days.ago)
+      spam_result.reviewable
+    }
+
     fab!(:not_old) { Fabricate(:reviewable_flagged_post, created_at: 59.days.ago) }
 
     it "defers the old flag if auto_handle_queued_age is 60" do
@@ -15,6 +31,7 @@ describe Jobs::AutoQueueHandler do
       subject
       expect(not_old.reload).to be_pending
       expect(old.reload).not_to be_pending
+      expect(post_action.related_post.topic.posts_count).to eq(1)
     end
 
     it "doesn't defer the old flag if auto_handle_queued_age is 0" do

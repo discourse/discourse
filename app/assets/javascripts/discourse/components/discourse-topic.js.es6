@@ -46,8 +46,8 @@ export default Ember.Component.extend(
       // Ember is supposed to only call observers when values change but something
       // in our view set up is firing this observer with the same value. This check
       // prevents scrolled from being called twice.
-      const enteredAt = this.get("enteredAt");
-      if (enteredAt && this.get("lastEnteredAt") !== enteredAt) {
+      const enteredAt = this.enteredAt;
+      if (enteredAt && this.lastEnteredAt !== enteredAt) {
         this._lastShowTopic = null;
         Ember.run.schedule("afterRender", () => this.scrolled());
         this.set("lastEnteredAt", enteredAt);
@@ -157,7 +157,7 @@ export default Ember.Component.extend(
       }
 
       const offset = window.pageYOffset || $("html").scrollTop();
-      if (this.get("dockAt") === 0) {
+      if (this.dockAt === 0) {
         const title = $("#topic-title");
         if (title && title.length === 1) {
           this.set("dockAt", title.offset().top);
@@ -166,7 +166,7 @@ export default Ember.Component.extend(
 
       this.set("hasScrolled", offset > 0);
 
-      const topic = this.get("topic");
+      const topic = this.topic;
       const showTopic = this.shouldShowTopicInHeader(topic, offset);
 
       if (showTopic !== this._lastShowTopic) {
@@ -205,7 +205,7 @@ export default Ember.Component.extend(
     toggleMobileHeaderTopic() {
       return this.appEvents.trigger(
         "header:update-topic",
-        this.mobileScrollDirection === "down" ? this.get("topic") : null
+        this.mobileScrollDirection === "down" ? this.topic : null
       );
     }
   }

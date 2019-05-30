@@ -30,7 +30,7 @@ export default Ember.Controller.extend({
 
       ajax("/admin/email/test", {
         type: "POST",
-        data: { email_address: this.get("testEmailAddress") }
+        data: { email_address: this.testEmailAddress }
       })
         .then(response =>
           this.set("sentTestEmailMessage", response.sent_test_email_message)

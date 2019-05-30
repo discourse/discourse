@@ -109,12 +109,17 @@ describe User do
     end
 
     context 'when user is anonymous?' do
-      let(:anonymous_user) { Fabricate(:anonymous) }
-
-      it 'should not initiate the bot' do
+      before do
         SiteSetting.allow_anonymous_posting = true
+      end
 
-        expect { anonymous_user }.to_not change { Post.count }
+      it 'should initiate bot for real user only' do
+
+        user = Fabricate(:user, trust_level: 1)
+        shadow = AnonymousShadowCreator.get(user)
+
+        expect(TopicAllowedUser.where(user_id: shadow.id).count).to eq(0)
+        expect(TopicAllowedUser.where(user_id: user.id).count).to eq(1)
       end
     end
 

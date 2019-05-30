@@ -18,7 +18,7 @@ export default Ember.Component.extend({
 
     // If we need to render a second modal for any reason, we can't
     // use `elementId`
-    if (this.get("modalStyle") !== "inline-modal") {
+    if (this.modalStyle !== "inline-modal") {
       this.set("elementId", "discourse-modal");
       this.set("modalStyle", "fixed-modal");
     }
@@ -30,7 +30,7 @@ export default Ember.Component.extend({
   @on("didInsertElement")
   setUp() {
     $("html").on("keydown.discourse-modal", e => {
-      if (e.which === 27 && this.get("dismissable")) {
+      if (e.which === 27 && this.dismissable) {
         Ember.run.next(() => $(".modal-header a.close").click());
       }
     });
@@ -74,7 +74,7 @@ export default Ember.Component.extend({
   },
 
   mouseDown(e) {
-    if (!this.get("dismissable")) {
+    if (!this.dismissable) {
       return;
     }
     const $target = $(e.target);

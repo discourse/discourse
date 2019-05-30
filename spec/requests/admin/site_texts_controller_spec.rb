@@ -271,7 +271,7 @@ RSpec.describe Admin::SiteTextsController do
       end
 
       it "returns the right error message" do
-        I18n.backend.store_translations(:en, some_key: '%{first} %{second}')
+        I18n.backend.store_translations(SiteSetting.default_locale, some_key: '%{first} %{second}')
 
         put "/admin/customize/site_texts/some_key.json", params: {
           site_text: { value: 'hello %{key} %{omg}' }

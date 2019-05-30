@@ -14,7 +14,7 @@ export default TextField.extend({
     const $searchInput = this.$();
     applySearchAutocomplete($searchInput, this.siteSettings);
 
-    if (!this.get("hasAutofocus")) {
+    if (!this.hasAutofocus) {
       return;
     }
     // iOS is crazy, without this we will not be

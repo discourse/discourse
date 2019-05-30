@@ -119,19 +119,19 @@ it:
         one: "Impossibile cancellare il record poiché ne esistono %{record} dipendenti"
         many: "Impossibile cancellare il record poiché esiste %{record} dipendente"
       too_long:
-        one: è troppo lungo (il massimo è di 1 carattere)
+        one: è troppo lungo (il massimo è di %{count} carattere)
         other: è troppo lungo (il massimo è di %{count} caratteri)
       too_short:
-        one: è troppo corto (il minimo è di 1 carattere)
+        one: è troppo corto (il minimo è di %{count} carattere)
         other: è troppo corto (il minimo è di %{count} caratteri)
       wrong_length:
-        one: ha una lunghezza errata (dovrebbe essere di 1 carattere)
+        one: ha una lunghezza errata (dovrebbe essere di %{count} carattere)
         other: ha una lunghezza errata (dovrebbe essere di %{count} caratteri)
       other_than: "deve essere diverso da %{count}"
     template:
       body: "Sono stati riscontrati problemi con i seguenti campi:"
       header:
-        one: 1 errore ha impedito il salvataggio di questo %{model}
+        one: "%{count} errore ha impedito il salvataggio di questo %{model}"
         other: "%{count} errori hanno impedito il salvataggio di questo %{model}"
     embed:
       load_from_remote: "Si è verificato un errore nel caricamento del messaggio."
@@ -179,7 +179,7 @@ it:
   reading_time: "Tempo di lettura"
   likes: "Mi piace"
   too_many_replies:
-    one: "Spiacenti, ma i nuovi utenti possono inserire solo 1 risposta nello stesso argomento."
+    one: "Spiacenti, ma i nuovi utenti possono inserire solo %{count} risposta nello stesso argomento."
     other: "Spiacenti, ma i nuovi utenti possono inserire solo %{count} risposte nello stesso argomento."
   embed:
     start_discussion: "Inizia Discussione"
@@ -189,7 +189,7 @@ it:
     no_hosts: "Non sono stati configurati host per l'inclusione."
     configure: "Configura Inclusione"
     more_replies:
-      one: "1 ulteriore risposta"
+      one: "%{count} ulteriore risposta"
       other: "%{count} ulteriori risposte"
     loading: "Caricamento Discussione..."
     permalink: "Collegamento permanente"
@@ -293,7 +293,7 @@ it:
       title: "Richesta di Adesione per @%{group_name}"
   education:
     until_posts:
-      one: "1 messaggio"
+      one: "%{count} messaggio"
       other: "%{count} messaggi"
     "new-topic": |
       Benvenuto su %{site_name} &mdash; **grazie per voler iniziare una nuova conversazione!**
@@ -331,20 +331,6 @@ it:
       Puoi modificare la risposta precedente per aggiungere una citazione evidenziando il testo e selezionando il bottone <b>Cita<b> che comparirà.
 
       E' più facile per chiunque leggere argomenti che hanno poche risposte ma più dettagliate, rispetto a molte brevi risposte individuali.
-    dominating_topic: |
-      ### Permetti agli altri di partecipare alla conversazione
-
-      Questo argomento è evidentemente importante per te &ndash; hai inviato più del %{percent}% delle risposte.
-
-      Sei sicuro di lasciare anche agli altri abbastanza tempo per esprimere il loro punto di vista?
-    get_a_room: |
-      ### Considera la risposta a più persone
-
-      Hai già risposto %{count}volte a @%{reply_username} in questo argomento.
-
-      Hai già considerato di rispondere ad *altre* persone nella stessa discussione? Una buona discussione coinvolge più voci e prospettive.
-
-      Se vuoi continuare più a lungo la conversazione con questa persona in particolare, [inviagli un messaggio privato](%{base_path}/u/%{reply_username}).
     too_many_replies: |
       ### Hai raggiungo il limite di risposte per questo argomento
 
@@ -391,7 +377,12 @@ it:
               same_as_username: "è la stessa del tuo nome utente. Per favore usa una password più sicura."
               same_as_email: "coincide con la tua email. Per favore scegli una password più sicura."
               same_as_current: "è la tua stessa password attuale."
+              same_as_name: "corrisponde al tuo nome."
               unique_characters: "ha troppi caratteri ripetuti. Per favore usa una password più sicura."
+            username:
+              same_as_password: "corrisponde alla tua password."
+            name:
+              same_as_password: "corrisponde alla tua password."
             ip_address:
               signup_not_allowed: "L'iscrizione non è permessa da questo account."
         user_email:
@@ -465,7 +456,7 @@ it:
     cannot_delete:
       has_subcategories: "Non puoi cancellare questa categoria perché ha sotto-categorie."
       topic_exists:
-        one: "Non puoi cancellare questa categoria perché ha 1 argomento. L'argomento più vecchio è %{topic_link}."
+        one: "Non puoi cancellare questa categoria perché ha %{count} argomento. L'argomento più vecchio è %{topic_link}."
         other: "Non puoi cancellare questa categoria perché ha %{count} argomenti. L'argomento più vecchio è %{topic_link}."
       topic_exists_no_oldest: "Non puoi cancellare questa categoria perché il numero di argomenti è di %{count}."
     uncategorized_description: "Argomenti che non necessitano di una categoria, o che non ricadono in nessuna categoria esistente."
@@ -503,85 +494,83 @@ it:
       unsubscribe_via_email: "Hai raggiunto il massimo numero di cancellazioni via email. Per favore aspetta %{time_left}  prima di riprovare."
       topic_invitations_per_day: "Hai raggiunto il numero massimo di inviti ad argomenti. Per favore aspetta %{time_left} prima di riprovare."
     hours:
-      one: "1 ora"
+      one: "%{count} ora"
       other: "%{count} ore"
     minutes:
-      one: "1 minuto"
+      one: "%{count} minuto"
       other: "%{count} minuti"
     seconds:
-      one: "1 secondo"
+      one: "%{count} secondo"
       other: "%{count} secondi"
     short_time: "qualche secondo"
   datetime:
     distance_in_words:
       half_a_minute: "< 1m"
       less_than_x_seconds:
-        one: "< 1s"
+        one: "< %{count}s"
         other: "< %{count}s"
       x_seconds:
-        one: "1s"
+        one: "%{count}s"
         other: "%{count}s"
       less_than_x_minutes:
-        one: "< 1m"
+        one: "< %{count}m"
         other: "< %{count}m"
       x_minutes:
-        one: "1m"
+        one: "%{count}m"
         other: "%{count}m"
       about_x_hours:
-        one: "1o"
+        one: "%{count}o"
         other: "%{count}o"
       x_days:
-        one: "1g"
+        one: "%{count}g"
         other: "%{count}gg"
       about_x_months:
-        one: "1mese"
+        one: "%{count}mese"
         other: "%{count}mesi"
       x_months:
-        one: "1mese"
+        one: "%{count}mese"
         other: "%{count}mesi"
       about_x_years:
-        one: "1a"
+        one: "%{count}a"
         other: "%{count}a"
       over_x_years:
-        one: "> 1a"
+        one: "> %{count}a"
         other: "> %{count}a"
       almost_x_years:
-        one: "1a"
+        one: "%{count}a"
         other: "%{count}a"
     distance_in_words_verbose:
       half_a_minute: "proprio ora"
-      less_than_x_seconds:
-        one: "adesso"
-        other: "proprio ora"
+      less_than_x_seconds: "proprio ora"
       x_seconds:
-        one: "1 secondo fa"
+        one: "%{count} secondo fa"
         other: "%{count} secondi fa"
       less_than_x_minutes:
-        one: "meno di 1 minuto fa"
+        one: "meno di %{count} minuto fa"
         other: "meno di %{count} minuti fa"
       x_minutes:
-        one: "1 minuto fa"
+        one: "%{count} minuto fa"
         other: "%{count} minuti fa"
       about_x_hours:
-        one: "1 ora fa"
+        one: "%{count} ora fa"
         other: "%{count} ore fa"
       x_days:
-        one: "1 giorno fa"
+        one: "%{count} giorno fa"
         other: "%{count} giorni fa"
       about_x_months:
-        one: "circa 1 mese fa"
+        one: "circa %{count} mese fa"
         other: "circa %{count} mesi fa"
       x_months:
-        one: "1 mese fa"
+        one: "%{count} mese fa"
         other: "%{count} mesi fa"
       about_x_years:
-        one: "circa 1 anno fa"
+        one: "circa %{count} anno fa"
         other: "circa %{count} anni fa"
       over_x_years:
-        one: "più di 1 anno fa"
+        one: "più di %{count} anno fa"
         other: "più di %{count} anni fa"
       almost_x_years:
-        one: "quasi 1 anno fa"
+        one: "quasi %{count} anno fa"
         other: "quasi %{count} anni fa"
   password_reset:
     no_token: "Spiacenti, il collegamento per il cambio password è scaduto. Clicca su Connetti e poi su 'Ho dimenticato la password' per ricevere un nuovo collegamento."
@@ -662,6 +651,7 @@ it:
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: "Inappropriato"
+      description: 'Questo messaggio ha dei contenuti che una persona ragionevole considererebbe offensivi, aggressivi o una violazione delle<a href="%{base_path}/guidelines"> linee guida della comunità</a>.'
       long_form: "segnalato come inappropriato"
     notify_user:
       title: "Invia un messaggio a @{{username}}"
@@ -745,6 +735,8 @@ it:
       every_hour: "ogni ora"
       daily: "ogni giorno"
       weekly: "ogni settimana"
+      every_month: "ogni mese"
+      every_six_months: "ogni sei mesi"
   user_api_key:
     title: "Autorizza accesso dell'applicazione"
     authorize: "Autorizza"
@@ -1275,7 +1267,6 @@ it:
     auto_silence_fast_typers_on_first_post: "Silenzia automaticamente gli utenti che non soddisfano min_first_post_typing_time"
     auto_silence_fast_typers_max_trust_level: "Livello di esperienza massimo per silenziare automaticamente i digitatori veloci"
     auto_silence_first_post_regex: "Regex senza distinzione tra maiuscole e minuscole che, se passato, causerà il silenziamento del primo messaggio dell'utente e che sarà inviato nella coda dei messaggi da approvare. Esempio: rabbia|a[bc]a, fa in modo che tutti i messaggi contenenti le parole rabbia o aba o aca siano silenziati in un primo momento. Si applica solo al primo messaggio."
-    flags_default_topics: "Di default, mostra gli argomenti segnalati nella sezione di amministrazione"
     reply_by_email_enabled: "Abilita la possibilità di rispondere ai messaggi tramite email."
     reply_by_email_address: "Modello per rispondere via email, per esempio: %%{reply_key}@risposta.esempio.com o risposte+%%{reply_key}@esempio.com"
     alternative_reply_by_email_addresses: "Elenco dei template alternativi per la risposta via email in arrivo da indirizzi email. Esempio: %%{reply_key}@reply.example.com|replies+%%{reply_key}@example.com"
@@ -1488,10 +1479,10 @@ it:
       different_users: "I messaggi appartenenti a diversi utenti non possono essere fusi."
   topic_statuses:
     autoclosed_message_max_posts:
-      one: "Questo messaggio è stato chiuso automaticamente per aver raggiunto il limite massimo di 1 risposta."
+      one: "Questo messaggio è stato chiuso automaticamente per aver raggiunto il limite massimo di %{count} risposta."
       other: "Questo messaggio è stato chiuso automaticamente per aver raggiunto il limite massimo di %{count} risposte."
     autoclosed_topic_max_posts:
-      one: "Questo argomento è stato chiuso automaticamente per aver raggiunto il limite massimo di 1 risposta."
+      one: "Questo argomento è stato chiuso automaticamente per aver raggiunto il limite massimo di %{count} risposta."
       other: "Questo argomento è stato chiuso automaticamente per aver raggiunto il limite massimo di %{count} risposte."
     autoclosed_enabled_days:
       one: "Questo argomento è stato automaticamente chiuso dopo un giorno. Non sono permesse altre risposte."
@@ -1512,22 +1503,22 @@ it:
       one: "Questo argomento è stato automaticamente chiuso un minuto dopo l'ultima risposta. Non sono permesse altre risposte."
       other: "Questo argomento è stato automaticamente chiuso %{count} minuti dopo l'ultima risposta. Non sono permesse altre risposte."
     autoclosed_disabled_days:
-      one: "This topic was automatically opened after 1 day."
+      one: "This topic was automatically opened after %{count} day."
       other: "Questo argomento è stato aperto automaticamente dopo %{count} giorni."
     autoclosed_disabled_hours:
-      one: "This topic was automatically opened after 1 hour."
+      one: "This topic was automatically opened after %{count} hour."
       other: "Questo argomento è stato aperto automaticamente dopo %{count} ore."
     autoclosed_disabled_minutes:
-      one: "This topic was automatically opened after 1 minute."
+      one: "This topic was automatically opened after %{count} minute."
       other: "Questo argomento è stato aperto automaticamente dopo %{count} minuti."
     autoclosed_disabled_lastpost_days:
-      one: "This topic was automatically opened 1 day after the last reply."
+      one: "This topic was automatically opened %{count} day after the last reply."
       other: "Questo argomento è stato aperto automaticamente %{count} giorni dopo l'ultima risposta."
     autoclosed_disabled_lastpost_hours:
-      one: "This topic was automatically opened 1 hour after the last reply."
+      one: "This topic was automatically opened %{count} hour after the last reply."
       other: "Questo argomento è stato aperto automaticamente %{count} ore dopo l'ultima risposta."
     autoclosed_disabled_lastpost_minutes:
-      one: "Questo argomento è stato aperto automaticamente 1 minuto dopo l'ultima risposta."
+      one: "Questo argomento è stato aperto automaticamente %{count} minuto dopo l'ultima risposta."
       other: "This topic was automatically opened %{count} minutes after the last reply."
     autoclosed_disabled: "Questo argomento è ora aperto. Sono permesse altre risposte."
     autoclosed_disabled_lastpost: "Questo argomento è ora aperto. Sono permesse altre risposte."
@@ -1936,7 +1927,7 @@ it:
     pending_users_reminder:
       title: "Promemoria Utenti in Sospeso"
       subject_template:
-        one: "1 utente in attesa di approvazione"
+        one: "%{count} utente in attesa di approvazione"
         other: "%{count} utenti in attesa di approvazione"
     download_remote_images_disabled:
       title: "Scaricamento Immagini Remote Disabilitato"
@@ -1958,10 +1949,6 @@ it:
       subject_template:
         one: "messaggi in attesa di essere revisionati "
         other: "%{count} messaggi in attesa di essere revisionati"
-      text_body_template: |
-        Ciao,
-
-        dei messaggi di nuovi utenti sono stati trattenuti per la moderazione e attualmente sono in attesa di essere rivisti. [Approvali o rifiutali qui](%{base_url}/queued-posts).
   unsubscribe_link: |
     Per annullare l'iscrizione a queste email, [clicca qui](%{unsubscribe_url}).
   unsubscribe_link_and_mail: |
@@ -1976,7 +1963,7 @@ it:
   user_notifications:
     previous_discussion: "Risposte Precedenti"
     reached_limit:
-      one: "Heads up: We send a maximum of 1 daily email. Check the site to see the ones that might be held back."
+      one: "Heads up: We send a maximum of %{count} daily email. Check the site to see the ones that might be held back."
       other: "Avvertimento: Inviamo un massimo di  %{count} email giornaliere. Controlla il sito per vedere quelle che potrebbero essere state trattenute. PS grazie per essere popolare!"
     in_reply_to: "In Risposta A"
     unsubscribe:
@@ -2205,7 +2192,6 @@ it:
       unread_messages: "Messaggi Non Letti"
       unread_notifications: "Notifiche Non Lette"
       liked_received: "Like ricevuti"
-      new_posts: "Nuovi Messaggi"
       new_users: "Nuovi utenti"
       popular_topics: "Argomenti Di Successo"
       follow_topic: "Segui questo topic"
@@ -2742,6 +2728,8 @@ it:
     empathetic:
       name: Empatico
       description: Ha ricevuto 500 mi piace sui messaggi e dato 1000 mi piace
+      long_description: |
+        Questo distintivo è assegnato quando hai ricevuto 500 mi piace sui messaggi e hai dato 1000 o più mi piace in cambio. Sei un modello di generosità e di apprezzamento reciproco :two_hearts:.
     first_emoji:
       name: Prima Emoji
       description: Ha usato una Emoji in un messaggio
@@ -2792,7 +2780,6 @@ it:
     title: "Etichette"
     staff_tag_disallowed: 'L''etichetta "%{tag}" può essere applicata solo dallo staff.'
     staff_tag_remove_disallowed: 'L''etichetta "%{tag}" può essere cancellata soltanto dallo staff.'
-    minimum_required_tags: "Devi selezionare almeno %{count} Etichette."
   rss_by_tag: "Argomenti etichettati %{tag}"
   finish_installation:
     congratulations: "Congratulazioni, hai installato Discourse!"
@@ -2869,14 +2856,10 @@ it:
         fields:
           logo:
             label: "Logo Primario"
-          logo_small:
-            label: "Logo Piccolo"
       icons:
         title: "Icone"
         fields:
-          favicon:
-            label: "Icona Piccola"
-          apple_touch_icon:
+          large_icon:
             label: "Icona Grande"
       homepage:
         description: "Ti consigliamo di mostrare gli ultimi argomenti nella tua homepage, ma puoi anche visualizzare le categorie (gruppi di argomenti) sulla homepage, se preferisci."
@@ -2907,6 +2890,7 @@ it:
     popup:
       confirm_title: "Notifiche abilitate - %{site_title}"
       confirm_body: "Successo! Le notifiche sono state abilitate."
+      custom: "Notifica da %{username} su %{site_title}"
   staff_action_logs:
     not_found: "non trovato"
     unknown: "sconosciuto"
@@ -2928,6 +2912,8 @@ it:
         description: "Nascondi questo messaggio e invia automaticamente all'utente un messaggio privato che lo invita a modificarlo."
       delete_spammer:
         title: "Cancella Spammer"
+      delete_single:
+        title: "Elimina"
       disagree_and_restore:
         description: "Ripristina il messaggio in modo che tutti gli utenti possano vederlo."
       disagree:

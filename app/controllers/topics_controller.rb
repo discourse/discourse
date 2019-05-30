@@ -324,13 +324,13 @@ class TopicsController < ApplicationController
     end
 
     changes = {}
+
     PostRevisor.tracked_topic_fields.each_key do |f|
       changes[f] = params[f] if params.has_key?(f)
     end
 
     changes.delete(:title) if topic.title == changes[:title]
     changes.delete(:category_id) if topic.category_id.to_i == changes[:category_id].to_i
-    changes.delete(:tags_empty_array) if !topic.tags.exists?
 
     success = true
 

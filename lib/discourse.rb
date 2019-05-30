@@ -453,6 +453,16 @@ module Discourse
       end
   end
 
+  def self.last_commit_date
+    ensure_version_file_loaded
+    $last_commit_date ||=
+      begin
+        git_cmd = 'git log -1 --format="%ct"'
+        seconds = self.try_git(git_cmd, nil)
+        seconds.nil? ? nil : DateTime.strptime(seconds, '%s')
+      end
+  end
+
   def self.try_git(git_cmd, default_value)
     version_value = false
 

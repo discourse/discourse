@@ -26,11 +26,11 @@ export default Ember.Component.extend({
   },
 
   _afterFirstRender() {
-    if (!this.site.mobileView && this.get("autoFocus") !== "false") {
+    if (!this.site.mobileView && this.autoFocus !== "false") {
       this.$("input:first").focus();
     }
 
-    const maxHeight = this.get("maxHeight");
+    const maxHeight = this.maxHeight;
     if (maxHeight) {
       const maxHeightFloat = parseFloat(maxHeight) / 100.0;
       if (maxHeightFloat > 0) {

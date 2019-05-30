@@ -43,61 +43,61 @@ bg:
       tiny:
         half_a_minute: "< 1 мин."
         less_than_x_seconds:
-          one: "< 1сек"
+          one: "< %{count}сек"
           other: "< %{count}сек"
         x_seconds:
-          one: "1сек"
+          one: "%{count}сек"
           other: "%{count}сек"
         x_minutes:
-          one: "1мин"
+          one: "%{count}мин"
           other: "%{count}мин"
         about_x_hours:
-          one: "1ч"
+          one: "%{count}ч"
           other: "%{count}ч"
         x_days:
-          one: "1д"
+          one: "%{count}д"
           other: "%{count}д"
         about_x_years:
-          one: "1г"
+          one: "%{count}г"
           other: "%{count}г"
         over_x_years:
-          one: "> 1г"
+          one: "> %{count}г"
           other: "> %{count}г"
         almost_x_years:
-          one: "1г"
+          one: "%{count}г"
           other: "%{count}г"
         date_month: "MMM D"
         date_year: "MMM 'YY"
       medium:
         x_minutes:
-          one: "1 минута"
+          one: "%{count} минута"
           other: "%{count} минути"
         x_hours:
-          one: "1 час"
+          one: "%{count} час"
           other: "%{count} часа"
         x_days:
-          one: "1 ден"
+          one: "%{count} ден"
           other: "%{count} дни"
         date_year: "MMM D, 'YY"
       medium_with_ago:
         x_minutes:
-          one: "преди 1 минута"
+          one: "преди %{count} минута"
           other: "преди %{count}  минути"
         x_hours:
-          one: "преди 1 час"
+          one: "преди %{count} час"
           other: "преди %{count} часа"
         x_days:
-          one: "преди 1 ден"
+          one: "преди %{count} ден"
           other: "преди %{count} дни"
       later:
         x_days:
-          one: "1 ден по-късно"
+          one: "%{count} ден по-късно"
           other: "%{count} дни по-късно"
         x_months:
-          one: "1 месец по-късно"
+          one: "%{count} месец по-късно"
           other: "%{count} месеца по-късно"
         x_years:
-          one: "1 година по-късно"
+          one: "%{count} година по-късно"
           other: "%{count} години по-късно"
       previous_month: "Предишен месец"
       next_month: "Следващ месец"
@@ -312,7 +312,7 @@ bg:
       posts_read: "Прочетени"
       posts_read_long: "Прочетени публикации"
       total_rows:
-        one: "1 потребител"
+        one: "%{count} потребител"
         other: "%{count} потребители"
     group_histories:
       actions:
@@ -456,7 +456,7 @@ bg:
       toggle_ordering: "включете контрол на подредбата"
       subcategories: "Подкатегории"
       topic_sentence:
-        one: "1 тема"
+        one: "%{count} тема"
         other: "%{count} теми"
     ip_lookup:
       title: Търсене по IP адрес
@@ -488,6 +488,7 @@ bg:
       private_message: "Съобщение"
       private_messages: "Съобщения"
       user_notifications:
+        ignore_duration_username: "Потребителско име"
         mute_option: "Заглушен"
         normal_option: "Нормален"
       activity_stream: "Активност"
@@ -854,7 +855,7 @@ bg:
       logout_disabled: "Излизане от сайта е временно спряно, докато е пуснат режим \"само за четене\"."
     logs_error_rate_notice:
       rate:
-        one: "1 грешка/%{duration}"
+        one: "%{count} грешка/%{duration}"
         other: "%{count} грешки/%{duration}"
     learn_more: "научете повече..."
     all_time: "общо"
@@ -1165,7 +1166,7 @@ bg:
         notification_level: "Известия"
         choose_new_category: "Избери нова категория за тези теми:"
         selected:
-          one: "Вие сте избрали <b>1</b> тема."
+          one: "Вие сте избрали <b>%{count}</b> тема."
           other: "Вие сте избрали <b>{{count}}</b> теми."
         change_tags: "Замени етикетите"
         append_tags: "Добави етикетите"
@@ -1214,10 +1215,10 @@ bg:
       new: "нова тема"
       unread: "непрочетено"
       new_topics:
-        one: "1 нова тема"
+        one: "%{count} нова тема"
         other: "{{count}} нови теми"
       unread_topics:
-        one: "1 непрочетена тема"
+        one: "%{count} непрочетена тема"
         other: "{{count}} непрочетени теми"
       title: "Тема"
       invalid_access:
@@ -1231,16 +1232,16 @@ bg:
         title: "Темата не е намерена"
         description: "Темата не може да бъде открита. Възможно ли е да е премахната от модератор?"
       total_unread_posts:
-        one: "имате 1 непрочетено мнение в тази тема"
+        one: "имате %{count} непрочетено мнение в тази тема"
         other: " Вие имате {{count}} непрочетени мнения в тази тема"
       unread_posts:
-        one: "Вие имате 1 непрочетено старо мнение в тази тема"
+        one: "Вие имате %{count} непрочетено старо мнение в тази тема"
         other: "Вие имате {{count}} непрочетени стари мнения в тази тема"
       new_posts:
-        one: "има 1 нова публикация в темата от последното Ви посещение на темата"
+        one: "има %{count} нова публикация в темата от последното Ви посещение на темата"
         other: "от последното Ви посещение в темата до сега има {{count}} нови публикации"
       likes:
-        one: "има 1 харесване в тази тема"
+        one: "има %{count} харесване в тази тема"
         other: "има {{count}} харесвания в тази тема"
       back_to_list: "Назад към Списъка с теми"
       options: "Настройки на темата"
@@ -1367,7 +1368,7 @@ bg:
         pin_validation: "Необходимо е да се избере дата, за да може да се закачи темата."
         not_pinned: "Няма закачени теми в {{categoryLink}}."
         already_pinned:
-          one: "Темата е закачена в {{categoryLink}}: <strong class='badge badge-notification unread'>е 1</strong>"
+          one: "Темата е закачена в {{categoryLink}}: <strong class='badge badge-notification unread'>е %{count}</strong>"
           other: "Темите закачени в {{categoryLink}}: <strong class='badge badge-notification unread'>са {{count}}</strong>"
         pin_globally: "Тази тема да се появява в горната част на всички списъци докато"
         confirm_pin_globally: "Вие вече имате {{count}} глобално заковани теми. Прекалено много заковани теми може да объркат новите и анонимни потребители. Сигурни ли сте че искате да заковете още една тема глобално към тази категория ?"
@@ -1376,7 +1377,7 @@ bg:
         global_pin_note: "Потребителите могат да отговат темата индивидуално само за тях."
         not_pinned_globally: "Няма никакви закачени теми."
         already_pinned_globally:
-          one: "Темата закачена глобално е: <strong class='badge badge-notification unread'>1</strong>"
+          one: "Темата закачена глобално е: <strong class='badge badge-notification unread'>%{count}</strong>"
           other: "Темите закачени глобално: <strong class='badge badge-notification unread'>{{count}}</strong>"
         make_banner: "Направете тази тема на банер който ще присъства в началото на всички страници"
         remove_banner: "Премахнете този банер който се появява в началото на всички страници"
@@ -1411,7 +1412,7 @@ bg:
       login_reply: "Влезте, за да отговорите "
       filters:
         n_posts:
-          one: "1 публикация"
+          one: "%{count} публикация"
           other: "{{count}} публикации"
         cancel: "Премахни филтъра"
       split_topic:
@@ -1452,7 +1453,7 @@ bg:
         select_all: "избери всички "
         deselect_all: "премахване на всички "
         description:
-          one: Вие избрахте <b>1</b> публикация.
+          one: Вие избрахте <b>%{count}</b> публикация.
           other: "Вие избрахте <b>{{count}}</b> публикации. "
     post:
       edit_reason: "Причина: "
@@ -1467,18 +1468,18 @@ bg:
         other: "(публикация оттеглена от автора, ще бъде автоматично изтрита след %{count} часа, освен, ако не бъде сигнализирана) "
       expand_collapse: "разшири/намали "
       gap:
-        one: "покажи 1 скрит отговор"
+        one: "покажи %{count} скрит отговор"
         other: "покажи {{count}} скрити отговора"
       unread: "Публикацията е непрочетена"
       has_replies:
         one: "{{count}} Отговор"
         other: "{{count}} Отговори"
       has_likes_title:
-        one: "1 човек харесва тази публикация"
+        one: "%{count} човек харесва тази публикация"
         other: "{{count}} човека харесват тази публикация"
       has_likes_title_only_you: "вие харесахте този пост"
       has_likes_title_you:
-        one: "вие и още 1 човек сте харесали този пост"
+        one: "вие и още %{count} човек сте харесали този пост"
         other: "вие и {{count}} човека сте харесали този пост"
       errors:
         create: "При създаването на Вашата публикация се получи грешка. Моля, опитайте отново."
@@ -1548,50 +1549,6 @@ bg:
           notify_user: "Изпратихте лично съобщение на този потребител"
           bookmark: "Сложихте тази публикация в Отметки"
           like: "Вие харесахте това"
-        by_you_and_others:
-          off_topic:
-            one: "Вие и още 1 човек маркирахте това извън темата"
-            other: "Вие и още {{count}} човека маркирахте това извън темата"
-          spam:
-            one: "Вие и още 1 човек маркирахте това като спам"
-            other: "Вие и още {{count}} човека маркирахте това като спам"
-          inappropriate:
-            one: "Вие и още 1 човек маркирахте това като неприлично"
-            other: "Вие и още {{count}} човека маркирахте това като неприлично"
-          notify_moderators:
-            one: "Вие и още 1 човек маркирахте това за модерация"
-            other: "Вие и още {{count}} човека маркирахте това за модерация"
-          notify_user:
-            one: "Вие и още 1 човек изпратихте лично съобщение на този потребител"
-            other: "Вие и още {{count}} човека изпратихте лично съобщение на този потребител"
-          bookmark:
-            one: "Вие и още 1 човек сложихте тази публикация отметки"
-            other: "Вие и още {{count}} човека сложихте тази публикация в Отметки"
-          like:
-            one: "Вие и още 1 човек харесвате това"
-            other: "Вие и още {{count}} човека харесахте това"
-        by_others:
-          off_topic:
-            one: "1 човек маркира това като извън темата"
-            other: "{{count}} човека маркираха това като извън темата"
-          spam:
-            one: "1 човек маркира това като спам"
-            other: "{{count}} човека маркираха това като спам"
-          inappropriate:
-            one: "1 човек маркира това като неприлично"
-            other: "{{count}} човека маркираха това като неприлично"
-          notify_moderators:
-            one: "1 човек маркира това за модерация"
-            other: "{{count}} човека маркираха това за модерация"
-          notify_user:
-            one: "1 човек изпрати съобщение на този потребител"
-            other: "{{count}} човека изпратиха лично съобщение на този потребител"
-          bookmark:
-            one: "1 човек сложи този публикация в отметки"
-            other: "{{count}} човека сложиха този публикация в отметки"
-          like:
-            one: "1 човек харесва тази публикация"
-            other: "{{count}} човека харесват тази публикация"
       revisions:
         controls:
           first: "Първа ревизия"
@@ -1652,6 +1609,7 @@ bg:
       email_in_disabled_click: 'разрешете "email in" настройката '
       allow_badges_label: "Разрешете използването на значки в тази категория. "
       edit_permissions: "Редакция на достъпа"
+      review_group_name: "име на групата"
       this_year: "тази година "
       default_position: "Позиция по подразбиране "
       position_disabled: "Категорията ще се показва в ред на активност. За да контролирате реда на категориите в списъците, "
@@ -1723,7 +1681,7 @@ bg:
       links_title: "Популярни връзки"
       links_shown: "покажи повече адреси..."
       clicks:
-        one: "1 кликване"
+        one: "%{count} кликване"
         other: "%{count} кликвания"
     topic_statuses:
       warning:
@@ -1784,7 +1742,7 @@ bg:
       latest:
         title: "Последни"
         title_with_count:
-          one: "Последен (1)"
+          one: "Последен (%{count})"
           other: "Последни ({{count}})"
         help: "теми със скорошни публикации"
       hot:
@@ -1803,20 +1761,20 @@ bg:
       unread:
         title: "Непрочетени"
         title_with_count:
-          one: "Непрочетен (1)"
+          one: "Непрочетен (%{count})"
           other: "Непрочетени ({{count}})"
         help: "теми които гледате или следите, с непрочетени публикации"
         lower_title_with_count:
-          one: "1 непрочетен"
+          one: "%{count} непрочетен"
           other: "{{count}} непрочетени"
       new:
         lower_title_with_count:
-          one: "1 нов"
+          one: "%{count} нов"
           other: "{{count}} нови"
         lower_title: "нови"
         title: "Нов"
         title_with_count:
-          one: "Нов (1)"
+          one: "Нов (%{count})"
           other: "Нови ({{count}})"
         help: "теми създадени през последните няколко дни"
       posted:
@@ -1828,7 +1786,7 @@ bg:
       category:
         title: "{{categoryName}}"
         title_with_count:
-          one: "{{categoryName}} (1)"
+          one: "{{categoryName}} (%{count})"
           other: "{{categoryName}} ({{count}})"
         help: "последни теми в категория {{categoryName}}"
       top:
@@ -1863,56 +1821,56 @@ bg:
       title: "Бързи клавиши"
       jump_to:
         title: "Премини към"
-        home: "<b>g</b>, <b>h</b> Начало"
-        latest: "<b>g</b>, <b>l</b> Последни"
-        new: "<b>g</b>, <b>n</b> Нови"
-        unread: "<b>g</b>, <b>u</b> Непрочетени"
-        categories: "<b>g</b>, <b>c</b> Категории"
-        top: "<b>g</b>, <b>t</b> Топ"
-        bookmarks: "<b>g</b>, <b>b</b> Отметки"
-        profile: "<b>g</b>, <b>p</b> Профил"
-        messages: "<b>g</b>, <b>m</b> Съобщения"
+        home: "%{shortcut} Начало"
+        latest: "%{shortcut} Последни"
+        new: "%{shortcut} Нови"
+        unread: "%{shortcut} Непрочетени"
+        categories: "%{shortcut} Категории"
+        top: "%{shortcut} Топ"
+        bookmarks: "%{shortcut} Отметки"
+        profile: "%{shortcut} Профил"
+        messages: "%{shortcut} Съобщения"
       navigation:
         title: "Навигация"
-        jump: "<b>#</b> Към публикация #"
-        back: "<b>u</b> Назад"
-        up_down: "<b>k</b>/<b>j</b> Преместване на селекцията &uarr; &darr;"
-        open: "<b>o</b> or <b>Enter</b> Отворяне на избраната тема"
-        next_prev: "<b>shift</b>+<b>j</b>/<b>shift</b>+<b>k</b> Следваща/Предишна секция "
+        jump: "%{shortcut} Към публикация #"
+        back: "%{shortcut} Назад"
+        up_down: "%{shortcut} Преместване на селекцията &uarr; &darr;"
+        open: "%{shortcut} Отворяне на избраната тема"
+        next_prev: "%{shortcut} Следваща/Предишна секция "
       application:
         title: "Приложение"
-        create: "<b>c</b> Създайте нова тема"
-        notifications: "<b>n</b> Отворяне на известията"
-        hamburger_menu: "<b>=</b> Отворяне на хамбургерното менюто"
-        user_profile_menu: "<b>p</b> Отваряне на потребителското меню"
-        show_incoming_updated_topics: "<b>.</b> Показване на обновените теми"
-        search: "<b>shift</b>+<b>z</b> <b>shift</b>+<b>z</b> Отписване"
-        help: "<b>?</b> Помощ с клавиатурата "
-        dismiss_new_posts: "<b>x</b>, <b>r</b> Отхвърляне на Нова/Публикации"
-        dismiss_topics: "<b>x</b>, <b>t</b> Отхвърляне на темите"
-        log_out: "<b>shift</b>+<b>z</b> <b>shift</b>+<b>z</b> Отписване"
+        create: "%{shortcut} Създайте нова тема"
+        notifications: "%{shortcut} Отворяне на известията"
+        hamburger_menu: "%{shortcut} Отворяне на хамбургерното менюто"
+        user_profile_menu: "%{shortcut} Отваряне на потребителското меню"
+        show_incoming_updated_topics: "%{shortcut} Показване на обновените теми"
+        search: "%{shortcut} Отписване"
+        help: "%{shortcut} Помощ с клавиатурата "
+        dismiss_new_posts: "%{shortcut} Отхвърляне на Нова/Публикации"
+        dismiss_topics: "%{shortcut} Отхвърляне на темите"
+        log_out: "%{shortcut} Отписване"
       composing:
         title: "Съставяне"
-        return: "<b>shift</b>+<b>c</b> Връщане към редактора"
+        return: "%{shortcut} Връщане към редактора"
       actions:
         title: "Действия"
-        bookmark_topic: "<b>f</b> Отменете статуса на темата в отментки."
-        pin_unpin_topic: "<b>shift p</b> Pin/Unpin на темата "
-        share_topic: "<b>shift s</b> Споделете тема "
-        share_post: "<b>s</b> Споделете публикация"
-        reply_as_new_topic: "<b>t</b> Отговор с нова тема"
-        reply_topic: "<b>shift</b>+<b>r</b> Отговорете на тема"
-        reply_post: "<b>r</b> Отговорете на публикация"
-        quote_post: "<b>q</b> Цитат"
-        like: "<b>l</b> Харесване"
-        flag: "<b>!</b> Сигнал"
-        bookmark: "<b>b</b> Отметка"
-        edit: "<b>e</b> Редакция"
-        delete: "<b>d</b> Изтриване"
-        mark_muted: "<b>m</b>, <b>m</b> Заглушете темата"
-        mark_regular: "<b>m</b>, <b>r</b> Номална (стандартна) тема"
-        mark_tracking: "<b>m</b>, <b>t</b> Следете темата"
-        mark_watching: "<b>m</b>, <b>w</b> Наблюдаване на темата"
+        bookmark_topic: "%{shortcut} Отменете статуса на темата в отментки."
+        pin_unpin_topic: "%{shortcut} Pin/Unpin на темата "
+        share_topic: "%{shortcut} Споделете тема "
+        share_post: "%{shortcut} Споделете публикация"
+        reply_as_new_topic: "%{shortcut} Отговор с нова тема"
+        reply_topic: "%{shortcut} Отговорете на тема"
+        reply_post: "%{shortcut} Отговорете на публикация"
+        quote_post: "%{shortcut} Цитат"
+        like: "%{shortcut} Харесване"
+        flag: "%{shortcut} Сигнал"
+        bookmark: "%{shortcut} Отметка"
+        edit: "%{shortcut} Редакция"
+        delete: "%{shortcut} Изтриване"
+        mark_muted: "%{shortcut} Заглушете темата"
+        mark_regular: "%{shortcut} Номална (стандартна) тема"
+        mark_tracking: "%{shortcut} Следете темата"
+        mark_watching: "%{shortcut} Наблюдаване на темата"
     badges:
       granted_on: "Разрешен %{date}"
       others_count: "Други са такава значка (%{count})"
@@ -2015,7 +1973,6 @@ bg:
       moderator: "Модератор"
       dashboard:
         title: "Работен плот"
-        last_updated: "Последно обновяване на плота"
         version: "Версия"
         up_to_date: "Вие сте с последна версия!"
         critical_available: "Налична е важна актуализация."
@@ -2053,6 +2010,11 @@ bg:
           start_date: "Начална дата"
           end_date: "Крайна дата"
           groups: "Всички групи"
+          filters:
+            group:
+              label: Група
+            category:
+              label: Категория
       commits:
         latest_changes: "Последни промени: моля обновявайте често! "
         by: "от"
@@ -2558,7 +2520,7 @@ bg:
           one: "Не може да изтриете всички публикации. Някои публикации са по стари от %{count} ден. (delete_user_max_post_age настройката)"
           other: "Не може да изтриете всички публикации. Някои публикации са по стари от %{count} дни. (delete_user_max_post_age настройката) "
         cant_delete_all_too_many_posts:
-          one: "Не може да изтриете всички публикации защото този потребител има 1 публикация. (delete_all_posts_max)"
+          one: "Не може да изтриете всички публикации защото този потребител има %{count} публикация. (delete_all_posts_max)"
           other: "Не може да изтриете всички публикации, защото този потребител има повече от %{count} публикации.(delete_all_posts_max) "
         delete_and_block: "Изтрийте и <b>блокирайте</b> този имейл и IP адрес "
         delete_dont_block: "Изтрий само "
@@ -2757,7 +2719,7 @@ bg:
             text: "Открити са примери за несъществуващи награди. Това може да се случи когато заявката за бадж се връща при несъществуващо потребителско име или съобщение. Това може да доведе до неочаквани резултати - моля проверете вашата заявка отново."
           no_grant_count: "Няма значки за закачане."
           grant_count:
-            one: "<b>1</b> значка за закачане."
+            one: "<b>%{count}</b> значка за закачане."
             other: "<b>%{count}</b> значки за закачане."
           sample: "Образец: "
           grant:

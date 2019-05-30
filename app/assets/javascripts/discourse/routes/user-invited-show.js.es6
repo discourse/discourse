@@ -23,7 +23,7 @@ export default Discourse.Route.extend({
       filter: this.inviteFilter,
       searchTerm: "",
       totalInvites: model.invites.length,
-      invitesCount: this.get("invitesCount")
+      invitesCount: this.invitesCount
     });
   },
 

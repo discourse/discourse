@@ -16,7 +16,7 @@ export default SingleSelectComponent.extend({
 
   computeHeaderContent() {
     let content = this._super(...arguments);
-    content.hasSelection = this.get("hasSelection");
+    content.hasSelection = this.hasSelection;
     return content;
   },
 
@@ -27,8 +27,8 @@ export default SingleSelectComponent.extend({
 
   @on("didUpdateAttrs", "init")
   _setComboBoxOptions() {
-    this.get("headerComponentOptions").setProperties({
-      clearable: this.get("clearable")
+    this.headerComponentOptions.setProperties({
+      clearable: this.clearable
     });
   }
 });

@@ -312,11 +312,7 @@ lt:
         other: "beveik %{count} metų"
     distance_in_words_verbose:
       half_a_minute: "ką tik"
-      less_than_x_seconds:
-        one: "ką tik"
-        few: "ką tik"
-        many: "ką tik"
-        other: "ką tik"
+      less_than_x_seconds: "ką tik"
       x_seconds:
         one: "prieš %{count} sekundę"
         few: "prieš %{count} sekundes"
@@ -829,7 +825,6 @@ lt:
     digest:
       new_topics: "Naujos temos"
       liked_received: "Gauta patikimų"
-      new_posts: "Nauji 5ra6ai"
       new_users: "Nauji nariai"
       popular_topics: "Populiarios temos"
       follow_topic: "Sekti šią temą"
@@ -1035,8 +1030,6 @@ lt:
         fields:
           logo:
             label: "Pirminis logotipas"
-          logo_small:
-            label: "Įmonės logotipas"
       homepage:
         title: "Pagrindinis puslapis"
         fields:
@@ -1081,6 +1074,8 @@ lt:
         title: "Paslėpti įrašą"
       delete_spammer:
         title: "Ištrinti Vartotoją"
+      delete_single:
+        title: "Pašalinti"
       disagree:
         title: "Nesutinka"
       ignore:

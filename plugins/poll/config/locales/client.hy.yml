@@ -25,13 +25,13 @@ hy:
       multiple:
         help:
           at_least_min_options:
-            one: "Ընտրեք առնվազն <strong>1</strong> տարբերակ"
+            one: "Ընտրեք առնվազն <strong>%{count}</strong> տարբերակ"
             other: "Ընտրեք առնվազն <strong>%{count}</strong> տարբերակ"
           up_to_max_options:
-            one: "Ընտրեք մինչև <strong>1</strong> տարբերակ"
+            one: "Ընտրեք մինչև <strong>%{count}</strong> տարբերակ"
             other: "Ընտրեք մինչև <strong>%{count}</strong> տարբերակ"
           x_options:
-            one: "Ընտրեք <strong>1</strong> տարբերակ"
+            one: "Ընտրեք <strong>%{count}</strong> տարբերակ"
             other: "Ընտրեք <strong>%{count}</strong> տարբերակ"
           between_min_and_max_options: "Ընտրեք <strong>%{min}</strong> և <strong>%{max}</strong> տարբերակների միջև"
       cast-votes:

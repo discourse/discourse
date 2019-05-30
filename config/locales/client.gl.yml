@@ -43,61 +43,61 @@ gl:
       tiny:
         half_a_minute: "< 1m"
         less_than_x_seconds:
-          one: "< 1s"
+          one: "< %{count}s"
           other: "< %{count}s"
         x_seconds:
-          one: "1s"
+          one: "%{count}s"
           other: "%{count}s"
         x_minutes:
-          one: "1m"
+          one: "%{count}m"
           other: "%{count}m"
         about_x_hours:
-          one: "1h"
+          one: "%{count}h"
           other: "%{count}h"
         x_days:
-          one: "1d"
+          one: "%{count}d"
           other: "%{count}d"
         about_x_years:
-          one: "1ano"
+          one: "%{count}ano"
           other: "%{count}anos"
         over_x_years:
-          one: "> 1ano"
+          one: "> %{count}ano"
           other: "> %{count}anos"
         almost_x_years:
-          one: "1ano"
+          one: "%{count}ano"
           other: "%{count}anos"
         date_month: "D MMM"
         date_year: "MMM 'YY"
       medium:
         x_minutes:
-          one: "1 min"
+          one: "%{count} min"
           other: "%{count} mins"
         x_hours:
-          one: "1 hora"
+          one: "%{count} hora"
           other: "%{count} horas"
         x_days:
-          one: "1 día"
+          one: "%{count} día"
           other: "%{count} días"
         date_year: "D MMM, 'YY"
       medium_with_ago:
         x_minutes:
-          one: "Hai 1 min."
+          one: "Hai %{count} min."
           other: "Hai %{count} min."
         x_hours:
-          one: "Hai 1 hora"
+          one: "Hai %{count} hora"
           other: "Hai %{count} horas"
         x_days:
-          one: "Hai 1 día"
+          one: "Hai %{count} día"
           other: "Hai %{count} días"
       later:
         x_days:
-          one: "1 día despois"
+          one: "%{count} día despois"
           other: "%{count} días despois"
         x_months:
-          one: "1 mes despois"
+          one: "%{count} mes despois"
           other: "%{count} meses despois"
         x_years:
-          one: "1 anos despois"
+          one: "%{count} anos despois"
           other: "%{count} anos despois"
       previous_month: "Mes anterior"
       next_month: "Mes seguinte"
@@ -423,6 +423,7 @@ gl:
       private_message: "Mensaxe"
       private_messages: "Mensaxes"
       user_notifications:
+        ignore_duration_username: "Nome do usuario"
         mute_option: "Silenciado"
         normal_option: "Normal"
       activity_stream: "Actividade"
@@ -1149,7 +1150,7 @@ gl:
         pin_validation: "Requírese unha data para pegar este tema."
         not_pinned: "Non hai temas pegados en {{categoryLink}}."
         already_pinned:
-          one: "Temas pegados actualmente en {{categoryLink}}: <strong class='badge badge-notification unread'>1</strong>"
+          one: "Temas pegados actualmente en {{categoryLink}}: <strong class='badge badge-notification unread'>%{count}</strong>"
           other: "Temas pegados actualmente en {{categoryLink}}: <strong class='badge badge-notification unread'>{{count}}</strong>"
         pin_globally: "Facer que este tema apareza no alto de todas as listas de temas até"
         confirm_pin_globally: "Xa tes {{count}} temas pegados globalmente. Demasiados temas pegados pode resultar pesado para usuarios novos e anónimos. Confirmas que queres pegar outro tema globalmente?"
@@ -1158,7 +1159,7 @@ gl:
         global_pin_note: "Os usuarios poden despegar o tema por si mesmos."
         not_pinned_globally: "Non hai temas pegados globalmente."
         already_pinned_globally:
-          one: "Temas pegados globalmente neste intre: <strong class='badge badge-notification unread'>1</strong>"
+          one: "Temas pegados globalmente neste intre: <strong class='badge badge-notification unread'>%{count}</strong>"
           other: "Temas pegados globalmente neste intre: <strong class='badge badge-notification unread'>{{count}}</strong>"
         make_banner: "Facer deste tema un báner que apareza na banda superior de todas as páxinas."
         remove_banner: "Eliminar o báner que aparece na banda superior de todas as páxinas."
@@ -1329,50 +1330,6 @@ gl:
           notify_user: "Enviaches unha mensaxe a este usuario"
           bookmark: "Marcaches esta publicación"
           like: "Gustouche isto"
-        by_you_and_others:
-          off_topic:
-            one: "Ti e outro máis informastes disto como non relacionado"
-            other: "Ti e {{count}} máis informastes disto como non relacionado"
-          spam:
-            one: "Ti e outro máis denunciastes isto como spam"
-            other: "Ti e {{count}} máis denunciastes isto com spam"
-          inappropriate:
-            one: "Ti e outro máis denunciastes isto como inapropiado"
-            other: "Ti e {{count}} máis denunciastes isto como inapropiado"
-          notify_moderators:
-            one: "Ti e outro máis denunciastes isto para moderación"
-            other: "Ti e {{count}} máis denunciastes isto para moderación"
-          notify_user:
-            one: "Ti e unha persoa máis enviastes unha mensaxe a este usuario"
-            other: "Ti e {{count}} persoas máis enviastes unha mensaxe a este usuario"
-          bookmark:
-            one: "Ti e outra persoa marcastes esta publicación"
-            other: "Ti e {{count}} persoas máis marcastes esta publicación"
-          like:
-            one: "A ti e a un máis gustouvos isto"
-            other: "A ti e a {{count}} máis gustouvos isto"
-        by_others:
-          off_topic:
-            one: "Unha persoa marcou isto como non relacionado"
-            other: "{{count}} persoas informaron disto como non relacionado"
-          spam:
-            one: "Unha persoa marcou isto como spam"
-            other: "{{count}} persoas denunciaron isto como spam"
-          inappropriate:
-            one: "Unha persoa denunciou isto como inapropiado"
-            other: "{{count}} persoas denunciaron isto como inapropiado"
-          notify_moderators:
-            one: "Unha persoa denunciou isto para moderación"
-            other: "{{count}} persoas denunciaron isto para moderación"
-          notify_user:
-            one: "Unha persoa enviou unha mensaxe a este usuario"
-            other: "{{count}} persoas enviaron unha mensaxe a este usuario"
-          bookmark:
-            one: "Unha persoa marcou esta publicación"
-            other: "{{count}} persoas marcaron esta publicación"
-          like:
-            one: "A unha persoa gustoulle isto"
-            other: "A {{count}} persoas gustoulles isto"
       revisions:
         controls:
           first: "Primeira revisión"
@@ -1431,6 +1388,7 @@ gl:
       email_in_disabled_click: 'activar o axuste «email in».'
       allow_badges_label: "Permitir adxudicar insignias nesta categoría"
       edit_permissions: "Editar permisos"
+      review_group_name: "nome do grupo"
       this_year: "este ano"
       default_position: "Posición predeterminada"
       position_disabled: "As categorías amosaranse en orde de actividade. Para controlar a orde das categorías nas listas."
@@ -1548,7 +1506,7 @@ gl:
       latest:
         title: "Últimos"
         title_with_count:
-          one: "Último (1)"
+          one: "Último (%{count})"
           other: "({{count}}) últimos"
         help: "temas con publicacións recentes"
       hot:
@@ -1592,7 +1550,7 @@ gl:
       category:
         title: "{{categoryName}}"
         title_with_count:
-          one: "{{categoryName}} (1)"
+          one: "{{categoryName}} (%{count})"
           other: "{{categoryName}} ({{count}})"
         help: "últimos temas na categoría {{categoryName}}"
       top:
@@ -1627,52 +1585,52 @@ gl:
       title: "Atallos do teclado"
       jump_to:
         title: "Ir a"
-        home: "<b>g</b>, <b>h</b> Inicio"
-        latest: "<b>g</b>, <b>l</b> Último"
-        new: "<b>g</b>, <b>n</b> Novo"
-        unread: "<b>g</b>, <b>u</b> Sen ler"
-        categories: "<b>g</b>, <b>c</b> Categorías"
-        top: "<b>g</b>, <b>t</b> Arriba"
-        bookmarks: "<b>g</b>, <b>b</b> Marcadores"
-        profile: "<b>g</b>, <b>p</b> Perfil"
-        messages: "<b>g</b>, <b>m</b> Mensaxes"
+        home: "%{shortcut} Inicio"
+        latest: "%{shortcut} Último"
+        new: "%{shortcut} Novo"
+        unread: "%{shortcut} Sen ler"
+        categories: "%{shortcut} Categorías"
+        top: "%{shortcut} Arriba"
+        bookmarks: "%{shortcut} Marcadores"
+        profile: "%{shortcut} Perfil"
+        messages: "%{shortcut} Mensaxes"
       navigation:
         title: "Navegación"
-        jump: "<b>#</b> Ir á publicación #"
-        back: "<b>u</b> Volver"
-        up_down: "<b>k</b>/<b>j</b> Mover selección &uarr; &darr;"
-        open: "<b>o</b> ou <b>Intro</b> Abrir tema seleccionado"
-        next_prev: "<b>maiús.</b>+<b>j</b>/<b>maiús.</b>+<b>k</b> Sección Seguinte/Anterior"
+        jump: "%{shortcut} Ir á publicación #"
+        back: "%{shortcut} Volver"
+        up_down: "%{shortcut} Mover selección &uarr; &darr;"
+        open: "%{shortcut} Abrir tema seleccionado"
+        next_prev: "%{shortcut} Sección Seguinte/Anterior"
       application:
         title: "Aplicativo"
-        create: "<b>c</b> Crear un novo tema"
-        notifications: "<b>n</b> Abrir notificacións"
-        hamburger_menu: "<b>=</b> Abrir o menú hamburguesa"
-        user_profile_menu: "<b>p</b> Abrir o menú do usuario"
-        show_incoming_updated_topics: "<b>.</b> Amosar temas actualizados"
-        help: "<b>?</b> Abrir a axuda do teclado"
-        dismiss_new_posts: "<b>x</b>, <b>r</b> Desbotar Novas/Publicacións"
-        dismiss_topics: "<b>x</b>, <b>t</b> Desbotar temas"
-        log_out: "<b>maiús.</b>+<b>z</b> <b>maiús.</b>+<b>z</b> Saír da sesión"
+        create: "%{shortcut} Crear un novo tema"
+        notifications: "%{shortcut} Abrir notificacións"
+        hamburger_menu: "%{shortcut} Abrir o menú hamburguesa"
+        user_profile_menu: "%{shortcut} Abrir o menú do usuario"
+        show_incoming_updated_topics: "%{shortcut} Amosar temas actualizados"
+        help: "%{shortcut} Abrir a axuda do teclado"
+        dismiss_new_posts: "%{shortcut} Desbotar Novas/Publicacións"
+        dismiss_topics: "%{shortcut} Desbotar temas"
+        log_out: "%{shortcut} Saír da sesión"
       actions:
         title: "Accións"
-        bookmark_topic: "<b>f</b> Cambiar marcar tema"
-        pin_unpin_topic: "<b>Maiús</b>+<b>p</b> Pegar/Despegar tema"
-        share_topic: "<b>maiús.</b>+<b>s</b> Compartir tema"
-        share_post: "<b>s</b> Compartir publicación"
-        reply_as_new_topic: "<b>t</b> Responder como tema ligado"
-        reply_topic: "<b>maiús.</b>+<b>r</b> Responder o tema"
-        reply_post: "<b>r</b> Responder a publicación"
-        quote_post: "<b>q</b> Citar publicación"
-        like: "<b>l</b> Gústame a publicación"
-        flag: "<b>!</b> Denunciar publicación"
-        bookmark: "<b>b</b> Marcar publicación"
-        edit: "<b>e</b> Editar publicación"
-        delete: "<b>d</b> Eliminar publicación"
-        mark_muted: "<b>m</b>, <b>m</b> Silenciar tema"
-        mark_regular: "<b>m</b>, <b>r</b> Tema normal (predeterminado)"
-        mark_tracking: "<b>m</b>, <b>t</b> Seguir tema"
-        mark_watching: "<b>m</b>, <b>w</b> Ver tema"
+        bookmark_topic: "%{shortcut} Cambiar marcar tema"
+        pin_unpin_topic: "%{shortcut} Pegar/Despegar tema"
+        share_topic: "%{shortcut} Compartir tema"
+        share_post: "%{shortcut} Compartir publicación"
+        reply_as_new_topic: "%{shortcut} Responder como tema ligado"
+        reply_topic: "%{shortcut} Responder o tema"
+        reply_post: "%{shortcut} Responder a publicación"
+        quote_post: "%{shortcut} Citar publicación"
+        like: "%{shortcut} Gústame a publicación"
+        flag: "%{shortcut} Denunciar publicación"
+        bookmark: "%{shortcut} Marcar publicación"
+        edit: "%{shortcut} Editar publicación"
+        delete: "%{shortcut} Eliminar publicación"
+        mark_muted: "%{shortcut} Silenciar tema"
+        mark_regular: "%{shortcut} Tema normal (predeterminado)"
+        mark_tracking: "%{shortcut} Seguir tema"
+        mark_watching: "%{shortcut} Ver tema"
     badges:
       title: Insignias
       select_badge_for_title: Selecciona insignia para usar como o teu título
@@ -1737,7 +1695,6 @@ gl:
       moderator: "Moderador"
       dashboard:
         title: "Panel"
-        last_updated: "Última actualización de Panel:"
         version: "Versión"
         up_to_date: "Estás actualizado."
         critical_available: "Está dispoñíbel unha actualización crítica."
@@ -1775,6 +1732,11 @@ gl:
           start_date: "Data de inicio"
           end_date: "Data de remate"
           groups: "Todos os grupos"
+          filters:
+            group:
+              label: Grupo
+            category:
+              label: Categoría
       commits:
         latest_changes: "Últimos cambios: por favor, actualiza a miúdo."
         by: "por"
@@ -2430,7 +2392,7 @@ gl:
             text: "Faltan algunhas mostras para a concesión da insignia. Isto acontece cando a consulta sobre insignias devolve unha ID do usuario, ou de publicacións que non existen. Pode causar resultados inesperados posteriormente. Revisa outra vez a solicitude."
           no_grant_count: "Non hai insignias para asignar."
           grant_count:
-            one: "<b>1</b> insignia para asignar."
+            one: "<b>%{count}</b> insignia para asignar."
             other: "<b>%{count}</b> insignias para asignar."
           sample: "Mostra:"
           grant:

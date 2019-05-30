@@ -253,6 +253,16 @@ describe Upload do
     end
   end
 
+  describe '.sha1_from_short_path' do
+    it "should be able to lookup sha1" do
+      path = "/uploads/short-url/3UjQ4jHoyeoQndk5y3qHzm3QVTQ.png"
+      sha1 = "1b6453892473a467d07372d45eb05abc2031647a"
+
+      expect(Upload.sha1_from_short_path(path)).to eq(sha1)
+      expect(Upload.sha1_from_short_path(path.sub(".png", ""))).to eq(sha1)
+    end
+  end
+
   describe '#to_s' do
     it 'should return the right value' do
       expect(upload.to_s).to eq(upload.url)

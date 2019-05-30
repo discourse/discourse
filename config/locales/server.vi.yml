@@ -299,8 +299,7 @@ vi:
         other: "%{count} năm"
     distance_in_words_verbose:
       half_a_minute: "ngay bây giờ"
-      less_than_x_seconds:
-        other: "ngay bây giờ"
+      less_than_x_seconds: "ngay bây giờ"
       x_seconds:
         other: "%{count} giây trước"
       less_than_x_minutes:
@@ -1397,6 +1396,8 @@ vi:
         title: "Tạm khóa Thành viên"
       delete_spammer:
         title: "Xóa người Spam"
+      delete_single:
+        title: "Xóa"
       disagree:
         title: "Không đồng ý"
       approve:

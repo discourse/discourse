@@ -13,26 +13,11 @@ componentTest("default", {
   },
 
   async test(assert) {
-    await this.get("subject").expand();
+    await this.subject.expand();
 
-    assert.equal(
-      this.get("subject")
-        .header()
-        .name(),
-      "hello"
-    );
-    assert.equal(
-      this.get("subject")
-        .rowByValue(1)
-        .name(),
-      "hello"
-    );
-    assert.equal(
-      this.get("subject")
-        .rowByValue(2)
-        .name(),
-      "world"
-    );
+    assert.equal(this.subject.header().name(), "hello");
+    assert.equal(this.subject.rowByValue(1).name(), "hello");
+    assert.equal(this.subject.rowByValue(2).name(), "world");
   }
 });
 
@@ -46,20 +31,10 @@ componentTest("with valueAttribute", {
   },
 
   async test(assert) {
-    await this.get("subject").expand();
+    await this.subject.expand();
 
-    assert.equal(
-      this.get("subject")
-        .rowByValue(0)
-        .name(),
-      "hello"
-    );
-    assert.equal(
-      this.get("subject")
-        .rowByValue(1)
-        .name(),
-      "world"
-    );
+    assert.equal(this.subject.rowByValue(0).name(), "hello");
+    assert.equal(this.subject.rowByValue(1).name(), "world");
   }
 });
 
@@ -70,20 +45,10 @@ componentTest("with nameProperty", {
   },
 
   async test(assert) {
-    await this.get("subject").expand();
+    await this.subject.expand();
 
-    assert.equal(
-      this.get("subject")
-        .rowByValue(0)
-        .name(),
-      "hello"
-    );
-    assert.equal(
-      this.get("subject")
-        .rowByValue(1)
-        .name(),
-      "world"
-    );
+    assert.equal(this.subject.rowByValue(0).name(), "hello");
+    assert.equal(this.subject.rowByValue(1).name(), "world");
   }
 });
 
@@ -94,20 +59,10 @@ componentTest("with an array as content", {
   },
 
   async test(assert) {
-    await this.get("subject").expand();
+    await this.subject.expand();
 
-    assert.equal(
-      this.get("subject")
-        .rowByValue("evil")
-        .name(),
-      "evil"
-    );
-    assert.equal(
-      this.get("subject")
-        .rowByValue("trout")
-        .name(),
-      "trout"
-    );
+    assert.equal(this.subject.rowByValue("evil").name(), "evil");
+    assert.equal(this.subject.rowByValue("trout").name(), "trout");
   }
 });
 
@@ -120,37 +75,17 @@ componentTest("with value and none as a string", {
   },
 
   async test(assert) {
-    await this.get("subject").expand();
+    await this.subject.expand();
 
-    assert.equal(
-      this.get("subject")
-        .noneRow()
-        .name(),
-      "none"
-    );
-    assert.equal(
-      this.get("subject")
-        .rowByValue("evil")
-        .name(),
-      "evil"
-    );
-    assert.equal(
-      this.get("subject")
-        .rowByValue("trout")
-        .name(),
-      "trout"
-    );
-    assert.equal(
-      this.get("subject")
-        .header()
-        .name(),
-      "trout"
-    );
-    assert.equal(this.get("value"), "trout");
+    assert.equal(this.subject.noneRow().name(), "none");
+    assert.equal(this.subject.rowByValue("evil").name(), "evil");
+    assert.equal(this.subject.rowByValue("trout").name(), "trout");
+    assert.equal(this.subject.header().name(), "trout");
+    assert.equal(this.value, "trout");
 
-    await this.get("subject").selectNoneRow();
+    await this.subject.selectNoneRow();
 
-    assert.equal(this.get("value"), null);
+    assert.equal(this.value, null);
   }
 });
 
@@ -163,37 +98,17 @@ componentTest("with value and none as an object", {
   },
 
   async test(assert) {
-    await this.get("subject").expand();
+    await this.subject.expand();
 
-    assert.equal(
-      this.get("subject")
-        .noneRow()
-        .name(),
-      "none"
-    );
-    assert.equal(
-      this.get("subject")
-        .rowByValue("evil")
-        .name(),
-      "evil"
-    );
-    assert.equal(
-      this.get("subject")
-        .rowByValue("trout")
-        .name(),
-      "trout"
-    );
-    assert.equal(
-      this.get("subject")
-        .header()
-        .name(),
-      "evil"
-    );
-    assert.equal(this.get("value"), "evil");
+    assert.equal(this.subject.noneRow().name(), "none");
+    assert.equal(this.subject.rowByValue("evil").name(), "evil");
+    assert.equal(this.subject.rowByValue("trout").name(), "trout");
+    assert.equal(this.subject.header().name(), "evil");
+    assert.equal(this.value, "evil");
 
-    await this.get("subject").selectNoneRow();
+    await this.subject.selectNoneRow();
 
-    assert.equal(this.get("value"), null);
+    assert.equal(this.value, null);
   }
 });
 
@@ -207,14 +122,9 @@ componentTest("with no value and none as an object", {
   },
 
   async test(assert) {
-    await this.get("subject").expand();
+    await this.subject.expand();
 
-    assert.equal(
-      this.get("subject")
-        .header()
-        .name(),
-      "none"
-    );
+    assert.equal(this.subject.header().name(), "none");
   }
 });
 
@@ -228,14 +138,9 @@ componentTest("with no value and none string", {
   },
 
   async test(assert) {
-    await this.get("subject").expand();
+    await this.subject.expand();
 
-    assert.equal(
-      this.get("subject")
-        .header()
-        .name(),
-      "none"
-    );
+    assert.equal(this.subject.header().name(), "none");
   }
 });
 
@@ -247,12 +152,10 @@ componentTest("with no value and no none", {
   },
 
   async test(assert) {
-    await this.get("subject").expand();
+    await this.subject.expand();
 
     assert.equal(
-      this.get("subject")
-        .header()
-        .name(),
+      this.subject.header().name(),
       "evil",
       "it sets the first row as value"
     );
@@ -267,12 +170,10 @@ componentTest("with empty string as value", {
   },
 
   async test(assert) {
-    await this.get("subject").expand();
+    await this.subject.expand();
 
     assert.equal(
-      this.get("subject")
-        .header()
-        .name(),
+      this.subject.header().name(),
       "evil",
       "it sets the first row as value"
     );
@@ -289,12 +190,10 @@ componentTest("with noneLabel", {
   },
 
   async test(assert) {
-    await this.get("subject").expand();
+    await this.subject.expand();
 
     assert.equal(
-      this.get("subject")
-        .header()
-        .name(),
+      this.subject.header().name(),
       "none",
       "it displays noneLabel as the header name"
     );

@@ -28,9 +28,9 @@ export default DropdownSelectBoxComponent.extend({
   @on("init")
   @observes("i18nPostfix")
   _setNotificationsButtonComponentOptions() {
-    this.get("rowComponentOptions").setProperties({
-      i18nPrefix: this.get("i18nPrefix"),
-      i18nPostfix: this.get("i18nPostfix")
+    this.rowComponentOptions.setProperties({
+      i18nPrefix: this.i18nPrefix,
+      i18nPostfix: this.i18nPostfix
     });
   },
 
@@ -39,11 +39,11 @@ export default DropdownSelectBoxComponent.extend({
   computeHeaderContent() {
     let content = this._super(...arguments);
     content.name = I18n.t(
-      `${this.get("i18nPrefix")}.${this.get("selectedDetails.key")}${this.get(
+      `${this.i18nPrefix}.${this.get("selectedDetails.key")}${this.get(
         "i18nPostfix"
       )}.title`
     );
-    content.hasSelection = this.get("hasSelection");
+    content.hasSelection = this.hasSelection;
     return content;
   },
 

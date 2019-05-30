@@ -453,11 +453,11 @@ class Post < ActiveRecord::Base
 
   # Strip out most of the markup
   def excerpt(maxlength = nil, options = {})
-    Post.excerpt(cooked, maxlength, options)
+    Post.excerpt(cooked, maxlength, options.merge(post: self))
   end
 
   def excerpt_for_topic
-    Post.excerpt(cooked, 220, strip_links: true, strip_images: true)
+    Post.excerpt(cooked, 220, strip_links: true, strip_images: true, post: self)
   end
 
   def is_first_post?
@@ -889,8 +889,10 @@ class Post < ActiveRecord::Base
     upload_patterns = [
       /\/uploads\/#{RailsMultisite::ConnectionManagement.current_db}\//,
       /\/original\//,
-      /\/optimized\//
+      /\/optimized\//,
+      /\/uploads\/short-url\/[a-zA-Z0-9]+\..*/
     ]
+
     fragments ||= Nokogiri::HTML::fragment(self.cooked)
     links = fragments.css("a/@href", "img/@src").map { |media| media.value }.uniq
 
@@ -911,7 +913,7 @@ class Post < ActiveRecord::Base
         if path.include? "optimized"
           OptimizedImage.extract_sha1(path)
         else
-          Upload.extract_sha1(path)
+          Upload.extract_sha1(path) || Upload.sha1_from_short_path(path)
         end
 
       yield(src, path, sha1)

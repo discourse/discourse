@@ -174,10 +174,10 @@ export default Ember.Controller.extend(bufferedProperty("model"), {
 
   _updateSelectedPostIds(postIds) {
     const smallActionsPostIds = this._smallActionPostIds();
-    this.get("selectedPostIds").pushObjects(
+    this.selectedPostIds.pushObjects(
       postIds.filter(postId => !smallActionsPostIds.has(postId))
     );
-    this.set("selectedPostIds", [...new Set(this.get("selectedPostIds"))]);
+    this.set("selectedPostIds", [...new Set(this.selectedPostIds)]);
     this._forceRefreshPostStream();
   },
 
@@ -200,7 +200,7 @@ export default Ember.Controller.extend(bufferedProperty("model"), {
   },
 
   _loadPostIds(post) {
-    if (this.get("loadingPostIds")) return;
+    if (this.loadingPostIds) return;
 
     const postStream = this.get("model.postStream");
     const url = `/t/${this.get("model.id")}/post_ids.json`;
@@ -223,6 +223,10 @@ export default Ember.Controller.extend(bufferedProperty("model"), {
   },
 
   actions: {
+    topicCategoryChanged(selection) {
+      this.set("buffered.category_id", selection.value);
+    },
+
     deletePending(pending) {
       return ajax(`/review/${pending.id}`, { type: "DELETE" })
         .then(() => {
@@ -243,7 +247,7 @@ export default Ember.Controller.extend(bufferedProperty("model"), {
       return this.get("model.postStream")
         .loadPost(postId)
         .then(post => {
-          const composer = this.get("composer");
+          const composer = this.composer;
           const viewOpen = composer.get("model.viewOpen");
           const quotedText = Quote.build(post, buffer);
 
@@ -298,7 +302,7 @@ export default Ember.Controller.extend(bufferedProperty("model"), {
       }
 
       const postNumber = post.get("post_number");
-      const topic = this.get("model");
+      const topic = this.model;
       topic.set("currentPost", postNumber);
       if (postNumber > (topic.get("last_read_post_number") || 0)) {
         topic.set("last_read_post_id", post.get("id"));
@@ -386,7 +390,7 @@ export default Ember.Controller.extend(bufferedProperty("model"), {
 
     // Archive a PM (as opposed to archiving a topic)
     toggleArchiveMessage() {
-      const topic = this.get("model");
+      const topic = this.model;
 
       if (topic.get("archiving")) {
         return;
@@ -422,9 +426,9 @@ export default Ember.Controller.extend(bufferedProperty("model"), {
 
     // Post related methods
     replyToPost(post) {
-      const composerController = this.get("composer");
-      const topic = post ? post.get("topic") : this.get("model");
-      const quoteState = this.get("quoteState");
+      const composerController = this.composer;
+      const topic = post ? post.get("topic") : this.model;
+      const quoteState = this.quoteState;
       const postStream = this.get("model.postStream");
 
       if (!postStream || !topic || !topic.get("details.can_create_post")) {
@@ -565,8 +569,8 @@ export default Ember.Controller.extend(bufferedProperty("model"), {
         return false;
       }
 
-      const composer = this.get("composer");
-      let topic = this.get("model");
+      const composer = this.composer;
+      let topic = this.model;
       const composerModel = composer.get("model");
       let editingFirst =
         composerModel &&
@@ -603,16 +607,14 @@ export default Ember.Controller.extend(bufferedProperty("model"), {
       } else if (post) {
         return post.toggleBookmark().catch(popupAjaxError);
       } else {
-        return this.get("model")
-          .toggleBookmark()
-          .then(changedIds => {
-            if (!changedIds) {
-              return;
-            }
-            changedIds.forEach(id =>
-              this.appEvents.trigger("post-stream:refresh", { id })
-            );
-          });
+        return this.model.toggleBookmark().then(changedIds => {
+          if (!changedIds) {
+            return;
+          }
+          changedIds.forEach(id =>
+            this.appEvents.trigger("post-stream:refresh", { id })
+          );
+        });
       }
     },
 
@@ -625,7 +627,7 @@ export default Ember.Controller.extend(bufferedProperty("model"), {
     },
 
     jumpToPostPrompt() {
-      const topic = this.get("model");
+      const topic = this.model;
       const controller = showModal("jump-to-post", {
         modalClass: "jump-to-post-modal"
       });
@@ -700,7 +702,7 @@ export default Ember.Controller.extend(bufferedProperty("model"), {
     },
 
     togglePostSelection(post) {
-      const selected = this.get("selectedPostIds");
+      const selected = this.selectedPostIds;
       selected.includes(post.id)
         ? selected.removeObject(post.id)
         : selected.addObject(post.id);
@@ -709,7 +711,7 @@ export default Ember.Controller.extend(bufferedProperty("model"), {
     selectReplies(post) {
       ajax(`/posts/${post.id}/reply-ids.json`).then(replies => {
         const replyIds = replies.map(r => r.id);
-        this.get("selectedPostIds").pushObjects([post.id, ...replyIds]);
+        this.selectedPostIds.pushObjects([post.id, ...replyIds]);
         this._forceRefreshPostStream();
       });
     },
@@ -729,14 +731,14 @@ export default Ember.Controller.extend(bufferedProperty("model"), {
 
       bootbox.confirm(
         I18n.t("post.delete.confirm", {
-          count: this.get("selectedPostsCount")
+          count: this.selectedPostsCount
         }),
         result => {
           if (result) {
             // If all posts are selected, it's the same thing as deleting the topic
-            if (this.get("selectedAllPosts")) return this.deleteTopic();
+            if (this.selectedAllPosts) return this.deleteTopic();
 
-            Post.deleteMany(this.get("selectedPostIds"));
+            Post.deleteMany(this.selectedPostIds);
             this.get("model.postStream.posts").forEach(
               p => this.postSelected(p) && p.setDeletedState(user)
             );
@@ -748,10 +750,10 @@ export default Ember.Controller.extend(bufferedProperty("model"), {
 
     mergePosts() {
       bootbox.confirm(
-        I18n.t("post.merge.confirm", { count: this.get("selectedPostsCount") }),
+        I18n.t("post.merge.confirm", { count: this.selectedPostsCount }),
         result => {
           if (result) {
-            Post.mergePosts(this.get("selectedPostIds"));
+            Post.mergePosts(this.selectedPostIds);
             this.send("toggleMultiSelect");
           }
         }
@@ -811,14 +813,14 @@ export default Ember.Controller.extend(bufferedProperty("model"), {
     },
 
     finishedEditingTopic() {
-      if (!this.get("editingTopic")) {
+      if (!this.editingTopic) {
         return;
       }
 
       // save the modifications
       const props = this.get("buffered.buffer");
 
-      Topic.update(this.get("model"), props)
+      Topic.update(this.model, props)
         .then(() => {
           // We roll back on success here because `update` saves the properties to the topic
           this.rollbackBuffer();
@@ -832,34 +834,32 @@ export default Ember.Controller.extend(bufferedProperty("model"), {
     },
 
     toggleVisibility() {
-      this.get("model").toggleStatus("visible");
+      this.model.toggleStatus("visible");
     },
 
     toggleClosed() {
-      const topic = this.get("model");
+      const topic = this.model;
 
-      this.get("model")
-        .toggleStatus("closed")
-        .then(result => {
-          topic.set("topic_status_update", result.topic_status_update);
-        });
+      this.model.toggleStatus("closed").then(result => {
+        topic.set("topic_status_update", result.topic_status_update);
+      });
     },
 
     recoverTopic() {
-      this.get("model").recover();
+      this.model.recover();
     },
 
     makeBanner() {
-      this.get("model").makeBanner();
+      this.model.makeBanner();
     },
 
     removeBanner() {
-      this.get("model").removeBanner();
+      this.model.removeBanner();
     },
 
     togglePinned() {
       const value = this.get("model.pinned_at") ? false : true,
-        topic = this.get("model"),
+        topic = this.model,
         until = this.get("model.pinnedInCategoryUntil");
 
       // optimistic update
@@ -873,7 +873,7 @@ export default Ember.Controller.extend(bufferedProperty("model"), {
     },
 
     pinGlobally() {
-      const topic = this.get("model"),
+      const topic = this.model,
         until = this.get("model.pinnedGloballyUntil");
 
       // optimistic update
@@ -887,16 +887,16 @@ export default Ember.Controller.extend(bufferedProperty("model"), {
     },
 
     toggleArchived() {
-      this.get("model").toggleStatus("archived");
+      this.model.toggleStatus("archived");
     },
 
     clearPin() {
-      this.get("model").clearPin();
+      this.model.clearPin();
     },
 
     togglePinnedForUser() {
       if (this.get("model.pinned_at")) {
-        const topic = this.get("model");
+        const topic = this.model;
         if (topic.get("pinned")) {
           topic.clearPin();
         } else {
@@ -906,7 +906,7 @@ export default Ember.Controller.extend(bufferedProperty("model"), {
     },
 
     replyAsNewTopic(post, quotedText) {
-      const composerController = this.get("composer");
+      const composerController = this.composer;
 
       const { quoteState } = this;
       quotedText = quotedText || Quote.build(post, quoteState.buffer);
@@ -987,11 +987,11 @@ export default Ember.Controller.extend(bufferedProperty("model"), {
     },
 
     convertToPublicTopic() {
-      this.get("model").convertTopic("public");
+      this.model.convertTopic("public");
     },
 
     convertToPrivateMessage() {
-      this.get("model").convertTopic("private");
+      this.model.convertTopic("private");
     },
 
     removeFeaturedLink() {
@@ -999,7 +999,7 @@ export default Ember.Controller.extend(bufferedProperty("model"), {
     },
 
     resetBumpDate() {
-      this.get("model").resetBumpDate();
+      this.model.resetBumpDate();
     }
   },
 
@@ -1022,7 +1022,7 @@ export default Ember.Controller.extend(bufferedProperty("model"), {
       .loadNearestPostToDate(date)
       .then(post => {
         DiscourseURL.routeTo(
-          this.get("model").urlForPostNumber(post.get("post_number"))
+          this.model.urlForPostNumber(post.get("post_number"))
         );
       })
       .catch(() => {
@@ -1036,13 +1036,11 @@ export default Ember.Controller.extend(bufferedProperty("model"), {
 
     if (post) {
       DiscourseURL.routeTo(
-        this.get("model").urlForPostNumber(post.get("post_number"))
+        this.model.urlForPostNumber(post.get("post_number"))
       );
     } else {
       postStream.loadPostByPostNumber(postNumber).then(p => {
-        DiscourseURL.routeTo(
-          this.get("model").urlForPostNumber(p.get("post_number"))
-        );
+        DiscourseURL.routeTo(this.model.urlForPostNumber(p.get("post_number")));
       });
     }
   },
@@ -1058,7 +1056,7 @@ export default Ember.Controller.extend(bufferedProperty("model"), {
 
     this.appEvents.trigger("topic:jump-to-post", postId);
 
-    const topic = this.get("model");
+    const topic = this.model;
     const postStream = topic.get("postStream");
     const post = postStream.findLoadedPost(postId);
 
@@ -1193,10 +1191,7 @@ export default Ember.Controller.extend(bufferedProperty("model"), {
   },
 
   postSelected(post) {
-    return (
-      this.get("selectedAllPost") ||
-      this.get("selectedPostIds").includes(post.id)
-    );
+    return this.selectedAllPost || this.selectedPostIds.includes(post.id);
   },
 
   @computed
@@ -1205,11 +1200,11 @@ export default Ember.Controller.extend(bufferedProperty("model"), {
   },
 
   recoverTopic() {
-    this.get("model").recover();
+    this.model.recover();
   },
 
   deleteTopic() {
-    this.get("model").destroy(this.currentUser);
+    this.model.destroy(this.currentUser);
   },
 
   subscribe() {
@@ -1220,7 +1215,7 @@ export default Ember.Controller.extend(bufferedProperty("model"), {
     this.messageBus.subscribe(
       `/topic/${this.get("model.id")}`,
       data => {
-        const topic = this.get("model");
+        const topic = this.model;
 
         if (Ember.isPresent(data.notification_level_change)) {
           topic.set(
@@ -1345,7 +1340,7 @@ export default Ember.Controller.extend(bufferedProperty("model"), {
   },
 
   readPosts(topicId, postNumbers) {
-    const topic = this.get("model");
+    const topic = this.model;
     const postStream = topic.get("postStream");
 
     if (topic.get("id") === topicId) {

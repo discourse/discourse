@@ -43,61 +43,61 @@ sv:
       tiny:
         half_a_minute: "< 1m"
         less_than_x_seconds:
-          one: "< 1s"
+          one: "< %{count}s"
           other: "< %{count}s"
         x_seconds:
-          one: "1s"
+          one: "%{count}s"
           other: "%{count}s"
         x_minutes:
-          one: "1m"
+          one: "%{count}m"
           other: "%{count}m"
         about_x_hours:
-          one: "1h"
+          one: "%{count}h"
           other: "%{count}h"
         x_days:
-          one: "1d"
+          one: "%{count}d"
           other: "%{count}d"
         about_x_years:
-          one: "1å"
+          one: "%{count}å"
           other: "%{count}å"
         over_x_years:
-          one: "> 1å"
+          one: "> %{count}å"
           other: "> %{count}å"
         almost_x_years:
-          one: "1å"
+          one: "%{count}å"
           other: "%{count}å"
         date_month: "D MMM"
         date_year: "MMM 'YY"
       medium:
         x_minutes:
-          one: "1 min"
+          one: "%{count} min"
           other: "%{count} min"
         x_hours:
-          one: "1 timme"
+          one: "%{count} timme"
           other: "%{count} timmar"
         x_days:
-          one: "1 dag"
+          one: "%{count} dag"
           other: "%{count} dagar"
         date_year: "D MMM, 'YY"
       medium_with_ago:
         x_minutes:
-          one: "1 min sedan"
+          one: "%{count} min sedan"
           other: "%{count} minuter sedan"
         x_hours:
-          one: "1 timme sedan"
+          one: "%{count} timme sedan"
           other: "%{count} timmar sedan"
         x_days:
-          one: "1 dag sedan"
+          one: "%{count} dag sedan"
           other: "%{count} dagar sedan"
       later:
         x_days:
-          one: "1 dag senare"
+          one: "%{count} dag senare"
           other: "%{count} dagar senare"
         x_months:
-          one: "1 månad senare"
+          one: "%{count} månad senare"
           other: "%{count} månader senare"
         x_years:
-          one: "1 år senare"
+          one: "%{count} år senare"
           other: "%{count} år senare"
       previous_month: "Föregående månad"
       next_month: "Nästkommande månad"
@@ -328,7 +328,7 @@ sv:
       posts_read: "Läst"
       posts_read_long: "Lästa inlägg"
       total_rows:
-        one: "1 användare"
+        one: "%{count} användare"
         other: "%{count} användare"
     group_histories:
       actions:
@@ -462,7 +462,7 @@ sv:
       toggle_ordering: "slå av/på sorteringskontroll"
       subcategories: "Underkategorier"
       topic_sentence:
-        one: "1 ämne"
+        one: "%{count} ämne"
         other: "%{count} ämnen"
     ip_lookup:
       title: Kolla upp IP-adress
@@ -494,6 +494,7 @@ sv:
       private_message: "Meddelande"
       private_messages: "Meddelanden"
       user_notifications:
+        ignore_duration_username: "Användarnamn"
         mute_option: "Tystad"
         normal_option: "Normal"
       activity_stream: "Aktivitet"
@@ -861,7 +862,7 @@ sv:
       reached: "<b>%{relativeAge}</b> – <a href='%{url}' target='_blank'>%{rate}</a> har uppnått webbplatsinställningarnas gräns på %{siteSettingRate}."
       exceeded: "<b>%{relativeAge}</b> – <a href='%{url}' target='_blank'>%{rate}</a> har överträffat webbplatsinställningarnas gräns på %{siteSettingRate}."
       rate:
-        one: "1 fel/%{duration}"
+        one: "%{count} fel/%{duration}"
         other: "%{count} fel/%{duration}"
     learn_more: "lär dig mer..."
     all_time: "totalt"
@@ -1020,7 +1021,7 @@ sv:
       similar_topics: "Ditt ämne liknar..."
       drafts_offline: "utkast offline"
       group_mentioned:
-        one: "Genom att nämna {{group}}, så kommer du att notifiera <a href='{{group_link}}'>1 person</a> – är du säker?"
+        one: "Genom att nämna {{group}}, så kommer du att notifiera <a href='{{group_link}}'>%{count} person</a> – är du säker?"
         other: "Genom att nämna {{group}}, så kommer du att notifiera <a href='{{group_link}}'>{{count}} medlemmar</a> – är du säker?"
       cannot_see_mention:
         category: "Du nämnde {{username}} men hen kommer inte få någon notifikation för hen har inte tillgång till denna kategori. Du behöver lägga till hen till en grupp som har tillgång till den här kategorin."
@@ -1196,7 +1197,7 @@ sv:
         notification_level: "Notifieringar"
         choose_new_category: "Välj den nya kategorin för ämnena:"
         selected:
-          one: "Du har markerat <b>1</b> ämne."
+          one: "Du har markerat <b>%{count}</b> ämne."
           other: "Du har markerat <b>{{count}}</b> ämnen."
         change_tags: "Ersätt taggar"
         append_tags: "Lägg till taggar"
@@ -1230,7 +1231,7 @@ sv:
         search: "Inga fler sökresultat hittades."
     topic:
       filter_to:
-        one: "1 inlägg i ämnet"
+        one: "%{count} inlägg i ämnet"
         other: "{{count}} inlägg i ämnet"
       create: "Nytt ämne"
       create_long: "Skapa ett nytt ämne"
@@ -1245,10 +1246,10 @@ sv:
       new: "nytt ämne"
       unread: "oläst"
       new_topics:
-        one: "1 nytt ämne"
+        one: "%{count} nytt ämne"
         other: "{{count}} nya ämnen"
       unread_topics:
-        one: "1 oläst ämne"
+        one: "%{count} oläst ämne"
         other: "{{count}} olästa ämnen"
       title: "Ämne"
       invalid_access:
@@ -1262,16 +1263,16 @@ sv:
         title: "Ämnet hittades inte"
         description: "Tyvärr, vi kunde inte hitta det ämnet. Kanske har den tagits bort av en moderator?"
       total_unread_posts:
-        one: "du har 1 oläst inlägg i det här ämnet"
+        one: "du har %{count} oläst inlägg i det här ämnet"
         other: "du har {{count}} olästa inlägg i det här ämnet"
       unread_posts:
-        one: "du har 1 oläst gammalt inlägg i det här ämnet"
+        one: "du har %{count} oläst gammalt inlägg i det här ämnet"
         other: "du har {{count}} olästa gamla inlägg i det här ämnet"
       new_posts:
-        one: "det finns 1 nytt inlägg i det här ämnet sedan du senast läste den"
+        one: "det finns %{count} nytt inlägg i det här ämnet sedan du senast läste den"
         other: "det finns {{count}} nya inlägg i det här ämnet sedan du senast läste det"
       likes:
-        one: "det finns 1 gillning i det här ämnet"
+        one: "det finns %{count} gillning i det här ämnet"
         other: "det finns {{count}} gillningar i det här ämnet"
       back_to_list: "Tillbaka till ämneslistan"
       options: "Ämnesinställningar"
@@ -1309,7 +1310,7 @@ sv:
         auto_close_based_on_last_post: "Detta ämne stängs %{duration} efter sista svaret."
       auto_close_title: "Inställningar för automatisk stängning"
       auto_close_immediate:
-        one: "Senaste inlägget i det här ämnet är redan 1 timme gammalt, så ämnet kommer att stängas omedelbart. "
+        one: "Senaste inlägget i det här ämnet är redan %{count} timme gammalt, så ämnet kommer att stängas omedelbart. "
         other: "Senaste inlägget i det här ämnet är redan %{count} timmar gammal, så ämnet kommer att stängas omedelbart. "
       timeline:
         back: "Tillbaka"
@@ -1323,7 +1324,6 @@ sv:
         jump_bottom: "hoppa till sista inlägget"
         jump_prompt: "hoppa till"
         jump_prompt_of: "av %{count} inlägg"
-        jump_prompt_long: "Vilket inlägg vill du hoppa till?"
         jump_bottom_with_number: "hoppa till inlägg %{post_number}"
         jump_prompt_or: "eller"
         total: antal inlägg
@@ -1413,7 +1413,7 @@ sv:
         pin_validation: "Ett datum krävs för att klistra fast det här ämnet."
         not_pinned: "Det finns inga klistrade ämnen i {{categoryLink}}."
         already_pinned:
-          one: "Nuvarande antal ämnen som är klistrade i {{categoryLink}}: <strong class='badge badge-notification unread'>1</strong>"
+          one: "Nuvarande antal ämnen som är klistrade i {{categoryLink}}: <strong class='badge badge-notification unread'>%{count}</strong>"
           other: "Nuvarande antal ämnen som är klistrade i {{categoryLink}}: <strong class='badge badge-notification unread'>{{count}}</strong>"
         pin_globally: "Gör det här ämnet synligt i toppen av alla ämneslistor tills "
         confirm_pin_globally: "Du har redan {{count}} globalt klistrade ämnen. För många klistrade ämnen kan vara störande för nya och anonyma användare. Är du säker på att du vill klistra ytterligare ett ämne globalt?"
@@ -1422,7 +1422,7 @@ sv:
         global_pin_note: "Användare kan avklistra ämnet individuellt för sig själva."
         not_pinned_globally: "Det finns inga globalt klistrade ämnen."
         already_pinned_globally:
-          one: "Nuvarande antal ämnen som klistrats globalt: <strong class='badge badge-notification unread'>1</strong>"
+          one: "Nuvarande antal ämnen som klistrats globalt: <strong class='badge badge-notification unread'>%{count}</strong>"
           other: "Nuvarande antal ämnen som klistrats globalt: <strong class='badge badge-notification unread'>{{count}}</strong>"
         make_banner: "Gör detta ämne till en banderoll som dyker upp i toppen av alla sidor."
         remove_banner: "Ta bort banderollen som dyker upp i toppen av alla sidor."
@@ -1459,7 +1459,7 @@ sv:
       login_reply: "Logga in för att svara"
       filters:
         n_posts:
-          one: "1 inlägg"
+          one: "%{count} inlägg"
           other: "{{count}} inlägg"
         cancel: "Ta bort filter"
       split_topic:
@@ -1507,7 +1507,7 @@ sv:
         select_all: markera alla
         deselect_all: avmarkera alla
         description:
-          one: Du har markerat <b>1</b> inlägg.
+          one: Du har markerat <b>%{count}</b> inlägg.
           other: "Du har markerat <b>{{count}}</b> inlägg."
     post:
       quote_reply: "Citat"
@@ -1521,22 +1521,22 @@ sv:
       follow_quote: "gå till det citerade inlägget"
       show_full: "Visa hela inlägget"
       deleted_by_author:
-        one: "(inlägg tillbakadraget av skaparen, kommer att raderas automatiskt om 1 timme om det inte flaggas)"
+        one: "(inlägg tillbakadraget av skaparen, kommer att raderas automatiskt om %{count} timme om det inte flaggas)"
         other: "(inlägg tillbakadraget av skaparen, kommer att raderas automatiskt om %{count} timmar om det inte flaggas)"
       expand_collapse: "utvidga/förminska"
       gap:
-        one: "visa 1 dolt svar"
+        one: "visa %{count} dolt svar"
         other: "visa {{count}} dolda svar"
       unread: "Inlägget är oläst"
       has_replies:
         one: "{{count}} svar"
         other: "{{count}} svar"
       has_likes_title:
-        one: "1 person gillade detta inlägg"
+        one: "%{count} person gillade detta inlägg"
         other: "{{count}} personer gillade detta inlägg"
       has_likes_title_only_you: "du gillade det här inlägget"
       has_likes_title_you:
-        one: "du och 1 annan person gillade det här inlägget"
+        one: "du och %{count} annan person gillade det här inlägget"
         other: "du och {{count}} andra personer gillade det här inlägget"
       errors:
         create: "Tyvärr, det uppstod ett fel under skapandet av ditt inlägg. Var god försök igen."
@@ -1608,50 +1608,6 @@ sv:
           notify_user: "Du skickade ett meddelande till denna användare"
           bookmark: "Du bokmärkte detta inlägg"
           like: "Du gillade detta"
-        by_you_and_others:
-          off_topic:
-            one: "Du och 1 annan flaggade detta som orelevant"
-            other: "Du och {{count}} andra personer flaggade detta som orelevant"
-          spam:
-            one: "Du och 1 annan flaggade detta som spam"
-            other: "Du och {{count}} andra personer flaggade detta som spam"
-          inappropriate:
-            one: "Du och 1 annan flaggade detta som olämpligt"
-            other: "Du och {{count}} andra personer flaggade detta som olämpligt"
-          notify_moderators:
-            one: "Du och 1 annan person har flaggat detta för moderation"
-            other: "Du och {{count}} andra personer har flaggat detta för moderation"
-          notify_user:
-            one: "Du och 1 person till skickade ett meddelande till denna användare"
-            other: "Du och {{count}} andra personer skickade ett meddelande till denna användare"
-          bookmark:
-            one: "Du och 1 annan bokmärkte detta inlägg"
-            other: "Du och {{count}} andra personer bokmärkte detta inlägg"
-          like:
-            one: "Du och 1 annan gillade detta"
-            other: "Du och {{count}} andra personer gillade detta"
-        by_others:
-          off_topic:
-            one: "1 person flaggade detta som orelevant"
-            other: "{{count}} personer flaggade detta som orelevant"
-          spam:
-            one: "1 person flaggade detta som spam"
-            other: "{{count}} personer flaggade detta som spam"
-          inappropriate:
-            one: "1 person flaggade detta som olämpligt"
-            other: "{{count}} personer flaggade detta som olämpligt"
-          notify_moderators:
-            one: "1 person flaggade detta för granskning"
-            other: "{{count}} personer flaggade detta för granskning"
-          notify_user:
-            one: "1 person skickade ett meddelande till denna användare"
-            other: "{{count}} skickade ett meddelande till denna användare"
-          bookmark:
-            one: "1 person bokmärkte detta inlägg"
-            other: "{{count}} personer bokmärkte detta inlägg"
-          like:
-            one: "1 person gillade detta"
-            other: "{{count}} personer gillade detta"
       revisions:
         controls:
           first: "Första revision"
@@ -1734,6 +1690,7 @@ sv:
       default_view: "Förvald ämneslista"
       allow_badges_label: "Tillåt utmärkelser i den här kategorin"
       edit_permissions: "Redigera behörigheter"
+      review_group_name: "gruppnamn"
       this_year: "i år"
       default_position: "Standardposition"
       position_disabled: "Kategorier kommer att sorteras efter deras aktivitet. För att ställa in sorteringen av kategorier i den här listan,"
@@ -1798,13 +1755,13 @@ sv:
       custom_placeholder_notify_moderators: "Låt oss veta i detalj vad du är bekymrad över, och skicka med relevanta länkar och exempel om möjligt."
       custom_message:
         at_least:
-          one: "skriv åtminstone 1 tecken"
+          one: "skriv åtminstone %{count} tecken"
           other: "skriv åtminstone {{count}} tecken"
         more:
-          one: "1 till..."
+          one: "%{count} till..."
           other: "{{count}} till..."
         left:
-          one: "1 kvar"
+          one: "%{count} kvar"
           other: "{{count}} kvar"
     flagging_topic:
       title: "Tack för att du hjälper oss hålla forumet civiliserat!"
@@ -1816,12 +1773,12 @@ sv:
       links_title: "Populära länkar"
       links_shown: "visa fler länkar..."
       clicks:
-        one: "1 klick"
+        one: "%{count} klick"
         other: "%{count} klick"
     post_links:
       about: "utvidga fler länkar för det här inlägget"
       title:
-        one: "1 mer"
+        one: "%{count} mer"
         other: "%{count} mer"
     topic_statuses:
       warning:
@@ -1860,7 +1817,7 @@ sv:
       other: "visningar"
     replies: "Svar"
     views_long:
-      one: "detta ämnet har visats 1 gång"
+      one: "detta ämnet har visats %{count} gång"
       other: "detta ämne har visats {{number}} gånger"
     activity: "Aktivitet"
     likes: "Gillningar"
@@ -1885,7 +1842,7 @@ sv:
       latest:
         title: "Senaste"
         title_with_count:
-          one: "Senaste (1)"
+          one: "Senaste (%{count})"
           other: "Senaste ({{count}})"
         help: "ämnen med nya inlägg"
       hot:
@@ -1908,16 +1865,16 @@ sv:
           other: "Olästa ({{count}})"
         help: "ämnen som du bevakar eller följer med olästa inlägg"
         lower_title_with_count:
-          one: "1 oläst"
+          one: "%{count} oläst"
           other: "{{count}} olästa"
       new:
         lower_title_with_count:
-          one: "1 ny"
+          one: "%{count} ny"
           other: "{{count}} nya"
         lower_title: "ny"
         title: "Nya"
         title_with_count:
-          one: "Ny (1)"
+          one: "Ny (%{count})"
           other: "Nya  ({{count}})"
         help: "ämnen skapade de senaste dagarna"
       posted:
@@ -1929,7 +1886,7 @@ sv:
       category:
         title: "{{categoryName}}"
         title_with_count:
-          one: "{{categoryName}} (1)"
+          one: "{{categoryName}} (%{count})"
           other: "{{categoryName}} ({{count}})"
         help: "senaste ämnena i kategorin {{categoryName}}"
       top:
@@ -1964,68 +1921,68 @@ sv:
       title: "Tangentbordsgenvägar"
       jump_to:
         title: "Hoppa till"
-        home: "<b>g</b>, <b>h</b> Hem"
-        latest: "<b>g</b>, <b>l</b> Senaste"
-        new: "<b>g</b>, <b>n</b> Nya"
-        unread: "<b>g</b>, <b>u</b> Olästa"
-        categories: "<b>g</b>, <b>c</b> Kategorier"
-        top: "<b>g</b>, <b>t</b> Upp till toppen"
-        bookmarks: "<b>g</b>, <b>b</b> Bokmärken"
-        profile: "<b>g</b>, <b>p</b> Profil"
-        messages: "<b>g</b>, <b>m</b> Meddelanden"
+        home: "%{shortcut} Hem"
+        latest: "%{shortcut} Senaste"
+        new: "%{shortcut} Nya"
+        unread: "%{shortcut} Olästa"
+        categories: "%{shortcut} Kategorier"
+        top: "%{shortcut} Upp till toppen"
+        bookmarks: "%{shortcut} Bokmärken"
+        profile: "%{shortcut} Profil"
+        messages: "%{shortcut} Meddelanden"
       navigation:
         title: "Navigering"
-        jump: "<b>#</b> Gå till inlägg #"
-        back: "<b>u</b> Tillbaka"
-        up_down: "<b>k</b>/<b>j</b> Flytta markering &uarr; &darr;"
-        open: "<b>ö</b> eller <b>Välj</b> Öppna valt ämne"
-        next_prev: "<b>shift</b>+<b>j</b>/<b>shift</b>+<b>k</b> Nästa/föregående avsnitt"
+        jump: "%{shortcut} Gå till inlägg #"
+        back: "%{shortcut} Tillbaka"
+        up_down: "%{shortcut} Flytta markering &uarr; &darr;"
+        open: "%{shortcut} Öppna valt ämne"
+        next_prev: "%{shortcut} Nästa/föregående avsnitt"
       application:
         title: "Applikation"
-        create: "<b>s</b> Skapa ett nytt ämne"
-        notifications: "<b>n</b> Öppna notifieringar"
-        hamburger_menu: "<b>=</b> Öppna hamburgarmenyn"
-        user_profile_menu: "<b>p</b> Öppna användarmeny"
-        show_incoming_updated_topics: "<b>.</b> Visa uppdaterade ämnen"
-        help: "<b>?</b> Öppna tangentbordshjälp"
-        dismiss_new_posts: "<b>x</b>, <b>r</b> Avfärda nya/inlägg"
-        dismiss_topics: "<b>x</b>, <b>t</b> Avfärda ämnen"
-        log_out: "<b>shift</b>+<b>z</b> <b>shift</b>+<b>z</b> Logga ut"
+        create: "%{shortcut} Skapa ett nytt ämne"
+        notifications: "%{shortcut} Öppna notifieringar"
+        hamburger_menu: "%{shortcut} Öppna hamburgarmenyn"
+        user_profile_menu: "%{shortcut} Öppna användarmeny"
+        show_incoming_updated_topics: "%{shortcut} Visa uppdaterade ämnen"
+        help: "%{shortcut} Öppna tangentbordshjälp"
+        dismiss_new_posts: "%{shortcut} Avfärda nya/inlägg"
+        dismiss_topics: "%{shortcut} Avfärda ämnen"
+        log_out: "%{shortcut} Logga ut"
       actions:
         title: "Åtgärder"
-        bookmark_topic: "<b>f</b> Växla bokmärkning av ämne"
-        pin_unpin_topic: "<b>shift</b>+<b>p</b> Klistra/avklistra ämne"
-        share_topic: "<b>shift</b>+<b>s</b> Dela ämne"
-        share_post: "<b>s</b> Dela inlägg"
-        reply_as_new_topic: "<b>t</b> Svara med länkat ämne"
-        reply_topic: "<b>shift</b>+<b>r</b> Svara på ämne"
-        reply_post: "<b>r</b> Svara på inlägg"
-        quote_post: "<b>q</b> Citera inlägg"
-        like: "<b>l</b> Gilla inlägg"
-        flag: "<b>!</b> Flagga inlägg"
-        bookmark: "<b>b</b> Bokmärk inlägg"
-        edit: "<b>e</b> Redigera inlägg"
-        delete: "<b>d</b> Radera inlägg"
-        mark_muted: "<b>m</b>, <b>m</b> Tysta ämne"
-        mark_regular: "<b>m</b>, <b>r</b> Vanligt (standard) ämne"
-        mark_tracking: "<b>m</b>, <b>t</b> Följ ämne"
-        mark_watching: "<b>m</b>, <b>w</b> Bevaka ämne"
-        print: "<b>ctrl</b>+<b>p</b> Skriv ut ämne"
+        bookmark_topic: "%{shortcut} Växla bokmärkning av ämne"
+        pin_unpin_topic: "%{shortcut} Klistra/avklistra ämne"
+        share_topic: "%{shortcut} Dela ämne"
+        share_post: "%{shortcut} Dela inlägg"
+        reply_as_new_topic: "%{shortcut} Svara med länkat ämne"
+        reply_topic: "%{shortcut} Svara på ämne"
+        reply_post: "%{shortcut} Svara på inlägg"
+        quote_post: "%{shortcut} Citera inlägg"
+        like: "%{shortcut} Gilla inlägg"
+        flag: "%{shortcut} Flagga inlägg"
+        bookmark: "%{shortcut} Bokmärk inlägg"
+        edit: "%{shortcut} Redigera inlägg"
+        delete: "%{shortcut} Radera inlägg"
+        mark_muted: "%{shortcut} Tysta ämne"
+        mark_regular: "%{shortcut} Vanligt (standard) ämne"
+        mark_tracking: "%{shortcut} Följ ämne"
+        mark_watching: "%{shortcut} Bevaka ämne"
+        print: "%{shortcut} Skriv ut ämne"
     badges:
       earned_n_times:
-        one: "Förtjänade den här utmärkelsen 1 gång"
+        one: "Förtjänade den här utmärkelsen %{count} gång"
         other: "Förtjänade den här utmärkelsen %{count} gånger"
       granted_on: "Utfärdad %{date}"
       others_count: "Andra med den här utmärkelsen (%{count})"
       title: Utmärkelser
       badge_count:
-        one: "1 Utmärkelse"
+        one: "%{count} Utmärkelse"
         other: "%{count} Utmärkelser"
       more_badges:
-        one: "+1 Till"
+        one: "+%{count} Till"
         other: "+%{count} Till"
       granted:
-        one: "1 utfärdad"
+        one: "%{count} utfärdad"
         other: "%{count} utfärdade"
       select_badge_for_title: Välj en utmärkelse att använda som din titel
       none: "(ingen)"
@@ -2128,7 +2085,6 @@ sv:
       moderator: "Moderator"
       dashboard:
         title: "Översiktspanel"
-        last_updated: "Dashboard senast uppdaterad:"
         version: "Version"
         up_to_date: "Du är aktuell!"
         critical_available: "En kritisk uppdatering är tillgänglig."
@@ -2172,6 +2128,11 @@ sv:
           start_date: "Startdatum"
           end_date: "Slutdatum"
           groups: "Alla grupper"
+          filters:
+            group:
+              label: Grupp
+            category:
+              label: Kategori
       commits:
         latest_changes: "Senaste ändringarna: snälla uppdatera ofta!"
         by: "av"
@@ -2280,7 +2241,7 @@ sv:
             one: "Det finns ett nytt event."
             other: "Det finns {{count}} nya event."
           completed_in:
-            one: "Färdigställd på 1 sekund."
+            one: "Färdigställd på %{count} sekund."
             other: "Färdigställd på {{count}} sekunder."
           request: "Förfrågning"
           response: "Svar"
@@ -2727,7 +2688,7 @@ sv:
           one: "Kan inte radera alla inlägg. Några inlägg är äldre än %{count} dag gammal. (Inställningen delete_user_max_post_age)"
           other: "Kan inte radera alla inlägg. Några inlägg är äldre än %{count} dagar gamla. (Inställningen delete_user_max_post_age)"
         cant_delete_all_too_many_posts:
-          one: "Kan inte radera alla inlägg, då användaren har fler än 1 inlägg. (delete_all_posts_max)"
+          one: "Kan inte radera alla inlägg, då användaren har fler än %{count} inlägg. (delete_all_posts_max)"
           other: "Kan inte radera alla inlägg, då användaren har fler än %{count} inlägg. (delete_all_posts_max)"
         delete_and_block: "Radera och <b>blockera</b> denna e-post och IP-adress"
         delete_dont_block: "Radera enbart"
@@ -2937,7 +2898,7 @@ sv:
             text: "Det saknas urval av beviljningar. Det händer när utmärkelsesökningen returnerar ett användar-ID eller ett inläggs-ID som inte existerar. Det kan få oväntade resultat i ett senare skede, dubblekontrollera gärna din sökning."
           no_grant_count: "Inga utmärkelser att tilldelas."
           grant_count:
-            one: "<b>1</b> utmärkelse att tilldelas."
+            one: "<b>%{count}</b> utmärkelse att tilldelas."
             other: "<b>%{count}</b> utmärkelser att tilldelas. "
           sample: "Exempel:"
           grant:

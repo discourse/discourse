@@ -53,7 +53,7 @@ export default Ember.Object.extend(Ember.Array, {
         const appendingIds = this._appendingIds;
         postIds.forEach(pid => (appendingIds[pid] = true));
       },
-      this.get("length"),
+      this.length,
       0,
       postIds.length
     );
@@ -76,7 +76,7 @@ export default Ember.Object.extend(Ember.Array, {
   },
 
   objectAt(index) {
-    const posts = this.get("posts");
+    const posts = this.posts;
     return index < posts.length
       ? posts[index]
       : new Placeholder("post-placeholder");

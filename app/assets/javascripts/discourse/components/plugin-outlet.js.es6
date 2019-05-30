@@ -37,15 +37,15 @@ export default Ember.Component.extend({
 
   init() {
     // This should be the future default
-    if (this.get("noTags")) {
+    if (this.noTags) {
       this.set("tagName", "");
       this.set("connectorTagName", "");
     }
 
     this._super(...arguments);
-    const name = this.get("name");
+    const name = this.name;
     if (name) {
-      const args = this.get("args");
+      const args = this.args;
       this.set("connectors", renderedConnectorsFor(name, args, this));
     }
   }

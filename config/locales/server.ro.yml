@@ -97,7 +97,7 @@ ro:
     template:
       body: "Au apărut probleme cu următoarele câmpuri:"
       header:
-        one: O eroare a împiedicat acest %{model} să fie salvat
+        one: "O eroare a împiedicat acest %{model} să fie salvat"
         few: "%{count} erori au împiedicat acest %{model} să fie salvat"
         other: "%{count} de erori au împiedicat acest %{model} să fie salvat"
     embed:
@@ -125,7 +125,7 @@ ro:
   reading_time: "Durata citirii"
   likes: "Aprecieri"
   too_many_replies:
-    one: "Ne pare rău, dar utilizatorii noi sunt limitați la 1 răspuns pe discuție."
+    one: "Ne pare rău, dar utilizatorii noi sunt limitați la %{count} răspuns pe discuție."
     few: "Ne pare rău, dar utilizatorii noi sunt limitați la %{count} răspunsuri pe discuție."
     other: "Ne pare rău, dar utilizatori noi sunt limitați la %{count} de răspunsuri pe discuție."
   embed:
@@ -353,27 +353,27 @@ ro:
     distance_in_words:
       half_a_minute: "de < 1m"
       less_than_x_seconds:
-        one: "de < 1s"
+        one: "de < %{count}s"
         few: "de < %{count}s"
         other: "de < %{count}s"
       x_seconds:
-        one: "de 1s"
+        one: "de %{count}s"
         few: "de %{count}s"
         other: "de %{count}s"
       less_than_x_minutes:
-        one: "de < 1m"
+        one: "de < %{count}m"
         few: " < %{count}m"
         other: "de < %{count}m"
       x_minutes:
-        one: "de 1m"
+        one: "de %{count}m"
         few: " de %{count}m"
         other: "de %{count}m"
       about_x_hours:
-        one: "de 1h"
+        one: "de %{count}h"
         few: " %{count}h"
         other: "de %{count}h"
       x_days:
-        one: "de 1z"
+        one: "de %{count}z"
         few: " %{count}z"
         other: "de %{count}z"
       about_x_months:
@@ -389,7 +389,7 @@ ro:
         few: "de %{count} ani"
         other: "de %{count} de ani"
       over_x_years:
-        one: "de > 1an"
+        one: "de > %{count}an"
         few: "de > %{count}ani"
         other: "de > %{count} de ani"
       almost_x_years:
@@ -398,16 +398,13 @@ ro:
         other: "de %{count} de ani"
     distance_in_words_verbose:
       half_a_minute: "chiar acum"
-      less_than_x_seconds:
-        one: "chiar acum"
-        few: "chiar acum"
-        other: "chiar acum"
+      less_than_x_seconds: "chiar acum"
       x_seconds:
         one: "cu o secundă în urmă"
         few: "cu %{count} secunde în urmă"
         other: "cu %{count} de secunde în urmă"
       less_than_x_minutes:
-        one: "cu mai puțin de 1 minut în urmă"
+        one: "cu mai puțin de %{count} minut în urmă"
         few: "cu mai puțin de %{count} minute în urmă"
         other: "mai puțin de %{count} de minute în urmă"
       x_minutes:
@@ -1455,11 +1452,6 @@ ro:
         În fiecare lună, doi utilizatori noi primesc acest premiu ce va fi vizibil permanent pe [pagina de ecusoane](%{url})
 
         Ai devenit un membru valoros al comunității noastre. Mulțumim pentru participare!
-    queued_posts_reminder:
-      text_body_template: |
-        Salutare,
-
-        Există postări de utilizatori noi care așteaptă să fie moderate. [Aprobă-le sau respinge-le aici](%{base_url}/queued-posts).
   unsubscribe_link: |
     Pentru dezabonare de la aceste emailuri, [click aici](%{unsubscribe_url}).
   unsubscribe_link_and_mail: |
@@ -1635,7 +1627,6 @@ ro:
       unread_messages: "Mesaje necitite"
       unread_notifications: "Notificări necitite"
       liked_received: "Aprecieri primite"
-      new_posts: "Postări noi"
       new_users: "Utilizatori noi"
       popular_topics: "Subiecte notorii"
       follow_topic: "Urmărește acest subiect"
@@ -2040,14 +2031,10 @@ ro:
         fields:
           logo:
             label: "Logo-ul principal"
-          logo_small:
-            label: "Logo compact"
       icons:
         title: "Iconițe"
         fields:
-          favicon:
-            label: "Iconiță mică"
-          apple_touch_icon:
+          large_icon:
             label: "Iconiță mare"
       homepage:
         title: "Pagina principală"
@@ -2093,6 +2080,8 @@ ro:
         title: "Ascunde postarea"
       delete_spammer:
         title: "Șterge spammer"
+      delete_single:
+        title: "Șterge"
       disagree_and_restore:
         description: "Restabilește postarea pentru astfel încât toți utilizatorii să o poată vedea."
       disagree:

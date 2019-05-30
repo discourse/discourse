@@ -843,15 +843,17 @@ class UsersController < ApplicationController
     topic_id = topic_id.to_i if topic_id
     topic_allowed_users = params[:topic_allowed_users] || false
 
-    if params[:group].present?
-      @group = Group.find_by(name: params[:group])
+    group_names = params[:groups] || []
+    group_names << params[:group] if params[:group]
+    if group_names.present?
+      @groups = Group.where(name: group_names)
     end
 
     results = UserSearch.new(term,
                              topic_id: topic_id,
                              topic_allowed_users: topic_allowed_users,
                              searching_user: current_user,
-                             group: @group
+                             groups: @groups
                             ).search
 
     user_fields = [:username, :upload_avatar_template]

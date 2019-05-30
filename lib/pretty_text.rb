@@ -159,7 +159,7 @@ module PrettyText
         __optInput.categoryHashtagLookup = __categoryLookup;
         __optInput.customEmoji = #{custom_emoji.to_json};
         __optInput.emojiUnicodeReplacer = __emojiUnicodeReplacer;
-        __optInput.lookupImageUrls = __lookupImageUrls;
+        __optInput.lookupUploadUrls = __lookupUploadUrls;
         __optInput.censoredWords = #{WordWatcher.words_for_action(:censor).join('|').to_json};
       JS
 
@@ -235,7 +235,12 @@ module PrettyText
     protect do
       v8.eval(<<~JS)
         __paths = #{paths_json};
-        __performEmojiUnescape(#{title.inspect}, { getURL: __getURL, emojiSet: #{set}, customEmoji: #{custom} });
+        __performEmojiUnescape(#{title.inspect}, {
+          getURL: __getURL,
+          emojiSet: #{set},
+          customEmoji: #{custom},
+          enableEmojiShortcuts: #{SiteSetting.enable_emoji_shortcuts}
+        });
       JS
     end
   end
@@ -243,9 +248,11 @@ module PrettyText
   def self.escape_emoji(title)
     return unless title
 
+    replace_emoji_shortcuts = SiteSetting.enable_emoji && SiteSetting.enable_emoji_shortcuts
+
     protect do
       v8.eval(<<~JS)
-        __performEmojiEscape(#{title.inspect});
+        __performEmojiEscape(#{title.inspect}, { emojiShortcuts: #{replace_emoji_shortcuts} });
       JS
     end
   end
@@ -340,6 +347,7 @@ module PrettyText
   def self.excerpt(html, max_length, options = {})
     # TODO: properly fix this HACK in ExcerptParser without introducing XSS
     doc = Nokogiri::HTML.fragment(html)
+    DiscourseEvent.trigger(:reduce_excerpt, doc, options)
     strip_image_wrapping(doc)
     html = doc.to_html
 

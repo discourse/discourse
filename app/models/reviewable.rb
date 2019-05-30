@@ -41,6 +41,25 @@ class Reviewable < ActiveRecord::Base
     Jobs.enqueue(:notify_reviewable, reviewable_id: self.id) if pending?
   end
 
+  # The gaps are in case we want more precision in the future
+  def self.priorities
+    @priorities ||= Enum.new(
+      low: 0,
+      medium: 5,
+      high: 10
+    )
+  end
+
+  # The gaps are in case we want more precision in the future
+  def self.sensitivity
+    @sensitivity ||= Enum.new(
+      disabled: 0,
+      low: 9,
+      medium: 6,
+      high: 3
+    )
+  end
+
   def self.statuses
     @statuses ||= Enum.new(
       pending: 0,
@@ -157,15 +176,41 @@ class Reviewable < ActiveRecord::Base
     rs
   end
 
-  def self.set_priorities(medium: nil, high: nil)
-    PluginStore.set('reviewables', 'priority_medium', medium) if medium
-    PluginStore.set('reviewables', 'priority_high', high) if high
+  def self.set_priorities(values)
+    values.each do |k, v|
+      id = Reviewable.priorities[k]
+      PluginStore.set('reviewables', "priority_#{id}", v) unless id.nil?
+    end
+  end
+
+  def self.sensitivity_score(sensitivity, scale: 1.0)
+    return Float::MAX if sensitivity == 0
+
+    ratio = sensitivity / Reviewable.sensitivity[:low].to_f
+    high = PluginStore.get('reviewables', "priority_#{Reviewable.priorities[:high]}")
+    return (10.0 * scale) if high.nil?
+
+    # We want this to be hard to reach
+    (high.to_f * ratio) * scale
+  end
+
+  def self.score_to_auto_close_topic
+    sensitivity_score(SiteSetting.auto_close_topic_sensitivity, scale: 2.5)
+  end
+
+  def self.spam_score_to_silence_new_user
+    sensitivity_score(SiteSetting.silence_new_user_sensitivity, scale: 0.6)
+  end
+
+  def self.score_required_to_hide_post
+    sensitivity_score(SiteSetting.hide_post_sensitivity)
   end
 
   def self.min_score_for_priority(priority = nil)
     priority ||= SiteSetting.reviewable_default_visibility
-    return 0.0 unless ['medium', 'high'].include?(priority)
-    return PluginStore.get('reviewables', "priority_#{priority}").to_f
+    id = Reviewable.priorities[priority.to_sym]
+    return 0.0 if id.nil?
+    return PluginStore.get('reviewables', "priority_#{id}").to_f
   end
 
   def history

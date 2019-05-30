@@ -292,6 +292,7 @@ describe Topic do
     let(:topic_script) { build_topic_with_title("Topic with <script>alert('title')</script> script in its title") }
     let(:topic_emoji) { build_topic_with_title("I 💖 candy alot") }
     let(:topic_modifier_emoji) { build_topic_with_title("I 👨‍🌾 candy alot") }
+    let(:topic_shortcut_emoji) { build_topic_with_title("I love candy :)") }
 
     it "escapes script contents" do
       expect(topic_script.fancy_title).to eq("Topic with &lt;script&gt;alert(&lsquo;title&rsquo;)&lt;/script&gt; script in its title")
@@ -320,6 +321,29 @@ describe Topic do
       expect(topic_script.fancy_title).not_to include("<script>")
     end
 
+    context "emoji shortcuts enabled" do
+      before { SiteSetting.enable_emoji_shortcuts = true }
+
+      it "converts emoji shortcuts into emoji" do
+        expect(topic_shortcut_emoji.fancy_title).to eq("I love candy :slight_smile:")
+      end
+
+      context "emojis disabled" do
+        before { SiteSetting.enable_emoji = false }
+
+        it "does not convert emoji shortcuts" do
+          expect(topic_shortcut_emoji.fancy_title).to eq("I love candy :)")
+        end
+      end
+    end
+
+    context "emoji shortcuts disabled" do
+      before { SiteSetting.enable_emoji_shortcuts = false }
+
+      it "does not convert emoji shortcuts" do
+        expect(topic_shortcut_emoji.fancy_title).to eq("I love candy :)")
+      end
+    end
   end
 
   context 'fancy title' do
@@ -908,7 +932,7 @@ describe Topic do
         it 'should not be visible and have correct counts' do
           expect(topic).not_to be_visible
           expect(topic.moderator_posts_count).to eq(1)
-          expect(topic.bumped_at.to_f).to eq(@original_bumped_at)
+          expect(topic.bumped_at.to_f).to be_within(1e-4).of(@original_bumped_at)
         end
       end
 
@@ -922,7 +946,7 @@ describe Topic do
         it 'should be visible with correct counts' do
           expect(topic).to be_visible
           expect(topic.moderator_posts_count).to eq(1)
-          expect(topic.bumped_at.to_f).to eq(@original_bumped_at)
+          expect(topic.bumped_at.to_f).to be_within(1e-4).of(@original_bumped_at)
         end
       end
     end
@@ -937,7 +961,7 @@ describe Topic do
         it "doesn't have a pinned_at but has correct dates" do
           expect(topic.pinned_at).to be_blank
           expect(topic.moderator_posts_count).to eq(1)
-          expect(topic.bumped_at.to_f).to eq(@original_bumped_at)
+          expect(topic.bumped_at.to_f).to be_within(1e-4).of(@original_bumped_at)
         end
       end
 
@@ -950,7 +974,7 @@ describe Topic do
 
         it 'should enable correctly' do
           expect(topic.pinned_at).to be_present
-          expect(topic.bumped_at.to_f).to eq(@original_bumped_at)
+          expect(topic.bumped_at.to_f).to be_within(1e-4).of(@original_bumped_at)
           expect(topic.moderator_posts_count).to eq(1)
         end
 
@@ -968,7 +992,7 @@ describe Topic do
 
         it 'should archive correctly' do
           expect(@archived_topic).not_to be_archived
-          expect(@archived_topic.bumped_at.to_f).to be_within(0.1).of(@original_bumped_at)
+          expect(@archived_topic.bumped_at.to_f).to be_within(1e-4).of(@original_bumped_at)
           expect(@archived_topic.moderator_posts_count).to eq(1)
         end
       end
@@ -983,9 +1007,8 @@ describe Topic do
         it 'should be archived' do
           expect(topic).to be_archived
           expect(topic.moderator_posts_count).to eq(1)
-          expect(topic.bumped_at.to_f).to eq(@original_bumped_at)
+          expect(topic.bumped_at.to_f).to be_within(1e-4).of(@original_bumped_at)
         end
-
       end
     end
 
@@ -1001,9 +1024,8 @@ describe Topic do
         it 'should not be pinned' do
           expect(@closed_topic).not_to be_closed
           expect(@closed_topic.moderator_posts_count).to eq(1)
-          expect(@closed_topic.bumped_at.to_f).not_to eq(@original_bumped_at)
+          expect(@closed_topic.bumped_at.to_f).not_to be_within(1e-4).of(@original_bumped_at)
         end
-
       end
 
       context 'enable' do
@@ -1015,7 +1037,7 @@ describe Topic do
 
         it 'should be closed' do
           expect(topic).to be_closed
-          expect(topic.bumped_at.to_f).to eq(@original_bumped_at)
+          expect(topic.bumped_at.to_f).to be_within(1e-4).of(@original_bumped_at)
           expect(topic.moderator_posts_count).to eq(1)
           expect(topic.topic_timers.first).to eq(nil)
         end

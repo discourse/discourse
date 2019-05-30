@@ -76,7 +76,7 @@ export default Ember.Component.extend({
   },
 
   _topicScrolled(event) {
-    if (this.get("docked")) {
+    if (this.docked) {
       this.set("progressPosition", this.get("postStream.filteredPostsCount"));
       this._streamPercentage = 1.0;
     } else {
@@ -97,7 +97,7 @@ export default Ember.Component.extend({
       .on("topic:scrolled", this, this._dock)
       .on("topic:current-post-scrolled", this, this._topicScrolled);
 
-    const prevEvent = this.get("prevEvent");
+    const prevEvent = this.prevEvent;
     if (prevEvent) {
       Ember.run.scheduleOnce(
         "afterRender",

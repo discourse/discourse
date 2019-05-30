@@ -7,19 +7,19 @@ const RestModel = Ember.Object.extend({
   afterUpdate() {},
 
   update(props) {
-    if (this.get("isSaving")) {
+    if (this.isSaving) {
       return Ember.RSVP.reject();
     }
 
     props = props || this.updateProperties();
 
-    const type = this.get("__type"),
-      store = this.get("store");
+    const type = this.__type,
+      store = this.store;
 
     const self = this;
     self.set("isSaving", true);
     return store
-      .update(type, this.get("id"), props)
+      .update(type, this.id, props)
       .then(function(res) {
         const payload = self.__munge(res.payload || res.responseJson);
 
@@ -39,7 +39,7 @@ const RestModel = Ember.Object.extend({
   },
 
   _saveNew(props) {
-    if (this.get("isSaving")) {
+    if (this.isSaving) {
       return Ember.RSVP.reject();
     }
 
@@ -47,8 +47,8 @@ const RestModel = Ember.Object.extend({
 
     this.beforeCreate(props);
 
-    const type = this.get("__type"),
-      store = this.get("store"),
+    const type = this.__type,
+      store = this.store,
       adapter = store.adapterFor(type);
 
     const self = this;
@@ -80,11 +80,11 @@ const RestModel = Ember.Object.extend({
   },
 
   save(props) {
-    return this.get("isNew") ? this._saveNew(props) : this.update(props);
+    return this.isNew ? this._saveNew(props) : this.update(props);
   },
 
   destroyRecord() {
-    const type = this.get("__type");
+    const type = this.__type;
     return this.store.destroyRecord(type, this);
   }
 });

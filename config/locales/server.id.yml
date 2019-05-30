@@ -237,8 +237,7 @@ id:
       half_a_minute: "< 1m"
     distance_in_words_verbose:
       half_a_minute: "baru saja"
-      less_than_x_seconds:
-        other: "baru saja"
+      less_than_x_seconds: "baru saja"
       x_seconds:
         other: "%{count} detik yang lalu"
       less_than_x_minutes:
@@ -589,6 +588,8 @@ id:
   joined: "Joined"
   reviewables:
     actions:
+      delete_single:
+        title: "Hapus"
       approve:
         title: "Terima"
       reject_user:

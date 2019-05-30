@@ -53,10 +53,18 @@ class Theme < ActiveRecord::Base
 
     Theme.expire_site_cache! if saved_change_to_user_selectable? || saved_change_to_name?
     notify_with_scheme = saved_change_to_color_scheme_id?
+    name_changed = saved_change_to_name?
 
     reload
     settings_field&.ensure_baked! # Other fields require setting to be **baked**
     theme_fields.each(&:ensure_baked!)
+
+    if name_changed
+      theme_fields.select { |f| f.basic_html_field? }.each do |f|
+        f.value_baked = nil
+        f.ensure_baked!
+      end
+    end
 
     remove_from_cache!
     clear_cached_settings!

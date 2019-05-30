@@ -3,10 +3,13 @@ import computed from "ember-addons/ember-computed-decorators";
 
 export default Ember.Mixin.create({
   queryParams: ["period"],
-
   period: "monthly",
 
-  availablePeriods: ["yearly", "quarterly", "monthly", "weekly"],
+  init() {
+    this._super(...arguments);
+
+    this.availablePeriods = ["yearly", "quarterly", "monthly", "weekly"];
+  },
 
   @computed("period")
   startDate(period) {

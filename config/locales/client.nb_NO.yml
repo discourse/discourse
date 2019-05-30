@@ -43,67 +43,67 @@ nb_NO:
       tiny:
         half_a_minute: "< 1m"
         less_than_x_seconds:
-          one: "< 1s"
+          one: "< %{count}s"
           other: "< %{count}s"
         x_seconds:
-          one: "1s"
+          one: "%{count}s"
           other: "%{count}s"
         less_than_x_minutes:
-          one: "< 1m"
+          one: "< %{count}m"
           other: "< %{count}m"
         x_minutes:
-          one: "1m"
+          one: "%{count}m"
           other: "%{count}m"
         about_x_hours:
-          one: "1t"
+          one: "%{count}t"
           other: "%{count}t"
         x_days:
-          one: "1d"
+          one: "%{count}d"
           other: "%{count}d"
         x_months:
-          one: "1mnd"
+          one: "%{count}mnd"
           other: "%{count}mnd"
         about_x_years:
-          one: "1år"
+          one: "%{count}år"
           other: "%{count}år"
         over_x_years:
-          one: "> 1år"
+          one: "> %{count}år"
           other: "> %{count}år"
         almost_x_years:
-          one: "1år"
+          one: "%{count}år"
           other: "%{count}år"
         date_month: "D MMM"
         date_year: "MMM 'YY"
       medium:
         x_minutes:
-          one: "1 minutt"
+          one: "%{count} minutt"
           other: "%{count} minutter"
         x_hours:
-          one: "1 time"
+          one: "%{count} time"
           other: "%{count} timer"
         x_days:
-          one: "1 dag"
+          one: "%{count} dag"
           other: "%{count} dager"
         date_year: "D. MMM, 'YY"
       medium_with_ago:
         x_minutes:
-          one: "1 minutt siden"
+          one: "%{count} minutt siden"
           other: "%{count} minutter siden"
         x_hours:
-          one: "1 time siden"
+          one: "%{count} time siden"
           other: "%{count} timer siden"
         x_days:
-          one: "1 dag siden"
+          one: "%{count} dag siden"
           other: "%{count} dager siden"
       later:
         x_days:
-          one: "1 dag senere"
+          one: "%{count} dag senere"
           other: "%{count} dager senere"
         x_months:
-          one: "1 måned senere"
+          one: "%{count} måned senere"
           other: "%{count} måneder senere"
         x_years:
-          one: "1 år senere"
+          one: "%{count} år senere"
           other: "%{count} år senere"
       previous_month: "Forrige måned"
       next_month: "Neste måned"
@@ -285,7 +285,6 @@ nb_NO:
         save_changes: "Lagre endringer"
         title: "Innstillinger"
       moderation_history: "Moderatorhistorikk"
-      title: "Må ses gjennom"
       topic: "Emne:"
       user:
         username: "Brukernavn"
@@ -347,7 +346,7 @@ nb_NO:
       posts_read: "Lest"
       posts_read_long: "Innlegg lest"
       total_rows:
-        one: "1 bruker"
+        one: "%{count} bruker"
         other: "%{count} brukere"
     group_histories:
       actions:
@@ -517,7 +516,7 @@ nb_NO:
       toggle_ordering: "slå på/av styring av sortering"
       subcategories: "Underkategorier"
       topic_sentence:
-        one: "1 emne"
+        one: "%{count} emne"
         other: "%{count} emner"
       n_more: "Kategorier (ytterligere%{count}) ..."
     ip_lookup:
@@ -551,6 +550,7 @@ nb_NO:
       private_message: "Melding"
       private_messages: "Meldinger"
       user_notifications:
+        ignore_duration_username: "Brukernavn"
         ignore_duration_save: "Ignorer"
         mute_option: "Ignorert"
         normal_option: "Normal"
@@ -973,7 +973,7 @@ nb_NO:
       reached: "<b>%{relativeAge}</b> – <a href='%{url}' target='_blank'>%{rate}</a> nådde innstillingsgrensen satt i %{siteSettingRate}."
       exceeded: "<b>%{relativeAge}</b> – <a href='%{url}' target='_blank'>%{rate}</a> overstiger innstillingsgrensen satt i %{siteSettingRate}."
       rate:
-        one: "1 feil/%{duration}"
+        one: "%{count} feil/%{duration}"
         other: "%{count} feil/%{duration}"
     learn_more: "lær mer…"
     all_time: "totalt"
@@ -1223,7 +1223,6 @@ nb_NO:
       remove_featured_link: "Fjern lenke fra emnet."
       reply_placeholder: "Skriv her. Bruk Markdown, BBCode eller HTML for å formatere innholdet. Dra bilder hit eller lim dem inn."
       reply_placeholder_no_images: "Skriv her. Bruk Markdown, BBkode, eller HTML for å formatere."
-      reply_placeholder_choose_category: "Du må velge en kategori før du skriver her."
       view_new_post: "Se ditt nye innlegg."
       saving: "Lagrer"
       saved: "Lagret!"
@@ -1361,7 +1360,7 @@ nb_NO:
       clear_all: "Fjern Alle"
       too_short: "Din søketekst er for kort."
       result_count:
-        one: "<span>1 resultat for</span><span class='term'>{{term}}</span>"
+        one: "<span>%{count} resultat for</span><span class='term'>{{term}}</span>"
         other: "<span>{{count}}{{plus}} resultater for</span><span class='term'>{{term}}</span>"
       title: "søk etter emner, innlegg, brukere eller kategorier"
       full_page_title: "søk etter emner eller innlegg"
@@ -1453,7 +1452,7 @@ nb_NO:
         notification_level: "Varsler"
         choose_new_category: "Velg den nye kategorien for emnene:"
         selected:
-          one: "Du har valgt <b>1</b> emne."
+          one: "Du har valgt <b>%{count}</b> emne."
           other: "Du har valgt <b>{{count}}</b> emner."
         change_tags: "Erstatt stikkord"
         append_tags: "Legg til stikkord"
@@ -1487,7 +1486,7 @@ nb_NO:
         search: "Det finnes ingen flere søkeresultater"
     topic:
       filter_to:
-        one: "1 innlegg i emnet"
+        one: "%{count} innlegg i emnet"
         other: "{{count}} innlegg i emnet"
       create: "Nytt emne"
       create_long: "Opprett et nytt emne"
@@ -1523,13 +1522,13 @@ nb_NO:
         title: "Fant ikke emnet"
         description: "Beklager, vi kunne ikke finne det emnet. Kanskje det ble fjernet av en moderator?"
       total_unread_posts:
-        one: "du har 1 ulest innlegg i dette emnet"
+        one: "du har %{count} ulest innlegg i dette emnet"
         other: "du har {{count}} uleste innlegg i dette emnet"
       unread_posts:
-        one: "du har 1 ulest gammelt innlegg i dette emnet"
+        one: "du har %{count} ulest gammelt innlegg i dette emnet"
         other: "du har {{count}} uleste gamle innlegg i dette emnet"
       new_posts:
-        one: "det er 1 nytt innlegg i dette emnet siden sist du leste det"
+        one: "det er %{count} nytt innlegg i dette emnet siden sist du leste det"
         other: "det er {{count}} nye innlegg i dette emnet siden sist du leste det"
       likes:
         one: "det er én like i dette emnet"
@@ -1614,7 +1613,6 @@ nb_NO:
         jump_bottom: "Hopp til nyeste innlegg"
         jump_prompt: "hopp til…"
         jump_prompt_of: "av %{count} innlegg"
-        jump_prompt_long: "Hvilket innlegg vil du gå til?"
         jump_bottom_with_number: "hopp til innlegg %{post_number}"
         jump_prompt_to_date: "til dato"
         jump_prompt_or: "eller"
@@ -1712,7 +1710,7 @@ nb_NO:
         pin_validation: "En dato kreves for å feste dette emnet."
         not_pinned: "Det finnes ingen festede emner i {{categoryLink}}."
         already_pinned:
-          one: "Emner som er festet i {{categoryLink}} for øyeblikket: <strong class='badge badge-notification unread'>1</strong>"
+          one: "Emner som er festet i {{categoryLink}} for øyeblikket: <strong class='badge badge-notification unread'>%{count}</strong>"
           other: "Emner som er festet i {{categoryLink}} for øyeblikket: <strong class='badge badge-notification unread'>{{count}}</strong>"
         pin_globally: "La dette emnet vises øverst i alle listene over emner inntil"
         confirm_pin_globally: "Du har allerede {{count}} globalt festede emner. For mange festede emner kan være slitsomt for nye og anonyme brukere. Er du sikker på at du vil feste enda et emne globalt? "
@@ -1721,7 +1719,7 @@ nb_NO:
         global_pin_note: "Brukere kan fjerne festet for emnet individuelt for seg selv."
         not_pinned_globally: "Det finnes ingen globalt festede emner."
         already_pinned_globally:
-          one: "Emner som er festet globalt for øyeblikket: <strong class='badge badge-notification unread'>1</strong>"
+          one: "Emner som er festet globalt for øyeblikket: <strong class='badge badge-notification unread'>%{count}</strong>"
           other: "Emner som er festet globalt for øyeblikket: <strong class='badge badge-notification unread'>{{count}}</strong>"
         make_banner: "Gjør dette emnet til et banner som vises øverst på alle sider."
         remove_banner: "Fjern banneret som vises øverst alle sider. "
@@ -1759,7 +1757,7 @@ nb_NO:
       login_reply: "Logg Inn for å svare"
       filters:
         n_posts:
-          one: "1 innlegg"
+          one: "%{count} innlegg"
           other: "{{count}} innlegg"
         cancel: "Fjern filter"
       split_topic:
@@ -1813,7 +1811,7 @@ nb_NO:
         select_all: velg alle
         deselect_all: fjern alle
         description:
-          one: Du har valgt <b>1</b> innlegg.
+          one: Du har valgt <b>%{count}</b> innlegg.
           other: "Du har valgt <b>{{count}}</b> innlegg."
     post:
       quote_reply: "Sitat"
@@ -1833,7 +1831,7 @@ nb_NO:
       expand_collapse: "utvid/vis"
       locked: "et stabsmedlem har låst dette innlegget fra å bli endret"
       gap:
-        one: "vis 1 skjult svar"
+        one: "vis %{count} skjult svar"
         other: "vis {{count}} skjulte svar"
       unread: "Innlegget er ulest"
       has_replies:
@@ -1844,7 +1842,7 @@ nb_NO:
         other: "{{count}} brukere likte dette innlegget"
       has_likes_title_only_you: "du likte dette innlegget"
       has_likes_title_you:
-        one: "du og 1 annen bruker likte dette innlegget"
+        one: "du og %{count} annen bruker likte dette innlegget"
         other: "du og {{count}} andre likte dette innlegget"
       errors:
         create: "Beklager, det oppstod en feil ved å publisere ditt innlegg. Prøv igjen."
@@ -1935,50 +1933,6 @@ nb_NO:
           notify_user: "Du sendte en melding til denne brukeren"
           bookmark: "Du bokmerket dette innlegget"
           like: "Du likte dette"
-        by_you_and_others:
-          off_topic:
-            one: "Du og 1 annen markerte dette som irrelevant"
-            other: "Du og {{count}} andre rapporterte dette som utenfor temaet"
-          spam:
-            one: "Du og 1 annen markerte dette som spam"
-            other: "Du og {{count}} andre rapporterte dette som spam"
-          inappropriate:
-            one: "Du og 1 annen markerte dette som upassende"
-            other: "Du og {{count}} andre rapporterte dette som upassende"
-          notify_moderators:
-            one: "Du og 1 annen markerte dette for moderering"
-            other: "Du og {{count}} andre rapporterte dette for moderering"
-          notify_user:
-            one: "Du og 1 annen bruker sendte en melding til denne brukeren"
-            other: "Du og {{count}} andre brukere har sendt en melding til denne brukeren"
-          bookmark:
-            one: "Du og 1 annen bokmerket dette innlegget"
-            other: "Du og {{count}} andre bokmerket dette innlegget"
-          like:
-            one: "Du og 1 annen likte dette"
-            other: "Du og {{count}} andre likte dette"
-        by_others:
-          off_topic:
-            one: "1 bruker markerte dette som irrelevant"
-            other: "{{count}} brukere rapporterte dette som irrelevant"
-          spam:
-            one: "1 bruker markerte dette som spam"
-            other: "{{count}} brukere rapporterte dette som spam"
-          inappropriate:
-            one: "1 bruker markerte dette som upassende"
-            other: "{{count}} brukere rapporterte dette som upassende"
-          notify_moderators:
-            one: "1 bruker markerte dette for moderering"
-            other: "{{count}} brukere rapporterte dette for moderering"
-          notify_user:
-            one: "1 person har sendt en melding til denne brukeren"
-            other: "{{count}} har sendt en melding til denne brukeren"
-          bookmark:
-            one: "1 bruker bokmerket dette innlegget"
-            other: "{{count}} brukere bokmerket dette innlegget"
-          like:
-            one: "1 bruker likte dette"
-            other: "{{count}} brukere likte dette"
       delete:
         confirm:
           one: "Er du sikker på at du ønsker å slette dette innlegget?"
@@ -2076,6 +2030,7 @@ nb_NO:
       default_top_period: "Forvalgt topp-periode:"
       allow_badges_label: "Tillat merker å bli tildelt i denne kategorien"
       edit_permissions: "Rediger tillatelser"
+      review_group_name: "gruppenavn"
       require_topic_approval: "Krev godkjennelse fra moderator for alle nye emner"
       require_reply_approval: "Krev godkjennelse fra moderator for alle nye svar"
       this_year: "dette året"
@@ -2167,7 +2122,7 @@ nb_NO:
       links_title: "Populære Lenker"
       links_shown: "vis flere lenker…"
       clicks:
-        one: "1 klikk"
+        one: "%{count} klikk"
         other: "%{count} klikk"
     post_links:
       about: "utvid flere lenker for dette innlegget"
@@ -2211,7 +2166,7 @@ nb_NO:
       other: "visninger"
     replies: "Svar"
     views_long:
-      one: "dette emnet er lest 1 gang"
+      one: "dette emnet er lest %{count} gang"
       other: "dette emnet er lest {{number}} ganger"
     activity: "Aktivitet"
     likes: "Likes"
@@ -2236,7 +2191,7 @@ nb_NO:
       latest:
         title: "Siste"
         title_with_count:
-          one: "Siste (1)"
+          one: "Siste (%{count})"
           other: "Siste ({{count}})"
         help: "emner med nylige innlegg"
       hot:
@@ -2255,20 +2210,20 @@ nb_NO:
       unread:
         title: "Uleste"
         title_with_count:
-          one: "Ulest (1)"
+          one: "Ulest (%{count})"
           other: "Ulest ({{count}})"
         help: "emner du følger eller overvåker for øyeblikket, med uleste innlegg"
         lower_title_with_count:
-          one: "1 ulest"
+          one: "%{count} ulest"
           other: "{{count}} uleste"
       new:
         lower_title_with_count:
-          one: "1 ny"
+          one: "%{count} ny"
           other: "{{count}} nye"
         lower_title: "ny"
         title: "Nye"
         title_with_count:
-          one: "Nye (1)"
+          one: "Nye (%{count})"
           other: "Nye ({{count}})"
         help: "emner opprettet de siste dagene"
       posted:
@@ -2280,7 +2235,7 @@ nb_NO:
       category:
         title: "{{categoryName}}"
         title_with_count:
-          one: "{{categoryName}} (1)"
+          one: "{{categoryName}} (%{count})"
           other: "{{categoryName}} ({{count}})"
         help: "siste emner i {{categoryName}}-kategorien"
       top:
@@ -2315,58 +2270,58 @@ nb_NO:
       title: "Tastatursnarveier"
       jump_to:
         title: "Hopp til"
-        home: "<b>g</b>, <b>h</b> Hjem"
-        latest: "<b>g</b>, <b>l</b> Siste"
-        new: "<b>g</b>, <b>n</b> Nye"
-        unread: "<b>g</b>, <b>u</b> Uleste"
-        categories: "<b>g</b>, <b>c</b> Kategorier"
-        top: "<b>g</b>, <b>t</b> Topp"
-        bookmarks: "<b>g</b>, <b>b</b> Bokmerker"
-        profile: "<b>g</b>, <b>p</b> Profil"
-        messages: "<b>g</b>, <b>m</b> Meldinger"
-        drafts: "<b>g</b>, <b>d</b> Utkast"
+        home: "%{shortcut} Hjem"
+        latest: "%{shortcut} Siste"
+        new: "%{shortcut} Nye"
+        unread: "%{shortcut} Uleste"
+        categories: "%{shortcut} Kategorier"
+        top: "%{shortcut} Topp"
+        bookmarks: "%{shortcut} Bokmerker"
+        profile: "%{shortcut} Profil"
+        messages: "%{shortcut} Meldinger"
+        drafts: "%{shortcut} Utkast"
       navigation:
         title: "Navigasjon"
-        jump: "<b>#</b> Gå til innlegg #"
-        back: "<b>u</b> Tilbake"
-        up_down: "<b>k</b>/<b>j</b> Flytt utvalg &uarr; &darr;"
-        open: "<b>o</b> eller <b>Enter</b> Åpne valgt emne"
-        next_prev: "<b>shift</b>+<b>j</b>/<b>shift</b>+<b>k</b> Neste/forrige del"
+        jump: "%{shortcut} Gå til innlegg #"
+        back: "%{shortcut} Tilbake"
+        up_down: "%{shortcut} Flytt utvalg &uarr; &darr;"
+        open: "%{shortcut} Åpne valgt emne"
+        next_prev: "%{shortcut} Neste/forrige del"
       application:
         title: "Applikasjon"
-        create: "<b>c</b> Opprett nytt emne"
-        notifications: "<b>n</b> Åpne varsler"
-        hamburger_menu: "<b>=</b> Åpne hamburgermeny"
-        user_profile_menu: "<b>p</b> Åpne brukermenyen"
-        show_incoming_updated_topics: "<b>.</b> Vis oppdaterte emner"
-        search: "<b>/</b> eller <b>Ctrl</b>+<b>Alt</b>+<b>f</b> Søk"
-        help: "<b>?</b> Åpne tastaturhjelp"
-        dismiss_new_posts: "<b>x</b>, <b>r</b> Forkast Nye/Innlegg"
-        dismiss_topics: "<b>x</b>, <b>t</b> Forkast Emner"
-        log_out: "<b>shift</b>+<b>z</b> <b>shift</b>+<b>z</b> Logg ut"
+        create: "%{shortcut} Opprett nytt emne"
+        notifications: "%{shortcut} Åpne varsler"
+        hamburger_menu: "%{shortcut} Åpne hamburgermeny"
+        user_profile_menu: "%{shortcut} Åpne brukermenyen"
+        show_incoming_updated_topics: "%{shortcut} Vis oppdaterte emner"
+        search: "%{shortcut} Søk"
+        help: "%{shortcut} Åpne tastaturhjelp"
+        dismiss_new_posts: "%{shortcut} Forkast Nye/Innlegg"
+        dismiss_topics: "%{shortcut} Forkast Emner"
+        log_out: "%{shortcut} Logg ut"
       composing:
         title: "Skriving"
-        return: "<b>shift</b>+<b>c</b> Gå tilbake til redigeringspanelet"
+        return: "%{shortcut} Gå tilbake til redigeringspanelet"
       actions:
         title: "Handlinger"
-        bookmark_topic: "<b>f</b> Legg til/fjern bokmerke for emne"
-        pin_unpin_topic: "<b>shift</b>+<b>p</b> Fest/fjern feste for emne"
-        share_topic: "<b>shift</b>+<b>s</b> Del emne"
-        share_post: "<b>s</b> Del innlegg"
-        reply_as_new_topic: "<b>t</b> Svar som lenket emne"
-        reply_topic: "<b>shift</b>+<b>r</b> Svar på emne"
-        reply_post: "<b>r</b> Svar på innlegg"
-        quote_post: "<b>q</b> Siter innlegg"
-        like: "<b>l</b> Lik innlegg"
-        flag: "<b>!</b> Rapporter innlegg"
-        bookmark: "<b>b</b> Bokmerk innlegg"
-        edit: "<b>e</b> Rediger innlegg"
-        delete: "<b>d</b> Slett innlegg"
-        mark_muted: "<b>m</b>, <b>m</b> Ignorer emne"
-        mark_regular: "<b>m</b>, <b>r</b> Vanlig (forvalgt) emne"
-        mark_tracking: "<b>m</b>, <b>t</b> Overvåk emne"
-        mark_watching: "<b>m</b>, <b>w</b> Følg emne"
-        print: "<b>ctrl</b>+<b>p</b> Skriv ut emne"
+        bookmark_topic: "%{shortcut} Legg til/fjern bokmerke for emne"
+        pin_unpin_topic: "%{shortcut} Fest/fjern feste for emne"
+        share_topic: "%{shortcut} Del emne"
+        share_post: "%{shortcut} Del innlegg"
+        reply_as_new_topic: "%{shortcut} Svar som lenket emne"
+        reply_topic: "%{shortcut} Svar på emne"
+        reply_post: "%{shortcut} Svar på innlegg"
+        quote_post: "%{shortcut} Siter innlegg"
+        like: "%{shortcut} Lik innlegg"
+        flag: "%{shortcut} Rapporter innlegg"
+        bookmark: "%{shortcut} Bokmerk innlegg"
+        edit: "%{shortcut} Rediger innlegg"
+        delete: "%{shortcut} Slett innlegg"
+        mark_muted: "%{shortcut} Ignorer emne"
+        mark_regular: "%{shortcut} Vanlig (forvalgt) emne"
+        mark_tracking: "%{shortcut} Overvåk emne"
+        mark_watching: "%{shortcut} Følg emne"
+        print: "%{shortcut} Skriv ut emne"
     badges:
       earned_n_times:
         one: "Har gjort seg fortjent til dette merket"
@@ -2377,10 +2332,10 @@ nb_NO:
       allow_title: "Du kan bruke dette merket som tittel"
       multiple_grant: "Du kan oppnå dette flere ganger"
       badge_count:
-        one: "1 merke"
+        one: "%{count} merke"
         other: "%{count} merker"
       more_badges:
-        one: "+1 mer"
+        one: "+%{count} mer"
         other: "+%{count} Flere"
       granted:
         one: "ett tildelt"
@@ -2506,7 +2461,6 @@ nb_NO:
         title: "Liste over tilgjengelige rapporter"
       dashboard:
         title: "Dashbord"
-        last_updated: "Dashboardet var sist oppdatert:"
         version: "Versjon"
         up_to_date: "Du har den seneste versjonen!"
         critical_available: "En kritisk oppdatering er tilgjengelig."
@@ -2570,6 +2524,11 @@ nb_NO:
           trending_search:
             more: '<a href="%{basePath}/admin/logs/search_logs">Logg for søk</a>'
             disabled: 'Rapporten for trending av søk er deaktivert. Aktiver <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">logging av søkeord</a> for å samle inn data.'
+          filters:
+            group:
+              label: Gruppe
+            category:
+              label: Kategori
       commits:
         latest_changes: "Siste endringer: Oppdater ofte!"
         by: "av"
@@ -2714,7 +2673,7 @@ nb_NO:
             one: "Det finnes en ny hendelse."
             other: "Det finnes {{count}} nye hendelser."
           completed_in:
-            one: "Ferdig på 1 sekund."
+            one: "Ferdig på %{count} sekund."
             other: "Ferdig på {{count}} sekunder."
           request: "Forespørsel"
           response: "Svar"
@@ -2821,7 +2780,6 @@ nb_NO:
         new: "Ny"
         new_style: "Ny stil"
         delete: "Slett"
-        delete_confirm: "Slett denne drakten?"
         color: "Farge"
         opacity: "Opacity"
         copy: "Kopier"
@@ -3312,7 +3270,7 @@ nb_NO:
           one: "Kan ikke slette alle innlegg. Noen innlegg er eldre enn %{count} dag gammel. (Innstillingen delete_user_max_post_age.)"
           other: "Kan ikke slette alle innlegg. Noen innlegg er eldre enn %{count} dager gamle. (Innstillingen delete_user_max_post_age.)"
         cant_delete_all_too_many_posts:
-          one: "Kan ikke slette alle innlegg fordi brukeren har mer enn 1 innlegg. (delete_all_posts_max)"
+          one: "Kan ikke slette alle innlegg fordi brukeren har mer enn %{count} innlegg. (delete_all_posts_max)"
           other: "Kan ikke slette alle innlegg fordi brukeren har mer enn %{count} innlegg. (delete_all_posts_max)"
         delete_and_block: "Slett og <b>blokker</b> denne e-post- og IP-adressen"
         delete_dont_block: "Bare slett"

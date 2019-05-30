@@ -65,15 +65,6 @@ class CookedPostProcessor
     BadgeGranter.grant(Badge.find(Badge::FirstReplyByEmail), @post.user, post_id: @post.id) if @post.is_reply_by_email?
   end
 
-  def post_process_images
-    extract_images.each do |img|
-      unless add_image_placeholder!(img)
-        limit_size!(img)
-        convert_to_link!(img)
-      end
-    end
-  end
-
   def post_process_quotes
     @doc.css("aside.quote").each do |q|
       post_number = q['data-post']
@@ -106,10 +97,15 @@ class CookedPostProcessor
 
     return if previous.blank?
 
-    previous_text = Nokogiri::HTML::fragment(previous).text.strip
-    quoted_text = @doc.css("aside.quote:first-child blockquote").first&.text&.strip
+    # remove click counters
+    previous_doc = Nokogiri::HTML::fragment(previous)
+    previous_doc.css("span.clicks").remove
 
-    return if previous_text != quoted_text
+    previous_text = previous_doc.text.strip
+
+    quoted_text = @doc.css("aside.quote:first-child blockquote").first&.text&.strip || ""
+
+    return if previous_text.gsub(/(\s){2,}/, '\1') != quoted_text.gsub(/(\s){2,}/, '\1')
 
     quote_regexp = /\A\s*\[quote.+?\[\/quote\]/im
     quoteless_raw = @post.raw.sub(quote_regexp, "").strip
@@ -682,6 +678,15 @@ class CookedPostProcessor
   end
 
   private
+
+  def post_process_images
+    extract_images.each do |img|
+      unless add_image_placeholder!(img)
+        limit_size!(img)
+        convert_to_link!(img)
+      end
+    end
+  end
 
   def process_inline_onebox(element)
     inline_onebox = InlineOneboxer.lookup(

@@ -43,67 +43,67 @@ hy:
       tiny:
         half_a_minute: "< 1ր"
         less_than_x_seconds:
-          one: "< 1վրկ"
+          one: "< %{count}վրկ"
           other: "< %{count}վ"
         x_seconds:
-          one: "1վրկ"
+          one: "%{count}վրկ"
           other: "%{count}վ"
         less_than_x_minutes:
-          one: "< 1ր"
+          one: "< %{count}ր"
           other: "< %{count}ր"
         x_minutes:
-          one: "1ր"
+          one: "%{count}ր"
           other: "%{count}ր"
         about_x_hours:
-          one: "1ժ"
+          one: "%{count}ժ"
           other: "%{count}ժ"
         x_days:
-          one: "1օր"
+          one: "%{count}օր"
           other: "%{count}օր"
         x_months:
-          one: "1ամիս"
+          one: "%{count}ամիս"
           other: "%{count}ամիս"
         about_x_years:
-          one: "1տարի"
+          one: "%{count}տարի"
           other: "%{count}տ"
         over_x_years:
-          one: "> 1տարի"
+          one: "> %{count}տարի"
           other: "> %{count}տ"
         almost_x_years:
-          one: "1տարի"
+          one: "%{count}տարի"
           other: "%{count}տ"
         date_month: "MMM D"
         date_year: "MMM 'YY"
       medium:
         x_minutes:
-          one: "1 րոպե"
+          one: "%{count} րոպե"
           other: "%{count} րոպե"
         x_hours:
-          one: "1 ժամ"
+          one: "%{count} ժամ"
           other: "%{count} ժամ"
         x_days:
-          one: "1 օր"
+          one: "%{count} օր"
           other: "%{count} օր"
         date_year: "MMM D, 'YY"
       medium_with_ago:
         x_minutes:
-          one: "1 րոպե առաջ"
+          one: "%{count} րոպե առաջ"
           other: "%{count} րոպե առաջ"
         x_hours:
-          one: "1 ժամ առաջ"
+          one: "%{count} ժամ առաջ"
           other: "%{count} ժամ առաջ"
         x_days:
-          one: "1 օր առաջ"
+          one: "%{count} օր առաջ"
           other: "%{count} օր առաջ"
       later:
         x_days:
-          one: "1 օր հետո"
+          one: "%{count} օր հետո"
           other: "%{count} օր անց"
         x_months:
-          one: "1 ամիս հետո"
+          one: "%{count} ամիս հետո"
           other: "%{count} ամիս անց"
         x_years:
-          one: "1 տարի հետո"
+          one: "%{count} տարի հետո"
           other: "%{count} տարի անց"
       previous_month: "Նախորդ Ամիս"
       next_month: "Հաջորդ Ամիս"
@@ -310,7 +310,6 @@ hy:
         save_changes: "Պահպանել Փոփոխությունները"
         title: "Կարգավորումներ"
       moderation_history: "Մոդերացիայի Պատմությունը"
-      title: "Կարիք ունի Վերանայման"
       topic: "Թեմա՝"
       user:
         username: "Օգտանուն"
@@ -327,6 +326,9 @@ hy:
         type:
           title: "Տիպ՝ "
         refresh: "Թարմացնել"
+        priority:
+          low: "Բարձր"
+          high: "Ցածր"
       scores:
         score: "Քանակ"
         date: "Ամսաթիվ"
@@ -377,7 +379,7 @@ hy:
       posts_read: "Կարդացած"
       posts_read_long: "Կարդացած Գրառում"
       total_rows:
-        one: "1 օգտատեր"
+        one: "%{count} օգտատեր"
         other: "%{count} օգտատեր"
     group_histories:
       actions:
@@ -552,7 +554,7 @@ hy:
       toggle_ordering: "փոխանջատել դասավորման կառավորումը"
       subcategories: "Ենթակատեգորիաներ"
       topic_sentence:
-        one: "1 թեմա"
+        one: "%{count} թեմա"
         other: "%{count} թեմա"
       topic_stat_sentence_week:
         one: "%{count} նոր թեմա անցյալ շաբաթվա ընթացքում"
@@ -594,6 +596,7 @@ hy:
       private_message: "Հաղորդագրություն"
       private_messages: "Հաղորդագրություններ"
       user_notifications:
+        ignore_duration_username: "Օգտանուն"
         ignore_duration_save: "Անտեսել"
         ignore_duration_time_frame_required: "Խնդրում ենք ընտրել ժամանակահատված"
         ignore_option: "Անտեսված"
@@ -1059,7 +1062,7 @@ hy:
       reached: "<b>%{relativeAge}</b> – <a href='%{url}' target='_blank'>%{rate}</a> հասել է կայքի %{siteSettingRate} կարգավորման սահմանին:"
       exceeded: "<b>%{relativeAge}</b> – <a href='%{url}' target='_blank'>%{rate}</a> գերազանցում է կայքի %{siteSettingRate} կարգավորման սահմանը:"
       rate:
-        one: "1 սխալ/%{duration}"
+        one: "%{count} սխալ/%{duration}"
         other: "%{count} սխալ/%{duration}"
     learn_more: "իմանալ ավելին..."
     all_time: "ընդհանուրը"
@@ -1290,7 +1293,7 @@ hy:
       edit_conflict: "խմբագրել հակասությունը"
       group_mentioned_limit: "<b>Նախազգուշացում!</b> Դուք հիշատակել եք <a href='{{group_link}}'>{{group}}</a> խումբը, սակայն այս խումբն ունի ավելի շատ անդամ, քան ադմինիստրատորի կողմից կարգավորված հիշատակումների {{max}} սահմանային թիվը: Ոչ ոք ծանուցում չի ստանա:"
       group_mentioned:
-        one: "Նշելով {{group}} ՝ Դուք ծանուցում եք <a href='{{group_link}}'>1 person</a> . Դուք համոզվա՞ծ եք:"
+        one: "Նշելով {{group}} ՝ Դուք ծանուցում եք <a href='{{group_link}}'>%{count} person</a> . Դուք համոզվա՞ծ եք:"
         other: "Հիշատակելով {{group}}-ը՝ Դուք ծանուցում կուղարկեք <a href='{{group_link}}'>{{count}} օգտագիրոջ</a>: Համոզվա՞ծ եք:"
       cannot_see_mention:
         category: "Դուք հիշատակել եք {{username}}-ին, բայց նա ծանուցում չի ստանա, քանի որ այս կատեգորիան նրան հասանելի չէ: Դուք պետք է ավելացնեք նրան որևէ խմբում, որը թուլտվություն ունի այս կատեգորիային:"
@@ -1326,7 +1329,6 @@ hy:
       remove_featured_link: "Հեռացնել հղումը թեմայից:"
       reply_placeholder: "Գրեք այստեղ: Օգտագործեք Markdown, BBCode, կամ HTML ֆորմատավորման համար: Քաշեք կամ տեղադրեք նկարներ:"
       reply_placeholder_no_images: "Գրեք այստեղ: Օգտագործեք Markdown, BBCode, կամ HTML ֆորմատավորման համար:"
-      reply_placeholder_choose_category: "Մինչ այստեղ գրերը՝ Դուք պետք է ընտրեք կատեգորիա:"
       view_new_post: "Դիտել Ձեր նոր գրառումը:"
       saving: "Պահպանվում է"
       saved: "Պահված է!"
@@ -1400,10 +1402,10 @@ hy:
     notifications:
       tooltip:
         regular:
-          one: "1 չդիտված ծանուցում"
+          one: "%{count} չդիտված ծանուցում"
           other: "{{count}} չդիտված ծանուցում"
         message:
-          one: "1 չկարդացած հաղորդագրություն"
+          one: "%{count} չկարդացած հաղորդագրություն"
           other: "{{count}} չկարդացած հաղորդագրություն"
       title: "@անունի հիշատակումների, Ձեր գրառումների և թեմաների պատասխանների, հաղորդագրությունների և այլնի մասին ծանուցումներ "
       none: "Սյս պահին հնարավոր չէ բեռնել ծանուցումները"
@@ -1418,7 +1420,7 @@ hy:
       liked: "<span>{{username}}</span> {{description}}"
       liked_2: "<span>{{username}}, {{username2}}</span> {{description}}"
       liked_many:
-        one: "<span>{{username}}, {{username2}} and 1 other</span> {{description}}"
+        one: "<span>{{username}}, {{username2}} and %{count} other</span> {{description}}"
         other: "<span>{{username}}, {{username2}} և ևս {{count}}-ը</span> {{description}}"
       liked_consolidated_description:
         one: "հավանել է Ձեր  {{count}} գրառում"
@@ -1473,7 +1475,7 @@ hy:
       clear_all: "Մաքրել Բոլորը"
       too_short: "Ձեր որոնման տեքստը շատ կարճ է:"
       result_count:
-        one: "<span>1 result for</span><span class='term'>{{term}}</span>"
+        one: "<span>%{count} result for</span><span class='term'>{{term}}</span>"
         other: "<span>{{count}}{{plus}} արդյունք</span><span class='term'>{{term}}</span>-ի համար"
       title: "որոնել թեմաներ, գրառումներ, օգտատերեր կամ կատեգորիաներ"
       full_page_title: "որոնել թեմաներ կամ գրառումներ"
@@ -1565,7 +1567,7 @@ hy:
         notification_level: "Ծանուցումներ"
         choose_new_category: "Ընտրել նոր կատեգորիա թեմաների համար՝"
         selected:
-          one: "Դուք ընտրել եք <b>1</b> թեմա:"
+          one: "Դուք ընտրել եք <b>%{count}</b> թեմա:"
           other: "Դուք ընտրել եք <b>{{count}}</b> թեմա:"
         change_tags: "Փոխարինել Թեգերը"
         append_tags: "Ավելացնել Թեգեր"
@@ -1599,7 +1601,7 @@ hy:
         search: "Որոնման արդյունքներ այլևս չկան:"
     topic:
       filter_to:
-        one: "1 հրապարակում թեմայում"
+        one: "%{count} հրապարակում թեմայում"
         other: "{{count}} գրառում թեմայում"
       create: "Նոր Թեմա"
       create_long: "Ստեղծել Նոր Թեմա"
@@ -1618,10 +1620,10 @@ hy:
       new: "նոր թեմա"
       unread: "չկարդացած"
       new_topics:
-        one: "1 նոր թեմա"
+        one: "%{count} նոր թեմա"
         other: "{{count}} նոր թեմա"
       unread_topics:
-        one: "1 չկարդացած թեմա"
+        one: "%{count} չկարդացած թեմա"
         other: "{{count}} չկարդացած թեմա"
       title: "Թեմա"
       invalid_access:
@@ -1635,16 +1637,16 @@ hy:
         title: "Թեման չի գտնվել"
         description: "Ներողություն, մենք չկարողացանք գտնել այդ թեման: Միգուցե՞ այն հեռացվել է մոդերատորի կողմից:"
       total_unread_posts:
-        one: "Դուք ունեք 1 չկարդացած հրապարակում այս թեմայում"
+        one: "Դուք ունեք %{count} չկարդացած հրապարակում այս թեմայում"
         other: "Այս թեմայում Դուք ունեք {{count}} չկարդացած գրառում"
       unread_posts:
-        one: "Դուք ունեք 1 չկարդացած հին հրապարակում այս թեմայում"
+        one: "Դուք ունեք %{count} չկարդացած հին հրապարակում այս թեմայում"
         other: "Այս թեմայում Դուք ունեք {{count}} հին չկարդացած գրառում"
       new_posts:
-        one: "Այս թեմայում կա 1 նոր հրապարակում՝ Ձեր վերջին կարդալուց հետո:"
+        one: "Այս թեմայում կա %{count} նոր հրապարակում՝ Ձեր վերջին կարդալուց հետո:"
         other: "Ձեր վերջին կարդալուց հետո այս թեմայում կա {{count}} նոր գրառում"
       likes:
-        one: "Այս թեմայում կա 1 հավանում:"
+        one: "Այս թեմայում կա %{count} հավանում:"
         other: "Այս թեմայում կա {{count}} հավանում"
       back_to_list: "Վերադառնալ Թեմաների Ցանկին"
       options: "Թեմաների Տարբերակները"
@@ -1713,7 +1715,7 @@ hy:
         auto_reminder: "Ձեզ կհիշեցվի այս թեմայի մասին %{timeLeft}:"
       auto_close_title: "Ավտոմատ Փակման Կարգավորումները"
       auto_close_immediate:
-        one: "Այս թեմայի վերջին հրապարակումը արդեն 1 ժամ վաղեմութոյւն ունի, հետևաբար՝ թեման անմիջապես կփակվի:"
+        one: "Այս թեմայի վերջին հրապարակումը արդեն %{count} ժամ վաղեմութոյւն ունի, հետևաբար՝ թեման անմիջապես կփակվի:"
         other: "Այս թեմայի վերջին գրառումն արդեն %{count} ժամվա վաղեմություն ունի, հետևաբար՝ թեման անմիջապես կփակվի:"
       timeline:
         back: "Վերադառնալ"
@@ -1727,7 +1729,6 @@ hy:
         jump_bottom: "ցատկել դեպի վերջին գրառում"
         jump_prompt: "ցատկել դեպի..."
         jump_prompt_of: "%{count} գրառումից"
-        jump_prompt_long: "Դեպի ո՞ր գրառումն եք ցանկանում տեղափոխվել:"
         jump_bottom_with_number: "ցատկել դեպի %{post_number}գրառումը"
         jump_prompt_to_date: "դեպի ամսաթիվ"
         jump_prompt_or: "կամ"
@@ -1826,7 +1827,7 @@ hy:
         pin_validation: "Ամսաթիվը պարտադիր է այս թեման ամրակցելու համար:"
         not_pinned: "{{categoryLink}} կատեգորիայում ոչ մի թեմա ամրակցված չէ:"
         already_pinned:
-          one: "Ներկայումս {{categoryLink}}կատեգորիայում ամրակցված Թեմաներ՝ <strong class='badge badge-notification unread'>1</strong>"
+          one: "Ներկայումս {{categoryLink}}կատեգորիայում ամրակցված Թեմաներ՝ <strong class='badge badge-notification unread'>%{count}</strong>"
           other: "Ներկայումս {{categoryLink}} կատեգորիայում ամրակցված թեմաները՝ <strong class='badge badge-notification unread'>{{count}}</strong>"
         pin_globally: "Այս թեման տեղադրել բոլոր թեմաների ցանկերի վերում, մինչև"
         confirm_pin_globally: "Դուք արդեն ունեք գլոբալ կերպով ամրակցված {{count}}թեմա: Չափից շատ ամրակցված թեմաները կարող են անհարմարություն պատճառել նոր և անանուն օգտատերերին: Դուք համոզվա՞ծ եք, որ ցանկանում եք գլոբալ կերպով ամրակցել ևս մեկ թեմա:"
@@ -1835,7 +1836,7 @@ hy:
         global_pin_note: "Օգտատերերը կարող են ապակցել թեման անհատապես իրենց համար:"
         not_pinned_globally: "Գլոբալ կերպով ամրակցված թեմաներ չկան:"
         already_pinned_globally:
-          one: "Ներկայումս գլոբալ կերպով ամրակցված թեմաներ՝ <strong class='badge badge-notification unread'>1</strong>"
+          one: "Ներկայումս գլոբալ կերպով ամրակցված թեմաներ՝ <strong class='badge badge-notification unread'>%{count}</strong>"
           other: "Ներկայումս գլոբալ կերպով ամրակցված թեմաները՝<strong class='badge badge-notification unread'>{{count}}</strong>"
         make_banner: "Այս թեման դարձնել բաններ, որը հայտնվում է բոլոր էջերի վերևում:"
         remove_banner: "Հանել բանները, որը հայտնվում է բոլոր էջերի վերևում:"
@@ -1873,7 +1874,7 @@ hy:
       login_reply: "Պատասխանելու համար Մուտք Գործեք"
       filters:
         n_posts:
-          one: "1 հրապարակում"
+          one: "%{count} հրապարակում"
           other: "{{count}} գրառում"
         cancel: "Հանել ֆիլտրը"
       move_to:
@@ -1952,7 +1953,7 @@ hy:
         select_all: ընտրել բոլորը
         deselect_all: հետընտրել բոլորը
         description:
-          one: 'Դուք ընտրել եք <b>1</b> հրապարակում:'
+          one: 'Դուք ընտրել եք <b>%{count}</b> հրապարակում:'
           other: "Դուք ընտրել եք <b>{{count}}</b> գրառում:"
     post:
       quote_reply: "Մեջբերել"
@@ -1972,7 +1973,7 @@ hy:
       expand_collapse: "ընդլայնել/կրճատել"
       locked: "անձնակազմի որևէ ներկայացուցիչ արգելափակել է այս գրառման խմբագրումը"
       gap:
-        one: "դիտել 1 թաքցրած պատասխան"
+        one: "դիտել %{count} թաքցրած պատասխան"
         other: "դիտել {{count}} թաքցրած պատասխանները"
       notice:
         new_user: "Առաջին անգամն է, որ {{user}} -ը գրառում է կատարել — եկեք ողջունենք նրան մեր համայնքում!"
@@ -1982,11 +1983,11 @@ hy:
         one: "{{count}} պատասխան"
         other: "{{count}} Պատասխան"
       has_likes_title:
-        one: "1 անձ հավանել է այս հրապարակումը"
+        one: "%{count} անձ հավանել է այս հրապարակումը"
         other: "{{count}} մարդ հավանել է այս գրառումը"
       has_likes_title_only_you: "Դուք հավանել եք այս գրառումը"
       has_likes_title_you:
-        one: "Դուք և 1 այլ անձ հավանել եք այս հրապարակումը"
+        one: "Դուք և %{count} այլ անձ հավանել եք այս հրապարակումը"
         other: "Դուք և {{count}} հոգի հավանել են այս գրառումը"
       errors:
         create: "Ներողություն, Ձեր գրառումը ստեղծելիս տեղի է ունեցել սխալ: Խնդրում ենք կրկին փորձել:"
@@ -2027,10 +2028,10 @@ hy:
         delete_replies:
           confirm: "Դուք ցանկանո՞ւմ եք ջնջել նաև այս գրառման պատասխանները:"
           direct_replies:
-            one: "Այո, և 1 ուղղակի պատասխան"
+            one: "Այո, և %{count} ուղղակի պատասխան"
             other: "Այո, և {{count}} ուղղակի պատասխանները"
           all_replies:
-            one: "Այո, և 1 պատասխանը"
+            one: "Այո, և %{count} պատասխանը"
             other: "Այո, և բոլոր {{count}} պատասխանները"
           just_the_post: "Ոչ, միայն այս գրառումը"
         admin: "գրառման ադմինի գործողություններ"
@@ -2079,50 +2080,6 @@ hy:
           notify_user: "Դուք ուղարկել եք հաղորդագրություն այս օգտատիրոջը"
           bookmark: "Դուք էջանշել եք այս գրառումը"
           like: "Դուք հավանել եք սա"
-        by_you_and_others:
-          off_topic:
-            one: "Դուք և 1 այլ անձ դրոշակավորել եք սա որպես թեմայից դուրս"
-            other: "Դուք և {{count}} հոգի դրոշակավորել են սա որպես թեմայից դուրս"
-          spam:
-            one: "Դուք և 1 այլ անձ դրոշակավորել եք սա որպես սպամ"
-            other: "Դուք և  {{count}} հոգի դրոշակավորել են սա որպես սպամ"
-          inappropriate:
-            one: "Դուք և 1 այլ անձ դրոշակավորել եք սա որպես անհամապատասխան"
-            other: "Դուք և {{count}} հոգի դրոշակավորել են սա որպես անհամապատասխան"
-          notify_moderators:
-            one: "Դուք և 1 այլ անձ դրոշակավորել եք սա մոդերացիայի համար"
-            other: "Դուք և {{count}} հոգի դրոշակավորել են սա մոդերացիայի համար"
-          notify_user:
-            one: "Դուք և 1 այլ անձ ուղարկել եք հաղորդագրություն այս օգտատիրոջը"
-            other: "Դուք և {{count}} հոգի հաղորդագրություն  են ուղարկել այս օգտատիրոջը"
-          bookmark:
-            one: "Դուք և 1 այլ անձինք նշել եք այս հրապարակումը"
-            other: "Դուք և ևս {{count}} հոգի էջանշել եք այս գրառումը"
-          like:
-            one: "Դուք և 1 այլ անձ հավանել եք սա"
-            other: "Դուք և {{count}} հոգի հավանել են սա"
-        by_others:
-          off_topic:
-            one: "1 մարդ դրոշակավորել է սա որպես թեմայից դուրս"
-            other: "{{count}} հոգի դրոշակավորել է սա որպես թեմայից դուրս"
-          spam:
-            one: "1 մարդ դրոշակավորել է սա որպես spam"
-            other: "{{count}} հոգի դրոշակավորել է սա որպես սպամ"
-          inappropriate:
-            one: "1 մարդ դրոշակավորել է սա որպես անհամապատասխան"
-            other: "{{count}} հոգի դրոշակավորել է սա որպես անհամապատասխան"
-          notify_moderators:
-            one: "1 մարդ դրոշակավորել է սա մոդերացիայի համար"
-            other: "{{count}} հոգի դրոշակավորել է սա մոդերացիայի համար"
-          notify_user:
-            one: "1 մարդ ուղարկել է հաղոդրագրություն այս օգտատիրոջը"
-            other: "{{count}} հոգի հաղորդագրություն են ուղարկել այս օգտատիրոջը"
-          bookmark:
-            one: "1 մարդ նշել է այս հրապարակումը"
-            other: "{{count}} հոգի էջանշել է այս գրառումը"
-          like:
-            one: "1 մարդ հավանում է սա"
-            other: "{{count}} հովի հավանում է սա"
       delete:
         confirm:
           one: "Դուք համոզվա՞ծ եք, որ ցանկանում եք ջնջել այդ հրապարակումը:"
@@ -2225,6 +2182,7 @@ hy:
       default_top_period: "Լռելյայն թոփ ժամանակահատվածը՝"
       allow_badges_label: "Այս կատեգորիայում թույլ տալ կրծքանշանների շնորհումը"
       edit_permissions: "Խմբագրել Թույլտվությունները"
+      review_group_name: "խմբի անունը"
       require_topic_approval: "Բոլոր նոր թեմաների համար պահանջել մոդերատորի հաստատումը"
       require_reply_approval: "Բոլոր նոր պատասխանների համար պահանջել մոդերատորի հաստատումը "
       this_year: "այս տարի"
@@ -2304,13 +2262,13 @@ hy:
       custom_placeholder_notify_moderators: "Տեղեկացրեք մեզ հատկապես, թե ինչի մասին եք Դուք մտահոգված, և տրամադրեք համապատասխան հղումներ և օրինակներ, եթե հնարավոր է:"
       custom_message:
         at_least:
-          one: "մուտքագրեք առնվազն 1 սիմվոլ"
+          one: "մուտքագրեք առնվազն %{count} սիմվոլ"
           other: "մուտքագրեք առնվազն {{count}} սիմվոլ"
         more:
-          one: "1 ևս..."
+          one: "%{count} ևս..."
           other: "ևս {{count}} շարունակելու համար..."
         left:
-          one: "1-ը մնում է"
+          one: "%{count}-ը մնում է"
           other: "{{count}} հատ է մնացել"
     flagging_topic:
       title: "Շնորհակալ ենք, որ օգնում եք պահել մեր համայնքը քաղաքակիրթ:"
@@ -2322,12 +2280,12 @@ hy:
       links_title: "Տարածված Հղումներ"
       links_shown: "ցուցադրել ավելի շատ հղումներ..."
       clicks:
-        one: "1 սեղմում"
+        one: "%{count} սեղմում"
         other: "%{count} սեղմում"
     post_links:
       about: "Ցուցադրել ավելի շատ հղումներ այս գրառման համար"
       title:
-        one: "ևս 1"
+        one: "ևս %{count}"
         other: "ևս %{count}"
     topic_statuses:
       warning:
@@ -2366,7 +2324,7 @@ hy:
       other: "դիտում"
     replies: "Պատասխան"
     views_long:
-      one: "այս թեման դիտվել է 1 անգամ"
+      one: "այս թեման դիտվել է %{count} անգամ"
       other: "այս թեման դիտվել է {{number}} անգամ"
     activity: "Ակտիվություն"
     likes: "Հավանում"
@@ -2410,20 +2368,20 @@ hy:
       unread:
         title: "Չկարդացած"
         title_with_count:
-          one: "Չկարդացած (1)"
+          one: "Չկարդացած (%{count})"
           other: "Չկարդացած ({{count}})"
         help: "չկարդացած գրառումներով թեմաները, որոնց Դուք այժմ դիտում եք կամ հետևում եք"
         lower_title_with_count:
-          one: "1 չկարդացած"
+          one: "%{count} չկարդացած"
           other: "{{count}} չկարդացած"
       new:
         lower_title_with_count:
-          one: "1 նոր"
+          one: "%{count} նոր"
           other: "{{count}} նոր"
         lower_title: "նոր"
         title: "Նոր"
         title_with_count:
-          one: "Նոր (1)"
+          one: "Նոր (%{count})"
           other: "Նոր ({{count}})"
         help: "վերջին մի քանի օրվա ընթացքում ստեղծված թեմաներ"
       posted:
@@ -2435,7 +2393,7 @@ hy:
       category:
         title: "{{categoryName}}"
         title_with_count:
-          one: "{{categoryName}} (1)"
+          one: "{{categoryName}} (%{count})"
           other: "{{categoryName}} ({{count}})"
         help: "{{categoryName}} կատեգորիայի վերջին թեմաները"
       top:
@@ -2471,62 +2429,62 @@ hy:
       title: "Ստեղնաշարի Համադրություններ"
       jump_to:
         title: "Ցատկել Դեպի"
-        home: "<b>g</b>, <b>h</b> Գլխավոր էջ"
-        latest: "<b>g</b>, <b>l</b> Վերջինները"
-        new: "<b>g</b>, <b>n</b> Նոր"
-        unread: "<b>g</b>, <b>u</b> Չկարդացած"
-        categories: "<b>g</b>, <b>c</b> Կատեգորիաներ"
-        top: "<b>g</b>, <b>t</b> Թոփ"
-        bookmarks: "<b>g</b>, <b>b</b> Էջանշաններ"
-        profile: "<b>g</b>, <b>p</b> Պրոֆիլ"
-        messages: "<b>g</b>, <b>m</b> Հաղորդագրություններ"
-        drafts: "<b>g</b>, <b>d</b> Սևագրեր"
+        home: "%{shortcut} Գլխավոր էջ"
+        latest: "%{shortcut} Վերջինները"
+        new: "%{shortcut} Նոր"
+        unread: "%{shortcut} Չկարդացած"
+        categories: "%{shortcut} Կատեգորիաներ"
+        top: "%{shortcut} Թոփ"
+        bookmarks: "%{shortcut} Էջանշաններ"
+        profile: "%{shortcut} Պրոֆիլ"
+        messages: "%{shortcut} Հաղորդագրություններ"
+        drafts: "%{shortcut} Սևագրեր"
       navigation:
         title: "Նավիգացիա"
-        jump: "<b>#</b> Գնալ դեպի գրառում # "
-        back: "<b>u</b> Ետ"
-        up_down: "<b>k</b>/<b>j</b> Տեղաշարժել նշվածը &uarr; &darr;"
-        open: "<b>o</b> կամ <b>Enter</b> Բացել ընտրված թեման"
-        next_prev: "<b>shift</b>+<b>j</b>/<b>shift</b>+<b>k</b> Հաջորդ/նախորդ բաժին"
+        jump: "%{shortcut} Գնալ դեպի գրառում # "
+        back: "%{shortcut} Ետ"
+        up_down: "%{shortcut} Տեղաշարժել նշվածը &uarr; &darr;"
+        open: "%{shortcut} Բացել ընտրված թեման"
+        next_prev: "%{shortcut} Հաջորդ/նախորդ բաժին"
       application:
         title: "Հավելված"
-        create: "<b>c</b> Ստեղծել նոր թեմա"
-        notifications: "<b>n</b> Բացել ծանուցումները"
-        hamburger_menu: "<b>=</b> Բացել համբուրգեր մենյուն"
-        user_profile_menu: "<b>p</b> Բացել օգտատիրոջ մենյուն"
-        show_incoming_updated_topics: "<b>.</b> Ցուցադրել թարմացված թեմաները"
-        search: "<b>/</b> կամ <b>ctrl</b>+<b>alt</b>+<b>f</b> Որոնել"
-        help: "<b>?</b> Բացել ստեղնաշարի օգնականը"
-        dismiss_new_posts: "<b>x</b>, <b>r</b> Չեղարկել Նոր/Գրառումները"
-        dismiss_topics: "<b>x</b>, <b>t</b> Չեղարկել Թեմաները"
-        log_out: "<b>shift</b>+<b>z</b> <b>shift</b>+<b>z</b> Ելք"
+        create: "%{shortcut} Ստեղծել նոր թեմա"
+        notifications: "%{shortcut} Բացել ծանուցումները"
+        hamburger_menu: "%{shortcut} Բացել համբուրգեր մենյուն"
+        user_profile_menu: "%{shortcut} Բացել օգտատիրոջ մենյուն"
+        show_incoming_updated_topics: "%{shortcut} Ցուցադրել թարմացված թեմաները"
+        search: "%{shortcut} Որոնել"
+        help: "%{shortcut} Բացել ստեղնաշարի օգնականը"
+        dismiss_new_posts: "%{shortcut} Չեղարկել Նոր/Գրառումները"
+        dismiss_topics: "%{shortcut} Չեղարկել Թեմաները"
+        log_out: "%{shortcut} Ելք"
       composing:
         title: "Կազմում"
-        return: "<b>shift</b>+<b>c</b> Վերադառնալ կոմպոզերին"
-        fullscreen: "<b>shift</b>+<b>F11</b> Ամբողջական էկրանով կոմպոզեր"
+        return: "%{shortcut} Վերադառնալ կոմպոզերին"
+        fullscreen: "%{shortcut} Ամբողջական էկրանով կոմպոզեր"
       actions:
         title: "Գործողություններ"
-        bookmark_topic: "<b>f</b> Փոխանջատել թեմայի էջանշանը"
-        pin_unpin_topic: "<b>shift</b>+<b>p</b> Ամրակցել/Ապակցել թեման"
-        share_topic: "<b>shift</b>+<b>s</b> Կիսվել թեմայով"
-        share_post: "<b>s</b> Կիսվել գրառմամբ"
-        reply_as_new_topic: "<b>t</b> Պատասխանել որպես կապված թեմա"
-        reply_topic: "<b>shift</b>+<b>r</b> Պատասխանել թեմային"
-        reply_post: "<b>r</b> Պատասխանել գրառմանը"
-        quote_post: "<b>q</b> Մեջբերել գրառումը"
-        like: "<b>l</b> Հավանել գրառումը"
-        flag: "<b>!</b> Դրոշակավորել գրառումը"
-        bookmark: "<b>b</b> Էջանշել գրառումը"
-        edit: "<b>e</b> Խմբագրել գրառումը"
-        delete: "<b>d</b> Ջնջել գրառումը"
-        mark_muted: "<b>m</b>, <b>m</b> Խլացնել թեման"
-        mark_regular: "<b>m</b>, <b>r</b> Սովորական (լռելյայն) թեմա"
-        mark_tracking: "<b>m</b>, <b>t</b> Հետևել թեմային"
-        mark_watching: "<b>m</b>, <b>w</b> Դիտել թեման"
-        print: "<b>ctrl</b>+<b>p</b> Տպել թեման"
+        bookmark_topic: "%{shortcut} Փոխանջատել թեմայի էջանշանը"
+        pin_unpin_topic: "%{shortcut} Ամրակցել/Ապակցել թեման"
+        share_topic: "%{shortcut} Կիսվել թեմայով"
+        share_post: "%{shortcut} Կիսվել գրառմամբ"
+        reply_as_new_topic: "%{shortcut} Պատասխանել որպես կապված թեմա"
+        reply_topic: "%{shortcut} Պատասխանել թեմային"
+        reply_post: "%{shortcut} Պատասխանել գրառմանը"
+        quote_post: "%{shortcut} Մեջբերել գրառումը"
+        like: "%{shortcut} Հավանել գրառումը"
+        flag: "%{shortcut} Դրոշակավորել գրառումը"
+        bookmark: "%{shortcut} Էջանշել գրառումը"
+        edit: "%{shortcut} Խմբագրել գրառումը"
+        delete: "%{shortcut} Ջնջել գրառումը"
+        mark_muted: "%{shortcut} Խլացնել թեման"
+        mark_regular: "%{shortcut} Սովորական (լռելյայն) թեմա"
+        mark_tracking: "%{shortcut} Հետևել թեմային"
+        mark_watching: "%{shortcut} Դիտել թեման"
+        print: "%{shortcut} Տպել թեման"
     badges:
       earned_n_times:
-        one: "Վաստակել է այս կրծքանշանը 1 անգամ"
+        one: "Վաստակել է այս կրծքանշանը %{count} անգամ"
         other: "Վաստակել է այս կրծքանշանը %{count} անգամ"
       granted_on: "Շնորհված է %{date}"
       others_count: "Այս կրծքանշանով այլոք (%{count})"
@@ -2534,13 +2492,13 @@ hy:
       allow_title: "Դուք կարող եք օգտագործել այս կրծքանշանը որպես վերնագիր"
       multiple_grant: "Դուք կարող եք վաստակել սա բազմակի անգամ"
       badge_count:
-        one: "1  Կրծքանշան"
+        one: "%{count}  Կրծքանշան"
         other: "%{count} Կրծքանշան"
       more_badges:
-        one: "+1 Ավելի"
+        one: "+%{count} Ավելի"
         other: "+ևս %{count}"
       granted:
-        one: "1 շնորհված"
+        one: "%{count} շնորհված"
         other: "%{count} շնորհված"
       select_badge_for_title: Ընտրեք կրծքանշան՝ որպես Ձեր վերնագիր օգտագործելու համար
       none: "(ոչ մի)"
@@ -2575,7 +2533,7 @@ hy:
       choose_for_topic: "ընտրովի թեգեր"
       delete_tag: "Ջնջել Թեգը"
       delete_confirm:
-        one: "Դուք համոզվա՞ծ եք, որ ցանկանում եք ջնջել այս թեգը և հեռացնել այն 1 թեմայից, որին այն վերագրված է:"
+        one: "Դուք համոզվա՞ծ եք, որ ցանկանում եք ջնջել այս թեգը և հեռացնել այն %{count} թեմայից, որին այն վերագրված է:"
         other: "Դուք համոզվա՞ծ եք, որ ցանկանում եք ջնջել այս թեգը և հեռացնել այն {{count}} թեմայից, որոնց այն վերագրված է:"
       delete_confirm_no_topics: "Դուք համոզվա՞ծ եք, որ ցանկանում եք ջնջել այս թեգը:"
       rename_tag: "Վերանվանել Թեգը"
@@ -2673,7 +2631,6 @@ hy:
         title: "Հասանելի հաշվետվությունների ցանկը"
       dashboard:
         title: "Կառավարման Հարթակ"
-        last_updated: "Կառավարման Հարթակի վերջին թարմացումը՝ "
         version: "Տարբերակ"
         up_to_date: "Դուք ամենավերջին տարբերակն եք օգտագործում!"
         critical_available: "Հասանելի է կրիտիկական թարմացում:"
@@ -2747,6 +2704,11 @@ hy:
           trending_search:
             more: '<a href="%{basePath}/admin/logs/search_logs">Որոնման գրառումներ</a>'
             disabled: 'Առաջատար որոնման հաշվետվությունն անջատված է: Միացրեք <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">գրառումների որոնման հարցումները</a>՝ տվյալներ հավաքելու համար:'
+          filters:
+            group:
+              label: Խումբ
+            category:
+              label: Կատեգորիա
       commits:
         latest_changes: "Վերջին փոփոխությունները. խնդրում ենք ավելի հաճախ թարմացնել!"
         by: "կողմից"
@@ -2893,7 +2855,7 @@ hy:
             one: "Կա նոր իրադարձություն:"
             other: "Կա {{count}} նոր իրադարձություն:"
           completed_in:
-            one: "Ավարտվել է 1 վայրկյանում:"
+            one: "Ավարտվել է %{count} վայրկյանում:"
             other: "Ավարտվել է {{count}} վայրկյանում:"
           request: "Հարցում"
           response: "Արձագանք"
@@ -3006,7 +2968,6 @@ hy:
         new_style: "Նոր Ոճ"
         install: "Տեղադրել"
         delete: "Ջնջել"
-        delete_confirm: "Ջնջե՞լ այս թեման:"
         color: "Գույն"
         opacity: "Թափանցիկություն"
         copy: "Կրկնօրինակել"
@@ -3118,7 +3079,7 @@ hy:
           theme_translations: "Թեմայի Թարգմանությւոն"
           empty: "Տարրեր չկան"
           commits_behind:
-            one: "Թեման գտնվում է 1 քոմմիթ ետ!"
+            one: "Թեման գտնվում է %{count} քոմմիթ ետ!"
             other: "Թեման {{count}} commit ետ է!"
           compare_commits: "(Տեսնել նոր commit-ները)"
           repo_unreachable: "Հնարավոր չէ կապ հաստատել այս թեմայի Git ռեպոզիտորիայի հետ: Սխալի հաղորդագրությունը՝ "
@@ -3419,7 +3380,7 @@ hy:
         clear_filter: "Ջնջել"
         show_words: "ցուցադրել բառերը"
         word_count:
-          one: "1 բառ"
+          one: "%{count} բառ"
           other: "%{count} բառ"
         actions:
           block: "Արգելափակել"
@@ -3573,7 +3534,7 @@ hy:
           one: "Հնարավոր չէ ջնջել բոլոր գրառումները: Որոշ գրառումներ %{count} օրվանից հին են: ( delete_user_max_post_age կարգավորում:)"
           other: "Հնարավոր չէ ջնջել բոլոր գրառումները: Որոշ գրառումներ %{count} օրվանից հին են: ( delete_user_max_post_age կարգավորում:)"
         cant_delete_all_too_many_posts:
-          one: "Հնարավոր չէ ջնջել բոլոր գրառումները, քանի որ օգտատերն ունի ավելի քան 1 գրառում: (delete_all_posts_max)"
+          one: "Հնարավոր չէ ջնջել բոլոր գրառումները, քանի որ օգտատերն ունի ավելի քան %{count} գրառում: (delete_all_posts_max)"
           other: "Հնարավոր չէ ջնջել բոլոր գրառումները, քանի որ օգտատերն ունի ավելի քան %{count} գրառում: (delete_all_posts_max)"
         delete_confirm: "Սովորաբար ավելի նախընտրելի է անվանազրկել օգտատիրոջը, քան ջնջել նրանց՝ գոյություն ունեցող քննարկումների պարունակությունը ջնջելուց խուսափելու համար: <br><br>Դուք ՀԱՄՈԶՎԱ՞Ծ ԵՔ, որ ցանկանում եք ջնջել այս օգտատիրոջը: Սա մշտական է!"
         delete_and_block: "Ջնջել և <b>արգելափակել</b> այս էլ. և IP հասցեները:"
@@ -3804,7 +3765,7 @@ hy:
             text: "Կան շնորհման բացակայող օրինակներ: Սա տեղի է ունենում, երբ կրծքանշանների հարցումը վերադարձնում է գոյություն չունեցող օգտատերերի կամ գրառումների ID-ներ: Սա կարող է բերել անսպասելի արդյունքներ. խնդրում ենք կրկին ստուգել Ձեր հարցումը:"
           no_grant_count: "Վերագրման ենթակա կրծքանշաններ չկան:"
           grant_count:
-            one: "Վերագրման ենթակա <b>1</b> կրծքանշան"
+            one: "Վերագրման ենթակա <b>%{count}</b> կրծքանշան"
             other: "Վերագրման ենթակա <b>%{count}</b> կրծքանշան:"
           sample: "Օրինակ՝ "
           grant:
@@ -3888,7 +3849,7 @@ hy:
       upload_error: "Ներողություն, այդ ֆայլը վերբեռնելիս տեղի է ունեցել սխալ: Խնդրում ենք կրկին փորձել:"
       quit: "Միգուցե ավելի ուշ"
       staff_count:
-        one: "Ձեր համայնքը ունի անձնակազմի 1 անդամ՝ Դուք:"
+        one: "Ձեր համայնքը ունի անձնակազմի %{count} անդամ՝ Դուք:"
         other: "Ձեր համայնքն ունի անձնակազմի %{count} անդամ՝ Դուք ներառյալ:"
       invites:
         add_user: "ավելացնել"

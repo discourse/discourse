@@ -25,9 +25,18 @@ module UserNameSuggester
     name = fix_username(name)
     offset = nil
     i = 1
-    attempt = name
 
-    until attempt == allowed_username || User.username_available?(attempt) || i > 100
+    attempt = name
+    normalized_attempt = User.normalize_username(attempt)
+
+    original_allowed_username = allowed_username
+    allowed_username = User.normalize_username(allowed_username) if allowed_username
+
+    until (
+      normalized_attempt == allowed_username ||
+      User.username_available?(attempt) ||
+      i > 100
+    )
 
       if offset.nil?
         normalized = User.normalize_username(name)
@@ -40,12 +49,23 @@ module UserNameSuggester
         SQL
 
         if count > 0
+
+          params = {
+            count: count + 10,
+            name: normalized,
+            allowed_normalized: allowed_username || ''
+          }
+
           # increasing the search space a bit to allow for some extra noise
-          available = DB.query_single(<<~SQL, count: count + 10, name: normalized).first
+          available = DB.query_single(<<~SQL, params).first
             WITH numbers AS (SELECT generate_series(1, :count) AS n)
 
             SELECT n FROM numbers
-            LEFT JOIN users ON username_lower = :name || n::varchar
+            LEFT JOIN users ON (
+              username_lower = :name || n::varchar
+            ) AND (
+              username_lower <> :allowed_normalized
+            )
             WHERE users.id IS NULL
             ORDER by n ASC
             LIMIT 1
@@ -60,16 +80,25 @@ module UserNameSuggester
       end
 
       suffix = (i + offset).to_s
+
       max_length = User.username_length.end - suffix.length
       attempt = "#{truncate(name, max_length)}#{suffix}"
+      normalized_attempt = User.normalize_username(attempt)
       i += 1
     end
 
-    until attempt == allowed_username || User.username_available?(attempt) || i > 200
+    until normalized_attempt == allowed_username || User.username_available?(attempt) || i > 200
       attempt = SecureRandom.hex[1..SiteSetting.max_username_length]
+      normalized_attempt = User.normalize_username(attempt)
       i += 1
     end
-    attempt
+
+    if allowed_username == normalized_attempt
+      original_allowed_username
+    else
+      attempt
+    end
+
   end
 
   def self.fix_username(name)

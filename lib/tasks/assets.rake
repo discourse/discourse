@@ -158,15 +158,75 @@ def concurrent?
   end
 end
 
+def geolite_dbs
+  @geolite_dbs ||= %w{
+    GeoLite2-City
+    GeoLite2-ASN
+  }
+end
+
+def get_mmdb_time(root_path)
+  mmdb_time = nil
+
+  geolite_dbs.each do |name|
+    path = File.join(root_path, "#{name}.mmdb")
+    if File.exist?(path)
+      mmdb_time = File.mtime(path)
+    else
+      mmdb_time = nil
+      break
+    end
+  end
+
+  mmdb_time
+end
+
+def copy_maxmind(from_path, to_path)
+  puts "Copying MaxMindDB from #{from_path} to #{to_path}"
+
+  geolite_dbs.each do |name|
+    from = File.join(from_path, "#{name}.mmdb")
+    to = File.join(to_path, "#{name}.mmdb")
+    FileUtils.cp(from, to, preserve: true)
+  end
+end
+
 task 'assets:precompile' => 'assets:precompile:before' do
-  if refresh_days = SiteSetting.refresh_maxmind_db_during_precompile_days
-    mmdb_path = DiscourseIpInfo.mmdb_path('GeoLite2-City')
-    mmdb_time = File.exist?(mmdb_path) && File.mtime(mmdb_path)
+
+  refresh_days = GlobalSetting.refresh_maxmind_db_during_precompile_days
+
+  if refresh_days.to_i > 0
+
+    mmdb_time = get_mmdb_time(DiscourseIpInfo.path)
+
+    backup_mmdb_time =
+      if GlobalSetting.maxmind_backup_path.present?
+        get_mmdb_time(GlobalSetting.maxmind_backup_path)
+      end
+
+    mmdb_time ||= backup_mmdb_time
+    if backup_mmdb_time && backup_mmdb_time >= mmdb_time
+      copy_maxmind(GlobalSetting.maxmind_backup_path, DiscourseIpInfo.path)
+    end
+
     if !mmdb_time || mmdb_time < refresh_days.days.ago
       puts "Downloading MaxMindDB..."
       mmdb_thread = Thread.new do
-        DiscourseIpInfo.mmdb_download('GeoLite2-City')
-        DiscourseIpInfo.mmdb_download('GeoLite2-ASN')
+        begin
+          geolite_dbs.each do |db|
+            DiscourseIpInfo.mmdb_download(db)
+          end
+
+          if GlobalSetting.maxmind_backup_path.present?
+            copy_maxmind(DiscourseIpInfo.path, GlobalSetting.maxmind_backup_path)
+          end
+
+        rescue OpenURI::HTTPError => e
+          STDERR.puts("*" * 100)
+          STDERR.puts("MaxMindDB (#{name}) could not be downloaded: #{e}")
+          STDERR.puts("*" * 100)
+          Rails.logger.warn("MaxMindDB (#{name}) could not be downloaded: #{e}")
+        end
       end
     end
   end

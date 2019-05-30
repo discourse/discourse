@@ -8,11 +8,11 @@ export function bufferedProperty(property) {
     }.property(property),
 
     rollbackBuffer: function() {
-      this.get("buffered").discardBufferedChanges();
+      this.buffered.discardBufferedChanges();
     },
 
     commitBuffer: function() {
-      this.get("buffered").applyBufferedChanges();
+      this.buffered.applyBufferedChanges();
     }
   };
 

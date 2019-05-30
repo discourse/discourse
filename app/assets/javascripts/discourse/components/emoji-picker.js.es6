@@ -61,7 +61,7 @@ export default Ember.Component.extend({
       this._checkVisibleSection(true);
 
       if (
-        (!this.site.isMobileDevice || this.get("isEditorFocused")) &&
+        (!this.site.isMobileDevice || this.isEditorFocused) &&
         !safariHacksDisabled()
       )
         this.$filter.find("input[name='filter']").focus();
@@ -104,12 +104,12 @@ export default Ember.Component.extend({
 
   @on("didUpdateAttrs")
   _setState() {
-    this.get("active") ? this.show() : this.close();
+    this.active ? this.show() : this.close();
   },
 
   @observes("filter")
   filterChanged() {
-    this.$filter.find(".clear-filter").toggle(!_.isEmpty(this.get("filter")));
+    this.$filter.find(".clear-filter").toggle(!_.isEmpty(this.filter));
     const filterDelay = this.site.isMobileDevice ? 400 : 250;
     run.debounce(this, this._filterEmojisList, filterDelay);
   },
@@ -118,7 +118,7 @@ export default Ember.Component.extend({
   selectedDiversityChanged() {
     keyValueStore.setObject({
       key: EMOJI_SELECTED_DIVERSITY,
-      value: this.get("selectedDiversity")
+      value: this.selectedDiversity
     });
 
     $.each(
@@ -130,7 +130,7 @@ export default Ember.Component.extend({
       }
     );
 
-    if (this.get("filter") !== "") {
+    if (this.filter !== "") {
       $.each(this.$results.find(".emoji.diversity"), (_, button) =>
         this._setButtonBackground(button, true)
       );
@@ -151,7 +151,7 @@ export default Ember.Component.extend({
     let persistScrollPosition = !$recentCategory.is(":visible") ? true : false;
 
     // we set height to 0 to avoid it being taken into account for scroll position
-    if (_.isEmpty(this.get("recentEmojis"))) {
+    if (_.isEmpty(this.recentEmojis)) {
       $recentCategory.hide();
       $recentSection.css("height", 0).hide();
     } else {
@@ -159,7 +159,7 @@ export default Ember.Component.extend({
       $recentSection.css("height", "auto").show();
     }
 
-    const recentEmojis = this.get("recentEmojis").map(code => {
+    const recentEmojis = this.recentEmojis.map(code => {
       return { code, src: emojiUrlFor(code) };
     });
     const template = findRawTemplate("emoji-picker-recent")({ recentEmojis });
@@ -177,7 +177,7 @@ export default Ember.Component.extend({
 
     $diversityPicker.find(".diversity-scale").removeClass("selected");
     $diversityPicker
-      .find(`.diversity-scale[data-level="${this.get("selectedDiversity")}"]`)
+      .find(`.diversity-scale[data-level="${this.selectedDiversity}"]`)
       .addClass("selected");
   },
 
@@ -236,12 +236,12 @@ export default Ember.Component.extend({
   },
 
   _filterEmojisList() {
-    if (this.get("filter") === "") {
+    if (this.filter === "") {
       this.$filter.find("input[name='filter']").val("");
       this.$results.empty().hide();
       this.$list.css("visibility", "visible");
     } else {
-      const lowerCaseFilter = this.get("filter").toLowerCase();
+      const lowerCaseFilter = this.filter.toLowerCase();
       const filteredCodes = emojiSearch(lowerCaseFilter, { maxResults: 30 });
       this.$results
         .empty()
@@ -410,7 +410,7 @@ export default Ember.Component.extend({
       return sectionTop + $section.height() > 0 && sectionTop < listHeight;
     });
 
-    if (!_.isEmpty(this.get("recentEmojis")) && this.scrollPosition === 0) {
+    if (!_.isEmpty(this.recentEmojis) && this.scrollPosition === 0) {
       $selectedSection = $(_.first(this.$visibleSections));
     } else {
       $selectedSection = $(_.last(this.$visibleSections));
@@ -476,7 +476,7 @@ export default Ember.Component.extend({
   },
 
   _positionPicker() {
-    if (!this.get("active")) {
+    if (!this.active) {
       return;
     }
 
@@ -514,6 +514,7 @@ export default Ember.Component.extend({
 
     const desktopPositioning = options => {
       let attributes = {
+        position: "fixed",
         width: windowWidth < 485 ? windowWidth - 12 : 400,
         marginLeft: "",
         marginTop: "",
@@ -528,7 +529,7 @@ export default Ember.Component.extend({
       this.$picker.css(_.merge(attributes, options));
     };
 
-    if (Ember.testing || !this.get("automaticPositioning")) {
+    if (Ember.testing || !this.automaticPositioning) {
       desktopPositioning();
       return;
     }
@@ -562,12 +563,30 @@ export default Ember.Component.extend({
         if (windowWidth < 485) {
           desktopModalePositioning();
         } else {
-          let previewInputOffset = $(".d-editor-input").offset();
-          let left = previewInputOffset.left;
-          desktopPositioning({
-            left,
-            bottom: $("#reply-control").height() - 45
-          });
+          const previewInputOffset = $(".d-editor-input").offset();
+
+          const pickerHeight = $(".emoji-picker").height();
+          const editorHeight = $(".d-editor-input").height();
+          const windowBottom = $(window).scrollTop() + $(window).height();
+
+          if (
+            previewInputOffset.top + editorHeight + pickerHeight <
+            windowBottom
+          ) {
+            // position it below editor if there is enough space
+            desktopPositioning({
+              position: "absolute",
+              top: previewInputOffset.top + editorHeight,
+              left: previewInputOffset.left
+            });
+          } else {
+            // try positioning it above
+            desktopPositioning({
+              position: "absolute",
+              top: -pickerHeight,
+              left: previewInputOffset.left
+            });
+          }
         }
       }
     }
@@ -581,8 +600,8 @@ export default Ember.Component.extend({
   },
 
   _codeWithDiversity(code, diversity) {
-    if (diversity && this.get("selectedDiversity") !== 1) {
-      return `${code}:t${this.get("selectedDiversity")}`;
+    if (diversity && this.selectedDiversity !== 1) {
+      return `${code}:t${this.selectedDiversity}`;
     } else {
       return code;
     }

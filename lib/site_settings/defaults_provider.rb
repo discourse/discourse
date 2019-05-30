@@ -4,7 +4,7 @@ module SiteSettings; end
 
 # A cache for providing default value based on site locale
 class SiteSettings::DefaultsProvider
-  DEFAULT_LOCALE = 'en'
+  DEFAULT_LOCALE = 'en_US'
 
   def initialize(site_setting)
     @site_setting = site_setting

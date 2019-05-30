@@ -22,7 +22,7 @@ export default Ember.Component.extend({
 
   init() {
     this._super(...arguments);
-    const name = this.get("widget");
+    const name = this.widget;
 
     this.register = getRegister(this);
 
@@ -49,7 +49,7 @@ export default Ember.Component.extend({
   },
 
   willClearRender() {
-    const callbacks = _cleanCallbacks[this.get("widget")];
+    const callbacks = _cleanCallbacks[this.widget];
     if (callbacks) {
       callbacks.forEach(cb => cb());
     }
@@ -106,9 +106,9 @@ export default Ember.Component.extend({
       }
 
       const t0 = new Date().getTime();
-      const args = this.get("args") || this.buildArgs();
+      const args = this.args || this.buildArgs();
       const opts = {
-        model: this.get("model"),
+        model: this.model,
         dirtyKeys: this.dirtyKeys
       };
       const newTree = new this._widgetClass(args, this.register, opts);

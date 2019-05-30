@@ -23,7 +23,7 @@ export default Ember.Component.extend({
   },
 
   _addToCollection: function() {
-    this.get("panels").addObject(this.get("tabClassName"));
+    this.panels.addObject(this.tabClassName);
   },
 
   _resetModalScrollState() {
@@ -37,7 +37,7 @@ export default Ember.Component.extend({
 
   actions: {
     select: function() {
-      this.set("selectedTab", this.get("tab"));
+      this.set("selectedTab", this.tab);
       this._resetModalScrollState();
     }
   }

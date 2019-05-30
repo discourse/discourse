@@ -1,5 +1,5 @@
 const OBSERVER_OPTIONS = {
-  rootMargin: "50%" // load images slightly before they're visible
+  rootMargin: "66%" // load images slightly before they're visible
 };
 
 // Min size in pixels for consideration for lazy loading

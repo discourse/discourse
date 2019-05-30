@@ -4,16 +4,20 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import { cookAsync } from "discourse/lib/text";
 
 export default Ember.Controller.extend(PreferencesTabController, {
-  saveAttrNames: [
-    "bio_raw",
-    "website",
-    "location",
-    "custom_fields",
-    "user_fields",
-    "profile_background_upload_url",
-    "card_background_upload_url",
-    "date_of_birth"
-  ],
+  init() {
+    this._super(...arguments);
+
+    this.saveAttrNames = [
+      "bio_raw",
+      "website",
+      "location",
+      "custom_fields",
+      "user_fields",
+      "profile_background_upload_url",
+      "card_background_upload_url",
+      "date_of_birth"
+    ];
+  },
 
   @computed("model.user_fields.@each.value")
   userFields() {
@@ -43,8 +47,8 @@ export default Ember.Controller.extend(PreferencesTabController, {
     save() {
       this.set("saved", false);
 
-      const model = this.get("model"),
-        userFields = this.get("userFields");
+      const model = this.model,
+        userFields = this.userFields;
 
       // Update the user fields
       if (!Ember.isEmpty(userFields)) {
@@ -57,7 +61,7 @@ export default Ember.Controller.extend(PreferencesTabController, {
       }
 
       return model
-        .save(this.get("saveAttrNames"))
+        .save(this.saveAttrNames)
         .then(() => {
           cookAsync(model.get("bio_raw"))
             .then(() => {

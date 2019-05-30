@@ -111,6 +111,9 @@ tr_TR:
     share:
       post: "#%{postNumber} numaralı gönderiyi paylaş"
       close: "kapat"
+      twitter: "bu linki Twitter'da paylaş"
+      facebook: "bu linki Facebook'ta paylaş"
+      email: "bu linki epostayla yolla"
     action_codes:
       public_topic: "bu konuyu %{when} herkese açık yaptı"
       private_topic: "bu konuyu %{when} kişisel mesaj yaptı"
@@ -292,7 +295,6 @@ tr_TR:
         save_changes: "Değişiklikleri Kaydet"
         title: "Ayarlar"
       moderation_history: "Moderasyon Tarihi"
-      title: "İnceleme Gerekiyor"
       topic: "Konu:"
       user:
         username: "Kullanıcı Adı"
@@ -561,6 +563,7 @@ tr_TR:
       private_message: "Mesaj"
       private_messages: "Mesajlar"
       user_notifications:
+        ignore_duration_username: "Kullanıcı Adı"
         ignore_duration_save: "Yoksay"
         mute_option: "Sessiz"
         normal_option: "Normal"
@@ -1236,7 +1239,6 @@ tr_TR:
       remove_featured_link: "Konudan bağlantıyı kaldır."
       reply_placeholder: "Buraya yaz. Biçimlendirmek için Markdown, BBCode ya da HTML kullanabilirsin. Resimleri sürükleyebilir ya da yapıştırabilirsin."
       reply_placeholder_no_images: "Buraya yaz. Biçimlendirme için Markdown, BBCode ya da HTML kullan."
-      reply_placeholder_choose_category: "Buraya yazmadan önce bir kategori seçmelisiniz."
       view_new_post: "Yeni gönderini görüntüle."
       saving: "Kaydediliyor"
       saved: "Kaydedildi!"
@@ -1367,7 +1369,7 @@ tr_TR:
       clear_all: "Tümünü Temizle"
       too_short: "Aradığın terim çok kısa."
       result_count:
-        one: "<span class='term'>{{term}}</span> <span>için 1 sonuç</span>"
+        one: "<span class='term'>{{term}}</span> <span>için %{count} sonuç</span>"
         other: "<span class='term'>{{term}}</span> için <span>{{count}} {{plus}} sonuç</span>"
       title: "konu, gönderi, kullanıcı veya kategori ara"
       full_page_title: "konu ya da gönderi ara"
@@ -1616,7 +1618,6 @@ tr_TR:
         jump_bottom: "son gönderiye geç"
         jump_prompt: "geç"
         jump_prompt_of: " %{count}  gönderinin"
-        jump_prompt_long: "Hangi gönderiye gitmek istersin?"
         jump_bottom_with_number: "%{post_number} numaralı gönderiye geç"
         jump_prompt_to_date: "şimdiye kadar"
         jump_prompt_or: "ya da"
@@ -1927,50 +1928,6 @@ tr_TR:
           notify_user: "Bu kullanıcıya mesaj gönderdin"
           bookmark: "Bu gönderiyi işaretledin"
           like: "Bunu beğendin"
-        by_you_and_others:
-          off_topic:
-            one: "Siz ve {{count}} diğer kişi bunu konu dışı olarak bildirdi"
-            other: "Sen ve {{count}} kişi bunu bayrakla \"konu dışı\" olarak işaretledi"
-          spam:
-            one: "Siz ve {{count}} diğer kişi bunu istenmeyen olarak bildirdi"
-            other: "Sen ve {{count}} kişi bunu bayrakla \"istenmeyen\" olarak işaretledi"
-          inappropriate:
-            one: "Siz ve {{count}} diğer kişi bunu uygunsuz olarak bildirdi"
-            other: "Sen ve {{count}} kişi bunu bayrakla \"uygunsuz\" olarak işaretledi"
-          notify_moderators:
-            one: "Siz ve {{count}} diğer kişi bunu denetlenmesi için bildirdi"
-            other: "Sen ve {{count}} kişi bunu moderatörün denetlemesi için bayrakla işaretledi"
-          notify_user:
-            one: "Siz ve {{count}} diğer kişi bu kullanıcıya ileti yolladı"
-            other: "Sen ve {{count}} kişi bu kullanıcıya mesaj gönderdi"
-          bookmark:
-            one: "Siz ve {{count}} diğer kişi bu gönderiyi imledi"
-            other: "Sen ve {{count}} kişi bu gönderiyi işaretledi"
-          like:
-            one: "Siz ve {{count}} başka kişi bunu beğendi"
-            other: "Sen ve {{count}} kişi bunu beğendi"
-        by_others:
-          off_topic:
-            one: "{{count}} kişi bunu konu dışı olarak bildirdi"
-            other: "{{count}} kişi bunu bayrakla \"konu dışı\" olarak işaretledi"
-          spam:
-            one: "{{count}} kişi bunu istenmeyen olarak bildirdi"
-            other: "{{count}} kişi bunu bayrakla \"istenmeyen\" olarak işaretledi"
-          inappropriate:
-            one: "{{count}} kişi bunu uygunsuz olarak bildirdi"
-            other: "{{count}} kişi bunu bayrakla \"uygunsuz\" olarak işaretledi"
-          notify_moderators:
-            one: "{{count}} kişi bunu moderasyon için bildirdi"
-            other: "{{count}} kişi bunu moderasyon için bayrakla işaretledi"
-          notify_user:
-            one: "{{count}} bu kullanıcıya ileti yolladı"
-            other: "{{count}} bu kullanıcıya ileti yolladı"
-          bookmark:
-            one: "{{count}} kişi bu gönderiyi imledi"
-            other: "{{count}} kişi bu gönderiyi işaretledi"
-          like:
-            one: "{{count}} kişi bunu beğendi"
-            other: "{{count}} kişi bunu beğendi"
       revisions:
         controls:
           first: "İlk revizyon"
@@ -2060,6 +2017,7 @@ tr_TR:
       default_top_period: "Varsayılan Üst Periyot:"
       allow_badges_label: "Bu kategoride rozetle ödüllendirilmesine izin ver"
       edit_permissions: "İzinleri Düzenle"
+      review_group_name: "grup adı"
       require_topic_approval: "Tüm yeni konular moderatör onayını gerektirir"
       require_reply_approval: "Tüm yeni cevaplar moderatör onayı gerektirir"
       this_year: "bu yıl"
@@ -2299,57 +2257,57 @@ tr_TR:
       title: "Klavye Kısayolları"
       jump_to:
         title: "Şuraya git"
-        home: "<b>g</b>, <b>h</b> Anasayfa"
-        latest: "<b>g</b>, <b>l</b> En son"
-        new: "<b>g</b>, <b>n</b> Yeni"
-        unread: "<b>g</b>, <b>u</b> Okunmamış"
-        categories: "<b>g</b>, <b>c</b> Kategoriler"
-        top: "<b>g</b>, <b>t</b> En üst"
-        bookmarks: "<b>g</b>, <b>b</b> İşaretler"
-        profile: "<b>g</b>, <b>p</b> Profil"
-        messages: "<b>g</b>, <b>m</b> Mesajlar"
-        drafts: "<b>g</b>, <b>d</b> Taslaklar"
+        home: "%{shortcut} Anasayfa"
+        latest: "%{shortcut} En son"
+        new: "%{shortcut} Yeni"
+        unread: "%{shortcut} Okunmamış"
+        categories: "%{shortcut} Kategoriler"
+        top: "%{shortcut} En üst"
+        bookmarks: "%{shortcut} İşaretler"
+        profile: "%{shortcut} Profil"
+        messages: "%{shortcut} Mesajlar"
+        drafts: "%{shortcut} Taslaklar"
       navigation:
         title: "Navigasyon"
-        jump: "<b>#</b> Gönderiye git #"
-        back: "<b>u</b> Geri"
-        up_down: "<b>k</b>/<b>j</b> Seçileni taşı &uarr; &darr;"
-        open: "<b>o</b> or <b>Enter</b> Seçili konuyu aç"
-        next_prev: "<b>shift</b>+<b>j</b>/<b>shift</b>+<b>k</b> Önceki/Sonraki bölüm"
+        jump: "%{shortcut} Gönderiye git #"
+        back: "%{shortcut} Geri"
+        up_down: "%{shortcut} Seçileni taşı &uarr; &darr;"
+        open: "%{shortcut} Seçili konuyu aç"
+        next_prev: "%{shortcut} Önceki/Sonraki bölüm"
       application:
         title: "Uygulama"
-        create: "<b>c</b> Yeni konu oluştur"
-        notifications: "<b>n</b> Bildirimleri aç"
-        hamburger_menu: "<b>=</b> Hamburger menüyü aç"
-        user_profile_menu: "<b>p</b> Kullanıcı menüsünü aç"
-        show_incoming_updated_topics: "<b>.</b> Güncellenmiş konuları göster"
-        search: "<b>/</b> or <b>ctrl</b>+<b>alt</b>+<b>f</b> Ara"
-        help: "<b>?</b> Klavye yardım sayfasını aç"
-        dismiss_new_posts: "<b>x</b>, <b>r</b> Yeni Konuları/Gönderileri Yoksay"
-        dismiss_topics: "<b>x</b>, <b>t</b> Konuları yoksay"
-        log_out: "<b>shift</b>+<b>z</b> <b>shift</b>+<b>z</b> Çıkış"
+        create: "%{shortcut} Yeni konu oluştur"
+        notifications: "%{shortcut} Bildirimleri aç"
+        hamburger_menu: "%{shortcut} Hamburger menüyü aç"
+        user_profile_menu: "%{shortcut} Kullanıcı menüsünü aç"
+        show_incoming_updated_topics: "%{shortcut} Güncellenmiş konuları göster"
+        search: "%{shortcut} Ara"
+        help: "%{shortcut} Klavye yardım sayfasını aç"
+        dismiss_new_posts: "%{shortcut} Yeni Konuları/Gönderileri Yoksay"
+        dismiss_topics: "%{shortcut} Konuları yoksay"
+        log_out: "%{shortcut} Çıkış"
       composing:
         title: "Oluşturma"
       actions:
         title: "Eylemler"
-        bookmark_topic: "<b>f</b> Konu işaretini değiştir"
-        pin_unpin_topic: "<b>shift</b>+<b>p</b> Konuyu en yukarıda sabitle/sabitleme"
-        share_topic: "<b>shift</b>+<b>s</b> Konuyu paylaş"
-        share_post: "<b>s</b> Gönderiyi paylaş"
-        reply_as_new_topic: "<b>t</b> Bağlantılı konu olarak cevapla"
-        reply_topic: "<b>shift</b>+<b>r</b> Konuyu cevapla"
-        reply_post: "<b>r</b> Gönderiyi cevapla"
-        quote_post: "<b>q</b> Gönderiyi alıntıla"
-        like: "<b>l</b> Gönderiyi beğen"
-        flag: "<b>!</b> Gönderiyi bayrakla işaretle"
-        bookmark: "<b>b</b> Gönderiyi işaretle"
-        edit: "<b>e</b> Gönderiyi düzenle"
-        delete: "<b>d</b> Gönderiyi sil"
-        mark_muted: "<b>m</b>, <b>m</b> Konuyu sessize al"
-        mark_regular: "<b>m</b>, <b>r</b> Öntanımlı konu"
-        mark_tracking: "<b>m</b>, <b>t</b> Konuyu takip et"
-        mark_watching: "<b>m</b>, <b>w</b> Konuyu izle"
-        print: "<b>ctrl</b>+<b>p</b> Konuyu yazdır"
+        bookmark_topic: "%{shortcut} Konu işaretini değiştir"
+        pin_unpin_topic: "%{shortcut} Konuyu en yukarıda sabitle/sabitleme"
+        share_topic: "%{shortcut} Konuyu paylaş"
+        share_post: "%{shortcut} Gönderiyi paylaş"
+        reply_as_new_topic: "%{shortcut} Bağlantılı konu olarak cevapla"
+        reply_topic: "%{shortcut} Konuyu cevapla"
+        reply_post: "%{shortcut} Gönderiyi cevapla"
+        quote_post: "%{shortcut} Gönderiyi alıntıla"
+        like: "%{shortcut} Gönderiyi beğen"
+        flag: "%{shortcut} Gönderiyi bayrakla işaretle"
+        bookmark: "%{shortcut} Gönderiyi işaretle"
+        edit: "%{shortcut} Gönderiyi düzenle"
+        delete: "%{shortcut} Gönderiyi sil"
+        mark_muted: "%{shortcut} Konuyu sessize al"
+        mark_regular: "%{shortcut} Öntanımlı konu"
+        mark_tracking: "%{shortcut} Konuyu takip et"
+        mark_watching: "%{shortcut} Konuyu izle"
+        print: "%{shortcut} Konuyu yazdır"
     badges:
       earned_n_times:
         one: "Bu rozet %{count} defa kazanılmış"
@@ -2482,7 +2440,6 @@ tr_TR:
         title: "Mevcut raporlar listesi"
       dashboard:
         title: "Gösterge Paneli"
-        last_updated: "Göstergelerin son güncellenmesi:"
         version: "Sürüm"
         up_to_date: "Sistemin güncel durumda!"
         critical_available: "Önemli bir güncelleme var."
@@ -2544,6 +2501,11 @@ tr_TR:
           no_data: "Gösterilecek bilgi yok."
           trending_search:
             more: '<a href="%{basePath}/admin/logs/search_logs">Arama Günlükleri</a>'
+          filters:
+            group:
+              label: Grup
+            category:
+              label: Kategori
       commits:
         latest_changes: "En son değişiklikler: lütfen sık sık güncelle!"
         by: "tarafından"
@@ -2794,7 +2756,6 @@ tr_TR:
         new: "Yeni"
         new_style: "Yeni Biçim"
         delete: "Sil"
-        delete_confirm: "Bu tema silinsin mi?"
         color: "Renk"
         opacity: "Saydam"
         copy: "Kopyala"
@@ -3136,7 +3097,7 @@ tr_TR:
         clear_filter: "Temizle"
         show_words: "kelimeleri göster"
         word_count:
-          one: "1 kelime"
+          one: "%{count} kelime"
           other: "%{count} kelimeler"
         actions:
           block: "Engelle"

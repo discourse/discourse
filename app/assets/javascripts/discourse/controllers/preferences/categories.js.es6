@@ -3,12 +3,16 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import computed from "ember-addons/ember-computed-decorators";
 
 export default Ember.Controller.extend(PreferencesTabController, {
-  saveAttrNames: [
-    "muted_category_ids",
-    "watched_category_ids",
-    "tracked_category_ids",
-    "watched_first_post_category_ids"
-  ],
+  init() {
+    this._super(...arguments);
+
+    this.saveAttrNames = [
+      "muted_category_ids",
+      "watched_category_ids",
+      "tracked_category_ids",
+      "watched_first_post_category_ids"
+    ];
+  },
 
   @computed(
     "model.watchedCategories",
@@ -30,8 +34,8 @@ export default Ember.Controller.extend(PreferencesTabController, {
   actions: {
     save() {
       this.set("saved", false);
-      return this.get("model")
-        .save(this.get("saveAttrNames"))
+      return this.model
+        .save(this.saveAttrNames)
         .then(() => {
           this.set("saved", true);
         })

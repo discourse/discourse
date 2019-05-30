@@ -91,6 +91,8 @@ vi:
     share:
       post: "đăng #%{postNumber}"
       close: "đóng"
+      twitter: "chia sẻ liên kết này lên Twitter"
+      facebook: "chia sẻ liên kết này lên Facebook"
     action_codes:
       public_topic: "hiển thị chủ đề này công khai lúc %{when}"
       split_topic: "tách chủ đề này lúc %{when}"
@@ -470,6 +472,7 @@ vi:
       private_message: "Tin nhắn"
       private_messages: "Tin nhắn"
       user_notifications:
+        ignore_duration_username: "Tên đăng nhập"
         mute_option: "Im lặng"
         normal_option: "Bình thường"
       activity_stream: "Hoạt động"
@@ -1524,36 +1527,6 @@ vi:
           notify_user: "Bạn đã gửi một tin nhắn đến người dùng này"
           bookmark: "Bạn đã đánh dấu bài viết này"
           like: "Bạn đã thích cái này"
-        by_you_and_others:
-          off_topic:
-            other: "Bạn và  {{count}}  người khác đã đánh dấu đây là chủ đề đóng"
-          spam:
-            other: "Bạn và {{count}} người khác gắn cờ nó là rác"
-          inappropriate:
-            other: "Bạn và {{count}} other người khác đã đánh dấu nó là không phù hợp"
-          notify_moderators:
-            other: "Bạn và {{count}} người khác gắn cờ nó là điều tiết"
-          notify_user:
-            other: "Bạn và {{count}} người khác đã gửi một tin nhắn đến người dùng này"
-          bookmark:
-            other: "Bạn và {{count}} người khác đã đánh dấu bài viết này"
-          like:
-            other: "Bạn và {{count}} người khác đã thích cái này"
-        by_others:
-          off_topic:
-            other: "{{count}} người đã đánh dấu nó là chủ đề đóng"
-          spam:
-            other: "{{count}} người khác đánh dấu là rác"
-          inappropriate:
-            other: "{{count}} người khác đã đánh dấu là không phù hợp"
-          notify_moderators:
-            other: "{{count}} người đã đánh dấu để chờ duyệt"
-          notify_user:
-            other: "{{count}} gửi tin nhắn đến người dùng này"
-          bookmark:
-            other: "{{count}} người đã đánh dấu bài viết này"
-          like:
-            other: "{count}} người đã thích cái này"
       revisions:
         controls:
           first: "Sửa đổi đầu tiên"
@@ -1627,6 +1600,7 @@ vi:
       email_in_disabled_click: 'kích hoạt thiết lập thư điện tử'
       allow_badges_label: "Cho phép thưởng huy hiệu trong chuyên mục này"
       edit_permissions: "Sửa quyền"
+      review_group_name: "Nhóm tên"
       this_year: "năm nay"
       default_position: "vị trí mặc định"
       position_disabled: "Chuyên mục sẽ được hiển thị theo thứ tự hoạt động. Để kiểm soát thứ tự chuyên mục trong danh sách, "
@@ -1836,52 +1810,52 @@ vi:
       title: "Phím tắt"
       jump_to:
         title: "Nhảy đến"
-        home: "<b>g</b>, <b>h</b> Nhà"
-        latest: "<b>g</b>, <b>l</b> Cuối cùng"
-        new: "<b>g</b>, <b>n</b> Mới"
-        unread: "<b>g</b>, <b>u</b> Chưa đọc"
-        categories: "<b>g</b>, <b>c</b> Danh mục"
-        top: "<b>g</b>, <b>t</b> Trên"
-        bookmarks: "<b>g</b>, <b>b</b> Đánh dấu"
-        profile: "<b>g</b>, <b>p</b> Hồ sơ"
-        messages: "<b>g</b>, <b>m</b> Tin nhắn"
+        home: "%{shortcut} Nhà"
+        latest: "%{shortcut} Cuối cùng"
+        new: "%{shortcut} Mới"
+        unread: "%{shortcut} Chưa đọc"
+        categories: "%{shortcut} Danh mục"
+        top: "%{shortcut} Trên"
+        bookmarks: "%{shortcut} Đánh dấu"
+        profile: "%{shortcut} Hồ sơ"
+        messages: "%{shortcut} Tin nhắn"
       navigation:
         title: "Điều hướng"
-        jump: "<b>#</b> Đến bài viết #"
-        back: "<b>u</b> Quay lại"
-        up_down: "<b>k</b>/<b>j</b> Move selection &uarr; &darr;"
-        open: "<b>o</b> or <b>Enter</b> Mở chủ để đã chọn"
-        next_prev: "<b>shift</b>+<b>j</b>/<b>shift</b>+<b>k</b> Next/previous section"
+        jump: "%{shortcut} Đến bài viết #"
+        back: "%{shortcut} Quay lại"
+        up_down: "%{shortcut} Move selection &uarr; &darr;"
+        open: "%{shortcut} Mở chủ để đã chọn"
+        next_prev: "%{shortcut} Next/previous section"
       application:
         title: "Ứng dụng"
-        create: "<b>c</b> Tạo mới chủ đề"
-        notifications: "<b>n</b> Mở thông báo"
-        hamburger_menu: "<b>=</b> Mở menu mobile"
-        user_profile_menu: "<b>p</b> Mở trình đơn thành viên"
-        show_incoming_updated_topics: "<b>.</b> Show updated topics"
-        help: "<b>?</b> Mở trợ giúp bàn phím"
-        dismiss_new_posts: "<b>x</b>, <b>r</b> Dismiss New/Posts"
-        dismiss_topics: "<b>x</b>, <b>t</b> Bỏ qua bài viết"
-        log_out: "<b>shift</b>+<b>z</b> <b>shift</b>+<b>z</b> Đăng xuất"
+        create: "%{shortcut} Tạo mới chủ đề"
+        notifications: "%{shortcut} Mở thông báo"
+        hamburger_menu: "%{shortcut} Mở menu mobile"
+        user_profile_menu: "%{shortcut} Mở trình đơn thành viên"
+        show_incoming_updated_topics: "%{shortcut} Show updated topics"
+        help: "%{shortcut} Mở trợ giúp bàn phím"
+        dismiss_new_posts: "%{shortcut} Dismiss New/Posts"
+        dismiss_topics: "%{shortcut} Bỏ qua bài viết"
+        log_out: "%{shortcut} Đăng xuất"
       actions:
         title: "Hành động"
-        bookmark_topic: "<b>f</b> Chuyển chủ đề đánh dấu"
-        pin_unpin_topic: "<b>shift</b>+<b>p</b> Pin/Unpin bài viết"
-        share_topic: "<b>shift</b>+<b>s</b> Chia sẻ bài viết"
-        share_post: "<b>s</b> Chia sẻ bài viết"
-        reply_as_new_topic: "<b>t</b> Trả lời như là một liên kết đến bài viết"
-        reply_topic: "<b>shift</b>+<b>r</b> Trả lời bài viết"
-        reply_post: "<b>r</b> Trả lời bài viết"
-        quote_post: "<b>q</b> Trích dẫn bài viết"
-        like: "<b>l</b> Thích bài viết"
-        flag: "<b>!</b> Đánh dấu bài viết"
-        bookmark: "<b>b</b> Đánh dấu bài viết"
-        edit: "<b>e</b> Sửa bài viết"
-        delete: "<b>d</b> Xóa bài viết"
-        mark_muted: "<b>m</b>, <b>m</b> Mute topic"
-        mark_regular: "<b>m</b>, <b>r</b> Chủ đề thông thường (mặc định)"
-        mark_tracking: "<b>m</b>, <b>t</b> Theo dõi chủ đề"
-        mark_watching: "<b>m</b>, <b>w</b> theo dõi chủ đề"
+        bookmark_topic: "%{shortcut} Chuyển chủ đề đánh dấu"
+        pin_unpin_topic: "%{shortcut} Pin/Unpin bài viết"
+        share_topic: "%{shortcut} Chia sẻ bài viết"
+        share_post: "%{shortcut} Chia sẻ bài viết"
+        reply_as_new_topic: "%{shortcut} Trả lời như là một liên kết đến bài viết"
+        reply_topic: "%{shortcut} Trả lời bài viết"
+        reply_post: "%{shortcut} Trả lời bài viết"
+        quote_post: "%{shortcut} Trích dẫn bài viết"
+        like: "%{shortcut} Thích bài viết"
+        flag: "%{shortcut} Đánh dấu bài viết"
+        bookmark: "%{shortcut} Đánh dấu bài viết"
+        edit: "%{shortcut} Sửa bài viết"
+        delete: "%{shortcut} Xóa bài viết"
+        mark_muted: "%{shortcut} Mute topic"
+        mark_regular: "%{shortcut} Chủ đề thông thường (mặc định)"
+        mark_tracking: "%{shortcut} Theo dõi chủ đề"
+        mark_watching: "%{shortcut} theo dõi chủ đề"
     badges:
       earned_n_times:
         other: "Đã giành được huy hiệu này %{count} lần"
@@ -1974,7 +1948,6 @@ vi:
       moderator: "Điều hành"
       dashboard:
         title: "Bảng điều khiển"
-        last_updated: "Bảng điều khiển cập nhật gần nhất:"
         version: "Phiên bản"
         up_to_date: "Bạn đã cập nhật phiên bản mới nhất"
         critical_available: "Bản cập nhật quan trọng sẵn sằng."
@@ -2013,6 +1986,11 @@ vi:
           start_date: "Từ ngày"
           end_date: "Đến ngày"
           groups: "Các nhóm"
+          filters:
+            group:
+              label: Nhóm
+            category:
+              label: Danh mục
       commits:
         latest_changes: "Thay đổi cuối: vui lòng cập nhật thường xuyên!"
         by: "bởi"

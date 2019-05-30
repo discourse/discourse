@@ -10,5 +10,3 @@ te:
     magic_8_ball:
       answers:
         '9': "అవును"
-    new_user_narrative:
-      reset_trigger: "కొత్త సభ్యుడు"

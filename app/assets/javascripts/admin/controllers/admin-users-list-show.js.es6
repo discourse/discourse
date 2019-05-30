@@ -27,11 +27,11 @@ export default Ember.Controller.extend(CanCheckEmails, {
   _refreshUsers() {
     this.set("refreshing", true);
 
-    AdminUser.findAll(this.get("query"), {
-      filter: this.get("listFilter"),
-      show_emails: this.get("showEmails"),
-      order: this.get("order"),
-      ascending: this.get("ascending")
+    AdminUser.findAll(this.query, {
+      filter: this.listFilter,
+      show_emails: this.showEmails,
+      order: this.order,
+      ascending: this.ascending
     })
       .then(result => this.set("model", result))
       .finally(() => this.set("refreshing", false));

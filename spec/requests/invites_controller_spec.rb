@@ -312,11 +312,20 @@ describe InvitesController do
             expect(Jobs::SendSystemMessage.jobs.size).to eq(1)
           end
 
+          it 'refreshes automatic groups if staff' do
+            topic.user.grant_admin!
+            invite.update!(moderator: true)
+
+            put "/invites/show/#{invite.invite_key}.json"
+            expect(response.status).to eq(200)
+
+            expect(invite.reload.user.groups.pluck(:name)).to contain_exactly("moderators", "staff")
+          end
+
           context "without password" do
             it "sends password reset email" do
               put "/invites/show/#{invite.invite_key}.json"
               expect(response.status).to eq(200)
-              expect(JSON.parse(response.body)["success"]).to eq(true)
 
               expect(Jobs::InvitePasswordInstructionsEmail.jobs.size).to eq(1)
               expect(Jobs::CriticalUserEmail.jobs.size).to eq(0)
@@ -327,7 +336,6 @@ describe InvitesController do
               SiteSetting.enable_sso = true
               put "/invites/show/#{invite.invite_key}.json"
               expect(response.status).to eq(200)
-              expect(JSON.parse(response.body)["success"]).to eq(true)
 
               expect(Jobs::InvitePasswordInstructionsEmail.jobs.size).to eq(0)
               expect(Jobs::CriticalUserEmail.jobs.size).to eq(0)
@@ -337,7 +345,6 @@ describe InvitesController do
               SiteSetting.enable_local_logins = false
               put "/invites/show/#{invite.invite_key}.json"
               expect(response.status).to eq(200)
-              expect(JSON.parse(response.body)["success"]).to eq(true)
 
               expect(Jobs::InvitePasswordInstructionsEmail.jobs.size).to eq(0)
               expect(Jobs::CriticalUserEmail.jobs.size).to eq(0)

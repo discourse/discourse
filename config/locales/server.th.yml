@@ -327,6 +327,8 @@ th:
     actions:
       delete_spammer:
         title: "ลบสแปมเมอร์"
+      delete_single:
+        title: "ลบ"
       disagree:
         title: "ไม่เห็นด้วย"
       approve:

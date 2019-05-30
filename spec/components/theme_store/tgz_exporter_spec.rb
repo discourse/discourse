@@ -109,7 +109,7 @@ describe ThemeStore::TgzExporter do
     # Theme field names should be sanitized before writing to the database,
     # but protection is in place 'just in case'
     expect do
-      theme.set_field(target: :translations, name: "en", value: "hacked")
+      theme.set_field(target: :translations, name: SiteSetting.default_locale, value: "hacked")
       ThemeField.any_instance.stubs(:file_path).returns("../../malicious")
       theme.save!
       package

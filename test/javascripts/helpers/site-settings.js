@@ -91,6 +91,7 @@ Discourse.SiteSettingsOriginal = {
   highlighted_languages:
     "apache|bash|cs|cpp|css|coffeescript|diff|xml|http|ini|json|java|javascript|makefile|markdown|nginx|objectivec|ruby|perl|php|python|sql|handlebars",
   enable_emoji: true,
+  enable_emoji_shortcuts: true,
   emoji_set: "emoji_one",
   desktop_category_page_style: "categories_and_latest_topics",
   enable_mentions: true,

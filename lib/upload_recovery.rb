@@ -63,15 +63,32 @@ class UploadRecovery
     end
   end
 
+  def ensure_upload!(post:, sha1:, upload:)
+    return if !upload.persisted?
+
+    if upload.sha1 != sha1
+      STDERR.puts "Warning #{post.url} had an incorrect #{sha1} should be #{upload.sha1} storing in custom field 'rake uploads:fix_relative_upload_links' can fix this"
+
+      sha_map = post.custom_fields["UPLOAD_SHA1_MAP"] || "{}"
+      sha_map = JSON.parse(sha_map)
+      sha_map[sha1] = upload.sha1
+
+      post.custom_fields["UPLOAD_SHA1_MAP"] = sha_map.to_json
+      post.save_custom_fields
+    end
+
+    post.rebake!
+  end
+
   def recover_post_upload_from_local(post:, sha1:)
     recover_from_local(sha1: sha1, user_id: post.user_id) do |upload|
-      post.rebake! if upload.persisted?
+      ensure_upload!(post: post, sha1: sha1, upload: upload)
     end
   end
 
   def recover_post_upload_from_s3(post:, sha1:)
     recover_from_s3(sha1: sha1, user_id: post.user_id) do |upload|
-      post.rebake! if upload.persisted?
+      ensure_upload!(post: post, sha1: sha1, upload: upload)
     end
   end
 

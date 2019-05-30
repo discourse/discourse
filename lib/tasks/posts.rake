@@ -8,17 +8,20 @@ task 'posts:rebake' => :environment do
 end
 
 task 'posts:rebake_uncooked_posts' => :environment do
-  uncooked = Post.where(baked_version: nil)
+  RailsMultisite::ConnectionManagement.each_connection do
+    puts "Rebaking uncooked posts on #{RailsMultisite::ConnectionManagement.current_db}"
+    uncooked = Post.where('baked_version <> ? or baked_version IS NULL', Post::BAKED_VERSION)
 
-  rebaked = 0
-  total = uncooked.count
+    rebaked = 0
+    total = uncooked.count
 
-  uncooked.find_each do |post|
-    rebake_post(post)
-    print_status(rebaked += 1, total)
+    uncooked.find_each do |post|
+      rebake_post(post)
+      print_status(rebaked += 1, total)
+    end
+
+    puts "", "#{rebaked} posts done!", ""
   end
-
-  puts "", "#{rebaked} posts done!", ""
 end
 
 desc 'Update each post with latest markdown and refresh oneboxes'
@@ -108,6 +111,9 @@ def rebake_posts(opts = {})
 end
 
 def rebake_post(post, opts = {})
+  if !opts[:priority]
+    opts[:priority] = :ultra_low
+  end
   post.rebake!(opts)
 rescue => e
   puts "", "Failed to rebake (topic_id: #{post.topic_id}, post_id: #{post.id})", e, e.backtrace.join("\n")
@@ -392,12 +398,18 @@ task 'posts:reorder_posts', [:topic_id] => [:environment] do |_, args|
   puts "", "Done.", ""
 end
 
-desc 'Finds missing post upload records from cooked HTML content'
-task 'posts:missing_uploads' => :environment do
+def missing_uploads
+  puts "Looking for missing uploads on: #{RailsMultisite::ConnectionManagement.current_db}"
+
   old_scheme_upload_count = 0
 
-  missing = Post.find_missing_uploads do |post, src, path, sha1|
+  count_missing = 0
+
+  missing = Post.find_missing_uploads(include_local_upload: true) do |post, src, path, sha1|
     next if sha1.present?
+    puts "Fixing missing uploads: " if count_missing == 0
+    count_missing += 1
+    print "."
 
     upload_id = nil
 
@@ -419,7 +431,6 @@ task 'posts:missing_uploads' => :environment do
       tmp.rewind
 
       if upload = UploadCreator.new(tmp, File.basename(path)).create_for(Discourse.system_user.id)
-        sha1s << upload.sha1
         upload_id = upload.id
         DbHelper.remap(UrlHelper.absolute(src), upload.url)
 
@@ -447,9 +458,208 @@ task 'posts:missing_uploads' => :environment do
     puts "#{missing[:uploads].count} uploads are missing."
     puts "#{old_scheme_upload_count} of #{missing[:uploads].count} are old scheme uploads." if old_scheme_upload_count > 0
     puts "#{missing[:post_uploads].count} of #{Post.count} posts are affected.", ""
+
+    if ENV['GIVE_UP'] == "1"
+      missing[:post_uploads].each do |id, uploads|
+        post = Post.with_deleted.find_by(id: id)
+        if post
+          puts "#{post.full_url} giving up on #{uploads.length} upload/s"
+          PostCustomField.create!(post_id: post.id, name: Post::MISSING_UPLOADS_IGNORED, value: "t")
+        else
+          puts "could not find post #{id}"
+        end
+      end
+    end
+
+    if ENV['VERBOSE'] == "1"
+      puts "missing uploads!"
+      missing[:uploads].each do |path|
+        puts "#{path}"
+      end
+
+      if missing[:post_uploads].count > 0
+        puts
+        puts "Posts with missing uploads"
+        missing[:post_uploads].each do |id, uploads|
+          post = Post.with_deleted.find_by(id: id)
+          if post
+            puts "#{post.full_url} missing #{uploads.join(", ")}"
+          else
+            puts "could not find post #{id}"
+          end
+        end
+      end
+    end
   end
+
+  missing[:count] == 0
 end
 
 desc 'Finds missing post upload records from cooked HTML content'
-task 'posts:missing_uploads' => :environment do
+task 'posts:missing_uploads', [:single_site] => :environment do |_, args|
+  if args[:single_site].to_s.downcase == "single_site"
+    missing_uploads
+  else
+    RailsMultisite::ConnectionManagement.each_connection do
+      missing_uploads
+    end
+  end
+end
+
+def destroy_old_data_exports
+  topics = Topic.with_deleted.where(<<~SQL, 2.days.ago)
+    slug LIKE '%-export-complete' AND
+    archetype = 'private_message' AND
+    posts_count = 1 AND
+    created_at < ? AND
+    user_id = -1
+  SQL
+
+  puts "Found #{topics.count} old CSV data exports on #{RailsMultisite::ConnectionManagement.current_db}, destroying"
+  puts
+  topics.each do |t|
+    Topic.transaction do
+      t.posts.first.destroy!
+      t.destroy!
+      print "."
+    end
+  end
+  puts "done"
+end
+
+desc 'destroys all user archive PMs (they may contain broken images)'
+task 'posts:destroy_old_data_exports' => :environment do
+  if RailsMultisite::ConnectionManagement.current_db != "default"
+    destroy_old_data_exports
+  else
+    RailsMultisite::ConnectionManagement.each_connection do
+      destroy_old_data_exports
+    end
+  end
+end
+
+def recover_uploads_from_index(path)
+  lookup = []
+
+  db = RailsMultisite::ConnectionManagement.current_db
+  cdn_path = SiteSetting.cdn_path("/uploads/#{db}").sub(/https?:/, "")
+  Post.where("cooked LIKE '%#{cdn_path}%'").each do |post|
+    regex = Regexp.new("((https?:)?#{Regexp.escape(cdn_path)}[^,;\\]\\>\\t\\n\\s)\"\']+)")
+    uploads = []
+    post.raw.scan(regex).each do |match|
+      uploads << match[0]
+    end
+
+    if uploads.length > 0
+      lookup << [post.id, uploads]
+    else
+      print "."
+      post.rebake!
+    end
+  end
+
+  PostCustomField.where(name: Post::MISSING_UPLOADS).pluck(:post_id, :value).each do |post_id, uploads|
+    uploads = JSON.parse(uploads)
+    raw = Post.where(id: post_id).pluck(:raw).first
+    uploads.map! do |upload|
+      orig = upload
+      if raw.scan(upload).length == 0
+        upload = upload.sub(SiteSetting.Upload.s3_cdn_url, SiteSetting.Upload.s3_base_url)
+      end
+      if raw.scan(upload).length == 0
+        upload = upload.sub(SiteSetting.Upload.s3_base_url, Discourse.base_url)
+      end
+      if raw.scan(upload).length == 0
+        upload = upload.sub(Discourse.base_url + "/", "/")
+      end
+      if raw.scan(upload).length == 0
+        # last resort, try for sha
+        sha = upload.split("/")[-1]
+        sha = sha.split(".")[0]
+
+        if sha.length == 40 && raw.scan(sha).length == 1
+          raw.match(Regexp.new("([^\"'<\\s\\n]+#{sha}[^\"'>\\s\\n]+)"))
+          upload = $1
+        end
+      end
+      if raw.scan(upload).length == 0
+        puts "can not find #{orig} in\n\n#{raw}"
+        upload = nil
+      end
+      upload
+    end
+    uploads.compact!
+    if uploads.length > 0
+      lookup << [post_id, uploads]
+    end
+  end
+
+  lookup.each do |post_id, uploads|
+    post = Post.find(post_id)
+    changed = false
+
+    uploads.each do |url|
+      if (n = post.raw.scan(url).length) != 1
+        puts "Skipping #{url} in #{post.full_url} cause it appears #{n} times"
+        next
+      end
+
+      name = File.basename(url).split("_")[0].split(".")[0]
+      puts "Searching for #{url} (#{name}) in index"
+      if name.length != 40
+        puts "Skipping #{url} in #{post.full_url} cause it appears to have a short file name"
+        next
+      end
+      found = `cat #{path} | grep #{name} | grep original`.split("\n")[0] rescue nil
+      if found.blank?
+        puts "Skipping #{url} in #{post.full_url} cause it missing from index"
+        next
+      end
+
+      found = File.expand_path(File.join(File.dirname(path), found))
+      if !File.exist?(found)
+        puts "Skipping #{url} in #{post.full_url} cause it missing from disk"
+        next
+      end
+
+      File.open(found) do |f|
+        begin
+          upload = UploadCreator.new(f, "upload").create_for(post.user_id)
+          if upload && upload.url
+            post.raw = post.raw.sub(url, upload.url)
+            changed = true
+          else
+            puts "Skipping #{url} in #{post.full_url} unable to create upload (unknown error)"
+            next
+          end
+        rescue Discourse::InvalidAccess
+          puts "Skipping #{url} in #{post.full_url} unable to create upload (bad format)"
+          next
+        end
+      end
+    end
+    if changed
+      puts "Recovered uploads on #{post.full_url}"
+      post.save!(validate: false)
+      post.rebake!
+    end
+  end
+end
+
+desc 'Attempts to recover missing uploads from an index file'
+task 'posts:recover_uploads_from_index' => :environment do |_, args|
+  path = File.expand_path(Rails.root + "public/uploads/all_the_files")
+  if File.exist?(path)
+    puts "Found existing index file at #{path}"
+  else
+    puts "Can not find index #{path} generating index this could take a while..."
+    `cd #{File.dirname(path)} && find -type f > #{path}`
+  end
+  if RailsMultisite::ConnectionManagement.current_db != "default"
+    recover_uploads_from_index(path)
+  else
+    RailsMultisite::ConnectionManagement.each_connection do
+      recover_uploads_from_index(path)
+    end
+  end
 end

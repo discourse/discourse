@@ -33,14 +33,14 @@ export default Ember.Component.extend({
 
   @computed("expandDetails")
   expandRequestIcon(expandDetails) {
-    return expandDetails === this.get("expandDetailsRequestKey")
+    return expandDetails === this.expandDetailsRequestKey
       ? "ellipsis-h"
       : "ellipsis-v";
   },
 
   @computed("expandDetails")
   expandResponseIcon(expandDetails) {
-    return expandDetails === this.get("expandDetailsResponseKey")
+    return expandDetails === this.expandDetailsResponseKey
       ? "ellipsis-h"
       : "ellipsis-v";
   },
@@ -69,9 +69,9 @@ export default Ember.Component.extend({
     },
 
     toggleRequest() {
-      const expandDetailsKey = this.get("expandDetailsRequestKey");
+      const expandDetailsKey = this.expandDetailsRequestKey;
 
-      if (this.get("expandDetails") !== expandDetailsKey) {
+      if (this.expandDetails !== expandDetailsKey) {
         let headers = _.extend(
           {
             "Request URL": this.get("model.request_url"),
@@ -91,9 +91,9 @@ export default Ember.Component.extend({
     },
 
     toggleResponse() {
-      const expandDetailsKey = this.get("expandDetailsResponseKey");
+      const expandDetailsKey = this.expandDetailsResponseKey;
 
-      if (this.get("expandDetails") !== expandDetailsKey) {
+      if (this.expandDetails !== expandDetailsKey) {
         this.setProperties({
           headers: plainJSON(this.get("model.response_headers")),
           body: this.get("model.response_body"),

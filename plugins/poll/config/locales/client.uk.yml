@@ -17,7 +17,7 @@ uk:
       multiple:
         help:
           at_least_min_options:
-            one: "Виберіть хоча б <strong>1</strong> варіант"
+            one: "Виберіть хоча б <strong>%{count}</strong> варіант"
             few: "Виберіть хоча б <strong>%{count}</strong> варіантів"
             many: "Виберіть хоча б <strong>%{count}</strong> варіанти"
             other: "Виберіть хоча б <strong>%{count}</strong> варіанти"

@@ -89,6 +89,8 @@ describe "translate accelerator" do
   end
 
   describe "with overrides" do
+    before { I18n.locale = :en }
+
     it "returns the overridden key" do
       override_translation('en', 'foo', 'Overwritten foo')
       expect(I18n.t('foo')).to eq('Overwritten foo')

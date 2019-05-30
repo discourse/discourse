@@ -85,6 +85,11 @@ createWidget("notification-item", {
     }
 
     if (this.attrs.fancy_title) {
+      if (this.attrs.topic_id) {
+        return `<span data-topic-id="${this.attrs.topic_id}">${
+          this.attrs.fancy_title
+        }</span>`;
+      }
       return this.attrs.fancy_title;
     }
 

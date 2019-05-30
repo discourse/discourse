@@ -127,9 +127,7 @@ export default Ember.Component.extend({
 
   @computed("inviteModel", "inviteModel.details.can_invite_via_email")
   canInviteViaEmail(inviteModel, canInviteViaEmail) {
-    return this.get("inviteModel") === this.currentUser
-      ? true
-      : canInviteViaEmail;
+    return this.inviteModel === this.currentUser ? true : canInviteViaEmail;
   },
 
   @computed("isPM", "canInviteViaEmail")
@@ -184,10 +182,7 @@ export default Ember.Component.extend({
 
   @computed("emailOrUsername")
   showCustomMessage(emailOrUsername) {
-    return (
-      this.get("inviteModel") === this.currentUser ||
-      emailValid(emailOrUsername)
-    );
+    return this.inviteModel === this.currentUser || emailValid(emailOrUsername);
   },
 
   // Instructional text for the modal.
@@ -247,7 +242,7 @@ export default Ember.Component.extend({
 
   @computed("isPM", "emailOrUsername", "invitingExistingUserToTopic")
   successMessage(isPM, emailOrUsername, invitingExistingUserToTopic) {
-    if (this.get("hasGroups")) {
+    if (this.hasGroups) {
       return I18n.t("topic.invite_private.success_group");
     } else if (isPM) {
       return I18n.t("topic.invite_private.success");
@@ -287,7 +282,7 @@ export default Ember.Component.extend({
       invitingExistingUserToTopic: false
     });
 
-    this.get("inviteModel").setProperties({
+    this.inviteModel.setProperties({
       groupNames: null,
       error: false,
       saving: false,
@@ -298,14 +293,14 @@ export default Ember.Component.extend({
 
   actions: {
     createInvite() {
-      if (this.get("disabled")) {
+      if (this.disabled) {
         return;
       }
 
       const groupNames = this.get("inviteModel.groupNames");
-      const userInvitedController = this.get("userInvitedShow");
+      const userInvitedController = this.userInvitedShow;
 
-      const model = this.get("inviteModel");
+      const model = this.inviteModel;
       model.setProperties({ saving: true, error: false });
 
       const onerror = e => {
@@ -314,7 +309,7 @@ export default Ember.Component.extend({
         } else {
           this.set(
             "errorMessage",
-            this.get("isPM")
+            this.isPM
               ? I18n.t("topic.invite_private.error")
               : I18n.t("topic.invite_reply.error")
           );
@@ -322,9 +317,9 @@ export default Ember.Component.extend({
         model.setProperties({ saving: false, error: true });
       };
 
-      if (this.get("hasGroups")) {
-        return this.get("inviteModel")
-          .createGroupInvite(this.get("emailOrUsername").trim())
+      if (this.hasGroups) {
+        return this.inviteModel
+          .createGroupInvite(this.emailOrUsername.trim())
           .then(data => {
             model.setProperties({ saving: false, finished: true });
             this.get("inviteModel.details.allowed_groups").pushObject(
@@ -334,15 +329,15 @@ export default Ember.Component.extend({
           })
           .catch(onerror);
       } else {
-        return this.get("inviteModel")
+        return this.inviteModel
           .createInvite(
-            this.get("emailOrUsername").trim(),
+            this.emailOrUsername.trim(),
             groupNames,
-            this.get("customMessage")
+            this.customMessage
           )
           .then(result => {
             model.setProperties({ saving: false, finished: true });
-            if (!this.get("invitingToTopic") && userInvitedController) {
+            if (!this.invitingToTopic && userInvitedController) {
               Invite.findInvitedBy(
                 this.currentUser,
                 userInvitedController.get("filter")
@@ -352,14 +347,14 @@ export default Ember.Component.extend({
                   totalInvites: inviteModel.invites.length
                 });
               });
-            } else if (this.get("isPM") && result && result.user) {
+            } else if (this.isPM && result && result.user) {
               this.get("inviteModel.details.allowed_users").pushObject(
                 Ember.Object.create(result.user)
               );
               this.appEvents.trigger("post-stream:refresh");
             } else if (
-              this.get("invitingToTopic") &&
-              emailValid(this.get("emailOrUsername").trim()) &&
+              this.invitingToTopic &&
+              emailValid(this.emailOrUsername.trim()) &&
               result &&
               result.user
             ) {
@@ -371,26 +366,22 @@ export default Ember.Component.extend({
     },
 
     generateInvitelink() {
-      if (this.get("disabled")) {
+      if (this.disabled) {
         return;
       }
 
       const groupNames = this.get("inviteModel.groupNames");
-      const userInvitedController = this.get("userInvitedShow");
-      const model = this.get("inviteModel");
+      const userInvitedController = this.userInvitedShow;
+      const model = this.inviteModel;
       model.setProperties({ saving: true, error: false });
 
       let topicId;
-      if (this.get("invitingToTopic")) {
+      if (this.invitingToTopic) {
         topicId = this.get("inviteModel.id");
       }
 
       return model
-        .generateInviteLink(
-          this.get("emailOrUsername").trim(),
-          groupNames,
-          topicId
-        )
+        .generateInviteLink(this.emailOrUsername.trim(), groupNames, topicId)
         .then(result => {
           model.setProperties({
             saving: false,
@@ -416,7 +407,7 @@ export default Ember.Component.extend({
           } else {
             this.set(
               "errorMessage",
-              this.get("isPM")
+              this.isPM
                 ? I18n.t("topic.invite_private.error")
                 : I18n.t("topic.invite_reply.error")
             );
@@ -427,8 +418,8 @@ export default Ember.Component.extend({
 
     showCustomMessageBox() {
       this.toggleProperty("hasCustomMessage");
-      if (this.get("hasCustomMessage")) {
-        if (this.get("inviteModel") === this.currentUser) {
+      if (this.hasCustomMessage) {
+        if (this.inviteModel === this.currentUser) {
           this.set(
             "customMessage",
             I18n.t("invite.custom_message_template_forum")

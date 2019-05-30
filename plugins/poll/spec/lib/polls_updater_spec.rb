@@ -54,7 +54,7 @@ describe DiscoursePoll::PollsUpdater do
   describe "update" do
 
     it "does nothing when there are no changes" do
-      message = MessageBus.track_publish do
+      message = MessageBus.track_publish("/polls/#{post.topic_id}") do
         update(post, polls)
       end.first
 
@@ -109,7 +109,7 @@ describe DiscoursePoll::PollsUpdater do
 
         expect(Poll.find_by(post: post)).to_not be
 
-        message = MessageBus.track_publish do
+        message = MessageBus.track_publish("/polls/#{post.topic_id}") do
           update(post, polls)
         end.first
 
@@ -135,7 +135,7 @@ describe DiscoursePoll::PollsUpdater do
 
           freeze_time 1.month.from_now
 
-          message = MessageBus.track_publish do
+          message = MessageBus.track_publish("/polls/#{post.topic_id}") do
             update(post, polls_with_some_attributes)
           end.first
 
@@ -166,7 +166,7 @@ describe DiscoursePoll::PollsUpdater do
         describe "inside the edit window" do
 
           it "and deletes the votes" do
-            message = MessageBus.track_publish do
+            message = MessageBus.track_publish("/polls/#{post.topic_id}") do
               update(post, polls_with_some_attributes)
             end.first
 

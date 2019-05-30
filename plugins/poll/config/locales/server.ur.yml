@@ -17,10 +17,10 @@ ur:
     default_poll_must_have_at_least_2_options: "پول کی کم ازکم 2 آپشنز ہونا ضروری ہے۔"
     named_poll_must_have_at_least_2_options: "پول جس کا نام <strong>%{نام}</strong> ہے، کی کم ازکم 2 آپشنز ہونا ضروری ہے۔"
     default_poll_must_have_less_options:
-      one: "پول کی 1 سے کم آپشن ہونا ضروری ہے۔"
+      one: "پول کی %{count} سے کم آپشن ہونا ضروری ہے۔"
       other: "پول کی %{گنتی} سے کم آپشنز ہونا ضروری ہے۔"
     named_poll_must_have_less_options:
-      one: "پول جس کا نام <strong>%{نام}</strong> ہے، کی 1 سے کم آپشن ہونا ضروری ہے۔"
+      one: "پول جس کا نام <strong>%{نام}</strong> ہے، کی %{count} سے کم آپشن ہونا ضروری ہے۔"
       other: "پول جس کا نام <strong>%{نام}</strong> ہے، کی %{count} سے کم آپشنز ہونا ضروری ہے۔"
     default_poll_must_have_different_options: "پول کی مختلف آپشنز ہونا ضروری ہے۔"
     named_poll_must_have_different_options: "پول جس کا نام <strong>%{نام}</strong> ہے، کی آپشنز مختلف ہونا ضروری ہے۔"

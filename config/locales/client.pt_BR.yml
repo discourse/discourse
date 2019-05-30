@@ -13,7 +13,7 @@ pt_BR:
         delimiter: "."
       human:
         storage_units:
-          format: "%n %u"
+          format: "%n,%u"
           units:
             byte:
               one: Byte
@@ -43,67 +43,67 @@ pt_BR:
       tiny:
         half_a_minute: "< 1m"
         less_than_x_seconds:
-          one: "< 1s"
+          one: "< %{count}s"
           other: "< %{count}s"
         x_seconds:
-          one: "1s"
+          one: "%{count}s"
           other: "%{count}s"
         less_than_x_minutes:
-          one: "< 1m"
+          one: "< %{count}m"
           other: "< %{count}m"
         x_minutes:
-          one: "1m"
+          one: "%{count}m"
           other: "%{count}m"
         about_x_hours:
-          one: "1h"
+          one: "%{count}h"
           other: "%{count}h"
         x_days:
-          one: "1d"
+          one: "%{count}d"
           other: "%{count}d"
         x_months:
-          one: "1 mês"
+          one: "%{count} mês"
           other: "%{count} meses"
         about_x_years:
-          one: "1a"
+          one: "%{count}a"
           other: "%{count}a"
         over_x_years:
-          one: "> 1a"
+          one: "> %{count}a"
           other: "> %{count}a"
         almost_x_years:
-          one: "1a"
+          one: "%{count}a"
           other: "%{count}a"
         date_month: "D MMM"
         date_year: "MMM 'YY"
       medium:
         x_minutes:
-          one: "1 minuto"
+          one: "%{count} minuto"
           other: "%{count} minutos"
         x_hours:
-          one: "1 hora"
+          one: "%{count} hora"
           other: "%{count} horas"
         x_days:
-          one: "1 dia"
+          one: "%{count} dia"
           other: "%{count} dias"
         date_year: "D MMM, 'YY"
       medium_with_ago:
         x_minutes:
-          one: "1 minuto atrás"
+          one: "%{count} minuto atrás"
           other: "%{count} minutos atrás"
         x_hours:
-          one: "1 hora atrás"
+          one: "%{count} hora atrás"
           other: "%{count} horas atrás"
         x_days:
-          one: "1 dia atrás"
+          one: "%{count} dia atrás"
           other: "%{count} dias atrás"
       later:
         x_days:
-          one: "1 dia depois"
+          one: "%{count} dia depois"
           other: "%{count} dias depois"
         x_months:
-          one: "1 mês depois"
+          one: "%{count} mês depois"
           other: "%{count} meses depois"
         x_years:
-          one: "1 ano depois"
+          one: "%{count} ano depois"
           other: "%{count} anos depois"
       previous_month: "Mês Anterior"
       next_month: "Mês Seguinte"
@@ -215,6 +215,8 @@ pt_BR:
     every_hour: "a cada hora"
     daily: "diário"
     weekly: "semanal"
+    every_month: "a cada mês"
+    every_six_months: "a cada seis meses"
     max_of_count: "máx de {{count}}"
     alternation: "ou"
     character_count:
@@ -297,45 +299,75 @@ pt_BR:
     choose_topic:
       none_found: "Nenhum tópico encontrado."
       title:
-        search: "Procurar por um Tópico pelo título, url ou id:"
+        search: "Pesquisar por um Tópico pelo título, url ou id:"
         placeholder: "digite o título do tópico aqui"
     choose_message:
       none_found: "Nenhuma mensagem encontrada."
       title:
-        search: "Procurar por uma Mensagem pelo título:"
+        search: "Pesquisar por uma Mensagem pelo título:"
         placeholder: "digite o título da mensagem aqui"
     review:
+      awaiting_approval: "Aguardando Aprovação"
       delete: "Excluir"
       settings:
+        saved: "Salvo"
         save_changes: "Salvar Mudanças"
         title: "Configurações"
+        score_bonuses:
+          title: "Pontos de Bônus"
       moderation_history: "Histórico de Moderação"
-      title: "Precisa de Revisão"
+      view_all: "Visualizar Todos"
+      grouped_by_topic: "Agrupado por Tópico"
+      none: "Não há itens para revisar."
+      view_pending: "visualização pendente"
       topic: "Tópico:"
+      filtered_user: "Usuário:"
+      show_all_topics: "mostrar todos os tópicos"
+      deleted_post: "(postagem excluída)"
+      deleted_user: "(usuário excluído)"
       user:
         username: "Nome de Usuário"
         email: "E-mail"
         name: "Nome"
+        fields: "Campos"
       topics:
         topic: "Tópico"
         reviewable_count: "Contagem"
+        reported_by: "Reportado por"
         deleted: "[Tópico Excluído]"
+        original: "(tópico original)"
         details: "detalhes"
       edit: "Editar"
       save: "Salvar"
       cancel: "Cancelar"
+      new_topic: "Novo Tópico:"
       filters:
+        type:
+          title: "Tipo:"
+          all: "(todos os tipos)"
+        minimum_score: "Pontuação Mínima:"
         refresh: "Atualizar"
+        status: "Status:"
+        category: "Categoria:"
+      conversation:
+        view_full: "visualizar conversa completa"
       scores:
+        score: "Pontuação"
         date: "Data"
         type: "Tipo"
+        submitted_by: "Submetido Por"
+        reviewed_by: "Revisado Por"
       statuses:
         pending:
           title: "Pendentes"
+        approved:
+          title: "Aprovado"
         rejected:
           title: "Rejeitados"
         ignored:
           title: "Ignorados"
+        deleted:
+          title: "Excluído"
       types:
         reviewable_user:
           title: "Usuário"
@@ -375,7 +407,7 @@ pt_BR:
       posts_read: "Lidos"
       posts_read_long: "Postagens Lidas"
       total_rows:
-        one: "1 usuário"
+        one: "%{count} usuário"
         other: "%{count} usuários"
     group_histories:
       actions:
@@ -550,7 +582,7 @@ pt_BR:
       toggle_ordering: "alternar controle de ordenação"
       subcategories: "Subcategorias"
       topic_sentence:
-        one: "1 tópico"
+        one: "%{count} tópico"
         other: "%{count} tópicos"
       topic_stat_sentence_week:
         one: "%{count} novo tópico na última semana."
@@ -592,6 +624,7 @@ pt_BR:
       private_message: "Mensagem"
       private_messages: "Mensagens"
       user_notifications:
+        ignore_duration_username: "Nome de Usuário"
         ignore_duration_save: "Ignorar"
         ignore_duration_time_frame_required: "Por favor selecione um período de tempo"
         ignore_option: "Ignorados"
@@ -875,6 +908,8 @@ pt_BR:
         every_hour: "a cada hora"
         daily: "diariamente"
         weekly: "semanalmente"
+        every_month: "a cada mês"
+        every_six_months: "a cada seis meses"
       email_level:
         title: "Envie-me um e-mail quando alguém me citar, responder ao meu post, mencionar meu @username ou me convidar para um tópico"
         always: "sempre"
@@ -906,7 +941,7 @@ pt_BR:
         after_10_minutes: "depois de 10 minutos"
       notification_level_when_replying: "Quando eu postar em um tópico, definir aquele tópico como"
       invited:
-        search: "digite para procurar convites..."
+        search: "digite para pesquisar convites..."
         title: "Convites"
         user: "Usuário Convidado"
         sent: "Enviado"
@@ -984,22 +1019,22 @@ pt_BR:
         bookmark_count:
           one: "favorito"
           other: "favoritos"
-        top_replies: "Principais Respostas"
+        top_replies: "Melhores Respostas"
         no_replies: "Nenhuma resposta ainda."
         more_replies: "Mais Respostas"
-        top_topics: "Principais Tópicos"
+        top_topics: "Melhores Tópicos"
         no_topics: "Nenhum tópico ainda."
         more_topics: "Mais Tópicos"
-        top_badges: "Principais Emblemas"
+        top_badges: "Melhores Emblemas"
         no_badges: "Nenhum emblema ainda."
         more_badges: "Mais Emblemas"
-        top_links: "Principais Links"
+        top_links: "Melhores Links"
         no_links: "Nenhum link ainda."
         most_liked_by: "Mais Curtido Por"
         most_liked_users: "Mais Curtidos"
         most_replied_to_users: "Mais Respondidos"
         no_likes: "Ainda sem nenhuma curtida."
-        top_categories: "Principais Categorias"
+        top_categories: "Melhores Categorias"
         topics: "Tópicos"
         replies: "Respostas"
       ip_address:
@@ -1054,7 +1089,7 @@ pt_BR:
       reached: "<b>%{relativeAge}</b> – <a href='%{url}' target='_blank'>%{rate}</a> alcançou a configuração limite do site de %{siteSettingRate}."
       exceeded: "<b>%{relativeAge}</b> – <a href='%{url}' target='_blank'>%{rate}</a> excede a configuração limite do site de %{siteSettingRate}."
       rate:
-        one: "1 erro/%{duration}"
+        one: "%{count} erro/%{duration}"
         other: "%{count} erros/%{duration}"
     learn_more: "saber mais..."
     all_time: "total"
@@ -1221,20 +1256,21 @@ pt_BR:
       categories_only: "Categorias Apenas"
       categories_with_featured_topics: "Categorias com Tópicos em Destaque"
       categories_and_latest_topics: "Categorias e Últimos Tópicos"
-      categories_and_top_topics: "Categorias e Tópicos Principais"
+      categories_and_top_topics: "Categorias e Melhores Tópicos"
       categories_boxes: "Caixas com Subcategorias"
       categories_boxes_with_topics: "Caixas com Tópicos em Destaque"
     shortcut_modifier_key:
       shift: "Shift"
       ctrl: "Ctrl"
       alt: "Alt"
+      enter: "Inserir"
     conditional_loading_section:
       loading: Carregando...
     select_kit:
       default_header_text: Selecionar...
       no_content: Nenhuma correspondência encontrada
-      filter_placeholder: Buscar...
-      filter_placeholder_with_any: Procurar ou criar…
+      filter_placeholder: Pesquisar...
+      filter_placeholder_with_any: Pesquisar ou criar…
       create: "Criar: '{{content}}'"
       max_content_reached:
         one: "Você só pode selecionar {{count}} item."
@@ -1243,7 +1279,7 @@ pt_BR:
         one: "Selecione pelo menos {{count}} item."
         other: "Selecione pelo menos {{count}} itens."
     emoji_picker:
-      filter_placeholder: Procurar por emoji
+      filter_placeholder: Pesquisar por emoji
       smileys_&_emotion: Smileys e Emotion
       people_&_body: Pessoas e Corpo
       animals_&_nature: Animais e Natureza
@@ -1285,7 +1321,7 @@ pt_BR:
       edit_conflict: "editar conflito"
       group_mentioned_limit: "<b>Aviso!</b> Você mencionou <a href='{{group_link}}'>{{group}}</a>; no entanto, este grupo tem mais membros do que o limite de menção configurado pelo administrador de {{max}} usuários. Ninguém será notificado."
       group_mentioned:
-        one: "Ao mencionar {{group}}, você está prestes a notificar <a href='{{group_link}}'>1 pessoa</a> – você tem certeza?"
+        one: "Ao mencionar {{group}}, você está prestes a notificar <a href='{{group_link}}'>%{count} pessoa</a> – você tem certeza?"
         other: "Ao mencionar {{group}}, você está prestes a notificar <a href='{{group_link}}'>{{count}} pessoas</a> – você tem certeza?"
       cannot_see_mention:
         category: "Você mencionou {{username}}, mas ele(a) não será notificado(a), pois ele(a) não tem acesso à esta categoria. Você precisará adicioná-lo(a) ao grupo que tem acesso à categoria."
@@ -1321,7 +1357,6 @@ pt_BR:
       remove_featured_link: "Remover link do tópico."
       reply_placeholder: "Digite aqui. Use Markdown, BBCode, ou HTML para formatar. Arraste ou cole imagens."
       reply_placeholder_no_images: "Digite aqui. Use Markdown, BBCode, ou HTML para formatar."
-      reply_placeholder_choose_category: "Você precisa selecionar uma categoria antes de digitar aqui."
       view_new_post: "Veja a sua nova postagem."
       saving: "Salvando"
       saved: "Salvo!"
@@ -1395,10 +1430,10 @@ pt_BR:
     notifications:
       tooltip:
         regular:
-          one: "1 notificação não visualizada"
+          one: "%{count} notificação não visualizada"
           other: "{{count}} notificações não visualizadas"
         message:
-          one: "1 mensagem não lida"
+          one: "%{count} mensagem não lida"
           other: "{{count}} mensagens não lidas"
       title: "notificações de menção de @nome, respostas às suas postagens, tópicos, mensagens, etc"
       none: "Não foi possível carregar notificações no momento."
@@ -1413,7 +1448,7 @@ pt_BR:
       liked: "<span>{{username}}</span> {{description}}"
       liked_2: "<span>{{username}}, {{username2}}</span> {{description}}"
       liked_many:
-        one: "<span>{{username}}, {{username2}} e 1 outro</span> {{description}}"
+        one: "<span>{{username}}, {{username2}} e %{count} outro</span> {{description}}"
         other: "<span>{{username}}, {{username2}} e {{count}} outros</span> {{description}}"
       liked_consolidated_description:
         one: "curtiu {{count}} de suas postagens"
@@ -1451,16 +1486,16 @@ pt_BR:
       remote_tip_with_attachments: "link para imagem ou arquivo {{authorized_extensions}}"
       local_tip: "selecione imagens a partir do seu dispositivo"
       local_tip_with_attachments: "selecione imagens ou arquivos do seu dispositivo {{authorized_extensions}}"
-      hint: "(Você também pode arrastar e soltar para o editor para carregá-las)"
-      hint_for_supported_browsers: "Você pode também arrastar e soltar ou copiar imagens no editor"
+      hint: "(você também pode arrastar e soltar no editor para enviá-las)"
+      hint_for_supported_browsers: "você também pode arrastar e soltar no editor para enviá-las"
       uploading: "Enviando"
       select_file: "Selecionar Arquivo"
-      image_link: "link da sua imagem"
+      image_link: "link para o qual a sua imagem irá apontar"
       default_image_alt_text: imagem
     search:
       sort_by: "Ordenar por"
       relevance: "Relevância"
-      latest_post: "Última Mensagem"
+      latest_post: "Última Postagem"
       latest_topic: "Último Tópico"
       most_viewed: "Mais Visto"
       most_liked: "Mais Curtido"
@@ -1468,29 +1503,29 @@ pt_BR:
       clear_all: "Limpar Todos"
       too_short: "Seu termo de pesquisa é muito curto."
       result_count:
-        one: "<span>1 resultado para</span><span class='term'>{{term}}</span>"
+        one: "<span>%{count} resultado para</span><span class='term'>{{term}}</span>"
         other: "<span>{{count}}{{plus}} resultados para</span><span class='term'>{{term}}</span>"
-      title: "procurar em tópicos, respostas, usuários ou categorias"
+      title: "pesquisar tópicos, postagens, usuários, ou categorias"
       full_page_title: "pesquisar tópicos ou postagens"
       no_results: "Nenhum resultado encontrado."
-      no_more_results: "Sem mais resultados encontrados."
-      searching: "Procurando..."
+      no_more_results: "Nenhum outro resultado encontrado."
+      searching: "Pesquisando..."
       post_format: "#{{post_number}} por {{username}}"
-      results_page: "Buscar resultados para '{{term}}'"
+      results_page: "Pesquisar resultados para '{{term}}'"
       more_results: "Existem mais resultados. Por favor, restrinja os seus critérios de pesquisa."
-      cant_find: "Não está conseguindo achar o que você quer?"
+      cant_find: "Não consegue encontrar o que você está procurando?"
       start_new_topic: "Que tal começar um novo tópico?"
       or_search_google: "Ou tente pesquisar com o Google:"
-      search_google: "Tente pesquisar com o Google:"
+      search_google: "Tente pesquisar com o Google em vez disso:"
       search_google_button: "Google"
-      search_google_title: "Buscar neste site"
+      search_google_title: "Pesquisar este site"
       context:
-        user: "Procurar respostas de @{{username}}"
-        category: "Procurar a categoria #{{category}}"
-        topic: "Procurar neste tópico"
-        private_messages: "Procurar mensagens"
+        user: "Pesquisar postagens por @{{username}}"
+        category: "Pesquisar a categoria #{{category}}"
+        topic: "Pesquisar este tópico"
+        private_messages: "Pesquisar mensagens"
       advanced:
-        title: Busca avançada
+        title: Pesquisa Avançada
         posted_by:
           label: Postado por
         in_category:
@@ -1500,231 +1535,230 @@ pt_BR:
         with_badge:
           label: Com Emblema
         with_tags:
-          label: Tagged
+          label: Etiquetado
         filters:
-          label: Apenas retorne tópicos / posts ...
-          title: Correspondência apenas no título
-          likes: Eu gostei
-          posted: Eu publiquei em
+          label: Retornar somente tópicos/postagens...
+          title: Correspondência somente no título
+          likes: Eu curti
+          posted: Eu postei em
           watching: Eu estou observando
-          tracking: Eu estou rastreando
+          tracking: Eu estou acompanhando
           private: Nas minhas mensagens
-          bookmarks: Eu marquei
-          first: são a primeira publicação
-          pinned: está fixado
-          unpinned: não está fixado
-          seen: Eu leio
+          bookmarks: Eu marquei como favorito
+          first: são exatamente a primeira postagem
+          pinned: estão fixados
+          unpinned: não estão fixados
+          seen: Eu li
           unseen: Eu não li
-          wiki: é uma wiki
-          images: incluir imagem (s)
-          all_tags: Todas as tags acima
+          wiki: são wiki
+          images: incluem imagem(ns)
+          all_tags: Todas as etiquetas acima
         statuses:
-          label: Onde os tópicos
-          open: está aberto
-          closed: está fechado
-          archived: está arquivado
-          noreplies: tem zero respostas
+          label: Onde tópicos
+          open: estão abertos
+          closed: estão fechados
+          archived: estão arquivados
+          noreplies: não possuem respostas
           single_user: contém um único usuário
         post:
           count:
-            label: Contagem de Publicação Mínima
+            label: Contagem de Postagem Mínima
           time:
-            label: Publicado
+            label: Postado
             before: antes
             after: depois
     hamburger_menu: "ir para outra listagem de tópicos ou categoria"
     new_item: "novo"
     go_back: "voltar"
-    not_logged_in_user: "página do usuário com resumo de atividades correntes e preferencias"
+    not_logged_in_user: "página do usuário com resumo de atividades e preferências atuais"
     current_user: "ir para a sua página de usuário"
     topics:
       new_messages_marker: "última visita"
       bulk:
         select_all: "Selecionar Tudo"
         clear_all: "Limpar Tudo"
-        unlist_topics: "Tópicos Não Listados"
-        relist_topics: "Tópicos Relist"
+        unlist_topics: "Desalistar Tópicos"
+        relist_topics: "Realistar Tópicos"
         reset_read: "Redefinir Lido"
-        delete: "Apagar Tópicos"
-        dismiss: "Marcar como lida"
-        dismiss_read: "Marcar todas como lida"
+        delete: "Excluir Tópicos"
+        dismiss: "Descartar"
+        dismiss_read: "Descartar todos os não lidos"
         dismiss_button: "Descartar..."
-        dismiss_tooltip: "Descartar apenas novos posts ou parar de acompanhar tópicos"
-        also_dismiss_topics: "Parar de acompanhar esses tópicos para que eles deixem de aparecer como não lidos para mim"
-        dismiss_new: "Dispensar Nova"
-        toggle: "alternar a seleção em massa de tópicos"
+        dismiss_tooltip: "Descartar apenas postagens novas ou parar de acompanhar tópicos"
+        also_dismiss_topics: "Parar de acompanhar estes tópicos para que eles deixem de aparecer como não lidos para mim"
+        dismiss_new: "Descartar Novos"
+        toggle: "alternar seleção em massa de tópicos"
         actions: "Ações em Massa"
-        change_category: "Definir categoria"
+        change_category: "Definir Categoria"
         close_topics: "Fechar Tópicos"
         archive_topics: "Arquivar Tópicos"
         notification_level: "Notificações"
         choose_new_category: "Escolha a nova categoria para os tópicos:"
         selected:
-          one: "Você selecionou <b>1</b> tópico."
+          one: "Você selecionou <b>%{count}</b> tópico."
           other: "Você selecionou <b>{{count}}</b> tópicos."
-        change_tags: "Substituir marcadores"
+        change_tags: "Substituir Etiquetas"
         append_tags: "Adicionar Etiquetas"
-        choose_new_tags: "Escolha novas tags para esses tópicos:"
-        choose_append_tags: "Escolha novos marcadores para anexar a esses tópicos:"
-        changed_tags: "As tags para esses tópicos foram alteradas."
+        choose_new_tags: "Escolha novas etiquetas para estes tópicos:"
+        choose_append_tags: "Escolha novas etiquetas para adicionar a estes tópicos:"
+        changed_tags: "As etiquetas para estes tópicos foram alteradas."
       none:
-        unread: "Não há nenhum tópico não lido."
-        new: "Não há tópicos novos."
+        unread: "Você não tem tópicos não lidos."
+        new: "Você não tem novos tópicos."
         read: "Você ainda não leu nenhum tópico."
-        posted: "Você ainda não postou nenhum tópico."
-        latest: "Não há tópicos recentes. Isso é triste."
-        hot: "Não há tópicos quentes."
-        bookmarks: "Você ainda não tem tópicos nos favoritos."
+        posted: "Você ainda não postou em nenhum tópico."
+        latest: "Não há últimos tópicos. Isto é triste."
+        hot: "Não há tópicos populares."
+        bookmarks: "Você ainda não tem nenhum tópico favorito."
         category: "Não há tópicos na categoria {{category}}."
-        top: "Não há tópicos em alta."
-        search: "Não foram encontrados resultados."
+        top: "Não há melhores tópicos."
+        search: "Não há resultados de pesquisa."
         educate:
-          new: '<p>Seus novos tópicos aparecem aqui.</p><p>Por padrão, tópicos são considerados novos e mostrarão um indicador <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">novo</span> se foram criados nos últimos 2 dias.</p><p>Visite as suas <a href="%{userPrefsUrl}">preferências</a> para mudar isto.</p>'
-          unread: '<p>Seus tópicos não lidos aparecem aqui.</p><p>Por padrão, tópicos são considerados como não lidos e irão mostrar contadores <span class="badge new-posts badge-notification">1</span> se você:</p><ul><li>Criou o tópico</li><li>Respondeu ao tópico</li><li>Leu o tópico por mais de 4 minutos</li></ul><p>Ou se você explicitamente colocou o tópico como Monitorado ou Observado através do controle de notificações que fica na parte inferior de cada tópico.</p><p>Dê uma passada nas suas <a href="%{userPrefsUrl}">preferências</a> para mudar isto.</p>'
+          new: '<p>Seus novos tópicos aparecem aqui.</p><p>Por padrão, tópicos são considerados novos e mostrarão um indicador de <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">novo</span> se eles foram criados nos últimos 2 dias.</p><p>Visite as suas <a href="%{userPrefsUrl}">preferências</a> para alterar isto.</p>'
+          unread: '<p>Seus tópicos não lidos aparecem aqui.</p><p>Por padrão, tópicos são considerados como não lidos e irão mostrar contadores <span class="badge new-posts badge-notification">1</span> se você:</p><ul><li>Criou o tópico</li><li>Respondeu ao tópico</li><li>Leu o tópico por mais de 4 minutos</li></ul><p>Ou se você explicitamente colocou o tópico como Monitorado ou Observado através do controle de notificações na parte inferior de cada tópico.</p><p>Visite suas <a href="%{userPrefsUrl}">preferências</a> para alterar isto.</p>'
       bottom:
-        latest: "Não há mais tópicos recentes."
-        hot: "Não mais tópicos quentes."
+        latest: "Não há mais últimos tópicos."
+        hot: "Não há mais tópicos populares."
         posted: "Não há mais tópicos postados."
         read: "Não há mais tópicos lidos."
         new: "Não há mais tópicos novos."
         unread: "Não há mais tópicos não lidos."
         category: "Não há mais tópicos na categoria {{category}}."
-        top: "Não há mais tópicos em alta."
-        bookmarks: "Não há mais tópicos nos favoritos."
-        search: "Não existem mais resultados."
+        top: "Não há mais melhores tópicos."
+        bookmarks: "Não há mais tópicos favoritos."
+        search: "Não há mais resultados de pesquisa."
     topic:
       filter_to:
-        one: "1 publicação no tópico"
-        other: "{{count}} publicações no tópico"
-      create: "Novo tópico"
-      create_long: "Criar um novo tópico"
-      open_draft: "Rascunho aberto"
+        one: "%{count} postagem no tópico"
+        other: "{{count}} postagens no tópico"
+      create: "Novo Tópico"
+      create_long: "Criar um novo Tópico"
+      open_draft: "Rascunho Aberto"
       private_message: "Iniciar uma mensagem"
       archive_message:
-        help: "Mover mensagens para o seu arquivo"
+        help: "Mover mensagem para o seu arquivo"
         title: "Arquivar"
       move_to_inbox:
-        title: "Mover para caixa de entrada"
-        help: "Mover mensagem para Caixa de Entrada"
+        title: "Mover para Caixa de Entrada"
+        help: "Mover mensagem de volta para Caixa de Entrada"
       edit_message:
-        help: "Editar primeiro post da mensagem"
+        help: "Editar primeira postagem da mensagem"
         title: "Editar Mensagem"
       list: "Tópicos"
       new: "novo tópico"
       unread: "não lido"
       new_topics:
-        one: "1 tópico novo"
-        other: "{{count}} novos tópicos"
+        one: "%{count} tópico novo"
+        other: "{{count}} tópicos novos"
       unread_topics:
-        one: "1 tópico não lido"
+        one: "%{count} tópico não lido"
         other: "{{count}} tópicos não lidos"
       title: "Tópico"
       invalid_access:
-        title: "Tópico é particular"
-        description: "Desculpe, você não tem acesso a este tópico!"
-        login_required: "Você precisa de logar para ver este tópico."
+        title: "Tópico é privado"
+        description: "Desculpe, você não tem acesso àquele tópico!"
+        login_required: "Você precisa entrar para ver aquele tópico."
       server_error:
         title: "Falha ao carregar o tópico"
-        description: "Desculpe, nós não conseguimos carregar este tópico, possivelmente devido a um problema na conexão. Por favor teste novamente. Se o problema persistir, contate-nos."
+        description: "Desculpe, nós não conseguimos carregar este tópico, possivelmente devido a um problema na conexão. Por favor tente novamente. Se o problema persistir, entre em contato conosco."
       not_found:
         title: "Tópico não encontrado"
-        description: "Desculpe, não foi possível encontrar este tópico. Talvez ele tenha sido apagado?"
+        description: "Desculpe, não foi possível encontrar aquele tópico. Talvez ele tenha sido removido por um moderador?"
       total_unread_posts:
-        one: "você tem {{count}} post não lido neste tópico"
-        other: "você tem {{count}} posts não lidos neste tópico"
+        one: "você tem %{count} postagem não lida neste tópico"
+        other: "você tem {{count}} postagens não lidas neste tópico"
       unread_posts:
-        one: "você possui 1 resposta antiga que não foi lida neste tópico"
-        other: "você possui {{count}} respostas antigas que não foram lidas neste tópico"
+        one: "você tem %{count} postagem antiga não lida neste tópico"
+        other: "você tem {{count}} postagens antigas não lidas neste tópico"
       new_posts:
-        one: "há 1 nova resposta neste tópico desde a sua última leitura"
-        other: "há {{count}} novas respostas neste tópico desde a sua última leitura"
+        one: "há %{count} postagem nova neste tópico desde a sua última leitura"
+        other: "há {{count}} postagens novas neste tópico desde a sua última leitura"
       likes:
-        one: "há 1 curtida neste tópico"
+        one: "há %{count} curtida neste tópico"
         other: "há {{count}} curtidas neste tópico"
-      back_to_list: "Voltar a lista dos tópicos"
-      options: "Opções do tópico"
+      back_to_list: "Voltar para a Lista de Tópicos"
+      options: "Opções de Tópico"
       show_links: "mostrar links dentro deste tópico"
       toggle_information: "alternar detalhes do tópico"
-      read_more_in_category: "Quer ler mais? Procure outros tópicos em {{catLink}} ou {{latestLink}}."
+      read_more_in_category: "Quer ler mais? Veja outros tópicos em {{catLink}} ou {{latestLink}}."
       read_more: "Quer ler mais? {{catLink}} ou {{latestLink}}."
-      read_more_MF: "Há { UNREAD, plural, =0 {} one { <a href='{basePath}/unread'>1 não lido</a> }\tother {<a href='{basePath}/unread'># não lidos</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{e } false {} other{}} <a href='{basePath}/new'>1 novo</a> tópico} other { {BOTH, select, true{e } false {} other{}} <a href='{basePath}/new'># novos</a> tópicos} } ou {CATEGORY, select, true {veja outros tópicos em {catLink}} false {{latestLink}} other {}}"
-      browse_all_categories: Procurar em todas as categorias
-      view_latest_topics: ver tópicos mais recentes
-      suggest_create_topic: "Que tal criar um tópico?"
-      jump_reply_up: pular para a resposta mais recente
-      jump_reply_down: pular para a resposta mais antiga
-      deleted: "Este tópico foi apagado"
+      read_more_MF: "Há { UNREAD, plural, =0 {} one { <a href='{basePath}/unread'>1 não lido</a> } other { <a href='{basePath}/unread'># não lidos</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{e } false {} other{}} <a href='{basePath}/new'>1 novo</a> tópico} other { {BOTH, select, true{e } false {} other{}} <a href='{basePath}/new'># novos</a> tópicos} } restantes, ou {CATEGORY, select, true {veja outros tópicos em {catLink}} false {{latestLink}} other {}}"
+      browse_all_categories: Ver todas as categorias
+      view_latest_topics: ver últimos tópicos
+      suggest_create_topic: "Por que não criar um tópico?"
+      jump_reply_up: pular para a primeira resposta
+      jump_reply_down: pular para a última resposta
+      deleted: "Este tópico foi excluído"
       topic_status_update:
         title: "Temporizador de Tópico"
-        save: "Definir temporizador"
+        save: "Definir Temporizador"
         num_of_hours: "Número de horas:"
-        remove: "Remover contador"
-        publish_to: "Publicar para:"
+        remove: "Remover Temporizador"
+        publish_to: "Publicar Em:"
         when: "Quando:"
-        public_timer_types: Temporizadores de Tópicos
-        private_timer_types: Temporizadores de tópicos do usuário
+        public_timer_types: Temporizadores de Tópico
+        private_timer_types: Temporizadores de Tópico do Usuário
         time_frame_required: Por favor selecione um período de tempo
       auto_update_input:
         none: "Selecione um período de tempo"
         later_today: "Mais tarde hoje"
         tomorrow: "Amanhã"
-        later_this_week: "Mais tarde esta semana"
+        later_this_week: "Mais tarde nesta semana"
         this_weekend: "Este fim de semana"
         next_week: "Próxima semana"
         two_weeks: "Duas Semanas"
-        next_month: "Mês que vem"
+        next_month: "Próximo mês"
         three_months: "Três Meses"
         six_months: "Seis Meses"
         one_year: "Um Ano"
         forever: "Para Sempre"
-        pick_date_and_time: "Escolha uma data e uma hora"
+        pick_date_and_time: "Escolha data e hora"
         set_based_on_last_post: "Fechar baseado na última postagem"
       publish_to_category:
-        title: "Agendar publicação"
+        title: "Agendar Publicação"
       temp_open:
-        title: "Aberto temporariamente"
+        title: "Abrir Temporariamente"
       auto_reopen:
-        title: "Abrir tópico automaticamente"
+        title: "Abrir Tópico Automaticamente"
       temp_close:
-        title: "Fechar temporariamente"
+        title: "Fechar Temporariamente"
       auto_close:
-        title: "Fechar tópico automaticamente"
+        title: "Fechar Tópico Automaticamente"
         label: "Horas para fechar tópico automaticamente:"
         error: "Por favor insira um valor válido."
-        based_on_last_post: "Não feche até que o último post do tópico seja pelo menos antigo."
+        based_on_last_post: "Não fechar até que a última postagem do tópico tenha pelo menos esta idade."
       auto_delete:
-        title: "Auto-excluir o tópico"
+        title: "Excluir Tópico Automaticamente"
       auto_bump:
         title: "Promover Tópico Automaticamente"
       reminder:
         title: "Lembrar-me"
       status_update_notice:
-        auto_open: "Este tópico irá abrir automaticamente em %{timeLeft}"
-        auto_close: "Este tópico irá fechar automaticamente em %{timeLeft}"
+        auto_open: "Este tópico abrirá automaticamente em %{timeLeft}."
+        auto_close: "Este tópico fechará automaticamente em %{timeLeft}."
         auto_publish_to_category: "Este tópico será publicado em <a href=%{categoryUrl}>#%{categoryName}</a> %{timeLeft}."
         auto_close_based_on_last_post: "Este tópico fechará %{duration} após a última resposta."
-        auto_delete: "Este tópico será automaticamente apagado %{timeLeft}."
+        auto_delete: "Este tópico será automaticamente excluído %{timeLeft}."
         auto_bump: "Este tópico será automaticamente promovido %{timeLeft}."
-        auto_reminder: "Você será lembrado sobre este tópico%{timeLeft}."
-      auto_close_title: "Configurações para fechar automaticamente"
+        auto_reminder: "Você será lembrado sobre este tópico %{timeLeft}."
+      auto_close_title: "Configurações de Fechamento Automático"
       auto_close_immediate:
-        one: "A última publicação no tópico já tem 1 hora, portanto ele será fechado imediatamente."
-        other: "A última publicação no tópico já tem %{count} horas, portanto ele será fechado imediatamente."
+        one: "A última postagem no tópico já foi feita há %{count} hora, portanto o tópico será fechado imediatamente."
+        other: "A última postagem no tópico já foi feita há %{count} horas, portanto o tópico será fechado imediatamente."
       timeline:
         back: "Voltar"
-        back_description: "Volte para a sua última postagem não lida"
+        back_description: "Voltar para a sua última postagem não lida"
         replies_short: "%{current} / %{total}"
       progress:
         title: progresso do tópico
         go_top: "topo"
         go_bottom: "último"
         go: "ir"
-        jump_bottom: "ir para a última mensagem"
+        jump_bottom: "pular para a última postagem"
         jump_prompt: "pular para..."
-        jump_prompt_of: "de %{count} publicações"
-        jump_prompt_long: "Gostaria de ir para qual mensagem?"
-        jump_bottom_with_number: "ir para a mensagem %{post_number}"
-        jump_prompt_to_date: "Até a presente data"
+        jump_prompt_of: "de %{count} postagens"
+        jump_bottom_with_number: "pular para postagem %{post_number}"
+        jump_prompt_to_date: "até agora"
         jump_prompt_or: "ou"
         total: total de mensagens
         current: resposta atual
@@ -1821,7 +1855,7 @@ pt_BR:
         pin_validation: "Uma data é necessária para fixar este tópico."
         not_pinned: "Não existem tópicos fixados em {{categoryLink}}."
         already_pinned:
-          one: "Tópicos fixados em {{categoryLink}}: <strong class='badge badge-notification unread'>1</strong>"
+          one: "Tópicos fixados em {{categoryLink}}: <strong class='badge badge-notification unread'>%{count}</strong>"
           other: "Tópicos fixados em {{categoryLink}}: <strong class='badge badge-notification unread'>{{count}}</strong>"
         pin_globally: "Fazer com que este tópico apareça no topo de todas listas de tópicos até"
         confirm_pin_globally: "Você já tem {{count}} tópicos fixados globalmente. Muitos tópicos fixados podem prejudicar usuários novos e anônimos. Tem certeza que quer fixar outro tópico globalmente?"
@@ -1868,7 +1902,7 @@ pt_BR:
       login_reply: "Logar para Responder"
       filters:
         n_posts:
-          one: "1 mensagem"
+          one: "%{count} mensagem"
           other: "{{count}} mensagens"
         cancel: "Remover filtro"
       move_to:
@@ -1947,7 +1981,7 @@ pt_BR:
         select_all: selecionar tudo
         deselect_all: deselecionar tudo
         description:
-          one: <b>1</b> resposta selecionada.
+          one: <b>%{count}</b> resposta selecionada.
           other: "<b>{{count}}</b> respostas selecionadas."
     post:
       quote_reply: "Citação"
@@ -1967,7 +2001,7 @@ pt_BR:
       expand_collapse: "expandir/encolher"
       locked: "um membro da equipe bloqueou este post de ser editado"
       gap:
-        one: "ver 1 resposta oculta"
+        one: "ver %{count} resposta oculta"
         other: "ver {{count}} respostas ocultas"
       notice:
         new_user: "Esta é a primeira vez que o {{user}} postou — Vamos dar boas vindas da nossa comunidade"
@@ -1981,7 +2015,7 @@ pt_BR:
         other: "{{count}} pessoas curtiram esta mensagem"
       has_likes_title_only_you: "você curtiu esta postagem"
       has_likes_title_you:
-        one: "você e mais 1 pessoa gostaram desta postagem"
+        one: "você e mais %{count} pessoa gostaram desta postagem"
         other: "você e mais {{count}} outras pessoas gostaram desta postagem"
       errors:
         create: "Desculpe, houve um erro ao criar sua resposta. Por favor, tente outra vez."
@@ -2022,10 +2056,10 @@ pt_BR:
         delete_replies:
           confirm: "Você também deseja excluir as respostas desta postagem?"
           direct_replies:
-            one: "Sim e 1 resposta direta"
+            one: "Sim e %{count} resposta direta"
             other: "Sim e {{count}} respostas diretas"
           all_replies:
-            one: "Sim e 1 resposta"
+            one: "Sim e %{count} resposta"
             other: "Sim, e todas as {{count}} respostas"
           just_the_post: "Não, apenas este post"
         admin: "ações administrativas da postagem"
@@ -2074,50 +2108,6 @@ pt_BR:
           notify_user: "Você enviou uma mensagem particular para este usuário"
           bookmark: "Você favoritou esta resposta"
           like: "Você curtiu"
-        by_you_and_others:
-          off_topic:
-            one: "Você e mais 1 pessoa sinalizaram isto como off-topic"
-            other: "Você e mais {{count}} pessoas sinalizaram isto como off-topic"
-          spam:
-            one: "Você e mais 1 pessoa sinalizaram isto como spam"
-            other: "Você e mais {{count}} pessoas sinalizaram isto como spam"
-          inappropriate:
-            one: "Você e mais 1 pessoa sinalizaram isto como inapropriado"
-            other: "Você e mais {{count}} pessoas sinalizaram isto como inapropriado"
-          notify_moderators:
-            one: "Você e mais 1 pessoa sinalizaram isto para moderação"
-            other: "Você e mais {{count}} pessoas sinalizaram isto para moderação"
-          notify_user:
-            one: "Você e 1 outro usuário enviaram mensagens particulares para este usuário"
-            other: "Você e mais {{count}} usuários enviaram mensagens particulares para este usuário"
-          bookmark:
-            one: "Você e mais 1 pessoa favoritaram esta resposta"
-            other: "Você e mais {{count}} favoritaram esta resposta"
-          like:
-            one: "Você e mais 1 pessoa curtiu isto"
-            other: "Você e mais {{count}} pessoas curtiram isto"
-        by_others:
-          off_topic:
-            one: "1 pessoa sinalizou isto como off-topic"
-            other: "{{count}} pessoas sinalizaram isto como off-topic"
-          spam:
-            one: "1 pessoa sinalizou isto como spam"
-            other: "{{count}} pessoas sinalizaram isto como spam"
-          inappropriate:
-            one: "1 pessoa sinalizou isto como inapropriado"
-            other: "{{count}} pessoas sinalizaram isto como inapropriado"
-          notify_moderators:
-            one: "1 pessoa sinalizou isto para moderação"
-            other: "{{count}} pessoas sinalizaram isto para moderação"
-          notify_user:
-            one: "1 usuário enviou mensagem particular para este usuário"
-            other: "{{count}} enviaram mensagem particular para este usuário"
-          bookmark:
-            one: "1 pessoa favoritou esta resposta"
-            other: "{{count}} pessoas favoritaram esta resposta"
-          like:
-            one: "1 pessoa curtiu"
-            other: "{{count}} pessoas curtiram"
       delete:
         confirm:
           one: "Tem certeza de que deseja excluir esta postagem?"
@@ -2220,6 +2210,7 @@ pt_BR:
       default_top_period: "Período Superior Padrão:"
       allow_badges_label: "Permitir a concessão de emblemas nesta categoria"
       edit_permissions: "Editar Permissões"
+      review_group_name: "nome do grupo"
       require_topic_approval: "Requer aprovação do moderador de todos os novos tópicos"
       require_reply_approval: "Requer aprovação do moderador de todas as novas respostas"
       this_year: "este ano"
@@ -2294,13 +2285,13 @@ pt_BR:
       custom_placeholder_notify_moderators: "Deixe-nos saber especificamente com o que você está preocupado, e nos forneça links relevantes e exemplos quando possível."
       custom_message:
         at_least:
-          one: "insira pelo menos 1 caractere"
+          one: "insira pelo menos %{count} caractere"
           other: "insira pelo menos {{count}} caracteres"
         more:
-          one: "Falta apenas 1..."
+          one: "Falta apenas %{count}..."
           other: "Faltam {{count}}..."
         left:
-          one: "1 restante"
+          one: "%{count} restante"
           other: "{{count}} restantes"
     flagging_topic:
       title: "Obrigado por ajudar a manter a civilidade da nossa comunidade!"
@@ -2312,12 +2303,12 @@ pt_BR:
       links_title: "Links Populares"
       links_shown: "mostrar mais links..."
       clicks:
-        one: "1 clique"
+        one: "%{count} clique"
         other: "%{count} cliques"
     post_links:
       about: "expandir mais links para esta mensagem"
       title:
-        one: "mais 1"
+        one: "mais %{count}"
         other: "mais %{count}"
     topic_statuses:
       warning:
@@ -2381,7 +2372,7 @@ pt_BR:
       latest:
         title: "Recente"
         title_with_count:
-          one: "Recente (1)"
+          one: "Recente (%{count})"
           other: "Recentes ({{count}})"
         help: "tópicos com mensagens recentes"
       hot:
@@ -2400,20 +2391,20 @@ pt_BR:
       unread:
         title: "Não lidas"
         title_with_count:
-          one: "Não lido (1)"
+          one: "Não lido (%{count})"
           other: "Não lidos ({{count}})"
         help: "tópicos que você está observando ou acompanhando com mensagens não lidas"
         lower_title_with_count:
-          one: "1 não lido"
+          one: "%{count} não lido"
           other: "{{count}} não lidos"
       new:
         lower_title_with_count:
-          one: "1 nova"
+          one: "%{count} nova"
           other: "{{count}} novas"
         lower_title: "nova"
         title: "Novo"
         title_with_count:
-          one: "Novo (1)"
+          one: "Novo (%{count})"
           other: "Novos ({{count}})"
         help: "tópicos criados nos últimos dias"
       posted:
@@ -2425,7 +2416,7 @@ pt_BR:
       category:
         title: "{{categoryName}}"
         title_with_count:
-          one: "{{categoryName}} (1)"
+          one: "{{categoryName}} (%{count})"
           other: "{{categoryName}} ({{count}})"
         help: "tópicos recentes na categoria {{categoryName}}"
       top:
@@ -2461,62 +2452,62 @@ pt_BR:
       title: "Atalhos de teclado"
       jump_to:
         title: "Ir Para"
-        home: "<b>g</b>, <b>h</b> Início"
-        latest: "<b>g</b>, <b>l</b> Mais recentes"
-        new: "<b>g</b>, <b>n</b> Novos"
-        unread: "<b>g</b>, <b>u</b> Não Lidos"
-        categories: "<b>g</b>, <b>c</b> Categorias"
-        top: "<b>g</b>, <b>t</b> Topo"
-        bookmarks: "<b>g</b>, <b>b</b> Favoritos"
-        profile: "<b>g</b>, <b>p</b> Perfil"
-        messages: "<b>g</b>, <b>m</b> Mensagens"
-        drafts: "<b>g</b>, <b>d</b> Rascunhos"
+        home: "%{shortcut} Início"
+        latest: "%{shortcut} Mais recentes"
+        new: "%{shortcut} Novos"
+        unread: "%{shortcut} Não Lidos"
+        categories: "%{shortcut} Categorias"
+        top: "%{shortcut} Topo"
+        bookmarks: "%{shortcut} Favoritos"
+        profile: "%{shortcut} Perfil"
+        messages: "%{shortcut} Mensagens"
+        drafts: "%{shortcut} Rascunhos"
       navigation:
         title: "Navegação"
-        jump: "<b>#</b> Ir para a mensagem #"
-        back: "<b>u</b> Voltar"
-        up_down: "<b>k</b>/<b>j</b> Move seleção &uarr; &darr;"
-        open: "<b>o</b> ou <b>Enter</b> Abre tópico selecionado"
-        next_prev: "<b>shift</b>+<b>j</b>/<b>shift</b>+<b>k</b> Pŕoxima seção/seção anterior"
+        jump: "%{shortcut} Ir para a mensagem #"
+        back: "%{shortcut} Voltar"
+        up_down: "%{shortcut} Move seleção &uarr; &darr;"
+        open: "%{shortcut} Abre tópico selecionado"
+        next_prev: "%{shortcut} Pŕoxima seção/seção anterior"
       application:
         title: "Aplicação"
-        create: "<b>c</b> Criar um tópico novo"
-        notifications: "<b>n</b> Abre notificações"
-        hamburger_menu: "<b>=</b> Abrir o menu hambúrguer"
-        user_profile_menu: "<b>p</b> Abrir menu do usuário"
-        show_incoming_updated_topics: "<b>.</b> Exibir tópicos atualizados"
-        search: "<b>/</b> ou <b>ctrl</b>+<b>alt</b>+<b>f</b> Procurar"
-        help: "<b>?</b> Abrir ajuda de teclado"
-        dismiss_new_posts: "<b>x</b>, <b>r</b> Descartar Novas Postagens"
-        dismiss_topics: "<b>x</b>, <b>t</b> Descartar Tópicos"
-        log_out: "<b>shift</b>+<b>z</b> <b>shift</b>+<b>z</b> Deslogar"
+        create: "%{shortcut} Criar um tópico novo"
+        notifications: "%{shortcut} Abre notificações"
+        hamburger_menu: "%{shortcut} Abrir o menu hambúrguer"
+        user_profile_menu: "%{shortcut} Abrir menu do usuário"
+        show_incoming_updated_topics: "%{shortcut} Exibir tópicos atualizados"
+        search: "%{shortcut} Procurar"
+        help: "%{shortcut} Abrir ajuda de teclado"
+        dismiss_new_posts: "%{shortcut} Descartar Novas Postagens"
+        dismiss_topics: "%{shortcut} Descartar Tópicos"
+        log_out: "%{shortcut} Deslogar"
       composing:
         title: "Composição"
-        return: "<b>shift</b>+<b>c</b> Retornar ao compositor"
-        fullscreen: "<b>shift</b>+<b>F11</b> Compositor em tela cheia"
+        return: "%{shortcut} Retornar ao compositor"
+        fullscreen: "%{shortcut} Compositor em tela cheia"
       actions:
         title: "Ações"
-        bookmark_topic: "<b>f</b> Favoritar o tópico"
-        pin_unpin_topic: "<b>shift</b>+<b>p</b> Fixar/Desfixar tópico"
-        share_topic: "<b>shift</b>+<b>s</b> Compartilhar tópico"
-        share_post: "<b>s</b> Compartilhar mensagem"
-        reply_as_new_topic: "<b>t</b> Responder como tópico linkado"
-        reply_topic: "<b>shift</b>+<b>r</b> Responder ao tópico"
-        reply_post: "<b>r</b> Responder a mensagem"
-        quote_post: "<b>q</b> Citar resposta"
-        like: "<b>l</b> Curtir a mensagem"
-        flag: "<b>!</b> Sinalizar mensagem"
-        bookmark: "<b>b</b> Favoritar mensagem"
-        edit: "<b>e</b> Editar mensagem"
-        delete: "<b>d</b> Excluir mensagem"
-        mark_muted: "<b>m</b>, <b>m</b> Silenciar tópico"
-        mark_regular: "<b>m</b>, <b>r</b> Tópico regular (padrão)"
-        mark_tracking: "<b>m</b>, <b>t</b> Monitorar o tópico"
-        mark_watching: "<b>m</b>, <b>w</b> Observar o tópico"
-        print: "<b>ctrl</b>+<b>p</b> Imprimir tópico"
+        bookmark_topic: "%{shortcut} Favoritar o tópico"
+        pin_unpin_topic: "%{shortcut} Fixar/Desfixar tópico"
+        share_topic: "%{shortcut} Compartilhar tópico"
+        share_post: "%{shortcut} Compartilhar mensagem"
+        reply_as_new_topic: "%{shortcut} Responder como tópico linkado"
+        reply_topic: "%{shortcut} Responder ao tópico"
+        reply_post: "%{shortcut} Responder a mensagem"
+        quote_post: "%{shortcut} Citar resposta"
+        like: "%{shortcut} Curtir a mensagem"
+        flag: "%{shortcut} Sinalizar mensagem"
+        bookmark: "%{shortcut} Favoritar mensagem"
+        edit: "%{shortcut} Editar mensagem"
+        delete: "%{shortcut} Excluir mensagem"
+        mark_muted: "%{shortcut} Silenciar tópico"
+        mark_regular: "%{shortcut} Tópico regular (padrão)"
+        mark_tracking: "%{shortcut} Monitorar o tópico"
+        mark_watching: "%{shortcut} Observar o tópico"
+        print: "%{shortcut} Imprimir tópico"
     badges:
       earned_n_times:
-        one: "Emblema adquirido 1 vez"
+        one: "Emblema adquirido %{count} vez"
         other: "Emblema adquirido %{count} vezes"
       granted_on: "Concedido em %{date}"
       others_count: "Outros com este emblema (%{count})"
@@ -2524,13 +2515,13 @@ pt_BR:
       allow_title: "Você pode usar este selo como um título"
       multiple_grant: "Você pode ganhar isto várias vezes"
       badge_count:
-        one: "1 Emblema"
+        one: "%{count} Emblema"
         other: "%{count} Emblemas"
       more_badges:
-        one: "+1 Mais"
+        one: "+%{count} Mais"
         other: "+%{count} Mais"
       granted:
-        one: "1 concedido"
+        one: "%{count} concedido"
         other: "%{count} concedidos"
       select_badge_for_title: Selecione um emblema para usar como o seu título
       none: "(nenhum)"
@@ -2663,7 +2654,6 @@ pt_BR:
         title: "Lista de relatórios disponíveis"
       dashboard:
         title: "Painel Administrativo"
-        last_updated: "Painel atualizado em:"
         version: "Versão"
         up_to_date: "Você está atualizado!"
         critical_available: "Uma atualização crítica está disponível."
@@ -2737,6 +2727,11 @@ pt_BR:
           trending_search:
             more: '<a href="%{basePath}/admin/logs/search_logs">Registros de pesquisa</a>'
             disabled: 'O relatório de pesquisa em alta está desativado. Habilitar<a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">consultas de pesquisa de registro</a> para coletar dados.'
+          filters:
+            group:
+              label: Grupo
+            category:
+              label: Categoria
       commits:
         latest_changes: "Últimas atualizações: atualize com frequência!"
         by: "por"
@@ -2883,7 +2878,7 @@ pt_BR:
             one: "Existe um novo evento."
             other: "Existem {{count}} novos eventos."
           completed_in:
-            one: "Completado em 1 segundo."
+            one: "Completado em %{count} segundo."
             other: "Completado em {{count}} segundos."
           request: "Requisição"
           response: "Resposta"
@@ -2996,7 +2991,6 @@ pt_BR:
         new_style: "Novo Estilo"
         install: "Instalar"
         delete: "Apagar"
-        delete_confirm: "Apagar este tema?"
         color: "Cor"
         opacity: "Opacidade"
         copy: "Copiar"
@@ -3108,7 +3102,7 @@ pt_BR:
           theme_translations: "Traduções de Tema"
           empty: "Nenhum item"
           commits_behind:
-            one: "O tema é 1 commit por trás!"
+            one: "O tema é %{count} commit por trás!"
             other: "o tema é {{count}} confirmado por trás"
           compare_commits: "(Ver novos commits)"
           repo_unreachable: "Não foi possível contatar o repositório Git deste tema. Mensagem de erro:"
@@ -3406,7 +3400,7 @@ pt_BR:
         clear_filter: "Limpo"
         show_words: "mostrar palavras"
         word_count:
-          one: "1 palavra"
+          one: "%{count} palavra"
           other: "%{count} palavras"
         actions:
           block: "Bloqueado"
@@ -3790,7 +3784,7 @@ pt_BR:
             text: "Faltam amostras de concessão. Isso acontece quando a consulta de emblemas retorna IDs de usuários ou IDs de postagens que não existem. Isso pode causar resultados inesperados futuramente - por favor verifique novamente a sua consulta."
           no_grant_count: "Sem emblemas para serem atribuídos."
           grant_count:
-            one: "<b>1</b> emblema para ser atribuído."
+            one: "<b>%{count}</b> emblema para ser atribuído."
             other: "<b>%{count}</b> emblemas para serem atribuídos."
           sample: "Exemplo:"
           grant:
@@ -3868,7 +3862,7 @@ pt_BR:
       upload_error: "Desculpe, houve um erro ao fazer o upload deste arquivo. Por favor, tente novamente."
       quit: "Talvez Depois"
       staff_count:
-        one: "Sua comunidade tem 1 pessoa (você). "
+        one: "Sua comunidade tem %{count} pessoa (você). "
         other: "Sua comunidade tem%{count} pessoas, incluindo você."
       invites:
         add_user: "adicionar"

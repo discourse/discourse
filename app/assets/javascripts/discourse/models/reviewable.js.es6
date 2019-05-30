@@ -25,12 +25,12 @@ export default RestModel.extend({
 
     let adapter = this.store.adapterFor("reviewable");
     return ajax(
-      `/review/${this.get("id")}?version=${this.get("version")}`,
+      `/review/${this.id}?version=${this.version}`,
       adapter.getPayload("PUT", { reviewable: updates })
     ).then(updated => {
       updated.payload = Object.assign(
         {},
-        this.get("payload") || {},
+        this.payload || {},
         updated.payload || {}
       );
 

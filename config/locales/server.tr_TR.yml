@@ -86,7 +86,7 @@ tr_TR:
     template:
       body: "Şu alanlarla ilgili problem yaşandı:"
       header:
-        one: '%{count} hata bu %{model} kaydının alınmasını engelledi'
+        one: "%{count} hata bu %{model} kaydının alınmasını engelledi"
         other: "%{count} hata bu %{model} kaydının alınmasını engelledi"
     embed:
       load_from_remote: "Gönderi yüklenirken bir hata oluştu."
@@ -337,9 +337,7 @@ tr_TR:
         other: "%{count}yıl"
     distance_in_words_verbose:
       half_a_minute: "hemen şimdi"
-      less_than_x_seconds:
-        one: "hemen şimdi"
-        other: "hemen şimdi"
+      less_than_x_seconds: "hemen şimdi"
       x_seconds:
         one: "%{count} saniye önce"
         other: "%{count} saniye önce"
@@ -1679,14 +1677,10 @@ tr_TR:
         fields:
           logo:
             label: "Birincil Görsel"
-          logo_small:
-            label: "Sadeleştirilmiş Görsel"
       icons:
         title: "Simgeler"
         fields:
-          favicon:
-            label: "Simgecik"
-          apple_touch_icon:
+          large_icon:
             label: "Büyük Simge"
       homepage:
         title: "Ana Sayfa"
@@ -1732,6 +1726,8 @@ tr_TR:
         description: "Bu gönderiyi sakla ve kullanıcıya otomatik olarak uyarı mesajı gönder."
       delete_spammer:
         title: "İstenmeyen e-postayı göndereni sil"
+      delete_single:
+        title: "Sil"
       disagree_and_restore:
         description: "Tüm kullanıcılar tarafından görülebilmesi için gönderiyi geri yükle. "
       disagree:

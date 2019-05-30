@@ -17,10 +17,10 @@ nb_NO:
     default_poll_must_have_at_least_2_options: "Avstemninger må inneholde minst 2 alternativer."
     named_poll_must_have_at_least_2_options: "Avstemningen <strong>%{name}</strong> må ha minst 2 svaralternativer."
     default_poll_must_have_less_options:
-      one: "Avstemningen må ha mindre enn 1 svaralternativ"
+      one: "Avstemningen må ha mindre enn %{count} svaralternativ"
       other: "Avstemningen må ha mindre enn %{max} svaralternativer."
     named_poll_must_have_less_options:
-      one: "Avstemningen <strong>%{name}</strong> må ha mindre enn 1 valg."
+      one: "Avstemningen <strong>%{name}</strong> må ha mindre enn %{count} valg."
       other: "Avstemningen <strong>%{name}</strong> må ha mindre enn %{count} valg."
     default_poll_must_have_different_options: "Avstemningen må ha ulike alternativer."
     named_poll_must_have_different_options: "Avstemningen <strong>%{name}</strong> må ha ulike svaralternativer."

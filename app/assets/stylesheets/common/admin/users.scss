@@ -81,6 +81,12 @@
       margin-right: 5px;
     }
   }
+  &.username,
+  &.name {
+    .value {
+      word-break: break-all;
+    }
+  }
 }
 
 .admin-users {

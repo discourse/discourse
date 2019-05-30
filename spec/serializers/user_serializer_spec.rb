@@ -250,4 +250,17 @@ describe UserSerializer do
       expect(json[:user_api_keys][2][:id]).to eq(user_api_key_2.id)
     end
   end
+
+  context "with missing user profile" do
+    fab!(:user) { Fabricate(:user) }
+
+    it "does not throw an error" do
+      id = user.id
+      UserProfile.delete(id)
+      user_b = User.find(id)
+      json = UserSerializer.new(user_b, scope: Guardian.new(user_b), root: false).as_json
+
+      expect(json[:bio_raw]).to eq nil
+    end
+  end
 end

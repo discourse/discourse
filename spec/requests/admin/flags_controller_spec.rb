@@ -115,7 +115,8 @@ RSpec.describe Admin::FlagsController do
 
   context '#disagree' do
     it "unhides the post and unsilences the user if disagreed" do
-      SiteSetting.spam_score_to_silence_new_user = 1.0
+      Reviewable.set_priorities(high: 1.0)
+      SiteSetting.silence_new_user_sensitivity = Reviewable.sensitivity[:low]
       SiteSetting.num_users_to_silence_new_user = 1
 
       new_user = Fabricate(:newuser)

@@ -84,8 +84,6 @@ sv:
         '5': "Du kan lita på det"
         '7': "Mest sannolikt"
         '9': "Ja"
-    new_user_narrative:
-      reset_trigger: "ny användare"
     advanced_user_narrative:
       poll:
         reply: |-

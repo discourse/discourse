@@ -19,8 +19,8 @@ export default Ember.Component.extend(
 
     click(e) {
       // only pin unpin for now
-      if (this.get("canAct") && $(e.target).hasClass("d-icon-thumbtack")) {
-        const topic = this.get("topic");
+      if (this.canAct && $(e.target).hasClass("d-icon-thumbtack")) {
+        const topic = this.topic;
         topic.get("pinned") ? topic.clearPin() : topic.rePin();
       }
 
@@ -33,8 +33,8 @@ export default Ember.Component.extend(
     },
 
     buildBuffer(buffer) {
-      const canAct = this.get("canAct");
-      const topic = this.get("topic");
+      const canAct = this.canAct;
+      const topic = this.topic;
 
       if (!topic) {
         return;

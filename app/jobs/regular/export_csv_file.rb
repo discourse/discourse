@@ -87,7 +87,12 @@ module Jobs
       end
 
     ensure
-      notify_user(download_link, file_name, file_size, export_title)
+      post = notify_user(download_link, file_name, file_size, export_title)
+      if user_export.present? && post.present?
+        topic = post.topic
+        user_export.update_columns(topic_id: topic.id)
+        topic.update_status('closed', true, Discourse.system_user)
+      end
     end
 
     def user_archive_export
@@ -106,7 +111,6 @@ module Jobs
     def user_list_export
       return enum_for(:user_list_export) unless block_given?
 
-      user_array = []
       user_field_ids = UserField.pluck(:id)
 
       condition = {}
@@ -385,8 +389,9 @@ module Jobs
     end
 
     def notify_user(download_link, file_name, file_size, export_title)
+      post = nil
       if @current_user
-        if download_link.present?
+        post = if download_link.present?
           SystemMessage.create_from_system_user(
             @current_user,
             :csv_export_succeeded,
@@ -399,6 +404,7 @@ module Jobs
           SystemMessage.create_from_system_user(@current_user, :csv_export_failed)
         end
       end
+      post
     end
   end
 end

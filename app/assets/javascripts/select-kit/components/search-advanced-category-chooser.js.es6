@@ -13,7 +13,7 @@ export default CategoryChooserComponent.extend({
   init() {
     this._super(...arguments);
 
-    this.get("rowComponentOptions").setProperties({
+    this.rowComponentOptions.setProperties({
       displayCategoryDescription: false
     });
   },

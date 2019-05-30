@@ -64,7 +64,7 @@ export default Ember.Controller.extend(
 
     actions: {
       submit() {
-        const userFields = this.get("userFields");
+        const userFields = this.userFields;
         let userCustomFields = {};
         if (!Ember.isEmpty(userFields)) {
           userFields.forEach(function(f) {
@@ -76,9 +76,9 @@ export default Ember.Controller.extend(
           url: `/invites/show/${this.get("model.token")}.json`,
           type: "PUT",
           data: {
-            username: this.get("accountUsername"),
-            name: this.get("accountName"),
-            password: this.get("accountPassword"),
+            username: this.accountUsername,
+            name: this.accountName,
+            password: this.accountPassword,
             user_custom_fields: userCustomFields
           }
         })
@@ -97,11 +97,9 @@ export default Ember.Controller.extend(
                 result.errors.password &&
                 result.errors.password.length > 0
               ) {
-                this.get("rejectedPasswords").pushObject(
-                  this.get("accountPassword")
-                );
-                this.get("rejectedPasswordsMessages").set(
-                  this.get("accountPassword"),
+                this.rejectedPasswords.pushObject(this.accountPassword);
+                this.rejectedPasswordsMessages.set(
+                  this.accountPassword,
                   result.errors.password[0]
                 );
               }
