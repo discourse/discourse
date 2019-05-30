@@ -13,15 +13,11 @@ const RestModel = Ember.Object.extend({
 
     props = props || this.updateProperties();
 
-    const type = this.__type,
-      store = this.store;
-
-    const self = this;
-    self.set("isSaving", true);
-    return store
-      .update(type, this.id, props)
-      .then(function(res) {
-        const payload = self.__munge(res.payload || res.responseJson);
+    this.set("isSaving", true);
+    return this.store
+      .update(this.__type, this.id, props)
+      .then((res) => {
+        const payload = this.__munge(res.payload || res.responseJson);
 
         if (payload.success === "OK") {
           Ember.warn("An update call should return the updated attributes", {
@@ -30,9 +26,9 @@ const RestModel = Ember.Object.extend({
           res = props;
         }
 
-        self.setProperties(payload);
-        self.afterUpdate(res);
-        res.target = self;
+        this.setProperties(payload);
+        this.afterUpdate(res);
+        res.target = this;
         return res;
       })
       .finally(() => this.set("isSaving", false));
@@ -47,15 +43,12 @@ const RestModel = Ember.Object.extend({
 
     this.beforeCreate(props);
 
-    const type = this.__type,
-      store = this.store,
-      adapter = store.adapterFor(type);
+    const adapter = this.store.adapterFor(this.__type);
 
-    const self = this;
-    self.set("isSaving", true);
+    this.set("isSaving", true);
     return adapter
-      .createRecord(store, type, props)
-      .then(function(res) {
+      .createRecord(this.store, this.__type, props)
+      .then((res) => {
         if (!res) {
           throw new Error("Received no data back from createRecord");
         }
@@ -63,11 +56,11 @@ const RestModel = Ember.Object.extend({
         // We can get a response back without properties, for example
         // when a post is queued.
         if (res.payload) {
-          self.setProperties(self.__munge(res.payload));
-          self.set("__state", "created");
+          this.setProperties(this.__munge(res.payload));
+          this.set("__state", "created");
         }
 
-        res.target = self;
+        res.target = this;
         return res;
       })
       .finally(() => this.set("isSaving", false));
@@ -84,8 +77,7 @@ const RestModel = Ember.Object.extend({
   },
 
   destroyRecord() {
-    const type = this.__type;
-    return this.store.destroyRecord(type, this);
+    return this.store.destroyRecord(this.__type, this);
   }
 });
 
