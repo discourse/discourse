@@ -5398,7 +5398,7 @@
     },
     {
       "code": "1f1f0-1f1f5",
-      "name": "north_korea"
+      "name": "kp"
     },
     {
       "code": "1f1f3-1f1f4",
@@ -6657,8 +6657,13 @@
     "jp": [
       "flag_jp"
     ],
+    "kp": [
+      "flag_kp",
+      "north_korea"
+    ],
     "kr": [
-      "flag_kr"
+      "flag_kr",
+      "south_korea"
     ],
     "ru": [
       "flag_ru"
