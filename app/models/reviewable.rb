@@ -30,7 +30,7 @@ class Reviewable < ActiveRecord::Base
   belongs_to :category
 
   has_many :reviewable_histories
-  has_many :reviewable_scores
+  has_many :reviewable_scores, -> { order(created_at: :desc) }
 
   after_create do
     log_history(:created, created_by)
