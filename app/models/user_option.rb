@@ -53,6 +53,7 @@ class UserOption < ActiveRecord::Base
     self.email_in_reply_to = SiteSetting.default_email_in_reply_to
 
     self.enable_quoting = SiteSetting.default_other_enable_quoting
+    self.enable_defer = SiteSetting.default_other_enable_defer
     self.external_links_in_new_tab = SiteSetting.default_other_external_links_in_new_tab
     self.dynamic_favicon = SiteSetting.default_other_dynamic_favicon
 
@@ -222,6 +223,7 @@ end
 #  email_level                      :integer          default(1), not null
 #  email_messages_level             :integer          default(0), not null
 #  title_count_mode_key             :integer          default(0), not null
+#  enable_defer                     :boolean          default(FALSE), not null
 #
 # Indexes
 #
