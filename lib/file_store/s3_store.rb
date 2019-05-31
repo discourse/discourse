@@ -149,6 +149,18 @@ module FileStore
       end
     end
 
+    def update_upload_ACL(upload)
+      private_uploads = SiteSetting.prevent_anons_from_downloading_files
+
+      key = upload.url.sub(absolute_base_url + "/", "")
+
+      begin
+        @s3_helper.object(key).acl.put(acl: private_uploads ? "private" : "public-read")
+      rescue Aws::S3::Errors::NoSuchKey
+        Rails.logger.warn("Could not update ACL on upload with key: '#{key}'. Upload is missing.")
+      end
+    end
+
     private
 
     def list_missing(model, prefix)
