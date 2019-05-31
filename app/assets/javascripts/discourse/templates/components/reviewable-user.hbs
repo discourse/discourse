@@ -14,17 +14,17 @@
     </div>
     
     {{reviewable-field classes='reviewable-user-details name'
-                               name=(i18n 'review.user.name')
-                               value=reviewable.payload.name}}
+                       name=(i18n 'review.user.name')
+                       value=reviewable.payload.name}}
     
     {{reviewable-field classes='reviewable-user-details email'
-                               name=(i18n 'review.user.email')
-                               value=reviewable.payload.email}}
+                       name=(i18n 'review.user.email')
+                       value=reviewable.payload.email}}
     
     {{#each userFields as |f|}}
       {{reviewable-field classes='reviewable-user-details user-field'
-                                 name=f.name
-                                 value=f.value}}
+                         name=f.name
+                         value=f.value}}
     {{/each}}
   </div>
 
