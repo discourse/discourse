@@ -664,6 +664,15 @@ class Category < ActiveRecord::Base
     end
   end
 
+  def self.ensure_consistency!
+    Category
+      .joins('LEFT JOIN topics ON categories.topic_id = topics.id AND topics.deleted_at IS NULL')
+      .where({ topics: { id: nil }})
+      .find_each do |category|
+      category.create_category_definition
+    end
+  end
+
   private
 
   def check_permissions_compatibility(parent_permissions, child_permissions)
