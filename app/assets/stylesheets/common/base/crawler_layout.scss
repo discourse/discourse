@@ -7,7 +7,7 @@ body.crawler {
     background-color: #fff;
     padding: 10px;
     box-shadow: none;
-    border-bottom: 1px solid $primary-medium;
+    border-bottom: 1px solid $primary-low-mid;
     box-sizing: border-box;
   }
 
@@ -19,6 +19,16 @@ body.crawler {
         height: auto;
       }
     }
+  }
+
+  .raw-topic-link {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 0.25em;
+  }
+
+  .topic-list {
+    margin-bottom: 1em;
   }
 }
 
@@ -33,14 +43,16 @@ body.crawler {
   border-top: 1px solid $primary-low;
 }
 
-.creator {
-  word-break: break-all;
-  a {
-    font-weight: bold;
-  }
-  @include breakpoint(tablet) {
-    display: inline-block;
-    margin-bottom: 0.25em;
+.crawler-post-meta {
+  .creator {
+    word-break: break-all;
+    a {
+      font-weight: bold;
+    }
+    @include breakpoint(tablet) {
+      display: inline-block;
+      margin-bottom: 0.25em;
+    }
   }
 }
 
@@ -77,9 +89,18 @@ body.crawler {
   }
 }
 
+.crawler-linkback-list {
+  margin-top: 1em;
+  a {
+    display: block;
+    padding: 0.5em 0;
+    border-top: 1px solid $primary-low;
+  }
+}
+
 footer {
   margin-top: 3em;
-  border-top: 1px solid $primary-low;
+  border-top: 1px solid $primary-low-mid;
 }
 
 .crawler-nav {
