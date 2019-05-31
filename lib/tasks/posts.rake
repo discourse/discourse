@@ -527,17 +527,6 @@ def destroy_old_data_exports
   puts "done"
 end
 
-desc 'destroys all user archive PMs (they may contain broken images)'
-task 'posts:destroy_old_data_exports' => :environment do
-  if RailsMultisite::ConnectionManagement.current_db != "default"
-    destroy_old_data_exports
-  else
-    RailsMultisite::ConnectionManagement.each_connection do
-      destroy_old_data_exports
-    end
-  end
-end
-
 def recover_uploads_from_index(path)
   lookup = []
 
