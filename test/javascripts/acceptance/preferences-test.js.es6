@@ -1,4 +1,4 @@
-import { acceptance } from "helpers/qunit-helpers";
+import { acceptance, replaceCurrentUser } from "helpers/qunit-helpers";
 import User from "discourse/models/user";
 
 acceptance("User Preferences", {
@@ -253,46 +253,12 @@ QUnit.test("default avatar selector", async assert => {
 });
 
 acceptance("second factor backups", {
+  loggedIn: true,
   pretend(server, helper) {
     server.post("/u/second_factors.json", () => {
       return helper.response({
         success: "OK",
         totps: [{ id: 1, name: "one of them" }]
-      });
-    });
-
-    server.get("/session/current.json", () => {
-      return helper.response({
-        current_user: {
-          id: 19,
-          username: "eviltrout",
-          uploaded_avatar_id: 5275,
-          avatar_template: "/user_avatar/localhost/eviltrout/{size}/5275.png",
-          name: "Robin Ward",
-          unread_notifications: 0,
-          unread_private_messages: 0,
-          admin: true,
-          notification_channel_position: null,
-          site_flagged_posts_count: 1,
-          moderator: true,
-          staff: true,
-          title: "co-founder",
-          reply_count: 859,
-          topic_count: 36,
-          enable_quoting: true,
-          external_links_in_new_tab: false,
-          dynamic_favicon: true,
-          trust_level: 4,
-          can_edit: true,
-          can_invite_to_forum: true,
-          should_be_redirected_to_top: false,
-          custom_fields: {},
-          muted_category_ids: [],
-          dismissed_banner_key: null,
-          akismet_review_count: 0,
-          title_count_mode: "notifications",
-          second_factor_enabled: true
-        }
       });
     });
 
@@ -308,7 +274,9 @@ acceptance("second factor backups", {
   }
 });
 QUnit.test("second factor backup", async assert => {
+  replaceCurrentUser({ second_factor_enabled: true });
   await visit("/u/eviltrout/preferences/second-factor");
+  await pauseTest();
   await click(".edit-2fa-backup");
   assert.ok(
     exists(".second-factor-backup-preferences"),
