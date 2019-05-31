@@ -37,7 +37,7 @@ module Onebox
           message_words = message.gsub("\n\n", "\n").gsub("\n", "<br>").split(" ")
           max_words = 20
           result['message'] =  message_words[0..max_words].join(" ")
-          result['message'] << "..." if message_words.length > max_words
+          result['message'] += "..." if message_words.length > max_words
           result['message'] = result['message'].gsub("<br>", "\n")
         end
 

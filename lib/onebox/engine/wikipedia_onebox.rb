@@ -53,7 +53,7 @@ module Onebox
           cnt = 0
           while text.length < Onebox::LayoutSupport.max_text && cnt <= 3
             break if cnt >= paras.size
-            text << " " unless cnt == 0
+            text += " " unless cnt == 0
 
             if paras[cnt].name == "ul" #Handle UL tag. Generate a textual ordered list (1.item | 2.item | 3.item). Unfourtently no newline allowed in output
               li_index = 1

@@ -29,7 +29,7 @@ module Onebox
         content_words = body_text.gsub("\n\n", "\n").gsub("\n", "<br>").split(" ") #one pass of removing double newline, then we change \n to <br> and later on we revert it back to \n this is a workaround to avoid losing newlines after we join it back.
         max_words = 20
         short_content =  content_words[0..max_words].join(" ")
-        short_content << "..." if content_words.length > max_words
+        short_content += "..." if content_words.length > max_words
 
         ulink = URI(link)
         {
