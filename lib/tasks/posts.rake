@@ -506,27 +506,6 @@ task 'posts:missing_uploads', [:single_site] => :environment do |_, args|
   end
 end
 
-def destroy_old_data_exports
-  topics = Topic.with_deleted.where(<<~SQL, 2.days.ago)
-    slug LIKE '%-export-complete' AND
-    archetype = 'private_message' AND
-    posts_count = 1 AND
-    created_at < ? AND
-    user_id = -1
-  SQL
-
-  puts "Found #{topics.count} old CSV data exports on #{RailsMultisite::ConnectionManagement.current_db}, destroying"
-  puts
-  topics.each do |t|
-    Topic.transaction do
-      t.posts.first.destroy!
-      t.destroy!
-      print "."
-    end
-  end
-  puts "done"
-end
-
 def recover_uploads_from_index(path)
   lookup = []
 
