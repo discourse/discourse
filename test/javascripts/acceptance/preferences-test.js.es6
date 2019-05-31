@@ -252,7 +252,7 @@ QUnit.test("default avatar selector", async assert => {
   );
 });
 
-acceptance("second factor backups", {
+acceptance("Second Factor Backups", {
   loggedIn: true,
   pretend(server, helper) {
     server.post("/u/second_factors.json", () => {
@@ -276,7 +276,6 @@ acceptance("second factor backups", {
 QUnit.test("second factor backup", async assert => {
   replaceCurrentUser({ second_factor_enabled: true });
   await visit("/u/eviltrout/preferences/second-factor");
-  await pauseTest();
   await click(".edit-2fa-backup");
   assert.ok(
     exists(".second-factor-backup-preferences"),
