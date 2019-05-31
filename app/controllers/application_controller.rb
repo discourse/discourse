@@ -79,7 +79,9 @@ class ApplicationController < ActionController::Base
       request.user_agent &&
       (request.content_type.blank? || request.content_type.include?('html')) &&
       !['json', 'rss'].include?(params[:format]) &&
-      (has_escaped_fragment? || CrawlerDetection.crawler?(request.user_agent) || params.key?("print"))
+      (has_escaped_fragment? || params.key?("print") ||
+      CrawlerDetection.crawler?(request.user_agent, request.headers["HTTP_VIA"])
+      )
   end
 
   def perform_refresh_session
