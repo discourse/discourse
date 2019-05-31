@@ -405,6 +405,27 @@ export default Ember.Controller.extend(bufferedProperty("model"), {
       }
     },
 
+    deferTopic() {
+      const screenTrack = Discourse.__container__.lookup("screen-track:main");
+      const currentUser = this.currentUser;
+      const topic = this.model;
+
+      screenTrack.reset();
+      screenTrack.stop();
+      const goToPath = topic.get("isPrivateMessage")
+        ? currentUser.pmPath(topic)
+        : "/";
+      ajax("/t/" + topic.get("id") + "/timings.json?last=1", { type: "DELETE" })
+        .then(() => {
+          const highestSeenByTopic = Discourse.Session.currentProp(
+            "highestSeenByTopic"
+          );
+          highestSeenByTopic[topic.get("id")] = null;
+          DiscourseURL.routeTo(goToPath);
+        })
+        .catch(popupAjaxError);
+    },
+
     editFirstPost() {
       const postStream = this.get("model.postStream");
       let firstPost = postStream.get("posts.firstObject");
