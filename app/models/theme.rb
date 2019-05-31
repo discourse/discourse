@@ -367,7 +367,7 @@ class Theme < ActiveRecord::Base
   end
 
   def internal_translations
-    translations(internal: true)
+    @internal_translations ||= translations(internal: true)
   end
 
   def translations(internal: false)
