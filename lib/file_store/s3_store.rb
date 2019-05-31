@@ -110,7 +110,7 @@ module FileStore
         obj = @s3_helper.object(get_path_for_upload(upload))
         url = obj.presigned_url(:get, expires_in: expires)
       else
-        url = upload&.url
+        url = upload.url
       end
 
       url

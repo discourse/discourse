@@ -97,8 +97,8 @@ describe FileStore::S3Store do
             "//s3-upload-bucket.s3.dualstack.us-west-1.amazonaws.com/original/1X/#{file_upload.sha1}.pdf"
           )
 
-          expect(Discourse.store.path_for(file_upload)).to match(/Amz-Credential/)
-          expect(Discourse.store.path_for(file_upload)).to match(/#{file_upload.sha1}/)
+          expect(Discourse.store.url_for(file_upload)).to match(/Amz-Credential/)
+          expect(Discourse.store.url_for(file_upload)).to match(/#{file_upload.sha1}/)
         end
       end
     end
