@@ -23,7 +23,7 @@ class ReviewableScoreSerializer < ApplicationSerializer
 
     if text = I18n.t("reviewables.reasons.#{object.reason}", default: nil)
       # Create a convenient link to any site settings if the user is staff
-      settings_url = "#{Discourse.base_uri}/admin/site_settings/category/all_results?filter="
+      settings_url = "#{Discourse.base_url}/admin/site_settings/category/all_results?filter="
 
       text.gsub!(/`[a-z_]+`/) do |m|
         if scope.is_staff?
