@@ -24,7 +24,7 @@ module Onebox
 
       def get_oembed_url
         oembed_url = "https://soundcloud.com/oembed.json?url=#{url}"
-        oembed_url << "&maxheight=166" unless url["/sets/"]
+        oembed_url += "&maxheight=166" unless url["/sets/"]
         oembed_url
       end
 
