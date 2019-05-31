@@ -4341,7 +4341,7 @@ en:
           <li><a href='https://meta.discourse.org/t/63682' target='_blank'>How do I install a theme or theme component?</a></li>
           <li><a href='https://meta.discourse.org/t/110448' target='_blank'>Developer Quick Reference Guide</a></li>
           </ul>
-          And here are some popular theme components: "
+          And here are some popular components (for more, see <a href='https://meta.discourse.org/c/theme/l/latest' target='_blank'>#theme</a> category on meta):"
 
       logos:
         title: "Logos"

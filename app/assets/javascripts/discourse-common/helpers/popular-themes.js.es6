@@ -84,7 +84,7 @@ export const POPULAR_THEMES = [
     component: true
   },
   {
-    name: "Header submenus",
+    name: "Header Submenus",
     value: "https://github.com/discourse/discourse-header-submenus",
     preview: "https://theme-creator.discourse.org/theme/Johani/header-submenus",
     description: "Lets you build a header menu with submenus (dropdowns).",
@@ -100,7 +100,7 @@ export const POPULAR_THEMES = [
     component: true
   },
   {
-    name: "Automatic table of contents",
+    name: "Automatic Table of Contents",
     value: "https://github.com/discourse/DiscoTOC",
     description:
       "Generates an interactive table of contents on the sidebar of your topic with a simple click in the composer.",
