@@ -60,12 +60,8 @@ export default Ember.Controller.extend(ModalFunctionality, {
           this.set("errorMessage", null);
           this.send("closeModal");
         })
-        .catch(error => {
-          this.onError(error);
-        })
-        .finally(() => {
-          this.set("loading", false);
-        });
+        .catch(error => this.onError(error))
+        .finally(() => this.set("loading", false));
     }
   }
 });
