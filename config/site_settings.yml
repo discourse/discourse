@@ -1726,6 +1726,8 @@ uncategorized:
   summary_percent_filter: 20
   summary_max_results: 100
 
+  automatic_topic_heat_values: true
+
   # View heat thresholds
   topic_views_heat_low:
     client: true
@@ -1735,7 +1737,7 @@ uncategorized:
     default: 2000
   topic_views_heat_high:
     client: true
-    default: 5000
+    default: 3500
 
   # Post/Like heat thresholds
   topic_post_like_heat_low:
