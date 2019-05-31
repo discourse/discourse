@@ -64,6 +64,10 @@ export function applyPretender(name, server, helper) {
   if (cb) cb(server, helper);
 }
 
+export function cleanPretender() {
+  _pretenderCallbacks = {};
+}
+
 export function acceptance(name, options) {
   options = options || {};
 

@@ -33,6 +33,10 @@ const loggedIn = () => !!Discourse.User.current();
 const helpers = { response, success, parsePostData };
 export let fixturesByUrl;
 
+export function clearFixtures() {
+  fixturesByUrl = undefined;
+}
+
 export default function() {
   const server = new Pretender(function() {
     // Autoload any `*-pretender` files
@@ -275,11 +279,11 @@ export default function() {
 
     this.get("/drafts.json", () => response(fixturesByUrl["/drafts.json"]));
 
-    this.put("/queued_posts/:queued_post_id", function(request) {
+    this.put("/queued_posts/:queued_post_id", request => {
       return response({ queued_post: { id: request.params.queued_post_id } });
     });
 
-    this.get("/queued_posts", function() {
+    this.get("/queued_posts", () => {
       return response({
         queued_posts: [
           { id: 1, raw: "queued post text", can_delete_user: true }
@@ -287,7 +291,7 @@ export default function() {
       });
     });
 
-    this.post("/session", function(request) {
+    this.post("/session", request => {
       const data = parsePostData(request.requestBody);
 
       if (data.password === "correct") {
@@ -332,14 +336,14 @@ export default function() {
     this.post("/u/action/send_activation_email", success);
     this.put("/u/update-activation-email", success);
 
-    this.get("/u/hp.json", function() {
+    this.get("/u/hp.json", () => {
       return response({
         value: "32faff1b1ef1ac3",
         challenge: "61a3de0ccf086fb9604b76e884d75801"
       });
     });
 
-    this.get("/session/csrf", function() {
+    this.get("/session/csrf", () => {
       return response({ csrf: "mgk906YLagHo2gOgM1ddYjAN4hQolBdJCqlY6jYzAYs=" });
     });
 
@@ -347,7 +351,7 @@ export default function() {
       return response({ available: true });
     });
 
-    this.get("/u/check_username", function(request) {
+    this.get("/u/check_username", request => {
       if (request.queryParams.username === "taken") {
         return response({ available: false, suggestion: "nottaken" });
       }
@@ -457,7 +461,7 @@ export default function() {
     );
     this.delete("/user_badges/:badge_id", success);
 
-    this.post("/posts", function(request) {
+    this.post("/posts", request => {
       const data = parsePostData(request.requestBody);
 
       if (data.title === "this title triggers an error") {
@@ -701,7 +705,9 @@ export default function() {
     throw error;
   };
 
-  server.checkPassthrough = request =>
+  server.checkPassthrough = function(request) {
     request.requestHeaders["Discourse-Script"];
+  };
+
   return server;
 }

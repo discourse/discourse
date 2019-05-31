@@ -148,6 +148,17 @@ QUnit.testStart(function(ctx) {
   }
 });
 
+QUnit.done(function() {
+  require("helpers/qunit-helpers", null, null, false).cleanPretender();
+  require("helpers/create-pretender", null, null, false).clearFixtures();
+
+  window.I18n.extras = {};
+  window.sandbox = undefined;
+  window.asyncTestDiscourse = undefined;
+  window.controllerFor = undefined;
+  window.fixture = undefined;
+});
+
 QUnit.testDone(function() {
   Ember.run.debounce = origDebounce;
   window.sandbox.restore();
