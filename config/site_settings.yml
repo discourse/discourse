@@ -1490,7 +1490,7 @@ developer:
     max: 99000
   anon_polling_interval:
     client: true
-    default: 15000
+    default: 30000
     max: 99000
   flush_timings_secs:
     client: true
