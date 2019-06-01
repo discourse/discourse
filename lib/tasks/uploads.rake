@@ -316,17 +316,25 @@ def migrate_to_s3
     exit 1
   end
 
-  unless ENV["DISCOURSE_S3_SECRET_ACCESS_KEY"].present? &&
+  unless ENV["DISCOURSE_S3_BUCKET"].present? &&
     ENV["DISCOURSE_S3_REGION"].present? &&
-    ENV["DISCOURSE_S3_ACCESS_KEY_ID"].present? &&
-    ENV["DISCOURSE_S3_SECRET_ACCESS_KEY"].present?
+    (
+      (
+        ENV["DISCOURSE_S3_ACCESS_KEY_ID"].present? &&
+        ENV["DISCOURSE_S3_SECRET_ACCESS_KEY"].present?
+      ) ||
+      ENV["DISCOURSE_S3_USE_IAM_PROFILE"].present?
+    )
 
     puts <<~TEXT
       Please provide the following environment variables
         - DISCOURSE_S3_BUCKET
         - DISCOURSE_S3_REGION
+        and either
         - DISCOURSE_S3_ACCESS_KEY_ID
         - DISCOURSE_S3_SECRET_ACCESS_KEY
+        or
+        - DISCOURSE_S3_USE_IAM_PROFILE
     TEXT
     exit 2
   end
