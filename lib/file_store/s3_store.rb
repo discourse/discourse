@@ -152,7 +152,11 @@ module FileStore
     def update_upload_ACL(upload)
       private_uploads = SiteSetting.prevent_anons_from_downloading_files
 
-      key = upload.url.sub(absolute_base_url + "/", "")
+      if Rails.configuration.multisite
+        key = File.join(upload_path, "/", get_path_for_upload(upload))
+      else
+        key = get_path_for_upload(upload)
+      end
 
       begin
         @s3_helper.object(key).acl.put(acl: private_uploads ? "private" : "public-read")

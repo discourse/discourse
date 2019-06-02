@@ -79,26 +79,33 @@ describe FileStore::S3Store do
       end
 
       describe "when private uploads are enabled" do
-        let(:uploaded_pdf) { file_from_fixtures("small.pdf", "pdf") }
-        fab!(:file_upload) do
+        it "returns signed URL for eligible private upload" do
           SiteSetting.prevent_anons_from_downloading_files = true
           SiteSetting.authorized_extensions = "pdf|png|jpg|gif"
-          Fabricate(:upload, original_filename: "small.pdf", extension: "pdf")
+          upload.update!(original_filename: "small.pdf", extension: "pdf")
+
+          s3_helper.expects(:s3_bucket).returns(s3_bucket).at_least_once
+          s3_bucket.expects(:object).with("original/1X/#{upload.sha1}.pdf").returns(s3_object).at_least_once
+          s3_object.expects(:presigned_url).with(:get, expires_in: S3Helper::DOWNLOAD_URL_EXPIRES_AFTER_SECONDS)
+
+          expect(store.store_upload(uploaded_file, upload)).to eq(
+            "//s3-upload-bucket.s3.dualstack.us-west-1.amazonaws.com/original/1X/#{upload.sha1}.pdf"
+          )
+
+          expect(store.url_for(upload)).not_to eq(upload.url)
         end
 
-        it "returns signed URL for private uploads" do
+        it "returns regular URL for ineligible private upload" do
           SiteSetting.prevent_anons_from_downloading_files = true
 
           s3_helper.expects(:s3_bucket).returns(s3_bucket).at_least_once
+          s3_bucket.expects(:object).with("original/1X/#{upload.sha1}.png").returns(s3_object).at_least_once
 
-          stub_request(:head, "https://s3-upload-bucket.s3.us-west-1.amazonaws.com/")
-
-          expect(store.store_upload(uploaded_pdf, file_upload)).to eq(
-            "//s3-upload-bucket.s3.dualstack.us-west-1.amazonaws.com/original/1X/#{file_upload.sha1}.pdf"
+          expect(store.store_upload(uploaded_file, upload)).to eq(
+            "//s3-upload-bucket.s3.dualstack.us-west-1.amazonaws.com/original/1X/#{upload.sha1}.png"
           )
 
-          expect(Discourse.store.url_for(file_upload)).to match(/Amz-Credential/)
-          expect(Discourse.store.url_for(file_upload)).to match(/#{file_upload.sha1}/)
+          expect(store.url_for(upload)).to eq(upload.url)
         end
       end
     end
@@ -341,6 +348,33 @@ describe FileStore::S3Store do
       assert_path("//hello", nil)
       assert_path("http://hello", nil)
       assert_path("https://hello", nil)
+    end
+  end
+
+  context 'update ACL' do
+    include_context "s3 helpers"
+    let(:s3_object) { stub }
+
+    describe ".update_upload_ACL" do
+      it "sets acl to private when private uploads are enabled" do
+        SiteSetting.prevent_anons_from_downloading_files = true
+        s3_helper.expects(:s3_bucket).returns(s3_bucket)
+        s3_bucket.expects(:object).with("original/1X/#{upload.sha1}.png").returns(s3_object)
+        s3_object.expects(:acl).returns(s3_object)
+        s3_object.expects(:put).with(acl: "private").returns(s3_object)
+
+        expect(store.update_upload_ACL(upload)).to be_truthy
+      end
+
+      it "sets acl to public when private uploads are disabled" do
+        SiteSetting.prevent_anons_from_downloading_files = false
+        s3_helper.expects(:s3_bucket).returns(s3_bucket)
+        s3_bucket.expects(:object).with("original/1X/#{upload.sha1}.png").returns(s3_object)
+        s3_object.expects(:acl).returns(s3_object)
+        s3_object.expects(:put).with(acl: "public-read").returns(s3_object)
+
+        expect(store.update_upload_ACL(upload)).to be_truthy
+      end
     end
   end
 
