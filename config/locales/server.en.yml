@@ -2867,6 +2867,14 @@ en:
 
         If you believe this is an error, [contact a staff member](%{base_url}/about).
 
+    email_reject_reply_not_allowed:
+      title: "Email Reject Reply Not Allowed"
+      subject_template: "[%{email_prefix}] Email issue -- Reply Not Allowed"
+      text_body_template: |
+        We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
+
+        You don't have permissions to reply to the topic. If you believe this is an error, [contact a staff member](%{base_url}/about).
+
     email_error_notification:
       title: "Email Error Notification"
       subject_template: "[%{email_prefix}] Email issue -- POP authentication error"
