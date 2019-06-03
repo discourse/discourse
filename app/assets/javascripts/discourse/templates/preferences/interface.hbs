@@ -47,18 +47,18 @@
 <div class="control-group other">
   <label class="control-label">{{i18n 'user.other_settings'}}</label>
 
-  {{preference-checkbox labelKey="user.external_links_in_new_tab" checked=model.user_option.external_links_in_new_tab}}
-  {{preference-checkbox labelKey="user.enable_quoting" checked=model.user_option.enable_quoting}}
-  {{preference-checkbox labelKey="user.enable_defer" checked=model.user_option.enable_defer}}
+  {{preference-checkbox labelKey="user.external_links_in_new_tab" checked=model.user_option.external_links_in_new_tab class="pref-external-links"}}
+  {{preference-checkbox labelKey="user.enable_quoting" checked=model.user_option.enable_quoting class="pref-enable-quoting"}}
+  {{preference-checkbox labelKey="user.enable_defer" checked=model.user_option.enable_defer class="pref-defer-undread"}}
   {{#if siteSettings.automatically_unpin_topics}}
-    {{preference-checkbox labelKey="user.automatically_unpin_topics" checked=model.user_option.automatically_unpin_topics}}
+    {{preference-checkbox labelKey="user.automatically_unpin_topics" checked=model.user_option.automatically_unpin_topics  class="pref-auto-unpin"}}
   {{/if}}
-  {{preference-checkbox labelKey="user.hide_profile_and_presence" checked=model.user_option.hide_profile_and_presence}}
+  {{preference-checkbox labelKey="user.hide_profile_and_presence" checked=model.user_option.hide_profile_and_presence  class="pref-hide-profile"}}
   {{#if isiPad}}
-    {{preference-checkbox labelKey="user.enable_physical_keyboard" checked=disableSafariHacks}}
+    {{preference-checkbox labelKey="user.enable_physical_keyboard" checked=disableSafariHacks  class="pref-safari-hacks"}}
   {{/if}}
-  {{preference-checkbox labelKey="user.dynamic_favicon" checked=model.user_option.dynamic_favicon}}
-  <div class='controls controls-dropdown'>
+  {{preference-checkbox labelKey="user.dynamic_favicon" checked=model.user_option.dynamic_favicon  class="pref-dynamic-favicon"}}
+  <div class='controls controls-dropdown pref-page-title'>
     <label for="user-email-level">{{i18n 'user.title_count_mode.title'}}</label>
     {{combo-box valueAttribute="value"
                 content=titleCountModes
