@@ -106,13 +106,7 @@ module FileStore
 
     def url_for(upload)
       if upload.private?
-        if Rails.configuration.multisite
-          key = File.join(upload_path, "/", get_path_for_upload(upload))
-        else
-          key = get_path_for_upload(upload)
-        end
-
-        obj = @s3_helper.object(key)
+        obj = @s3_helper.object(get_upload_key(upload))
         url = obj.presigned_url(:get, expires_in: S3Helper::DOWNLOAD_URL_EXPIRES_AFTER_SECONDS)
       else
         url = upload.url
@@ -156,12 +150,7 @@ module FileStore
 
     def update_upload_ACL(upload)
       private_uploads = SiteSetting.prevent_anons_from_downloading_files
-
-      if Rails.configuration.multisite
-        key = File.join(upload_path, "/", get_path_for_upload(upload))
-      else
-        key = get_path_for_upload(upload)
-      end
+      key = get_upload_key(upload)
 
       begin
         @s3_helper.object(key).acl.put(acl: private_uploads ? "private" : "public-read")
@@ -171,6 +160,14 @@ module FileStore
     end
 
     private
+
+    def get_upload_key(upload)
+      if Rails.configuration.multisite
+        File.join(upload_path, "/", get_path_for_upload(upload))
+      else
+        get_path_for_upload(upload)
+      end
+    end
 
     def list_missing(model, prefix)
       connection = ActiveRecord::Base.connection.raw_connection
