@@ -424,7 +424,7 @@ class TopicView
       # Create a hash with counts by post so we can quickly look up whether there is reviewable content.
       @reviewable_counts = {}
       Reviewable.
-        where(target_type: 'Post', target_id: filtered_post_ids).
+        where(target_type: 'Post', target_id: @posts.map(&:id)).
         includes(:reviewable_scores).each do |r|
 
         for_post = (@reviewable_counts[r.target_id] ||= { total: 0, pending: 0, reviewable_id: r.id })
