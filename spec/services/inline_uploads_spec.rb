@@ -54,6 +54,21 @@ RSpec.describe InlineUploads do
         expect(InlineUploads.process(md)).to eq(md)
       end
 
+      it "should not correct links in quotes" do
+        post = Fabricate(:post)
+        user = Fabricate(:user)
+
+        md = <<~MD
+        [quote="#{user.username}, post:#{post.post_number}, topic:#{post.topic.id}"]
+        some quote
+
+        #{Discourse.base_url}#{upload3.url}
+        [/quote]
+        MD
+
+        expect(InlineUploads.process(md)).to eq(md)
+      end
+
       it "should correct bbcode img URLs to the short version" do
         md = <<~MD
         [img]#{upload.url}[/img]
@@ -70,15 +85,29 @@ RSpec.describe InlineUploads do
         MD
       end
 
+      it "should correct raw image URLs to the short version" do
+        md = <<~MD
+        #{Discourse.base_url}#{upload3.url} #{Discourse.base_url}#{upload3.url}
+        MD
+
+        expect(InlineUploads.process(md)).to eq(<<~MD)
+        ![](#{upload3.short_url}) ![](#{upload3.short_url})
+        MD
+      end
+
       it "should correct image URLs to the short version" do
         md = <<~MD
         ![image|690x290](#{upload.short_url})
 
-        ![image](#{upload.url})
-        ![image|100x100](#{upload.url})
+        ![IMAge|690x190,60%](#{upload.short_url})
 
-        <img src="#{Discourse.base_url}#{upload.url}" alt="some image">
-        <img src="#{Discourse.base_url}#{upload.url}" alt="some image"><img src="#{Discourse.base_url}#{upload.url}" alt="some image">
+        ![image](#{upload2.url})
+        ![image|100x100](#{upload3.url})
+
+        <img src="#{Discourse.base_url}#{upload.url}" alt="some image" />
+        <img src="#{Discourse.base_url}#{upload2.url}" alt="some image"><img src="#{Discourse.base_url}#{upload3.url}" alt="some image">
+
+        #{Discourse.base_url}#{upload3.url} #{Discourse.base_url}#{upload3.url}
 
         <img src="#{upload.url}" width="5" height="4">
         MD
@@ -86,25 +115,165 @@ RSpec.describe InlineUploads do
         expect(InlineUploads.process(md)).to eq(<<~MD)
         ![image|690x290](#{upload.short_url})
 
-        ![image](#{upload.short_url})
-        ![image|100x100](#{upload.short_url})
+        ![IMAge|690x190,60%](#{upload.short_url})
+
+        ![image](#{upload2.short_url})
+        ![image|100x100](#{upload3.short_url})
 
         ![some image](#{upload.short_url})
-        ![some image](#{upload.short_url})![some image](#{upload.short_url})
+        ![some image](#{upload2.short_url})![some image](#{upload3.short_url})
+
+        ![](#{upload3.short_url}) ![](#{upload3.short_url})
 
         ![|5x4](#{upload.short_url})
         MD
       end
 
-      it "should correct attachment URLS with an upload before" do
+      it "should not be affected by an emoji" do
+        CustomEmoji.create!(name: 'test', upload: upload3)
+        Emoji.clear_cache
+
         md = <<~MD
-        ![image](#{upload.short_url})
+        :test:
+
+        ![image|690x290](#{upload.url})
+        MD
+
+        expect(InlineUploads.process(md)).to eq(<<~MD)
+        :test:
+
+        ![image|690x290](#{upload.short_url})
+        MD
+      end
+
+      it "should correctly update image sources within anchor or paragraph tags" do
+        md = <<~MD
+        <a href="http://somelink.com">
+          <img src="#{upload.url}" alt="test" width="500" height="500">
+        </a>
+
+        <p>
+          <img src="#{upload2.url}" alt="test">
+        </p>
+
+        <a href="http://somelink.com"><img src="#{upload3.url}" alt="test" width="500" height="500"></a>
+
+        <a href="http://somelink.com">  <img src="#{upload.url}" alt="test" width="500" height="500">  </a>
+
+        <a href="http://somelink.com">
+
+
+        <img src="#{upload.url}" alt="test" width="500" height="500">
+
+        </a>
+
+        <p>Test <img src="#{upload2.url}" alt="test" width="500" height="500"></p>
+
+        <hr/>
+        <img src="#{upload2.url}" alt="test" width="500" height="500">
+        MD
+
+        expect(InlineUploads.process(md)).to eq(<<~MD)
+        <a href="http://somelink.com">
+
+          ![test|500x500](#{upload.short_url})
+
+        </a>
+
+        <p>
+
+          ![test](#{upload2.short_url})
+
+        </p>
+
+        <a href="http://somelink.com">
+
+          ![test|500x500](#{upload3.short_url})
+
+        </a>
+
+        <a href="http://somelink.com">
+
+          ![test|500x500](#{upload.short_url})
+
+        </a>
+
+        <a href="http://somelink.com">
+
+
+          ![test|500x500](#{upload.short_url})
+
+        </a>
+
+        <p>Test ![test|500x500](#{upload2.short_url})</p>
+
+        <hr/>
+
+        ![test|500x500](#{upload2.short_url})
+        MD
+      end
+
+      it "should not be affected by fake HTML tags" do
+        md = <<~MD
+        ```
+        This is some <img src=" and <a href="
+        ```
+
+        <img src="#{upload.url}" alt="test">
+
+        > some quote
 
         <a class="attachment" href="#{upload2.url}">test2</a>
         MD
 
         expect(InlineUploads.process(md)).to eq(<<~MD)
-        ![image](#{upload.short_url})
+        ```
+        This is some <img src=" and <a href="
+        ```
+
+        ![test](#{upload.short_url})
+
+        > some quote
+
+        [test2|attachment](#{upload2.short_url})
+        MD
+      end
+
+      it "should not be affected by an external or invalid links" do
+        md = <<~MD
+        <a id="test">invalid</a>
+
+        [test]("https://this.is.some.external.link")
+
+        <a href="https://some.external.com/link">test</a>
+
+        <a class="attachment" href="#{upload2.url}">test2</a>
+        MD
+
+        expect(InlineUploads.process(md)).to eq(<<~MD)
+        <a id="test">invalid</a>
+
+        [test]("https://this.is.some.external.link")
+
+        <a href="https://some.external.com/link">test</a>
+
+        [test2|attachment](#{upload2.short_url})
+        MD
+      end
+
+      it "should correct attachment URLS to the short version when raw contains inline image" do
+        md = <<~MD
+        ![image](#{upload.short_url}) ![image](#{upload.short_url})
+
+        [some complicated.doc %50](#{upload3.url})
+
+        <a class="attachment" href="#{upload2.url}">test2</a>
+        MD
+
+        expect(InlineUploads.process(md)).to eq(<<~MD)
+        ![image](#{upload.short_url}) ![image](#{upload.short_url})
+
+        [some complicated.doc %50](#{upload3.short_url})
 
         [test2|attachment](#{upload2.short_url})
         MD
@@ -120,23 +289,23 @@ RSpec.describe InlineUploads do
 
         </a>
 
-        - <a class="attachment" href="#{upload2.url}">test2</a>
+        - <a class="attachment" href="#{upload.url}">test2</a>
           - <a class="attachment" href="#{upload2.url}">test2</a>
-            - <a class="attachment" href="#{upload2.url}">test2</a>
+            - <a class="attachment" href="#{upload3.url}">test2</a>
 
-        <a class="test attachment" href="#{upload3.url}">test3</a>
-        <a class="test attachment" href="#{upload3.url}">test3</a><a class="test attachment" href="#{upload3.url}">test3</a>
+        <a class="test attachment" href="#{upload.url}">test3</a>
+        <a class="test attachment" href="#{upload2.url}">test3</a><a class="test attachment" href="#{upload3.url}">test3</a>
         MD
 
         expect(InlineUploads.process(md)).to eq(<<~MD)
         [this is some attachment|attachment](#{upload.short_url})
 
-        - [test2|attachment](#{upload2.short_url})
+        - [test2|attachment](#{upload.short_url})
           - [test2|attachment](#{upload2.short_url})
-            - [test2|attachment](#{upload2.short_url})
+            - [test2|attachment](#{upload3.short_url})
 
-        [test3|attachment](#{upload3.short_url})
-        [test3|attachment](#{upload3.short_url})[test3|attachment](#{upload3.short_url})
+        [test3|attachment](#{upload.short_url})
+        [test3|attachment](#{upload2.short_url})[test3|attachment](#{upload3.short_url})
         MD
       end
 
@@ -200,6 +369,7 @@ RSpec.describe InlineUploads do
 
     describe "s3 uploads" do
       let(:upload) { Fabricate(:upload_s3) }
+      let(:upload2) { Fabricate(:upload_s3) }
 
       before do
         SiteSetting.enable_s3_uploads = true
@@ -212,12 +382,12 @@ RSpec.describe InlineUploads do
       it "should correct image URLs to the short version" do
         md = <<~MD
         <img src="#{upload.url}" alt="some image">
-        <img src="#{URI.join(SiteSetting.s3_cdn_url, URI.parse(upload.url).path).to_s}" alt="some image">
+        <img src="#{URI.join(SiteSetting.s3_cdn_url, URI.parse(upload2.url).path).to_s}" alt="some image">
         MD
 
         expect(InlineUploads.process(md)).to eq(<<~MD)
         ![some image](#{upload.short_url})
-        ![some image](#{upload.short_url})
+        ![some image](#{upload2.short_url})
         MD
       end
 
@@ -226,13 +396,19 @@ RSpec.describe InlineUploads do
           Rails.configuration.multisite = true
 
           md = <<~MD
+          https:#{upload2.url} https:#{upload2.url}
+          #{URI.join(SiteSetting.s3_cdn_url, URI.parse(upload2.url).path).to_s}
+
           <img src="#{upload.url}" alt="some image">
-          <img src="#{URI.join(SiteSetting.s3_cdn_url, URI.parse(upload.url).path).to_s}" alt="some image">
+          <img src="#{URI.join(SiteSetting.s3_cdn_url, URI.parse(upload2.url).path).to_s}" alt="some image">
           MD
 
           expect(InlineUploads.process(md)).to eq(<<~MD)
+          ![](#{upload2.short_url}) ![](#{upload2.short_url})
+          ![](#{upload2.short_url})
+
           ![some image](#{upload.short_url})
-          ![some image](#{upload.short_url})
+          ![some image](#{upload2.short_url})
           MD
         ensure
           Rails.configuration.multisite = false
