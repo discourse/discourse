@@ -239,7 +239,8 @@ RSpec.describe UploadCreator do
 
         upload = UploadCreator.new(pdf_file, pdf_filename).create_for(user.id)
         stored_upload = Upload.last
-        signed_url = Discourse.store.path_for(stored_upload)
+        signed_url = Discourse.store.url_for(stored_upload)
+        puts signed_url
 
         expect(stored_upload.private?).to eq(true)
         expect(stored_upload.url).not_to eq(signed_url)
