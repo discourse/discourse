@@ -106,9 +106,14 @@ module FileStore
 
     def url_for(upload)
       if upload.private?
-        expires = S3Helper::DOWNLOAD_URL_EXPIRES_AFTER_SECONDS
-        obj = @s3_helper.object(get_path_for_upload(upload))
-        url = obj.presigned_url(:get, expires_in: expires)
+        if Rails.configuration.multisite
+          key = File.join(upload_path, "/", get_path_for_upload(upload))
+        else
+          key = get_path_for_upload(upload)
+        end
+
+        obj = @s3_helper.object(key)
+        url = obj.presigned_url(:get, expires_in: S3Helper::DOWNLOAD_URL_EXPIRES_AFTER_SECONDS)
       else
         url = upload.url
       end

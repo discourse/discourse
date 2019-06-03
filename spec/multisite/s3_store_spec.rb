@@ -119,7 +119,14 @@ RSpec.describe 'Multisite s3 uploads', type: :multisite do
     end
   end
 
-  context 'update ACL' do
+  context 'private uploads' do
+    let(:store) { FileStore::S3Store.new }
+    let(:client) { Aws::S3::Client.new(stub_responses: true) }
+    let(:resource) { Aws::S3::Resource.new(client: client) }
+    let(:s3_bucket) { resource.bucket("some-really-cool-bucket") }
+    let(:s3_helper) { store.instance_variable_get(:@s3_helper) }
+    let(:s3_object) { stub }
+
     before(:each) do
       SiteSetting.s3_upload_bucket = "some-really-cool-bucket"
       SiteSetting.s3_access_key_id = "s3-access-key-id"
@@ -128,14 +135,31 @@ RSpec.describe 'Multisite s3 uploads', type: :multisite do
       SiteSetting.prevent_anons_from_downloading_files = true
     end
 
-    describe "#update_upload_ACL" do
-      let(:store) { FileStore::S3Store.new }
-      let(:client) { Aws::S3::Client.new(stub_responses: true) }
-      let(:resource) { Aws::S3::Resource.new(client: client) }
-      let(:s3_bucket) { resource.bucket("s3-upload-bucket") }
-      let(:s3_helper) { store.instance_variable_get(:@s3_helper) }
-      let(:s3_object) { stub }
+    before do
+      s3_object.stubs(:put).returns(Aws::S3::Types::PutObjectOutput.new(etag: "etag"))
+    end
 
+    describe "when private uploads are enabled" do
+      it "returns signed URL with correct path" do
+        test_multisite_connection('default') do
+          SiteSetting.authorized_extensions = "pdf|png|jpg|gif"
+          upload = build_upload
+          upload.update!(original_filename: "small.pdf", extension: "pdf")
+
+          s3_helper.expects(:s3_bucket).returns(s3_bucket).at_least_once
+          s3_bucket.expects(:object).with("uploads/default/original/1X/#{upload.sha1}.pdf").returns(s3_object).at_least_once
+          s3_object.expects(:presigned_url).with(:get, expires_in: S3Helper::DOWNLOAD_URL_EXPIRES_AFTER_SECONDS)
+
+          expect(store.store_upload(uploaded_file, upload)).to eq(
+            "//some-really-cool-bucket.s3.dualstack.us-east-1.amazonaws.com/uploads/default/original/1X/#{upload.sha1}.pdf"
+          )
+
+          expect(store.url_for(upload)).not_to eq(upload.url)
+        end
+      end
+    end
+
+    describe "#update_upload_ACL" do
       it "updates correct file for default and second multisite db" do
         test_multisite_connection('default') do
           upload = build_upload
