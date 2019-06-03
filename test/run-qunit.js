@@ -38,7 +38,7 @@ if (QUNIT_RESULT) {
 async function runAllTests() {
   function launchChrome() {
     const options = {
-      chromeFlags: ["--disable-gpu", "--headless"]
+      chromeFlags: ["--disable-gpu", "--headless", "--no-sandbox"]
     };
 
     if (process.env.REMOTE_DEBUG) {
