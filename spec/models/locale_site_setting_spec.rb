@@ -50,6 +50,7 @@ describe LocaleSiteSetting do
 
     after do
       DiscoursePluginRegistry.reset!
+      LocaleSiteSetting.reset!
     end
 
     describe '.valid_value?' do
