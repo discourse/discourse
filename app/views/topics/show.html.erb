@@ -46,7 +46,8 @@
           <a itemprop="url" href='<%= Discourse.base_uri %>/u/<%= u.username %>'><span itemprop='name'><%= u.username %></span></a>
           <%= "(#{u.name})" if (SiteSetting.display_name_on_posts && SiteSetting.enable_names? && !u.name.blank?) %>
           <%
-            who_username = post.custom_fields["action_code_who"] || ""
+            post_custom_fields = @topic_view.post_custom_fields[post.id] || {}
+            who_username = post_custom_fields["action_code_who"] || ""
             if post.action_code
           %>
             <%= t("js.action_codes.#{post.action_code}", when: "", who: who_username).html_safe %>
