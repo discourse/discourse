@@ -30,6 +30,11 @@ body.crawler {
   .topic-list {
     margin-bottom: 1em;
   }
+
+  footer {
+    margin-top: 3em;
+    border-top: 1px solid $primary-low-mid;
+  }
 }
 
 .crawler-topic-title {
@@ -97,11 +102,6 @@ body.crawler {
     padding: 0.5em 0;
     border-top: 1px solid $primary-low;
   }
-}
-
-footer {
-  margin-top: 3em;
-  border-top: 1px solid $primary-low-mid;
 }
 
 .crawler-nav {
