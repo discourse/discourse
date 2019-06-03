@@ -14,8 +14,12 @@ describe WatchedWord do
   let(:flag_word) { Fabricate(:watched_word, action: WatchedWord.actions[:flag]) }
   let(:block_word) { Fabricate(:watched_word, action: WatchedWord.actions[:block]) }
 
+  before_all do
+    WordWatcher.clear_cache!
+  end
+
   after do
-    $redis.flushall
+    WordWatcher.clear_cache!
   end
 
   context "block" do
