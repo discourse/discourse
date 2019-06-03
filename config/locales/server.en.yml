@@ -786,6 +786,7 @@ en:
 
   associated_accounts:
     revoke_failed: "Failed to revoke your account with %{provider_name}."
+    connected: "(connected)"
 
   activation:
     action: "Click here to activate your account"
