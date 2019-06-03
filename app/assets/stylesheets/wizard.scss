@@ -472,12 +472,12 @@ body.wizard {
   .popular-themes {
     display: flex;
     a.popular-theme-item {
-      background: #F9F9F9;
+      background: #f9f9f9;
       padding: 8px;
       margin: 0px 4px;
       width: 25%;
       &:hover {
-        background: #F3F3F3;
+        background: #f3f3f3;
       }
     }
   }
@@ -614,7 +614,8 @@ body.wizard {
     .popular-themes {
       a.popular-theme-item {
         width: 33.3%;
-        &:nth-child(4), &:nth-child(5) {
+        &:nth-child(4),
+        &:nth-child(5) {
           display: none;
         }
       }
