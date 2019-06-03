@@ -46,7 +46,8 @@ class ThemeField < ActiveRecord::Base
                         theme_upload_var: 2,
                         theme_color_var: 3, # No longer used
                         theme_var: 4, # No longer used
-                        yaml: 5)
+                        yaml: 5,
+                        js: 6)
   end
 
   def self.theme_var_type_ids
@@ -120,6 +121,29 @@ class ThemeField < ActiveRecord::Base
 
     doc.add_child("<script src='#{javascript_cache.url}'></script>") if javascript_cache.content.present?
     [doc.to_s, errors&.join("\n")]
+  end
+
+  def process_extra_js(content)
+    errors = []
+
+    js_compiler = ThemeJavascriptCompiler.new(theme_id, theme.name)
+    filename, extension = name.split(".", 2)
+    begin
+      case extension
+      when "js.es6"
+        js_compiler.append_module(content, filename)
+      when "hbs"
+        js_compiler.append_ember_template(filename.sub("discourse/templates/", ""), content)
+      when "raw.hbs"
+        js_compiler.append_raw_template(filename, content)
+      else
+        raise ThemeJavascriptCompiler::CompileError.new(I18n.t("themes.compile_error.unrecognized_extension", extension: extension))
+      end
+    rescue ThemeJavascriptCompiler::CompileError => ex
+      errors << ex.message
+    end
+
+    [js_compiler.content, errors&.join("\n")]
   end
 
   def raw_translation_data(internal: false)
@@ -227,6 +251,8 @@ class ThemeField < ActiveRecord::Base
       types[:scss]
     elsif target.to_s == "extra_scss"
       types[:scss]
+    elsif target.to_s == "extra_js"
+      types[:js]
     elsif target.to_s == "settings" || target.to_s == "translations"
       types[:yaml]
     end
@@ -247,6 +273,10 @@ class ThemeField < ActiveRecord::Base
   def basic_html_field?
     ThemeField.basic_targets.include?(Theme.targets[self.target_id].to_s) &&
       ThemeField.html_fields.include?(self.name)
+  end
+
+  def extra_js_field?
+    Theme.targets[self.target_id] == :extra_js
   end
 
   def basic_scss_field?
@@ -276,6 +306,10 @@ class ThemeField < ActiveRecord::Base
 
     if basic_html_field? || translation_field?
       self.value_baked, self.error = translation_field? ? process_translation : process_html(self.value)
+      self.error = nil unless self.error.present?
+      self.compiler_version = COMPILER_VERSION
+    elsif extra_js_field?
+      self.value_baked, self.error = process_extra_js(self.value)
       self.error = nil unless self.error.present?
       self.compiler_version = COMPILER_VERSION
     elsif basic_scss_field?
@@ -382,6 +416,9 @@ class ThemeField < ActiveRecord::Base
     ThemeFileMatcher.new(regex: /^(?:scss|stylesheets)\/(?<name>.+)\.scss$/,
                          targets: :extra_scss, names: nil, types: :scss,
                          canonical: -> (h) { "stylesheets/#{h[:name]}.scss" }),
+    ThemeFileMatcher.new(regex: /^javascripts\/(?<name>.+)$/,
+                         targets: :extra_js, names: nil, types: :js,
+                         canonical: -> (h) { "javascripts/#{h[:name]}" }),
     ThemeFileMatcher.new(regex: /^settings\.ya?ml$/,
                          names: "yaml", types: :yaml, targets: :settings,
                          canonical: -> (h) { "settings.yml" }),
