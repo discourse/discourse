@@ -875,7 +875,7 @@ class TopicQuery
     list
   end
   def remove_muted_tags(list, user, opts = nil)
-    if user.nil? || !SiteSetting.tagging_enabled || !SiteSetting.remove_muted_tags_from_latest
+    if user.nil? || !SiteSetting.tagging_enabled || SiteSetting.remove_muted_tags_from_latest == 'never'
       return list
     end
 
@@ -896,7 +896,7 @@ class TopicQuery
       return list
     end
 
-    if SiteSetting.mute_other_present_tags
+    if SiteSetting.remove_muted_tags_from_latest == 'always'
       list = list.where("
         NOT EXISTS(
           SELECT 1

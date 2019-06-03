@@ -244,7 +244,7 @@ describe TopicQuery do
   context 'muted tags' do
     it 'is removed from new and latest lists' do
       SiteSetting.tagging_enabled = true
-      SiteSetting.remove_muted_tags_from_latest = true
+      SiteSetting.remove_muted_tags_from_latest = 'always'
 
       muted_tag, other_tag = Fabricate(:tag), Fabricate(:tag)
 
@@ -263,13 +263,21 @@ describe TopicQuery do
       topic_ids = topic_query.list_new.topics.map(&:id)
       expect(topic_ids).to contain_exactly(tagged_topic.id, untagged_topic.id)
 
-      SiteSetting.mute_other_present_tags = false
+      SiteSetting.remove_muted_tags_from_latest = 'only_muted'
 
       topic_ids = topic_query.list_latest.topics.map(&:id)
-      expect(topic_ids).to contain_exactly(muted_tagged_topic.id, tagged_topic.id, untagged_topic.id)
+      expect(topic_ids).to contain_exactly(tagged_topic.id, muted_tagged_topic.id, untagged_topic.id)
 
       topic_ids = topic_query.list_new.topics.map(&:id)
-      expect(topic_ids).to contain_exactly(muted_tagged_topic.id, tagged_topic.id, untagged_topic.id)
+      expect(topic_ids).to contain_exactly(tagged_topic.id, muted_tagged_topic.id, untagged_topic.id)
+
+      SiteSetting.remove_muted_tags_from_latest = 'never'
+
+      topic_ids = topic_query.list_latest.topics.map(&:id)
+      expect(topic_ids).to contain_exactly(muted_topic.id, tagged_topic.id, muted_tagged_topic.id, untagged_topic.id)
+
+      topic_ids = topic_query.list_new.topics.map(&:id)
+      expect(topic_ids).to contain_exactly(muted_topic.id, tagged_topic.id, muted_tagged_topic.id, untagged_topic.id)
     end
   end
 
