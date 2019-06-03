@@ -440,7 +440,7 @@ class ListController < ApplicationController
       return period if top_topics.count == SiteSetting.topics_per_period_in_top_page
     end
 
-    false
+    nil
   end
 
   def self.best_periods_for(date, default_period = :all)
