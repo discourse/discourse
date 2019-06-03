@@ -77,12 +77,12 @@ class SiteSetting < ActiveRecord::Base
 
   def self.should_download_images?(src)
     setting = disabled_image_download_domains
-    return true unless setting.present?
+    return true if setting.blank?
 
     host = URI.parse(src).host
-    return !(setting.split('|').include?(host))
+    !setting.split("|").include?(host)
   rescue URI::Error
-    return true
+    true
   end
 
   def self.scheme
@@ -99,11 +99,7 @@ class SiteSetting < ActiveRecord::Base
   end
 
   def self.min_redirected_to_top_period(duration)
-    period = ListController.best_period_with_topics_for(duration)
-    return period if period
-
-    # not enough topics
-    nil
+    ListController.best_period_with_topics_for(duration)
   end
 
   def self.queue_jobs=(val)
