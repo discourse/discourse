@@ -2059,9 +2059,10 @@ tags:
     default: false
     client: true
   remove_muted_tags_from_latest:
-    default: false
-  mute_other_present_tags:
-    default: true
+    client: true
+    type: enum
+    default: always
+    enum: RemoveMutedTagsFromLatestSiteSetting
   force_lowercase_tags:
     default: true
     client: true
