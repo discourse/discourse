@@ -136,4 +136,21 @@ describe PrettyText do
     expect(onebox[:preview]).to include("A post with a poll")
     expect(onebox[:preview]).to include("<a href=\"#{post.url}\">poll</a>")
   end
+
+  it 'can reduce excerpts' do
+    post = Fabricate(:post, raw: <<~EOF)
+      A post with a poll
+
+      [poll type=regular]
+      * Hello
+      * World
+      [/poll]
+    EOF
+
+    excerpt = PrettyText.excerpt(post.cooked, SiteSetting.post_onebox_maxlength, post: post)
+    expect(excerpt).to eq("A post with a poll \n<a href=\"#{post.url}\">poll</a>")
+
+    excerpt = PrettyText.excerpt(post.cooked, SiteSetting.post_onebox_maxlength)
+    expect(excerpt).to eq("A post with a poll \npoll")
+  end
 end
