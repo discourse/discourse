@@ -68,9 +68,9 @@ export const POPULAR_THEMES = [
   },
   {
     name: "Kanban Board",
-    value: "https://github.com/davidtaylorhq/discourse-kanban-theme",
+    value: "https://github.com/discourse/discourse-kanban-theme",
     preview: "https://theme-creator.discourse.org/theme/david/kanban",
-    description: "Display and organize topics using a Kanban board interface. ",
+    description: "Display and organize topics using a Kanban board interface.",
     meta_url:
       "https://meta.discourse.org/t/kanban-board-theme-component/118164",
     component: true
