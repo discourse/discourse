@@ -652,7 +652,7 @@ end
 
 desc "Coverts full upload URLs in `Post#raw` to short upload url"
 task 'posts:inline_uploads' => :environment do |_, args|
-  dry_run = ENV["DRY_RUN"] || true
+  dry_run = (ENV["DRY_RUN"].nil? ? true : ENV["DRY_RUN"] != "false")
 
   scope = Post.joins(:post_uploads)
     .distinct("posts.id")
@@ -661,32 +661,54 @@ task 'posts:inline_uploads' => :environment do |_, args|
   affected_posts_count = scope.count
   fixed_count = 0
   not_corrected_post_ids = []
+  failed_to_correct_post_ids = []
 
   scope.find_each do |post|
-    new_raw = InlineUploads.process(post.raw)
+    if post.raw !~ Upload::URL_REGEX
+      affected_posts_count -= 1
+      next
+    end
 
-    if post.raw != new_raw
-      if dry_run
-        puts "Post id #{post.id} raw changed!"
-        Diffy::Diff.default_format = :color
-        puts Diffy::Diff.new(post.raw, new_raw, context: 1)
+    begin
+      new_raw = InlineUploads.process(post.raw)
+
+      if post.raw != new_raw
+        if dry_run
+          putc "🏃‍"
+        else
+          post.revise!(Discourse.system_user,
+            {
+              raw: new_raw
+            },
+            skip_validations: true,
+            force_new_version: true
+          )
+
+          putc "."
+        end
+
+        fixed_count += 1
       else
-        putc "."
+        not_corrected_post_ids << post.id
       end
-
-      fixed_count += 1
-    else
-      not_corrected_post_ids << post.id
+    rescue => e
+      putc "X"
+      failed_to_correct_post_ids << post.id
     end
   end
 
+  puts
   puts "#{fixed_count} out of #{affected_posts_count} affected posts corrected"
 
-  if fixed_count != affected_posts_count
-    puts "Ids of posts that were not correct: #{not_corrected_post_ids}"
+  if not_corrected_post_ids.present?
+    puts "Ids of posts that were not corrected: #{not_corrected_post_ids}"
+  end
+
+  if failed_to_correct_post_ids.present?
+    puts "Ids of posts that encountered failures: #{failed_to_correct_post_ids}"
   end
 
   if dry_run
-
+    puts "Task was ran in dry run mode. Set `DRY_RUN=false` to revise affected posts"
   end
 end
