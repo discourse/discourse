@@ -119,6 +119,7 @@ module Jobs
           AND pd.post_id = posts.id
         INNER JOIN topics ON topics.id = posts.topic_id
         WHERE pd.post_id IS NULL
+        AND posts.deleted_at IS NULL
         AND topics.deleted_at IS NULL
         AND posts.raw != ''
         ORDER BY posts.id DESC
