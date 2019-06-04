@@ -160,6 +160,9 @@ describe PlainTextToMarkdown do
 
   context "links" do
     it "removes duplicate links" do
+      expect(to_markdown("foo https://www.example.com/foo.html?a=1 <https://www.example.com/foo.html?a=1> bar"))
+        .to eq("foo https://www.example.com/foo.html?a=1 bar")
+
       expect(to_markdown("foo https://www.example.com/foo.html <https://www.example.com/foo.html> bar"))
         .to eq("foo https://www.example.com/foo.html bar")
 
