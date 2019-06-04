@@ -631,3 +631,21 @@ task 'posts:recover_uploads_from_index' => :environment do |_, args|
     end
   end
 end
+
+desc 'invalidate broken images'
+task 'posts:invalidate_broken_images' => :environment do
+  puts "Invalidating broken images.."
+
+  posts = Post.where("raw like '%<img%'")
+
+  rebaked = 0
+  total = posts.count
+
+  posts.find_each do |p|
+    rebake_post(p, invalidate_broken_images: true)
+    print_status(rebaked += 1, total)
+  end
+
+  puts
+  puts "", "#{rebaked} posts rebaked!"
+end
