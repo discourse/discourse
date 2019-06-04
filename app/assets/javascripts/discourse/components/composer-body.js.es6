@@ -149,7 +149,7 @@ export default Ember.Component.extend(KeyEnterEscape, {
       resize();
       triggerOpen();
     });
-    positioningWorkaround(this.$());
+    positioningWorkaround(this.element);
   },
 
   willDestroyElement() {

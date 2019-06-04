@@ -65,12 +65,11 @@ export function isWorkaroundActive() {
 }
 
 // per http://stackoverflow.com/questions/29001977/safari-in-ios8-is-scrolling-screen-when-fixed-elements-get-focus/29064810
-function positioningWorkaround($fixedElement) {
+function positioningWorkaround(fixedElement) {
   if (!isAppleDevice() || safariHacksDisabled()) {
     return;
   }
 
-  const fixedElement = $fixedElement[0];
   const oldHeight = fixedElement.style.height;
   const $window = $(window);
 
@@ -171,21 +170,21 @@ function positioningWorkaround($fixedElement) {
   }
 
   const checkForInputs = debounce(function() {
-    $fixedElement
-      .find(
+    fixedElement
+      .querySelectorAll(
         "button:not(.hide-preview),a:not(.mobile-file-upload):not(.toggle-toolbar)"
       )
-      .each((_, elem) => {
-        const $elem = $(elem);
+      .forEach(node => {
+        const $node = $(node);
         if (
-          $elem.parents(".emoji-picker").length > 0 ||
-          $elem.parents(".autocomplete").length > 0 ||
-          $elem.parents(".d-editor-button-bar").length > 0
+          $node.parents(".emoji-picker").length > 0 ||
+          $node.parents(".autocomplete").length > 0 ||
+          $node.parents(".d-editor-button-bar").length > 0
         ) {
           return;
         }
 
-        attachTouchStart(this, evt => {
+        attachTouchStart(node, evt => {
           done = true;
           document.activeElement && document.activeElement.blur();
           evt.preventDefault();
