@@ -157,7 +157,8 @@ class PlainTextToMarkdown
       .keep_if { |_, urls | urls.length > 1 }
       .keys.each do |url|
 
-      text.gsub!(Regexp.new(%Q|#{url}(\s*[()\\[\\]<>«»'"“”‘’]?#{url}[()\\[\\]<>«»'"“”‘’]?)|, Regexp::IGNORECASE), url)
+      escaped = Regexp.escape(url)
+      text.gsub!(Regexp.new(%Q|#{escaped}(\s*[()\\[\\]<>«»'"“”‘’]?#{escaped}[()\\[\\]<>«»'"“”‘’]?)|, Regexp::IGNORECASE), url)
     end
 
     text
