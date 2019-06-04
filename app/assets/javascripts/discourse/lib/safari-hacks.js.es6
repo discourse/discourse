@@ -72,33 +72,38 @@ function positioningWorkaround($fixedElement) {
 
   const fixedElement = $fixedElement[0];
   const oldHeight = fixedElement.style.height;
+  const $window = $(window);
 
-  var done = false;
-  var originalScrollTop = 0;
+  let done = false;
+  let originalScrollTop = 0;
 
   positioningWorkaround.blur = function(evt) {
     if (workaroundActive) {
       done = true;
 
-      $("#main-outlet").show();
-      $("header").show();
+      document.getElementById("main-outlet").style.display = "block";
+      document.querySelector("header").style.display = "block";
 
       fixedElement.style.position = "";
       fixedElement.style.top = "";
       fixedElement.style.height = oldHeight;
 
-      Ember.run.later(() => $(fixedElement).removeClass("no-transition"), 500);
+      Ember.run.later(
+        () => fixedElement.classList.remove("no-transition"),
+        500
+      );
 
-      $(window).scrollTop(originalScrollTop);
+      $window.scrollTop(originalScrollTop);
 
       if (evt) {
         evt.target.removeEventListener("blur", blurred);
       }
+
       workaroundActive = false;
     }
   };
 
-  var blurredNow = function(evt) {
+  const blurredNow = function(evt) {
     if (
       !done &&
       $(document.activeElement)
@@ -113,58 +118,55 @@ function positioningWorkaround($fixedElement) {
     positioningWorkaround.blur(evt);
   };
 
-  var blurred = debounce(blurredNow, 250);
+  const blurred = debounce(blurredNow, 250);
 
-  var positioningHack = function(evt) {
-    const self = this;
+  const positioningHack = function(evt) {
     done = false;
 
     // we need this, otherwise changing focus means we never clear
-    self.addEventListener("blur", blurred);
+    this.addEventListener("blur", blurred);
 
     if (fixedElement.style.top === "0px") {
       if (this !== document.activeElement) {
         evt.preventDefault();
-        self.focus();
+        this.focus();
       }
       return;
     }
 
-    originalScrollTop = $(window).scrollTop();
+    originalScrollTop = $window.scrollTop();
 
     // take care of body
 
-    $("#main-outlet").hide();
-    $("header").hide();
+    document.getElementById("main-outlet").style.display = "none";
+    document.querySelector("header").style.display = "none";
 
-    $(window).scrollTop(0);
+    $window.scrollTop(0);
 
     let i = 20;
     let interval = setInterval(() => {
-      $(window).scrollTop(0);
-      if (i-- === 0) {
-        clearInterval(interval);
-      }
+      $window.scrollTop(0);
+      if (i-- === 0) clearInterval(interval);
     }, 10);
 
     fixedElement.style.top = "0px";
 
-    composingTopic = $("#reply-control .category-chooser").length > 0;
+    composingTopic =
+      document.querySelector("#reply-control .category-chooser") !== null;
 
     const height = calcHeight(composingTopic);
     fixedElement.style.height = height + "px";
-
-    $(fixedElement).addClass("no-transition");
+    fixedElement.classList.add("no-transition");
 
     evt.preventDefault();
-    self.focus();
+    this.focus();
     workaroundActive = true;
   };
 
   function attachTouchStart(elem, fn) {
-    if (!$(elem).data("listening")) {
+    if (!elem.getAttribute("listening")) {
       elem.addEventListener("touchstart", fn);
-      $(elem).data("listening", true);
+      elem.setAttribute("data-listening", true);
     }
   }
 
@@ -173,29 +175,27 @@ function positioningWorkaround($fixedElement) {
       .find(
         "button:not(.hide-preview),a:not(.mobile-file-upload):not(.toggle-toolbar)"
       )
-      .each(function(idx, elem) {
-        if ($(elem).parents(".emoji-picker").length > 0) {
+      .each((_, elem) => {
+        const $elem = $(elem);
+        if (
+          $elem.parents(".emoji-picker").length > 0 ||
+          $elem.parents(".autocomplete").length > 0 ||
+          $elem.parents(".d-editor-button-bar").length > 0
+        ) {
           return;
         }
 
-        if ($(elem).parents(".autocomplete").length > 0) {
-          return;
-        }
-
-        if ($(elem).parents(".d-editor-button-bar").length > 0) {
-          return;
-        }
-
-        attachTouchStart(this, function(evt) {
+        attachTouchStart(this, evt => {
           done = true;
-          $(document.activeElement).blur();
+          document.activeElement && document.activeElement.blur();
           evt.preventDefault();
-          $(this).click();
+          this.click();
         });
       });
-    $fixedElement.find("input[type=text],textarea").each(function() {
-      attachTouchStart(this, positioningHack);
-    });
+
+    fixedElement
+      .querySelectorAll("input[type=text],textarea")
+      .forEach(node => attachTouchStart(node, positioningHack));
   }, 100);
 
   const config = {
