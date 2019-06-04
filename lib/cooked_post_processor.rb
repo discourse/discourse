@@ -97,12 +97,7 @@ class CookedPostProcessor
 
     return if previous.blank?
 
-    # remove click counters
-    previous_doc = Nokogiri::HTML::fragment(previous)
-    previous_doc.css("span.clicks").remove
-
-    previous_text = previous_doc.text.strip
-
+    previous_text = Nokogiri::HTML::fragment(previous).text.strip
     quoted_text = @doc.css("aside.quote:first-child blockquote").first&.text&.strip || ""
 
     return if previous_text.gsub(/(\s){2,}/, '\1') != quoted_text.gsub(/(\s){2,}/, '\1')
