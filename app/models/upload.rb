@@ -138,7 +138,7 @@ class Upload < ActiveRecord::Base
   end
 
   def base62_sha1
-    Upload.base62_sha1(upload.sha1)
+    Upload.base62_sha1(self.sha1)
   end
 
   def local?
