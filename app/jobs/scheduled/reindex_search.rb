@@ -126,6 +126,7 @@ module Jobs
       Category.joins(:category_search_data)
         .where('category_search_data.locale != ?
                 OR category_search_data.version != ?', SiteSetting.default_locale, SearchIndexer::INDEX_VERSION)
+        .order('categories.id asc')
         .limit(limit)
         .pluck(:id)
     end
@@ -134,6 +135,7 @@ module Jobs
       Topic.joins(:topic_search_data)
         .where('topic_search_data.locale != ?
                 OR topic_search_data.version != ?', SiteSetting.default_locale, SearchIndexer::INDEX_VERSION)
+        .order('topics.id desc')
         .limit(limit)
         .pluck(:id)
     end
@@ -142,6 +144,7 @@ module Jobs
       User.joins(:user_search_data)
         .where('user_search_data.locale != ?
                 OR user_search_data.version != ?', SiteSetting.default_locale, SearchIndexer::INDEX_VERSION)
+        .order('users.id asc')
         .limit(limit)
         .pluck(:id)
     end
@@ -150,6 +153,7 @@ module Jobs
       Tag.joins(:tag_search_data)
         .where('tag_search_data.locale != ?
                 OR tag_search_data.version != ?', SiteSetting.default_locale, SearchIndexer::INDEX_VERSION)
+        .order('tags.id asc')
         .limit(limit)
         .pluck(:id)
     end
