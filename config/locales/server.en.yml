@@ -1006,7 +1006,7 @@ en:
       title: "User Visits"
       xaxis: "Day"
       yaxis: "Number of visits"
-      description: "Number of all unique user visits."
+      description: "Number of all user visits."
     signups:
       title: "Signups"
       xaxis: "Day"
