@@ -121,14 +121,14 @@ describe PrettyText do
   end
 
   it 'can onebox posts' do
-    post = Fabricate(:post, raw: <<~EOF)
+    post = Fabricate(:post, raw: <<~MD)
       A post with a poll
 
       [poll type=regular]
       * Hello
       * World
       [/poll]
-    EOF
+    MD
 
     onebox = Oneboxer.onebox_raw(post.full_url, user_id: Fabricate(:user).id)
     doc = Nokogiri::HTML(onebox[:preview])
@@ -138,14 +138,14 @@ describe PrettyText do
   end
 
   it 'can reduce excerpts' do
-    post = Fabricate(:post, raw: <<~EOF)
+    post = Fabricate(:post, raw: <<~MD)
       A post with a poll
 
       [poll type=regular]
       * Hello
       * World
       [/poll]
-    EOF
+    MD
 
     excerpt = PrettyText.excerpt(post.cooked, SiteSetting.post_onebox_maxlength, post: post)
     expect(excerpt).to eq("A post with a poll \n<a href=\"#{post.url}\">poll</a>")
