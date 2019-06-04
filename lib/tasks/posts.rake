@@ -8,20 +8,28 @@ task 'posts:rebake' => :environment do
 end
 
 task 'posts:rebake_uncooked_posts' => :environment do
-  RailsMultisite::ConnectionManagement.each_connection do
-    puts "Rebaking uncooked posts on #{RailsMultisite::ConnectionManagement.current_db}"
-    uncooked = Post.where('baked_version <> ? or baked_version IS NULL', Post::BAKED_VERSION)
+  ENV['RAILS_DB'] ? rebake_uncooked_posts : rebake_uncooked_posts_all_sites
+end
 
-    rebaked = 0
-    total = uncooked.count
-
-    uncooked.find_each do |post|
-      rebake_post(post)
-      print_status(rebaked += 1, total)
-    end
-
-    puts "", "#{rebaked} posts done!", ""
+def rebake_uncooked_posts_all_sites
+  RailsMultisite::ConnectionManagement.each_connection do |db|
+    rebake_uncooked_posts
   end
+end
+
+def rebake_uncooked_posts
+  puts "Rebaking uncooked posts on #{RailsMultisite::ConnectionManagement.current_db}"
+  uncooked = Post.where('baked_version <> ? or baked_version IS NULL', Post::BAKED_VERSION)
+
+  rebaked = 0
+  total = uncooked.count
+
+  uncooked.find_each do |post|
+    rebake_post(post)
+    print_status(rebaked += 1, total)
+  end
+
+  puts "", "#{rebaked} posts done!", ""
 end
 
 desc 'Update each post with latest markdown and refresh oneboxes'
