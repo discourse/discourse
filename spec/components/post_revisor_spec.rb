@@ -753,6 +753,27 @@ describe PostRevisor do
                 expect(result).to eq(true)
               }.to_not change { topic.reload.bumped_at }
             end
+
+            it "doesn't bump topic if only staff-only tags are removed and there are no tags left" do
+              topic.tags = Tag.where(name: ['important', 'secret']).to_a
+              expect {
+                result = subject.revise!(Fabricate(:admin), raw: post.raw, tags: [])
+                expect(result).to eq(true)
+              }.to_not change { topic.reload.bumped_at }
+            end
+
+            it "creates a hidden revision" do
+              subject.revise!(Fabricate(:admin), raw: post.raw, tags: topic.tags.map(&:name) + ['secret'])
+              expect(post.reload.revisions.first.hidden).to eq(true)
+            end
+
+            it "doesn't notify topic owner about hidden tags" do
+              PostActionNotifier.enable
+              Jobs.run_immediately!
+              expect {
+                subject.revise!(Fabricate(:admin), raw: post.raw, tags: topic.tags.map(&:name) + ['secret'])
+              }.not_to change { Notification.where(notification_type: Notification.types[:edited]).count }
+            end
           end
 
         end

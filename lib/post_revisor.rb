@@ -462,7 +462,8 @@ class PostRevisor
       user_id: @post.last_editor_id,
       post_id: @post.id,
       number: @post.version,
-      modifications: modifications
+      modifications: modifications,
+      hidden: only_hidden_tags_changed?
     )
   end
 
