@@ -433,24 +433,24 @@ class ListController < ApplicationController
   end
 
   def self.best_period_with_topics_for(previous_visit_at, category_id = nil, default_period = SiteSetting.top_page_default_timeframe)
-    best_periods_for(previous_visit_at, default_period.to_sym).each do |period|
+    best_periods_for(previous_visit_at, default_period.to_sym).find do |period|
       top_topics = TopTopic.where("#{period}_score > 0")
       top_topics = top_topics.joins(:topic).where("topics.category_id = ?", category_id) if category_id
       top_topics = top_topics.limit(SiteSetting.topics_per_period_in_top_page)
-      return period if top_topics.count == SiteSetting.topics_per_period_in_top_page
+      top_topics.count == SiteSetting.topics_per_period_in_top_page
     end
-
-    nil
   end
 
   def self.best_periods_for(date, default_period = :all)
-    date ||= 1.year.ago
+    return [default_period, :all].uniq unless date
+
     periods = []
-    periods << default_period if :all     != default_period
-    periods << :daily         if :daily   != default_period && date > 8.days.ago
-    periods << :weekly        if :weekly  != default_period && date > 35.days.ago
-    periods << :monthly       if :monthly != default_period && date > 180.days.ago
-    periods << :yearly        if :yearly  != default_period
+    periods << :daily     if date > (1.week + 1.day).ago
+    periods << :weekly    if date > (1.month + 1.week).ago
+    periods << :monthly   if date > (3.months + 3.weeks).ago
+    periods << :quarterly if date > (1.year + 1.month).ago
+    periods << :yearly    if date > 3.years.ago
+    periods << :all
     periods
   end
 
