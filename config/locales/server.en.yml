@@ -1715,6 +1715,8 @@ en:
     title_prettify: "Prevent common title typos and errors, including all caps, lowercase first character, multiple ! and ?, extra . at end, etc."
     title_remove_extraneous_space: "Remove leading whitespaces in front of the end punctuation."
 
+    automatic_topic_heat_values: 'Automatically update the "topic views heat" and "topic post like heat" settings based on site activity.'
+
     topic_views_heat_low: "After this many views, the views field is slightly highlighted."
     topic_views_heat_medium: "After this many views, the views field is moderately highlighted."
     topic_views_heat_high: "After this many views, the views field is strongly highlighted."
