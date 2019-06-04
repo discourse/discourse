@@ -5,7 +5,7 @@ module Jobs
   class ReindexSearch < Jobs::Scheduled
     every 2.hours
 
-    CLEANUP_GRACE_PERIOD = 1.week.ago
+    CLEANUP_GRACE_PERIOD = 1.day.ago
 
     def execute(args)
       rebuild_problem_topics
@@ -79,8 +79,12 @@ module Jobs
           FROM post_search_data
           LEFT JOIN posts ON post_search_data.post_id = posts.id
           INNER JOIN topics ON posts.topic_id = topics.id
-          WHERE topics.deleted_at IS NOT NULL
-          AND topics.deleted_at <= :deleted_at
+          WHERE (topics.deleted_at IS NOT NULL
+          AND topics.deleted_at <= :deleted_at) OR (
+            posts.deleted_at IS NOT NULL AND
+            posts.deleted_at <= :deleted_at
+          )
+
         )
       SQL
     end
