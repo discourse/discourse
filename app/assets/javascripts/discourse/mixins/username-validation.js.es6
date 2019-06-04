@@ -7,20 +7,20 @@ export default Ember.Mixin.create({
   uniqueUsernameValidation: null,
 
   maxUsernameLength: setting("max_username_length"),
+
   minUsernameLength: setting("min_username_length"),
 
   fetchExistingUsername: debounce(function() {
-    const self = this;
-    Discourse.User.checkUsername(null, this.accountEmail).then(function(
-      result
-    ) {
+    Discourse.User.checkUsername(null, this.accountEmail).then(result => {
       if (
         result.suggestion &&
-        (Ember.isEmpty(self.get("accountUsername")) ||
-          self.get("accountUsername") === self.get("authOptions.username"))
+        (Ember.isEmpty(this.accountUsername) ||
+          this.accountUsername === this.get("authOptions.username"))
       ) {
-        self.set("accountUsername", result.suggestion);
-        self.set("prefilledUsername", result.suggestion);
+        this.setProperties({
+          accountUsername: result.suggestion,
+          prefilledUsername: result.suggestion
+        });
       }
     });
   }, 500),
@@ -38,9 +38,7 @@ export default Ember.Mixin.create({
 
     // If blank, fail without a reason
     if (Ember.isEmpty(accountUsername)) {
-      return InputValidation.create({
-        failed: true
-      });
+      return InputValidation.create({ failed: true });
     }
 
     // If too short
@@ -67,7 +65,7 @@ export default Ember.Mixin.create({
     });
   },
 
-  shouldCheckUsernameAvailability: function() {
+  shouldCheckUsernameAvailability() {
     return (
       !Ember.isEmpty(this.accountUsername) &&
       this.accountUsername.length >= this.minUsernameLength
