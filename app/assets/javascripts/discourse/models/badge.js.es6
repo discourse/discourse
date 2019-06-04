@@ -45,7 +45,9 @@ const Badge = RestModel.extend({
         this.updateFromJson(json);
         return this;
       })
-      .catch(error => throw new Error(error));
+      .catch(error => {
+        throw new Error(error);
+      });
   },
 
   destroy() {
