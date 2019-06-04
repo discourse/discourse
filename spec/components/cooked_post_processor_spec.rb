@@ -1368,23 +1368,6 @@ describe CookedPostProcessor do
       expect(reply.raw).to eq("and this is the third reply")
     end
 
-    it "works with click counters" do
-      post = Fabricate(:post,
-        topic: topic,
-        raw: "[Discourse](https://www.discourse.org) is amazing!",
-        cooked: %{<p><a href="https://www.discourse.org">Discourse <span class="badge badge-notification clicks" title="1 click">1</span></a> is amazing!</p>}
-      )
-
-      reply = Fabricate(:post,
-        topic: topic,
-        raw: "[quote]\n[Discourse](https://www.discourse.org) is amazing!\n[/quote]\nIt sure is :+1:"
-      )
-
-      CookedPostProcessor.new(reply).remove_full_quote_on_direct_reply
-
-      expect(reply.raw).to eq("It sure is :+1:")
-    end
-
   end
 
 end
