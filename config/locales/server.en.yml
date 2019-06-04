@@ -218,6 +218,7 @@ en:
 
   bulk_invite:
     file_should_be_csv: "The uploaded file should be of csv format."
+    max_rows: "Maximum of 50,000 invites can be sent at a time. Try splitting the file in smaller parts."
     error: "There was an error uploading that file. Please try again later."
 
   topic_invite:

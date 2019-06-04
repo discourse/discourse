@@ -242,14 +242,6 @@ class Invite < ActiveRecord::Base
   def self.base_directory
     File.join(Rails.root, "public", "uploads", "csv", RailsMultisite::ConnectionManagement.current_db)
   end
-
-  def self.create_csv(file, name)
-    extension = File.extname(file.original_filename)
-    path = "#{Invite.base_directory}/#{name}#{extension}"
-    FileUtils.mkdir_p(Pathname.new(path).dirname)
-    File.open(path, "wb") { |f| f << file.tempfile.read }
-    path
-  end
 end
 
 # == Schema Information
