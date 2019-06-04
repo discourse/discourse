@@ -31,6 +31,16 @@ export default Ember.Component.extend({
     return reportTotal && total && twoColumns;
   },
 
+  @computed("model.average", "totalsForSample.1.value", "twoColumns")
+  showAverage(reportAverage, totalValue, twoColumns) {
+    return reportAverage && totalValue && twoColumns;
+  },
+
+  @computed("totalsForSample.1.value", "model.data.length")
+  averageForSample(totals, count) {
+    return (totals / count).toFixed(0);
+  },
+
   @computed("model.data.length")
   showSortingUI(dataLength) {
     return dataLength >= 5;

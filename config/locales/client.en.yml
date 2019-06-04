@@ -3111,6 +3111,7 @@ en:
           groups: "All groups"
           disabled: "This report is disabled"
           totals_for_sample: "Totals for sample"
+          average_for_sample: "Average for sample"
           total: "All time total"
           no_data: "No data to display."
           trending_search:
