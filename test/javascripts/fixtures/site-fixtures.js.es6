@@ -1,4 +1,4 @@
-import { LIKED_CONSOLIDATED_TYPE } from "discourse/widgets/notification-item";
+import { LIKED_CONSOLIDATED_TYPE } from "discourse/widgets/concerns/notification-types";
 
 export default {
   "site.json": {

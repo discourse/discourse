@@ -13,10 +13,12 @@ import { setTransientHeader } from "discourse/lib/ajax";
 import { userPath } from "discourse/lib/url";
 import { iconNode } from "discourse-common/lib/icon-library";
 
-const LIKED_TYPE = 5;
-const INVITED_TYPE = 8;
-const GROUP_SUMMARY_TYPE = 16;
-export const LIKED_CONSOLIDATED_TYPE = 19;
+import {
+  LIKED_TYPE,
+  INVITEE_ACCEPTED_TYPE,
+  GROUP_MESSAGE_SUMMARY_TYPE,
+  LIKED_CONSOLIDATED_TYPE
+} from "discourse/widgets/concerns/notification-types";
 
 createWidget("notification-item", {
   tagName: "li",
@@ -58,7 +60,7 @@ createWidget("notification-item", {
       return postUrl(attrs.slug, topicId, attrs.post_number);
     }
 
-    if (attrs.notification_type === INVITED_TYPE) {
+    if (attrs.notification_type === INVITEE_ACCEPTED_TYPE) {
       return userPath(data.display_username);
     }
 
@@ -112,7 +114,7 @@ createWidget("notification-item", {
     const scope =
       notName === "custom" ? data.message : `notifications.${notName}`;
 
-    if (notificationType === GROUP_SUMMARY_TYPE) {
+    if (notificationType === GROUP_MESSAGE_SUMMARY_TYPE) {
       const count = data.inbox_count;
       const group_name = data.group_name;
       return I18n.t(scope, { count, group_name });
