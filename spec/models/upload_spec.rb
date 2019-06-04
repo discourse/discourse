@@ -253,6 +253,13 @@ describe Upload do
     end
   end
 
+  describe '#base62_sha1' do
+    it 'should return the right value' do
+      upload.update!(sha1: "0000c513e1da04f7b4e99230851ea2aafeb8cc4e")
+      expect(upload.base62_sha1).to eq("1Eg9p8rrCURq4T3a6iJUk0ri6")
+    end
+  end
+
   describe '.sha1_from_short_path' do
     it "should be able to lookup sha1" do
       path = "/uploads/short-url/3UjQ4jHoyeoQndk5y3qHzm3QVTQ.png"
