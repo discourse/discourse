@@ -3,7 +3,6 @@ import {
   observes
 } from "ember-addons/ember-computed-decorators";
 import { FORMAT } from "select-kit/components/future-date-input-selector";
-
 import { PUBLISH_TO_CATEGORY_STATUS_TYPE } from "discourse/controllers/edit-topic-timer";
 
 export default Ember.Component.extend({
@@ -22,16 +21,16 @@ export default Ember.Component.extend({
   init() {
     this._super(...arguments);
 
-    const input = this.input;
-
-    if (input) {
+    if (this.input) {
       if (this.basedOnLastPost) {
         this.set("selection", "set_based_on_last_post");
       } else {
-        this.set("selection", "pick_date_and_time");
-        const datetime = moment(input);
-        this.set("date", datetime.toDate());
-        this.set("time", datetime.format("HH:mm"));
+        const datetime = moment(this.input);
+        this.setProperties({
+          selection: "pick_date_and_time",
+          date: datetime.format("YYYY-MM-DD"),
+          time: datetime.format("HH:mm")
+        });
         this._updateInput();
       }
     }
@@ -39,9 +38,18 @@ export default Ember.Component.extend({
 
   @observes("date", "time")
   _updateInput() {
-    const date = moment(this.date).format("YYYY-MM-DD");
-    const time = (this.time && ` ${this.time}`) || "";
-    this.set("input", moment(`${date}${time}`).format(FORMAT));
+    if (!this.date) {
+      this.set("time", null);
+    }
+
+    const time = this.time ? ` ${this.time}` : "";
+    const dateTime = moment(`${this.date}${time}`);
+
+    if (dateTime.isValid()) {
+      this.set("input", dateTime.format(FORMAT));
+    } else {
+      this.set("input", null);
+    }
   },
 
   @observes("isBasedOnLastPost")
@@ -72,6 +80,8 @@ export default Ember.Component.extend({
   },
 
   didReceiveAttrs() {
+    this._super(...arguments);
+
     if (this.label) this.set("displayLabel", I18n.t(this.label));
   },
 
