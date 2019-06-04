@@ -110,7 +110,7 @@ export const POPULAR_THEMES = [
   },
   {
     name: "Easy Responsive Footer",
-    value: "https://github.com/hnb-ku/Discourse-easy-footer",
+    value: "https://github.com/discourse/Discourse-easy-footer",
     preview: "https://theme-creator.discourse.org/theme/Johani/easy-footer",
     description: "Add a fully responsive footer without writing any HTML.",
     meta_url: "https://meta.discourse.org/t/easy-responsive-footer/95818",
