@@ -103,17 +103,13 @@ export function endWith() {
   const args = Array.prototype.slice.call(arguments, 0);
   const substring = args.pop();
   const computed = Ember.computed(function() {
-    const self = this;
-    return _.every(
-      args.map(function(a) {
-        return self.get(a);
-      }),
-      function(s) {
+    return args
+      .map(a => this.get(a))
+      .every(s => {
         const position = s.length - substring.length,
           lastIndex = s.lastIndexOf(substring);
         return lastIndex !== -1 && lastIndex === position;
-      }
-    );
+      });
   });
   return computed.property.apply(computed, args);
 }
@@ -128,5 +124,5 @@ export function endWith() {
 export function setting(name) {
   return Ember.computed(function() {
     return Discourse.SiteSettings[name];
-  }).property();
+  });
 }
