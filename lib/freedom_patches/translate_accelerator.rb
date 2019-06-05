@@ -181,7 +181,7 @@ module I18n
 
         # for now lets do all the expensive work for keys with count
         # no choice really
-        has_override = !!options[:count]
+        has_override = !!options[:count] || (SiteSetting.default_locale != I18n.locale)
 
         I18n.fallbacks[locale].each do |l|
           override = overrides[l] = overrides_by_locale(l)
