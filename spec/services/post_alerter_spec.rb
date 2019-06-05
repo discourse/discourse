@@ -989,15 +989,16 @@ describe PostAlerter do
         SiteSetting.tagging_enabled = true
         Jobs.run_immediately!
         TagUser.change(user.id, watched_tag.id, TagUser.notification_levels[:watching_first_post])
+        TopicUser.change(Fabricate(:user).id, post.topic.id, notification_level: TopicUser.notification_levels[:watching])
       end
 
       it "triggers a notification" do
         expect(user.notifications.where(notification_type: Notification.types[:watching_first_post]).count).to eq(0)
 
-        PostRevisor.new(post).revise!(Fabricate(:user), tags: [other_tag.name, watched_tag.name])
+        expect { PostRevisor.new(post).revise!(Fabricate(:user), tags: [other_tag.name, watched_tag.name]) }.to change { Notification.count }.by(1)
         expect(user.notifications.where(notification_type: Notification.types[:watching_first_post]).count).to eq(1)
 
-        PostRevisor.new(post).revise!(Fabricate(:user), tags: [watched_tag.name, other_tag.name])
+        expect { PostRevisor.new(post).revise!(Fabricate(:user), tags: [watched_tag.name, other_tag.name]) }.to change { Notification.count }.by(0)
         expect(user.notifications.where(notification_type: Notification.types[:watching_first_post]).count).to eq(1)
       end
 
