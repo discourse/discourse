@@ -143,6 +143,7 @@ class StaticController < ApplicationController
           rescue => e
             AdminDashboardData.add_problem_message('dashboard.bad_favicon_url', 1800)
             Rails.logger.warn("Failed to fetch faivcon #{favicon.url}: #{e}\n#{e.backtrace}")
+            ""
           ensure
             file&.unlink
           end
