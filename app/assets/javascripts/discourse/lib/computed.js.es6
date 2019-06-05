@@ -11,7 +11,7 @@ import addonFmt from "ember-addons/fmt";
 
 export function propertyEqual(p1, p2) {
   return Ember.computed(p1, p2, function() {
-    return this.get(p1) === this.get(p2);
+    return this[p1] === this[p2];
   });
 }
 
@@ -25,19 +25,19 @@ export function propertyEqual(p1, p2) {
 **/
 export function propertyNotEqual(p1, p2) {
   return Ember.computed(p1, p2, function() {
-    return this.get(p1) !== this.get(p2);
+    return this[p1] !== this[p2];
   });
 }
 
 export function propertyGreaterThan(p1, p2) {
   return Ember.computed(p1, p2, function() {
-    return this.get(p1) > this.get(p2);
+    return this[p1] > this[p2];
   });
 }
 
 export function propertyLessThan(p1, p2) {
   return Ember.computed(p1, p2, function() {
-    return this.get(p1) < this.get(p2);
+    return this[p1] < this[p2];
   });
 }
 
@@ -52,7 +52,7 @@ export function propertyLessThan(p1, p2) {
 export function i18n(...args) {
   const format = args.pop();
   const computed = Ember.computed(function() {
-    return I18n.t(addonFmt(format, ...args.map(a => this.get(a))));
+    return I18n.t(addonFmt(format, ...args.map(a => this[a])));
   });
   return computed.property.apply(computed, args);
 }
@@ -69,7 +69,7 @@ export function i18n(...args) {
 export function fmt(...args) {
   const format = args.pop();
   const computed = Ember.computed(function() {
-    return addonFmt(format, ...args.map(a => this.get(a)));
+    return addonFmt(format, ...args.map(a => this[a]));
   });
   return computed.property.apply(computed, args);
 }
@@ -86,7 +86,7 @@ export function fmt(...args) {
 export function url(...args) {
   const format = args.pop();
   const computed = Ember.computed(function() {
-    return Discourse.getURL(addonFmt(format, ...args.map(a => this.get(a))));
+    return Discourse.getURL(addonFmt(format, ...args.map(a => this[a])));
   });
   return computed.property.apply(computed, args);
 }
@@ -103,17 +103,13 @@ export function endWith() {
   const args = Array.prototype.slice.call(arguments, 0);
   const substring = args.pop();
   const computed = Ember.computed(function() {
-    const self = this;
-    return _.every(
-      args.map(function(a) {
-        return self.get(a);
-      }),
-      function(s) {
+    return args
+      .map(a => this[a])
+      .every(s => {
         const position = s.length - substring.length,
           lastIndex = s.lastIndexOf(substring);
         return lastIndex !== -1 && lastIndex === position;
-      }
-    );
+      });
   });
   return computed.property.apply(computed, args);
 }
@@ -128,5 +124,5 @@ export function endWith() {
 export function setting(name) {
   return Ember.computed(function() {
     return Discourse.SiteSettings[name];
-  }).property();
+  });
 }
