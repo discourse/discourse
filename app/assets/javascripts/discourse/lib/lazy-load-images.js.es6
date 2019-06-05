@@ -53,8 +53,8 @@ function show(image) {
     copyImg.style.position = "absolute";
     copyImg.style.top = `${image.offsetTop}px`;
     copyImg.style.left = `${image.offsetLeft}px`;
-    copyImg.style.width = imageData.width;
-    copyImg.style.height = imageData.height;
+    copyImg.style.width = `${imageData.width}px`;
+    copyImg.style.height = `${imageData.height}px`;
     copyImg.className = imageData.className;
 
     image.parentNode.insertBefore(copyImg, image);
