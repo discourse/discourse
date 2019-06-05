@@ -389,6 +389,23 @@
       display: flex;
     }
   }
+  .reviewable-post-header {
+    display: flex;
+    justify-content: space-between;
+    max-width: $topic-body-width;
+    width: $topic-body-width;
+    align-items: center;
+
+    .reviewable-reply-to {
+      display: flex;
+      align-items: center;
+      color: $primary-medium;
+      font-size: 0.9em;
+      .d-icon {
+        margin-right: 0.5em;
+      }
+    }
+  }
 
   .post-contents {
     width: 100%;

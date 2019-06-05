@@ -363,6 +363,7 @@ en:
         placeholder: "type the message title here"
 
     review:
+      in_reply_to: "in reply to"
       claim_help:
         optional: "You can claim this item to prevent others from reviewing it."
         required: "You must claim items before you can review them."
