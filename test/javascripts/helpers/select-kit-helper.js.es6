@@ -47,37 +47,26 @@ async function selectKitSelectRowByIndex(index, selector) {
   await click(find(`${selector} .select-kit-row`).eq(index));
 }
 
-async function createEvent(element, keyCode, selector, options) {
-  element = element || ".filter-input";
-  options = options || {};
-
-  const type = options.type || "keydown";
-  const event = jQuery.Event(type);
-  event.keyCode = keyCode;
-
-  if (options && options.metaKey) event.metaKey = true;
-
-  await find(selector)
-    .find(element)
-    .trigger(event);
-}
-
 async function keyboardHelper(value, target, selector) {
-  switch (value) {
-    case "enter":
-      return await createEvent(target, 13, selector);
-    case "backspace":
-      return await createEvent(target, 8, selector);
-    case "selectAll":
-      return await createEvent(target, 65, selector, { metaKey: true });
-    case "escape":
-      return await createEvent(target, 27, selector);
-    case "down":
-      return await createEvent(target, 40, selector);
-    case "up":
-      return await createEvent(target, 38, selector);
-    case "tab":
-      return await createEvent(target, 9, selector);
+  target = find(selector).find(target || ".filter-input");
+
+  if (value === "selectAll") {
+    // special casing the only one not working with triggerEvent
+    const event = jQuery.Event("keydown");
+    event.keyCode = 65;
+    event.metaKey = true;
+    target.trigger(event);
+  } else {
+    const mapping = {
+      enter: { keyCode: 13 },
+      backspace: { keyCode: 8 },
+      escape: { keyCode: 27 },
+      down: { keyCode: 40 },
+      up: { keyCode: 38 },
+      tab: { keyCode: 9 }
+    };
+
+    await triggerEvent(target, "keydown", mapping[value]);
   }
 }
 
@@ -178,7 +167,7 @@ export default function selectKit(selector) {
     },
 
     async keyboard(value, target) {
-      return keyboardHelper(value, target, selector);
+      await keyboardHelper(value, target, selector);
     },
 
     isExpanded() {
