@@ -120,7 +120,7 @@ module I18n
 
       val = @cache.getset(k) do
         begin
-          translate_no_cache(key, raise: true).freeze
+          translate_no_cache(key, locale: locale, raise: true).freeze
         rescue I18n::MissingTranslationData
           MissingTranslation
         end

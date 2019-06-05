@@ -33,6 +33,19 @@ describe "translate accelerator" do
     expect(I18n.t('i_am_an_unknown_key99')).to eq("translation missing: en_US.i_am_an_unknown_key99")
   end
 
+  it "returns the correct language" do
+    expect(I18n.t('foo', locale: :en)).to eq('Foo in :en')
+    expect(I18n.t('foo', locale: :de)).to eq('Foo in :de')
+
+    I18n.with_locale(:en) do
+      expect(I18n.t('foo')).to eq('Foo in :en')
+    end
+
+    I18n.with_locale(:de) do
+      expect(I18n.t('foo')).to eq('Foo in :de')
+    end
+  end
+
   it "overrides for both string and symbol keys" do
     key = 'user.email.not_allowed'
     text_overriden = 'foobar'
