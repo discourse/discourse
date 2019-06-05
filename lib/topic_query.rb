@@ -446,10 +446,14 @@ class TopicQuery
       avatar_lookup = AvatarLookup.new(user_ids)
       primary_group_lookup = PrimaryGroupLookup.new(user_ids)
 
+      # memoize for loop so we don't keep looking these up
+      translations = TopicPostersSummary.translations
+
       topics.each do |t|
         t.posters = t.posters_summary(
           avatar_lookup: avatar_lookup,
-          primary_group_lookup: primary_group_lookup
+          primary_group_lookup: primary_group_lookup,
+          translations: translations
         )
       end
     end
