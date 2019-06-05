@@ -59,8 +59,6 @@
     "selectKitSelectRowByIndex": true,
     "selectKitSelectRowByName": true,
     "selectKitSelectRowByValue": true,
-    "setTextareaSelection": true,
-    "getTextareaSelection": true,
     "sinon": true,
     "test": true,
     "triggerEvent": true,
