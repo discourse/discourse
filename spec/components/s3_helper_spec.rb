@@ -78,4 +78,15 @@ describe "S3Helper" do
       end
     end
   end
+
+  it "should prefix bucket folder path only if not exists" do
+    s3_helper = S3Helper.new('bucket/folder_path')
+    bucket = stub('s3_bucket')
+
+    s3_helper.expects(:s3_bucket).returns(bucket).twice
+    bucket.expects(:object).with("folder_path/original/1X/def.xyz").twice
+
+    s3_helper.object("original/1X/def.xyz")
+    s3_helper.object("folder_path/original/1X/def.xyz")
+  end
 end
