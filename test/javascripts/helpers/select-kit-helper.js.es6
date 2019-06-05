@@ -65,19 +65,19 @@ async function createEvent(element, keyCode, selector, options) {
 async function keyboardHelper(value, target, selector) {
   switch (value) {
     case "enter":
-      return createEvent(target, 13, selector);
+      return await createEvent(target, 13, selector);
     case "backspace":
-      return createEvent(target, 8, selector);
+      return await createEvent(target, 8, selector);
     case "selectAll":
-      return createEvent(target, 65, selector, { metaKey: true });
+      return await createEvent(target, 65, selector, { metaKey: true });
     case "escape":
-      return createEvent(target, 27, selector);
+      return await createEvent(target, 27, selector);
     case "down":
-      return createEvent(target, 40, selector);
+      return await createEvent(target, 40, selector);
     case "up":
-      return createEvent(target, 38, selector);
+      return await createEvent(target, 38, selector);
     case "tab":
-      return createEvent(target, 9, selector);
+      return await createEvent(target, 9, selector);
   }
 }
 
@@ -147,43 +147,37 @@ export default function selectKit(selector) {
   return {
     async expand() {
       await expandSelectKit(selector);
-      return selectKit(selector);
     },
 
     async collapse() {
       await collapseSelectKit(selector);
-      return selectKit(selector);
     },
 
     async selectRowByIndex(index) {
       await selectKitSelectRowByIndex(index, selector);
-      return selectKit(selector);
     },
 
     async selectRowByValue(value) {
       await selectKitSelectRowByValue(value, selector);
-      return selectKit(selector);
     },
 
     async selectKitSelectRowByName(name) {
       await selectKitSelectRowByName(name, selector);
-      return selectKit(selector);
     },
 
-    selectRowByName(name) {
-      selectKitSelectRowByValue(name, selector);
-      return selectKit(selector);
+    async selectRowByName(name) {
+      await selectKitSelectRowByValue(name, selector);
     },
 
-    selectNoneRow() {
-      return selectKitSelectNoneRow(selector);
+    async selectNoneRow() {
+      await selectKitSelectNoneRow(selector);
     },
 
-    fillInFilter(filter) {
-      return selectKitFillInFilter(filter, selector);
+    async fillInFilter(filter) {
+      await selectKitFillInFilter(filter, selector);
     },
 
-    keyboard(value, target) {
+    async keyboard(value, target) {
       return keyboardHelper(value, target, selector);
     },
 
