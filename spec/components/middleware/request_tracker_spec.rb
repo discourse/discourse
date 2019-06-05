@@ -274,6 +274,8 @@ describe Middleware::RequestTracker do
 
     it "can correctly log detailed data" do
 
+      global_setting :enable_performance_http_headers, true
+
       # ensure pg is warmed up with the select 1 query
       User.where(id: -100).pluck(:id)
 
@@ -283,7 +285,7 @@ describe Middleware::RequestTracker do
       freeze_time 1.minute.from_now
 
       tracker = Middleware::RequestTracker.new(app([200, {}, []], sql_calls: 2, redis_calls: 2))
-      tracker.call(env("HTTP_X_REQUEST_START" => "t=#{start}"))
+      _, headers, _ = tracker.call(env("HTTP_X_REQUEST_START" => "t=#{start}"))
 
       expect(@data[:queue_seconds]).to eq(60)
 
@@ -295,6 +297,16 @@ describe Middleware::RequestTracker do
 
       expect(timing[:redis][:duration]).to be > 0
       expect(timing[:redis][:calls]).to eq 2
+
+      expect(headers["X-Queue-Time"]).to eq("60.000000")
+
+      expect(headers["X-Redis-Calls"]).to eq("2")
+      expect(headers["X-Redis-Time"].to_f).to be > 0
+
+      expect(headers["X-Sql-Calls"]).to eq("2")
+      expect(headers["X-Sql-Time"].to_f).to be > 0
+
+      expect(headers["X-Runtime"].to_f).to be > 0
     end
   end
 
