@@ -4352,8 +4352,8 @@ en:
         description:
           "Looking to customize your Discourse? Take advantage of our powerful theming system:
           <ul>
-          <li><a href='https://meta.discourse.org/t/x/63682' target='_blank'>How do I install a theme or theme component?</a></li>
-          <li><a href='https://meta.discourse.org/t/x/110448' target='_blank'>Theme Developer Quick Reference Guide</a></li>
+          <li><a href='https://meta.discourse.org/t/63682' target='_blank'>How do I install a theme or theme component?</a></li>
+          <li><a href='https://meta.discourse.org/t/110448' target='_blank'>Theme Developer Quick Reference Guide</a></li>
           </ul>
           Popular theme components (for more, browse <a href='https://meta.discourse.org/c/theme/l/latest' target='_blank'>#theme</a>)"
 
