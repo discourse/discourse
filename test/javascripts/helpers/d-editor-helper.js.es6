@@ -1,8 +1,4 @@
-Ember.Test.registerAsyncHelper("formatTextWithSelection", function(
-  app,
-  text,
-  [start, len]
-) {
+export default function formatTextWithSelection(text, [start, len]) {
   return [
     '"',
     text.substr(0, start),
@@ -12,4 +8,4 @@ Ember.Test.registerAsyncHelper("formatTextWithSelection", function(
     text.substr(start + len),
     '"'
   ].join("");
-});
+}

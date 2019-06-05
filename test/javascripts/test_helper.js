@@ -32,7 +32,6 @@
 //= require helpers/assertions
 //= require helpers/textarea-selection
 //= require helpers/select-kit-helper
-//= require helpers/d-editor-helper
 
 //= require helpers/qunit-helpers
 //= require_tree ./fixtures
