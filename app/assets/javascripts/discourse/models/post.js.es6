@@ -19,7 +19,7 @@ const Post = RestModel.extend({
 
   @computed("url")
   shareUrl(url) {
-    const user = this.currentUser;
+    const user = Discourse.User.current();
     const userSuffix = user ? `?u=${user.username_lower}` : "";
 
     if (this.firstPost) {
