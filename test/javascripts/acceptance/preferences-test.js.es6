@@ -1,3 +1,4 @@
+import selectKit from "helpers/select-kit-helper";
 import { acceptance } from "helpers/qunit-helpers";
 import User from "discourse/models/user";
 
