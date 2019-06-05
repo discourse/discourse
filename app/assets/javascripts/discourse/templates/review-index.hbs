@@ -55,6 +55,11 @@
           {{d-button label="review.show_all_topics" icon="times" action=(action "resetTopic")}}
         </div>
       {{/if}}
+
+      <div class='reviewable-filter sort-order'>
+        {{i18n "review.order_by"}}
+        {{combo-box value=filterSortOrder content=sortOrders}}
+      </div>
     {{/if}}
 
     <div class='reviewable-filters-actions'>
