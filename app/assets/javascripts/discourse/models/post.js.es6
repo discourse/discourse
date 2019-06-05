@@ -20,7 +20,7 @@ const Post = RestModel.extend({
   @computed("url")
   shareUrl(url) {
     const user = this.currentUser;
-    const userSuffix = user ? "?u=" + user.username_lower : "";
+    const userSuffix = user ? `?u=${user.username_lower}` : "";
 
     if (this.firstPost) {
       return this.get("topic.url") + userSuffix;
@@ -62,10 +62,10 @@ const Post = RestModel.extend({
   // Don't drop the /1
   @computed("post_number", "url")
   urlWithNumber(postNumber, baseUrl) {
-    return postNumber === 1 ? baseUrl + "/1" : baseUrl;
+    return postNumber === 1 ? `${baseUrl}/1` : baseUrl;
   },
 
-  @computed("username") username: userPath,
+  @computed("username") usernameUrl: userPath,
 
   topicOwner: propertyEqual("topic.details.created_by.id", "user_id"),
 
@@ -94,7 +94,7 @@ const Post = RestModel.extend({
     }
 
     return this.site.flagTypes.filter(item =>
-      this.get(`actionByName.${item.get("name_key")}.can_act`)
+      this.get(`actionByName.${item.name_key}.can_act`)
     );
   },
 
