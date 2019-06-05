@@ -130,6 +130,9 @@ export default {
         "archiveTitle",
         "toggleArchiveMessage"
       ],
+      dropdown() {
+        return this.site.mobileView;
+      },
       displayed() {
         return this.canArchive;
       }
