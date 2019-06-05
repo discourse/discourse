@@ -99,7 +99,6 @@ export default function() {
     "user",
     { path: "/u/:username", resetNamespace: true },
     function() {
-      this.route("profile-hidden");
       this.route("summary");
       this.route(
         "userActivity",

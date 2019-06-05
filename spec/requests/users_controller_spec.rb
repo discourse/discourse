@@ -2343,18 +2343,20 @@ describe UsersController do
 
       get "/u/#{user.username_lower}/summary.json"
       expect(response.status).to eq(200)
+
       json = JSON.parse(response.body)
 
       expect(json["user_summary"]["topic_count"]).to eq(1)
       expect(json["user_summary"]["post_count"]).to eq(0)
     end
 
-    it "returns 404 for a hidden profile" do
+    it "returns empty body for a hidden profile" do
       user = Fabricate(:user)
       user.user_option.update_column(:hide_profile_and_presence, true)
 
       get "/u/#{user.username_lower}/summary.json"
-      expect(response.status).to eq(404)
+
+      expect(response.body).to eq("")
     end
   end
 

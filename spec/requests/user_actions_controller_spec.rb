@@ -10,13 +10,15 @@ describe UserActionsController do
       expect(response.status).to eq(400)
     end
 
-    it "returns a 404 for a user with a hidden profile" do
+    it "returns an empty user_actions array for a user with a hidden profile" do
       UserActionManager.enable
       post = Fabricate(:post)
       post.user.user_option.update_column(:hide_profile_and_presence, true)
 
       get "/user_actions.json", params: { username: post.user.username }
-      expect(response.code).to eq("404")
+      
+      parsed = JSON.parse(response.body)
+      expect(parsed["user_actions"]).to eq([])
     end
 
     it 'renders list correctly' do
