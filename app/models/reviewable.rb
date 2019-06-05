@@ -383,10 +383,21 @@ class Reviewable < ActiveRecord::Base
     limit: nil,
     offset: nil,
     priority: nil,
-    username: nil
+    username: nil,
+    sort_order: nil
   )
     min_score = Reviewable.min_score_for_priority(priority)
-    order = (status == :pending) ? 'score DESC, created_at DESC' : 'created_at DESC'
+
+    order = case sort_order
+            when 'priority_asc'
+              'score ASC, created_at DESC'
+            when 'created_at'
+              'created_at DESC, score DESC'
+            when 'created_at_asc'
+              'created_at ASC, score DESC'
+            else
+              'score DESC, created_at DESC'
+    end
 
     if username.present?
       user_id = User.find_by_username(username)&.id

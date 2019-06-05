@@ -363,6 +363,7 @@ en:
         placeholder: "type the message title here"
 
     review:
+      order_by: "Order by"
       in_reply_to: "in reply to"
       claim_help:
         optional: "You can claim this item to prevent others from reviewing it."
@@ -442,6 +443,12 @@ en:
         refresh: "Refresh"
         status: "Status"
         category: "Category"
+        orders:
+          priority: "Priority"
+          priority_asc: "Priority (reverse)"
+          created_at: "Created At"
+          created_at_asc: "Created At (reverse)"
+
         priority:
           title: "Minimum Priority"
           low: "Low"
