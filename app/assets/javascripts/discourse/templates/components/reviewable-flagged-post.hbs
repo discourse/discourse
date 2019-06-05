@@ -12,9 +12,8 @@
 <div class='post-contents-wrapper'>
   {{reviewable-created-by user=reviewable.target_created_by tagName=''}}
   <div class='post-contents'>
-    {{reviewable-created-by-name user=reviewable.target_created_by tagName=''}}
+    {{reviewable-post-header reviewable=reviewable createdBy=reviewable.target_created_by tagName=''}}
     <div class='post-body'>
-
       {{#if reviewable.blank_post}}
         <p>{{i18n "review.deleted_post"}}</p>
       {{else}}
