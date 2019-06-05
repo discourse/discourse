@@ -185,6 +185,7 @@ input,
 select,
 textarea {
   color: $primary;
+  caret-color: currentColor;
 
   &[class*="span"] {
     float: none;
