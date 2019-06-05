@@ -2723,7 +2723,7 @@ RSpec.describe TopicsController do
 
         expect(response.headers['Last-Modified']).to eq(page1_time.httpdate)
 
-        get topic.url + "?page=2", env: { "HTTP_USER_AGENT" => user_agent}
+        get topic.url + "?page=2", env: { "HTTP_USER_AGENT" => user_agent }
         body = response.body
 
         expect(response.headers['Last-Modified']).to eq(page2_time.httpdate)
@@ -2731,7 +2731,7 @@ RSpec.describe TopicsController do
         expect(body).to include('<link rel="prev" href="' + topic.relative_url)
         expect(body).to include('<link rel="next" href="' + topic.relative_url + "?page=3")
 
-        get topic.url + "?page=3", env: { "HTTP_USER_AGENT" => user_agent}
+        get topic.url + "?page=3", env: { "HTTP_USER_AGENT" => user_agent }
         body = response.body
 
         expect(response.headers['Last-Modified']).to eq(page3_time.httpdate)
