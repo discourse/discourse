@@ -104,7 +104,7 @@ export function endWith() {
   const substring = args.pop();
   const computed = Ember.computed(function() {
     return args
-      .map(a => this[a])
+      .map(a => this.get(a))
       .every(s => {
         const position = s.length - substring.length,
           lastIndex = s.lastIndexOf(substring);
