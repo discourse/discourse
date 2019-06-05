@@ -486,6 +486,8 @@ en:
         reviewable_flagged_post:
           title: "Flagged Post"
           flagged_by: "Flagged By"
+        reviewable_queued_topic:
+          title: "Queued Topic"
         reviewable_queued_post:
           title: "Queued Post"
         reviewable_user:
