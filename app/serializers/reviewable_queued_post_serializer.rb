@@ -24,7 +24,7 @@ class ReviewableQueuedPostSerializer < ReviewableSerializer
   end
 
   def include_reply_to_post_number?
-    object.payload['reply_to_post_number'].present?
+    object.payload.present? && object.payload['reply_to_post_number'].present?
   end
 
 end
