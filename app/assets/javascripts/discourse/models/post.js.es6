@@ -55,8 +55,12 @@ const Post = RestModel.extend({
   },
 
   @computed("post_number", "topic_id", "topic.slug")
-  url(postNr, topicId, slug) {
-    return postUrl(slug || slug, topicId || this.get("topic.id"), postNr);
+  url(post_number, topic_id, topicSlug) {
+    return postUrl(
+      topicSlug || this.topic_slug,
+      topic_id || this.get("topic.id"),
+      post_number
+    );
   },
 
   // Don't drop the /1
