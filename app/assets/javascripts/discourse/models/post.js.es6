@@ -93,9 +93,9 @@ const Post = RestModel.extend({
       return [];
     }
 
-    return this.site
-      .get("flagTypes")
-      .filter(item => this.get(`actionByName.${item.get("name_key")}.can_act`));
+    return this.site.flagTypes.filter(item =>
+      this.get(`actionByName.${item.get("name_key")}.can_act`)
+    );
   },
 
   afterUpdate(res) {
