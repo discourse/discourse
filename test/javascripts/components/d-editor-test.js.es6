@@ -1,5 +1,6 @@
 import componentTest from "helpers/component-test";
 import { withPluginApi } from "discourse/lib/plugin-api";
+import formatTextWithSelection from "helpers/d-editor-helper";
 
 moduleForComponent("d-editor", { integration: true });
 
@@ -797,12 +798,14 @@ composerTestCase("replace-text event for composer", async function(assert) {
         .lookup("app-events:main")
         .trigger("composer:replace-text", "green", "yellow", { forceFocus: true });
 
-      let expect = await formatTextWithSelection(AFTER, CASE.after); // eslint-disable-line no-undef
-      let actual = await formatTextWithSelection( // eslint-disable-line no-undef
-        this.value,
-        getTextareaSelection(textarea)
-      );
-      assert.equal(actual, expect);
+      Ember.run.next(() => {
+        let expect = formatTextWithSelection(AFTER, CASE.after);
+        let actual = formatTextWithSelection(
+          this.value,
+          getTextareaSelection(textarea)
+        );
+        assert.equal(actual, expect);
+      });
     });
   }
 })();
