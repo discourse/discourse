@@ -13,7 +13,7 @@ import { setTransientHeader } from "discourse/lib/ajax";
 import { userPath } from "discourse/lib/url";
 import { iconNode } from "discourse-common/lib/icon-library";
 
-createWidget("notification-item", {
+createWidget("default-notification-item", {
   tagName: "li",
 
   buildClasses(attrs) {

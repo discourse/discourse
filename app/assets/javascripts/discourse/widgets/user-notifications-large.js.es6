@@ -13,7 +13,7 @@ createWidget("large-notification-item", {
 
   html(attrs) {
     return [
-      this.attach("notification-item", attrs),
+      this.attach("default-notification-item", attrs),
       h("span.time", dateNode(attrs.created_at))
     ];
   }
