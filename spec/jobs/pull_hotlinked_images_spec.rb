@@ -49,20 +49,22 @@ describe Jobs::PullHotlinkedImages do
     it 'replaces images' do
       post = Fabricate(:post, raw: "<img src='#{image_url}'>")
 
-      Jobs::PullHotlinkedImages.new.execute(post_id: post.id)
-      post.reload
+      expect do
+        Jobs::PullHotlinkedImages.new.execute(post_id: post.id)
+      end.to change { Upload.count }.by(1)
 
-      expect(post.raw).to match(/^<img src='\/uploads/)
+      expect(post.reload.raw).to eq("![](#{Upload.last.short_url})")
     end
 
     it 'replaces images without protocol' do
       url = image_url.sub(/^https?\:/, '')
-      post = Fabricate(:post, raw: "<img src='#{url}'>")
+      post = Fabricate(:post, raw: "<img alt='test' src='#{url}'>")
 
-      Jobs::PullHotlinkedImages.new.execute(post_id: post.id)
-      post.reload
+      expect do
+        Jobs::PullHotlinkedImages.new.execute(post_id: post.id)
+      end.to change { Upload.count }.by(1)
 
-      expect(post.raw).to match(/^<img src='\/uploads/)
+      expect(post.reload.raw).to eq("![test](#{Upload.last.short_url})")
     end
 
     it 'replaces images without extension' do
@@ -70,10 +72,11 @@ describe Jobs::PullHotlinkedImages do
       stub_request(:get, url).to_return(body: png, headers: { "Content-Type" => "image/png" })
       post = Fabricate(:post, raw: "<img src='#{url}'>")
 
-      Jobs::PullHotlinkedImages.new.execute(post_id: post.id)
-      post.reload
+      expect do
+        Jobs::PullHotlinkedImages.new.execute(post_id: post.id)
+      end.to change { Upload.count }.by(1)
 
-      expect(post.raw).to match(/^<img src='\/uploads/)
+      expect(post.reload.raw).to eq("![](#{Upload.last.short_url})")
     end
 
     it 'replaces optimized images' do
@@ -91,8 +94,71 @@ describe Jobs::PullHotlinkedImages do
       upload = Upload.last
       post.reload
 
-      expect(post.raw).to eq("<img src='#{upload.url}'>")
+      expect(post.raw).to eq("![](#{upload.short_url})")
       expect(post.uploads).to contain_exactly(upload)
+    end
+
+    it 'replaces direct links' do
+      post = Fabricate(:post, raw: <<~MD)
+      #{image_url}
+      #{image_url}
+      MD
+
+      expect { Jobs::PullHotlinkedImages.new.execute(post_id: post.id) }
+        .to change { Upload.count }.by(1)
+
+      post.reload
+
+      expect(post.raw).to eq(<<~MD.chomp)
+      ![](#{Upload.last.short_url})
+      ![](#{Upload.last.short_url})
+      MD
+    end
+
+    it 'replaces markdown image' do
+      post = Fabricate(:post, raw: <<~MD)
+      [![some test](#{image_url})](https://somelink.com)
+      ![some test](#{image_url})
+      ![](#{image_url})
+      ![abcde](#{image_url} 'some test')
+      ![](#{image_url} 'some test')
+      MD
+
+      expect { Jobs::PullHotlinkedImages.new.execute(post_id: post.id) }
+        .to change { Upload.count }.by(1)
+
+      post.reload
+
+      expect(post.raw).to eq(<<~MD.chomp)
+      [![some test](#{Upload.last.short_url})](https://somelink.com)
+      ![some test](#{Upload.last.short_url})
+      ![](#{Upload.last.short_url})
+      ![abcde](#{Upload.last.short_url} 'some test')
+      ![](#{Upload.last.short_url} 'some test')
+      MD
+    end
+
+    it 'replaces bbcode images' do
+      post = Fabricate(:post, raw: <<~MD)
+      [img]
+      #{image_url}
+      [/img]
+
+      [img]
+      #{image_url}
+      [/img]
+      MD
+
+      expect { Jobs::PullHotlinkedImages.new.execute(post_id: post.id) }
+        .to change { Upload.count }.by(1)
+
+      post.reload
+
+      expect(post.raw).to eq(<<~MD.chomp)
+      ![](#{Upload.last.short_url})
+
+      ![](#{Upload.last.short_url})
+      MD
     end
 
     describe 'onebox' do
@@ -104,6 +170,7 @@ describe Jobs::PullHotlinkedImages do
         Jobs.run_later!
         stub_request(:head, url)
         stub_request(:get, url).to_return(body: '')
+
         stub_request(:get, api_url).to_return(body: "{
           \"query\": {
             \"pages\": {
@@ -139,11 +206,19 @@ describe Jobs::PullHotlinkedImages do
         <a href='#{url}'><img src='#{large_image_url}'></a>
         BODY
 
-        Jobs::ProcessPost.new.execute(post_id: post.id)
-        Jobs::PullHotlinkedImages.new.execute(post_id: post.id)
-        Jobs::ProcessPost.new.execute(post_id: post.id)
-        Jobs::PullHotlinkedImages.new.execute(post_id: post.id)
+        2.times do
+          Jobs::ProcessPost.new.execute(post_id: post.id)
+          Jobs::PullHotlinkedImages.new.execute(post_id: post.id)
+        end
+
         post.reload
+
+        expect(post.raw).to eq(<<~MD.chomp)
+        ![](upload://z2QSs1KJWoj51uYhDjb6ifCzxH6.gif)
+        https://commons.wikimedia.org/wiki/File:Brisbane_May_2013201.jpg
+        <img src='#{broken_image_url}'>
+        <a href='#{url}'><img src='#{large_image_url}'></a>
+        MD
 
         expect(post.cooked).to match(/<p><img src=.*\/uploads/)
         expect(post.cooked).to match(/<img src=.*\/uploads.*\ class="thumbnail"/)
@@ -231,7 +306,7 @@ describe Jobs::PullHotlinkedImages do
 
       post.reload
 
-      expect(post.raw).to eq("<img src='#{Upload.last.url}'>")
+      expect(post.raw).to eq("![](#{Upload.last.short_url})")
       expect(post.uploads.count).to eq(1)
     end
 
