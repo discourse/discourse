@@ -53,9 +53,20 @@ function show(image) {
     copyImg.style.position = "absolute";
     copyImg.style.top = `${image.offsetTop}px`;
     copyImg.style.left = `${image.offsetLeft}px`;
-    copyImg.style.width = `${imageData.width}px`;
-    copyImg.style.height = `${imageData.height}px`;
     copyImg.className = imageData.className;
+
+    let inOnebox = false;
+    for (let element = image; element; element = element.parentElement) {
+      if (element.classList.contains("onebox")) {
+        inOnebox = true;
+        break;
+      }
+    }
+
+    if (!inOnebox) {
+      copyImg.style.width = `${imageData.width}px`;
+      copyImg.style.height = `${imageData.height}px`;
+    }
 
     image.parentNode.insertBefore(copyImg, image);
   } else {
