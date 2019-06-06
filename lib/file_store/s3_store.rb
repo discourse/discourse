@@ -21,7 +21,7 @@ module FileStore
 
     def store_upload(file, upload, content_type = nil)
       path = get_path_for_upload(upload)
-      url, upload.etag = store_file(file, path, filename: upload.original_filename, content_type: content_type, cache_locally: true)
+      url, upload.etag = store_file(file, path, filename: upload.original_filename, content_type: content_type, cache_locally: true, private: upload.private?)
       url
     end
 
@@ -41,9 +41,8 @@ module FileStore
       filename = opts[:filename].presence || File.basename(path)
       # cache file locally when needed
       cache_file(file, File.basename(path)) if opts[:cache_locally]
-      # stored uploaded are public by default
       options = {
-        acl: "public-read",
+        acl: opts[:private] ? "private" : "public-read",
         content_type: opts[:content_type].presence || MiniMime.lookup_by_filename(filename)&.content_type
       }
       # add a "content disposition" header for "attachments"
@@ -105,6 +104,17 @@ module FileStore
       FileStore::LocalStore.new.path_for(upload) if url && url[/^\/[^\/]/]
     end
 
+    def url_for(upload)
+      if upload.private?
+        obj = @s3_helper.object(get_upload_key(upload))
+        url = obj.presigned_url(:get, expires_in: S3Helper::DOWNLOAD_URL_EXPIRES_AFTER_SECONDS)
+      else
+        url = upload.url
+      end
+
+      url
+    end
+
     def cdn_url(url)
       return url if SiteSetting.Upload.s3_cdn_url.blank?
       schema = url[/^(https?:)?\/\//, 1]
@@ -138,7 +148,26 @@ module FileStore
       end
     end
 
+    def update_upload_ACL(upload)
+      private_uploads = SiteSetting.prevent_anons_from_downloading_files
+      key = get_upload_key(upload)
+
+      begin
+        @s3_helper.object(key).acl.put(acl: private_uploads ? "private" : "public-read")
+      rescue Aws::S3::Errors::NoSuchKey
+        Rails.logger.warn("Could not update ACL on upload with key: '#{key}'. Upload is missing.")
+      end
+    end
+
     private
+
+    def get_upload_key(upload)
+      if Rails.configuration.multisite
+        File.join(upload_path, "/", get_path_for_upload(upload))
+      else
+        get_path_for_upload(upload)
+      end
+    end
 
     def list_missing(model, prefix)
       connection = ActiveRecord::Base.connection.raw_connection
