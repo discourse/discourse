@@ -98,10 +98,12 @@
       </tbody>
 
     </table>
-  {{else if loading}}
-    {{conditional-loading-spinner condition=loading}}
   {{else}}
     {{i18n 'search.no_results'}}
+  {{/if}}
+
+  {{#if loading}}
+    {{conditional-loading-spinner condition=loading}}
   {{/if}}
 {{/load-more}}
 
