@@ -59,12 +59,11 @@ RSpec.describe FileStore::BaseStore do
     end
 
     let(:upload_s3) { Fabricate(:upload_s3) }
+    let(:store) { FileStore::BaseStore.new }
 
     it "should return consistent encodings for fresh and cached downloads" do
       # Net::HTTP always returns binary ASCII-8BIT encoding. File.read auto-detects the encoding
       # Make sure we File.read after downloading a file for consistency
-
-      store = FileStore::BaseStore.new
 
       first_encoding = store.download(upload_s3).read.encoding
 
@@ -72,6 +71,21 @@ RSpec.describe FileStore::BaseStore do
 
       expect(first_encoding).to eq(Encoding::UTF_8)
       expect(second_encoding).to eq(Encoding::UTF_8)
+    end
+
+    it "should return the file" do
+      file = store.download(upload_s3)
+
+      expect(file.class).to eq(File)
+    end
+
+    it "should return the file when s3 cdn enabled" do
+      SiteSetting.s3_cdn_url = "https://cdn.s3.amazonaws.com"
+      stub_request(:get, Discourse.store.cdn_url(upload_s3.url)).to_return(status: 200, body: "Hello world")
+
+      file = store.download(upload_s3)
+
+      expect(file.class).to eq(File)
     end
   end
 end
