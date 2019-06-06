@@ -108,19 +108,29 @@ export default Ember.Controller.extend(bufferedProperty("model"), {
 
   init() {
     this._super(...arguments);
-    this.appEvents.on("post:show-revision", (postNumber, revision) => {
-      const post = this.model.get("postStream").postForPostNumber(postNumber);
-      if (!post) {
-        return;
-      }
 
-      Ember.run.scheduleOnce("afterRender", () => {
-        this.send("showHistory", post, revision);
-      });
-    });
+    this.appEvents.on("post:show-revision", this, "_showRevision");
+
     this.setProperties({
       selectedPostIds: [],
       quoteState: new QuoteState()
+    });
+  },
+
+  willDestroy() {
+    this._super(...arguments);
+
+    this.appEvents.off("post:show-revision", this, "_showRevision");
+  },
+
+  _showRevision(postNumber, revision) {
+    const post = this.model.get("postStream").postForPostNumber(postNumber);
+    if (!post) {
+      return;
+    }
+
+    Ember.run.scheduleOnce("afterRender", () => {
+      this.send("showHistory", post, revision);
     });
   },
 

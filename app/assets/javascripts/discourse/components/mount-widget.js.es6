@@ -61,7 +61,7 @@ export default Ember.Component.extend({
   willDestroyElement() {
     this._dispatched.forEach(evt => {
       const [eventName, caller] = evt;
-      this.appEvents.off(eventName, caller);
+      this.appEvents.off(eventName, this, caller);
     });
     Ember.run.cancel(this._timeout);
   },
@@ -84,7 +84,7 @@ export default Ember.Component.extend({
     const caller = refreshArg =>
       this.eventDispatched(eventName, key, refreshArg);
     this._dispatched.push([eventName, caller]);
-    this.appEvents.on(eventName, caller);
+    this.appEvents.on(eventName, this, caller);
   },
 
   queueRerender(callback) {
