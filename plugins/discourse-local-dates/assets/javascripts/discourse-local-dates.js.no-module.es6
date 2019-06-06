@@ -203,11 +203,7 @@
   function _createDateTimeRange(dateTime, timezone) {
     const dt = moment(dateTime).tz(timezone);
 
-    return [
-      dt.format("LLL"),
-      "→",
-      dt.add(24, "hours").format("LLL"),
-    ].join(" ");
+    return [dt.format("LLL"), "→", dt.add(24, "hours").format("LLL")].join(" ");
   }
 
   function _generatePreviews(dateTime, displayedTimezone, options) {
@@ -221,7 +217,9 @@
       timezone: watchingUserTimezone,
       current: true,
       dateTime: options.time
-        ? moment(dateTime).tz(watchingUserTimezone).format("LLL")
+        ? moment(dateTime)
+            .tz(watchingUserTimezone)
+            .format("LLL")
         : _createDateTimeRange(dateTime, watchingUserTimezone)
     });
 
@@ -248,7 +246,9 @@
         previewedTimezones.push({
           timezone,
           dateTime: options.time
-            ? moment(dateTime).tz(timezone).format("LLL")
+            ? moment(dateTime)
+                .tz(timezone)
+                .format("LLL")
             : _createDateTimeRange(dateTime, timezone)
         });
       });
@@ -257,7 +257,9 @@
       previewedTimezones.push({
         timezone: "Etc/UTC",
         dateTime: options.time
-          ? moment(dateTime).tz("Etc/UTC").format("LLL")
+          ? moment(dateTime)
+              .tz("Etc/UTC")
+              .format("LLL")
           : _createDateTimeRange(dateTime, "Etc/UTC")
       });
     }
