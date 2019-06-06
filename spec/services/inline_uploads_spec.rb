@@ -64,10 +64,46 @@ RSpec.describe InlineUploads do
         some quote
 
         #{Discourse.base_url}#{upload3.url}
+
+        ![](#{upload.url})
         [/quote]
         MD
 
-        expect(InlineUploads.process(md)).to eq(md)
+        expect(InlineUploads.process(md)).to eq(<<~MD)
+        [quote="#{user.username}, post:#{post.post_number}, topic:#{post.topic.id}"]
+        some quote
+
+        ![](#{upload3.short_url})
+
+        ![](#{upload.short_url})
+        [/quote]
+        MD
+      end
+
+      it "should correct markdown linked images" do
+        md = <<~MD
+        [![](#{upload.url})](https://somelink.com)
+
+        [![some test](#{upload2.url})](https://somelink.com)
+        MD
+
+        expect(InlineUploads.process(md)).to eq(<<~MD)
+        [![](#{upload.short_url})](https://somelink.com)
+
+        [![some test](#{upload2.short_url})](https://somelink.com)
+        MD
+      end
+
+      it "should correct markdown images with title" do
+        md = <<~MD
+        ![](#{upload.url} "some alt")
+        ![testing](#{upload2.url}  'some alt'  )
+        MD
+
+        expect(InlineUploads.process(md)).to eq(<<~MD)
+        ![](#{upload.short_url} "some alt")
+        ![testing](#{upload2.short_url}  'some alt'  )
+        MD
       end
 
       it "should correct bbcode img URLs to the short version" do
@@ -83,6 +119,20 @@ RSpec.describe InlineUploads do
         ![](#{upload.short_url})
 
         ![](#{upload2.short_url})
+        MD
+      end
+
+      it "should correct markdown references" do
+        md = <<~MD
+        This is a [some reference] somethign
+
+        [some reference]: #{Discourse.base_url}#{upload.url}
+        MD
+
+        expect(InlineUploads.process(md)).to eq(<<~MD)
+        This is a [some reference] somethign
+
+        [some reference]: #{Discourse.base_url}#{upload.short_path}
         MD
       end
 
@@ -105,7 +155,7 @@ RSpec.describe InlineUploads do
         ![image](#{upload2.url})
         ![image|100x100](#{upload3.url})
 
-        <img src="#{Discourse.base_url}#{upload.url}" alt="some image" />
+        <img src="#{Discourse.base_url}#{upload.url}" alt="some image" title="some title" />
         <img src="#{Discourse.base_url}#{upload2.url}" alt="some image"><img src="#{Discourse.base_url}#{upload3.url}" alt="some image">
 
         #{Discourse.base_url}#{upload3.url} #{Discourse.base_url}#{upload3.url}
@@ -121,7 +171,7 @@ RSpec.describe InlineUploads do
         ![image](#{upload2.short_url})
         ![image|100x100](#{upload3.short_url})
 
-        ![some image](#{upload.short_url})
+        ![some image](#{upload.short_url} "some title")
         ![some image](#{upload2.short_url})![some image](#{upload3.short_url})
 
         ![](#{upload3.short_url}) ![](#{upload3.short_url})
@@ -389,6 +439,20 @@ RSpec.describe InlineUploads do
         expect(InlineUploads.process(md)).to eq(<<~MD)
         ![some image](#{upload.short_url})
         ![some image](#{upload2.short_url})
+        MD
+      end
+
+      it "should correct markdown references" do
+        md = <<~MD
+        This is a [some reference] somethign
+
+        [some reference]: https:#{upload.url}
+        MD
+
+        expect(InlineUploads.process(md)).to eq(<<~MD)
+        This is a [some reference] somethign
+
+        [some reference]: #{Discourse.base_url}#{upload.short_path}
         MD
       end
 
