@@ -270,18 +270,26 @@ export default class Widget {
     }
   }
 
-  attach(widgetName, attrs, opts) {
-    let WidgetClass = _registry[widgetName];
+  attach(widgetNames, attrs, opts) {
+    widgetNames = [].concat(widgetNames);
+    let WidgetClass = null;
 
-    if (!WidgetClass) {
+    for (let widgetName of widgetNames) {
+      WidgetClass = _registry[widgetName];
+      if (WidgetClass) {
+        break;
+      }
+
       if (!this.register) {
         // eslint-disable-next-line no-console
         console.error("couldn't find register");
         return;
       }
+
       WidgetClass = this.register.lookupFactory(`widget:${widgetName}`);
       if (WidgetClass && WidgetClass.class) {
         WidgetClass = WidgetClass.class;
+        break;
       }
     }
 
@@ -291,7 +299,7 @@ export default class Widget {
       result.dirtyKeys = this.dirtyKeys;
       return result;
     } else {
-      throw new Error(`Couldn't find ${widgetName} factory`);
+      throw new Error(`Couldn't find ${widgetNames} factory`);
     }
   }
 
