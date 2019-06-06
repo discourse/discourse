@@ -3,7 +3,7 @@
 class Admin::StaffActionLogsController < Admin::AdminController
 
   def index
-    filters = params.slice(*UserHistory.staff_filters)
+    filters = params.slice(*UserHistory.staff_filters + [:page, :limit])
 
     staff_action_logs = UserHistory.staff_action_records(current_user, filters).to_a
     render json: StaffActionLogsSerializer.new({
