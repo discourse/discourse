@@ -469,13 +469,48 @@ describe GroupsController do
   end
 
   describe '#update' do
-    let(:group) do
+    let!(:group) do
       Fabricate(:group,
         name: 'test',
         users: [user],
         public_admission: false,
         public_exit: false
       )
+    end
+
+    context "custom_fields" do
+      before do
+        user.update!(admin: true)
+        sign_in(user)
+        plugin = Plugin::Instance.new
+        plugin.register_editable_group_custom_field :test
+        @group = Fabricate(:group)
+      end
+
+      after do
+        Group.plugin_editable_group_custom_fields.clear
+      end
+
+      it "only updates allowed user fields" do
+        put "/groups/#{@group.id}.json", params: { group: { custom_fields: { test: :hello1, test2: :hello2 } } }
+
+        @group.reload
+
+        expect(response.status).to eq(200)
+        expect(@group.custom_fields['test']).to eq('hello1')
+        expect(@group.custom_fields['test2']).to be_blank
+      end
+
+      it "is secure when there are no registered editable fields" do
+        Group.plugin_editable_group_custom_fields.clear
+        put "/groups/#{@group.id}.json", params: { group: { custom_fields: { test: :hello1, test2: :hello2 } } }
+
+        @group.reload
+
+        expect(response.status).to eq(200)
+        expect(@group.custom_fields['test']).to be_blank
+        expect(@group.custom_fields['test2']).to be_blank
+      end
     end
 
     context "when user is group owner" do
