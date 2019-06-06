@@ -34,7 +34,7 @@ class Site
   def categories
     @categories ||= begin
       categories = Category
-        .includes(:uploaded_logo, :uploaded_background)
+        .includes(:uploaded_logo, :uploaded_background, :tags, :tag_groups)
         .secured(@guardian)
         .joins('LEFT JOIN topics t on t.id = categories.topic_id')
         .select('categories.*, t.slug topic_slug')
