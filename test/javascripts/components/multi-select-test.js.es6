@@ -1,3 +1,4 @@
+import selectKit from "helpers/select-kit-helper";
 import componentTest from "helpers/component-test";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { clearCallbacks } from "select-kit/mixins/plugin-api";

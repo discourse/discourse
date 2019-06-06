@@ -1,3 +1,5 @@
+import selectKit from "helpers/select-kit-helper";
+
 export function displayPollBuilderButton() {
   visit("/");
   click("#create-topic");

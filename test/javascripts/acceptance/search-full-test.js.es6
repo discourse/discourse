@@ -1,4 +1,6 @@
+import selectKit from "helpers/select-kit-helper";
 import { acceptance, waitFor } from "helpers/qunit-helpers";
+
 acceptance("Search - Full Page", {
   settings: { tagging_enabled: true },
   loggedIn: true,

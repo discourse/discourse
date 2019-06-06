@@ -1,3 +1,4 @@
+import selectKit from "helpers/select-kit-helper";
 import { acceptance, logIn } from "helpers/qunit-helpers";
 
 acceptance("New Topic");
