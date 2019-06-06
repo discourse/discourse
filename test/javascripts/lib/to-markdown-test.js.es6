@@ -166,6 +166,9 @@ QUnit.test("converts img tag", assert => {
   let html = `<img src="${url}" width="100" height="50">`;
   assert.equal(toMarkdown(html), `![|100x50](${url})`);
 
+  html = `<img src="${url}" width="100" height="50" title="some title">`;
+  assert.equal(toMarkdown(html), `![|100x50](${url} "some title")`);
+
   html = `<div><span><img src="${url}" alt="description" width="50" height="100" /></span></div>`;
   assert.equal(toMarkdown(html), `![description|50x100](${url})`);
 
