@@ -75,14 +75,14 @@ describe HeatSettingsUpdater do
 
     context 'increased activity' do
       let!(:hottest_topic1) { Fabricate(:topic, views: 10_100, posts_count: 100, like_count: 230) }
-      let!(:hottest_topic2) { Fabricate(:topic, views: 10_000, posts_count: 100, like_count: 220) }
-      let!(:warm_topic1) { Fabricate(:topic, views: 4020, posts_count: 100, like_count: 126) }
-      let!(:warm_topic2) { Fabricate(:topic, views: 4010, posts_count: 100, like_count: 116) }
-      let!(:warm_topic3) { Fabricate(:topic, views: 4000, posts_count: 100, like_count: 106) }
-      let!(:lukewarm_topic1) { Fabricate(:topic, views: 2040, posts_count: 100, like_count: 84) }
-      let!(:lukewarm_topic2) { Fabricate(:topic, views: 2030, posts_count: 100, like_count: 74) }
-      let!(:lukewarm_topic3) { Fabricate(:topic, views: 2020, posts_count: 100, like_count: 64) }
-      let!(:lukewarm_topic4) { Fabricate(:topic, views: 2000, posts_count: 100, like_count: 54) }
+      let!(:hottest_topic2) { Fabricate(:topic, views: 10_012, posts_count: 100, like_count: 220) }
+      let!(:warm_topic1) { Fabricate(:topic, views: 4020, posts_count: 99, like_count: 126) }
+      let!(:warm_topic2) { Fabricate(:topic, views: 4010, posts_count: 99, like_count: 116) }
+      let!(:warm_topic3) { Fabricate(:topic, views: 4005, posts_count: 99, like_count: 106) }
+      let!(:lukewarm_topic1) { Fabricate(:topic, views: 2040, posts_count: 99, like_count: 84) }
+      let!(:lukewarm_topic2) { Fabricate(:topic, views: 2030, posts_count: 99, like_count: 74) }
+      let!(:lukewarm_topic3) { Fabricate(:topic, views: 2020, posts_count: 99, like_count: 64) }
+      let!(:lukewarm_topic4) { Fabricate(:topic, views: 2002, posts_count: 99, like_count: 54) }
       let!(:cold_topic) { Fabricate(:topic, views: 100, posts_count: 100, like_count: 1) }
 
       it 'changes settings when difference is significant' do
@@ -93,8 +93,8 @@ describe HeatSettingsUpdater do
         expect(SiteSetting.topic_views_heat_medium).to eq(4000)
         expect(SiteSetting.topic_views_heat_low).to eq(2000)
         expect(SiteSetting.topic_post_like_heat_high).to eq(2.2)
-        expect(SiteSetting.topic_post_like_heat_medium).to eq(1.06)
-        expect(SiteSetting.topic_post_like_heat_low).to eq(0.54)
+        expect(SiteSetting.topic_post_like_heat_medium).to eq(1.07)
+        expect(SiteSetting.topic_post_like_heat_low).to eq(0.55)
       end
 
       it "doesn't change settings when automatic_topic_heat_values is false" do
