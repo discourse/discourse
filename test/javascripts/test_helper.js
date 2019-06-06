@@ -166,6 +166,11 @@ QUnit.testDone(function() {
       appEvents.off(eventKey, listener.target, listener.fn);
     });
   });
+
+  // attempts to remove any subscribed message bug callback
+  window.MessageBus.callbacks.forEach(function(callback) {
+    window.MessageBus.unsubscribe(callback.channel, callback.func);
+  });
 });
 
 // Load ES6 tests
