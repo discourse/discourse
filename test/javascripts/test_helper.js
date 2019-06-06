@@ -176,11 +176,6 @@ QUnit.testDone(function() {
 // Load ES6 tests
 var helpers = require("helpers/qunit-helpers");
 
-// TODO: Replace with proper imports rather than globals
-window.asyncTestDiscourse = helpers.asyncTestDiscourse;
-window.controllerFor = helpers.controllerFor;
-window.fixture = helpers.fixture;
-
 function getUrlParameter(name) {
   name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
   var regex = new RegExp("[\\?&]" + name + "=([^&#]*)");
