@@ -21,7 +21,7 @@ class ReviewableScoreSerializer < ApplicationSerializer
   def reason
     return unless object.reason
 
-    if text = I18n.t("reviewables.reasons.#{object.reason}", default: nil)
+    if text = I18n.t("reviewables.reasons.#{object.reason}", base_url: Discourse.base_url, default: nil)
       # Create a convenient link to any site settings if the user is staff
       settings_url = "#{Discourse.base_url}/admin/site_settings/category/all_results?filter="
 
