@@ -89,7 +89,7 @@ export default createWidget("user-notifications", {
       result.push(h("div.spinner-container", h("div.spinner")));
     } else if (state.notifications.length) {
       const notificationItems = state.notifications.map(n =>
-        this.attach("notification-item", n)
+        this.attach("default-notification-item", n)
       );
 
       result.push(h("hr"));
