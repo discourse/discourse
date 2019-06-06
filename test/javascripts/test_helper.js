@@ -156,7 +156,7 @@ QUnit.testDone(function() {
   server.shutdown();
 
   // ensures any event not removed is not leaking between tests
-  // most like in intialisers, other places (controller, component...)
+  // most likely in intialisers, other places (controller, component...)
   // should be fixed in code
   var appEvents = window.Discourse.__container__.lookup("app-events:main");
   var events = appEvents.__proto__._events;
@@ -167,7 +167,7 @@ QUnit.testDone(function() {
     });
   });
 
-  // attempts to remove any subscribed message bug callback
+  // attempts to remove any subscribed message bus callback
   window.MessageBus.callbacks.forEach(function(callback) {
     window.MessageBus.unsubscribe(callback.channel, callback.func);
   });
