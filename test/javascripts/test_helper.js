@@ -30,7 +30,6 @@
 //= require sinon/pkg/sinon
 
 //= require helpers/assertions
-//= require helpers/select-kit-helper
 
 //= require helpers/qunit-helpers
 //= require_tree ./fixtures
