@@ -15,27 +15,35 @@ describe Jobs::PullHotlinkedImages do
     stub_request(:get, image_url).to_return(body: png, headers: { "Content-Type" => "image/png" })
     stub_request(:get, broken_image_url).to_return(status: 404)
     stub_request(:get, large_image_url).to_return(body: large_png, headers: { "Content-Type" => "image/png" })
+
+    stub_request(
+      :get,
+      "#{Discourse.base_url}/uploads/default/original/1X/f59ea56fe8ebe42048491d43a19d9f34c5d0f8dc.gif"
+    )
+
+    stub_request(
+      :get,
+      "#{Discourse.base_url}/uploads/default/original/1X/c530c06cf89c410c0355d7852644a73fc3ec8c04.png"
+    )
+
     SiteSetting.crawl_images = true
     SiteSetting.download_remote_images_to_local = true
     SiteSetting.max_image_size_kb = 2
     SiteSetting.download_remote_images_threshold = 0
   end
 
-  describe "#nochange" do
-    it 'does saves nothing if there are no large images to pull' do
+  describe '#execute' do
+    before do
+      Jobs.run_immediately!
+    end
+
+    it 'does nothing if there are no large images to pull' do
       post = Fabricate(:post, raw: 'bob bob')
       orig = post.updated_at
 
       freeze_time 1.week.from_now
       Jobs::PullHotlinkedImages.new.execute(post_id: post.id)
       expect(orig).to be_within(1.second).of(post.reload.updated_at)
-    end
-  end
-
-  describe '#execute' do
-    before do
-      Jobs.run_immediately!
-      FastImage.expects(:size).returns([100, 100]).at_least_once
     end
 
     it 'replaces images' do
