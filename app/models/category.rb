@@ -667,7 +667,7 @@ class Category < ActiveRecord::Base
   def self.ensure_consistency!
     Category
       .joins('LEFT JOIN topics ON categories.topic_id = topics.id AND topics.deleted_at IS NULL')
-      .where({ topics: { id: nil }})
+      .where(topics: { id: nil })
       .find_each do |category|
       category.create_category_definition
     end
