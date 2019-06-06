@@ -425,6 +425,10 @@ def migrate_to_s3
         options[:content_disposition] =
           %Q{attachment; filename="#{upload.original_filename}"}
       end
+
+      if upload&.private?
+        options[:acl] = "private"
+      end
     end
 
     etag ||= Digest::MD5.file(path).hexdigest
