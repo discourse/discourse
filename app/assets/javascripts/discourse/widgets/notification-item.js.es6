@@ -105,11 +105,11 @@ createWidget("notification-item", {
     return Ember.isEmpty(title) ? "" : escapeExpression(title);
   },
 
-  text(notificationType, notName) {
+  text(notificationType, notificationName) {
     const { attrs } = this;
     const data = attrs.data;
     const scope =
-      notName === "custom" ? data.message : `notifications.${notName}`;
+      notificationName === "custom" ? data.message : `notifications.${notificationName}`;
 
     const notificationTypes = this.site.notification_types;
 
