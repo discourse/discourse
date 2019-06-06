@@ -43,6 +43,7 @@ class Users::OmniauthCallbacksController < ApplicationController
     else
       @auth_result = authenticator.after_authenticate(auth)
     end
+    DiscourseEvent.trigger(:after_auth, authenticator, @auth_result)
 
     preferred_origin = request.env['omniauth.origin']
 
