@@ -13,13 +13,6 @@ import { setTransientHeader } from "discourse/lib/ajax";
 import { userPath } from "discourse/lib/url";
 import { iconNode } from "discourse-common/lib/icon-library";
 
-import {
-  LIKED_TYPE,
-  INVITEE_ACCEPTED_TYPE,
-  GROUP_MESSAGE_SUMMARY_TYPE,
-  LIKED_CONSOLIDATED_TYPE
-} from "discourse/widgets/concerns/notification-types";
-
 createWidget("notification-item", {
   tagName: "li",
 
@@ -37,6 +30,7 @@ createWidget("notification-item", {
   url() {
     const attrs = this.attrs;
     const data = attrs.data;
+    const notificationTypes = this.site.get("notification_types");
 
     const badgeId = data.badge_id;
     if (badgeId) {
@@ -60,11 +54,11 @@ createWidget("notification-item", {
       return postUrl(attrs.slug, topicId, attrs.post_number);
     }
 
-    if (attrs.notification_type === INVITEE_ACCEPTED_TYPE) {
+    if (attrs.notification_type === notificationTypes.invitee_accepted) {
       return userPath(data.display_username);
     }
 
-    if (attrs.notification_type === LIKED_CONSOLIDATED_TYPE) {
+    if (attrs.notification_type === notificationTypes.liked_consolidated) {
       return userPath(
         `${this.attrs.username ||
           this.currentUser
@@ -97,7 +91,10 @@ createWidget("notification-item", {
 
     let title;
 
-    if (this.attrs.notification_type === LIKED_CONSOLIDATED_TYPE) {
+    if (
+      this.attrs.notification_type ===
+      this.site.get("notification_types").liked_consolidated
+    ) {
       title = I18n.t("notifications.liked_consolidated_description", {
         count: parseInt(data.count)
       });
@@ -114,7 +111,9 @@ createWidget("notification-item", {
     const scope =
       notName === "custom" ? data.message : `notifications.${notName}`;
 
-    if (notificationType === GROUP_MESSAGE_SUMMARY_TYPE) {
+    const notificationTypes = this.site.get("notification_types");
+
+    if (notificationType === notificationTypes.group_message_summary) {
       const count = data.inbox_count;
       const group_name = data.group_name;
       return I18n.t(scope, { count, group_name });
@@ -123,7 +122,7 @@ createWidget("notification-item", {
     const username = formatUsername(data.display_username);
     const description = this.description();
 
-    if (notificationType === LIKED_TYPE && data.count > 1) {
+    if (notificationType === notificationTypes.liked && data.count > 1) {
       const count = data.count - 2;
       const username2 = formatUsername(data.username2);
 
