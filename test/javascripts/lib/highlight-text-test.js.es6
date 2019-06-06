@@ -2,6 +2,7 @@ import {
   default as highlightText,
   CLASS_NAME
 } from "discourse/lib/highlight-text";
+import { fixture } from "helpers/qunit-helpers";
 
 QUnit.module("lib:highlight-text");
 
