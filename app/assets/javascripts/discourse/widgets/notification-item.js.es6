@@ -30,7 +30,7 @@ createWidget("notification-item", {
   url() {
     const attrs = this.attrs;
     const data = attrs.data;
-    const notificationTypes = this.site.get("notification_types");
+    const notificationTypes = this.site.notification_types;
 
     const badgeId = data.badge_id;
     if (badgeId) {
@@ -93,7 +93,7 @@ createWidget("notification-item", {
 
     if (
       this.attrs.notification_type ===
-      this.site.get("notification_types").liked_consolidated
+      this.site.notification_types.liked_consolidated
     ) {
       title = I18n.t("notifications.liked_consolidated_description", {
         count: parseInt(data.count)
@@ -111,7 +111,7 @@ createWidget("notification-item", {
     const scope =
       notName === "custom" ? data.message : `notifications.${notName}`;
 
-    const notificationTypes = this.site.get("notification_types");
+    const notificationTypes = this.site.notification_types;
 
     if (notificationType === notificationTypes.group_message_summary) {
       const count = data.inbox_count;
