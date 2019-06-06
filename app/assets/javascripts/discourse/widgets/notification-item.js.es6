@@ -159,7 +159,11 @@ createWidget("notification-item", {
     let title;
 
     if (notificationName) {
-      title = I18n.t(`notifications.titles.${notificationName}`);
+      if (notificationName === "custom") {
+        title = data.title ? I18n.t(data.title) : "";
+      } else {
+        title = I18n.t(`notifications.titles.${notificationName}`);
+      }
     } else {
       title = "";
     }
