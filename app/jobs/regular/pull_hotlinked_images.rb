@@ -92,36 +92,37 @@ module Jobs
               url = downloaded_urls[src]
               escaped_src = Regexp.escape(original_src)
 
+              replace_raw = ->(match, match_src, replacement, _index) {
+                if src.include?(match_src)
+                  raw = raw.gsub(
+                    match,
+                    replacement.sub(InlineUploads::PLACEHOLDER, upload.short_url)
+                  )
+                end
+              }
+
               # there are 6 ways to insert an image in a post
               # HTML tag - <img src="http://...">
-              raw.gsub!(/src=["']#{escaped_src}["']/i, "src='#{url}'")
-
-              if (original_path = Upload.extract_url(original_src)&.to_s) &&
-                 Upload.extract_url(url)&.to_s
-
-                raw.gsub!(
-                  /src=["']\S*#{Regexp.escape(original_path)}["']/i,
-                  "src='#{url}'"
-                )
-              end
+              InlineUploads.match_img(raw, external_src: true, &replace_raw)
 
               # BBCode tag - [img]http://...[/img]
-              raw.gsub!(/\[img\]#{escaped_src}\[\/img\]/i, "[img]#{url}[/img]")
+              InlineUploads.match_bbcode_img(raw, &replace_raw)
+
               # Markdown linked image - [![alt](http://...)](http://...)
-              raw.gsub!(/\[!\[([^\]]*)\]\(#{escaped_src}\)\]/) { "[<img src='#{url}' alt='#{$1}'>]" }
               # Markdown inline - ![alt](http://...)
-              raw.gsub!(/!\[([^\]]*)\]\(#{escaped_src}\)/) { "![#{$1}](#{url})" }
               # Markdown inline - ![](http://... "image title")
-              raw.gsub!(/!\[\]\(#{escaped_src} "([^\]]*)"\)/) { "![](#{url})" }
               # Markdown inline - ![alt](http://... "image title")
-              raw.gsub!(/!\[([^\]]*)\]\(#{escaped_src} "([^\]]*)"\)/) { "![](#{url})" }
-              # Markdown reference - [x]: http://
-              raw.gsub!(/\[([^\]]+)\]:\s?#{escaped_src}/) { "[#{$1}]: #{url}" }
+              InlineUploads.match_md_inline_img(raw, external_src: true, &replace_raw)
+
               # Direct link
-              raw.gsub!(/^#{escaped_src}(\s?)$/) { "<img src='#{url}'>#{$1}" }
+              raw.gsub!(/^#{escaped_src}(\s?)$/) { "![](#{upload.short_url})#{$1}" }
             end
           rescue => e
-            log(:error, "Failed to pull hotlinked image (#{src}) post: #{post_id}\n" + e.message + "\n" + e.backtrace.join("\n"))
+            if Rails.env.test?
+              raise e
+            else
+              log(:error, "Failed to pull hotlinked image (#{src}) post: #{post_id}\n" + e.message + "\n" + e.backtrace.join("\n"))
+            end
           end
         end
       end
@@ -147,7 +148,10 @@ module Jobs
 
     def extract_images_from(html)
       doc = Nokogiri::HTML::fragment(html)
-      doc.css("img[src], a.lightbox[href]") - doc.css("img.avatar") - doc.css(".lightbox img[src]")
+
+      doc.css("img[src], a.lightbox[href], a.onebox[href]") -
+        doc.css("img.avatar") -
+        doc.css(".lightbox img[src]")
     end
 
     def should_download_image?(src)
