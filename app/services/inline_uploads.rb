@@ -4,7 +4,7 @@ require_dependency "pretty_text"
 
 class InlineUploads
   PLACEHOLDER = "__replace__"
-  private_constant :PLACEHOLDER
+  PATH_PLACEHOLDER = "__replace_path__"
 
   UPLOAD_REGEXP_PATTERN = "/original/(\\dX/(?:[a-f0-9]/)*[a-f0-9]{40}[a-z0-9.]*)"
   private_constant :UPLOAD_REGEXP_PATTERN
@@ -17,8 +17,7 @@ class InlineUploads
     cooked_fragment.traverse do |node|
       if node.name == "img"
         # Do nothing
-      elsif !(node.children.count == 1 && (node.children[0].name != "img" && node.children[0].children.blank?)) ||
-            !node.ancestors.all? { |parent| !parent.attributes["class"]&.value&.include?("quote") }
+      elsif !(node.children.count == 1 && (node.children[0].name != "img" && node.children[0].children.blank?))
         next
       end
 
@@ -34,71 +33,24 @@ class InlineUploads
 
     raw_matches = []
 
-    markdown.scan(/(\[img\]\s?(.+)\s?\[\/img\])/) do |match|
-      raw_matches << [match[0], match[1], +"![](#{PLACEHOLDER})", $~.offset(0)[0]]
+    match_bbcode_img(markdown) do |match, src, replacement, index|
+      raw_matches << [match, src, replacement, index]
     end
 
-    markdown.scan(/(!?\[([^\[\]]+)\]\(([a-zA-z0-9\.\/:-]+)\))/) do |match|
-      if matched_uploads(match[2]).present?
-        raw_matches << [
-          match[0],
-          match[2],
-          +"#{match[0].start_with?("!") ? "!" : ""}[#{match[1]}](#{PLACEHOLDER})",
-          $~.offset(0)[0]
-        ]
-      end
+    match_md_inline_img(markdown) do |match, src, replacement, index|
+      raw_matches << [match, src, replacement, index]
     end
 
-    markdown.scan(/(<(?!img)[^<>]+\/?>)?(\n*)(([ ]*)<img ([^<>]+)>([ ]*))(\n*)/) do |match|
-      node = Nokogiri::HTML::fragment(match[2].strip).children[0]
-      src =  node.attributes["src"].value
-
-      if matched_uploads(src).present?
-        text = node.attributes["alt"]&.value
-        width = node.attributes["width"]&.value
-        height = node.attributes["height"]&.value
-        text = "#{text}|#{width}x#{height}" if width && height
-        after_html_tag = match[0].present?
-
-        spaces_before =
-          if after_html_tag && !match[0].end_with?("/>")
-            (match[3].present? ? match[3] : "  ")
-          else
-            ""
-          end
-
-        replacement = +"#{spaces_before}![#{text}](#{PLACEHOLDER})"
-
-        if after_html_tag && (num_newlines = match[1].length) <= 1
-          replacement.prepend("\n" * (num_newlines == 0 ? 2 : 1))
-        end
-
-        if after_html_tag && !match[0].end_with?("/>") && (num_newlines = match[6].length) <= 1
-          replacement += ("\n" * (num_newlines == 0 ? 2 : 1))
-        end
-
-        match[2].strip! if !after_html_tag
-
-        raw_matches << [
-          match[2],
-          src,
-          replacement,
-          $~.offset(0)[0]
-        ]
-      end
+    match_md_reference(markdown) do |match, src, replacement, index|
+      raw_matches << [match, src, replacement, index]
     end
 
-    markdown.scan(/((<a[^<]+>)([^<\a>]*?)<\/a>)/) do |match|
-      node = Nokogiri::HTML::fragment(match[0]).children[0]
-      href =  node.attributes["href"]&.value
+    match_img(markdown) do |match, src, replacement, index|
+      raw_matches << [match, src, replacement, index]
+    end
 
-      if href && matched_uploads(href).present?
-        has_attachment = node.attributes["class"]&.value
-        index = $~.offset(0)[0]
-        text = match[2].strip.gsub("\n", "").gsub(/ +/, " ")
-        text = "#{text}|attachment" if has_attachment
-        raw_matches << [match[0], href, +"[#{text}](#{PLACEHOLDER})", index]
-      end
+    match_anchor(markdown) do |match, href, replacement, index|
+      raw_matches << [match, href, replacement, index]
     end
 
     db = RailsMultisite::ConnectionManagement.current_db
@@ -140,8 +92,9 @@ class InlineUploads
         upload = Upload.get_from_url(link)
 
         if upload
-          replacement = replace_with.sub!(PLACEHOLDER, upload.short_url)
-          markdown.sub!(match, replacement)
+          replace_with.sub!(PLACEHOLDER, upload.short_url)
+          replace_with.sub!(PATH_PLACEHOLDER, upload.short_path)
+          markdown.sub!(match, replace_with)
         else
           on_missing.call(link) if on_missing
         end
@@ -149,6 +102,91 @@ class InlineUploads
     end
 
     markdown
+  end
+
+  def self.match_md_inline_img(markdown, external_src: false)
+    markdown.scan(/(!?\[([^\[\]]*)\]\(([a-zA-z0-9\.\/:-]+)([ ]*['"]{1}[^\)]*['"]{1}[ ]*)?\))/) do |match|
+      if (matched_uploads(match[2]).present? || external_src) && block_given?
+        yield(
+          match[0],
+          match[2],
+          +"#{match[0].start_with?("!") ? "!" : ""}[#{match[1]}](#{PLACEHOLDER}#{match[3]})",
+          $~.offset(0)[0]
+        )
+      end
+    end
+  end
+
+  def self.match_bbcode_img(markdown)
+    markdown.scan(/(\[img\]\s?(.+)\s?\[\/img\])/) do |match|
+      yield(match[0], match[1], +"![](#{PLACEHOLDER})", $~.offset(0)[0]) if block_given?
+    end
+  end
+
+  def self.match_md_reference(markdown)
+    markdown.scan(/(\[([^\]]+)\]:([ ]+)(\S+))/) do |match|
+      if match[3] && matched_uploads(match[3]) && block_given?
+        yield(
+          match[0],
+          match[3],
+          +"[#{match[1]}]:#{match[2]}#{Discourse.base_url}#{PATH_PLACEHOLDER}",
+          $~.offset(0)[0]
+        )
+      end
+    end
+  end
+
+  def self.match_anchor(markdown, external_href: false)
+    markdown.scan(/((<a[^<]+>)([^<\a>]*?)<\/a>)/) do |match|
+      node = Nokogiri::HTML::fragment(match[0]).children[0]
+      href =  node.attributes["href"]&.value
+
+      if href && (matched_uploads(href).present? || external_href)
+        has_attachment = node.attributes["class"]&.value
+        index = $~.offset(0)[0]
+        text = match[2].strip.gsub("\n", "").gsub(/ +/, " ")
+        text = "#{text}|attachment" if has_attachment
+
+        yield(match[0], href, +"[#{text}](#{PLACEHOLDER})", index) if block_given?
+      end
+    end
+  end
+
+  def self.match_img(markdown, external_src: false)
+    markdown.scan(/(<(?!img)[^<>]+\/?>)?(\n*)(([ ]*)<img ([^<>]+)>([ ]*))(\n*)/) do |match|
+      node = Nokogiri::HTML::fragment(match[2].strip).children[0]
+      src =  node.attributes["src"].value
+
+      if matched_uploads(src).present? || external_src
+        text = node.attributes["alt"]&.value
+        width = node.attributes["width"]&.value
+        height = node.attributes["height"]&.value
+        title = node.attributes["title"]&.value
+        text = "#{text}|#{width}x#{height}" if width && height
+        after_html_tag = match[0].present?
+
+        spaces_before =
+          if after_html_tag && !match[0].end_with?("/>")
+            (match[3].present? ? match[3] : "  ")
+          else
+            ""
+          end
+
+        replacement = +"#{spaces_before}![#{text}](#{PLACEHOLDER}#{title.present? ? " \"#{title}\"" : ""})"
+
+        if after_html_tag && (num_newlines = match[1].length) <= 1
+          replacement.prepend("\n" * (num_newlines == 0 ? 2 : 1))
+        end
+
+        if after_html_tag && !match[0].end_with?("/>") && (num_newlines = match[6].length) <= 1
+          replacement += ("\n" * (num_newlines == 0 ? 2 : 1))
+        end
+
+        match[2].strip! if !after_html_tag
+
+        yield(match[2], src, replacement, $~.offset(0)[0]) if block_given?
+      end
+    end
   end
 
   def self.matched_uploads(node)
