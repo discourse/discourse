@@ -222,13 +222,18 @@ class Category < ActiveRecord::Base
   def create_category_definition
     return if skip_category_definition
 
-    t = Topic.new(title: I18n.t("category.topic_prefix", category: name), user: user, pinned_at: Time.now, category_id: id)
-    t.skip_callbacks = true
-    t.ignore_category_auto_close = true
-    t.delete_topic_timer(TopicTimer.types[:close])
-    t.save!(validate: false)
-    update_column(:topic_id, t.id)
-    t.posts.create(raw: description || post_template, user: user)
+    Topic.transaction do
+      t = Topic.new(title: I18n.t("category.topic_prefix", category: name), user: user, pinned_at: Time.now, category_id: id)
+      t.skip_callbacks = true
+      t.ignore_category_auto_close = true
+      t.delete_topic_timer(TopicTimer.types[:close])
+      t.save!(validate: false)
+      update_column(:topic_id, t.id)
+      post = t.posts.build(raw: description || post_template, user: user)
+      post.save!(validate: false)
+
+      t
+    end
   end
 
   def topic_url
@@ -665,8 +670,33 @@ class Category < ActiveRecord::Base
   end
 
   def self.ensure_consistency!
+
+    sql = <<~SQL
+      SELECT t.id FROM topics t
+      JOIN categories c ON c.topic_id = t.id
+      LEFT JOIN posts p ON p.topic_id = t.id AND p.post_number = 1
+      WHERE p.id IS NULL
+    SQL
+
+    DB.query_single(sql).each do |id|
+      Topic.find(id).destroy!
+    end
+
+    sql = <<~SQL
+      UPDATE categories c
+      SET topic_id = NULL
+      WHERE c.id IN (
+        SELECT c2.id FROM categories c2
+        LEFT JOIN topics t ON t.id = c2.topic_id AND t.deleted_at IS NULL
+        WHERE t.id IS NULL AND c2.topic_id IS NOT NULL
+      )
+    SQL
+
+    DB.exec(sql)
+
     Category
       .joins('LEFT JOIN topics ON categories.topic_id = topics.id AND topics.deleted_at IS NULL')
+      .where('categories.id <> ?', SiteSetting.uncategorized_category_id)
       .where(topics: { id: nil })
       .find_each do |category|
       category.create_category_definition
