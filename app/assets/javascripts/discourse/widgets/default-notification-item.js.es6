@@ -109,28 +109,20 @@ export const DefaultNotificationItem =
     text(notificationType, notificationName) {
       const { attrs } = this;
       const data = attrs.data;
-      const scope =
-        notificationName === "custom" ? data.message : `notifications.${notificationName}`;
 
       const username = formatUsername(data.display_username);
       const description = this.description();
 
-      return I18n.t(scope, { description, username });
+      return I18n.t(`notifications.${notificationName}`, { description, username });
     },
 
     icon(notificationName, data) {
-      let infoKey =
-        notificationName === "custom" ? data.message : notificationName;
-      return iconNode(`notification.${infoKey}`);
+      return iconNode(`notification.${notificationName}`);
     },
 
     title(notificationName, data) {
       if (notificationName) {
-        if (notificationName === "custom") {
-          return data.title ? I18n.t(data.title) : "";
-        } else {
-          return I18n.t(`notifications.titles.${notificationName}`);
-        }
+        return I18n.t(`notifications.titles.${notificationName}`);
       } else {
         return "";
       }
