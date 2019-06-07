@@ -85,11 +85,11 @@ export const DefaultNotificationItem =
       return I18n.t(`notifications.${notificationName}`, { description, username });
     },
 
-    icon(notificationName, data) {
+    icon(notificationName) {
       return iconNode(`notification.${notificationName}`);
     },
 
-    title(notificationName, data) {
+    title(notificationName) {
       if (notificationName) {
         return I18n.t(`notifications.titles.${notificationName}`);
       } else {
