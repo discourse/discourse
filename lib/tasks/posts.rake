@@ -661,6 +661,7 @@ end
 desc "Coverts full upload URLs in `Post#raw` to short upload url"
 task 'posts:inline_uploads' => :environment do |_, args|
   dry_run = (ENV["DRY_RUN"].nil? ? true : ENV["DRY_RUN"] != "false")
+  verbose = ENV["VERBOSE"]
 
   scope = Post.joins(:post_uploads)
     .distinct("posts.id")
@@ -681,9 +682,7 @@ task 'posts:inline_uploads' => :environment do |_, args|
       new_raw = InlineUploads.process(post.raw)
 
       if post.raw != new_raw
-        if dry_run
-          putc "🏃‍"
-        else
+        if !dry_run
           post.revise!(Discourse.system_user,
             {
               raw: new_raw
@@ -691,9 +690,20 @@ task 'posts:inline_uploads' => :environment do |_, args|
             skip_validations: true,
             force_new_version: true
           )
+        end
 
+        if verbose
+          require 'diffy'
+          Diffy::Diff.default_format = :color
+          puts "Cooked diff for Post #{post.id}"
+          puts Diffy::Diff.new(PrettyText.cook(post.raw), PrettyText.cook(new_raw), context: 1)
+          puts
+        elsif dry_run
+          putc "🏃"
+        else
           putc "."
         end
+
 
         fixed_count += 1
       else

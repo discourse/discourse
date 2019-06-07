@@ -144,6 +144,7 @@ group :test, :development do
   gem 'byebug', require: ENV['RM_INFO'].nil?
   gem 'rubocop', require: false
   gem 'parallel_tests'
+  gem 'diffy', require: false
 end
 
 group :development do
