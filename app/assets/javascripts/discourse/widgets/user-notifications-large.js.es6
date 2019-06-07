@@ -12,8 +12,16 @@ createWidget("large-notification-item", {
   },
 
   html(attrs) {
+    const notificationName =
+      this.site.notificationLookup[attrs.notification_type];
+
+    const widgetNames = [
+      `${notificationName.replace(/_/g, '-')}-notification-item`,
+      "default-notification-item"
+    ];
+
     return [
-      this.attach("default-notification-item", attrs),
+      this.attach(widgetNames, attrs),
       h("span.time", dateNode(attrs.created_at))
     ];
   }
