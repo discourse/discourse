@@ -738,6 +738,18 @@ describe UsersController do
           expect(response.status).to eq(200)
           expect(JSON.parse(response.body)['active']).to be_falsy
         end
+
+        it "won't set the new user's locale to the admin's locale" do
+          SiteSetting.allow_user_locale = true
+          admin.update!(locale: :fr)
+
+          post "/u.json", params: post_user_params.merge(active: true, api_key: api_key.key)
+          expect(response.status).to eq(200)
+
+          json = JSON.parse(response.body)
+          new_user = User.find(json["user_id"])
+          expect(new_user.locale).not_to eq("fr")
+        end
       end
     end
 
