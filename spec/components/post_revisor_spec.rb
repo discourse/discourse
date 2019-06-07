@@ -762,6 +762,14 @@ describe PostRevisor do
               }.to_not change { topic.reload.bumped_at }
             end
 
+            it "doesn't bump topic if empty string is given" do
+              topic.tags = Tag.where(name: ['important', 'secret']).to_a
+              expect {
+                result = subject.revise!(Fabricate(:admin), raw: post.raw, tags: [""])
+                expect(result).to eq(true)
+              }.to_not change { topic.reload.bumped_at }
+            end
+
             it "creates a hidden revision" do
               subject.revise!(Fabricate(:admin), raw: post.raw, tags: topic.tags.map(&:name) + ['secret'])
               expect(post.reload.revisions.first.hidden).to eq(true)
