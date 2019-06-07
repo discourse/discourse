@@ -5,7 +5,7 @@ import { formatUsername } from "discourse/lib/utilities";
 createWidgetFrom(DefaultNotificationItem, "liked-notification-item", {
   text(notificationName, data) {
     const username = formatUsername(data.display_username);
-    const description = this.description();
+    const description = this.description(data);
 
     if (data.count > 1) {
       const count = data.count - 2;

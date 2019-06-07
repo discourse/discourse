@@ -10,7 +10,7 @@ createWidgetFrom(DefaultNotificationItem, "custom-notification-item", {
 
   text(notificationName, data) {
     const username = formatUsername(data.display_username);
-    const description = this.description();
+    const description = this.description(data);
 
     return I18n.t(data.message, { description, username });
   },
