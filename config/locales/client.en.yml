@@ -1822,6 +1822,8 @@ en:
           wiki: are wiki
           images: include image(s)
           all_tags: All the above tags
+          tagged: are tagged
+          untagged: are untagged
         statuses:
           label: Where topics
           open: are open

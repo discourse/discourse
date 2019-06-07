@@ -47,7 +47,9 @@ export default Ember.Component.extend({
       { name: I18n.t("search.advanced.filters.pinned"), value: "pinned" },
       { name: I18n.t("search.advanced.filters.unpinned"), value: "unpinned" },
       { name: I18n.t("search.advanced.filters.wiki"), value: "wiki" },
-      { name: I18n.t("search.advanced.filters.images"), value: "images" }
+      { name: I18n.t("search.advanced.filters.images"), value: "images" },
+      { name: I18n.t("search.advanced.filters.tagged"), value: "tagged" },
+      { name: I18n.t("search.advanced.filters.untagged"), value: "untagged" }
     ];
 
     this.statusOptions = [
