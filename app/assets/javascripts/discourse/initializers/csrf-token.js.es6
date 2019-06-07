@@ -4,18 +4,19 @@ export default {
 
   initialize(container) {
     const session = container.lookup("session:main");
+    const meta = document.querySelector("meta[name=csrf-token]");
 
-    const csrfToken = document
-      .querySelector("meta[name=csrf-token]")
-      .getAttribute("content");
+    if (meta) {
+      const csrfToken = meta.getAttribute("content");
 
-    // Add a CSRF token to all AJAX requests
-    session.set("csrfToken", csrfToken);
+      // Add a CSRF token to all AJAX requests
+      session.set("csrfToken", csrfToken);
 
-    $.ajaxPrefilter((options, originalOptions, xhr) => {
-      if (!options.crossDomain) {
-        xhr.setRequestHeader("X-CSRF-Token", csrfToken);
-      }
-    });
+      $.ajaxPrefilter((options, originalOptions, xhr) => {
+        if (!options.crossDomain) {
+          xhr.setRequestHeader("X-CSRF-Token", csrfToken);
+        }
+      });
+    }
   }
 };
