@@ -527,7 +527,7 @@ class PostRevisor
     modifications = post_changes.merge(@topic_changes.diff)
     if modifications.keys.size == 1 && tags_diff = modifications["tags"]
       a, b = tags_diff[0] || [], tags_diff[1] || []
-      changed_tags = (a + b) - (a & b)
+      changed_tags = ((a + b) - (a & b)).map(&:presence).compact
       if (changed_tags - DiscourseTagging.hidden_tag_names(nil)).empty?
         return true
       end
