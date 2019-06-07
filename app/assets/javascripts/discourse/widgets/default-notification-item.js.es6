@@ -118,16 +118,20 @@ export const DefaultNotificationItem =
       return I18n.t(scope, { description, username });
     },
 
+    icon(notificationName, data) {
+      let infoKey =
+        notificationName === "custom" ? data.message : notificationName;
+      return iconNode(`notification.${infoKey}`);
+    },
+
     html(attrs) {
       const notificationType = attrs.notification_type;
       const lookup = this.site.get("notificationLookup");
       const notificationName = lookup[notificationType];
 
       let { data } = attrs;
-      let infoKey =
-        notificationName === "custom" ? data.message : notificationName;
       let text = emojiUnescape(this.text(notificationType, notificationName));
-      let icon = iconNode(`notification.${infoKey}`);
+      let icon = this.icon(notificationName, data);
 
       let title;
 
