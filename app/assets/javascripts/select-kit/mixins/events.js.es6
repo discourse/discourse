@@ -1,3 +1,5 @@
+import { on } from "ember-addons/ember-computed-decorators";
+
 export default Ember.Mixin.create({
   init() {
     this._super(...arguments);
@@ -15,9 +17,25 @@ export default Ember.Mixin.create({
     };
   },
 
-  willDestroyElement() {
-    this._super(...arguments);
+  @on("didInsertElement")
+  _setupEvents() {
+    $(document).on("mousedown.select-kit", this._mouseDownHandler.bind(this));
 
+    this.$header()
+      .on("blur.select-kit", this._blurHeaderHandler.bind(this))
+      .on("focus.select-kit", this._focusHeaderHandler.bind(this))
+      .on("keydown.select-kit", this._keydownHeaderHandler.bind(this))
+      .on("keypress.select-kit", this._keypressHeaderHandler.bind(this));
+
+    this.$filterInput()
+      .on("change.select-kit", this._changeFilterInputHandler.bind(this))
+      .on("keypress.select-kit", this._keypressFilterInputHandler.bind(this))
+      .on("focusout.select-kit", this._focusoutFilterInputHandler.bind(this))
+      .on("keydown.select-kit", this._keydownFilterInputHandler.bind(this));
+  },
+
+  @on("willDestroyElement")
+  _cleanUpEvents() {
     $(document).off("mousedown.select-kit", this._mouseDownHandler);
 
     if (this.$header().length) {
@@ -143,24 +161,6 @@ export default Ember.Mixin.create({
   },
   _focusoutFilterInputHandler(event) {
     this.onFilterInputFocusout(event);
-  },
-
-  didInsertElement() {
-    this._super(...arguments);
-
-    $(document).on("mousedown.select-kit", this._mouseDownHandler.bind(this));
-
-    this.$header()
-      .on("blur.select-kit", this._blurHeaderHandler.bind(this))
-      .on("focus.select-kit", this._focusHeaderHandler.bind(this))
-      .on("keydown.select-kit", this._keydownHeaderHandler.bind(this))
-      .on("keypress.select-kit", this._keypressHeaderHandler.bind(this));
-
-    this.$filterInput()
-      .on("change.select-kit", this._changeFilterInputHandler.bind(this))
-      .on("keypress.select-kit", this._keypressFilterInputHandler.bind(this))
-      .on("focusout.select-kit", this._focusoutFilterInputHandler.bind(this))
-      .on("keydown.select-kit", this._keydownFilterInputHandler.bind(this));
   },
 
   didPressTab(event) {
