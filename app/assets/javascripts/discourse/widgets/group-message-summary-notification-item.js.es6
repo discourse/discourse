@@ -2,7 +2,7 @@ import { createWidgetFrom } from "discourse/widgets/widget";
 import { DefaultNotificationItem } from "discourse/widgets/default-notification-item";
 
 createWidgetFrom(DefaultNotificationItem, "group-message-summary-notification-item", {
-  text(notificationType, notificationName) {
+  text(notificationName) {
     const { attrs } = this;
     const data = attrs.data;
     const count = data.inbox_count;

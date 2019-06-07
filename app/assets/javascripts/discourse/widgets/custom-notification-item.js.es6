@@ -8,7 +8,7 @@ createWidgetFrom(DefaultNotificationItem, "custom-notification-item", {
     return data.title ? I18n.t(data.title) : "";
   },
 
-  text(notificationType, notificationName) {
+  text(notificationName) {
     const { attrs } = this;
     const data = attrs.data;
 
