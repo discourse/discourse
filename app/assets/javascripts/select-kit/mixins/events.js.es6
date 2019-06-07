@@ -19,7 +19,7 @@ export default Ember.Mixin.create({
 
     this._boundMouseDownHandler = bind(this, this._mouseDownHandler);
     this._boundFocusHeaderHandler = bind(this, this._focusHeaderHandler);
-    this._boundFocusHeaderHandler = bind(this, this._keydownHeaderHandler);
+    this._boundKeydownHeaderHandler = bind(this, this._keydownHeaderHandler);
     this._boundKeypressHeaderHandler = bind(this, this._keypressHeaderHandler);
     this._boundChangeFilterInputHandler = bind(
       this,
