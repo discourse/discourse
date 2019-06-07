@@ -16,11 +16,13 @@ const REGEXP_MIN_POST_COUNT_PREFIX = /^min_post_count:/gi;
 const REGEXP_POST_TIME_PREFIX = /^(before|after):/gi;
 const REGEXP_TAGS_REPLACE = /(^(tags?:|#(?=[a-z0-9\-]+::tag))|::tag\s?$)/gi;
 
-const REGEXP_IN_MATCH = /^(in|with):(posted|watching|tracking|bookmarks|first|pinned|unpinned|wiki|unseen|image)/gi;
+const REGEXP_IN_MATCH = /^(in|with):(posted|watching|tracking|bookmarks|first|pinned|unpinned|wiki|unseen|image|tagged|untagged)/gi;
 const REGEXP_SPECIAL_IN_LIKES_MATCH = /^in:likes/gi;
 const REGEXP_SPECIAL_IN_TITLE_MATCH = /^in:title/gi;
 const REGEXP_SPECIAL_IN_PRIVATE_MATCH = /^in:private/gi;
 const REGEXP_SPECIAL_IN_SEEN_MATCH = /^in:seen/gi;
+const REGEXP_SPECIAL_IN_TAGGED_MATCH = /^in:tagged/gi;
+const REGEXP_SPECIAL_IN_UNTAGGED_MATCH = /^in:untagged/gi;
 
 const REGEXP_CATEGORY_SLUG = /^(\#[a-zA-Z0-9\-:]+)/gi;
 const REGEXP_CATEGORY_ID = /^(category:[0-9]+)/gi;
@@ -96,7 +98,9 @@ export default Ember.Component.extend({
             title: false,
             likes: false,
             private: false,
-            seen: false
+            seen: false,
+            tagged: false,
+            untagged: false
           },
           all_tags: false
         },
@@ -149,6 +153,16 @@ export default Ember.Component.extend({
     this.setSearchedTermSpecialInValue(
       "searchedTerms.special.in.seen",
       REGEXP_SPECIAL_IN_SEEN_MATCH
+    );
+
+    this.setSearchedTermSpecialInValue(
+      "searchedTerms.special.in.tagged",
+      REGEXP_SPECIAL_IN_TAGGED_MATCH
+    );
+
+    this.setSearchedTermSpecialInValue(
+      "searchedTerms.special.in.untagged",
+      REGEXP_SPECIAL_IN_UNTAGGED_MATCH
     );
 
     this.setSearchedTermValue("searchedTerms.status", REGEXP_STATUS_PREFIX);
@@ -522,6 +536,16 @@ export default Ember.Component.extend({
   @observes("searchedTerms.special.in.seen")
   updateSearchTermForSpecialInSeen() {
     this.updateInRegex(REGEXP_SPECIAL_IN_SEEN_MATCH, "seen");
+  },
+
+  @observes("searchedTerms.special.in.tagged")
+  updateSearchTermForSpecialInTagged() {
+    this.updateInRegex(REGEXP_SPECIAL_IN_TAGGED_MATCH, "tagged");
+  },
+
+  @observes("searchedTerms.special.in.untagged")
+  updateSearchTermForSpecialInUntagged() {
+    this.updateInRegex(REGEXP_SPECIAL_IN_UNTAGGED_MATCH, "untagged");
   },
 
   @observes("searchedTerms.special.in.title")
