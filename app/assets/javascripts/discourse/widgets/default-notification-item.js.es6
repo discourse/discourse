@@ -28,9 +28,8 @@ export const DefaultNotificationItem =
       return classNames;
     },
 
-    url() {
+    url(data) {
       const attrs = this.attrs;
-      const data = attrs.data;
 
       const badgeId = data.badge_id;
       if (badgeId) {
@@ -119,7 +118,7 @@ export const DefaultNotificationItem =
 
       let contents = [icon, html];
 
-      const href = this.url();
+      const href = this.url(data);
       return href
         ? h(
             "a",
@@ -143,7 +142,7 @@ export const DefaultNotificationItem =
       e.preventDefault();
 
       this.sendWidgetEvent("linkClicked");
-      DiscourseURL.routeTo(this.url(), {
+      DiscourseURL.routeTo(this.url(this.attrs.data), {
         afterRouteComplete: () => {
           if (!this.attrs.data.revision_number) {
             return;
