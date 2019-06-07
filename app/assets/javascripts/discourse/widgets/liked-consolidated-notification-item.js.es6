@@ -14,9 +14,7 @@ createWidgetFrom(DefaultNotificationItem, "liked-consolidated-notification-item"
     );
   },
 
-  description() {
-    const data = this.attrs.data;
-
+  description(data) {
     const description =
       I18n.t("notifications.liked_consolidated_description", {
         count: parseInt(data.count)

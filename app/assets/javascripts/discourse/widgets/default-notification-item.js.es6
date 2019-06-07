@@ -58,8 +58,7 @@ export const DefaultNotificationItem =
       }
     },
 
-    description() {
-      const data = this.attrs.data;
+    description(data) {
       const badgeName = data.badge_name;
       if (badgeName) {
         return escapeExpression(badgeName);
@@ -81,7 +80,7 @@ export const DefaultNotificationItem =
 
     text(notificationName, data) {
       const username = formatUsername(data.display_username);
-      const description = this.description();
+      const description = this.description(data);
 
       return I18n.t(`notifications.${notificationName}`, { description, username });
     },
