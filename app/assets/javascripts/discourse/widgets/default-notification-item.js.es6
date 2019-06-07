@@ -31,7 +31,6 @@ export const DefaultNotificationItem =
     url() {
       const attrs = this.attrs;
       const data = attrs.data;
-      const notificationTypes = this.site.notification_types;
 
       const badgeId = data.badge_id;
       if (badgeId) {
@@ -53,10 +52,6 @@ export const DefaultNotificationItem =
 
       if (topicId) {
         return postUrl(attrs.slug, topicId, attrs.post_number);
-      }
-
-      if (attrs.notification_type === notificationTypes.invitee_accepted) {
-        return userPath(data.display_username);
       }
 
       if (data.group_id) {
