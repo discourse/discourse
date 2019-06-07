@@ -1094,10 +1094,10 @@ describe CookedPostProcessor do
         SiteSetting.download_remote_images_to_local = true
       end
 
-      it "does not run when there is not enough disk space" do
-        cpp.expects(:disable_if_low_on_disk_space).returns(true)
-        Jobs.expects(:cancel_scheduled_job).never
+      it "disables download_remote_images if there is not enough disk space" do
+        cpp.expects(:available_disk_space).returns(5)
         cpp.pull_hotlinked_images
+        expect(SiteSetting.download_remote_images_to_local).to eq(false)
       end
 
       context "and there is enough disk space" do
@@ -1136,11 +1136,14 @@ describe CookedPostProcessor do
     let(:post) { build(:post, created_at: 20.days.ago) }
     let(:cpp) { CookedPostProcessor.new(post) }
 
-    before { cpp.expects(:available_disk_space).returns(50) }
+    before do
+      SiteSetting.download_remote_images_to_local = true
+      cpp.expects(:available_disk_space).returns(50)
+    end
 
     it "does nothing when there's enough disk space" do
       SiteSetting.expects(:download_remote_images_threshold).returns(20)
-      SiteSetting.expects(:download_remote_images_to_local).never
+      SiteSetting.expects(:download_remote_images_to_local=).never
       expect(cpp.disable_if_low_on_disk_space).to eq(false)
     end
 

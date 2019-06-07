@@ -627,7 +627,7 @@ class CookedPostProcessor
 
   def pull_hotlinked_images(bypass_bump = false)
     # have we enough disk space?
-    return if disable_if_low_on_disk_space
+    disable_if_low_on_disk_space # But still enqueue the job
     # don't download remote images for posts that are more than n days old
     return unless @post.created_at > (Date.today - SiteSetting.download_remote_images_max_days_old)
     # we only want to run the job whenever it's changed by a user
@@ -640,6 +640,7 @@ class CookedPostProcessor
   end
 
   def disable_if_low_on_disk_space
+    return false if !SiteSetting.download_remote_images_to_local
     return false if available_disk_space >= SiteSetting.download_remote_images_threshold
 
     SiteSetting.download_remote_images_to_local = false
