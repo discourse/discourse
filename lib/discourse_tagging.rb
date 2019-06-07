@@ -56,7 +56,7 @@ module DiscourseTagging
           selected_tags: tag_names
         ).to_a
 
-        if tags.size < tag_names.size && (category.nil? || (category.tags.count == 0 && category.tag_groups.count == 0))
+        if tags.size < tag_names.size && (category.nil? || category.allow_global_tags || (category.tags.count == 0 && category.tag_groups.count == 0))
           tag_names.each do |name|
             unless Tag.where_name(name).exists?
               tags << Tag.create(name: name)
