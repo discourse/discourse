@@ -79,10 +79,7 @@ export const DefaultNotificationItem =
       return Ember.isEmpty(description) ? "" : escapeExpression(description);
     },
 
-    text(notificationName) {
-      const { attrs } = this;
-      const data = attrs.data;
-
+    text(notificationName, data) {
       const username = formatUsername(data.display_username);
       const description = this.description();
 
@@ -107,7 +104,7 @@ export const DefaultNotificationItem =
       const notificationName = lookup[notificationType];
 
       let { data } = attrs;
-      let text = emojiUnescape(this.text(notificationName));
+      let text = emojiUnescape(this.text(notificationName, data));
       let icon = this.icon(notificationName, data);
 
       const title = this.title(notificationName, data);
