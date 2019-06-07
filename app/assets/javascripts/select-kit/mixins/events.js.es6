@@ -17,7 +17,7 @@ export default Ember.Mixin.create({
     };
   },
 
-  @on("willDestroyElement")
+  @on("didInsertElement")
   _setupEvents() {
     $(document).on("mousedown.select-kit", this._mouseDownHandler.bind(this));
 
