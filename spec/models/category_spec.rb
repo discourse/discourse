@@ -898,6 +898,9 @@ describe Category do
       uncategorized.create_category_definition
       uncategorized.topic.posts.first.destroy!
 
+      # make stuff extra broken
+      uncategorized.topic.trash!
+
       category = Fabricate(:category)
       category_destroyed = Fabricate(:category)
       category_trashed = Fabricate(:category)
