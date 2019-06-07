@@ -124,25 +124,37 @@ RSpec.describe InlineUploads do
 
       it "should correct markdown references" do
         md = <<~MD
-        This is a [some reference] somethign
+        This is a [some reference] something
 
         [some reference]: #{Discourse.base_url}#{upload.url}
+
+        <img src="#{upload.url}">
         MD
 
         expect(InlineUploads.process(md)).to eq(<<~MD)
-        This is a [some reference] somethign
+        This is a [some reference] something
 
         [some reference]: #{Discourse.base_url}#{upload.short_path}
+
+        ![](#{upload.short_url})
         MD
       end
 
-      it "should correct raw image URLs to the short version" do
+      it "should correct raw image URLs to the short url and paths" do
         md = <<~MD
-        #{Discourse.base_url}#{upload3.url} #{Discourse.base_url}#{upload3.url}
+        #{Discourse.base_url}#{upload.url}
+
+        #{Discourse.base_url}#{upload.url} #{Discourse.base_url}#{upload2.url}
+
+        #{Discourse.base_url}#{upload3.url}
         MD
 
         expect(InlineUploads.process(md)).to eq(<<~MD)
-        ![](#{upload3.short_url}) ![](#{upload3.short_url})
+        ![](#{upload.short_url})
+
+        #{Discourse.base_url}#{upload.short_path} #{Discourse.base_url}#{upload2.short_path}
+
+        ![](#{upload3.short_url})
         MD
       end
 
@@ -174,7 +186,7 @@ RSpec.describe InlineUploads do
         ![some image](#{upload.short_url} "some title")
         ![some image](#{upload2.short_url})![some image](#{upload3.short_url})
 
-        ![](#{upload3.short_url}) ![](#{upload3.short_url})
+        #{Discourse.base_url}#{upload3.short_path} #{Discourse.base_url}#{upload3.short_path}
 
         ![|5x4](#{upload.short_url})
         MD
@@ -469,8 +481,8 @@ RSpec.describe InlineUploads do
           MD
 
           expect(InlineUploads.process(md)).to eq(<<~MD)
-          ![](#{upload2.short_url}) ![](#{upload2.short_url})
-          ![](#{upload2.short_url})
+          #{Discourse.base_url}#{upload2.short_path} #{Discourse.base_url}#{upload2.short_path}
+          #{Discourse.base_url}#{upload2.short_path}
 
           ![some image](#{upload.short_url})
           ![some image](#{upload2.short_url})
