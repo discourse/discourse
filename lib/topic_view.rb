@@ -421,17 +421,32 @@ class TopicView
   def reviewable_counts
     if @reviewable_counts.blank?
 
-      # Create a hash with counts by post so we can quickly look up whether there is reviewable content.
-      @reviewable_counts = {}
-      Reviewable.
-        where(target_type: 'Post', target_id: @posts.map(&:id)).
-        includes(:reviewable_scores).each do |r|
+      post_ids = @posts.map(&:id)
 
-        for_post = (@reviewable_counts[r.target_id] ||= { total: 0, pending: 0, reviewable_id: r.id })
-        r.reviewable_scores.each do |s|
-          for_post[:total] += 1
-          for_post[:pending] += 1 if s.pending?
-        end
+      sql = <<~SQL
+        SELECT target_id,
+          MAX(r.id) reviewable_id,
+          COUNT(*) total,
+          SUM(CASE WHEN s.status = :pending THEN 1 ELSE 0 END) pending
+        FROM reviewables r
+        JOIN reviewable_scores s ON reviewable_id = r.id
+        WHERE r.target_id IN (:post_ids) AND
+          r.target_type = 'Post'
+        GROUP BY target_id
+      SQL
+
+      @reviewable_counts = {}
+
+      DB.query(
+        sql,
+        pending: ReviewableScore.statuses[:pending],
+        post_ids: post_ids
+      ).each do |row|
+        @reviewable_counts[row.target_id] = {
+          total: row.total,
+          pending: row.pending,
+          reviewable_id: row.reviewable_id
+        }
       end
     end
 
