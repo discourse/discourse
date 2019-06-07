@@ -112,14 +112,6 @@ export const DefaultNotificationItem =
       const scope =
         notificationName === "custom" ? data.message : `notifications.${notificationName}`;
 
-      const notificationTypes = this.site.notification_types;
-
-      if (notificationType === notificationTypes.group_message_summary) {
-        const count = data.inbox_count;
-        const group_name = data.group_name;
-        return I18n.t(scope, { count, group_name });
-      }
-
       const username = formatUsername(data.display_username);
       const description = this.description();
 
