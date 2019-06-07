@@ -4,10 +4,7 @@ import { postUrl } from "discourse/lib/utilities";
 import { userPath } from "discourse/lib/url";
 
 createWidgetFrom(DefaultNotificationItem, "invitee-accepted-notification-item", {
-  url() {
-    const attrs = this.attrs;
-    const data = attrs.data;
-
+  url(data) {
     return userPath(data.display_username);
   },
 });

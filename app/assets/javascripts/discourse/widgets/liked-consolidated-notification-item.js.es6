@@ -4,10 +4,7 @@ import { escapeExpression } from "discourse/lib/utilities";
 import { userPath } from "discourse/lib/url";
 
 createWidgetFrom(DefaultNotificationItem, "liked-consolidated-notification-item", {
-  url() {
-    const attrs = this.attrs;
-    const data = attrs.data;
-
+  url(data) {
     return userPath(
       `${this.attrs.username ||
         this.currentUser
