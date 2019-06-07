@@ -90,20 +90,20 @@ export const DefaultNotificationItem =
         return this.attrs.fancy_title;
       }
 
-      let title;
+      let description;
 
       if (
         this.attrs.notification_type ===
         this.site.notification_types.liked_consolidated
       ) {
-        title = I18n.t("notifications.liked_consolidated_description", {
+        description = I18n.t("notifications.liked_consolidated_description", {
           count: parseInt(data.count)
         });
       } else {
-        title = data.topic_title;
+        description = data.topic_title;
       }
 
-      return Ember.isEmpty(title) ? "" : escapeExpression(title);
+      return Ember.isEmpty(description) ? "" : escapeExpression(description);
     },
 
     text(notificationType, notificationName) {
