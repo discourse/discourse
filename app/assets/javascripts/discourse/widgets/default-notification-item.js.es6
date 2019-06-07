@@ -59,16 +59,6 @@ export const DefaultNotificationItem =
         return userPath(data.display_username);
       }
 
-      if (attrs.notification_type === notificationTypes.liked_consolidated) {
-        return userPath(
-          `${this.attrs.username ||
-            this.currentUser
-              .username}/notifications/likes-received?acting_username=${
-            data.display_username
-          }`
-        );
-      }
-
       if (data.group_id) {
         return userPath(data.username + "/messages/group/" + data.group_name);
       }
@@ -90,18 +80,7 @@ export const DefaultNotificationItem =
         return this.attrs.fancy_title;
       }
 
-      let description;
-
-      if (
-        this.attrs.notification_type ===
-        this.site.notification_types.liked_consolidated
-      ) {
-        description = I18n.t("notifications.liked_consolidated_description", {
-          count: parseInt(data.count)
-        });
-      } else {
-        description = data.topic_title;
-      }
+      const description = data.topic_title;
 
       return Ember.isEmpty(description) ? "" : escapeExpression(description);
     },
