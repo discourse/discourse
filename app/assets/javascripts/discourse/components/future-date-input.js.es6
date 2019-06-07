@@ -36,6 +36,8 @@ export default Ember.Component.extend({
     }
   },
 
+  timeInputDisabled: Ember.computed.empty("date"),
+
   @observes("date", "time")
   _updateInput() {
     if (!this.date) {
