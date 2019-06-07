@@ -56,18 +56,58 @@ class InlineUploads
     db = RailsMultisite::ConnectionManagement.current_db
 
     regexps = [
-      /(^|\s)?(https?:\/\/[a-zA-Z0-9\.\/-]+\/uploads\/#{db}#{UPLOAD_REGEXP_PATTERN})($|\s)/,
+      /(https?:\/\/[a-zA-Z0-9\.\/-]+\/uploads\/#{db}#{UPLOAD_REGEXP_PATTERN})/,
     ]
 
     if Discourse.store.external?
-      regexps << /(^|\s)?(https?:#{SiteSetting.Upload.s3_base_url}#{UPLOAD_REGEXP_PATTERN})($|\s)?/
-      regexps << /(^|\s)?(#{SiteSetting.Upload.s3_cdn_url}#{UPLOAD_REGEXP_PATTERN})($|\s)?/
+      regexps << /(https?:#{SiteSetting.Upload.s3_base_url}#{UPLOAD_REGEXP_PATTERN})/
+      regexps << /(#{SiteSetting.Upload.s3_cdn_url}#{UPLOAD_REGEXP_PATTERN})/
     end
 
     regexps.each do |regexp|
-      markdown.scan(regexp) do |match|
-        if matched_uploads(match[1]).present?
-          raw_matches << [match[1], match[1], +"![](#{PLACEHOLDER})", $~.offset(0)[0]]
+      indexes = Set.new
+
+      markdown.scan(/(\n{2,}|\A)#{regexp}$/) do |match|
+        if match[1].present?
+          index = $~.offset(2)[0]
+          indexes << index
+          raw_matches << [match[1], match[1], +"![](#{PLACEHOLDER})", index]
+        end
+      end
+
+      markdown.scan(/^#{regexp}(\s)/) do |match|
+        if match[0].present?
+          index = $~.offset(0)[0]
+          next if indexes.include?(index)
+          indexes << index
+
+          raw_matches << [
+            match[0],
+            match[0],
+            +"#{Discourse.base_url}#{PATH_PLACEHOLDER}",
+            $~.offset(0)[0]
+          ]
+        end
+      end
+
+      markdown.scan(/\[[^\[\]]*\]: #{regexp}/) do |match|
+        if match[0].present?
+          index = $~.offset(1)[0]
+          next if indexes.include?(index)
+          indexes << index
+        end
+      end
+
+      markdown.scan(/((\n|\s)+)#{regexp}/) do |match|
+        if matched_uploads(match[2]).present?
+          next if indexes.include?($~.offset(3)[0])
+
+          raw_matches << [
+            match[2],
+            match[2],
+            +"#{Discourse.base_url}#{PATH_PLACEHOLDER}",
+            $~.offset(0)[0]
+          ]
         end
       end
     end
@@ -125,7 +165,7 @@ class InlineUploads
 
   def self.match_md_reference(markdown)
     markdown.scan(/(\[([^\]]+)\]:([ ]+)(\S+))/) do |match|
-      if match[3] && matched_uploads(match[3]) && block_given?
+      if match[3] && matched_uploads(match[3]).present? && block_given?
         yield(
           match[0],
           match[3],
