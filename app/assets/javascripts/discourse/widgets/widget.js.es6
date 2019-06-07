@@ -9,8 +9,6 @@ import {
 import { h } from "virtual-dom";
 import DecoratorHelper from "discourse/widgets/decorator-helper";
 
-function emptyContent() {}
-
 const _registry = {};
 
 export function queryRegistry(name) {
@@ -45,90 +43,14 @@ export function changeSetting(widgetName, settingName, newValue) {
   _customSettings[widgetName][settingName] = newValue;
 }
 
-function drawWidget(builder, attrs, state) {
-  const properties = {};
-
-  if (this.buildClasses) {
-    let classes = this.buildClasses(attrs, state) || [];
-    if (!Array.isArray(classes)) {
-      classes = [classes];
-    }
-
-    const customClasses = applyDecorators(this, "classNames", attrs, state);
-    if (customClasses && customClasses.length) {
-      classes = classes.concat(customClasses);
-    }
-
-    if (classes.length) {
-      properties.className = classes.join(" ");
-    }
-  }
-  if (this.buildId) {
-    properties.id = this.buildId(attrs);
-  }
-
-  if (this.buildAttributes) {
-    properties.attributes = this.buildAttributes(attrs);
-  }
-
-  if (this.keyUp) {
-    properties["widget-key-up"] = new WidgetKeyUpHook(this);
-  }
-
-  if (this.keyDown) {
-    properties["widget-key-down"] = new WidgetKeyDownHook(this);
-  }
-
-  if (this.clickOutside) {
-    properties["widget-click-outside"] = new WidgetClickOutsideHook(this);
-  }
-  if (this.click) {
-    properties["widget-click"] = new WidgetClickHook(this);
-  }
-
-  if (this.mouseDownOutside) {
-    properties["widget-mouse-down-outside"] = new WidgetMouseDownOutsideHook(
-      this
-    );
-  }
-
-  if (this.drag) {
-    properties["widget-drag"] = new WidgetDragHook(this);
-  }
-
-  const attributes = properties["attributes"] || {};
-  properties.attributes = attributes;
-
-  if (this.title) {
-    if (typeof this.title === "function") {
-      attributes.title = this.title(attrs, state);
-    } else {
-      attributes.title = I18n.t(this.title);
-    }
-  }
-
-  this.transformed = this.transform(this.attrs, this.state);
-
-  let contents = this.html(attrs, state);
-  if (this.name) {
-    const beforeContents = applyDecorators(this, "before", attrs, state) || [];
-    const afterContents = applyDecorators(this, "after", attrs, state) || [];
-    contents = beforeContents.concat(contents).concat(afterContents);
-  }
-
-  return h(this.tagName || "div", properties, contents);
-}
-
-export function createWidget(name, opts) {
-  const result = class CustomWidget extends Widget {};
+export function createWidgetFrom(base, name, opts) {
+  const result = class CustomWidget extends base {};
 
   if (name) {
     _registry[name] = result;
   }
 
   opts.name = name;
-  opts.html = opts.html || emptyContent;
-  opts.draw = drawWidget;
 
   if (opts.template) {
     opts.html = opts.template;
@@ -136,6 +58,10 @@ export function createWidget(name, opts) {
 
   Object.keys(opts).forEach(k => (result.prototype[k] = opts[k]));
   return result;
+}
+
+export function createWidget(name, opts) {
+  return createWidgetFrom(Widget, name, opts);
 }
 
 export function reopenWidget(name, opts) {
@@ -382,6 +308,82 @@ export default class Widget {
 
       return this._sendComponentAction(name, param || this.findAncestorModel());
     });
+  }
+
+  html() {}
+
+  draw(builder, attrs, state) {
+    const properties = {};
+
+    if (this.buildClasses) {
+      let classes = this.buildClasses(attrs, state) || [];
+      if (!Array.isArray(classes)) {
+        classes = [classes];
+      }
+
+      const customClasses = applyDecorators(this, "classNames", attrs, state);
+      if (customClasses && customClasses.length) {
+        classes = classes.concat(customClasses);
+      }
+
+      if (classes.length) {
+        properties.className = classes.join(" ");
+      }
+    }
+    if (this.buildId) {
+      properties.id = this.buildId(attrs);
+    }
+
+    if (this.buildAttributes) {
+      properties.attributes = this.buildAttributes(attrs);
+    }
+
+    if (this.keyUp) {
+      properties["widget-key-up"] = new WidgetKeyUpHook(this);
+    }
+
+    if (this.keyDown) {
+      properties["widget-key-down"] = new WidgetKeyDownHook(this);
+    }
+
+    if (this.clickOutside) {
+      properties["widget-click-outside"] = new WidgetClickOutsideHook(this);
+    }
+    if (this.click) {
+      properties["widget-click"] = new WidgetClickHook(this);
+    }
+
+    if (this.mouseDownOutside) {
+      properties["widget-mouse-down-outside"] = new WidgetMouseDownOutsideHook(
+        this
+      );
+    }
+
+    if (this.drag) {
+      properties["widget-drag"] = new WidgetDragHook(this);
+    }
+
+    const attributes = properties["attributes"] || {};
+    properties.attributes = attributes;
+
+    if (this.title) {
+      if (typeof this.title === "function") {
+        attributes.title = this.title(attrs, state);
+      } else {
+        attributes.title = I18n.t(this.title);
+      }
+    }
+
+    this.transformed = this.transform(this.attrs, this.state);
+
+    let contents = this.html(attrs, state);
+    if (this.name) {
+      const beforeContents = applyDecorators(this, "before", attrs, state) || [];
+      const afterContents = applyDecorators(this, "after", attrs, state) || [];
+      contents = beforeContents.concat(contents).concat(afterContents);
+    }
+
+    return h(this.tagName || "div", properties, contents);
   }
 }
 
