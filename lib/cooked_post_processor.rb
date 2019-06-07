@@ -626,8 +626,6 @@ class CookedPostProcessor
   end
 
   def pull_hotlinked_images(bypass_bump = false)
-    # is the job enabled?
-    return unless SiteSetting.download_remote_images_to_local?
     # have we enough disk space?
     return if disable_if_low_on_disk_space
     # don't download remote images for posts that are more than n days old

@@ -1082,10 +1082,11 @@ describe CookedPostProcessor do
 
     before { cpp.stubs(:available_disk_space).returns(90) }
 
-    it "does not run when download_remote_images_to_local is disabled" do
+    it "runs even when download_remote_images_to_local is disabled" do
+      # We want to run it to pull hotlinked optimized images
       SiteSetting.download_remote_images_to_local = false
-      Jobs.expects(:cancel_scheduled_job).never
-      cpp.pull_hotlinked_images
+      expect { cpp.pull_hotlinked_images }.
+        to change { Jobs::PullHotlinkedImages.jobs.count }.by 1
     end
 
     context "when download_remote_images_to_local? is enabled" do
