@@ -191,6 +191,11 @@ describe Jobs::PullHotlinkedImages do
         expect(subject.should_download_image?(src)).to eq(true)
       end
 
+      it "returns false for emoji" do
+        src = Emoji.url_for("testemoji.png")
+        expect(subject.should_download_image?(src)).to eq(false)
+      end
+
       it 'returns false for valid remote URLs' do
         expect(subject.should_download_image?("http://meta.discourse.org")).to eq(false)
       end
