@@ -313,40 +313,6 @@ QUnit.test("update in:seen filter through advanced search ui", async assert => {
   );
 });
 
-QUnit.test("update in:tagged filter through advanced search ui", async assert => {
-  await visit("/search");
-  await fillIn(".search-query", "none");
-  await click(".search-advanced-options .in-tagged");
-
-  assert.ok(
-    exists(".search-advanced-options .in-tagged:checked"),
-    "it should check the right checkbox"
-  );
-
-  assert.equal(
-    find(".search-query").val(),
-    "none in:tagged",
-    "it should update the search term"
-  );
-});
-
-QUnit.test("update in:untagged filter through advanced search ui", async assert => {
-  await visit("/search");
-  await fillIn(".search-query", "none");
-  await click(".search-advanced-options .in-untagged");
-
-  assert.ok(
-    exists(".search-advanced-options .in-untagged:checked"),
-    "it should check the right checkbox"
-  );
-
-  assert.equal(
-    find(".search-query").val(),
-    "none in:untagged",
-    "it should update the search term"
-  );
-});
-
 QUnit.test("update in filter through advanced search ui", async assert => {
   const inSelector = selectKit(".search-advanced-options .select-kit#in");
 
@@ -364,6 +330,46 @@ QUnit.test("update in filter through advanced search ui", async assert => {
     find(".search-query").val(),
     "none in:bookmarks",
     'has updated search term to "none in:bookmarks"'
+  );
+});
+
+QUnit.test("update in filter through advanced search ui", async assert => {
+  const inSelector = selectKit(".search-advanced-options .select-kit#in");
+
+  await visit("/search");
+
+  await fillIn(".search-query", "none");
+  await inSelector.expand();
+  await inSelector.selectRowByValue("tagged");
+
+  assert.ok(
+    inSelector.rowByName("are tagged").exists(),
+    'has "are tagged" populated'
+  );
+  assert.equal(
+    find(".search-query").val(),
+    "none in:tagged",
+    'has updated search term to "none in:tagged"'
+  );
+});
+
+QUnit.test("update in filter through advanced search ui", async assert => {
+  const inSelector = selectKit(".search-advanced-options .select-kit#in");
+
+  await visit("/search");
+
+  await fillIn(".search-query", "none");
+  await inSelector.expand();
+  await inSelector.selectRowByValue("untagged");
+
+  assert.ok(
+    inSelector.rowByName("are untagged").exists(),
+    'has "are untagged" populated'
+  );
+  assert.equal(
+    find(".search-query").val(),
+    "none in:untagged",
+    'has updated search term to "none in:untagged"'
   );
 });
 
