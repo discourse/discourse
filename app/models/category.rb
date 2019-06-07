@@ -679,7 +679,7 @@ class Category < ActiveRecord::Base
     SQL
 
     DB.query_single(sql).each do |id|
-      Topic.find(id).destroy!
+      Topic.with_deleted.find_by(id: id).destroy!
     end
 
     sql = <<~SQL
