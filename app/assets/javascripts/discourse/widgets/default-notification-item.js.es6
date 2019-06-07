@@ -124,6 +124,18 @@ export const DefaultNotificationItem =
       return iconNode(`notification.${infoKey}`);
     },
 
+    title(notificationName, data) {
+      if (notificationName) {
+        if (notificationName === "custom") {
+          return data.title ? I18n.t(data.title) : "";
+        } else {
+          return I18n.t(`notifications.titles.${notificationName}`);
+        }
+      } else {
+        return "";
+      }
+    },
+
     html(attrs) {
       const notificationType = attrs.notification_type;
       const lookup = this.site.get("notificationLookup");
@@ -133,17 +145,7 @@ export const DefaultNotificationItem =
       let text = emojiUnescape(this.text(notificationType, notificationName));
       let icon = this.icon(notificationName, data);
 
-      let title;
-
-      if (notificationName) {
-        if (notificationName === "custom") {
-          title = data.title ? I18n.t(data.title) : "";
-        } else {
-          title = I18n.t(`notifications.titles.${notificationName}`);
-        }
-      } else {
-        title = "";
-      }
+      const title = this.title(notificationName, data);
 
       // We can use a `<p>` tag here once other languages have fixed their HTML
       // translations.
