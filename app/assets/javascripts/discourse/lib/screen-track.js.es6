@@ -26,7 +26,8 @@ export default class {
     // Create an interval timer if we don't have one.
     if (!this._interval) {
       this._interval = setInterval(() => this.tick(), 1000);
-      $(window).on("scroll.screentrack", this.scrolled.bind(this));
+      this._boundScrolled = Ember.run.bind(this, this.scrolled);
+      $(window).on("scroll.screentrack", this._boundScrolled);
     }
 
     this._topicId = topicId;
@@ -39,7 +40,10 @@ export default class {
       return;
     }
 
-    $(window).off("scroll.screentrack", this.scrolled);
+    if (this._boundScrolled) {
+      $(window).off("scroll.screentrack", this._boundScrolled);
+    }
+
     this.tick();
     this.flush();
     this.reset();
