@@ -3,10 +3,7 @@ import { DefaultNotificationItem } from "discourse/widgets/default-notification-
 import { formatUsername } from "discourse/lib/utilities";
 
 createWidgetFrom(DefaultNotificationItem, "liked-notification-item", {
-  text(notificationName) {
-    const { attrs } = this;
-    const data = attrs.data;
-
+  text(notificationName, data) {
     const username = formatUsername(data.display_username);
     const description = this.description();
 
