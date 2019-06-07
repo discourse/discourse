@@ -155,6 +155,8 @@ QUnit.testDone(function() {
 
   server.shutdown();
 
+  window.server = null;
+
   // ensures any event not removed is not leaking between tests
   // most likely in intialisers, other places (controller, component...)
   // should be fixed in code
