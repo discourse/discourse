@@ -419,7 +419,7 @@ class TopicView
   end
 
   def reviewable_counts
-    if @reviewable_counts.blank?
+    if @reviewable_counts.nil?
 
       post_ids = @posts.map(&:id)
 
