@@ -34,13 +34,16 @@ class S3Inventory
       download_inventory_files_to_tmp_directory
       decompress_inventory_files
 
+      multisite_prefix = "uploads/#{RailsMultisite::ConnectionManagement.current_db}/"
       ActiveRecord::Base.transaction do
         begin
           connection.exec("CREATE TEMP TABLE #{table_name}(key text UNIQUE, etag text, PRIMARY KEY(etag, key))")
           connection.copy_data("COPY #{table_name} FROM STDIN CSV") do
             files.each do |file|
               CSV.foreach(file[:filename][0...-3], headers: false) do |row|
-                connection.put_copy_data("#{row[CSV_KEY_INDEX]},#{row[CSV_ETAG_INDEX]}\n")
+                key = row[CSV_KEY_INDEX]
+                next if Rails.configuration.multisite && key.exclude?(multisite_prefix)
+                connection.put_copy_data("#{key},#{row[CSV_ETAG_INDEX]}\n")
               end
             end
           end
