@@ -433,7 +433,7 @@ en:
       edit: "Edit"
       save: "Save"
       cancel: "Cancel"
-      new_topic: "New Topic:"
+      new_topic: "Approving this item will create a new topic"
 
       filters:
         type:
