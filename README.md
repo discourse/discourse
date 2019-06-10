@@ -1,9 +1,9 @@
 onebox
 ======
 
-[![Gem Version](https://badge.fury.io/rb/onebox.png)](https://rubygems.org/gems/onebox)
-[![Code Climate](https://codeclimate.com/github/dysania/onebox.png)](https://codeclimate.com/github/dysania/onebox)
-[![Build Status](https://travis-ci.org/discourse/onebox.png)](https://travis-ci.org/discourse/onebox)
+[![Gem Version](https://badge.fury.io/rb/onebox.svg)](https://rubygems.org/gems/onebox)
+[![Code Climate](https://codeclimate.com/github/dysania/onebox.svg)](https://codeclimate.com/github/dysania/onebox)
+[![Build Status](https://travis-ci.org/discourse/onebox.svg)](https://travis-ci.org/discourse/onebox)
 
 Onebox is a library for turning media URLs into simple HTML previews of the resource.
 
