@@ -391,7 +391,7 @@ describe FileStore::S3Store do
 
       url = "//s3-upload-bucket.s3.dualstack.us-east-1.amazonaws.com/livechat/original/gif.png"
 
-      expect(store.cdn_url(url)).to eq("https://rainbow.com/community/original/gif.png")
+      expect(store.cdn_url(url)).to eq("https://rainbow.com/livechat/original/gif.png")
     end
   end
 
