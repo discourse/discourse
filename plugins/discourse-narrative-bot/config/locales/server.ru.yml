@@ -113,6 +113,11 @@ ru:
       random_mention:
         reply: |-
           Привет! Tтобы узнать, что я могу сделать, наберите: `@%{discobot_username} %{help_trigger}`.
+        tracks: |-
+          В настоящее время я знаю, как сделать следующие вещи:
+
+          `@%{discobot_username} %{reset_trigger} %{default_track}`
+          > Запускает одно из следующих интерактивных руководств: %{tracks}.
         bot_actions: |-
           `@%{discobot_username} %{dice_trigger} 2d6`
           > :game_die: 3, 6
@@ -135,9 +140,19 @@ ru:
 
           В то же время, я не буду стоять на вашем пути.
     new_user_narrative:
+      reset_trigger: "tutorial"
+      title: "Сертификат о прохождении обучения нового пользователя"
       cert_title: "В знак признания успешного завершения нового руководство пользователя"
       hello:
         title: "Здравствуйте!"
+        message: |-
+          Спасибо %{title}, и Добро пожаловать!
+
+          - Я всего лишь робот, но [наш дружный коллектив](%{base_uri}/about) готов помочь вам в любое время.
+
+          - По соображениям безопасности мы временно ограничиваем возможности новых пользователей. Прочитать о уровнях доверия [можно в нашем блоге](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/) (а также в разделе [награды](%{base_uri}/badges)) на этом сайте.
+
+          - Мы верим в [цивилизованное поведение](%{base_uri}/guidelines) в нашем сообществе.
       onebox:
         instructions: |-
           Теперь, не могли бы вы отправить одну из этих ссылок мне? Отправьте **только ссылку**, тогда она автоматически покажет превью.
@@ -287,6 +302,7 @@ ru:
       certificate:
         alt: 'Свидетельство о достижении'
     advanced_user_narrative:
+      reset_trigger: 'advanced tutorial'
       cert_title: "В знак признания успешного завершения расширенного руководства пользователя"
       title: ':arrow_up: Расширенные функции пользователя'
       start_message: |-
@@ -326,6 +342,10 @@ ru:
           Можете ли вы сделать мне одолжение и **восстановить** его <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-rotate-left.png" width="16" height="16">?
         not_found: |-
           Возникли проблемы? Помните, что нужно нажать на значок "показать еще" <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> чтобы увидеть опцию "восстановить" <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-rotate-left.png" width="16" height="16">
+        reply: |-
+          Ух, это было отлично! Спасибо, что исправили это :wink:
+
+          Запомните, что у вас есть только %{deletion_after} час(а), чтобы восстановить пост.
       category_hashtag:
         instructions: |-
           Знаете ли вы, что вы можете обратитесь к категории и теги в вашем посте? Например, вы видели %{category} категорию?

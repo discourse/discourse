@@ -586,6 +586,8 @@ fa_IR:
       every_hour: "هر ساعت"
       daily: "روزانه"
       weekly: "هفتگی"
+      every_month: "هر ماه"
+      every_six_months: "هر شش ماه"
   user_api_key:
     title: "اجازه دسترسی به برنامه"
     authorize: "اجازه دادن"
@@ -604,6 +606,7 @@ fa_IR:
   reports:
     default:
       labels:
+        count: تعداد
         day: روز
     post_edits:
       labels:
@@ -613,6 +616,7 @@ fa_IR:
     user_flagging_ratio:
       labels:
         user: کاربر
+        score: امتیاز
     moderators_activity:
       labels:
         moderator: مدیر
@@ -2251,6 +2255,8 @@ fa_IR:
         title: "سازمان"
       colors:
         title: "قالب"
+      themes_further_reading:
+        title: "قالب‌ها"
       logos:
         title: "لوگو‌ها"
         fields:
@@ -2284,6 +2290,14 @@ fa_IR:
         title: "Discourse شما آماده‌ست!"
   joined: "ملحق شده"
   reviewables:
+    priorities:
+      low: "کم"
+      medium: "متوسط"
+      high: "بالا"
+    sensitivity:
+      low: "کم"
+      medium: "متوسط"
+      high: "بالا"
     actions:
       agree_and_suspend:
         title: "کاربر تعلیق شده"

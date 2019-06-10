@@ -583,27 +583,27 @@ it:
   user_auth_tokens:
     browser:
       chrome: "Google Chrome"
-      safari: "Safari"
-      firefox: "Firefox"
-      opera: "Opera"
-      ie: "Internet Explorer"
       edge: "Microsoft Edge"
+      firefox: "Firefox"
+      ie: "Internet Explorer"
+      opera: "Opera"
+      safari: "Safari"
       unknown: "browser sconosciuto"
     device:
       android: "Dispositivo Android"
       ipad: "iPad"
       iphone: "iPhone"
       ipod: "iPod"
-      mobile: "Dispositivo Mobile"
-      mac: "Mac"
       linux: "GNU/Linux Computer"
+      mac: "Mac"
+      mobile: "Dispositivo Mobile"
       windows: "Windows Computer"
       unknown: "dispositivo sconosciuto"
     os:
       android: "Android"
       ios: "iOS"
-      macos: "macOS"
       linux: "Linux"
+      macos: "macOS"
       windows: "Microsoft Windows"
       unknown: "sistema operativo sconosciuto"
   change_email:
@@ -849,6 +849,7 @@ it:
       labels:
         term: Termine
         searches: Ricerche
+        click_through: CTR
     emails:
       title: "Email Inviate"
       xaxis: "Giorno"
@@ -1476,6 +1477,12 @@ it:
       different_topics: "I messaggi appartenenti a diversi argomenti non possono essere fusi."
       different_users: "I messaggi appartenenti a diversi utenti non possono essere fusi."
   move_posts:
+    new_topic_moderator_post:
+      one: "Un messaggio è stato spostato in un nuovo argomento: %{topic_link}"
+      other: "%{count} messaggi sono stati spostati in un nuovo Argomento: %{topic_link}"
+    new_message_moderator_post:
+      one: "Un messaggio è stato spostato in un nuovo messaggio ai moderatori: %{topic_link}"
+      other: "%{count} messaggi sono stati spostati in un nuovo messaggio ai moderatori: %{topic_link}"
     existing_topic_moderator_post:
       one: "Un messaggio è stato unito ad un Argomento esistente: %{topic_link}"
       other: "%{count} messaggi sono stati uniti ad un Argomento esistente: %{topic_link}"
@@ -2876,6 +2883,8 @@ it:
         title: "Società"
       colors:
         title: "Tema"
+      themes_further_reading:
+        title: "Temi"
       logos:
         title: "Loghi"
         fields:
@@ -2922,10 +2931,12 @@ it:
   reviewables:
     priorities:
       low: "Bassa"
+      medium: "Media"
       high: "Alta"
     sensitivity:
       disabled: "Disabilitato"
       low: "Bassa"
+      medium: "Media"
       high: "Alta"
     reasons:
       trust_level: "Le risposte degli utenti con un basso Livello di Esperienza devono essere approvate dallo Staff. Vedi `approve_unless_trust_level`."

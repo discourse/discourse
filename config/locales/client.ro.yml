@@ -1282,6 +1282,8 @@ ro:
         replied: '{{username}} ți-a răspuns la "{{topic}}" - {{site_title}}'
         posted: '{{username}} a postat în "{{topic}}" - {{site_title}}'
         linked: '{{username}} a pus un link către postarea ta din "{{topic}}" - {{site_title}}'
+      titles:
+        watching_first_post: "subiect nou"
     upload_selector:
       title: "Adaugă o imagine"
       title_with_attachments: "Adaugă o imagine sau un fișier"
@@ -1431,6 +1433,8 @@ ro:
       move_to_inbox:
         title: "Mută în Primite"
         help: "Mută mesajul în Primite"
+      defer:
+        title: "Amânare"
       list: "Subiecte"
       new: "subiect nou"
       unread: "necitit"
@@ -2364,6 +2368,10 @@ ro:
     admin:
       title: "Admin Discourse"
       moderator: "Moderator"
+      tags:
+        remove_muted_tags_from_latest:
+          always: "întotdeauna"
+          never: "niciodată"
       dashboard:
         title: "Panou de control"
         version: "Versiune"

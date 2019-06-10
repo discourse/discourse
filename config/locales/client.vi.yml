@@ -259,6 +259,8 @@ vi:
           title: "Loại"
         refresh: "Tải lại"
         category: "Danh mục"
+        orders:
+          created_at: "Được tạo tại"
       scores:
         type: "Loại"
       statuses:
@@ -1069,6 +1071,8 @@ vi:
         replied: '{{username}} trả lời cho bạn trong "{{topic}}" - {{site_title}}'
         posted: '{{username}} gửi bài trong "{{topic}}" - {{site_title}}'
         linked: '{{username}} liên quan đến bài viết của bạn từ "{{topic}}" - {{site_title}}'
+      titles:
+        watching_first_post: "chủ đề mới"
     upload_selector:
       title: "Thêm một ảnh"
       title_with_attachments: "Thêm một ảnh hoặc tệp tin"
@@ -1192,6 +1196,8 @@ vi:
       move_to_inbox:
         title: "Chuyển sang hộp thư"
         help: "Chuyển tin nhắn trở lại hộp thư"
+      defer:
+        title: "Hoãn"
       list: "Chủ đề"
       new: "chủ đề mới"
       unread: "chưa đọc"
@@ -1931,6 +1937,10 @@ vi:
     admin:
       title: "Quản trị Diễn đàn"
       moderator: "Điều hành"
+      tags:
+        remove_muted_tags_from_latest:
+          always: "luôn luôn"
+          never: "không  bao giờ"
       dashboard:
         title: "Bảng điều khiển"
         version: "Phiên bản"

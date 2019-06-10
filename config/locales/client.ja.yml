@@ -279,6 +279,7 @@ ja:
         search: "タイトルでメッセージを検索:"
         placeholder: "メッセージのタイトルをここに入力してください"
     review:
+      in_reply_to: "こちらへの回答"
       delete: "削除する"
       settings:
         saved: "保存しました"
@@ -307,6 +308,8 @@ ja:
         minimum_score: "最小スコア:"
         refresh: "更新"
         category: "カテゴリ"
+        orders:
+          created_at: "作られた"
       scores:
         score: "スコア"
         date: "日付"
@@ -1300,6 +1303,8 @@ ja:
         posted: '{{username}} が投稿しました "{{topic}}" - {{site_title}}'
         linked: '"{{topic}}"にあるあなたの投稿に{{username}}がリンクしました - {{site_title}}'
         confirm_body: "成功！通知を可能にしました！"
+      titles:
+        watching_first_post: "新着トピック"
     upload_selector:
       title: "画像のアップロード"
       title_with_attachments: "画像/ファイルをアップロード"
@@ -1455,6 +1460,8 @@ ja:
       edit_message:
         help: "メッセージの最初の投稿を編集"
         title: "メッセージを編集"
+      defer:
+        title: "取り下げる"
       list: "トピック"
       new: "新着トピック"
       unread: "未読"
@@ -2254,6 +2261,10 @@ ja:
     admin:
       title: "Discourseの管理者"
       moderator: "モデレータ"
+      tags:
+        remove_muted_tags_from_latest:
+          always: "常に含める"
+          never: "追跡しない"
       dashboard:
         title: "ダッシュボード"
         version: "Version"

@@ -662,28 +662,30 @@ nl:
   user_auth_tokens:
     browser:
       chrome: "Google Chrome"
-      safari: "Safari"
-      firefox: "Firefox"
-      opera: "Opera"
-      ie: "Internet Explorer"
-      edge: "Microsoft Edge"
       discoursehub: "DiscourseHub-app"
+      edge: "Microsoft Edge"
+      firefox: "Firefox"
+      ie: "Internet Explorer"
+      opera: "Opera"
+      safari: "Safari"
       unknown: "onbekende browser"
     device:
       android: "Android-apparaat"
+      chromebook: "Chromebook"
       ipad: "iPad"
       iphone: "iPhone"
       ipod: "iPod"
-      mobile: "Mobiel apparaat"
-      mac: "Mac"
       linux: "GNU/Linux-computer"
+      mac: "Mac"
+      mobile: "Mobiel apparaat"
       windows: "Windows-computer"
       unknown: "onbekend apparaat"
     os:
       android: "Android"
+      chromeos: "ChromeOS"
       ios: "iOS"
-      macos: "macOS"
       linux: "Linux"
+      macos: "macOS"
       windows: "Microsoft Windows"
       unknown: "onbekend besturingssysteem"
   change_email:
@@ -697,6 +699,7 @@ nl:
       description: "We sturen nu ter bevestiging een e-mail naar uw nieuwe adres."
   associated_accounts:
     revoke_failed: "Intrekken van uw account bij %{provider_name} is mislukt."
+    connected: "(verbonden)"
   activation:
     action: "Klik hier om uw account te activeren"
     already_done: "Sorry, deze koppeling voor het bevestigen van uw account is niet meer geldig. Misschien is uw account al actief?"
@@ -905,7 +908,6 @@ nl:
       title: "Gebruikersbezoeken"
       xaxis: "Dag"
       yaxis: "Aantal bezoeken"
-      description: "Aantal alle unieke gebruikersbezoeken."
     signups:
       title: "Registraties"
       xaxis: "Dag"
@@ -1285,6 +1287,9 @@ nl:
     polling_interval: "Als geen 'long polling' wordt toegepast, hoe vaak aangemelde clients moeten pollen in milliseconden"
     anon_polling_interval: "Hoe vaak anonieme clients moeten pollen in milliseconden"
     background_polling_interval: "Hoe vaak clients moeten pollen in milliseconden (als het venster in de achtergrond staat)"
+    hide_post_sensitivity: "De waarschijnlijkheid dat een gemarkeerd bericht wordt verborgen"
+    silence_new_user_sensitivity: "De waarschijnlijkheid dat een nieuwe gebruiker wordt gedempt op basis van spammarkeringen"
+    auto_close_topic_sensitivity: "De waarschijnlijkheid dat een gemarkeerd topic automatisch wordt gesloten"
     cooldown_minutes_after_hiding_posts: "Het aantal minuten dat een gebruiker moet wachten voordat deze een via de gemeenschap gemarkeerd bericht kan bewerken"
     max_topics_in_first_day: "Het maximale aantal topics dat een gebruiker in de 24 uursperiode na het schrijven van een eerste bericht mag aanmaken"
     max_replies_in_first_day: "Het maximale aantal antwoorden dat een gebruiker in de 24 uursperiode na het schrijven van een eerste bericht mag aanmaken"
@@ -1304,7 +1309,6 @@ nl:
     must_approve_users: "Stafleden moeten alle nieuwe gebruikersaccounts goedkeuren voordat ze de website mogen bezoeken. WAARSCHUWING: als dit voor een actieve website wordt ingeschakeld, wordt alle toegang voor bestaande niet-stafleden ingetrokken!"
     pending_users_reminder_delay: "Moderators inlichten als nieuwe gebruikers langer dan dit aantal uren op goedkeuring wachten. Stel dit in op -1 om meldingen uit te schakelen."
     maximum_session_age: "Gebruikers blijven (n) uur na hun laatste bezoek aangemeld"
-    ga_universal_tracking_code: "Google Universal Analytics (analytics.js)-trackingcode, bv. UA-12345678-9; zie <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
     ga_universal_domain_name: "Google Universal Analytics (analytics.js)-domeinnaam, bv. mysite.com; zie <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
     ga_universal_auto_link_domains: "Google Universal Analytics (analytics.js)-cross-domain-tracking inschakelen. Aan uitgaande koppelingen naar deze domeinen wordt de client-ID toegevoegd. Zie <a href='https://support.google.com/analytics/answer/1034342?hl=en' target='_blank'>Google's Cross-Domein Tracking-handleiding.</a>"
     gtm_container_id: "Google Tag Manager-container-ID, bv. GTM-ABCDEF. <br/>Opmerking: scripts van derden die door GTM worden geladen, dienen mogelijk op de whitelist te worden geplaatst in 'content security policy script src'."
@@ -1542,6 +1546,7 @@ nl:
     max_similar_results: "Hoeveel vergelijkbare topics om boven de editor te tonen bij het opstellen van een nieuw topic. Vergelijking is gebaseerd op titel en inhoud."
     max_image_megapixels: "Maximale aantal toegestane megapixels voor een afbeelding."
     title_prettify: "Veelvoorkomende fouten in titels voorkomen, waaronder alles in hoofdletters, eerste woord zonder hoofdletter, meerdere ! en ?, een extra . aan het eind, etc."
+    title_remove_extraneous_space: "Voorloopspaties voor de eindinterpunctie verwijderen."
     topic_views_heat_low: "Na dit aantal weergaven wordt het veld 'weergaven' licht gemarkeerd."
     topic_views_heat_medium: "Na dit aantal weergaven wordt het veld 'weergaven' middelmatig gemarkeerd."
     topic_views_heat_high: "Na dit aantal weergaven wordt het veld 'weergaven' sterk gemarkeerd."
@@ -1742,6 +1747,7 @@ nl:
     default_other_notification_level_when_replying: "Globale standaard meldingsniveau wanneer de gebruiker op een topic antwoordt."
     default_other_external_links_in_new_tab: "Externe koppelingen standaard in een nieuw tabblad openen."
     default_other_enable_quoting: "Antwoord-met-citaat voor gemarkeerde tekst standaard inschakelen."
+    default_other_enable_defer: "Topicnegeerfunctionaliteit standaard inschakelen."
     default_other_dynamic_favicon: "Aantal nieuwe / bijgewerkte topics standaard tonen op browserpictogram."
     default_other_like_notification_frequency: "Gebruikers standaard informeren bij likes"
     default_topics_automatic_unpin: "Topics standaard automatisch losmaken wanneer de gebruiker de onderkant bereikt."
@@ -1773,6 +1779,7 @@ nl:
     allow_staff_to_tag_pms: "Stafleden mogen persoonlijke berichten taggen"
     min_trust_level_to_tag_topics: "Het minimale vertrouwensniveau dat nodig is om topics te taggen"
     suppress_overlapping_tags_in_list: "Als tags exacte overeenkomsten met woorden in topictitels hebben, de tag niet tonen"
+    remove_muted_tags_from_latest: "Topics met alleen gedempt-tags niet in de lijst met nieuwste topics tonen."
     force_lowercase_tags: "Gebruik van kleine letters voor alle nieuwe tags afdwingen."
     company_name: "Bedrijfsnaam"
     governing_law: "Toepasselijk recht"
@@ -2404,6 +2411,23 @@ nl:
       name: Zeer populaire koppeling
     famous_link:
       name: Uiterst populaire koppeling
+    appreciated:
+      name: Gewaardeerd
+    respected:
+      name: Gerespecteerd
+    thank_you:
+      name: Bedankt
+    empathetic:
+      name: Empathisch
+      description: Heeft 500 geliked en 1000 likes gegeven
+    first_emoji:
+      name: Eerste emoji
+      description: Een emoji in een bericht gebruikt
+    first_reply_by_email:
+      name: Eerste antwoord via e-mail
+      description: Bericht beantwoord via e-mail
+    new_user_of_the_month:
+      name: "Nieuwe gebruiker van de maand"
     badge_title_metadata: "%{display_name}-badge op %{site_title}"
   admin_login:
     success: "E-mail verstuurd"
@@ -2420,13 +2444,19 @@ nl:
     congratulations: "Gefeliciteerd, u hebt Discourse geïnstalleerd!"
     register:
       button: "Registreren"
+      title: "Beheerdersaccount registreren"
+      help: "Registreer een nieuw account om te beginnen"
+    confirm_email:
+      title: "Bevestig uw e-mailadres"
     resend_email:
       title: "Activeringsmail opnieuw versturen"
       message: "<p>We hebben de activeringsmail opnieuw naar <b>%{email}</b> verstuurd"
   safe_mode:
+    title: "Veilige modus starten"
     no_customizations: "Huidige thema uitschakelen"
     only_official: "Niet-officiële plug-ins uitschakelen"
     no_plugins: "Alle plug-ins uitschakelen"
+    enter: "Veilige modus starten"
   wizard:
     step:
       locale:
@@ -2471,6 +2501,8 @@ nl:
             placeholder: "San Francisco, Californië"
       colors:
         title: "Thema"
+      themes_further_reading:
+        title: "Thema's"
       logos:
         title: "Logo's"
         fields:
@@ -2595,9 +2627,20 @@ nl:
         title: "Negeren"
       approve:
         title: "Goedkeuren"
+      approve_post:
+        title: "Bericht goedkeuren"
+      reject_post:
+        title: "Bericht weigeren"
+      approve_user:
+        title: "Gebruiker goedkeuren"
       reject_user:
+        title: "Gebruiker verwijderen..."
         delete:
           title: "Gebruiker verwijderen"
+          description: "De gebruiker zal van het forum verwijderd worden."
+        block:
+          title: "Gebruiker verwijderen en blokkeren"
+          description: "De gebruiker zal verwijderd worden en we zullen het IP-adres en e-mailadres blokkeren."
       reject:
         title: "Weigeren"
       delete_user:

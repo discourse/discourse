@@ -281,6 +281,7 @@ zh_TW:
         search: "以標題尋找訊息"
         placeholder: "輸入訊息標題"
     review:
+      in_reply_to: "回覆給"
       claim_help:
         optional: "您可以聲明此項目以防止其他人審核。"
         required: "您必須先審核項目才能查看它們。"
@@ -1490,6 +1491,9 @@ zh_TW:
         confirm_title: "通知已啟用-%{site_title}"
         confirm_body: "成功! 通知已啟用"
         custom: "新的通知由{{username}}在%{site_title}"
+      titles:
+        watching_first_post: "新話題"
+        post_approved: "貼文已通過審核"
     upload_selector:
       title: "加入圖片"
       title_with_attachments: "加入圖片或檔案"
@@ -1650,6 +1654,8 @@ zh_TW:
       edit_message:
         help: "編輯這個訊息的第一篇貼文"
         title: "編輯訊息"
+      defer:
+        title: "延遲"
       list: "話題"
       new: "新話題"
       unread: "未讀"
@@ -2623,6 +2629,10 @@ zh_TW:
     admin:
       title: "論壇管理員"
       moderator: "板主"
+      tags:
+        remove_muted_tags_from_latest:
+          always: "總是"
+          never: "永不"
       reports:
         title: "可見報告列表"
       dashboard:

@@ -23,20 +23,20 @@ el:
             mb: MB
             tb: TB
       short:
-        thousands: "{{number}}k"
-        millions: "{{number}}M"
+        thousands: "{{number}}χιλ."
+        millions: "{{number}}εκατ."
     dates:
       time: "ΗΗ:mm"
       timeline_date: "MMM YYYY"
       long_no_year: "DD MMM HH:mm"
       long_no_year_no_time: "DD MMM"
       full_no_year_no_time: "Do MMMM"
-      long_with_year: "DD MMM YYYY h:mm a"
-      long_with_year_no_time: "D, MMM YYYY"
-      full_with_year_no_time: "Do MMMM, YYYY"
-      long_date_with_year: "DD, MMM 'YY HH:mm"
+      long_with_year: "D MMM YYYY HH:mm"
+      long_with_year_no_time: "D MMM YYYY"
+      full_with_year_no_time: "D MMMM YYYY"
+      long_date_with_year: "D MMM 'YY LT"
       long_date_without_year: "MMM D, LT"
-      long_date_with_year_without_time: "D MMM, 'YY"
+      long_date_with_year_without_time: "MMM D, 'YY"
       long_date_without_year_with_linebreak: "MMM D <br/>LT"
       long_date_with_year_with_linebreak: "MMM D, 'YY <br/>LT"
       wrap_ago: "%{date} πριν"
@@ -1167,6 +1167,8 @@ el:
         replied: '{{username}} σου απάντησε στο "{{topic}}" - {{site_title}}'
         posted: '{{username}} ανάρτησε στο "{{topic}}" - {{site_title}}'
         linked: '{{username}} έκανε μια σύνδεση στην ανάρτηση που έκανες στο νήμα "{{topic}}" - {{site_title}}'
+      titles:
+        watching_first_post: "νέο νήμα"
     upload_selector:
       title: "Προσθήκη εικόνας"
       title_with_attachments: "Προσθήκη εικόνας ή αρχείου"
@@ -1311,6 +1313,8 @@ el:
       move_to_inbox:
         title: "Μετακίνηση στα Εισερχόμενα"
         help: "Μετακίνηση μηνύματος πίσω στα Εισερχόμενα"
+      defer:
+        title: "Αναβολή"
       list: "Νήματα"
       new: "νέο νήμα"
       unread: "αδιάβαστο"
@@ -2208,6 +2212,10 @@ el:
     admin:
       title: "Διαχειριστής"
       moderator: "Συντονιστής"
+      tags:
+        remove_muted_tags_from_latest:
+          always: "πάντα"
+          never: "ποτέ"
       dashboard:
         title: "Πίνακας ελέγχου"
         version: "Έκδοση"

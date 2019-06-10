@@ -1282,6 +1282,8 @@ lt:
         linked: '{{username}} panaudojo tavo įrašą "{{topic}}" - {{site_title}}'
         confirm_title: "Pranešimai įgalinti - %{site_title}"
         confirm_body: "Pavyko! Pranešimai buvo įgalinti."
+      titles:
+        watching_first_post: "nauja tema"
     upload_selector:
       title: "Pridėti nuotrauką"
       title_with_attachments: "Pridėti nautrauką arba dokumentą"
@@ -1429,6 +1431,8 @@ lt:
         help: "Perkelti žinutes atgal į Pranešimų dėžutę"
       edit_message:
         title: "Redaguoti žinutę"
+      defer:
+        title: "Atidėti"
       list: "Temos"
       new: "nauja tema"
       unread: "Neperskaitytos"
@@ -2297,6 +2301,10 @@ lt:
     admin:
       title: "Forumo administratorius"
       moderator: "Moderatorius"
+      tags:
+        remove_muted_tags_from_latest:
+          always: "visada"
+          never: "niekada"
       dashboard:
         title: "Apžvalga"
         version: "Versija"

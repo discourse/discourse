@@ -1335,6 +1335,9 @@ tr_TR:
         linked: '{{username}}, "{{topic}}" başlıklı konudaki gönderinize bağlantı yaptı - {{site_title}}'
         confirm_title: "Bildirimler etkin - %{site_title}"
         confirm_body: "Başarılı! Bildirimler etkinleştirildi."
+      titles:
+        watching_first_post: "yeni konu"
+        post_approved: "gönderi onaylandı"
     upload_selector:
       title: "Resim ekle"
       title_with_attachments: "Resim ya da dosya ekle"
@@ -1498,6 +1501,8 @@ tr_TR:
       edit_message:
         help: "Mesajın ilk gönderisini düzenle"
         title: "Gönderiyi düzenle"
+      defer:
+        title: "Ertele"
       list: "Konular"
       new: "yeni konu"
       unread: "okunmamış"
@@ -2414,6 +2419,10 @@ tr_TR:
     admin:
       title: "Yönetici Panel Dili"
       moderator: "Moderatör"
+      tags:
+        remove_muted_tags_from_latest:
+          always: "her zaman"
+          never: "asla"
       reports:
         title: "Mevcut raporlar listesi"
       dashboard:

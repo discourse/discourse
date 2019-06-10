@@ -145,6 +145,14 @@ he:
       cert_title: "כהוקרה על סיום מוצלח של מדריך המשתמשים החדשים"
       hello:
         title: "ברכות!"
+        message: |-
+          תודה לך על הצטרפותך אל %{title} וברוך בואך!
+
+          - אני בסך הכול רובוט, אך [הסגל הידידותי שלנו](%{base_uri}/about) כאן כדי לסייע אם נדרשת התערבות מצד גורם אנושי.
+
+          - מטעמי אבטחה, אנו מגבילים את חופש הפעולה למשתמשים חדשים באופן זמני. עם הזמן יתאפשר לך לצבור [מיומנויות חדשות](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/) (לרבות [עיטורים](%{base_uri}/badges)) בהתאם לרמת ההיכרות אתך.
+
+          - אנו דוגלים ב[התנהלות קהילתית מתורבתת](%{base_uri}/guidelines) בכל עת.
       onebox:
         instructions: |-
           נתקדם, אפשר לבקש ממך לשתף אתי את אחד הקישורים האלה? יש להגיב **עם קישור בשורה נפרדת** והוא יתרחב אוטומטית ויציג פירוט מגניב.
@@ -246,25 +254,99 @@ he:
           אפשר לבקש ממך לאזכר את **`@%{discobot_username}`** בתגובה שלך?
         reply: |-
           _קראתם בשמי!?_ :raised_hand: אני מאמין שכן! :wave: ובכן, אני כאן! תודה שאיזכרתם אותי.  :ok_hand:
+        not_found: |-
+          איני מצליח למצוא את השם שלי בשום מקום :frowning: אפשר לבקש ממך לאזכר אותי בשם `‎@%{discobot_username}‎` שוב?
+
+          (וכן, שם המשתמש שלי מתחיל ב_disco_ (דיסקו) כמו טירוף הריקודים של שנות השבעים. אני גם [אוהב את חיי הלילה!](https://www.youtube.com/watch?v=B_wGI3_sGf8) :dancer:)
+      flag:
+        instructions: |-
+          אנחנו אוהבים לשמור על נימה חברית בדיונים שלנו ואנו זקוקים לעזרה כדי [לשמור על תרבות שיח](%{guidelines_url}). במקרה של בעיה כלשהי, נא לסמן בדגל כדי ליידע את המחבר או את [הסגל היעיל שלנו](%{about_url}) באופן פרטי.
+
+          >  :imp: כתבתי כאן משהו נבזי
+
+          נראה לי שהבנת מה עליך לעשות. קדימה **לסמן את הפוסט הזה בדגל** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16"> על היותו בלתי הולם!
+        reply: |-
+          [הסגל שלנו](%{base_uri}/groups/staff) יקבל התראה פרטית על הדגל שלך. אם מספיק חברים בקהילה מסמנים פוסט בדגל, הוא יוסתר ליתר ביטחון. (מאחר שלא באמת כתבתי כאן משהו נבזי :angel:, הרשיתי לעצמי להסיר את הדגל בינתיים.)
+        not_found: |-
+          אללי, טרם סימנת בדגל פוסט נבזי. :worried: אפשר לבקש ממך לסמן דגל כתוכן בלתי הולם באמצעות ה**דגל** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16">? לא לשכוח להשתמש בכפתור להציג עוד <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> כדי לחשוף פעולות נוספות עבור כל פוסט.
       search:
+        instructions: |-
+          _פססט_ … החבאתי הפתעה בנושא הזה. אם מעניין אותך להיענות לאתגר, **עליך לבחור בסמל החיפוש** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> שבפינה השמאלית העליונה &#8599; כדי לחפש אותה.
+
+          יש לנסות לחפש את הביטוי „capy&#8203;bara” בנושא הזה
         hidden_message: |-
           איך הצלחת לפספס את הקפיברה הזאת? :wink:
 
           <img src="%{base_uri}/plugins/discourse-narrative-bot/images/capybara-eating.gif"/>
 
           שמת לב שחזרת להתחלה? אולי נאכיל את הקפיברה המסכנה הזאת על ידי **השבה עם האמוג׳י `:herb:`** ומיד הדיון יוקפץ לסופו.
+        reply: |-
+          הידד! מצאת אותה :tada:
+
+          - לחיפושים מורכבים יותר, יש לגשת אל [עמוד החיפוש המלא](%{search_url}).
+
+          - כדי לקפוץ למיקום כלשהו בתוך דיון ארוך, יש לנסות להשתמש בפקדי ציר הזמן שמשמאל (ומלמטה במכשירים ניידים).
+
+          - אם יש לך :keyboard: פיזית, יש לנסות ללחוץ על <kbd>?</kbd> כדי לצפות בקיצורי המקלדת השימושיים שלנו.
+        not_found: |-
+          המממ… נראה כאילו הסתבכת קצת. מתנצלים. חיפשת <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> אחר הביטוי **capy&#8203;bara**?
+      end:
+        message: |-
+          תודה שנשארת אתי עד כאן ‎@%{username}‎! הכנתי את זה עבורך, הרווחת את זה ביושר:
+
+          %{certificate}
+
+          זה הכול לבינתיים! כדאי לבקר ב[**נושאי הדיון העדכניים ביותר שלנו**](%{base_uri}/latest) או ב[**קטגוריות דיון**](%{base_uri}/categories). :sunglasses:
+
+          (אם בא לך לדבר אתי שוב, עליך פשוט לאזכר את `‎@%{discobot_username}‎` בכל עת!)
       certificate:
         alt: 'תעודת הישג'
     advanced_user_narrative:
+      reset_trigger: 'מדריך מתקדם'
       cert_title: "כהוקרה על סיום של מדריך המשתמשים המתקדמים בהצלחה"
       title: ':arrow_up: יכולות משתמשים מתקדמים'
+      edit:
+        bot_created_post_raw: "‎@%{discobot_username}‎ הוא, עד כה, הבוט המגניב ביותר שאני מכיר :wink:"
+        instructions: |-
+          כולם טועים לפעמים. אך אל חשש, תמיד יתאפשר לך לערוך את הפוסטים שלך כדי לתקן אותם!
+
+          אולי נתחיל ב**עריכת** הפוסט שיצרתי בשמך?
+        not_found: |-
+          נראה לי שטרם ערכת את ה[פוסט](%{url}) שיצרתי עבורך. אולי ננסה שוב?
+
+          יש להשתמש בסמל <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-pencil.png" width="16" height="16"> כדי להעלות את העורך.
+        reply: |-
+          מרשים ביותר!
+
+          נא לשים לב ששינויים שנערכו לאחר 5 דקות יופיעו כמהדורות עריכה ציבוריות ויופיע סמל קטן של עיפרון בפינה השמאלית העליונה לצד מספר המהדורות.
+      delete:
+        reply: |-
+          ואו! :boom:
+
+          כדי לשמר את המשכיות הדיון, המחיקות אינן מיידיות, לכן הפוסט יוסר לאחר זמן מה.
       recover:
         deleted_post_raw: 'מדוע הפוסט שלי נמחק על ידי @%{discobot_username}? :anguished:'
         instructions: |-
           שוד ושבר! נראה שמחקתי לך בטעות פוסט חדש שהרגע יצרתי עבורך.
 
           יש מצב לבקש ממך <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-rotate-left.png" width="16" height="16"> **לבטל את המחיקה** שלו?
+        not_found: |-
+          הסתבכת? כדאי לזכור כי <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> להציג עוד יחשוף את <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-rotate-left.png" width="16" height="16"> ביטול המחיקה.
+        reply: |-
+          ואו, זה היה קרוב! תודה שתיקנת את זה :wink:
+
+          מוטב לשים לב כי לרשותך %{deletion_after} שעות לבטל מחיקת פוסט.
       category_hashtag:
+        instructions: |-
+          ידעת שיש לך אפשרות להפנות לקטגוריות ולתגיות בפוסט שלך? למשל, ראית את הקטגוריה %{category}?
+
+          עליך להקליד `#` באמצע משפט ולבחור בקטגוריה או בתגית.
+        not_found: |-
+          המממ, אני לא רואה שם קטגוריה בשום מקום. נא לשים לב שהתו הראשון לא יכול להיות `#`. אפשר לבקש ממך להעתיק את זה בתגובה הבאה שלך?
+
+          ```text
+          אוכל ליצור קישור לקטגוריה דרך #
+          ```
         reply: |-
           מצויין! זיכרו שזה עובד בשביל קטגוריות _וגם_ תגיות, אם תגיות מאופשרות.
       poll:

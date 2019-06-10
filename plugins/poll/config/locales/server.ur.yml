@@ -12,6 +12,7 @@ ur:
     poll_edit_window_mins: "پوسٹ بنانے کے بعد کتنے منت تک پولز کی ترمیم کی جاسکتی ہے۔"
     poll_minimum_trust_level_to_create: "پول بنانے کیلئے کم از کم ٹرسٹ لَیول واضح کریں۔"
   poll:
+    poll: "پَول"
     invalid_argument: "آرگیومنٹ کیلئے '%{argument}' غلط وَیلِیو '%{value}'۔"
     multiple_polls_without_name: "نام کے بغیر ایک سے زیادہ پولزموجود ہیں۔ اپنے پولز کو منفرد شناخت دینے کیلیے '<code>نام</code>' صفت کا استعمال کریں۔"
     multiple_polls_with_same_name: "ایک ہی نام والے ایک سے زیادہ پولزموجود ہیں: <strong>%{نام}</strong>۔ اپنے پولز کو منفرد شناخت دینے کیلیے '<code>نام</code>' صفت کا استعمال کریں۔"

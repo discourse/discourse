@@ -153,6 +153,7 @@ ur:
     bootstrap_mode_disabled: "بُوٹسٹرَیپ مَوڈ 24 گھنٹوں کے اندر غیر فعال کر دیا جائے گا۔"
     themes:
       default_description: "ڈِیفالٹ"
+      broken_theme_alert: "تِھیم/کمپنَینٹ %{theme} میں ایسی غلطیاں ہیں جو آپ کی سائٹ کو صحیح طریقے سے کام کرنے سے روک سکتی ہیں! آپ اِسے %{path} پر غیر فعال کریں۔"
     s3:
       regions:
         ap_northeast_1: "ایشیا پیسفک (ٹوکیو)"
@@ -307,6 +308,8 @@ ur:
         search: "بزریعہ عنوان پیغام کو تلاش کریں:"
         placeholder: "یہاں پیغام کا عنوان لکھیں"
     review:
+      order_by: "کے حساب سے آرڈر"
+      in_reply_to: "کے جواب میں"
       claim_help:
         optional: "آپ اس چیز کو کََلیم کرسکتے ہیں کہ دوسروں کو اِسکا جائزہ لینے سے روکا جا سکے۔"
         required: "اشیاء کا جائزہ لینے سے پہلے آپ کا اُن کو کََلیم کرنا ضروری ہے۔"
@@ -382,7 +385,13 @@ ur:
         refresh: "رِیفریش"
         status: "سٹیٹس"
         category: "زمرہ"
+        orders:
+          priority: "ترجیح"
+          priority_asc: "ترجیح (ریوَرس)"
+          created_at: "کو بنایا گیا"
+          created_at_asc: "کو بنایا گیا (ریوَرس)"
         priority:
+          title: "کم از کم ترجیح"
           low: "کم"
           medium: "درمیانی"
           high: "زیادہ"
@@ -415,6 +424,8 @@ ur:
         reviewable_flagged_post:
           title: "فلَیگ کردہ پوسٹ"
           flagged_by: "کی طرف سے فلَیگ کردہ"
+        reviewable_queued_topic:
+          title: "قطار شدہ ٹاپک"
         reviewable_queued_post:
           title: "قطار شدہ پوسٹ"
         reviewable_user:
@@ -727,6 +738,7 @@ ur:
       allow_private_messages: "دوسرے صارفین کو مجھے ذاتی پیغامات بھیجنے کی اجازت دیں"
       external_links_in_new_tab: "تمام بیرونی ویب سائٹ کے لنکس ایک نئے ٹیب میں کھولیں"
       enable_quoting: "روشنی ڈالے گئے ٹَیکسٹ کے لئے اقتباسی جواب فعال کریں"
+      enable_defer: "ٹاپکس کو بغیر پڑھا نشان زد کرنے کیلئے ملتوی فعال کریں"
       change: "بدلیں"
       moderator: "{{user}} ایک ماڈریٹر ہے"
       admin: "{{user}} ایک ایڈمِن ہے"
@@ -766,6 +778,7 @@ ur:
       watched_first_post_tags_instructions: "آپ کو اِن ٹیگ والے ہر نئے ٹاپک کی پہلی پوسٹ کے بارے میں مطلع کیا جائے گا۔"
       muted_categories: "خاموش کِیا ہوا"
       muted_categories_instructions: "آپ کو اِن زمرہ جات میں موجود نئے ٹاپکس کی کسی بھی چیز کے بارے میں مطلع نہیں کیا جائے گا، اور یہ زمرہ جات یا تازہ ترین صفحات پر نظر نہیں آئیں گے۔"
+      muted_categories_instructions_dont_hide: "آپ کو اِن زمرہ جات میں نئے ٹاپک کی کسی بھی چیز کے بارے میں مطلع نہیں کیا جائے گا۔"
       no_category_access: "ایک ماڈریٹر کے طور پر آپ کو زمرہ پر محدود رسائی حاصل ہے، محفوظ کرنا غیر فعال ہے۔"
       delete_account: "میرا اکاؤنٹ حذف کریں"
       delete_account_confirm: "کیا آپ واقعی مستقل طور پر اپنا اکاؤنٹ حذف کرنا چاہتے ہیں؟ اس عمل کو کالعدم نہیں کیا جا سکتا!"
@@ -1553,6 +1566,26 @@ ur:
         confirm_title: "نوٹیفکیشن فعال - %{site_title}"
         confirm_body: "کامیابی! اطلاعات فعال ہوگئی ہیں۔"
         custom: "{{username}} کی طرف سے %{site_title} پر اطلاعات"
+      titles:
+        mentioned: "ذکر کیا گیا"
+        replied: "نیا جواب"
+        quoted: "اقتباس کردہ"
+        edited: "ترمیم کردہ"
+        liked: "نیا لائیک"
+        private_message: "نیا ذاتی پیغام"
+        invited_to_private_message: "ذاتی پیغام کیلئے دعوت دی گئی"
+        invitee_accepted: "دعوت قبول کر لی گئی"
+        posted: "نئی پوسٹ"
+        moved_post: "پوسٹ منتقل کر دی گئی"
+        linked: "لنک کردہ"
+        granted_badge: "بَیج عطا کیا گیا"
+        invited_to_topic: "ٹاپک کیلئے دعوت دی گئی"
+        group_mentioned: "گروپ کا ذکر کیا گیا"
+        group_message_summary: "نئے گروپ پیغامات"
+        watching_first_post: "نیا ٹاپک"
+        topic_reminder: "ٹاپک یاد دہانی"
+        liked_consolidated: "نئے لائیکس"
+        post_approved: "منظورشدہ پوسٹ"
     upload_selector:
       title: "ایک تصویر شامل کریں"
       title_with_attachments: "ایک تصویر یا ایک فائل شامل کریں"
@@ -1716,6 +1749,9 @@ ur:
       edit_message:
         help: "پیغام کی پہلی اشاعت میں ترمیم کریں"
         title: "پیغام میں ترمیم کریں"
+      defer:
+        help: "بغیر پڑھا نشان زد کریں"
+        title: "ملتوی کریں"
       list: "ٹاپک"
       new: "نیا ٹاپک"
       unread: "بغیر پڑھے"
@@ -2745,6 +2781,11 @@ ur:
     admin:
       title: "ڈِسکورس ایڈمن"
       moderator: "ماڈریٹر"
+      tags:
+        remove_muted_tags_from_latest:
+          always: "ہمیشہ"
+          only_muted: "جب اکیلے یا دوسرے خاموش کردہ ٹیگز کے ساتھ استعمال ہو"
+          never: "کبھی نہیں "
       reports:
         title: "دستیاب رپورٹوں کی فہرست"
       dashboard:
@@ -2819,6 +2860,7 @@ ur:
           groups: "تمام گروپس"
           disabled: "یہ رپورٹ غیر فعال ہے"
           totals_for_sample: "نمونہ کیلئے کل"
+          average_for_sample: "نمونہ کیلئے اوسط"
           total: "تمام وقت کے کل"
           no_data: "ظاہر کرنے کیلئے کوئی ڈیٹا نہیں۔"
           trending_search:
@@ -3602,6 +3644,7 @@ ur:
         delete_posts_failed: "پوسٹس حذف کرنے میں ایک مسئلہ پیش آیا۔"
         penalty_post_actions: "آپ اِس مُنسلِک پوسٹ کے ساتھ کیا کرنا چاہیں گے؟"
         penalty_post_delete: "پوسٹ حذف کریں"
+        penalty_post_delete_replies: "پوسٹ حذف کریں + جوابات کو بھی"
         penalty_post_edit: " پوسٹ ترمیم کریں"
         penalty_post_none: "کچھ نہ کریں"
         penalty_count: "سزا شمار"

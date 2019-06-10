@@ -732,6 +732,8 @@ te:
     notifications:
       none: "ఈ సమయంలో ప్రకటనలు చూపలేకున్నాము."
       more: "పాత ప్రకటనలు చూడు"
+      titles:
+        watching_first_post: "కొత్త విషయం"
     upload_selector:
       title: "ఒక బొమ్మ కలుపు"
       title_with_attachments: "ఒక బొమ్మ లేదా దస్త్రం కలుపు"
@@ -795,6 +797,8 @@ te:
     topic:
       create: "కొత్త విషయం"
       create_long: "కొత్త విషయం సృష్టించు"
+      defer:
+        title: "వాయిదావేయి"
       list: "విషయాలు"
       new: "కొత్త విషయం"
       unread: "చదవని"
@@ -1314,6 +1318,10 @@ te:
     admin:
       title: "డిస్కోర్సు అధికారి"
       moderator: "నిర్వాహకుడు"
+      tags:
+        remove_muted_tags_from_latest:
+          always: "ఎల్లప్పుడూ"
+          never: "ఎప్పటికీ వద్దు"
       dashboard:
         title: "రంగస్థలం"
         version: "రూపాంతరం"

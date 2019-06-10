@@ -40,6 +40,8 @@ de:
   themes:
     bad_color_scheme: "Kann Theme nicht aktualisieren, weil die Farbpalette ungültig ist"
     other_error: "Etwas ist schief gelaufen beim Aktualisieren des Theme"
+    compile_error:
+      unrecognized_extension: "Unbekannte Dateiendung: %{extension}"
     import_error:
       generic: Beim Importieren dieses Themes ist ein Fehler aufgetreten
       about_json: "Importfehler: about.json existiert nicht, oder ist ungültig"
@@ -176,6 +178,7 @@ de:
     confirm_email: "<p>Du bist fast fertig! Wir haben eine Aktivierungsmail an deine E-Mail-Adresse geschickt. Bitte folge den Anweisungen in der E-Mail, um dein Konto zu aktivieren.</p><p>Wenn keine E-Mail ankommt, überprüfe bitte deinen Spam-Ordner.</p>"
   bulk_invite:
     file_should_be_csv: "Die hochzuladende Datei sollte im CSV-Format vorliegen."
+    max_rows: "Maximal 50.000 Einladungen können auf einmal versendet werden. Versuche die Datei in kleinere aufzuteilen."
     error: "Es gab einen Fehler beim Hochladen dieser Datei. Bitte versuche es später noch einmal."
   topic_invite:
     failed_to_invite: "Der Benutzer kann nicht in dieses Thema eingeladen werden, ohne Mitglied in einer der folgenden Gruppen zu sein: %{group_names}"
@@ -642,28 +645,30 @@ de:
   user_auth_tokens:
     browser:
       chrome: "Google Chrome"
-      safari: "Safari"
-      firefox: "Firefox"
-      opera: "Opera"
-      ie: "Internet Explorer"
-      edge: "Microsoft Edge"
       discoursehub: "DiscouseHub App"
+      edge: "Microsoft Edge"
+      firefox: "Firefox"
+      ie: "Internet Explorer"
+      opera: "Opera"
+      safari: "Safari"
       unknown: "unbekannter Browser"
     device:
       android: "Android-Gerät"
+      chromebook: "Chromebook"
       ipad: "iPad"
       iphone: "iPhone"
       ipod: "iPod"
-      mobile: "Mobilgerät"
-      mac: "Mac"
       linux: "GNU/Linux-Computer"
+      mac: "Mac"
+      mobile: "Mobilgerät"
       windows: "Windows-Computer"
       unknown: "unbekanntes Gerät"
     os:
       android: "Android"
+      chromeos: "ChromeOS"
       ios: "iOS"
-      macos: "macOS"
       linux: "Linux"
+      macos: "macOS"
       windows: "Microsoft Windows"
       unknown: "unbekanntes Betriebssystem"
   change_email:
@@ -677,6 +682,7 @@ de:
       description: "Wir senden dir jetzt zur Bestätigung eine E-Mail an deine neue Adresse."
   associated_accounts:
     revoke_failed: "Das Widerrufen deines Kontos bei %{provider_name} ist fehlgeschlagen."
+    connected: "(verbunden)"
   activation:
     action: "Klicke hier, um deinen Account zu aktivieren"
     already_done: "Entschuldige, dieser Link zur Aktivierung des Benutzerkontos ist nicht mehr gültig. Ist dein Konto schon aktiviert?"
@@ -885,7 +891,7 @@ de:
       title: "Nutzerbesuche"
       xaxis: "Tag"
       yaxis: "Anzahl der Besuche"
-      description: "Anzahl aller eindeutigen Seitenbesuche."
+      description: "Anzahl aller Seitenbesucher"
     signups:
       title: "Neue Benutzer"
       xaxis: "Tag"
@@ -1265,6 +1271,9 @@ de:
     polling_interval: "Polling-Intervall in Millisekunden für angemeldete Clients, wenn Long Polling nicht verwendet wird."
     anon_polling_interval: "Polling-Intervall in Millisekunden für anonyme Clients."
     background_polling_interval: "Polling-Intervall in Millisekunden für Clients, wenn sich das Browser-Fenster im Hintergrund befindet."
+    hide_post_sensitivity: "Die Wahrscheinlichkeit, mit der ein gemeldeter Beitrag verborgen wird"
+    silence_new_user_sensitivity: "Die Wahrscheinlichkeit, mit der ein neuer Benutzer wegen der Spam-Meldungen stummgeschaltet wird"
+    auto_close_topic_sensitivity: "Die Wahrscheinlichkeit, mit der ein gemeldetes Thema automatisch geschlossen wird"
     cooldown_minutes_after_hiding_posts: "Minuten die ein Benutzer warten muss, bevor ein Beitrag bearbeitet werden kann, der wegen Meldungen anderer Benutzer versteckt wurde"
     max_topics_in_first_day: "Maximale Anzahl an Themen, die ein Benutzer in den ersten 24 Stunden nach dem Schreiben seines ersten Beitrags erstellen kann."
     max_replies_in_first_day: "Maximale Anzahl an Beiträgen, die ein Benutzer in den ersten 24 Stunden nach dem Schreiben seines ersten Beitrags erstellen kann."
@@ -1284,7 +1293,7 @@ de:
     must_approve_users: "Team-Mitglieder müssen alle neuen Benutzerkonten freischalten, bevor diese Zugriff auf die Website erhalten. ACHTUNG: Das Aktivieren dieser Option für eine Live-Site entfernt den Zugriff auch für alle existierenden Benutzer außer für Team-Mitglieder!"
     pending_users_reminder_delay: "Benachrichtige die Moderatoren, falls neue Benutzer mehr als so viele Stunden auf ihre Genehmigung gewartet haben. Stelle -1 ein, um diese Benachrichtigungen zu deaktivieren."
     maximum_session_age: "Benutzer bleiben (n) Stunden nach ihrem letzten Besuch angemeldet"
-    ga_universal_tracking_code: "Google Universal Analytics (analytics.js) Tracking-Code, z.B. UA-12345678-9; siehe <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
+    ga_universal_tracking_code: "Tracking Code ID von Google Universal Analytics (analytics.js), eg: UA-12345678-9; siehe <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
     ga_universal_domain_name: "Google Universal Analytics (analytics.js) domain name, eg: mysite.com; <a href='https://google.com/analytics' target='_blank'>Siehe https://google.com/analytics</a>"
     ga_universal_auto_link_domains: "Aktiviere Google Universal Analytics (analytics.js) Cross-Domain-Tracking. Ausgehenden Links zu diesen Domains wird eine Client-ID hinzugefügt. Siehe <a href='https://support.google.com/analytics/answer/1034342?hl=en' target='_blank'>Googles Cross-Domain-Tracking-Anleitung</a>."
     gtm_container_id: "Google Tag Manager Container-ID, z.B.: GTM-ABCDEF. <br/>Beachte: Skripte von Drittanbietern, die von GTM geladen weren, müssen erlaubt werden in 'content security policy script src'."
@@ -1381,8 +1390,8 @@ de:
     facebook_app_id: "App-ID für Facebook-Authentifizierung, registriert unter <a href='https://developers.facebook.com/apps/' target='_blank'>https://developers.facebook.com/apps</a>"
     facebook_app_secret: "App-Secret für Facebook-Authentifizierung, registriert unter <a href='https://developers.facebook.com/apps/' target='_blank'>https://developers.facebook.com/apps</a>"
     enable_github_logins: "GitHub-Authentifizierung aktivieren, erfordert github_client_id und github_client_secret. Siehe <a href='https://meta.discourse.org/t/13745' target='_blank'>Configuring GitHub login for Discourse</a>."
-    github_client_id: "Client-ID für GitHub-Authentifizierung, registriert auf <a href='https://github.com/settings/applications/' target='_blank'>https://github.com/settings/developers</a>"
-    github_client_secret: "Client-Secret für GitHub-Authentifizierung, registriert auf <a href='https://github.com/settings/applications/' target='_blank'>https://github.com/settings/developers</a>"
+    github_client_id: "Client-ID für GitHub-Authentifizierung, registriert auf <a href='https://github.com/settings/developers/' target='_blank'>https://github.com/settings/developers</a>"
+    github_client_secret: "Client-Secret für GitHub-Authentifizierung, registriert auf <a href='https://github.com/settings/developers/' target='_blank'>https://github.com/settings/developers</a>"
     readonly_mode_during_backup: "Nur-Lesen-Modus beim Erstellen einer Sicherung aktivieren"
     enable_backups: "Erlaube Administratoren, Backups des Forums zu erstellen"
     allow_restore: "Wiederherstellung von Sicherungen zulassen, die ALLE vorhandenen Daten überschreiben! Auf 'false' lassen, sofern Sie nicht planen, eine Sicherung wiederherzustellen."
@@ -1522,6 +1531,8 @@ de:
     max_similar_results: "Anzahl ähnlicher Themen, die beim Erstellen eines neuen Themas über dem Editor angezeigt werden. Ähnlichkeit wird an Hand des Titels und Inhalts bestimmt."
     max_image_megapixels: "Maximale erlaubte Auflösung für Bilder (in Megapixeln)."
     title_prettify: "Verhindert gängige Fehler im Titel, wie reine Grossschreibung, Kleinbuchstaben am Anfang, mehrere ! und ?, überflüssiger . am Ende, etc."
+    title_remove_extraneous_space: "Entferne führende Leerzeichen vor dem Ende-Zeichen."
+    automatic_topic_heat_values: 'Update die "Themenansicht-Erhitzung" und "Themenbeitrags ''Gefällt mir'' Erhitzung" Einstellungen automatisch basierend auf der Seiten-Aktivität.'
     topic_views_heat_low: "Aufrufe-Feld leicht hervorheben, sobald das Thema so oft gelesen wurde."
     topic_views_heat_medium: "Aufrufe-Feld mäßig hervorheben, sobald das Thema so oft gelesen wurde."
     topic_views_heat_high: "Aufrufe-Feld stark hervorheben, sobald das Thema so oft gelesen wurde."
@@ -1722,6 +1733,7 @@ de:
     default_other_notification_level_when_replying: "Globales Standard-Benachrichtigungslevel, wenn ein Benutzer auf ein Thema antwortet."
     default_other_external_links_in_new_tab: "Öffne externe Links standardmäßig in einem neuen Tab."
     default_other_enable_quoting: "Aktiviere standardmäßig die Zitat-Antwort Funktion für hervorgehobenen Text."
+    default_other_enable_defer: "Standardmäßig Verzögerung der Themen-Funktionalität aktivieren."
     default_other_dynamic_favicon: "Zeige standardmäßig die Anzahl von neuen und geänderten Beiträgen im Browser-Symbol an."
     default_other_like_notification_frequency: "Benutzer standardmäßig bei erhaltenen Likes benachrichtigen."
     default_topics_automatic_unpin: "Standardmäßig Themen automatisch loslösen, wenn ein Benutzer das Ende erreicht."
@@ -1753,6 +1765,7 @@ de:
     allow_staff_to_tag_pms: "Erlaube Team-Mitgliedern, jede Nachricht mit einem Schlagwort zu markieren."
     min_trust_level_to_tag_topics: "Minimale Vertrauensstufe, um Schlagwörter zu Themen hinzuzufügen."
     suppress_overlapping_tags_in_list: "Schlagwort nicht zeigen, wenn es genau so im Thementitel vorkommt"
+    remove_muted_tags_from_latest: "Themen, die nur mit stummgeschalteten Tags versehen sind, nicht in der Liste der aktuellen Themen anzeigen"
     force_lowercase_tags: "Erzwinge alle neuen tags in Kleinschreibung."
     company_name: "Firmenname"
     governing_law: "Anzuwendendes Recht"
@@ -2521,6 +2534,13 @@ de:
         %{rejected_errors}
 
         Wenn Sie denken, dass dies ein Fehler ist, [Team Mitarbeiter kontaktieren](%{base_url}/about).
+    email_reject_reply_not_allowed:
+      title: "E-Mail Ablehnung Antwort nicht erlaubt"
+      subject_template: "[%{email_prefix}] E-Mail Problem -- Antwort nicht erlaubt"
+      text_body_template: |
+        Entschuldigung, aber deine E-Mail Nachricht an %{destination} (Betreff %{former_title}) hat nicht funktioniert.
+
+        Du hast keine Berechtigung, auf das Thema zu antworten. Falls du glaubst, dass das nicht richtig ist, [kontaktiere ein Team-Mitglied](%{base_url}/about).
     email_error_notification:
       title: "Benachrichtigung zu E-Mail-POP-Authentifizierungsfehler"
       subject_template: "[%{email_prefix}] E-Mail-Problem -- POP-Authentifizierungsfehler"
@@ -3863,6 +3883,9 @@ de:
             placeholder: "Berlin"
       colors:
         title: "Design"
+      themes_further_reading:
+        title: "Designs"
+        description: "Möchtest du dein Discourse individuell anpassen? Nutze unser vielseitiges Theming-System: <ul> <li><a href='https://meta.discourse.org/t/63682' target='_blank'>Wie installiere ich ein Theme oder eine Theme Komponente?</a></li> <li><a href='https://meta.discourse.org/t/110448' target='_blank'>Theme Entwickler Kurzreferenz</a></li> </ul> Beliebte Theme Komponenten (für weitere, besuche <a href='https://meta.discourse.org/c/theme/l/latest' target='_blank'>#theme</a>)"
       logos:
         title: "Logos"
         fields:
@@ -3955,7 +3978,7 @@ de:
       new_topics_unless_trust_level: "Themen von Benutzern in niedrigen Vertrauensstufen müssen von Team-Mitgliedern genehmigt werden. Siehe `approve_new_topics_unless_trust_level`."
       fast_typer: "Ein neuer Benutzer hat seinen ersten Beitrag verdächtig schnell getippt, Verdacht auf Bot oder Spammer-Verhalten. Siehe `min_first_post_typing_time`."
       auto_silence_regexp: "Neuer Benutzer, dessen erster Beitrag der `auto_silence_first_post_regex` entspricht."
-      watched_word: "Beitrag enthält ein Watched Word."
+      watched_word: "Dieser Beitrag enthielt ein beobachtetes Wort. Siehe deine <a href='%{base_url}/admin/logs/watched_words'>Liste beobachteter Wörter</a>."
       staged: "Neue Themen und Beiträge für aufgeführte Benutzer müssen von Team-Mitgliedern genehmigt werden. Siehe `approve_unless_staged`."
       category: "Beiträge in dieser Kategorie benötigen manuelle Genehmigung von Team-Mitgliedern. Siehe in den Kategorie-Einstellungen."
       must_approve_users: "Alle neuen Benutzer müssen von Team-Mitgliedern bestätigkt werden. Siehe `must_approve_users`. "

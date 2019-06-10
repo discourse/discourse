@@ -1666,6 +1666,8 @@ tr_TR:
         title: "Organizasyon"
       colors:
         title: "Tema"
+      themes_further_reading:
+        title: "Temalar"
       logos:
         title: "Görseller"
         fields:

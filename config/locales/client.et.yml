@@ -714,6 +714,7 @@ et:
         primary: "Peamine e-post"
         secondary: "Teine e-post"
         no_secondary: "Teist e-posti pole"
+        instructions: "Ära näita kunagi avalikkusele."
         ok: "Saadame sulle kinnituseks meili"
         invalid: "Sisesta palun korrektne meiliaadress"
         authenticated: "Sinu meil on autenditud {{provider}} poolt"
@@ -1019,6 +1020,7 @@ et:
       button_ok: "OK"
       button_help: "Abi"
     email_login:
+      button_label: "e-postiga"
       complete_username_not_found: "Kasutajanimele <b>%{username}</b> ei vasta ükski konto"
       complete_email_not_found: "Meiliaadressile <b>%{email}</b> ei vasta ükski konto"
     login:
@@ -1118,6 +1120,7 @@ et:
       medium_dark_tone: Keskmiselt tume nahatoon
       dark_tone: Tume nahatoon
     shared_drafts:
+      destination_category: "Sihtkategooria"
       publishing: "Teema avaldamine..."
     composer:
       emoji: "Emoji :)"
@@ -1255,6 +1258,8 @@ et:
         replied: '{{username}} vastas Sulle teemas "{{topic}}" - {{site_title}}'
         posted: '{{username}} postitas teemasse "{{topic}}" - {{site_title}}'
         linked: '{{username}} viitas Sinu postitusele teemas "{{topic}}" - {{site_title}}'
+      titles:
+        watching_first_post: "uus teema"
     upload_selector:
       title: "Lisa pilt"
       title_with_attachments: "Lisa pilt või fail"
@@ -1403,6 +1408,8 @@ et:
         help: "Liiguta sõnum tagasi Postkasti"
       edit_message:
         title: "Muuda sõnumit"
+      defer:
+        title: "Lükka edasi"
       list: "Teemad"
       new: "uus teema"
       unread: "lugemata"
@@ -1649,6 +1656,7 @@ et:
       split_topic:
         title: "Liiguta uue teema alla"
         action: "liiguta uue teema alla"
+        topic_name: "Uue teema pealkiri"
         radio_label: "Uus teema"
         error: "Postituste uude teemasse liigutamisel tekkis viga."
         instructions:
@@ -2022,6 +2030,7 @@ et:
     history: "Ajalugu"
     changed_by: "autor {{author}}"
     raw_email:
+      title: "Sissetulevad e-kirjad"
       not_available: "Pole saadaval!"
     categories_list: "Foorumite loend"
     filters:
@@ -2190,6 +2199,7 @@ et:
       </p>
     tagging:
       all_tags: "Kõik sildid"
+      other_tags: "Muud sildid"
       selector_all_tags: "kõik sildid"
       selector_no_tags: "sildid puuduvad"
       changed: "muudetud sildid:"
@@ -2262,8 +2272,13 @@ et:
     admin:
       title: "Discourse Admin"
       moderator: "Moderaator"
+      tags:
+        remove_muted_tags_from_latest:
+          always: "alati"
+          never: "mitte kunagi"
       dashboard:
         title: "Armatuurlaud"
+        last_updated: "Töölauda on uuendatud:"
         version: "Versioon"
         up_to_date: "Oled aja tasemel!"
         critical_available: "Kriitiline uuendus on saadaval."
@@ -2573,6 +2588,8 @@ et:
           settings: "Seaded"
           preview: "Eelvaade"
           is_default: "Kujundus on vaikimisi sisse lülitatud"
+          user_selectable: "Kasutajad saavad teemat valida"
+          color_scheme: "Värvipalett"
           theme_components: "Kujunduse osad"
           convert: "Konverdi"
           collapse: Ahenda
@@ -2580,12 +2597,14 @@ et:
           add_upload: "Lisa üleslaadimine"
           upload: "Laadi üles"
           select_component: "Vali komponent..."
+          edit_css_html: "Muuda CSS-i/HTML-i"
           installed: "Paigaldatud"
           install_popular: "Populaarsed"
           about_theme: "Teave"
           license: "Litsents"
           updating: "Uuendamine..."
           add: "Lisa"
+          theme_settings: "Teema seaded"
           scss:
             text: "CSS"
           header:
@@ -2602,9 +2621,14 @@ et:
           body_tag:
             text: "</body>"
             title: "HTML, mida lisatakse enne </body> silti"
+          yaml:
+            text: "YAML"
         colors:
           title: "Värvid"
+          edit: "Muuda värvipalette"
+          long_title: "Värvipaletid"
           copy_name_prefix: "Koopia sellest"
+          delete_confirm: "Kas kustutada see vävripalett?"
           undo: "ennista"
           undo_title: "Ennista selle värvistiku muudatused alates viimasest salvestamisest."
           revert: "võta tagasi"
@@ -2822,6 +2846,9 @@ et:
         title: "Vaadatud sõnad"
         search: "otsi"
         clear_filter: "Tühjenda"
+        word_count:
+          one: "%{count} sõna"
+          other: "%{count} sõna"
         actions:
           block: "Blokeeri"
           censor: "Tsenseeri"
@@ -2844,6 +2871,7 @@ et:
         last_emailed: "Viimati meilitud"
         not_found: "Vabanda, sellist kasutajanime ei eksisteeri meie süsteemis."
         id_not_found: "Vabanda, sellist kasutajatunnust ei eksisteeri meie süsteemis."
+        active: "Aktiveeritud"
         show_emails: "Näita meile"
         nav:
           new: "Uus"
@@ -2885,6 +2913,8 @@ et:
         silence_modal_title: "Vaigista kasutaja"
         silence_reason_placeholder: "Vaigistamise põhjus"
         delete_all_posts: "Kustuta kõik postitused"
+        penalty_post_edit: "Muuda postitust"
+        penalty_post_none: "Ära tee midagi"
         delete_all_posts_confirm_MF: "Sa oled kustutamas {POSTS, plural, one {1 post} other {# posts}} and {TOPICS, plural, one {1 topic} other {# topics}}. Oled Sa kindel?"
         silence: "Vaigista"
         unsilence: "Eemalda vaigistud"
@@ -2951,6 +2981,7 @@ et:
         activate_failed: "Viga kasutaja aktiveerimisel."
         deactivate_account: "Deaktiveeri konto"
         deactivate_failed: "Viga kasutaja deaktiveerimisel."
+        silence_accept: "Jah, vaigista see kasutaja"
         bounce_score: "Väljaviskamiste skoor"
         reset_bounce_score:
           label: "Lähtesta"
@@ -2990,6 +3021,7 @@ et:
           likes_received: "Meeldimisi saadud"
           likes_received_days: "Meeldimisi saadud: unikaalseid päevi"
           likes_received_users: "Meeldimisi saadud: unikaalseid kasutajaid"
+          silenced: "Vaigistatud (kogu aeg)"
           qualifies: "Kvalifitseerub usaldustasemele 3."
           does_not_qualify: "Ei kvalifitseeru usaldustasemele 3."
           will_be_promoted: "Edutatakse varsti."

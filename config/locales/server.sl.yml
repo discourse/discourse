@@ -473,27 +473,27 @@ sl:
   user_auth_tokens:
     browser:
       chrome: "Google Chrome"
-      safari: "Safari"
-      firefox: "Firefox"
-      opera: "Opera"
-      ie: "Internet Explorer"
       edge: "Microsoft Edge"
+      firefox: "Firefox"
+      ie: "Internet Explorer"
+      opera: "Opera"
+      safari: "Safari"
       unknown: "neznan brskalnik"
     device:
       android: "Android naprava"
       ipad: "iPad"
       iphone: "iPhone"
       ipod: "iPod"
-      mobile: "Mobilna naprava"
-      mac: "Mac"
       linux: "GNU/Linux računalnik"
+      mac: "Mac"
+      mobile: "Mobilna naprava"
       windows: "Windows računalnik"
       unknown: "neznana naprava"
     os:
       android: "Android"
       ios: "iOS"
-      macos: "macOS"
       linux: "Linux"
+      macos: "macOS"
       windows: "Microsoft Windows"
       unknown: "neznan operacijski sistem"
   change_email:
@@ -2136,6 +2136,8 @@ sl:
         title: "Organizacija"
       colors:
         title: "Videz"
+      themes_further_reading:
+        title: "Videzi"
       homepage:
         fields:
           homepage_style:
@@ -2189,7 +2191,6 @@ sl:
       new_topics_unless_trust_level: "Uporabniki na nizkih nivojih zaupanja potrebujejo odobritev teme s strani osebja. Glej `approve_new_topics_unless_trust_level`."
       fast_typer: "Nov uporabnik je svoj prvi prispevek natipkal sumljivo hitro zato sumimo bota ali spammerja. Glej `min_first_post_typing_time`."
       auto_silence_regexp: "Nov uporabnik katerega prvi prispevek ustreza `auto_silence_first_post_regex` nastavitvi."
-      watched_word: "Prispevek vsebuje nadzorovano besedo."
       staged: "Nove teme in prispevki prirejenih uporabnikov morajo biti odobreni s strani osebja. Glej `approve_unless_staged`."
       category: "Prispevki v tej kategoriji zahtevajo odobritev s strani osebja. Glej nastavitve kategorije."
       must_approve_users: "Vsi novi uporabniki morajo biti odobreni s strani osebja. Glej `must_approve_users`."
