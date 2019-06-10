@@ -40,6 +40,8 @@ es:
   themes:
     bad_color_scheme: "No se puede actualizar el tema, paleta de colores no válida"
     other_error: "Algo salió mal actualizando el tema"
+    compile_error:
+      unrecognized_extension: "Extensión de archivo no reconocida: %{extension}"
     import_error:
       generic: Se produjo un error al importar ese tema
       about_json: "Error de importación: about.json no existe, o no es válido"
@@ -176,6 +178,7 @@ es:
     confirm_email: "<p>¡Ya casi has terminado! Te enviamos un correo de activación a tu dirección de correo. Por favor sigue las instrucciones de ese correo para activar tu cuenta.</p><p>Si no llega, mira en la carpeta de spam.</p>"
   bulk_invite:
     file_should_be_csv: "El archivo subido debería ser de formato csv."
+    max_rows: "Se pueden enviar un máximo de 50,000 invitaciones a la vez. Intenta dividir el archivo en partes más pequeñas."
     error: "Ha ocurrido un error al subir ese archivo. Por favor, inténtalo más tarde de nuevo."
   topic_invite:
     failed_to_invite: "No se puede invitar al usuario a este tema sin ser miembro de un grupo en cualquiera de los siguientes grupos: %{group_names}"
@@ -200,6 +203,7 @@ es:
   read_only_mode_enabled: "El sitio está en modo sólo lectura. Las interacciones están deshabilitadas."
   invalid_grant_badge_reason_link: "El enlace de discourse externo o inválido no está permitido en la razón de la insignia."
   email_template_cant_be_modified: "Esta plantilla de email no puede ser modificada"
+  invalid_whisper_access: "O los susurros no están habilitados o no tiene acceso para crear publicaciones de susurros"
   reading_time: "Tiempo de lectura"
   likes: "Me gusta"
   too_many_replies:
@@ -362,6 +366,20 @@ es:
       Puedes editar tu respuesta previa para añadir una cita simplemente seleccionando el texto y pulsando en el botón <b>citar respuesta</b> que aparece.
 
       Es más fácil para todos leer temas con menos comentarios y respuestas en profundidad que muchas respuestas pequeñas y comentarios individuales.
+    dominating_topic: |
+      ### Deja a los demás unirse a la conversación
+
+      Este tema es muy importante para ti &ndash; has publicado más del %{percent}% de las respuestas aquí.
+
+      Podría ser incluso mejor si también tienes espacio para que otras personas compartan sus puntos de vista. ¿Puedes invitarlos?
+    get_a_room: |
+      ### Anima a todos a participar en la conversación
+
+      ¡Has respondido %{count} veces a @%{reply_username} en este tema particular!
+
+      Una gran discusión involucra muchas voces y perspectivas. ¿Puedes involucrar a alguien más?
+
+      Y no lo olvides, si desea continuar su conversación con este usuario en particular fuera de la vista pública, [enviarle un mensaje privado](%{base_path}/u/%{reply_username}).
     too_many_replies: |
       ### Has alcanzado el límite de respuestas para este tema
 
@@ -408,7 +426,12 @@ es:
               same_as_username: "es la misma que tu nombre de usuario. Por favor, escoge una contraseña más segura."
               same_as_email: "es el mismo que tu email. Por favor, utiliza una contraseña más segura."
               same_as_current: "es la misma que tu contraseña actual."
+              same_as_name: "es el mismo que tu nombre."
               unique_characters: "tiene demasiados caracteres repetidos. Por favor usa una contraseña más segura."
+            username:
+              same_as_password: "es el mismo que tu contraseña."
+            name:
+              same_as_password: "es el mismo que tu contraseña."
             ip_address:
               signup_not_allowed: "El registro no está permitido para esta cuenta."
         user_email:
@@ -642,28 +665,30 @@ es:
   user_auth_tokens:
     browser:
       chrome: "Google Chrome"
-      safari: "Safari"
-      firefox: "Firefox"
-      opera: "Opera"
-      ie: "Internet Explorer"
-      edge: "Microsoft Edge"
       discoursehub: "DiscourseHub app"
+      edge: "Microsoft Edge"
+      firefox: "Firefox"
+      ie: "Internet Explorer"
+      opera: "Opera"
+      safari: "Safari"
       unknown: "navegador desconocido"
     device:
       android: "Dispositivo Android"
+      chromebook: "Chromebook"
       ipad: "iPad"
       iphone: "iPhone"
       ipod: "iPod"
-      mobile: "Dispositivo móvil"
-      mac: "Mac"
       linux: "Ordenador GNU/Linux"
+      mac: "Mac"
+      mobile: "Dispositivo móvil"
       windows: "Ordenador Windows"
       unknown: "dispositivo desconocido"
     os:
       android: "Android"
+      chromeos: "ChromeOS"
       ios: "iOS"
-      macos: "macOS"
       linux: "Linux"
+      macos: "macOS"
       windows: "Microsoft Windows"
       unknown: "sistema operativo desconocido"
   change_email:
@@ -677,6 +702,7 @@ es:
       description: "Te enviaremos un email a tu nueva dirección para confirmar."
   associated_accounts:
     revoke_failed: "No se ha podido revocar la conexión con %{provider_name}."
+    connected: "(conectados)"
   activation:
     action: "Haz clic aquí para activar tu cuenta"
     already_done: "Lo sentimos, este link de confirmación de cuenta ya no es válido. ¿Quizás tu cuenta ya está activa?"
@@ -885,7 +911,7 @@ es:
       title: "Visitas de usuario"
       xaxis: "Día"
       yaxis: "Número de visitas"
-      description: "Número de visitantes únicos."
+      description: "Número de todas las visitas de usuario."
     signups:
       title: "Registros"
       xaxis: "Día"
@@ -1265,6 +1291,9 @@ es:
     polling_interval: "Cuando no este en 'long polling', ¿Qué tan frecuente debe los clientes con sesión iniciada hacer 'poll' en milisegundos?"
     anon_polling_interval: "¿Cuán a menudo deben hacer poll los usuarios anónimos en milisegundos"
     background_polling_interval: "Cada cuántos milisegundos debería hacerse cargarse información (mientras que la ventana esté en segundo plano)"
+    hide_post_sensitivity: "La probabilidad de que una publicación marcada se oculte"
+    silence_new_user_sensitivity: "La probabilidad de que un nuevo usuario sea silenciado basado en los reportes de spam"
+    auto_close_topic_sensitivity: "La probabilidad de que un tema reportado sea automáticamente cerrado"
     cooldown_minutes_after_hiding_posts: "Número de minutos que un usuario debe esperar para poder editar un post oculto por los reportes de la comunidad"
     max_topics_in_first_day: "El máximo número de temas que un usuario puede crear en las 24 horas posteriores a publicar su primer post"
     max_replies_in_first_day: "El máximo número de respuestas que un usuario puede crear en las 24 horas posteriores a publicar su primer post"
@@ -1295,6 +1324,7 @@ es:
     blacklist_ip_blocks: "Una lista de IPs bloqueadas privadas que nunca deberían ser rastreadas por Discourse"
     whitelist_internal_hosts: "Una lista con hosts internos que discourse puede rastrear de forma segura para oneboxing y otros propósitos"
     allowed_iframes: "Una lista de dominios para iframe src donde discourse pueda permitir de forma segura en mensajes"
+    whitelisted_crawler_user_agents: "User agents de rastreadores web a los que se debe permitir el acceso al sitio. ¡ADVERTENCIA! ¡CONFIGURAR ESTO INHABILITARÁ TODOS LOS RASTREADORES QUE NO SE ENUMERAN AQUÍ!"
     blacklisted_crawler_user_agents: "Palabra única insensible a mayúsculas y minúsculas en la cadena del user agent que identifica rastreadores web a los que no se debe permitir el acceso al sitio. No se aplica si se define una lista blanca."
     slow_down_crawler_user_agents: "User agents de rastreadores web a los que se debe aplicar una tarifa limitada en robots.txt utilizando la directiva de retardo de rastreo"
     slow_down_crawler_rate: "Si slow_down_crawler_user_agents es especificado, este ratio aplicará para todos los crawlers (la solicitud demora número de segundos)"
@@ -1521,6 +1551,8 @@ es:
     max_similar_results: "Cuántos temas similares se mostrarán encima del editor cuando estés creando un nuevo tema. La comparación se basa en el título y el cuerpo del tema."
     max_image_megapixels: "Máximo de megapíxeles permitidos por una imagen."
     title_prettify: "Prevenir errores comunes en el título, incluyendo \"todo mayúsculas\", primera letra minúscula, multiples signos ! o ?, . extra al final, etc."
+    title_remove_extraneous_space: "Elimine los espacios en blanco iniciales delante de la puntuación final."
+    automatic_topic_heat_values: 'Actualice automáticamente la configuración de "topic views heat" y "topic post like heat" según la actividad del sitio.'
     topic_views_heat_low: "Después de este número de vistas, el campo vistas será ligeramente resaltado."
     topic_views_heat_medium: "Después de este número de visitas, el campo visitas será moderadamente resaltado."
     topic_views_heat_high: "Después de este número de visitas, el campo visitas será fuertemente resaltado."
@@ -1554,6 +1586,9 @@ es:
     auto_silence_fast_typers_on_first_post: "Silenciar automáticamente a usuarios que no cumplan el umbral establecido en min_first_post_typing_time"
     auto_silence_fast_typers_max_trust_level: "Máximo nivel de confianza por debajo del cual se podrán silenciar usuarios que escriban demasiado rápido en su primer post"
     auto_silence_first_post_regex: "Expresión regular que no distingue mayúsculas y minúsculas que si es detectada hará que el primer post de un usuario sea silenciado y enviado a la cola de aprobación. Ejemplo: raging|a[bc]a hará que todos los posts que contengan gaging, aba o aca sean silenciados. Sólo tiene efecto en el primer mensaje de un usuario."
+    reviewable_claiming: "¿Es necesario reclamar el contenido revisable antes de poder actuar?"
+    reviewable_default_topics: "Mostrar contenido revisable agrupado por tema por defecto"
+    reviewable_default_visibility: "No muestre elementos revisables a menos que cumplan con esta prioridad"
     reply_by_email_enabled: "Habilitar la respuesta a temas por email."
     reply_by_email_address: "Plantilla para la dirección de email que aparecerá al recibir correos con la función de respuesta por email: %%{reply_key}@respuesta.ejemplo.com o respuestas+%%{reply_key}@ejemplo.com"
     alternative_reply_by_email_addresses: "Lista de plantillas alternativa para las direcciones de respuesta por email. Ejemplo: %%{reply_key}@reply.example.com|replies+%%{reply_key}@example.com"
@@ -1718,6 +1753,7 @@ es:
     default_other_notification_level_when_replying: "Nivel global de notificación cuando el usuario responde a un tema."
     default_other_external_links_in_new_tab: "Abrir enlaces externos en una nueva pestaña por defecto."
     default_other_enable_quoting: "Activar respuesta citando texto seleccionado por defecto."
+    default_other_enable_defer: "Habilitar la funcionalidad de temas diferidos por defecto."
     default_other_dynamic_favicon: "Mostrar temas nuevos/actualizados en el icono del navegador por defecto"
     default_other_like_notification_frequency: "Notificar a los usuarios de los me gusta por defecto"
     default_topics_automatic_unpin: "Quitar destacado automáticamente cuando el usuario llega al final del tema."
@@ -1749,6 +1785,7 @@ es:
     allow_staff_to_tag_pms: "Permitir a los miembros del staff etiquetar cualquier mensaje personal"
     min_trust_level_to_tag_topics: "Nivel mínimo requerido para etiquetar temas"
     suppress_overlapping_tags_in_list: "Si alguna etiqueta coinciden con palabras en el título de los temas, ocultarla."
+    remove_muted_tags_from_latest: "No muestre temas etiquetados solo con etiquetas silenciadas en la lista de temas más reciente."
     force_lowercase_tags: "Forzar que todas las etiquetas sean completamente en minúscula"
     company_name: "Nombre de Compañía"
     governing_law: "Ley que rige"
@@ -2519,6 +2556,13 @@ es:
         %{rejected_errors}
 
         Si crees que se trata de un error, [contacta con un miembro del staff](%{base_url}/about).
+    email_reject_reply_not_allowed:
+      title: "Rechazar respuesta de Correo electrónico no permitido"
+      subject_template: "[%{email_prefix}] Problema de Email -- Respuesta no permitida"
+      text_body_template: |
+        Lo sentimos, pero tu mensaje de correo a %{destination} (titulado %{former_title}) no ha funcionado.
+
+        Tu cuenta no tiene los permisos para responder al tema. Si crees que esto es un error, [contacta a un miembro del staff](%{base_url}/about).
     email_error_notification:
       title: "Email, error de notificación"
       subject_template: "[%{email_prefix}] Problema con el correo -- Error de autenticación POP"
@@ -2652,6 +2696,10 @@ es:
       subject_template:
         one: "%{count} post esperando a ser revisado"
         other: "%{count} posts esperando a ser revisados"
+      text_body_template: |
+        Hola,
+
+        Posts de nuevos usuarios se mantienen moderados y están actualmente esperando a ser revisados. [Aprueba o rechaza desde aquí](%{base_url}/review?type=ReviewableQueuedPost).
   unsubscribe_link: |
     Para darte de baja de estos emails, [haz clic aquí](%{unsubscribe_url}).
   unsubscribe_link_and_mail: |
@@ -3674,6 +3722,9 @@ es:
     title: "Etiquetas"
     staff_tag_disallowed: 'La etiqueta "%{tag}" solo puede ser insertada por moderadores.'
     staff_tag_remove_disallowed: 'La etiqueta "%{tag}" solo puede ser eliminada por moderadores.'
+    minimum_required_tags:
+      one: "Debes seleccionar al menos %{count} etiqueta."
+      other: "Debes seleccionar al menos %{count} etiquetas."
     upload_row_too_long: "El archivo CSV debe tener una etiqueta por línea. Opcionalmente, la etiqueta puede ir seguida de una coma, luego el nombre del grupo de etiquetas."
     forbidden:
       in_this_category: '"%{tag_name}" no puede ser usada en esta categoría.'
@@ -3781,6 +3832,9 @@ es:
             placeholder: "San Francisco, California"
       colors:
         title: "Tema"
+      themes_further_reading:
+        title: "Tema"
+        description: "¿Buscando personalizar tu Discourse? Aprovecha el poderoso sistema de diseño: <ul> <li><a href='https://meta.discourse.org/t/63682' target='_blank'>¿Cómo instalo un diseño o un componente de diseño?</a></li> <li><a href='https://meta.discourse.org/t/110448' target='_blank'>Guía Rápida de Referencia del Desarrollador de Diseños</a></li> </ul>Componentes de diseño populares (para más información, explora <a href='https://meta.discourse.org/c/theme/l/latest' target='_blank'>#theme</a>)"
       logos:
         title: "Logos"
         fields:
@@ -3863,6 +3917,8 @@ es:
       low: "Bajo"
       medium: "Medio"
       high: "Alto"
+    must_claim: "Debes reclamar objetos antes de actuar sobre ellos."
+    user_claimed: "Este artículo ha sido reclamado por otro usuario."
     missing_version: "Debes incluir un parámetro de versión"
     conflict: "Se ha detectado un conflicto de actualización que no te ha permitido realizar esa acción"
     reasons:
@@ -3871,7 +3927,7 @@ es:
       new_topics_unless_trust_level: "Los usuarios con bajos niveles de confianza deben tener temas aprobados por el staff. Consulta `approve_new_topics_unless_trust_level`."
       fast_typer: "El nuevo usuario escribió su primer mensaje de forma sospechosamente rápida, presunto bot o comportamiento de spammer. Consulta `min_first_post_typing_time`."
       auto_silence_regexp: "Nuevo usuario cuya primera publicación coincide con la configuración `auto_silence_first_post_regex`."
-      watched_word: "La publicación incluye una palabra vigilada."
+      watched_word: "Esta publicación incluye una Palabra Observada. Ver tu <a href='%{base_url}/admin/logs/watched_words'>lista de palabras observadas</a>."
       staged: "Los nuevos temas y publicaciones para usuarios en escena deben ser aprobados por el staff. Consulta `approve_unless_staged`."
       category: "Los mensajes en esta categoría requieren la aprobación manual del staff. Consulta la configuración de la categoría."
       must_approve_users: "Todos los nuevos usuarios deben ser aprobados por el staff. Consulta `must_approve_users`."

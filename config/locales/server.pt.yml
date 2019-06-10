@@ -583,6 +583,8 @@ pt:
       every_hour: "de hora em hora"
       daily: "diariamente"
       weekly: "semanalmente"
+      every_month: "cada mês"
+      every_six_months: "a cada seis meses"
   user_api_key:
     title: "Autorizar o acesso da aplicação"
     authorize: "Autorizar"

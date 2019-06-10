@@ -144,6 +144,14 @@ de:
       cert_title: "In Anerkennung deines erfolgreichen Abschlusses eines Tutorials für neue Benutzer"
       hello:
         title: "Sei gegrüßt!"
+        message: |-
+          Vielen Dank für's Mitmachen bei %{title}, und willkommen!
+
+          - Ich bin nur ein Roboter, aber [unser freundliches Team](%{base_uri}/about) sind auch hier und können helfen, wenn du einen Menschen erreichen musst.
+
+          - Aus Sicherheitsgründen limitieren wir, was neue Benutzer machen können. Du bekommst [neue Fähigkeiten](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/) und [Abzeichen](%{base_uri}/badges)), wenn wir dich besser kennenlernen.
+
+          - Wir glauben an  [zivilisiertes Community-Verhalten](%{base_uri}/guidelines) zu jeder Zeit.
       onebox:
         instructions: |-
           Als Nächstes: Kannst du einen dieser Links mit mir teilen? Antworte mit **einem Link auf einer eigenen Zeile**, und er wird automatisch in eine hübsche, kurze Inhaltsangabe erweitert.

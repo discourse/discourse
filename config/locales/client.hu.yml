@@ -1439,6 +1439,9 @@ hu:
         private_message: '{{username}} küldött egy személyes üzenetet itt: "{{topic}}" - {{site_title}}'
         confirm_title: "Értesítések bekapcsolva - %{site_title}"
         confirm_body: "Siker! Értesítések engedélyezve."
+      titles:
+        watching_first_post: "új téma"
+        post_approved: "bejegyzés jóváhagyva"
     upload_selector:
       title: "Kép hozzáadása"
       title_with_attachments: "Kép vagy file hozzáadása"
@@ -2309,6 +2312,10 @@ hu:
     admin:
       title: "Discourse Admin"
       moderator: "Moderátor"
+      tags:
+        remove_muted_tags_from_latest:
+          always: "mindig"
+          never: "soha"
       reports:
         title: "Aktív bejelentések listája"
       dashboard:
@@ -2876,7 +2883,7 @@ hu:
       users:
         title: "Felhasználók"
         create: "Admin felhasználó hozzáadása"
-        last_emailed: "Utoljára emailelt"
+        last_emailed: "Utolsó levélküldés"
         not_found: "Sajnos ez a felhasználónév nem létezik."
         id_not_found: "Sajnos ez a felhasználó id nem található a rendszerben."
         show_emails: "E-mailek mutatása"

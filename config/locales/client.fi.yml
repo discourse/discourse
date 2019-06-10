@@ -307,6 +307,7 @@ fi:
         search: "Etsi keskustelua otsikon perusteella:"
         placeholder: "kirjoita keskustelun otsikko tähän"
     review:
+      in_reply_to: "vastauksena"
       claim_help:
         optional: "Voit vaatia tämän itsellesi, jolloin muut eivät voi käsitellä sitä."
         required: "Sinun täytyy osoittaa asia itsellesi ennen kuin voit käsitellä sen."
@@ -1550,6 +1551,9 @@ fi:
         confirm_title: "Ilmoitukset käytössä - %{site_title}"
         confirm_body: "Onnistui! Ilmoitukset ovat nyt käytössä."
         custom: "Ilmoitus käyttäjältä {{username}} sivustolla %{site_title}"
+      titles:
+        watching_first_post: "uusi ketju"
+        post_approved: "viesti hyväksytty"
     upload_selector:
       title: "Lisää kuva"
       title_with_attachments: "Lisää kuva tai tiedosto"
@@ -1713,6 +1717,8 @@ fi:
       edit_message:
         help: "Muokkaa keskustelun ensimmäistä viestiä"
         title: "Muokkaa viestiä"
+      defer:
+        title: "Lykkää"
       list: "Ketjut"
       new: "uusi ketju"
       unread: "lukematta"
@@ -2742,6 +2748,10 @@ fi:
     admin:
       title: "Discourse ylläpitäjä"
       moderator: "Valvoja"
+      tags:
+        remove_muted_tags_from_latest:
+          always: "aina"
+          never: "ei koskaan"
       reports:
         title: "Saatavilla olevat raportit"
       dashboard:

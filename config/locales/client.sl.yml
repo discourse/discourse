@@ -1253,7 +1253,7 @@ sl:
       sign_up: "Registracija"
       hide_session: "Spomni me jutri"
       hide_forever: "ne, hvala"
-      hidden_for_session: "V redu, vas ponovno vprašamo jutri. Vedno lahko uporabite gumb 'Prijava' da ustvarite nov račun."
+      hidden_for_session: "Hvala, ponovno vas vprašamo jutri. Vedno pa lahko uporabite gumb 'Prijava', da ustvarite nov račun."
       intro: "Pozdravljeni! Vidimo, da uživate v branju razprave, vendar se še niste registrirali kot uporabnik."
       value_prop: "Ko registrirate uporabniški račun, si lahko zapomnimo točno kaj ste že prebrali, tako da boste naslednjič lahko nadaljevali od tam, kjer ste končali. Lahko boste tudi prejemali obvestila, tukaj ali preko e-sporočila vsakič, ko vam nekdo odgovori. In lahko boste všečkali prispevke, ki so vam všeč. :heartpulse:"
     summary:
@@ -1634,6 +1634,9 @@ sl:
         confirm_title: "Obvestila omogočena - %{site_title}"
         confirm_body: "Uspelo! Obvestila so bila omogočena."
         custom: "Obvestilo od  {{username}} na %{site_title}"
+      titles:
+        watching_first_post: "nova tema"
+        post_approved: "prispevek odobren"
     upload_selector:
       title: "Dodaj sliko"
       title_with_attachments: "Dodaj sliko ali datoteko"
@@ -2932,6 +2935,10 @@ sl:
     admin:
       title: "Discourse Admin"
       moderator: "Moderator"
+      tags:
+        remove_muted_tags_from_latest:
+          always: "vedno"
+          never: "nikoli"
       reports:
         title: "Seznam poročil"
       dashboard:

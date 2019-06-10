@@ -245,6 +245,7 @@ sq:
       title:
         placeholder: "shkruaj titullin e temës këtu"
     review:
+      in_reply_to: "në përgjigje të"
       delete: "Fshij"
       settings:
         save_changes: "Ruaj ndryshimet"
@@ -1045,6 +1046,8 @@ sq:
         replied: '{{username}} ju u përgjigj në "{{topic}}" - {{site_title}}'
         posted: '{{username}} postoi në "{{topic}}" - {{site_title}}'
         linked: '{{username}} vendosi një lidhje për postimin tuaj nga "{{topic}}" - {{site_title}}'
+      titles:
+        watching_first_post: "temë e re"
     upload_selector:
       title: "Shto një imazh"
       title_with_attachments: "Shto një imazh ose një skedar"
@@ -1154,6 +1157,8 @@ sq:
       move_to_inbox:
         title: "Lëviz në Inbox"
         help: "Riktheje mesazhin në inbox"
+      defer:
+        title: "Shty"
       list: "Temat"
       new: "temë e re"
       unread: "palexuar"
@@ -1927,6 +1932,10 @@ sq:
     admin:
       title: "Administrator"
       moderator: "Moderator"
+      tags:
+        remove_muted_tags_from_latest:
+          always: "gjithmonë"
+          never: "asnjëherë"
       dashboard:
         title: "Paneli i kontrollit"
         version: "Versioni"

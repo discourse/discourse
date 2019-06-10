@@ -153,6 +153,7 @@ de:
     bootstrap_mode_disabled: "Starthilfe-Modus wird in den nächsten 24 Stunden deaktiviert."
     themes:
       default_description: "Standard"
+      broken_theme_alert: "Deine Seite funktioniert vielleicht nicht, weil Theme/Komponent %{theme} Fehler hat. Deaktiviere es in %{path}."
     s3:
       regions:
         ap_northeast_1: "Asien-Pazifik (Tokio)"
@@ -307,6 +308,8 @@ de:
         search: "Suche eine Nachricht anhand der Überschrift:"
         placeholder: "Gib hier die Überschrift der Nachricht ein"
     review:
+      order_by: "beauftragt von"
+      in_reply_to: "Antwort auf"
       claim_help:
         optional: "Du kannst dieses Element reservieren, damit andere es nicht überprüfen."
         required: "Du musst Elemente reservieren, bevor du sie überprüfen kannst."
@@ -382,7 +385,13 @@ de:
         refresh: "Aktualisieren"
         status: "Status"
         category: "Kategorie"
+        orders:
+          priority: "Priorität"
+          priority_asc: "Priorität (umgekehrt)"
+          created_at: "Erstellt am"
+          created_at_asc: "Erstellt am (umgekehrt)"
         priority:
+          title: "Minimale Priorität"
           low: "Niedrig"
           medium: "Mittel"
           high: "Hoch"
@@ -415,6 +424,8 @@ de:
         reviewable_flagged_post:
           title: "Gemeldeter Beitrag"
           flagged_by: "Gemeldet von"
+        reviewable_queued_topic:
+          title: "Thema in der Warteschlange"
         reviewable_queued_post:
           title: "Beitrag in der Warteschlange"
         reviewable_user:
@@ -727,6 +738,7 @@ de:
       allow_private_messages: "Anderen Benutzern erlauben, mir persönliche Nachrichten zu schicken"
       external_links_in_new_tab: "Öffne alle externen Links in einem neuen Tab"
       enable_quoting: "Aktiviere Zitatantwort mit dem hervorgehobenen Text"
+      enable_defer: "Aktiviere Verzögerung für das ungelesen Markieren von Themen"
       change: "ändern"
       moderator: "{{user}} ist ein Moderator"
       admin: "{{user}} ist ein Administrator"
@@ -766,6 +778,7 @@ de:
       watched_first_post_tags_instructions: "Du erhältst eine Benachrichtigung für den ersten Beitrag in jedem neuen Thema mit diesen Schlagwörtern."
       muted_categories: "Stummgeschaltet"
       muted_categories_instructions: "Du erhältst keine Benachrichtigungen über neue Themen in dieser Kategorie und die Themen werden auch nicht in der Liste der Kategorien oder der aktuellen Themen erscheinen."
+      muted_categories_instructions_dont_hide: "Du bekommst keine Benachrichtigung über irgendetwas an neuen Themen in diesen Kategorien."
       no_category_access: "Moderaturen haben eingeschränkte Kategorien-Berechtigungen, Speichern ist nicht verfügbar."
       delete_account: "Lösche mein Benutzerkonto"
       delete_account_confirm: "Möchtest du wirklich dein Benutzerkonto permanent löschen? Diese Aktion kann nicht rückgängig gemacht werden!"
@@ -1161,6 +1174,11 @@ de:
     too_few_topics_and_posts_notice: "Lass' <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>die Diskussionen starten!</a> Es existieren bisher <strong>%{currentTopics} von %{requiredTopics}</strong> benötigten Themen und <strong>%{currentPosts} von %{requiredPosts}</strong> benötigten Beiträgen. Neue Besucher benötigen bestehende Konversationen, die sie lesen und auf die sie antworten können."
     too_few_topics_notice: "Lass' <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>die Diskussionen starten!</a> Es existieren bisher <strong>%{currentTopics} von %{requiredTopics}</strong> benötigten Themen. Neue Besucher benötigen bestehende Konversationen, die sie lesen und auf die sie antworten können."
     too_few_posts_notice: "Lass' <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>die Diskussionen starten!</a> Es existieren bisher <strong>%{currentPosts} von %{requiredPosts}</strong> benötigten Beiträgen. Neue Besucher benötigen bestehende Konversationen, die sie lesen und auf die sie antworten können."
+    logs_error_rate_notice:
+      reached_hour_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# Fehler/Stunde} other {# errors/hour}}</a> hat die Grenze der Webseiten-Einstellung von {limit, plural, one {# Fehler/Stunde} other {# Fehler/Stunde}} erreicht."
+      reached_minute_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# Fehler/Minute} other {# Fehler/Minute}}</a> hat die Grenze der Webseiten-Einstellung von {limit, plural, one {# Fehler/Minute} other {# Fehler/Minute}} erreicht."
+      exceeded_hour_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# Fehler/Stunde} other {# Fehler/Stunde}}</a> hat die Grenze der Webseiten-Einstellung von {limit, plural, one {# Fehler/Stunde} other {# Fehler/Stunde}} überschritten."
+      exceeded_minute_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# Fehler/Minute} other {# Fehler/Minute}}</a> hat die Grenze der Webseiten-Einstellung von {limit, plural, one {# Fehler/Minute} other {# Fehler/Minute}} überschritten."
     learn_more: "mehr erfahren…"
     all_time: "gesamt"
     all_time_desc: "Erstellte Themen"
@@ -1553,6 +1571,26 @@ de:
         confirm_title: "Benachrichtigungen aktiviert – %{site_title}"
         confirm_body: "Erfolgreich! Benachrichtigungen wurden aktiviert."
         custom: "Benachrichtigung von {{username}} auf %{site_title}"
+      titles:
+        mentioned: "erwähnte"
+        replied: "neue Antwort"
+        quoted: "zitiert"
+        edited: "bearbeitet"
+        liked: "neue „Gefällt mir“-Angabe"
+        private_message: "neue private Nachricht"
+        invited_to_private_message: "zu einer privaten Nachricht eingeladen"
+        invitee_accepted: "Einladung angenommen"
+        posted: "neuer Beitrag"
+        moved_post: "Beitrag verschoben"
+        linked: "verknüpft"
+        granted_badge: "Abzeichen gewährt"
+        invited_to_topic: "zum Thema eingeladen"
+        group_mentioned: "Gruppe erwähnt"
+        group_message_summary: "neue Gruppen-Nachrichten"
+        watching_first_post: "neues Thema"
+        topic_reminder: "Themen-Erinnerung"
+        liked_consolidated: "neue „Gefällt mir“-Angaben"
+        post_approved: "Beitrag genehmigt"
     upload_selector:
       title: "Ein Bild hinzufügen"
       title_with_attachments: "Ein Bild oder eine Datei hinzufügen"
@@ -1716,6 +1754,9 @@ de:
       edit_message:
         help: "Bearbeite ersten Beitrag dieser Nachricht"
         title: "Nachricht bearbeiten"
+      defer:
+        help: "Als ungelesen markieren"
+        title: "Ignorieren"
       list: "Themen"
       new: "neues Thema"
       unread: "ungelesen"
@@ -2741,6 +2782,11 @@ de:
     admin:
       title: "Discourse-Administrator"
       moderator: "Moderator"
+      tags:
+        remove_muted_tags_from_latest:
+          always: "immer"
+          only_muted: "wenn allein oder mit anderen stummgeschalteten Tags verwendet"
+          never: "nie"
       reports:
         title: "Verfügbare Berichte"
       dashboard:
@@ -2815,6 +2861,7 @@ de:
           groups: "Alle Gruppen"
           disabled: "Dieser Bericht ist deaktiviert"
           totals_for_sample: "Insgesamt für Stichprobe"
+          average_for_sample: "Durchschnitt für Beispiel"
           total: "Gesamt aller Zeiten"
           no_data: "Keine Daten anzuzeigen."
           trending_search:
@@ -3599,6 +3646,7 @@ de:
         delete_posts_failed: "Es gab ein Problem beim Löschen der Beiträge."
         penalty_post_actions: "Was möchtest du mit dem zugehörigen Beitrag machen?"
         penalty_post_delete: "Beitrag löschen"
+        penalty_post_delete_replies: "Den Beitrag und etwaige Antworten löschen"
         penalty_post_edit: "Beitrag bearbeiten"
         penalty_post_none: "Nichts tun"
         penalty_count: "Anzahl der Strafen"

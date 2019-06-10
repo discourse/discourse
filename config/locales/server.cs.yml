@@ -1112,6 +1112,8 @@ cs:
         title: "Organizace"
       colors:
         title: "Téma"
+      themes_further_reading:
+        title: "Motivy"
       logos:
         title: "Loga"
         fields:

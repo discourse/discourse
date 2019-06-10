@@ -281,6 +281,7 @@ ko:
         search: "제목으로 메시지 검색:"
         placeholder: "여기에 메시지 제목을 입력하십시오"
     review:
+      in_reply_to: "답글"
       delete: "삭제"
       settings:
         save_changes: "변경사항 저장"
@@ -1281,6 +1282,9 @@ ko:
         linked: '{{username}}님이  "{{topic}}" - {{site_title}}에 내 글을 링크했습니다'
         confirm_title: "알림 활성 - %{site_title}"
         confirm_body: "완료! 알림이 활성화되었습니다."
+      titles:
+        watching_first_post: "새로운 주제"
+        post_approved: "게시물 승인됨"
     upload_selector:
       title: "이미지 추가하기"
       title_with_attachments: "이미지 또는 파일 추가하기"
@@ -1427,6 +1431,8 @@ ko:
       edit_message:
         help: "메시지의 첫 번째 게시물 수정"
         title: "메시지 수정"
+      defer:
+        title: "연기"
       list: "주제 목록"
       new: "새로운 주제"
       unread: "읽지 않은"
@@ -2300,6 +2306,10 @@ ko:
     admin:
       title: "Discourse 관리자"
       moderator: "운영자"
+      tags:
+        remove_muted_tags_from_latest:
+          always: "항상 알림 받기"
+          never: "하지않음"
       dashboard:
         title: "대시보드"
         version: "버전"

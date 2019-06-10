@@ -922,6 +922,8 @@ sr:
       none: "Nemoguće je učitati notifikacije ovog trenutka."
       empty: "Nisu pronađene notifikacije"
       more: "pogledaj starije notifikacije"
+      titles:
+        watching_first_post: "nova tema"
     upload_selector:
       title: "Dodaj sliku"
       title_with_attachments: "Dodaj sliku ili datoteku"
@@ -1000,6 +1002,8 @@ sr:
       create_long: "Otvori novu Temu"
       archive_message:
         title: "Arhiviraj"
+      defer:
+        title: "Odloži"
       list: "Teme"
       new: "nova tema"
       unread: "nepročitano"
@@ -1577,6 +1581,10 @@ sr:
     admin:
       title: "Administrator"
       moderator: "Moderator"
+      tags:
+        remove_muted_tags_from_latest:
+          always: "uvek"
+          never: "nikada"
       dashboard:
         title: "Komandna Tabla"
         version: "Verzija"

@@ -1077,6 +1077,8 @@ hu:
         title: "Szervezet"
       colors:
         title: "Téma"
+      themes_further_reading:
+        title: "Témák"
       logos:
         title: "Logók"
         fields:

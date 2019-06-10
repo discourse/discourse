@@ -153,6 +153,7 @@ fa_IR:
     bootstrap_mode_disabled: "حالت خود راه انداز در 24 ساعت آینده غیر‌فعال خواهد شد."
     themes:
       default_description: "پیش‌فرض"
+      broken_theme_alert: "ممکن است سایت شما به دلیل خطا در قالب %{theme} کار نکند. آن را در مسیر زیر از کار بیندازید: %{path}"
     s3:
       regions:
         ap_northeast_1: "آسیا و اقیانوسیه (توکیو)"
@@ -182,6 +183,7 @@ fa_IR:
     submit: "ثبت"
     generic_error: "متأسفیم، خطایی روی داده."
     generic_error_with_reason: "خطایی روی داد: %{error}"
+    go_ahead: "ادامه دهید"
     sign_up: "ثبت نام"
     log_in: "ورود"
     age: "سن"
@@ -198,6 +200,8 @@ fa_IR:
     privacy_policy: "سیاست حفظ حریم خصوصی"
     privacy: "حریم خصوصی"
     tos: "شرایط استفاده از خدمات"
+    rules: "قوانین"
+    conduct: "دستورالعمل"
     mobile_view: "نمایش برای موبایل "
     desktop_view: "نمایش برای کامپیوتر"
     you: "شما"
@@ -211,11 +215,15 @@ fa_IR:
     every_hour: "هر ساعت"
     daily: "روزانه"
     weekly: "هفتگی"
+    every_month: "هر ماه"
+    every_six_months: "هر شش ماه"
     max_of_count: "حداکثر {{count}}"
     alternation: "یا"
     character_count:
       one: "{{count}} نویسه"
       other: "{{count}} نویسه"
+    related_messages:
+      title: "پیام‌های مرتبط"
     suggested_topics:
       title: "موضوعات پیشنهادی"
       pm_title: "پیام‌های پیشنهادی"
@@ -244,10 +252,17 @@ fa_IR:
         unbookmark: "برای حذف تمام نشانک های این موضوع کلیک کنید"
     bookmarks:
       created: "شما روی این نوشته‌ها نشانک گذاشته‌اید"
+      not_bookmarked: "این نوشته را نشانک گذاری کنید."
       remove: "پاک کردن نشانک"
+      confirm_clear: "آیا مطمئنید می‌خواهید همه‌ی نشانک های خود را از این مبحث پاک کنید؟"
     drafts:
+      resume: "از سر گیری"
       remove: "پاک کردن"
+      new_topic: "درفت جدید برای مبحث"
+      new_private_message: "درفت جدید برای پیام"
+      topic_reply: "پاسخ درفت"
       abandon:
+        confirm: "شما پیش از این یک پیش نویس در این مبحث باز کرده اید. مطمئنید میخواهید آن را حذف کنید؟"
         yes_value: "بله، رها کن"
         no_value: "خیر، نگه دار"
     topic_count_latest:
@@ -266,6 +281,8 @@ fa_IR:
     saved: "ذخیره شد!"
     upload: "بارگذاری"
     uploading: "در حال بارگذاری..."
+    uploading_filename: "بارگذاری {{filename}}..."
+    clipboard: "کلیپ بورد"
     uploaded: "بارگذاری شد!"
     pasting: "چسباندن..."
     enable: "فعال کردن"
@@ -282,42 +299,142 @@ fa_IR:
     choose_topic:
       none_found: "موضوعی یافت نشد."
       title:
+        search: "جستجوی یک مبحث با عنوان، آی دی و یا لینک "
         placeholder: "عنوان موضوع را اینجا بنویسید"
+    choose_message:
+      none_found: "پیامی پیدا نشد"
+      title:
+        search: "جستجوی یک پیام با عنوان"
+        placeholder: "عنوان پیام را اینجا وارد کنید"
     review:
+      order_by: "به ترتیب"
+      in_reply_to: "در پاسخ به"
+      claim_help:
+        optional: "می‌توانید این مورد را درخواست کنید تا دیگران را از بازنگری آن بازنگه دارید."
+        required: "شما قبل از بازنگری موارد باید آن‌ها را درخواست دهید ."
+        claimed_by_you: "می‌توانید این مورد را درخواست کنید و آن را بازنگری کنید."
+        claimed_by_other: "این مورد فقط توسط کاربر<b>{{username}} </b>قابل بازنگری است."
+      claim:
+        title: "درخواست این مبحث"
+      unclaim:
+        help: "حذف درخواست"
+      awaiting_approval: "منتظر تایید"
       delete: "حذف"
       settings:
+        saved: "ذخیره شد"
         save_changes: "ذخیره تغییرات"
         title: "تنظیمات"
+        priorities:
+          title: "اولویت های بازنگری"
+      moderation_history: "تاریخچه مدیریت"
+      view_all: "نمایش همه"
+      grouped_by_topic: "دسته بندی مبحث ها"
+      none: "هیچ موردی برای بازنگری وجود ندارد"
+      view_pending: "نمایش صف انتظار"
+      topic_has_pending:
+        one: "این مبحث <b>%{count}</b>نوشته در حال انتظار دارد"
+        other: "این مبحث <b>{{count}}</b>نوشته در حال انتظار دارد."
+      title: "بازنگری"
       topic: "موضوع:"
+      filtered_topic: "شما یک مبحث را بر حسب محتوای قابل بازنگری فیلتر کرده‌اید"
       filtered_user: "کاربر"
+      show_all_topics: "نمایش همه ی مباحث"
+      deleted_post: "(نوشته حذف شده)"
+      deleted_user: "(کاربر حذف شده)"
       user:
         username: "نام‌کاربری"
         email: "ایمیل"
         name: "نام"
+        fields: "فیلدها"
+      user_percentage:
+        summary:
+          one: "{{agreed}}، {{disagreed}}، {{ignored}}({{count}}پرچم)"
+          other: "{{agreed}}، {{disagreed}}، {{ignored}} ({{count}}پرچم)"
+        agreed:
+          one: "{{count}}% موافقت شده"
+          other: "{{count}}% موافقت شده"
+        disagreed:
+          one: "{{count}}% موافقت نشده"
+          other: "{{count}}% موافقت نشده"
+        ignored:
+          one: "{{count}}% صرف نظر شده"
+          other: "{{count}}% صرف نظر شده"
       topics:
         topic: "موضوعات"
+        reviewable_count: "تعداد"
+        reported_by: "گزارش شده توسط"
+        deleted: "[مبحث حذف شده]"
+        original: "(مبحث اصلی)"
+        details: "جزئیات"
+        unique_users:
+          one: "%{count}کاربر"
+          other: "{{count}}کاربر"
+      replies:
+        one: "%{count}پاسخ"
+        other: "{{count}}پاسخ"
       edit: "ویرایش"
       save: "ذخیره"
       cancel: "لغو کردن"
+      new_topic: "مبحث جدید:"
       filters:
         type:
           title: "نوع"
+          all: "(همه نوع)"
+        minimum_score: "حداقل امتیاز :"
         refresh: "تازه کردن"
+        status: "وضعیت"
         category: "دسته‌بندی"
+        orders:
+          priority: "اولویت"
+          priority_asc: "اولویت (برعکس)"
+          created_at: "ساخته شده"
+          created_at_asc: "ساخته شده (برعکس)"
+        priority:
+          title: "کمترین اولویت"
+          low: "کم"
+          medium: "متوسط"
+          high: "بالا"
+      conversation:
+        view_full: "نمایش همه ی مباحث"
       scores:
+        about: "این امتیاز بر اساس سطح اعتماد گزارش دهنده، دقت پرچم‌های قبلی ایشان، و اولویت مورد گزارش شده حساب میشود، "
+        score: "امتیاز"
         date: "تاریخ"
         type: "نوع"
+        status: "وضعیت"
+        submitted_by: "ارسال شده توسط"
+        reviewed_by: "بازنگری شده توسط"
       statuses:
         pending:
           title: "در انتظار"
+        approved:
+          title: "پذیرفته شده"
         rejected:
           title: "رد شده"
+        ignored:
+          title: "صرف نظر شده"
+        deleted:
+          title: "حذف شده"
+        reviewed:
+          title: "(همه بازنگری ها)"
+        all:
+          title: "(همه چیز)"
       types:
+        reviewable_flagged_post:
+          title: "نوشته پرچم شده"
+          flagged_by: "پرچم شده توسط"
+        reviewable_queued_topic:
+          title: "مبحث های در صف"
+        reviewable_queued_post:
+          title: "نوشته در صف"
         reviewable_user:
           title: "کاربر"
       approval:
         title: "نوشته نیاز به تایید دارد"
         description: "ما نوشته شما را دریافت کرده ایم ولی قبل از نمایش نیاز به تایید آن توسط یکی از مدیران است. لطفا صبر داشته باشید."
+        pending_posts:
+          one: "شما <strong>%{count}</strong> نوشته در انتظار دارید"
+          other: "شما <strong>{{count}}</strong> نوشته در انتظار دارید"
         ok: "باشه"
     user_action:
       user_posted_topic: "<a href='{{userUrl}}'>{{user}}</a> <a href='{{topicUrl}}'>یک موضوع</a> ایجاد کرد"
@@ -361,13 +478,20 @@ fa_IR:
         make_user_group_owner: "مدیر کردن"
         remove_user_as_group_owner: "لغو مالکیت"
     groups:
+      member_added: "اضافه شده"
+      member_requested: "درخواست شده در"
       add_members:
         title: "افزودن اعضا"
         description: "مدیریت عضویت کاربران در این گروه"
         usernames: "نام های کاربری"
       requests:
+        title: "درخواست ها"
         reason: "دلیل"
+        accept: "پذیرفتن"
         accepted: "تأیدد شده"
+        deny: "رد کردن"
+        denied: "رد شده"
+        undone: "بازگرداندن درخواست"
       manage:
         title: "مدیریت"
         name: "نام"
@@ -398,6 +522,7 @@ fa_IR:
       empty:
         posts: "در این گروه هیچ نوشته ای توسط کاربران ارسال نشده."
         members: "این گروه هیچ عضوی ندارد"
+        requests: "هیچ درخواست عضویتی برای این گروه وجود ندارد"
         mentions: "هیچ اشاره ای به این گروه وجود ندارد."
         messages: "هیچ پیامی برای این گروه وجود ندارد."
         topics: "در این گروه هیچ موضوعی توسط اعضای آن ایجاد نشده."
@@ -425,8 +550,11 @@ fa_IR:
         all: "همه گروهها"
         empty: "هیچ گروه قابل نمایشی وجود ندارد."
         filter: "فیلتر با نوع گروه"
+        owner_groups: "گروه های تحت مالکیت من"
+        close_groups: "گروه های بسته"
         automatic_groups: "گروههای خودکار"
         automatic: "خودکار"
+        closed: "بسته"
         public: "عمومی"
         private: "خصوصی"
         public_groups: "گروههای عمومی"
@@ -448,6 +576,8 @@ fa_IR:
         remove_member_description: "اخراج <b>%{username}</b> از این گروه"
         make_owner: "اعطای مالکیت"
         make_owner_description: "دادن مالکیت این گروه به <b>%{username}</b>"
+        remove_owner: "حذف توسط مالک"
+        remove_owner_description: "حذف کاربر <b>%{username}</b> به عنوان مالک این گروه"
         owner: "مالک"
       topics: "موضوعات"
       posts: "نوشته‌ها"
@@ -468,6 +598,7 @@ fa_IR:
           description: "در صورت ارسال شدن پست جدید در هر پیام یک اعلان برای شما ارسال می‌شود و تعداد پاسخ‌های جدید در آن نمایش داده می‌شود."
         watching_first_post:
           title: "در حال مشاهده نوشته اول"
+          description: "شما از پیام های جدید این گروه آگاه می‌شوید ولی برای پاسخ به پیام ها آگاه سازی نمی‌گیرید."
         tracking:
           title: "پیگیری"
           description: "در صورت اشاره شدن به @نام شما توسط اشخاص دیگر و یا دریافت پاسخ، اعلانی برای شما ارسال می‌شود و تعداد پاسخ‌های جدید نمایش داده می‌شود."
@@ -476,8 +607,10 @@ fa_IR:
           description: "در صورتی که به @نام شما اشاره شود و یا پاسخی دریافت کنید اعلانی برای شما ارسال می‌شود."
         muted:
           title: "بی صدا شد"
+          description: "شما برای هر اتفاقی در ارتباط با پیام های این گروه آگاه سازی می‌گیرید."
       flair_url: "تصویر آواتار"
       flair_url_placeholder: "(اختیاری) URL تصویر و یا کلاس Font Awesome"
+      flair_url_description: 'از تصاویر مربعی بزرگتر از ۲۰پیکسل × ۲۰ پیکسل و یا ایکون های فونت آسام استفاده کنید (فرمت های قابل قبول: "fa-icon", "far fa-icon", "fab fa-icon" ).'
       flair_bg_color: "رنگ پس زمینه آواتار"
       flair_bg_color_placeholder: "(اختیاری) کد HEX رنگ"
       flair_color: "رنگ آواتار"
@@ -497,6 +630,7 @@ fa_IR:
       "12": "موارد ارسال شده"
       "13": "صندوق دریافت"
       "14": "در انتظار"
+      "15": "درفت"
     categories:
       all: "همه‌ی دسته‌بندی‌ها"
       all_subcategories: "همه"
@@ -518,6 +652,12 @@ fa_IR:
       topic_sentence:
         one: "%{count} موضوع"
         other: "%{count} موضوع"
+      topic_stat_sentence_week:
+        one: "%{count} مبحث جدید در هفته ی گذشته"
+        other: "%{count} مبحث جدید در هفته ی گذشته"
+      topic_stat_sentence_month:
+        one: "%{count} مبحث جدید در ماه گذشته"
+        other: "%{count} مبحث جدید در ماه گذشته"
       n_more: "دسته‌بندی‌ها ( %{count}مورد دیگر)"
     ip_lookup:
       title: جستجوی نشانی IP
@@ -534,6 +674,8 @@ fa_IR:
       topics_entered: "موضوعات وارد شده"
       post_count: "# نوشته"
       confirm_delete_other_accounts: "آیا مطمئن هستید که می خواهید این حساب کاربری را حذف نمایید؟"
+      powered_by: "استفاده از <a href='https://maxmind.com'>MaxMindDB</a>"
+      copied: "کپی شده"
     user_fields:
       none: "(یک گزینه انتخاب کنید)"
     user:
@@ -550,12 +692,23 @@ fa_IR:
       private_message: "پیام"
       private_messages: "پیام‌ها"
       user_notifications:
+        ignore_duration_title: "از زمانسنج صرف نظر کن"
         ignore_duration_username: "نام‌کاربری"
+        ignore_duration_when: "مدت زمان:"
         ignore_duration_save: "چشم پوشی"
+        ignore_duration_note: "توجه کنید همه ی صرف نظر شده ها بعد از انقضای زمان صرف نظر برداشته میشود."
+        ignore_duration_time_frame_required: "یک بازه ی زمانی انتخاب کنید"
+        ignore_no_users: "هیچ کاربر صرف نظر شده ای ندارید"
+        ignore_option: "صرف نظر شده"
+        ignore_option_title: "هیچ آگاه سازی از این کاربر دریافت نمی‌کنید و مبحث ها یا نوشته های ایشان برای شما نمایش داده نخواهد شد."
+        add_ignored_user: "اضافه کردن ..."
         mute_option: "بی صدا شد"
+        mute_option_title: "هیچ اگاه سازی از این کاربر دریافت نمیکنید"
         normal_option: "معمولی"
+        normal_option_title: "اگر این کاربر به شما پاسخ دهد، از شما نقل قول کند و یا شما را صدا کند، اگاه سازی دریافت میکنید"
       activity_stream: "فعالیت"
       preferences: "تنظیمات"
+      profile_hidden: "صفحه نمایه این کاربر مخفی است"
       expand_profile: "باز کردن"
       collapse_profile: "جمع کردن"
       bookmarks: "نشانک‌ها"
@@ -565,6 +718,7 @@ fa_IR:
       notifications: "آگاه‌سازی‌ها"
       statistics: "وضعیت"
       desktop_notifications:
+        label: "اگاه سازی زنده"
         not_supported: "اعلانات بر روی این مرورگر پشتیبانی نمیشوند. با عرض پوزش."
         perm_default: "فعال کردن اعلانات"
         perm_denied_btn: "دسترسی رد شد"
@@ -572,13 +726,18 @@ fa_IR:
         disable: "غیرفعال کردن اعلانات"
         enable: "فعال کردن اعلانات"
         each_browser_note: "نکته: شما باید این تنظیمات را در هر مرورگری که استفاده میکنید تغییر دهید."
+        consent_prompt: "ایا مایلید وقتی دیگران به شما پاسخ میدهند، اگاه سازی زنده دریافت کنید؟"
       dismiss: "نخواستیم"
       dismiss_notifications: "پنهان کردن همه"
       dismiss_notifications_tooltip: "علامت گذاری همه اطلاعیه های خوانده نشده به عنوان خوانده شده"
       first_notification: "اولین پیام اطلاع‌رسانی شما! برای شروع آن‌را انتخاب کنید."
+      dynamic_favicon: "نمایش تعداد در ایکون بروسر"
+      theme_default_on_all_devices: "این قالب، حالت پیش فرض در همه ی دستگاه های من باشد"
+      text_size_default_on_all_devices: "این سایز قلم حالت پیش فرض در تمام دستگاه های من باشد"
       allow_private_messages: "به دیگر کاربران اجازه بده به من پیام شخصی بفرستند"
       external_links_in_new_tab: "همهٔ پیوندهای خروجی را در یک تب جدید باز کن"
       enable_quoting: "فعال کردن نقل قول گرفتن از متن انتخاب شده"
+      enable_defer: "تاخیر را برای علامت زدن مباحث به عنوان خوانده نشده فعال کن"
       change: "تغییر"
       moderator: "{{user}} یک مدیر است"
       admin: "{{user}} یک مدیر ارشد است"
@@ -600,6 +759,7 @@ fa_IR:
         individual_no_echo: "ارسال ایمیل برای هر پست جدید، به جز پست‌های خودم"
         many_per_day: "برای هر پست جدید یک ایمیل برای من بفرست. (حدود  {{dailyEmailEstimate}} در روز)"
         few_per_day: "ارسال یک ایمیل برای هر پست جدید (حدود 2 ایمیل در روز)"
+        warning: "حالت ایمیل فعال شد. تنظیمات اگاه سازی ایمیلی بازنویسی میشود."
       tag_settings: "برچسب‌ها"
       watched_tags: "تماشا شده"
       watched_tags_instructions: "تمام موضوعاتی که دارای این برچسب هستند مشاهده خواهید کرد و گزارش و تعداد نوشته‌ها و موضوعات را کنار موضوع مشاهده خواهید کرد."
@@ -624,6 +784,7 @@ fa_IR:
       users: "کاربران"
       muted_users: "بی صدا شده"
       muted_users_instructions: "متوقف کردن تمام اطلاعیه ها از طرف این کاربران."
+      ignored_users: "صرف نظر شده"
       muted_topics_link: "نمایش موضوعات بی‌صدا شده"
       watched_topics_link: "نمایش موضوعات مشاهده شده"
       tracked_topics_link: "نمایش موضوعات پی‌گیری شده"
@@ -678,11 +839,27 @@ fa_IR:
         copy_to_clipboard_error: "خطا در کپی اطلاعات"
       second_factor:
         title: "احراز هویت دو مرحله ای"
+        disable: "احراز هویت دوعامله را از کار بینداز"
+        enable: "احراز هویت دو عامله را فعال کن"
+        confirm_password_description: "لطفا رمز عبور خود را تایید کنید تا ادامه دهیم."
+        rate_limit: "لطفا قبل از اینکه کد احراز هویت دیگری را تست کنید کمی صبر کنید"
+        enable_description: |
+          این کد QR را در یک اپلیکیشن مورد تایید (<a href="https://www.google.com/search?q=authenticator+apps+for+android" target="_blank">آندروید</a> -- <a href="https://www.google.com/search?q=authenticator+apps+for+ios" target="_blank">IOS</a>) و کد احراز هویت خود را وارد کنید.
+        disable_description: "لطفا کد احراز هویت را از اپلیکیشن خود وارد کنید"
+        show_key_description: "دستی وارد کنید"
+        short_description: |
+          حساب کاربری خود را با کد امنیتی یک بار مصرف محافظت کنید
+        extended_description: |
+          احراز هویت دو عامله امنیت بیشتری به حساب کاربری شما میدهد، چرا که یک توکن یک بار مصرف علاوه بر رمز عبور خود خواهید داشت. توکن ها در ابزارهای <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>اندروید</a> و <a href="https://www.google.com/search?q=authenticator+apps+for+ios">IOS</a> قابل تولید هستند.
+        oauth_enabled_warning: "دقت کنید وقتی احراز هویت دوعامله فعال شود، ورود با حساب شبکه های اجتماعی به حساب کاربری شما از کار میفتد."
+        use: "<a href>از اپلیکیشن احراز هویت استفاده کنید</a>"
+        enforced_notice: "شما باید احراز هویت دو عامله را قبل از دسترسی به سایت فعال کنید"
       change_about:
         title: "تغییر «درباره‌ی من»"
         error: "در فرآیند تغییر این مقدار خطایی روی داد."
       change_username:
         title: "تغییر نام‌کاربری"
+        confirm: "مطمئنید میخواهید نام کاربری خود را تغییر دهید؟"
         taken: "متأسفیم، آن نام کاربری  قبلا گرفته شده است."
         invalid: "آن نام کاربری نامعتبر است. تنها باید عددها و حرف‌ها را در بر بگیرد."
       change_email:
@@ -690,10 +867,12 @@ fa_IR:
         taken: "متأسفیم، آن ایمیل در دسترس نیست."
         error: "در تغییر ایمیلتان  خطایی روی داد. شاید آن نشانی از پیش در حال استفاده است؟"
         success: "ما ایمیلی به آن نشانی فرستاده‌ایم. لطفاً دستورکار تأییده را در آن دنبال کنید."
+        success_staff: "یک ایمیل به آدرس کنونی شما ارسال کردیم. لطفا دستورالعمل آن را دنبال کنید."
       change_avatar:
         title: "عکس نمایه خود را تغییر دهید"
         gravatar: "بر‌اساس <a href='//gravatar.com/emails' target='_blank'>Gravatar</a>"
         gravatar_title: "تصویرتان را در سایت Gravatar تغییر دهید"
+        gravatar_failed: "هیچ گراواتاری با این آدرس ایمیل پیدا نکردیم"
         refresh_gravatar_title: "تازه‌سازی Gravatar شما"
         letter_based: "سیستم تصویر پرفایل را اختصاص داده است"
         uploaded_avatar: "تصویر سفارشی"
@@ -709,6 +888,11 @@ fa_IR:
         instructions: "تصاویر پس زمینه در مرکز قرار خواهند گرفت و عرض  پیشفرض آن 590 پیکسل است"
       email:
         title: "ایمیل"
+        primary: "آدرس ایمیل اصلی"
+        secondary: "آدرس ایمیل ثانویه"
+        no_secondary: "بدون ایمیل ثانویه"
+        sso_override_instructions: "ایمیل را میتوانید از طریق SSO به روزرسانی کنید"
+        instructions: "هرگز به عموم نمایش داده نخواهد شد"
         ok: "برای تایید ایمیلی برایتان ارسال خواهیم کرد."
         invalid: "لطفا یک آدرس ایمیل معتبر وارد کنید"
         authenticated: "ایمیل شما توسط {{provider}} تصدیق شد"
@@ -717,7 +901,10 @@ fa_IR:
           one: "ما فقط در صورتی برای شما ایمیل میفرستیم که در {{count}} دقیقه آخر شما را ندیده باشیم."
           other: "ما فقط در صورتی برای شما ایمیل میفرستیم که در {{count}} دقیقه آخر شما را ندیده باشیم."
       associated_accounts:
+        title: "حساب های مرتبط"
+        connect: "وصل شدن"
         revoke: "ابطال "
+        not_connected: "(وصل نشده)"
       name:
         title: "نام"
         instructions: "نام و نام‌خانوادگی شما (اختیاری)"
@@ -743,8 +930,18 @@ fa_IR:
       password_confirmation:
         title: "رمز عبور را مجدد وارد نمایید"
       auth_tokens:
+        title: "ابزارهایی که اخیرا استفاده شدند"
         ip: "IP"
         details: "جزئیات"
+        log_out_all: "از همه خارج شو"
+        not_you: "شما نیستید؟"
+        show_all: "نمایش همه ({{count}})"
+        show_few: "کمتر نشان بده"
+        was_this_you: "آیا شما بودید؟"
+        was_this_you_description: "اگر شما نبودید، پیشنهاد می‌کنیم رمز عبور خود را تغییر دهید و از همه حساب ها خارج شوید"
+        browser_and_device: "{{browser}} در {{device}}"
+        secure_account: "از حساب کاربری من محافظت کن"
+        latest_post: "آخرین بار شما نوشتید ..."
       last_posted: "آخرین نوشته"
       last_emailed: "آخرین ایمیل فرستاده شده"
       last_seen: "مشاهده"
@@ -753,8 +950,14 @@ fa_IR:
       location: "موقعیت"
       website: "تارنما"
       email_settings: "ایمیل"
+      hide_profile_and_presence: "نمایه کاربری و حضور من را مخفی کن"
       text_size:
+        smaller: "کوچکتر"
         normal: "معمولی"
+        larger: "بزرگتر"
+        largest: "بزرگترین"
+      title_count_mode:
+        notifications: "آگاهسازی جدید"
       like_notification_frequency:
         title: "وقتی پسندیده شد اعلام کن"
         always: "همیشه"
@@ -771,6 +974,8 @@ fa_IR:
         every_hour: "هر ساعت"
         daily: "روزانه"
         weekly: "هفتگی"
+        every_month: "هر ماه"
+        every_six_months: "هر شش ماه"
       email_level:
         title: "وقتی کسی نوشته‌های من را نقل‌قول کرد، یا به من پاسخ داد، یا به @نام‌کاربری من اشاره کرد، یا به موضوعی دعوت کرد، ایمیل بفرست."
         always: "همیشه"
@@ -1183,6 +1388,8 @@ fa_IR:
         replied: '{{username}} در "{{topic}}" - {{site_title}} به شما پاسخ داد'
         posted: '{{username}} در "{{topic}}" - {{site_title}} مطلبی نوشت'
         linked: '{{username}} در "{{topic}}" - {{site_title}} به نوشته‌ی شما پیوندی قرار داد'
+      titles:
+        watching_first_post: "موضوع جدید"
     upload_selector:
       title: "افزودن تصویر"
       title_with_attachments: "افزودن یک تصویر یا پرونده"
@@ -1323,6 +1530,8 @@ fa_IR:
       move_to_inbox:
         title: "انتقال به صندوق دریافت"
         help: "بازگرداندن پیام به صندوق دریافتی"
+      defer:
+        title: " واگذار کردن"
       list: "موضوعات"
       new: "موضوع جدید"
       unread: "خوانده نشده"
@@ -1374,6 +1583,7 @@ fa_IR:
         remove: "حذف زمان‌سنج"
         publish_to: "انتشار در:"
         when: "در زمان:"
+        time_frame_required: یک بازه ی زمانی انتخاب کنید
       auto_update_input:
         later_today: "امروز"
         tomorrow: "فردا"
@@ -1821,6 +2031,8 @@ fa_IR:
         options:
           normal: "معمولی"
           ignore: "چشم پوشی"
+          low: "کم"
+          high: "بالا"
       sort_options:
         default: "پیش‌فرض"
         likes: "پسند‌ها"
@@ -2125,6 +2337,14 @@ fa_IR:
       sort_by_name: "نام"
       manage_groups: "مدیریت گروه‌های برچسب"
       manage_groups_description: "تعریف گروه برای سازماندهی برچسب‌ها"
+      delete_unused_confirmation:
+        one: "%{count} برچسب حذف خواهد شد:%{tags}"
+        other: "%{count} برچسب حذف خواهد شد: %{tags}"
+      delete_unused_confirmation_more_tags:
+        one: "%{tags} و %{count} بیشتر"
+        other: "%{tags}و %{count} بیشتر"
+      delete_unused: "پاک کردن برچسب های استفاده نشده"
+      delete_unused_description: "پاک کردن همه ی برچسب هایی که به هیچ مبحث یا پیامی تعلق ندارند"
       cancel_delete_unused: "لغو کردن"
       filters:
         without_category: "%{filter} %{tag} موضوعات"
@@ -2134,8 +2354,10 @@ fa_IR:
       notifications:
         watching:
           title: "در حال مشاهده"
+          description: "به شکل اتوماتیک همه ی مباحث با این برچسب را دنبال خواهید کرد. برای همه ی نوشته ها و مباحث اگاهسازی خواهید گرفت، و تعداد نوشته های جدید و خوانده نشده در اول مبحث نمایش داده خواهد شد."
         watching_first_post:
           title: "در حال مشاهده اولین نوشته"
+          description: "شما از مباحث جدید در این برچسب آگاهسازی می‌گیرید ولی برای نوشته ها نه."
         tracking:
           title: "پیگیری"
         regular:
@@ -2184,6 +2406,10 @@ fa_IR:
     admin:
       title: "مدیر ارشد دیسکورس"
       moderator: "مدیر"
+      tags:
+        remove_muted_tags_from_latest:
+          always: "همیشه"
+          never: "هیچوقت"
       dashboard:
         title: "پیشخوان"
         version: "نسخه"

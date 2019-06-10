@@ -1565,7 +1565,7 @@ ja:
         このバッジは初めてメール :e-mail: 経由で返信した人に付与されます
     new_user_of_the_month:
       name: "一ヶ月の新規ユーザー"
-      description: "最初の一ヶ月間の功績\U0001F44C"
+      description: ! "最初の一ヶ月間の功績\U0001F44C"
       long_description: "このバッジは毎月二人のユーザーに付与されるバッジで、素晴らしい貢献をコミュニティーにもたらしたことを讃えるものです！おめでとうございます！\U0001F381\n"
     enthusiast:
       name: 熱狂者

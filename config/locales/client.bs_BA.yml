@@ -1332,6 +1332,8 @@ bs_BA:
         linked: '{{username}} je linkao/la vašu objavu "{{topic}}" - {{site_title}}'
         confirm_title: "Obavijesti uključene - %{site_title}"
         confirm_body: "Uspješno! Obavijesti su sada uključene."
+      titles:
+        watching_first_post: "nova tema"
     upload_selector:
       title: "Dodaj sliku"
       title_with_attachments: "Dodaj sliku ili fajl"
@@ -1498,6 +1500,8 @@ bs_BA:
       edit_message:
         help: "Izmijeni prvu objavu ove poruke"
         title: "Izmijeni poruku"
+      defer:
+        title: "Defer"
       list: "Teme"
       new: "nova tema"
       unread: "nepročitana"
@@ -2236,6 +2240,10 @@ bs_BA:
     admin:
       title: "Discourse Admin"
       moderator: "Moderator"
+      tags:
+        remove_muted_tags_from_latest:
+          always: "uvijek"
+          never: "nikad"
       dashboard:
         title: "Dashboard"
         version: "Version"

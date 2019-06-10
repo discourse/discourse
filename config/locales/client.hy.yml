@@ -1440,6 +1440,9 @@ hy:
         watching_first_post: '{{username}} -ը ստեղծել է նոր թեմա՝ "{{topic}}" - {{site_title}}'
         confirm_title: "Ծանուցումները միացված են. %{site_title}"
         confirm_body: "Հաջողվեց! Ծանուցումները միացված են:"
+      titles:
+        watching_first_post: "նոր թեմա"
+        post_approved: "գրառումը հաստատված է"
     upload_selector:
       title: "Ավելացնել նկար"
       title_with_attachments: "Ավելացնել նկար կամ ֆայլ"
@@ -2604,6 +2607,10 @@ hy:
     admin:
       title: "Discourse Ադմին"
       moderator: "Մոդերատոր"
+      tags:
+        remove_muted_tags_from_latest:
+          always: "միշտ"
+          never: "երբեք"
       reports:
         title: "Հասանելի հաշվետվությունների ցանկը"
       dashboard:

@@ -36,7 +36,7 @@ fr:
           between_min_and_max_options: "Choisissez entre <strong>%{min}</strong> et <strong>%{max}</strong> options"
       cast-votes:
         title: "Distribuez vos votes"
-        label: "Votez maintenant !"
+        label: "Votez maintenant !"
       show-results:
         title: "Afficher les résultats du sondage"
         label: "Afficher les résultats"

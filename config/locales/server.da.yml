@@ -1608,6 +1608,8 @@ da:
         title: "Organisation"
       colors:
         title: "Tema"
+      themes_further_reading:
+        title: "Temaer"
       logos:
         title: "Logoer"
         fields:

@@ -337,6 +337,7 @@ cs:
       title:
         placeholder: "sem napište název tématu"
     review:
+      in_reply_to: "v odpovědi na"
       delete: "Smazat"
       settings:
         save_changes: "Uložit změny"
@@ -1459,6 +1460,8 @@ cs:
         linked: '{{username}} odkázal na vás příspěvek v "{{topic}}" - {{site_title}}'
         confirm_title: "Upozornění zapnuta - %{site_title}"
         confirm_body: "Upozornění úspěšně zapnuta."
+      titles:
+        watching_first_post: "nové téma"
     upload_selector:
       title: "Vložit obrázek"
       title_with_attachments: "Nahrát obrázek nebo soubor"
@@ -1628,6 +1631,8 @@ cs:
       edit_message:
         help: "Upravit první příspěvek zprávy"
         title: "upravit zprávu"
+      defer:
+        title: "Odložit"
       list: "Témata"
       new: "nové téma"
       unread: "nepřečtený"
@@ -2666,6 +2671,10 @@ cs:
     admin:
       title: "Administrátor"
       moderator: "Moderátor"
+      tags:
+        remove_muted_tags_from_latest:
+          always: "vždy"
+          never: "nikdy"
       reports:
         title: "Seznam dostupných reportů"
       dashboard:
