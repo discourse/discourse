@@ -883,6 +883,8 @@ id:
     notifications:
       empty: "Tidak ada pemberitahuan."
       more: "lihat notifikasi sebelumnya"
+      titles:
+        watching_first_post: "topik baru"
     upload_selector:
       default_image_alt_text: gambar
     search:
@@ -1098,6 +1100,10 @@ id:
     admin:
       title: "Admin Discourse"
       moderator: "Moderator"
+      tags:
+        remove_muted_tags_from_latest:
+          always: "selalu"
+          never: "tidak pernah"
       dashboard:
         latest_version: "Terbaru"
         last_checked: "Terakhir dicek"

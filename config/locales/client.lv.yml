@@ -1125,6 +1125,8 @@ lv:
         replied: '{{username}} atbildēja jums "{{topic}}" - {{site_title}}'
         posted: '{{username}} ierakstīja "{{topic}}" - {{site_title}}'
         linked: '{{username}} ievietoja saiti uz jūsu ierakstu no "{{topic}}" - {{site_title}}'
+      titles:
+        watching_first_post: "Jauna tēma"
     upload_selector:
       title: "Pievienot attēlu"
       title_with_attachments: "Pievienot attēlu vai failu"
@@ -1265,6 +1267,8 @@ lv:
       move_to_inbox:
         title: "Pārvietot uz iesūtni"
         help: "Atgriezt ziņu uz iesūtni "
+      defer:
+        title: "Nepiekrist"
       list: "Tēmas"
       new: "Jauna tēma"
       unread: "nelasīti"
@@ -2148,6 +2152,10 @@ lv:
     admin:
       title: "Discourse administrators"
       moderator: "Moderators"
+      tags:
+        remove_muted_tags_from_latest:
+          always: "vienmēr"
+          never: "nekad"
       dashboard:
         title: "Administrācijas panelis"
         version: "Versija"

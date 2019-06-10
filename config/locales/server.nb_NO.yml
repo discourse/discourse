@@ -1474,6 +1474,8 @@ nb_NO:
         title: "Organisasjon"
       colors:
         title: "Drakt"
+      themes_further_reading:
+        title: "Drakter"
       logos:
         title: "Logoer"
         fields:

@@ -156,7 +156,10 @@ module Jobs
 
       # If file is on the forum or CDN domain
       if Discourse.store.has_been_uploaded?(src) || src =~ /\A\/[^\/]/i
-        # Return true if we can't find the upload in the db
+        return false if src =~ /\/images\/emoji\//
+
+        # Someone could hotlink a file from a different site on the same CDN,
+        # so check whether we have it in this database
         return !Upload.get_from_url(src)
       end
 

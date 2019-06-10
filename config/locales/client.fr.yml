@@ -26,7 +26,7 @@ fr:
         thousands: "{{number}}k"
         millions: "{{number}}M"
     dates:
-      time: "H:mm"
+      time: "HH:mm"
       timeline_date: "MMM YYYY"
       long_no_year: "DD MMM H:mm"
       long_no_year_no_time: "D MMM"
@@ -64,14 +64,14 @@ fr:
           one: "%{count} mois"
           other: "%{count} mois"
         about_x_years:
-          one: "%{count}a"
-          other: "%{count}a"
+          one: "%{count}an"
+          other: "%{count}ans"
         over_x_years:
-          one: "> %{count}a"
-          other: "> %{count}a"
+          one: "> %{count}an"
+          other: "> %{count}ans"
         almost_x_years:
-          one: "%{count}a"
-          other: "%{count}a"
+          one: "%{count}an"
+          other: "%{count}ans"
         date_month: "D MMM"
         date_year: "MMM 'YY"
       medium:
@@ -153,6 +153,7 @@ fr:
     bootstrap_mode_disabled: "Le mode Bootstrap sera désactivé dans les prochaines 24 heures."
     themes:
       default_description: "Par défaut"
+      broken_theme_alert: "Votre site pourrait ne pas fonctionner parce que thème/composant %{theme} a des erreurs. Le désactiver ici : %{path}."
     s3:
       regions:
         ap_northeast_1: "Asie-Pacifique (Tokyo)"
@@ -172,6 +173,7 @@ fr:
         us_east_1: "États-Unis est (Virginie)"
         us_east_2: "États-Unis est (Ohio)"
         us_gov_east_1: "AWS GovCloud (US-Est)"
+        us_gov_west_1: "AWS GovCloud (US-Ouest)"
         us_west_1: "États-Unis ouest (Californie)"
         us_west_2: "États-Unis ouest (Oregon)"
     edit: "modifier le titre et la catégorie de ce sujet"
@@ -306,23 +308,45 @@ fr:
         search: "Rechercher messages par titre :"
         placeholder: "saisir le titre du message ici"
     review:
+      order_by: "Trier par"
+      in_reply_to: "en réponse à"
+      claim_help:
+        optional: "Vous pouvez réserver cet élément pour empêcher d'autres de le vérifier."
+        required: "Vous devez réserver des éléments avant des les vérifier."
+        claimed_by_you: "Vous avez réservé cet élément et pouvez le vérifier."
+        claimed_by_other: "Cet élément ne peut être vérifier que par <b>{{username}}</b>."
+      claim:
+        title: "réserver ce sujet"
+      unclaim:
+        help: "retirer cette réservation"
+      awaiting_approval: "En attente d'approbation"
       delete: "Supprimer"
       settings:
+        saved: "Sauvegardé"
         save_changes: "Sauvegarder"
         title: "Paramètres"
+        priorities:
+          title: "Priorités vérifications"
       moderation_history: "Historique de modération"
+      view_all: "Tout voir"
+      grouped_by_topic: "Groupé par sujet"
       none: "Il n'y a pas d'éléments à vérifier."
       view_pending: "voir les messages en attente"
       topic_has_pending:
         one: "Ce sujet a <b>%{count}</b> message en attente de validation"
         other: "Ce sujet a <b>{{count}}</b> messages en attente de validation"
+      title: "Vérification"
       topic: "Sujet :"
+      filtered_topic: "Vous avez restreint au contenu vérifiable dans un seul sujet."
       filtered_user: "Utilisateur"
       show_all_topics: "afficher tous les sujets"
+      deleted_post: "(message supprimé)"
+      deleted_user: "(utilisateur supprimé)"
       user:
         username: "Pseudo"
         email: "Courriel"
         name: "Nom"
+        fields: "Champs"
       user_percentage:
         summary:
           one: "{{agreed}}, {{disagreed}}, {{ignored}} ({{count}} signalement total)"
@@ -341,10 +365,14 @@ fr:
         reviewable_count: "Nombre"
         reported_by: "Signalé par"
         deleted: "[Sujet supprimé]"
+        original: "(sujet d'origine)"
         details: "détails"
         unique_users:
           one: "%{count} utilisateur"
           other: "{{count}} utilisateurs"
+      replies:
+        one: "%{count} réponse"
+        other: "{{count}} réponses"
       edit: "Modifier"
       save: "Sauvegarder"
       cancel: "Annuler"
@@ -355,17 +383,28 @@ fr:
           all: "(tous les types)"
         minimum_score: "Score minimum :"
         refresh: "Rafraîchir"
+        status: "Etat"
         category: "Catégorie"
+        orders:
+          priority: "Priorité"
+          priority_asc: "Priorité (inverse)"
+          created_at: "Créé à"
+          created_at_asc: "Créé à (inverse)"
         priority:
+          title: "Priorité minimum"
           low: "Faible"
+          medium: "Moyenne"
           high: "Fort"
       conversation:
         view_full: "voir conversation entière"
       scores:
+        about: "Ce score est calculé en fonction du niveau de confiance de l'utilisateur qui a signalé, de l'exactitude de ses indicateurs précédents et de la priorité de l'élément déclaré."
         score: "Score"
         date: "Date"
         type: "Type"
+        status: "Etat"
         submitted_by: "Soumis par"
+        reviewed_by: "Vérifié par"
       statuses:
         pending:
           title: "En attente"
@@ -385,6 +424,8 @@ fr:
         reviewable_flagged_post:
           title: "Message signalé"
           flagged_by: "Signalé par"
+        reviewable_queued_topic:
+          title: "Sujet en file d'attente"
         reviewable_queued_post:
           title: "Message en file d'attente"
         reviewable_user:
@@ -658,8 +699,10 @@ fr:
         ignore_duration_save: "Ignorer"
         ignore_duration_note: "Noter que tous les 'ignorer' sans supprimés automatiquement après l'échéance de la durée d'ignore."
         ignore_duration_time_frame_required: "Veuillez sélectionner un intervalle de temps"
+        ignore_no_users: "Vous n'avez aucun utilisateur ignoré."
         ignore_option: "Ignoré"
         ignore_option_title: "Vous ne recevrez pas de notification en lien avec cet utilisateur et ses messages et réponses seront cachés."
+        add_ignored_user: "Ajouter..."
         mute_option: "Silencieux"
         mute_option_title: "Vous ne recevrez pas de notifications en lien avec cet utillisateur."
         normal_option: "Normal"
@@ -689,11 +732,13 @@ fr:
       dismiss_notifications: "Tout ignorer"
       dismiss_notifications_tooltip: "Marquer les notifications comme lues"
       first_notification: "Votre première notification ! Cliquez-la pour démarrer."
+      dynamic_favicon: "Faire apparaître le nombre sur l'icône navigateur"
       theme_default_on_all_devices: "En faire mon thème par défaut sur tous mes périphériques"
       text_size_default_on_all_devices: "En faire la taille de texte par défaut sur tous mes périphériques"
       allow_private_messages: "Permettre aux autres utilisateurs de m’envoyer des messages directs"
       external_links_in_new_tab: "Ouvrir tous les liens externes dans un nouvel onglet"
       enable_quoting: "Proposer de citer le texte sélectionné"
+      enable_defer: "Activer reporter pour marquer des sujets non lu"
       change: "modifier"
       moderator: "{{user}} est un modérateur"
       admin: "{{user}} est un administrateur"
@@ -735,6 +780,7 @@ fr:
       watched_first_post_tags_instructions: "Vous serez notifié du premier message de chaque sujet avec ces étiquettes."
       muted_categories: "Silencieuses"
       muted_categories_instructions: "Vous ne serez aucunement notifié à propos de nouveaux sujets dans ces catégories et ils n'apparaîtront pas sur les pages \"Catégories\" ou \"Dernier\"."
+      muted_categories_instructions_dont_hide: "Nous ne serez jamais notifié de quoi que ce soit à propos des nouveaux sujets dans cette catégorie."
       no_category_access: "En tant que modérateur votre accès à la catégorie est limitée, la sauvegarde est désactivée."
       delete_account: "Supprimer mon compte"
       delete_account_confirm: "Êtes-vous sûr de vouloir supprimer définitivement votre compte ? Cette action ne peut pas être annulée !"
@@ -811,6 +857,8 @@ fr:
           description: "Chaque code de secours ne peut être utilisé qu'une seule fois. Garder les dans un endroit sûr mais accessible."
       second_factor:
         title: "Authentification à deux facteurs"
+        disable: "Désactiver l'authentification à deux facteurs"
+        enable: "Activer l'authentification à deux facteurs"
         confirm_password_description: "Merci de confirmer votre mot de passe pour continuer"
         label: "Code"
         rate_limit: "Veuillez patienter avant d'essayer un autre code d'identification."
@@ -818,6 +866,8 @@ fr:
           Scannez ce code QR en utilisant une application supportée (<a href="https://www.google.com/search?q=authenticator+apps+for+android" target="_blank">Android</a>– <a href="https://www.google.com/search?q=authenticator+apps+for+ios" target="_blank">iOS</a>) et entrez votre code d'authentification.
         disable_description: "Veuillez saisir le code d'authentification de votre app"
         show_key_description: "Saisir manuellement"
+        short_description: |
+          Protéger votre compte avec des codes de sécurité à usage unique.
         extended_description: "L'authentification à deux facteurs ajoute une sécurité supplémentaire à votre compte en exigeant un jeton unique en \nplus de votre mot de passe. Les jetons peuvent être générés sur les appareils <a href=\"https://www.google.com/search?q=authenticator+apps+for+android\" target='_blank'>Android</a> et <a href=\"https://www.google.com/search?q=authenticator+apps+for+ios\">iOS</a>.\n"
         oauth_enabled_warning: "Veuillez noter que les connexions sociales seront désactivées une fois que l'authentification à deux facteurs aura été activée sur votre compte."
         use: "<a href>Utiliser l'application Authenticator</a>"
@@ -927,6 +977,10 @@ fr:
         normal: "Normal"
         larger: "Grand"
         largest: "Plus grand"
+      title_count_mode:
+        title: "Titre de page de fond affiche nombre de:"
+        notifications: "Nouvelles notifications"
+        contextual: "Nouveau contenu de page"
       like_notification_frequency:
         title: "Notifier lors d'un J'aime"
         always: "Toujours"
@@ -1121,6 +1175,11 @@ fr:
     too_few_topics_and_posts_notice: "Faites <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>partir la discussion !</a> Il y a actuellement <strong>%{currentTopics} / %{requiredTopics}</strong> sujets et <strong>%{currentPosts} / %{requiredPosts}</strong> messages. Les nouveaux utilisateurs ont besoin de discussions qu'ils peuvent lire et sur lesquelles ils peuvent répondre."
     too_few_topics_notice: "<a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>Démarrons cette discussion !</a> Il y a actuellement <strong>%{currentTopics} / %{requiredTopics}</strong> sujets. Les nouveaux visiteurs ont besoin de quelques conversations à lire et répondre."
     too_few_posts_notice: "<a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>Démarrons cette discussion !</a> Il y a actuellement <strong>%{currentPosts} / %{requiredPosts}</strong> messages. Les nouveaux visiteurs ont besoin de quelques conversations à lire et répondre."
+    logs_error_rate_notice:
+      reached_hour_MF: "{relativeAge} – {rate, plural, one {# erreur/heure} other {# erreurs/heure}} arrive à la limite paramétrée de {limit, plural, one {# erreur/heure} other {# erreurs/heure}}."
+      reached_minute_MF: "{relativeAge} – {rate, plural, one {# erreur/minute} other {# erreurs/minute}} arrive à la limite paramétrée de {limit, plural, one {# erreur/minute} other {# erreurs/minute}}."
+      exceeded_hour_MF: "{relativeAge} – {rate, plural, one {# erreur/heure} other {# erreurs/heure}} a dépassé la limite paramétrée de {limit, plural, one {# erreur/heure} other {# erreurs/heure}}."
+      exceeded_minute_MF: " {relativeAge} – {rate, plural, one {# erreur/heure} other {# erreurs/heure}} a dépassé la limite paramétrée de {limit, plural, one {# erreur/heure} other {# erreurs/heure}}."
     learn_more: "en savoir plus…"
     all_time: "total"
     all_time_desc: "nombre total de sujets créés"
@@ -1176,6 +1235,7 @@ fr:
     trust_level: "Niveau de confiance"
     search_hint: "pseudo, courriel ou adresse IP"
     create_account:
+      disclaimer: "En vous s'inscrivant, vous acceptez la <a href='{{privacy_link}}' target='blank'>politique de confidentialité</a> et les <a href='{{tos_link}}' target='blank'>conditions générales d'utilisation</a>."
       title: "Créer un nouveau compte"
       failed: "Quelque chose s'est mal passé, peut-être que cette adresse de courriel est déjà enregistrée, essayez le lien Mot de passe oublié."
     forgot_password:
@@ -1214,6 +1274,7 @@ fr:
       email_placeholder: "courriel ou pseudo"
       caps_lock_warning: "Majuscules vérrouillées"
       error: "Erreur inconnue"
+      cookies_error: "Les cookies de votre navigateur semblent désactiver. Vous ne pourrez pas vous connecter sans les activer."
       rate_limit: "Merci de patienter avant de vous reconnecter."
       blank_username: "Merci de saisir votre courriel ou pseudo."
       blank_username_or_password: "Merci de saisir votre courriel ou pseudo, et mot de passe."
@@ -1291,6 +1352,7 @@ fr:
       shift: "Maj"
       ctrl: "Ctrl"
       alt: "Alt"
+      enter: "Enter"
     conditional_loading_section:
       loading: Chargement…
     category_row:
@@ -1386,6 +1448,7 @@ fr:
       remove_featured_link: "Retirer le lien du sujet"
       reply_placeholder: "Écrivez ici. Utilisez Markdown, BBCode, ou HTML pour mettre en forme. Glissez ou collez des images."
       reply_placeholder_no_images: "Écrivez ici. Utilisez Markdown, BBCode, ou HTML pour mettre en forme."
+      reply_placeholder_choose_category: "Sélectionner une catégorie avant de rédiger ici."
       view_new_post: "Voir votre nouveau message."
       saving: "Sauvegarde"
       saved: "Sauvegardé !"
@@ -1468,6 +1531,8 @@ fr:
       none: "Impossible de charger les notifications pour le moment."
       empty: "Aucune notification trouvée."
       more: "voir les anciennes notifications"
+      post_approved: "Votre message a été approuvé"
+      reviewable_items: "éléments en attente de vérification"
       mentioned: "<span>{{username}}</span> {{description}}"
       group_mentioned: "<span>{{username}}</span> {{description}}"
       quoted: "<span>{{username}}</span> {{description}}"
@@ -1506,6 +1571,27 @@ fr:
         watching_first_post: '{{username}} a crée un nouveau sujet « {{topic}} » - {{site_title}}'
         confirm_title: "Notifications activées - %{site_title}"
         confirm_body: "Les notifications ont été activées."
+        custom: "Notification de {{username}} sur %{site_title}"
+      titles:
+        mentioned: "mentionnés"
+        replied: "nouvelle réponse"
+        quoted: "cités"
+        edited: "modifiés"
+        liked: "nouveau j'aime"
+        private_message: "nouveau message direct"
+        invited_to_private_message: "invité au message privé"
+        invitee_accepted: "invitation acceptée"
+        posted: "nouveau message"
+        moved_post: "message déplacé"
+        linked: "linkés"
+        granted_badge: "badge attribué"
+        invited_to_topic: "invité à un sujet"
+        group_mentioned: "groupe mentionné"
+        group_message_summary: "nouveaux messages de groupe"
+        watching_first_post: "nouveau sujet"
+        topic_reminder: "rappel de sujet"
+        liked_consolidated: "nouveaux j'aime"
+        post_approved: "message approuvé"
     upload_selector:
       title: "Ajouter une image"
       title_with_attachments: "Ajouter une image ou un fichier"
@@ -1669,6 +1755,9 @@ fr:
       edit_message:
         help: "Modifier premier message"
         title: "Modifier message"
+      defer:
+        help: "Marquer comme non-lu"
+        title: "Reporter"
       list: "Sujets"
       new: "nouveau sujet"
       unread: "non lus"
@@ -1784,6 +1873,7 @@ fr:
         jump_bottom: "aller au dernier message"
         jump_prompt: "aller à…"
         jump_prompt_of: "de %{count} messages"
+        jump_prompt_long: "Aller à…"
         jump_bottom_with_number: "aller au message %{post_number}"
         jump_prompt_to_date: "à la date"
         jump_prompt_or: "ou"
@@ -2017,6 +2107,7 @@ fr:
       quote_reply: "Citer"
       edit_reason: "Raison :"
       post_number: "message {{number}}"
+      ignored: "Contenu ignoré"
       wiki_last_edited_on: "Wiki édité pour la dernière fois"
       last_edited_on: "message édité pour la dernière fois"
       reply_as_new_topic: "Répondre par un nouveau sujet"
@@ -2024,6 +2115,7 @@ fr:
       continue_discussion: "Suite du sujet {{postLink}} :"
       follow_quote: "aller au message cité"
       show_full: "Afficher le message complet"
+      show_hidden: "Visualiser contenu ignoré."
       deleted_by_author:
         one: "(message supprimé par son auteur, sera supprimé automatiquement dans %{count} heure à moins qu'il ne soit signalé)"
         other: "(message supprimé par son auteur, sera supprimé automatiquement dans %{count} heures à moins qu'il ne soit signalé)"
@@ -2108,6 +2200,8 @@ fr:
         delete_topic_disallowed_modal: "Vous n'avez pas le permission de supprimer ce sujet. Si vous souhaitez vraiment le voir supprimé, signalez-le aux modérateurs avec une explication."
         delete_topic_disallowed: "vous n'avez pas la permission de supprimer ce sujet"
         delete_topic: "supprimer le sujet"
+        add_post_notice: "Ajouter note pour responsables"
+        remove_post_notice: "Retirer le note pour responsables"
       actions:
         flag: "Signaler"
         defer_flags:
@@ -2191,9 +2285,13 @@ fr:
       settings: "Paramètres"
       topic_template: "Modèle de sujet"
       tags: "Étiquettes"
+      tags_allowed_tags: "Réserver l'utilisation de ces étiquettes à cette catégorie :"
+      tags_allowed_tag_groups: "Réserver l'utilisation de ces groupes d'étiquettes à cette catégorie :"
       tags_placeholder: "(Facultatif) liste des étiquettes autorisées"
       tags_tab_description: "Les étiquettes et les groupes d'étiquettes spécifiés ici ne seront disponibles que dans cette catégorie ainsi que dans toutes les catégories qui contiennent les mêmes spécifications. Ces étiquettes ne pourront pas être utilisées dans d'autres catégories."
       tag_groups_placeholder: "(Facultatif) liste des groupes de étiquettes autorisées"
+      manage_tag_groups_link: "Gérer les groupes d'étiquettes ici."
+      allow_global_tags_label: "Permettre aussi d'autres étiquettes"
       topic_featured_link_allowed: "Autoriser les liens à la une dans cette catégorie"
       delete: "Supprimer la catégorie"
       create: "Nouvelle catégorie"
@@ -2240,10 +2338,12 @@ fr:
       default_top_period: "Période des meilleurs sujets par défaut :"
       allow_badges_label: "Autoriser les badges à être accordé dans cette catégorie"
       edit_permissions: "Modifier les permissions"
+      reviewable_by_group: "En plus des responsables, les messages et signalements dans cette catégorie peuvent aussi être vérifier par :"
       review_group_name: "nom du groupe"
       require_topic_approval: "Nécessiter l'approbation pour chaque nouveau sujet"
       require_reply_approval: "Nécessiter l'approbation pour chaque nouvelle réponse"
       this_year: "cette année"
+      position: "Position sur la page des catégories :"
       default_position: "Position par défaut"
       position_disabled: "Les catégories seront affichées dans l'ordre d'activité. Pour contrôler l'ordre des catégories dans la liste,"
       position_disabled_click: 'activer le paramètre "fixed category positions"'
@@ -2296,6 +2396,7 @@ fr:
       settings_sections:
         general: "Général"
         moderation: "Modération"
+        appearance: "Apparence"
         email: "Courriel"
     flagging:
       title: "Merci d'aider à garder notre communauté civilisée !"
@@ -2482,7 +2583,18 @@ fr:
       readonly: "Voir"
     lightbox:
       download: "télécharger"
+      previous: "Précédent (touche flèche gauche)"
+      next: "Suivant (touche flèche droite)"
+      counter: "%curr% de %total%"
+      close: "Femer (Esc)"
+      content_load_error: '<a href="%url%">Ce contenu</a> ne pouvait pas être chargé.'
+      image_load_error: '<a href="%url%">Cette image</a> ne pouvait pas être chargé.'
     keyboard_shortcuts_help:
+      shortcut_key_delimiter_comma: ", "
+      shortcut_key_delimiter_plus: "+"
+      shortcut_delimiter_or: "%{shortcut1} ou %{shortcut2}"
+      shortcut_delimiter_slash: "%{shortcut1}/%{shortcut2}"
+      shortcut_delimiter_space: "%{shortcut1} %{shortcut2}"
       title: "Raccourcis clavier"
       jump_to:
         title: "Aller à"
@@ -2688,10 +2800,17 @@ fr:
     admin:
       title: "Administrateur"
       moderator: "Modérateur"
+      tags:
+        remove_muted_tags_from_latest:
+          always: "toujours"
+          only_muted: "quand utilisé seul ou avec d'autres étiquettes mises sous silence"
+          never: "jamais"
       reports:
         title: "Liste de rapports disponibles"
       dashboard:
         title: "Tableau de bord"
+        last_updated: "Tableau de bord actualisé le :"
+        discourse_last_updated: "Discourse mis à jour le :"
         version: "Version"
         up_to_date: "À jour !"
         critical_available: "Une mise à jour critique est disponible."
@@ -2760,12 +2879,15 @@ fr:
           groups: "Tous les groupes"
           disabled: "Ce rapport est désactivé"
           totals_for_sample: "Totaux pour l'échantillon"
+          average_for_sample: "Moyenne pour échantillon"
           total: "Total depuis toujours"
           no_data: "Aucune donnée à afficher."
           trending_search:
             more: '<a href="%{basePath}/admin/logs/search_logs">Journal des recherches</a>'
             disabled: 'Rapport sur les tendances de recherche désactivé. Activé <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">journalisation des recherches</a> pour collectioner les données.'
           filters:
+            file-extension:
+              label: Extension de fichier
             group:
               label: Groupe
             category:
@@ -2903,6 +3025,9 @@ fr:
         queued_post_event:
           name: "Événement à l'approbation d'un message"
           details: "Quand un nouveau message est créé, approuvé ou rejeté"
+        reviewable_event:
+          name: "Evènement vérifiable"
+          details: "Quand un nouvel élément est prêt à être vérifié et quand son état est mis à jour."
         delivery_status:
           title: "État de l'envoi"
           inactive: "Inactif"
@@ -3029,6 +3154,7 @@ fr:
         new_style: "Nouveau style"
         install: "Installer"
         delete: "Supprimer"
+        delete_confirm: 'Êtes-vous sûr de vouloir supprimer "%{theme_name}" ?'
         color: "Couleur"
         opacity: "Opacité"
         copy: "Copier"
@@ -3062,11 +3188,14 @@ fr:
           long_title: "Modifier les couleurs, le CSS et le contenu HTML de votre site"
           edit: "Modifier"
           edit_confirm: "Ceci est un thème distant, si vous modifiez le CSS/HTML vos modifications seront écrasées la prochaine fois que vous le mettez à jour."
+          update_confirm: "Ces modifications locales seront supprimées par la mise à jour. Êtes-vous sûr de vouloir continuer ?"
+          update_confirm_yes: "Oui, poursuivre la mise à jour"
           common: "Général"
           desktop: "Bureau"
           mobile: "Mobile"
           settings: "Paramètres"
           translations: "Traductions"
+          extra_scss: "Extra SCSS"
           preview: "Prévisualiser"
           show_advanced: "Afficher les champs avancés"
           hide_advanced: "Cacher les champs avancés"
@@ -3392,6 +3521,7 @@ fr:
             web_hook_create: "Créer un webhook"
             web_hook_update: "Mettre à jour le webhook"
             web_hook_destroy: "Détruire le webhook"
+            web_hook_deactivate: "désactiver webhook"
             embeddable_host_create: "créer hôte intégré"
             embeddable_host_update: "mettre à jour hôte intégré"
             embeddable_host_destroy: "détruire hôte intégré"
@@ -3534,6 +3664,7 @@ fr:
         delete_posts_failed: "Il y a eu un problème lors de la suppression des messages."
         penalty_post_actions: "Qu'aimeriez-vous faire du message associé ?"
         penalty_post_delete: "Supprimer le message"
+        penalty_post_delete_replies: "Supprimer le message + réponses"
         penalty_post_edit: "Modifier le message"
         penalty_post_none: "Ne rien faire"
         penalty_count: "Décompte pénalités"
@@ -3730,6 +3861,7 @@ fr:
         clear_filter: "Effacer"
         add_url: "ajouter URL"
         add_host: "ajouter hôte"
+        add_group: "ajouter groupe"
         uploaded_image_list:
           label: "Modifier la liste"
           empty: "Il n'y a aucune image pour le moment. Veuillez en envoyer une."
@@ -3741,6 +3873,7 @@ fr:
         categories:
           all_results: "Toutes"
           required: "Requis"
+          branding: "Branding"
           basic: "Général"
           users: "Utilisateurs"
           posting: "Messages"
@@ -3878,6 +4011,7 @@ fr:
         save: "Sauvegarder les paramètres d'intégration"
       permalink:
         title: "Permaliens"
+        description: "Veuillez noter que ceci s'applique uniquement aux sources externes, les liens postés sur votre forum ne seront pas redirigés."
         url: "URL"
         topic_id: "ID sujet"
         topic_title: "Sujet"

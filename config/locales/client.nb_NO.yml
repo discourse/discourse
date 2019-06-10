@@ -279,6 +279,7 @@ nb_NO:
       title:
         placeholder: "skriv tittelen på emnet her"
     review:
+      in_reply_to: "i svar til"
       delete: "Slett"
       settings:
         save_changes: "Lagre endringer"
@@ -1328,6 +1329,9 @@ nb_NO:
         linked: '{{username}} lenket til innlegget ditt i "{{topic}}" - {{site_title}}'
         confirm_title: "Varslinger aktivert - %{site_title}"
         confirm_body: "Suksess! Varslinger er nå aktivert."
+      titles:
+        watching_first_post: "nytt emne"
+        post_approved: "innlegg godkjent"
     upload_selector:
       title: "Legg til bilde"
       title_with_attachments: "Legg til et bilde eller en fil"
@@ -1491,6 +1495,8 @@ nb_NO:
       edit_message:
         help: "Rediger første innlegg i meldingen"
         title: "Rediger melding"
+      defer:
+        title: "Utsett"
       list: "Emner"
       new: "nytt emne"
       unread: "ulest"
@@ -2437,6 +2443,10 @@ nb_NO:
     admin:
       title: "Discourse-admin"
       moderator: "Moderator"
+      tags:
+        remove_muted_tags_from_latest:
+          always: "alltid"
+          never: "aldri"
       reports:
         title: "Liste over tilgjengelige rapporter"
       dashboard:

@@ -463,7 +463,13 @@ users:
     validator: "UnicodeUsernameWhitelistValidator"
     default: ""
     locale_default:
+      cs: "[ěščřžýáíéóůúďťňĚŠČŘŽÝÁÍÉÓŮÚĎŤŇ]"
       de: "[äöüßÄÖÜẞ]"
+      fi: "[åäöÅÄÖ]"
+      ja: '[\p{Han}\p{Katakana}\p{Hiragana}]'
+      ko: '\p{Hangul}'
+      zh_CN: '\p{Han}'
+      zh_TW: '\p{Han}'
   reserved_usernames:
     type: list
     list_type: compact
@@ -1490,7 +1496,7 @@ developer:
     max: 99000
   anon_polling_interval:
     client: true
-    default: 15000
+    default: 30000
     max: 99000
   flush_timings_secs:
     client: true
@@ -1726,6 +1732,8 @@ uncategorized:
   summary_percent_filter: 20
   summary_max_results: 100
 
+  automatic_topic_heat_values: true
+
   # View heat thresholds
   topic_views_heat_low:
     client: true
@@ -1735,7 +1743,7 @@ uncategorized:
     default: 2000
   topic_views_heat_high:
     client: true
-    default: 5000
+    default: 3500
 
   # Post/Like heat thresholds
   topic_post_like_heat_low:
@@ -1939,6 +1947,7 @@ user_preferences:
     default: 2
   default_other_external_links_in_new_tab: false
   default_other_enable_quoting: true
+  default_other_enable_defer: false
   default_other_dynamic_favicon: false
   default_other_like_notification_frequency:
     enum: "LikeNotificationFrequencySiteSetting"
@@ -2058,9 +2067,10 @@ tags:
     default: false
     client: true
   remove_muted_tags_from_latest:
-    default: false
-  mute_other_present_tags:
-    default: true
+    client: true
+    type: enum
+    default: always
+    enum: RemoveMutedTagsFromLatestSiteSetting
   force_lowercase_tags:
     default: true
     client: true

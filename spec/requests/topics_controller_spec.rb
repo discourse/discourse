@@ -2677,7 +2677,6 @@ RSpec.describe TopicsController do
   end
 
   describe "crawler" do
-
     context "when not a crawler" do
       it "renders with the application layout" do
         get topic.url
@@ -2691,7 +2690,6 @@ RSpec.describe TopicsController do
 
     context "when a crawler" do
       it "renders with the crawler layout, and handles proper pagination" do
-
         page1_time = 3.months.ago
         page2_time = 2.months.ago
         page3_time = 1.month.ago
@@ -2739,8 +2737,17 @@ RSpec.describe TopicsController do
         expect(response.headers['Last-Modified']).to eq(page3_time.httpdate)
         expect(body).to include('<link rel="prev" href="' + topic.relative_url + "?page=2")
       end
-    end
 
+      context "wayback machine" do
+        it "renders crawler layout" do
+          get topic.url, env: { "HTTP_USER_AGENT" => "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36", "HTTP_VIA" => "HTTP/1.0 web.archive.org (Wayback Save Page)" }
+          body = response.body
+
+          expect(body).to have_tag(:body, with: { class: 'crawler' })
+          expect(body).to_not have_tag(:meta, with: { name: 'fragment' })
+        end
+      end
+    end
   end
 
   describe "#reset_bump_date" do

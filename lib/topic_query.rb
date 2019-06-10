@@ -446,10 +446,14 @@ class TopicQuery
       avatar_lookup = AvatarLookup.new(user_ids)
       primary_group_lookup = PrimaryGroupLookup.new(user_ids)
 
+      # memoize for loop so we don't keep looking these up
+      translations = TopicPostersSummary.translations
+
       topics.each do |t|
         t.posters = t.posters_summary(
           avatar_lookup: avatar_lookup,
-          primary_group_lookup: primary_group_lookup
+          primary_group_lookup: primary_group_lookup,
+          translations: translations
         )
       end
     end
@@ -875,7 +879,7 @@ class TopicQuery
     list
   end
   def remove_muted_tags(list, user, opts = nil)
-    if user.nil? || !SiteSetting.tagging_enabled || !SiteSetting.remove_muted_tags_from_latest
+    if user.nil? || !SiteSetting.tagging_enabled || SiteSetting.remove_muted_tags_from_latest == 'never'
       return list
     end
 
@@ -896,7 +900,7 @@ class TopicQuery
       return list
     end
 
-    if SiteSetting.mute_other_present_tags
+    if SiteSetting.remove_muted_tags_from_latest == 'always'
       list = list.where("
         NOT EXISTS(
           SELECT 1

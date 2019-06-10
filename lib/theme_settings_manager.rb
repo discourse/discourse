@@ -34,7 +34,7 @@ class ThemeSettingsManager
   end
 
   def description
-    @opts[:description]
+    @opts[:description] # Old method of specifying description. Is now overridden by locale file
   end
 
   def value=(new_value)

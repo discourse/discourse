@@ -1,3 +1,4 @@
+import selectKit from "helpers/select-kit-helper";
 import { acceptance, logIn } from "helpers/qunit-helpers";
 
 acceptance("Group", {
@@ -48,7 +49,7 @@ QUnit.test("Anonymous Viewing Group", async assert => {
   );
   assert.ok(count(".user-stream-item") > 0, "it lists stream items");
 
-  await expandSelectKit(".group-dropdown");
+  await selectKit(".group-dropdown").expand();
 
   assert.equal(
     find(".select-kit-row")
@@ -70,7 +71,7 @@ QUnit.test("Anonymous Viewing Group", async assert => {
 
   await visit("/g");
   await visit("/g/discourse");
-  await expandSelectKit(".group-dropdown");
+  await selectKit(".group-dropdown").expand();
 
   assert.equal(
     find(".group-dropdown-filter").length,

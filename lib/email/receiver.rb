@@ -27,6 +27,7 @@ module Email
     class SilencedUserError            < ProcessingError; end
     class BadDestinationAddress        < ProcessingError; end
     class StrangersNotAllowedError     < ProcessingError; end
+    class ReplyNotAllowedError         < ProcessingError; end
     class InsufficientTrustLevelError  < ProcessingError; end
     class ReplyUserNotMatchingError    < ProcessingError; end
     class TopicNotFoundError           < ProcessingError; end
@@ -694,12 +695,12 @@ module Email
         raise BadDestinationAddress if user.blank?
 
         post_reply_key = destination[:obj]
+        post = Post.with_deleted.find(post_reply_key.post_id)
+        raise ReplyNotAllowedError if !Guardian.new(user).can_create_post?(post&.topic)
 
         if post_reply_key.user_id != user.id && !forwarded_reply_key?(post_reply_key, user)
           raise ReplyUserNotMatchingError, "post_reply_key.user_id => #{post_reply_key.user_id.inspect}, user.id => #{user.id.inspect}"
         end
-
-        post = Post.with_deleted.find(post_reply_key.post_id)
 
         create_reply(user: user,
                      raw: body,

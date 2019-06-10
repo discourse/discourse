@@ -153,6 +153,7 @@ nl:
     bootstrap_mode_disabled: "De bootstrapmodus wordt binnen 24 uur uitgeschakeld."
     themes:
       default_description: "Standaard"
+      broken_theme_alert: "Uw website werkt mogelijk niet, omdat het thema / onderdeel %{theme} fouten bevat. Schakel het uit via %{path}."
     s3:
       regions:
         ap_northeast_1: "Azië Pacifisch (Tokio)"
@@ -307,6 +308,8 @@ nl:
         search: "Zoeken naar een bericht op titel:"
         placeholder: "typ hier de titel van het bericht"
     review:
+      order_by: "Sorteren op"
+      in_reply_to: "in reactie op"
       claim_help:
         optional: "U kunt dit item opeisen om te voorkomen dat anderen het beoordelen."
         required: "U moet items opeisen voordat u ze kunt beoordelen."
@@ -382,7 +385,13 @@ nl:
         refresh: "Vernieuwen"
         status: "Status"
         category: "Categorie"
+        orders:
+          priority: "Prioriteit"
+          priority_asc: "Prioriteit (omgekeerd)"
+          created_at: "Lid sinds"
+          created_at_asc: "Gemaakt op (omgekeerd)"
         priority:
+          title: "Minimale prioriteit"
           low: "Laag"
           medium: "Gemiddeld"
           high: "Hoog"
@@ -415,6 +424,8 @@ nl:
         reviewable_flagged_post:
           title: "Gemarkeerd bericht"
           flagged_by: "Gemarkeerd door"
+        reviewable_queued_topic:
+          title: "Topic in wachtrij"
         reviewable_queued_post:
           title: "Bericht in wachtrij"
         reviewable_user:
@@ -727,6 +738,7 @@ nl:
       allow_private_messages: "Andere gebruikers mogen mij persoonlijke berichten sturen"
       external_links_in_new_tab: "Alle externe koppelingen openen in een nieuw tabblad"
       enable_quoting: "Antwoord-met-citaat voor gemarkeerde tekst inschakelen"
+      enable_defer: "Negeren voor markeren van topics als ongelezen inschakelen"
       change: "wijzigen"
       moderator: "{{user}} is een moderator"
       admin: "{{user}} is een beheerder"
@@ -766,6 +778,7 @@ nl:
       watched_first_post_tags_instructions: "U ontvangt een melding bij het eerste bericht in elk nieuw topic met deze tags."
       muted_categories: "Genegeerd"
       muted_categories_instructions: "U ontvangt geen enkele melding over nieuwe topics en berichten in deze categorieën, en ze verschijnen niet op de pagina's Categorieën of Nieuwste."
+      muted_categories_instructions_dont_hide: "U ontvangt geen enkele melding over nieuwe topics in deze categorieën."
       no_category_access: "Als moderator hebt u beperkte toegang tot categorieën, opslaan is uitgeschakeld."
       delete_account: "Mijn account verwijderen"
       delete_account_confirm: "Weet u zeker dat u uw account definitief wilt verwijderen? Deze actie kan niet ongedaan worden gemaakt!"
@@ -1161,6 +1174,11 @@ nl:
     too_few_topics_and_posts_notice: "Laten we <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>deze discussie starten!</a> Er zijn op dit moment <strong>%{currentTopics} / %{requiredTopics}</strong> topics en <strong>%{currentPosts} / %{requiredPosts}</strong> berichten. Nieuwe bezoekers hebben wat conversaties nodig om te lezen en op te reageren."
     too_few_topics_notice: "Laten we <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>deze discussie starten!</a> Er zijn op dit moment <strong>%{currentTopics} / %{requiredTopics}</strong> topics. Nieuwe bezoekers hebben wat conversaties nodig om te lezen en op te reageren."
     too_few_posts_notice: "Laten we <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>deze discussie starten!</a> Er zijn op dit moment <strong>%{currentPosts} / %{requiredPosts}</strong> berichten. Nieuwe bezoekers hebben wat conversaties nodig om te lezen en op te reageren."
+    logs_error_rate_notice:
+      reached_hour_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# fout/uur} other {# fouten/uur}}</a> heeft de limiet voor de website-instelling van {limit, plural, one {# fout/uur} other {# fouten/uur}} bereikt."
+      reached_minute_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# fout/minuut} other {# fouten/minuut}}</a> heeft de limiet voor de website-instelling van {limit, plural, one {# fout/minuut} other {# fouten/minuut}} bereikt."
+      exceeded_hour_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# fout/uur} other {# fouten/uur}}</a> heeft de limiet voor de website-instelling van {limit, plural, one {# fout/uur} other {# fouten/uur}} bereikt."
+      exceeded_minute_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# fout/minuut} other {# fouten/minuut}}</a> heeft de limiet voor de website-instelling van {limit, plural, one {# fout/minuut} other {# fouten/minuut}} bereikt."
     learn_more: "meer info..."
     all_time: "totaal"
     all_time_desc: "aantal aangemaakte topics"
@@ -1216,6 +1234,7 @@ nl:
     trust_level: "Vertrouwensniveau"
     search_hint: "gebruikersnaam, e-mailadres of IP-adres"
     create_account:
+      disclaimer: "Door te registreren gaat u akkoord met het <a href='{{privacy_link}}' target='blank'>privacybeleid</a> en de <a href='{{tos_link}}' target='blank'>servicevoorwaarden</a>."
       title: "Nieuwe account maken"
       failed: "Er is iets misgegaan; mogelijk is het e-mailadres al geregistreerd. Probeer de koppeling 'Wachtwoord vergeten'."
     forgot_password:
@@ -1552,6 +1571,26 @@ nl:
         confirm_title: "Meldingen ingeschakeld - %{site_title}"
         confirm_body: "Gelukt! Meldingen zijn ingeschakeld."
         custom: "Melding van {{username}} op %{site_title}"
+      titles:
+        mentioned: "genoemd"
+        replied: "nieuw antwoord"
+        quoted: "geciteerd"
+        edited: "bewerkt"
+        liked: "nieuwe like"
+        private_message: "nieuw privébericht"
+        invited_to_private_message: "uitgenodigd voor privébericht"
+        invitee_accepted: "uitnodiging geaccepteerd"
+        posted: "nieuw bericht"
+        moved_post: "bericht verplaatst"
+        linked: "gekoppeld"
+        granted_badge: "badge toegekend"
+        invited_to_topic: "uitgenodigd voor topic"
+        group_mentioned: "groep genoemd"
+        group_message_summary: "nieuwe groepsberichten"
+        watching_first_post: "nieuw topic"
+        topic_reminder: "topic-herinnering"
+        liked_consolidated: "nieuwe likes"
+        post_approved: "bericht goedgekeurd"
     upload_selector:
       title: "Een afbeelding toevoegen"
       title_with_attachments: "Een afbeelding of bestand toevoegen"
@@ -1715,6 +1754,9 @@ nl:
       edit_message:
         help: "Het eerste bericht van het bericht bewerken"
         title: "Bericht bewerken"
+      defer:
+        help: "Markeren als ongelezen"
+        title: "Negeren"
       list: "Topics"
       new: "nieuw topic"
       unread: "ongelezen"
@@ -2744,6 +2786,11 @@ nl:
     admin:
       title: "Discourse-beheer"
       moderator: "Moderator"
+      tags:
+        remove_muted_tags_from_latest:
+          always: "altijd"
+          only_muted: "bij enkel of gebruik met andere genegeerde tags"
+          never: "nooit"
       reports:
         title: "Lijst van beschikbare rapporten"
       dashboard:
@@ -2818,6 +2865,7 @@ nl:
           groups: "Alle groepen"
           disabled: "Dit rapport is uitgeschakeld"
           totals_for_sample: "Totalen voor steekproef"
+          average_for_sample: "Gemiddelde voor steekproef"
           total: "Totaal sinds begin"
           no_data: "Geen gegevens om weer te geven."
           trending_search:
@@ -3602,6 +3650,7 @@ nl:
         delete_posts_failed: "Er is een probleem opgetreden bij het verwijderen van de berichten."
         penalty_post_actions: "Wat wilt u met het gekoppelde bericht doen?"
         penalty_post_delete: "Het bericht verwijderen"
+        penalty_post_delete_replies: "Het bericht + alle antwoorden verwijderen"
         penalty_post_edit: "Het bericht bewerken"
         penalty_post_none: "Niets doen"
         penalty_count: "Aantal minpunten"

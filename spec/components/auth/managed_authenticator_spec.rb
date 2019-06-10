@@ -261,6 +261,8 @@ describe Auth::ManagedAuthenticator do
       expect(authenticator.description_for_user(user)).to eq('somenickname')
       association.update(info: { nickname: "bestname" })
       expect(authenticator.description_for_user(user)).to eq('bestname')
+      association.update(info: {})
+      expect(authenticator.description_for_user(user)).to eq(I18n.t("associated_accounts.connected"))
     end
   end
 

@@ -620,28 +620,28 @@ zh_TW:
   user_auth_tokens:
     browser:
       chrome: "Google Chrome"
-      safari: "Safari"
-      firefox: "Firefox"
-      opera: "Opera"
-      ie: "Internet Explorer"
-      edge: "Microsoft Edge"
       discoursehub: "DiscourseHub app"
+      edge: "Microsoft Edge"
+      firefox: "Firefox"
+      ie: "Internet Explorer"
+      opera: "Opera"
+      safari: "Safari"
       unknown: "\b不知名的瀏覽器"
     device:
       android: "安卓裝置"
       ipad: "iPad"
       iphone: "iPhone"
       ipod: "iPod"
-      mobile: "行動裝置"
-      mac: "Mac"
       linux: "GNU/Linux Computer"
+      mac: "Mac"
+      mobile: "行動裝置"
       windows: "Windows Computer"
       unknown: "不知名的裝置"
     os:
       android: "安卓"
       ios: "iOS"
-      macos: "macOS"
       linux: "Linux"
+      macos: "macOS"
       windows: "Microsoft Windows"
       unknown: "未知的運作系統"
   change_email:
@@ -863,7 +863,6 @@ zh_TW:
       title: "使用者瀏覽量"
       xaxis: "天"
       yaxis: "瀏覽量"
-      description: "所有唯一使用者的瀏覽量"
     signups:
       title: "註冊"
       xaxis: "天"
@@ -1261,7 +1260,6 @@ zh_TW:
     must_approve_users: "新使用者在被允許訪問站點前需要由管理人員批准。警告：在運行的站點中啟用將解除所有非管理人員使用者的訪問權限！"
     pending_users_reminder_delay: "如果新使用者等待批准時間超過此小時設置則通知版主。設置 -1 關閉通知。"
     maximum_session_age: "使用者自訪問後可維持登錄 n 小時"
-    ga_universal_tracking_code: "Google 通用 Analytics (分析) 追蹤代碼（analytics.js）追蹤代碼，例如：UA-12345678-9；參考 <a href='https://google.com/analytics' target='_blank'>http://google.com/analytics</a>"
     ga_universal_domain_name: "Google 通用 Analytics (分析) 域名（analytics.js）追蹤代碼，例如：mysite.com；参考 <a href='https://google.com/analytics' target='_blank'>http://google.com/analytics</a>"
     ga_universal_auto_link_domains: "啟用Google通用Analytics（analytics.js）的跨域追蹤。本網站導向外其他網站時將客戶端 ID添加並追蹤，參閱 <a href='https://support.google.com/analytics/answer/1034342?hl=en' target='_blank'>Google 跨網域追蹤指南</a>。"
     gtm_container_id: "Google Tag Manager Container（GTM） ID，例如：GFM-ABCDEF。注意：由GTM加載 Script 時可能需要在內容安全性政策（Content Security Policy Script Src）加入白名單。"
@@ -3583,6 +3581,8 @@ zh_TW:
             placeholder: "舊金山，加洲（California）"
       colors:
         title: "主題"
+      themes_further_reading:
+        title: "佈景主題"
       logos:
         title: "標誌"
         fields:
@@ -3675,7 +3675,6 @@ zh_TW:
       new_topics_unless_trust_level: "低信任等級的使用者必須擁有管理員批准，才可發佈討論話題，更多資訊請參閱`approve_new_topics_unless_trust_level`。"
       fast_typer: "新使用者輸入他們的第一個貼文，由於發送速度過快，疑似機器人或垃圾郵件發送者的行為，更多資訊請參閱`min_first_post_typing_time`。"
       auto_silence_regexp: "第一個貼文與`auto_silence_first_post_regex`設定匹配相符的新使用者"
-      watched_word: "貼文已包含一個觀看的單詞。"
       staged: "分階段使用者的新討論話題及貼文，必須得到管理員的批准，更多資訊請參閱`approve_unless_staged`。"
       category: "在這個分類的貼文需要管理員手動批准，更多資訊請參閱分類設定（category setting）。"
       must_approve_users: "所有新使用者必須得到管理員的批准，更多資訊請參閱`must_approve_users`。"

@@ -177,6 +177,7 @@ uk:
       title:
         placeholder: "введіть назву теми"
     review:
+      in_reply_to: "у відповідь на"
       delete: "Видалити"
       settings:
         save_changes: "Зберегти зміни"
@@ -745,6 +746,8 @@ uk:
           label: "Нова тема"
     notifications:
       more: "переглянути старіші сповіщення"
+      titles:
+        watching_first_post: "нова тема"
     upload_selector:
       title: "Додати зображення"
       title_with_attachments: "Додати зображення або файл"
@@ -814,6 +817,8 @@ uk:
         title: "Архів"
       move_to_inbox:
         title: "Перемістити у Вхідні"
+      defer:
+        title: "Відкласти"
       list: "Теми"
       new: "нова тема"
       unread: "непрочитані"
@@ -1238,6 +1243,10 @@ uk:
     admin:
       title: "Адміністратор Discourse"
       moderator: "Модератор"
+      tags:
+        remove_muted_tags_from_latest:
+          always: "завжди"
+          never: "ніколи"
       dashboard:
         title: "Майстерня"
         version: "Версія"

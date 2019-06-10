@@ -26,15 +26,15 @@ es:
         thousands: "{{number}}k"
         millions: "{{number}}M"
     dates:
-      time: "h:mm a"
+      time: "HH:mm"
       timeline_date: "MMM YYYY"
-      long_no_year: "MMM D h:mm a"
-      long_no_year_no_time: "MMM D"
-      full_no_year_no_time: "MMMM Do"
-      long_with_year: "MMM D, YYYY h:mm a"
-      long_with_year_no_time: "MMM D, YYYY"
-      full_with_year_no_time: "MMMM Do, YYYY"
-      long_date_with_year: "D MMM, 'YY LT"
+      long_no_year: "D MMM HH:mm"
+      long_no_year_no_time: "D MMM"
+      full_no_year_no_time: "Do MMMM"
+      long_with_year: "D MMM YYYY HH:mm"
+      long_with_year_no_time: "D MMM YYYY"
+      full_with_year_no_time: "D MMMM YYYY"
+      long_date_with_year: "D MMM 'YY LT"
       long_date_without_year: "D MMM, LT"
       long_date_with_year_without_time: "D MMM, 'YY"
       long_date_without_year_with_linebreak: "D MMM <br/>LT"
@@ -153,6 +153,7 @@ es:
     bootstrap_mode_disabled: "El modo de arranque se desactivará dentro de 24 horas."
     themes:
       default_description: "Por defecto"
+      broken_theme_alert: "Tu sitio puede no funcionar porque el theme / componente %{theme} tiene errores. Desactivarlo en %{path}."
     s3:
       regions:
         ap_northeast_1: "Asia Pacific (Tokyo)"
@@ -172,6 +173,7 @@ es:
         us_east_1: "US East (N. Virginia)"
         us_east_2: "US East (Ohio)"
         us_gov_east_1: "AWS GovCloud (US-East)"
+        us_gov_west_1: "AWS GovCloud (US-West)"
         us_west_1: "US West (N. California)"
         us_west_2: "US West (Oregon)"
     edit: "editar el título y la categoría de este tema"
@@ -306,6 +308,8 @@ es:
         search: "Buscar un mensaje por título:"
         placeholder: "escribe el título del mensaje aquí"
     review:
+      order_by: "Ordenar por"
+      in_reply_to: "en respuesta a"
       claim_help:
         optional: "Puedes reclamar este artículo para evitar que otros lo revisen."
         required: "Debes reclamar los artículos antes de poder revisarlos."
@@ -321,6 +325,8 @@ es:
         saved: "Guardado"
         save_changes: "Guardar cambios"
         title: "Ajustes"
+        priorities:
+          title: "Prioridades Revisables"
       moderation_history: "Historial de moderación"
       view_all: "Ver todo"
       grouped_by_topic: "Agrupados por tema"
@@ -379,6 +385,11 @@ es:
         refresh: "Actualizar"
         status: "Estado"
         category: "Categoría"
+        orders:
+          priority: "Prioridad"
+          priority_asc: "Prioridad (inverso)"
+          created_at: "Creado el"
+          created_at_asc: "Creado el (inverso)"
         priority:
           title: "Prioridad mínima"
           low: "Bajo"
@@ -413,6 +424,8 @@ es:
         reviewable_flagged_post:
           title: "Publicación reportada"
           flagged_by: "Reportado por"
+        reviewable_queued_topic:
+          title: "Tema en cola"
         reviewable_queued_post:
           title: "Publicación en cola"
         reviewable_user:
@@ -725,6 +738,7 @@ es:
       allow_private_messages: "Permitir que otros usuarios me envíen mensajes privados"
       external_links_in_new_tab: "Abrir todos los enlaces externos en una nueva pestaña"
       enable_quoting: "Activar respuesta citando el texto resaltado"
+      enable_defer: "Habilitar diferir para marcar temas no leídos"
       change: "cambio"
       moderator: "{{user}} es un moderador"
       admin: "{{user}} es un administrador"
@@ -764,6 +778,7 @@ es:
       watched_first_post_tags_instructions: "Se te notificará del primer post en cada nuevo tema con estas etiquetas."
       muted_categories: "Silenciado"
       muted_categories_instructions: "No serás notificado de ningún tema en estas categorías, y no aparecerán en la página de categorías o mensajes recientes."
+      muted_categories_instructions_dont_hide: "No se le notificará nada sobre nuevos temas en estas categorías."
       no_category_access: "Como un moderador, tienes acceso limitado a categorías, guardar está deshabilitado."
       delete_account: "Borrar Mi Cuenta"
       delete_account_confirm: "¿Estás seguro que quieres borrar permanentemente tu cuenta? ¡Esta acción no puede ser revertida!"
@@ -840,6 +855,8 @@ es:
           description: "Cada uno de estos códigos de respaldo puede ser usado una única vez. Mantén los códigos en un lugar seguro, pero accesible."
       second_factor:
         title: "Autenticación Dos Factores"
+        disable: "Inhabilitar Autenticación Dos Factores"
+        enable: "Habilitar Autenticación Dos Factores"
         confirm_password_description: "Por favor confirma tu contraseña para continuar"
         label: "Código"
         rate_limit: "Por favor, espera antes de volver a intentar otro código de autenticación."
@@ -847,6 +864,8 @@ es:
           Escanea este código QR en una aplicación que lo soporte (<a href="https://www.google.com/search?q=authenticator+apps+for+android" target="_blank">Android</a> – <a href="https://www.google.com/search?q=authenticator+apps+for+ios" target="_blank">iOS</a>) e introduce el código de verificación.
         disable_description: "Por favor ingrese el código de autenticación desde su aplicación"
         show_key_description: "Ingrese Manualmente"
+        short_description: |
+          Protege tu cuenta con el uso de un único código de seguridad.
         extended_description: |
           La verificación en dos pasos añade una capa extra de seguridad requiriendo un token por única vez además de tu contraseña. Los códigos (token) se generan en dispositivos <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>Android</a> e <a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS</a>
         oauth_enabled_warning: "Por favor ten en cuenta que los accesos a través de redes sociales serán inhabilitados si habilitas el factor de autenticación en dos pasos de tu cuenta."
@@ -1155,6 +1174,11 @@ es:
     too_few_topics_and_posts_notice: "¡Vamos a <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>dar por comenzada la comunidad!</a> Hay <strong>%{currentTopics} / %{requiredTopics}</strong> temas y <strong>%{currentPosts} / %{requiredPosts}</strong> posts. Los nuevos visitantes necesitan algo que leer y a lo que responder."
     too_few_topics_notice: "¡Vamos a <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>dar por comenzada la comunidad!</a> Hay <strong>%{currentTopics} / %{requiredTopics}</strong> temas. Los nuevos visitantes necesitan algo que leer y a lo que responder."
     too_few_posts_notice: "¡Vamos a <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>dar por empezada la comunidad!</a> Hay <strong>%{currentPosts} / %{requiredPosts}</strong> posts. Los nuevos visitantes necesitan algo que leer y a lo que responder."
+    logs_error_rate_notice:
+      reached_hour_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# error/hour} otros {# errors/hour}}</a> alcanzó el límite de la configuración del sitio del {limit, plural, one {# error/hour} otros {# errors/hour}}."
+      reached_minute_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# error/minute} otros {# errors/minute}}</a> alcanzó el límite de la configuración del sitio del {limit, plural, one {# error/minute} otros {# errors/minute}}."
+      exceeded_hour_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# error/hour} otros {# errors/hour}}</a> excedió el límite de la configuración del sitio del {limit, plural, one {# error/hour} otros {# errors/hour}}."
+      exceeded_minute_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# error/minute} otros {# errors/minute}}</a> excedió el límite de la configuración del sitio del {limit, plural, one {# error/minute} otros {# errors/minute}}."
     learn_more: "saber más..."
     all_time: "total"
     all_time_desc: "temas creados total"
@@ -1210,6 +1234,7 @@ es:
     trust_level: "Nivel de Confianza"
     search_hint: "usuario, email o dirección IP"
     create_account:
+      disclaimer: "Al registrarte aceptas la <a href='{{privacy_link}}' target='blank'>política de privacidad</a> y los <a href='{{tos_link}}' target='blank'>términos del servicio</a>."
       title: "Crear Cuenta Nueva"
       failed: "Algo ha salido mal, tal vez este e-mail ya fue registrado, intenta con el enlace 'olvidé la contraseña'"
     forgot_password:
@@ -1248,6 +1273,7 @@ es:
       email_placeholder: "dirección de e-mail o nombre de usuario"
       caps_lock_warning: "Está activado Bloqueo de Mayúsculas"
       error: "Error desconocido"
+      cookies_error: "Su navegador parece tener las cookies deshabilitadas. Es posible que no pueda iniciar sesión sin habilitarlos primero."
       rate_limit: "Por favor, espera un poco antes de volver a intentar iniciar sesión."
       blank_username: "Por favor ingresa tu email o nombre de usuario."
       blank_username_or_password: "Por favor, introducir tu e-mail o usuario, y tu contraseña."
@@ -1325,6 +1351,7 @@ es:
       shift: "Shift"
       ctrl: "Ctrl"
       alt: "Alt"
+      enter: "Intro"
     conditional_loading_section:
       loading: Cargando...
     category_row:
@@ -1544,6 +1571,26 @@ es:
         confirm_title: "Notificaciones habilitadas - %{site_title}"
         confirm_body: "¡Éxito! Las notificaciones han sido habilitadas."
         custom: "Notificación de {{username}} en %{site_title}"
+      titles:
+        mentioned: "mencionado"
+        replied: "nueva respuesta"
+        quoted: "citado"
+        edited: "editado"
+        liked: "nuevo me gusta"
+        private_message: "nuevo mensaje privado"
+        invited_to_private_message: "invitado a mensaje privado"
+        invitee_accepted: "invitación aceptada"
+        posted: "nueva publicación"
+        moved_post: "publicación movida"
+        linked: "gustado"
+        granted_badge: "medalla concedida"
+        invited_to_topic: "invitado al tema"
+        group_mentioned: "grupo mencionado"
+        group_message_summary: "nuevo mensaje grupal"
+        watching_first_post: "nuevo tema"
+        topic_reminder: "recordatorio de tema"
+        liked_consolidated: "nuevos me gusta"
+        post_approved: "post aprobado"
     upload_selector:
       title: "Añadir imagen"
       title_with_attachments: "Añadir una imagen o archivo"
@@ -1707,6 +1754,9 @@ es:
       edit_message:
         help: "Editar el primer post del mensaje"
         title: "Editar Mensaje"
+      defer:
+        help: "Marcar como no leído"
+        title: "Aplazar"
       list: "Temas"
       new: "nuevo tema"
       unread: "sin leer"
@@ -2736,6 +2786,11 @@ es:
     admin:
       title: "Administrador de Discourse"
       moderator: "Moderador"
+      tags:
+        remove_muted_tags_from_latest:
+          always: "siempre"
+          only_muted: "cuando es usado solo o con otras etiquetas silenciadas"
+          never: "nunca"
       reports:
         title: "Lista de informes disponibles"
       dashboard:
@@ -2810,6 +2865,7 @@ es:
           groups: "Todos los grupos"
           disabled: "Este reporte está inhabilitado"
           totals_for_sample: "Total para la muestra"
+          average_for_sample: "Promedio por muestra"
           total: "Total de siempre"
           no_data: "Ningún dato a mostrar."
           trending_search:
@@ -3594,6 +3650,7 @@ es:
         delete_posts_failed: "Ha habido un problema borrando los mensajes."
         penalty_post_actions: "¿Qué te gustaría hacer con la publicación asociada?"
         penalty_post_delete: "Borrar el post"
+        penalty_post_delete_replies: "Eliminar el post + sus respuesta"
         penalty_post_edit: "Editar el post"
         penalty_post_none: "Nada"
         penalty_count: "Contador de Faltas"

@@ -1074,6 +1074,9 @@ bg:
         linked: '{{username}} прикачи вашата публикация от "{{topic}}" - {{site_title}}'
         confirm_title: "Включени известявания - %{site_title}"
         confirm_body: "Успех! Известяването е включено."
+      titles:
+        watching_first_post: "нова тема"
+        post_approved: "публикацията е одобрена"
     upload_selector:
       title: "Добавете изображение"
       title_with_attachments: "Добавете изображение или файл"
@@ -1204,6 +1207,8 @@ bg:
       move_to_inbox:
         title: "Премести във входящи"
         help: "Премести съобщението обратно във входящи"
+      defer:
+        title: "Отложи "
       list: "Теми"
       new: "нова тема"
       unread: "непрочетено"
@@ -1954,6 +1959,10 @@ bg:
     admin:
       title: "Discourse Админ"
       moderator: "Модератор"
+      tags:
+        remove_muted_tags_from_latest:
+          always: "винаги"
+          never: "никога"
       dashboard:
         title: "Работен плот"
         version: "Версия"

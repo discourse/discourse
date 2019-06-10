@@ -312,7 +312,7 @@ export default Ember.Object.extend({
             obj[subType] = hydrated;
             delete obj[k];
           } else {
-            obj[subType] = null;
+            Ember.set(obj, subType, null);
           }
         }
       }

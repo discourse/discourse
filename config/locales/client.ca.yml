@@ -109,10 +109,15 @@ ca:
       next_month: "Següent mes"
       placeholder: data
     share:
+      topic_html: 'Tema: <span class="topic-title">%{topicTitle}</span>'
       post: "publica #%{postNumber}"
       close: "tanca"
+      twitter: "Comparteix aquest enllaç a Twitter"
+      facebook: "Comparteix aquest enllaç a Facebook"
+      email: "Envia aquest enllaç a un correu electrònic"
     action_codes:
       public_topic: "va fer públic aquest tema %{when}"
+      private_topic: "es va convertir aquest tema en un missatge personal %{when}"
       split_topic: "va dividir aquest tema %{when}"
       invited_user: "va invitar %{who} %{when}"
       invited_group: "va invitar %{who} %{when}"
@@ -158,6 +163,7 @@ ca:
         eu_west_1: "EU (Irlanda)"
         eu_west_2: "EU (Londres)"
         eu_west_3: "UE (Paris)"
+        sa_east_1: "Sud-amèrica (São Paulo)"
         us_east_1: "US East (N. Virginia)"
         us_east_2: "EEUU Est (Ohio)"
         us_west_1: "US West (N. California)"
@@ -1176,6 +1182,8 @@ ca:
         replied: '{{username}} t''ha respost a "{{topic}}" - {{site_title}}'
         posted: '{{username}} publicat a "{{topic}}" - {{site_title}}'
         linked: '{{username}} ha enllaçat la teva entrada en "{{topic}}" - {{site_title}}'
+      titles:
+        watching_first_post: "nou tema"
     upload_selector:
       title: "Afegeix una imatge"
       title_with_attachments: "Afegeix una imatge o arxiu"
@@ -1314,6 +1322,8 @@ ca:
       move_to_inbox:
         title: "Mou a la safata d'entrada"
         help: "Torna el missatge a la safata d'entrada"
+      defer:
+        title: "Aplaça"
       list: "Temes"
       new: "nou tema"
       unread: "sense llegir"
@@ -2129,6 +2139,10 @@ ca:
     admin:
       title: "Administració de Discourse"
       moderator: "Moderació"
+      tags:
+        remove_muted_tags_from_latest:
+          always: "sempre"
+          never: "mai"
       dashboard:
         title: "Tauler de control"
         version: "Versió"

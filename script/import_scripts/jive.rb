@@ -69,7 +69,7 @@ class ImportScripts::Jive < ImportScripts::Base
     first = true
     row = nil
 
-    current_row = ""
+    current_row = +""
     double_quote_count = 0
 
     File.open(filename).each_line do |line|
@@ -154,7 +154,7 @@ class ImportScripts::Jive < ImportScripts::Base
 
       # fake it
       if row.email.blank? || row.email !~ /@/
-        email = SecureRandom.hex << "@domain.com"
+        email = fake_email
       end
 
       name = "#{row.firstname} #{row.lastname}"

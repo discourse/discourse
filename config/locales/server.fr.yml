@@ -646,27 +646,27 @@ fr:
   user_auth_tokens:
     browser:
       chrome: "Google Chrome"
-      safari: "Safari"
-      firefox: "Firefox"
-      opera: "Opera"
-      ie: "Internet Explorer"
       edge: "Microsoft Edge"
+      firefox: "Firefox"
+      ie: "Internet Explorer"
+      opera: "Opera"
+      safari: "Safari"
       unknown: "navigateur inconnu"
     device:
       android: "Android Device"
       ipad: "iPad"
       iphone: "iPhone"
       ipod: "iPod"
-      mobile: "Appareil portable"
-      mac: "Mac"
       linux: "Ordinateur GNU/Linux"
+      mac: "Mac"
+      mobile: "Appareil portable"
       windows: "Ordinateur Windows"
       unknown: "appareil inconnu"
     os:
       android: "Android"
       ios: "iOS"
-      macos: "macOS"
       linux: "Linux"
+      macos: "macOS"
       windows: "Microsoft Windows"
       unknown: "système d'exploitation inconnu"
   change_email:
@@ -881,7 +881,6 @@ fr:
       title: "Visites d'utilisateurs"
       xaxis: "Jour"
       yaxis: "Nombre de visites"
-      description: "Nombre de visites d'utilisateurs uniques"
     signups:
       title: "Inscriptions"
       xaxis: "Jour"
@@ -1272,7 +1271,6 @@ fr:
     must_approve_users: "Les responsables doivent approuver les nouveaux utilisateurs afin qu'ils puissent accéder au site. ATTENTION : activer cette option sur un site en production suspendra l'accès des utilisateurs existants qui ne sont pas des responsables !"
     pending_users_reminder_delay: "Avertir les modérateurs si des nouveaux utilisateurs sont en attente d'approbation depuis x heures. Mettre -1 pour désactiver les notifications."
     maximum_session_age: "L'utilisateur restera connecté pour n heures après la dernière visite"
-    ga_universal_tracking_code: "Code de suivi Google Universal Analytics (analytics.js), par exemple : UA-12345678-9 ; voir <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
     ga_universal_domain_name: "Nom de domaine Google Universal Analytics (analytics.js), par exemple : monsite.com ; voir <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
     ga_universal_auto_link_domains: "Activer Google Universal Analytics (analytics.js) pour le suivi interdomaine. Les liens sortants vers ces domaines auront l'identifiant client ajouté. Voir le guide <a href='https://support.google.com/analytics/answer/1034342?hl=en' target='_blank'>Cross-Domain Tracking  de Google</a>."
     gtm_container_id: "Identifiant de container Google Tag Manager. P.ex : GTM-ABCDEF. <br/>Note: les scripts tiers chargés par GTM devront peut-être être mis sur liste blanche dans 'content security policy script src'."
@@ -3954,6 +3952,8 @@ fr:
             placeholder: "San Francisco, Californie"
       colors:
         title: "Thème"
+      themes_further_reading:
+        title: "Thèmes"
       logos:
         title: "Logos"
         fields:
@@ -4019,10 +4019,12 @@ fr:
   reviewables:
     priorities:
       low: "Faible"
+      medium: "Moyenne"
       high: "Fort"
     sensitivity:
       disabled: "Désactivé"
       low: "Faible"
+      medium: "Moyenne"
       high: "Fort"
     missing_version: "Vous devez fournir un paramètre de version"
     conflict: "Un conflit de mise à jour empêche rend cette action impossible."

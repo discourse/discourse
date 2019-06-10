@@ -66,7 +66,7 @@ class ReviewableFlaggedPost < Reviewable
 
     build_action(actions, :ignore, icon: 'external-link-alt')
 
-    if guardian.is_staff?
+    if guardian.can_delete_post_or_topic?(post)
       delete = actions.add_bundle("#{id}-delete", icon: "far-trash-alt", label: "reviewables.actions.delete.title")
       build_action(actions, :delete_and_ignore, icon: 'external-link-alt', bundle: delete)
       if post.reply_count > 0

@@ -11,6 +11,7 @@ class ThemeStore::GitImporter
   def initialize(url, private_key: nil, branch: nil)
     @url = url
     if @url.start_with?("https://github.com") && !@url.end_with?(".git")
+      @url = @url.gsub(/\/$/, '')
       @url += ".git"
     end
     @temp_folder = "#{Pathname.new(Dir.tmpdir).realpath}/discourse_theme_#{SecureRandom.hex}"

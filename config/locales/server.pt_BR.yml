@@ -2938,6 +2938,8 @@ pt_BR:
         title: "Organização"
       colors:
         title: "Tema"
+      themes_further_reading:
+        title: "Temas"
       logos:
         title: "Logotipos"
         fields:

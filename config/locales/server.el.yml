@@ -2729,6 +2729,8 @@ el:
         title: "Οργάνωση"
       colors:
         title: "Θέμα"
+      themes_further_reading:
+        title: "Θέματα"
       logos:
         title: "Λογότυπα"
         fields:

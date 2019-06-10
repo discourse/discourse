@@ -351,6 +351,7 @@ pl_PL:
       title:
         placeholder: "wpisz tytuł wiadomości"
     review:
+      in_reply_to: "w odpowiedzi na"
       delete: "Usuń"
       settings:
         saved: "Zapisano"
@@ -387,6 +388,8 @@ pl_PL:
           title: "Typ"
         refresh: "Odśwież"
         category: "Kategoria"
+        orders:
+          created_at: "Utworzony"
       scores:
         date: "Data"
         type: "Typ"
@@ -1418,6 +1421,8 @@ pl_PL:
         replied: '{{username}} odpowiada na twój wpis w "{{topic}}" - {{site_title}}'
         posted: '{{username}} pisze w "{{topic}}" - {{site_title}}'
         linked: '{{username}} linkuje do twojego wpisu z "{{topic}}" - {{site_title}}'
+      titles:
+        watching_first_post: "nowy temat"
     upload_selector:
       title: "Dodaj obraz"
       title_with_attachments: "Dodaj obraz lub plik"
@@ -1576,6 +1581,8 @@ pl_PL:
         help: "Przenieś wiadomość z powrotem do skrzynki odbiorczej"
       edit_message:
         title: "Edytuj wiadomość"
+      defer:
+        title: "Zignoruj"
       list: "Tematy"
       new: "nowy temat"
       unread: "nieprzeczytane"
@@ -2547,6 +2554,10 @@ pl_PL:
     admin:
       title: "Administrator Discourse"
       moderator: "Moderator"
+      tags:
+        remove_muted_tags_from_latest:
+          always: "zawsze"
+          never: "nigdy"
       dashboard:
         title: "Raporty"
         version: "Wersja"

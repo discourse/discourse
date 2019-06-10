@@ -483,27 +483,27 @@ ko:
   user_auth_tokens:
     browser:
       chrome: "구글 크롬"
-      safari: "사파리"
-      firefox: "파이어폭스"
-      opera: "오페라"
-      ie: "인터넷 익스플로러"
       edge: "마이크로소프트 엣지"
+      firefox: "파이어폭스"
+      ie: "인터넷 익스플로러"
+      opera: "오페라"
+      safari: "사파리"
       unknown: "알수없는 브라우저"
     device:
       android: "안드로이드 기기"
       ipad: "아이패드"
       iphone: "아이폰"
       ipod: "아이팟"
-      mobile: "모바일 기기"
-      mac: "맥"
       linux: "GNU/리눅스 컴퓨터"
+      mac: "맥"
+      mobile: "모바일 기기"
       windows: "윈도우 컴퓨터"
       unknown: "알수없는 디바이스"
     os:
       android: "안드로이드"
       ios: "iOS"
-      macos: "맥OS"
       linux: "리눅스"
+      macos: "맥OS"
       windows: "마이크로소프트 윈도우"
       unknown: "알수없는 운영체제"
   change_email:
@@ -1895,6 +1895,8 @@ ko:
       corporate:
         title: "소속"
       colors:
+        title: "테마"
+      themes_further_reading:
         title: "테마"
       logos:
         title: "로고"

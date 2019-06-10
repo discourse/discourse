@@ -133,6 +133,7 @@ zh_CN:
     bootstrap_mode_disabled: "初始化模式将会在24小时后关闭。"
     themes:
       default_description: "默认"
+      broken_theme_alert: "你的网站可能无法正常运行，因为主题/组件%{theme}有错误。 在%{path}禁用它。"
     s3:
       regions:
         ap_northeast_1: "亚太地区（Tokyo）"
@@ -152,6 +153,7 @@ zh_CN:
         us_east_1: "美国东部（N. Virginia）"
         us_east_2: "美国东部（俄亥俄州）"
         us_gov_east_1: "AWS政府专用（US-East）"
+        us_gov_west_1: "AWS GovCloud (US-West)"
         us_west_1: "美国西部（N. California）"
         us_west_2: "美国西部（Oregon）"
     edit: "编辑标题和分类"
@@ -281,6 +283,8 @@ zh_CN:
         search: "按标题搜索消息："
         placeholder: "在此输入消息标题"
     review:
+      order_by: "排序依据"
+      in_reply_to: "回复给"
       claim_help:
         optional: "你可以认领此条目以防止他人审核。"
         required: "在你审核之前你必须认领此条目。"
@@ -296,6 +300,8 @@ zh_CN:
         saved: "已保存！"
         save_changes: "保存更改"
         title: "设置"
+        priorities:
+          title: "需审核优先级"
       moderation_history: "管理日志"
       view_all: "查看全部"
       grouped_by_topic: "依据主题分组"
@@ -347,7 +353,13 @@ zh_CN:
         refresh: "刷新"
         status: "状态"
         category: "分类"
+        orders:
+          priority: "优先级"
+          priority_asc: "优先级（倒序）"
+          created_at: "创建时间"
+          created_at_asc: "创建时间（倒序）"
         priority:
+          title: "最低优先级"
           low: "低"
           medium: "中等"
           high: "高"
@@ -380,6 +392,8 @@ zh_CN:
         reviewable_flagged_post:
           title: "被标记的帖子"
           flagged_by: "标记者"
+        reviewable_queued_topic:
+          title: "队列中到主题"
         reviewable_queued_post:
           title: "队列中的帖子"
         reviewable_user:
@@ -686,6 +700,7 @@ zh_CN:
       allow_private_messages: "允许其他用户发送私信给我"
       external_links_in_new_tab: "在新标签页打开外部链接"
       enable_quoting: "在选择文字时显示引用回复按钮"
+      enable_defer: "启用延迟以标记未读主题"
       change: "修改"
       moderator: "{{user}}是版主"
       admin: "{{user}}是管理员"
@@ -725,6 +740,7 @@ zh_CN:
       watched_first_post_tags_instructions: "在有了这些标签的每一个新主题，第一帖会通知你。"
       muted_categories: "静音"
       muted_categories_instructions: "你不会收到有关这些分类中新主题的任何通知，也不会出现在类别或最新页面上。"
+      muted_categories_instructions_dont_hide: "你不会收到这些组内关于新主题中的通知。"
       no_category_access: "无法保存，作为审核人你仅具有受限的 分类 访问权限"
       delete_account: "删除我的账户"
       delete_account_confirm: "你真的要永久删除自己的账户吗？删除之后无法恢复！"
@@ -810,6 +826,8 @@ zh_CN:
           使用我们支持的应用 (<a href="https://www.google.com/search?q=authenticator+apps+for+android" target="_blank">Android</a> – <a href="https://www.google.com/search?q=authenticator+apps+for+ios" target="_blank">iOS</a>) 扫描此二维码并输入您的授权码。
         disable_description: "请输入来自  app  的验证码"
         show_key_description: "手动输入"
+        short_description: |
+          使用一次性安全码保护你的帐户。
         extended_description: |
           双重身份验证除了你的密码之外还需要一次性令牌，从而为你的帐户增加了额外的安全性。 可以在<a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>Android</a>和<a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS</a>设备。
         oauth_enabled_warning: "请注意，一旦你的帐户启用了双重身份验证，系统就会停用社交登录。"
@@ -1108,6 +1126,11 @@ zh_CN:
     too_few_topics_and_posts_notice: "让我们<a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>开始讨论！</a>目前有<strong>%{currentTopics} / %{requiredTopics}</strong>个主题和<strong>%{currentPosts} / %{requiredPosts}</strong>个帖子。新访客需要能够阅读和回复一些对话。"
     too_few_topics_notice: "让我们<a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>开始讨论！</a>目前有<strong>%{currentTopics} / %{requiredTopics}</strong>个主题。新访客需要能够阅读和回复一些讨论。"
     too_few_posts_notice: "让我们<a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>开始讨论！</a>目前有<strong>%{currentPosts} / %{requiredPosts}</strong>个帖子。新访客需要能够阅读和回复一些讨论。"
+    logs_error_rate_notice:
+      reached_hour_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# error/hour} other {# errors/hour}}</a>达到了站点设置中的限制{limit, plural, one {# error/hour} other {# errors/hour}}。"
+      reached_minute_MF: "<b>{relativeAge}</b>1 – <a href='{url}' target='_blank'>{rate, plural, one {# error/minute} other {# errors/minute}}</a>已经达到站点设置限制  {limit, plural, one {# error/minute} other {# errors/minute}}。"
+      exceeded_hour_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# error/hour} other {# errors/hour}}</a>超出了站点设置中的限制{limit, plural, one {# error/hour} other {# errors/hour}}。"
+      exceeded_minute_MF: "<b>{relativeAge}</b>1 – <a href='{url}' target='_blank'>{rate, plural, one {# error/minute} other {# errors/minute}}</a>已经超出站点设置限制  {limit, plural, one {# error/minute} other {# errors/minute}}。"
     learn_more: "了解更多…"
     all_time: "总量"
     all_time_desc: "创建的主题总量"
@@ -1162,6 +1185,7 @@ zh_CN:
     trust_level: "用户级别"
     search_hint: "用户名、电子邮件或 IP 地址"
     create_account:
+      disclaimer: "注册即表示你同意<a href='{{privacy_link}}' target='blank'>隐私策略</a>和<a href='{{tos_link}}' target='blank'>服务条款</a>。"
       title: "创建新账户"
       failed: "出问题了，有可能这个邮箱已经被注册了。试试忘记密码链接？"
     forgot_password:
@@ -1200,6 +1224,7 @@ zh_CN:
       email_placeholder: "电子邮件或者用户名"
       caps_lock_warning: "大写锁定开启"
       error: "未知错误"
+      cookies_error: "你的浏览器似乎禁用了Cookie。如果不先启用它们，你可能无法登录。"
       rate_limit: "请请稍后再重试"
       blank_username: "请输入你的邮件地址或用户名。"
       blank_username_or_password: "请输入你的邮件地址或用户名，以及密码。"
@@ -1489,6 +1514,26 @@ zh_CN:
         confirm_title: "通知已启用 - %{site_title}"
         confirm_body: "成功！通知已启用。"
         custom: "来自{{username}}在%{site_title}的通知"
+      titles:
+        mentioned: "提及到"
+        replied: "新回复"
+        quoted: "引用"
+        edited: "编辑"
+        liked: "新到赞"
+        private_message: "新私信"
+        invited_to_private_message: "邀请进行私下交流"
+        invitee_accepted: "邀请已接受"
+        posted: "新帖子"
+        moved_post: "帖子已移动"
+        linked: "链接"
+        granted_badge: "勋章授予"
+        invited_to_topic: "邀请到主题"
+        group_mentioned: "群组提及"
+        group_message_summary: "新建群组消息"
+        watching_first_post: "近期主题"
+        topic_reminder: "主题提醒"
+        liked_consolidated: "新的赞"
+        post_approved: "帖子已审批"
     upload_selector:
       title: "插入图片"
       title_with_attachments: "上传图片或文件"
@@ -1649,6 +1694,9 @@ zh_CN:
       edit_message:
         help: "编辑消息中的第一帖"
         title: "编辑消息"
+      defer:
+        help: "标记为未读"
+        title: "推迟处理"
       list: "主题"
       new: "近期主题"
       unread: "未读"
@@ -2628,6 +2676,11 @@ zh_CN:
     admin:
       title: "Discourse 管理员"
       moderator: "版主"
+      tags:
+        remove_muted_tags_from_latest:
+          always: "始终"
+          only_muted: "单独使用或与其他静音标签一起使用时"
+          never: "从不"
       reports:
         title: "可用报告列表"
       dashboard:
@@ -2701,6 +2754,7 @@ zh_CN:
           groups: "所有群组"
           disabled: "此报告已禁用"
           totals_for_sample: "总计样本"
+          average_for_sample: "平均样本"
           total: "所有时间总计"
           no_data: "没有数据显示。"
           trending_search:
@@ -3481,6 +3535,7 @@ zh_CN:
         delete_posts_failed: "删除帖子时出现问题。"
         penalty_post_actions: "你想对相关帖子做什么？"
         penalty_post_delete: "删除帖子"
+        penalty_post_delete_replies: "删除帖子+所有回复"
         penalty_post_edit: "编辑帖子"
         penalty_post_none: "什么都不做"
         penalty_count: "处罚计数"

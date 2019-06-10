@@ -1332,6 +1332,8 @@ ar:
         replied: 'ردّ {{username}} عليك في "{{topic}}" - {{site_title}}'
         posted: 'نشر {{username}} في "{{topic}}" - {{site_title}}'
         linked: '{{username}} وضع رابطا لمنشورك في "{{topic}}" - {{site_title}}'
+      titles:
+        watching_first_post: "موضوع جديد"
     upload_selector:
       title: "أضف صورة"
       title_with_attachments: "أضف صورة أو ملفّ"
@@ -1489,6 +1491,8 @@ ar:
         help: "انقل الرسالة للبريد الوارد"
       edit_message:
         title: "تحرير رسالة"
+      defer:
+        title: "تأجيل"
       list: "الموضوعات"
       new: "موضوع جديد"
       unread: "غير مقروء"
@@ -2517,6 +2521,10 @@ ar:
     admin:
       title: "مدير المجتمع"
       moderator: "مشرف"
+      tags:
+        remove_muted_tags_from_latest:
+          always: "دائما"
+          never: "أبدا"
       dashboard:
         title: "لوحة التحكم"
         version: "الإصدار"

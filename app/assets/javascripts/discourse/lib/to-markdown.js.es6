@@ -241,6 +241,7 @@ export class Tag {
           let alt = attr.alt || pAttr.alt || "";
           const width = attr.width || pAttr.width;
           const height = attr.height || pAttr.height;
+          const title = attr.title;
 
           if (width && height) {
             const pipe = this.element.parentNames.includes("table")
@@ -249,7 +250,7 @@ export class Tag {
             alt = `${alt}${pipe}${width}x${height}`;
           }
 
-          return "![" + alt + "](" + src + ")";
+          return `![${alt}](${src}${title ? ` "${title}"` : ""})`;
         }
 
         return "";

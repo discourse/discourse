@@ -431,6 +431,11 @@ module ApplicationHelper
       &.html_safe
   end
 
+  def theme_js_lookup
+    Theme.lookup_field(theme_ids, :extra_js, nil)
+      &.html_safe
+  end
+
   def discourse_stylesheet_link_tag(name, opts = {})
     if opts.key?(:theme_ids)
       ids = opts[:theme_ids] unless customization_disabled?

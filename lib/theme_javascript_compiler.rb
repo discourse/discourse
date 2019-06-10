@@ -202,22 +202,36 @@ class ThemeJavascriptCompiler
     @content << script + "\n"
   end
 
+  def append_module(script, name)
+    script.prepend theme_variables
+    template = Tilt::ES6ModuleTranspilerTemplate.new {}
+    @content << template.module_transpile(script, "", name)
+  rescue MiniRacer::RuntimeError => ex
+    raise CompileError.new ex.message
+  end
+
   def append_js_error(message)
     @content << "console.error('Theme Transpilation Error:', #{message.inspect});"
   end
 
   private
 
+  def theme_variables
+    <<~JS
+      const __theme_name__ = "#{@theme_name.gsub('"', "\\\"")}";
+      const settings = Discourse.__container__
+        .lookup("service:theme-settings")
+        .getObjectForTheme(#{@theme_id});
+      const themePrefix = (key) => `theme_translations.#{@theme_id}.${key}`;
+    JS
+  end
+
   def transpile(es6_source, version)
     template = Tilt::ES6ModuleTranspilerTemplate.new {}
     wrapped = <<~PLUGIN_API_JS
       (function() {
         if ('Discourse' in window && typeof Discourse._registerPluginCode === 'function') {
-          const __theme_name__ = "#{@theme_name.gsub('"', "\\\"")}";
-          const settings = Discourse.__container__
-            .lookup("service:theme-settings")
-            .getObjectForTheme(#{@theme_id});
-          const themePrefix = (key) => `theme_translations.#{@theme_id}.${key}`;
+          #{theme_variables}
           Discourse._registerPluginCode('#{version}', api => {
             try {
             #{es6_source}

@@ -545,6 +545,9 @@ class GroupsController < ApplicationController
             :automatic_membership_email_domains,
             :automatic_membership_retroactive
           ])
+
+          custom_fields = Group.editable_group_custom_fields
+          default_params << { custom_fields: custom_fields } unless custom_fields.blank?
         end
 
         default_params

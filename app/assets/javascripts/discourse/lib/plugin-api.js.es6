@@ -44,7 +44,7 @@ import { addComposerUploadHandler } from "discourse/components/composer-editor";
 import { addCategorySortCriteria } from "discourse/components/edit-category-settings";
 
 // If you add any methods to the API ensure you bump up this number
-const PLUGIN_API_VERSION = "0.8.30";
+const PLUGIN_API_VERSION = "0.8.31";
 
 class PluginApi {
   constructor(version, container) {
@@ -809,7 +809,7 @@ class PluginApi {
    *
    * Example:
    *
-   * addComposerUploadHandler(["mp4", "mov"], (file) => {
+   * addComposerUploadHandler(["mp4", "mov"], (file, editor) => {
    *    console.log("Handling upload for", file.name);
    * })
    */

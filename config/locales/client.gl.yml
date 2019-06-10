@@ -913,6 +913,8 @@ gl:
         replied: '{{username}} respondeute en "{{topic}}" - {{site_title}}'
         posted: '{{username}} publicou en "{{topic}}" - {{site_title}}'
         linked: '{{username}} ligou a túa publicación desde "{{topic}}" - {{site_title}}'
+      titles:
+        watching_first_post: "novo tema"
     upload_selector:
       title: "Engadir unha imaxe"
       title_with_attachments: "Engadir imaxe ou ficheiro"
@@ -1007,6 +1009,8 @@ gl:
       move_to_inbox:
         title: "Mover á caixa de entrada"
         help: "Mover mensaxes á caixa de entrada"
+      defer:
+        title: "Pospor"
       list: "Temas"
       new: "novo tema"
       unread: "sen ler"
@@ -1680,6 +1684,10 @@ gl:
     admin:
       title: "Administrador de Discourse"
       moderator: "Moderador"
+      tags:
+        remove_muted_tags_from_latest:
+          always: "sempre"
+          never: "nunca"
       dashboard:
         title: "Panel"
         version: "Versión"

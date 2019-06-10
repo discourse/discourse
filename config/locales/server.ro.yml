@@ -2019,6 +2019,8 @@ ro:
         title: "Organizație"
       colors:
         title: "Temă"
+      themes_further_reading:
+        title: "Teme"
       logos:
         title: "Logo-uri"
         fields:

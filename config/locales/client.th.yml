@@ -969,6 +969,8 @@ th:
         replied: '{{username}} ตอบคุณใน "{{topic}}" - {{site_title}}'
         posted: '{{username}} โพสท์ใน "{{topic}}" - {{site_title}}'
         linked: '{{username}} ลิงค์โพสของคุณจาก "{{topic}}" - {{site_title}}'
+      titles:
+        watching_first_post: "สร้างกระทู้"
     upload_selector:
       title: "เพิ่มรูปภาพ"
       title_with_attachments: "เพิ่มรูปภาพหรือไฟล์"
@@ -1514,6 +1516,10 @@ th:
     admin:
       title: "ผู้ดูแลระบบดิสคอส"
       moderator: "ผู้ดูแล"
+      tags:
+        remove_muted_tags_from_latest:
+          always: "เสมอ"
+          never: "ไม่เลย"
       dashboard:
         title: "แดชบอร์ด"
         version: "เวอร์ชั่น"

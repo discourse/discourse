@@ -444,7 +444,6 @@ class PostRevisor
     return if @skip_revision
     # don't create an empty revision if something failed
     return unless successfully_saved_post_and_topic
-    return if only_hidden_tags_changed?
     @version_changed ? create_revision : update_revision
   end
 
@@ -463,7 +462,8 @@ class PostRevisor
       user_id: @post.last_editor_id,
       post_id: @post.id,
       number: @post.version,
-      modifications: modifications
+      modifications: modifications,
+      hidden: only_hidden_tags_changed?
     )
   end
 
@@ -527,7 +527,7 @@ class PostRevisor
     modifications = post_changes.merge(@topic_changes.diff)
     if modifications.keys.size == 1 && tags_diff = modifications["tags"]
       a, b = tags_diff[0] || [], tags_diff[1] || []
-      changed_tags = (a + b) - (a & b)
+      changed_tags = ((a + b) - (a & b)).map(&:presence).compact
       if (changed_tags - DiscourseTagging.hidden_tag_names(nil)).empty?
         return true
       end

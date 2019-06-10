@@ -33,7 +33,7 @@
     <label>{{d-icon "d-muted"}} {{i18n 'user.muted_categories'}}</label>
     {{category-selector categories=model.mutedCategories blacklist=selectedCategories}}
   </div>
-  <div class="instructions">{{i18n 'user.muted_categories_instructions'}}</div>
+  <div class="instructions">{{i18n (if hideMutedTags 'user.muted_categories_instructions' 'user.muted_categories_instructions_dont_hide')}}</div>
   {{#if canSee}}
     <div class="controls">
       <a href="{{unbound model.mutedTopicsPath}}">{{i18n 'user.muted_topics_link'}}</a>

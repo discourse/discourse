@@ -265,6 +265,7 @@ sv:
       title:
         placeholder: "skriv ämnets rubrik här"
     review:
+      in_reply_to: "som svar till"
       delete: "Radera"
       settings:
         save_changes: "Spara ändringar"
@@ -285,6 +286,8 @@ sv:
           title: "Typ"
         refresh: "Uppdatera"
         category: "Kategori"
+        orders:
+          created_at: "Skapad den"
       scores:
         type: "Typ"
       statuses:
@@ -1098,6 +1101,8 @@ sv:
         replied: '{{username}} svarade dig i "{{topic}}" - {{site_title}}'
         posted: '{{username}} skrev i "{{topic}}" - {{site_title}}'
         linked: '{{username}} länkade till ett inlägg du gjort från "{{topic}}" - {{site_title}}'
+      titles:
+        watching_first_post: "nytt ämne"
     upload_selector:
       title: "Lägg till en bild"
       title_with_attachments: "Lägg till en bild eller en fil"
@@ -1234,6 +1239,8 @@ sv:
       move_to_inbox:
         title: "Flytta till inkorgen"
         help: "Flytta tillbaka meddelandet till inkorgen"
+      defer:
+        title: "Skjut upp"
       list: "Ämnen"
       new: "nytt ämne"
       unread: "oläst"
@@ -2065,6 +2072,10 @@ sv:
     admin:
       title: "Discourse Admin"
       moderator: "Moderator"
+      tags:
+        remove_muted_tags_from_latest:
+          always: "alltid"
+          never: "aldrig"
       dashboard:
         title: "Översiktspanel"
         version: "Version"

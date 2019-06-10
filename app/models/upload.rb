@@ -138,11 +138,16 @@ class Upload < ActiveRecord::Base
   end
 
   def base62_sha1
-    Upload.base62_sha1(upload.sha1)
+    Upload.base62_sha1(self.sha1)
   end
 
   def local?
     !(url =~ /^(https?:)?\/\//)
+  end
+
+  def private?
+    return false if self.for_theme || self.for_site_setting
+    SiteSetting.prevent_anons_from_downloading_files && !FileHelper.is_supported_image?(self.original_filename)
   end
 
   def fix_dimensions!

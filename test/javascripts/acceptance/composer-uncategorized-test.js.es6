@@ -1,3 +1,4 @@
+import selectKit from "helpers/select-kit-helper";
 import { acceptance, replaceCurrentUser } from "helpers/qunit-helpers";
 
 acceptance("Composer and uncategorized is not allowed", {

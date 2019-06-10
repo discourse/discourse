@@ -306,6 +306,7 @@ pt_BR:
         search: "Pesquisar por uma Mensagem pelo título:"
         placeholder: "digite o título da mensagem aqui"
     review:
+      in_reply_to: "Em resposta a"
       awaiting_approval: "Aguardando Aprovação"
       delete: "Excluir"
       settings:
@@ -345,6 +346,8 @@ pt_BR:
         minimum_score: "Pontuação Mínima:"
         refresh: "Atualizar"
         category: "Categoria"
+        orders:
+          created_at: "Criado a"
       conversation:
         view_full: "visualizar conversa completa"
       scores:
@@ -1463,6 +1466,9 @@ pt_BR:
         watching_first_post: '{{username}} criou um novo tópico "{{topic}}" - {{site_title}}'
         confirm_title: "Notificações habilitadas - %{site_title}"
         confirm_body: "Sucesso! Notificações foram habilitadas."
+      titles:
+        watching_first_post: "novo tópico"
+        post_approved: "publicação aprovada"
     upload_selector:
       title: "Adicionar uma imagem"
       title_with_attachments: "Adicionar uma imagem ou um arquivo"
@@ -1626,6 +1632,8 @@ pt_BR:
       edit_message:
         help: "Editar primeira postagem da mensagem"
         title: "Editar Mensagem"
+      defer:
+        title: "Delegar"
       list: "Tópicos"
       new: "novo tópico"
       unread: "não lido"
@@ -2622,6 +2630,10 @@ pt_BR:
     admin:
       title: "Discourse Admin"
       moderator: "Moderador"
+      tags:
+        remove_muted_tags_from_latest:
+          always: "sempre"
+          never: "nunca"
       reports:
         title: "Lista de relatórios disponíveis"
       dashboard:

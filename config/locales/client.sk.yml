@@ -1288,6 +1288,8 @@ sk:
         replied: '{{username}} vám odpovedal v "{{topic}}" - {{site_title}}'
         posted: '{{username}} prispel v "{{topic}}" - {{site_title}}'
         linked: '{{username}} odkázal na váš príspevok z "{{topic}}" - {{site_title}}'
+      titles:
+        watching_first_post: "nová téma"
     upload_selector:
       title: "Pridať obrázok"
       title_with_attachments: "Pridať obrázok alebo súbor"
@@ -1423,6 +1425,8 @@ sk:
       move_to_inbox:
         title: "Presunúť do schránky"
         help: "Presunúť správu späť do schránky"
+      defer:
+        title: "Odložiť"
       list: "Témy"
       new: "nová téma"
       unread: "neprečítané"
@@ -2265,6 +2269,10 @@ sk:
     admin:
       title: "Administrátor Discourse"
       moderator: "Moderátor"
+      tags:
+        remove_muted_tags_from_latest:
+          always: "vždy"
+          never: "nikdy"
       dashboard:
         title: "Ovládací panel"
         version: "Verzia"

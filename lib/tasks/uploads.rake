@@ -316,17 +316,25 @@ def migrate_to_s3
     exit 1
   end
 
-  unless ENV["DISCOURSE_S3_SECRET_ACCESS_KEY"].present? &&
+  unless ENV["DISCOURSE_S3_BUCKET"].present? &&
     ENV["DISCOURSE_S3_REGION"].present? &&
-    ENV["DISCOURSE_S3_ACCESS_KEY_ID"].present? &&
-    ENV["DISCOURSE_S3_SECRET_ACCESS_KEY"].present?
+    (
+      (
+        ENV["DISCOURSE_S3_ACCESS_KEY_ID"].present? &&
+        ENV["DISCOURSE_S3_SECRET_ACCESS_KEY"].present?
+      ) ||
+      ENV["DISCOURSE_S3_USE_IAM_PROFILE"].present?
+    )
 
     puts <<~TEXT
       Please provide the following environment variables
         - DISCOURSE_S3_BUCKET
         - DISCOURSE_S3_REGION
+        and either
         - DISCOURSE_S3_ACCESS_KEY_ID
         - DISCOURSE_S3_SECRET_ACCESS_KEY
+        or
+        - DISCOURSE_S3_USE_IAM_PROFILE
     TEXT
     exit 2
   end
@@ -337,6 +345,7 @@ def migrate_to_s3
   end
 
   bucket_has_folder_path = true if ENV["DISCOURSE_S3_BUCKET"].include? "/"
+  public_directory = Rails.root.join("public").to_s
 
   opts = {
     region: ENV["DISCOURSE_S3_REGION"],
@@ -361,7 +370,7 @@ def migrate_to_s3
   print " - Listing local files"
 
   local_files = []
-  IO.popen("cd public && find uploads/#{db}/original -type f").each do |file|
+  IO.popen("cd #{public_directory} && find uploads/#{db}/original -type f").each do |file|
     local_files << file.chomp
     putc "." if local_files.size % 1000 == 0
   end
@@ -390,7 +399,7 @@ def migrate_to_s3
 
   skip_etag_verify = ENV["SKIP_ETAG_VERIFY"].present?
   local_files.each do |file|
-    path = File.join("public", file)
+    path = File.join(public_directory, file)
     name = File.basename(path)
     etag = Digest::MD5.file(path).hexdigest unless skip_etag_verify
     key = file[file.index(prefix)..-1]
@@ -415,6 +424,10 @@ def migrate_to_s3
       if upload&.original_filename
         options[:content_disposition] =
           %Q{attachment; filename="#{upload.original_filename}"}
+      end
+
+      if upload&.private?
+        options[:acl] = "private"
       end
     end
 
@@ -526,7 +539,7 @@ def migrate_to_s3
         .where("u.id IS NOT NULL AND u.url LIKE '//%' AND optimized_images.url NOT LIKE '//%'")
         .delete_all
 
-      puts "Flagging all posts containing oneboxes for rebake..."
+      puts "Flagging all posts containing lightboxes for rebake..."
 
       count = Post.where("cooked LIKE '%class=\"lightbox\"%'").update_all(baked_version: nil)
       puts "#{count} posts were flagged for a rebake"

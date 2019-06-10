@@ -787,7 +787,7 @@ class ImportScripts::DiscuzX < ImportScripts::Base
           FROM #{table_name 'forum_attachment'}
           WHERE pid = #{post.custom_fields['import_id']}"
       if !inline_attachments.empty?
-        sql << " AND aid NOT IN (#{inline_attachments.join(',')})"
+        sql = "#{sql} AND aid NOT IN (#{inline_attachments.join(',')})"
       end
 
       results = mysql_query(sql)

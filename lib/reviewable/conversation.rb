@@ -20,7 +20,7 @@ class Reviewable < ActiveRecord::Base
     def initialize(meta_topic)
       @id = meta_topic.id
       @has_more = false
-      @permalink = meta_topic.relative_url
+      @permalink = "#{Discourse.base_url}#{meta_topic.relative_url}"
       @posts = []
 
       meta_posts = meta_topic.ordered_posts.where(post_type: ::Post.types[:regular]).limit(2)

@@ -358,6 +358,7 @@ he:
         search: "חפש הודעה לפי שם:"
         placeholder: "הקלידו את כותרת ההודעה כאן"
     review:
+      in_reply_to: "בתגובה ל"
       claim_help:
         optional: "באפשרותך לדרוש את הפריט כדי למנוע מאחרים לסקור אותו."
         required: "עליך לדרוש פריטים לפני שיתאפשר לך לסקור אותם."
@@ -805,6 +806,7 @@ he:
       allow_private_messages: "אפשר למשתמשים אחרים לשלוח לי הודעות פרטיות"
       external_links_in_new_tab: "פתח את כל הקישורים החיצוניים בעמוד חדש"
       enable_quoting: "הפעלת תגובת ציטוט לטקסט מסומן"
+      enable_defer: "הפעלת דחייה כדי לסמן נושאים כלא נקראו"
       change: "שנה"
       moderator: "ל־{{user}} יש תפקיד פיקוח"
       admin: "{{user}} הוא מנהל מערכת"
@@ -844,6 +846,7 @@ he:
       watched_first_post_tags_instructions: "אתם תיודעו לגבי הפוסט הראשון בכל נושא חדש בתגיות אלו."
       muted_categories: "מושתק"
       muted_categories_instructions: "לא תקבל הודעה בנוגע לנושאים חדשים בקטגוריות אלה, והם לא יופיעו בקטגוריות או בדפים האחרונים."
+      muted_categories_instructions_dont_hide: "לא תישלחנה אליך התראות על שום דבר בנוגע לנושאים בקטגוריות האלו."
       no_category_access: "בתור פיקוח יש לך גישה מוגבלת לקטגוריות, שמירה מנוטרלת."
       delete_account: "מחק את החשבון שלי"
       delete_account_confirm: "אתם בטוחים שברצונכם להסיר את החשבון? לא ניתן לבטל פעולה זו!"
@@ -1259,6 +1262,11 @@ he:
     too_few_topics_and_posts_notice: "בואו <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>נתניע את הדיון הזה! </a> כרגע יש <strong>%{currentTopics} / %{requiredTopics}</strong>  נושאים ו<strong>%{currentPosts} / %{requiredPosts}</strong> פרסומים. מבקרים חדשים צריכים כמה שיחות לקרוא ולהגיב אליהם."
     too_few_topics_notice: "בואו <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>נתחיל את הדיון הזה!</a> יש כרגע <strong>%{currentTopics} / %{requiredTopics}</strong> נושאים. אורחים חדשים צריכים כמה דיונים לקרוא ולהגיב אליהם."
     too_few_posts_notice: "בואו <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>נתחיל את הדיון הזה!</a> יש כרגע <strong>%{currentPosts} / %{requiredPosts}</strong> פרסומים. אורחים חדשים צריכים כמה דיונים לקרוא ולהגיב אליהם."
+    logs_error_rate_notice:
+      reached_hour_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {שגיאה אחת בשעה הגיעה} other {# שגיאות בשעה הגיעו}}</a> למגבלת האתר שהיא {limit, plural, one {שגיאה אחת בשעה} other {# שגיאות בשעה}}."
+      reached_minute_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {שגיאה אחת בדקה הגיעה} other {# שגיאות בדקה הגיעו}}</a> למגבלת האתר שהיא {limit, plural, one {שגיאה אחת בדקה} other {# שגיאות בדקה}}."
+      exceeded_hour_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {שגיאה אחת בשעה חרגה} other {# שגיאות בשעה חרגו}}</a> ממגבלת האתר שהיא {limit, plural, one {שגיאה אחת בשעה} other {# שגיאות בשעה}}."
+      exceeded_minute_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {שגיאה אחת בדקה חרגה} other {# שגיאות בדקה חרגו}}</a> ממגבלת האתר שהיא {limit, plural, one {שגיאה אחת בדקה} other {# שגיאות בדקה}}."
     learn_more: "למד עוד..."
     all_time: "סך הכל"
     all_time_desc: "כל הנושאים שנוצרו"
@@ -1669,6 +1677,26 @@ he:
         confirm_title: "התראות הופעלו - %{site_title}"
         confirm_body: "הצלחה! התראות הופעלו"
         custom: "התראה מ־{{username}} באתר %{site_title}"
+      titles:
+        mentioned: "אוזכר"
+        replied: "תגובה חדשה"
+        quoted: "צוטט"
+        edited: "נערך"
+        liked: "לייק חדש"
+        private_message: "הודעה פרטית חדשה"
+        invited_to_private_message: "הוזמנת להודעה פרטית"
+        invitee_accepted: "ההזמנה התקבלה"
+        posted: "פוסט חדש"
+        moved_post: "פוסט הועבר"
+        linked: "מקושר"
+        granted_badge: "הוענק עיטור"
+        invited_to_topic: "הוזמן לנושא"
+        group_mentioned: "קבוצה אוזכרה"
+        group_message_summary: "הודעות קבוצתיות חדשות"
+        watching_first_post: "נושא חדש"
+        topic_reminder: "תזכורת נושא"
+        liked_consolidated: "לייקים חדשים"
+        post_approved: "פוסט אושר"
     upload_selector:
       title: "הוספת תמונה"
       title_with_attachments: "הוספת תמונה או קובץ"
@@ -1840,6 +1868,9 @@ he:
       edit_message:
         help: "ערוך פוסט ראשון של ההודעה"
         title: "ערוך הודעה"
+      defer:
+        help: "סימון כלא נקראו"
+        title: "דחייה"
       list: "נושאים"
       new: "נושא חדש"
       unread: "לא נקראו"
@@ -2969,6 +3000,11 @@ he:
     admin:
       title: "ניהול Discourse"
       moderator: "מפקח"
+      tags:
+        remove_muted_tags_from_latest:
+          always: "תמיד"
+          only_muted: "בעת שימוש בנפרד או עם תגיות מושתקות אחרות"
+          never: "אף פעם"
       reports:
         title: "רשימה של דיווחים זמינים"
       dashboard:
@@ -3045,6 +3081,7 @@ he:
           groups: "כל הקבוצות"
           disabled: "דוח זה מנוטרל"
           totals_for_sample: "סיכומים לדוגמה"
+          average_for_sample: "ממוצע לדגימה"
           total: "סך הכול מאז ומתמיד"
           no_data: "אין נתונים להצגה."
           trending_search:

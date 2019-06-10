@@ -1312,6 +1312,9 @@ sw:
         linked: '{{jina la mtumiaji}} ametengeneza kiungo kutoka kwenye "{{mada}}" - {{jina la_tovuti}}'
         confirm_title: "Taarifa mubashara zimewezeshwa - %{site_title}"
         confirm_body: "Taarifa mubashara zimewezeshwa kikamilifu"
+      titles:
+        watching_first_post: "mada mpya"
+        post_approved: "Chapisho Limepitishwa"
     upload_selector:
       title: "Ongeza picha au faili"
       title_with_attachments: "Ongeza picha au faili"
@@ -2306,6 +2309,10 @@ sw:
     admin:
       title: "Kiongozi wa Discourse"
       moderator: "Msimamizi"
+      tags:
+        remove_muted_tags_from_latest:
+          always: "mara kwa mara"
+          never: "kamwe"
       reports:
         title: "Orodha ya ripoti zilizopo"
       dashboard:

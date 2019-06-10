@@ -428,7 +428,7 @@ end
 
 def create_category_definitions
   log "Creating category definitions"
-  Category.where(topic_id: nil).each(&:create_category_definition)
+  Category.ensure_consistency!
 end
 
 def log(message)

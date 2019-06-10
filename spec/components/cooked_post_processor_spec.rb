@@ -1082,10 +1082,11 @@ describe CookedPostProcessor do
 
     before { cpp.stubs(:available_disk_space).returns(90) }
 
-    it "does not run when download_remote_images_to_local is disabled" do
+    it "runs even when download_remote_images_to_local is disabled" do
+      # We want to run it to pull hotlinked optimized images
       SiteSetting.download_remote_images_to_local = false
-      Jobs.expects(:cancel_scheduled_job).never
-      cpp.pull_hotlinked_images
+      expect { cpp.pull_hotlinked_images }.
+        to change { Jobs::PullHotlinkedImages.jobs.count }.by 1
     end
 
     context "when download_remote_images_to_local? is enabled" do
@@ -1093,10 +1094,10 @@ describe CookedPostProcessor do
         SiteSetting.download_remote_images_to_local = true
       end
 
-      it "does not run when there is not enough disk space" do
-        cpp.expects(:disable_if_low_on_disk_space).returns(true)
-        Jobs.expects(:cancel_scheduled_job).never
+      it "disables download_remote_images if there is not enough disk space" do
+        cpp.expects(:available_disk_space).returns(5)
         cpp.pull_hotlinked_images
+        expect(SiteSetting.download_remote_images_to_local).to eq(false)
       end
 
       context "and there is enough disk space" do
@@ -1135,11 +1136,14 @@ describe CookedPostProcessor do
     let(:post) { build(:post, created_at: 20.days.ago) }
     let(:cpp) { CookedPostProcessor.new(post) }
 
-    before { cpp.expects(:available_disk_space).returns(50) }
+    before do
+      SiteSetting.download_remote_images_to_local = true
+      cpp.expects(:available_disk_space).returns(50)
+    end
 
     it "does nothing when there's enough disk space" do
       SiteSetting.expects(:download_remote_images_threshold).returns(20)
-      SiteSetting.expects(:download_remote_images_to_local).never
+      SiteSetting.expects(:download_remote_images_to_local=).never
       expect(cpp.disable_if_low_on_disk_space).to eq(false)
     end
 
@@ -1366,23 +1370,6 @@ describe CookedPostProcessor do
       PostRevisor.new(reply).revise!(Discourse.system_user, raw: raw, edit_reason: "put back full quote")
       CookedPostProcessor.new(reply).post_process(new_post: true)
       expect(reply.raw).to eq("and this is the third reply")
-    end
-
-    it "works with click counters" do
-      post = Fabricate(:post,
-        topic: topic,
-        raw: "[Discourse](https://www.discourse.org) is amazing!",
-        cooked: %{<p><a href="https://www.discourse.org">Discourse <span class="badge badge-notification clicks" title="1 click">1</span></a> is amazing!</p>}
-      )
-
-      reply = Fabricate(:post,
-        topic: topic,
-        raw: "[quote]\n[Discourse](https://www.discourse.org) is amazing!\n[/quote]\nIt sure is :+1:"
-      )
-
-      CookedPostProcessor.new(reply).remove_full_quote_on_direct_reply
-
-      expect(reply.raw).to eq("It sure is :+1:")
     end
 
   end

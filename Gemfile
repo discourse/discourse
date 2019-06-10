@@ -46,7 +46,7 @@ gem 'redis-namespace'
 
 gem 'active_model_serializers', '~> 0.8.3'
 
-gem 'onebox', '1.8.90'
+gem 'onebox', '1.8.92'
 
 gem 'http_accept_language', '~>2.0.5', require: false
 
@@ -89,8 +89,7 @@ gem 'omniauth-github'
 
 gem 'omniauth-oauth2', require: false
 
-# pinned until we test verified email change in the gem
-gem 'omniauth-google-oauth2', '0.6.0'
+gem 'omniauth-google-oauth2'
 
 gem 'oj'
 gem 'pg'
@@ -145,6 +144,7 @@ group :test, :development do
   gem 'byebug', require: ENV['RM_INFO'].nil?
   gem 'rubocop', require: false
   gem 'parallel_tests'
+  gem 'diffy', require: false
 end
 
 group :development do

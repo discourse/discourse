@@ -298,6 +298,13 @@ describe Email::Receiver do
       expect(post.user).to eq(user)
     end
 
+    it "raises a ReplyNotAllowedError when user without permissions is replying" do
+      Fabricate(:user, email: "bob@bar.com")
+      category.set_permissions(admins: :full)
+      category.save
+      expect { process(:reply_user_not_matching_but_known) }.to raise_error(Email::Receiver::ReplyNotAllowedError)
+    end
+
     it "raises a TopicNotFoundError when the topic was deleted" do
       topic.update_columns(deleted_at: 1.day.ago)
       expect { process(:reply_user_matching) }.to raise_error(Email::Receiver::TopicNotFoundError)
@@ -444,7 +451,7 @@ describe Email::Receiver do
       category.email_in = "category@bar.com"
       category.email_in_allow_strangers = true
       category.set_permissions(Group[:trust_level_4] => :full)
-      category.save
+      category.save!
 
       expect { process(:staged_reply_restricted) }.to change { topic.posts.count }
     end
@@ -853,7 +860,7 @@ describe Email::Receiver do
       group.save
 
       category.set_permissions(group => :create_post)
-      category.save
+      category.save!
 
       # raises an InvalidAccess when the user doesn't have the privileges to create a topic
       expect { process(:existing_user) }.to raise_error(Discourse::InvalidAccess)
@@ -926,7 +933,7 @@ describe Email::Receiver do
       Fabricate(:user, email: "tl4@bar.com", trust_level: TrustLevel[4])
 
       category.set_permissions(Group[:trust_level_4] => :full)
-      category.save
+      category.save!
 
       Group.refresh_automatic_group!(:trust_level_4)
 
@@ -1257,7 +1264,7 @@ describe Email::Receiver do
     context "read-only category" do
       before do
         category.set_permissions(everyone: :readonly)
-        category.save
+        category.save!
 
         Fabricate(:user, email: "alice@foo.com")
         Fabricate(:user, email: "bob@bar.com")

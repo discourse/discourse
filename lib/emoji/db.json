@@ -6657,8 +6657,13 @@
     "jp": [
       "flag_jp"
     ],
+    "north_korea": [
+      "flag_kp",
+      "kp"
+    ],
     "kr": [
-      "flag_kr"
+      "flag_kr",
+      "south_korea"
     ],
     "ru": [
       "flag_ru"

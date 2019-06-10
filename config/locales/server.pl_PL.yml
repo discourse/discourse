@@ -2518,6 +2518,8 @@ pl_PL:
         title: "Organizacja"
       colors:
         title: "Motyw"
+      themes_further_reading:
+        title: "Motywy"
       logos:
         title: "Loga"
         fields:

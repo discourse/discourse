@@ -4,6 +4,7 @@ import {
   resetCache
 } from "pretty-text/upload-short-url";
 import { ajax } from "discourse/lib/ajax";
+import { fixture } from "helpers/qunit-helpers";
 
 QUnit.module("lib:pretty-text/upload-short-url", {
   beforeEach() {

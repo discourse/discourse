@@ -130,6 +130,9 @@ export default {
         "archiveTitle",
         "toggleArchiveMessage"
       ],
+      dropdown() {
+        return this.site.mobileView;
+      },
       displayed() {
         return this.canArchive;
       }
@@ -146,6 +149,21 @@ export default {
       dependentKeys: ["editFirstPost", "showEditOnFooter"],
       displayed() {
         return this.showEditOnFooter;
+      }
+    });
+
+    registerTopicFooterButton({
+      id: "defer",
+      icon: "circle",
+      priority: 300,
+      label: "topic.defer.title",
+      title: "topic.defer.help",
+      action: "deferTopic",
+      displayed() {
+        return this.canDefer;
+      },
+      dropdown() {
+        return this.site.mobileView;
       }
     });
   }

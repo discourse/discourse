@@ -253,6 +253,7 @@ da:
       title:
         placeholder: "indtast emnets titel her"
     review:
+      in_reply_to: "som svar til"
       delete: "Slet"
       settings:
         save_changes: "Gem ændringer"
@@ -1117,6 +1118,8 @@ da:
         replied: '{{username}} svarede dig i "{{topic}}" - {{site_title}}'
         posted: '{{username}} skrev i "{{topic}}" - {{site_title}}'
         linked: '{{username}} linkede til dit indlæg fra "{{topic}}" - {{site_title}}'
+      titles:
+        watching_first_post: "nyt emne"
     upload_selector:
       title: "Indsæt billede"
       title_with_attachments: "Tilføj et billede eller en fil"
@@ -1256,6 +1259,8 @@ da:
         help: "Flyt beskeder tilbage til Indbakke"
       edit_message:
         title: "Rediger Besked"
+      defer:
+        title: "Udsæt"
       list: "Emner"
       new: "nyt emne"
       unread: "ulæste"
@@ -2113,6 +2118,10 @@ da:
     admin:
       title: "Discourse Admin"
       moderator: "Moderator"
+      tags:
+        remove_muted_tags_from_latest:
+          always: "altid"
+          never: "aldrig"
       dashboard:
         title: "Dashboard"
         version: "Installeret version"

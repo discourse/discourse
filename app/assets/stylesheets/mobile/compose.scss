@@ -104,7 +104,7 @@
   &.show-preview {
     .d-editor-preview-wrapper {
       position: fixed;
-      z-index: z("base") + 1;
+      z-index: z("fullscreen");
       top: 0;
       bottom: 0;
       left: 0;
@@ -122,7 +122,7 @@
       position: fixed;
       right: 5px;
       bottom: 5px;
-      z-index: z("base") + 2;
+      z-index: z("fullscreen") + 1;
     }
   }
 

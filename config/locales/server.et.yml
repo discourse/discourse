@@ -420,27 +420,27 @@ et:
   user_auth_tokens:
     browser:
       chrome: "Google Chrome"
-      safari: "Safari"
-      firefox: "Firefox"
-      opera: "Opera"
-      ie: "Internet Explorer"
       edge: "Microsoft Edge"
+      firefox: "Firefox"
+      ie: "Internet Explorer"
+      opera: "Opera"
+      safari: "Safari"
       unknown: "tundmatu brauser"
     device:
       android: "Androidi seade"
       ipad: "iPad"
       iphone: "iPhone"
       ipod: "iPod"
-      mobile: "Mobiilne seade"
-      mac: "Mac"
       linux: "GNU/Linuxiga arvuti"
+      mac: "Mac"
+      mobile: "Mobiilne seade"
       windows: "Windowsi arvuti"
       unknown: "tundmatu seade"
     os:
       android: "Android"
       ios: "iOS"
-      macos: "macOS"
       linux: "Linux"
+      macos: "macOS"
       windows: "Microsoft Windows"
       unknown: "tundmatu operatsioonisüsteem"
   change_email:
@@ -748,6 +748,7 @@ et:
     min_topic_title_length: "Lühim lubatud teema pealkirja pikkus tähemärkides"
     max_topic_title_length: "Maksimaalne lubatud teema pealkirja pikkus tähemärkides"
     min_personal_message_title_length: "Minimaalne lubatud teema pealkirja pikkus tähemärkides"
+    min_admin_password_length: "Minimaalne administraatori parooli pikkus."
     enable_instagram_logins: "Luba autentimine Instagrami abil, nõuab instagram_consumer_key ja instagram_consumer_secret"
     instagram_consumer_key: "Teenusekasutaja avalik võti Instagrami abil autentimiseks"
     instagram_consumer_secret: "Teenusekasutaja salajane võti Instagrami abil autentimiseks"
@@ -806,6 +807,20 @@ et:
     in_reply_to: "Vastuseks"
     unsubscribe:
       title: "Tühista tellimus"
+    user_replied:
+      subject_template: "[%{email_prefix}] %{topic_title}"
+    user_quoted:
+      subject_template: "[%{email_prefix}] %{topic_title}"
+    user_linked:
+      subject_template: "[%{email_prefix}] %{topic_title}"
+    user_mentioned:
+      subject_template: "[%{email_prefix}] %{topic_title}"
+    user_group_mentioned:
+      subject_template: "[%{email_prefix}] %{topic_title}"
+    user_posted:
+      subject_template: "[%{email_prefix}] %{topic_title}"
+    user_watching_first_post:
+      subject_template: "[%{email_prefix}] %{topic_title}"
     user_posted_pm_staged:
       subject_template: "%{optional_re}%{topic_title}"
       text_body_template: |2
@@ -1048,6 +1063,8 @@ et:
         title: "Organisatsioon"
       colors:
         title: "Kujundusteema"
+      themes_further_reading:
+        title: "Kujundused"
       logos:
         title: "Logod"
         fields:
@@ -1101,6 +1118,8 @@ et:
         title: "Ignoreeri"
       approve:
         title: "Kinnita"
+      approve_user:
+        title: "Kiida kasutaja heaks"
       reject_user:
         delete:
           title: "Kustuta kasutaja"

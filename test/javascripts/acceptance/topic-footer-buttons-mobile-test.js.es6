@@ -1,3 +1,4 @@
+import selectKit from "helpers/select-kit-helper";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { clearTopicFooterButtons } from "discourse/lib/register-topic-footer-button";
 import { acceptance } from "helpers/qunit-helpers";

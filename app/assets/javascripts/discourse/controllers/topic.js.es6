@@ -108,19 +108,29 @@ export default Ember.Controller.extend(bufferedProperty("model"), {
 
   init() {
     this._super(...arguments);
-    this.appEvents.on("post:show-revision", (postNumber, revision) => {
-      const post = this.model.get("postStream").postForPostNumber(postNumber);
-      if (!post) {
-        return;
-      }
 
-      Ember.run.scheduleOnce("afterRender", () => {
-        this.send("showHistory", post, revision);
-      });
-    });
+    this.appEvents.on("post:show-revision", this, "_showRevision");
+
     this.setProperties({
       selectedPostIds: [],
       quoteState: new QuoteState()
+    });
+  },
+
+  willDestroy() {
+    this._super(...arguments);
+
+    this.appEvents.off("post:show-revision", this, "_showRevision");
+  },
+
+  _showRevision(postNumber, revision) {
+    const post = this.model.get("postStream").postForPostNumber(postNumber);
+    if (!post) {
+      return;
+    }
+
+    Ember.run.scheduleOnce("afterRender", () => {
+      this.send("showHistory", post, revision);
     });
   },
 
@@ -403,6 +413,27 @@ export default Ember.Controller.extend(bufferedProperty("model"), {
       } else {
         topic.archiveMessage().then(backToInbox);
       }
+    },
+
+    deferTopic() {
+      const screenTrack = Discourse.__container__.lookup("screen-track:main");
+      const currentUser = this.currentUser;
+      const topic = this.model;
+
+      screenTrack.reset();
+      screenTrack.stop();
+      const goToPath = topic.get("isPrivateMessage")
+        ? currentUser.pmPath(topic)
+        : "/";
+      ajax("/t/" + topic.get("id") + "/timings.json?last=1", { type: "DELETE" })
+        .then(() => {
+          const highestSeenByTopic = Discourse.Session.currentProp(
+            "highestSeenByTopic"
+          );
+          highestSeenByTopic[topic.get("id")] = null;
+          DiscourseURL.routeTo(goToPath);
+        })
+        .catch(popupAjaxError);
     },
 
     editFirstPost() {

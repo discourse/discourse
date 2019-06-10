@@ -55,7 +55,7 @@ export function transformBasicPost(post) {
     reviewableScorePendingCount: post.reviewable_score_pending_count,
     version: post.version,
     canRecoverTopic: false,
-    canDeletedTopic: false,
+    canDeleteTopic: false,
     canViewEditHistory: post.can_view_edit_history,
     canWiki: post.can_wiki,
     showLike: false,
@@ -234,12 +234,10 @@ export default function transformPost(
 
     // Show a "Flag to delete" message if not staff and you can't
     // otherwise delete it.
-    postAtts.showFlagDelete = (
+    postAtts.showFlagDelete =
       !postAtts.canDelete &&
       postAtts.yours &&
-      (currentUser && !currentUser.staff)
-    );
-
+      (currentUser && !currentUser.staff);
   } else {
     postAtts.canRecover = postAtts.isDeleted && postAtts.canRecover;
     postAtts.canDelete =

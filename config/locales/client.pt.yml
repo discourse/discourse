@@ -214,6 +214,8 @@ pt:
     every_hour: "a cada hora"
     daily: "diário"
     weekly: "semanal"
+    every_month: "cada mês"
+    every_six_months: "a cada seis meses"
     max_of_count: "máximo de {{count}}"
     alternation: "ou"
     character_count:
@@ -304,6 +306,12 @@ pt:
         search: "Pesquisar por uma Mensagem por título:"
         placeholder: "escreva o título da mensagem aqui"
     review:
+      in_reply_to: "Em resposta a"
+      claim_help:
+        optional: "Pode reivindicar este item para prevenir que outras pessoas o revejam."
+        required: "Deve reivindicar items antes de as poder rever."
+      claim:
+        title: "reivindicar este tópico"
       delete: "Eliminar"
       settings:
         save_changes: "Guardar alterações"
@@ -324,6 +332,8 @@ pt:
           title: "Tipo"
         refresh: "Atualizar"
         category: "Categoria"
+        orders:
+          created_at: "Criado a"
       scores:
         date: "Data"
         type: "Tipo"
@@ -872,6 +882,8 @@ pt:
         every_hour: "de hora em hora"
         daily: "diariamente"
         weekly: "semanalmente"
+        every_month: "cada mês"
+        every_six_months: "a cada seis meses"
       email_level:
         title: "Enviem-me um email quando alguém me citar, responder a uma publicação minha, mencionar o meu @nome_de_utilizador ou me convidar para um tópico"
         always: "sempre"
@@ -1430,6 +1442,8 @@ pt:
         watching_first_post: '{{username}} criou um novo tópico "{{topic}}" - {{site_title}}'
         confirm_title: "Notificações ativas - %{site_title}"
         confirm_body: "Sucesso! As notificações foram ativadas."
+      titles:
+        watching_first_post: "novo tópico"
     upload_selector:
       title: "Adicionar uma imagem"
       title_with_attachments: "Adicionar uma imagem ou um ficheiro"
@@ -1593,6 +1607,8 @@ pt:
       edit_message:
         help: "Editar primeira publicação da mensagem"
         title: "Editar Mensagem"
+      defer:
+        title: "Diferir"
       list: "Tópicos"
       new: "novo tópico"
       unread: "não lido"
@@ -2476,6 +2492,10 @@ pt:
     admin:
       title: "Administração Discourse"
       moderator: "Moderador"
+      tags:
+        remove_muted_tags_from_latest:
+          always: "sempre"
+          never: "nunca"
       dashboard:
         title: "Painel de Administração"
         version: "Versão"
