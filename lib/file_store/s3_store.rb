@@ -119,7 +119,7 @@ module FileStore
       return url if SiteSetting.Upload.s3_cdn_url.blank?
       schema = url[/^(https?:)?\/\//, 1]
       folder = @s3_helper.s3_bucket_folder_path.nil? ? "" : "#{@s3_helper.s3_bucket_folder_path}/"
-      url.sub(File.join("#{schema}#{absolute_base_url}", folder), File.join(SiteSetting.Upload.s3_cdn_url, "/"))
+      url.sub(File.join("#{schema}#{absolute_base_url}", folder), File.join(SiteSetting.Upload.s3_cdn_url, Discourse.base_uri, "/"))
     end
 
     def cache_avatar(avatar, user_id)
