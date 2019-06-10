@@ -97,7 +97,7 @@ end
 DiscourseEvent.on(:reviewable_transitioned_to) do |status, reviewable|
   WebHook.enqueue_object_hooks(:reviewable, reviewable, :reviewable_transitioned_to, reviewable.serializer)
 
-  # TODO: Backwards compatibility for Queued Post webhooks. Remve in favor of Reviewable API
+  # TODO: Backwards compatibility for Queued Post webhooks. Remove in favor of Reviewable API
   if reviewable.is_a?(ReviewableQueuedPost)
     if reviewable.approved?
       WebHook.enqueue_object_hooks(:queued_post, reviewable, :approved_post, QueuedPostSerializer)
