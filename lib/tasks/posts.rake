@@ -704,7 +704,6 @@ task 'posts:inline_uploads' => :environment do |_, args|
           putc "."
         end
 
-
         fixed_count += 1
       else
         not_corrected_post_ids << post.id
