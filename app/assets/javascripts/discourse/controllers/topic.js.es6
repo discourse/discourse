@@ -254,47 +254,51 @@ export default Ember.Controller.extend(bufferedProperty("model"), {
     },
 
     selectText(postId, buffer) {
-      return this.get("model.postStream")
-        .loadPost(postId)
-        .then(post => {
-          const composer = this.composer;
-          const viewOpen = composer.get("model.viewOpen");
-          const quotedText = Quote.build(post, buffer);
+      const loadedPost = this.get("model.postStream").findLoadedPost(postId);
+      const promise = loadedPost
+        ? Ember.RSVP.resolve(loadedPost)
+        : this.get("model.postStream").loadPost(postId);
 
-          // If we can't create a post, delegate to reply as new topic
-          if (!viewOpen && !this.get("model.details.can_create_post")) {
-            this.send("replyAsNewTopic", post, quotedText);
-            return;
-          }
+      return promise.then(post => {
+        const composer = this.composer;
+        const viewOpen = composer.get("model.viewOpen");
+        const quotedText = Quote.build(post, buffer);
 
-          const composerOpts = {
-            action: Composer.REPLY,
-            draftKey: post.get("topic.draft_key")
-          };
+        // If we can't create a post, delegate to reply as new topic
+        if (!viewOpen && !this.get("model.details.can_create_post")) {
+          this.send("replyAsNewTopic", post, quotedText);
+          return;
+        }
 
-          if (post.get("post_number") === 1) {
-            composerOpts.topic = post.get("topic");
-          } else {
-            composerOpts.post = post;
-          }
+        const composerOpts = {
+          action: Composer.REPLY,
+          draftSequence: post.get("topic.draft_sequence"),
+          draftKey: post.get("topic.draft_key")
+        };
 
-          // If the composer is associated with a different post, we don't change it.
-          const composerPost = composer.get("model.post");
-          if (composerPost && composerPost.get("id") !== this.get("post.id")) {
-            composerOpts.post = composerPost;
-          }
+        if (post.get("post_number") === 1) {
+          composerOpts.topic = post.get("topic");
+        } else {
+          composerOpts.post = post;
+        }
 
-          composerOpts.quote = quotedText;
-          if (composer.get("model.viewOpen")) {
-            this.appEvents.trigger("composer:insert-block", quotedText);
-          } else if (composer.get("model.viewDraft")) {
-            const model = composer.get("model");
-            model.set("reply", model.get("reply") + quotedText);
-            composer.send("openIfDraft");
-          } else {
-            composer.open(composerOpts);
-          }
-        });
+        // If the composer is associated with a different post, we don't change it.
+        const composerPost = composer.get("model.post");
+        if (composerPost && composerPost.get("id") !== this.get("post.id")) {
+          composerOpts.post = composerPost;
+        }
+
+        composerOpts.quote = quotedText;
+        if (composer.get("model.viewOpen")) {
+          this.appEvents.trigger("composer:insert-block", quotedText);
+        } else if (composer.get("model.viewDraft")) {
+          const model = composer.get("model");
+          model.set("reply", model.get("reply") + quotedText);
+          composer.send("openIfDraft");
+        } else {
+          composer.open(composerOpts);
+        }
+      });
     },
 
     fillGapBefore(args) {
