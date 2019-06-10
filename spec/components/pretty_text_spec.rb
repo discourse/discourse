@@ -1224,7 +1224,7 @@ HTML
         ![](http://png.com/my.png)
         ![|220x100](http://png.com/my.png)
         ![stuff](http://png.com/my.png)
-        ![|220x100,50%](http://png.com/my.png)
+        ![|220x100,50%](http://png.com/my.png "some title")
       MD
 
       html = <<~HTML
@@ -1232,7 +1232,7 @@ HTML
         <img src="http://png.com/my.png" alt><br>
         <img src="http://png.com/my.png" alt width="220" height="100"><br>
         <img src="http://png.com/my.png" alt="stuff"><br>
-        <img src="http://png.com/my.png" alt width="110" height="50"></p>
+        <img src="http://png.com/my.png" alt title="some title" width="110" height="50"></p>
       HTML
 
       expect(cooked).to eq(html.strip)
