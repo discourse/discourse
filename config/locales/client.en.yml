@@ -436,6 +436,7 @@ en:
       new_topic: "Approving this item will create a new topic"
 
       filters:
+        all_categories: "(all categories)"
         type:
           title: "Type"
           all: "(all types)"
@@ -451,7 +452,7 @@ en:
 
         priority:
           title: "Minimum Priority"
-          low: "Low"
+          low: "(any)"
           medium: "Medium"
           high: "High"
 
@@ -478,9 +479,9 @@ en:
         deleted:
           title: "Deleted"
         reviewed:
-          title: "(All Reviewed)"
+          title: "(all reviewed)"
         all:
-          title: "(Everything)"
+          title: "(everything)"
 
       types:
         reviewable_flagged_post:
