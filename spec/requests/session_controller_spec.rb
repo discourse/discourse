@@ -320,6 +320,28 @@ RSpec.describe SessionController do
 
     end
 
+    it 'can handle invalid sso external ids due to blank' do
+      sso = get_sso("/")
+      sso.email = "test@test.com"
+      sso.external_id = '   '
+      sso.username = 'sam'
+
+      get "/session/sso_login", params: Rack::Utils.parse_query(sso.payload), headers: headers
+
+      expect(response.status).to eq(500)
+    end
+
+    it 'can handle invalid sso external ids due to banned word' do
+      sso = get_sso("/")
+      sso.email = "test@test.com"
+      sso.external_id = 'nil'
+      sso.username = 'sam'
+
+      get "/session/sso_login", params: Rack::Utils.parse_query(sso.payload), headers: headers
+
+      expect(response.status).to eq(500)
+    end
+
     it 'can take over an account' do
       sso = get_sso("/")
       user = Fabricate(:user)
@@ -348,7 +370,7 @@ RSpec.describe SessionController do
     it 'respects IP restrictions on create' do
       ScreenedIpAddress.all.destroy_all
       get "/"
-      screened_ip = Fabricate(:screened_ip_address, ip_address: request.remote_ip, action_type: ScreenedIpAddress.actions[:block])
+      _screened_ip = Fabricate(:screened_ip_address, ip_address: request.remote_ip, action_type: ScreenedIpAddress.actions[:block])
 
       sso = sso_for_ip_specs
       get "/session/sso_login", params: Rack::Utils.parse_query(sso.payload), headers: headers
@@ -364,7 +386,7 @@ RSpec.describe SessionController do
       DiscourseSingleSignOn.parse(sso.payload).lookup_or_create_user(request.remote_ip)
 
       sso = sso_for_ip_specs
-      screened_ip = Fabricate(:screened_ip_address, ip_address: request.remote_ip, action_type: ScreenedIpAddress.actions[:block])
+      _screened_ip = Fabricate(:screened_ip_address, ip_address: request.remote_ip, action_type: ScreenedIpAddress.actions[:block])
 
       get "/session/sso_login", params: Rack::Utils.parse_query(sso.payload), headers: headers
       logged_on_user = Discourse.current_user_provider.new(request.env).current_user
@@ -1052,7 +1074,7 @@ RSpec.describe SessionController do
         it "doesn't log in" do
           ScreenedIpAddress.all.destroy_all
           get "/"
-          screened_ip = Fabricate(:screened_ip_address, ip_address: request.remote_ip)
+          _screened_ip = Fabricate(:screened_ip_address, ip_address: request.remote_ip)
           post "/session.json", params: {
             login: "@" + user.username, password: 'myawesomepassword'
           }
