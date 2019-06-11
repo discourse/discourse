@@ -1,10 +1,9 @@
-let _cache = {};
+import {
+  INLINE_ONEBOX_LOADING_CSS_CLASS,
+  INLINE_ONEBOX_CSS_CLASS
+} from "pretty-text/context/inline-onebox-css-classes";
 
-export const INLINE_ONEBOX_LOADING_CSS_CLASS =
-  "<%= CookedPostProcessor::INLINE_ONEBOX_LOADING_CSS_CLASS %>";
-
-export const INLINE_ONEBOX_CSS_CLASS =
-  "<%= CookedPostProcessor::INLINE_ONEBOX_CSS_CLASS %>";
+const _cache = {};
 
 export function applyInlineOneboxes(inline, ajax) {
   Object.keys(inline).forEach(url => {
@@ -20,7 +19,8 @@ export function applyInlineOneboxes(inline, ajax) {
         _cache[onebox.url] = onebox;
         let links = inline[onebox.url] || [];
         links.forEach(link => {
-          $(link).text(onebox.title)
+          $(link)
+            .text(onebox.title)
             .addClass(INLINE_ONEBOX_CSS_CLASS)
             .removeClass(INLINE_ONEBOX_LOADING_CSS_CLASS);
         });
@@ -31,4 +31,12 @@ export function applyInlineOneboxes(inline, ajax) {
 
 export function cachedInlineOnebox(url) {
   return _cache[url];
+}
+
+export function applyCachedInlineOnebox(url, onebox) {
+  return (_cache[url] = onebox);
+}
+
+export function deleteCachedInlineOnebox(url) {
+  return delete _cache[url];
 }
