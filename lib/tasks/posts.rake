@@ -681,15 +681,18 @@ task 'posts:inline_uploads' => :environment do |_, args|
     begin
       new_raw = InlineUploads.process(post.raw)
 
+      byebug
       if post.raw != new_raw
         if !dry_run
-          post.revise!(Discourse.system_user,
-            {
-              raw: new_raw
-            },
-            skip_validations: true,
-            force_new_version: true
-          )
+          PostRevisor.new(post, Topic.with_deleted.find_by(id: post.topic_id))
+            .revise!(
+              Discourse.system_user,
+              {
+                raw: new_raw
+              },
+              skip_validations: true,
+              force_new_version: true
+            )
         end
 
         if verbose
@@ -701,15 +704,16 @@ task 'posts:inline_uploads' => :environment do |_, args|
         elsif dry_run
           putc "🏃"
         else
-          putc "."
+          putc "🆗"
         end
 
         fixed_count += 1
       else
+        putc "❌"
         not_corrected_post_ids << post.id
       end
     rescue => e
-      putc "X"
+      putc "🚫"
       failed_to_correct_post_ids << post.id
     end
   end
