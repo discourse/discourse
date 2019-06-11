@@ -169,6 +169,15 @@ QUnit.testDone(function() {
     });
   });
 
+  Discourse._runInitializer("instanceInitializers", function(
+    name,
+    initializer
+  ) {
+    if (initializer && initializer.teardown) {
+      initializer.teardown();
+    }
+  });
+
   // attempts to remove any subscribed message bus callback
   window.MessageBus.callbacks.forEach(function(callback) {
     window.MessageBus.unsubscribe(callback.channel, callback.func);
