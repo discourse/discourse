@@ -230,7 +230,9 @@ export class Tag {
         const e = this.element;
         const attr = e.attributes;
         const pAttr = (e.parent && e.parent.attributes) || {};
-        const src = attr.src || pAttr.src;
+        let src = attr.src || pAttr.src;
+        const base62SHA1 = attr["data-base62-sha1"];
+        if (base62SHA1) src = `upload://${base62SHA1}`;
         const cssClass = attr.class || pAttr.class;
 
         if (cssClass && cssClass.includes("emoji")) {

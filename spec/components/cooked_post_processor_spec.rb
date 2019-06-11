@@ -1040,7 +1040,7 @@ describe CookedPostProcessor do
 
         expect(cpp.html).to match_html <<~HTML
           <p>This post has a local emoji <img src="https://local.cdn.com/images/emoji/twitter/+1.png?v=#{Emoji::EMOJI_VERSION}" title=":+1:" class="emoji" alt=":+1:"> and an external upload</p>
-          <p><img src="https://s3.cdn.com/#{stored_path}" alt="smallest.png" width="10" height="20"></p>
+          <p><img src="https://s3.cdn.com/#{stored_path}" alt="smallest.png" data-base62-sha1="#{upload.base62_sha1}" width="10" height="20"></p>
         HTML
       end
 
