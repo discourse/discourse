@@ -1165,6 +1165,7 @@ class UsersController < ApplicationController
 
     # We're likely going to contact the remote auth provider, so hijack request
     hijack do
+      DiscourseEvent.trigger(:before_auth_revoke, authenticator, user)
       result = authenticator.revoke(user, skip_remote: skip_remote)
       if result
         render json: success_json
