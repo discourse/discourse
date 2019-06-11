@@ -115,6 +115,7 @@ export default class {
       !stream.canAppendMore && // We are at the end of the stream
       stream.posts.lastObject && // The last post exists
       stream.posts.lastObject.read && // The last post is read
+      stream.gaps && // The stream has gaps
       !!stream.gaps.after[stream.posts.lastObject.id] && // Stream ends with a gap
       stream.topic.last_read_post_number !==
         stream.posts.lastObject.post_number +
