@@ -2299,7 +2299,7 @@ zh_CN:
       text_body_template: |
         数据成功出成功！:dvd:
 
-        <a class="attachment" href="%{download_link}">%{file_name}</a>（%{file_size}）
+        ![%{file_name}|attachment](%{download_link}) (%{file_size})
 
         以上的下载链接将在48小时后失效。
 
