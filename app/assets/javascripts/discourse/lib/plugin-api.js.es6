@@ -193,8 +193,14 @@ class PluginApi {
    * For example, to add a yellow background to all posts you could do this:
    *
    * ```
-   * api.decorateCooked($elem => $elem.css({ backgroundColor: 'yellow' }));
+   * api.decorateCooked(
+   *   $elem => $elem.css({ backgroundColor: 'yellow' }),
+   *   { id: 'yellow-decorator' }
+   * );
    * ```
+   *
+   * NOTE: To avoid memory leaks, it is highly recommended to pass a unique `id` parameter.
+   * You will receive a warning if you do not.
    **/
   decorateCooked(callback, opts) {
     opts = opts || {};
@@ -202,12 +208,13 @@ class PluginApi {
     addDecorator(callback);
 
     if (!opts.onlyStream) {
-      decorate(ComposerEditor, "previewRefreshed", callback);
-      decorate(DiscourseBanner, "didInsertElement", callback);
+      decorate(ComposerEditor, "previewRefreshed", callback, opts.id);
+      decorate(DiscourseBanner, "didInsertElement", callback, opts.id);
       decorate(
         this.container.factoryFor("component:user-stream").class,
         "didInsertElement",
-        callback
+        callback,
+        opts.id
       );
     }
   }
@@ -930,7 +937,26 @@ export function withPluginApi(version, apiCodeCallback, opts) {
 }
 
 let _decorateId = 0;
-function decorate(klass, evt, cb) {
+let _decorated = new WeakMap();
+
+function decorate(klass, evt, cb, id) {
+  if (!id) {
+    // eslint-disable-next-line no-console
+    console.warn(
+      "`decorateCooked` should be supplied with an `id` option to avoid memory leaks."
+    );
+  } else {
+    if (!_decorated.has(klass)) {
+      _decorated.set(klass, new Set());
+    }
+    id = `${id}:${evt}`;
+    let set = _decorated.get(klass);
+    if (set.has(id)) {
+      return;
+    }
+    set.add(id);
+  }
+
   const mixin = {};
   mixin["_decorate_" + _decorateId++] = function($elem) {
     $elem = $elem || this.$();
@@ -943,11 +969,4 @@ function decorate(klass, evt, cb) {
 
 export function resetPluginApi() {
   _pluginv01 = null;
-}
-
-export function decorateCooked() {
-  // eslint-disable-next-line no-console
-  console.warn(
-    "`decorateCooked` has been removed. Use `getPluginApi(version).decorateCooked` instead"
-  );
 }

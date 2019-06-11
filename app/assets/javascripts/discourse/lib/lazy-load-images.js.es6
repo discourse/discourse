@@ -95,6 +95,6 @@ export function setupLazyLoading(api) {
         }
       });
     },
-    { onlyStream: true }
+    { onlyStream: true, id: "discourse-lazy-load" }
   );
 }
