@@ -108,6 +108,8 @@ export default class {
     const controller = this._topicController;
     const stream = controller ? controller.get("model.postStream") : null;
     if (
+      this.currentUser && // Logged in
+      this.currentUser.get("ignored_users.length") && // At least 1 user is ignored
       stream && // Sanity check
       stream.hasNoFilters && // The stream is not filtered (by username or summary)
       !stream.canAppendMore && // We are at the end of the stream
