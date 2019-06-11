@@ -2266,7 +2266,7 @@ zh_TW:
       text_body_template: |
         資料成功匯出了！:dvd:
 
-         <a class="attachment" href="%{download_link}">%{file_name}</a> (%{file_size})
+         ![%{file_name}|attachment](%{download_link}) (%{file_size})
 
         以上的下載連結將在 48 小時後失效。
 
