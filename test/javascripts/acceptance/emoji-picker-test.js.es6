@@ -9,7 +9,7 @@ acceptance("EmojiPicker", {
   }
 });
 
-QUnit.test("emoji picker can be opened/closed", async assert => {
+QUnit.skip("emoji picker can be opened/closed", async assert => {
   await visit("/t/internationalization-localization/280");
   await click("#topic-footer-buttons .btn.create");
 
