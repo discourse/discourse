@@ -681,7 +681,6 @@ task 'posts:inline_uploads' => :environment do |_, args|
     begin
       new_raw = InlineUploads.process(post.raw)
 
-      byebug
       if post.raw != new_raw
         if !dry_run
           PostRevisor.new(post, Topic.with_deleted.find_by(id: post.topic_id))
