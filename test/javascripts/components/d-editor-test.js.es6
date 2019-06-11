@@ -672,32 +672,32 @@ testCase(`doesn't jump to bottom with long text`, async function(
   assert.equal($(textarea).scrollTop(), 0, "it stays scrolled up");
 });
 
-componentTest("emoji", {
-  template: "{{d-editor value=value}}",
-  beforeEach() {
-    // Test adding a custom button
-    withPluginApi("0.1", api => {
-      api.onToolbarCreate(toolbar => {
-        toolbar.addButton({
-          id: "emoji",
-          group: "extras",
-          icon: "far-smile",
-          action: () => toolbar.context.send("emoji")
-        });
-      });
-    });
-    this.set("value", "hello world.");
-  },
-  async test(assert) {
-    jumpEnd(find("textarea.d-editor-input")[0]);
-    await click("button.emoji");
-
-    await click(
-      '.emoji-picker .section[data-section="smileys_&_emotion"] button.emoji[title="grinning"]'
-    );
-    assert.equal(this.value, "hello world.:grinning:");
-  }
-});
+// componentTest("emoji", {
+//   template: "{{d-editor value=value}}",
+//   beforeEach() {
+//     // Test adding a custom button
+//     withPluginApi("0.1", api => {
+//       api.onToolbarCreate(toolbar => {
+//         toolbar.addButton({
+//           id: "emoji",
+//           group: "extras",
+//           icon: "far-smile",
+//           action: () => toolbar.context.send("emoji")
+//         });
+//       });
+//     });
+//     this.set("value", "hello world.");
+//   },
+//   async test(assert) {
+//     jumpEnd(find("textarea.d-editor-input")[0]);
+//     await click("button.emoji");
+//
+//     await click(
+//       '.emoji-picker .section[data-section="smileys_&_emotion"] button.emoji[title="grinning"]'
+//     );
+//     assert.equal(this.value, "hello world.:grinning:");
+//   }
+// });
 
 testCase("replace-text event by default", async function(assert) {
   this.set("value", "red green blue");
