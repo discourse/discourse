@@ -1340,4 +1340,31 @@ describe Post do
     end
   end
 
+  describe '#each_upload_url' do
+    let(:upload) { Fabricate(:upload_s3) }
+
+    it "correctly identifies all upload urls" do
+      urls = []
+      upload1 = Fabricate(:upload)
+      upload2 = Fabricate(:upload)
+      post = Fabricate(:post, raw: "A post with image and link upload.\n\n![](#{upload1.short_url})\n\n<a href='#{upload2.url}'>Link to upload</a>")
+      post.each_upload_url { |src, _, _| urls << src }
+      expect(urls).to eq([upload1.url, upload2.url])
+    end
+
+    it "should skip external urls with upload url in query string" do
+      SiteSetting.enable_s3_uploads = true
+      SiteSetting.s3_upload_bucket = "s3-upload-bucket"
+      SiteSetting.s3_access_key_id = "some key"
+      SiteSetting.s3_secret_access_key = "some secret key"
+      SiteSetting.s3_cdn_url = "https://cdn.s3.amazonaws.com"
+
+      urls = []
+      upload = Fabricate(:upload_s3)
+      post = Fabricate(:post, raw: "<a href='https://link.example.com/redirect?url=#{Discourse.store.cdn_url(upload.url)}'>Link to upload</a>")
+      post.each_upload_url { |src, _, _| urls << src }
+      expect(urls).to be_empty
+    end
+  end
+
 end
