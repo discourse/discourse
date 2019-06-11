@@ -1347,7 +1347,7 @@ describe Post do
       urls = []
       upload1 = Fabricate(:upload)
       upload2 = Fabricate(:upload)
-      post = Fabricate(:post, raw: "A post with image and link upload.\n\n![](#{upload1.short_url})\n\n<a href='#{upload2.url}'>Link to upload</a>")
+      post = Fabricate(:post, raw: "A post with image and link upload.\n\n![](#{upload1.short_url})\n\n<a href='#{upload2.url}'>Link to upload</a>\n![](http://example.com/external.png)")
       post.each_upload_url { |src, _, _| urls << src }
       expect(urls).to eq([upload1.url, upload2.url])
     end
