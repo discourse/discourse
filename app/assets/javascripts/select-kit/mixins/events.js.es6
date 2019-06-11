@@ -60,7 +60,7 @@ export default Ember.Mixin.create({
   _cleanUpEvents() {
     $(document).off("mousedown.select-kit", this._boundMouseDownHandler);
 
-    if (this.$header().length) {
+    if (this.$header()) {
       this.$header()
         .off("blur.select-kit", this._boundBlurHeaderHandler)
         .off("focus.select-kit", this._boundFocusHeaderHandler)
@@ -68,7 +68,7 @@ export default Ember.Mixin.create({
         .off("keypress.select-kit", this._boundKeypressHeaderHandler);
     }
 
-    if (this.$filterInput().length) {
+    if (this.$filterInput()) {
       this.$filterInput()
         .off("change.select-kit", this._boundChangeFilterInputHandler)
         .off("keypress.select-kit", this._boundKeypressFilterInputHandler)
