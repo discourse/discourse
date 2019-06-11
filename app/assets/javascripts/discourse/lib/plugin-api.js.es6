@@ -944,10 +944,3 @@ function decorate(klass, evt, cb) {
 export function resetPluginApi() {
   _pluginv01 = null;
 }
-
-export function decorateCooked() {
-  // eslint-disable-next-line no-console
-  console.warn(
-    "`decorateCooked` has been removed. Use `getPluginApi(version).decorateCooked` instead"
-  );
-}
