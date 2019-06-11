@@ -154,7 +154,6 @@ export default class {
           }
         })
           .then(() => {
-            const controller = this._topicController;
             if (controller) {
               const postNumbers = Object.keys(newTimings).map(v =>
                 parseInt(v, 10)
