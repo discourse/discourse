@@ -104,6 +104,28 @@ export default class {
     const topicId = parseInt(this._topicId, 10);
     let highestSeen = 0;
 
+    // Workaround to avoid ignored posts being "stuck unread"
+    const controller = this._topicController;
+    const stream = controller ? controller.get("model.postStream") : null;
+    if (
+      this.currentUser && // Logged in
+      this.currentUser.get("ignored_users.length") && // At least 1 user is ignored
+      stream && // Sanity check
+      stream.hasNoFilters && // The stream is not filtered (by username or summary)
+      !stream.canAppendMore && // We are at the end of the stream
+      stream.posts.lastObject && // The last post exists
+      stream.posts.lastObject.read && // The last post is read
+      !!stream.gaps.after[stream.posts.lastObject.id] && // Stream ends with a gap
+      stream.topic.last_read_post_number !==
+        stream.posts.lastObject.post_number +
+          stream.get(`gaps.after.${stream.posts.lastObject.id}.length`) // The last post in the gap has not been marked read
+    ) {
+      newTimings[
+        stream.posts.lastObject.post_number +
+          stream.get(`gaps.after.${stream.posts.lastObject.id}.length`)
+      ] = 1;
+    }
+
     Object.keys(newTimings).forEach(postNumber => {
       highestSeen = Math.max(highestSeen, parseInt(postNumber, 10));
     });
