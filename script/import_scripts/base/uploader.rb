@@ -57,7 +57,7 @@ module ImportScripts
     end
 
     def attachment_html(upload, display_filename)
-      "<a class='attachment' href='#{upload.url}'>#{display_filename}</a> (#{number_to_human_size(upload.filesize)})"
+      "[#{display_filename}|attachment](#{upload.short}) (#{number_to_human_size(upload.filesize)})"
     end
 
     private
