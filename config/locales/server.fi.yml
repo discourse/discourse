@@ -2258,7 +2258,7 @@ fi:
       text_body_template: |
         Tietojen vienti onnistui! :dvd:
 
-        ![%{file_name}|attachment](%{download_link}) (%{file_size})
+        %{download_link}
 
         Yllä oleva latauslinkki toimii 48 tunnin ajan.
 
