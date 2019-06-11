@@ -16,7 +16,6 @@ import { resetDecorators } from "discourse/widgets/widget";
 import { resetDecorators as resetPostCookedDecorators } from "discourse/widgets/post-cooked";
 import { resetCache as resetOneboxCache } from "pretty-text/oneboxer";
 import { resetCustomPostMessageCallbacks } from "discourse/controllers/topic";
-import { resetCsrfCallbacks } from "discourse/initializers/csrf-token";
 
 export function currentUser() {
   return Discourse.User.create(
@@ -129,7 +128,6 @@ export function acceptance(name, options) {
       resetPostCookedDecorators();
       resetOneboxCache();
       resetCustomPostMessageCallbacks();
-      resetCsrfCallbacks();
       Discourse.reset();
     }
   });
