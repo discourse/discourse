@@ -154,11 +154,12 @@ export default class {
           }
         })
           .then(() => {
-            if (controller) {
+            const topicController = this._topicController;
+            if (topicController) {
               const postNumbers = Object.keys(newTimings).map(v =>
                 parseInt(v, 10)
               );
-              controller.readPosts(topicId, postNumbers);
+              topicController.readPosts(topicId, postNumbers);
             }
           })
           .catch(e => {
