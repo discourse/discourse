@@ -2367,7 +2367,7 @@ ur:
       text_body_template: |
         آپ کا ڈَیٹا ایکسپورٹ کامیاب ہو گیا! :dvd:
 
-        <a class="attachment" href="%{download_link}">%{file_name}</a> (%{file_size})
+        ![%{file_name}|attachment](%{download_link}) (%{file_size})
 
         درجہ بالا ڈاؤن لوڈ لِنک 48 گھنٹے تک درست رہے گا۔
 

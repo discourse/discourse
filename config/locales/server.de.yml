@@ -2347,7 +2347,7 @@ de:
       text_body_template: |
         Deine Daten wurden erfolgreich exportiert! :dvd:
 
-        <a class="attachment" href="%{download_link}">%{file_name}</a> (%{file_size})
+        ![%{file_name}|attachment](%{download_link}) (%{file_size})
 
         Der obenstehende Download-Link wird 48 Stunden gültig sein.
 

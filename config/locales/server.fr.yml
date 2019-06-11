@@ -2322,7 +2322,7 @@ fr:
       text_body_template: |
         L'exportation de vos données a réussi !  :dvd:
 
-        <a class="attachment" href="%{download_link}">%{file_name}</a> (%{file_size})
+        ![%{file_name}|attachment](%{download_link}) (%{file_size})
 
         Le lien de téléchargement ci-dessus est valide 48 heures.
 
