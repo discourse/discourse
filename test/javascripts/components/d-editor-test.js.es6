@@ -1,5 +1,5 @@
 import componentTest from "helpers/component-test";
-import { withPluginApi } from "discourse/lib/plugin-api";
+// import { withPluginApi } from "discourse/lib/plugin-api";
 import formatTextWithSelection from "helpers/d-editor-helper";
 import {
   setTextareaSelection,
