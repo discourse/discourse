@@ -2185,7 +2185,7 @@ hy:
       text_body_template: |
         Ձեր տվյալների արտահանումը հաջող էր! :dvd:
 
-        ![%{file_name}|attachment](%{download_link}) (%{file_size})
+        %{download_link}
 
         Վերևի ներբեռնման հղումը վավեր կլինի 8 ժամ:
 

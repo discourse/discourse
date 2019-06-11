@@ -1113,7 +1113,7 @@ sl:
       text_body_template: |
         Vaš izvoz podatkov je končan! :dvd:
 
-        ![%{file_name}|attachment](%{download_link}) (%{file_size})
+        %{download_link}
 
         Zgornja povezava za prenos bo aktivna naslednjih 48 ur.
 
