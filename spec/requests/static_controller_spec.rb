@@ -283,6 +283,13 @@ describe StaticController do
       end
     end
 
+    context 'with an array' do
+      it "redirects to the root" do
+        post "/login.json", params: { redirect: ["/foo"] }
+        expect(response).to redirect_to('/')
+      end
+    end
+
     context 'when the redirect path is the login page' do
       it 'redirects to the root url' do
         post "/login.json", params: { redirect: login_path }
