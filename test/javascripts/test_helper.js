@@ -80,7 +80,6 @@ var origDebounce = Ember.run.debounce,
   flushMap = require("discourse/models/store", null, null, false).flushMap,
   ScrollingDOMMethods = require("discourse/mixins/scrolling", null, null, false)
     .ScrollingDOMMethods,
-  _DiscourseURL = require("discourse/lib/url", null, null, false).default,
   applyPretender = require("helpers/qunit-helpers", null, null, false)
     .applyPretender,
   server,
@@ -122,11 +121,6 @@ QUnit.testStart(function(ctx) {
   Discourse.Session.resetCurrent();
   Discourse.User.resetCurrent();
   resetSite(Discourse.SiteSettings);
-
-  _DiscourseURL.redirectedTo = null;
-  _DiscourseURL.redirectTo = function(url) {
-    _DiscourseURL.redirectedTo = url;
-  };
 
   var ps = require("preload-store").default;
   ps.reset();
