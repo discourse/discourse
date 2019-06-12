@@ -1,4 +1,5 @@
-import { acceptance } from "helpers/qunit-helpers";
+import selectKit from "helpers/select-kit-helper";
+import { acceptance, logIn } from "helpers/qunit-helpers";
 
 acceptance("Badges");
 
@@ -13,4 +14,14 @@ QUnit.test("Visit Badge Pages", async assert => {
   assert.ok(exists(".badge-card"), "has the badge in the listing");
   assert.ok(exists(".user-info"), "has the list of users with that badge");
   assert.ok(!exists(".badge-card:eq(0) script"));
+});
+
+QUnit.test("shows correct badge titles to choose from", async assert => {
+  logIn();
+  Discourse.reset();
+  const availableBadgeTitles = selectKit(".select-kit");
+
+  await visit("/badges/50/custombadge");
+  await availableBadgeTitles.expand();
+  assert.ok(availableBadgeTitles.rowByIndex(1).name() === "CustomBadge");
 });
