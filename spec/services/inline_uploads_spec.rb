@@ -45,6 +45,20 @@ RSpec.describe InlineUploads do
         expect(InlineUploads.process(md)).to eq(md)
       end
 
+      it "should work with invalid img tags" do
+        md = <<~MD
+        <img src="#{upload.url}">
+
+        This is an invalid `<img ...>` tag
+        MD
+
+        expect(InlineUploads.process(md)).to eq(<<~MD)
+        ![](#{upload.short_url})
+
+        This is an invalid `<img ...>` tag
+        MD
+      end
+
       it "should not correct code blocks" do
         md = "`<a class=\"attachment\" href=\"#{upload2.url}\">In Code Block</a>`"
 
