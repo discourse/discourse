@@ -176,20 +176,22 @@ class InvitesController < ApplicationController
       begin
         file = params[:file] || params[:files].first
 
-        if File.read(file.tempfile).scan(/\n/).count.to_i > 50000
-          return render json: failed_json.merge(errors: [I18n.t("bulk_invite.max_rows")]), status: 422
+        count = 0
+        invites = []
+        max_bulk_invites = SiteSetting.max_bulk_invites
+        CSV.foreach(file.tempfile) do |row|
+          count += 1
+          invites.push({ email: row[0], groups: row[1], topic_id: row[2] }) if row[0].present?
+          break if count >= max_bulk_invites
         end
 
-        invites = []
-        CSV.foreach(file.tempfile) do |row|
-          invite_hash = { email: row[0], groups: row[1], topic_id: row[2] }
-          if invite_hash[:email].present?
-            invites.push(invite_hash)
-          end
-        end
         if invites.present?
           Jobs.enqueue(:bulk_invite, invites: invites, current_user_id: current_user.id)
-          render json: success_json
+          if count >= max_bulk_invites
+            render json: failed_json.merge(errors: [I18n.t("bulk_invite.max_rows", max_bulk_invites: max_bulk_invites)]), status: 422
+          else
+            render json: success_json
+          end
         else
           render json: failed_json.merge(errors: [I18n.t("bulk_invite.error")]), status: 422
         end
