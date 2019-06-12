@@ -298,6 +298,8 @@ RSpec.describe InlineUploads do
 
         <img src="#{upload.url}" alt="test">
 
+        <img src="#{upload2.url}" alt="test" height="150<img">
+
         > some quote
 
         <a class="attachment" href="#{upload2.url}">test2</a>
@@ -309,6 +311,8 @@ RSpec.describe InlineUploads do
         ```
 
         ![test](#{upload.short_url})
+
+        ![test](#{upload2.short_url})
 
         > some quote
 

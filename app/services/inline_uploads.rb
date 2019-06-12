@@ -193,7 +193,7 @@ class InlineUploads
   end
 
   def self.match_img(markdown, external_src: false)
-    markdown.scan(/(<(?!img)[^<>]+\/?>)?(\n*)(([ ]*)<img ([^<>]+)>([ ]*))(\n*)/) do |match|
+    markdown.scan(/(<(?!img)[^<>]+\/?>)?(\n*)(([ ]*)<img ([^>\n]+)>([ ]*))(\n*)/) do |match|
       node = Nokogiri::HTML::fragment(match[2].strip).children[0]
       src =  node.attributes["src"]&.value
 
