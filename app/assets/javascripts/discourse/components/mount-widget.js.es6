@@ -4,10 +4,14 @@ import { queryRegistry } from "discourse/widgets/widget";
 import { getRegister } from "discourse-common/lib/get-owner";
 import DirtyKeys from "discourse/lib/dirty-keys";
 
-const _cleanCallbacks = {};
+let _cleanCallbacks = {};
 export function addWidgetCleanCallback(widgetName, fn) {
   _cleanCallbacks[widgetName] = _cleanCallbacks[widgetName] || [];
   _cleanCallbacks[widgetName].push(fn);
+}
+
+export function resetWidgetCleanCallbacks() {
+  _cleanCallbacks = {};
 }
 
 export default Ember.Component.extend({
