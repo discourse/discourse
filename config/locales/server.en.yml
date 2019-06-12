@@ -354,7 +354,7 @@ en:
   groups:
     success:
       bulk_add:
-        one: "%{count} user have been added to the group."
+        one: "%{count} user has been added to the group."
         other: "%{count} users have been added to the group."
     errors:
       grant_trust_level_not_valid: "'%{trust_level}' is not a valid trust level."
@@ -1163,7 +1163,7 @@ en:
       title: "Anonymous"
       xaxis: "Day"
       yaxis: "Anonymous Pageviews"
-      description: "Number of new page views by visitors not logged in to an account."
+      description: "Number of new pageviews by visitors not logged in to an account."
     page_view_logged_in_reqs:
       title: "Logged In"
       xaxis: "Day"
@@ -1217,7 +1217,7 @@ en:
       title: "Time to first response"
       xaxis: "Day"
       yaxis: "Average time (hours)"
-      description: "Average time  (in hours) of the first response to new topics."
+      description: "Average time (in hours) of the first response to new topics."
     topics_with_no_response:
       title: "Topics with no response"
       xaxis: "Day"
@@ -1423,7 +1423,7 @@ en:
     ga_universal_tracking_code: "Google Universal Analytics (analytics.js) tracking code ID, eg: UA-12345678-9; see <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
     ga_universal_domain_name: "Google Universal Analytics (analytics.js) domain name, eg: mysite.com; see <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
     ga_universal_auto_link_domains: "Enable Google Universal Analytics (analytics.js) cross-domain tracking. Outgoing links to these domains will have the client id added to them. See <a href='https://support.google.com/analytics/answer/1034342?hl=en' target='_blank'>Google's Cross-Domain Tracking guide.</a>"
-    gtm_container_id: "Google Tag Manager container id. eg: GTM-ABCDEF. <br/>Note: third-party scripts loaded by GTM may need to be whitelisted in 'content security policy script src'."
+    gtm_container_id: "Google Tag Manager container id. eg: GTM-ABCDEF. <br/>Note: Third-party scripts loaded by GTM may need to be whitelisted in 'content security policy script src'."
     enable_escaped_fragments: "Fall back to Google's Ajax-Crawling API if no webcrawler is detected. See <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
     moderators_create_categories: "Allow moderators to create new categories"
     cors_origins: "Allowed origins for cross-origin requests (CORS). Each origin must include http:// or https://. The DISCOURSE_ENABLE_CORS env variable must be set to true to enable CORS."
@@ -1497,7 +1497,7 @@ en:
     enable_sso_provider: "Implement Discourse SSO provider protocol at the /session/sso_provider endpoint, requires sso_provider_secrets to be set"
     sso_url: "URL of single sign on endpoint (must include http:// or https://)"
     sso_secret: "Secret string used to cryptographically authenticate SSO information, be sure it is 10 characters or longer"
-    sso_provider_secrets: "A list of domain-secret pairs that are using Discourse as a SSO provider. Make sure SSO secret is 10 characters or longer. Wildcard symbol * can be used to match any domain or only a part of it (e.g. *.example.com)."
+    sso_provider_secrets: "A list of domain-secret pairs that are using Discourse as an SSO provider. Make sure SSO secret is 10 characters or longer. Wildcard symbol * can be used to match any domain or only a part of it (e.g. *.example.com)."
     sso_overrides_bio: "Overrides user bio in user profile and prevents user from changing it"
     sso_overrides_groups: "Synchronize all manual group membership with groups specified in the groups sso attribute (WARNING: if you do not specify groups all manual group membership will be cleared for user)"
     sso_overrides_email: "Overrides local email with external site email from SSO payload on every login, and prevent local changes. (WARNING: discrepancies can occur due to normalization of local emails)"
@@ -2009,7 +2009,7 @@ en:
     min_trust_level_for_user_api_key: "Trust level required for generation of user API keys"
     allowed_user_api_auth_redirects: "Allowed URL for authentication redirect for user API keys. Wildcard symbol * can be used to match any part of it (e.g. www.example.com/*)."
     allowed_user_api_push_urls: "Allowed URLs for server push to user API"
-    expire_user_api_keys_days: "Number of days before an user API key automatically expires (0 for never)"
+    expire_user_api_keys_days: "Number of days before a user API key automatically expires (0 for never)"
 
     tagging_enabled: "Enable tags on topics?"
     min_trust_to_create_tag: "The minimum trust level required to create a tag."
