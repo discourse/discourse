@@ -181,7 +181,7 @@ class InvitesController < ApplicationController
         max_bulk_invites = SiteSetting.max_bulk_invites
         CSV.foreach(file.tempfile) do |row|
           count += 1
-          invites.push({ email: row[0], groups: row[1], topic_id: row[2] }) if row[0].present?
+          invites.push(email: row[0], groups: row[1], topic_id: row[2]) if row[0].present?
           break if count >= max_bulk_invites
         end
 
