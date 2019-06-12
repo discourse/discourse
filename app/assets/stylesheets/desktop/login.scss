@@ -227,6 +227,7 @@
 }
 
 .password-reset,
+.email-login,
 .invites-show {
   .col-form {
     padding-left: 20px;
@@ -242,7 +243,8 @@
   }
 }
 
-.password-reset {
+.password-reset,
+.email-login {
   .col-form {
     padding-top: 40px;
   }
