@@ -690,7 +690,8 @@ task 'posts:inline_uploads' => :environment do |_, args|
                 raw: new_raw
               },
               skip_validations: true,
-              force_new_version: true
+              force_new_version: true,
+              bypass_bump: true
             )
         end
 
