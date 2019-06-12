@@ -60,11 +60,21 @@ RSpec.describe InlineUploads do
       end
 
       it "should not correct code blocks" do
-        md = "`<a class=\"attachment\" href=\"#{upload2.url}\">In Code Block</a>`"
 
-        expect(InlineUploads.process(md)).to eq(md)
+        md = <<~MD
+          `<a class=\"attachment\" href=\"#{upload2.url}\">In Code Block</a>`
 
-        md = "    <a class=\"attachment\" href=\"#{upload2.url}\">In Code Block</a>"
+                 <a class=\"attachment\" href=\"#{upload2.url}\">In Code Block</a>
+
+          ```
+          <a class=\"attachment\" href=\"#{upload2.url}\">In Code Block</a>
+          ```
+          a [code]<a class=\"attachment\" href=\"#{upload2.url}\">In Code Block</a>[/code] b
+
+          [code]
+          <a class=\"attachment\" href=\"#{upload2.url}\">In Code Block</a>
+          [/code]
+        MD
 
         expect(InlineUploads.process(md)).to eq(md)
       end
