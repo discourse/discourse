@@ -15,13 +15,13 @@ createWidget("large-notification-item", {
     const notificationName =
       this.site.notificationLookup[attrs.notification_type];
 
-    const widgetNames = [
-      `${notificationName.dasherize()}-notification-item`,
-      "default-notification-item"
-    ];
-
     return [
-      this.attach(widgetNames, attrs),
+      this.attach(
+        `${notificationName.dasherize()}-notification-item`,
+        attrs,
+        {},
+        { fallbackWidgetName: 'default-notification-item' },
+      ),
       h("span.time", dateNode(attrs.created_at))
     ];
   }

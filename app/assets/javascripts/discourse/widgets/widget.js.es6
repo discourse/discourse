@@ -196,27 +196,31 @@ export default class Widget {
     }
   }
 
-  attach(widgetNames, attrs, opts) {
-    widgetNames = [].concat(widgetNames);
-    let WidgetClass = null;
+  lookupWidgetClass(widgetName) {
+    let WidgetClass = _registry[widgetName];
+    if (WidgetClass) {
+      return WidgetClass;
+    }
 
-    for (let widgetName of widgetNames) {
-      WidgetClass = _registry[widgetName];
-      if (WidgetClass) {
-        break;
-      }
+    if (!this.register) {
+      // eslint-disable-next-line no-console
+      console.error("couldn't find register");
+      return null;
+    }
 
-      if (!this.register) {
-        // eslint-disable-next-line no-console
-        console.error("couldn't find register");
-        return;
-      }
+    WidgetClass = this.register.lookupFactory(`widget:${widgetName}`);
+    if (WidgetClass && WidgetClass.class) {
+      return WidgetClass.class;
+    }
 
-      WidgetClass = this.register.lookupFactory(`widget:${widgetName}`);
-      if (WidgetClass && WidgetClass.class) {
-        WidgetClass = WidgetClass.class;
-        break;
-      }
+    return null;
+  }
+
+  attach(widgetName, attrs, opts, otherOpts = {}) {
+    let WidgetClass = this.lookupWidgetClass(widgetName);
+
+    if (!WidgetClass && otherOpts.fallbackWidgetName) {
+      WidgetClass = this.lookupWidgetClass(otherOpts.fallbackWidgetName);
     }
 
     if (WidgetClass) {
@@ -225,7 +229,7 @@ export default class Widget {
       result.dirtyKeys = this.dirtyKeys;
       return result;
     } else {
-      throw new Error(`Couldn't find ${widgetNames} factory`);
+      throw new Error(`Couldn't find ${widgetName} or fallback ${otherOpts.fallbackWidgetName}`);
     }
   }
 
