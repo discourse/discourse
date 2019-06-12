@@ -939,6 +939,10 @@ en:
     description: '"%{application_name}" is requesting the following access to your account:'
     instructions: 'We just generated a new user API key for you to use with "%{application_name}", please paste the following key into your application:'
     otp_description: 'Would you like to allow "%{application_name}" to access this site?'
+    otp_confirmation: 
+      confirm_title: Continue to %{site_name}
+      logging_in_as: Logging in as %{username}
+      confirm_button: Finish Login
     no_trust_level: "Sorry, you do not have the required trust level to access the user API"
     generic_error: "Sorry, we are unable to issue user API keys, this feature may be disabled by the site admin"
     scopes:
