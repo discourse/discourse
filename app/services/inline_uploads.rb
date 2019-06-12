@@ -22,12 +22,11 @@ class InlineUploads
       end
 
       if seen_link = matched_uploads(node).first
-        link_occurences <<
-          if (actual_link = (node.attributes["href"]&.value || node.attributes["src"]&.value))
-            { link: actual_link, is_valid: true }
-          else
-            { link: seen_link, is_valid: false }
-          end
+        if (actual_link = (node.attributes["href"]&.value || node.attributes["src"]&.value))
+          link_occurences << { link: actual_link, is_valid: true }
+        elsif node.name != "p"
+          link_occurences << { link: actual_link, is_valid: false }
+        end
       end
     end
 
@@ -60,7 +59,7 @@ class InlineUploads
     ]
 
     if Discourse.store.external?
-      regexps << /(https?:#{SiteSetting.Upload.s3_base_url}#{UPLOAD_REGEXP_PATTERN})/
+      regexps << /((https?:)?#{SiteSetting.Upload.s3_base_url}#{UPLOAD_REGEXP_PATTERN})/
       regexps << /(#{SiteSetting.Upload.s3_cdn_url}#{UPLOAD_REGEXP_PATTERN})/
     end
 
@@ -235,28 +234,31 @@ class InlineUploads
     regexps = [
       /(upload:\/\/([a-zA-Z0-9]+)[a-z0-9\.]*)/,
       /(\/uploads\/short-url\/([a-zA-Z0-9]+)[a-z0-9\.]*)/,
+      /(#{Discourse.base_url}\/uploads\/short-url\/([a-zA-Z0-9]+)[a-z0-9\.]*)/,
     ]
 
     db = RailsMultisite::ConnectionManagement.current_db
 
     if Discourse.store.external?
       if Rails.configuration.multisite
-        regexps << /(#{SiteSetting.Upload.s3_base_url}\/uploads\/#{db}#{UPLOAD_REGEXP_PATTERN})/
+        regexps << /((https?:)?#{SiteSetting.Upload.s3_base_url}\/uploads\/#{db}#{UPLOAD_REGEXP_PATTERN})/
         regexps << /(#{SiteSetting.Upload.s3_cdn_url}\/uploads\/#{db}#{UPLOAD_REGEXP_PATTERN})/
       else
-        regexps << /(#{SiteSetting.Upload.s3_base_url}#{UPLOAD_REGEXP_PATTERN})/
+        regexps << /((https?:)?#{SiteSetting.Upload.s3_base_url}#{UPLOAD_REGEXP_PATTERN})/
         regexps << /(#{SiteSetting.Upload.s3_cdn_url}#{UPLOAD_REGEXP_PATTERN})/
         regexps << /(\/uploads\/#{db}#{UPLOAD_REGEXP_PATTERN})/
+        regexps << /(#{Discourse.base_url}\/uploads\/#{db}#{UPLOAD_REGEXP_PATTERN})/
       end
     else
       regexps << /(\/uploads\/#{db}#{UPLOAD_REGEXP_PATTERN})/
+      regexps << /(#{Discourse.base_url}\/uploads\/#{db}#{UPLOAD_REGEXP_PATTERN})/
     end
 
     node = node.to_s
 
     regexps.each do |regexp|
-      node.scan(regexp) do |matched|
-        matches << matched[0]
+      node.scan(/(^|[\n\s"'\(>])#{regexp}($|[\n\s"'\)<])/) do |matched|
+        matches << matched[1]
       end
     end
 
