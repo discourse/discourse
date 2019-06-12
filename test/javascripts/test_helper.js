@@ -154,7 +154,6 @@ QUnit.testDone(function() {
   flushMap();
 
   server.shutdown();
-
   window.server = null;
 
   // ensures any event not removed is not leaking between tests
@@ -167,15 +166,6 @@ QUnit.testDone(function() {
     event.forEach(function(listener) {
       appEvents.off(eventKey, listener.target, listener.fn);
     });
-  });
-
-  Discourse._runInitializer("instanceInitializers", function(
-    name,
-    initializer
-  ) {
-    if (initializer && initializer.teardown) {
-      initializer.teardown();
-    }
   });
 
   window.MessageBus.unsubscribe("*");

@@ -130,6 +130,16 @@ export function acceptance(name, options) {
       resetWidgetCleanCallbacks();
       resetOneboxCache();
       resetCustomPostMessageCallbacks();
+
+      Discourse._runInitializer("instanceInitializers", function(
+        initializerName,
+        initializer
+      ) {
+        if (initializer && initializer.teardown) {
+          initializer.teardown(Discourse.__container__);
+        }
+      });
+
       Discourse.reset();
     }
   });
