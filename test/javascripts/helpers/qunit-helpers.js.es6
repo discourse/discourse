@@ -13,6 +13,7 @@ import { flushMap } from "discourse/models/store";
 import { clearRewrites } from "discourse/lib/url";
 import { initSearchData } from "discourse/widgets/search-menu";
 import { resetDecorators } from "discourse/widgets/widget";
+import { resetWidgetCleanCallbacks } from "discourse/components/mount-widget";
 import { resetDecorators as resetPostCookedDecorators } from "discourse/widgets/post-cooked";
 import { resetCache as resetOneboxCache } from "pretty-text/oneboxer";
 import { resetCustomPostMessageCallbacks } from "discourse/controllers/topic";
@@ -126,6 +127,7 @@ export function acceptance(name, options) {
       initSearchData();
       resetDecorators();
       resetPostCookedDecorators();
+      resetWidgetCleanCallbacks();
       resetOneboxCache();
       resetCustomPostMessageCallbacks();
       Discourse.reset();
