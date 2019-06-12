@@ -292,7 +292,7 @@ describe GroupsController do
     end
 
     it 'should respond to HTML' do
-      group.update_attribute(:bio_cooked, 'testing group bio')
+      group.update!(bio_raw: 'testing **group** bio')
 
       get "/groups/#{group.name}.html"
 
@@ -302,8 +302,9 @@ describe GroupsController do
         property: 'og:title', content: group.name
       })
 
+      # note this uses an excerpt so it strips html
       expect(response.body).to have_tag(:meta, with: {
-        property: 'og:description', content: group.bio_cooked
+        property: 'og:description', content: 'testing group bio'
       })
     end
 
