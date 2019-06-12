@@ -16,7 +16,7 @@ createWidget("large-notification-item", {
       this.site.notificationLookup[attrs.notification_type];
 
     const widgetNames = [
-      `${notificationName.replace(/_/g, '-')}-notification-item`,
+      `${notificationName.dasherize()}-notification-item`,
       "default-notification-item"
     ];
 

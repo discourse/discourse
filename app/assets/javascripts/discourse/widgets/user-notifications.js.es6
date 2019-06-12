@@ -95,7 +95,7 @@ export default createWidget("user-notifications", {
             this.site.notificationLookup[notificationAttrs.notification_type];
 
           const widgetNames = [
-            `${notificationName.replace(/_/g, '-')}-notification-item`,
+            `${notificationName.dasherize()}-notification-item`,
             "default-notification-item"
           ];
 
