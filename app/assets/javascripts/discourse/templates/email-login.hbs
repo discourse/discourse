@@ -1,0 +1,33 @@
+<div class="container email-login clearfix">
+  <div class="pull-left col-image">
+    <img src={{lockImageUrl}} class="password-reset-img">
+  </div>
+
+  <div class="pull-left col-form">
+    <form>
+      {{#if model.error}}
+        <div class='alert alert-error'>
+          {{model.error}}
+        </div>
+      {{/if}}
+
+      {{#if model.can_login}}
+        {{#if model.second_factor_required}}
+          {{#second-factor-form
+            secondFactorMethod=secondFactorMethod
+            secondFactorToken=secondFactorToken
+            backupEnabled=model.backup_codes_enabled
+            isLogin=true}}
+            {{second-factor-input value=secondFactorToken secondFactorMethod=secondFactorMethod backupEnabled=backupEnabled}}
+          {{/second-factor-form}}
+        {{else}}
+          <h2>{{i18n "email_login.confirm_title" site_name=siteSettings.title}}</h2>
+          <p>{{i18n "email_login.logging_in_as" email=model.token_email}}</p>
+        {{/if}}
+
+        {{d-button label="email_login.confirm_button" action=(action "finishLogin") class="btn-primary"}}
+      {{/if}}
+    </form>
+  </div>
+</div>
+
