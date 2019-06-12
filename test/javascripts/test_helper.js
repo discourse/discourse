@@ -178,10 +178,7 @@ QUnit.testDone(function() {
     }
   });
 
-  // attempts to remove any subscribed message bus callback
-  window.MessageBus.callbacks.forEach(function(callback) {
-    window.MessageBus.unsubscribe(callback.channel, callback.func);
-  });
+  window.MessageBus.unsubscribe("*");
 });
 
 // Load ES6 tests
