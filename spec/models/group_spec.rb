@@ -622,6 +622,10 @@ describe Group do
     group.update!(bio_raw: 'This is a group for :unicorn: lovers')
 
     expect(group.bio_cooked).to include("unicorn.png")
+
+    group.update!(bio_raw: '')
+
+    expect(group.bio_cooked).to eq(nil)
   end
 
   describe ".visible_groups" do
