@@ -365,12 +365,19 @@ class SessionController < ApplicationController
   end
 
   def one_time_password
-    otp_username = $redis.get "otp_#{params[:token]}"
+    @otp_username = otp_username = $redis.get "otp_#{params[:token]}"
 
     if otp_username && user = User.find_by_username(otp_username)
-      log_on_user(user)
-      $redis.del "otp_#{params[:token]}"
-      return redirect_to path("/")
+      if current_user&.username == otp_username
+        $redis.del "otp_#{params[:token]}"
+        return redirect_to path("/")
+      elsif request.post?
+        log_on_user(user)
+        $redis.del "otp_#{params[:token]}"
+        return redirect_to path("/")
+      else
+        # Display the form
+      end
     else
       @error = I18n.t('user_api_key.invalid_token')
     end
