@@ -89,7 +89,6 @@ module Jobs
             end
             # have we successfully downloaded that file?
             if downloaded_urls[src].present?
-              url = downloaded_urls[src]
               escaped_src = Regexp.escape(original_src)
 
               replace_raw = ->(match, match_src, replacement, _index) {
