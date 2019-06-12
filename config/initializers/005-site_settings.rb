@@ -5,6 +5,13 @@
 # the original version
 Discourse.git_version
 
+if GlobalSetting.skip_redis?
+  require 'site_settings/local_process_provider'
+  Rails.cache = Discourse.cache
+  SiteSetting.provider = SiteSettings::LocalProcessProvider.new
+  return
+end
+
 reload_settings = lambda {
   RailsMultisite::ConnectionManagement.safe_each_connection do
     begin
