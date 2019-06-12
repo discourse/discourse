@@ -94,12 +94,14 @@ export default createWidget("user-notifications", {
           const notificationName =
             this.site.notificationLookup[notificationAttrs.notification_type];
 
-          const widgetNames = [
-            `${notificationName.dasherize()}-notification-item`,
-            "default-notification-item"
-          ];
-
-          return this.attach(widgetNames, notificationAttrs);
+          return (
+            this.attach(
+              `${notificationName.dasherize()}-notification-item`,
+              notificationAttrs,
+              {},
+              { fallbackWidgetName: 'default-notification-item' }
+            )
+          );
         });
 
       result.push(h("hr"));
