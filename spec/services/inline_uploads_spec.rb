@@ -60,26 +60,55 @@ RSpec.describe InlineUploads do
       end
 
       it "should not correct code blocks" do
+        md = "`<a class=\"attachment\" href=\"#{upload2.url}\">In Code Block</a>`"
 
-        md = <<~MD
-          `<a class=\"attachment\" href=\"#{upload2.url}\">In Code Block</a>`
+        expect(InlineUploads.process(md)).to eq(md)
 
-                 <a class=\"attachment\" href=\"#{upload2.url}\">In Code Block</a>
-
-          ```
-          <a class=\"attachment\" href=\"#{upload2.url}\">In Code Block</a>
-          ```
-          a [code]<a class=\"attachment\" href=\"#{upload2.url}\">In Code Block</a>[/code] b
-
-          [code]
-          <a class=\"attachment\" href=\"#{upload2.url}\">In Code Block</a>
-          [/code]
-        MD
+        md = "    <a class=\"attachment\" href=\"#{upload2.url}\">In Code Block</a>"
 
         expect(InlineUploads.process(md)).to eq(md)
       end
 
-      it "should not correct links in quotes" do
+      it "should not correct invalid links in quotes" do
+        post = Fabricate(:post)
+        user = Fabricate(:user)
+
+        md = <<~MD
+        [quote="#{user.username}, post:#{post.post_number}, topic:#{post.topic.id}"]
+        <img src="#{upload.url}"
+        someothertext#{upload2.url}someothertext
+
+        <img src="#{upload.url}"
+
+        sometext#{upload2.url}sometext
+
+        #{upload3.url}
+
+        #{Discourse.base_url}#{upload3.url}
+        [/quote]
+
+        <img src="#{upload2.url}">
+        MD
+
+        expect(InlineUploads.process(md)).to eq(<<~MD)
+        [quote="#{user.username}, post:#{post.post_number}, topic:#{post.topic.id}"]
+        <img src="#{upload.url}"
+        someothertext#{upload2.url}someothertext
+
+        <img src="#{upload.url}"
+
+        sometext#{upload2.url}sometext
+
+        #{upload3.url}
+
+        ![](#{upload3.short_url})
+        [/quote]
+
+        ![](#{upload2.short_url})
+        MD
+      end
+
+      it "should correct links in quotes" do
         post = Fabricate(:post)
         user = Fabricate(:user)
 
@@ -472,11 +501,13 @@ RSpec.describe InlineUploads do
 
       it "should correct image URLs to the short version" do
         md = <<~MD
+        #{upload.url}
         <img src="#{upload.url}" alt="some image">
         <img src="#{URI.join(SiteSetting.s3_cdn_url, URI.parse(upload2.url).path).to_s}" alt="some image">
         MD
 
         expect(InlineUploads.process(md)).to eq(<<~MD)
+        ![](#{upload.short_url})
         ![some image](#{upload.short_url})
         ![some image](#{upload2.short_url})
         MD
