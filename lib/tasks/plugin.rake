@@ -62,7 +62,11 @@ task 'plugin:update_all' do |t|
   # Loop through each directory
   plugins = Dir.glob(File.expand_path('plugins/*')).select { |f| File.directory? f }
   # run plugin:update
-  plugins.each { |plugin| Rake::Task['plugin:update'].invoke(plugin) }
+  plugins.each do |plugin|
+    next unless File.directory?(plugin + "/.git")
+    Rake::Task['plugin:update'].invoke(plugin)
+    Rake::Task['plugin:update'].reenable
+  end
 end
 
 desc 'update a plugin'
