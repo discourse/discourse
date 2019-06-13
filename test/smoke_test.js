@@ -29,7 +29,7 @@ const path = require("path");
 
   const takeFailureScreenshot = function() {
     const screenshotPath = `${process.env.SMOKE_TEST_SCREENSHOT_PATH ||
-    "tmp/smoke-test-screenshots"}/smoke-test-${Date.now()}.png`;
+      "tmp/smoke-test-screenshots"}/smoke-test-${Date.now()}.png`;
     console.log(`Screenshot of failure taken at ${screenshotPath}`);
     return page.screenshot({ path: screenshotPath, fullPage: true });
   };
@@ -286,7 +286,7 @@ const path = require("path");
         visible: true
       });
 
-      promise = promise.then(() => page.waitFor(1000));
+      promise = promise.then(() => page.waitFor(2000));
 
       promise = promise.then(() => {
         const post = `I edited this post`;
