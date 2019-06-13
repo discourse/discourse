@@ -660,6 +660,18 @@ end
 
 desc "Coverts full upload URLs in `Post#raw` to short upload url"
 task 'posts:inline_uploads' => :environment do |_, args|
+  if ENV['RAILS_DB']
+    correct_inline_uploads
+  else
+    RailsMultisite::ConnectionManagement.each_connection do |db|
+      puts "Correcting #{db}..."
+      puts
+      correct_inline_uploads
+    end
+  end
+end
+
+def correct_inline_uploads
   dry_run = (ENV["DRY_RUN"].nil? ? true : ENV["DRY_RUN"] != "false")
   verbose = ENV["VERBOSE"]
 
