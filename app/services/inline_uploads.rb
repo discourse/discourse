@@ -166,7 +166,9 @@ class InlineUploads
 
   def self.match_bbcode_img(markdown)
     markdown.scan(/(\[img\]\s?(.+)\s?\[\/img\])/) do |match|
-      yield(match[0], match[1], +"![](#{PLACEHOLDER})", $~.offset(0)[0]) if block_given?
+      if matched_uploads(match[1]).present? && block_given?
+        yield(match[0], match[1], +"![](#{PLACEHOLDER})", $~.offset(0)[0])
+      end
     end
   end
 
