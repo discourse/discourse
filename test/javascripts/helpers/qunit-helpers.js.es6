@@ -24,7 +24,7 @@ export function currentUser() {
   );
 }
 
-export function replaceCurrentUser(properties) {
+export function updateCurrentUser(properties) {
   Discourse.User.current().setProperties(properties);
 }
 
