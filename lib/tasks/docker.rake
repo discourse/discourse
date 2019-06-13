@@ -117,6 +117,10 @@ task 'docker:test' do
         @good &&= run_or_fail("bundle exec rake plugin:install_all_official")
       end
 
+      if ENV["UPDATE_ALL_PLUGINS"]
+        @good &&= run_or_fail("bundle exec rake plugin:update_all")
+      end
+
       if ENV["SKIP_PLUGINS"]
         @good &&= run_or_fail("bundle exec rake db:migrate")
       else
