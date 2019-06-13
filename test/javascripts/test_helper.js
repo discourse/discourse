@@ -169,15 +169,6 @@ QUnit.testDone(function() {
     });
   });
 
-  Discourse._runInitializer("instanceInitializers", function(
-    name,
-    initializer
-  ) {
-    if (initializer && initializer.teardown) {
-      initializer.teardown();
-    }
-  });
-
   window.MessageBus.unsubscribe("*");
 });
 
