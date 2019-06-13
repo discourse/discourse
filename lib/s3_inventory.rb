@@ -125,11 +125,9 @@ class S3Inventory
   end
 
   def decompress_inventory_files
-    FileUtils.cd(tmp_directory) do
-      files.each do |file|
-        log "Decompressing inventory file '#{file[:filename]}', this may take a while..."
-        Discourse::Utils.execute_command('gzip', '--decompress', file[:filename], failure_message: "Failed to decompress inventory file '#{file[:filename]}'.")
-      end
+    files.each do |file|
+      log "Decompressing inventory file '#{file[:filename]}', this may take a while..."
+      Discourse::Utils.execute_command('gzip', '--decompress', file[:filename], failure_message: "Failed to decompress inventory file '#{file[:filename]}'.", chdir: tmp_directory)
     end
   end
 
