@@ -161,7 +161,9 @@ RSpec.describe InlineUploads do
 
       it "should correct bbcode img URLs to the short version" do
         md = <<~MD
+        [img]http://some.external.img[/img]
         [img]#{upload.url}[/img]
+        <img src="#{upload3.url}">
 
         [img]
         #{upload2.url}
@@ -169,7 +171,9 @@ RSpec.describe InlineUploads do
         MD
 
         expect(InlineUploads.process(md)).to eq(<<~MD)
+        [img]http://some.external.img[/img]
         ![](#{upload.short_url})
+        ![](#{upload3.short_url})
 
         ![](#{upload2.short_url})
         MD
