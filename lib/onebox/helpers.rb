@@ -169,7 +169,7 @@ module Onebox
       url.gsub!(' ', '%20')
       url.gsub!("'", "&apos;")
       url.gsub!('"', "&quot;")
-      url.gsub!(/[^\w\-`.~:\/?#\[\]@!$&'\(\)*+,;=%]/, "")
+      url.gsub!(/[^\w\-`.~:\/?#\[\]@!$&'\(\)*+,;=%\p{M}’]/, "")
       url
     end
 
