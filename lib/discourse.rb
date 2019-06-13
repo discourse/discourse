@@ -23,8 +23,8 @@ module Discourse
   end
 
   class Utils
-    def self.execute_command(*command, failure_message: "", success_status_codes: [0])
-      stdout, stderr, status = Open3.capture3(*command)
+    def self.execute_command(*command, failure_message: "", success_status_codes: [0], chdir: ".")
+      stdout, stderr, status = Open3.capture3(*command, chdir: chdir)
 
       if !status.exited? || !success_status_codes.include?(status.exitstatus)
         failure_message = "#{failure_message}\n" if !failure_message.blank?
