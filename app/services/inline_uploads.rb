@@ -11,6 +11,13 @@ class InlineUploads
 
   def self.process(markdown, on_missing: nil)
     markdown = markdown.dup
+
+    match_md_reference(markdown) do |match, src, replacement, index|
+      if upload = Upload.get_from_url(src)
+        markdown = markdown.sub(match, replacement.sub!(PATH_PLACEHOLDER, "__#{upload.sha1}__"))
+      end
+    end
+
     cooked_fragment = Nokogiri::HTML::fragment(PrettyText.cook(markdown, disable_emojis: true))
     link_occurences = []
 
@@ -37,10 +44,6 @@ class InlineUploads
     end
 
     match_md_inline_img(markdown) do |match, src, replacement, index|
-      raw_matches << [match, src, replacement, index]
-    end
-
-    match_md_reference(markdown) do |match, src, replacement, index|
       raw_matches << [match, src, replacement, index]
     end
 
@@ -138,6 +141,11 @@ class InlineUploads
           on_missing.call(link) if on_missing
         end
       end
+    end
+
+    markdown.scan(/(__([a-f0-9]{40})__)/) do |match|
+      upload = Upload.find_by(sha1: match[1])
+      markdown = markdown.sub(match[0], upload.short_path)
     end
 
     markdown
