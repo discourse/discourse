@@ -6,7 +6,7 @@ class InlineUploads
   PLACEHOLDER = "__replace__"
   PATH_PLACEHOLDER = "__replace_path__"
 
-  UPLOAD_REGEXP_PATTERN = "/original/(\\dX/(?:[a-f0-9]/)*[a-f0-9]{40}[a-z0-9.]*)"
+  UPLOAD_REGEXP_PATTERN = "/original/(\\dX/(?:[a-f0-9]/)*[a-f0-9]{40}[a-zA-Z0-9.]*)"
   private_constant :UPLOAD_REGEXP_PATTERN
 
   def self.process(markdown, on_missing: nil)
@@ -232,9 +232,9 @@ class InlineUploads
     matches = []
 
     regexps = [
-      /(upload:\/\/([a-zA-Z0-9]+)[a-z0-9\.]*)/,
-      /(\/uploads\/short-url\/([a-zA-Z0-9]+)[a-z0-9\.]*)/,
-      /(#{Discourse.base_url}\/uploads\/short-url\/([a-zA-Z0-9]+)[a-z0-9\.]*)/,
+      /(upload:\/\/([a-zA-Z0-9]+)[a-zA-Z0-9\.]*)/,
+      /(\/uploads\/short-url\/([a-zA-Z0-9]+)[a-zA-Z0-9\.]*)/,
+      /(#{Discourse.base_url}\/uploads\/short-url\/([a-zA-Z0-9]+)[a-zA-Z0-9\.]*)/,
     ]
 
     db = RailsMultisite::ConnectionManagement.current_db
