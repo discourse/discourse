@@ -40,7 +40,12 @@ class ReviewableFlaggedPost < Reviewable
       build_action(actions, :agree_and_hide, icon: 'far-eye-slash', bundle: agree)
     end
 
-    build_action(actions, :agree_and_keep, icon: 'thumbs-up', bundle: agree)
+    if post.hidden?
+      build_action(actions, :agree_and_keep_hidden, icon: 'thumbs-up', bundle: agree)
+    else
+      build_action(actions, :agree_and_keep, icon: 'thumbs-up', bundle: agree)
+    end
+
     if guardian.can_suspend?(target_created_by)
       build_action(actions, :agree_and_suspend, icon: 'ban', bundle: agree, client_action: 'suspend')
       build_action(actions, :agree_and_silence, icon: 'microphone-slash', bundle: agree, client_action: 'silence')
@@ -121,6 +126,10 @@ class ReviewableFlaggedPost < Reviewable
 
   # Penalties are handled by the modal after the action is performed
   def perform_agree_and_keep(performed_by, args)
+    agree(performed_by, args)
+  end
+
+  def perform_agree_and_keep_hidden(performed_by, args)
     agree(performed_by, args)
   end
 
