@@ -1,9 +1,9 @@
 import selectKit from "helpers/select-kit-helper";
-import { acceptance, logIn } from "helpers/qunit-helpers";
+import { acceptance } from "helpers/qunit-helpers";
 
 const emptySearchContextCallbacks = [];
 
-acceptance("Search", {
+let searchArgs = {
   pretend(server) {
     server.handledRequest = (verb, path, request) => {
       if (request.queryParams["search_context[type]"] === undefined) {
@@ -13,7 +13,9 @@ acceptance("Search", {
       }
     };
   }
-});
+};
+
+acceptance("Search", searchArgs);
 
 QUnit.test("search", async assert => {
   await visit("/");
@@ -136,11 +138,11 @@ QUnit.test("Right filters are shown to anonymous users", async assert => {
   assert.notOk(exists(".search-advanced-options .in-seen"));
 });
 
+acceptance("Search", Object.assign({ loggedIn: true, searchArgs }));
+
 QUnit.test("Right filters are shown to logged-in users", async assert => {
   const inSelector = selectKit(".select-kit#in");
 
-  logIn();
-  Discourse.reset();
   await visit("/search?expanded=true");
 
   await inSelector.expand();

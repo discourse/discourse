@@ -1,4 +1,4 @@
-import { acceptance, logIn, replaceCurrentUser } from "helpers/qunit-helpers";
+import { acceptance, replaceCurrentUser } from "helpers/qunit-helpers";
 import DiscoveryFixtures from "fixtures/discovery_fixtures";
 
 acceptance("Redirect to Top", {
@@ -12,12 +12,11 @@ acceptance("Redirect to Top", {
     server.get("/top/all.json", () => {
       return helper.response(DiscoveryFixtures["/latest.json"]);
     });
-  }
+  },
+  loggedIn: true
 });
 
 QUnit.test("redirects categories to weekly top", async assert => {
-  logIn();
-
   replaceCurrentUser({
     should_be_redirected_to_top: true,
     redirected_to_top: {
@@ -31,8 +30,6 @@ QUnit.test("redirects categories to weekly top", async assert => {
 });
 
 QUnit.test("redirects latest to monthly top", async assert => {
-  logIn();
-
   replaceCurrentUser({
     should_be_redirected_to_top: true,
     redirected_to_top: {
@@ -46,8 +43,6 @@ QUnit.test("redirects latest to monthly top", async assert => {
 });
 
 QUnit.test("redirects root to All top", async assert => {
-  logIn();
-
   replaceCurrentUser({
     should_be_redirected_to_top: true,
     redirected_to_top: {
