@@ -138,6 +138,8 @@ module I18n
     def overrides_by_locale(locale)
       return unless @overrides_enabled
 
+      return {} if GlobalSetting.skip_db?
+
       site = RailsMultisite::ConnectionManagement.current_db
 
       by_site = @overrides_by_site[site]
