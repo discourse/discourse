@@ -211,6 +211,16 @@ RSpec.describe InlineUploads do
         MD
       end
 
+      it "should correct img tags with uppercase upload extension" do
+        md = <<~MD
+        test<img src="#{upload.url.sub(".png", ".PNG")}">
+        MD
+
+        expect(InlineUploads.process(md)).to eq(<<~MD)
+        test![](#{upload.short_url})
+        MD
+      end
+
       it "should correct image URLs to the short version" do
         md = <<~MD
         ![image|690x290](#{upload.short_url})
@@ -503,12 +513,14 @@ RSpec.describe InlineUploads do
         md = <<~MD
         #{upload.url}
         <img src="#{upload.url}" alt="some image">
+        test<img src="#{upload2.url}" alt="some image">test
         <img src="#{URI.join(SiteSetting.s3_cdn_url, URI.parse(upload2.url).path).to_s}" alt="some image">
         MD
 
         expect(InlineUploads.process(md)).to eq(<<~MD)
         ![](#{upload.short_url})
         ![some image](#{upload.short_url})
+        test![some image](#{upload2.short_url})test
         ![some image](#{upload2.short_url})
         MD
       end
