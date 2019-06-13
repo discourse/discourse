@@ -105,7 +105,7 @@ module Jobs
               InlineUploads.match_img(raw, external_src: true, &replace_raw)
 
               # BBCode tag - [img]http://...[/img]
-              InlineUploads.match_bbcode_img(raw, &replace_raw)
+              InlineUploads.match_bbcode_img(raw, external_src: true, &replace_raw)
 
               # Markdown linked image - [![alt](http://...)](http://...)
               # Markdown inline - ![alt](http://...)
