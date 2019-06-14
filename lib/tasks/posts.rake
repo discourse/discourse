@@ -675,9 +675,10 @@ def correct_inline_uploads
   dry_run = (ENV["DRY_RUN"].nil? ? true : ENV["DRY_RUN"] != "false")
   verbose = ENV["VERBOSE"]
 
-  scope = Post.joins(:post_uploads)
-    .distinct("posts.id")
-    .where("raw LIKE '%class=\"attachment%' OR raw LIKE '%<img src=\"%'")
+  scope = Post.joins(:post_uploads).distinct("posts.id")
+    .where(<<~SQL)
+    raw LIKE '%/uploads/#{RailsMultisite::ConnectionManagement.current_db}/original/%'
+    SQL
 
   affected_posts_count = scope.count
   fixed_count = 0
