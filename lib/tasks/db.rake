@@ -26,9 +26,9 @@ task 'db:force_skip_persist' do
   GlobalSetting.skip_redis = true
 end
 
-task 'db:create' do |_, args|
-  if MultisiteTestHelpers.load_multisite?
-    system("RAILS_DB=discourse_test_multisite rake db:create")
+task 'db:create' => [:load_config] do |_, args|
+  if !ENV['RAILS_ENV']
+    system("RAILS_ENV=test RAILS_DB=discourse_test_multisite rake db:create")
   end
 end
 

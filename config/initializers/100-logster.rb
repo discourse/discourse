@@ -1,7 +1,9 @@
 # frozen_string_literal: true
 
 if GlobalSetting.skip_redis?
-  Rails.logger = Rails.logger.chained.first
+  if Rails.logger.respond_to? :chained
+    Rails.logger = Rails.logger.chained.first
+  end
   return
 end
 
@@ -142,6 +144,8 @@ RailsMultisite::ConnectionManagement.each_connection do
 end
 
 if Rails.configuration.multisite
-  chained = Rails.logger.chained
-  chained && chained.first.formatter = RailsMultisite::Formatter.new
+  if Rails.logger.respond_to? :chained
+    chained = Rails.logger.chained
+    chained && chained.first.formatter = RailsMultisite::Formatter.new
+  end
 end
