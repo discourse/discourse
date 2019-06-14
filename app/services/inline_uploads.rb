@@ -100,7 +100,7 @@ class InlineUploads
         end
       end
 
-      markdown.scan(/((\n|\s)+)#{regexp}/) do |match|
+      markdown.scan(/(([\n\s\)\]\<])+)#{regexp}/) do |match|
         if matched_uploads(match[2]).present?
           next if indexes.include?($~.offset(3)[0])
 

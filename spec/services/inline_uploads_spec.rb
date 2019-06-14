@@ -234,6 +234,20 @@ RSpec.describe InlineUploads do
         MD
       end
 
+      it "should correct image URLs that follows an image md" do
+        md = <<~MD
+        ![image|690x290](#{upload.short_url})#{Discourse.base_url}#{upload2.url}
+
+        <#{Discourse.base_url}#{upload2.url}>
+        MD
+
+        expect(InlineUploads.process(md)).to eq(<<~MD)
+        ![image|690x290](#{upload.short_url})#{Discourse.base_url}#{upload2.short_path}
+
+        <#{Discourse.base_url}#{upload2.short_path}>
+        MD
+      end
+
       it "should correct image URLs to the short version" do
         md = <<~MD
         ![image|690x290](#{upload.short_url})
