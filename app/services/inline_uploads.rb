@@ -130,7 +130,13 @@ class InlineUploads
         if !Discourse.store.external?
           host = uri&.host
 
-          if host && ![Discourse.current_hostname, URI(GlobalSetting.cdn_url).hostname].include?(host)
+          hosts = [Discourse.current_hostname]
+
+          if cdn_url = GlobalSetting.cdn_url
+            hosts << URI(GlobalSetting.cdn_url).hostname
+          end
+
+          if host && !hosts.include?(host)
             next
           end
         end
@@ -246,7 +252,10 @@ class InlineUploads
     matches = []
 
     base_url = Discourse.base_url.sub(/https?:\/\//, "(https?://)")
-    cdn_url = GlobalSetting.cdn_url.sub(/https?:\/\//, "(https?://)")
+
+    if GlobalSetting.cdn_url
+      cdn_url = GlobalSetting.cdn_url.sub(/https?:\/\//, "(https?://)")
+    end
 
     regexps = [
       /(upload:\/\/([a-zA-Z0-9]+)[a-zA-Z0-9\.]*)/,
@@ -265,12 +274,12 @@ class InlineUploads
         regexps << /(#{SiteSetting.Upload.s3_cdn_url}#{UPLOAD_REGEXP_PATTERN})/
         regexps << /(\/uploads\/#{db}#{UPLOAD_REGEXP_PATTERN})/
         regexps << /(#{base_url}\/uploads\/#{db}#{UPLOAD_REGEXP_PATTERN})/
-        regexps << /(#{cdn_url}\/uploads\/#{db}#{UPLOAD_REGEXP_PATTERN})/
+        regexps << /(#{cdn_url}\/uploads\/#{db}#{UPLOAD_REGEXP_PATTERN})/ if cdn_url
       end
     else
       regexps << /(\/uploads\/#{db}#{UPLOAD_REGEXP_PATTERN})/
       regexps << /(#{base_url}\/uploads\/#{db}#{UPLOAD_REGEXP_PATTERN})/
-      regexps << /(#{cdn_url}\/uploads\/#{db}#{UPLOAD_REGEXP_PATTERN})/
+      regexps << /(#{cdn_url}\/uploads\/#{db}#{UPLOAD_REGEXP_PATTERN})/ if cdn_url
     end
 
     node = node.to_s
