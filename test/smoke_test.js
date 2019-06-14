@@ -70,7 +70,7 @@ const path = require("path");
   page.on("console", msg => console.log(`PAGE LOG: ${msg.text()}`));
 
   page.on("response", resp => {
-    if (resp.status() !== 200) {
+    if (resp.status() !== 200 && resp.status() !== 302) {
       console.log(
         "FAILED HTTP REQUEST TO " + resp.url() + " Status is: " + resp.status()
       );
