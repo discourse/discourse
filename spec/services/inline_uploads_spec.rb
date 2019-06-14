@@ -190,7 +190,7 @@ RSpec.describe InlineUploads do
         <img src="#{upload.url}">
 
         [1]: #{Discourse.base_url}#{upload.url}
-        [2]: #{Discourse.base_url}#{upload2.url}
+        [2]: #{Discourse.base_url.sub("http://", "https://")}#{upload2.url}
         MD
 
         expect(InlineUploads.process(md)).to eq(<<~MD)

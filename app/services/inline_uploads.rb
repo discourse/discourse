@@ -241,10 +241,12 @@ class InlineUploads
   def self.matched_uploads(node)
     matches = []
 
+    base_url = Discourse.base_url.sub(/https?:\/\//, "(https?://)")
+
     regexps = [
       /(upload:\/\/([a-zA-Z0-9]+)[a-zA-Z0-9\.]*)/,
       /(\/uploads\/short-url\/([a-zA-Z0-9]+)[a-zA-Z0-9\.]*)/,
-      /(#{Discourse.base_url}\/uploads\/short-url\/([a-zA-Z0-9]+)[a-zA-Z0-9\.]*)/,
+      /(#{base_url}\/uploads\/short-url\/([a-zA-Z0-9]+)[a-zA-Z0-9\.]*)/,
     ]
 
     db = RailsMultisite::ConnectionManagement.current_db
@@ -257,11 +259,11 @@ class InlineUploads
         regexps << /((https?:)?#{SiteSetting.Upload.s3_base_url}#{UPLOAD_REGEXP_PATTERN})/
         regexps << /(#{SiteSetting.Upload.s3_cdn_url}#{UPLOAD_REGEXP_PATTERN})/
         regexps << /(\/uploads\/#{db}#{UPLOAD_REGEXP_PATTERN})/
-        regexps << /(#{Discourse.base_url}\/uploads\/#{db}#{UPLOAD_REGEXP_PATTERN})/
+        regexps << /(#{base_url}\/uploads\/#{db}#{UPLOAD_REGEXP_PATTERN})/
       end
     else
       regexps << /(\/uploads\/#{db}#{UPLOAD_REGEXP_PATTERN})/
-      regexps << /(#{Discourse.base_url}\/uploads\/#{db}#{UPLOAD_REGEXP_PATTERN})/
+      regexps << /(#{base_url}\/uploads\/#{db}#{UPLOAD_REGEXP_PATTERN})/
     end
 
     node = node.to_s
