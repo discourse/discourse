@@ -1,4 +1,4 @@
-import { acceptance, replaceCurrentUser } from "helpers/qunit-helpers";
+import { acceptance, updateCurrentUser } from "helpers/qunit-helpers";
 
 acceptance("Managing Group Interaction Settings", {
   loggedIn: true,
@@ -42,7 +42,7 @@ QUnit.test("As an admin", async assert => {
 });
 
 QUnit.test("As a group owner", async assert => {
-  replaceCurrentUser({ admin: false, staff: false });
+  updateCurrentUser({ admin: false, staff: false });
   await visit("/g/discourse/manage/interaction");
 
   assert.equal(

@@ -24,12 +24,11 @@ export function currentUser() {
   );
 }
 
-export function replaceCurrentUser(properties) {
-  const user = Discourse.User.current();
-  user.setProperties(properties);
-  Discourse.User.resetCurrent(user);
+export function updateCurrentUser(properties) {
+  Discourse.User.current().setProperties(properties);
 }
 
+// Note: do not use this in acceptance tests. Use `loggedIn: true` instead
 export function logIn() {
   Discourse.User.resetCurrent(currentUser());
 }
@@ -130,6 +129,14 @@ export function acceptance(name, options) {
       resetWidgetCleanCallbacks();
       resetOneboxCache();
       resetCustomPostMessageCallbacks();
+      Discourse._runInitializer("instanceInitializers", function(
+        initName,
+        initializer
+      ) {
+        if (initializer && initializer.teardown) {
+          initializer.teardown(Discourse.__container__);
+        }
+      });
       Discourse.reset();
     }
   });

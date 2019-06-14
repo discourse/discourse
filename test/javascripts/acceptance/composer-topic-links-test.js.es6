@@ -1,4 +1,4 @@
-import { acceptance, replaceCurrentUser } from "helpers/qunit-helpers";
+import { acceptance, updateCurrentUser } from "helpers/qunit-helpers";
 
 acceptance("Composer topic featured links", {
   loggedIn: true,
@@ -156,7 +156,7 @@ acceptance("Composer topic featured links when uncategorized is not allowed", {
 });
 
 QUnit.test("Pasting a link enables the text input area", async assert => {
-  replaceCurrentUser({ admin: false, staff: false, trust_level: 1 });
+  updateCurrentUser({ admin: false, staff: false, trust_level: 1 });
 
   await visit("/");
   await click("#create-topic");
