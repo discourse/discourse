@@ -128,7 +128,11 @@ class InlineUploads
         end
 
         if !Discourse.store.external?
-          next if uri&.host && uri.host != Discourse.current_hostname
+          host = uri&.host
+
+          if host && ![Discourse.current_hostname, URI(GlobalSetting.cdn_url).hostname].include?(host)
+            next
+          end
         end
 
         upload = Upload.get_from_url(link)
@@ -242,6 +246,7 @@ class InlineUploads
     matches = []
 
     base_url = Discourse.base_url.sub(/https?:\/\//, "(https?://)")
+    cdn_url = GlobalSetting.cdn_url.sub(/https?:\/\//, "(https?://)")
 
     regexps = [
       /(upload:\/\/([a-zA-Z0-9]+)[a-zA-Z0-9\.]*)/,
@@ -260,10 +265,12 @@ class InlineUploads
         regexps << /(#{SiteSetting.Upload.s3_cdn_url}#{UPLOAD_REGEXP_PATTERN})/
         regexps << /(\/uploads\/#{db}#{UPLOAD_REGEXP_PATTERN})/
         regexps << /(#{base_url}\/uploads\/#{db}#{UPLOAD_REGEXP_PATTERN})/
+        regexps << /(#{cdn_url}\/uploads\/#{db}#{UPLOAD_REGEXP_PATTERN})/
       end
     else
       regexps << /(\/uploads\/#{db}#{UPLOAD_REGEXP_PATTERN})/
       regexps << /(#{base_url}\/uploads\/#{db}#{UPLOAD_REGEXP_PATTERN})/
+      regexps << /(#{cdn_url}\/uploads\/#{db}#{UPLOAD_REGEXP_PATTERN})/
     end
 
     node = node.to_s

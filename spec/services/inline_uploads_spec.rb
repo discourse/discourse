@@ -3,12 +3,7 @@ require 'rails_helper'
 
 RSpec.describe InlineUploads do
   before do
-    @original_asset_host = Rails.configuration.action_controller.asset_host
-    Rails.configuration.action_controller.asset_host = "https://cdn.discourse.org/stuff"
-  end
-
-  after do
-    Rails.configuration.action_controller.asset_host = @original_asset_host
+    set_cdn_url "https://awesome.com"
   end
 
   describe '.process' do
@@ -214,12 +209,16 @@ RSpec.describe InlineUploads do
         #{Discourse.base_url}#{upload.url} #{Discourse.base_url}#{upload2.url}
 
         #{Discourse.base_url}#{upload3.url}
+
+        #{GlobalSetting.cdn_url}#{upload3.url}
         MD
 
         expect(InlineUploads.process(md)).to eq(<<~MD)
         ![](#{upload.short_url})
 
         #{Discourse.base_url}#{upload.short_path} #{Discourse.base_url}#{upload2.short_path}
+
+        ![](#{upload3.short_url})
 
         ![](#{upload3.short_url})
         MD
