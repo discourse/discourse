@@ -115,6 +115,7 @@
 .d-editor-preview-wrapper {
   overflow: auto;
   cursor: default;
+  -webkit-overflow-scrolling: touch;
 }
 
 .d-editor-input,
