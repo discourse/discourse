@@ -71,6 +71,7 @@ module Jobs
                   filename = File.basename(URI.parse(src).path)
                   filename << File.extname(hotlinked.path) unless filename["."]
                   upload = UploadCreator.new(hotlinked, filename, origin: src).create_for(post.user_id)
+
                   if upload.persisted?
                     downloaded_urls[src] = upload.url
                     downloaded_images[remove_scheme(src)] = upload.id
@@ -148,7 +149,7 @@ module Jobs
     def extract_images_from(html)
       doc = Nokogiri::HTML::fragment(html)
 
-      doc.css("img[src], a.lightbox[href], a.onebox[href]") -
+      doc.css("img[src], a.lightbox[href]") -
         doc.css("img.avatar") -
         doc.css(".lightbox img[src]")
     end

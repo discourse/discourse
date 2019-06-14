@@ -98,23 +98,6 @@ describe Jobs::PullHotlinkedImages do
       expect(post.uploads).to contain_exactly(upload)
     end
 
-    it 'replaces direct links' do
-      post = Fabricate(:post, raw: <<~MD)
-      #{image_url}
-      #{image_url}
-      MD
-
-      expect { Jobs::PullHotlinkedImages.new.execute(post_id: post.id) }
-        .to change { Upload.count }.by(1)
-
-      post.reload
-
-      expect(post.raw).to eq(<<~MD.chomp)
-      ![](#{Upload.last.short_url})
-      ![](#{Upload.last.short_url})
-      MD
-    end
-
     it 'replaces markdown image' do
       post = Fabricate(:post, raw: <<~MD)
       [![some test](#{image_url})](https://somelink.com)
