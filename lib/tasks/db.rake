@@ -21,10 +21,21 @@ task 'db:environment:set' => [:load_config]  do |_, args|
   end
 end
 
-task 'db:create' => [:load_config] do |_, args|
+task 'db:force_skip_persist' do
+  GlobalSetting.skip_db = true
+  GlobalSetting.skip_redis = true
+end
+
+task 'db:create' do |_, args|
   if MultisiteTestHelpers.load_multisite?
     system("RAILS_DB=discourse_test_multisite rake db:create")
   end
+end
+
+begin
+  reqs = Rake::Task['db:create'].prerequisites.map(&:to_sym)
+  Rake::Task['db:create'].clear_prerequisites
+  Rake::Task['db:create'].enhance(["db:force_skip_persist"] + reqs)
 end
 
 task 'db:drop' => [:load_config] do |_, args|
