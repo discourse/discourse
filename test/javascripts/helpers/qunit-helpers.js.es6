@@ -126,7 +126,6 @@ export function acceptance(name, options) {
       initSearchData();
       resetDecorators();
       resetPostCookedDecorators();
-      resetWidgetCleanCallbacks();
       resetOneboxCache();
       resetCustomPostMessageCallbacks();
       Discourse._runInitializer("instanceInitializers", function(
@@ -138,6 +137,9 @@ export function acceptance(name, options) {
         }
       });
       Discourse.reset();
+
+      // We do this after reset so that the willClearRender will have already fired
+      resetWidgetCleanCallbacks();
     }
   });
 }
