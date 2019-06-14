@@ -13,6 +13,10 @@ module MultisiteTestHelpers
   def self.load_multisite?
     Rails.env.test? && !ENV["RAILS_DB"] && !ENV["SKIP_MULTISITE"]
   end
+
+  def self.create_multisite?
+    (ENV["RAILS_ENV"] == "test" || !ENV["RAILS_ENV"]) && !ENV["RAILS_DB"] && !ENV["SKIP_MULTISITE"]
+  end
 end
 
 task 'db:environment:set' => [:load_config]  do |_, args|
@@ -27,7 +31,7 @@ task 'db:force_skip_persist' do
 end
 
 task 'db:create' => [:load_config] do |_, args|
-  if !ENV['RAILS_ENV']
+  if MultisiteTestHelpers.create_multisite?
     system("RAILS_ENV=test RAILS_DB=discourse_test_multisite rake db:create")
   end
 end
@@ -39,8 +43,8 @@ begin
 end
 
 task 'db:drop' => [:load_config] do |_, args|
-  if MultisiteTestHelpers.load_multisite?
-    system("RAILS_DB=discourse_test_multisite rake db:drop")
+  if MultisiteTestHelpers.create_multisite?
+    system("RAILS_DB=discourse_test_multisite RAILS_ENV=test rake db:drop")
   end
 end
 
