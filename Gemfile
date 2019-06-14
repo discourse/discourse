@@ -99,6 +99,7 @@ gem 'r2', '~> 0.2.5', require: false
 gem 'rake'
 
 gem 'thor', require: false
+gem 'diffy', require: false
 gem 'rinku'
 gem 'sanitize'
 gem 'sidekiq'
@@ -144,7 +145,6 @@ group :test, :development do
   gem 'byebug', require: ENV['RM_INFO'].nil?
   gem 'rubocop', require: false
   gem 'parallel_tests'
-  gem 'diffy', require: false
 end
 
 group :development do
