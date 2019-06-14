@@ -286,7 +286,7 @@ const path = require("path");
         visible: true
       });
 
-      promise = promise.then(() => page.waitFor(2000));
+      promise = promise.then(() => page.waitFor(5000));
 
       promise = promise.then(() => {
         const post = `I edited this post`;
