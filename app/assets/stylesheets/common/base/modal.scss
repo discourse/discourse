@@ -426,13 +426,35 @@
 }
 
 .modal .modal-body.change-timestamp {
-  overflow-y: scroll;
+  #date-container {
+    .pika-single {
+      width: 100%;
+      box-sizing: border-box;
+      display: flex;
+      justify-content: center;
+    }
+  }
 
   form {
     display: flex;
 
+    .date-picker-wrapper,
+    input[type="time"] {
+      width: 50%;
+    }
+
+    .date-picker-wrapper {
+      display: flex;
+      flex: 1;
+
+      .date-picker {
+        flex: 1;
+      }
+    }
+
     input.date-picker,
     input[type="time"] {
+      text-align: left;
       margin: 0;
     }
   }
@@ -453,10 +475,6 @@
   .date-picker-wrapper {
     min-width: 130px;
     margin-right: 0.5em;
-
-    .date-picker {
-      height: 100%;
-    }
   }
 
   input[type="time"] {
