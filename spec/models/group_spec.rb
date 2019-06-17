@@ -223,6 +223,21 @@ describe Group do
   end
 
   describe '.refresh_automatic_group!' do
+
+    it "does not include staged users in any automatic groups" do
+      staged = Fabricate(:staged, trust_level: 1)
+
+      Group.refresh_automatic_group!(:trust_level_0)
+      Group.refresh_automatic_group!(:trust_level_1)
+
+      expect(GroupUser.where(user_id: staged.id).count).to eq(0)
+
+      staged.unstage
+      staged.save!
+
+      expect(GroupUser.where(user_id: staged.id).count).to eq(2)
+    end
+
     it "makes sure the everyone group is not visible except to staff" do
       g = Group.refresh_automatic_group!(:everyone)
       expect(g.visibility_level).to eq(Group.visibility_levels[:staff])
