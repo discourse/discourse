@@ -376,8 +376,9 @@ it:
       edit: "Modifica"
       save: "Salva"
       cancel: "Annulla"
-      new_topic: "Nuovo Argomento:"
+      new_topic: "L'approvazione di questo elemento creerà un nuovo Argomento"
       filters:
+        all_categories: "(tutte le categorie)"
         type:
           title: "Tipo"
           all: "(tutti i tipi)"
@@ -392,7 +393,7 @@ it:
           created_at_asc: "Data creazione (inversa)"
         priority:
           title: "Priorità minima"
-          low: "Bassa"
+          low: "(qualsiasi)"
           medium: "Media"
           high: "Alta"
       conversation:
@@ -417,9 +418,9 @@ it:
         deleted:
           title: "Eliminato"
         reviewed:
-          title: "(Già revisionati)"
+          title: "(tutti i revisionati)"
         all:
-          title: "(Tutto)"
+          title: "(tutto)"
       types:
         reviewable_flagged_post:
           title: "Messaggio segnalato"
@@ -738,6 +739,7 @@ it:
       allow_private_messages: "Consenti agli altri utenti di inviarmi messaggi privati"
       external_links_in_new_tab: "Apri tutti i link esterni in nuove schede"
       enable_quoting: "Abilita \"rispondi quotando\" per il testo evidenziato"
+      enable_defer: "Abilita differimento per marcare gli Argomenti come non letti"
       change: "cambia"
       moderator: "{{user}} è un moderatore"
       admin: "{{user}} è un amministratore"
@@ -976,6 +978,7 @@ it:
         larger: "Più grande"
         largest: "Massima"
       title_count_mode:
+        title: "Il titolo della pagina di background mostra il conteggio di:"
         notifications: "Nuove notifiche"
         contextual: "Nuovo contenuto nella pagina"
       like_notification_frequency:
@@ -1172,6 +1175,11 @@ it:
     too_few_topics_and_posts_notice: "Diamo <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>il via alle discussionii!</a> Al momento ci sono <strong>%{currentTopics} / %{requiredTopics}</strong> Argomenti e <strong>%{currentPosts} / %{requiredPosts}</strong> messaggi. I nuovi arrivati hanno bisogno di conversazioni da leggere e a cui rispondere."
     too_few_topics_notice: "Diamo <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>il via alle discussioni!</a> Al momento ci sono <strong>%{currentTopics} / %{requiredTopics}</strong> Argomenti. I nuovi arrivati hanno bisogno di conversazioni da leggere e a cui rispondere."
     too_few_posts_notice: "Diamo <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>il via alle discussioni!</a> Al momento ci sono <strong>%{currentPosts} / %{requiredPosts}</strong> messaggi. I nuovi arrivati hanno bisogno di conversazioni da leggere e a cui rispondere."
+    logs_error_rate_notice:
+      reached_hour_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# error/hour} altro {# errors/hour}}</a> il limite impostato di {limit, plural, one {# error/hour} altro {# errors/hour}}."
+      reached_minute_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# error/minute} altro {# errors/minute}}</a> raggiunto il limite impostato di {limit, plural, one {# error/minute} altro {# errors/minute}}."
+      exceeded_hour_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# error/hour} altro {# errors/hour}}</a> superato il limite impostato di {limit, plural, one {# error/hour} altro {# errors/hour}}."
+      exceeded_minute_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# error/minute} altro {# errors/minute}}</a> superato il limite impostato di {limit, plural, one {# error/minute} other {# errors/minute}}."
     learn_more: "per saperne di più..."
     all_time: "totale"
     all_time_desc: "totale argomenti creati"
@@ -2312,6 +2320,7 @@ it:
       security: "Sicurezza"
       special_warning: "Attenzione: questa è una categoria predefinita e le impostazioni di sicurezza ne vietano la modifica. Se non vuoi usare questa categoria, cancellala invece di modificarla."
       uncategorized_security_warning: "Questa è una Categoria speciale. È utilizzata come area di parcheggio per gli Argomenti senza Categoria. Non può avere impostazioni di sicurezza."
+      uncategorized_general_warning: 'Questa è una Categoria speciale. È usata come Categoria predefinita per i nuovi Argomenti senza una Categoria selezionata. Se vuoi prevenire questo comportamento e forzare la scelta di una Categoria, <a href="%{settingLink}">per favore disabilita l''impostazione qui</a>. Se vuoi cambiare il nome o la descrizione, vai a <a href="%{customizeLink}">Personalizza / Contenuto Testuale</a>.'
       images: "Immagini"
       email_in: "Indirizzo email personalizzato:"
       email_in_allow_strangers: "Accetta email da utenti anonimi senza alcun account"
@@ -2835,6 +2844,7 @@ it:
         not_found_error: "Spiacenti, questo rapporto non esiste"
         filter_reports: Filtra rapporti
         reports:
+          trend_title: "Variazione del %{percent}. Attualmente %{current}, era %{prev} nel periodo precedente."
           today: "Oggi"
           yesterday: "Ieri"
           last_7_days: "Ultimi 7"
@@ -2850,12 +2860,16 @@ it:
           end_date: "Data Fine"
           groups: "Tutti i gruppi"
           disabled: "Il rapporto è disabilitato"
+          totals_for_sample: "Totale per campione"
+          average_for_sample: "Media per campione"
           total: "Totale generale"
           no_data: "Non ci sono dati da mostrare."
           trending_search:
             more: '<a href="%{basePath}/admin/logs/search_logs">Cerca nei log</a>'
             disabled: 'Il rapporto sulle ricerche di tendenza è disabilitato. Attiva l''opzione<a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">log search queries</a>per iniziare a raccogliere i dati.'
           filters:
+            file-extension:
+              label: Estensione file
             group:
               label: Gruppo
             category:
@@ -2916,6 +2930,7 @@ it:
         custom: "Personalizzato"
         automatic: "Automatico"
         default_title: "Titolo predefinito"
+        default_title_description: "sarà applicato a tutti gli utenti del gruppo"
         group_owners: Proprietari
         add_owners: Aggiungi proprietari
         none_selected: "Seleziona un gruppo per iniziare"
@@ -2963,6 +2978,8 @@ it:
         active_notice: "Invieremo i dettagli dell'evento quando si verificherà"
         categories_filter_instructions: "I webhook pertinenti saranno attivati solo se l'evento è in relazione a categorie specifiche. Lasciare vuoto per attivare i webhook per tutte le categorie."
         categories_filter: "Categorie Innescate"
+        tags_filter_instructions: "I webhook pertinenti saranno attivati solo se l'evento è relativo alle Etichette specificate. Lasciare vuoto per attivare i webhook per tutti i gruppi."
+        tags_filter: "Etichette attivate"
         groups_filter_instructions: "I webhook pertinenti saranno attivati solo se l'evento è in relazione a gruppi specifici. Lasciare vuoto per attivare i webhook per tutti i gruppi."
         groups_filter: "Gruppi Innescati"
         delete_confirm: "Eliminare questo webhook?"
@@ -2974,6 +2991,25 @@ it:
           details: "Quando c'è una nuova risposta, modifica, cancellazione o recupero."
         user_event:
           name: "Evento Utente"
+          details: "Quando un utente si connette, si disconnette, viene creato, approvato o aggiornato."
+        group_event:
+          name: "Evento di Gruppo"
+          details: "Quando un Gruppo viene creato, aggiornato o eliminato."
+        category_event:
+          name: "Evento di Categoria"
+          details: "Quando una categoria viene creata, aggiornata o eliminata."
+        tag_event:
+          name: "Evento di Etichetta"
+          details: "Quando un'Etichetta viene creata, aggiornata o distrutta."
+        flag_event:
+          name: "Evento di Segnalazione"
+          details: "Quando una Segnalazione viene creata, approvata, disapprovata o ignorata."
+        queued_post_event:
+          name: "Evento approvazione messaggio"
+          details: "Quando un nuovo messaggio accodato viene creato, approvato o respinto."
+        reviewable_event:
+          name: "Evento revisionabile"
+          details: "Quando un nuovo elemento è pronto per la revisione e quando il suo stato viene aggiornato."
         delivery_status:
           title: "Stato di Consegna"
           inactive: "Non attivo"
@@ -3041,6 +3077,7 @@ it:
           title: "Carica un backup su questa istanza"
           uploading: "In caricamento..."
           uploading_progress: "In caricamento... {{progress}}%"
+          success: "'{{filename}}' è stato caricato con successo. Il file è in via di elaborazione e potrebbe servire fino ad un minuto perché appaia nella lista."
           error: "Si è verificato un errore durante il caricamento {{filename}}': {{message}}"
         operations:
           is_running: "Un'operazione è attualmente in esecuzione..."
@@ -3099,6 +3136,7 @@ it:
         new_style: "Nuovo Stile"
         install: "Installa"
         delete: "Cancella"
+        delete_confirm: 'Sei sicuro di voler eliminare "%{theme_name}"?'
         color: "Colore"
         opacity: "Opacità"
         copy: "Copia"
@@ -3120,6 +3158,9 @@ it:
           components: "Componenti"
           theme_name: "Nome del Tema"
           component_name: "Nome del Componente"
+          themes_intro: "Seleziona un tema esistente o installane uno nuovo per iniziare"
+          beginners_guide_title: "Guida per principianti all'uso dei Temi di Discourse"
+          developers_guide_title: "Guida per sviluppatori ai Temi di Discourse"
           browse_themes: "Sfoglia i temi della comunità"
           customize_desc: "Personalizza:"
           title: "Temi"
@@ -3129,6 +3170,7 @@ it:
           long_title: "Modifica i colori, i CSS e il contenuto HTML del tuo sito"
           edit: "Modifica"
           edit_confirm: "Questo è un tema remoto, se modifichi il CSS o l'HTML i cambiamenti verranno cancellati la prossima volta che aggiorni il tema."
+          update_confirm: "Questi cambiamenti locali saranno eliminati dall'aggiornamento. Confermi di voler continuare?"
           update_confirm_yes: "Sì, continua con l'aggiornamento"
           common: "Condiviso"
           desktop: "Desktop"
@@ -3163,7 +3205,13 @@ it:
           add_upload: "Aggiungi Caricamento"
           upload_file_tip: "Scegli una risorsa da caricare (png, woff2, ecc...)"
           variable_name: "Nome SCSS var:"
+          variable_name_invalid: "Nome di variabile non valido. Sono ammessi solo caratteri alfanumerici. Deve iniziare con una lettera. Deve essere unico."
+          variable_name_error:
+            invalid_syntax: "Nome di variabile non valido. Sono ammessi solo caratteri alfanumerici. Deve iniziare con una lettera."
+            no_overwrite: "Nome di variabile non valido. Non deve sovrascrivere una variabile esistente."
+            must_be_unique: "Nome di variabile non valido. Deve essere unico."
           upload: "Carica"
+          select_component: "Seleziona un componente..."
           unsaved_changes_alert: "Non hai ancora salvato le tue modifiche. Sei sicuro di volerle abbandonare e passare ad altro?"
           discard: "Annulla"
           stay: "Resta"
@@ -3173,8 +3221,10 @@ it:
           delete_upload_confirm: "Elimina questo caricamento? (Il CSS del tema potrebbe non funzionare!)"
           import_web_tip: "Repository contenente il tema"
           import_web_advanced: "Avanzate..."
+          import_file_tip: "file .tar.gz o .dcstyle.json contenenti un tema"
           is_private: "Il tema è in un repository git privato"
           remote_branch: "Nome del branch (opzionale)"
+          public_key: "Concedi l'accesso al repository alla seguente chiave pubblica:"
           install: "Installa"
           installed: "Installata"
           install_popular: "Di successo"
@@ -3282,6 +3332,7 @@ it:
         preview_digest: "Anteprima Riepilogo"
         advanced_test:
           title: "Test avanzato"
+          desc: "Vedi come Discourse processa le email ricevute. Per poter processare correttamente le email, per favore incolla qui sotto l'intero messaggio di email originale."
           email: "Messaggio originale"
           run: "Esegui test"
           text: "Seleziona il corpo del testo"
@@ -3494,6 +3545,9 @@ it:
           types:
             all_search_types: "Tutti i tipi di ricerca"
             header: "Intestazione"
+            full_page: "Pagina completa"
+            click_through_only: "Tutti (solo click)"
+          header_search_results: "Risultati ricerca nell'Header"
         logster:
           title: "Log Errori"
       watched_words:

@@ -178,7 +178,7 @@ de:
     confirm_email: "<p>Du bist fast fertig! Wir haben eine Aktivierungsmail an deine E-Mail-Adresse geschickt. Bitte folge den Anweisungen in der E-Mail, um dein Konto zu aktivieren.</p><p>Wenn keine E-Mail ankommt, überprüfe bitte deinen Spam-Ordner.</p>"
   bulk_invite:
     file_should_be_csv: "Die hochzuladende Datei sollte im CSV-Format vorliegen."
-    max_rows: "Maximal 50.000 Einladungen können auf einmal versendet werden. Versuche die Datei in kleinere aufzuteilen."
+    max_rows: "Die ersten %{max_bulk_invites} Einladungen wurden versandt. Versuche, die Datein in kleinere Teile aufzuspalten."
     error: "Es gab einen Fehler beim Hochladen dieser Datei. Bitte versuche es später noch einmal."
   topic_invite:
     failed_to_invite: "Der Benutzer kann nicht in dieses Thema eingeladen werden, ohne Mitglied in einer der folgenden Gruppen zu sein: %{group_names}"
@@ -299,8 +299,8 @@ de:
   groups:
     success:
       bulk_add:
-        one: "%{count} Benutzer wurde zu dieser Gruppe hinzugefügt."
-        other: "%{count} Benutzer wurden zu dieser Gruppe hinzugefügt."
+        one: "%{count} Benutzer wurde zur Gruppe hinzugefügt."
+        other: "%{count} Benutzer wurden zur Gruppe hinzugefügt."
     errors:
       grant_trust_level_not_valid: "'%{trust_level}' ist keine gültige Vertrauensstufe"
       can_not_modify_automatic: "Du kannst eine automatische Gruppe nicht bearbeiten"
@@ -1047,7 +1047,7 @@ de:
       title: "Anonym"
       xaxis: "Tag"
       yaxis: "Anonyme Seitenaufrufe"
-      description: "Anzahl der neuen Seitenaufrufe von Besuchern, die nicht angemeldet sind."
+      description: "Anzahl neuer Seitenaufrufe durch Besucher, die nicht angemeldet sind."
     page_view_logged_in_reqs:
       title: "Angemeldet"
       xaxis: "Tag"
@@ -1101,7 +1101,7 @@ de:
       title: "Zeit bis zur ersten Reaktion"
       xaxis: "Tag"
       yaxis: "Durchschnittszeit (Stunden)"
-      description: "Durchschnittliche Zeit (in Stunden) bis zur ersten Antwort auf neue Themen"
+      description: "Durchschnittliche Zeit (in Stunden) bis zur ersten Antwort auf neue Themen."
     topics_with_no_response:
       title: "Themen ohne Reaktionen"
       xaxis: "Tag"
@@ -1296,7 +1296,7 @@ de:
     ga_universal_tracking_code: "Tracking Code ID von Google Universal Analytics (analytics.js), eg: UA-12345678-9; siehe <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
     ga_universal_domain_name: "Google Universal Analytics (analytics.js) domain name, eg: mysite.com; <a href='https://google.com/analytics' target='_blank'>Siehe https://google.com/analytics</a>"
     ga_universal_auto_link_domains: "Aktiviere Google Universal Analytics (analytics.js) Cross-Domain-Tracking. Ausgehenden Links zu diesen Domains wird eine Client-ID hinzugefügt. Siehe <a href='https://support.google.com/analytics/answer/1034342?hl=en' target='_blank'>Googles Cross-Domain-Tracking-Anleitung</a>."
-    gtm_container_id: "Google Tag Manager Container-ID, z.B.: GTM-ABCDEF. <br/>Beachte: Skripte von Drittanbietern, die von GTM geladen weren, müssen erlaubt werden in 'content security policy script src'."
+    gtm_container_id: "Google Tag Manager Container-ID. z.B.: GTM-ABCDEF. <br/>Hinweis: Skripte von Drittanbietern, die von GTM geladen werden, müssten in der 'content security policy script src' gewhitelistet werden."
     enable_escaped_fragments: "Als Fallback die Ajax-Crawling-API von Google verwenden, wenn keine Suchmaschine deaktiviert wurde. Siehe <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
     moderators_create_categories: "Erlaube Moderatoren, neue Kategorien anzulegen"
     cors_origins: "Erlaubte Adressen für Cross-Origin-Requests (CORS). Jede Adresse muss http:// oder https:// enthalten. Die Umgebungsvariable DISCOURSE_ENABLE_CORS muss gesetzt sein, um CORS zu aktivieren."
@@ -1360,7 +1360,7 @@ de:
     enable_sso_provider: "Aktiviere das Discourse SSO-Provider-Protokoll unter /session/sso_provider; setzt voraus, dass sso_provider_secret gesetzt ist."
     sso_url: "URL des Single Sign-On-Endpunkts (muss http:// oder https:// enthalten)"
     sso_secret: "Geheimer Schlüssel für die Authentifizierung von SSO-Informationen. Sollte unbedingt 10 Zeichen oder länger sein."
-    sso_provider_secrets: "Eine Liste von Domain-Secret-Paaren, die Discourse als SSO-Provider verwenden. Stelle sicher, dass SSO-Secrets mindestens 10 Zeichen lang sind. Das Wildcard-Symbol * can verwndet werden, um jede Domain oder Teile davon auszuwählen (z.B. *.example.com)."
+    sso_provider_secrets: "Eine Liste mit Domain-Secret-Paaren, die Discourse als SSO-Provider verwenden. Stelle sicher, dass SSO-Secrets mindestens 10 Zeichen lang sind. Das Wildcard-Symbol * kann verwendet werden, um jede Domain oder nur einen Teil davon auszuwählen (z.B. *.example.com). "
     sso_overrides_bio: "Überschreibt \"Über mich\" im Benutzerprofil und verhindert Änderungen durch den Benutzer"
     sso_overrides_groups: "Synchronisiert alle manuellen Gruppenmitgliedschaften mit den Gruppen, die im SSO-Attribut „groups“ angegeben ist (WARNUNG: wenn du keine Gruppen angibst, werden alle Gruppenmitgliedschaften des Benutzers aufgehoben)"
     sso_overrides_email: "Überschreibt lokale E-Mail mit E-Mail der externen Site aus dem SSO-Payload (WARNUNG: Diskrepanzen können aufgrund der Normalisierung lokaler E-Mail-Adressen auftreten.)"
@@ -1751,7 +1751,7 @@ de:
     min_trust_level_for_user_api_key: "Erforderliche Vertrauensstufe für die Generierung von Benutzer API Schlüsseln"
     allowed_user_api_auth_redirects: "Zulässige URL für Authentifizierungs-Umleitung für Benutzer-API-Schlüssel. Das Platzhaltersymbol * kann verwendet werden, um jeden Bestandteil der Adresse zu ersetzen (z.B. www.example.com/*)."
     allowed_user_api_push_urls: "Erlaubte URL für Server-Push zur Benutzer API"
-    expire_user_api_keys_days: "Anzahl Tage bevor ein Benutzer API Schlüssel automatisch abläuft. (0 für niemals)"
+    expire_user_api_keys_days: "Anzahl Tage, bevor ein Benutzer API Schlüssel automatisch abläuft. (0 für niemals)"
     tagging_enabled: "Schlagwörter für Themen aktivieren"
     min_trust_to_create_tag: "Minimale Vertrauensstufe, um ein Schlagwort zu erstellen."
     max_tags_per_topic: "Maximale Anzahl an Schlagwörtern, die einem Thema hinzugefügt werden können."
@@ -2345,13 +2345,13 @@ de:
       title: "CSV-Export erfolgreich"
       subject_template: "[%{export_title}] Datenexport abgeschlossen"
       text_body_template: |
-        Deine Daten wurden erfolgreich exportiert! :dvd:
+        Dein Datenexport war erfolgreich! :dvd:
 
         %{download_link}
 
-        Der obenstehende Download-Link wird 48 Stunden gültig sein.
+        Der obige Download Link bleibt für 48 Stunden gültig.
 
-        Die Daten sind als Gzip-Archiv komprimiert. Wenn sich das Archiv beim Öffnen nicht selbst extrahiert, verwende eines der hier empfohlenen Werkzeuge: https://www.gzip.org/#faq4
+        Die Daten sind in einem gzip Archiv komprimiert. Falls sich das Archiv beim Öffnen nicht selbst extrahiert, nutze eins der hier empfohlenen Tools: https://www.gzip.org/#faq4
     csv_export_failed:
       title: "CSV-Export fehlgeschlagen"
       subject_template: "Datenexport fehlgeschlagen"

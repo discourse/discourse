@@ -358,6 +358,7 @@ he:
         search: "חפש הודעה לפי שם:"
         placeholder: "הקלידו את כותרת ההודעה כאן"
     review:
+      order_by: "סידור לפי"
       in_reply_to: "בתגובה ל"
       claim_help:
         optional: "באפשרותך לדרוש את הפריט כדי למנוע מאחרים לסקור אותו."
@@ -439,8 +440,9 @@ he:
       edit: "ערוך"
       save: "שמירה"
       cancel: "ביטול"
-      new_topic: "נושא חדש:"
+      new_topic: "אישור הפריט הזה ייצור נושא חדש"
       filters:
+        all_categories: "(כל הקטגוריות)"
         type:
           title: "סוג"
           all: "(כל הסוגים)"
@@ -448,9 +450,14 @@ he:
         refresh: "רענן"
         status: "מצב"
         category: "קטגוריה"
+        orders:
+          priority: "עדיפות"
+          priority_asc: "עדיפות (הפוכה)"
+          created_at: "מועד יצירה"
+          created_at_asc: "מועד יצירה (הפוך)"
         priority:
           title: "עדיפות מזערית"
-          low: "נמוכה"
+          low: "(כלשהו)"
           medium: "בינונית"
           high: "גבוהה"
       conversation:
@@ -482,6 +489,8 @@ he:
         reviewable_flagged_post:
           title: "פוסט שדוגל"
           flagged_by: "דוגל על ידי"
+        reviewable_queued_topic:
+          title: "נושא בתור"
         reviewable_queued_post:
           title: "הוספת פוסט לתור"
         reviewable_user:

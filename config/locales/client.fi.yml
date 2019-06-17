@@ -153,6 +153,7 @@ fi:
     bootstrap_mode_disabled: "Aloitustila poistetaan seuraavan 24 tunnin aikana."
     themes:
       default_description: "Oletus"
+      broken_theme_alert: "Teemassa / komponentissa %{theme} on virheitä, jotka voivat aiheuttaa sen, ettei sivustosi toimi. Voit ottaa sen käytöstä täällä: %{path}."
     s3:
       regions:
         ap_northeast_1: "Aasia ja Tyynimeri (Tokio)"
@@ -307,6 +308,7 @@ fi:
         search: "Etsi keskustelua otsikon perusteella:"
         placeholder: "kirjoita keskustelun otsikko tähän"
     review:
+      order_by: "Järjestä"
       in_reply_to: "vastauksena"
       claim_help:
         optional: "Voit vaatia tämän itsellesi, jolloin muut eivät voi käsitellä sitä."
@@ -374,8 +376,9 @@ fi:
       edit: "Muokkaa"
       save: "Tallenna"
       cancel: "Peru"
-      new_topic: "Uusi ketju:"
+      new_topic: "Tämän hyväksyminen aloittaa uuden ketjun"
       filters:
+        all_categories: "(kaikki alueet)"
         type:
           title: "Tyyppi"
           all: "(kaikki tyypit)"
@@ -384,7 +387,6 @@ fi:
         status: "Tila"
         category: "Alue"
         priority:
-          low: "Matala"
           medium: "Keskiverto"
           high: "Korkea"
       conversation:
@@ -407,10 +409,6 @@ fi:
           title: "Sivuutettu"
         deleted:
           title: "Poistett"
-        reviewed:
-          title: "(Kaikki käsitellyt)"
-        all:
-          title: "(Kaikki)"
       types:
         reviewable_flagged_post:
           title: "Liputettu viesti"
@@ -1552,7 +1550,24 @@ fi:
         confirm_body: "Onnistui! Ilmoitukset ovat nyt käytössä."
         custom: "Ilmoitus käyttäjältä {{username}} sivustolla %{site_title}"
       titles:
+        mentioned: "mainitsi"
+        replied: "uusi vastaus"
+        quoted: "lainasi"
+        edited: "muokkasi"
+        liked: "uusi tykkäys"
+        private_message: "uusi yksityisviesti"
+        invited_to_private_message: "kutsuttiin yksityiskeskusteluun"
+        invitee_accepted: "kutsu hyväksyttiin"
+        posted: "uusi viesti"
+        moved_post: "viesti siirrettiin"
+        linked: "linkitti"
+        granted_badge: "ansiomerkki myönnettiin"
+        invited_to_topic: "kutsuttiin ketjuun"
+        group_mentioned: "ryhmä mainittiin"
+        group_message_summary: "uusia ryhmäyksityisviestejä"
         watching_first_post: "uusi ketju"
+        topic_reminder: "ketjumuistutus"
+        liked_consolidated: "uusia tykkäyksiä"
         post_approved: "viesti hyväksytty"
     upload_selector:
       title: "Lisää kuva"
@@ -1718,6 +1733,7 @@ fi:
         help: "Muokkaa keskustelun ensimmäistä viestiä"
         title: "Muokkaa viestiä"
       defer:
+        help: "Merkitse lukemattomaksi"
         title: "Lykkää"
       list: "Ketjut"
       new: "uusi ketju"
@@ -2751,6 +2767,7 @@ fi:
       tags:
         remove_muted_tags_from_latest:
           always: "aina"
+          only_muted: "kun käytetään yksin tai muiden vaimennettujen tunnisteiden kanssa"
           never: "ei koskaan"
       reports:
         title: "Saatavilla olevat raportit"
@@ -2826,6 +2843,7 @@ fi:
           groups: "Kaikki ryhmät"
           disabled: "Raportti ei ole käytössä"
           totals_for_sample: "Otos yhteensä"
+          average_for_sample: "Näytteen keskiarvo"
           total: "Kaikki yhteensä"
           no_data: "Ei näytettäviä tietoja"
           trending_search:
@@ -3609,6 +3627,7 @@ fi:
         delete_posts_failed: "Viestien poistaminen epäonnistui."
         penalty_post_actions: "Mitä haluat tehdä kyseiselle viestille?"
         penalty_post_delete: "Poista viesti"
+        penalty_post_delete_replies: "Poista viesti + kaikki vastaukset"
         penalty_post_edit: "Muokkaa viestiä"
         penalty_post_none: "Älä tee mitään"
         penalty_count: "Rangaistusten määrä"

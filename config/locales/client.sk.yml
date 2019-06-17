@@ -355,6 +355,7 @@ sk:
       save: "Uložiť"
       cancel: "Zrušiť"
       filters:
+        all_categories: "(všetky kategórie)"
         type:
           title: "Typ"
         refresh: "Obnoviť"

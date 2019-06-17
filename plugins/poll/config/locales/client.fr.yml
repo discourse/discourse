@@ -14,7 +14,7 @@ fr:
       total_votes:
         one: "vote au total"
         other: "votes au total"
-      average_rating: "Notation moyenne : <strong>%{average}</strong>"
+      average_rating: "Notation moyenne : <strong>%{average}</strong>"
       public:
         title: "Les votes sont <strong>publics</strong>."
       results:
@@ -46,11 +46,11 @@ fr:
       open:
         title: "Ouvrir le sondage"
         label: "Ouvrir"
-        confirm: "Êtes-vous sûr de vouloir ouvrir ce sondage ?"
+        confirm: "Êtes-vous sûr de vouloir ouvrir ce sondage ?"
       close:
         title: "Fermer le sondage"
         label: "Fermer"
-        confirm: "Êtes-vous sûr de vouloir fermer ce sondage ?"
+        confirm: "Êtes-vous sûr de vouloir fermer ce sondage ?"
       automatic_close:
         closes_in: "Se termine dans <strong>%{timeLeft}</strong>."
         age: "Fermé <strong>%{age}</strong>"

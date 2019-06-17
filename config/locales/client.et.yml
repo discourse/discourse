@@ -296,6 +296,7 @@ et:
       save: "Salvesta"
       cancel: "Tühista"
       filters:
+        all_categories: "(kõik kategooriad)"
         type:
           title: "Liik"
         refresh: "Värskenda"

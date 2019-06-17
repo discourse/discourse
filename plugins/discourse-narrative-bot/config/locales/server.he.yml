@@ -305,6 +305,10 @@ he:
       reset_trigger: 'מדריך מתקדם'
       cert_title: "כהוקרה על סיום של מדריך המשתמשים המתקדמים בהצלחה"
       title: ':arrow_up: יכולות משתמשים מתקדמים'
+      start_message: |-
+        ממרום הוותק שצברת בשימוש _מתקדם_, יצא לך כבר לבקר ב[עמוד ההעדפות שלך](%{base_uri}/my/preferences) ‎@%{username}‎? ישנן דרכים רבות להתאים את החוויה שלך, כגון בחירת ערכת עיצוב כהה או בהירה.
+
+        אך זאת כבר סטייה מהנושא, נצא לדרך!
       edit:
         bot_created_post_raw: "‎@%{discobot_username}‎ הוא, עד כה, הבוט המגניב ביותר שאני מכיר :wink:"
         instructions: |-
@@ -320,6 +324,12 @@ he:
 
           נא לשים לב ששינויים שנערכו לאחר 5 דקות יופיעו כמהדורות עריכה ציבוריות ויופיע סמל קטן של עיפרון בפינה השמאלית העליונה לצד מספר המהדורות.
       delete:
+        instructions: |-
+          אם ברצונך למשוך פוסט שיצרת, באפשרותך למחוק אותו.
+
+          קדימה, נא לגשת ו**למחוק** כל אחד מהפוסטים שלעיל באמצעות פעולת <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-trash.png" width="16" height="16"> ה**מחיקה**. עם זאת, לא למחוק את הפוסט הראשון!
+        not_found: |-
+          ייתכן שלא הבחנתי בפוסטים שנמחקו עדיין? להזכירך, <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> להציג עוד יחשוף את <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-trash.png" width="16" height="16"> המחיקה.
         reply: |-
           ואו! :boom:
 
@@ -349,6 +359,11 @@ he:
           ```
         reply: |-
           מצויין! זיכרו שזה עובד בשביל קטגוריות _וגם_ תגיות, אם תגיות מאופשרות.
+      change_topic_notification_level:
+        reply: |-
+          עבודה נפלאה! אני מאוד מקווה שלא השתקת את הנושא הזה כיוון שלפעמים יש לי נטייה לקשקשנות :grin:.
+
+          נא לשים לב שבעת תגובה לנושא או קריאת נושא במשך למעלה ממספר דקות, רמת ההתראות משתנה אוטומטית למצב ‚במעקב’. ניתן לשנות זאת ב[העדפות המשתמש שלך](%{base_uri}/my/preferences).
       poll:
         instructions: |-
           ידעת שאפשר להוסיף סקר לכל פוסט? כדאי לנסות להשתמש בסמל גלגל השיניים <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> שבעורך כדי **לבנות סקר**.
@@ -371,6 +386,20 @@ he:
           * :-1:
           [/poll]
       details:
+        instructions: |-
+          לפעמים יכול להיות שיעניין אותך **להסתיר פרטים** בתגובות שלך:
+
+          - בעת דיון על נקודות עלילה בסרט או בסדרת טלוויזיה שתיחשבנה לקלקלן (ספוילר).
+
+          - כשבפוסט שלך יש הרבה פרטי רשות שעשויים להציף אם נקראים בבת אחת.
+
+          [details=יש לבחור את זה כדי לראות אם זה עובד!]
+          1. יש לבחור את <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> גלגל השיניים בעורך.
+          2. לבחור ב־„הסתרת פרטים”.
+          3. לערוך את תקציר הפרטים ולהוסיף את התוכן שלך.
+          [/details]
+
+          אפשר לבקש ממך להשתמש <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> בגלגל השיניים בעורך כדי להוסיף סעיף פרטים בתגובה הבאה?
         not_found: |-
           מתקשה ביצירת וידג׳ט פירוט? נא לנסות לכלול את הסימון שלהלן בתגובה הבאה שלך:
 

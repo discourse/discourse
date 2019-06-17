@@ -280,9 +280,6 @@ zh_TW:
   revert_version_same: "您試圖回復的版本和當前版本相同。"
   excerpt_image: "圖片"
   groups:
-    success:
-      bulk_add:
-        other: "%{count}位使用者已被加入這個群組。"
     errors:
       grant_trust_level_not_valid: "'%{trust_level}' 不是有效的信任層級。"
       can_not_modify_automatic: "你不能修改自動組"
@@ -1018,7 +1015,6 @@ zh_TW:
       title: "匿名"
       xaxis: "天"
       yaxis: "未登錄頁面訪問"
-      description: "來自訪客（未登入帳號）新增的頁面瀏覽次數。"
     page_view_logged_in_reqs:
       title: "已登入"
       xaxis: "天"
@@ -1072,7 +1068,6 @@ zh_TW:
       title: "第一個回覆時間"
       xaxis: "天"
       yaxis: "平均時間（小時）"
-      description: "對新主題的第一次回應的平均時間（小時）"
     topics_with_no_response:
       title: "沒有回覆的貼文"
       xaxis: "天"
@@ -1262,7 +1257,6 @@ zh_TW:
     maximum_session_age: "使用者自訪問後可維持登錄 n 小時"
     ga_universal_domain_name: "Google 通用 Analytics (分析) 域名（analytics.js）追蹤代碼，例如：mysite.com；参考 <a href='https://google.com/analytics' target='_blank'>http://google.com/analytics</a>"
     ga_universal_auto_link_domains: "啟用Google通用Analytics（analytics.js）的跨域追蹤。本網站導向外其他網站時將客戶端 ID添加並追蹤，參閱 <a href='https://support.google.com/analytics/answer/1034342?hl=en' target='_blank'>Google 跨網域追蹤指南</a>。"
-    gtm_container_id: "Google Tag Manager Container（GTM） ID，例如：GFM-ABCDEF。注意：由GTM加載 Script 時可能需要在內容安全性政策（Content Security Policy Script Src）加入白名單。"
     enable_escaped_fragments: "如未偵測到爬蟲，將會使用 Google Ajax-Crawling API。參閱<a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
     moderators_create_categories: "允許管理員建立新分類"
     cors_origins: "允許跨來源資源共享（CORS）。每個來源必須包括 http:// 或 https://。DISCOURSE_ENABLE_CORS 環境選項必須設置為 true 才能啟用 CORS 。"
@@ -1326,7 +1320,6 @@ zh_TW:
     enable_sso_provider: "在 /session/sso_provider endpoint 必須設定 sso_secret 以實現 Discourse SSO 提供方協定"
     sso_url: "SSO URL endpoint (必須包含 http:// 或 https://)"
     sso_secret: "秘密字符串，用於驗證秘密的 SSO 訊息，請確保由 10 個字或以上組成"
-    sso_provider_secrets: "使用Discourse作為SSO的網域密鑰列表。 請確認SSO密碼為10個以上的字串。使用星號「*」可用於查詢通用字元或通用其中的一部分（例如* .example.com）。"
     sso_overrides_bio: "在使用者頁面中覆蓋使用者的個人信息並禁止使用者修改"
     sso_overrides_groups: "將所有手動群組成員與 SSO 内容中指定的群組同步（警告：如果不指定群組，所有手動群組成員資格將被使用者清除）"
     sso_overrides_email: "每一次登錄時，用單一登入服務提供者訊息中的外部站點的電子郵件地址更新本站郵件地址，並且阻止本站的郵件地址修改。（警告：郵件地址可能會因本站郵件地址規則而有所差異）"
@@ -1714,7 +1707,6 @@ zh_TW:
     min_trust_level_for_user_api_key: "生成使用者 API 密鑰所需的信任等級"
     allowed_user_api_auth_redirects: "允許身份驗證URL用於導向使用者API 密鑰（Keys），使用星號「*」將代入所有字詞，並找到最適合的配對（例如：www.example.com/*）。"
     allowed_user_api_push_urls: "允許使用伺服器推送至使用者 API 的 URL"
-    expire_user_api_keys_days: "使用者API密鑰（Keys）自動過期前的天數（設定0表示從不過期）"
     tagging_enabled: "啟用話題標籤功能？"
     min_trust_to_create_tag: "建立標籤所需的最低信任等級。"
     max_tags_per_topic: "主題最多允許有多少個標籤。"
@@ -2263,14 +2255,6 @@ zh_TW:
     csv_export_succeeded:
       title: "CSV 檔匯出成功"
       subject_template: "[%{export_title}] 資料匯出已完成"
-      text_body_template: |
-        資料成功匯出了！:dvd:
-
-         %{download_link}
-
-        以上的下載連結將在 48 小時後失效。
-
-        資料以 gzip 格式壓縮，如果你無法開啟壓縮檔，可以使用這裡推薦的工具： http://www.gzip.org/#faq4，或是搜尋gzip 解壓縮以獲得更多資訊。
     csv_export_failed:
       title: "CSV 檔匯出失敗"
       subject_template: "資料匯出失敗"

@@ -372,6 +372,7 @@ ar:
       save: "احفظ"
       cancel: "ألغِ"
       filters:
+        all_categories: "(جميع الأقسام)"
         type:
           title: "النوع"
         refresh: "تحديث"
@@ -627,6 +628,7 @@ ar:
       private_messages: "الرسائل"
       user_notifications:
         ignore_duration_username: "اسم المستخدم"
+        ignore_duration_save: "تجاهل"
         mute_option: "مكتومة"
         normal_option: "عادي"
       activity_stream: "النّشاط"
@@ -2072,8 +2074,10 @@ ar:
           title: "مكتومة"
           description: "لن يتم إشعارك بأي موضوعات جديدة في هذه الأقسام ولن يتم عرضها في قائمة الموضوعات المنشورة مؤخراً."
       search_priority:
+        label: "أولوية البحث"
         options:
           normal: "عادي"
+          ignore: "تجاهل"
       sort_options:
         default: "افترضى"
         likes: "الاعجابات"
@@ -2093,6 +2097,7 @@ ar:
         boxes_with_featured_topics: "مربعات مع الموضوعات المميزة"
       settings_sections:
         general: "عام"
+        appearance: "الظهور"
         email: "البريد الإلكتروني"
     flagging:
       title: "شكرا لمساعدتك في إبقاء مجتمعنا متحضرا."

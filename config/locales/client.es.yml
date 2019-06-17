@@ -376,8 +376,9 @@ es:
       edit: "Editar"
       save: "Guardar"
       cancel: "Cancelar"
-      new_topic: "Nuevo tema:"
+      new_topic: "Aprobar este item creará un tema nuevo"
       filters:
+        all_categories: "(todas las categorías)"
         type:
           title: "Tipo"
           all: "(todos los tipos)"
@@ -392,7 +393,7 @@ es:
           created_at_asc: "Creado el (inverso)"
         priority:
           title: "Prioridad mínima"
-          low: "Bajo"
+          low: "(cualquiera)"
           medium: "Medio"
           high: "Alto"
       conversation:
@@ -417,9 +418,9 @@ es:
         deleted:
           title: "Eliminado"
         reviewed:
-          title: "(Todo revisado)"
+          title: "(todo revisado)"
         all:
-          title: "(Todo)"
+          title: "(todo)"
       types:
         reviewable_flagged_post:
           title: "Publicación reportada"

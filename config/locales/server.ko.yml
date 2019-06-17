@@ -847,7 +847,6 @@ ko:
       title: "첫 응답"
       xaxis: "일"
       yaxis: "평균 시간 (시간단위)"
-      description: "새 토픽에 대한 첫 번째 응답의 평균 시간 (시간)."
     topics_with_no_response:
       title: "답글 없는 주제"
       xaxis: "일"

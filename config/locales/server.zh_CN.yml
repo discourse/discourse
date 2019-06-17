@@ -7,9 +7,9 @@
 
 zh_CN:
   dates:
-    short_date_no_year: "|"
-    short_date: "ll"
-    long_date: "lll"
+    short_date_no_year: "D MMM"
+    short_date: "D MMM YYYY"
+    long_date: "D MMMM YYYY LT"
   datetime_formats: &datetime_formats
     formats:
       short: "%Y年%m月%d日"
@@ -44,7 +44,7 @@ zh_CN:
       unrecognized_extension: "无法识别的文件扩展名：%{extension}"
     import_error:
       generic: 导入该主题时发生错误
-      about_json: "导入错误：about.json不存在或格式错误"
+      about_json: "导入错误：about.json不存在或是无效的"
       about_json_values: "about.json包含无效值：%{errors}"
       git: "克隆 git 版本库时出错，访问被拒绝或找不到版本库"
       unpack_failed: "无法解压缩文件"
@@ -173,7 +173,7 @@ zh_CN:
     confirm_email: "<p>快完成了！我们发送了一封激活邮件到你的邮件地址。请按照邮件中的步骤来激活你的账户。</p><p>如果你没有收到邮件，请检查你的垃圾邮件收件箱。</p>"
   bulk_invite:
     file_should_be_csv: "上传的文件应为 csv 格式。"
-    max_rows: "同一时间内最多能发送50000个邀请。尝试将文件分割成更小的部分。"
+    max_rows: "前%{max_bulk_invites}个邀请已经被发出。尝试将文件分割成更小的部分。"
     error: "上传文件的时候出错了。请重试。"
   topic_invite:
     failed_to_invite: "如果没有以下任一组中的组成员身份，则无法邀请用户加入此主题：%{group_names}。"
@@ -285,7 +285,7 @@ zh_CN:
   groups:
     success:
       bulk_add:
-        other: "%{count}个用户已添加到该群组。"
+        other: "%{count}个用户已被添加到这个群组。"
     errors:
       grant_trust_level_not_valid: "'%{trust_level}'不是有效的信任等级。"
       can_not_modify_automatic: "你不能修改自动组"
@@ -398,7 +398,7 @@ zh_CN:
               cant_send_pm: "抱歉，你不能向该用户发送消息。"
               no_user_selected: "必须选择一个有效的用户。"
               reply_by_email_disabled: "用邮件回复已被禁止"
-              target_user_not_found: "找不到你要发送此消息中的一个用户。"
+              target_user_not_found: "未找到你要向其发送此消息的其中一个用户"
             featured_link:
               invalid: "不合法。URL 应包括 http:// 或 https://。"
               invalid_category: "无法编辑该分类。"
@@ -849,7 +849,7 @@ zh_CN:
         post_count: 创建的帖子
         pm_count: 创建的私信
         revision_count: 版本
-      description: 版主动列表，内容包括已审阅的标记，阅读时间，创建的主题，创建的帖子，创建的个人消息和修订。
+      description: 版主活动列表，包括已审核的标记，阅读时间，创建的主题，创建的帖子，创建的个人消息以及修订。
     flags_status:
       title: "标记状态"
       values:
@@ -1078,7 +1078,7 @@ zh_CN:
       title: "第一个回复时间"
       xaxis: "天"
       yaxis: "平均时间（小时）"
-      description: "新主题首次得到响应的平均时间（一小时内）"
+      description: "新主题首次得到响应的平均时间（每小时）"
     topics_with_no_response:
       title: "没有回复的帖子"
       xaxis: "天"
@@ -1272,7 +1272,7 @@ zh_CN:
     ga_universal_tracking_code: "Google Universal Analytics（analytics.js）跟踪代码ID，例如：UA-12345678-9; 请参阅<a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
     ga_universal_domain_name: "Google Universal Analytics（analytics.js）域名，例如：mysite.com; 请参阅<a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
     ga_universal_auto_link_domains: "启用Google Universal Analytics（analytics.js）跨域跟踪。 这些域的传出链接将添加客户端ID。请参阅<a href='https://support.google.com/analytics/answer/1034342?hl=en' target='_blank'>Google的跨域跟踪指南。</a>"
-    gtm_container_id: "Google Tag Manager容器id。例如：GTM-ABCDEF。<br/>注意：由GTM加载的第三方脚本需要在“content security policy script src”内。"
+    gtm_container_id: "Google Tag Manager容器id。例如：GTM-ABCDEF。<br/>注意：由GTM加载的第三方脚本需要在“内容安全策略脚本源”内。"
     enable_escaped_fragments: "如果未检测到webcrawler，则回退到Google的Ajax-Crawling API。请参阅<a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
     moderators_create_categories: "允许版主创建新的分类"
     cors_origins: "允许跨源请求（CORS）。每个源必须包括 http:// 或 https://。DISCOURSE_ENABLE_CORS 环境变量必须设置为 true 才能启用 CORS 政策。"
@@ -1294,6 +1294,7 @@ zh_CN:
     post_menu_hidden_items: "帖子菜单中默认隐藏的按钮，点击省略号后显示。"
     share_links: "决定分享对话框中出现的按钮及显示顺序。"
     site_contact_username: "论坛给用户自动发送私信时使用的用户名；如果留空将使用默认的系统账户。"
+    site_contact_group_name: "被邀请到所有自动消息的有效群组名称。"
     send_welcome_message: "给所有用户发送快速开始指导的私信"
     send_tl1_welcome_message: "向新的信任级别1用户发送欢迎消息。"
     suppress_reply_directly_below: "当一个帖子只有一个回复时，不显示帖子回复数量。"
@@ -1690,6 +1691,7 @@ zh_CN:
     code_formatting_style: "编辑器中的代码格式化按钮设置的默认格式"
     max_allowed_message_recipients: "私信允许的最大收件人数。"
     watched_words_regular_expressions: "监视词是正则表达式。"
+    old_post_notice_days: "提醒帖子成为存档前的天数"
     new_user_notice_tl: "查看新用户发帖通知所需的最低信任级别。"
     returning_user_notice_tl: "查看回归用户发帖通知所需的最低信任级别。"
     returning_users_days: "在用户被认为回归之前应该经过多少天。"
@@ -2056,7 +2058,7 @@ zh_CN:
     text_body_template: |
       这是来自的测试电子邮件
 
-      [**％{BASE_URL} **] [0]
+      [**%{base_url}**][0]
 
       电子邮件传送能力很复杂。以下是您应该首先检查的一些重要事项：
 
@@ -2074,7 +2076,7 @@ zh_CN:
 
        - 我们强烈建议您**发送测试电子邮件到[mail-tester.com] [mt] **以验证以上所有内容是否正常工作。
 
-      （* easy *方式是在[SendGrid] [sg]，[SparkPost] [sp]，[Mailgun] [mg]或[Mailjet] [mj]上创建免费帐户，这些帐户拥有丰厚的免费邮寄计划，适用于小型社区。但您仍需要在DNS中设置SPF和DKIM记录！）
+      （*简单的*方式是在[SendGrid] [sg]，[SparkPost] [sp]，[Mailgun] [mg]或[Mailjet] [mj]上创建免费帐户，这些帐户拥有丰厚的免费邮寄计划，适用于小型社区。但您仍需要在DNS中设置SPF和DKIM记录！）
 
       我们希望您收到此电子邮件的可传递性测试OK！
 
@@ -2082,7 +2084,7 @@ zh_CN:
 
       您在[discourse]的朋友（https://www.discourse.org）
 
-      [0]：％{base_url}
+      [0]：%{base_url}
       [1]：https://www.kitterman.com/spf/validate.html
       [2]：https://mxtoolbox.com/ReverseLookup.aspx
       [3]：http://www.dkim.org/
@@ -2297,13 +2299,13 @@ zh_CN:
       title: "成功导致CSV格式"
       subject_template: "[%{export_title}]数据导出完成"
       text_body_template: |
-        数据成功出成功！:dvd:
+        你的数据导出成功！:dvd:
 
         %{download_link}
 
-        以上的下载链接将在48小时后失效。
+        上面的下载链接有效期为48小时。
 
-        数据由gzip压缩打包。如果双击无法打开压缩文件，用这里推荐的工具：https://www.gzip.org/#faq4
+        数据被压缩为一个gzip存档。如果你无法打开存档，使用这里推荐的工具：https://www.gzip.org/#faq4
     csv_export_failed:
       title: "导致CSV失败"
       subject_template: "数据导出失败"

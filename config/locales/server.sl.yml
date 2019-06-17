@@ -1110,14 +1110,6 @@ sl:
     csv_export_succeeded:
       title: "CSV izvoz uspel"
       subject_template: "[%{export_title}] Izvoz podatkov končan"
-      text_body_template: |
-        Vaš izvoz podatkov je končan! :dvd:
-
-        %{download_link}
-
-        Zgornja povezava za prenos bo aktivna naslednjih 48 ur.
-
-        Podatki so stisnjeni v gzip datoteki. Če se datoteka ne razširi samodejno, ko jo odprete, uporabite eno od navedenih orodij: https://www.gzip.org/#faq4
     csv_export_failed:
       title: "CSV izvoz ni uspel"
       subject_template: "Izvoz podatkov ni uspel"

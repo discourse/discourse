@@ -177,7 +177,6 @@ fi:
     confirm_email: "<p>Melkein valmista! Lähetimme aktivointiviestin sähköpostiosoitteeseesi. Aktivoi tilisi noudattamalla sähköpostissa kerrottuja ohjeita.</p><p>Jos viesti ei saavu, tarkistathan roskapostikansiosi.</p>"
   bulk_invite:
     file_should_be_csv: "Ladattavan tiedoston tulee olla CSV-muodossa."
-    max_rows: "Kerrallaan voi lähettää enintään 50 000 kutsua. Jaa tiedosto pienempiin osiin."
     error: "Tiedoston lataus epäonnistui. Yritä myöhemmin uudelleen."
   topic_invite:
     failed_to_invite: "Käyttäjää ei voi kutsua ketjuun, jollei hän ole jonkun näistä ryhmistä jäsen: %{group_names}."
@@ -296,10 +295,6 @@ fi:
   revert_version_same: "Nykyinen revisio on sama, kuin jonka yrität palauttaa."
   excerpt_image: "kuva"
   groups:
-    success:
-      bulk_add:
-        one: "%{count} käyttäjä lisättiin ryhmään."
-        other: "%{count} käyttäjää lisättiin ryhmään."
     errors:
       grant_trust_level_not_valid: "'%{trust_level}' ei kelpaa luottamustasoksi."
       can_not_modify_automatic: "Et voi muokata automaattista ryhmää"
@@ -1064,7 +1059,7 @@ fi:
       title: "Anonyymit"
       xaxis: "Päivä"
       yaxis: "Anonyymien sivukatselut"
-      description: "Kuinka monta sivunkatselua kirjautumattomilta vierailta."
+      description: "Kuinka monta sivunkatselua sisäänkirjautumattomilta vierailta."
     page_view_logged_in_reqs:
       title: "Kirjautuneita"
       xaxis: "Päivä"
@@ -1117,7 +1112,7 @@ fi:
       title: "Aika ensimmäiseen vastaukseen"
       xaxis: "Päivä"
       yaxis: "Keskimääräinen aika (tuntia)"
-      description: "Keskimääräinen aika (tunteina) siihen, kun uuteen ketjuun vastataan ensimmäisen kerran."
+      description: "Keskimääräinen aika (tunteina) siihen, että uusiin ketjuihin vastataan."
     topics_with_no_response:
       title: "Ketjut, joihin ei ole vastattu"
       xaxis: "Päivä"
@@ -1699,7 +1694,6 @@ fi:
     max_api_keys_per_user: "Enimmäismäärä rajapinnan käyttäjäavaimia käyttäjää kohden"
     min_trust_level_for_user_api_key: "Vähimmäisluottamustaso, joka vaaditaan rajapinnan käyttäjäavainten muodostamiseen"
     allowed_user_api_push_urls: "Sallitut URL-osoitteet "
-    expire_user_api_keys_days: "Kuinka monessa päivässä rajapinnan käyttäjäavain vanhenee (0 niin ei koskaan)"
     tagging_enabled: "Ota käyttöön ketjujen tunnisteet?"
     min_trust_to_create_tag: "Vähimmäisluottamustaso, jolla voi luoda tunnisteita."
     max_tags_per_topic: "Suurin tunnisteiden määrä, joka voi liittyä ketjuun."
@@ -2255,14 +2249,6 @@ fi:
     csv_export_succeeded:
       title: "CSV:n vienti onnistui"
       subject_template: "[%{export_title}] Tiedostojen vienti valmis"
-      text_body_template: |
-        Tietojen vienti onnistui! :dvd:
-
-        %{download_link}
-
-        Yllä oleva latauslinkki toimii 48 tunnin ajan.
-
-        Tiedot on pakattu GZIP-arkistoksi. Jos arkisto ei purkaudu kun yrität avata sitä, käytä täällä suositeltuja työkaluja: https://www.gzip.org/#faq4
     csv_export_failed:
       title: "CSV:n vienti epäonnistui"
       subject_template: "Datan vienti epäonnistui"

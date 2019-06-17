@@ -297,6 +297,7 @@ sw:
       save: "hifadhi"
       cancel: "Ghairi"
       filters:
+        all_categories: "(Vikundi Vyote)"
         type:
           title: "Aina"
         refresh: "Rudisha Tena"

@@ -339,7 +339,6 @@ zh_TW:
       edit: "編輯"
       save: "儲存"
       cancel: "取消"
-      new_topic: "新增話題"
       filters:
         type:
           title: "類型"
@@ -349,7 +348,6 @@ zh_TW:
         status: "狀態"
         category: "分類"
         priority:
-          low: "低"
           medium: "中間的"
           high: "高"
       conversation:
@@ -373,10 +371,6 @@ zh_TW:
           title: "忽略"
         deleted:
           title: "刪除"
-        reviewed:
-          title: "（所有已審核）"
-        all:
-          title: "（所有）"
       types:
         reviewable_flagged_post:
           title: "標記的貼文"
