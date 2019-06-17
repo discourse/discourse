@@ -337,9 +337,10 @@ Discourse::Application.routes.draw do
   get "session/sso_provider" => "session#sso_provider"
   get "session/current" => "session#current"
   get "session/csrf" => "session#csrf"
-  get "session/email-login/:token" => "session#email_login"
+  get "session/email-login/:token" => "session#email_login_info"
   post "session/email-login/:token" => "session#email_login"
   get "session/otp/:token" => "session#one_time_password", constraints: { token: /[0-9a-f]+/ }
+  post "session/otp/:token" => "session#one_time_password", constraints: { token: /[0-9a-f]+/ }
   get "composer_messages" => "composer_messages#index"
   post "composer/parse_html" => "composer#parse_html"
 
