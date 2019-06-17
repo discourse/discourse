@@ -84,7 +84,7 @@ export default Discourse.Route.extend({
         category = categories.find(item => {
           return (
             item &&
-            item.get(type) === subCategory.toLowerCase() &&
+            item[type] === subCategory.toLowerCase() &&
             item.parent_category_id === main.id
           );
         });
