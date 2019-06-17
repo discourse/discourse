@@ -14,7 +14,7 @@ RSpec.describe SessionController do
     end
   end
 
-  describe '#email_login_info' do
+  describe '#email_login' do
     before do
       SiteSetting.enable_local_logins_via_email = true
     end
@@ -26,66 +26,13 @@ RSpec.describe SessionController do
       end
     end
 
-    context 'valid token' do
-      it 'returns information' do
-        get "/session/email-login/#{email_token.token}.json"
-
-        expect(JSON.parse(response.body)["can_login"]).to eq(true)
-        expect(JSON.parse(response.body)["second_factor_required"]).to eq(nil)
-
-        # Does not log in the user
-        expect(session[:current_user_id]).to be_nil
-      end
-
-      it 'fails when local logins via email is disabled' do
-        SiteSetting.enable_local_logins_via_email = false
-
-        get "/session/email-login/#{email_token.token}.json"
-
-        expect(response.status).to eq(404)
-      end
-
-      it 'fails when local logins is disabled' do
-        SiteSetting.enable_local_logins = false
-
-        get "/session/email-login/#{email_token.token}.json"
-
-        expect(response.status).to eq(500)
-      end
-
-      context 'user has 2-factor logins' do
-        let!(:user_second_factor) { Fabricate(:user_second_factor_totp, user: user) }
-        let!(:user_second_factor_backup) { Fabricate(:user_second_factor_backup, user: user) }
-
-        it "includes that information in the response" do
-          get "/session/email-login/#{email_token.token}.json"
-
-          expect(JSON.parse(response.body)["can_login"]).to eq(true)
-          expect(JSON.parse(response.body)["second_factor_required"]).to eq(true)
-          expect(JSON.parse(response.body)["backup_codes_enabled"]).to eq(true)
-        end
-      end
-    end
-  end
-
-  describe '#email_login' do
-    before do
-      SiteSetting.enable_local_logins_via_email = true
-    end
-
-    context 'missing token' do
-      it 'returns the right response' do
-        post "/session/email-login"
-        expect(response.status).to eq(404)
-      end
-    end
-
     context 'invalid token' do
       it 'returns the right response' do
-        post "/session/email-login/adasdad.json"
+        get "/session/email-login/adasdad"
 
         expect(response.status).to eq(200)
-        expect(JSON.parse(response.body)["error"]).to eq(
+
+        expect(CGI.unescapeHTML(response.body)).to match(
           I18n.t('email_login.invalid_token')
         )
       end
@@ -94,11 +41,11 @@ RSpec.describe SessionController do
         it 'should return the right response' do
           email_token.update!(created_at: 999.years.ago)
 
-          post "/session/email-login/#{email_token.token}.json"
+          get "/session/email-login/#{email_token.token}"
 
           expect(response.status).to eq(200)
 
-          expect(JSON.parse(response.body)["error"]).to eq(
+          expect(CGI.unescapeHTML(response.body)).to match(
             I18n.t('email_login.invalid_token')
           )
         end
@@ -107,39 +54,37 @@ RSpec.describe SessionController do
 
     context 'valid token' do
       it 'returns success' do
-        post "/session/email-login/#{email_token.token}.json"
+        get "/session/email-login/#{email_token.token}"
 
-        expect(JSON.parse(response.body)["success"]).to eq("OK")
-        expect(session[:current_user_id]).to eq(user.id)
+        expect(response).to redirect_to("/")
       end
 
       it 'fails when local logins via email is disabled' do
         SiteSetting.enable_local_logins_via_email = false
 
-        post "/session/email-login/#{email_token.token}.json"
+        get "/session/email-login/#{email_token.token}"
 
         expect(response.status).to eq(404)
-        expect(session[:current_user_id]).to eq(nil)
       end
 
       it 'fails when local logins is disabled' do
         SiteSetting.enable_local_logins = false
 
-        post "/session/email-login/#{email_token.token}.json"
+        get "/session/email-login/#{email_token.token}"
 
         expect(response.status).to eq(500)
-        expect(session[:current_user_id]).to eq(nil)
       end
 
       it "doesn't log in the user when not approved" do
         SiteSetting.must_approve_users = true
 
-        post "/session/email-login/#{email_token.token}.json"
+        get "/session/email-login/#{email_token.token}"
 
         expect(response.status).to eq(200)
 
-        expect(JSON.parse(response.body)["error"]).to eq(I18n.t("login.not_approved"))
-        expect(session[:current_user_id]).to eq(nil)
+        expect(CGI.unescapeHTML(response.body)).to include(
+          I18n.t("login.not_approved")
+        )
       end
 
       context "when admin IP address is not valid" do
@@ -154,14 +99,13 @@ RSpec.describe SessionController do
         end
 
         it 'returns the right response' do
-          post "/session/email-login/#{email_token.token}.json"
+          get "/session/email-login/#{email_token.token}"
 
           expect(response.status).to eq(200)
 
-          expect(JSON.parse(response.body)["error"]).to eq(
+          expect(CGI.unescapeHTML(response.body)).to include(
             I18n.t("login.admin_not_allowed_from_ip_address", username: user.username)
           )
-          expect(session[:current_user_id]).to eq(nil)
         end
       end
 
@@ -178,14 +122,13 @@ RSpec.describe SessionController do
         it 'returns the right response' do
           ActionDispatch::Request.any_instance.stubs(:remote_ip).returns(permitted_ip_address)
 
-          post "/session/email-login/#{email_token.token}.json"
+          get "/session/email-login/#{email_token.token}"
 
           expect(response.status).to eq(200)
 
-          expect(JSON.parse(response.body)["error"]).to eq(
+          expect(CGI.unescapeHTML(response.body)).to include(
             I18n.t("login.not_allowed_from_ip_address", username: user.username)
           )
-          expect(session[:current_user_id]).to eq(nil)
         end
       end
 
@@ -195,48 +138,63 @@ RSpec.describe SessionController do
           suspended_at: Time.zone.now
         )
 
-        post "/session/email-login/#{email_token.token}.json"
+        get "/session/email-login/#{email_token.token}"
 
         expect(response.status).to eq(200)
 
-        expect(JSON.parse(response.body)["error"]).to eq(
-          I18n.t("login.suspended", date: I18n.l(user.suspended_till, format: :date_only)
+        expect(CGI.unescapeHTML(response.body)).to include(I18n.t("login.suspended",
+          date: I18n.l(user.suspended_till, format: :date_only)
         ))
-        expect(session[:current_user_id]).to eq(nil)
       end
 
       context 'user has 2-factor logins' do
         let!(:user_second_factor) { Fabricate(:user_second_factor_totp, user: user) }
         let!(:user_second_factor_backup) { Fabricate(:user_second_factor_backup, user: user) }
 
+        describe 'requires second factor' do
+          it 'should return a second factor prompt' do
+            get "/session/email-login/#{email_token.token}"
+
+            expect(response.status).to eq(200)
+
+            response_body = CGI.unescapeHTML(response.body)
+
+            expect(response_body).to include(I18n.t(
+              "login.second_factor_title"
+            ))
+
+            expect(response_body).to_not include(I18n.t(
+              "login.invalid_second_factor_code"
+            ))
+          end
+        end
+
         describe 'errors on incorrect 2-factor' do
           context 'when using totp method' do
             it 'does not log in with incorrect two factor' do
-              post "/session/email-login/#{email_token.token}.json", params: {
+              post "/session/email-login/#{email_token.token}", params: {
                 second_factor_token: "0000",
                 second_factor_method: UserSecondFactor.methods[:totp]
               }
 
               expect(response.status).to eq(200)
 
-              expect(JSON.parse(response.body)["error"]).to eq(
-                I18n.t("login.invalid_second_factor_code")
-              )
-              expect(session[:current_user_id]).to eq(nil)
+              expect(CGI.unescapeHTML(response.body)).to include(I18n.t(
+                "login.invalid_second_factor_code"
+              ))
             end
           end
           context 'when using backup code method' do
             it 'does not log in with incorrect backup code' do
-              post "/session/email-login/#{email_token.token}.json", params: {
+              post "/session/email-login/#{email_token.token}", params: {
                 second_factor_token: "0000",
                 second_factor_method: UserSecondFactor.methods[:backup_codes]
               }
 
               expect(response.status).to eq(200)
-              expect(JSON.parse(response.body)["error"]).to eq(
-                I18n.t("login.invalid_second_factor_code")
-              )
-              expect(session[:current_user_id]).to eq(nil)
+              expect(CGI.unescapeHTML(response.body)).to include(I18n.t(
+                "login.invalid_second_factor_code"
+              ))
             end
           end
         end
@@ -244,24 +202,22 @@ RSpec.describe SessionController do
         describe 'allows successful 2-factor' do
           context 'when using totp method' do
             it 'logs in correctly' do
-              post "/session/email-login/#{email_token.token}.json", params: {
+              post "/session/email-login/#{email_token.token}", params: {
                 second_factor_token: ROTP::TOTP.new(user_second_factor.data).now,
                 second_factor_method: UserSecondFactor.methods[:totp]
               }
 
-              expect(JSON.parse(response.body)["success"]).to eq("OK")
-              expect(session[:current_user_id]).to eq(user.id)
+              expect(response).to redirect_to("/")
             end
           end
           context 'when using backup code method' do
             it 'logs in correctly' do
-              post "/session/email-login/#{email_token.token}.json", params: {
+              post "/session/email-login/#{email_token.token}", params: {
                 second_factor_token: "iAmValidBackupCode",
                 second_factor_method: UserSecondFactor.methods[:backup_codes]
               }
 
-              expect(JSON.parse(response.body)["success"]).to eq("OK")
-              expect(session[:current_user_id]).to eq(user.id)
+              expect(response).to redirect_to("/")
             end
           end
         end
@@ -1369,40 +1325,9 @@ RSpec.describe SessionController do
         get "/session/otp/asd1231dasd123"
 
         expect(response.status).to eq(404)
-
-        post "/session/otp/asd1231dasd123"
-
-        expect(response.status).to eq(404)
       end
 
       context 'when token is valid' do
-        it "should display the form for GET" do
-          token = SecureRandom.hex
-          $redis.setex "otp_#{token}", 10.minutes, user.username
-
-          get "/session/otp/#{token}"
-
-          expect(response.status).to eq(200)
-          expect(response.body).to include(
-            I18n.t("user_api_key.otp_confirmation.logging_in_as", username: user.username)
-          )
-          expect($redis.get("otp_#{token}")).to eq(user.username)
-
-          expect(session[:current_user_id]).to eq(nil)
-        end
-
-        it "should redirect on GET if already logged in" do
-          sign_in(user)
-          token = SecureRandom.hex
-          $redis.setex "otp_#{token}", 10.minutes, user.username
-
-          get "/session/otp/#{token}"
-          expect(response.status).to eq(302)
-
-          expect($redis.get("otp_#{token}")).to eq(nil)
-          expect(session[:current_user_id]).to eq(user.id)
-        end
-
         it 'should authenticate user and delete token' do
           user = Fabricate(:user)
 
@@ -1412,7 +1337,7 @@ RSpec.describe SessionController do
           token = SecureRandom.hex
           $redis.setex "otp_#{token}", 10.minutes, user.username
 
-          post "/session/otp/#{token}"
+          get "/session/otp/#{token}"
 
           expect(response.status).to eq(302)
           expect(response).to redirect_to("/")

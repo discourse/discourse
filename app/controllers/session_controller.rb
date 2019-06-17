@@ -11,10 +11,10 @@ class SessionController < ApplicationController
     render body: nil, status: 500
   end
 
-  before_action :check_local_login_allowed, only: %i(create forgot_password email_login email_login_info)
+  before_action :check_local_login_allowed, only: %i(create forgot_password email_login)
   before_action :rate_limit_login, only: %i(create email_login)
   skip_before_action :redirect_to_login_if_required
-  skip_before_action :preload_json, :check_xhr, only: %i(sso sso_login sso_provider destroy one_time_password)
+  skip_before_action :preload_json, :check_xhr, only: %i(sso sso_login sso_provider destroy email_login one_time_password)
 
   ACTIVATE_USER_KEY = "activate_user"
 
@@ -305,79 +305,49 @@ class SessionController < ApplicationController
     end
   end
 
-  def email_login_info
-    raise Discourse::NotFound if !SiteSetting.enable_local_logins_via_email
-
-    token = params[:token]
-    matched_token = EmailToken.confirmable(token)
-
-    if matched_token
-      response = {
-        can_login: true,
-        token: token,
-        token_email: matched_token.email
-      }
-
-      if matched_token.user&.totp_enabled?
-        response.merge!(
-          second_factor_required: true,
-          backup_codes_enabled: matched_token.user&.backup_codes_enabled?
-        )
-      end
-
-      render json: response
-    else
-      render json: {
-        can_login: false,
-        error: I18n.t('email_login.invalid_token')
-      }
-    end
-  end
-
   def email_login
     raise Discourse::NotFound if !SiteSetting.enable_local_logins_via_email
     second_factor_token = params[:second_factor_token]
     second_factor_method = params[:second_factor_method].to_i
     token = params[:token]
-    matched_token = EmailToken.confirmable(token)
+    valid_token = !!EmailToken.valid_token_format?(token)
+    user = EmailToken.confirmable(token)&.user
 
-    if matched_token&.user&.totp_enabled?
+    if valid_token && user&.totp_enabled?
       if !second_factor_token.present?
-        return render json: { error: I18n.t('login.invalid_second_factor_code') }
-      elsif !matched_token.user.authenticate_second_factor(second_factor_token, second_factor_method)
+        @second_factor_required = true
+        @backup_codes_enabled = true if user&.backup_codes_enabled?
+        return render layout: 'no_ember'
+      elsif !user.authenticate_second_factor(second_factor_token, second_factor_method)
         RateLimiter.new(nil, "second-factor-min-#{request.remote_ip}", 3, 1.minute).performed!
-        return render json: { error: I18n.t('login.invalid_second_factor_code') }
+        @error = I18n.t('login.invalid_second_factor_code')
+        return render layout: 'no_ember'
       end
     end
 
     if user = EmailToken.confirm(token)
       if login_not_approved_for?(user)
-        return render json: login_not_approved
+        @error = login_not_approved[:error]
       elsif payload = login_error_check(user)
-        return render json: payload
+        @error = payload[:error]
       else
         log_on_user(user)
-        return render json: success_json
+        return redirect_to path("/")
       end
+    else
+      @error = I18n.t('email_login.invalid_token')
     end
 
-    return render json: { error: I18n.t('email_login.invalid_token') }
+    render layout: 'no_ember'
   end
 
   def one_time_password
-    @otp_username = otp_username = $redis.get "otp_#{params[:token]}"
+    otp_username = $redis.get "otp_#{params[:token]}"
 
     if otp_username && user = User.find_by_username(otp_username)
-      if current_user&.username == otp_username
-        $redis.del "otp_#{params[:token]}"
-        return redirect_to path("/")
-      elsif request.post?
-        log_on_user(user)
-        $redis.del "otp_#{params[:token]}"
-        return redirect_to path("/")
-      else
-        # Display the form
-      end
+      log_on_user(user)
+      $redis.del "otp_#{params[:token]}"
+      return redirect_to path("/")
     else
       @error = I18n.t('user_api_key.invalid_token')
     end
