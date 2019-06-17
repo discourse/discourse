@@ -211,6 +211,10 @@ class GroupsController < ApplicationController
       raise Discourse::InvalidParameters.new(:limit)
     end
 
+    if limit > 1000
+      raise Discourse::InvalidParameters.new(:limit)
+    end
+
     if offset < 0
       raise Discourse::InvalidParameters.new(:offset)
     end

@@ -351,6 +351,9 @@ describe GroupsController do
 
       get "/groups/#{group.name}/members.json?offset=-1"
       expect(response.status).to eq(400)
+
+      get "/groups/trust_level_0/members.json?limit=2000"
+      expect(response.status).to eq(400)
     end
 
     it "ensures the group can be seen" do
