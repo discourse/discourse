@@ -3630,7 +3630,7 @@ cs:
         granted_badges: Udělené odznaky
         grant: Udělit
         no_user_badges: "%{name} nezískal žádné oznaky."
-        no_badges: "Nejsou tu žádné odznaky, které by se dali rozdat."
+        no_badges: "Nejsou tu žádné odznaky, které by se daly rozdat."
         none_selected: "Vyberte odznak, abyste mohli začít"
         allow_title: Povolit užití odzanku jako titul
         multiple_grant: Může být přiděleno několikrát

@@ -147,11 +147,11 @@ ru:
           other: "%{count} лет спустя"
       previous_month: "Предыдущий месяц"
       next_month: "Следующий месяц"
-      placeholder: Дата
+      placeholder: дата
     share:
       topic_html: 'Тема: <span class="topic-title">%{topicTitle}</span>'
       post: "пост #%{postNumber}"
-      close: "Закрыть"
+      close: "закрыть"
       twitter: "Поделиться ссылкой в Twitter"
       facebook: "Поделиться ссылкой в Facebook"
       email: "Отправить эту ссылку по e-mail"
@@ -440,8 +440,9 @@ ru:
       edit: "Редактировать"
       save: "Сохранить"
       cancel: "Отмена"
-      new_topic: "Новая тема:"
+      new_topic: "Утверждение этого пункта создаст новую тему"
       filters:
+        all_categories: "(все категории)"
         type:
           title: "Тип"
           all: "(все типы)"
@@ -456,7 +457,7 @@ ru:
           created_at_asc: "Созданные в (обратный)"
         priority:
           title: "Минимальный Приоритет:"
-          low: "Низкий"
+          low: "(любой)"
           medium: "Средний"
           high: "Высокий"
       conversation:
@@ -481,9 +482,9 @@ ru:
         deleted:
           title: "Удалено"
         reviewed:
-          title: "(Все Жалобы)"
+          title: "(все рассмотрено)"
         all:
-          title: "(Все)"
+          title: "(всё)"
       types:
         reviewable_flagged_post:
           title: "Отмеченный Пост"
@@ -717,7 +718,7 @@ ru:
       posts: "Сообщения"
       topics: "Темы"
       latest: "Последние"
-      latest_by: "последние по"
+      latest_by: "последние от"
       toggle_ordering: "изменить сортировку"
       subcategories: "Подразделы"
       topic_sentence:
@@ -814,7 +815,7 @@ ru:
       allow_private_messages: "Разрешить другим пользователям отправлять мне личные сообщения"
       external_links_in_new_tab: "Открывать все внешние ссылки в новой вкладке"
       enable_quoting: "Позволить отвечать с цитированием выделенного текста"
-      enable_defer: "Включить отложить, чтобы пометить темы как непрочитанные"
+      enable_defer: "Включить кнопку отложить, чтобы помечать темы, как непрочитанные"
       change: "изменить"
       moderator: "{{user}} — модератор"
       admin: "{{user}} — админ"

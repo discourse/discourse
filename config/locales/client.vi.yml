@@ -671,7 +671,14 @@ vi:
       website: "Web Site"
       email_settings: "Email"
       text_size:
+        title: "Cở chữ"
+        smaller: "Nhỏ"
         normal: "Bình thường"
+        larger: "Lớn"
+        largest: "Lớn nhất"
+      title_count_mode:
+        notifications: "Thông báo mới"
+        contextual: "Trang nội dung mới"
       like_notification_frequency:
         title: "Thông báo khi tôi like"
         always: "Luôn luôn"

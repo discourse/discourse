@@ -149,12 +149,6 @@ lt:
   too_late_to_edit: "Šis pranešimas buvo sukurtas jau labai senai, todėl jo negalima redaguoti ar ištrinti."
   excerpt_image: "paveikslėlis"
   groups:
-    success:
-      bulk_add:
-        one: "%{count} narys buvo pridėtas prie grupės"
-        few: "%{count}nariai buvo pridėti prie grupės"
-        many: "%{count}narių buvo pridėta prie grupės"
-        other: "%{count}nariai buvo pridėti prie grupės"
     default_names:
       everyone: "visi"
       admins: "administratoriai"

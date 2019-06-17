@@ -292,10 +292,6 @@ hy:
   revert_version_same: "Ընթացիկ տարբերակը նույնն է, ինչ այն, որը Դուք փորձում եք վերադարձնել:"
   excerpt_image: "նկար"
   groups:
-    success:
-      bulk_add:
-        one: "%{count}  օգտատեր ավելացվել է խմբին:"
-        other: "%{count} օգտատեր ավելացվել է խմբին:"
     errors:
       grant_trust_level_not_valid: "'%{trust_level}' -ը վավեր վստահության մակարդակ չէ:"
       can_not_modify_automatic: "Դուք չեք կարող փոփոխել ավտոմատ խումբը"
@@ -980,7 +976,6 @@ hy:
       title: "Անանուն"
       xaxis: "Օր"
       yaxis: "Անանուն Էջադիտումներ"
-      description: "Հաշիվ մուտք չգործած այցելուների կողմից նոր էջերի դիտումների քանակը:"
     page_view_logged_in_reqs:
       title: "Մուտքագրված"
       xaxis: "Օր"
@@ -1034,7 +1029,6 @@ hy:
       title: "Առաջին արձագանքի ժամանակը"
       xaxis: "Օր"
       yaxis: "Միջին ժամանակը (Ժամ)"
-      description: "Նոր թեմաներին առաջին արձագանքի միջին ժամանակը (ժամով):"
     topics_with_no_response:
       title: "Պատասխան չունեցող թեմաներ"
       xaxis: "Օր"
@@ -1217,7 +1211,6 @@ hy:
     maximum_session_age: "Օգտատերը կմնա մուտքագրված վերջին այցելությունից n ժամ անց"
     ga_universal_domain_name: "Google Universal Analytics (analytics.js) դոմենի անուն, օրինակ՝ mysite.com; այցելեք <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
     ga_universal_auto_link_domains: "Միացնել Google Universal Analytics (analytics.js) խաչաձև դոմենի դիտումը: Այս դոմնեների ելքային հղումները կունենան իրենց ավելացված հաճախորդի id: Այցելեք <a href='https://support.google.com/analytics/answer/1034342?hl=en' target='_blank'>Google's Cross-Domain Tracking guide.</a>"
-    gtm_container_id: "Google Tag Manager container id. eg: GTM-ABCDEF. <br/>Note: third-party scripts loaded by GTM may need to be whitelisted in 'content security policy script src'."
     enable_escaped_fragments: "Վերադարձ դեպի Google's Ajax-Crawling API , եթե  ոչ մի ցանցային տվայլների հավաքագրիչ (webcrawler) հայտնաբերված չէ: Այցելեք <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
     moderators_create_categories: "Թույլատրել մոդերատորներին ստեղծել նոր կատեգորիաներ"
     cors_origins: "Թույլատրելի origin-ներ խաչաձև origin հարցումների համար (CORS): Յուրաքանչյուր origin պետք է ներառի http:// կամ https://: DISCOURSE_ENABLE_CORS env փոփոխականը պետք է սահմանված լինի true ՝ CORS -ի միացման համար:"
@@ -1277,7 +1270,6 @@ hy:
     enable_sso_provider: "Իրականացնել Discourse SSO մատակարարի պրոտոկոլը /session/sso_provider վերջնակետում. պահանջվում է տեղադրել sso_provider_secrets "
     sso_url: "Վերջնակետի եզակի նշանի URL (պետք է պարունակի http:// կամ https://)"
     sso_secret: "Գաղտնի տող, որը օգտագործվում է կրիպտոգրաֆիկ կերպով SSO տեղեկատվությունը նույնականացնելու համար, համոզվեք, որ այն ունի 10 կամ ավելի սիմվոլ"
-    sso_provider_secrets: "Դոմեն-գաղտնի արժեք զույգերի ցանկ, որոնք օգտագործում են Discourse-ը՝ որպես SSO մատակարար: Համողվեք, որ SSO  գաղտնի արժեքը ունի 10 կամ ավելի սիմվոլ երկարություն: * նշանը կարող է օգտագործվել ցանկացած դոմենի կամ դրա մի մասի համընկնման համար (օրինակ՝ *.example.com):"
     sso_overrides_bio: "Վերասահմանում է օգտատիրոջ կենսագրությունը իր պրոֆիլում և կանխարգելում է օգտատիրոջը այն փոփոխելուց"
     sso_overrides_groups: "Համաժամանակեցնել բոլոր ձեռքով գրված խմբերի անդամակցությունները՝ խմբերի sso ատրիբուտում սահմանված խմբերի համար: (ՈՒՇԱԴՐՈՒԹՅՈՒՆ՝ եթե Դուք չեք սահմանում խմբեր, բոլոր ձեռքով գրված խմբերի անդամակցություներրը կջնջվեն օգտատիրոջ համար)"
     sso_overrides_email: "Վերասահմանում է տեղական էլ. հասցեն արտաքին կայքի էլ. հասցեով SSO տվյալների ուղարկումից յուրաքանչյուր մուտքի ժամանակ և կանխում է տեղական փոփոխությունները: (ՈՒՇԱԴՐՈՒԹՅՈՒՆ՝ անհամապատասխանությունները կարող են տեղի ունենալ տեղական էլ. հասցեների նորմալիզացման պատճառով)"
@@ -1652,7 +1644,6 @@ hy:
     min_trust_level_for_user_api_key: "Օգտատիրոջ API key-երի գեներացման համար անհրաժեշտ վստահության մակարդակը"
     allowed_user_api_auth_redirects: "Թույլատրելի URL նույնականացման վերաուղարկման համար օգտատիրոջ API key -երի համար: * նշանը կարող օգտագործվել դրա ցանկացած մասի հետ համընկնման համար (օրինակ՝ www.example.com/*)."
     allowed_user_api_push_urls: "Օգտատիրոջ API -ին սերվերի push անելու համար թույլատրված URL-ները"
-    expire_user_api_keys_days: "Օրերի քանակը, որից հետո օգտատիրոջ API key -ը ավտոմատ դառնում է ժամկետանց (0 երբեք չդառնալու համար)"
     tagging_enabled: "Միացնե՞լ թեմաների թեգերը:"
     min_trust_to_create_tag: "Դրոշակ ստեղծելու համար պահանջվող նվազագույն վստահության մակարդակը:"
     max_tags_per_topic: "Թեմային տրվող առավելագույն թեգերը"
@@ -2182,14 +2173,6 @@ hy:
     csv_export_succeeded:
       title: "CSV Արտահանումը Հաջողվեց"
       subject_template: "[%{export_title}] Տվյալների արտահանումը ավարտվեց"
-      text_body_template: |
-        Ձեր տվյալների արտահանումը հաջող էր! :dvd:
-
-        %{download_link}
-
-        Վերևի ներբեռնման հղումը վավեր կլինի 8 ժամ:
-
-        Տվյալները սեղմված են gzip արխիվում: Եթե արխիվը ինքն իրեն չի ընդլայնում, երբ Դուք այն բացում եք, օգտագործեք այստեղ խորհուրդ տրված գործիքները՝ https://www.gzip.org/#faq4
     csv_export_failed:
       title: "CSV Արտահանումը Ձախողվեց "
       subject_template: "Տվյալների արտահանումը ձախողվել է"

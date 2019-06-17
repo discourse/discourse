@@ -376,8 +376,9 @@ nl:
       edit: "Bewerken"
       save: "Opslaan"
       cancel: "Annuleren"
-      new_topic: "Nieuw topic:"
+      new_topic: "Goedkeuren van dit item maakt een nieuw topic"
       filters:
+        all_categories: "(alle categorieën)"
         type:
           title: "Type"
           all: "(alle typen)"
@@ -392,7 +393,7 @@ nl:
           created_at_asc: "Gemaakt op (omgekeerd)"
         priority:
           title: "Minimale prioriteit"
-          low: "Laag"
+          low: "(alle)"
           medium: "Gemiddeld"
           high: "Hoog"
       conversation:
@@ -417,9 +418,9 @@ nl:
         deleted:
           title: "Verwijderd"
         reviewed:
-          title: "(Alle beoordeelde)"
+          title: "(alle beoordeelde)"
         all:
-          title: "(Alles)"
+          title: "(alles)"
       types:
         reviewable_flagged_post:
           title: "Gemarkeerd bericht"

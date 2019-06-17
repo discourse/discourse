@@ -256,10 +256,6 @@ nb_NO:
   revert_version_same: "Den gjeldende versjonen er den samme som den du prøver å rulle tilbake til."
   excerpt_image: "bilde"
   groups:
-    success:
-      bulk_add:
-        one: "%{count} bruker ble lagt til i gruppen."
-        other: "%{count} brukere ble lagt til i gruppen."
     errors:
       grant_trust_level_not_valid: "'%{trust_level}' er ikke et gyldig tillitsnivå."
       can_not_modify_automatic: "Du kan ikke modifisere en automatisk gruppe"

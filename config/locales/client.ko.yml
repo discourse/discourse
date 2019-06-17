@@ -318,7 +318,6 @@ ko:
       edit: "수정"
       save: "저장"
       cancel: "취소"
-      new_topic: "새 토픽:"
       filters:
         type:
           title: "형식"
@@ -344,10 +343,6 @@ ko:
           title: "무시됨"
         deleted:
           title: "삭제됨"
-        reviewed:
-          title: "(모두 검토됨)"
-        all:
-          title: "(모두)"
       types:
         reviewable_flagged_post:
           title: "신고된 글"

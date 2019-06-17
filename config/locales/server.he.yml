@@ -188,7 +188,7 @@ he:
     confirm_email: "<p>כמעט סיימת! שלחנו הודעת הפעלה לכתובת הדוא״ל שלך. נא לעקוב אחר ההנחיות המופיעות בהודעה כדי להפעיל את החשבון שלך.</p><p>אם ההודעה לא הגיעה אליך כדאי לבדוק בתיקיית הספאם.</p>"
   bulk_invite:
     file_should_be_csv: "הקובץ שנשלח אמור להיות בתסדיר csv."
-    max_rows: "מותר לשלוח עד 50,000 הודעות כל פעם. כדאי לנסות לפצל את הקובץ לחלקים קטנים יותר."
+    max_rows: "%{max_bulk_invites} ההזמנות הראשונות נשלחו. כדאי לנסות לפצל את הקובץ לחלקים קטנים יותר."
     error: "אירעה שגיאה בשליחת הקובץ. נא לנסות שוב מאוחר יותר."
   topic_invite:
     failed_to_invite: "לא ניתן להזמין את המשתמש לנושא הזה בהעדר חברות באחת הקבוצות הבאות: %{group_names}"
@@ -327,10 +327,10 @@ he:
   groups:
     success:
       bulk_add:
-        one: "משתמש אחד נוסף לקבוצה."
-        two: "%{count} משתמשים נוספו לקבוצה."
-        many: "%{count} משתמשים נוספו לקבוצה."
-        other: "%{count} משתמשים נוספו לקבוצה."
+        one: "נוסף משתמש %{count} לקבוצה."
+        two: "נוספו %{count} משתמשים לקבוצה."
+        many: "נוספו %{count} משתמשים לקבוצה."
+        other: "נוספו %{count} משתמשים לקבוצה."
     errors:
       grant_trust_level_not_valid: "‚%{trust_level}’ אינה דרגת אמון תקפה."
       can_not_modify_automatic: "אין לך אפשרות לערוך קבוצה אוטומטית"
@@ -1120,7 +1120,6 @@ he:
       title: "אלמוני"
       xaxis: "יום"
       yaxis: "צפיות אנונימיות"
-      description: "מספר הצפיות החדשות בעמודים ממשתמשים שלא נכנסו לחשבון שלהם."
     page_view_logged_in_reqs:
       title: "מחובר/ת"
       xaxis: "יום"
@@ -1174,7 +1173,6 @@ he:
       title: "זמן לתגובה הראשונה"
       xaxis: "יום"
       yaxis: "זמן ממוצע (שעות)"
-      description: "זמן ממוצע (בשעות) של התגובה הראשונה לנושאים חדשים."
     topics_with_no_response:
       title: "נושאים ללא תגובות"
       xaxis: "יום"
@@ -1279,6 +1277,7 @@ he:
     educate_until_posts: "כאשר המשתמש/ת מתחילים להקיש את (n) הפוסטים הראשונים שלהם, הציגו פאנל הנחיה למשתמש באזור חיבור הפוסטים."
     title: "שם האתר הזה, כפי שהוא משמש בתגית הכותרת."
     site_description: "תארו את האתר הזה במשפט אחד, כפי שהוא מופיע במטא-תגית התיאור."
+    short_site_description: "תיאור קצר, כפי שמתואר בתגית הכותרת באתר הבית."
     contact_url: "כתובת יצירת הקשר של האתר הזה. נעשה בה שימוש בטופס יצירת הקשר תחת <a href='%{base_path}/about' target='_blank'>‎/about</a> לטיפול בנושאים דחופים."
     crawl_images: "לקבל תמונות מכתובות מרוחקות כדי לציין את ממדי הרוחב והגובה הנכונים."
     download_remote_images_to_local: "המרת תמונות מרוחקות למקומיות על ידי הורדתן, פעולה זו מסייעת במניעת תמונות שבורות."
@@ -1732,6 +1731,8 @@ he:
     default_categories_muted: "רשימת קטגוריות שמושתקות כברירת מחדל."
     default_categories_watching_first_post: "רשימת קטגוריות שבה הפוסט הראשון בכל נושא ייצפה אוטומטית."
     default_text_size: "גודל הטקסט שנבחר כבררת מחדל"
+    default_title_count_mode: "מצב בררת מחדל למונה כותרות עמודים"
+    retain_web_hook_events_period_days: "מספר הימים לשמירת רשומות אירועי התלייה."
     allow_user_api_keys: "איפשור יצירת מפתחות API למשתמשים"
     allow_user_api_key_scopes: "רשימת אזורים מותרים למפתחות API של משתמשים"
     max_api_keys_per_user: "מספר מקסימלי של מפתחות API של משתמש לכל משתמש"
@@ -1778,6 +1779,10 @@ he:
       enable_sso_disabled: "אתם חייבים קודם כל לאפשר ״אפשור sso״ לפני שאתם מאפשרים הגדרה זו."
       min_username_length_range: "לא ניתן לקבוע את המינימום מעל המקסימום."
       max_username_length_range: "לא ניתן לקבוע את המקסימום מתחת למינימום."
+      invalid_hex_value: "ערכי הצבעים חייבים להיות קודים הקסדצימליים באורך 6 תווים."
+      category_search_priority:
+        very_low_weight_invalid: "לא ניתן להגדיר משקל מעבר ל־‚category_search_priority_low_weight’."
+        low_weight_invalid: "לא ניתן להגדיר משקל שווה או גדול מ־1 או קטן מ־‚category_search_priority_very_low_weight’."
       unicode_username_whitelist:
         regex_invalid: "הביטוי הרגולרי שגוי: %{error}"
         leading_trailing_slash: "אסור שהביטוי הרגולרי יתחיל או יסתיים בלוכסן."
@@ -1816,6 +1821,29 @@ he:
     errors:
       different_topics: "לא ניתן למזג פוסטים ששייכים לנושאים שונים."
       different_users: "לא ניתן למזג פוסטים ששייכים למשתמשים שונים."
+  move_posts:
+    new_topic_moderator_post:
+      one: "אחד הפוסטים פוצל לנושא חדש: %{topic_link}"
+      two: "%{count} פוסטים פוצלו לנושא חדש: %{topic_link}"
+      many: "%{count} פוסטים פוצלו לנושא חדש: %{topic_link}"
+      other: "%{count} פוסטים פוצלו לנושא חדש: %{topic_link}"
+    new_message_moderator_post:
+      one: "אחד הפוסטים פוצל להודעה חדשה: %{topic_link}"
+      two: "%{count} פוסטים פוצלו להודעה חדשה: %{topic_link}"
+      many: "%{count} פוסטים פוצלו להודעה חדשה: %{topic_link}"
+      other: "%{count} פוסטים פוצלו להודעה חדשה: %{topic_link}"
+    existing_topic_moderator_post:
+      one: "אחד הפוסטים אוחד לנושא קיים: %{topic_link}"
+      two: "%{count} פוסטים אוחדו לנושא קיים: %{topic_link}"
+      many: "%{count} פוסטים אוחדו לנושא קיים: %{topic_link}"
+      other: "%{count} פוסטים אוחדו לנושא קיים: %{topic_link}"
+    existing_message_moderator_post:
+      one: "אחד הפוסטים מוזג להודעה קיימת: %{topic_link}"
+      two: "%{count} פוסטים מוזגו להודעה קיימת: %{topic_link}"
+      many: "%{count} פוסטים מוזגו להודעה קיימת: %{topic_link}"
+      other: "%{count} פוסטים מוזגו להודעה קיימת: %{topic_link}"
+  change_owner:
+    post_revision_text: "הבעלות הועברה"
   topic_statuses:
     autoclosed_message_max_posts:
       one: "הודעה זו נסגרה אוטומטית אחרי שהגיעה למספר המקסימלי  של תגובות: %{count} ."
@@ -1917,7 +1945,13 @@ he:
     click_to_continue: "יש ללחוץ כאן כדי להמשיך."
     already_logged_in: "אופס, נראה שאתם מנסים לקבל הזמנה שנועדה למשתמש אחר. אם אתם לא %{current_user}, אנא התנתקו ונסו שוב."
     second_factor_title: "אימות ב2 גורמים"
+    second_factor_description: "נא להקליד את קוד האימות הנדרש מהיישומון שלך:"
     second_factor_backup_description: "אנא הכניסו את קודי הגיבוי שלכם:"
+    second_factor_backup_title: "קוד גיבוי לאימות דו־שלבי"
+    invalid_second_factor_code: "קוד האימות שגוי. מותר להשתמש בכל קוד פעם אחת בלבד."
+    second_factor_toggle:
+      totp: "להשתמש ביישומון אימות במקום"
+      backup_code: "להשתמש בקוד גיבוי במקום"
   admin:
     email:
       sent_test: "נשלח!"
@@ -1949,6 +1983,12 @@ he:
     destroy_reasons:
       same_ip_address: "אותה כתובת ה־IP (%{ip_address}) כמו משתמשים אחרים"
       inactive_user: "משתמש בלתי פעיל"
+  reviewables_reminder:
+    subject_template:
+      one: "פריט %{count} ממתין לסקירה"
+      two: "%{count} פריטים ממתינים לסקירה"
+      many: "%{count} פריטים ממתינים לסקירה"
+      other: "%{count} פריטים ממתינים לסקירה"
   unsubscribe_mailer:
     title: "שולח-מיילים לביטול מנוי"
     subject_template: "אשרו שאינכם מעוניינים יותר לקבל עדכוני דוא\"ל מ%{site_title}"
@@ -1961,14 +2001,71 @@ he:
       אם אתם מעוניינים להמשיך לקבל עדכוני מייל, אתם יכולים להתעלם ממייל זה.
   invite_mailer:
     title: "שולח-מיילים להזמנה"
+    subject_template: "הוזמנת על ידי %{inviter_name} לנושא ‚%{topic_title}’ בפורום %{site_domain_name}"
+    text_body_template: |
+      הוזמנת על ידי%{inviter_name} לדיון
+
+      > **%{topic_title}**
+      >
+      > %{topic_excerpt}
+
+      בפורום
+
+      > %{site_title} -- %{site_description}
+
+      אם מעניין אותך, עליך ללחוץ על הקישור שלהלן:
+
+      %{invite_link}
   custom_invite_mailer:
     title: "שולח-מיילים מותאם-אישית להזמנה"
+    subject_template: "הוזמנת על ידי %{inviter_name} לנושא ‚%{topic_title}’ בפורום %{site_domain_name}"
+    text_body_template: |
+      הוזמנת על ידי %{inviter_name} לדיון
+
+      > **%{topic_title}**
+      >
+      > %{topic_excerpt}
+
+      בפורום
+
+      > %{site_title} -- %{site_description}
+
+      עם ההערה הבאה
+
+      > %{user_custom_message}
+
+      אם מעניין אותך, עליך ללחוץ על הקישור שלהלן:
+
+      %{invite_link}
   invite_forum_mailer:
     title: "שולח-מיילים להזמנה לפורום"
     subject_template: "קיבלת הזמנה מאת %{inviter_name} להצטרף אל %{site_domain_name}"
+    text_body_template: |
+      הוזמנת על ידי %{inviter_name} להצטרף אל
+
+      > **%{site_title}**
+      >
+      > %{site_description}
+
+      אם מעניין אותך, עליך ללחוץ על הקישור שלהלן:
+
+      %{invite_link}
   custom_invite_forum_mailer:
     title: "דואר הזמנה לפורום מותאם אישית"
     subject_template: "קיבלת הזמנה מאת %{inviter_name} להצטרף אל %{site_domain_name}"
+    text_body_template: |
+      הוזמנת על ידי %{inviter_name} להצטרף אל
+
+      > **%{site_title}**
+      >
+      > %{site_description}
+
+      עם ההערה הבאה
+      > %{user_custom_message}
+
+      אם מעניין אותך, עליך ללחוץ על הקישור שלהלן:
+
+      %{invite_link}
   invite_password_instructions:
     title: "הנחיות סיסמה למוזמנים"
     subject_template: "צרו סיסמה עבור חשבון ה-%{site_name} שלכם."
@@ -2216,6 +2313,10 @@ he:
     email_revoked:
       title: "דוא״ל נשלל"
       subject_template: "כתובת הדוא״ל שלך נכונה?"
+      text_body_template: |
+        לא הצלחנו להגיע אליך דרך דוא״ל, עמך הסליחה. ההודעות האחרונות ששלחנו לך חזרו עקב בעיית שליחה.
+
+        נוכל לבקש ממך לוודא ש[כתובת הדוא״ל שלך](%{base_url}/my/preferences/email) תקינה וזמינה? ייתכן שכדאי לך להוסיף את כתובת הדוא״ל שלנו לספר הכתובות / רשימת אנשי הקשר שלך כדי לשפר את איכות השליחה.
     email_bounced: |
       ההודעה אל %{email} הוחזרה.
 
@@ -2224,6 +2325,15 @@ he:
       ``` text
       %{raw}
       ```
+    ignored_users_summary:
+      text_body_template: |
+        שלום רב,
+
+        זו הודעה אוטומטית מטעם %{site_name} כדי ליידע אותך ש[פרופיל המשתמש הזה](%{base_url}/u/%{username}/summary) נכנס לרשימת ההתעלמות של %{ignores_threshold} משתמשים אחרים. ייתכן שמדובר במחדל שהולך ומתפתח בקרב קהילתנו.
+
+        מוטב אולי לסקור את הפעילות האחרונה של המשתמש הזה ואולי גם של משתמשים אחרים ב[דוח המשתמשים שבהתעלמות](%{base_url}/admin/reports/top_ignored_users).
+
+        להדרכה נוספת, ניתן לעיין ב[הנחיות הקהילה שלנו](%{base_url}/guidelines).
     too_many_spam_flags:
       title: "יותר מידי דיגלי ספאם"
       subject_template: "חשבון חדש בהשהיה"
@@ -2306,7 +2416,9 @@ he:
       title: "ביטול מנוי"
       description: "לא מעוניינים בקבלת המיילים האלו? אין בעיה! לחצו למטה כדי להסיר את עצמכם מהמנוי מיידית:"
     reply_by_email: "[בקרו בנושא](%{base_url}%{url}) או ענו למייל זה כדי להגיב."
+    reply_by_email_pm: "יש [לבקר בהודעה](%{base_url}%{url}) או להשיב להודעת דוא״ל זו כדי להגיב אל %{participants}."
     only_reply_by_email: "השיבו למייל זה כדי לענות."
+    only_reply_by_email_pm: "יש להשיב להודעה הזאת כדי להגיב אל %{participants}."
     visit_link_to_respond: "[בקרו בנושא](%{base_url}%{url}) כדי לענות."
     posted_by: "פורסם על ידי %{username} ב %{post_date}"
     pm_participants: "משתתפים: %{participants}"
@@ -2621,6 +2733,9 @@ he:
         ‎%{base_url}/u/activate-account/%{email_token}‎
 
         אם הקישור שלהלן אינו זמין ללחיצה, מוטב לנסות להעתיק ולהדביק אותו לסרגל הכתובות של הדפדפן שלך.
+    suspicious_login:
+      title: "התראת כניסה חדשה"
+      subject_template: "[%{site_name}] כניסה חדשה מ%{location}"
   page_not_found:
     title: "אופס! הדף לא קיים או שהוא פרטי."
     popular_topics: "פופלארי"
@@ -3018,6 +3133,8 @@ he:
     read_guidelines:
       name: קראו את ההנחיות
       description: "מוטב לעיין ב<a href=\"%{base_uri}/guidelines\">כללי הקהילה</a>"
+      long_description: |
+        עיטור זה מוענק על <a href="%{base_uri}/guidelines">קריאת הנחיות הקהילה</a>. התנהלות לפי הכללים המנחים הפשוטים האלה ושיתופים מסייעים בבניית קהילה בטוחה, מהנה וצומחת. תמיד עליך לזכור כי יש שם בן אדם אחר, בדיוק כמוך, בצד השני של המסך. יש לנהוג בצורה נאותה!
     reader:
       name: קוראים
       description: קראו כל תגובה בנושא עם למעלה מ 100 תגובות
@@ -3066,6 +3183,8 @@ he:
     crazy_in_love:
       name: מאוהבים בטירוף
       description: השתמשו ב 50 לייקים ביום 20 פעם
+      long_description: |
+        עיטור זה מוענק לך לאחר שהשתמשת בכל 50 הלייקים היומיים שלך במשך 20 ימים. חבל על הזמן! התנהגותך היא מופת לחברי הקהילה האחרים!
     thank_you:
       name: תודה רבה
       description: יש לכם 20 פוסטים שנאהבו ונתתם 10 לייקים
@@ -3132,6 +3251,11 @@ he:
     title: "תגיות"
     staff_tag_disallowed: 'רק הסגל יכול להוסיף את התגית „%{tag}”.'
     staff_tag_remove_disallowed: 'רק הסגל יכול להסיר את התגית „%{tag}”.'
+    minimum_required_tags:
+      one: "עליך לבחור לפחות בתגית %{count}."
+      two: "עליך לבחור לפחות %{count} תגיות."
+      many: "עליך לבחור לפחות %{count} תגיות."
+      other: "עליך לבחור לפחות %{count} תגיות."
     upload_row_too_long: "בקובץ ה־CSV אמורה להופיע תגית אחת בכל שורה. מותר להוסיף פסיק לאחר תגית ואז את שם קבוצת התגיות."
   rss_by_tag: "נושאים מתוייגים %{tag}"
   finish_installation:
@@ -3240,6 +3364,9 @@ he:
       icons:
         title: "אייקונים"
         fields:
+          favicon:
+            label: "סמל דפדפן"
+            description: "תמונת סמל שמשמשת לייצוג האתר שלך בצורה יפה גם כשהיא מוקטנת מול הדפדפנים. סיומות קובצי התמונות המומלצות הן PNG או JPG. אנו נשתמש בלוגו הריבועי כבררת מחדל."
           large_icon:
             label: "אייקון גדול"
       homepage:
@@ -3267,6 +3394,7 @@ he:
         description: "איזה סגנון אמוג׳יז תעדיפו לקהילה שלכם? אתם יכולים להוסיף עוד אמוג׳יז מותאמים אישית תחת ניהול, התאמה אישית, אמוג׳י."
       invites:
         title: "הזמנת סגל"
+        description: "כמעט סיימת! אולי נזמין כמה אנשים כדי <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>לעורר דיונים</a> עם נושאים מעניינים ותגובות שיניעו קדימה את הקהילה שלך."
         disabled: "מאחר שכניסה בשליטה מקומית מנוטרלת, אי אפשר לשלוח לכולם הזמנות. נא להמשיך לשלב הבא."
       finished:
         title: "ה Discourse שלכם מוכן!"
@@ -3301,6 +3429,10 @@ he:
       low: "נמוכה"
       medium: "בינונית"
       high: "גבוהה"
+    must_claim: "עליך לדרוש פריטים בטרם יתאפשר לך לבצע עליהם פעולות."
+    user_claimed: "הפריט נדרש על ידי משתמש אחר."
+    missing_version: "עליך לספק משתנה גרסה"
+    conflict: "אירעה סתירת עדכון שמונעת ממך לעשות את זה."
     reasons:
       category: "פוסטים בקטגוריה זו דורשים אימות ידני של הסגל. יש לעיין בהגדרות הקטגוריה."
       must_approve_users: "כל המשתמשים החדשים חייבים לעבור את אישור הסגל. יש לעיין בנושא `must_approve_users` (חובת אישור משתמשים)."

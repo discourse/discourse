@@ -323,12 +323,12 @@ hy:
       save: "Պահպանել"
       cancel: "Չեղարկել"
       filters:
+        all_categories: "(Բոլոր կատեգորիաները)"
         type:
           title: "Տիպ"
         refresh: "Թարմացնել"
         category: "Կատեգորիա"
         priority:
-          low: "Բարձր"
           high: "Ցածր"
       scores:
         score: "Քանակ"

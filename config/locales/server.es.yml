@@ -178,7 +178,7 @@ es:
     confirm_email: "<p>¡Ya casi has terminado! Te enviamos un correo de activación a tu dirección de correo. Por favor sigue las instrucciones de ese correo para activar tu cuenta.</p><p>Si no llega, mira en la carpeta de spam.</p>"
   bulk_invite:
     file_should_be_csv: "El archivo subido debería ser de formato csv."
-    max_rows: "Se pueden enviar un máximo de 50,000 invitaciones a la vez. Intenta dividir el archivo en partes más pequeñas."
+    max_rows: "Las primeras %{max_bulk_invites}invitaciones han sido enviadas. Intenta dividir el archivo en partes más pequeñas."
     error: "Ha ocurrido un error al subir ese archivo. Por favor, inténtalo más tarde de nuevo."
   topic_invite:
     failed_to_invite: "No se puede invitar al usuario a este tema sin ser miembro de un grupo en cualquiera de los siguientes grupos: %{group_names}"
@@ -1067,7 +1067,7 @@ es:
       title: "Anónimas"
       xaxis: "Día"
       yaxis: "Páginas vistas anónimas"
-      description: "Número de nuevas impresiones de páginas de visitantes sin una sesión iniciada."
+      description: "Número de visitas de página nuevas por visitantes que no han iniciado sesión en una cuenta."
     page_view_logged_in_reqs:
       title: "Registrados"
       xaxis: "Día"
@@ -2367,11 +2367,11 @@ es:
       title: "Exportación de datos en CSV completada con éxito"
       subject_template: "[%{export_title}] exportación de datos completa"
       text_body_template: |
-        ¡La exportación de los datos ha finalizado correctamente! :dvd:
+        ¡La exportación de los datos ha sido exitosa! :dvd:
 
         %{download_link}
 
-        El enlace de arriba funcionará durante las próximas 48 horas.
+        El enlace de arriba será válido por 48 horas.
 
         Los datos han sido comprimidos en un archivo gzip. Si no consigues extraerlo al abrirlo, usa las herramientas recomendadas aquí: https://www.gzip.org/#faq4
     csv_export_failed:

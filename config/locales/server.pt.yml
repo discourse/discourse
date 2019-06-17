@@ -16,6 +16,7 @@ pt:
       short_no_year: "%B %-d"
       date_only: "%B %-d, %Y"
       long: "%B %-d, %Y, %l:%M%P"
+      no_day: "%B %Y"
   date:
     month_names: [~, Janeiro, Fevereiro, Março, Abril, Maio, Junho, Julho, Agosto, Setembro, Outubro, Novembro, Dezembro]
     <<: *datetime_formats
@@ -39,6 +40,8 @@ pt:
   themes:
     bad_color_scheme: "Não é possível actualizar o tema, a paleta de cores é inválida"
     other_error: "Ocorreu algo de errado ao atualizar o tema"
+    compile_error:
+      unrecognized_extension: "Extensão de ficheiro desconhecida: %{extension}"
     import_error:
       generic: Ocorreu um erro durante a importação do tema
       about_json: "Erro de Importação: about.json não existe ou é inválido"
@@ -64,6 +67,7 @@ pt:
       number_value_not_valid_min: "Deve ser maior ou igual a %{min}."
       number_value_not_valid_max: "Deve ser menor ou igual a %{max}."
       string_value_not_valid: "O novo valor não está dentro do intervalo permitido."
+      string_value_not_valid_min_max: "Deve ter entre %{min} e %{max} caractéres de comprimento. "
       string_value_not_valid_min: "Deve ter o um tamanho mínimo de %{min} caractéres."
       string_value_not_valid_max: "Deve ter, no máximo, um tamanho de %{max} caractéres."
     locale_errors:
@@ -94,6 +98,7 @@ pt:
         topic_closed_error: "Acontece quando é recebida uma resposta, mas que o tópico relacionado foi encerrado."
         bounced_email_error: "A mensagem é um relatório de mensagem redirecionado."
         screened_email_error: "Acontece quando o endereço de e-mail do remetente já foi confirmado."
+        email_not_allowed: "Acontece quando um endereço de e-mail não está na lista branca ou está na lista negra."
       unrecognized_error: "Erro Desconhecido"
   errors: &errors
     format: "%{attribute} %{message}"
@@ -147,6 +152,9 @@ pt:
     embed:
       load_from_remote: "Ocorreu um erro no carregamento dessa mensagem."
     site_settings:
+      invalid_choice:
+        one: "Especificou a escolha inválida %{name}"
+        other: "Especificou escolhas inválidas %{name}"
       default_categories_already_selected: "Não pode selecionar uma categoria usada noutra lista."
       s3_upload_bucket_is_required: "Não pode ativar carregamentos para o S3 excepto se tiver fornecido o 's3_upload_bucket'."
   activemodel:
@@ -164,6 +172,10 @@ pt:
     backup_file_should_be_tar_gz: "O ficheiro da cópia de segurança deve ser um arquivo .tar.gz"
     not_enough_space_on_disk: "Não existe espaço suficiente no disco para carregar esta cópia de segurança."
     invalid_filename: "O nome da cópia de segurança contém carácteres inválidos. Cáracteres válidos são a-z 0-9 . - _."
+    file_exists: "O ficheiro que está a tentar enviar já existe."
+    location:
+      local: "Local"
+      s3: "Amazon S3"
   not_logged_in: "Necessita de ter sessão iniciada para fazer isso."
   not_found: "O URL ou recurso pedido não foi encontrado."
   invalid_access: "Não tem permissões para visualizar o recurso pedido."

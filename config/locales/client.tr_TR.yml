@@ -307,6 +307,7 @@ tr_TR:
       save: "Kaydet"
       cancel: "İptal"
       filters:
+        all_categories: "(tüm kategoriler)"
         type:
           title: "Tür"
         refresh: "Yenile"
