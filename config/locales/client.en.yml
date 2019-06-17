@@ -1387,9 +1387,6 @@ en:
       complete_email_found: "We found an account that matches <b>%{email}</b>, you should receive an email with a login link shortly."
       complete_username_not_found: "No account matches the username <b>%{username}</b>"
       complete_email_not_found: "No account matches <b>%{email}</b>"
-      confirm_title: Continue to %{site_name}
-      logging_in_as: Logging in as %{email}
-      confirm_button: Finish Login
 
     login:
       title: "Log In"
