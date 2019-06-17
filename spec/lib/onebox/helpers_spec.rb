@@ -72,6 +72,14 @@ RSpec.describe Onebox::Helpers do
     end
   end
 
+  describe '.normalize_url_for_output' do
+    it { expect(described_class.normalize_url_for_output('http://example.com/fo o')).to eq("http://example.com/fo%20o") }
+    it { expect(described_class.normalize_url_for_output("http://example.com/fo'o")).to eq("http://example.com/fo&apos;o") }
+    it { expect(described_class.normalize_url_for_output('http://example.com/fo"o')).to eq("http://example.com/fo&quot;o") }
+    it { expect(described_class.normalize_url_for_output('http://example.com/fo<o>')).to eq("http://example.com/foo") }
+    it { expect(described_class.normalize_url_for_output('http://example.com/d’écran-à')).to eq("http://example.com/d’écran-à") }
+  end
+
   describe '.uri_encode' do
     it { expect(described_class.uri_encode('http://example.com/f"o&o?[b"ar]')).to eq("http://example.com/f%22o&o?%5Bb%22ar%5D") }
     it { expect(described_class.uri_encode("http://example.com/f.o~o;?<ba'r>")).to eq("http://example.com/f.o~o;?%3Cba%27r%3E") }
