@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddSilencedTillToUsers < ActiveRecord::Migration[5.1]
   def up
     add_column :users, :silenced_till, :timestamp, null: true

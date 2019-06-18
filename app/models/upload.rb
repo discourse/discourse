@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "digest/sha1"
 require_dependency "file_helper"
 require_dependency "url_helper"
@@ -7,7 +9,12 @@ require_dependency "file_store/local_store"
 require_dependency "base62"
 
 class Upload < ActiveRecord::Base
+  include ActionView::Helpers::NumberHelper
+  include HasUrl
+
   SHA1_LENGTH = 40
+  SEEDED_ID_THRESHOLD = 0
+  URL_REGEX ||= /(\/original\/\dX[\/\.\w]*\/([a-zA-Z0-9]+)[\.\w]*)/
 
   belongs_to :user
 
@@ -33,6 +40,8 @@ class Upload < ActiveRecord::Base
     UserAvatar.where(gravatar_upload_id: self.id).update_all(gravatar_upload_id: nil)
     UserAvatar.where(custom_upload_id: self.id).update_all(custom_upload_id: nil)
   end
+
+  scope :by_users, -> { where("uploads.id > ?", SEEDED_ID_THRESHOLD) }
 
   def to_s
     self.url
@@ -108,11 +117,37 @@ class Upload < ActiveRecord::Base
   end
 
   def short_url
-    "upload://#{Base62.encode(sha1.hex)}.#{extension}"
+    "upload://#{short_url_basename}"
+  end
+
+  def short_path
+    self.class.short_path(sha1: self.sha1, extension: self.extension)
+  end
+
+  def self.short_path(sha1:, extension:)
+    @url_helpers ||= Rails.application.routes.url_helpers
+
+    @url_helpers.upload_short_path(
+      base62: self.base62_sha1(sha1),
+      extension: extension
+    )
+  end
+
+  def self.base62_sha1(sha1)
+    Base62.encode(sha1.hex)
+  end
+
+  def base62_sha1
+    Upload.base62_sha1(self.sha1)
   end
 
   def local?
     !(url =~ /^(https?:)?\/\//)
+  end
+
+  def private?
+    return false if self.for_theme || self.for_site_setting
+    SiteSetting.prevent_anons_from_downloading_files && !FileHelper.is_supported_image?(self.original_filename)
   end
 
   def fix_dimensions!
@@ -171,15 +206,25 @@ class Upload < ActiveRecord::Base
     get_dimension(:thumbnail_height)
   end
 
+  def self.sha1_from_short_path(path)
+    if path =~ /(\/uploads\/short-url\/)([a-zA-Z0-9]+)(\..*)?/
+      self.sha1_from_base62_encoded($2)
+    end
+  end
+
   def self.sha1_from_short_url(url)
     if url =~ /(upload:\/\/)?([a-zA-Z0-9]+)(\..*)?/
-      sha1 = Base62.decode($2).to_s(16)
+      self.sha1_from_base62_encoded($2)
+    end
+  end
 
-      if sha1.length > SHA1_LENGTH
-        nil
-      else
-        sha1.rjust(SHA1_LENGTH, '0')
-      end
+  def self.sha1_from_base62_encoded(encoded_sha1)
+    sha1 = Base62.decode(encoded_sha1).to_s(16)
+
+    if sha1.length > SHA1_LENGTH
+      nil
+    else
+      sha1.rjust(SHA1_LENGTH, '0')
     end
   end
 
@@ -187,85 +232,136 @@ class Upload < ActiveRecord::Base
     Digest::SHA1.file(path).hexdigest
   end
 
-  def self.extract_upload_url(url)
-    url.match(/(\/original\/\dX[\/\.\w]*\/([a-zA-Z0-9]+)[\.\w]*)/)
+  def human_filesize
+    number_to_human_size(self.filesize)
   end
 
-  def self.get_from_url(url)
-    return if url.blank?
-
-    uri = begin
-      URI(URI.unescape(url))
-    rescue URI::Error
-    end
-
-    return if uri&.path.blank?
-    data = extract_upload_url(uri.path)
-    return if data.blank?
-    sha1 = data[2]
-    upload = nil
-    upload = Upload.find_by(sha1: sha1) if sha1&.length == SHA1_LENGTH
-    upload || Upload.find_by("url LIKE ?", "%#{data[1]}")
+  def rebake_posts_on_old_scheme
+    self.posts.where("cooked LIKE '%/_optimized/%'").find_each(&:rebake!)
   end
 
-  def self.migrate_to_new_scheme(limit = nil)
+  def self.migrate_to_new_scheme(limit: nil)
     problems = []
 
-    if SiteSetting.migrate_to_new_scheme
-      max_file_size_kb = [SiteSetting.max_image_size_kb, SiteSetting.max_attachment_size_kb].max.kilobytes
-      local_store = FileStore::LocalStore.new
+    DistributedMutex.synchronize("migrate_upload_to_new_scheme") do
+      if SiteSetting.migrate_to_new_scheme
+        max_file_size_kb = [
+          SiteSetting.max_image_size_kb,
+          SiteSetting.max_attachment_size_kb
+        ].max.kilobytes
 
-      scope = Upload.where("url NOT LIKE '%/original/_X/%'").order(id: :desc)
-      scope = scope.limit(limit) if limit
+        local_store = FileStore::LocalStore.new
+        db = RailsMultisite::ConnectionManagement.current_db
 
-      scope.each do |upload|
-        begin
-          # keep track of the url
-          previous_url = upload.url.dup
-          # where is the file currently stored?
-          external = previous_url =~ /^\/\//
-          # download if external
-          if external
-            url = SiteSetting.scheme + ":" + previous_url
-            file = FileHelper.download(
-              url,
-              max_file_size: max_file_size_kb,
-              tmp_file_name: "discourse",
-              follow_redirect: true
-            ) rescue nil
-            path = file.path
-          else
-            path = local_store.path_for(upload)
+        scope = Upload.by_users
+          .where("url NOT LIKE '%/original/_X/%' AND url LIKE '%/uploads/#{db}%'")
+          .order(id: :desc)
+
+        scope = scope.limit(limit) if limit
+
+        if scope.count == 0
+          SiteSetting.migrate_to_new_scheme = false
+          return problems
+        end
+
+        remap_scope = nil
+
+        scope.each do |upload|
+          begin
+            # keep track of the url
+            previous_url = upload.url.dup
+            # where is the file currently stored?
+            external = previous_url =~ /^\/\//
+            # download if external
+            if external
+              url = SiteSetting.scheme + ":" + previous_url
+
+              begin
+                retries ||= 0
+
+                file = FileHelper.download(
+                  url,
+                  max_file_size: max_file_size_kb,
+                  tmp_file_name: "discourse",
+                  follow_redirect: true
+                )
+              rescue OpenURI::HTTPError
+                retry if (retires += 1) < 1
+                next
+              end
+
+              path = file.path
+            else
+              path = local_store.path_for(upload)
+            end
+            # compute SHA if missing
+            if upload.sha1.blank?
+              upload.sha1 = Upload.generate_digest(path)
+            end
+
+            # store to new location & update the filesize
+            File.open(path) do |f|
+              upload.url = Discourse.store.store_upload(f, upload)
+              upload.filesize = f.size
+              upload.save!(validate: false)
+            end
+            # remap the URLs
+            DbHelper.remap(UrlHelper.absolute(previous_url), upload.url) unless external
+
+            DbHelper.remap(
+              previous_url,
+              upload.url,
+              excluded_tables: %w{
+                posts
+                post_search_data
+                incoming_emails
+                notifications
+                single_sign_on_records
+                stylesheet_cache
+                topic_search_data
+                users
+                user_emails
+                draft_sequences
+                optimized_images
+              }
+            )
+
+            remap_scope ||= begin
+              Post.with_deleted
+                .where("raw ~ '/uploads/#{db}/\\d+/' OR raw ~ '/uploads/#{db}/original/(\\d|[a-z])/'")
+                .select(:id, :raw, :cooked)
+                .all
+            end
+
+            remap_scope.each do |post|
+              post.raw.gsub!(previous_url, upload.url)
+              post.cooked.gsub!(previous_url, upload.url)
+              Post.with_deleted.where(id: post.id).update_all(raw: post.raw, cooked: post.cooked) if post.changed?
+            end
+
+            upload.optimized_images.find_each(&:destroy!)
+            upload.rebake_posts_on_old_scheme
+            # remove the old file (when local)
+            unless external
+              FileUtils.rm(path, force: true)
+            end
+          rescue => e
+            problems << { upload: upload, ex: e }
+          ensure
+            file&.unlink
+            file&.close
           end
-          # compute SHA if missing
-          if upload.sha1.blank?
-            upload.sha1 = Upload.generate_digest(path)
-          end
-          # optimize if image
-          FileHelper.optimize_image!(path) if FileHelper.is_supported_image?(File.basename(path))
-          # store to new location & update the filesize
-          File.open(path) do |f|
-            upload.url = Discourse.store.store_upload(f, upload)
-            upload.filesize = f.size
-            upload.save!
-          end
-          # remap the URLs
-          DbHelper.remap(UrlHelper.absolute(previous_url), upload.url) unless external
-          DbHelper.remap(previous_url, upload.url)
-          # remove the old file (when local)
-          unless external
-            FileUtils.rm(path, force: true)
-          end
-        rescue => e
-          problems << { upload: upload, ex: e }
-        ensure
-          file&.unlink
-          file&.close
         end
       end
     end
 
     problems
+  end
+
+  private
+
+  def short_url_basename
+    "#{Upload.base62_sha1(sha1)}.#{extension}"
   end
 
 end

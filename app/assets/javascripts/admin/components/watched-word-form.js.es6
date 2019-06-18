@@ -21,17 +21,15 @@ export default Ember.Component.extend({
 
   @observes("word")
   removeMessage() {
-    if (this.get("showMessage") && !Ember.isEmpty(this.get("word"))) {
+    if (this.showMessage && !Ember.isEmpty(this.word)) {
       this.set("showMessage", false);
     }
   },
 
   @computed("word")
   isUniqueWord(word) {
-    const words = this.get("filteredContent") || [];
-    const filtered = words.filter(
-      content => content.action === this.get("actionKey")
-    );
+    const words = this.filteredContent || [];
+    const filtered = words.filter(content => content.action === this.actionKey);
     return filtered.every(
       content => content.word.toLowerCase() !== word.toLowerCase()
     );
@@ -39,7 +37,7 @@ export default Ember.Component.extend({
 
   actions: {
     submit() {
-      if (!this.get("isUniqueWord")) {
+      if (!this.isUniqueWord) {
         this.setProperties({
           showMessage: true,
           message: I18n.t("admin.watched_words.form.exists")
@@ -47,12 +45,12 @@ export default Ember.Component.extend({
         return;
       }
 
-      if (!this.get("formSubmitted")) {
+      if (!this.formSubmitted) {
         this.set("formSubmitted", true);
 
         const watchedWord = WatchedWord.create({
-          word: this.get("word"),
-          action: this.get("actionKey")
+          word: this.word,
+          action: this.actionKey
         });
 
         watchedWord

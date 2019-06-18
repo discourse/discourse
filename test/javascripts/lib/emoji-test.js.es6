@@ -1,11 +1,22 @@
-import { emojiSearch, IMAGE_VERSION as v } from "pretty-text/emoji";
+import { emojiSearch } from "pretty-text/emoji";
+import { IMAGE_VERSION as v } from "pretty-text/emoji/version";
 import { emojiUnescape } from "discourse/lib/text";
 
 QUnit.module("lib:emoji");
 
 QUnit.test("emojiUnescape", assert => {
-  const testUnescape = (input, expected, description) => {
+  const testUnescape = (input, expected, description, settings = {}) => {
+    const originalSettings = {};
+    for (const [key, value] of Object.entries(settings)) {
+      originalSettings[key] = Discourse.SiteSettings[key];
+      Discourse.SiteSettings[key] = value;
+    }
+
     assert.equal(emojiUnescape(input), expected, description);
+
+    for (const [key, value] of Object.entries(originalSettings)) {
+      Discourse.SiteSettings[key] = value;
+    }
   };
 
   testUnescape(
@@ -62,6 +73,24 @@ QUnit.test("emojiUnescape", assert => {
     "hi :blonde_man:t6",
     "hi :blonde_man:t6",
     "end colon not optional for skin tones"
+  );
+  testUnescape(
+    "emoticons :)",
+    "emoticons :)",
+    "no emoticons when emojis are disabled",
+    { enable_emoji: false }
+  );
+  testUnescape(
+    "emoji :smile:",
+    "emoji :smile:",
+    "no emojis when emojis are disabled",
+    { enable_emoji: false }
+  );
+  testUnescape(
+    "emoticons :)",
+    "emoticons :)",
+    "no emoticons when emoji shortcuts are disabled",
+    { enable_emoji_shortcuts: false }
   );
 });
 

@@ -14,7 +14,7 @@ export default Ember.Component.extend({
   presenceUsers: null,
 
   clear() {
-    if (!this.get("isDestroyed")) this.set("presenceUsers", []);
+    if (!this.isDestroyed) this.set("presenceUsers", []);
   },
 
   @on("didInsertElement")
@@ -22,9 +22,9 @@ export default Ember.Component.extend({
     this.clear();
 
     this.messageBus.subscribe(
-      this.get("channel"),
+      this.channel,
       message => {
-        if (!this.get("isDestroyed")) this.set("presenceUsers", message.users);
+        if (!this.isDestroyed) this.set("presenceUsers", message.users);
         this._clearTimer = Ember.run.debounce(
           this,
           "clear",
@@ -38,7 +38,7 @@ export default Ember.Component.extend({
   @on("willDestroyElement")
   _destroyed() {
     Ember.run.cancel(this._clearTimer);
-    this.messageBus.unsubscribe(this.get("channel"));
+    this.messageBus.unsubscribe(this.channel);
   },
 
   @computed("topicId")
@@ -46,9 +46,13 @@ export default Ember.Component.extend({
     return `/presence/topic/${topicId}`;
   },
 
-  @computed("presenceUsers", "currentUser.id")
-  users(users, currentUserId) {
-    return (users || []).filter(user => user.id !== currentUserId);
+  @computed("presenceUsers", "currentUser.{id,ignored_users}")
+  users(users, currentUser) {
+    const ignoredUsers = currentUser.ignored_users || [];
+    return (users || []).filter(
+      user =>
+        user.id !== currentUser.id && !ignoredUsers.includes(user.username)
+    );
   },
 
   shouldDisplay: Ember.computed.gt("users.length", 0)

@@ -2,28 +2,27 @@
 // except for the little snippet from StackOverflow
 //
 // http://stackoverflow.com/questions/263743/how-to-get-caret-position-in-textarea
-var clone, getCaret;
-getCaret = function(el) {
-  var r, rc, re;
-  if (el.selectionStart) {
-    return el.selectionStart;
-  } else if (document.selection) {
-    el.focus();
-    r = document.selection.createRange();
-    if (!r) return 0;
-    re = el.createTextRange();
-    rc = re.duplicate();
-    re.moveToBookmark(r.getBookmark());
-    rc.setEndPoint("EndToStart", re);
-    return rc.text.length;
-  }
-  return 0;
-};
+var clone = null;
 
-clone = null;
+$.fn.caret = function(elem) {
+  var getCaret = function(el) {
+    var r, rc, re;
+    if (el.selectionStart) {
+      return el.selectionStart;
+    } else if (document.selection) {
+      el.focus();
+      r = document.selection.createRange();
+      if (!r) return 0;
+      re = el.createTextRange();
+      rc = re.duplicate();
+      re.moveToBookmark(r.getBookmark());
+      rc.setEndPoint("EndToStart", re);
+      return rc.text.length;
+    }
+    return 0;
+  };
 
-$.fn.caret = function() {
-  return getCaret(this[0]);
+  return getCaret(elem || this[0]);
 };
 
 /**
@@ -99,7 +98,7 @@ $.fn.caretPosition = function(options) {
   pos =
     options && (options.pos || options.pos === 0)
       ? options.pos
-      : getCaret(textarea[0]);
+      : $.caret(textarea[0]);
 
   val = textarea.val().replace("\r", "");
   if (options && options.key) {

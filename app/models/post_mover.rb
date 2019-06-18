@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class PostMover
   attr_reader :original_topic, :destination_topic, :user, :post_ids
 
@@ -16,7 +18,10 @@ class PostMover
     @move_type = PostMover.move_types[:existing_topic]
 
     topic = Topic.find_by_id(id)
-    raise Discourse::InvalidParameters unless topic.archetype == @original_topic.archetype
+    if topic.archetype != @original_topic.archetype &&
+       [@original_topic.archetype, topic.archetype].include?(Archetype.private_message)
+      raise Discourse::InvalidParameters
+    end
 
     Topic.transaction do
       move_posts_to topic
@@ -87,7 +92,8 @@ class PostMover
 
     posts.each do |post|
       post.is_first_post? ? create_first_post(post) : move(post)
-      if @move_to_pm && destination_topic.topic_allowed_users.where(user_id: post.user_id).blank?
+
+      if @move_to_pm && !destination_topic.topic_allowed_users.exists?(user_id: post.user_id)
         destination_topic.topic_allowed_users.create!(user_id: post.user_id)
       end
     end
@@ -195,21 +201,22 @@ class PostMover
 
   def create_moderator_post_in_original_topic
     move_type_str = PostMover.move_types[@move_type].to_s
+    move_type_str.sub!("topic", "message") if @move_to_pm
 
     message = I18n.with_locale(SiteSetting.default_locale) do
       I18n.t(
         "move_posts.#{move_type_str}_moderator_post",
         count: posts.length,
-        entity: @move_to_pm ? "message" : "topic",
         topic_link: posts.first.is_first_post? ?
           "[#{destination_topic.title}](#{destination_topic.relative_url})" :
           "[#{destination_topic.title}](#{posts.first.url})"
       )
     end
 
+    post_type = @move_to_pm ? Post.types[:whisper] : Post.types[:small_action]
     original_topic.add_moderator_post(
       user, message,
-      post_type: Post.types[:small_action],
+      post_type: post_type,
       action_code: "split_topic",
       post_number: @first_post_number_moved
     )
@@ -219,6 +226,7 @@ class PostMover
     @posts ||= begin
       Post.where(topic: @original_topic, id: post_ids)
         .where.not(post_type: Post.types[:small_action])
+        .where.not(raw: '')
         .order(:created_at).tap do |posts|
 
         raise Discourse::InvalidParameters.new(:post_ids) if posts.empty?
@@ -239,12 +247,24 @@ class PostMover
   end
 
   def watch_new_topic
-    TopicUser.change(
-      destination_topic.user,
-      destination_topic.id,
-      notification_level: TopicUser.notification_levels[:watching],
-      notifications_reason_id: TopicUser.notification_reasons[:created_topic]
-    )
+    if @destination_topic.archetype == Archetype.private_message
+      if @original_topic.archetype == Archetype.private_message
+        notification_levels = TopicUser.where(topic_id: @original_topic.id, user_id: posts.pluck(:user_id)).pluck(:user_id, :notification_level).to_h
+      else
+        notification_levels = posts.pluck(:user_id).uniq.map { |user_id| [user_id, TopicUser.notification_levels[:watching]] }.to_h
+      end
+    else
+      notification_levels = [[@destination_topic.user_id, TopicUser.notification_levels[:watching]]]
+    end
+
+    notification_levels.each do |user_id, notification_level|
+      TopicUser.change(
+        user_id,
+        @destination_topic.id,
+        notification_level: notification_level,
+        notifications_reason_id: TopicUser.notification_reasons[destination_topic.user_id == user_id ? :created_topic : :created_post]
+      )
+    end
   end
 
   def add_allowed_users(usernames)

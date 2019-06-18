@@ -13,9 +13,13 @@ hu:
     poll_minimum_trust_level_to_create: "Legkisebb szükséges bizalmi szint meghatározása szavazások létrehozásához."
   poll:
     default_poll_must_have_at_least_2_options: "Legalább 2 választható tételt kell tartalmaznia a szavazásnak."
+    named_poll_must_have_at_least_2_options: "<strong>%{name}</strong> nevű szavazásnak legalább 2 választható tételt kell tartalmaznia."
     default_poll_must_have_less_options:
-      one: "Szavazásnak kevesebb, mint 1 lehetőséget kell tartalmaznia."
+      one: "Szavazásnak kevesebb, mint %{count} lehetőséget kell tartalmaznia."
       other: "Szavazásnak legalább %{count} lehetőséget kell tartalmaznia."
+    named_poll_must_have_less_options:
+      one: "<strong>%{name}</strong> nevű  szavazásnak kevesebb mint %{count} változót kell tartalmaznia"
+      other: "<strong>%{name}</strong> nevű  szavazásnak kevesebb mint %{count}válaszható lehetőséget kell tartalmaznia."
     default_poll_must_have_different_options: "A szavazásnak több különböző megszavazható tételt kell tartalmaznia."
     named_poll_must_have_different_options: "A <strong>%[name]</strong> nevű szavazásnak több különböző megszavazható tételt kell tartalmaznia."
     requires_at_least_1_valid_option: "Ki kell választanod legalább 1 érvényes lehetőséget."
@@ -25,4 +29,4 @@ hu:
     only_staff_or_op_can_toggle_status: "Csak egy staff tag vagy az eredeti posztoló tudja bekapcsolni a szavazás státuszát."
     insufficient_rights_to_create: "Nem tudsz szavazást létrehozni."
     email:
-      link_to_poll: "Klikk, hogy megnézd ezt a szavazást."
+      link_to_poll: "Kattints a szavazás megtekintéséhez."

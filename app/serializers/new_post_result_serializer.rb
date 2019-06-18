@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_dependency 'application_serializer'
 
 class NewPostResultSerializer < ApplicationSerializer
@@ -7,6 +9,8 @@ class NewPostResultSerializer < ApplicationSerializer
              :success,
              :pending_count,
              :reason
+
+  has_one :pending_post, serializer: TopicPendingPostSerializer, root: false, embed: :objects
 
   def post
     post_serializer = PostSerializer.new(object.post, scope: scope, root: false)
@@ -39,7 +43,7 @@ class NewPostResultSerializer < ApplicationSerializer
   end
 
   def include_reason?
-    reason.present?
+    scope.is_staff? && reason.present?
   end
 
   def action
@@ -48,6 +52,14 @@ class NewPostResultSerializer < ApplicationSerializer
 
   def pending_count
     object.pending_count
+  end
+
+  def pending_post
+    object.reviewable
+  end
+
+  def include_pending_post?
+    object.reviewable.present?
   end
 
   def include_pending_count?

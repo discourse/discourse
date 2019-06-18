@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module AgeWords
 
   def self.age_words(secs)

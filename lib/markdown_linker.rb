@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Helps create links using markdown (where references are at the bottom)
 class MarkdownLinker
 
@@ -16,7 +18,7 @@ class MarkdownLinker
   end
 
   def references
-    result = ""
+    result = +""
     (@rendered..@index - 1).each do |i|
       result << "[#{i}]: #{@markdown_links[i]}\n"
     end

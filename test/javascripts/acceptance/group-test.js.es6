@@ -1,6 +1,7 @@
-import { acceptance, logIn } from "helpers/qunit-helpers";
+import selectKit from "helpers/select-kit-helper";
+import { acceptance } from "helpers/qunit-helpers";
 
-acceptance("Group", {
+let groupArgs = {
   settings: {
     enable_group_directory: true
   },
@@ -11,14 +12,16 @@ acceptance("Group", {
       });
     });
   }
-});
+};
+
+acceptance("Group", groupArgs);
 
 const response = object => {
   return [200, { "Content-Type": "application/json" }, object];
 };
 
 QUnit.test("Anonymous Viewing Group", async assert => {
-  await visit("/groups/discourse");
+  await visit("/g/discourse");
 
   assert.equal(
     count(".nav-pills li a[title='Messages']"),
@@ -30,12 +33,12 @@ QUnit.test("Anonymous Viewing Group", async assert => {
 
   assert.ok(count(".user-stream-item") > 0, "it lists stream items");
 
-  await click(".activity-nav li a[href='/groups/discourse/activity/topics']");
+  await click(".activity-nav li a[href='/g/discourse/activity/topics']");
 
   assert.ok(find(".topic-list"), "it shows the topic list");
   assert.equal(count(".topic-list-item"), 2, "it lists stream items");
 
-  await click(".activity-nav li a[href='/groups/discourse/activity/mentions']");
+  await click(".activity-nav li a[href='/g/discourse/activity/mentions']");
 
   assert.ok(count(".user-stream-item") > 0, "it lists stream items");
   assert.ok(
@@ -48,7 +51,7 @@ QUnit.test("Anonymous Viewing Group", async assert => {
   );
   assert.ok(count(".user-stream-item") > 0, "it lists stream items");
 
-  await expandSelectKit(".group-dropdown");
+  await selectKit(".group-dropdown").expand();
 
   assert.equal(
     find(".select-kit-row")
@@ -68,9 +71,9 @@ QUnit.test("Anonymous Viewing Group", async assert => {
 
   Discourse.SiteSettings.enable_group_directory = false;
 
-  await visit("/groups");
-  await visit("/groups/discourse");
-  await expandSelectKit(".group-dropdown");
+  await visit("/g");
+  await visit("/g/discourse");
+  await selectKit(".group-dropdown").expand();
 
   assert.equal(
     find(".group-dropdown-filter").length,
@@ -80,7 +83,7 @@ QUnit.test("Anonymous Viewing Group", async assert => {
 });
 
 QUnit.test("Anonymous Viewing Automatic Group", async assert => {
-  await visit("/groups/moderators");
+  await visit("/g/moderators");
 
   assert.equal(
     count(".nav-pills li a[title='Manage']"),
@@ -89,11 +92,10 @@ QUnit.test("Anonymous Viewing Automatic Group", async assert => {
   );
 });
 
-QUnit.test("User Viewing Group", async assert => {
-  logIn();
-  Discourse.reset();
+acceptance("Group", Object.assign({ loggedIn: true }, groupArgs));
 
-  await visit("/groups");
+QUnit.test("User Viewing Group", async assert => {
+  await visit("/g");
   await click(".group-index-request");
 
   assert.equal(
@@ -117,7 +119,7 @@ QUnit.test("User Viewing Group", async assert => {
     "Internationalization / localization"
   );
 
-  await visit("/groups/discourse");
+  await visit("/g/discourse");
 
   await click(".group-message-button");
 
@@ -137,11 +139,7 @@ QUnit.test(
       return response({ topic_list: { topics: [] } });
     });
 
-    logIn();
-    Discourse.reset();
-
-    await visit("/groups/discourse");
-
+    await visit("/g/discourse");
     await click(".nav-pills li a[title='Messages']");
 
     assert.equal(
@@ -237,10 +235,7 @@ QUnit.test("Admin viewing group messages", async assert => {
     });
   });
 
-  logIn();
-  Discourse.reset();
-
-  await visit("/groups/discourse");
+  await visit("/g/discourse");
   await click(".nav-pills li a[title='Messages']");
 
   assert.equal(
@@ -253,10 +248,7 @@ QUnit.test("Admin viewing group messages", async assert => {
 });
 
 QUnit.test("Admin Viewing Group", async assert => {
-  logIn();
-  Discourse.reset();
-
-  await visit("/groups/discourse");
+  await visit("/g/discourse");
 
   assert.ok(
     find(".nav-pills li a[title='Manage']").length === 1,

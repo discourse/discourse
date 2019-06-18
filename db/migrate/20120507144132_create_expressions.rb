@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreateExpressions < ActiveRecord::Migration[4.2]
   def change
     create_table :expressions, id: false, force: true do |t|

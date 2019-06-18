@@ -1,8 +1,10 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe Admin::SiteTextsController do
-  let(:admin) { Fabricate(:admin) }
-  let(:user) { Fabricate(:user) }
+  fab!(:admin) { Fabricate(:admin) }
+  fab!(:user) { Fabricate(:user) }
 
   after do
     TranslationOverride.delete_all
@@ -28,7 +30,11 @@ RSpec.describe Admin::SiteTextsController do
       put "/admin/customize/site_texts/some_key.json", params: {
         site_text: { value: 'foo' }
       }
+      expect(response.status).to eq(404)
 
+      put "/admin/customize/reseed.json", params: {
+        category_ids: [], topic_ids: []
+      }
       expect(response.status).to eq(404)
     end
   end
@@ -43,6 +49,13 @@ RSpec.describe Admin::SiteTextsController do
         get "/admin/customize/site_texts.json", params: { q: 'title' }
         expect(response.status).to eq(200)
         expect(JSON.parse(response.body)['site_texts']).to include(include("id" => "title"))
+      end
+
+      it 'sets has_more to true if more than 50 results were found' do
+        get "/admin/customize/site_texts.json", params: { q: 'e' }
+        expect(response.status).to eq(200)
+        expect(JSON.parse(response.body)['site_texts'].size).to eq(50)
+        expect(JSON.parse(response.body)['extras']['has_more']).to be_truthy
       end
 
       it 'normalizes quotes during search' do
@@ -78,6 +91,72 @@ RSpec.describe Admin::SiteTextsController do
         end
       end
 
+      context 'plural keys' do
+        before do
+          I18n.backend.store_translations(:en, colour: { one: '%{count} colour', other: '%{count} colours' })
+        end
+
+        shared_examples 'finds correct plural keys' do
+          it 'finds the correct plural keys for the locale' do
+            SiteSetting.default_locale = locale
+
+            get '/admin/customize/site_texts.json', params: { q: 'colour' }
+            expect(response.status).to eq(200)
+
+            json = ::JSON.parse(response.body, symbolize_names: true)
+            expect(json).to be_present
+
+            site_texts = json[:site_texts]
+            expect(site_texts).to be_present
+
+            expected_search_result = expected_translations.map do |key, value|
+              overridden = defined?(expected_overridden) ? expected_overridden[key] || false : false
+              { id: "colour.#{key}", value: value, can_revert: overridden, overridden: overridden }
+            end
+
+            expect(site_texts).to match_array(expected_search_result)
+          end
+        end
+
+        context 'English' do
+          let(:locale) { :en }
+          let(:expected_translations) { { one: '%{count} colour', other: '%{count} colours' } }
+
+          include_examples 'finds correct plural keys'
+        end
+
+        context 'language with different plural keys and missing translations' do
+          let(:locale) { :ru }
+          let(:expected_translations) { { one: '%{count} colour', few: '%{count} colours', other: '%{count} colours' } }
+
+          include_examples 'finds correct plural keys'
+        end
+
+        context 'language with different plural keys and partial translation' do
+          before do
+            I18n.backend.store_translations(:ru, colour: { few: '%{count} цвета', many: '%{count} цветов' })
+          end
+
+          let(:locale) { :ru }
+          let(:expected_translations) { { one: '%{count} colour', few: '%{count} цвета', other: '%{count} colours' } }
+
+          include_examples 'finds correct plural keys'
+        end
+
+        context 'with overridden translation not in original translation' do
+          before do
+            I18n.backend.store_translations(:ru, colour: { few: '%{count} цвета', many: '%{count} цветов' })
+            TranslationOverride.create!(locale: :ru, translation_key: 'colour.one', value: 'ONE')
+            TranslationOverride.create!(locale: :ru, translation_key: 'colour.few', value: 'FEW')
+          end
+
+          let(:locale) { :ru }
+          let(:expected_translations) { { one: 'ONE', few: 'FEW', other: '%{count} colours' } }
+          let(:expected_overridden) { { one: true, few: true } }
+
+          include_examples 'finds correct plural keys'
+        end
+      end
     end
 
     describe '#show' do
@@ -96,6 +175,59 @@ RSpec.describe Admin::SiteTextsController do
       it 'returns not found for missing keys' do
         get "/admin/customize/site_texts/made_up_no_key_exists.json"
         expect(response.status).to eq(404)
+      end
+
+      context 'plural keys' do
+        before do
+          I18n.backend.store_translations(:en, colour: { one: '%{count} colour', other: '%{count} colours' })
+        end
+
+        shared_examples 'has correct plural keys' do
+          it 'returns the correct plural keys for the locale' do
+            SiteSetting.default_locale = locale
+
+            expected_translations.each do |key, value|
+              id = "colour.#{key}"
+
+              get "/admin/customize/site_texts/#{id}.json"
+              expect(response.status).to eq(200)
+
+              json = ::JSON.parse(response.body)
+              expect(json).to be_present
+
+              site_text = json['site_text']
+              expect(site_text).to be_present
+
+              expect(site_text['id']).to eq(id)
+              expect(site_text['value']).to eq(value)
+            end
+          end
+        end
+
+        context 'English' do
+          let(:locale) { :en }
+          let(:expected_translations) { { one: '%{count} colour', other: '%{count} colours' } }
+
+          include_examples 'has correct plural keys'
+        end
+
+        context 'language with different plural keys and missing translations' do
+          let(:locale) { :ru }
+          let(:expected_translations) { { one: '%{count} colour', few: '%{count} colours', other: '%{count} colours' } }
+
+          include_examples 'has correct plural keys'
+        end
+
+        context 'language with different plural keys and partial translation' do
+          before do
+            I18n.backend.store_translations(:ru, colour: { few: '%{count} цвета' })
+          end
+
+          let(:locale) { :ru }
+          let(:expected_translations) { { one: '%{count} colour', few: '%{count} цвета', other: '%{count} colours' } }
+
+          include_examples 'has correct plural keys'
+        end
       end
     end
 
@@ -130,14 +262,16 @@ RSpec.describe Admin::SiteTextsController do
           site_text: { value: 'foo' }
         }
 
-        expect(response.status).to eq(404)
+        expect(response.status).to eq(403)
 
         json = ::JSON.parse(response.body)
-        expect(json['error_type']).to eq('not_found')
+        expect(json['error_type']).to eq('invalid_access')
+        expect(json['errors'].size).to eq(1)
+        expect(json['errors'].first).to eq(I18n.t('email_template_cant_be_modified'))
       end
 
       it "returns the right error message" do
-        I18n.backend.store_translations(:en, some_key: '%{first} %{second}')
+        I18n.backend.store_translations(SiteSetting.default_locale, some_key: '%{first} %{second}')
 
         put "/admin/customize/site_texts/some_key.json", params: {
           site_text: { value: 'hello %{key} %{omg}' }
@@ -234,6 +368,58 @@ RSpec.describe Admin::SiteTextsController do
         expect(response.status).to eq(200)
         json = ::JSON.parse(response.body)
         expect(json['site_text']['value']).to_not eq(ru_mf_text)
+      end
+    end
+
+    context "reseeding" do
+      before do
+        staff_category = Fabricate(
+          :category,
+          name: "Staff EN",
+          user: Discourse.system_user
+        )
+        SiteSetting.staff_category_id = staff_category.id
+
+        guidelines_topic = Fabricate(
+          :topic,
+          title: "The English Guidelines",
+          category: @staff_category,
+          user: Discourse.system_user
+        )
+        Fabricate(:post, topic: guidelines_topic, user: Discourse.system_user)
+        SiteSetting.guidelines_topic_id = guidelines_topic.id
+      end
+
+      describe '#get_reseed_options' do
+        it 'returns correct json' do
+          get "/admin/customize/reseed.json"
+          expect(response.status).to eq(200)
+
+          expected_reseed_options = {
+            categories: [
+              { id: "uncategorized_category_id", name: I18n.t("uncategorized_category_name"), selected: true },
+              { id: "staff_category_id", name: "Staff EN", selected: true }
+            ],
+            topics: [{ id: "guidelines_topic_id", name: "The English Guidelines", selected: true }]
+          }
+
+          expect(JSON.parse(response.body, symbolize_names: true)).to eq(expected_reseed_options)
+        end
+      end
+
+      describe '#reseed' do
+        it 'reseeds categories and topics' do
+          SiteSetting.default_locale = :de
+
+          post "/admin/customize/reseed.json", params: {
+            category_ids: ["staff_category_id"],
+            topic_ids: ["guidelines_topic_id"]
+          }
+          expect(response.status).to eq(200)
+
+          expect(Category.find(SiteSetting.staff_category_id).name).to eq(I18n.t("staff_category_name"))
+          expect(Topic.find(SiteSetting.guidelines_topic_id).title).to eq(I18n.t("guidelines_topic.title"))
+        end
       end
     end
   end

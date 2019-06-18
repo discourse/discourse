@@ -32,7 +32,8 @@
   <div class="control-group pref-profile-bg">
     <label class="control-label">{{i18n 'user.change_profile_background.title'}}</label>
     <div class="controls">
-      {{image-uploader imageUrl=model.profile_background type="profile_background"}}
+      {{image-uploader imageUrl=model.profile_background_upload_url
+                       type="profile_background"}}
     </div>
     <div class='instructions'>
       {{i18n 'user.change_profile_background.instructions'}}
@@ -42,7 +43,8 @@
   <div class="control-group pref-profile-bg">
     <label class="control-label">{{i18n 'user.change_card_background.title'}}</label>
     <div class="controls">
-      {{image-uploader imageUrl=model.card_background type="card_background"}}
+      {{image-uploader imageUrl=model.card_background_upload_url
+                       type="card_background"}}
     </div>
     <div class='instructions'>
       {{i18n 'user.change_card_background.instructions'}}

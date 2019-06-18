@@ -1,3 +1,10 @@
+# frozen_string_literal: true
+
+if GlobalSetting.skip_redis?
+  MessageBus.configure(backend: :memory)
+  return
+end
+
 MessageBus.site_id_lookup do |env = nil|
   if env
     setup_message_bus_env(env)
@@ -92,8 +99,11 @@ MessageBus.on_disconnect do |site_id|
   ActiveRecord::Base.connection_handler.clear_active_connections!
 end
 
-# Point at our redis
-MessageBus.redis_config = GlobalSetting.redis_config
+if Rails.env == "test"
+  MessageBus.configure(backend: :memory)
+else
+  MessageBus.redis_config = GlobalSetting.message_bus_redis_config
+end
 MessageBus.reliable_pub_sub.max_backlog_size = GlobalSetting.message_bus_max_backlog_size
 
 MessageBus.long_polling_enabled = SiteSetting.enable_long_polling

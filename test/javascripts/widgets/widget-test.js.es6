@@ -18,7 +18,7 @@ widgetTest("widget attributes are passed in via args", {
   },
 
   test(assert) {
-    assert.equal(this.$(".test").text(), "Hello Robin");
+    assert.equal(find(".test").text(), "Hello Robin");
   }
 });
 
@@ -34,7 +34,7 @@ widgetTest("hbs template - no tagName", {
   },
 
   test(assert) {
-    assert.equal(this.$("div.test").text(), "Hello Robin");
+    assert.equal(find("div.test").text(), "Hello Robin");
   }
 });
 
@@ -51,7 +51,7 @@ widgetTest("hbs template - with tagName", {
   },
 
   test(assert) {
-    assert.equal(this.$("div.test").text(), "Hello Robin");
+    assert.equal(find("div.test").text(), "Hello Robin");
   }
 });
 
@@ -71,10 +71,7 @@ widgetTest("buildClasses", {
   },
 
   test(assert) {
-    assert.ok(
-      this.$(".test.static.cool-class").length,
-      "it has all the classes"
-    );
+    assert.ok(find(".test.static.cool-class").length, "it has all the classes");
   }
 });
 
@@ -94,8 +91,8 @@ widgetTest("buildAttributes", {
   },
 
   test(assert) {
-    assert.ok(this.$(".test[data-evil=trout]").length);
-    assert.ok(this.$(".test[aria-label=accessibility]").length);
+    assert.ok(find(".test[data-evil=trout]").length);
+    assert.ok(find(".test[aria-label=accessibility]").length);
   }
 });
 
@@ -113,7 +110,7 @@ widgetTest("buildId", {
   },
 
   test(assert) {
-    assert.ok(this.$("#test-1234").length);
+    assert.ok(find("#test-1234").length);
   }
 });
 
@@ -137,11 +134,11 @@ widgetTest("widget state", {
   },
 
   async test(assert) {
-    assert.ok(this.$("button.test").length, "it renders the button");
-    assert.equal(this.$("button.test").text(), "0 clicks");
+    assert.ok(find("button.test").length, "it renders the button");
+    assert.equal(find("button.test").text(), "0 clicks");
 
-    await click(this.$("button"));
-    assert.equal(this.$("button.test").text(), "1 clicks");
+    await click(find("button"));
+    assert.equal(find("button.test").text(), "1 clicks");
   }
 });
 
@@ -173,15 +170,15 @@ widgetTest("widget update with promise", {
 
   async test(assert) {
     assert.equal(
-      this.$("button.test")
+      find("button.test")
         .text()
         .trim(),
       "No name"
     );
 
-    await click(this.$("button"));
+    await click(find("button"));
     assert.equal(
-      this.$("button.test")
+      find("button.test")
         .text()
         .trim(),
       "Robin"
@@ -202,8 +199,47 @@ widgetTest("widget attaching", {
   },
 
   test(assert) {
-    assert.ok(this.$(".container").length, "renders container");
-    assert.ok(this.$(".container .embedded").length, "renders attached");
+    assert.ok(find(".container").length, "renders container");
+    assert.ok(find(".container .embedded").length, "renders attached");
+  }
+});
+
+widgetTest("magic attaching by name", {
+  template: `{{mount-widget widget="attach-test"}}`,
+
+  beforeEach() {
+    createWidget("test-embedded", { tagName: "div.embedded" });
+
+    createWidget("attach-test", {
+      tagName: "div.container",
+      template: hbs`{{test-embedded attrs=attrs}}`
+    });
+  },
+
+  test(assert) {
+    assert.ok(find(".container").length, "renders container");
+    assert.ok(find(".container .embedded").length, "renders attached");
+  }
+});
+
+widgetTest("custom attrs to a magic attached widget", {
+  template: `{{mount-widget widget="attach-test"}}`,
+
+  beforeEach() {
+    createWidget("testing", {
+      tagName: "span.value",
+      template: hbs`{{attrs.value}}`
+    });
+
+    createWidget("attach-test", {
+      tagName: "div.container",
+      template: hbs`{{testing value=(concat "hello" " " "world")}}`
+    });
+  },
+
+  test(assert) {
+    assert.ok(find(".container").length, "renders container");
+    assert.equal(find(".container .value").text(), "hello world");
   }
 });
 
@@ -217,11 +253,13 @@ widgetTest("handlebars d-icon", {
   },
 
   test(assert) {
-    assert.equal(this.$(".d-icon-arrow-down").length, 1);
+    assert.equal(find(".d-icon-arrow-down").length, 1);
   }
 });
 
 widgetTest("handlebars i18n", {
+  _translations: I18n.translations,
+
   template: `{{mount-widget widget="hbs-i18n-test" args=args}}`,
 
   beforeEach() {
@@ -232,20 +270,26 @@ widgetTest("handlebars i18n", {
         <a href title={{i18n "hbs_test0"}}>test</a>
       `
     });
-    I18n.extras = [
-      {
-        hbs_test0: "evil",
-        hbs_test1: "trout"
+    I18n.translations = {
+      en: {
+        js: {
+          hbs_test0: "evil",
+          hbs_test1: "trout"
+        }
       }
-    ];
+    };
     this.set("args", { key: "hbs_test1" });
+  },
+
+  afterEach() {
+    I18n.translations = this._translations;
   },
 
   test(assert) {
     // comin up
-    assert.equal(this.$("span.string").text(), "evil");
-    assert.equal(this.$("span.var").text(), "trout");
-    assert.equal(this.$("a").prop("title"), "evil");
+    assert.equal(find("span.string").text(), "evil");
+    assert.equal(find("span.var").text(), "trout");
+    assert.equal(find("a").prop("title"), "evil");
   }
 });
 
@@ -268,8 +312,8 @@ widgetTest("handlebars #each", {
   },
 
   test(assert) {
-    assert.equal(this.$("ul li").length, 3);
-    assert.equal(this.$("ul li:eq(0)").text(), "one");
+    assert.equal(find("ul li").length, 3);
+    assert.equal(find("ul li:eq(0)").text(), "one");
   }
 });
 
@@ -294,9 +338,9 @@ widgetTest("widget decorating", {
   },
 
   test(assert) {
-    assert.ok(this.$(".decorate").length);
-    assert.equal(this.$(".decorate b").text(), "before");
-    assert.equal(this.$(".decorate i").text(), "after");
+    assert.ok(find(".decorate").length);
+    assert.equal(find(".decorate b").text(), "before");
+    assert.equal(find(".decorate i").text(), "after");
   }
 });
 
@@ -312,7 +356,7 @@ widgetTest("widget settings", {
   },
 
   test(assert) {
-    assert.equal(this.$(".settings").text(), "age is 36");
+    assert.equal(find(".settings").text(), "age is 36");
   }
 });
 
@@ -332,6 +376,6 @@ widgetTest("override settings", {
   },
 
   test(assert) {
-    assert.equal(this.$(".settings").text(), "age is 37");
+    assert.equal(find(".settings").text(), "age is 37");
   }
 });

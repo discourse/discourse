@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # patch https://github.com/rack/rack/pull/600
 #
 class Rack::ETag

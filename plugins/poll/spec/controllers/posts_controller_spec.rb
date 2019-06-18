@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "rails_helper"
 
 describe PostsController do
@@ -51,7 +53,7 @@ describe PostsController do
       json = ::JSON.parse(response.body)
       post_id = json["id"]
 
-      expect(Poll.find_by(post_id: post_id).close_at).to eq(1.month.from_now)
+      expect(Poll.find_by(post_id: post_id).close_at).to be_within_one_second_of(1.month.from_now)
 
       job = Jobs::ClosePoll.jobs.first
       job_args = job["args"].first
@@ -81,7 +83,7 @@ describe PostsController do
     end
 
     it "should have at most 'SiteSetting.poll_maximum_options' options" do
-      raw = "[poll]\n"
+      raw = +"[poll]\n"
       (SiteSetting.poll_maximum_options + 1).times { |n| raw << "\n- #{n}" }
       raw << "\n[/poll]"
 

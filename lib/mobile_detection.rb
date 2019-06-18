@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module MobileDetection
   def self.mobile_device?(user_agent)
     user_agent =~ /Mobile/ && !(user_agent =~ /iPad/)
@@ -8,6 +10,7 @@ module MobileDetection
     return false unless SiteSetting.enable_mobile_theme
 
     session[:mobile_view] = params[:mobile_view] if params && params.has_key?(:mobile_view)
+    session[:mobile_view] = nil if params && params.has_key?(:mobile_view) && params[:mobile_view] == 'auto'
 
     if session && session[:mobile_view]
       session[:mobile_view] == '1'
@@ -15,4 +18,9 @@ module MobileDetection
       mobile_device?(user_agent)
     end
   end
+
+  def self.ios_device?(user_agent)
+    user_agent =~ /iPad|iPhone|iPod/
+  end
+
 end

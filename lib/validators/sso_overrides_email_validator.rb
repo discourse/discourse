@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class SsoOverridesEmailValidator
   def initialize(opts = {})
     @opts = opts

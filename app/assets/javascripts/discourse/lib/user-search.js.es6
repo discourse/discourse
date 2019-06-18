@@ -1,3 +1,4 @@
+import debounce from "discourse/lib/debounce";
 import { CANCELLED_STATUS } from "discourse/lib/autocomplete";
 import { userPath } from "discourse/lib/url";
 import { emailValid } from "discourse/lib/utilities";
@@ -15,7 +16,7 @@ function performSearch(
   includeMentionableGroups,
   includeMessageableGroups,
   allowedUsers,
-  group,
+  groupMembersOf,
   resultsFn
 ) {
   var cached = cache[term];
@@ -23,7 +24,11 @@ function performSearch(
     resultsFn(cached);
     return;
   }
-  if (term === "") {
+
+  // I am not strongly against unconditionally returning
+  // however this allows us to return a list of probable
+  // users we want to mention, early on a topic
+  if (term === "" && !topicId) {
     return [];
   }
 
@@ -35,7 +40,7 @@ function performSearch(
       include_groups: includeGroups,
       include_mentionable_groups: includeMentionableGroups,
       include_messageable_groups: includeMessageableGroups,
-      group: group,
+      groups: groupMembersOf,
       topic_allowed_users: allowedUsers
     }
   });
@@ -57,7 +62,7 @@ function performSearch(
     });
 }
 
-var debouncedSearch = _.debounce(performSearch, 300);
+var debouncedSearch = debounce(performSearch, 300);
 
 function organizeResults(r, options) {
   if (r === CANCELLED_STATUS) {
@@ -81,7 +86,7 @@ function organizeResults(r, options) {
     });
   }
 
-  if (!options.disallowEmails && emailValid(options.term)) {
+  if (options.allowEmails && emailValid(options.term)) {
     let e = { username: options.term };
     emails = [e];
     results.push(e);
@@ -108,6 +113,22 @@ function organizeResults(r, options) {
   return results;
 }
 
+// all punctuations except for -, _ and . which are allowed in usernames
+// note: these are valid in names, but will end up tripping search anyway so just skip
+// this means searching for `sam saffron` is OK but if my name is `sam$ saffron` autocomplete
+// will not find me, which is a reasonable compromise
+//
+// we also ignore if we notice a double space or a string that is only a space
+const ignoreRegex = /([\u2000-\u206F\u2E00-\u2E7F\\'!"#$%&()*+,\/:;<=>?\[\]^`{|}~])|\s\s|^\s$/;
+
+function skipSearch(term, allowEmails) {
+  if (term.indexOf("@") > -1 && !allowEmails) {
+    return true;
+  }
+
+  return !!term.match(ignoreRegex);
+}
+
 export default function userSearch(options) {
   if (options.term && options.term.length > 0 && options.term[0] === "@") {
     options.term = options.term.substring(1);
@@ -119,7 +140,7 @@ export default function userSearch(options) {
     includeMessageableGroups = options.includeMessageableGroups,
     allowedUsers = options.allowedUsers,
     topicId = options.topicId,
-    group = options.group;
+    groupMembersOf = options.groupMembersOf;
 
   if (oldSearch) {
     oldSearch.abort();
@@ -139,6 +160,11 @@ export default function userSearch(options) {
       resolve(CANCELLED_STATUS);
     }, 5000);
 
+    if (skipSearch(term, options.allowEmails)) {
+      resolve([]);
+      return;
+    }
+
     debouncedSearch(
       term,
       topicId,
@@ -146,7 +172,7 @@ export default function userSearch(options) {
       includeMentionableGroups,
       includeMessageableGroups,
       allowedUsers,
-      group,
+      groupMembersOf,
       function(r) {
         clearTimeout(clearPromise);
         resolve(organizeResults(r, options));

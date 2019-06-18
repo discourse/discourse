@@ -1,25 +1,19 @@
 .alert {
-  padding: 8px 35px 8px 14px;
+  padding: 8px 32px 8px 16px;
   background-color: $danger-low;
-  color: #c09853;
+  color: $primary;
+  position: relative;
 
   .close {
-    position: relative;
-    top: -2px;
-    right: -21px;
+    position: absolute;
+    top: 8px;
+    right: 8px;
     line-height: $line-height-small;
-    float: right;
     font-size: $font-up-3;
-    font-weight: bold;
-    color: $primary;
-    opacity: 0.2;
-    filter: alpha(opacity = 20);
+    color: $primary-low-mid;
     @include hover {
-      color: $primary;
-      text-decoration: none;
+      color: $primary-medium;
       cursor: pointer;
-      opacity: 0.4;
-      filter: alpha(opacity = 40);
     }
   }
   button.close {
@@ -30,11 +24,11 @@
     -webkit-appearance: none;
   }
   &.alert-success {
-    background-color: $success-medium;
+    background-color: $success-low;
     color: $primary;
   }
   &.alert-error {
-    background-color: rgba($danger-low, 0.5);
+    background-color: $danger-low;
     color: $primary;
   }
   &.alert-info {

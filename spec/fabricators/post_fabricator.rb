@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 Fabricator(:post) do
   user
   topic { |attrs| Fabricate(:topic, user: attrs[:user]) }

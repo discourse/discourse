@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class PostStat < ActiveRecord::Base
   belongs_to :post
 end

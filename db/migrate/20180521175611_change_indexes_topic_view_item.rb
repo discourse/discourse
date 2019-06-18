@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ChangeIndexesTopicViewItem < ActiveRecord::Migration[5.1]
   def up
     remove_index :topic_views,

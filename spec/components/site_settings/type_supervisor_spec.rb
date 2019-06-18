@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 require_dependency 'site_settings/type_supervisor'
 
@@ -72,9 +74,14 @@ describe SiteSettings::TypeSupervisor do
       it "'uploaded_image_list' should be at 17th position" do
         expect(SiteSettings::TypeSupervisor.types[:uploaded_image_list]).to eq(17)
       end
-
       it "'upload' should be at the right position" do
         expect(SiteSettings::TypeSupervisor.types[:upload]).to eq(18)
+      end
+      it "'group' should be at the right position" do
+        expect(SiteSettings::TypeSupervisor.types[:group]).to eq(19)
+      end
+      it "'group_list' should be at the right position" do
+        expect(SiteSettings::TypeSupervisor.types[:group_list]).to eq(20)
       end
     end
   end
@@ -190,6 +197,9 @@ describe SiteSettings::TypeSupervisor do
 
         expect(settings.type_supervisor.to_db_value(:type_upload, upload))
           .to eq([upload.id, SiteSetting.types[:upload]])
+
+        expect(settings.type_supervisor.to_db_value(:type_upload, 1))
+          .to eq([1, SiteSetting.types[:upload]])
       end
 
       it 'returns enum value with string default' do
@@ -230,9 +240,6 @@ describe SiteSettings::TypeSupervisor do
     end
 
     describe '#to_rb_value' do
-      let(:true_val) { 't' }
-      let(:false_val) { 'f' }
-
       it 'the type can be overriden by a parameter' do
         expect(settings.type_supervisor.to_rb_value(:type_null, '1', SiteSetting.types[:integer])).to eq(1)
       end
@@ -331,6 +338,7 @@ describe SiteSettings::TypeSupervisor do
       settings.setting(:type_float, 2.3232)
       settings.setting(:type_string, 'string')
       settings.setting(:type_url_list, 'string', type: 'url_list')
+      settings.setting(:type_textarea, 'string', textarea: true)
       settings.setting(:type_enum_choices, '2', type: 'enum', choices: ['1', '2'])
       settings.setting(:type_enum_class, 'a', enum: 'TestEnumClass2')
       settings.setting(:type_list, 'a', type: 'list', choices: ['a', 'b'], list_type: 'compact')
@@ -354,6 +362,9 @@ describe SiteSettings::TypeSupervisor do
     end
     it 'returns url_list type' do
       expect(settings.type_supervisor.type_hash(:type_url_list)[:type]).to eq 'url_list'
+    end
+    it 'returns textarea type' do
+      expect(settings.type_supervisor.type_hash(:type_textarea)[:textarea]).to eq true
     end
     it 'returns enum type' do
       expect(settings.type_supervisor.type_hash(:type_enum_choices)[:type]).to eq 'enum'

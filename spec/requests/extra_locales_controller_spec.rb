@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 describe ExtraLocalesController do
@@ -24,26 +26,59 @@ describe ExtraLocalesController do
       expect(response.status).to eq(404)
     end
 
-    it "includes plugin translations" do
-      I18n.locale = :en
-      I18n.reload!
-
-      JsLocaleHelper.expects(:plugin_translations)
-        .with(I18n.locale.to_s)
-        .returns("admin_js" => {
-          "admin" => {
-            "site_settings" => {
-              "categories" => {
-                "github_badges" => "Github Badges"
+    context "with plugin" do
+      before do
+        JsLocaleHelper.clear_cache!
+        JsLocaleHelper.expects(:plugin_translations)
+          .with(any_of("en", "en_US"))
+          .returns("admin_js" => {
+            "admin" => {
+              "site_settings" => {
+                "categories" => {
+                  "github_badges" => "Github Badges"
+                }
               }
             }
-          }
-        }).at_least_once
+          }).at_least_once
+      end
 
-      get "/extra-locales/admin"
+      after do
+        JsLocaleHelper.clear_cache!
+      end
 
-      expect(response.status).to eq(200)
-      expect(response.body.include?("github_badges")).to eq(true)
+      it "includes plugin translations" do
+        get "/extra-locales/admin"
+
+        expect(response.status).to eq(200)
+        expect(response.body.include?("github_badges")).to eq(true)
+      end
+    end
+  end
+
+  describe ".bundle_js_hash" do
+    it "doesn't call bundle_js more than once for the same locale and bundle" do
+      I18n.locale = :de
+      ExtraLocalesController.expects(:bundle_js).with("admin").returns("admin_js DE").once
+      expected_hash_de = Digest::MD5.hexdigest("admin_js DE")
+
+      expect(ExtraLocalesController.bundle_js_hash("admin")).to eq(expected_hash_de)
+      expect(ExtraLocalesController.bundle_js_hash("admin")).to eq(expected_hash_de)
+
+      I18n.locale = :fr
+      ExtraLocalesController.expects(:bundle_js).with("admin").returns("admin_js FR").once
+      expected_hash_fr = Digest::MD5.hexdigest("admin_js FR")
+
+      expect(ExtraLocalesController.bundle_js_hash("admin")).to eq(expected_hash_fr)
+      expect(ExtraLocalesController.bundle_js_hash("admin")).to eq(expected_hash_fr)
+
+      I18n.locale = :de
+      expect(ExtraLocalesController.bundle_js_hash("admin")).to eq(expected_hash_de)
+
+      ExtraLocalesController.expects(:bundle_js).with("wizard").returns("wizard_js DE").once
+      expected_hash_de = Digest::MD5.hexdigest("wizard_js DE")
+
+      expect(ExtraLocalesController.bundle_js_hash("wizard")).to eq(expected_hash_de)
+      expect(ExtraLocalesController.bundle_js_hash("wizard")).to eq(expected_hash_de)
     end
   end
 end

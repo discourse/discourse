@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_dependency 'site_settings/validations'
 require_dependency 'enum'
 
@@ -6,7 +8,7 @@ module SiteSettings; end
 class SiteSettings::TypeSupervisor
   include SiteSettings::Validations
 
-  CONSUMED_OPTS = %i[enum choices type validator min max regex hidden regex_error allow_any list_type].freeze
+  CONSUMED_OPTS = %i[enum choices type validator min max regex hidden regex_error allow_any list_type textarea].freeze
   VALIDATOR_OPTS = %i[min max regex hidden regex_error].freeze
 
   # For plugins, so they can tell if a feature is supported
@@ -32,6 +34,8 @@ class SiteSettings::TypeSupervisor
       category: 16,
       uploaded_image_list: 17,
       upload: 18,
+      group: 19,
+      group_list: 20,
     )
   end
 
@@ -65,10 +69,15 @@ class SiteSettings::TypeSupervisor
     @types = {}
     @allow_any = {}
     @list_type = {}
+    @textareas = {}
   end
 
   def load_setting(name_arg, opts = {})
     name = name_arg.to_sym
+
+    if opts[:textarea]
+      @textareas[name] = opts[:textarea]
+    end
 
     if (enum = opts[:enum])
       @enums[name] = enum.is_a?(String) ? enum.constantize : enum
@@ -97,7 +106,9 @@ class SiteSettings::TypeSupervisor
 
     opts[:validator] = opts[:validator].try(:constantize)
     if (validator_type = (opts[:validator] || validator_for(@types[name])))
-      @validators[name] = { class: validator_type, opts: opts.slice(*VALIDATOR_OPTS) }
+      validator_opts = opts.slice(*VALIDATOR_OPTS)
+      validator_opts[:name] = name
+      @validators[name] = { class: validator_type, opts: validator_opts }
     end
   end
 
@@ -148,6 +159,8 @@ class SiteSettings::TypeSupervisor
 
     result[:choices] = @choices[name] if @choices.has_key? name
     result[:list_type] = @list_type[name] if @list_type.has_key? name
+    result[:textarea] = @textareas[name] if @textareas.has_key? name
+
     result
   end
 
@@ -170,7 +183,7 @@ class SiteSettings::TypeSupervisor
     elsif type == self.class.types[:enum]
       val = @defaults_provider[name].is_a?(Integer) ? val.to_i : val.to_s
     elsif type == self.class.types[:upload] && val.present?
-      val = val.id
+      val = val.is_a?(Integer) ? val : val.id
     end
 
     [val, type]
@@ -208,7 +221,7 @@ class SiteSettings::TypeSupervisor
 
     validate_method = "validate_#{name}"
     if self.respond_to? validate_method
-      send(validate_method, val)
+      public_send(validate_method, val)
     end
   end
 
@@ -232,6 +245,8 @@ class SiteSettings::TypeSupervisor
       EmailSettingValidator
     when self.class.types[:username]
       UsernameSettingValidator
+    when self.class.types[:group]
+      GroupSettingValidator
     when self.class.types[:integer]
       IntegerSettingValidator
     when self.class.types[:regex]

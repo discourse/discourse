@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class RemoveNotNullFromEmail < ActiveRecord::Migration[4.2]
   def up
     execute "ALTER TABLE invites ALTER COLUMN email DROP NOT NULL"

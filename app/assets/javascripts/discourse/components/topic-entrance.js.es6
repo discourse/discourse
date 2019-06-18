@@ -53,12 +53,12 @@ export default Ember.Component.extend(CleansUp, {
 
   didInsertElement() {
     this._super(...arguments);
-    this.appEvents.on("topic-entrance:show", data => this._show(data));
+    this.appEvents.on("topic-entrance:show", this, "_show");
   },
 
   _setCSS() {
     const pos = this._position;
-    const $self = this.$();
+    const $self = $(this.element);
     const width = $self.width();
     const height = $self.height();
     pos.left = parseInt(pos.left) - width / 2;
@@ -74,8 +74,7 @@ export default Ember.Component.extend(CleansUp, {
   _show(data) {
     this._position = data.position;
 
-    this.set("topic", data.topic);
-    this.set("visible", true);
+    this.setProperties({ topic: data.topic, visible: true });
 
     Ember.run.scheduleOnce("afterRender", this, this._setCSS);
 
@@ -85,7 +84,7 @@ export default Ember.Component.extend(CleansUp, {
         const $target = $(e.target);
         if (
           $target.prop("id") === "topic-entrance" ||
-          this.$().has($target).length !== 0
+          $(this.element).has($target).length !== 0
         ) {
           return;
         }
@@ -94,13 +93,12 @@ export default Ember.Component.extend(CleansUp, {
   },
 
   cleanUp() {
-    this.set("topic", null);
-    this.set("visible", false);
+    this.setProperties({ topic: null, visible: false });
     $("html").off("mousedown.topic-entrance");
   },
 
   willDestroyElement() {
-    this.appEvents.off("topic-entrance:show");
+    this.appEvents.off("topic-entrance:show", this, "_show");
   },
 
   _jumpTo(destination) {

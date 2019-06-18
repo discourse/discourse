@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreateTagSearchData < ActiveRecord::Migration[4.2]
   def up
     create_table :tag_search_data, primary_key: :tag_id do |t|

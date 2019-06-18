@@ -1,8 +1,10 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 describe BadgesController do
-  let!(:badge) { Fabricate(:badge) }
-  let(:user) { Fabricate(:user) }
+  fab!(:badge) { Fabricate(:badge) }
+  fab!(:user) { Fabricate(:user) }
 
   before do
     SiteSetting.enable_badges = true

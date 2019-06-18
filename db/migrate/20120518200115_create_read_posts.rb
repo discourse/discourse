@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreateReadPosts < ActiveRecord::Migration[4.2]
   def up
     create_table :read_posts, id: false do |t|

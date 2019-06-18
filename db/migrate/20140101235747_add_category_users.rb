@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddCategoryUsers < ActiveRecord::Migration[4.2]
   def change
     create_table :category_users do |t|

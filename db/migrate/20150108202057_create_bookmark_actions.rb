@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreateBookmarkActions < ActiveRecord::Migration[4.2]
   def up
     execute "INSERT INTO user_actions (action_type,

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 describe Admin::ApiController do
@@ -6,7 +8,7 @@ describe Admin::ApiController do
     expect(Admin::ApiController < Admin::AdminController).to eq(true)
   end
 
-  let(:admin) { Fabricate(:admin) }
+  fab!(:admin) { Fabricate(:admin) }
 
   context "as an admin" do
     before do
@@ -21,7 +23,7 @@ describe Admin::ApiController do
     end
 
     describe '#regenerate_key' do
-      let(:api_key) { Fabricate(:api_key) }
+      fab!(:api_key) { Fabricate(:api_key) }
 
       it "returns 404 when there is no key" do
         put "/admin/api/key.json", params: { id: 1234 }
@@ -40,7 +42,7 @@ describe Admin::ApiController do
     end
 
     describe '#revoke_key' do
-      let(:api_key) { Fabricate(:api_key) }
+      fab!(:api_key) { Fabricate(:api_key) }
 
       it "returns 404 when there is no key" do
         delete "/admin/api/key.json", params: { id: 1234 }

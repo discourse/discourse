@@ -8,7 +8,7 @@ const Wizard = Ember.Object.extend({
   totalSteps: length => length,
 
   getTitle() {
-    const titleStep = this.get("steps").findBy("id", "forum-title");
+    const titleStep = this.steps.findBy("id", "forum-title");
     if (!titleStep) {
       return;
     }
@@ -16,7 +16,7 @@ const Wizard = Ember.Object.extend({
   },
 
   getLogoUrl() {
-    const logoStep = this.get("steps").findBy("id", "logos");
+    const logoStep = this.steps.findBy("id", "logos");
     if (!logoStep) {
       return;
     }
@@ -25,7 +25,7 @@ const Wizard = Ember.Object.extend({
 
   // A bit clunky, but get the current colors from the appropriate step
   getCurrentColors(schemeId) {
-    const colorStep = this.get("steps").findBy("id", "colors");
+    const colorStep = this.steps.findBy("id", "colors");
     if (!colorStep) {
       return;
     }

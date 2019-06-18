@@ -1,4 +1,5 @@
 # encoding: utf-8
+# frozen_string_literal: true
 
 require 'rails_helper'
 require_dependency 'post_creator'
@@ -68,7 +69,7 @@ describe CategoryUser do
 
   context 'integration' do
     before do
-      SiteSetting.queue_jobs = false
+      Jobs.run_immediately!
       NotificationEmailer.enable
     end
 

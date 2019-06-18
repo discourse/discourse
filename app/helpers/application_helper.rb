@@ -1,3 +1,4 @@
+# coding: utf-8
 # frozen_string_literal: true
 require 'current_user'
 require 'canonical_url'
@@ -54,7 +55,6 @@ module ApplicationHelper
   end
 
   def is_brotli_req?
-    ENV["COMPRESS_BROTLI"] == "1" &&
     request.env["HTTP_ACCEPT_ENCODING"] =~ /br/
   end
 
@@ -63,7 +63,8 @@ module ApplicationHelper
 
     if GlobalSetting.use_s3? && GlobalSetting.s3_cdn_url
       if GlobalSetting.cdn_url
-        path = path.gsub(GlobalSetting.cdn_url, GlobalSetting.s3_cdn_url)
+        folder = ActionController::Base.config.relative_url_root || "/"
+        path = path.gsub(File.join(GlobalSetting.cdn_url, folder, "/"), File.join(GlobalSetting.s3_cdn_url, "/"))
       else
         # we must remove the subfolder path here, assets are uploaded to s3
         # without it getting involved
@@ -112,6 +113,7 @@ module ApplicationHelper
     list = []
     list << (mobile_view? ? 'mobile-view' : 'desktop-view')
     list << (mobile_device? ? 'mobile-device' : 'not-mobile-device')
+    list << 'ios-device' if ios_device?
     list << 'rtl' if rtl?
     list << text_size_class
     list << 'anon' unless current_user
@@ -125,7 +127,9 @@ module ApplicationHelper
       result << "category-#{@category.url.sub(/^\/c\//, '').gsub(/\//, '-')}"
     end
 
-    if current_user.present? && primary_group_name = current_user.primary_group&.name
+    if current_user.present? &&
+        current_user.primary_group_id &&
+        primary_group_name = Group.where(id: current_user.primary_group_id).pluck(:name).first
       result << "primary-group-#{primary_group_name.downcase}"
     end
 
@@ -219,11 +223,7 @@ module ApplicationHelper
         opts[:twitter_summary_large_image] = twitter_summary_large_image_url
       end
 
-      opts[:image] = SiteSetting.opengraph_image_url.presence ||
-        twitter_summary_large_image_url.presence ||
-        SiteSetting.site_large_icon_url.presence ||
-        SiteSetting.site_apple_touch_icon_url.presence ||
-        SiteSetting.site_logo_url.presence
+      opts[:image] = SiteSetting.site_opengraph_image_url
     end
 
     # Use the correct scheme for opengraph/twitter image
@@ -292,10 +292,10 @@ module ApplicationHelper
 
   def application_logo_url
     @application_logo_url ||= begin
-      if mobile_view? && SiteSetting.site_mobile_logo_url
+      if mobile_view? && SiteSetting.site_mobile_logo_url.present?
         SiteSetting.site_mobile_logo_url
       else
-        SiteSetting.site_home_logo_url
+        SiteSetting.site_logo_url
       end
     end
   end
@@ -320,8 +320,16 @@ module ApplicationHelper
     MobileDetection.mobile_device?(request.user_agent)
   end
 
+  def ios_device?
+    MobileDetection.ios_device?(request.user_agent)
+  end
+
   def customization_disabled?
     request.env[ApplicationController::NO_CUSTOM]
+  end
+
+  def include_ios_native_app_banner?
+    current_user && current_user.trust_level >= 1 && SiteSetting.native_app_install_banner_ios
   end
 
   def allow_plugins?
@@ -382,7 +390,7 @@ module ApplicationHelper
 
   def theme_ids
     if customization_disabled?
-      nil
+      [nil]
     else
       request.env[:resolved_theme_ids]
     end
@@ -390,8 +398,10 @@ module ApplicationHelper
 
   def scheme_id
     return if theme_ids.blank?
-    theme = Theme.find_by(id: theme_ids.first)
-    theme&.color_scheme_id
+    Theme
+      .where(id: theme_ids.first)
+      .pluck(:color_scheme_id)
+      .first
   end
 
   def current_homepage
@@ -423,6 +433,11 @@ module ApplicationHelper
       &.html_safe
   end
 
+  def theme_js_lookup
+    Theme.lookup_field(theme_ids, :extra_js, nil)
+      &.html_safe
+  end
+
   def discourse_stylesheet_link_tag(name, opts = {})
     if opts.key?(:theme_ids)
       ids = opts[:theme_ids] unless customization_disabled?
@@ -440,11 +455,10 @@ module ApplicationHelper
 
   def client_side_setup_data
     service_worker_url = Rails.env.development? ? 'service-worker.js' : Rails.application.assets_manifest.assets['service-worker.js']
-    current_hostname_without_port = RailsMultisite::ConnectionManagement.current_hostname.sub(/:[\d]*$/, '')
 
     setup_data = {
       cdn: Rails.configuration.action_controller.asset_host,
-      base_url: current_hostname_without_port,
+      base_url: Discourse.base_url,
       base_uri: Discourse::base_uri,
       environment: Rails.env,
       letter_avatar_version: LetterAvatar.version,
@@ -454,11 +468,11 @@ module ApplicationHelper
       asset_version: Discourse.assets_digest,
       disable_custom_css: loading_admin?,
       highlight_js_path: HighlightJs.path,
-      svg_sprite_path: SvgSprite.path,
+      svg_sprite_path: SvgSprite.path(theme_ids),
     }
 
     if Rails.env.development?
-      setup_data[:svg_icon_list] = SvgSprite.all_icons
+      setup_data[:svg_icon_list] = SvgSprite.all_icons(theme_ids)
     end
 
     if guardian.can_enable_safe_mode? && params["safe_mode"]

@@ -5,4 +5,7 @@
 # To work with us on translations, join this project:
 # https://www.transifex.com/projects/p/discourse-org/
 
-uk: {}
+uk:
+  js:
+    composer:
+      details_title: Підсумок

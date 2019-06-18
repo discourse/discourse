@@ -1,8 +1,8 @@
 <div class="themes-list-header">
   <div {{action "changeView" THEMES}} class="themes-tab tab {{if themesTabActive 'active' ''}}">
-    {{d-icon "cube"}}
     {{I18n "admin.customize.theme.title"}}
   </div><div {{action "changeView" COMPONENTS}} class="components-tab tab {{if componentsTabActive 'active' ''}}">
+    {{d-icon "puzzle-piece"}}
     {{I18n "admin.customize.theme.components"}}
   </div>
 </div>
@@ -37,4 +37,10 @@
       <span class="empty">{{I18n "admin.customize.theme.empty"}}</span>
     </div>
   {{/if}}
+
+
+</div>
+
+<div class="create-actions">
+  {{d-button action=installModal icon="upload" label="admin.customize.install" class="btn-primary"}}
 </div>

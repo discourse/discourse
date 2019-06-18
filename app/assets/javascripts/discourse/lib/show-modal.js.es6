@@ -64,6 +64,24 @@ export default function(name, opts) {
     modalController.set("title", I18n.t(opts.title));
   }
 
+  if (opts.panels) {
+    modalController.setProperties({
+      panels: opts.panels,
+      selectedPanel: opts.panels[0]
+    });
+
+    if (controller.actions.onSelectPanel) {
+      modalController.set("onSelectPanel", controller.actions.onSelectPanel);
+    }
+
+    modalController.set(
+      "modalClass",
+      `${modalController.get("modalClass")} has-tabs`
+    );
+  } else {
+    modalController.setProperties({ panels: [], selectedPanel: null });
+  }
+
   controller.set("modal", modalController);
   const model = opts.model;
   if (model) {

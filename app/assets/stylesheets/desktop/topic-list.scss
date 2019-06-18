@@ -111,13 +111,6 @@
     left: -2px;
   }
 
-  .sortable {
-    cursor: pointer;
-    &:hover {
-      background-color: $primary-low;
-    }
-    @include unselectable;
-  }
   .likes {
     width: 65px;
   }

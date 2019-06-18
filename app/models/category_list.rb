@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_dependency 'pinned_check'
 
 class CategoryList
@@ -43,6 +45,19 @@ class CategoryList
     "categories_list".freeze
   end
 
+  def self.order_categories(categories)
+    if SiteSetting.fixed_category_positions
+      categories.order(:position, :id)
+    else
+      allowed_category_ids = categories.pluck(:id) << nil # `nil` is necessary to include categories without any associated topics
+      categories.left_outer_joins(:featured_topics)
+        .where(topics: { category_id: allowed_category_ids })
+        .group('categories.id')
+        .order("max(topics.bumped_at) DESC NULLS LAST")
+        .order('categories.id ASC')
+    end
+  end
+
   private
 
   def find_relevant_topics
@@ -75,14 +90,7 @@ class CategoryList
 
     @categories = @categories.where("categories.parent_category_id = ?", @options[:parent_category_id].to_i) if @options[:parent_category_id].present?
 
-    if SiteSetting.fixed_category_positions
-      @categories = @categories.order(:position, :id)
-    else
-      @categories = @categories.order('COALESCE(categories.posts_week, 0) DESC')
-        .order('COALESCE(categories.posts_month, 0) DESC')
-        .order('COALESCE(categories.posts_year, 0) DESC')
-        .order('id ASC')
-    end
+    @categories = self.class.order_categories(@categories)
 
     @categories = @categories.to_a
 

@@ -1,0 +1,114 @@
+$d-popover-background: $secondary;
+$d-popover-border: $primary-medium;
+
+@-webkit-keyframes popoverFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes popoverFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+#d-popover {
+  background-color: $d-popover-background;
+  position: absolute;
+  z-index: z("modal", "tooltip");
+  border-color: $d-popover-border;
+  border-style: solid;
+  border-width: 1px;
+  max-width: 300px;
+  -webkit-animation: popoverFadeIn 0.5s;
+  animation: popoverFadeIn 0.5s;
+  background-clip: padding-box;
+  display: block;
+  box-shadow: shadow("dropdown");
+  border-radius: 2px;
+
+  &.is-under {
+    margin-top: 0px;
+
+    .d-popover-top-arrow {
+      display: block;
+    }
+
+    .d-popover-bottom-arrow {
+      display: none;
+    }
+  }
+
+  &.is-above {
+    margin-top: 0px;
+
+    .d-popover-bottom-arrow {
+      display: block;
+    }
+
+    .d-popover-top-arrow {
+      display: none;
+    }
+  }
+
+  &.retina {
+    border-width: 0.5px;
+  }
+
+  .d-popover-content {
+    padding: 0.5em;
+    font-size: $font-down-1;
+    overflow-wrap: break-word;
+    -webkit-animation: popoverFadeIn 0.5s;
+    animation: popoverFadeIn 0.5s;
+  }
+
+  .d-popover-arrow {
+    border-style: solid;
+    color: transparent;
+    content: "";
+    position: absolute;
+    z-index: calc(z("tooltip") - 100);
+  }
+
+  .d-popover-top-arrow {
+    border-color: transparent transparent $d-popover-border;
+    top: 8px;
+    transform: translate(0, -15px);
+    border-width: 0 8px 8px;
+
+    &:after {
+      border-color: transparent transparent $d-popover-background;
+      border-style: solid;
+      border-width: 0 7px 7px;
+      bottom: -8px;
+      margin-left: -7px;
+      position: absolute;
+      content: "";
+    }
+  }
+
+  .d-popover-bottom-arrow {
+    border-color: $d-popover-border transparent transparent;
+    top: calc(100% + 16px);
+    transform: translate(0, -16px);
+    border-width: 8px 8px 0;
+
+    &:after {
+      position: absolute;
+      content: "";
+      border-color: $d-popover-background transparent transparent;
+      border-style: solid;
+      border-width: 7px 7px 0;
+      bottom: 2px;
+      transform: translate(-7px, 0);
+    }
+  }
+}

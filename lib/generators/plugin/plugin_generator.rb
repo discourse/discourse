@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails/generators/named_base'
 
 class PluginGenerator < Rails::Generators::NamedBase

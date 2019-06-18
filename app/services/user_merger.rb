@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class UserMerger
   def initialize(source_user, target_user, acting_user = nil)
     @source_user = source_user
@@ -221,10 +223,10 @@ class UserMerger
         bio_raw              = COALESCE(t.bio_raw, s.bio_raw),
         bio_cooked           = COALESCE(t.bio_cooked, s.bio_cooked),
         bio_cooked_version   = COALESCE(t.bio_cooked_version, s.bio_cooked_version),
-        profile_background   = COALESCE(t.profile_background, s.profile_background),
+        profile_background_upload_id = COALESCE(t.profile_background_upload_id, s.profile_background_upload_id),
         dismissed_banner_key = COALESCE(t.dismissed_banner_key, s.dismissed_banner_key),
         badge_granted_title  = t.badge_granted_title OR s.badge_granted_title,
-        card_background      = COALESCE(t.card_background, s.card_background),
+        card_background_upload_id = COALESCE(t.card_background_upload_id, s.card_background_upload_id),
         views                = t.views + s.views
       FROM user_profiles AS s
       WHERE t.user_id = :target_user_id AND s.user_id = :source_user_id
@@ -260,6 +262,9 @@ class UserMerger
     update_user_id(:muted_users, conditions: "x.muted_user_id = y.muted_user_id")
     update_user_id(:muted_users, user_id_column_name: "muted_user_id", conditions: "x.user_id = y.user_id")
 
+    update_user_id(:ignored_users, conditions: "x.ignored_user_id = y.ignored_user_id")
+    update_user_id(:ignored_users, user_id_column_name: "ignored_user_id", conditions: "x.user_id = y.user_id")
+
     Notification.where(user_id: @source_user.id).update_all(user_id: @target_user.id)
 
     update_user_id(:post_actions, conditions: ["x.post_id = y.post_id",
@@ -278,9 +283,8 @@ class UserMerger
     Post.with_deleted.where(locked_by_id: @source_user.id).update_all(locked_by_id: @target_user.id)
     Post.with_deleted.where(reply_to_user_id: @source_user.id).update_all(reply_to_user_id: @target_user.id)
 
-    QueuedPost.where(user_id: @source_user.id).update_all(user_id: @target_user.id)
-    QueuedPost.where(approved_by_id: @source_user.id).update_all(approved_by_id: @target_user.id)
-    QueuedPost.where(rejected_by_id: @source_user.id).update_all(rejected_by_id: @target_user.id)
+    Reviewable.where(created_by_id: @source_user.id).update_all(created_by_id: @target_user.id)
+    ReviewableHistory.where(created_by_id: @source_user.id).update_all(created_by_id: @target_user.id)
 
     SearchLog.where(user_id: @source_user.id).update_all(user_id: @target_user.id)
 
@@ -352,7 +356,7 @@ class UserMerger
 
   def delete_source_user
     @source_user.reload
-    @source_user.update_attributes(
+    @source_user.update(
       admin: false,
       email: "#{@source_user.username}_#{SecureRandom.hex}@no-email.invalid"
     )
@@ -365,6 +369,7 @@ class UserMerger
     DraftSequence.where(user_id: @source_user.id).delete_all
     GivenDailyLike.where(user_id: @source_user.id).delete_all
     MutedUser.where(user_id: @source_user.id).or(MutedUser.where(muted_user_id: @source_user.id)).delete_all
+    IgnoredUser.where(user_id: @source_user.id).or(IgnoredUser.where(ignored_user_id: @source_user.id)).delete_all
     UserAuthTokenLog.where(user_id: @source_user.id).delete_all
     UserAvatar.where(user_id: @source_user.id).delete_all
     UserAction.where(acting_user_id: @source_user.id).delete_all

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class MinUsernameLengthValidator
   def initialize(opts = {})
     @opts = opts

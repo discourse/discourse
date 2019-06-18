@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class BasicUserBadgeSerializer < ApplicationSerializer
   attributes :id, :granted_at, :count, :grouping_position
 

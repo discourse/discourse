@@ -32,11 +32,11 @@ export default Ember.Controller.extend({
   )
   _refreshModel() {
     this.get("group.model")
-      .findLogs(0, this.get("filterParams"))
+      .findLogs(0, this.filterParams)
       .then(results => {
         this.set("offset", 0);
 
-        this.get("model").setProperties({
+        this.model.setProperties({
           logs: results.logs,
           all_loaded: results.all_loaded
         });
@@ -62,7 +62,7 @@ export default Ember.Controller.extend({
       this.set("loading", true);
 
       this.get("group.model")
-        .findLogs(this.get("offset") + 1, this.get("filterParams"))
+        .findLogs(this.offset + 1, this.filterParams)
         .then(results => {
           results.logs.forEach(result =>
             this.get("model.logs").addObject(result)

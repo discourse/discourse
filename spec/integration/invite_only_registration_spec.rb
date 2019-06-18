@@ -1,4 +1,5 @@
 # encoding: UTF-8
+# frozen_string_literal: true
 
 require 'rails_helper'
 
@@ -8,6 +9,7 @@ describe 'invite only' do
     it 'can create user via API' do
 
       SiteSetting.invite_only = true
+      Jobs.run_immediately!
 
       admin = Fabricate(:admin)
       api_key = Fabricate(:api_key, user: admin)

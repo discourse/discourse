@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ChangeDefaultNotificationLevelOnGroups < ActiveRecord::Migration[4.2]
   def change
     execute "UPDATE group_users SET notification_level = 2"

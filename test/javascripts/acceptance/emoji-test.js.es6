@@ -1,4 +1,4 @@
-import { IMAGE_VERSION as v } from "pretty-text/emoji";
+import { IMAGE_VERSION as v } from "pretty-text/emoji/version";
 import { acceptance } from "helpers/qunit-helpers";
 
 acceptance("Emoji", { loggedIn: true });

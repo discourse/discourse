@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rss'
 require 'feed_item_accessor'
 require 'rails_helper'

@@ -13,12 +13,12 @@ widgetTest("basic rendering", {
     });
   },
   test(assert) {
-    assert.ok(this.$(".names").length);
-    assert.ok(this.$("span.username").length);
-    assert.ok(this.$("a[data-user-card=eviltrout]").length);
-    assert.equal(this.$(".username a").text(), "eviltrout");
-    assert.equal(this.$(".full-name a").text(), "Robin Ward");
-    assert.equal(this.$(".user-title").text(), "Trout Master");
+    assert.ok(find(".names").length);
+    assert.ok(find("span.username").length);
+    assert.ok(find("a[data-user-card=eviltrout]").length);
+    assert.equal(find(".username a").text(), "eviltrout");
+    assert.equal(find(".full-name a").text(), "Robin Ward");
+    assert.equal(find(".user-title").text(), "Trout Master");
   }
 });
 
@@ -36,12 +36,12 @@ widgetTest("extra classes and glyphs", {
     });
   },
   test(assert) {
-    assert.ok(this.$("span.staff").length);
-    assert.ok(this.$("span.admin").length);
-    assert.ok(this.$("span.moderator").length);
-    assert.ok(this.$(".d-icon-shield-alt").length);
-    assert.ok(this.$("span.new-user").length);
-    assert.ok(this.$("span.fish").length);
+    assert.ok(find("span.staff").length);
+    assert.ok(find("span.admin").length);
+    assert.ok(find("span.moderator").length);
+    assert.ok(find(".d-icon-shield-alt").length);
+    assert.ok(find("span.new-user").length);
+    assert.ok(find("span.fish").length);
   }
 });
 
@@ -52,7 +52,7 @@ widgetTest("disable display name on posts", {
     this.set("args", { username: "eviltrout", name: "Robin Ward" });
   },
   test(assert) {
-    assert.equal(this.$(".full-name").length, 0);
+    assert.equal(find(".full-name").length, 0);
   }
 });
 
@@ -64,6 +64,6 @@ widgetTest("doesn't render a name if it's similar to the username", {
     this.set("args", { username: "eviltrout", name: "evil-trout" });
   },
   test(assert) {
-    assert.equal(this.$(".second").length, 0);
+    assert.equal(find(".second").length, 0);
   }
 });

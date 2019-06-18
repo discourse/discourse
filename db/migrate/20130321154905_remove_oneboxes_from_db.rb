@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class RemoveOneboxesFromDb < ActiveRecord::Migration[4.2]
   def up
     drop_table :post_onebox_renders

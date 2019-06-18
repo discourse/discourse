@@ -280,6 +280,7 @@
     flex-basis: 50%;
     display: flex;
     align-items: center;
+    margin-right: auto;
     button {
       flex: 0 0 auto;
     }
@@ -307,14 +308,10 @@
         margin-right: 5px;
       }
     }
-  }
-
-  .composer-bottom-right {
-    flex-basis: 50%;
-    display: flex;
-    flex-direction: row-reverse;
-    .toggle-preview {
-      order: 2;
+    #draft-status .d-icon-user-edit {
+      color: $danger;
+      font-size: 20px;
+      vertical-align: -5.5px;
     }
   }
 
@@ -451,5 +448,27 @@ div.ac-wrap {
     table {
       width: 100%;
     }
+  }
+}
+
+.save-animation {
+  -webkit-animation: transformer 5s forwards;
+  animation: transformer 5s forwards;
+}
+
+@-webkit-keyframes transformer {
+  90% {
+    -webkit-filter: opacity(1);
+  }
+  100% {
+    -webkit-filter: opacity(0);
+  }
+}
+@keyframes transformer {
+  90% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
   }
 }

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 describe InviteRedeemer do
@@ -12,12 +14,15 @@ describe InviteRedeemer do
       expect(user.approved).to eq(true)
     end
 
-    it "can set the password too" do
+    it "can set the password and ip_address" do
       password = 's3cure5tpasSw0rD'
-      user = InviteRedeemer.create_user_from_invite(Fabricate(:invite, email: 'walter.white@email.com'), 'walter', 'Walter White', password)
+      ip_address = '192.168.1.1'
+      user = InviteRedeemer.create_user_from_invite(Fabricate(:invite, email: 'walter.white@email.com'), 'walter', 'Walter White', password, nil, ip_address)
       expect(user).to have_password
       expect(user.confirm_password?(password)).to eq(true)
       expect(user.approved).to eq(true)
+      expect(user.ip_address).to eq(ip_address)
+      expect(user.registration_ip_address).to eq(ip_address)
     end
 
     it "raises exception with record and errors" do
@@ -45,7 +50,7 @@ describe InviteRedeemer do
   end
 
   describe "#redeem" do
-    let(:invite) { Fabricate(:invite) }
+    fab!(:invite) { Fabricate(:invite) }
     let(:name) { 'john snow' }
     let(:username) { 'kingofthenorth' }
     let(:password) { 'know5nOthiNG' }

@@ -48,6 +48,31 @@ const TopicRoute = Discourse.Route.extend({
   },
 
   actions: {
+    showInvite() {
+      let invitePanelTitle;
+
+      if (this.isPM) {
+        invitePanelTitle = "topic.invite_private.title";
+      } else if (this.invitingToTopic) {
+        invitePanelTitle = "topic.invite_reply.title";
+      } else {
+        invitePanelTitle = "user.invited.create";
+      }
+
+      showModal("share-and-invite", {
+        modalClass: "share-and-invite",
+        panels: [
+          {
+            id: "invite",
+            title: invitePanelTitle,
+            model: {
+              inviteModel: this.modelFor("topic")
+            }
+          }
+        ]
+      });
+    },
+
     showFlags(model) {
       let controller = showModal("flag", { model });
       controller.setProperties({ flagTopic: false });
@@ -92,20 +117,14 @@ const TopicRoute = Discourse.Route.extend({
       this.controllerFor("feature_topic").reset();
     },
 
-    showInvite() {
-      showModal("invite", { model: this.modelFor("topic") });
-      this.controllerFor("invite").reset();
-    },
-
     showHistory(model, revision) {
-      showModal("history", { model });
-      const historyController = this.controllerFor("history");
-
+      let historyController = showModal("history", {
+        model,
+        modalClass: "history-modal"
+      });
       historyController.refresh(model.get("id"), revision || "latest");
       historyController.set("post", model);
       historyController.set("topicController", this.controllerFor("topic"));
-
-      this.controllerFor("modal").set("modalClass", "history-modal");
     },
 
     showGrantBadgeModal() {
@@ -154,7 +173,7 @@ const TopicRoute = Discourse.Route.extend({
           this,
           "_replaceUnlessScrolling",
           postUrl,
-          SCROLL_DELAY
+          Ember.Test ? 0 : SCROLL_DELAY
         );
       }
     },
@@ -211,7 +230,7 @@ const TopicRoute = Discourse.Route.extend({
       });
     }
 
-    const queryParams = transition.queryParams;
+    const queryParams = transition.to.queryParams;
 
     let topic = this.modelFor("topic");
     if (topic && topic.get("id") === parseInt(params.id, 10)) {

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class UploadFixer
   def self.fix_all_extensions
     Upload.where("uploads.extension IS NOT NULL").find_each do |upload|

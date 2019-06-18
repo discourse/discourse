@@ -29,10 +29,10 @@ export default DropdownSelectBoxComponent.extend({
     onSelect(id) {
       switch (id) {
         case "notYou":
-          this.showToken(this.get("token"));
+          this.showToken(this.token);
           break;
         case "logOut":
-          this.revokeAuthToken(this.get("token"));
+          this.revokeAuthToken(this.token);
           break;
       }
     }

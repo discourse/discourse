@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreateWebCrawlerRequests < ActiveRecord::Migration[5.1]
   def change
     create_table :web_crawler_requests do |t|

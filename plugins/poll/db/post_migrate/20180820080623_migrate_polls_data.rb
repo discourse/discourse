@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class MigratePollsData < ActiveRecord::Migration[5.2]
   def escape(text)
     PG::Connection.escape_string(text)

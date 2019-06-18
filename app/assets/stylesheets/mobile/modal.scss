@@ -42,8 +42,6 @@
 
 .close {
   font-size: $font-up-4;
-  padding: 10px 15px 5px 5px;
-  color: $primary;
 }
 
 #move-selected {
@@ -67,7 +65,7 @@
 
   form {
     margin-top: 20px;
-    input[type="text"] {
+    input:not(.filter-input)[type="text"] {
       box-sizing: border-box;
       width: 100%;
     }
@@ -82,7 +80,6 @@
 
 .edit-category-modal {
   .modal-body {
-    box-sizing: border-box;
     position: relative;
     height: 350px;
   }
@@ -101,14 +98,6 @@
 
 .modal-inner-container {
   margin-bottom: 20px;
-}
-
-.alert {
-  padding: 5px;
-  &.alert-success {
-    background-color: $success-low;
-    color: $success;
-  }
 }
 
 .change-timestamp-footer .btn-primary {

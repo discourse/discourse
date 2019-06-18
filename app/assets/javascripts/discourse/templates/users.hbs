@@ -10,11 +10,10 @@
 
         {{#conditional-loading-spinner condition=model.loading}}
           {{#if model.length}}
-            <div class='total-rows'>{{i18n "directory.total_rows" count=model.totalRows}}</div>
 
             <table>
               <thead>
-                <th>&nbsp;</th>
+                <th>{{i18n "directory.total_rows" count=model.totalRows}}</th>
                 {{directory-toggle field="likes_received" order=order asc=asc icon="heart"}}
                 {{directory-toggle field="likes_given" order=order asc=asc icon="heart"}}
                 {{directory-toggle field="topic_count" order=order asc=asc}}

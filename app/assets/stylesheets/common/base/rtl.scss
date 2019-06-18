@@ -2,11 +2,6 @@
 // *** These styles are all going to be flipped by the r2 gem ***
 // Adding the !important declaration to a rule prevents it from being flipped.
 
-.rtl #topic-progress-wrapper .topic-admin-popup-menu.right-side,
-.rtl #topic-progress-wrapper.docked .topic-admin-popup-menu.right-side {
-  right: 80px;
-}
-
 // This is used to flip the .d-icon-caret-right
 @mixin rotate($degrees) {
   -webkit-transform: rotate(#{$degrees}deg);

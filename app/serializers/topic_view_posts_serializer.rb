@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class TopicViewPostsSerializer < ApplicationSerializer
   include PostStreamSerializerMixin
   include SuggestedTopicsMixin

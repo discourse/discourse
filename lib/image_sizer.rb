@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module ImageSizer
 
   # Resize an image to the aspect ratio we want

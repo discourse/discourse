@@ -1,4 +1,5 @@
 #!/usr/bin/env ruby
+# frozen_string_literal: true
 
 require "thor"
 
@@ -106,6 +107,7 @@ class DiscourseCLI < Thor
   end
 
   desc "restore", "Restore a Discourse backup"
+  option :disable_emails, type: :boolean, default: true
   def restore(filename = nil)
 
     if File.exist?('/usr/local/bin/discourse')
@@ -132,7 +134,11 @@ class DiscourseCLI < Thor
 
     begin
       puts "Starting restore: #{filename}"
-      restorer = BackupRestore::Restorer.new(Discourse.system_user.id, filename: filename)
+      restorer = BackupRestore::Restorer.new(
+        Discourse.system_user.id,
+        filename: filename,
+        disable_emails: options[:disable_emails]
+      )
       restorer.run
       puts 'Restore done.'
     rescue BackupRestore::FilenameMissingError

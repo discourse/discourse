@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class RenameStickyToPinned < ActiveRecord::Migration[4.2]
   def up
     rename_column :topics, :sticky, :pinned

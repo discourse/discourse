@@ -14,7 +14,7 @@ export default Ember.Controller.extend({
 
       ajax("/admin/email/advanced-test", {
         type: "POST",
-        data: { email: this.get("email") }
+        data: { email: this.email }
       })
         .then(data => {
           this.setProperties({

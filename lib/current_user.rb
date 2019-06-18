@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module CurrentUser
 
   def self.has_auth_cookie?(env)

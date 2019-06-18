@@ -1,0 +1,94 @@
+<div class='edit-main-nav admin-controls'>
+    <nav>
+    <ul class='nav nav-pills target'>
+        {{#each visibleTargets as |target|}}
+        <li>
+            {{#link-to editRouteName
+                theme.id 
+                target.name 
+                fieldName 
+                replace=true 
+                title=field.title 
+                class=(if target.edited 'edited' 'blank')
+            }}
+            {{#if target.error}}{{d-icon 'exclamation-triangle'}}{{/if}}
+            {{#if target.icon}}
+                {{d-icon target.icon}}
+            {{/if}}
+            {{i18n (concat 'admin.customize.theme.' target.name)}}
+            {{/link-to}}
+        </li>
+        {{/each}}
+        
+        {{#if allowAdvanced}}
+        <li>
+            <a {{action "toggleShowAdvanced"}} 
+                class='no-text' 
+                title="{{i18n (concat "admin.customize.theme." (if showAdvanced "hide_advanced" "show_advanced"))}}"
+            >
+                {{d-icon (if showAdvanced "angle-double-left" "angle-double-right")}}   
+            </a>
+        </li>
+        {{/if}}
+
+        <li class="spacer"></li>
+        <li>
+        <label>
+            {{input type="checkbox" checked=onlyOverridden click=(action "onlyOverriddenChanged" value="target.checked")}}
+            {{i18n 'admin.customize.theme.hide_unused_fields'}}
+        </label>
+        </li>
+    </ul>
+    </nav>
+</div>
+
+<div class='admin-controls'>
+    <nav>
+    <ul class='nav nav-pills fields'>
+        {{#each visibleFields as |field|}}
+        <li>
+            {{#link-to editRouteName
+            theme.id 
+            currentTargetName 
+            field.name 
+            replace=true 
+            title=field.title 
+            class=(if field.edited 'edited' 'blank')
+            }}
+            {{#if field.error}}{{d-icon 'exclamation-triangle'}}{{/if}}
+            {{#if field.icon}}{{d-icon field.icon}}{{/if}}
+            {{field.translatedName}}
+            
+            {{/link-to}}
+        </li>
+        {{/each}}
+
+        {{#if showAddField}}
+        <li>
+            {{#if addingField}}
+            {{input type=text value=newFieldName enter=(action 'addField') escape-press=(action "cancelAddField")}} 
+            {{d-button class="ok" action=(action "addField" newFieldName) icon="check"}} 
+            {{d-button class="cancel" action=(action "cancelAddField") icon="times"}}
+            {{else}}
+            <a {{action "toggleAddField" currentTargetName}} class="no-text">
+            {{d-icon "plus"}}
+            </a>
+            {{/if}}
+        </li>
+        {{/if}}
+        <li class='spacer'></li>
+        <li>
+        <a {{action "toggleMaximize"}} class="no-text">
+            {{d-icon maximizeIcon}}
+        </a>
+        </li>
+    </ul>
+    </nav>
+</div>
+
+
+{{#if error}}
+    <pre class='field-error'>{{error}}</pre>
+{{/if}}
+
+{{ace-editor content=activeSection editorId=editorId mode=activeSectionMode autofocus="true"}}

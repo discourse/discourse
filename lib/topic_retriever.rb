@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class TopicRetriever
 
   def initialize(embed_url, opts = nil)

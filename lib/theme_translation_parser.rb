@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ThemeTranslationParser
   INTERNAL_KEYS = [:theme_metadata]
   class InvalidYaml < StandardError; end

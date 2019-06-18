@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class PostLocker
   def initialize(post, user)
     @post, @user = post, user

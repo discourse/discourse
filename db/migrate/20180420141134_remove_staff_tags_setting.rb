@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class RemoveStaffTagsSetting < ActiveRecord::Migration[5.1]
   def up
     execute "INSERT INTO tag_group_permissions

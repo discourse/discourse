@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # For some reason safe buffer is getting invalid encoding in some cases
 # we work around the issue and log the problems
 #
@@ -15,9 +17,9 @@ class ActiveSupport::SafeBuffer
       raise
     else
 
-      encoding_diags = "internal encoding #{Encoding.default_internal}, external encoding #{Encoding.default_external}"
+      encoding_diags = +"internal encoding #{Encoding.default_internal}, external encoding #{Encoding.default_external}"
 
-      unless encoding == Encoding::UTF_8
+      if encoding != Encoding::UTF_8
         encoding_diags << " my encoding is #{encoding} "
 
         self.force_encoding("UTF-8")
@@ -28,7 +30,7 @@ class ActiveSupport::SafeBuffer
         Rails.logger.warn("Encountered a non UTF-8 string in SafeBuffer - #{self} - #{encoding_diags}")
       end
 
-      unless value.encoding == Encoding::UTF_8
+      if value.encoding != Encoding::UTF_8
 
         encoding_diags << " attempted to append encoding  #{value.encoding} "
 

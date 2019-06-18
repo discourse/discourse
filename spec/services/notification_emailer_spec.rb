@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 describe NotificationEmailer do
@@ -6,8 +8,8 @@ describe NotificationEmailer do
     NotificationEmailer.enable
   end
 
-  let(:topic) { Fabricate(:topic) }
-  let(:post) { Fabricate(:post, topic: topic) }
+  fab!(:topic) { Fabricate(:topic) }
+  fab!(:post) { Fabricate(:post, topic: topic) }
 
   # something is off with fabricator
   def create_notification(type, user = nil)
@@ -78,7 +80,7 @@ describe NotificationEmailer do
     include_examples "enqueue"
 
     it "doesn't enqueue a job if the user has mention emails disabled" do
-      notification.user.user_option.update_columns(email_direct: false)
+      notification.user.user_option.update_columns(email_level: UserOption.email_level_types[:never])
       Jobs.expects(:enqueue_in).with(delay, :user_email, has_entry(type: type)).never
       NotificationEmailer.process_notification(notification)
     end
@@ -88,7 +90,7 @@ describe NotificationEmailer do
     include_examples "enqueue"
 
     it "doesn't enqueue a job if the user has private message emails disabled" do
-      notification.user.user_option.update_columns(email_private_messages: false)
+      notification.user.user_option.update_columns(email_messages_level: UserOption.email_level_types[:never])
       Jobs.expects(:enqueue_in).with(delay, :user_email, has_entry(type: type)).never
       NotificationEmailer.process_notification(notification)
     end

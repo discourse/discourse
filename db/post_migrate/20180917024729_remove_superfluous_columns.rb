@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'migration/column_dropper'
 require 'badge_posts_view_manager'
 

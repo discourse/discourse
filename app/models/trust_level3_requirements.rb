@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # This class performs calculations to determine if a user qualifies for
 # the Leader (3) trust level.
 class TrustLevel3Requirements

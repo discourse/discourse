@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Just ignore included associations that are to be embedded in the root instead of
 # throwing an exception in AMS 0.8.x.
 #

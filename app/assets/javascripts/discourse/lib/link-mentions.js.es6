@@ -16,7 +16,7 @@ function replaceSpan($e, username, opts) {
       extraClass = "notify";
     }
     $e.replaceWith(
-      `<a href='${Discourse.getURL("/groups/") +
+      `<a href='${Discourse.getURL("/g/") +
         username}' class='mention-group ${extraClass}' ${extra}>@${username}</a>`
     );
   } else {

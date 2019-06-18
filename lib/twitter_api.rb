@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # lightweight Twitter api calls
 class TwitterApi
 

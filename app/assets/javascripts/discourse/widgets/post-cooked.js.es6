@@ -2,20 +2,29 @@ import { iconHTML } from "discourse-common/lib/icon-library";
 import { ajax } from "discourse/lib/ajax";
 import { isValidLink } from "discourse/lib/click-track";
 import { number } from "discourse/lib/formatter";
+import highlightText from "discourse/lib/highlight-text";
 
-const _decorators = [];
+let _decorators = [];
 
 // Don't call this directly: use `plugin-api/decorateCooked`
 export function addDecorator(cb) {
   _decorators.push(cb);
 }
 
+export function resetDecorators() {
+  _decorators = [];
+}
+
 export default class PostCooked {
-  constructor(attrs, decoratorHelper) {
+  constructor(attrs, decoratorHelper, currentUser) {
     this.attrs = attrs;
     this.expanding = false;
     this._highlighted = false;
     this.decoratorHelper = decoratorHelper;
+    this.currentUser = currentUser;
+    this.ignoredUsers = this.currentUser
+      ? this.currentUser.ignored_users
+      : null;
   }
 
   update(prev) {
@@ -28,7 +37,7 @@ export default class PostCooked {
   }
 
   init() {
-    const $html = $(`<div class='cooked'>${this.attrs.cooked}</div>`);
+    const $html = this._computeCooked();
     this._insertQuoteControls($html);
     this._showLinkCounts($html);
     this._fixImageSizes($html);
@@ -45,7 +54,8 @@ export default class PostCooked {
       if (this._highlighted) {
         $html.unhighlight();
       }
-      $html.highlight(highlight.split(/\s+/));
+
+      highlightText($html, highlight, { defaultClassName: true });
       this._highlighted = true;
     } else if (this._highlighted) {
       $html.unhighlight();
@@ -139,7 +149,11 @@ export default class PostCooked {
       const $blockQuote = $("> blockquote", $aside);
       $aside.data("original-contents", $blockQuote.html());
 
-      const originalText = $blockQuote.text().trim();
+      const originalText =
+        $blockQuote.text().trim() ||
+        $("> blockquote", this.attrs.cooked)
+          .text()
+          .trim();
       $blockQuote.html(I18n.t("loading"));
       let topicId = this.attrs.topicId;
       if ($aside.data("topic")) {
@@ -210,6 +224,16 @@ export default class PostCooked {
       expandContract = iconHTML(desc, { title: "post.expand_collapse" });
       $(".title", $aside).css("cursor", "pointer");
     }
+    if (this.ignoredUsers && this.ignoredUsers.length > 0) {
+      const username = $aside
+        .find(".title")
+        .text()
+        .trim()
+        .slice(0, -1);
+      if (username.length > 0 && this.ignoredUsers.includes(username)) {
+        $aside.find("p").remove();
+      }
+    }
     $(".quote-controls", $aside).html(expandContract + navLink);
   }
 
@@ -238,6 +262,21 @@ export default class PostCooked {
         }
       }
     });
+  }
+
+  _computeCooked() {
+    if (
+      (this.attrs.firstPost || this.attrs.embeddedPost) &&
+      this.ignoredUsers &&
+      this.ignoredUsers.length > 0 &&
+      this.ignoredUsers.includes(this.attrs.username)
+    ) {
+      return $(
+        `<div class='cooked post-ignored'>${I18n.t("post.ignored")}</div>`
+      );
+    }
+
+    return $(`<div class='cooked'>${this.attrs.cooked}</div>`);
   }
 }
 

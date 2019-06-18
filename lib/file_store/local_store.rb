@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_dependency 'file_store/base_store'
 
 module FileStore
@@ -16,6 +18,7 @@ module FileStore
       destination = "#{public_dir}#{url.sub("/uploads/", "/uploads/tombstone/")}"
       dir = Pathname.new(destination).dirname
       FileUtils.mkdir_p(dir) unless Dir.exists?(dir)
+      FileUtils.remove(destination) if File.exists?(destination)
       FileUtils.move(source, destination, force: true)
       FileUtils.touch(destination)
     end
@@ -46,8 +49,7 @@ module FileStore
     end
 
     def cdn_url(url)
-      return url if Discourse.asset_host.blank?
-      url.sub(Discourse.base_url_no_prefix, Discourse.asset_host)
+      UrlHelper.local_cdn_url(url)
     end
 
     def path_for(upload)

@@ -1,7 +1,10 @@
+import computed from "ember-addons/ember-computed-decorators";
+
 export default Ember.Controller.extend({
   faqOverriden: Ember.computed.gt("siteSettings.faq_url.length", 0),
 
-  contactInfo: function() {
+  @computed
+  contactInfo() {
     if (this.siteSettings.contact_url) {
       return I18n.t("about.contact_info", {
         contact_info:
@@ -18,5 +21,5 @@ export default Ember.Controller.extend({
     } else {
       return null;
     }
-  }.property()
+  }
 });

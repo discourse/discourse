@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddTopicColumnsBack < ActiveRecord::Migration[4.2]
 
   # This really sucks big time, we have no use for these columns yet can not remove them

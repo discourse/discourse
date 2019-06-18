@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module FileStore
 
   class BaseStore
@@ -75,7 +77,8 @@ module FileStore
 
         if !file
           max_file_size_kb = [SiteSetting.max_image_size_kb, SiteSetting.max_attachment_size_kb].max.kilobytes
-          url = SiteSetting.scheme + ":" + upload.url
+          url = Discourse.store.cdn_url(upload.url)
+          url = SiteSetting.scheme + ":" + url if url =~ /^\/\//
           file = FileHelper.download(
             url,
             max_file_size: max_file_size_kb,
@@ -83,6 +86,7 @@ module FileStore
             follow_redirect: true
           )
           cache_file(file, filename)
+          file = get_from_cache(filename)
         end
 
         file
@@ -90,10 +94,6 @@ module FileStore
     end
 
     def purge_tombstone(grace_period)
-    end
-
-    def get_depth_for(id)
-      [0, Math.log(id / 1_000.0, 16).ceil].max
     end
 
     def get_path_for(type, id, sha, extension)
@@ -146,6 +146,12 @@ module FileStore
 
     def not_implemented
       raise "Not implemented."
+    end
+
+    def get_depth_for(id)
+      depths = [0]
+      depths << Math.log(id / 1_000.0, 16).ceil if id.positive?
+      depths.max
     end
 
   end

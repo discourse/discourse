@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class PushNotificationController < ApplicationController
   layout false
   before_action :ensure_logged_in

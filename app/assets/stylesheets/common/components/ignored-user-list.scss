@@ -1,0 +1,36 @@
+.ignored-list {
+  overflow: auto;
+  max-height: 150px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  background-color: #fff;
+  min-height: 30px;
+  box-sizing: border-box;
+}
+
+.ignored-user-list-item {
+  border: 1px solid #e9e9e9;
+  border-radius: 0.25em;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  margin-right: 10px;
+}
+
+.remove-ignored-user {
+  display: flex;
+  flex: 1 0 0px;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  border-radius: 0 0.25em 0.25em 0;
+  padding-top: 0;
+  padding-bottom: 0;
+  height: 100%;
+}
+
+.ignored-user-name {
+  padding-left: 10px;
+  padding-right: 10px;
+}

@@ -7,7 +7,7 @@
 
 nl:
   site_settings:
-    discourse_local_dates_enabled: "Ziet de discourse-local-dates feature aan. Dit zal ondersteuning bieden voor lokale tijdzones in posts die gebruik maken van de [date] element."
-    discourse_local_dates_default_formats: "Vaak gebruikte date time formaten, zie: <a target='_blank' rel='noopener' href='https://momentjs.com/docs/#/parsing/string-format/'>momentjs string format</a>"
-    discourse_local_dates_default_timezones: "Standaard lijst van timezones, moet een geldige <a target='_blank' rel='noopener' href='https://en.wikipedia.org/wiki/List_of_tz_database_time_zones'>TZ</a> zijn."
-    discourse_local_dates_email_format: "Het formaat dat gebruikt wordt om een datum weer te geven in emails."
+    discourse_local_dates_enabled: "De functie discourse-local-dates inschakelen. Dit voegt ondersteuning toe voor lokale tijdzonebewuste datums in berichten via het element [date]."
+    discourse_local_dates_default_formats: "Vaak gebruikte datum- en tijdnotaties, zie: <a target='_blank' rel='noopener' href='https://momentjs.com/docs/#/parsing/string-format/'>momentjs string format</a>"
+    discourse_local_dates_default_timezones: "Standaardlijst van tijdzones, moet een geldige <a target='_blank' rel='noopener' href='https://en.wikipedia.org/wiki/List_of_tz_database_time_zones'>TZ</a> zijn."
+    discourse_local_dates_email_format: "Gebruikte notatie voor het weergeven van een datum in e-mails."

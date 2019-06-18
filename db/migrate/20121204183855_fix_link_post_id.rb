@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class FixLinkPostId < ActiveRecord::Migration[4.2]
   def up
     to_remove = []

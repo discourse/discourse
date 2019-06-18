@@ -1,18 +1,21 @@
+import computed from "ember-addons/ember-computed-decorators";
+
 export default Ember.Component.extend({
   loadingMore: Ember.computed.alias("topicList.loadingMore"),
   loading: Ember.computed.not("loaded"),
 
-  loaded: function() {
-    var topicList = this.get("topicList");
+  @computed("topicList.loaded")
+  loaded() {
+    var topicList = this.topicList;
     if (topicList) {
       return topicList.get("loaded");
     } else {
       return true;
     }
-  }.property("topicList.loaded"),
+  },
 
   _topicListChanged: function() {
-    this._initFromTopicList(this.get("topicList"));
+    this._initFromTopicList(this.topicList);
   }.observes("topicList.[]"),
 
   _initFromTopicList(topicList) {
@@ -24,12 +27,9 @@ export default Ember.Component.extend({
 
   init() {
     this._super(...arguments);
-    const topicList = this.get("topicList");
+    const topicList = this.topicList;
     if (topicList) {
       this._initFromTopicList(topicList);
-    } else {
-      // Without a topic list, we assume it's loaded always.
-      this.set("loaded", true);
     }
   },
 
@@ -58,7 +58,7 @@ export default Ember.Component.extend({
           }
         }
 
-        const topic = this.get("topics").findBy("id", parseInt(topicId));
+        const topic = this.topics.findBy("id", parseInt(topicId));
         this.appEvents.trigger("topic-entrance:show", {
           topic,
           position: target.offset()

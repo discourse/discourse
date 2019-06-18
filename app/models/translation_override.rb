@@ -1,4 +1,5 @@
-require 'js_locale_helper'
+# frozen_string_literal: true
+
 require "i18n/i18n_interpolation_keys_finder"
 
 class TranslationOverride < ActiveRecord::Base
@@ -21,7 +22,7 @@ class TranslationOverride < ActiveRecord::Base
 
     data = { value: value }
     if key.end_with?('_MF')
-      _, filename = JsLocaleHelper.find_message_format_locale([locale], false)
+      _, filename = JsLocaleHelper.find_message_format_locale([locale], fallback_to_english: false)
       data[:compiled_js] = JsLocaleHelper.compile_message_format(filename, locale, value)
     end
 
@@ -65,7 +66,7 @@ class TranslationOverride < ActiveRecord::Base
 
   def check_interpolation_keys
     original_text = I18n.overrides_disabled do
-      I18n.backend.send(:lookup, self.locale, self.translation_key)
+      I18n.t(translation_key, locale: :en)
     end
 
     if original_text

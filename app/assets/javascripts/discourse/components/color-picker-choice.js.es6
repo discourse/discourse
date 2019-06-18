@@ -22,6 +22,6 @@ export default Ember.Component.extend({
 
   click(e) {
     e.preventDefault();
-    this.selectColor(this.get("color"));
+    this.selectColor(this.color);
   }
 });

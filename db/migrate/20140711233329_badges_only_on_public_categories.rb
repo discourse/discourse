@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class BadgesOnlyOnPublicCategories < ActiveRecord::Migration[4.2]
   def up
     execute "DROP VIEW badge_posts"

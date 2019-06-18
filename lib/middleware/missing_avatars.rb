@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Middleware
 
   # In development mode, it is common to use a database from a production site for testing

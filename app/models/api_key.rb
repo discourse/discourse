@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ApiKey < ActiveRecord::Base
   belongs_to :user
   belongs_to :created_by, class_name: 'User'

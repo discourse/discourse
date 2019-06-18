@@ -8,10 +8,7 @@
 lt:
   js:
     discourse_local_dates:
-      title: Įterpti datą
       create:
-        modal_title: Įterpti datą
-        modal_subtitle: "Mes automatiškai konvertuosime datą ir laiką į žiūrovo vietinę laiko juostą."
         form:
           insert: Įterpti
           advanced_mode: Išplėstinis režimas

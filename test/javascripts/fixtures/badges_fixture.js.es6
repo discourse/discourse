@@ -114,7 +114,7 @@ export default {
         id: 116,
         name: "Tester",
         description:
-          'Reported 10 bugs that were liked by the <a href="https://meta.discourse.org/groups/discourse">Discourse team</a>',
+          'Reported 10 bugs that were liked by the <a href="https://meta.discourse.org/g/discourse">Discourse team</a>',
         grant_count: 9,
         allow_title: true,
         multiple_grant: false,
@@ -157,7 +157,7 @@ export default {
         id: 114,
         name: "Bug Reporter",
         description:
-          'Reported a bug that was liked by the <a href="https://meta.discourse.org/groups/discourse">Discourse team</a>',
+          'Reported a bug that was liked by the <a href="https://meta.discourse.org/g/discourse">Discourse team</a>',
         grant_count: 183,
         allow_title: false,
         multiple_grant: false,
@@ -402,6 +402,30 @@ export default {
       badge_grouping_id: 1,
       system: true,
       badge_type_id: 3
+    }
+  },
+  "/badges/50": {
+    badge_types: [
+      {
+        id: 3,
+        name: "Bronze"
+      }
+    ],
+    badge: {
+      id: 50,
+      name: "CustomBadge",
+      description: null,
+      long_description: "",
+      grant_count: 10,
+      allow_title: true,
+      multiple_grant: true,
+      icon: "fa-certificate",
+      listable: true,
+      enabled: true,
+      badge_grouping_id: 1,
+      system: false,
+      badge_type_id: 3,
+      has_badge: true
     }
   },
   "/user_badges.json": {

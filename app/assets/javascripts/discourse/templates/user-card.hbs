@@ -1,3 +1,7 @@
+{{#if site.mobileView}}
+  <div class="card-cloak hidden"></div>
+{{/if}}
+
 {{user-card-contents
   currentPath=application.currentPath
   topic=topic.model
@@ -9,4 +13,5 @@
   currentPath=application.currentPath
   topic=topic.model
   showUser=(action "showUser")
+  showGroup=(action "showGroup")
   createNewMessageViaParams=(route-action "createNewMessageViaParams")}}

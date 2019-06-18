@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddNotificationsToTopicUsers < ActiveRecord::Migration[4.2]
   def change
     add_column :topic_users, :notifications, :integer, default: 2

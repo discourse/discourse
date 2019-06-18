@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Admin::ApiController < Admin::AdminController
 
   def index

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 describe Notification do
@@ -87,7 +89,7 @@ describe Notification do
 
   describe 'unread counts' do
 
-    let(:user) { Fabricate(:user) }
+    fab!(:user) { Fabricate(:user) }
 
     context 'a regular notification' do
       it 'increases unread_notifications' do
@@ -252,7 +254,7 @@ describe Notification do
 
   describe '.filter_by_display_username_and_type' do
     let(:post) { Fabricate(:post) }
-    let(:user) { Fabricate(:user) }
+    fab!(:user) { Fabricate(:user) }
 
     before do
       PostActionNotifier.enable
@@ -269,7 +271,7 @@ describe Notification do
           topic: post.topic
         ))
 
-        PostAction.act(user, post, PostActionType.types[:like])
+        PostActionCreator.like(user, post)
       end.to change { Notification.count }.by(2)
 
       expect(Notification.filter_by_display_username_and_type(
@@ -285,7 +287,7 @@ end
 # pulling this out cause I don't want an observer
 describe Notification do
   describe '#recent_report' do
-    let(:user) { Fabricate(:user) }
+    fab!(:user) { Fabricate(:user) }
     let(:post) { Fabricate(:post) }
 
     def fab(type, read)

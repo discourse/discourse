@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class RemoveTopicResponseActions < ActiveRecord::Migration[4.2]
   def up
     # 2 notes:

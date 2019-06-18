@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 class JavascriptCache < ActiveRecord::Base
   belongs_to :theme_field
+  belongs_to :theme
 
   validate :content_cannot_be_nil
 
@@ -25,15 +26,22 @@ end
 #
 # Table name: javascript_caches
 #
-#  id             :bigint(8)        not null, primary key
-#  theme_field_id :bigint(8)        not null
+#  id             :bigint           not null, primary key
+#  theme_field_id :bigint
 #  digest         :string
 #  content        :text             not null
 #  created_at     :datetime         not null
 #  updated_at     :datetime         not null
+#  theme_id       :bigint
 #
 # Indexes
 #
 #  index_javascript_caches_on_digest          (digest)
 #  index_javascript_caches_on_theme_field_id  (theme_field_id)
+#  index_javascript_caches_on_theme_id        (theme_id)
+#
+# Foreign Keys
+#
+#  fk_rails_...  (theme_field_id => theme_fields.id) ON DELETE => cascade
+#  fk_rails_...  (theme_id => themes.id) ON DELETE => cascade
 #

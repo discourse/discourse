@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'comment_migration'
 
 class AddExampleColumnComments < CommentMigration

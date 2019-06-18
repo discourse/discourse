@@ -118,20 +118,21 @@
     vertical-align: middle;
   }
   th {
-    color: dark-light-choose($primary-medium, $secondary-medium);
-    font-weight: normal;
-    font-size: $font-0;
     button .d-icon {
-      color: dark-light-choose($primary-medium, $secondary-medium);
+      color: $primary-medium;
     }
   }
   td {
-    color: dark-light-choose($primary-medium, $secondary-medium);
+    color: $primary-medium;
     font-size: $font-0;
   }
 
   .main-link {
     @extend .topic-list-main-link;
+
+    .raw-topic-link > * {
+      pointer-events: none;
+    }
   }
 
   .link-bottom-line {

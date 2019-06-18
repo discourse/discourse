@@ -2,4 +2,5 @@ app/assets/stylesheets/vendor/
 plugins/**/assets/stylesheets/vendor/
 package.json
 config/locales/**/*.yml
-!config/locales/**/*.en.yml
+!config/locales/**/*.en*.yml
+script/import_scripts/**/*.yml

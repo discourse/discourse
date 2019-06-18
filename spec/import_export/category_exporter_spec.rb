@@ -1,13 +1,15 @@
+# frozen_string_literal: true
+
 require "rails_helper"
 require "import_export/category_exporter"
 
 describe ImportExport::CategoryExporter do
 
-  let(:category) { Fabricate(:category) }
-  let(:group) { Fabricate(:group) }
-  let(:user) { Fabricate(:user) }
-  let(:user2) { Fabricate(:user) }
-  let(:user3) { Fabricate(:user) }
+  fab!(:category) { Fabricate(:category) }
+  fab!(:group) { Fabricate(:group) }
+  fab!(:user) { Fabricate(:user) }
+  fab!(:user2) { Fabricate(:user) }
+  fab!(:user3) { Fabricate(:user) }
 
   before do
     STDOUT.stubs(:write)

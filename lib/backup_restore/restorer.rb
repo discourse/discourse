@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_dependency "db_helper"
 
 module BackupRestore
@@ -29,6 +31,7 @@ module BackupRestore
       @client_id = opts[:client_id]
       @filename = opts[:filename]
       @publish_to_message_bus = opts[:publish_to_message_bus] || false
+      @disable_emails = opts.fetch(:disable_emails, true)
 
       ensure_restore_is_enabled
       ensure_no_operation_is_running
@@ -81,6 +84,8 @@ module BackupRestore
       clear_theme_cache
 
       extract_uploads
+
+      after_restore_hook
     rescue SystemExit
       log "Restore process was cancelled!"
       rollback
@@ -377,6 +382,14 @@ module BackupRestore
 
     def migrate_database
       log "Migrating the database..."
+
+      if Discourse.skip_post_deployment_migrations?
+        ENV["SKIP_POST_DEPLOYMENT_MIGRATIONS"] = "0"
+        Rails.application.config.paths['db/migrate'] << Rails.root.join(
+          Discourse::DB_POST_MIGRATE_PATH
+        ).to_s
+      end
+
       Discourse::Application.load_tasks
       ENV["VERSION"] = @current_version.to_s
       DB.exec("SET search_path = public, pg_catalog;")
@@ -391,6 +404,12 @@ module BackupRestore
     def reload_site_settings
       log "Reloading site settings..."
       SiteSetting.refresh!
+
+      if @disable_emails && SiteSetting.disable_emails == 'no'
+        log "Disabling outgoing emails for non-staff users..."
+        user = User.find_by_email(@user_info[:email]) || Discourse.system_user
+        SiteSetting.set_and_log(:disable_emails, 'non-staff', user)
+      end
     end
 
     def clear_emoji_cache
@@ -417,6 +436,7 @@ module BackupRestore
           tmp_uploads_path = Dir.glob(File.join(@tmp_directory, "uploads", "*")).first
           previous_db_name = File.basename(tmp_uploads_path)
           current_db_name = RailsMultisite::ConnectionManagement.current_db
+          optimized_images_exist = File.exist?(File.join(tmp_uploads_path, 'optimized'))
 
           Discourse::Utils.execute_command(
             'rsync', '-avp', '--safe-links', "#{tmp_uploads_path}/", "uploads/#{current_db_name}/",
@@ -424,9 +444,50 @@ module BackupRestore
           )
 
           if previous_db_name != current_db_name
+            log "Remapping uploads..."
             DbHelper.remap("uploads/#{previous_db_name}", "uploads/#{current_db_name}")
           end
+
+          if SiteSetting.Upload.enable_s3_uploads
+            migrate_to_s3
+            remove_local_uploads(File.join(public_uploads_path, "uploads/#{current_db_name}"))
+          end
+
+          generate_optimized_images unless optimized_images_exist
         end
+      end
+    end
+
+    def migrate_to_s3
+      log "Migrating uploads to S3..."
+      ENV["SKIP_FAILED"] = "1"
+      ENV["MIGRATE_TO_MULTISITE"] = "1" if Rails.configuration.multisite
+      Rake::Task["uploads:migrate_to_s3"].invoke
+    end
+
+    def remove_local_uploads(directory)
+      log "Removing local uploads directory..."
+      FileUtils.rm_rf(directory) if Dir[directory].present?
+    rescue => ex
+      log "Something went wrong while removing the following uploads directory: #{directory}", ex
+    end
+
+    def generate_optimized_images
+      log 'Optimizing site icons...'
+      DB.exec("TRUNCATE TABLE optimized_images")
+      SiteIconManager.ensure_optimized!
+
+      log 'Posts will be rebaked by a background job in sidekiq. You will see missing images until that has completed.'
+      log 'You can expedite the process by manually running "rake posts:rebake_uncooked_posts"'
+
+      DB.exec(<<~SQL)
+        UPDATE posts
+        SET baked_version = NULL
+        WHERE id IN (SELECT post_id FROM post_uploads)
+      SQL
+
+      User.where("uploaded_avatar_id IS NOT NULL").find_each do |user|
+        Jobs.enqueue(:create_avatar_thumbnails, upload_id: user.uploaded_avatar_id)
       end
     end
 
@@ -481,6 +542,7 @@ module BackupRestore
       log "Clear theme cache"
       ThemeField.force_recompilation!
       Theme.expire_site_cache!
+      Stylesheet::Manager.cache.clear
     end
 
     def disable_readonly_mode
@@ -501,6 +563,11 @@ module BackupRestore
     def ensure_directory_exists(directory)
       log "Making sure #{directory} exists..."
       FileUtils.mkdir_p(directory)
+    end
+
+    def after_restore_hook
+      log "Executing the after_restore_hook..."
+      DiscourseEvent.trigger(:restore_complete)
     end
 
     def log(message, ex = nil)

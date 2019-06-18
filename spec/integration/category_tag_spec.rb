@@ -1,4 +1,5 @@
 # encoding: UTF-8
+# frozen_string_literal: true
 
 require 'rails_helper'
 require_dependency 'post_creator'
@@ -13,13 +14,13 @@ describe "category tag restrictions" do
     DiscourseTagging.filter_allowed_tags(Tag.all, Guardian.new(user), opts)
   end
 
-  let!(:tag1) { Fabricate(:tag, name: 'tag1') }
-  let!(:tag2) { Fabricate(:tag, name: 'tag2') }
-  let!(:tag3) { Fabricate(:tag, name: 'tag3') }
-  let!(:tag4) { Fabricate(:tag, name: 'tag4') }
+  fab!(:tag1) { Fabricate(:tag, name: 'tag1') }
+  fab!(:tag2) { Fabricate(:tag, name: 'tag2') }
+  fab!(:tag3) { Fabricate(:tag, name: 'tag3') }
+  fab!(:tag4) { Fabricate(:tag, name: 'tag4') }
 
-  let(:user)  { Fabricate(:user) }
-  let(:admin) { Fabricate(:admin) }
+  fab!(:user)  { Fabricate(:user) }
+  fab!(:admin) { Fabricate(:admin) }
 
   before do
     SiteSetting.tagging_enabled = true
@@ -28,8 +29,8 @@ describe "category tag restrictions" do
   end
 
   context "tags restricted to one category" do
-    let(:category_with_tags) { Fabricate(:category) }
-    let(:other_category)     { Fabricate(:category) }
+    fab!(:category_with_tags) { Fabricate(:category) }
+    fab!(:other_category)     { Fabricate(:category) }
 
     before do
       category_with_tags.tags = [tag1, tag2]
@@ -49,6 +50,9 @@ describe "category tag restrictions" do
       expect(filter_allowed_tags(for_input: true)).to contain_exactly(tag3, tag4)
       expect(filter_allowed_tags(for_input: true, category: category_with_tags, selected_tags: [tag1.name])).to contain_exactly(tag2)
       expect(filter_allowed_tags(for_input: true, category: category_with_tags, selected_tags: [tag1.name], term: 'tag')).to contain_exactly(tag2)
+      expect(filter_allowed_tags(for_input: true, category: other_category)).to contain_exactly(tag3, tag4)
+      expect(filter_allowed_tags(for_input: true, category: other_category, selected_tags: [tag3.name])).to contain_exactly(tag4)
+      expect(filter_allowed_tags(for_input: true, category: other_category, selected_tags: [tag3.name], term: 'tag')).to contain_exactly(tag4)
     end
 
     it "can't create new tags in a restricted category" do
@@ -67,21 +71,44 @@ describe "category tag restrictions" do
       expect { other_category.update(allowed_tags: ['newtag']) }.to change { Tag.count }.by(1)
       expect { other_category.update(allowed_tags: [tag1.name, 'tag-stuff', tag2.name, 'another-tag']) }.to change { Tag.count }.by(2)
     end
+
+    context 'category allows other tags to be used' do
+      before do
+        category_with_tags.update!(allow_global_tags: true)
+      end
+
+      it "search can show the permitted tags" do
+        expect(filter_allowed_tags.count).to eq(Tag.count)
+        expect(filter_allowed_tags(for_input: true, category: category_with_tags)).to contain_exactly(tag1, tag2, tag3, tag4)
+        expect(filter_allowed_tags(for_input: true)).to contain_exactly(tag3, tag4)
+        expect(filter_allowed_tags(for_input: true, category: category_with_tags, selected_tags: [tag1.name])).to contain_exactly(tag2, tag3, tag4)
+        expect(filter_allowed_tags(for_input: true, category: category_with_tags, selected_tags: [tag1.name], term: 'tag')).to contain_exactly(tag2, tag3, tag4)
+        expect(filter_allowed_tags(for_input: true, category: other_category)).to contain_exactly(tag3, tag4)
+        expect(filter_allowed_tags(for_input: true, category: other_category, selected_tags: [tag3.name])).to contain_exactly(tag4)
+        expect(filter_allowed_tags(for_input: true, category: other_category, selected_tags: [tag3.name], term: 'tag')).to contain_exactly(tag4)
+      end
+
+      it "works if no tags are restricted to the category" do
+        other_category.update!(allow_global_tags: true)
+        expect(filter_allowed_tags(for_input: true, category: other_category)).to contain_exactly(tag3, tag4)
+        expect(filter_allowed_tags(for_input: true, category: other_category, selected_tags: [tag3.name])).to contain_exactly(tag4)
+        expect(filter_allowed_tags(for_input: true, category: other_category, selected_tags: [tag3.name], term: 'tag')).to contain_exactly(tag4)
+      end
+    end
   end
 
   context "tag groups restricted to a category" do
-    let!(:tag_group1)     { Fabricate(:tag_group) }
-    let(:category)        { Fabricate(:category) }
-    let(:other_category)  { Fabricate(:category) }
+    fab!(:tag_group1)     { Fabricate(:tag_group) }
+    fab!(:category)        { Fabricate(:category) }
+    fab!(:other_category)  { Fabricate(:category) }
 
     before do
       tag_group1.tags = [tag1, tag2]
+      category.allowed_tag_groups = [tag_group1.name]
+      category.reload
     end
 
     it "tags in the group are used by category tag restrictions" do
-      category.allowed_tag_groups = [tag_group1.name]
-      category.reload
-
       expect(filter_allowed_tags(for_input: true, category: category)).to contain_exactly(tag1, tag2)
       expect(filter_allowed_tags(for_input: true)).to contain_exactly(tag3, tag4)
 
@@ -92,7 +119,6 @@ describe "category tag restrictions" do
     end
 
     it "groups and individual tags can be mixed" do
-      category.allowed_tag_groups = [tag_group1.name]
       category.allowed_tags = [tag4.name]
       category.reload
 
@@ -102,15 +128,76 @@ describe "category tag restrictions" do
     end
 
     it "enforces restrictions when creating a topic" do
-      category.allowed_tag_groups = [tag_group1.name]
-      category.reload
       post = create_post(category: category, tags: [tag1.name, "newtag"])
       expect(post.topic.tags.map(&:name)).to eq([tag1.name])
+    end
+
+    context 'category allows other tags to be used' do
+      before do
+        category.update!(allow_global_tags: true)
+      end
+
+      it 'filters tags correctly' do
+        expect(filter_allowed_tags(for_input: true, category: category)).to contain_exactly(tag1, tag2, tag3, tag4)
+        expect(filter_allowed_tags(for_input: true)).to contain_exactly(tag3, tag4)
+        expect(filter_allowed_tags(for_input: true, category: other_category)).to contain_exactly(tag3, tag4)
+
+        tag_group1.tags = [tag2, tag3, tag4]
+        expect(filter_allowed_tags(for_input: true, category: category)).to contain_exactly(tag1, tag2, tag3, tag4)
+        expect(filter_allowed_tags(for_input: true)).to contain_exactly(tag1)
+        expect(filter_allowed_tags(for_input: true, category: other_category)).to contain_exactly(tag1)
+      end
+
+      it "works if no tags are restricted to the category" do
+        other_category.update!(allow_global_tags: true)
+        expect(filter_allowed_tags(for_input: true, category: other_category)).to contain_exactly(tag3, tag4)
+        tag_group1.tags = [tag2, tag3, tag4]
+        expect(filter_allowed_tags(for_input: true, category: other_category)).to contain_exactly(tag1)
+      end
+
+      context 'another category has restricted tags using groups' do
+        fab!(:category2) { Fabricate(:category) }
+        fab!(:tag_group2) { Fabricate(:tag_group) }
+
+        before do
+          tag_group2.tags = [tag2, tag3]
+          category2.allowed_tag_groups = [tag_group2.name]
+          category2.reload
+        end
+
+        it 'filters tags correctly' do
+          expect(filter_allowed_tags(for_input: true, category: category2)).to contain_exactly(tag2, tag3)
+          expect(filter_allowed_tags(for_input: true)).to contain_exactly(tag4)
+          expect(filter_allowed_tags(for_input: true, category: other_category)).to contain_exactly(tag4)
+          expect(filter_allowed_tags(for_input: true, category: category)).to contain_exactly(tag1, tag2, tag4)
+        end
+
+        it "doesn't care about tags in a group that isn't used in a category" do
+          unused_tag_group = Fabricate(:tag_group)
+          unused_tag_group.tags = [tag4]
+          expect(filter_allowed_tags(for_input: true, category: category2)).to contain_exactly(tag2, tag3)
+          expect(filter_allowed_tags(for_input: true)).to contain_exactly(tag4)
+          expect(filter_allowed_tags(for_input: true, category: other_category)).to contain_exactly(tag4)
+          expect(filter_allowed_tags(for_input: true, category: category)).to contain_exactly(tag1, tag2, tag4)
+        end
+      end
+
+      context 'another category has restricted tags' do
+        fab!(:category2) { Fabricate(:category) }
+
+        it "doesn't filter tags that are also restricted in another category" do
+          category2.tags = [tag2, tag3]
+          expect(filter_allowed_tags(for_input: true, category: category2)).to contain_exactly(tag2, tag3)
+          expect(filter_allowed_tags(for_input: true)).to contain_exactly(tag4)
+          expect(filter_allowed_tags(for_input: true, category: other_category)).to contain_exactly(tag4)
+          expect(filter_allowed_tags(for_input: true, category: category)).to contain_exactly(tag1, tag2, tag4)
+        end
+      end
     end
   end
 
   context "tag groups with parent tag" do
-    it "filter_allowed_tags returns results based on whether parent tag is present or not" do
+    it "for input field, filter_allowed_tags returns results based on whether parent tag is present or not" do
       tag_group = Fabricate(:tag_group, parent_tag_id: tag1.id)
       tag_group.tags = [tag3, tag4]
       expect(filter_allowed_tags(for_input: true)).to contain_exactly(tag1, tag2)
@@ -118,12 +205,20 @@ describe "category tag restrictions" do
       expect(filter_allowed_tags(for_input: true, selected_tags: [tag1.name, tag3.name])).to contain_exactly(tag2, tag4)
     end
 
+    it "for tagging a topic, filter_allowed_tags allows tags without parent tag" do
+      tag_group = Fabricate(:tag_group, parent_tag_id: tag1.id)
+      tag_group.tags = [tag3, tag4]
+      expect(filter_allowed_tags(for_topic: true)).to contain_exactly(tag1, tag2, tag3, tag4)
+      expect(filter_allowed_tags(for_topic: true, selected_tags: [tag1.name])).to contain_exactly(tag1, tag2, tag3, tag4)
+      expect(filter_allowed_tags(for_topic: true, selected_tags: [tag1.name, tag3.name])).to contain_exactly(tag1, tag2, tag3, tag4)
+    end
+
     context "and category restrictions" do
-      let(:car_category)    { Fabricate(:category) }
-      let(:other_category)  { Fabricate(:category) }
-      let(:makes)           { Fabricate(:tag_group, name: "Makes") }
-      let(:honda_group)     { Fabricate(:tag_group, name: "Honda Models") }
-      let(:ford_group)      { Fabricate(:tag_group, name: "Ford Models") }
+      fab!(:car_category)    { Fabricate(:category) }
+      fab!(:other_category)  { Fabricate(:category) }
+      fab!(:makes)           { Fabricate(:tag_group, name: "Makes") }
+      fab!(:honda_group)     { Fabricate(:tag_group, name: "Honda Models") }
+      fab!(:ford_group)      { Fabricate(:tag_group, name: "Ford Models") }
 
       before do
         @tags = {}
@@ -164,9 +259,9 @@ describe "category tag restrictions" do
 
       context "limit one tag from each group" do
         before do
-          makes.update_attributes(one_per_topic: true)
-          honda_group.update_attributes(one_per_topic: true)
-          ford_group.update_attributes(one_per_topic: true)
+          makes.update(one_per_topic: true)
+          honda_group.update(one_per_topic: true)
+          ford_group.update(one_per_topic: true)
         end
 
         it "can restrict one tag from each group" do
@@ -195,13 +290,12 @@ describe "category tag restrictions" do
 end
 
 describe "tag topic counts per category" do
-  let(:user)  { Fabricate(:user) }
-  let(:admin) { Fabricate(:admin) }
-  let(:category) { Fabricate(:category) }
-  let(:category2) { Fabricate(:category) }
-  let(:tag1) { Fabricate(:tag) }
-  let(:tag2) { Fabricate(:tag) }
-  let(:tag3) { Fabricate(:tag) }
+  fab!(:admin) { Fabricate(:admin) }
+  fab!(:category) { Fabricate(:category) }
+  fab!(:category2) { Fabricate(:category) }
+  fab!(:tag1) { Fabricate(:tag) }
+  fab!(:tag2) { Fabricate(:tag) }
+  fab!(:tag3) { Fabricate(:tag) }
 
   before do
     SiteSetting.tagging_enabled = true
@@ -229,8 +323,8 @@ describe "tag topic counts per category" do
   end
 
   context "topic with 2 tags" do
-    let(:topic) { Fabricate(:topic, category: category, tags: [tag1, tag2]) }
-    let(:post)  { Fabricate(:post, user: topic.user, topic: topic) }
+    fab!(:topic) { Fabricate(:topic, category: category, tags: [tag1, tag2]) }
+    fab!(:post)  { Fabricate(:post, user: topic.user, topic: topic) }
 
     it "has correct counts after tag is removed from a topic" do
       post
@@ -261,8 +355,8 @@ describe "tag topic counts per category" do
   end
 
   context "topic with one tag" do
-    let(:topic) { Fabricate(:topic, tags: [tag1], category: category) }
-    let(:post) { Fabricate(:post, user: topic.user, topic: topic) }
+    fab!(:topic) { Fabricate(:topic, tags: [tag1], category: category) }
+    fab!(:post) { Fabricate(:post, user: topic.user, topic: topic) }
 
     it "counts after topic becomes uncategorized" do
       PostRevisor.new(post).revise!(topic.user, raw: post.raw, tags: [tag1.name], category_id: SiteSetting.uncategorized_category_id)

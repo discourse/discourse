@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddSeenAtToUserAuthToken < ActiveRecord::Migration[4.2]
   def up
     add_column :user_auth_tokens, :seen_at, :datetime

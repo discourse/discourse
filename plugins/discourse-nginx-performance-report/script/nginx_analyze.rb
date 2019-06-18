@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'date'
 require_relative '../lib/log_analyzer'
 
@@ -77,7 +79,7 @@ def top(cols, aggregator, count, aggregator_formatter = nil)
 
     rows.each do |row|
       cols.length.times do |i|
-        print row[i].to_s.send(col_just[i], col_widths[i])
+        print row[i].to_s.public_send(col_just[i], col_widths[i])
         print " "
       end
       puts

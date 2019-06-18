@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "socket"
 require "csv"
 require "yaml"
@@ -231,7 +233,7 @@ begin
   tests = [
     ["categories", "/categories"],
     ["home", "/"],
-    ["topic", "/t/oh-how-i-wish-i-could-shut-up-like-a-tunnel-for-so/179"]
+    ["topic", "/t/i-am-a-topic-used-for-perf-tests/179"]
     # ["user", "/u/admin1/activity"],
   ]
 

@@ -26,7 +26,7 @@ createWidget("topic-header-participant", {
       url = user.get("path");
     } else {
       content = [iconNode("users")];
-      url = Discourse.getURL(`/groups/${group.name}`);
+      url = Discourse.getURL(`/g/${group.name}`);
       content.push(h("span", group.name));
     }
 

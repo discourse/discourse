@@ -1,15 +1,29 @@
 # encoding: utf-8
+# frozen_string_literal: true
 
 require 'rails_helper'
 require_dependency 'post_creator'
 
 describe Category do
+  fab!(:user) { Fabricate(:user) }
+
   it { is_expected.to validate_presence_of :user_id }
   it { is_expected.to validate_presence_of :name }
 
   it 'validates uniqueness of name' do
     Fabricate(:category)
-    is_expected.to validate_uniqueness_of(:name).scoped_to(:parent_category_id)
+    is_expected.to validate_uniqueness_of(:name).scoped_to(:parent_category_id).case_insensitive
+  end
+
+  it 'validates inclusion of search_priority' do
+    category = Fabricate.build(:category, user: user)
+
+    expect(category.valid?).to eq(true)
+
+    category.search_priority = Searchable::PRIORITIES.values.last + 1
+
+    expect(category.valid?).to eq(false)
+    expect(category.errors.to_hash.keys).to contain_exactly(:search_priority)
   end
 
   it 'validates uniqueness in case insensitive way' do
@@ -34,6 +48,51 @@ describe Category do
       group = Fabricate(:group)
       category_group = Fabricate(:category_group, category: category, group: group)
       expect(category.permissions_params).to eq("#{group.name}" => category_group.permission_type)
+    end
+  end
+
+  describe "#review_group_id" do
+    fab!(:group) { Fabricate(:group) }
+    fab!(:category) { Fabricate(:category, reviewable_by_group: group) }
+    fab!(:topic) { Fabricate(:topic, category: category) }
+    fab!(:post) { Fabricate(:post, topic: topic) }
+    fab!(:user) { Fabricate(:user) }
+
+    it "will add the group to the reviewable" do
+      SiteSetting.enable_category_group_review = true
+      reviewable = PostActionCreator.spam(user, post).reviewable
+      expect(reviewable.reviewable_by_group_id).to eq(group.id)
+    end
+
+    it "will add the group to the reviewable even if created manually" do
+      SiteSetting.enable_category_group_review = true
+      reviewable = ReviewableFlaggedPost.create!(
+        created_by: user,
+        payload: { raw: 'test raw' },
+        category: category
+      )
+      expect(reviewable.reviewable_by_group_id).to eq(group.id)
+    end
+
+    it "will not add add the group to the reviewable" do
+      SiteSetting.enable_category_group_review = false
+      reviewable = PostActionCreator.spam(user, post).reviewable
+      expect(reviewable.reviewable_by_group_id).to be_nil
+    end
+
+    it "will nullify the group_id if destroyed" do
+      reviewable = PostActionCreator.spam(user, post).reviewable
+      group.destroy
+      expect(category.reload.reviewable_by_group).to be_blank
+      expect(reviewable.reload.reviewable_by_group_id).to be_blank
+    end
+
+    it "will remove the reviewable_by_group if the category is updated" do
+      SiteSetting.enable_category_group_review = true
+      reviewable = PostActionCreator.spam(user, post).reviewable
+      category.reviewable_by_group_id = nil
+      category.save!
+      expect(reviewable.reload.reviewable_by_group_id).to be_nil
     end
   end
 
@@ -92,10 +151,10 @@ describe Category do
   end
 
   describe "security" do
-    let(:category) { Fabricate(:category) }
-    let(:category_2) { Fabricate(:category) }
-    let(:user) { Fabricate(:user) }
-    let(:group) { Fabricate(:group) }
+    fab!(:category) { Fabricate(:category) }
+    fab!(:category_2) { Fabricate(:category) }
+    fab!(:user) { Fabricate(:user) }
+    fab!(:group) { Fabricate(:group) }
 
     it "secures categories correctly" do
       expect(category.read_restricted?).to be false
@@ -161,7 +220,7 @@ describe Category do
   end
 
   describe "short name" do
-    let!(:category) { Fabricate(:category, name: 'xx') }
+    fab!(:category) { Fabricate(:category, name: 'xx') }
 
     it "creates the category" do
       expect(category).to be_present
@@ -298,24 +357,31 @@ describe Category do
     end
 
     it "renames the definition when renamed" do
-      @category.update_attributes(name: 'Troutfishing')
+      @category.update(name: 'Troutfishing')
       @topic.reload
       expect(@topic.title).to match(/Troutfishing/)
       expect(@topic.fancy_title).to match(/Troutfishing/)
     end
 
     it "doesn't raise an error if there is no definition topic to rename (uncategorized)" do
-      expect { @category.update_attributes(name: 'Troutfishing', topic_id: nil) }.to_not raise_error
+      expect { @category.update(name: 'Troutfishing', topic_id: nil) }.to_not raise_error
     end
 
     it "creates permalink when category slug is changed" do
-      @category.update_attributes(slug: 'new-category')
+      @category.update(slug: 'new-category')
       expect(Permalink.count).to eq(1)
+    end
+
+    it "reuses existing permalink when category slug is changed" do
+      permalink = Permalink.create!(url: "c/#{@category.slug}", category_id: 42)
+
+      expect { @category.update(slug: 'new-slug') }.to_not change { Permalink.count }
+      expect(permalink.reload.category_id).to eq(@category.id)
     end
 
     it "creates permalink when sub category slug is changed" do
       sub_category = Fabricate(:category, slug: 'sub-category', parent_category_id: @category.id)
-      sub_category.update_attributes(slug: 'new-sub-category')
+      sub_category.update(slug: 'new-sub-category')
       expect(Permalink.count).to eq(1)
     end
 
@@ -336,7 +402,7 @@ describe Category do
       GlobalSetting.stubs(:relative_url_root).returns('/forum')
       Discourse.stubs(:base_uri).returns("/forum")
       old_url = @category.url
-      @category.update_attributes(slug: 'new-category')
+      @category.update(slug: 'new-category')
       permalink = Permalink.last
       expect(permalink.url).to eq(old_url[1..-1])
     end
@@ -414,7 +480,7 @@ describe Category do
     end
 
     it 'triggers a extensibility event' do
-      event = DiscourseEvent.track_events { @category.destroy }.first
+      event = DiscourseEvent.track(:category_destroyed) { @category.destroy }
 
       expect(event[:event_name]).to eq(:category_destroyed)
       expect(event[:params].first).to eq(@category)
@@ -514,7 +580,7 @@ describe Category do
     context 'for uncategorized category' do
       before do
         @uncategorized = Category.find(SiteSetting.uncategorized_category_id)
-        create_post(user: Fabricate(:user), category: @uncategorized.name)
+        create_post(user: Fabricate(:user), category: @uncategorized.id)
         Category.update_stats
         @uncategorized.reload
       end
@@ -549,14 +615,14 @@ describe Category do
   end
 
   describe "#url_with_id" do
-    let(:category) { Fabricate(:category, name: 'cats') }
+    fab!(:category) { Fabricate(:category, name: 'cats') }
 
     it "includes the id in the URL" do
       expect(category.url_with_id).to eq("/c/#{category.id}-cats")
     end
 
     context "child category" do
-      let(:child_category) { Fabricate(:category, parent_category_id: category.id, name: 'dogs') }
+      fab!(:child_category) { Fabricate(:category, parent_category_id: category.id, name: 'dogs') }
 
       it "includes the id in the URL" do
         expect(child_category.url_with_id).to eq("/c/cats/dogs/#{child_category.id}")
@@ -578,8 +644,8 @@ describe Category do
   end
 
   describe "parent categories" do
-    let(:user) { Fabricate(:user) }
-    let(:parent_category) { Fabricate(:category, user: user) }
+    fab!(:user) { Fabricate(:user) }
+    fab!(:parent_category) { Fabricate(:category, user: user) }
 
     it "can be associated with a parent category" do
       sub_category = Fabricate.build(:category, parent_category_id: parent_category.id, user: user)
@@ -639,7 +705,7 @@ describe Category do
   end
 
   describe "validate email_in" do
-    let(:user) { Fabricate(:user) }
+    fab!(:user) { Fabricate(:user) }
 
     it "works with a valid email" do
       expect(Category.new(name: 'test', user: user, email_in: 'test@example.com').valid?).to eq(true)
@@ -652,7 +718,7 @@ describe Category do
     end
 
     context "with a duplicate email in a group" do
-      let(:group) { Fabricate(:group, name: 'testgroup', incoming_email: 'test@example.com') }
+      fab!(:group) { Fabricate(:group, name: 'testgroup', incoming_email: 'test@example.com') }
 
       it "adds an error with an invalid email" do
         category = Category.new(name: 'test', user: user, email_in: group.incoming_email)
@@ -661,7 +727,7 @@ describe Category do
     end
 
     context "with duplicate email in a category" do
-      let!(:category) { Fabricate(:category, user: user, name: '<b>cool</b>', email_in: 'test@example.com') }
+      fab!(:category) { Fabricate(:category, user: user, name: '<b>cool</b>', email_in: 'test@example.com') }
 
       it "adds an error with an invalid email" do
         category = Category.new(name: 'test', user: user, email_in: "test@example.com")
@@ -673,7 +739,7 @@ describe Category do
   end
 
   describe 'require topic/post approval' do
-    let(:category) { Fabricate(:category) }
+    fab!(:category) { Fabricate(:category) }
 
     describe '#require_topic_approval?' do
       before do
@@ -748,6 +814,112 @@ describe Category do
       category.save!
 
       expect(Category.auto_bump_topic!).to eq(false)
+    end
+  end
+
+  describe "validate permissions compatibility" do
+    fab!(:admin) { Fabricate(:admin) }
+    fab!(:group) { Fabricate(:group) }
+    fab!(:group2) { Fabricate(:group) }
+    fab!(:parent_category) { Fabricate(:category, name: "parent") }
+    fab!(:subcategory) { Fabricate(:category, name: "child1", parent_category_id: parent_category.id) }
+    fab!(:subcategory2) { Fabricate(:category, name: "child2", parent_category_id: parent_category.id) }
+
+    context "when changing subcategory permissions" do
+      it "it is not valid if permissions are less restrictive" do
+        parent_category.set_permissions(group => :readonly)
+        parent_category.save!
+
+        subcategory.set_permissions(group => :full, group2 => :readonly)
+
+        expect(subcategory.valid?).to eq(false)
+        expect(subcategory.errors.full_messages).to contain_exactly(I18n.t("category.errors.permission_conflict", group_names: group2.name))
+      end
+
+      it "is valid if permissions are same or more restrictive" do
+        parent_category.set_permissions(group => :full, group2 => :create_post)
+        parent_category.save!
+
+        subcategory.set_permissions(group => :create_post, group2 => :full)
+
+        expect(subcategory.valid?).to eq(true)
+      end
+
+      it "is valid if everyone has access to parent category" do
+        parent_category.set_permissions(everyone: :readonly)
+        parent_category.save!
+
+        subcategory.set_permissions(group => :create_post, group2 => :create_post)
+
+        expect(subcategory.valid?).to eq(true)
+      end
+    end
+
+    context "when changing parent category permissions" do
+      it "it is not valid if subcategory permissions are less restrictive" do
+        subcategory.set_permissions(group => :create_post)
+        subcategory.save!
+        subcategory2.set_permissions(group => :create_post, group2 => :create_post)
+        subcategory2.save!
+
+        parent_category.set_permissions(group => :readonly)
+
+        expect(parent_category.valid?).to eq(false)
+        expect(parent_category.errors.full_messages).to contain_exactly(I18n.t("category.errors.permission_conflict", group_names: group2.name))
+      end
+
+      it "is valid if subcategory permissions are same or more restrictive" do
+        subcategory.set_permissions(group => :create_post)
+        subcategory.save!
+        subcategory2.set_permissions(group => :create_post, group2 => :create_post)
+        subcategory2.save!
+
+        parent_category.set_permissions(group => :full, group2 => :create_post)
+
+        expect(parent_category.valid?).to eq(true)
+
+      end
+
+      it "is valid if everyone has access to parent category" do
+        subcategory.set_permissions(group => :create_post)
+        subcategory.save
+        parent_category.set_permissions(everyone: :readonly)
+
+        expect(parent_category.valid?).to eq(true)
+      end
+    end
+  end
+
+  describe "#ensure_consistency!" do
+    it "creates category topic" do
+
+      # corrupt a category topic
+      uncategorized = Category.find(SiteSetting.uncategorized_category_id)
+      uncategorized.create_category_definition
+      uncategorized.topic.posts.first.destroy!
+
+      # make stuff extra broken
+      uncategorized.topic.trash!
+
+      category = Fabricate(:category)
+      category_destroyed = Fabricate(:category)
+      category_trashed = Fabricate(:category)
+
+      category_topic_id = category.topic.id
+      category_destroyed.topic.destroy!
+      category_trashed.topic.trash!
+
+      Category.ensure_consistency!
+      # step one fix corruption
+      expect(uncategorized.reload.topic_id).to eq(nil)
+
+      Category.ensure_consistency!
+      # step two don't create a category definition for uncategorized
+      expect(uncategorized.reload.topic_id).to eq(nil)
+
+      expect(category.reload.topic_id).to eq(category_topic_id)
+      expect(category_destroyed.reload.topic).to_not eq(nil)
+      expect(category_trashed.reload.topic).to_not eq(nil)
     end
   end
 

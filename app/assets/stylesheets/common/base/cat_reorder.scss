@@ -1,9 +1,7 @@
 .reorder-categories {
   thead {
-    border-bottom: 1px solid $primary-low;
     th {
       padding-bottom: 0.5em;
-      text-align: left;
     }
   }
   input {
@@ -28,4 +26,8 @@
       max-width: 30vw;
     }
   }
+}
+
+.reorder-categories-sub-cat {
+  margin-left: 20px;
 }

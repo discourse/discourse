@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module SecondFactorManager
   extend ActiveSupport::Concern
 
@@ -34,15 +36,15 @@ module SecondFactorManager
   end
 
   def totp_enabled?
-    !!(self&.user_second_factors&.totp&.enabled?) &&
-      !SiteSetting.enable_sso &&
-      SiteSetting.enable_local_logins
+    !SiteSetting.enable_sso &&
+      SiteSetting.enable_local_logins &&
+      self&.user_second_factors.totps.exists?
   end
 
   def backup_codes_enabled?
-    !!(self&.user_second_factors&.backup_codes&.present?) &&
-      !SiteSetting.enable_sso &&
-      SiteSetting.enable_local_logins
+    !SiteSetting.enable_sso &&
+      SiteSetting.enable_local_logins &&
+      self&.user_second_factors.backup_codes.exists?
   end
 
   def remaining_backup_codes

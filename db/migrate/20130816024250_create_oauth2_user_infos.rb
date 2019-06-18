@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreateOauth2UserInfos < ActiveRecord::Migration[4.2]
   def change
     create_table :oauth2_user_infos do |t|

@@ -1,8 +1,10 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 describe UserAuthTokenSerializer do
 
-  let(:user) { Fabricate(:moderator) }
+  fab!(:user) { Fabricate(:moderator) }
   let(:token) { UserAuthToken.generate!(user_id: user.id, client_ip: '2a02:ea00::', staff: true) }
 
   before(:each) do

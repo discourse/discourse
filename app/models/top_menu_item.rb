@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Public: Instances of TopMenuItem should be instantiated from segments contained in SiteSetting.top_menu.
 # Exposes relevant properties and methods that dictate which query methods should be called from the ListController.
 # Segment data should start with a route fragment in one of the following formats:

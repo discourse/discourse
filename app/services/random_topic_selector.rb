@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class RandomTopicSelector
 
   BACKFILL_SIZE = 3000

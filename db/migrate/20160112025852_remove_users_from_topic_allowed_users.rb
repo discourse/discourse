@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class RemoveUsersFromTopicAllowedUsers < ActiveRecord::Migration[4.2]
 
   # historically we added admins automatically to a message if they

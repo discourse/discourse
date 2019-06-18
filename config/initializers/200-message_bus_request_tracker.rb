@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # we want MesageBus in the absolute front
 # this is important cause the vast majority of web requests go to it
 # this allows us to avoid full middleware crawls each time
@@ -14,4 +16,8 @@ Rails.configuration.middleware = Rails.configuration.middleware + session_operat
 if Rails.env != 'development' || ENV['TRACK_REQUESTS']
   require 'middleware/request_tracker'
   Rails.configuration.middleware.unshift Middleware::RequestTracker
+
+  if GlobalSetting.enable_performance_http_headers
+    MethodProfiler.ensure_discourse_instrumentation!
+  end
 end

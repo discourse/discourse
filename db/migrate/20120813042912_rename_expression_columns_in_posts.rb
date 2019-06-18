@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class RenameExpressionColumnsInPosts < ActiveRecord::Migration[4.2]
   def change
     rename_column 'posts', 'expression1_count', 'off_topic_count'

@@ -10,21 +10,21 @@ import { default as loadScript, loadCSS } from "discourse/lib/load-script";
 export default Ember.Component.extend({
   classNames: ["color-picker"],
   hexValueChanged: function() {
-    var hex = this.get("hexValue");
+    var hex = this.hexValue;
     let $text = this.$("input.hex-input");
 
-    if (this.get("valid")) {
+    if (this.valid) {
       $text.attr(
         "style",
         "color: " +
-          (this.get("brightnessValue") > 125 ? "black" : "white") +
+          (this.brightnessValue > 125 ? "black" : "white") +
           "; background-color: #" +
           hex +
           ";"
       );
 
-      if (this.get("pickerLoaded")) {
-        this.$(".picker").spectrum({ color: "#" + this.get("hexValue") });
+      if (this.pickerLoaded) {
+        this.$(".picker").spectrum({ color: "#" + this.hexValue });
       }
     } else {
       $text.attr("style", "");
@@ -36,7 +36,7 @@ export default Ember.Component.extend({
       loadCSS("/javascripts/spectrum.css").then(() => {
         Ember.run.schedule("afterRender", () => {
           this.$(".picker")
-            .spectrum({ color: "#" + this.get("hexValue") })
+            .spectrum({ color: "#" + this.hexValue })
             .on("change.spectrum", (me, color) => {
               this.set("hexValue", color.toHexString().replace("#", ""));
             });

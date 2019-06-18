@@ -19,20 +19,27 @@ ru:
         many: "голосов"
         other: "голосов"
       average_rating: "Средний рейтинг: <strong>%{average}</strong>."
+      public:
+        title: "Голосов <strong>публичных</strong>."
+      results:
+        vote:
+          title: "Результаты будут показаны на <strong>голос</strong>."
+        closed:
+          title: "Результаты будут показаны один раз <strong>закрыто</strong>."
       multiple:
         help:
           at_least_min_options:
-            one: "Выберите хотя бы <strong>1</strong> вариант ответа"
+            one: "Выберите хотя бы <strong>%{count}</strong> вариант ответа"
             few: "Выберите хотя бы <strong>%{count}</strong> варианта ответов"
             many: "Выберите хотя бы <strong>%{count}</strong> вариантов ответов"
             other: "Выберите хотя бы <strong>%{count}</strong> вариантов ответов"
           up_to_max_options:
-            one: "Выберите не более <strong>1</strong> варианта ответа"
+            one: "Выберите не более <strong>%{count}</strong> варианта ответа"
             few: "Выберите не более <strong>%{count}</strong> вариантов ответов"
             many: "Выберите не более <strong>%{count}</strong> вариантов ответов"
             other: "Выберите не более <strong>%{count}</strong> вариантов ответов"
           x_options:
-            one: "Выберите <strong>1</strong> вариант ответа"
+            one: "Выберите <strong>%{count}</strong> вариант ответа"
             few: "Выберите <strong>%{count}</strong> варианта ответотв"
             many: "Выберите <strong>%{count}</strong> вариантов ответов"
             other: "Выберите <strong>%{count}</strong> вариантов ответов"
@@ -55,8 +62,8 @@ ru:
         label: "Завершить"
         confirm: "Вы уверены, что хотите завершить этот опрос и больше не принимать голоса?"
       automatic_close:
-        closes_in: "закроется через <strong>%{timeLeft}</strong>"
-        age: "закрыто <strong>%{age}</strong>"
+        closes_in: "Закроется через <strong>%{timeLeft}</strong>."
+        age: "Закрыто <strong>%{age}</strong>"
       error_while_toggling_status: "Произошла ошибка при смене статуса опроса."
       error_while_casting_votes: "Произошла ошибка в процессе обработки вашего голоса."
       error_while_fetching_voters: "В процессе получения списка проголосовавших произошла ошибка."
@@ -72,6 +79,11 @@ ru:
           regular: Выбор одного варианта из списка
           multiple: Выбор нескольких вариантов из списка
           number: Шкала из чисел
+        poll_result:
+          label: Результаты
+          always: Всегда видимый
+          vote: На голосование
+          closed: При закрытии
         poll_config:
           max: Макс.
           min: Мин.

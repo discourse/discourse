@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module ListHelper
   def page_links(topic)
     posts = topic.posts_count

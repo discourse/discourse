@@ -1,8 +1,10 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 describe Admin::EmailController do
-  let(:admin) { Fabricate(:admin) }
-  let(:email_log) { Fabricate(:email_log) }
+  fab!(:admin) { Fabricate(:admin) }
+  fab!(:email_log) { Fabricate(:email_log) }
 
   before do
     sign_in(admin)
@@ -33,8 +35,8 @@ describe Admin::EmailController do
   end
 
   describe '#sent' do
-    let(:post) { Fabricate(:post) }
-    let(:email_log) { Fabricate(:email_log, post: post) }
+    fab!(:post) { Fabricate(:post) }
+    fab!(:email_log) { Fabricate(:email_log, post: post) }
 
     let(:post_reply_key) do
       Fabricate(:post_reply_key, post: post, user: email_log.user)
@@ -87,9 +89,9 @@ describe Admin::EmailController do
   end
 
   describe '#skipped' do
-    let(:user) { Fabricate(:user) }
-    let!(:log1) { Fabricate(:skipped_email_log, user: user) }
-    let!(:log2) { Fabricate(:skipped_email_log) }
+    fab!(:user) { Fabricate(:user) }
+    fab!(:log1) { Fabricate(:skipped_email_log, user: user) }
+    fab!(:log2) { Fabricate(:skipped_email_log) }
 
     it "succeeds" do
       get "/admin/email/skipped.json"
@@ -134,34 +136,42 @@ describe Admin::EmailController do
     end
 
     context 'with SiteSetting.disable_emails' do
-      let(:eviltrout) { Fabricate(:evil_trout) }
-      let(:admin) { Fabricate(:admin) }
+      fab!(:eviltrout) { Fabricate(:evil_trout) }
+      fab!(:admin) { Fabricate(:admin) }
 
-      it 'does not sends mail to anyone when setting is "yes"' do
+      it 'bypasses disable when setting is "yes"' do
         SiteSetting.disable_emails = 'yes'
-
         post "/admin/email/test.json", params: { email_address: admin.email }
 
+        expect(ActionMailer::Base.deliveries.first.to).to contain_exactly(
+          admin.email
+        )
+
         incoming = JSON.parse(response.body)
-        expect(incoming['sent_test_email_message']).to eq(I18n.t("admin.email.sent_test_disabled"))
+        expect(incoming['sent_test_email_message']).to eq(I18n.t("admin.email.sent_test"))
       end
 
-      it 'sends mail to everyone when setting is "non-staff"' do
+      it 'bypasses disable when setting is "non-staff"' do
         SiteSetting.disable_emails = 'non-staff'
 
-        post "/admin/email/test.json", params: { email_address: admin.email }
-        incoming = JSON.parse(response.body)
-        expect(incoming['sent_test_email_message']).to eq(I18n.t("admin.email.sent_test"))
-
         post "/admin/email/test.json", params: { email_address: eviltrout.email }
+
+        expect(ActionMailer::Base.deliveries.first.to).to contain_exactly(
+          eviltrout.email
+        )
+
         incoming = JSON.parse(response.body)
         expect(incoming['sent_test_email_message']).to eq(I18n.t("admin.email.sent_test"))
       end
 
-      it 'sends mail to everyone when setting is "no"' do
+      it 'works when setting is "no"' do
         SiteSetting.disable_emails = 'no'
 
         post "/admin/email/test.json", params: { email_address: eviltrout.email }
+
+        expect(ActionMailer::Base.deliveries.first.to).to contain_exactly(
+          eviltrout.email
+        )
 
         incoming = JSON.parse(response.body)
         expect(incoming['sent_test_email_message']).to eq(I18n.t("admin.email.sent_test"))
@@ -216,6 +226,77 @@ describe Admin::EmailController do
       expect(response.status).to eq(200)
       incoming = JSON.parse(response.body)
       expect(incoming['error']).to eq(I18n.t("emails.incoming.unrecognized_error"))
+    end
+  end
+
+  describe '#incoming_from_bounced' do
+    it 'raises an error when the email log entry does not exist' do
+      get "/admin/email/incoming_from_bounced/12345.json"
+      expect(response.status).to eq(404)
+
+      json = JSON.parse(response.body)
+      expect(json["errors"]).to include("Discourse::InvalidParameters")
+    end
+
+    it 'raises an error when the email log entry is not marked as bounced' do
+      get "/admin/email/incoming_from_bounced/#{email_log.id}.json"
+      expect(response.status).to eq(404)
+
+      json = JSON.parse(response.body)
+      expect(json["errors"]).to include("Discourse::InvalidParameters")
+    end
+
+    context 'bounced email log entry exists' do
+      fab!(:email_log) { Fabricate(:email_log, bounced: true, bounce_key: SecureRandom.hex) }
+      let(:error_message) { "Email::Receiver::BouncedEmailError" }
+
+      it 'returns an incoming email sent to the reply_by_email_address' do
+        SiteSetting.reply_by_email_address = "replies+%{reply_key}@example.com"
+
+        Fabricate(:incoming_email,
+                  is_bounce: true,
+                  error: error_message,
+                  to_addresses: Email::Sender.bounce_address(email_log.bounce_key)
+        )
+
+        get "/admin/email/incoming_from_bounced/#{email_log.id}.json"
+        expect(response.status).to eq(200)
+
+        json = JSON.parse(response.body)
+        expect(json["error"]).to eq(error_message)
+      end
+
+      it 'returns an incoming email sent to the notification_email address' do
+        Fabricate(:incoming_email,
+                  is_bounce: true,
+                  error: error_message,
+                  to_addresses: SiteSetting.notification_email.sub("@", "+verp-#{email_log.bounce_key}@")
+        )
+
+        get "/admin/email/incoming_from_bounced/#{email_log.id}.json"
+        expect(response.status).to eq(200)
+
+        json = JSON.parse(response.body)
+        expect(json["error"]).to eq(error_message)
+      end
+
+      it 'raises an error if the bounce_key is blank' do
+        email_log.update(bounce_key: nil)
+
+        get "/admin/email/incoming_from_bounced/#{email_log.id}.json"
+        expect(response.status).to eq(404)
+
+        json = JSON.parse(response.body)
+        expect(json["errors"]).to include("Discourse::InvalidParameters")
+      end
+
+      it 'raises an error if there is no incoming email' do
+        get "/admin/email/incoming_from_bounced/#{email_log.id}.json"
+        expect(response.status).to eq(404)
+
+        json = JSON.parse(response.body)
+        expect(json["errors"]).to include("Discourse::NotFound")
+      end
     end
   end
 

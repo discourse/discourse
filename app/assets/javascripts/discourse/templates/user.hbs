@@ -1,59 +1,65 @@
 <div class="container {{if viewingSelf 'viewing-self'}}">
   {{#d-section class="user-main"}}
 
-    <section class="{{if collapsedInfo 'collapsed-info'}} about {{if hasProfileBackground 'has-background' 'no-background'}}"  style={{model.profileBackground}}>
+    <section class="{{if collapsedInfo 'collapsed-info'}} about {{if hasProfileBackgroundUrl 'has-background' 'no-background'}}" >
     {{#unless collapsedInfo}}
-      {{#if showStaffCounters}}
-        <div class='staff-counters'>
-          {{#if model.number_of_flags_given}}
-            <div><span class="helpful-flags">{{model.number_of_flags_given}}</span>{{i18n 'user.staff_counters.flags_given'}}</div>
-          {{/if}}
-          {{#if model.number_of_flagged_posts}}
-            <div>
-              {{#link-to 'user.flaggedPosts' model}}
-                <span class="flagged-posts">{{model.number_of_flagged_posts}}</span>{{i18n 'user.staff_counters.flagged_posts'}}
-              {{/link-to}}
-            </div>
-          {{/if}}
-          {{#if model.number_of_deleted_posts}}
-            <div>
-              {{#link-to 'user.deletedPosts' model}}
-                <span class="deleted-posts">{{model.number_of_deleted_posts}}</span>{{i18n 'user.staff_counters.deleted_posts'}}
-              {{/link-to}}
-            </div>
-          {{/if}}
-          {{#if model.number_of_suspensions}}
-            <div>
-              <a {{action "showSuspensions"}}>
-                <span class="suspensions">{{model.number_of_suspensions}}</span>{{i18n 'user.staff_counters.suspensions'}}
-              </a>
-            </div>
-          {{/if}}
-          {{#if model.warnings_received_count}}
-            <div><span class="warnings-received">{{model.warnings_received_count}}</span>{{i18n 'user.staff_counters.warnings_received'}}</div>
-          {{/if}}
-        </div>
-      {{/if}}
+    {{#if showStaffCounters}}
+      <div class='staff-counters'>
+        {{#if model.number_of_flags_given}}
+          <div><span class="helpful-flags">{{model.number_of_flags_given}}</span>{{i18n 'user.staff_counters.flags_given'}}</div>
+        {{/if}}
+        {{#if model.number_of_flagged_posts}}
+          <div>
+            {{#link-to 'review' (query-params username=model.username status='all' type='ReviewableFlaggedPost')}}
+              <span class="flagged-posts">{{model.number_of_flagged_posts}}</span>{{i18n 'user.staff_counters.flagged_posts'}}
+            {{/link-to}}
+          </div>
+        {{/if}}
+        {{#if model.number_of_deleted_posts}}
+          <div>
+            {{#link-to 'user.deletedPosts' model}}
+              <span class="deleted-posts">{{model.number_of_deleted_posts}}</span>{{i18n 'user.staff_counters.deleted_posts'}}
+            {{/link-to}}
+          </div>
+        {{/if}}
+        {{#if model.number_of_suspensions}}
+          <div>
+            <a {{action "showSuspensions"}}>
+              <span class="suspensions">{{model.number_of_suspensions}}</span>{{i18n 'user.staff_counters.suspensions'}}
+            </a>
+          </div>
+        {{/if}}
+        {{#if model.warnings_received_count}}
+          <div><span class="warnings-received">{{model.warnings_received_count}}</span>{{i18n 'user.staff_counters.warnings_received'}}</div>
+        {{/if}}
+      </div>
+    {{/if}}
+    <div class="user-profile-image" style={{model.profileBackgroundUrl}}></div>
     {{/unless}}
 
-      <div class='profile-image'></div>
       <div class='details'>
         <div class='primary'>
-          {{user-profile-avatar user=model}}
+          {{user-profile-avatar user=model tagName=""}}
           <section class='controls'>
             <ul>
               {{#if model.can_send_private_message_to_user}}
-              <li>
-                {{d-button class="btn btn-primary compose-pm"
-                  action=(route-action "composePrivateMessage" model)
-                  icon="envelope"
-                  label="user.private_message"}}
-              </li>
+                <li>
+                  {{d-button class="btn-primary compose-pm"
+                    action=(route-action "composePrivateMessage" model)
+                    icon="envelope"
+                    label="user.private_message"}}
+                </li>
+                {{#if canMuteOrIgnoreUser}}
+                  <li>
+                    {{user-notifications-dropdown user=model updateNotificationLevel=(action "updateNotificationLevel")}}
+                  </li>
+                {{/if}}
               {{/if}}
               {{#if currentUser.staff}}
                 <li><a href={{model.adminPath}} class="btn btn-default">{{d-icon "wrench"}}{{i18n 'admin.user.show_admin_profile'}}</a></li>
               {{/if}}
               {{plugin-outlet name="user-profile-controls"
+                              tagName=""
                               connectorTagName="li"
                               args=(hash model=model)}}
 
@@ -74,24 +80,28 @@
           </section>
 
           <div class="primary-textual">
-            <h1 class="{{if nameFirst "full-name" "username"}}">{{if nameFirst model.name (format-username model.username)}} {{user-status model currentUser=currentUser}}</h1>
-            <h2 class="{{if nameFirst "username" "full-name"}}">{{#if nameFirst}}{{model.username}}{{else}}{{model.name}}{{/if}}</h2>
-            {{#if model.staged}}
-              <h2 class="staged">{{i18n 'user.staged'}}</h2>
-            {{/if}}
-            {{#if model.title}}
-              <h3>{{model.title}}</h3>
-            {{/if}}
-            {{plugin-outlet name="user-post-names" args=(hash model=model)}}
+            <div class="user-profile-names">
+              <h1 class="{{if nameFirst "full-name" "username"}}">{{if nameFirst model.name (format-username model.username)}} {{user-status model currentUser=currentUser}}</h1>
+              <h2 class="{{if nameFirst "username" "full-name"}}">{{#if nameFirst}}{{model.username}}{{else}}{{model.name}}{{/if}}</h2>
+              {{#if model.staged}}
+                <h2 class="staged">{{i18n 'user.staged'}}</h2>
+              {{/if}}
+              {{#if model.title}}
+                <h3>{{model.title}}</h3>
+              {{/if}}
+              {{plugin-outlet name="user-post-names" args=(hash model=model)}}
+            </div>
             <h3 class="location-and-website">
-            {{#if model.location}}{{d-icon "map-marker"}} {{model.location}}{{/if}}
+            {{#if model.location}}<div class="user-profile-location">{{d-icon "map-marker-alt"}} {{model.location}}</div>{{/if}}
             {{#if model.website_name}}
+            <div class="user-profile-website">
               {{d-icon "globe"}}
               {{#if linkWebsite}}
                 <a href={{model.website}} rel={{unless removeNoFollow 'nofollow noopener'}} target="_blank">{{model.website_name}}</a>
               {{else}}
                 <span title={{model.website}}>{{model.website_name}}</span>
               {{/if}}
+              </div>
             {{/if}}
             {{plugin-outlet name="user-location-and-website" args=(hash model=model)}}
             </h3>
@@ -137,63 +147,66 @@
             {{plugin-outlet name="user-profile-primary" args=(hash model=model)}}
           </div>
         </div>
-        <div style='clear: both'></div>
+        {{#unless collapsedInfo}}
+        <div class='secondary'>
+          <dl>
+            {{#if model.created_at}}
+              <div><dt>{{i18n 'user.created'}}</dt><dd>{{bound-date model.created_at}}</dd></div>
+            {{/if}}
+            {{#if model.last_posted_at}}
+              <div><dt>{{i18n 'user.last_posted'}}</dt><dd>{{bound-date model.last_posted_at}}</dd></div>
+            {{/if}}
+            {{#if model.last_seen_at}}
+              <div><dt>{{i18n 'user.last_seen'}}</dt><dd>{{bound-date model.last_seen_at}}</dd></div>
+            {{/if}}
+            <div><dt>{{i18n 'views'}}</dt><dd>{{model.profile_view_count}}</dd></div>
+            {{#if model.invited_by}}
+              <div><dt class="invited-by">{{i18n 'user.invited_by'}}</dt><dd class="invited-by">{{#link-to 'user' model.invited_by}}{{model.invited_by.username}}{{/link-to}}</dd></div>
+            {{/if}}
+            {{#if model.trust_level}}
+              <div><dt class="trust-level">{{i18n 'user.trust_level'}}</dt><dd class="trust-level">{{model.trustLevel.name}}</dd></div>
+            {{/if}}
+            {{#if canCheckEmails}}
+              <div><dt>{{i18n 'user.email.title'}}</dt>
+              <dd title={{model.email}}>
+                {{#if model.email}}
+                  {{model.email}}
+                {{else}}
+                  {{d-button action=(route-action "checkEmail") actionParam=model icon="far-envelope" label="admin.users.check_email.text" class="btn-primary"}}
+                {{/if}}
+              </dd>
+              </div>
+            {{/if}}
+
+            {{#if model.displayGroups}}
+              <div><dt class="groups">{{i18n 'groups.title' count=model.displayGroups.length}}</dt>
+              <dd class='groups'>
+                {{#each model.displayGroups as |group|}}
+                  <span>{{#link-to 'group' group.name class="group-link"}}{{group.name}}{{/link-to}}</span>
+                {{/each}}
+
+                {{#link-to "groups" (query-params username=model.username)}}
+                  ...
+                {{/link-to}}
+              </dd>
+              </div>
+            {{/if}}
+
+            {{#if canDeleteUser}}
+              <div class='pull-right'>{{d-button action=(action "adminDelete") icon="exclamation-triangle" label="user.admin_delete" class="btn-danger"}}</div>
+            {{/if}}
+          </dl>
+          {{plugin-outlet name="user-profile-secondary" args=(hash model=model)}}
+        </div>
+        {{/unless}}
       </div>
 
-      {{#unless collapsedInfo}}
-      <div class='secondary'>
-        <dl>
-          {{#if model.created_at}}
-            <div><dt>{{i18n 'user.created'}}</dt><dd>{{bound-date model.created_at}}</dd></div>
-          {{/if}}
-          {{#if model.last_posted_at}}
-            <div><dt>{{i18n 'user.last_posted'}}</dt><dd>{{bound-date model.last_posted_at}}</dd></div>
-          {{/if}}
-          {{#if model.last_seen_at}}
-            <div><dt>{{i18n 'user.last_seen'}}</dt><dd>{{bound-date model.last_seen_at}}</dd></div>
-          {{/if}}
-          <div><dt>{{i18n 'views'}}</dt><dd>{{model.profile_view_count}}</dd></div>
-          {{#if model.invited_by}}
-            <div><dt class="invited-by">{{i18n 'user.invited_by'}}</dt><dd class="invited-by">{{#link-to 'user' model.invited_by}}{{model.invited_by.username}}{{/link-to}}</dd></div>
-          {{/if}}
-          {{#if model.trust_level}}
-            <div><dt class="trust-level">{{i18n 'user.trust_level'}}</dt><dd class="trust-level">{{model.trustLevel.name}}</dd></div>
-          {{/if}}
-          {{#if canCheckEmails}}
-            <div><dt>{{i18n 'user.email.title'}}</dt>
-            <dd title={{model.email}}>
-              {{#if model.email}}
-                {{model.email}}
-              {{else}}
-                {{d-button action=(route-action "checkEmail") actionParam=model icon="far-envelope" label="admin.users.check_email.text" class="btn-primary"}}
-              {{/if}}
-            </dd>
-            </div>
-          {{/if}}
 
-          {{#if model.displayGroups}}
-            <div><dt class="groups">{{i18n 'groups.title' count=model.displayGroups.length}}</dt>
-            <dd class='groups'>
-              {{#each model.displayGroups as |group|}}
-                <span>{{#link-to 'group' group.name class="group-link"}}{{group.name}}{{/link-to}}</span>
-              {{/each}}
-
-              {{#link-to "groups" (query-params username=model.username)}}
-                ...
-              {{/link-to}}
-            </dd>
-            </div>
-          {{/if}}
-
-          {{#if canDeleteUser}}
-            <div>{{d-button action=(action "adminDelete") icon="exclamation-triangle" label="user.admin_delete" class="btn-danger"}}</div>
-          {{/if}}
-        </dl>
-        {{plugin-outlet name="user-profile-secondary" args=(hash model=model)}}
-      </div>
-      {{/unless}}
     </section>
 
+    <div class='user-content-wrapper'>
+
+    <section class="user-primary-navigation">
     {{#mobile-nav class='main-nav' desktopClass="nav nav-pills user-nav" currentPath=currentPath}}
       {{#unless model.profile_hidden}}
         <li>{{#link-to 'user.summary'}}{{i18n 'user.summary.title'}}{{/link-to}}</li>
@@ -220,11 +233,9 @@
         <li>{{#link-to 'preferences'}}{{d-icon "cog"}}{{i18n 'user.preferences'}}{{/link-to}}</li>
       {{/if}}
     {{/mobile-nav}}
+    </section>
 
-    <div class='user-table'>
-      <div class='wrapper'>
         {{outlet}}
-      </div>
     </div>
 
   {{/d-section}}

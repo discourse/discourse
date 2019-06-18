@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative 'attachment_importer'
 require_relative 'avatar_importer'
 require_relative 'bookmark_importer'

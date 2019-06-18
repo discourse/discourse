@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'pbkdf2'
 
 describe Pbkdf2 do

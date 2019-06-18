@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CleanUpUserHistory < ActiveRecord::Migration[4.2]
   def up
     # 'checked_for_custom_avatar' is not used anymore

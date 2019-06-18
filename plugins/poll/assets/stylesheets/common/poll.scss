@@ -16,20 +16,17 @@ div.poll {
   li {
     cursor: pointer;
     font-size: $font-up-1;
-    &:not(:last-of-type) {
-      margin-bottom: 0.5em;
-    }
   }
 
   li[data-poll-option-id] {
     color: $primary;
-    padding: 0.5em 0.7em 0.7em 0.5em;
+    padding: 0.5em 0;
   }
 
   img {
-    max-width: 100% !important; /* needed to override internal styles */
+    // needed to override internal styles in image-sizing hack
+    max-width: 100% !important;
     height: auto;
-    margin-top: 0.25em;
   }
 
   .poll-info {
@@ -38,34 +35,38 @@ div.poll {
     padding: 1em 0;
 
     .info-label {
-      font-size: 1.7em;
+      font-size: $font-up-4;
       line-height: $line-height-medium;
     }
 
     .info-text {
-      margin: 5px 0;
+      margin: 0.25em 0;
       display: block;
     }
   }
 
   .poll-container {
     vertical-align: middle;
-    padding: 0.8em;
+    padding: 0.5em 1em;
 
     .poll-results-number-rating {
-      font-size: 2em;
+      font-size: $font-up-5;
     }
   }
 
   .poll-buttons {
     .info-text {
-      margin: 0 5px;
+      margin: 0.25em 0;
       color: $primary-medium;
+    }
+    .info-text + .info-text,
+    button + .info-text {
+      margin-left: 0.5em;
     }
   }
 
-  .poll-voters-list {
-    margin-top: 0.25em;
+  .poll-voters:not(:empty) {
+    margin-bottom: 0.25em;
     li {
       display: inline;
     }
@@ -79,17 +80,18 @@ div.poll {
   .results {
     > li {
       cursor: default;
-      padding: 0.5em 0.7em 0.7em 0.5em;
+      padding: 0.25em 0;
+      &:last-child {
+        padding-bottom: 0;
+      }
     }
     .option {
-      padding-bottom: 0.25em;
       p {
         margin: 0;
       }
     }
 
     .percentage {
-      font-size: $font-up-1;
       float: right;
       color: $primary-medium;
       margin-left: 0.25em;

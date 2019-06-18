@@ -69,8 +69,11 @@
 
     $element
       .html(DATE_TEMPLATE)
-      .attr("title", textPreview)
-      .attr("data-html-tooltip", `<div class="previews">${htmlPreview}</div>`)
+      .attr("aria-label", textPreview)
+      .attr(
+        "data-html-tooltip",
+        `<div class="locale-dates-previews">${htmlPreview}</div>`
+      )
       .addClass("cooked-date")
       .find(".relative-time")
       .text(formatedDateTime);
@@ -182,19 +185,25 @@
     const type = parts[1];
     const diff = moment().diff(dateTime, type);
     const add = Math.ceil(diff + count);
+    const wasDST = moment(dateTime.format()).isDST();
+    let dateTimeWithRecurrence = dateTime.add(add, type);
+    const isDST = moment(dateTimeWithRecurrence.format()).isDST();
 
-    return dateTime.add(add, type);
+    if (!wasDST && isDST) {
+      dateTimeWithRecurrence.subtract(1, "hour");
+    }
+
+    if (wasDST && !isDST) {
+      dateTimeWithRecurrence.add(1, "hour");
+    }
+
+    return dateTimeWithRecurrence;
   }
 
   function _createDateTimeRange(dateTime, timezone) {
-    const startRange = dateTime.tz(timezone).format("LLL");
-    const separator = "→";
-    const endRange = dateTime
-      .add(24, "hours")
-      .tz(timezone)
-      .format("LLL");
+    const dt = moment(dateTime).tz(timezone);
 
-    return `${startRange} ${separator} ${endRange}`;
+    return [dt.format("LLL"), "→", dt.add(24, "hours").format("LLL")].join(" ");
   }
 
   function _generatePreviews(dateTime, displayedTimezone, options) {
@@ -208,7 +217,9 @@
       timezone: watchingUserTimezone,
       current: true,
       dateTime: options.time
-        ? dateTime.tz(watchingUserTimezone).format("LLL")
+        ? moment(dateTime)
+            .tz(watchingUserTimezone)
+            .format("LLL")
         : _createDateTimeRange(dateTime, watchingUserTimezone)
     });
 
@@ -235,7 +246,9 @@
         previewedTimezones.push({
           timezone,
           dateTime: options.time
-            ? dateTime.tz(timezone).format("LLL")
+            ? moment(dateTime)
+                .tz(timezone)
+                .format("LLL")
             : _createDateTimeRange(dateTime, timezone)
         });
       });
@@ -244,7 +257,9 @@
       previewedTimezones.push({
         timezone: "Etc/UTC",
         dateTime: options.time
-          ? dateTime.tz("Etc/UTC").format("LLL")
+          ? moment(dateTime)
+              .tz("Etc/UTC")
+              .format("LLL")
           : _createDateTimeRange(dateTime, "Etc/UTC")
       });
     }

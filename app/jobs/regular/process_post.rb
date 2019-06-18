@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'image_sizer'
 require_dependency 'cooked_post_processor'
 
@@ -42,7 +44,7 @@ module Jobs
         s = post.cooked
         s << " #{post.topic.title}" if post.post_number == 1
         if !args[:bypass_bump] && WordWatcher.new(s).should_flag?
-          PostAction.act(Discourse.system_user, post, PostActionType.types[:inappropriate]) rescue PostAction::AlreadyActed
+          PostActionCreator.create(Discourse.system_user, post, :inappropriate)
         end
       end
     end

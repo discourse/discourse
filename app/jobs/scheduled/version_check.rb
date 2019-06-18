@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_dependency 'discourse_hub'
 require_dependency 'discourse_updates'
 

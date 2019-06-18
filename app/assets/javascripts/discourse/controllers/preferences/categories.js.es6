@@ -3,12 +3,16 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import computed from "ember-addons/ember-computed-decorators";
 
 export default Ember.Controller.extend(PreferencesTabController, {
-  saveAttrNames: [
-    "muted_category_ids",
-    "watched_category_ids",
-    "tracked_category_ids",
-    "watched_first_post_category_ids"
-  ],
+  init() {
+    this._super(...arguments);
+
+    this.saveAttrNames = [
+      "muted_category_ids",
+      "watched_category_ids",
+      "tracked_category_ids",
+      "watched_first_post_category_ids"
+    ];
+  },
 
   @computed(
     "model.watchedCategories",
@@ -20,18 +24,23 @@ export default Ember.Controller.extend(PreferencesTabController, {
     return [].concat(watched, watchedFirst, tracked, muted).filter(t => t);
   },
 
-  canSave: function() {
-    return (
-      this.get("currentUser.id") === this.get("model.id") ||
-      this.get("currentUser.admin")
-    );
-  }.property(),
+  @computed
+  canSee() {
+    return this.get("currentUser.id") === this.get("model.id");
+  },
+
+  @computed("siteSettings.remove_muted_tags_from_latest")
+  hideMutedTags() {
+    return this.siteSettings.remove_muted_tags_from_latest !== "never";
+  },
+
+  canSave: Ember.computed.or("canSee", "currentUser.admin"),
 
   actions: {
     save() {
       this.set("saved", false);
-      return this.get("model")
-        .save(this.get("saveAttrNames"))
+      return this.model
+        .save(this.saveAttrNames)
         .then(() => {
           this.set("saved", true);
         })

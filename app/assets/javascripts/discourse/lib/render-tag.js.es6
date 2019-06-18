@@ -1,4 +1,10 @@
-export default function renderTag(tag, params) {
+let _renderer = defaultRenderTag;
+
+export function replaceTagRenderer(fn) {
+  _renderer = fn;
+}
+
+function defaultRenderTag(tag, params) {
   params = params || {};
   const visibleName = Handlebars.Utils.escapeExpression(tag);
   tag = visibleName.toLowerCase();
@@ -40,4 +46,8 @@ export default function renderTag(tag, params) {
   }
 
   return val;
+}
+
+export default function renderTag(tag, params) {
+  return _renderer(tag, params);
 }

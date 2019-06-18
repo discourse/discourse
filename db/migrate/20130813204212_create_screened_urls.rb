@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreateScreenedUrls < ActiveRecord::Migration[4.2]
   def change
     create_table :screened_urls do |t|

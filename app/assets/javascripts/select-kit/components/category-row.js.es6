@@ -40,8 +40,8 @@ export default SelectKitRowComponent.extend({
   @computed("category", "parentCategory")
   badgeForCategory(category, parentCategory) {
     return categoryBadgeHTML(category, {
-      link: this.get("categoryLink"),
-      allowUncategorized: this.get("allowUncategorized"),
+      link: this.categoryLink,
+      allowUncategorized: this.allowUncategorized,
       hideParent: parentCategory ? true : false
     }).htmlSafe();
   },
@@ -49,8 +49,8 @@ export default SelectKitRowComponent.extend({
   @computed("parentCategory")
   badgeForParentCategory(parentCategory) {
     return categoryBadgeHTML(parentCategory, {
-      link: this.get("categoryLink"),
-      allowUncategorized: this.get("allowUncategorized")
+      link: this.categoryLink,
+      allowUncategorized: this.allowUncategorized
     }).htmlSafe();
   },
 
@@ -75,7 +75,7 @@ export default SelectKitRowComponent.extend({
     "options.countSubcategories"
   )
   topicCount(totalCount, topicCount, countSubcats) {
-    return `&times; ${countSubcats ? totalCount : topicCount}`.htmlSafe();
+    return countSubcats ? totalCount : topicCount;
   },
 
   @computed("displayCategoryDescription", "category.description")

@@ -1,0 +1,72 @@
+<tr class='reviewable-score'>
+  <td class='user'>
+    {{#user-link user=rs.user}}
+      {{avatar rs.user imageSize="tiny"}}
+      {{rs.user.username}}
+    {{/user-link}}
+    {{user-flag-percentage
+      agreed=rs.agree_stats.agreed
+      disagreed=rs.agree_stats.disagreed
+      ignored=rs.agree_stats.ignored}}
+  </td>
+  <td>
+    {{d-icon rs.score_type.icon}}
+    {{title}}
+  </td>
+  <td>
+    {{format-date rs.created_at format="tiny"}}
+  </td>
+
+  {{#if showStatus}}
+    <td class="reviewable-score-spacer">
+      {{d-icon "angle-double-right"}}
+    </td>
+
+    <td class='reviewed-by'>
+      {{#if rs.reviewed_by}}
+        {{#user-link user=rs.reviewed_by}}
+          {{avatar rs.reviewed_by imageSize="tiny"}}
+          {{rs.reviewed_by.username}}
+        {{/user-link}}
+      {{else}}
+        &mdash;
+      {{/if}}
+    </td>
+
+    <td>
+      {{reviewable-status rs.status}}
+    </td>
+    <td>
+      {{#if rs.reviewed_by}}
+        {{format-date rs.reviewed_at format="tiny"}}
+      {{/if}}
+    </td>
+  {{else}}
+    <td colspan="4"></td>
+  {{/if}}
+</tr>
+
+{{#if rs.reason}}
+  <tr>
+    <td colspan='7'>
+      <div class='reviewable-score-reason'>{{{rs.reason}}}</div>
+    </td>
+  </tr>
+{{/if}}
+
+{{#if rs.reviewable_conversation}}
+  <tr>
+    <td colspan='7'>
+      <div class='reviewable-conversation'>
+        {{#each rs.reviewable_conversation.conversation_posts as |p index|}}
+          {{reviewable-conversation-post post=p index=index}}
+        {{/each}}
+        <div class='controls'>
+          <a href={{rs.reviewable_conversation.permalink}} class='btn btn-small'>
+            {{i18n "review.conversation.view_full"}}
+          </a>
+        </div>
+      </div>
+    </td>
+  </tr>
+{{/if}}

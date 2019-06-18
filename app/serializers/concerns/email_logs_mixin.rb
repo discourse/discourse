@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module EmailLogsMixin
   def self.included(klass)
     klass.attributes :id,

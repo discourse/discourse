@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class InitFixedCategoryPositionsValue < ActiveRecord::Migration[4.2]
   def up
     # Look at existing categories to determine if positions have been specified

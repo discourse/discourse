@@ -10,6 +10,7 @@
   z-index: z("mobile-composer");
   .reply-area {
     padding: 0 10px;
+    padding-bottom: env(safe-area-inset-bottom);
     @media screen and (max-width: 374px) {
       padding: 0 5px;
     }
@@ -38,6 +39,8 @@
   }
 
   &.draft {
+    padding-bottom: env(safe-area-inset-bottom);
+
     .toggle-toolbar,
     .toggler {
       top: 8px;
@@ -68,18 +71,29 @@
       flex: 1 1 auto;
       #draft-status,
       #file-uploading {
-        margin-left: 15px;
+        margin-left: 6px;
       }
       .cancel {
-        font-size: 1.6em;
+        font-size: 1.4em;
         color: $primary-low-mid;
         margin-left: 0.6em;
-        padding: 0 5px;
+        padding: 3px 6px;
       }
     }
-    .composer-bottom-right {
-      margin-left: auto;
-      flex: 1 1 auto;
+    .mobile-file-upload:not(.hidden),
+    .mobile-preview {
+      // Alignment fix, remove if converted to buttons
+      display: inline-flex;
+    }
+    .mobile-file-upload {
+      &.hidden + .mobile-preview {
+        // Hide preview button while file is uploading to make room for upload progress
+        display: none;
+      }
+    }
+
+    .mobile-preview {
+      margin-left: 0.25em;
     }
   }
 
@@ -90,7 +104,7 @@
   &.show-preview {
     .d-editor-preview-wrapper {
       position: fixed;
-      z-index: z("base") + 1;
+      z-index: z("fullscreen");
       top: 0;
       bottom: 0;
       left: 0;
@@ -108,7 +122,7 @@
       position: fixed;
       right: 5px;
       bottom: 5px;
-      z-index: z("base") + 2;
+      z-index: z("fullscreen") + 1;
     }
   }
 
@@ -134,8 +148,9 @@
         0
       ); // Hack: Reduces composer icon jitter while scrolling in Safari on iOS12
     }
-    @media all and (max-width: 350px) {
-      padding: 2px 4px;
+    @include breakpoint(mobile-medium) {
+      padding: 4px;
+      font-size: 0.96em;
     }
     &.preview {
       margin: 0;

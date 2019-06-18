@@ -1,6 +1,6 @@
 {{#discourse-topic multiSelect=multiSelect enteredAt=enteredAt topic=model hasScrolled=hasScrolled}}
   {{#if model}}
-    {{add-category-class category=model.category}}
+    {{add-category-tag-classes category=model.category tags=model.tags}}
     <div class="container">
       {{discourse-banner user=currentUser banner=site.banner overlay=hasScrolled hide=model.errorLoading}}
     </div>
@@ -22,7 +22,10 @@
           {{/if}}
             {{text-field id="edit-title" value=buffered.title maxlength=siteSettings.max_topic_title_length autofocus="true"}}
             {{#if showCategoryChooser}}
-              {{category-chooser class="small" value=buffered.category_id}}
+              {{category-chooser
+                class="small"
+                value=(unbound buffered.category_id)
+                onSelectAny=(action "topicCategoryChanged")}}
             {{/if}}
 
             {{#if canEditTags}}
@@ -184,6 +187,8 @@
                 rebakePost=(action "rebakePost")
                 changePostOwner=(action "changePostOwner")
                 grantBadge=(action "grantBadge")
+                addNotice=(action "addNotice")
+                removeNotice=(action "removeNotice")
                 lockPost=(action "lockPost")
                 unlockPost=(action "unlockPost")
                 unhidePost=(action "unhidePost")
@@ -192,7 +197,6 @@
                 toggleSummary=(action "toggleSummary")
                 removeAllowedUser=(action "removeAllowedUser")
                 removeAllowedGroup=(action "removeAllowedGroup")
-                showInvite=(route-action "showInvite")
                 topVisibleChanged=(action "topVisibleChanged")
                 currentPostChanged=(action "currentPostChanged")
                 currentPostScrolled=(action "currentPostScrolled")
@@ -201,7 +205,8 @@
                 selectReplies=(action "selectReplies")
                 selectBelow=(action "selectBelow")
                 fillGapBefore=(action "fillGapBefore")
-                fillGapAfter=(action "fillGapAfter")}}
+                fillGapAfter=(action "fillGapAfter")
+                showInvite=(route-action "showInvite")}}
             {{/unless}}
 
             {{conditional-loading-spinner condition=model.postStream.loadingBelow}}
@@ -211,16 +216,46 @@
           {{#conditional-loading-spinner condition=model.postStream.loadingFilter}}
             {{#if loadedAllPosts}}
 
-              {{#if model.pending_posts_count}}
-                <div class="has-pending-posts">
-                  {{{i18n "queue.has_pending_posts" count=model.pending_posts_count}}}
+              {{#if model.pending_posts}}
+                <div class='pending-posts'>
+                  {{#each model.pending_posts as |pending|}}
+                    <div class='reviewable-item'>
+                      <div class='reviewable-meta-data'>
+                        <span class='reviewable-type'>
+                          {{i18n "review.awaiting_approval"}}
+                        </span>
+                        <span class='created-at'>
+                          {{age-with-tooltip pending.created_at}}
+                        </span>
+                      </div>
+                      <div class='post-contents-wrapper'>
+                        {{reviewable-created-by user=currentUser tagName=''}}
+                        <div class='post-contents'>
+                          {{reviewable-created-by-name user=currentUser tagName=''}}
+                          <div class='post-body'>{{cook-text pending.raw}}</div>
+                        </div>
+                      </div>
+                      <div class='reviewable-actions'>
+                        {{d-button
+                          class="btn-danger"
+                          label="review.delete"
+                          icon="trash-alt"
+                          action=(action "deletePending" pending) }}
+                      </div>
+                    </div>
+                  {{/each}}
+                </div>
+              {{/if}}
 
-                  {{#if currentUser.show_queued_posts}}
-                    {{#link-to "queued-posts"}}
-                      {{d-icon "check"}}
-                      {{i18n "queue.view_pending"}}
-                    {{/link-to}}
-                  {{/if}}
+              {{#if model.queued_posts_count}}
+                <div class="has-pending-posts">
+                  <div>
+                    {{{i18n "review.topic_has_pending" count=model.queued_posts_count}}}
+                  </div>
+
+                  {{#link-to 'review' (query-params topic_id=model.id type="ReviewableQueuedPost" status="pending")}}
+                    {{i18n "review.view_pending"}}
+                  {{/link-to}}
                 </div>
               {{/if}}
 
@@ -264,11 +299,10 @@
                     convertToPrivateMessage=(action "convertToPrivateMessage")
                     toggleBookmark=(action "toggleBookmark")
                     showFlagTopic=(route-action "showFlagTopic")
-                    showInvite=(route-action "showInvite")
                     toggleArchiveMessage=(action "toggleArchiveMessage")
                     editFirstPost=(action "editFirstPost")
-                    replyToPost=(action "replyToPost")
-                    }}
+                    deferTopic=(action "deferTopic")
+                    replyToPost=(action "replyToPost")}}
                 {{else}}
                   <div id="topic-footer-buttons">
                     {{d-button icon="reply" class="btn-primary pull-right" action=(route-action "showLogin") label="topic.reply.title"}}
@@ -311,7 +345,7 @@
                 {{d-button action=(route-action "showLogin") class="btn-primary topic-retry" icon="user" label="log_in"}}
               {{/unless}}
             {{else}}
-              {{d-button action=(action "retryLoading") class="btn-primary topic-retry" icon="refresh" label="errors.buttons.again"}}
+              {{d-button action=(action "retryLoading") class="btn-primary topic-retry" icon="sync" label="errors.buttons.again"}}
             {{/if}}
           </div>
           {{conditional-loading-spinner condition=retrying}}

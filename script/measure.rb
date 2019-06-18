@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # using this script to try figure out why Ruby 2 is slower than 1.9
 require 'flamegraph'
 

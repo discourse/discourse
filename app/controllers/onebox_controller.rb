@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_dependency 'oneboxer'
 
 class OneboxController < ApplicationController
@@ -6,7 +8,7 @@ class OneboxController < ApplicationController
   def show
     unless params[:refresh] == 'true'
       preview = Oneboxer.cached_preview(params[:url])
-      preview.strip! if preview.present?
+      preview = preview.strip if preview.present?
       return render(plain: preview) if preview.present?
     end
 
@@ -29,7 +31,7 @@ class OneboxController < ApplicationController
         topic_id: topic_id
       )
 
-      preview.strip! if preview.present?
+      preview = preview.strip if preview.present?
 
       Oneboxer.onebox_previewed!(user_id)
 

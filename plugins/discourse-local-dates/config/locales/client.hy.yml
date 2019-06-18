@@ -1,0 +1,29 @@
+# encoding: utf-8
+#
+# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+#
+# To work with us on translations, join this project:
+# https://www.transifex.com/projects/p/discourse-org/
+
+hy:
+  js:
+    discourse_local_dates:
+      relative_dates:
+        today: Այսօր %{time}
+        tomorrow: Վաղը %{time}
+        yesterday: Երեկ %{time}
+      create:
+        form:
+          insert: Մուտքագրել
+          advanced_mode: Ընդլայնված ռեժիմ
+          simple_mode: Հասարակ ռեժիմ
+          format_description: "Օգտատիրոջը ամսաթվի ցուցադրման համար օգտագործված ֆորմատ: Օգտագործեք \"\\T\\Z\" ՝ օգտատիրոջ ժամային գոտին բառերով ցուցադրելու համար (Europe/Paris)"
+          timezones_title: Ցուցադրվող ժամային գոտիներ
+          timezones_description: 'Ժամային գոտիները կօգտագործվեն նախադիտման և վերադարձի ժամանակ ամսաթվի ցուցադրման համար:'
+          recurring_title: Կրկնություն
+          recurring_description: "Սահմանեք իրադարձության կրկնությունը: Դուք կարող եք նաև ձեռքով խմբագրել էջի կողմից գեներացված կրկնության տարբերակը և օգտագործեք հետևյալ key-երից որևէ մեկը՝ տարիներ, եռամսյակներ, շաբաթներ, օրեր, ժամեր, րոպեներ, վայրկյաններ, միլիվայրկյաններ:"
+          recurring_none: Կրկնություն չկա
+          invalid_date: Անվավեր ամսաթիվ, համոզվեք, որ ամսաթիվը և ժամը ճիշտ են
+          date_title: Ամսաթիվ
+          time_title: Ժամ
+          format_title: Ամսաթվի ֆորմատ

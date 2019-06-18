@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class PrimaryGroupLookup
   def initialize(user_ids = [])
     @user_ids = user_ids.tap(&:compact!).tap(&:uniq!).tap(&:flatten!)

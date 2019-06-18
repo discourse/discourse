@@ -1,8 +1,11 @@
+import computed from "ember-addons/ember-computed-decorators";
+
 const PermissionType = Discourse.Model.extend({
-  description: function() {
+  @computed("id")
+  description(id) {
     var key = "";
 
-    switch (this.get("id")) {
+    switch (id) {
       case 1:
         key = "full";
         break;
@@ -14,7 +17,7 @@ const PermissionType = Discourse.Model.extend({
         break;
     }
     return I18n.t("permission_types." + key);
-  }.property("id")
+  }
 });
 
 PermissionType.FULL = 1;

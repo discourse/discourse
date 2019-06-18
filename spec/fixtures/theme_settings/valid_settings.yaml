@@ -10,6 +10,10 @@ string_setting_02:
   min: 2
   max: 20
 
+string_setting_03:
+  default: "string value"
+  textarea: true
+
 integer_setting: 51
 
 integer_setting_02:

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # kind of odd, but we need it, we also need to nuke usage of User from inside migrations
 #  very poor form
 user = User.find_by("id <> -1 and username_lower = 'system'")
@@ -27,8 +29,8 @@ User.seed do |u|
 end
 
 UserOption.where(user_id: -1).update_all(
-  email_private_messages: false,
-  email_direct: false
+  email_messages_level: UserOption.email_level_types[:never],
+  email_level: UserOption.email_level_types[:never]
 )
 
 Group.user_trust_level_change!(-1, TrustLevel[4])
@@ -55,9 +57,9 @@ if ENV["SMOKE"] == "1"
   end.first
 
   UserOption.where(user_id: smoke_user.id).update_all(
-    email_direct: false,
     email_digests: false,
-    email_private_messages: false,
+    email_messages_level: UserOption.email_level_types[:never],
+    email_level: UserOption.email_level_types[:never]
   )
 
   EmailToken.where(user_id: smoke_user.id).update_all(confirmed: true)

@@ -1,16 +1,21 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 require 'theme_store/tgz_exporter'
 
 describe ThemeStore::TgzExporter do
-  let(:theme) do
+  let!(:theme) do
     Fabricate(:theme, name: "Header Icons").tap do |theme|
       theme.set_field(target: :common, name: :body_tag, value: "<b>testtheme1</b>")
       theme.set_field(target: :settings, name: :yaml, value: "somesetting: test")
       theme.set_field(target: :mobile, name: :scss, value: 'body {background-color: $background_color; font-size: $font-size}')
       theme.set_field(target: :translations, name: :en, value: { en: { key: "value" } }.deep_stringify_keys.to_yaml)
       image = file_from_fixtures("logo.png")
-      upload = UploadCreator.new(image, "logo.png").create_for(-1)
+      upload = UploadCreator.new(image, "logo.png").create_for(Discourse::SYSTEM_USER_ID)
       theme.set_field(target: :common, name: :logo, upload_id: upload.id, type: :theme_upload_var)
+      image = file_from_fixtures("logo.png")
+      other_upload = UploadCreator.new(image, "logo.png").create_for(Discourse::SYSTEM_USER_ID)
+      theme.set_field(target: :common, name: "other_logo", upload_id: upload.id, type: :theme_upload_var)
       theme.build_remote_theme(remote_url: "", about_url: "abouturl", license_url: "licenseurl",
                                authors: "David Taylor", theme_version: "1.0", minimum_discourse_version: "1.0.0",
                                maximum_discourse_version: "3.0.0.beta1")
@@ -63,7 +68,7 @@ describe ThemeStore::TgzExporter do
       expect(folders).to contain_exactly("assets", "common", "locales", "mobile")
 
       files = Dir.glob("**/*").reject { |f| File.directory?(f) }
-      expect(files).to contain_exactly("about.json", "assets/logo.png", "common/body_tag.html", "locales/en.yml", "mobile/mobile.scss", "settings.yml")
+      expect(files).to contain_exactly("about.json", "assets/logo.png", "assets/other_logo.png", "common/body_tag.html", "locales/en.yml", "mobile/mobile.scss", "settings.yml")
 
       expect(JSON.parse(File.read('about.json')).deep_symbolize_keys).to eq(
         "name": "Header Icons",
@@ -71,7 +76,8 @@ describe ThemeStore::TgzExporter do
         "license_url": "licenseurl",
         "component": false,
         "assets": {
-          "logo": "assets/logo.png"
+          "logo": "assets/logo.png",
+          "other_logo": "assets/other_logo.png"
         },
         "authors": "David Taylor",
         "minimum_discourse_version": "1.0.0",
@@ -103,8 +109,8 @@ describe ThemeStore::TgzExporter do
     # Theme field names should be sanitized before writing to the database,
     # but protection is in place 'just in case'
     expect do
-      theme.set_field(target: :translations, name: "en", value: "hacked")
-      theme.theme_fields[0].stubs(:file_path).returns("../../malicious")
+      theme.set_field(target: :translations, name: SiteSetting.default_locale, value: "hacked")
+      ThemeField.any_instance.stubs(:file_path).returns("../../malicious")
       theme.save!
       package
     end.to raise_error(RuntimeError)

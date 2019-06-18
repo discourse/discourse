@@ -31,44 +31,47 @@ const IN_OPTIONS_MAPPING = { images: "with" };
 export default Ember.Component.extend({
   classNames: ["search-advanced-options"],
 
-  inOptionsForUsers: [
-    { name: I18n.t("search.advanced.filters.unseen"), value: "unseen" },
-    { name: I18n.t("search.advanced.filters.posted"), value: "posted" },
-    { name: I18n.t("search.advanced.filters.watching"), value: "watching" },
-    { name: I18n.t("search.advanced.filters.tracking"), value: "tracking" },
-    { name: I18n.t("search.advanced.filters.bookmarks"), value: "bookmarks" }
-  ],
-
-  inOptionsForAll: [
-    { name: I18n.t("search.advanced.filters.first"), value: "first" },
-    { name: I18n.t("search.advanced.filters.pinned"), value: "pinned" },
-    { name: I18n.t("search.advanced.filters.unpinned"), value: "unpinned" },
-    { name: I18n.t("search.advanced.filters.wiki"), value: "wiki" },
-    { name: I18n.t("search.advanced.filters.images"), value: "images" }
-  ],
-
-  statusOptions: [
-    { name: I18n.t("search.advanced.statuses.open"), value: "open" },
-    { name: I18n.t("search.advanced.statuses.closed"), value: "closed" },
-    { name: I18n.t("search.advanced.statuses.archived"), value: "archived" },
-    { name: I18n.t("search.advanced.statuses.noreplies"), value: "noreplies" },
-    {
-      name: I18n.t("search.advanced.statuses.single_user"),
-      value: "single_user"
-    }
-  ],
-
-  postTimeOptions: [
-    { name: I18n.t("search.advanced.post.time.before"), value: "before" },
-    { name: I18n.t("search.advanced.post.time.after"), value: "after" }
-  ],
-
   init() {
     this._super(...arguments);
+
+    this.inOptionsForUsers = [
+      { name: I18n.t("search.advanced.filters.unseen"), value: "unseen" },
+      { name: I18n.t("search.advanced.filters.posted"), value: "posted" },
+      { name: I18n.t("search.advanced.filters.watching"), value: "watching" },
+      { name: I18n.t("search.advanced.filters.tracking"), value: "tracking" },
+      { name: I18n.t("search.advanced.filters.bookmarks"), value: "bookmarks" }
+    ];
+
+    this.inOptionsForAll = [
+      { name: I18n.t("search.advanced.filters.first"), value: "first" },
+      { name: I18n.t("search.advanced.filters.pinned"), value: "pinned" },
+      { name: I18n.t("search.advanced.filters.unpinned"), value: "unpinned" },
+      { name: I18n.t("search.advanced.filters.wiki"), value: "wiki" },
+      { name: I18n.t("search.advanced.filters.images"), value: "images" }
+    ];
+
+    this.statusOptions = [
+      { name: I18n.t("search.advanced.statuses.open"), value: "open" },
+      { name: I18n.t("search.advanced.statuses.closed"), value: "closed" },
+      { name: I18n.t("search.advanced.statuses.archived"), value: "archived" },
+      {
+        name: I18n.t("search.advanced.statuses.noreplies"),
+        value: "noreplies"
+      },
+      {
+        name: I18n.t("search.advanced.statuses.single_user"),
+        value: "single_user"
+      }
+    ];
+
+    this.postTimeOptions = [
+      { name: I18n.t("search.advanced.post.time.before"), value: "before" },
+      { name: I18n.t("search.advanced.post.time.after"), value: "after" }
+    ];
+
     this._init();
-    Ember.run.scheduleOnce("afterRender", () => {
-      this._update();
-    });
+
+    Ember.run.scheduleOnce("afterRender", () => this._update());
   },
 
   @observes("searchTerm")
@@ -109,7 +112,7 @@ export default Ember.Component.extend({
   },
 
   _update() {
-    if (!this.get("searchTerm")) {
+    if (!this.searchTerm) {
       this._init();
       return;
     }
@@ -156,7 +159,7 @@ export default Ember.Component.extend({
   },
 
   findSearchTerms() {
-    const searchTerm = escapeExpression(this.get("searchTerm"));
+    const searchTerm = escapeExpression(this.searchTerm);
     if (!searchTerm) return [];
 
     const blocks = searchTerm.match(REGEXP_BLOCKS);
@@ -334,7 +337,7 @@ export default Ember.Component.extend({
   updateSearchTermForUsername() {
     const match = this.filterBlocks(REGEXP_USERNAME_PREFIX);
     const userFilter = this.get("searchedTerms.username");
-    let searchTerm = this.get("searchTerm") || "";
+    let searchTerm = this.searchTerm || "";
 
     if (userFilter && userFilter.length !== 0) {
       if (match.length !== 0) {
@@ -354,7 +357,7 @@ export default Ember.Component.extend({
   updateSearchTermForCategory() {
     const match = this.filterBlocks(REGEXP_CATEGORY_PREFIX);
     const categoryFilter = this.get("searchedTerms.category");
-    let searchTerm = this.get("searchTerm") || "";
+    let searchTerm = this.searchTerm || "";
 
     const slugCategoryMatches =
       match.length !== 0 ? match[0].match(REGEXP_CATEGORY_SLUG) : null;
@@ -404,7 +407,7 @@ export default Ember.Component.extend({
   updateSearchTermForGroup() {
     const match = this.filterBlocks(REGEXP_GROUP_PREFIX);
     const groupFilter = this.get("searchedTerms.group");
-    let searchTerm = this.get("searchTerm") || "";
+    let searchTerm = this.searchTerm || "";
 
     if (groupFilter && groupFilter.length !== 0) {
       if (match.length !== 0) {
@@ -424,7 +427,7 @@ export default Ember.Component.extend({
   updateSearchTermForBadge() {
     const match = this.filterBlocks(REGEXP_BADGE_PREFIX);
     const badgeFilter = this.get("searchedTerms.badge");
-    let searchTerm = this.get("searchTerm") || "";
+    let searchTerm = this.searchTerm || "";
 
     if (badgeFilter && badgeFilter.length !== 0) {
       if (match.length !== 0) {
@@ -444,7 +447,7 @@ export default Ember.Component.extend({
   updateSearchTermForTags() {
     const match = this.filterBlocks(REGEXP_TAGS_PREFIX);
     const tagFilter = this.get("searchedTerms.tags");
-    let searchTerm = this.get("searchTerm") || "";
+    let searchTerm = this.searchTerm || "";
     const contain_all_tags = this.get("searchedTerms.special.all_tags");
 
     if (tagFilter && tagFilter.length !== 0) {
@@ -472,7 +475,7 @@ export default Ember.Component.extend({
     if (inFilter in IN_OPTIONS_MAPPING) {
       keyword = IN_OPTIONS_MAPPING[inFilter];
     }
-    let searchTerm = this.get("searchTerm") || "";
+    let searchTerm = this.searchTerm || "";
 
     if (inFilter) {
       if (match.length !== 0) {
@@ -491,7 +494,7 @@ export default Ember.Component.extend({
   updateInRegex(regex, filter) {
     const match = this.filterBlocks(regex);
     const inFilter = this.get("searchedTerms.special.in." + filter);
-    let searchTerm = this.get("searchTerm") || "";
+    let searchTerm = this.searchTerm || "";
 
     if (inFilter) {
       if (match.length === 0) {
@@ -528,7 +531,7 @@ export default Ember.Component.extend({
   updateSearchTermForStatus() {
     const match = this.filterBlocks(REGEXP_STATUS_PREFIX);
     const statusFilter = this.get("searchedTerms.status");
-    let searchTerm = this.get("searchTerm") || "";
+    let searchTerm = this.searchTerm || "";
 
     if (statusFilter) {
       if (match.length !== 0) {
@@ -548,7 +551,7 @@ export default Ember.Component.extend({
   updateSearchTermForPostTime() {
     const match = this.filterBlocks(REGEXP_POST_TIME_PREFIX);
     const timeDaysFilter = this.get("searchedTerms.time.days");
-    let searchTerm = this.get("searchTerm") || "";
+    let searchTerm = this.searchTerm || "";
 
     if (timeDaysFilter) {
       const when = this.get("searchedTerms.time.when");
@@ -569,7 +572,7 @@ export default Ember.Component.extend({
   updateSearchTermForMinPostCount() {
     const match = this.filterBlocks(REGEXP_MIN_POST_COUNT_PREFIX);
     const postsCountFilter = this.get("searchedTerms.min_post_count");
-    let searchTerm = this.get("searchTerm") || "";
+    let searchTerm = this.searchTerm || "";
 
     if (postsCountFilter) {
       if (match.length !== 0) {

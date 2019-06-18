@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Email
 
   class Processor
@@ -63,6 +65,7 @@ module Email
                          when Email::Receiver::InvalidPostAction           then :email_reject_invalid_post_action
                          when Discourse::InvalidAccess                     then :email_reject_invalid_access
                          when Email::Receiver::OldDestinationError         then :email_reject_old_destination
+                         when Email::Receiver::ReplyNotAllowedError        then :email_reject_reply_not_allowed
                          else                                                   :email_reject_unrecognized_error
       end
 
@@ -125,7 +128,7 @@ module Email
     end
 
     def set_incoming_email_rejection_message(incoming_email, message)
-      incoming_email.update_attributes!(rejection_message: message) if incoming_email
+      incoming_email.update!(rejection_message: message) if incoming_email
     end
 
     def log_email_process_failure(mail_string, exception)

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddHasBestOfToForumThreads < ActiveRecord::Migration[4.2]
 
   def change

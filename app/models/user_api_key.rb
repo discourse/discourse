@@ -1,10 +1,13 @@
+# frozen_string_literal: true
+
 class UserApiKey < ActiveRecord::Base
 
   SCOPES = {
     read: [:get],
-    write: [:get, :post, :patch],
+    write: [:get, :post, :patch, :put, :delete],
     message_bus: [[:post, 'message_bus']],
     push: nil,
+    one_time_password: nil,
     notifications: [[:post, 'message_bus'], [:get, 'notifications#index'], [:put, 'notifications#mark_read']],
     session_info: [
       [:get, 'session#current'],
@@ -29,7 +32,6 @@ class UserApiKey < ActiveRecord::Base
     verb, action = permission
     actual_verb = env["REQUEST_METHOD"] || ""
 
-    # safe in Ruby 2.3 which is only one supported
     return false unless actual_verb.downcase == verb.to_s
     return true unless action
 
@@ -64,6 +66,11 @@ class UserApiKey < ActiveRecord::Base
     end
   end
 
+  def self.invalid_auth_redirect?(auth_redirect)
+    return SiteSetting.allowed_user_api_auth_redirects
+        .split('|')
+        .none? { |u| WildcardUrlChecker.check_url(u, auth_redirect) }
+  end
 end
 
 # == Schema Information

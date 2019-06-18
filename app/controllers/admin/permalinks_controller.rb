@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Admin::PermalinksController < Admin::AdminController
 
   before_action :fetch_permalink, only: [:destroy]

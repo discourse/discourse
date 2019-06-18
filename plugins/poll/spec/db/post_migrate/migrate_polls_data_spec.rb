@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 require_relative '../../../db/post_migrate/20180820080623_migrate_polls_data'
 

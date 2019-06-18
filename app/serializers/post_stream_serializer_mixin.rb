@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_dependency 'gap_serializer'
 require_dependency 'post_serializer'
 require_dependency 'timeline_lookup'

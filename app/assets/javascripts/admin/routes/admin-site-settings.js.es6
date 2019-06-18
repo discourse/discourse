@@ -15,5 +15,13 @@ export default Discourse.Route.extend({
     if (!controller.get("visibleSiteSettings")) {
       controller.set("visibleSiteSettings", siteSettings);
     }
+  },
+
+  actions: {
+    refreshAll() {
+      SiteSetting.findAll().then(settings => {
+        this.controllerFor("adminSiteSettings").set("model", settings);
+      });
+    }
   }
 });

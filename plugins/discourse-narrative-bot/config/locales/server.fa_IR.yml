@@ -110,11 +110,6 @@ fa_IR:
       random_mention:
         reply: |-
           سلام! برای اینکه بفهمی من چکار میتوانم بکنم، بگو `@%{discobot_username} %{help_trigger} `.
-        tracks: |-
-          در حال حاظر من کارهای زیر را بلدم انجام دهم:
-
-          `@%{discobot_username} %{reset_trigger} %{default_track}`
-          > یکی از روایت‌های تعاملی مقابل را شروع کن: %{tracks}.
         bot_actions: |-
           `@%{discobot_username} %{dice_trigger} 2d6`
           > :game_die: 3, 6
@@ -137,7 +132,6 @@ fa_IR:
 
           در عین حال، سعی میکنم که جلو راهت سبز نشم.
     new_user_narrative:
-      reset_trigger: "کاربر جدید"
       cert_title: "با توجه به اتمام موفقیت آمیز راهنمای جدید کاربران"
       onebox:
         reply: |-
@@ -268,7 +262,6 @@ fa_IR:
       certificate:
         alt: 'گواهی موفقیت'
     advanced_user_narrative:
-      reset_trigger: 'کاربر حرفه‌ای'
       cert_title: "با توجه به اتمام موفقیت آمیز راهنمای جدید کاربران"
       title: ':arrow_up: ویژگی‌های کاربر حرفه‌ای'
       edit:

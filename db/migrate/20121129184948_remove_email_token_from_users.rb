@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class RemoveEmailTokenFromUsers < ActiveRecord::Migration[4.2]
   def up
     execute "INSERT INTO email_tokens (user_id, email, token, created_at, updated_at)

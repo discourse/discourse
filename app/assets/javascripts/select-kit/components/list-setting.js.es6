@@ -12,12 +12,12 @@ export default MultiSelectComponent.extend({
   init() {
     this._super(...arguments);
 
-    if (!isNone(this.get("settingName"))) {
-      this.set("nameProperty", this.get("settingName"));
+    if (!isNone(this.settingName)) {
+      this.set("nameProperty", this.settingName);
     }
 
-    if (this.get("nameProperty").indexOf("color") > -1) {
-      this.get("headerComponentOptions").setProperties({
+    if (this.nameProperty.indexOf("color") > -1) {
+      this.headerComponentOptions.setProperties({
         selectedNameComponent: "multi-select/selected-color"
       });
     }
@@ -25,23 +25,21 @@ export default MultiSelectComponent.extend({
 
   computeContent() {
     let content;
-    if (isNone(this.get("choices"))) {
-      content = this.get("settingValue").split(this.get("tokenSeparator"));
+    if (isNone(this.choices)) {
+      content = this.settingValue.split(this.tokenSeparator);
     } else {
-      content = this.get("choices");
+      content = this.choices;
     }
 
     return makeArray(content).filter(c => c);
   },
 
   mutateValues(values) {
-    this.set("settingValue", values.join(this.get("tokenSeparator")));
+    this.set("settingValue", values.join(this.tokenSeparator));
   },
 
   computeValues() {
-    return this.get("settingValue")
-      .split(this.get("tokenSeparator"))
-      .filter(c => c);
+    return this.settingValue.split(this.tokenSeparator).filter(c => c);
   },
 
   _handleTabOnKeyDown(event) {

@@ -76,7 +76,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
         if (time) {
           this.send("closeModal");
 
-          Ember.setProperties(this.get("topicTimer"), {
+          Ember.setProperties(this.topicTimer, {
             execute_at: result.execute_at,
             duration: result.duration,
             category_id: result.category_id
@@ -85,9 +85,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
           this.set("model.closed", result.closed);
         } else {
           const topicTimer =
-            this.get("isPublic") === "true"
-              ? "topic_timer"
-              : "private_topic_timer";
+            this.isPublic === "true" ? "topic_timer" : "private_topic_timer";
           this.set(`model.${topicTimer}`, Ember.Object.create({}));
 
           this.setProperties({
@@ -103,6 +101,14 @@ export default Ember.Controller.extend(ModalFunctionality, {
 
   actions: {
     saveTimer() {
+      if (!this.get("topicTimer.updateTime")) {
+        this.flash(
+          I18n.t("topic.topic_status_update.time_frame_required"),
+          "alert-error"
+        );
+        return;
+      }
+
       this._setTimer(
         this.get("topicTimer.updateTime"),
         this.get("topicTimer.status_type")

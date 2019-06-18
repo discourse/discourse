@@ -3,13 +3,13 @@ import { acceptance } from "helpers/qunit-helpers";
 acceptance("Groups");
 
 QUnit.test("Browsing Groups", async assert => {
-  await visit("/groups?username=eviltrout");
+  await visit("/g?username=eviltrout");
 
-  assert.equal(count(".groups-table-row"), 1, "it displays user's groups");
+  assert.equal(count(".group-box"), 1, "it displays user's groups");
 
-  await visit("/groups");
+  await visit("/g");
 
-  assert.equal(count(".groups-table-row"), 2, "it displays visible groups");
+  assert.equal(count(".group-box"), 2, "it displays visible groups");
   assert.equal(
     find(".group-index-join").length,
     1,
@@ -33,7 +33,7 @@ QUnit.test("Browsing Groups", async assert => {
 
   assert.ok(exists(".modal.login-modal"), "it shows the login modal");
 
-  await click("a[href='/groups/discourse/members']");
+  await click("a[href='/g/discourse/members']");
 
   assert.equal(
     find(".group-info-name")

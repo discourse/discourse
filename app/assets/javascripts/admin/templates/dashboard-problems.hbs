@@ -18,7 +18,7 @@
         </div>
 
         <p class="actions">
-          {{d-button action=(action "refreshProblems") class="btn-default" icon="refresh" label="admin.dashboard.refresh_problems"}}
+          {{d-button action=(action "refreshProblems") class="btn-default" icon="sync" label="admin.dashboard.refresh_problems"}}
           {{i18n 'admin.dashboard.last_checked'}}: {{problemsTimestamp}}
         </p>
       {{/conditional-loading-section}}

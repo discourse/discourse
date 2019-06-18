@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # tiny middleware to force https if needed
 class Discourse::ForceHttpsMiddleware
 

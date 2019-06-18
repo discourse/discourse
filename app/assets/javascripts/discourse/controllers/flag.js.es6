@@ -21,7 +21,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
       spammerDetails: null
     });
 
-    let adminTools = this.get("adminTools");
+    let adminTools = this.adminTools;
     if (adminTools) {
       adminTools.checkSpammer(this.get("model.user_id")).then(result => {
         this.set("spammerDetails", result);
@@ -39,8 +39,9 @@ export default Ember.Controller.extend(ModalFunctionality, {
     return flagTopic ? "flagging_topic.title" : "flagging.title";
   },
 
-  flagsAvailable: function() {
-    if (!this.get("flagTopic")) {
+  @computed("post", "flagTopic", "model.actions_summary.@each.can_act")
+  flagsAvailable() {
+    if (!this.flagTopic) {
       // flagging post
       let flagsAvailable = this.get("model.flagsAvailable");
 
@@ -57,7 +58,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
     } else {
       // flagging topic
       let lookup = Ember.Object.create();
-      let model = this.get("model");
+      let model = this.model;
       model.get("actions_summary").forEach(a => {
         a.flagTopic = model;
         a.actionType = this.site.topicFlagTypeById(a.id);
@@ -66,22 +67,24 @@ export default Ember.Controller.extend(ModalFunctionality, {
       this.set("topicActionByName", lookup);
 
       return this.site.get("topic_flag_types").filter(item => {
-        return _.any(this.get("model.actions_summary"), a => {
+        return this.get("model.actions_summary").some(a => {
           return a.id === item.get("id") && a.can_act;
         });
       });
     }
-  }.property("post", "flagTopic", "model.actions_summary.@each.can_act"),
+  },
 
-  staffFlagsAvailable: function() {
+  @computed("post", "flagTopic", "model.actions_summary.@each.can_act")
+  staffFlagsAvailable() {
     return (
       this.get("model.flagsAvailable") &&
       this.get("model.flagsAvailable").length > 1
     );
-  }.property("post", "flagTopic", "model.actions_summary.@each.can_act"),
+  },
 
-  submitEnabled: function() {
-    const selected = this.get("selected");
+  @computed("selected.is_custom_flag", "message.length")
+  submitEnabled() {
+    const selected = this.selected;
     if (!selected) return false;
 
     if (selected.get("is_custom_flag")) {
@@ -92,7 +95,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
       );
     }
     return true;
-  }.property("selected.is_custom_flag", "message.length"),
+  },
 
   submitDisabled: Ember.computed.not("submitEnabled"),
 
@@ -119,7 +122,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
 
   actions: {
     deleteSpammer() {
-      let details = this.get("spammerDetails");
+      let details = this.spammerDetails;
       if (details) {
         details.deleteUser().then(() => window.location.reload());
       }
@@ -133,7 +136,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
     createFlag(opts) {
       let postAction; // an instance of ActionSummary
 
-      if (!this.get("flagTopic")) {
+      if (!this.flagTopic) {
         postAction = this.get("model.actions_summary").findBy(
           "id",
           this.get("selected.id")
@@ -145,7 +148,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
       }
 
       let params = this.get("selected.is_custom_flag")
-        ? { message: this.get("message") }
+        ? { message: this.message }
         : {};
       if (opts) {
         params = $.extend(params, opts);
@@ -154,7 +157,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
       this.send("hideModal");
 
       postAction
-        .act(this.get("model"), params)
+        .act(this.model, params)
         .then(() => {
           this.send("closeModal");
           if (params.message) {

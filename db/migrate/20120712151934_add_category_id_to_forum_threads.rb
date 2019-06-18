@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddCategoryIdToForumThreads < ActiveRecord::Migration[4.2]
   def up
     add_column :forum_threads, :category_id, :integer

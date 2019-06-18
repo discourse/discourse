@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class SplitPublicInGroups < ActiveRecord::Migration[4.2]
   def up
     add_column :groups, :public_exit, :boolean, default: false, null: false

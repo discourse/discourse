@@ -154,11 +154,11 @@ a.badge-category {
 }
 
 .has-pending-posts {
+  display: flex;
+  justify-content: space-between;
+
   padding: 0.5em;
   background-color: $highlight-medium;
-  a[href] {
-    float: right;
-  }
   margin-top: 1em;
   max-width: 757px;
 }
@@ -264,5 +264,19 @@ a.topic-featured-link {
   font-size: 0.875rem;
   .d-icon {
     margin-right: 3px;
+  }
+}
+
+.topic-area {
+  .pending-posts {
+    max-width: calc(
+      #{$topic-body-width} + #{$topic-avatar-width} + #{$topic-body-width-padding *
+        2}
+    );
+    .reviewable-item {
+      .post-body {
+        max-height: unset;
+      }
+    }
   }
 }

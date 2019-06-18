@@ -1,10 +1,12 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 describe TranslationOverride do
   context 'validations' do
     describe '#value' do
       before do
-        I18n.backend.store_translations(:en, some_key: '%{first} %{second}')
+        I18n.backend.store_translations(I18n.locale, some_key: '%{first} %{second}')
       end
 
       describe 'when interpolation keys are missing' do

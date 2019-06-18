@@ -1,9 +1,11 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 describe Jobs::DisableBootstrapMode do
 
   context '.execute' do
-    let(:admin) { Fabricate(:admin) }
+    fab!(:admin) { Fabricate(:admin) }
 
     before do
       SiteSetting.bootstrap_mode_enabled = true

@@ -1,9 +1,11 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe GroupActionLogger do
-  let(:group_owner) { Fabricate(:user) }
-  let(:group) { Fabricate(:group) }
-  let(:user) { Fabricate(:user) }
+  fab!(:group_owner) { Fabricate(:user) }
+  fab!(:group) { Fabricate(:group) }
+  fab!(:user) { Fabricate(:user) }
 
   subject { described_class.new(group_owner, group) }
 
@@ -119,7 +121,7 @@ RSpec.describe GroupActionLogger do
 
   describe '#log_change_group_settings' do
     it 'should create the right record' do
-      group.update_attributes!(public_admission: true, created_at: Time.zone.now)
+      group.update!(public_admission: true, created_at: Time.zone.now)
 
       expect { subject.log_change_group_settings }.to change { GroupHistory.count }.by(1)
 

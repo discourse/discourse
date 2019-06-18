@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module SiteSettings; end
 
 module SiteSettings::Validations
@@ -51,6 +53,10 @@ module SiteSettings::Validations
 
   def validate_enable_s3_uploads(new_val)
     validate_error :s3_upload_bucket_is_required if new_val == "t" && SiteSetting.s3_upload_bucket.blank?
+  end
+
+  def validate_enable_s3_inventory(new_val)
+    validate_error :enable_s3_uploads_is_required if new_val == "t" && !SiteSetting.Upload.enable_s3_uploads
   end
 
   def validate_backup_location(new_val)

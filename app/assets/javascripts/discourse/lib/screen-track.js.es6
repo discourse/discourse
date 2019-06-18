@@ -1,10 +1,9 @@
 import { ajax } from "discourse/lib/ajax";
+
 // We use this class to track how long posts in a topic are on the screen.
 const PAUSE_UNLESS_SCROLLED = 1000 * 60 * 3;
 const MAX_TRACKING_TIME = 1000 * 60 * 6;
 const ANON_MAX_TOPIC_IDS = 5;
-
-const getTime = () => new Date().getTime();
 
 export default class {
   constructor(topicTrackingState, siteSettings, session, currentUser) {
@@ -27,7 +26,8 @@ export default class {
     // Create an interval timer if we don't have one.
     if (!this._interval) {
       this._interval = setInterval(() => this.tick(), 1000);
-      $(window).on("scroll.screentrack", () => this.scrolled());
+      this._boundScrolled = Ember.run.bind(this, this.scrolled);
+      $(window).on("scroll.screentrack", this._boundScrolled);
     }
 
     this._topicId = topicId;
@@ -40,7 +40,10 @@ export default class {
       return;
     }
 
-    $(window).off("scroll.screentrack");
+    if (this._boundScrolled) {
+      $(window).off("scroll.screentrack", this._boundScrolled);
+    }
+
     this.tick();
     this.flush();
     this.reset();
@@ -54,13 +57,14 @@ export default class {
     }
   }
 
-  setOnscreen(onscreen) {
+  setOnscreen(onscreen, readOnscreen) {
     this._onscreen = onscreen;
+    this._readOnscreen = readOnscreen;
   }
 
   // Reset our timers
   reset() {
-    const now = getTime();
+    const now = new Date().getTime();
     this._lastTick = now;
     this._lastScrolled = now;
     this._lastFlush = 0;
@@ -68,11 +72,13 @@ export default class {
     this._totalTimings = {};
     this._topicTime = 0;
     this._onscreen = [];
+    this._readOnscreen = [];
+    this._readPosts = {};
     this._inProgress = false;
   }
 
   scrolled() {
-    this._lastScrolled = getTime();
+    this._lastScrolled = new Date().getTime();
   }
 
   registerAnonCallback(cb) {
@@ -98,6 +104,29 @@ export default class {
     const topicId = parseInt(this._topicId, 10);
     let highestSeen = 0;
 
+    // Workaround to avoid ignored posts being "stuck unread"
+    const controller = this._topicController;
+    const stream = controller ? controller.get("model.postStream") : null;
+    if (
+      this.currentUser && // Logged in
+      this.currentUser.get("ignored_users.length") && // At least 1 user is ignored
+      stream && // Sanity check
+      stream.hasNoFilters && // The stream is not filtered (by username or summary)
+      !stream.canAppendMore && // We are at the end of the stream
+      stream.posts.lastObject && // The last post exists
+      stream.posts.lastObject.read && // The last post is read
+      stream.gaps && // The stream has gaps
+      !!stream.gaps.after[stream.posts.lastObject.id] && // Stream ends with a gap
+      stream.topic.last_read_post_number !==
+        stream.posts.lastObject.post_number +
+          stream.get(`gaps.after.${stream.posts.lastObject.id}.length`) // The last post in the gap has not been marked read
+    ) {
+      newTimings[
+        stream.posts.lastObject.post_number +
+          stream.get(`gaps.after.${stream.posts.lastObject.id}.length`)
+      ] = 1;
+    }
+
     Object.keys(newTimings).forEach(postNumber => {
       highestSeen = Math.max(highestSeen, parseInt(postNumber, 10));
     });
@@ -112,6 +141,7 @@ export default class {
     if (!$.isEmptyObject(newTimings)) {
       if (this.currentUser) {
         this._inProgress = true;
+
         ajax("/topics/timings", {
           data: {
             timings: newTimings,
@@ -125,12 +155,12 @@ export default class {
           }
         })
           .then(() => {
-            const controller = this._topicController;
-            if (controller) {
+            const topicController = this._topicController;
+            if (topicController) {
               const postNumbers = Object.keys(newTimings).map(v =>
                 parseInt(v, 10)
               );
-              controller.readPosts(topicId, postNumbers);
+              topicController.readPosts(topicId, postNumbers);
             }
           })
           .catch(e => {
@@ -198,20 +228,27 @@ export default class {
     const nextFlush = this.siteSettings.flush_timings_secs * 1000;
 
     const rush = Object.keys(timings).some(postNumber => {
-      return timings[postNumber] > 0 && !totalTimings[postNumber];
+      return (
+        timings[postNumber] > 0 &&
+        !totalTimings[postNumber] &&
+        !this._readPosts[postNumber]
+      );
     });
 
     if (!this._inProgress && (this._lastFlush > nextFlush || rush)) {
       this.flush();
     }
 
-    // Don't track timings if we're not in focus
-    if (!Discourse.get("hasFocus")) return;
+    if (Discourse.get("hasFocus")) {
+      this._topicTime += diff;
 
-    this._topicTime += diff;
+      this._onscreen.forEach(
+        postNumber => (timings[postNumber] = (timings[postNumber] || 0) + diff)
+      );
 
-    this._onscreen.forEach(
-      postNumber => (timings[postNumber] = (timings[postNumber] || 0) + diff)
-    );
+      this._readOnscreen.forEach(postNumber => {
+        this._readPosts[postNumber] = true;
+      });
+    }
   }
 }

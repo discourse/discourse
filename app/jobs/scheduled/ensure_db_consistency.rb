@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Jobs
   # various consistency checks
   class EnsureDbConsistency < Jobs::Scheduled
@@ -19,6 +21,7 @@ module Jobs
       CategoryTagStat.ensure_consistency!
       User.ensure_consistency!
       UserAvatar.ensure_consistency!
+      Category.ensure_consistency!
     end
   end
 end

@@ -29,6 +29,7 @@ export default createWidget("embedded-post", {
   buildKey: attrs => `embedded-post-${attrs.id}`,
 
   html(attrs, state) {
+    attrs.embeddedPost = true;
     return [
       h("div.reply", { attributes: { "data-post-id": attrs.id } }, [
         h("div.row", [
@@ -41,7 +42,7 @@ export default createWidget("embedded-post", {
                 shareUrl: attrs.shareUrl
               })
             ]),
-            new PostCooked(attrs, new DecoratorHelper(this))
+            new PostCooked(attrs, new DecoratorHelper(this), this.currentUser)
           ])
         ])
       ])

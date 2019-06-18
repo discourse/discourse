@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CategorySerializer < BasicCategorySerializer
 
   attributes :read_restricted,
@@ -18,7 +20,18 @@ class CategorySerializer < BasicCategorySerializer
              :custom_fields,
              :allowed_tags,
              :allowed_tag_groups,
-             :topic_featured_link_allowed
+             :allow_global_tags,
+             :topic_featured_link_allowed,
+             :search_priority,
+             :reviewable_by_group_name
+
+  def reviewable_by_group_name
+    object.reviewable_by_group.name
+  end
+
+  def include_reviewable_by_group_name?
+    SiteSetting.enable_category_group_review? && object.reviewable_by_group_id.present?
+  end
 
   def group_permissions
     @group_permissions ||= begin
@@ -96,5 +109,13 @@ class CategorySerializer < BasicCategorySerializer
 
   def allowed_tag_groups
     object.tag_groups.pluck(:name)
+  end
+
+  def custom_fields
+    object.custom_fields
+  end
+
+  def include_custom_fields?
+    true
   end
 end

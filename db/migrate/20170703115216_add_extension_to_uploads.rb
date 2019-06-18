@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddExtensionToUploads < ActiveRecord::Migration[4.2]
   def up
     add_column :uploads, :extension, :string, limit: 10

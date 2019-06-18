@@ -5,4 +5,10 @@
 # To work with us on translations, join this project:
 # https://www.transifex.com/projects/p/discourse-org/
 
-ko: {}
+ko:
+  js:
+    presence:
+      replying: "답변중"
+      editing: "수정중"
+      replying_to_topic:
+        other: "답변중"

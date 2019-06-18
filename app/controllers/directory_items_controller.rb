@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class DirectoryItemsController < ApplicationController
   PAGE_SIZE = 50
 

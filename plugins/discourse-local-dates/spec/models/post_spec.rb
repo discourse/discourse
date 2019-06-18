@@ -1,9 +1,11 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 describe Post do
 
   before do
-    SiteSetting.queue_jobs = false
+    Jobs.run_immediately!
   end
 
   describe '#local_dates' do

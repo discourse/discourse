@@ -1,16 +1,18 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 describe DestroyTask do
 
   describe 'destroy topics' do
-    let!(:c) { Fabricate(:category) }
-    let!(:t) { Fabricate(:topic, category: c) }
+    fab!(:c) { Fabricate(:category) }
+    fab!(:t) { Fabricate(:topic, category: c) }
     let!(:p) { Fabricate(:post, topic: t) }
-    let!(:c2) { Fabricate(:category) }
-    let!(:t2) { Fabricate(:topic, category: c2) }
+    fab!(:c2) { Fabricate(:category) }
+    fab!(:t2) { Fabricate(:topic, category: c2) }
     let!(:p2) { Fabricate(:post, topic: t2) }
-    let!(:sc) { Fabricate(:category, parent_category: c) }
-    let!(:t3) { Fabricate(:topic, category: sc) }
+    fab!(:sc) { Fabricate(:category, parent_category: c) }
+    fab!(:t3) { Fabricate(:topic, category: sc) }
     let!(:p3) { Fabricate(:post, topic: t3) }
 
     it 'destroys all topics in a category' do

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class UserSerializer < BasicUserSerializer
 
   attr_accessor :omit_stats,
@@ -27,7 +29,7 @@ class UserSerializer < BasicUserSerializer
       method_name = "include_#{attr}?"
       define_method(method_name) do
         return false if scope.restrict_user_fields?(object)
-        send(attr).present?
+        public_send(attr).present?
       end
     end
   end
@@ -41,14 +43,16 @@ class UserSerializer < BasicUserSerializer
              :created_at,
              :website,
              :website_name,
-             :profile_background,
-             :card_background,
              :location,
              :can_edit,
              :can_edit_username,
              :can_edit_email,
              :can_edit_name,
              :stats,
+             :ignored,
+             :muted,
+             :can_ignore_user,
+             :can_mute_user,
              :can_send_private_messages,
              :can_send_private_message_to_user,
              :bio_excerpt,
@@ -76,7 +80,9 @@ class UserSerializer < BasicUserSerializer
              :second_factor_enabled,
              :second_factor_backup_enabled,
              :second_factor_remaining_backup_codes,
-             :associated_accounts
+             :associated_accounts,
+             :profile_background_upload_url,
+             :card_background_upload_url
 
   has_one :invited_by, embed: :object, serializer: BasicUserSerializer
   has_many :groups, embed: :object, serializer: BasicGroupSerializer
@@ -110,6 +116,7 @@ class UserSerializer < BasicUserSerializer
                      :custom_avatar_template,
                      :has_title_badges,
                      :muted_usernames,
+                     :ignored_usernames,
                      :mailing_list_posts_per_day,
                      :can_change_bio,
                      :user_api_keys,
@@ -122,8 +129,8 @@ class UserSerializer < BasicUserSerializer
                        :location,
                        :website,
                        :website_name,
-                       :profile_background,
-                       :card_background
+                       :profile_background_upload_url,
+                       :card_background_upload_url
 
   ###
   ### ATTRIBUTES
@@ -238,14 +245,6 @@ class UserSerializer < BasicUserSerializer
     website.present?
   end
 
-  def profile_background
-    object.user_profile.profile_background
-  end
-
-  def card_background
-    object.user_profile.card_background
-  end
-
   def location
     object.user_profile.location
   end
@@ -272,6 +271,22 @@ class UserSerializer < BasicUserSerializer
 
   def stats
     UserAction.stats(object.id, scope)
+  end
+
+  def ignored
+    IgnoredUser.where(user_id: scope.user&.id, ignored_user_id: object.id).exists?
+  end
+
+  def muted
+    MutedUser.where(user_id: scope.user&.id, muted_user_id: object.id).exists?
+  end
+
+  def can_mute_user
+    scope.can_mute_user?(object.id)
+  end
+
+  def can_ignore_user
+    scope.can_ignore_user?(object.id)
   end
 
   # Needed because 'send_private_message_to_user' will always return false
@@ -365,6 +380,10 @@ class UserSerializer < BasicUserSerializer
 
   def muted_usernames
     MutedUser.where(user_id: object.id).joins(:muted_user).pluck(:username)
+  end
+
+  def ignored_usernames
+    IgnoredUser.where(user_id: object.id).joins(:ignored_user).pluck(:username)
   end
 
   def include_private_messages_stats?
@@ -464,6 +483,14 @@ class UserSerializer < BasicUserSerializer
 
   def include_staged?
     scope.is_staff?
+  end
+
+  def profile_background_upload_url
+    object.profile_background_upload&.url
+  end
+
+  def card_background_upload_url
+    object.card_background_upload&.url
   end
 
 end

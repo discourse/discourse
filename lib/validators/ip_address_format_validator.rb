@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Allows unique IP address (10.0.1.20), and IP addresses with a mask (10.0.0.0/8).
 # Useful when storing in a Postgresql inet column.
 class IpAddressFormatValidator < ActiveModel::EachValidator

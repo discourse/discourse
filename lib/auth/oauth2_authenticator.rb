@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Auth::OAuth2Authenticator < Auth::Authenticator
 
   def name

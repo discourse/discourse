@@ -1,8 +1,10 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 describe Jobs::SuspiciousLogin do
 
-  let(:user) { Fabricate(:moderator) }
+  fab!(:user) { Fabricate(:moderator) }
 
   let(:zurich) { { latitude: 47.3686498, longitude: 8.5391825 } } # Zurich, Switzerland
   let(:bern) { { latitude: 46.947922, longitude: 7.444608 } }  # Bern, Switzerland

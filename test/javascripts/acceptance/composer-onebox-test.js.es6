@@ -1,5 +1,5 @@
 import { acceptance } from "helpers/qunit-helpers";
-import { INLINE_ONEBOX_CSS_CLASS } from "pretty-text/inline-oneboxer";
+import { INLINE_ONEBOX_CSS_CLASS } from "pretty-text/context/inline-onebox-css-classes";
 
 acceptance("Composer - Onebox", {
   loggedIn: true,

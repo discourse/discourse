@@ -14,6 +14,17 @@
   {{/if}}
 </div>
 
+{{#unless siteSettings.sso_overrides_avatar}}
+  <div class="control-group pref-avatar">
+    <label class="control-label" id="profile-picture">{{i18n 'user.avatar.title'}}</label>
+    <div class="controls">
+      {{! we want the "huge" version even though we're downsizing it in CSS }}
+      {{bound-avatar model "huge"}}
+      {{d-button action=(route-action "showAvatarSelector") actionParam=model class="btn-default pad-left" icon="pencil-alt"}}
+    </div>
+  </div>
+{{/unless}}
+
 {{#if canEditName}}
   <div class="control-group pref-name">
     <label class="control-label">{{i18n 'user.name.title'}}</label>
@@ -41,6 +52,9 @@
         {{/if}}
       </div>
       <div class='instructions'>
+        {{#if siteSettings.sso_overrides_email}}
+          {{i18n 'user.email.sso_override_instructions'}}
+        {{/if}}
         {{i18n 'user.email.instructions'}}
       </div>
     {{else}}
@@ -66,32 +80,40 @@
 
     {{passwordProgress}}
   </div>
+</div>
 
+<div class="control-group pref-second-factor">
+  <label class="control-label">{{i18n 'user.second_factor.title'}}</label>
+  {{#unless model.second_factor_enabled}}
+    <label>
+        {{i18n 'user.second_factor.short_description'}}
+    </label>
+  {{/unless}}
   <div class="controls pref-second-factor">
-    {{#if model.second_factor_enabled}}
-      {{i18n 'user.second_factor.disable'}}
-    {{else}}
-      {{i18n 'user.second_factor.enable'}}
-    {{/if}}
-
     {{#if isCurrentUser}}
-      {{#link-to "preferences.second-factor" class="btn btn-default btn-small btn-icon pad-left no-text"}}
-        {{d-icon "pencil-alt"}}
-      {{/link-to}}
+      {{#if model.second_factor_enabled}}
+        {{#link-to "preferences.second-factor" class="btn btn-default"}}
+          {{d-icon "unlock"}} <span>{{i18n 'user.second_factor.disable'}}</span>
+        {{/link-to}}
+      {{else}}
+        {{#link-to "preferences.second-factor" class="btn btn-default"}}
+          {{d-icon "lock"}} <span>{{i18n 'user.second_factor.enable'}}</span>
+        {{/link-to}}
+      {{/if}}
     {{/if}}
   </div>
 
   <div class="controls pref-second-factor-backup">
     {{#if model.second_factor_enabled}}
-      {{#if model.second_factor_backup_enabled}}
-        {{i18n 'user.second_factor_backup.manage'}}
-      {{else}}
-        {{i18n 'user.second_factor_backup.enable_long'}}
-      {{/if}}
-
       {{#if isCurrentUser}}
-        {{#link-to "preferences.second-factor-backup" class="btn btn-default btn-small btn-icon pad-left no-text"}}
-          {{d-icon "pencil-alt"}}
+        {{#link-to "preferences.second-factor-backup"}}
+        <span>
+        {{#if model.second_factor_backup_enabled}}
+          {{i18n 'user.second_factor_backup.manage'}}
+        {{else}}
+          {{i18n 'user.second_factor_backup.enable_long'}}
+        {{/if}}
+        </span>
         {{/link-to}}
       {{/if}}
     {{/if}}
@@ -137,17 +159,6 @@
     {{/if}}
   </div>
 {{/if}}
-
-{{#unless siteSettings.sso_overrides_avatar}}
-  <div class="control-group pref-avatar">
-    <label class="control-label">{{i18n 'user.avatar.title'}}</label>
-    <div class="controls">
-      {{! we want the "huge" version even though we're downsizing it in CSS }}
-      {{bound-avatar model "huge"}}
-      {{d-button action=(route-action "showAvatarSelector") actionParam=model class="btn-default pad-left" icon="pencil-alt"}}
-    </div>
-  </div>
-{{/unless}}
 
 {{#if canSelectTitle}}
   <div class="control-group pref-title">

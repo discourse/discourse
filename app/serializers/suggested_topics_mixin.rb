@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module SuggestedTopicsMixin
   def self.included(klass)
     klass.attributes :related_messages

@@ -36,6 +36,13 @@ export default {
         name: "Badge 8",
         description: null,
         badge_type_id: 13
+      },
+      {
+        id: 50,
+        name: "CustomBadge",
+        description: null,
+        allow_title: true,
+        badge_type_id: 3
       }
     ],
     badge_types: [
@@ -50,6 +57,12 @@ export default {
         id: 668,
         granted_at: "2014-03-09T20:30:01.420-04:00",
         badge_id: 880,
+        granted_by_id: null
+      },
+      {
+        id: 669,
+        granted_at: "2014-03-09T20:30:01.420-04:00",
+        badge_id: 50,
         granted_by_id: null
       }
     ]

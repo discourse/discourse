@@ -108,11 +108,6 @@ ar:
       random_mention:
         reply: |-
           مرحباً, لتكتشف ما استطيع ان افعلة, قل `@%{discobot_username} %{help_trigger}`.
-        tracks: |-
-          انا الأن استطيع القيام بالمهام التالية
-
-          `@%{discobot_username} %{reset_trigger} %{default_track}`
-          > ابدا احد المهام التالية: %{tracks}.
         bot_actions: |-
           `@%{discobot_username} %{dice_trigger} 2d6`
           > :game_die: 3.6
@@ -135,7 +130,6 @@ ar:
 
           في الوقت الحالي, ساظل بعيد عن طريقك.
     new_user_narrative:
-      reset_trigger: "تدريب العضو جديد"
       cert_title: "في اعتراف بأتمام ناجح للدرس التعليمي للاعضاء الجدد"
       onebox:
         not_found: |-
@@ -214,7 +208,6 @@ ar:
       certificate:
         alt: 'شهادة انجاز'
     advanced_user_narrative:
-      reset_trigger: 'تدريب العضو المحترف'
       cert_title: "في اعتراف بأتمام ناجح للدرس التعليمي للاعضاء المتقدمين"
       title: ':arrow_up: مميزات العضو المحترف'
       edit:
@@ -234,10 +227,6 @@ ar:
           للحفاظ علي ترابط النقاش, عمليات الحذف لا تنفز فوريا, سيتم تنفيذ حذف المنشور بعد بعض الوقت.
       recover:
         deleted_post_raw: 'لماذا قام @%{discobot_username} بحذف منشوري؟ :anguished:'
-        reply: |-
-          اه, ذلك كان وشيكاً! شكراً لاصلاح ذلك :wink:
-
-          رجاء تأكد ان لديك 24 ساعة فقط لألغاء حذفك للموضوع.
       category_hashtag:
         instructions: |-
           هل تعلم انك تستطيع الإشارة إلي قسم او وسم في منشورك؟ كمثال علي ذلك "هل رايت من قبل قسم ال%{category}؟"

@@ -1,11 +1,13 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 describe UserBadgesController do
-  let(:user) { Fabricate(:user) }
-  let(:badge) { Fabricate(:badge) }
+  fab!(:user) { Fabricate(:user) }
+  fab!(:badge) { Fabricate(:badge) }
 
   context 'index' do
-    let(:badge) { Fabricate(:badge, target_posts: true, show_posts: false) }
+    fab!(:badge) { Fabricate(:badge, target_posts: true, show_posts: false) }
     it 'does not leak private info' do
       p = create_post
       UserBadge.create!(badge: badge, user: user, post_id: p.id, granted_by_id: -1, granted_at: Time.now)

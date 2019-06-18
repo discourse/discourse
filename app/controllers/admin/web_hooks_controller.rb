@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Admin::WebHooksController < Admin::AdminController
   before_action :fetch_web_hook, only: %i(show update destroy list_events bulk_events ping)
 
@@ -34,6 +36,7 @@ class Admin::WebHooksController < Admin::AdminController
     web_hook = WebHook.new(web_hook_params)
 
     if web_hook.save
+      StaffActionLogger.new(current_user).log_web_hook(web_hook, UserHistory.actions[:web_hook_create])
       render_serialized(web_hook, AdminWebHookSerializer, root: 'web_hook')
     else
       render_json_error web_hook.errors.full_messages
@@ -41,7 +44,8 @@ class Admin::WebHooksController < Admin::AdminController
   end
 
   def update
-    if @web_hook.update_attributes(web_hook_params)
+    if @web_hook.update(web_hook_params)
+      StaffActionLogger.new(current_user).log_web_hook(@web_hook, UserHistory.actions[:web_hook_update], changes: @web_hook.saved_changes)
       render_serialized(@web_hook, AdminWebHookSerializer, root: 'web_hook')
     else
       render_json_error @web_hook.errors.full_messages
@@ -50,6 +54,7 @@ class Admin::WebHooksController < Admin::AdminController
 
   def destroy
     @web_hook.destroy!
+    StaffActionLogger.new(current_user).log_web_hook(@web_hook, UserHistory.actions[:web_hook_destroy])
     render json: success_json
   end
 
@@ -89,10 +94,12 @@ class Admin::WebHooksController < Admin::AdminController
 
       now = Time.zone.now
       response = conn.post(headers: MultiJson.load(web_hook_event.headers), body: web_hook_event.payload)
-      web_hook_event.update_attributes!(status: response.status,
-                                        response_headers: MultiJson.dump(response.headers),
-                                        response_body: response.body,
-                                        duration: ((Time.zone.now - now) * 1000).to_i)
+      web_hook_event.update!(
+        status: response.status,
+        response_headers: MultiJson.dump(response.headers),
+        response_body: response.body,
+        duration: ((Time.zone.now - now) * 1000).to_i
+      )
       render_serialized(web_hook_event, AdminWebHookEventSerializer, root: 'web_hook_event')
     else
       render json: failed_json

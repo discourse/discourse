@@ -5,4 +5,6 @@
 # To work with us on translations, join this project:
 # https://www.transifex.com/projects/p/discourse-org/
 
-id: {}
+id:
+  site_settings:
+    details_enabled: "Aktifkan fitur detail. Jika Anda mengganti ini, Anda perlu memproses ulang semua post dengan: \"rake posts:rebake\""

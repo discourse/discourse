@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddIndexToTags < ActiveRecord::Migration[5.2]
   def up
     # Append ID to any tags that already have duplicate names

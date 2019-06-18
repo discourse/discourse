@@ -1,8 +1,10 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 describe UserVisit do
-  let(:user) { Fabricate(:user) }
-  let(:other_user) { Fabricate(:user) }
+  fab!(:user) { Fabricate(:user) }
+  fab!(:other_user) { Fabricate(:user) }
 
   it 'can ensure consistency' do
     user.update_visit_record!(2.weeks.ago.to_date)

@@ -8,7 +8,7 @@
 pt_BR:
   js:
     details:
-      title: Detalhes ocultos
+      title: Ocultar Detalhes
     composer:
       details_title: Resumo
       details_text: "Este texto ficará oculto."

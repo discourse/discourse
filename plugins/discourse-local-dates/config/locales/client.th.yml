@@ -8,10 +8,7 @@
 th:
   js:
     discourse_local_dates:
-      title: เพิ่มวัน
       create:
-        modal_title: เพิ่มวัน
-        modal_subtitle: "เราจะแปลงวันที่และเวลาเป็นเขตเวลาของผู้เข้าชมอัตโนมัติ"
         form:
           insert: เพิ่ม
           advanced_mode: ระดับสูง

@@ -15,7 +15,7 @@ export default buildCategoryPanel("security", {
 
     addPermission(group, id) {
       if (!this.get("category.is_special")) {
-        this.get("category").addPermission({
+        this.category.addPermission({
           group_name: group + "",
           permission: PermissionType.create({ id: parseInt(id) })
         });
@@ -29,7 +29,7 @@ export default buildCategoryPanel("security", {
 
     removePermission(permission) {
       if (!this.get("category.is_special")) {
-        this.get("category").removePermission(permission);
+        this.category.removePermission(permission);
       }
     }
   }

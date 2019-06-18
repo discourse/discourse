@@ -22,8 +22,8 @@ export default Ember.Controller.extend(ModalFunctionality, {
       if (this.currentUser) {
         this.set("loading", true);
 
-        this.get("model")
-          .requestMembership(this.get("reason"))
+        this.model
+          .requestMembership(this.reason)
           .then(result => {
             DiscourseURL.routeTo(result.relative_url);
           })

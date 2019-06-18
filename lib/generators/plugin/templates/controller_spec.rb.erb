@@ -2,7 +2,7 @@ require 'rails_helper'
 
 describe <%= name %>::ActionsController do
   before do
-    SiteSetting.queue_jobs = false
+    Jobs.run_immediately!
   end
 
   it 'can list' do

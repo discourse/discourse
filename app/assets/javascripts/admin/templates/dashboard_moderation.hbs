@@ -1,0 +1,43 @@
+<div class="sections">
+  {{plugin-outlet name="admin-dashboard-moderation-top"}}
+
+  <div class="moderators-activity section">
+    <div class="section-title">
+      <h2>
+        <a href="{{get-url '/admin/reports/moderators_activity'}}">
+          {{i18n "admin.dashboard.moderators_activity"}}
+        </a>
+      </h2>
+      {{period-chooser
+        period=period
+        action=(action "changePeriod")
+        content=availablePeriods
+        fullDay=true}}
+    </div>
+
+    <div class="section-body">
+      {{admin-report
+        filters=filters
+        showHeader=false
+        dataSourceName="moderators_activity"}}
+    </div>
+  </div>
+
+  <div class="main-section">
+    {{admin-report
+      dataSourceName="flags_status"
+      reportOptions=flagsStatusOptions
+      filters=lastWeekfilters}}
+
+    {{admin-report
+      dataSourceName="post_edits"
+      filters=lastWeekfilters}}
+
+    {{admin-report
+      dataSourceName="user_flagging_ratio"
+      filters=lastWeekfilters
+      reportOptions=userFlaggingRatioOptions}}
+
+    {{plugin-outlet name="admin-dashboard-moderation-bottom"}}
+  </div>
+</div>

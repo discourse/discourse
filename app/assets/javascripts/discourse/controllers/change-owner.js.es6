@@ -38,7 +38,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
 
       const options = {
         post_ids: this.get("topicController.selectedPostIds"),
-        username: this.get("new_user")
+        username: this.new_user
       };
 
       Discourse.Topic.changeOwners(
@@ -47,9 +47,9 @@ export default Ember.Controller.extend(ModalFunctionality, {
       ).then(
         () => {
           this.send("closeModal");
-          this.get("topicController").send("deselectAll");
+          this.topicController.send("deselectAll");
           if (this.get("topicController.multiSelect")) {
-            this.get("topicController").send("toggleMultiSelect");
+            this.topicController.send("toggleMultiSelect");
           }
           Ember.run.next(() =>
             DiscourseURL.routeTo(this.get("topicController.model.url"))

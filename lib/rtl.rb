@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Rtl
 
   attr_reader :user

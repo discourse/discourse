@@ -1,15 +1,14 @@
-<p>
+<div class="admin-title">
   {{period-chooser period=period}}
   {{combo-box content=searchTypeOptions value=searchType class='search-logs-filter'}}
-</p>
-<br>
+</div>
 
 <h2>
   {{#link-to 'full-page-search' (query-params q=term)}}{{term}}{{/link-to}}
 </h2>
 
 {{#conditional-loading-spinner condition=refreshing}}
-  {{admin-graph model=model}}
+  {{admin-graph model=model type="bar"}}
 
   <br><br>
   <h2> {{i18n "admin.logs.search_logs.header_search_results"}} </h2>

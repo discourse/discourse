@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 if ENV['RAILS_ENV'] == 'production'
 
   # First, you need to change these below to your situation.

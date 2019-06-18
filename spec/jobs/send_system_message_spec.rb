@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 require 'jobs/regular/send_system_message'
 
@@ -13,7 +15,7 @@ describe Jobs::SendSystemMessage do
 
   context 'with valid parameters' do
 
-    let(:user) { Fabricate(:user) }
+    fab!(:user) { Fabricate(:user) }
 
     it "should call SystemMessage.create" do
       SystemMessage.any_instance.expects(:create).with('welcome_invite', {})

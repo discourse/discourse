@@ -1,11 +1,13 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 describe GroupsController do
-  let(:user) { Fabricate(:user) }
+  fab!(:user) { Fabricate(:user) }
   let(:group) { Fabricate(:group, users: [user]) }
   let(:moderator_group_id) { Group::AUTO_GROUPS[:moderators] }
-  let(:admin) { Fabricate(:admin) }
-  let(:moderator) { Fabricate(:moderator) }
+  fab!(:admin) { Fabricate(:admin) }
+  fab!(:moderator) { Fabricate(:moderator) }
 
   describe '#index' do
     let(:staff_group) do
@@ -159,7 +161,7 @@ describe GroupsController do
     end
 
     context 'viewing as an admin' do
-      let(:admin) { Fabricate(:admin) }
+      fab!(:admin) { Fabricate(:admin) }
 
       before do
         sign_in(admin)
@@ -290,7 +292,7 @@ describe GroupsController do
     end
 
     it 'should respond to HTML' do
-      group.update_attribute(:bio_cooked, 'testing group bio')
+      group.update!(bio_raw: 'testing **group** bio')
 
       get "/groups/#{group.name}.html"
 
@@ -300,8 +302,9 @@ describe GroupsController do
         property: 'og:title', content: group.name
       })
 
+      # note this uses an excerpt so it strips html
       expect(response.body).to have_tag(:meta, with: {
-        property: 'og:description', content: group.bio_cooked
+        property: 'og:description', content: 'testing group bio'
       })
     end
 
@@ -347,6 +350,9 @@ describe GroupsController do
       expect(response.status).to eq(400)
 
       get "/groups/#{group.name}/members.json?offset=-1"
+      expect(response.status).to eq(400)
+
+      get "/groups/trust_level_0/members.json?limit=2000"
       expect(response.status).to eq(400)
     end
 
@@ -430,7 +436,7 @@ describe GroupsController do
       response_body = JSON.parse(response.body)
       expect(response_body["mentionable"]).to eq(false)
 
-      group.update_attributes!(
+      group.update!(
         mentionable_level: Group::ALIAS_LEVELS[:everyone],
         visibility_level: Group.visibility_levels[:staff]
       )
@@ -467,13 +473,48 @@ describe GroupsController do
   end
 
   describe '#update' do
-    let(:group) do
+    let!(:group) do
       Fabricate(:group,
         name: 'test',
         users: [user],
         public_admission: false,
         public_exit: false
       )
+    end
+
+    context "custom_fields" do
+      before do
+        user.update!(admin: true)
+        sign_in(user)
+        plugin = Plugin::Instance.new
+        plugin.register_editable_group_custom_field :test
+        @group = Fabricate(:group)
+      end
+
+      after do
+        Group.plugin_editable_group_custom_fields.clear
+      end
+
+      it "only updates allowed user fields" do
+        put "/groups/#{@group.id}.json", params: { group: { custom_fields: { test: :hello1, test2: :hello2 } } }
+
+        @group.reload
+
+        expect(response.status).to eq(200)
+        expect(@group.custom_fields['test']).to eq('hello1')
+        expect(@group.custom_fields['test2']).to be_blank
+      end
+
+      it "is secure when there are no registered editable fields" do
+        Group.plugin_editable_group_custom_fields.clear
+        put "/groups/#{@group.id}.json", params: { group: { custom_fields: { test: :hello1, test2: :hello2 } } }
+
+        @group.reload
+
+        expect(response.status).to eq(200)
+        expect(@group.custom_fields['test']).to be_blank
+        expect(@group.custom_fields['test2']).to be_blank
+      end
     end
 
     context "when user is group owner" do
@@ -561,7 +602,7 @@ describe GroupsController do
 
     context "when user is group admin" do
       before do
-        user.update_attributes!(admin: true)
+        user.update!(admin: true)
         sign_in(user)
       end
 
@@ -671,7 +712,7 @@ describe GroupsController do
       )
     end
 
-    let(:user3) do
+    fab!(:user3) do
       Fabricate(:user,
         last_seen_at: nil,
         last_posted_at: nil,
@@ -679,7 +720,7 @@ describe GroupsController do
       )
     end
 
-    let(:bot) { Fabricate(:user, id: -999) }
+    fab!(:bot) { Fabricate(:user, id: -999) }
 
     let(:group) { Fabricate(:group, users: [user1, user2, user3, bot]) }
 
@@ -722,6 +763,20 @@ describe GroupsController do
 
       expect(members.map { |m| m["id"] })
         .to contain_exactly(user1.id, user2.id, user3.id)
+    end
+
+    it "can show group requests" do
+      sign_in(Fabricate(:admin))
+
+      user4 = Fabricate(:user)
+      request4 = Fabricate(:group_request, user: user4, group: group)
+
+      get "/groups/#{group.name}/members.json", params: { requesters: true }
+
+      members = JSON.parse(response.body)["members"]
+      expect(members.length).to eq(1)
+      expect(members.first["username"]).to eq(user4.username)
+      expect(members.first["reason"]).to eq(request4.reason)
     end
 
     describe 'filterable' do
@@ -777,7 +832,7 @@ describe GroupsController do
   end
 
   describe "#edit" do
-    let(:group) { Fabricate(:group) }
+    fab!(:group) { Fabricate(:group) }
 
     context 'when user is not signed in' do
       it 'should be fobidden' do
@@ -790,7 +845,7 @@ describe GroupsController do
 
       context 'public group' do
         it 'should be fobidden' do
-          group.update_attributes!(
+          group.update!(
             public_admission: true,
             public_exit: true
           )
@@ -819,7 +874,7 @@ describe GroupsController do
     end
 
     context 'when user is an admin' do
-      let(:user) { Fabricate(:admin) }
+      fab!(:user) { Fabricate(:admin) }
       let(:group) { Fabricate(:group, users: [user], automatic: true) }
 
       before do
@@ -837,7 +892,7 @@ describe GroupsController do
   end
 
   describe "membership edits" do
-    let(:admin) { Fabricate(:admin) }
+    fab!(:admin) { Fabricate(:admin) }
 
     before do
       sign_in(admin)
@@ -868,8 +923,8 @@ describe GroupsController do
       end
 
       context "is able to add several members to a group" do
-        let(:user1) { Fabricate(:user) }
-        let(:user2) { Fabricate(:user, username: "UsEr2") }
+        fab!(:user1) { Fabricate(:user) }
+        fab!(:user2) { Fabricate(:user, username: "UsEr2") }
 
         it "adds by username" do
           expect do
@@ -947,7 +1002,7 @@ describe GroupsController do
       end
 
       context 'public group' do
-        let(:other_user) { Fabricate(:user) }
+        fab!(:other_user) { Fabricate(:user) }
 
         before do
           group.update!(
@@ -1052,7 +1107,7 @@ describe GroupsController do
         end
 
         context 'public group' do
-          let(:other_user) { Fabricate(:user) }
+          fab!(:other_user) { Fabricate(:user) }
           let(:group) { Fabricate(:public_group, users: [other_user]) }
 
           context "admin" do
@@ -1090,8 +1145,8 @@ describe GroupsController do
 
       context '#remove_members' do
         context "is able to remove several members from a group" do
-          let(:user1) { Fabricate(:user) }
-          let(:user2) { Fabricate(:user, username: "UsEr2") }
+          fab!(:user1) { Fabricate(:user) }
+          fab!(:user2) { Fabricate(:user, username: "UsEr2") }
           let(:group1) { Fabricate(:group, users: [user1, user2]) }
 
           it "removes by username" do
@@ -1170,7 +1225,7 @@ describe GroupsController do
 
       describe 'when viewing a public group' do
         before do
-          group.update_attributes!(
+          group.update!(
             public_admission: true,
             public_exit: true
           )
@@ -1202,7 +1257,7 @@ describe GroupsController do
     end
 
     context 'when user is an admin' do
-      let(:admin) { Fabricate(:admin) }
+      fab!(:admin) { Fabricate(:admin) }
 
       before do
         sign_in(admin)
@@ -1247,7 +1302,7 @@ describe GroupsController do
   end
 
   describe '#request_membership' do
-    let(:new_user) { Fabricate(:user) }
+    fab!(:new_user) { Fabricate(:user) }
 
     it 'requires the user to log in' do
       post "/groups/#{group.name}/request_membership.json"
@@ -1259,6 +1314,20 @@ describe GroupsController do
 
       post "/groups/#{group.name}/request_membership.json"
       expect(response.status).to eq(400)
+    end
+
+    it 'checks for duplicates' do
+      sign_in(user)
+
+      post "/groups/#{group.name}/request_membership.json",
+        params: { reason: 'Please add me in' }
+
+      expect(response.status).to eq(200)
+
+      post "/groups/#{group.name}/request_membership.json",
+        params: { reason: 'Please add me in' }
+
+      expect(response.status).to eq(409)
     end
 
     it 'should create the right PM' do
@@ -1284,7 +1353,7 @@ describe GroupsController do
         group_name: group.name
       ))
 
-      expect(post.raw).to eq('Please add me in')
+      expect(post.raw).to start_with('Please add me in')
       expect(topic.archetype).to eq(Archetype.private_message)
       expect(topic.allowed_users).to contain_exactly(user, owner1, owner2)
       expect(topic.allowed_groups).to eq([])
@@ -1292,7 +1361,7 @@ describe GroupsController do
   end
 
   describe '#search ' do
-    let(:hidden_group) do
+    fab!(:hidden_group) do
       Fabricate(:group,
         visibility_level: Group.visibility_levels[:owners],
         name: 'KingOfTheNorth'

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #mixin for all guardian methods dealing with group permissions
 module GroupGuardian
 
@@ -5,7 +7,7 @@ module GroupGuardian
   # Automatic groups are not represented in the GROUP_USERS
   # table and thus do not allow membership changes.
   def can_edit_group?(group)
-    can_log_group_changes?(group) && !group.automatic
+    !group.automatic && can_log_group_changes?(group)
   end
 
   def can_log_group_changes?(group)

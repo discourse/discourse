@@ -43,6 +43,8 @@ bg:
       ui_builder:
         poll_type:
           label: Тип
+        poll_result:
+          label: Резултати
         poll_config:
           max: Максимално
           min: Минимално

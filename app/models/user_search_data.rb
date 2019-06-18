@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class UserSearchData < ActiveRecord::Base
   include HasSearchData
 end

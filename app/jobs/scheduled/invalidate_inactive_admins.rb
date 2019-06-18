@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Jobs
 
   class InvalidateInactiveAdmins < Jobs::Scheduled
@@ -13,7 +15,7 @@ module Jobs
         .each do |user|
 
         User.transaction do
-          user.deactivate
+          user.deactivate(Discourse.system_user)
           user.email_tokens.update_all(confirmed: false, expired: true)
 
           Discourse.authenticators.each do |authenticator|

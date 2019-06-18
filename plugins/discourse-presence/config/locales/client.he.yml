@@ -10,3 +10,8 @@ he:
     presence:
       replying: "תגובה"
       editing: "עריכה"
+      replying_to_topic:
+        one: "תגובה"
+        two: "תגובה"
+        many: "תגובה"
+        other: "תגובה"

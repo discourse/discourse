@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AdminDetailedUserSerializer < AdminUserSerializer
 
   attributes :moderator,

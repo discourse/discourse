@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class PostJobsEnqueuer
   def initialize(post, topic, new_topic, opts = {})
     @post = post

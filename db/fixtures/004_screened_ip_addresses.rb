@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 ScreenedIpAddress.seed do |s|
   s.id = 1
   s.ip_address = "10.0.0.0/8"

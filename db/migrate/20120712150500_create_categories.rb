@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreateCategories < ActiveRecord::Migration[4.2]
   def up
     create_table :categories do |t|

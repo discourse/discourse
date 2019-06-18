@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class IntroductionUpdater
 
   def initialize(user)
@@ -29,11 +31,9 @@ class IntroductionUpdater
   end
 
   def find_welcome_post
-    topic_id = TopicCustomField
-      .where(name: "is_welcome_topic", value: "true")
-      .pluck(:topic_id)
+    topic_id = SiteSetting.welcome_topic_id
 
-    if topic_id.blank?
+    if topic_id <= 0
       title = I18n.t("discourse_welcome_topic.title")
       topic_id = find_topic_id(title)
     end

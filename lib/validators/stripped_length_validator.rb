@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Validators; end
 class Validators::StrippedLengthValidator < ActiveModel::EachValidator
   def self.validate(record, attribute, value, range)

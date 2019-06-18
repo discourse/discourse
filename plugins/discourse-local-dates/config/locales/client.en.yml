@@ -5,10 +5,8 @@ en:
         today: Today %{time}
         tomorrow: Tomorrow %{time}
         yesterday: Yesterday %{time}
-      title: Insert date
+      title: Insert date / time
       create:
-        modal_title: Insert date
-        modal_subtitle: "We will automatically convert the date and time to the viewer’s local time zone."
         form:
           insert: Insert
           advanced_mode: Advanced mode
@@ -23,3 +21,14 @@ en:
           date_title: Date
           time_title: Time
           format_title: Date format
+          timezone: Timezone
+          until: Until...
+          recurring:
+            every_day: "Every day"
+            every_week: "Every week"
+            every_two_weeks: "Every two weeks"
+            every_month: "Every month"
+            every_two_months: "Every two months"
+            every_three_months: "Every three months"
+            every_six_months: "Every six months"
+            every_year: "Every year"

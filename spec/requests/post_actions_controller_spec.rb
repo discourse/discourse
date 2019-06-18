@@ -1,8 +1,10 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe PostActionsController do
   describe '#destroy' do
-    let(:post) { Fabricate(:post, user: Fabricate(:coding_horror)) }
+    fab!(:post) { Fabricate(:post, user: Fabricate(:coding_horror)) }
 
     it 'requires you to be logged in' do
       delete "/post_actions/#{post.id}.json"
@@ -10,7 +12,7 @@ RSpec.describe PostActionsController do
     end
 
     context 'logged in' do
-      let(:user) { Fabricate(:user) }
+      fab!(:user) { Fabricate(:user) }
 
       before do
         sign_in(user)
@@ -112,8 +114,8 @@ RSpec.describe PostActionsController do
     end
 
     describe 'as a moderator' do
-      let(:user) { Fabricate(:moderator) }
-      let(:post_1) { Fabricate(:post, user: Fabricate(:coding_horror)) }
+      fab!(:user) { Fabricate(:moderator) }
+      fab!(:post_1) { Fabricate(:post, user: Fabricate(:coding_horror)) }
 
       before do
         sign_in(user)
@@ -232,10 +234,12 @@ RSpec.describe PostActionsController do
 
         expect(response.status).to eq(200)
 
-        post_action = PostAction.last
-
-        expect(post_action.post_id).to eq(post_1.id)
+        post_action = PostAction.find_by(post: post_1)
         expect(post_action.staff_took_action).to eq(true)
+
+        reviewable = ReviewableFlaggedPost.find_by(target: post_1)
+        score = reviewable.reviewable_scores.first
+        expect(score.took_action?).to eq(true)
       end
 
       it "doesn't pass take_action through if the user isn't staff" do
@@ -243,83 +247,19 @@ RSpec.describe PostActionsController do
 
         post "/post_actions.json", params: {
           id: post_1.id,
-          post_action_type_id: PostActionType.types[:like]
+          post_action_type_id: PostActionType.types[:inappropriate]
         }
 
         expect(response.status).to eq(200)
 
-        post_action = PostAction.last
-
-        expect(post_action.post_id).to eq(post_1.id)
+        post_action = PostAction.find_by(post: post_1)
         expect(post_action.staff_took_action).to eq(false)
+
+        reviewable = ReviewableFlaggedPost.find_by(target: post_1)
+        score = reviewable.reviewable_scores.first
+        expect(score.took_action?).to eq(false)
       end
     end
   end
 
-  describe '#defer_flags' do
-    let!(:flag) do
-      PostAction.create!(
-        post_id: flagged_post.id,
-        user_id: Fabricate(:user).id,
-        post_action_type_id: PostActionType.types[:spam]
-      )
-    end
-    let(:flagged_post) { Fabricate(:post, user: Fabricate(:coding_horror)) }
-
-    context "not logged in" do
-      it "should not allow them to clear flags" do
-        post "/post_actions/defer_flags.json", params: { id: flagged_post.id }
-        expect(response.status).to eq(403)
-        flag.reload
-        expect(flag.deferred_at).to be_nil
-      end
-    end
-
-    context 'logged in' do
-      let!(:user) { sign_in(Fabricate(:moderator)) }
-
-      it "raises an error without a post_action_type_id" do
-        post "/post_actions/defer_flags.json", params: { id: flagged_post.id }
-        expect(response.status).to eq(400)
-        flag.reload
-        expect(flag.deferred_at).to be_nil
-      end
-
-      it "raises an error when the user doesn't have access" do
-        sign_in(Fabricate(:user))
-
-        post "/post_actions/defer_flags.json", params: {
-          id: flagged_post.id, post_action_type_id: PostActionType.types[:spam]
-        }
-
-        expect(response).to be_forbidden
-        flag.reload
-        expect(flag.deferred_at).to be_nil
-      end
-
-      context "success" do
-        it "delegates to defer_flags" do
-          post "/post_actions/defer_flags.json", params: {
-            id: flagged_post.id, post_action_type_id: PostActionType.types[:spam]
-          }
-
-          expect(response.status).to eq(200)
-          flag.reload
-          expect(flag.deferred_at).to be_present
-        end
-
-        it "works with a deleted post" do
-          flagged_post.trash!(user)
-
-          post "/post_actions/defer_flags.json", params: {
-            id: flagged_post.id, post_action_type_id: PostActionType.types[:spam]
-          }
-
-          expect(response.status).to eq(200)
-          flag.reload
-          expect(flag.deferred_at).to be_present
-        end
-      end
-    end
-  end
 end

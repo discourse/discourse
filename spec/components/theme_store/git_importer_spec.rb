@@ -1,5 +1,6 @@
 
 # encoding: utf-8
+# frozen_string_literal: true
 
 require 'rails_helper'
 require 'theme_store/git_importer'
@@ -9,6 +10,7 @@ describe ThemeStore::GitImporter do
   context "#import" do
 
     let(:url) { "https://github.com/example/example.git" }
+    let(:trailing_slash_url) { "https://github.com/example/example/" }
     let(:ssh_url) { "git@github.com:example/example.git" }
     let(:branch) { "dev" }
 
@@ -23,6 +25,13 @@ describe ThemeStore::GitImporter do
       Discourse::Utils.expects(:execute_command).with("git", "clone", url, @temp_folder)
 
       importer = ThemeStore::GitImporter.new(url)
+      importer.import!
+    end
+
+    it "should work with trailing slash url" do
+      Discourse::Utils.expects(:execute_command).with("git", "clone", url, @temp_folder)
+
+      importer = ThemeStore::GitImporter.new(trailing_slash_url)
       importer.import!
     end
 

@@ -117,7 +117,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
   },
 
   _forwardAction(name) {
-    this.get("topicController").send(name);
+    this.topicController.send(name);
     this.send("closeModal");
   },
 
@@ -138,7 +138,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
 
   actions: {
     pin() {
-      if (this.get("pinDisabled")) {
+      if (this.pinDisabled) {
         this.set("pinInCategoryTipShownAt", Date.now());
       } else {
         this._forwardAction("togglePinned");
@@ -146,11 +146,11 @@ export default Ember.Controller.extend(ModalFunctionality, {
     },
 
     pinGlobally() {
-      if (this.get("pinGloballyDisabled")) {
+      if (this.pinGloballyDisabled) {
         this.set("pinGloballyTipShownAt", Date.now());
       } else {
         this._confirmBeforePinning(
-          this.get("pinnedGloballyCount"),
+          this.pinnedGloballyCount,
           "pin_globally",
           "pinGlobally"
         );

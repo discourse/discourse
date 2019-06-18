@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'discourse_iife'
 
 Rails.application.config.assets.configure do |env|

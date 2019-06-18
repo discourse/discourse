@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module PluginGem
   def self.load(path, name, version, opts = nil)
     opts ||= {}

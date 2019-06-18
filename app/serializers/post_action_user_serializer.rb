@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class PostActionUserSerializer < BasicUserSerializer
   attributes :post_url,
              :username_lower

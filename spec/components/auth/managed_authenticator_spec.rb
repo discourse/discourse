@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 describe Auth::ManagedAuthenticator do
@@ -39,11 +41,12 @@ describe Auth::ManagedAuthenticator do
   describe 'after_authenticate' do
     it 'can match account from an existing association' do
       user = Fabricate(:user)
-      associated = UserAssociatedAccount.create!(user: user, provider_name: 'myauth', provider_uid: "1234")
+      associated = UserAssociatedAccount.create!(user: user, provider_name: 'myauth', provider_uid: "1234", last_used: 1.year.ago)
       result = authenticator.after_authenticate(hash)
 
       expect(result.user.id).to eq(user.id)
       associated.reload
+      expect(associated.last_used).to be >= 1.day.ago
       expect(associated.info["name"]).to eq("Best Display Name")
       expect(associated.info["email"]).to eq("awesome@example.com")
       expect(associated.credentials["token"]).to eq("supersecrettoken")
@@ -51,8 +54,8 @@ describe Auth::ManagedAuthenticator do
     end
 
     describe 'connecting to another user account' do
-      let(:user1) { Fabricate(:user) }
-      let(:user2) { Fabricate(:user) }
+      fab!(:user1) { Fabricate(:user) }
+      fab!(:user2) { Fabricate(:user) }
       before { UserAssociatedAccount.create!(user: user1, provider_name: 'myauth', provider_uid: "1234") }
 
       it 'works by default' do
@@ -135,7 +138,7 @@ describe Auth::ManagedAuthenticator do
     end
 
     describe "avatar on update" do
-      let(:user) { Fabricate(:user) }
+      fab!(:user) { Fabricate(:user) }
       let!(:associated) { UserAssociatedAccount.create!(user: user, provider_name: 'myauth', provider_uid: "1234") }
 
       it "schedules the job upon update correctly" do
@@ -156,7 +159,7 @@ describe Auth::ManagedAuthenticator do
     end
 
     describe "profile on update" do
-      let(:user) { Fabricate(:user) }
+      fab!(:user) { Fabricate(:user) }
       let!(:associated) { UserAssociatedAccount.create!(user: user, provider_name: 'myauth', provider_uid: "1234") }
 
       it "updates the user's location and bio, unless already set" do
@@ -179,8 +182,37 @@ describe Auth::ManagedAuthenticator do
       end
     end
 
+    describe "email update" do
+      fab!(:user) { Fabricate(:user) }
+      let!(:associated) { UserAssociatedAccount.create!(user: user, provider_name: 'myauth', provider_uid: "1234") }
+
+      it "updates the user's email if currently invalid" do
+        user.update!(email: "someemail@discourse.org")
+        # Existing email is valid, do not change
+        expect { result = authenticator.after_authenticate(hash) }
+          .not_to change { user.reload.email }
+
+        user.update!(email: "someemail@discourse.invalid")
+        # Existing email is invalid, expect change
+        expect { result = authenticator.after_authenticate(hash) }
+          .to change { user.reload.email }
+
+        expect(user.email).to eq("awesome@example.com")
+      end
+
+      it "doesn't raise error if email is taken" do
+        other_user = Fabricate(:user, email: "awesome@example.com")
+        user.update!(email: "someemail@discourse.invalid")
+
+        expect { result = authenticator.after_authenticate(hash) }
+          .not_to change { user.reload.email }
+
+        expect(user.email).to eq("someemail@discourse.invalid")
+      end
+    end
+
     describe "avatar on create" do
-      let(:user) { Fabricate(:user) }
+      fab!(:user) { Fabricate(:user) }
       let!(:association) { UserAssociatedAccount.create!(provider_name: 'myauth', provider_uid: "1234") }
 
       it "doesn't schedule with no image" do
@@ -197,7 +229,7 @@ describe Auth::ManagedAuthenticator do
     end
 
     describe "profile on create" do
-      let(:user) { Fabricate(:user) }
+      fab!(:user) { Fabricate(:user) }
       let!(:association) { UserAssociatedAccount.create!(provider_name: 'myauth', provider_uid: "1234") }
 
       it "doesn't explode without profile" do
@@ -216,7 +248,7 @@ describe Auth::ManagedAuthenticator do
   end
 
   describe 'description_for_user' do
-    let(:user) { Fabricate(:user) }
+    fab!(:user) { Fabricate(:user) }
 
     it 'returns empty string if no entry for user' do
       expect(authenticator.description_for_user(user)).to eq("")
@@ -229,11 +261,13 @@ describe Auth::ManagedAuthenticator do
       expect(authenticator.description_for_user(user)).to eq('somenickname')
       association.update(info: { nickname: "bestname" })
       expect(authenticator.description_for_user(user)).to eq('bestname')
+      association.update(info: {})
+      expect(authenticator.description_for_user(user)).to eq(I18n.t("associated_accounts.connected"))
     end
   end
 
   describe 'revoke' do
-    let(:user) { Fabricate(:user) }
+    fab!(:user) { Fabricate(:user) }
 
     it 'raises exception if no entry for user' do
       expect { authenticator.revoke(user) }.to raise_error(Discourse::NotFound)

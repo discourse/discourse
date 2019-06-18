@@ -69,19 +69,19 @@ bg:
         one: "Записът не може да бъде изтрит, защото е зависим от съществуващите  %{record}"
         many: "Записът не може да бъде изтрит, защото е зависим от съществуващите %{record}"
       too_long:
-        one: прекалено дълго (трябва да бъде само 1 символ)
+        one: прекалено дълго (трябва да бъде само %{count} символ)
         other: е прекалено дълго (максималния брой символи е %{count})
       too_short:
-        one: прекалено кратко (минимума е 1 символ)
+        one: прекалено кратко (минимума е %{count} символ)
         other: е прекалено кратко (миниума е %{count} символи)
       wrong_length:
-        one: е с грешна дължина (трябва да бъде поне 1 символ)
+        one: е с грешна дължина (трябва да бъде поне %{count} символ)
         other: е с грешна дължина (трябва да бъде %{count} символа)
       other_than: "трябва да бъде различно от %{count}"
     template:
       body: "Имаше проблеми със следните полета:"
       header:
-        one: 1 грешка възпрепятства запазването на този %{model}
+        one: "%{count} грешка възпрепятства запазването на този %{model}"
         other: "%{count} грешки възпрепятстват запазването на този %{model} "
     embed:
       load_from_remote: "Получи се грешка при зареждането на тази публикация."
@@ -101,7 +101,7 @@ bg:
   reading_time: "Време за четене"
   likes: "Харесвания"
   too_many_replies:
-    one: "Съжаляваме, но новите потребители са временно са ограничени до 1 отговор във същата публикация."
+    one: "Съжаляваме, но новите потребители са временно са ограничени до %{count} отговор във същата публикация."
     other: "Съжаляваме, но новите потребители са временно са ограничени до %{count}  отговори в същата публикация."
   embed:
     start_discussion: "Започване на дискусия "
@@ -154,7 +154,6 @@ bg:
   private_message_abbrev: "Съобщение"
   rss_description:
     latest: "Последни теми"
-    hot: "Горещи теми"
     top: "Топ теми"
     top_all: "Топ теми за всички времена"
     top_yearly: "Годишни топ теми"
@@ -171,8 +170,6 @@ bg:
   too_late_to_edit: "Това мнение е създадено много отдавна. То вече не може да се променя или  да бъде изтрито."
   revert_version_same: "Текущата версия е същата като версията, към която се опитвате да се върнете."
   excerpt_image: "изображение"
-  queue:
-    delete_reason: "Изтрит чрез опашката за медериране на публикации."
   groups:
     errors:
       invalid_domain: "'%{domain}' е невалиден домейн."
@@ -191,7 +188,7 @@ bg:
       trust_level_4: "trust_level_4 "
   education:
     until_posts:
-      one: "1 публикация"
+      one: "%{count} публикация"
       other: "%{count} публикации"
     "new-topic": |
       Добре дошли в %{site_name} &mdash; **Благодарим ви за създаването на нова тема!**
@@ -219,6 +216,7 @@ bg:
         name: "Име на категорията"
       topic:
         title: "Заглавие"
+        category_id: "Категория"
       post:
         raw: "Тяло"
       user_profile:
@@ -261,7 +259,6 @@ bg:
       email_already_used_in_group: "'%{email}' е вече използван от групата '%{group_name}'."
       email_already_used_in_category: "'%{email}' е вече използван за категорията '%{category_name}'."
     cannot_delete:
-      uncategorized: "Не можете да изтриете Некатегоризиран"
       has_subcategories: "Не можете да изтриете тази категория, защото има подкатегории."
       topic_exists_no_oldest: "Не можете да изтриете тази категория, защото броят на темите е %{count}."
   trust_levels:
@@ -285,86 +282,86 @@ bg:
       unsubscribe_via_email: "Достигнахте максималния брой отписвания по имейл. Моля, изчакайте %{time_left}, преди да опитате отново."
       topic_invitations_per_day: "Достигнахте максималния брой покани за теми. Моля, изчакайте %{time_left}, преди да опитате отново."
     hours:
-      one: "1 час"
+      one: "%{count} час"
       other: "%{count} часове "
     minutes:
-      one: "1 минута"
+      one: "%{count} минута"
       other: "%{count} минути "
     seconds:
-      one: "1 секунда"
+      one: "%{count} секунда"
       other: "%{count} секунди "
   datetime:
     distance_in_words:
       half_a_minute: "< 1m"
       less_than_x_seconds:
-        one: "< 1с"
+        one: "< %{count}с"
         other: "< %{count}s"
       x_seconds:
-        one: "1s"
+        one: "%{count}s"
         other: "%{count}s"
       less_than_x_minutes:
-        one: "< 1m"
+        one: "< %{count}m"
         other: "< %{count}m"
       x_minutes:
-        one: "1m"
+        one: "%{count}m"
         other: "%{count}m"
       about_x_hours:
-        one: "1h"
+        one: "%{count}h"
         other: "%{count}h"
       x_days:
-        one: "1d"
+        one: "%{count}d"
         other: "%{count}d"
       about_x_months:
-        one: "1mon "
+        one: "%{count}mon "
         other: "%{count}mon"
       x_months:
-        one: "1mon "
+        one: "%{count}mon "
         other: "%{count}mon "
       about_x_years:
-        one: "1y "
+        one: "%{count}y "
         other: "%{count}y "
       over_x_years:
-        one: "> 1y "
+        one: "> %{count}y "
         other: "> %{count}y "
       almost_x_years:
-        one: "1y"
+        one: "%{count}y"
         other: "%{count}y"
     distance_in_words_verbose:
       half_a_minute: "преди малко"
-      less_than_x_seconds:
-        one: "преди малко"
-        other: "преди малко"
+      less_than_x_seconds: "преди малко"
       x_seconds:
-        one: "преди 1 секунда"
+        one: "преди %{count} секунда"
         other: "преди %{count} секунди"
       less_than_x_minutes:
-        one: "по малко от 1 минута"
+        one: "по малко от %{count} минута"
         other: "преди по-малко от %{count} минути"
       x_minutes:
-        one: "преди 1 минута"
+        one: "преди %{count} минута"
         other: "преди %{count} минути"
       about_x_hours:
-        one: "преди 1 час"
+        one: "преди %{count} час"
         other: "преди %{count} часа"
       x_days:
-        one: "преди 1 ден"
+        one: "преди %{count} ден"
         other: "преди %{count} дни"
       about_x_months:
-        one: "преди около 1 месец"
+        one: "преди около %{count} месец"
         other: "преди около %{count} месеца"
       x_months:
-        one: "преди 1 месец"
+        one: "преди %{count} месец"
         other: "преди %{count} месеца"
       about_x_years:
-        one: "преди около 1 година"
+        one: "преди около %{count} година"
         other: "преди около  %{count} години "
       over_x_years:
-        one: "преди повече от 1 година "
+        one: "преди повече от %{count} година "
         other: "преди повече от %{count} години "
       almost_x_years:
-        one: "преди почти 1 година"
+        one: "преди почти %{count} година"
         other: "преди почти %{count} години"
   password_reset:
+    choose_new: "Избери нова парола"
+    choose: "Избери парола"
     update: "Обновете паролата"
     save: "Задайте парола"
     title: "Смяна на паролата"
@@ -383,6 +380,9 @@ bg:
     continue_button: "Продължете към %{site_name}"
     welcome_to: "Добре дошли в %{site_name}!"
     approval_required: "Акаунтът Ви трябва да бъде одобрен от модератор преди да получите достъп до този форум. Ще получите имейл когато акаунтът Ви е одобрен!"
+  reviewable_score_types:
+    needs_approval:
+      title: "Чакащи одобрение"
   post_action_types:
     off_topic:
       title: "Оф-топик"
@@ -409,10 +409,12 @@ bg:
     bookmark:
       title: "Отметка"
       description: "Добавете тази публикация в Отметки"
+      short_description: "Добавете тази публикация в Отметки"
       long_form: "Добавихте тази публикация в Отметки"
     like:
       title: "Харесвам"
       description: "Харесайте тази публикация"
+      short_description: "Харесайте тази публикация"
       long_form: "харесаха това"
   topic_flag_types:
     spam:
@@ -437,12 +439,52 @@ bg:
       message:
         make: "Тази тема сега е банер. Тя ще се появява най-отгоре на всяка страница докато не бъде премахната от потребителя."
         remove: "Тази тема вече не е банер. Тя няма да се появява повече най-отгоре на всяка страница."
+  unsubscribe:
+    title: "Отписвам"
+    log_out: "Изход "
+    digest_frequency:
+      never: "никога"
+      every_30_minutes: "на всеки 30 минути"
+      every_hour: "почасово"
+      daily: "дневно"
+      weekly: "седмично"
+  user_api_key:
+    read: "четене"
   reports:
+    default:
+      labels:
+        day: Ден
+    post_edits:
+      labels:
+        post: Публикация
+        editor: Редактор
+        edit_reason: Причина
+    user_flagging_ratio:
+      labels:
+        user: Потребител
+    moderators_activity:
+      labels:
+        moderator: Модератор
+    flags_status:
+      labels:
+        flag: Тип
     visits:
       title: "Потребителски посещения "
       xaxis: "Ден"
       yaxis: "Брой на посещенията"
     signups:
+      xaxis: "Ден"
+    new_contributors:
+      xaxis: "Ден"
+    consolidated_page_views:
+      yaxis: "Ден"
+      labels:
+        post: Публикация
+        editor: Редактор
+        edit_reason: Причина
+    dau_by_mau:
+      xaxis: "Ден"
+    daily_engaged_users:
       xaxis: "Ден"
     profile_views:
       title: "Гледания на потребителският профил"
@@ -472,11 +514,27 @@ bg:
       title: "Потребители с  Ниво на доверие"
       xaxis: "Ниво на Доверие"
       yaxis: "Брой потребители"
+    users_by_type:
+      xaxis: "Тип"
+      yaxis: "Брой потребители"
+      labels:
+        type: Тип
+      xaxis_labels:
+        admin: Администратор
+        moderator: Модератор
+        suspended: Отстранени
+    trending_search:
+      labels:
+        term: Термин
+        searches: Търсения
     emails:
       title: "Имейлите са изпратени"
       xaxis: "Ден"
       yaxis: "Брой имейли"
     user_to_user_private_messages:
+      xaxis: "Ден"
+      yaxis: "Брой съобщения"
+    user_to_user_private_messages_with_replies:
       xaxis: "Ден"
       yaxis: "Брой съобщения"
     system_private_messages:
@@ -500,14 +558,25 @@ bg:
       xaxis: "Потребител"
       num_clicks: "Кликвания"
       num_topics: "Теми"
+      labels:
+        user: "Потребител"
+        num_clicks: "Кликвания"
+        num_topics: "Теми"
     top_traffic_sources:
       title: "Топ източници на трафик "
       xaxis: "Домейн"
       num_clicks: "Кликвания"
       num_topics: "Теми"
       num_users: "Потребители"
+      labels:
+        domain: Домейн
+        num_clicks: Кликвания
+        num_topics: Теми
     top_referred_topics:
       title: "Top Посочени Теми "
+      labels:
+        num_clicks: "Кликвания"
+        topic: "Тема"
     page_view_anon_reqs:
       title: "Анонимен"
       xaxis: "Ден"
@@ -557,10 +626,22 @@ bg:
     mobile_visits:
       xaxis: "Ден"
       yaxis: "Брой на посещенията"
+    suspicious_logins:
+      labels:
+        user: Потребител
+        location: Локация
+    staff_logins:
+      labels:
+        user: Потребител
+        location: Локация
+    top_uploads:
+      labels:
+        filename: Име на файла
   dashboard:
     rails_env_warning: "Вашият сървър е в % {env} режим."
     host_names_warning: "Вашият config/database.yml файл използва по подразбиране localhost за hostname. Обновете, за да използва името на вашия сайт за hostname. "
     sidekiq_warning: 'Sidekiq не работи. Много задачи, като изпращане на имейли, се изпълняват несинхронизирано от sidekiq.  Моля убедете се, че поне един процес sidekiq работи.  <a href="https://github.com/mperham/sidekiq" target="_blank">Научете повече за Sidekiq тук</a>.'
+    queue_size_warning: "Броят на чакащите задачи е %{queue_size}, и е голям. Това може да означава проблем с процеса(сите)  Sidekiq, или може да се наложи да добавите още Sidekiq работници."
     memory_warning: "Вашият сървър използва по-малко от 1 ГБ от общата памет. Препоръчва се най-малко 1 ГБ."
     subfolder_ends_in_slash: "Вашата настройка за подпапка е неправилна; DISCOURSE_RELATIVE_URL_ROOT завършва с наклонена черта."
   site_settings:
@@ -569,9 +650,11 @@ bg:
     allow_user_locale: "Позволи на потребителите да избират език на интерфейса"
     min_post_length: "Минимално допустимо количество символи в едно съобщение"
     min_first_post_length: "Минимално допустими символи в първата публикация (тялото на темата)."
+    min_personal_message_post_length: "Минимално допустимо количество символи в едно  съобщение"
     max_post_length: "Максимално допустимо количество символи в едно съобщение"
     min_topic_title_length: "Минимално допустимо количество символи в името на темата"
     max_topic_title_length: "Максимално допустимо количество символи в името на темата"
+    min_personal_message_title_length: "Минимално допустимо количество символи в заглавието на съобщение"
     min_search_term_length: "Минимално допустимо количество символи в заявката за търсене"
     allow_uncategorized_topics: "Позволи създаването на теми без категория. ВНИМАНИЕ: Ако има някакви не категоризирани теми, трябва да ги категоризирате, преди да изключите тази опция."
     allow_duplicate_topic_titles: "Позволи теми с идентични, дублиращи се заглавия."
@@ -583,6 +666,7 @@ bg:
     download_remote_images_to_local: "Конвертирайте отдалечените изображения в местни изображения като ги свалите; това ще предотврати повредата им."
     download_remote_images_threshold: "Минимум необходимо дисково пространство за изтеглянето на отдалечените изображения ( в проценти)"
     disabled_image_download_domains: "Отдалечените изображения никога няма да бъдат изтеглени от тези домейни. Разделен със знака \"|\" списък."
+    editing_grace_period: "За(n) секунди след публикуването , системата няма да запише нова версия в историята на публикациите."
     edit_history_visible_to_public: "Позволи на всички потребители да видят предишните версии на публикацията. Ако е деактивитано, историята на публикациите ще бъде видима само за членовете на персонала. "
     delete_removed_posts_after: "Публикации, които са премахнати от автор ще бъдат автоматично  изтрити след (n) часа. Ако е зададено 0, публикациите ще бъдат изтрити веднага."
     max_image_width: "Максимална ширина на умалените изображения в публикацията"
@@ -598,7 +682,6 @@ bg:
     summary_posts_required: "Минимум публикации в темата преди \"Обобщи тази тема\" да бъде активирано"
     summary_likes_required: "Минимум харесвания в темата преди \"Обобщи тази тема\" да бъде активирано"
     summary_percent_filter: "Когато потребителят кликне върху \"Обобщи тази тема\", се показват % от най-добрите публикации "
-    summary_max_results: "Максимум публикации върнати от \"Обобщи тази тема\""
     enable_long_polling: "Системата за обработка на известия, да използва long polling - заявки с дълго изчакване / дълъг интервал "
     long_polling_base_url: "Основен URL използван за long polling - проверка на дълги интервали (когато се използва CDN за динамично съдръжание, уверете се, че тази стойност е настроена към основното съдържание) Например: http://origin.site.com"
     long_polling_interval: "Времето, през което сървърът трябва да изчака преди да отговори на клиентите, когато няма данни за изпращане (влезли потребители само)"
@@ -612,7 +695,7 @@ bg:
     traditional_markdown_linebreaks: "Използвайте стандартния метод за пренасяне на нов ред в Markdown, който изисква два интервала за пренасянето на нов ред."
     post_undo_action_window_mins: "Брой минути, през които потребителите могат да отменят своите действия в публикацията ( харесване, сигнал, и т.н.) "
     must_approve_users: "Персоналът трябва да одобри всички нови потребителски акаунти, преди да им бъде разрешен достъп до сайта. ВНИМАНИЕ: Включвайки тази функция, достъпът до сайта ще бъде разрешен само за персонала на сайта!"
-    allow_moderators_to_create_categories: "Позволи на модераторите да създават нови категории"
+    moderators_create_categories: "Позволи на модераторите да създават нови категории"
     cors_origins: "Позволени източници за cross-origin requests (CORS). Всеки източник трябва да включва http:// или https://. \nПроменливата за DISCOURSE_ENABLE_CORS env трябва да бъде правилно настроена за да позволи CORS."
     top_menu: "Определете кои елементи да се показват в навигацията на началната страница, и в какъв ред. Например последни|нови|непрочетени|категории|топ|прочетени|публикувани|отметки"
     post_menu: "Определете кои елементи да се появяват в менюто на публикацията, и в какъв ред. Например like|edit|flag|delete|share|bookmark|reply"
@@ -646,7 +729,6 @@ bg:
     sso_overrides_name: "Сменете потребителското име с това, което е предоставено от SSO доставчика."
     sso_not_approved_url: "Пренасочване на неодобрените SSO акаунти към този URL"
     allow_new_registrations: "Позволи регистрация на нови потребители. Махни отметката, за да не може никой да създаде нов акаунт."
-    enable_yahoo_logins: "Активиране на Yahoo удостоверяване"
     google_oauth2_client_id: "Client ID за Google приложение."
     google_oauth2_client_secret: "Client secret за Google приложение."
     allow_restore: "Позволи възстановяване, което може да замени ВСИЧКИ данни на сайта! Оставете го погрешно освен ако не планирате да възстановите бекъпа"
@@ -664,6 +746,7 @@ bg:
     max_bookmarks_per_day: "Максимален брой отметки на потребител на ден."
     max_edits_per_day: "Максимален брой редактирания на потребител на ден."
     max_topics_per_day: "Максимален брой теми, които потребител може да създаде на ден."
+    max_personal_messages_per_day: "Максимален брой съобщения които, потребител може да създаде за един ден."
     max_invites_per_day: "Максимален брой покани на потребител за ден."
     max_topic_invitations_per_day: "Максимален брой покани за теми, които потребител може да изпрати за един ден."
     suggested_topics: "Брой на предложените теми, показани в долната част на една тема."
@@ -673,9 +756,6 @@ bg:
     purge_deleted_uploads_grace_period_days: "Гратисен период (в дни) преди изтритите качвания да бъдат заличени."
     enable_s3_uploads: "Постави качените файлове на Amazon S3 storage. ВАЖНО: изисква валидни S3 идентификационни данни (both access key id & secret access key)."
     s3_upload_bucket: "Име на Amazon S3 bucket в което ще се качват файловете. ВНИМАНИЕ: трябва да съдържа само малки букви, без разстояния и долни черти."
-    s3_access_key_id: "Amazon S3 secret access key който ще се използва за качването на изображения."
-    s3_secret_access_key: "Amazon S3 secret access key който ще се използва за качването на изображения."
-    s3_region: "The Amazon S3 region name който ще се използва за качването на изображения."
     s3_cdn_url: "URL адресът на URL да се използва за всички s3 авоари (например: https://cdn.somewhere.com). ВНИМАНИЕ: след промяната на тази настройка трябва да преработите всичките си публикации."
     avatar_sizes: "Списък от автоматично генерираните размери на аватари"
     enable_flash_video_onebox: "Разрешаване на ембедване на swf и flv (Adobe Flash) линкове в oneboxes. ВНИМАНИЕ: това може да създаде проблеми със сигурността."
@@ -742,7 +822,6 @@ bg:
     max_age_unmatched_emails: "Изтриване на несъвпадащите пресяти имейл записи след (N) дни."
     max_age_unmatched_ips: "Изтрий  несъчетаните пресяти IP вписвания след (N) дни."
     num_flaggers_to_close_topic: "Минимален брой уникални сигнализации, които се изискват за спиране на темата"
-    num_flags_to_close_topic: "Минимален брой активни сигнали, които се изискват за спиране на темата"
     auto_respond_to_flag_actions: "Активиране на автоматичен отговор с помощта на сигналите на сайта."
     reply_by_email_enabled: "Позволи отговори в темите чрез имейл."
     reply_by_email_address: "Шаблон за отговор по имейла на входящ имейл адрес, например: %%{reply_key}@reply.example.com or replies+%%{reply_key}@example.com"
@@ -794,15 +873,12 @@ bg:
     enable_emoji: "Разреши емотикони"
     emoji_set: "Как бихте искали да е вашата емотикона?"
     approve_unless_trust_level: "Постовете на потребители с по-ниско от това ниво на доверие трябва да бъдат одобрени"
-    default_email_direct: "Изпращай имейл по подразбиране, когато някой цитира, отговаря на публикацията или споменава името на потребителя."
     default_email_mailing_list_mode: "Изпращай ми имейл по подразбиране за всяка нова публикация."
-    default_email_always: "Изпращай ми имейл известия по подразбиране, дори когато потребителя е активен на сайта."
     default_other_new_topic_duration_minutes: "Глобално състояние по подразбиране за всяка тема, която се счита за нова."
     default_other_auto_track_topics_after_msecs: "Глобално време по подразбиране, преди темата да бъде автоматично следена."
     default_other_external_links_in_new_tab: "Отваряй външните връзки в нов раздел по подразбиране."
     default_other_enable_quoting: "Включи отговор с цитат при маркиран текст по подразбиране."
     default_other_dynamic_favicon: "Покажи броя на новите / обновените теми в иконата на браузъра по подразбиране."
-    default_other_disable_jump_reply: "Не отивай към моята публикация след като отговоря, по подразбиране."
     default_categories_watching: "Списък с категории, които са прегледани, по подразбиране."
     default_categories_tracking: "Списък с категории, които са следени, по подразбиране."
     default_categories_muted: "Списък с категории, които са заглушени, по подразбиране."
@@ -835,22 +911,22 @@ bg:
     not_seen_in_a_month: "Добре дошли отново! Това са най-популярните теми за времето, през което Ви нямаше."
   topic_statuses:
     autoclosed_enabled_days:
-      one: "Тази тема ще се затвори автоматично след 1 ден. Нови отговори вече не се допускат."
+      one: "Тази тема ще се затвори автоматично след %{count} ден. Нови отговори вече не се допускат."
       other: "Тази тема ще се затвори автоматично след %{count} дни. Нови отговори вече не се допускат."
     autoclosed_enabled_hours:
-      one: "Тази тема ще се затвори автоматично след 1 час. Нови отговори не се допускат."
+      one: "Тази тема ще се затвори автоматично след %{count} час. Нови отговори не се допускат."
       other: "Тази тема ще се затвори автоматично след %{count} часа. Нови отговори не се допускат."
     autoclosed_enabled_minutes:
-      one: "Тази тема ще се затвори автоматично след 1 минута. Нови отговори не се допускат."
+      one: "Тази тема ще се затвори автоматично след %{count} минута. Нови отговори не се допускат."
       other: "Тази тема ще се затвори автоматично след %{count} минути. Нови отговори не се допускат."
     autoclosed_enabled_lastpost_days:
-      one: "Тази тема беше автоматично затворена 1 ден след последния отговор. Нови отговори вече не са разрешени."
+      one: "Тази тема беше автоматично затворена %{count} ден след последния отговор. Нови отговори вече не са разрешени."
       other: "Тази тема беше автоматично затворена след %{count} дни след последния отговор. Нови отговори вече не са разрешени."
     autoclosed_enabled_lastpost_hours:
-      one: "Тази тема беше автоматично затворена 1 час след последния отговор. Отговорите в нея вече са забранени."
+      one: "Тази тема беше автоматично затворена %{count} час след последния отговор. Отговорите в нея вече са забранени."
       other: "Тази тема беше автоматично затворена %{count} часа след последния отговор. Отговорите в нея вече са забранени. "
     autoclosed_enabled_lastpost_minutes:
-      one: "Тази тема беше автоматично затворена 1 минута след последния отговор. Отговорите в нея вече са забранени. "
+      one: "Тази тема беше автоматично затворена %{count} минута след последния отговор. Отговорите в нея вече са забранени. "
       other: "Тази тема беше автоматично затворена %{count} минути след последния отговор. Отговорите в нея вече са забранени. "
     autoclosed_disabled: "Тази тема сега е отворена. Новите отговори са разрешени."
     autoclosed_disabled_lastpost: "Тази тема сега е отворена. Новите отговори са разрешени."
@@ -878,6 +954,9 @@ bg:
     already_logged_in: "Ами сега, изглежда, че се опитвате да приемете покана за друг потребител. Ако не сте  %{current_user}, моля, излезте от профила си и опитайте отново."
     second_factor_title: "Удостоверяване с два фактора"
     second_factor_description: "Моля, въведете необходимият код за удостоверяване от приложението си:"
+  admin:
+    email:
+      sent_test: "изпратено!"
   user:
     username:
       short: "трябва да бъде минимум %{min} символа."
@@ -890,10 +969,6 @@ bg:
     ip_address:
       blocked: "Не са разрешени нови регистрации от вашия IP адрес."
       max_new_accounts_per_registration_ip: "Не са разрешени нови регистрации от вашия IP адрес (достигнали сте лимита). Свържете се с член на персонала."
-  flags_reminder:
-    subject_template:
-      one: "1 сигнал чакащ за обработка"
-      other: "%{count} сигнала налични за обработка "
   invite_mailer:
     text_body_template: |
       %{inviter_name} ви покани да се присъедините към дискусията
@@ -965,8 +1040,8 @@ bg:
     agreed: "Благодарим Ви за информацията. Съгласни сме, че има проблем и вече го разглеждаме."
     agreed_and_deleted: "Благодарим Ви, за информацията. Съгласни сме, че има проблем и ще премахнем публикацията."
     disagreed: "Благодарим Ви за информацията. Вече разглеждаме проблема."
-    deferred: "Благодарим Ви за информацията. Вече разглеждаме проблема. "
-    deferred_and_deleted: "Благодарим,Ви за информацията. Вече премахнахме публикацията."
+    ignored: "Благодарим Ви за информацията. Вече разглеждаме проблема. "
+    ignored_and_deleted: "Благодарим,Ви за информацията. Вече премахнахме публикацията."
   system_messages:
     welcome_user:
       subject_template: "Добре дошли в %{site_name}!"
@@ -992,14 +1067,23 @@ bg:
         Съжаляваме, но вашето съобщение до %{destination} (titled %{former_title}) не може да бъде обработено.
 
         Не намираме вашия отговор в съобщението. **Уверете се, че вашият отговор в горната част на съобщението** -- не можем да обработим инлайн отговори.
+    email_reject_invalid_post:
+      text_body_template: "Съжаляваме, но вашето имейл съобщение до  %{destination} (titled %{former_title}) не може да бъде обработено.\n\nВъзможни причини: сложен формат, съобщението е прекалено дълго, съобщението е прекалено късо. Моля опитайте отново, или публикувайте на уеб сайта, ако това продължи. \n"
+    email_reject_invalid_post_specified:
+      text_body_template: |
+        Съжаляваме, но вашето имейл съобщение до  %{destination} (titled %{former_title}) не може да бъде обработено.
+
+        Причина:
+
+        %{post_error}
+
+        Ако можете да отстраните проблема, моля опитайте отново.
+    spam_post_blocked:
+      subject_template: "Публикациите на новия потребител %{username} са блокирани заради повторящите се линкове "
     pending_users_reminder:
       subject_template:
-        one: "1 потребител чака одобрение"
+        one: "%{count} потребител чака одобрение"
         other: "%{count} потребители чакат одобрение"
-      text_body_template: |
-        Има нови потребителски регистрации, които чакат да бъдат одобрени (отхвърлени) преди да получат достъп до този форум.
-
-        [Please review them in the admin section](%{base_url}/admin/users/list/pending).
     download_remote_images_disabled:
       subject_template: "Изтеглянето на отдалечение изображения е забранено"
       text_body_template: " `download_remote_images_to_local`  настройка беше спряна защото лимита за дисково пространство в `download_remote_images_threshold` беше достигнат."
@@ -1016,7 +1100,14 @@ bg:
       title: "Потребителят е отговорил"
     digest:
       why: "Кратко резюме на %{site_link} след последното Ви посещение на %{last_seen_at}"
+      liked_received: "Получени харесвания"
+      new_users: "Нови потребители"
+      join_the_discussion: "Прочетете повече"
       click_here: "кликнете тук"
+    forgot_password:
+      title: "Забравена парола"
+    set_password:
+      title: "Задайте парола"
     signup_after_approval:
       subject_template: "Вие бяхте одобрени на %{site_name}!"
   page_not_found:
@@ -1024,9 +1115,9 @@ bg:
     recent_topics: "Скорошни"
     see_more: "Повече"
     search_title: "Търси този сайт"
-  terms_of_service:
-    title: "Правила за ползване"
+    search_button: "Търсене"
   deleted: "изтрит"
+  image: "изображение"
   upload:
     edit_reason: "изтеглено локално копие на изображенията"
     unauthorized: "Съжеляваме, Файлът е забранен за качване (разрешени разширения : %{authorized_extensions})."
@@ -1037,11 +1128,23 @@ bg:
     images:
       too_large: "Съжаляваме, изображението, което се опитвате да качите е прекалено голямо (максималният размер е %{max_size_kb}%KB), моля преоразмерете го и опитайте отново. "
       size_not_found: "Съжаляваме, но не можем да определим размера на изображението. Възможно ли е изображението да е повредено?"
+  skipped_email_log:
+    user_email_no_user: "Няма потребител с id %{user_id}"
+    user_email_post_not_found: "Няма публикация с id %{post_id}"
+    user_email_anonymous_user: "Потребителя е анонимен"
+    user_email_user_suspended_not_pm: "Бла бля бля\nБла бля бля"
+    user_email_seen_recently: "Потребителят скоро е забелязан "
+    user_email_notification_already_read: "Уведомлението, за което е този имейл вече беше прочетено"
+    user_email_notification_topic_nil: "post.topic is nil"
+    user_email_post_deleted: "публикацията беше изтрита от автора"
+    user_email_user_suspended: "потребителят е деактивиран"
+    user_email_already_read: "потребителят вече е прочел тази публикация"
+    sender_message_blank: "message е празно"
+    sender_message_to_blank: "message.to е празно"
+    sender_text_part_body_blank: "text_part.body е празно"
+    sender_body_blank: "съдържанието е празно"
   color_schemes:
     base_theme_name: "Основа"
-  about: "Относно"
-  guidelines: "Насоки"
-  privacy: "Поверителност"
   edit_this_page: "Редактирайте тази страница"
   csv_export:
     boolean_yes: "Да"
@@ -1055,6 +1158,29 @@ bg:
   privacy_topic:
     title: "Декларация за поверителност"
   badges:
+    editor:
+      name: Редактор
+      description: " Редактиране на първа публикация"
+    basic_user:
+      name: "Основно "
+    member:
+      name: Член
+    regular:
+      name: Редовен
+    leader:
+      name: "лидер "
+    welcome:
+      name: "Добре дошли "
+      description: Получил харесване
+    autobiographer:
+      name: Автобиограф
+    anniversary:
+      name: Годишнина
+      description: Активен потребител на една година с поне една публикация
+    nice_topic:
+      name: Приятна тема
+    good_topic:
+      name: Добра Тема
     great_topic:
       name: Чудесна тема
       description: Получени 50 харесвания за една тема
@@ -1129,13 +1255,10 @@ bg:
       name: "Нов потребител на месеца"
     enthusiast:
       name: Ентусиаст
-      description: Посещавал 10 дни
     aficionado:
       name: Любител
-      description: Посещавал 100 дни
     devotee:
       name: Отдаден
-      description: Посещавал 365 дни
   admin_login:
     success: "Изпратен имейл"
     errors:
@@ -1150,7 +1273,6 @@ bg:
     title: "Тагове"
     staff_tag_disallowed: 'Тагът "%{tag}" може да бъде приложен само от персонала.'
     staff_tag_remove_disallowed: 'Тагът "%{tag}" може да бъде премахнат само от персонала.'
-    minimum_required_tags: "Трябва да изберете поне %{count} тагове."
   finish_installation:
     register:
       button: "Регистриране"
@@ -1164,25 +1286,32 @@ bg:
     title: "Влизане в безопасен режим"
   wizard:
     step:
+      forum_title:
+        title: "Име"
+      privacy:
+        title: "Достъп"
+        fields:
+          privacy:
+            choices:
+              open:
+                label: "Публични"
+              restricted:
+                label: "Затворени"
       contact:
         fields:
+          contact_email:
+            placeholder: "name@example.com"
           contact_url:
             label: "Уеб страница"
           site_contact:
             label: "Автоматизирани съобщения"
       corporate:
         title: "Организация"
-      colors:
-        fields:
-          theme_id:
-            description: "Предпочитате ли да започнете с лека или тъмна цветова схема? Можете допълнително да персонализирате външния вид на вашия сайт чрез Админ, Персонализация."
-            choices:
-              default:
-                label: "Опростено светло"
-              dark:
-                label: "Опростено тъмно"
       logos:
         title: "Логота"
+        fields:
+          logo:
+            label: "Главно лого"
       icons:
         title: "Икони"
       homepage:
@@ -1201,6 +1330,7 @@ bg:
         title: "Вашият Discourse е готов!"
   search_logs:
     graph_title: "Брой търсения"
+  joined: "Присъединен"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} ви спомена в "%{topic}" - %{site_title}'
@@ -1212,3 +1342,28 @@ bg:
       linked: '%{username} е сложил връзка към вашата публикация в "%{topic}" - %{site_title}'
       confirm_title: "Включени известявания - %{site_title}"
       confirm_body: "Успех! Известяването е включено."
+  reviewables:
+    actions:
+      agree_and_suspend:
+        title: "Преустанови потребител"
+      agree_and_restore:
+        description: "Възстанови тази публикация така че всички потребители да могат да я виждат."
+      agree_and_hide:
+        description: "Скрий тази публикация и автоматично изпрати съобщение към потребителия спешно да я редактира."
+      delete_spammer:
+        title: "Изтрий спамера "
+      delete_single:
+        title: "Изтрий"
+      disagree_and_restore:
+        description: "Възстанови тази публикация така че всички потребители да могат да я виждат."
+      disagree:
+        title: "Не съм съгласен "
+      approve:
+        title: "Одобри"
+      reject_user:
+        delete:
+          title: "Изтрий потребител "
+      reject:
+        title: "Отхвърли"
+      delete_user:
+        title: "Изтрий потребител "

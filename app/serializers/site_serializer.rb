@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_dependency 'discourse_tagging'
 require_dependency 'wizard'
 require_dependency 'wizard/builder'

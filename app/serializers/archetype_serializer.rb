@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ArchetypeSerializer < ApplicationSerializer
 
   attributes :id, :name, :options

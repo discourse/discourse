@@ -36,3 +36,8 @@ lt:
         title: "Uždaryti balsavimą"
         label: "Uždaryti"
         confirm: "Ar tikrai norite uždaryti šį balsavimą?"
+      ui_builder:
+        poll_type:
+          label: Tipas
+        poll_result:
+          label: Rezultatai

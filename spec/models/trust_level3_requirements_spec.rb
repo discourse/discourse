@@ -1,10 +1,12 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 describe TrustLevel3Requirements do
 
   let(:user) { Fabricate.build(:user) }
   subject(:tl3_requirements) { described_class.new(user) }
-  let(:moderator) { Fabricate(:moderator) }
+  fab!(:moderator) { Fabricate(:moderator) }
 
   before do
     described_class.clear_cache
@@ -12,6 +14,10 @@ describe TrustLevel3Requirements do
 
   def make_view(id, at, user_id)
     TopicViewItem.add(id, '11.22.33.44', user_id, at, _skip_redis = true)
+  end
+
+  def like_at(created_by, post, created_at)
+    PostActionCreator.new(created_by, post, PostActionType.types[:like], created_at: created_at).perform
   end
 
   describe "requirements" do
@@ -260,15 +266,16 @@ describe TrustLevel3Requirements do
 
   describe "num_likes_given" do
     it "counts likes given in the last 100 days" do
-      UserActionCreator.enable
+      UserActionManager.enable
 
       recent_post1 = create_post(created_at: 1.hour.ago)
       recent_post2 = create_post(created_at: 10.days.ago)
       old_post     = create_post(created_at: 102.days.ago)
 
-      Fabricate(:like, user: user, post: recent_post1, created_at: 2.hours.ago)
-      Fabricate(:like, user: user, post: recent_post2, created_at: 5.days.ago)
-      Fabricate(:like, user: user, post: old_post,     created_at: 101.days.ago)
+      user.save
+      like_at(user, recent_post1, 2.hours.ago)
+      like_at(user, recent_post2, 5.days.ago)
+      like_at(user, old_post, 101.days.ago)
 
       expect(tl3_requirements.num_likes_given).to eq(2)
     end
@@ -276,7 +283,7 @@ describe TrustLevel3Requirements do
 
   describe "num_likes_received" do
     it "counts likes received in the last 100 days" do
-      UserActionCreator.enable
+      UserActionManager.enable
 
       t = Fabricate(:topic, user: user, created_at: 102.days.ago)
       old_post     = create_post(topic: t, user: user, created_at: 102.days.ago)
@@ -285,10 +292,10 @@ describe TrustLevel3Requirements do
 
       liker = Fabricate(:user)
       liker2 = Fabricate(:user)
-      Fabricate(:like, user: liker,  post: recent_post1, created_at: 2.hours.ago)
-      Fabricate(:like, user: liker2, post: recent_post1, created_at: 2.hours.ago)
-      Fabricate(:like, user: liker,  post: recent_post2, created_at: 5.days.ago)
-      Fabricate(:like, user: liker,  post: old_post,     created_at: 101.days.ago)
+      like_at(liker, recent_post1, 2.hours.ago)
+      like_at(liker2, recent_post1, 2.hours.ago)
+      like_at(liker, recent_post2, 5.days.ago)
+      like_at(liker, old_post, 101.days.ago)
 
       expect(tl3_requirements.num_likes_received).to eq(3)
       expect(tl3_requirements.num_likes_received_days).to eq(2)

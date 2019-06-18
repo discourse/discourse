@@ -1,10 +1,12 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 require 'score_calculator'
 
 describe ScoreCalculator do
 
-  let!(:post) { Fabricate(:post, reads: 111) }
-  let!(:another_post) { Fabricate(:post, topic: post.topic, reads: 222) }
+  fab!(:post) { Fabricate(:post, reads: 111) }
+  fab!(:another_post) { Fabricate(:post, topic: post.topic, reads: 222) }
   let(:topic) { post.topic }
 
   context 'with weightings' do

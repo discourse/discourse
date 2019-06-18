@@ -2,7 +2,6 @@ import createStore from "helpers/create-store";
 
 QUnit.module("lib:category-link");
 
-import parseHTML from "discourse/helpers/parse-html";
 import { categoryBadgeHTML } from "discourse/helpers/category-link";
 
 QUnit.test("categoryBadge without a category", assert => {
@@ -18,24 +17,19 @@ QUnit.test("Regular categoryBadge", assert => {
     color: "ff0",
     text_color: "f00"
   });
-  const tag = parseHTML(categoryBadgeHTML(category))[0];
+  const tag = $.parseHTML(categoryBadgeHTML(category))[0];
 
-  assert.equal(tag.name, "a", "it creates a `a` wrapper tag");
+  assert.equal(tag.tagName, "A", "it creates a `a` wrapper tag");
   assert.equal(
-    tag.attributes["class"].trim(),
+    tag.className.trim(),
     "badge-wrapper",
     "it has the correct class"
   );
 
   const label = tag.children[1];
+  assert.equal(label.title, "cool description", "it has the correct title");
   assert.equal(
-    label.attributes.title,
-    "cool description",
-    "it has the correct title"
-  );
-
-  assert.equal(
-    label.children[0].children[0].data,
+    label.children[0].innerText,
     "hello",
     "it has the category name"
   );
@@ -44,10 +38,10 @@ QUnit.test("Regular categoryBadge", assert => {
 QUnit.test("undefined color", assert => {
   const store = createStore();
   const noColor = store.createRecord("category", { name: "hello", id: 123 });
-  const tag = parseHTML(categoryBadgeHTML(noColor))[0];
+  const tag = $.parseHTML(categoryBadgeHTML(noColor))[0];
 
   assert.blank(
-    tag.attributes.style,
+    tag.attributes["style"],
     "it has no color style because there are no colors"
   );
 });
@@ -89,11 +83,11 @@ QUnit.test("category names are wrapped in dir-spans", assert => {
     id: 234
   });
 
-  let tag = parseHTML(categoryBadgeHTML(rtlCategory))[0];
+  let tag = $.parseHTML(categoryBadgeHTML(rtlCategory))[0];
   let dirSpan = tag.children[1].children[0];
-  assert.equal(dirSpan.attributes.dir, "rtl");
+  assert.equal(dirSpan.dir, "rtl");
 
-  tag = parseHTML(categoryBadgeHTML(ltrCategory))[0];
+  tag = $.parseHTML(categoryBadgeHTML(ltrCategory))[0];
   dirSpan = tag.children[1].children[0];
-  assert.equal(dirSpan.attributes.dir, "ltr");
+  assert.equal(dirSpan.dir, "ltr");
 });

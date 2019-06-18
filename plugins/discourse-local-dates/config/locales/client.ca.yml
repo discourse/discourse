@@ -11,3 +11,4 @@ ca:
       create:
         form:
           date_title: Data
+          time_title: Temps

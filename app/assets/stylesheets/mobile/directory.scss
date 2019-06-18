@@ -10,6 +10,11 @@
     float: left;
   }
 
+  .total-rows {
+    color: $primary-medium;
+    padding: 5px;
+  }
+
   .user {
     border-top: 1px solid $primary-low;
     padding: 1em;

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Jobs
   class RetroRecentTimeRead < Jobs::Onceoff
     def execute_onceoff(args)

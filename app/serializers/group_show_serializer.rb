@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class GroupShowSerializer < BasicGroupSerializer
   attributes :is_group_user, :is_group_owner, :is_group_owner_display, :mentionable, :messageable
 

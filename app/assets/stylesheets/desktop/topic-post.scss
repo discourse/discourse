@@ -46,61 +46,74 @@ section.post-menu-area {
 
 nav.post-controls {
   padding: 0;
-  .like-button {
+
+  // Some buttons can be doubled up, like likes or flags
+  .double-button {
     display: inline-flex;
-    .like-count {
-      color: dark-light-choose($primary-low-mid, $secondary-high);
-    }
-    .widget-button {
-      background: none;
-    }
+    color: $primary-low-mid;
+    margin-right: 0.15em;
     &:hover {
-      background: $primary-low;
-      .like-count {
+      button {
+        background: $primary-low;
         color: $primary-medium;
+      }
+    }
+    button {
+      // It looks really confusing when one half a double button has an inner shadow on click.
+      &:active {
+        box-shadow: none;
+      }
+      margin-left: 0;
+      margin-right: 0;
+      &.my-likes {
+        // Like count on my posts
+        .d-icon {
+          color: $primary-low-mid;
+          padding-left: 0.45em;
+        }
+      }
+      &.like {
+        // Like button with 0 likes
+        &.d-hover {
+          background: $love-low;
+          .d-icon {
+            color: $love;
+          }
+        }
+      }
+      &.has-like {
+        // Like button after I've liked
+        .d-icon {
+          color: $love;
+        }
+        &.d-hover {
+          background: $primary-low;
+          .d-icon {
+            color: $primary-medium;
+          }
+        }
+      }
+      &[disabled] {
+        // Disabled like button
+        cursor: not-allowed;
+      }
+      &.button-count {
+        // Like count button
+        &:not(.my-likes) {
+          padding-right: 0;
+        }
         &.d-hover {
           color: $primary;
         }
-      }
-      .d-hover {
-        background: none;
-      }
-      .d-icon {
-        color: $love;
-      }
-    }
-    &:active {
-      box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.4);
-      .widget-button {
-        box-shadow: none;
+        + .toggle-like {
+          // Like button when like count is present
+          padding-left: 0.45em;
+          &.d-hover {
+            background: $primary-low;
+          }
+        }
       }
     }
-    .like {
-      &:focus {
-        background: none;
-      }
-    }
-    .like-count {
-      font-size: $font-up-1;
-      margin-left: 0;
-      .d-icon {
-        padding-left: 10px;
-        color: dark-light-choose($primary-low-mid, $secondary-high);
-      }
-      &.my-likes {
-        margin-right: -2px;
-      }
-      &.regular-likes {
-        margin-right: -12px;
-      }
-    }
-    .toggle-like {
-      padding: 8px 8px;
-      margin-left: 2px;
-    }
-  }
-  .highlight-action {
-    color: dark-light-choose($primary-medium, $secondary-high);
   }
   a,
   button {
@@ -186,23 +199,6 @@ nav.post-controls {
         color: $secondary;
       }
     }
-    &.like.d-hover,
-    &.like:focus {
-      color: $love;
-      background: $love-low;
-      .d-icon {
-        color: $love;
-      }
-    }
-    &.has-like .d-icon {
-      color: $love;
-    }
-    &.has-like[disabled]:hover {
-      background: transparent;
-    }
-    &.has-like[disabled]:active {
-      box-shadow: none;
-    }
     &.bookmark {
       padding: 8px 11px;
       &.bookmarked .d-icon {
@@ -273,9 +269,17 @@ nav.post-controls {
     border: 1px solid $primary-low;
     padding: 6px 9px 8px;
     z-index: 99; // Needs to be higher than topic-avatar
-    &:hover {
-      background: $primary-low;
-      color: $primary;
+    .d-icon {
+      color: currentColor;
+    }
+    .discourse-no-touch & {
+      &:hover {
+        background: $primary-low;
+        color: $primary-high;
+        .d-icon {
+          color: currentColor;
+        }
+      }
     }
   } // bottom means "reply expansion" below a post
   &.bottom {
@@ -579,11 +583,6 @@ video {
   }
 }
 
-#share-link {
-  width: 365px;
-  margin-left: -4px;
-}
-
 .post-select {
   float: right;
   margin-right: 20px;
@@ -633,9 +632,6 @@ blockquote {
 }
 
 // variables are used to calculate the width of .gap
-$topic-body-width: 690px;
-$topic-body-width-padding: 11px;
-$topic-avatar-width: 45px;
 .topic-body {
   width: calc(#{$topic-body-width} + (#{$topic-body-width-padding} * 2));
   float: left;
@@ -645,6 +641,9 @@ $topic-avatar-width: 45px;
   .topic-meta-data,
   .cooked {
     padding: 0 $topic-body-width-padding 0.25em $topic-body-width-padding;
+  }
+  a.expand-hidden {
+    padding-left: $topic-body-width-padding;
   }
 }
 
@@ -851,8 +850,8 @@ span.highlighted {
   background-color: $tertiary-low;
 }
 
-.username.new-user a {
-  color: dark-light-choose($primary-low-mid, $secondary-high);
+.first.new-user:not(.staff) a {
+  color: $primary-low-mid;
 }
 
 .read-state {

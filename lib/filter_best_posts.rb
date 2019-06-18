@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class FilterBestPosts
 
   attr_accessor :filtered_posts, :posts

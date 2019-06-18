@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_dependency 'rate_limiter'
 
 class Invite < ActiveRecord::Base
@@ -16,7 +18,7 @@ class Invite < ActiveRecord::Base
   has_many :topic_invites
   has_many :topics, through: :topic_invites, source: :topic
   validates_presence_of :invited_by_id
-  validates :email, email: true
+  validates :email, email: true, format: { with: EmailValidator.email_regex }
 
   before_create do
     self.invite_key ||= SecureRandom.hex
@@ -53,8 +55,10 @@ class Invite < ActiveRecord::Base
     invalidated_at.nil?
   end
 
-  def redeem(username: nil, name: nil, password: nil, user_custom_fields: nil)
-    InviteRedeemer.new(self, username, name, password, user_custom_fields).redeem unless expired? || destroyed? || !link_valid?
+  def redeem(username: nil, name: nil, password: nil, user_custom_fields: nil, ip_address: nil)
+    if !expired? && !destroyed? && link_valid?
+      InviteRedeemer.new(self, username, name, password, user_custom_fields, ip_address).redeem
+    end
   end
 
   def self.invite_by_email(email, invited_by, topic = nil, group_ids = nil, custom_message = nil)
@@ -209,9 +213,7 @@ class Invite < ActiveRecord::Base
 
   def self.redeem_from_email(email)
     invite = Invite.find_by(email: Email.downcase(email))
-    if invite
-      InviteRedeemer.new(invite).redeem
-    end
+    InviteRedeemer.new(invite).redeem if invite
     invite
   end
 
@@ -226,8 +228,9 @@ class Invite < ActiveRecord::Base
     end
   end
 
-  def self.rescind_all_invites_from(user)
-    Invite.where('invites.user_id IS NULL AND invites.email IS NOT NULL AND invited_by_id = ?', user.id).find_each do |invite|
+  def self.rescind_all_expired_invites_from(user)
+    Invite.where('invites.user_id IS NULL AND invites.email IS NOT NULL AND invited_by_id = ? AND invites.created_at < ?',
+                user.id, SiteSetting.invite_expiry_days.days.ago).find_each do |invite|
       invite.trash!(user)
     end
   end
@@ -238,14 +241,6 @@ class Invite < ActiveRecord::Base
 
   def self.base_directory
     File.join(Rails.root, "public", "uploads", "csv", RailsMultisite::ConnectionManagement.current_db)
-  end
-
-  def self.create_csv(file, name)
-    extension = File.extname(file.original_filename)
-    path = "#{Invite.base_directory}/#{name}#{extension}"
-    FileUtils.mkdir_p(Pathname.new(path).dirname)
-    File.open(path, "wb") { |f| f << file.tempfile.read }
-    path
   end
 end
 

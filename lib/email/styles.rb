@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #
 # HTML emails don't support CSS, so we can use nokogiri to inline attributes based on
 # matchers.
@@ -119,6 +121,7 @@ module Email
       style('aside.onebox header a[href]', "color: #222222; text-decoration: none;")
       style('aside.onebox .onebox-body', "clear: both")
       style('aside.onebox .onebox-body img', "max-height: 80%; max-width: 20%; height: auto; float: left; margin-right: 10px;")
+      style('aside.onebox .onebox-body img.thumbnail', "width: 60px;")
       style('aside.onebox .onebox-body h3, aside.onebox .onebox-body h4', "font-size: 1.17em; margin: 10px 0;")
       style('.onebox-metadata', "color: #919191")
 
@@ -149,7 +152,7 @@ module Email
             next
           end
 
-          src_uri = URI(i['src'])
+          src_uri = i["data-original-href"].present? ? URI(i["data-original-href"]) : URI(i['src'])
           # If an iframe is protocol relative, use SSL when displaying it
           display_src = "#{src_uri.scheme || 'https'}://#{src_uri.host}#{src_uri.path}#{src_uri.query.nil? ? '' : '?' + src_uri.query}#{src_uri.fragment.nil? ? '' : '#' + src_uri.fragment}"
           i.replace "<p><a href='#{src_uri.to_s}'>#{CGI.escapeHTML(display_src)}</a><p>"

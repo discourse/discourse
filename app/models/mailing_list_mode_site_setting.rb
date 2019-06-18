@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_dependency 'enum_site_setting'
 
 class MailingListModeSiteSetting < EnumSiteSetting

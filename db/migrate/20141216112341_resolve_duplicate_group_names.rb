@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ResolveDuplicateGroupNames < ActiveRecord::Migration[4.2]
 
   def up

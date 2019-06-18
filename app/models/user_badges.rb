@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # view model for user badges
 class UserBadges
   alias :read_attribute_for_serialization :send

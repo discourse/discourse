@@ -4,7 +4,7 @@
   <Description>Search for posts on <%= SiteSetting.title %></Description>
   <Tags>discourse forum</Tags>
   <% site_favicon_url = SiteSetting.site_favicon_url %>
-  <% absolute_site_favicon_url = UrlHelper.absolute(site_favicon_url) %>
+  <% absolute_site_favicon_url = ::UrlHelper.absolute(site_favicon_url) %>
   <% if site_favicon_url =~ /\.ico$/ -%>
     <Image height="16" width="16" type="image/vnd.microsoft.icon"><%= absolute_site_favicon_url %></Image>
   <%- else -%>

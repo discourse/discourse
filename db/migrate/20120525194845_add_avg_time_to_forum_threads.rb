@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddAvgTimeToForumThreads < ActiveRecord::Migration[4.2]
   def up
     add_column :forum_threads, :avg_time, :integer

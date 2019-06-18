@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "rails_helper"
 require "email/receiver"
 
@@ -25,11 +27,13 @@ describe Email::Receiver do
 
   it "raises EmailNotAllowed when email address is not on whitelist" do
     SiteSetting.email_domains_whitelist = "example.com|bar.com"
+    Fabricate(:group, incoming_email: "some_group@bar.com")
     expect { process(:blacklist_whitelist_email) }.to raise_error(Email::Receiver::EmailNotAllowed)
   end
 
   it "raises EmailNotAllowed when email address is on blacklist" do
     SiteSetting.email_domains_blacklist = "email.com|mail.com"
+    Fabricate(:group, incoming_email: "some_group@bar.com")
     expect { process(:blacklist_whitelist_email) }.to raise_error(Email::Receiver::EmailNotAllowed)
   end
 
@@ -83,6 +87,7 @@ describe Email::Receiver do
 
     topic = Fabricate(:topic, id: 424242)
     post  = Fabricate(:post, topic: topic, id: 123456)
+    user  = Fabricate(:user, email: "discourse@bar.com")
 
     expect { process(:old_destination) }.to raise_error(
       Email::Receiver::BadDestinationAddress
@@ -114,8 +119,8 @@ describe Email::Receiver do
 
     describe "creating whisper post in PMs for staged users" do
       let(:email_address) { "linux-admin@b-s-c.co.jp" }
-      let(:user1) { user1 = Fabricate(:user) }
-      let(:user2) { user2 = Fabricate(:staged, email: email_address) }
+      fab!(:user1) { Fabricate(:user) }
+      let(:user2) { Fabricate(:staged, email: email_address) }
       let(:topic) { Fabricate(:topic, archetype: 'private_message', category_id: nil, user: user1, allowed_users: [user1, user2]) }
       let(:post) { create_post(topic: topic, user: user1) }
 
@@ -181,7 +186,7 @@ describe Email::Receiver do
 
     let(:bounce_key) { "14b08c855160d67f2e0c2f8ef36e251e" }
     let(:bounce_key_2) { "b542fb5a9bacda6d28cc061d18e4eb83" }
-    let!(:user) { Fabricate(:user, email: "linux-admin@b-s-c.co.jp") }
+    fab!(:user) { Fabricate(:user, email: "linux-admin@b-s-c.co.jp") }
     let!(:email_log) { Fabricate(:email_log, to_address: user.email, user: user, bounce_key: bounce_key) }
     let!(:email_log_2) { Fabricate(:email_log, to_address: user.email, user: user, bounce_key: bounce_key_2) }
 
@@ -205,6 +210,14 @@ describe Email::Receiver do
       email_log_2.reload
       expect(email_log_2.user.user_stat.bounce_score).to eq(SiteSetting.hard_bounce_score * 2)
       expect(email_log_2.bounced).to eq(true)
+    end
+
+    it "works when the final recipient is different" do
+      expect { process(:verp_bounce_different_final_recipient) }.to raise_error(Email::Receiver::BouncedEmailError)
+
+      email_log.reload
+      expect(email_log.bounced).to eq(true)
+      expect(email_log.user.user_stat.bounce_score).to eq(SiteSetting.soft_bounce_score)
     end
 
     it "sends a system message once they reach the 'bounce_score_threshold'" do
@@ -238,10 +251,10 @@ describe Email::Receiver do
   context "reply" do
 
     let(:reply_key) { "4f97315cc828096c9cb34c6f1a0d6fe8" }
-    let(:category) { Fabricate(:category) }
-    let(:user) { Fabricate(:user, email: "discourse@bar.com") }
-    let(:topic) { create_topic(category: category, user: user) }
-    let(:post) { create_post(topic: topic) }
+    fab!(:category) { Fabricate(:category) }
+    fab!(:user) { Fabricate(:user, email: "discourse@bar.com") }
+    fab!(:topic) { create_topic(category: category, user: user) }
+    fab!(:post) { create_post(topic: topic) }
 
     let!(:post_reply_key) do
       Fabricate(:post_reply_key,
@@ -251,6 +264,10 @@ describe Email::Receiver do
       )
     end
 
+    let :topic_user do
+      TopicUser.find_by(topic_id: topic.id, user_id: user.id)
+    end
+
     it "uses MD5 of 'mail_string' there is no message_id" do
       mail_string = email(:missing_message_id)
       expect { Email::Receiver.new(mail_string).process! }.to change { IncomingEmail.count }
@@ -258,6 +275,7 @@ describe Email::Receiver do
     end
 
     it "raises a ReplyUserNotMatchingError when the email address isn't matching the one we sent the notification to" do
+      Fabricate(:user, email: "someone_else@bar.com")
       expect { process(:reply_user_not_matching) }.to raise_error(Email::Receiver::ReplyUserNotMatchingError)
     end
 
@@ -280,19 +298,46 @@ describe Email::Receiver do
       expect(post.user).to eq(user)
     end
 
+    it "raises a ReplyNotAllowedError when user without permissions is replying" do
+      Fabricate(:user, email: "bob@bar.com")
+      category.set_permissions(admins: :full)
+      category.save
+      expect { process(:reply_user_not_matching_but_known) }.to raise_error(Email::Receiver::ReplyNotAllowedError)
+    end
+
     it "raises a TopicNotFoundError when the topic was deleted" do
       topic.update_columns(deleted_at: 1.day.ago)
       expect { process(:reply_user_matching) }.to raise_error(Email::Receiver::TopicNotFoundError)
     end
 
-    it "raises a TopicClosedError when the topic was closed" do
-      topic.update_columns(closed: true)
-      expect { process(:reply_user_matching) }.to raise_error(Email::Receiver::TopicClosedError)
-    end
+    context "a closed topic" do
 
-    it "does not raise TopicClosedError when performing a like action" do
-      topic.update_columns(closed: true)
-      expect { process(:like) }.to change(PostAction, :count)
+      before do
+        topic.update_columns(closed: true)
+      end
+
+      it "raises a TopicClosedError when the topic was closed" do
+        expect { process(:reply_user_matching) }.to raise_error(Email::Receiver::TopicClosedError)
+      end
+
+      it "Can watch topics via the watch command" do
+        # TODO support other locales as well, the tricky thing is that these string live in
+        # client.yml not on server yml so it is a bit tricky to find
+
+        topic.update_columns(closed: true)
+        process(:watch)
+        expect(topic_user.notification_level).to eq(NotificationLevels.topic_levels[:watching])
+      end
+
+      it "Can mute topics via the mute command" do
+        process(:mute)
+        expect(topic_user.notification_level).to eq(NotificationLevels.topic_levels[:muted])
+      end
+
+      it "can track a topic via the track command" do
+        process(:track)
+        expect(topic_user.notification_level).to eq(NotificationLevels.topic_levels[:tracking])
+      end
     end
 
     it "raises an InvalidPost when there was an error while creating the post" do
@@ -406,7 +451,7 @@ describe Email::Receiver do
       category.email_in = "category@bar.com"
       category.email_in_allow_strangers = true
       category.set_permissions(Group[:trust_level_4] => :full)
-      category.save
+      category.save!
 
       expect { process(:staged_reply_restricted) }.to change { topic.posts.count }
     end
@@ -508,38 +553,77 @@ describe Email::Receiver do
       SiteSetting.incoming_email_prefer_html = false
 
       expect { process(:no_body_with_image) }.to change { topic.posts.count }
-      expect(topic.posts.last.raw).to match(/<img/)
+
+      post = topic.posts.last
+      upload = post.uploads.first
+
+      expect(post.raw).to include(
+        "![#{upload.original_filename}|#{upload.width}x#{upload.height}](#{upload.short_url})"
+      )
 
       expect { process(:inline_image) }.to change { topic.posts.count }
-      expect(topic.posts.last.raw).to match(/Before\s+<img.+>\s+After/)
+
+      post = topic.posts.last
+      upload = post.uploads.first
+
+      expect(post.raw).to include(
+        "![#{upload.original_filename}|#{upload.width}x#{upload.height}](#{upload.short_url})"
+      )
     end
 
     it "supports attached images in HTML part" do
       SiteSetting.incoming_email_prefer_html = true
 
       expect { process(:inline_image) }.to change { topic.posts.count }
-      expect(topic.posts.last.raw).to match(/\*\*Before\*\*\s+<img.+>\s+\*After\*/)
+
+      post = topic.posts.last
+      upload = post.uploads.last
+
+      expect(post.raw).to eq(<<~MD.chomp)
+      **Before**
+
+      ![#{upload.original_filename}|#{upload.width}x#{upload.height}](#{upload.short_url})
+
+      *After*
+      MD
     end
 
     it "supports attachments" do
       SiteSetting.authorized_extensions = "txt|jpg"
       expect { process(:attached_txt_file) }.to change { topic.posts.count }
       post = topic.posts.last
-      expect(post.raw).to match(/\APlease find some text file attached\.\s+<a class='attachment' href='\/uploads\/default\/original\/.+?txt'>text\.txt<\/a> \(20 Bytes\)\z/)
-      expect(post.uploads.size).to eq 1
+      upload = post.uploads.first
+
+      expect(post.raw).to eq(<<~MD.chomp)
+      Please find some text file attached.
+
+      [#{upload.original_filename}|attachment](#{upload.short_url}) (20 Bytes)
+      MD
 
       expect { process(:apple_mail_attachment) }.to change { topic.posts.count }
       post = topic.posts.last
-      expect(post.raw).to match(/\APicture below\.\s+<img.+?src="\/uploads\/default\/original\/.+?jpeg" class="">\s+Picture above\.\z/)
-      expect(post.uploads.size).to eq 1
+      upload = post.uploads.first
+
+      expect(post.raw).to eq(<<~MD.chomp)
+      Picture below.
+
+      ![#{upload.original_filename}|#{upload.width}x#{upload.height}](#{upload.short_url})
+
+      Picture above.
+      MD
     end
 
     it "supports eml attachments" do
       SiteSetting.authorized_extensions = "eml"
       expect { process(:attached_eml_file) }.to change { topic.posts.count }
       post = topic.posts.last
-      expect(post.raw).to match(/\APlease find the eml file attached\.\s+<a class='attachment' href='\/uploads\/default\/original\/.+?eml'>sample\.eml<\/a> \(193 Bytes\)\z/)
-      expect(post.uploads.size).to eq 1
+      upload = post.uploads.first
+
+      expect(post.raw).to eq(<<~MD.chomp)
+      Please find the eml file attached.
+
+      [#{upload.original_filename}|attachment](#{upload.short_url}) (193 Bytes)
+      MD
     end
 
     context "when attachment is rejected" do
@@ -568,8 +652,11 @@ describe Email::Receiver do
       SiteSetting.authorized_extensions = "pdf"
       expect { process(:attached_pdf_file) }.to change { topic.posts.count }
       post = topic.posts.last
-      expect(post.raw).to match(/\A\s+<a class='attachment' href='\/uploads\/default\/original\/.+?pdf'>discourse\.pdf<\/a> \(64 KB\)\z/)
-      expect(post.uploads.size).to eq 1
+      upload = post.uploads.last
+
+      expect(post.raw).to include(
+        "[#{upload.original_filename}|attachment](#{upload.short_url}) (64 KB)"
+      )
     end
 
     it "supports liking via email" do
@@ -582,6 +669,7 @@ describe Email::Receiver do
     end
 
     it "accepts emails with wrong reply key if the system knows about the forwarded email" do
+      Fabricate(:user, email: "bob@bar.com")
       Fabricate(:incoming_email,
                 raw: <<~RAW,
                   Return-Path: <discourse@bar.com>
@@ -607,22 +695,22 @@ describe Email::Receiver do
       expect { process(:reply_user_not_matching_but_known) }.to change { topic.posts.count }
     end
 
-    it "re-enables user's email_private_messages setting when user replies to a private topic" do
+    it "re-enables user's PM email notifications when user replies to a private topic" do
       topic.update_columns(category_id: nil, archetype: Archetype.private_message)
       topic.allowed_users << user
       topic.save
 
-      user.user_option.update_columns(email_private_messages: false)
+      user.user_option.update_columns(email_messages_level: UserOption.email_level_types[:never])
       expect { process(:reply_user_matching) }.to change { topic.posts.count }
       user.reload
-      expect(user.user_option.email_private_messages).to eq(true)
+      expect(user.user_option.email_messages_level).to eq(UserOption.email_level_types[:always])
     end
 
   end
 
   context "new message to a group" do
 
-    let!(:group) { Fabricate(:group, incoming_email: "team@bar.com|meat@bar.com") }
+    fab!(:group) { Fabricate(:group, incoming_email: "team@bar.com|meat@bar.com") }
 
     it "handles encoded display names" do
       expect { process(:encoded_display_name) }.to change(Topic, :count)
@@ -713,20 +801,28 @@ describe Email::Receiver do
     it "supports any kind of attachments when 'allow_all_attachments_for_group_messages' is enabled" do
       SiteSetting.allow_all_attachments_for_group_messages = true
       expect { process(:attached_rb_file) }.to change(Topic, :count)
-      expect(Post.last.raw).to match(/<a\sclass='attachment'[^>]*>discourse\.rb<\/a>/)
-      expect(Post.last.uploads.length).to eq 1
+
+      post = Topic.last.first_post
+      upload = post.uploads.first
+
+      expect(post.raw).to include(
+        "[#{upload.original_filename}|attachment](#{upload.short_url}) (#{upload.filesize} Bytes)"
+      )
     end
 
-    it "enables user's email_private_messages setting when user emails new topic to group" do
+    it "reenables user's PM email notifications when user emails new topic to group" do
       user = Fabricate(:user, email: "existing@bar.com")
-      user.user_option.update_columns(email_private_messages: false)
+      user.user_option.update_columns(email_messages_level: UserOption.email_level_types[:never])
       expect { process(:group_existing_user) }.to change(Topic, :count)
       user.reload
-      expect(user.user_option.email_private_messages).to eq(true)
+      expect(user.user_option.email_messages_level).to eq(UserOption.email_level_types[:always])
     end
 
     context "with forwarded emails enabled" do
-      before { SiteSetting.enable_forwarded_emails = true }
+      before do
+        Fabricate(:group, incoming_email: "some_group@bar.com")
+        SiteSetting.enable_forwarded_emails = true
+      end
 
       it "handles forwarded emails" do
         expect { process(:forwarded_email_1) }.to change(Topic, :count)
@@ -791,7 +887,7 @@ describe Email::Receiver do
 
   context "new topic in a category" do
 
-    let!(:category) { Fabricate(:category, email_in: "category@bar.com|category@foo.com", email_in_allow_strangers: false) }
+    fab!(:category) { Fabricate(:category, email_in: "category@bar.com|category@foo.com", email_in_allow_strangers: false) }
 
     it "raises a StrangersNotAllowedError when 'email_in_allow_strangers' is disabled" do
       expect { process(:new_user) }.to raise_error(Email::Receiver::StrangersNotAllowedError)
@@ -811,7 +907,7 @@ describe Email::Receiver do
       group.save
 
       category.set_permissions(group => :create_post)
-      category.save
+      category.save!
 
       # raises an InvalidAccess when the user doesn't have the privileges to create a topic
       expect { process(:existing_user) }.to raise_error(Discourse::InvalidAccess)
@@ -884,7 +980,7 @@ describe Email::Receiver do
       Fabricate(:user, email: "tl4@bar.com", trust_level: TrustLevel[4])
 
       category.set_permissions(Group[:trust_level_4] => :full)
-      category.save
+      category.save!
 
       Group.refresh_automatic_group!(:trust_level_4)
 
@@ -918,7 +1014,7 @@ describe Email::Receiver do
 
   context "new topic in a category that allows strangers" do
 
-    let!(:category) { Fabricate(:category, email_in: "category@bar.com|category@foo.com", email_in_allow_strangers: true) }
+    fab!(:category) { Fabricate(:category, email_in: "category@bar.com|category@foo.com", email_in_allow_strangers: true) }
 
     it "lets an email in from a stranger" do
       expect { process(:new_user) }.to change(Topic, :count)
@@ -996,8 +1092,24 @@ describe Email::Receiver do
       SiteSetting.enable_staged_users = true
     end
 
-    shared_examples "no staged users" do |email_name, expected_exception|
+    shared_examples "does not create staged users" do |email_name, expected_exception|
       it "does not create staged users" do
+        staged_user_count = User.where(staged: true).count
+        User.expects(:create).never
+        User.expects(:create!).never
+
+        if expected_exception
+          expect { process(email_name) }.to raise_error(expected_exception)
+        else
+          process(email_name)
+        end
+
+        expect(User.where(staged: true).count).to eq(staged_user_count)
+      end
+    end
+
+    shared_examples "cleans up staged users" do |email_name, expected_exception|
+      it "cleans up staged users" do
         staged_user_count = User.where(staged: true).count
         expect { process(email_name) }.to raise_error(expected_exception)
         expect(User.where(staged: true).count).to eq(staged_user_count)
@@ -1009,39 +1121,41 @@ describe Email::Receiver do
         ScreenedEmail.expects(:should_block?).with("screened@mail.com").returns(true)
       end
 
-      include_examples "no staged users", :screened_email, Email::Receiver::ScreenedEmailError
+      include_examples "does not create staged users", :screened_email, Email::Receiver::ScreenedEmailError
     end
 
     context "when the mail is auto generated" do
-      include_examples "no staged users", :auto_generated_header, Email::Receiver::AutoGeneratedEmailError
+      include_examples "does not create staged users", :auto_generated_header, Email::Receiver::AutoGeneratedEmailError
     end
 
     context "when email is a bounced email" do
-      include_examples "no staged users", :bounced_email, Email::Receiver::BouncedEmailError
+      include_examples "does not create staged users", :bounced_email, Email::Receiver::BouncedEmailError
     end
 
     context "when the body is blank" do
-      include_examples "no staged users", :no_body, Email::Receiver::NoBodyDetectedError
+      include_examples "does not create staged users", :no_body, Email::Receiver::NoBodyDetectedError
     end
 
     context "when unsubscribe via email is not allowed" do
-      include_examples "no staged users", :unsubscribe_new_user, Email::Receiver::UnsubscribeNotAllowed
+      include_examples "does not create staged users", :unsubscribe_new_user, Email::Receiver::UnsubscribeNotAllowed
     end
 
     context "when From email address is not on whitelist" do
       before do
         SiteSetting.email_domains_whitelist = "example.com|bar.com"
+        Fabricate(:group, incoming_email: "some_group@bar.com")
       end
 
-      include_examples "no staged users", :blacklist_whitelist_email, Email::Receiver::EmailNotAllowed
+      include_examples "does not create staged users", :blacklist_whitelist_email, Email::Receiver::EmailNotAllowed
     end
 
     context "when From email address is on blacklist" do
       before do
         SiteSetting.email_domains_blacklist = "email.com|mail.com"
+        Fabricate(:group, incoming_email: "some_group@bar.com")
       end
 
-      include_examples "no staged users", :blacklist_whitelist_email, Email::Receiver::EmailNotAllowed
+      include_examples "does not create staged users", :blacklist_whitelist_email, Email::Receiver::EmailNotAllowed
     end
 
     context "blacklist and whitelist for To and Cc" do
@@ -1069,41 +1183,64 @@ describe Email::Receiver do
     end
 
     context "when destinations aren't matching any of the incoming emails" do
-      include_examples "no staged users", :bad_destinations, Email::Receiver::BadDestinationAddress
+      include_examples "does not create staged users", :bad_destinations, Email::Receiver::BadDestinationAddress
     end
 
     context "when email is sent to category" do
       context "when email is sent by a new user and category does not allow strangers" do
-        let!(:category) { Fabricate(:category, email_in: "category@foo.com", email_in_allow_strangers: false) }
+        fab!(:category) { Fabricate(:category, email_in: "category@foo.com", email_in_allow_strangers: false) }
 
-        include_examples "no staged users", :new_user, Email::Receiver::StrangersNotAllowedError
+        include_examples "does not create staged users", :new_user, Email::Receiver::StrangersNotAllowedError
       end
 
       context "when email has no date" do
-        let!(:category) { Fabricate(:category, email_in: "category@foo.com", email_in_allow_strangers: true) }
+        fab!(:category) { Fabricate(:category, email_in: "category@foo.com", email_in_allow_strangers: true) }
 
-        include_examples "no staged users", :no_date, Email::Receiver::InvalidPost
+        it "includes the translated string in the error" do
+          expect { process(:no_date) }.to raise_error(Email::Receiver::InvalidPost).with_message(I18n.t("system_messages.email_reject_invalid_post_specified.date_invalid"))
+        end
+
+        include_examples "does not create staged users", :no_date, Email::Receiver::InvalidPost
       end
     end
 
     context "email is a reply" do
       let(:reply_key) { "4f97315cc828096c9cb34c6f1a0d6fe8" }
-      let(:category) { Fabricate(:category) }
-      let(:user) { Fabricate(:user, email: "discourse@bar.com") }
-      let(:topic) { create_topic(category: category, user: user) }
-      let(:post) { create_post(topic: topic, user: user) }
+      fab!(:category) { Fabricate(:category) }
+      fab!(:user) { Fabricate(:user, email: "discourse@bar.com") }
+      fab!(:user2) { Fabricate(:user, email: "someone_else@bar.com") }
+      fab!(:topic) { create_topic(category: category, user: user) }
+      fab!(:post) { create_post(topic: topic, user: user) }
 
       let!(:post_reply_key) do
         Fabricate(:post_reply_key, reply_key: reply_key, user: user, post: post)
       end
 
       context "when the email address isn't matching the one we sent the notification to" do
-        include_examples "no staged users", :reply_user_not_matching, Email::Receiver::ReplyUserNotMatchingError
+        include_examples "does not create staged users", :reply_user_not_matching, Email::Receiver::ReplyUserNotMatchingError
+      end
+
+      context "when forwarded emails are enabled" do
+        before do
+          SiteSetting.enable_forwarded_emails = true
+        end
+
+        context "when a reply contains a forwareded email" do
+          include_examples "does not create staged users", :reply_and_forwarded
+        end
+
+        context "forwarded email to category that doesn't allow strangers" do
+          before do
+            category.update!(email_in: "team@bar.com", email_in_allow_strangers: false)
+          end
+
+          include_examples "cleans up staged users", :forwarded_email_1, Email::Receiver::StrangersNotAllowedError
+        end
       end
     end
 
     context "replying without key is allowed" do
-      let!(:group) { Fabricate(:group, incoming_email: "team@bar.com") }
+      fab!(:group) { Fabricate(:group, incoming_email: "team@bar.com") }
       let!(:topic) do
         SiteSetting.find_related_post_with_key = false
         process(:email_reply_1)
@@ -1115,7 +1252,7 @@ describe Email::Receiver do
           topic.update_columns(deleted_at: 1.day.ago)
         end
 
-        include_examples "no staged users", :email_reply_staged, Email::Receiver::TopicNotFoundError
+        include_examples "cleans up staged users", :email_reply_staged, Email::Receiver::TopicNotFoundError
       end
 
       context "when the topic was closed" do
@@ -1123,7 +1260,7 @@ describe Email::Receiver do
           topic.update_columns(closed: true)
         end
 
-        include_examples "no staged users", :email_reply_staged, Email::Receiver::TopicClosedError
+        include_examples "cleans up staged users", :email_reply_staged, Email::Receiver::TopicClosedError
       end
 
       context "when they aren't allowed to like a post" do
@@ -1131,7 +1268,7 @@ describe Email::Receiver do
           topic.update_columns(archived: true)
         end
 
-        include_examples "no staged users", :email_reply_like, Email::Receiver::InvalidPostAction
+        include_examples "cleans up staged users", :email_reply_like, Email::Receiver::InvalidPostAction
       end
     end
 
@@ -1143,7 +1280,7 @@ describe Email::Receiver do
   end
 
   context "mailing list mirror" do
-    let!(:category) { Fabricate(:mailinglist_mirror_category) }
+    fab!(:category) { Fabricate(:mailinglist_mirror_category) }
 
     before do
       SiteSetting.block_auto_generated_emails = true
@@ -1174,7 +1311,7 @@ describe Email::Receiver do
     context "read-only category" do
       before do
         category.set_permissions(everyone: :readonly)
-        category.save
+        category.save!
 
         Fabricate(:user, email: "alice@foo.com")
         Fabricate(:user, email: "bob@bar.com")
@@ -1206,5 +1343,116 @@ describe Email::Receiver do
     email = IncomingEmail.last
     expect(email.to_addresses).to eq("foo@bar.com")
     expect(email.cc_addresses).to eq("bob@example.com;carol@example.com")
+  end
+
+  context "#select_body" do
+
+    let(:email) {
+      <<~EOF
+      MIME-Version: 1.0
+      Date: Tue, 01 Jan 2019 00:00:00 +0300
+      Subject: An email with whitespaces
+      From: Foo <foo@discourse.org>
+      To: bar@discourse.org
+      Content-Type: text/plain; charset="UTF-8"
+
+          This is a line that will be stripped
+          This is another line that will be stripped
+
+      This is a line that will not be touched.
+      This is another line that will not be touched.
+
+      * list
+
+        * sub-list
+
+      - list
+
+        - sub-list
+
+      + list
+
+        + sub-list
+
+      [code]
+        1.upto(10).each do |i|
+          puts i
+        end
+
+      ```
+        # comment
+      [/code]
+
+          This is going to be stripped too.
+
+      ```
+        1.upto(10).each do |i|
+          puts i
+        end
+
+      [/code]
+        # comment
+      ```
+
+              This is going to be stripped too.
+
+      Bye!
+      EOF
+    }
+
+    let(:stripped_text) {
+      <<~EOF
+      This is a line that will be stripped
+      This is another line that will be stripped
+
+      This is a line that will not be touched.
+      This is another line that will not be touched.
+
+      * list
+
+        * sub-list
+
+      - list
+
+        - sub-list
+
+      + list
+
+        + sub-list
+
+      [code]
+        1.upto(10).each do |i|
+          puts i
+        end
+
+      ```
+        # comment
+      [/code]
+
+      This is going to be stripped too.
+
+      ```
+        1.upto(10).each do |i|
+          puts i
+        end
+
+      [/code]
+        # comment
+      ```
+
+      This is going to be stripped too.
+
+      Bye!
+      EOF
+    }
+
+    it "strips lines if strip_incoming_email_lines is enabled" do
+      SiteSetting.strip_incoming_email_lines = true
+
+      receiver = Email::Receiver.new(email)
+      text, elided, format = receiver.select_body
+      expect(text).to eq(stripped_text)
+    end
+
   end
 end

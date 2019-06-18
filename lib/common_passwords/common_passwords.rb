@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # CommonPasswords will check a given password against a list of the most commonly used passwords.
 # The list comes from https://github.com/danielmiessler/SecLists/tree/master/Passwords
 # specifically the list of 10 million passwords, top 100k, filtered by length

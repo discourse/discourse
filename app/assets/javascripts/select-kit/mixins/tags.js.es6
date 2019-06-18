@@ -6,13 +6,11 @@ export default Ember.Mixin.create({
   willDestroyElement() {
     this._super(...arguments);
 
-    const searchDebounce = this.get("searchDebounce");
+    const searchDebounce = this.searchDebounce;
     if (searchDebounce) run.cancel(searchDebounce);
   },
 
   searchTags(url, data, callback) {
-    const self = this;
-
     this.startLoading();
 
     return ajax(Discourse.getURL(url), {
@@ -22,19 +20,15 @@ export default Ember.Mixin.create({
       data
     })
       .then(json => {
-        self.set("asyncContent", callback(self, json));
-        self.autoHighlight();
+        this.set("asyncContent", callback(this, json));
+        this.autoHighlight();
       })
-      .catch(error => {
-        popupAjaxError(error);
-      })
-      .finally(() => {
-        self.stopLoading();
-      });
+      .catch(error => popupAjaxError(error))
+      .finally(() => this.stopLoading());
   },
 
   validateCreate(term) {
-    if (this.get("hasReachedMaximum") || !this.site.get("can_create_tag")) {
+    if (this.hasReachedMaximum || !this.site.get("can_create_tag")) {
       return false;
     }
 
@@ -44,7 +38,7 @@ export default Ember.Mixin.create({
       .trim()
       .toLowerCase();
 
-    if (!term.length || this.get("termMatchesForbidden")) {
+    if (!term.length || this.termMatchesForbidden) {
       return false;
     }
 
@@ -56,13 +50,14 @@ export default Ember.Mixin.create({
       return string === undefined ? undefined : string.toLowerCase();
     };
 
-    const inCollection = this.get("collectionComputedContent")
+    const inCollection = this.collectionComputedContent
       .map(c => toLowerCaseOrUndefined(get(c, "id")))
       .includes(term);
 
-    const inSelection = this.get("selection")
+    const inSelection = this.selection
       .map(s => toLowerCaseOrUndefined(get(s, "value")))
       .includes(term);
+
     if (inCollection || inSelection) {
       return false;
     }
@@ -72,7 +67,7 @@ export default Ember.Mixin.create({
 
   createContentFromInput(input) {
     // See lib/discourse_tagging#clean_tag.
-    var content = input
+    let content = input
       .trim()
       .replace(/\s+/g, "-")
       .replace(/[\/\?#\[\]@!\$&'\(\)\*\+,;=\.%\\`^\s|\{\}"<>]+/g, "")

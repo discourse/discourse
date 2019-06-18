@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class FixupBadgeIds < ActiveRecord::Migration[4.2]
   def change
     # badge ids were below 100, for user badges, this really messed stuff up

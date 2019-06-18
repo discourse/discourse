@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ChangeUserEmailsPrimaryIndex < ActiveRecord::Migration[5.1]
   def up
     remove_index :user_emails, [:user_id, :primary]

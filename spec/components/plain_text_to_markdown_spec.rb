@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 require 'plain_text_to_markdown'
 
@@ -158,6 +160,9 @@ describe PlainTextToMarkdown do
 
   context "links" do
     it "removes duplicate links" do
+      expect(to_markdown("foo https://www.example.com/foo.html?a=1 <https://www.example.com/foo.html?a=1> bar"))
+        .to eq("foo https://www.example.com/foo.html?a=1 bar")
+
       expect(to_markdown("foo https://www.example.com/foo.html <https://www.example.com/foo.html> bar"))
         .to eq("foo https://www.example.com/foo.html bar")
 
@@ -171,6 +176,14 @@ describe PlainTextToMarkdown do
     it "does not removes duplicate links when there is text between the links" do
       expect(to_markdown("foo https://www.example.com/foo.html bar https://www.example.com/foo.html baz"))
         .to eq("foo https://www.example.com/foo.html bar https://www.example.com/foo.html baz")
+    end
+
+    it "does not explode with weird links" do
+      expect {
+        Timeout::timeout(0.25) {
+          to_markdown("https://www.discourse.org/?boom=#{"." * 20}")
+        }
+      }.not_to raise_error
     end
   end
 

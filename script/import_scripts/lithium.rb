@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Notes:
 #
 # Written by Sam
@@ -291,7 +293,7 @@ class ImportScripts::Lithium < ImportScripts::Base
 
     return if !upload.persisted?
 
-    imported_user.user_profile.update(profile_background: upload.url)
+    imported_user.user_profile.upload_profile_background(upload)
   ensure
     file.close rescue nil
     file.unlink rescue nil
@@ -1019,7 +1021,7 @@ SQL
   end
 
   def html_for_attachments(user_id, files)
-    html = ""
+    html = +""
 
     files.each do |file|
       upload, filename = find_upload(user_id, file["attachment_id"], file["file_name"])

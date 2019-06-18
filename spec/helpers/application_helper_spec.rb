@@ -1,3 +1,6 @@
+# coding: utf-8
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 describe ApplicationHelper do
@@ -5,7 +8,6 @@ describe ApplicationHelper do
   describe "preload_script" do
     it "provides brotli links to brotli cdn" do
       set_cdn_url "https://awesome.com"
-      set_env "COMPRESS_BROTLI", "1"
 
       helper.request.env["HTTP_ACCEPT_ENCODING"] = 'br'
       link = helper.preload_script('application')
@@ -20,7 +22,6 @@ describe ApplicationHelper do
         global_setting :s3_access_key_id, '123'
         global_setting :s3_secret_access_key, '123'
         global_setting :s3_cdn_url, 'https://s3cdn.com'
-        set_env "COMPRESS_BROTLI", "1"
       end
 
       after do
@@ -30,6 +31,13 @@ describe ApplicationHelper do
       it "deals correctly with subfolder" do
         ActionController::Base.config.relative_url_root = "/community"
         expect(helper.preload_script("application")).to include('https://s3cdn.com/assets/application.js')
+      end
+
+      it "replaces cdn URLs with s3 cdn subfolder paths" do
+        global_setting :s3_cdn_url, 'https://s3cdn.com/s3_subpath'
+        set_cdn_url "https://awesome.com"
+        ActionController::Base.config.relative_url_root = "/community"
+        expect(helper.preload_script("application")).to include('https://s3cdn.com/s3_subpath/assets/application.js')
       end
 
       it "returns magic brotli mangling for brotli requests" do
@@ -78,6 +86,24 @@ describe ApplicationHelper do
       it "is false if mobile_view is '0' in the session" do
         session[:mobile_view] = '0'
         expect(helper.mobile_view?).to eq(false)
+      end
+
+      context "mobile_view session is cleared" do
+        before do
+          params[:mobile_view] = 'auto'
+        end
+
+        it "is false if user agent is not mobile" do
+          session[:mobile_view] = '1'
+          controller.request.stubs(:user_agent).returns('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/49.0.2623.87 Safari/537.36')
+          expect(helper.mobile_view?).to be_falsey
+        end
+
+        it "is true for iPhone" do
+          session[:mobile_view] = '0'
+          controller.request.stubs(:user_agent).returns('Mozilla/5.0 (iPhone; CPU iPhone OS 9_2_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13D15 Safari/601.1')
+          expect(helper.mobile_view?).to eq(true)
+        end
       end
 
       context "mobile_view is not set" do
@@ -148,7 +174,7 @@ describe ApplicationHelper do
   end
 
   describe '#html_classes' do
-    let(:user) { Fabricate(:user) }
+    fab!(:user) { Fabricate(:user) }
 
     it "includes 'rtl' when the I18n.locale is rtl" do
       I18n.stubs(:locale).returns(:he)
@@ -233,29 +259,53 @@ describe ApplicationHelper do
   describe 'crawlable_meta_data' do
     context "opengraph image" do
       it 'returns the correct image' do
-        SiteSetting.default_opengraph_image_url = '/images/og-image.png'
-        SiteSetting.twitter_summary_large_image_url = '/images/twitter.png'
-        SiteSetting.large_icon_url = '/images/large_icon.png'
-        SiteSetting.apple_touch_icon_url = '/images/default-apple-touch-icon.png'
-        SiteSetting.logo_url = '/images/d-logo-sketch.png'
+        SiteSetting.opengraph_image = Fabricate(:upload,
+          url: '/images/og-image.png'
+        )
 
-        expect(helper.crawlable_meta_data(image: "some-image.png")).to include("some-image.png")
-        expect(helper.crawlable_meta_data).to include("/images/og-image.png")
+        SiteSetting.twitter_summary_large_image = Fabricate(:upload,
+          url: '/images/twitter.png'
+        )
 
-        SiteSetting.default_opengraph_image_url = ''
-        expect(helper.crawlable_meta_data).to include("/images/twitter.png")
+        SiteSetting.large_icon = Fabricate(:upload,
+          url: '/images/large_icon.png'
+        )
 
-        SiteSetting.twitter_summary_large_image_url = ''
-        expect(helper.crawlable_meta_data).to include("/images/large_icon.png")
+        SiteSetting.apple_touch_icon = Fabricate(:upload,
+          url: '/images/default-apple-touch-icon.png'
+        )
 
-        SiteSetting.large_icon_url = ''
-        expect(helper.crawlable_meta_data).to include("/images/default-apple-touch-icon.png")
+        SiteSetting.logo = Fabricate(:upload, url: '/images/d-logo-sketch.png')
 
-        SiteSetting.apple_touch_icon_url = ''
-        expect(helper.crawlable_meta_data).to include("/images/d-logo-sketch.png")
+        expect(
+          helper.crawlable_meta_data(image: "some-image.png")
+        ).to include("some-image.png")
 
-        SiteSetting.logo_url = ''
-        expect(helper.crawlable_meta_data).to_not include("/images")
+        expect(helper.crawlable_meta_data).to include(
+          SiteSetting.site_opengraph_image_url
+        )
+
+        SiteSetting.opengraph_image = nil
+
+        expect(helper.crawlable_meta_data).to include(
+          SiteSetting.site_twitter_summary_large_image_url
+        )
+
+        SiteSetting.twitter_summary_large_image = nil
+
+        expect(helper.crawlable_meta_data).to include(
+          SiteSetting.site_large_icon_url
+        )
+
+        SiteSetting.large_icon = nil
+        SiteSetting.logo_small = nil
+
+        expect(helper.crawlable_meta_data).to include(SiteSetting.site_logo_url)
+
+        SiteSetting.logo = nil
+        SiteSetting.logo_url = nil
+
+        expect(helper.crawlable_meta_data).to include(Upload.find(SiteIconManager::SKETCH_LOGO_ID).url)
       end
     end
   end

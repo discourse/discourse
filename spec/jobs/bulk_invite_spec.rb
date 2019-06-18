@@ -1,80 +1,94 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 describe Jobs::BulkInvite do
+  describe '#execute' do
+    fab!(:user) { Fabricate(:user) }
+    fab!(:admin) { Fabricate(:admin) }
+    fab!(:group1) { Fabricate(:group, name: 'group1') }
+    fab!(:group2) { Fabricate(:group, name: 'group2') }
+    fab!(:topic) { Fabricate(:topic, id: 999) }
+    let(:email) { "test@discourse.org" }
+    let(:invites) { [{ email: 'test2@discourse.org' }, { email: 'test@discourse.org', groups: 'GROUP1;group2', topic_id: 999 }] }
 
-  context '.execute' do
-
-    it 'raises an error when the filename is missing' do
-      user = Fabricate(:user)
-      expect { Jobs::BulkInvite.new.execute(current_user_id: user.id) }.to raise_error(Discourse::InvalidParameters)
+    it 'raises an error when the invites array is missing' do
+      expect { Jobs::BulkInvite.new.execute(current_user_id: user.id) }
+        .to raise_error(Discourse::InvalidParameters, /invites/)
     end
 
-    context '.read_csv_file' do
-      let(:user) { Fabricate(:user) }
-      let(:bulk_invite) { Jobs::BulkInvite.new }
-      let(:csv_file) { "#{Rails.root}/spec/fixtures/csv/discourse.csv" }
-
-      it 'reads csv file' do
-        bulk_invite.current_user = user
-        bulk_invite.read_csv_file(csv_file)
-        expect(Invite.where(email: "robin@outlook.com").exists?).to eq(true)
-        expect(Invite.where(email: "jeff@gmail.com").exists?).to eq(true) # handles BOM
-      end
+    it 'raises an error when current_user_id is not valid' do
+      expect { Jobs::BulkInvite.new.execute(invites: invites) }
+        .to raise_error(Discourse::InvalidParameters, /current_user_id/)
     end
 
-    context '.send_invite' do
-      let(:bulk_invite) { Jobs::BulkInvite.new }
-      let(:user) { Fabricate(:user) }
-      let(:group) { Fabricate(:group) }
-      let(:topic) { Fabricate(:topic) }
-      let(:email) { "evil@trout.com" }
-      let(:csv_info) { [] }
+    it 'creates the right invites' do
+      described_class.new.execute(
+        current_user_id: admin.id,
+        invites: invites
+      )
 
-      it 'creates an invite' do
-        csv_info[0] = email
+      invite = Invite.last
 
-        bulk_invite.current_user = user
-        bulk_invite.send_invite(csv_info, 1)
-        expect(Invite.where(email: email).exists?).to eq(true)
-      end
+      expect(invite.email).to eq(email)
+      expect(Invite.exists?(email: "test2@discourse.org")).to eq(true)
 
-      it 'creates an invite with group' do
-        csv_info[0] = email
-        csv_info[1] = group.name
+      expect(invite.invited_groups.pluck(:group_id)).to contain_exactly(
+        group1.id, group2.id
+      )
 
-        bulk_invite.current_user = user
-        bulk_invite.send_invite(csv_info, 1)
-        invite = Invite.where(email: email).first
-        expect(invite).to be_present
-        expect(InvitedGroup.where(invite_id: invite.id, group_id: group.id).exists?).to eq(true)
-      end
-
-      it 'creates an invite with topic' do
-        csv_info[0] = email
-        csv_info[2] = topic
-
-        bulk_invite.current_user = user
-        bulk_invite.send_invite(csv_info, 1)
-        invite = Invite.where(email: email).first
-        expect(invite).to be_present
-        expect(TopicInvite.where(invite_id: invite.id, topic_id: topic.id).exists?).to eq(true)
-      end
-
-      it 'creates an invite with group and topic' do
-        csv_info[0] = email
-        csv_info[1] = group.name
-        csv_info[2] = topic
-
-        bulk_invite.current_user = user
-        bulk_invite.send_invite(csv_info, 1)
-        invite = Invite.where(email: email).first
-        expect(invite).to be_present
-        expect(InvitedGroup.where(invite_id: invite.id, group_id: group.id).exists?).to eq(true)
-        expect(TopicInvite.where(invite_id: invite.id, topic_id: topic.id).exists?).to eq(true)
-      end
-
+      expect(invite.topic_invites.pluck(:topic_id)).to contain_exactly(topic.id)
     end
 
+    it 'does not create invited groups for automatic groups' do
+      group2.update!(automatic: true)
+
+      described_class.new.execute(
+        current_user_id: admin.id,
+        invites: invites
+      )
+
+      invite = Invite.last
+
+      expect(invite.email).to eq(email)
+
+      expect(invite.invited_groups.pluck(:group_id)).to contain_exactly(
+        group1.id
+      )
+    end
+
+    it 'does not create invited groups record if the user can not manage the group' do
+      group1.add_owner(user)
+
+      described_class.new.execute(
+        current_user_id: user.id,
+        invites: invites
+      )
+
+      invite = Invite.last
+
+      expect(invite.email).to eq(email)
+
+      expect(invite.invited_groups.pluck(:group_id)).to contain_exactly(
+        group1.id
+      )
+    end
+
+    it 'adds existing users to valid groups' do
+      existing_user = Fabricate(:user, email: "test@discourse.org")
+
+      group2.update!(automatic: true)
+
+      expect do
+        described_class.new.execute(
+          current_user_id: admin.id,
+          invites: invites
+        )
+      end.to change { Invite.count }.by(1)
+
+      expect(Invite.exists?(email: "test2@discourse.org")).to eq(true)
+      expect(existing_user.reload.groups).to eq([group1])
+    end
   end
 
 end

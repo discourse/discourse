@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "aws-sdk-s3"
 
 class S3Helper
@@ -5,6 +7,8 @@ class S3Helper
   class SettingMissing < StandardError; end
 
   attr_reader :s3_bucket_name, :s3_bucket_folder_path
+
+  DOWNLOAD_URL_EXPIRES_AFTER_SECONDS ||= 15
 
   def initialize(s3_bucket_name, tombstone_prefix = '', options = {})
     @s3_client = options.delete(:client)
@@ -43,10 +47,12 @@ class S3Helper
       end
     end
 
-    return path, etag
+    return path, etag.gsub('"', '')
   end
 
   def remove(s3_filename, copy_to_tombstone = false)
+    s3_filename = s3_filename.dup
+
     # copy the file in tombstone
     if copy_to_tombstone && @tombstone_prefix.present?
       self.copy(
@@ -192,8 +198,7 @@ class S3Helper
 
   def self.s3_options(obj)
     opts = {
-      region: obj.s3_region,
-      force_path_style: SiteSetting.s3_force_path_style
+      region: obj.s3_region
     }
 
     opts[:endpoint] = SiteSetting.s3_endpoint if SiteSetting.s3_endpoint.present?
@@ -204,6 +209,20 @@ class S3Helper
     end
 
     opts
+  end
+
+  def download_file(filename, destination_path, failure_message = nil)
+    unless object(filename).download_file(destination_path)
+      raise failure_message&.to_s || "Failed to download file"
+    end
+  end
+
+  def s3_client
+    @s3_client ||= Aws::S3::Client.new(@s3_options)
+  end
+
+  def s3_inventory_path(path = 'inventory')
+    get_path_for_s3_upload(path)
   end
 
   private
@@ -221,16 +240,12 @@ class S3Helper
   end
 
   def get_path_for_s3_upload(path)
-    path = File.join(@s3_bucket_folder_path, path) if @s3_bucket_folder_path
+    path = File.join(@s3_bucket_folder_path, path) if @s3_bucket_folder_path && path !~ /^#{@s3_bucket_folder_path}\//
     path
   end
 
   def multisite_upload_path
     File.join("uploads", RailsMultisite::ConnectionManagement.current_db, "/")
-  end
-
-  def s3_client
-    @s3_client ||= Aws::S3::Client.new(@s3_options)
   end
 
   def s3_resource

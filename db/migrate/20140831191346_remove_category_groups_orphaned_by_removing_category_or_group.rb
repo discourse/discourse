@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class RemoveCategoryGroupsOrphanedByRemovingCategoryOrGroup < ActiveRecord::Migration[4.2]
   def up
     execute "DELETE FROM category_groups

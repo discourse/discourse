@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class IncomingReferer < ActiveRecord::Base
   belongs_to :incoming_domain
 

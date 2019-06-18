@@ -1,3 +1,4 @@
+import selectKit from "helpers/select-kit-helper";
 import { acceptance } from "helpers/qunit-helpers";
 import User from "discourse/models/user";
 
@@ -83,7 +84,7 @@ QUnit.test("update some fields", async assert => {
   await savePreferences();
 
   click(".preferences-nav .nav-categories a");
-  fillIn(".category-controls .category-selector", "faq");
+  fillIn(".tracking-controls .category-selector", "faq");
   await savePreferences();
 
   assert.ok(
@@ -114,12 +115,12 @@ QUnit.test("font size change", async assert => {
   await visit("/u/eviltrout/preferences/interface");
 
   // Live changes without reload
-  await expandSelectKit(".text-size .combobox");
-  await selectKitSelectRowByValue("larger", ".text-size .combobox");
+  await selectKit(".text-size .combobox").expand();
+  await selectKit(".text-size .combobox").selectRowByValue("larger");
   assert.ok(document.documentElement.classList.contains("text-size-larger"));
 
-  await expandSelectKit(".text-size .combobox");
-  await selectKitSelectRowByValue("largest", ".text-size .combobox");
+  await selectKit(".text-size .combobox").expand();
+  await selectKit(".text-size .combobox").selectRowByValue("largest");
   assert.ok(document.documentElement.classList.contains("text-size-largest"));
 
   assert.equal($.cookie("text_size"), null, "cookie is not set");
@@ -129,19 +130,19 @@ QUnit.test("font size change", async assert => {
 
   assert.equal($.cookie("text_size"), null, "cookie is not set");
 
-  await expandSelectKit(".text-size .combobox");
-  await selectKitSelectRowByValue("larger", ".text-size .combobox");
+  await selectKit(".text-size .combobox").expand();
+  await selectKit(".text-size .combobox").selectRowByValue("larger");
   await click(".text-size input[type=checkbox]");
 
   await savePreferences();
 
   assert.equal($.cookie("text_size"), "larger|1", "cookie is set");
   await click(".text-size input[type=checkbox]");
-  await expandSelectKit(".text-size .combobox");
-  await selectKitSelectRowByValue("largest", ".text-size .combobox");
+  await selectKit(".text-size .combobox").expand();
+  await selectKit(".text-size .combobox").selectRowByValue("largest");
 
   await savePreferences();
-  assert.equal($.cookie("text_size"), "larger|1", "cookie remains the same");
+  assert.equal($.cookie("text_size"), null, "cookie is removed");
 
   $.removeCookie("text_size");
 });
@@ -298,6 +299,14 @@ QUnit.test("visit my preferences", async assert => {
 
 QUnit.test("recently connected devices", async assert => {
   await visit("/u/eviltrout/preferences");
+
+  assert.equal(
+    find(".auth-tokens > .auth-token:first .auth-token-device")
+      .text()
+      .trim(),
+    "Linux Computer",
+    "it should display active token first"
+  );
 
   assert.equal(
     find(".pref-auth-tokens > a:first")

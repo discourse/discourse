@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # This is meant to be used by plugins to trigger and listen to events
 # So we can execute code when things happen.
 class DiscourseEvent
@@ -14,6 +16,9 @@ class DiscourseEvent
   end
 
   def self.on(event_name, &block)
+    if event_name == :site_setting_saved
+      Discourse.deprecate("The :site_setting_saved event is deprecated. Please use :site_setting_changed instead", since: "2.3.0beta8", drop_from: "2.4")
+    end
     events[event_name] << block
   end
 

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module DiscourseNarrativeBot
   class AdvancedUserNarrative < Base
     I18N_KEY = "discourse_narrative_bot.advanced_user_narrative".freeze
@@ -149,14 +151,8 @@ module DiscourseNarrativeBot
       if SiteSetting.delete_removed_posts_after < 1
         opts[:delete_removed_posts_after] = 1
 
-        # Flag it and defer so the stub doesn't get destroyed
-        flag = PostAction.create!(
-          user: self.discobot_user,
-          post: post, post_action_type_id:
-          PostActionType.types[:notify_moderators]
-        )
-
-        PostAction.defer_flags!(post, self.discobot_user)
+        result = PostActionCreator.notify_moderators(self.discobot_user, post)
+        result.reviewable.perform(self.discobot_user, :ignore)
       end
 
       PostDestroyer.new(@user, post, opts).destroy
@@ -255,7 +251,7 @@ module DiscourseNarrativeBot
       fake_delay
 
       raw = <<~RAW
-      #{I18n.t("#{I18N_KEY}.recover.reply", i18n_post_args)}
+      #{I18n.t("#{I18N_KEY}.recover.reply", i18n_post_args(deletion_after: SiteSetting.delete_removed_posts_after))}
 
       #{instance_eval(&@next_instructions)}
       RAW

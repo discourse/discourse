@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 Fabricator(:web_hook) do
   payload_url 'https://meta.discourse.org/webhook_listener'
   content_type WebHook.content_types['application/json']
@@ -82,5 +84,13 @@ Fabricator(:queued_post_web_hook, from: :web_hook) do
 
   after_build do |web_hook, transients|
     web_hook.web_hook_event_types = [transients[:queued_post_hook]]
+  end
+end
+
+Fabricator(:reviewable_web_hook, from: :web_hook) do
+  transient reviewable_hook: WebHookEventType.find_by(name: 'reviewable')
+
+  after_build do |web_hook, transients|
+    web_hook.web_hook_event_types = [transients[:reviewable_hook]]
   end
 end

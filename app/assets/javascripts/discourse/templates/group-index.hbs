@@ -1,6 +1,9 @@
+<section class="user-content">
+
 <div class="group-members-actions">
     {{text-field value=filterInput
         placeholderKey=filterPlaceholder
+        autocomplete="discourse"
         class="group-username-filter no-blur"}}
 
   <div class="group-members-manage">
@@ -61,8 +64,10 @@
                     removeMember=(action "removeMember")
                     makeOwner=(action "makeOwner")
                     removeOwner=(action "removeOwner")
-                    member=m}}
+                    member=m
+                    group=model}}
               {{/if}}
+              {{!-- group parameter is used by plugins --}}
             </td>
           </tr>
         {{/each}}
@@ -76,3 +81,4 @@
 
   <div>{{i18n "groups.empty.members"}}</div>
 {{/if}}
+</section>

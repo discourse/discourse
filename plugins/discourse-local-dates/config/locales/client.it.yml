@@ -8,10 +8,12 @@
 it:
   js:
     discourse_local_dates:
-      title: Inserisci la data
+      relative_dates:
+        today: Oggi %{time}
+        tomorrow: Domani %{time}
+        yesterday: Ieri %{time}
+      title: Inserisci data / ora
       create:
-        modal_title: Inscisci la data
-        modal_subtitle: "Convertiremo automaticamente la data e l'ora al fuso orario locale del visualizzatore."
         form:
           insert: Inserisci
           advanced_mode: Modalità avanzata
@@ -26,3 +28,14 @@ it:
           date_title: Data
           time_title: Ora
           format_title: Formato data
+          timezone: Fuso orario
+          until: Fino a...
+          recurring:
+            every_day: "Ogni giorno"
+            every_week: "Ogni settimana"
+            every_two_weeks: "Ogni due settimane"
+            every_month: "Ogni mese"
+            every_two_months: "Ogni due mesi"
+            every_three_months: "Ogni tre mesi"
+            every_six_months: "Ogni sei mesi"
+            every_year: "Ogni anno"

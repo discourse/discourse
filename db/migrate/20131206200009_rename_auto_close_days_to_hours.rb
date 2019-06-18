@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class RenameAutoCloseDaysToHours < ActiveRecord::Migration[4.2]
   def up
     rename_column :categories, :auto_close_days, :auto_close_hours

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class IncomingEmail < ActiveRecord::Base
   belongs_to :user
   belongs_to :topic
@@ -52,4 +54,5 @@ end
 #  index_incoming_emails_on_error       (error)
 #  index_incoming_emails_on_message_id  (message_id)
 #  index_incoming_emails_on_post_id     (post_id)
+#  index_incoming_emails_on_user_id     (user_id) WHERE (user_id IS NOT NULL)
 #

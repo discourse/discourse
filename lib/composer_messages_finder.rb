@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ComposerMessagesFinder
 
   def initialize(user, details)
@@ -14,7 +16,7 @@ class ComposerMessagesFinder
     return if editing_post?
 
     self.class.check_methods.each do |m|
-      msg = send(m)
+      msg = public_send(m)
       return msg if msg.present?
     end
 
@@ -85,7 +87,7 @@ class ComposerMessagesFinder
     {
       id: 'avatar',
       templateName: 'education',
-      body: PrettyText.cook(I18n.t('education.avatar', profile_path: "/u/#{@user.username_lower}"))
+      body: PrettyText.cook(I18n.t('education.avatar', profile_path: "/u/#{@user.username_lower}/preferences/account#profile-picture"))
     }
   end
 

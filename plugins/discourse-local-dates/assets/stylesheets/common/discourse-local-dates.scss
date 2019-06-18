@@ -14,24 +14,20 @@
   }
 }
 
-.discourse-local-date + #discourse-tooltip {
-  .tooltip-content {
+#d-popover {
+  .locale-dates-previews {
     max-width: 360px;
-    padding: 0.5em;
+    .preview {
+      display: flex;
+      flex-direction: column;
+      padding: 5px;
 
-    .previews {
-      .preview {
-        display: flex;
-        flex-direction: column;
-        padding: 5px;
+      .timezone {
+        font-weight: 700;
+      }
 
-        .timezone {
-          font-weight: 700;
-        }
-
-        &.current {
-          background: $tertiary-low;
-        }
+      &.current {
+        background: $tertiary-low;
       }
     }
   }
@@ -61,9 +57,29 @@
 }
 
 .discourse-local-dates-create-modal {
-  min-height: 300px;
+  min-height: 320px;
   display: flex;
   flex-direction: row;
+  padding: 0.5em;
+
+  .picker-panel {
+    padding: 5px;
+    border: 1px solid $primary-low;
+  }
+
+  .date-picker {
+    display: flex;
+    flex-direction: column;
+    width: auto;
+    box-sizing: border-box;
+
+    .pika-single {
+      position: relative !important;
+      flex: 1;
+      display: flex;
+      border: 0;
+    }
+  }
 
   .form {
     flex: 1 0 0px;
@@ -74,76 +90,171 @@
 
     .date-time-configuration {
       display: flex;
-      align-items: center;
-      flex-direction: row;
 
-      .range {
-        .from {
-          flex-direction: row;
-          display: flex;
-        }
-
-        .to {
-          flex-direction: row;
-          display: flex;
-        }
-
-        .to-indicator {
-          display: flex;
-          justify-content: center;
-          margin: 0.5em 0;
-        }
+      .fake-input {
+        display: none;
       }
 
-      .date {
-        .date-input {
-          margin-right: 1em;
+      .timezone-input {
+        width: 100%;
 
-          .date-picker {
-            padding-top: 5px;
-            bottom: 5px;
-            margin: 0;
-            width: 120px;
-            text-align: left;
+        &.is-expanded {
+          .select-kit-header {
+            border: 1px solid $primary-medium;
+          }
+        }
+
+        .select-kit-header {
+          padding: 0.5em 0.5em;
+          border: 1px solid $primary-low;
+
+          .d-icon {
+            margin-right: 1em;
+          }
+
+          .caret-icon {
+            margin-right: 0;
           }
         }
       }
 
-      .time {
-        .time-input {
-          margin: 0 0.5em 0 0;
-          width: 120px;
-          padding: 3.5px 10px;
+      .date-time-control {
+        position: relative;
+        display: flex;
+        border: 1px solid $primary-low;
+
+        &.is-filled,
+        &.is-selected {
+          .date-time {
+            color: $primary;
+            background: $secondary;
+          }
+
+          .d-icon {
+            color: $primary-high;
+          }
+        }
+
+        &.from {
+          border-radius: 5px 5px 0 0;
+
+          .date-time {
+            border-radius: 5px 5px 0 0;
+          }
+
+          &.is-selected {
+            border-color: $tertiary;
+          }
+        }
+
+        &.to {
+          border-radius: 0 0 5px 5px;
+          margin-bottom: 1em;
+
+          .date-time {
+            border-radius: 0 0 5px 5px;
+            padding-right: 3em;
+          }
+
+          &.is-selected {
+            border-color: $tertiary;
+          }
+        }
+
+        .date-time {
+          color: $primary-medium;
+          background: $primary-very-low;
+        }
+
+        .d-icon {
+          position: absolute;
+          margin-top: auto;
+          margin-bottom: auto;
+          left: 0.5em;
+          top: 0;
+          bottom: 0;
+          color: $primary-medium;
+        }
+
+        .delete-to-date {
+          position: absolute;
+          margin-top: auto;
+          margin-bottom: auto;
+          right: 0;
+          width: 30px;
+          top: 0;
+          bottom: 0;
+          color: $primary-high;
+          border-radius: 0 0 5px 0;
+        }
+
+        .date-time {
+          padding: 1em 0.5em 1em 2em;
+          border: 0;
+          outline: none;
+          flex: 1;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          width: 100%;
+          text-align: left;
         }
       }
 
-      .preview {
-        flex: 1 0 0px;
-        margin-top: 16px;
-        text-align: center;
+      .inputs-panel {
+        flex: 1;
       }
 
-      @include breakpoint(medium) {
-        flex-direction: column;
-        align-items: flex-start;
+      .picker-panel {
+        z-index: 1;
+        background: $secondary;
+        width: 200px;
+        box-sizing: border-box;
+        margin-left: 1em;
+      }
 
-        .range .from,
-        .range .to {
-          flex-direction: column;
+      .time-pickers {
+        display: flex;
+        justify-content: center;
+        flex: 1;
+        margin-top: 1em;
+        align-items: center;
+        padding: 0.25em;
+        border-top: 1px solid $primary-low-mid;
+        box-sizing: border-box;
+
+        .d-icon {
+          color: $primary-medium;
         }
 
-        .date .date-input .date-picker {
-          width: 200px;
-        }
-
-        .time .time-input {
-          width: 200px;
+        .time-picker {
+          outline: none;
+          box-shadow: none;
+          margin: 0;
+          box-sizing: border-box;
+          width: 100%;
+          border: 0;
         }
       }
     }
 
-    .validation-error {
-      color: $danger;
+    .preview {
+      text-align: center;
+      margin-top: 0;
+      margin-bottom: 0.5em;
+      display: flex;
+      align-items: center;
+      padding: 0.5em;
+      flex-wrap: wrap;
+
+      b {
+        margin-right: 0.5em;
+      }
+
+      b + p {
+        margin: 0;
+        display: inline-block;
+      }
     }
 
     .recurrence {
@@ -151,6 +262,10 @@
         width: 300px;
       }
     }
+  }
+
+  .validation-error {
+    margin-bottom: 0.5em;
   }
 
   .format {
@@ -178,5 +293,35 @@
 
   .timezones-input {
     width: 99%;
+  }
+}
+
+html:not(.mobile-view) {
+  .fixed-modal .discourse-local-dates-create-modal.modal-body {
+    width: 600px;
+    max-height: 400px !important;
+  }
+}
+
+html.mobile-view {
+  .fixed-modal .discourse-local-dates-create-modal.modal-body {
+    max-height: 400px !important;
+
+    .date-time-configuration {
+      flex-direction: column;
+    }
+
+    .picker-panel {
+      width: 100%;
+      margin: 0 0 1em 0;
+
+      .pika-single {
+        justify-content: center;
+      }
+    }
+
+    .time-picker {
+      padding-top: 6px;
+    }
   }
 }

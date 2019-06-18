@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_dependency 'inline_oneboxer'
 
 class InlineOneboxController < ApplicationController

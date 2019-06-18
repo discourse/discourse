@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_dependency 'discourse_hub'
 require_dependency 'user_name_suggester'
 require_dependency 'rate_limiter'
@@ -14,7 +16,7 @@ class UsersController < ApplicationController
     :pick_avatar, :destroy_user_image, :destroy, :check_emails,
     :topic_tracking_state, :preferences, :create_second_factor,
     :update_second_factor, :create_second_factor_backup, :select_avatar,
-    :revoke_auth_token
+    :notification_level, :revoke_auth_token
   ]
 
   skip_before_action :check_xhr, only: [
@@ -148,9 +150,11 @@ class UsersController < ApplicationController
 
   def check_emails
     user = fetch_user_from_params(include_inactive: true)
-    guardian.ensure_can_check_emails!(user)
 
-    StaffActionLogger.new(current_user).log_check_email(user, context: params[:context])
+    unless user == current_user
+      guardian.ensure_can_check_emails!(user)
+      StaffActionLogger.new(current_user).log_check_email(user, context: params[:context])
+    end
 
     email, *secondary_emails = user.emails
 
@@ -311,7 +315,7 @@ class UsersController < ApplicationController
       params.require(:username) if !params[:email].present?
       return render(json: success_json)
     end
-    username = params[:username]
+    username = params[:username]&.unicode_normalize
 
     target_user = user_from_params_or_current_user
 
@@ -329,6 +333,7 @@ class UsersController < ApplicationController
 
   def create
     params.require(:email)
+    params.require(:username)
     params.permit(:user_fields)
 
     unless SiteSetting.allow_new_registrations
@@ -347,15 +352,14 @@ class UsersController < ApplicationController
       return fail_with("login.reserved_username")
     end
 
+    params[:locale] ||= I18n.locale unless current_user
+
     new_user_params = user_params
     user = User.unstage(new_user_params)
     user = User.new(new_user_params) if user.nil?
 
     # Handle API approval
-    if user.approved
-      user.approved_by_id ||= current_user.id
-      user.approved_at ||= Time.zone.now
-    end
+    ReviewableUser.set_approved_fields!(user, current_user) if user.approved?
 
     # Handle custom fields
     user_fields = UserField.all
@@ -402,6 +406,9 @@ class UsersController < ApplicationController
       # save user email in session, to show on account-created page
       session["user_created_message"] = activation.message
       session[SessionController::ACTIVATE_USER_KEY] = user.id
+
+      # If the user was created as active, they might need to be approved
+      user.create_reviewable if user.active?
 
       render json: {
         success: true,
@@ -475,7 +482,7 @@ class UsersController < ApplicationController
     second_factor_token = params[:second_factor_token]
     second_factor_method = params[:second_factor_method].to_i
 
-    if second_factor_token.present? && second_factor_token[/\d{6}/] && UserSecondFactor.methods[second_factor_method]
+    if second_factor_token.present? && UserSecondFactor.methods[second_factor_method]
       RateLimiter.new(nil, "second-factor-min-#{request.remote_ip}", 3, 1.minute).performed!
       second_factor_authenticated = @user&.authenticate_second_factor(second_factor_token, second_factor_method)
     end
@@ -838,15 +845,17 @@ class UsersController < ApplicationController
     topic_id = topic_id.to_i if topic_id
     topic_allowed_users = params[:topic_allowed_users] || false
 
-    if params[:group].present?
-      @group = Group.find_by(name: params[:group])
+    group_names = params[:groups] || []
+    group_names << params[:group] if params[:group]
+    if group_names.present?
+      @groups = Group.where(name: group_names)
     end
 
     results = UserSearch.new(term,
                              topic_id: topic_id,
                              topic_allowed_users: topic_allowed_users,
                              searching_user: current_user,
-                             group: @group
+                             groups: @groups
                             ).search
 
     user_fields = [:username, :upload_avatar_template]
@@ -864,6 +873,10 @@ class UsersController < ApplicationController
       end
 
     include_groups = params[:include_groups] == "true"
+
+    # blank term is only handy for in-topic search of users after @
+    # we do not want group results ever if term is blank
+    include_groups = groups = nil if term.blank?
 
     if include_groups || groups
       groups = Group.search_groups(term, groups: groups)
@@ -989,6 +1002,30 @@ class UsersController < ApplicationController
     render json: success_json
   end
 
+  def notification_level
+    user = fetch_user_from_params
+
+    if params[:notification_level] == "ignore"
+      guardian.ensure_can_ignore_user!(user.id)
+      MutedUser.where(user: current_user, muted_user: user).delete_all
+      ignored_user = IgnoredUser.find_by(user: current_user, ignored_user: user)
+      if ignored_user.present?
+        ignored_user.update(expiring_at: DateTime.parse(params[:expiring_at]))
+      else
+        IgnoredUser.create!(user: current_user, ignored_user: user, expiring_at: Time.parse(params[:expiring_at]))
+      end
+    elsif params[:notification_level] == "mute"
+      guardian.ensure_can_mute_user!(user.id)
+      IgnoredUser.where(user: current_user, ignored_user: user).delete_all
+      MutedUser.find_or_create_by!(user: current_user, muted_user: user)
+    elsif params[:notification_level] == "normal"
+      MutedUser.where(user: current_user, muted_user: user).delete_all
+      IgnoredUser.where(user: current_user, ignored_user: user).delete_all
+    end
+
+    render json: success_json
+  end
+
   def read_faq
     if user = current_user
       user.user_stat.read_faq = 1.second.ago
@@ -1005,7 +1042,7 @@ class UsersController < ApplicationController
     result = {}
 
     %W{number_of_deleted_posts number_of_flagged_posts number_of_flags_given number_of_suspensions warnings_received_count}.each do |info|
-      result[info] = @user.send(info)
+      result[info] = @user.public_send(info)
     end
 
     render json: result
@@ -1053,7 +1090,7 @@ class UsersController < ApplicationController
   def create_second_factor_backup
     raise Discourse::NotFound if SiteSetting.enable_sso || !SiteSetting.enable_local_logins
 
-    unless current_user.authenticate_totp(params[:second_factor_token])
+    unless current_user.authenticate_second_factor(params[:second_factor_token], params[:second_factor_method].to_i)
       return render json: failed_json.merge(
         error: I18n.t("login.invalid_second_factor_code")
       )
@@ -1069,22 +1106,26 @@ class UsersController < ApplicationController
   def update_second_factor
     params.require(:second_factor_token)
     params.require(:second_factor_method)
+    params.require(:second_factor_target)
 
-    second_factor_method = params[:second_factor_method].to_i
+    auth_method = params[:second_factor_method].to_i
+    auth_token = params[:second_factor_token]
+
+    update_second_factor_method = params[:second_factor_target].to_i
 
     [request.remote_ip, current_user.id].each do |key|
       RateLimiter.new(nil, "second-factor-min-#{key}", 3, 1.minute).performed!
     end
 
-    if second_factor_method == UserSecondFactor.methods[:totp]
+    if update_second_factor_method == UserSecondFactor.methods[:totp]
       user_second_factor = current_user.user_second_factors.totp
-    elsif second_factor_method == UserSecondFactor.methods[:backup_codes]
+    elsif update_second_factor_method == UserSecondFactor.methods[:backup_codes]
       user_second_factor = current_user.user_second_factors.backup_codes
     end
 
     raise Discourse::InvalidParameters unless user_second_factor
 
-    unless current_user.authenticate_totp(params[:second_factor_token])
+    unless current_user.authenticate_second_factor(auth_token, auth_method)
       return render json: failed_json.merge(
         error: I18n.t("login.invalid_second_factor_code")
       )
@@ -1094,7 +1135,7 @@ class UsersController < ApplicationController
       user_second_factor.update!(enabled: true)
     else
       # when disabling totp, backup is disabled too
-      if second_factor_method == UserSecondFactor.methods[:totp]
+      if update_second_factor_method == UserSecondFactor.methods[:totp]
         current_user.user_second_factors.destroy_all
 
         Jobs.enqueue(
@@ -1102,7 +1143,7 @@ class UsersController < ApplicationController
           type: :account_second_factor_disabled,
           user_id: current_user.id
         )
-      elsif second_factor_method == UserSecondFactor.methods[:backup_codes]
+      elsif update_second_factor_method == UserSecondFactor.methods[:backup_codes]
         current_user.user_second_factors.where(method: UserSecondFactor.methods[:backup_codes]).destroy_all
       end
     end
@@ -1124,6 +1165,7 @@ class UsersController < ApplicationController
 
     # We're likely going to contact the remote auth provider, so hijack request
     hijack do
+      DiscourseEvent.trigger(:before_auth_revoke, authenticator, user)
       result = authenticator.revoke(user, skip_remote: skip_remote)
       if result
         render json: success_json
@@ -1200,14 +1242,15 @@ class UsersController < ApplicationController
       :title,
       :date_of_birth,
       :muted_usernames,
+      :ignored_usernames,
       :theme_ids,
       :locale,
       :bio_raw,
       :location,
       :website,
       :dismissed_banner_key,
-      :profile_background,
-      :card_background
+      :profile_background_upload_url,
+      :card_background_upload_url
     ]
 
     permitted << { custom_fields: User.editable_user_custom_fields } unless User.editable_user_custom_fields.blank?
@@ -1219,8 +1262,7 @@ class UsersController < ApplicationController
       .permit(permitted, theme_ids: [])
       .reverse_merge(
         ip_address: request.remote_ip,
-        registration_ip_address: request.remote_ip,
-        locale: user_locale
+        registration_ip_address: request.remote_ip
       )
 
     if !UsernameCheckerService.is_developer?(result['email']) &&
@@ -1237,10 +1279,6 @@ class UsersController < ApplicationController
   # Plugins can use this to modify user parameters
   def modify_user_params(attrs)
     attrs
-  end
-
-  def user_locale
-    I18n.locale
   end
 
   def fail_with(key)

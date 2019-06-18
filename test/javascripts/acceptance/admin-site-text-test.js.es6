@@ -13,7 +13,7 @@ QUnit.test("search for a key", async assert => {
   assert.ok(exists(".site-text.overridden"));
 
   // Only show overridden
-  await click(".extra-options input");
+  await click(".search-area .filter-options input");
   assert.equal(
     currentURL(),
     "/admin/customize/site_texts?overridden=true&q=Test"

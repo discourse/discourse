@@ -1,6 +1,8 @@
+# frozen_string_literal: true
+
 class SiteSettingsTask
-  def self.export_to_hash(include_defaults: false)
-    site_settings = SiteSetting.all_settings
+  def self.export_to_hash(include_defaults: false, include_hidden: false)
+    site_settings = SiteSetting.all_settings(include_hidden)
     h = {}
     site_settings.each do |site_setting|
       next if site_setting[:default] == site_setting[:value] if !include_defaults
@@ -10,7 +12,7 @@ class SiteSettingsTask
   end
 
   def self.import(yml)
-    h = SiteSettingsTask.export_to_hash(include_defaults: true)
+    h = SiteSettingsTask.export_to_hash(include_defaults: true, include_hidden: true)
     counts = { updated: 0, not_found: 0, errors: 0 }
     log = []
 

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class DiskSpace
   def self.uploads_used_bytes
     # used(uploads_path)

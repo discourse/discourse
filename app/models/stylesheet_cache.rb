@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class StylesheetCache < ActiveRecord::Base
   self.table_name = 'stylesheet_cache'
 

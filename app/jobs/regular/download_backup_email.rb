@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_dependency 'email/sender'
 require_dependency "email_backup_token"
 

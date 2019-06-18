@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "net/pop"
 
 class POP3PollingEnabledSettingValidator

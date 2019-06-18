@@ -1,6 +1,8 @@
+# frozen_string_literal: true
+
 class Emoji
   # update this to clear the cache
-  EMOJI_VERSION = "6"
+  EMOJI_VERSION = "9"
 
   FITZPATRICK_SCALE ||= [ "1f3fb", "1f3fc", "1f3fd", "1f3fe", "1f3ff" ]
 
@@ -87,10 +89,12 @@ class Emoji
   def self.load_custom
     result = []
 
-    CustomEmoji.includes(:upload).order(:name).each do |emoji|
-      result << Emoji.new.tap do |e|
-        e.name = emoji.name
-        e.url = emoji.upload&.url
+    if !GlobalSetting.skip_db?
+      CustomEmoji.includes(:upload).order(:name).each do |emoji|
+        result << Emoji.new.tap do |e|
+          e.name = emoji.name
+          e.url = emoji.upload&.url
+        end
       end
     end
 
@@ -157,13 +161,7 @@ class Emoji
   end
 
   def self.unicode_unescape(string)
-    string.each_char.map do |c|
-      if str = unicode_replacements[c]
-        ":#{str}:"
-      else
-        c
-      end
-    end.join
+    PrettyText.escape_emoji(string)
   end
 
   def self.gsub_emoji_to_unicode(str)

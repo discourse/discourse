@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_dependency 'slug'
 require_dependency 'avatar_lookup'
 require_dependency 'topic_view'
@@ -13,9 +15,6 @@ require_dependency 'topic_posters_summary'
 require_dependency 'topic_featured_users'
 
 class Topic < ActiveRecord::Base
-  # TODO remove 01-01-2019
-  self.ignored_columns = ["percent_rank", "vote_count"]
-
   class UserExists < StandardError; end
   include ActionView::Helpers::SanitizeHelper
   include RateLimiter::OnCreateRecord
@@ -36,14 +35,6 @@ class Topic < ActiveRecord::Base
 
   attr_accessor :allowed_user_ids, :tags_changed, :includes_destination_category
 
-  DiscourseEvent.on(:site_setting_saved) do |site_setting|
-    if site_setting.name.to_s == "slug_generation_method" && site_setting.saved_change_to_value?
-      Scheduler::Defer.later("Null topic slug") do
-        Topic.update_all(slug: nil)
-      end
-    end
-  end
-
   def self.max_fancy_title_length
     400
   end
@@ -58,17 +49,18 @@ class Topic < ActiveRecord::Base
       CategoryTagStat.topic_deleted(self) if self.tags.present?
     end
     super(trashed_by)
-    update_flagged_posts_count
     self.topic_embed.trash! if has_topic_embed?
   end
 
-  def recover!
+  def recover!(recovered_by = nil)
     unless deleted_at.nil?
       update_category_topic_count_by(1)
       CategoryTagStat.topic_recovered(self) if self.tags.present?
     end
-    super
-    update_flagged_posts_count
+
+    # Note parens are required because superclass doesn't take `recovered_by`
+    super()
+
     unless (topic_embed = TopicEmbed.with_deleted.find_by_topic_id(id)).nil?
       topic_embed.recover!
     end
@@ -98,8 +90,7 @@ class Topic < ActiveRecord::Base
             if: Proc.new { |t|
               (t.new_record? || t.category_id_changed?) &&
               !SiteSetting.allow_uncategorized_topics &&
-              (t.archetype.nil? || t.regular?) &&
-              (!t.user_id || !t.user.staff?)
+              (t.archetype.nil? || t.regular?)
             }
 
   validates :featured_link, allow_nil: true, url: true
@@ -126,7 +117,6 @@ class Topic < ActiveRecord::Base
   has_many :allowed_groups, through: :topic_allowed_groups, source: :group
   has_many :allowed_group_users, through: :allowed_groups, source: :users
   has_many :allowed_users, through: :topic_allowed_users, source: :user
-  has_many :queued_posts
 
   has_many :topic_tags
   has_many :tags, through: :topic_tags, dependent: :destroy # dependent destroy applies to the topic_tags records
@@ -147,6 +137,7 @@ class Topic < ActiveRecord::Base
   has_many :topic_invites
   has_many :invites, through: :topic_invites, source: :invite
   has_many :topic_timers, dependent: :destroy
+  has_many :reviewables
 
   has_one :user_warning
   has_one :first_post, -> { where post_number: 1 }, class_name: 'Post'
@@ -250,7 +241,6 @@ class Topic < ActiveRecord::Base
     end
 
     SearchIndexer.index(self)
-    UserActionCreator.log_topic(self)
   end
 
   after_update do
@@ -317,9 +307,7 @@ class Topic < ActiveRecord::Base
   end
 
   def has_flags?
-    FlagQuery.flagged_post_actions(filter: "active")
-      .where("topics.id" => id)
-      .exists?
+    ReviewableFlaggedPost.pending.default_visible.where(topic_id: id).exists?
   end
 
   def is_official_warning?
@@ -367,10 +355,6 @@ class Topic < ActiveRecord::Base
     end
 
     fancy_title
-  end
-
-  def pending_posts_count
-    queued_posts.new_count
   end
 
   # Returns hot topics since a date for display in email digest.
@@ -431,12 +415,6 @@ class Topic < ActiveRecord::Base
     end
 
     topics
-  end
-
-  # Using the digest query, figure out what's  new for a user since last seen
-  def self.new_since_last_seen(user, since, featured_topic_ids = nil)
-    topics = Topic.for_digest(user, since)
-    featured_topic_ids ? topics.where("topics.id NOT IN (?)", featured_topic_ids) : topics
   end
 
   def meta_data=(data)
@@ -531,10 +509,10 @@ class Topic < ActiveRecord::Base
   end
 
   # Atomically creates the next post number
-  def self.next_post_number(topic_id, reply = false, whisper = false)
+  def self.next_post_number(topic_id, opts = {})
     highest = DB.query_single("SELECT coalesce(max(post_number),0) AS max FROM posts WHERE topic_id = ?", topic_id).first.to_i
 
-    if whisper
+    if opts[:whisper]
 
       result = DB.query_single(<<~SQL, highest, topic_id)
         UPDATE topics
@@ -547,13 +525,15 @@ class Topic < ActiveRecord::Base
 
     else
 
-      reply_sql = reply ? ", reply_count = reply_count + 1" : ""
+      reply_sql = opts[:reply] ? ", reply_count = reply_count + 1" : ""
+      posts_sql = opts[:post]  ? ", posts_count = posts_count + 1" : ""
 
       result = DB.query_single(<<~SQL, highest: highest, topic_id: topic_id)
         UPDATE topics
         SET highest_staff_post_number = :highest + 1,
-            highest_post_number = :highest + 1#{reply_sql},
-            posts_count = posts_count + 1
+            highest_post_number = :highest + 1
+            #{reply_sql}
+            #{posts_sql}
         WHERE id = :topic_id
         RETURNING highest_post_number
       SQL
@@ -589,6 +569,43 @@ class Topic < ActiveRecord::Base
         posts_count = Y.posts_count
       FROM X, Y
       WHERE
+        topics.archetype <> 'private_message' AND
+        X.topic_id = topics.id AND
+        Y.topic_id = topics.id AND (
+          topics.highest_staff_post_number <> X.highest_post_number OR
+          topics.highest_post_number <> Y.highest_post_number OR
+          topics.last_posted_at <> Y.last_posted_at OR
+          topics.posts_count <> Y.posts_count
+        )
+    SQL
+
+    DB.exec <<~SQL
+      WITH
+      X as (
+        SELECT topic_id,
+               COALESCE(MAX(post_number), 0) highest_post_number
+        FROM posts
+        WHERE deleted_at IS NULL
+        GROUP BY topic_id
+      ),
+      Y as (
+        SELECT topic_id,
+               coalesce(MAX(post_number), 0) highest_post_number,
+               count(*) posts_count,
+               max(created_at) last_posted_at
+        FROM posts
+        WHERE deleted_at IS NULL AND post_type <> 3 AND post_type <> 4
+        GROUP BY topic_id
+      )
+      UPDATE topics
+      SET
+        highest_staff_post_number = X.highest_post_number,
+        highest_post_number = Y.highest_post_number,
+        last_posted_at = Y.last_posted_at,
+        posts_count = Y.posts_count
+      FROM X, Y
+      WHERE
+        topics.archetype = 'private_message' AND
         X.topic_id = topics.id AND
         Y.topic_id = topics.id AND (
           topics.highest_staff_post_number <> X.highest_post_number OR
@@ -601,32 +618,39 @@ class Topic < ActiveRecord::Base
 
   # If a post is deleted we have to update our highest post counters
   def self.reset_highest(topic_id)
+    archetype = Topic.where(id: topic_id).pluck(:archetype).first
+
+    # ignore small_action replies for private messages
+    post_type = archetype == Archetype.private_message ? " AND post_type <> #{Post.types[:small_action]}" : ''
+
     result = DB.query_single(<<~SQL, topic_id: topic_id)
       UPDATE topics
       SET
-      highest_staff_post_number = (
+        highest_staff_post_number = (
           SELECT COALESCE(MAX(post_number), 0) FROM posts
           WHERE topic_id = :topic_id AND
                 deleted_at IS NULL
         ),
-      highest_post_number = (
+        highest_post_number = (
           SELECT COALESCE(MAX(post_number), 0) FROM posts
           WHERE topic_id = :topic_id AND
                 deleted_at IS NULL AND
                 post_type <> 4
+                #{post_type}
         ),
         posts_count = (
           SELECT count(*) FROM posts
           WHERE deleted_at IS NULL AND
                 topic_id = :topic_id AND
                 post_type <> 4
+                #{post_type}
         ),
-
         last_posted_at = (
           SELECT MAX(created_at) FROM posts
           WHERE topic_id = :topic_id AND
                 deleted_at IS NULL AND
                 post_type <> 4
+                #{post_type}
         )
       WHERE id = :topic_id
       RETURNING highest_post_number
@@ -649,30 +673,7 @@ class Topic < ActiveRecord::Base
     SQL
   end
 
-  # This calculates the geometric mean of the posts and stores it with the topic
-  def self.calculate_avg_time(min_topic_age = nil)
-    builder = DB.build <<~SQL
-      UPDATE topics
-      SET avg_time = x.gmean
-      FROM (SELECT topic_id,
-                   round(exp(avg(ln(avg_time)))) AS gmean
-            FROM posts
-            WHERE avg_time > 0 AND avg_time IS NOT NULL
-            GROUP BY topic_id) AS x
-      /*where*/
-    SQL
-
-    builder.where <<~SQL
-      x.topic_id = topics.id AND
-      (topics.avg_time <> x.gmean OR topics.avg_time IS NULL)
-    SQL
-
-    if min_topic_age
-      builder.where("topics.bumped_at > :bumped_at", bumped_at: min_topic_age)
-    end
-
-    builder.exec
-  end
+  cattr_accessor :update_featured_topics
 
   def changed_to_category(new_category)
     return true if new_category.blank? || Category.exists?(topic_id: id)
@@ -704,8 +705,11 @@ class Topic < ActiveRecord::Base
       end
 
       Category.where(id: new_category.id).update_all("topic_count = topic_count + 1")
-      CategoryFeaturedTopic.feature_topics_for(old_category) unless @import_mode
-      CategoryFeaturedTopic.feature_topics_for(new_category) unless @import_mode || old_category.try(:id) == new_category.id
+
+      if Topic.update_featured_topics != false
+        CategoryFeaturedTopic.feature_topics_for(old_category) unless @import_mode
+        CategoryFeaturedTopic.feature_topics_for(new_category) unless @import_mode || old_category.try(:id) == new_category.id
+      end
     end
 
     true
@@ -739,7 +743,7 @@ class Topic < ActiveRecord::Base
       increment!(:moderator_posts_count) if new_post.persisted?
       # If we are moving posts, we want to insert the moderator post where the previous posts were
       # in the stream, not at the end.
-      new_post.update_attributes!(post_number: opts[:post_number], sort_order: opts[:post_number]) if opts[:post_number].present?
+      new_post.update!(post_number: opts[:post_number], sort_order: opts[:post_number]) if opts[:post_number].present?
 
       # Grab any links that are present
       TopicLink.extract_from(new_post)
@@ -760,6 +764,8 @@ class Topic < ActiveRecord::Base
 
     cat = Category.find_by(id: new_category_id)
     return false unless cat
+
+    reviewables.update_all(category_id: new_category_id)
 
     changed_to_category(cat)
   end
@@ -888,7 +894,7 @@ class Topic < ActiveRecord::Base
 
   def grant_permission_to_user(lower_email)
     user = User.find_by_email(lower_email)
-    topic_allowed_users.create!(user_id: user.id)
+    topic_allowed_users.create!(user_id: user.id) unless topic_allowed_users.exists?(user_id: user.id)
   end
 
   def max_post_number
@@ -919,10 +925,6 @@ class Topic < ActiveRecord::Base
     feature_topic_users
     update_action_counts
     Topic.reset_highest(id)
-  end
-
-  def update_flagged_posts_count
-    PostAction.update_flagged_posts_count
   end
 
   def update_action_counts
@@ -999,7 +1001,7 @@ class Topic < ActiveRecord::Base
   end
 
   def self.url(id, slug, post_number = nil)
-    url = "#{Discourse.base_url}/t/#{slug}/#{id}"
+    url = +"#{Discourse.base_url}/t/#{slug}/#{id}"
     url << "/#{post_number}" if post_number.to_i > 1
     url
   end
@@ -1009,7 +1011,7 @@ class Topic < ActiveRecord::Base
   end
 
   def self.relative_url(id, slug, post_number = nil)
-    url = "#{Discourse.base_uri}/t/"
+    url = +"#{Discourse.base_uri}/t/"
     url << "#{slug}/" if slug.present?
     url << id.to_s
     url << "/#{post_number}" if post_number.to_i > 1
@@ -1362,6 +1364,26 @@ class Topic < ActiveRecord::Base
     update!(bumped_at: post.created_at)
   end
 
+  def auto_close_threshold_reached?
+    return if user&.staff?
+
+    scores = ReviewableScore.pending
+      .joins(:reviewable)
+      .where("reviewables.topic_id = ?", self.id)
+      .pluck("COUNT(DISTINCT reviewable_scores.user_id), COALESCE(SUM(reviewable_scores.score), 0.0)")
+      .first
+
+    scores[0] >= SiteSetting.num_flaggers_to_close_topic && scores[1] >= Reviewable.score_to_auto_close_topic
+  end
+
+  def update_category_topic_count_by(num)
+    if category_id.present?
+      Category
+        .where(['id = ?', category_id])
+        .update_all("topic_count = topic_count " + (num > 0 ? '+' : '') + "#{num}")
+    end
+  end
+
   private
 
   def invite_to_private_message(invited_by, target_user, guardian)
@@ -1373,7 +1395,7 @@ class Topic < ActiveRecord::Base
 
     Topic.transaction do
       rate_limit_topic_invitation(invited_by)
-      topic_allowed_users.create!(user_id: target_user.id)
+      topic_allowed_users.create!(user_id: target_user.id) unless topic_allowed_users.exists?(user_id: target_user.id)
       add_small_action(invited_by, "invited_user", target_user.username)
 
       create_invite_notification!(
@@ -1413,18 +1435,12 @@ class Topic < ActiveRecord::Base
     end
   end
 
-  def update_category_topic_count_by(num)
-    if category_id.present?
-      Category.where(['id = ?', category_id]).update_all("topic_count = topic_count " + (num > 0 ? '+' : '') + "#{num}")
-    end
-  end
-
   def limit_first_day_topics_per_day
     apply_per_day_rate_limit_for("first-day-topics", :max_topics_in_first_day)
   end
 
   def apply_per_day_rate_limit_for(key, method_name)
-    RateLimiter.new(user, "#{key}-per-day", SiteSetting.send(method_name), 1.day.to_i)
+    RateLimiter.new(user, "#{key}-per-day", SiteSetting.get(method_name), 1.day.to_i)
   end
 
   def create_invite_notification!(target_user, notification_type, username)
@@ -1487,6 +1503,7 @@ end
 #  spam_count                :integer          default(0), not null
 #  pinned_at                 :datetime
 #  score                     :float
+#  percent_rank              :float            default(1.0), not null
 #  subtype                   :string
 #  slug                      :string
 #  deleted_by_id             :integer
@@ -1498,6 +1515,7 @@ end
 #  fancy_title               :string(400)
 #  highest_staff_post_number :integer          default(0), not null
 #  featured_link             :string
+#  reviewable_score          :float            default(0.0), not null
 #
 # Indexes
 #
@@ -1510,4 +1528,5 @@ end
 #  index_topics_on_lower_title             (lower((title)::text))
 #  index_topics_on_pinned_at               (pinned_at) WHERE (pinned_at IS NOT NULL)
 #  index_topics_on_pinned_globally         (pinned_globally) WHERE pinned_globally
+#  index_topics_on_updated_at_public       (updated_at,visible,highest_staff_post_number,highest_post_number,category_id,created_at,id) WHERE (((archetype)::text <> 'private_message'::text) AND (deleted_at IS NULL))
 #

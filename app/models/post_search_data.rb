@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class PostSearchData < ActiveRecord::Base
   include HasSearchData
 end
@@ -14,5 +16,6 @@ end
 #
 # Indexes
 #
-#  idx_search_post  (search_data) USING gin
+#  idx_search_post                                           (search_data) USING gin
+#  index_post_search_data_on_post_id_and_version_and_locale  (post_id,version,locale)
 #

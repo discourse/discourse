@@ -1,41 +1,74 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 describe StaticController do
-  let(:upload) { Fabricate(:upload) }
+  fab!(:upload) { Fabricate(:upload) }
 
   context '#favicon' do
-    let(:png) { Base64.decode64("R0lGODlhAQABALMAAAAAAIAAAACAAICAAAAAgIAAgACAgMDAwICAgP8AAAD/AP//AAAA//8A/wD//wBiZCH5BAEAAA8ALAAAAAABAAEAAAQC8EUAOw==") }
+    let(:filename) { 'smallest.png' }
+    let(:file) { file_from_fixtures(filename) }
 
-    before { FinalDestination.stubs(:lookup_ip).returns("1.2.3.4") }
+    let(:upload) do
+      UploadCreator.new(file, filename).create_for(Discourse.system_user.id)
+    end
+
+    before_all do
+      DistributedMemoizer.flush!
+    end
 
     after do
-      $redis.flushall
+      DistributedMemoizer.flush!
     end
 
-    it 'returns the default favicon for a missing download' do
-      url = UrlHelper.absolute(upload.url)
-      SiteSetting.favicon = upload
-      stub_request(:get, url).to_return(status: 404)
+    describe 'local store' do
+      it 'returns the default favicon if favicon has not been configured' do
+        get '/favicon/proxied'
 
-      get '/favicon/proxied'
+        expect(response.status).to eq(200)
+        expect(response.content_type).to eq('image/png')
+        expect(response.body.bytesize).to eq(SiteIconManager.favicon.filesize)
+      end
 
-      favicon = File.read(Rails.root + "public/images/default-favicon.png")
+      it 'returns the configured favicon' do
+        SiteSetting.favicon = upload
 
-      expect(response.status).to eq(200)
-      expect(response.content_type).to eq('image/png')
-      expect(response.body.bytesize).to eq(favicon.bytesize)
+        get '/favicon/proxied'
+
+        expect(response.status).to eq(200)
+        expect(response.content_type).to eq('image/png')
+        expect(response.body.bytesize).to eq(upload.filesize)
+      end
     end
 
-    it 'can proxy a favicon correctly' do
-      url = UrlHelper.absolute(upload.url)
-      SiteSetting.favicon = upload
-      stub_request(:get, url).to_return(status: 200, body: png)
+    describe 'external store' do
+      let(:upload) do
+        Upload.create!(
+          url: '//s3-upload-bucket.s3-us-east-1.amazonaws.com/somewhere/a.png',
+          original_filename: filename,
+          filesize: file.size,
+          user_id: Discourse.system_user.id
+        )
+      end
 
-      get '/favicon/proxied'
+      before do
+        SiteSetting.enable_s3_uploads = true
+        SiteSetting.s3_access_key_id = 'X'
+        SiteSetting.s3_secret_access_key = 'X'
+      end
 
-      expect(response.status).to eq(200)
-      expect(response.content_type).to eq('image/png')
-      expect(response.body.bytesize).to eq(png.bytesize)
+      it 'can proxy a favicon correctly' do
+        SiteSetting.favicon = upload
+
+        stub_request(:get, "https:/#{upload.url}")
+          .to_return(status: 200, body: file)
+
+        get '/favicon/proxied'
+
+        expect(response.status).to eq(200)
+        expect(response.content_type).to eq('image/png')
+        expect(response.body.bytesize).to eq(upload.filesize)
+      end
     end
   end
 
@@ -96,7 +129,7 @@ describe StaticController do
     end
 
     context "with a static file that's present" do
-      it "should return the right response" do
+      it "should return the right response for /faq" do
         get "/faq"
 
         expect(response.status).to eq(200)
@@ -106,8 +139,8 @@ describe StaticController do
     end
 
     [
-      ['tos', :tos_url, I18n.t('terms_of_service.title')],
-      ['privacy', :privacy_policy_url, I18n.t('privacy')]
+      ['tos', :tos_url, I18n.t('js.tos')],
+      ['privacy', :privacy_policy_url, I18n.t('js.privacy')]
     ].each do |id, setting_name, text|
 
       context "#{id}" do
@@ -122,7 +155,7 @@ describe StaticController do
 
         context "when #{setting_name} site setting is set" do
           before do
-            SiteSetting.public_send("#{setting_name}=", 'http://example.com/page')
+            SiteSetting.set(setting_name, 'http://example.com/page')
           end
 
           it "redirects to the #{setting_name}" do
@@ -138,6 +171,18 @@ describe StaticController do
       it "should respond 404" do
         get "/static/does-not-exist"
         expect(response.status).to eq(404)
+      end
+
+      context "modal pages" do
+        it "should return the right response for /signup" do
+          get "/signup"
+          expect(response.status).to eq(200)
+        end
+
+        it "should return the right response for /password-reset" do
+          get "/password-reset"
+          expect(response.status).to eq(200)
+        end
       end
     end
 
@@ -181,7 +226,7 @@ describe StaticController do
           get "/#{page_name}"
 
           expect(response.status).to eq(200)
-          expect(response.body).to include(I18n.t('guidelines'))
+          expect(response.body).to include(I18n.t('js.guidelines'))
         end
       end
     end
@@ -235,6 +280,18 @@ describe StaticController do
       it "redirects to the root" do
         post "/login.json", params: { redirect: "javascript:alert('trout')" }
         expect(response).to redirect_to('/')
+      end
+    end
+
+    context 'with an array' do
+      it "redirects to the root" do
+        post "/login.json", params: { redirect: ["/foo"] }
+        expect(response.status).to eq(400)
+        json = JSON.parse(response.body)
+        expect(json["errors"]).to be_present
+        expect(json["errors"]).to include(
+          I18n.t("invalid_params", message: "redirect")
+        )
       end
     end
 

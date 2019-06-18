@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module DiscourseNarrativeBot
   module Actions
     TIMEOUT_DURATION = 900 # 15 mins
@@ -69,7 +71,10 @@ module DiscourseNarrativeBot
       valid = false
 
       doc.css(".mention").each do |mention|
-        valid = true if mention.text == "@#{self.discobot_user.username}"
+        if User.normalize_username(mention.text) == "@#{self.discobot_user.username_lower}"
+          valid = true
+          break
+        end
       end
 
       valid

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddVisibleBackToGroups < ActiveRecord::Migration[4.2]
   def change
     # add the visible column so it is delay dropped this cleans up some deploy issues

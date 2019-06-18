@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'feed_element_installer'
 require 'rails_helper'
 

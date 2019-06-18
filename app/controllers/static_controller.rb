@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_dependency 'distributed_memoizer'
 require_dependency 'file_helper'
 
@@ -9,6 +11,7 @@ class StaticController < ApplicationController
   skip_before_action :handle_theme, only: [:brotli_asset, :cdn_asset, :enter, :favicon, :service_worker_asset]
 
   PAGES_WITH_EMAIL_PARAM = ['login', 'password_reset', 'signup']
+  MODAL_PAGES = ['password_reset', 'signup']
 
   def show
     return redirect_to(path '/') if current_user && (params[:id] == 'login' || params[:id] == 'signup')
@@ -26,7 +29,7 @@ class StaticController < ApplicationController
 
     if map.has_key?(@page)
       site_setting_key = map[@page][:redirect]
-      url = SiteSetting.send(site_setting_key)
+      url = SiteSetting.get(site_setting_key)
       return redirect_to(url) unless url.blank?
     end
 
@@ -34,10 +37,10 @@ class StaticController < ApplicationController
     @page = 'faq' if @page == 'guidelines'
 
     # Don't allow paths like ".." or "/" or anything hacky like that
-    @page.gsub!(/[^a-z0-9\_\-]/, '')
+    @page = @page.gsub(/[^a-z0-9\_\-]/, '')
 
     if map.has_key?(@page)
-      @topic = Topic.find_by_id(SiteSetting.send(map[@page][:topic_id]))
+      @topic = Topic.find_by_id(SiteSetting.get(map[@page][:topic_id]))
       raise Discourse::NotFound unless @topic
       title_prefix = if I18n.exists?("js.#{@page}")
         I18n.t("js.#{@page}")
@@ -69,6 +72,11 @@ class StaticController < ApplicationController
       return
     end
 
+    if MODAL_PAGES.include?(@page)
+      render html: nil, layout: true
+      return
+    end
+
     raise Discourse::NotFound
   end
 
@@ -81,10 +89,13 @@ class StaticController < ApplicationController
 
     destination = path("/")
 
-    if params[:redirect].present? && !params[:redirect].match(login_path)
+    redirect_location = params[:redirect]
+    if redirect_location.present? && !redirect_location.is_a?(String)
+      raise Discourse::InvalidParameters.new(:redirect)
+    elsif redirect_location.present? && !redirect_location.match(login_path)
       begin
         forum_uri = URI(Discourse.base_url)
-        uri = URI(params[:redirect])
+        uri = URI(redirect_location)
 
         if uri.path.present? &&
            (uri.host.blank? || uri.host == forum_uri.host) &&
@@ -118,22 +129,29 @@ class StaticController < ApplicationController
     is_asset_path
 
     hijack do
-      data = DistributedMemoizer.memoize(FAVICON + SiteSetting.site_favicon_url, 60 * 30) do
-        begin
-          file = FileHelper.download(
-            UrlHelper.absolute(SiteSetting.site_favicon_url),
-            max_file_size: 50.kilobytes,
-            tmp_file_name: FAVICON,
-            follow_redirect: true
-          )
-          file ||= Tempfile.new([FAVICON, ".png"])
-          data = file.read
-          file.unlink
-          data
-        rescue => e
-          AdminDashboardData.add_problem_message('dashboard.bad_favicon_url', 1800)
-          Rails.logger.debug("Invalid favicon_url #{SiteSetting.site_favicon_url}: #{e}\n#{e.backtrace}")
-          ""
+      data = DistributedMemoizer.memoize("FAVICON#{SiteIconManager.favicon_url}", 60 * 30) do
+        favicon = SiteIconManager.favicon
+        next "" unless favicon
+
+        if Discourse.store.external?
+          begin
+            file = FileHelper.download(
+              UrlHelper.absolute(favicon.url),
+              max_file_size: favicon.filesize,
+              tmp_file_name: FAVICON,
+              follow_redirect: true
+            )
+
+            file&.read || ""
+          rescue => e
+            AdminDashboardData.add_problem_message('dashboard.bad_favicon_url', 1800)
+            Rails.logger.warn("Failed to fetch favicon #{favicon.url}: #{e}\n#{e.backtrace}")
+            ""
+          ensure
+            file&.unlink
+          end
+        else
+          File.read(Rails.root.join("public", favicon.url[1..-1]))
         end
       end
 

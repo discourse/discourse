@@ -1,6 +1,7 @@
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { bufferedProperty } from "discourse/mixins/buffered-content";
 import { propertyNotEqual } from "discourse/lib/computed";
+import computed from "ember-addons/ember-computed-decorators";
 
 export default Ember.Controller.extend(bufferedProperty("model"), {
   adminBadges: Ember.inject.controller(),
@@ -17,14 +18,13 @@ export default Ember.Controller.extend(bufferedProperty("model"), {
   readOnly: Ember.computed.alias("buffered.system"),
   showDisplayName: propertyNotEqual("name", "displayName"),
 
-  hasQuery: function() {
-    const bQuery = this.get("buffered.query");
-    if (bQuery) {
-      return bQuery.trim().length > 0;
+  @computed("model.query", "buffered.query")
+  hasQuery(modelQuery, bufferedQuery) {
+    if (bufferedQuery) {
+      return bufferedQuery.trim().length > 0;
     }
-    const mQuery = this.get("model.query");
-    return mQuery && mQuery.trim().length > 0;
-  }.property("model.query", "buffered.query"),
+    return modelQuery && modelQuery.trim().length > 0;
+  },
 
   _resetSaving: function() {
     this.set("saving", false);
@@ -33,7 +33,7 @@ export default Ember.Controller.extend(bufferedProperty("model"), {
 
   actions: {
     save() {
-      if (!this.get("saving")) {
+      if (!this.saving) {
         let fields = [
           "allow_title",
           "multiple_grant",
@@ -54,7 +54,7 @@ export default Ember.Controller.extend(bufferedProperty("model"), {
         ];
 
         if (this.get("buffered.system")) {
-          var protectedFields = this.get("protectedSystemFields") || [];
+          var protectedFields = this.protectedSystemFields || [];
           fields = _.filter(fields, f => !protectedFields.includes(f));
         }
 
@@ -72,7 +72,7 @@ export default Ember.Controller.extend(bufferedProperty("model"), {
         ];
 
         const data = {};
-        const buffered = this.get("buffered");
+        const buffered = this.buffered;
         fields.forEach(function(field) {
           var d = buffered.get(field);
           if (boolFields.includes(field)) {
@@ -81,9 +81,9 @@ export default Ember.Controller.extend(bufferedProperty("model"), {
           data[field] = d;
         });
 
-        const newBadge = !this.get("id");
-        const model = this.get("model");
-        this.get("model")
+        const newBadge = !this.id;
+        const model = this.model;
+        this.model
           .save(data)
           .then(() => {
             if (newBadge) {
@@ -107,7 +107,7 @@ export default Ember.Controller.extend(bufferedProperty("model"), {
 
     destroy() {
       const adminBadges = this.get("adminBadges.model");
-      const model = this.get("model");
+      const model = this.model;
 
       if (!model.get("id")) {
         this.transitionToRoute("adminBadges.index");

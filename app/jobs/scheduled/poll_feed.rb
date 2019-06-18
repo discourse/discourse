@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #
 # Creates and Updates Topics based on an RSS or ATOM feed.
 #

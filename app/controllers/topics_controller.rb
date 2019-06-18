@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_dependency 'topic_view'
 require_dependency 'promotion'
 require_dependency 'url_helper'
@@ -5,6 +7,7 @@ require_dependency 'topics_bulk_action'
 require_dependency 'discourse_event'
 require_dependency 'rate_limiter'
 require_dependency 'topic_publisher'
+require_dependency 'post_action_destroyer'
 
 class TopicsController < ApplicationController
   requires_login only: [
@@ -197,13 +200,17 @@ class TopicsController < ApplicationController
 
   def posts
     params.require(:topic_id)
-    params.permit(:post_ids, :post_number, :username_filters, :filter)
+    params.permit(:post_ids, :post_number, :username_filters, :filter, :include_suggested)
+
+    include_suggested = params[:include_suggested] == "true"
 
     options = {
       filter_post_number: params[:post_number],
       post_ids: params[:post_ids],
       asc: ActiveRecord::Type::Boolean.new.deserialize(params[:asc]),
-      filter: params[:filter]
+      filter: params[:filter],
+      include_suggested: include_suggested,
+      include_related: include_suggested,
     }
 
     fetch_topic_view(options)
@@ -249,10 +256,25 @@ class TopicsController < ApplicationController
   end
 
   def destroy_timings
+    topic_id = params[:topic_id].to_i
+
     if params[:last].to_s == "1"
-      PostTiming.destroy_last_for(current_user, params[:topic_id])
+      PostTiming.destroy_last_for(current_user, topic_id)
     else
-      PostTiming.destroy_for(current_user.id, [params[:topic_id].to_i])
+      PostTiming.destroy_for(current_user.id, [topic_id])
+    end
+
+    last_notification = Notification
+      .where(
+        user_id: current_user.id,
+        topic_id: topic_id
+      )
+      .order(created_at: :desc)
+      .limit(1)
+      .first
+
+    if last_notification
+      last_notification.update!(read: false)
     end
 
     render body: nil
@@ -279,14 +301,30 @@ class TopicsController < ApplicationController
 
     if params[:category_id] && (params[:category_id].to_i != topic.category_id.to_i)
       category = Category.find_by(id: params[:category_id])
+
       if category || (params[:category_id].to_i == 0)
         guardian.ensure_can_move_topic_to_category!(category)
       else
         return render_json_error(I18n.t('category.errors.not_found'))
       end
+
+      if category && topic_tags = (params[:tags] || topic.tags.pluck(:name))
+        category_tags = category.tags.pluck(:name)
+        category_tag_groups = category.tag_groups.joins(:tags).pluck("tags.name")
+        allowed_tags = (category_tags + category_tag_groups).uniq
+
+        if topic_tags.present? && allowed_tags.present?
+          invalid_tags = topic_tags - allowed_tags
+
+          if !invalid_tags.empty?
+            return render_json_error(I18n.t('category.errors.disallowed_topic_tags', tags: invalid_tags.join(", ")))
+          end
+        end
+      end
     end
 
     changes = {}
+
     PostRevisor.tracked_topic_fields.each_key do |f|
       changes[f] = params[f] if params.has_key?(f)
     end
@@ -389,7 +427,7 @@ class TopicsController < ApplicationController
 
   def make_banner
     topic = Topic.find_by(id: params[:topic_id].to_i)
-    guardian.ensure_can_moderate!(topic)
+    guardian.ensure_can_banner_topic!(topic)
 
     topic.make_banner!(current_user)
 
@@ -398,7 +436,7 @@ class TopicsController < ApplicationController
 
   def remove_banner
     topic = Topic.find_by(id: params[:topic_id].to_i)
-    guardian.ensure_can_moderate!(topic)
+    guardian.ensure_can_banner_topic!(topic)
 
     topic.remove_banner!(current_user)
 
@@ -412,7 +450,7 @@ class TopicsController < ApplicationController
       .where(user_id: current_user.id)
       .where('topic_id = ?', topic.id).each do |pa|
 
-      PostAction.remove_act(current_user, pa.post, PostActionType.types[:bookmark])
+      PostActionDestroyer.destroy(current_user, pa.post, :bookmark)
     end
 
     render body: nil
@@ -465,9 +503,8 @@ class TopicsController < ApplicationController
     topic = Topic.find(params[:topic_id].to_i)
     first_post = topic.ordered_posts.first
 
-    guardian.ensure_can_see!(first_post)
-
-    PostAction.act(current_user, first_post, PostActionType.types[:bookmark])
+    result = PostActionCreator.create(current_user, first_post, :bookmark)
+    return render_json_error(result) if result.failed?
 
     render body: nil
   end
@@ -672,16 +709,21 @@ class TopicsController < ApplicationController
   end
 
   def change_timestamps
-    params.require(:topic_id)
-    params.require(:timestamp)
+    topic_id = params.require(:topic_id).to_i
+    timestamp = params.require(:timestamp).to_f
 
     guardian.ensure_can_change_post_timestamps!
 
+    topic = Topic.with_deleted.find(topic_id)
+    previous_timestamp = topic.first_post.created_at
+
     begin
       TopicTimestampChanger.new(
-        topic_id: params[:topic_id].to_i,
-        timestamp: params[:timestamp].to_f
+        topic: topic,
+        timestamp: timestamp
       ).change!
+
+      StaffActionLogger.new(current_user).log_topic_timestamps_changed(topic, Time.zone.at(timestamp), previous_timestamp)
 
       render json: success_json
     rescue ActiveRecord::RecordInvalid, TopicTimestampChanger::InvalidTimestampError

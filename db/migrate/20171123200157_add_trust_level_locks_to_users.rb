@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddTrustLevelLocksToUsers < ActiveRecord::Migration[5.1]
   def up
     add_column :users, :group_locked_trust_level, :integer, null: true

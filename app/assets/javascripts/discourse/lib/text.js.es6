@@ -60,17 +60,24 @@ function createPrettyText(options) {
 }
 
 function emojiOptions() {
-  const siteSettings = Discourse.__container__.lookup("site-settings:main");
-  if (!siteSettings.enable_emoji) {
+  if (!Discourse.SiteSettings.enable_emoji) {
     return;
   }
 
-  return { getURL: Discourse.getURLWithCDN, emojiSet: siteSettings.emoji_set };
+  return {
+    getURL: Discourse.getURLWithCDN,
+    emojiSet: Discourse.SiteSettings.emoji_set,
+    enableEmojiShortcuts: Discourse.SiteSettings.enable_emoji_shortcuts
+  };
 }
 
 export function emojiUnescape(string, options) {
-  const opts = _.extend(emojiOptions(), options || {});
-  return opts ? performEmojiUnescape(string, opts) : string;
+  const opts = emojiOptions();
+  if (opts) {
+    return performEmojiUnescape(string, Object.assign(opts, options || {}));
+  } else {
+    return string;
+  }
 }
 
 export function emojiUrlFor(code) {

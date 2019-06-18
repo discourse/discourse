@@ -36,8 +36,9 @@ sw:
   remove_posts_deleted_by_author: "Imefutwa na Mwandishi"
   redirect_warning: "Tumeshindwa kuthibitisha kua kiungo ulichokichagua kipo kwenye hii jamii. Kama ungependa kuendelea, chagua kiungo hapo chini."
   themes:
-    bad_color_scheme: "Hauwezi kusasisha mandhari, mpango wa rangi batili"
     other_error: "Tatizo limetokea kwenye kusasisha mandhari"
+    import_error:
+      git: "Tatizo limetokea wakati wa kunakili weko la git, hauna ruhusa au weko haijapatikana"
     settings_errors:
       invalid_yaml: "YAML iliyowekwa ni batili."
       data_type_not_a_number: "Aina ya mpangilio `%{name}` hauruhusiwi. Aina zinazoruhusiwa ni `namba kamili`, `bool`, `orodha` na `enum`"
@@ -48,7 +49,6 @@ sw:
       number_value_not_valid_min_max: "Lazima iwe kati ya %{min} na %{max}."
       number_value_not_valid_min: "Lazima iwe na ukubwa wa au zaidi ya %{min}."
       number_value_not_valid_max: "Lazima iwe ndogo au sawa na %{max}"
-      string_value_not_valid_min_max: "Herufi lazima ziwe kati ya %{min} na %{max}"
       string_value_not_valid_min: "Lazima iwe au izidi %{min} maneno."
       string_value_not_valid_max: "Isizidi maneno  %{max}."
   emails:
@@ -176,7 +176,6 @@ sw:
   private_message_abbrev: "Msg"
   rss_description:
     latest: "Mada za hivi karibuni"
-    hot: "Mada kali"
     top: "Mada za juu"
     top_all: "Mada za juu Mda Wote"
     top_yearly: "Mada za Juu za Kila Mwaka"
@@ -195,8 +194,6 @@ sw:
   too_late_to_edit: "Chapisho lilitengenezwa kitambo sana. Haiwezi kufanyiwa uhariri au kufutwa."
   revert_version_same: "Toleo la sasa ni sawa na toleo unalo jaribu kurudisha."
   excerpt_image: "Picha"
-  queue:
-    not_found: "Chapisho halijaonwa au limesasishwa."
   groups:
     errors:
       grant_trust_level_not_valid: "'%{trust_level}' sio kiwango cha uaminifu."
@@ -255,20 +252,6 @@ sw:
       Unaweza kuhariri machapisho yaliyopita kuongeza nukulu kwa kufanya yafuatayo, bainisha nakala na chagua kitufe cha <b>nukulu jibu</b>kitakachotokea.
 
       Ni rahisi kwa watu wote kusoma mada ambazo zina majibu machache ukilinganisha na majibu madogo, mafupi na ya kibinafsi.
-    dominating_topic: |
-      ### Ruhusu wengine wajiunge kwenye maongezi
-
-      Mada hii ni muhimu kwako &ndash; umechapisha zaidi ya %{percent}% ya majibu hapa.
-
-      Una uhakika unatoa mda wa kutosha kwa watu wengine kutoa maoni yao, pia?
-    get_a_room: |
-      ### Fikia kujibu kwa watu wengi
-
-      Umejibu mara %{count} kwenye @%{reply_username} kwenye mada hii.
-
-      Umefikiria kuhusu kujibu watu *wengine* kwenye majadiliano, pia? Majadiliano mazuri yanashirikisha sauti na mtazamo mwingi.
-
-      Kama ungependa, kuendelea na maongezi yako na mtumiaji huyu kwa krefu, [watumie ujumbe binafsi](%{base_path}/u/%{reply_username}).
     too_many_replies: |
       ### Umefika kiwango cha juu cha kujibu kwenye mada hii
 
@@ -287,6 +270,7 @@ sw:
         name: "Jina la Kategoria"
       topic:
         title: "Kichwa cha Habari"
+        category_id: "Kategoria"
       post:
         raw: "Mwili"
       user_profile:
@@ -365,7 +349,6 @@ sw:
       email_already_used_in_category: "'%{email}' tayari inatumika kwenye kategoria '%{group_name}'."
       description_incomplete: "Chapisho la maelezo kwenye kategoria lazima ziwe na aya moja au zaidi."
     cannot_delete:
-      uncategorized: "Hauwezi Kufuta Mada Ambazo Hazina Kategoria"
       has_subcategories: "Hauwezi kufuta kategoria kwa sababu ina kategoria zingine."
       topic_exists_no_oldest: "Hauwezi kufuta kategoria hii  kwa sababu ina idadi ya mada %{count}."
     uncategorized_description: "Mada ambazo hazina kategoria, au haziwezi kuwekwa kwenye kategoria zingine."
@@ -407,6 +390,7 @@ sw:
       half_a_minute: "< 1d"
     distance_in_words_verbose:
       half_a_minute: "sasa hivi"
+      less_than_x_seconds: "sasa hivi"
   password_reset:
     no_token: "Samahani, kiungo hicho cha kuingia kupitia barua pepe ni cha mda sana. Bonyeza kitufe cha Kuingia na tumia 'Nimesahau nywila' ili upate kiungo kipya."
     choose_new: "Chagua nywila"
@@ -443,6 +427,9 @@ sw:
       grant: "Toa ufikivu wa Kiongozi"
       complete: "<b>%{target_username}</b>ni msimamizi."
       back_to: "Rudi  kwenye %{title}"
+  reviewable_score_types:
+    needs_approval:
+      title: "Inahitaji Uthibitisho"
   post_action_types:
     off_topic:
       title: "Mada Isiyohusika"
@@ -506,6 +493,7 @@ sw:
     notify_moderators:
       title: "Kitu Kingine"
       long_form: "imeripotiwa na itapitiwa na msimamizi"
+      short_description: "Inahitaji kupitiwa na msaidizi kwa sababu nyingine"
       email_title: 'Mada "%{title}" inahitaji kupitiwa na msimamizi'
       email_body: "%{link}\n\n%{message}"
   flagging:
@@ -520,8 +508,6 @@ sw:
         make: "Mada hii sasa ni bango. Itaonekana juu ya kila ukurasa mpaka itakapo ondolewa na mtumiaji."
         remove: "Mada hii sio bango tena. Haitatokea tena juu ya kila ukurasa."
   unsubscribed:
-    title: "Ametolewa!"
-    description: "<b>%{email}</b> amejitoa. Kubadilisha mipangilio ya barua pepe <a href='%{url}'>tembelea mapendekezo yako ya mtumiaji</a>."
     topic_description: "Kuendelea kupata taarifa za %{link}, tumia kidhibiti  cha taarifa kilichopo chini au kulia kwa mada."
     private_topic_description: "Kuendelea kupata taarifa, tumia kidhibiti cha taarifa kilichopo chini au kulia kwa mada."
   unsubscribe:
@@ -529,11 +515,16 @@ sw:
     stop_watching_topic: "Acha kuangalia mada hii, %{link}"
     mute_topic: "Nyamazisha taarifa zote za mada hii, %{link}"
     unwatch_category: "Acha kuangalia mada zote kwenye %{category}"
-    disable_digest_emails: "Acha kunitumia muhtasari wa barua pepe"
     all: "Usinitumie barua yoyote kutoka %{sitename}"
     different_user_description: "Umeingia kama mtu mwingine tofauti na mtu tuliyemtumia barua pepe. Tafadhali toka, au  ingia kwenye hali-tumizi ya mtu asiyejulikana, na jaribu tena."
     not_found_description: "Samahani hatujaona kujiengua. Inawezekana kiungo kwenye barua pepe yako kimepita mda?"
     log_out: "Toka"
+    digest_frequency:
+      never: "kamwe"
+      every_30_minutes: "kila dakika 30"
+      every_hour: "kila saa"
+      daily: "kila siku"
+      weekly: "kila wiki"
   user_api_key:
     title: "Idhini ufikivu wa programu-tumizi"
     authorize: "Idhini"
@@ -548,6 +539,24 @@ sw:
       read: "Soma zote"
       write: "Andika zote"
   reports:
+    default:
+      labels:
+        day: Siku
+    post_edits:
+      labels:
+        post: Ujumbe
+        editor: Mhariri
+        edit_reason: Sababu
+    user_flagging_ratio:
+      labels:
+        user: Mtumiaji
+    moderators_activity:
+      labels:
+        moderator: Msimamizi
+    flags_status:
+      labels:
+        flag: Aina
+        assigned: Imekabidhiwa
     visits:
       title: "Mtumiaji Ametembelea"
       xaxis: "Siku"
@@ -558,6 +567,16 @@ sw:
       title: "Wachangiaji Wapya"
       xaxis: "Siku"
       yaxis: "Idadi ya wachangiaji wapya"
+    consolidated_page_views:
+      yaxis: "Siku"
+      labels:
+        post: Ujumbe
+        editor: Mhariri
+        edit_reason: Sababu
+    dau_by_mau:
+      xaxis: "Siku"
+    daily_engaged_users:
+      xaxis: "Siku"
     profile_views:
       title: "Umbo la Mtumiaji Limetembelewa"
       xaxis: "Siku"
@@ -591,6 +610,8 @@ sw:
       title: "Watumiaji wa kila aina"
       xaxis: "Aina"
       yaxis: "Idadi ya Watumiaji"
+      labels:
+        type: Aina
       xaxis_labels:
         admin: Kiongozi
         moderator: Msimamizi
@@ -608,6 +629,7 @@ sw:
       xaxis: "Siku"
       yaxis: "Idadi ya ujumbe"
     user_to_user_private_messages_with_replies:
+      title: "Mtumiaji-kwa-Mtumiaji (na majibu)"
       xaxis: "Siku"
       yaxis: "Idadi ya ujumbe"
     system_private_messages:
@@ -631,14 +653,25 @@ sw:
       xaxis: "Mtumiaji"
       num_clicks: "Imebonyezwa"
       num_topics: "Mada"
+      labels:
+        user: "Mtumiaji"
+        num_clicks: "Imebonyezwa"
+        num_topics: "Mada"
     top_traffic_sources:
       title: "Chanzo cha Msongamano Kwenye Mtandao"
       xaxis: "Kikoa"
       num_clicks: "Imebonyezwa"
       num_topics: "Mada"
       num_users: "Watumiaji"
+      labels:
+        domain: Kikoa
+        num_clicks: Imebonyezwa
+        num_topics: Mada
     top_referred_topics:
       title: "Mada za Juu za Kurejesha"
+      labels:
+        num_clicks: "Imebonyezwa"
+        topic: "Mada"
     page_view_anon_reqs:
       title: "Asiyejulikana"
       xaxis: "Siku"
@@ -649,6 +682,7 @@ sw:
     page_view_crawler_reqs:
       xaxis: "Siku"
     page_view_total_reqs:
+      title: "Ukurasa Umeonwa Mara"
       xaxis: "Siku"
       yaxis: "Karatasi imeonwa Mara"
     page_view_logged_in_mobile_reqs:
@@ -690,6 +724,21 @@ sw:
     mobile_visits:
       xaxis: "Siku"
       yaxis: "Namba ya watu waliyotembelea"
+    web_crawlers:
+      labels:
+        user_agent: "Mwakilishi wa Mtumiaji"
+        page_views: "Ukurasa Umeonwa Mara"
+    suspicious_logins:
+      labels:
+        user: Mtumiaji
+        location: Sehemu
+    staff_logins:
+      labels:
+        user: Mtumiaji
+        location: Sehemu
+    top_uploads:
+      labels:
+        filename: Jina la faili
   dashboard:
     rails_env_warning: "Seva inafanyakazi ndani ya %{env} halitumizi."
     host_names_warning: "Fili lako la config/database.yml linatumia localhost hostname. Sasisha ili itumie hostname ya tovuti yako."
@@ -701,7 +750,6 @@ sw:
   site_settings:
     censored_words: "Maneno ambayo yatabadilishwa kuwa &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "Futa machapisho yote ambayo yatakuwa yamefichwa baada ya siku 30."
-    default_locale: "Lugha ya Discourse"
     allow_user_locale: "Waruhusu watumiaji wachague lugha ya kutumia au kuwasiliana"
     support_mixed_text_direction: "ruhusu mchanganyiko wa mwelekeo wa maneno wa kushoto-kwenda-kulia na kulia-kwenda-kushoto"
     min_post_length: "Kiwango cha chini cha herufi za chapisho zinazokubaliwa"
@@ -737,7 +785,6 @@ sw:
     summary_posts_required: "Kiwango cha chini cha machapisho ndani ya mada kabla 'Fupisha Mada' haijaonyeshwa"
     summary_likes_required: "Kiwango cha chini cha likes ndani ya mada kabla 'Mada kufupishwa' haijaruhusiwa"
     summary_percent_filter: "Mtumiaji akibonyeza 'Fupisha Hii Mada', onyesha % machapisho ya juu"
-    summary_max_results: "Kiwango cha juu cha machapisho zinazoonyeshwa kutoka kwa 'Muhtasari wa Hii Mada'"
     enable_personal_messages: "Ruhusu watumiaji wenye kiwango cha 1 cha uaminifu (inasanidiwa kwa kupitia kiwango cha chini cha uaminifu kutuma ujumbe) kutuma ujumbe wa barua pepe. Wasaidizi wataweza kutuma ujumbe mda kila wakati."
     enable_system_message_replies: "Waruhusu watumiaji wajibu ujumbe wa mfumo,hata kama ujumbe binafsi umezuiliwa."
     notify_mods_when_user_silenced: "Kama mtumiaji akinyamazishwa, tuma ujumbe kwa wasimamizi wote."
@@ -746,7 +793,7 @@ sw:
     must_approve_users: "Wasaidizi lazima wathibitishe akaunti zote mpya za watumiaji kabla hawajaruhusiwa kufikia tovuti. ONYO: ukiruhusu hii kwenye tovuti iliyo hewani, itasitisha ufikivu wa watumiaji ambao sio wasaidizi!"
     pending_users_reminder_delay: "Wajulishe wasimamizi kama watumiaji wapya wamekuwa wanasubiria kibali kwa mda zaidi ya masaa haya. Seti -1 kusitisha taarifa."
     maximum_session_age: "mtumiaji ataendelea kuwa ndani kwa masaa n toka mara ya mwisho alipotembelea"
-    allow_moderators_to_create_categories: "Waruhusu wasimamizi watengeneze mada mpya"
+    moderators_create_categories: "Waruhusu wasimamizi watengeneze mada mpya"
     site_contact_username: "Jina la msaidizi lililo sahihi litakalotuma ujumbe otomatikali. Kama ikiachwa wazi chaguo-msingi la akaunti ya mfumo litatumika."
     send_welcome_message: "Watumie watumiaji wapya ujumbe wa kuwakaribisha na muongozo mfupi wa kuanzia."
     topics_per_period_in_top_summary: "Namba ya mada za juu zitakazo onyeshwa kama chaguo-msingi la muhtasari wa mada za juu."
@@ -766,7 +813,6 @@ sw:
     enable_local_logins_via_email: "Ruhusu watumiaji kuomba kuingia kupitia kiungo ambacho kitatumwa kupitia barua pepe."
     allow_new_registrations: "Ruhusu usajili wa watumiaji wapya. Ondoa hii kusitisha mtu yoyote kutengeneza akaunti mpya."
     enable_signup_cta: "Onyesha ilani kwa watumiaji wasiojulikana itakayowaambia watengeneze akaunti."
-    enable_yahoo_logins: "Ruhusu  Uhalalishaji wa Yahoo"
     google_oauth2_client_id: "Utambulisho wa Mtumiaji kwa ajili ya Programu-timizi ya Google"
     google_oauth2_client_secret: "Siri ya Mtumiaji kwa ajili ya Programu-timizi ya Google"
     enable_instagram_logins: "Ruhusu Uhalalishaji wa Instagram, inahitaji instagram_consumer_key na instagram_consumer_secret"
@@ -855,9 +901,7 @@ sw:
     num_hours_to_close_topic: "Mda wa masaa kusitisha mada ili kuingilia."
     auto_silence_fast_typers_max_trust_level: "Kiwango cha  juu cha uaminifu kunyamazisha wanaochapa haraka sana otomatikali"
     auto_silence_first_post_regex: "Taarifa zilizo ndani ya mabano hazitapewa kipaumbele kama herufi ni kubwa au ndogo, kama zikipitishwa zitasababisha chapisho la kwanza linyamazishwe na lisubirishwe. Mfano raging|a[bc]a , itasababisha machapisho yote yenye raging au aba au aca yamazishwe mara ya kwanza. Kanuni hii inatokea kwenye chapisho la kwanza tu."
-    flags_default_topics: "Onyesha mada zilizoripotiwa kama chaguo-msingi upande wa kiongozi"
     reply_by_email_enabled: "Ruhusu majibu ya mada kupitia barua pepe."
-    private_email: "Usiweke ndani maandishi ya machapisho au mada kwenye barua pepe kwa ajili ya ulinzi zaidi."
     delete_all_posts_max: "Kiwango cha juu cha machapisho yanayoweza kufutwa mara moja na kitufe cha Futa Machapisho Yote. Kama mtumiaji ana namba fulani ya machapisho, machapisho hayawezi kufutwa mara moja na mtumiaji hawezi kufutwa. "
     digest_topics: "Kiwango cha juu cha mada maarufu kuonyeshwa kwenye muhtasari wa barua pepe."
     digest_posts: "Kiwango cha juu cha machapisho kitakacho onyeshwa kwenye muhtasari ya barua pepe."
@@ -868,7 +912,6 @@ sw:
     sequential_replies_threshold: "Namba ya machapisho mtumiaji anaruhusiwa kuandika kabla ya kukumbushwa kuwa ameandika majibu mengi yanayofuatana."
     get_a_room_threshold: "Namba ya machapisho mtumiaji anaruhusiwa kuandika kwa mtu mmoja kwenye mada moja kabla ya kupata onyo."
     dominating_topic_minimum_percent: "Namba ya machapisho mtumiaji anaruhusiwa kuandika kwenye mada kabla ya kukumbushwa kuwa anamiliki mada sana."
-    native_app_install_banner: "Waulize wageni wa mara kwa mara kusanikisha Discourse programu-tumizi."
     auto_handle_queued_age: "Shughulikia rekodi zinazosubirishwa baada ya siku hizi. Bendera zitapuuzwa . Machapisho kwenye foleni na watumiaji watakataliwa. Weka namba 0 kusitisha hiki kipengele."
     display_name_on_posts: "Onyesha jina lote kwenye machapisho zaidi ya @jinalamtumiaji"
     show_time_gap_days: "Kama machapisho mawili yametengenezwa baada ya siku hizi kupita, onyesha utofauti wa mda kwenye mada."
@@ -890,13 +933,9 @@ sw:
     max_allowed_message_recipients: "Kiwango cha juu cha wapokeaji wanaoruhusiwa kwenye ujumbe."
     default_email_digest_frequency: "Mara ngapi watumiaji watapata muhtasari wa barua pepe kama chaguo-msingi."
     default_include_tl0_in_digests: "Tia ndani machapisho ya watumiaji wapya kwenye muhtasari wa barua pepe kama chapio-msingi. Watumiaji wanaweza kubadilisha hii kwenye mapendekezo yao."
-    default_email_personal_messages: "tuma barua pepe mtumiaji akitumiwa ujumbe kama chaguo-msingi."
-    default_email_direct: "tuma barua pepe mtu akinukulu/kujibu kwa/akitaja au mualika mtumiaji kama chaguo-msingi."
     default_email_mailing_list_mode: "Tuma barua pepe kwa ajili ya kila chapisho jipya kama chaguo-msingi."
-    default_email_always: "Tuma taarifa kwa njia ya barua pepe hata kama mtumiaji ni amilifu kama chaguo-msingi."
     default_email_previous_replies: "Weka ndani majibu ya awali kwenye barua pepe kama chaguo-msingi"
     default_other_enable_quoting: "Ruhusu jibu nukulu kwenye neno lenye angaza kama chaguo-msingi."
-    default_other_disable_jump_reply: "Usifikie chapisho la mtumiaji baada ya kujibiwa kama chaguo-msingi."
     default_other_like_notification_frequency: "Wajulishe watumiaji kuhusu upendo kama chaguo-msingi"
     default_topics_automatic_unpin: "Otomatikali ondoa mada zilizobandikwa mtumiaji akifika mwisho wa ukurasa kama chaguo-msingi."
     default_categories_watching: "Orodha ya kategoria zinazoangaliwa kama chaguo-msingi."
@@ -912,7 +951,6 @@ sw:
     allow_staff_to_tag_pms: "Ruhusu wasaidizi walebo ujumbe wowote binafsi"
     min_trust_level_to_tag_topics: "Kiwango cha chini kabisa kinachohitajika kulebo mada"
     suppress_overlapping_tags_in_list: "Kama lebo zina maneno ambayo yapo kwenye vichwa vya mada, usionyeshe lebo"
-    remove_muted_tags_from_latest: "Usionyeshe mada zenye lebo za kunyamazishwa kwenye orodha ya mada za hivi karibuni."
     errors:
       invalid_email: "Barua pepe batili."
       invalid_username: "Hakuna mtumiaji mwenye hilo jina."
@@ -931,6 +969,8 @@ sw:
       reply_by_email_disabled: "Kwanza ruhusu 'jibu kupitia barua pepe' kabla ya kuruhusu mpangilio huu."
       sso_url_is_empty: "Kwanza ruhusu 'sso url' kabla ya kuruhusu mpangilio huu."
       enable_local_logins_disabled: "Kwanza ruhusu 'ruhusu programu-jalizi ' kabla ya kuruhusu mpangilio huu."
+      min_username_length_range: "Hauwezi ukaseti kiwango cha chini kiwe zaidi ya kiwango cha juu."
+      max_username_length_range: "Hauwezi ukaweka kiwango cha juu kiwe kidogo ya kiwango cha chini."
   search:
     within_post: "#%{post_number} za %{username}"
     types:
@@ -989,6 +1029,10 @@ sw:
     already_logged_in: "Inaonekana kuwa unajaribu kukubali mualiko kwa ajili ya mtumiaji mwingine.  Kama wewe sio %{current_user}, tafadhali toka nje ya akaunti yako alafu jaribu kuingia tena."
     second_factor_title: "Uthibitisho wa Vipengele Viwili"
     second_factor_description: "Tafadhali andika kodi ya uthibitisho kutoka kwenye programu-tumizi:"
+    second_factor_backup_description: "Samahani, Ingiza mojawapo ya kodi yako ya backup"
+  admin:
+    email:
+      sent_test: "imetumwa!"
   user:
     deactivated: "Imesitishwa kwa sababu barua pepe nyingi hazifikii '%{email}'."
     deactivated_by_staff: "Imesitishwa na msimamizi"
@@ -1127,8 +1171,8 @@ sw:
     agreed: "Asante kwa kutujulisha. Tunakubali kuwa kuna tatizo na tunaifuatilia."
     agreed_and_deleted: "Asante kwa kutujulisha. Tunakubali kuwa kuna tatizo na tumeondoa chapisho."
     disagreed: "Asante kwa kutujulisha. Tutaifuatilia."
-    deferred: "Asante kwa kutujulisha. Tutaifuatilia."
-    deferred_and_deleted: "Asante kwa kutujulisha. Tumeondoa chapisho."
+    ignored: "Asante kwa kutujulisha. Tutaifuatilia."
+    ignored_and_deleted: "Asante kwa kutujulisha. Tumeondoa chapisho."
   system_messages:
     private_topic_title: "Mada #%{id}"
     contents_hidden: "Tafadhali tembelea chapisho kuona taarifa zake."
@@ -1426,10 +1470,6 @@ sw:
         Unaweza kuandika majibu na mada tena. Asante kwa uvumilivu wako.
     pending_users_reminder:
       title: "Ukumbusho wa Watumiaji Waliosubirishwa"
-      text_body_template: |
-        Kuna watumiaji wapya waliojiunga wanaosubiria kupata kibali (au kukataliwa) kabla hawajafikia jumuia hii.
-
-        [Tafadhali kagua kwenye upande wa kiongozi](%{base_url}/admin/users/list/pending).
     dashboard_problems:
       title: "Matatizo ya Ubao"
     new_user_of_the_month:
@@ -1443,10 +1483,6 @@ sw:
         Kwa haraka sana, umekuwa mwanachama muhimu sana kwenye jumuia yetu. Asante sana kwa kujiunga, na endelea kufanya kazi nzuri!
     queued_posts_reminder:
       title: "Ukumbusho wa Machapisho Yalipangwa"
-      text_body_template: |
-        Habari,
-
-        Machapisho kutoka kwa mtumiaji mpya yamesimamishwa kwa ajili ya ukaguzi na yanasubiria kukaguliwa. [Thibitisha au Kataa hapa](%{base_url}/subirishwa-machapisho).
   unsubscribe_link: |
     Kujitoa kwenye barua pepe hizi, [bofya hapa](%{unsubscribe_url}).
   unsubscribe_link_and_mail: |
@@ -1585,6 +1621,16 @@ sw:
         %{context}
 
         %{respond_instructions}
+    user_mentioned_pm:
+      subject_template: "[%{email_prefix}] [PM] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
     user_group_mentioned:
       title: "Kikundi cha Watumiaji Kimetajwa"
       subject_template: "[%{email_prefix}] %{topic_title}"
@@ -1679,7 +1725,6 @@ sw:
       unread_messages: "Ujumbe ambao Haujasomwa"
       unread_notifications: "Taarifa ambazo Hazijasomwa"
       liked_received: "Upendo Uliopokelewa"
-      new_posts: "Machapisho Mapya"
       new_users: "Watumiaji Wapya"
       popular_topics: "Mada Maarufu"
       follow_topic: "Fuatilia mada"
@@ -1803,6 +1848,7 @@ sw:
     recent_topics: "Hivi Karibuni"
     see_more: "Zaidi"
     search_title: "Tafuta tovuti hii"
+    search_button: "Tafuta"
   offline:
     title: "Haiwezi kupakia programu-tumizi"
     offline_page_message: "Inaonekana kuwa hauko hewani! Tafadhali angalia muunganisho wa mtandao na jaribu tena."
@@ -1832,12 +1878,31 @@ sw:
   flag_reason:
     sockpuppet: "Mtumiaji mpya ametengeneza mada, na mtumiaji mpya mwenye anwani ya mtandao hiyo hiyo (%{ip_address}) amejibu. Angalia mpangilio wa tovuti <a href='%{base_path}/admin/site_settings/category/spam'>`flag_sockpuppets`</a>."
     spam_hosts: "Mtumiaji mpya amejaribu kutengeneza machapisho mengi yenye viungo kwenda kwa kikoa (%{domain}). Tembelea <a href='%{base_path}/admin/site_settings/category/spam'>`newuser_spam_host_threshold`</a> mpangilio wa tovuti."
+  skipped_email_log:
+    exceeded_emails_limit: "Kiwango kimepita max_emails_per_day_per_user"
+    exceeded_bounces_limit: "Kiwango kimepita bounce_score_threshold"
+    mailing_list_no_echo_mode: "Taarifa za orodha ya ujumbe zimezimwa kwa machapisho ya mtumiaji."
+    user_email_no_user: "Tumeshindwa kumpata mtumiaji mwenye utambulisho %{user_id}"
+    user_email_post_not_found: "Tumeshindwa kupata chapisho lenye utambulisho %{user_id}"
+    user_email_anonymous_user: "Mtumiaji Asiyejulikana"
+    user_email_user_suspended_not_pm: "Mtumiaji amesimamishwa, sio ujumbe"
+    user_email_seen_recently: "Mtumiaji alionwa hivi karibuni"
+    user_email_notification_already_read: "Taarifa zilizokuwa ndani ya barua pepe hii zimesomwa."
+    user_email_notification_topic_nil: "chapisho.mada ni sifuri"
+    user_email_post_user_deleted: "Muandishi wa mada ameondolewa."
+    user_email_post_deleted: "chapisho limefutwa na muandishi"
+    user_email_user_suspended: "mtumiaji alisitishwa"
+    user_email_already_read: "mtumiaji amesoma mada hii"
+    sender_message_blank: "ujumbe hauna maandishi"
+    sender_message_to_blank: "ujumbe.to hauna maandishi"
+    sender_text_part_body_blank: "text_part.body hauna maandishi"
+    sender_body_blank: "mwili hauna maandishi"
   color_schemes:
+    light: "Hafifu"
+    dark: "Nyeusi"
+    default_theme_name: "Hafifu"
     light_theme_name: "Hafifu"
     dark_theme_name: "Nyeusi"
-  about: "Kuhusu"
-  guidelines: "Miongozo"
-  privacy: "Siri"
   edit_this_page: "Hariri ukurasa huu"
   csv_export:
     boolean_yes: "Ndiyo"
@@ -1940,6 +2005,10 @@ sw:
       ## [Sheria na Masharti](#tos)
 
       Ndio, sheria hinikiza, ila inabidi tujilinde &ndash; na watumiaji wenye tabia mbaya. Tuna [Sheria na Masharti](%{base_path}/tos) yanayoelezea tabia yako (na yetu) na haki za maandishi, faragha, na sheria. Kutumia huduma hizi, inabidi ukubaliane na [TOS](%{base_path}/tos) zetu.
+  tos_topic:
+    title: "Masharti ya Huduma"
+  privacy_topic:
+    title: "Sera ya Faragha"
   badges:
     editor:
       name: Mhariri
@@ -2101,13 +2170,10 @@ sw:
         Beji hii inatolewa kwa watumiaji wawili wapya kila mwezi kuwapongeza kwa mchango wao, inapimwa kulingana na machapisho mangapi yalipendwa, na nani.
     enthusiast:
       name: Mwenye Motisha
-      description: Ametembelea siku 10
     aficionado:
       name: Aficionado
-      description: Ametembelea siku 100
     devotee:
       name: Mshiriki
-      description: Ametembelea siku 365
     badge_title_metadata: "beji %{display_name} kwenye %{site_title} "
   admin_login:
     success: "Barua Pepe Imetumwa"
@@ -2122,7 +2188,6 @@ sw:
     title: "Lebo"
     staff_tag_disallowed: 'lebo ya "%{tag}" inatumiwa na wasaidizi pekee.'
     staff_tag_remove_disallowed: 'lebo ya "%{tag}" inaweza kuondolewa na wasaidizi tu.'
-    minimum_required_tags: "Chagua lebo %{count} au zaidi."
   rss_by_tag: "Mada zenye lebo %{tag}"
   finish_installation:
     congratulations: "Hongera, umesakinisha Discourse!"
@@ -2132,7 +2197,6 @@ sw:
       help: "sajili akaunti mpya kuanza"
     confirm_email:
       title: "Thibitisha Barua pepe yako"
-      message: "<p>Tumekutumia barua pepe ya uanzisho kwenye <b>%{email}</b>. Tafadhali fuatiia maelezo kwenye barua pepe kuanzisha akaunti yako.</p><p>Kama haijafika, hakikisha umeandika barua pepe sawa kwenye Discourse yako na angalia folda la barua taka au spam.</p>"
     resend_email:
       title: "Tuma Tena Barua Pepe ya Uanzisho"
       message: "<p>Tumekutumia tena barua ya uanzishaji<b>%{email}</b>"
@@ -2168,16 +2232,13 @@ sw:
             one_paragraph: "Tafadhali hakikisha ujumbe wa kukaribisha ni aya moja."
       privacy:
         title: "Kufikia"
-        description: "<p>Je jamii yako inapatikana kwa kila mtu, au ni kwa wanachama, mualiko, au uthibitisho? Kama ungependa, unaweza kuseti vitu viwe  binafsi, kama ya kuonyesha kwa umma baadae. </p><p>Unaweza kutuma mialiko kutoka kwenye mada, au kutoka kwenye ukurasa binafsi wa mtumiaji, pia.</p>"
         fields:
           privacy:
             choices:
               open:
                 label: "Umma"
-                description: "Mtu yoyote  anaweza kuifikia jamii hii na kujiunga."
               restricted:
                 label: "Binafsi"
-                description: "Watu pekee waliopata mualiko au kuthibitishwa wanaweza kuona jamii"
       contact:
         title: "Wasiliana"
         fields:
@@ -2195,10 +2256,18 @@ sw:
         title: "Shirika"
       colors:
         title: "Mandhari"
+      themes_further_reading:
+        title: "Mandhari"
       logos:
         title: "Nembo"
+        fields:
+          logo:
+            label: "Nembo Msingi"
       icons:
         title: "Ikoni"
+        fields:
+          large_icon:
+            label: "Ikoni Kubwa"
       homepage:
         description: "Tunakushauri uonyeshe mada za hivi karibuni kwenye ukurasa wa kwanza, lakini unaweza kuonyesha kategoria (vikundi vya mada) kwenye ukurasa wa kwanza kama ungependelea."
         title: "Ukurasa mkuu"
@@ -2207,6 +2276,14 @@ sw:
             choices:
               latest:
                 label: "Mada za hivi Karibuni"
+              categories_only:
+                label: "Kategoria Pekee"
+              categories_with_featured_topics:
+                label: "Makundi yenye post shilikishi"
+              categories_and_latest_topics:
+                label: "Kategoria na Mada za Hivi Karibuni"
+              categories_and_top_topics:
+                label: "Kategoria na Mada za Juu"
       emoji:
         title: "Emoji"
       invites:
@@ -2217,3 +2294,44 @@ sw:
   search_logs:
     graph_title: "Idadi ya Utafiti"
   joined: "Alijiunga"
+  discourse_push_notifications:
+    popup:
+      confirm_title: "Taarifa mubashara zimewezeshwa - %{site_title}"
+      confirm_body: "Taarifa mubashara zimewezeshwa kikamilifu"
+  reviewables:
+    sensitivity:
+      disabled: "Imezuiwa"
+    actions:
+      agree_and_keep:
+        title: "Tunza Chapisho"
+        description: "Kubaliana na bendera na chapisho halitabadilishwa."
+      agree_and_suspend:
+        title: "Simamisha Mtumiaji"
+        description: "Kubaliana na bendera na simamisha mtumiaji."
+      agree_and_silence:
+        title: "Nyamazisha Mtumiaji"
+        description: "Kubaliana na bendera na nyamazisha mtumiaji."
+      agree_and_restore:
+        description: "Rudisha chapisho ili watumiaji wote waweze kuliona."
+      agree_and_hide:
+        title: "Ficha Chapisho"
+        description: "Ficha chapisho hili na otomatikali mtumie mtumiaji ujumbe wa kumwambia afanye uhariri."
+      delete_spammer:
+        title: "Futa Muandishi wa Taka"
+      delete_single:
+        title: "Futa"
+      disagree_and_restore:
+        description: "Rudisha chapisho ili watumiaji wote waweze kuliona."
+      disagree:
+        title: "Kataa"
+      ignore:
+        title: "Puuzia"
+      approve:
+        title: "Imethibitishwa"
+      reject_user:
+        delete:
+          title: "Futa Mtumiaji"
+      reject:
+        title: "Kataa"
+      delete_user:
+        title: "Futa Mtumiaji"

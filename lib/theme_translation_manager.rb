@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ThemeTranslationManager
   include ActiveModel::Serialization
   attr_reader :key, :default, :theme

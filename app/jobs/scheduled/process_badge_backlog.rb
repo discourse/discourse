@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Jobs
   class ProcessBadgeBacklog < Jobs::Scheduled
     every 1.minute

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_dependency 'guardian/category_guardian'
 require_dependency 'guardian/ensure_magic'
 require_dependency 'guardian/post_guardian'
@@ -30,6 +32,9 @@ class Guardian
     end
     def moderator?
       false
+    end
+    def anonymous?
+      true
     end
     def approved?
       false
@@ -107,11 +112,15 @@ class Guardian
     @user.staged?
   end
 
+  def is_anonymous?
+    @user.anonymous?
+  end
+
   # Can the user see the object?
   def can_see?(obj)
     if obj
       see_method = method_name_for :see, obj
-      return (see_method ? send(see_method, obj) : true)
+      return (see_method ? public_send(see_method, obj) : true)
     end
   end
 
@@ -130,7 +139,7 @@ class Guardian
     end
     create_method = :"can_create_#{target}?"
 
-    return send(create_method, parent) if respond_to?(create_method)
+    return public_send(create_method, parent) if respond_to?(create_method)
 
     true
   end
@@ -174,6 +183,12 @@ class Guardian
     SiteSetting.enable_badges && is_staff?
   end
 
+  def can_delete_reviewable_queued_post?(reviewable)
+    reviewable.present? &&
+      authenticated? &&
+      reviewable.created_by_id == @user.id
+  end
+
   def can_see_group?(group)
     return false if group.blank?
     return true if group.visibility_level == Group.visibility_levels[:public]
@@ -188,6 +203,25 @@ class Guardian
     if !membership.owner
       return false if group.visibility_level == Group.visibility_levels[:owners]
       return false if group.visibility_level == Group.visibility_levels[:staff]
+    end
+
+    true
+  end
+
+  def can_see_groups?(groups)
+    return false if groups.blank?
+    return true if groups.all? { |g| g.visibility_level == Group.visibility_levels[:public] }
+    return true if is_admin?
+    return true if is_staff? && groups.all? { |g| g.visibility_level == Group.visibility_levels[:staff] }
+    return false if user.blank?
+
+    memberships = GroupUser.where(group: groups, user_id: user.id).pluck(:owner)
+
+    return false if memberships.empty? || memberships.length < groups.size
+
+    if !memberships.all?
+      return false if groups.all? { |g| g.visibility_level == Group.visibility_levels[:owners] }
+      return false if groups.all? { |g| g.visibility_level == Group.visibility_levels[:staff] }
     end
 
     true
@@ -214,7 +248,7 @@ class Guardian
 
   # Can we approve it?
   def can_approve?(target)
-    is_staff? && target && target.active? && not(target.approved?)
+    is_staff? && target && target.active? && !target.approved?
   end
 
   def can_activate?(target)
@@ -390,6 +424,26 @@ class Guardian
     UserExport.where(user_id: @user.id, created_at: (Time.zone.now.beginning_of_day..Time.zone.now.end_of_day)).count == 0
   end
 
+  def can_mute_user?(user_id)
+    can_mute_users? &&
+      @user.id != user_id &&
+      User.where(id: user_id, admin: false, moderator: false).exists?
+  end
+
+  def can_mute_users?
+    return false if anonymous?
+    @user.staff? || @user.trust_level >= TrustLevel.levels[:basic]
+  end
+
+  def can_ignore_user?(user_id)
+    can_ignore_users? && @user.id != user_id && User.where(id: user_id, admin: false, moderator: false).exists?
+  end
+
+  def can_ignore_users?
+    return false if anonymous?
+    @user.staff? || @user.trust_level >= TrustLevel.levels[:member]
+  end
+
   def allow_themes?(theme_ids, include_preview: false)
     return true if theme_ids.blank?
 
@@ -446,7 +500,7 @@ class Guardian
   def can_do?(action, obj)
     if obj && authenticated?
       action_method = method_name_for action, obj
-      return (action_method ? send(action_method, obj) : true)
+      return (action_method ? public_send(action_method, obj) : true)
     else
       false
     end

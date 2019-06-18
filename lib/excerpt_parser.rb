@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ExcerptParser < Nokogiri::XML::SAX::Document
 
   attr_reader :excerpt
@@ -6,7 +8,7 @@ class ExcerptParser < Nokogiri::XML::SAX::Document
 
   def initialize(length, options = nil)
     @length = length
-    @excerpt = ""
+    @excerpt = +""
     @current_length = 0
     options || {}
     @strip_links = options[:strip_links] == true
@@ -19,8 +21,8 @@ class ExcerptParser < Nokogiri::XML::SAX::Document
     @remap_emoji = options[:remap_emoji] == true
     @start_excerpt = false
     @in_details_depth = 0
-    @summary_contents = ""
-    @detail_contents = ""
+    @summary_contents = +""
+    @detail_contents = +""
   end
 
   def self.get_excerpt(html, length, options)
@@ -104,7 +106,7 @@ class ExcerptParser < Nokogiri::XML::SAX::Document
 
     when "div", "span"
       if attributes.include?(["class", "excerpt"])
-        @excerpt = ""
+        @excerpt = +""
         @current_length = 0
         @start_excerpt = true
       end
@@ -115,12 +117,12 @@ class ExcerptParser < Nokogiri::XML::SAX::Document
       end
 
     when "details"
-      @detail_contents = "" if @in_details_depth == 0
+      @detail_contents = +"" if @in_details_depth == 0
       @in_details_depth += 1
 
     when "summary"
       if @in_details_depth == 1 && !@in_summary
-        @summary_contents = ""
+        @summary_contents = +""
         @in_summary = true
       end
 

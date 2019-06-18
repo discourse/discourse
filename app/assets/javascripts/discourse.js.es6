@@ -1,19 +1,26 @@
+/*global Mousetrap:true*/
 import { buildResolver } from "discourse-common/resolver";
 import {
   default as computed,
   observes
 } from "ember-addons/ember-computed-decorators";
+import FocusEvent from "discourse-common/mixins/focus-event";
 
 const _pluginCallbacks = [];
 
-const Discourse = Ember.Application.extend({
+const Discourse = Ember.Application.extend(FocusEvent, {
   rootElement: "#main",
   _docTitle: document.title,
   RAW_TEMPLATES: {},
   __widget_helpers: {},
-  showingSignup: false,
   customEvents: {
     paste: "paste"
+  },
+
+  reset() {
+    this._super(...arguments);
+
+    Mousetrap.reset();
   },
 
   getURL(url) {
@@ -41,9 +48,9 @@ const Discourse = Ember.Application.extend({
 
   Resolver: buildResolver("discourse"),
 
-  @observes("_docTitle", "hasFocus", "notifyCount")
+  @observes("_docTitle", "hasFocus", "contextCount", "notificationCount")
   _titleChanged() {
-    let title = this.get("_docTitle") || Discourse.SiteSettings.title;
+    let title = this._docTitle || Discourse.SiteSettings.title;
 
     // if we change this we can trigger changes on document.title
     // only set if changed.
@@ -51,22 +58,37 @@ const Discourse = Ember.Application.extend({
       $("title").text(title);
     }
 
-    const notifyCount = this.get("notifyCount");
-    if (notifyCount > 0 && !Discourse.User.currentProp("dynamic_favicon")) {
-      title = `(${notifyCount}) ${title}`;
+    var displayCount = this.displayCount;
+    if (displayCount > 0 && !Discourse.User.currentProp("dynamic_favicon")) {
+      title = `(${displayCount}) ${title}`;
     }
 
     document.title = title;
   },
 
-  @observes("notifyCount")
+  @computed("contextCount", "notificationCount")
+  displayCount() {
+    return Discourse.User.current() &&
+      Discourse.User.currentProp("title_count_mode") === "notifications"
+      ? this.notificationCount
+      : this.contextCount;
+  },
+
+  @observes("contextCount", "notificationCount")
   faviconChanged() {
     if (Discourse.User.currentProp("dynamic_favicon")) {
       let url = Discourse.SiteSettings.site_favicon_url;
+
+      // Since the favicon is cached on the browser for a really long time, we
+      // append the favicon_url as query params to the path so that the cache
+      // is not used when the favicon changes.
       if (/^http/.test(url)) {
         url = Discourse.getURL("/favicon/proxied?" + encodeURIComponent(url));
       }
-      new window.Favcount(url).set(this.get("notifyCount"));
+
+      var displayCount = this.displayCount;
+
+      new window.Favcount(url).set(displayCount);
     }
   },
 
@@ -78,23 +100,33 @@ const Discourse = Ember.Application.extend({
     });
   },
 
-  notifyTitle(count) {
-    this.set("notifyCount", count);
+  updateContextCount(count) {
+    this.set("contextCount", count);
   },
 
-  notifyBackgroundCountIncrement() {
-    if (!this.get("hasFocus")) {
+  updateNotificationCount(count) {
+    if (!this.hasFocus) {
+      this.set("notificationCount", count);
+    }
+  },
+
+  incrementBackgroundContextCount() {
+    if (!this.hasFocus) {
       this.set("backgroundNotify", true);
-      this.set("notifyCount", (this.get("notifyCount") || 0) + 1);
+      this.set("contextCount", (this.contextCount || 0) + 1);
     }
   },
 
   @observes("hasFocus")
-  resetBackgroundNotifyCount() {
-    if (this.get("hasFocus") && this.get("backgroundNotify")) {
-      this.set("notifyCount", 0);
+  resetCounts() {
+    if (this.hasFocus && this.backgroundNotify) {
+      this.set("contextCount", 0);
     }
     this.set("backgroundNotify", false);
+
+    if (this.hasFocus) {
+      this.set("notificationCount", 0);
+    }
   },
 
   authenticationComplete(options) {
@@ -166,17 +198,17 @@ const Discourse = Ember.Application.extend({
 
   assetVersion: Ember.computed({
     get() {
-      return this.get("currentAssetVersion");
+      return this.currentAssetVersion;
     },
     set(key, val) {
       if (val) {
-        if (this.get("currentAssetVersion")) {
+        if (this.currentAssetVersion) {
           this.set("desiredAssetVersion", val);
         } else {
           this.set("currentAssetVersion", val);
         }
       }
-      return this.get("currentAssetVersion");
+      return this.currentAssetVersion;
     }
   })
 }).create();

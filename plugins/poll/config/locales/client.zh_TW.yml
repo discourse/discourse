@@ -54,6 +54,8 @@ zh_TW:
           regular: 單選
           multiple: 多選
           number: 評分
+        poll_result:
+          label: 結果
         poll_config:
           max: 最大
           min: 最小

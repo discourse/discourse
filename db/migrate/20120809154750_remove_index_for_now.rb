@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class RemoveIndexForNow < ActiveRecord::Migration[4.2]
   def up
     remove_index "posts", ["forum_thread_id", "post_number"]

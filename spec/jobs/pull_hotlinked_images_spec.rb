@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 require 'jobs/regular/pull_hotlinked_images'
 
@@ -13,14 +15,29 @@ describe Jobs::PullHotlinkedImages do
     stub_request(:get, image_url).to_return(body: png, headers: { "Content-Type" => "image/png" })
     stub_request(:get, broken_image_url).to_return(status: 404)
     stub_request(:get, large_image_url).to_return(body: large_png, headers: { "Content-Type" => "image/png" })
+
+    stub_request(
+      :get,
+      "#{Discourse.base_url}/uploads/default/original/1X/f59ea56fe8ebe42048491d43a19d9f34c5d0f8dc.gif"
+    )
+
+    stub_request(
+      :get,
+      "#{Discourse.base_url}/uploads/default/original/1X/c530c06cf89c410c0355d7852644a73fc3ec8c04.png"
+    )
+
     SiteSetting.crawl_images = true
     SiteSetting.download_remote_images_to_local = true
     SiteSetting.max_image_size_kb = 2
     SiteSetting.download_remote_images_threshold = 0
   end
 
-  describe "#nochange" do
-    it 'does saves nothing if there are no large images to pull' do
+  describe '#execute' do
+    before do
+      Jobs.run_immediately!
+    end
+
+    it 'does nothing if there are no large images to pull' do
       post = Fabricate(:post, raw: 'bob bob')
       orig = post.updated_at
 
@@ -28,31 +45,26 @@ describe Jobs::PullHotlinkedImages do
       Jobs::PullHotlinkedImages.new.execute(post_id: post.id)
       expect(orig).to be_within(1.second).of(post.reload.updated_at)
     end
-  end
-
-  describe '#execute' do
-    before do
-      SiteSetting.queue_jobs = false
-      FastImage.expects(:size).returns([100, 100]).at_least_once
-    end
 
     it 'replaces images' do
       post = Fabricate(:post, raw: "<img src='#{image_url}'>")
 
-      Jobs::PullHotlinkedImages.new.execute(post_id: post.id)
-      post.reload
+      expect do
+        Jobs::PullHotlinkedImages.new.execute(post_id: post.id)
+      end.to change { Upload.count }.by(1)
 
-      expect(post.raw).to match(/^<img src='\/uploads/)
+      expect(post.reload.raw).to eq("![](#{Upload.last.short_url})")
     end
 
     it 'replaces images without protocol' do
       url = image_url.sub(/^https?\:/, '')
-      post = Fabricate(:post, raw: "<img src='#{url}'>")
+      post = Fabricate(:post, raw: "<img alt='test' src='#{url}'>")
 
-      Jobs::PullHotlinkedImages.new.execute(post_id: post.id)
-      post.reload
+      expect do
+        Jobs::PullHotlinkedImages.new.execute(post_id: post.id)
+      end.to change { Upload.count }.by(1)
 
-      expect(post.raw).to match(/^<img src='\/uploads/)
+      expect(post.reload.raw).to eq("![test](#{Upload.last.short_url})")
     end
 
     it 'replaces images without extension' do
@@ -60,10 +72,76 @@ describe Jobs::PullHotlinkedImages do
       stub_request(:get, url).to_return(body: png, headers: { "Content-Type" => "image/png" })
       post = Fabricate(:post, raw: "<img src='#{url}'>")
 
-      Jobs::PullHotlinkedImages.new.execute(post_id: post.id)
+      expect do
+        Jobs::PullHotlinkedImages.new.execute(post_id: post.id)
+      end.to change { Upload.count }.by(1)
+
+      expect(post.reload.raw).to eq("![](#{Upload.last.short_url})")
+    end
+
+    it 'replaces optimized images' do
+      optimized_image = Fabricate(:optimized_image)
+      url = "#{Discourse.base_url}#{optimized_image.url}"
+
+      stub_request(:get, url)
+        .to_return(status: 200, body: file_from_fixtures("smallest.png"))
+
+      post = Fabricate(:post, raw: "<img src='#{url}'>")
+
+      expect { Jobs::PullHotlinkedImages.new.execute(post_id: post.id) }
+        .to change { Upload.count }.by(1)
+
+      upload = Upload.last
       post.reload
 
-      expect(post.raw).to match(/^<img src='\/uploads/)
+      expect(post.raw).to eq("![](#{upload.short_url})")
+      expect(post.uploads).to contain_exactly(upload)
+    end
+
+    it 'replaces markdown image' do
+      post = Fabricate(:post, raw: <<~MD)
+      [![some test](#{image_url})](https://somelink.com)
+      ![some test](#{image_url})
+      ![](#{image_url})
+      ![abcde](#{image_url} 'some test')
+      ![](#{image_url} 'some test')
+      MD
+
+      expect { Jobs::PullHotlinkedImages.new.execute(post_id: post.id) }
+        .to change { Upload.count }.by(1)
+
+      post.reload
+
+      expect(post.raw).to eq(<<~MD.chomp)
+      [![some test](#{Upload.last.short_url})](https://somelink.com)
+      ![some test](#{Upload.last.short_url})
+      ![](#{Upload.last.short_url})
+      ![abcde](#{Upload.last.short_url} 'some test')
+      ![](#{Upload.last.short_url} 'some test')
+      MD
+    end
+
+    it 'replaces bbcode images' do
+      post = Fabricate(:post, raw: <<~MD)
+      [img]
+      #{image_url}
+      [/img]
+
+      [img]
+      #{image_url}
+      [/img]
+      MD
+
+      expect { Jobs::PullHotlinkedImages.new.execute(post_id: post.id) }
+        .to change { Upload.count }.by(1)
+
+      post.reload
+
+      expect(post.raw).to eq(<<~MD.chomp)
+      ![](#{Upload.last.short_url})
+
+      ![](#{Upload.last.short_url})
+      MD
     end
 
     describe 'onebox' do
@@ -72,9 +150,10 @@ describe Jobs::PullHotlinkedImages do
       let(:api_url) { "https://en.wikipedia.org/w/api.php?action=query&titles=#{media}&prop=imageinfo&iilimit=50&iiprop=timestamp|user|url&iiurlwidth=500&format=json" }
 
       before do
-        SiteSetting.queue_jobs = true
+        Jobs.run_later!
         stub_request(:head, url)
         stub_request(:get, url).to_return(body: '')
+
         stub_request(:get, api_url).to_return(body: "{
           \"query\": {
             \"pages\": {
@@ -110,11 +189,19 @@ describe Jobs::PullHotlinkedImages do
         <a href='#{url}'><img src='#{large_image_url}'></a>
         BODY
 
-        Jobs::ProcessPost.new.execute(post_id: post.id)
-        Jobs::PullHotlinkedImages.new.execute(post_id: post.id)
-        Jobs::ProcessPost.new.execute(post_id: post.id)
-        Jobs::PullHotlinkedImages.new.execute(post_id: post.id)
+        2.times do
+          Jobs::ProcessPost.new.execute(post_id: post.id)
+          Jobs::PullHotlinkedImages.new.execute(post_id: post.id)
+        end
+
         post.reload
+
+        expect(post.raw).to eq(<<~MD.chomp)
+        ![](upload://z2QSs1KJWoj51uYhDjb6ifCzxH6.gif)
+        https://commons.wikimedia.org/wiki/File:Brisbane_May_2013201.jpg
+        <img src='#{broken_image_url}'>
+        <a href='#{url}'><img src='#{large_image_url}'></a>
+        MD
 
         expect(post.cooked).to match(/<p><img src=.*\/uploads/)
         expect(post.cooked).to match(/<img src=.*\/uploads.*\ class="thumbnail"/)
@@ -124,21 +211,103 @@ describe Jobs::PullHotlinkedImages do
     end
   end
 
-  describe '#is_valid_image_url' do
+  describe '#should_download_image?' do
     subject { described_class.new }
 
     describe 'when url is invalid' do
       it 'should return false' do
-        expect(subject.is_valid_image_url("null")).to eq(false)
-        expect(subject.is_valid_image_url("meta.discourse.org")).to eq(false)
+        expect(subject.should_download_image?("null")).to eq(false)
+        expect(subject.should_download_image?("meta.discourse.org")).to eq(false)
       end
     end
 
     describe 'when url is valid' do
       it 'should return true' do
-        expect(subject.is_valid_image_url("http://meta.discourse.org")).to eq(true)
-        expect(subject.is_valid_image_url("//meta.discourse.org")).to eq(true)
+        expect(subject.should_download_image?("http://meta.discourse.org")).to eq(true)
+        expect(subject.should_download_image?("//meta.discourse.org")).to eq(true)
       end
+    end
+
+    describe 'when url is an upload' do
+      it 'should return false for original' do
+        expect(subject.should_download_image?(Fabricate(:upload).url)).to eq(false)
+      end
+
+      it 'should return true for optimized' do
+        src = Discourse.store.get_path_for_optimized_image(Fabricate(:optimized_image))
+        expect(subject.should_download_image?(src)).to eq(true)
+      end
+    end
+
+    context "when download_remote_images_to_local? is false" do
+      before do
+        SiteSetting.download_remote_images_to_local = false
+      end
+
+      it "still returns true for optimized" do
+        src = Discourse.store.get_path_for_optimized_image(Fabricate(:optimized_image))
+        expect(subject.should_download_image?(src)).to eq(true)
+      end
+
+      it "returns false for emoji" do
+        src = Emoji.url_for("testemoji.png")
+        expect(subject.should_download_image?(src)).to eq(false)
+      end
+
+      it 'returns false for valid remote URLs' do
+        expect(subject.should_download_image?("http://meta.discourse.org")).to eq(false)
+      end
+    end
+  end
+
+  describe "with a lightboxed image" do
+    fab!(:upload) { Fabricate(:upload) }
+    fab!(:user) { Fabricate(:user) }
+
+    before do
+      FastImage.expects(:size).returns([1750, 2000]).at_least_once
+      OptimizedImage.stubs(:resize).returns(true)
+      Jobs.run_immediately!
+    end
+
+    it 'replaces missing local uploads in lightbox link' do
+      post = PostCreator.create!(
+        user,
+        raw: "<img src='#{Discourse.base_url}#{upload.url}'>",
+        title: "Some title that is long enough"
+      )
+
+      expect(post.reload.cooked).to have_tag(:a, with: { class: "lightbox" })
+
+      stub_request(:get, "#{Discourse.base_url}#{upload.url}")
+        .to_return(status: 200, body: file_from_fixtures("smallest.png"))
+
+      upload.delete
+
+      expect { Jobs::PullHotlinkedImages.new.execute(post_id: post.id) }
+        .to change { Upload.count }.by(1)
+
+      post.reload
+
+      expect(post.raw).to eq("![](#{Upload.last.short_url})")
+      expect(post.uploads.count).to eq(1)
+    end
+
+    it "doesn't remove optimized images from lightboxes" do
+      post = PostCreator.create!(
+        user,
+        raw: "![alt](#{upload.short_url})",
+        title: "Some title that is long enough"
+      )
+
+      expect(post.reload.cooked).to have_tag(:a, with: { class: "lightbox" })
+
+      expect { Jobs::PullHotlinkedImages.new.execute(post_id: post.id) }
+        .not_to change { Upload.count }
+
+      post.reload
+
+      expect(post.raw).to eq("![alt](#{upload.short_url})")
     end
   end
 

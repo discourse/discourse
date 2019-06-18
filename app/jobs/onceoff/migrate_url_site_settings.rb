@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Jobs
   class MigrateUrlSiteSettings < Jobs::Onceoff
     SETTINGS = [
@@ -15,6 +17,12 @@ module Jobs
 
     def execute_onceoff(args)
       SETTINGS.each do |old_setting, new_setting|
+
+        if (upload = SiteSetting.get(new_setting)) && upload.id >= Upload::SEEDED_ID_THRESHOLD
+          logger.warn("Skipping migration of the Site Setting #{new_setting} to url cause upload #{upload} already exists for it")
+          next
+        end
+
         old_url = DB.query_single(
           "SELECT value FROM site_settings WHERE name = '#{old_setting}'"
         ).first
@@ -73,7 +81,7 @@ module Jobs
           for_site_setting: true
         ).create_for(Discourse.system_user.id)
 
-        SiteSetting.public_send("#{new_setting}=", upload)
+        SiteSetting.set(new_setting, upload)
       end
     end
 

@@ -1,4 +1,7 @@
-import { observes } from "ember-addons/ember-computed-decorators";
+import {
+  default as computed,
+  observes
+} from "ember-addons/ember-computed-decorators";
 
 export default Ember.Component.extend({
   tagName: "table",
@@ -16,30 +19,32 @@ export default Ember.Component.extend({
     this.refreshLastVisited();
   }.on("init"),
 
-  toggleInTitle: function() {
-    return !this.get("bulkSelectEnabled") && this.get("canBulkSelect");
-  }.property("bulkSelectEnabled"),
+  @computed("bulkSelectEnabled")
+  toggleInTitle(bulkSelectEnabled) {
+    return !bulkSelectEnabled && this.canBulkSelect;
+  },
 
-  sortable: function() {
-    return !!this.get("changeSort");
-  }.property(),
+  @computed
+  sortable() {
+    return !!this.changeSort;
+  },
 
-  skipHeader: function() {
-    return this.site.mobileView;
-  }.property(),
+  skipHeader: Ember.computed.reads("site.mobileView"),
 
-  showLikes: function() {
-    return this.get("order") === "likes";
-  }.property("order"),
+  @computed("order")
+  showLikes(order) {
+    return order === "likes";
+  },
 
-  showOpLikes: function() {
-    return this.get("order") === "op_likes";
-  }.property("order"),
+  @computed("order")
+  showOpLikes(order) {
+    return order === "op_likes";
+  },
 
   @observes("topics.[]")
   topicsAdded() {
     // special case so we don't keep scanning huge lists
-    if (!this.get("lastVisitedTopic")) {
+    if (!this.lastVisitedTopic) {
       this.refreshLastVisited();
     }
   },
@@ -52,7 +57,7 @@ export default Ember.Component.extend({
   _updateLastVisitedTopic(topics, order, ascending, top) {
     this.set("lastVisitedTopic", null);
 
-    if (!this.get("highlightLastVisited")) {
+    if (!this.highlightLastVisited) {
       return;
     }
 
@@ -111,10 +116,10 @@ export default Ember.Component.extend({
 
   refreshLastVisited() {
     this._updateLastVisitedTopic(
-      this.get("topics"),
-      this.get("order"),
-      this.get("ascending"),
-      this.get("top")
+      this.topics,
+      this.order,
+      this.ascending,
+      this.top
     );
   },
 

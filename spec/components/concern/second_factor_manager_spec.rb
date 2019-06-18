@@ -1,11 +1,13 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe SecondFactorManager do
-  let(:user_second_factor_totp) { Fabricate(:user_second_factor_totp) }
+  fab!(:user_second_factor_totp) { Fabricate(:user_second_factor_totp) }
   let(:user) { user_second_factor_totp.user }
-  let(:another_user) { Fabricate(:user) }
+  fab!(:another_user) { Fabricate(:user) }
 
-  let(:user_second_factor_backup) { Fabricate(:user_second_factor_backup) }
+  fab!(:user_second_factor_backup) { Fabricate(:user_second_factor_backup) }
   let(:user_backup) {  user_second_factor_backup.user }
 
   describe '#totp' do
@@ -53,7 +55,7 @@ RSpec.describe SecondFactorManager do
         token = user.totp.now
 
         expect(user.authenticate_totp(token)).to eq(true)
-        expect(user.user_second_factors.totp.last_used).to eq(DateTime.now)
+        expect(user.user_second_factors.totp.last_used).to eq_time(DateTime.now)
         expect(user.authenticate_totp(token)).to eq(false)
       end
     end

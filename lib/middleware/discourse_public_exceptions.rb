@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # since all the rescue from clauses are not caught by the application controller for matches
 # we need to handle certain exceptions here
 module Middleware

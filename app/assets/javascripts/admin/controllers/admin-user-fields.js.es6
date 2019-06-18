@@ -5,9 +5,13 @@ const MAX_FIELDS = 20;
 export default Ember.Controller.extend({
   fieldTypes: null,
   createDisabled: Ember.computed.gte("model.length", MAX_FIELDS),
-
-  fieldSortOrder: ["position"],
   sortedFields: Ember.computed.sort("model", "fieldSortOrder"),
+
+  init() {
+    this._super(...arguments);
+
+    this.fieldSortOrder = ["position"];
+  },
 
   actions: {
     createField() {
@@ -15,13 +19,13 @@ export default Ember.Controller.extend({
         field_type: "text",
         position: MAX_FIELDS
       });
-      this.get("model").pushObject(f);
+      this.model.pushObject(f);
     },
 
     moveUp(f) {
-      const idx = this.get("sortedFields").indexOf(f);
+      const idx = this.sortedFields.indexOf(f);
       if (idx) {
-        const prev = this.get("sortedFields").objectAt(idx - 1);
+        const prev = this.sortedFields.objectAt(idx - 1);
         const prevPos = prev.get("position");
 
         prev.update({ position: f.get("position") });
@@ -30,9 +34,9 @@ export default Ember.Controller.extend({
     },
 
     moveDown(f) {
-      const idx = this.get("sortedFields").indexOf(f);
+      const idx = this.sortedFields.indexOf(f);
       if (idx > -1) {
-        const next = this.get("sortedFields").objectAt(idx + 1);
+        const next = this.sortedFields.objectAt(idx + 1);
         const nextPos = next.get("position");
 
         next.update({ position: f.get("position") });
@@ -41,7 +45,7 @@ export default Ember.Controller.extend({
     },
 
     destroy(f) {
-      const model = this.get("model");
+      const model = this.model;
 
       // Only confirm if we already been saved
       if (f.get("id")) {

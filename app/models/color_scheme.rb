@@ -101,6 +101,8 @@ class ColorScheme < ActiveRecord::Base
 
   # rubocop:enable Layout/AlignHash
 
+  LIGHT_THEME_ID = 'Light'
+
   def self.base_color_scheme_colors
     base_with_hash = {}
 
@@ -109,7 +111,7 @@ class ColorScheme < ActiveRecord::Base
     end
 
     list = [
-      { id: 'Light', colors: base_with_hash }
+      { id: LIGHT_THEME_ID, colors: base_with_hash }
     ]
 
     CUSTOM_SCHEMES.each do |k, v|
@@ -142,13 +144,15 @@ class ColorScheme < ActiveRecord::Base
   @mutex = Mutex.new
 
   def self.base_colors
+    return @base_colors if @base_colors
     @mutex.synchronize do
       return @base_colors if @base_colors
-      @base_colors = {}
+      base_colors = {}
       File.readlines(BASE_COLORS_FILE).each do |line|
         matches = /\$([\w]+):\s*#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})(?:[;]|\s)/.match(line.strip)
-        @base_colors[matches[1]] = matches[2] if matches
+        base_colors[matches[1]] = matches[2] if matches
       end
+      @base_colors = base_colors
     end
     @base_colors
   end

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class FixIndexOnPostAction < ActiveRecord::Migration[4.2]
   def change
     remove_index "post_actions", name: "idx_unique_actions"

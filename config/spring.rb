@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # spring speeds up your dev environment, similar to zeus but build in Ruby
 #
 # gem install spring

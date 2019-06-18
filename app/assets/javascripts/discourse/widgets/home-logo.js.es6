@@ -17,7 +17,7 @@ export default createWidget("home-logo", {
   },
 
   logoUrl() {
-    return this.siteSettings.site_home_logo_url || "";
+    return this.siteSettings.site_logo_url || "";
   },
 
   mobileLogoUrl() {

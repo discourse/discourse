@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #####
 # Patch to allow open-uri to follow safe (http to https)
 # and unsafe redirections (https to http).
@@ -6,7 +8,7 @@
 # https://gist.github.com/1271420
 #
 # Relevant issue:
-# http://redmine.ruby-lang.org/issues/3719
+# https://redmine.ruby-lang.org/issues/3719
 #
 # Source here:
 # https://github.com/ruby/ruby/blob/trunk/lib/open-uri.rb

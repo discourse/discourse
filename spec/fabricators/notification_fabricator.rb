@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 Fabricator(:notification) do
   transient :post
   notification_type Notification.types[:mentioned]

@@ -7,8 +7,8 @@ export default Ember.Component.extend(
 
     buildBuffer(buffer) {
       buffer.push(
-        I18n.t(this.get("key") + (this.get("suffix") || ""), {
-          count: this.get("count")
+        I18n.t(this.key + (this.suffix || ""), {
+          count: this.count
         })
       );
     }

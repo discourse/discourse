@@ -13,17 +13,17 @@ export default Ember.Controller.extend({
   loadedAllItems: Ember.computed.not("discoveryTopics.model.canLoadMore"),
 
   _showFooter: function() {
-    this.set("application.showFooter", this.get("loadedAllItems"));
+    this.set("application.showFooter", this.loadedAllItems);
   }.observes("loadedAllItems"),
 
   showMoreUrl(period) {
     let url = "",
-      category = this.get("category");
+      category = this.category;
     if (category) {
       url =
         "/c/" +
         Discourse.Category.slugFor(category) +
-        (this.get("noSubcategories") ? "/none" : "") +
+        (this.noSubcategories ? "/none" : "") +
         "/l";
     }
     url += "/top/" + period;

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 describe Admin::PermalinksController do
@@ -6,7 +8,7 @@ describe Admin::PermalinksController do
     expect(Admin::PermalinksController < Admin::AdminController).to eq(true)
   end
 
-  let(:admin) { Fabricate(:admin) }
+  fab!(:admin) { Fabricate(:admin) }
 
   before do
     sign_in(admin)

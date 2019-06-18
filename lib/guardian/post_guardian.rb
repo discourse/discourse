@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #mixin for all guardian methods dealing with post permissions
 module PostGuardian
 
@@ -79,10 +81,6 @@ module PostGuardian
     can_see_post?(post) && is_staff?
   end
 
-  def can_defer_flags?(post)
-    can_see_post?(post) && is_staff? && post
-  end
-
   # Can we see who acted on a post in a particular way?
   def can_see_post_actors?(topic, post_action_type_id)
     return true if is_admin?
@@ -108,10 +106,9 @@ module PostGuardian
 
   # Creating Method
   def can_create_post?(parent)
-
     return false if !SiteSetting.enable_system_message_replies? && parent.try(:subtype) == "system_message"
 
-    (!SpamRule::AutoSilence.silence?(@user) || (!!parent.try(:private_message?) && parent.allowed_users.include?(@user))) && (
+    (!SpamRule::AutoSilence.prevent_posting?(@user) || (!!parent.try(:private_message?) && parent.allowed_users.include?(@user))) && (
       !parent ||
       !parent.category ||
       Category.post_create_allowed(self).where(id: parent.category.id).count == 1
@@ -167,9 +164,13 @@ module PostGuardian
     false
   end
 
+  def can_delete_post_or_topic?(post)
+    post.is_first_post? ? post.topic && can_delete_topic?(post.topic) : can_delete_post?(post)
+  end
+
   # Deleting Methods
   def can_delete_post?(post)
-    can_see_post?(post)
+    return false if !can_see_post?(post)
 
     # Can't delete the first post
     return false if post.is_first_post?
@@ -193,10 +194,11 @@ module PostGuardian
   end
 
   def can_delete_post_action?(post_action)
-    # You can only undo your own actions
-    is_my_own?(post_action) && not(post_action.is_private_message?) &&
+    return false unless is_my_own?(post_action) && !post_action.is_private_message?
 
-    # Make sure they want to delete it within the window
+    # Bookmarks do not have a time constraint
+    return true if post_action.is_bookmark?
+
     post_action.created_at > SiteSetting.post_undo_action_window_mins.minutes.ago
   end
 
@@ -227,7 +229,7 @@ module PostGuardian
   end
 
   def can_change_post_timestamps?
-    is_admin?
+    is_staff?
   end
 
   def can_wiki?(post)

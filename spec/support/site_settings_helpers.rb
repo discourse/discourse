@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module SiteSettingsHelpers
   def new_settings(provider)
     Class.new do

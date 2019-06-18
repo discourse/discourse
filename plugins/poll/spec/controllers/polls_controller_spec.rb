@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "rails_helper"
 
 describe ::DiscoursePoll::PollsController do
@@ -13,7 +15,9 @@ describe ::DiscoursePoll::PollsController do
   describe "#vote" do
 
     it "works" do
-      message = MessageBus.track_publish do
+      channel = "/polls/#{poll.topic_id}"
+
+      message = MessageBus.track_publish(channel) do
         put :vote, params: {
           post_id: poll.id, poll_name: "poll", options: ["5c24fc1df56d764b550ceae1b9319125"]
         }, format: :json
@@ -26,7 +30,7 @@ describe ::DiscoursePoll::PollsController do
       expect(json["poll"]["voters"]).to eq(1)
       expect(json["vote"]).to eq(["5c24fc1df56d764b550ceae1b9319125"])
 
-      expect(message.channel).to eq("/polls/#{poll.topic_id}")
+      expect(message.channel).to eq(channel)
       expect(message.user_ids).to eq(nil)
       expect(message.group_ids).to eq(nil)
     end
@@ -39,7 +43,9 @@ describe ::DiscoursePoll::PollsController do
       ])
       poll = Fabricate(:post, topic: topic, user: user, raw: "[poll]\n- A\n- B\n[/poll]")
 
-      message = MessageBus.track_publish do
+      channel = "/polls/#{poll.topic_id}"
+
+      message = MessageBus.track_publish(channel) do
         put :vote, params: {
           post_id: poll.id, poll_name: "poll", options: ["5c24fc1df56d764b550ceae1b9319125"]
         }, format: :json
@@ -52,7 +58,7 @@ describe ::DiscoursePoll::PollsController do
       expect(json["poll"]["voters"]).to eq(1)
       expect(json["vote"]).to eq(["5c24fc1df56d764b550ceae1b9319125"])
 
-      expect(message.channel).to eq("/polls/#{poll.topic_id}")
+      expect(message.channel).to eq(channel)
       expect(message.user_ids).to contain_exactly(user.id, user2.id)
       expect(message.group_ids).to eq(nil)
     end
@@ -64,7 +70,9 @@ describe ::DiscoursePoll::PollsController do
       topic = Fabricate(:topic, category: category)
       poll = Fabricate(:post, topic: topic, user: user, raw: "[poll]\n- A\n- B\n[/poll]")
 
-      message = MessageBus.track_publish do
+      channel = "/polls/#{poll.topic_id}"
+
+      message = MessageBus.track_publish(channel) do
         put :vote, params: {
           post_id: poll.id, poll_name: "poll", options: ["5c24fc1df56d764b550ceae1b9319125"]
         }, format: :json
@@ -77,7 +85,7 @@ describe ::DiscoursePoll::PollsController do
       expect(json["poll"]["voters"]).to eq(1)
       expect(json["vote"]).to eq(["5c24fc1df56d764b550ceae1b9319125"])
 
-      expect(message.channel).to eq("/polls/#{poll.topic_id}")
+      expect(message.channel).to eq(channel)
       expect(message.user_ids).to eq(nil)
       expect(message.group_ids).to contain_exactly(group.id)
     end
@@ -200,7 +208,9 @@ describe ::DiscoursePoll::PollsController do
   describe "#toggle_status" do
 
     it "works for OP" do
-      message = MessageBus.track_publish do
+      channel = "/polls/#{poll.topic_id}"
+
+      message = MessageBus.track_publish(channel) do
         put :toggle_status, params: {
           post_id: poll.id, poll_name: "poll", status: "closed"
         }, format: :json
@@ -210,13 +220,15 @@ describe ::DiscoursePoll::PollsController do
 
       json = ::JSON.parse(response.body)
       expect(json["poll"]["status"]).to eq("closed")
-      expect(message.channel).to eq("/polls/#{poll.topic_id}")
+      expect(message.channel).to eq(channel)
     end
 
     it "works for staff" do
       log_in(:moderator)
 
-      message = MessageBus.track_publish do
+      channel = "/polls/#{poll.topic_id}"
+
+      message = MessageBus.track_publish(channel) do
         put :toggle_status, params: {
           post_id: poll.id, poll_name: "poll", status: "closed"
         }, format: :json
@@ -226,7 +238,7 @@ describe ::DiscoursePoll::PollsController do
 
       json = ::JSON.parse(response.body)
       expect(json["poll"]["status"]).to eq("closed")
-      expect(message.channel).to eq("/polls/#{poll.topic_id}")
+      expect(message.channel).to eq(channel)
     end
 
     it "ensures post is not trashed" do
@@ -303,7 +315,7 @@ describe ::DiscoursePoll::PollsController do
 
       expect(json["voters"][first].size).to eq(1)
 
-      user2 = log_in
+      _user2 = log_in
 
       get :voters, params: {
         poll_name: "poll", post_id: public_poll_on_vote.id

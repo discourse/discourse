@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 describe PrettyText do
@@ -116,5 +118,39 @@ describe PrettyText do
     # note, hashes should remain stable even if emoji changes cause text content is hashed
     expect(n cooked).to eq(n expected)
 
+  end
+
+  it 'can onebox posts' do
+    post = Fabricate(:post, raw: <<~MD)
+      A post with a poll
+
+      [poll type=regular]
+      * Hello
+      * World
+      [/poll]
+    MD
+
+    onebox = Oneboxer.onebox_raw(post.full_url, user_id: Fabricate(:user).id)
+    doc = Nokogiri::HTML(onebox[:preview])
+
+    expect(onebox[:preview]).to include("A post with a poll")
+    expect(onebox[:preview]).to include("<a href=\"#{post.url}\">poll</a>")
+  end
+
+  it 'can reduce excerpts' do
+    post = Fabricate(:post, raw: <<~MD)
+      A post with a poll
+
+      [poll type=regular]
+      * Hello
+      * World
+      [/poll]
+    MD
+
+    excerpt = PrettyText.excerpt(post.cooked, SiteSetting.post_onebox_maxlength, post: post)
+    expect(excerpt).to eq("A post with a poll \n<a href=\"#{post.url}\">poll</a>")
+
+    excerpt = PrettyText.excerpt(post.cooked, SiteSetting.post_onebox_maxlength)
+    expect(excerpt).to eq("A post with a poll \npoll")
   end
 end

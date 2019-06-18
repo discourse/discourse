@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module EmailHelper
 
   def mailing_list_topic(topic, post_count)

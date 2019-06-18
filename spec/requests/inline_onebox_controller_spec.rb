@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 describe InlineOneboxController do
@@ -18,7 +20,7 @@ describe InlineOneboxController do
     end
 
     context "topic link" do
-      let(:topic) { Fabricate(:topic) }
+      fab!(:topic) { Fabricate(:topic) }
 
       it "returns information for a valid link" do
         get "/inline-onebox.json", params: { urls: [ topic.url ] }

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AboutSerializer < ApplicationSerializer
 
   class UserAboutSerializer < BasicUserSerializer

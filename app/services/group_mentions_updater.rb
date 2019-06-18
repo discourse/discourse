@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class GroupMentionsUpdater
   def self.update(current_name, previous_name)
     Post.where(

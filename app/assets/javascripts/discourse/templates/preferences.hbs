@@ -1,4 +1,4 @@
-{{#d-section pageClass="user-preferences" class="user-navigation"}}
+{{#d-section pageClass="user-preferences" class="user-secondary-navigation"}}
   {{#mobile-nav class='preferences-nav' desktopClass='preferences-list action-list nav-stacked' currentPath=application.currentPath}}
     <li class='nav-account'>
       {{#link-to 'preferences.account'}}
@@ -25,6 +25,11 @@
         {{i18n 'user.preferences_nav.categories'}}
       {{/link-to}}
     </li>
+    <li class='indent nav-users'>
+      {{#link-to 'preferences.users'}}
+        {{i18n 'user.preferences_nav.users'}}
+      {{/link-to}}
+    </li>
     {{#if siteSettings.tagging_enabled}}
       <li class='indent nav-tags'>
         {{#link-to 'preferences.tags'}}
@@ -48,7 +53,7 @@
   {{/mobile-nav}}
 {{/d-section}}
 
-<section class='user-right user-preferences'>
+<section class='user-content user-preferences'>
   {{plugin-outlet name="above-user-preferences"}}
 
   <form class="form-vertical">

@@ -1,4 +1,6 @@
 # coding: utf-8
+# frozen_string_literal: true
+
 require 'mysql2'
 require File.expand_path(File.dirname(__FILE__) + '/base.rb')
 
@@ -317,7 +319,7 @@ class ImportScripts::Smf2 < ImportScripts::Base
       "\n[#{tag}]#{$~[:inner].strip}[/#{tag}]\n"
     end
     body.gsub!(XListPattern) do |s|
-      r = "\n[ul]"
+      r = +"\n[ul]"
       s.lines.each { |l| r << '[li]' << l.strip.sub(/^\[x\]\s*/, '') << '[/li]' }
       r << "[/ul]\n"
     end
@@ -355,7 +357,7 @@ class ImportScripts::Smf2 < ImportScripts::Base
       inner = $~[:inner].strip
       params = parse_tag_params($~[:params])
       if params['author'].present?
-        quote = "[quote=\"#{params['author']}"
+        quote = +"[quote=\"#{params['author']}"
         if QuoteParamsPattern =~ params['link']
           tl = topic_lookup_from_imported_post_id($~[:msg].to_i)
           quote << ", post:#{tl[:post_number]}, topic:#{tl[:topic_id]}" if tl

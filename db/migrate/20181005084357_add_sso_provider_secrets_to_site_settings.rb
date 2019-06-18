@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddSsoProviderSecretsToSiteSettings < ActiveRecord::Migration[5.2]
   def up
     return unless SiteSetting.enable_sso_provider && SiteSetting.sso_secret.present?

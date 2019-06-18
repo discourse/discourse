@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 describe DiscourseNarrativeBot::NewUserNarrative do
@@ -25,7 +27,7 @@ describe DiscourseNarrativeBot::NewUserNarrative do
   let(:reset_trigger) { DiscourseNarrativeBot::TrackSelector.reset_trigger }
 
   before do
-    SiteSetting.queue_jobs = false
+    Jobs.run_immediately!
     SiteSetting.discourse_narrative_bot_enabled = true
   end
 
@@ -422,7 +424,7 @@ describe DiscourseNarrativeBot::NewUserNarrative do
 
       context 'when image is not found' do
         it 'should create the right replies' do
-          PostAction.act(user, post_2, PostActionType.types[:like])
+          PostActionCreator.like(user, post_2)
 
           described_class.any_instance.expects(:enqueue_timeout_job).with(user)
           DiscourseNarrativeBot::TrackSelector.new(:reply, user, post_id: post.id).select
@@ -503,7 +505,7 @@ describe DiscourseNarrativeBot::NewUserNarrative do
           .to eq(new_post.id)
 
         described_class.any_instance.expects(:enqueue_timeout_job).with(user)
-        PostAction.act(user, post_2, PostActionType.types[:like])
+        PostActionCreator.like(user, post_2)
 
         expected_raw = <<~RAW
           #{I18n.t('discourse_narrative_bot.new_user_narrative.images.reply')}
@@ -803,7 +805,7 @@ describe DiscourseNarrativeBot::NewUserNarrative do
 
       it 'should create the right reply' do
         post.update!(
-          raw: '@discobot hello how are you doing today?'
+          raw: '@disCoBot hello how are you doing today?'
         )
 
         narrative.expects(:enqueue_timeout_job).with(user)

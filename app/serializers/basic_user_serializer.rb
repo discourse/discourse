@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class BasicUserSerializer < ApplicationSerializer
   attributes :id, :username, :name, :avatar_template
 

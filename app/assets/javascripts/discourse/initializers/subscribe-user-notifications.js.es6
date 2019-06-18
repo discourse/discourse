@@ -21,17 +21,9 @@ export default {
     const appEvents = container.lookup("app-events:main");
 
     if (user) {
-      if (user.get("staff")) {
-        bus.subscribe("/flagged_counts", data => {
-          user.set("site_flagged_posts_count", data.total);
-        });
-        bus.subscribe("/queue_counts", data => {
-          user.set("post_queue_new_count", data.post_queue_new_count);
-          if (data.post_queue_new_count > 0) {
-            user.set("show_queued_posts", 1);
-          }
-        });
-      }
+      bus.subscribe("/reviewable_counts", data => {
+        user.set("reviewable_count", data.reviewable_count);
+      });
 
       bus.subscribe(
         `/notification/${user.get("id")}`,
@@ -51,6 +43,14 @@ export default {
             oldPM !== data.unread_private_messages
           ) {
             appEvents.trigger("notifications:changed");
+
+            if (
+              site.mobileView &&
+              (data.unread_notifications - oldUnread > 0 ||
+                data.unread_private_messages - oldPM > 0)
+            ) {
+              appEvents.trigger("header:update-topic", null, 5000);
+            }
           }
 
           const stale = store.findStale(

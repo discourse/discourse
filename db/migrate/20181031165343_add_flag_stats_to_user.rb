@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddFlagStatsToUser < ActiveRecord::Migration[5.2]
   def up
     add_column :user_stats, :flags_agreed, :integer, default: 0, null: false

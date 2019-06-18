@@ -14,7 +14,11 @@ rescue
 end
 
 require File.expand_path('../boot', __FILE__)
-require 'rails/all'
+require 'active_record/railtie'
+require 'action_controller/railtie'
+require 'action_view/railtie'
+require 'action_mailer/railtie'
+require 'sprockets/railtie'
 
 # Plugin related stuff
 require_relative '../lib/discourse_event'
@@ -31,10 +35,23 @@ unless Rails.env.test? && ENV['LOAD_PLUGINS'] != "1"
 end
 GlobalSetting.load_defaults
 
+if ENV['SKIP_DB_AND_REDIS'] == '1'
+  GlobalSetting.skip_db = true
+  GlobalSetting.skip_redis = true
+end
+
 require 'pry-rails' if Rails.env.development?
 
 if defined?(Bundler)
-  Bundler.require(*Rails.groups(assets: %w(development test profile)))
+  bundler_groups = [:default]
+
+  if !Rails.env.production?
+    bundler_groups = bundler_groups.concat(Rails.groups(
+      assets: %w(development test profile)
+    ))
+  end
+
+  Bundler.require(*bundler_groups)
 end
 
 module Discourse

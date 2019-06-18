@@ -1,7 +1,9 @@
+# frozen_string_literal: true
+
 module RouteFormat
 
   def self.username
-    /[\w.\-]+?/
+    /[%\w.\-]+?/
   end
 
   def self.backup

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 describe UsernameSettingValidator do
@@ -19,8 +21,8 @@ describe UsernameSettingValidator do
     end
 
     context "regex support" do
-      let!(:darthvader) { Fabricate(:user, username: 'darthvader') }
-      let!(:luke) { Fabricate(:user, username: 'luke') }
+      fab!(:darthvader) { Fabricate(:user, username: 'darthvader') }
+      fab!(:luke) { Fabricate(:user, username: 'luke') }
 
       it "returns false if regex doesn't match" do
         v = described_class.new(regex: 'darth')

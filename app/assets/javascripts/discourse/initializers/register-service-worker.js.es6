@@ -20,7 +20,7 @@ export default {
                 Discourse.ServiceWorkerURL
               )
             ) {
-              registration.unregister();
+              this.unregister(registration);
             }
           }
         });
@@ -34,10 +34,16 @@ export default {
       } else {
         navigator.serviceWorker.getRegistrations().then(registrations => {
           for (let registration of registrations) {
-            registration.unregister();
+            this.unregister(registration);
           }
         });
       }
+    }
+  },
+
+  unregister(registration) {
+    if (registration.scope.startsWith(Discourse.BaseUrl)) {
+      registration.unregister();
     }
   }
 };

@@ -69,7 +69,7 @@ export default Ember.Component.extend({
 
   keyPress(key) {
     if (key.keyCode === 13) {
-      if (this.get("showDoneButton")) {
+      if (this.showDoneButton) {
         this.send("quit");
       } else {
         this.send("nextStep");
@@ -110,7 +110,7 @@ export default Ember.Component.extend({
 
   advance() {
     this.set("saving", true);
-    this.get("step")
+    this.step
       .save()
       .then(response => this.goNext(response))
       .catch(() => this.animateInvalidFields())
@@ -123,7 +123,7 @@ export default Ember.Component.extend({
     },
 
     exitEarly() {
-      const step = this.get("step");
+      const step = this.step;
       step.validate();
 
       if (step.get("valid")) {
@@ -141,7 +141,7 @@ export default Ember.Component.extend({
     },
 
     backStep() {
-      if (this.get("saving")) {
+      if (this.saving) {
         return;
       }
 
@@ -149,11 +149,11 @@ export default Ember.Component.extend({
     },
 
     nextStep() {
-      if (this.get("saving")) {
+      if (this.saving) {
         return;
       }
 
-      const step = this.get("step");
+      const step = this.step;
       const result = step.validate();
 
       if (result.warnings.length) {

@@ -5,4 +5,9 @@
 # To work with us on translations, join this project:
 # https://www.transifex.com/projects/p/discourse-org/
 
-te: {}
+te:
+  js:
+    discourse_local_dates:
+      create:
+        form:
+          time_title: కాలం

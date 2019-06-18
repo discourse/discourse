@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 task "tags:bulk_tag_category", [:tags, :category] => [:environment] do |_, args|
   tags = args[:tags].split("|")
   category_id = args[:category]

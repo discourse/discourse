@@ -1,0 +1,39 @@
+{{#if reviewableTopics}}
+  <table class='reviewable-topics'>
+    <thead>
+      <th>{{i18n "review.topics.topic"}} </th>
+      <th>{{i18n "review.topics.reviewable_count"}}</th>
+      <th>{{i18n "review.topics.reported_by"}}</th>
+      <th></th>
+    </thead>
+    <tbody>
+    {{#each reviewableTopics as |rt|}}
+      <tr class='reviewable-topic'>
+        <td class="topic-title">
+          <div class='combined-title'>
+            {{topic-status topic=rt}}
+            <a href={{rt.relative_url}} target="_blank">{{replace-emoji rt.fancy_title}}</a>
+          </div>
+        </td>
+        <td class="reviewable-count">
+          {{rt.stats.count}}
+        </td>
+        <td class="reported-by">
+          {{i18n "review.topics.unique_users" count=rt.stats.unique_users}}
+        </td>
+        <td class="reviewable-details">
+          {{reviewable-claimed-topic topicId=rt.id claimedBy=rt.claimed_by}}
+          {{#link-to "review.index" (query-params topic_id=rt.id) class="btn btn-primary btn-small"}}
+            {{d-icon "list"}}
+            <span>{{i18n "review.topics.details"}}</span>
+          {{/link-to}}
+        </td>
+      </tr>
+    {{/each}}
+    </tbody>
+  </table>
+{{else}}
+  <div class="no-review">
+    {{i18n "review.none"}}
+  </div>
+{{/if}}

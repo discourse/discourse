@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class BadgesController < ApplicationController
   skip_before_action :check_xhr, only: [:index, :show]
 
@@ -45,7 +47,7 @@ class BadgesController < ApplicationController
     if current_user
       user_badge = UserBadge.find_by(user_id: current_user.id, badge_id: @badge.id)
       if user_badge && user_badge.notification
-        user_badge.notification.update_attributes read: true
+        user_badge.notification.update read: true
       end
       if user_badge
         @badge.has_badge = true

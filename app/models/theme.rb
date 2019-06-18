@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_dependency 'distributed_cache'
 require_dependency 'stylesheet/compiler'
 require_dependency 'stylesheet/manager'
@@ -7,8 +9,6 @@ require_dependency 'theme_translation_parser'
 require_dependency 'theme_translation_manager'
 
 class Theme < ActiveRecord::Base
-  # TODO: remove in 2019
-  self.ignored_columns = ["key"]
 
   @cache = DistributedCache.new('theme')
 
@@ -25,6 +25,8 @@ class Theme < ActiveRecord::Base
   belongs_to :remote_theme, autosave: true
 
   has_one :settings_field, -> { where(target_id: Theme.targets[:settings], name: "yaml") }, class_name: 'ThemeField'
+  has_one :javascript_cache, dependent: :destroy
+  has_many :locale_fields, -> { filter_locale_fields(I18n.fallbacks[I18n.locale]) }, class_name: 'ThemeField'
 
   validate :component_validations
 
@@ -50,11 +52,32 @@ class Theme < ActiveRecord::Base
     changed_fields.each(&:save!)
     changed_fields.clear
 
+    if saved_change_to_name?
+      theme_fields.select(&:basic_html_field?).each(&:invalidate_baked!)
+    end
+
     Theme.expire_site_cache! if saved_change_to_user_selectable? || saved_change_to_name?
+    notify_with_scheme = saved_change_to_color_scheme_id?
+
+    reload
+    settings_field&.ensure_baked! # Other fields require setting to be **baked**
+    theme_fields.each(&:ensure_baked!)
+
+    all_extra_js = theme_fields.where(target_id: Theme.targets[:extra_js]).pluck(:value_baked).join("\n")
+    if all_extra_js.present?
+      js_compiler = ThemeJavascriptCompiler.new(id, name)
+      js_compiler.append_raw_script(all_extra_js)
+      js_compiler.prepend_settings(cached_settings) if cached_settings.present?
+      javascript_cache || build_javascript_cache
+      javascript_cache.update!(content: js_compiler.content)
+    else
+      javascript_cache&.destroy!
+    end
 
     remove_from_cache!
     clear_cached_settings!
     ColorScheme.hex_cache.clear
+    notify_theme_change(with_scheme: notify_with_scheme)
   end
 
   after_destroy do
@@ -77,11 +100,9 @@ class Theme < ActiveRecord::Base
 
     Theme.expire_site_cache!
     ColorScheme.hex_cache.clear
+    CSP::Extension.clear_theme_extensions_cache!
+    SvgSprite.expire_cache
   end
-
-  after_commit ->(theme) do
-    theme.notify_theme_change(with_scheme: theme.saved_change_to_color_scheme_id?)
-  end, on: [:create, :update]
 
   def self.get_set_cache(key, &blk)
     if val = @cache[key]
@@ -121,6 +142,7 @@ class Theme < ActiveRecord::Base
   end
 
   def self.transform_ids(ids, extend: true)
+    return [] if ids.nil?
     get_set_cache "#{extend ? "extended_" : ""}transformed_ids_#{ids.join("_")}" do
       next [] if ids.blank?
 
@@ -224,7 +246,7 @@ class Theme < ActiveRecord::Base
   end
 
   def self.targets
-    @targets ||= Enum.new(common: 0, desktop: 1, mobile: 2, settings: 3, translations: 4)
+    @targets ||= Enum.new(common: 0, desktop: 1, mobile: 2, settings: 3, translations: 4, extra_scss: 5, extra_js: 6)
   end
 
   def self.lookup_target(target_id)
@@ -243,7 +265,8 @@ class Theme < ActiveRecord::Base
     if all_themes
       message = theme_ids.map { |id| refresh_message_for_targets(targets, id) }.flatten
     else
-      message = refresh_message_for_targets(targets, theme_ids).flatten
+      parent_ids = Theme.where(id: theme_ids).joins(:parent_themes).pluck(:parent_theme_id).uniq
+      message = refresh_message_for_targets(targets, theme_ids | parent_ids).flatten
     end
 
     MessageBus.publish('/file-change', message)
@@ -261,19 +284,25 @@ class Theme < ActiveRecord::Base
   end
 
   def self.resolve_baked_field(theme_ids, target, name)
+    if target == :extra_js
+      caches = JavascriptCache.where(theme_id: theme_ids)
+      caches = caches.sort_by { |cache| theme_ids.index(cache.theme_id) }
+      return caches.map { |c| "<script src='#{c.url}'></script>" }.join("\n")
+    end
     list_baked_fields(theme_ids, target, name).map { |f| f.value_baked || f.value }.join("\n")
   end
 
   def self.list_baked_fields(theme_ids, target, name)
     target = target.to_sym
-    name = name.to_sym
+    name = name&.to_sym
 
     if target == :translations
       fields = ThemeField.find_first_locale_fields(theme_ids, I18n.fallbacks[name])
     else
       fields = ThemeField.find_by_theme_ids(theme_ids)
         .where(target_id: [Theme.targets[target], Theme.targets[:common]])
-        .where(name: name.to_s)
+      fields = fields.where(name: name.to_s) unless name.nil?
+      fields = fields.order(:target_id)
     end
 
     fields.each(&:ensure_baked!)
@@ -323,6 +352,7 @@ class Theme < ActiveRecord::Base
           changed_fields << field
         end
       end
+      field
     else
       theme_fields.build(target_id: target_id, value: value, name: name, type_id: type_id, upload_id: upload_id) if value.present? || upload_id.present?
     end
@@ -350,13 +380,13 @@ class Theme < ActiveRecord::Base
   end
 
   def internal_translations
-    translations(internal: true)
+    @internal_translations ||= translations(internal: true)
   end
 
   def translations(internal: false)
     fallbacks = I18n.fallbacks[I18n.locale]
     begin
-      data = theme_fields.find_first_locale_fields([id], fallbacks).first&.translation_data(with_overrides: false, internal: internal)
+      data = locale_fields.first&.translation_data(with_overrides: false, internal: internal, fallback_fields: locale_fields)
       return {} if data.nil?
       best_translations = {}
       fallbacks.reverse.each do |locale|
@@ -442,7 +472,7 @@ class Theme < ActiveRecord::Base
 
       meta[:assets] = {}.tap do |hash|
         theme_fields.where(type_id: ThemeField.types[:theme_upload_var]).each do |field|
-          hash[field.name] = "assets/#{field.upload.original_filename}"
+          hash[field.name] = field.file_path
         end
       end
 

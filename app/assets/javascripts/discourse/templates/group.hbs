@@ -53,16 +53,13 @@
       {{/if}}
     </div>
   </div>
-
-  <div class="list-controls">
+<div class="user-content-wrapper">
+  <section class="user-primary-navigation">
     <div class="container">
       {{group-navigation group=model currentPath=application.currentPath tabs=tabs}}
     </div>
-  </div>
+  </section>
 
-    <div class='user-table'>
-      <div class='wrapper'>
         {{outlet}}
-      </div>
-    </div>
+</div>
 </div>

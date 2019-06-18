@@ -1,12 +1,10 @@
+# frozen_string_literal: true
+
 class MigrateTosSetting < ActiveRecord::Migration[4.2]
   def up
     res = execute("SELECT * FROM site_settings WHERE name = 'tos_accept_required' AND value = 't'")
     if res.present? && res.cmd_tuples > 0
-      label = nil
-
-      I18n.overrides_disabled do
-        label = I18n.t("terms_of_service.signup_form_message", base_path: "")
-      end
+      label = 'Terms of Service'
 
       res = execute("SELECT value FROM site_texts WHERE text_type = 'tos_signup_form_message'")
       if res.present? && res.cmd_tuples == 1

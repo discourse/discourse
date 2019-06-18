@@ -6,26 +6,115 @@ body.crawler {
     z-index: z("max");
     background-color: #fff;
     padding: 10px;
-    box-shadow: shadow("header");
+    box-shadow: none;
+    border-bottom: 1px solid $primary-low-mid;
+    box-sizing: border-box;
   }
-  div.topic-list div[itemprop="itemListElement"] {
-    padding: 10px 0;
-    border-bottom: 1px solid #e9e9e9;
-    .page-links a {
-      padding: 0 4px;
-    }
-  }
+
   div#main-outlet {
     div.post {
+      word-break: break-word;
       img {
         max-width: 100%;
+        height: auto;
       }
     }
   }
-  footer nav {
-    margin: 50px 0;
+
+  .raw-topic-link {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 0.25em;
+  }
+
+  .topic-list {
+    margin-bottom: 1em;
+  }
+
+  footer {
+    margin-top: 3em;
+    border-top: 1px solid $primary-low-mid;
+  }
+}
+
+.crawler-topic-title {
+  margin-top: 0.5em;
+}
+
+.crawler-post {
+  margin-top: 1em;
+  margin-bottom: 2em;
+  padding-top: 1.5em;
+  border-top: 1px solid $primary-low;
+}
+
+.crawler-post-meta {
+  margin-bottom: 1em;
+  .creator {
+    word-break: break-all;
     a {
-      padding: 15px;
+      font-weight: bold;
     }
+    @include breakpoint(tablet) {
+      display: inline-block;
+      margin-bottom: 0.25em;
+    }
+  }
+}
+
+.crawler-post-infos {
+  color: $primary-high;
+  display: inline-block;
+  @include breakpoint(tablet, min-width) {
+    float: right;
+  }
+  [itemprop="position"] {
+    float: left;
+    margin-right: 0.5em;
+  }
+}
+
+#breadcrumbs {
+  margin-bottom: 0.5em;
+  font-size: $font-up-1;
+  > div {
+    margin-bottom: 0.15em;
+  }
+  .badge-category-bg {
+    background-color: $secondary-high;
+  }
+  .category-title {
+    color: $primary;
+  }
+}
+
+.crawler-tags-list {
+  span {
+    display: block;
+    margin-bottom: 0.15em;
+  }
+}
+
+.crawler-linkback-list {
+  margin-top: 1em;
+  a {
+    display: block;
+    padding: 0.5em 0;
+    border-top: 1px solid $primary-low;
+  }
+}
+
+.crawler-nav {
+  margin: 1em 0;
+  ul {
+    margin: 0;
+    list-style-type: none;
+  }
+  li {
+    display: inline-block;
+  }
+  a {
+    display: inline-block;
+    padding: 0.5em 1em 0.5em 0;
   }
 }

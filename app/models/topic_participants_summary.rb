@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # This is used on a topic page
 class TopicParticipantsSummary
   attr_reader :topic, :options

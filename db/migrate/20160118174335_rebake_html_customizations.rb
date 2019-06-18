@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class RebakeHtmlCustomizations < ActiveRecord::Migration[4.2]
   def change
     execute "UPDATE site_customizations SET body_tag_baked = NULL,

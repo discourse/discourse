@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Note: the pbkdf2 gem is bust on 2.0, the logic is so simple I am not sure it makes sense to have this in a gem atm (Sam)
 #
 # Also PBKDF2 monkey patches string ... don't like that at all

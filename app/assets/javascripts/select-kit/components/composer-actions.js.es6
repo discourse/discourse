@@ -55,7 +55,7 @@ export default DropdownSelectBoxComponent.extend({
   computeHeaderContent() {
     let content = this._super(...arguments);
 
-    switch (this.get("action")) {
+    switch (this.action) {
       case PRIVATE_MESSAGE:
       case CREATE_TOPIC:
       case REPLY:
@@ -230,18 +230,21 @@ export default DropdownSelectBoxComponent.extend({
   replyToTopicSelected(options) {
     options.action = REPLY;
     options.topic = _topicSnapshot;
+    options.skipDraftCheck = true;
     this._openComposer(options);
   },
 
   replyToPostSelected(options) {
     options.action = REPLY;
     options.post = _postSnapshot;
+    options.skipDraftCheck = true;
     this._openComposer(options);
   },
 
   replyAsNewTopicSelected(options) {
     options.action = CREATE_TOPIC;
     options.categoryId = this.get("composerModel.topic.category.id");
+    options.disableScopedCategory = true;
     this._replyFromExisting(options, _postSnapshot, _topicSnapshot);
   },
 
@@ -293,9 +296,14 @@ export default DropdownSelectBoxComponent.extend({
     onSelect(value) {
       let action = `${Ember.String.camelize(value)}Selected`;
       if (this[action]) {
-        let model = this.get("composerModel");
+        let model = this.composerModel;
         this[action](
-          model.getProperties("draftKey", "draftSequence", "reply"),
+          model.getProperties(
+            "draftKey",
+            "draftSequence",
+            "reply",
+            "disableScopedCategory"
+          ),
           model
         );
       } else {

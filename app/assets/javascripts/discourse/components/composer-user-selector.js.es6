@@ -11,7 +11,7 @@ export default Ember.Component.extend({
   didInsertElement() {
     this._super(...arguments);
 
-    if (this.get("focusTarget") === "usernames") {
+    if (this.focusTarget === "usernames") {
       this.$("input").putCursorAtEnd();
     }
   },
@@ -46,7 +46,7 @@ export default Ember.Component.extend({
     const selector =
       "#reply-control #reply-title, #reply-control .d-editor-input";
 
-    if (this.get("shouldHide")) {
+    if (this.shouldHide) {
       $(selector).on("focus.composer-user-selector", () => {
         this.set("showSelector", false);
         this.appEvents.trigger("composer:resize");

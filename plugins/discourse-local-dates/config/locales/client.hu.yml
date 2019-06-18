@@ -8,10 +8,7 @@
 hu:
   js:
     discourse_local_dates:
-      title: Dátum beszúrása
       create:
-        modal_title: Dátum beszúrása
-        modal_subtitle: "Automatikusan átkonvertáljuk a dátumot és az időt a látogató helyi időzónájára."
         form:
           insert: Beszúrás
           advanced_mode: Haladó mód

@@ -6,12 +6,12 @@ widgetTest("basics", {
   template: '{{mount-widget widget="user-menu"}}',
 
   test(assert) {
-    assert.ok(this.$(".user-menu").length);
-    assert.ok(this.$(".user-activity-link").length);
-    assert.ok(this.$(".user-bookmarks-link").length);
-    assert.ok(this.$(".user-preferences-link").length);
-    assert.ok(this.$(".notifications").length);
-    assert.ok(this.$(".dismiss-link").length);
+    assert.ok(find(".user-menu").length);
+    assert.ok(find(".user-activity-link").length);
+    assert.ok(find(".user-bookmarks-link").length);
+    assert.ok(find(".user-preferences-link").length);
+    assert.ok(find(".notifications").length);
+    assert.ok(find(".dismiss-link").length);
   }
 });
 
@@ -47,7 +47,7 @@ widgetTest("log out", {
   },
 
   async test(assert) {
-    assert.ok(this.$(".logout").length);
+    assert.ok(find(".logout").length);
 
     await click(".logout");
     assert.ok(this.loggedOut);
@@ -61,7 +61,7 @@ widgetTest("private messages - disabled", {
   },
 
   test(assert) {
-    assert.ok(!this.$(".user-pms-link").length);
+    assert.ok(!find(".user-pms-link").length);
   }
 });
 
@@ -72,7 +72,7 @@ widgetTest("private messages - enabled", {
   },
 
   test(assert) {
-    assert.ok(this.$(".user-pms-link").length);
+    assert.ok(find(".user-pms-link").length);
   }
 });
 
@@ -89,7 +89,7 @@ widgetTest("anonymous", {
   },
 
   async test(assert) {
-    assert.ok(this.$(".enable-anonymous").length);
+    assert.ok(find(".enable-anonymous").length);
     await click(".enable-anonymous");
     assert.ok(this.anonymous);
   }
@@ -103,7 +103,7 @@ widgetTest("anonymous - disabled", {
   },
 
   test(assert) {
-    assert.ok(!this.$(".enable-anonymous").length);
+    assert.ok(!find(".enable-anonymous").length);
   }
 });
 
@@ -119,7 +119,7 @@ widgetTest("anonymous - switch back", {
   },
 
   async test(assert) {
-    assert.ok(this.$(".disable-anonymous").length);
+    assert.ok(find(".disable-anonymous").length);
     await click(".disable-anonymous");
     assert.ok(this.anonymous);
   }

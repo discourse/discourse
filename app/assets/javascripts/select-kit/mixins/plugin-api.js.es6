@@ -68,13 +68,15 @@ function onSelect(pluginApiIdentifiers, mutationFunction) {
 export function applyContentPluginApiCallbacks(identifiers, content, context) {
   identifiers.forEach(key => {
     (_prependContentCallbacks[key] || []).forEach(c => {
-      content = c().concat(content);
+      content = c()
+        .concat(content)
+        .uniqBy("id");
     });
     (_appendContentCallbacks[key] || []).forEach(c => {
-      content = content.concat(c());
+      content = content.concat(c()).uniqBy("id");
     });
     (_modifyContentCallbacks[key] || []).forEach(c => {
-      content = c(context, content);
+      content = c(context, content).uniqBy("id");
     });
   });
 

@@ -1,36 +1,47 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 require 'email/sender'
 
 describe Email::Sender do
-  let(:post) { Fabricate(:post) }
+  fab!(:post) { Fabricate(:post) }
 
   context "disable_emails is enabled" do
-    let(:user) { Fabricate(:user) }
-    let(:moderator) { Fabricate(:moderator) }
+    fab!(:user) { Fabricate(:user) }
+    fab!(:moderator) { Fabricate(:moderator) }
 
     context "disable_emails is enabled for everyone" do
       before { SiteSetting.disable_emails = "yes" }
 
       it "doesn't deliver mail when mails are disabled" do
-        Mail::Message.any_instance.expects(:deliver_now).never
-        message = Mail::Message.new(to: moderator.email , body: "hello")
-        expect(Email::Sender.new(message, :hello).send).to eq(nil)
+        message = UserNotifications.email_login(moderator)
+        Email::Sender.new(message, :email_login).send
+
+        expect(ActionMailer::Base.deliveries).to eq([])
       end
 
       it "delivers mail when mails are disabled but the email_type is admin_login" do
-        Mail::Message.any_instance.expects(:deliver_now).once
-        message = Mail::Message.new(to: moderator.email , body: "hello")
+        message = UserNotifications.admin_login(moderator)
         Email::Sender.new(message, :admin_login).send
+
+        expect(ActionMailer::Base.deliveries.first.to).to eq([moderator.email])
+      end
+
+      it "delivers mail when mails are disabled but the email_type is test_message" do
+        message = TestMailer.send_test(moderator.email)
+        Email::Sender.new(message, :test_message).send
+
+        expect(ActionMailer::Base.deliveries.first.to).to eq([moderator.email])
       end
     end
 
     context "disable_emails is enabled for non-staff users" do
       before { SiteSetting.disable_emails = "non-staff" }
 
-      it "delivers mail to normal user" do
-        Mail::Message.any_instance.expects(:deliver_now).once
+      it "doesn't deliver mail to normal user" do
+        Mail::Message.any_instance.expects(:deliver_now).never
         message = Mail::Message.new(to: user.email, body: "hello")
-        Email::Sender.new(message, :hello).send
+        expect(Email::Sender.new(message, :hello).send).to eq(nil)
       end
 
       it "delivers mail to staff user" do
@@ -56,6 +67,13 @@ describe Email::Sender do
     message = Mail::Message.new(body: 'hello')
     message.expects(:deliver_now).never
     Email::Sender.new(message, :hello).send
+  end
+
+  it "doesn't deliver when the to address uses the .invalid tld" do
+    message = Mail::Message.new(body: 'hello', to: 'myemail@example.invalid')
+    message.expects(:deliver_now).never
+    expect { Email::Sender.new(message, :hello).send }.
+      to change { SkippedEmailLog.where(reason_type: SkippedEmailLog.reason_types[:sender_message_to_invalid]).count }.by(1)
   end
 
   it "doesn't deliver when the body is nil" do
@@ -120,9 +138,9 @@ describe Email::Sender do
     end
 
     context "adds a List-ID header to identify the forum" do
-      let(:category) { Fabricate(:category, name: 'Name With Space') }
-      let(:topic) { Fabricate(:topic, category: category) }
-      let(:post) { Fabricate(:post, topic: topic) }
+      fab!(:category) { Fabricate(:category, name: 'Name With Space') }
+      fab!(:topic) { Fabricate(:topic, category: category) }
+      fab!(:post) { Fabricate(:post, topic: topic) }
 
       before do
         message.header['X-Discourse-Post-Id']  = post.id
@@ -147,8 +165,8 @@ describe Email::Sender do
     end
 
     context "adds Precedence header" do
-      let(:topic) { Fabricate(:topic) }
-      let(:post) { Fabricate(:post, topic: topic) }
+      fab!(:topic) { Fabricate(:topic) }
+      fab!(:post) { Fabricate(:post, topic: topic) }
 
       before do
         message.header['X-Discourse-Post-Id']  = post.id
@@ -162,8 +180,8 @@ describe Email::Sender do
     end
 
     context "removes custom Discourse headers from topic notification mails" do
-      let(:topic) { Fabricate(:topic) }
-      let(:post) { Fabricate(:post, topic: topic) }
+      fab!(:topic) { Fabricate(:topic) }
+      fab!(:post) { Fabricate(:post, topic: topic) }
 
       before do
         message.header['X-Discourse-Post-Id']  = post.id
@@ -188,12 +206,12 @@ describe Email::Sender do
     end
 
     context "email threading" do
-      let(:topic) { Fabricate(:topic) }
+      fab!(:topic) { Fabricate(:topic) }
 
-      let(:post_1) { Fabricate(:post, topic: topic, post_number: 1) }
-      let(:post_2) { Fabricate(:post, topic: topic, post_number: 2) }
-      let(:post_3) { Fabricate(:post, topic: topic, post_number: 3) }
-      let(:post_4) { Fabricate(:post, topic: topic, post_number: 4) }
+      fab!(:post_1) { Fabricate(:post, topic: topic, post_number: 1) }
+      fab!(:post_2) { Fabricate(:post, topic: topic, post_number: 2) }
+      fab!(:post_3) { Fabricate(:post, topic: topic, post_number: 3) }
+      fab!(:post_4) { Fabricate(:post, topic: topic, post_number: 4) }
 
       let!(:post_reply_1_4) { PostReply.create(post: post_1, reply: post_4) }
       let!(:post_reply_2_4) { PostReply.create(post: post_2, reply: post_4) }
@@ -359,7 +377,7 @@ describe Email::Sender do
       message
     end
 
-    let(:user) { Fabricate(:user) }
+    fab!(:user) { Fabricate(:user) }
     let(:email_sender) { Email::Sender.new(message, :valid_type, user) }
 
     before do
@@ -372,7 +390,7 @@ describe Email::Sender do
     end
 
     describe "post reply keys" do
-      let(:post) { Fabricate(:post) }
+      fab!(:post) { Fabricate(:post) }
 
       before do
         message.header['X-Discourse-Post-Id'] = post.id

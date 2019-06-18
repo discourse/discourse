@@ -1,11 +1,13 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe Admin::FlagsController do
-  let(:user) { Fabricate(:user) }
-  let(:admin) { Fabricate(:admin) }
-  let(:post_1) { Fabricate(:post) }
-  let(:category) { Fabricate(:category) }
-  let(:first_post) { Fabricate(:post, post_number: 1) }
+  fab!(:user) { Fabricate(:user) }
+  fab!(:admin) { Fabricate(:admin) }
+  fab!(:post_1) { Fabricate(:post) }
+  fab!(:category) { Fabricate(:category) }
+  fab!(:first_post) { Fabricate(:post, post_number: 1) }
 
   before do
     sign_in(admin)
@@ -19,11 +21,11 @@ RSpec.describe Admin::FlagsController do
 
       data = ::JSON.parse(response.body)
       expect(data["users"]).to eq([])
-      expect(data["posts"]).to eq([])
+      expect(data["flagged_posts"]).to eq([])
     end
 
     it 'should return the right response' do
-      PostAction.act(user, post_1, PostActionType.types[:spam])
+      PostActionCreator.create(user, post_1, :spam)
 
       get '/admin/flags.json'
 
@@ -31,18 +33,19 @@ RSpec.describe Admin::FlagsController do
 
       data = ::JSON.parse(response.body)
       expect(data["users"].length).to eq(2)
-      expect(data["posts"].length).to eq(1)
+      expect(data["flagged_posts"].length).to eq(1)
     end
   end
 
   context '#agree' do
     it 'should raise a reasonable error if a flag was deferred and then someone else agreed' do
-      SiteSetting.queue_jobs = false
+      Jobs.run_immediately!
 
-      _post_action = PostAction.act(user, post_1, PostActionType.types[:spam], message: 'bad')
+      reviewable = PostActionCreator.spam(user, post_1).reviewable
 
       post "/admin/flags/defer/#{post_1.id}.json"
       expect(response.status).to eq(200)
+      expect(reviewable.reload).to be_ignored
 
       post "/admin/flags/agree/#{post_1.id}.json", params: { action_on_post: 'keep' }
       # 409 means conflict which is what is happening here
@@ -52,15 +55,22 @@ RSpec.describe Admin::FlagsController do
     end
 
     it 'should be able to agree and keep content' do
-      SiteSetting.queue_jobs = false
+      Jobs.run_immediately!
 
-      post_action = PostAction.act(user, post_1, PostActionType.types[:spam], message: 'bad')
+      result = PostActionCreator.spam(user, post_1)
+      reviewable = result.reviewable
 
       post "/admin/flags/agree/#{post_1.id}.json", params: { action_on_post: 'keep' }
       expect(response.status).to eq(200)
 
-      post_action.reload
-      expect(post_action.agreed_by_id).to eq(admin.id)
+      expect(reviewable.reload).to be_approved
+
+      approve_history = reviewable.reviewable_histories.where(
+        created_by: admin,
+        reviewable_history_type: ReviewableHistory.types[:transitioned],
+        status: Reviewable.statuses[:approved]
+      )
+      expect(approve_history).to be_present
       expect(user.user_stat.reload.flags_agreed).to eq(1)
 
       post_1.reload
@@ -69,9 +79,9 @@ RSpec.describe Admin::FlagsController do
 
     it 'should be able to hide spam' do
       SiteSetting.allow_user_locale = true
-      SiteSetting.queue_jobs = false
+      Jobs.run_immediately!
 
-      post_action = PostAction.act(user, post_1, PostActionType.types[:spam], message: 'bad')
+      post_action = PostActionCreator.new(user, post_1, PostActionType.types[:spam], message: 'bad').perform.post_action
       admin.update!(locale: 'ja')
 
       post "/admin/flags/agree/#{post_1.id}.json", params: { action_on_post: 'delete' }
@@ -90,16 +100,39 @@ RSpec.describe Admin::FlagsController do
     end
 
     it 'should not delete category topic' do
-      SiteSetting.queue_jobs = false
+      Jobs.run_immediately!
       category.update_column(:topic_id, first_post.topic_id)
 
-      PostAction.act(user, first_post, PostActionType.types[:spam], message: 'bad')
+      PostActionCreator.new(user, first_post, PostActionType.types[:spam], message: 'bad').perform
 
       post "/admin/flags/agree/#{first_post.id}.json", params: { action_on_post: 'delete' }
       expect(response.status).to eq(403)
 
       first_post.reload
       expect(first_post.deleted_at).to eq(nil)
+    end
+  end
+
+  context '#disagree' do
+    it "unhides the post and unsilences the user if disagreed" do
+      Reviewable.set_priorities(high: 1.0)
+      SiteSetting.silence_new_user_sensitivity = Reviewable.sensitivity[:low]
+      SiteSetting.num_users_to_silence_new_user = 1
+
+      new_user = Fabricate(:newuser)
+      new_post = create_post(user: new_user)
+
+      PostActionCreator.spam(Fabricate(:leader), new_post)
+
+      post "/admin/flags/disagree/#{new_post.id}.json"
+      expect(response.status).to eq(200)
+
+      new_post.reload
+      new_user.reload
+
+      expect(new_post).to_not be_hidden
+      expect(new_post.spam_count).to eq(0)
+      expect(new_user).to_not be_silenced
     end
   end
 end

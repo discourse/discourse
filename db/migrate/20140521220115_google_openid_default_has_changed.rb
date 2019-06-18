@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class GoogleOpenidDefaultHasChanged < ActiveRecord::Migration[4.2]
   def up
     users_count_query = DB.query_single("SELECT count(*) FROM users")

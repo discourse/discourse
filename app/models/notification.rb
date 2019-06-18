@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_dependency 'enum'
 require_dependency 'notification_emailer'
 
@@ -61,6 +63,8 @@ class Notification < ActiveRecord::Base
                         watching_first_post: 17,
                         topic_reminder: 18,
                         liked_consolidated: 19,
+                        post_approved: 20,
+                        code_review_commit_approved: 21
                        )
   end
 
@@ -124,10 +128,10 @@ class Notification < ActiveRecord::Base
   # Be wary of calling this frequently. O(n) JSON parsing can suck.
   def data_hash
     @data_hash ||= begin
-      return nil if data.blank?
+      return {} if data.blank?
 
       parsed = JSON.parse(data)
-      return nil if parsed.blank?
+      return {} if parsed.blank?
 
       parsed.with_indifferent_access
     end
@@ -243,6 +247,7 @@ end
 #
 #  idx_notifications_speedup_unread_count                       (user_id,notification_type) WHERE (NOT read)
 #  index_notifications_on_post_action_id                        (post_action_id)
+#  index_notifications_on_read_or_n_type                        (user_id,id DESC,read,topic_id) UNIQUE WHERE (read OR (notification_type <> 6))
 #  index_notifications_on_user_id_and_created_at                (user_id,created_at)
 #  index_notifications_on_user_id_and_id                        (user_id,id) UNIQUE WHERE ((notification_type = 6) AND (NOT read))
 #  index_notifications_on_user_id_and_topic_id_and_post_number  (user_id,topic_id,post_number)

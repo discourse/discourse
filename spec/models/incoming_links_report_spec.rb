@@ -1,10 +1,11 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 describe IncomingLinksReport do
 
   before do
-    # we do not want this to fail if you run it at 11:59:59PM
-    freeze_time Time.zone.now
+    freeze_time DateTime.parse('2010-01-01 6:00')
   end
 
   describe 'integration' do
@@ -122,10 +123,10 @@ describe IncomingLinksReport do
   describe 'top_referrers' do
     subject(:top_referrers) { IncomingLinksReport.find('top_referrers').as_json }
 
-    let(:amy) { Fabricate(:user, username: 'amy') }
-    let(:bob) { Fabricate(:user, username: 'bob') }
-    let(:post1) { Fabricate(:post) }
-    let(:post2) { Fabricate(:post) }
+    fab!(:amy) { Fabricate(:user, username: 'amy') }
+    fab!(:bob) { Fabricate(:user, username: 'bob') }
+    fab!(:post1) { Fabricate(:post) }
+    fab!(:post2) { Fabricate(:post) }
     let(:topic1) { post1.topic }
     let(:topic2) { post2.topic }
 

@@ -30,14 +30,16 @@ export default Discourse.Route.extend({
   },
 
   afterModel(model, transition) {
-    const username = transition.queryParams && transition.queryParams.username;
+    const usernameFromParams =
+      transition.to.queryParams && transition.to.queryParams.username;
 
     const userBadgesGrant = UserBadge.findByBadgeId(model.get("id"), {
-      username
+      username: usernameFromParams
     }).then(userBadges => {
       this.userBadgesGrant = userBadges;
     });
 
+    const username = this.currentUser && this.currentUser.username_lower;
     const userBadgesAll = UserBadge.findByUsername(username).then(
       userBadges => {
         this.userBadgesAll = userBadges;

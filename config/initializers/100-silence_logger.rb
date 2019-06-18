@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class SilenceLogger < Rails::Rack::Logger
   PATH_INFO = 'PATH_INFO'.freeze
   HTTP_X_SILENCE_LOGGER = 'HTTP_X_SILENCE_LOGGER'.freeze

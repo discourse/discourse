@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddTopicAllowedGroups < ActiveRecord::Migration[4.2]
   def change
     create_table :topic_allowed_groups, force: true do |t|

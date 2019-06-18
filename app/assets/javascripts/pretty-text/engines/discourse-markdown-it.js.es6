@@ -1,6 +1,7 @@
 import { default as WhiteLister } from "pretty-text/white-lister";
 import { sanitize } from "pretty-text/sanitizer";
 import guid from "pretty-text/guid";
+import { ATTACHMENT_CSS_CLASS } from "pretty-text/upload-short-url";
 
 function deprecate(feature, name) {
   return function() {
@@ -122,7 +123,7 @@ function setupHoister(md) {
   md.renderer.rules.html_raw = renderHoisted;
 }
 
-const IMG_SIZE_REGEX = /^([1-9]+[0-9]*)x([1-9]+[0-9]*)(\s*,\s*([1-9][0-9]?)%)?$/;
+const IMG_SIZE_REGEX = /^([1-9]+[0-9]*)x([1-9]+[0-9]*)(\s*,\s*(x?)([1-9][0-9]{0,2}?)([%x]?))?$/;
 function renderImage(tokens, idx, options, env, slf) {
   var token = tokens[idx];
 
@@ -140,10 +141,25 @@ function renderImage(tokens, idx, options, env, slf) {
         let width = match[1];
         let height = match[2];
 
-        if (match[4]) {
-          let percent = parseFloat(match[4]) / 100.0;
+        // calculate using percentage
+        if (match[5] && match[6] && match[6] === "%") {
+          let percent = parseFloat(match[5]) / 100.0;
           width = parseInt(width * percent);
           height = parseInt(height * percent);
+        }
+
+        // calculate using only given width
+        if (match[5] && match[6] && match[6] === "x") {
+          let wr = parseFloat(match[5]) / width;
+          width = parseInt(match[5]);
+          height = parseInt(height * wr);
+        }
+
+        // calculate using only given height
+        if (match[5] && match[4] && match[4] === "x" && !match[6]) {
+          let hr = parseFloat(match[5]) / height;
+          height = parseInt(match[5]);
+          width = parseInt(width * hr);
         }
 
         if (token.attrIndex("width") === -1) {
@@ -153,6 +169,13 @@ function renderImage(tokens, idx, options, env, slf) {
         if (token.attrIndex("height") === -1) {
           token.attrs.push(["height", height]);
         }
+
+        if (
+          options.discourse.previewing &&
+          match[6] !== "x" &&
+          match[4] !== "x"
+        )
+          token.attrs.push(["class", "resizable"]);
       }
     }
   }
@@ -163,6 +186,26 @@ function renderImage(tokens, idx, options, env, slf) {
 
 function setupImageDimensions(md) {
   md.renderer.rules.image = renderImage;
+}
+
+function renderAttachment(tokens, idx, options, env, slf) {
+  const linkOpenToken = tokens[idx];
+  const linkTextToken = tokens[idx + 1];
+  const split = linkTextToken.content.split("|");
+  const isValid = !linkOpenToken.attrs[
+    linkOpenToken.attrIndex("data-orig-href")
+  ];
+
+  if (isValid && split.length === 2 && split[1] === ATTACHMENT_CSS_CLASS) {
+    linkOpenToken.attrs.unshift(["class", split[1]]);
+    linkTextToken.content = split[0];
+  }
+
+  return slf.renderToken(tokens, idx, options);
+}
+
+function setupAttachments(md) {
+  md.renderer.rules.link_open = renderAttachment;
 }
 
 let Helpers;
@@ -254,6 +297,7 @@ export function setup(opts, siteSettings, state) {
   setupUrlDecoding(opts.engine);
   setupHoister(opts.engine);
   setupImageDimensions(opts.engine);
+  setupAttachments(opts.engine);
   setupBlockBBCode(opts.engine);
   setupInlineBBCode(opts.engine);
   setupTextPostProcessRuler(opts.engine);

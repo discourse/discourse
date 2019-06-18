@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class TopicTimestampChanger
   class InvalidTimestampError < StandardError; end
 
@@ -43,7 +45,7 @@ class TopicTimestampChanger
   end
 
   def update_topic(last_posted_at)
-    @topic.update_attributes(
+    @topic.update(
       created_at: @timestamp,
       updated_at: @timestamp,
       bumped_at: @timestamp,
@@ -52,6 +54,6 @@ class TopicTimestampChanger
   end
 
   def update_post(post, timestamp)
-    post.update_attributes(created_at: timestamp, updated_at: timestamp)
+    post.update(created_at: timestamp, updated_at: timestamp)
   end
 end

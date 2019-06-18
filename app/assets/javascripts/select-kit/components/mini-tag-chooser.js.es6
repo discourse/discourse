@@ -16,7 +16,8 @@ export default ComboBox.extend(TagsMixin, {
   verticalOffset: 3,
   filterable: true,
   noTags: Ember.computed.empty("selection"),
-  allowAny: true,
+  allowCreate: null,
+  allowAny: Ember.computed.alias("allowCreate"),
   caretUpIcon: Ember.computed.alias("caretIcon"),
   caretDownIcon: Ember.computed.alias("caretIcon"),
   isAsync: true,
@@ -27,6 +28,10 @@ export default ComboBox.extend(TagsMixin, {
 
     this.set("termMatchesForbidden", false);
     this.selectionSelector = ".selected-tag";
+
+    if (this.allowCreate !== false) {
+      this.set("allowCreate", this.site.get("can_create_tag"));
+    }
 
     this.set("templateForRow", rowComponent => {
       const tag = rowComponent.get("computedContent");
@@ -39,8 +44,8 @@ export default ComboBox.extend(TagsMixin, {
     this.set(
       "maximum",
       parseInt(
-        this.get("limit") ||
-          this.get("maximum") ||
+        this.limit ||
+          this.maximum ||
           this.get("siteSettings.max_tags_per_topic")
       )
     );
@@ -84,21 +89,21 @@ export default ComboBox.extend(TagsMixin, {
   mutateValue() {},
 
   didPressTab(event) {
-    if (this.get("isLoading")) {
+    if (this.isLoading) {
       this._destroyEvent(event);
       return false;
     }
 
-    if (isEmpty(this.get("filter")) && !this.get("highlighted")) {
+    if (isEmpty(this.filter) && !this.highlighted) {
       this.$header().focus();
       this.close(event);
       return true;
     }
 
-    if (this.get("highlighted") && this.get("isExpanded")) {
+    if (this.highlighted && this.isExpanded) {
       this._destroyEvent(event);
       this.focus();
-      this.select(this.get("highlighted"));
+      this.select(this.highlighted);
       return false;
     } else {
       this.close(event);
@@ -138,20 +143,19 @@ export default ComboBox.extend(TagsMixin, {
   computeHeaderContent() {
     let content = this._super(...arguments);
 
-    const joinedTags = this.get("selection")
+    const joinedTags = this.selection
       .map(s => Ember.get(s, "value"))
       .join(", ");
 
-    if (isEmpty(this.get("selection"))) {
+    if (isEmpty(this.selection)) {
       content.label = I18n.t("tagging.choose_for_topic");
     } else {
       content.label = joinedTags;
     }
 
-    if (!this.get("hasReachedMinimum") && isEmpty(this.get("selection"))) {
-      const key =
-        this.get("minimumLabel") || "select_kit.min_content_not_reached";
-      const label = I18n.t(key, { count: this.get("minimum") });
+    if (!this.hasReachedMinimum && isEmpty(this.selection)) {
+      const key = this.minimumLabel || "select_kit.min_content_not_reached";
+      const label = I18n.t(key, { count: this.minimum });
       content.title = content.name = content.label = label;
     }
 
@@ -164,16 +168,16 @@ export default ComboBox.extend(TagsMixin, {
     const data = {
       q: query,
       limit: this.get("siteSettings.max_tag_search_results"),
-      categoryId: this.get("categoryId")
+      categoryId: this.categoryId
     };
 
-    if (this.get("selection")) {
-      data.selected_tags = this.get("selection")
+    if (this.selection) {
+      data.selected_tags = this.selection
         .map(s => Ember.get(s, "value"))
         .slice(0, 100);
     }
 
-    if (!this.get("everyTag")) data.filterForInput = true;
+    if (!this.everyTag) data.filterForInput = true;
 
     this.searchTags("/tags/filter/search", data, this._transformJson);
   },
@@ -203,12 +207,13 @@ export default ComboBox.extend(TagsMixin, {
     // work around usage with buffered proxy
     // it does not listen on array changes, similar hack already on select
     // TODO: FIX buffered-proxy.js to support arrays
-    this.get("tags").removeObjects(tags);
-    this.set("tags", this.get("tags").slice(0));
+    this.tags.removeObjects(tags);
+    this.set("tags", this.tags.slice(0));
+    this._tagsChanged();
 
     this.set(
       "searchDebounce",
-      run.debounce(this, this._prepareSearch, this.get("filter"), 350)
+      run.debounce(this, this._prepareSearch, this.filter, 350)
     );
   },
 
@@ -216,18 +221,26 @@ export default ComboBox.extend(TagsMixin, {
     this.destroyTags(tags);
   },
 
+  _tagsChanged() {
+    if (this.attrs.onChangeTags) {
+      this.attrs.onChangeTags({ target: { value: this.tags } });
+    }
+  },
+
   actions: {
     onSelect(tag) {
-      this.set("tags", makeArray(this.get("tags")).concat(tag));
-      this._prepareSearch(this.get("filter"));
+      this.set("tags", makeArray(this.tags).concat(tag));
+      this._tagsChanged();
+
+      this._prepareSearch(this.filter);
       this.autoHighlight();
     },
 
     onExpand() {
-      if (isEmpty(this.get("collectionComputedContent"))) {
+      if (isEmpty(this.collectionComputedContent)) {
         this.set(
           "searchDebounce",
-          run.debounce(this, this._prepareSearch, this.get("filter"), 350)
+          run.debounce(this, this._prepareSearch, this.filter, 350)
         );
       }
     },

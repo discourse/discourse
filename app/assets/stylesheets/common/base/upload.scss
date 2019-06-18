@@ -1,6 +1,46 @@
 .uploaded-image-preview {
   background: $primary center;
   background-size: cover;
+  position: relative;
+
+  .placeholder-overlay {
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0.3;
+  }
+
+  .image-upload-controls {
+    position: relative;
+    display: flex;
+
+    .btn {
+      margin-right: 5px;
+    }
+
+    .image-uploader-lightbox-btn {
+      background: none;
+      margin-right: 0;
+      margin-left: auto;
+
+      .d-icon {
+        color: $primary-low;
+      }
+
+      &:hover {
+        background: none;
+
+        .d-icon {
+          color: $primary;
+        }
+      }
+    }
+  }
 }
 
 .image-uploader.no-repeat {

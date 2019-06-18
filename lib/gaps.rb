@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #
 # This is used for finding the gaps between a subset of elements in an array
 # and the original layout. We use this in Discourse to find gaps between posts.

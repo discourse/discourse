@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ColorSchemeColorSerializer < ApplicationSerializer
   attributes :name, :hex, :default_hex
 

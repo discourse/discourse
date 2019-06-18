@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddThreadCountsToCategories < ActiveRecord::Migration[4.2]
   def change
     add_column :categories, :threads_year, :integer

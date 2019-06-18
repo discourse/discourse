@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddBadgeGroupings < ActiveRecord::Migration[4.2]
   def change
     create_table :badge_groupings do |t|

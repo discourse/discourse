@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'site_setting_extension'
 require_dependency 'global_path'
 require_dependency 'site_settings/yaml_loader'
@@ -75,12 +77,12 @@ class SiteSetting < ActiveRecord::Base
 
   def self.should_download_images?(src)
     setting = disabled_image_download_domains
-    return true unless setting.present?
+    return true if setting.blank?
 
     host = URI.parse(src).host
-    return !(setting.split('|').include?(host))
+    !setting.split("|").include?(host)
   rescue URI::Error
-    return true
+    true
   end
 
   def self.scheme
@@ -97,11 +99,12 @@ class SiteSetting < ActiveRecord::Base
   end
 
   def self.min_redirected_to_top_period(duration)
-    period = ListController.best_period_with_topics_for(duration)
-    return period if period
+    ListController.best_period_with_topics_for(duration)
+  end
 
-    # not enough topics
-    nil
+  def self.queue_jobs=(val)
+    Discourse.deprecate("queue_jobs is deprecated. Please use Jobs.run_immediately! instead")
+    val ? Jobs.run_later! : Jobs.run_immediately!
   end
 
   def self.email_polling_enabled?
@@ -114,6 +117,11 @@ class SiteSetting < ActiveRecord::Base
 
   def self.attachment_filename_blacklist_regex
     @attachment_filename_blacklist_regex ||= Regexp.union(SiteSetting.attachment_filename_blacklist.split("|"))
+  end
+
+  def self.unicode_username_character_whitelist_regex
+    @unicode_username_whitelist_regex = SiteSetting.unicode_username_character_whitelist.present? \
+      ? Regexp.new(SiteSetting.unicode_username_character_whitelist) : nil
   end
 
   # helpers for getting s3 settings that fallback to global
@@ -132,10 +140,6 @@ class SiteSetting < ActiveRecord::Base
 
     def self.s3_endpoint
       SiteSetting.enable_s3_uploads ? SiteSetting.s3_endpoint : GlobalSetting.s3_endpoint
-    end
-
-    def self.s3_force_path_style
-      SiteSetting.enable_s3_uploads ? SiteSetting.s3_force_path_style : GlobalSetting.s3_force_path_style
     end
 
     def self.enable_s3_uploads
@@ -158,8 +162,6 @@ class SiteSetting < ActiveRecord::Base
         else
           "//#{bucket}.s3.dualstack.#{SiteSetting.Upload.s3_region}.amazonaws.com"
         end
-      elsif SiteSetting.s3_force_path_style
-        "//#{url_basename}/#{bucket}"
       else
         "//#{bucket}.#{url_basename}"
       end
@@ -175,67 +177,29 @@ class SiteSetting < ActiveRecord::Base
     site_logo_small_url
     site_mobile_logo_url
     site_favicon_url
-    site_home_logo_url
   }.each { |client_setting| client_settings << client_setting }
 
-  def self.site_home_logo_url
-    upload = SiteSetting.logo
+  %i{
+    logo
+    logo_small
+    digest_logo
+    mobile_logo
+    large_icon
+    manifest_icon
+    favicon
+    apple_touch_icon
+    twitter_summary_large_image
+    opengraph_image
+    push_notifications_icon
+  }.each do |setting_name|
+    define_singleton_method("site_#{setting_name}_url") do
+      if SiteIconManager.respond_to?("#{setting_name}_url")
+        return SiteIconManager.public_send("#{setting_name}_url")
+      end
 
-    if SiteSetting.defaults.get(:title) != SiteSetting.title && !upload
-      ''
-    else
-      full_cdn_url(upload ? upload.url : '/images/d-logo-sketch.png')
+      upload = self.public_send(setting_name)
+      upload ? full_cdn_url(upload.url) : ''
     end
-  end
-
-  def self.site_logo_url
-    upload = self.logo
-    upload ? full_cdn_url(upload.url) : self.logo_url(warn: false)
-  end
-
-  def self.site_logo_small_url
-    upload = self.logo_small
-    upload ? full_cdn_url(upload.url) : self.logo_small_url(warn: false)
-  end
-
-  def self.site_digest_logo_url
-    upload = self.digest_logo
-    upload ? full_cdn_url(upload.url) : self.digest_logo_url(warn: false)
-  end
-
-  def self.site_mobile_logo_url
-    upload = self.mobile_logo
-    upload ? full_cdn_url(upload.url) : self.mobile_logo_url(warn: false)
-  end
-
-  def self.site_large_icon_url
-    upload = self.large_icon
-    upload ? full_cdn_url(upload.url) : self.large_icon_url(warn: false)
-  end
-
-  def self.site_favicon_url
-    upload = self.favicon
-    upload ? full_cdn_url(upload.url) : self.favicon_url(warn: false)
-  end
-
-  def self.site_apple_touch_icon_url
-    upload = self.apple_touch_icon
-    upload ? full_cdn_url(upload.url) : self.apple_touch_icon_url(warn: false)
-  end
-
-  def self.opengraph_image_url
-    upload = self.opengraph_image
-    upload ? full_cdn_url(upload.url) : self.default_opengraph_image_url(warn: false)
-  end
-
-  def self.site_twitter_summary_large_image_url
-    self.twitter_summary_large_image&.url ||
-      self.twitter_summary_large_image_url(warn: false)
-  end
-
-  def self.site_push_notifications_icon_url
-    SiteSetting.push_notifications_icon&.url ||
-      SiteSetting.push_notifications_icon_url(warn: false)
   end
 
   def self.shared_drafts_enabled?
@@ -255,4 +219,8 @@ end
 #  value      :text
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
+#
+# Indexes
+#
+#  index_site_settings_on_name  (name) UNIQUE
 #

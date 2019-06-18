@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 Fabricator(:topic) do
   user
   title { sequence(:title) { |i| "This is a test topic #{i}" } }

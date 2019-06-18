@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class EmailBackupToken
 
   def self.key(user_id)

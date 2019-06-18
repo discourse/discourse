@@ -1,8 +1,9 @@
-import { acceptance, logIn } from "helpers/qunit-helpers";
+import selectKit from "helpers/select-kit-helper";
+import { acceptance } from "helpers/qunit-helpers";
 
 const emptySearchContextCallbacks = [];
 
-acceptance("Search", {
+let searchArgs = {
   pretend(server) {
     server.handledRequest = (verb, path, request) => {
       if (request.queryParams["search_context[type]"] === undefined) {
@@ -12,7 +13,9 @@ acceptance("Search", {
       }
     };
   }
-});
+};
+
+acceptance("Search", searchArgs);
 
 QUnit.test("search", async assert => {
   await visit("/");
@@ -75,15 +78,22 @@ QUnit.test("Search with context", async assert => {
   await visit("/t/internationalization-localization/280/1");
 
   await click("#search-button");
-  await fillIn("#search-term", "dev");
+  await fillIn("#search-term", "a proper");
   await click(".search-context input[type='checkbox']");
   await keyEvent("#search-term", "keyup", 16);
 
   assert.ok(exists(".search-menu .results ul li"), "it shows results");
 
-  assert.ok(
-    exists(".cooked span.highlight-strong"),
-    "it should highlight the search term"
+  const highlighted = [];
+
+  find("#post_7 span.highlight-strong").map((_, span) => {
+    highlighted.push(span.innerText);
+  });
+
+  assert.deepEqual(
+    highlighted,
+    ["a", "a", "proper", "a"],
+    "it should highlight the post with the search terms correctly"
   );
 
   let callbackCalled = false;
@@ -128,11 +138,11 @@ QUnit.test("Right filters are shown to anonymous users", async assert => {
   assert.notOk(exists(".search-advanced-options .in-seen"));
 });
 
+acceptance("Search", Object.assign({ loggedIn: true, searchArgs }));
+
 QUnit.test("Right filters are shown to logged-in users", async assert => {
   const inSelector = selectKit(".select-kit#in");
 
-  logIn();
-  Discourse.reset();
   await visit("/search?expanded=true");
 
   await inSelector.expand();

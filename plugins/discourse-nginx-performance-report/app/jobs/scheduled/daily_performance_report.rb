@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Jobs
   class DailyPerformanceReport < Jobs::Scheduled
     every 1.day

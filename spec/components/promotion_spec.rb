@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 require 'promotion'
 
@@ -15,7 +17,7 @@ describe Promotion do
 
   context "newuser" do
 
-    let(:user) { Fabricate(:user, trust_level: TrustLevel[0], created_at: 2.days.ago) }
+    fab!(:user) { Fabricate(:user, trust_level: TrustLevel[0], created_at: 2.days.ago) }
     let(:promotion) { Promotion.new(user) }
 
     it "doesn't raise an error with a nil user" do
@@ -104,7 +106,7 @@ describe Promotion do
 
   context "basic" do
 
-    let(:user) { Fabricate(:user, trust_level: TrustLevel[1], created_at: 2.days.ago) }
+    fab!(:user) { Fabricate(:user, trust_level: TrustLevel[1], created_at: 2.days.ago) }
     let(:promotion) { Promotion.new(user) }
 
     context 'that has done nothing' do
@@ -165,7 +167,7 @@ describe Promotion do
   end
 
   context "regular" do
-    let(:user) { Fabricate(:user, trust_level: TrustLevel[2]) }
+    fab!(:user) { Fabricate(:user, trust_level: TrustLevel[2]) }
     let(:promotion) { Promotion.new(user) }
 
     context "doesn't qualify for promotion" do

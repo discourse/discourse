@@ -130,7 +130,7 @@ export function setup(helper) {
   helper.whiteList([
     "span.discourse-local-date",
     "span[data-*]",
-    "span[title]"
+    "span[aria-label]"
   ]);
 
   helper.registerOptions((opts, siteSettings) => {
@@ -143,7 +143,7 @@ export function setup(helper) {
 
   helper.registerPlugin(md => {
     const rule = {
-      matcher: /\[date(.+?)\]/,
+      matcher: /\[date(=.+?)\]/,
       onMatch: addLocalDate
     };
 

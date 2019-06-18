@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class BadgeTypeSerializer < ApplicationSerializer
   attributes :id, :name, :sort_order
 

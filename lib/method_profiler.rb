@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # see https://samsaffron.com/archive/2017/10/18/fastest-way-to-profile-a-method-in-ruby
 class MethodProfiler
   def self.patch(klass, methods, name, no_recurse: false)
@@ -61,4 +63,26 @@ class MethodProfiler
     end
     data
   end
+
+  def self.ensure_discourse_instrumentation!
+    @@instrumentation_setup ||= begin
+      MethodProfiler.patch(PG::Connection, [
+        :exec, :async_exec, :exec_prepared, :send_query_prepared, :query, :exec_params
+      ], :sql)
+
+      MethodProfiler.patch(Redis::Client, [
+        :call, :call_pipeline
+      ], :redis)
+
+      MethodProfiler.patch(Net::HTTP, [
+        :request
+      ], :net, no_recurse: true)
+
+      MethodProfiler.patch(Excon::Connection, [
+        :request
+      ], :net)
+      true
+    end
+  end
+
 end

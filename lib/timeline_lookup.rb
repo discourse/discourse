@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module TimelineLookup
 
   # Given an array of tuples containing (id, days_ago), return at most `max_values` worth of a

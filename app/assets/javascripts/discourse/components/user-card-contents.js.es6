@@ -46,12 +46,22 @@ export default Ember.Component.extend(
       "user.location",
       "user.website_name"
     ),
+    isSuspendedOrHasBio: Ember.computed.or(
+      "user.suspend_reason",
+      "user.bio_cooked"
+    ),
     showCheckEmail: Ember.computed.and("user.staged", "canCheckEmails"),
 
     user: null,
 
     // If inside a topic
     topicPostCount: null,
+
+    @computed("user.staff")
+    staff: isStaff => (isStaff ? "staff" : ""),
+
+    @computed("user.trust_level")
+    newUser: trustLevel => (trustLevel === 0 ? "new-user" : ""),
 
     @computed("user.name")
     nameFirst(name) {
@@ -121,9 +131,9 @@ export default Ember.Component.extend(
       }
     },
 
-    @observes("user.card_background")
+    @observes("user.card_background_upload_url")
     addBackground() {
-      if (!this.get("allowBackgrounds")) {
+      if (!this.allowBackgrounds) {
         return;
       }
 
@@ -132,7 +142,7 @@ export default Ember.Component.extend(
         return;
       }
 
-      const url = this.get("user.card_background");
+      const url = this.get("user.card_background_upload_url");
       const bg = Ember.isEmpty(url)
         ? ""
         : `url(${Discourse.getURLWithCDN(url)})`;
@@ -140,6 +150,9 @@ export default Ember.Component.extend(
     },
 
     _showCallback(username, $target) {
+      this._positionCard($target);
+      this.setProperties({ visible: true, loading: true });
+
       const args = { stats: false };
       args.include_post_count_for = this.get("topic.id");
       User.findByUsername(username, args)
@@ -150,19 +163,15 @@ export default Ember.Component.extend(
               user.topic_post_count[args.include_post_count_for]
             );
           }
-          this._positionCard($target);
-          this.setProperties({ user, visible: true });
+          this.setProperties({ user });
         })
         .catch(() => this._close())
         .finally(() => this.set("loading", null));
     },
 
-    didInsertElement() {
-      this._super(...arguments);
-    },
-
     _close() {
       this._super(...arguments);
+
       this.setProperties({
         user: null,
         topicPostCount: null
@@ -179,24 +188,24 @@ export default Ember.Component.extend(
       },
 
       cancelFilter() {
-        const postStream = this.get("postStream");
+        const postStream = this.postStream;
         postStream.cancelFilter();
         postStream.refresh();
         this._close();
       },
 
       togglePosts() {
-        this.togglePosts(this.get("user"));
+        this.togglePosts(this.user);
         this._close();
       },
 
       deleteUser() {
-        this.get("user").delete();
+        this.user.delete();
         this._close();
       },
 
-      showUser() {
-        this.showUser(this.get("user"));
+      showUser(username) {
+        this.showUser(username);
         this._close();
       },
 

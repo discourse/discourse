@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddGithubUserInfo < ActiveRecord::Migration[4.2]
   def change
     create_table :github_user_infos do  |t|

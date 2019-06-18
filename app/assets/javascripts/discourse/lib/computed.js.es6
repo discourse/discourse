@@ -1,4 +1,5 @@
 import addonFmt from "ember-addons/fmt";
+
 /**
   Returns whether two properties are equal to each other.
 
@@ -7,10 +8,11 @@ import addonFmt from "ember-addons/fmt";
   @params {String} p2 the second property
   @return {Function} computedProperty function
 **/
+
 export function propertyEqual(p1, p2) {
-  return Ember.computed(function() {
+  return Ember.computed(p1, p2, function() {
     return this.get(p1) === this.get(p2);
-  }).property(p1, p2);
+  });
 }
 
 /**
@@ -22,21 +24,21 @@ export function propertyEqual(p1, p2) {
   @return {Function} computedProperty function
 **/
 export function propertyNotEqual(p1, p2) {
-  return Ember.computed(function() {
+  return Ember.computed(p1, p2, function() {
     return this.get(p1) !== this.get(p2);
-  }).property(p1, p2);
+  });
 }
 
 export function propertyGreaterThan(p1, p2) {
-  return Ember.computed(function() {
+  return Ember.computed(p1, p2, function() {
     return this.get(p1) > this.get(p2);
-  }).property(p1, p2);
+  });
 }
 
 export function propertyLessThan(p1, p2) {
-  return Ember.computed(function() {
+  return Ember.computed(p1, p2, function() {
     return this.get(p1) < this.get(p2);
-  }).property(p1, p2);
+  });
 }
 
 /**
@@ -101,17 +103,13 @@ export function endWith() {
   const args = Array.prototype.slice.call(arguments, 0);
   const substring = args.pop();
   const computed = Ember.computed(function() {
-    const self = this;
-    return _.all(
-      args.map(function(a) {
-        return self.get(a);
-      }),
-      function(s) {
+    return args
+      .map(a => this.get(a))
+      .every(s => {
         const position = s.length - substring.length,
           lastIndex = s.lastIndexOf(substring);
         return lastIndex !== -1 && lastIndex === position;
-      }
-    );
+      });
   });
   return computed.property.apply(computed, args);
 }
@@ -126,5 +124,5 @@ export function endWith() {
 export function setting(name) {
   return Ember.computed(function() {
     return Discourse.SiteSettings[name];
-  }).property();
+  });
 }

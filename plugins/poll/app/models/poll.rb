@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Poll < ActiveRecord::Base
   # because we want to use the 'type' column and don't want to use STI
   self.inheritance_column = nil
@@ -54,8 +56,8 @@ end
 #
 # Table name: polls
 #
-#  id               :bigint(8)        not null, primary key
-#  post_id          :bigint(8)
+#  id               :bigint           not null, primary key
+#  post_id          :bigint
 #  name             :string           default("poll"), not null
 #  close_at         :datetime
 #  type             :integer          default("regular"), not null
@@ -73,4 +75,8 @@ end
 #
 #  index_polls_on_post_id           (post_id)
 #  index_polls_on_post_id_and_name  (post_id,name) UNIQUE
+#
+# Foreign Keys
+#
+#  fk_rails_...  (post_id => posts.id)
 #

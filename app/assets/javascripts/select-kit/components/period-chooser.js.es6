@@ -14,20 +14,20 @@ export default DropdownSelectBoxComponent.extend({
     return isExpanded ? "caret-up" : "caret-down";
   },
 
-  @on("didReceiveAttrs")
+  @on("didUpdateAttrs", "init")
   _setFullDay() {
-    this.get("headerComponentOptions").setProperties({
-      fullDay: this.get("fullDay")
+    this.headerComponentOptions.setProperties({
+      fullDay: this.fullDay
     });
-    this.get("rowComponentOptions").setProperties({
-      fullDay: this.get("fullDay")
+    this.rowComponentOptions.setProperties({
+      fullDay: this.fullDay
     });
   },
 
   actions: {
     onSelect() {
       if (this.action) {
-        this.action(this.get("computedValue"));
+        this.action(this.computedValue);
       }
     }
   }

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'mysql2'
 require File.expand_path(File.dirname(__FILE__) + "/base.rb")
 require 'htmlentities'
@@ -254,7 +256,7 @@ EOM
 
     return if !upload.persisted?
 
-    imported_user.user_profile.update(profile_background: upload.url)
+    imported_user.user_profile.upload_profile_background(upload)
   ensure
     file.close rescue nil
     file.unlink rescue nil

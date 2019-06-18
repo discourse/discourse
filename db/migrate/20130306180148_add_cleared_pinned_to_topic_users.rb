@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddClearedPinnedToTopicUsers < ActiveRecord::Migration[4.2]
   def change
     add_column :topic_users, :cleared_pinned_at, :datetime, null: true

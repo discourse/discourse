@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AdminWebHookSerializer < ApplicationSerializer
   attributes :id,
              :payload_url,
@@ -15,5 +17,9 @@ class AdminWebHookSerializer < ApplicationSerializer
 
   def web_hook_event_types
     ActiveModel::ArraySerializer.new(object.web_hook_event_types).as_json
+  end
+
+  def last_delivery_status
+    object.active ? object.last_delivery_status : WebHook.last_delivery_statuses[:disabled]
   end
 end

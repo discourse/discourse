@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class RemoveAccessPassword < ActiveRecord::Migration[4.2]
   def up
     result = execute("SELECT count(*) FROM site_settings where name='access_password' and char_length(value) > 0")

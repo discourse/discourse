@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_dependency 'post'
 
 module Jobs
@@ -36,6 +38,11 @@ module Jobs
                       SELECT 1
                       FROM muted_users mu
                       WHERE mu.muted_user_id = ? AND mu.user_id = users.id
+                  )', post.user_id)
+            .where('NOT EXISTS (
+                      SELECT 1
+                      FROM ignored_users iu
+                      WHERE iu.ignored_user_id = ? AND iu.user_id = users.id
                   )', post.user_id)
             .where('NOT EXISTS (
                       SELECT 1

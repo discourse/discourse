@@ -48,6 +48,8 @@ th:
         help:
           options_count: ใส่อย่างน้อย 2 ตัวเลือก
           invalid_values: ค่าต่ำสุดต้องน้อยกว่าค่าสูงสุด
+        poll_type:
+          label: ชนิด
         poll_public:
           label: แสดงรายชื่อผู้โหวต
         poll_options:

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_dependency 'email/message_builder'
 
 class TestMailer < ActionMailer::Base

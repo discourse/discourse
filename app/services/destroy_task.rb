@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 ## Because these methods are meant to be called from a rake task
 #   we are capturing all log output into a log array to return
 #   to the rake task rather than using `puts` statements.

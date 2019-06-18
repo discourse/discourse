@@ -1,9 +1,10 @@
+import computed from "ember-addons/ember-computed-decorators";
+
 export default Ember.Component.extend({
-  visible: function() {
-    var bannerKey = this.get("banner.key"),
-      dismissedBannerKey =
-        this.get("user.dismissed_banner_key") ||
-        this.keyValueStore.get("dismissed_banner_key");
+  @computed("user.dismissed_banner_key", "banner.key", "hide")
+  visible(dismissedBannerKey, bannerKey, hide) {
+    dismissedBannerKey =
+      dismissedBannerKey || this.keyValueStore.get("dismissed_banner_key");
 
     if (bannerKey) {
       bannerKey = parseInt(bannerKey, 10);
@@ -12,13 +13,13 @@ export default Ember.Component.extend({
       dismissedBannerKey = parseInt(dismissedBannerKey, 10);
     }
 
-    return !this.get("hide") && bannerKey && dismissedBannerKey !== bannerKey;
-  }.property("user.dismissed_banner_key", "banner.key", "hide"),
+    return !hide && bannerKey && dismissedBannerKey !== bannerKey;
+  },
 
   actions: {
     dismiss() {
-      if (this.get("user")) {
-        this.get("user").dismissBanner(this.get("banner.key"));
+      if (this.user) {
+        this.user.dismissBanner(this.get("banner.key"));
       } else {
         this.set("visible", false);
         this.keyValueStore.set({

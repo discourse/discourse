@@ -3,48 +3,60 @@ import {
   observes
 } from "ember-addons/ember-computed-decorators";
 import { FORMAT } from "select-kit/components/future-date-input-selector";
-
 import { PUBLISH_TO_CATEGORY_STATUS_TYPE } from "discourse/controllers/edit-topic-timer";
 
 export default Ember.Component.extend({
   selection: null,
   date: null,
   time: null,
+  includeDateTime: true,
   isCustom: Ember.computed.equal("selection", "pick_date_and_time"),
   isBasedOnLastPost: Ember.computed.equal(
     "selection",
     "set_based_on_last_post"
   ),
+  displayDateAndTimePicker: Ember.computed.and("includeDateTime", "isCustom"),
   displayLabel: null,
 
   init() {
     this._super(...arguments);
 
-    const input = this.get("input");
-
-    if (input) {
-      if (this.get("basedOnLastPost")) {
+    if (this.input) {
+      if (this.basedOnLastPost) {
         this.set("selection", "set_based_on_last_post");
       } else {
-        this.set("selection", "pick_date_and_time");
-        const datetime = moment(input);
-        this.set("date", datetime.toDate());
-        this.set("time", datetime.format("HH:mm"));
+        const datetime = moment(this.input);
+        this.setProperties({
+          selection: "pick_date_and_time",
+          date: datetime.format("YYYY-MM-DD"),
+          time: datetime.format("HH:mm")
+        });
         this._updateInput();
       }
     }
   },
 
+  timeInputDisabled: Ember.computed.empty("date"),
+
   @observes("date", "time")
   _updateInput() {
-    const date = moment(this.get("date")).format("YYYY-MM-DD");
-    const time = (this.get("time") && ` ${this.get("time")}`) || "";
-    this.set("input", moment(`${date}${time}`).format(FORMAT));
+    if (!this.date) {
+      this.set("time", null);
+    }
+
+    const time = this.time ? ` ${this.time}` : "";
+    const dateTime = moment(`${this.date}${time}`);
+
+    if (dateTime.isValid()) {
+      this.set("input", dateTime.format(FORMAT));
+    } else {
+      this.set("input", null);
+    }
   },
 
   @observes("isBasedOnLastPost")
   _updateBasedOnLastPost() {
-    this.set("basedOnLastPost", this.get("isBasedOnLastPost"));
+    this.set("basedOnLastPost", this.isBasedOnLastPost);
   },
 
   @computed("input", "isBasedOnLastPost")
@@ -70,7 +82,9 @@ export default Ember.Component.extend({
   },
 
   didReceiveAttrs() {
-    if (this.get("label")) this.set("displayLabel", I18n.t(this.get("label")));
+    this._super(...arguments);
+
+    if (this.label) this.set("displayLabel", I18n.t(this.label));
   },
 
   @computed(

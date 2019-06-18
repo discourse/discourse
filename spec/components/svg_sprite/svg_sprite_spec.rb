@@ -1,15 +1,26 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 describe SvgSprite do
 
   before do
-    SvgSprite.rebuild_cache
+    SvgSprite.expire_cache
   end
 
   it 'can generate a bundle' do
     bundle = SvgSprite.bundle
     expect(bundle).to match(/heart/)
     expect(bundle).to match(/angle-double-down/)
+  end
+
+  it 'can generate paths' do
+    version = SvgSprite.version # Icons won't change for this test
+    expect(SvgSprite.path).to eq("/svg-sprite/#{Discourse.current_hostname}/svg--#{version}.js")
+    expect(SvgSprite.path([1, 2])).to eq("/svg-sprite/#{Discourse.current_hostname}/svg-1,2-#{version}.js")
+
+    # Safe mode
+    expect(SvgSprite.path([nil])).to eq("/svg-sprite/#{Discourse.current_hostname}/svg--#{version}.js")
   end
 
   it 'can search for a specific FA icon' do
@@ -51,26 +62,85 @@ describe SvgSprite do
 
   it 'includes icons defined in theme settings' do
     theme = Fabricate(:theme)
-    theme.set_field(target: :settings, name: :yaml, value: "custom_icon: magic")
+
+    # Works for default settings:
+    theme.set_field(target: :settings, name: :yaml, value: "custom_icon: dragon")
     theme.save!
+    expect(SvgSprite.all_icons([theme.id])).to include("dragon")
 
-    # TODO: add test for default settings values
+    # Automatically purges cache when default changes:
+    theme.set_field(target: :settings, name: :yaml, value: "custom_icon: gamepad")
+    theme.save!
+    expect(SvgSprite.all_icons([theme.id])).to include("gamepad")
 
+    # Works when applying override
     theme.update_setting(:custom_icon, "gas-pump")
-    expect(SvgSprite.all_icons).to include("gas-pump")
+    theme.save!
+    expect(SvgSprite.all_icons([theme.id])).to include("gas-pump")
 
+    # Works when changing override
     theme.update_setting(:custom_icon, "gamepad")
-    expect(SvgSprite.all_icons).to include("gamepad")
-    expect(SvgSprite.all_icons).not_to include("gas-pump")
+    theme.save!
+    expect(SvgSprite.all_icons([theme.id])).to include("gamepad")
+    expect(SvgSprite.all_icons([theme.id])).not_to include("gas-pump")
 
     # FA5 syntax
     theme.update_setting(:custom_icon, "fab fa-bandcamp")
-    expect(SvgSprite.all_icons).to include("fab-bandcamp")
+    theme.save!
+    expect(SvgSprite.all_icons([theme.id])).to include("fab-bandcamp")
 
     # Internal Discourse syntax + multiple icons
     theme.update_setting(:custom_icon, "fab-android|dragon")
-    expect(SvgSprite.all_icons).to include("fab-android")
-    expect(SvgSprite.all_icons).to include("dragon")
+    theme.save!
+    expect(SvgSprite.all_icons([theme.id])).to include("fab-android")
+    expect(SvgSprite.all_icons([theme.id])).to include("dragon")
+
+    # Check themes don't leak into non-theme sprite sheet
+    expect(SvgSprite.all_icons).not_to include("dragon")
+
+    # Check components are included
+    theme.update(component: true)
+    theme.save!
+    parent_theme = Fabricate(:theme)
+    parent_theme.add_child_theme!(theme)
+    expect(SvgSprite.all_icons([parent_theme.id])).to include("dragon")
+  end
+
+  it 'includes custom icons from a sprite in a theme' do
+    theme = Fabricate(:theme)
+    fname = "custom-theme-icon-sprite.svg"
+
+    upload = UploadCreator.new(file_from_fixtures(fname), fname, for_theme: true).create_for(-1)
+
+    theme.set_field(target: :common, name: SvgSprite.theme_sprite_variable_name, upload_id: upload.id, type: :theme_upload_var)
+    theme.save!
+
+    expect(Upload.where(id: upload.id)).to be_exist
+    expect(SvgSprite.bundle([theme.id])).to match(/my-custom-theme-icon/)
+  end
+
+  context "s3" do
+    let(:upload_s3) { Fabricate(:upload_s3) }
+
+    before do
+      SiteSetting.enable_s3_uploads = true
+      SiteSetting.s3_upload_bucket = "s3bucket"
+      SiteSetting.s3_access_key_id = "s3_access_key_id"
+      SiteSetting.s3_secret_access_key = "s3_secret_access_key"
+
+      stub_request(:get, upload_s3.url).to_return(status: 200, body: "Hello world")
+    end
+
+    it 'includes svg sprites in themes stored in s3' do
+      theme = Fabricate(:theme)
+      theme.set_field(target: :common, name: SvgSprite.theme_sprite_variable_name, upload_id: upload_s3.id, type: :theme_upload_var)
+      theme.save!
+
+      sprite_files = SvgSprite.custom_svg_sprites([theme.id]).join("|")
+
+      expect(sprite_files).to match(/#{upload_s3.sha1}/)
+      expect(sprite_files).not_to match(/amazonaws/)
+    end
   end
 
   it 'includes icons from SiteSettings' do
@@ -82,10 +152,12 @@ describe SvgSprite do
     expect(all_icons).to include("fab-bandcamp")
 
     SiteSetting.svg_icon_subset = nil
+    SvgSprite.expire_cache
     expect(SvgSprite.all_icons).not_to include("drafting-compass")
 
     # does not fail on non-string setting
     SiteSetting.svg_icon_subset = false
+    SvgSprite.expire_cache
     expect(SvgSprite.all_icons).to be_truthy
   end
 

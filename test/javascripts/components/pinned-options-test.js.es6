@@ -1,3 +1,4 @@
+import selectKit from "helpers/select-kit-helper";
 import componentTest from "helpers/component-test";
 import Topic from "discourse/models/topic";
 
@@ -27,20 +28,10 @@ componentTest("updating the content refreshes the list", {
   },
 
   async test(assert) {
-    assert.equal(
-      this.get("subject")
-        .header()
-        .name(),
-      "pinned"
-    );
+    assert.equal(this.subject.header().name(), "pinned");
 
     await this.set("pinned", false);
 
-    assert.equal(
-      this.get("subject")
-        .header()
-        .name(),
-      "unpinned"
-    );
+    assert.equal(this.subject.header().name(), "unpinned");
   }
 });

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rate_limiter'
 class EditRateLimiter < RateLimiter
   def initialize(user)

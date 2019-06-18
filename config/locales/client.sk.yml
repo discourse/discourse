@@ -45,32 +45,32 @@ sk:
       tiny:
         half_a_minute: "< 1m"
         less_than_x_seconds:
-          one: "< 1s"
+          one: "< %{count}s"
           few: "< %{count}s"
           many: "< %{count}s"
           other: "< %{count}s"
         x_seconds:
-          one: "1s"
+          one: "%{count}s"
           few: "1s"
           many: "%{count}s"
           other: "%{count}s"
         less_than_x_minutes:
-          one: "< 1m"
+          one: "< %{count}m"
           few: "< 1m"
           many: "< %{count}m"
           other: "< %{count}m"
         x_minutes:
-          one: "1m"
+          one: "%{count}m"
           few: "%{count}m"
           many: "%{count}m"
           other: "%{count}m"
         about_x_hours:
-          one: "1h"
+          one: "%{count}h"
           few: "%{count}h"
           many: "%{count}h"
           other: "%{count}h"
         x_days:
-          one: "1d"
+          one: "%{count}d"
           few: "%{count}d"
           many: "%{count}d"
           other: "%{count}d"
@@ -80,17 +80,17 @@ sk:
           many: "%{count} mesiace"
           other: "%{count} mesiace"
         about_x_years:
-          one: "1r"
+          one: "%{count}r"
           few: "%{count}r"
           many: "%{count}r"
           other: "%{count}r"
         over_x_years:
-          one: "> 1r"
+          one: "> %{count}r"
           few: "> %{count}r"
           many: "> %{count}r"
           other: "> %{count}r"
         almost_x_years:
-          one: "1r"
+          one: "%{count}r"
           few: "%{count}r"
           many: "%{count}r"
           other: "%{count}r"
@@ -98,50 +98,50 @@ sk:
         date_year: "MMM 'YY"
       medium:
         x_minutes:
-          one: "1 minúta"
+          one: "%{count} minúta"
           few: "%{count} minúty"
           many: "%{count} minút"
           other: "%{count} minút"
         x_hours:
-          one: "1 hodina"
+          one: "%{count} hodina"
           few: "%{count} hodiny"
           many: "%{count} hodín"
           other: "%{count} hodín"
         x_days:
-          one: "1 deň"
+          one: "%{count} deň"
           few: "%{count} dni"
           many: "%{count} dní"
           other: "%{count} dní"
         date_year: "MMM D, 'YY"
       medium_with_ago:
         x_minutes:
-          one: "pred 1 minútou"
+          one: "pred %{count} minútou"
           few: "pred %{count} minútami"
           many: "pred %{count} minútami"
           other: "pred %{count} minútami"
         x_hours:
-          one: "pred 1 hodinou"
+          one: "pred %{count} hodinou"
           few: "pred %{count} hodinami"
           many: "pred %{count} hodinami"
           other: "pred %{count} hodinami"
         x_days:
-          one: "pred 1 dňom"
+          one: "pred %{count} dňom"
           few: "pred %{count} dňami"
           many: "pred %{count} dňami"
           other: "pred %{count} dňami"
       later:
         x_days:
-          one: "1 deň neskôr"
+          one: "%{count} deň neskôr"
           few: "%{count} dni neskôr"
           many: "%{count} dní neskôr"
           other: "%{count} dní neskôr"
         x_months:
-          one: "1 mesiac neskôr"
+          one: "%{count} mesiac neskôr"
           few: "%{count} mesiace neskôr"
           many: "%{count} mesiacov neskôr"
           other: "%{count} mesiacov neskôr"
         x_years:
-          one: "1 rok neskôr"
+          one: "%{count} rok neskôr"
           few: "%{count} roky neskôr"
           many: "%{count} rokov neskôr"
           other: "%{count} rokov neskôr"
@@ -149,12 +149,8 @@ sk:
       next_month: "Nasledujúci mesiac"
       placeholder: Dátum
     share:
-      topic: "zdieľaj odkaz na túto tému"
       post: "príspevok #%{postNumber}"
       close: "zatvoriť"
-      twitter: "zdieľaj odkaz na Twitteri"
-      facebook: "zdieľaj odkaz na Facebooku"
-      email: "pošli odkaz emailom"
     action_codes:
       public_topic: "téma je verejná%{when}"
       private_topic: "urobil(a) z témy osobnú správu%{when}"
@@ -206,13 +202,12 @@ sk:
         eu_west_1: "EU (Írsko)"
         eu_west_2: "EU (Londýn)"
         eu_west_3: "EU (Paríž)"
-        sa_east_1: "Južná Amerika (Sao Paulo)"
         us_east_1: "USA Východ (S. Virginia)"
         us_east_2: "USA Východ (Ohio)"
-        us_gov_west_1: "AWS GovCloud (USA)"
         us_west_1: "USA Západ (S. Kalifornia)"
         us_west_2: "USA Západ (Oregon)"
     edit: "upraviť názov a kategóriu témy"
+    expand: "Rozbaľ"
     not_implemented: "Ľutujeme, táto funkcia ešte nie je implementovaná."
     no_value: "Nie"
     yes_value: "Áno"
@@ -225,7 +220,6 @@ sk:
     age: "Vek"
     joined: "Registrovaný"
     admin_title: "Administrácia"
-    flags_title: "Nahlásenie"
     show_more: "zobraz viac"
     show_help: "možnosti"
     links: "Odkazy"
@@ -253,12 +247,10 @@ sk:
     every_hour: "každú hodinu"
     daily: "denne"
     weekly: "týždenne"
-    every_two_weeks: "každé dva týždne"
-    every_three_days: "každé tri dni"
     max_of_count: "najviac {{count}}"
     alternation: "alebo"
     character_count:
-      one: "1 znak"
+      one: "%{count} znak"
       few: "{{count}} znakov"
       many: "{{count}} znakov"
       other: "{{count}} znakov"
@@ -345,31 +337,43 @@ sk:
         placeholder: "sem napíšte názov témy"
     choose_message:
       none_found: "Žiadne správy."
-    queue:
+    review:
+      delete: "Odstrániť"
+      settings:
+        save_changes: "Uložiť zmeny"
+        title: "Nastavenia"
       topic: "Téma:"
-      approve: "Schváliť"
-      reject: "Zamietnuť"
-      delete_user: "Odstrániť používateľa"
-      title: "Vyžaduje schválenie"
-      none: "Žiadne príspevky na kontrolu."
+      filtered_user: "Používateľ"
+      user:
+        username: "Používateľské meno"
+        email: "Email"
+        name: "Meno"
+      topics:
+        topic: "Témy"
+        details: "detaily"
       edit: "Upraviť"
+      save: "Uložiť"
       cancel: "Zrušiť"
-      view_pending: "zobraziť príspevky čakajúce na schválenie"
-      has_pending_posts:
-        one: "Téma má <b>{{count}}</b> príspevkov čakajúci na schválenie"
-        few: "Téma má <b>{{count}}</b> príspevky čakajúce na schválenie"
-        many: "Téma má <b>{{count}}</b> príspevkov čakajúcich na schválenie"
-        other: "Téma má <b>{{count}}</b> príspevkov čakajúcich na schválenie"
-      confirm: "Uložiť zmeny"
-      delete_prompt: "Táto akcia zmaže všetky príspevky, zablokuje e-mail a IP adresu používateľa <b>%{username}</b>. Ste si istý, že chcete zmazať tohto používateľa? "
+      filters:
+        all_categories: "(všetky kategórie)"
+        type:
+          title: "Typ"
+        refresh: "Obnoviť"
+        category: "Kategória"
+      scores:
+        date: "Dátum"
+        type: "Typ"
+      statuses:
+        pending:
+          title: "Čakajúce správy"
+        rejected:
+          title: "Zamietnuté"
+      types:
+        reviewable_user:
+          title: "Používateľ"
       approval:
         title: "Príspevok vyžaduje schválenie"
         description: "Váš príspevok sme obdžali, ale skôr než bude zverejnený musí byť schválený moderátorom. Prosíme o trpezlivosť."
-        pending_posts:
-          one: "Máte <strong>1</strong> neprečítaný príspevok."
-          few: "Máte <strong>{{count}}</strong> neprečítané príspevky."
-          many: "Máte <strong>{{count}}</strong> neprečítaných príspevkov."
-          other: "Máte <strong>{{count}}</strong> neprečítaných príspevkov."
         ok: "OK"
     user_action:
       user_posted_topic: "<a href='{{userUrl}}'>{{user}}</a> založil <a href='{{topicUrl}}'>tému</a>"
@@ -403,7 +407,7 @@ sk:
       posts_read: "Prečítané"
       posts_read_long: "Prečítaných príspevkov"
       total_rows:
-        one: "1 používateľ"
+        one: "%{count} používateľ"
         few: "%{count} používatelia"
         many: "%{count} používateľov"
         other: "%{count} používateľov"
@@ -420,6 +424,8 @@ sk:
         title: "Pridať používateľov"
         description: "Spravovať členstvo v tejto skupine"
         usernames: "Používateľské mená"
+      requests:
+        reason: "Dôvod"
       manage:
         title: "Spravovať"
         name: "Názov"
@@ -535,7 +541,6 @@ sk:
           description: "Budete upozornený ak niekto zmieni Vaše @meno alebo Vám odpovie."
         muted:
           title: "Ignorované"
-          description: "Nikdy nebudete upozornení na nič ohľadom nových tém v tejto skupine."
       flair_url: "Obrázok pre štítok avataru"
       flair_url_placeholder: "(Voliteľné) URL obrázka alebo typ Awesome Fontu"
       flair_bg_color: "Farba pozadia štítku avataru"
@@ -577,7 +582,7 @@ sk:
       toggle_ordering: "zmeniť radenie"
       subcategories: "Podkategórie"
       topic_sentence:
-        one: "1 téma"
+        one: "%{count} téma"
         few: "%{count} témy"
         many: "%{count} tém"
         other: "%{count} tém"
@@ -614,6 +619,10 @@ sk:
       new_private_message: "Nová správa"
       private_message: "Správa"
       private_messages: "Správy"
+      user_notifications:
+        ignore_duration_username: "Používateľské meno"
+        mute_option: "Ignorované"
+        normal_option: "Normálne"
       activity_stream: "Aktivita"
       preferences: "Nastavenia"
       profile_hidden: "Tento užívateľský profil je skrytý."
@@ -639,8 +648,6 @@ sk:
       dismiss_notifications: "Zahodiť všetko"
       dismiss_notifications_tooltip: "Označiť všetky neprečítané upozornenia ako prečítané"
       first_notification: "Vaša prvé upozornenie! Vyberte ho ak chcete začať."
-      disable_jump_reply: "Neskočiť na môj príspevok po odpovedi"
-      dynamic_favicon: "Zobraziť počet nových/upravených tém na ikone prehliadača"
       allow_private_messages: "Umožniť iným používateľom, aby mi posielali osobné správy"
       external_links_in_new_tab: "Otvárať všekty externé odkazy na novej karte"
       enable_quoting: "Umožniť odpoveď s citáciou z označeného textu"
@@ -730,6 +737,7 @@ sk:
         emails: "Emaily"
         notifications: "Upozornenia"
         categories: "Kategórie"
+        users: "Používatelia"
         tags: "Štítky"
         interface: "Rozhranie"
         apps: "Aplikácie"
@@ -756,13 +764,9 @@ sk:
           description: "Každý z týchto záložných kódov sa môže použiť iba raz. Uložte si ich bezpečne, no, aby Vám boli dostupné"
       second_factor:
         title: "Dvojfaktorová autentifikácia"
-        disable: "Vypnúť dvojfaktorovú autentifikáciu"
-        enable: "Aktivujte si dvojfaktorové prihlásenie pre zvýšenie bezpečnosti"
         confirm_password_description: "Pre pokračovanie potvrďte svoje heslo prosím"
         label: "Kód"
         rate_limit: "Prosím čakajte pred zadaním ďalšieho autentifikačného kódu"
-        enable_description: |
-          Oskentujte tento QR kód v podporovanej aplikácii (<a href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2" target="_blank">Android</a> – <a href="https://itunes.apple.com/us/app/google-authenticator/id388497605?mt=8" target="_blank">iOS</a> – <a href="https://www.microsoft.com/en-us/store/p/authenticator/9wzdncrfj3rj" target='_blank'>Windows Phone</a>) a zadajte váš overovací kód.
         disable_description: "Prosím zadajte autentifikačný kód z vašej aplikácie"
         show_key_description: "Vložiť ručne"
         extended_description: |
@@ -804,7 +808,6 @@ sk:
         primary: "Primárny e-mail"
         secondary: "Sekundárne e-maily"
         no_secondary: "Žiadne sekundárne e-maily"
-        instructions: "nikdy sa nezobrazuje verejne"
         ok: "Pošleme vám email pre potvrdenie"
         invalid: "Zadajte prosím platný email"
         authenticated: "Váš email bude autentifikovaný pomocou {{provider}}"
@@ -875,14 +878,14 @@ sk:
         every_30_minutes: "každých 30 mintút"
         every_hour: "každú hodinu"
         daily: "denne"
-        every_three_days: "každé tri dni"
         weekly: "týždenne"
-        every_two_weeks: "každé dva týždne"
+      email_level:
+        title: "Pošlite mi email ak ma niekto cituje, odpovie na môj príspevok, zmieni moje @meno alebo ma pozve do témy."
+        always: "vždy"
+        never: "nikdy"
+      email_messages_level: "Pošlite mi email keď mi niekto pošle správu"
       include_tl0_in_digests: "Zahrnúť obsah od nových používateľov do súhrnných emailov"
       email_in_reply_to: "Zahrnúť úryvok príspevku, na ktorý používateľ reagoval, v emailoch"
-      email_direct: "Pošlite mi email ak ma niekto cituje, odpovie na môj príspevok, zmieni moje @meno alebo ma pozve do témy."
-      email_private_messages: "Pošlite mi email keď mi niekto pošle správu"
-      email_always: "Pošlite mi emailovú notifikáciu aj keď som aktívny na stránke"
       other_settings: "Ostatné"
       categories_settings: "Kategórie"
       new_topic_duration:
@@ -928,9 +931,6 @@ sk:
         expired: "Táto pozvánka vypršala."
         rescind: "Odstrániť"
         rescinded: "Pozvánka odstránená"
-        rescind_all: "Odstrániť všetky pozvánky"
-        rescinded_all: "Všetky pozvánky odstránené!"
-        rescind_all_confirm: "Naozaj chcete odstrániť všetky pozvánky?"
         reinvite: "Poslať pozvánku znovu"
         reinvite_all: "Poslať všetky pozvánky znovu"
         reinvite_all_confirm: "Naozaj chcete poslať všetky pozvánky znovu?"
@@ -1090,6 +1090,7 @@ sk:
       invite: "Pozvať ďalších"
       edit: "Pridať alebo odobrať"
       remove_allowed_user: "Skutočne chcete odstrániť {{name}} z tejto správy?"
+      remove_allowed_group: "Skutočne chcete odstrániť {{name}} z tejto správy?"
     email: "Email"
     username: "Používateľské meno"
     last_seen: "Videné"
@@ -1098,7 +1099,6 @@ sk:
     trust_level: "Stupeň dôvery"
     search_hint: "používateľské meno, email alebo IP adresa"
     create_account:
-      disclaimer: "Registráciou súhlasíte so <a href='{{privacy_link}}'>zásadami ochrany osobných údajov</a> a s<a href='{{tos_link}}'>podmienkami používania</a>."
       title: "Vytvoriť nový účet"
       failed: "Niečo sa pokazilo, možno je tento e-mail už registrovaný, vyskúšajte odkaz pre zabudnuté heslo"
     forgot_password:
@@ -1117,6 +1117,8 @@ sk:
     email_login:
       link_label: "Zaslať emailom prihlasovací link"
       button_label: "s emailom"
+      complete_username_not_found: "Žiadny účet nemá priradené používateľské meno <b>%{username}</b>"
+      complete_email_not_found: "Žiadny účet nie je s e-mailom  <b>%{email}</b>"
     login:
       title: "Prihlásenie"
       username: "Používateľ"
@@ -1133,6 +1135,7 @@ sk:
       logging_in: "Prebieha prihlásenie..."
       or: "Alebo"
       authenticating: "Prebieha overovanie..."
+      awaiting_activation: "Váš účet čaká na aktiváciu. Ak chcete zaslať aktivačný e-mail znova, použite odkaz pre zabudnuté heslo."
       awaiting_approval: "Váš účet zatiaľ nebol schválený členom tímu. Keď bude schválený, dostanete e-mail."
       requires_invite: "Ľutujeme, ale prístup k tomuto fóru majú iba pozvaní používatelia."
       not_activated: "Systém vás nemôže prihlásiť. Na emailovú adresu <b>{{sentTo}}</b> sme vám poslali aktivačný email. Prosím, postupujte podľa inštrukcií na aktiváciu účtu, ktoré sú uvedené v tomto emaile."
@@ -1146,10 +1149,13 @@ sk:
       to_continue: "Prosím, prihláste sa"
       preferences: "Na zmenu používateľských nastavení musíte byť prihlásený."
       forgot: "Nepamätám si detaily môjho účtu"
+      not_approved: "Váš účet zatiaľ nebol schválený. Ak bude pripravený na prihlásenie, dostanete upozorňujúci email."
       google_oauth2:
+        name: "Google"
         title: "pomocou Google"
         message: "Prihlásenie pomocou Google účtu (prosím uistite sa, že vyskakovacie okná sú povolené)"
       twitter:
+        name: "Twitter"
         title: "pomocou Twitter účtu"
         message: "Prihlásenie pomocou Twitter účtu (prosím uistite sa, že vyskakovacie okná sú povolené)"
       instagram:
@@ -1158,19 +1164,19 @@ sk:
       facebook:
         title: "pomocou stránky Facebook"
         message: "Prihlásenie pomocou Facebook účtu (prosím uistite sa, že vyskakovacie okná sú povolené)"
-      yahoo:
-        title: "pomocou Yahoo"
-        message: "Prihlásenie pomocou Yahoo účtu (prosím uistite sa, že vyskakovacie okná sú povolené)"
       github:
         title: "pomocou GitHub"
         message: "Prihlásenie pomocou GitHub účtu (prosím uistite sa, že vyskakovacie okná sú povolené)"
     invites:
       accept_title: "Pozvánka"
+      welcome_to: "Vitajte na %{site_name}!"
       accept_invite: "Prijať pozvánku"
       success: "Váš účet bol vytvorený a ste prihlásený."
       name_label: "Meno"
       password_label: "Nastaviť heslo"
       optional_description: "(nepovinné)"
+    password_reset:
+      continue: "Pokračujte na %{site_name}"
     emoji_set:
       apple_international: "Apple/Medzinárodné"
       google: "Google"
@@ -1184,30 +1190,28 @@ sk:
       shift: "Shift"
       ctrl: "Ctrl"
       alt: "Alt"
+    conditional_loading_section:
+      loading: Prebieha načítavanie...
     select_kit:
       default_header_text: Vybrať...
       filter_placeholder: Hľadať
     emoji_picker:
-      people: Ľudia
-      food: Jedlo
-      activity: Aktivita
-      travel: Cestovanie
       objects: Objekty
+      flags: Označenia
     composer:
       emoji: "Emoji :)"
       more_emoji: "viac ..."
       options: "Možnosti"
       whisper: "šepot"
+      blockquote_text: "Úvodzovky"
       add_warning: "Toto je oficiálne varovanie."
       toggle_whisper: "Prepnúť šepot"
       posting_not_on_topic: "Na akú tému chcete odpovedať?"
-      saving_draft_tip: "ukladám..."
-      saved_draft_tip: "uložené"
       saved_local_draft_tip: "uložené lokálne"
       similar_topics: "Vaša téma je podobná..."
       drafts_offline: "offline koncepty"
       group_mentioned:
-        one: "Zmienením {{group}}, upozorníte <a href='{{group_link}}'>1 človeka</a> – ste si istý?"
+        one: "Zmienením {{group}}, upozorníte <a href='{{group_link}}'>%{count} človeka</a> – ste si istý?"
         few: "Zmienením {{group}}, upozorníte <a href='{{group_link}}'>{{count}} ľudí</a> – ste si istý?"
         many: "Zmienením {{group}}, upozorníte <a href='{{group_link}}'>{{count}} ľudí</a> – ste si istý?"
         other: "Zmienením {{group}}, upozorníte <a href='{{group_link}}'>{{count}} ľudí</a> – ste si istý?"
@@ -1265,6 +1269,8 @@ sk:
       cant_send_pm: "Ľutujeme, nemôžete poslať správu používateľovi %{username}."
       admin_options_title: "Nepovinné zamestnanecké nastavenia pre túto tému"
       composer_actions:
+        reply: Odpoveď
+        edit: Upraviť
         reply_as_private_message:
           label: Nová správa
         reply_to_topic:
@@ -1276,7 +1282,6 @@ sk:
       none: "Notifikácie sa nepodarilo načítať"
       empty: "Žiadne upozornenia sa nenašli."
       more: "zobraziť staršie upozornenia"
-      total_flagged: "označených príspevkov celkom"
       popup:
         mentioned: '{{username}} Vás zmienil v "{{topic}}" - {{site_title}}'
         group_mentioned: '{{username}} Vás zmienil v "{{topic}}" - {{site_title}}'
@@ -1284,6 +1289,8 @@ sk:
         replied: '{{username}} vám odpovedal v "{{topic}}" - {{site_title}}'
         posted: '{{username}} prispel v "{{topic}}" - {{site_title}}'
         linked: '{{username}} odkázal na váš príspevok z "{{topic}}" - {{site_title}}'
+      titles:
+        watching_first_post: "nová téma"
     upload_selector:
       title: "Pridať obrázok"
       title_with_attachments: "Pridať obrázok alebo súbor"
@@ -1315,6 +1322,8 @@ sk:
       searching: "Vyhľadávam....."
       post_format: "#{{post_number}} podľa {{username}}"
       cant_find: "Nemôžete nájsť to čo hľadáte?"
+      search_google_button: "Google"
+      search_google_title: "Prehľadať tieto stránky"
       context:
         user: "Vyhľadávanie podľa @{{username}}"
         category: "Vyhľadať kategóriu #{{category}}"
@@ -1375,7 +1384,7 @@ sk:
         notification_level: "Upozornenia"
         choose_new_category: "Vyberte pre tému novú kategóriu:"
         selected:
-          one: "Označíli ste <b>1</b> tému."
+          one: "Označíli ste <b>%{count}</b> tému."
           few: "Označíli ste <b>{{count}}</b> tém.y"
           many: "Označíli ste <b>{{count}}</b> tém."
           other: "Označíli ste <b>{{count}}</b> tém."
@@ -1387,17 +1396,14 @@ sk:
         read: "Neprečítali ste ešte žiadnu tému."
         posted: "Nanapísali ste ešte žiadnu tému."
         latest: "Nie sú žiadne nové témy. To je smutné."
-        hot: "Nie sú žiadne horúce témy."
         bookmarks: "Nemáte zatiaľ žiadne témy v záložkách."
         category: "V kategórii {{category}} nie je žiadna téma"
         top: "Nie sú žiadne populárne témy."
-        search: "Nenašli sa žiadne výsledky"
         educate:
           new: '<p>Tu sa zobrazia Vaše nové témy.</p><p>V predvolenom nastavení sú témy považované za nové a zobrazí indikátor <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">nové</span> ak boli vytvorené za posledné 2 dni.</p><p>Môžete to zmeniť vo Vašich <a href="%{userPrefsUrl}">nastaveniach</a>.</p>'
           unread: '<p>Tu sa zobrazia Vaše neprečítané témy.</p><p>V predvolenom nastavení sú témy považované za neprečítané a zobrazí sa počet neprečítaných <span class="badge new-posts badge-notification">1</span> ak ste:</p><ul><li>Vytvorili tému</li><li>Odpovedali na tému</li><li>Čítali tému viac ako 4 minúty</li></ul><p>Alebo ste explicitne nastavili pozorovanie alebo sledovanie témy prostredníctvom ovládania upozornení na konci každej témy.</p><p>Môžte to zmeniť vo Vašich <a href="%{userPrefsUrl}">nastaveniach</a>.</p>'
       bottom:
         latest: "Nie je už viac najnovšich tém."
-        hot: "Nie je už viac horúcich tém"
         posted: "Žiadne ďalšie témy na čítanie."
         read: "Žiadne ďalšie prečítané témy."
         new: "Žiadne nové témy."
@@ -1405,10 +1411,9 @@ sk:
         category: "Žiadne ďalšie témy v  {{category}}."
         top: "Nie je už viac poulárnych tém"
         bookmarks: "Žiadne ďalšie témy v záložkách."
-        search: "Nenašlo sa viac výsledkov."
     topic:
       filter_to:
-        one: "1 príspevok k téme"
+        one: "%{count} príspevok k téme"
         few: "{{count}} príspevky k téme"
         many: "{{count}} príspevkov k téme"
         other: "{{count}} príspevkov k téme"
@@ -1421,16 +1426,18 @@ sk:
       move_to_inbox:
         title: "Presunúť do schránky"
         help: "Presunúť správu späť do schránky"
+      defer:
+        title: "Odložiť"
       list: "Témy"
       new: "nová téma"
       unread: "neprečítané"
       new_topics:
-        one: "1 nová téma"
+        one: "%{count} nová téma"
         few: "{{count}} nové témy"
         many: "{{count}} nových tém"
         other: "{{count}} nových tém"
       unread_topics:
-        one: "1 neprečítaná téma"
+        one: "%{count} neprečítaná téma"
         few: "{{count}} neprečítané témy"
         many: "{{count}} neprečítaných tém"
         other: "{{count}} neprečítaných tém"
@@ -1446,17 +1453,17 @@ sk:
         title: "Téma sa nenašla"
         description: "Ľutujeme, hľadaná téma nebola nájdená. Možno bola odstránená moderátorom?"
       total_unread_posts:
-        one: "máte 1 neprečítaný príspevok k tejto téme"
+        one: "máte %{count} neprečítaný príspevok k tejto téme"
         few: "máte {{count}} neprečítanépríspevky k tejto téme"
         many: "máte {{count}} neprečítaných príspevkov k tejto téme"
         other: "máte {{count}} neprečítaných príspevkov k tejto téme"
       unread_posts:
-        one: "máte 1 starší neprečítaný príspevok k tejto téme"
+        one: "máte %{count} starší neprečítaný príspevok k tejto téme"
         few: "máte {{count}} staršie neprečítané príspevky k tejto téme"
         many: "máte {{count}} starších neprečítaných príspevkov k tejto téme"
         other: "máte {{count}} starších neprečítaných príspevkov k tejto téme"
       new_posts:
-        one: "pribudol 1 nový príspevok odkedy ste čítali túto tému naposledy "
+        one: "pribudol %{count} nový príspevok odkedy ste čítali túto tému naposledy "
         few: "pribudlo  {{count}}  nové príspevky odkedy ste čítali túto tému naposledy "
         many: "pribudlo  {{count}}  nových príspevkov odkedy ste čítali túto tému naposledy "
         other: "pribudlo  {{count}}  nových príspevkov odkedy ste čítali túto tému naposledy "
@@ -1494,11 +1501,17 @@ sk:
         pick_date_and_time: "Vyberte dátum a čas"
       temp_close:
         title: "Dočasne zatvoriť"
+      auto_close:
+        error: "Prosím zadajte platnú hodnotu."
+        based_on_last_post: "Nezatvárať pokým posledný príspevok v téme nie je takto starý."
       reminder:
         title: "Upozorni ma"
+      status_update_notice:
+        auto_close: "Táto téma bude automaticky uzavretá o %{timeLeft}."
+        auto_close_based_on_last_post: "Táto téma bude uzavretá %{duration} po poslednej odpovedi."
       auto_close_title: "Nastavenia automatického zatvárania"
       auto_close_immediate:
-        one: "Posledný príspevok k téme je starý už 1 hodinu, takže téma bude okamžite uzavretá. "
+        one: "Posledný príspevok k téme je starý už %{count} hodinu, takže téma bude okamžite uzavretá. "
         few: "Posledný príspevok k téme je starý už %{hours} hodiny, takže téma bude okamžite uzavretá. "
         many: "Posledný príspevok k téme je starý už %{hours} hodín, takže téma bude okamžite uzavretá. "
         other: "Posledný príspevok k téme je starý už %{hours} hodín, takže téma bude okamžite uzavretá. "
@@ -1512,6 +1525,7 @@ sk:
         jump_bottom: "choď na posledný príspevok"
         jump_prompt: "choď na..."
         jump_bottom_with_number: "choď na príspevok číslo %{post_number}"
+        jump_prompt_or: "alebo"
         total: Všetkých príspevkov
         current: tento príspevok
       notifications:
@@ -1597,7 +1611,7 @@ sk:
         pin_validation: "Dátum je vyžadovaný k pripnutiu tejto témy."
         not_pinned: "V {{categoryLink}} nie sú pripnuté žiadne témy."
         already_pinned:
-          one: "Téma pripnutá k {{categoryLink}}: <strong class='badge badge-notification unread'>1</strong>"
+          one: "Téma pripnutá k {{categoryLink}}: <strong class='badge badge-notification unread'>%{count}</strong>"
           few: "Témy pripnuté ku {{categoryLink}}: <strong class='badge badge-notification unread'>{{count}}</strong>"
           many: "Tém pripnutých k {{categoryLink}}: <strong class='badge badge-notification unread'>{{count}}</strong>"
           other: "Tém pripnutých k {{categoryLink}}: <strong class='badge badge-notification unread'>{{count}}</strong>"
@@ -1608,7 +1622,7 @@ sk:
         global_pin_note: "Užívatelia si môžu sami odopnúť tému."
         not_pinned_globally: "Nie sú pripnuté žiadne globálne témy."
         already_pinned_globally:
-          one: "Globálne pripnutá téma : <strong class='badge badge-notification unread'>1</strong>"
+          one: "Globálne pripnutá téma : <strong class='badge badge-notification unread'>%{count}</strong>"
           few: "Globálne pripnuté témy : <strong class='badge badge-notification unread'>{{count}}</strong>"
           many: "Globálne pripnutých tém : <strong class='badge badge-notification unread'>{{count}}</strong>"
           other: "Globálne pripnutých tém : <strong class='badge badge-notification unread'>{{count}}</strong>"
@@ -1646,7 +1660,7 @@ sk:
       login_reply: "Príhláste sa ak chcete odpovedať"
       filters:
         n_posts:
-          one: "1 príspevok"
+          one: "%{count} príspevok"
           few: "{{count}} príspevky"
           many: "{{count}} príspevkov"
           other: "{{count}} príspevkov"
@@ -1654,6 +1668,7 @@ sk:
       split_topic:
         title: "Presuň na novú tému"
         action: "presuň na novú tému"
+        radio_label: "Nová téma"
         error: "Nastala chyba pri presune príspevku na novú tému."
         instructions:
           one: "Vytvárate novú tému do ktorej bude vložený príspevok, ktorý ste označili. "
@@ -1669,6 +1684,8 @@ sk:
           few: "Prosím vyberte tému do ktorej chcete presunúť tieto <b>{{count}}</b> príspevky."
           many: "Prosím vyberte tému do ktorej chcete presunúť týchto <b>{{count}}</b> príspevkov."
           other: "Prosím vyberte tému do ktorej chcete presunúť týchto <b>{{count}}</b> príspevkov."
+      move_to_new_message:
+        radio_label: "Nová správa"
       merge_posts:
         title: "Spojiť označené príspevky"
         action: "spojiť označené príspevky"
@@ -1688,12 +1705,14 @@ sk:
           label: "vybrať"
         selected_post:
           label: "vybraté"
+        select_replies:
+          label: "označ +odpovede"
         delete: zmaž označené
         cancel: zrušiť výber
         select_all: označ všetko
         deselect_all: odznač všetko
         description:
-          one: Označili ste <b>1</b> príspevok
+          one: Označili ste <b>%{count}</b> príspevok
           few: "Označili ste <b>{{count}}</b> príspevky"
           many: "Označili ste <b>{{count}}</b> príspevkov"
           other: "Označili ste <b>{{count}}</b> príspevkov"
@@ -1706,7 +1725,6 @@ sk:
       continue_discussion: "Pokračovanie diskusie z {{postLink}}:"
       follow_quote: "prejsť na citovaný príspevok"
       show_full: "Zobraziť celý príspevok"
-      show_hidden: "Zobraziť skrytý obsah."
       deleted_by_author:
         one: "(príspevky stiahnuté autorom budú automaticky zmazané za jednu hodinu pokiaľ nie sú označené)"
         few: "(príspevky stiahnuté autorom budú automaticky zmazané za %{count} hodiny pokiaľ nie sú označené)"
@@ -1724,11 +1742,6 @@ sk:
         few: "{{count}} Odpovede"
         many: "{{count}} Odpovedí"
         other: "{{count}} Odpovedí"
-      has_likes:
-        one: "{{count}} \"Páči sa\""
-        few: "{{count}} \"Páči sa\""
-        many: "{{count}} \"Páči sa\""
-        other: "{{count}} \"Páči sa\""
       has_likes_title:
         one: "Tento príspevok sa páčil jedej osobe"
         few: "Tento príspevok sa páčil {{count}}  ľuďom"
@@ -1744,7 +1757,6 @@ sk:
         create: "Ľutujeme, pri vytváraní príspevku nastala chyba. Prosím, skúste znovu."
         edit: "Ľutujeme, pri úprave príspevku nastala chyba. Prosím, skúste znovu."
         upload: "Ľutujeme, pri nahrávaní súboru nastala chyba. Prosím, skúste znovu."
-        file_too_large: "Ľutujeme, daný súbor je príliš veľký (maximálna veľkosť je {{max_size_kb}}kB). Čo takto nahrať ten súbor na zdielané cloudové úložisko a nazdielať odkaz?"
         too_many_uploads: "Ľutujeme, ale naraz je možné nahrať iba jeden súbor."
         image_upload_not_allowed_for_new_user: "Ľutujeme, noví použivatelia nemôžu nahrávať obrázky."
         attachment_upload_not_allowed_for_new_user: "Ľutujeme, noví používatelia nemôžu nahrávať prílohy."
@@ -1755,6 +1767,8 @@ sk:
         yes_value: "Áno, zahodiť."
       via_email: "tento príspevok prišiel emailom"
       whisper: "tento príspevok je súkromným šepotom pre moderátorov"
+      wiki:
+        about: "tento príspevok je wiki"
       archetypes:
         save: "Uložiť možnosti"
       controls:
@@ -1763,6 +1777,7 @@ sk:
         has_liked: "tento príspevok sa Vám páči"
         undo_like: "zruš \"Páči sa\""
         edit: "Editovať tento príspevok."
+        edit_action: "Upraviť"
         edit_anonymous: "Ľutujeme, ale pre úpravu príspevku je potrebné sa prihlásiť."
         flag: "súkromne označiť tento príspevok do pozornosti, alebo naň poslať súkromne upozornenie"
         delete: "odstrániť tento príspevok"
@@ -1782,6 +1797,7 @@ sk:
         grant_badge: "Udeliť vyznamenanie"
         lock_post: "Zamknúť príspevok"
         unlock_post: "Odblokovať príspevok"
+        delete_topic: "odstrániť tému"
       actions:
         flag: "Označ"
         undo:
@@ -1790,6 +1806,11 @@ sk:
           inappropriate: "Zruš označenie"
           bookmark: "Vrátiť záložku späť"
           like: "Zruš \"Páči sa\""
+        people:
+          off_topic: "toto je označené ako \"Mimo témy\""
+          spam: "označiť toto ako spam"
+          inappropriate: "toto označ ako nevhodné"
+          like: "páčilo sa"
         by_you:
           off_topic: "Označíli ste to ako mimo tému"
           spam: "Označíli ste to ako spam"
@@ -1798,78 +1819,6 @@ sk:
           notify_user: "Poslali ste správu používateľovi "
           bookmark: "Vytvorili ste si záložku na tento príspevok"
           like: "Páči sa Vám to"
-        by_you_and_others:
-          off_topic:
-            one: "Vy a 1 ďalšia osoba to označílo ako mimo tému"
-            few: "Vy a ďalšie {{count}} osoby to označíli ako mimo tému"
-            many: "Vy a ďalších {{count}} osôb to označílo ako mimo tému"
-            other: "Vy a ďalších {{count}} osôb to označílo ako mimo tému"
-          spam:
-            one: "Vy a 1 ďalšia osoba to označíla ako spam"
-            few: "Vy a ďalšie {{count}} osoby to označíli ako spam"
-            many: "Vy a ďalších {{count}} osôb to označílo ako spam"
-            other: "Vy a ďalších {{count}} osôb to označílo ako spam"
-          inappropriate:
-            one: "Vy a jedna ďalšia osoba to označila ako nevhodné"
-            few: "Vy a ďalšie {{count}} osoby to označili ako nevhodné"
-            many: "Vy a ďalších {{count}} osôb to označilo ako nevhodné"
-            other: "Vy a ďalších {{count}} osôb to označilo ako nevhodné"
-          notify_moderators:
-            one: "Vy a jedna ďalšia osoba to označila na moderovanie"
-            few: "Vy a ďalšie {{count}} osoby to označili na moderovanie"
-            many: "Vy a ďalších {{count}} osôb to označilo na moderovanie"
-            other: "Vy a ďalších {{count}} osôb to označilo na moderovanie"
-          notify_user:
-            one: "Vy a jedna ďalšia osoba poslala správu tomuto užívateľovi"
-            few: "Vy a ďalšie {{count}} osoby poslali správu tomuto užívateľovi"
-            many: "Vy a ďalších {{count}} osôb poslalo správu tomuto používateľovi"
-            other: "Vy a ďalších {{count}} osôb poslalo správu tomuto používateľovi"
-          bookmark:
-            one: "Vy a jedna ďalšia osoba si vytvorilo záložku na tento príspevok"
-            few: "Vy a ďalšie {{count}} osoby si vytvorili záložku na tento príspevok"
-            many: "Vy a ďalších {{count}} osôb si vytvorilo záložku na tento príspevok"
-            other: "Vy a ďalších {{count}} osôb si vytvorilo záložku na tento príspevok"
-          like:
-            one: "Páči sa to Vám a jendej ďalšej osobe"
-            few: "Páči sa to Vám a ďalším {{count}} osobám"
-            many: "Páči sa to Vám a ďalším {{count}} osobám"
-            other: "Páči sa to Vám a ďalším {{count}} osobám"
-        by_others:
-          off_topic:
-            one: "1 osoba to označíla ako mimo tému"
-            few: "{{count}} osoby to označíli ako mimo tému"
-            many: "{{count}} osôb to označílo ako mimo tému"
-            other: "{{count}} osôb to označílo ako mimo tému"
-          spam:
-            one: "1 osoba to označíla ako spam"
-            few: "{{count}} osoby to označíli ako spam"
-            many: "{{count}} osôb to označílo ako spam"
-            other: "{{count}} osôb to označílo ako spam"
-          inappropriate:
-            one: "1 osoba to označila ako nevhodné"
-            few: "{{count}} osoby to označili ako nevhodné"
-            many: "{{count}} osôb to označilo ako nevhodné"
-            other: "{{count}} osôb to označilo ako nevhodné"
-          notify_moderators:
-            one: "1 osoba to označila na moderovanie"
-            few: "{{count}} osoby to označili na moderovanie"
-            many: "{{count}} osôb to označilo na moderovanie"
-            other: "{{count}} osôb to označilo na moderovanie"
-          notify_user:
-            one: "1 osoba poslala správu tomuto používateľovi"
-            few: "{{count}} osoby poslali správu tomuto používateľovi"
-            many: "{{count}} osôb poslalo správu tomuto používateľovi"
-            other: "{{count}} osôb poslalo správu tomuto používateľovi"
-          bookmark:
-            one: "1 osoba si vytvorila záložku na tento príspevok"
-            few: "{{count}} osoby si vytvorili záložku na tento príspevok"
-            many: "{{count}} osôb si vytvorilo záložku na tento príspevok"
-            other: "{{count}} osôb si vytvorilo záložku na tento príspevok"
-          like:
-            one: " {{count}} osobe sa to páčilo"
-            few: " {{count}} osobám sa to páčilo"
-            many: " {{count}} osobám sa to páčilo"
-            other: " {{count}} osobám sa to páčilo"
       revisions:
         controls:
           first: "Prvá revízia"
@@ -1893,8 +1842,7 @@ sk:
       can: "môže &hellip; "
       none: "(Bez kategórie)"
       all: "Všetky kategórie"
-      edit: "uprav"
-      edit_long: "Upraviť"
+      edit: "Upraviť"
       view: "Prezerať témy v kategórii"
       general: "Všeobecné"
       settings: "Nastavenia"
@@ -1935,7 +1883,7 @@ sk:
       email_in_disabled_click: 'povoľte nastavenie "email in"'
       allow_badges_label: "Povoliť získavanie odznakov v tejto kategórii"
       edit_permissions: "Upraviť práva"
-      add_permission: "Pridať práva"
+      review_group_name: "názov skupiny"
       this_year: "tento rok"
       default_position: "Predvolená pozícia"
       position_disabled: "Kategórie budú zobrazené podľa aktivity. Pre možnosť ovládania poradia kategórií v zozname,"
@@ -1956,8 +1904,19 @@ sk:
         muted:
           title: "Stíšené"
           description: "Nikdy nebudete informovaní o udalostiach v nových témach týchto kategórií. Tieto témy sa zároveň nebudú zobrazovať v zozname posledných udalostí."
+      search_priority:
+        options:
+          normal: "Normálne"
       sort_options:
+        likes: "Páči sa mi"
+        views: "Zobrazenia"
+        posts: "Príspevky"
         activity: "Aktivity"
+        category: "Kategória"
+        created: "Vytvorené"
+      settings_sections:
+        general: "Všeobecné"
+        email: "Email"
     flagging:
       title: "Ďakujeme, že pomáhate udržiavať slušnosť v našej komunite!"
       action: "Označ príspevok"
@@ -1980,12 +1939,12 @@ sk:
       custom_placeholder_notify_moderators: "Dajte nám vedieť, z čoho konkrétne máte obavy, a priložte príslušné odkazy a príklady, ak je to možné."
       custom_message:
         more:
-          one: "ešte 1 ..."
+          one: "ešte %{count} ..."
           few: "ešte {{count}} ..."
           many: "ešte {{count}} ..."
           other: "ešte {{count}} ..."
         left:
-          one: "1 zostáva"
+          one: "%{count} zostáva"
           few: "{{count}} zostávajú"
           many: "{{count}} zostáva"
           other: "{{count}} zostáva"
@@ -2005,7 +1964,7 @@ sk:
         other: "%{count} klikov"
     post_links:
       title:
-        one: "1 ďalší"
+        one: "%{count} ďalší"
         few: "%{count} ďalšie"
         many: "%{count} ďalších"
         other: "%{count} ďalších"
@@ -2029,6 +1988,8 @@ sk:
       pinned:
         title: "Pripnutý"
         help: "Túto tému ste pripli.  Bude zobrazená na vrchole svojej kategórie"
+      unlisted:
+        help: "Táto téma je skrytá. Nebude zobrazená v zozname tém a prístup k nej bude možný len prostrednictvom priameho odkazu na ňu"
     posts: "Príspevky"
     posts_long: "v tejto téme je {{number}} príspevkov"
     posts_likes_MF: |2
@@ -2076,20 +2037,14 @@ sk:
       latest:
         title: "Najnovšie"
         title_with_count:
-          one: "Posledný (1)"
+          one: "Posledný (%{count})"
           few: "Posledné ({{count}})"
           many: "Posledných ({{count}})"
           other: "Posledných ({{count}})"
         help: "témy s nedávnymi príspevkami"
-      hot:
-        title: "Horúca"
-        help: "výber najhorúcejších tém"
       read:
         title: "Prečítaná"
         help: "prečítané témy, zoradené podľa času ich prečítania"
-      search:
-        title: "Hľadať"
-        help: "hľadaj vo všetkych témach"
       categories:
         title: "Kategórie"
         title_in: "Kategória - {{categoryName}}"
@@ -2097,26 +2052,26 @@ sk:
       unread:
         title: "Neprečítané"
         title_with_count:
-          one: "Neprečítaná (1)"
+          one: "Neprečítaná (%{count})"
           few: "Neprečítané ({{count}})"
           many: "Neprečítaných ({{count}})"
           other: "Neprečítaných ({{count}})"
         help: "témy ktorých neprečítané príspevky v súčastnosti sledujete alebo pozorujete "
         lower_title_with_count:
-          one: "1 neprečítaná"
+          one: "%{count} neprečítaná"
           few: "{{count}} neprečítané"
           many: "{{count}} neprečítaných"
           other: "{{count}} neprečítaných"
       new:
         lower_title_with_count:
-          one: "1 nová"
+          one: "%{count} nová"
           few: "{{count}} nové"
           many: "{{count}} nových"
           other: "{{count}} nových"
         lower_title: "nový"
         title: "Nové"
         title_with_count:
-          one: "Nová (1)"
+          one: "Nová (%{count})"
           few: "Nové ({{count}})"
           many: "Nových ({{count}})"
           other: "Nových ({{count}})"
@@ -2167,55 +2122,55 @@ sk:
       title: "Klávesové skratky"
       jump_to:
         title: "Choď na"
-        home: "<b>g</b>, <b>h</b> Domov"
-        latest: "<b>g</b>, <b>l</b> Najnovšie"
-        new: "<b>g</b>, <b>n</b> Nové"
-        unread: "<b>g</b>, <b>u</b> Neprečítané"
-        categories: "<b>g</b>, <b>c</b> Kategórie"
-        top: "<b>g</b>, <b>t</b> Top"
-        bookmarks: "<b>g</b>, <b>b</b> Záložky"
-        profile: "<b>g</b>, <b>p</b> Profil"
-        messages: "<b>g</b>, <b>m</b> Správy"
+        home: "%{shortcut} Domov"
+        latest: "%{shortcut} Najnovšie"
+        new: "%{shortcut} Nové"
+        unread: "%{shortcut} Neprečítané"
+        categories: "%{shortcut} Kategórie"
+        top: "%{shortcut} Top"
+        bookmarks: "%{shortcut} Záložky"
+        profile: "%{shortcut} Profil"
+        messages: "%{shortcut} Správy"
       navigation:
         title: "Navigácia"
-        jump: "<b>#</b> Choď na príspevok #"
-        back: "<b>u</b> Späť"
-        up_down: "<b>k</b>/<b>j</b> Presuň označené &uarr; &darr;"
-        open: "<b>o</b> or <b>Enter</b>Otvoriť zvolenú tému"
-        next_prev: "<b>shift</b>+<b>j</b>/<b>shift</b>+<b>k</b> Nasledujúca/predchádzajúca sekcia"
+        jump: "%{shortcut} Choď na príspevok #"
+        back: "%{shortcut} Späť"
+        up_down: "%{shortcut} Presuň označené &uarr; &darr;"
+        open: "%{shortcut}Otvoriť zvolenú tému"
+        next_prev: "%{shortcut} Nasledujúca/predchádzajúca sekcia"
       application:
         title: "Aplikácia"
-        create: "<b>c</b> Vytvoriť novú tému"
-        notifications: "<b>n</b> Otvor upozornenia"
-        hamburger_menu: "<b>=</b> Otvoriť hamburger menu"
-        user_profile_menu: "<b>p</b> Otvor užívateľské menu"
-        show_incoming_updated_topics: "<b>.</b> Zobraz aktualizované témy"
-        help: "<b>?</b> Pomoc s klávesovými skratkami"
-        dismiss_new_posts: "<b>x</b>, <b>r</b> Zahodiť Nové/Príspevky"
-        dismiss_topics: "<b>x</b>, <b>t</b> Zahodiť témy"
-        log_out: "<b>shift</b>+<b>z</b> <b>shift</b>+<b>z</b> Odhlásiť sa"
+        create: "%{shortcut} Vytvoriť novú tému"
+        notifications: "%{shortcut} Otvor upozornenia"
+        hamburger_menu: "%{shortcut} Otvoriť hamburger menu"
+        user_profile_menu: "%{shortcut} Otvor užívateľské menu"
+        show_incoming_updated_topics: "%{shortcut} Zobraz aktualizované témy"
+        help: "%{shortcut} Pomoc s klávesovými skratkami"
+        dismiss_new_posts: "%{shortcut} Zahodiť Nové/Príspevky"
+        dismiss_topics: "%{shortcut} Zahodiť témy"
+        log_out: "%{shortcut} Odhlásiť sa"
       actions:
         title: "Akcie"
-        bookmark_topic: "<b>f</b> Prepnúť zazáložkovanie témy"
-        pin_unpin_topic: "<b>shift</b>+<b>p</b> Pripnúť/Odopnúť tému"
-        share_topic: "<b>shift</b>+<b>s</b> Zdielať tému"
-        share_post: "<b>s</b> Zdielať príspevok"
-        reply_as_new_topic: "<b>t</b> Odpovedať formou prepojenej témy"
-        reply_topic: "<b>shift</b>+<b>r</b> Odpovedať na tému"
-        reply_post: "<b>r</b> Odpovedať na príspevok"
-        quote_post: "<b>q</b> Citovať príspevok"
-        like: "<b>l</b> Označiť príspevok \"Páči sa\""
-        flag: "<b>!</b> Nahlásiť príspevok "
-        bookmark: "<b>b</b> Pridať príspevok do záložiek"
-        edit: "<b>e</b> Upraviť príspevok"
-        delete: "<b>d</b> Zmazať príspevok"
-        mark_muted: "<b>m</b>, <b>m</b> Umlčať tému"
-        mark_regular: "<b>m</b>, <b>r</b> Obyčajná (preddefinovaná) téma"
-        mark_tracking: "<b>m</b>, <b>t</b> Pozorovať tému"
-        mark_watching: "<b>m</b>, <b>w</b> Pozorovať tému"
+        bookmark_topic: "%{shortcut} Prepnúť zazáložkovanie témy"
+        pin_unpin_topic: "%{shortcut} Pripnúť/Odopnúť tému"
+        share_topic: "%{shortcut} Zdielať tému"
+        share_post: "%{shortcut} Zdielať príspevok"
+        reply_as_new_topic: "%{shortcut} Odpovedať formou prepojenej témy"
+        reply_topic: "%{shortcut} Odpovedať na tému"
+        reply_post: "%{shortcut} Odpovedať na príspevok"
+        quote_post: "%{shortcut} Citovať príspevok"
+        like: "%{shortcut} Označiť príspevok \"Páči sa\""
+        flag: "%{shortcut} Nahlásiť príspevok "
+        bookmark: "%{shortcut} Pridať príspevok do záložiek"
+        edit: "%{shortcut} Upraviť príspevok"
+        delete: "%{shortcut} Zmazať príspevok"
+        mark_muted: "%{shortcut} Umlčať tému"
+        mark_regular: "%{shortcut} Obyčajná (preddefinovaná) téma"
+        mark_tracking: "%{shortcut} Pozorovať tému"
+        mark_watching: "%{shortcut} Pozorovať tému"
     badges:
       earned_n_times:
-        one: "Získal tento odkaz 1-krát"
+        one: "Získal tento odkaz %{count}-krát"
         few: "Získal tento odkaz %{count}-krát"
         many: "Získal tento odkaz %{count}-krát"
         other: "Získal tento odkaz %{count}-krát"
@@ -2223,10 +2178,12 @@ sk:
       others_count: "Ostatní s týmto odznakom (%{count})"
       title: Odznaky
       granted:
-        one: "1 udelený"
+        one: "%{count} udelený"
         few: "%{count} udelené"
         many: "%{count} udelených"
         other: "%{count} udelených"
+      select_badge_for_title: "Vyberte odznak, ktorý chcete použiť ako Váš titul"
+      none: "(žiadne)"
       badge_grouping:
         getting_started:
           name: Začíname
@@ -2238,6 +2195,15 @@ sk:
           name: Ostatné
         posting:
           name: Prispievanie
+    google_search: |
+      <h3>Vyhľadávať pomocou Google</h3>
+      <p>
+        <form action='//google.com/search' id='google-search' onsubmit="document.getElementById('google-query').value = 'site:' + window.location.host + ' ' + document.getElementById('user-query').value; return true;">
+          <input type="text" id='user-query' value="">
+          <input type='hidden' id='google-query' name="q">
+          <button class="btn btn-primary">Google</button>
+        </form>
+      </p>
     tagging:
       all_tags: "Všetky štítky"
       selector_all_tags: "všetky štítky"
@@ -2287,20 +2253,16 @@ sk:
           read: "Neprečítali ste ešte žiadnu tému."
           posted: "Neprispeli ste ešte do žiadnej témy."
           latest: "Nie sú žiadne najnovšie témy."
-          hot: "Nie sú žiadne horúce témy."
           bookmarks: "Nemáte ešte žiadne témy v záložkách."
           top: "Nie sú žiadne top témy."
-          search: "Nenašli sa žiadne výsledky"
         bottom:
           latest: "Žiadne ďalšie najnovšie témy."
-          hot: "Žiadne ďalšie horúce témy."
           posted: "Žiadne ďalšie témy na čítanie."
           read: "Žiadne ďalšie prečítané témy."
           new: "Žiadne ďalšie nové témy."
           unread: "Žiadne ďalšie neprečítané témy."
           top: "Žiadne ďalšie top témy."
           bookmarks: "Žiadne ďalšie zazáložkované témy."
-          search: "Žiadne ďalšie výsledky vyhľadávania."
     invite:
       custom_message_placeholder: "Zadajte Vašu vlastnú správu"
   admin_js:
@@ -2308,9 +2270,12 @@ sk:
     admin:
       title: "Administrátor Discourse"
       moderator: "Moderátor"
+      tags:
+        remove_muted_tags_from_latest:
+          always: "vždy"
+          never: "nikdy"
       dashboard:
         title: "Ovládací panel"
-        last_updated: "Dashboard naposledy aktualizovaný:"
         version: "Verzia"
         up_to_date: "Máte nainštalovanú najnovšiu verziu!"
         critical_available: "Je dostupná kritická aktualizácia."
@@ -2330,17 +2295,22 @@ sk:
         private_messages_short: "Správy"
         private_messages_title: "Správy"
         mobile_title: "Mobil"
+        backups: "Zálohy"
         traffic_short: "Vyťaženie"
         traffic: "Požiadavky webových aplikácií"
         show_traffic_report: "Zobraziť detaily vyťaženia"
         whats_new_in_discourse: "Čo je nové v Discourse?"
         all_reports: "Všetky hlásenia"
         general_tab: "Všeobecné"
+        security_tab: "Bezpečnosť"
+        report_filter_any: "hocijaký"
         disabled: Vypnuté
         not_found_error: "Prepáčte, toto hlásenie neexistuje"
         reports:
           today: "Dnes"
           yesterday: "Včera"
+          last_7_days: "Posledných 7"
+          last_30_days: "Posledných 30"
           all_time: "Za celú dobu"
           7_days_ago: "Pred 7 dňami"
           30_days_ago: "Pred 30 dňami"
@@ -2351,56 +2321,49 @@ sk:
           start_date: "Od"
           end_date: "Do"
           groups: "Všetky skupiny"
+          filters:
+            group:
+              label: Skupina
+            category:
+              label: Kategória
       commits:
         latest_changes: "Najnov3ie zmeny. Prosime aktualizujte čo najčastejšie!"
         by: "podľa"
-      flags:
-        title: "Označenia"
-        agree: "Súhlasiť"
-        agree_title: "Akceptovať toto označenie ako platné a správne"
-        agree_flag_suspend: "Suspendovaný užívateľ"
-        agree_flag_silence: "Tichý užívateľ"
-        agree_flag: "Ponechať príspevok"
-        delete: "Odstrániť"
-        delete_title: "Zmazať príspevok na ktorý označenie odkazuje ."
-        delete_post_defer_flag_title: "Zmazať prípspevok; ak ide o prvý príspevok, zmazať aj tému"
-        delete_post_agree_flag_title: "Zmazať prípspevok; ak ide o prvý príspevok, zmazať aj tému"
-        delete_flag_modal_title: "Zmazať a..."
-        delete_spammer: "Zmazať spammera"
-        delete_spammer_title: "Zmazať používateľa aj všetky príspevky a témy ktoré vytvoril."
-        disagree_flag_unhide_post: "Nesúhlasiť (odkryť príspevok)"
-        disagree_flag_unhide_post_title: "Zrušíť všetky označenia z príspevku a znova odkryť príspevok"
-        disagree_flag: "Nesúhlasiť"
-        disagree_flag_title: "Zamietnuť toto označenie ako neplatné, alebo nesprávne"
-        clear_topic_flags: "Hotovo"
-        clear_topic_flags_title: "Téma bola preskúmaná a problémy boli vyriešené. Kliknite Hotovo pre zrušenie označení."
-        more: "(viac odpovedí...)"
-        dispositions:
-          agreed: "odsúhlasené"
-          disagreed: "neodsúhlasené"
-        flagged_by: "Označené "
-        resolved_by: "Vyriešené"
-        took_action: "Prijal opatrenia"
-        system: "Systém"
-        error: "Niečo sa pokazilo"
-        reply_message: "Odpovedať"
-        topic_flagged: "Táto <strong>téma</strong> bola označená. "
-        visit_topic: "Navšťívte tému pre prijatie opatrení"
-        was_edited: "Príspevok bol upravený po prvom označení"
-        previous_flags_count: "Tento príspevok bol už označený {{count}} krát."
-        details: "detaily"
-        flagged_topics:
-          topic: "Téma"
-          type: "Typ"
-          users: "Používatelia"
-          last_flagged: "Naposledy označené"
-        short_names:
-          off_topic: "mimo tému"
-          inappropriate: "nevhodné"
-          spam: "spam"
-          notify_user: "vlastné"
-          notify_moderators: "vlastné"
       groups:
+        new:
+          title: "Nová skupina"
+          create: "Vytvoriť:"
+          name:
+            too_short: "Názov skupiny je príliš krátky"
+            too_long: "Názov skupiny je príliš dlhý"
+            checking: "Kontrolujeme dostupnosť názvu skupiny"
+            available: "Názov skupiny je k dispozícii"
+            not_available: "Názov skupiny nie je k dispozícii"
+            blank: "Názov skupiny nesmie byť prázdny"
+        bulk_add:
+          title: "Hromadné pridanie do skupiny"
+          paste: "Vlož zoznam používateľov alebo emailov, jeden na riadok:"
+        add_members:
+          as_owner: "Nastaviť používateľa/ov ako vlastníka/ov skupiny"
+        manage:
+          interaction:
+            email: Email
+            incoming_email: "Vlastná e-mailová adresa pre príchodziu poštu"
+            incoming_email_placeholder: "zadajte emailovú adresu"
+            visibility_levels:
+              title: "Kto môže vidieť túto skupinu?"
+              public: "Každý"
+              members: "Vlastníci skupiny, členovia a jej administrátori"
+              owners: "Vlastníci skupiny a jej administrátori"
+          membership:
+            automatic: Automaticky
+            trust_level: Stupeň dôvery
+            trust_levels_title: "Stupeň dôvery automaticky udelený členom po ich pridaní:"
+            trust_levels_none: "Žiadny"
+            automatic_membership_email_domains: "Užívatelia, ktorí sa zaregistrovali s emailovou doménou uvedenou v zozname budú automaticky pridaní do tejto skupiny. "
+            automatic_membership_retroactive: "Použi pravidlo rovnakej emailovej domény pre pridanie registrovaných používateľov"
+            primary_group: "Automaticky nastav ako hlavnú skupinu"
+        name_placeholder: "Meno skupiny, bez medzier, také isté pravidlá ako pre používateľské meno"
         primary: "Hlavná skupina"
         no_primary: "(bez hlavnej skupiny)"
         title: "Skupiny"
@@ -2438,6 +2401,16 @@ sk:
         description: "Popis"
         go_back: "Späť na zoznam"
         payload_url_placeholder: "https://example.com/postreceive"
+        active: "Aktívny"
+        delivery_status:
+          failed: "Nepodarilo sa"
+          disabled: "Vypnuté"
+        events:
+          request: "Požiadavka"
+          headers: "Hlavičky"
+          body: "Telo"
+          timestamp: "Vytvorené"
+          actions: "Akcie"
       plugins:
         title: "Pluginy"
         installed: "Nainštalované pluginy"
@@ -2520,11 +2493,12 @@ sk:
         save: "Uložiť"
         new: "Nový"
         new_style: "Nový štýl"
-        import: "Import"
         delete: "Odstrániť"
         color: "Farba"
         opacity: "Nepriesvitnosť"
         copy: "Kopírovať"
+        copied_to_clipboard: "Skopírované do schránky"
+        copy_to_clipboard_error: "Chyba pri kopírovaní dát do schránky"
         email_templates:
           title: "Emailové šablóny"
           subject: "Predmet"
@@ -2540,9 +2514,8 @@ sk:
           theme_name: "Názov témy"
           component_name: "Názov komponentu"
           create: "Vytvoriť:"
-          create_type: "Typ:"
-          create_name: "Meno:"
-          name_too_short: "Meno musí mať minimálne 4 znaky."
+          create_type: "Typ"
+          create_name: "Meno"
           long_title: "Upraviť farby, CSS a obsah HTML Vašej stránky"
           edit: "Upraviť"
           common: "Spoločné"
@@ -2550,25 +2523,40 @@ sk:
           mobile: "Mobil"
           settings: "Nastavenia"
           preview: "Ukážka"
+          collapse: Zbaliť
+          upload: "Upload"
           discard: "Zahodiť"
           stay: "Ponechať"
           css_html: "Vlastné CSS/HTML"
           edit_css_html: "Upraviť CSS/HTML"
+          installed: "Nainštalované"
+          install_popular: "Populárne"
+          about_theme: "O stránke"
           check_for_updates: "Skontrolovať aktualizácie"
           updating: "Aktualizujem..."
           add: "Pridať"
           theme_settings: "Nastavenie tém"
           empty: "Žiadne položky"
+          scss:
+            text: "CSS"
+          header:
+            text: "Hlavička"
+          footer:
+            text: "Päta"
+          embedded_scss:
+            text: "Vnorené CSS"
+          head_tag:
+            text: "</head>"
+            title: "HTML, ktoré bude vložené pred </body> tag"
+          body_tag:
+            text: "</body>"
+            title: "HTML, ktoré bude vložené pred </body> tag"
         colors:
           title: "Farby"
-          long_title: "Farebné schémy"
-          new_name: "Nová farebná schéma"
           copy_name_prefix: "Kópia"
-          delete_confirm: "Zmazať túto farebnú schému?"
           undo: "späť"
           undo_title: "Zrušiť zmeny farby a vrátiť sa k predchádzajucej uloženej verzii. "
           revert: "vrátiť zmeny"
-          revert_title: "Nastaviť východziu farebnú schému Discourse. "
           primary:
             name: "primárny"
             description: "Väčšina textov, ikony, a okraje."
@@ -2639,6 +2627,7 @@ sk:
             error: "Chyba"
             headers: "Hlavičky"
             subject: "Predmet"
+            body: "Telo"
           filters:
             from_placeholder: "from@example.com"
             to_placeholder: "to@example.com"
@@ -2670,8 +2659,10 @@ sk:
           block: "blokovať"
           do_nothing: "nerob nič"
         staff_actions:
+          all: "všetko"
           title: "Akcie personálu"
           clear_filters: "Ukázať všetko"
+          staff_user: "Používateľ"
           target_user: "Cieľový používateľ"
           subject: "Predmet"
           when: "Kedy"
@@ -2746,14 +2737,21 @@ sk:
           roll_up:
             text: "Zbaliť"
             title: "Vytvorí novú podsieť zakázaných záznamov pokiaľ existuje aspoň 'min_ban_entries_for_roll_up' záznamov"
+        search_logs:
+          types:
+            header: "Hlavička"
         logster:
           title: "Chybové Logy"
       watched_words:
+        clear_filter: "Vyčistiť"
         actions:
           block: "Zablokovať"
           censor: "Cenzor"
           require_approval: "Potrebné povolenie"
           flag: "Označenie"
+        form:
+          add: "Pridať"
+          upload: "Upload"
       impersonate:
         title: "Privlastniť"
         help: "Použite tento nástroj na privlastnenie si používateľského účtu na účely debugovania. Po skončení sa budete musieť odhlásiť."
@@ -2769,21 +2767,11 @@ sk:
         nav:
           new: "Nový"
           active: "Aktívny"
-          pending: "Čakajúci"
           staff: "Zamestnanci"
           suspended: "Odobrate práva"
           suspect: "Podozrivý"
+          staged: "Dočasný"
         approved: "Schválený?"
-        approved_selected:
-          one: "schváliť používateľa"
-          few: "schváliť ({{count}}) používateľov "
-          many: "schváliť ({{count}}) používateľov "
-          other: "schváliť ({{count}}) používateľov "
-        reject_selected:
-          one: "zamietnuť používateľa"
-          few: "zamietnuť ({{count}}) používateľov "
-          many: "zamietnuť ({{count}}) používateľov "
-          other: "zamietnuť ({{count}}) používateľov "
         titles:
           active: "Aktívni používatelia"
           new: "Noví používatelia"
@@ -2798,16 +2786,6 @@ sk:
           moderators: "Moderátori"
           suspended: "Užívatelia s odobratými právami"
           suspect: "Podozriví užívatelia"
-        reject_successful:
-          one: "Úspešne zamietnutý používateľ"
-          few: "Úspešne zamietnutí %{count} používatelia"
-          many: "Úspešne zamietnutých %{count} používateľov"
-          other: "Úspešne zamietnutých %{count} používateľov"
-        reject_failures:
-          one: "Nepodarilo sa zamietnuť 1 používateľa"
-          few: "Nepodarilo sa zamietnuť %{count} používateľov"
-          many: "Nepodarilo sa zamietnuť %{count} používateľov"
-          other: "Nepodarilo sa zamietnuť %{count} používateľov"
         not_verified: "Neoverený"
         check_email:
           title: "Odhaliť emailovú adresu tohto používateľa"
@@ -2819,14 +2797,14 @@ sk:
         suspend_reason_label: "Prečo mu odoberáte práva? Tento text <b>sa zobrazí každému</b> na stránke profilu používateľa a bude zobrazený užívateľovi pri pokuse o prihlásenie. Buďte strucný."
         suspend_reason: "Dôvod"
         suspended_by: "Práva odobraté"
+        silence_reason: "Dôvod"
+        silence_modal_title: "Tichý užívateľ"
         delete_all_posts: "Zmazať všetky príspevky"
         moderator: "Moderátor?"
         admin: "Admin?"
         suspended: "Odobrate práva?"
         staged: "Dočasný?"
         show_admin_profile: "Admin"
-        refresh_browsers: "Vynútiť refresh browsera."
-        refresh_browsers_message: "Správa odoslaná všetkým klientom!"
         show_public_profile: "Ukázať verejný profil"
         impersonate: "Privlastniť"
         ip_lookup: "Vyhľadávanie IP"
@@ -2874,7 +2852,7 @@ sk:
           many: "Nepodarilo sa zmazať všetky príspevky. Niektoré príspevky sú staršie ako %{count} dní. (Nastavenie delete_user_max_post_age )"
           other: "Nepodarilo sa zmazať všetky príspevky. Niektoré príspevky sú staršie ako %{count} dní. (Nastavenie delete_user_max_post_age )"
         cant_delete_all_too_many_posts:
-          one: "Nedá sa zmazať všetky píspevky, pretože používateľ má viac ako 1 príspevok.  (delete_all_posts_max)"
+          one: "Nedá sa zmazať všetky píspevky, pretože používateľ má viac ako %{count} príspevok.  (delete_all_posts_max)"
           few: "Nedá sa zmazať všetky píspevky, pretože používateľ má viac ako %{count} príspevky.  (delete_all_posts_max)"
           many: "Nedá sa zmazať všetky píspevky, pretože používateľ má viac ako %{count} príspevkov.  (delete_all_posts_max)"
           other: "Nedá sa zmazať všetky píspevky, pretože používateľ má viac ako %{count} príspevkov.  (delete_all_posts_max)"
@@ -2971,12 +2949,19 @@ sk:
         go_back: "Návrat na vyhľadávanie"
         recommended: "Odporúčame prispôsobenie nasledujúceho textu podľa vašich potrieb:"
         show_overriden: "Ukázať iba zmenené"
+      settings:
+        show_overriden: "Ukázať iba zmenené"
+        reset: "zrušiť"
+        none: "žiadne"
       site_settings:
         title: "Nastavenia"
         no_results: "Žiadne výsledky"
         clear_filter: "Vyčistiť"
         add_url: "pridaj URL"
         add_host: "pridať hostiteľa"
+        uploaded_image_list:
+          upload:
+            label: "Upload"
         categories:
           all_results: "Všetky"
           required: "Povinné"
@@ -2994,6 +2979,7 @@ sk:
           developer: "Vývojár"
           embedding: "Vkladám"
           legal: "Právne záležitosti"
+          api: "API"
           uncategorized: "Ostatné"
           backups: "Zálohy"
           login: "Prihlásenie"
@@ -3002,6 +2988,7 @@ sk:
           tags: "Štítky"
           search: "Hľadať"
           groups: "Skupiny"
+          dashboard: "Ovládací panel"
       badges:
         title: Odznaky
         new_badge: Nový odznak
@@ -3059,7 +3046,7 @@ sk:
             text: "Chýbajú ukážky práv. Toto sa stane, ak dotaz na odznak vráti ID používateľa alebo príspevku, ktorý neexistuje. Toto môže zapríčiniť neskoršie neočakávané výsledky - prosíme znovu overte Váš dotaz."
           no_grant_count: "Žiadne odznaky na pridelenie."
           grant_count:
-            one: "<b>1</b> odznak na pridelenie"
+            one: "<b>%{count}</b> odznak na pridelenie"
             few: "<b>%{count}</b> odznaky na pridelenie"
             many: "<b>%{count}</b> odznakov na pridelenie"
             other: "<b>%{count}</b> odznakov na pridelenie"
@@ -3115,6 +3102,10 @@ sk:
           label: "Nový:"
           add: "Pridať"
           filter: "Hľadať (URL alebo externá URL)"
+      reseed:
+        modal:
+          categories: "Kategórie"
+          topics: "Témy"
   wizard_js:
     wizard:
       done: "Hotovo"
@@ -3123,6 +3114,7 @@ sk:
       step: "%{current} z %{total}"
       upload: "Načítať"
       uploading: "Načítavam..."
+      upload_error: "Ľutujeme, pri nahrávaní súboru nastala chyba. Prosím, skúste znovu."
       quit: "Možno neskôr"
       invites:
         add_user: "pridať"

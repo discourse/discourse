@@ -18,19 +18,19 @@
   {{/if}}
 
   {{#admin-form-row wrapLabel="true"}}
-    {{input type="checkbox" checked=buffered.editable}} {{i18n 'admin.user_fields.editable.title'}}
+    {{input type="checkbox" checked=buffered.editable}} {{i18n "admin.user_fields.editable.title"}}
   {{/admin-form-row}}
 
   {{#admin-form-row wrapLabel="true"}}
-    {{input type="checkbox" checked=buffered.required}} {{i18n 'admin.user_fields.required.title'}}
+    {{input type="checkbox" checked=buffered.required}} {{i18n "admin.user_fields.required.title"}}
   {{/admin-form-row}}
 
   {{#admin-form-row wrapLabel="true"}}
-    {{input type="checkbox" checked=buffered.show_on_profile}} {{i18n 'admin.user_fields.show_on_profile.title'}}
+    {{input type="checkbox" checked=buffered.show_on_profile}} {{i18n "admin.user_fields.show_on_profile.title"}}
   {{/admin-form-row}}
 
   {{#admin-form-row wrapLabel="true"}}
-    {{input type="checkbox" checked=buffered.show_on_user_card}} {{i18n 'admin.user_fields.show_on_user_card.title'}}
+    {{input type="checkbox" checked=buffered.show_on_user_card}} {{i18n "admin.user_fields.show_on_user_card.title"}}
   {{/admin-form-row}}
 
   {{#admin-form-row}}
@@ -39,15 +39,14 @@
   {{/admin-form-row}}
 {{else}}
   <div class="row">
-    <div class='form-display'>
+    <div class="form-display">
       <strong>{{userField.name}}</strong>
       <br/>
       {{{userField.description}}}
     </div>
-    <div class='form-display'>{{fieldName}}</div>
-    <div class='form-element controls'>
+    <div class="form-display">{{fieldName}}</div>
+    <div class="form-element controls">
       {{d-button action=(action "edit") class="btn-default" icon="pencil-alt" label="admin.user_fields.edit"}}
-
       {{d-button action=destroyAction actionParam=userField class="btn-danger" icon="far-trash-alt" label="admin.user_fields.delete"}}
       {{d-button action=moveUpAction actionParam=userField class="btn-default" icon="arrow-up" disabled=cantMoveUp}}
       {{d-button action=moveDownAction actionParam=userField class="btn-default" icon="arrow-down" disabled=cantMoveDown}}
@@ -55,4 +54,4 @@
   </div>
   <div class="row">{{flags}}</div>
 {{/if}}
-<div class='clearfix'></div>
+<div class="clearfix"></div>

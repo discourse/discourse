@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class IncomingLinkNormalization < ActiveRecord::Migration[4.2]
   def up
     remove_column :incoming_links, :post_number

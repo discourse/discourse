@@ -1,4 +1,4 @@
-import { IMAGE_VERSION as v } from "pretty-text/emoji";
+import { IMAGE_VERSION as v } from "pretty-text/emoji/version";
 
 QUnit.module("model:topic");
 

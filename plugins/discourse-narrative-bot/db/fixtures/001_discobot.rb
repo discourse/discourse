@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 discobot_username = 'discobot'
 
 def seed_primary_email
@@ -50,8 +52,8 @@ end
 bot.update!(admin: true, moderator: false)
 
 bot.user_option.update!(
-  email_private_messages: false,
-  email_direct: false
+  email_messages_level: UserOption.email_level_types[:never],
+  email_level: UserOption.email_level_types[:never]
 )
 
 if !bot.user_profile.bio_raw

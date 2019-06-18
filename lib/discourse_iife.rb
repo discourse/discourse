@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class DiscourseIIFE
   def initialize(options = {}, &block)
   end

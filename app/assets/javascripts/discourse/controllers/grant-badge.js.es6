@@ -13,8 +13,13 @@ export default Ember.Controller.extend(
     loading: true,
     saving: false,
     selectedBadgeId: null,
-    allBadges: [],
-    userBadges: [],
+
+    init() {
+      this._super(...arguments);
+
+      this.allBadges = [];
+      this.userBadges = [];
+    },
 
     @computed("topicController.selectedPosts")
     post() {
@@ -55,9 +60,9 @@ export default Ember.Controller.extend(
         this.set("saving", true);
 
         this.grantBadge(
-          this.get("selectedBadgeId"),
+          this.selectedBadgeId,
           this.get("post.username"),
-          this.get("badgeReason")
+          this.badgeReason
         )
           .then(
             newBadge => {

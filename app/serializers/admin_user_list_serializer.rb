@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AdminUserListSerializer < BasicUserSerializer
 
   attributes :email,
@@ -18,7 +20,6 @@ class AdminUserListSerializer < BasicUserSerializer
              :username,
              :title,
              :avatar_template,
-             :can_approve,
              :approved,
              :suspended_at,
              :suspended_till,
@@ -32,7 +33,7 @@ class AdminUserListSerializer < BasicUserSerializer
   [:days_visited, :posts_read_count, :topics_entered, :post_count].each do |sym|
     attributes sym
     define_method sym do
-      object.user_stat.send(sym)
+      object.user_stat.public_send(sym)
     end
   end
 
@@ -106,20 +107,14 @@ class AdminUserListSerializer < BasicUserSerializer
     Time.now - object.created_at
   end
 
-  def can_approve
-    scope.can_approve?(object)
-  end
-
-  def include_can_approve?
-    SiteSetting.must_approve_users
-  end
-
   def include_approved?
     SiteSetting.must_approve_users
   end
 
   def include_second_factor_enabled?
-    object.totp_enabled?
+    !SiteSetting.enable_sso &&
+      SiteSetting.enable_local_logins &&
+      object.totps.present?
   end
 
   def second_factor_enabled

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class UploadSerializer < ApplicationSerializer
   attributes :id,
              :url,
@@ -9,5 +11,6 @@ class UploadSerializer < ApplicationSerializer
              :thumbnail_height,
              :extension,
              :short_url,
-             :retain_hours
+             :retain_hours,
+             :human_filesize
 end

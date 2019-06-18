@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_dependency 'markdown_linker'
 require_dependency 'email/message_builder'
 require_dependency 'age_words'
@@ -16,6 +18,14 @@ class UserNotifications < ActionMailer::Base
   def signup(user, opts = {})
     build_user_email_token_by_template(
       "user_notifications.signup",
+      user,
+      opts[:email_token]
+    )
+  end
+
+  def activation_reminder(user, opts = {})
+    build_user_email_token_by_template(
+      "user_notifications.activation_reminder",
       user,
       opts[:email_token]
     )
@@ -195,12 +205,12 @@ class UserNotifications < ActionMailer::Base
       @excerpts = {}
 
       @popular_topics.map do |t|
-        @excerpts[t.first_post.id] = email_excerpt(t.first_post.cooked) if t.first_post.present?
+        @excerpts[t.first_post.id] = email_excerpt(t.first_post.cooked, t.first_post) if t.first_post.present?
       end
 
       # Try to find 3 interesting stats for the top of the digest
+      new_topics_count = Topic.for_digest(user, min_date).count
 
-      new_topics_count = Topic.new_since_last_seen(user, min_date).count
       if new_topics_count == 0
         # We used topics from new users instead, so count should match
         new_topics_count = topics_for_digest.size
@@ -218,11 +228,6 @@ class UserNotifications < ActionMailer::Base
       if @counts.size < 3
         value = user.unread_notifications_of_type(Notification.types[:liked])
         @counts << { label_key: 'user_notifications.digest.liked_received', value: value, href: "#{Discourse.base_url}/my/notifications" } if value > 0
-      end
-
-      if @counts.size < 3
-        value = Post.for_mailing_list(user, min_date).where("posts.post_number > ?", 1).count
-        @counts << { label_key: 'user_notifications.digest.new_posts', value: value, href: "#{Discourse.base_url}/new" } if value > 0
       end
 
       if @counts.size < 3
@@ -350,7 +355,7 @@ class UserNotifications < ActionMailer::Base
   end
 
   def email_post_markdown(post, add_posted_by = false)
-    result = "#{post.raw}\n\n"
+    result = +"#{post.raw}\n\n"
     if add_posted_by
       result << "#{I18n.t('user_notifications.posted_by', username: post.username, post_date: post.created_at.strftime("%m/%d/%Y"))}\n\n"
     end
@@ -464,7 +469,7 @@ class UserNotifications < ActionMailer::Base
     group_name = opts[:group_name]
     locale = user_locale(user)
 
-    template = "user_notifications.user_#{notification_type}"
+    template = +"user_notifications.user_#{notification_type}"
     if post.topic.private_message?
       template << "_pm"
 
@@ -533,7 +538,7 @@ class UserNotifications < ActionMailer::Base
       title = I18n.t("system_messages.private_topic_title", id: post.topic_id)
     end
 
-    context = ""
+    context = +""
     tu = TopicUser.get(post.topic_id, user)
     context_posts = self.class.get_context_posts(post, tu, user)
 
@@ -541,7 +546,7 @@ class UserNotifications < ActionMailer::Base
     context_posts = context_posts.to_a
 
     if context_posts.present?
-      context << "-- \n*#{I18n.t('user_notifications.previous_discussion')}*\n"
+      context << +"-- \n*#{I18n.t('user_notifications.previous_discussion')}*\n"
       context_posts.each do |cp|
         context << email_post_markdown(cp, true)
       end
@@ -553,7 +558,7 @@ class UserNotifications < ActionMailer::Base
     ).exists?
 
     if opts[:use_invite_template]
-      invite_template = "user_notifications.invited"
+      invite_template = +"user_notifications.invited"
       invite_template << "_group" if group_name
 
       invite_template <<
@@ -576,7 +581,7 @@ class UserNotifications < ActionMailer::Base
       )
 
       unless translation_override_exists
-        html = UserNotificationRenderer.new(Rails.configuration.paths["app/views"]).render(
+        html = UserNotificationRenderer.with_view_paths(Rails.configuration.paths["app/views"]).render(
           template: 'email/invite',
           format: :html,
           locals: { message: PrettyText.cook(message, sanitize: false).html_safe,
@@ -603,7 +608,8 @@ class UserNotifications < ActionMailer::Base
       end
 
       unless translation_override_exists
-        html = UserNotificationRenderer.new(Rails.configuration.paths["app/views"]).render(
+
+        html = UserNotificationRenderer.with_view_paths(Rails.configuration.paths["app/views"]).render(
           template: 'email/notification',
           format: :html,
           locals: { context_posts: context_posts,

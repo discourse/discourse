@@ -16,6 +16,7 @@ export function translateResults(results, opts) {
   results.posts = results.posts || [];
   results.categories = results.categories || [];
   results.tags = results.tags || [];
+  results.groups = results.groups || [];
 
   const topicMap = {};
   results.topics = results.topics.map(function(topic) {
@@ -43,6 +44,32 @@ export function translateResults(results, opts) {
     })
     .compact();
 
+  results.groups = results.groups
+    .map(group => {
+      const name = Handlebars.Utils.escapeExpression(group.name);
+      const fullName = Handlebars.Utils.escapeExpression(
+        group.full_name || group.display_name
+      );
+      const flairUrl = Ember.isEmpty(group.flair_url)
+        ? null
+        : Handlebars.Utils.escapeExpression(group.flair_url);
+      const flairColor = Handlebars.Utils.escapeExpression(group.flair_color);
+      const flairBgColor = Handlebars.Utils.escapeExpression(
+        group.flair_bg_color
+      );
+
+      return {
+        id: group.id,
+        flairUrl,
+        flairColor,
+        flairBgColor,
+        fullName,
+        name,
+        url: Discourse.getURL(`/g/${name}`)
+      };
+    })
+    .compact();
+
   results.tags = results.tags
     .map(function(tag) {
       const tagName = Handlebars.Utils.escapeExpression(tag.name);
@@ -60,9 +87,10 @@ export function translateResults(results, opts) {
   if (groupedSearchResult) {
     [
       ["topic", "posts"],
+      ["user", "users"],
+      ["group", "groups"],
       ["category", "categories"],
-      ["tag", "tags"],
-      ["user", "users"]
+      ["tag", "tags"]
     ].forEach(function(pair) {
       const type = pair[0];
       const name = pair[1];

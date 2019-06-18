@@ -1,109 +1,83 @@
 import { ajax } from "discourse/lib/ajax";
 import BadgeGrouping from "discourse/models/badge-grouping";
 import RestModel from "discourse/models/rest";
+import computed from "ember-addons/ember-computed-decorators";
 
 const Badge = RestModel.extend({
   newBadge: Ember.computed.none("id"),
 
-  url: function() {
-    return Discourse.getURL(`/badges/${this.get("id")}/${this.get("slug")}`);
-  }.property(),
+  @computed
+  url() {
+    return Discourse.getURL(`/badges/${this.id}/${this.slug}`);
+  },
 
-  /**
-    Update this badge with the response returned by the server on save.
-
-    @method updateFromJson
-    @param {Object} json The JSON response returned by the server
-  **/
-  updateFromJson: function(json) {
-    const self = this;
+  updateFromJson(json) {
     if (json.badge) {
-      Object.keys(json.badge).forEach(function(key) {
-        self.set(key, json.badge[key]);
-      });
+      Object.keys(json.badge).forEach(key => this.set(key, json.badge[key]));
     }
     if (json.badge_types) {
-      json.badge_types.forEach(function(badgeType) {
-        if (badgeType.id === self.get("badge_type_id")) {
-          self.set("badge_type", Object.create(badgeType));
+      json.badge_types.forEach(badgeType => {
+        if (badgeType.id === this.badge_type_id) {
+          this.set("badge_type", Object.create(badgeType));
         }
       });
     }
   },
 
-  badgeTypeClassName: function() {
-    const type = this.get("badge_type.name") || "";
-    return "badge-type-" + type.toLowerCase();
-  }.property("badge_type.name"),
+  @computed("badge_type.name")
+  badgeTypeClassName(type) {
+    type = type || "";
+    return `badge-type-${type.toLowerCase()}`;
+  },
 
-  /**
-    Save and update the badge from the server's response.
-
-    @method save
-    @returns {Promise} A promise that resolves to the updated `Badge`
-  **/
-  save: function(data) {
+  save(data) {
     let url = "/admin/badges",
-      requestType = "POST";
-    const self = this;
+      type = "POST";
 
-    if (this.get("id")) {
+    if (this.id) {
       // We are updating an existing badge.
-      url += "/" + this.get("id");
-      requestType = "PUT";
+      url += `/${this.id}`;
+      type = "PUT";
     }
 
-    return ajax(url, {
-      type: requestType,
-      data: data
-    })
-      .then(function(json) {
-        self.updateFromJson(json);
-        return self;
+    return ajax(url, { type, data })
+      .then(json => {
+        this.updateFromJson(json);
+        return this;
       })
-      .catch(function(error) {
+      .catch(error => {
         throw new Error(error);
       });
   },
 
-  /**
-    Destroy the badge.
+  destroy() {
+    if (this.newBadge) return Ember.RSVP.resolve();
 
-    @method destroy
-    @returns {Promise} A promise that resolves to the server response
-  **/
-  destroy: function() {
-    if (this.get("newBadge")) return Ember.RSVP.resolve();
-    return ajax("/admin/badges/" + this.get("id"), {
+    return ajax(`/admin/badges/${this.id}`, {
       type: "DELETE"
     });
   }
 });
 
 Badge.reopenClass({
-  /**
-    Create `Badge` instances from the server JSON response.
-
-    @method createFromJson
-    @param {Object} json The JSON returned by the server
-    @returns Array or instance of `Badge` depending on the input JSON
-  **/
-  createFromJson: function(json) {
+  createFromJson(json) {
     // Create BadgeType objects.
     const badgeTypes = {};
     if ("badge_types" in json) {
-      json.badge_types.forEach(function(badgeTypeJson) {
-        badgeTypes[badgeTypeJson.id] = Ember.Object.create(badgeTypeJson);
-      });
+      json.badge_types.forEach(
+        badgeTypeJson =>
+          (badgeTypes[badgeTypeJson.id] = Ember.Object.create(badgeTypeJson))
+      );
     }
 
     const badgeGroupings = {};
     if ("badge_groupings" in json) {
-      json.badge_groupings.forEach(function(badgeGroupingJson) {
-        badgeGroupings[badgeGroupingJson.id] = BadgeGrouping.create(
-          badgeGroupingJson
-        );
-      });
+      json.badge_groupings.forEach(
+        badgeGroupingJson =>
+          (badgeGroupings[badgeGroupingJson.id] = BadgeGrouping.create(
+            badgeGroupingJson
+          ))
+      );
     }
 
     // Create Badge objects.
@@ -113,13 +87,12 @@ Badge.reopenClass({
     } else if (json.badges) {
       badges = json.badges;
     }
-    badges = badges.map(function(badgeJson) {
+    badges = badges.map(badgeJson => {
       const badge = Badge.create(badgeJson);
-      badge.set("badge_type", badgeTypes[badge.get("badge_type_id")]);
-      badge.set(
-        "badge_grouping",
-        badgeGroupings[badge.get("badge_grouping_id")]
-      );
+      badge.setProperties({
+        badge_type: badgeTypes[badge.badge_type_id],
+        badge_grouping: badgeGroupings[badge.badge_grouping_id]
+      });
       return badge;
     });
 
@@ -130,35 +103,21 @@ Badge.reopenClass({
     }
   },
 
-  /**
-    Find all `Badge` instances that have been defined.
-
-    @method findAll
-    @returns {Promise} a promise that resolves to an array of `Badge`
-  **/
-  findAll: function(opts) {
+  findAll(opts) {
     let listable = "";
     if (opts && opts.onlyListable) {
       listable = "?only_listable=true";
     }
-    return ajax("/badges.json" + listable, { data: opts }).then(function(
-      badgesJson
-    ) {
-      return Badge.createFromJson(badgesJson);
-    });
+
+    return ajax(`/badges.json${listable}`, { data: opts }).then(badgesJson =>
+      Badge.createFromJson(badgesJson)
+    );
   },
 
-  /**
-    Returns a `Badge` that has the given ID.
-
-    @method findById
-    @param {Number} id ID of the badge
-    @returns {Promise} a promise that resolves to a `Badge`
-  **/
-  findById: function(id) {
-    return ajax("/badges/" + id).then(function(badgeJson) {
-      return Badge.createFromJson(badgeJson);
-    });
+  findById(id) {
+    return ajax(`/badges/${id}`).then(badgeJson =>
+      Badge.createFromJson(badgeJson)
+    );
   }
 });
 

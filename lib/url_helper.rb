@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class UrlHelper
 
   # At the moment this handles invalid URLs that browser address bar accepts
@@ -18,13 +20,13 @@ class UrlHelper
   def self.is_local(url)
     url.present? && (
       Discourse.store.has_been_uploaded?(url) ||
-      !!(url =~ /^\/(assets|plugins|images)\//) ||
+      !!(url =~ Regexp.new("^#{Discourse.base_uri}/(assets|plugins|images)/")) ||
       url.start_with?(Discourse.asset_host || Discourse.base_url_no_prefix)
     )
   end
 
   def self.absolute(url, cdn = Discourse.asset_host)
-    cdn = "https:" << cdn if cdn && cdn =~ /^\/\//
+    cdn = "https:#{cdn}" if cdn && cdn =~ /^\/\//
     url =~ /^\/[^\/]/ ? (cdn || Discourse.base_url_no_prefix) + url : url
   end
 
@@ -56,11 +58,20 @@ class UrlHelper
     no_cdn = SiteSetting.login_required || SiteSetting.prevent_anons_from_downloading_files
 
     url = absolute_without_cdn(url)
-    url = Discourse.store.cdn_url(url) unless is_attachment && no_cdn
+
+    unless is_attachment && no_cdn
+      url = Discourse.store.cdn_url(url)
+      url = local_cdn_url(url) if Discourse.store.external?
+    end
 
     schemaless(url)
   rescue URI::Error
     url
+  end
+
+  def self.local_cdn_url(url)
+    return url if Discourse.asset_host.blank?
+    url.sub(Discourse.base_url_no_prefix, Discourse.asset_host)
   end
 
 end

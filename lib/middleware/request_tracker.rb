@@ -15,26 +15,7 @@ class Middleware::RequestTracker
   #   # do stuff with env and data
   # end
   def self.register_detailed_request_logger(callback)
-
-    unless @patched_instrumentation
-      MethodProfiler.patch(PG::Connection, [
-        :exec, :async_exec, :exec_prepared, :send_query_prepared, :query, :exec_params
-      ], :sql)
-
-      MethodProfiler.patch(Redis::Client, [
-        :call, :call_pipeline
-      ], :redis)
-
-      MethodProfiler.patch(Net::HTTP, [
-        :request
-      ], :net, no_recurse: true)
-
-      MethodProfiler.patch(Excon::Connection, [
-        :request
-      ], :net)
-      @patched_instrumentation = true
-    end
-
+    MethodProfiler.ensure_discourse_instrumentation!
     (@@detailed_request_loggers ||= []) << callback
   end
 
@@ -184,6 +165,20 @@ class Middleware::RequestTracker
     # possibly transferred?
     if info && (headers = result[1])
       headers["X-Runtime"] = "%0.6f" % info[:total_duration]
+
+      if GlobalSetting.enable_performance_http_headers
+        if redis = info[:redis]
+          headers["X-Redis-Calls"] = redis[:calls].to_s
+          headers["X-Redis-Time"] = "%0.6f" % redis[:duration]
+        end
+        if sql = info[:sql]
+          headers["X-Sql-Calls"] = sql[:calls].to_s
+          headers["X-Sql-Time"] = "%0.6f" % sql[:duration]
+        end
+        if queue = env['REQUEST_QUEUE_SECONDS']
+          headers["X-Queue-Time"] = "%0.6f" % queue
+        end
+      end
     end
 
     if env[Auth::DefaultCurrentUserProvider::BAD_TOKEN] && (headers = result[1])

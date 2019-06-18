@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddTimeReadToUserVisits < ActiveRecord::Migration[5.1]
   def up
     add_column :user_visits, :time_read, :integer, null: false, default: 0 # in seconds

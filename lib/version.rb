@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Discourse
   VERSION_REGEXP = /\A\d+\.\d+\.\d+(\.beta\d+)?\z/ unless defined? ::Discourse::VERSION_REGEXP
 
@@ -5,9 +7,9 @@ module Discourse
   unless defined? ::Discourse::VERSION
     module VERSION #:nodoc:
       MAJOR = 2
-      MINOR = 2
-      TINY  = 6
-      PRE   = nil
+      MINOR = 3
+      TINY  = 0
+      PRE   = 'beta11'
 
       STRING = [MAJOR, MINOR, TINY, PRE].compact.join('.')
     end

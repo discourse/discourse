@@ -101,7 +101,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
     this.perform(operation).then(topics => {
       if (topics) {
         topics.forEach(cb);
-        (this.get("refreshClosure") || identity)();
+        (this.refreshClosure || identity)();
         this.send("closeModal");
       }
     });
@@ -109,7 +109,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
 
   performAndRefresh(operation) {
     return this.perform(operation).then(() => {
-      (this.get("refreshClosure") || identity)();
+      (this.refreshClosure || identity)();
       this.send("closeModal");
     });
   },
@@ -124,7 +124,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
     },
 
     changeTags() {
-      this.performAndRefresh({ type: "change_tags", tags: this.get("tags") });
+      this.performAndRefresh({ type: "change_tags", tags: this.tags });
     },
 
     showAppendTagTopics() {
@@ -136,7 +136,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
     },
 
     appendTags() {
-      this.performAndRefresh({ type: "append_tags", tags: this.get("tags") });
+      this.performAndRefresh({ type: "append_tags", tags: this.tags });
     },
 
     showChangeCategory() {
@@ -168,13 +168,13 @@ export default Ember.Controller.extend(ModalFunctionality, {
     },
 
     changeCategory() {
-      const categoryId = parseInt(this.get("newCategoryId"), 10) || 0;
+      const categoryId = parseInt(this.newCategoryId, 10) || 0;
       const category = Discourse.Category.findById(categoryId);
 
       this.perform({ type: "change_category", category_id: categoryId }).then(
         topics => {
           topics.forEach(t => t.set("category", category));
-          (this.get("refreshClosure") || identity)();
+          (this.refreshClosure || identity)();
           this.send("closeModal");
         }
       );

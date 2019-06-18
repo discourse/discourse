@@ -24,6 +24,7 @@
           {{else}}
             {{d-button
               action=b.action
+              type="button"
               actionParam=b
               translatedTitle=b.title
               label=b.label
@@ -39,7 +40,14 @@
     </div>
 
     {{conditional-loading-spinner condition=loading}}
-    {{textarea autocomplete="off" tabindex=tabindex value=value class="d-editor-input" placeholder=placeholderTranslated disabled=disabled}}
+    {{textarea
+      autocomplete="discourse"
+      tabindex=tabindex
+      value=value
+      class="d-editor-input"
+      placeholder=placeholderTranslated
+      disabled=disabled
+      change=change}}
     {{popup-input-tip validation=validation}}
     {{plugin-outlet name="after-d-editor" tagName="" args=outletArgs}}
   </div>
@@ -50,4 +58,4 @@
   </div>
 </div>
 
-{{emoji-picker active=emojiPickerIsActive emojiSelected=(action 'emojiSelected')}}
+{{emoji-picker active=emojiPickerIsActive isEditorFocused=isEditorFocused emojiSelected=(action 'emojiSelected')}}

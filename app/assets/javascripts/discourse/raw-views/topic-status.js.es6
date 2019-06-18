@@ -5,12 +5,12 @@ export default Ember.Object.extend({
 
   @computed("defaultIcon")
   renderDiv(defaultIcon) {
-    return (defaultIcon || this.get("statuses").length > 0) && !this.noDiv;
+    return (defaultIcon || this.statuses.length > 0) && !this.noDiv;
   },
 
   @computed
   statuses() {
-    const topic = this.get("topic");
+    const topic = this.topic;
     const results = [];
 
     // TODO, custom statuses? via override?
@@ -70,7 +70,7 @@ export default Ember.Object.extend({
       }
     });
 
-    let defaultIcon = this.get("defaultIcon");
+    let defaultIcon = this.defaultIcon;
     if (results.length === 0 && defaultIcon) {
       this.set("showDefault", defaultIcon);
     }

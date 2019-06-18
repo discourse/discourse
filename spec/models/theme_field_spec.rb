@@ -1,4 +1,5 @@
 # encoding: utf-8
+# frozen_string_literal: true
 
 require 'rails_helper'
 
@@ -29,6 +30,7 @@ describe ThemeField do
 
   it 'does not insert a script tag when there are no inline script' do
     theme_field = ThemeField.create!(theme_id: 1, target_id: 0, name: "body_tag", value: '<div>new div</div>')
+    theme_field.ensure_baked!
     expect(theme_field.value_baked).to_not include('<script')
   end
 
@@ -53,7 +55,7 @@ describe ThemeField do
     HTML
 
     theme_field = ThemeField.create!(theme_id: 1, target_id: 0, name: "header", value: html)
-
+    theme_field.ensure_baked!
     expect(theme_field.value_baked).to include("<script src=\"#{theme_field.javascript_cache.url}\"></script>")
     expect(theme_field.value_baked).to include("external-script.js")
     expect(theme_field.value_baked).to include('<script type="text/template"')
@@ -75,7 +77,7 @@ describe ThemeField do
     JavaScript
 
     theme_field = ThemeField.create!(theme_id: 1, target_id: 0, name: "header", value: html)
-
+    theme_field.ensure_baked!
     expect(theme_field.javascript_cache.content).to include(extracted)
   end
 
@@ -87,11 +89,13 @@ describe ThemeField do
 HTML
 
     field = ThemeField.create!(theme_id: 1, target_id: 0, name: "header", value: html)
+    field.ensure_baked!
     expect(field.error).not_to eq(nil)
     expect(field.value_baked).to include("<script src=\"#{field.javascript_cache.url}\"></script>")
     expect(field.javascript_cache.content).to include("Theme Transpilation Error:")
 
     field.update!(value: '')
+    field.ensure_baked!
     expect(field.error).to eq(nil)
   end
 
@@ -102,8 +106,9 @@ HTML
 </script>
 HTML
 
-    ThemeField.create!(theme_id: 1, target_id: 3, name: "yaml", value: "string_setting: \"test text \\\" 123!\"")
+    ThemeField.create!(theme_id: 1, target_id: 3, name: "yaml", value: "string_setting: \"test text \\\" 123!\"").ensure_baked!
     theme_field = ThemeField.create!(theme_id: 1, target_id: 0, name: "head_tag", value: html)
+    theme_field.ensure_baked!
     javascript_cache = theme_field.javascript_cache
 
     expect(theme_field.value_baked).to include("<script src=\"#{javascript_cache.url}\"></script>")
@@ -115,13 +120,65 @@ HTML
   it "correctly generates errors for transpiled css" do
     css = "body {"
     field = ThemeField.create!(theme_id: 1, target_id: 0, name: "scss", value: css)
-    field.reload
+    field.ensure_baked!
     expect(field.error).not_to eq(nil)
     field.value = "body {color: blue};"
     field.save!
-    field.reload
+    field.ensure_baked!
 
     expect(field.error).to eq(nil)
+  end
+
+  it "allows importing scss files" do
+    theme = Fabricate(:theme)
+    main_field = theme.set_field(target: :common, name: :scss, value: ".class1{color: red}\n@import 'rootfile1';")
+    theme.set_field(target: :extra_scss, name: "rootfile1", value: ".class2{color:green}\n@import 'foldername/subfile1';")
+    theme.set_field(target: :extra_scss, name: "rootfile2", value: ".class3{color:green} ")
+    theme.set_field(target: :extra_scss, name: "foldername/subfile1", value: ".class4{color:yellow}\n@import 'subfile2';")
+    theme.set_field(target: :extra_scss, name: "foldername/subfile2", value: ".class5{color:yellow}\n@import '../rootfile2';")
+
+    theme.save!
+    result = main_field.compile_scss[0]
+
+    expect(result).to include(".class1")
+    expect(result).to include(".class2")
+    expect(result).to include(".class3")
+    expect(result).to include(".class4")
+    expect(result).to include(".class5")
+  end
+
+  it "correctly handles extra JS fields" do
+    theme = Fabricate(:theme)
+    js_field = theme.set_field(target: :extra_js, name: "discourse/controllers/discovery.js.es6", value: "import 'discourse/lib/ajax'; console.log('hello');")
+    hbs_field = theme.set_field(target: :extra_js, name: "discourse/templates/discovery.hbs", value: "{{hello-world}}")
+    raw_hbs_field = theme.set_field(target: :extra_js, name: "discourse/templates/discovery.raw.hbs", value: "{{hello-world}}")
+    unknown_field = theme.set_field(target: :extra_js, name: "discourse/controllers/discovery.blah", value: "this wont work")
+    theme.save!
+
+    expected_js = <<~JS
+      define("discourse/controllers/discovery", ["discourse/lib/ajax"], function () {
+        "use strict";
+
+        var __theme_name__ = "#{theme.name}";
+        var settings = Discourse.__container__.lookup("service:theme-settings").getObjectForTheme(#{theme.id});
+        var themePrefix = function themePrefix(key) {
+          return "theme_translations.#{theme.id}." + key;
+        };
+        console.log('hello');
+      });
+    JS
+    expect(js_field.reload.value_baked).to eq(expected_js.strip)
+
+    expect(hbs_field.reload.value_baked).to include('Ember.TEMPLATES["discovery"]')
+    expect(raw_hbs_field.reload.value_baked).to include('Discourse.RAW_TEMPLATES["discourse/templates/discovery"]')
+    expect(unknown_field.reload.value_baked).to eq("")
+    expect(unknown_field.reload.error).to eq(I18n.t("themes.compile_error.unrecognized_extension", extension: "blah"))
+
+    # All together
+    expect(theme.javascript_cache.content).to include('Ember.TEMPLATES["discovery"]')
+    expect(theme.javascript_cache.content).to include('Discourse.RAW_TEMPLATES["discourse/templates/discovery"]')
+    expect(theme.javascript_cache.content).to include('define("discourse/controllers/discovery"')
+    expect(theme.javascript_cache.content).to include("var settings =")
   end
 
   def create_upload_theme_field!(name)
@@ -131,7 +188,7 @@ HTML
       value: "",
       type_id: ThemeField.types[:theme_upload_var],
       name: name,
-    )
+    ).tap { |tf| tf.ensure_baked! }
   end
 
   it "ensures we don't use invalid SCSS variable names" do
@@ -145,11 +202,32 @@ HTML
 
   def create_yaml_field(value)
     field = ThemeField.create!(theme_id: 1, target_id: Theme.targets[:settings], name: "yaml", value: value)
-    field.reload
+    field.ensure_baked!
     field
   end
 
   let(:key) { "themes.settings_errors" }
+
+  it "forces re-transpilation of theme JS when settings YAML changes" do
+    theme = Fabricate(:theme)
+    settings_field = ThemeField.create!(theme: theme, target_id: Theme.targets[:settings], name: "yaml", value: "setting: 5")
+
+    html = <<~HTML
+      <script type="text/discourse-plugin" version="0.8">
+        alert(settings.setting);
+      </script>
+    HTML
+
+    js_field = ThemeField.create!(theme: theme, target_id: ThemeField.types[:html], name: "header", value: html)
+    old_value_baked = js_field.value_baked
+    settings_field.update!(value: "setting: 66")
+    js_field.reload
+
+    expect(js_field.value_baked).to eq(nil)
+    js_field.ensure_baked!
+    expect(js_field.value_baked).to be_present
+    expect(js_field.value_baked).not_to eq(old_value_baked)
+  end
 
   it "generates errors for bad YAML" do
     yaml = "invalid_setting 5"
@@ -158,7 +236,7 @@ HTML
 
     field.value = "valid_setting: true"
     field.save!
-    field.reload
+    field.ensure_baked!
     expect(field.error).to eq(nil)
   end
 
@@ -195,8 +273,8 @@ HTML
     let!(:theme3) { Fabricate(:theme) }
 
     let!(:en1) {
-      ThemeField.create!(theme: theme, target_id: Theme.targets[:translations], name: "en",
-                         value: { en: { somestring1: "helloworld", group: { key1: "enval1" } } }
+      ThemeField.create!(theme: theme, target_id: Theme.targets[:translations], name: "en_US",
+                         value: { en_US: { somestring1: "helloworld", group: { key1: "enval1" } } }
                                   .deep_stringify_keys.to_yaml
       )
     }
@@ -207,20 +285,21 @@ HTML
       )
     }
     let!(:fr2) { ThemeField.create!(theme: theme2, target_id: Theme.targets[:translations], name: "fr", value: "") }
-    let!(:en2) { ThemeField.create!(theme: theme2, target_id: Theme.targets[:translations], name: "en", value: "") }
+    let!(:en2) { ThemeField.create!(theme: theme2, target_id: Theme.targets[:translations], name: "en_US", value: "") }
     let!(:ca3) { ThemeField.create!(theme: theme3, target_id: Theme.targets[:translations], name: "ca", value: "") }
-    let!(:en3) { ThemeField.create!(theme: theme3, target_id: Theme.targets[:translations], name: "en", value: "") }
+    let!(:en3) { ThemeField.create!(theme: theme3, target_id: Theme.targets[:translations], name: "en_US", value: "") }
 
     describe "scopes" do
-      it "find_locale_fields returns results in the correct order" do
-        expect(ThemeField.find_locale_fields(
-          [theme3.id, theme.id, theme2.id], ["en", "fr"]
+      it "filter_locale_fields returns results in the correct order" do
+        expect(ThemeField.find_by_theme_ids([theme3.id, theme.id, theme2.id])
+          .filter_locale_fields(
+           ["en_US", "fr"]
         )).to eq([en3, en1, fr1, en2, fr2])
       end
 
       it "find_first_locale_fields returns only the first locale for each theme" do
         expect(ThemeField.find_first_locale_fields(
-          [theme3.id, theme.id, theme2.id], ["ca", "en", "fr"]
+          [theme3.id, theme.id, theme2.id], ["ca", "en_US", "fr"]
         )).to eq([ca3, en1, en2])
       end
     end
@@ -251,7 +330,7 @@ HTML
       it "loads correctly" do
         expect(fr1.translation_data).to eq(
           fr: { somestring1: "bonjourworld", group: { key2: "frval2" } },
-          en: { somestring1: "helloworld", group: { key1: "enval1" } }
+          en_US: { somestring1: "helloworld", group: { key1: "enval1" } }
         )
       end
 
@@ -273,7 +352,7 @@ HTML
         theme.reload
         expect(fr1.translation_data).to eq(
           fr: { somestring1: "bonjourworld", group: { key2: "frval2" } },
-          en: { somestring1: "helloworld", group: { key1: "overriddentest1" } }
+          en_US: { somestring1: "helloworld", group: { key1: "overriddentest1" } }
         )
       end
     end
@@ -297,6 +376,7 @@ HTML
         HTML
 
         theme_field = ThemeField.create!(theme_id: theme.id, target_id: 0, name: "head_tag", value: html)
+        theme_field.ensure_baked!
         javascript_cache = theme_field.javascript_cache
         expect(javascript_cache.content).to include("inline discourse plugin")
         expect(javascript_cache.content).to include("theme_translations.#{theme.id}.")

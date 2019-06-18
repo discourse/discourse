@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreatePluginStoreRows < ActiveRecord::Migration[4.2]
   def change
     create_table :plugin_store_rows do |table|

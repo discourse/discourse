@@ -5,4 +5,9 @@
 # To work with us on translations, join this project:
 # https://www.transifex.com/projects/p/discourse-org/
 
-et: {}
+et:
+  js:
+    details:
+      title: Peida üksikasjad
+    composer:
+      details_title: Kokkuvõte

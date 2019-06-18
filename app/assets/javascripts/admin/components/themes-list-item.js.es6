@@ -56,12 +56,12 @@ export default Ember.Component.extend({
     "childrenExpanded"
   )
   children() {
-    const theme = this.get("theme");
+    const theme = this.theme;
     let children = theme.get("childThemes");
     if (theme.get("component") || !children) {
       return [];
     }
-    children = this.get("childrenExpanded")
+    children = this.childrenExpanded
       ? children
       : children.slice(0, MAX_COMPONENTS);
     return children.map(t => t.get("name"));

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 Fabricator(:group_history) do
   group
   action GroupHistory.actions[:add_user_to_group]

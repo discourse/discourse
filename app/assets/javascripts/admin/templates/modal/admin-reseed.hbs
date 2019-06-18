@@ -1,0 +1,40 @@
+{{#d-modal-body title="admin.reseed.modal.title" subtitle="admin.reseed.modal.subtitle" class="reseed-modal"}}
+  {{#conditional-loading-spinner condition=loading}}
+    {{#if categories}}
+      <fieldset>
+        <legend class="options-group-title">{{i18n "admin.reseed.modal.categories"}}</legend>
+
+        {{#each categories as |category|}}
+          <label>
+            {{input class="option" type="checkbox" checked=category.selected}}
+            <span>{{category.name}}</span>
+          </label>
+        {{/each}}
+      </fieldset>
+    {{/if}}
+
+    <br>
+
+    {{#if topics}}
+      <fieldset>
+        <legend class="options-group-title">{{i18n "admin.reseed.modal.topics"}}</legend>
+
+        {{#each topics as |topic|}}
+          <label>
+            {{input class="option" type="checkbox" checked=topic.selected}}
+            <span>{{topic.name}}</span>
+          </label>
+        {{/each}}
+      </fieldset>
+    {{/if}}
+  {{/conditional-loading-spinner}}
+{{/d-modal-body}}
+
+<div class="modal-footer">
+  {{conditional-loading-spinner condition=reseeding size="small"}}
+  {{d-button action=(action "reseed") class="btn-danger" label="admin.reseed.modal.replace" disabled=reseeding}}
+
+  {{#unless reseeding}}
+    {{d-modal-cancel close=(route-action "closeModal")}}
+  {{/unless}}
+</div>

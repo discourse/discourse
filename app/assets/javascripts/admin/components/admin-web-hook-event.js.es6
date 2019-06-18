@@ -6,6 +6,8 @@ import { ensureJSON, plainJSON, prettyJSON } from "discourse/lib/formatter";
 export default Ember.Component.extend({
   tagName: "li",
   expandDetails: null,
+  expandDetailsRequestKey: "request",
+  expandDetailsResponseKey: "response",
 
   @computed("model.status")
   statusColorClasses(status) {
@@ -27,6 +29,20 @@ export default Ember.Component.extend({
   completion(duration) {
     const seconds = Math.floor(duration / 10.0) / 100.0;
     return I18n.t("admin.web_hooks.events.completed_in", { count: seconds });
+  },
+
+  @computed("expandDetails")
+  expandRequestIcon(expandDetails) {
+    return expandDetails === this.expandDetailsRequestKey
+      ? "ellipsis-h"
+      : "ellipsis-v";
+  },
+
+  @computed("expandDetails")
+  expandResponseIcon(expandDetails) {
+    return expandDetails === this.expandDetailsResponseKey
+      ? "ellipsis-h"
+      : "ellipsis-v";
   },
 
   actions: {
@@ -53,9 +69,9 @@ export default Ember.Component.extend({
     },
 
     toggleRequest() {
-      const expandDetailsKey = "request";
+      const expandDetailsKey = this.expandDetailsRequestKey;
 
-      if (this.get("expandDetails") !== expandDetailsKey) {
+      if (this.expandDetails !== expandDetailsKey) {
         let headers = _.extend(
           {
             "Request URL": this.get("model.request_url"),
@@ -75,9 +91,9 @@ export default Ember.Component.extend({
     },
 
     toggleResponse() {
-      const expandDetailsKey = "response";
+      const expandDetailsKey = this.expandDetailsResponseKey;
 
-      if (this.get("expandDetails") !== expandDetailsKey) {
+      if (this.expandDetails !== expandDetailsKey) {
         this.setProperties({
           headers: plainJSON(this.get("model.response_headers")),
           body: this.get("model.response_body"),

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_dependency 'distributed_cache'
 
 class Developer < ActiveRecord::Base

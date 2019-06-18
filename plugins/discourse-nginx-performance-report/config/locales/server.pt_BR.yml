@@ -7,4 +7,4 @@
 
 pt_BR:
   site_settings:
-    daily_performance_report: "Analiza logs do NGINX diariamente e cria um tópico na categoria Somente Equipe com os detalhes."
+    daily_performance_report: "Analizar logs do NGINX diariamente e postar um tópico somente para a Staff com os detalhes"

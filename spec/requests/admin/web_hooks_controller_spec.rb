@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "rails_helper"
 
 describe Admin::WebHooksController do
@@ -7,8 +9,8 @@ describe Admin::WebHooksController do
   end
 
   context 'while logged in as an admin' do
-    let(:web_hook) { Fabricate(:web_hook) }
-    let(:admin) { Fabricate(:admin) }
+    fab!(:web_hook) { Fabricate(:web_hook) }
+    fab!(:admin) { Fabricate(:admin) }
 
     before do
       sign_in(admin)
@@ -34,6 +36,7 @@ describe Admin::WebHooksController do
 
         json = ::JSON.parse(response.body)
         expect(json["web_hook"]["payload_url"]).to eq("https://meta.discourse.org/")
+        expect(UserHistory.where(acting_user_id: admin.id, action: UserHistory.actions[:web_hook_create]).count).to eq(1)
       end
 
       it 'returns error when field is not filled correctly' do
@@ -54,6 +57,30 @@ describe Admin::WebHooksController do
         response_body = JSON.parse(response.body)
 
         expect(response_body["errors"]).to be_present
+      end
+    end
+
+    describe '#update' do
+      it "logs webhook update" do
+        put "/admin/api/web_hooks/#{web_hook.id}.json", params: {
+          web_hook: { active: false, payload_url: "https://test.com" }
+        }
+
+        expect(response.status).to eq(200)
+        expect(UserHistory.where(acting_user_id: admin.id,
+                                 action: UserHistory.actions[:web_hook_update],
+                                 new_value: "payload_url: https://test.com, active: false").exists?).to eq(true)
+      end
+    end
+
+    describe '#destroy' do
+      it "logs webhook destroy" do
+        delete "/admin/api/web_hooks/#{web_hook.id}.json", params: {
+          web_hook: { active: false, payload_url: "https://test.com" }
+        }
+
+        expect(response.status).to eq(200)
+        expect(UserHistory.where(acting_user_id: admin.id, action: UserHistory.actions[:web_hook_destroy]).exists?).to eq(true)
       end
     end
 

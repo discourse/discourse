@@ -1,4 +1,5 @@
 #!/usr/bin/env ruby
+# frozen_string_literal: true
 
 if !ENV["RAILS_ENV"] && (ARGV[0] == "s" || ARGV[0] == "server")
   ENV["UNICORN_PORT"] ||= "3000"

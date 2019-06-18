@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'open-uri'
 
 desc 'Creates the integration fixtures. Requires a development instance running.'

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddTopicCustomFields < ActiveRecord::Migration[4.2]
   def change
     create_table :topic_custom_fields do |t|

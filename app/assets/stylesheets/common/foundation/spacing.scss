@@ -1,0 +1,23 @@
+$base-space: 4px;
+
+@function s(
+  $sizes: (
+    0
+  )
+) {
+  $spaces: ();
+  @each $size in $sizes {
+    @if ($size == 0) {
+      // Strip units if 0
+      $size: $size * $base-space;
+      $size: $size / ($size * 0 + 1);
+    } @else if ($size == auto) {
+      $size: auto;
+    } @else {
+      $size: $size * $base-space;
+    }
+
+    $spaces: append($spaces, $size);
+  }
+  @return $spaces;
+}

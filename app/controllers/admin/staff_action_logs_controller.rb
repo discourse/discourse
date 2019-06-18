@@ -1,12 +1,14 @@
+# frozen_string_literal: true
+
 class Admin::StaffActionLogsController < Admin::AdminController
 
   def index
-    filters = params.slice(*UserHistory.staff_filters)
+    filters = params.slice(*UserHistory.staff_filters + [:page, :limit])
 
     staff_action_logs = UserHistory.staff_action_records(current_user, filters).to_a
     render json: StaffActionLogsSerializer.new({
       staff_action_logs: staff_action_logs,
-      user_history_actions: UserHistory.staff_actions.sort.map { |name| { id: UserHistory.actions[name], name: name } }
+      user_history_actions: staff_available_actions
     }, root: false)
   end
 
@@ -22,7 +24,7 @@ class Admin::StaffActionLogsController < Admin::AdminController
 
     diff_fields = {}
 
-    output = "<h2>#{CGI.escapeHTML(cur["name"].to_s)}</h2><p></p>"
+    output = +"<h2>#{CGI.escapeHTML(cur["name"].to_s)}</h2><p></p>"
 
     diff_fields["name"] = {
       prev: prev["name"].to_s,
@@ -77,4 +79,14 @@ class Admin::StaffActionLogsController < Admin::AdminController
     end
   end
 
+  private
+
+  def staff_available_actions
+    UserHistory.staff_actions.sort.map do |name|
+      {
+        id: name,
+        action_id: UserHistory.actions[name] || UserHistory.actions[:custom_staff],
+      }
+    end
+  end
 end

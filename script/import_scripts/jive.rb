@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Jive importer
 require 'nokogiri'
 require 'csv'
@@ -46,7 +48,7 @@ class ImportScripts::Jive < ImportScripts::Base
 
     def initialize(cols)
       cols.each_with_index do |col, idx|
-        self.class.send(:define_method, col) do
+        self.class.public_send(:define_method, col) do
           @row[idx]
         end
       end
@@ -67,7 +69,7 @@ class ImportScripts::Jive < ImportScripts::Base
     first = true
     row = nil
 
-    current_row = ""
+    current_row = +""
     double_quote_count = 0
 
     File.open(filename).each_line do |line|
@@ -152,7 +154,7 @@ class ImportScripts::Jive < ImportScripts::Base
 
       # fake it
       if row.email.blank? || row.email !~ /@/
-        email = SecureRandom.hex << "@domain.com"
+        email = fake_email
       end
 
       name = "#{row.firstname} #{row.lastname}"

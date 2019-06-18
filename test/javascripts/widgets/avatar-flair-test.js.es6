@@ -12,10 +12,10 @@ widgetTest("avatar flair with an icon", {
     });
   },
   test(assert) {
-    assert.ok(this.$(".avatar-flair").length, "it has the tag");
-    assert.ok(this.$("svg.d-icon-bars").length, "it has the svg icon");
+    assert.ok(find(".avatar-flair").length, "it has the tag");
+    assert.ok(find("svg.d-icon-bars").length, "it has the svg icon");
     assert.equal(
-      this.$(".avatar-flair").attr("style"),
+      find(".avatar-flair").attr("style"),
       "background-color: #CC0000; color: #FFFFFF; ",
       "it has styles"
     );
@@ -30,7 +30,7 @@ widgetTest("avatar flair with an image", {
     });
   },
   test(assert) {
-    assert.ok(this.$(".avatar-flair").length, "it has the tag");
-    assert.ok(this.$("svg").length === 0, "it does not have an svg icon");
+    assert.ok(find(".avatar-flair").length, "it has the tag");
+    assert.ok(find("svg").length === 0, "it does not have an svg icon");
   }
 });

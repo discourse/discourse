@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 def vendor_svgs
   "#{Rails.root}/vendor/assets/svg-icons"
 end

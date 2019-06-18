@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddSortOrderToPosts < ActiveRecord::Migration[4.2]
   def change
     add_column :posts, :sort_order, :integer

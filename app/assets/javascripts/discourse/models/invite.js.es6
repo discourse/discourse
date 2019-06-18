@@ -6,27 +6,24 @@ const Invite = Discourse.Model.extend({
   rescind() {
     ajax("/invites", {
       type: "DELETE",
-      data: { email: this.get("email") }
+      data: { email: this.email }
     });
     this.set("rescinded", true);
   },
 
   reinvite() {
-    const self = this;
     return ajax("/invites/reinvite", {
       type: "POST",
-      data: { email: this.get("email") }
+      data: { email: this.email }
     })
-      .then(function() {
-        self.set("reinvited", true);
-      })
+      .then(() => this.set("reinvited", true))
       .catch(popupAjaxError);
   }
 });
 
 Invite.reopenClass({
   create() {
-    var result = this._super.apply(this, arguments);
+    const result = this._super.apply(this, arguments);
     if (result.user) {
       result.user = Discourse.User.create(result.user);
     }
@@ -34,37 +31,27 @@ Invite.reopenClass({
   },
 
   findInvitedBy(user, filter, search, offset) {
-    if (!user) {
-      return Ember.RSVP.resolve();
-    }
+    if (!user) Ember.RSVP.resolve();
 
-    var data = {};
-    if (!Ember.isNone(filter)) {
-      data.filter = filter;
-    }
-    if (!Ember.isNone(search)) {
-      data.search = search;
-    }
+    const data = {};
+    if (!Ember.isNone(filter)) data.filter = filter;
+    if (!Ember.isNone(search)) data.search = search;
     data.offset = offset || 0;
 
-    return ajax(userPath(user.get("username_lower") + "/invited.json"), {
+    return ajax(userPath(`${user.username_lower}/invited.json`), {
       data
-    }).then(function(result) {
-      result.invites = result.invites.map(function(i) {
-        return Invite.create(i);
-      });
-
+    }).then(result => {
+      result.invites = result.invites.map(i => Invite.create(i));
       return Ember.Object.create(result);
     });
   },
 
   findInvitedCount(user) {
-    if (!user) {
-      return Ember.RSVP.resolve();
-    }
-    return ajax(
-      userPath(user.get("username_lower") + "/invited_count.json")
-    ).then(result => Ember.Object.create(result.counts));
+    if (!user) Ember.RSVP.resolve();
+
+    return ajax(userPath(`${user.username_lower}/invited_count.json`)).then(
+      result => Ember.Object.create(result.counts)
+    );
   },
 
   reinviteAll() {

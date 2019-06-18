@@ -79,6 +79,8 @@ ar:
           regular: اختيار من متعدد
           multiple: عدّة خيارات
           number: تقييم عددي
+        poll_result:
+          label: 'نتائج '
         poll_config:
           max: الحد الأقصى
           min: الحد الأدنى

@@ -1,8 +1,11 @@
 import { ajax } from "discourse/lib/ajax";
+import computed from "ember-addons/ember-computed-decorators";
+
 const ScreenedUrl = Discourse.Model.extend({
-  actionName: function() {
-    return I18n.t("admin.logs.screened_actions." + this.get("action"));
-  }.property("action")
+  @computed("action")
+  actionName(action) {
+    return I18n.t("admin.logs.screened_actions." + action);
+  }
 });
 
 ScreenedUrl.reopenClass({

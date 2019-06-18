@@ -1,4 +1,4 @@
-import { observes } from "ember-addons/ember-computed-decorators";
+import { on, observes } from "ember-addons/ember-computed-decorators";
 import TextField from "discourse/components/text-field";
 import userSearch from "discourse/lib/user-search";
 import { findRawTemplate } from "discourse/lib/raw-templates";
@@ -10,20 +10,24 @@ export default TextField.extend({
 
   @observes("usernames")
   _update() {
-    if (this.get("canReceiveUpdates") === "true")
-      this.didInsertElement({ updateData: true });
+    if (this.canReceiveUpdates === "true") {
+      this._createAutocompleteInstance({ updateData: true });
+    }
   },
 
-  didInsertElement(opts) {
-    this._super(...arguments);
+  @on("willDestroyElement")
+  _destroyAutocompleteInstance() {
+    $(this.element).autocomplete("destroy");
+  },
 
+  @on("didInsertElement")
+  _createAutocompleteInstance(opts) {
     const bool = n => {
-      const val = this.get(n);
+      const val = this[n];
       return val === true || val === "true";
     };
 
-    var self = this,
-      selected = [],
+    let selected = [],
       groups = [],
       currentUser = this.currentUser,
       includeMentionableGroups = bool("includeMentionableGroups"),
@@ -34,40 +38,43 @@ export default TextField.extend({
       single = bool("single"),
       allowAny = bool("allowAny"),
       disabled = bool("disabled"),
-      disallowEmails = bool("disallowEmails");
+      allowEmails = bool("allowEmails"),
+      fullWidthWrap = bool("fullWidthWrap");
 
-    function excludedUsernames() {
+    const excludedUsernames = () => {
       // hack works around some issues with allowAny eventing
       const usernames = single ? [] : selected;
 
       if (currentUser && excludeCurrentUser) {
-        return usernames.concat([currentUser.get("username")]);
+        return usernames.concat([currentUser.username]);
       }
       return usernames;
-    }
+    };
 
-    this.$()
-      .val(this.get("usernames"))
+    const userSelectorComponent = this;
+
+    $(this.element)
+      .val(this.usernames)
       .autocomplete({
         template: findRawTemplate("user-selector-autocomplete"),
-        disabled: disabled,
-        single: single,
-        allowAny: allowAny,
+        disabled,
+        single,
+        allowAny,
         updateData: opts && opts.updateData ? opts.updateData : false,
+        fullWidthWrap,
 
         dataSource(term) {
-          var results = userSearch({
+          return userSearch({
             term,
-            topicId: self.get("topicId"),
+            topicId: userSelectorComponent.topicId,
             exclude: excludedUsernames(),
             includeGroups,
             allowedUsers,
             includeMentionableGroups,
             includeMessageableGroups,
-            group: self.get("group"),
-            disallowEmails
+            groupMembersOf: userSelectorComponent.groupMembersOf,
+            allowEmails
           });
-          return results;
         },
 
         transformComplete(v) {
@@ -77,26 +84,41 @@ export default TextField.extend({
             }
             return v.username || v.name;
           } else {
-            var excludes = excludedUsernames();
-            return v.usernames.filter(function(item) {
-              return excludes.indexOf(item) === -1;
-            });
+            const excludes = excludedUsernames();
+            return v.usernames.filter(item => excludes.indexOf(item) === -1);
           }
         },
 
         onChangeItems(items) {
-          var hasGroups = false;
-          items = items.map(function(i) {
+          let hasGroups = false;
+          items = items.map(i => {
             if (groups.indexOf(i) > -1) {
               hasGroups = true;
             }
             return i.username ? i.username : i;
           });
-          self.set("usernames", items.join(","));
-          self.set("hasGroups", hasGroups);
 
+          let previouslySelected = [];
+          if (Array.isArray(userSelectorComponent.usernames)) {
+            previouslySelected = userSelectorComponent.usernames;
+          } else {
+            if (userSelectorComponent.usernames) {
+              previouslySelected = userSelectorComponent.usernames.split(",");
+            }
+          }
+
+          userSelectorComponent.setProperties({
+            usernames: items.join(","),
+            hasGroups
+          });
           selected = items;
-          if (self.get("onChangeCallback")) self.onChangeCallback();
+
+          if (userSelectorComponent.onChangeCallback) {
+            userSelectorComponent.onChangeCallback(
+              previouslySelected,
+              selected
+            );
+          }
         },
 
         reverseTransform(i) {
@@ -105,21 +127,14 @@ export default TextField.extend({
       });
   },
 
-  willDestroyElement() {
-    this._super(...arguments);
-    this.$().autocomplete("destroy");
-  },
-
   // THIS IS A HUGE HACK TO SUPPORT CLEARING THE INPUT
   @observes("usernames")
-  _clearInput: function() {
-    if (arguments.length > 1) {
-      if (Ember.isEmpty(this.get("usernames"))) {
-        this.$()
-          .parent()
-          .find("a")
-          .click();
-      }
+  _clearInput() {
+    if (arguments.length > 1 && Ember.isEmpty(this.usernames)) {
+      $(this.element)
+        .parent()
+        .find("a")
+        .click();
     }
   }
 });

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddQuotedPosts < ActiveRecord::Migration[4.2]
   def change
     create_table :quoted_posts do |t|

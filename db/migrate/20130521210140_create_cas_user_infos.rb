@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreateCasUserInfos < ActiveRecord::Migration[4.2]
   def change
     create_table :cas_user_infos do |t|

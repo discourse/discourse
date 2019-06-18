@@ -1,8 +1,12 @@
 import Quote from "discourse/lib/quote";
 import Post from "discourse/models/post";
 import { default as PrettyText, buildOptions } from "pretty-text/pretty-text";
-import { IMAGE_VERSION as v } from "pretty-text/emoji";
-import { INLINE_ONEBOX_LOADING_CSS_CLASS } from "pretty-text/inline-oneboxer";
+import { IMAGE_VERSION as v } from "pretty-text/emoji/version";
+import { INLINE_ONEBOX_LOADING_CSS_CLASS } from "pretty-text/context/inline-onebox-css-classes";
+import {
+  applyCachedInlineOnebox,
+  deleteCachedInlineOnebox
+} from "pretty-text/inline-oneboxer";
 
 QUnit.module("lib:pretty-text");
 
@@ -196,11 +200,24 @@ QUnit.test("Links", assert => {
     "autolinks a URL"
   );
 
+  const link = "http://www.youtube.com/watch?v=1MrpeBRkM5A";
+
   assert.cooked(
-    "Youtube: http://www.youtube.com/watch?v=1MrpeBRkM5A",
-    `<p>Youtube: <a href="http://www.youtube.com/watch?v=1MrpeBRkM5A" class="${INLINE_ONEBOX_LOADING_CSS_CLASS}">http://www.youtube.com/watch?v=1MrpeBRkM5A</a></p>`,
+    `Youtube: ${link}`,
+    `<p>Youtube: <a href="${link}" class="${INLINE_ONEBOX_LOADING_CSS_CLASS}">${link}</a></p>`,
     "allows links to contain query params"
   );
+
+  try {
+    applyCachedInlineOnebox(link, {});
+
+    assert.cooked(
+      `Youtube: ${link}`,
+      `<p>Youtube: <a href="${link}">${link}</a></p>`
+    );
+  } finally {
+    deleteCachedInlineOnebox(link);
+  }
 
   assert.cooked(
     "Derpy: http://derp.com?__test=1",
@@ -554,6 +571,48 @@ QUnit.test("Mentions", assert => {
     "<small>a @sam c</small>",
     '<p><small>a <span class="mention">@sam</span> c</small></p>',
     "it allows mentions within HTML tags"
+  );
+
+  assert.cooked(
+    "@_sam @1sam @ab-cd.123_ABC-xYz @sam1",
+    '<p><span class="mention">@_sam</span> <span class="mention">@1sam</span> <span class="mention">@ab-cd.123_ABC-xYz</span> <span class="mention">@sam1</span></p>',
+    "it detects mentions of valid usernames"
+  );
+
+  assert.cooked(
+    "@.sam @-sam @sam. @sam_ @sam-",
+    '<p>@.sam @-sam <span class="mention">@sam</span>. <span class="mention">@sam</span>_ <span class="mention">@sam</span>-</p>',
+    "it does not detect mentions of invalid usernames"
+  );
+
+  assert.cookedOptions(
+    "Hello @狮子",
+    { siteSettings: { unicode_usernames: false } },
+    "<p>Hello @狮子</p>",
+    "it does not detect mentions of Unicode usernames"
+  );
+});
+
+QUnit.test("Mentions - Unicode usernames enabled", assert => {
+  assert.cookedOptions(
+    "Hello @狮子",
+    { siteSettings: { unicode_usernames: true } },
+    '<p>Hello <span class="mention">@狮子</span></p>',
+    "it detects mentions of Unicode usernames"
+  );
+
+  assert.cookedOptions(
+    "@狮子 @_狮子 @1狮子 @狮-ø.١٢٣_Ö-ழ் @狮子1",
+    { siteSettings: { unicode_usernames: true } },
+    '<p><span class="mention">@狮子</span> <span class="mention">@_狮子</span> <span class="mention">@1狮子</span> <span class="mention">@狮-ø.١٢٣_Ö-ழ்</span> <span class="mention">@狮子1</span></p>',
+    "it detects mentions of valid Unicode usernames"
+  );
+
+  assert.cookedOptions(
+    "@.狮子 @-狮子 @狮子. @狮子_ @狮子-",
+    { siteSettings: { unicode_usernames: true } },
+    '<p>@.狮子 @-狮子 <span class="mention">@狮子</span>. <span class="mention">@狮子</span>_ <span class="mention">@狮子</span>-</p>',
+    "it does not detect mentions of invalid Unicode usernames"
   );
 });
 

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class GroupHistory < ActiveRecord::Base
   belongs_to :group
   belongs_to :acting_user, class_name: 'User'

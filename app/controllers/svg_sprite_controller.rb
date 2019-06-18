@@ -10,12 +10,13 @@ class SvgSpriteController < ApplicationController
     no_cookies
 
     RailsMultisite::ConnectionManagement.with_hostname(params[:hostname]) do
+      theme_ids = params[:theme_ids].split(",").map(&:to_i)
 
-      if SvgSprite.version != params[:version]
-        return redirect_to path(SvgSprite.path)
+      if SvgSprite.version(theme_ids) != params[:version]
+        return redirect_to path(SvgSprite.path(theme_ids))
       end
 
-      svg_sprite = "window.__svg_sprite = #{SvgSprite.bundle.inspect};"
+      svg_sprite = "window.__svg_sprite = #{SvgSprite.bundle(theme_ids).inspect};"
 
       response.headers["Last-Modified"] = 10.years.ago.httpdate
       response.headers["Content-Length"] = svg_sprite.bytesize.to_s
@@ -26,13 +27,16 @@ class SvgSpriteController < ApplicationController
   end
 
   def search
-    keyword = params.require(:keyword)
-    data = SvgSprite.search(keyword)
+    RailsMultisite::ConnectionManagement.with_hostname(params[:hostname]) do
 
-    if data.blank?
-      render body: nil, status: 404
-    else
-      render plain: data.inspect, disposition: nil, content_type: 'text/plain'
+      keyword = params.require(:keyword)
+      data = SvgSprite.search(keyword)
+
+      if data.blank?
+        render body: nil, status: 404
+      else
+        render plain: data.inspect, disposition: nil, content_type: 'text/plain'
+      end
     end
   end
 end

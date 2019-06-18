@@ -1,15 +1,17 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 describe Jobs::CleanUpEmailLogs do
-  let!(:email_log) { Fabricate(:email_log, created_at: 2.years.ago) }
-  let!(:email_log2) { Fabricate(:email_log, created_at: 2.weeks.ago) }
-  let!(:email_log3) { Fabricate(:email_log, created_at: 2.days.ago) }
+  fab!(:email_log) { Fabricate(:email_log, created_at: 2.years.ago) }
+  fab!(:email_log2) { Fabricate(:email_log, created_at: 2.weeks.ago) }
+  fab!(:email_log3) { Fabricate(:email_log, created_at: 2.days.ago) }
 
   let!(:skipped_email_log) do
     Fabricate(:skipped_email_log, created_at: 2.years.ago)
   end
 
-  let!(:skipped_email_log2) { Fabricate(:skipped_email_log) }
+  fab!(:skipped_email_log2) { Fabricate(:skipped_email_log) }
 
   it "removes old email logs" do
     Jobs::CleanUpEmailLogs.new.execute({})

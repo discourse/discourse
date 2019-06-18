@@ -1,4 +1,6 @@
+import selectKit from "helpers/select-kit-helper";
 import { acceptance, waitFor } from "helpers/qunit-helpers";
+
 acceptance("Search - Full Page", {
   settings: { tagging_enabled: true },
   loggedIn: true,
@@ -114,7 +116,7 @@ QUnit.test("escape search term", async assert => {
   );
 });
 
-QUnit.test("update username through advanced search ui", async assert => {
+QUnit.skip("update username through advanced search ui", async assert => {
   await visit("/search");
   await fillIn(".search-query", "none");
   await fillIn(".search-advanced-options .user-selector", "admin");

@@ -33,7 +33,7 @@ export default Ember.Component.extend({
 
   _scheduleChartRendering() {
     Ember.run.schedule("afterRender", () => {
-      this._renderChart(this.get("model"), this.$(".chart-canvas"));
+      this._renderChart(this.model, this.$(".chart-canvas"));
     });
   },
 
@@ -114,6 +114,7 @@ export default Ember.Component.extend({
               display: true,
               gridLines: { display: false },
               type: "time",
+              offset: true,
               time: {
                 parser: "YYYY-MM-DD",
                 minUnit: "day"

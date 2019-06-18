@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class EmailToken < ActiveRecord::Base
   belongs_to :user
 
@@ -57,21 +59,25 @@ class EmailToken < ActiveRecord::Base
     end
   end
 
-  def self.confirm(token)
+  def self.confirm(token, skip_reviewable: false)
     User.transaction do
       result = atomic_confirm(token)
       user = result[:user]
       if result[:success]
         # If we are activating the user, send the welcome message
         user.send_welcome_message = !user.active?
-        user.active = true
         user.email = result[:email_token].email
+        user.active = true
+        user.custom_fields.delete('activation_reminder')
         user.save!
+        user.create_reviewable unless skip_reviewable
         user.set_automatic_groups
       end
 
       if user
-        return User.find_by_email(user.email) if Invite.redeem_from_email(user.email).present?
+        if Invite.redeem_from_email(user.email).present?
+          return user.reload
+        end
         user
       end
     end

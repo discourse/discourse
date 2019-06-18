@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Support for ensure_{blah}! methods.
 module EnsureMagic
 

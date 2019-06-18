@@ -1,0 +1,14 @@
+<div class="header">
+  <h3 class="title">{{{shareTitle}}}</h3>
+</div>
+
+<div class="body">
+  {{textarea value=shareUrl class="topic-share-url"}}
+  <div class="topic-share-url-for-touch"><a></a></div>
+
+  <div class="sources">
+    {{#each sources as |source|}}
+      {{share-source source=source title=topic.title action=(action "share")}}
+    {{/each}}
+  </div>
+</div>

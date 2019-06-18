@@ -3,6 +3,7 @@ import {
   WidgetClickOutsideHook,
   WidgetKeyUpHook,
   WidgetKeyDownHook,
+  WidgetMouseDownOutsideHook,
   WidgetDragHook
 } from "discourse/widgets/hooks";
 import { h } from "virtual-dom";
@@ -84,6 +85,13 @@ function drawWidget(builder, attrs, state) {
   if (this.click) {
     properties["widget-click"] = new WidgetClickHook(this);
   }
+
+  if (this.mouseDownOutside) {
+    properties["widget-mouse-down-outside"] = new WidgetMouseDownOutsideHook(
+      this
+    );
+  }
+
   if (this.drag) {
     properties["widget-drag"] = new WidgetDragHook(this);
   }

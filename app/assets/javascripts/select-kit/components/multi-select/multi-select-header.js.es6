@@ -22,7 +22,7 @@ export default SelectKitHeaderComponent.extend({
 
   @on("didRender")
   _positionFilter() {
-    if (!this.get("shouldDisplayFilter")) return;
+    if (!this.shouldDisplayFilter) return;
 
     const $filter = this.$(".filter");
     $filter.width(0);

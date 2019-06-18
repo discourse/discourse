@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class FixCategoryLogoAndBackgroundUrls < ActiveRecord::Migration[4.2]
   def up
     return true if Discourse.asset_host.blank?

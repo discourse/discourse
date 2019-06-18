@@ -1,8 +1,10 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe WebHookTopicViewSerializer do
-  let(:admin) { Fabricate(:admin) }
-  let(:topic) { Fabricate(:topic) }
+  fab!(:admin) { Fabricate(:admin) }
+  fab!(:topic) { Fabricate(:topic) }
 
   let(:serializer) do
     WebHookTopicViewSerializer.new(TopicView.new(topic),

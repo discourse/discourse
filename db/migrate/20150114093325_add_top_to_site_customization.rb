@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddTopToSiteCustomization < ActiveRecord::Migration[4.2]
   def up
     add_column :site_customizations, :top, :text

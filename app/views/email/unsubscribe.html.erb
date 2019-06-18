@@ -52,15 +52,26 @@
         </p>
       <% end %>
 
-      <% if !@topic %>
-        <% unless SiteSetting.disable_digest_emails %>
+      <% if @digest_unsubscribe %>
           <p>
-          <label>
-          <%= check_box_tag 'disable_digest_emails', 1, @type=="digest" %>
-          <%= t 'unsubscribe.disable_digest_emails' %>
-          </label>
+          
+          <% if @digest_frequencies[:current] %>
+            <h3>
+            <%= t(
+              'unsubscribe.digest_frequency.title', 
+              frequency: t("unsubscribe.digest_frequency.#{@digest_frequencies[:current]}")
+            ) %>
+            </h3>
+            <br/>
+          <% end %>
+          
+          <label><%= t 'unsubscribe.digest_frequency.select_title' %></label>
+          <%= 
+            select_tag :digest_after_minutes, 
+            options_for_select(@digest_frequencies[:frequencies], @digest_frequencies[:selected]), 
+            class: 'combobox' 
+          %>
           </p>
-        <% end %>
       <% end %>
 
       <p>
@@ -71,7 +82,8 @@
       </p>
 
       <br/>
-      <%= submit_tag t('unsubscribe.title'), class: 'btn btn-danger' %>
+      <% text = @type=='digest' ? t('unsubscribe.submit') : t('unsubscribe.title') %>
+      <%= submit_tag text, class: 'btn btn-danger' %>
     <%- end %>
 
 

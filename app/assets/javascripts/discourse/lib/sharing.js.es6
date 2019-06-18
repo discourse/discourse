@@ -47,6 +47,27 @@ export default {
     _sources[source.id] = source;
   },
 
+  shareSource(source, data) {
+    const url = source.generateUrl(data.url, data.title);
+    const options = {
+      menubar: "no",
+      toolbar: "no",
+      resizable: "yes",
+      scrollbars: "yes",
+      width: 600,
+      height: source.popupHeight || 315
+    };
+    const stringOptions = Object.keys(options)
+      .map(k => `${k}=${options[k]}`)
+      .join(",");
+
+    if (source.shouldOpenInPopup) {
+      window.open(url, "", stringOptions);
+    } else {
+      window.open(url, "_blank");
+    }
+  },
+
   activeSources(linksSetting = "") {
     return linksSetting
       .split("|")

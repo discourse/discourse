@@ -1,3 +1,7 @@
+# frozen_string_literal: true
+
+return if GlobalSetting.skip_db?
+
 require_dependency 'webpush'
 
 if SiteSetting.vapid_public_key.blank? || SiteSetting.vapid_private_key.blank? || SiteSetting.vapid_public_key_bytes.blank?

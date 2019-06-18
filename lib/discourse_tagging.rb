@@ -1,7 +1,17 @@
+# frozen_string_literal: true
+
 module DiscourseTagging
 
   TAGS_FIELD_NAME = "tags"
   TAGS_FILTER_REGEXP = /[\/\?#\[\]@!\$&'\(\)\*\+,;=\.%\\`^\s|\{\}"<>]+/ # /?#[]@!$&'()*+,;=.%\`^|{}"<>
+  TAGS_STAFF_CACHE_KEY = "staff_tag_names"
+
+  TAG_GROUP_TAG_IDS_SQL = <<-SQL
+      SELECT tag_id
+        FROM tag_group_memberships tgm
+  INNER JOIN tag_groups tg
+          ON tgm.tag_group_id = tg.id
+  SQL
 
   def self.tag_topic_by_names(topic, guardian, tag_names_arg, append: false)
     if guardian.can_tag?(topic)
@@ -19,13 +29,13 @@ module DiscourseTagging
         staff_tags = new_tag_names & all_staff_tags
         staff_tags += new_tag_names & hidden_tags
         if staff_tags.present?
-          topic.errors[:base] << I18n.t("tags.staff_tag_disallowed", tag: staff_tags.join(" "))
+          topic.errors.add(:base, I18n.t("tags.staff_tag_disallowed", tag: staff_tags.join(" ")))
           return false
         end
 
         staff_tags = removed_tag_names & all_staff_tags
         if staff_tags.present?
-          topic.errors[:base] << I18n.t("tags.staff_tag_remove_disallowed", tag: staff_tags.join(" "))
+          topic.errors.add(:base, I18n.t("tags.staff_tag_remove_disallowed", tag: staff_tags.join(" ")))
           return false
         end
 
@@ -46,7 +56,7 @@ module DiscourseTagging
           selected_tags: tag_names
         ).to_a
 
-        if tags.size < tag_names.size && (category.nil? || (category.tags.count == 0 && category.tag_groups.count == 0))
+        if tags.size < tag_names.size && (category.nil? || category.allow_global_tags || (category.tags.count == 0 && category.tag_groups.count == 0))
           tag_names.each do |name|
             unless Tag.where_name(name).exists?
               tags << Tag.create(name: name)
@@ -54,9 +64,22 @@ module DiscourseTagging
           end
         end
 
+        # add missing mandatory parent tags
+        parent_tags = TagGroup.includes(:parent_tag).where("tag_groups.id IN (
+          SELECT tg.id
+            FROM tag_groups tg
+      INNER JOIN tag_group_memberships tgm
+              ON tgm.tag_group_id = tg.id
+           WHERE tg.parent_tag_id IS NOT NULL
+             AND tgm.tag_id IN (?))", tags.map(&:id)).map(&:parent_tag)
+
+        parent_tags.reject { |t| tag_names.include?(t.name) }.each do |tag|
+          tags << tag
+        end
+
         # validate minimum required tags for a category
         if !guardian.is_staff? && category && category.minimum_required_tags > 0 && tags.length < category.minimum_required_tags
-          topic.errors[:base] << I18n.t("tags.minimum_required_tags", count: category.minimum_required_tags)
+          topic.errors.add(:base, I18n.t("tags.minimum_required_tags", count: category.minimum_required_tags))
           return false
         end
 
@@ -64,7 +87,7 @@ module DiscourseTagging
       else
         # validate minimum required tags for a category
         if !guardian.is_staff? && category && category.minimum_required_tags > 0
-          topic.errors[:base] << I18n.t("tags.minimum_required_tags", count: category.minimum_required_tags)
+          topic.errors.add(:base, I18n.t("tags.minimum_required_tags", count: category.minimum_required_tags))
           return false
         end
 
@@ -90,8 +113,9 @@ module DiscourseTagging
 
     term = opts[:term]
     if term.present?
-      term.gsub!("_", "\\_")
-      term = clean_tag(term).downcase
+      term = term.gsub("_", "\\_")
+      clean_tag(term)
+      term.downcase!
       query = query.where('lower(tags.name) like ?', "%#{term}%")
     end
 
@@ -99,21 +123,35 @@ module DiscourseTagging
     category = opts[:category]
 
     if category && (category.tags.count > 0 || category.tag_groups.count > 0)
-      if category.tags.count > 0 && category.tag_groups.count > 0
-        tag_group_ids = category.tag_groups.pluck(:id)
-
-        query = query.where(
-          "tags.id IN (SELECT tag_id FROM category_tags WHERE category_id = ?
+      if category.allow_global_tags
+        # Select tags that:
+        #   * are restricted to the given category
+        #   * belong to no tag groups and aren't restricted to other categories
+        #   * belong to tag groups that are not restricted to any categories
+        query = query.where(<<~SQL, category.tag_groups.pluck(:id), category.id)
+          tags.id IN (
+            SELECT t.id FROM tags t
+            LEFT JOIN category_tags ct ON t.id = ct.tag_id
+            LEFT JOIN (
+              SELECT xtgm.tag_id, xtgm.tag_group_id
+              FROM tag_group_memberships xtgm
+              INNER JOIN category_tag_groups ctg
+              ON xtgm.tag_group_id = ctg.tag_group_id
+            ) AS tgm ON t.id = tgm.tag_id
+            WHERE (tgm.tag_group_id IS NULL AND ct.category_id IS NULL)
+               OR tgm.tag_group_id IN (?)
+               OR ct.category_id = ?
+          )
+        SQL
+      else
+        # Select only tags that are restricted to the given category
+        query = query.where(<<~SQL, category.id, category.tag_groups.pluck(:id))
+          tags.id IN (
+            SELECT tag_id FROM category_tags WHERE category_id = ?
             UNION
-            SELECT tag_id FROM tag_group_memberships WHERE tag_group_id IN (?))",
-          category.id, tag_group_ids
-        )
-      elsif category.tags.count > 0
-        query = query.where("tags.id IN (SELECT tag_id FROM category_tags WHERE category_id = ?)", category.id)
-      else # category.tag_groups.count > 0
-        tag_group_ids = category.tag_groups.pluck(:id)
-
-        query = query.where("tags.id IN (SELECT tag_id FROM tag_group_memberships WHERE tag_group_id IN (?))", tag_group_ids)
+            SELECT tag_id FROM tag_group_memberships WHERE tag_group_id IN (?)
+          )
+        SQL
       end
     elsif opts[:for_input] || opts[:for_topic] || category
       # exclude tags that are restricted to other categories
@@ -132,28 +170,19 @@ module DiscourseTagging
         all_staff_tags = DiscourseTagging.staff_tag_names
         query = query.where('tags.name NOT IN (?)', all_staff_tags) if all_staff_tags.present?
       end
+    end
 
+    if opts[:for_input]
       # exclude tag groups that have a parent tag which is missing from selected_tags
 
-      select_sql = <<-SQL
-      SELECT tag_id
-            FROM tag_group_memberships tgm
-      INNER JOIN tag_groups tg
-              ON tgm.tag_group_id = tg.id
-      SQL
-
       if selected_tag_ids.empty?
-        sql = "tags.id NOT IN (#{select_sql} WHERE tg.parent_tag_id IS NOT NULL)"
+        sql = "tags.id NOT IN (#{TAG_GROUP_TAG_IDS_SQL} WHERE tg.parent_tag_id IS NOT NULL)"
         query = query.where(sql)
       else
-        # One tag per group restriction
-        exclude_group_ids = TagGroup.where(one_per_topic: true)
-          .joins(:tag_group_memberships)
-          .where('tag_group_memberships.tag_id in (?)', selected_tag_ids)
-          .pluck(:id)
+        exclude_group_ids = one_per_topic_group_ids(selected_tag_ids)
 
         if exclude_group_ids.empty?
-          sql = "tags.id NOT IN (#{select_sql} WHERE tg.parent_tag_id NOT IN (?))"
+          sql = "tags.id NOT IN (#{TAG_GROUP_TAG_IDS_SQL} WHERE tg.parent_tag_id NOT IN (?))"
           query = query.where(sql, selected_tag_ids)
         else
           # It's possible that the selected tags violate some one-tag-per-group restrictions,
@@ -162,9 +191,21 @@ module DiscourseTagging
             .where(tag_id: selected_tag_ids)
             .where(tag_group_id: exclude_group_ids)
             .map(&:tag_id)
-          sql = "(tags.id NOT IN (#{select_sql} WHERE (tg.parent_tag_id NOT IN (?) OR tg.id in (?))) OR tags.id IN (?))"
+          sql = "(tags.id NOT IN (#{TAG_GROUP_TAG_IDS_SQL} WHERE (tg.parent_tag_id NOT IN (?) OR tg.id in (?))) OR tags.id IN (?))"
           query = query.where(sql, selected_tag_ids, exclude_group_ids, limit_tag_ids)
         end
+      end
+    elsif opts[:for_topic] && !selected_tag_ids.empty?
+      # One tag per group restriction
+      exclude_group_ids = one_per_topic_group_ids(selected_tag_ids)
+
+      unless exclude_group_ids.empty?
+        limit_tag_ids = TagGroupMembership.select('distinct on (tag_group_id) tag_id')
+          .where(tag_id: selected_tag_ids)
+          .where(tag_group_id: exclude_group_ids)
+          .map(&:tag_id)
+        sql = "(tags.id NOT IN (#{TAG_GROUP_TAG_IDS_SQL} WHERE (tg.id in (?))) OR tags.id IN (?))"
+        query = query.where(sql, exclude_group_ids, limit_tag_ids)
       end
     end
 
@@ -173,6 +214,13 @@ module DiscourseTagging
     else
       filter_visible(query, guardian)
     end
+  end
+
+  def self.one_per_topic_group_ids(selected_tag_ids)
+    TagGroup.where(one_per_topic: true)
+      .joins(:tag_group_memberships)
+      .where('tag_group_memberships.tag_id in (?)', selected_tag_ids)
+      .pluck(:id)
   end
 
   def self.filter_visible(query, guardian = nil)
@@ -194,11 +242,22 @@ module DiscourseTagging
   end
 
   def self.staff_tag_names
-    Tag.joins(tag_groups: :tag_group_permissions)
-      .where('tag_group_permissions.group_id = ? AND tag_group_permissions.permission_type = ?',
-        Group::AUTO_GROUPS[:everyone],
-        TagGroupPermission.permission_types[:readonly]
-      ).pluck(:name)
+    tag_names = Discourse.cache.read(TAGS_STAFF_CACHE_KEY, tag_names)
+
+    if !tag_names
+      tag_names = Tag.joins(tag_groups: :tag_group_permissions)
+        .where('tag_group_permissions.group_id = ? AND tag_group_permissions.permission_type = ?',
+          Group::AUTO_GROUPS[:everyone],
+          TagGroupPermission.permission_types[:readonly]
+        ).pluck(:name)
+      Discourse.cache.write(TAGS_STAFF_CACHE_KEY, tag_names, expires_in: 1.hour)
+    end
+
+    tag_names
+  end
+
+  def self.clear_cache!
+    Discourse.cache.delete(TAGS_STAFF_CACHE_KEY)
   end
 
   def self.clean_tag(tag)

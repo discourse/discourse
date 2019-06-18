@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require File.expand_path(File.dirname(__FILE__) + "/base.rb")
 require 'pg'
 require_relative 'base/uploader'
@@ -78,7 +80,7 @@ class ImportScripts::Nabble < ImportScripts::Base
       create_users(users, total: total_count, offset: offset) do |row|
         {
           id: row["user_id"],
-          email: row["email"] || (SecureRandom.hex << "@domain.com"),
+          email: row["email"] || fake_email,
           created_at: Time.zone.at(@td.decode(row["joined"])),
           name: row["name"],
           post_create_action: proc do |user|
@@ -281,7 +283,7 @@ class String
   def indent(count, char = ' ')
     gsub(/([^\n]*)(\n|$)/) do |match|
       last_iteration = ($1 == "" && $2 == "")
-      line = ""
+      line = +""
       line << (char * count) unless last_iteration
       line << $1
       line << $2

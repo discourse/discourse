@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Use http://tatiyants.com/pev/#/plans/new if you want to optimize a query
 
 task "import:ensure_consistency" => :environment do
@@ -20,6 +22,7 @@ task "import:ensure_consistency" => :environment do
   update_users
   update_groups
   update_tag_stats
+  create_category_definitions
 
   log "Done!"
 end
@@ -140,11 +143,10 @@ def insert_user_options
   DB.exec <<-SQL
     INSERT INTO user_options (
                   user_id,
-                  email_always,
                   mailing_list_mode,
                   mailing_list_mode_frequency,
-                  email_direct,
-                  email_private_messages,
+                  email_level,
+                  email_messages_level,
                   email_previous_replies,
                   email_in_reply_to,
                   email_digests,
@@ -154,18 +156,16 @@ def insert_user_options
                   enable_quoting,
                   external_links_in_new_tab,
                   dynamic_favicon,
-                  disable_jump_reply,
                   new_topic_duration_minutes,
                   auto_track_topics_after_msecs,
                   notification_level_when_replying,
                   like_notification_frequency
                 )
              SELECT u.id
-                  , #{SiteSetting.default_email_always}
                   , #{SiteSetting.default_email_mailing_list_mode}
                   , #{SiteSetting.default_email_mailing_list_mode_frequency}
-                  , #{SiteSetting.default_email_direct}
-                  , #{SiteSetting.default_email_personal_messages}
+                  , #{SiteSetting.default_email_level}
+                  , #{SiteSetting.default_email_messages_level}
                   , #{SiteSetting.default_email_previous_replies}
                   , #{SiteSetting.default_email_in_reply_to}
                   , #{SiteSetting.default_email_digest_frequency.to_i > 0}
@@ -175,7 +175,6 @@ def insert_user_options
                   , #{SiteSetting.default_other_enable_quoting}
                   , #{SiteSetting.default_other_external_links_in_new_tab}
                   , #{SiteSetting.default_other_dynamic_favicon}
-                  , #{SiteSetting.default_other_disable_jump_reply}
                   , #{SiteSetting.default_other_new_topic_duration_minutes}
                   , #{SiteSetting.default_other_auto_track_topics_after_msecs}
                   , #{SiteSetting.default_other_notification_level_when_replying}
@@ -425,6 +424,11 @@ end
 
 def update_tag_stats
   Tag.ensure_consistency!
+end
+
+def create_category_definitions
+  log "Creating category definitions"
+  Category.ensure_consistency!
 end
 
 def log(message)

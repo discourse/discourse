@@ -51,5 +51,12 @@ export default {
         node[segs[segs.length - 1]] = v;
       }
     });
+
+    bootbox.addLocale(I18n.currentLocale(), {
+      OK: I18n.t("composer.modal_ok"),
+      CANCEL: I18n.t("composer.modal_cancel"),
+      CONFIRM: I18n.t("composer.modal_ok")
+    });
+    bootbox.setLocale(I18n.currentLocale());
   }
 };

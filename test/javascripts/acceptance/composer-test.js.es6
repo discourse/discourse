@@ -1,3 +1,4 @@
+import selectKit from "helpers/select-kit-helper";
 import { acceptance } from "helpers/qunit-helpers";
 import { toggleCheckDraftPopup } from "discourse/controllers/composer";
 
@@ -9,6 +10,9 @@ acceptance("Composer", {
         draft: null,
         draft_sequence: 42
       });
+    });
+    server.post("/uploads/lookup-urls", () => {
+      return helper.response([]);
     });
   },
   settings: {
@@ -98,81 +102,98 @@ QUnit.test("Tests the Composer controls", async assert => {
   assert.ok(!exists(".bootbox.modal"), "the confirmation can be cancelled");
 });
 
-// Temporarily remove to see if this is breaking the test suite
-//
-// QUnit.test("Composer upload placeholder", async assert => {
-//   await visit("/");
-//   await click("#create-topic");
-//
-//   const file1 = new Blob([""], { type: "image/png" });
-//   file1.name = "test.png";
-//   const data1 = {
-//     files: [file1],
-//     result: {
-//       original_filename: "test.png",
-//       thumbnail_width: 200,
-//       thumbnail_height: 300,
-//       url: "/uploads/test1.ext"
-//     }
-//   };
-//
-//   const file2 = new Blob([""], { type: "image/png" });
-//   file2.name = "test.png";
-//   const data2 = {
-//     files: [file2],
-//     result: {
-//       original_filename: "test.png",
-//       thumbnail_width: 100,
-//       thumbnail_height: 200,
-//       url: "/uploads/test2.ext"
-//     }
-//   };
-//
-//   const file3 = new Blob([""], { type: "image/png" });
-//   file3.name = "image.png";
-//   const data3 = {
-//     files: [file3],
-//     result: {
-//       original_filename: "image.png",
-//       thumbnail_width: 300,
-//       thumbnail_height: 400,
-//       url: "/uploads/test3.ext"
-//     }
-//   };
-//
-//   await find(".wmd-controls").trigger("fileuploadsend", data1);
-//   assert.equal(find(".d-editor-input").val(), "[Uploading: test.png...]() ");
-//
-//   await find(".wmd-controls").trigger("fileuploadsend", data2);
-//   assert.equal(
-//     find(".d-editor-input").val(),
-//     "[Uploading: test.png...]() [Uploading: test.png(1)...]() "
-//   );
-//
-//   await find(".wmd-controls").trigger("fileuploadsend", data3);
-//   assert.equal(
-//     find(".d-editor-input").val(),
-//     "[Uploading: test.png...]() [Uploading: test.png(1)...]() [Uploading: image.png...]() "
-//   );
-//
-//   await find(".wmd-controls").trigger("fileuploaddone", data2);
-//   assert.equal(
-//     find(".d-editor-input").val(),
-//     "[Uploading: test.png...]() ![test|100x200](/uploads/test2.ext) [Uploading: image.png...]() "
-//   );
-//
-//   await find(".wmd-controls").trigger("fileuploaddone", data3);
-//   assert.equal(
-//     find(".d-editor-input").val(),
-//     "[Uploading: test.png...]() ![test|100x200](/uploads/test2.ext) ![image|300x400](/uploads/test3.ext) "
-//   );
-//
-//   await find(".wmd-controls").trigger("fileuploaddone", data1);
-//   assert.equal(
-//     find(".d-editor-input").val(),
-//     "![test|200x300](/uploads/test1.ext) ![test|100x200](/uploads/test2.ext) ![image|300x400](/uploads/test3.ext) "
-//   );
-// });
+QUnit.test("Composer upload placeholder", async assert => {
+  await visit("/");
+  await click("#create-topic");
+
+  const file1 = new Blob([""], { type: "image/png" });
+  file1.name = "test.png";
+  const data1 = {
+    files: [file1],
+    result: {
+      original_filename: "test.png",
+      thumbnail_width: 200,
+      thumbnail_height: 300,
+      url: "/uploads/test1.ext"
+    }
+  };
+
+  const file2 = new Blob([""], { type: "image/png" });
+  file2.name = "test.png";
+  const data2 = {
+    files: [file2],
+    result: {
+      original_filename: "test.png",
+      thumbnail_width: 100,
+      thumbnail_height: 200,
+      url: "/uploads/test2.ext"
+    }
+  };
+
+  const file3 = new Blob([""], { type: "image/png" });
+  file3.name = "image.png";
+  const data3 = {
+    files: [file3],
+    result: {
+      original_filename: "image.png",
+      thumbnail_width: 300,
+      thumbnail_height: 400,
+      url: "/uploads/test3.ext"
+    }
+  };
+
+  const file4 = new Blob([""], { type: "image/png" });
+  file4.name = "ima++ge.png";
+  const data4 = {
+    files: [file4],
+    result: {
+      original_filename: "ima++ge.png",
+      thumbnail_width: 300,
+      thumbnail_height: 400,
+      url: "/uploads/test3.ext"
+    }
+  };
+
+  await find(".wmd-controls").trigger("fileuploadsend", data1);
+  assert.equal(find(".d-editor-input").val(), "[Uploading: test.png...]() ");
+
+  await find(".wmd-controls").trigger("fileuploadsend", data2);
+  assert.equal(
+    find(".d-editor-input").val(),
+    "[Uploading: test.png...]() [Uploading: test.png(1)...]() "
+  );
+
+  await find(".wmd-controls").trigger("fileuploadsend", data4);
+  assert.equal(
+    find(".d-editor-input").val(),
+    "[Uploading: test.png...]() [Uploading: test.png(1)...]() [Uploading: ima++ge.png...]() ",
+    "should accept files with unescaped characters"
+  );
+
+  await find(".wmd-controls").trigger("fileuploadsend", data3);
+  assert.equal(
+    find(".d-editor-input").val(),
+    "[Uploading: test.png...]() [Uploading: test.png(1)...]() [Uploading: ima++ge.png...]() [Uploading: image.png...]() "
+  );
+
+  await find(".wmd-controls").trigger("fileuploaddone", data2);
+  assert.equal(
+    find(".d-editor-input").val(),
+    "[Uploading: test.png...]() ![test|100x200](/uploads/test2.ext) [Uploading: ima++ge.png...]() [Uploading: image.png...]() "
+  );
+
+  await find(".wmd-controls").trigger("fileuploaddone", data3);
+  assert.equal(
+    find(".d-editor-input").val(),
+    "[Uploading: test.png...]() ![test|100x200](/uploads/test2.ext) [Uploading: ima++ge.png...]() ![image|300x400](/uploads/test3.ext) "
+  );
+
+  await find(".wmd-controls").trigger("fileuploaddone", data1);
+  assert.equal(
+    find(".d-editor-input").val(),
+    "![test|200x300](/uploads/test1.ext) ![test|100x200](/uploads/test2.ext) [Uploading: ima++ge.png...]() ![image|300x400](/uploads/test3.ext) "
+  );
+});
 
 QUnit.test("Create a topic with server side errors", async assert => {
   await visit("/");
@@ -252,6 +273,8 @@ QUnit.test("Posting on a different topic", async assert => {
 QUnit.test("Create an enqueued Reply", async assert => {
   await visit("/t/internationalization-localization/280");
 
+  assert.notOk(find(".pending-posts .reviewable-item").length);
+
   await click("#topic-footer-buttons .btn.create");
   assert.ok(exists(".d-editor-input"), "the composer input is visible");
   assert.ok(!exists("#reply-title"), "there is no title since this is a reply");
@@ -267,6 +290,8 @@ QUnit.test("Create an enqueued Reply", async assert => {
 
   await click(".modal-footer button");
   assert.ok(invisible(".d-modal"), "the modal can be dismissed");
+
+  assert.ok(find(".pending-posts .reviewable-item").length);
 });
 
 QUnit.test("Edit the first post", async assert => {
@@ -575,24 +600,210 @@ QUnit.test(
 );
 
 QUnit.test("Checks for existing draft", async assert => {
-  toggleCheckDraftPopup(true);
+  try {
+    toggleCheckDraftPopup(true);
 
-  // prettier-ignore
-  server.get("/draft.json", () => { // eslint-disable-line no-undef
-    return [ 200, { "Content-Type": "application/json" }, {
-      draft: "{\"reply\":\"This is a draft of the first post\",\"action\":\"reply\",\"categoryId\":1,\"archetypeId\":\"regular\",\"metaData\":null,\"composerTime\":2863,\"typingTime\":200}",
-      draft_sequence: 42
-    } ];
-  });
+    // prettier-ignore
+    server.get("/draft.json", () => { // eslint-disable-line no-undef
+      return [ 200, { "Content-Type": "application/json" }, {
+        draft: "{\"reply\":\"This is a draft of the first post\",\"action\":\"reply\",\"categoryId\":1,\"archetypeId\":\"regular\",\"metaData\":null,\"composerTime\":2863,\"typingTime\":200}",
+        draft_sequence: 42
+      } ];
+    });
 
-  await visit("/t/internationalization-localization/280");
+    await visit("/t/internationalization-localization/280");
 
-  await click(".topic-post:eq(0) button.show-more-actions");
-  await click(".topic-post:eq(0) button.edit");
+    await click(".topic-post:eq(0) button.show-more-actions");
+    await click(".topic-post:eq(0) button.edit");
 
-  assert.equal(find(".modal-body").text(), I18n.t("drafts.abandon.confirm"));
+    assert.equal(find(".modal-body").text(), I18n.t("drafts.abandon.confirm"));
 
-  await click(".modal-footer .btn.btn-default");
+    await click(".modal-footer .btn.btn-default");
+  } finally {
+    toggleCheckDraftPopup(false);
+  }
+});
 
-  toggleCheckDraftPopup(false);
+QUnit.test("Can switch states without abandon popup", async assert => {
+  try {
+    const composerActions = selectKit(".composer-actions");
+    toggleCheckDraftPopup(true);
+
+    await visit("/t/internationalization-localization/280");
+
+    const longText = "a".repeat(256);
+
+    await click(".btn-primary.create.btn");
+
+    await fillIn(".d-editor-input", longText);
+
+    // prettier-ignore
+    server.get("/draft.json", () => { // eslint-disable-line no-undef
+      return [ 200, { "Content-Type": "application/json" }, {
+        draft: "{\"reply\":\"This is a draft of the first post\",\"action\":\"reply\",\"categoryId\":1,\"archetypeId\":\"regular\",\"metaData\":null,\"composerTime\":2863,\"typingTime\":200}",
+        draft_sequence: 42
+      } ];
+    });
+
+    await click("article#post_3 button.reply");
+
+    await composerActions.expand();
+    await composerActions.selectRowByValue("reply_to_topic");
+
+    assert.equal(
+      find(".modal-body").text(),
+      "",
+      "abandon popup shouldn't come"
+    );
+
+    assert.equal(
+      find(".d-editor-input").val(),
+      longText,
+      "entered text should still be there"
+    );
+
+    assert.ok(
+      find('.action-title a[href="/t/internationalization-localization/280"]'),
+      "mode should have changed"
+    );
+
+    assert.ok(find(".save-animation"), "save animation should show");
+  } finally {
+    toggleCheckDraftPopup(false);
+  }
+});
+
+QUnit.test("Loading draft also replaces the recipients", async assert => {
+  try {
+    toggleCheckDraftPopup(true);
+
+    // prettier-ignore
+    server.get("/draft.json", () => { // eslint-disable-line no-undef
+      return [ 200, { "Content-Type": "application/json" }, {
+         "draft":"{\"reply\":\"hello\",\"action\":\"privateMessage\",\"title\":\"hello\",\"categoryId\":null,\"archetypeId\":\"private_message\",\"metaData\":null,\"usernames\":\"codinghorror\",\"composerTime\":9159,\"typingTime\":2500}",
+         "draft_sequence":0
+      } ];
+    });
+
+    await visit("/u/charlie");
+    await click("button.compose-pm");
+    await click(".modal .btn-default");
+
+    assert.equal(find(".users-input .item:eq(0)").text(), "codinghorror");
+  } finally {
+    toggleCheckDraftPopup(false);
+  }
+});
+
+QUnit.test(
+  "Deleting the text content of the first post in a private message",
+  async assert => {
+    Discourse.SiteSettings.allow_uncategorized_topics = false;
+
+    await visit("/t/34");
+
+    await click("#post_1 .d-icon-ellipsis-h");
+
+    await click("#post_1 .d-icon-pencil-alt");
+
+    await fillIn(".d-editor-input", "");
+
+    assert.equal(
+      find(".d-editor-container textarea").attr("placeholder"),
+      I18n.t("composer.reply_placeholder"),
+      "it should not block because of missing category"
+    );
+  }
+);
+
+const assertImageResized = (assert, uploads) => {
+  assert.equal(
+    find(".d-editor-input").val(),
+    uploads.join("\n"),
+    "it resizes uploaded image"
+  );
+};
+
+QUnit.test("Image resizing buttons", async assert => {
+  await visit("/");
+  await click("#create-topic");
+
+  let uploads = [
+    "![test|690x313](upload://test.png)",
+    "[img]http://example.com/image.jpg[/img]",
+    "![anotherOne|690x463](upload://anotherOne.jpeg)",
+    "![](upload://withoutAltAndSize.jpeg)",
+    "`![test|690x313](upload://test.png)`",
+    "![withoutSize](upload://withoutSize.png)",
+    "<img src='http://someimage.jpg' wight='20' height='20'>",
+    "![onTheSameLine1|200x200](upload://onTheSameLine1.jpeg) ![onTheSameLine2|250x250](upload://onTheSameLine2.jpeg)",
+    "![identicalImage|300x300](upload://identicalImage.png)",
+    "![identicalImage|300x300](upload://identicalImage.png)"
+  ];
+
+  await fillIn(".d-editor-input", uploads.join("\n"));
+
+  assert.ok(
+    find(".button-wrapper").length === 0,
+    "it does not append scaling buttons before hovering images"
+  );
+
+  await triggerEvent($(".d-editor-preview img"), "mouseover");
+
+  assert.ok(
+    find(".button-wrapper").length === 6,
+    "it adds correct amount of scaling button groups"
+  );
+
+  uploads[0] = "![test|690x313,50%](upload://test.png)";
+  await click(find(".button-wrapper .scale-btn[data-scale='50']")[0]);
+  assertImageResized(assert, uploads);
+
+  await triggerEvent($(".d-editor-preview img"), "mouseover");
+
+  uploads[2] = "![anotherOne|690x463,75%](upload://anotherOne.jpeg)";
+  await click(find(".button-wrapper .scale-btn[data-scale='75']")[1]);
+  assertImageResized(assert, uploads);
+
+  await triggerEvent($(".d-editor-preview img"), "mouseover");
+
+  uploads[7] =
+    "![onTheSameLine1|200x200,50%](upload://onTheSameLine1.jpeg) ![onTheSameLine2|250x250](upload://onTheSameLine2.jpeg)";
+  await click(find(".button-wrapper .scale-btn[data-scale='50']")[2]);
+  assertImageResized(assert, uploads);
+
+  await triggerEvent($(".d-editor-preview img"), "mouseover");
+
+  uploads[7] =
+    "![onTheSameLine1|200x200,50%](upload://onTheSameLine1.jpeg) ![onTheSameLine2|250x250,75%](upload://onTheSameLine2.jpeg)";
+  await click(find(".button-wrapper .scale-btn[data-scale='75']")[3]);
+  assertImageResized(assert, uploads);
+
+  await triggerEvent($(".d-editor-preview img"), "mouseover");
+
+  uploads[8] = "![identicalImage|300x300,50%](upload://identicalImage.png)";
+  await click(find(".button-wrapper .scale-btn[data-scale='50']")[4]);
+  assertImageResized(assert, uploads);
+
+  await triggerEvent($(".d-editor-preview img"), "mouseover");
+
+  uploads[9] = "![identicalImage|300x300,75%](upload://identicalImage.png)";
+  await click(find(".button-wrapper .scale-btn[data-scale='75']")[5]);
+  assertImageResized(assert, uploads);
+
+  await fillIn(
+    ".d-editor-input",
+    `
+![test|690x313](upload://test.png)
+
+\`<script>alert("xss")</script>\`
+    `
+  );
+
+  await triggerEvent($(".d-editor-preview img"), "mouseover");
+
+  assert.ok(
+    find("script").length === 0,
+    "it does not unescapes script tags in code blocks"
+  );
 });

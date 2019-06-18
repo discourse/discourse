@@ -1,6 +1,11 @@
+# frozen_string_literal: true
+
 require_dependency 'single_sign_on'
 
 class DiscourseSingleSignOn < SingleSignOn
+
+  class BlankExternalId < StandardError; end
+  class BannedExternalId < StandardError; end
 
   def self.sso_url
     SiteSetting.sso_url
@@ -24,7 +29,7 @@ class DiscourseSingleSignOn < SingleSignOn
 
   def register_nonce(return_path)
     if nonce
-      $redis.setex(nonce_key, NONCE_EXPIRY_TIME, return_path)
+      $redis.setex(nonce_key, SingleSignOn.nonce_expiry_time, return_path)
     end
   end
 
@@ -46,7 +51,21 @@ class DiscourseSingleSignOn < SingleSignOn
     "SSO_NONCE_#{nonce}"
   end
 
+  BANNED_EXTERNAL_IDS = %w{none nil blank null}
+
   def lookup_or_create_user(ip_address = nil)
+
+    # we don't want to ban 0 from being an external id
+    external_id = self.external_id.to_s
+
+    if external_id.blank?
+      raise BlankExternalId
+    end
+
+    if BANNED_EXTERNAL_IDS.include?(external_id.downcase)
+      raise BannedExternalId, external_id
+    end
+
     sso_record = SingleSignOnRecord.find_by(external_id: external_id)
 
     if sso_record && (user = sso_record.user)
@@ -83,6 +102,9 @@ class DiscourseSingleSignOn < SingleSignOn
     # optionally save the user and sso_record if they have changed
     user.user_avatar.save! if user.user_avatar
     user.save!
+
+    # The user might require approval
+    user.create_reviewable
 
     if bio && (user.user_profile.bio_raw.blank? || SiteSetting.sso_overrides_bio)
       user.user_profile.bio_raw = bio
@@ -263,7 +285,7 @@ class DiscourseSingleSignOn < SingleSignOn
       end
     end
 
-    profile_background_missing = user.user_profile.profile_background.blank? || Upload.get_from_url(user.user_profile.profile_background).blank?
+    profile_background_missing = user.user_profile.profile_background_upload.blank? || Upload.get_from_url(user.user_profile.profile_background_upload.url).blank?
     if (profile_background_missing || SiteSetting.sso_overrides_profile_background) && profile_background_url.present?
       profile_background_changed = sso_record.external_profile_background_url != profile_background_url
       if profile_background_changed || profile_background_missing
@@ -275,7 +297,7 @@ class DiscourseSingleSignOn < SingleSignOn
       end
     end
 
-    card_background_missing = user.user_profile.card_background.blank? || Upload.get_from_url(user.user_profile.card_background).blank?
+    card_background_missing = user.user_profile.card_background_upload.blank? || Upload.get_from_url(user.user_profile.card_background_upload.url).blank?
     if (card_background_missing || SiteSetting.sso_overrides_profile_background) && card_background_url.present?
       card_background_changed = sso_record.external_card_background_url != card_background_url
       if card_background_changed || card_background_missing

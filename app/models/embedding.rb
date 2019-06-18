@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'has_errors'
 
 class Embedding < OpenStruct
@@ -23,7 +25,7 @@ class Embedding < OpenStruct
 
   def save
     Embedding.settings.each do |s|
-      SiteSetting.send("#{s}=", send(s))
+      SiteSetting.set(s, public_send(s))
     end
     true
   rescue Discourse::InvalidParameters => p
@@ -37,8 +39,7 @@ class Embedding < OpenStruct
 
   def self.find
     embedding_args = { id: 'default' }
-
-    Embedding.settings.each { |s| embedding_args[s] = SiteSetting.send(s) }
+    Embedding.settings.each { |s| embedding_args[s] = SiteSetting.get(s) }
     Embedding.new(embedding_args)
   end
 end

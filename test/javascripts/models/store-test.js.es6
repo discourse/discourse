@@ -142,7 +142,7 @@ QUnit.test("destroyRecord when new", function(assert) {
 
 QUnit.test("find embedded", function(assert) {
   const store = createStore();
-  return store.find("fruit", 2).then(function(f) {
+  return store.find("fruit", 1).then(function(f) {
     assert.ok(f.get("farmer"), "it has the embedded object");
 
     const fruitCols = f.get("colors");
@@ -152,6 +152,14 @@ QUnit.test("find embedded", function(assert) {
 
     assert.ok(f.get("category"), "categories are found automatically");
   });
+});
+
+QUnit.test("embedded records can be cleared", async assert => {
+  const store = createStore();
+  let f = await store.find("fruit", 4);
+  f.set("farmer", { dummy: "object" });
+  f = await store.find("fruit", 4);
+  assert.ok(!f.get("farmer"));
 });
 
 QUnit.test("meta types", function(assert) {

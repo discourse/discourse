@@ -5,7 +5,12 @@ export default DropdownSelectBoxComponent.extend({
   classNames: "categories-admin-dropdown",
   showFullTitle: false,
   allowInitialValueMutation: false,
-  headerIcon: ["bars"],
+
+  init() {
+    this._super(...arguments);
+
+    this.headerIcon = ["bars"];
+  },
 
   autoHighlight() {},
 

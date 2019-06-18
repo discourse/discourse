@@ -16,7 +16,7 @@
 //= require preload-store
 
 //= require locales/i18n
-//= require locales/en
+//= require locales/en_US
 
 // Stuff we need to load first
 //= require vendor
@@ -25,14 +25,11 @@
 //= require markdown-it-bundle
 //= require application
 //= require plugin
-//= require htmlparser.js
 //= require admin
 
 //= require sinon/pkg/sinon
 
 //= require helpers/assertions
-//= require helpers/select-kit-helper
-//= require helpers/d-editor-helper
 
 //= require helpers/qunit-helpers
 //= require_tree ./fixtures
@@ -65,8 +62,6 @@ d.write(
   "<style>#ember-testing-container { position: absolute; background: white; bottom: 0; right: 0; width: 640px; height: 384px; overflow: auto; z-index: 9999; border: 1px solid #ccc; } #ember-testing { zoom: 50%; }</style>"
 );
 
-Ember.Test.adapter = window.QUnitAdapter.create();
-
 Discourse.rootElement = "#ember-testing";
 Discourse.setupForTesting();
 Discourse.injectTestHelpers();
@@ -88,7 +83,8 @@ var origDebounce = Ember.run.debounce,
   _DiscourseURL = require("discourse/lib/url", null, null, false).default,
   applyPretender = require("helpers/qunit-helpers", null, null, false)
     .applyPretender,
-  server;
+  server,
+  acceptanceModulePrefix = "Acceptance: ";
 
 function dup(obj) {
   return jQuery.extend(true, {}, obj);
@@ -105,18 +101,24 @@ function resetSite(siteSettings, extras) {
 QUnit.testStart(function(ctx) {
   server = pretender.default();
 
-  var helper = {
-    parsePostData: pretender.parsePostData,
-    response: pretender.response,
-    success: pretender.success
-  };
+  if (ctx.module.startsWith(acceptanceModulePrefix)) {
+    var helper = {
+      parsePostData: pretender.parsePostData,
+      response: pretender.response,
+      success: pretender.success
+    };
 
-  applyPretender(server, helper);
+    applyPretender(
+      ctx.module.replace(acceptanceModulePrefix, ""),
+      server,
+      helper
+    );
+  }
 
   // Allow our tests to change site settings and have them reset before the next test
   Discourse.SiteSettings = dup(Discourse.SiteSettingsOriginal);
   Discourse.BaseUri = "";
-  Discourse.BaseUrl = "localhost";
+  Discourse.BaseUrl = "http://localhost:3000";
   Discourse.Session.resetCurrent();
   Discourse.User.resetCurrent();
   resetSite(Discourse.SiteSettings);
@@ -152,15 +154,26 @@ QUnit.testDone(function() {
   flushMap();
 
   server.shutdown();
+
+  window.server = null;
+
+  // ensures any event not removed is not leaking between tests
+  // most likely in intialisers, other places (controller, component...)
+  // should be fixed in code
+  var appEvents = window.Discourse.__container__.lookup("app-events:main");
+  var events = appEvents.__proto__._events;
+  Object.keys(events).forEach(function(eventKey) {
+    var event = events[eventKey];
+    event.forEach(function(listener) {
+      appEvents.off(eventKey, listener.target, listener.fn);
+    });
+  });
+
+  window.MessageBus.unsubscribe("*");
 });
 
 // Load ES6 tests
 var helpers = require("helpers/qunit-helpers");
-
-// TODO: Replace with proper imports rather than globals
-window.asyncTestDiscourse = helpers.asyncTestDiscourse;
-window.controllerFor = helpers.controllerFor;
-window.fixture = helpers.fixture;
 
 function getUrlParameter(name) {
   name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");

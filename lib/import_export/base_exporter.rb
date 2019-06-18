@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module ImportExport
   class BaseExporter
 
@@ -26,7 +28,7 @@ module ImportExport
       data = []
 
       categories.each do |cat|
-        data << CATEGORY_ATTRS.inject({}) { |h, a| h[a] = cat.send(a); h }
+        data << CATEGORY_ATTRS.inject({}) { |h, a| h[a] = cat.public_send(a); h }
       end
 
       data
@@ -53,7 +55,7 @@ module ImportExport
       return [] if group_names.empty?
 
       Group.where(name: group_names).find_each do |group|
-        attrs = GROUP_ATTRS.inject({}) { |h, a| h[a] = group.send(a); h }
+        attrs = GROUP_ATTRS.inject({}) { |h, a| h[a] = group.public_send(a); h }
         attrs[:user_ids] = group.users.pluck(:id)
         groups << attrs
       end
@@ -93,11 +95,18 @@ module ImportExport
       @topics.each do |topic|
         puts topic.title
 
-        topic_data = TOPIC_ATTRS.inject({}) { |h, a| h[a] = topic.send(a); h; }
+        topic_data = TOPIC_ATTRS.inject({}) do |h, a|
+          h[a] = topic.public_send(a)
+          h
+        end
+
         topic_data[:posts] = []
 
         topic.ordered_posts.find_each do |post|
-          attributes = POST_ATTRS.inject({}) { |h, a| h[a] = post.send(a); h; }
+          attributes = POST_ATTRS.inject({}) do |h, a|
+            h[a] = post.public_send(a)
+            h
+          end
 
           attributes[:raw] = attributes[:raw].gsub(
             'src="/uploads',
@@ -139,7 +148,12 @@ module ImportExport
 
       users.find_each do |u|
         next if u.id == Discourse::SYSTEM_USER_ID
-        x = USER_ATTRS.inject({}) { |h, a| h[a] = u.send(a); h; }
+
+        x = USER_ATTRS.inject({}) do |h, a|
+          h[a] = u.public_send(a)
+          h
+        end
+
         x.merge(bio_raw: u.user_profile.bio_raw,
                 website: u.user_profile.website,
                 location: u.user_profile.location)

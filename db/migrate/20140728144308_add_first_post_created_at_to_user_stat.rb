@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddFirstPostCreatedAtToUserStat < ActiveRecord::Migration[4.2]
   def up
     add_column :user_stats, :first_post_created_at, :datetime

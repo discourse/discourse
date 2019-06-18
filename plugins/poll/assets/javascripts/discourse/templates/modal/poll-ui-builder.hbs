@@ -52,7 +52,7 @@
     {{#unless isNumber}}
       <div class="input-group poll-textarea">
         <label>{{i18n 'poll.ui_builder.poll_options.label'}}</label>
-        {{textarea value=pollOptions}}
+        {{textarea value=pollOptions autocomplete="discourse"}}
         {{input-tip validation=minNumOfOptionsValidation}}
       </div>
     {{/unless}}

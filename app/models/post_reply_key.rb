@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class PostReplyKey < ActiveRecord::Base
   belongs_to :post
   belongs_to :user
@@ -21,7 +23,7 @@ end
 #
 # Table name: post_reply_keys
 #
-#  id         :bigint(8)        not null, primary key
+#  id         :bigint           not null, primary key
 #  user_id    :integer          not null
 #  post_id    :integer          not null
 #  reply_key  :uuid             not null

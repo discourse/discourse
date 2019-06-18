@@ -1,4 +1,6 @@
 # encoding: utf-8
+# frozen_string_literal: true
+
 require 'rails_helper'
 require 'composer_messages_finder'
 
@@ -43,7 +45,7 @@ describe ComposerMessagesFinder do
     end
 
     context 'private message' do
-      let(:topic) { Fabricate(:private_message_topic) }
+      fab!(:topic) { Fabricate(:private_message_topic) }
 
       context 'starting a new private message' do
         let(:finder) { ComposerMessagesFinder.new(user, composer_action: 'createTopic', topic_id: topic.id) }
@@ -102,7 +104,7 @@ describe ComposerMessagesFinder do
 
   context '.check_avatar_notification' do
     let(:finder) { ComposerMessagesFinder.new(user, composer_action: 'createTopic') }
-    let(:user) { Fabricate(:user) }
+    fab!(:user) { Fabricate(:user) }
 
     context "success" do
       let!(:message) { finder.check_avatar_notification }
@@ -148,8 +150,8 @@ describe ComposerMessagesFinder do
   end
 
   context '.check_sequential_replies' do
-    let(:user) { Fabricate(:user) }
-    let(:topic) { Fabricate(:topic) }
+    fab!(:user) { Fabricate(:user) }
+    fab!(:topic) { Fabricate(:topic) }
 
     before do
       SiteSetting.educate_until_posts = 10
@@ -221,8 +223,8 @@ describe ComposerMessagesFinder do
   end
 
   context '.check_dominating_topic' do
-    let(:user) { Fabricate(:user) }
-    let(:topic) { Fabricate(:topic) }
+    fab!(:user) { Fabricate(:user) }
+    fab!(:topic) { Fabricate(:topic) }
 
     before do
       SiteSetting.educate_until_posts = 10
@@ -306,21 +308,21 @@ describe ComposerMessagesFinder do
   end
 
   context '.check_get_a_room' do
-    let(:user) { Fabricate(:user) }
-    let(:other_user) { Fabricate(:user) }
-    let(:third_user) { Fabricate(:user) }
-    let(:topic) { Fabricate(:topic, user: other_user) }
-    let(:op) { Fabricate(:post, topic_id: topic.id, user: other_user) }
+    fab!(:user) { Fabricate(:user) }
+    fab!(:other_user) { Fabricate(:user) }
+    fab!(:third_user) { Fabricate(:user) }
+    fab!(:topic) { Fabricate(:topic, user: other_user) }
+    fab!(:op) { Fabricate(:post, topic_id: topic.id, user: other_user) }
 
-    let!(:other_user_reply) do
+    fab!(:other_user_reply) do
       Fabricate(:post, topic: topic, user: third_user, reply_to_user_id: op.user_id)
     end
 
-    let!(:first_reply) do
+    fab!(:first_reply) do
       Fabricate(:post, topic: topic, user: user, reply_to_user_id: op.user_id)
     end
 
-    let!(:second_reply) do
+    fab!(:second_reply) do
       Fabricate(:post, topic: topic, user: user, reply_to_user_id: op.user_id)
     end
 
@@ -422,8 +424,8 @@ describe ComposerMessagesFinder do
   end
 
   context '.check_reviving_old_topic' do
-    let(:user)  { Fabricate(:user) }
-    let(:topic) { Fabricate(:topic) }
+    fab!(:user)  { Fabricate(:user) }
+    fab!(:topic) { Fabricate(:topic) }
 
     it "does not give a message without a topic id" do
       expect(described_class.new(user, composer_action: 'createTopic').check_reviving_old_topic).to be_blank
@@ -468,8 +470,8 @@ describe ComposerMessagesFinder do
   end
 
   context 'when editing a post' do
-    let(:user) { Fabricate(:user) }
-    let(:topic) { Fabricate(:post).topic }
+    fab!(:user) { Fabricate(:user) }
+    fab!(:topic) { Fabricate(:post).topic }
 
     let!(:post) do
       PostCreator.create!(

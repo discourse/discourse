@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_dependency 'letter_avatar'
 
 class UserAvatarsController < ApplicationController
@@ -44,7 +46,11 @@ class UserAvatarsController < ApplicationController
     params.require(:version)
     params.require(:size)
     hijack do
-      proxy_avatar("https://avatars.discourse.org/#{params[:version]}/letter/#{params[:letter]}/#{params[:color]}/#{params[:size]}.png", Time.new('1990-01-01'))
+      begin
+        proxy_avatar("https://avatars.discourse.org/#{params[:version]}/letter/#{params[:letter]}/#{params[:color]}/#{params[:size]}.png", Time.new('1990-01-01'))
+      rescue OpenURI::HTTPError
+        render_blank
+      end
     end
   end
 

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Jobs
 
   class CreateAvatarThumbnails < Jobs::Base
@@ -10,7 +12,6 @@ module Jobs
       raise Discourse::InvalidParameters.new(:upload_id) if upload_id.blank?
 
       return unless upload = Upload.find_by(id: upload_id)
-      return unless user = User.find_by(id: args[:user_id] || upload.user_id)
 
       Discourse.avatar_sizes.each do |size|
         OptimizedImage.create_for(

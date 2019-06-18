@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class QuoteComparer
   def self.whitespace
     " \t\r\n".freeze

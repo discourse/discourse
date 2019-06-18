@@ -13,15 +13,15 @@ export default SingleSelectComponent.extend({
   showFullTitle: true,
   allowInitialValueMutation: false,
 
-  @on("didReceiveAttrs")
+  @on("didUpdateAttrs", "init")
   _setDropdownSelectBoxComponentOptions() {
-    this.get("headerComponentOptions").setProperties({
-      showFullTitle: this.get("showFullTitle")
+    this.headerComponentOptions.setProperties({
+      showFullTitle: this.showFullTitle
     });
   },
 
   didClickOutside() {
-    if (!this.get("isExpanded")) return;
+    if (!this.isExpanded) return;
     this.close();
   },
 

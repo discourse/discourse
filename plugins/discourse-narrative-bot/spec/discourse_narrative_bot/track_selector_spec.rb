@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 describe DiscourseNarrativeBot::TrackSelector do
@@ -37,7 +39,7 @@ describe DiscourseNarrativeBot::TrackSelector do
   end
 
   before do
-    SiteSetting.queue_jobs = false
+    Jobs.run_immediately!
   end
 
   describe '#select' do
@@ -109,7 +111,7 @@ describe DiscourseNarrativeBot::TrackSelector do
 
           it 'should not enqueue any user email' do
             NotificationEmailer.enable
-            user.user_option.update!(email_always: true)
+            user.user_option.update!(email_level: UserOption.email_level_types[:always])
 
             post.update!(
               raw: 'show me what you can do',
@@ -656,7 +658,7 @@ describe DiscourseNarrativeBot::TrackSelector do
               user
 
               expect do
-                PostAction.act(user, another_post, PostActionType.types[:like])
+                PostActionCreator.like(user, another_post)
               end.to_not change { Post.count }
             end
           end

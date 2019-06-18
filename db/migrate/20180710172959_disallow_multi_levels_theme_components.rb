@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class DisallowMultiLevelsThemeComponents < ActiveRecord::Migration[5.2]
   def up
     @handled = []

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # this class is used by the user and omniauth controllers, it controls how
 #  an authentication system interacts with our database and middleware
 

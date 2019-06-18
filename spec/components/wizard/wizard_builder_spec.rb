@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 require 'wizard'
 require 'wizard/builder'
@@ -68,16 +70,16 @@ describe Wizard::Builder do
       upload2 = Fabricate(:upload)
 
       SiteSetting.favicon = upload
-      SiteSetting.apple_touch_icon = upload2
+      SiteSetting.large_icon = upload2
 
       fields = icons_step.fields
       favicon_field = fields.first
-      apple_touch_icon_field = fields.last
+      large_icon_field = fields.last
 
       expect(favicon_field.id).to eq('favicon')
       expect(favicon_field.value).to eq(GlobalPathInstance.full_cdn_url(upload.url))
-      expect(apple_touch_icon_field.id).to eq('apple_touch_icon')
-      expect(apple_touch_icon_field.value).to eq(GlobalPathInstance.full_cdn_url(upload2.url))
+      expect(large_icon_field.id).to eq('large_icon')
+      expect(large_icon_field.value).to eq(GlobalPathInstance.full_cdn_url(upload2.url))
     end
   end
 
@@ -110,6 +112,64 @@ describe Wizard::Builder do
         welcome_post = Fabricate(:post, topic: topic, raw: "this will be the welcome topic post\n\ncool!")
 
         expect(introduction_step.disabled).to be_nil
+      end
+    end
+  end
+
+  context 'privacy step' do
+    let(:privacy_step) { wizard.steps.find { |s| s.id == 'privacy' } }
+
+    it 'should set the right default value for the fields' do
+      SiteSetting.login_required = true
+      SiteSetting.invite_only = true
+
+      fields = privacy_step.fields
+      login_required_field = fields.first
+      privacy_options_field = fields.last
+
+      expect(fields.length).to eq(2)
+      expect(login_required_field.id).to eq('privacy')
+      expect(login_required_field.value).to eq("restricted")
+      expect(privacy_options_field.id).to eq('privacy_options')
+      expect(privacy_options_field.value).to eq("invite_only")
+    end
+
+    it 'should not show privacy_options field on special case' do
+      SiteSetting.invite_only = true
+      SiteSetting.must_approve_users = true
+
+      fields = privacy_step.fields
+      login_required_field = fields.first
+
+      expect(fields.length).to eq(1)
+      expect(login_required_field.id).to eq('privacy')
+    end
+  end
+
+  context "colors step" do
+    fab!(:theme) { Fabricate(:theme) }
+    let(:colors_step) { wizard.steps.find { |s| s.id == 'colors' } }
+    let(:field) { colors_step.fields.first }
+
+    describe "when the default theme has not been override" do
+      before do
+        SiteSetting.find_by(name: "default_theme_id").destroy!
+      end
+
+      it 'should set the right default values' do
+        expect(field.required).to eq(true)
+        expect(field.value).to eq(ColorScheme::LIGHT_THEME_ID)
+      end
+    end
+
+    describe "when the default them hass been override" do
+      before do
+        theme.set_default!
+      end
+
+      it 'should set the right default values' do
+        expect(field.required).to eq(false)
+        expect(field.value).to eq(nil)
       end
     end
   end

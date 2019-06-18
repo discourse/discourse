@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # bespoke importer for a customer, feel free to borrow ideas
 
 require 'csv'
@@ -44,7 +46,7 @@ class ImportScripts::Bespoke < ImportScripts::Base
 
     def initialize(cols)
       cols.each_with_index do |col, idx|
-        self.class.send(:define_method, col) do
+        self.class.public_send(:define_method, col) do
           @row[idx]
         end
       end
@@ -65,7 +67,7 @@ class ImportScripts::Bespoke < ImportScripts::Base
     first = true
     row = nil
 
-    current_row = ""
+    current_row = +""
     double_quote_count = 0
 
     File.open(filename).each_line do |line|
@@ -137,7 +139,7 @@ class ImportScripts::Bespoke < ImportScripts::Base
 
       # fake it
       if row.email.blank? || row.email !~ /@/
-        email = SecureRandom.hex << "@domain.com"
+        email = fake_email
       end
 
       name = row.display_name

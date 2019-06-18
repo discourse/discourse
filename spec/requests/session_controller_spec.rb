@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe SessionController do
@@ -309,11 +311,7 @@ RSpec.describe SessionController do
       SiteSetting.enable_sso = true
       SiteSetting.sso_secret = @sso_secret
 
-      # We have 2 options, either fabricate an admin or don't
-      # send welcome messages
       Fabricate(:admin)
-      # skip for now
-      # SiteSetting.send_welcome_message = false
     end
 
     let(:headers) { { host: Discourse.current_hostname } }
@@ -366,6 +364,28 @@ RSpec.describe SessionController do
 
     end
 
+    it 'can handle invalid sso external ids due to blank' do
+      sso = get_sso("/")
+      sso.email = "test@test.com"
+      sso.external_id = '   '
+      sso.username = 'sam'
+
+      get "/session/sso_login", params: Rack::Utils.parse_query(sso.payload), headers: headers
+
+      expect(response.status).to eq(500)
+    end
+
+    it 'can handle invalid sso external ids due to banned word' do
+      sso = get_sso("/")
+      sso.email = "test@test.com"
+      sso.external_id = 'nil'
+      sso.username = 'sam'
+
+      get "/session/sso_login", params: Rack::Utils.parse_query(sso.payload), headers: headers
+
+      expect(response.status).to eq(500)
+    end
+
     it 'can take over an account' do
       sso = get_sso("/")
       user = Fabricate(:user)
@@ -394,7 +414,7 @@ RSpec.describe SessionController do
     it 'respects IP restrictions on create' do
       ScreenedIpAddress.all.destroy_all
       get "/"
-      screened_ip = Fabricate(:screened_ip_address, ip_address: request.remote_ip, action_type: ScreenedIpAddress.actions[:block])
+      _screened_ip = Fabricate(:screened_ip_address, ip_address: request.remote_ip, action_type: ScreenedIpAddress.actions[:block])
 
       sso = sso_for_ip_specs
       get "/session/sso_login", params: Rack::Utils.parse_query(sso.payload), headers: headers
@@ -410,7 +430,7 @@ RSpec.describe SessionController do
       DiscourseSingleSignOn.parse(sso.payload).lookup_or_create_user(request.remote_ip)
 
       sso = sso_for_ip_specs
-      screened_ip = Fabricate(:screened_ip_address, ip_address: request.remote_ip, action_type: ScreenedIpAddress.actions[:block])
+      _screened_ip = Fabricate(:screened_ip_address, ip_address: request.remote_ip, action_type: ScreenedIpAddress.actions[:block])
 
       get "/session/sso_login", params: Rack::Utils.parse_query(sso.payload), headers: headers
       logged_on_user = Discourse.current_user_provider.new(request.env).current_user
@@ -846,9 +866,13 @@ RSpec.describe SessionController do
         )
 
         @user.update_columns(uploaded_avatar_id: upload.id)
-        @user.user_profile.update_columns(
-          profile_background: "//test.s3.dualstack.us-east-1.amazonaws.com/something",
-          card_background: "//test.s3.dualstack.us-east-1.amazonaws.com/something"
+
+        upload1 = Fabricate(:upload_s3)
+        upload2 = Fabricate(:upload_s3)
+
+        @user.user_profile.update!(
+          profile_background_upload: upload1,
+          card_background_upload: upload2
         )
 
         @user.reload
@@ -1094,7 +1118,7 @@ RSpec.describe SessionController do
         it "doesn't log in" do
           ScreenedIpAddress.all.destroy_all
           get "/"
-          screened_ip = Fabricate(:screened_ip_address, ip_address: request.remote_ip)
+          _screened_ip = Fabricate(:screened_ip_address, ip_address: request.remote_ip)
           post "/session.json", params: {
             login: "@" + user.username, password: 'myawesomepassword'
           }
@@ -1155,6 +1179,7 @@ RSpec.describe SessionController do
 
         context 'with an unapproved user' do
           before do
+            user.update_columns(approved: false)
             post "/session.json", params: {
               login: user.email, password: 'myawesomepassword'
             }
@@ -1188,7 +1213,6 @@ RSpec.describe SessionController do
       end
 
       context 'when admins are restricted by ip address' do
-        let(:permitted_ip_address) { '111.234.23.11' }
         before do
           SiteSetting.use_admin_ip_whitelist = true
           ScreenedIpAddress.all.destroy_all
@@ -1332,6 +1356,76 @@ RSpec.describe SessionController do
     end
   end
 
+  describe '#one_time_password' do
+    context 'missing token' do
+      it 'returns the right response' do
+        get "/session/otp"
+        expect(response.status).to eq(404)
+      end
+    end
+
+    context 'invalid token' do
+      it 'returns the right response' do
+        get "/session/otp/asd1231dasd123"
+
+        expect(response.status).to eq(404)
+
+        post "/session/otp/asd1231dasd123"
+
+        expect(response.status).to eq(404)
+      end
+
+      context 'when token is valid' do
+        it "should display the form for GET" do
+          token = SecureRandom.hex
+          $redis.setex "otp_#{token}", 10.minutes, user.username
+
+          get "/session/otp/#{token}"
+
+          expect(response.status).to eq(200)
+          expect(response.body).to include(
+            I18n.t("user_api_key.otp_confirmation.logging_in_as", username: user.username)
+          )
+          expect($redis.get("otp_#{token}")).to eq(user.username)
+
+          expect(session[:current_user_id]).to eq(nil)
+        end
+
+        it "should redirect on GET if already logged in" do
+          sign_in(user)
+          token = SecureRandom.hex
+          $redis.setex "otp_#{token}", 10.minutes, user.username
+
+          get "/session/otp/#{token}"
+          expect(response.status).to eq(302)
+
+          expect($redis.get("otp_#{token}")).to eq(nil)
+          expect(session[:current_user_id]).to eq(user.id)
+        end
+
+        it 'should authenticate user and delete token' do
+          user = Fabricate(:user)
+
+          get "/session/current.json"
+          expect(response.status).to eq(404)
+
+          token = SecureRandom.hex
+          $redis.setex "otp_#{token}", 10.minutes, user.username
+
+          post "/session/otp/#{token}"
+
+          expect(response.status).to eq(302)
+          expect(response).to redirect_to("/")
+          expect($redis.get("otp_#{token}")).to eq(nil)
+
+          get "/session/current.json"
+          expect(response.status).to eq(200)
+        end
+      end
+    end
+
+  end
+
   describe '#forgot_password' do
     it 'raises an error without a username parameter' do
       post "/session/forgot_password.json"
@@ -1348,7 +1442,7 @@ RSpec.describe SessionController do
     end
 
     context 'for an existing username' do
-      let(:user) { Fabricate(:user) }
+      fab!(:user) { Fabricate(:user) }
 
       context 'local login is disabled' do
         before do

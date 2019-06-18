@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative 'database_3_0'
 require_relative '../support/constants'
 

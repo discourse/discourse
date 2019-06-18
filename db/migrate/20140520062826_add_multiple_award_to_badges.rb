@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddMultipleAwardToBadges < ActiveRecord::Migration[4.2]
   def change
     add_column :badges, :multiple_grant, :boolean, default: false, null: false

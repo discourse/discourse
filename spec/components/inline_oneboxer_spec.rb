@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 require_dependency 'inline_oneboxer'
 
@@ -22,7 +24,7 @@ describe InlineOneboxer do
   end
 
   context "caching" do
-    let(:topic) { Fabricate(:topic) }
+    fab!(:topic) { Fabricate(:topic) }
 
     before do
       InlineOneboxer.purge(topic.url)

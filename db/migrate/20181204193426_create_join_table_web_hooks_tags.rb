@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreateJoinTableWebHooksTags < ActiveRecord::Migration[5.2]
   def change
     create_join_table :web_hooks, :tags do |t|

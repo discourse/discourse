@@ -36,7 +36,7 @@ function initializePolls(api) {
     // we need a proper ember object so it is bindable
     @observes("polls")
     pollsChanged() {
-      const polls = this.get("polls");
+      const polls = this.polls;
       if (polls) {
         this._polls = this._polls || {};
         polls.forEach(p => {
@@ -104,7 +104,7 @@ function initializePolls(api) {
   }
 
   api.includePostAttributes("polls", "polls_votes");
-  api.decorateCooked(attachPolls, { onlyStream: true });
+  api.decorateCooked(attachPolls, { onlyStream: true, id: "discourse-poll" });
   api.cleanupStream(cleanUpPolls);
 }
 

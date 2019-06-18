@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class RenameShaColumn < ActiveRecord::Migration[4.2]
   def up
     remove_index :uploads, :sha

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "backup_restore/backup_restore"
 
 module Jobs

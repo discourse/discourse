@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 Fabricator(:post_reply_key) do
   user
   post

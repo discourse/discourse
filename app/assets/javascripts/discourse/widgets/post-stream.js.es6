@@ -34,7 +34,7 @@ export function cloak(post, component) {
     return;
   }
 
-  const $post = $(`#post_${post.post_number}`);
+  const $post = $(`#post_${post.post_number}`).parent();
   _cloaked[post.id] = true;
   _heights[post.id] = $post.outerHeight();
 

@@ -40,14 +40,13 @@ export default createWidget("hamburger-menu", {
 
   settings: {
     showCategories: true,
-    maxWidth: 300,
+    maxWidth: 320,
     showFAQ: true,
     showAbout: true
   },
 
   adminLinks() {
-    const { currentUser, siteSettings } = this;
-    let flagsPath = siteSettings.flags_default_topics ? "topics" : "active";
+    const { currentUser } = this;
 
     const links = [
       {
@@ -55,27 +54,8 @@ export default createWidget("hamburger-menu", {
         className: "admin-link",
         icon: "wrench",
         label: "admin_title"
-      },
-      {
-        href: `/admin/flags/${flagsPath}`,
-        className: "flagged-posts-link",
-        icon: "flag",
-        label: "flags_title",
-        badgeClass: "flagged-posts",
-        badgeTitle: "notifications.total_flagged",
-        badgeCount: "site_flagged_posts_count"
       }
     ];
-
-    if (currentUser.show_queued_posts) {
-      links.push({
-        route: "queued-posts",
-        className: "queued-posts-link",
-        label: "queue.title",
-        badgeCount: "post_queue_new_count",
-        badgeClass: "queued-posts"
-      });
-    }
 
     if (currentUser.admin) {
       links.push({
@@ -129,6 +109,22 @@ export default createWidget("hamburger-menu", {
         label: "filters.unread.title",
         title: "filters.unread.help",
         count: this.lookupCount("unread")
+      });
+    }
+
+    // Staff always see the review link. Non-staff will see it if there are items to review
+    if (
+      this.currentUser &&
+      (this.currentUser.staff || this.currentUser.reviewable_count)
+    ) {
+      links.push({
+        route: siteSettings.reviewable_default_topics
+          ? "review.topics"
+          : "review",
+        className: "review",
+        label: "review.title",
+        badgeCount: "reviewable_count",
+        badgeClass: "reviewables"
       });
     }
 
@@ -205,6 +201,12 @@ export default createWidget("hamburger-menu", {
         allCategories
           .filter(c => !categories.includes(c))
           .sort((a, b) => b.topic_count - a.topic_count)
+      );
+    }
+
+    if (!this.siteSettings.allow_uncategorized_topics) {
+      categories = categories.filter(
+        c => c.id !== this.site.uncategorized_category_id
       );
     }
 

@@ -13,7 +13,7 @@ export function actionDescriptionHtml(actionCode, createdAt, username) {
   var who = "";
   if (username) {
     if (actionCode === "invited_group" || actionCode === "removed_group") {
-      who = `<a class="mention-group" href="/groups/${username}">@${username}</a>`;
+      who = `<a class="mention-group" href="/g/${username}">@${username}</a>`;
     } else {
       who = `<a class="mention" href="${userPath(username)}">@${username}</a>`;
     }
@@ -109,7 +109,7 @@ export default createWidget("post-small-action", {
 
     const description = actionDescriptionHtml(
       attrs.actionCode,
-      attrs.created_at,
+      new Date(attrs.created_at),
       attrs.actionCodeWho
     );
     contents.push(new RawHtml({ html: `<p>${description}</p>` }));

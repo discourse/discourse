@@ -1,15 +1,41 @@
+.button-count.has-pending {
+  span {
+    background-color: $danger;
+    color: $secondary;
+    border-radius: 10px;
+    padding: 0.25em 0.5em;
+    display: inline-block;
+    font-size: 0.8em;
+  }
+}
+
 .placeholder-avatar {
   display: inline-block;
-  background-color: $primary-low;
   width: 45px;
   height: 45px;
   border-radius: 50%;
+  position: relative;
+  overflow: hidden;
+  &:before {
+    animation: placeHolderShimmer 4s linear infinite forwards;
+    position: absolute;
+    left: 0;
+    content: "";
+    background: linear-gradient(
+      to right,
+      $primary-very-low 10%,
+      $primary-low 28%,
+      $primary-very-low 43%
+    );
+    height: 45px;
+    width: 700px;
+  }
 }
 
 .placeholder-text {
+  margin-left: 11px;
   display: inline-block;
-  background-color: $primary-low;
-  width: 100%;
+  width: calc(100% - 11px);
   height: 1.5em;
   margin-bottom: 0.6em;
 }
@@ -18,6 +44,8 @@
   flex: 1 1 auto;
   overflow: hidden;
   span.first {
+    display: flex;
+    align-items: baseline;
     font-weight: bold;
   }
 
@@ -30,7 +58,6 @@
     text-overflow: ellipsis;
     vertical-align: middle;
     a {
-      vertical-align: middle;
       color: dark-light-choose($primary-high, $secondary-low);
     }
   }
@@ -202,6 +229,15 @@ aside.quote {
   }
 }
 
+blockquote {
+  // due to #image-sizing-hack large images and lightboxes extend past the
+  // limits blockquotes. Since #image-sizing-hack is inline, we need to use
+  // !important here otherwise it won't work.
+  img {
+    max-width: 100% !important;
+  }
+}
+
 .quote-controls,
 .quote-controls .d-icon {
   color: dark-light-choose($primary-low-mid, $secondary-high);
@@ -213,7 +249,12 @@ aside.quote {
   margin: -2px;
 }
 
+.post-ignored {
+  font-style: italic;
+}
+
 .post-action {
+  color: $primary-medium;
   .undo-action,
   .act-action {
     margin-left: 5px;
@@ -352,7 +393,10 @@ aside.quote {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    margin-bottom: 0.5em;
+
+    & + .controls {
+      margin-top: 0.5em;
+    }
 
     &.hide-names .user {
       .username,
@@ -471,6 +515,7 @@ aside.quote {
   width: 16px;
   height: 16px;
   bottom: -3px;
+  color: $primary;
   &.rounded {
     background-size: 12px 12px;
     border-radius: 8px;
@@ -605,16 +650,16 @@ blockquote > *:last-child {
 .cooked table,
 .d-editor-preview table {
   thead {
-    border-bottom: 2px solid lighten($primary, 80%);
     th {
       text-align: left;
       padding-bottom: 2px;
+      font-weight: bold;
+      color: $primary;
     }
   }
 
-  td,
-  th {
-    padding: 3px 3px 3px 10px;
+  td {
+    padding: 3px 3px 3px 0.5em;
   }
 }
 
@@ -660,6 +705,7 @@ blockquote > *:last-child {
     font-weight: bold;
     font-size: $font-down-1;
     color: $primary-medium;
+    min-width: 0; // Allows flex container to shrink
 
     .custom-message {
       flex: 1 1 100%;
@@ -667,6 +713,8 @@ blockquote > *:last-child {
       font-weight: normal;
       font-size: $font-up-1;
       order: 12;
+      word-break: break-word;
+      min-width: 0; // Allows content like oneboxes to shrink
       p {
         margin-bottom: 0;
       }
@@ -853,5 +901,34 @@ a.mention-group {
   }
   .buttons {
     margin-bottom: 1em;
+  }
+}
+
+.post-notice {
+  background-color: $tertiary-low;
+  border-top: 1px solid $primary-low;
+  color: $primary;
+  padding: 0.8em;
+  max-width: calc(#{$topic-body-width} + #{$topic-avatar-width} - 0.1em);
+
+  &.old {
+    background-color: unset;
+    color: $primary-medium;
+
+    .d-icon {
+      color: $primary-medium;
+    }
+  }
+
+  p {
+    display: flex;
+    align-items: center;
+    margin: 0;
+  }
+
+  .d-icon {
+    font-size: 2em;
+    color: $primary-high;
+    margin-right: 0.65em;
   }
 }

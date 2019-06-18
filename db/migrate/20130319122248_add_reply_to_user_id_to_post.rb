@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddReplyToUserIdToPost < ActiveRecord::Migration[4.2]
   def up
     # caching this column makes the topic page WAY faster

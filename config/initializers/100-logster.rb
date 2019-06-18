@@ -1,3 +1,21 @@
+# frozen_string_literal: true
+
+if GlobalSetting.skip_redis?
+  if Rails.logger.respond_to? :chained
+    Rails.logger = Rails.logger.chained.first
+  end
+  return
+end
+
+if Rails.env.development? && RUBY_VERSION.match?(/^2\.5\.[23]/)
+  STDERR.puts "WARNING: Discourse development environment runs slower on Ruby 2.5.3 or below"
+  STDERR.puts "We recommend you upgrade to Ruby 2.6.1 for the optimal development performance"
+
+  # we have to used to older and slower version of the logger cause the new one exposes a Ruby bug in
+  # the Queue class which causes segmentation faults
+  Logster::Scheduler.disable
+end
+
 if Rails.env.development? && !Sidekiq.server? && ENV["RAILS_LOGS_STDOUT"] == "1"
   console = ActiveSupport::Logger.new(STDOUT)
   original_logger = Rails.logger.chained.first
@@ -60,7 +78,10 @@ if Rails.env.production?
     # scopes for the enums
     /^Creating scope :open\. Overwriting existing method Poll\.open\./,
   ]
+  Logster.config.env_expandable_keys.push(:hostname, :problem_db)
 end
+
+Logster.store.max_backlog = GlobalSetting.max_logster_logs
 
 # middleware that logs errors sits before multisite
 # we need to establish a connection so redis connection is good
@@ -82,6 +103,7 @@ Logster.config.current_context = lambda { |env, &blk|
 Logster.config.subdirectory = "#{GlobalSetting.relative_url_root}/logs"
 
 Logster.config.application_version = Discourse.git_version
+Logster.config.enable_custom_patterns_via_ui = true
 
 store = Logster.store
 redis = Logster.store.redis
@@ -122,6 +144,8 @@ RailsMultisite::ConnectionManagement.each_connection do
 end
 
 if Rails.configuration.multisite
-  chained = Rails.logger.chained
-  chained && chained.first.formatter = RailsMultisite::Formatter.new
+  if Rails.logger.respond_to? :chained
+    chained = Rails.logger.chained
+    chained && chained.first.formatter = RailsMultisite::Formatter.new
+  end
 end

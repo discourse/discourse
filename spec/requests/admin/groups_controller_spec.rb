@@ -1,17 +1,19 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe Admin::GroupsController do
-  let(:admin) { Fabricate(:admin) }
-  let(:user) { Fabricate(:user) }
-  let(:group) { Fabricate(:group) }
+  fab!(:admin) { Fabricate(:admin) }
+  fab!(:user) { Fabricate(:user) }
+  fab!(:group) { Fabricate(:group) }
 
   before do
     sign_in(admin)
   end
 
   describe '#create' do
-    it 'should work' do
-      post "/admin/groups.json", params: {
+    let(:group_params) do
+      {
         group: {
           name: 'testing',
           usernames: [admin.username, user.username].join(","),
@@ -20,6 +22,10 @@ RSpec.describe Admin::GroupsController do
           membership_request_template: 'Testing',
         }
       }
+    end
+
+    it 'should work' do
+      post "/admin/groups.json", params: group_params
 
       expect(response.status).to eq(200)
 
@@ -29,6 +35,44 @@ RSpec.describe Admin::GroupsController do
       expect(group.users).to contain_exactly(admin, user)
       expect(group.allow_membership_requests).to eq(true)
       expect(group.membership_request_template).to eq('Testing')
+    end
+
+    context "custom_fields" do
+      before do
+        plugin = Plugin::Instance.new
+        plugin.register_editable_group_custom_field :test
+      end
+
+      after do
+        Group.plugin_editable_group_custom_fields.clear
+      end
+
+      it "only updates allowed user fields" do
+        params = group_params
+        params[:group].merge!(custom_fields: { test: :hello1, test2: :hello2 })
+
+        post "/admin/groups.json", params: params
+
+        group = Group.last
+
+        expect(response.status).to eq(200)
+        expect(group.custom_fields['test']).to eq('hello1')
+        expect(group.custom_fields['test2']).to be_blank
+      end
+
+      it "is secure when there are no registered editable fields" do
+        Group.plugin_editable_group_custom_fields.clear
+        params = group_params
+        params[:group].merge!(custom_fields: { test: :hello1, test2: :hello2 })
+
+        post "/admin/groups.json", params: params
+
+        group = Group.last
+
+        expect(response.status).to eq(200)
+        expect(group.custom_fields['test']).to be_blank
+        expect(group.custom_fields['test2']).to be_blank
+      end
     end
   end
 
@@ -65,7 +109,7 @@ RSpec.describe Admin::GroupsController do
   end
 
   describe "#bulk_perform" do
-    let(:group) do
+    fab!(:group) do
       Fabricate(:group,
         name: "test",
         primary_group: true,
@@ -74,11 +118,11 @@ RSpec.describe Admin::GroupsController do
       )
     end
 
-    let(:user) { Fabricate(:user, trust_level: 2) }
-    let(:user2) { Fabricate(:user, trust_level: 4) }
+    fab!(:user) { Fabricate(:user, trust_level: 2) }
+    fab!(:user2) { Fabricate(:user, trust_level: 4) }
 
     it "can assign users to a group by email or username" do
-      SiteSetting.queue_jobs = false
+      Jobs.run_immediately!
 
       put "/admin/groups/bulk.json", params: {
         group_id: group.id, users: [user.username.upcase, user2.email, 'doesnt_exist']
@@ -104,8 +148,8 @@ RSpec.describe Admin::GroupsController do
 
   context "#destroy" do
     it 'should return the right response for an invalid group_id' do
-      delete "/admin/groups/123.json"
-
+      max_id = Group.maximum(:id).to_i
+      delete "/admin/groups/#{max_id + 1}.json"
       expect(response.status).to eq(404)
     end
 

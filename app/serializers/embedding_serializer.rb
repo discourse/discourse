@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class EmbeddingSerializer < ApplicationSerializer
   attributes :id, :fields, :base_url
   attributes *Embedding.settings
@@ -9,6 +11,6 @@ class EmbeddingSerializer < ApplicationSerializer
   end
 
   def read_attribute_for_serialization(attr)
-    object.respond_to?(attr) ? object.send(attr) : send(attr)
+    object.respond_to?(attr) ? object.public_send(attr) : public_send(attr)
   end
 end

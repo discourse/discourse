@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # mixin for all Guardian methods dealing with post_revisions permissions
 module PostRevisionGuardian
 

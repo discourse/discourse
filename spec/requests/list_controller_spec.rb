@@ -1,10 +1,11 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe ListController do
   let(:topic) { Fabricate(:topic, user: user) }
   let(:group) { Fabricate(:group) }
   let(:user) { Fabricate(:user) }
-  let(:post) { Fabricate(:post, user: user) }
   let(:admin) { Fabricate(:admin) }
 
   before do
@@ -199,8 +200,6 @@ RSpec.describe ListController do
         allowed_groups: [group],
       )
     end
-
-    let(:private_post) { Fabricate(:post, topic: topic) }
 
     it 'should return the right response' do
       get "/topics/private-messages-group/#{user.username}/#{group.name}.json"
@@ -419,7 +418,7 @@ RSpec.describe ListController do
 
       describe "category default views" do
         it "has a top default view" do
-          category.update_attributes!(default_view: 'top', default_top_period: 'monthly')
+          category.update!(default_view: 'top', default_top_period: 'monthly')
           get "/c/#{category.slug}.json"
           expect(response.status).to eq(200)
           json = JSON.parse(response.body)
@@ -427,7 +426,7 @@ RSpec.describe ListController do
         end
 
         it "has a default view of nil" do
-          category.update_attributes!(default_view: nil)
+          category.update!(default_view: nil)
           get "/c/#{category.slug}.json"
           expect(response.status).to eq(200)
           json = JSON.parse(response.body)
@@ -435,7 +434,7 @@ RSpec.describe ListController do
         end
 
         it "has a default view of ''" do
-          category.update_attributes!(default_view: '')
+          category.update!(default_view: '')
           get "/c/#{category.slug}.json"
           expect(response.status).to eq(200)
           json = JSON.parse(response.body)
@@ -443,7 +442,7 @@ RSpec.describe ListController do
         end
 
         it "has a default view of latest" do
-          category.update_attributes!(default_view: 'latest')
+          category.update!(default_view: 'latest')
           get "/c/#{category.slug}.json"
           expect(response.status).to eq(200)
           json = JSON.parse(response.body)
@@ -567,52 +566,22 @@ RSpec.describe ListController do
   end
 
   describe "best_periods_for" do
-    it "returns yearly for more than 180 days" do
-      expect(ListController.best_periods_for(nil, :all)).to eq([:yearly])
-      expect(ListController.best_periods_for(180.days.ago, :all)).to eq([:yearly])
+    it "works" do
+      expect(ListController.best_periods_for(nil)).to eq([:all])
+      expect(ListController.best_periods_for(5.years.ago)).to eq([:all])
+      expect(ListController.best_periods_for(2.years.ago)).to eq([:yearly, :all])
+      expect(ListController.best_periods_for(6.months.ago)).to eq([:quarterly, :yearly, :all])
+      expect(ListController.best_periods_for(2.months.ago)).to eq([:monthly, :quarterly, :yearly, :all])
+      expect(ListController.best_periods_for(2.weeks.ago)).to eq([:weekly, :monthly, :quarterly, :yearly, :all])
+      expect(ListController.best_periods_for(2.days.ago)).to eq([:daily, :weekly, :monthly, :quarterly, :yearly, :all])
     end
 
-    it "includes monthly when less than 180 days and more than 35 days" do
-      (35...180).each do |date|
-        expect(ListController.best_periods_for(date.days.ago, :all)).to eq([:monthly, :yearly])
-      end
-    end
-
-    it "includes weekly when less than 35 days and more than 8 days" do
-      (8...35).each do |date|
-        expect(ListController.best_periods_for(date.days.ago, :all)).to eq([:weekly, :monthly, :yearly])
-      end
-    end
-
-    it "includes daily when less than 8 days" do
-      (0...8).each do |date|
-        expect(ListController.best_periods_for(date.days.ago, :all)).to eq([:daily, :weekly, :monthly, :yearly])
-      end
-    end
-
-    it "returns default even for more than 180 days" do
-      expect(ListController.best_periods_for(nil, :monthly)).to eq([:monthly, :yearly])
-      expect(ListController.best_periods_for(180.days.ago, :monthly)).to eq([:monthly, :yearly])
-    end
-
-    it "returns default even when less than 180 days and more than 35 days" do
-      (35...180).each do |date|
-        expect(ListController.best_periods_for(date.days.ago, :weekly)).to eq([:weekly, :monthly, :yearly])
-      end
-    end
-
-    it "returns default even when less than 35 days and more than 8 days" do
-      (8...35).each do |date|
-        expect(ListController.best_periods_for(date.days.ago, :daily)).to eq([:daily, :weekly, :monthly, :yearly])
-      end
-    end
-
-    it "doesn't return default when set to all" do
-      expect(ListController.best_periods_for(nil, :all)).to eq([:yearly])
-    end
-
-    it "doesn't return value twice when matches default" do
-      expect(ListController.best_periods_for(nil, :yearly)).to eq([:yearly])
+    it "supports default period" do
+      expect(ListController.best_periods_for(nil, :yearly)).to eq([:yearly, :all])
+      expect(ListController.best_periods_for(nil, :quarterly)).to eq([:quarterly, :all])
+      expect(ListController.best_periods_for(nil, :monthly)).to eq([:monthly, :all])
+      expect(ListController.best_periods_for(nil, :weekly)).to eq([:weekly, :all])
+      expect(ListController.best_periods_for(nil, :daily)).to eq([:daily, :all])
     end
   end
 

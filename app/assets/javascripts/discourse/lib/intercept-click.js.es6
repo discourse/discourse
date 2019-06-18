@@ -6,7 +6,8 @@ export function wantsNewWindow(e) {
     e.shiftKey ||
     e.metaKey ||
     e.ctrlKey ||
-    (e.button && e.button !== 0)
+    (e.button && e.button !== 0) ||
+    (e.target && e.target.target === "_blank")
   );
 }
 

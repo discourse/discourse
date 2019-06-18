@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative '../base'
 require_relative 'support/database'
 require_relative 'support/indexer'
@@ -135,7 +137,7 @@ module ImportScripts::Mbox
         body = receiver.add_attachments(body, user)
       end
 
-      body << Email::Receiver.elided_html(elided) if elided.present?
+      body = "#{body}#{Email::Receiver.elided_html(elided)}" if elided.present?
       body
     end
 

@@ -17,10 +17,10 @@ pt:
     default_poll_must_have_at_least_2_options: "A sondagem deve ter pelo menos 2 opções."
     named_poll_must_have_at_least_2_options: "A sondagem com o nome <strong>%{name}</strong> deve ter pelo menos 2 opções."
     default_poll_must_have_less_options:
-      one: "A sondagem deve ter menos que 1 opção."
+      one: "A sondagem deve ter menos que %{count} opção."
       other: "A sondagem deve ter menos que %{count} opções."
     named_poll_must_have_less_options:
-      one: "A sondagem com o nome <strong>%{name}</strong> deve ter menos que 1 opção."
+      one: "A sondagem com o nome <strong>%{name}</strong> deve ter menos que %{count} opção."
       other: "A sondagem com o nome <strong>%{name}</strong> deve ter menos que %{count} opções."
     default_poll_must_have_different_options: "A sondagem deve ter opções diferentes."
     named_poll_must_have_different_options: "A sondagem com o nome <strong>%{name}</strong> deve ter opções diferentes."

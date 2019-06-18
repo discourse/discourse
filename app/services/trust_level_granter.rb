@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class TrustLevelGranter
 
   def initialize(trust_level, user)

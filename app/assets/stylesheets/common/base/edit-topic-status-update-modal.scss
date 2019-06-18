@@ -11,12 +11,9 @@
       margin-right: 5px;
     }
   }
-  .select-kit {
-    width: 50%;
-  }
   input.date-picker,
   input[type="time"] {
-    width: 150px;
+    width: 200px;
     text-align: left;
   }
   .radios {
@@ -51,6 +48,10 @@
         font-weight: normal;
         font-size: $font-up-1;
       }
+    }
+
+    input[disabled] {
+      background: $primary-low;
     }
   }
   .pika-single {

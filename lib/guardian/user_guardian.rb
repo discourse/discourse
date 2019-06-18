@@ -1,5 +1,11 @@
+# frozen_string_literal: true
+
 # mixin for all Guardian methods dealing with user permissions
 module UserGuardian
+
+  def can_claim_reviewable_topic?(topic)
+    SiteSetting.reviewable_claiming != 'disabled' && can_review_topic?(topic)
+  end
 
   def can_pick_avatar?(user_avatar, upload)
     return false unless self.user
@@ -17,23 +23,26 @@ module UserGuardian
   end
 
   def can_edit_username?(user)
-    return false if (SiteSetting.sso_overrides_username? && SiteSetting.enable_sso?)
+    return false if SiteSetting.sso_overrides_username? && SiteSetting.enable_sso?
     return true if is_staff?
     return false if SiteSetting.username_change_period <= 0
+    return false if is_anonymous?
     is_me?(user) && ((user.post_count + user.topic_count) == 0 || user.created_at > SiteSetting.username_change_period.days.ago)
   end
 
   def can_edit_email?(user)
-    return false if (SiteSetting.sso_overrides_email? && SiteSetting.enable_sso?)
+    return false if SiteSetting.sso_overrides_email? && SiteSetting.enable_sso?
     return false unless SiteSetting.email_editable?
     return true if is_staff?
+    return false if is_anonymous?
     can_edit?(user)
   end
 
   def can_edit_name?(user)
-    return false if not(SiteSetting.enable_names?)
-    return false if (SiteSetting.sso_overrides_name? && SiteSetting.enable_sso?)
+    return false unless SiteSetting.enable_names?
+    return false if SiteSetting.sso_overrides_name? && SiteSetting.enable_sso?
     return true if is_staff?
+    return false if is_anonymous?
     can_edit?(user)
   end
 
@@ -67,7 +76,7 @@ module UserGuardian
   end
 
   def can_check_emails?(user)
-    is_admin? || (is_staff? && SiteSetting.show_email_on_profile)
+    is_admin? || (is_staff? && SiteSetting.moderators_view_emails)
   end
 
   def restrict_user_fields?(user)

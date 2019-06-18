@@ -17,8 +17,8 @@ widgetTest("prioritize faq", {
   },
 
   test(assert) {
-    assert.ok(this.$(".faq-priority").length);
-    assert.ok(!this.$(".faq-link").length);
+    assert.ok(find(".faq-priority").length);
+    assert.ok(!find(".faq-link").length);
   }
 });
 
@@ -31,8 +31,8 @@ widgetTest("prioritize faq - user has read", {
   },
 
   test(assert) {
-    assert.ok(!this.$(".faq-priority").length);
-    assert.ok(this.$(".faq-link").length);
+    assert.ok(!find(".faq-priority").length);
+    assert.ok(find(".faq-link").length);
   }
 });
 
@@ -44,7 +44,7 @@ widgetTest("staff menu - not staff", {
   },
 
   test(assert) {
-    assert.ok(!this.$(".admin-link").length);
+    assert.ok(!find(".admin-link").length);
   }
 });
 
@@ -54,15 +54,15 @@ widgetTest("staff menu", {
   beforeEach() {
     this.currentUser.setProperties({
       staff: true,
-      site_flagged_posts_count: 3
+      reviewable_count: 3
     });
   },
 
   test(assert) {
-    assert.ok(this.$(".admin-link").length);
-    assert.ok(this.$(".flagged-posts-link").length);
-    assert.equal(this.$(".flagged-posts").text(), "3");
-    assert.ok(!this.$(".settings-link").length);
+    assert.ok(find(".admin-link").length);
+    assert.ok(find(".review").length);
+    assert.equal(find(".reviewables").text(), "3");
+    assert.ok(!find(".settings-link").length);
   }
 });
 
@@ -74,36 +74,22 @@ widgetTest("staff menu - admin", {
   },
 
   test(assert) {
-    assert.ok(this.$(".settings-link").length);
+    assert.ok(find(".settings-link").length);
   }
 });
 
-widgetTest("queued posts", {
+widgetTest("reviewable content", {
   template: '{{mount-widget widget="hamburger-menu"}}',
 
   beforeEach() {
     this.currentUser.setProperties({
       staff: true,
-      show_queued_posts: true,
-      post_queue_new_count: 5
+      reviewable_count: 5
     });
   },
 
   test(assert) {
-    assert.ok(this.$(".queued-posts-link").length);
-    assert.equal(this.$(".queued-posts").text(), "5");
-  }
-});
-
-widgetTest("queued posts - disabled", {
-  template: '{{mount-widget widget="hamburger-menu"}}',
-
-  beforeEach() {
-    this.currentUser.setProperties({ staff: true, show_queued_posts: false });
-  },
-
-  test(assert) {
-    assert.ok(!this.$(".queued-posts-link").length);
+    assert.equal(this.$(".reviewables").text(), "5");
   }
 });
 
@@ -111,8 +97,8 @@ widgetTest("logged in links", {
   template: '{{mount-widget widget="hamburger-menu"}}',
 
   test(assert) {
-    assert.ok(this.$(".new-topics-link").length);
-    assert.ok(this.$(".unread-topics-link").length);
+    assert.ok(find(".new-topics-link").length);
+    assert.ok(find(".unread-topics-link").length);
   }
 });
 
@@ -121,13 +107,13 @@ widgetTest("general links", {
   anonymous: true,
 
   test(assert) {
-    assert.ok(this.$("li[class='']").length === 0);
-    assert.ok(this.$(".latest-topics-link").length);
-    assert.ok(!this.$(".new-topics-link").length);
-    assert.ok(!this.$(".unread-topics-link").length);
-    assert.ok(this.$(".top-topics-link").length);
-    assert.ok(this.$(".badge-link").length);
-    assert.ok(this.$(".category-link").length > 0);
+    assert.ok(find("li[class='']").length === 0);
+    assert.ok(find(".latest-topics-link").length);
+    assert.ok(!find(".new-topics-link").length);
+    assert.ok(!find(".unread-topics-link").length);
+    assert.ok(find(".top-topics-link").length);
+    assert.ok(find(".badge-link").length);
+    assert.ok(find(".category-link").length > 0);
   }
 });
 
@@ -139,19 +125,38 @@ widgetTest("top categories - anonymous", {
 
   beforeEach() {
     this.siteSettings.header_dropdown_category_count = 8;
-    maxCategoriesToDisplay = this.siteSettings.header_dropdown_category_count;
-    categoriesByCount = this.site.get("categoriesByCount");
   },
 
   test(assert) {
-    const count = categoriesByCount.length;
-    const maximum =
-      count <= maxCategoriesToDisplay ? count : maxCategoriesToDisplay;
-    assert.equal(find(".category-link").length, maximum);
+    assert.equal(find(".category-link").length, 8);
     assert.equal(
       find(".category-link .category-name").text(),
-      categoriesByCount
-        .slice(0, maxCategoriesToDisplay)
+      this.site
+        .get("categoriesByCount")
+        .slice(0, 8)
+        .map(c => c.name)
+        .join("")
+    );
+  }
+});
+
+widgetTest("top categories - allow_uncategorized_topics", {
+  template: '{{mount-widget widget="hamburger-menu"}}',
+  anonymous: true,
+
+  beforeEach() {
+    this.siteSettings.allow_uncategorized_topics = false;
+    this.siteSettings.header_dropdown_category_count = 8;
+  },
+
+  test(assert) {
+    assert.equal(find(".category-link").length, 8);
+    assert.equal(
+      find(".category-link .category-name").text(),
+      this.site
+        .get("categoriesByCount")
+        .filter(c => c.name !== "uncategorized")
+        .slice(0, 8)
         .map(c => c.name)
         .join("")
     );
@@ -213,7 +218,7 @@ widgetTest("badges link - disabled", {
   },
 
   test(assert) {
-    assert.ok(!this.$(".badge-link").length);
+    assert.ok(!find(".badge-link").length);
   }
 });
 
@@ -221,7 +226,7 @@ widgetTest("badges link", {
   template: '{{mount-widget widget="hamburger-menu"}}',
 
   test(assert) {
-    assert.ok(this.$(".badge-link").length);
+    assert.ok(find(".badge-link").length);
   }
 });
 
@@ -229,7 +234,7 @@ widgetTest("user directory link", {
   template: '{{mount-widget widget="hamburger-menu"}}',
 
   test(assert) {
-    assert.ok(this.$(".user-directory-link").length);
+    assert.ok(find(".user-directory-link").length);
   }
 });
 
@@ -241,7 +246,7 @@ widgetTest("user directory link - disabled", {
   },
 
   test(assert) {
-    assert.ok(!this.$(".user-directory-link").length);
+    assert.ok(!find(".user-directory-link").length);
   }
 });
 
@@ -249,7 +254,7 @@ widgetTest("general links", {
   template: '{{mount-widget widget="hamburger-menu"}}',
 
   test(assert) {
-    assert.ok(this.$(".about-link").length);
-    assert.ok(this.$(".keyboard-shortcuts-link").length);
+    assert.ok(find(".about-link").length);
+    assert.ok(find(".keyboard-shortcuts-link").length);
   }
 });

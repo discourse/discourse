@@ -1,4 +1,4 @@
-{{#d-section pageClass="user-activity" class="user-navigation" scrollTop="false"}}
+{{#d-section pageClass="user-activity" class="user-secondary-navigation" scrollTop="false"}}
   {{#mobile-nav class='activity-nav' desktopClass='action-list activity-list nav-stacked' currentPath=application.currentPath}}
     <li>
       {{#link-to 'userActivity.index'}}{{i18n 'user.filters.all'}}{{/link-to}}
@@ -26,14 +26,13 @@
                     connectorTagName='li'
                     args=(hash model=model)}}
   {{/mobile-nav}}
-
-  {{#if canDownloadPosts}}
-    <div class='user-archive'>
-      {{d-button action=(action "exportUserArchive") class="btn-default" label="user.download_archive.button_text" icon="download"}}
-    </div>
-  {{/if}}
+ 
 {{/d-section}}
-
-<section class='user-right'>
+{{#if canDownloadPosts}}
+    <section class='user-additional-controls'>
+      {{d-button action=(action "exportUserArchive") class="btn-default" label="user.download_archive.button_text" icon="download"}}
+    </section>
+{{/if}}
+<section class='user-content'>
   {{outlet}}
 </section>

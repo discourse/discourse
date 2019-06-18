@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class RenameVersionColumn < ActiveRecord::Migration[4.2]
 
   def change

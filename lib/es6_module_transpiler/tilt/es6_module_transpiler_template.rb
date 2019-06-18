@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'execjs'
 require 'mini_racer'
 
@@ -161,8 +163,8 @@ JS
           result = "Route" if result == "DiscourseRoute"
           result = "View" if result == "ViewView"
 
-          result.gsub!(/Mixin$/, '')
-          result.gsub!(/Model$/, '')
+          result = result.gsub(/Mixin$/, '')
+          result = result.gsub(/Model$/, '')
 
           if result != "PostMenuView"
             @output << "\n\nDiscourse.#{result} = require('#{require_name}').default;\n"

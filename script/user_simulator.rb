@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # used during local testing, simulates a user active on the site.
 #
 # by default 1 new topic every 30 sec, 1 reply to last topic every 30 secs

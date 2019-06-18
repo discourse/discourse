@@ -8,18 +8,31 @@ import {
 export default Ember.Component.extend({
   classNames: ["date-picker-wrapper"],
   _picker: null,
+  value: null,
+
+  @computed("site.mobileView")
+  inputType(mobileView) {
+    return mobileView ? "date" : "text";
+  },
 
   @on("didInsertElement")
   _loadDatePicker() {
-    const input = this.$(".date-picker")[0];
-    const container = $("#" + this.get("containerId"))[0];
+    const container = this.element.querySelector(`#${this.containerId}`);
 
+    if (this.site.mobileView) {
+      this._loadNativePicker(container);
+    } else {
+      this._loadPikadayPicker(container);
+    }
+  },
+
+  _loadPikadayPicker(container) {
     loadScript("/javascripts/pikaday.js").then(() => {
       Ember.run.next(() => {
-        let default_opts = {
-          field: input,
-          container: container || this.$()[0],
-          bound: container === undefined,
+        const default_opts = {
+          field: this.element.querySelector(".date-picker"),
+          container: container || this.element,
+          bound: container === null,
           format: "YYYY-MM-DD",
           firstDay: 1,
           i18n: {
@@ -29,22 +42,37 @@ export default Ember.Component.extend({
             weekdays: moment.weekdays(),
             weekdaysShort: moment.weekdaysShort()
           },
-          onSelect: date => {
-            const formattedDate = moment(date).format("YYYY-MM-DD");
-
-            if (this.attrs.onSelect) {
-              this.attrs.onSelect(formattedDate);
-            }
-
-            if (!this.element || this.isDestroying || this.isDestroyed) return;
-
-            this.set("value", formattedDate);
-          }
+          onSelect: date => this._handleSelection(date)
         };
 
-        this._picker = new Pikaday(_.merge(default_opts, this._opts()));
+        this._picker = new Pikaday(Object.assign(default_opts, this._opts()));
       });
     });
+  },
+
+  _loadNativePicker(container) {
+    const wrapper = container || this.element;
+    const picker = wrapper.querySelector("input.date-picker");
+    picker.onchange = () => this._handleSelection(picker.value);
+    picker.hide = () => {
+      /* do nothing for native */
+    };
+    picker.destroy = () => {
+      /* do nothing for native */
+    };
+    this._picker = picker;
+  },
+
+  _handleSelection(value) {
+    const formattedDate = moment(value).format("YYYY-MM-DD");
+
+    if (!this.element || this.isDestroying || this.isDestroyed) return;
+
+    this._picker && this._picker.hide();
+
+    if (this.onSelect) {
+      this.onSelect(formattedDate);
+    }
   },
 
   @on("willDestroyElement")

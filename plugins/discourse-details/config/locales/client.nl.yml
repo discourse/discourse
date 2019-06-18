@@ -8,7 +8,7 @@
 nl:
   js:
     details:
-      title: Verberg details
+      title: Details verbergen
     composer:
       details_title: Samenvatting
-      details_text: "Deze tekst zal worden verborgen"
+      details_text: "Deze tekst wordt verborgen"

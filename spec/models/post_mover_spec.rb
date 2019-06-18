@@ -1,6 +1,10 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 describe PostMover do
+  fab!(:admin) { Fabricate(:admin) }
+  fab!(:evil_trout) { Fabricate(:evil_trout) }
 
   describe '#move_types' do
     context "verify enum sequence" do
@@ -20,13 +24,13 @@ describe PostMover do
 
   describe 'move_posts' do
     context 'topics' do
-      let(:user) { Fabricate(:user, admin: true) }
-      let(:another_user) { Fabricate(:evil_trout) }
-      let(:category) { Fabricate(:category, user: user) }
-      let!(:topic) { Fabricate(:topic, user: user) }
-      let!(:p1) { Fabricate(:post, topic: topic, user: user, created_at: 3.hours.ago) }
+      fab!(:user) { Fabricate(:user, admin: true) }
+      fab!(:another_user) { evil_trout }
+      fab!(:category) { Fabricate(:category, user: user) }
+      fab!(:topic) { Fabricate(:topic, user: user) }
+      fab!(:p1) { Fabricate(:post, topic: topic, user: user, created_at: 3.hours.ago) }
 
-      let!(:p2) do
+      fab!(:p2) do
         Fabricate(:post,
           topic: topic,
           user: another_user,
@@ -34,18 +38,18 @@ describe PostMover do
           reply_to_post_number: p1.post_number)
       end
 
-      let!(:p3) { Fabricate(:post, topic: topic, reply_to_post_number: p1.post_number, user: user) }
-      let!(:p4) { Fabricate(:post, topic: topic, reply_to_post_number: p2.post_number, user: user) }
-      let!(:p5) { Fabricate(:post) }
+      fab!(:p3) { Fabricate(:post, topic: topic, reply_to_post_number: p1.post_number, user: user) }
+      fab!(:p4) { Fabricate(:post, topic: topic, reply_to_post_number: p2.post_number, user: user) }
+      fab!(:p5) { Fabricate(:post) }
       let(:p6) { Fabricate(:post, topic: topic) }
 
       before do
         SiteSetting.tagging_enabled = true
-        SiteSetting.queue_jobs = false
+        Jobs.run_immediately!
         p1.replies << p3
         p2.replies << p4
-        UserActionCreator.enable
-        @like = PostAction.act(another_user, p4, PostActionType.types[:like])
+        UserActionManager.enable
+        @like = PostActionCreator.like(another_user, p4)
       end
 
       context 'success' do
@@ -220,6 +224,14 @@ describe PostMover do
             # both the like and was_liked user actions should be correct
             action = UserAction.find_by(user_id: another_user.id)
             expect(action.target_topic_id).to eq(new_topic.id)
+
+            expect(TopicUser.exists?(
+              user_id: another_user,
+              topic_id: new_topic.id,
+              notification_level: TopicUser.notification_levels[:watching],
+              notifications_reason_id: TopicUser.notification_reasons[:created_topic]
+            )).to eq(true)
+            expect(TopicUser.exists?(user_id: user, topic_id: new_topic.id)).to eq(false)
           end
 
           it "moving all posts will close the topic" do
@@ -248,7 +260,6 @@ describe PostMover do
             expected_text = I18n.with_locale(:en) do
               I18n.t("move_posts.new_topic_moderator_post",
                      count: 2,
-                     entity: "topic",
                      topic_link: "[#{new_topic.title}](#{new_topic.relative_url})")
             end
 
@@ -257,10 +268,13 @@ describe PostMover do
 
           it "does not try to move small action posts" do
             small_action = Fabricate(:post, topic: topic, raw: "A small action", post_type: Post.types[:small_action])
-            new_topic = topic.move_posts(user, [p2.id, p4.id, small_action.id], title: "new testing topic name", category_id: category.id)
+            hidden_small_action = Fabricate(:post, topic: topic, post_type: Post.types[:whisper])
+            hidden_small_action.update_attribute(:raw, "")
+            new_topic = topic.move_posts(user, [p2.id, p4.id, small_action.id, hidden_small_action.id], title: "new testing topic name", category_id: category.id)
 
             expect(new_topic.posts_count).to eq(2)
             expect(small_action.topic_id).to eq(topic.id)
+            expect(hidden_small_action.topic_id).to eq(topic.id)
 
             moderator_post = topic.posts.last
             expect(moderator_post.raw).to include("2 posts were split")
@@ -281,8 +295,8 @@ describe PostMover do
         end
 
         context "to an existing topic" do
-          let!(:destination_topic) { Fabricate(:topic, user: another_user) }
-          let!(:destination_op) { Fabricate(:post, topic: destination_topic, user: another_user) }
+          fab!(:destination_topic) { Fabricate(:topic, user: another_user) }
+          fab!(:destination_op) { Fabricate(:post, topic: destination_topic, user: another_user) }
 
           it "works correctly" do
             topic.expects(:add_moderator_post).once
@@ -355,6 +369,66 @@ describe PostMover do
             moderator_post = topic.posts.find_by(post_number: 2)
             expect(moderator_post.raw).to include("4 posts were merged")
           end
+        end
+
+        context "to a message" do
+
+          it "works correctly" do
+            topic.expects(:add_moderator_post).once
+            new_topic = topic.move_posts(user, [p2.id, p4.id], title: "new testing topic name", archetype: "private_message")
+
+            expect(TopicUser.find_by(user_id: user.id, topic_id: topic.id).last_read_post_number).to eq(p3.post_number)
+
+            expect(new_topic).to be_present
+            expect(new_topic.featured_user1_id).to eq(p4.user_id)
+            expect(new_topic.like_count).to eq(1)
+
+            expect(new_topic.archetype).to eq(Archetype.private_message)
+            expect(topic.featured_user1_id).to be_blank
+            expect(new_topic.posts.by_post_number).to match_array([p2, p4])
+
+            new_topic.reload
+            expect(new_topic.posts_count).to eq(2)
+            expect(new_topic.highest_post_number).to eq(2)
+
+            p4.reload
+            expect(new_topic.last_post_user_id).to eq(p4.user_id)
+            expect(new_topic.last_posted_at).to eq(p4.created_at)
+            expect(new_topic.bumped_at).to eq(p4.created_at)
+
+            p2.reload
+            expect(p2.sort_order).to eq(1)
+            expect(p2.post_number).to eq(1)
+            expect(p2.topic_links.first.topic_id).to eq(new_topic.id)
+
+            expect(p4.post_number).to eq(2)
+            expect(p4.sort_order).to eq(2)
+
+            topic.reload
+            expect(topic.featured_user1_id).to be_blank
+            expect(topic.like_count).to eq(0)
+            expect(topic.posts_count).to eq(2)
+            expect(topic.posts.by_post_number).to match_array([p1, p3])
+            expect(topic.highest_post_number).to eq(p3.post_number)
+
+            # both the like and was_liked user actions should be correct
+            action = UserAction.find_by(user_id: another_user.id)
+            expect(action.target_topic_id).to eq(new_topic.id)
+
+            expect(TopicUser.exists?(
+              user_id: another_user,
+              topic_id: new_topic.id,
+              notification_level: TopicUser.notification_levels[:watching],
+              notifications_reason_id: TopicUser.notification_reasons[:created_topic]
+            )).to eq(true)
+            expect(TopicUser.exists?(
+              user_id: user,
+              topic_id: new_topic.id,
+              notification_level: TopicUser.notification_levels[:watching],
+              notifications_reason_id: TopicUser.notification_reasons[:created_post]
+            )).to eq(true)
+          end
+
         end
 
         shared_examples "moves email related stuff" do
@@ -453,7 +527,7 @@ describe PostMover do
           end
 
           it "preserves post actions in the new post" do
-            PostAction.act(another_user, p1, PostActionType.types[:like])
+            PostActionCreator.like(another_user, p1)
 
             new_topic = topic.move_posts(user, [p1.id], title: "new testing topic name")
             new_post = new_topic.posts.where(post_number: 1).first
@@ -490,9 +564,9 @@ describe PostMover do
             topic.expects(:add_moderator_post)
           end
 
-          let!(:destination_topic) { Fabricate(:topic, user: user) }
-          let!(:destination_op) { Fabricate(:post, topic: destination_topic, user: user) }
-          let!(:destination_deleted_reply) { Fabricate(:post, topic: destination_topic, user: another_user) }
+          fab!(:destination_topic) { Fabricate(:topic, user: user) }
+          fab!(:destination_op) { Fabricate(:post, topic: destination_topic, user: user) }
+          fab!(:destination_deleted_reply) { Fabricate(:post, topic: destination_topic, user: another_user) }
           let(:moved_to) { topic.move_posts(user, [p2.id, p4.id], destination_topic_id: destination_topic.id) }
 
           it "works correctly" do
@@ -522,10 +596,9 @@ describe PostMover do
         end
 
         context "to an existing closed topic" do
-          let!(:destination_topic) { Fabricate(:topic, closed: true) }
+          fab!(:destination_topic) { Fabricate(:topic, closed: true) }
 
           it "works correctly for admin" do
-            admin = Fabricate(:admin)
             moved_to = topic.move_posts(admin, [p1.id, p2.id], destination_topic_id: destination_topic.id)
             expect(moved_to).to be_present
 
@@ -550,18 +623,16 @@ describe PostMover do
     end
 
     context 'messages' do
-      let(:user) { Fabricate(:user) }
-      let(:admin) { Fabricate(:admin) }
-      let(:evil_trout) { Fabricate(:evil_trout) }
-      let(:another_user) { Fabricate(:user) }
-      let(:regular_user) { Fabricate(:trust_level_4) }
-      let(:topic) { Fabricate(:topic) }
-      let(:personal_message) { Fabricate(:private_message_topic, user: evil_trout) }
-      let!(:p1) { Fabricate(:post, topic: personal_message, user: user) }
-      let!(:p2) { Fabricate(:post, topic: personal_message, reply_to_post_number: p1.post_number, user: another_user) }
-      let!(:p3) { Fabricate(:post, topic: personal_message, reply_to_post_number: p1.post_number, user: user) }
-      let!(:p4) { Fabricate(:post, topic: personal_message, reply_to_post_number: p2.post_number, user: user) }
-      let!(:p5) { Fabricate(:post, topic: personal_message, user: evil_trout) }
+      fab!(:user) { Fabricate(:user) }
+      fab!(:another_user) { Fabricate(:user) }
+      fab!(:regular_user) { Fabricate(:trust_level_4) }
+      fab!(:topic) { Fabricate(:topic) }
+      fab!(:personal_message) { Fabricate(:private_message_topic, user: evil_trout) }
+      fab!(:p1) { Fabricate(:post, topic: personal_message, user: user) }
+      fab!(:p2) { Fabricate(:post, topic: personal_message, reply_to_post_number: p1.post_number, user: another_user) }
+      fab!(:p3) { Fabricate(:post, topic: personal_message, reply_to_post_number: p1.post_number, user: user) }
+      fab!(:p4) { Fabricate(:post, topic: personal_message, reply_to_post_number: p2.post_number, user: user) }
+      fab!(:p5) { Fabricate(:post, topic: personal_message, user: evil_trout) }
       let(:another_personal_message) do
         Fabricate(:private_message_topic, user: user, topic_allowed_users: [
           Fabricate.build(:topic_allowed_user, user: admin)
@@ -571,15 +642,18 @@ describe PostMover do
 
       before do
         SiteSetting.tagging_enabled = true
-        SiteSetting.queue_jobs = false
+        Jobs.run_immediately!
         p1.replies << p3
         p2.replies << p4
-        UserActionCreator.enable
-        @like = PostAction.act(another_user, p4, PostActionType.types[:like])
+        UserActionManager.enable
+        @like = PostActionCreator.like(another_user, p4)
       end
 
       context 'move to new message' do
         it "adds post users as topic allowed users" do
+          TopicUser.change(user, personal_message, notification_level: TopicUser.notification_levels[:muted])
+          TopicUser.change(another_user, personal_message, notification_level: TopicUser.notification_levels[:tracking])
+
           personal_message.move_posts(admin, [p2.id, p3.id, p4.id, p5.id], title: "new testing message name", tags: ["tag1", "tag2"], archetype: "private_message")
 
           p2.reload
@@ -589,6 +663,18 @@ describe PostMover do
           expect(destination_topic.topic_allowed_users.where(user_id: another_user.id).count).to eq(1)
           expect(destination_topic.topic_allowed_users.where(user_id: evil_trout.id).count).to eq(1)
           expect(destination_topic.tags.pluck(:name)).to eq([])
+          expect(TopicUser.exists?(
+            user_id: another_user,
+            topic_id: destination_topic.id,
+            notification_level: TopicUser.notification_levels[:tracking],
+            notifications_reason_id: TopicUser.notification_reasons[:created_topic]
+          )).to eq(true)
+          expect(TopicUser.exists?(
+            user_id: user,
+            topic_id: destination_topic.id,
+            notification_level: TopicUser.notification_levels[:muted],
+            notifications_reason_id: TopicUser.notification_reasons[:created_post]
+          )).to eq(true)
         end
 
         it "can add tags to new message when allow_staff_to_tag_pms is enabled" do
@@ -620,7 +706,7 @@ describe PostMover do
 
           old_message.reload
           move_message = old_message.posts.find_by(post_number: 2)
-          expect(move_message.post_type).to eq(Post.types[:small_action])
+          expect(move_message.post_type).to eq(Post.types[:whisper])
           expect(move_message.raw).to include("2 posts were split")
         end
       end
@@ -659,6 +745,42 @@ describe PostMover do
           personal_message.reload
           expect(personal_message.closed).to eq(true)
           expect(moved_to.posts_count).to eq(6)
+        end
+
+        it "uses the correct small action post" do
+          moved_to = personal_message.move_posts(admin, [p2.id], destination_topic_id: another_personal_message.id, archetype: "private_message")
+          post = Post.find_by(topic_id: personal_message.id, post_type: Post.types[:whisper])
+
+          expected_text = I18n.t(
+            "move_posts.existing_message_moderator_post",
+            count: 1,
+            topic_link: "[#{moved_to.title}](#{p2.reload.url})",
+            locale: :en
+          )
+
+          expect(post.raw).to eq(expected_text)
+        end
+      end
+    end
+
+    context 'banner topic' do
+      fab!(:regular_user) { Fabricate(:trust_level_4) }
+      fab!(:topic) { Fabricate(:topic) }
+      fab!(:personal_message) { Fabricate(:private_message_topic, user: regular_user) }
+      fab!(:banner_topic) { Fabricate(:banner_topic, user: evil_trout) }
+      fab!(:p1) { Fabricate(:post, topic: banner_topic, user: evil_trout) }
+      fab!(:p2) { Fabricate(:post, topic: banner_topic, reply_to_post_number: p1.post_number, user: regular_user) }
+
+      context 'move to existing topic' do
+        it "allows moving banner topic posts in regular topic" do
+          banner_topic.move_posts(admin, [p2.id], destination_topic_id: topic.id)
+          expect(p2.reload.topic_id).to eq(topic.id)
+        end
+
+        it "does not allow moving banner topic posts in personal message" do
+          expect {
+            banner_topic.move_posts(admin, [p2.id], destination_topic_id: personal_message.id)
+          }.to raise_error(Discourse::InvalidParameters)
         end
       end
     end

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module MessageBus::DiagnosticsHelper
   def publish(channel, data, opts = nil)
     id = super(channel, data, opts)
@@ -18,6 +20,7 @@ module MessageBus::DiagnosticsHelper
   ensure
     @tracking = nil
   end
+
 end
 
 module MessageBus

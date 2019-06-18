@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class PermalinkSerializer < ApplicationSerializer
   attributes :id, :url, :topic_id, :topic_title, :topic_url,
              :post_id, :post_url, :post_number, :post_topic_title,

@@ -7,7 +7,7 @@ export default Ember.Mixin.create(ModalFunctionality, {
   postEdit: null,
   postAction: null,
   user: null,
-  post: null,
+  postId: null,
   successCallback: null,
 
   resetModal() {
@@ -15,7 +15,7 @@ export default Ember.Mixin.create(ModalFunctionality, {
       reason: null,
       message: null,
       loadingUser: true,
-      post: null,
+      postId: null,
       postEdit: null,
       postAction: "delete",
       before: null,
@@ -24,14 +24,14 @@ export default Ember.Mixin.create(ModalFunctionality, {
   },
 
   penalize(cb) {
-    let before = this.get("before");
+    let before = this.before;
     let promise = before ? before() : Ember.RSVP.resolve();
 
     return promise
       .then(() => cb())
       .then(result => {
         this.send("closeModal");
-        let callback = this.get("successCallback");
+        let callback = this.successCallback;
         if (callback) {
           callback(result);
         }

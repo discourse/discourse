@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class GroupedScreenedUrlSerializer < ApplicationSerializer
   attributes :domain,
              :action,

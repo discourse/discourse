@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "rails_helper"
 
 describe "translate accelerator" do
@@ -20,6 +22,28 @@ describe "translate accelerator" do
     expect(I18n.exists?(key, locale)).to eq(true)
     override = TranslationOverride.upsert!(locale, key, value)
     expect(override.persisted?).to eq(true)
+  end
+
+  it "supports raising if requested, and cache bypasses" do
+    expect { I18n.t('i_am_an_unknown_key99', raise: true) }.to raise_error(I18n::MissingTranslationData)
+
+    orig = I18n.t('i_am_an_unknown_key99')
+
+    expect(I18n.t('i_am_an_unknown_key99').object_id).to eq(orig.object_id)
+    expect(I18n.t('i_am_an_unknown_key99')).to eq("translation missing: en_US.i_am_an_unknown_key99")
+  end
+
+  it "returns the correct language" do
+    expect(I18n.t('foo', locale: :en)).to eq('Foo in :en')
+    expect(I18n.t('foo', locale: :de)).to eq('Foo in :de')
+
+    I18n.with_locale(:en) do
+      expect(I18n.t('foo')).to eq('Foo in :en')
+    end
+
+    I18n.with_locale(:de) do
+      expect(I18n.t('foo')).to eq('Foo in :de')
+    end
   end
 
   it "overrides for both string and symbol keys" do
@@ -87,6 +111,8 @@ describe "translate accelerator" do
   end
 
   describe "with overrides" do
+    before { I18n.locale = :en }
+
     it "returns the overridden key" do
       override_translation('en', 'foo', 'Overwritten foo')
       expect(I18n.t('foo')).to eq('Overwritten foo')
@@ -120,6 +146,7 @@ describe "translate accelerator" do
       I18n.overrides_disabled do
         expect(I18n.t('title')).to eq(orig_title)
       end
+
       expect(I18n.t('title')).to eq('overridden title')
     end
 

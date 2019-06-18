@@ -11,7 +11,8 @@ const _moreWidgets = [
 const fruits = [
   { id: 1, name: "apple", farmer_id: 1, color_ids: [1, 2], category_id: 4 },
   { id: 2, name: "banana", farmer_id: 1, color_ids: [3], category_id: 3 },
-  { id: 3, name: "grape", farmer_id: 2, color_ids: [2], category_id: 5 }
+  { id: 3, name: "grape", farmer_id: 2, color_ids: [2], category_id: 5 },
+  { id: 4, name: "orange", farmer_id: null, color_ids: [2], category_id: 5 }
 ];
 
 const farmers = [
@@ -28,8 +29,8 @@ const colors = [
 export default function(helpers) {
   const { response, success, parsePostData } = helpers;
 
-  this.get("/fruits/:id", function() {
-    const fruit = fruits[0];
+  this.get("/fruits/:id", function(request) {
+    const fruit = fruits.find(f => f.id === parseInt(request.params.id));
     return response({ __rest_serializer: "1", fruit, farmers, colors });
   });
 

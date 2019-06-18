@@ -48,7 +48,7 @@ export default Ember.Object.extend({
   _plurals: {
     "post-reply": "post-replies",
     "post-reply-history": "post_reply_histories",
-    "moderation-history": "moderation_history"
+    reviewable_history: "reviewable_histories"
   },
 
   init() {
@@ -223,6 +223,7 @@ export default Ember.Object.extend({
       totalRows: pageTarget["total_rows_" + typeName] || content.length,
       loadMoreUrl: pageTarget["load_more_" + typeName],
       refreshUrl: pageTarget["refresh_" + typeName],
+      resultSetMeta: result.meta,
       store: this,
       __type: type
     };
@@ -310,6 +311,8 @@ export default Ember.Object.extend({
           if (hydrated) {
             obj[subType] = hydrated;
             delete obj[k];
+          } else {
+            Ember.set(obj, subType, null);
           }
         }
       }
@@ -328,8 +331,6 @@ export default Ember.Object.extend({
 
     root = root || obj;
 
-    // Experimental: If serialized with a certain option we'll wire up embedded objects
-    // automatically.
     if (root.__rest_serializer === "1") {
       this._hydrateEmbedded(type, obj, root);
     }

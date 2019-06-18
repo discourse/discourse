@@ -13,7 +13,7 @@ export default Ember.Mixin.create({
   @computed("passwordMinLength")
   passwordInstructions() {
     return I18n.t("user.password.instructions", {
-      count: this.get("passwordMinLength")
+      count: this.passwordMinLength
     });
   },
 
@@ -48,7 +48,7 @@ export default Ember.Mixin.create({
       return InputValidation.create({
         failed: true,
         reason:
-          this.get("rejectedPasswordsMessages").get(password) ||
+          this.rejectedPasswordsMessages.get(password) ||
           I18n.t("user.password.common")
       });
     }

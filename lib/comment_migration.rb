@@ -1,4 +1,4 @@
-
+# frozen_string_literal: true
 
 class CommentMigration < ActiveRecord::Migration[4.2]
   def comments_up

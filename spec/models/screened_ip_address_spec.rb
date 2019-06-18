@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 describe ScreenedIpAddress do
@@ -135,13 +137,13 @@ describe ScreenedIpAddress do
       end
 
       context 'using exact match' do
-        let!(:existing) { Fabricate(:screened_ip_address) }
+        fab!(:existing) { Fabricate(:screened_ip_address) }
         let(:ip_address_arg) { existing.ip_address }
         include_examples 'exact match of ip address'
       end
 
       context 'using subnet mask 255.255.255.0' do
-        let!(:existing) { Fabricate(:screened_ip_address, ip_address: '99.232.23.124/24') }
+        fab!(:existing) { Fabricate(:screened_ip_address, ip_address: '99.232.23.124/24') }
 
         context 'at exact address' do
           let(:ip_address_arg) { '99.232.23.124' }

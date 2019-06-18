@@ -13,6 +13,7 @@ import {
   formatUsername
 } from "discourse/lib/utilities";
 import hbs from "discourse/widgets/hbs-compiler";
+import { durationTiny } from "discourse/lib/formatter";
 
 function transformWithCallbacks(post) {
   let transformed = transformBasicPost(post);
@@ -56,6 +57,11 @@ export function avatarFor(wanted, attrs) {
     },
     avatarImg(wanted, attrs)
   );
+}
+
+// TODO: Improve how helpers are registered for vdom compliation
+if (typeof Discourse !== "undefined") {
+  Discourse.__widget_helpers.avatar = avatarFor;
 }
 
 createWidget("select-post", {
@@ -354,7 +360,9 @@ createWidget("post-contents", {
   },
 
   html(attrs, state) {
-    let result = [new PostCooked(attrs, new DecoratorHelper(this))];
+    let result = [
+      new PostCooked(attrs, new DecoratorHelper(this), this.currentUser)
+    ];
     result = result.concat(applyDecorators(this, "after-cooked", attrs, state));
 
     if (attrs.cooked_hidden) {
@@ -391,6 +399,13 @@ createWidget("post-contents", {
     return result;
   },
 
+  _date(attrs) {
+    const lastWikiEdit =
+      attrs.wiki && attrs.lastWikiEdit && new Date(attrs.lastWikiEdit);
+    const createdAt = new Date(attrs.created_at);
+    return lastWikiEdit ? lastWikiEdit : createdAt;
+  },
+
   toggleRepliesBelow(goToPost = "false") {
     if (this.state.repliesBelow.length) {
       this.state.repliesBelow = [];
@@ -417,6 +432,47 @@ createWidget("post-contents", {
   expandFirstPost() {
     const post = this.findAncestorModel();
     return post.expand().then(() => (this.state.expandedFirstPost = true));
+  }
+});
+
+createWidget("post-notice", {
+  tagName: "div.post-notice",
+
+  buildClasses(attrs) {
+    const classes = [attrs.noticeType.replace(/_/g, "-")];
+
+    if (
+      new Date() - new Date(attrs.created_at) >
+      this.siteSettings.old_post_notice_days * 86400000
+    ) {
+      classes.push("old");
+    }
+
+    return classes;
+  },
+
+  html(attrs) {
+    const user =
+      this.siteSettings.prioritize_username_in_ux || !attrs.name
+        ? attrs.username
+        : attrs.name;
+    let text, icon;
+    if (attrs.noticeType === "custom") {
+      icon = "user-shield";
+      text = attrs.noticeMessage;
+    } else if (attrs.noticeType === "new_user") {
+      icon = "hands-helping";
+      text = I18n.t("post.notice.new_user", { user });
+    } else if (attrs.noticeType === "returning_user") {
+      icon = "far-smile";
+      const distance = (new Date() - new Date(attrs.noticeTime)) / 1000;
+      text = I18n.t("post.notice.returning_user", {
+        user,
+        time: durationTiny(distance, { addAgo: true })
+      });
+    }
+
+    return h("p", [iconNode(icon), text]);
   }
 });
 
@@ -496,6 +552,10 @@ createWidget("post-article", {
           ])
         )
       );
+    }
+
+    if (attrs.noticeType) {
+      rows.push(h("div.row", [this.attach("post-notice", attrs)]));
     }
 
     rows.push(
@@ -651,21 +711,5 @@ export default createWidget("post", {
       bootbox.alert(I18n.t("post.few_likes_left"));
       kvs.set({ key: "lastWarnedLikes", value: new Date().getTime() });
     }
-  },
-
-  undoPostAction(typeId) {
-    const post = this.model;
-    return post
-      .get("actions_summary")
-      .findBy("id", typeId)
-      .undo(post);
-  },
-
-  deferPostActionFlags(typeId) {
-    const post = this.model;
-    return post
-      .get("actions_summary")
-      .findBy("id", typeId)
-      .deferFlags(post);
   }
 });

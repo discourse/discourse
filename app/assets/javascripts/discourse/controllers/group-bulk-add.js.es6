@@ -22,7 +22,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
         result: null
       });
 
-      const users = this.get("input")
+      const users = this.input
         .split("\n")
         .uniq()
         .reject(x => x.length === 0);

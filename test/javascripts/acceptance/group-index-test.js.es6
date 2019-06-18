@@ -1,9 +1,9 @@
-import { acceptance, logIn, replaceCurrentUser } from "helpers/qunit-helpers";
+import { acceptance, updateCurrentUser } from "helpers/qunit-helpers";
 
 acceptance("Group Members");
 
 QUnit.test("Viewing Members as anon user", async assert => {
-  await visit("/groups/discourse");
+  await visit("/g/discourse");
 
   assert.ok(
     count(".avatar-flair .d-icon-adjust") === 1,
@@ -23,12 +23,12 @@ QUnit.test("Viewing Members as anon user", async assert => {
   );
 });
 
-QUnit.test("Viewing Members as a group owner", async assert => {
-  logIn();
-  Discourse.reset();
-  replaceCurrentUser({ admin: false, staff: false });
+acceptance("Group Members", { loggedIn: true });
 
-  await visit("/groups/discourse");
+QUnit.test("Viewing Members as a group owner", async assert => {
+  updateCurrentUser({ admin: false, staff: false });
+
+  await visit("/g/discourse");
   await click(".group-members-add");
 
   assert.equal(
@@ -39,10 +39,7 @@ QUnit.test("Viewing Members as a group owner", async assert => {
 });
 
 QUnit.test("Viewing Members as an admin user", async assert => {
-  logIn();
-  Discourse.reset();
-
-  await visit("/groups/discourse");
+  await visit("/g/discourse");
 
   assert.ok(
     count(".group-member-dropdown") > 0,

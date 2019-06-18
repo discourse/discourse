@@ -1,7 +1,7 @@
 en:
   got: "winter"
-  foo: 'Foo in :en'
-  bar: 'Bar in :en'
+  foo: "Foo in :en"
+  bar: "Bar in :en"
   wat: "Hello %{count}"
   world: "Hello %{world}"
   items:

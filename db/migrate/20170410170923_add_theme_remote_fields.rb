@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddThemeRemoteFields < ActiveRecord::Migration[4.2]
   def change
     create_table :remote_themes do |t|

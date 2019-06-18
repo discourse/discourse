@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # perf fixes, review for each rails upgrade.
 
 # This speeds up calls to present? and blank? on model instances

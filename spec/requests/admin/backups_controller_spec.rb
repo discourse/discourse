@@ -1,10 +1,11 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe Admin::BackupsController do
-  let(:admin) { Fabricate(:admin) }
+  fab!(:admin) { Fabricate(:admin) }
   let(:backup_filename) { "2014-02-10-065935.tar.gz" }
   let(:backup_filename2) { "2014-02-11-065935.tar.gz" }
-  let(:store) { BackupRestore::LocalBackupStore.new }
 
   def create_backup_files(*filenames)
     @paths = filenames.map do |filename|
@@ -162,12 +163,10 @@ RSpec.describe Admin::BackupsController do
 
   describe '#restore' do
     it "starts a restore" do
-      expect(SiteSetting.disable_emails).to eq("no")
       BackupRestore.expects(:restore!).with(admin.id, filename: backup_filename, publish_to_message_bus: true, client_id: "foo")
 
       post "/admin/backups/#{backup_filename}/restore.json", params: { client_id: "foo" }
 
-      expect(SiteSetting.disable_emails).to eq("yes")
       expect(response.status).to eq(200)
     end
   end

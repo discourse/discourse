@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Permalink < ActiveRecord::Base
   belongs_to :topic
   belongs_to :post
@@ -21,8 +23,8 @@ class Permalink < ActiveRecord::Base
       return unless rule =~ /\/.*\//
 
       escaping = false
-      regex = ""
-      sub = ""
+      regex = +""
+      sub = +""
       c = 0
 
       rule.chars.each do |l|

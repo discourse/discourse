@@ -1,15 +1,16 @@
+# frozen_string_literal: true
+
 class UserOptionSerializer < ApplicationSerializer
   attributes :user_id,
-             :email_always,
              :mailing_list_mode,
              :mailing_list_mode_frequency,
              :email_digests,
-             :email_private_messages,
-             :email_direct,
+             :email_level,
+             :email_messages_level,
              :external_links_in_new_tab,
              :dynamic_favicon,
              :enable_quoting,
-             :disable_jump_reply,
+             :enable_defer,
              :digest_after_minutes,
              :automatically_unpin_topics,
              :auto_track_topics_after_msecs,
@@ -25,7 +26,8 @@ class UserOptionSerializer < ApplicationSerializer
              :homepage_id,
              :hide_profile_and_presence,
              :text_size,
-             :text_size_seq
+             :text_size_seq,
+             :title_count_mode
 
   def auto_track_topics_after_msecs
     object.auto_track_topics_after_msecs || SiteSetting.default_other_auto_track_topics_after_msecs

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Migration; end
 
 class Discourse::InvalidMigration < StandardError; end

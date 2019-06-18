@@ -9,9 +9,9 @@ QUnit.module("lib:keyboard-shortcuts", {
 
     testMouseTrap = {
       bind: function(bindings, callback) {
-        var registerBinding = _.bind(function(binding) {
+        var registerBinding = function(binding) {
           _bindings[binding] = callback;
-        }, this);
+        }.bind(this);
 
         if (_.isArray(bindings)) {
           bindings.forEach(registerBinding, this);
@@ -64,6 +64,7 @@ QUnit.module("lib:keyboard-shortcuts", {
 
   afterEach() {
     $("#qunit-scratch").html("");
+    testMouseTrap = undefined;
   }
 });
 

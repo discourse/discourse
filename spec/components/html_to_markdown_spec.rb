@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 require 'html_to_markdown'
 
@@ -101,6 +103,10 @@ describe HtmlToMarkdown do
 
   it "converts <br>" do
     expect(html_to_markdown("Before<br>Inside<br>After")).to eq("Before\nInside\nAfter")
+  end
+
+  it "skips <br> inside <p> if next character is \n" do
+    expect(html_to_markdown("<p>Before<br>\nInside<br>After</p>")).to eq("Before\nInside\nAfter")
   end
 
   it "converts <hr>" do

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class UserArchivedMessage < ActiveRecord::Base
   belongs_to :user
   belongs_to :topic

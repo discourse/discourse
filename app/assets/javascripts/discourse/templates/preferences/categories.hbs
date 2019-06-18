@@ -1,39 +1,44 @@
 <div class="control-group category-notifications">
   <label class="control-label">{{i18n 'user.categories_settings'}}</label>
 
-  <div class="controls category-controls">
+  <div class="controls tracking-controls">
     <label>{{d-icon "d-watching"}} {{i18n 'user.watched_categories'}}</label>
     {{category-selector categories=model.watchedCategories blacklist=selectedCategories}}
   </div>
   <div class="instructions">{{i18n 'user.watched_categories_instructions'}}</div>
-  <div class="controls">
-    <a href="{{unbound model.watchingTopicsPath}}">{{i18n 'user.watched_topics_link'}}</a>
-  </div>
+  {{#if canSee}}
+    <div class="controls">
+      <a href="{{unbound model.watchingTopicsPath}}">{{i18n 'user.watched_topics_link'}}</a>
+    </div>
+  {{/if}}
 
-  <div class="controls category-controls">
+  <div class="controls tracking-controls">
     <label>{{d-icon "d-tracking"}} {{i18n 'user.tracked_categories'}}</label>
     {{category-selector categories=model.trackedCategories blacklist=selectedCategories}}
   </div>
   <div class="instructions">{{i18n 'user.tracked_categories_instructions'}}</div>
-  <div class="controls">
-    <a href="{{unbound model.trackingTopicsPath}}">{{i18n 'user.tracked_topics_link'}}</a>
-  </div>
+  {{#if canSee}}
+    <div class="controls">
+      <a href="{{unbound model.trackingTopicsPath}}">{{i18n 'user.tracked_topics_link'}}</a>
+    </div>
+  {{/if}}
 
-  <div class="controls category-controls">
+  <div class="controls tracking-controls">
     <label>{{d-icon "d-watching-first"}} {{i18n 'user.watched_first_post_categories'}}</label>
     {{category-selector categories=model.watchedFirstPostCategories blacklist=selectedCategories}}
   </div>
   <div class="instructions">{{i18n 'user.watched_first_post_categories_instructions'}}</div>
 
-  <div class="controls category-controls">
+  <div class="controls tracking-controls">
     <label>{{d-icon "d-muted"}} {{i18n 'user.muted_categories'}}</label>
     {{category-selector categories=model.mutedCategories blacklist=selectedCategories}}
   </div>
-  <div class="instructions">{{i18n 'user.muted_categories_instructions'}}</div>
-  <div class="controls">
-    <a href="{{unbound model.mutedTopicsPath}}">{{i18n 'user.muted_topics_link'}}</a>
-  </div>
-
+  <div class="instructions">{{i18n (if hideMutedTags 'user.muted_categories_instructions' 'user.muted_categories_instructions_dont_hide')}}</div>
+  {{#if canSee}}
+    <div class="controls">
+      <a href="{{unbound model.mutedTopicsPath}}">{{i18n 'user.muted_topics_link'}}</a>
+    </div>
+  {{/if}}
 </div>
 
 {{plugin-outlet name="user-preferences-categories" args=(hash model=model save=(action "save"))}}

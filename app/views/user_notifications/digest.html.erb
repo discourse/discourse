@@ -248,7 +248,7 @@ body, table, td, th, h1, h2, h3 {font-family: Helvetica, Arial, sans-serif !impo
   <tbody>
     <tr>
       <td class="post-excerpt" style="color:#0a0a0a;font-size:14px;font-weight:normal;padding:16px;text-align:<%= rtl? ? 'right' : 'left' %>;width:100%;">
-        <%= email_excerpt(post.cooked) %>
+        <%= email_excerpt(post.cooked, post) %>
       </td>
     </tr>
   </tbody>

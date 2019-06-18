@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ThemeSettingsParser
   class InvalidYaml < StandardError; end
 
@@ -37,6 +39,8 @@ class ThemeSettingsParser
     if raw_opts[:list_type]
       opts[:list_type] = raw_opts[:list_type]
     end
+
+    opts[:textarea] = !!raw_opts[:textarea]
 
     opts
   end

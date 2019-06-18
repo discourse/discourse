@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class UserProfileView < ActiveRecord::Base
   validates_presence_of :user_profile_id, :viewed_at
 
@@ -5,7 +7,7 @@ class UserProfileView < ActiveRecord::Base
 
   def self.add(user_profile_id, ip, user_id = nil, at = nil, skip_redis = false)
     at ||= Time.zone.now
-    redis_key = "user-profile-view:#{user_profile_id}:#{at.to_date}"
+    redis_key = +"user-profile-view:#{user_profile_id}:#{at.to_date}"
     if user_id
       return if user_id < 1
       redis_key << ":user-#{user_id}"

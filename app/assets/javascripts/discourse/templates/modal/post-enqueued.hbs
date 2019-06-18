@@ -1,8 +1,8 @@
 {{#d-modal-body}}
-  <p>{{{description}}}</p>
+  <p>{{i18n "review.approval.description"}}</p>
 
-  <p>{{{i18n "queue.approval.pending_posts" count=model.pending_count}}}</p>
+  <p>{{{i18n "review.approval.pending_posts" count=model.pending_count}}}</p>
 {{/d-modal-body}}
 <div class="modal-footer">
-  {{d-button action=(route-action "closeModal") class="btn-primary" label="queue.approval.ok"}}
+  {{d-button action=(route-action "closeModal") class="btn-primary" label="review.approval.ok"}}
 </div>

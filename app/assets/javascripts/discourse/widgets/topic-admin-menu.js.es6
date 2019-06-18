@@ -3,9 +3,9 @@ import { h } from "virtual-dom";
 
 createWidget("admin-menu-button", {
   html(attrs) {
-    let className = "btn";
+    let className;
     if (attrs.buttonClass) {
-      className += " " + attrs.buttonClass;
+      className = attrs.buttonClass;
     }
 
     return h(
@@ -14,6 +14,7 @@ createWidget("admin-menu-button", {
       this.attach("button", {
         className,
         action: attrs.action,
+        url: attrs.url,
         icon: attrs.icon,
         label: attrs.fullLabel || `topic.${attrs.label}`,
         secondaryAction: "hideAdminMenu"
@@ -201,7 +202,7 @@ export default createWidget("topic-admin-menu", {
       });
     }
 
-    if (this.currentUser.admin) {
+    if (this.currentUser.get("staff")) {
       buttons.push({
         className: "topic-admin-change-timestamp",
         buttonClass: "btn-default",
@@ -252,10 +253,10 @@ export default createWidget("topic-admin-menu", {
 
     if (this.currentUser.get("staff")) {
       buttons.push({
-        action: "showModerationHistory",
-        buttonClass: "btn-default",
         icon: "list",
-        fullLabel: "admin.flags.moderation_history"
+        buttonClass: "btn-default",
+        fullLabel: "review.moderation_history",
+        url: `/review?topic_id=${topic.id}&status=all`
       });
     }
 

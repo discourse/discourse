@@ -5,4 +5,6 @@
 # To work with us on translations, join this project:
 # https://www.transifex.com/projects/p/discourse-org/
 
-sv: {}
+sv:
+  site_settings:
+    daily_performance_report: "Analysera NGINX-loggar dagligen och skriv ett inlägg för personalen med detaljerna"

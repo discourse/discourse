@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Jobs
   class PendingQueuedPostReminder < Jobs::Scheduled
 
@@ -25,7 +27,9 @@ module Jobs
     end
 
     def should_notify_ids
-      QueuedPost.new_posts.visible.where('created_at < ?', SiteSetting.notify_about_queued_posts_after.hours.ago).pluck(:id)
+      ReviewableQueuedPost.where(status: Reviewable.statuses[:pending]).where(
+        'created_at < ?', SiteSetting.notify_about_queued_posts_after.hours.ago
+      ).pluck(:id)
     end
 
     def last_notified_id

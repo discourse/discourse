@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe EnableSsoValidator do
@@ -23,6 +25,24 @@ RSpec.describe EnableSsoValidator do
             'site_settings.errors.sso_url_is_empty'
           ))
         end
+      end
+    end
+
+    describe "when invite_only is set" do
+      before do
+        SiteSetting.invite_only = true
+        SiteSetting.sso_url = 'https://example.com/sso'
+      end
+
+      it 'allows a false value' do
+        expect(subject.valid_value?('f')).to eq(true)
+      end
+
+      it "doesn't allow true" do
+        expect(subject.valid_value?('t')).to eq(false)
+        expect(subject.error_message).to eq(I18n.t(
+          'site_settings.errors.sso_invite_only'
+        ))
       end
     end
 

@@ -1,12 +1,26 @@
+# frozen_string_literal: true
+
 # This is used in topic lists
 require_dependency 'topic_poster'
 
 class TopicPostersSummary
+
+  # localization is fast, but this allows us to avoid
+  # calling it in a loop which adds up
+  def self.translations
+    {
+      original_poster: I18n.t(:original_poster),
+      most_recent_poster: I18n.t(:most_recent_poster),
+      frequent_poster: I18n.t(:frequent_poster)
+    }
+  end
+
   attr_reader :topic, :options
 
   def initialize(topic, options = {})
     @topic = topic
     @options = options
+    @translations = options[:translations] || TopicPostersSummary.translations
   end
 
   def summary
@@ -16,23 +30,38 @@ class TopicPostersSummary
   private
 
   def new_topic_poster_for(user)
-    TopicPoster.new.tap do |topic_poster|
-      topic_poster.user = user
-      topic_poster.description = descriptions_for(user)
-      topic_poster.primary_group = primary_group_lookup[user.id]
-      if topic.last_post_user_id == user.id
-        topic_poster.extras = 'latest'
-        topic_poster.extras << ' single' if user_ids.uniq.size == 1
-      end
+    topic_poster = TopicPoster.new
+    topic_poster.user = user
+    topic_poster.description = descriptions_for(user)
+    topic_poster.primary_group = primary_group_lookup[user.id]
+    if topic.last_post_user_id == user.id
+      topic_poster.extras = +'latest'
+      topic_poster.extras << ' single' if user_ids.uniq.size == 1
     end
+    topic_poster
   end
 
   def descriptions_by_id
     @descriptions_by_id ||= begin
-      user_ids_with_descriptions.each_with_object({}) do |(id, description), descriptions|
-        descriptions[id] ||= []
-        descriptions[id] << description
+      result = {}
+      ids = user_ids
+
+      if id = ids.shift
+        result[id] ||= []
+        result[id] << @translations[:original_poster]
       end
+
+      if id = ids.shift
+        result[id] ||= []
+        result[id] << @translations[:most_recent_poster]
+      end
+
+      while id = ids.shift
+        result[id] ||= []
+        result[id] << @translations[:frequent_poster]
+      end
+
+      result
     end
   end
 
@@ -46,17 +75,6 @@ class TopicPostersSummary
       summary << avatar_lookup[topic.last_post_user_id]
     end
     summary
-  end
-
-  def user_ids_with_descriptions
-    user_ids.zip([
-      :original_poster,
-      :most_recent_poster,
-      :frequent_poster,
-      :frequent_poster,
-      :frequent_poster,
-      :frequent_poster
-      ].map { |description| I18n.t(description) })
   end
 
   def last_poster_is_topic_creator?

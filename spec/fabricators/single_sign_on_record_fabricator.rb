@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 Fabricator(:single_sign_on_record) do
   user
   external_id { sequence(:external_id) { |i| "ext_#{i}" } }

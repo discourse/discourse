@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 require 'discourse'
 
@@ -109,8 +111,8 @@ describe Discourse do
 
   context '#site_contact_user' do
 
-    let!(:admin) { Fabricate(:admin) }
-    let!(:another_admin) { Fabricate(:admin) }
+    fab!(:admin) { Fabricate(:admin) }
+    fab!(:another_admin) { Fabricate(:admin) }
 
     it 'returns the user specified by the site setting site_contact_username' do
       SiteSetting.site_contact_username = another_admin.username
@@ -274,7 +276,10 @@ describe Discourse do
     it "should not fail when called" do
       exception = StandardError.new
 
-      Discourse.handle_job_exception(exception, nil, nil)
+      expect do
+        Discourse.handle_job_exception(exception, nil, nil)
+      end.to raise_error(StandardError) # Raises in test mode, catch it
+
       expect(logger.exception).to eq(exception)
       expect(logger.context.keys).to eq([:current_db, :current_hostname])
     end
@@ -282,7 +287,10 @@ describe Discourse do
     it "correctly passes extra context" do
       exception = StandardError.new
 
-      Discourse.handle_job_exception(exception, { message: "Doing a test", post_id: 31 }, nil)
+      expect do
+        Discourse.handle_job_exception(exception, { message: "Doing a test", post_id: 31 }, nil)
+      end.to raise_error(StandardError) # Raises in test mode, catch it
+
       expect(logger.exception).to eq(exception)
       expect(logger.context.keys.sort).to eq([:current_db, :current_hostname, :message, :post_id].sort)
     end

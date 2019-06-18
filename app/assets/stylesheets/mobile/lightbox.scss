@@ -5,9 +5,7 @@
 }
 
 .meta {
-  display: flex;
   align-items: center;
-  justify-content: center;
   background: $secondary;
   color: $primary-high;
   height: 25px;
@@ -16,10 +14,16 @@
   right: 0;
 
   .filename,
-  .informations {
+  .informations,
+  .d-icon-far-image {
     display: none;
   }
 
+  .d-icon-discourse-expand {
+    color: $primary-high;
+  }
+
+  // TODO: Delete by May 2019
   .expand {
     position: initial;
     float: none;

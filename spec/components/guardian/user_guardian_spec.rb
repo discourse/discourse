@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 describe UserGuardian do
@@ -114,7 +116,7 @@ describe UserGuardian do
 
     context "hidden profile" do
       # Mixing Fabricate.build() and Fabricate() could cause ID clashes, so override :user
-      let(:user) { Fabricate(:user) }
+      fab!(:user) { Fabricate(:user) }
 
       let(:hidden_user) do
         result = Fabricate(:user)

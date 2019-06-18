@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_dependency "discourse_diff"
 
 class PostRevision < ActiveRecord::Base

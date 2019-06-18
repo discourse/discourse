@@ -10,9 +10,12 @@ export default {
     // URL rewrites (usually due to refactoring)
     DiscourseURL.rewrite(/^\/category\//, "/c/");
     DiscourseURL.rewrite(/^\/group\//, "/groups/");
+    DiscourseURL.rewrite(/^\/groups$/, "/g");
+    DiscourseURL.rewrite(/^\/groups\//, "/g/");
     DiscourseURL.rewrite(/\/private-messages\/$/, "/messages/");
     DiscourseURL.rewrite(/^\/users$/, "/u");
     DiscourseURL.rewrite(/^\/users\//, "/u/");
+    DiscourseURL.rewrite(/\/admin\/flags/, "/review");
 
     if (currentUser) {
       const username = currentUser.get("username");

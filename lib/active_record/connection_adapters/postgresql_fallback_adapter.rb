@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'active_record/connection_adapters/abstract_adapter'
 require 'active_record/connection_adapters/postgresql_adapter'
 require 'discourse'
@@ -52,7 +54,7 @@ class PostgreSQLFallbackHandler
   def master_down
     synchronize do
       @masters_down[namespace] = true
-      Sidekiq.pause! if !Sidekiq.paused?
+      Sidekiq.pause!("pg_failover") if !Sidekiq.paused?
       MessageBus.publish(DATABASE_DOWN_CHANNEL, db: namespace, pid: Process.pid)
     end
   end
@@ -138,6 +140,7 @@ end
 module ActiveRecord
   module ConnectionHandling
     def postgresql_fallback_connection(config)
+      return postgresql_connection(config) if ARGV.include?("db:migrate")
       fallback_handler = ::PostgreSQLFallbackHandler.instance
       config = config.symbolize_keys
 

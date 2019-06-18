@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 require_dependency 'jobs/scheduled/clean_up_uploads'
@@ -7,8 +9,6 @@ describe Jobs::CleanUpUploads do
   def fabricate_upload(attributes = {})
     Fabricate(:upload, { created_at: 2.hours.ago }.merge(attributes))
   end
-
-  let(:upload) { fabricate_upload }
 
   before do
     SiteSetting.clean_up_uploads = true
@@ -50,6 +50,7 @@ describe Jobs::CleanUpUploads do
       SiteSetting.provider = SiteSettings::DbProvider.new(SiteSetting)
       SiteSetting.clean_orphan_uploads_grace_period_hours = 1
 
+      system_upload = fabricate_upload(id: -999)
       logo_upload = fabricate_upload
       logo_small_upload = fabricate_upload
       digest_logo_upload = fabricate_upload
@@ -84,7 +85,8 @@ describe Jobs::CleanUpUploads do
         opengraph_image_upload,
         twitter_summary_large_image_upload,
         favicon_upload,
-        apple_touch_icon_upload
+        apple_touch_icon_upload,
+        system_upload
       ].each { |record| expect(Upload.exists?(id: record.id)).to eq(true) }
 
       fabricate_upload
@@ -154,7 +156,7 @@ describe Jobs::CleanUpUploads do
 
   it "does not delete profile background uploads" do
     profile_background_upload = fabricate_upload
-    UserProfile.last.update_attributes!(profile_background: profile_background_upload.url)
+    UserProfile.last.upload_profile_background(profile_background_upload)
 
     Jobs::CleanUpUploads.new.execute(nil)
 
@@ -164,7 +166,7 @@ describe Jobs::CleanUpUploads do
 
   it "does not delete card background uploads" do
     card_background_upload = fabricate_upload
-    UserProfile.last.update_attributes!(card_background: card_background_upload.url)
+    UserProfile.last.upload_card_background(card_background_upload)
 
     Jobs::CleanUpUploads.new.execute(nil)
 
@@ -235,13 +237,17 @@ describe Jobs::CleanUpUploads do
   it "does not delete uploads in a queued post" do
     upload = fabricate_upload
     upload2 = fabricate_upload
+    upload3 = fabricate_upload
 
-    QueuedPost.create(
-      queue: "uploads",
-      state: QueuedPost.states[:new],
-      user_id: Fabricate(:user).id,
-      raw: "#{upload.sha1}\n#{upload2.short_url}",
-      post_options: {}
+    Fabricate(:reviewable_queued_post_topic, payload: {
+      raw: "#{upload.sha1}\n#{upload2.short_url}"
+    })
+
+    Fabricate(:reviewable_queued_post_topic,
+      payload: {
+        raw: "#{upload3.sha1}"
+      },
+      status: Reviewable.statuses[:rejected]
     )
 
     Jobs::CleanUpUploads.new.execute(nil)
@@ -249,6 +255,7 @@ describe Jobs::CleanUpUploads do
     expect(Upload.exists?(id: @upload.id)).to eq(false)
     expect(Upload.exists?(id: upload.id)).to eq(true)
     expect(Upload.exists?(id: upload2.id)).to eq(true)
+    expect(Upload.exists?(id: upload3.id)).to eq(false)
   end
 
   it "does not delete uploads in a draft" do

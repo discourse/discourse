@@ -16,6 +16,7 @@ export default Ember.Route.extend({
     this._super(...arguments);
 
     const parentController = this.controllerFor("adminCustomizeThemes");
+
     parentController.setProperties({
       editingTheme: false,
       currentTab: model.get("component") ? COMPONENTS : THEMES
@@ -26,7 +27,8 @@ export default Ember.Route.extend({
       parentController: parentController,
       allThemes: parentController.get("model"),
       colorSchemeId: model.get("color_scheme_id"),
-      colorSchemes: parentController.get("model.extras.color_schemes")
+      colorSchemes: parentController.get("model.extras.color_schemes"),
+      editingName: false
     });
 
     this.handleHighlight(model);

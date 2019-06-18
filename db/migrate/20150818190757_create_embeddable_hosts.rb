@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreateEmbeddableHosts < ActiveRecord::Migration[4.2]
   def change
     create_table :embeddable_hosts, force: true do |t|

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class UserBadge < ActiveRecord::Base
   belongs_to :badge
   belongs_to :user
@@ -27,7 +29,7 @@ class UserBadge < ActiveRecord::Base
   private
 
   def single_grant_badge?
-    self.badge.single_grant?
+    self.badge ? self.badge.single_grant? : true
   end
 end
 

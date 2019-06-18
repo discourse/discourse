@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class SingleSignOn
 
   class ParseError < RuntimeError; end
@@ -37,7 +39,13 @@ class SingleSignOn
     suppress_welcome_message
   }
 
-  NONCE_EXPIRY_TIME = 10.minutes
+  def self.nonce_expiry_time
+    @nonce_expiry_time ||= 10.minutes
+  end
+
+  def self.nonce_expiry_time=(v)
+    @nonce_expiry_time = v
+  end
 
   attr_accessor(*ACCESSORS)
   attr_writer :sso_secret, :sso_url
@@ -58,8 +66,6 @@ class SingleSignOn
     decoded = Base64.decode64(parsed["sso"])
     decoded_hash = Rack::Utils.parse_query(decoded)
 
-    return_sso_url = decoded_hash['return_sso_url']
-
     if sso.sign(parsed["sso"]) != parsed["sig"]
       diags = "\n\nsso: #{parsed["sso"]}\n\nsig: #{parsed["sig"]}\n\nexpected sig: #{sso.sign(parsed["sso"])}"
       if parsed["sso"] =~ /[^a-zA-Z0-9=\r\n\/+]/m
@@ -75,7 +81,7 @@ class SingleSignOn
       if BOOLS.include? k
         val = ["true", "false"].include?(val) ? val == "true" : nil
       end
-      sso.send("#{k}=", val)
+      sso.public_send("#{k}=", val)
     end
 
     decoded_hash.each do |k, v|
@@ -88,7 +94,7 @@ class SingleSignOn
   end
 
   def diagnostics
-    SingleSignOn::ACCESSORS.map { |a| "#{a}: #{send(a)}" }.join("\n")
+    SingleSignOn::ACCESSORS.map { |a| "#{a}: #{public_send(a)}" }.join("\n")
   end
 
   def sso_secret
@@ -122,8 +128,8 @@ class SingleSignOn
     payload = {}
 
     ACCESSORS.each do |k|
-      next if (val = send k) == nil
-     payload[k] = val
+      next if (val = public_send(k)) == nil
+      payload[k] = val
     end
 
     @custom_fields&.each do |k, v|

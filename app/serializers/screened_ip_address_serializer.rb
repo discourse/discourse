@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ScreenedIpAddressSerializer < ApplicationSerializer
   attributes :id,
              :ip_address,

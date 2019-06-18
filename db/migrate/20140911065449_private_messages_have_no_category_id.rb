@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class PrivateMessagesHaveNoCategoryId < ActiveRecord::Migration[4.2]
   def up
     execute "UPDATE topics SET category_id = NULL WHERE category_id IS NOT NULL AND archetype = \'private_message\'"

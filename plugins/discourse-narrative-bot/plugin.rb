@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # name: discourse-narrative-bot
 # about: Introduces staff to Discourse
 # version: 1.0
@@ -154,7 +156,7 @@ after_initialize do
 
   self.add_to_class(:user, :enqueue_narrative_bot_job?) do
     SiteSetting.discourse_narrative_bot_enabled &&
-      self.id > 0 &&
+      self.human? &&
       !self.anonymous? &&
       !self.staged &&
       !SiteSetting.discourse_narrative_bot_ignored_usernames.split('|'.freeze).include?(self.username)

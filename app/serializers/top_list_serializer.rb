@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class TopListSerializer < ApplicationSerializer
 
   attributes :can_create_topic,
@@ -13,7 +15,9 @@ class TopListSerializer < ApplicationSerializer
     attribute period
 
     define_method(period) do
-      TopicListSerializer.new(object.send(period), scope: scope).as_json if object.send(period)
+      if resolved = object.public_send(period)
+        TopicListSerializer.new(resolved, scope: scope).as_json
+      end
     end
 
   end

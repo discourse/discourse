@@ -7,5 +7,5 @@
 
 sl:
   site_settings:
-    presence_enabled: 'Pokaži uporabnice/ke, ki trenutno odgovarjajo na odprto temo ali urejujejo objavo?'
+    presence_enabled: 'Pokaži uporabnike, ki trenutno odgovarjajo na odprto temo ali urejujejo objavo?'
     presence_max_users_shown: 'Maksimalno prikazano število uporabnikov.'

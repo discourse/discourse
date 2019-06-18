@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 Discourse::Application.configure do
   # Settings specified here will take precedence over those in config/application.rb
 
@@ -63,14 +65,13 @@ Discourse::Application.configure do
       s.set_regardless_of_locale(:crawl_images, false)
       s.set_regardless_of_locale(:download_remote_images_to_local, false)
       s.set_regardless_of_locale(:unique_posts_mins, 0)
-      # Running jobs are expensive and most of our tests are not concern with
-      # code that runs inside jobs
-      s.set_regardless_of_locale(:queue_jobs, true)
+      s.set_regardless_of_locale(:max_consecutive_replies, 0)
       # disable plugins
       if ENV['LOAD_PLUGINS'] == '1'
         s.set_regardless_of_locale(:discourse_narrative_bot_enabled, false)
       end
     end
+
     SiteSetting.refresh!
   end
 end

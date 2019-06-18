@@ -4,9 +4,6 @@ require 'digest/sha1'
 class UserAuthToken < ActiveRecord::Base
   belongs_to :user
 
-  # TODO 2019: remove this line
-  self.ignored_columns = ["legacy"]
-
   ROTATE_TIME = 10.minutes
   # used when token did not arrive at client
   URGENT_ROTATE_TIME = 1.minute
@@ -245,4 +242,5 @@ end
 #
 #  index_user_auth_tokens_on_auth_token       (auth_token) UNIQUE
 #  index_user_auth_tokens_on_prev_auth_token  (prev_auth_token) UNIQUE
+#  index_user_auth_tokens_on_user_id          (user_id)
 #

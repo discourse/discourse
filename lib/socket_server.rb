@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'socket'
 
 class SocketServer
@@ -49,7 +51,7 @@ class SocketServer
     end
 
     start = Time.now
-    line = ""
+    line = +""
 
     while Time.now - start < 10
       if IO.select([socket], nil, nil, 10)

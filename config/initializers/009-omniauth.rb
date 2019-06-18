@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "openssl"
 require "openid_redis_store"
 

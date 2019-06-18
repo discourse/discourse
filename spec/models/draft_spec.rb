@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 describe Draft do
@@ -65,7 +67,7 @@ describe Draft do
   end
 
   describe '#stream' do
-    let(:public_post) { Fabricate(:post) }
+    fab!(:public_post) { Fabricate(:post) }
     let(:public_topic) { public_post.topic }
 
     let(:stream) do

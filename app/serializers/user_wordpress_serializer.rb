@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class UserWordpressSerializer < BasicUserSerializer
 
   def avatar_template

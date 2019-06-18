@@ -22,7 +22,8 @@ const SERVER_SIDE_ONLY = [
   /^\/wizard/,
   /\.rss$/,
   /\.json$/,
-  /^\/admin\/upgrade$/
+  /^\/admin\/upgrade$/,
+  /^\/logs($|\/)/
 ];
 
 export function rewritePath(path) {
@@ -49,6 +50,10 @@ export function clearRewrites() {
 
 export function userPath(subPath) {
   return Discourse.getURL(subPath ? `/u/${subPath}` : "/u");
+}
+
+export function groupPath(subPath) {
+  return Discourse.getURL(subPath ? `/g/${subPath}` : "/g");
 }
 
 let _jumpScheduled = false;
@@ -419,7 +424,7 @@ const DiscourseURL = Ember.Object.extend({
   handleURL(path, opts) {
     opts = opts || {};
 
-    const router = this.get("router");
+    const router = this.router;
 
     if (opts.replaceURL) {
       this.replaceState(path);

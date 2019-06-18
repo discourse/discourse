@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddTwitterUserInfo < ActiveRecord::Migration[4.2]
   def change
     create_table :twitter_user_infos do  |t|

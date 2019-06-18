@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class WebHook < ActiveRecord::Base
   has_and_belongs_to_many :web_hook_event_types
   has_and_belongs_to_many :groups
@@ -28,7 +30,8 @@ class WebHook < ActiveRecord::Base
   def self.last_delivery_statuses
     @last_delivery_statuses ||= Enum.new(inactive: 1,
                                          failed: 2,
-                                         successful: 3)
+                                         successful: 3,
+                                         disabled: 4)
   end
 
   def self.default_event_types
@@ -56,6 +59,10 @@ class WebHook < ActiveRecord::Base
 
   def self.enqueue_object_hooks(type, object, event, serializer = nil)
     if active_web_hooks(type).exists?
+      if type == :flag
+        Discourse.deprecate("The flags webhook is deprecated. Please use reviewable instead.")
+      end
+
       payload = WebHook.generate_payload(type, object, serializer)
 
       WebHook.enqueue_hooks(type, event,
@@ -65,10 +72,12 @@ class WebHook < ActiveRecord::Base
     end
   end
 
-  def self.enqueue_topic_hooks(event, topic)
+  def self.enqueue_topic_hooks(event, topic, payload = nil)
     if active_web_hooks('topic').exists? && topic.present?
-      topic_view = TopicView.new(topic.id, Discourse.system_user)
-      payload = WebHook.generate_payload(:topic, topic_view, WebHookTopicViewSerializer)
+      payload ||= begin
+        topic_view = TopicView.new(topic.id, Discourse.system_user)
+        WebHook.generate_payload(:topic, topic_view, WebHookTopicViewSerializer)
+      end
 
       WebHook.enqueue_hooks(:topic, event,
         id: topic.id,
@@ -79,9 +88,9 @@ class WebHook < ActiveRecord::Base
     end
   end
 
-  def self.enqueue_post_hooks(event, post)
+  def self.enqueue_post_hooks(event, post, payload = nil)
     if active_web_hooks('post').exists? && post.present?
-      payload = WebHook.generate_payload(:post, post)
+      payload ||= WebHook.generate_payload(:post, post)
 
       WebHook.enqueue_hooks(:post, event,
         id: post.id,

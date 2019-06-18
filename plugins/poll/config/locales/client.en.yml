@@ -39,13 +39,13 @@ en:
       multiple:
         help:
           at_least_min_options:
-            one: "Choose at least <strong>1</strong> option"
+            one: "Choose at least <strong>%{count}</strong> option"
             other: "Choose at least <strong>%{count}</strong> options"
           up_to_max_options:
-            one: "Choose up to <strong>1</strong> option"
+            one: "Choose up to <strong>%{count}</strong> option"
             other: "Choose up to <strong>%{count}</strong> options"
           x_options:
-            one: "Choose <strong>1</strong> option"
+            one: "Choose <strong>%{count}</strong> option"
             other: "Choose <strong>%{count}</strong> options"
           between_min_and_max_options: "Choose between <strong>%{min}</strong> and <strong>%{max}</strong> options"
 
@@ -72,8 +72,8 @@ en:
         confirm: "Are you sure you want to close this poll?"
 
       automatic_close:
-        closes_in: "closes in <strong>%{timeLeft}</strong>"
-        age: "closed <strong>%{age}</strong>"
+        closes_in: "Closes in <strong>%{timeLeft}</strong>."
+        age: "Closed <strong>%{age}</strong>"
 
       error_while_toggling_status: "Sorry, there was an error toggling the status of this poll."
       error_while_casting_votes: "Sorry, there was an error casting your votes."

@@ -8,12 +8,12 @@ export default Ember.Component.extend({
       return;
     }
 
-    const path = this.get("path");
+    const path = this.path;
     if (path === "faq" || path === "guidelines") {
       $(window).on("load.faq resize.faq scroll.faq", () => {
         const faqUnread = !currentUser.get("read_faq");
         if (faqUnread && isElementInViewport($(".contents p").last())) {
-          this.sendAction();
+          this.action();
         }
       });
     }

@@ -1,4 +1,8 @@
+# frozen_string_literal: true
+
 class GroupsController < ApplicationController
+  include ApplicationHelper
+
   requires_login only: [
     :set_notifications,
     :mentionable,
@@ -42,7 +46,7 @@ class GroupsController < ApplicationController
       raise Discourse::InvalidAccess.new(:enable_group_directory)
     end
 
-    page_size = 30
+    page_size = mobile_device? ? 15 : 36
     page = params[:page]&.to_i || 0
     order = %w{name user_count}.delete(params[:order])
     dir = params[:asc] ? 'ASC' : 'DESC'
@@ -207,12 +211,49 @@ class GroupsController < ApplicationController
       raise Discourse::InvalidParameters.new(:limit)
     end
 
+    if limit > 1000
+      raise Discourse::InvalidParameters.new(:limit)
+    end
+
     if offset < 0
       raise Discourse::InvalidParameters.new(:offset)
     end
 
     dir = (params[:desc] && !params[:desc].blank?) ? 'DESC' : 'ASC'
     order = ""
+
+    if params[:requesters]
+      guardian.ensure_can_edit!(group)
+
+      users = group.requesters
+      total = users.count
+
+      if (filter = params[:filter]).present?
+        filter = filter.split(',') if filter.include?(',')
+
+        if current_user&.admin
+          users = users.filter_by_username_or_email(filter)
+        else
+          users = users.filter_by_username(filter)
+        end
+      end
+
+      users = users
+        .select("users.*, group_requests.reason, group_requests.created_at requested_at")
+        .order(params[:order] == 'requested_at' ? "group_requests.created_at #{dir}" : "")
+        .order(username_lower: dir)
+        .limit(limit)
+        .offset(offset)
+
+      return render json: {
+        members: serialize_data(users, GroupRequesterSerializer),
+        meta: {
+          total: total,
+          limit: limit,
+          offset: offset
+        }
+      }
+    end
 
     if params[:order] && %w{last_posted_at last_seen_at}.include?(params[:order])
       order = "#{params[:order]} #{dir} NULLS LAST"
@@ -284,14 +325,40 @@ class GroupsController < ApplicationController
       ))
     else
       users.each do |user|
-        group.add(user)
-        GroupActionLogger.new(current_user, group).log_add_user_to_group(user)
+        begin
+          group.add(user)
+          GroupActionLogger.new(current_user, group).log_add_user_to_group(user)
+        rescue ActiveRecord::RecordNotUnique
+          # Under concurrency, we might attempt to insert two records quickly and hit a DB
+          # constraint. In this case we can safely ignore the error and act as if the user
+          # was added to the group.
+        end
       end
 
       render json: success_json.merge!(
         usernames: users.map(&:username)
       )
     end
+  end
+
+  def handle_membership_request
+    group = Group.find_by(id: params[:id])
+    raise Discourse::InvalidParameters.new(:id) if group.blank?
+    guardian.ensure_can_edit!(group)
+
+    ActiveRecord::Base.transaction do
+      user = User.find_by(id: params[:user_id])
+      raise Discourse::InvalidParameters.new(:user_id) if user.blank?
+
+      if params[:accept]
+        group.add(user)
+        GroupActionLogger.new(current_user, group).log_add_user_to_group(user)
+      end
+
+      GroupRequest.where(group_id: group.id, user_id: user.id).delete_all
+    end
+
+    render json: success_json
   end
 
   def mentionable
@@ -355,12 +422,13 @@ class GroupsController < ApplicationController
   def request_membership
     params.require(:reason)
 
-    unless current_user.staff?
-      RateLimiter.new(current_user, "request_group_membership", 1, 1.day).performed!
-    end
-
     group = find_group(:id)
-    group_name = group.name
+
+    begin
+      GroupRequest.create!(group: group, user: current_user, reason: params[:reason])
+    rescue ActiveRecord::RecordNotUnique => e
+      return render json: failed_json.merge(error: I18n.t("groups.errors.already_requested_membership")), status: 409
+    end
 
     usernames = [current_user.username].concat(
       group.users.where('group_users.owner')
@@ -369,9 +437,18 @@ class GroupsController < ApplicationController
         .pluck("users.username")
     )
 
+    raw = <<~EOF
+      #{params[:reason]}
+
+      ---
+      <a href="#{Discourse.base_uri}/g/#{group.name}/requests">
+        #{I18n.t('groups.request_membership_pm.handle')}
+      </a>
+    EOF
+
     post = PostCreator.new(current_user,
-      title: I18n.t('groups.request_membership_pm.title', group_name: group_name),
-      raw: params[:reason],
+      title: I18n.t('groups.request_membership_pm.title', group_name: group.name),
+      raw: raw,
       archetype: Archetype.private_message,
       target_usernames: usernames.join(','),
       skip_validations: true
@@ -443,6 +520,7 @@ class GroupsController < ApplicationController
           mentionable_level
           messageable_level
           default_notification_level
+          bio_raw
         }
       else
         default_params = %i{
@@ -471,6 +549,9 @@ class GroupsController < ApplicationController
             :automatic_membership_email_domains,
             :automatic_membership_retroactive
           ])
+
+          custom_fields = Group.editable_group_custom_fields
+          default_params << { custom_fields: custom_fields } unless custom_fields.blank?
         end
 
         default_params

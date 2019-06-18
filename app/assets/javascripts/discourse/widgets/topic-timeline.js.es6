@@ -216,11 +216,6 @@ createWidget("timeline-scrollarea", {
       );
       showButton =
         before + SCROLLER_HEIGHT - 5 < lastReadTop || before > lastReadTop + 25;
-
-      // Don't show if at the bottom of the timeline
-      if (lastReadTop > scrollareaHeight() - LAST_READ_HEIGHT / 2) {
-        showButton = false;
-      }
     }
 
     const result = [

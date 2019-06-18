@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 require_dependency 'theme_javascript_compiler'
@@ -61,6 +63,12 @@ describe ThemeJavascriptCompiler do
       # Works when used inside other statements
       expect(render("{{dummy-helper themeSettings.setting_key}}")).
         to eq('dummy(setting(22:setting_key))')
+    end
+
+    it "doesn't duplicate number parameter inside {{each}}" do
+      expect(compiler.compile("{{#each item as |test test2|}}{{theme-setting 'setting_key'}}{{/each}}")).
+        to include('{"name":"theme-setting","hash":{},"hashTypes":{},"hashContexts":{},"types":["NumberLiteral","StringLiteral"]')
+      # Fail would be if theme-setting is defined with types:["NumberLiteral","NumberLiteral","StringLiteral"]
     end
   end
 

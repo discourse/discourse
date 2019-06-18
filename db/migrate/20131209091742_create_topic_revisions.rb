@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreateTopicRevisions < ActiveRecord::Migration[4.2]
   def up
     create_table :topic_revisions do |t|

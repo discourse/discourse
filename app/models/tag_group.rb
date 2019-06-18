@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class TagGroup < ActiveRecord::Base
   validates_uniqueness_of :name, case_sensitive: false
 
@@ -11,6 +13,8 @@ class TagGroup < ActiveRecord::Base
 
   before_create :init_permissions
   before_save :apply_permissions
+
+  after_commit { DiscourseTagging.clear_cache! }
 
   attr_accessor :permissions
 
@@ -66,14 +70,19 @@ class TagGroup < ActiveRecord::Base
     if guardian.is_staff?
       TagGroup
     else
+      # (
+      #   tag group is restricted to a category you can see
+      #   OR
+      #   tag group is not restricted to any categories
+      # )
+      # AND tag group can be seen by everyone
       filter_sql = <<~SQL
         (
           id IN (SELECT tag_group_id FROM category_tag_groups WHERE category_id IN (?))
-        ) OR (
+          OR
           id NOT IN (SELECT tag_group_id FROM category_tag_groups)
-          AND
-          id IN (SELECT tag_group_id FROM tag_group_permissions WHERE group_id = ?)
         )
+        AND id IN (SELECT tag_group_id FROM tag_group_permissions WHERE group_id = ?)
       SQL
 
       TagGroup.where(filter_sql, guardian.allowed_category_ids, Group::AUTO_GROUPS[:everyone])

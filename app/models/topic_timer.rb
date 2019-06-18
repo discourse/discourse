@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class TopicTimer < ActiveRecord::Base
   include Trashable
 
@@ -23,6 +25,7 @@ class TopicTimer < ActiveRecord::Base
        !attribute_in_database(:execute_at).nil?) ||
        will_save_change_to_user_id?
 
+      # private implementation detail have to use send
       self.send("cancel_auto_#{self.class.types[status_type]}_job")
     end
   end
@@ -32,6 +35,7 @@ class TopicTimer < ActiveRecord::Base
       now = Time.zone.now
       time = execute_at < now ? now : execute_at
 
+      # private implementation detail have to use send
       self.send("schedule_auto_#{self.class.types[status_type]}_job", time)
     end
   end
@@ -59,6 +63,7 @@ class TopicTimer < ActiveRecord::Base
     TopicTimer.where("topic_timers.execute_at < ?", Time.zone.now)
       .find_each do |topic_timer|
 
+      # private implementation detail scoped to class
       topic_timer.send(
         "schedule_auto_#{self.types[topic_timer.status_type]}_job",
         topic_timer.execute_at

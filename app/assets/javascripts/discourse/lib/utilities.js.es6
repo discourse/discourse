@@ -282,7 +282,7 @@ export function validateUploadedFile(file, opts) {
   return true;
 }
 
-const IMAGES_EXTENSIONS_REGEX = /(png|jpe?g|gif|bmp|tiff?|svg|webp|ico)/i;
+const IMAGES_EXTENSIONS_REGEX = /(png|jpe?g|gif|svg|ico)/i;
 
 function extensionsToArray(exts) {
   return exts
@@ -348,7 +348,7 @@ export function authorizedExtensions() {
 
 export function authorizedImagesExtensions() {
   return authorizesAllExtensions()
-    ? "png, jpg, jpeg, gif, bmp, tiff, svg, webp, ico"
+    ? "png, jpg, jpeg, gif, svg, ico"
     : imagesExtensions().join(", ");
 }
 
@@ -376,7 +376,7 @@ export function authorizesOneOrMoreImageExtensions() {
 }
 
 export function isAnImage(path) {
-  return /\.(png|jpe?g|gif|bmp|tiff?|svg|webp|ico)$/i.test(path);
+  return /\.(png|jpe?g|gif|svg|ico)$/i.test(path);
 }
 
 function uploadTypeFromFileName(fileName) {
@@ -444,15 +444,9 @@ export function getUploadMarkdown(upload) {
   ) {
     return uploadLocation(upload.url);
   } else {
-    return (
-      '<a class="attachment" href="' +
-      upload.url +
-      '">' +
-      upload.original_filename +
-      "</a> (" +
-      I18n.toHumanSize(upload.filesize) +
-      ")\n"
-    );
+    return `[${upload.original_filename}|attachment](${
+      upload.short_url
+    }) (${I18n.toHumanSize(upload.filesize)})`;
   }
 }
 
@@ -550,6 +544,26 @@ export function isAppleDevice() {
   );
 }
 
+let iPadDetected = undefined;
+
+export function isiPad() {
+  if (iPadDetected === undefined) {
+    iPadDetected =
+      navigator.userAgent.match(/iPad/g) &&
+      !navigator.userAgent.match(/Trident/g);
+  }
+  return iPadDetected;
+}
+
+export function safariHacksDisabled() {
+  let pref = localStorage.getItem("safari-hacks-disabled");
+  let result = false;
+  if (pref !== null) {
+    result = pref === "true";
+  }
+  return result;
+}
+
 const toArray = items => {
   items = items || [];
 
@@ -621,6 +635,57 @@ export function areCookiesEnabled() {
   } catch (e) {
     return false;
   }
+}
+
+export function isiOSPWA() {
+  return (
+    window.matchMedia("(display-mode: standalone)").matches &&
+    navigator.userAgent.match(/(iPad|iPhone|iPod)/g)
+  );
+}
+
+export function isAppWebview() {
+  return window.ReactNativeWebView !== undefined;
+}
+
+export function postRNWebviewMessage(prop, value) {
+  if (window.ReactNativeWebView !== undefined) {
+    window.ReactNativeWebView.postMessage(JSON.stringify({ [prop]: value }));
+  }
+}
+
+function reportToLogster(name, error) {
+  const data = {
+    message: `${name} theme/component is throwing errors`,
+    stacktrace: error.stack
+  };
+
+  Ember.$.ajax(`${Discourse.BaseUri}/logs/report_js_error`, {
+    data,
+    type: "POST",
+    cache: false
+  });
+}
+// this function is used in lib/theme_javascript_compiler.rb
+export function rescueThemeError(name, error, api) {
+  /* eslint-disable-next-line no-console */
+  console.error(`"${name}" error:`, error);
+  reportToLogster(name, error);
+
+  const currentUser = api.getCurrentUser();
+  if (!currentUser || !currentUser.admin) {
+    return;
+  }
+
+  const path = `${Discourse.BaseUri}/admin/customize/themes`;
+  const message = I18n.t("themes.broken_theme_alert", {
+    theme: name,
+    path: `<a href="${path}">${path}</a>`
+  });
+  const alertDiv = document.createElement("div");
+  alertDiv.classList.add("broken-theme-alert");
+  alertDiv.innerHTML = `⚠️ ${message}`;
+  document.body.prepend(alertDiv);
 }
 
 // This prevents a mini racer crash

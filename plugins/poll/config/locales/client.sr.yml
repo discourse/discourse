@@ -9,3 +9,5 @@ sr:
   js:
     poll:
       average_rating: "Prosečan rejting: <strong>%{average}</strong>."
+      close:
+        label: "Zatvori"

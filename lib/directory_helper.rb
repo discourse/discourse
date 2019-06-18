@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module DirectoryHelper
 
   def tmp_directory(prefix)

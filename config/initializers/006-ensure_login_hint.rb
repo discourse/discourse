@@ -1,3 +1,7 @@
+# frozen_string_literal: true
+
+return if GlobalSetting.skip_db?
+
 # Some sanity checking so we don't count on an unindexed column on boot
 begin
   if ActiveRecord::Base.connection.table_exists?(:users) &&

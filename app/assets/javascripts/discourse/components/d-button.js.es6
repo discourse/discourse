@@ -1,16 +1,21 @@
 import { default as computed } from "ember-addons/ember-computed-decorators";
+import DiscourseURL from "discourse/lib/url";
 
 export default Ember.Component.extend({
   // subclasses need this
   layoutName: "components/d-button",
 
+  form: null,
+
   tagName: "button",
   classNameBindings: [":btn", "noText", "btnType"],
   attributeBindings: [
+    "form",
     "disabled",
     "translatedTitle:title",
     "translatedLabel:aria-label",
-    "tabindex"
+    "tabindex",
+    "type"
   ],
 
   btnIcon: Ember.computed.notEmpty("icon"),
@@ -27,20 +32,42 @@ export default Ember.Component.extend({
   noText: Ember.computed.empty("translatedLabel"),
 
   @computed("title")
-  translatedTitle(title) {
-    if (title) return I18n.t(title);
+  translatedTitle: {
+    get() {
+      if (this._translatedTitle) return this._translatedTitle;
+      if (this.title) return I18n.t(this.title);
+    },
+    set(value) {
+      return (this._translatedTitle = value);
+    }
   },
 
   @computed("label")
-  translatedLabel(label) {
-    if (label) return I18n.t(label);
+  translatedLabel: {
+    get() {
+      if (this._translatedLabel) return this._translatedLabel;
+      if (this.label) return I18n.t(this.label);
+    },
+    set(value) {
+      return (this._translatedLabel = value);
+    }
   },
 
   click() {
-    if (typeof this.get("action") === "string") {
-      this.sendAction("action", this.get("actionParam"));
-    } else {
-      this.get("action")(this.get("actionParam"));
+    let { action } = this;
+
+    if (action) {
+      if (typeof action === "string") {
+        this.sendAction("action", this.actionParam);
+      } else if (typeof action === "object" && action.value) {
+        action.value(this.actionParam);
+      } else if (typeof this.action === "function") {
+        action(this.actionParam);
+      }
+    }
+
+    if (this.href && this.href.length) {
+      DiscourseURL.routeTo(this.href);
     }
 
     return false;

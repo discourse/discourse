@@ -34,7 +34,7 @@ export default ComboBoxComponent.extend({
 
     if (hasSelection || (noSubcategories && subCategory)) {
       shortcuts.push({
-        name: this.get("allCategoriesLabel"),
+        name: this.allCategoriesLabel,
         __sk_row_type: "noopRow",
         id: "all-categories"
       });
@@ -42,7 +42,7 @@ export default ComboBoxComponent.extend({
 
     if (subCategory && (hasSelection || !noSubcategories)) {
       shortcuts.push({
-        name: this.get("noCategoriesLabel"),
+        name: this.noCategoriesLabel,
         __sk_row_type: "noopRow",
         id: "no-categories"
       });
@@ -54,10 +54,10 @@ export default ComboBoxComponent.extend({
   init() {
     this._super(...arguments);
 
-    this.get("rowComponentOptions").setProperties({
-      hideParentCategory: this.get("subCategory"),
+    this.rowComponentOptions.setProperties({
+      hideParentCategory: this.subCategory,
       allowUncategorized: true,
-      countSubcategories: this.get("countSubcategories"),
+      countSubcategories: this.countSubcategories,
       displayCategoryDescription: !(
         this.currentUser &&
         (this.currentUser.get("staff") || this.currentUser.trust_level > 0)
@@ -66,7 +66,7 @@ export default ComboBoxComponent.extend({
   },
 
   didReceiveAttrs() {
-    if (!this.get("categories")) this.set("categories", []);
+    if (!this.categories) this.set("categories", []);
     this.forceValue(this.get("category.id"));
   },
 
@@ -75,14 +75,14 @@ export default ComboBoxComponent.extend({
     const contentLength = (content && content.length) || 0;
     return (
       contentLength >= 15 ||
-      (this.get("isAsync") && contentLength < Discourse.Category.list().length)
+      (this.isAsync && contentLength < Discourse.Category.list().length)
     );
   },
 
   computeHeaderContent() {
     let content = this._super(...arguments);
 
-    if (this.get("hasSelection")) {
+    if (this.hasSelection) {
       const category = Category.findById(content.value);
       content.title = category.title;
       content.label = categoryBadgeHTML(category, {
@@ -91,16 +91,16 @@ export default ComboBoxComponent.extend({
         hideParent: true
       }).htmlSafe();
     } else {
-      if (this.get("noSubcategories")) {
+      if (this.noSubcategories) {
         content.label = `<span class="category-name">${this.get(
           "noCategoriesLabel"
         )}</span>`;
-        content.title = this.get("noCategoriesLabel");
+        content.title = this.noCategoriesLabel;
       } else {
         content.label = `<span class="category-name">${this.get(
           "allCategoriesLabel"
         )}</span>`;
-        content.title = this.get("allCategoriesLabel");
+        content.title = this.allCategoriesLabel;
       }
     }
 
@@ -130,9 +130,9 @@ export default ComboBoxComponent.extend({
       let categoryURL;
 
       if (categoryId === "all-categories") {
-        categoryURL = Discourse.getURL(this.get("allCategoriesUrl"));
+        categoryURL = Discourse.getURL(this.allCategoriesUrl);
       } else if (categoryId === "no-categories") {
-        categoryURL = Discourse.getURL(this.get("noCategoriesUrl"));
+        categoryURL = Discourse.getURL(this.noCategoriesUrl);
       } else {
         const category = Category.findById(parseInt(categoryId, 10));
         const slug = Discourse.Category.slugFor(category);
@@ -143,18 +143,18 @@ export default ComboBoxComponent.extend({
     },
 
     onExpand() {
-      if (this.get("isAsync") && isEmpty(this.get("asyncContent"))) {
-        this.set("asyncContent", this.get("content"));
+      if (this.isAsync && isEmpty(this.asyncContent)) {
+        this.set("asyncContent", this.content);
       }
     },
 
     onFilter(filter) {
-      if (!this.get("isAsync")) {
+      if (!this.isAsync) {
         return;
       }
 
       if (isEmpty(filter)) {
-        this.set("asyncContent", this.get("content"));
+        this.set("asyncContent", this.content);
         return;
       }
 

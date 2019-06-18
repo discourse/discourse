@@ -1,5 +1,8 @@
+# frozen_string_literal: true
+
 require_dependency 'new_post_manager'
 require_dependency 'post_creator'
+require_dependency 'post_action_destroyer'
 require_dependency 'post_destroyer'
 require_dependency 'post_merger'
 require_dependency 'distributed_memoizer'
@@ -199,7 +202,10 @@ class PostsController < ApplicationController
 
     post.image_sizes = params[:image_sizes] if params[:image_sizes].present?
 
-    if !guardian.send("can_edit?", post) && post.user_id == current_user.id && post.edit_time_limit_expired?
+    if !guardian.public_send("can_edit?", post) &&
+       post.user_id == current_user.id &&
+       post.edit_time_limit_expired?
+
       return render_json_error(I18n.t('too_late_to_edit'))
     end
 
@@ -336,7 +342,7 @@ class PostsController < ApplicationController
 
   def destroy_many
     params.require(:post_ids)
-    defer_flags = params[:defer_flags] || false
+    agree_with_first_reply_flag = (params[:agree_with_first_reply_flag] || true).to_s == "true"
 
     posts = Post.where(id: post_ids_including_replies)
     raise Discourse::InvalidParameters.new(:post_ids) if posts.blank?
@@ -345,7 +351,9 @@ class PostsController < ApplicationController
     posts.each { |p| guardian.ensure_can_delete!(p) }
 
     Post.transaction do
-      posts.each { |p| PostDestroyer.new(current_user, p, defer_flags: defer_flags).destroy }
+      posts.each_with_index do |p, i|
+        PostDestroyer.new(current_user, p, defer_flags: !(agree_with_first_reply_flag && i == 0)).destroy
+      end
     end
 
     render body: nil
@@ -473,10 +481,27 @@ class PostsController < ApplicationController
     render_json_dump(locked: post.locked?)
   end
 
+  def notice
+    raise Discourse::NotFound unless guardian.is_staff?
+
+    post = find_post_from_params
+
+    if params[:notice].present?
+      post.custom_fields["notice_type"] = Post.notices[:custom]
+      post.custom_fields["notice_args"] = params[:notice]
+      post.save_custom_fields
+    else
+      post.delete_post_notices
+    end
+
+    render body: nil
+  end
+
   def bookmark
     if params[:bookmarked] == "true"
       post = find_post_from_params
-      PostAction.act(current_user, post, PostActionType.types[:bookmark])
+      result = PostActionCreator.create(current_user, post, :bookmark)
+      return render_json_error(result) if result.failed?
     else
       post_action = PostAction.find_by(post_id: params[:post_id], user_id: current_user.id)
       raise Discourse::NotFound unless post_action
@@ -484,7 +509,8 @@ class PostsController < ApplicationController
       post = Post.with_deleted.find_by(id: post_action&.post_id)
       raise Discourse::NotFound unless post
 
-      PostAction.remove_act(current_user, post, PostActionType.types[:bookmark])
+      result = PostActionDestroyer.destroy(current_user, post, :bookmark)
+      return render_json_error(result) if result.failed?
     end
 
     topic_user = TopicUser.get(post.topic, current_user)
@@ -706,7 +732,9 @@ class PostsController < ApplicationController
       result[:shared_draft] = true
     end
 
-    if current_user.staff? && SiteSetting.enable_whispers? && params[:whisper] == "true"
+    if params[:whisper] == "true"
+      raise Discourse::InvalidAccess.new("invalid_whisper_access", nil, custom_message: "invalid_whisper_access") unless guardian.can_create_whisper?
+
       result[:post_type] = Post.types[:whisper]
     end
 
@@ -736,7 +764,7 @@ class PostsController < ApplicationController
   end
 
   def signature_for(args)
-    "post##" << Digest::SHA1.hexdigest(args
+    +"post##" << Digest::SHA1.hexdigest(args
       .to_h
       .to_a
       .concat([["user", current_user.id]])

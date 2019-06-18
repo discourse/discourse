@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 task 'redis:clean_up' => ['environment'] do
   return unless Rails.configuration.multisite
 

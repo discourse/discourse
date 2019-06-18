@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class RenameInvisible < ActiveRecord::Migration[4.2]
   def change
 

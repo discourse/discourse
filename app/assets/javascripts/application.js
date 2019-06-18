@@ -10,7 +10,6 @@
 //= require ./deprecated
 
 // Stuff we need to load first
-//= require ./discourse/helpers/parse-html
 //= require ./discourse/lib/to-markdown
 //= require ./discourse/lib/utilities
 //= require ./discourse/lib/page-visible
@@ -25,6 +24,7 @@
 //= require ./discourse/lib/lock-on
 //= require ./discourse/lib/url
 //= require ./discourse/lib/debounce
+//= require ./discourse/lib/throttle
 //= require ./discourse/lib/quote
 //= require ./discourse/lib/key-value-store
 //= require ./discourse/lib/computed
@@ -54,7 +54,6 @@
 //= require ./discourse/lib/export-csv
 //= require ./discourse/lib/autocomplete
 //= require ./discourse/lib/after-transition
-//= require ./discourse/lib/debounce
 //= require ./discourse/lib/safari-hacks
 //= require_tree ./discourse/adapters
 //= require ./discourse/models/post-action-type

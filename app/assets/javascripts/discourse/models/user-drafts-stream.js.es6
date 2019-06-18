@@ -44,21 +44,21 @@ export default RestModel.extend({
   },
 
   remove(draft) {
-    let content = this.get("content").filter(
+    let content = this.content.filter(
       item => item.draft_key !== draft.draft_key
     );
     this.setProperties({ content, itemsLoaded: content.length });
   },
 
   findItems() {
-    let findUrl = this.get("baseUrl");
+    let findUrl = this.baseUrl;
 
-    const lastLoadedUrl = this.get("lastLoadedUrl");
+    const lastLoadedUrl = this.lastLoadedUrl;
     if (lastLoadedUrl === findUrl) {
       return Ember.RSVP.resolve();
     }
 
-    if (this.get("loading")) {
+    if (this.loading) {
       return Ember.RSVP.resolve();
     }
 
@@ -90,10 +90,10 @@ export default RestModel.extend({
 
             copy.pushObject(UserDraft.create(draft));
           });
-          this.get("content").pushObjects(copy);
+          this.content.pushObjects(copy);
           this.setProperties({
             loaded: true,
-            itemsLoaded: this.get("itemsLoaded") + result.drafts.length
+            itemsLoaded: this.itemsLoaded + result.drafts.length
           });
         }
       })

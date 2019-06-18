@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require File.expand_path("../../config/environment", __FILE__)
 
 # no less than 1 megapixel
@@ -7,7 +9,7 @@ puts '', "Downsizing uploads size to no more than #{max_image_pixels} pixels"
 
 count = 0
 
-Upload.where("lower(extension) in (?)", ['jpg', 'jpeg', 'gif', 'png', 'bmp', 'tif', 'tiff']).find_each do |upload|
+Upload.where("lower(extension) in (?)", ['jpg', 'jpeg', 'gif', 'png']).find_each do |upload|
   count += 1
   print "\r%8d".freeze % count
   absolute_path = Discourse.store.path_for(upload)

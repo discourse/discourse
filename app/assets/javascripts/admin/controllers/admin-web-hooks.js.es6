@@ -12,7 +12,7 @@ export default Ember.Controller.extend({
             webhook
               .destroyRecord()
               .then(() => {
-                this.get("model").removeObject(webhook);
+                this.model.removeObject(webhook);
               })
               .catch(popupAjaxError);
           }
@@ -21,7 +21,7 @@ export default Ember.Controller.extend({
     },
 
     loadMore() {
-      this.get("model").loadMore();
+      this.model.loadMore();
     }
   }
 });

@@ -1,4 +1,4 @@
-import { acceptance, replaceCurrentUser } from "helpers/qunit-helpers";
+import { acceptance, updateCurrentUser } from "helpers/qunit-helpers";
 
 acceptance("Managing Group Interaction Settings", {
   loggedIn: true,
@@ -8,7 +8,7 @@ acceptance("Managing Group Interaction Settings", {
 });
 
 QUnit.test("As an admin", async assert => {
-  await visit("/groups/discourse/manage/interaction");
+  await visit("/g/discourse/manage/interaction");
 
   assert.equal(
     find(".groups-form-visibility-level").length,
@@ -42,8 +42,8 @@ QUnit.test("As an admin", async assert => {
 });
 
 QUnit.test("As a group owner", async assert => {
-  replaceCurrentUser({ admin: false, staff: false });
-  await visit("/groups/discourse/manage/interaction");
+  updateCurrentUser({ admin: false, staff: false });
+  await visit("/g/discourse/manage/interaction");
 
   assert.equal(
     find(".groups-form-visibility-level").length,

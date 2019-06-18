@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class IPAddr
 
   def self.handle_wildcards(val)

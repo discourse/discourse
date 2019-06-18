@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 Fabricator(:incoming_link) do
   user
   post

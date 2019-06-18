@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class PostDetail < ActiveRecord::Base
   belongs_to :post
 

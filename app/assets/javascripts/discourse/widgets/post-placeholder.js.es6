@@ -6,12 +6,12 @@ export default createWidget("post-placeholder", {
   template: hbs`
     <div class='row'>
       <div class='topic-avatar'>
-        <div class='placeholder-avatar'></div>
+        <div class='placeholder-avatar placeholder-animation'></div>
       </div>
       <div class='topic-body'>
-        <div class='placeholder-text'></div>
-        <div class='placeholder-text'></div>
-        <div class='placeholder-text'></div>
+        <div class='placeholder-text placeholder-animation'></div>
+        <div class='placeholder-text placeholder-animation'></div>
+        <div class='placeholder-text placeholder-animation'></div>
       </div>
     </div>
   `

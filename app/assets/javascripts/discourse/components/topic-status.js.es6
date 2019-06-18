@@ -1,6 +1,8 @@
 import { iconHTML } from "discourse-common/lib/icon-library";
 import { bufferedRender } from "discourse-common/lib/buffered-render";
 import { escapeExpression } from "discourse/lib/utilities";
+import TopicStatusIcons from "discourse/helpers/topic-status-icons";
+import computed from "ember-addons/ember-computed-decorators";
 
 export default Ember.Component.extend(
   bufferedRender({
@@ -17,20 +19,29 @@ export default Ember.Component.extend(
 
     click(e) {
       // only pin unpin for now
-      if (this.get("canAct") && $(e.target).hasClass("d-icon-thumbtack")) {
-        const topic = this.get("topic");
+      if (this.canAct && $(e.target).hasClass("d-icon-thumbtack")) {
+        const topic = this.topic;
         topic.get("pinned") ? topic.clearPin() : topic.rePin();
       }
 
       return false;
     },
 
-    canAct: function() {
-      return Discourse.User.current() && !this.get("disableActions");
-    }.property("disableActions"),
+    @computed("disableActions")
+    canAct(disableActions) {
+      return Discourse.User.current() && !disableActions;
+    },
 
     buildBuffer(buffer) {
-      const renderIcon = function(name, key, actionable) {
+      const canAct = this.canAct;
+      const topic = this.topic;
+
+      if (!topic) {
+        return;
+      }
+
+      TopicStatusIcons.render(topic, function(name, key) {
+        const actionable = ["pinned", "unpinned"].includes(key) && canAct;
         const title = escapeExpression(I18n.t(`topic_statuses.${key}.help`)),
           startTag = actionable ? "a href" : "span",
           endTag = actionable ? "a" : "span",
@@ -40,32 +51,7 @@ export default Ember.Component.extend(
         buffer.push(
           `<${startTag} title='${title}' class='topic-status'>${icon}</${endTag}>`
         );
-      };
-
-      const renderIconIf = (conditionProp, name, key, actionable) => {
-        if (!this.get(conditionProp)) {
-          return;
-        }
-        renderIcon(name, key, actionable);
-      };
-
-      renderIconIf("topic.is_warning", "envelope", "warning");
-
-      if (this.get("topic.closed") && this.get("topic.archived")) {
-        renderIcon("lock", "locked_and_archived");
-      } else {
-        renderIconIf("topic.closed", "lock", "locked");
-        renderIconIf("topic.archived", "lock", "archived");
-      }
-
-      renderIconIf("topic.pinned", "thumbtack", "pinned", this.get("canAct"));
-      renderIconIf(
-        "topic.unpinned",
-        "thumbtack",
-        "unpinned",
-        this.get("canAct")
-      );
-      renderIconIf("topic.invisible", "far-eye-slash", "unlisted");
+      });
     }
   })
 );

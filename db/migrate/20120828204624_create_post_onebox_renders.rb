@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreatePostOneboxRenders < ActiveRecord::Migration[4.2]
   def change
     create_table :post_onebox_renders, id: false do |t|

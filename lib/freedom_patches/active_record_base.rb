@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ActiveRecord::Base
 
   # Handle PG::UniqueViolation as well due to concurrency
@@ -27,7 +29,7 @@ class ActiveRecord::Base
     Discourse.deprecate("exec_sql should not be used anymore, please use DB.exec or DB.query instead!")
 
     conn = ActiveRecord::Base.connection
-    sql = ActiveRecord::Base.send(:sanitize_sql_array, args)
+    sql = ActiveRecord::Base.public_send(:sanitize_sql_array, args)
     conn.raw_connection.async_exec(sql)
   end
 

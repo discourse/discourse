@@ -1,36 +1,38 @@
-{{#if this.currentUser.admin}}
-  <div class="control-group">
-    <label class="control-label" for="name">{{i18n 'groups.name'}}</label>
+{{#if canEdit}}
+  {{#if this.currentUser.admin}}
+    <div class="control-group">
+      <label class="control-label" for="name">{{i18n 'groups.name'}}</label>
 
-    {{text-field name="name"
-        class="input-xxlarge group-form-name"
-        value=nameInput
-        placeholderKey="admin.groups.name_placeholder"}}
+      {{text-field name="name"
+          class="input-xxlarge group-form-name"
+          value=nameInput
+          placeholderKey="admin.groups.name_placeholder"}}
 
-    {{input-tip validation=nameValidation}}
-  </div>
-{{/if}}
-
-<div class="control-group">
-  <label class="control-label" for='full_name'>{{i18n 'groups.manage.full_name'}}</label>
-
-  {{text-field name='full_name'
-      class="input-xxlarge group-form-full-name"
-      value=model.full_name}}
-</div>
-
-{{#if this.currentUser.admin}}
-  <div class="control-group">
-    <label class="control-label" for="title">
-      {{i18n 'admin.groups.default_title'}}
-    </label>
-
-    {{input value=model.title name="title" class="input-xxlarge"}}
-
-    <div class="control-instructions">
-      {{i18n 'admin.groups.default_title_description'}}
+      {{input-tip validation=nameValidation}}
     </div>
+  {{/if}}
+
+  <div class="control-group">
+    <label class="control-label" for='full_name'>{{i18n 'groups.manage.full_name'}}</label>
+
+    {{text-field name='full_name'
+        class="input-xxlarge group-form-full-name"
+        value=model.full_name}}
   </div>
+
+  {{#if this.currentUser.admin}}
+    <div class="control-group">
+      <label class="control-label" for="title">
+        {{i18n 'admin.groups.default_title'}}
+      </label>
+
+      {{input value=model.title name="title" class="input-xxlarge"}}
+
+      <div class="control-instructions">
+        {{i18n 'admin.groups.default_title_description'}}
+      </div>
+    </div>
+  {{/if}}
 {{/if}}
 
 <div class="control-group">
@@ -38,10 +40,12 @@
   {{d-editor value=model.bio_raw class="group-form-bio input-xxlarge"}}
 </div>
 
-{{yield}}
+{{#if canEdit}}
+  {{yield}}
 
-<div class="control-group">
-  {{group-flair-inputs model=model}}
-</div>
+  <div class="control-group">
+    {{group-flair-inputs model=model}}
+  </div>
 
-{{plugin-outlet name="group-edit" args=(hash group=model)}}
+  {{plugin-outlet name="group-edit" args=(hash group=model)}}
+{{/if}}

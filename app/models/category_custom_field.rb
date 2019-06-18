@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CategoryCustomField < ActiveRecord::Base
   belongs_to :category
 end

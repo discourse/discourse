@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "middleware/anonymous_cache"
 
 enabled =

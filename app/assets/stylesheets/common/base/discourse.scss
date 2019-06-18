@@ -33,6 +33,31 @@
   }
 }
 
+// placeholder
+@keyframes placeHolderShimmer {
+  0% {
+    background-position: -1000px 0;
+  }
+  100% {
+    background-position: 1100px 0;
+  }
+}
+
+.placeholder-animation {
+  animation-duration: 4s;
+  animation-fill-mode: forwards;
+  animation-iteration-count: infinite;
+  animation-name: placeHolderShimmer;
+  animation-timing-function: linear;
+  background: $primary-very-low;
+  background: linear-gradient(
+    to right,
+    $primary-very-low 10%,
+    $primary-low 18%,
+    $primary-very-low 33%
+  );
+}
+
 // Base Elements
 html {
   height: 100%;
@@ -118,6 +143,10 @@ label {
   display: flex;
   margin-bottom: 5px;
   align-items: flex-start;
+  > .d-icon {
+    align-self: center;
+    margin-right: 4px;
+  }
 }
 
 input {
@@ -156,6 +185,7 @@ input,
 select,
 textarea {
   color: $primary;
+  caret-color: currentColor;
 
   &[class*="span"] {
     float: none;
@@ -276,7 +306,31 @@ select {
   border: 1px solid $primary-low;
 }
 
+table {
+  th {
+    font-weight: normal;
+    color: $primary-medium;
+    text-align: left;
+    padding: 0.5em;
+  }
+}
+
 // Common Classes
+
+.sortable {
+  white-space: nowrap;
+  cursor: pointer;
+  .discourse-no-touch & {
+    &:hover {
+      background-color: $primary-low;
+    }
+  }
+  .d-icon {
+    margin-left: 0.25em;
+  }
+  @include unselectable;
+}
+
 .radio,
 .checkbox {
   min-height: 18px;
@@ -532,21 +586,6 @@ select {
 
   .control-group {
     @include clearfix;
-
-    .table {
-      width: 100%;
-
-      th,
-      td {
-        padding: 10px;
-        text-align: center;
-      }
-    }
-
-    &.highlighted {
-      animation: background-fade-highlight 2.5s ease-out;
-      background-color: dark-light-choose($highlight-low, $highlight);
-    }
   }
 
   .control-label {
@@ -629,6 +668,7 @@ select {
   }
 
   .auth-token-icon {
+    color: $primary-medium;
     font-size: 2.25em;
     float: left;
     margin-right: 10px;
@@ -659,7 +699,7 @@ select {
       background: transparent;
 
       .d-icon {
-        color: $primary;
+        color: $primary-high;
       }
     }
   }
@@ -693,4 +733,14 @@ select {
   .d-icon-envelope {
     color: $danger;
   }
+}
+
+.broken-theme-alert {
+  font-size: $base-font-size;
+  font-weight: bold;
+  padding: 5px 0;
+  background: $danger-medium;
+  text-align: center;
+  z-index: z("max");
+  color: $secondary;
 }

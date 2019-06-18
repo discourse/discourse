@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class PenaltyCountsSerializer < ApplicationSerializer
   attributes :silenced, :suspended, :total
 

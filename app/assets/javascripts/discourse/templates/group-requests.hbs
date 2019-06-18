@@ -1,0 +1,55 @@
+<section class="user-content">
+
+<div class="group-members-actions">
+    {{text-field value=filterInput
+        placeholderKey=filterPlaceholder
+        class="group-username-filter no-blur"}}
+</div>
+
+{{#if hasRequesters}}
+  {{#load-more selector=".group-members tr" action=(action "loadMore")}}
+    <table class='group-members'>
+      <thead>
+        {{group-index-toggle order=order desc=desc field='username_lower' i18nKey='username'}}
+        {{group-index-toggle order=order desc=desc field='requested_at' i18nKey='groups.member_requested'}}
+        <th>{{i18n "groups.requests.reason"}}</th>
+        <th></th>
+        <th></th>
+      </thead>
+
+      <tbody>
+        {{#each model.requesters as |m|}}
+          <tr>
+            <td class='avatar'>
+              {{user-info user=m skipName=skipName}}
+            </td>
+            <td>
+              <span class="text">{{bound-date m.requested_at}}</span>
+            </td>
+            <td>{{m.reason}}</td>
+            <td>
+              {{#if m.request_undone}}
+                {{i18n "groups.requests.undone"}}
+              {{else if m.request_accepted}}
+                {{i18n "groups.requests.accepted"}}
+                {{d-button action=(action "undoAcceptRequest") actionParam=m label="undo"}}
+              {{else if m.request_denied}}
+                {{i18n "groups.requests.denied"}}
+              {{else}}
+                {{d-button action=(action "acceptRequest") actionParam=m label="groups.requests.accept" class="btn-primary"}}
+                {{d-button action=(action "denyRequest") actionParam=m label="groups.requests.deny" class="btn-danger"}}
+              {{/if}}
+            </td>
+            <td></td>
+          </tr>
+        {{/each}}
+      </tbody>
+    </table>
+  {{/load-more}}
+
+  {{conditional-loading-spinner condition=loading}}
+{{else}}
+  <div>{{i18n "groups.empty.requests"}}</div>
+{{/if}}
+
+</section>

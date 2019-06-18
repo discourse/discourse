@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AmendCssColumnsInTheme < ActiveRecord::Migration[4.2]
   def change
     rename_column :themes, :stylesheet, :desktop_scss

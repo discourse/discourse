@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreateTopTopics < ActiveRecord::Migration[4.2]
   PERIODS = [:yearly, :monthly, :weekly, :daily]
   SORT_ORDERS = [:posts, :views, :likes]

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'sanitize'
 
 class Search
@@ -15,6 +17,7 @@ class Search
       :categories,
       :users,
       :tags,
+      :groups,
       :more_posts,
       :more_categories,
       :more_users,
@@ -36,6 +39,7 @@ class Search
       @categories = []
       @users = []
       @tags = []
+      @groups = []
     end
 
     def find_user_data(guardian)
@@ -53,12 +57,12 @@ class Search
     def add(object)
       type = object.class.to_s.downcase.pluralize
 
-      if @type_filter.present? && send(type).length == Search.per_filter
+      if @type_filter.present? && public_send(type).length == Search.per_filter
         @more_full_page_results = true
-      elsif !@type_filter.present? && send(type).length == Search.per_facet
+      elsif !@type_filter.present? && public_send(type).length == Search.per_facet
         instance_variable_set("@more_#{type}".to_sym, true)
       else
-        (send type) << object
+        (self.public_send(type)) << object
       end
     end
 
@@ -68,7 +72,16 @@ class Search
 
       if term
         terms = term.split(/\s+/)
-        blurb = TextHelper.excerpt(cooked, terms.first, radius: blurb_length / 2, seperator: " ")
+        phrase = terms.first
+
+        if phrase =~ Regexp.new(Search::PHRASE_MATCH_REGEXP_PATTERN)
+          phrase = Regexp.last_match[1]
+        end
+
+        blurb = TextHelper.excerpt(cooked, phrase,
+          radius: blurb_length / 2,
+          seperator: " "
+        )
       end
 
       blurb = TextHelper.truncate(cooked, length: blurb_length, seperator: " ") if blurb.blank?

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module IntegrationHelpers
   def create_user
     get "/u/hp.json"

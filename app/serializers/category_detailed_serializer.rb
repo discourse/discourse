@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CategoryDetailedSerializer < BasicCategorySerializer
 
   attributes :topic_count,
@@ -54,10 +56,12 @@ class CategoryDetailedSerializer < BasicCategorySerializer
   end
 
   def count_with_subcategories(method)
-    count = object.send(method) || 0
+    count = object.public_send(method) || 0
+
     object.subcategories.each do |category|
-      count += (category.send(method) || 0)
+      count += (category.public_send(method) || 0)
     end
+
     count
   end
 

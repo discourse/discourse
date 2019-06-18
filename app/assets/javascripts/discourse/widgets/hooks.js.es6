@@ -2,6 +2,8 @@
 
 const CLICK_ATTRIBUTE_NAME = "_discourse_click_widget";
 const CLICK_OUTSIDE_ATTRIBUTE_NAME = "_discourse_click_outside_widget";
+const MOUSE_DOWN_OUTSIDE_ATTRIBUTE_NAME =
+  "_discourse_mouse_down_outside_widget";
 const KEY_UP_ATTRIBUTE_NAME = "_discourse_key_up_widget";
 const KEY_DOWN_ATTRIBUTE_NAME = "_discourse_key_down_widget";
 const DRAG_ATTRIBUTE_NAME = "_discourse_drag_widget";
@@ -32,6 +34,10 @@ export const WidgetClickHook = buildHook(CLICK_ATTRIBUTE_NAME);
 export const WidgetClickOutsideHook = buildHook(
   CLICK_OUTSIDE_ATTRIBUTE_NAME,
   "data-click-outside"
+);
+export const WidgetMouseDownOutsideHook = buildHook(
+  MOUSE_DOWN_OUTSIDE_ATTRIBUTE_NAME,
+  "data-mouse-down-outside"
 );
 export const WidgetKeyUpHook = buildHook(KEY_UP_ATTRIBUTE_NAME);
 export const WidgetKeyDownHook = buildHook(KEY_DOWN_ATTRIBUTE_NAME);
@@ -126,12 +132,30 @@ WidgetClickHook.setupDocumentCallback = function() {
     let node = e.target;
     const $outside = $("[data-click-outside]");
     $outside.each((i, outNode) => {
-      if (outNode.contains(node)) {
+      if (
+        outNode.contains(node) ||
+        (outNode === node && outNode.style.position === "absolute")
+      ) {
         return;
       }
+
       const widget2 = outNode[CLICK_OUTSIDE_ATTRIBUTE_NAME];
       if (widget2) {
         widget2.clickOutside(e);
+      }
+    });
+  });
+
+  $(document).on("mousedown.discourse-widget", e => {
+    let node = e.target;
+    const $outside = $("[data-mouse-down-outside]");
+    $outside.each((i, outNode) => {
+      if (outNode.contains(node)) {
+        return;
+      }
+      const widget2 = outNode[MOUSE_DOWN_OUTSIDE_ATTRIBUTE_NAME];
+      if (widget2) {
+        widget2.mouseDownOutside(e);
       }
     });
   });

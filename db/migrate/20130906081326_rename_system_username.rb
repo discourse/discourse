@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class RenameSystemUsername < ActiveRecord::Migration[4.2]
   def up
     execute "update site_settings set name = 'site_contact_username' where name = 'system_username'"

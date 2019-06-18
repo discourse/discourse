@@ -15,6 +15,13 @@ tr_TR:
         one: "toplam oy"
         other: "toplam oy"
       average_rating: "Ortalama oran: <strong>%{average}</strong>."
+      public:
+        title: "Oylar <strong>halka açıktır</strong>."
+      results:
+        vote:
+          title: "Sonuçlar <strong>oylamada</strong> gösterilecektir."
+        closed:
+          title: "Sonuçlar oylama <strong>kapatıldıktan</strong> sonra gösterilecektir."
       multiple:
         help:
           at_least_min_options:
@@ -44,6 +51,9 @@ tr_TR:
         title: "Anketi bitir"
         label: "Bitir"
         confirm: "Bu anketi bitirmek istediğinize emin misiniz?"
+      automatic_close:
+        closes_in: "Kapatılmasına zaman <strong>%{timeLeft}</strong>"
+        age: "<strong>%{age}</strong> kapanmış."
       error_while_toggling_status: "Üzgünüz, anket durumunu değiştirme sırasında hata meydana geldi."
       error_while_casting_votes: "Üzgünüz, oylarınızı dönüştürme sırasında hata meydana geldi."
       error_while_fetching_voters: "Üzgünüz, oy verenleri görüntüleme sırasında hata meydana geldi"
@@ -53,11 +63,17 @@ tr_TR:
         help:
           options_count: En az 2 seçenek ekleyin
           invalid_values: Minimum değer maksimum değerden küçük olmalıdır.
+          min_step_value: Minimum adım değeri 1
         poll_type:
           label: Tür
           regular: Tekli seçim
           multiple: Çoklu Seçim
           number: Sayısal Değerlendirme
+        poll_result:
+          label: Sonuçlar
+          always: Her zaman görünür
+          vote: Oylamada
+          closed: Kapatıldığında
         poll_config:
           max: En fazla
           min: En az
@@ -66,3 +82,5 @@ tr_TR:
           label: Kimlerin oy verdiğini göster
         poll_options:
           label: Her satıra bir anket seçeneği girin
+        automatic_close:
+          label: Seçimi otomatik olarak kapat

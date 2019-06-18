@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 def process_popmail(popmail)
   begin
     mail_string = popmail.pop
@@ -84,8 +86,7 @@ task 'emails:test', [:email] => [:environment] do |_, args|
     #  s.auth_login(smtp[:user_name], smtp[:password])
     #end
 
-    Net::SMTP.start(smtp[:address], smtp[:port])
-      .auth_login(smtp[:user_name], smtp[:password])
+    Net::SMTP.start(smtp[:address], smtp[:port], 'localhost', smtp[:user_name], smtp[:password])
   rescue Exception => e
 
     if e.to_s.match(/execution expired/)

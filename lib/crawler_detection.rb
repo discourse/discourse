@@ -1,4 +1,7 @@
+# frozen_string_literal: true
+
 module CrawlerDetection
+  WAYBACK_MACHINE_URL = "web.archive.org"
 
   def self.to_matcher(string, type: nil)
     escaped = string.split('|').map { |agent| Regexp.escape(agent) }.join('|')
@@ -11,8 +14,8 @@ module CrawlerDetection
     Regexp.new(escaped, Regexp::IGNORECASE)
   end
 
-  def self.crawler?(user_agent)
-    return true if user_agent.nil?
+  def self.crawler?(user_agent, via_header = nil)
+    return true if user_agent.nil? || via_header&.include?(WAYBACK_MACHINE_URL)
 
     # this is done to avoid regenerating regexes
     @non_crawler_matchers ||= {}

@@ -7,4 +7,4 @@
 
 nl:
   site_settings:
-    details_enabled: "Zet de details functie aan. Als je dit wijzigt moet je alle posts veranderen met: \"rake posts:rebake\"."
+    details_enabled: "De details-functie inschakelen. Als u dit wijzigt, moet u alle berichten opnieuw opbouwen met: 'rake posts:rebake'."

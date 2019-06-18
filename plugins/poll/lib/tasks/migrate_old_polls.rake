@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 CLOSED_POLL_PREFIXES = {
   "ar" => "هذا التصويت مغلق",
   "ca" => "Enquesta tancada",

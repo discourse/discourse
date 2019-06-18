@@ -137,7 +137,6 @@
      app/assets/stylesheets/desktop/topic-post.scss     |   8 +-
      app/assets/stylesheets/desktop/topic.scss          |   5 +-
      app/assets/stylesheets/desktop/upload.scss         |   2 +-
-     app/assets/stylesheets/desktop/user-card.scss      |   2 +-
      app/assets/stylesheets/desktop/user.scss           |   8 -
      app/assets/stylesheets/mobile.scss                 |   1 +
      app/assets/stylesheets/mobile/alert.scss           |   2 +

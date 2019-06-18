@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class EmailController < ApplicationController
   layout 'no_ember'
 
@@ -16,6 +18,7 @@ class EmailController < ApplicationController
       if @user = key.user
         post = key.post
         @topic = post&.topic || key.topic
+        @digest_unsubscribe = !@topic && !SiteSetting.disable_digest_emails
         @type = key.unsubscribe_key_type
         @not_found = false
 
@@ -35,6 +38,8 @@ class EmailController < ApplicationController
                 .count
             end
           end
+        else
+          @digest_frequencies = digest_frequencies(@user)
         end
       end
     end
@@ -85,16 +90,20 @@ class EmailController < ApplicationController
       updated = true
     end
 
-    if params["disable_digest_emails"]
-      user.user_option.update_columns(email_digests: false)
+    if params['digest_after_minutes']
+      digest_frequency = params['digest_after_minutes'].to_i
+
+      user.user_option.update_columns(
+        digest_after_minutes: digest_frequency,
+        email_digests: digest_frequency.positive?
+      )
       updated = true
     end
 
     if params["unsubscribe_all"]
-      user.user_option.update_columns(email_always: false,
-                                      email_digests: false,
-                                      email_direct: false,
-                                      email_private_messages: false)
+      user.user_option.update_columns(email_digests: false,
+                                      email_level: UserOption.email_level_types[:never],
+                                      email_messages_level: UserOption.email_level_types[:never])
       updated = true
     end
 
@@ -124,4 +133,29 @@ class EmailController < ApplicationController
     @topic = topic if topic && Guardian.new(nil).can_see?(topic)
   end
 
+  private
+
+  def digest_frequencies(user)
+    frequency_in_minutes = user.user_option.digest_after_minutes
+    frequencies = DigestEmailSiteSetting.values.dup
+    never = frequencies.delete_at(0)
+    allowed_frequencies = %w[never weekly every_month every_six_months]
+
+    result = frequencies.reduce(frequencies: [], current: nil, selected: nil, take_next: false) do |memo, v|
+      memo[:current] = v[:name] if v[:value] == frequency_in_minutes
+      next(memo) unless allowed_frequencies.include?(v[:name])
+
+      memo.tap do |m|
+        m[:selected] = v[:value] if m[:take_next]
+        m[:frequencies] << [I18n.t("unsubscribe.digest_frequency.#{v[:name]}"), v[:value]]
+        m[:take_next] = !m[:take_next] && m[:current]
+      end
+    end
+
+    result.slice(:frequencies, :current, :selected).tap do |r|
+      r[:frequencies] << [I18n.t("unsubscribe.digest_frequency.#{never[:name]}"), never[:value]]
+      r[:selected] ||= never[:value]
+      r[:current] ||= never[:name]
+    end
+  end
 end

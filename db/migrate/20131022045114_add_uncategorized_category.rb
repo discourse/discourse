@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddUncategorizedCategory < ActiveRecord::Migration[4.2]
   def up
 

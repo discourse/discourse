@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddExcerptToTopics < ActiveRecord::Migration[4.2]
   def up
     add_column :topics, :excerpt, :string, limit: 1000

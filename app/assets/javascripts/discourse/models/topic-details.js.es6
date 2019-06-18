@@ -1,4 +1,6 @@
 import { ajax } from "discourse/lib/ajax";
+import computed from "ember-addons/ember-computed-decorators";
+
 /**
   A model representing a Topic's details that aren't always present, such as a list of participants.
   When showing topics in lists and such this information should not be required.
@@ -10,7 +12,7 @@ const TopicDetails = RestModel.extend({
   loaded: false,
 
   updateFromJson(details) {
-    const topic = this.get("topic");
+    const topic = this.topic;
 
     if (details.allowed_users) {
       details.allowed_users = details.allowed_users.map(function(u) {
@@ -29,17 +31,17 @@ const TopicDetails = RestModel.extend({
     this.set("loaded", true);
   },
 
-  notificationReasonText: function() {
-    let level = this.get("notification_level");
+  @computed("notification_level", "notifications_reason_id")
+  notificationReasonText(level, reason) {
     if (typeof level !== "number") {
       level = 1;
     }
 
     let localeString = `topic.notifications.reasons.${level}`;
-    if (typeof this.get("notifications_reason_id") === "number") {
-      const tmp = localeString + "_" + this.get("notifications_reason_id");
+    if (typeof reason === "number") {
+      const tmp = localeString + "_" + reason;
       // some sane protection for missing translations of edge cases
-      if (I18n.lookup(tmp)) {
+      if (I18n.lookup(tmp, { locale: "en" })) {
         localeString = tmp;
       }
     }
@@ -55,7 +57,7 @@ const TopicDetails = RestModel.extend({
         basePath: Discourse.BaseUri
       });
     }
-  }.property("notification_level", "notifications_reason_id"),
+  },
 
   updateNotifications(v) {
     this.set("notification_level", v);
@@ -67,7 +69,7 @@ const TopicDetails = RestModel.extend({
   },
 
   removeAllowedGroup(group) {
-    const groups = this.get("allowed_groups");
+    const groups = this.allowed_groups;
     const name = group.name;
 
     return ajax("/t/" + this.get("topic.id") + "/remove-allowed-group", {
@@ -79,7 +81,7 @@ const TopicDetails = RestModel.extend({
   },
 
   removeAllowedUser(user) {
-    const users = this.get("allowed_users");
+    const users = this.allowed_users;
     const username = user.get("username");
 
     return ajax("/t/" + this.get("topic.id") + "/remove-allowed-user", {

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "edit_rate_limiter"
 require 'post_locker'
 
@@ -63,13 +65,18 @@ class PostRevisor
   end
 
   # Fields we want to record revisions for by default
-  track_topic_field(:title) do |tc, title|
-    tc.record_change('title', tc.topic.title, title)
-    tc.topic.title = title
+  %i{title archetype}.each do |field|
+    track_topic_field(field) do |tc, attribute|
+      tc.record_change(field, tc.topic.public_send(field), attribute)
+      tc.topic.public_send("#{field}=", attribute)
+    end
   end
 
   track_topic_field(:category_id) do |tc, category_id|
-    if category_id == 0 || tc.guardian.can_move_topic_to_category?(category_id)
+    if category_id == 0 && tc.topic.private_message?
+      tc.record_change('category_id', tc.topic.category_id, nil)
+      tc.topic.category_id = nil
+    elsif category_id == 0 || tc.guardian.can_move_topic_to_category?(category_id)
       tc.record_change('category_id', tc.topic.category_id, category_id)
       tc.check_result(tc.topic.change_category_to_id(category_id))
     end
@@ -83,18 +90,13 @@ class PostRevisor
         tc.check_result(false)
         next
       end
-      tc.record_change('tags', prev_tags, tags) unless prev_tags.sort == tags.sort
-    end
-  end
-
-  track_topic_field(:tags_empty_array) do |tc, val|
-    if val.present? && tc.guardian.can_tag_topics?
-      prev_tags = tc.topic.tags.map(&:name)
-      if !DiscourseTagging.tag_topic_by_names(tc.topic, tc.guardian, [])
-        tc.check_result(false)
-        next
+      if prev_tags.sort != tags.sort
+        tc.record_change('tags', prev_tags, tags)
+        DB.after_commit do
+          post = tc.topic.ordered_posts.first
+          Jobs.enqueue(:notify_tag_change, post_id: post.id)
+        end
       end
-      tc.record_change('tags', prev_tags, nil)
     end
   end
 
@@ -214,7 +216,9 @@ class PostRevisor
 
   def post_changed?
     POST_TRACKED_FIELDS.each do |field|
-      return true if @fields.has_key?(field) && @fields[field] != @post.send(field)
+      if @fields.has_key?(field) && @fields[field] != @post.public_send(field)
+        return true
+      end
     end
     advance_draft_sequence
     false
@@ -285,8 +289,8 @@ class PostRevisor
   end
 
   def ninja_edit?
-    return false if @post.has_active_flag?
     return false if (@revised_at - @last_version_at) > SiteSetting.editing_grace_period.to_i
+    return false if @post.reviewable_flag.present?
 
     if new_raw = @fields[:raw]
 
@@ -336,23 +340,21 @@ class PostRevisor
       prev_owner = User.find(@post.user_id)
       new_owner = User.find(@fields["user_id"])
 
-      # UserActionCreator will create new UserAction records for the new owner
-
       UserAction.where(target_post_id: @post.id)
         .where(user_id: prev_owner.id)
         .where(action_type: USER_ACTIONS_TO_REMOVE)
-        .destroy_all
+        .update_all(user_id: new_owner.id)
 
       if @post.post_number == 1
         UserAction.where(target_topic_id: @post.topic_id)
           .where(user_id: prev_owner.id)
           .where(action_type: UserAction::NEW_TOPIC)
-          .destroy_all
+          .update_all(user_id: new_owner.id)
       end
     end
 
     POST_TRACKED_FIELDS.each do |field|
-      @post.send("#{field}=", @fields[field]) if @fields.has_key?(field)
+      @post.public_send("#{field}=", @fields[field]) if @fields.has_key?(field)
     end
 
     @post.last_editor_id = @editor.id
@@ -459,7 +461,8 @@ class PostRevisor
       user_id: @post.last_editor_id,
       post_id: @post.id,
       number: @post.version,
-      modifications: modifications
+      modifications: modifications,
+      hidden: only_hidden_tags_changed?
     )
   end
 
@@ -512,7 +515,23 @@ class PostRevisor
   end
 
   def bypass_bump?
-    !@post_successfully_saved || @topic_changes.errored? || @opts[:bypass_bump] == true
+    !@post_successfully_saved ||
+      @topic_changes.errored? ||
+      @opts[:bypass_bump] == true ||
+      @post.whisper? ||
+      only_hidden_tags_changed?
+  end
+
+  def only_hidden_tags_changed?
+    modifications = post_changes.merge(@topic_changes.diff)
+    if modifications.keys.size == 1 && tags_diff = modifications["tags"]
+      a, b = tags_diff[0] || [], tags_diff[1] || []
+      changed_tags = ((a + b) - (a & b)).map(&:presence).compact
+      if (changed_tags - DiscourseTagging.hidden_tag_names(nil)).empty?
+        return true
+      end
+    end
+    false
   end
 
   def is_last_post?
@@ -552,7 +571,7 @@ class PostRevisor
       category.update_column(:description, new_description)
       @category_changed = category
     else
-      @post.errors[:base] << I18n.t("category.errors.description_incomplete")
+      @post.errors.add(:base, I18n.t("category.errors.description_incomplete"))
     end
   end
 

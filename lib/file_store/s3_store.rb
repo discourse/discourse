@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "uri"
 require "mini_mime"
 require_dependency "file_store/base_store"
@@ -19,7 +21,7 @@ module FileStore
 
     def store_upload(file, upload, content_type = nil)
       path = get_path_for_upload(upload)
-      url, upload.etag = store_file(file, path, filename: upload.original_filename, content_type: content_type, cache_locally: true)
+      url, upload.etag = store_file(file, path, filename: upload.original_filename, content_type: content_type, cache_locally: true, private: upload.private?)
       url
     end
 
@@ -34,12 +36,13 @@ module FileStore
     #   - content_type
     #   - cache_locally
     def store_file(file, path, opts = {})
+      path = path.dup
+
       filename = opts[:filename].presence || File.basename(path)
       # cache file locally when needed
       cache_file(file, File.basename(path)) if opts[:cache_locally]
-      # stored uploaded are public by default
       options = {
-        acl: "public-read",
+        acl: opts[:private] ? "private" : "public-read",
         content_type: opts[:content_type].presence || MiniMime.lookup_by_filename(filename)&.content_type
       }
       # add a "content disposition" header for "attachments"
@@ -97,8 +100,19 @@ module FileStore
     end
 
     def path_for(upload)
-      url = upload.try(:url)
+      url = upload&.url
       FileStore::LocalStore.new.path_for(upload) if url && url[/^\/[^\/]/]
+    end
+
+    def url_for(upload)
+      if upload.private?
+        obj = @s3_helper.object(get_upload_key(upload))
+        url = obj.presigned_url(:get, expires_in: S3Helper::DOWNLOAD_URL_EXPIRES_AFTER_SECONDS)
+      else
+        url = upload.url
+      end
+
+      url
     end
 
     def cdn_url(url)
@@ -124,11 +138,36 @@ module FileStore
     end
 
     def list_missing_uploads(skip_optimized: false)
-      list_missing(Upload, "original/")
-      list_missing(OptimizedImage, "optimized/") unless skip_optimized
+      if SiteSetting.enable_s3_inventory
+        require 's3_inventory'
+        S3Inventory.new(s3_helper, :upload).backfill_etags_and_list_missing
+        S3Inventory.new(s3_helper, :optimized).backfill_etags_and_list_missing unless skip_optimized
+      else
+        list_missing(Upload.by_users, "original/")
+        list_missing(OptimizedImage, "optimized/") unless skip_optimized
+      end
+    end
+
+    def update_upload_ACL(upload)
+      private_uploads = SiteSetting.prevent_anons_from_downloading_files
+      key = get_upload_key(upload)
+
+      begin
+        @s3_helper.object(key).acl.put(acl: private_uploads ? "private" : "public-read")
+      rescue Aws::S3::Errors::NoSuchKey
+        Rails.logger.warn("Could not update ACL on upload with key: '#{key}'. Upload is missing.")
+      end
     end
 
     private
+
+    def get_upload_key(upload)
+      if Rails.configuration.multisite
+        File.join(upload_path, "/", get_path_for_upload(upload))
+      else
+        get_path_for_upload(upload)
+      end
+    end
 
     def list_missing(model, prefix)
       connection = ActiveRecord::Base.connection.raw_connection
@@ -140,7 +179,7 @@ module FileStore
         verified_ids = []
 
         files.each do |f|
-          id = model.where("url LIKE '%#{f.key}'").pluck(:id).first if f.size > 0
+          id = model.where("url LIKE '%#{f.key}' AND etag = '#{f.etag}'").pluck(:id).first
           verified_ids << id if id.present?
           marker = f.key
         end
@@ -150,7 +189,7 @@ module FileStore
         files = @s3_helper.list(prefix, marker)
       end
 
-      missing_uploads = model.where("id NOT IN (SELECT val FROM verified_ids)")
+      missing_uploads = model.joins('LEFT JOIN verified_ids ON verified_ids.val = id').where("verified_ids.val IS NULL")
       missing_count = missing_uploads.count
 
       if missing_count > 0

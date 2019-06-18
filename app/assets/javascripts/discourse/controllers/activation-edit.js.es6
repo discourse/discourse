@@ -17,18 +17,18 @@ export default Ember.Controller.extend(ModalFunctionality, {
 
   actions: {
     changeEmail() {
-      const login = this.get("login");
+      const login = this.login;
 
       changeEmail({
         username: login.get("loginName"),
         password: login.get("loginPassword"),
-        email: this.get("newEmail")
+        email: this.newEmail
       })
         .then(() => {
           const modal = this.showModal("activation-resent", {
             title: "log_in"
           });
-          modal.set("currentEmail", this.get("newEmail"));
+          modal.set("currentEmail", this.newEmail);
         })
         .catch(err => this.flash(extractError(err), "error"));
     }

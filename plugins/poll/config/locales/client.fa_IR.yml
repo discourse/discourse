@@ -60,6 +60,8 @@ fa_IR:
           regular: یک انتخابی
           multiple: چند انتخابی
           number: امتیاز عددی
+        poll_result:
+          label: نتایج
         poll_config:
           max: بیشترین
           min: کمترین

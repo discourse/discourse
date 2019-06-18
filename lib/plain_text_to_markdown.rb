@@ -1,7 +1,7 @@
+# frozen_string_literal: true
+
 class PlainTextToMarkdown
   SIGNATURE_SEPARATOR ||= "-- ".freeze
-
-  URL_REGEX ||= /((?:https?:(?:\/{1,3}|[a-z0-9%])|www\d{0,3}[.])(?:[^\s()<>]+|\([^\s()<>]+\))+(?:\([^\s()<>]+\)|[^`!()\[\]{};:'".,<>?«»“”‘’\s]))/i
 
   def initialize(plaintext, opts = {})
     @plaintext = plaintext
@@ -15,7 +15,7 @@ class PlainTextToMarkdown
     prepare_lines
     classify_lines
 
-    markdown = ""
+    markdown = +""
     last_quote_level = 0
     last_line_blank = false
 
@@ -148,14 +148,17 @@ class PlainTextToMarkdown
     converted_text
   end
 
-  def replace_duplicate_links(text)
-    text.to_enum(:scan, URL_REGEX)
-      .map { $& }
-      .group_by { |url| url }
-      .keep_if { |_, urls | urls.length > 1 }
-      .keys.each do |url|
+  URL_REGEX ||= URI.regexp(%w{http https ftp mailto})
+  BEFORE ||= Regexp.escape(%Q|([<«"“'‘|)
+  AFTER  ||= Regexp.escape(%Q|)]>»"”'’|)
 
-      text.gsub!(Regexp.new(%Q|#{url}(\s*[()\\[\\]<>«»'"“”‘’]?#{url}[()\\[\\]<>«»'"“”‘’]?)|, Regexp::IGNORECASE), url)
+  def replace_duplicate_links(text)
+    urls = Set.new
+    text.scan(URL_REGEX) { urls << $& }
+
+    urls.each do |url|
+      escaped = Regexp.escape(url)
+      text.gsub!(Regexp.new(%Q|#{escaped}\s*[#{BEFORE}]?#{escaped}[#{AFTER}]?|, Regexp::IGNORECASE), url)
     end
 
     text
@@ -172,19 +175,20 @@ class PlainTextToMarkdown
   end
 
   def escape_special_characters(text)
-    escaped_text = ""
+    urls = Set.new
+    text.scan(URL_REGEX) { urls << $& }
 
-    text.split(URL_REGEX).each do |text_part|
-      if text_part =~ URL_REGEX
-        # no escaping withing URLs
-        escaped_text << text_part
-      else
-        # escape Markdown and HTML
-        text_part.gsub!(/[\\`*_{}\[\]()#+\-.!~]/) { |c| "\\#{c}" }
-        escaped_text << CGI.escapeHTML(text_part)
-      end
-    end
+    hoisted = urls
+      .map { |url| [SecureRandom.hex, url] }
+      .to_h
 
-    escaped_text
+    hoisted.each { |h, url| text.gsub!(url, h) }
+
+    text.gsub!(/[\\`*_{}\[\]()#+\-.!~]/) { |c| "\\#{c}" }
+    text = CGI.escapeHTML(text)
+
+    hoisted.each { |h, url| text.gsub!(h, url) }
+
+    text
   end
 end

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class TopicNotifier
   def initialize(topic)
     @topic = topic

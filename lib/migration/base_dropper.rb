@@ -1,6 +1,8 @@
+# frozen_string_literal: true
+
 module Migration
   class BaseDropper
-    FUNCTION_SCHEMA_NAME = "discourse_functions".freeze
+    FUNCTION_SCHEMA_NAME ||= "discourse_functions".freeze
 
     def self.create_readonly_function(table_name, column_name = nil)
       DB.exec <<~SQL

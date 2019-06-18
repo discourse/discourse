@@ -1,5 +1,11 @@
+# frozen_string_literal: true
+
 class WebHookUserSerializer < UserSerializer
   attributes :external_id
+
+  def omit_stats
+    true
+  end
 
   # remove staff attributes
   def staff_attributes(*attrs)
@@ -12,6 +18,9 @@ class WebHookUserSerializer < UserSerializer
     can_edit_name
     can_send_private_messages
     can_send_private_message_to_user
+    can_ignore_user
+    can_mute_user
+    ignored
     uploaded_avatar_id
     has_title_badges
     bio_cooked

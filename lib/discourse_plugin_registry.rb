@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #
 #  A class that handles interaction between a plugin and the Discourse App.
 #
@@ -204,8 +206,8 @@ class DiscoursePluginRegistry
   end
 
   VENDORED_CORE_PRETTY_TEXT_MAP = {
-    "moment.js" => "lib/javascripts/moment.js",
-    "moment-timezone.js" => "lib/javascripts/moment-timezone-with-data.js"
+    "moment.js" => "vendor/assets/javascripts/moment.js",
+    "moment-timezone.js" => "vendor/assets/javascripts/moment-timezone-with-data.js"
   }
   def self.core_asset_for_name(name)
     asset = VENDORED_CORE_PRETTY_TEXT_MAP[name]

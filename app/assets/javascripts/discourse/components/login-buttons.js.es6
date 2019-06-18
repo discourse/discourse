@@ -12,11 +12,7 @@ export default Ember.Component.extend({
 
   @computed
   buttons() {
-    return findAll(
-      this.siteSettings,
-      this.capabilities,
-      this.site.isMobileDevice
-    );
+    return findAll();
   },
 
   actions: {

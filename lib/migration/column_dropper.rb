@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_dependency 'migration/base_dropper'
 
 module Migration
@@ -20,17 +22,19 @@ module Migration
 
       columns.each do |column|
         column = column.to_s
-
-        DB.exec <<~SQL
-          DROP FUNCTION IF EXISTS #{BaseDropper.readonly_function_name(table, column)} CASCADE;
-          -- Backward compatibility for old functions created in the public
-          -- schema
-          DROP FUNCTION IF EXISTS #{BaseDropper.old_readonly_function_name(table, column)} CASCADE;
-        SQL
-
+        self.drop_readonly(table, column)
         # safe cause it is protected on method entry, can not be passed in params
         DB.exec("ALTER TABLE #{table} DROP COLUMN IF EXISTS #{column}")
       end
+    end
+
+    def self.drop_readonly(table, column)
+      DB.exec <<~SQL
+        DROP FUNCTION IF EXISTS #{BaseDropper.readonly_function_name(table, column)} CASCADE;
+        -- Backward compatibility for old functions created in the public
+        -- schema
+        DROP FUNCTION IF EXISTS #{BaseDropper.old_readonly_function_name(table, column)} CASCADE;
+      SQL
     end
   end
 end

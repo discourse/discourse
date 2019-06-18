@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class RenameTrustLevelBadges < ActiveRecord::Migration[4.2]
 
   def rename(id, old, new)

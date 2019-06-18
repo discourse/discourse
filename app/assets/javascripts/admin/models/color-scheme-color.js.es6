@@ -1,48 +1,50 @@
-const ColorSchemeColor = Discourse.Model.extend({
-  init: function() {
-    this._super(...arguments);
-    this.startTrackingChanges();
-  },
+import {
+  default as computed,
+  observes,
+  on
+} from "ember-addons/ember-computed-decorators";
+import { propertyNotEqual, i18n } from "discourse/lib/computed";
 
-  startTrackingChanges: function() {
-    this.set("originals", { hex: this.get("hex") || "FFFFFF" });
-    this.notifyPropertyChange("hex"); // force changed property to be recalculated
+const ColorSchemeColor = Discourse.Model.extend({
+  @on("init")
+  startTrackingChanges() {
+    this.set("originals", { hex: this.hex || "FFFFFF" });
+
+    // force changed property to be recalculated
+    this.notifyPropertyChange("hex");
   },
 
   // Whether value has changed since it was last saved.
-  changed: function() {
+  @computed("hex")
+  changed(hex) {
     if (!this.originals) return false;
-    if (this.get("hex") !== this.originals["hex"]) return true;
+    if (hex !== this.originals.hex) return true;
+
     return false;
-  }.property("hex"),
+  },
 
   // Whether the current value is different than Discourse's default color scheme.
-  overridden: function() {
-    return this.get("hex") !== this.get("default_hex");
-  }.property("hex", "default_hex"),
+  overridden: propertyNotEqual("hex", "default_hex"),
 
   // Whether the saved value is different than Discourse's default color scheme.
-  savedIsOverriden: function() {
-    return this.get("originals").hex !== this.get("default_hex");
-  }.property("hex", "default_hex"),
-
-  revert: function() {
-    this.set("hex", this.get("default_hex"));
+  @computed("default_hex", "hex")
+  savedIsOverriden(defaultHex) {
+    return this.originals.hex !== defaultHex;
   },
 
-  undo: function() {
-    if (this.originals) this.set("hex", this.originals["hex"]);
+  revert() {
+    this.set("hex", this.default_hex);
   },
 
-  translatedName: function() {
-    return I18n.t("admin.customize.colors." + this.get("name") + ".name");
-  }.property("name"),
+  undo() {
+    if (this.originals) {
+      this.set("hex", this.originals.hex);
+    }
+  },
 
-  description: function() {
-    return I18n.t(
-      "admin.customize.colors." + this.get("name") + ".description"
-    );
-  }.property("name"),
+  translatedName: i18n("name", "admin.customize.colors.%@.name"),
+
+  description: i18n("name", "admin.customize.colors.%@.description"),
 
   /**
     brightness returns a number between 0 (darkest) to 255 (brightest).
@@ -50,8 +52,8 @@ const ColorSchemeColor = Discourse.Model.extend({
 
     @property brightness
   **/
-  brightness: function() {
-    var hex = this.get("hex");
+  @computed("hex")
+  brightness(hex) {
     if (hex.length === 6 || hex.length === 3) {
       if (hex.length === 3) {
         hex =
@@ -69,22 +71,19 @@ const ColorSchemeColor = Discourse.Model.extend({
           1000
       );
     }
-  }.property("hex"),
+  },
 
-  hexValueChanged: function() {
-    if (this.get("hex")) {
-      this.set(
-        "hex",
-        this.get("hex")
-          .toString()
-          .replace(/[^0-9a-fA-F]/g, "")
-      );
+  @observes("hex")
+  hexValueChanged() {
+    if (this.hex) {
+      this.set("hex", this.hex.toString().replace(/[^0-9a-fA-F]/g, ""));
     }
-  }.observes("hex"),
+  },
 
-  valid: function() {
-    return this.get("hex").match(/^([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/) !== null;
-  }.property("hex")
+  @computed("hex")
+  valid(hex) {
+    return hex.match(/^([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/) !== null;
+  }
 });
 
 export default ColorSchemeColor;

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'open-uri'
 require 'nokogiri'
 require 'excon'
@@ -6,6 +8,8 @@ require_dependency 'topic_link'
 
 module Jobs
   class CrawlTopicLink < Jobs::Base
+
+    sidekiq_options queue: 'low'
 
     def execute(args)
       raise Discourse::InvalidParameters.new(:topic_link_id) unless args[:topic_link_id].present?

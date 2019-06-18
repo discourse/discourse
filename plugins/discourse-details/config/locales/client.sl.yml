@@ -8,7 +8,7 @@
 sl:
   js:
     details:
-      title: Dodaj strnjeno besedilo
+      title: Dodaj skrito besedilo
     composer:
       details_title: Povzetek
       details_text: "To besedilo bo skrito, dokler ga bralec ne razširi"

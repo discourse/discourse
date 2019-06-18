@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class RenameForumThreadTables < ActiveRecord::Migration[4.2]
   def change
     rename_table 'forum_threads', 'topics'

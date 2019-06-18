@@ -1,7 +1,11 @@
+# frozen_string_literal: true
+
 require "s3_helper"
 require "rails_helper"
 
 describe "S3Helper" do
+  let(:client) { Aws::S3::Client.new(stub_responses: true) }
+
   before(:each) do
     SiteSetting.enable_s3_uploads = true
     SiteSetting.s3_access_key_id = "abc"
@@ -68,12 +72,19 @@ describe "S3Helper" do
         'some/bucket' => 'bucket/testing',
         'some' => 'testing'
       }.each do |bucket_name, prefix|
-        s3_helper = S3Helper.new(bucket_name)
-        bucket = stub('s3_bucket')
-        s3_helper.expects(:s3_bucket).returns(bucket)
-        bucket.expects(:objects).with(prefix: prefix)
+        s3_helper = S3Helper.new(bucket_name, "", client: client)
+        Aws::S3::Bucket.any_instance.expects(:objects).with(prefix: prefix)
         s3_helper.list('testing')
       end
     end
+  end
+
+  it "should prefix bucket folder path only if not exists" do
+    s3_helper = S3Helper.new('bucket/folder_path', "", client: client)
+
+    object1 = s3_helper.object("original/1X/def.xyz")
+    object2 = s3_helper.object("folder_path/original/1X/def.xyz")
+
+    expect(object1.key).to eq(object2.key)
   end
 end

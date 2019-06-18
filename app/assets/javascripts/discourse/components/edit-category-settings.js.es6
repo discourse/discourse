@@ -1,6 +1,13 @@
 import { setting } from "discourse/lib/computed";
 import { buildCategoryPanel } from "discourse/components/edit-category-panel";
 import computed from "ember-addons/ember-computed-decorators";
+import { searchPriorities } from "discourse/components/concerns/category-search-priorities";
+import Group from "discourse/models/group";
+
+const categorySortCriteria = [];
+export function addCategorySortCriteria(criteria) {
+  categorySortCriteria.push(criteria);
+}
 
 export default buildCategoryPanel("settings", {
   emailInEnabled: setting("email_in"),
@@ -35,6 +42,10 @@ export default buildCategoryPanel("settings", {
     ];
   },
 
+  groupFinder(term) {
+    return Group.findAll({ term, ignore_automatic: true });
+  },
+
   @computed
   availableViews() {
     return [
@@ -53,6 +64,22 @@ export default buildCategoryPanel("settings", {
   },
 
   @computed
+  searchPrioritiesOptions() {
+    const options = [];
+
+    Object.entries(searchPriorities).forEach(entry => {
+      const [name, value] = entry;
+
+      options.push({
+        name: I18n.t(`category.search_priority.options.${name}`),
+        value
+      });
+    });
+
+    return options;
+  },
+
+  @computed
   availableSorts() {
     return [
       "likes",
@@ -64,10 +91,9 @@ export default buildCategoryPanel("settings", {
       "category",
       "created"
     ]
+      .concat(categorySortCriteria)
       .map(s => ({ name: I18n.t("category.sort_options." + s), value: s }))
-      .sort((a, b) => {
-        return a.name > b.name;
-      });
+      .sort((a, b) => a.name.localeCompare(b.name));
   },
 
   @computed

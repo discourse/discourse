@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # can be used to generate a mock db for profiling purposes
 
 # we want our script to generate a consistent output, to do so
@@ -55,16 +57,24 @@ end
 
 require File.expand_path(File.dirname(__FILE__) + "/../config/environment")
 
-SiteSetting.queue_jobs = false
+Jobs.run_immediately!
 
 unless Rails.env == "profile"
   puts "This script should only be used in the profile environment"
   exit
 end
 
+def ensure_perf_test_topic_has_right_title!
+  t = Topic.find(179)
+  t.title = "I am a topic used for perf tests"
+  t.save! if t.title_changed?
+end
+
 # by default, Discourse has a "system" and `discobot` account
 if User.count > 2
   puts "Only run this script against an empty DB"
+
+  ensure_perf_test_topic_has_right_title!
   exit
 end
 
@@ -110,3 +120,5 @@ end
 # no sidekiq so update some stuff
 Category.update_stats
 Jobs::PeriodicalUpdates.new.execute(nil)
+
+ensure_perf_test_topic_has_right_title!

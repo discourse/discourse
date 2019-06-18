@@ -22,6 +22,7 @@ en:
     poll_minimum_trust_level_to_create: "Define the minimum trust level needed to create polls."
 
   poll:
+    poll: "poll"
     invalid_argument: "Invalid value '%{value}' for argument '%{argument}'."
 
     multiple_polls_without_name: "There are multiple polls without a name. Use the '<code>name</code>' attribute to uniquely identify your polls."
@@ -31,10 +32,10 @@ en:
     named_poll_must_have_at_least_2_options: "Poll named <strong>%{name}</strong> must have at least 2 options."
 
     default_poll_must_have_less_options:
-      one: "Poll must have less than 1 option."
+      one: "Poll must have less than %{count} option."
       other: "Poll must have less than %{count} options."
     named_poll_must_have_less_options:
-      one: "Poll named <strong>%{name}</strong> must have less than 1 option."
+      one: "Poll named <strong>%{name}</strong> must have less than %{count} option."
       other: "Poll named <strong>%{name}</strong> must have less than %{count} options."
 
     default_poll_must_have_different_options: "Poll must have different options."

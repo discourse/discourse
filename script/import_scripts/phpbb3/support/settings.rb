@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'yaml'
 
 module ImportScripts::PhpBB3
@@ -84,11 +86,13 @@ module ImportScripts::PhpBB3
     attr_reader :create_category_links
     attr_reader :create_topic_links
     attr_reader :create_post_links
+    attr_reader :normalization_prefix
 
     def initialize(yaml)
       @create_category_links = yaml['categories']
       @create_topic_links = yaml['topics']
       @create_post_links = yaml['posts']
+      @normalization_prefix = yaml['prefix']
     end
   end
 end

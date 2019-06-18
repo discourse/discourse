@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 describe EmbeddableHost do
@@ -56,7 +58,7 @@ describe EmbeddableHost do
   end
 
   describe "it works with ports" do
-    let!(:host) { Fabricate(:embeddable_host, host: 'localhost:8000') }
+    fab!(:host) { Fabricate(:embeddable_host, host: 'localhost:8000') }
 
     it "works as expected" do
       expect(EmbeddableHost.url_allowed?('http://localhost:8000/eviltrout')).to eq(true)
@@ -64,7 +66,7 @@ describe EmbeddableHost do
   end
 
   describe "url_allowed?" do
-    let!(:host) { Fabricate(:embeddable_host) }
+    fab!(:host) { Fabricate(:embeddable_host) }
 
     it 'works as expected' do
       expect(EmbeddableHost.url_allowed?('http://eviltrout.com')).to eq(true)
@@ -121,4 +123,26 @@ describe EmbeddableHost do
     end
   end
 
+  describe "reset_embedding_settings" do
+    it "resets all embedding related settings when last embeddable host is removed" do
+      host = Fabricate(:embeddable_host)
+      host2 = Fabricate(:embeddable_host)
+
+      SiteSetting.embed_post_limit = 300
+      SiteSetting.feed_polling_url = "http://test.com"
+      SiteSetting.feed_polling_enabled = true
+
+      host2.destroy
+
+      expect(SiteSetting.embed_post_limit).to eq(300)
+      expect(SiteSetting.feed_polling_url).to eq("http://test.com")
+      expect(SiteSetting.feed_polling_enabled).to eq(true)
+
+      host.destroy
+
+      expect(SiteSetting.embed_post_limit).to eq(SiteSetting.defaults[:embed_post_limit])
+      expect(SiteSetting.feed_polling_url).to eq(SiteSetting.defaults[:feed_polling_url])
+      expect(SiteSetting.feed_polling_enabled).to eq(SiteSetting.defaults[:feed_polling_enabled])
+    end
+  end
 end

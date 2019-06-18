@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class SplitAliasLevels < ActiveRecord::Migration[4.2]
   def up
     add_column :groups, :messageable_level, :integer, default: 0

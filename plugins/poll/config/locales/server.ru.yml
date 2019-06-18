@@ -12,17 +12,19 @@ ru:
     poll_edit_window_mins: "Количество минут с момента создания сообщения, в течение которых разрешено редактирование опросов."
     poll_minimum_trust_level_to_create: "Определить минимальный уровень доверия, необходимый для создания опросов."
   poll:
+    poll: "опрос"
+    invalid_argument: "Неверное значение '%{value}' для аргумента '%{argument}'."
     multiple_polls_without_name: "Обнаружено несколько опросов в одном сообщении. Чтобы система могла их различать между собой, используйте атрибут <code>name</code>' для каждого опроса. Например: <code>[poll name=A1]</code>"
     multiple_polls_with_same_name: "Обнаружено несколько опросов с одним и тем же названием: <strong>%{name}</strong>. Чтобы система могла  различать опросы между собой, придумайте разные значения для атрибута <code>name</code>' - для каждого опроса своё."
     default_poll_must_have_at_least_2_options: "В опросе должно быть хотябы 2 варианта ответа."
     named_poll_must_have_at_least_2_options: "В опросе с названием \"<strong>%{name}</strong>\" должно быть хотябы 2 варианта ответа."
     default_poll_must_have_less_options:
-      one: "В опросе может быть не более 1-го варианта ответа."
+      one: "В опросе может быть не более %{count}-го варианта ответа."
       few: "В опросе может быть не более %{count} вариантов ответов."
       many: "В опросе может быть не более %{count} вариантов ответов."
       other: "В опросе может быть не более %{count} вариантов ответов."
     named_poll_must_have_less_options:
-      one: "В опросе под названием \"<strong>%{name}</strong>\" должно быть не более 1-го варианта ответов."
+      one: "В опросе под названием \"<strong>%{name}</strong>\" должно быть не более %{count}-го варианта ответов."
       few: "В опросе под названием \"<strong>%{name}</strong>\" должно быть не более %{max} вариантов ответов."
       many: "В опросе под названием \"<strong>%{name}</strong>\" должно быть не более %{max} вариантов ответов."
       other: "В опросе под названием \"<strong>%{name}</strong>\" должно быть не более %{max} вариантов ответов."
@@ -31,6 +33,9 @@ ru:
     default_poll_with_multiple_choices_has_invalid_parameters: "Опрос с множественным выбором вариантов ответов содержит неправильные параметры."
     named_poll_with_multiple_choices_has_invalid_parameters: "Опрос под названием <strong>%{name}</strong> с множественным выбором вариантов ответов содержит неправильные параметры."
     requires_at_least_1_valid_option: "Выберите хотя бы 1 вариант ответа."
+    edit_window_expired:
+      cannot_edit_default_poll_with_votes: "Вы не можете редактировать опрос после первых %{minutes} минут."
+      cannot_edit_named_poll_with_votes: "Вы не можете изменить имя опроса <strong>${name}</strong> после первых %{minutes} минут."
     no_poll_with_this_name: "В данном сообщении нет опроса под названием <strong>%{name}</strong>."
     post_is_deleted: "Невозможно совершить действие над удаленным сообщением."
     user_cant_post_in_topic: "Вы не можете голосовать, т.к. вы не можете писать в этой теме."

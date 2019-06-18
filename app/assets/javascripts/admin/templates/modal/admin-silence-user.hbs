@@ -13,9 +13,9 @@
     </div>
 
     {{silence-details reason=reason message=message}}
-    {{#if post}}
+    {{#if postId}}
       {{penalty-post-action
-        post=post
+        postId=postId
         postAction=postAction
         postEdit=postEdit}}
     {{/if}}

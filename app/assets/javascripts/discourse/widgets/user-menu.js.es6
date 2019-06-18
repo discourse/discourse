@@ -109,15 +109,12 @@ createWidget("user-menu-dismiss-link", {
   template: hbs`
     <ul class='menu-links'>
       <li>
-        {{attach
-          widget="link"
-          attrs=(hash
-            action="dismissNotifications"
-            className="dismiss"
-            tabindex="0"
-            icon="check"
-            label="user.dismiss"
-            title="user.dismiss_notifications_tooltip")}}
+        {{link action="dismissNotifications"
+          className="dismiss"
+          tabindex="0"
+          icon="check"
+          label="user.dismiss"
+          title="user.dismiss_notifications_tooltip"}}
       </li>
     </ul>
   `

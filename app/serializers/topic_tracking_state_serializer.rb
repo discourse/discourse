@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class TopicTrackingStateSerializer < ApplicationSerializer
   attributes :topic_id,
              :highest_post_number,

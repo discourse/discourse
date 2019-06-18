@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_dependency 'staff_message_format'
 
 class UserSilencer
@@ -14,6 +16,12 @@ class UserSilencer
 
   def self.unsilence(user, by_user = nil, opts = {})
     UserSilencer.new(user, by_user, opts).unsilence
+  end
+
+  def self.was_silenced_for?(post)
+    return false if post.blank?
+
+    UserHistory.where(action: UserHistory.actions[:silence_user], post: post).exists?
   end
 
   def silence

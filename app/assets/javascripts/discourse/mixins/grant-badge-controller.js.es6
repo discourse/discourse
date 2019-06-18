@@ -40,7 +40,7 @@ export default Ember.Mixin.create({
   grantBadge(selectedBadgeId, username, badgeReason) {
     return UserBadge.grant(selectedBadgeId, username, badgeReason).then(
       newBadge => {
-        this.get("userBadges").pushObject(newBadge);
+        this.userBadges.pushObject(newBadge);
         return newBadge;
       },
       error => {

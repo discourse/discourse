@@ -26,21 +26,21 @@ export default Ember.Mixin.create({
 
     username = Ember.Handlebars.Utils.escapeExpression(username.toString());
 
-    // Don't show on mobile or nested
-    if (this.site.mobileView || $target.parents(".card-content").length) {
+    // Don't show if nested
+    if ($target.parents(".card-content").length) {
       this._close();
       DiscourseURL.routeTo($target.attr("href"));
       return false;
     }
 
-    const currentUsername = this.get("username");
-    if (username === currentUsername && this.get("loading") === username) {
+    const currentUsername = this.username;
+    if (username === currentUsername && this.loading === username) {
       return;
     }
 
     const postId = $target.parents("article").data("post-id");
-    const wasVisible = this.get("visible");
-    const previousTarget = this.get("cardTarget");
+    const wasVisible = this.visible;
+    const previousTarget = this.cardTarget;
     const target = $target[0];
 
     if (wasVisible) {
@@ -51,8 +51,8 @@ export default Ember.Mixin.create({
     }
 
     const post =
-      this.get("viewingTopic") && postId
-        ? this.get("postStream").findLoadedPost(postId)
+      this.viewingTopic && postId
+        ? this.postStream.findLoadedPost(postId)
         : null;
     this.setProperties({
       username,
@@ -63,30 +63,37 @@ export default Ember.Mixin.create({
 
     this._showCallback(username, $target);
 
+    // We bind scrolling on mobile after cards are shown to hide them if user scrolls
+    if (this.site.mobileView) {
+      this._bindMobileScroll();
+    }
+
     return false;
   },
 
   didInsertElement() {
     this._super(...arguments);
     afterTransition(this.$(), this._hide.bind(this));
-    const id = this.get("elementId");
-    const triggeringLinkClass = this.get("triggeringLinkClass");
+    const id = this.elementId;
+    const triggeringLinkClass = this.triggeringLinkClass;
     const clickOutsideEventName = `mousedown.outside-${id}`;
     const clickDataExpand = `click.discourse-${id}`;
     const clickMention = `click.discourse-${id}-${triggeringLinkClass}`;
     const previewClickEvent = `click.discourse-preview-${id}-${triggeringLinkClass}`;
+    const mobileScrollEvent = "scroll.mobile-card-cloak";
 
     this.setProperties({
       clickOutsideEventName,
       clickDataExpand,
       clickMention,
-      previewClickEvent
+      previewClickEvent,
+      mobileScrollEvent
     });
 
     $("html")
       .off(clickOutsideEventName)
       .on(clickOutsideEventName, e => {
-        if (this.get("visible")) {
+        if (this.visible) {
           const $target = $(e.target);
           if (
             $target.closest(`[data-${id}]`).data(id) ||
@@ -118,15 +125,38 @@ export default Ember.Mixin.create({
       return this._show($target.text().replace(/^@/, ""), $target);
     });
 
-    this.appEvents.on(previewClickEvent, $target => {
-      this.set("isFixed", true);
-      return this._show($target.text().replace(/^@/, ""), $target);
-    });
+    this.appEvents.on(previewClickEvent, this, "_previewClick");
 
-    this.appEvents.on(`topic-header:trigger-${id}`, (username, $target) => {
-      this.setProperties({ isFixed: true, isDocked: true });
-      return this._show(username, $target);
-    });
+    this.appEvents.on(
+      `topic-header:trigger-${id}`,
+      this,
+      "_topicHeaderTrigger"
+    );
+  },
+
+  _topicHeaderTrigger(username, $target) {
+    this.setProperties({ isFixed: true, isDocked: true });
+    return this._show(username, $target);
+  },
+
+  _bindMobileScroll() {
+    const mobileScrollEvent = this.mobileScrollEvent;
+    const onScroll = () => {
+      Ember.run.throttle(this, this._close, 1000);
+    };
+
+    $(window).on(mobileScrollEvent, onScroll);
+  },
+
+  _unbindMobileScroll() {
+    const mobileScrollEvent = this.mobileScrollEvent;
+
+    $(window).off(mobileScrollEvent);
+  },
+
+  _previewClick($target) {
+    this.set("isFixed", true);
+    return this._show($target.text().replace(/^@/, ""), $target);
   },
 
   _positionCard(target) {
@@ -136,65 +166,78 @@ export default Ember.Mixin.create({
     }
     const width = this.$().width();
     const height = 175;
-    const isFixed = this.get("isFixed");
-    const isDocked = this.get("isDocked");
+    const isFixed = this.isFixed;
+    const isDocked = this.isDocked;
 
     let verticalAdjustments = 0;
 
     Ember.run.schedule("afterRender", () => {
       if (target) {
-        let position = target.offset();
-        if (position) {
-          position.bottom = "unset";
-
-          if (rtl) {
-            // The site direction is rtl
-            position.right = $(window).width() - position.left + 10;
-            position.left = "auto";
-            let overage = $(window).width() - 50 - (position.right + width);
-            if (overage < 0) {
-              position.right += overage;
-              position.top += target.height() + 48;
-              verticalAdjustments += target.height() + 48;
-            }
-          } else {
-            // The site direction is ltr
-            position.left += target.width() + 10;
-
-            let overage = $(window).width() - 50 - (position.left + width);
-            if (overage < 0) {
-              position.left += overage;
-              position.top += target.height() + 48;
-              verticalAdjustments += target.height() + 48;
-            }
+        if (!this.site.mobileView) {
+          let position = target.offset();
+          if (target.parents(".d-header").length > 0) {
+            position.top = target.position().top;
           }
 
-          position.top -= $("#main-outlet").offset().top;
-          if (isFixed) {
-            position.top -= $("html").scrollTop();
-            //if content is fixed and will be cut off on the bottom, display it above...
-            if (
-              position.top + height + verticalAdjustments >
-              $(window).height() - 50
-            ) {
-              position.bottom =
-                $(window).height() -
-                (target.offset().top - $("html").scrollTop());
-              if (verticalAdjustments > 0) {
-                position.bottom += 48;
+          if (position) {
+            position.bottom = "unset";
+
+            if (rtl) {
+              // The site direction is rtl
+              position.right = $(window).width() - position.left + 10;
+              position.left = "auto";
+              let overage = $(window).width() - 50 - (position.right + width);
+              if (overage < 0) {
+                position.right += overage;
+                position.top += target.height() + 48;
+                verticalAdjustments += target.height() + 48;
               }
-              position.top = "unset";
+            } else {
+              // The site direction is ltr
+              position.left += target.width() + 10;
+
+              let overage = $(window).width() - 50 - (position.left + width);
+              if (overage < 0) {
+                position.left += overage;
+                position.top += target.height() + 48;
+                verticalAdjustments += target.height() + 48;
+              }
             }
-          }
 
-          const avatarOverflowSize = 44;
-          if (isDocked && position.top < avatarOverflowSize) {
-            position.top = avatarOverflowSize;
-          }
+            position.top -= $("#main-outlet").offset().top;
+            if (isFixed) {
+              position.top -= $("html").scrollTop();
+              //if content is fixed and will be cut off on the bottom, display it above...
+              if (
+                position.top + height + verticalAdjustments >
+                $(window).height() - 50
+              ) {
+                position.bottom =
+                  $(window).height() -
+                  (target.offset().top - $("html").scrollTop());
+                if (verticalAdjustments > 0) {
+                  position.bottom += 48;
+                }
+                position.top = "unset";
+              }
+            }
 
-          this.$().css(position);
+            const avatarOverflowSize = 44;
+            if (isDocked && position.top < avatarOverflowSize) {
+              position.top = avatarOverflowSize;
+            }
+
+            this.$().css(position);
+          }
         }
 
+        if (this.site.mobileView) {
+          $(".card-cloak").removeClass("hidden");
+          let position = target.offset();
+          position.top = "10%"; // match modal behaviour
+          position.left = 0;
+          this.$().css(position);
+        }
         this.$().toggleClass("docked-card", isDocked);
 
         // After the card is shown, focus on the first link
@@ -208,8 +251,11 @@ export default Ember.Mixin.create({
   },
 
   _hide() {
-    if (!this.get("visible")) {
+    if (!this.visible) {
       this.$().css({ left: -9999, top: -9999 });
+      if (this.site.mobileView) {
+        $(".card-cloak").addClass("hidden");
+      }
     }
   },
 
@@ -223,25 +269,38 @@ export default Ember.Mixin.create({
       isFixed: false,
       isDocked: false
     });
+
+    // Card will be removed, so we unbind mobile scrolling
+    if (this.site.mobileView) {
+      this._unbindMobileScroll();
+    }
   },
 
   willDestroyElement() {
     this._super(...arguments);
-    const clickOutsideEventName = this.get("clickOutsideEventName");
-    const clickDataExpand = this.get("clickDataExpand");
-    const clickMention = this.get("clickMention");
-    const previewClickEvent = this.get("previewClickEvent");
+    const clickOutsideEventName = this.clickOutsideEventName;
+    const clickDataExpand = this.clickDataExpand;
+    const clickMention = this.clickMention;
+    const previewClickEvent = this.previewClickEvent;
+
     $("html").off(clickOutsideEventName);
     $("#main")
       .off(clickDataExpand)
       .off(clickMention);
-    this.appEvents.off(previewClickEvent);
+
+    this.appEvents.off(previewClickEvent, this, "_previewClick");
+
+    this.appEvents.off(
+      `topic-header:trigger-${this.elementId}`,
+      this,
+      "_topicHeaderTrigger"
+    );
   },
 
   keyUp(e) {
     if (e.keyCode === 27) {
       // ESC
-      const target = this.get("cardTarget");
+      const target = this.cardTarget;
       this._close();
       target.focus();
     }

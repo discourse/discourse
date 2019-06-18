@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 def print_status_with_label(label, current, max)
   print "\r%s%9d / %d (%5.1f%%)" % [label, current, max, ((current.to_f / max.to_f) * 100).round(1)]
 end
@@ -65,38 +67,22 @@ task "topics:apply_autoclose" => :environment do
   puts "", "Done"
 end
 
-def update_static_page_topic(locale, site_setting_key, title_key, body_key, params = {})
-  topic = Topic.find(SiteSetting.send(site_setting_key))
+task "topics:watch_all_replied_topics" => :environment do
+  puts "Setting all topics to Watching on which a user has posted at least once..."
+  topics = Topic.where("archetype != ?", Archetype.private_message)
+  total = topics.count
+  count = 0
 
-  if (topic && post = topic.first_post)
-    post.revise(Discourse.system_user,
-                title: I18n.t(title_key, locale: locale),
-                raw: I18n.t(body_key, params.merge(locale: locale)))
-
-    puts "", "Topic for #{site_setting_key} updated"
-  else
-    puts "", "Topic for #{site_setting_key} not found"
+  topics.find_each do |t|
+    t.topic_users.where(posted: true).find_each do |tp|
+      tp.update!(notification_level: TopicUser.notification_levels[:watching], notifications_reason_id: TopicUser.notification_reasons[:created_post])
+    end
+    print_status(count += 1, total)
   end
+
+  puts "", "Done"
 end
 
-desc "Update static topics (ToS, Privacy, Guidelines) with latest translated content"
-task "topics:update_static", [:locale] => [:environment] do |_, args|
-  locale = args[:locale]&.to_sym
-
-  if locale.blank? || !I18n.locale_available?(locale)
-    puts "ERROR: Expecting rake topics:update_static[locale]"
-    exit 1
-  end
-
-  update_static_page_topic(locale, "tos_topic_id", "tos_topic.title", "tos_topic.body",
-                           company_name: SiteSetting.company_name.presence || "company_name",
-                           base_url: Discourse.base_url,
-                           contact_email: SiteSetting.contact_email.presence || "contact_email",
-                           governing_law: SiteSetting.governing_law.presence || "governing_law",
-                           city_for_disputes: SiteSetting.city_for_disputes.presence || "city_for_disputes")
-
-  update_static_page_topic(locale, "guidelines_topic_id", "guidelines_topic.title", "guidelines_topic.body",
-                           base_path: Discourse.base_path)
-
-  update_static_page_topic(locale, "privacy_topic_id", "privacy_topic.title", "privacy_topic.body")
+def print_status(current, max)
+  print "\r%9d / %d (%5.1f%%)" % [current, max, ((current.to_f / max.to_f) * 100).round(1)]
 end

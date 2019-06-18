@@ -24,13 +24,13 @@ export default Ember.Component.extend({
 
   actions: {
     submit() {
-      if (!this.get("formSubmitted")) {
+      if (!this.formSubmitted) {
         this.set("formSubmitted", true);
 
         Permalink.create({
-          url: this.get("url"),
-          permalink_type: this.get("permalinkType"),
-          permalink_type_value: this.get("permalink_type_value")
+          url: this.url,
+          permalink_type: this.permalinkType,
+          permalink_type_value: this.permalink_type_value
         })
           .save()
           .then(

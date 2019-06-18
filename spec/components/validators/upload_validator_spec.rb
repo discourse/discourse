@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 require_dependency 'validators/upload_validator'
 
@@ -5,7 +7,7 @@ describe Validators::UploadValidator do
   subject(:validator) { described_class.new }
 
   describe 'validate' do
-    let(:user) { Fabricate(:user) }
+    fab!(:user) { Fabricate(:user) }
     let(:filename) { "discourse.csv" }
     let(:csv_file) { file_from_fixtures(filename, "csv") }
 
@@ -55,7 +57,7 @@ describe Validators::UploadValidator do
     end
 
     describe 'upload for site settings' do
-      let(:user) { Fabricate(:admin) }
+      fab!(:user) { Fabricate(:admin) }
 
       let(:upload) do
         Fabricate.build(:upload,
@@ -83,7 +85,7 @@ describe Validators::UploadValidator do
       end
 
       describe 'for normal user' do
-        let(:user) { Fabricate(:user) }
+        fab!(:user) { Fabricate(:user) }
 
         it 'should not allow the upload' do
           expect(subject.validate(upload)).to eq(nil)

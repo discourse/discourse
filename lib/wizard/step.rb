@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Wizard
   class Step
     attr_reader :id, :updater

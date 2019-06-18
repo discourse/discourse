@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class PostReply < ActiveRecord::Base
   belongs_to :post
   belongs_to :reply, class_name: 'Post'
@@ -29,4 +31,5 @@ end
 # Indexes
 #
 #  index_post_replies_on_post_id_and_reply_id  (post_id,reply_id) UNIQUE
+#  index_post_replies_on_reply_id              (reply_id)
 #

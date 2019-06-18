@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreatePostRevisions < ActiveRecord::Migration[4.2]
   def up
     create_table :post_revisions do |t|

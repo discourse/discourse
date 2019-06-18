@@ -1,9 +1,11 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 describe PostReply do
-  let(:topic) { Fabricate(:topic) }
-  let(:post) { Fabricate(:post, topic: topic) }
-  let(:other_post) { Fabricate(:post, topic: topic) }
+  fab!(:topic) { Fabricate(:topic) }
+  fab!(:post) { Fabricate(:post, topic: topic) }
+  fab!(:other_post) { Fabricate(:post, topic: topic) }
 
   it { is_expected.to belong_to :post }
   it { is_expected.to belong_to :reply }
@@ -13,7 +15,7 @@ describe PostReply do
       expect(PostReply.new(post: post, reply: other_post)).to be_valid
 
       other_topic = Fabricate(:topic)
-      other_post.update_attributes!(topic_id: other_topic.id)
+      other_post.update!(topic_id: other_topic.id)
       other_post.reload
 
       post_reply = PostReply.new(post: post, reply: other_post)

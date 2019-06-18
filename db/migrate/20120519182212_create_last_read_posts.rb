@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreateLastReadPosts < ActiveRecord::Migration[4.2]
   def change
     create_table :last_read_posts do |t|

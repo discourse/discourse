@@ -34,7 +34,7 @@ matrix:
   fast_finish: true
 
 rvm:
-  - 2.5.3
+  - 2.6.3
 
 services:
   - redis-server
@@ -68,14 +68,14 @@ install:
   - bash -c "if [ '$RAILS_MASTER' == '1' ]; then bundle update --retry=3 --jobs=3 arel rails seed-fu; fi"
   - bash -c "if [ '$RAILS_MASTER' == '0' ]; then bundle install --without development --deployment --retry=3 --jobs=3; fi"
   - bash -c "if [ '$QUNIT_RUN' == '1' ] || [ '$RUN_LINT' == '1' ]; then yarn install --dev; fi"
-  - bash -c "if [ '$RUN_LINT' != '1' ]; then LOAD_PLUGINS=1 bundle exec rake db:create db:migrate; fi"
+  - bash -c "if [ '$RUN_LINT' != '1' ]; then bundle exec rake db:create && LOAD_PLUGINS=1 bundle exec rake db:migrate; fi"
 
 script:
   - |
     bash -c "
       if [ '$RUN_LINT' == '1' ]; then
         bundle exec rubocop --parallel && \
-        bundle exec danger && \
+        yarn prettier --list-different "app/assets/stylesheets/**/*.scss" "app/assets/javascripts/**/*.es6" "test/javascripts/**/*.es6"
         yarn eslint --ext .es6 app/assets/javascripts && \
         yarn eslint --ext .es6 test/javascripts && \
         yarn eslint --ext .es6 plugins/**/assets/javascripts && \
@@ -83,8 +83,8 @@ script:
         yarn eslint app/assets/javascripts test/javascripts
       else
         if [ '$QUNIT_RUN' == '1' ]; then
-          bundle exec rake qunit:test['500000'] && \
-          bundle exec rake qunit:test['500000','/wizard/qunit'] && \
+          bundle exec rake qunit:test['1200000'] && \
+          bundle exec rake qunit:test['1200000','/wizard/qunit'] && \
           bundle exec rake plugin:qunit
         else
           bundle exec rspec && bundle exec rake plugin:spec

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 PostActionType.seed do |s|
   s.id = PostActionType.types[:bookmark]
   s.name_key = 'bookmark'

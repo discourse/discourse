@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 def public_js
   "#{Rails.root}/public/javascripts"
 end
@@ -19,7 +21,10 @@ task 'javascript:update' do
 
   dependencies = [
     {
-      source: 'ace-builds/src-min',
+      source: 'bootstrap/js/modal.js',
+      destination: 'bootstrap-modal.js'
+    }, {
+      source: 'ace-builds/src-min-noconflict/.',
       destination: 'ace',
       public: true
     }, {
@@ -48,8 +53,6 @@ task 'javascript:update' do
       source: 'highlight.js/build/.',
       destination: 'highlightjs'
     }, {
-      source: 'htmlparser/lib/htmlparser.js'
-    }, {
       source: 'jquery-resize/jquery.ba-resize.js'
     }, {
       source: 'jquery.autoellipsis/src/jquery.autoellipsis.js',
@@ -66,6 +69,19 @@ task 'javascript:update' do
       source: 'markdown-it/dist/markdown-it.js'
     }, {
       source: 'mousetrap/mousetrap.js'
+    }, {
+      source: 'moment/moment.js'
+    }, {
+      source: 'moment/locale/.',
+      destination: 'moment-locale',
+    }, {
+      source: 'moment-timezone/builds/moment-timezone-with-data-10-year-range.js',
+      destination: 'moment-timezone-with-data.js'
+    }, {
+      source: 'moment-timezone-names-translations/locales/.',
+      destination: 'moment-timezone-names-locale'
+    }, {
+      source: 'mousetrap/plugins/global-bind/mousetrap-global-bind.js'
     }, {
       source: 'resumablejs/resumable.js'
     }, {
@@ -95,6 +111,11 @@ task 'javascript:update' do
 
       puts "Cleanup unused styles folder"
       system("rm -rf node_modules/highlight.js/build/styles")
+    end
+
+    if src.include? "ace-builds"
+      puts "Cleanup unused snippets folder for ACE"
+      system("rm -rf node_modules/ace-builds/src-min-noconflict/snippets")
     end
 
     if f[:public]

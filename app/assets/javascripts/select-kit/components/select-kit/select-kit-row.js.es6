@@ -16,7 +16,11 @@ export default Ember.Component.extend(UtilsMixin, {
     "ariaLabel:aria-label",
     "guid:data-guid"
   ],
-  classNameBindings: ["isHighlighted", "isSelected"],
+  classNameBindings: [
+    "isHighlighted",
+    "isSelected",
+    "computedContent.originalContent.classNames"
+  ],
 
   forceEscape: Ember.computed.alias("options.forceEscape"),
 
@@ -48,16 +52,15 @@ export default Ember.Component.extend(UtilsMixin, {
 
   @on("didReceiveAttrs")
   _setSelectionState() {
-    this.set("isSelected", this.get("computedValue") === this.get("value"));
-    this.set(
-      "isHighlighted",
-      this.get("highlighted.value") === this.get("value")
-    );
+    this.setProperties({
+      isSelected: this.computedValue === this.value,
+      isHighlighted: this.get("highlighted.value") === this.value
+    });
   },
 
   @on("willDestroyElement")
   _clearDebounce() {
-    const hoverDebounce = this.get("hoverDebounce");
+    const hoverDebounce = this.hoverDebounce;
     if (isPresent(hoverDebounce)) {
       run.cancel(hoverDebounce);
     }
@@ -83,10 +86,10 @@ export default Ember.Component.extend(UtilsMixin, {
   },
 
   click() {
-    this.onClickRow(this.get("computedContent"));
+    this.onClickRow(this.computedContent);
   },
 
   _sendMouseoverAction() {
-    this.onMouseoverRow(this.get("computedContent"));
+    this.onMouseoverRow(this.computedContent);
   }
 });

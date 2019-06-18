@@ -4,7 +4,8 @@ QUnit.test("displayEdit", function(assert) {
   const HistoryController = this.subject();
 
   HistoryController.setProperties({
-    model: { last_revision: 3, current_revision: 3, can_edit: false }
+    model: { last_revision: 3, current_revision: 3, can_edit: false },
+    topicController: {}
   });
 
   assert.equal(
@@ -20,6 +21,14 @@ QUnit.test("displayEdit", function(assert) {
     true,
     "it should display edit button when user can edit the post"
   );
+
+  HistoryController.set("topicController", null);
+  assert.equal(
+    HistoryController.get("displayEdit"),
+    false,
+    "it should not display edit button when there is not topic controller"
+  );
+  HistoryController.set("topicController", {});
 
   HistoryController.set("model.current_revision", 2);
   assert.equal(

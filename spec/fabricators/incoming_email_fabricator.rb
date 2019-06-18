@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 Fabricator(:incoming_email) do
   message_id "12345@example.com"
   subject "Hello world"

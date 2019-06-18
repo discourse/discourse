@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_dependency 'pinned_check'
 
 class ListableTopicSerializer < BasicTopicSerializer
@@ -108,7 +110,7 @@ class ListableTopicSerializer < BasicTopicSerializer
   alias :include_new_posts? :has_user_data
 
   def include_excerpt?
-    pinned
+    pinned || SiteSetting.always_include_topic_excerpts
   end
 
   def pinned

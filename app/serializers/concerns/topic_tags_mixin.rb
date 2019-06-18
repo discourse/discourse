@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module TopicTagsMixin
   def self.included(klass)
     klass.attributes :tags

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # avatar_url does not function properly as it does not properly deal with scaling.
 #   css based scaling is inefficient and has terrible results in both firefox and ie. canvas based scaling is slow.
 #

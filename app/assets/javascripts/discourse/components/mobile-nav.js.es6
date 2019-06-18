@@ -4,7 +4,7 @@ export default Ember.Component.extend({
   @on("init")
   _init() {
     if (!this.get("site.mobileView")) {
-      var classes = this.get("desktopClass");
+      var classes = this.desktopClass;
       if (classes) {
         classes = classes.split(" ");
         this.set("classNames", classes);
@@ -39,7 +39,7 @@ export default Ember.Component.extend({
       this.toggleProperty("expanded");
 
       Ember.run.next(() => {
-        if (this.get("expanded")) {
+        if (this.expanded) {
           $(window)
             .off("click.mobile-nav")
             .on("click.mobile-nav", e => {

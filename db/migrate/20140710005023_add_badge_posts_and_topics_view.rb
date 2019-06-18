@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddBadgePostsAndTopicsView < ActiveRecord::Migration[4.2]
   def up
     add_column :categories, :allow_badges, :boolean, default: true, null: false

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 require_dependency 'site_settings/local_process_provider'
 
@@ -9,16 +11,10 @@ describe SiteSettings::LocalProcessProvider do
     expect(actual.data_type).to eq(expected.data_type)
   end
 
-  let :provider do
-    SiteSettings::LocalProcessProvider.new
-  end
+  let(:provider) { described_class.new }
 
   def setting(name, value, data_type)
-    OpenStruct.new.tap do |setting|
-      setting.name = name
-      setting.value = value
-      setting.data_type = data_type
-    end
+    described_class::Setting.new(name, data_type).tap { |s| s.value = value }
   end
 
   describe "all" do

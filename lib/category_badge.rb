@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module CategoryBadge
 
   def self.category_stripe(color, classes)
@@ -32,7 +34,7 @@ module CategoryBadge
 
     extra_classes = "#{opts[:extra_classes]} #{SiteSetting.category_style}"
 
-    result = ''
+    result = +''
 
     # parent span
     unless category.parent_category_id.nil? || opts[:hide_parent]
@@ -53,8 +55,6 @@ module CategoryBadge
           category_stripe(parent_category.color, 'badge-category-parent-bg')
         end
     end
-
-    show_parent = category.parent_category_id && !opts[:hide_parent]
 
     # sub parent or main category span
     result <<

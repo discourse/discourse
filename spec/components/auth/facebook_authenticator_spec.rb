@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 describe Auth::FacebookAuthenticator do
@@ -47,7 +49,7 @@ describe Auth::FacebookAuthenticator do
   end
 
   context 'description_for_user' do
-    let(:user) { Fabricate(:user) }
+    fab!(:user) { Fabricate(:user) }
 
     it 'returns empty string if no entry for user' do
       expect(authenticator.description_for_user(user)).to eq("")
@@ -60,7 +62,7 @@ describe Auth::FacebookAuthenticator do
   end
 
   context 'revoke' do
-    let(:user) { Fabricate(:user) }
+    fab!(:user) { Fabricate(:user) }
     let(:authenticator) { Auth::FacebookAuthenticator.new }
 
     it 'raises exception if no entry for user' do

@@ -1,4 +1,5 @@
-import { acceptance, replaceCurrentUser } from "helpers/qunit-helpers";
+import selectKit from "helpers/select-kit-helper";
+import { acceptance, updateCurrentUser } from "helpers/qunit-helpers";
 import { _clearSnapshots } from "select-kit/components/composer-actions";
 import { toggleCheckDraftPopup } from "discourse/controllers/composer";
 
@@ -131,31 +132,43 @@ QUnit.test("replying to post - reply_as_new_topic", async assert => {
 });
 
 QUnit.test("shared draft", async assert => {
-  toggleCheckDraftPopup(true);
+  try {
+    toggleCheckDraftPopup(true);
 
-  const composerActions = selectKit(".composer-actions");
-  const tags = selectKit(".mini-tag-chooser");
+    const composerActions = selectKit(".composer-actions");
+    const tags = selectKit(".mini-tag-chooser");
 
-  await visit("/");
-  await click("#create-topic");
+    await visit("/");
+    await click("#create-topic");
 
-  await fillIn("#reply-title", "This is the new text for the title");
-  await fillIn(".d-editor-input", "This is the new text for the post");
-  await tags.expand();
-  await tags.selectRowByValue("monkey");
+    await fillIn(
+      "#reply-title",
+      "This is the new text for the title using 'quotes'"
+    );
 
-  await composerActions.expand();
-  await composerActions.selectRowByValue("shared_draft");
+    await fillIn(".d-editor-input", "This is the new text for the post");
+    await tags.expand();
+    await tags.selectRowByValue("monkey");
+    await composerActions.expand();
+    await composerActions.selectRowByValue("shared_draft");
 
-  assert.equal(tags.header().value(), "monkey", "tags are not reset");
+    assert.equal(tags.header().value(), "monkey", "tags are not reset");
 
-  assert.equal(
-    find("#reply-control .btn-primary.create .d-button-label").text(),
-    I18n.t("composer.create_shared_draft")
-  );
-  assert.ok(find("#reply-control.composing-shared-draft").length === 1);
+    assert.equal(
+      find("#reply-title").val(),
+      "This is the new text for the title using 'quotes'"
+    );
 
-  toggleCheckDraftPopup(false);
+    assert.equal(
+      find("#reply-control .btn-primary.create .d-button-label").text(),
+      I18n.t("composer.create_shared_draft")
+    );
+
+    assert.ok(find("#reply-control.composing-shared-draft").length === 1);
+    await click(".modal-footer .btn.btn-default");
+  } finally {
+    toggleCheckDraftPopup(false);
+  }
 });
 
 QUnit.test("hide component if no content", async assert => {
@@ -292,7 +305,7 @@ QUnit.test("replying to post - toggle_topic_bump", async assert => {
 QUnit.test("replying to post as staff", async assert => {
   const composerActions = selectKit(".composer-actions");
 
-  replaceCurrentUser({ staff: true, admin: false });
+  updateCurrentUser({ staff: true, admin: false });
   await visit("/t/internationalization-localization/280");
   await click("article#post_3 button.reply");
   await composerActions.expand();
@@ -304,7 +317,7 @@ QUnit.test("replying to post as staff", async assert => {
 QUnit.test("replying to post as TL3 user", async assert => {
   const composerActions = selectKit(".composer-actions");
 
-  replaceCurrentUser({ staff: false, admin: false, trust_level: 3 });
+  updateCurrentUser({ staff: false, admin: false, trust_level: 3 });
   await visit("/t/internationalization-localization/280");
   await click("article#post_3 button.reply");
   await composerActions.expand();
@@ -322,7 +335,7 @@ QUnit.test("replying to post as TL3 user", async assert => {
 QUnit.test("replying to post as TL4 user", async assert => {
   const composerActions = selectKit(".composer-actions");
 
-  replaceCurrentUser({ staff: false, admin: false, trust_level: 4 });
+  updateCurrentUser({ staff: false, admin: false, trust_level: 4 });
   await visit("/t/internationalization-localization/280");
   await click("article#post_3 button.reply");
   await composerActions.expand();

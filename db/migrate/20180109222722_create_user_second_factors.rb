@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreateUserSecondFactors < ActiveRecord::Migration[5.1]
   def change
     create_table :user_second_factors do |t|

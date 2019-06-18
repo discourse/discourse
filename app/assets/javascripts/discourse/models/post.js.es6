@@ -17,16 +17,17 @@ const Post = RestModel.extend({
     return Discourse.SiteSettings;
   },
 
-  shareUrl: function() {
+  @computed("url")
+  shareUrl(url) {
     const user = Discourse.User.current();
-    const userSuffix = user ? "?u=" + user.get("username_lower") : "";
+    const userSuffix = user ? `?u=${user.username_lower}` : "";
 
-    if (this.get("firstPost")) {
+    if (this.firstPost) {
       return this.get("topic.url") + userSuffix;
     } else {
-      return this.get("url") + userSuffix;
+      return url + userSuffix;
     }
-  }.property("url"),
+  },
 
   new_user: Ember.computed.equal("trust_level", 0),
   firstPost: Ember.computed.equal("post_number", 1),
@@ -36,47 +37,39 @@ const Post = RestModel.extend({
   deleted: Ember.computed.or("deleted_at", "deletedViaTopic"),
   notDeleted: Ember.computed.not("deleted"),
 
-  showName: function() {
-    const name = this.get("name");
+  @computed("name", "username")
+  showName(name, username) {
     return (
-      name &&
-      name !== this.get("username") &&
-      Discourse.SiteSettings.display_name_on_posts
+      name && name !== username && Discourse.SiteSettings.display_name_on_posts
     );
-  }.property("name", "username"),
+  },
 
-  postDeletedBy: function() {
-    if (this.get("firstPost")) {
-      return this.get("topic.deleted_by");
-    }
-    return this.get("deleted_by");
-  }.property("firstPost", "deleted_by", "topic.deleted_by"),
+  @computed("firstPost", "deleted_by", "topic.deleted_by")
+  postDeletedBy(firstPost, deletedBy, topicDeletedBy) {
+    return firstPost ? topicDeletedBy : deletedBy;
+  },
 
-  postDeletedAt: function() {
-    if (this.get("firstPost")) {
-      return this.get("topic.deleted_at");
-    }
-    return this.get("deleted_at");
-  }.property("firstPost", "deleted_at", "topic.deleted_at"),
+  @computed("firstPost", "deleted_at", "topic.deleted_at")
+  postDeletedAt(firstPost, deletedAt, topicDeletedAt) {
+    return firstPost ? topicDeletedAt : deletedAt;
+  },
 
-  url: function() {
+  @computed("post_number", "topic_id", "topic.slug")
+  url(post_number, topic_id, topicSlug) {
     return postUrl(
-      this.get("topic.slug") || this.get("topic_slug"),
-      this.get("topic_id") || this.get("topic.id"),
-      this.get("post_number")
+      topicSlug || this.topic_slug,
+      topic_id || this.get("topic.id"),
+      post_number
     );
-  }.property("post_number", "topic_id", "topic.slug"),
+  },
 
   // Don't drop the /1
   @computed("post_number", "url")
   urlWithNumber(postNumber, baseUrl) {
-    return postNumber === 1 ? baseUrl + "/1" : baseUrl;
+    return postNumber === 1 ? `${baseUrl}/1` : baseUrl;
   },
 
-  @computed("username")
-  usernameUrl(username) {
-    return userPath(username);
-  },
+  @computed("username") usernameUrl: userPath,
 
   topicOwner: propertyEqual("topic.details.created_by.id", "user_id"),
 
@@ -84,20 +77,16 @@ const Post = RestModel.extend({
     const data = {};
     data[field] = value;
 
-    return ajax(`/posts/${this.get("id")}/${field}`, { type: "PUT", data })
-      .then(() => {
-        this.set(field, value);
-      })
+    return ajax(`/posts/${this.id}/${field}`, { type: "PUT", data })
+      .then(() => this.set(field, value))
       .catch(popupAjaxError);
   },
 
   @computed("link_counts.@each.internal")
   internalLinks() {
-    if (Ember.isEmpty(this.get("link_counts"))) return null;
+    if (Ember.isEmpty(this.link_counts)) return null;
 
-    return this.get("link_counts")
-      .filterBy("internal")
-      .filterBy("title");
+    return this.link_counts.filterBy("internal").filterBy("title");
   },
 
   @computed("actions_summary.@each.can_act")
@@ -108,9 +97,9 @@ const Post = RestModel.extend({
       return [];
     }
 
-    return this.site.get("flagTypes").filter(item => {
-      return this.get(`actionByName.${item.get("name_key")}.can_act`);
-    });
+    return this.site.flagTypes.filter(item =>
+      this.get(`actionByName.${item.name_key}.can_act`)
+    );
   },
 
   afterUpdate(res) {
@@ -121,25 +110,25 @@ const Post = RestModel.extend({
 
   updateProperties() {
     return {
-      post: { raw: this.get("raw"), edit_reason: this.get("editReason") },
-      image_sizes: this.get("imageSizes")
+      post: { raw: this.raw, edit_reason: this.editReason },
+      image_sizes: this.imageSizes
     };
   },
 
   createProperties() {
     // composer only used once, defer the dependency
     const data = this.getProperties(Composer.serializedFieldsForCreate());
-    data.reply_to_post_number = this.get("reply_to_post_number");
-    data.image_sizes = this.get("imageSizes");
+    data.reply_to_post_number = this.reply_to_post_number;
+    data.image_sizes = this.imageSizes;
 
-    const metaData = this.get("metaData");
+    const metaData = this.metaData;
 
     // Put the metaData into the request
     if (metaData) {
       data.meta_data = {};
-      Object.keys(metaData).forEach(function(key) {
-        data.meta_data[key] = metaData.get(key);
-      });
+      Object.keys(metaData).forEach(
+        key => (data.meta_data[key] = metaData[key])
+      );
     }
 
     return data;
@@ -147,7 +136,7 @@ const Post = RestModel.extend({
 
   // Expands the first post's content, if embedded and shortened.
   expand() {
-    return ajax(`/posts/${this.get("id")}/expand-embed`).then(post => {
+    return ajax(`/posts/${this.id}/expand-embed`).then(post => {
       this.set(
         "cooked",
         `<section class="expanded-embed">${post.cooked}</section>`
@@ -171,7 +160,7 @@ const Post = RestModel.extend({
       can_delete: false
     });
 
-    return ajax(`/posts/${this.get("id")}/recover`, {
+    return ajax(`/posts/${this.id}/recover`, {
       type: "PUT",
       cache: false
     })
@@ -196,11 +185,11 @@ const Post = RestModel.extend({
   **/
   setDeletedState(deletedBy) {
     let promise;
-    this.set("oldCooked", this.get("cooked"));
+    this.set("oldCooked", this.cooked);
 
     // Moderators can delete posts. Users can only trigger a deleted at message, unless delete_removed_posts_after is 0.
     if (
-      deletedBy.get("staff") ||
+      deletedBy.staff ||
       Discourse.SiteSettings.delete_removed_posts_after === 0
     ) {
       this.setProperties({
@@ -210,15 +199,19 @@ const Post = RestModel.extend({
         can_recover: true
       });
     } else {
+      const key =
+        this.post_number === 1
+          ? "topic.deleted_by_author"
+          : "post.deleted_by_author";
       promise = cookAsync(
-        I18n.t("post.deleted_by_author", {
+        I18n.t(key, {
           count: Discourse.SiteSettings.delete_removed_posts_after
         })
       ).then(cooked => {
         this.setProperties({
           cooked: cooked,
           can_delete: false,
-          version: this.get("version") + 1,
+          version: this.version + 1,
           can_recover: true,
           can_edit: false,
           user_deleted: true
@@ -235,12 +228,12 @@ const Post = RestModel.extend({
     failed on the server.
   **/
   undoDeleteState() {
-    if (this.get("oldCooked")) {
+    if (this.oldCooked) {
       this.setProperties({
         deleted_at: null,
         deleted_by: null,
-        cooked: this.get("oldCooked"),
-        version: this.get("version") - 1,
+        cooked: this.oldCooked,
+        version: this.version - 1,
         can_recover: false,
         can_delete: true,
         user_deleted: false
@@ -250,7 +243,7 @@ const Post = RestModel.extend({
 
   destroy(deletedBy) {
     return this.setDeletedState(deletedBy).then(() => {
-      return ajax("/posts/" + this.get("id"), {
+      return ajax("/posts/" + this.id, {
         data: { context: window.location.pathname },
         type: "DELETE"
       });
@@ -262,10 +255,9 @@ const Post = RestModel.extend({
     is already found in an identity map.
   **/
   updateFromPost(otherPost) {
-    const self = this;
-    Object.keys(otherPost).forEach(function(key) {
+    Object.keys(otherPost).forEach(key => {
       let value = otherPost[key],
-        oldValue = self[key];
+        oldValue = this[key];
 
       if (!value) {
         value = null;
@@ -284,61 +276,58 @@ const Post = RestModel.extend({
         }
 
         if (!skip) {
-          self.set(key, value);
+          this.set(key, value);
         }
       }
     });
   },
 
   expandHidden() {
-    return ajax("/posts/" + this.get("id") + "/cooked.json").then(result => {
+    return ajax(`/posts/${this.id}/cooked.json`).then(result => {
       this.setProperties({ cooked: result.cooked, cooked_hidden: false });
     });
   },
 
   rebake() {
-    return ajax("/posts/" + this.get("id") + "/rebake", { type: "PUT" });
+    return ajax(`/posts/${this.id}/rebake`, { type: "PUT" });
   },
 
   unhide() {
-    return ajax("/posts/" + this.get("id") + "/unhide", { type: "PUT" });
+    return ajax(`/posts/${this.id}/unhide`, { type: "PUT" });
   },
 
   toggleBookmark() {
-    const self = this;
     let bookmarkedTopic;
 
     this.toggleProperty("bookmarked");
 
-    if (this.get("bookmarked") && !this.get("topic.bookmarked")) {
+    if (this.bookmarked && !this.get("topic.bookmarked")) {
       this.set("topic.bookmarked", true);
       bookmarkedTopic = true;
     }
 
     // need to wait to hear back from server (stuff may not be loaded)
 
-    return Discourse.Post.updateBookmark(this.get("id"), this.get("bookmarked"))
-      .then(function(result) {
-        self.set("topic.bookmarked", result.topic_bookmarked);
-      })
-      .catch(function(error) {
-        self.toggleProperty("bookmarked");
+    return Discourse.Post.updateBookmark(this.id, this.bookmarked)
+      .then(result => this.set("topic.bookmarked", result.topic_bookmarked))
+      .catch(error => {
+        this.toggleProperty("bookmarked");
         if (bookmarkedTopic) {
-          self.set("topic.bookmarked", false);
+          this.set("topic.bookmarked", false);
         }
         throw new Error(error);
       });
   },
 
   updateActionsSummary(json) {
-    if (json && json.id === this.get("id")) {
+    if (json && json.id === this.id) {
       json = Post.munge(json);
       this.set("actions_summary", json.actions_summary);
     }
   },
 
   revertToRevision(version) {
-    return ajax(`/posts/${this.get("id")}/revisions/${version}/revert`, {
+    return ajax(`/posts/${this.id}/revisions/${version}/revert`, {
       type: "PUT"
     });
   }
@@ -350,7 +339,7 @@ Post.reopenClass({
       const lookup = Ember.Object.create();
 
       // this area should be optimized, it is creating way too many objects per post
-      json.actions_summary = json.actions_summary.map(function(a) {
+      json.actions_summary = json.actions_summary.map(a => {
         a.actionType = Discourse.Site.current().postActionTypeById(a.id);
         a.count = a.count || 0;
         const actionSummary = ActionSummary.create(a);
@@ -368,20 +357,21 @@ Post.reopenClass({
     if (json && json.reply_to_user) {
       json.reply_to_user = Discourse.User.create(json.reply_to_user);
     }
+
     return json;
   },
 
   updateBookmark(postId, bookmarked) {
-    return ajax("/posts/" + postId + "/bookmark", {
+    return ajax(`/posts/${postId}/bookmark`, {
       type: "PUT",
-      data: { bookmarked: bookmarked }
+      data: { bookmarked }
     });
   },
 
-  deleteMany(post_ids, { deferFlags = false } = {}) {
+  deleteMany(post_ids, { agreeWithFirstReplyFlag = true } = {}) {
     return ajax("/posts/destroy_many", {
       type: "DELETE",
-      data: { post_ids, defer_flags: deferFlags }
+      data: { post_ids, agree_with_first_reply_flag: agreeWithFirstReplyFlag }
     });
   },
 
@@ -393,27 +383,27 @@ Post.reopenClass({
   },
 
   loadRevision(postId, version) {
-    return ajax("/posts/" + postId + "/revisions/" + version + ".json").then(
-      result => Ember.Object.create(result)
+    return ajax(`/posts/${postId}/revisions/${version}.json`).then(result =>
+      Ember.Object.create(result)
     );
   },
 
   hideRevision(postId, version) {
-    return ajax("/posts/" + postId + "/revisions/" + version + "/hide", {
+    return ajax(`/posts/${postId}/revisions/${version}/hide`, {
       type: "PUT"
     });
   },
 
   showRevision(postId, version) {
-    return ajax("/posts/" + postId + "/revisions/" + version + "/show", {
+    return ajax(`/posts/${postId}/revisions/${version}/show`, {
       type: "PUT"
     });
   },
 
   loadQuote(postId) {
-    return ajax("/posts/" + postId + ".json").then(result => {
+    return ajax(`/posts/${postId}.json`).then(result => {
       const post = Discourse.Post.create(result);
-      return Quote.build(post, post.get("raw"), { raw: true, full: true });
+      return Quote.build(post, post.raw, { raw: true, full: true });
     });
   },
 

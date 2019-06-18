@@ -32,35 +32,30 @@ span.badge-posts {
     .actions {
       display: flex;
     }
-    .like-button {
+    // Handles the like and flag buttons in the post menu.
+    .double-button {
       display: flex;
       flex: 0 1 auto;
       button {
-        &.like {
+        &.like,
+        &.create-flag {
           flex: 1 1 auto;
         }
-        &.like-count {
-          padding: 8px 4px 8px 8px;
-          line-height: 1.2;
-          &.regular-likes {
-            margin-right: 0;
+        &.button-count {
+          padding: s(2 1 2 2);
+          + .toggle-like,
+          + .create-flag {
+            padding: s(2 2 2 1);
           }
           &.my-likes {
             display: flex;
             max-width: unset;
-            margin-right: 0;
-            padding: 8px 9px 8px 8px;
+            padding: s(2);
             .d-icon {
-              padding-left: 8px;
+              padding-left: s(2);
             }
           }
         }
-        .d-icon {
-          line-height: $line-height-medium;
-        }
-      }
-      button.like-count + button.toggle-like {
-        padding: 8px 9px 8px 4px;
       }
     }
     .d-icon {
@@ -244,8 +239,7 @@ a.reply-to-tab {
     color: $tertiary;
   }
   .combobox {
-    float: left;
-    margin-right: 1em;
+    margin-right: 0.5em;
     width: 160px;
     margin-bottom: 0.5em;
   }
@@ -288,8 +282,8 @@ span.post-count {
 
 #topic-footer-buttons {
   .btn {
-    margin-bottom: 5px;
-    margin-right: 10px;
+    margin-bottom: 0.5em;
+    margin-right: 0.5em;
   }
 }
 
@@ -349,12 +343,6 @@ iframe {
 .dropdown-toggle {
   float: left;
   position: relative;
-}
-
-#share-link {
-  width: 290px;
-  left: auto;
-  right: 4px;
 }
 
 .selected-posts {
@@ -480,5 +468,13 @@ span.highlighted {
 .popup-menu {
   h3 {
     margin-bottom: 0;
+  }
+}
+
+.post-notice {
+  margin-bottom: 1em;
+  &.old {
+    border-top: none;
+    padding-top: 0;
   }
 }

@@ -1,4 +1,6 @@
 #!/usr/bin/env ruby
+# frozen_string_literal: true
+
 # from: https://gist.github.com/kenn/5105061/raw/ac7ebc6be7008c35b72560cc4e05b7cc14eb4919/memstats.rb
 
 #------------------------------------------------------------------------------
@@ -48,7 +50,7 @@ class Mapping
   def initialize(lines)
 
     FIELDS.each do |field|
-      self.send("#{field}=", 0)
+      self.public_send("#{field}=", 0)
     end
 
     parse_first_line(lines.shift)
@@ -72,7 +74,7 @@ class Mapping
     field = parts[0].downcase.sub(':', '')
     if respond_to? "#{field}="
       value = Float(parts[1]).to_i
-      self.send("#{field}=", value)
+      self.public_send("#{field}=", value)
     end
   end
 end
@@ -81,7 +83,7 @@ def consume_mapping(map_lines, totals)
   m = Mapping.new(map_lines)
 
   Mapping::FIELDS.each do |field|
-    totals[field] += m.send(field)
+    totals[field] += m.public_send(field)
   end
   return m
 end

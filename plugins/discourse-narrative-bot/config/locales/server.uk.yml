@@ -23,7 +23,3 @@ uk:
       reset_trigger: 'розпочати'
       skip_trigger: 'пропустити'
       help_trigger: 'показати допомогу'
-    new_user_narrative:
-      reset_trigger: "новий користувач"
-    advanced_user_narrative:
-      reset_trigger: 'професійний користувач'

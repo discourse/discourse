@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class EnableContentSecurityPolicyForNewSites < ActiveRecord::Migration[5.2]
   def up
     return if Rails.env.test?

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # UserHistory stores information about actions that users have taken,
 # like deleting users, changing site settings, dimissing notifications, etc.
 # Use other classes, like StaffActionLogger, to log records to this table.
@@ -83,7 +85,16 @@ class UserHistory < ActiveRecord::Base
       post_rejected: 64,
       merge_user: 65,
       entity_export: 66,
-      change_password: 67
+      change_password: 67,
+      topic_timestamps_changed: 68,
+      approve_user: 69,
+      web_hook_create: 70,
+      web_hook_update: 71,
+      web_hook_destroy: 72,
+      embeddable_host_create: 73,
+      embeddable_host_update: 74,
+      embeddable_host_destroy: 75,
+      web_hook_deactivate: 76
     )
   end
 
@@ -145,7 +156,16 @@ class UserHistory < ActiveRecord::Base
       :post_rejected,
       :merge_user,
       :entity_export,
-      :change_name
+      :change_name,
+      :topic_timestamps_changed,
+      :approve_user,
+      :web_hook_create,
+      :web_hook_update,
+      :web_hook_destroy,
+      :web_hook_deactivate,
+      :embeddable_host_create,
+      :embeddable_host_update,
+      :embeddable_host_destroy
     ]
   end
 
@@ -183,12 +203,29 @@ class UserHistory < ActiveRecord::Base
   end
 
   def self.staff_filters
-    [:action_id, :custom_type, :acting_user, :target_user, :subject]
+    [:action_id, :custom_type, :acting_user, :target_user, :subject, :action_name]
   end
 
   def self.staff_action_records(viewer, opts = nil)
     opts ||= {}
-    query = self.with_filters(opts.slice(*staff_filters)).only_staff_actions.limit(200).order('id DESC').includes(:acting_user, :target_user)
+    custom_staff = opts[:action_id].to_i == actions[:custom_staff]
+
+    if custom_staff
+      opts[:custom_type] = opts[:action_name]
+    else
+      opts[:action_id] = self.actions[opts[:action_name].to_sym] if opts[:action_name]
+    end
+
+    page = (opts[:page] || 0).to_i
+    page_size = (opts[:limit] || 200).to_i
+
+    query = self
+      .with_filters(opts.slice(*staff_filters))
+      .only_staff_actions
+      .limit(page_size)
+      .offset(page * page_size)
+      .order('id DESC')
+      .includes(:acting_user, :target_user)
     query = query.where(admin_only: false) unless viewer && viewer.admin?
     query
   end

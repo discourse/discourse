@@ -15,19 +15,25 @@ export function startPageTracking(router, appEvents) {
   if (_started) {
     return;
   }
+  router.on("routeDidChange", transition => {
+    // we ocassionally prevent tracking of replaced pages when only query params changed
+    // eg: google analytics
+    const replacedOnlyQueryParams =
+      transition.urlMethod === "replace" && transition.queryParamsOnly;
 
-  router.on("didTransition", function() {
-    this.send("refreshTitle");
-    const url = Discourse.getURL(this.get("url"));
+    router.send("refreshTitle");
+    const url = Discourse.getURL(router.get("url"));
 
     // Refreshing the title is debounced, so we need to trigger this in the
     // next runloop to have the correct title.
     Ember.run.next(() => {
       let title = Discourse.get("_docTitle");
+
       appEvents.trigger("page:changed", {
         url,
         title,
-        currentRouteName: router.get("currentRouteName")
+        currentRouteName: router.get("currentRouteName"),
+        replacedOnlyQueryParams
       });
     });
 
@@ -39,6 +45,7 @@ export function startPageTracking(router, appEvents) {
       }
     });
   });
+
   _started = true;
 }
 

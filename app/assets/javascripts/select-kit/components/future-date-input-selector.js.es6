@@ -91,12 +91,36 @@ export const TIMEFRAMES = [
     icon: "briefcase"
   }),
   buildTimeframe({
+    id: "two_months",
+    format: "MMM D",
+    enabled: opts => opts.includeMidFuture,
+    when: (time, timeOfDay) =>
+      time
+        .add(2, "month")
+        .startOf("month")
+        .hour(timeOfDay)
+        .minute(0),
+    icon: "briefcase"
+  }),
+  buildTimeframe({
     id: "three_months",
     format: "MMM D",
-    enabled: opts => opts.includeFarFuture,
+    enabled: opts => opts.includeMidFuture,
     when: (time, timeOfDay) =>
       time
         .add(3, "month")
+        .startOf("month")
+        .hour(timeOfDay)
+        .minute(0),
+    icon: "briefcase"
+  }),
+  buildTimeframe({
+    id: "four_months",
+    format: "MMM D",
+    enabled: opts => opts.includeMidFuture,
+    when: (time, timeOfDay) =>
+      time
+        .add(4, "month")
         .startOf("month")
         .hour(timeOfDay)
         .minute(0),
@@ -139,6 +163,7 @@ export const TIMEFRAMES = [
   }),
   buildTimeframe({
     id: "pick_date_and_time",
+    enabled: opts => opts.includeDateTime,
     icon: "far-calendar-plus"
   }),
   buildTimeframe({
@@ -170,10 +195,10 @@ export default ComboBoxComponent.extend(DatetimeMixin, {
 
   computeHeaderContent() {
     let content = this._super(...arguments);
-    content.datetime = this._computeDatetimeForValue(this.get("computedValue"));
+    content.datetime = this._computeDatetimeForValue(this.computedValue);
     content.name = this.get("selection.name") || content.name;
-    content.hasSelection = this.get("hasSelection");
-    content.icons = this._computeIconsForValue(this.get("computedValue"));
+    content.hasSelection = this.hasSelection;
+    content.icons = this._computeIconsForValue(this.computedValue);
     return content;
   },
 
@@ -191,9 +216,11 @@ export default ComboBoxComponent.extend(DatetimeMixin, {
     let opts = {
       now,
       day: now.day(),
-      includeWeekend: this.get("includeWeekend"),
-      includeFarFuture: this.get("includeFarFuture"),
-      includeBasedOnLastPost: this.get("statusType") === CLOSE_STATUS_TYPE,
+      includeWeekend: this.includeWeekend,
+      includeMidFuture: this.includeMidFuture || true,
+      includeFarFuture: this.includeFarFuture,
+      includeDateTime: this.includeDateTime,
+      includeBasedOnLastPost: this.statusType === CLOSE_STATUS_TYPE,
       canScheduleToday: 24 - now.hour() > 6
     };
 
@@ -206,7 +233,7 @@ export default ComboBoxComponent.extend(DatetimeMixin, {
   },
 
   mutateValue(value) {
-    if (value === "pick_date_and_time" || this.get("isBasedOnLastPost")) {
+    if (value === "pick_date_and_time" || this.isBasedOnLastPost) {
       this.set("value", value);
     } else {
       let input = null;

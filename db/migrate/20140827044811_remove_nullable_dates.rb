@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class RemoveNullableDates < ActiveRecord::Migration[4.2]
   def up
 

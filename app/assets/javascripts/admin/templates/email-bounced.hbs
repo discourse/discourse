@@ -28,10 +28,16 @@
           {{/if}}
         </td>
         <td><a href='mailto:{{unbound l.to_address}}'>{{l.to_address}}</a></td>
-        <td><a {{action "showIncomingEmail" l.id}}>{{l.email_type}}</a></td>
+        {{#if l.has_bounce_key}}
+          <td><a {{action "showIncomingEmail" l.id}}>{{l.email_type}}</a></td>
+        {{else}}
+          <td>{{l.email_type}}</td>
+        {{/if}}
       </tr>
     {{else}}
-      <tr><td colspan="4">{{i18n 'admin.email.logs.none'}}</td></tr>
+      {{#unless loading}}
+        <tr><td colspan="4">{{i18n 'admin.email.logs.none'}}</td></tr>
+      {{/unless}}
     {{/each}}
 
   </table>

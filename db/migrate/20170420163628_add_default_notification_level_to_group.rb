@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddDefaultNotificationLevelToGroup < ActiveRecord::Migration[4.2]
   def up
     add_column :groups, :default_notification_level, :integer, default: 3, null: false

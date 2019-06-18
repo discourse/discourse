@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # cdn related tasks
 #
 desc 'pre-stage assets on cdn'

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 if ARGV.include?('bbcode-to-md')
   # Replace (most) bbcode with markdown before creating posts.
   # This will dramatically clean up the final posts in Discourse.
@@ -95,7 +97,7 @@ class ImportScripts::Base
     @site_settings_during_import = get_site_settings_for_import
 
     @site_settings_during_import.each do |key, value|
-      @old_site_settings[key] = SiteSetting.send(key)
+      @old_site_settings[key] = SiteSetting.get(key)
       SiteSetting.set(key, value)
     end
 
@@ -108,7 +110,7 @@ class ImportScripts::Base
 
   def reset_site_settings
     @old_site_settings.each do |key, value|
-      current_value = SiteSetting.send(key)
+      current_value = SiteSetting.get(key)
       SiteSetting.set(key, value) unless current_value != @site_settings_during_import[key]
     end
 
@@ -302,8 +304,6 @@ class ImportScripts::Base
     # Allow the || operations to work with empty strings ''
     opts[:username] = nil if opts[:username].blank?
 
-    opts[:name] = User.suggest_name(opts[:email]) unless opts[:name]
-
     if opts[:username].blank? ||
       opts[:username].length < User.username_length.begin ||
       opts[:username].length > User.username_length.end ||
@@ -374,9 +374,8 @@ class ImportScripts::Base
 
       user_option = u.user_option
       user_option.email_digests = false
-      user_option.email_private_messages = false
-      user_option.email_direct = false
-      user_option.email_always = false
+      user_option.email_level = UserOption.email_level_types[:never]
+      user_option.email_messages_level = UserOption.email_level_types[:never]
       user_option.save!
       if u.save
         StaffActionLogger.new(Discourse.system_user).log_user_suspend(u, ban_reason)
@@ -565,7 +564,7 @@ class ImportScripts::Base
     post_creator = PostCreator.new(user, opts)
     post = post_creator.create
     post_create_action.try(:call, post) if post
-    post ? post : post_creator.errors.full_messages
+    post && post_creator.errors.empty? ? post : post_creator.errors.full_messages
   end
 
   def create_upload(user_id, path, source_filename)
@@ -599,12 +598,9 @@ class ImportScripts::Base
           skipped += 1
           puts "Skipping bookmark for user id #{params[:user_id]} and post id #{params[:post_id]}"
         else
-          begin
-            PostAction.act(user, post, PostActionType.types[:bookmark])
-            created += 1
-          rescue PostAction::AlreadyActed
-            skipped += 1
-          end
+          result = PostActionCreator.create(user, post, :bookmark)
+          created += 1 if result.success?
+          skipped += 1 if result.failed?
         end
       end
 
@@ -887,6 +883,6 @@ class ImportScripts::Base
   end
 
   def fake_email
-    SecureRandom.hex << "@domain.com"
+    SecureRandom.hex << "@email.invalid"
   end
 end

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class WebHookPostSerializer < PostSerializer
 
   attributes :topic_posts_count
@@ -18,6 +20,8 @@ class WebHookPostSerializer < PostSerializer
     primary_group_flair_url
     primary_group_flair_bg_color
     primary_group_flair_color
+    notice_args
+    notice_type
   }.each do |attr|
     define_method("include_#{attr}?") do
       false

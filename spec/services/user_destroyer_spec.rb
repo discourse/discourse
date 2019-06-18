@@ -1,10 +1,12 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 require_dependency 'user_destroyer'
 
 describe UserDestroyer do
 
-  let(:user) { Fabricate(:user) }
-  let(:admin) { Fabricate(:admin) }
+  fab!(:user) { Fabricate(:user) }
+  fab!(:admin) { Fabricate(:admin) }
 
   describe 'new' do
     it 'raises an error when user is nil' do
@@ -19,7 +21,7 @@ describe UserDestroyer do
   describe 'destroy' do
     before do
       @admin = Fabricate(:admin)
-      @user = Fabricate(:user)
+      @user = Fabricate(:user_with_secondary_email)
     end
 
     it 'raises an error when user is nil' do
@@ -89,12 +91,12 @@ describe UserDestroyer do
       end
     end
 
-    context "with a queued post" do
-      let!(:qp) { Fabricate(:queued_post, user: user) }
+    context "with a reviewable post" do
+      let!(:reviewable) { Fabricate(:reviewable, created_by: user) }
 
       it "removes the queued post" do
         UserDestroyer.new(admin).destroy(user)
-        expect(QueuedPost.where(user_id: user.id).count).to eq(0)
+        expect(Reviewable.where(created_by_id: user.id).count).to eq(0)
       end
     end
 
@@ -177,15 +179,15 @@ describe UserDestroyer do
 
             before { destroy_opts[:delete_as_spammer] = true }
 
-            it "agrees with flags on user's posts" do
+            it "approves reviewable flags" do
               spammer_post = Fabricate(:post, user: @user)
-              flag = PostAction.act(@admin, spammer_post, PostActionType.types[:inappropriate])
-              expect(flag.agreed_at).to eq(nil)
+              reviewable = PostActionCreator.inappropriate(@admin, spammer_post).reviewable
+              expect(reviewable).to be_pending
 
               destroy
 
-              flag.reload
-              expect(flag.agreed_at).not_to eq(nil)
+              reviewable.reload
+              expect(reviewable).to be_approved
             end
 
           end
@@ -335,7 +337,7 @@ describe UserDestroyer do
       before do
         @topic = Fabricate(:topic, user: Fabricate(:user))
         @post = Fabricate(:post, user: @topic.user, topic: @topic)
-        @like = PostAction.act(@user, @post, PostActionType.types[:like])
+        PostActionCreator.like(@user, @post)
       end
 
       it 'should destroy the like' do

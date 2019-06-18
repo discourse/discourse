@@ -43,78 +43,74 @@ sw:
       tiny:
         half_a_minute: "< dakika 1"
         less_than_x_seconds:
-          one: "< 1s"
+          one: "< %{count}s"
           other: "< %{count}s"
         x_seconds:
-          one: "1s"
+          one: "%{count}s"
           other: "%{count}s"
         less_than_x_minutes:
           one: "< dakika moja"
           other: "< %{count} dakika"
         x_minutes:
-          one: "1m"
+          one: "%{count}m"
           other: "%{count}m"
         about_x_hours:
-          one: "1h"
+          one: "%{count}h"
           other: "%{count}h"
         x_days:
-          one: "1d"
+          one: "%{count}d"
           other: "%{count}d"
         x_months:
           one: "Mwezi mmoja"
           other: "%{count} miezi"
         about_x_years:
-          one: "1y"
+          one: "%{count}y"
           other: "%{count}y"
         over_x_years:
-          one: "> 1y"
+          one: "> %{count}y"
           other: "> %{count}y"
         almost_x_years:
-          one: "1y"
+          one: "%{count}y"
           other: "%{count}y"
         date_month: "MMM D"
         date_year: "MMM 'YY"
       medium:
         x_minutes:
-          one: "dakika 1"
+          one: "dakika %{count}"
           other: "dakika %{count} "
         x_hours:
-          one: "saa 1"
+          one: "saa %{count}"
           other: "masaa %{count}"
         x_days:
-          one: "siku 1"
+          one: "siku %{count}"
           other: "siku %{count}"
         date_year: "MMM D, 'YY"
       medium_with_ago:
         x_minutes:
-          one: "dakika 1 iliyopita"
+          one: "dakika %{count} iliyopita"
           other: "dakika %{count} zilizopita"
         x_hours:
-          one: "saa 1 iliyopita"
+          one: "saa %{count} iliyopita"
           other: "masaa%{count} yaliyopita"
         x_days:
-          one: "siku 1 iliyopita"
+          one: "siku %{count} iliyopita"
           other: "siku %{count} zilizopita"
       later:
         x_days:
-          one: "siku 1 baadae"
+          one: "siku %{count} baadae"
           other: "siku %{count} baadae"
         x_months:
-          one: "mwezi 1 baadae"
+          one: "mwezi %{count} baadae"
           other: "miezi %{count} baadae"
         x_years:
-          one: "mwaka 1 baadae"
+          one: "mwaka %{count} baadae"
           other: "miaka %{count} baadae"
       previous_month: "Mwezi Uliopita"
       next_month: "Mwezi Ujao"
       placeholder: tarehe
     share:
-      topic: "Andika kiungo shiriki cha mada hii"
       post: "taarifa #%{postNumber}"
       close: "funga"
-      twitter: "Shiriki hiki kiungo kwenye Twitter"
-      facebook: "Shiriki hiki kiungo kwenye Facebook"
-      email: "tuma kiungo hiki kwenye barua pepe"
     action_codes:
       public_topic: "ameifanya hii mada isiwe ya siri %{when}"
       private_topic: "ameifanya hii mada ujumbe binafsi %{when}"
@@ -164,13 +160,12 @@ sw:
         eu_west_1: "Umoja wa Ulaya (Ireland)"
         eu_west_2: "Umoja wa Ulaya (London)"
         eu_west_3: "EU (Parisi)"
-        sa_east_1: "Amerika ya Kusini (Sao Paulo)"
         us_east_1: "Mashariki ya Marekani (Virginia Kaskazini)"
         us_east_2: "Mashariki ya Marekani (Ohio)"
-        us_gov_west_1: "AWS GovCloud (Marekani)"
         us_west_1: "Magharibi ya Marekani (California Kaskazini)"
         us_west_2: "Magharibi ya Marekani (Oregon)"
     edit: "hariri kichwa na kikundi cha mada hii"
+    expand: "Panua"
     not_implemented: "Samahani, kipengele hicho hakijatekelezwa bado."
     no_value: "Hapana"
     yes_value: "Ndiyo"
@@ -182,7 +177,6 @@ sw:
     age: "Umri"
     joined: "Alijiunga"
     admin_title: "Kiongozi"
-    flags_title: "Bendera"
     show_more: "onyesha zaidi"
     show_help: "chaguo"
     links: "Viungo"
@@ -207,8 +201,6 @@ sw:
     every_hour: "kila saa"
     daily: "kila siku"
     weekly: "kila wiki"
-    every_two_weeks: "kila wiki mbili"
-    every_three_days: "kila siku tatu"
     max_of_count: "kiwango cha juu cha {{count}}"
     alternation: "au"
     character_count:
@@ -242,10 +234,16 @@ sw:
         unbookmark: "Bofya kuondoa mialamisho yote kwenye mada hii"
     bookmarks:
       created: "umealamisha chapisho hili"
+      not_bookmarked: "alamisha chapisho hili"
       remove: "Ondoa Alamisho"
+      confirm_clear: "Una uhakika unataka kuondoa mialamisho ya mada hii?"
     drafts:
+      remove: "Ondoa"
       new_topic: "Mswadajaribio wa mada mpya"
       new_private_message: "Mswadajaribio wa ujumbe binafsi mpya"
+      abandon:
+        yes_value: "Ndio, acha"
+        no_value: "Hapana, tunza"
     topic_count_latest:
       one: "Angalia Topiki Mpya au Masahisho {{count}}"
       other: "Angalia Topiki Mpya au Masahisho  {{count}}"
@@ -262,6 +260,7 @@ sw:
     saved: "Imehifadhiwa!"
     upload: "Pakia"
     uploading: "Inapakiwa..."
+    uploading_filename: "Inapakia {{filename}}..."
     uploaded: "Imepakiwa!"
     pasting: "Inabandika..."
     enable: "Ruhusu"
@@ -279,28 +278,45 @@ sw:
       none_found: "Hakuna mada zilizopatikana."
       title:
         placeholder: "andika kichwa cha mada hapa"
-    queue:
+    review:
+      delete: "Futa"
+      settings:
+        save_changes: "Hifadhi Mabadiliko"
+        title: "Mpangilio"
+      moderation_history: "Historia ya Usimamizi"
       topic: "Mada:"
-      approve: "Toa Kibali"
-      reject: "Kataa"
-      delete_user: "Futa Mtumiaji"
-      title: "Inahitaji Uthibitisho"
-      none: "Hakuna machapisho ya kukagua."
+      filtered_user: "Mtumiaji"
+      user:
+        username: "Jina la mtumiaji"
+        email: "Barua Pepe"
+        name: "Jina"
+      topics:
+        topic: "Mada"
+        details: "maelezo"
       edit: "Hariri"
+      save: "hifadhi"
       cancel: "Ghairi"
-      view_pending: "angalia machapisho ambayo hayajapitishwa"
-      has_pending_posts:
-        one: "Topiki hii in posti <b>1</b> inayosubiri uhakiki"
-        other: "Topiki hii ina posti <b>{{count}}</b> inayosubiria uhakiki"
-      confirm: "Hifadhi Mabadiliko"
-      delete_prompt: "Una uhakika unataka kumfuta<b>%{username}</b>? Kitendo hicho kitaondoa machapisho yake yote na kuzuia barua pepe na anwani yake ya mtandao."
+      filters:
+        all_categories: "(Vikundi Vyote)"
+        type:
+          title: "Aina"
+        refresh: "Rudisha Tena"
+        category: "Kategoria"
+      scores:
+        date: "Tarehe"
+        type: "Aina"
+      statuses:
+        pending:
+          title: "subiria"
+        rejected:
+          title: "Imekataliwa"
+      types:
+        reviewable_user:
+          title: "Mtumiaji"
       approval:
         title: "Chapisho Linahitaji Kibali"
         description: "Tumepokea chapisho lako jipya, lakini linahitaji kupata kibali kutoka kwa kiongozi kabla ya kuonyeshwa. Tafadhali kuwa na subira."
-        pending_posts:
-          one: "Una posti <strong>1</strong> inayosubiri."
-          other: "Una posti <strong>{{count}}</strong> zinazosubiri."
-        ok: "SAWA"
+        ok: "Sawa"
     user_action:
       user_posted_topic: "<a href='{{userUrl}}'>{{mtumiaji}}</a> amechapisha <a href='{{topicUrl}}'>mada</a>"
       you_posted_topic: "<a href='{{userUrl}}'>Ume</a> chapisha <a href='{{topicUrl}}'>mada</a>"
@@ -347,6 +363,9 @@ sw:
         title: "Ongeza Wanachama"
         description: "Simamia uanachama wa kikundi hiki"
         usernames: "Majina la watumiaji"
+      requests:
+        reason: "Sababu"
+        accepted: "imeruhusiwa"
       manage:
         title: "Simamia"
         name: "Jina"
@@ -459,7 +478,6 @@ sw:
           description: "Utajulishwa kama mtu akitaja @jina lako au akikujibu."
         muted:
           title: "Imenyamazishwa"
-          description: "Hautajulishwa chochote kuhusu mada mpya kwenye kikundi hichi."
       flair_url: "Picha ya mtumiaji"
       flair_url_placeholder: "(Hiari) URL ya Picha au Font Awesome class"
       flair_bg_color: "Rangi ya nyuma kwenye picha ya mtumiaji"
@@ -500,7 +518,7 @@ sw:
       toggle_ordering: "swichi udhibiti wa oda"
       subcategories: "Kategoria mtoto"
       topic_sentence:
-        one: "1 topiki"
+        one: "%{count} topiki"
         other: "%{count} Topiki"
     ip_lookup:
       title: Utafutaji wa Anwani ya Mtandao
@@ -517,6 +535,7 @@ sw:
       topics_entered: "mada zilizoingizwa"
       post_count: "# machapisho"
       confirm_delete_other_accounts: "Una uhakika unataka kufuta hizi akaunti?"
+      powered_by: "inatumia <a href='https://maxmind.com'>MaxMindDB</a>"
     user_fields:
       none: "(Chagua chaguo moja)"
     user:
@@ -532,6 +551,11 @@ sw:
       new_private_message: "Ujumbe Mpya"
       private_message: "Ujumbe"
       private_messages: "Ujumbe"
+      user_notifications:
+        ignore_duration_username: "Jina la mtumiaji"
+        ignore_duration_save: "Puuzia"
+        mute_option: "Imenyamazishwa"
+        normal_option: "Kawaida"
       activity_stream: "Shughuli"
       preferences: "Mapendekezo"
       expand_profile: "Panua"
@@ -556,8 +580,6 @@ sw:
       dismiss_notifications: "Puuzia Zote"
       dismiss_notifications_tooltip: "Weka alama kuwa taarifa zote ambazo hazijasomwa kuwa zimesomwa"
       first_notification: "Umepata taarifa ya kwanza! Ichague kuanza."
-      disable_jump_reply: "Usifikie chapisho langu baada ya kujibu"
-      dynamic_favicon: "Onyesha idadi ya mada mpya / sasishwa kwenye ikoni ya kivinjari"
       allow_private_messages: "Ruhusu watumiaji wengine wanitumie ujumbe binafsi"
       external_links_in_new_tab: "Fungua viungo vingine kwenye kichupo kingine"
       enable_quoting: "Ruhusu jibu nukulu kwenye neno lenye angaza"
@@ -644,6 +666,7 @@ sw:
         emails: "Barua pepe"
         notifications: "Taarifa"
         categories: "Vikundi"
+        users: "Watumiaji"
         tags: "Lebo"
         interface: "Kiolesura"
         apps: "Apps"
@@ -666,7 +689,6 @@ sw:
         remaining_codes: "Una kodi  <strong>{{count}}</strong> za backup zimebaki."
       second_factor:
         title: "Uhalalalishaji wa Viwango Viwili"
-        disable: "Zuia uhalalalishaji wa Viwango Viwili"
         confirm_password_description: "Thibitisha nywila yako kuendelea"
         label: "Kodi"
         disable_description: "Tafadhali andika kodi ya uthibitisho kutoka kwenye app yako"
@@ -707,7 +729,6 @@ sw:
         title: "Barua pepe"
         primary: "Barua pepe ya awali"
         secondary: "Barua pepe"
-        instructions: "haitoonyeshwa kwa umma"
         ok: "Tutakutumia barua pepe kuthibitisha"
         invalid: "Andika barua pepe iliyo sahihi"
         authenticated: "Barua pepe yako imethibitishwa na {{mkimu}}"
@@ -718,6 +739,7 @@ sw:
       associated_accounts:
         title: "Akaunti inayohusiana"
         connect: "Unganisha"
+        revoke: "Nyang'anya"
         not_connected: "(haijaunganishwa)"
       name:
         title: "Jina"
@@ -743,6 +765,8 @@ sw:
         any: "yoyote"
       password_confirmation:
         title: "nywila upya"
+      auth_tokens:
+        details: "Taarifa"
       last_posted: "chapisho la mwisho"
       last_emailed: "Mara ya Mwisho Amepokea Barua Pepe"
       last_seen: "Imeonwa"
@@ -751,6 +775,8 @@ sw:
       location: "Sehemu"
       website: "Tovuti"
       email_settings: "Barua Pepe"
+      text_size:
+        normal: "Kawaida"
       like_notification_frequency:
         title: "Julisha ikipendwa"
         always: "Mara kwa mara"
@@ -766,14 +792,14 @@ sw:
         every_30_minutes: "kila baada ya dakika 30"
         every_hour: "kila saa"
         daily: "kila siku"
-        every_three_days: "kila siku tatu"
         weekly: "kila wiki"
-        every_two_weeks: "kila wiki mbili"
+      email_level:
+        title: "Tuma barua pepe mtu akinukulu, akijibu chapisho langu, akitaja @jina langu, au akinialika kwenye mada."
+        always: "mara kwa mara"
+        never: "kamwe"
+      email_messages_level: "Nitumie barua pepe mtu akinitumia ujumbe"
       include_tl0_in_digests: "Tia ndani maandishi kutoka kwa watumiaji wapya kwenye muhtasari wa barua pepe"
       email_in_reply_to: "Jumuisha dhana ya majibu ya posti kwenye barua pepe"
-      email_direct: "Tuma barua pepe mtu akinukulu, akijibu chapisho langu, akitaja @jina langu, au akinialika kwenye mada."
-      email_private_messages: "Nitumie barua pepe mtu akinitumia ujumbe"
-      email_always: "Nitumie taarifa kupitia barua pepe nikiwa amilifu kwenye mtandao"
       other_settings: "Zingine"
       categories_settings: "Kategoria"
       new_topic_duration:
@@ -817,9 +843,6 @@ sw:
         expired: "Mda wa mualiko huu umeisha."
         rescind: "Ondoa"
         rescinded: "Mualiko umeondolewa"
-        rescind_all: "Ondoa Mialiko yote"
-        rescinded_all: "Mialiko yote imeondolewa!"
-        rescind_all_confirm: "Una uhakika unataka kuondoa  mialiko yote?"
         reinvite: "Tuma tena Mualiko"
         reinvite_all: "Tuma tena Mialiko yote"
         reinvite_all_confirm: "Una uhakika unataka kutuma tena mialiko yote?"
@@ -937,12 +960,6 @@ sw:
       enabled: "Tovuti hii ipo kwenye  hali-tumizi ya usomaji tu. Tafadhali endelea kuperuzi, lakini kujibu, kupenda na vitendo vingine vimesitishwa kwa sasa."
       login_disabled: "Kuingia kumesitishwa kipindi tovuti ipo kwenye hali-tumizi ya kusoma tu."
       logout_disabled: "Kutoka kumesitishwa kipindi tovuti ipo kwenye hali-tumizi ya kusoma tu."
-    logs_error_rate_notice:
-      reached: "<b>%{relativeAge}</b> – <a href='%{url}' target='_blank'>%{rate}</a> imefika kipeo cha mpangilio cha %{siteSettingRate}."
-      exceeded: "<b>%{relativeAge}</b> – <a href='%{url}' target='_blank'>%{rate}</a> imepita kiwango cha mpangilio cha tovuti %{siteSettingRate}."
-      rate:
-        one: "1 kosa/%{duration}"
-        other: "%{count} makosa/%{duration}"
     learn_more: "jifunze zaidi..."
     all_time: "jumla"
     all_time_desc: "jumla ya mada zilizotengenezwa"
@@ -994,7 +1011,6 @@ sw:
     trust_level: "Kipimo cha uaminifu"
     search_hint: "jina la mtumiaji, barua pepe au Anwani ya Mtandao"
     create_account:
-      disclaimer: "Kwa kujisajii, unakubaliana na <a href='{{privacy_link}}'>vigezo</a>na <a href='{{tos_link}}'>masharti</a>."
       title: "Unda akaunti mpya"
       failed: "Tatizo limetokea, labda barua pepe imesajiliwa tayari, jaribu kiungo cha kusahau nywila."
     forgot_password:
@@ -1073,10 +1089,6 @@ sw:
         name: "Facebook"
         title: "na Facebook"
         message: "uthibitisho na Facebook (hakikisha vizuizi vya pop-up havijaruhusiwa)"
-      yahoo:
-        name: "Yahoo"
-        title: "na Yahoo"
-        message: "uthibitisho na Yahoo (hakikisha vizuizi vya pop-up havijaruhusiwa)"
       github:
         name: "GitHub"
         title: "na Github"
@@ -1126,13 +1138,8 @@ sw:
         other: " Chagua japo vitu {{count}}."
     emoji_picker:
       filter_placeholder: Tafuta picha-hisia
-      people: Watu
-      nature: Uasilia
-      food: Chakula
-      activity: utendaji
-      travel: Safiri
       objects: Vitu
-      celebration: Sherehekea
+      flags: Bendera
       custom: Ishara binafsi
       recent: Imetumika hivi  karibuni
       default_tone: Mwonekano usio na toni
@@ -1159,8 +1166,6 @@ sw:
       toggle_whisper: "Badilisha Nong'ono"
       toggle_unlisted: "Badilisha Ondoa kwenye Orodha"
       posting_not_on_topic: "Mada zipi unazotaka kuzijibu?"
-      saving_draft_tip: "inahifadhiwa..."
-      saved_draft_tip: "ilihifadhiwa"
       saved_local_draft_tip: "Imehifadhiwa kwenye mazingira yako"
       similar_topics: "Mada yako inafanana na..."
       drafts_offline: "Miswadajaribio Nje ya Mtandao"
@@ -1200,7 +1205,6 @@ sw:
       remove_featured_link: "Ondoa kiungo kwenye mada."
       reply_placeholder: "Andika hapa. tumia Markdown, BBCode au HTML kuweka kwenye muundo mzuri. Vuta na kuweka picha"
       reply_placeholder_no_images: "Andika hapa. Tumia Markdown, BBCode, au HTML kuumbiza."
-      reply_placeholder_choose_category: "Unatakiwa kuchagua kundi kabla ya kuanza kuandika hapa"
       view_new_post: "Angalia chapisho lako jipya"
       saving: "Inahifadhiwa"
       saved: "Imehifadhiwa!"
@@ -1266,16 +1270,15 @@ sw:
     notifications:
       tooltip:
         regular:
-          one: "1 taarifa ambayo haijaonwa"
+          one: "%{count} taarifa ambayo haijaonwa"
           other: "{{count}} taarifa ambazo hazijaonwa"
         message:
-          one: "1 meseji ambayo haijasomwa"
+          one: "%{count} meseji ambayo haijasomwa"
           other: "{{count}} meseji ambazo hazijasomwa"
       title: "taarifa za @jina lililotajwa, majibu ya machapisho na mada, ujumbe, na zingine"
       none: "Imeshindwa kupakia taarifa kwa mda huu."
       empty: "Hakuna taarifa zilizopatikana."
       more: "angalia taarifa za mda zaidi"
-      total_flagged: "machapisho yenye bendera"
       mentioned: "<span>{{jina la mtumiaji}} </span>{{maelezo}}"
       group_mentioned: "<span>{{jina la mtumiaji}} </span>{{maelezo}}"
       quoted: "<span>{{jina la mtumiaji}}</span> {{maelezo}}"
@@ -1285,8 +1288,9 @@ sw:
       liked: "<span>{{jina la mtumiaji}}</span> {{maelezo}}"
       liked_2: "<span>{{username}}, {{username2}}</span> {{description}}"
       liked_many:
-        one: "<span>{{username}}, {{username2}} na 1 mwingine </span> {{description}}"
+        one: "<span>{{username}}, {{username2}} na %{count} mwingine </span> {{description}}"
         other: "<span>{{username}}, {{username2}} na {{count}} wengine</span> {{description}}"
+      liked_consolidated: "<span>{{jina la mtumiaji}}</span> {{maelezo}}"
       private_message: "<span>{{jina la mtumiaji}}</span> {{maelezo}}"
       invited_to_private_message: "<p><span>{{jina la mtumiaji}}</span> {{maelezo}}"
       invited_to_topic: "<span>{{jina la mtumiaji}}</span> {{maelezo}}"
@@ -1309,6 +1313,9 @@ sw:
         linked: '{{jina la mtumiaji}} ametengeneza kiungo kutoka kwenye "{{mada}}" - {{jina la_tovuti}}'
         confirm_title: "Taarifa mubashara zimewezeshwa - %{site_title}"
         confirm_body: "Taarifa mubashara zimewezeshwa kikamilifu"
+      titles:
+        watching_first_post: "mada mpya"
+        post_approved: "Chapisho Limepitishwa"
     upload_selector:
       title: "Ongeza picha au faili"
       title_with_attachments: "Ongeza picha au faili"
@@ -1427,7 +1434,7 @@ sw:
         notification_level: "Taarifa"
         choose_new_category: "Chagua kategoria mpya kwa ajili ya mada:"
         selected:
-          one: "Umechagua mada <b>1</b>."
+          one: "Umechagua mada <b>%{count}</b>."
           other: "Umechagua mada <b>{{count}}</b>."
         change_tags: "Badilisha Lebo"
         append_tags: "Jumlisha Lebo"
@@ -1440,17 +1447,14 @@ sw:
         read: "Haujasoma mada yoyote."
         posted: "Bado haujachapisha kwenye mada yoyote."
         latest: "Hakuna mada mpya. Hii ni huzuni."
-        hot: "Hakuna mada nzuri."
         bookmarks: "Hauja alamisha mada yoyote."
         category: "Hakuna {{category}} mada."
         top: "Hakuna mada za juu."
-        search: "Hakuna majibu ya utafiti."
         educate:
           new: '<p>Mada zako mpya zitatokea hapa.</p><p>Kwa chaguo-msingi, mada ni mpya na zitakuwa na indiketa <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">mpya</span>kama zilitengenezwa ndani ya siku 2 zilizopita.</p><p>Tembelea<a href="%{userPrefsUrl}">mipangilio</a>yako kubadilisha hizi.</p>'
           unread: '<p>Mada ambazo haujasoma zitatokea hapa.</p><p>Kwa chaguo-msingi, mada zote zinakuwa hazijasomwa na zitaonyesha jumla ya hizo namba<span class="badge new-posts badge-notification">1</span>Kama uli:</p><ul><li>Tengeneza mada</li><li>Alijibu mada</li><li>Amesoma mada zaidi ya dakika 4</li></ul><p>Au  kama uliseti mada iwe inafuatiliwa au kuangaliwa kwa kupitia udhibiti wa taarifa chini ya kila mada. </p><p>Tembelea <a href="%{userPrefsUrl}">mapendekezo</a>yako kubadilisha hii.</p>'
       bottom:
         latest: "Hakuna mada mpya zingine."
-        hot: "Hakuna mada mpya zingine."
         posted: "Hakuna mada mpya zilizochapishwa."
         read: "Hakuna mada zingine zilizosomwa."
         new: "Hakuna mada mpya zingine."
@@ -1458,10 +1462,9 @@ sw:
         category: "Hakuna {{category}} mada zingine."
         top: "Hakuna mada za juu zingine."
         bookmarks: "Hakuna mada zingine zilizoalamishwa."
-        search: "Hakuna majibu mapya mengine ya utafiti."
     topic:
       filter_to:
-        one: "1 chapisho kwenye mada"
+        one: "%{count} chapisho kwenye mada"
         other: "{{count}} machapisho kwenye mada"
       create: "Mada Mpya"
       create_long: "Tengeneza Mada mpya"
@@ -1480,10 +1483,10 @@ sw:
       new: "mada mpya"
       unread: "haijasomwa"
       new_topics:
-        one: "1 mada mpya"
+        one: "%{count} mada mpya"
         other: "{{count}} mada mpya"
       unread_topics:
-        one: "1 mada haijasomwa"
+        one: "%{count} mada haijasomwa"
         other: "{{count}} mada zisizosomwa"
       title: "Mada"
       invalid_access:
@@ -1582,7 +1585,6 @@ sw:
         jump_bottom: "fikia chapisho la mwisho"
         jump_prompt: "ruka kwenda..."
         jump_prompt_of: "machapisho %{count} ya"
-        jump_prompt_long: "Ungependa ufikie chapisho gani?"
         jump_bottom_with_number: "fikia chapisho %{post_number}"
         jump_prompt_or: "au"
         total: jumla ya machapisho
@@ -1716,17 +1718,20 @@ sw:
       login_reply: "Ingia Kujibu"
       filters:
         n_posts:
-          one: "1 chapisho"
+          one: "%{count} chapisho"
           other: "{{count}} machapisho"
         cancel: "Ondoa uchujaji"
       split_topic:
         title: "Hamisha kwenda Mada Mpya"
         action: "hamisha kwenda mada mpya"
+        radio_label: "Mada Mpya"
         error: "Hitilafu imetokea wakati wa kuhamisha machapisho kwenda mada mpya."
       merge_topic:
         title: "Hamisha kwenda kwenye Mada Iliyopo"
         action: "hamisha kwenda kwenye mada Iliyopo"
         error: "Hitilafu imetokea wakati wa kuhamisha machapisho kwenda kwenye hiyo mada mpya."
+      move_to_new_message:
+        radio_label: "Ujumbe Mpya"
       merge_posts:
         title: "Unganisha Machapisho Uliyochagua"
         action: "unganisha machapisho uliyochagua"
@@ -1761,7 +1766,7 @@ sw:
         select_all: chagua zote
         deselect_all: Ondoa uteuzi wote
         description:
-          one: 'Umechagua chapisho <b>1</b> '
+          one: 'Umechagua chapisho <b>%{count}</b> '
           other: "Umechagua machapisho<b>{{count}}</b>."
     post:
       quote_reply: "Nukulu"
@@ -1774,32 +1779,27 @@ sw:
       continue_discussion: "Endelea majadiliano kuanzia {{postLink}}:"
       follow_quote: "nenda kwenye chapisho lililotajwa"
       show_full: "Onyesha Chapisho Lote"
-      show_hidden: "Angalia maandishi yaliyofichwa."
       collapse: "kunja"
       expand_collapse: "panua/kunja"
       locked: "msimamizi amefunga chapisho hili lisifanyiwe uhariri"
       gap:
-        one: "Tazama jibu 1"
+        one: "Tazama jibu %{count}"
         other: "Tazama majibu{{count}} "
       unread: "Chapisho halijasomwa"
       has_replies:
         one: "{{count}} Jibu"
         other: "{{count}} Majibu"
-      has_likes:
-        one: "Limependwa {{count}} "
-        other: "Limependwa mara {{count}}"
       has_likes_title:
-        one: "Mtu 1 amevutiwa na hii"
+        one: "Mtu %{count} amevutiwa na hii"
         other: "Watu {{count}} wamevutiwa na hii"
       has_likes_title_only_you: "umependa chapisho hili"
       has_likes_title_you:
-        one: "Wewe na mtu 1 mmevutiwa na hii"
+        one: "Wewe na mtu %{count} mmevutiwa na hii"
         other: "Wewe na watu {{count}} mmevutiwa na hii"
       errors:
         create: "Samahani, hitilafu imetokea wakati wa kutengeneza chapisho lako. Tafadhali jaribu tena."
         edit: "Samahani, hitilafu imetokea wakati wa kuhariri chapisho lako. Tafadhali jaribu tena."
         upload: "Samahani, hitilafu imetokea wakati wa kupakia faili hilo. Tafadhali jaribu tena."
-        file_too_large: "Samahani, hilo faili ni kubwa sana (kiwango cha juu ni {{max_size_kb}}kb). Kwa nini usipakie faili lako kubwa kwenye huduma ya kugawa kwenye wingu kama Google Drive, Dropbox au OneDrive, alafu ukaandika kiungo hapa?"
         too_many_uploads: "Samahani, unaweza kupakia faili 1 tu kwa wakati mmoja."
         upload_not_authorized: "Samahani, faili unalo jaribu kupakia halina kibali (authorized extensions: {{authorized_extensions}})."
         image_upload_not_allowed_for_new_user: "Samahani, watumiaji wapya hawawezi kupakia picha."
@@ -1846,6 +1846,7 @@ sw:
         lock_post_description: "mzuie mchapishaji kuhariri chapisho hili"
         unlock_post: "Fungua Chapisho"
         unlock_post_description: "mruhusu mchapishaji kuhariri chapisho hili"
+        delete_topic: "futa mada"
       actions:
         flag: "Bendera"
         defer_flags:
@@ -1873,17 +1874,6 @@ sw:
           notify_user: "Umetuma ujumbe kwa mtumiaji huyu"
           bookmark: "Umealamisha chapisho hili"
           like: "Umeipenda hii"
-        by_you_and_others:
-          notify_user:
-            one: "Wewe na 1 mwingine mmetuma ujumbe kwa mtumiaji huyu"
-            other: "Wewe na {{count}} wengine mmetuma ujumbe kwa mtumiaji huyu"
-          like:
-            one: "Wewe na 1 mwingine mmevutiwa na hii"
-            other: "Wewe na  {{count}} wengine mmevutiwa na hii"
-        by_others:
-          like:
-            one: "Mtu 1 amevutiwa na hii"
-            other: "Watu {{count}} wamevutiwa na hii"
       delete:
         confirm:
           one: "Je, umeridhia kufuta chapisho hili?"
@@ -1923,15 +1913,12 @@ sw:
       can: "can&hellip; "
       none: "(hakuna kategoria)"
       all: "Kategoria Zote"
-      edit: "hariri"
-      edit_long: "Hariri"
+      edit: "Hariri"
       view: "Angalia Mada kwenye Kategoria"
       general: "Jumla"
       settings: "Mipangilio"
       topic_template: "kiolezo cha kawaida"
       tags: "Lebo"
-      tags_allowed_tags: "Ruhusu lebo hizi zitumike kwenye kategoria hii tu:"
-      tags_allowed_tag_groups: "Ruhusu lebo hizi kutoka kwenye vikundi hivi vitumike kwenye kategoria hii tu:"
       tags_placeholder: "(Sio muhimu) orodha ya lebo zilizoruhusiwa."
       tag_groups_placeholder: "(Sio muhimu) orodha ya vikundi vyenye lebo zilizoruhusiwa."
       delete: "Futa Kategoria"
@@ -1969,9 +1956,8 @@ sw:
       default_view: "Orodha ya Mada Chaguo Msingi:"
       allow_badges_label: "Ruhusu beji hizi zitolewe kwenye kategoria hii:"
       edit_permissions: "Hariri Vibali"
-      add_permission: "Ongeza Kibali"
+      review_group_name: "jina la kikundi"
       this_year: "mwaka huu"
-      position: "Nafasi"
       default_position: "Chaguo Msingi la Nafasi"
       position_disabled: "Kategoria zitaonyeshwa kulingana na oda ya shughuli. Kudhibiti oda ya kategoria kwenye orodha,"
       minimum_required_tags: "Kiwango cha chini cha lebo zinazohitajika kwenye mada:"
@@ -1991,6 +1977,10 @@ sw:
         muted:
           title: "Imenyamazishwa"
           description: "Utajulishwa kuhusu kila kitu  kuhusu mada mpya kwenye kategoria hizi, na hazitatokea kama taarifa za hivi karibuni."
+      search_priority:
+        options:
+          normal: "Kawaida"
+          ignore: "Puuzia"
       sort_options:
         default: "chaguo-msingi"
         likes: "Upendo"
@@ -2006,6 +1996,9 @@ sw:
       subcategory_list_styles:
         rows: "Safu"
         boxes: "Visanduku"
+      settings_sections:
+        general: "Jumla"
+        email: "Barua Pepe"
     flagging:
       title: "Asante kwa kuendeleza ustaarabu kwenye jumuiya yetu!"
       action: "Ripoti Chapisho"
@@ -2053,6 +2046,8 @@ sw:
       pinned:
         title: "Imebandikwa"
         help: "Mada hii imebandikwa kwa ajili yako; itatokea juu ya kategoria yake"
+      unlisted:
+        help: "Mada hii imeondolewa kwenye orodha. Haitaonyeshwa kwenye orodha za mada, na njia pekee ya kuifia ni kupitia kiungo chake"
     posts: "Machapisho"
     posts_long: "kuna machapisho {{namba}} kwenye hii mada"
     posts_likes_MF: |
@@ -2087,18 +2082,12 @@ sw:
       latest:
         title: "Hivi Karibuni"
         title_with_count:
-          one: "Mada 1 ya hivi karibuni"
+          one: "Mada %{count} ya hivi karibuni"
           other: "Mada ({{count}}) za hivi karibuni"
         help: "mada zenye machapisho ya hivi karibuni"
-      hot:
-        title: "Nzuri Sana"
-        help: "chaguo la mada nzuri sana"
       read:
         title: "Soma"
         help: "mada ambazo umezisoma, kwenye oda ulivyosoma"
-      search:
-        title: "Tafuta"
-        help: "tafuta mada zote"
       categories:
         title: "Kategoria"
         title_in: "Kategoria - {{Jinalakategoria}}"
@@ -2106,12 +2095,12 @@ sw:
       unread:
         title: "Haijasomwa"
         title_with_count:
-          one: "Haijasomwa (1)"
+          one: "Haijasomwa (%{count})"
           other: "Hazijasomwa ({{count}})"
         help: "mada unazo fuatilia au angalia zenye machapisho ambayo hayajasomwa"
       new:
         lower_title_with_count:
-          one: "Mada mpya 1"
+          one: "Mada mpya %{count}"
           other: "Mada mpya {{count}} "
         lower_title: "mpya"
         title: "Mpya"
@@ -2147,6 +2136,7 @@ sw:
         this_week: "Wiki"
         today: "Leo"
         other_periods: "tazama juu"
+    browser_update: 'Kwa bahati mbaya, <a href="https://www.discourse.org/faq/#browser">kivinjari unachotumia kimepita mda na hakiwezi kufungua tovuti hii</a>. Tafadhali <a href="https://browsehappy.com">sasisha kivinjari chako</a>.'
     permission_types:
       full: "Tengeneza / Jibu / Angalia"
       create_post: "Jibu / Angalia"
@@ -2157,57 +2147,57 @@ sw:
       title: "Njia Mkato za Baobonye"
       jump_to:
         title: "Fikia"
-        home: "<b>g</b>, <b>h</b> Nyumbani"
-        latest: "<b>g</b>, <b>l</b> Hivi Karibuni"
-        new: "<b>g</b>, <b>n</b> Mpya"
-        unread: "<b>g</b>, <b>u</b> Haijasomwa"
-        categories: "<b>g</b>, <b>c</b> Kategoria"
-        top: "<b>g</b>, <b>t</b> Juu"
-        bookmarks: "<b>g</b>, <b>b</b> Machelezo"
-        profile: "<b>g</b>, <b>p</b> Umbo"
-        messages: "<b>g</b>, <b>m</b> Ujumbe"
+        home: "%{shortcut} Nyumbani"
+        latest: "%{shortcut} Hivi Karibuni"
+        new: "%{shortcut} Mpya"
+        unread: "%{shortcut} Haijasomwa"
+        categories: "%{shortcut} Kategoria"
+        top: "%{shortcut} Juu"
+        bookmarks: "%{shortcut} Machelezo"
+        profile: "%{shortcut} Umbo"
+        messages: "%{shortcut} Ujumbe"
       navigation:
         title: "Abiri"
-        jump: "<b>#</b> Nenda kwenye chapisho #"
-        back: "<b>u</b> Nyuma"
-        up_down: "<b>k</b>/<b>j</b> Hamisha chaguo &uarr; &darr;"
-        open: "<b>o</b> or <b>Enter</b> Fungua mada iliyochaguliwa"
-        next_prev: "<b>shift</b>+<b>j</b>/<b>shift</b>+<b>k</b> Kifungu Kifuatacho/kilichopita"
+        jump: "%{shortcut} Nenda kwenye chapisho #"
+        back: "%{shortcut} Nyuma"
+        up_down: "%{shortcut} Hamisha chaguo &uarr; &darr;"
+        open: "%{shortcut} Fungua mada iliyochaguliwa"
+        next_prev: "%{shortcut} Kifungu Kifuatacho/kilichopita"
       application:
         title: "Programu-tumizi"
-        create: "<b>c</b> Tengeneza mada mpya"
-        notifications: "<b>n</b> Fungua taarifa"
-        hamburger_menu: "<b>=</b> Fungua menyu  ya hamburger - ina mistari mitatu iliyolala"
-        user_profile_menu: "<b>p</b> Fungua menyu ya mtumiaji"
-        show_incoming_updated_topics: "<b>.</b> Onyesha mada zilizosasishwa"
-        search: "<b>/</b> or <b>ctrl</b>+<b>alt</b>+<b>f</b> Tafuta"
-        help: "<b>?</b> Fungua msaada wa kibodi"
-        dismiss_new_posts: "<b>x</b>, <b>r</b> Ondosha Mpya/Machapisho"
-        dismiss_topics: "<b>x</b>, <b>t</b> Puuzia Mada"
-        log_out: "<b>shift</b>+<b>z</b> <b>shift</b>+<b>z</b> Ondoka"
+        create: "%{shortcut} Tengeneza mada mpya"
+        notifications: "%{shortcut} Fungua taarifa"
+        hamburger_menu: "%{shortcut} Fungua menyu  ya hamburger - ina mistari mitatu iliyolala"
+        user_profile_menu: "%{shortcut} Fungua menyu ya mtumiaji"
+        show_incoming_updated_topics: "%{shortcut} Onyesha mada zilizosasishwa"
+        search: "%{shortcut} Tafuta"
+        help: "%{shortcut} Fungua msaada wa kibodi"
+        dismiss_new_posts: "%{shortcut} Ondosha Mpya/Machapisho"
+        dismiss_topics: "%{shortcut} Puuzia Mada"
+        log_out: "%{shortcut} Ondoka"
       composing:
         title: "Andika"
-        return: "<b>shift</b>+<b>c</b> Rudi kwenye sehemu ya uandishi"
+        return: "%{shortcut} Rudi kwenye sehemu ya uandishi"
       actions:
         title: "Vitendo"
-        bookmark_topic: "<b>f</b> Swichi alamisho ya mada"
-        pin_unpin_topic: "<b>shift</b>+<b>p</b> Bandika/Ondoa mada"
-        share_topic: "<b>shift</b>+<b>s</b> Gawiza mada"
-        share_post: "<b>s</b> Gawiza chapisho"
-        reply_as_new_topic: "<b>t</b> Jibu kama mada iliyounganishwa"
-        reply_topic: "<b>shift</b>+<b>r</b> Jibu mada"
-        reply_post: "<b>r</b> Jibu chapisho"
-        quote_post: "<b>q</b> Nukulu chapisho"
-        like: "<b>l</b> Penda chapisho"
-        flag: "<b>!</b> Ripoti chapisho"
-        bookmark: "<b>b</b> Alamisha chapisho"
-        edit: "<b>e</b> Hariri chapisho"
-        delete: "<b>d</b> Futa chapisho"
-        mark_muted: "<b>m</b>, <b>m</b> Nyamazisha mada"
-        mark_regular: "<b>m</b>, <b>r</b> Mada kawaida (chaguo-msingi)  "
-        mark_tracking: "<b>m</b>, <b>t</b> Fuatilia mada"
-        mark_watching: "<b>m</b>, <b>w</b> Angalia mada"
-        print: "<b>ctrl</b>+<b>p</b> Chapisha mada:"
+        bookmark_topic: "%{shortcut} Swichi alamisho ya mada"
+        pin_unpin_topic: "%{shortcut} Bandika/Ondoa mada"
+        share_topic: "%{shortcut} Gawiza mada"
+        share_post: "%{shortcut} Gawiza chapisho"
+        reply_as_new_topic: "%{shortcut} Jibu kama mada iliyounganishwa"
+        reply_topic: "%{shortcut} Jibu mada"
+        reply_post: "%{shortcut} Jibu chapisho"
+        quote_post: "%{shortcut} Nukulu chapisho"
+        like: "%{shortcut} Penda chapisho"
+        flag: "%{shortcut} Ripoti chapisho"
+        bookmark: "%{shortcut} Alamisha chapisho"
+        edit: "%{shortcut} Hariri chapisho"
+        delete: "%{shortcut} Futa chapisho"
+        mark_muted: "%{shortcut} Nyamazisha mada"
+        mark_regular: "%{shortcut} Mada kawaida (chaguo-msingi)  "
+        mark_tracking: "%{shortcut} Fuatilia mada"
+        mark_watching: "%{shortcut} Angalia mada"
+        print: "%{shortcut} Chapisha mada:"
     badges:
       granted_on: "Imetolewa %{date}"
       others_count: "Wengine wenye hii beji (%{count})"
@@ -2215,7 +2205,7 @@ sw:
       allow_title: "Unaweza kutumia beji hii kama cheo"
       multiple_grant: "Unaweza kuipata mara nyingi"
       badge_count:
-        one: "Beji 1"
+        one: "Beji %{count}"
         other: "%{count} Beji"
       select_badge_for_title: Chagua beji ya kutumia kama cheo chako
       none: "(hakuna)"
@@ -2257,6 +2247,7 @@ sw:
       sort_by_name: "jina"
       manage_groups: "Dhibiti makundi ya lebo"
       manage_groups_description: "Fasili makundi kwa ajili ya kurakibisha lebo"
+      cancel_delete_unused: "Ghairi"
       filters:
         without_category: "mada %{filter}%{tag}"
         with_category: "mada%{filter} %{tag} za %{category}"
@@ -2300,20 +2291,16 @@ sw:
           read: "Bado haujasoma mada yoyote."
           posted: "Bado haujachapisha kwenye mada yoyote."
           latest: "Hakuna mada zingine za hivi karibuni."
-          hot: "Hakuna mada nzuri."
           bookmarks: "Bado hauja alamisha mada yoyote."
           top: "Hakuna mada za juu."
-          search: "Hakuna majibu ya utafiti."
         bottom:
           latest: "Hakuna mada zingine za hivi karibuni."
-          hot: "Hakuna mada nzuri sana zaidi."
           posted: "Hakuna mada mpya zilizochapishwa."
           read: "Hakuna mada zingine zilizosomwa."
           new: "Hakuna mada mpya zingine."
           unread: "Hakuna mada zingine ambazo hazijasomwa."
           top: "Hakuna mada za juu zingine."
           bookmarks: "Hakuna mada zingine zilizoalamishwa."
-          search: "Hakuna majibu zaidi ya utafiti."
     invite:
       custom_message_placeholder: "Andika ujumbe binafsi"
       custom_message_template_forum: "Habari, jiunge kwenye jumuiya yetu!"
@@ -2323,12 +2310,14 @@ sw:
     admin:
       title: "Kiongozi wa Discourse"
       moderator: "Msimamizi"
+      tags:
+        remove_muted_tags_from_latest:
+          always: "mara kwa mara"
+          never: "kamwe"
       reports:
         title: "Orodha ya ripoti zilizopo"
       dashboard:
         title: "Ubao"
-        last_updated: "Mara ya mwisho ubao umesasishwa:"
-        old_link: "Tembelea hapa"
         version: "Toleo"
         up_to_date: "Una toleo la sasa!"
         critical_available: "Sasisho muhimu linapatikana."
@@ -2349,6 +2338,8 @@ sw:
         private_messages_short: "Ujumbe"
         private_messages_title: "Ujumbe"
         mobile_title: "Kifaa cha kiganjani"
+        uploads: "Upakiaji"
+        backups: "Chelezo"
         lastest_backup: "Hivi karibuni: %{date}"
         traffic_short: "Utembeleaji"
         page_views: "Ukurasa Umeonwa Mara"
@@ -2358,6 +2349,8 @@ sw:
         whats_new_in_discourse: "Vitu gani ni vipya kwenye Discourse?"
         all_reports: "Ripoti zote"
         general_tab: "Jumla"
+        security_tab: "Ulinzi"
+        report_filter_any: "yoyote"
         disabled: Imezuiwa
         reports:
           today: "Leo"
@@ -2377,76 +2370,14 @@ sw:
           disabled: "Hii ripoti imezuiwa"
           total: "Jumla ya wakati wote"
           no_data: "Hakuna data za kuoneshwa"
+          filters:
+            group:
+              label: Kikundi
+            category:
+              label: Kategoria
       commits:
         latest_changes: "Mabadiliko ya mwisho: tafadhali sasisha mara kwa mara!"
         by: "na"
-      flags:
-        title: "Bendera"
-        active_posts: "Machapisho yenye Bendera"
-        old_posts: "Machapisho yenye Bendera za Zamani"
-        topics: "Mada Zilizoripotiwa"
-        moderation_history: "Historia ya Usimamizi"
-        agree: "Kubali"
-        agree_title: "Thibitisha bendera hii kuwa ni halali na sawa"
-        agree_flag_hide_post: "Ficha Chapisho"
-        agree_flag_hide_post_title: "Ficha chapisho hili na otomatikali mtumie mtumiaji ujumbe wa kumwambia afanye uhariri."
-        agree_flag_restore_post: "Kubali na Rudisha Chapisho"
-        agree_flag_restore_post_title: "Rudisha chapisho ili watumiaji wote waweze kuliona."
-        agree_flag_suspend: "Simamisha Mtumiaji"
-        agree_flag_suspend_title: "Kubaliana na bendera na simamisha mtumiaji."
-        agree_flag_silence: "Nyamazisha Mtumiaji"
-        agree_flag_silence_title: "Kubaliana na bendera na nyamazisha mtumiaji."
-        agree_flag: "Tunza Chapisho"
-        agree_flag_title: "Kubaliana na bendera na chapisho halitabadilishwa."
-        ignore_flag: "Puuzia"
-        ignore_flag_title: "Ondoa bendera hii, haihitaji kitendo chochote kwa sasa."
-        delete: "Futa"
-        delete_title: "Futa chapisho linalo ongelewa na bendera."
-        delete_post_defer_flag: "Futa Chapisho na Puuzia bendera"
-        delete_post_defer_flag_title: "Futa chapisho; kama ni chapisho la kwanza, futa mada"
-        delete_post_agree_flag: "Futa Chapisho na Kubaliana na bendera"
-        delete_post_agree_flag_title: "Futa chapisho; kama ni chapisho la kwanza, futa mada"
-        delete_flag_modal_title: "Futa na..."
-        delete_spammer: "Futa Muandishi wa Taka"
-        delete_spammer_title: "Muondoe mtumiaji na machapisho yake yote na mada za mtumiaji huyu."
-        disagree_flag_unhide_post: "Kataa (onyesha chapisho)"
-        disagree_flag_unhide_post_title: "Ondoa bendera zote kwenye chapisho hili na fanya chapisho lionekane tena"
-        disagree_flag: "Kataa"
-        disagree_flag_title: "Kataa bendera hii kuwa sio sahihi au batili"
-        clear_topic_flags: "Imekwisha"
-        clear_topic_flags_title: "Mada hii imefanyiwa upelelezi na matatizo yake yametatuliwa. Bonyeza Imekwisha kuondoa bendera."
-        more: "(majibu zaidi...)"
-        suspend_user: "Simamisha Mtumiaji"
-        suspend_user_title: "Simamisha mtumiaji kwenye chapisho hili"
-        dispositions:
-          agreed: "imekubaliwa"
-          disagreed: "imekataliwa"
-          deferred: "Imepuuziwa"
-        flagged_by: "Imeripotiwa na"
-        resolved_by: "Imesuluhishwa na"
-        took_action: "Amefanya kitendo"
-        system: "Mfumo"
-        error: "Kitu kimeenda vibaya"
-        reply_message: "Jibu"
-        no_results: "Hakuna mada zilizoripotiwa."
-        topic_flagged: "<strong>Mada</strong>hii imeripotiwa."
-        show_full: "onyesha chapisho lote"
-        visit_topic: "Tembelea mada kufanya kitendo"
-        was_edited: "Chapisho lilifanyiwa uhariri baada ya ripoti ya kwanza"
-        previous_flags_count: "Chapisho hili limeripotiwa mara {{count}}."
-        show_details: "Onyesha maelezo ya bendera"
-        details: "maelezo"
-        flagged_topics:
-          topic: "Mada"
-          type: "Aina"
-          users: "Watumiaji"
-          last_flagged: "Mara ya mwisho Imeripotiwa"
-        short_names:
-          off_topic: "isiyohusika"
-          inappropriate: "Haifai"
-          spam: "sio muhimu"
-          notify_user: "binafsi"
-          notify_moderators: "binafsi"
       groups:
         new:
           title: "Kikundi Kipya"
@@ -2559,6 +2490,7 @@ sw:
           inactive: "Isiyo Amilifu"
           failed: "Kushindwa"
           successful: "Fanikiwa"
+          disabled: "Imezuiwa"
         events:
           none: "Hakuna matukio yanayofanana"
           redeliver: "Wasilisha tena"
@@ -2623,6 +2555,7 @@ sw:
             label: "Chelezo"
             title: "Tengeneza chelezo"
             confirm: "Unataka kuanzisha chelezo jipya?"
+            without_uploads: "Ndio (usiweke vilivyopakiwa)"
           download:
             label: "Pakua"
             title: "Tuma barua pepe yenye kiungo cha upakuaji"
@@ -2662,9 +2595,7 @@ sw:
         save: "Hifadhi"
         new: "Mpya"
         new_style: "Style Mpya"
-        import: "Ingiza"
         delete: "Ondoa"
-        delete_confirm: "Ondoa mandhari hii?"
         color: "Rangi"
         copy: "Nakili"
         copy_to_clipboard: "Umenakili kwenye Ubao Nakili"
@@ -2679,9 +2610,12 @@ sw:
           revert: "Ondoa Mabadiliko"
           revert_confirm: "Una uhakika unataka kuondoa mabadiliko?"
         theme:
-          import_theme: "Ingiza Mandhari"
+          theme: "Mandhari"
           customize_desc: "Geuza Kukufaa:"
           title: "Mandhari"
+          create: "Tengeneza"
+          create_type: "Aina"
+          create_name: "Jina"
           long_title: "Boresha rangi, taarifa za CSS na HTML zilipo ndani ya tovuti yako"
           edit: "Hariri"
           edit_confirm: "Mandhari hii ni kutoka nje, ukihariri CSS/HTML mabadiliko yatafutwa mara ukisasisha mandhari."
@@ -2692,10 +2626,10 @@ sw:
           preview: "Kihakiki"
           is_default: "Mandhari imewezeshwa kama chaguo-msingi"
           user_selectable: "Mandhari inaweza kuchaguliwa na watumiaji"
-          color_scheme: "Mpango Rangi"
           color_scheme_select: "Chagua rangi zitakazotumika kwenye mandhari"
           custom_sections: "Vifungu binafsi:"
           theme_components: "Vipengele vya Mandhari"
+          collapse: Kunja
           uploads: "Upakiaji"
           no_uploads: "Unaweza kupakia vitu vinavyoendana na mandhari yako kama picha na fonti"
           add_upload: "Ongeza Upakiaji"
@@ -2710,6 +2644,9 @@ sw:
           import_web_tip: "Hifadhi yenye mandhari"
           is_private: "Mandhari ipo ndani ya hifadhi binafsi ya git"
           public_key: "Ruhusu ufungo wa umma ufuatao ufikie hifadhi:"
+          installed: "Imesanikishwa"
+          install_popular: "Maarufu"
+          about_theme: "Kuhusu"
           license: "Leseni"
           update_to_latest: "Sasisha iwe Toleo Jipya"
           check_for_updates: "Angalia Masasisho"
@@ -2742,20 +2679,11 @@ sw:
             text: "YAML"
             title: "Tambulisha mipangilio ya mpango kwenye umbiza wa YAML"
         colors:
-          select_base:
-            title: "Chagua rangi ya mpango msingi"
-            description: "Mipango msingi:"
           title: "Rangi"
-          edit: "Hariri Mipango Rangi"
-          long_title: "Mipango Rangi"
-          about: "Rekebisha rangi zinazotumiwa na mandhari. Tengeneza mpango rangi mpya kuanza."
-          new_name: "Mpango Rangi Mpya"
           copy_name_prefix: "Nakala ya"
-          delete_confirm: "Ondoa mpango rangi huu?"
           undo: "tendua"
           undo_title: "tendua madiliko kwenye rangi hii kutoka mara ya mwisho ilivyohifadhiwa."
           revert: "rejea"
-          revert_title: "Rudisha rangi ya Discourse."
           primary:
             name: "msingi"
             description: "Neno, ikoni, na mipaka mingi."
@@ -2876,6 +2804,7 @@ sw:
           filter: "Chuja:"
           title: "Vitendo vya Wasaidizi"
           clear_filters: "Onyesha Kila Kitu"
+          staff_user: "Mtumiaji"
           target_user: "Mlenge Mtumiaji "
           subject: "maudhui"
           when: "Lini"
@@ -2967,6 +2896,7 @@ sw:
           searches: "Utafiti"
           types:
             all_search_types: "Aina zote za matokeo"
+            header: "Kichwa"
             full_page: "Ukurasa Wote"
           header_search_results: "Matokeo ya Utafiti"
         logster:
@@ -3010,11 +2940,11 @@ sw:
         nav:
           new: "Mpya"
           active: "Mara kwa Mara"
-          pending: "Subirishwa"
           staff: "Wasaidizi"
           suspended: "Alisitishwa"
           silenced: "Amenyamazishwa"
           suspect: "Mshukiwa"
+          staged: "Sehemu ya kujaribu"
         approved: "Wamekubaliwa?"
         titles:
           active: "Watumiaji amilifu"
@@ -3069,8 +2999,6 @@ sw:
         admin: "Kiongozi?"
         suspended: "Imesitishwa?"
         show_admin_profile: "Msimamizi"
-        refresh_browsers: "Lazimisha uanzishaji upya wa kivinjari"
-        refresh_browsers_message: "Ujumbe umetumwa kwa watumiaji wote!"
         show_public_profile: "Onyesha Taarifa za Umma"
         impersonate: "Chukua Utambulisho wa Mtu Mwingine"
         action_logs: "Taarifa za Shughuli Tofauti"
@@ -3117,7 +3045,7 @@ sw:
           one: "Hauwezi kufuta taarifa zote. Kuna taarifa ambazo ziliandikwa siku %{count}zilizopita. (The delete_user_max_post_age setting.)"
           other: "Hauwezi kufuta machapisho yote. Kuna machapisho ambazo ziliandikwa siku %{count}zilizopita. (The delete_user_max_post_age setting.)"
         cant_delete_all_too_many_posts:
-          one: "Hauwezi kufuta taarifa zote kwa sababu mtumiaji ana taarifa zaidi ya 1. (delete_all_posts_max)"
+          one: "Hauwezi kufuta taarifa zote kwa sababu mtumiaji ana taarifa zaidi ya %{count}. (delete_all_posts_max)"
           other: "Hauwezi kufuta machapisho yote kwa sababu mtumiaji ana machapisho zaidi ya %{count}. (delete_all_posts_max)"
         delete_and_block: "Futa na <b>fungia</b>hii barua pepe na anwani ya mtandao"
         delete_dont_block: "Futa"
@@ -3274,6 +3202,7 @@ sw:
           tags: "Lebo"
           search: "Tafuta"
           groups: "Vikundi"
+          dashboard: "Ubao"
       badges:
         title: Beji
         new_badge: Beji Mpya
@@ -3383,6 +3312,10 @@ sw:
           label: "Mpya:"
           add: "Ongeza"
           filter: "Tafuta (URL au Kiungo cha nje)"
+      reseed:
+        modal:
+          categories: "Kategoria"
+          topics: "Mada"
   wizard_js:
     wizard:
       done: "Imekwisha"

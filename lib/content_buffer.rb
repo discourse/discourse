@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # this class is used to track changes to an arbitrary buffer
 
 class ContentBuffer

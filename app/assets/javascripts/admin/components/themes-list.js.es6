@@ -16,7 +16,7 @@ export default Ember.Component.extend({
 
   @computed("themes", "components", "currentTab")
   themesList(themes, components) {
-    if (this.get("themesTabActive")) {
+    if (this.themesTabActive) {
       return themes;
     } else {
       return components;
@@ -30,7 +30,7 @@ export default Ember.Component.extend({
     "themesList.@each.default"
   )
   inactiveThemes(themes) {
-    if (this.get("componentsTabActive")) {
+    if (this.componentsTabActive) {
       return themes.filter(theme => theme.get("parent_themes.length") <= 0);
     }
     return themes.filter(
@@ -45,7 +45,7 @@ export default Ember.Component.extend({
     "themesList.@each.default"
   )
   activeThemes(themes) {
-    if (this.get("componentsTabActive")) {
+    if (this.componentsTabActive) {
       return themes.filter(theme => theme.get("parent_themes.length") > 0);
     } else {
       themes = themes.filter(
@@ -61,21 +61,9 @@ export default Ember.Component.extend({
     }
   },
 
-  didRender() {
-    this._super(...arguments);
-
-    // hide scrollbar
-    const $container = this.$(".themes-list-container");
-    const containerNode = $container[0];
-    if (containerNode) {
-      const width = containerNode.offsetWidth - containerNode.clientWidth;
-      $container.css("width", `calc(100% + ${width}px)`);
-    }
-  },
-
   actions: {
     changeView(newTab) {
-      if (newTab !== this.get("currentTab")) {
+      if (newTab !== this.currentTab) {
         this.set("currentTab", newTab);
       }
     },

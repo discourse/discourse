@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class MoveTrackingOptionsToUserOptions < ActiveRecord::Migration[4.2]
   def change
     add_column :user_options, :auto_track_topics_after_msecs, :integer

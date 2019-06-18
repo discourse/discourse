@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 require_dependency 'admin_user_index_query'
 
@@ -91,8 +93,8 @@ describe AdminUserIndexQuery do
   end
 
   describe 'with a suspected user' do
-    let(:user) { Fabricate(:active_user, created_at: 1.day.ago) }
-    let(:bot) { Fabricate(:active_user, id: -10, created_at: 1.day.ago) }
+    fab!(:user) { Fabricate(:active_user, created_at: 1.day.ago) }
+    fab!(:bot) { Fabricate(:active_user, id: -10, created_at: 1.day.ago) }
 
     it 'finds the suspected user' do
       bot
@@ -104,8 +106,8 @@ describe AdminUserIndexQuery do
 
   describe "with a pending user" do
 
-    let!(:user) { Fabricate(:user, active: true, approved: false) }
-    let!(:inactive_user) { Fabricate(:user, approved: false, active: false) }
+    fab!(:user) { Fabricate(:user, active: true, approved: false) }
+    fab!(:inactive_user) { Fabricate(:user, approved: false, active: false) }
 
     it "finds the unapproved user" do
       query = ::AdminUserIndexQuery.new(query: 'pending')
@@ -114,7 +116,7 @@ describe AdminUserIndexQuery do
     end
 
     context 'and a suspended pending user' do
-      let!(:suspended_user) { Fabricate(:user, approved: false, suspended_at: 1.hour.ago, suspended_till: 20.years.from_now) }
+      fab!(:suspended_user) { Fabricate(:user, approved: false, suspended_at: 1.hour.ago, suspended_till: 20.years.from_now) }
       it "doesn't return the suspended user" do
         query = ::AdminUserIndexQuery.new(query: 'pending')
         expect(query.find_users).not_to include(suspended_user)
@@ -147,8 +149,8 @@ describe AdminUserIndexQuery do
 
   describe "with an admin user" do
 
-    let!(:user) { Fabricate(:user, admin: true) }
-    let!(:user2) { Fabricate(:user, admin: false) }
+    fab!(:user) { Fabricate(:user, admin: true) }
+    fab!(:user2) { Fabricate(:user, admin: false) }
 
     it "finds the admin" do
       query = ::AdminUserIndexQuery.new(query: 'admins')
@@ -159,8 +161,8 @@ describe AdminUserIndexQuery do
 
   describe "with a moderator" do
 
-    let!(:user) { Fabricate(:user, moderator: true) }
-    let!(:user2) { Fabricate(:user, moderator: false) }
+    fab!(:user) { Fabricate(:user, moderator: true) }
+    fab!(:user2) { Fabricate(:user, moderator: false) }
 
     it "finds the moderator" do
       query = ::AdminUserIndexQuery.new(query: 'moderators')
@@ -171,8 +173,8 @@ describe AdminUserIndexQuery do
 
   describe "with a silenced user" do
 
-    let!(:user) { Fabricate(:user, silenced_till: 1.year.from_now) }
-    let!(:user2) { Fabricate(:user) }
+    fab!(:user) { Fabricate(:user, silenced_till: 1.year.from_now) }
+    fab!(:user2) { Fabricate(:user) }
 
     it "finds the silenced user" do
       query = ::AdminUserIndexQuery.new(query: 'silenced')
@@ -183,8 +185,8 @@ describe AdminUserIndexQuery do
 
   describe "with a staged user" do
 
-    let!(:user) { Fabricate(:user, staged: true) }
-    let!(:user2) { Fabricate(:user, staged: false) }
+    fab!(:user) { Fabricate(:user, staged: true) }
+    fab!(:user2) { Fabricate(:user, staged: false) }
 
     it "finds the staged user" do
       query = ::AdminUserIndexQuery.new(query: 'staged')
@@ -254,7 +256,7 @@ describe AdminUserIndexQuery do
 
     context "by ip address fragment" do
 
-      let!(:user) { Fabricate(:user, ip_address: "117.207.94.9") }
+      fab!(:user) { Fabricate(:user, ip_address: "117.207.94.9") }
 
       it "matches the ip address" do
         query = ::AdminUserIndexQuery.new(filter: " 117.207.94.9 ")

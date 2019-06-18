@@ -8,21 +8,21 @@ export default Ember.Controller.extend({
   regularExpressions: null,
 
   filterContentNow() {
-    if (!!Ember.isEmpty(this.get("allWatchedWords"))) return;
+    if (!!Ember.isEmpty(this.allWatchedWords)) return;
 
     let filter;
-    if (this.get("filter")) {
-      filter = this.get("filter").toLowerCase();
+    if (this.filter) {
+      filter = this.filter.toLowerCase();
     }
 
     if (filter === undefined || filter.length < 1) {
-      this.set("model", this.get("allWatchedWords"));
+      this.set("model", this.allWatchedWords);
       return;
     }
 
     const matchesByAction = [];
 
-    this.get("allWatchedWords").forEach(wordsForAction => {
+    this.allWatchedWords.forEach(wordsForAction => {
       const wordRecords = wordsForAction.words.filter(wordRecord => {
         return wordRecord.word.indexOf(filter) > -1;
       });
@@ -41,7 +41,7 @@ export default Ember.Controller.extend({
 
   filterContent: debounce(function() {
     this.filterContentNow();
-    this.set("filtered", !Ember.isEmpty(this.get("filter")));
+    this.set("filtered", !Ember.isEmpty(this.filter));
   }, 250).observes("filter"),
 
   actions: {

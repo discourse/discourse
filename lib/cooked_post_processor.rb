@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Post processing that we can do after a post has already been cooked.
 # For example, inserting the onebox content, or image sizes/thumbnails.
 
@@ -6,10 +8,9 @@ require_dependency 'pretty_text'
 require_dependency 'quote_comparer'
 
 class CookedPostProcessor
-  include ActionView::Helpers::NumberHelper
-
   INLINE_ONEBOX_LOADING_CSS_CLASS = "inline-onebox-loading"
   INLINE_ONEBOX_CSS_CLASS = "inline-onebox"
+  LIGHTBOX_WRAPPER_CSS_CLASS = "lightbox-wrapper"
   LOADING_SIZE = 10
   LOADING_COLORS = 32
 
@@ -36,11 +37,12 @@ class CookedPostProcessor
   def post_process(bypass_bump: false, new_post: false)
     DistributedMutex.synchronize("post_process_#{@post.id}") do
       DiscourseEvent.trigger(:before_post_process_cooked, @doc, @post)
-      removed_direct_reply_full_quotes if new_post
+      remove_full_quote_on_direct_reply if new_post
       post_process_oneboxes
       post_process_images
       post_process_quotes
       optimize_urls
+      remove_user_ids
       update_post_image
       enforce_nofollow
       pull_hotlinked_images(bypass_bump)
@@ -63,15 +65,6 @@ class CookedPostProcessor
     BadgeGranter.grant(Badge.find(Badge::FirstReplyByEmail), @post.user, post_id: @post.id) if @post.is_reply_by_email?
   end
 
-  def post_process_images
-    extract_images.each do |img|
-      unless add_image_placeholder!(img)
-        limit_size!(img)
-        convert_to_link!(img)
-      end
-    end
-  end
-
   def post_process_quotes
     @doc.css("aside.quote").each do |q|
       post_number = q['data-post']
@@ -90,22 +83,34 @@ class CookedPostProcessor
     end
   end
 
-  def removed_direct_reply_full_quotes
-    return if !SiteSetting.remove_full_quote || @post.post_number == 1
+  def remove_full_quote_on_direct_reply
+    return if !SiteSetting.remove_full_quote
+    return if @post.post_number == 1
+    return if @doc.css("aside.quote").size != 1
 
-    num_quotes = @doc.css("aside.quote").size
-    return if num_quotes != 1
+    previous = Post
+      .where("post_number < ? AND topic_id = ? AND post_type = ? AND NOT hidden", @post.post_number, @post.topic_id, Post.types[:regular])
+      .order("post_number DESC")
+      .limit(1)
+      .pluck(:cooked)
+      .first
 
-    prev = Post.where('post_number < ? AND topic_id = ? AND post_type = ? AND not hidden', @post.post_number, @post.topic_id, Post.types[:regular]).order('post_number desc').limit(1).pluck(:raw).first
-    return if !prev
+    return if previous.blank?
 
-    new_raw = @post.raw.gsub(/\A\s*\[quote[^\]]*\]\s*#{Regexp.quote(prev.strip)}\s*\[\/quote\]/, '')
-    return if @post.raw == new_raw
+    previous_text = Nokogiri::HTML::fragment(previous).text.strip
+    quoted_text = @doc.css("aside.quote:first-child blockquote").first&.text&.strip || ""
+
+    return if previous_text.gsub(/(\s){2,}/, '\1') != quoted_text.gsub(/(\s){2,}/, '\1')
+
+    quote_regexp = /\A\s*\[quote.+?\[\/quote\]/im
+    quoteless_raw = @post.raw.sub(quote_regexp, "").strip
+
+    return if @post.raw.strip == quoteless_raw
 
     PostRevisor.new(@post).revise!(
       Discourse.system_user,
       {
-        raw: new_raw.strip,
+        raw: quoteless_raw,
         edit_reason: I18n.t(:removed_direct_reply_full_quotes)
       },
       skip_validations: true,
@@ -369,7 +374,7 @@ class CookedPostProcessor
 
   def add_lightbox!(img, original_width, original_height, upload, cropped: false)
     # first, create a div to hold our lightbox
-    lightbox = create_node("div", "lightbox-wrapper")
+    lightbox = create_node("div", LIGHTBOX_WRAPPER_CSS_CLASS)
     img.add_next_sibling(lightbox)
     lightbox.add_child(img)
 
@@ -421,14 +426,15 @@ class CookedPostProcessor
     img.add_next_sibling(meta)
 
     filename = get_filename(upload, img["src"])
-    informations = "#{original_width}×#{original_height}"
-    informations << " #{number_to_human_size(upload.filesize)}" if upload
+    informations = +"#{original_width}×#{original_height}"
+    informations << " #{upload.human_filesize}" if upload
 
     a["title"] = CGI.escapeHTML(img["title"] || filename)
 
+    meta.add_child create_icon_node("far-image")
     meta.add_child create_span_node("filename", a["title"])
     meta.add_child create_span_node("informations", informations)
-    meta.add_child create_span_node("expand")
+    meta.add_child create_icon_node("discourse-expand")
   end
 
   def get_filename(upload, src)
@@ -538,6 +544,7 @@ class CookedPostProcessor
 
       next if img["class"]&.include?('onebox-avatar')
 
+      parent = parent&.parent if parent&.name == "a"
       parent_class = parent && parent["class"]
       width = img["width"].to_i
       height = img["height"].to_i
@@ -568,11 +575,11 @@ class CookedPostProcessor
           new_parent = img.add_next_sibling("<div class='aspect-image' style='--aspect-ratio:#{width}/#{height};'/>")
           new_parent.first.add_child(img)
         end
-      elsif (parent_class&.include?("instagram-images") || parent_class&.include?("tweet-images")) && width > 0 && height > 0
+      elsif (parent_class&.include?("instagram-images") || parent_class&.include?("tweet-images") || parent_class&.include?("scale-images")) && width > 0 && height > 0
         img.remove_attribute("width")
         img.remove_attribute("height")
-        img.parent["class"] = "aspect-image-full-size"
-        img.parent["style"] = "--aspect-ratio:#{width}/#{height};"
+        parent["class"] = "aspect-image-full-size"
+        parent["style"] = "--aspect-ratio:#{width}/#{height};"
       end
     end
 
@@ -588,8 +595,27 @@ class CookedPostProcessor
       end
     end
 
-    @doc.css("img[src]").each do |img|
-      img["src"] = UrlHelper.cook_url(img["src"].to_s)
+    %w{src data-small-upload}.each do |selector|
+      @doc.css("img[#{selector}]").each do |img|
+        img[selector] = UrlHelper.cook_url(img[selector].to_s)
+      end
+    end
+  end
+
+  def remove_user_ids
+    @doc.css("a[href]").each do |a|
+      uri = begin
+        URI(a["href"])
+      rescue URI::Error
+        next
+      end
+      next if uri.hostname != Discourse.current_hostname
+
+      query = Rack::Utils.parse_nested_query(uri.query)
+      next if !query.delete("u")
+
+      uri.query = query.map { |k, v| "#{k}=#{v}" }.join("&").presence
+      a["href"] = uri.to_s
     end
   end
 
@@ -600,10 +626,8 @@ class CookedPostProcessor
   end
 
   def pull_hotlinked_images(bypass_bump = false)
-    # is the job enabled?
-    return unless SiteSetting.download_remote_images_to_local?
     # have we enough disk space?
-    return if disable_if_low_on_disk_space
+    disable_if_low_on_disk_space # But still enqueue the job
     # don't download remote images for posts that are more than n days old
     return unless @post.created_at > (Date.today - SiteSetting.download_remote_images_max_days_old)
     # we only want to run the job whenever it's changed by a user
@@ -616,6 +640,7 @@ class CookedPostProcessor
   end
 
   def disable_if_low_on_disk_space
+    return false if !SiteSetting.download_remote_images_to_local
     return false if available_disk_space >= SiteSetting.download_remote_images_threshold
 
     SiteSetting.download_remote_images_to_local = false
@@ -647,6 +672,15 @@ class CookedPostProcessor
   end
 
   private
+
+  def post_process_images
+    extract_images.each do |img|
+      unless add_image_placeholder!(img)
+        limit_size!(img)
+        convert_to_link!(img)
+      end
+    end
+  end
 
   def process_inline_onebox(element)
     inline_onebox = InlineOneboxer.lookup(

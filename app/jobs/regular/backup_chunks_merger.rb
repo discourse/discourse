@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_dependency "backup_restore/local_backup_store"
 require_dependency "backup_restore/backup_store"
 

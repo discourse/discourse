@@ -111,11 +111,6 @@ ca:
       random_mention:
         reply: |-
           Hola! Per trobar què puc fer, digues `@%{discobot_username} %{help_trigger}`.
-        tracks: |-
-          Ja sé com fer les següents tasques:
-
-          `@%{discobot_username} %{reset_trigger} %{default_track}`
-          > Comença una de les següents narracions interactives: %{tracks}.
         bot_actions: |-
           `@%{discobot_username} %{dice_trigger} 2d6`
           > :game_die: 3, 6
@@ -138,7 +133,6 @@ ca:
 
           Mentrestant, no et destorbaré.
     new_user_narrative:
-      reset_trigger: "nou usuari"
       cert_title: "En reconeixement per haver completat satisfactòriament el tutorial de nou usuari"
       onebox:
         reply: |-
@@ -270,7 +264,6 @@ ca:
       certificate:
         alt: 'Certificat d&#39;Assoliment'
     advanced_user_narrative:
-      reset_trigger: 'usuari avançat'
       cert_title: "En reconeixement a la finalització satisfactòria del tutorial d'usuari avançat"
       title: ':arrow_up: Funcionalitats d''usuari avançat'
       edit:
@@ -304,10 +297,6 @@ ca:
           Pots fer-me un favor i <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-rotate-left.png" width="16" height="16"> **restaurar** la publicacio?
         not_found: |-
           Tens problemes? Recorda <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> mostra més desplegarà <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-rotate-left.png" width="16" height="16"> restaurar.
-        reply: |-
-          Uf, pels pèls! Gràcies per arreglar-ho :wink:
-
-          Tingues en compte que només tens 24 hores per restaurar una publicació.
       category_hashtag:
         instructions: |-
           Saps que pots fer referència a categories i etiquetes a la teva publicació? Per exemple, has vist la %{category} categoria?

@@ -13,11 +13,6 @@ import { setTransientHeader } from "discourse/lib/ajax";
 import { userPath } from "discourse/lib/url";
 import { iconNode } from "discourse-common/lib/icon-library";
 
-const LIKED_TYPE = 5;
-const INVITED_TYPE = 8;
-const GROUP_SUMMARY_TYPE = 16;
-export const LIKED_CONSOLIDATED_TYPE = 19;
-
 createWidget("notification-item", {
   tagName: "li",
 
@@ -35,6 +30,7 @@ createWidget("notification-item", {
   url() {
     const attrs = this.attrs;
     const data = attrs.data;
+    const notificationTypes = this.site.notification_types;
 
     const badgeId = data.badge_id;
     if (badgeId) {
@@ -58,11 +54,11 @@ createWidget("notification-item", {
       return postUrl(attrs.slug, topicId, attrs.post_number);
     }
 
-    if (attrs.notification_type === INVITED_TYPE) {
+    if (attrs.notification_type === notificationTypes.invitee_accepted) {
       return userPath(data.display_username);
     }
 
-    if (attrs.notification_type === LIKED_CONSOLIDATED_TYPE) {
+    if (attrs.notification_type === notificationTypes.liked_consolidated) {
       return userPath(
         `${this.attrs.username ||
           this.currentUser
@@ -85,12 +81,20 @@ createWidget("notification-item", {
     }
 
     if (this.attrs.fancy_title) {
+      if (this.attrs.topic_id) {
+        return `<span data-topic-id="${this.attrs.topic_id}">${
+          this.attrs.fancy_title
+        }</span>`;
+      }
       return this.attrs.fancy_title;
     }
 
     let title;
 
-    if (this.attrs.notification_type === LIKED_CONSOLIDATED_TYPE) {
+    if (
+      this.attrs.notification_type ===
+      this.site.notification_types.liked_consolidated
+    ) {
       title = I18n.t("notifications.liked_consolidated_description", {
         count: parseInt(data.count)
       });
@@ -107,7 +111,9 @@ createWidget("notification-item", {
     const scope =
       notName === "custom" ? data.message : `notifications.${notName}`;
 
-    if (notificationType === GROUP_SUMMARY_TYPE) {
+    const notificationTypes = this.site.notification_types;
+
+    if (notificationType === notificationTypes.group_message_summary) {
       const count = data.inbox_count;
       const group_name = data.group_name;
       return I18n.t(scope, { count, group_name });
@@ -116,7 +122,7 @@ createWidget("notification-item", {
     const username = formatUsername(data.display_username);
     const description = this.description();
 
-    if (notificationType === LIKED_TYPE && data.count > 1) {
+    if (notificationType === notificationTypes.liked && data.count > 1) {
       const count = data.count - 2;
       const username2 = formatUsername(data.username2);
 
@@ -142,12 +148,25 @@ createWidget("notification-item", {
   html(attrs) {
     const notificationType = attrs.notification_type;
     const lookup = this.site.get("notificationLookup");
-    const notName = lookup[notificationType];
+    const notificationName = lookup[notificationType];
 
     let { data } = attrs;
-    let infoKey = notName === "custom" ? data.message : notName;
-    let text = emojiUnescape(this.text(notificationType, notName));
+    let infoKey =
+      notificationName === "custom" ? data.message : notificationName;
+    let text = emojiUnescape(this.text(notificationType, notificationName));
     let icon = iconNode(`notification.${infoKey}`);
+
+    let title;
+
+    if (notificationName) {
+      if (notificationName === "custom") {
+        title = data.title ? I18n.t(data.title) : "";
+      } else {
+        title = I18n.t(`notifications.titles.${notificationName}`);
+      }
+    } else {
+      title = "";
+    }
 
     // We can use a `<p>` tag here once other languages have fixed their HTML
     // translations.
@@ -157,7 +176,11 @@ createWidget("notification-item", {
 
     const href = this.url();
     return href
-      ? h("a", { attributes: { href, "data-auto-route": true } }, contents)
+      ? h(
+          "a",
+          { attributes: { href, title, "data-auto-route": true } },
+          contents
+        )
       : contents;
   },
 

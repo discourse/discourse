@@ -15,7 +15,12 @@ export default Ember.Mixin.create({
 
   actions: {
     closeModal() {
-      this.get("modal").send("closeModal");
+      this.modal.send("closeModal");
+      this.set("panels", []);
+    },
+
+    onSelectPanel(panel) {
+      this.set("selectedPanel", panel);
     }
   }
 });
