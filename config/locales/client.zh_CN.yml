@@ -344,8 +344,9 @@ zh_CN:
       edit: "编辑"
       save: "保存"
       cancel: "取消"
-      new_topic: "新主题："
+      new_topic: "批准此条目将会创建一个新的主题"
       filters:
+        all_categories: "（所有分类）"
         type:
           title: "类型"
           all: "(全部类型)"
@@ -360,7 +361,7 @@ zh_CN:
           created_at_asc: "创建时间（倒序）"
         priority:
           title: "最低优先级"
-          low: "低"
+          low: "（所有）"
           medium: "中等"
           high: "高"
       conversation:
@@ -563,7 +564,7 @@ zh_CN:
           title: "跟踪"
           description: "你将会在该私信中的每个新帖子发布后收到通知，并且会显示新回复数量。"
         watching_first_post:
-          title: "跟踪"
+          title: "监看头一帖"
           description: "你将收到有关此组中新消息的通知，但不会回复消息。"
         tracking:
           title: "跟踪"
@@ -1604,8 +1605,8 @@ zh_CN:
           first: 是第一帖
           pinned: 是置顶的
           unpinned: 不是置顶的
-          seen: 我阅读了
-          unseen: 我还没有读过的
+          seen: 我看了
+          unseen: 我还没看过
           wiki: 公共编辑
           images: 包含图片
           all_tags: 上述所有标签
@@ -2639,7 +2640,7 @@ zh_CN:
         parent_tag_placeholder: "可选"
         parent_tag_description: "未设置上级标签前群组内标签无法使用。"
         one_per_topic_label: "只可给主题设置一个该组内的标签"
-        new_name: "新标签组名"
+        new_name: "新建标签组"
         save: "保存"
         delete: "删除"
         confirm_delete: "确定要删除此标签组吗？"
@@ -2731,7 +2732,7 @@ zh_CN:
         reports_tab: "报告"
         report_filter_any: "任意"
         disabled: 停用
-        timeout_error: 对不起，查询时间太长，请选择较短的间隔
+        timeout_error: 对不起，查询时间过长，请选择一个较短的间隔
         exception_error: 抱歉，执行查询时发生错误
         too_many_requests: 你执行这个操作太多次了，请稍后再试。
         not_found_error: 抱歉，报告不存在
@@ -3111,7 +3112,7 @@ zh_CN:
           edit_css_html_help: "你还未编辑任何 CSS 或 HTML"
           delete_upload_confirm: "删除这个上传？（主题 CSS 可能会出问题！）"
           import_web_tip: "目录包含主题"
-          import_web_advanced: "高级。。。"
+          import_web_advanced: "高级..."
           import_file_tip: "包含主题的.tar.gz或.dcstyle.json文件"
           is_private: "主题在私有git存储库中"
           remote_branch: "分支名称（可选）"
@@ -3156,7 +3157,7 @@ zh_CN:
             text: "添加头部"
             title: "输入显示在所有页面的头部之后的 HTML"
           footer:
-            text: "尾部"
+            text: "页脚"
             title: "输入显示在页面尾部后的 HTML"
           embedded_scss:
             text: "嵌入使用的 CSS"
@@ -3394,9 +3395,9 @@ zh_CN:
             web_hook_update: "更新webhook"
             web_hook_destroy: "销毁webhook"
             web_hook_deactivate: "禁用webhook"
-            embeddable_host_create: "可嵌入的宿主创建"
-            embeddable_host_update: "可嵌入的主机更新"
-            embeddable_host_destroy: "可嵌入的主机销毁"
+            embeddable_host_create: "创建可嵌入的主机"
+            embeddable_host_update: "更新可嵌入的主机"
+            embeddable_host_destroy: "销毁可嵌入的主机"
         screened_emails:
           title: "被屏蔽的邮件地址"
           description: "当有人试图用以下邮件地址注册时，将受到阻止或其它系统操作。"
@@ -3414,7 +3415,7 @@ zh_CN:
           delete_confirm: "确定要撤销对 IP 地址为 %{ip_address} 的规则？"
           roll_up_confirm: "你确定要将常用的 IP 地址归类为子网地址吗？"
           rolled_up_some_subnets: "成功地折叠了 IP 封禁记录至这些子网： %{subnets}。"
-          rolled_up_no_subnet: "无法折叠。"
+          rolled_up_no_subnet: "没有可折叠内容。"
           actions:
             block: "封禁"
             do_nothing: "放行"
@@ -3531,7 +3532,7 @@ zh_CN:
         suspended_until: "（直到%{until}）"
         cant_suspend: "该用户不能被封禁。"
         delete_all_posts: "删除所有帖子"
-        delete_posts_progress: "删除帖子。。。"
+        delete_posts_progress: "删除帖子..."
         delete_posts_failed: "删除帖子时出现问题。"
         penalty_post_actions: "你想对相关帖子做什么？"
         penalty_post_delete: "删除帖子"

@@ -409,8 +409,8 @@ sl:
       edit: "Uredi"
       save: "Shrani"
       cancel: "Prekliči"
-      new_topic: "Nova tema:"
       filters:
+        all_categories: "(vse kategorije)"
         type:
           title: "Tip"
           all: "(vse vrste)"
@@ -419,7 +419,6 @@ sl:
         status: "Stanje"
         category: "Kategorija"
         priority:
-          low: "Nizka"
           medium: "Srednja"
           high: "Visoka"
       conversation:
@@ -443,10 +442,6 @@ sl:
           title: "Prezrto"
         deleted:
           title: "Izbrisano"
-        reviewed:
-          title: "(vsi pregledani)"
-        all:
-          title: "(vse)"
       types:
         reviewable_flagged_post:
           title: "Prijavljen prispevek"

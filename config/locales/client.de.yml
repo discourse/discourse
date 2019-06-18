@@ -376,8 +376,9 @@ de:
       edit: "Bearbeiten"
       save: "Speichern"
       cancel: "Abbrechen"
-      new_topic: "Neues Thema:"
+      new_topic: "Das Bestätigen dieses Elements wird ein neues Thema erstellen"
       filters:
+        all_categories: "(alle Kategorien)"
         type:
           title: "Typ"
           all: "(alle Arten)"
@@ -392,7 +393,7 @@ de:
           created_at_asc: "Erstellt am (umgekehrt)"
         priority:
           title: "Minimale Priorität"
-          low: "Niedrig"
+          low: "(irgendein)"
           medium: "Mittel"
           high: "Hoch"
       conversation:
@@ -417,9 +418,9 @@ de:
         deleted:
           title: "Gelöscht"
         reviewed:
-          title: "(Alle überprüft)"
+          title: "(alle überprüft)"
         all:
-          title: "(Alles)"
+          title: "(alles)"
       types:
         reviewable_flagged_post:
           title: "Gemeldeter Beitrag"

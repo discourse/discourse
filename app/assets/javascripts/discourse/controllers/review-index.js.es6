@@ -64,6 +64,7 @@ export default Ember.Controller.extend({
       "pending",
       "approved",
       "rejected",
+      "deleted",
       "ignored",
       "reviewed",
       "all"

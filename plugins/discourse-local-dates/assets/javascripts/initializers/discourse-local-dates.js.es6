@@ -2,9 +2,12 @@ import { withPluginApi } from "discourse/lib/plugin-api";
 import showModal from "discourse/lib/show-modal";
 
 function initializeDiscourseLocalDates(api) {
-  api.decorateCooked($elem => {
-    $(".discourse-local-date", $elem).applyLocalDates();
-  });
+  api.decorateCooked(
+    $elem => {
+      $(".discourse-local-date", $elem).applyLocalDates();
+    },
+    { id: "discourse-local-date" }
+  );
 
   api.onToolbarCreate(toolbar => {
     toolbar.addButton({

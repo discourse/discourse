@@ -6,11 +6,18 @@ class InlineUploads
   PLACEHOLDER = "__replace__"
   PATH_PLACEHOLDER = "__replace_path__"
 
-  UPLOAD_REGEXP_PATTERN = "/original/(\\dX/(?:[a-f0-9]/)*[a-f0-9]{40}[a-z0-9.]*)"
+  UPLOAD_REGEXP_PATTERN = "/original/(\\dX/(?:[a-f0-9]/)*[a-f0-9]{40}[a-zA-Z0-9.]*)"
   private_constant :UPLOAD_REGEXP_PATTERN
 
   def self.process(markdown, on_missing: nil)
     markdown = markdown.dup
+
+    match_md_reference(markdown) do |match, src, replacement, index|
+      if upload = Upload.get_from_url(src)
+        markdown = markdown.sub(match, replacement.sub!(PATH_PLACEHOLDER, "__#{upload.sha1}__"))
+      end
+    end
+
     cooked_fragment = Nokogiri::HTML::fragment(PrettyText.cook(markdown, disable_emojis: true))
     link_occurences = []
 
@@ -22,12 +29,11 @@ class InlineUploads
       end
 
       if seen_link = matched_uploads(node).first
-        link_occurences <<
-          if (actual_link = (node.attributes["href"]&.value || node.attributes["src"]&.value))
-            { link: actual_link, is_valid: true }
-          else
-            { link: seen_link, is_valid: false }
-          end
+        if (actual_link = (node.attributes["href"]&.value || node.attributes["src"]&.value))
+          link_occurences << { link: actual_link, is_valid: true }
+        elsif node.name != "p"
+          link_occurences << { link: actual_link, is_valid: false }
+        end
       end
     end
 
@@ -38,10 +44,6 @@ class InlineUploads
     end
 
     match_md_inline_img(markdown) do |match, src, replacement, index|
-      raw_matches << [match, src, replacement, index]
-    end
-
-    match_md_reference(markdown) do |match, src, replacement, index|
       raw_matches << [match, src, replacement, index]
     end
 
@@ -60,7 +62,7 @@ class InlineUploads
     ]
 
     if Discourse.store.external?
-      regexps << /(https?:#{SiteSetting.Upload.s3_base_url}#{UPLOAD_REGEXP_PATTERN})/
+      regexps << /((https?:)?#{SiteSetting.Upload.s3_base_url}#{UPLOAD_REGEXP_PATTERN})/
       regexps << /(#{SiteSetting.Upload.s3_cdn_url}#{UPLOAD_REGEXP_PATTERN})/
     end
 
@@ -98,7 +100,7 @@ class InlineUploads
         end
       end
 
-      markdown.scan(/((\n|\s)+)#{regexp}/) do |match|
+      markdown.scan(/(([\n\s\)\]\<])+)#{regexp}/) do |match|
         if matched_uploads(match[2]).present?
           next if indexes.include?($~.offset(3)[0])
 
@@ -126,7 +128,17 @@ class InlineUploads
         end
 
         if !Discourse.store.external?
-          next if uri&.host && uri.host != Discourse.current_hostname
+          host = uri&.host
+
+          hosts = [Discourse.current_hostname]
+
+          if cdn_url = GlobalSetting.cdn_url
+            hosts << URI(GlobalSetting.cdn_url).hostname
+          end
+
+          if host && !hosts.include?(host)
+            next
+          end
         end
 
         upload = Upload.get_from_url(link)
@@ -139,6 +151,11 @@ class InlineUploads
           on_missing.call(link) if on_missing
         end
       end
+    end
+
+    markdown.scan(/(__([a-f0-9]{40})__)/) do |match|
+      upload = Upload.find_by(sha1: match[1])
+      markdown = markdown.sub(match[0], upload.short_path)
     end
 
     markdown
@@ -157,9 +174,11 @@ class InlineUploads
     end
   end
 
-  def self.match_bbcode_img(markdown)
+  def self.match_bbcode_img(markdown, external_src: false)
     markdown.scan(/(\[img\]\s?(.+)\s?\[\/img\])/) do |match|
-      yield(match[0], match[1], +"![](#{PLACEHOLDER})", $~.offset(0)[0]) if block_given?
+      if (matched_uploads(match[1]).present? && block_given?) || external_src
+        yield(match[0], match[1], +"![](#{PLACEHOLDER})", $~.offset(0)[0])
+      end
     end
   end
 
@@ -193,11 +212,11 @@ class InlineUploads
   end
 
   def self.match_img(markdown, external_src: false)
-    markdown.scan(/(<(?!img)[^<>]+\/?>)?(\n*)(([ ]*)<img ([^<>]+)>([ ]*))(\n*)/) do |match|
+    markdown.scan(/(<(?!img)[^<>]+\/?>)?(\n*)(([ ]*)<img ([^>\n]+)>([ ]*))(\n*)/) do |match|
       node = Nokogiri::HTML::fragment(match[2].strip).children[0]
-      src =  node.attributes["src"].value
+      src =  node.attributes["src"]&.value
 
-      if matched_uploads(src).present? || external_src
+      if src && (matched_uploads(src).present? || external_src)
         text = node.attributes["alt"]&.value
         width = node.attributes["width"]&.value
         height = node.attributes["height"]&.value
@@ -232,31 +251,42 @@ class InlineUploads
   def self.matched_uploads(node)
     matches = []
 
+    base_url = Discourse.base_url.sub(/https?:\/\//, "(https?://)")
+
+    if GlobalSetting.cdn_url
+      cdn_url = GlobalSetting.cdn_url.sub(/https?:\/\//, "(https?://)")
+    end
+
     regexps = [
-      /(upload:\/\/([a-zA-Z0-9]+)[a-z0-9\.]*)/,
-      /(\/uploads\/short-url\/([a-zA-Z0-9]+)[a-z0-9\.]*)/,
+      /(upload:\/\/([a-zA-Z0-9]+)[a-zA-Z0-9\.]*)/,
+      /(\/uploads\/short-url\/([a-zA-Z0-9]+)[a-zA-Z0-9\.]*)/,
+      /(#{base_url}\/uploads\/short-url\/([a-zA-Z0-9]+)[a-zA-Z0-9\.]*)/,
     ]
 
     db = RailsMultisite::ConnectionManagement.current_db
 
     if Discourse.store.external?
       if Rails.configuration.multisite
-        regexps << /(#{SiteSetting.Upload.s3_base_url}\/uploads\/#{db}#{UPLOAD_REGEXP_PATTERN})/
+        regexps << /((https?:)?#{SiteSetting.Upload.s3_base_url}\/uploads\/#{db}#{UPLOAD_REGEXP_PATTERN})/
         regexps << /(#{SiteSetting.Upload.s3_cdn_url}\/uploads\/#{db}#{UPLOAD_REGEXP_PATTERN})/
       else
-        regexps << /(#{SiteSetting.Upload.s3_base_url}#{UPLOAD_REGEXP_PATTERN})/
+        regexps << /((https?:)?#{SiteSetting.Upload.s3_base_url}#{UPLOAD_REGEXP_PATTERN})/
         regexps << /(#{SiteSetting.Upload.s3_cdn_url}#{UPLOAD_REGEXP_PATTERN})/
         regexps << /(\/uploads\/#{db}#{UPLOAD_REGEXP_PATTERN})/
+        regexps << /(#{base_url}\/uploads\/#{db}#{UPLOAD_REGEXP_PATTERN})/
+        regexps << /(#{cdn_url}\/uploads\/#{db}#{UPLOAD_REGEXP_PATTERN})/ if cdn_url
       end
     else
       regexps << /(\/uploads\/#{db}#{UPLOAD_REGEXP_PATTERN})/
+      regexps << /(#{base_url}\/uploads\/#{db}#{UPLOAD_REGEXP_PATTERN})/
+      regexps << /(#{cdn_url}\/uploads\/#{db}#{UPLOAD_REGEXP_PATTERN})/ if cdn_url
     end
 
     node = node.to_s
 
     regexps.each do |regexp|
-      node.scan(regexp) do |matched|
-        matches << matched[0]
+      node.scan(/(^|[\n\s"'\(>])#{regexp}($|[\n\s"'\)<])/) do |matched|
+        matches << matched[1]
       end
     end
 

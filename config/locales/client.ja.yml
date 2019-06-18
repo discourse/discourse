@@ -300,7 +300,6 @@ ja:
       edit: "編集"
       save: "保存"
       cancel: "キャンセル"
-      new_topic: "新しいトピック:"
       filters:
         type:
           title: "タイプ"
@@ -319,8 +318,6 @@ ja:
           title: "保留中"
         rejected:
           title: "拒否されたメール"
-        all:
-          title: "(すべて)"
       types:
         reviewable_user:
           title: "ユーザー"

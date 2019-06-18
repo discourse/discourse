@@ -1,4 +1,4 @@
-import { acceptance, replaceCurrentUser } from "helpers/qunit-helpers";
+import { acceptance, updateCurrentUser } from "helpers/qunit-helpers";
 
 acceptance("Enforce Second Factor", {
   loggedIn: true
@@ -27,7 +27,7 @@ QUnit.test("as an admin", async assert => {
 });
 
 QUnit.test("as a user", async assert => {
-  replaceCurrentUser({ staff: false, admin: false });
+  updateCurrentUser({ staff: false, admin: false });
 
   await visit("/u/eviltrout/preferences/second-factor");
   Discourse.SiteSettings.enforce_second_factor = "all";

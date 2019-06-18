@@ -82,8 +82,8 @@ describe "S3Inventory" do
 
   it "should backfill etags to uploads table correctly" do
     files = [
-      ["//bucket.amazonaws.com/original/0184537a4f419224404d013414e913a4f56018f2.jpg", "defcaac0b4aca535c284e95f30d608d0"],
-      ["//bucket.amazonaws.com/original/0789fbf5490babc68326b9cec90eeb0d6590db05.png", "25c02eaceef4cb779fc17030d33f7f06"]
+      ["#{Discourse.store.absolute_base_url}/original/0184537a4f419224404d013414e913a4f56018f2.jpg", "defcaac0b4aca535c284e95f30d608d0"],
+      ["#{Discourse.store.absolute_base_url}/original/0789fbf5490babc68326b9cec90eeb0d6590db05.png", "25c02eaceef4cb779fc17030d33f7f06"]
     ]
     files.each { |file| Fabricate(:upload, url: file[0]) }
 

@@ -147,6 +147,15 @@ describe Jobs::UserEmail do
     end
 
     it "sends an email by default for a PM to a user that's been recently seen" do
+      upload = Fabricate(:upload)
+
+      post.update!(raw: <<~RAW)
+      This is a test post
+
+      <a class="attachment" href="#{upload.url}">test</a>
+      <img src="#{upload.url}"/>
+      RAW
+
       Jobs::UserEmail.new.execute(
         type: :user_private_message,
         user_id: user.id,
@@ -154,9 +163,16 @@ describe Jobs::UserEmail do
         notification_id: notification.id
       )
 
-      expect(ActionMailer::Base.deliveries.first.to).to contain_exactly(
-        user.email
-      )
+      email = ActionMailer::Base.deliveries.first
+
+      expect(email.to).to contain_exactly(user.email)
+
+      expect(email.parts[0].body.to_s).to include(<<~MD)
+      This is a test post
+
+      [test|attachment](#{Discourse.base_url}#{upload.url})
+      ![](#{Discourse.base_url}#{upload.url})
+      MD
     end
 
     it "doesn't send a PM email to a user that's been recently seen and has email_messages_level set to never" do

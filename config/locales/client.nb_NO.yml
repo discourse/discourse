@@ -299,6 +299,7 @@ nb_NO:
       save: "Lagre"
       cancel: "Avbryt"
       filters:
+        all_categories: "(alle kategorier)"
         type:
           title: "Type"
         refresh: "Last inn på nytt"

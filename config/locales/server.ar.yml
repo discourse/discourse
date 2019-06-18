@@ -1845,6 +1845,8 @@ ar:
         title: "أحذف"
       disagree:
         title: "لا اوافق"
+      ignore:
+        title: "تجاهل"
       approve:
         title: "تصديق"
       reject_user:

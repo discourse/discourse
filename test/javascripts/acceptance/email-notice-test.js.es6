@@ -1,4 +1,4 @@
-import { acceptance, replaceCurrentUser } from "helpers/qunit-helpers";
+import { acceptance, updateCurrentUser } from "helpers/qunit-helpers";
 
 acceptance("Email Disabled Banner", {
   loggedIn: true
@@ -26,7 +26,7 @@ QUnit.test("shows banner when required", async assert => {
     "alert is displayed when email disabled for non-staff"
   );
 
-  replaceCurrentUser({ staff: true, moderator: true });
+  updateCurrentUser({ staff: true, moderator: true });
   await visit("/");
   assert.ok(
     exists(".alert-emails-disabled"),

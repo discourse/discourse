@@ -2,7 +2,11 @@ import Quote from "discourse/lib/quote";
 import Post from "discourse/models/post";
 import { default as PrettyText, buildOptions } from "pretty-text/pretty-text";
 import { IMAGE_VERSION as v } from "pretty-text/emoji/version";
-import { INLINE_ONEBOX_LOADING_CSS_CLASS } from "pretty-text/inline-oneboxer";
+import { INLINE_ONEBOX_LOADING_CSS_CLASS } from "pretty-text/context/inline-onebox-css-classes";
+import {
+  applyCachedInlineOnebox,
+  deleteCachedInlineOnebox
+} from "pretty-text/inline-oneboxer";
 
 QUnit.module("lib:pretty-text");
 
@@ -196,11 +200,24 @@ QUnit.test("Links", assert => {
     "autolinks a URL"
   );
 
+  const link = "http://www.youtube.com/watch?v=1MrpeBRkM5A";
+
   assert.cooked(
-    "Youtube: http://www.youtube.com/watch?v=1MrpeBRkM5A",
-    `<p>Youtube: <a href="http://www.youtube.com/watch?v=1MrpeBRkM5A" class="${INLINE_ONEBOX_LOADING_CSS_CLASS}">http://www.youtube.com/watch?v=1MrpeBRkM5A</a></p>`,
+    `Youtube: ${link}`,
+    `<p>Youtube: <a href="${link}" class="${INLINE_ONEBOX_LOADING_CSS_CLASS}">${link}</a></p>`,
     "allows links to contain query params"
   );
+
+  try {
+    applyCachedInlineOnebox(link, {});
+
+    assert.cooked(
+      `Youtube: ${link}`,
+      `<p>Youtube: <a href="${link}">${link}</a></p>`
+    );
+  } finally {
+    deleteCachedInlineOnebox(link);
+  }
 
   assert.cooked(
     "Derpy: http://derp.com?__test=1",

@@ -3,12 +3,7 @@ require 'rails_helper'
 
 RSpec.describe InlineUploads do
   before do
-    @original_asset_host = Rails.configuration.action_controller.asset_host
-    Rails.configuration.action_controller.asset_host = "https://cdn.discourse.org/stuff"
-  end
-
-  after do
-    Rails.configuration.action_controller.asset_host = @original_asset_host
+    set_cdn_url "https://awesome.com"
   end
 
   describe '.process' do
@@ -45,6 +40,20 @@ RSpec.describe InlineUploads do
         expect(InlineUploads.process(md)).to eq(md)
       end
 
+      it "should work with invalid img tags" do
+        md = <<~MD
+        <img src="#{upload.url}">
+
+        This is an invalid `<img ...>` tag
+        MD
+
+        expect(InlineUploads.process(md)).to eq(<<~MD)
+        ![](#{upload.short_url})
+
+        This is an invalid `<img ...>` tag
+        MD
+      end
+
       it "should not correct code blocks" do
         md = "`<a class=\"attachment\" href=\"#{upload2.url}\">In Code Block</a>`"
 
@@ -55,7 +64,46 @@ RSpec.describe InlineUploads do
         expect(InlineUploads.process(md)).to eq(md)
       end
 
-      it "should not correct links in quotes" do
+      it "should not correct invalid links in quotes" do
+        post = Fabricate(:post)
+        user = Fabricate(:user)
+
+        md = <<~MD
+        [quote="#{user.username}, post:#{post.post_number}, topic:#{post.topic.id}"]
+        <img src="#{upload.url}"
+        someothertext#{upload2.url}someothertext
+
+        <img src="#{upload.url}"
+
+        sometext#{upload2.url}sometext
+
+        #{upload3.url}
+
+        #{Discourse.base_url}#{upload3.url}
+        [/quote]
+
+        <img src="#{upload2.url}">
+        MD
+
+        expect(InlineUploads.process(md)).to eq(<<~MD)
+        [quote="#{user.username}, post:#{post.post_number}, topic:#{post.topic.id}"]
+        <img src="#{upload.url}"
+        someothertext#{upload2.url}someothertext
+
+        <img src="#{upload.url}"
+
+        sometext#{upload2.url}sometext
+
+        #{upload3.url}
+
+        ![](#{upload3.short_url})
+        [/quote]
+
+        ![](#{upload2.short_url})
+        MD
+      end
+
+      it "should correct links in quotes" do
         post = Fabricate(:post)
         user = Fabricate(:user)
 
@@ -108,7 +156,9 @@ RSpec.describe InlineUploads do
 
       it "should correct bbcode img URLs to the short version" do
         md = <<~MD
+        [img]http://some.external.img[/img]
         [img]#{upload.url}[/img]
+        <img src="#{upload3.url}">
 
         [img]
         #{upload2.url}
@@ -116,7 +166,9 @@ RSpec.describe InlineUploads do
         MD
 
         expect(InlineUploads.process(md)).to eq(<<~MD)
+        [img]http://some.external.img[/img]
         ![](#{upload.short_url})
+        ![](#{upload3.short_url})
 
         ![](#{upload2.short_url})
         MD
@@ -124,19 +176,29 @@ RSpec.describe InlineUploads do
 
       it "should correct markdown references" do
         md = <<~MD
-        This is a [some reference] something
+        [link3][3]
 
-        [some reference]: #{Discourse.base_url}#{upload.url}
+        [3]: #{Discourse.base_url}#{upload2.url}
+
+        This is a [link1][1] test [link2][2] something
 
         <img src="#{upload.url}">
+
+        [1]: #{Discourse.base_url}#{upload.url}
+        [2]: #{Discourse.base_url.sub("http://", "https://")}#{upload2.url}
         MD
 
         expect(InlineUploads.process(md)).to eq(<<~MD)
-        This is a [some reference] something
+        [link3][3]
 
-        [some reference]: #{Discourse.base_url}#{upload.short_path}
+        [3]: #{Discourse.base_url}#{upload2.short_path}
+
+        This is a [link1][1] test [link2][2] something
 
         ![](#{upload.short_url})
+
+        [1]: #{Discourse.base_url}#{upload.short_path}
+        [2]: #{Discourse.base_url}#{upload2.short_path}
         MD
       end
 
@@ -147,6 +209,8 @@ RSpec.describe InlineUploads do
         #{Discourse.base_url}#{upload.url} #{Discourse.base_url}#{upload2.url}
 
         #{Discourse.base_url}#{upload3.url}
+
+        #{GlobalSetting.cdn_url}#{upload3.url}
         MD
 
         expect(InlineUploads.process(md)).to eq(<<~MD)
@@ -155,6 +219,32 @@ RSpec.describe InlineUploads do
         #{Discourse.base_url}#{upload.short_path} #{Discourse.base_url}#{upload2.short_path}
 
         ![](#{upload3.short_url})
+
+        ![](#{upload3.short_url})
+        MD
+      end
+
+      it "should correct img tags with uppercase upload extension" do
+        md = <<~MD
+        test<img src="#{upload.url.sub(".png", ".PNG")}">
+        MD
+
+        expect(InlineUploads.process(md)).to eq(<<~MD)
+        test![](#{upload.short_url})
+        MD
+      end
+
+      it "should correct image URLs that follows an image md" do
+        md = <<~MD
+        ![image|690x290](#{upload.short_url})#{Discourse.base_url}#{upload2.url}
+
+        <#{Discourse.base_url}#{upload2.url}>
+        MD
+
+        expect(InlineUploads.process(md)).to eq(<<~MD)
+        ![image|690x290](#{upload.short_url})#{Discourse.base_url}#{upload2.short_path}
+
+        <#{Discourse.base_url}#{upload2.short_path}>
         MD
       end
 
@@ -284,6 +374,8 @@ RSpec.describe InlineUploads do
 
         <img src="#{upload.url}" alt="test">
 
+        <img src="#{upload2.url}" alt="test" height="150<img">
+
         > some quote
 
         <a class="attachment" href="#{upload2.url}">test2</a>
@@ -295,6 +387,8 @@ RSpec.describe InlineUploads do
         ```
 
         ![test](#{upload.short_url})
+
+        ![test](#{upload2.short_url})
 
         > some quote
 
@@ -444,12 +538,16 @@ RSpec.describe InlineUploads do
 
       it "should correct image URLs to the short version" do
         md = <<~MD
+        #{upload.url}
         <img src="#{upload.url}" alt="some image">
+        test<img src="#{upload2.url}" alt="some image">test
         <img src="#{URI.join(SiteSetting.s3_cdn_url, URI.parse(upload2.url).path).to_s}" alt="some image">
         MD
 
         expect(InlineUploads.process(md)).to eq(<<~MD)
+        ![](#{upload.short_url})
         ![some image](#{upload.short_url})
+        test![some image](#{upload2.short_url})test
         ![some image](#{upload2.short_url})
         MD
       end

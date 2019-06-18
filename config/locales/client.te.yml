@@ -204,6 +204,7 @@ te:
       save: "భద్రపరచు"
       cancel: "రద్దుచేయి"
       filters:
+        all_categories: "(అన్ని వర్గాలు)"
         type:
           title: "రకం"
         refresh: "తాజా పరుచు"

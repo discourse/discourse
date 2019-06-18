@@ -4,11 +4,15 @@ import { isValidLink } from "discourse/lib/click-track";
 import { number } from "discourse/lib/formatter";
 import highlightText from "discourse/lib/highlight-text";
 
-const _decorators = [];
+let _decorators = [];
 
 // Don't call this directly: use `plugin-api/decorateCooked`
 export function addDecorator(cb) {
   _decorators.push(cb);
+}
+
+export function resetDecorators() {
+  _decorators = [];
 }
 
 export default class PostCooked {

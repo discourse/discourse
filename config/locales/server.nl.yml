@@ -40,6 +40,8 @@ nl:
   themes:
     bad_color_scheme: "Kan thema niet bijwerken, ongeldig kleurenpalet"
     other_error: "Er is iets misgegaan bij het bijwerken van het thema"
+    compile_error:
+      unrecognized_extension: "Niet-herkende bestandsextensie: %{extension}"
     import_error:
       generic: Er is een fout opgetreden bij het importeren van dat thema
       about_json: "Fout bij importeren: about.json bestaat niet, of is ongeldig"
@@ -294,10 +296,6 @@ nl:
   revert_version_same: "De huidige versie is dezelfde als de versie die u probeert terug te zetten."
   excerpt_image: "afbeelding"
   groups:
-    success:
-      bulk_add:
-        one: "Er is %{count} gebruiker aan de groep toegevoegd."
-        other: "Er zijn %{count} gebruikers aan de groep toegevoegd."
     errors:
       grant_trust_level_not_valid: "'%{trust_level}' is geen geldig vertrouwensniveau."
       can_not_modify_automatic: "U kunt een automatische groep niet wijzigen"
@@ -908,6 +906,7 @@ nl:
       title: "Gebruikersbezoeken"
       xaxis: "Dag"
       yaxis: "Aantal bezoeken"
+      description: "Aantal alle gebruikersbezoeken."
     signups:
       title: "Registraties"
       xaxis: "Dag"
@@ -1063,7 +1062,6 @@ nl:
       title: "Anoniem"
       xaxis: "Dag"
       yaxis: "Anonieme paginaweergaven"
-      description: "Aantal nieuwe paginaweergaven door bezoekers die niet zijn aangemeld bij een account."
     page_view_logged_in_reqs:
       title: "Aangemeld"
       xaxis: "Dag"
@@ -1117,7 +1115,6 @@ nl:
       title: "Tijd tot eerste reactie"
       xaxis: "Dag"
       yaxis: "Gemiddelde tijd (uren)"
-      description: "Gemiddelde tijd (in uren) van de eerste reactie op nieuwe topics."
     topics_with_no_response:
       title: "Topics zonder reactie"
       xaxis: "Dag"
@@ -1309,9 +1306,9 @@ nl:
     must_approve_users: "Stafleden moeten alle nieuwe gebruikersaccounts goedkeuren voordat ze de website mogen bezoeken. WAARSCHUWING: als dit voor een actieve website wordt ingeschakeld, wordt alle toegang voor bestaande niet-stafleden ingetrokken!"
     pending_users_reminder_delay: "Moderators inlichten als nieuwe gebruikers langer dan dit aantal uren op goedkeuring wachten. Stel dit in op -1 om meldingen uit te schakelen."
     maximum_session_age: "Gebruikers blijven (n) uur na hun laatste bezoek aangemeld"
+    ga_universal_tracking_code: "Google Universal Analytics (analytics.js)-trackingcode-ID, bv. UA-12345678-9; zie <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
     ga_universal_domain_name: "Google Universal Analytics (analytics.js)-domeinnaam, bv. mysite.com; zie <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
     ga_universal_auto_link_domains: "Google Universal Analytics (analytics.js)-cross-domain-tracking inschakelen. Aan uitgaande koppelingen naar deze domeinen wordt de client-ID toegevoegd. Zie <a href='https://support.google.com/analytics/answer/1034342?hl=en' target='_blank'>Google's Cross-Domein Tracking-handleiding.</a>"
-    gtm_container_id: "Google Tag Manager-container-ID, bv. GTM-ABCDEF. <br/>Opmerking: scripts van derden die door GTM worden geladen, dienen mogelijk op de whitelist te worden geplaatst in 'content security policy script src'."
     enable_escaped_fragments: "Terugvallen naar Google's Ajax-Crawling-API als geen webcrawler wordt gedetecteerd. Zie <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
     moderators_create_categories: "Moderators mogen nieuwe categorieën maken"
     cors_origins: "Toegestane domeinen voor cross-origin-aanvragen (CORS). Elk domein moet http:// of https:// bevatten. De omgevingsvariabele DISCOURSE_ENABLE_CORS moet op true zijn ingesteld om CORS in te schakelen."
@@ -1375,7 +1372,6 @@ nl:
     enable_sso_provider: "Discourse SSO provider-protocol aan het /session/sso_provider-eindpunt implementeren, vereist dat sso_provider_secrets is ingesteld"
     sso_url: "URL van single-sign-on-eindpunt (moet http:// of https:// bevatten)"
     sso_secret: "Geheime tekenreeks voor het cryptografisch authenticeren van SSO-informatie, zorg ervoor dat deze 10 tekens of langer is"
-    sso_provider_secrets: "Een lijst van domain-secret-paren die Discourse als SSO-provider gebruiken. Zorg ervoor dat het SSO-geheim 10 tekens of langer is. Het jokerteken * kan worden gebruikt om een domein of alleen een deel ervan (bv. *.example.com) te laten overeenkomen."
     sso_overrides_bio: "Overschrijft biografie in gebruikersprofiel en voorkomt dat gebruiker deze kan wijzigen"
     sso_overrides_groups: "Alle handmatige groepslidmaatschappen synchroniseren met opgegeven groepen in SSO-attribuut van de groep (WAARSCHUWING: als u geen groepen opgeeft, worden alle handmatige groepslidmaatschappen voor de gebruiker gewist)"
     sso_overrides_email: "Overschrijft bij elke aanmelding lokaal opgegeven e-mailadres door e-mailadres uit SSO-payload van externe website, en voorkomt lokale wijzigingen. (WAARSCHUWING: er kunnen discrepanties ontstaan door normalisatie van lokale e-mailadressen)"
@@ -1765,7 +1761,6 @@ nl:
     min_trust_level_for_user_api_key: "Vereiste vertrouwensniveau voor genereren van API-sleutels van gebruiker"
     allowed_user_api_auth_redirects: "Toegestane URL voor authenticatie bij omleiden voor API-sleutels van gebruiker. Het jokerteken * kan worden gebruikt om een deel ervan te laten overeenkomen (bv. www.example.com/*)."
     allowed_user_api_push_urls: "Toegestane URL's voor server-push naar gebruikers-API"
-    expire_user_api_keys_days: "Aantal dagen voordat een API-sleutel van een gebruiker automatisch verloopt (0 voor nooit)"
     tagging_enabled: "Tags op topics inschakelen?"
     min_trust_to_create_tag: "Het minimale vertrouwensniveau dat nodig is om een tag te maken."
     max_tags_per_topic: "De maximale tags die op een topic kunnen worden toegepast."
@@ -2419,7 +2414,7 @@ nl:
       name: Bedankt
     empathetic:
       name: Empathisch
-      description: Heeft 500 geliked en 1000 likes gegeven
+      description: Heeft 500 geliket en 1000 likes gegeven
     first_emoji:
       name: Eerste emoji
       description: Een emoji in een bericht gebruikt
@@ -2445,7 +2440,7 @@ nl:
     register:
       button: "Registreren"
       title: "Beheerdersaccount registreren"
-      help: "Registreer een nieuw account om te beginnen"
+      help: "registreer een nieuwe account om te beginnen"
     confirm_email:
       title: "Bevestig uw e-mailadres"
     resend_email:
@@ -2637,10 +2632,10 @@ nl:
         title: "Gebruiker verwijderen..."
         delete:
           title: "Gebruiker verwijderen"
-          description: "De gebruiker zal van het forum verwijderd worden."
+          description: "De gebruiker wordt van het forum verwijderd."
         block:
           title: "Gebruiker verwijderen en blokkeren"
-          description: "De gebruiker zal verwijderd worden en we zullen het IP-adres en e-mailadres blokkeren."
+          description: "De gebruiker wordt verwijderd, en het IP- en e-mailadres ervan geblokkeerd."
       reject:
         title: "Weigeren"
       delete_user:

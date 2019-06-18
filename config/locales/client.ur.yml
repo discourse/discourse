@@ -376,8 +376,9 @@ ur:
       edit: "ترمیم"
       save: "محفوظ کریں"
       cancel: "منسوخ"
-      new_topic: "نیا ٹاپک:"
+      new_topic: "اِس شے کی منظوری سے ایک نیا ٹاپک بن جائے گا"
       filters:
+        all_categories: "(تمام زُمرَہ جات)"
         type:
           title: "قِسم"
           all: "(تمام اقسام)"
@@ -392,7 +393,7 @@ ur:
           created_at_asc: "کو بنایا گیا (ریوَرس)"
         priority:
           title: "کم از کم ترجیح"
-          low: "کم"
+          low: "(کوئی بھی)"
           medium: "درمیانی"
           high: "زیادہ"
       conversation:

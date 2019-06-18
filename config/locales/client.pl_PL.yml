@@ -384,6 +384,7 @@ pl_PL:
       save: "Zapisz"
       cancel: "Anuluj"
       filters:
+        all_categories: "(wszystkie kategorie)"
         type:
           title: "Typ"
         refresh: "Odśwież"

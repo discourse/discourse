@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Auth::Result
-  attr_accessor :user, :name, :username, :email, :user,
+  attr_accessor :user, :name, :username, :email,
                 :email_valid, :extra_data, :awaiting_activation,
                 :awaiting_approval, :authenticated, :authenticator_name,
                 :requires_invite, :not_allowed_from_ip_address,

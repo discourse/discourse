@@ -374,8 +374,8 @@ hu:
       edit: "Szerkesztés"
       save: "Mentés"
       cancel: "Visszavon"
-      new_topic: "Új téma:"
       filters:
+        all_categories: "(összes kategória)"
         type:
           title: "Típus"
           all: "(összes típus)"
@@ -385,7 +385,6 @@ hu:
         category: "Kategória"
         priority:
           title: "Minimális prioritás"
-          low: "Alacsony"
           medium: "Közepes"
           high: "Magas"
       conversation:
@@ -409,10 +408,6 @@ hu:
           title: "Figyelmen kívül hagyva"
         deleted:
           title: "Törölve "
-        reviewed:
-          title: "(Összes átnézve)"
-        all:
-          title: "(Minden)"
       types:
         reviewable_flagged_post:
           title: "Megjelölt bejegyzés"

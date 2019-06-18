@@ -673,6 +673,7 @@ testCase(`doesn't jump to bottom with long text`, async function(
 });
 
 componentTest("emoji", {
+  skip: true,
   template: "{{d-editor value=value}}",
   beforeEach() {
     // Test adding a custom button

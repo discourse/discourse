@@ -1031,6 +1031,15 @@ module Email
             if attachment.content_type&.start_with?("image/")
               if raw[attachment.url]
                 raw.sub!(attachment.url, upload.url)
+
+                InlineUploads.match_img(raw) do |match, src, replacement, _|
+                  if src == upload.url
+                    raw = raw.sub(
+                      match,
+                      "![#{upload.original_filename}|#{upload.width}x#{upload.height}](#{upload.short_url})"
+                    )
+                  end
+                end
               elsif raw[/\[image:.*?\d+[^\]]*\]/i]
                 raw.sub!(/\[image:.*?\d+[^\]]*\]/i, attachment_markdown(upload))
               else
@@ -1074,9 +1083,9 @@ module Email
 
     def attachment_markdown(upload)
       if FileHelper.is_supported_image?(upload.original_filename)
-        "<img src='#{upload.url}' width='#{upload.width}' height='#{upload.height}'>"
+        "![#{upload.original_filename}|#{upload.width}x#{upload.height}](#{upload.short_url})"
       else
-        "<a class='attachment' href='#{upload.url}'>#{upload.original_filename}</a> (#{number_to_human_size(upload.filesize)})"
+        "[#{upload.original_filename}|attachment](#{upload.short_url}) (#{number_to_human_size(upload.filesize)})"
       end
     end
 

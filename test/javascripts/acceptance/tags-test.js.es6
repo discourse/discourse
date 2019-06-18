@@ -1,4 +1,4 @@
-import { replaceCurrentUser, acceptance } from "helpers/qunit-helpers";
+import { updateCurrentUser, acceptance } from "helpers/qunit-helpers";
 acceptance("Tags", { loggedIn: true });
 
 QUnit.test("list the tags", async assert => {
@@ -156,7 +156,7 @@ test("new topic button is not available for staff-only tags", async assert => {
     }
   ]);
 
-  replaceCurrentUser({ staff: false });
+  updateCurrentUser({ staff: false });
 
   await visit("/tags/regular-tag");
   assert.ok(find("#create-topic:disabled").length === 0);
@@ -164,7 +164,7 @@ test("new topic button is not available for staff-only tags", async assert => {
   await visit("/tags/staff-only-tag");
   assert.ok(find("#create-topic:disabled").length === 1);
 
-  replaceCurrentUser({ staff: true });
+  updateCurrentUser({ staff: true });
 
   await visit("/tags/regular-tag");
   assert.ok(find("#create-topic:disabled").length === 0);

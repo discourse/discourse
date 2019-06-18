@@ -1,11 +1,18 @@
-import { acceptance, logIn, replaceCurrentUser } from "helpers/qunit-helpers";
+import { acceptance, updateCurrentUser } from "helpers/qunit-helpers";
 
 acceptance("Managing Group Profile");
+QUnit.test("As an anonymous user", async assert => {
+  await visit("/g/discourse/manage/profile");
+
+  assert.ok(
+    count(".group-members tr") > 0,
+    "it should redirect to members page for an anonymous user"
+  );
+});
+
+acceptance("Managing Group Profile", { loggedIn: true });
 
 QUnit.test("As an admin", async assert => {
-  logIn();
-  Discourse.reset();
-
   await visit("/g/discourse/manage/profile");
 
   assert.ok(
@@ -27,9 +34,7 @@ QUnit.test("As an admin", async assert => {
 });
 
 QUnit.test("As a group owner", async assert => {
-  logIn();
-  Discourse.reset();
-  replaceCurrentUser({ staff: false, admin: false });
+  updateCurrentUser({ staff: false, admin: false });
 
   await visit("/g/discourse/manage/profile");
 
@@ -37,14 +42,5 @@ QUnit.test("As a group owner", async assert => {
     find(".group-form-name").length,
     0,
     "it should not display group name input"
-  );
-});
-
-QUnit.test("As an anonymous user", async assert => {
-  await visit("/g/discourse/manage/profile");
-
-  assert.ok(
-    count(".group-members tr") > 0,
-    "it should redirect to members page for an anonymous user"
   );
 });

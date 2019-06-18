@@ -41,7 +41,7 @@ import {
 import {
   INLINE_ONEBOX_LOADING_CSS_CLASS,
   INLINE_ONEBOX_CSS_CLASS
-} from "pretty-text/inline-oneboxer";
+} from "pretty-text/context/inline-onebox-css-classes";
 
 const REBUILD_SCROLL_MAP_EVENTS = ["composer:resized", "composer:typed-reply"];
 
