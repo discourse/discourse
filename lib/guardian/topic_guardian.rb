@@ -97,7 +97,9 @@ module TopicGuardian
     )
 
     return false if topic.archived
-    is_my_own?(topic) && !topic.edit_time_limit_expired?
+    is_my_own?(topic) &&
+      !topic.edit_time_limit_expired? &&
+      !Post.where(topic_id: topic.id, post_number: 1).where.not(locked_by_id: nil).exists?
   end
 
   # Recovery Method
