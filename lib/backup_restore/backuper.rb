@@ -48,8 +48,6 @@ module BackupRestore
       log "Finalizing backup..."
 
       @with_uploads ? create_archive : move_dump_backup
-
-      unpause_sidekiq
       upload_archive
 
       after_create_hook

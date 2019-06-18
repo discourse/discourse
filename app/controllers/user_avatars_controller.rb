@@ -45,6 +45,7 @@ class UserAvatarsController < ApplicationController
     params.require(:color)
     params.require(:version)
     params.require(:size)
+
     hijack do
       begin
         proxy_avatar("https://avatars.discourse.org/#{params[:version]}/letter/#{params[:letter]}/#{params[:color]}/#{params[:size]}.png", Time.new('1990-01-01'))

@@ -382,7 +382,7 @@ class SessionController < ApplicationController
       @error = I18n.t('user_api_key.invalid_token')
     end
 
-    return render json: { error: I18n.t('email_login.invalid_token') }
+    render layout: 'no_ember'
   end
 
   def forgot_password
