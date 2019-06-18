@@ -1,5 +1,3 @@
-import { isAppleDevice } from "discourse/lib/utilities";
-
 export default function(name, opts) {
   opts = opts || {};
   const container = Discourse.__container__;
