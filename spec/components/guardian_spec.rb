@@ -1419,6 +1419,16 @@ describe Guardian do
         expect(Guardian.new(coding_horror).can_edit?(topic)).to be_falsey
       end
 
+      context "locked" do
+        let(:post) { Fabricate(:post, locked_by_id: admin.id) }
+        let(:topic) { post.topic }
+
+        it "doesn't allow users to edit locked topics" do
+          expect(Guardian.new(topic.user).can_edit?(topic)).to eq(false)
+          expect(Guardian.new(admin).can_edit?(topic)).to eq(true)
+        end
+      end
+
       context 'not archived' do
         it 'returns true as a moderator' do
           expect(Guardian.new(moderator).can_edit?(topic)).to eq(true)
