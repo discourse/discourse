@@ -5,9 +5,9 @@ export default {
   name: "avatar-select",
 
   initialize(container) {
-    this.selectAvatarsEnabled = container.lookup(
+    this.selectableAvatarsEnabled = container.lookup(
       "site-settings:main"
-    ).select_avatars_enabled;
+    ).selectable_avatars_enabled;
 
     container
       .lookup("app-events:main")
@@ -27,7 +27,7 @@ export default {
     const modal = showModal("avatar-selector");
     modal.setProperties({ user, selected });
 
-    if (this.selectAvatarsEnabled) {
+    if (this.selectableAvatarsEnabled) {
       ajax("/site/selectable-avatars.json").then(avatars =>
         modal.set("selectableAvatars", avatars)
       );
