@@ -452,6 +452,8 @@ RSpec.describe InlineUploads do
 
         <a class="test attachment" href="#{upload.url}">test3</a>
         <a class="test attachment" href="#{upload2.url}">test3</a><a class="test attachment" href="#{upload3.url}">test3</a>
+
+        <a class="test attachment" href="#{upload3.url}">This is some _test_ here</a>
         MD
 
         expect(InlineUploads.process(md)).to eq(<<~MD)
@@ -463,6 +465,8 @@ RSpec.describe InlineUploads do
 
         [test3|attachment](#{upload.short_url})
         [test3|attachment](#{upload2.short_url})[test3|attachment](#{upload3.short_url})
+
+        [This is some _test_ here|attachment](#{upload3.short_url})
         MD
       end
 
