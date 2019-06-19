@@ -890,7 +890,7 @@ class Post < ActiveRecord::Base
       /\/uploads\/#{RailsMultisite::ConnectionManagement.current_db}\//,
       /\/original\//,
       /\/optimized\//,
-      /\/uploads\/short-url\/[a-zA-Z0-9]+\..*/
+      /\/uploads\/short-url\/[a-zA-Z0-9]+(\.[a-z0-9]+)?/
     ]
 
     fragments ||= Nokogiri::HTML::fragment(self.cooked)

@@ -235,6 +235,9 @@ describe Upload do
     it "should generate a correct short url" do
       upload = Upload.new(sha1: 'bda2c513e1da04f7b4e99230851ea2aafeb8cc4e', extension: 'png')
       expect(upload.short_url).to eq('upload://r3AYqESanERjladb4vBB7VsMBm6.png')
+
+      upload.extension = nil
+      expect(upload.short_url).to eq('upload://r3AYqESanERjladb4vBB7VsMBm6')
     end
   end
 
