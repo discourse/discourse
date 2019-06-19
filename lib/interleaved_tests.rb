@@ -55,40 +55,34 @@ module InterleavedTests
     end
 
     def example_passed(example)
-      notification = example.notification
-
-      @formatters.each do |formatter|
-        formatter.example_passed(notification) if formatter.respond_to?(:example_passed)
-      end
+      delegate_to_formatters(:example_passed, example.notification)
 
       @all_examples << example
     end
 
     def example_pending(example)
-      notification = example.notification
-
-      @formatters.each do |formatter|
-        formatter.example_pending(notification) if formatter.respond_to?(:example_pending)
-      end
+      delegate_to_formatters(:example_pending, example.notification)
 
       @all_examples << example
       @pending_examples << example
     end
 
     def example_failed(example)
-      notification = example.notification
-
-      @formatters.each do |formatter|
-        formatter.example_failed(notification) if formatter.respond_to?(:example_failed)
-      end
+      delegate_to_formatters(:example_failed, example.notification)
 
       @all_examples << example
       @failed_examples << example
     end
 
     def method_missing(method, arg)
+      delegate_to_formatters(method, arg)
+    end
+
+    protected
+
+    def delegate_to_formatters(method, *args)
       @formatters.each do |formatter|
-        formatter.send(method, arg) if formatter.respond_to?(method)
+        formatter.send(method, *args) if formatter.respond_to?(method)
       end
     end
   end
