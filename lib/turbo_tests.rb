@@ -9,6 +9,7 @@ require 'parallel_tests/rspec/runner'
 
 require './lib/turbo_tests/reporter'
 require './lib/turbo_tests/runner'
+require './lib/turbo_tests/json_rows_formatter'
 
 module TurboTests
   FakeException = Struct.new(:backtrace, :message, :cause)

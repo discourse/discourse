@@ -57,7 +57,7 @@ module TurboTests
           Open3.popen3(
             {'TEST_ENV_NUMBER' => process_num.to_s},
             "bundle", "exec", "rspec",
-            "-f", "JsonRowsFormatter",
+            "-f", "TurboTests::JsonRowsFormatter",
             "-o", "tmp/test-pipes/subprocess-#{process_num}",
             *tests
           )
