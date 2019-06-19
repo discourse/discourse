@@ -24,7 +24,9 @@ class InlineUploads
     cooked_fragment.traverse do |node|
       if node.name == "img"
         # Do nothing
-      elsif !(node.children.count == 1 && (node.children[0].name != "img" && node.children[0].children.blank?))
+      elsif !(node.children.count == 1 && (node.children[0].name != "img" && node.children[0].children.blank?)) &&
+        !(node.name == "a" && node.children.count > 1 && !node_children_names(node).include?("img"))
+
         next
       end
 
@@ -293,4 +295,18 @@ class InlineUploads
     matches
   end
   private_class_method :matched_uploads
+
+  def self.node_children_names(node, names = Set.new)
+    if node.children.blank?
+      names << node.name
+      return names
+    end
+
+    node.children.each do |child|
+      names = node_children_names(child, names)
+    end
+
+    names
+  end
+  private_class_method :node_children_names
 end
