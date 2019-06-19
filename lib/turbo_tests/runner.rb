@@ -10,6 +10,7 @@ module TurboTests
       @reporter = reporter
       @files = files
       @messages = Queue.new
+      @threads = []
     end
 
     def run
@@ -31,6 +32,8 @@ module TurboTests
       handle_messages
 
       @reporter.finish
+
+      @threads.each(&:join)
     end
 
     protected
@@ -62,40 +65,34 @@ module TurboTests
             *tests
           )
 
-        Thread.new do
-          File.open("tmp/test-pipes/subprocess-#{process_num}") do |fd|
-            fd.each_line do |line|
-              message = JSON.parse(line)
-              message = message.symbolize_keys
-              message[:process_num] = process_num
-              @messages << message
+        @threads <<
+          Thread.new do
+            File.open("tmp/test-pipes/subprocess-#{process_num}") do |fd|
+              fd.each_line do |line|
+                message = JSON.parse(line)
+                message = message.symbolize_keys
+                message[:process_num] = process_num
+                @messages << message
+              end
             end
+
+            @messages << {type: 'exit', process_num: process_num}
           end
 
-          @messages << {type: 'exit', process_num: process_num}
-        end
+        @threads << start_copy_thread(stdout, STDOUT)
+        @threads << start_copy_thread(stderr, STDERR)
+      end
+    end
 
-        Thread.new do
-          while true
-            begin
-              msg = stdout.readpartial(4096)
-            rescue EOFError
-              break
-            else
-              STDOUT.write(msg)
-            end
-          end
-        end
-
-        Thread.new do
-          while true
-            begin
-              msg = stderr.readpartial(4096)
-            rescue EOFError
-              break
-            else
-              STDERR.write(msg)
-            end
+    def start_copy_thread(src, dst)
+      Thread.new do
+        while true
+          begin
+            msg = src.readpartial(4096)
+          rescue EOFError
+            break
+          else
+            dst.write(msg)
           end
         end
       end
