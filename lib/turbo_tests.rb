@@ -58,33 +58,54 @@ module TurboTests
     end
   end
 
-  def self.run(formatter_config, files)
-    start_time = Time.now
-    reporter = Reporter.from_config(formatter_config, start_time)
+  class Runner
+    def self.run(formatter_config, files, start_time=Time.now)
+      reporter = Reporter.from_config(formatter_config, start_time)
 
-    num_processes = ParallelTests.determine_number_of_processes(nil)
-
-    tests_in_groups =
-      ParallelTests::RSpec::Runner.tests_in_groups(
-        files,
-        num_processes,
-        group_by: :filesize
-      )
-
-    messages = Queue.new
-
-    begin
-      FileUtils.rm_r('tmp/test-pipes')
-    rescue Errno::ENOENT
+      new(reporter, files).run
     end
 
-    FileUtils.mkdir_p('tmp/test-pipes/')
+    def initialize(reporter, files)
+      @reporter = reporter
+      @files = files
+      @messages = Queue.new
+    end
 
-    tests_in_groups.each_with_index do |tests, process_num|
-      process_num += 1
+    def run
+      @num_processes = ParallelTests.determine_number_of_processes(nil)
 
+      tests_in_groups =
+        ParallelTests::RSpec::Runner.tests_in_groups(
+          @files,
+          @num_processes,
+          group_by: :filesize
+        )
+
+      setup_tmp_dir
+
+      tests_in_groups.each_with_index do |tests, process_num|
+        start_subprocess(tests, process_num + 1)
+      end
+
+      handle_messages
+
+      @reporter.finish
+    end
+
+    protected
+
+    def setup_tmp_dir
+      begin
+        FileUtils.rm_r('tmp/test-pipes')
+      rescue Errno::ENOENT
+      end
+
+      FileUtils.mkdir_p('tmp/test-pipes/')
+    end
+
+    def start_subprocess(tests, process_num)
       if tests.empty?
-        messages << {type: 'exit', process_num: process_num}
+        @messages << {type: 'exit', process_num: process_num}
       else
         begin
           File.mkfifo("tmp/test-pipes/subprocess-#{process_num}")
@@ -106,11 +127,11 @@ module TurboTests
               message = JSON.parse(line)
               message = message.symbolize_keys
               message[:process_num] = process_num
-              messages << message
+              @messages << message
             end
           end
 
-          messages << {type: 'exit', process_num: process_num}
+          @messages << {type: 'exit', process_num: process_num}
         end
 
         Thread.new do
@@ -139,40 +160,37 @@ module TurboTests
       end
     end
 
-    exited = 0
+    def handle_messages
+      exited = 0
 
-    seeds = {}
-
-    begin
-      while true
-        message = messages.pop
-        case message[:type]
-        when 'example_passed'
-          example = FakeExample.from_obj(message[:example])
-          reporter.example_passed(example)
-        when 'example_pending'
-          example = FakeExample.from_obj(message[:example])
-          reporter.example_pending(example)
-        when 'example_failed'
-          example = FakeExample.from_obj(message[:example])
-          reporter.example_failed(example)
-        when 'seed'
-          seeds[message[:process_num]] = message[:seed]
-        when 'close'
-        when 'exit'
-          exited += 1
-          if exited == num_processes
-            break
+      begin
+        while true
+          message = @messages.pop
+          case message[:type]
+          when 'example_passed'
+            example = FakeExample.from_obj(message[:example])
+            @reporter.example_passed(example)
+          when 'example_pending'
+            example = FakeExample.from_obj(message[:example])
+            @reporter.example_pending(example)
+          when 'example_failed'
+            example = FakeExample.from_obj(message[:example])
+            @reporter.example_failed(example)
+          when 'seed'
+          when 'close'
+          when 'exit'
+            exited += 1
+            if exited == @num_processes
+              break
+            end
+          else
+            STDERR.puts("Unhandled message in main process: #{message}")
           end
-        else
-          STDERR.puts("Unhandled message in main process: #{message}")
+
+          STDOUT.flush
         end
-
-        STDOUT.flush
+      rescue Interrupt
       end
-    rescue Interrupt
     end
-
-    reporter.finish
   end
 end
