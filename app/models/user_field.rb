@@ -31,4 +31,5 @@ end
 #  show_on_user_card :boolean          default(FALSE), not null
 #  external_name     :string
 #  external_type     :string
+#  icon              :string
 #

@@ -11,6 +11,10 @@
     {{input value=buffered.description class="user-field-desc" maxlength="255"}}
   {{/admin-form-row}}
 
+  {{#admin-form-row label="admin.user_fields.icon"}}
+    {{input value=buffered.icon class="user-field-icon" maxlength="255"}}
+  {{/admin-form-row}}
+
   {{#if bufferedFieldType.hasOptions}}
     {{#admin-form-row label="admin.user_fields.options"}}
       {{value-list values=buffered.options inputType="array"}}
@@ -53,5 +57,10 @@
     </div>
   </div>
   <div class="row">{{flags}}</div>
+  {{#if userField.icon}}
+  <div class="row">
+    <span>{{ d-icon userField.icon }}</span>
+  </div>
+  {{/if}}
 {{/if}}
 <div class="clearfix"></div>

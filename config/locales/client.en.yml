@@ -4079,6 +4079,7 @@ en:
         name: "Field Name"
         type: "Field Type"
         description: "Field Description"
+        icon: "Field Icon"
         save: "Save"
         edit: "Edit"
         delete: "Delete"

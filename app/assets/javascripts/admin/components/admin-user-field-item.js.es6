@@ -75,7 +75,8 @@ export default Ember.Component.extend(bufferedProperty("userField"), {
         "required",
         "show_on_profile",
         "show_on_user_card",
-        "options"
+        "options",
+        "icon"
       );
 
       this.userField

@@ -10,7 +10,8 @@ class UserFieldSerializer < ApplicationSerializer
              :show_on_profile,
              :show_on_user_card,
              :position,
-             :options
+             :options,
+             :icon
 
   def options
     object.user_field_options.pluck(:value)
