@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'csv'
+require 'zip'
 require_dependency 'system_message'
 require_dependency 'upload_creator'
 
@@ -60,11 +61,16 @@ module Jobs
       end
 
       # compress CSV file
-      system('gzip', '-5', absolute_path)
+      compressed_file_path = "#{absolute_path}.zip"
+
+      Zip::File.open(compressed_file_path, Zip::File::CREATE) do |zipfile|
+        zipfile.add(file_name, absolute_path)
+
+        zipfile.close
+      end
 
       # create upload
       upload = nil
-      compressed_file_path = "#{absolute_path}.gz"
 
       if File.exist?(compressed_file_path)
         File.open(compressed_file_path) do |file|
