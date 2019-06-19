@@ -1,4 +1,5 @@
 require 'open3'
+require 'fileutils'
 require 'json'
 require 'rspec'
 require 'rails'
@@ -156,8 +157,12 @@ module InterleavedTests
 
     messages = Queue.new
 
-    `rm -r tmp/test-pipes`
-    `mkdir -p tmp/test-pipes/`
+    begin
+      FileUtils.rm_r('tmp/test-pipes')
+    rescue Errno::ENOENT
+    end
+
+    FileUtils.mkdir_p('tmp/test-pipes/')
 
     tests_in_groups.each_with_index do |tests, process_num|
       process_num += 1
