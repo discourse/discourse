@@ -3783,7 +3783,7 @@ zh_CN:
             one_paragraph: "请限制你的欢迎私信至一段话。"
       privacy:
         title: "访问"
-        description: "<p>你的社区对所有人开发，还在是限制会员、邀请或审批？你可以随意设置为私有的然后切换到公开的。</p>"
+        description: "<p>你的社区对所有人开放，还在是限制会员、邀请或审批？你可以随意设置为私有的然后切换到公开的。</p>"
         fields:
           privacy:
             choices:
