@@ -9,8 +9,8 @@ require 'parallel_tests/rspec/runner'
 
 module InterleavedTests
   class Reporter
-    def self.from_config(formatter_config)
-      reporter = new
+    def self.from_config(formatter_config, start_time)
+      reporter = new(start_time)
 
       formatter_config.each do |config|
         name, outputs = config.values_at(:name, :outputs)
@@ -31,13 +31,13 @@ module InterleavedTests
 
     attr_reader :pending_examples
     attr_reader :failed_examples
-    attr_reader :all_examples
 
-    def initialize
+    def initialize(start_time)
       @formatters = []
       @pending_examples = []
       @failed_examples = []
       @all_examples = []
+      @start_time = start_time
     end
 
     def add(name, outputs)
@@ -74,8 +74,35 @@ module InterleavedTests
       @failed_examples << example
     end
 
-    def method_missing(method, arg)
-      delegate_to_formatters(method, arg)
+    def finish
+      end_time = Time.now
+
+      delegate_to_formatters(:start_dump,
+        RSpec::Core::Notifications::NullNotification
+      )
+      delegate_to_formatters(:dump_pending,
+        RSpec::Core::Notifications::ExamplesNotification.new(
+          self
+        )
+      )
+      delegate_to_formatters(:dump_failures,
+        RSpec::Core::Notifications::ExamplesNotification.new(
+          self
+        )
+      )
+      delegate_to_formatters(:dump_summary,
+        RSpec::Core::Notifications::SummaryNotification.new(
+          end_time - @start_time,
+          @all_examples,
+          @failed_examples,
+          @pending_examples,
+          0,
+          0
+        )
+      )
+      delegate_to_formatters(:close,
+        RSpec::Core::Notifications::NullNotification
+      )
     end
 
     protected
@@ -137,8 +164,7 @@ module InterleavedTests
 
   def self.run(formatter_config, files)
     start_time = Time.now
-
-    reporter = Reporter.from_config(formatter_config)
+    reporter = Reporter.from_config(formatter_config, start_time)
 
     num_processes = ParallelTests.determine_number_of_processes(nil)
 
@@ -251,34 +277,6 @@ module InterleavedTests
     rescue Interrupt
     end
 
-    end_time = Time.now
-
-    reporter.start_dump(
-      RSpec::Core::Notifications::NullNotification
-    )
-
-    reporter.dump_pending(
-      RSpec::Core::Notifications::ExamplesNotification.new(
-        reporter
-      )
-    )
-    reporter.dump_failures(
-      RSpec::Core::Notifications::ExamplesNotification.new(
-        reporter
-      )
-    )
-    reporter.dump_summary(
-      RSpec::Core::Notifications::SummaryNotification.new(
-        end_time - start_time,
-        reporter.all_examples,
-        reporter.failed_examples,
-        reporter.pending_examples,
-        0,
-        0
-      )
-    )
-    reporter.close(
-      RSpec::Core::Notifications::NullNotification
-    )
+    reporter.finish
   end
 end
