@@ -7,7 +7,7 @@ require 'rails'
 require 'parallel_tests'
 require 'parallel_tests/rspec/runner'
 
-module InterleavedTests
+module TurboTests
   class Reporter
     def self.from_config(formatter_config, start_time)
       reporter = new(start_time)

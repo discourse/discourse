@@ -25,7 +25,7 @@ module Autospec
         if ENV["PARALLEL_SPEC"] != '0' &&
               !specs.split.any? { |s| puts s; s =~ /\:/ } # Parallel spec can't run specific groups
 
-          "bin/interleaved_rspec #{args.join(" ")} #{specs.split.join(" ")}"
+          "bin/turbo_rspec #{args.join(" ")} #{specs.split.join(" ")}"
         else
           "bin/rspec #{args.join(" ")} #{specs.split.join(" ")}"
         end

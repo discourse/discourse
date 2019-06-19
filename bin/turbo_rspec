@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 
-require './lib/interleaved_tests'
+require './lib/turbo_tests'
 require 'optparse'
 
 requires = []
@@ -46,4 +46,4 @@ formatters.each do |formatter|
   end
 end
 
-InterleavedTests.run(formatters, ARGV)
+TurboTests.run(formatters, ARGV)
