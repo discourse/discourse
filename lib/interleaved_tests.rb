@@ -170,15 +170,14 @@ module InterleavedTests
         rescue Errno::EEXIST
         end
 
-        command = [
-          "TEST_ENV_NUMBER=#{process_num}",
-          "bundle exec rspec",
-          "-f JsonRowsFormatter",
-          "-o tmp/test-pipes/subprocess-#{process_num}",
-          tests.map(&:inspect).join(' ')
-        ].join(' ')
-
-        stdin, stdout, stderr, wait_thr = Open3.popen3(command)
+        stdin, stdout, stderr, wait_thr =
+          Open3.popen3(
+            {'TEST_ENV_NUMBER' => process_num.to_s},
+            "bundle", "exec", "rspec",
+            "-f", "JsonRowsFormatter",
+            "-o", "tmp/test-pipes/subprocess-#{process_num}",
+            *tests
+          )
 
         Thread.new do
           File.open("tmp/test-pipes/subprocess-#{process_num}") do |fd|
