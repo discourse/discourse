@@ -776,6 +776,13 @@ describe Guardian do
         PostActionCreator.create(user, first_post, :off_topic)
         expect(Guardian.new(moderator).can_see?(private_topic)).to be_truthy
       end
+
+      it "allows staff to set banner topics" do
+        topic = Fabricate(:topic)
+
+        expect(Guardian.new(admin).can_banner_topic?(nil)).to be_falsey
+        expect(Guardian.new(admin).can_banner_topic?(topic)).to be_truthy
+      end
     end
 
     describe 'a Post' do
