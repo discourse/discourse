@@ -861,7 +861,11 @@ class Search
           THEN #{SiteSetting.category_search_priority_high_weight}
           WHEN #{Searchable::PRIORITIES[:very_high]}
           THEN #{SiteSetting.category_search_priority_very_high_weight}
-          ELSE 1
+          ELSE
+            CASE WHEN topics.closed
+            THEN 0.9
+            ELSE 1
+            END
           END
         )
       )
