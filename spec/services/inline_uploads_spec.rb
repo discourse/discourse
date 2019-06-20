@@ -163,6 +163,8 @@ RSpec.describe InlineUploads do
         [img]
         #{upload2.url}
         [/img]
+
+        [img]#{upload.url}[/img][img]#{upload2.url}[/img]
         MD
 
         expect(InlineUploads.process(md)).to eq(<<~MD)
@@ -171,6 +173,8 @@ RSpec.describe InlineUploads do
         ![](#{upload3.short_url})
 
         ![](#{upload2.short_url})
+
+        ![](#{upload.short_url})![](#{upload2.short_url})
         MD
       end
 
