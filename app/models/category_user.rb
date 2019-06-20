@@ -10,10 +10,6 @@ class CategoryUser < ActiveRecord::Base
     self.where(user: user, notification_level: notification_levels[level])
   end
 
-  def self.lookup_by_category(user, category)
-    self.where(user: user, category: category)
-  end
-
   def self.notification_levels
     NotificationLevels.all
   end
