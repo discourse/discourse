@@ -264,7 +264,8 @@
                     topicClosed=model.closed
                     statusType=model.private_topic_timer.status_type
                     executeAt=model.private_topic_timer.execute_at
-                    duration=model.private_topic_timer.duration}}
+                    duration=model.private_topic_timer.duration
+                    removeTopicTimer=(action "removeTopicTimer" model.private_topic_timer.status_type "private_topic_timer")}}
               {{/if}}
 
               {{topic-timer-info
@@ -273,7 +274,8 @@
                   executeAt=model.topic_timer.execute_at
                   basedOnLastPost=model.topic_timer.based_on_last_post
                   duration=model.topic_timer.duration
-                  categoryId=model.topic_timer.category_id}}
+                  categoryId=model.topic_timer.category_id
+                  removeTopicTimer=(action "removeTopicTimer" model.topic_timer.status_type "topic_timer")}}
 
               {{#if session.showSignupCta}}
                 {{! replace "Log In to Reply" with the infobox }}
