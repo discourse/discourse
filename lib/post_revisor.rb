@@ -407,6 +407,7 @@ class PostRevisor
   end
 
   def remove_flags_and_unhide_post
+    return if @opts[:deleting_post]
     return unless editing_a_flagged_and_hidden_post?
 
     flaggers = []
