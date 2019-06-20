@@ -1,15 +1,16 @@
 import Composer from "discourse/models/composer";
 import showModal from "discourse/lib/show-modal";
-import { findTopicList } from "discourse/routes/build-topic-route";
+import {
+  filterQueryParams,
+  findTopicList
+} from "discourse/routes/build-topic-route";
+import { queryParams } from "discourse/controllers/discovery-sortable";
 import PermissionType from "discourse/models/permission-type";
 
 export default Discourse.Route.extend({
   navMode: "latest",
 
-  queryParams: {
-    ascending: { refreshModel: true },
-    order: { refreshModel: true }
-  },
+  queryParams,
 
   renderTemplate() {
     const controller = this.controllerFor("tags.show");
@@ -69,10 +70,7 @@ export default Discourse.Route.extend({
     const controller = this.controllerFor("tags.show");
     controller.set("loading", true);
 
-    const params = controller.getProperties("order", "ascending");
-    params.order = transition.to.queryParams.order || params.order;
-    params.ascending = transition.to.queryParams.ascending || params.ascending;
-
+    const params = filterQueryParams(transition.to.queryParams, {});
     const categorySlug = this.categorySlug;
     const parentCategorySlug = this.parentCategorySlug;
     const filter = this.navMode;
