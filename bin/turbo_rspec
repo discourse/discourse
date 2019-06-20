@@ -29,9 +29,7 @@ OptionParser.new do |opts|
   end
 end.parse!(ARGV)
 
-requires.each do |filename|
-  require filename
-end
+requires.each { |f| require(f) }
 
 if formatters.empty?
   formatters << {
