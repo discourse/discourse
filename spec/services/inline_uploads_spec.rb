@@ -309,6 +309,11 @@ RSpec.describe InlineUploads do
           <img src="#{upload.url}" alt="test" width="500" height="500">
         </a>
 
+        <h1></h1>
+                        <a href="http://somelink.com">
+                          <img src="#{upload2.url}" alt="test" width="500" height="500">
+                        </a>
+
         <p>
           <img src="#{upload2.url}" alt="test">
         </p>
@@ -336,6 +341,13 @@ RSpec.describe InlineUploads do
           ![test|500x500](#{upload.short_url})
 
         </a>
+
+        <h1></h1>
+                        <a href="http://somelink.com">
+
+                          ![test|500x500](#{upload2.short_url})
+
+                        </a>
 
         <p>
 
