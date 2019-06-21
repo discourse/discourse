@@ -214,7 +214,7 @@ class InlineUploads
   end
 
   def self.match_img(markdown, external_src: false)
-    markdown.scan(/(([ ]*)<(?!img)[^<>]+\/?>)?(\n*)(([ ]*)<img ([^>\n]+)>([ ]*))(\n*)/) do |match|
+    markdown.scan(/(([ ]*)<(?!img)[^<>]+\/?>)?([\r\n]*)(([ ]*)<img ([^>\n]+)>([ ]*))([\r\n]*)/) do |match|
       node = Nokogiri::HTML::fragment(match[3].strip).children[0]
       src =  node.attributes["src"]&.value
 
@@ -245,8 +245,12 @@ class InlineUploads
 
         match[3].strip! if !after_html_tag
 
-        if match[1].nil? || match[1].length < 4
-          yield(match[3], src, replacement, $~.offset(0)[0]) if block_given?
+        if (match[1].nil? || match[1].length < 4)
+          if (match[4].nil? || match[4].length < 4)
+            yield(match[3], src, replacement, $~.offset(0)[0]) if block_given?
+          else
+            yield(match[3], src, match[3].sub(src, PATH_PLACEHOLDER), $~.offset(0)[0]) if block_given?
+          end
         else
           yield(match[3], src, match[3].sub(src, PATH_PLACEHOLDER), $~.offset(0)[0]) if block_given?
         end
