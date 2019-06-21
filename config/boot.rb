@@ -49,5 +49,8 @@ if ENV['RAILS_ENV'] == "test" && ENV['TEST_ENV_NUMBER']
   ENV["DISCOURSE_REDIS_PORT"] = port.to_s
   ENV["RAILS_DB"] = "discourse_test_#{n}"
 
-  at_exit { STDERR.puts "Terminating redis #{n}"; Process.kill("SIGTERM", pid); Process.wait }
+  at_exit do
+    Process.kill("SIGTERM", pid)
+    Process.wait
+  end
 end
