@@ -184,6 +184,6 @@ end
 #
 # Indexes
 #
-#  idx_category_users_u1  (user_id,category_id,notification_level) UNIQUE
-#  idx_category_users_u2  (category_id,user_id,notification_level) UNIQUE
+#  idx_category_users_category_id_user_id  (category_id,user_id) UNIQUE
+#  idx_category_users_user_id_category_id  (user_id,category_id) UNIQUE
 #
