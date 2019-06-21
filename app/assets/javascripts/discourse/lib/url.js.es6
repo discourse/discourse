@@ -433,8 +433,6 @@ const DiscourseURL = Ember.Object.extend({
       if (discoveryTopics) {
         discoveryTopics.resetParams();
       }
-
-      router._routerMicrolib.updateURL(path);
     }
 
     const split = path.split("#");
@@ -445,7 +443,16 @@ const DiscourseURL = Ember.Object.extend({
       elementId = split[1];
     }
 
-    const transition = router.handleURL(path);
+    // The default path has a hack to allow `/` to default to defaultHomepage
+    // via BareRouter.handleUrl
+    let transition;
+    if (path === "/") {
+      router._routerMicrolib.updateURL(path);
+      transition = router.handleURL(path);
+    } else {
+      transition = router.transitionTo(path);
+    }
+
     transition._discourse_intercepted = true;
     const promise = transition.promise || transition;
     promise.then(() => jumpToElement(elementId));
