@@ -325,6 +325,10 @@ RSpec.describe InlineUploads do
                           <img src="#{upload2.url}" alt="test" width="500" height="500">
                         </a>
         MD
+
+        md = "<h1></h1>\r\n<a href=\"http://somelink.com\">\r\n        <img src=\"#{upload.url}\" alt=\"test\" width=\"500\" height=\"500\">\r\n</a>"
+
+        expect(InlineUploads.process(md)).to eq("<h1></h1>\r\n<a href=\"http://somelink.com\">\r\n        <img src=\"#{upload.short_path}\" alt=\"test\" width=\"500\" height=\"500\">\r\n</a>")
       end
 
       it "should correctly update image sources within anchor or paragraph tags" do
