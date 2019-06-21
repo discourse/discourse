@@ -359,6 +359,26 @@ describe Search do
           post.id, category.topic.first_post.id, post2.id
         ])
       end
+
+      it 'applies a small penalty to closed topic when ranking' do
+        post = Fabricate(:post,
+          raw: "My weekly update",
+          topic: Fabricate(:topic,
+            title: "A topic that will be closed",
+            closed: true
+          )
+        )
+
+        post2 = Fabricate(:post,
+          raw: "My weekly update",
+          topic: Fabricate(:topic,
+            title: "A topic that will be open"
+          )
+        )
+
+        result = Search.execute('weekly update')
+        expect(result.posts.pluck(:id)).to eq([post2.id, post.id])
+      end
     end
 
     context 'searching for quoted title' do
