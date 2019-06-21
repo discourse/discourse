@@ -22,7 +22,7 @@ module Autospec
       ]
 
       command = begin
-        if ENV["PARALLEL_SPEC"] != '0' &&
+        if ENV["PARALLEL_SPEC"] == '1' &&
               !specs.split.any? { |s| puts s; s =~ /\:/ } # Parallel spec can't run specific groups
 
           "bin/turbo_rspec #{args.join(" ")} #{specs.split.join(" ")}"
