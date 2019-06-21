@@ -32,9 +32,11 @@ class Users::OmniauthCallbacksController < ApplicationController
       @auth_result = authenticator.after_authenticate(auth, existing_account: current_user)
       if provider&.full_screen_login || cookies['fsl']
         cookies.delete('fsl')
+        DiscourseEvent.trigger(:after_auth, authenticator, @auth_result)
         return redirect_to Discourse.base_uri("/my/preferences/account")
       else
         @auth_result.authenticated = true
+        DiscourseEvent.trigger(:after_auth, authenticator, @auth_result)
         return respond_to do |format|
           format.html
           format.json { render json: @auth_result.to_client_hash }
@@ -42,8 +44,8 @@ class Users::OmniauthCallbacksController < ApplicationController
       end
     else
       @auth_result = authenticator.after_authenticate(auth)
+      DiscourseEvent.trigger(:after_auth, authenticator, @auth_result)
     end
-    DiscourseEvent.trigger(:after_auth, authenticator, @auth_result)
 
     preferred_origin = request.env['omniauth.origin']
 
