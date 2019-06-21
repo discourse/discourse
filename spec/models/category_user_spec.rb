@@ -15,20 +15,46 @@ describe CategoryUser do
     CategoryUser.notification_levels[:regular]
   end
 
-  it 'allows batch set' do
-    category1 = Fabricate(:category)
-    category2 = Fabricate(:category)
+  context '#batch_set' do
+    fab!(:category) { Fabricate(:category) }
 
-    watching = CategoryUser.where(user_id: user.id, notification_level: CategoryUser.notification_levels[:watching])
+    def category_ids_at_level(level)
+      CategoryUser.where(
+        user_id: user.id,
+        notification_level: CategoryUser.notification_levels[level]
+      ).pluck(:category_id)
+    end
 
-    CategoryUser.batch_set(user, :watching, [category1.id, category2.id])
-    expect(watching.pluck(:category_id).sort).to eq [category1.id, category2.id]
+    it "should add new records where required" do
+      CategoryUser.batch_set(user, :watching, [category.id])
 
-    CategoryUser.batch_set(user, :watching, [])
-    expect(watching.count).to eq 0
+      expect(category_ids_at_level(:watching)).to eq([category.id])
+    end
 
-    CategoryUser.batch_set(user, :watching, [category2.id])
-    expect(watching.count).to eq 1
+    it "should change existing records where required" do
+      CategoryUser.create!(
+        user_id: user.id,
+        category_id: category.id,
+        notification_level: CategoryUser.notification_levels[:muted]
+      )
+
+      CategoryUser.batch_set(user, :watching, [category.id])
+
+      expect(category_ids_at_level(:watching)).to eq([category.id])
+      expect(category_ids_at_level(:muted)).to eq([])
+    end
+
+    it "should delete extraneous records where required" do
+      CategoryUser.create!(
+        user_id: user.id,
+        category_id: category.id,
+        notification_level: CategoryUser.notification_levels[:watching]
+      )
+
+      CategoryUser.batch_set(user, :watching, [])
+
+      expect(category_ids_at_level(:watching)).to eq([])
+    end
   end
 
   it 'should correctly auto_track' do
