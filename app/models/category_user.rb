@@ -19,20 +19,31 @@ class CategoryUser < ActiveRecord::Base
   end
 
   def self.batch_set(user, level, category_ids)
-    records = CategoryUser.where(user: user, notification_level: notification_levels[level])
-    old_ids = records.pluck(:category_id)
-    changed = false
+    level_num = notification_levels[level]
+    category_ids = Category.where(id: category_ids).pluck(:id)
 
-    category_ids = Category.where('id in (?)', category_ids).pluck(:id)
+    # Update pre-existing category users
+    changed =
+      CategoryUser
+        .where(user_id: user.id, category_id: category_ids)
+        .update_all(notification_level: level_num) > 0
 
-    remove = (old_ids - category_ids)
-    if remove.present?
-      records.where('category_id in (?)', remove).destroy_all
-      changed = true
-    end
+    # Remove extraneous category users
+    changed ||=
+      CategoryUser
+        .where(user_id: user.id, notification_level: level_num)
+        .where.not(category_id: category_ids)
+        .delete_all() > 0
 
-    (category_ids - old_ids).each do |id|
-      CategoryUser.create!(user: user, category_id: id, notification_level: notification_levels[level])
+    # Create new category users
+    new_category_ids =
+      Category
+        .where(id: category_ids)
+        .where.not(id: CategoryUser.where(user_id: user.id).select(:category_id))
+        .pluck(:id)
+
+    new_category_ids.each do |id|
+      CategoryUser.create!(user: user, category_id: id, notification_level: level_num)
       changed = true
     end
 
