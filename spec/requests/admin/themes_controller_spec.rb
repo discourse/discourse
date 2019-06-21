@@ -387,4 +387,39 @@ describe Admin::ThemesController do
       expect(response.body).to eq("{}")
     end
   end
+
+  describe '#update_single_setting' do
+    let(:theme) { Fabricate(:theme) }
+
+    before do
+      theme.set_field(target: :settings, name: :yaml, value: "bg: red")
+      theme.save!
+    end
+
+    it "should update a theme setting" do
+      put "/admin/themes/#{theme.id}/setting.json", params: {
+        name: "bg",
+        value: "green"
+      }
+
+      expect(response.status).to eq(200)
+      expect(JSON.parse(response.body)["bg"]).to eq("green")
+
+      theme.reload
+      expect(theme.included_settings[:bg]).to eq("green")
+      user_history = UserHistory.last
+
+      expect(user_history.action).to eq(
+        UserHistory.actions[:change_theme_setting]
+      )
+    end
+
+    it "should clear a theme setting" do
+      put "/admin/themes/#{theme.id}/setting.json", params: { name: "bg" }
+      theme.reload
+
+      expect(response.status).to eq(200)
+      expect(theme.included_settings[:bg]).to eq("")
+    end
+  end
 end
