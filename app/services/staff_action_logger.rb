@@ -206,6 +206,18 @@ class StaffActionLogger
     ))
   end
 
+  def log_theme_setting_change(setting_name, previous_value, new_value, theme, opts = {})
+    raise Discourse::InvalidParameters.new(:theme) unless theme
+    raise Discourse::InvalidParameters.new(:setting_name) unless theme.included_settings.has_key?(setting_name)
+
+    UserHistory.create!(params(opts).merge(
+      action: UserHistory.actions[:change_theme_setting],
+      subject: "#{theme.name}: #{setting_name.to_s}",
+      previous_value: previous_value,
+      new_value: new_value
+    ))
+  end
+
   def log_site_text_change(subject, new_text = nil, old_text = nil, opts = {})
     raise Discourse::InvalidParameters.new(:subject) unless subject.present?
     UserHistory.create!(params(opts).merge(

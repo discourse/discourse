@@ -94,7 +94,8 @@ class UserHistory < ActiveRecord::Base
       embeddable_host_create: 73,
       embeddable_host_update: 74,
       embeddable_host_destroy: 75,
-      web_hook_deactivate: 76
+      web_hook_deactivate: 76,
+      change_theme_setting: 77
     )
   end
 
@@ -165,7 +166,8 @@ class UserHistory < ActiveRecord::Base
       :web_hook_deactivate,
       :embeddable_host_create,
       :embeddable_host_update,
-      :embeddable_host_destroy
+      :embeddable_host_destroy,
+      :change_theme_setting
     ]
   end
 
