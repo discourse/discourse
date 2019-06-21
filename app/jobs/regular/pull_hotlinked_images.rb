@@ -94,9 +94,17 @@ module Jobs
 
               replace_raw = ->(match, match_src, replacement, _index) {
                 if src.include?(match_src)
+
+                  replacement =
+                    if replacement.include?(InlineUploads::PLACEHOLDER)
+                      replacement.sub(InlineUploads::PLACEHOLDER, upload.short_url)
+                    elsif replacement.include?(InlineUploads::PATH_PLACEHOLDER)
+                      replacement.sub(InlineUploads::PATH_PLACEHOLDER, upload.short_path)
+                    end
+
                   raw = raw.gsub(
                     match,
-                    replacement.sub(InlineUploads::PLACEHOLDER, upload.short_url)
+                    replacement
                   )
                 end
               }
