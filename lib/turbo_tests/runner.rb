@@ -1,6 +1,8 @@
+# frozen_string_literal: true
+
 module TurboTests
   class Runner
-    def self.run(formatter_config, files, start_time=Time.now)
+    def self.run(formatter_config, files, start_time = Time.now)
       reporter = Reporter.from_config(formatter_config, start_time)
 
       new(reporter, files).run
@@ -49,16 +51,19 @@ module TurboTests
 
     def start_subprocess(tests, process_num)
       if tests.empty?
-        @messages << {type: 'exit', process_num: process_num}
+        @messages << {
+          type: 'exit',
+          process_num: process_num
+        }
       else
         begin
           File.mkfifo("tmp/test-pipes/subprocess-#{process_num}")
         rescue Errno::EEXIST
         end
 
-        stdin, stdout, stderr, wait_thr =
+        _stdin, stdout, stderr, _wait_thr =
           Open3.popen3(
-            {'TEST_ENV_NUMBER' => process_num.to_s},
+            { 'TEST_ENV_NUMBER' => process_num.to_s },
             "bundle", "exec", "rspec",
             "-f", "TurboTests::JsonRowsFormatter",
             "-o", "tmp/test-pipes/subprocess-#{process_num}",
@@ -76,7 +81,7 @@ module TurboTests
               end
             end
 
-            @messages << {type: 'exit', process_num: process_num}
+            @messages << { type: 'exit', process_num: process_num }
           end
 
         @threads << start_copy_thread(stdout, STDOUT)

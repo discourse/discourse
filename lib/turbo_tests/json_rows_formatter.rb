@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module TurboTests
   # An RSpec formatter used for each subprocess during parallel test execution
   class JsonRowsFormatter
@@ -50,37 +52,37 @@ module TurboTests
     end
 
     def example_passed(notification)
-      output_row({
+      output_row(
         type: :example_passed,
         example: example_to_json(notification.example)
-      })
+      )
     end
 
     def example_pending(notification)
-      output_row({
+      output_row(
         type: :example_pending,
         example: example_to_json(notification.example)
-      })
+      )
     end
 
     def example_failed(notification)
-      output_row({
+      output_row(
         type: :example_failed,
         example: example_to_json(notification.example)
-      })
+      )
     end
 
     def seed(notification)
-      output_row({
+      output_row(
         type: :seed,
         seed: notification.seed,
-      })
+      )
     end
 
     def close(notification)
-      output_row({
+      output_row(
         type: :close,
-      })
+      )
     end
 
     private

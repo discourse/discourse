@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module TurboTests
   class Reporter
     def self.from_config(formatter_config, start_time)
