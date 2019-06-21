@@ -377,21 +377,34 @@ module Discourse
     $redis.get(PG_READONLY_MODE_KEY).present?
   end
 
-  def self.last_read_only
-    @last_read_only ||= DistributedCache.new('last_read_only', namespace: false)
+  # Shared between processes
+  def self.postgres_last_read_only
+    @postgres_last_read_only ||= DistributedCache.new('postgres_last_read_only', namespace: false)
+  end
+
+  # Per-process
+  def self.redis_last_read_only
+    @redis_last_read_only ||= {}
   end
 
   def self.recently_readonly?
-    read_only = last_read_only[$redis.namespace]
-    read_only.present? && read_only > 15.seconds.ago
+    postgres_read_only = postgres_last_read_only[$redis.namespace]
+    redis_read_only = redis_last_read_only[$redis.namespace]
+
+    (redis_read_only.present? && redis_read_only > 15.seconds.ago) ||
+      (postgres_read_only.present? && postgres_read_only > 15.seconds.ago)
   end
 
-  def self.received_readonly!
-    last_read_only[$redis.namespace] = Time.zone.now
+  def self.received_postgres_readonly!
+    postgres_last_read_only[$redis.namespace] = Time.zone.now
+  end
+
+  def self.received_redis_readonly!
+    redis_last_read_only[$redis.namespace] = Time.zone.now
   end
 
   def self.clear_readonly!
-    last_read_only[$redis.namespace] = nil
+    postgres_last_read_only[$redis.namespace] = redis_last_read_only[$redis.namespace] = nil
     Site.clear_anon_cache!
     true
   end
@@ -667,7 +680,11 @@ module Discourse
 
     if !$redis.without_namespace.get(redis_key)
       Rails.logger.warn(warning)
-      $redis.without_namespace.setex(redis_key, 3600, "x")
+      begin
+        $redis.without_namespace.setex(redis_key, 3600, "x")
+      rescue Redis::CommandError => e
+        raise unless e.message =~ /READONLY/
+      end
     end
     warning
   end
