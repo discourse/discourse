@@ -148,6 +148,23 @@ describe Category do
 
     end
 
+    it "topic_create_allowed does not include 'uncategorized' if allow_uncategorized_topics is disabled" do
+      SiteSetting.allow_uncategorized_topics = false
+
+      _default_category = Fabricate(:category)
+      can_read_category = Fabricate(:category)
+
+      user = Fabricate(:user)
+      group = Fabricate(:group)
+      group.add(user)
+      group.save
+
+      can_read_category.set_permissions(group => :readonly)
+      can_read_category.save
+
+      expect(Category.topic_create_allowed(Guardian.new(user)).count).to be(1)
+      expect(Category.topic_create_allowed(Guardian.new(nil)).count).to be(0)
+    end
   end
 
   describe "security" do

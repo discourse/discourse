@@ -1137,6 +1137,7 @@ RSpec.describe TopicsController do
 
         context "allow_uncategorized_topics is false" do
           before do
+            sign_in(moderator)
             SiteSetting.allow_uncategorized_topics = false
           end
 
