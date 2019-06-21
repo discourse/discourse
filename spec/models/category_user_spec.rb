@@ -5,6 +5,7 @@ require 'rails_helper'
 require_dependency 'post_creator'
 
 describe CategoryUser do
+  fab!(:user) { Fabricate(:user) }
 
   def tracking
     CategoryUser.notification_levels[:tracking]
@@ -15,7 +16,6 @@ describe CategoryUser do
   end
 
   it 'allows batch set' do
-    user = Fabricate(:user)
     category1 = Fabricate(:category)
     category2 = Fabricate(:category)
 
@@ -33,7 +33,6 @@ describe CategoryUser do
 
   it 'should correctly auto_track' do
     tracking_user = Fabricate(:user)
-    user = Fabricate(:user)
     topic = Fabricate(:post).topic
 
     TopicUser.change(user.id, topic.id, total_msecs_viewed: 10)
@@ -48,7 +47,6 @@ describe CategoryUser do
 
   it 'allows updating notification level' do
     category = Fabricate(:category)
-    user = Fabricate(:user)
 
     CategoryUser.set_notification_level_for_category(user,
                                                      NotificationLevels.all[:watching_first_post],
@@ -78,8 +76,6 @@ describe CategoryUser do
       muted_category = Fabricate(:category)
       tracked_category = Fabricate(:category)
 
-      user = Fabricate(:user)
-
       early_watched_post = create_post(category: watched_category)
 
       CategoryUser.create!(user: user, category: watched_category, notification_level: CategoryUser.notification_levels[:watching])
@@ -104,8 +100,6 @@ describe CategoryUser do
     end
 
     it "topics that move to a tracked category should auto track" do
-      user = Fabricate(:user)
-
       first_post = create_post
       tracked_category = first_post.topic.category
 
@@ -120,7 +114,6 @@ describe CategoryUser do
     end
 
     it "unwatches categories that have been changed" do
-      user = Fabricate(:user)
       watched_category = Fabricate(:category)
       CategoryUser.create!(user: user, category: watched_category, notification_level: CategoryUser.notification_levels[:watching])
 
@@ -141,7 +134,6 @@ describe CategoryUser do
       # this is done so as to maintain topic notification state when topic category is changed and the new category has same notification level for the user
       # see: https://meta.discourse.org/t/changing-topic-from-one-watched-category-to-another-watched-category-makes-topic-new-again/36517/15
 
-      user = Fabricate(:user)
       watched_category_1 = Fabricate(:category)
       watched_category_2 = Fabricate(:category)
       category_3 = Fabricate(:category)
@@ -167,7 +159,6 @@ describe CategoryUser do
     end
 
     it "deletes TopicUser record when topic category is changed, and new category has different notification level" do
-      user = Fabricate(:user)
       watched_category = Fabricate(:category)
       tracked_category = Fabricate(:category)
       CategoryUser.create!(user: user, category: watched_category, notification_level: CategoryUser.notification_levels[:watching])
@@ -183,7 +174,6 @@ describe CategoryUser do
     end
 
     it "is destroyed when a user is deleted" do
-      user = Fabricate(:user)
       category = Fabricate(:category)
 
       CategoryUser.create!(user: user, category: category, notification_level: CategoryUser.notification_levels[:watching])
