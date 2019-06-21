@@ -303,16 +303,35 @@ RSpec.describe InlineUploads do
         MD
       end
 
+      it "should correctly update images sources within anchor tags with indentation" do
+        md = <<~MD
+        <h1></h1>
+                        <a href="http://somelink.com">
+                          <img src="#{upload2.url}" alt="test" width="500" height="500">
+                        </a>
+
+                        <a href="http://somelink.com">
+                          <img src="#{upload2.url}" alt="test" width="500" height="500">
+                        </a>
+        MD
+
+        expect(InlineUploads.process(md)).to eq(<<~MD)
+        <h1></h1>
+                        <a href="http://somelink.com">
+                          <img src="#{upload2.short_path}" alt="test" width="500" height="500">
+                        </a>
+
+                        <a href="http://somelink.com">
+                          <img src="#{upload2.url}" alt="test" width="500" height="500">
+                        </a>
+        MD
+      end
+
       it "should correctly update image sources within anchor or paragraph tags" do
         md = <<~MD
         <a href="http://somelink.com">
           <img src="#{upload.url}" alt="test" width="500" height="500">
         </a>
-
-        <h1></h1>
-                        <a href="http://somelink.com">
-                          <img src="#{upload2.url}" alt="test" width="500" height="500">
-                        </a>
 
         <p>
           <img src="#{upload2.url}" alt="test">
@@ -341,13 +360,6 @@ RSpec.describe InlineUploads do
           ![test|500x500](#{upload.short_url})
 
         </a>
-
-        <h1></h1>
-                        <a href="http://somelink.com">
-
-                          ![test|500x500](#{upload2.short_url})
-
-                        </a>
 
         <p>
 
