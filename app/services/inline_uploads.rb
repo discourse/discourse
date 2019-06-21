@@ -228,7 +228,7 @@ class InlineUploads
 
         spaces_before =
           if after_html_tag && !match[0].end_with?("/>")
-            (match[3].present? ? match[3] : "  ")
+            (match[3].length > 0 ? match[3] : "  ")
           else
             ""
           end
