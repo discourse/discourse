@@ -1,4 +1,5 @@
 #!/usr/bin/env ruby
+# frozen_string_literal: true
 
 require './lib/turbo_tests'
 require 'optparse'
@@ -44,4 +45,4 @@ formatters.each do |formatter|
   end
 end
 
-TurboTests::Runner.run(formatters, ARGV)
+TurboTests::Runner.run(formatters, ARGV.empty? ? ["spec"] : ARGV)
