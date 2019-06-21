@@ -274,7 +274,9 @@ class Admin::ThemesController < Admin::AdminController
     @theme.save
 
     log_theme_setting_change(setting_name, previous_value, new_value)
-    render json: {}, status: :ok
+
+    updated_setting = @theme.included_settings.select { |key, val| key == setting_name }
+    render json: updated_setting, status: :ok
   end
 
   private

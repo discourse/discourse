@@ -209,7 +209,7 @@ Discourse::Application.routes.draw do
     post "themes/generate_key_pair" => "themes#generate_key_pair"
     get "themes/:id/preview" => "themes#preview"
     get "themes/:id/diff_local_changes" => "themes#diff_local_changes"
-    post "themes/:id/setting" => "themes#update_single_setting"
+    put "themes/:id/setting" => "themes#update_single_setting"
 
     scope "/customize", constraints: AdminConstraint.new do
       resources :user_fields, constraints: AdminConstraint.new

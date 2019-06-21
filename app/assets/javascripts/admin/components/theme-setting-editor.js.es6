@@ -7,7 +7,7 @@ export default Ember.Component.extend(BufferedContent, SettingComponent, {
   layoutName: "admin/templates/components/site-setting",
   _save() {
     return ajax(`/admin/themes/${this.model.id}/setting`, {
-      type: "POST",
+      type: "PUT",
       data: {
         name: this.setting.setting,
         value: this.get("buffered.value")

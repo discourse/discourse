@@ -397,12 +397,14 @@ describe Admin::ThemesController do
     end
 
     it "should update a theme setting" do
-      post "/admin/themes/#{theme.id}/setting.json", params: {
+      put "/admin/themes/#{theme.id}/setting.json", params: {
         name: "bg",
         value: "green"
       }
 
       expect(response.status).to eq(200)
+      expect(JSON.parse(response.body)["bg"]).to eq("green")
+
       theme.reload
       expect(theme.included_settings[:bg]).to eq("green")
       user_history = UserHistory.last
@@ -413,7 +415,7 @@ describe Admin::ThemesController do
     end
 
     it "should clear a theme setting" do
-      post "/admin/themes/#{theme.id}/setting.json", params: { name: "bg" }
+      put "/admin/themes/#{theme.id}/setting.json", params: { name: "bg" }
       theme.reload
 
       expect(response.status).to eq(200)
