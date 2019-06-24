@@ -184,7 +184,7 @@ GEM
     mini_portile2 (2.4.0)
     mini_racer (0.2.6)
       libv8 (>= 6.9.411)
-    mini_scheduler (0.9.2)
+    mini_scheduler (0.11.0)
       sidekiq
     mini_sql (0.2.2)
     mini_suffix (0.3.0)
