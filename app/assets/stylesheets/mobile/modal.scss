@@ -8,6 +8,7 @@
   margin-top: 10%;
   max-width: 100%;
   margin-bottom: 30px; // For iOS Safari issues
+  height: auto; // For hidden social login issue
 }
 
 // Hardcode to be the same as before for now. I would recommend not using bootbox, or finding a way so the html structure can be the same
