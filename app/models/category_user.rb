@@ -38,7 +38,7 @@ class CategoryUser < ActiveRecord::Base
       CategoryUser
         .where(user_id: user.id, notification_level: level_num)
         .where.not(category_id: category_ids)
-        .delete_all() > 0
+        .delete_all > 0
 
     # Create new category users
     unless category_ids.empty?
