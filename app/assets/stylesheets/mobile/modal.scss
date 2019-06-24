@@ -5,7 +5,6 @@
 }
 
 .modal-middle-container {
-  margin-top: 10%;
   max-width: 100%;
   margin-bottom: 30px; // For iOS Safari issues
 }
@@ -98,4 +97,16 @@
 
 .modal-inner-container {
   margin-bottom: 20px;
+}
+
+/* fix for tall modals */
+
+.fixed-modal {
+  .modal-middle-container {
+    margin-bottom: 0;
+  }
+  .modal-inner-container {
+    max-height: 90vh;
+    overflow: auto;
+  }
 }
