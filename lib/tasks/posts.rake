@@ -434,11 +434,7 @@ def missing_uploads
     end
 
     if file_path.present?
-      tmp = Tempfile.new
-      tmp.write(File.read(file_path))
-      tmp.rewind
-
-      if upload = UploadCreator.new(tmp, File.basename(path)).create_for(Discourse.system_user.id)
+      if upload = UploadCreator.new(File.open(file_path), File.basename(path)).create_for(Discourse.system_user.id)
         upload_id = upload.id
         DbHelper.remap(UrlHelper.absolute(src), upload.url)
 
@@ -451,8 +447,6 @@ def missing_uploads
           post.rebake!
         end
       end
-
-      FileUtils.rm(tmp, force: true)
     else
       old_scheme_upload_count += 1
     end
