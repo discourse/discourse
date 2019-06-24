@@ -1,38 +1,43 @@
 <div class="future-date-input">
   <div class="control-group">
-    <label>{{displayLabel}}</label>
+    <label>
+      {{displayLabel}}
+    </label>
     {{future-date-input-selector
-        minimumResultsForSearch=-1
-        statusType=statusType
-        value=selection
-        input=input
-        includeDateTime=includeDateTime
-        includeWeekend=includeWeekend
-        includeFarFuture=includeFarFuture
-        includeMidFuture=includeMidFuture
-        clearable=clearable
-        none="topic.auto_update_input.none"}}
+      minimumResultsForSearch=-1
+      statusType=statusType
+      value=selection
+      input=input
+      includeDateTime=includeDateTime
+      includeWeekend=includeWeekend
+      includeFarFuture=includeFarFuture
+      includeMidFuture=includeMidFuture
+      clearable=clearable
+      none="topic.auto_update_input.none"
+    }}
   </div>
-
   {{#if displayDateAndTimePicker}}
     <div class="control-group">
-      {{d-icon "calendar-alt"}} {{date-picker-future value=date defaultDate=date}}
+      {{d-icon "calendar-alt"}}
+      {{date-picker-future value=date defaultDate=date}}
     </div>
-
     <div class="control-group">
       {{d-icon "far-clock"}}
-      {{input placeholder="--:--" type="time" value=time disabled=timeInputDisabled}}
+      {{input
+        placeholder="--:--"
+        type="time"
+        value=time
+        disabled=timeInputDisabled
+      }}
     </div>
   {{/if}}
-
   {{#if isBasedOnLastPost}}
     <div class="control-group">
       <label>
-        {{i18n 'topic.topic_status_update.num_of_hours'}}
+        {{i18n "topic.topic_status_update.num_of_hours"}}
         {{text-field value=input type="number"}}
       </label>
     </div>
-
     {{#if willCloseImmediately}}
       <div class="warning">
         {{d-icon "warning"}}
@@ -40,15 +45,15 @@
       </div>
     {{/if}}
   {{/if}}
-
   {{#if showTopicStatusInfo}}
     <div class="alert alert-info">
       {{topic-timer-info
-          statusType=statusType
-          executeAt=executeAt
-          basedOnLastPost=basedOnLastPost
-          duration=duration
-          categoryId=categoryId}}
+        statusType=statusType
+        executeAt=executeAt
+        basedOnLastPost=basedOnLastPost
+        duration=duration
+        categoryId=categoryId
+      }}
     </div>
   {{/if}}
 </div>

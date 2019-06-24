@@ -1,58 +1,99 @@
 <div class="control-group category-notifications">
-  <label class="control-label">{{i18n 'user.categories_settings'}}</label>
-
+  <label class="control-label">
+    {{i18n "user.categories_settings"}}
+  </label>
   <div class="controls tracking-controls">
-    <label>{{d-icon "d-watching"}} {{i18n 'user.watched_categories'}}</label>
-    {{category-selector categories=model.watchedCategories blacklist=selectedCategories}}
+    <label>
+      {{d-icon "d-watching"}}
+      {{i18n "user.watched_categories"}}
+    </label>
+    {{category-selector
+      categories=model.watchedCategories
+      blacklist=selectedCategories
+    }}
   </div>
-  <div class="instructions">{{i18n 'user.watched_categories_instructions'}}</div>
+  <div class="instructions">
+    {{i18n "user.watched_categories_instructions"}}
+  </div>
   {{#if canSee}}
     <div class="controls">
-      <a href="{{unbound model.watchingTopicsPath}}">{{i18n 'user.watched_topics_link'}}</a>
+      <a href="{{unbound model.watchingTopicsPath}}">
+        {{i18n "user.watched_topics_link"}}
+      </a>
     </div>
   {{/if}}
-
   <div class="controls tracking-controls">
-    <label>{{d-icon "d-tracking"}} {{i18n 'user.tracked_categories'}}</label>
-    {{category-selector categories=model.trackedCategories blacklist=selectedCategories}}
+    <label>
+      {{d-icon "d-tracking"}}
+      {{i18n "user.tracked_categories"}}
+    </label>
+    {{category-selector
+      categories=model.trackedCategories
+      blacklist=selectedCategories
+    }}
   </div>
-  <div class="instructions">{{i18n 'user.tracked_categories_instructions'}}</div>
+  <div class="instructions">
+    {{i18n "user.tracked_categories_instructions"}}
+  </div>
   {{#if canSee}}
     <div class="controls">
-      <a href="{{unbound model.trackingTopicsPath}}">{{i18n 'user.tracked_topics_link'}}</a>
+      <a href="{{unbound model.trackingTopicsPath}}">
+        {{i18n "user.tracked_topics_link"}}
+      </a>
     </div>
   {{/if}}
-
   <div class="controls tracking-controls">
-    <label>{{d-icon "d-watching-first"}} {{i18n 'user.watched_first_post_categories'}}</label>
-    {{category-selector categories=model.watchedFirstPostCategories blacklist=selectedCategories}}
+    <label>
+      {{d-icon "d-watching-first"}}
+      {{i18n "user.watched_first_post_categories"}}
+    </label>
+    {{category-selector
+      categories=model.watchedFirstPostCategories
+      blacklist=selectedCategories
+    }}
   </div>
-  <div class="instructions">{{i18n 'user.watched_first_post_categories_instructions'}}</div>
-
+  <div class="instructions">
+    {{i18n "user.watched_first_post_categories_instructions"}}
+  </div>
   <div class="controls tracking-controls">
-    <label>{{d-icon "d-muted"}} {{i18n 'user.muted_categories'}}</label>
-    {{category-selector categories=model.mutedCategories blacklist=selectedCategories}}
+    <label>
+      {{d-icon "d-muted"}}
+      {{i18n "user.muted_categories"}}
+    </label>
+    {{category-selector
+      categories=model.mutedCategories
+      blacklist=selectedCategories
+    }}
   </div>
-  <div class="instructions">{{i18n (if hideMutedTags 'user.muted_categories_instructions' 'user.muted_categories_instructions_dont_hide')}}</div>
+  <div class="instructions">
+    {{i18n
+      (if
+        hideMutedTags
+        "user.muted_categories_instructions"
+        "user.muted_categories_instructions_dont_hide"
+      )
+    }}
+  </div>
   {{#if canSee}}
     <div class="controls">
-      <a href="{{unbound model.mutedTopicsPath}}">{{i18n 'user.muted_topics_link'}}</a>
+      <a href="{{unbound model.mutedTopicsPath}}">
+        {{i18n "user.muted_topics_link"}}
+      </a>
     </div>
   {{/if}}
 </div>
-
-{{plugin-outlet name="user-preferences-categories" args=(hash model=model save=(action "save"))}}
-
-<br/>
-
+{{plugin-outlet
+  name="user-preferences-categories"
+  args=(hash model=model save=(action "save"))
+}}
+<br />
 {{plugin-outlet name="user-custom-controls" args=(hash model=model)}}
-
 {{#if canSave}}
-<div class="control-group save-button">
-  <div class="controls">
-    {{partial 'user/preferences/save-button'}}
+  <div class="control-group save-button">
+    <div class="controls">
+      {{partial "user/preferences/save-button"}}
+    </div>
   </div>
-</div>
 {{else}}
-  {{i18n 'user.no_category_access'}}
+  {{i18n "user.no_category_access"}}
 {{/if}}

@@ -1,26 +1,38 @@
 <section class="field">
-  <label for="category-allowed-tags">{{i18n 'category.tags_allowed_tags'}}</label>
+  <label for="category-allowed-tags">
+    {{i18n "category.tags_allowed_tags"}}
+  </label>
   {{tag-chooser
     id="category-allowed-tags"
     filterPlaceholder="category.tags_placeholder"
     tags=category.allowed_tags
     everyTag=true
-    unlimitedTagCount=true}}
-    </section>
-
-<section class="field">
-  <label for="category-allowed-tag-groups">{{i18n 'category.tags_allowed_tag_groups'}}</label>
-  {{tag-group-chooser id="category-allowed-tag-groups" tagGroups=category.allowed_tag_groups}}
-  {{#link-to 'tagGroups'}}{{i18n 'category.manage_tag_groups_link'}}{{/link-to}}
+    unlimitedTagCount=true
+  }}
 </section>
-
-<section class='field'>
+<section class="field">
+  <label for="category-allowed-tag-groups">
+    {{i18n "category.tags_allowed_tag_groups"}}
+  </label>
+  {{tag-group-chooser
+    id="category-allowed-tag-groups"
+    tagGroups=category.allowed_tag_groups
+  }}
+  {{#link-to "tagGroups"}}
+    {{i18n "category.manage_tag_groups_link"}}
+  {{/link-to}}
+</section>
+<section class="field">
   <label>
-    {{input type="checkbox" checked=category.allow_global_tags id="allow_global_tags" disabled=disableAllowGlobalTags}}
-    {{i18n 'category.allow_global_tags_label'}}
+    {{input
+      type="checkbox"
+      checked=category.allow_global_tags
+      id="allow_global_tags"
+      disabled=disableAllowGlobalTags
+    }}
+    {{i18n "category.allow_global_tags_label"}}
   </label>
 </section>
-
-<section class='field'>
-  {{i18n 'category.tags_tab_description'}}
+<section class="field">
+  {{i18n "category.tags_tab_description"}}
 </section>

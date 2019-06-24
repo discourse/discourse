@@ -3,7 +3,9 @@
     {{#each model as |post|}}
       {{group-post post=post class="user-stream-item item"}}
     {{else}}
-      <div>{{i18n emptyText}}</div>
+      <div>
+        {{i18n emptyText}}
+      </div>
     {{/each}}
   </div>
   {{conditional-loading-spinner condition=loading}}

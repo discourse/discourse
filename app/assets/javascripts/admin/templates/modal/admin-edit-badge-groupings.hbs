@@ -1,4 +1,7 @@
-{{#d-modal-body title="admin.badges.badge_groupings.modal_title" class="badge-groupings-modal"}}
+{{#d-modal-body
+  title="admin.badges.badge_groupings.modal_title"
+  class="badge-groupings-modal"
+}}
   <div class="badge-groupings">
     <ul class="badge-groupings-list">
       {{#each workingCopy as |wc|}}
@@ -8,14 +11,24 @@
               {{input value=wc.name class="badge-grouping-name-input"}}
               {{d-button action=(action "save" wc) icon="check"}}
             {{else}}
-              <span>{{wc.displayName}}</span>
+              <span>
+                {{wc.displayName}}
+              </span>
             {{/if}}
           </div>
           <div class="actions">
-            {{d-button action=(action "edit" wc) disabled=wc.system icon="pencil-alt"}}
+            {{d-button
+              action=(action "edit" wc)
+              disabled=wc.system
+              icon="pencil-alt"
+            }}
             {{d-button action=(action "up" wc) icon="chevron-up"}}
             {{d-button action=(action "down" wc) icon="chevron-down"}}
-            {{d-button action=(action "delete" wc) disabled=wc.system icon="times"}}
+            {{d-button
+              action=(action "delete" wc)
+              disabled=wc.system
+              icon="times"
+            }}
           </div>
         </li>
       {{/each}}
@@ -23,12 +36,12 @@
   </div>
   {{d-button action=(action "add") label="admin.badges.new"}}
 {{/d-modal-body}}
-
 <div class="modal-footer">
   {{d-button
     action=(action "saveAll")
     label="admin.badges.save"
     class="btn-primary"
-    disabled=submitDisabled}}
+    disabled=submitDisabled
+  }}
   {{d-modal-cancel close=(route-action "closeModal")}}
 </div>

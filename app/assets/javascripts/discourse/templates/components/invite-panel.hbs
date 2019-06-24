@@ -1,16 +1,18 @@
 {{#if inviteModel.error}}
   <div class="alert alert-error">
-    <button class="close" data-dismiss="alert">×</button>
+    <button class="close" data-dismiss="alert">
+      ×
+    </button>
     <div class="error-message">
       {{{errorMessage}}}
     </div>
   </div>
 {{/if}}
-
 <div class="body">
   {{#if inviteModel.finished}}
     {{#if inviteModel.inviteLink}}
-      {{generated-invite-link link=inviteModel.inviteLink email=emailOrUsername}}
+      {{generated-invite-link link=inviteModel.inviteLink email=emailOrUsername
+      }}
     {{else}}
       <div class="success-message">
         {{{successMessage}}}
@@ -18,7 +20,9 @@
     {{/if}}
   {{else}}
     <div class="invite-user-control">
-      <label class="instructions">{{inviteInstructions}}</label>
+      <label class="instructions">
+        {{inviteInstructions}}
+      </label>
       {{#if allowExistingMembers}}
         {{user-selector
           fullWidthWrap=true
@@ -31,15 +35,16 @@
           placeholderKey=placeholderKey
           allowEmails=true
           class="invite-user-input"
-          autocomplete="discourse"}}
+          autocomplete="discourse"
+        }}
       {{else}}
         {{text-field
           class="email-or-username-input"
           value=emailOrUsername
-          placeholderKey="topic.invite_reply.email_placeholder"}}
+          placeholderKey="topic.invite_reply.email_placeholder"
+        }}
       {{/if}}
     </div>
-
     {{#if showGroups}}
       <div class="group-access-control">
         <label class="instructions {{showGroupsClass}}">
@@ -49,17 +54,18 @@
           fullWidthWrap=true
           groupFinder=groupFinder
           groupNames=inviteModel.groupNames
-          placeholderKey="topic.invite_private.group_name"}}
+          placeholderKey="topic.invite_private.group_name"
+        }}
       </div>
     {{/if}}
-
     {{#if showCustomMessage}}
       <div class="show-custom-message-control">
         <label class="instructions">
           {{discourse-linked-text
             class="optional"
             action=(action "showCustomMessageBox")
-            text="invite.custom_message"}}
+            text="invite.custom_message"
+          }}
         </label>
         {{#if hasCustomMessage}}
           {{textarea value=customMessage placeholder=customMessagePlaceholder}}
@@ -68,27 +74,29 @@
     {{/if}}
   {{/if}}
 </div>
-
 <div class="footer">
   {{#if inviteModel.finished}}
     {{d-button
       class="btn-primary"
       action=(route-action "closeModal")
-      label="close"}}
+      label="close"
+    }}
   {{else}}
     {{d-button
       icon=inviteIcon
       action=(action "createInvite")
       class="btn-primary send-invite"
       disabled=disabled
-      label=buttonTitle}}
+      label=buttonTitle
+    }}
     {{#if showCopyInviteButton}}
       {{d-button
         icon="link"
         action=(action "generateInvitelink")
         class="btn-primary generate-invite-link"
         disabled=disabledCopyLink
-        label="user.invited.generate_link"}}
+        label="user.invited.generate_link"
+      }}
     {{/if}}
   {{/if}}
 </div>

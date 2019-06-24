@@ -1,26 +1,50 @@
-<div class='emoji'>
-  <h2>{{i18n 'admin.emoji.title'}}</h2>
-
-  <p class="desc">{{i18n 'admin.emoji.help'}}</p>
-
-  <p>{{emoji-uploader done=(action "emojiUploaded")}}</p>
-
+<div class="emoji">
+  <h2>
+    {{i18n "admin.emoji.title"}}
+  </h2>
+  <p class="desc">
+    {{i18n "admin.emoji.help"}}
+  </p>
+  <p>
+    {{emoji-uploader done=(action "emojiUploaded")}}
+  </p>
   {{#if sortedEmojis}}
     <div>
       <table id="custom_emoji">
         <thead>
           <tr>
-            <th>{{i18n "admin.emoji.image"}}</th>
-            <th>{{i18n "admin.emoji.name"}}</th>
+            <th>
+              {{i18n "admin.emoji.image"}}
+            </th>
+            <th>
+              {{i18n "admin.emoji.name"}}
+            </th>
             <th></th>
           </tr>
         </thead>
         <tbody>
           {{#each sortedEmojis as |e|}}
             <tr>
-              <th><img class="emoji emoji-custom" src="{{unbound e.url}}" title="{{unbound e.name}}"></th>
-              <th>:{{e.name}}:</th>
-              <th><button {{action "destroy" e}} class='btn btn-danger no-text pull-right'>{{d-icon "far-trash-alt"}} </button></th>
+              <th>
+                <img
+                  class="emoji emoji-custom"
+                  src="{{unbound e.url}}"
+                  title="{{unbound e.name}}"
+                />
+              </th>
+              <th>
+                :
+                {{e.name}}
+                :
+              </th>
+              <th>
+                <button
+                  class="btn btn-danger no-text pull-right"
+                  {{action "destroy" e}}
+                >
+                  {{d-icon "far-trash-alt"}}
+                </button>
+              </th>
             </tr>
           {{/each}}
         </tbody>

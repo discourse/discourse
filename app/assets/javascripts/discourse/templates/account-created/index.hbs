@@ -1,7 +1,9 @@
-<div class='ac-message'>
+<div class="ac-message">
   {{{accountCreated.message}}}
 </div>
 {{#if accountCreated.show_controls}}
-  {{activation-controls sendActivationEmail=(action "sendActivationEmail")
-                        editActivationEmail=(action "editActivationEmail")}}
+  {{activation-controls
+    sendActivationEmail=(action "sendActivationEmail")
+    editActivationEmail=(action "editActivationEmail")
+  }}
 {{/if}}

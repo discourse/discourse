@@ -5,16 +5,16 @@
         {{result.message}}
       </div>
     {{/if}}
-
     {{#if result.invalidUsers}}
       <div class="alert alert-error">
         {{i18n "admin.groups.bulk_add.complete_users_not_added"}}
         {{result.invalidUsers}}
       </div>
     {{/if}}
-
     <div class="">
-      <a {{action 'cancel'}}>{{i18n 'cancel'}}</a>
+      <a {{action "cancel"}}>
+        {{i18n "cancel"}}
+      </a>
     </div>
   {{else}}
     <form class="form-vertical group-bulk-add">
@@ -22,17 +22,17 @@
         <label class="control-label">
           {{i18n "admin.groups.bulk_add.paste"}}
         </label>
-
         {{textarea value=input}}
       </div>
     </form>
   {{/if}}
 {{/d-modal-body}}
-
 <div class="modal-footer">
-  {{d-button action=(action "add")
-      class="add btn-primary"
-      icon="plus"
-      disabled=disableAddButton
-      label="groups.add"}}
+  {{d-button
+    action=(action "add")
+    class="add btn-primary"
+    icon="plus"
+    disabled=disableAddButton
+    label="groups.add"
+  }}
 </div>

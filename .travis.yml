@@ -25,10 +25,10 @@ addons:
   apt:
     update: true
     packages:
-    - gifsicle
-    - jpegoptim
-    - optipng
-    - jhead
+      - gifsicle
+      - jpegoptim
+      - optipng
+      - jhead
 
 matrix:
   fast_finish: true
@@ -75,7 +75,8 @@ script:
     bash -c "
       if [ '$RUN_LINT' == '1' ]; then
         bundle exec rubocop --parallel && \
-        yarn prettier --list-different "app/assets/stylesheets/**/*.scss" "app/assets/javascripts/**/*.es6" "test/javascripts/**/*.es6"
+        yarn prettier --list-different 'app/assets/javascripts/**/*.hbs' '!app/assets/javascripts/**/*.raw.hbs' --parser glimmer && \
+        yarn prettier --list-different "app/assets/stylesheets/**/*.scss" "app/assets/javascripts/**/*.es6" "test/javascripts/**/*.es6" && \
         yarn eslint --ext .es6 app/assets/javascripts && \
         yarn eslint --ext .es6 test/javascripts && \
         yarn eslint --ext .es6 plugins/**/assets/javascripts && \

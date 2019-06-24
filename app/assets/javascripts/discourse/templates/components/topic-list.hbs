@@ -1,6 +1,7 @@
 {{#unless skipHeader}}
   <thead>
-    {{raw "topic-list-header"
+    {{raw
+      "topic-list-header"
       canBulkSelect=canBulkSelect
       toggleInTitle=toggleInTitle
       hideCategory=hideCategory
@@ -11,10 +12,10 @@
       ascending=ascending
       sortable=sortable
       listTitle=listTitle
-      bulkSelectEnabled=bulkSelectEnabled}}
+      bulkSelectEnabled=bulkSelectEnabled
+    }}
   </thead>
 {{/unless}}
-
 {{plugin-outlet
   name="before-topic-list-body"
   args=(hash
@@ -23,24 +24,27 @@
     bulkSelectEnabled=bulkSelectEnabled
     lastVisitedTopic=lastVisitedTopic
     discoveryList=discoveryList
-    hideCategory=hideCategory)
+    hideCategory=hideCategory
+  )
   tagName=""
-  connectorTagName=""}}
-
+  connectorTagName=""
+}}
 <tbody>
   {{#each filteredTopics as |topic|}}
-    {{topic-list-item topic=topic
-                      bulkSelectEnabled=bulkSelectEnabled
-                      showTopicPostBadges=showTopicPostBadges
-                      hideCategory=hideCategory
-                      showPosters=showPosters
-                      showLikes=showLikes
-                      showOpLikes=showOpLikes
-                      expandGloballyPinned=expandGloballyPinned
-                      expandAllPinned=expandAllPinned
-                      lastVisitedTopic=lastVisitedTopic
-                      selected=selected
-                      tagsForUser=tagsForUser}}
+    {{topic-list-item
+      topic=topic
+      bulkSelectEnabled=bulkSelectEnabled
+      showTopicPostBadges=showTopicPostBadges
+      hideCategory=hideCategory
+      showPosters=showPosters
+      showLikes=showLikes
+      showOpLikes=showOpLikes
+      expandGloballyPinned=expandGloballyPinned
+      expandAllPinned=expandAllPinned
+      lastVisitedTopic=lastVisitedTopic
+      selected=selected
+      tagsForUser=tagsForUser
+    }}
     {{raw "list/visited-line" lastVisitedTopic=lastVisitedTopic topic=topic}}
   {{/each}}
 </tbody>

@@ -5,11 +5,17 @@
         {{bound-avatar-template image "huge"}}
       </div>
     {{else}}
-      <p>{{i18n "admin.site_settings.uploaded_image_list.empty"}}</p>
+      <p>
+        {{i18n "admin.site_settings.uploaded_image_list.empty"}}
+      </p>
     {{/each}}
   </div>
 {{/d-modal-body}}
 <div class="modal-footer">
   {{d-button action=(action "close") label="close"}}
-  {{images-uploader uploading=uploading done=(action "uploadDone") class="pull-right"}}
+  {{images-uploader
+    uploading=uploading
+    done=(action "uploadDone")
+    class="pull-right"
+  }}
 </div>

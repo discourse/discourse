@@ -1,52 +1,62 @@
 {{#d-section class="user-secondary-navigation" pageClass="user-messages"}}
   {{#unless site.mobileView}}
     {{#if showNewPM}}
-      {{d-button class="btn-primary new-private-message" action=(route-action "composePrivateMessage") icon="envelope" label="user.new_private_message"}}
+      {{d-button
+        class="btn-primary new-private-message"
+        action=(route-action "composePrivateMessage")
+        icon="envelope"
+        label="user.new_private_message"
+      }}
     {{/if}}
   {{/unless}}
-
-  {{#mobile-nav class='messages-nav' desktopClass='nav-stacked action-list' currentPath=currentPath}}
+  {{#mobile-nav
+    class="messages-nav"
+    desktopClass="nav-stacked action-list"
+    currentPath=currentPath
+  }}
     <li class="noGlyph">
-      {{#link-to 'userPrivateMessages.index' model}}
-        {{i18n 'user.messages.inbox'}}
+      {{#link-to "userPrivateMessages.index" model}}
+        {{i18n "user.messages.inbox"}}
       {{/link-to}}
     </li>
     <li class="noGlyph">
-      {{#link-to 'userPrivateMessages.sent' model}}
-        {{i18n 'user.messages.sent'}}
+      {{#link-to "userPrivateMessages.sent" model}}
+        {{i18n "user.messages.sent"}}
       {{/link-to}}
     </li>
     <li class="noGlyph">
-      {{#link-to 'userPrivateMessages.archive' model}}
-        {{i18n 'user.messages.archive'}}
+      {{#link-to "userPrivateMessages.archive" model}}
+        {{i18n "user.messages.archive"}}
       {{/link-to}}
     </li>
-    {{plugin-outlet name="user-messages-nav" connectorTagName='li' args=(hash model=model)}}
+    {{plugin-outlet
+      name="user-messages-nav"
+      connectorTagName="li"
+      args=(hash model=model)
+    }}
     {{#each model.groups as |group|}}
       {{#if group.has_messages}}
         <li>
-          {{#link-to 'userPrivateMessages.group' group.name}}
-            {{d-icon "users"}}
-            {{capitalize-string group.name}}
+          {{#link-to "userPrivateMessages.group" group.name}}
+            {{d-icon "users"}}{{capitalize-string group.name}}
           {{/link-to}}
         </li>
-        <li class='archive'>
-          {{#link-to 'userPrivateMessages.groupArchive' group.name}}
-            {{i18n 'user.messages.archive'}}
+        <li class="archive">
+          {{#link-to "userPrivateMessages.groupArchive" group.name}}
+            {{i18n "user.messages.archive"}}
           {{/link-to}}
         </li>
       {{/if}}
     {{/each}}
-
     {{#if pmTaggingEnabled}}
       <li class="noGlyph">
-        {{#link-to 'userPrivateMessages.tags' model}}
-          {{i18n 'user.messages.tags'}}
+        {{#link-to "userPrivateMessages.tags" model}}
+          {{i18n "user.messages.tags"}}
         {{/link-to}}
       </li>
       {{#if tagId}}
         <li class="archive">
-          {{#link-to 'userPrivateMessages.tagsShow' tagId}}
+          {{#link-to "userPrivateMessages.tagsShow" tagId}}
             {{tagId}}
           {{/link-to}}
         </li>
@@ -54,47 +64,51 @@
     {{/if}}
   {{/mobile-nav}}
 {{/d-section}}
-
-<section class='user-content'>
-
-<div class="list-actions">
-  
+<section class="user-content">
+  <div class="list-actions">
     {{#unless site.mobileView}}
       {{#if showToggleBulkSelect}}
-        <button {{action "toggleBulkSelect"}} class="btn btn-default bulk-select no-text" title="{{i18n "user.messages.bulk_select"}}">
+        <button
+          class="btn btn-default bulk-select no-text"
+          title="{{i18n "user.messages.bulk_select"}}"
+          {{action "toggleBulkSelect"}}
+        >
           {{d-icon "list"}}
         </button>
       {{/if}}
     {{/unless}}
-
     {{#if site.mobileView}}
       {{#if showNewPM}}
-        {{d-button class="btn-primary new-private-message" action=(route-action "composePrivateMessage") icon="envelope" label="user.new_private_message"}}
+        {{d-button
+          class="btn-primary new-private-message"
+          action=(route-action "composePrivateMessage")
+          icon="envelope"
+          label="user.new_private_message"
+        }}
       {{/if}}
     {{/if}}
-
     {{#if canArchive}}
-    <button {{action "archive"}} class="btn btn-default btn-archive">
-      {{i18n "user.messages.move_to_archive"}}
-    </button>
+      <button class="btn btn-default btn-archive" {{action "archive"}}>
+        {{i18n "user.messages.move_to_archive"}}
+      </button>
     {{/if}}
-
     {{#if canMoveToInbox}}
-    <button {{action "toInbox"}} class="btn btn-default btn-to-inbox">
-      {{i18n "user.messages.move_to_inbox"}}
-    </button>
+      <button class="btn btn-default btn-to-inbox" {{action "toInbox"}}>
+        {{i18n "user.messages.move_to_inbox"}}
+      </button>
     {{/if}}
-
     {{#if bulkSelectEnabled}}
-    <button {{action "selectAll"}} class="btn btn-default btn-select-all">
-      {{i18n "user.messages.select_all"}}
-    </button>
+      <button class="btn btn-default btn-select-all" {{action "selectAll"}}>
+        {{i18n "user.messages.select_all"}}
+      </button>
     {{/if}}
-
     {{#if isGroup}}
-      {{group-notifications-button value=group.group_user.notification_level group=group user=model}}
+      {{group-notifications-button
+        value=group.group_user.notification_level
+        group=group
+        user=model
+      }}
     {{/if}}
-</div>
-
-{{outlet}}
+  </div>
+  {{outlet}}
 </section>

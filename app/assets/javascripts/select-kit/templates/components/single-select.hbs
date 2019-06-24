@@ -1,4 +1,5 @@
-{{component headerComponent
+{{component
+  headerComponent
   caretIcon=caretIcon
   tabindex=tabindex
   isFocused=isFocused
@@ -8,9 +9,9 @@
   onClearSelection=(action "onClearSelection")
   options=headerComponentOptions
 }}
-
 <div class="select-kit-body">
-  {{component filterComponent
+  {{component
+    filterComponent
     filter=filter
     isLoading=isLoading
     icon=filterIcon
@@ -20,9 +21,9 @@
     isFocused=isFocused
     onFilterComputedContent=(action "onFilterComputedContent")
   }}
-
   {{#if renderedBodyOnce}}
-    {{component collectionComponent
+    {{component
+      collectionComponent
       collectionHeaderComputedContent=collectionHeaderComputedContent
       hasSelection=hasSelection
       noneRowComputedContent=noneRowComputedContent
@@ -44,5 +45,4 @@
     }}
   {{/if}}
 </div>
-
 <div class="select-kit-wrapper"></div>

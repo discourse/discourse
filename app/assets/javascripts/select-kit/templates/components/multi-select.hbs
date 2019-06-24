@@ -1,4 +1,5 @@
-{{#component headerComponent
+{{#component
+  headerComponent
   tabindex=tabindex
   isFocused=isFocused
   isExpanded=isExpanded
@@ -8,7 +9,8 @@
   onToggle=(action "onToggle")
   options=headerComponentOptions
 }}
-  {{component filterComponent
+  {{component
+    filterComponent
     icon=filterIcon
     placeholder=filterPlaceholder
     filter=filter
@@ -19,32 +21,31 @@
     onFilterComputedContent=(action "onFilterComputedContent")
   }}
 {{/component}}
-
 <div class="select-kit-body">
   {{#if renderedBodyOnce}}
-  {{#unless isLoading}}
-    {{component collectionComponent
-      collectionHeaderComputedContent=collectionHeaderComputedContent
-      hasSelection=hasSelection
-      noneRowComputedContent=noneRowComputedContent
-      createRowComputedContent=createRowComputedContent
-      collectionComputedContent=collectionComputedContent
-      rowComponent=rowComponent
-      noneRowComponent=noneRowComponent
-      createRowComponent=createRowComponent
-      templateForRow=templateForRow
-      templateForNoneRow=templateForNoneRow
-      templateForCreateRow=templateForCreateRow
-      onClickRow=(action "onClickRow")
-      onMouseoverRow=(action "onMouseoverRow")
-      highlighted=highlighted
-      computedValue=computedValue
-      rowComponentOptions=rowComponentOptions
-      noContentRow=noContentRow
-      validationMessage=validationMessage
-    }}
-  {{/unless}}
+    {{#unless isLoading}}
+      {{component
+        collectionComponent
+        collectionHeaderComputedContent=collectionHeaderComputedContent
+        hasSelection=hasSelection
+        noneRowComputedContent=noneRowComputedContent
+        createRowComputedContent=createRowComputedContent
+        collectionComputedContent=collectionComputedContent
+        rowComponent=rowComponent
+        noneRowComponent=noneRowComponent
+        createRowComponent=createRowComponent
+        templateForRow=templateForRow
+        templateForNoneRow=templateForNoneRow
+        templateForCreateRow=templateForCreateRow
+        onClickRow=(action "onClickRow")
+        onMouseoverRow=(action "onMouseoverRow")
+        highlighted=highlighted
+        computedValue=computedValue
+        rowComponentOptions=rowComponentOptions
+        noContentRow=noContentRow
+        validationMessage=validationMessage
+      }}
+    {{/unless}}
   {{/if}}
 </div>
-
 <div class="select-kit-wrapper"></div>

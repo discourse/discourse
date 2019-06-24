@@ -1,5 +1,8 @@
-{{#if headerContent}}<div class="header">{{headerContent}}</div>{{/if}}
-
+{{#if headerContent}}
+  <div class="header">
+    {{headerContent}}
+  </div>
+{{/if}}
 <div class="body">
   <span class="name">
     {{#if forceEscape}}
@@ -8,7 +11,10 @@
       {{{label}}}
     {{/if}}
   </span>
-  {{d-icon 'times'}}
+  {{d-icon "times"}}
 </div>
-
-{{#if footerContent}}<div class="footer">{{footerContent}}</div>{{/if}}
+{{#if footerContent}}
+  <div class="footer">
+    {{footerContent}}
+  </div>
+{{/if}}

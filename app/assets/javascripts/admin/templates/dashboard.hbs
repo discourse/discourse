@@ -1,5 +1,4 @@
 {{plugin-outlet name="admin-dashboard-top"}}
-
 {{#if showVersionChecks}}
   <div class="section-top">
     <div class="version-checks">
@@ -7,9 +6,7 @@
     </div>
   </div>
 {{/if}}
-
 {{partial "admin/templates/dashboard-problems"}}
-
 <ul class="navigation">
   <li class="navigation-item general">
     {{#link-to "admin.dashboard.general" class="navigation-link"}}
@@ -32,7 +29,5 @@
     {{/link-to}}
   </li>
 </ul>
-
 {{outlet}}
-
 {{plugin-outlet name="admin-dashboard-bottom"}}

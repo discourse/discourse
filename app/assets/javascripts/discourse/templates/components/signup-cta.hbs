@@ -4,13 +4,27 @@
       {{i18n "signup_cta.hidden_for_session"}}
     </p>
   {{else}}
-    <p>{{replace-emoji (i18n "signup_cta.intro")}}</p>
-    <p>{{replace-emoji (i18n "signup_cta.value_prop")}}</p>
-
+    <p>
+      {{replace-emoji (i18n "signup_cta.intro")}}
+    </p>
+    <p>
+      {{replace-emoji (i18n "signup_cta.value_prop")}}
+    </p>
     <div class="buttons">
-      {{d-button action=(route-action "showCreateAccount") label="signup_cta.sign_up" icon="check" class="btn-primary"}}
-      {{d-button action=(action "hideForSession") label="signup_cta.hide_session" class="no-icon"}}
-      <a {{action "neverShow"}}>{{i18n "signup_cta.hide_forever"}}</a>
+      {{d-button
+        action=(route-action "showCreateAccount")
+        label="signup_cta.sign_up"
+        icon="check"
+        class="btn-primary"
+      }}
+      {{d-button
+        action=(action "hideForSession")
+        label="signup_cta.hide_session"
+        class="no-icon"
+      }}
+      <a {{action "neverShow"}}>
+        {{i18n "signup_cta.hide_forever"}}
+      </a>
     </div>
   {{/if}}
   <div class="clearfix"></div>

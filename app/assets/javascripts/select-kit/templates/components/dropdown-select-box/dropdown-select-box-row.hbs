@@ -4,12 +4,17 @@
   {{#if icons}}
     <div class="icons">
       <span class="selection-indicator"></span>
-      {{#each icons as |icon|}} {{d-icon icon}} {{/each}}
+      {{#each icons as |icon|}}
+        {{d-icon icon}}
+      {{/each}}
     </div>
   {{/if}}
-
   <div class="texts">
-    <span class="name">{{{label}}}</span>
-    <span class="desc">{{{description}}}</span>
+    <span class="name">
+      {{{label}}}
+    </span>
+    <span class="desc">
+      {{{description}}}
+    </span>
   </div>
 {{/if}}

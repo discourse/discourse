@@ -1,64 +1,67 @@
 {{#conditional-loading-spinner condition=isLoading}}
   {{plugin-outlet name="admin-dashboard-general-top"}}
-
   <div class="community-health section">
     <div class="period-section">
       <div class="section-title">
         <h2>
-          <a href="{{get-url '/admin/dashboard/reports'}}">
+          <a href="{{get-url "/admin/dashboard/reports"}}">
             {{i18n "admin.dashboard.community_health"}}
           </a>
         </h2>
-        {{period-chooser period=period action=(action "changePeriod") content=availablePeriods fullDay=true}}
+        {{period-chooser
+          period=period
+          action=(action "changePeriod")
+          content=availablePeriods
+          fullDay=true
+        }}
       </div>
-
       <div class="section-body">
         <div class="charts">
           {{admin-report
             dataSourceName="consolidated_page_views"
             forcedModes="stacked-chart"
-            filters=filters}}
-
+            filters=filters
+          }}
           {{admin-report
             dataSourceName="signups"
             showTrend=true
             forcedModes="chart"
-            filters=filters}}
-
+            filters=filters
+          }}
           {{admin-report
             dataSourceName="topics"
             showTrend=true
             forcedModes="chart"
-            filters=filters}}
-
+            filters=filters
+          }}
           {{admin-report
             dataSourceName="posts"
             showTrend=true
             forcedModes="chart"
-            filters=filters}}
-
+            filters=filters
+          }}
           {{admin-report
             dataSourceName="dau_by_mau"
             showTrend=true
             forcedModes="chart"
-            filters=filters}}
-
+            filters=filters
+          }}
           {{admin-report
             dataSourceName="daily_engaged_users"
             showTrend=true
             forcedModes="chart"
-            filters=filters}}
-
+            filters=filters
+          }}
           {{admin-report
             dataSourceName="new_contributors"
             showTrend=true
             forcedModes="chart"
-            filters=filters}}
+            filters=filters
+          }}
         </div>
       </div>
     </div>
   </div>
-
   <div class="section-columns">
     <div class="section-column">
       {{#if activityMetrics.length}}
@@ -76,73 +79,96 @@
             <div class="counters-list">
               <div class="counters-header">
                 <div class="counters-cell"></div>
-                <div class="counters-cell">{{i18n 'admin.dashboard.reports.today'}}</div>
-                <div class="counters-cell">{{i18n 'admin.dashboard.reports.yesterday'}}</div>
-                <div class="counters-cell">{{i18n 'admin.dashboard.reports.last_7_days'}}</div>
-                <div class="counters-cell">{{i18n 'admin.dashboard.reports.last_30_days'}}</div>
+                <div class="counters-cell">
+                  {{i18n "admin.dashboard.reports.today"}}
+                </div>
+                <div class="counters-cell">
+                  {{i18n "admin.dashboard.reports.yesterday"}}
+                </div>
+                <div class="counters-cell">
+                  {{i18n "admin.dashboard.reports.last_7_days"}}
+                </div>
+                <div class="counters-cell">
+                  {{i18n "admin.dashboard.reports.last_30_days"}}
+                </div>
               </div>
-
               {{#each activityMetrics as |metric|}}
                 {{admin-report
                   showHeader=false
                   filters=activityMetricsFilters
                   forcedModes="counters"
-                  dataSourceName=metric}}
+                  dataSourceName=metric
+                }}
               {{/each}}
             </div>
           </div>
         </div>
       {{/if}}
-
       <div class="user-metrics">
         {{#conditional-loading-section isLoading=isLoading}}
           {{admin-report
             forcedModes="inline-table"
-            dataSourceName="users_by_type"}}
-
+            dataSourceName="users_by_type"
+          }}
           {{admin-report
             forcedModes="inline-table"
-            dataSourceName="users_by_trust_level"}}
+            dataSourceName="users_by_trust_level"
+          }}
         {{/conditional-loading-section}}
       </div>
-
       <div class="misc">
         {{admin-report
           forcedModes="storage-stats"
           dataSourceName="storage_stats"
-          showHeader=false}}
-
+          showHeader=false
+        }}
         <div class="last-dashboard-update">
           <div>
-            <h4>{{i18n "admin.dashboard.last_updated"}} </h4>
-            <p>{{format-date model.attributes.updated_at leaveAgo="true"}}</p>
+            <h4>
+              {{i18n "admin.dashboard.last_updated"}}
+            </h4>
+            <p>
+              {{format-date model.attributes.updated_at leaveAgo="true"}}
+            </p>
           </div>
           <div>
-            <h4>{{i18n "admin.dashboard.discourse_last_updated"}} </h4>
-            <p>{{format-date model.attributes.discourse_updated_at leaveAgo="true"}}</p>
-            <a rel="noopener" target="_blank" href={{model.attributes.release_notes_link}} class="btn btn-default">
+            <h4>
+              {{i18n "admin.dashboard.discourse_last_updated"}}
+            </h4>
+            <p>
+              {{format-date
+                model.attributes.discourse_updated_at
+                leaveAgo="true"
+              }}
+            </p>
+            <a
+              rel="noopener"
+              target="_blank"
+              href={{model.attributes.release_notes_link}}
+              class="btn btn-default"
+            >
               {{i18n "admin.dashboard.whats_new_in_discourse"}}
             </a>
           </div>
         </div>
       </div>
     </div>
-
     <div class="section-column">
       {{admin-report
         filters=topReferredTopicsFilters
         dataSourceName="top_referred_topics"
-        reportOptions=topReferredTopicsOptions}}
-
+        reportOptions=topReferredTopicsOptions
+      }}
       {{admin-report
         dataSourceName="trending_search"
         reportOptions=trendingSearchOptions
         filters=trendingSearchFilters
         isEnabled=logSearchQueriesEnabled
-        disabledLabel=trendingSearchDisabledLabel}}
-      {{{i18n "admin.dashboard.reports.trending_search.more" basePath=basePath}}}
+        disabledLabel=trendingSearchDisabledLabel
+      }}
+      {{{i18n "admin.dashboard.reports.trending_search.more" basePath=basePath
+      }}}
     </div>
   </div>
-
   {{plugin-outlet name="admin-dashboard-general-bottom"}}
 {{/conditional-loading-spinner}}

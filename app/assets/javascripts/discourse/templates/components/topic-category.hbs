@@ -14,5 +14,7 @@
     {{topic-featured-link topic}}
   {{/if}}
 </div>
-
-{{plugin-outlet name="topic-category" args=(hash topic=topic category=topic.category)}}
+{{plugin-outlet
+  name="topic-category"
+  args=(hash topic=topic category=topic.category)
+}}

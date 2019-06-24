@@ -77,6 +77,7 @@ task 'docker:test' do
 
         unless ENV["SKIP_CORE"]
           puts "Listing prettier offenses in core:"
+          @good &&= run_or_fail("yarn prettier --list-different 'app/assets/javascripts/**/*.hbs' '!app/assets/javascripts/**/*.raw.hbs' --parser glimmer")
           @good &&= run_or_fail('yarn prettier --list-different "app/assets/stylesheets/**/*.scss" "app/assets/javascripts/**/*.es6" "test/javascripts/**/*.es6"')
         end
 

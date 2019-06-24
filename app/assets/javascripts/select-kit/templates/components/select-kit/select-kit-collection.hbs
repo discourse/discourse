@@ -3,10 +3,10 @@
     {{{collectionHeaderComputedContent}}}
   </div>
 {{/if}}
-
 {{#if hasSelection}}
   {{#if noneRowComputedContent}}
-    {{component noneRowComponent
+    {{component
+      noneRowComponent
       computedContent=noneRowComputedContent
       templateForRow=templateForNoneRow
       highlighted=highlighted
@@ -17,9 +17,9 @@
     }}
   {{/if}}
 {{/if}}
-
 {{#if createRowComputedContent}}
-  {{component createRowComponent
+  {{component
+    createRowComponent
     computedContent=createRowComputedContent
     highlighted=highlighted
     computedValue=computedValue
@@ -29,7 +29,6 @@
     options=rowComponentOptions
   }}
 {{/if}}
-
 {{#if noContentRow}}
   <li class="select-kit-row no-content">
     {{noContentRow}}
@@ -41,7 +40,8 @@
     </div>
   {{/if}}
   {{#each collectionComputedContent as |computedContent|}}
-    {{component rowComponent
+    {{component
+      rowComponent
       computedContent=computedContent
       highlighted=highlighted
       computedValue=computedValue

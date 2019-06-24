@@ -1,22 +1,22 @@
 {{category-drop
   category=firstCategory
   categories=parentCategoriesSorted
-  countSubcategories=true}}
-
+  countSubcategories=true
+}}
 {{#if childCategories}}
   {{category-drop
     category=secondCategory
     parentCategory=firstCategory
     categories=childCategories
     subCategory=true
-    noSubcategories=noSubcategories}}
+    noSubcategories=noSubcategories
+  }}
 {{/if}}
-
 {{#if siteSettings.tagging_enabled}}
   {{tag-drop
     firstCategory=firstCategory
     secondCategory=secondCategory
-    tagId=tagId}}
+    tagId=tagId
+  }}
 {{/if}}
-
 {{plugin-outlet name="bread-crumbs-right" connectorTagName="li" tagName=""}}

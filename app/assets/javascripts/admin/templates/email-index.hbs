@@ -1,27 +1,48 @@
 <table class="table">
   <tr>
-    <th>{{i18n 'admin.email.delivery_method'}}</th>
-    <td>{{delivery_method}}</td>
+    <th>
+      {{i18n "admin.email.delivery_method"}}
+    </th>
+    <td>
+      {{delivery_method}}
+    </td>
   </tr>
-
   {{#each model.settings as |s|}}
     <tr>
-      <th style='width: 25%'>{{s.name}}</th>
-      <td>{{s.value}}</td>
+      <th style="width: 25%">
+        {{s.name}}
+      </th>
+      <td>
+        {{s.value}}
+      </td>
     </tr>
   {{/each}}
 </table>
-
-<div class='admin-controls'>
+<div class="admin-controls">
   {{#if sendingEmail}}
-  <div class='span15 controls'>{{i18n 'admin.email.sending_test'}}</div>
+    <div class="span15 controls">
+      {{i18n "admin.email.sending_test"}}
+    </div>
   {{else}}
-  <div class='controls'>
-    {{text-field value=testEmailAddress placeholderKey="admin.email.test_email_address"}}
-  </div>
-  <div class='controls'>
-    <button class='btn btn-primary' {{action "sendTestEmail"}} disabled={{sendTestEmailDisabled}}>{{i18n 'admin.email.send_test'}}</button>
-    {{#if sentTestEmailMessage}}<span class='result-message'>{{sentTestEmailMessage}}</span>{{/if}}
-  </div>
+    <div class="controls">
+      {{text-field
+        value=testEmailAddress
+        placeholderKey="admin.email.test_email_address"
+      }}
+    </div>
+    <div class="controls">
+      <button
+        class="btn btn-primary"
+        disabled={{sendTestEmailDisabled}}
+        {{action "sendTestEmail"}}
+      >
+        {{i18n "admin.email.send_test"}}
+      </button>
+      {{#if sentTestEmailMessage}}
+        <span class="result-message">
+          {{sentTestEmailMessage}}
+        </span>
+      {{/if}}
+    </div>
   {{/if}}
 </div>

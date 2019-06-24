@@ -1,17 +1,29 @@
-<label for='choose-topic-title'>{{i18n 'choose_topic.title.search'}}</label>
-
-{{text-field value=topicTitle placeholderKey="choose_topic.title.placeholder" id="choose-topic-title"}}
-
+<label for="choose-topic-title">
+  {{i18n "choose_topic.title.search"}}
+</label>
+{{text-field
+  value=topicTitle
+  placeholderKey="choose_topic.title.placeholder"
+  id="choose-topic-title"
+}}
 {{#if loading}}
-  <p>{{i18n 'loading'}}</p>
+  <p>
+    {{i18n "loading"}}
+  </p>
+{{else if noResults}}
+  <p>
+    {{i18n "choose_topic.none_found"}}
+  </p>
 {{else}}
-  {{#if noResults}}
-    <p>{{i18n 'choose_topic.none_found'}}</p>
-  {{else}}
-    {{#each topics as |t|}}
-      <div class='controls existing-topic'>
-        <label class='radio'>
-        <input type='radio' id="choose-topic-{{unbound t.id}}" name='choose_topic_id' {{action "chooseTopic" t}}>
+  {{#each topics as |t|}}
+    <div class="controls existing-topic">
+      <label class="radio">
+        <input
+          type="radio"
+          id="choose-topic-{{unbound t.id}}"
+          name="choose_topic_id"
+          {{action "chooseTopic" t}}
+        />
         <span class="topic-title">
           {{t.title}}
         </span>
@@ -20,9 +32,8 @@
             {{bound-category-link t.category.parentCategory}}
           {{/if}}
           {{bound-category-link t.category}}
-       </span>
-        </label>
-      </div>
-    {{/each}}
-  {{/if}}
+        </span>
+      </label>
+    </div>
+  {{/each}}
 {{/if}}

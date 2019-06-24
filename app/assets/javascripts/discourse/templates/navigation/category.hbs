@@ -1,20 +1,21 @@
 {{#d-section class="navigation-container"}}
   {{add-category-tag-classes category=category}}
-
-  <section class='category-heading'>
+  <section class="category-heading">
     {{#if category.uploaded_logo.url}}
       {{cdn-img
         src=category.uploaded_logo.url
         class="category-logo"
         width=category.uploaded_logo.width
-        height=category.uploaded_logo.height}}
+        height=category.uploaded_logo.height
+      }}
       {{#if category.description}}
-        <p>{{{dir-span category.description}}}</p>
+        <p>
+          {{{dir-span category.description}}}
+        </p>
       {{/if}}
     {{/if}}
   </section>
-
-  <div class='category-navigation'>
+  <div class="category-navigation">
     {{d-navigation
       category=category
       filterMode=filterMode
@@ -23,8 +24,8 @@
       createTopic=(route-action "createTopic")
       createTopicDisabled=cannotCreateTopicOnCategory
       hasDraft=draft
-      editCategory=(route-action "editCategory" category)}}
-
+      editCategory=(route-action "editCategory" category)
+    }}
     {{plugin-outlet name="category-navigation" args=(hash category=category)}}
   </div>
 {{/d-section}}

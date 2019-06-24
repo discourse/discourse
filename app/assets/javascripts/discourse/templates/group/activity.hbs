@@ -1,13 +1,21 @@
-  <section class="user-secondary-navigation">
-  {{#mobile-nav class='activity-nav' desktopClass='action-list activity-list nav-stacked' currentPath=application.currentPath}}
+<section class="user-secondary-navigation">
+  {{#mobile-nav
+    class="activity-nav"
+    desktopClass="action-list activity-list nav-stacked"
+    currentPath=application.currentPath
+  }}
     {{group-activity-filter filter="posts" categoryId=category_id}}
     {{group-activity-filter filter="topics" categoryId=category_id}}
     {{#if siteSettings.enable_mentions}}
       {{group-activity-filter filter="mentions" categoryId=category_id}}
     {{/if}}
-    {{plugin-outlet name="group-activity-bottom" tagName='' connectorTagName='li'}}
+    {{plugin-outlet
+      name="group-activity-bottom"
+      tagName=""
+      connectorTagName="li"
+    }}
   {{/mobile-nav}}
 </section>
 <section class="user-content">
   {{outlet}}
-  </section>
+</section>

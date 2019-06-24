@@ -1,14 +1,14 @@
-<section class="user-preferences solo-preference  second-factor-backup-preferences">
+<section
+  class="user-preferences solo-preference  second-factor-backup-preferences"
+>
   <form class="form-horizontal">
     <div class="control-group">
-
       <div class="controls">
         {{#if successMessage}}
           <div class="alert alert-success">
             {{successMessage}}
           </div>
         {{/if}}
-
         {{#if errorMessage}}
           <div class="alert alert-error">
             {{errorMessage}}
@@ -16,50 +16,59 @@
         {{/if}}
       </div>
     </div>
-
     <div class="control-group">
       <div class="controls">
         {{#second-factor-form
+          secondFactorMethod=secondFactorMethod
+          backupEnabled=backupEnabled
+          secondFactorToken=secondFactorToken
+          secondFactorTitle=(i18n "user.second_factor_backup.title")
+          optionalText=(if
+            backupEnabled
+            (i18n
+              "user.second_factor_backup.remaining_codes" count=remainingCodes
+            )
+          )
+          isLogin=false
+        }}
+          {{second-factor-input
+            value=secondFactorToken
+            inputId="second-factor-token"
             secondFactorMethod=secondFactorMethod
-            backupEnabled=backupEnabled
-            secondFactorToken=secondFactorToken
-            secondFactorTitle=(i18n 'user.second_factor_backup.title')
-            optionalText=(if backupEnabled (i18n "user.second_factor_backup.remaining_codes" count=remainingCodes))
-            isLogin=false}}
-          {{second-factor-input value=secondFactorToken inputId='second-factor-token' secondFactorMethod=secondFactorMethod}}
+          }}
         {{/second-factor-form}}
       </div>
     </div>
-
     <div class="control-group">
       <div class="controls">
         <div class="actions">
-            {{d-button
-              action=(action "generateSecondFactorCodes")
-              class="btn btn-primary"
-              disabled=isDisabledGenerateBackupCodeBtn
-              label=generateBackupCodeBtnLabel}}
+          {{d-button
+            action=(action "generateSecondFactorCodes")
+            class="btn btn-primary"
+            disabled=isDisabledGenerateBackupCodeBtn
+            label=generateBackupCodeBtnLabel
+          }}
           {{#if backupEnabled}}
             {{d-button
               action=(action "disableSecondFactorBackup")
               class="btn btn-danger"
               disabled=isDisabledDisableBackupCodeBtn
-              label="user.second_factor_backup.disable"}}
+              label="user.second_factor_backup.disable"
+            }}
           {{/if}}
         </div>
-
         {{#conditional-loading-section isLoading=loading}}
           {{#if backupCodes}}
-            <h3>{{i18n "user.second_factor_backup.codes.title"}}</h3>
-
+            <h3>
+              {{i18n "user.second_factor_backup.codes.title"}}
+            </h3>
             <p>
               {{i18n "user.second_factor_backup.codes.description"}}
             </p>
-
             {{backup-codes
               copyBackupCode=(action "copyBackupCode")
-              backupCodes=backupCodes}}
-
+              backupCodes=backupCodes
+            }}
             {{#link-to "preferences.account" model.username}}
               {{i18n "go_back"}}
             {{/link-to}}

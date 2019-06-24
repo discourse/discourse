@@ -1,7 +1,12 @@
-{{#d-button action=(action "save") disabled=model.isSaving class="btn btn-primary save-user"}}
+{{#d-button
+  action=(action "save")
+  disabled=model.isSaving
+  class="btn btn-primary save-user"
+}}
   {{saveButtonText}}
 {{/d-button}}
-
 {{#if saved}}
-  <span class='saved-user'>{{i18n 'saved'}}</span>
+  <span class="saved-user">
+    {{i18n "saved"}}
+  </span>
 {{/if}}
