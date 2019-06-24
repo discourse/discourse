@@ -51,7 +51,9 @@ export const ListItemDefaults = {
     }
 
     if (topic.get("tags")) {
-      topic.get("tags").forEach(tagName => classes.push("tag-" + tagName));
+      topic.get("tags").forEach(tagName => {
+        classes.push("tag-" + tagName.replace(/:/g, '-'));
+      });
     }
 
     if (topic.get("hasExcerpt")) {
