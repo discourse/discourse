@@ -30,7 +30,7 @@ export default ComboBoxComponent.extend({
     }
 
     if (this.scopedCategoryId) {
-      computedContent = this.categoriesByScope().map(c =>
+      computedContent = this.categoriesByScope(this.scopedCategoryId).map(c =>
         this.computeContentItem(c)
       );
     }
