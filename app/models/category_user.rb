@@ -22,11 +22,16 @@ class CategoryUser < ActiveRecord::Base
     level_num = notification_levels[level]
     category_ids = Category.where(id: category_ids).pluck(:id)
 
+    changed = false
+
     # Update pre-existing category users
-    changed =
-      CategoryUser
-        .where(user_id: user.id, category_id: category_ids)
-        .update_all(notification_level: level_num) > 0
+    unless category_ids.empty?
+      changed ||=
+        CategoryUser
+          .where(user_id: user.id, category_id: category_ids)
+          .where.not(notification_level: level_num)
+          .update_all(notification_level: level_num) > 0
+    end
 
     # Remove extraneous category users
     changed ||=

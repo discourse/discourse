@@ -55,6 +55,16 @@ describe CategoryUser do
 
       expect(category_ids_at_level(:watching)).to eq([])
     end
+
+    it "should return true when something changed" do
+      expect(CategoryUser.batch_set(user, :watching, [category.id])).to eq(true)
+    end
+
+    it "should return false when nothing changed" do
+      CategoryUser.batch_set(user, :watching, [category.id])
+
+      expect(CategoryUser.batch_set(user, :watching, [category.id])).to eq(false)
+    end
   end
 
   it 'should correctly auto_track' do
