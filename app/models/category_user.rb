@@ -41,15 +41,21 @@ class CategoryUser < ActiveRecord::Base
         .delete_all() > 0
 
     # Create new category users
-    new_category_ids =
-      Category
-        .where(id: category_ids)
-        .where.not(id: CategoryUser.where(user_id: user.id).select(:category_id))
-        .pluck(:id)
-
-    new_category_ids.each do |id|
-      CategoryUser.create!(user: user, category_id: id, notification_level: level_num)
-      changed = true
+    unless category_ids.empty?
+      # TODO: rewrite this when we upgrade to rails 6
+      changed ||=
+        DB.exec(
+          "
+            INSERT INTO category_users (user_id, category_id, notification_level)
+            SELECT :user_id, category_id, :level_num
+            FROM
+              (VALUES (:category_ids)) AS category_ids (category_id)
+            ON CONFLICT DO NOTHING
+          ",
+          user_id: user.id,
+          level_num: level_num,
+          category_ids: category_ids
+        ) > 0
     end
 
     if changed
