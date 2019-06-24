@@ -471,7 +471,7 @@ def missing_uploads
       missing[:post_uploads].each do |id, uploads|
         post = Post.with_deleted.find_by(id: id)
         if post
-          puts "#{post.full_url} giving up on #{uploads.length} upload/s"
+          puts "#{post.full_url} giving up on #{uploads.length} upload(s)"
           PostCustomField.create!(post_id: post.id, name: Post::MISSING_UPLOADS_IGNORED, value: "t")
         else
           puts "could not find post #{id}"
