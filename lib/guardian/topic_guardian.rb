@@ -174,6 +174,6 @@ module TopicGuardian
   end
 
   def can_banner_topic?(topic)
-    authenticated? && !topic.private_message? && is_staff?
+    topic && authenticated? && !topic.private_message? && is_staff?
   end
 end
