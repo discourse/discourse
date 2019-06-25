@@ -25,37 +25,43 @@ class CategoryUser < ActiveRecord::Base
     changed = false
 
     # Update pre-existing category users
-    unless category_ids.empty?
-      changed ||=
-        CategoryUser
-          .where(user_id: user.id, category_id: category_ids)
-          .where.not(notification_level: level_num)
-          .update_all(notification_level: level_num) > 0
+    if category_ids.present? && CategoryUser
+        .where(user_id: user.id, category_id: category_ids)
+        .where.not(notification_level: level_num)
+        .update_all(notification_level: level_num) > 0
+
+      changed = true
     end
 
     # Remove extraneous category users
-    changed ||=
-      CategoryUser
-        .where(user_id: user.id, notification_level: level_num)
+    if CategoryUser.where(user_id: user.id, notification_level: level_num)
         .where.not(category_id: category_ids)
         .delete_all > 0
 
-    # Create new category users
-    unless category_ids.empty?
-      # TODO: rewrite this when we upgrade to rails 6
-      changed ||=
-        DB.exec(
-          "
-            INSERT INTO category_users (user_id, category_id, notification_level)
-            SELECT :user_id, category_id, :level_num
-            FROM
-              (VALUES (:category_ids)) AS category_ids (category_id)
-            ON CONFLICT DO NOTHING
-          ",
-          user_id: user.id,
-          level_num: level_num,
-          category_ids: category_ids
-        ) > 0
+      changed = true
+    end
+
+    if category_ids.present?
+      params = {
+        user_id: user.id,
+        level_num: level_num,
+      }
+
+      sql = <<~SQL
+        INSERT INTO category_users (user_id, category_id, notification_level)
+        SELECT :user_id, :category_id, :level_num
+        ON CONFLICT DO NOTHING
+      SQL
+
+      # we could use VALUES here but it would introduce a string
+      # into the query, plus it is a bit of a micro optimisation
+      category_ids.each do |category_id|
+        params[:category_id] = category_id
+        if DB.exec(sql, params) > 0
+          changed = true
+        end
+      end
+
     end
 
     if changed
