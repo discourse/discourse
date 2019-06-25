@@ -65,9 +65,10 @@ const bindings = {
   "shift+p": { handler: "pinUnpinTopic" },
   "shift+r": { handler: "replyToTopic" },
   "shift+s": { click: "#topic-footer-buttons button.share", anonymous: true }, // share topic
-  "shift+u": { handler: "goToUnreadPost" },
+  "shift+l": { handler: "goToUnreadPost" },
   "shift+z shift+z": { handler: "logout" },
   "shift+f11": { handler: "fullscreenComposer", global: true },
+  "shift+u": { handler: "deferTopic" },
   t: { postAction: "replyAsNewTopic" },
   u: { handler: "goBack", anonymous: true },
   "x r": {
@@ -618,5 +619,9 @@ export default {
 
   _replyToPost() {
     this.container.lookup("controller:topic").send("replyToPost");
+  },
+
+  deferTopic() {
+    this.container.lookup("controller:topic").send("deferTopic");
   }
 };

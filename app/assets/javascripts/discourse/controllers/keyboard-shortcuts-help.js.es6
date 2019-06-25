@@ -77,6 +77,10 @@ export default Ember.Controller.extend(ModalFunctionality, {
         keys2: [SHIFT, "k"],
         keysDelimiter: PLUS,
         shortcutsDelimiter: "slash"
+      }),
+      go_to_unread_post: buildShortcut("navigation.go_to_unread_post", {
+        keys1: [SHIFT, "l"],
+        keysDelimiter: PLUS
       })
     },
     application: {
@@ -157,6 +161,10 @@ export default Ember.Controller.extend(ModalFunctionality, {
       }),
       print: buildShortcut("actions.print", {
         keys1: [CTRL, "p"],
+        keysDelimiter: PLUS
+      }),
+      defer: buildShortcut("actions.defer", {
+        keys1: [SHIFT, "u"],
         keysDelimiter: PLUS
       })
     }

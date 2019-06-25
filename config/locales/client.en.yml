@@ -2853,6 +2853,7 @@ en:
         up_down: "%{shortcut} Move selection &uarr; &darr;"
         open: "%{shortcut} Open selected topic"
         next_prev: "%{shortcut} Next/previous section"
+        go_to_unread_post: "%{shortcut} Go to the first unread post"
       application:
         title: "Application"
         create: "%{shortcut} Create a new topic"
@@ -2889,6 +2890,7 @@ en:
         mark_tracking: "%{shortcut} Track topic"
         mark_watching: "%{shortcut} Watch topic"
         print: "%{shortcut} Print topic"
+        defer: "%{shortcut} Defer topic"
 
     badges:
       earned_n_times:
