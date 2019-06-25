@@ -46,6 +46,18 @@ RSpec.describe ApplicationController do
       expect(response).to redirect_to("/u/#{user.username}/preferences/second-factor")
     end
 
+    it "should not redirect anonymous users when enforce_second_factor is 'all'" do
+      SiteSetting.enforce_second_factor = "all"
+      SiteSetting.allow_anonymous_posting = true
+      sign_in(user)
+
+      post "/u/toggle-anon.json"
+      expect(response.status).to eq(200)
+
+      get "/"
+      expect(response.status).to eq(200)
+    end
+
     it "should redirect admins when enforce_second_factor is 'staff'" do
       SiteSetting.enforce_second_factor = "staff"
       sign_in(admin)
