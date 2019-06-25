@@ -238,6 +238,7 @@ def migration_successful?(db, should_raise = false)
 
   puts error_message if count > 0
 
+  db = "default"
   cdn_path = SiteSetting.cdn_path("/uploads/#{db}/original").sub(/https?:/, "")
   count = Post.where("cooked LIKE '%#{cdn_path}%'").count
   error_message = "#{count} posts are not remapped to new S3 upload URL. #{failure_message}"
