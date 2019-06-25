@@ -570,6 +570,8 @@ da:
     read: "læst"
     read_write: "læs/skriv"
     description: '"%{application_name}" anmoder om følgende adgang til din konto:'
+    otp_confirmation:
+      confirm_title: "Fortsæt til %{site_name}"
     no_trust_level: "Beklager, du har ikke adgang til brugerens API"
     generic_error: "Beklager, vi er ikke i stand til at give dig API nøgler, denne funktionalitet er muligvis bestemt af sitets administrator"
     scopes:
@@ -851,7 +853,6 @@ da:
     tl4_additional_likes_per_day_multiplier: "Øg antallet af likes pr. dag for tl4 (leader) ved at gange med dette tal"
     traditional_markdown_linebreaks: "Brug traditionelle linjeskift i Markdown, som kræver 2 mellemrum i slutningen af sætningen."
     post_undo_action_window_mins: "Antal minutter som brugere er tilladt at fortryde handlinger på et indlæg (like, flag, etc)."
-    must_approve_users: "Personale skal godkende alle nye bruger konti inden de kan tilgå sitet. ADVARSEL: aktivering af dette for et live site vil medføre en ophævning af adgang for eksisterende ikke-personale brugere."
     pending_users_reminder_delay: "Underret moderatorer hvis nye brugere har ventet på godkendelse i længere end så mange timer. Skriv -1 for at deaktivere notifikationer."
     maximum_session_age: "Bruger vil forblive logget in for n hours siden sidste besøg"
     moderators_create_categories: "Tillad moderatorer at skabe nye kategorier"

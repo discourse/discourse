@@ -800,6 +800,10 @@ zh_CN:
     description: '“%{application_name}”正在请求访问你的账户中的以下权限：'
     instructions: '我们刚刚生成了一个新的用户API密钥供您使用“%{application_name}”，请将以下密钥粘贴到您的应用程序中：'
     otp_description: '你允许“%{application_name}”访问此网站吗？'
+    otp_confirmation:
+      confirm_title: "转入到%{site_name}"
+      logging_in_as: "用%{username}登录"
+      confirm_button: 登录完成
     no_trust_level: "抱歉，你没有使用用户 API 所需要的信任等级"
     generic_error: "抱歉，我们不能分发用户 API 密钥，该特性已经被站点管理"
     scopes:
@@ -1266,7 +1270,7 @@ zh_CN:
     enable_markdown_linkify: "自动将看起来像链接的文本视为链接：www.example.com和https://example.com将自动链接"
     markdown_linkify_tlds: " 自动视为链接的顶级域列表"
     post_undo_action_window_mins: "允许用户在帖子上进行撤销操作（赞、标记等）所需等待的间隔分钟数"
-    must_approve_users: "新用户在被允许访问站点前需要由管理人员批准。警告：在运行的站点中启用将解除所有非管理人员用户的访问权限！"
+    must_approve_users: "新注册用户必须获得职员批准方能访问"
     pending_users_reminder_delay: "如果新用户等待批准时间超过此小时设置则通知版主。设置 -1 关闭通知。"
     maximum_session_age: "用户自访问后可维持登录 n 小时"
     ga_universal_tracking_code: "Google Universal Analytics（analytics.js）跟踪代码ID，例如：UA-12345678-9; 请参阅<a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
@@ -3783,7 +3787,7 @@ zh_CN:
             one_paragraph: "请限制你的欢迎私信至一段话。"
       privacy:
         title: "访问"
-        description: "<p>你的社区对所有人开发，还在是限制会员、邀请或审批？你可以随意设置为私有的然后切换到公开的。</p>"
+        description: "<p>你的社区对所有人开放，还在是限制会员、邀请或审批？你可以随意设置为私有的然后切换到公开的。</p>"
         fields:
           privacy:
             choices:

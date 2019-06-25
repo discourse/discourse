@@ -1055,6 +1055,7 @@ bs_BA:
       complete_email_found: "Pronašli smo korisnički račun koji se podudara sa <b>%{email}</b>, trebali bi uskoro dobiti email sa linkom za ulogovanje."
       complete_username_not_found: "Ne postoji korisnički račun koji se podudara sa <b>%{username}</b>"
       complete_email_not_found: "Ne postoji korisnički račun koji se podudara sa <b>%{email}</b>"
+      confirm_title: "Nastavi ka %{site_name}"
     login:
       title: "Uloguj se"
       username: "Korisnik"

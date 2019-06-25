@@ -1261,6 +1261,9 @@ es:
       complete_email_found: "Encontramos una cuenta que coincide con <b>%{email}</b>, deberías recibir un email con un enlace de ingreso muy pronto."
       complete_username_not_found: "Ninguna cuenta coincide el nombre de usuario <b>%{username}</b>"
       complete_email_not_found: "Ninguna cuenta coincide con <b>%{email}</b>"
+      confirm_title: "Continuar a %{site_name}"
+      logging_in_as: "Ingresando como %{email}"
+      confirm_button: Finalizar Login
     login:
       title: "Iniciar Sesión"
       username: "Usuario"

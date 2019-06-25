@@ -619,6 +619,7 @@ te:
     email_login:
       complete_username_not_found: "మీ సభ్యనామం <b>%{username}</b> తో ఏ ఖాతా సరిపోవడంలేదు."
       complete_email_not_found: "<b>%{email}</b> తో ఏ ఖాతా సరిపోవడంలేదు"
+      confirm_title: "%{site_name} కు కొనసాగండి"
     login:
       title: "లాగిన్"
       username: "వాడుకరి"

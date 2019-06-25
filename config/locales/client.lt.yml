@@ -1043,6 +1043,7 @@ lt:
     email_login:
       complete_username_not_found: "Jokia paskyra nesutampa su vartotojo vardu <b>%{username}</b>"
       complete_email_not_found: "Jokia paskyra nesutampa su <b>%{email}</b>"
+      confirm_title: "Tęsti į %{site_name}"
     login:
       title: "Prisijungti"
       username: "Vartotojas"

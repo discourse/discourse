@@ -1261,6 +1261,9 @@ de:
       complete_email_found: "Wir haben ein Benutzerkonto für <b>%{email}</b> erhalten, du solltest in Kürze einen Anmeldelink erhalten."
       complete_username_not_found: "Es existiert kein Benutzerkonto mit dem Benutzername <b>%{username}</b>."
       complete_email_not_found: "Es existiert kein Benutzerkonto für <b>%{email}</b>."
+      confirm_title: "Weiter zu %{site_name}"
+      logging_in_as: "Anmeldung als %{email}"
+      confirm_button: Anmeldung fertigstellen
     login:
       title: "Anmelden"
       username: "Benutzername"
@@ -3508,6 +3511,7 @@ de:
             embeddable_host_create: "Einbettbaren Host erstellen"
             embeddable_host_update: "Einbettbaren Host aktualisieren"
             embeddable_host_destroy: "Einbettbaren Host entfernen"
+            change_theme_setting: "Theme Einstellung ändern"
         screened_emails:
           title: "Gefilterte E-Mails"
           description: "Wenn jemand ein Konto erstellt, werden die folgenden E-Mail-Adressen überprüft und es wird die Anmeldung blockiert oder eine andere Aktion ausgeführt."

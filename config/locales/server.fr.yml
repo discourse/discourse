@@ -846,6 +846,8 @@ fr:
     description: '« %{application_name} » demande l''accès suivant à votre compte :'
     instructions: 'Nous venons de générer une nouvelle clé API utilisateur à utiliser avec « %{application_name} », merci de coller cette clé dans votre application :'
     otp_description: 'Voulez-vous autoriser "%{application_name}" à accèder à ce site ?'
+    otp_confirmation:
+      confirm_title: "Continuer vers %{site_name}"
     no_trust_level: "Désolé, vous n'avez pas le niveau de confiance requis pour accéder à l'API utilisateur"
     generic_error: "Désolé, nous n'avons pu générer de clés pour l'API utilisateur, cette fonctionnalité a peut-être été désactivée par l'administrateur"
     scopes:
@@ -1313,7 +1315,7 @@ fr:
     enable_markdown_linkify: "Traiter automatiquement le texte qui ressemble à un lien comme un lien : www.site.com et https://site.com seront automatiquement liés."
     markdown_linkify_tlds: "Liste des domaines de premier niveau qui sont automatiquement traités comme des liens."
     post_undo_action_window_mins: "Nombre de minutes pendant lesquelles un utilisateur peut annuler une action sur un message (J'aime, signaler, etc.)"
-    must_approve_users: "Les responsables doivent approuver les nouveaux utilisateurs afin qu'ils puissent accéder au site. ATTENTION : activer cette option sur un site en production suspendra l'accès des utilisateurs existants qui ne sont pas des responsables !"
+    must_approve_users: "L'équipe du forum doit approuver tous les nouveaux utilisateurs avant qu'il aient accès au site."
     pending_users_reminder_delay: "Avertir les modérateurs si des nouveaux utilisateurs sont en attente d'approbation depuis x heures. Mettre -1 pour désactiver les notifications."
     maximum_session_age: "L'utilisateur restera connecté pour n heures après la dernière visite"
     ga_universal_tracking_code: "Code de suivi Google Universal Analytics (analytics.js), par exemple : UA-12345678-9; voir <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"

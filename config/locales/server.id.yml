@@ -327,6 +327,8 @@ id:
     authorize: "Izinkan"
     read: "baca"
     read_write: "baca/tulis"
+    otp_confirmation:
+      confirm_title: "Lanjut ke %{site_name}"
   reports:
     default:
       labels:

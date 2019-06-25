@@ -252,6 +252,9 @@ uk:
       every_hour: "щогодини"
       daily: "щодня"
       weekly: "щотижня"
+  user_api_key:
+    otp_confirmation:
+      confirm_title: "Продовжити у %{site_name}"
   reports:
     default:
       labels:

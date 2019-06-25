@@ -614,6 +614,8 @@ cs:
       daily: "denně"
       weekly: "týdně"
   user_api_key:
+    otp_confirmation:
+      confirm_title: "Pokračovat na %{site_name}"
     scopes:
       session_info: "Číst user session info"
       read: "Číst vše"

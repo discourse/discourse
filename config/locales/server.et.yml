@@ -541,6 +541,8 @@ et:
     authorize: "Autoriseeri"
     read: "lugemine"
     read_write: "lugemine ja kirjutamine"
+    otp_confirmation:
+      confirm_title: "Edasi saidile %{site_name}"
     scopes:
       read: "Loe kõiki"
       write: "Kirjuta kõikidesse"

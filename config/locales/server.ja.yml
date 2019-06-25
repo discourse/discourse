@@ -39,9 +39,12 @@ ja:
   themes:
     bad_color_scheme: "テーマを更新できません、無効なカラーパレットです"
     other_error: "サーバーに不具合があるので、テーマを更新してください。"
+    compile_error:
+      unrecognized_extension: "ファイルの拡張子が認識できません。: %{extension}"
     import_error:
       generic: テーマをインポートするときにエラーが起こりました
       about_json: "重要なエラー: about.json が存在しないか無効です"
+      about_json_values: "about.jsonは無効な値があります: %{errors}"
       git: "gitレポジトリのクローニングに失敗しました。アクセスが許可されていないか、レポジトリが見つかりません。"
       unpack_failed: "ファイルの解凍に失敗しました"
     errors:
@@ -55,18 +58,27 @@ ja:
       name_too_long: "長すぎる名前の設定があります。長さの最大値は255です。"
       default_value_missing: "設定%{name}はデフォルト値を持っていません"
       default_not_match_type: "設定%{name}のデフォルト値の型が、設定の型と合致しません"
+      enum_value_not_valid: "選択された値は列挙された選択しの一つではありません。"
       number_value_not_valid: "新しい値は許可された範囲を超えています。"
       number_value_not_valid_min_max: "%{min}と%{max}の間になければなりません。"
       number_value_not_valid_min: "%{min}以上でなければなりません。"
       number_value_not_valid_max: "%{max}以下でなければなりません。"
       string_value_not_valid: "新しい値の長さが許可された範囲を超えています。"
       string_value_not_valid_min_max: "%{min}文字以上%{max}文字以下でなければいけません。"
+    locale_errors:
+      invalid_yaml: "翻訳YAMLが無効です"
   emails:
     incoming:
       default_subject: "このトピックはタイトルが必要です。"
       show_trimmed_content: "続きを読む"
+      no_subject: "(件名なし)"
+      no_body: "(内容なし)"
+      errors:
+        bounced_email_error: "Eメールは返送されたEメールレポートです。"
+      unrecognized_error: "認識されていないエラー"
   errors: &errors
     format: "%{attribute} %{message}"
+    format_with_full_message: "<b>%{attribute}</b>%{message}"
     messages:
       too_long_validation: "は、最大文字数(%{max}文字)を超えています。(入力したのは%{length}文字 ) "
       invalid_boolean: "無効な選択肢"
@@ -91,6 +103,8 @@ ja:
       not_an_integer: は整数で入力してください
       odd: は奇数にしてください
       record_invalid: "検証に失敗しました： %{errors}"
+      emojis_disabled: "絵文字を持っていません"
+      ip_address_already_screened: "すでに存在するルールを含んでいます"
       restrict_dependent_destroy:
         one: "%{record}が存在しているので削除できません"
         many: "%{record}が存在しているので削除できません。"
@@ -107,16 +121,26 @@ ja:
         other: "%{model} の保存中に%{count} 個のエラーが発生しました"
     embed:
       load_from_remote: "投稿の読み込みに失敗しました。"
+    site_settings:
+      default_categories_already_selected: "他のリストで使われているカテゴリーは選択できません。"
+      s3_upload_bucket_is_required: "'s3_upload_bucket'がない場合、S3にアップロードを有効にすることはできません。"
   activemodel:
     errors:
       <<: *errors
   bulk_invite:
     file_should_be_csv: "アップロードファイルはcsv形式である必要があります。"
     error: "アップロードファイルにエラーが発生しました。時間が経ってから再度お試しください。"
+  topic_invite:
+    user_exists: "ごめんなさい、そのユーザーはすでに招待されています。一つのトピックにつき一度しかユーザーを招待できません。"
   backup:
     operation_already_running: "操作を実行しています。他の操作はできません。"
     backup_file_should_be_tar_gz: "バックアップファイルは .tar.gz形式である必要があります。"
     not_enough_space_on_disk: "このバックアップファイルをアップロードするディスクの空き容量が足りません。"
+    invalid_filename: "バックアップファイル名に無効な文字が含まれています。有効な文字はa-z 0-9 . - _ です。"
+    file_exists: "アップロードしようとしているファイルはすでに存在しています。"
+    location:
+      local: "ローカル"
+      s3: "Amazon S3"
   not_logged_in: "ログインしてください。"
   not_found: "リクエストされたURL、リソースは見つかりませんでした"
   invalid_access: "リクエストしたリソースの閲覧が許可されていません"
@@ -128,17 +152,29 @@ ja:
   embed:
     start_discussion: "会話をする"
     continue: "会話を続ける"
+    referer: "リファラー:"
     more_replies:
       other: "%{count} 以上の返信"
     loading: "会話を読み込んでいます…"
     permalink: "パーマリンク"
     imported_from: "これは、オリジナルエントリ%{link}に対するディスカッショントピックです"
     in_reply_to: "▶ %{username}"
+    replies:
+      other: "%{count}件のリプライ"
   no_mentions_allowed: "あなたは他のユーザーへメンションを送ることができません。"
   no_mentions_allowed_newuser: "申し訳ありませんが、新規ユーザはこのポストにおいて他のユーザをタグ付けできません。"
+  no_images_allowed_trust: "ごめんなさい、ポストに画像を添付することができません"
   no_images_allowed: "新規ユーザーは投稿に画像を付ける事はできません。"
+  too_many_images:
+    other: "ごめんなさい、新しいユーザーは一つのポストにつき%{count}個の画像しか貼り付けられません。"
   no_attachments_allowed: "申し訳ありませんが、新規ユーザはこのポストにファイルを添付できません。"
+  too_many_attachments:
+    other: "ごめんなさい、新しいユーザーは一つのポストにつき%{count}個のファイルしか貼り付けられません。"
   no_links_allowed: "申し訳ありませんが、新規ユーザはこのポストにリンクを貼れません。"
+  links_require_trust: "ごめんなさい、ポストにリンクを含めることはできません。"
+  too_many_links:
+    other: "ごめんなさい、新しいユーザーは一つのポストにつき%{count}個のリンクしか貼り付けられません。"
+  contains_blocked_words: "ポストに許可されていない言葉が含まれています: %{word}"
   spamming_host: "申し訳ありませんが、このホストへのリンクを貼ることはできません。"
   user_is_suspended: "凍結中のユーザーは投稿できません。"
   topic_not_found: "問題が発生しました。トピックがクローズしたか、閲覧中に削除された可能性があります。"
@@ -159,11 +195,20 @@ ja:
   private_message_abbrev: "メッセージ"
   rss_description:
     latest: "最新のトピック"
+    top: "トップトピック"
+    top_all: "すべての期間のトップトピック"
+    top_yearly: "年間のトップトピック"
+    top_quarterly: "四半期のトップトピック"
+    top_monthly: "月間のトップトピック"
+    top_weekly: "今週のトップトピック"
+    top_daily: "今日のトップトピック"
     posts: "最近の投稿"
+    private_posts: "最新の個人メッセージ"
     group_posts: "%{group_name}からの最新投稿"
     group_mentions: "%{group_name}からの最新メンション"
     user_posts: "@%{username}からの最新投稿"
     user_topics: "@%{username}からの最新トピック"
+    tag: "タグされたトピック"
   too_late_to_edit: "この投稿の編集・削除期間が過ぎました。編集・削除が出来ません。"
   excerpt_image: "画像"
   groups:
@@ -184,6 +229,16 @@ ja:
   education:
     until_posts:
       other: "%{count} 投稿"
+    "new-topic": |
+      %{site_name} へようこそ。 **新しい投稿をありがとうございます！**
+
+      - タイトルは声に出して読んでみた時に関心を惹くように聞こえますか？適切な要約になっていますか？
+
+      - 誰がこれに興味を持ちますか？なぜ問題ですか？どのような反応を期待しますか？
+
+      - 他の人が*見つけ*やすいよう、一般的な単語を使ってください。関連するトピックとまとめるため、カテゴリを選んでください。
+
+      その他、[我々のコミュニティガイドラインをご覧ください](%{base_path}/guidelines)。 この案内は初めの %{education_posts_text}だけ表示されます。
     too_many_replies: |
       ### このトピックへの返信数の制限に達しました
 
@@ -218,6 +273,7 @@ ja:
               same_as_username: "はあなたのユーザー名と同じです。より安全なパスワードを使用してください"
               same_as_email: "はあなたのメールアドレスと同じです。より安全なパスワードを使用してください"
               same_as_current: "はあなたの現在のパスワードと同じです。"
+              unique_characters: "パスワードに繰り返しが多すぎます。より安全なものを入力してください。"
             ip_address:
               signup_not_allowed: "このアカウントからのサインアップできません。"
         color_scheme_color:
@@ -452,6 +508,8 @@ ja:
         make: "このトピックはバナートピックに設定されています。ユーザーが解除しない限り、ページ毎の一番上に表示されます"
         remove: "このトピックはバナーではなくなりました。トップページには表示されなくなります"
   unsubscribed:
+    title: "メール設定を更新しました！"
+    description: " <b>%{email}</b>のメール設定は更新されました。変更するには <a href='%{url}'>あなたのユーザー設定にアクセスしてください</a>。"
     topic_description: "%{link}を再配信するために、トピックの右か下の通知コントロールを使用してください。"
     private_topic_description: "再配信するために、トピックの右か下の通知コントロールを使用してください。"
   unsubscribe:
@@ -478,11 +536,14 @@ ja:
     read: "既読"
     read_write: "既読/書く"
     description: '"%{application_name}" があなたのアカウントへのアクセスを要求しています: '
+    otp_confirmation:
+      confirm_title: "%{site_name}へ"
     no_trust_level: "申し訳ありませんが、ユーザーAPIへのアクセスはできません。"
     generic_error: "申し訳ありませんが、この機能は管理者が使用できなくしています。"
     scopes:
       message_bus: "ライプアップデート"
       notifications: "全ての未読通知を既読にします"
+      session_info: "ユーザー情報を読み取ります"
       read: "全て既読にする"
   reports:
     default:
@@ -744,7 +805,7 @@ ja:
     tl4_additional_likes_per_day_multiplier: "この数字を掛けると TL4 (リーダー) の1日あたりの「いいね！」の上限を増やします"
     traditional_markdown_linebreaks: "Markdown の従来形式のラインブレーク (行の終わりにダブルスペース) を使う"
     post_undo_action_window_mins: "投稿に対するアクション (「いいね!」、通報等) 取り消しを許可する時間 (秒)"
-    must_approve_users: "スタッフはサイトへのアクセスが許可される前のすべての新規ユーザを承認する必要があります。警告：公開中のサイトでこれを有効にすると、既存の非スタッフユーザのアクセスを取り消すことになります！"
+    must_approve_users: "ユーザがサイトにアクセスするには、スタッフの承認が必要"
     moderators_create_categories: "モデレータのカテゴリ作成を許可"
     cors_origins: "CORSを許可。オリジンはhttp://かhttps://を含む必要があります。CORSを有効にするには、環境変数　DISCOURSE_ENABLE_CORSにtrueをセットする必要があります"
     top_menu: "ホームナビゲーションに表示する項目・表示順を指定。例:  latest|new|unread|categories|top|read|posted|bookmarks"
@@ -814,10 +875,10 @@ ja:
     enable_flash_video_onebox: "onebox で、swf の埋め込みと flv(Adobe Flash) リンクを許可する。注意: セキュリティリスクになる可能性があります"
     default_invitee_trust_level: "招待したユーザのデフォルトトラストレベル(0-4)"
     default_trust_level: "新規ユーザのデフォルトトラストレベル(0-4) 警告: 変更すると深刻なスパムのリスクがあります"
-    tl1_requires_topics_entered: "新規ユーザがトラストレベル1に昇格するために作成しなければならないトピックの数"
+    tl1_requires_topics_entered: "新規ユーザーがトラストレベル1に昇格するために閲覧しなければならないトピックの数"
     tl1_requires_read_posts: "新規ユーザがトラストレベル1に昇格するために閲覧しなければらないポストの数"
     tl1_requires_time_spent_mins: "新規ユーザがトラストレベル1に昇格するためにポストを読まなければならない時間 (分)"
-    tl2_requires_topics_entered: "トラストレベル2に昇格するために作成しなければならないトピックの数"
+    tl2_requires_topics_entered: "ユーザーがトラストレベル2に昇格するために閲覧しなければならないトピックの数"
     tl2_requires_read_posts: "トラストレベル2に昇格するために閲覧しなければならないポストの数"
     tl2_requires_time_spent_mins: "トラストレベル2に昇格するためにポストを読まなければならない時間（分）"
     tl2_requires_days_visited: "トラストレベル2に昇格するためにサイトを訪問しなければない日数"
@@ -1279,6 +1340,13 @@ ja:
     see_more: "もっと見る"
     search_title: "サイトを検索"
     search_button: "検索"
+  login_required:
+    welcome_message: |
+      ## [%{title}へようこそ](#welcome)
+      アカウントが必要です。続けるにはアカウントを作るかログインしてください。
+    welcome_message_invite_only: |
+      ## [%{title}へようこそ](#welcome)
+      アカウントが必要です。続けるには既存のメンバーに招待を依頼するかログインしてください。
   deleted: "削除"
   image: "画像"
   upload:

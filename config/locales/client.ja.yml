@@ -9,18 +9,18 @@ ja:
   js:
     number:
       format:
-        separator: "."
-        delimiter: ","
+        separator: "。"
+        delimiter: "、"
       human:
         storage_units:
           format: "%n %u"
           units:
             byte:
               other: バイト
-            gb: GB
-            kb: KB
-            mb: MB
-            tb: TB
+            gb: ギガバイト
+            kb: キロバイト
+            mb: メガバイト
+            tb: テラバイト
       short:
         thousands: "{{number}}k"
         millions: "{{number}}M"
@@ -133,6 +133,7 @@ ja:
     bootstrap_mode_disabled: "ブートストラップモードは24時間以内に無効になります。"
     themes:
       default_description: "デフォルト"
+      broken_theme_alert: "あなたのサイトはテーマかコンポーネント%{theme}の影響で動いていません。%{path}で無効にしてください。"
     s3:
       regions:
         ap_northeast_1: "アジア(東京)"
@@ -152,6 +153,7 @@ ja:
         us_east_1: "米東部(バージニア北部)"
         us_east_2: "米東部(オハイオ)"
         us_gov_east_1: "AWS GovCloud (米国東部)"
+        us_gov_west_1: "AWS GovCloud (US-West)"
         us_west_1: "米西部(カリフォルニア北部)"
         us_west_2: "米西部(オレゴン)"
     edit: "このトピックのタイトル/カテゴリを編集"
@@ -162,7 +164,7 @@ ja:
     submit: "送信"
     generic_error: "申し訳ありません、エラーが発生しました。"
     generic_error_with_reason: "エラーが発生しました: %{error}"
-    sign_up: "サインアップ"
+    sign_up: "アカウントを作成"
     log_in: "ログイン"
     age: "経過"
     joined: "参加時刻"
@@ -279,14 +281,25 @@ ja:
         search: "タイトルでメッセージを検索:"
         placeholder: "メッセージのタイトルをここに入力してください"
     review:
+      order_by: "順"
       in_reply_to: "こちらへの回答"
+      claim:
+        title: "トピックを要請する"
+      unclaim:
+        help: "この要請を削除する"
       delete: "削除する"
       settings:
         saved: "保存しました"
         save_changes: "変更を保存"
         title: "設定"
+      moderation_history: "ヒストリーを操作する"
       view_all: "すべて見る"
       grouped_by_topic: "トピックによってグループ分けされた"
+      none: "レビューするアイテムがありません"
+      view_pending: "保留のものを見る"
+      topic_has_pending:
+        other: "このトピックは<b>{{count}}</b>件の承認待ちのポストがあります"
+      title: "レビュー"
       topic: "トピック:"
       filtered_user: "ユーザー"
       show_all_topics: "すべてのトピックを表示"
@@ -318,6 +331,8 @@ ja:
           title: "保留中"
         rejected:
           title: "拒否されたメール"
+        ignored:
+          title: "無視する"
       types:
         reviewable_user:
           title: "ユーザー"
@@ -571,6 +586,8 @@ ja:
       user_notifications:
         ignore_duration_username: "ユーザー名"
         ignore_duration_save: "無視する"
+        ignore_no_users: "無視するユーザーはいません。"
+        ignore_option: "無視する"
         mute_option: "通知しない"
         normal_option: "通常"
       activity_stream: "アクティビティ"
@@ -652,6 +669,8 @@ ja:
       users: "ユーザー"
       muted_users: "ミュート"
       muted_users_instructions: "ユーザーからの通知をすべて行いません"
+      ignored_users: "無視する"
+      ignored_users_instructions: "ユーザーからのすべての投稿と通知が抑制されます。"
       muted_topics_link: "ミュートしたトピックを表示する"
       watched_topics_link: "ウォッチ中のトピックを表示"
       tracked_topics_link: "追跡トピックを表示"
@@ -660,6 +679,7 @@ ja:
       revoke_access: "アクセス解除"
       undo_revoke_access: "アクセス解除をやめる"
       api_approved: "承認されました:"
+      api_last_used_at: "最終利用:"
       theme: "テーマ"
       home: "デフォルトホームページ"
       staged: "段階"
@@ -714,10 +734,12 @@ ja:
           title: "バックアップコードが作られました"
       second_factor:
         title: "2段階認証"
+        enable: "2段階認証を有効にする"
         confirm_password_description: "続行するにはパスワードを入力してください"
         label: "コード"
         show_key_description: "手動入力"
         oauth_enabled_warning: "アカウントで2段階認証が有効になると、ソーシャルログインは無効になります。"
+        enforced_notice: "このサイトにアクセスするには2段階認証を有効にする必要があります。"
       change_about:
         title: "プロフィールを変更"
         error: "変更中にエラーが発生しました。"
@@ -754,7 +776,7 @@ ja:
         primary: "主要なメールアドレス"
         secondary: "その他のメールアドレス"
         no_secondary: "その他のメールアドレスはありません"
-        instructions: "公開で閲覧できない"
+        instructions: "他人に公開はされません"
         ok: "確認用メールを送信します"
         invalid: "正しいメールアドレスを入力してください"
         authenticated: "あなたのメールアドレスは {{provider}} によって認証されています"
@@ -774,7 +796,7 @@ ja:
         ok: "問題ありません"
       username:
         title: "ユーザー名"
-        instructions: "被らず、空白を含まず、短い名前を入力してください。"
+        instructions: "他人と被らず、空白を含まず、短い名前を入力してください。"
         short_instructions: "@{{username}} であなたにメンションを送ることができます"
         available: "ユーザー名は利用可能です"
         not_available: "利用できない名前です。 {{suggestion}} などはどうでしょうか？"
@@ -827,6 +849,7 @@ ja:
         always: "常に含める"
         never: "含めない"
       email_digests:
+        title: "ここを訪れていないとき、人気のトピックと返信のサマリーをメールで送信する"
         every_30_minutes: "30分毎"
         every_hour: "1時間毎"
         daily: "毎日"
@@ -836,6 +859,7 @@ ja:
       email_level:
         title: "誰かが投稿を引用した時、投稿に返信があった時、私のユーザ名にメンションがあった時、またはトピックへの招待があった時にメールで通知を受け取る。"
         always: "常に含める"
+        only_when_away: "離れている時のみ"
         never: "追跡しない"
       email_messages_level: "メッセージを受け取ったときにメールで通知を受け取る。"
       include_tl0_in_digests: "サマリーをメールする際、新しいユーザーのコンテンツを含める"
@@ -954,7 +978,7 @@ ja:
         title: "プロフィール画像"
         header_title: "プロフィール、メッセージ、ブックマーク、設定"
       title:
-        title: "タイトル"
+        title: "肩書き"
         none: "（なし）"
       filters:
         all: "すべて"
@@ -1042,6 +1066,7 @@ ja:
     trust_level: "トラストレベル"
     search_hint: "ユーザ名、メールアドレスまたはIPアドレス"
     create_account:
+      disclaimer: "登録すると<a href='{{privacy_link}}' target='blank'>プライバシーポリシー</a>と<a href='{{tos_link}}' target='blank'>利用規約</a>に同意することになります。"
       title: "アカウントの作成"
       failed: "エラーが発生しました。既にこのメールアドレスは使用中かもしれません。「パスワードを忘れました」リンクを試してみてください"
     forgot_password:
@@ -1061,6 +1086,7 @@ ja:
       link_label: "ログインリンクをメールする"
       complete_username_not_found: " <b>%{username}</b>は見つかりませんでした"
       complete_email_not_found: "<b>%{email}</b> にアカウントはありません"
+      confirm_title: "%{site_name}へ"
     login:
       title: "ログイン"
       username: "ユーザ名"
@@ -1565,7 +1591,9 @@ ja:
           "3_2": "このトピックをウォッチしているため通知されます。"
           "3_1": "このトピックを作成したため通知されます。"
           "3": "このトピックをウォッチしているため通知されます。"
+          "2_8": "このカテゴリを追跡しているので、新たな返信のカウント数が表示されます。"
           "2_4": "このトピックに返信したので、新たな返信のカウント数が表示されます。"
+          "2_2": "このトピックを追跡しているので、新たな返信のカウント数が表示されます。"
           "2": '<a href="{{basePath}}/u/{{username}}/preferences">このトピックを読む</a>ので、新しい返信の数が表示されます。'
           "1_2": "他のユーザからメンションされた場合か、メッセージ内の投稿に返信された場合に通知されます。"
           "1": "他のユーザからメンションされた場合か、メッセージ内の投稿に返信された場合に通知されます。"
@@ -1746,6 +1774,7 @@ ja:
       quote_reply: "引用"
       edit_reason: "理由: "
       post_number: "投稿{{number}}"
+      ignored: "無視したコンテンツ"
       wiki_last_edited_on: "wikiの最終編集日"
       last_edited_on: "投稿の最終編集日"
       reply_as_new_topic: "トピックのリンクを付けて返信"
@@ -1753,6 +1782,7 @@ ja:
       continue_discussion: "{{postLink}} から:"
       follow_quote: "引用した投稿に移動"
       show_full: "全て表示"
+      show_hidden: "無視したコンテンツを見る"
       deleted_by_author:
         other: "(投稿は投稿者により削除されました。何らかの通報がされていない限り、%{count}時間後に自動的に削除されます)"
       expand_collapse: "開く/折りたたむ"
@@ -2170,7 +2200,7 @@ ja:
       title: バッジ
       badge_count:
         other: "%{count}個のバッジ"
-      select_badge_for_title: プロフィールのタイトルに付けるバッジを選んでください
+      select_badge_for_title: プロフィールの肩書きに付けるバッジを選んでください
       none: "（なし）"
       badge_grouping:
         getting_started:
@@ -3017,7 +3047,7 @@ ja:
         no_user_badges: "%{name}はバッジを付けられていません。"
         no_badges: 付けられるバッジがありません
         none_selected: "バッジを選択して開始"
-        allow_title: バッジをタイトルとして使用されることを許可する
+        allow_title: バッジを肩書きとして使用されることを許可する
         multiple_grant: 何度もゲットできるようにする
         listable: 公開されるバッジページにバッジを表示する
         enabled: バッジを有効にする

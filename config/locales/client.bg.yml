@@ -919,6 +919,7 @@ bg:
     email_login:
       complete_username_not_found: "Няма профил, който да съвпада с потребителскоto име <b>%{username}</b>"
       complete_email_not_found: "Няма акаунт който да съвпада с <b>%{email}</b>"
+      confirm_title: "Продължете към %{site_name}"
     login:
       title: "Вход"
       username: "Потребител"

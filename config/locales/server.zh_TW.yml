@@ -792,6 +792,8 @@ zh_TW:
     description: '“%{application_name}”正在請求訪問你的賬戶中的以下權限：'
     instructions: '系統熱騰騰產生了新的使用者API鑰匙給您使用，請將以下API鑰匙貼到您的應用程式裡。'
     otp_description: '你要允許進入%{application_name}這個網站嗎？'
+    otp_confirmation:
+      confirm_title: "繼續連接至 %{site_name}"
     no_trust_level: "抱歉，你沒有使用使用者 API 所需要的信任等級"
     generic_error: "抱歉，我們不能分發使用者 API 密鑰，該特性已經被站點管理員禁用"
     scopes:
@@ -1252,7 +1254,7 @@ zh_TW:
     enable_markdown_linkify: "自動將前方有www、https:// 的字樣加上連結，例如：www.example.com 和 https://example.com 將自動加上超連結。"
     markdown_linkify_tlds: "自動設為連結的最上層網域列表"
     post_undo_action_window_mins: "允許使用者還原貼文上近期動作（讚、標記等）的時間長度（分鐘數）。"
-    must_approve_users: "新使用者在被允許訪問站點前需要由管理人員批准。警告：在運行的站點中啟用將解除所有非管理人員使用者的訪問權限！"
+    must_approve_users: "新註冊用戶必須由管理員進行審核，才能進行相關操作"
     pending_users_reminder_delay: "如果新使用者等待批准時間超過此小時設置則通知版主。設置 -1 關閉通知。"
     maximum_session_age: "使用者自訪問後可維持登錄 n 小時"
     ga_universal_domain_name: "Google 通用 Analytics (分析) 域名（analytics.js）追蹤代碼，例如：mysite.com；参考 <a href='https://google.com/analytics' target='_blank'>http://google.com/analytics</a>"

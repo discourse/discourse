@@ -928,6 +928,7 @@ sv:
     email_login:
       complete_username_not_found: "Det finns inget konto som matchar användarnamnet <b>%{username}</b>"
       complete_email_not_found: "Det finns inget konto som matchar <b>%{email}</b>"
+      confirm_title: "Fortsätt till %{site_name}"
     login:
       title: "Logga in"
       username: "Användare"

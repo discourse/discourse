@@ -1066,6 +1066,7 @@ tr_TR:
       complete_email_found: "<b>%{email}</b> e-posta adresi ile eşleşen bir hesap bulduk, kısa bir süre içinde giriş bağlantısına sahip bir e-posta alacaksınız."
       complete_username_not_found: "Hiçbir hesap kullanıcı adı <b>%{username}</b> ile eşleşmiyor"
       complete_email_not_found: "%{email} Hiçbir hesap bulunamadı"
+      confirm_title: "%{site_name} devam et"
     login:
       title: "Giriş Yap"
       username: "Kullanıcı"

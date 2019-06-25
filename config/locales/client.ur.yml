@@ -1256,6 +1256,9 @@ ur:
       complete_email_found: "ہمیں ایک ایسا اکاؤنٹ مل گیا جو <b>%{email}</b> سے میچ کرتا ہے، آپ کو جلد ہی لاگ اِن لِنک کے ساتھ ایک ای میل موصول ہو جانی چاہئے۔"
       complete_username_not_found: "کوئی اکاؤنٹ صارف نام <b>%{username}</b> سے میچ نہیں کرتا"
       complete_email_not_found: "کوئی اکاؤنٹ <b>%{email}</b> سے میچ نہیں کرتا"
+      confirm_title: "%{site_name} پر جاری رکھیں"
+      logging_in_as: "%{email} کے طور پر لاگ اِن"
+      confirm_button: لاگ اِن مکمل
     login:
       title: "لاگ اِن"
       username: "صارف"
@@ -2605,6 +2608,7 @@ ur:
         up_down: "%{shortcut} انتخاب منتقل کریں &uarr; &darr;"
         open: "%{shortcut} منتخب کردہ ٹاپک کھولیں"
         next_prev: "%{shortcut} اگلا/پچھلا سیکشن"
+        go_to_unread_post: "%{shortcut} پہلی غیر پڑھی پوسٹ پر جائیں"
       application:
         title: "ایپلیکیشن"
         create: "%{shortcut} نیا ٹاپک بنائیں"
@@ -2641,6 +2645,7 @@ ur:
         mark_tracking: "%{shortcut} ٹاپک ٹریک کریں"
         mark_watching: "%{shortcut} ٹاپک پر نظر رکھیں"
         print: "%{shortcut} ٹاپک پرِنٹ کریں"
+        defer: "%{shortcut} ٹاپک ملتوی کریں"
     badges:
       earned_n_times:
         one: "یہ بَیج %{count} دفعہ حاصل کیا"
@@ -3336,6 +3341,7 @@ ur:
           email: "اصل پیغام"
           run: "ٹیسٹ چلائیں"
           text: "منتخب متن کا جسم"
+          elided: "کاٹا گیا متن"
         sending_test: "ٹیسٹ اِیمیل بھیجی جا رہی ہے..."
         error: "<b>خرابی</b> - %{server_error}"
         test_error: "ٹیسٹ اِیمیل بھیجنے میں ایک مسئلہ پیش آیا۔ اپنی میل سیٹِنگ دوبارہ چیک کریں، تصدیق کر لیں کہ آپ کا ہَوسٹ میل کنکشنوں کو بلاک تو نہیں کر رہا، اور دوبارہ کوشش کریں۔"
@@ -3506,6 +3512,7 @@ ur:
             embeddable_host_create: "قابلِ اَیمبَیڈ ہَوسٹ تخلیق"
             embeddable_host_update: "قابلِ اَیمبَیڈ ہَوسٹ اپ ڈیٹ"
             embeddable_host_destroy: "قابلِ اَیمبَیڈ ہَوسٹ تباہ"
+            change_theme_setting: "تِھیم کی سیٹِنگ تبدیل کریں"
         screened_emails:
           title: "سکرین کی گئی اِیمیلز"
           description: "جب کوئی نیا اکاؤنٹ بنانے کی کوشش کرے گا، تو مندرجہ ذیل اِیمیل ایڈریسوں کو چیک کیا جائے گا اور رجسٹریشن بلاک، یا کوئی اور کارروائی کی جائے گی۔"

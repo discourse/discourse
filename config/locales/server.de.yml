@@ -823,6 +823,10 @@ de:
     description: '"%{application_name}" fordert den folgenden Zugriff auf dein Konto:'
     instructions: 'Wir haben gerade einen neuen Benutzer-API-Schlüssel für dich generiert zur Verwendung mit „%{application_name}“, bitte füge den folgenden Schlüssel in deine Anwendung ein:'
     otp_description: 'Möchtest du "%{application_name}" erlauben, auf diese Seite zuzugreifen?'
+    otp_confirmation:
+      confirm_title: "Weiter zu %{site_name}"
+      logging_in_as: "Anmeldung als %{username}"
+      confirm_button: Anmeldung fertigstellen
     no_trust_level: "Entschuldige, du hast nicht die erforderliche Vertrauensstufe, um die Benutzer API zu nutzen."
     generic_error: "Entschuldige, wir können keinen Benutzer API Schlüssel erstellen. Dieses Feature ist möglicherweise vom Site Administrator deaktiviert worden."
     scopes:
@@ -1290,7 +1294,7 @@ de:
     enable_markdown_linkify: "Text, der nach einem Link aussieht, automatisch als Link behandeln: www.example.com und https://example.com werden automatisch verlinkt"
     markdown_linkify_tlds: "Liste der Top-Level-Domains, die automatisch als Links behandelt werden"
     post_undo_action_window_mins: "Minuten, die ein Benutzer hat, um Aktionen auf einen Beitrag rückgängig zu machen (Gefällt mir, Meldung, usw.)."
-    must_approve_users: "Team-Mitglieder müssen alle neuen Benutzerkonten freischalten, bevor diese Zugriff auf die Website erhalten. ACHTUNG: Das Aktivieren dieser Option für eine Live-Site entfernt den Zugriff auch für alle existierenden Benutzer außer für Team-Mitglieder!"
+    must_approve_users: "Alle neuen Benutzerkonten müssen von Mitarbeitern freigeschaltet werden, bevor sie Zugriff auf die Seite erhalten."
     pending_users_reminder_delay: "Benachrichtige die Moderatoren, falls neue Benutzer mehr als so viele Stunden auf ihre Genehmigung gewartet haben. Stelle -1 ein, um diese Benachrichtigungen zu deaktivieren."
     maximum_session_age: "Benutzer bleiben (n) Stunden nach ihrem letzten Besuch angemeldet"
     ga_universal_tracking_code: "Tracking Code ID von Google Universal Analytics (analytics.js), eg: UA-12345678-9; siehe <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"

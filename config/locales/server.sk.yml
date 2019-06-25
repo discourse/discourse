@@ -580,6 +580,8 @@ sk:
     authorize: "Autorizovať"
     read: "čítať"
     read_write: "čítať/zapisovať"
+    otp_confirmation:
+      confirm_title: "Pokračujte na %{site_name}"
     no_trust_level: "Ľutujeme, nemáte dostatočný stupeň dôvery na prístup k používateľskému API"
     generic_error: "Ľutujeme, nie je možné vystaviť používateľský API kľúč, táto možnosť môže byť vypnutá administrátorom."
   reports:
@@ -824,7 +826,6 @@ sk:
     tl4_additional_likes_per_day_multiplier: "Zvýšiť počet páči sa mi na deň pre úroveň dôvery 4 (vedúci) vynásobením týmto číslom"
     traditional_markdown_linebreaks: "V Markdown použiť tradičné oddeľovače riadkov, čo vyžaduje dve koncové medzery ako oddeľovač riadku."
     post_undo_action_window_mins: "Počet minút počas ktorých môžu používatelia zrušiť poslednú akciu na príspevku (\"Páči sa\", označenie, atď..)."
-    must_approve_users: "Obsluha musí povoliť účty všetkým novým používateľom skôr než im bude povolený prístup na stránku. UPOZORNENIE: zapnutie na živej stránke spôsobí zrušenie prístupu pre existujúcich používateľov, okrem obsluhy!"
     pending_users_reminder_delay: "Upozorni moderátora ak nový používateľ čaká na schválenie dlhšie ako tento počet hodín. Nastavte -1 pre vypnutie upozornenia."
     moderators_create_categories: "Povoliť moderátorom vytváranie nových kategórií"
     cors_origins: "Povoľ prameňom/origins použitie cross-origin dotazov (CORS). Každý prameň/origin musí obsahovať http:// alebo https://. Aby ste umožnili CORS, systémové premenná DISCOURSE_ENABLE_CORS musí byť nastavená na true."

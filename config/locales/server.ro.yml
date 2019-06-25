@@ -561,6 +561,8 @@ ro:
     read: "citire"
     read_write: "citire/scriere"
     description: '„%{application_name}” cere accesul la contul tău de:'
+    otp_confirmation:
+      confirm_title: "Continuă la %{site_name}"
     no_trust_level: "Ne pare rău, nu ai nivelul de încredere necesar pentru a accesa API utilizator"
     generic_error: "Ne pare rău, nu putem să emitem chei API utilizator: această funcționalitate este probabil dezactivată din administrarea site-ului"
     scopes:
@@ -849,7 +851,7 @@ ro:
     tl4_additional_likes_per_day_multiplier: "Crește numărul maxim de aprecieri pe zi pentru (membrii cu) nivelul de încredere 4, multiplicând cu această valoare"
     traditional_markdown_linebreaks: "Folosește întreruperi de rând tradiționale în Markdown, ceea ce necesită două spații pentru un capăt de rând. "
     post_undo_action_window_mins: "Numărul de minute în care utilizatorii pot anula acțiunile recente asupra unei postări (aprecieri, marcări cu marcaje de avertizare, etc)."
-    must_approve_users: "Membrii echipei trebuie să aprobe toate conturile noilor utilizatori înainte ca aceștia să poată accesa site-ul. ATENȚIE: activarea acestei opțiuni pentru un site în producție va revoca accesul tuturor utilizatorilor care nu sunt membri ai echipei!"
+    must_approve_users: "Personalul trebuie să aprobe toate conturile utilizatorilor noi înainte ca ei să aibă aces în site."
     pending_users_reminder_delay: "Notifică moderatorii dacă noii utilizatori sunt în așteptarea aprobării de mai mult de atâtea ore. Setează la -1 pentru a dezactiva notificările."
     maximum_session_age: "Utilizatorul va rămâne autentificat pentru n ore de la ultima vizită"
     moderators_create_categories: "Permite moderatorilor să creeze noi categorii"
