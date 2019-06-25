@@ -61,7 +61,7 @@ class Emoji
   end
 
   def self.url_for(name)
-    name = name.gsub(":t", "/")
+    name = name.gsub(':t', '/').tr(':', '')
     "#{Discourse.base_uri}/images/emoji/#{SiteSetting.emoji_set}/#{name}.png?v=#{EMOJI_VERSION}"
   end
 
