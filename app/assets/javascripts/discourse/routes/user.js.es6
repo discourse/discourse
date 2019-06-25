@@ -1,3 +1,5 @@
+import { USERNAME_ROUTE_REGEXP } from "discourse/routes/concerns/username-route-regexp";
+
 export default Discourse.Route.extend({
   titleToken() {
     const username = this.modelFor("user").username;
@@ -39,7 +41,11 @@ export default Discourse.Route.extend({
       return this.currentUser;
     }
 
-    return Discourse.User.create({ username: params.username });
+    if (params.username.match(USERNAME_ROUTE_REGEXP)) {
+      return Discourse.User.create({ username: params.username });
+    } else {
+      this.transitionTo("exception-unknown");
+    }
   },
 
   afterModel() {

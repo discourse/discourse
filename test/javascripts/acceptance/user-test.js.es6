@@ -2,6 +2,12 @@ import { acceptance } from "helpers/qunit-helpers";
 
 acceptance("User", { loggedIn: true });
 
+QUnit.test("Invalid usernames", async assert => {
+  await visit("/u/eviltrout%2F..%2F..%2F/summary");
+
+  assert.equal(currentPath(), "exception-unknown");
+});
+
 QUnit.test("Invites", async assert => {
   await visit("/u/eviltrout/invited/pending");
   assert.ok($("body.user-invites-page").length, "has the body class");
