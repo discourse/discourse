@@ -608,6 +608,8 @@ sl:
       every_six_months: "vsakih 6 mesecev"
   user_api_key:
     otp_description: 'Hočete dovoliti "%{application_name}" da dostopa do te strani?'
+    otp_confirmation:
+      confirm_title: "Nadaljujte na %{site_name}"
   flags:
     errors:
       already_handled: "Prijava je bila že obdelana"

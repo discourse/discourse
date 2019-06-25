@@ -1261,6 +1261,7 @@ it:
       complete_email_found: "Abbiamo trovato un account che corrisponde a <b>%{email}</b>. A breve dovresti ricevere una email con un link di login."
       complete_username_not_found: "Nessun account con nome utente <b>%{username}</b>"
       complete_email_not_found: "Nessun account con email <b>%{email}</b>"
+      confirm_title: "Procedi su %{site_name}."
     login:
       title: "Connetti"
       username: "Utente"

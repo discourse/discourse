@@ -1261,6 +1261,9 @@ nl:
       complete_email_found: "We hebben een account gevonden die overeenkomt met <b>%{email}</b>. U zou spoedig een e-mail met een koppeling voor aanmelding moeten ontvangen."
       complete_username_not_found: "Er komt geen account overeen met de gebruikersnaam <b>%{username}</b>"
       complete_email_not_found: "Er komt geen account overeen met <b>%{email}</b>"
+      confirm_title: "Doorgaan naar %{site_name}"
+      logging_in_as: "Aanmelden als %{email}"
+      confirm_button: Aanmelding voltooien
     login:
       title: "Aanmelden"
       username: "Gebruiker"

@@ -413,6 +413,9 @@ vi:
       every_hour: "hàng giờ"
       daily: "hàng ngày"
       weekly: "hàng tuần"
+  user_api_key:
+    otp_confirmation:
+      confirm_title: "Tiếp tục tới %{site_name}"
   reports:
     default:
       labels:
@@ -660,7 +663,6 @@ vi:
     tl4_additional_likes_per_day_multiplier: "Tăng giới hạn thích mỗi ngày cho mức độ tin tưởng 4 (dẫn đầu) bằng cách nhân với số này"
     traditional_markdown_linebreaks: "Sử dụng ngắt dòng truyền thống trong Markdown, đòi hỏi hai khoảng trống kế tiếp cho một ngắt dòng."
     post_undo_action_window_mins: "Số phút thành viên được phép làm lại các hành động gần đây với bài viết (like, đánh dấu...)."
-    must_approve_users: "Quản trị viên phải duyệt tất cả các tài khoản thành viên mới trước khi họ có quyền truy cập website. LƯU Ý: bật tính năng này trên site đang hoạt động sẽ hủy bỏ quyền truy cập đối với các tài khoản thành viên hiện tại!"
     pending_users_reminder_delay: "Thông báo cho quản trị viên nếu thành viên mới đã chờ duyệt lâu hơn số giờ được thiết lập ở đây, đặt là -1 để tắt thông báo."
     moderators_create_categories: "Cho phép điều hành viên tạo danh mục mới"
     cors_origins: "Cho phép CORS (Cross-Origin Requests). Mỗi nguyên gốc phải kèm theo http:// hoặc https://. Biến env DISCOURSE_ENABLE_CORS phải được đặt là 'true' để bật CORS."

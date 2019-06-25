@@ -1119,6 +1119,7 @@ sk:
       button_label: "s emailom"
       complete_username_not_found: "Žiadny účet nemá priradené používateľské meno <b>%{username}</b>"
       complete_email_not_found: "Žiadny účet nie je s e-mailom  <b>%{email}</b>"
+      confirm_title: "Pokračujte na %{site_name}"
     login:
       title: "Prihlásenie"
       username: "Používateľ"

@@ -45,7 +45,7 @@ ca:
     incoming:
       default_subject: "Aquest tema necessita un títol"
       show_trimmed_content: "Mostrar contingut tallat"
-      maximum_staged_user_per_email_reached: "S'ha arribat a la quantitat màxima de persones usuàries creades amb correu electrònic."
+      maximum_staged_user_per_email_reached: "S'ha arribat a la quantitat màxima d'usuaris creades amb correu electrònic."
       errors:
         empty_email_error: "Succeeix quan el correu electrònic en brut que vam rebre era buit."
         no_message_id_error: "Succeeix quan el correu electrònic no conté l'encapçalament 'Message-Id'."
@@ -119,7 +119,7 @@ ca:
     file_should_be_csv: "L'arxiu desat hauria de tenir format csv."
     error: "Hi ha hagut una errada en carregar aquest arxiu. Si us plau, prova-ho més tard."
   topic_invite:
-    user_exists: "Disculpa, aquesta persona ja ha estat convidada. Només pots convidar d'un sol cop una persona a un tema."
+    user_exists: "Aquesta persona ja ha estat convidada. Només podeu convidar d'un sol cop una persona a un tema."
   backup:
     operation_already_running: "Hi ha una operació en marxa en aquest moment. Ara no es pot començar la nova tasca."
     backup_file_should_be_tar_gz: "La còpia de seguretat hauria de ser un arxiu .tar.gz."
@@ -132,8 +132,8 @@ ca:
   reading_time: "Temps de lectura."
   likes: "M'agrades"
   too_many_replies:
-    one: "Ho lamentem, però les noves persones usuàries ara estan de moment limitades a %{count} resposta al mateix tema."
-    other: "Ho lamentem, però les noves persones usuàries ara estan de moment limitades a %{count} respostes al mateix tema."
+    one: "Ho lamentem, però els usuaris nous ara estan de moment limitades a %{count} resposta al mateix tema."
+    other: "Ho lamentem, però els usuaris nous ara estan de moment limitades a %{count} respostes al mateix tema."
   embed:
     start_discussion: "Comença una discussió"
     continue: "Continua la discussió"
@@ -148,30 +148,30 @@ ca:
     permalink: "Enllaç permanent "
     imported_from: "Aquesta discussió és derivada de l'entrada original de %{link}"
     in_reply_to: "%{username}"
-  no_mentions_allowed: "Disculpa, no pots mencionar altres persones usuàries"
+  no_mentions_allowed: "No podeu mencionar altres usuaris"
   too_many_mentions:
-    one: "Disculpa, només pots mencionar una persona usuària a un escrit."
-    other: "Disculpa, només pots mencionar %{count} persones usuàries a un escrit."
-  no_mentions_allowed_newuser: "Disculpa, les noves persones usuàries no poden mencionar-ne d'altres."
+    one: "Només podeu mencionar un usuari en un escrit."
+    other: "Només podeu mencionar %{count} usuaris en un escrit."
+  no_mentions_allowed_newuser: "Els usuaris nous no poden mencionar-ne d'altres."
   too_many_mentions_newuser:
-    one: "Disculpa, les noves persones usuàries només poden mencionar una persona usuària a un escrit."
-    other: "Disculpa, les noves persones usuàries només poden mencionar %{count} persones usuàries a un escrit."
-  no_images_allowed: "Disculpa, les noves persones usuàries no poden adjuntar imatges a un escrit."
+    one: "Els usuaris nous només poden mencionar un usuari en un escrit."
+    other: "Els usuaris nous només poden mencionar %{count} usuaris en un escrit."
+  no_images_allowed: "Els usuaris nous no poden adjuntar imatges a un escrit."
   too_many_images:
-    one: "Disculpa, les noves persones usuàries només poden adjuntar una imatge a un escrit."
-    other: "Disculpa, les noves persones usuàries només poden adjuntar %{count} imatges a un escrit."
-  no_attachments_allowed: "Disculpa, les noves persones usuàries no poden adjuntar arxius a un escrit."
+    one: "Els usuaris nous només poden adjuntar una imatge a un escrit."
+    other: "Els usuaris nous només poden adjuntar %{count} imatges a un escrit."
+  no_attachments_allowed: "Els usuaris nous no poden adjuntar fitxers a un escrit."
   too_many_attachments:
-    one: "Disculpa, les noves persones usuàries només poden adjuntar un arxiu a un escrit."
-    other: "Disculpa, les noves persones usuàries només poden adjuntar %{count} arxius a un escrit."
-  no_links_allowed: "Disculpa, les noves persones usuàries no poden incloure enllaços a un escrit."
+    one: "Els usuaris nous només poden adjuntar un fitxer a un escrit."
+    other: "Els usuaris nous només poden adjuntar %{count} fixers a un escrit."
+  no_links_allowed: "Els usuaris nous no poden incloure enllaços en un escrit."
   too_many_links:
-    one: "Disculpa, les noves persones usuàries només poden incloure un enllaç a un escrit."
-    other: "Disculpa, les noves persones usuàries només poden incloure %{count} enllaços a un escrit."
-  spamming_host: "Disculpa, no pots enviar un enllaç a aquest amfitrió."
-  user_is_suspended: "Les persones usuàries suspeses no tenen permís per publicar."
+    one: "Els usuaris nous només poden incloure un enllaç en un escrit."
+    other: "Els usuaris nous només poden incloure %{count} enllaços en un escrit."
+  spamming_host: "No podeu enviar un enllaç a aquest amfitrió."
+  user_is_suspended: "Les usuaris suspeses no tenen permís per publicar."
   topic_not_found: "Alguna cosa ha fallat. Que potser aquest tema ha estat tancat o esborrat mentre el consultaves?"
-  not_accepting_pms: "Disculpa, per ara %{username} no accepta missatges."
+  not_accepting_pms: "De moment %{username} no accepta missatges."
   just_posted_that: "és massa semblant al que has publicat recentment"
   invalid_characters: "hi conté caràcters invàlids"
   is_invalid: "no sembla clar, és una frase sencera?"
@@ -206,8 +206,8 @@ ca:
       can_not_modify_automatic: "No pots modificar un grup automàtic"
       invalid_domain: "'%{domain}' no és un domini vàlid."
       invalid_incoming_email: "'%{email}' no és una adreça vàlida de correu electrònic."
-      email_already_used_in_group: "'%{email}' ja és fa servir pel grup '%{group_name}'."
-      email_already_used_in_category: "'%{email}' ja es fa servir per la categoria '%{category_name}'."
+      email_already_used_in_group: "'%{email}' ja és utilitzat pel grup '%{group_name}'."
+      email_already_used_in_category: "'%{email}' ja és utilitzat per la categoria '%{category_name}'."
     default_names:
       everyone: "qualsevol"
       admins: "administració"
@@ -259,11 +259,11 @@ ca:
 
       És més fàcil seguir un tema quan té menys respostes més profundes que no pas moltes respostes indivituals.
     too_many_replies: |
-      ### Has assolit el límit de respostes per a aquest tema
+      ### Heu assolit el límit de respostes per a aquest tema
 
-      Disculpa, però les noves persones usuàries estan temporalment limitades a %{newuser_max_replies_per_topic} respostes al mateix tema.
+      Ho sentim, però els usuaris nous estan temporalment limitats a %{newuser_max_replies_per_topic} respostes al mateix tema.
 
-      En comptes d'afegir-hi una altra resposta, si us plau, considera l'edició de les teves respostes d'abans o fes una visita a altres temes.
+      En comptes d'afegir-hi una altra resposta, considereu l'edició de les respostes prèvies o visiteu altres temes.
   activerecord:
     attributes:
       category:
@@ -337,8 +337,8 @@ ca:
       self_parent: "Una subcategoria relacionada no pot ser ella mateixa"
       depth: "No pots nidificar una subcategoria sota una altra"
       invalid_email_in: "'%{email}' no és una adreça vàlida de correu electrònic."
-      email_already_used_in_group: "'%{email}' ja és fa servir pel grup '%{group_name}'."
-      email_already_used_in_category: "'%{email}' ja es fa servir per la categoria '%{category_name}'."
+      email_already_used_in_group: "'%{email}' ja és utilitzat pel grup '%{group_name}'."
+      email_already_used_in_category: "'%{email}' ja és utilitzat per la categoria '%{category_name}'."
     cannot_delete:
       has_subcategories: "No es pot esborrar aquesta categoria perquè té subcategories"
       topic_exists_no_oldest: "No es pot esborrar aquesta categoria perquè el recompte de temes és %{count}."
@@ -435,7 +435,7 @@ ca:
         one: "fa ben bé %{count} any"
         other: "fa ben bé %{count} any"
   password_reset:
-    no_token: "Disculpa, aquest enllaç de canvi de contrasenya és massa antic. Tria el botó de Registre i fes servir 'He oblidat la meva contrasenya' per obtenir-ne un nou enllaç."
+    no_token: "Aquest enllaç de canvi de contrasenya és massa antic. Trieu el botó d'inici de sessió i feu servir 'He oblidat la contrasenya' per a obtenir un nou enllaç."
     choose_new: "Tria una nova contrasenya"
     choose: "Tria una constrasenya"
     update: "Actualitza la contrasenya"
@@ -448,13 +448,13 @@ ca:
     please_continue: "Continua cap a %{site_name}"
     error: "Hi ha hagut una errada en canviar el teu correu electrònic. Que potser l'adreça ja està en ús?"
     error_staged: "Hi ha hagut una errada en canviar el teu correu electrònic. L'adreça ja està en ús per part d'una persona usuària."
-    already_done: "Disculpa, aquest enllaç de confirmació ja no és vàlid. Que potser ha canviat el teu correu electrònic?"
+    already_done: "Aquest enllaç de confirmació ja no és vàlid. Que potser ha canviat el vostre correu electrònic?"
     authorizing_old:
       title: "Gràcies per confirmar la teva adreça actual de correu electrònic"
       description: "T'enviem ara per correu la teva nova adreça per confirmar."
   activation:
     action: "Clica aquí per activar el teu compte"
-    already_done: "Disculpa, ja no és vàlid aquest enllaç per confirmar el compte. Que potser el teu compte ja és actiu?"
+    already_done: "Aquest enllaç ja no és vàlid per a confirmar el compte. Que potser el vostre compte ja és actiu?"
     please_continue: "El teu nou compte està confirmat; et redireccionarem a la pàgina principal."
     continue_button: "Continua a %{site_name} "
     welcome_to: "Et donem la benvinguda a %{site_name}!"
@@ -536,7 +536,7 @@ ca:
     mailing_list_mode: "Apaga el mode de llista de correu"
     all: "No m'enviïs cap correu de %{sitename}"
     different_user_description: "Actualment t'hi has connectat amb una identitat diferent a la qual vam enviar un correu. Si us plau, desconnecta't o entra-hi anònimament i torna a provar-ho."
-    not_found_description: "Disculpa, no hem pogut trobar aquesta cancel·lació de subscripció. És possible que hagi caducat l'enllaç al teu correu?"
+    not_found_description: "No hem pogut trobar aquesta cancel·lació de subscripció. És possible que hagi caducat l'enllaç al vostre correu?"
     log_out: "Sortir"
     digest_frequency:
       never: "mai"
@@ -552,8 +552,10 @@ ca:
     read: "llegeix"
     read_write: "llegeix/escriu"
     description: '"%{application_name}" està demanant el següent accés al teu compte:'
-    no_trust_level: "Disculpa, no tens el nivell de confiança necessari per accedir a l'API de la persona usuària"
-    generic_error: "Disculpa, no hem pogut emetre les claus API de la persona, aquesta característica pot haver estat desactivada per l'administració del lloc"
+    otp_confirmation:
+      confirm_title: "Continua cap a %{site_name}"
+    no_trust_level: "No teniu el nivell de confiança necessari per a accedir a l'API d'usuari."
+    generic_error: "No hem pogut emetre les claus API d'usuari. Aquesta característica pot haver estat desactivada per l'administració del lloc."
     scopes:
       message_bus: "Actualitzacions en directe"
       notifications: "Llegeix i neteja alertes"
@@ -600,9 +602,9 @@ ca:
     daily_engaged_users:
       xaxis: "Dia"
     profile_views:
-      title: "Vistes de perfils de persones usuàries"
+      title: "Vistes de perfils d'usuaris"
       xaxis: "Dia"
-      yaxis: "Quantitat de perfils vists de persones usuàries"
+      yaxis: "Quantitat de perfils vists d'usuaris"
     topics:
       title: "Temes"
       xaxis: "Dia"
@@ -624,12 +626,12 @@ ca:
       xaxis: "Dia"
       yaxis: "Quantitat de nous preferits"
     users_by_trust_level:
-      title: "Persones usuàries per nivell de confiança"
+      title: "Usuaris per nivell de confiança"
       xaxis: "Nivell de confiança"
-      yaxis: "Quantitat de persones usuàries"
+      yaxis: "Quantitat d'usuaris"
     users_by_type:
       xaxis: "Tipus"
-      yaxis: "Quantitat de persones usuàries"
+      yaxis: "Quantitat d'usuaris"
       labels:
         type: Tipus
       xaxis_labels:
@@ -676,7 +678,7 @@ ca:
       xaxis: "Domini"
       num_clicks: "Clics"
       num_topics: "Temes"
-      num_users: "Persones usuàries"
+      num_users: "Usuaris"
       labels:
         domain: Domini
         num_clicks: Clics
@@ -774,7 +776,7 @@ ca:
   site_settings:
     censored_words: "Paraules que es reemplaçaran automàticament amb  &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "Esborra automàticament qualsevol publicació que resten oculta durant més de 30 dies."
-    allow_user_locale: "Permet que les persones usuàries triïn la seva preferència de llengua d'interfície"
+    allow_user_locale: "Permet que les usuaris triïn la seva preferència de llengua d'interfície"
     set_locale_from_accept_language_header: "configura la llengua d'interfície per a persones anònimes des dels encapçalaments dels seus navegadors. (EXPERIMENTAL, no funciona amb memòria cau anònima)"
     min_post_length: "Mínim permès en caràcters per a l'extensió de publicacions "
     min_first_post_length: "Mínim permès en caràcters per a l'extensió de primera publicació (cos del tema)"
@@ -824,7 +826,7 @@ ca:
     enable_personal_messages: "Permet que les persones amb nivell de confiança 1 puguin crear missatges i respondre'ls (configurable amb el mínim de nivell de confiança per enviar missatges). Fixa't que l'equip sempre pot enviar qualsevol mena de missatges."
     enable_long_polling: "El bus de missatges emprat per a la notificació pot fer servir el mostreig llarg"
     long_polling_base_url: "La URL bàsica emprada per a mostreig llarg (quan una xarxa de lliurament de continguts serveix contingut dinàmic, assegura't de configurar-ho per llençar l'origen). Per exemple, http://origin.site.com"
-    long_polling_interval: "Quantitat de temps que el servidor hauria d'esperar abans de respondre clients quan no hi ha dades d'enviament (connectat només a persones usuàries)"
+    long_polling_interval: "Quantitat de temps que el servidor hauria d'esperar abans de respondre clients quan no hi ha dades d'enviament (connectat només a usuaris)"
     polling_interval: "Quan no hi ha mostreig llarg, amb quina freqüència en mil·lisegons haurien de connectar-se a clients de mostreig"
     anon_polling_interval: "Amb quina freqüència en mil·lisegons podria votar els clients"
     background_polling_interval: "Amb quina freqüència en mil·lisegons podrien votar els client (quan la finestra és al fons)"
@@ -835,8 +837,8 @@ ca:
     tl3_additional_likes_per_day_multiplier: "Augmenta la quantitat de M'agrada per dia per nivell de confiança 3 (ordinari), en multiplicar per aquesta xifra"
     tl4_additional_likes_per_day_multiplier: "Augmenta el límit de M'agrada per dia a nivell de confiança 4 (líder), en multiplicar per aquesta xifra"
     traditional_markdown_linebreaks: "Fes servir salts de línia tradicionals a Markdown, que necessita dos espais a la dreta per un salt de línia."
-    post_undo_action_window_mins: "Quantitat de minuts durant els quals es permet a les persones usuàries desfer accions recents sobre una publicació (M'agrada, bandera, etcètera)."
-    must_approve_users: "L'equip ha d'aprovar tots els nous comptes abans de permetre que accedeixin el lloc. ATENCIÓ: si actives això a un lloc en funcionament, es revocarà l'accés a les persones usuàries que no pertanyen a l'equip!"
+    post_undo_action_window_mins: "Quantitat de minuts durant els quals es permet a les usuaris desfer accions recents sobre una publicació (M'agrada, bandera, etcètera)."
+    must_approve_users: "Els membres del \"staff\" hauràn d'aprovar tots els nous comptes abans que se'ls hi permeti acceder al lloc web."
     pending_users_reminder_delay: "Comunica a l'equip moderador si hi ha noves persones esperant l'aprovació més enllà d'aquest grapat d'hores. Configura-ho a -1 per desactivar les alertes."
     maximum_session_age: "La persona romandrà connectada durant n hores des de la darrera visita"
     moderators_create_categories: "Permet que l'equip moderador creï noves categories"
@@ -847,7 +849,7 @@ ca:
     post_menu_hidden_items: "Els elements del menú que s'oculten per defecte al menú de publicacions, tret que es cliqui sobre una el·lipsi d'expansió."
     share_links: "Determina quins elements apareixen a diàleg d'acció i en qui ordre."
     site_contact_username: "Un nom vàlid de membre de l'equip per emetre tots els missatges automàtics. Si es deixa buit, es farà servir el compte per defecte del sistema."
-    send_welcome_message: "Envia a totes les noves persones usuàries un missatge de benvinguda amb la guia ràpida d'inici."
+    send_welcome_message: "Envia a totes els usuaris nous un missatge de benvinguda amb la guia ràpida d'inici."
     suppress_reply_directly_below: "No mostris el recompte de respostes expansibles a una publicació quan només hi hagi una resposta directa sota la publicació."
     suppress_reply_directly_above: "No mostris l'expansible \"en resposta a\" a una publicació quan només hi hagi una resposta directa sota aquesta publicació."
     suppress_reply_when_quoting: "No mostris l'expansible \"en resposta a\" a una publicació quan la publicació cita una resposta."
@@ -906,8 +908,8 @@ ca:
     rebake_old_posts_count: "Quantitat de publicacions antigues per refer cada 15 minuts."
     rate_limit_create_topic: "Després de crear un tema, les persones han d'esperar (n) segons abans de crear-ne un altre."
     rate_limit_create_post: "Després de fer una publicació, les persones han d'esperar (n) segons abans de publicar-ne més."
-    rate_limit_new_user_create_topic: "Després de crear un tema, les noves persones usuàries han d'esperar (n) segons abans de crear-ne un altre"
-    rate_limit_new_user_create_post: "Després de fer una publicació, les noves persones usuàries han d'esperar (n) segons abans de publicar-ne més."
+    rate_limit_new_user_create_topic: "Després de crear un tema, els usuaris nous han d'esperar (n) segons abans de crear-ne un altre"
+    rate_limit_new_user_create_post: "Després de fer una publicació, els usuaris nous han d'esperar (n) segons abans de publicar-ne més."
     max_likes_per_day: "Quantitat màxima de M'agrada per persona i dia."
     max_flags_per_day: "Quantitat màxima de banderes per persona i dia."
     max_bookmarks_per_day: "Quantitat màxima de preferits per persona i dia."
@@ -1055,14 +1057,14 @@ ca:
     email_site_title: "El títol del lloc fet servir com a remitent de correus des del lloc. Per defecte serà 'títol' si no es configura. Si el teu 'títol' conté caràcters no permesos, fes servir la configuració."
     minimum_topics_similar: "Quants temes han d'existir abans no hi apareguin temes semblants quan es redacten nous temes."
     relative_date_duration: "Quantitat de dies després de publicar on les dates de publicació seran visibles com a relatives (7d) en comptes d'absolutes (20 febrer)."
-    delete_user_max_post_age: "No permetis que s'esborrin persones usuàries amb una publicació de menys d'(x) dies."
+    delete_user_max_post_age: "No permetis que s'esborrin usuaris amb una publicació de menys d'(x) dies."
     delete_all_posts_max: "Quantitat màxima de publicacions que es poden esborrar d'un cop amb el botó \"Esborra totes les publicacions\". Si una persona en té una quantitat superior, les publicacions no podran esborrar-se d'un cop i la persona tampoc no podrà ser eliminada."
     email_editable: "Permet que les persones canviïn la seva adreça de correu després del registre."
     allow_uploaded_avatars: "Permet que les persones carreguin imatges de perfil personalitzades."
     allow_animated_avatars: "Permet que les persones facin servir gifs animats a les fotos de perfil. ATENCIÓ: executa la tasca rastell avatars:refresh després de canviar aquesta configuració."
     allow_animated_thumbnails: "Genera miniatures amb moviment de gifs animats."
-    default_avatars: "Adreces URL d'avatars que es faran servir per defecte per a les noves persones usuàries fins que es canviïn."
-    automatically_download_gravatars: "Descarrega Gravatars per a persones usuàries fins la creació d'un compte o el canvi de correu."
+    default_avatars: "Adreces URL d'avatars que es faran servir per defecte per a els usuaris nous fins que es canviïn."
+    automatically_download_gravatars: "Descarrega Gravatars per a usuaris fins la creació d'un compte o el canvi de correu."
     digest_topics: "Quantitat màxima de temes populars per mostrar al resum de correus."
     digest_posts: "Quantitat màxima de publicacions populars per mostrar al resum de correus."
     digest_other_topics: "Quantitat màxima de temes a mostrar a la secció \"Nou a temes i categories que segueixes\" del resum de correus."
@@ -1114,7 +1116,7 @@ ca:
     enable_emoji: "Activa emojo"
     emoji_set: "Com t'agradaria el teu emoji?"
     approve_post_count: "Cal aprovar la quantitat de publicacions d'una persona usuària nova o bàsica"
-    approve_unless_trust_level: "Cal aprovar les publicacions per a persones usuàries amb aquest nivell de confiança"
+    approve_unless_trust_level: "Cal aprovar les publicacions per a usuaris amb aquest nivell de confiança"
     approve_new_topics_unless_trust_level: "Cal aprovar els nous temes per a persones amb aquest nivell de confiança"
     auto_close_messages_post_count: "Quantitat màxima de publicacions permeses a un missatge abans no es tanqui automàticament (a 0 per desactivar)"
     auto_close_topics_post_count: "Quantitat màxima de publicacions permeses a un tema abans no es tanqui automàticament (a 0 per desactivar)"
@@ -1184,7 +1186,7 @@ ca:
     types:
       category: "Categories"
       topic: "Resultats"
-      user: "Persones usuàries"
+      user: "Usuaris"
   sso:
     not_found: "No s'ha trobat el teu compte. Si us plau contacta amb l'administració del lloc."
     account_not_approved: "El teu compte està pendent d'aprovació. Rebràs un correu d'alerta quan s'aprovi."
@@ -1244,7 +1246,7 @@ ca:
     errors: "%{errors}"
     not_available: "No disponible. Prova %{suggestion}?"
     something_already_taken: "Alguna cosa ha anat malament, potser nom de persona usuària ja ha estat registrat. Prova-ho amb l'enllaç de contrasenya oblidada"
-    omniauth_error: "Disculpa, s'ha produït una errada en autoritzar el teu compte. Que potser no has aprovat l'autorització?"
+    omniauth_error: "S'ha produït una errada en autoritzar el vostre compte. Que potser no heu aprovat l'autorització?"
     omniauth_error_unknown: "Alguna cosa ha fallat en processar el teu inici de sessió. Si us plau, torna a provar-ho."
     authenticator_error_no_valid_email: "No es permeten adreces de correu associades amb %{account}. Et pot caldre configurar el teu compte amb una adreça de correu diferent."
     new_registrations_disabled: "Ara mateix no es permeten els registres de nous comptes."
@@ -1358,9 +1360,9 @@ ca:
     email_reject_inactive_user:
       title: "Correu rebutjat per persona inactiva"
       text_body_template: |
-        Disculpa, però no ha funcionat el teu missatge de correu a %{destination} (titled %{former_title}).
+        Ho sentim, però no ha funcionat el vostre missatge de correu a %{destination} (titulat %{former_title}).
 
-        El teu compte associat a aquest correu no està activat. Si us plau, activa el teu compte abans d'enviar-hi correus.
+        El compte associat a aquesta adreça de correu no està activat. Activeu el compte abans d'enviar-hi correus.
     email_reject_reply_user_not_matching:
       title: "Correu rebutjat per persona no coincident"
     email_reject_no_account:
@@ -1368,17 +1370,17 @@ ca:
     email_reject_empty:
       title: "Correu rebutjat per buit"
       text_body_template: |
-        Disculpa, però no ha funcionat el teu missatge de correu a %{destination} (titled %{former_title}).
+        Ho sentim, però no ha funcionat el vostre missatge de correu a %{destination} (titulat %{former_title}).
 
-        No hem pogut trobar cap contingut al teu correu.
+        No hem pogut trobar cap resposta en el vostre correu.
 
-        Si has rebut això i hi_has_inclòs_una_resposta, torna a provar-ho amb una altre format.
+        Si rebeu això i sí que heu inclòs una resposta, torneu a provar-ho amb un altre format.
     email_reject_parsing:
       title: "Correu rebutjat per anàlisi de dades"
       text_body_template: |
-        Disculpa, però no ha funcionat el teu missatge de correu a %{destination} (titled %{former_title}).
+        Ho sentim, però no ha funcionat el vostre missatge de correu a %{destination} (titulat %{former_title}).
 
-        No hem pogut trobar la teva resposta al correu. **Assegura't que la teva resposta és al començament del correu** --no podem processar respostes entre línies.
+        No hem pogut trobar la resposta en el correu. **Assegureu-vos que la resposta és al començament del correu.** No podem processar respostes entre línies.
     email_reject_invalid_access:
       title: "Correu rebutjat per accés no vàlid"
     email_reject_strangers_not_allowed:
@@ -1628,7 +1630,7 @@ ca:
       unread_messages: "Missatges sense llegir"
       unread_notifications: "Alertes sense llegir"
       liked_received: "M'agrades rebuts"
-      new_users: "Noves persones usuàries"
+      new_users: "Noves usuaris"
       popular_topics: "Temes populars"
       follow_topic: "Segueix aquest tema"
       join_the_discussion: "Llegeix-ne més"
@@ -1785,7 +1787,7 @@ ca:
       description: Ha convidat una persona
     campaigner:
       name: Activista
-      description: Ha convidat 3 persones usuàries bàsiques
+      description: Ha convidat 3 usuaris bàsiques
     champion:
       name: De campionat
       description: Ha convidat 5 membres

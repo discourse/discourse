@@ -1302,6 +1302,7 @@ sl:
       complete_email_found: "Račun z e-naslovom <b>%{email}</b> obstaja. V kratkem bi morali prejeti e-sporočilo s povezavo za samodejno prijavo."
       complete_username_not_found: "Račun z uporabniškim imenom <b>%{username}</b> ne obstaja."
       complete_email_not_found: "Noben račun se ne ujema z <b>%{email}</b>"
+      confirm_title: "Nadaljujte na %{site_name}"
     login:
       title: "Prijava"
       username: "Uporabnik"

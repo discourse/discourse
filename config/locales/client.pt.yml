@@ -1139,6 +1139,7 @@ pt:
       complete_email_found: "Encontrámos uma conta com o endereço <b>%{email}</b>, deverá receber um email com uma ligação para entrar dentro de poucos instantes."
       complete_username_not_found: "Nenhuma conta correspondente com o nome de utilizador <b>%{username}</b>"
       complete_email_not_found: "Nenhuma conta correspondente com <b>%{email}</b>"
+      confirm_title: "Continuar para %{site_name}"
     login:
       title: "Iniciar a Sessão"
       username: "Utilizador"

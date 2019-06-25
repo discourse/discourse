@@ -877,6 +877,7 @@ sq:
     email_login:
       complete_username_not_found: "Nuk ka llogari me emër përdoruesi <b>%{username}</b>"
       complete_email_not_found: "Nuk ka llogari për <b>%{email}</b>"
+      confirm_title: "Vazhdo tek %{site_name}"
     login:
       title: "Identifikohu"
       username: "Anëtari"

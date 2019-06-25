@@ -1212,6 +1212,9 @@ zh_CN:
       complete_email_found: "我们发现了一个与<b>%{email}</b>相匹配的帐户，你很快就会收到一封带有登录链接的电子邮件。"
       complete_username_not_found: "没有帐户与用户名<b>%{username}</b>匹配"
       complete_email_not_found: "没有帐户匹配<b>%{email}</b>"
+      confirm_title: "转入到%{site_name}"
+      logging_in_as: "用%{email}登录"
+      confirm_button: 登录完成
     login:
       title: "登录"
       username: "用户"
@@ -3398,6 +3401,7 @@ zh_CN:
             embeddable_host_create: "创建可嵌入的主机"
             embeddable_host_update: "更新可嵌入的主机"
             embeddable_host_destroy: "销毁可嵌入的主机"
+            change_theme_setting: "更改主题设置"
         screened_emails:
           title: "被屏蔽的邮件地址"
           description: "当有人试图用以下邮件地址注册时，将受到阻止或其它系统操作。"

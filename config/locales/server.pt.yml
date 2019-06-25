@@ -603,6 +603,8 @@ pt:
     read: "ler"
     read_write: "ler/escrever"
     description: '"%{application_name}" está a requerer o seguinte acesso à sua conta:'
+    otp_confirmation:
+      confirm_title: "Continuar para %{site_name}"
     no_trust_level: "Desculpe, não tem o nível de confiança requerido para aceder à API de utilizador"
     generic_error: "Desculpe, não somos capazes de gerar chaves  API de uitlizador, esta funcionalidade poderá estar desactivada pela administração do site"
     scopes:
@@ -881,7 +883,7 @@ pt:
     tl4_additional_likes_per_day_multiplier: "Aumentar limite de gostos por dia para nc4 (líder) ao multiplicar por este número"
     traditional_markdown_linebreaks: "Utilize tradicionais quebras de linha no Markdown, que requer dois espaços no final para uma quebra de linha."
     post_undo_action_window_mins: "Número de minutos durante o qual os utilizadores têm permissão para desfazer ações numa mensagem (gostos, sinalizações, etc)."
-    must_approve_users: "O pessoal deve aprovar todas as novas contas de utilizador antes destas terem permissão para aceder ao sítio. AVISO: ativar isto para um sítio ativo irá revogar o acesso aos utilizadores existentes que não fazem parte do pessoal!"
+    must_approve_users: "O pessoal deverá aprovar todas as contas dos novos utilizadores antes destes terem permissão para aceder ao sítio."
     pending_users_reminder_delay: "Notificar moderadores se novos utilizadores estiverem à espera de aprovação por mais que esta quantidade de horas. Configurar com -1 para desativar notificações."
     maximum_session_age: "Utilizador permanecerá ligado durante n horas desde a última visita"
     moderators_create_categories: "Permitir que os moderadores criem novas categorias"

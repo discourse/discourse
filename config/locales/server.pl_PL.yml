@@ -16,6 +16,7 @@ pl_PL:
       short_no_year: "%-d %B"
       date_only: "%-d %b %Y"
       long: "%B %-d, %Y, %l:%M%P"
+      no_day: "%B %Y"
   date:
     month_names: [~, Styczeń, Luty, Marzec, Kwiecień, Maj, Czerwiec, Lipiec, Sierpień, Wrzesień, Październik, Listopad, Grudzień]
     <<: *datetime_formats
@@ -34,13 +35,28 @@ pl_PL:
   disable_remote_images_download_reason: "Pobieranie zewnętrznych grafik zostało wyłączone z uwagi na niską ilość wolnego miejsca na dysku."
   anonymous: "Anonim"
   remove_posts_deleted_by_author: "Usunięte przez autora"
+  on_another_topic: "Na innym temacie"
   themes:
+    bad_color_scheme: "Nie można zaktualizować szablonu, nieprawidłowa paleta kolorów"
     other_error: "Coś poszło nie tak podczas aktualizacji szablonu"
+    compile_error:
+      unrecognized_extension: "Nie rozpoznano rozszerzenia pliku: %{extension}"
+    import_error:
+      unpack_failed: "Błąd przy rozpakowywaniu pliku"
+    errors:
+      component_no_default: "Komponenty motywu nie mogą być domyślnym motywem"
+    settings_errors:
+      invalid_yaml: "Wprowadzony YAML jest nieprawidłowy"
+      default_value_missing: "Ustawienie `%{name}` nie ma domyślnej wartości"
+      number_value_not_valid: "Nowa wartość nie jest w dozwolonym przedziale."
+      string_value_not_valid: "Długość nowej wartości nie jest w dozwolonym przedziale."
   emails:
     incoming:
       default_subject: "Ten temat wymaga tytułu"
       show_trimmed_content: "Pokaż skróconą zawartość"
       maximum_staged_user_per_email_reached: "Osiągnięto maksymalną ilość użytkowników zarejestrowanych przez email."
+      no_subject: "(brak tematu)"
+      no_body: "(brak treści wpisu)"
       errors:
         empty_email_error: "Zdarza się kiedy mail jaki dostaliśmy jest pusty."
         no_message_id_error: "Zdarza się kiedy email nie posiada nagłówka 'Message-Id'."
@@ -83,6 +99,8 @@ pl_PL:
       not_an_integer: musi być liczbą całkowitą
       odd: musi być nieparzysty
       record_invalid: "Weryfikacja zakończyła się niepowiedzeniem: %{errors}"
+      emojis_disabled: "nie może mieć emoji"
+      ip_address_already_screened: "Jest już zawarte w istniejącej regule"
       restrict_dependent_destroy:
         one: "Nie można usunąć wpisu, ponieważ zależny %{record} istnieje"
         many: "Nie można usunąć wpisu, ponieważ zależny %{record} istnieje"
@@ -130,6 +148,9 @@ pl_PL:
     backup_file_should_be_tar_gz: "Plik z kopią zapasową powinien mieć postać archiwum .tar.gz."
     not_enough_space_on_disk: "Nie ma wystarczającej ilości wolnego miejsca, aby wczytać tę kopię zapasową."
     invalid_filename: "Plik kopii zapasowej zawiera nieprawidłowe znaki. Nieprawidłowe znaki to a-z 0-9 . - _."
+    location:
+      local: "Lokalne"
+      s3: "Amazon S3"
   not_logged_in: "Aby to zrobić musisz się zalogować."
   not_found: "Żądany URL lub źródło nie mógł zostać znaleziony."
   invalid_access: "Nie jesteś uprawniony, by zobaczyć żądane źródło."
@@ -158,6 +179,11 @@ pl_PL:
     permalink: "Link bezpośredni"
     imported_from: "Ten temat jest powiązany ze źródłową dyskusją: %{link}"
     in_reply_to: "▶ %{username}"
+    replies:
+      one: "%{count}odpowiedź"
+      few: "%{count}odpowiedzi"
+      many: "%{count}odpowiedzi"
+      other: "%{count}odpowiedzi"
   no_mentions_allowed: "Przepraszamy, nie możesz odwoływać się do innych użytkowników."
   no_mentions_allowed_newuser: "Przepraszamy, nowi użytkownicy nie mogą odwoływać się do innych użytkowników."
   no_images_allowed: "Przepraszamy, nowi użytkownicy nie mogą dodawać zdjęć do postów."
@@ -193,6 +219,7 @@ pl_PL:
     top_weekly: "Najpopularniejsze tematy w tym tygodniu"
     top_daily: "Najpopularniejsze tematy dzisiaj"
     posts: "Aktualne wpisy"
+    private_posts: "Ostatnie wiadomości prywatne"
     group_posts: "Ostatni post z %{group_name}"
     group_mentions: "Ostatnie wspomnienie z %{group_name}"
     user_posts: "Ostatnie posty @%{username}"
@@ -222,6 +249,7 @@ pl_PL:
       trust_level_4: "poziom_zaufania_4"
     request_membership_pm:
       title: "Prośba o członkostwo w grupie @%{group_name}"
+      handle: "obsłuż prośby o członkostwo "
   education:
     until_posts:
       one: "%{count} wpis"
@@ -302,7 +330,12 @@ pl_PL:
               same_as_username: "jest takie same jak Twoja nazwa użytkownika. Proszę użyj bardziej bezpiecznego hasła. "
               same_as_email: "jest takie same jak Twój email. Proszę użyj bardziej bezpiecznego hasła. "
               same_as_current: "Hasło jest takie same jak aktualne."
+              same_as_name: "jest takie samo, jak twoje imię."
               unique_characters: "ma za dużo powtarzających się znaków. Prosimy o użycie bezpieczniejszego hasła."
+            username:
+              same_as_password: "jest takie samo, jak twoje hasło."
+            name:
+              same_as_password: "jest takie samo, jak twoje hasło."
             ip_address:
               signup_not_allowed: "Rejestracja z tego konta jest niemożliwa."
         color_scheme_color:
@@ -383,6 +416,11 @@ pl_PL:
   post:
     image_placeholder:
       broken: "Ten obraz jest uszkodzony"
+    has_likes:
+      one: "%{count}lajk"
+      few: "%{count}lajki"
+      many: "%{count}lajków"
+      other: "%{count}lajków"
   rate_limiter:
     hours:
       one: "%{count} godzina"
@@ -519,6 +557,35 @@ pl_PL:
     title: "Zresetuj hasło"
     success: "Twoje hasło zostało pomyślnie zmienione, zalogowano."
     success_unapproved: "Zmieniłeś(-a) swoje hasło."
+  user_auth_tokens:
+    browser:
+      chrome: "Google Chrome"
+      discoursehub: "aplikacja DiscourseHub"
+      edge: "Microsoft Edge"
+      firefox: "Firefox"
+      ie: "Internet Explorer"
+      opera: "Opera"
+      safari: "Safari"
+      unknown: "nieznana przeglądarka"
+    device:
+      android: "Urządzenie z Androidem"
+      chromebook: "Chromebook"
+      ipad: "iPad"
+      iphone: "iPhone"
+      ipod: "iPod"
+      linux: "Komputer z GNU / Linuksem"
+      mac: "Mac"
+      mobile: "Urządzenie przenośne"
+      windows: "Komputer z systemem Windows"
+      unknown: "nieznane urządzenie"
+    os:
+      android: "Android"
+      chromeos: "ChromeOS"
+      ios: "iOS"
+      linux: "Linux"
+      macos: "macOS"
+      windows: "Microsoft Windows"
+      unknown: "nieznany system operacyjny"
   change_email:
     confirmed: "Twój email został zmieniony."
     please_continue: "Przejdź do %{site_name}"
@@ -528,6 +595,8 @@ pl_PL:
     authorizing_old:
       title: "Dziękujemy za potwierdzenie twojego aktualnego adresu e-mail"
       description: "Wysyłamy teraz twój nowy adres do potwierdzenia."
+  associated_accounts:
+    connected: "(połączony)"
   activation:
     action: "Kliknij, by aktywować swoje konto."
     already_done: "Przepraszamy, ten link aktywujący konto jest już nieważny. Być może Twoje konto jest już aktywne ?"
@@ -601,6 +670,7 @@ pl_PL:
       title: "Spam"
       description: "Ten temat jest komercyjnym ogłoszeniem. Nie zawiera wartościowej treści, jedynie reklamową. "
       long_form: "oflagowano jako spam"
+      short_description: "To jest ogłoszenie\n                  \n                    \n                      \n                    \n                  \n                "
     inappropriate:
       title: "Niewłaściwe"
       long_form: "oflagowano jako niewłaściwe"
@@ -621,6 +691,7 @@ pl_PL:
         make: "Ten temat został ustawiony jako baner. Będzie pojawiać się na górze każdej strony do czasu zamknięcia przez użytkownika."
         remove: "Ten temat nie jest już banerem. Nie będzie pojawiać się na górze każdej strony."
   unsubscribed:
+    title: "Zaktualizowano preferencje e-mail!"
     topic_description: "Aby ponownie zasubskrybować %{link}, użyj kontrolki powiadomienia na dole lub po prawej stronie tematu."
   unsubscribe:
     title: "Wypisz"
@@ -646,6 +717,9 @@ pl_PL:
     read: "odczyt"
     read_write: "odzczyt/zapis"
     description: '"%{application_name}" prosi o następujący dostęp do twojego konta:'
+    otp_confirmation:
+      confirm_title: "Przejdź do %{site_name}"
+      confirm_button: Dokończ logowanie
     no_trust_level: "Przepraszamy, nie masz wystarczających uprawnień do przeglądania API użytkownika"
     generic_error: "Przykro nam , ale ie jesteśmy w stanie pozwolić użytkownikowi na klucze API, ta funkcja może być zablokowana przed administratora."
     scopes:
@@ -659,39 +733,79 @@ pl_PL:
     default:
       labels:
         count: Liczba
+        percent: Procent
         day: Dzień
     post_edits:
+      title: "Edycje wpisu"
       labels:
         post: Wpis
         editor: Edytor
+        author: Autor
         edit_reason: Powód
+      description: "Liczba nowych edycji wpisu."
     user_flagging_ratio:
+      title: "Ratio flag użytkowników"
       labels:
         user: Użytkownik
+        agreed_flags: Potwierdzone flagi
+        disagreed_flags: Niepotwierdzone flagi
+        ignored_flags: Zignorowane flagi
+        score: Wynik
     moderators_activity:
+      title: "Aktywność moderatorów"
       labels:
         moderator: Moderatorzy
+        flag_count: Sprawdzone flagi
+        time_read: Czas czytania
+        topic_count: Stworzone tematy
+        post_count: Napisanych wpisów
+        pm_count: Napisanych PW
+        revision_count: Wersji
     flags_status:
+      title: "Status flag"
+      values:
+        agreed: Potwierdzono
+        disagreed: Niepotwierdzono
+        deferred: Odroczono
+        no_action: Brak akcji
       labels:
         flag: Typ
+        assigned: Przypisana
+        poster: Publikujący
+        flagger: Flagujący
+        time_to_resolution: Czas rozwiązania
     visits:
       title: "Wizyty użytkowników"
       xaxis: "Dzień"
       yaxis: "Liczba wizyt"
     signups:
+      title: "Podpisy"
       xaxis: "Dzień"
     new_contributors:
+      title: "Nowi współtwórcy"
       xaxis: "Dzień"
+      yaxis: "Liczba nowych współtwórców"
     consolidated_page_views:
+      title: "Skonsolidowane odsłony"
+      xaxis:
+        page_view_crawler: "Botów indeksujących"
+        page_view_anon: "Anonimowych użytkowników"
+        page_view_logged_in: "Zalogowanych użytkowników"
       yaxis: "Dzień"
+      description: "Odsłony zalogowanych użytkowników, anonimowych użytkowników i botów indeksujących."
       labels:
         post: Wpis
         editor: Edytor
+        author: Autor
         edit_reason: Powód
     dau_by_mau:
+      title: "DAU / MAU"
       xaxis: "Dzień"
+      yaxis: "DAU / MAU"
     daily_engaged_users:
+      title: "Zaangażowani użytkownicy dziennie"
       xaxis: "Dzień"
+      yaxis: "Zaangażowani użytkownicy"
     profile_views:
       title: "Wyświetlenia profilu użytkownika"
       xaxis: "Dzień"
@@ -708,18 +822,23 @@ pl_PL:
       title: "Polubienia"
       xaxis: "Dzień"
       yaxis: "Liczba nowych polubień"
+      description: "Liczba nowych lajków"
     flags:
       title: "Flagi"
       xaxis: "Dzień"
       yaxis: "Liczba flag"
+      description: "Liczba nowych flag"
     bookmarks:
       title: "Zakładki"
       xaxis: "Dzień"
       yaxis: "Liczba nowych zakładek"
+      description: "Liczba nowych tematów i wpisów w zakładkach."
     users_by_trust_level:
       title: "Użytkownicy wg poziomu zaufania"
       xaxis: "Poziom zaufania"
       yaxis: "Liczba użytkowników"
+      labels:
+        level: Poziom
     users_by_type:
       xaxis: "Typ"
       yaxis: "Liczba użytkowników"
@@ -734,6 +853,7 @@ pl_PL:
       labels:
         term: Szukana fraza
         searches: Wyszukiwania
+        click_through: CTR
     emails:
       title: "Wysłane emaile"
       xaxis: "Dzień"
@@ -845,18 +965,32 @@ pl_PL:
       yaxis: "Liczba wizyt"
     web_crawlers:
       labels:
+        user_agent: "Przeglądarka użytkownika"
         page_views: "Wyświetlenia strony"
     suspicious_logins:
       labels:
         user: Użytkownik
+        client_ip: IP klienta
         location: Lokalizacja
+        browser: Przeglądarka
+        device: Urządzenie
+        os: System operacyjny
+        login_time: Czas zalogowania
     staff_logins:
+      title: "Zalogowania administratora"
       labels:
         user: Użytkownik
         location: Lokalizacja
     top_uploads:
       labels:
         filename: Nazwa pliku
+        extension: Rozszerzenia
+        author: Autor
+        filesize: Rozmiar pliku
+    top_ignored_users:
+      labels:
+        ignores_count: Licznik ignorowanych
+        mutes_count: Licznik wyciszonych
   dashboard:
     rails_env_warning: "Twój serwer działa w trybie %{env}"
     host_names_warning: "Twój plik config/database.yml używa domyślnej nazwy serwera localhost. Zmień go by używał nazwy serwera Twojej strony."
@@ -871,6 +1005,7 @@ pl_PL:
       other: "Email polling wygenerował %{count} błędów w przeciągu ostatniej doby. Więcej szczegółów w <a href='%{base_path}/logs' target='_blank'>logach</a>."
     poll_pop3_timeout: "Połączenie z serwerem POP3 zostało zerwane. Przychodząca wiadomość mogła nie zostać odebrany. Proszę sprawdź swoje <a href='%{base_path}/admin/site_settings/category/email'ustawienia POP3</a> i dostawcę usług."
     poll_pop3_auth_error: "Połączenie z serwerem POP3 nie powiodło się przez błąd uwierzytelnienia. Proszę sprawdź swoje <a href='%{base_path}/admin/site_settings/category/email'>ustawienia POP3</a>."
+    out_of_date_themes: "Aktualizacje są dostępne dla następujących motywów:"
   site_settings:
     censored_words: "Wskazane słowa będą automatycznie zamieniane na  &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "Automatycznie kasuj wpisy ukryte dłużej niż 30 dni."
@@ -885,12 +1020,15 @@ pl_PL:
     min_topic_title_length: "Minimalna długość tytułu tematu, w znakach"
     max_topic_title_length: "Maksymalna długość tytułu tematu, w znakach"
     min_personal_message_title_length: "Minimalna liczba znaków w temacie wiadomości "
+    max_emojis_in_title: "Maksymalna liczba emoji w tytule tematu"
     min_search_term_length: "Minimalna długość wyszukiwanego tekstu, w znakach"
     search_tokenize_chinese_japanese_korean: "Wymuś wyszukiwanie żeby tokenizowało Chiński/Japoński/Koreański nawet na stronach nie-CJK"
     search_prefer_recent_posts: "Jeśli wyszukiwanie na twoim duży forum jest wolne, ta opcja pozwala zaindeskować ostanie posty wpierw."
     search_recent_posts_size: "Jak dużo ostanich postów trzymać w indexie"
     log_search_queries: "Dzienniki wyszukiwanych przez użytkowników treści"
     search_query_log_max_size: "Maksymalna liczba zapytań do zachowania"
+    search_query_log_max_retention_days: "Maksymalny czas zachowywania wyników wyszukiwania, w dniach."
+    search_ignore_accents: "Ignoruj akcenty przy szukaniu tekstu."
     allow_uncategorized_topics: "Zezwól na tworzenie tematów bez kategorii. UWAGA: jeśli jest jakiś nieskategoryzowany temat, musisz go przypisać do kategorii, zanim wyłączysz tę opcję."
     allow_duplicate_topic_titles: "Pozwól na tworzenie tematów o identycznych tytułach."
     unique_posts_mins: "Ile minut musi upłynąć zanim użytkownik będzie mógł ponownie zrobić wpis z tą samą treścią"
@@ -933,6 +1071,7 @@ pl_PL:
     polling_interval: "Kiedy nie long polling, jak często zalogowani klienci powinni poll w milisekundach"
     anon_polling_interval: "How often should anonymous clients poll in milliseconds"
     background_polling_interval: "Jak często klienci powinni poll w milisekundach (kiedy okno jest w tle)"
+    hide_post_sensitivity: "Prawdopodobieństwo, że flagowany wpis zostanie ukryty"
     cooldown_minutes_after_hiding_posts: "Liczba minut, ile musi odczekać użytkownik, zanim będzie mógł edytować post ukryty w wyniku oflagowania przez społeczność"
     max_topics_in_first_day: "Maksymalna liczba tematów, jakie może stworzyć użytkownik w trakcie 24 godzin po utworzeniu pierwszego posta"
     max_replies_in_first_day: "Maksymalna liczba odpowiedzi, jakie może stworzyć użytkownik w trakcie 24 godzin po utworzeniu pierwszego posta"
@@ -941,7 +1080,7 @@ pl_PL:
     tl4_additional_likes_per_day_multiplier: "Zwiększ limit lajków na dzień dla tl4 (lider), mnożąc przez tę liczbę"
     traditional_markdown_linebreaks: "Używaj tradycyjnych znaków końca linii w Markdown, to znaczy dwóch spacji na końcu linii."
     post_undo_action_window_mins: "Przez tyle minut użytkownicy mogą cofnąć swoje ostatnie działania przy danym poście (lajki, flagowanie, itd.)."
-    must_approve_users: "Zespół musi zaakceptować wszystkie nowe konta zanim uzyskają dostęp do serwisu. UWAGA: włączenie tego dla już udostępnionej strony sprawi, że zostanie odebrany dostęp wszystkim istniejącym użytkownikom spoza zespołu."
+    must_approve_users: "Zespół musi zaakceptować wszystkie nowe konta zanim uzyskają dostęp do serwisu."
     pending_users_reminder_delay: "Powiadomić moderatorów jeżeli nowi użytkownicy czekali na zatwierdzenie dłużej niż his mamy godzin. Ustaw -1 aby wyłączyć powiadomienia. "
     maximum_session_age: "Użytkownik zostanie zalogowany przez n godzin od czasu ostatniej wizyty."
     moderators_create_categories: "Zezwól moderatorom na tworzenie nowych kategorii"
@@ -1427,7 +1566,7 @@ pl_PL:
     website:
       domain_not_allowed: "Błędny adres strony internetowej. Dozwolone domeny: %{domains}"
   unsubscribe_mailer:
-    title: "Unsubscribe Mailer"
+    title: "Przestań obserwować mailera"
     subject_template: "Potwierdź, że nie chcesz już otrzymywać powiadomień mailowych ze strony %{site_title}"
     text_body_template: |
       Ktoś (może ty?) zażądał, by strona %{site_domain_name} nie wysyłała już powiadomień mailowych na ten adres.
@@ -2556,6 +2695,12 @@ pl_PL:
         title: "Twój Discourse jest Gotowy!"
   joined: "Dołączył"
   reviewables:
+    priorities:
+      medium: "Średni"
+      high: "Wysoki"
+    sensitivity:
+      medium: "Średni"
+      high: "Wysoki"
     actions:
       agree_and_keep:
         title: "Zachowaj wpis"

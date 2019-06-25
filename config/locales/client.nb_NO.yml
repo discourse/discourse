@@ -1049,6 +1049,7 @@ nb_NO:
       complete_email_found: "Vi fant en konto som matcher <b>%{email}</b>, du vil snart motta en e-post med lenke for innlogging."
       complete_username_not_found: "Ingen konto har med brukernavnet <b>%{username}</b> er registrert"
       complete_email_not_found: "Ingen konto med e-postadressen <b>%{email}</b> er registrert"
+      confirm_title: "Fortsett til %{site_name}"
     login:
       title: "Logg Inn"
       username: "Bruker"

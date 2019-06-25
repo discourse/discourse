@@ -1024,6 +1024,7 @@ et:
       button_label: "e-postiga"
       complete_username_not_found: "Kasutajanimele <b>%{username}</b> ei vasta ükski konto"
       complete_email_not_found: "Meiliaadressile <b>%{email}</b> ei vasta ükski konto"
+      confirm_title: "Edasi saidile %{site_name}"
     login:
       title: "Logi sisse"
       username: "Kasutaja"

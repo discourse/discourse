@@ -632,6 +632,8 @@ uk:
       reset: "Скинути пароль"
       complete_username: "Якщо обліковий запис збігається з <b>%{username}</b>, у найближчий час ви отримаєте email з інструкціями, як змінити ваш пароль."
       button_ok: "OK"
+    email_login:
+      confirm_title: "Продовжити у %{site_name}"
     login:
       title: "Увійти"
       username: "Користувач"

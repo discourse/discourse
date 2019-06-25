@@ -1238,6 +1238,7 @@ fi:
       complete_email_found: "Käyttäjätili sähköpostiosoitteella <b>%{email}</b> löytyi. Kirjautumislinkin sisältävän sähköpostiviestin pitäisi saapua sinulle tuota pikaa."
       complete_username_not_found: "Ei löytynyt käyttäjänimeä <b>%{username}</b>"
       complete_email_not_found: "Ei löytynyt sähköpostiosoitetta <b>%{email}</b>"
+      confirm_title: "Jatka sivustolle %{site_name}"
     login:
       title: "Kirjaudu"
       username: "Käyttäjä"

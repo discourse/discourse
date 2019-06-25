@@ -442,6 +442,8 @@ lt:
       weekly: "kas savaitę"
   user_api_key:
     read: "skaityti"
+    otp_confirmation:
+      confirm_title: "Tęsti į %{site_name}"
     scopes:
       message_bus: "Tiesioginiai atnaujinimai"
       read: "Skaityti viską"

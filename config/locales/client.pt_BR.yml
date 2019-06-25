@@ -1261,6 +1261,9 @@ pt_BR:
       complete_email_found: "Encontramos uma conta que corresponde à <b>%{email}</b>, você deverá receber um e-mail com um link de login em breve."
       complete_username_not_found: "Nenhuma conta corresponde ao nome de usuário <b>%{username}</b>"
       complete_email_not_found: "Nenhuma conta corresponde à <b>%{email}</b>"
+      confirm_title: "Continuar no %{site_name}"
+      logging_in_as: "Fazendo login como %{email}"
+      confirm_button: Terminar Login
     login:
       title: "Entrar"
       username: "Usuário"
@@ -3512,6 +3515,7 @@ pt_BR:
             embeddable_host_create: "criação de host incorporável"
             embeddable_host_update: "atualização de host incorporável"
             embeddable_host_destroy: "exclusão de host incorporável"
+            change_theme_setting: "alterar configurações do tema"
         screened_emails:
           title: "Emails Filtrados"
           description: "Quando alguém tenta cria uma nova conta, os seguintes endereços de e-mail serão verificados e o registro será bloqueado, ou outra ação será executada."

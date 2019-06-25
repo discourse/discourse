@@ -348,6 +348,9 @@ te:
       never: "ఎప్పటికీ వద్దు"
       daily: "ప్రతిరోజూ"
       weekly: "ప్రతీవారం"
+  user_api_key:
+    otp_confirmation:
+      confirm_title: "%{site_name} కు కొనసాగండి"
   reports:
     default:
       labels:

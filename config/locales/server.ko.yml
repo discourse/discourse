@@ -636,6 +636,8 @@ ko:
     read: "읽기"
     read_write: "읽기/쓰기"
     description: '"%{application_name}" 이(가) 당신의 계정에 다음의 접근을 요청합니다:'
+    otp_confirmation:
+      confirm_title: "%{site_name}으로 가기"
     no_trust_level: "죄송하지만, 사용자 API에 접근할 수 있는 신뢰 레벨보다 낮습니다."
     generic_error: "죄송합니다. 사용자 API 키를 발급할 수 없습니다. 운영진이 이 기능을 해제한 것 같습니다."
     scopes:
@@ -958,7 +960,7 @@ ko:
     tl4_additional_likes_per_day_multiplier: "tl4 (리더)의 일별 좋아요 제한을 올릴 배수"
     traditional_markdown_linebreaks: "Markdown에서 전통적인 linebreak를 사용, linebreak시 두개의 trailing space를 사용하는 것."
     post_undo_action_window_mins: "사용자가 어떤 글에 대해서 수행한 작업(신고 등)을 취소하는 것이 허용되는 시간(초)"
-    must_approve_users: "스태프는 반드시 사이트 엑세스권한을 허용하기 전에 모든 신규가입계정을 승인해야 합니다. 경고: 이것을 활성화하면 기존 스태프 아닌 회원들의 엑세스권한이 회수됩니다."
+    must_approve_users: "관리자가 모든 사용자에 대해 사이트 접근 전에 허용을 해야 함"
     pending_users_reminder_delay: "새로운 사용자가 승인을 기다리는 시간이 여기에 지정된 시간횟수보다 더 길어길경우 운영자에게 알려줍니다. 알림을 해제하려면 -1로 설정하세요."
     maximum_session_age: "마지막 방문으로 부터 n시간 동안 사용자의 로그인이 유지됩니다"
     moderators_create_categories: "운영자가 새로운 카테고리를 만드는 것을 허용"

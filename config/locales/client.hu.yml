@@ -1173,6 +1173,7 @@ hu:
       button_label: "Email"
       complete_username_not_found: "Nem található egyezés a felhasználónévvel<b>%{username}</b>"
       complete_email_not_found: "Nincs fiók regisztrálva a következő e-mail címmel: <b>%{email}</b>"
+      confirm_title: "Tovább a%{site_name}"
     login:
       title: "Bejelentkezés"
       username: "Felhasználó"

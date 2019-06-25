@@ -1262,6 +1262,7 @@ fr:
       complete_email_found: "Nous avons trouvé un compte correspond au courriel <b>%{email}</b>, vous devriez recevoir rapidement un courriel avec un lien pour vous connecter."
       complete_username_not_found: "Aucun compte ne correspond au pseudo <b>%{username}</b>"
       complete_email_not_found: "Aucun compte ne correspond à <b>%{email}</b>"
+      confirm_title: "Continuer vers %{site_name}"
     login:
       title: "Se connecter"
       username: "Utilisateur"

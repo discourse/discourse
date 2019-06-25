@@ -775,6 +775,7 @@ gl:
     email_login:
       complete_username_not_found: "Ningunha conta coincide co nome do usuario <b>%{username}</b>"
       complete_email_not_found: "Ningunha conta coincide co <b>%{email}</b>"
+      confirm_title: "Continuar a %{site_name}"
     login:
       title: "Iniciar sesión"
       username: "Usuario"

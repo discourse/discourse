@@ -804,6 +804,7 @@ id:
       button_help: "Bantuan"
     email_login:
       button_label: "dengan surel"
+      confirm_title: "Lanjut ke %{site_name}"
     login:
       title: "Log In"
       username: "Pengguna"
