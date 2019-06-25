@@ -10,10 +10,6 @@ class CategoryUser < ActiveRecord::Base
     self.where(user: user, notification_level: notification_levels[level])
   end
 
-  def self.lookup_by_category(user, category)
-    self.where(user: user, category: category)
-  end
-
   def self.notification_levels
     NotificationLevels.all
   end
@@ -23,21 +19,43 @@ class CategoryUser < ActiveRecord::Base
   end
 
   def self.batch_set(user, level, category_ids)
-    records = CategoryUser.where(user: user, notification_level: notification_levels[level])
-    old_ids = records.pluck(:category_id)
+    level_num = notification_levels[level]
+    category_ids = Category.where(id: category_ids).pluck(:id)
+
     changed = false
 
-    category_ids = Category.where('id in (?)', category_ids).pluck(:id)
-
-    remove = (old_ids - category_ids)
-    if remove.present?
-      records.where('category_id in (?)', remove).destroy_all
-      changed = true
+    # Update pre-existing category users
+    unless category_ids.empty?
+      changed ||=
+        CategoryUser
+          .where(user_id: user.id, category_id: category_ids)
+          .where.not(notification_level: level_num)
+          .update_all(notification_level: level_num) > 0
     end
 
-    (category_ids - old_ids).each do |id|
-      CategoryUser.create!(user: user, category_id: id, notification_level: notification_levels[level])
-      changed = true
+    # Remove extraneous category users
+    changed ||=
+      CategoryUser
+        .where(user_id: user.id, notification_level: level_num)
+        .where.not(category_id: category_ids)
+        .delete_all > 0
+
+    # Create new category users
+    unless category_ids.empty?
+      # TODO: rewrite this when we upgrade to rails 6
+      changed ||=
+        DB.exec(
+          "
+            INSERT INTO category_users (user_id, category_id, notification_level)
+            SELECT :user_id, category_id, :level_num
+            FROM
+              (VALUES (:category_ids)) AS category_ids (category_id)
+            ON CONFLICT DO NOTHING
+          ",
+          user_id: user.id,
+          level_num: level_num,
+          category_ids: category_ids
+        ) > 0
     end
 
     if changed
@@ -188,6 +206,6 @@ end
 #
 # Indexes
 #
-#  idx_category_users_u1  (user_id,category_id,notification_level) UNIQUE
-#  idx_category_users_u2  (category_id,user_id,notification_level) UNIQUE
+#  idx_category_users_category_id_user_id  (category_id,user_id) UNIQUE
+#  idx_category_users_user_id_category_id  (user_id,category_id) UNIQUE
 #
