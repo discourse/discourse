@@ -433,7 +433,7 @@ def missing_uploads
     end
 
     if file_path.present?
-      if (upload = UploadCreator.new(File.open(file_path), File.basename(path)).create_for(Discourse.system_user.id)).presisted?
+      if (upload = UploadCreator.new(File.open(file_path), File.basename(path)).create_for(Discourse.system_user.id)).persisted?
         upload_id = upload.id
 
         post.reload
