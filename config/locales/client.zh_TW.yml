@@ -1184,6 +1184,7 @@ zh_TW:
       complete_email_found: "有一個帳號符合<b>%{email}</b>，您很快會收到一封含有登入連結的email。"
       complete_username_not_found: "沒有符合使用者名稱<b>%{username}</b>的帳號"
       complete_email_not_found: "沒有符合<b>%{email}</b>的帳號"
+      confirm_title: "繼續連接至 %{site_name}"
     login:
       title: "登入"
       username: "使用者"

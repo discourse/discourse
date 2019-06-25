@@ -1107,6 +1107,7 @@ ar:
       button_label: "مع البريد الإلكتروني"
       complete_username_not_found: "لا يوجد حساب يطابق اسم المستخدم <b>%{username}</b>"
       complete_email_not_found: "لا حساب يطابق <b>%{email}</b>"
+      confirm_title: "تابع إلى %{site_name}"
     login:
       title: "تسجيل دخول"
       username: "اسم المستخدم"

@@ -1049,6 +1049,7 @@ ko:
     email_login:
       complete_username_not_found: "<b>%{username}</b>과 일치하는 계정이 없습니다."
       complete_email_not_found: "<b>%{email}</b>과 일치하는 계정이 없습니다."
+      confirm_title: "%{site_name}으로 가기"
     login:
       title: "로그인"
       username: "아이디"

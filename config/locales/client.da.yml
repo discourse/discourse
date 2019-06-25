@@ -938,6 +938,7 @@ da:
     email_login:
       complete_username_not_found: "Ingen kontoer passer til brugernavnet <b>%{username}</b>"
       complete_email_not_found: "Ingen kontoer svarer til <b>%{email}</b>"
+      confirm_title: "Fortsæt til %{site_name}"
     login:
       title: "Log ind"
       username: "Bruger"

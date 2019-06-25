@@ -842,6 +842,10 @@ pt_BR:
     description: '"%{application_name}" está pedindo o seguinte acesso à sua conta:'
     instructions: 'Acabamos de gerar uma nova chave de API de usuário para você usar com "%{application_name}", cole a seguinte chave em seu aplicativo:'
     otp_description: 'Você gostaria de permitir que "%{application_name}" acesse este site?'
+    otp_confirmation:
+      confirm_title: "Continuar no %{site_name}"
+      logging_in_as: "Fazendo login como %{username}"
+      confirm_button: Terminar Login
     no_trust_level: "Desculpe, você não tem o nível de confiança necessário para acessar a API de usuário."
     generic_error: "Desculpe, não pudemos emitir as chaves de API de usuário. Esse recurso pode ter sido desativado pelo administrador do site."
     scopes:
@@ -1309,7 +1313,7 @@ pt_BR:
     enable_markdown_linkify: "Automaticamente tratar texto que se parecer com um link como um link: www.example.com e https://example.com serão vinculados automaticamente"
     markdown_linkify_tlds: "Lista de domínios de nível superior que são tratados automaticamente como links"
     post_undo_action_window_mins: "Número de minutos permitidos aos usuários para desfazerem uma ação recente em uma publicação (curtir, sinalizar, etc)"
-    must_approve_users: "Os moderadores devem aprovar todas novas contas antes que elas sejam permitidas acessarem o site. CUIDADO: habilitar esta opção para um site já em funcionamento irá revogar o acesso para todos usuários já cadastrados que não são moderadores."
+    must_approve_users: "Gerenciadores deverão aprovar novas contas de usuários antes das mesmas serem permitidas o acesso ao site."
     pending_users_reminder_delay: "Notifique os moderadores se novos usuários estiverem aguardando aprovação por mais tempo que muitas horas. Defina como -1 para desativar as notificações."
     maximum_session_age: "Usuário continuará logado por n horas desde a última visita"
     ga_universal_tracking_code: "ID do código de acompanhamento do Google Universal Analytics (analytics.js), por exemplo: UA-12345678-9; consulte <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"

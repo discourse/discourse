@@ -831,6 +831,8 @@ it:
     description: '"%{application_name}" richiede il seguente accesso al tuo account:'
     instructions: 'Abbiamo appena generato una nuova chiave API utente da usare con "%{application_name}", per favore, incollala nella tua applicazione.'
     otp_description: 'Vuoi consentire ad "%{application_name}" di accedere al sito?'
+    otp_confirmation:
+      confirm_title: "Procedi su %{site_name}."
     no_trust_level: "Spiacenti, non hai il livello di esperienza richiesto per accedere alle user API"
     generic_error: "Spiacenti, non siamo in grado di produrre user API keys, questa caratteristica potrebbe essere stata disabilitata dall'amministratore di sistema"
     scopes:
@@ -1298,7 +1300,7 @@ it:
     enable_markdown_linkify: "Tratta automaticamente il testo che assomiglia a un collegamento come un collegamento: www.example.com e https://example.com saranno automaticamente collegati"
     markdown_linkify_tlds: "Elenco dei domini di primo livello che vengono automaticamente considerati come collegamenti"
     post_undo_action_window_mins: "Numero di minuti durante i quali gli utenti possono annullare le loro azioni recenti su un messaggio (segnalazioni, Mi piace, ecc.)."
-    must_approve_users: "Lo staff deve approvare tutti i nuovi account utente prima che essi possano accedere al sito. ATTENZIONE: abilitare l'opzione per un sito live revocherà l'accesso per tutti gli utenti non-staff esistenti!"
+    must_approve_users: "Lo staff deve approvare tutti i nuovi account utente prima che essi possano accedere al sito."
     pending_users_reminder_delay: "Notifica i moderatori se nuovi utenti sono in attesa di approvazione per più di queste ore. Imposta a -1 per disabilitare le notifiche."
     maximum_session_age: "L'utente resterà connesso per n ore dall'ultima visita"
     ga_universal_tracking_code: "ID del codice di tracciamento di Google Universal Analytics (analytics.js), ad esempio: UA-12345678-9; vedi <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
@@ -2435,7 +2437,7 @@ it:
       subject_template:
         one: "%{count} utente in attesa di approvazione"
         other: "%{count} utenti in attesa di approvazione"
-      text_body_template: "Ci sono nuove iscrizioni in attesa di essere approvate (o rifiutate), prima che gli utenti possano accedere a questo forum. \n\n[Si prega di revisionarle] (%{base_url}/review).\n"
+      text_body_template: "Ci sono nuove iscrizioni in attesa di essere approvate (o rifiutate), prima che gli utenti possano accedere a questo forum. \n\n[Si prega di revisionarle](%{base_url}/review).\n"
     download_remote_images_disabled:
       title: "Scaricamento Immagini Remote Disabilitato"
       subject_template: "Lo scaricamento delle immagini remote è disabilitato"

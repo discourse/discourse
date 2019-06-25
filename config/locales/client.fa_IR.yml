@@ -173,6 +173,7 @@ fa_IR:
         us_east_1: "شرق ایالات متحده (ویرجینیا شمالی)"
         us_east_2: "شرق ایالات متحده (اوهایو)"
         us_gov_east_1: "AWS GovCloud (ایالات متحده - شرق)"
+        us_gov_west_1: "AWS GovCloud (US-West)"
         us_west_1: "غرب ایالات متحده (کالیفرنیا شمالی)"
         us_west_2: "غرب ایالات متحده  (اورگان)"
     edit: "موضوع و دسته‌ی این موضوع را ویرایش کنید"
@@ -1171,6 +1172,14 @@ fa_IR:
       enabled: "سایت در حال فقط خواندنی است. می‌توانید موضوعات را مشاهده کنید ولی امکان ارسال پاسخ، پسندیدن و سایر عملیات در حال حاضر غیر‌فعال است."
       login_disabled: "ورود به سیستم غیر فعال شده همزمان با اینکه سایت در حال فقط خواندنی است."
       logout_disabled: "سایت در حال فقط خواندنی است و امکان خروج در این حالت وجود ندارد."
+    too_few_topics_and_posts_notice: "بیاید <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>بحث را شروع کنیم!</a> در حال حاضر <strong>%{currentTopics}/%{requiredTopics}</strong> موضوع و <strong>%{currentPosts}/%{requiredPosts}</strong> پاسخ وجود دارد. بازدیدکننده‌های جدید برای مطالعه و مشارکت باید چند موضوع پیدا کنند."
+    too_few_topics_notice: "بیایید <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>بحث را شروع کنیم!</a>در حال حاضر <strong>%{currentTopics}/%{requiredTopics}</strong> موضوع وجود دارد. بازدیدکننده‌های جدید لازم است چند موضوع برای مطالعه و مشارکت پیدا کنند."
+    too_few_posts_notice: "بیاید <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'> این بحث را شروع کنیم!</a> در حال حاضر <strong>%{currentPosts} / %{requiredPosts}</strong> نوشته وجود دارد. بازدیدکنندگان تازه وارد به گفتگوهایی برای خواندن و پاسخ دادن نیاز دارند."
+    logs_error_rate_notice:
+      reached_hour_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# error/hour} other {# errors/hour}}</a> به حد مجاز از {limit, plural, one {# error/hour} other {# errors/hour}} رسیده است."
+      reached_minute_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# error/hour} other {# errors/hour}}</a> به حد مجاز از {limit, plural, one {# error/hour} other {# errors/hour}} رسیده است."
+      exceeded_hour_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# error/hour} other {# errors/hour}}</a> از حد مجاز از {limit, plural, one {# error/hour} other {# errors/hour}} عبور کرده است."
+      exceeded_minute_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# error/hour} other {# errors/hour}}</a> از حد مجاز از {limit, plural, one {# error/hour} other {# errors/hour}} عبور کرده است."
     learn_more: "بیشتر بدانید..."
     all_time: "مجموع"
     all_time_desc: "مجموع موضوعات ایجاد شده"
@@ -1188,6 +1197,7 @@ fa_IR:
     time_read: خواندن
     time_read_recently: "اخیراً"
     time_read_tooltip: "%{time_read} مجموع زمان خواندن "
+    time_read_recently_tooltip: "%{time_read} زمان مطالعه کل (%{recent_time_read}در ۶۰ روز گذشته)"
     last_reply_lowercase: آخرین پاسخ
     replies_lowercase:
       one: 'پاسخ‌ها '
@@ -1197,6 +1207,8 @@ fa_IR:
       hide_session: "فردا به من یادآوری کن"
       hide_forever: "نه ممنون"
       hidden_for_session: "باشه, فردا از شما سؤال میکنم. شما همیشه میتوانید از 'ورود' نیز برای ساخت حساب کاربری استفاده کنید."
+      intro: "سلام! :heart_eyes: به نظر میاد شما از بحث لذت می‌برید، اما هنوز برای یک حساب کاربری ثبت نام نکرده‌اید."
+      value_prop: "وقتی یک حساب کاربری بسازید، دقیقا به جایی که پیشتر مطالعه می‌کردید برمی‌گردید. در ضمن وقتی کسی به شما پاسخ داد، آگاه‌سازی ایمیلی هم دریافت می‌کنید. و می‌توانید نوشته‌های خوب را لایک کنید و محبت را در فضا توسعه دهید :heartpulse:"
     summary:
       enabled_description: "شما خلاصه ای از این موضوع را می بینید:  بالاترین‌ نوشته‌هایی  که توسط انجمن انتخاب شده."
       description: "<b>{{replyCount}}</b> پاسخ وجود دارد."
@@ -1223,6 +1235,7 @@ fa_IR:
     trust_level: "سطح اعتماد"
     search_hint: "نام کاربری ، ایمیل یا ای پی "
     create_account:
+      disclaimer: "با ثبت نام شما با <a href='{{privacy_link}}' target='blank'>حریم خصوصی</a> و <a href='{{tos_link}}' target='blank'>شرایط و ضوابط استفاده از سرویس </a> موافقت کرده اید."
       title: "ساختن حساب‌کاربری جدید"
       failed: "اشتباهی روی داده، شاید این نام کاربری پیش‌تر استفاده شده؛ پیوند فراموشی گذرواژه می‌تواند کمک کند."
     forgot_password:
@@ -1241,8 +1254,15 @@ fa_IR:
     email_login:
       link_label: "یک لینک ورود به من ایمیل کن"
       button_label: "با ایمیل"
+      complete_username: "اگر حساب کاربری با نام کاربری <b>%{username}</b> وجود داشته باشد، شما الان یک ایمیل با لینک ورود دریافت می‌کنید."
+      complete_email: "اگر حساب کاربری با <b>%{email}</b> وجود داشته باشد، شما الان یک لینک ورود دریافت می‌کنید."
+      complete_username_found: "یک حساب کاربری با نام کاربری <b>%{username}</b> پیدا کردیم، شما الان یک ایمیل با لینک ورود دریافت می‌کنید."
+      complete_email_found: "یک حساب کاربری با <b>%{email}</b> پیدا کردیم، شما الان یک ایمیل با لینک ورود دریافت می‌کنید."
       complete_username_not_found: "هیچ حساب کاربری که با <b>%{username}</b> همخوانی داشته باشد پیدا نشد"
       complete_email_not_found: "هیچ حساب کاربری که <b>%{email}</b> همخوانی داشته باشد پیدا نشد"
+      confirm_title: "ورود به %{site_name}"
+      logging_in_as: "ورود با %{email}"
+      confirm_button: اتمام ورود
     login:
       title: "ورود"
       username: "کاربر"
@@ -1271,11 +1291,13 @@ fa_IR:
       not_allowed_from_ip_address: "شما نمی توانید با این آدرس آیپی وارد شوید."
       admin_not_allowed_from_ip_address: "شما نمی تواند با این آدرس آیپی وارد بخش مدیریت شوید."
       resend_activation_email: "برای ارسال مجدد ایمیل فعالسازی، اینجا را  کلیک کنید."
+      omniauth_disallow_totp: "در حساب کاربری شما، احراز هویت دوعامله فعال است. لطفا با کلمه عبور خود وارد شوید."
       resend_title: "ارسال مجدد ایمیل فعالسازی"
       change_email: "تغییر ایمیل"
       provide_new_email: "یک ایمیل جدید وارد کنید و ما ایمیل فعالسازی را برایتان ارسال می‌کنیم."
       submit_new_email: "تغییر ایمیل"
       sent_activation_email_again: "ایمیل فعال‌سازی دیگری را به نشانی <b>{{currentEmail}}</b> فرستادیم. ممکن است چند دقیقه طول بکشد؛ مطمئن شوید که پوشه اسپم را نیز بررسی کنید."
+      sent_activation_email_again_generic: "یک ایمیل فعالسازی دیگر فرستادیم. رسیدن آن ممکن است چند دقیقه طول بکشد؛ لطفا پوشه‌ی اسپم را هم چک کنید."
       to_continue: "لطفا وارد شوید"
       preferences: "شما باید وارد شوید تا بتوانید تنظیمات کاربری خود را تغییر بدهید."
       forgot: "من اطلاعات حساب کاربری خود را به یاد نمی‌آورم"
@@ -1370,8 +1392,10 @@ fa_IR:
       dark_tone: رنگ پوست تیره
     shared_drafts:
       title: "درفت مشترک"
+      notice: "این موضوع فقط برای افرادی که به دسته بندی <b>{{category}}</b>دسترسی دارند نمایش داده می‌شود."
       destination_category: "دسته بندی مقصد"
       publish: "درفت مشترک را منتشر کن"
+      confirm_publish: "از انتشار درفت مطمئنید؟"
       publishing: "مبحث در حال انتشار"
     composer:
       emoji: "شکلک :)"
@@ -1387,6 +1411,7 @@ fa_IR:
       saved_local_draft_tip: "به صورت محلی ذخیره شد"
       similar_topics: "موضوع شما شبیه است به..."
       drafts_offline: "پیش نویس آفلاین"
+      edit_conflict: "ویرایش تناقض"
       group_mentioned:
         one: "با اشاره  به {{group}}، به <a href='{{group_link}}'>{{count}} نفر</a> اطلاعیه ارسال می‌شود. مطمئن هستید؟"
         other: "با اشاره  به {{group}}، به <a href='{{group_link}}'>{{count}} نفر</a> اطلاعیه ارسال می‌شود. مطمئن هستید؟"
@@ -1470,8 +1495,17 @@ fa_IR:
         reply_to_topic:
           label: پاسخ به مبحث
           desc: به مبحث اصلی پاسخ بده و نه هیچ کدام از نوشته ها
+        toggle_whisper:
+          label: فعالسازی زمزمه
+          desc: زمزمه ها فقط توسط کارکنان قابل مشاهده است
         create_topic:
           label: "موضوع جدید"
+        shared_draft:
+          label: "درفت اشتراکی"
+          desc: "درفت یک مبحث که تنها توسط کارکنان قابل مشاهده است"
+        toggle_topic_bump:
+          label: "فعالسازی بالا آوردن مبحث در لیست"
+          desc: "بدون تغییر زمان اخرین پاسخ، پاسخ دهید."
     notifications:
       tooltip:
         regular:
@@ -1484,6 +1518,7 @@ fa_IR:
       none: "قادر به بارگیری اعلان‌ها در این زمان نیستیم."
       empty: "اعلانی پیدا نشد."
       more: "نمایش اعلان‌های قدیمی‌تر"
+      post_approved: "نوشته ی شما تایید شد"
       mentioned: "<span>{{username}}</span>{{description}}"
       group_mentioned: "<span>{{username}}</span>{{description}}"
       quoted: "<span>{{username}}</span>{{description}}"
@@ -1495,6 +1530,9 @@ fa_IR:
       liked_many:
         one: "<span>{{username}}،{{username2}}و %{count} دیگر</span>{{description}}"
         other: "<span>{{username}}،{{username2}}و {{count}} دیگر</span>{{description}}"
+      liked_consolidated_description:
+        one: "{{count}}نوشته ی شما را پسندید"
+        other: "{{count}}نوشته ی شما را پسندید"
       liked_consolidated: "<span>{{username}}</span>{{description}}"
       private_message: "<span>{{username}}</span>{{description}}"
       invited_to_private_message: "<p><span>{{username}}</span>{{description}}"
@@ -1502,7 +1540,12 @@ fa_IR:
       invitee_accepted: "<span>{{username}}</span>دعوت شما را پذیرفت"
       moved_post: "<span>{{username}}</span> منتقل کرد {{description}}"
       linked: "<span>{{username}}</span>{{description}}"
+      granted_badge: "به دست آوردید '{{description}}'"
       topic_reminder: "<span>{{username}}</span>{{description}}"
+      watching_first_post: "<span>مبحث جدید</span>{{description}}"
+      group_message_summary:
+        one: "{{count}}پیام در اینباکس {{group_name}}"
+        other: "{{count}}پیام در اینباکس {{group_name}}"
       popup:
         mentioned: '{{username}} در "{{topic}}" - {{site_title}} به شما اشاره کرد'
         group_mentioned: '{{username}} به شما در "{{topic}}" - {{site_title}} اشاره نمود'
@@ -1510,8 +1553,27 @@ fa_IR:
         replied: '{{username}} در "{{topic}}" - {{site_title}} به شما پاسخ داد'
         posted: '{{username}} در "{{topic}}" - {{site_title}} مطلبی نوشت'
         linked: '{{username}} در "{{topic}}" - {{site_title}} به نوشته‌ی شما پیوندی قرار داد'
+        confirm_body: "موفق شدید. اگاهسازی‌ها فعال شدند."
       titles:
+        mentioned: "احضار شده"
+        replied: "پاسخ جدید"
+        quoted: "نقل قول"
+        edited: "ویرایش شده"
+        liked: "لایک جدید"
+        private_message: "پیام جدید"
+        invited_to_private_message: "به پیام دعوت شده"
+        invitee_accepted: "پذیرفتن دعوت"
+        posted: "پاسخ جدید"
+        moved_post: "نوشته جابجا شده"
+        linked: "لینک شده"
+        granted_badge: "اهدای نشان"
+        invited_to_topic: "به موضوع دعوت شدید."
+        group_mentioned: "گروه احضار شده"
+        group_message_summary: "پیام گروهی جدید"
         watching_first_post: "موضوع جدید"
+        topic_reminder: "اگاهسازی مبحث"
+        liked_consolidated: "لایک جدید"
+        post_approved: "نوشته تایید شده"
     upload_selector:
       title: "افزودن تصویر"
       title_with_attachments: "افزودن یک تصویر یا پرونده"
@@ -1538,10 +1600,12 @@ fa_IR:
       clear_all: "پاک کردن همه"
       too_short: "کلمه جستجو شده بسیار کوتاه است"
       title: "جستجوی موضوعات، نوشته‌ها، کاربران یا دسته‌‌بندی‌ها"
+      full_page_title: "جستجوی مبحث یا نوشته"
       no_results: "چیزی یافت نشد."
       no_more_results: "نتایجی بیشتری یافت نشد."
       searching: "در حال جستجو..."
       post_format: "#{{post_number}} توسط {{username}}"
+      results_page: "نتایج جستجو برای '{{term}}'"
       search_google_button: "گوگل"
       search_google_title: "جستجو در سایت"
       context:
@@ -1553,21 +1617,28 @@ fa_IR:
         title: جستجوی پیشرفته
         posted_by:
           label: فرستنده
+        in_category:
+          label: دسته بندی شده
         in_group:
           label: در گروه
         with_badge:
           label: با نشان
+        with_tags:
+          label: برچسب خورده
         filters:
           likes: پسندیدم
           posted: نوشته ارسال کردم در
           watching: در حال مشاهده هستم
           tracking: در حال پیگیری هستم
+          private: در پیام های من
           first: اولین نوشته هستند
           pinned: سنجاق شدند
           unpinned: سنجاق نشدند
           seen: خواندم
           unseen: نخواندم
           wiki: دانشنامه هستند
+          images: استفاده از تصویر
+          all_tags: تمام برچسب های بالا
         statuses:
           label: موضوع بودند
           open: باز هستند
@@ -1711,6 +1782,7 @@ fa_IR:
         publish_to: "انتشار در:"
         when: "در زمان:"
         public_timer_types: زمانسنجهای  مبحث
+        private_timer_types: زمان سنج‌های مبحث های کاربر
         time_frame_required: یک بازه ی زمانی انتخاب کنید
       auto_update_input:
         later_today: "امروز"
@@ -1723,6 +1795,9 @@ fa_IR:
         two_months: "دو ماه"
         three_months: "سه ماه"
         four_months: "چهار ماه"
+        six_months: "شش ماه"
+        one_year: "یک سال"
+        forever: "همیشه"
         pick_date_and_time: "انتخاب زمان و تاریخ"
         set_based_on_last_post: "بستن با توجه به آخرین نوشته"
       publish_to_category:
@@ -1766,7 +1841,9 @@ fa_IR:
         jump_bottom: "پرش به آخرین نوشته"
         jump_prompt: "پرش به..."
         jump_prompt_of: "از %{count} نوشته"
+        jump_prompt_long: "برو به ..."
         jump_bottom_with_number: "رفتن به نوشته ی %{post_number}"
+        jump_prompt_to_date: "تا تاریخ"
         jump_prompt_or: "یا"
         total: همه نوشته‌ها
         current: نوشته‌ی کنونی
@@ -1828,6 +1905,7 @@ fa_IR:
         visible: "وارد کردن به فهرست"
         reset_read: "تنظیم مجدد خواندن داده ها"
         make_public: "ایجاد موضوع عمومی"
+        make_private: "به پیام تبدیل کن"
       feature:
         pin: "سنجاق زدن موضوع"
         unpin: "برداشتن سنجاق موضوع"
@@ -1941,6 +2019,7 @@ fa_IR:
         action: "ادغام نوشته‌های انتخاب شده"
         error: "خطایی در ادغام نوشته‌های انتخاب شده رخ داده است."
       change_owner:
+        title: "تغییر دادن مالک"
         action: "تغییر مالکیت"
         error: "خطایی در تغییر مالکیت نوشته‌ها وجود داشت."
         placeholder: "نام‌کاربری مالک جدید"
@@ -1955,6 +2034,9 @@ fa_IR:
         selected: "انتخاب شده ({{count}}) "
         select_post:
           label: "انتخاب"
+          title: "انتخاب نوشته"
+        selected_post:
+          label: "انتخاب شده"
         select_replies:
           label: "انتخاب کردن + جواب دادن"
         delete: حذف انتخاب شده ها
@@ -3069,6 +3151,7 @@ fa_IR:
             change_readonly_mode: "تغییر حالت فقط خواندنی"
             backup_download: "دانلود نسخه پشتیبان"
             backup_destroy: "حذف نسخه پشتیبان"
+            post_approved: "نوشته تایید شده"
         screened_emails:
           title: "ایمیل ها نمایش داده شده"
           description: "وقتی کسی سعی می کند یک حساب جدید ایجاد کند، آدرس‌های ایمیل زیر بررسی و ثبت نام مسدود خواهد شد، و یا برخی از اقدام های دیگر انجام می شود."

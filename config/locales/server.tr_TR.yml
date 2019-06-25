@@ -473,6 +473,8 @@ tr_TR:
     authorize: "Yetkilendir"
     read: "okuma"
     read_write: "okuma/yazma"
+    otp_confirmation:
+      confirm_title: "%{site_name} devam et"
     no_trust_level: "Üzgünüz, kullanıcı APIsine erişmek için gerekli güvenilirlik seviyeniz yok"
   reports:
     default:
@@ -743,7 +745,7 @@ tr_TR:
     tl4_additional_likes_per_day_multiplier: "Güvenlik seviyesi 4 (Lider) olanlar için günlük beğeni limitini bu rakamla çarparak artır"
     traditional_markdown_linebreaks: "Markdown'da, satır sonundan önce yazının sağında iki tane boşluk gerektiren, geleneksel satır sonu metodunu kullan."
     post_undo_action_window_mins: "Bir gönderide yapılan yeni eylemlerin (beğenme, bildirme vb) geri alınabileceği zaman, dakika olarak"
-    must_approve_users: "Siteye erişimlerine izin verilmeden önce tüm yeni kullanıcı hesaplarının görevliler tarafından onaylanması gerekir. UYARI: yayındaki bir site için bunu etkinleştirmek görevli olmayan hesapların erişimini iptal edecek."
+    must_approve_users: "Siteye erişimlerine izin verilmeden önce tüm yeni kullanıcı hesaplarının görevliler tarafından onaylanması gerekir."
     pending_users_reminder_delay: "Belirtilen saatten daha uzun bir süredir onay bekleyen yeni kullanıcılar mevcutsa moderatörleri bilgilendir. Bilgilendirmeyi devre dışı bırakmak için -1 girin."
     maximum_session_age: "Kullanıcı son ziyaretinden bu yana n saat boyunca giriş yapmış olarak kalacak"
     moderators_create_categories: "Moderatörlerin yeni kategoriler oluşturmasına izin ver"

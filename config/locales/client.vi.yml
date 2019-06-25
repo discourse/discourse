@@ -912,6 +912,7 @@ vi:
     email_login:
       complete_username_not_found: "Không có tài khoản phù hợp với tên thành viên <b>%{username} </b>"
       complete_email_not_found: "Không tìm thấy tài khoản nào tương ứng với <b>%{email}</b>"
+      confirm_title: "Tiếp tục tới %{site_name}"
     login:
       title: "Đăng nhập"
       username: "Thành viên"

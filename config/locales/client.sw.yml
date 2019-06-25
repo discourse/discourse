@@ -1036,6 +1036,7 @@ sw:
       complete_email_found: "Tumeona akaunti inayolingana na <b>%{email} </b>, utapokea barua pepe yenye kiungo cha kuingia hivi punde."
       complete_username_not_found: "Hakuna akaunti inayolingana na jina la mtumiaji <b>%{username}</b>"
       complete_email_not_found: "Hakuna akaunti inayolingana na <b>%{email}</b>"
+      confirm_title: "Endelea kwenye %{site_name}"
     login:
       title: "Ingia"
       username: "Mtumiaji"

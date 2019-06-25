@@ -843,6 +843,10 @@ es:
     description: '"%{application_name}" está solicitando el siguiente acceso a tu cuenta:'
     instructions: 'Acabamos de generar una nueva llave API de usuario para que uses con "%{application_name}", por favor pega la siguiente llave en tu aplicación: '
     otp_description: '¿Te gustaría permitir a "%{application_name}" acceder a este sitio?'
+    otp_confirmation:
+      confirm_title: "Continuar a %{site_name}"
+      logging_in_as: "Ingresando como %{username}"
+      confirm_button: Finalizar Login
     no_trust_level: "Lo sentimos, no tienes el nivel de confianza requerido para acceder a la API de usuario"
     generic_error: "Lo sentimos, no pudimos emitir claves API de usuario, esta funcionalidad puede estar desactivada por el administrador del sitio"
     scopes:
@@ -1310,7 +1314,7 @@ es:
     enable_markdown_linkify: "Trate automáticamente el texto que se ve como un enlace como un enlace: www.ejemplo.com y https://ejemplo.com se vincularán automáticamente"
     markdown_linkify_tlds: "Lista de dominios de nivel superior que se tratan automáticamente como enlaces"
     post_undo_action_window_mins: "Número de minutos durante los cuales los usuarios pueden deshacer sus acciones recientes en un post (me gusta, reportes, etc)."
-    must_approve_users: "Los miembros administración deben aprobar todas las nuevas cuentas antes de que se les permita el acceso al sitio. AVISO: ¡habilitar esta opción en un sitio activo revocará el acceso a los usuarios que no sean moderadores o admin!"
+    must_approve_users: "Los miembros del Staff deben aprobar todas las nuevas cuentas antes de que se les permita acceder al sitio."
     pending_users_reminder_delay: "Notificar a los moderadores si hay nuevos usuarios que hayan estado esperando aprbación durante más estas horas. Usa -1 para desactivar estas notificaciones."
     maximum_session_age: "El usuario permanecerá n horas con su sesión iniciada desde su última visita"
     ga_universal_tracking_code: "Código de seguimiento de Google Universal Analytics (analytics.js), ejemplo: UA-12345678-9; visita <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"

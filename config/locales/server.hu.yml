@@ -465,6 +465,8 @@ hu:
     authorize: "Engedélyezés"
     read: "olvasható"
     read_write: "olvasható/írható"
+    otp_confirmation:
+      confirm_title: "Tovább a%{site_name}"
   reports:
     default:
       labels:

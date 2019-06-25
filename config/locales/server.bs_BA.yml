@@ -295,6 +295,9 @@ bs_BA:
       every_hour: "po satu"
       daily: "dnevno"
       weekly: "sedmično"
+  user_api_key:
+    otp_confirmation:
+      confirm_title: "Nastavi ka %{site_name}"
   reports:
     default:
       labels:
@@ -507,7 +510,6 @@ bs_BA:
     cooldown_minutes_after_hiding_posts: "Number of minutes a user must wait before they can edit a post hidden via community flagging"
     traditional_markdown_linebreaks: "Use traditional linebreaks in Markdown, which require two trailing spaces for a linebreak."
     post_undo_action_window_mins: "Number of minutes users are allowed to undo recent actions on a post (like, flag, etc)."
-    must_approve_users: "Staff must approve all new user accounts before they are allowed to access the site."
     moderators_create_categories: "Allow moderators to create new categories"
     cors_origins: "Allowed origins for cross-origin requests (CORS). Each origin must include http:// or https://. The DISCOURSE_ENABLE_CORS env variable must be set to true to enable CORS."
     top_menu: "Determine which items appear in the homepage navigation, and in what order. Example latest|new|unread|starred|categories|top|read|posted"

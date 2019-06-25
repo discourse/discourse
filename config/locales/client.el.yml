@@ -953,6 +953,7 @@ el:
     email_login:
       complete_username_not_found: "Δεν υπάρχει λογαριασμός με το όνομα χρήστη <b>%{username}</b>"
       complete_email_not_found: "Δεν υπάρχει λογαριασμός με τη διεύθυνση <b>%{email}</b>"
+      confirm_title: "Συνεχίστε στην %{site_name}"
     login:
       title: "Σύνδεση"
       username: "Όνομα Χρήστη"

@@ -531,6 +531,8 @@ sw:
     read: "soma"
     read_write: "soma/andika"
     description: '"%{application_name}" anaomba ufikivu ufuatao kwenye akaunti yako:'
+    otp_confirmation:
+      confirm_title: "Endelea kwenye %{site_name}"
     no_trust_level: "Samahani, hauna kiwango cha uaminifu kinachohitajika kufikia API ya mtumiaji"
     scopes:
       message_bus: "Masashisho yaliyo hai"
@@ -790,7 +792,6 @@ sw:
     notify_mods_when_user_silenced: "Kama mtumiaji akinyamazishwa, tuma ujumbe kwa wasimamizi wote."
     markdown_linkify_tlds: "Orodha ya vikoa vya hali ya juu ambavyo otomatikali  ni  viungo."
     post_undo_action_window_mins: "Dakika watumiaji wanaruhusiwa kutendua vitendo vya hivi karibuni kwenye chapisho (kupenda, bendera, etc)."
-    must_approve_users: "Wasaidizi lazima wathibitishe akaunti zote mpya za watumiaji kabla hawajaruhusiwa kufikia tovuti. ONYO: ukiruhusu hii kwenye tovuti iliyo hewani, itasitisha ufikivu wa watumiaji ambao sio wasaidizi!"
     pending_users_reminder_delay: "Wajulishe wasimamizi kama watumiaji wapya wamekuwa wanasubiria kibali kwa mda zaidi ya masaa haya. Seti -1 kusitisha taarifa."
     maximum_session_age: "mtumiaji ataendelea kuwa ndani kwa masaa n toka mara ya mwisho alipotembelea"
     moderators_create_categories: "Waruhusu wasimamizi watengeneze mada mpya"

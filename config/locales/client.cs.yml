@@ -1158,6 +1158,7 @@ cs:
       complete_email_found: "Našli jsme účet s emailovou adresou <b>%{email}</b>, za chvilku by měl přijít email s přihlašovacím odkazem."
       complete_username_not_found: "Nebyl nalezen účet s uživatelským jménem <b>%{username}</b>"
       complete_email_not_found: "Nebyl nalezen účet s emailem <b>%{email}</b>"
+      confirm_title: "Pokračovat na %{site_name}"
     login:
       title: "Přihlásit se"
       username: "Uživatel"

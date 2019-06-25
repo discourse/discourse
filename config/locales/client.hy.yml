@@ -1137,6 +1137,7 @@ hy:
       complete_email_found: "Մենք գտել ենք հաշիվ, որը համընկնում է <b>%{email}</b> էլ. հասցեի հետ, Դուք շուտով կստանաք էլ. նամակ մուտքի հղումով:"
       complete_username_not_found: "<b>%{username}</b> օգտանվանը համապատասխանող հաշիվ չի գտնվել:"
       complete_email_not_found: "Ոչ մի հաշիվ չի համընկնում <b>%{email}</b> էլ. հասցեին"
+      confirm_title: "Շարունակել դեպի %{site_name}"
     login:
       title: "Մուտք"
       username: "Օգտատեր"
