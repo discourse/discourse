@@ -37,7 +37,7 @@ after_initialize do
       link = fragment.document.create_element("a")
       link["href"] = post.url if post
       link.content = I18n.t("details.excerpt_details")
-      el.replace text + " " + link.to_html
+      el.replace CGI.escapeHTML(text) + " " + link.to_html
     end
   end
 
