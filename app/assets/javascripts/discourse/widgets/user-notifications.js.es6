@@ -88,21 +88,18 @@ export default createWidget("user-notifications", {
     if (state.loading) {
       result.push(h("div.spinner-container", h("div.spinner")));
     } else if (state.notifications.length) {
-      const notificationItems =
-        state.notifications.map(notificationAttrs => {
+      const notificationItems = state.notifications.map(notificationAttrs => {
+        const notificationName = this.site.notificationLookup[
+          notificationAttrs.notification_type
+        ];
 
-          const notificationName =
-            this.site.notificationLookup[notificationAttrs.notification_type];
-
-          return (
-            this.attach(
-              `${notificationName.dasherize()}-notification-item`,
-              notificationAttrs,
-              {},
-              { fallbackWidgetName: 'default-notification-item' }
-            )
-          );
-        });
+        return this.attach(
+          `${notificationName.dasherize()}-notification-item`,
+          notificationAttrs,
+          {},
+          { fallbackWidgetName: "default-notification-item" }
+        );
+      });
 
       result.push(h("hr"));
 

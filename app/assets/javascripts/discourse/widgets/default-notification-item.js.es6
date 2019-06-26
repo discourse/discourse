@@ -13,8 +13,9 @@ import { setTransientHeader } from "discourse/lib/ajax";
 import { userPath } from "discourse/lib/url";
 import { iconNode } from "discourse-common/lib/icon-library";
 
-export const DefaultNotificationItem =
-  createWidget("default-notification-item", {
+export const DefaultNotificationItem = createWidget(
+  "default-notification-item",
+  {
     tagName: "li",
 
     buildClasses(attrs) {
@@ -82,7 +83,10 @@ export const DefaultNotificationItem =
       const username = formatUsername(data.display_username);
       const description = this.description(data);
 
-      return I18n.t(`notifications.${notificationName}`, { description, username });
+      return I18n.t(`notifications.${notificationName}`, {
+        description,
+        username
+      });
     },
 
     icon(notificationName) {
@@ -152,4 +156,5 @@ export const DefaultNotificationItem =
         }
       });
     }
-  });
+  }
+);
