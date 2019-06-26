@@ -865,8 +865,9 @@ span.highlighted {
 }
 
 .read-state.read {
+  visibility: hidden;
   opacity: 0;
-  transition: opacity ease-out 1s;
+  transition: visibility 1s, opacity ease-out 1s;
 }
 
 .signup-cta {
