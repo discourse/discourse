@@ -72,9 +72,7 @@ export default Ember.Component.extend({
   },
 
   _formatReplyToUserPost(avatar, link) {
-    const htmlLink = `<a class="user-link" href="${link.href}">${
-      link.anchor
-    }</a>`;
+    const htmlLink = `<a class="user-link" href="${link.href}">${link.anchor}</a>`;
     return `${avatar}${htmlLink}`.htmlSafe();
   }
 });

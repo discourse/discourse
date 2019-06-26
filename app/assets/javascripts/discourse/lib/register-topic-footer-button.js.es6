@@ -53,9 +53,7 @@ export function registerTopicFooterButton(button) {
     !normalizedButton.translatedTitle
   ) {
     Ember.error(
-      `Attempted to register a topic button: ${
-        button.id
-      } with no icon or title.`
+      `Attempted to register a topic button: ${button.id} with no icon or title.`
     );
     return;
   }

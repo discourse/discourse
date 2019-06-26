@@ -332,9 +332,7 @@ const Report = Discourse.Model.extend({
         ignoreTitle: true
       });
 
-      return `<a href='${href}'>${avatarImg}<span class='username'>${
-        user.name
-      }</span></a>`;
+      return `<a href='${href}'>${avatarImg}<span class='username'>${user.name}</span></a>`;
     };
 
     return {

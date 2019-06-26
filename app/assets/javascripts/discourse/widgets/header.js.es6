@@ -399,9 +399,7 @@ export default createWidget("header", {
       var params = "";
 
       if (context) {
-        params = `?context=${context.type}&context_id=${
-          context.id
-        }&skip_context=${this.state.skipSearchContext}`;
+        params = `?context=${context.type}&context_id=${context.id}&skip_context=${this.state.skipSearchContext}`;
       }
 
       const currentPath = this.register
