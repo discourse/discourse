@@ -11,6 +11,10 @@ class UserSecondFactor < ActiveRecord::Base
     where(method: UserSecondFactor.methods[:totp], enabled: true)
   end
 
+  scope :all_totps, -> do
+    where(method: UserSecondFactor.methods[:totp])
+  end
+
   def self.methods
     @methods ||= Enum.new(
       totp: 1,
@@ -18,8 +22,12 @@ class UserSecondFactor < ActiveRecord::Base
     )
   end
 
-  def self.totp
-    where(method: self.methods[:totp]).first
+  def get_totp_object
+    ROTP::TOTP.new(self.data, issuer: SiteSetting.title)
+  end
+
+  def totp_provisioning_uri
+    get_totp_object.provisioning_uri(user.email)
   end
 
 end

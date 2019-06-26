@@ -1,7 +1,15 @@
 import { acceptance, updateCurrentUser } from "helpers/qunit-helpers";
 
 acceptance("Enforce Second Factor", {
-  loggedIn: true
+  loggedIn: true,
+  pretend(server, helper) {
+    server.post("/u/second_factors.json", () => {
+      return helper.response({
+        success: "OK",
+        password_required: "true"
+      });
+    });
+  }
 });
 
 QUnit.test("as an admin", async assert => {

@@ -13,6 +13,23 @@ export default RestrictedUserRoute.extend({
 
   setupController(controller, model) {
     controller.setProperties({ model, newUsername: model.get("username") });
+    controller.set("loading", true);
+    model
+      .loadSecondFactorCodes("")
+      .then(response => {
+        if (response.error) {
+          controller.set("errorMessage", response.error);
+        } else {
+          controller.setProperties({
+            errorMessage: null,
+            loaded: !response.password_required,
+            dirty: !!response.password_required,
+            totps: response.totps
+          });
+        }
+      })
+      .catch(controller.popupAjaxError)
+      .finally(() => controller.set("loading", false));
   },
 
   actions: {
