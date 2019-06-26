@@ -230,9 +230,7 @@ export default class Widget {
       return result;
     } else {
       throw new Error(
-        `Couldn't find ${widgetName} or fallback ${
-          otherOpts.fallbackWidgetName
-        }`
+        `Couldn't find ${widgetName} or fallback ${otherOpts.fallbackWidgetName}`
       );
     }
   }

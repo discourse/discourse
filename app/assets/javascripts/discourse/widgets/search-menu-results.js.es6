@@ -73,9 +73,7 @@ createSearchResult({
     return h(
       "span",
       {
-        className: `tag-${tag} discourse-tag ${
-          Discourse.SiteSettings.tag_style
-        }`
+        className: `tag-${tag} discourse-tag ${Discourse.SiteSettings.tag_style}`
       },
       tag
     );
