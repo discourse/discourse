@@ -39,7 +39,8 @@ module TopicGuardian
     is_staff? ||
     (user &&
       user.trust_level >= SiteSetting.min_trust_to_create_topic.to_i &&
-      can_create_post?(parent))
+      can_create_post?(parent) &&
+      Category.topic_create_allowed(self).limit(1).count == 1)
   end
 
   def can_create_topic_on_category?(category)
