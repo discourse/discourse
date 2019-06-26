@@ -5,10 +5,7 @@ require 'tiny_tds'
 
 # Import script for Telligent communities
 #
-# Users are currently imported from a temp table. This will need some
-# work the next time this import script is used, because that table
-# won't exist. Also, it's really hard to find all attachments, but
-# the script tries to do it anyway.
+# It's really hard to find all attachments, but the script tries to do it anyway.
 
 class ImportScripts::Telligent < ImportScripts::Base
   BATCH_SIZE ||= 1000
@@ -26,7 +23,8 @@ class ImportScripts::Telligent < ImportScripts::Base
       host: ENV["DB_HOST"],
       username: ENV["DB_USERNAME"],
       password: ENV["DB_PASSWORD"],
-      database: ENV["DB_NAME"]
+      database: ENV["DB_NAME"],
+      timeout: 60 # the user query is very slow
     )
   end
 
@@ -56,48 +54,64 @@ class ImportScripts::Telligent < ImportScripts::Base
     last_user_id = -1
     total_count = count(<<~SQL)
       SELECT COUNT(1) AS count
-      FROM temp_User u
+      FROM cs_Users u
       WHERE #{user_conditions}
     SQL
+    import_count = 0
 
-    batches do |offset|
+    loop do
       rows = query(<<~SQL)
-        SELECT TOP #{BATCH_SIZE} *
-        FROM
-          (
-            SELECT
-              u.UserID,
-              u.Email,
-              u.UserName,
-              u.CommonName,
-              u.CreateDate,
-              p.PropertyName,
-              p.PropertyValue
-            FROM temp_User u
-              LEFT OUTER JOIN temp_UserProperties p ON (u.UserID = p.UserID)
+        SELECT *
+        FROM (
+            SELECT TOP #{BATCH_SIZE}
+                u.UserID,
+                u.Email,
+                u.UserName,
+                u.CreateDate,
+                p.PropertyName,
+                p.PropertyValue
+            FROM cs_Users u
+                LEFT OUTER JOIN (
+                    SELECT NULL AS UserID, ap.UserId AS MembershipID, x.PropertyName, x.PropertyValue
+                    FROM aspnet_Profile ap
+                             CROSS APPLY dbo.GetProperties(ap.PropertyNames, ap.PropertyValuesString) x
+                    WHERE ap.PropertyNames NOT LIKE '%:-1%' AND
+                        x.PropertyName IN ('bio', 'commonName', 'location', 'webAddress')
+                    UNION
+                    SELECT up.UserID, NULL AS MembershipID, x.PropertyName, CAST(x.PropertyValue AS NVARCHAR) AS PropertyValue
+                    FROM cs_UserProfile up
+                             CROSS APPLY dbo.GetProperties(up.PropertyNames, up.PropertyValues) x
+                    WHERE up.PropertyNames NOT LIKE '%:-1%' AND
+                        x.PropertyName IN ('avatarUrl', 'BannedUntil', 'UserBanReason')
+                ) p ON p.UserID = u.UserID OR p.MembershipID = u.MembershipID
             WHERE u.UserID > #{last_user_id} AND #{user_conditions}
-          ) x
-          PIVOT (
-            MAX(PropertyValue)
-            FOR PropertyName
-            IN (avatarUrl, bio, Location, webAddress, BannedUntil, UserBanReason)
-          ) y
+            ORDER BY u.UserID
+        ) x
+            PIVOT (
+              MAX(PropertyValue)
+              FOR PropertyName
+              IN (bio, commonName, location, webAddress, avatarUrl, BannedUntil, UserBanReason)
+            ) Y
         ORDER BY UserID
       SQL
 
       break if rows.blank?
       last_user_id = rows[-1]["UserID"]
-      next if all_records_exist?(:users, rows.map { |row| row["UserID"] })
 
-      create_users(rows, total: total_count, offset: offset) do |row|
+      if all_records_exist?(:users, rows.map { |row| row["UserID"] })
+        import_count += rows.size
+        next
+      end
+
+      create_users(rows, total: total_count, offset: import_count) do |row|
         {
           id: row["UserID"],
           email: row["Email"],
           username: row["UserName"],
-          name: row["CommonName"],
+          name: row["commonName"],
           created_at: row["CreateDate"],
           bio_raw: html_to_markdown(row["bio"]),
-          location: row["Location"],
+          location: row["location"],
           website: row["webAddress"],
           post_create_action: proc do |user|
             import_avatar(user, row["avatarUrl"])
@@ -105,12 +119,14 @@ class ImportScripts::Telligent < ImportScripts::Base
           end
         }
       end
+
+      import_count += rows.size
     end
   end
 
   # TODO move into base importer (create_user) and use consistent error handling
   def import_avatar(user, avatar_url)
-    return if avatar_url.blank? || avatar_url.include?("anonymous")
+    return if ENV["FILE_BASE_DIR"].blank? || avatar_url.blank? || avatar_url.include?("anonymous")
 
     if match_data = avatar_url.match(LOCAL_AVATAR_REGEX)
       avatar_path = File.join(ENV["FILE_BASE_DIR"],
@@ -141,11 +157,6 @@ class ImportScripts::Telligent < ImportScripts::Base
   end
 
   def import_categories
-    @new_parent_categories = {}
-    @new_parent_categories[:archives] = create_category({ name: "Archives" }, nil)
-    @new_parent_categories[:spotlight] = create_category({ name: "Spotlight" }, nil)
-    @new_parent_categories[:optimizer] = create_category({ name: "SQL Optimizer" }, nil)
-
     puts "", "Importing parent categories..."
     parent_categories = query(<<~SQL)
       SELECT
@@ -181,7 +192,7 @@ class ImportScripts::Telligent < ImportScripts::Base
     create_categories(child_categories) do |row|
       parent_category_id = parent_category_id_for(row)
 
-      if category_id = replace_with_category_id(row, child_categories, parent_category_id)
+      if category_id = replace_with_category_id(child_categories, parent_category_id)
         add_category(row['ForumId'], Category.find_by_id(category_id))
         url = "f/#{row['ForumId']}"
         Permalink.create(url: url, category_id: category_id) unless Permalink.exists?(url: url)
@@ -199,29 +210,11 @@ class ImportScripts::Telligent < ImportScripts::Base
   end
 
   def parent_category_id_for(row)
-    name = row["Name"].downcase
-
-    if name.include?("beta")
-      @new_parent_categories[:archives].id
-    elsif name.include?("spotlight")
-      @new_parent_categories[:spotlight].id
-    elsif name.include?("optimizer")
-      @new_parent_categories[:optimizer].id
-    elsif row.key?("GroupId")
-      category_id_from_imported_category_id("G#{row['GroupId']}")
-    else
-      nil
-    end
+    category_id_from_imported_category_id("G#{row['GroupId']}") if row.key?("GroupId")
   end
 
-  def replace_with_category_id(row, child_categories, parent_category_id)
-    name = row["Name"].downcase
-
-    if name.include?("data modeler") || name.include?("benchmark")
-      category_id_from_imported_category_id("G#{row['GroupId']}")
-    elsif only_child?(child_categories, parent_category_id)
-      parent_category_id
-    end
+  def replace_with_category_id(child_categories, parent_category_id)
+    parent_category_id if only_child?(child_categories, parent_category_id)
   end
 
   def only_child?(child_categories, parent_category_id)
@@ -236,7 +229,6 @@ class ImportScripts::Telligent < ImportScripts::Base
 
   def clean_category_name(name)
     CGI.unescapeHTML(name)
-      .sub(/(?:\- )?Forum/i, "")
       .strip
   end
 
@@ -360,7 +352,7 @@ class ImportScripts::Telligent < ImportScripts::Base
     raw = html_to_markdown(raw) || ""
 
     filename = row["FileName"]
-    return raw if filename.blank?
+    return raw if ENV["FILE_BASE_DIR"].blank? || filename.blank?
 
     path = File.join(
       ENV["FILE_BASE_DIR"],
@@ -377,7 +369,7 @@ class ImportScripts::Telligent < ImportScripts::Base
         upload = @uploader.create_upload(user_id, path, filename)
 
         if upload.present? && upload.persisted? && !upload_ids.include?(upload.id)
-          raw << "\n" << @uploader.html_for_upload(upload, filename)
+          raw = "#{raw}\n#{@uploader.html_for_upload(upload, filename)}"
         end
       else
         STDERR.puts "Could not find file: #{path}"

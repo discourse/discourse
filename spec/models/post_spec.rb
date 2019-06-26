@@ -1229,29 +1229,12 @@ describe Post do
   end
 
   describe '#link_post_uploads' do
-    fab!(:video_upload) do
-      Fabricate(:upload,
-        url: '/uploads/default/original/1X/1/1234567890123456.mp4'
-      )
-    end
-
-    fab!(:image_upload) do
-      Fabricate(:upload,
-        url: '/uploads/default/original/1X/1/1234567890123456.jpg'
-      )
-    end
-
-    fab!(:audio_upload) do
-      Fabricate(:upload,
-        url: '/uploads/default/original/1X/1/1234567890123456.ogg'
-      )
-    end
-
-    fab!(:attachment_upload) do
-      Fabricate(:upload,
-        url: '/uploads/default/original/1X/1/1234567890123456.csv'
-      )
-    end
+    fab!(:video_upload) { Fabricate(:upload, extension: "mp4") }
+    fab!(:image_upload) { Fabricate(:upload) }
+    fab!(:audio_upload) { Fabricate(:upload, extension: "ogg") }
+    fab!(:attachment_upload) { Fabricate(:upload, extension: "csv") }
+    fab!(:attachment_upload_2) { Fabricate(:upload) }
+    fab!(:attachment_upload_3) { Fabricate(:upload, extension: nil) }
 
     let(:base_url) { "#{Discourse.base_url_no_prefix}#{Discourse.base_uri}" }
     let(:video_url) { "#{base_url}#{video_upload.url}" }
@@ -1260,6 +1243,8 @@ describe Post do
     let(:raw) do
       <<~RAW
       <a href="#{attachment_upload.url}">Link</a>
+      [test|attachment](#{attachment_upload_2.short_url})
+      [test3|attachment](#{attachment_upload_3.short_url})
       <img src="#{image_upload.url}">
 
       <video width="100%" height="100%" controls>
@@ -1285,7 +1270,12 @@ describe Post do
       post.link_post_uploads
 
       expect(PostUpload.where(post: post).pluck(:upload_id)).to contain_exactly(
-        video_upload.id, image_upload.id, audio_upload.id, attachment_upload.id
+        video_upload.id,
+        image_upload.id,
+        audio_upload.id,
+        attachment_upload.id,
+        attachment_upload_2.id,
+        attachment_upload_3.id
       )
     end
 
@@ -1350,6 +1340,33 @@ describe Post do
       Fabricate(:post, cooked: "A post with external link <a href='https://example.com/wp-content/uploads/abcdef.gif'>")
       ids << Fabricate(:post, cooked: 'A post with missing upload <img src="https://cdn.example.com/images/transparent.png" data-orig-src="upload://defghijklmno.png">').id
       expect(Post.have_uploads.order(:id).pluck(:id)).to eq(ids)
+    end
+  end
+
+  describe '#each_upload_url' do
+    let(:upload) { Fabricate(:upload_s3) }
+
+    it "correctly identifies all upload urls" do
+      urls = []
+      upload1 = Fabricate(:upload)
+      upload2 = Fabricate(:upload)
+      post = Fabricate(:post, raw: "A post with image and link upload.\n\n![](#{upload1.short_url})\n\n<a href='#{upload2.url}'>Link to upload</a>\n![](http://example.com/external.png)")
+      post.each_upload_url { |src, _, _| urls << src }
+      expect(urls).to eq([upload1.url, upload2.url])
+    end
+
+    it "should skip external urls with upload url in query string" do
+      SiteSetting.enable_s3_uploads = true
+      SiteSetting.s3_upload_bucket = "s3-upload-bucket"
+      SiteSetting.s3_access_key_id = "some key"
+      SiteSetting.s3_secret_access_key = "some secret key"
+      SiteSetting.s3_cdn_url = "https://cdn.s3.amazonaws.com"
+
+      urls = []
+      upload = Fabricate(:upload_s3)
+      post = Fabricate(:post, raw: "<a href='https://link.example.com/redirect?url=#{Discourse.store.cdn_url(upload.url)}'>Link to upload</a>")
+      post.each_upload_url { |src, _, _| urls << src }
+      expect(urls).to be_empty
     end
   end
 

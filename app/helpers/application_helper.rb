@@ -1,3 +1,4 @@
+# coding: utf-8
 # frozen_string_literal: true
 require 'current_user'
 require 'canonical_url'
@@ -62,7 +63,8 @@ module ApplicationHelper
 
     if GlobalSetting.use_s3? && GlobalSetting.s3_cdn_url
       if GlobalSetting.cdn_url
-        path = path.gsub(GlobalSetting.cdn_url, GlobalSetting.s3_cdn_url)
+        folder = ActionController::Base.config.relative_url_root || "/"
+        path = path.gsub(File.join(GlobalSetting.cdn_url, folder, "/"), File.join(GlobalSetting.s3_cdn_url, "/"))
       else
         # we must remove the subfolder path here, assets are uploaded to s3
         # without it getting involved
@@ -428,6 +430,11 @@ module ApplicationHelper
 
   def theme_translations_lookup
     Theme.lookup_field(theme_ids, :translations, I18n.locale)
+      &.html_safe
+  end
+
+  def theme_js_lookup
+    Theme.lookup_field(theme_ids, :extra_js, nil)
       &.html_safe
   end
 

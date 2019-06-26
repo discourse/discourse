@@ -5,9 +5,9 @@ require_dependency 'crawler_detection'
 
 describe CrawlerDetection do
 
-  def crawler!(s)
-    if (!CrawlerDetection.crawler?(s))
-      raise "#{s} should be a crawler!"
+  def crawler!(user_agent, via = nil)
+    if (!CrawlerDetection.crawler?(user_agent, via))
+      raise "#{user_agent} should be a crawler!"
     end
   end
 
@@ -48,6 +48,10 @@ describe CrawlerDetection do
       crawler! "LogicMonitor SiteMonitor/1.0"
       crawler! "Java/1.8.0_151"
       crawler! "Mozilla/5.0 (compatible; Yahoo! Slurp; http://help.yahoo.com/help/us/ysearch/slurp)"
+    end
+
+    it "returns true when VIA header contains 'web.archive.org'" do
+      crawler!("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36", "HTTP/1.0 web.archive.org (Wayback Save Page)")
     end
 
     it "returns false for non-crawler user agents" do

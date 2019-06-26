@@ -149,6 +149,7 @@ module PrettyText
       buffer = +<<~JS
         __optInput = {};
         __optInput.siteSettings = #{SiteSetting.client_settings_json};
+        #{"__optInput.disableEmojis = true" if opts[:disable_emojis]}
         __paths = #{paths_json};
         __optInput.getURL = __getURL;
         __optInput.getCurrentUser = __getCurrentUser;
@@ -159,7 +160,7 @@ module PrettyText
         __optInput.categoryHashtagLookup = __categoryLookup;
         __optInput.customEmoji = #{custom_emoji.to_json};
         __optInput.emojiUnicodeReplacer = __emojiUnicodeReplacer;
-        __optInput.lookupImageUrls = __lookupImageUrls;
+        __optInput.lookupUploadUrls = __lookupUploadUrls;
         __optInput.censoredWords = #{WordWatcher.words_for_action(:censor).join('|').to_json};
       JS
 
@@ -347,6 +348,7 @@ module PrettyText
   def self.excerpt(html, max_length, options = {})
     # TODO: properly fix this HACK in ExcerptParser without introducing XSS
     doc = Nokogiri::HTML.fragment(html)
+    DiscourseEvent.trigger(:reduce_excerpt, doc, options)
     strip_image_wrapping(doc)
     html = doc.to_html
 

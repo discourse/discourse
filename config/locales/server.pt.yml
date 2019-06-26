@@ -16,6 +16,7 @@ pt:
       short_no_year: "%B %-d"
       date_only: "%B %-d, %Y"
       long: "%B %-d, %Y, %l:%M%P"
+      no_day: "%B %Y"
   date:
     month_names: [~, Janeiro, Fevereiro, Março, Abril, Maio, Junho, Julho, Agosto, Setembro, Outubro, Novembro, Dezembro]
     <<: *datetime_formats
@@ -39,6 +40,8 @@ pt:
   themes:
     bad_color_scheme: "Não é possível actualizar o tema, a paleta de cores é inválida"
     other_error: "Ocorreu algo de errado ao atualizar o tema"
+    compile_error:
+      unrecognized_extension: "Extensão de ficheiro desconhecida: %{extension}"
     import_error:
       generic: Ocorreu um erro durante a importação do tema
       about_json: "Erro de Importação: about.json não existe ou é inválido"
@@ -64,6 +67,7 @@ pt:
       number_value_not_valid_min: "Deve ser maior ou igual a %{min}."
       number_value_not_valid_max: "Deve ser menor ou igual a %{max}."
       string_value_not_valid: "O novo valor não está dentro do intervalo permitido."
+      string_value_not_valid_min_max: "Deve ter entre %{min} e %{max} caractéres de comprimento. "
       string_value_not_valid_min: "Deve ter o um tamanho mínimo de %{min} caractéres."
       string_value_not_valid_max: "Deve ter, no máximo, um tamanho de %{max} caractéres."
     locale_errors:
@@ -94,6 +98,7 @@ pt:
         topic_closed_error: "Acontece quando é recebida uma resposta, mas que o tópico relacionado foi encerrado."
         bounced_email_error: "A mensagem é um relatório de mensagem redirecionado."
         screened_email_error: "Acontece quando o endereço de e-mail do remetente já foi confirmado."
+        email_not_allowed: "Acontece quando um endereço de e-mail não está na lista branca ou está na lista negra."
       unrecognized_error: "Erro Desconhecido"
   errors: &errors
     format: "%{attribute} %{message}"
@@ -147,6 +152,9 @@ pt:
     embed:
       load_from_remote: "Ocorreu um erro no carregamento dessa mensagem."
     site_settings:
+      invalid_choice:
+        one: "Especificou a escolha inválida %{name}"
+        other: "Especificou escolhas inválidas %{name}"
       default_categories_already_selected: "Não pode selecionar uma categoria usada noutra lista."
       s3_upload_bucket_is_required: "Não pode ativar carregamentos para o S3 excepto se tiver fornecido o 's3_upload_bucket'."
   activemodel:
@@ -164,6 +172,10 @@ pt:
     backup_file_should_be_tar_gz: "O ficheiro da cópia de segurança deve ser um arquivo .tar.gz"
     not_enough_space_on_disk: "Não existe espaço suficiente no disco para carregar esta cópia de segurança."
     invalid_filename: "O nome da cópia de segurança contém carácteres inválidos. Cáracteres válidos são a-z 0-9 . - _."
+    file_exists: "O ficheiro que está a tentar enviar já existe."
+    location:
+      local: "Local"
+      s3: "Amazon S3"
   not_logged_in: "Necessita de ter sessão iniciada para fazer isso."
   not_found: "O URL ou recurso pedido não foi encontrado."
   invalid_access: "Não tem permissões para visualizar o recurso pedido."
@@ -228,7 +240,6 @@ pt:
   private_message_abbrev: "Msg"
   rss_description:
     latest: "Tópicos recentes"
-    hot: "Tópicos quentes"
     top: "Melhores tópicos"
     top_all: "Melhores tópicos de todos os tempos"
     top_yearly: "Melhores tópicos do ano"
@@ -584,12 +595,16 @@ pt:
       every_hour: "de hora em hora"
       daily: "diariamente"
       weekly: "semanalmente"
+      every_month: "cada mês"
+      every_six_months: "a cada seis meses"
   user_api_key:
     title: "Autorizar o acesso da aplicação"
     authorize: "Autorizar"
     read: "ler"
     read_write: "ler/escrever"
     description: '"%{application_name}" está a requerer o seguinte acesso à sua conta:'
+    otp_confirmation:
+      confirm_title: "Continuar para %{site_name}"
     no_trust_level: "Desculpe, não tem o nível de confiança requerido para aceder à API de utilizador"
     generic_error: "Desculpe, não somos capazes de gerar chaves  API de uitlizador, esta funcionalidade poderá estar desactivada pela administração do site"
     scopes:
@@ -868,7 +883,7 @@ pt:
     tl4_additional_likes_per_day_multiplier: "Aumentar limite de gostos por dia para nc4 (líder) ao multiplicar por este número"
     traditional_markdown_linebreaks: "Utilize tradicionais quebras de linha no Markdown, que requer dois espaços no final para uma quebra de linha."
     post_undo_action_window_mins: "Número de minutos durante o qual os utilizadores têm permissão para desfazer ações numa mensagem (gostos, sinalizações, etc)."
-    must_approve_users: "O pessoal deve aprovar todas as novas contas de utilizador antes destas terem permissão para aceder ao sítio. AVISO: ativar isto para um sítio ativo irá revogar o acesso aos utilizadores existentes que não fazem parte do pessoal!"
+    must_approve_users: "O pessoal deverá aprovar todas as contas dos novos utilizadores antes destes terem permissão para aceder ao sítio."
     pending_users_reminder_delay: "Notificar moderadores se novos utilizadores estiverem à espera de aprovação por mais que esta quantidade de horas. Configurar com -1 para desativar notificações."
     maximum_session_age: "Utilizador permanecerá ligado durante n horas desde a última visita"
     moderators_create_categories: "Permitir que os moderadores criem novas categorias"
@@ -1178,7 +1193,6 @@ pt:
     tag_style: "Estilo visual dos distintivos das etiquetas."
     min_trust_level_to_tag_topics: "Nível de confiança mínimo necessário para atribuir etiquetas a tópicos."
     suppress_overlapping_tags_in_list: "Se as etiquetas coincidirem exactamente com palavras nos títulos dos tópicos, não mostrar as etiquetas"
-    remove_muted_tags_from_latest: "Não mostrar tópicos etiquetados com etiquetas silenciadas na lista de tópicos recentes."
     errors:
       invalid_email: "Endereço de email inválido."
       invalid_username: "Não existe nenhum utilizador com esse nome de utilizador."
@@ -1688,8 +1702,6 @@ pt:
     see_more: "Mais"
     search_title: "Pesquisar neste sítio"
     search_button: "Pesquisar"
-  terms_of_service:
-    title: "Termos de Serviço"
   deleted: "eliminado"
   image: "imagem"
   upload:
@@ -1729,9 +1741,6 @@ pt:
     sender_body_blank: "corpo está em branco"
   color_schemes:
     base_theme_name: "Base"
-  about: "Sobre"
-  guidelines: "Orientações"
-  privacy: "Privacidade"
   edit_this_page: "Editar esta página"
   csv_export:
     boolean_yes: "Sim"

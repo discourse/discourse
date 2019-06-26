@@ -1,4 +1,6 @@
+import selectKit from "helpers/select-kit-helper";
 import componentTest from "helpers/component-test";
+
 moduleForComponent("combo-box", {
   integration: true,
   beforeEach: function() {

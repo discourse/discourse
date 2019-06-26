@@ -47,7 +47,8 @@ span.badge-posts {
           + .create-flag {
             padding: s(2 2 2 1);
           }
-          &.my-likes {
+          &.my-likes,
+          &.regular-likes {
             display: flex;
             max-width: unset;
             padding: s(2);

@@ -36,12 +36,12 @@ import {
 import {
   cacheShortUploadUrl,
   resolveAllShortUrls
-} from "pretty-text/image-short-url";
+} from "pretty-text/upload-short-url";
 
 import {
   INLINE_ONEBOX_LOADING_CSS_CLASS,
   INLINE_ONEBOX_CSS_CLASS
-} from "pretty-text/inline-oneboxer";
+} from "pretty-text/context/inline-onebox-css-classes";
 
 const REBUILD_SCROLL_MAP_EVENTS = ["composer:resized", "composer:typed-reply"];
 
@@ -694,7 +694,7 @@ export default Ember.Component.extend({
 
       const matchingHandler = uploadHandlers.find(matcher);
       if (data.files.length === 1 && matchingHandler) {
-        if (!matchingHandler.method(data.files[0])) {
+        if (!matchingHandler.method(data.files[0], this)) {
           return false;
         }
       }

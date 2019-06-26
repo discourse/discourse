@@ -514,6 +514,7 @@ export default Ember.Component.extend({
 
     const desktopPositioning = options => {
       let attributes = {
+        position: "fixed",
         width: windowWidth < 485 ? windowWidth - 12 : 400,
         marginLeft: "",
         marginTop: "",
@@ -562,12 +563,30 @@ export default Ember.Component.extend({
         if (windowWidth < 485) {
           desktopModalePositioning();
         } else {
-          let previewInputOffset = $(".d-editor-input").offset();
-          let left = previewInputOffset.left;
-          desktopPositioning({
-            left,
-            bottom: $("#reply-control").height() - 45
-          });
+          const previewInputOffset = $(".d-editor-input").offset();
+
+          const pickerHeight = $(".emoji-picker").height();
+          const editorHeight = $(".d-editor-input").height();
+          const windowBottom = $(window).scrollTop() + $(window).height();
+
+          if (
+            previewInputOffset.top + editorHeight + pickerHeight <
+            windowBottom
+          ) {
+            // position it below editor if there is enough space
+            desktopPositioning({
+              position: "absolute",
+              top: previewInputOffset.top + editorHeight,
+              left: previewInputOffset.left
+            });
+          } else {
+            // try positioning it above
+            desktopPositioning({
+              position: "absolute",
+              top: -pickerHeight,
+              left: previewInputOffset.left
+            });
+          }
         }
       }
     }

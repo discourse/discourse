@@ -28,6 +28,7 @@ class Plugin::Metadata
     "discourse-crowd",
     "discourse-data-explorer",
     "discourse-details",
+    "discourse-encrypt",
     "discourse-footnote",
     "discourse-github",
     "discourse-gradle-issue",
@@ -67,7 +68,6 @@ class Plugin::Metadata
     "discourse-voting",
     "discourse-yearly-review",
     "discourse-openid-connect",
-    "discourse-yearly-review",
     "docker_manager",
     "lazyYT",
     "poll"

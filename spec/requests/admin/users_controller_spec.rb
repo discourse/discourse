@@ -185,6 +185,36 @@ RSpec.describe Admin::UsersController do
         expect(response.status).to eq(200)
       end
 
+      it "won't delete a category topic" do
+        c = Fabricate(:category)
+        cat_post = c.topic.posts.first
+        put(
+          "/admin/users/#{user.id}/suspend.json",
+          params: suspend_params.merge(
+            post_action: 'delete',
+            post_id: cat_post.id
+          )
+        )
+        cat_post.reload
+        expect(cat_post.deleted_at).to be_blank
+        expect(response.status).to eq(200)
+      end
+
+      it "won't delete a category topic by replies" do
+        c = Fabricate(:category)
+        cat_post = c.topic.posts.first
+        put(
+          "/admin/users/#{user.id}/suspend.json",
+          params: suspend_params.merge(
+            post_action: 'delete_replies',
+            post_id: cat_post.id
+          )
+        )
+        cat_post.reload
+        expect(cat_post.deleted_at).to be_blank
+        expect(response.status).to eq(200)
+      end
+
       it "can delete an associated post and its replies" do
         reply = PostCreator.create(
           Fabricate(:user),

@@ -164,6 +164,10 @@ module PostGuardian
     false
   end
 
+  def can_delete_post_or_topic?(post)
+    post.is_first_post? ? post.topic && can_delete_topic?(post.topic) : can_delete_post?(post)
+  end
+
   # Deleting Methods
   def can_delete_post?(post)
     return false if !can_see_post?(post)

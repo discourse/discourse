@@ -26,15 +26,15 @@ es:
         thousands: "{{number}}k"
         millions: "{{number}}M"
     dates:
-      time: "h:mm a"
+      time: "HH:mm"
       timeline_date: "MMM YYYY"
-      long_no_year: "MMM D h:mm a"
-      long_no_year_no_time: "MMM D"
-      full_no_year_no_time: "MMMM Do"
-      long_with_year: "MMM D, YYYY h:mm a"
-      long_with_year_no_time: "MMM D, YYYY"
-      full_with_year_no_time: "MMMM Do, YYYY"
-      long_date_with_year: "D MMM, 'YY LT"
+      long_no_year: "D MMM HH:mm"
+      long_no_year_no_time: "D MMM"
+      full_no_year_no_time: "Do MMMM"
+      long_with_year: "D MMM YYYY HH:mm"
+      long_with_year_no_time: "D MMM YYYY"
+      full_with_year_no_time: "D MMMM YYYY"
+      long_date_with_year: "D MMM 'YY LT"
       long_date_without_year: "D MMM, LT"
       long_date_with_year_without_time: "D MMM, 'YY"
       long_date_without_year_with_linebreak: "D MMM <br/>LT"
@@ -47,22 +47,22 @@ es:
           other: "< %{count}s"
         x_seconds:
           one: "%{count}s"
-          other: "%{count}s"
+          other: "%{count} s"
         less_than_x_minutes:
           one: "< %{count}m"
-          other: "< %{count}m"
+          other: "< %{count} min"
         x_minutes:
           one: "%{count}m"
-          other: "%{count}m"
+          other: "%{count} min"
         about_x_hours:
           one: "%{count}h"
-          other: "%{count}h"
+          other: "%{count} h"
         x_days:
           one: "%{count}d"
-          other: "%{count}d"
+          other: "%{count} d"
         x_months:
           one: "%{count} mes"
-          other: "%{count}meses"
+          other: "%{count} meses"
         about_x_years:
           one: "%{count}a"
           other: "%{count}a"
@@ -77,7 +77,7 @@ es:
       medium:
         x_minutes:
           one: "%{count} minuto"
-          other: "%{count} mins"
+          other: "%{count} min"
         x_hours:
           one: "%{count} hora"
           other: "%{count} horas"
@@ -153,6 +153,7 @@ es:
     bootstrap_mode_disabled: "El modo de arranque se desactivará dentro de 24 horas."
     themes:
       default_description: "Por defecto"
+      broken_theme_alert: "Tu sitio puede no funcionar porque el theme / componente %{theme} tiene errores. Desactivarlo en %{path}."
     s3:
       regions:
         ap_northeast_1: "Asia Pacific (Tokyo)"
@@ -172,7 +173,7 @@ es:
         us_east_1: "US East (N. Virginia)"
         us_east_2: "US East (Ohio)"
         us_gov_east_1: "AWS GovCloud (US-East)"
-        us_gov_west_1: "AWS GovCloud (US)"
+        us_gov_west_1: "AWS GovCloud (US-West)"
         us_west_1: "US West (N. California)"
         us_west_2: "US West (Oregon)"
     edit: "editar el título y la categoría de este tema"
@@ -307,6 +308,8 @@ es:
         search: "Buscar un mensaje por título:"
         placeholder: "escribe el título del mensaje aquí"
     review:
+      order_by: "Ordenar por"
+      in_reply_to: "en respuesta a"
       claim_help:
         optional: "Puedes reclamar este artículo para evitar que otros lo revisen."
         required: "Debes reclamar los artículos antes de poder revisarlos."
@@ -322,9 +325,8 @@ es:
         saved: "Guardado"
         save_changes: "Guardar cambios"
         title: "Ajustes"
-        score_bonuses:
-          title: "Bonos de puntuación"
-          description: "Los bonos permiten que ciertos tipos se califiquen más alto que otros para que puedan ser priorizados. Nota: el cambio de estos valores no se aplicará a los elementos calificados anteriormente."
+        priorities:
+          title: "Prioridades Revisables"
       moderation_history: "Historial de moderación"
       view_all: "Ver todo"
       grouped_by_topic: "Agrupados por tema"
@@ -336,7 +338,7 @@ es:
       title: "Revisión"
       topic: "Tema:"
       filtered_topic: "Has filtrado a contenido revisable en un solo tema."
-      filtered_user: "Usuario:"
+      filtered_user: "Usuario"
       show_all_topics: "mostrar todos los temas"
       deleted_post: "(publicación eliminada)"
       deleted_user: "(usuario eliminado)"
@@ -374,18 +376,24 @@ es:
       edit: "Editar"
       save: "Guardar"
       cancel: "Cancelar"
-      new_topic: "Nuevo tema:"
+      new_topic: "Aprobar este item creará un tema nuevo"
       filters:
+        all_categories: "(todas las categorías)"
         type:
-          title: "Tipo:"
+          title: "Tipo"
           all: "(todos los tipos)"
         minimum_score: "Puntuación mínima:"
         refresh: "Actualizar"
-        status: "Estado:"
-        category: "Categoría:"
+        status: "Estado"
+        category: "Categoría"
+        orders:
+          priority: "Prioridad"
+          priority_asc: "Prioridad (inverso)"
+          created_at: "Creado el"
+          created_at_asc: "Creado el (inverso)"
         priority:
-          title: "Prioridad mínima:"
-          low: "Bajo"
+          title: "Prioridad mínima"
+          low: "(cualquiera)"
           medium: "Medio"
           high: "Alto"
       conversation:
@@ -410,13 +418,15 @@ es:
         deleted:
           title: "Eliminado"
         reviewed:
-          title: "(Todo revisado)"
+          title: "(todo revisado)"
         all:
-          title: "(Todo)"
+          title: "(todo)"
       types:
         reviewable_flagged_post:
           title: "Publicación reportada"
           flagged_by: "Reportado por"
+        reviewable_queued_topic:
+          title: "Tema en cola"
         reviewable_queued_post:
           title: "Publicación en cola"
         reviewable_user:
@@ -729,6 +739,7 @@ es:
       allow_private_messages: "Permitir que otros usuarios me envíen mensajes privados"
       external_links_in_new_tab: "Abrir todos los enlaces externos en una nueva pestaña"
       enable_quoting: "Activar respuesta citando el texto resaltado"
+      enable_defer: "Habilitar diferir para marcar temas no leídos"
       change: "cambio"
       moderator: "{{user}} es un moderador"
       admin: "{{user}} es un administrador"
@@ -768,6 +779,7 @@ es:
       watched_first_post_tags_instructions: "Se te notificará del primer post en cada nuevo tema con estas etiquetas."
       muted_categories: "Silenciado"
       muted_categories_instructions: "No serás notificado de ningún tema en estas categorías, y no aparecerán en la página de categorías o mensajes recientes."
+      muted_categories_instructions_dont_hide: "No se le notificará nada sobre nuevos temas en estas categorías."
       no_category_access: "Como un moderador, tienes acceso limitado a categorías, guardar está deshabilitado."
       delete_account: "Borrar Mi Cuenta"
       delete_account_confirm: "¿Estás seguro que quieres borrar permanentemente tu cuenta? ¡Esta acción no puede ser revertida!"
@@ -784,10 +796,10 @@ es:
       watched_topics_link: "Mostrar temas vigilados"
       tracked_topics_link: "Mostrar temas vigilados"
       automatically_unpin_topics: "Dejar de destacar temas automáticamente cuando los leo por completo."
-      apps: "Apps"
+      apps: "Aplicaciones"
       revoke_access: "Revocar acceso"
       undo_revoke_access: "Deshacer revocación de acceso"
-      api_approved: "Aprobado:"
+      api_approved: "Fecha de aprobación:"
       api_last_used_at: "Fecha de último uso:"
       theme: "Tema"
       home: "Página de inicio por defecto"
@@ -819,7 +831,7 @@ es:
         users: "Usuarios"
         tags: "Etiquetas"
         interface: "Interfaz"
-        apps: "Apps"
+        apps: "Aplicaciones"
       change_password:
         success: "(e-mail enviado)"
         in_progress: "(enviando e-mail)"
@@ -845,7 +857,7 @@ es:
       second_factor:
         title: "Autenticación Dos Factores"
         disable: "Inhabilitar Autenticación Dos Factores"
-        enable: "Habilita la autenticación en dos pasos para mejorar la seguridad de la cuenta"
+        enable: "Habilitar Autenticación Dos Factores"
         confirm_password_description: "Por favor confirma tu contraseña para continuar"
         label: "Código"
         rate_limit: "Por favor, espera antes de volver a intentar otro código de autenticación."
@@ -853,6 +865,8 @@ es:
           Escanea este código QR en una aplicación que lo soporte (<a href="https://www.google.com/search?q=authenticator+apps+for+android" target="_blank">Android</a> – <a href="https://www.google.com/search?q=authenticator+apps+for+ios" target="_blank">iOS</a>) e introduce el código de verificación.
         disable_description: "Por favor ingrese el código de autenticación desde su aplicación"
         show_key_description: "Ingrese Manualmente"
+        short_description: |
+          Protege tu cuenta con el uso de un único código de seguridad.
         extended_description: |
           La verificación en dos pasos añade una capa extra de seguridad requiriendo un token por única vez además de tu contraseña. Los códigos (token) se generan en dispositivos <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>Android</a> e <a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS</a>
         oauth_enabled_warning: "Por favor ten en cuenta que los accesos a través de redes sociales serán inhabilitados si habilitas el factor de autenticación en dos pasos de tu cuenta."
@@ -1162,11 +1176,10 @@ es:
     too_few_topics_notice: "¡Vamos a <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>dar por comenzada la comunidad!</a> Hay <strong>%{currentTopics} / %{requiredTopics}</strong> temas. Los nuevos visitantes necesitan algo que leer y a lo que responder."
     too_few_posts_notice: "¡Vamos a <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>dar por empezada la comunidad!</a> Hay <strong>%{currentPosts} / %{requiredPosts}</strong> posts. Los nuevos visitantes necesitan algo que leer y a lo que responder."
     logs_error_rate_notice:
-      reached: "<b>%{relativeAge}</b> – <a href='%{url}' target='_blank'>%{rate}</a> alcanzó el límite establecido en las opciones del sitio del %{siteSettingRate}."
-      exceeded: "<b>%{relativeAge}</b> – <a href='%{url}' target='_blank'>%{rate}</a> excedió el límite establecido en las opciones del sitio del %{siteSettingRate}."
-      rate:
-        one: "%{count} error/%{duration}"
-        other: "%{count} errores/%{duration}"
+      reached_hour_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# error/hour} otros {# errors/hour}}</a> alcanzó el límite de la configuración del sitio del {limit, plural, one {# error/hour} otros {# errors/hour}}."
+      reached_minute_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# error/minute} otros {# errors/minute}}</a> alcanzó el límite de la configuración del sitio del {limit, plural, one {# error/minute} otros {# errors/minute}}."
+      exceeded_hour_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# error/hour} otros {# errors/hour}}</a> excedió el límite de la configuración del sitio del {limit, plural, one {# error/hour} otros {# errors/hour}}."
+      exceeded_minute_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# error/minute} otros {# errors/minute}}</a> excedió el límite de la configuración del sitio del {limit, plural, one {# error/minute} otros {# errors/minute}}."
     learn_more: "saber más..."
     all_time: "total"
     all_time_desc: "temas creados total"
@@ -1222,7 +1235,7 @@ es:
     trust_level: "Nivel de Confianza"
     search_hint: "usuario, email o dirección IP"
     create_account:
-      disclaimer: "Al registrarte, aceptas la <a href='{{privacy_link}}'>política de privacidad</a> y los <a href='{{tos_link}}'>términos de servicio</a>."
+      disclaimer: "Al registrarte aceptas la <a href='{{privacy_link}}' target='blank'>política de privacidad</a> y los <a href='{{tos_link}}' target='blank'>términos del servicio</a>."
       title: "Crear Cuenta Nueva"
       failed: "Algo ha salido mal, tal vez este e-mail ya fue registrado, intenta con el enlace 'olvidé la contraseña'"
     forgot_password:
@@ -1248,6 +1261,9 @@ es:
       complete_email_found: "Encontramos una cuenta que coincide con <b>%{email}</b>, deberías recibir un email con un enlace de ingreso muy pronto."
       complete_username_not_found: "Ninguna cuenta coincide el nombre de usuario <b>%{username}</b>"
       complete_email_not_found: "Ninguna cuenta coincide con <b>%{email}</b>"
+      confirm_title: "Continuar a %{site_name}"
+      logging_in_as: "Ingresando como %{email}"
+      confirm_button: Finalizar Login
     login:
       title: "Iniciar Sesión"
       username: "Usuario"
@@ -1261,7 +1277,7 @@ es:
       email_placeholder: "dirección de e-mail o nombre de usuario"
       caps_lock_warning: "Está activado Bloqueo de Mayúsculas"
       error: "Error desconocido"
-      cookies_error: "Tu navegador parece tener las cookies desactivadas. El inicio de sesión podría no funcionar hasta que las actives."
+      cookies_error: "Su navegador parece tener las cookies deshabilitadas. Es posible que no pueda iniciar sesión sin habilitarlos primero."
       rate_limit: "Por favor, espera un poco antes de volver a intentar iniciar sesión."
       blank_username: "Por favor ingresa tu email o nombre de usuario."
       blank_username_or_password: "Por favor, introducir tu e-mail o usuario, y tu contraseña."
@@ -1339,6 +1355,7 @@ es:
       shift: "Shift"
       ctrl: "Ctrl"
       alt: "Alt"
+      enter: "Intro"
     conditional_loading_section:
       loading: Cargando...
     category_row:
@@ -1558,6 +1575,26 @@ es:
         confirm_title: "Notificaciones habilitadas - %{site_title}"
         confirm_body: "¡Éxito! Las notificaciones han sido habilitadas."
         custom: "Notificación de {{username}} en %{site_title}"
+      titles:
+        mentioned: "mencionado"
+        replied: "nueva respuesta"
+        quoted: "citado"
+        edited: "editado"
+        liked: "nuevo me gusta"
+        private_message: "nuevo mensaje privado"
+        invited_to_private_message: "invitado a mensaje privado"
+        invitee_accepted: "invitación aceptada"
+        posted: "nueva publicación"
+        moved_post: "publicación movida"
+        linked: "gustado"
+        granted_badge: "medalla concedida"
+        invited_to_topic: "invitado al tema"
+        group_mentioned: "grupo mencionado"
+        group_message_summary: "nuevo mensaje grupal"
+        watching_first_post: "nuevo tema"
+        topic_reminder: "recordatorio de tema"
+        liked_consolidated: "nuevos me gusta"
+        post_approved: "post aprobado"
     upload_selector:
       title: "Añadir imagen"
       title_with_attachments: "Añadir una imagen o archivo"
@@ -1689,17 +1726,14 @@ es:
         read: "Todavía no has leído ningún tema."
         posted: "Todavía no has publicado en ningún tema."
         latest: "No hay temas recientes. Qué pena."
-        hot: "No hay temas candentes nuevos."
         bookmarks: "No tienes temas guardados en marcadores todavía."
         category: "No hay temas en la categoría {{category}}."
         top: "No hay temas en el top más vistos."
-        search: "No hay resultados de búsqueda."
         educate:
           new: '<p>Tus temas nuevos aparecen aquí.</p><p>Por defecto, los temas se consideran nuevos y mostrarán un indicador <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">nuevo</span> si fueron creados en los últimos 2 días.</p><p>Dirígite a <a href="%{userPrefsUrl}">preferencias</a> para cambiar esto.</p>'
           unread: '<p>Tus temas sin leer aparecen aquí.</p><p>Por defecto, los temas son considerados sin leer y mostrarán contadores de posts sin leer <span class="badge new-posts badge-notification">1</span> si:</p><ul><li>Creaste el tema</li><li>Respondiste al tema</li><li>Leíste el tema por más de 4 minutos</li></ul><p>O si has establecido específicamente el tema como Siguiendo o Vigilando a través del control de notificaciones al pie de cada tema.</p><p>Visita tus <a href="%{userPrefsUrl}">preferencias</a> para cambiar esto.</p>'
       bottom:
         latest: "No hay más temas recientes para leer."
-        hot: "No hay más temas candentes."
         posted: "No hay más temas publicados."
         read: "No hay más temas leídos."
         new: "No hay más nuevos temas."
@@ -1707,7 +1741,6 @@ es:
         category: "No hay más temas en la categoría {{category}}."
         top: "No hay más temas en el top más vistos."
         bookmarks: "No hay más temas guardados en marcadores."
-        search: "No hay más resultados de búsqueda."
     topic:
       filter_to:
         one: "%{count} post en el tema"
@@ -1725,6 +1758,9 @@ es:
       edit_message:
         help: "Editar el primer post del mensaje"
         title: "Editar Mensaje"
+      defer:
+        help: "Marcar como no leído"
+        title: "Aplazar"
       list: "Temas"
       new: "nuevo tema"
       unread: "sin leer"
@@ -2478,15 +2514,9 @@ es:
           one: "Reciente (%{count})"
           other: "Recientes ({{count}})"
         help: "temas con posts recientes"
-      hot:
-        title: "Candente"
-        help: "una selección de los temas más candentes"
       read:
         title: "Leídos"
         help: "temas que ya has leído"
-      search:
-        title: "Buscar"
-        help: "buscar todos los temas"
       categories:
         title: "Categorías"
         title_in: "Categoría - {{categoryName}}"
@@ -2558,6 +2588,11 @@ es:
       content_load_error: '<a href="%url%">El contenido</a>no pudo ser cargado.'
       image_load_error: '<a href="%url%">La imagen</a>no pudo ser cargada.'
     keyboard_shortcuts_help:
+      shortcut_key_delimiter_comma: ","
+      shortcut_key_delimiter_plus: "+"
+      shortcut_delimiter_or: "%{shortcut1} o %{shortcut2}"
+      shortcut_delimiter_slash: "%{shortcut1}/%{shortcut2}"
+      shortcut_delimiter_space: "%{shortcut1} %{shortcut2}"
       title: "Atajos de teclado"
       jump_to:
         title: "Saltar a"
@@ -2567,7 +2602,7 @@ es:
         unread: "%{shortcut} Sin leer"
         categories: "%{shortcut} Categorías"
         top: "%{shortcut} Top"
-        bookmarks: "%{shortcut} Marcadores"
+        bookmarks: "%{shortcut} marcadores"
         profile: "%{shortcut} Perfil"
         messages: "%{shortcut} Mensajes"
         drafts: "%{shortcut} Borradores"
@@ -2628,7 +2663,7 @@ es:
         other: "%{count} medallas"
       more_badges:
         one: "+%{count} Más"
-        other: "+%{count} Más"
+        other: "+%{count} más"
       granted:
         one: "%{count} concedido"
         other: "%{count} concedidos"
@@ -2732,20 +2767,16 @@ es:
           read: "Todavía no has leído ningún tema."
           posted: "Todavía no has publicado en ningún tema."
           latest: "No hay temas recientes."
-          hot: "No hay temas populares."
           bookmarks: "No tienes temas guardados en marcadores todavía."
           top: "No hay temas en el top más vistos."
-          search: "No hay resultados de búsqueda."
         bottom:
           latest: "No hay más temas recientes para leer."
-          hot: "No hay más temas populares."
           posted: "No hay más temas publicados."
           read: "No hay más temas leídos."
           new: "No hay más temas nuevos."
           unread: "No hay más temas sin leer."
           top: "No hay más temas en el top más vistos."
           bookmarks: "No hay más temas guardados en marcadores."
-          search: "No hay más resultados de búsqueda."
     invite:
       custom_message: "Dale a tu invitación un toque personal escribiendo un <a href>mensaje personalizado</a>."
       custom_message_placeholder: "Introducir un mensaje personalizado"
@@ -2759,6 +2790,11 @@ es:
     admin:
       title: "Administrador de Discourse"
       moderator: "Moderador"
+      tags:
+        remove_muted_tags_from_latest:
+          always: "siempre"
+          only_muted: "cuando es usado solo o con otras etiquetas silenciadas"
+          never: "nunca"
       reports:
         title: "Lista de informes disponibles"
       dashboard:
@@ -2833,6 +2869,7 @@ es:
           groups: "Todos los grupos"
           disabled: "Este reporte está inhabilitado"
           totals_for_sample: "Total para la muestra"
+          average_for_sample: "Promedio por muestra"
           total: "Total de siempre"
           no_data: "Ningún dato a mostrar."
           trending_search:
@@ -2894,7 +2931,7 @@ es:
         about: "Edita los aquí los nombres de los grupos y sus miembros"
         group_members: "Miembros del grupo"
         delete: "Borrar"
-        delete_confirm: "Borrar este grupo?"
+        delete_confirm: "¿Borrar este grupo?"
         delete_failed: "No se pudo borrar el grupo. Si este es un grupo automático, no se puede destruir."
         delete_owner_confirm: "¿Quitar privilegios de propietario para '%{username}'?"
         add: "Añadir"
@@ -3570,7 +3607,7 @@ es:
           silenced: "Silenciado"
           suspect: "Sospechoso"
           staged: "Temporal"
-        approved: "Aprobado/s?"
+        approved: "¿Aprobado/s?"
         titles:
           active: "Usuarios activos"
           new: "Usuarios nuevos"
@@ -3617,6 +3654,7 @@ es:
         delete_posts_failed: "Ha habido un problema borrando los mensajes."
         penalty_post_actions: "¿Qué te gustaría hacer con la publicación asociada?"
         penalty_post_delete: "Borrar el post"
+        penalty_post_delete_replies: "Eliminar el post + sus respuesta"
         penalty_post_edit: "Editar el post"
         penalty_post_none: "Nada"
         penalty_count: "Contador de Faltas"

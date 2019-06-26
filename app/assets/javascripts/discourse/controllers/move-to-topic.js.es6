@@ -27,6 +27,13 @@ export default Ember.Controller.extend(ModalFunctionality, {
       "newMessage",
       "existingMessage"
     ];
+
+    this.moveTypes = [
+      "newTopic",
+      "existingTopic",
+      "newMessage",
+      "existingMessage"
+    ];
   },
 
   topicController: Ember.inject.controller("topic"),

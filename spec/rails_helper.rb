@@ -78,6 +78,10 @@ SiteSetting.automatically_download_gravatars = false
 
 SeedFu.seed
 
+# we need this env var to ensure that we can impersonate in test
+# this enable integration_helpers sign_in helper
+ENV['DISCOURSE_DEV_ALLOW_ANON_TO_IMPERSONATE'] = '1'
+
 module TestSetup
   # This is run before each test and before each before_all block
   def self.test_setup(x = nil)

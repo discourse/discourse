@@ -345,6 +345,12 @@ describe PostDestroyer do
       end
     end
 
+    it "maintains history when a user destroys a hidden post" do
+      post.hide!(PostActionType.types[:inappropriate])
+      PostDestroyer.new(post.user, post).destroy
+      expect(post.revisions[0].modifications['raw']).to be_present
+    end
+
     it "when topic is destroyed, it updates user_stats correctly" do
       SiteSetting.min_topic_title_length = 5
       post.topic.update_column(:title, "xyz")

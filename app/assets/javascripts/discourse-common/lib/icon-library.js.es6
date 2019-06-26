@@ -34,7 +34,7 @@ const REPLACEMENTS = {
   "notification.granted_badge": "certificate",
   "notification.topic_reminder": "far-clock",
   "notification.watching_first_post": "far-dot-circle",
-  "notification.group_message_summary": "group",
+  "notification.group_message_summary": "users",
   "notification.post_approved": "check"
 };
 

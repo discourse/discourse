@@ -163,8 +163,18 @@ QUnit.test(
 
 QUnit.test("converts img tag", assert => {
   const url = "https://example.com/image.png";
+  const base62SHA1 = "q16M6GR110R47Z9p9Dk3PMXOJoE";
   let html = `<img src="${url}" width="100" height="50">`;
   assert.equal(toMarkdown(html), `![|100x50](${url})`);
+
+  html = `<img src="${url}" width="100" height="50" title="some title">`;
+  assert.equal(toMarkdown(html), `![|100x50](${url} "some title")`);
+
+  html = `<img src="${url}" width="100" height="50" title="some title" data-base62-sha1="${base62SHA1}">`;
+  assert.equal(
+    toMarkdown(html),
+    `![|100x50](upload://${base62SHA1} "some title")`
+  );
 
   html = `<div><span><img src="${url}" alt="description" width="50" height="100" /></span></div>`;
   assert.equal(toMarkdown(html), `![description|50x100](${url})`);

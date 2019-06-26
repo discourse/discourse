@@ -738,6 +738,18 @@ describe UsersController do
           expect(response.status).to eq(200)
           expect(JSON.parse(response.body)['active']).to be_falsy
         end
+
+        it "won't set the new user's locale to the admin's locale" do
+          SiteSetting.allow_user_locale = true
+          admin.update!(locale: :fr)
+
+          post "/u.json", params: post_user_params.merge(active: true, api_key: api_key.key)
+          expect(response.status).to eq(200)
+
+          json = JSON.parse(response.body)
+          new_user = User.find(json["user_id"])
+          expect(new_user.locale).not_to eq("fr")
+        end
       end
     end
 
@@ -1926,10 +1938,13 @@ describe UsersController do
       end
 
       it 'can successfully pick a custom avatar' do
-        put "/u/#{user.username}/preferences/avatar/pick.json", params: {
-          upload_id: upload.id, type: "custom"
-        }
+        events = DiscourseEvent.track_events do
+          put "/u/#{user.username}/preferences/avatar/pick.json", params: {
+            upload_id: upload.id, type: "custom"
+          }
+        end
 
+        expect(events.map { |event| event[:event_name] }).to include(:user_updated)
         expect(response.status).to eq(200)
         expect(user.reload.uploaded_avatar_id).to eq(upload.id)
         expect(user.user_avatar.reload.custom_upload_id).to eq(upload.id)
@@ -1981,8 +1996,11 @@ describe UsersController do
           end
 
           it 'can successfully select an avatar' do
-            put "/u/#{user.username}/preferences/avatar/select.json", params: { url: avatar1.url }
+            events = DiscourseEvent.track_events do
+              put "/u/#{user.username}/preferences/avatar/select.json", params: { url: avatar1.url }
+            end
 
+            expect(events.map { |event| event[:event_name] }).to include(:user_updated)
             expect(response.status).to eq(200)
             expect(user.reload.uploaded_avatar_id).to eq(avatar1.id)
             expect(user.user_avatar.reload.custom_upload_id).to eq(avatar1.id)
@@ -3019,6 +3037,54 @@ describe UsersController do
 
           expect(response.status).to eq(200)
           expect(JSON.parse(response.body)).not_to have_key(:groups)
+        end
+      end
+
+      describe 'when searching by group name' do
+        fab!(:exclusive_group) { Fabricate(:group) }
+
+        it 'return results if the user is a group member' do
+          exclusive_group.add(user)
+
+          get "/u/search/users.json", params: {
+            group: exclusive_group.name,
+            term: user.username
+          }
+
+          expect(users_found).to contain_exactly(user.username)
+        end
+
+        it 'does not return results if the user is not a group member' do
+          get "/u/search/users.json", params: {
+            group: exclusive_group.name,
+            term: user.username
+          }
+
+          expect(users_found).to be_empty
+        end
+
+        it 'returns results if the user is member of one of the groups' do
+          exclusive_group.add(user)
+
+          get "/u/search/users.json", params: {
+            groups: [exclusive_group.name],
+            term: user.username
+          }
+
+          expect(users_found).to contain_exactly(user.username)
+        end
+
+        it 'does not return results if the user is not a member of the groups' do
+          get "/u/search/users.json", params: {
+            groups: [exclusive_group.name],
+            term: user.username
+          }
+
+          expect(users_found).to be_empty
+        end
+
+        def users_found
+          JSON.parse(response.body)['users'].map { |u| u['username'] }
         end
       end
     end

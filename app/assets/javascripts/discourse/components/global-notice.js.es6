@@ -87,18 +87,36 @@ export default Ember.Component.extend(
 
     @on("didInsertElement")
     _setupLogsNotice() {
-      LogsNotice.current().addObserver("hidden", () => {
-        this.rerenderBuffer();
-      });
+      this._boundRerenderBuffer = Ember.run.bind(this, this.rerenderBuffer);
+      LogsNotice.current().addObserver("hidden", this._boundRerenderBuffer);
 
-      this.$().on("click.global-notice", ".alert-logs-notice .close", () => {
-        LogsNotice.currentProp("text", "");
-      });
+      this._boundResetCurrentProp = Ember.run.bind(
+        this,
+        this._resetCurrentProp
+      );
+      $(this.element).on(
+        "click.global-notice",
+        ".alert-logs-notice .close",
+        this._boundResetCurrentProp
+      );
     },
 
     @on("willDestroyElement")
     _teardownLogsNotice() {
-      this.$().off("click.global-notice");
+      if (this._boundResetCurrentProp) {
+        $(this.element).off("click.global-notice", this._boundResetCurrentProp);
+      }
+
+      if (this._boundRerenderBuffer) {
+        LogsNotice.current().removeObserver(
+          "hidden",
+          this._boundRerenderBuffer
+        );
+      }
+    },
+
+    _resetCurrentProp() {
+      LogsNotice.currentProp("text", "");
     }
   })
 );

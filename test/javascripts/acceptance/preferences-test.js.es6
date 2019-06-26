@@ -1,4 +1,6 @@
 import { acceptance, replaceCurrentUser } from "helpers/qunit-helpers";
+import selectKit from "helpers/select-kit-helper";
+
 import User from "discourse/models/user";
 
 acceptance("User Preferences", {
@@ -121,12 +123,12 @@ QUnit.test("font size change", async assert => {
   await visit("/u/eviltrout/preferences/interface");
 
   // Live changes without reload
-  await expandSelectKit(".text-size .combobox");
-  await selectKitSelectRowByValue("larger", ".text-size .combobox");
+  await selectKit(".text-size .combobox").expand();
+  await selectKit(".text-size .combobox").selectRowByValue("larger");
   assert.ok(document.documentElement.classList.contains("text-size-larger"));
 
-  await expandSelectKit(".text-size .combobox");
-  await selectKitSelectRowByValue("largest", ".text-size .combobox");
+  await selectKit(".text-size .combobox").expand();
+  await selectKit(".text-size .combobox").selectRowByValue("largest");
   assert.ok(document.documentElement.classList.contains("text-size-largest"));
 
   assert.equal($.cookie("text_size"), null, "cookie is not set");
@@ -136,16 +138,16 @@ QUnit.test("font size change", async assert => {
 
   assert.equal($.cookie("text_size"), null, "cookie is not set");
 
-  await expandSelectKit(".text-size .combobox");
-  await selectKitSelectRowByValue("larger", ".text-size .combobox");
+  await selectKit(".text-size .combobox").expand();
+  await selectKit(".text-size .combobox").selectRowByValue("larger");
   await click(".text-size input[type=checkbox]");
 
   await savePreferences();
 
   assert.equal($.cookie("text_size"), "larger|1", "cookie is set");
   await click(".text-size input[type=checkbox]");
-  await expandSelectKit(".text-size .combobox");
-  await selectKitSelectRowByValue("largest", ".text-size .combobox");
+  await selectKit(".text-size .combobox").expand();
+  await selectKit(".text-size .combobox").selectRowByValue("largest");
 
   await savePreferences();
   assert.equal($.cookie("text_size"), null, "cookie is removed");

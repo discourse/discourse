@@ -1,12 +1,12 @@
 /*jshint maxlen:10000000 */
-import { LIKED_CONSOLIDATED_TYPE } from "discourse/widgets/notification-item";
+import { NOTIFICATION_TYPES } from "fixtures/concerns/notification-types";
 
 export default {
   "/notifications": {
     notifications: [
       {
         id: 123,
-        notification_type: 2,
+        notification_type: NOTIFICATION_TYPES.replied,
         read: false,
         post_number: 2,
         topic_id: 1234,
@@ -15,7 +15,7 @@ export default {
       },
       {
         id: 456,
-        notification_type: LIKED_CONSOLIDATED_TYPE,
+        notification_type: NOTIFICATION_TYPES.liked_consolidated,
         read: false,
         data: { display_username: "aquaman", count: "5" }
       }

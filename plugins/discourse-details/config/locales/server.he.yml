@@ -8,3 +8,5 @@
 he:
   site_settings:
     details_enabled: "הפעלת תכונת הפירוט. שינוי הגדרה זו תאלץ אותך להכין את כל הפוסטים מחדש בעזרת: „rake posts:rebake”"
+  details:
+    excerpt_details: "(לחיצה לפרטים נוספים)"

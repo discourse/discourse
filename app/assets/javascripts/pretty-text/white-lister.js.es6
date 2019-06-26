@@ -1,7 +1,7 @@
 import {
-  INLINE_ONEBOX_CSS_CLASS,
-  INLINE_ONEBOX_LOADING_CSS_CLASS
-} from "pretty-text/inline-oneboxer";
+  INLINE_ONEBOX_LOADING_CSS_CLASS,
+  INLINE_ONEBOX_CSS_CLASS
+} from "pretty-text/context/inline-onebox-css-classes";
 
 // to match:
 // abcd

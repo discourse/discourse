@@ -185,6 +185,7 @@ input,
 select,
 textarea {
   color: $primary;
+  caret-color: currentColor;
 
   &[class*="span"] {
     float: none;
@@ -667,6 +668,7 @@ table {
   }
 
   .auth-token-icon {
+    color: $primary-medium;
     font-size: 2.25em;
     float: left;
     margin-right: 10px;
@@ -697,7 +699,7 @@ table {
       background: transparent;
 
       .d-icon {
-        color: $primary;
+        color: $primary-high;
       }
     }
   }

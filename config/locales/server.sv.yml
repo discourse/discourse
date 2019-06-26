@@ -181,7 +181,6 @@ sv:
   private_message_abbrev: "Meddelande"
   rss_description:
     latest: "Aktuella ämnen"
-    hot: "Heta ämnen"
     top: "Toppämnen"
     posts: "Senaste inläggen"
     group_posts: "Senaste inläggen från %{group_name}"
@@ -509,6 +508,8 @@ sv:
     authorize: "Auktorisera"
     read: "läs"
     read_write: "läs/skriv"
+    otp_confirmation:
+      confirm_title: "Fortsätt till %{site_name}"
     no_trust_level: "Tyvärr har ni inte den nödvändiga förtroendenivån för att få tillgång till användar API"
     generic_error: "Ledsen, vi kan inte lämna ut API nycklar, denna funktion kan inaktiveras av administratören"
     scopes:
@@ -790,7 +791,6 @@ sv:
     tl4_additional_likes_per_day_multiplier: "Höj gränsen för antal gillningar per dag för användare med förtroendenivå 4 (ledare) genom att multiplicera med det här numret"
     traditional_markdown_linebreaks: "Använd vanliga radmatningar i Markdown, vilka kräver 2 avslutande mellanslag för en radmatning."
     post_undo_action_window_mins: "Antal minuter som en användare tillåts att upphäva handlingar på ett inlägg som gjorts nyligen (gillning, flaggning osv)."
-    must_approve_users: "Personal måste godkänna alla nya användarkonton innan de tillåts använda webbplatsen. VARNING: om det tillåts när webbplatsen är live så kommer det att upphäva tillgång för alla existerande användare som inte är personal!"
     pending_users_reminder_delay: "Notifiera moderatorer om nya användare har väntat på godkännande längre än så här många timmar. Ange -1 för att inaktivera notifikationer. "
     maximum_session_age: "Användaren kommer fortsättningsvis att vara inloggad i n timmar sedan senaste besöket"
     moderators_create_categories: "Tillåt moderatorer att skapa nya kategorier"
@@ -1096,7 +1096,6 @@ sv:
     tag_style: "Visuell stil för tagg-utmärkelser."
     min_trust_level_to_tag_topics: "Lägsta förtroendenivå som krävs för att tagga ämnen"
     suppress_overlapping_tags_in_list: "Om taggen exakt matchar orden i ämnets titel, visa inte taggen"
-    remove_muted_tags_from_latest: "Visa inte ämnen som taggats med dolda taggar i listan med senaste ämnen."
     errors:
       invalid_email: "Felaktig e-postadress."
       invalid_username: "Det finns ingen användare med detta användarnamn."
@@ -1591,8 +1590,6 @@ sv:
     see_more: "Mer"
     search_title: "Sök på hemsidan"
     search_button: "Sök"
-  terms_of_service:
-    title: "Användarvillkor"
   deleted: "raderad"
   image: "bild"
   upload:
@@ -1632,9 +1629,6 @@ sv:
     sender_body_blank: "body är tom"
   color_schemes:
     base_theme_name: "Bas"
-  about: "Om"
-  guidelines: "Riktlinjer"
-  privacy: "Integritet"
   edit_this_page: "Redigera denna sida"
   csv_export:
     boolean_yes: "Ja"

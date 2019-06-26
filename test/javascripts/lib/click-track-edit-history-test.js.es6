@@ -1,6 +1,6 @@
 import DiscourseURL from "discourse/lib/url";
 import ClickTrack from "discourse/lib/click-track";
-import { logIn } from "helpers/qunit-helpers";
+import { fixture, logIn } from "helpers/qunit-helpers";
 
 QUnit.module("lib:click-track-edit-history", {
   beforeEach() {

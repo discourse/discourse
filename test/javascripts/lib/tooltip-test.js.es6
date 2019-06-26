@@ -1,4 +1,5 @@
 import { registerTooltip, registerHoverTooltip } from "discourse/lib/tooltip";
+import { fixture } from "helpers/qunit-helpers";
 
 // prettier-ignore
 QUnit.module("lib:tooltip", {

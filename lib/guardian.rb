@@ -208,6 +208,25 @@ class Guardian
     true
   end
 
+  def can_see_groups?(groups)
+    return false if groups.blank?
+    return true if groups.all? { |g| g.visibility_level == Group.visibility_levels[:public] }
+    return true if is_admin?
+    return true if is_staff? && groups.all? { |g| g.visibility_level == Group.visibility_levels[:staff] }
+    return false if user.blank?
+
+    memberships = GroupUser.where(group: groups, user_id: user.id).pluck(:owner)
+
+    return false if memberships.empty? || memberships.length < groups.size
+
+    if !memberships.all?
+      return false if groups.all? { |g| g.visibility_level == Group.visibility_levels[:owners] }
+      return false if groups.all? { |g| g.visibility_level == Group.visibility_levels[:staff] }
+    end
+
+    true
+  end
+
   # Can we impersonate this user?
   def can_impersonate?(target)
     target &&

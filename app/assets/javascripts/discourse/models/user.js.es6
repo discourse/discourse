@@ -267,6 +267,7 @@ const User = RestModel.extend({
       "email_previous_replies",
       "dynamic_favicon",
       "enable_quoting",
+      "enable_defer",
       "automatically_unpin_topics",
       "digest_after_minutes",
       "new_topic_duration_minutes",
@@ -334,6 +335,7 @@ const User = RestModel.extend({
         const userProps = Ember.getProperties(
           this.user_option,
           "enable_quoting",
+          "enable_defer",
           "external_links_in_new_tab",
           "dynamic_favicon"
         );

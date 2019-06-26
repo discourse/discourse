@@ -16,6 +16,7 @@ class CurrentUserSerializer < BasicUserSerializer
              :reply_count,
              :topic_count,
              :enable_quoting,
+             :enable_defer,
              :external_links_in_new_tab,
              :dynamic_favicon,
              :trust_level,
@@ -77,6 +78,10 @@ class CurrentUserSerializer < BasicUserSerializer
 
   def enable_quoting
     object.user_option.enable_quoting
+  end
+
+  def enable_defer
+    object.user_option.enable_defer
   end
 
   def external_links_in_new_tab

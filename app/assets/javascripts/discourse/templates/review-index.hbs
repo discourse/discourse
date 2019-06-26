@@ -35,7 +35,7 @@
 
       <div class='reviewable-filter'>
         <label class='filter-label'>{{i18n "review.filters.category"}}</label>
-        {{category-chooser none="category.all" value=filterCategoryId}}
+        {{category-chooser none="review.filters.all_categories" value=filterCategoryId}}
       </div>
 
       <div class='reviewable-filter topic-filter'>
@@ -55,6 +55,11 @@
           {{d-button label="review.show_all_topics" icon="times" action=(action "resetTopic")}}
         </div>
       {{/if}}
+
+      <div class='reviewable-filter sort-order'>
+        {{i18n "review.order_by"}}
+        {{combo-box value=filterSortOrder content=sortOrders}}
+      </div>
     {{/if}}
 
     <div class='reviewable-filters-actions'>

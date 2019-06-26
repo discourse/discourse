@@ -155,7 +155,7 @@ en:
 
           - I’m only a robot, but [our friendly staff](%{base_uri}/about) are also here to help if you need to reach a person.
 
-          - For safety reasons, we temporarily limit what new users can do. You’ll gain new abilities (and [badges](%{base_uri}/badges)) as we get to know you.
+          - For safety reasons, we temporarily limit what new users can do. You’ll gain [new abilities](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/) (and [badges](%{base_uri}/badges)) as we get to know you.
 
           - We believe in [civilized community behavior](%{base_uri}/guidelines) at all times.
 

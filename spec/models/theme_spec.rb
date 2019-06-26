@@ -367,6 +367,7 @@ HTML
           var themePrefix = function themePrefix(key) {
             return 'theme_translations.#{theme.id}.' + key;
           };
+
           Discourse._registerPluginCode('1.0', function (api) {
             try {
               alert(settings.name);var a = function a() {};
@@ -402,6 +403,7 @@ HTML
           var themePrefix = function themePrefix(key) {
             return 'theme_translations.#{theme.id}.' + key;
           };
+
           Discourse._registerPluginCode('1.0', function (api) {
             try {
               alert(settings.name);var a = function a() {};

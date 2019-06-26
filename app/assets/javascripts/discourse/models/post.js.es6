@@ -20,7 +20,7 @@ const Post = RestModel.extend({
   @computed("url")
   shareUrl(url) {
     const user = Discourse.User.current();
-    const userSuffix = user ? "?u=" + user.get("username_lower") : "";
+    const userSuffix = user ? `?u=${user.username_lower}` : "";
 
     if (this.firstPost) {
       return this.get("topic.url") + userSuffix;
@@ -55,24 +55,21 @@ const Post = RestModel.extend({
   },
 
   @computed("post_number", "topic_id", "topic.slug")
-  url(postNr, topicId, slug) {
+  url(post_number, topic_id, topicSlug) {
     return postUrl(
-      slug || this.topic_slug,
-      topicId || this.get("topic.id"),
-      postNr
+      topicSlug || this.topic_slug,
+      topic_id || this.get("topic.id"),
+      post_number
     );
   },
 
   // Don't drop the /1
   @computed("post_number", "url")
   urlWithNumber(postNumber, baseUrl) {
-    return postNumber === 1 ? baseUrl + "/1" : baseUrl;
+    return postNumber === 1 ? `${baseUrl}/1` : baseUrl;
   },
 
-  @computed("username")
-  usernameUrl(username) {
-    return userPath(username);
-  },
+  @computed("username") usernameUrl: userPath,
 
   topicOwner: propertyEqual("topic.details.created_by.id", "user_id"),
 
@@ -81,9 +78,7 @@ const Post = RestModel.extend({
     data[field] = value;
 
     return ajax(`/posts/${this.id}/${field}`, { type: "PUT", data })
-      .then(() => {
-        this.set(field, value);
-      })
+      .then(() => this.set(field, value))
       .catch(popupAjaxError);
   },
 
@@ -102,9 +97,9 @@ const Post = RestModel.extend({
       return [];
     }
 
-    return this.site.get("flagTypes").filter(item => {
-      return this.get(`actionByName.${item.get("name_key")}.can_act`);
-    });
+    return this.site.flagTypes.filter(item =>
+      this.get(`actionByName.${item.name_key}.can_act`)
+    );
   },
 
   afterUpdate(res) {
@@ -131,9 +126,9 @@ const Post = RestModel.extend({
     // Put the metaData into the request
     if (metaData) {
       data.meta_data = {};
-      Object.keys(metaData).forEach(function(key) {
-        data.meta_data[key] = metaData.get(key);
-      });
+      Object.keys(metaData).forEach(
+        key => (data.meta_data[key] = metaData[key])
+      );
     }
 
     return data;
@@ -194,7 +189,7 @@ const Post = RestModel.extend({
 
     // Moderators can delete posts. Users can only trigger a deleted at message, unless delete_removed_posts_after is 0.
     if (
-      deletedBy.get("staff") ||
+      deletedBy.staff ||
       Discourse.SiteSettings.delete_removed_posts_after === 0
     ) {
       this.setProperties({
@@ -260,10 +255,9 @@ const Post = RestModel.extend({
     is already found in an identity map.
   **/
   updateFromPost(otherPost) {
-    const self = this;
-    Object.keys(otherPost).forEach(function(key) {
+    Object.keys(otherPost).forEach(key => {
       let value = otherPost[key],
-        oldValue = self[key];
+        oldValue = this[key];
 
       if (!value) {
         value = null;
@@ -282,28 +276,27 @@ const Post = RestModel.extend({
         }
 
         if (!skip) {
-          self.set(key, value);
+          this.set(key, value);
         }
       }
     });
   },
 
   expandHidden() {
-    return ajax("/posts/" + this.id + "/cooked.json").then(result => {
+    return ajax(`/posts/${this.id}/cooked.json`).then(result => {
       this.setProperties({ cooked: result.cooked, cooked_hidden: false });
     });
   },
 
   rebake() {
-    return ajax("/posts/" + this.id + "/rebake", { type: "PUT" });
+    return ajax(`/posts/${this.id}/rebake`, { type: "PUT" });
   },
 
   unhide() {
-    return ajax("/posts/" + this.id + "/unhide", { type: "PUT" });
+    return ajax(`/posts/${this.id}/unhide`, { type: "PUT" });
   },
 
   toggleBookmark() {
-    const self = this;
     let bookmarkedTopic;
 
     this.toggleProperty("bookmarked");
@@ -316,13 +309,11 @@ const Post = RestModel.extend({
     // need to wait to hear back from server (stuff may not be loaded)
 
     return Discourse.Post.updateBookmark(this.id, this.bookmarked)
-      .then(function(result) {
-        self.set("topic.bookmarked", result.topic_bookmarked);
-      })
-      .catch(function(error) {
-        self.toggleProperty("bookmarked");
+      .then(result => this.set("topic.bookmarked", result.topic_bookmarked))
+      .catch(error => {
+        this.toggleProperty("bookmarked");
         if (bookmarkedTopic) {
-          self.set("topic.bookmarked", false);
+          this.set("topic.bookmarked", false);
         }
         throw new Error(error);
       });
@@ -348,7 +339,7 @@ Post.reopenClass({
       const lookup = Ember.Object.create();
 
       // this area should be optimized, it is creating way too many objects per post
-      json.actions_summary = json.actions_summary.map(function(a) {
+      json.actions_summary = json.actions_summary.map(a => {
         a.actionType = Discourse.Site.current().postActionTypeById(a.id);
         a.count = a.count || 0;
         const actionSummary = ActionSummary.create(a);
@@ -366,13 +357,14 @@ Post.reopenClass({
     if (json && json.reply_to_user) {
       json.reply_to_user = Discourse.User.create(json.reply_to_user);
     }
+
     return json;
   },
 
   updateBookmark(postId, bookmarked) {
-    return ajax("/posts/" + postId + "/bookmark", {
+    return ajax(`/posts/${postId}/bookmark`, {
       type: "PUT",
-      data: { bookmarked: bookmarked }
+      data: { bookmarked }
     });
   },
 
@@ -391,27 +383,27 @@ Post.reopenClass({
   },
 
   loadRevision(postId, version) {
-    return ajax("/posts/" + postId + "/revisions/" + version + ".json").then(
-      result => Ember.Object.create(result)
+    return ajax(`/posts/${postId}/revisions/${version}.json`).then(result =>
+      Ember.Object.create(result)
     );
   },
 
   hideRevision(postId, version) {
-    return ajax("/posts/" + postId + "/revisions/" + version + "/hide", {
+    return ajax(`/posts/${postId}/revisions/${version}/hide`, {
       type: "PUT"
     });
   },
 
   showRevision(postId, version) {
-    return ajax("/posts/" + postId + "/revisions/" + version + "/show", {
+    return ajax(`/posts/${postId}/revisions/${version}/show`, {
       type: "PUT"
     });
   },
 
   loadQuote(postId) {
-    return ajax("/posts/" + postId + ".json").then(result => {
+    return ajax(`/posts/${postId}.json`).then(result => {
       const post = Discourse.Post.create(result);
-      return Quote.build(post, post.get("raw"), { raw: true, full: true });
+      return Quote.build(post, post.raw, { raw: true, full: true });
     });
   },
 

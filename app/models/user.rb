@@ -79,6 +79,12 @@ class User < ActiveRecord::Base
     where(method: UserSecondFactor.methods[:totp], enabled: true)
   }, class_name: "UserSecondFactor"
 
+  has_one :anonymous_user_master, class_name: 'AnonymousUser'
+  has_one :anonymous_user_shadow, ->(record) { where(active: true) }, foreign_key: :master_user_id, class_name: 'AnonymousUser'
+
+  has_one :master_user, through: :anonymous_user_master
+  has_one :shadow_user, through: :anonymous_user_shadow, source: :user
+
   has_one :user_stat, dependent: :destroy
   has_one :user_profile, dependent: :destroy, inverse_of: :user
   has_one :profile_background_upload, through: :user_profile
@@ -124,6 +130,9 @@ class User < ActiveRecord::Base
   after_create :ensure_in_trust_level_group
   after_create :set_default_categories_preferences
 
+  after_update :trigger_user_updated_event, if: :saved_change_to_uploaded_avatar_id?
+  after_update :trigger_user_automatic_group_refresh, if: :saved_change_to_staged?
+
   before_save :update_usernames
   before_save :ensure_password_is_hashed
   before_save :match_title_to_primary_group_changes
@@ -136,6 +145,7 @@ class User < ActiveRecord::Base
   after_save :expire_old_email_tokens
   after_save :index_search
   after_save :check_site_contact_username
+
   after_commit :trigger_user_created_event, on: :create
   after_commit :trigger_user_destroyed_event, on: :destroy
 
@@ -177,12 +187,9 @@ class User < ActiveRecord::Base
   # excluding fake users like the system user or anonymous users
   scope :real, -> { human_users.where('NOT EXISTS(
                      SELECT 1
-                     FROM user_custom_fields ucf
-                     WHERE
-                       ucf.user_id = users.id AND
-                       ucf.name = ? AND
-                       ucf.value::int > 0
-                  )', 'master_id') }
+                     FROM anonymous_users a
+                     WHERE a.user_id = users.id
+                  )') }
 
   # TODO-PERF: There is no indexes on any of these
   # and NotifyMailingListSubscribers does a select-all-and-loop
@@ -1149,7 +1156,7 @@ class User < ActiveRecord::Base
   def anonymous?
     SiteSetting.allow_anonymous_posting &&
       trust_level >= 1 &&
-      custom_fields["master_id"].to_i > 0
+      !!anonymous_user_master
   end
 
   def is_singular_admin?
@@ -1410,6 +1417,18 @@ class User < ActiveRecord::Base
   end
 
   private
+
+  def trigger_user_automatic_group_refresh
+    if !staged
+      Group.user_trust_level_change!(id, trust_level)
+    end
+    true
+  end
+
+  def trigger_user_updated_event
+    DiscourseEvent.trigger(:user_updated, self)
+    true
+  end
 
   def check_if_title_is_badged_granted
     if title_changed? && !new_record? && user_profile

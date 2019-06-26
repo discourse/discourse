@@ -18,6 +18,5 @@ end
 # Indexes
 #
 #  index_topic_custom_fields_on_topic_id_and_name  (topic_id,name)
-#  index_topic_custom_fields_on_value              (value) UNIQUE WHERE ((name)::text = 'commit hash'::text)
 #  topic_custom_fields_value_key_idx               (value,name) WHERE ((value IS NOT NULL) AND (char_length(value) < 400))
 #

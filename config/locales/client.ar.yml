@@ -228,7 +228,6 @@ ar:
         eu_west_2: "الاتحاد الأوروبي (لندن)"
         us_east_1: "شرق الولايات المتحدة (فرجينيا الشمالية)"
         us_east_2: "غرب الولايات المتحدة (اوهايو)"
-        us_gov_west_1: "إستضافة أمازون الحسابية الحكومية (الولايات المتحدة الأمريكية)"
         us_west_1: "غرب الولايات المتحدة (كاليفورنيا الشمالية)"
         us_west_2: "غرب الولايات المتحدة (أوريغون)"
     edit: "عدل عنوان و قسم هذا الموضوع"
@@ -361,6 +360,7 @@ ar:
       moderation_history: "تاريخ الادارة"
       view_all: "اظهار الكل"
       topic: "الموضوع:"
+      filtered_user: "مستخدم"
       user:
         username: "اسم المستخدم"
         email: "البريد الإلكتروني"
@@ -372,9 +372,11 @@ ar:
       save: "احفظ"
       cancel: "ألغِ"
       filters:
+        all_categories: "(جميع الأقسام)"
         type:
-          title: "النوع:"
+          title: "النوع"
         refresh: "تحديث"
+        category: "تصنيف"
       scores:
         date: "التاريخ"
         type: "النوع"
@@ -626,6 +628,7 @@ ar:
       private_messages: "الرسائل"
       user_notifications:
         ignore_duration_username: "اسم المستخدم"
+        ignore_duration_save: "تجاهل"
         mute_option: "مكتومة"
         normal_option: "عادي"
       activity_stream: "النّشاط"
@@ -1033,16 +1036,6 @@ ar:
       enabled: "هذا الموقع في وضع القراءة فقط. نأمل أن تتابع تصفحه، ولكن الرد، والإعجاب وغيرها من الصلاحيات معطلة حاليا."
       login_disabled: "تسجيل الدخول معطل في حال كان الموقع في وضع القراءة فقط."
       logout_disabled: "تسجيل الخروج معطّل في حال كان الموقع في وضع القراءة فقط."
-    logs_error_rate_notice:
-      reached: "<b>%{relativeAge}</b> – <a href='%{url}' target='_blank'>%{rate}</a> وصل الحد الاقصي لإعدادت الموقع %{siteSettingRate}."
-      exceeded: "<b>%{relativeAge}</b> – <a href='%{url}' target='_blank'>%{rate}</a> يتجاوز الحد الاقصي لإعدادت الموقع %{siteSettingRate}."
-      rate:
-        zero: "خطا واحد / %{duration}"
-        one: "خطا واحد / %{duration}"
-        two: "%{count} خطا / %{duration}"
-        few: "%{count} خطا / %{duration}"
-        many: "%{count} خطا /%{duration}"
-        other: "%{count} خطا /%{duration}"
     learn_more: "اطّلع على المزيد..."
     all_time: "المجموع"
     all_time_desc: "عدد المواضيع المنشأة"
@@ -1094,7 +1087,6 @@ ar:
     trust_level: "مستوى الثقة"
     search_hint: "اسم المستخدم أو البريد إلكتروني أو عنوان الـ IP"
     create_account:
-      disclaimer: "التّسجيل يعني موافقتك على <a href='{{privacy_link}}'>سياسة الخصوصيّة</a> و<a href='{{tos_link}}'>بنود الخدمة</a>."
       title: "إنشاء حساب جديد"
       failed: "حدث خطب ما. لربّما يكون البريد الإلكتروني مسجلًا بالفعل. جرب رابط نسيان كلمة المرور"
     forgot_password:
@@ -1115,6 +1107,7 @@ ar:
       button_label: "مع البريد الإلكتروني"
       complete_username_not_found: "لا يوجد حساب يطابق اسم المستخدم <b>%{username}</b>"
       complete_email_not_found: "لا حساب يطابق <b>%{email}</b>"
+      confirm_title: "تابع إلى %{site_name}"
     login:
       title: "تسجيل دخول"
       username: "اسم المستخدم"
@@ -1342,6 +1335,8 @@ ar:
         replied: 'ردّ {{username}} عليك في "{{topic}}" - {{site_title}}'
         posted: 'نشر {{username}} في "{{topic}}" - {{site_title}}'
         linked: '{{username}} وضع رابطا لمنشورك في "{{topic}}" - {{site_title}}'
+      titles:
+        watching_first_post: "موضوع جديد"
     upload_selector:
       title: "أضف صورة"
       title_with_attachments: "أضف صورة أو ملفّ"
@@ -1465,17 +1460,14 @@ ar:
         read: "لم تقرأ أيّ موضوع بعد."
         posted: "لم تشارك في أيّ موضوع بعد."
         latest: "لا مواضيع حديثة. يا للأسف."
-        hot: "لايُوجد مواضيع نَشطة"
         bookmarks: "لا مواضيع معلّمة بعد."
         category: "لا يوجد موضوعات في قسم ’{{category}}‘."
         top: "لا يوجد موضوعات مشاهدة بكثرة"
-        search: "لا يوجد نتائج للبحث."
         educate:
           new: '<p>سوف تظهر موضوعاتك هنا.</p><p>بشكل افتراضي تعتبر الموضوعات جديدة و يظهر بجانبها كلمه <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">جديد</span> إذا لم يمضي علي نشرها اكثر من يومين.</p><p>زور صفحة <a href="%{userPrefsUrl}">التفضيلات</a> لتغيير هذا السلوك</p>'
           unread: '<p>الموضوعات الغير مقروءة تظهر هنا.</p><p>بشكل افتراضي تعتبر الموضوعات غير مقروءة و يظهر بجانبها عداد <span class="badge new-posts badge-notification">1</span> في حال:</p><ul><li>انشأت الموضوع</li><li>رددت علي الموضوع</li><li>قرأت الموضوع لاكثر من اربع دقائق</li></ul><p>او قمت بضبط مستوي اشعارات الموضوع إلي مراقب او متابع.</p><p>زور صفحة <a href="%{userPrefsUrl}">التفضيلات</a> لتغيير هذا السلوك.</p>'
       bottom:
         latest: "لا يوجد موضوعات حديثة أخرى."
-        hot: "لا يوجد موضوعات نشطة اخري."
         posted: "لا يوجد مواضيع منشورة أخرى."
         read: "لا يوجد موضوعات مقروءة أخرى."
         new: "لا يوجد مواضيع جديدة أخرى."
@@ -1483,7 +1475,6 @@ ar:
         category: "لا يوجد مواضيع أخرى في قسم \"{{category}}\"."
         top: "لا يوجد موضوعات مشاهدة بكثرة اخري."
         bookmarks: "لا يوجد موضوعات عليها علامة مرجعية اخري."
-        search: "لا يوجد نتائج بحث أخرى."
     topic:
       filter_to:
         zero: "لا يوجد منشورات في الموضوع"
@@ -1503,6 +1494,8 @@ ar:
         help: "انقل الرسالة للبريد الوارد"
       edit_message:
         title: "تحرير رسالة"
+      defer:
+        title: "تأجيل"
       list: "الموضوعات"
       new: "موضوع جديد"
       unread: "غير مقروء"
@@ -2082,8 +2075,10 @@ ar:
           title: "مكتومة"
           description: "لن يتم إشعارك بأي موضوعات جديدة في هذه الأقسام ولن يتم عرضها في قائمة الموضوعات المنشورة مؤخراً."
       search_priority:
+        label: "أولوية البحث"
         options:
           normal: "عادي"
+          ignore: "تجاهل"
       sort_options:
         default: "افترضى"
         likes: "الاعجابات"
@@ -2103,6 +2098,7 @@ ar:
         boxes_with_featured_topics: "مربعات مع الموضوعات المميزة"
       settings_sections:
         general: "عام"
+        appearance: "الظهور"
         email: "البريد الإلكتروني"
     flagging:
       title: "شكرا لمساعدتك في إبقاء مجتمعنا متحضرا."
@@ -2257,15 +2253,9 @@ ar:
           many: "الأخيرة ({{count}})"
           other: "الأخيرة ({{count}})"
         help: "الموضوعات التي بها منشورات حديثة"
-      hot:
-        title: "نَشط"
-        help: "مختارات من انشط الموضوعات"
       read:
         title: "المقروءة"
         help: "المواضيع التي قرأتها بترتيب قرائتك لها"
-      search:
-        title: "بحث"
-        help: "بحث في كل الموضوعات"
       categories:
         title: "الأقسام"
         title_in: "قسم - {{categoryName}}"
@@ -2516,20 +2506,16 @@ ar:
           read: "لم تقرأ أيّ موضوع بعد."
           posted: "لم تنشر في أيّ موضوع بعد.."
           latest: "لا يوجد موضوعات حديثة."
-          hot: "لا يوجد موضوعات نشطة."
           bookmarks: "لم تقم بوضع علامات مرجعية علي اي موضوع بعد."
           top: "لا يوجد موضوعات الاكثر مشاهدة."
-          search: "لا يوجد نتائج للبحث."
         bottom:
           latest: "لا يوجد المزيد من الموضوعات الحديثة."
-          hot: "لا يوجد المزيد من الموضوعات النشطة."
           posted: "لا يوجد المزيد من الموضوعات المنشورة."
           read: "لا يوجد المزيد من الموضوعات المقروءة."
           new: "لا يوجد المزيد من الموضوعات الجديدة."
           unread: "لا يوجد المزيد من الموضوعات غير مقروءة."
           top: "لا يوجد المزيد من الموضوعات الاكثر مشاهدة."
           bookmarks: "لا يوجد المزيد من الموضوعات التي عليها علامة مرجعية."
-          search: "لا نتائج بحث أخرى."
     invite:
       custom_message_placeholder: "ادخل رسالتك المخصصة"
       custom_message_template_forum: "مرحبا. عليك الانضمام إلى هذا المجتمع!"
@@ -2541,6 +2527,10 @@ ar:
     admin:
       title: "مدير المجتمع"
       moderator: "مشرف"
+      tags:
+        remove_muted_tags_from_latest:
+          always: "دائما"
+          never: "أبدا"
       dashboard:
         title: "لوحة التحكم"
         version: "الإصدار"

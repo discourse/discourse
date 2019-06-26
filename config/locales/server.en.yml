@@ -76,6 +76,8 @@ en:
   themes:
     bad_color_scheme: "Can not update theme, invalid color palette"
     other_error: "Something went wrong updating theme"
+    compile_error:
+      unrecognized_extension: "Unrecognized file extension: %{extension}"
     import_error:
       generic: An error occured while importing that theme
       about_json: "Import Error: about.json does not exist, or is invalid"
@@ -216,6 +218,7 @@ en:
 
   bulk_invite:
     file_should_be_csv: "The uploaded file should be of csv format."
+    max_rows: "First %{max_bulk_invites} invites has been sent. Try splitting the file in smaller parts."
     error: "There was an error uploading that file. Please try again later."
 
   topic_invite:
@@ -351,7 +354,7 @@ en:
   groups:
     success:
       bulk_add:
-        one: "%{count} user have been added to the group."
+        one: "%{count} user has been added to the group."
         other: "%{count} users have been added to the group."
     errors:
       grant_trust_level_not_valid: "'%{trust_level}' is not a valid trust level."
@@ -745,28 +748,30 @@ en:
   user_auth_tokens:
     browser:
       chrome: "Google Chrome"
-      safari: "Safari"
-      firefox: "Firefox"
-      opera: "Opera"
-      ie: "Internet Explorer"
-      edge: "Microsoft Edge"
       discoursehub: "DiscourseHub app"
+      edge: "Microsoft Edge"
+      firefox: "Firefox"
+      ie: "Internet Explorer"
+      opera: "Opera"
+      safari: "Safari"
       unknown: "unknown browser"
     device:
       android: "Android Device"
+      chromebook: "Chromebook"
       ipad: "iPad"
       iphone: "iPhone"
       ipod: "iPod"
-      mobile: "Mobile Device"
-      mac: "Mac"
       linux: "GNU/Linux Computer"
+      mac: "Mac"
+      mobile: "Mobile Device"
       windows: "Windows Computer"
       unknown: "unknown device"
     os:
       android: "Android"
+      chromeos: "ChromeOS"
       ios: "iOS"
-      macos: "macOS"
       linux: "Linux"
+      macos: "macOS"
       windows: "Microsoft Windows"
       unknown: "unknown operating system"
 
@@ -782,6 +787,7 @@ en:
 
   associated_accounts:
     revoke_failed: "Failed to revoke your account with %{provider_name}."
+    connected: "(connected)"
 
   activation:
     action: "Click here to activate your account"
@@ -933,6 +939,10 @@ en:
     description: '"%{application_name}" is requesting the following access to your account:'
     instructions: 'We just generated a new user API key for you to use with "%{application_name}", please paste the following key into your application:'
     otp_description: 'Would you like to allow "%{application_name}" to access this site?'
+    otp_confirmation: 
+      confirm_title: Continue to %{site_name}
+      logging_in_as: Logging in as %{username}
+      confirm_button: Finish Login
     no_trust_level: "Sorry, you do not have the required trust level to access the user API"
     generic_error: "Sorry, we are unable to issue user API keys, this feature may be disabled by the site admin"
     scopes:
@@ -1001,7 +1011,7 @@ en:
       title: "User Visits"
       xaxis: "Day"
       yaxis: "Number of visits"
-      description: "Number of all unique user visits."
+      description: "Number of all user visits."
     signups:
       title: "Signups"
       xaxis: "Day"
@@ -1157,7 +1167,7 @@ en:
       title: "Anonymous"
       xaxis: "Day"
       yaxis: "Anonymous Pageviews"
-      description: "Number of new page views by visitors not logged in to an account."
+      description: "Number of new pageviews by visitors not logged in to an account."
     page_view_logged_in_reqs:
       title: "Logged In"
       xaxis: "Day"
@@ -1211,7 +1221,7 @@ en:
       title: "Time to first response"
       xaxis: "Day"
       yaxis: "Average time (hours)"
-      description: "Average time  (in hours) of the first response to new topics."
+      description: "Average time (in hours) of the first response to new topics."
     topics_with_no_response:
       title: "Topics with no response"
       xaxis: "Day"
@@ -1411,13 +1421,13 @@ en:
     enable_markdown_linkify: "Automatically treat text that looks like a link as a link: www.example.com and https://example.com will be automatically linked"
     markdown_linkify_tlds: "List of top level domains that get automatically treated as links"
     post_undo_action_window_mins: "Number of minutes users are allowed to undo recent actions on a post (like, flag, etc)."
-    must_approve_users: "Staff must approve all new user accounts before they are allowed to access the site. WARNING: enabling this for a live site will revoke access for existing non-staff users!"
+    must_approve_users: "Staff must approve all new user accounts before they are allowed to access the site."
     pending_users_reminder_delay: "Notify moderators if new users have been waiting for approval for longer than this many hours. Set to -1 to disable notifications."
     maximum_session_age: "User will remain logged in for n hours since last visit"
-    ga_universal_tracking_code: "Google Universal Analytics (analytics.js) tracking code code, eg: UA-12345678-9; see <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
+    ga_universal_tracking_code: "Google Universal Analytics (analytics.js) tracking code ID, eg: UA-12345678-9; see <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
     ga_universal_domain_name: "Google Universal Analytics (analytics.js) domain name, eg: mysite.com; see <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
     ga_universal_auto_link_domains: "Enable Google Universal Analytics (analytics.js) cross-domain tracking. Outgoing links to these domains will have the client id added to them. See <a href='https://support.google.com/analytics/answer/1034342?hl=en' target='_blank'>Google's Cross-Domain Tracking guide.</a>"
-    gtm_container_id: "Google Tag Manager container id. eg: GTM-ABCDEF. <br/>Note: third-party scripts loaded by GTM may need to be whitelisted in 'content security policy script src'."
+    gtm_container_id: "Google Tag Manager container id. eg: GTM-ABCDEF. <br/>Note: Third-party scripts loaded by GTM may need to be whitelisted in 'content security policy script src'."
     enable_escaped_fragments: "Fall back to Google's Ajax-Crawling API if no webcrawler is detected. See <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
     moderators_create_categories: "Allow moderators to create new categories"
     cors_origins: "Allowed origins for cross-origin requests (CORS). Each origin must include http:// or https://. The DISCOURSE_ENABLE_CORS env variable must be set to true to enable CORS."
@@ -1491,7 +1501,7 @@ en:
     enable_sso_provider: "Implement Discourse SSO provider protocol at the /session/sso_provider endpoint, requires sso_provider_secrets to be set"
     sso_url: "URL of single sign on endpoint (must include http:// or https://)"
     sso_secret: "Secret string used to cryptographically authenticate SSO information, be sure it is 10 characters or longer"
-    sso_provider_secrets: "A list of domain-secret pairs that are using Discourse as a SSO provider. Make sure SSO secret is 10 characters or longer. Wildcard symbol * can be used to match any domain or only a part of it (e.g. *.example.com)."
+    sso_provider_secrets: "A list of domain-secret pairs that are using Discourse as an SSO provider. Make sure SSO secret is 10 characters or longer. Wildcard symbol * can be used to match any domain or only a part of it (e.g. *.example.com)."
     sso_overrides_bio: "Overrides user bio in user profile and prevents user from changing it"
     sso_overrides_groups: "Synchronize all manual group membership with groups specified in the groups sso attribute (WARNING: if you do not specify groups all manual group membership will be cleared for user)"
     sso_overrides_email: "Overrides local email with external site email from SSO payload on every login, and prevent local changes. (WARNING: discrepancies can occur due to normalization of local emails)"
@@ -1709,6 +1719,8 @@ en:
 
     title_prettify: "Prevent common title typos and errors, including all caps, lowercase first character, multiple ! and ?, extra . at end, etc."
     title_remove_extraneous_space: "Remove leading whitespaces in front of the end punctuation."
+
+    automatic_topic_heat_values: 'Automatically update the "topic views heat" and "topic post like heat" settings based on site activity.'
 
     topic_views_heat_low: "After this many views, the views field is slightly highlighted."
     topic_views_heat_medium: "After this many views, the views field is moderately highlighted."
@@ -1976,6 +1988,7 @@ en:
     default_other_notification_level_when_replying: "Global default notification level when the user replies to a topic."
     default_other_external_links_in_new_tab: "Open external links in a new tab by default."
     default_other_enable_quoting: "Enable quote reply for highlighted text by default."
+    default_other_enable_defer: "Enable defer topic functionality by default."
     default_other_dynamic_favicon: "Show new/updated topic count on browser icon by default."
 
     default_other_like_notification_frequency: "Notify users on likes by default"
@@ -2000,7 +2013,7 @@ en:
     min_trust_level_for_user_api_key: "Trust level required for generation of user API keys"
     allowed_user_api_auth_redirects: "Allowed URL for authentication redirect for user API keys. Wildcard symbol * can be used to match any part of it (e.g. www.example.com/*)."
     allowed_user_api_push_urls: "Allowed URLs for server push to user API"
-    expire_user_api_keys_days: "Number of days before an user API key automatically expires (0 for never)"
+    expire_user_api_keys_days: "Number of days before a user API key automatically expires (0 for never)"
 
     tagging_enabled: "Enable tags on topics?"
     min_trust_to_create_tag: "The minimum trust level required to create a tag."
@@ -2015,7 +2028,7 @@ en:
     allow_staff_to_tag_pms: "Allow staff members to tag any personal message"
     min_trust_level_to_tag_topics: "Minimum trust level required to tag topics"
     suppress_overlapping_tags_in_list: "If tags match exact words in topic titles, don't show the tag"
-    remove_muted_tags_from_latest: "Don't show topics tagged with muted tags in the latest topic list."
+    remove_muted_tags_from_latest: "Don't show topics tagged only with muted tags in the latest topic list."
     force_lowercase_tags: "Force all new tags to be entirely lowercase."
 
     company_name: "Company Name"
@@ -2648,7 +2661,7 @@ en:
       text_body_template: |
         Your data export was successful! :dvd:
 
-        <a class="attachment" href="%{download_link}">%{file_name}</a> (%{file_size})
+        %{download_link}
 
         The above download link will be valid for 48 hours.
 
@@ -2860,6 +2873,14 @@ en:
         %{rejected_errors}
 
         If you believe this is an error, [contact a staff member](%{base_url}/about).
+
+    email_reject_reply_not_allowed:
+      title: "Email Reject Reply Not Allowed"
+      subject_template: "[%{email_prefix}] Email issue -- Reply Not Allowed"
+      text_body_template: |
+        We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
+
+        You don't have permissions to reply to the topic. If you believe this is an error, [contact a staff member](%{base_url}/about).
 
     email_error_notification:
       title: "Email Error Notification"
@@ -4330,6 +4351,16 @@ en:
       colors:
         title: "Theme"
 
+      themes_further_reading:
+        title: "Themes"
+        description:
+          "Looking to customize your Discourse? Take advantage of our powerful theming system:
+          <ul>
+          <li><a href='https://meta.discourse.org/t/63682' target='_blank'>How do I install a theme or theme component?</a></li>
+          <li><a href='https://meta.discourse.org/t/110448' target='_blank'>Theme Developer Quick Reference Guide</a></li>
+          </ul>
+          Popular theme components (for more, browse <a href='https://meta.discourse.org/c/theme/l/latest' target='_blank'>#theme</a>)"
+
       logos:
         title: "Logos"
         fields:
@@ -4433,7 +4464,7 @@ en:
       new_topics_unless_trust_level: "Users at low trust levels must have topics approved by staff. See `approve_new_topics_unless_trust_level`."
       fast_typer: "New user typed their first post suspiciously fast, suspected bot or spammer behavior. See `min_first_post_typing_time`."
       auto_silence_regexp: "New user whose first post matches the `auto_silence_first_post_regex` setting."
-      watched_word: "Post included a Watched Word."
+      watched_word: "This post included a Watched Word. See your <a href='%{base_url}/admin/logs/watched_words'>list of watched words</a>."
       staged: "New topics and posts for staged users must be approved by staff. See `approve_unless_staged`."
       category: "Posts in this category require manual approval by staff. See the category settings."
       must_approve_users: "All new users must be approved by staff. See `must_approve_users`."
