@@ -39,7 +39,9 @@ export default Discourse.Route.extend({
       return this.currentUser;
     }
 
-    return Discourse.User.create({ username: params.username });
+    return Discourse.User.create({
+      username: encodeURIComponent(params.username)
+    });
   },
 
   afterModel() {

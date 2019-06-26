@@ -69,6 +69,9 @@ class UploadsController < ApplicationController
   end
 
   def show
+    # do not serve uploads requested via XHR to prevent XSS
+    return render_404 if request.xhr?
+
     return render_404 if !RailsMultisite::ConnectionManagement.has_db?(params[:site])
 
     RailsMultisite::ConnectionManagement.with_connection(params[:site]) do |db|
@@ -88,6 +91,9 @@ class UploadsController < ApplicationController
   end
 
   def show_short
+    # do not serve uploads requested via XHR to prevent XSS
+    return render_404 if request.xhr?
+
     if SiteSetting.prevent_anons_from_downloading_files && current_user.nil?
       return render_404
     end
