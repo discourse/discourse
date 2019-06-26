@@ -54,7 +54,9 @@ export default Ember.Object.extend({
         }
       } else {
         // It's serializable as a string if not an object
-        return `${path}/${findArgs}${extension ? extension : ""}`;
+        return `${path}/${encodeURIComponent(findArgs)}${
+          extension ? extension : ""
+        }`;
       }
     }
     return path;
