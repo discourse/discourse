@@ -90,32 +90,11 @@
     </label>
   {{/unless}}
   <div class="controls pref-second-factor">
+    {{i18n 'user.second_factor.enable'}}
     {{#if isCurrentUser}}
-      {{#if model.second_factor_enabled}}
-        {{#link-to "preferences.second-factor" class="btn btn-default"}}
-          {{d-icon "unlock"}} <span>{{i18n 'user.second_factor.disable'}}</span>
-        {{/link-to}}
-      {{else}}
-        {{#link-to "preferences.second-factor" class="btn btn-default"}}
-          {{d-icon "lock"}} <span>{{i18n 'user.second_factor.enable'}}</span>
-        {{/link-to}}
-      {{/if}}
-    {{/if}}
-  </div>
-
-  <div class="controls pref-second-factor-backup">
-    {{#if model.second_factor_enabled}}
-      {{#if isCurrentUser}}
-        {{#link-to "preferences.second-factor-backup"}}
-        <span>
-        {{#if model.second_factor_backup_enabled}}
-          {{i18n 'user.second_factor_backup.manage'}}
-        {{else}}
-          {{i18n 'user.second_factor_backup.enable_long'}}
-        {{/if}}
-        </span>
-        {{/link-to}}
-      {{/if}}
+      {{#link-to "preferences.second-factor" class="btn btn-default"}}
+        {{d-icon "lock"}} <span>{{i18n 'user.second_factor.enable'}}</span>
+      {{/link-to}}
     {{/if}}
   </div>
 </div>
