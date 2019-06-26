@@ -3,23 +3,29 @@ import { DefaultNotificationItem } from "discourse/widgets/default-notification-
 import { escapeExpression } from "discourse/lib/utilities";
 import { userPath } from "discourse/lib/url";
 
-createWidgetFrom(DefaultNotificationItem, "liked-consolidated-notification-item", {
-  url(data) {
-    return userPath(
-      `${this.attrs.username ||
-        this.currentUser
-          .username}/notifications/likes-received?acting_username=${
-        data.display_username
-      }`
-    );
-  },
+createWidgetFrom(
+  DefaultNotificationItem,
+  "liked-consolidated-notification-item",
+  {
+    url(data) {
+      return userPath(
+        `${this.attrs.username ||
+          this.currentUser
+            .username}/notifications/likes-received?acting_username=${
+          data.display_username
+        }`
+      );
+    },
 
-  description(data) {
-    const description =
-      I18n.t("notifications.liked_consolidated_description", {
-        count: parseInt(data.count)
-      });
+    description(data) {
+      const description = I18n.t(
+        "notifications.liked_consolidated_description",
+        {
+          count: parseInt(data.count)
+        }
+      );
 
-    return Ember.isEmpty(description) ? "" : escapeExpression(description);
+      return Ember.isEmpty(description) ? "" : escapeExpression(description);
+    }
   }
-});
+);
