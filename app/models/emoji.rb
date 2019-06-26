@@ -49,7 +49,7 @@ class Emoji
 
     Emoji.all.detect do |e|
       e.name == normalized_name &&
-      (!is_toned || is_toned && e.tonable)
+      (!is_toned || (is_toned && e.tonable))
     end
   end
 
@@ -60,7 +60,7 @@ class Emoji
 
     Emoji.new.tap do |e|
       e.name = name
-      e.tonable = is_tonable
+      e.tonable = Emoji.tonable_emojis.include?(name)
       e.url = Emoji.url_for(filename)
     end
   end
