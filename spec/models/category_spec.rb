@@ -97,55 +97,97 @@ describe Category do
   end
 
   describe "topic_create_allowed and post_create_allowed" do
-    it "works" do
+    fab!(:group) { Fabricate(:group) }
 
-      # NOTE we also have the uncategorized category ... hence the increased count
-
-      _default_category = Fabricate(:category)
-      full_category = Fabricate(:category)
-      can_post_category = Fabricate(:category)
-      can_read_category = Fabricate(:category)
-
+    fab!(:user) do
       user = Fabricate(:user)
-      group = Fabricate(:group)
       group.add(user)
       group.save
+      user
+    end
 
-      admin = Fabricate(:admin)
+    fab!(:admin) { Fabricate(:admin) }
 
-      full_category.set_permissions(group => :full)
-      full_category.save
+    fab!(:default_category) { Fabricate(:category) }
 
-      can_post_category.set_permissions(group => :create_post)
-      can_post_category.save
+    fab!(:full_category) do
+      c = Fabricate(:category)
+      c.set_permissions(group => :full)
+      c.save
+      c
+    end
 
-      can_read_category.set_permissions(group => :readonly)
-      can_read_category.save
+    fab!(:can_post_category) do
+      c = Fabricate(:category)
+      c.set_permissions(group => :create_post)
+      c.save
+      c
+    end
 
-      guardian = Guardian.new(admin)
-      expect(Category.topic_create_allowed(guardian).count).to be(5)
-      expect(Category.post_create_allowed(guardian).count).to be(5)
-      expect(Category.secured(guardian).count).to be(5)
+    fab!(:can_read_category) do
+      c = Fabricate(:category)
+      c.set_permissions(group => :readonly)
+      c.save
+    end
 
-      guardian = Guardian.new(user)
-      expect(Category.secured(guardian).count).to be(5)
-      expect(Category.post_create_allowed(guardian).count).to be(4)
-      expect(Category.topic_create_allowed(guardian).count).to be(3) # explicitly allowed once, default allowed once
+    let(:user_guardian) { Guardian.new(user) }
+    let(:admin_guardian) { Guardian.new(admin) }
+    let(:anon_guardian) { Guardian.new(nil) }
 
-      expect(Category.scoped_to_permissions(nil, [:readonly]).count).to be(2)
+    context 'when disabling uncategorized' do
+      before do
+        SiteSetting.allow_uncategorized_topics = false
+      end
 
-      # everyone has special semantics, test it as well
+      it "allows everything to admins unconditionally" do
+        count = Category.count
+
+        expect(Category.topic_create_allowed(admin_guardian).count).to eq(count)
+        expect(Category.post_create_allowed(admin_guardian).count).to eq(count)
+        expect(Category.secured(admin_guardian).count).to eq(count)
+      end
+
+      it "allows normal users correct access to all categories" do
+
+        # Sam: I am mixed here, once disabling uncategorized maybe users should no
+        # longer be allowed to know about it so all counts should go down?
+        expect(Category.secured(user_guardian).count).to eq(5)
+        expect(Category.post_create_allowed(user_guardian).count).to eq(4)
+        expect(Category.topic_create_allowed(user_guardian).count).to eq(2)
+      end
+    end
+
+    it "allows everything to admins unconditionally" do
+      count = Category.count
+
+      expect(Category.topic_create_allowed(admin_guardian).count).to eq(count)
+      expect(Category.post_create_allowed(admin_guardian).count).to eq(count)
+      expect(Category.secured(admin_guardian).count).to eq(count)
+    end
+
+    it "allows normal users correct access to all categories" do
+      expect(Category.secured(user_guardian).count).to eq(5)
+      expect(Category.post_create_allowed(user_guardian).count).to eq(4)
+      expect(Category.topic_create_allowed(user_guardian).count).to eq(3)
+    end
+
+    it "allows anon correct access" do
+      expect(Category.scoped_to_permissions(anon_guardian, [:readonly]).count).to eq(2)
+      expect(Category.post_create_allowed(anon_guardian).count).to eq(0)
+      expect(Category.topic_create_allowed(anon_guardian).count).to eq(0)
+
+      # nil has special semantics
+      expect(Category.scoped_to_permissions(nil, [:readonly]).count).to eq(2)
+    end
+
+    it "handles :everyone scope" do
       can_post_category.set_permissions(everyone: :create_post)
       can_post_category.save
 
-      expect(Category.post_create_allowed(guardian).count).to be(4)
+      expect(Category.post_create_allowed(user_guardian).count).to eq(4)
 
       # anonymous has permission to create no topics
-      guardian = Guardian.new(nil)
-      expect(Category.post_create_allowed(guardian).count).to be(0)
-      expect(Category.topic_create_allowed(guardian).count).to be(0)
-      expect(Category.scoped_to_permissions(guardian, [:readonly]).count).to be(3)
-
+      expect(Category.scoped_to_permissions(user_guardian, [:readonly]).count).to eq(3)
     end
 
   end
