@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    onebox (1.8.92)
+    onebox (1.8.93)
       htmlentities (~> 4.3)
       moneta (~> 1.0)
       multi_json (~> 1.11)
@@ -51,12 +51,12 @@ GEM
     mini_portile2 (2.4.0)
     mocha (1.8.0)
       metaclass (~> 0.0.1)
-    moneta (1.0.0)
+    moneta (1.1.1)
     multi_json (1.13.1)
     multipart-post (2.0.0)
     mustache (1.1.0)
     nenv (0.3.0)
-    nokogiri (1.10.1)
+    nokogiri (1.10.3)
       mini_portile2 (~> 2.4.0)
     nokogumbo (2.0.1)
       nokogiri (~> 1.8, >= 1.8.4)
