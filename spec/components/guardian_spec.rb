@@ -1668,6 +1668,40 @@ describe Guardian do
     end
   end
 
+  context "can_create_topic?" do
+    it 'returns true for staff user' do
+      expect(Guardian.new(moderator).can_create_topic?(topic)).to eq(true)
+    end
+
+    it 'returns false for user with insufficient trust level' do
+      SiteSetting.min_trust_to_create_topic = 3
+      expect(Guardian.new(user).can_create_topic?(topic)).to eq(false)
+    end
+
+    it 'returns true for user with sufficient trust level' do
+      SiteSetting.min_trust_to_create_topic = 3
+      expect(Guardian.new(trust_level_4).can_create_topic?(topic)).to eq(true)
+    end
+
+    it 'returns false when posting in "uncategorized" is disabled and there is no other category available for posting' do
+      SiteSetting.allow_uncategorized_topics = false
+
+      plain_category.set_permissions(group => :readonly)
+      plain_category.save
+      expect(Guardian.new(user).can_create_topic?(topic)).to eq(false)
+    end
+
+    it 'returns true when there is a category available for posting' do
+      SiteSetting.allow_uncategorized_topics = false
+
+      plain_category.set_permissions(group => :full)
+      plain_category.save
+      group.add(user)
+      group.save
+      expect(Guardian.new(user).can_create_topic?(topic)).to eq(true)
+    end
+  end
+
   context 'can_move_posts?' do
 
     it 'returns false with a nil object' do
