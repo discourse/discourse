@@ -4,7 +4,7 @@ module EmojiHelper
   def emoji_codes_to_img(str)
     return if str.blank?
 
-    raw str.gsub(/:([\w\-+]*(?::t\d)?):/) do |name|
+    str = str.gsub(/:([\w\-+]*(?::t\d)?):/) do |name|
       code = $1
 
       if Emoji.exists?(code)
@@ -13,5 +13,7 @@ module EmojiHelper
         name
       end
     end
+
+    raw(str)
   end
 end
