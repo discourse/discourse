@@ -1371,7 +1371,8 @@ describe GroupsController do
     before do
       group.update!(
         name: 'GOT',
-        full_name: 'Daenerys Targaryen'
+        full_name: 'Daenerys Targaryen',
+        visibility_level: Group.visibility_levels[:logged_on_users]
       )
 
       hidden_group

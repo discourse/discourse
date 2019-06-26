@@ -3172,6 +3172,7 @@ en:
             visibility_levels:
               title: "Who can see this group?"
               public: "Everyone"
+              logged_on_users: "Logged on users"
               members: "Group owners, members and admins"
               staff: "Group owners and staff"
               owners: "Group owners and admins"

@@ -13,6 +13,12 @@ export default Ember.Component.extend({
       },
       {
         name: I18n.t(
+          "admin.groups.manage.interaction.visibility_levels.logged_on_users"
+        ),
+        value: 4
+      },
+      {
+        name: I18n.t(
           "admin.groups.manage.interaction.visibility_levels.members"
         ),
         value: 1
