@@ -17,6 +17,7 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import { spinnerHTML } from "discourse/helpers/loading-spinner";
 import { userPath } from "discourse/lib/url";
 import showModal from "discourse/lib/show-modal";
+import TopicTimer from "discourse/models/topic-timer";
 
 let customPostMessageCallbacks = {};
 
@@ -1035,6 +1036,18 @@ export default Ember.Controller.extend(bufferedProperty("model"), {
 
     resetBumpDate() {
       this.model.resetBumpDate();
+    },
+
+    removeTopicTimer(statusType, topicTimer) {
+      TopicTimer.updateStatus(
+        this.get("model.id"),
+        null,
+        null,
+        statusType,
+        null
+      )
+        .then(() => this.set(`model.${topicTimer}`, Ember.Object.create({})))
+        .catch(error => popupAjaxError(error));
     }
   },
 
