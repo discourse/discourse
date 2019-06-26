@@ -36,6 +36,10 @@ class ReviewableFlaggedPost < Reviewable
 
     agree = actions.add_bundle("#{id}-agree", icon: 'thumbs-up', label: 'reviewables.actions.agree.title')
 
+    if !post.user_deleted? && !post.hidden?
+      build_action(actions, :agree_and_hide, icon: 'far-eye-slash', bundle: agree)
+    end
+
     build_action(actions, :agree_and_keep, icon: 'thumbs-up', bundle: agree)
     if guardian.can_suspend?(target_created_by)
       build_action(actions, :agree_and_suspend, icon: 'ban', bundle: agree, client_action: 'suspend')
@@ -54,8 +58,6 @@ class ReviewableFlaggedPost < Reviewable
 
     if post.user_deleted?
       build_action(actions, :agree_and_restore, icon: 'far-eye', bundle: agree)
-    elsif !post.hidden?
-      build_action(actions, :agree_and_hide, icon: 'far-eye-slash', bundle: agree)
     end
 
     if post.hidden?
