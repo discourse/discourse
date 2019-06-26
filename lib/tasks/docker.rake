@@ -144,13 +144,16 @@ task 'docker:test' do
         puts "travis_fold:start:ruby_tests" if ENV["TRAVIS"]
         unless ENV["SKIP_CORE"]
           params = []
-          params << "--profile"
-          params << "--fail-fast"
-          if ENV["BISECT"]
-            params << "--bisect"
-          end
-          if ENV["RSPEC_SEED"]
-            params << "--seed #{ENV["RSPEC_SEED"]}"
+
+          unless ENV['USE_TURBO']
+            params << "--profile"
+            params << "--fail-fast"
+            if ENV["BISECT"]
+              params << "--bisect"
+            end
+            if ENV["RSPEC_SEED"]
+              params << "--seed #{ENV["RSPEC_SEED"]}"
+            end
           end
 
           if ENV['PARALLEL']
