@@ -76,7 +76,14 @@ module TopicGuardian
     return true if is_moderator? && can_create_post?(topic)
 
     # can't edit topics in secured categories where you don't have permission to create topics
-    return false if !can_create_topic_on_category?(topic.category)
+    # except for a tiny edge case where the topic is uncategorized and you are trying
+    # to fix it but uncategorized is disabled
+    if (
+      SiteSetting.allow_uncategorized_topics ||
+      topic.category_id != SiteSetting.uncategorized_category_id
+    )
+      return false if !can_create_topic_on_category?(topic.category)
+    end
 
     # TL4 users can edit archived topics, but can not edit private messages
     return true if (
