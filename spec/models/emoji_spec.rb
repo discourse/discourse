@@ -66,4 +66,30 @@ describe Emoji do
     end
   end
 
+  describe '.exists?' do
+    it 'finds existing emoji' do
+      expect(Emoji.exists?(":blonde_woman:")).to be(true)
+      expect(Emoji.exists?("blonde_woman")).to be(true)
+    end
+
+    it 'finds existing skin toned emoji' do
+      expect(Emoji.exists?(":blonde_woman:t1:")).to be(true)
+      expect(Emoji.exists?("blonde_woman:t6")).to be(true)
+    end
+
+    it 'finds existing custom emoji' do
+      CustomEmoji.create!(name: 'test', upload_id: 9999)
+      Emoji.clear_cache
+      expect(Emoji.exists?(":test:")).to be(true)
+      expect(Emoji.exists?("test")).to be(true)
+    end
+
+    it 'doesn’t find non-existing emoji' do
+      expect(Emoji.exists?(":foo-bar:")).to be(false)
+      expect(Emoji.exists?(":blonde_woman:t7:")).to be(false)
+      expect(Emoji.exists?("blonde_woman:t0")).to be(false)
+      expect(Emoji.exists?("blonde_woman:t")).to be(false)
+    end
+  end
+
 end
