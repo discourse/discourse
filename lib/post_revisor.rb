@@ -299,7 +299,7 @@ class PostRevisor
         max_diff = SiteSetting.editing_grace_period_max_diff_high_trust.to_i
       end
 
-      if (original_raw.length - new_raw.length).abs > max_diff ||
+      if (original_raw.size - new_raw.size).abs > max_diff ||
         diff_size(original_raw, new_raw) > max_diff
         return false
       end
