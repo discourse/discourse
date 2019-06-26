@@ -4521,6 +4521,7 @@ en:
         title: "Approve"
       approve_post:
         title: "Approve Post"
+        confirm_closed: "This topic is closed. Would you like to create the post anyway?"
       reject_post:
         title: "Reject Post"
       approve_user:
