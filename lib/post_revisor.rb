@@ -280,12 +280,9 @@ class PostRevisor
   end
 
   def diff_size(before, after)
-    changes = 0
-    ONPDiff.new(before, after).short_diff.each do |str, type|
-      next if type == :common
-      changes += str.length
+    ONPDiff.new(before, after).short_diff.sum do |str, type|
+      type == :common ? 0 : str.size
     end
-    changes
   end
 
   def ninja_edit?
