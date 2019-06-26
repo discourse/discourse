@@ -56,7 +56,6 @@ class Emoji
   def self.create_from_db_item(emoji)
     name = emoji["name"]
     filename = emoji['filename'] || name
-    is_tonable = Emoji.tonable_emojis.include?(name)
 
     Emoji.new.tap do |e|
       e.name = name
