@@ -49,7 +49,7 @@ class Emoji
 
     Emoji.all.detect do |e|
       e.name == normalized_name &&
-      (!is_toned || is_toned && e.tonable)
+      (!is_toned || (is_toned && e.tonable))
     end
   end
 
