@@ -229,7 +229,11 @@ export default class Widget {
       result.dirtyKeys = this.dirtyKeys;
       return result;
     } else {
-      throw new Error(`Couldn't find ${widgetName} or fallback ${otherOpts.fallbackWidgetName}`);
+      throw new Error(
+        `Couldn't find ${widgetName} or fallback ${
+          otherOpts.fallbackWidgetName
+        }`
+      );
     }
   }
 
@@ -382,7 +386,8 @@ export default class Widget {
 
     let contents = this.html(attrs, state);
     if (this.name) {
-      const beforeContents = applyDecorators(this, "before", attrs, state) || [];
+      const beforeContents =
+        applyDecorators(this, "before", attrs, state) || [];
       const afterContents = applyDecorators(this, "after", attrs, state) || [];
       contents = beforeContents.concat(contents).concat(afterContents);
     }
