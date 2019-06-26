@@ -22,9 +22,7 @@ QUnit.test("Reply as new topic", async assert => {
     find(".d-editor-input")
       .val()
       .trim(),
-    `Continuing the discussion from [Internationalization / localization](${
-      window.location.origin
-    }/t/internationalization-localization/280):`,
+    `Continuing the discussion from [Internationalization / localization](${window.location.origin}/t/internationalization-localization/280):`,
     "it fills composer with the ring string"
   );
   assert.equal(
@@ -47,9 +45,7 @@ QUnit.test("Reply as new message", async assert => {
     find(".d-editor-input")
       .val()
       .trim(),
-    `Continuing the discussion from [PM for testing](${
-      window.location.origin
-    }/t/pm-for-testing/12):`,
+    `Continuing the discussion from [PM for testing](${window.location.origin}/t/pm-for-testing/12):`,
     "it fills composer with the ring string"
   );
 
