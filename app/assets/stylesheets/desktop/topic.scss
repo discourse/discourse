@@ -73,15 +73,15 @@
   border-top: 1px solid $primary-low;
   padding: 10px 0;
   max-width: 758px;
-  h3 {
+  .topic-timer-heading {
     display: flex;
     align-items: center;
     margin: 0px;
-    button {
-      font-size: $font-down-2;
-      background: transparent;
-      margin-left: auto;
-    }
+  }
+  .topic-timer-remove {
+    font-size: $font-down-2;
+    background: transparent;
+    margin-left: auto;
   }
 }
 

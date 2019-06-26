@@ -1046,7 +1046,9 @@ export default Ember.Controller.extend(bufferedProperty("model"), {
         statusType,
         null
       )
-        .then(() => this.set(`model.${topicTimer}`, Ember.Object.create({})))
+        .then(() => {
+          this.set(`model.${topicTimer}`, Ember.Object.create({}));
+        })
         .catch(error => {
           popupAjaxError(error);
         });

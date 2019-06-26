@@ -40,7 +40,7 @@ export default Ember.Component.extend(
         }
         let autoCloseHours = this.duration || 0;
 
-        buffer.push(`<h3>`);
+        buffer.push(`<h3 class="topic-timer-heading">`);
 
         let options = {
           timeLeft: duration.humanize(true),
@@ -86,6 +86,8 @@ export default Ember.Component.extend(
     },
 
     didInsertElement() {
+      this._super(...arguments);
+
       if (this.removeTopicTimer) {
         $(this.element).on(
           "click.topic-timer-remove",
@@ -96,7 +98,7 @@ export default Ember.Component.extend(
     },
 
     willDestroyElement() {
-      $(this.element).off("click.topic-timer-remove", "button");
+      $(this.element).off("click.topic-timer-remove", this.removeTopicTimer);
 
       if (this._delayedRerender) {
         Ember.run.cancel(this._delayedRerender);
