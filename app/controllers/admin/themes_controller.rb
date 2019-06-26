@@ -156,8 +156,9 @@ class Admin::ThemesController < Admin::AdminController
     raise Discourse::InvalidParameters.new(:id) unless @theme
 
     original_json = ThemeSerializer.new(@theme, root: false).to_json
+    disables_component = [true, "true"].include?(theme_params[:disabled])
 
-    [:name, :color_scheme_id, :user_selectable].each do |field|
+    [:name, :color_scheme_id, :user_selectable, :disabled].each do |field|
       if theme_params.key?(field)
         @theme.public_send("#{field}=", theme_params[field])
       end
@@ -203,7 +204,9 @@ class Admin::ThemesController < Admin::AdminController
         update_default_theme
 
         @theme.reload
-        log_theme_change(original_json, @theme)
+        log_theme_change(original_json, @theme) if !disables_component || theme_params.keys.size > 1
+        log_theme_component_disabled if disables_component
+
         format.json { render json: @theme, status: :ok }
       else
         format.json do
@@ -304,6 +307,7 @@ class Admin::ThemesController < Admin::AdminController
           :default,
           :user_selectable,
           :component,
+          :disabled,
           settings: {},
           translations: {},
           theme_fields: [:name, :target, :value, :upload_id, :type_id],
@@ -348,6 +352,10 @@ class Admin::ThemesController < Admin::AdminController
 
   def log_theme_setting_change(setting_name, previous_value, new_value)
     StaffActionLogger.new(current_user).log_theme_setting_change(setting_name, previous_value, new_value, @theme)
+  end
+
+  def log_theme_component_disabled
+    StaffActionLogger.new(current_user).log_theme_component_disabled(@theme)
   end
 
   def handle_switch

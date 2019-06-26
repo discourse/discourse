@@ -16,7 +16,7 @@
     </div>
   {{/each}}
 
-  {{#unless model.enabled}}
+  {{#unless model.supported}}
     <div class="alert alert-error">
       {{i18n "admin.customize.theme.required_version.error"}}
       {{#if model.remote_theme.minimum_discourse_version}}
@@ -28,12 +28,39 @@
     </div>
   {{/unless}}
 
+  {{#if model.disabled}}
+    <div class="alert alert-error">
+      {{i18n "admin.customize.theme.disabled"}}
+      {{#if model.disabled_by}}
+        {{#user-link user=model.disabled_by}}
+          {{avatar model.disabled_by imageSize="tiny"}}
+          {{model.disabled_by.username}}
+        {{/user-link}}
+        {{format-date model.disabled_at leaveAgo="true"}}
+      {{/if}}
+    </div>
+  {{/if}}
+
   {{#unless model.component}}
     <div class="control-unit">
       {{inline-edit-checkbox action=(action "applyDefault") labelKey="admin.customize.theme.is_default" checked=model.default}}
       {{inline-edit-checkbox action=(action "applyUserSelectable") labelKey="admin.customize.theme.user_selectable" checked=model.user_selectable}}
     </div>
   {{/unless}}
+
+  {{#if model.component}}
+    <div class="control-unit">
+      {{#if model.disabled}}
+        {{#d-button class='btn-default' action=(action "enableComponent") icon="check"}}
+          {{i18n "admin.customize.theme.enable"}}
+        {{/d-button}}
+      {{else}}
+        {{#d-button class='btn-default' action=(action "disableComponent") icon="ban"}}
+          {{i18n "admin.customize.theme.disable"}}
+        {{/d-button}}
+      {{/if}}
+    </div>
+  {{/if}}
 
   {{#if model.remote_theme}}
 
@@ -204,7 +231,19 @@
       {{#if model.childThemes.length}}
         <ul class='removable-list'>
           {{#each model.childThemes as |child|}}
-            <li>{{#link-to 'adminCustomizeThemes.show' child replace=true class='col'}}{{child.name}}{{/link-to}} {{d-button action=(action "removeChildTheme") actionParam=child class="btn-default cancel-edit col" icon="times"}}</li>
+            <li class={{if child.disabled "disabled-child"}}>
+              {{#link-to 'adminCustomizeThemes.show' child replace=true class='col child-link'}}
+                {{child.name}}
+              {{/link-to}}
+
+              {{#if child.disabled}}
+                {{d-button action=(action "enableComponent") actionParam=child class="col btn-primary" icon="check"}}
+              {{else}}
+                {{d-button action=(action "disableComponent") actionParam=child class="col btn-default" icon="ban"}}
+              {{/if}}
+
+              {{d-button action=(action "removeChildTheme") actionParam=child class="btn-default cancel-edit col" icon="times"}}
+            </li>
           {{/each}}
         </ul>
       {{/if}}

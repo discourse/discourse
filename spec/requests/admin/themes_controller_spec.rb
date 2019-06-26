@@ -322,6 +322,54 @@ describe Admin::ThemesController do
       expect(theme.theme_translation_overrides.count).to eq(0)
     end
 
+    it 'can disable component' do
+      child = Fabricate(:theme, component: true)
+
+      put "/admin/themes/#{child.id}.json", params: {
+        theme: {
+          disabled: true
+        }
+      }
+      expect(response.status).to eq(200)
+      json = JSON.parse(response.body)
+      expect(json["theme"]["disabled"]).to eq(true)
+      expect(UserHistory.where(
+        context: child.id.to_s,
+        action: UserHistory.actions[:disable_theme_component]
+      ).size).to eq(1)
+      expect(json["theme"]["disabled_by"]["id"]).to eq(admin.id)
+    end
+
+    it 'enabling a component doesn\'t create a staff action log' do
+      child = Fabricate(:theme, component: true)
+
+      put "/admin/themes/#{child.id}.json", params: {
+        theme: {
+          disabled: true
+        }
+      }
+      expect(response.status).to eq(200)
+      expect(UserHistory.where(
+        context: child.id.to_s,
+        action: UserHistory.actions[:disable_theme_component]
+      ).size).to eq(1)
+
+      put "/admin/themes/#{child.id}.json", params: {
+        theme: {
+          disabled: false
+        }
+      }
+      expect(response.status).to eq(200)
+      json = JSON.parse(response.body)
+      expect(json["theme"]["disabled"]).to eq(false)
+      expect(UserHistory.where(
+        context: child.id.to_s,
+        action: UserHistory.actions[:disable_theme_component]
+      ).size).to eq(1)
+
+      expect(json["theme"]["disabled_by"]).to eq(nil)
+    end
+
     it 'handles import errors on update' do
       theme.create_remote_theme!(remote_url: "https://example.com/repository")
 
