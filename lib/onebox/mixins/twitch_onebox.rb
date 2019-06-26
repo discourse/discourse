@@ -20,7 +20,7 @@ module Onebox
         end
 
         def placeholder_html
-          "<span class='onebox-video-placeholder'></span>"
+          "<div class='onebox-video-placeholder'><span class='video-placeholder-icon'></span></div>"
         end
 
         def to_html
