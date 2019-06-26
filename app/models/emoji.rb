@@ -60,7 +60,7 @@ class Emoji
 
     Emoji.new.tap do |e|
       e.name = name
-      e.tonable = is_tonable
+      e.tonable = Emoji.tonable_emojis.include?(name)
       e.url = Emoji.url_for(filename)
     end
   end
