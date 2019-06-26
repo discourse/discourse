@@ -465,28 +465,44 @@ class Reviewable < ActiveRecord::Base
 protected
 
   def recalculate_score
-    # Recalculate the pending score and return it
-    result = DB.query(<<~SQL, id: self.id, pending: ReviewableScore.statuses[:pending])
+    # pending/agreed scores count
+    sql = <<~SQL
       UPDATE reviewables
       SET score = COALESCE((
         SELECT sum(score)
         FROM reviewable_scores AS rs
         WHERE rs.reviewable_id = :id
+          AND rs.status IN (:pending, :agreed)
       ), 0.0)
       WHERE id = :id
       RETURNING score
     SQL
 
+    result = DB.query(
+      sql,
+      id: self.id,
+      pending: ReviewableScore.statuses[:pending],
+      agreed: ReviewableScore.statuses[:agreed]
+    )
+
     # Update topic score
-    DB.query(<<~SQL, topic_id: topic_id, pending: Reviewable.statuses[:pending])
+    sql = <<~SQL
       UPDATE topics
       SET reviewable_score = COALESCE((
         SELECT SUM(score)
         FROM reviewables AS r
         WHERE r.topic_id = :topic_id
+          AND r.status IN (:pending, :approved)
       ), 0.0)
       WHERE id = :topic_id
     SQL
+
+    DB.query(
+      sql,
+      topic_id: topic_id,
+      pending: Reviewable.statuses[:pending],
+      approved: Reviewable.statuses[:approved]
+    )
 
     self.score = result[0].score
   end
