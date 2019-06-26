@@ -263,3 +263,22 @@ QUnit.test(
     assert.notOk(regex.test(newTopicStatusInfo));
   }
 );
+
+QUnit.test("Inline delete timer", async assert => {
+  updateCurrentUser({ admin: true, staff: true, canManageTopic: true });
+  const futureDateInputSelector = selectKit(".future-date-input-selector");
+
+  await visit("/t/internationalization-localization");
+  await click(".toggle-admin-menu");
+  await click(".topic-admin-status-update button");
+  await futureDateInputSelector.expand();
+  await futureDateInputSelector.selectRowByValue("next_week");
+  await click(".modal-footer button.btn-primary");
+
+  const removeTimerButton = find(".topic-status-info .topic-timer-remove");
+  assert.equal(removeTimerButton.attr("title"), "remove timer");
+
+  await click(".topic-status-info .topic-timer-remove");
+  const topicStatusInfo = find(".topic-status-info .topic-timer-remove");
+  assert.equal(topicStatusInfo.length, 0);
+});
