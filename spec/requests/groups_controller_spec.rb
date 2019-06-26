@@ -62,6 +62,10 @@ describe GroupsController do
     end
 
     context 'sortable' do
+      before do
+        sign_in(user)
+      end
+
       let!(:other_group) { Fabricate(:group, name: "zzzzzz", users: [user]) }
 
       %w{
@@ -126,7 +130,7 @@ describe GroupsController do
       expect(group_ids).to include(group.id)
       expect(group_ids).to_not include(staff_group.id)
       expect(response_body["load_more_groups"]).to eq("/groups?page=1")
-      expect(response_body["total_rows_groups"]).to eq(2)
+      expect(response_body["total_rows_groups"]).to eq(1)
 
       expect(response_body["extras"]["type_filters"].map(&:to_sym)).to eq(
         described_class::TYPE_FILTERS.keys - [:my, :owner, :automatic]
