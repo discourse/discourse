@@ -188,7 +188,8 @@ module Onebox
       src
     end
 
-    RFC_3986_URI_REGEX = /^(?<scheme>([^:\/?#]+):)?(?<authority>\/\/([^\/?#]*))?(?<path>[^?#]*)(\?(?<query>[^#]*))?(#(?<fragment>.*))?$/
+    RFC_3986_URI_REGEX ||= /^(?<scheme>([^:\/?#]+):)?(?<authority>\/\/([^\/?#]*))?(?<path>[^?#]*)(\?(?<query>[^#]*))?(#(?<fragment>.*))?$/
+    DOUBLE_ESCAPED_REGEXP ||= /%25([0-9a-f]{2})/i
 
     # Percent-encodes a URI query parameter per RFC3986 - https://tools.ietf.org/html/rfc3986
     def self.uri_query_encode(query_string)
@@ -219,6 +220,7 @@ module Onebox
       # URI::parse and URI::Generic.build don't like paths encoded with CGI.escape
       # URI.escape does not change / to %2F and : to %3A like CGI.escape
       encoded += URI.escape(parts[:path]) unless parts[:path].nil?
+      encoded.gsub!(DOUBLE_ESCAPED_REGEXP, '%\1')
 
       # each query parameter
       if !parts[:query].nil?
