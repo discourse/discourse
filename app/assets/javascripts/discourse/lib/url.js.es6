@@ -428,11 +428,6 @@ const DiscourseURL = Ember.Object.extend({
 
     if (opts.replaceURL) {
       this.replaceState(path);
-    } else {
-      const discoveryTopics = this.controllerFor("discovery/topics");
-      if (discoveryTopics) {
-        discoveryTopics.resetParams();
-      }
     }
 
     const split = path.split("#");
