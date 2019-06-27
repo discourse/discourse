@@ -70,7 +70,7 @@ class UploadsController < ApplicationController
 
   def show
     # do not serve uploads requested via XHR to prevent XSS
-    return render_404 if request.xhr?
+    return xhr_not_allowed if request.xhr?
 
     return render_404 if !RailsMultisite::ConnectionManagement.has_db?(params[:site])
 
@@ -92,7 +92,7 @@ class UploadsController < ApplicationController
 
   def show_short
     # do not serve uploads requested via XHR to prevent XSS
-    return render_404 if request.xhr?
+    return xhr_not_allowed if request.xhr?
 
     if SiteSetting.prevent_anons_from_downloading_files && current_user.nil?
       return render_404
@@ -125,6 +125,10 @@ class UploadsController < ApplicationController
   end
 
   protected
+
+  def xhr_not_allowed
+    raise Discourse::InvalidParameters.new("XHR not allowed")
+  end
 
   def render_404
     raise Discourse::NotFound
