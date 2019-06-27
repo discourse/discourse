@@ -21,6 +21,7 @@ module TurboTests
     def exception_to_json(exception)
       if exception
         {
+          class_name: exception.class.name.to_s,
           backtrace: exception.backtrace,
           message: exception.message,
           cause: exception_to_json(exception.cause)
