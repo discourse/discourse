@@ -79,7 +79,7 @@ def compress_node(from, to)
   source_map_url = cdn_path "/assets/#{to}.map"
 
   cmd = <<~EOS
-    uglifyjs '#{assets_path}/#{from}' -m -c -ie8 -o '#{to_path}' --source-map "root='#{source_map_root}',url='#{source_map_url}'" --output '#{to_path}'
+    uglifyjs '#{assets_path}/#{from}' -m -c -o '#{to_path}' --source-map "root='#{source_map_root}',url='#{source_map_url}'" --output '#{to_path}'
   EOS
 
   STDERR.puts cmd
