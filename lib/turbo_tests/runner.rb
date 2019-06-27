@@ -2,15 +2,30 @@
 
 module TurboTests
   class Runner
-    def self.run(formatter_config, files, start_time = Time.now)
-      reporter = Reporter.from_config(formatter_config, start_time)
+    def self.run(opts = {})
+      files = opts[:files]
+      formatters = opts[:formatters]
+      start_time = opts.fetch(:start_time) { Time.now }
+      verbose = opts.fetch(:verbose, false)
 
-      new(reporter, files).run
+      if verbose
+        STDERR.puts "VERBOSE"
+      end
+
+      reporter = Reporter.from_config(formatters, start_time)
+
+      new(
+        reporter: reporter,
+        files: files,
+        verbose: verbose
+      ).run
     end
 
-    def initialize(reporter, files)
-      @reporter = reporter
-      @files = files
+    def initialize(opts)
+      @reporter = opts[:reporter]
+      @files = opts[:files]
+      @verbose = opts[:verbose]
+
       @messages = Queue.new
       @threads = []
     end
@@ -61,14 +76,24 @@ module TurboTests
         rescue Errno::EEXIST
         end
 
-        _stdin, stdout, stderr, _wait_thr =
-          Open3.popen3(
-            { 'TEST_ENV_NUMBER' => process_num.to_s },
-            "bundle", "exec", "rspec",
-            "-f", "TurboTests::JsonRowsFormatter",
-            "-o", "tmp/test-pipes/subprocess-#{process_num}",
-            *tests
-          )
+        env = { 'TEST_ENV_NUMBER' => process_num.to_s }
+        command = [
+          "bundle", "exec", "rspec",
+          "-f", "TurboTests::JsonRowsFormatter",
+          "-o", "tmp/test-pipes/subprocess-#{process_num}",
+          *tests
+        ]
+
+        if @verbose
+          command_str = [
+            env.map { |k, v| "#{k}=#{v}" }.join(' '),
+            command.join(' ')
+          ].join(' ')
+
+          STDERR.puts "Process #{process_num}: #{command_str}"
+        end
+
+        _stdin, stdout, stderr, _wait_thr = Open3.popen3(env, *command)
 
         @threads <<
           Thread.new do
