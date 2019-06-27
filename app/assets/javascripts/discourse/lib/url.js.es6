@@ -431,6 +431,7 @@ const DiscourseURL = Ember.Object.extend({
     } else {
       const discoveryTopics = this.controllerFor("discovery/topics");
       if (discoveryTopics) {
+        router._routerMicrolib.updateURL(path);
         discoveryTopics.resetParams();
       }
     }
