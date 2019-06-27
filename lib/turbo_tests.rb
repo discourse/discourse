@@ -22,7 +22,7 @@ module TurboTests
         new(
           obj[:backtrace],
           obj[:message],
-          obj[:cause]
+          FakeException.from_obj(obj[:cause])
         )
       end
     end
