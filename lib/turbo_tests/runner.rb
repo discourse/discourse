@@ -31,6 +31,8 @@ module TurboTests
     end
 
     def run
+      check_for_migrations
+
       @num_processes = ParallelTests.determine_number_of_processes(nil)
 
       tests_in_groups =
@@ -54,6 +56,21 @@ module TurboTests
     end
 
     protected
+
+    def check_for_migrations
+      config =
+        ActiveRecord::Base
+          .configurations["test"]
+          .merge("database" => "discourse_test_1")
+
+      conn = ActiveRecord::Base.establish_connection(config).connection
+      begin
+        ActiveRecord::Migration.check_pending!(conn)
+      rescue ActiveRecord::PendingMigrationError
+        puts "There are pending migrations, run rake parallel:migrate"
+        exit 1
+      end
+    end
 
     def setup_tmp_dir
       begin
