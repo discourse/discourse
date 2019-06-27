@@ -23,7 +23,7 @@ module TurboTests
         {
           backtrace: exception.backtrace,
           message: exception.message,
-          cause: exception.cause
+          cause: exception_to_json(exception.cause)
         }
       end
     end
