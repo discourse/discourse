@@ -18,7 +18,7 @@ export default Ember.Mixin.create({
       this.selected.clear();
     },
 
-    dismissRead(operationType) {
+    dismissRead(operationType, categoryOptions) {
       let operation;
       if (operationType === "posts") {
         operation = { type: "dismiss_posts" };
@@ -36,7 +36,8 @@ export default Ember.Mixin.create({
         promise = Discourse.Topic.bulkOperationByFilter(
           "unread",
           operation,
-          this.get("category.id")
+          this.get("category.id"),
+          categoryOptions
         );
       }
 

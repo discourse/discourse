@@ -779,7 +779,17 @@ class TopicsController < ApplicationController
     elsif params[:filter] == 'unread'
       tq = TopicQuery.new(current_user)
       topics = TopicQuery.unread_filter(tq.joined_topic_user, current_user.id, staff: guardian.is_staff?).listable_topics
-      topics = topics.where('category_id = ?', params[:category_id]) if params[:category_id]
+
+      if params[:category_id]
+        if params[:include_subcategories]
+          topics = topics.where(<<~SQL, category_id: params[:category_id])
+            category_id in (select id FROM categories WHERE parent_category_id = :category_id) OR
+            category_id = :category_id
+          SQL
+        else
+          topics = topics.where('category_id = ?', params[:category_id])
+        end
+      end
       topic_ids = topics.pluck(:id)
     else
       raise ActionController::ParameterMissing.new(:topic_ids)

@@ -60,12 +60,15 @@ export default Discourse.Route.extend(OpenComposer, {
     },
 
     dismissReadTopics(dismissTopics) {
-      var operationType = dismissTopics ? "topics" : "posts";
-      this.controllerFor("discovery/topics").send("dismissRead", operationType);
+      const operationType = dismissTopics ? "topics" : "posts";
+      this.send("dismissRead", operationType);
     },
 
     dismissRead(operationType) {
-      this.controllerFor("discovery/topics").send("dismissRead", operationType);
+      const controller = this.controllerFor("discovery/topics");
+      controller.send("dismissRead", operationType, {
+        includeSubcategories: !controller.noSubcategories
+      });
     }
   }
 });
