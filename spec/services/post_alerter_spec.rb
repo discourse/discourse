@@ -184,7 +184,7 @@ describe PostAlerter do
       }.to change(evil_trout.notifications, :count).by(0)
     end
 
-    it 'notifies a user by username' do
+    it 'does not collapse quote notifications' do
       topic = Fabricate(:topic)
 
       expect {
@@ -194,7 +194,7 @@ describe PostAlerter do
             topic: topic
           )
         end
-      }.to change(evil_trout.notifications, :count).by(1)
+      }.to change(evil_trout.notifications, :count).by(2)
     end
 
     it "won't notify the user a second time on revision" do
