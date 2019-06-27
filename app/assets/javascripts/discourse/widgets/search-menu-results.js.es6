@@ -147,14 +147,23 @@ createSearchResult({
   linkField: "url",
   builder(result, term) {
     const topic = result.topic;
-    const link = h("span.topic", [
+
+    const linkContent = [
       this.attach("topic-status", { topic, disableActions: true }),
-      h("span.topic-title", new Highlighted(topic.get("fancyTitle"), term)),
+      h("span.topic-title", new Highlighted(topic.fancyTitle, term)),
       this.attach("category-link", {
-        category: topic.get("category"),
+        category: topic.category,
         link: false
       })
-    ]);
+    ];
+
+    if (Discourse.SiteSettings.tagging_enabled) {
+      linkContent.push(
+        this.attach("discourse-tags", { topic, tagName: "span" })
+      );
+    }
+
+    const link = h("span.topic", linkContent);
 
     return postResult.call(this, result, link, term);
   }
