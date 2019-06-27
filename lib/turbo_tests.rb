@@ -1,10 +1,13 @@
 # frozen_string_literal: true
 
+require 'bundler/setup'
+
 require 'open3'
 require 'fileutils'
 require 'json'
 require 'rspec'
 require 'rails'
+require File.expand_path('../../config/environment', __FILE__)
 
 require 'parallel_tests'
 require 'parallel_tests/rspec/runner'
