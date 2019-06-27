@@ -6,6 +6,7 @@ require 'optparse'
 
 requires = []
 formatters = []
+verbose = false
 
 OptionParser.new do |opts|
   opts.on("-r", "--require PATH", "Require a file.") do |filename|
@@ -28,6 +29,10 @@ OptionParser.new do |opts|
     end
     formatters.last[:outputs] << filename
   end
+
+  opts.on("-v", "--verbose", "More output") do
+    verbose = true
+  end
 end.parse!(ARGV)
 
 requires.each { |f| require(f) }
@@ -45,4 +50,8 @@ formatters.each do |formatter|
   end
 end
 
-TurboTests::Runner.run(formatters, ARGV.empty? ? ["spec"] : ARGV)
+TurboTests::Runner.run(
+  formatters: formatters,
+  files: ARGV.empty? ? ["spec"] : ARGV,
+  verbose: verbose
+)
