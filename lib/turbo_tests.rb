@@ -19,7 +19,15 @@ module TurboTests
     def self.from_obj(obj)
       if obj
         obj = obj.symbolize_keys
-        new(
+
+        klass =
+          Class.new(FakeException) do
+            define_singleton_method(:name) do
+              obj[:class_name]
+            end
+          end
+
+        klass.new(
           obj[:backtrace],
           obj[:message],
           FakeException.from_obj(obj[:cause])
