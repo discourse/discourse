@@ -57,3 +57,28 @@ QUnit.test("as a user", async assert => {
     "it stays at second-factor preferences"
   );
 });
+
+QUnit.test("as an anonymous user", async assert => {
+  updateCurrentUser({ staff: false, admin: false, is_anonymous: true });
+
+  await visit("/u/eviltrout/preferences/second-factor");
+  Discourse.SiteSettings.enforce_second_factor = "all";
+  Discourse.SiteSettings.allow_anonymous_posting = true;
+
+  await visit("/u/eviltrout/summary");
+
+  assert.notEqual(
+    find(".control-label").text(),
+    "Password",
+    "it will transition from second-factor preferences"
+  );
+
+  await click("#toggle-hamburger-menu");
+  await click("a.about-link");
+
+  assert.notEqual(
+    find(".control-label").text(),
+    "Password",
+    "it is possible to navigate to other pages"
+  );
+});
