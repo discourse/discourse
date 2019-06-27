@@ -38,7 +38,7 @@ class ThemeStore::GitImporter
     Dir.chdir(@temp_folder) do
       Discourse::Utils.execute_command("git", "checkout", local_version)
       Discourse::Utils.execute_command("rm -rf ./*/")
-      Discourse::Utils.execute_command("cp", "-rf", "#{local_temp_folder}/#{exporter.export_name}/", @temp_folder)
+      Discourse::Utils.execute_command("cp", "-rf", "#{local_temp_folder}/#{exporter.export_name}/.", @temp_folder)
       Discourse::Utils.execute_command("git", "checkout", "about.json")
       # adding and diffing on staged so that we catch uploads
       Discourse::Utils.execute_command("git", "add", "-A")
