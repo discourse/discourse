@@ -2,7 +2,7 @@ import loadScript from "discourse/lib/load-script";
 
 QUnit.module("lib:load-script");
 
-QUnit.test(
+QUnit.skip(
   "load with a script tag, and callbacks are only executed after script is loaded",
   async assert => {
     assert.ok(
