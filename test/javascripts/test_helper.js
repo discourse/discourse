@@ -24,7 +24,6 @@
 //= require pretty-text-bundle
 //= require markdown-it-bundle
 //= require application
-//= require_tree ../../app/assets/javascripts/plugins
 //= require admin
 
 //= require sinon/pkg/sinon
