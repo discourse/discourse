@@ -1,4 +1,4 @@
-import { acceptance, replaceCurrentUser } from "helpers/qunit-helpers";
+import { acceptance, updateCurrentUser } from "helpers/qunit-helpers";
 import selectKit from "helpers/select-kit-helper";
 
 import User from "discourse/models/user";
@@ -276,7 +276,7 @@ acceptance("Second Factor Backups", {
   }
 });
 QUnit.test("second factor backup", async assert => {
-  replaceCurrentUser({ second_factor_enabled: true });
+  updateCurrentUser({ second_factor_enabled: true });
   await visit("/u/eviltrout/preferences/second-factor");
   await click(".edit-2fa-backup");
   assert.ok(
