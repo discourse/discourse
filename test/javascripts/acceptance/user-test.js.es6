@@ -5,14 +5,7 @@ acceptance("User", { loggedIn: true });
 QUnit.test("Invalid usernames", async assert => {
   // prettier-ignore
   server.get("/u/eviltrout%2F..%2F..%2F.json", () => { // eslint-disable-line no-undef
-    return [
-      404,
-      { "Content-Type": "application/json" },
-      {
-        errors: ["The requested URL or resource could not be found."],
-        error_type: "not_found"
-      }
-    ];
+    return [400, { "Content-Type": "application/json" }, {}];
   });
 
   await visit("/u/eviltrout%2F..%2F..%2F/summary");
