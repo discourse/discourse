@@ -163,3 +163,27 @@ QUnit.test("Right filters are shown to logged-in users", async assert => {
   assert.ok(exists(".search-advanced-options .in-private"));
   assert.ok(exists(".search-advanced-options .in-seen"));
 });
+
+acceptance(
+  "Search - with tagging enabled",
+  Object.assign({
+    loggedIn: true,
+    searchArgs,
+    settings: { tagging_enabled: true }
+  })
+);
+
+QUnit.test("displays tags", async assert => {
+  await visit("/");
+
+  await click("#search-button");
+
+  await fillIn("#search-term", "dev");
+  await keyEvent("#search-term", "keyup", 16);
+
+  const tags = find(".search-menu .results ul li:eq(0) .discourse-tags")
+    .text()
+    .trim();
+
+  assert.equal(tags, "dev slow");
+});
