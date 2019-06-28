@@ -32,6 +32,13 @@ export default Ember.Controller.extend(CanCheckEmails, {
     this.resetFilters();
   }, 250).observes("listFilter"),
 
+  resetFilters() {
+    this._page = 0;
+    this._results = [];
+    this._canLoadMore = true;
+    this._refreshUsers();
+  },
+
   _refreshUsers() {
     if (!this._canLoadMore) {
       return;
@@ -57,13 +64,6 @@ export default Ember.Controller.extend(CanCheckEmails, {
       .finally(() => this.set("refreshing", false));
   },
 
-  resetFilters() {
-    this._page = 0;
-    this._results = [];
-    this._canLoadMore = true;
-    this._refreshUsers();
-  },
-
   actions: {
     loadMore() {
       this._page += 1;
@@ -72,7 +72,7 @@ export default Ember.Controller.extend(CanCheckEmails, {
 
     toggleEmailVisibility() {
       this.toggleProperty("showEmails");
-      this._refreshUsers();
+      this.resetFilters();
     }
   }
 });
