@@ -1377,4 +1377,32 @@ describe Search do
 
   end
 
+  context 'in:tagged' do
+    it 'allows for searching by presence of any tags' do
+      topic = Fabricate(:topic, title: 'I am testing a tagged search')
+      _post = Fabricate(:post, topic: topic, raw: 'this is the first post')
+      tag = Fabricate(:tag)
+      topic_tag = Fabricate(:topic_tag, topic: topic, tag: tag)
+
+      results = Search.execute('in:untagged')
+      expect(results.posts.length).to eq(0)
+
+      results = Search.execute('in:tagged')
+      expect(results.posts.length).to eq(1)
+    end
+  end
+
+  context 'in:untagged' do
+    it 'allows for searching by presence of no tags' do
+      topic = Fabricate(:topic, title: 'I am testing a untagged search')
+      _post = Fabricate(:post, topic: topic, raw: 'this is the first post')
+
+      results = Search.execute('in:untagged')
+      expect(results.posts.length).to eq(1)
+
+      results = Search.execute('in:tagged')
+      expect(results.posts.length).to eq(0)
+    end
+  end
+
 end
