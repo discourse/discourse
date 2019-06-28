@@ -69,7 +69,8 @@ const Post = RestModel.extend({
     return postNumber === 1 ? `${baseUrl}/1` : baseUrl;
   },
 
-  @computed("username") usernameUrl: userPath,
+  @computed("username")
+  usernameUrl: userPath,
 
   topicOwner: propertyEqual("topic.details.created_by.id", "user_id"),
 
