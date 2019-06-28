@@ -170,9 +170,8 @@ export default Ember.Component.extend({
       "[:prev_period]",
       this.get("reportOptions.table.limit"),
       customFilters
-        ? JSON.stringify(
-            customFilters,
-            (key, value) => (isNumeric(value) ? value.toString() : value)
+        ? JSON.stringify(customFilters, (key, value) =>
+            isNumeric(value) ? value.toString() : value
           )
         : null,
       SCHEMA_VERSION
