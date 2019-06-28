@@ -546,9 +546,18 @@
   .tracking-controls {
     label {
       align-items: center;
+      display: inline-block;
       .d-icon {
         margin-right: 3px;
       }
+    }
+    .select-kit.multi-select {
+      @include breakpoint(mobile) {
+        width: 100%;
+      }
+    }
+    .show-tracking {
+      float: right;
     }
   }
 
