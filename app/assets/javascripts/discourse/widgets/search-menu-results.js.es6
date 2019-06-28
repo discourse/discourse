@@ -149,8 +149,10 @@ createSearchResult({
     const topic = result.topic;
 
     const linkContent = [
-      this.attach("topic-status", { topic, disableActions: true }),
-      h("span.topic-title", new Highlighted(topic.fancyTitle, term)),
+      h("div.header", [
+        this.attach("topic-status", { topic, disableActions: true }),
+        h("span.topic-title", new Highlighted(topic.fancyTitle, term))
+      ]),
       this.attach("category-link", {
         category: topic.category,
         link: false
