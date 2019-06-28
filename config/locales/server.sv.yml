@@ -181,7 +181,6 @@ sv:
   private_message_abbrev: "Meddelande"
   rss_description:
     latest: "Aktuella ämnen"
-    hot: "Heta ämnen"
     top: "Toppämnen"
     posts: "Senaste inläggen"
     group_posts: "Senaste inläggen från %{group_name}"
@@ -1096,7 +1095,6 @@ sv:
     tag_style: "Visuell stil för tagg-utmärkelser."
     min_trust_level_to_tag_topics: "Lägsta förtroendenivå som krävs för att tagga ämnen"
     suppress_overlapping_tags_in_list: "Om taggen exakt matchar orden i ämnets titel, visa inte taggen"
-    remove_muted_tags_from_latest: "Visa inte ämnen som taggats med dolda taggar i listan med senaste ämnen."
     errors:
       invalid_email: "Felaktig e-postadress."
       invalid_username: "Det finns ingen användare med detta användarnamn."
@@ -1591,8 +1589,6 @@ sv:
     see_more: "Mer"
     search_title: "Sök på hemsidan"
     search_button: "Sök"
-  terms_of_service:
-    title: "Användarvillkor"
   deleted: "raderad"
   image: "bild"
   upload:
@@ -1632,9 +1628,6 @@ sv:
     sender_body_blank: "body är tom"
   color_schemes:
     base_theme_name: "Bas"
-  about: "Om"
-  guidelines: "Riktlinjer"
-  privacy: "Integritet"
   edit_this_page: "Redigera denna sida"
   csv_export:
     boolean_yes: "Ja"

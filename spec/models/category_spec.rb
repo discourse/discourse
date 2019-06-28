@@ -890,4 +890,37 @@ describe Category do
     end
   end
 
+  describe "#ensure_consistency!" do
+    it "creates category topic" do
+
+      # corrupt a category topic
+      uncategorized = Category.find(SiteSetting.uncategorized_category_id)
+      uncategorized.create_category_definition
+      uncategorized.topic.posts.first.destroy!
+
+      # make stuff extra broken
+      uncategorized.topic.trash!
+
+      category = Fabricate(:category)
+      category_destroyed = Fabricate(:category)
+      category_trashed = Fabricate(:category)
+
+      category_topic_id = category.topic.id
+      category_destroyed.topic.destroy!
+      category_trashed.topic.trash!
+
+      Category.ensure_consistency!
+      # step one fix corruption
+      expect(uncategorized.reload.topic_id).to eq(nil)
+
+      Category.ensure_consistency!
+      # step two don't create a category definition for uncategorized
+      expect(uncategorized.reload.topic_id).to eq(nil)
+
+      expect(category.reload.topic_id).to eq(category_topic_id)
+      expect(category_destroyed.reload.topic).to_not eq(nil)
+      expect(category_trashed.reload.topic).to_not eq(nil)
+    end
+  end
+
 end

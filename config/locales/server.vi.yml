@@ -147,7 +147,6 @@ vi:
   private_message_abbrev: "Tin nhắn"
   rss_description:
     latest: "Chủ đề mới nhất"
-    hot: "Chủ đề nóng nhất"
     top: "Top chủ đề"
     posts: "Bài viết mới nhất"
     group_posts: "Bài viết mới từ %{group_name}"
@@ -1149,8 +1148,6 @@ vi:
     see_more: "Thêm"
     search_title: "Tìm trang này"
     search_button: "Tìm kiếm"
-  terms_of_service:
-    title: "Điều khoản Dịch vụ"
   deleted: "đã bị xóa "
   image: "hình ảnh"
   upload:
@@ -1184,9 +1181,6 @@ vi:
     sender_body_blank: "nội dung rỗng"
   color_schemes:
     base_theme_name: "Cơ bản"
-  about: "Giới thiệu"
-  guidelines: "Hướng dẫn"
-  privacy: "Riêng tư"
   edit_this_page: "Sửa trang này"
   csv_export:
     boolean_yes: "Đồng ý"

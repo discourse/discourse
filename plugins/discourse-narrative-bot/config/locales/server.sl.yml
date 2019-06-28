@@ -138,14 +138,6 @@ sl:
       cert_title: "Priznanje za uspešno končan vodič za nove uporabnike."
       hello:
         title: "Pozdravljeni!"
-        message: |-
-          Dobrodošli - zahvaljujemo se vam za pridružitev %{title}!
-
-          - Jaz sem samo robot - če potrebujete pravo osebo je na voljo [naše osebje](%{base_uri}/about).
-
-          - Iz varnostnih razlogov je omejeno kaj lahko novi uporabniki počnete. Ko vas bolje spoznamo, boste dobili nove zmožnosti (in [značke](%{base_uri}/badges)).
-
-          - Verjamemo v [prijazno obnašanje v skupnosti](%{base_uri}/guidelines).
       onebox:
         instructions: |-
           Kot naslednji korak, ali lahko delite enega od spodnjih povezav z menoj? Odgovorite s **povezavo v svoji vrstici**, in se bo samodejno razširila tako, da bo vsebovala kratkek povzetek.

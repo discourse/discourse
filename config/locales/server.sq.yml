@@ -130,7 +130,6 @@ sq:
   private_message_abbrev: "Msg"
   rss_description:
     latest: "Temat e fundit"
-    hot: "Temat Kryesore"
     posts: "Postimet e fundit"
   too_late_to_edit: "Ky postim është fshirë para shumë kohësh. Nuk mund të ndryshohet apo fshihet më."
   excerpt_image: "imazh"
@@ -1213,8 +1212,6 @@ sq:
     see_more: "Më shumë"
     search_title: "Kërko në këtë faqe"
     search_button: "Kërko"
-  terms_of_service:
-    title: "Kushtet e shërbimit"
   deleted: "deleted"
   image: "imazh"
   upload:
@@ -1245,9 +1242,6 @@ sq:
     sender_body_blank: "përmbajtja është bosh"
   color_schemes:
     base_theme_name: "Baza"
-  about: "Rreth"
-  guidelines: "Udhëzimet"
-  privacy: "Privatësia"
   edit_this_page: "Modifiko këtë faqe"
   csv_export:
     boolean_yes: "Po"

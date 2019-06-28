@@ -1,3 +1,4 @@
+# coding: utf-8
 # frozen_string_literal: true
 
 require 'rails_helper'
@@ -30,6 +31,13 @@ describe ApplicationHelper do
       it "deals correctly with subfolder" do
         ActionController::Base.config.relative_url_root = "/community"
         expect(helper.preload_script("application")).to include('https://s3cdn.com/assets/application.js')
+      end
+
+      it "replaces cdn URLs with s3 cdn subfolder paths" do
+        global_setting :s3_cdn_url, 'https://s3cdn.com/s3_subpath'
+        set_cdn_url "https://awesome.com"
+        ActionController::Base.config.relative_url_root = "/community"
+        expect(helper.preload_script("application")).to include('https://s3cdn.com/s3_subpath/assets/application.js')
       end
 
       it "returns magic brotli mangling for brotli requests" do

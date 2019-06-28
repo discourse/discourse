@@ -79,7 +79,9 @@ class ApplicationController < ActionController::Base
       request.user_agent &&
       (request.content_type.blank? || request.content_type.include?('html')) &&
       !['json', 'rss'].include?(params[:format]) &&
-      (has_escaped_fragment? || CrawlerDetection.crawler?(request.user_agent) || params.key?("print"))
+      (has_escaped_fragment? || params.key?("print") ||
+      CrawlerDetection.crawler?(request.user_agent, request.headers["HTTP_VIA"])
+      )
   end
 
   def perform_refresh_session
@@ -728,24 +730,30 @@ class ApplicationController < ActionController::Base
         # save original URL in a session so we can redirect after login
         session[:destination_url] = destination_url
         redirect_to path('/session/sso')
+        return
       elsif params[:authComplete].present?
         redirect_to path("/login?authComplete=true")
+        return
       else
         # save original URL in a cookie (javascript redirects after login in this case)
         cookies[:destination_url] = destination_url
         redirect_to path("/login")
+        return
       end
     end
 
-    if current_user &&
-      !current_user.totp_enabled? &&
+    check_totp = current_user &&
       !request.format.json? &&
       !is_api? &&
       ((SiteSetting.enforce_second_factor == 'staff' && current_user.staff?) ||
-        SiteSetting.enforce_second_factor == 'all')
+        SiteSetting.enforce_second_factor == 'all') &&
+      !current_user.totp_enabled?
+
+    if check_totp
       redirect_path = "#{GlobalSetting.relative_url_root}/u/#{current_user.username}/preferences/second-factor"
       if !request.fullpath.start_with?(redirect_path)
         redirect_to path(redirect_path)
+        return
       end
     end
   end

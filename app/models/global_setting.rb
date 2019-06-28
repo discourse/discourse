@@ -77,6 +77,22 @@ class GlobalSetting
     end
   end
 
+  def self.skip_db=(v)
+    @skip_db = v
+  end
+
+  def self.skip_db?
+    @skip_db
+  end
+
+  def self.skip_redis=(v)
+    @skip_redis = v
+  end
+
+  def self.skip_redis?
+    @skip_redis
+  end
+
   def self.use_s3?
     (@use_s3 ||=
       begin

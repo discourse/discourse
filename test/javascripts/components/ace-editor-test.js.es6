@@ -3,6 +3,7 @@ import componentTest from "helpers/component-test";
 moduleForComponent("ace-editor", { integration: true });
 
 componentTest("css editor", {
+  skip: true,
   template: '{{ace-editor mode="css"}}',
   test(assert) {
     assert.expect(1);
@@ -11,6 +12,7 @@ componentTest("css editor", {
 });
 
 componentTest("html editor", {
+  skip: true,
   template: '{{ace-editor mode="html" content="<b>wat</b>"}}',
   test(assert) {
     assert.expect(1);
@@ -19,6 +21,7 @@ componentTest("html editor", {
 });
 
 componentTest("sql editor", {
+  skip: true,
   template: '{{ace-editor mode="sql" content="SELECT * FROM users"}}',
   test(assert) {
     assert.expect(1);
@@ -27,6 +30,7 @@ componentTest("sql editor", {
 });
 
 componentTest("disabled editor", {
+  skip: true,
   template:
     '{{ace-editor mode="sql" content="SELECT * FROM users" disabled=true}}',
   test(assert) {

@@ -352,6 +352,8 @@ class UsersController < ApplicationController
       return fail_with("login.reserved_username")
     end
 
+    params[:locale] ||= I18n.locale unless current_user
+
     new_user_params = user_params
     user = User.unstage(new_user_params)
     user = User.new(new_user_params) if user.nil?
@@ -1163,6 +1165,7 @@ class UsersController < ApplicationController
 
     # We're likely going to contact the remote auth provider, so hijack request
     hijack do
+      DiscourseEvent.trigger(:before_auth_revoke, authenticator, user)
       result = authenticator.revoke(user, skip_remote: skip_remote)
       if result
         render json: success_json
@@ -1259,8 +1262,7 @@ class UsersController < ApplicationController
       .permit(permitted, theme_ids: [])
       .reverse_merge(
         ip_address: request.remote_ip,
-        registration_ip_address: request.remote_ip,
-        locale: user_locale
+        registration_ip_address: request.remote_ip
       )
 
     if !UsernameCheckerService.is_developer?(result['email']) &&
@@ -1277,10 +1279,6 @@ class UsersController < ApplicationController
   # Plugins can use this to modify user parameters
   def modify_user_params(attrs)
     attrs
-  end
-
-  def user_locale
-    I18n.locale
   end
 
   def fail_with(key)

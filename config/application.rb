@@ -35,6 +35,11 @@ unless Rails.env.test? && ENV['LOAD_PLUGINS'] != "1"
 end
 GlobalSetting.load_defaults
 
+if ENV['SKIP_DB_AND_REDIS'] == '1'
+  GlobalSetting.skip_db = true
+  GlobalSetting.skip_redis = true
+end
+
 require 'pry-rails' if Rails.env.development?
 
 if defined?(Bundler)

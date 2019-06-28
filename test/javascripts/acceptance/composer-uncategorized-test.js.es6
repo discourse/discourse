@@ -1,4 +1,5 @@
-import { acceptance, replaceCurrentUser } from "helpers/qunit-helpers";
+import selectKit from "helpers/select-kit-helper";
+import { acceptance, updateCurrentUser } from "helpers/qunit-helpers";
 
 acceptance("Composer and uncategorized is not allowed", {
   loggedIn: true,
@@ -17,7 +18,7 @@ acceptance("Composer and uncategorized is not allowed", {
 });
 
 QUnit.test("Disable body until category is selected", async assert => {
-  replaceCurrentUser({ admin: false, staff: false, trust_level: 1 });
+  updateCurrentUser({ admin: false, staff: false, trust_level: 1 });
 
   await visit("/");
   await click("#create-topic");

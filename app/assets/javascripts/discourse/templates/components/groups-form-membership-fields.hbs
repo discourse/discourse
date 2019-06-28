@@ -27,6 +27,9 @@
     </label>
   </div>
 
+  {{plugin-outlet name="groups-form-membership-below-automatic"
+                  args=(hash model=model)}}
+
   <div class="control-group">
     <label class="control-label">{{i18n "admin.groups.manage.membership.trust_level"}}</label>
     <label for="grant_trust_level">{{i18n 'admin.groups.manage.membership.trust_levels_title'}}</label>

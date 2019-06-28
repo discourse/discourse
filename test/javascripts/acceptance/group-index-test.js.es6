@@ -1,4 +1,4 @@
-import { acceptance, logIn, replaceCurrentUser } from "helpers/qunit-helpers";
+import { acceptance, updateCurrentUser } from "helpers/qunit-helpers";
 
 acceptance("Group Members");
 
@@ -23,10 +23,10 @@ QUnit.test("Viewing Members as anon user", async assert => {
   );
 });
 
+acceptance("Group Members", { loggedIn: true });
+
 QUnit.test("Viewing Members as a group owner", async assert => {
-  logIn();
-  Discourse.reset();
-  replaceCurrentUser({ admin: false, staff: false });
+  updateCurrentUser({ admin: false, staff: false });
 
   await visit("/g/discourse");
   await click(".group-members-add");
@@ -39,9 +39,6 @@ QUnit.test("Viewing Members as a group owner", async assert => {
 });
 
 QUnit.test("Viewing Members as an admin user", async assert => {
-  logIn();
-  Discourse.reset();
-
   await visit("/g/discourse");
 
   assert.ok(

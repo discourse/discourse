@@ -138,14 +138,6 @@ fi:
       cert_title: "Tunnustuksena palstan käytön peruskurssin menestyksekkäästä suorittamisesta"
       hello:
         title: "Tervehdys!"
-        message: |-
-          Kiitos kun liityit sivustollemme %{title}. Tervetuloa!
-
-          - Olen vain robotti, mutta [avulias henkilökunta](%{base_uri}/about) auttaa myös mielellään, jos sinulla on asiaa heille.
-
-          - Turvallisuussyistä uusi käyttäjä ei voi tehdä ihan kaikkea. Saat uusia toimintoja käyttöösi (ja [ansiomerkkejä](%{base_uri}/badges)) kun tutustumme sinuun.
-
-          - Vannomme [sivistyneen yhteisökäyttäytymisen](%{base_uri}/guidelines) nimeen kaikissa tilanteissa.
       onebox:
         instructions: |-
           Voisitko nyt jakaa jonkun seuraavista linkeistä minulle? Laita vastaukseesi **linkin osoite yksin omalle rivilleen**, jolloin siitä muotoillaan automaattisesti kätevä tiivistelmälaatikko.

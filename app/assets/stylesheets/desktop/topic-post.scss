@@ -65,8 +65,9 @@ nav.post-controls {
       }
       margin-left: 0;
       margin-right: 0;
-      &.my-likes {
-        // Like count on my posts
+      &.my-likes,
+      &.regular-likes {
+        // Like count on posts
         .d-icon {
           color: $primary-low-mid;
           padding-left: 0.45em;
@@ -890,24 +891,5 @@ span.highlighted {
     &.top {
       width: calc(100% - 56px); // [100% - margin-left]
     }
-  }
-}
-
-.crawler-post {
-  .post-time {
-    float: right;
-  }
-  .post-likes {
-    float: right;
-  }
-  margin-top: 5px;
-}
-
-#breadcrumbs {
-  .badge-category-bg {
-    background-color: $secondary-high;
-  }
-  .category-title {
-    color: $primary;
   }
 }

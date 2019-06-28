@@ -77,6 +77,37 @@ describe FileStore::S3Store do
           expect(upload.etag).to eq(etag)
         end
       end
+
+      describe "when private uploads are enabled" do
+        it "returns signed URL for eligible private upload" do
+          SiteSetting.prevent_anons_from_downloading_files = true
+          SiteSetting.authorized_extensions = "pdf|png|jpg|gif"
+          upload.update!(original_filename: "small.pdf", extension: "pdf")
+
+          s3_helper.expects(:s3_bucket).returns(s3_bucket).at_least_once
+          s3_bucket.expects(:object).with("original/1X/#{upload.sha1}.pdf").returns(s3_object).at_least_once
+          s3_object.expects(:presigned_url).with(:get, expires_in: S3Helper::DOWNLOAD_URL_EXPIRES_AFTER_SECONDS)
+
+          expect(store.store_upload(uploaded_file, upload)).to eq(
+            "//s3-upload-bucket.s3.dualstack.us-west-1.amazonaws.com/original/1X/#{upload.sha1}.pdf"
+          )
+
+          expect(store.url_for(upload)).not_to eq(upload.url)
+        end
+
+        it "returns regular URL for ineligible private upload" do
+          SiteSetting.prevent_anons_from_downloading_files = true
+
+          s3_helper.expects(:s3_bucket).returns(s3_bucket).at_least_once
+          s3_bucket.expects(:object).with("original/1X/#{upload.sha1}.png").returns(s3_object).at_least_once
+
+          expect(store.store_upload(uploaded_file, upload)).to eq(
+            "//s3-upload-bucket.s3.dualstack.us-west-1.amazonaws.com/original/1X/#{upload.sha1}.png"
+          )
+
+          expect(store.url_for(upload)).to eq(upload.url)
+        end
+      end
     end
 
     describe "#store_optimized_image" do
@@ -317,6 +348,33 @@ describe FileStore::S3Store do
       assert_path("//hello", nil)
       assert_path("http://hello", nil)
       assert_path("https://hello", nil)
+    end
+  end
+
+  context 'update ACL' do
+    include_context "s3 helpers"
+    let(:s3_object) { stub }
+
+    describe ".update_upload_ACL" do
+      it "sets acl to private when private uploads are enabled" do
+        SiteSetting.prevent_anons_from_downloading_files = true
+        s3_helper.expects(:s3_bucket).returns(s3_bucket)
+        s3_bucket.expects(:object).with("original/1X/#{upload.sha1}.png").returns(s3_object)
+        s3_object.expects(:acl).returns(s3_object)
+        s3_object.expects(:put).with(acl: "private").returns(s3_object)
+
+        expect(store.update_upload_ACL(upload)).to be_truthy
+      end
+
+      it "sets acl to public when private uploads are disabled" do
+        SiteSetting.prevent_anons_from_downloading_files = false
+        s3_helper.expects(:s3_bucket).returns(s3_bucket)
+        s3_bucket.expects(:object).with("original/1X/#{upload.sha1}.png").returns(s3_object)
+        s3_object.expects(:acl).returns(s3_object)
+        s3_object.expects(:put).with(acl: "public-read").returns(s3_object)
+
+        expect(store.update_upload_ACL(upload)).to be_truthy
+      end
     end
   end
 

@@ -5,22 +5,36 @@ import {
   on
 } from "ember-addons/ember-computed-decorators";
 
+const DATE_FORMAT = "YYYY-MM-DD";
+
 export default Ember.Component.extend({
   classNames: ["date-picker-wrapper"],
   _picker: null,
+  value: null,
+
+  @computed("site.mobileView")
+  inputType(mobileView) {
+    return mobileView ? "date" : "text";
+  },
 
   @on("didInsertElement")
   _loadDatePicker() {
-    const input = this.$(".date-picker")[0];
-    const container = $("#" + this.containerId)[0];
+    if (this.site.mobileView) {
+      this._loadNativePicker();
+    } else {
+      const container = document.getElementById(this.containerId);
+      this._loadPikadayPicker(container);
+    }
+  },
 
+  _loadPikadayPicker(container) {
     loadScript("/javascripts/pikaday.js").then(() => {
       Ember.run.next(() => {
-        let default_opts = {
-          field: input,
-          container: container || this.$()[0],
-          bound: container === undefined,
-          format: "YYYY-MM-DD",
+        const options = {
+          field: this.element.querySelector(".date-picker"),
+          container: container || null,
+          bound: container === null,
+          format: DATE_FORMAT,
           firstDay: 1,
           i18n: {
             previousMonth: I18n.t("dates.previous_month"),
@@ -29,30 +43,42 @@ export default Ember.Component.extend({
             weekdays: moment.weekdays(),
             weekdaysShort: moment.weekdaysShort()
           },
-          onSelect: date => {
-            const formattedDate = moment(date).format("YYYY-MM-DD");
-
-            if (this.attrs.onSelect) {
-              this.attrs.onSelect(formattedDate);
-            }
-
-            if (!this.element || this.isDestroying || this.isDestroyed) return;
-
-            this.set("value", formattedDate);
-          }
+          onSelect: date => this._handleSelection(date)
         };
 
-        this._picker = new Pikaday(_.merge(default_opts, this._opts()));
+        this._picker = new Pikaday(Object.assign(options, this._opts()));
       });
     });
+  },
+
+  _loadNativePicker() {
+    const picker = this.element.querySelector("input.date-picker");
+    picker.onchange = () => this._handleSelection(picker.value);
+    picker.hide = () => {
+      /* do nothing for native */
+    };
+    picker.destroy = () => {
+      /* do nothing for native */
+    };
+    this._picker = picker;
+  },
+
+  _handleSelection(value) {
+    const formattedDate = moment(value).format(DATE_FORMAT);
+
+    if (!this.element || this.isDestroying || this.isDestroyed) return;
+
+    if (this.onSelect) {
+      this.onSelect(formattedDate);
+    }
   },
 
   @on("willDestroyElement")
   _destroy() {
     if (this._picker) {
       this._picker.destroy();
+      this._picker = null;
     }
-    this._picker = null;
   },
 
   @computed()

@@ -609,7 +609,11 @@ export default RestModel.extend({
         this.set("loadingLastPost", true);
         return this.findPostsByIds([postId])
           .then(posts => {
-            posts.forEach(p => this.appendPost(p));
+            const ignoredUsers = this.get("currentUser.ignored_users");
+            posts.forEach(p => {
+              if (ignoredUsers && ignoredUsers.includes(p.username)) return;
+              this.appendPost(p);
+            });
           })
           .finally(() => {
             this.set("loadingLastPost", false);

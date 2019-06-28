@@ -260,7 +260,6 @@ zh_TW:
   private_message_abbrev: "消息"
   rss_description:
     latest: "最新討論話題"
-    hot: "熱門討論話題"
     top: "熱門討論話題"
     top_all: "最熱門話題"
     top_yearly: "每年最熱門話題"
@@ -281,9 +280,6 @@ zh_TW:
   revert_version_same: "您試圖回復的版本和當前版本相同。"
   excerpt_image: "圖片"
   groups:
-    success:
-      bulk_add:
-        other: "%{count}位使用者已被加入這個群組。"
     errors:
       grant_trust_level_not_valid: "'%{trust_level}' 不是有效的信任層級。"
       can_not_modify_automatic: "你不能修改自動組"
@@ -585,7 +581,7 @@ zh_TW:
         other: "%{count} 年"
     distance_in_words_verbose:
       half_a_minute: "剛剛"
-      less_than_x_seconds: "剛才"
+      less_than_x_seconds: "就在剛才"
       x_seconds:
         other: "%{count} 秒前"
       less_than_x_minutes:
@@ -621,28 +617,28 @@ zh_TW:
   user_auth_tokens:
     browser:
       chrome: "Google Chrome"
-      safari: "Safari"
-      firefox: "Firefox"
-      opera: "Opera"
-      ie: "Internet Explorer"
-      edge: "Microsoft Edge"
       discoursehub: "DiscourseHub app"
+      edge: "Microsoft Edge"
+      firefox: "Firefox"
+      ie: "Internet Explorer"
+      opera: "Opera"
+      safari: "Safari"
       unknown: "\b不知名的瀏覽器"
     device:
       android: "安卓裝置"
       ipad: "iPad"
       iphone: "iPhone"
       ipod: "iPod"
-      mobile: "行動裝置"
-      mac: "Mac"
       linux: "GNU/Linux Computer"
+      mac: "Mac"
+      mobile: "行動裝置"
       windows: "Windows Computer"
       unknown: "不知名的裝置"
     os:
       android: "安卓"
       ios: "iOS"
-      macos: "macOS"
       linux: "Linux"
+      macos: "macOS"
       windows: "Microsoft Windows"
       unknown: "未知的運作系統"
   change_email:
@@ -864,7 +860,6 @@ zh_TW:
       title: "使用者瀏覽量"
       xaxis: "天"
       yaxis: "瀏覽量"
-      description: "所有唯一使用者的瀏覽量"
     signups:
       title: "註冊"
       xaxis: "天"
@@ -1020,7 +1015,6 @@ zh_TW:
       title: "匿名"
       xaxis: "天"
       yaxis: "未登錄頁面訪問"
-      description: "來自訪客（未登入帳號）新增的頁面瀏覽次數。"
     page_view_logged_in_reqs:
       title: "已登入"
       xaxis: "天"
@@ -1074,7 +1068,6 @@ zh_TW:
       title: "第一個回覆時間"
       xaxis: "天"
       yaxis: "平均時間（小時）"
-      description: "對新主題的第一次回應的平均時間（小時）"
     topics_with_no_response:
       title: "沒有回覆的貼文"
       xaxis: "天"
@@ -1243,14 +1236,12 @@ zh_TW:
     polling_interval: "當不再長輪詢時，已登錄的客戶端應該多久輪詢一次（單位 毫秒）"
     anon_polling_interval: "匿名使用者使用者端輪詢時間間隔（單位 毫秒）"
     background_polling_interval: "客戶端輪詢的間隔，以毫秒計（當視窗在後台時）"
-    score_required_to_hide_post: "一個貼文累計多少個標記之後會被自動隱藏，並向貼文作者發送私信通知（0 為不啟用）"
     cooldown_minutes_after_hiding_posts: "如果一個貼文因為標記而隱藏，使用者需要等待多少分鐘才能編輯該貼文"
     max_topics_in_first_day: "新使用者在24小時內在發表第一帖後允許創建的主題數"
     max_replies_in_first_day: "新使用者在24小時內在發表第一帖後允許創建的回覆數"
     tl2_additional_likes_per_day_multiplier: "增加信任等級2（成員）的贊限制，可提供一個乘數與原始值相乘"
     tl3_additional_likes_per_day_multiplier: "增加信任等級3（常規）的每日贊限制，將此設置項與原始值相乘"
     tl4_additional_likes_per_day_multiplier: "增加信任等級4（資深）的贊限制，可提供一個乘數與原始值相乘"
-    spam_score_to_silence_new_user: "如果一個新使用者的貼文被其他 num_users_to_block_new_user 個使用者標記為垃圾，隱藏他們的所有貼文並阻止其之後的貼文。0 表示停用。"
     num_users_to_silence_new_user: "如果新使用者的貼文被不同使用者多次標記為垃圾信息，隱藏他們的所有貼文並不讓其繼續發表內容。0 為禁用。"
     num_tl3_flags_to_silence_new_user: "如果新使用者的貼文被多個不同的信任等級3的使用者標記，隱藏他們的所有貼文並不讓其繼續發表內容。0 為禁用。"
     num_tl3_users_to_silence_new_user: "如果新使用者的貼文被不同的信任等級3的使用者標記多次，隱藏他們的所有貼文子，並不讓其繼續發表內容。0 為禁用。"
@@ -1264,10 +1255,8 @@ zh_TW:
     must_approve_users: "新使用者在被允許訪問站點前需要由管理人員批准。警告：在運行的站點中啟用將解除所有非管理人員使用者的訪問權限！"
     pending_users_reminder_delay: "如果新使用者等待批准時間超過此小時設置則通知版主。設置 -1 關閉通知。"
     maximum_session_age: "使用者自訪問後可維持登錄 n 小時"
-    ga_universal_tracking_code: "Google 通用 Analytics (分析) 追蹤代碼（analytics.js）追蹤代碼，例如：UA-12345678-9；參考 <a href='https://google.com/analytics' target='_blank'>http://google.com/analytics</a>"
     ga_universal_domain_name: "Google 通用 Analytics (分析) 域名（analytics.js）追蹤代碼，例如：mysite.com；参考 <a href='https://google.com/analytics' target='_blank'>http://google.com/analytics</a>"
     ga_universal_auto_link_domains: "啟用Google通用Analytics（analytics.js）的跨域追蹤。本網站導向外其他網站時將客戶端 ID添加並追蹤，參閱 <a href='https://support.google.com/analytics/answer/1034342?hl=en' target='_blank'>Google 跨網域追蹤指南</a>。"
-    gtm_container_id: "Google Tag Manager Container（GTM） ID，例如：GFM-ABCDEF。注意：由GTM加載 Script 時可能需要在內容安全性政策（Content Security Policy Script Src）加入白名單。"
     enable_escaped_fragments: "如未偵測到爬蟲，將會使用 Google Ajax-Crawling API。參閱<a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
     moderators_create_categories: "允許管理員建立新分類"
     cors_origins: "允許跨來源資源共享（CORS）。每個來源必須包括 http:// 或 https://。DISCOURSE_ENABLE_CORS 環境選項必須設置為 true 才能啟用 CORS 。"
@@ -1331,7 +1320,6 @@ zh_TW:
     enable_sso_provider: "在 /session/sso_provider endpoint 必須設定 sso_secret 以實現 Discourse SSO 提供方協定"
     sso_url: "SSO URL endpoint (必須包含 http:// 或 https://)"
     sso_secret: "秘密字符串，用於驗證秘密的 SSO 訊息，請確保由 10 個字或以上組成"
-    sso_provider_secrets: "使用Discourse作為SSO的網域密鑰列表。 請確認SSO密碼為10個以上的字串。使用星號「*」可用於查詢通用字元或通用其中的一部分（例如* .example.com）。"
     sso_overrides_bio: "在使用者頁面中覆蓋使用者的個人信息並禁止使用者修改"
     sso_overrides_groups: "將所有手動群組成員與 SSO 内容中指定的群組同步（警告：如果不指定群組，所有手動群組成員資格將被使用者清除）"
     sso_overrides_email: "每一次登錄時，用單一登入服務提供者訊息中的外部站點的電子郵件地址更新本站郵件地址，並且阻止本站的郵件地址修改。（警告：郵件地址可能會因本站郵件地址規則而有所差異）"
@@ -1529,7 +1517,6 @@ zh_TW:
     max_age_unmatched_emails: "在 (N) 天後刪除不匹配的電郵地址。"
     max_age_unmatched_ips: "在 (N) 天後刪除不匹配的 IP 記錄。"
     num_flaggers_to_close_topic: "要自動終止一個主題的討論並介入時所需的最小數量的獨立標記者"
-    score_to_auto_close_topic: "設定需要的總分數，才能自動暫停討論話題"
     num_hours_to_close_topic: "暫停討論話題以進行干預的小時數。"
     auto_respond_to_flag_actions: "啟用自動回覆當加入一個標籤。"
     min_first_post_typing_time: "使用者發表第一帖時打字的最小時間（以毫秒計），如果沒有達到該閾值，貼文將自動進入需要批准隊列。設置為 0 禁用（不推薦）"
@@ -1720,7 +1707,6 @@ zh_TW:
     min_trust_level_for_user_api_key: "生成使用者 API 密鑰所需的信任等級"
     allowed_user_api_auth_redirects: "允許身份驗證URL用於導向使用者API 密鑰（Keys），使用星號「*」將代入所有字詞，並找到最適合的配對（例如：www.example.com/*）。"
     allowed_user_api_push_urls: "允許使用伺服器推送至使用者 API 的 URL"
-    expire_user_api_keys_days: "使用者API密鑰（Keys）自動過期前的天數（設定0表示從不過期）"
     tagging_enabled: "啟用話題標籤功能？"
     min_trust_to_create_tag: "建立標籤所需的最低信任等級。"
     max_tags_per_topic: "主題最多允許有多少個標籤。"
@@ -1734,7 +1720,6 @@ zh_TW:
     allow_staff_to_tag_pms: "允許工作人員（具有管理員權限）標記任何的個人訊息"
     min_trust_level_to_tag_topics: "給主題加標籤的最小信任等級"
     suppress_overlapping_tags_in_list: "如果標籤匹配了主題標題中的詞，不顯示該標籤"
-    remove_muted_tags_from_latest: "在最新主題列表中，不顯示有靜音標籤的主題。"
     force_lowercase_tags: "強制所有新標籤完全小寫"
     company_name: "公司名稱"
     governing_law: "適用於法律"
@@ -2270,14 +2255,6 @@ zh_TW:
     csv_export_succeeded:
       title: "CSV 檔匯出成功"
       subject_template: "[%{export_title}] 資料匯出已完成"
-      text_body_template: |
-        資料成功匯出了！:dvd:
-
-         <a class="attachment" href="%{download_link}">%{file_name}</a> (%{file_size})
-
-        以上的下載連結將在 48 小時後失效。
-
-        資料以 gzip 格式壓縮，如果你無法開啟壓縮檔，可以使用這裡推薦的工具： http://www.gzip.org/#faq4，或是搜尋gzip 解壓縮以獲得更多資訊。
     csv_export_failed:
       title: "CSV 檔匯出失敗"
       subject_template: "資料匯出失敗"
@@ -2968,9 +2945,6 @@ zh_TW:
     welcome_message_invite_only: |
       ## [歡迎來到 %{title}](#welcome)
       必須要有一個帳戶，請向現有會員請求邀請或登入以繼續。
-  terms_of_service:
-    title: "服務條款"
-    signup_form_message: '我已閱讀並接受 <a href="%{base_path}/tos" target="_blank">服務條款</a>。'
   deleted: "已刪除"
   image: "圖片"
   upload:
@@ -3034,9 +3008,6 @@ zh_TW:
     latte_theme_name: "棕色"
     summer_theme_name: "夏季"
     dark_rose_theme_name: "暗紅"
-  about: "關於"
-  guidelines: "指導"
-  privacy: "隱私政策"
   edit_this_page: "編輯此頁"
   csv_export:
     boolean_yes: "是"
@@ -3594,6 +3565,8 @@ zh_TW:
             placeholder: "舊金山，加洲（California）"
       colors:
         title: "主題"
+      themes_further_reading:
+        title: "佈景主題"
       logos:
         title: "標誌"
         fields:
@@ -3667,6 +3640,15 @@ zh_TW:
     user_delete_self: "由 %{url} 自行刪除"
     webhook_deactivation_reason: "您的webhook已自動取消啟用，我們收到了多個 %{status} HTTP狀態失敗回應錯誤。"
   reviewables:
+    priorities:
+      low: "低"
+      medium: "中間的"
+      high: "高"
+    sensitivity:
+      disabled: "停用"
+      low: "低"
+      medium: "中間的"
+      high: "高"
     must_claim: "您必須在採取行動之前請求項目"
     user_claimed: "該項目已被其他的使用者要求"
     missing_version: "您必須提供版本參數（Version parameter）"
@@ -3677,7 +3659,6 @@ zh_TW:
       new_topics_unless_trust_level: "低信任等級的使用者必須擁有管理員批准，才可發佈討論話題，更多資訊請參閱`approve_new_topics_unless_trust_level`。"
       fast_typer: "新使用者輸入他們的第一個貼文，由於發送速度過快，疑似機器人或垃圾郵件發送者的行為，更多資訊請參閱`min_first_post_typing_time`。"
       auto_silence_regexp: "第一個貼文與`auto_silence_first_post_regex`設定匹配相符的新使用者"
-      watched_word: "貼文已包含一個觀看的單詞。"
       staged: "分階段使用者的新討論話題及貼文，必須得到管理員的批准，更多資訊請參閱`approve_unless_staged`。"
       category: "在這個分類的貼文需要管理員手動批准，更多資訊請參閱分類設定（category setting）。"
       must_approve_users: "所有新使用者必須得到管理員的批准，更多資訊請參閱`must_approve_users`。"

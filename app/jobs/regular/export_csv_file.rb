@@ -63,9 +63,8 @@ module Jobs
       system('gzip', '-5', absolute_path)
 
       # create upload
-      download_link = nil
+      upload = nil
       compressed_file_path = "#{absolute_path}.gz"
-      file_size = number_to_human_size(File.size(compressed_file_path))
 
       if File.exist?(compressed_file_path)
         File.open(compressed_file_path) do |file|
@@ -78,16 +77,16 @@ module Jobs
 
           if upload.persisted?
             user_export.update_columns(upload_id: upload.id)
-            download_link = upload.url
           else
             Rails.logger.warn("Failed to upload the file #{Discourse.base_uri}/export_csv/#{file_name}.gz")
           end
         end
+
         File.delete(compressed_file_path)
       end
-
     ensure
-      post = notify_user(download_link, file_name, file_size, export_title)
+      post = notify_user(upload, export_title)
+
       if user_export.present? && post.present?
         topic = post.topic
         user_export.update_columns(topic_id: topic.id)
@@ -388,22 +387,22 @@ module Jobs
       screened_url_array
     end
 
-    def notify_user(download_link, file_name, file_size, export_title)
+    def notify_user(upload, export_title)
       post = nil
+
       if @current_user
-        post = if download_link.present?
+        post = if upload
           SystemMessage.create_from_system_user(
             @current_user,
             :csv_export_succeeded,
-            download_link: download_link,
-            file_name: "#{file_name}.gz",
-            file_size: file_size,
+            download_link: "[#{upload.original_filename}|attachment](#{upload.short_url}) (#{number_to_human_size(upload.filesize)})",
             export_title: export_title
           )
         else
           SystemMessage.create_from_system_user(@current_user, :csv_export_failed)
         end
       end
+
       post
     end
   end

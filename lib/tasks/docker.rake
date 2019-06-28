@@ -70,6 +70,7 @@ task 'docker:test' do
         puts "Listing prettier offenses in #{ENV['SINGLE_PLUGIN']}:"
         @good &&= run_or_fail_prettier("plugins/#{ENV['SINGLE_PLUGIN']}/**/*.scss", "plugins/#{ENV['SINGLE_PLUGIN']}/**/*.es6")
       else
+        @good &&= run_or_fail("bundle exec rake plugin:update_all") unless ENV["SKIP_PLUGINS"]
         @good &&= run_or_fail("bundle exec rubocop --parallel") unless ENV["SKIP_CORE"]
         @good &&= run_or_fail("yarn eslint app/assets/javascripts test/javascripts") unless ENV["SKIP_CORE"]
         @good &&= run_or_fail("yarn eslint --ext .es6 app/assets/javascripts test/javascripts plugins") unless ENV["SKIP_PLUGINS"]
@@ -115,6 +116,10 @@ task 'docker:test' do
 
       if ENV["INSTALL_OFFICIAL_PLUGINS"]
         @good &&= run_or_fail("bundle exec rake plugin:install_all_official")
+      end
+
+      if ENV["UPDATE_ALL_PLUGINS"]
+        @good &&= run_or_fail("bundle exec rake plugin:update_all")
       end
 
       if ENV["SKIP_PLUGINS"]

@@ -40,6 +40,8 @@ nl:
   themes:
     bad_color_scheme: "Kan thema niet bijwerken, ongeldig kleurenpalet"
     other_error: "Er is iets misgegaan bij het bijwerken van het thema"
+    compile_error:
+      unrecognized_extension: "Niet-herkende bestandsextensie: %{extension}"
     import_error:
       generic: Er is een fout opgetreden bij het importeren van dat thema
       about_json: "Fout bij importeren: about.json bestaat niet, of is ongeldig"
@@ -274,7 +276,6 @@ nl:
   private_message_abbrev: "PB"
   rss_description:
     latest: "Nieuwste topics"
-    hot: "Populaire topics"
     top: "Toptopics"
     top_all: "Toptopics vanaf begin"
     top_yearly: "Jaarlijkse toptopics"
@@ -295,10 +296,6 @@ nl:
   revert_version_same: "De huidige versie is dezelfde als de versie die u probeert terug te zetten."
   excerpt_image: "afbeelding"
   groups:
-    success:
-      bulk_add:
-        one: "Er is %{count} gebruiker aan de groep toegevoegd."
-        other: "Er zijn %{count} gebruikers aan de groep toegevoegd."
     errors:
       grant_trust_level_not_valid: "'%{trust_level}' is geen geldig vertrouwensniveau."
       can_not_modify_automatic: "U kunt een automatische groep niet wijzigen"
@@ -364,6 +361,20 @@ nl:
       U kunt uw eerdere antwoord bewerken om een citaat toe te voegen door tekst te accentueren en de knop <b>Bericht citeren</b> die verschijnt te selecteren.
 
       Het is voor iedereen makkelijker om topics te lezen die minder uitgebreide antwoorden bevatten dan die met veel kleine, individuele antwoorden.
+    dominating_topic: |
+      ### Laat anderen aan de conversatie deelnemen
+
+      Dit topic is duidelijk belangrijk voor u &ndash; u hebt hier meer dan %{percent}% van de antwoorden geplaatst.
+
+      Het zou nog beter kunnen zijn als u ook anderen de ruimte geeft om hun ideeën te delen. Kunt u ze uitnodigen?
+    get_a_room: |
+      ### Overweeg iedereen aan de conversatie te laten deelnemen
+
+      U hebt in dit specifieke topic %{count} keer op @%{reply_username} geantwoord!
+
+      Een goede discussie omvat veel meningen en perspectieven. Kunt u hier nog anderen bij betrekken?
+
+      Denk eraan: als u uw conversatie met deze bepaalde gebruiker wilt verbergen, kunt u [hem of haar een persoonlijk bericht sturen](%{base_path}/u/%{reply_username}).
     too_many_replies: |
       ### U hebt de antwoordlimiet voor dit topic bereikt
 
@@ -649,28 +660,30 @@ nl:
   user_auth_tokens:
     browser:
       chrome: "Google Chrome"
-      safari: "Safari"
-      firefox: "Firefox"
-      opera: "Opera"
-      ie: "Internet Explorer"
-      edge: "Microsoft Edge"
       discoursehub: "DiscourseHub-app"
+      edge: "Microsoft Edge"
+      firefox: "Firefox"
+      ie: "Internet Explorer"
+      opera: "Opera"
+      safari: "Safari"
       unknown: "onbekende browser"
     device:
       android: "Android-apparaat"
+      chromebook: "Chromebook"
       ipad: "iPad"
       iphone: "iPhone"
       ipod: "iPod"
-      mobile: "Mobiel apparaat"
-      mac: "Mac"
       linux: "GNU/Linux-computer"
+      mac: "Mac"
+      mobile: "Mobiel apparaat"
       windows: "Windows-computer"
       unknown: "onbekend apparaat"
     os:
       android: "Android"
+      chromeos: "ChromeOS"
       ios: "iOS"
-      macos: "macOS"
       linux: "Linux"
+      macos: "macOS"
       windows: "Microsoft Windows"
       unknown: "onbekend besturingssysteem"
   change_email:
@@ -684,6 +697,7 @@ nl:
       description: "We sturen nu ter bevestiging een e-mail naar uw nieuwe adres."
   associated_accounts:
     revoke_failed: "Intrekken van uw account bij %{provider_name} is mislukt."
+    connected: "(verbonden)"
   activation:
     action: "Klik hier om uw account te activeren"
     already_done: "Sorry, deze koppeling voor het bevestigen van uw account is niet meer geldig. Misschien is uw account al actief?"
@@ -892,7 +906,7 @@ nl:
       title: "Gebruikersbezoeken"
       xaxis: "Dag"
       yaxis: "Aantal bezoeken"
-      description: "Aantal alle unieke gebruikersbezoeken."
+      description: "Aantal alle gebruikersbezoeken."
     signups:
       title: "Registraties"
       xaxis: "Dag"
@@ -1048,7 +1062,6 @@ nl:
       title: "Anoniem"
       xaxis: "Dag"
       yaxis: "Anonieme paginaweergaven"
-      description: "Aantal nieuwe paginaweergaven door bezoekers die niet zijn aangemeld bij een account."
     page_view_logged_in_reqs:
       title: "Aangemeld"
       xaxis: "Dag"
@@ -1102,7 +1115,6 @@ nl:
       title: "Tijd tot eerste reactie"
       xaxis: "Dag"
       yaxis: "Gemiddelde tijd (uren)"
-      description: "Gemiddelde tijd (in uren) van de eerste reactie op nieuwe topics."
     topics_with_no_response:
       title: "Topics zonder reactie"
       xaxis: "Dag"
@@ -1272,14 +1284,15 @@ nl:
     polling_interval: "Als geen 'long polling' wordt toegepast, hoe vaak aangemelde clients moeten pollen in milliseconden"
     anon_polling_interval: "Hoe vaak anonieme clients moeten pollen in milliseconden"
     background_polling_interval: "Hoe vaak clients moeten pollen in milliseconden (als het venster in de achtergrond staat)"
-    score_required_to_hide_post: "Scoredrempel die zorgt voor het automatisch verbergen van een bericht en het versturen van een bericht naar de gebruiker (0 voor uitschakelen)"
+    hide_post_sensitivity: "De waarschijnlijkheid dat een gemarkeerd bericht wordt verborgen"
+    silence_new_user_sensitivity: "De waarschijnlijkheid dat een nieuwe gebruiker wordt gedempt op basis van spammarkeringen"
+    auto_close_topic_sensitivity: "De waarschijnlijkheid dat een gemarkeerd topic automatisch wordt gesloten"
     cooldown_minutes_after_hiding_posts: "Het aantal minuten dat een gebruiker moet wachten voordat deze een via de gemeenschap gemarkeerd bericht kan bewerken"
     max_topics_in_first_day: "Het maximale aantal topics dat een gebruiker in de 24 uursperiode na het schrijven van een eerste bericht mag aanmaken"
     max_replies_in_first_day: "Het maximale aantal antwoorden dat een gebruiker in de 24 uursperiode na het schrijven van een eerste bericht mag aanmaken"
     tl2_additional_likes_per_day_multiplier: "Limiet van likes per dag voor TL2 (lid) verhogen door met dit getal te vermenigvuldigen"
     tl3_additional_likes_per_day_multiplier: "Limiet van likes per dag voor TL3 (vaste gebruiker) verhogen door met dit getal te vermenigvuldigen"
     tl4_additional_likes_per_day_multiplier: "Limiet van likes per dag voor TL4 (leider) verhogen door met dit getal te vermenigvuldigen"
-    spam_score_to_silence_new_user: "Als berichten van een nieuwe gebruiker deze score ontvangen van num_users_to_silence_new_user verschillende gebruikers, alle berichten ervan verbergen en het plaatsen van berichten in de toekomst tegengaan. 0 voor uitschakelen."
     num_users_to_silence_new_user: "Als berichten van een nieuwe gebruiker num_spam_flags_to_silence_new_user spammarkeringen krijgen van dit aantal verschillende gebruikers, alle berichten ervan verbergen en het plaatsen van berichten in de toekomst tegengaan. 0 voor uitschakelen."
     num_tl3_flags_to_silence_new_user: "Als berichten van een nieuwe gebruiker dit aantal markeringen krijgen van num_tl3_users_to_silence_new_user verschillende gebruikers met vertrouwensniveau 3, alle berichten ervan verbergen en het plaatsen van berichten in de toekomst tegengaan. 0 voor uitschakelen."
     num_tl3_users_to_silence_new_user: "Als berichten van een nieuwe gebruiker num_tl3_flags_to_silence_new_user markeringen krijgen van dit aantal verschillende gebruikers met vertrouwensniveau 3, alle berichten ervan verbergen en het plaatsen van berichten in de toekomst tegengaan. 0 voor uitschakelen."
@@ -1293,10 +1306,9 @@ nl:
     must_approve_users: "Stafleden moeten alle nieuwe gebruikersaccounts goedkeuren voordat ze de website mogen bezoeken. WAARSCHUWING: als dit voor een actieve website wordt ingeschakeld, wordt alle toegang voor bestaande niet-stafleden ingetrokken!"
     pending_users_reminder_delay: "Moderators inlichten als nieuwe gebruikers langer dan dit aantal uren op goedkeuring wachten. Stel dit in op -1 om meldingen uit te schakelen."
     maximum_session_age: "Gebruikers blijven (n) uur na hun laatste bezoek aangemeld"
-    ga_universal_tracking_code: "Google Universal Analytics (analytics.js)-trackingcode, bv. UA-12345678-9; zie <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
+    ga_universal_tracking_code: "Google Universal Analytics (analytics.js)-trackingcode-ID, bv. UA-12345678-9; zie <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
     ga_universal_domain_name: "Google Universal Analytics (analytics.js)-domeinnaam, bv. mysite.com; zie <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
     ga_universal_auto_link_domains: "Google Universal Analytics (analytics.js)-cross-domain-tracking inschakelen. Aan uitgaande koppelingen naar deze domeinen wordt de client-ID toegevoegd. Zie <a href='https://support.google.com/analytics/answer/1034342?hl=en' target='_blank'>Google's Cross-Domein Tracking-handleiding.</a>"
-    gtm_container_id: "Google Tag Manager-container-ID, bv. GTM-ABCDEF. <br/>Opmerking: scripts van derden die door GTM worden geladen, dienen mogelijk op de whitelist te worden geplaatst in 'content security policy script src'."
     enable_escaped_fragments: "Terugvallen naar Google's Ajax-Crawling-API als geen webcrawler wordt gedetecteerd. Zie <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
     moderators_create_categories: "Moderators mogen nieuwe categorieën maken"
     cors_origins: "Toegestane domeinen voor cross-origin-aanvragen (CORS). Elk domein moet http:// of https:// bevatten. De omgevingsvariabele DISCOURSE_ENABLE_CORS moet op true zijn ingesteld om CORS in te schakelen."
@@ -1360,7 +1372,6 @@ nl:
     enable_sso_provider: "Discourse SSO provider-protocol aan het /session/sso_provider-eindpunt implementeren, vereist dat sso_provider_secrets is ingesteld"
     sso_url: "URL van single-sign-on-eindpunt (moet http:// of https:// bevatten)"
     sso_secret: "Geheime tekenreeks voor het cryptografisch authenticeren van SSO-informatie, zorg ervoor dat deze 10 tekens of langer is"
-    sso_provider_secrets: "Een lijst van domain-secret-paren die Discourse als SSO-provider gebruiken. Zorg ervoor dat het SSO-geheim 10 tekens of langer is. Het jokerteken * kan worden gebruikt om een domein of alleen een deel ervan (bv. *.example.com) te laten overeenkomen."
     sso_overrides_bio: "Overschrijft biografie in gebruikersprofiel en voorkomt dat gebruiker deze kan wijzigen"
     sso_overrides_groups: "Alle handmatige groepslidmaatschappen synchroniseren met opgegeven groepen in SSO-attribuut van de groep (WAARSCHUWING: als u geen groepen opgeeft, worden alle handmatige groepslidmaatschappen voor de gebruiker gewist)"
     sso_overrides_email: "Overschrijft bij elke aanmelding lokaal opgegeven e-mailadres door e-mailadres uit SSO-payload van externe website, en voorkomt lokale wijzigingen. (WAARSCHUWING: er kunnen discrepanties ontstaan door normalisatie van lokale e-mailadressen)"
@@ -1531,6 +1542,7 @@ nl:
     max_similar_results: "Hoeveel vergelijkbare topics om boven de editor te tonen bij het opstellen van een nieuw topic. Vergelijking is gebaseerd op titel en inhoud."
     max_image_megapixels: "Maximale aantal toegestane megapixels voor een afbeelding."
     title_prettify: "Veelvoorkomende fouten in titels voorkomen, waaronder alles in hoofdletters, eerste woord zonder hoofdletter, meerdere ! en ?, een extra . aan het eind, etc."
+    title_remove_extraneous_space: "Voorloopspaties voor de eindinterpunctie verwijderen."
     topic_views_heat_low: "Na dit aantal weergaven wordt het veld 'weergaven' licht gemarkeerd."
     topic_views_heat_medium: "Na dit aantal weergaven wordt het veld 'weergaven' middelmatig gemarkeerd."
     topic_views_heat_high: "Na dit aantal weergaven wordt het veld 'weergaven' sterk gemarkeerd."
@@ -1558,7 +1570,6 @@ nl:
     max_age_unmatched_emails: "Niet-overeenkomende gecontroleerde e-mailadresvermeldingen na (N) dagen verwijderen."
     max_age_unmatched_ips: "Niet-overeenkomende gecontroleerde IP-adresvermeldingen na (N) dagen verwijderen."
     num_flaggers_to_close_topic: "Minimale aantal unieke melders dat nodig is om automatisch een topic te pauzeren voor interventie."
-    score_to_auto_close_topic: "De totale markeringsscore die nodig is om een topic automatisch te pauzeren voor interventie"
     num_hours_to_close_topic: "Aantal uren om een topic te pauzeren voor interventie."
     auto_respond_to_flag_actions: "Automatisch antwoord inschakelen bij weggooien van een markering."
     min_first_post_typing_time: "Minimale tijd in milliseconden dat een gebruiker moet typen tijdens een eerste bericht. Als de drempelwaarde niet wordt bereikt, wordt het bericht automatisch in de wachtrij voor goedkeuring gezet. Stel dit in op 0 om uit te schakelen (niet aanbevolen)."
@@ -1597,6 +1608,7 @@ nl:
     attachment_filename_blacklist: "Lijst van trefwoorden voor het blacklisten van bijlagen op basis van de bestandsnaam."
     enable_forwarded_emails: "[BETA] Gebruikers mogen een topic maken door een e-mail door te sturen."
     always_show_trimmed_content: "Altijd afgekapt deel van inkomende e-mails tonen. WAARSCHUWING: kan e-mailadressen onthullen."
+    private_email: "Geen inhoud van berichten of topics in titel of tekst van e-mail opnemen. OPMERKING: schakelt ook e-mailsamenvattingen uit."
     manual_polling_enabled: "E-mails pushen via de API voor e-mailantwoorden."
     pop3_polling_enabled: "Pollen via POP3 voor e-mailantwoorden."
     pop3_polling_ssl: "SSL gebruiken bij verbinden met de POP3-server. (Aanbevolen)"
@@ -1731,6 +1743,7 @@ nl:
     default_other_notification_level_when_replying: "Globale standaard meldingsniveau wanneer de gebruiker op een topic antwoordt."
     default_other_external_links_in_new_tab: "Externe koppelingen standaard in een nieuw tabblad openen."
     default_other_enable_quoting: "Antwoord-met-citaat voor gemarkeerde tekst standaard inschakelen."
+    default_other_enable_defer: "Topicnegeerfunctionaliteit standaard inschakelen."
     default_other_dynamic_favicon: "Aantal nieuwe / bijgewerkte topics standaard tonen op browserpictogram."
     default_other_like_notification_frequency: "Gebruikers standaard informeren bij likes"
     default_topics_automatic_unpin: "Topics standaard automatisch losmaken wanneer de gebruiker de onderkant bereikt."
@@ -1748,7 +1761,6 @@ nl:
     min_trust_level_for_user_api_key: "Vereiste vertrouwensniveau voor genereren van API-sleutels van gebruiker"
     allowed_user_api_auth_redirects: "Toegestane URL voor authenticatie bij omleiden voor API-sleutels van gebruiker. Het jokerteken * kan worden gebruikt om een deel ervan te laten overeenkomen (bv. www.example.com/*)."
     allowed_user_api_push_urls: "Toegestane URL's voor server-push naar gebruikers-API"
-    expire_user_api_keys_days: "Aantal dagen voordat een API-sleutel van een gebruiker automatisch verloopt (0 voor nooit)"
     tagging_enabled: "Tags op topics inschakelen?"
     min_trust_to_create_tag: "Het minimale vertrouwensniveau dat nodig is om een tag te maken."
     max_tags_per_topic: "De maximale tags die op een topic kunnen worden toegepast."
@@ -1762,7 +1774,7 @@ nl:
     allow_staff_to_tag_pms: "Stafleden mogen persoonlijke berichten taggen"
     min_trust_level_to_tag_topics: "Het minimale vertrouwensniveau dat nodig is om topics te taggen"
     suppress_overlapping_tags_in_list: "Als tags exacte overeenkomsten met woorden in topictitels hebben, de tag niet tonen"
-    remove_muted_tags_from_latest: "Topics met gedempte tags niet in de lijst met nieuwste topics tonen."
+    remove_muted_tags_from_latest: "Topics met alleen gedempt-tags niet in de lijst met nieuwste topics tonen."
     force_lowercase_tags: "Gebruik van kleine letters voor alle nieuwe tags afdwingen."
     company_name: "Bedrijfsnaam"
     governing_law: "Toepasselijk recht"
@@ -2276,8 +2288,6 @@ nl:
     search_button: "Zoeken"
   offline:
     title: "Kan app niet laden"
-  terms_of_service:
-    title: "Servicevoorwaarden"
   deleted: "verwijderd"
   image: "afbeelding"
   upload:
@@ -2317,9 +2327,6 @@ nl:
     sender_body_blank: "geen tekst"
   color_schemes:
     base_theme_name: "Basis"
-  about: "Over"
-  guidelines: "Richtlijnen"
-  privacy: "Privacy"
   edit_this_page: "Deze pagina bewerken"
   csv_export:
     boolean_yes: "Ja"
@@ -2399,6 +2406,23 @@ nl:
       name: Zeer populaire koppeling
     famous_link:
       name: Uiterst populaire koppeling
+    appreciated:
+      name: Gewaardeerd
+    respected:
+      name: Gerespecteerd
+    thank_you:
+      name: Bedankt
+    empathetic:
+      name: Empathisch
+      description: Heeft 500 geliket en 1000 likes gegeven
+    first_emoji:
+      name: Eerste emoji
+      description: Een emoji in een bericht gebruikt
+    first_reply_by_email:
+      name: Eerste antwoord via e-mail
+      description: Bericht beantwoord via e-mail
+    new_user_of_the_month:
+      name: "Nieuwe gebruiker van de maand"
     badge_title_metadata: "%{display_name}-badge op %{site_title}"
   admin_login:
     success: "E-mail verstuurd"
@@ -2415,13 +2439,19 @@ nl:
     congratulations: "Gefeliciteerd, u hebt Discourse geïnstalleerd!"
     register:
       button: "Registreren"
+      title: "Beheerdersaccount registreren"
+      help: "registreer een nieuwe account om te beginnen"
+    confirm_email:
+      title: "Bevestig uw e-mailadres"
     resend_email:
       title: "Activeringsmail opnieuw versturen"
       message: "<p>We hebben de activeringsmail opnieuw naar <b>%{email}</b> verstuurd"
   safe_mode:
+    title: "Veilige modus starten"
     no_customizations: "Huidige thema uitschakelen"
     only_official: "Niet-officiële plug-ins uitschakelen"
     no_plugins: "Alle plug-ins uitschakelen"
+    enter: "Veilige modus starten"
   wizard:
     step:
       locale:
@@ -2466,6 +2496,8 @@ nl:
             placeholder: "San Francisco, Californië"
       colors:
         title: "Thema"
+      themes_further_reading:
+        title: "Thema's"
       logos:
         title: "Logo's"
         fields:
@@ -2528,6 +2560,15 @@ nl:
     unknown: "onbekend"
     user_merged: "%{username} is met deze account samengevoegd"
   reviewables:
+    priorities:
+      low: "Laag"
+      medium: "Gemiddeld"
+      high: "Hoog"
+    sensitivity:
+      disabled: "Uitgeschakeld"
+      low: "Laag"
+      medium: "Gemiddeld"
+      high: "Hoog"
     must_claim: "U moet items opeisen voordat u er handelingen op kunt uitvoeren."
     user_claimed: "Dit item is door een andere gebruiker opgeëist."
     missing_version: "U moet een versieparameter opgeven"
@@ -2581,9 +2622,20 @@ nl:
         title: "Negeren"
       approve:
         title: "Goedkeuren"
+      approve_post:
+        title: "Bericht goedkeuren"
+      reject_post:
+        title: "Bericht weigeren"
+      approve_user:
+        title: "Gebruiker goedkeuren"
       reject_user:
+        title: "Gebruiker verwijderen..."
         delete:
           title: "Gebruiker verwijderen"
+          description: "De gebruiker wordt van het forum verwijderd."
+        block:
+          title: "Gebruiker verwijderen en blokkeren"
+          description: "De gebruiker wordt verwijderd, en het IP- en e-mailadres ervan geblokkeerd."
       reject:
         title: "Weigeren"
       delete_user:

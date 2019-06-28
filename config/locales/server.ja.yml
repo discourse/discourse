@@ -159,7 +159,6 @@ ja:
   private_message_abbrev: "メッセージ"
   rss_description:
     latest: "最新のトピック"
-    hot: "ホットトピック"
     posts: "最近の投稿"
     group_posts: "%{group_name}からの最新投稿"
     group_mentions: "%{group_name}からの最新メンション"
@@ -1280,8 +1279,6 @@ ja:
     see_more: "もっと見る"
     search_title: "サイトを検索"
     search_button: "検索"
-  terms_of_service:
-    title: "利用規約"
   deleted: "削除"
   image: "画像"
   upload:
@@ -1311,9 +1308,6 @@ ja:
     sender_body_blank: "本文が空です"
   color_schemes:
     base_theme_name: "ベース"
-  about: "このサイトについて"
-  guidelines: "ガイドライン"
-  privacy: "プライバシー"
   edit_this_page: "ページを編集"
   csv_export:
     boolean_yes: "はい"
@@ -1571,7 +1565,7 @@ ja:
         このバッジは初めてメール :e-mail: 経由で返信した人に付与されます
     new_user_of_the_month:
       name: "一ヶ月の新規ユーザー"
-      description: "最初の一ヶ月間の功績\U0001F44C"
+      description: ! "最初の一ヶ月間の功績\U0001F44C"
       long_description: "このバッジは毎月二人のユーザーに付与されるバッジで、素晴らしい貢献をコミュニティーにもたらしたことを讃えるものです！おめでとうございます！\U0001F381\n"
     enthusiast:
       name: 熱狂者
@@ -1637,6 +1631,8 @@ ja:
     popup:
       confirm_body: "成功！通知を可能にしました！"
   reviewables:
+    sensitivity:
+      disabled: "利用不可"
     actions:
       agree_and_suspend:
         title: "凍結中のユーザ"

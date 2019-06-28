@@ -363,6 +363,8 @@ en:
         placeholder: "type the message title here"
 
     review:
+      order_by: "Order by"
+      in_reply_to: "in reply to"
       claim_help:
         optional: "You can claim this item to prevent others from reviewing it."
         required: "You must claim items before you can review them."
@@ -431,9 +433,10 @@ en:
       edit: "Edit"
       save: "Save"
       cancel: "Cancel"
-      new_topic: "New Topic:"
+      new_topic: "Approving this item will create a new topic"
 
       filters:
+        all_categories: "(all categories)"
         type:
           title: "Type"
           all: "(all types)"
@@ -441,9 +444,15 @@ en:
         refresh: "Refresh"
         status: "Status"
         category: "Category"
+        orders:
+          priority: "Priority"
+          priority_asc: "Priority (reverse)"
+          created_at: "Created At"
+          created_at_asc: "Created At (reverse)"
+
         priority:
           title: "Minimum Priority"
-          low: "Low"
+          low: "(any)"
           medium: "Medium"
           high: "High"
 
@@ -470,14 +479,16 @@ en:
         deleted:
           title: "Deleted"
         reviewed:
-          title: "(All Reviewed)"
+          title: "(all reviewed)"
         all:
-          title: "(Everything)"
+          title: "(everything)"
 
       types:
         reviewable_flagged_post:
           title: "Flagged Post"
           flagged_by: "Flagged By"
+        reviewable_queued_topic:
+          title: "Queued Topic"
         reviewable_queued_post:
           title: "Queued Post"
         reviewable_user:
@@ -803,6 +814,7 @@ en:
       allow_private_messages: "Allow other users to send me personal messages"
       external_links_in_new_tab: "Open all external links in a new tab"
       enable_quoting: "Enable quote reply for highlighted text"
+      enable_defer: "Enable defer to mark topics unread"
       change: "change"
       moderator: "{{user}} is a moderator"
       admin: "{{user}} is an admin"
@@ -843,6 +855,7 @@ en:
 
       muted_categories: "Muted"
       muted_categories_instructions: "You will not be notified of anything about new topics in these categories, and they will not appear on the categories or latest pages."
+      muted_categories_instructions_dont_hide: "You will not be notified of anything about new topics in these categories."
       no_category_access: "As a moderator you have limited category access, save is disabled."
       delete_account: "Delete My Account"
       delete_account_confirm: "Are you sure you want to permanently delete your account? This action cannot be undone!"
@@ -1273,9 +1286,13 @@ en:
     too_few_topics_notice: "Let's <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>get this discussion started!</a> There are currently <strong>%{currentTopics} / %{requiredTopics}</strong> topics. New visitors need some conversations to read and respond to."
     too_few_posts_notice: "Let's <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>get this discussion started!</a> There are currently <strong>%{currentPosts} / %{requiredPosts}</strong> posts. New visitors need some conversations to read and respond to."
     logs_error_rate_notice:
+      # keys ending with _MF use message format, see https://meta.discourse.org/t/message-format-support-for-localization/7035 for details
       reached_hour_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# error/hour} other {# errors/hour}}</a> reached site setting limit of {limit, plural, one {# error/hour} other {# errors/hour}}."
+      # keys ending with _MF use message format, see https://meta.discourse.org/t/message-format-support-for-localization/7035 for details
       reached_minute_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# error/minute} other {# errors/minute}}</a> reached site setting limit of {limit, plural, one {# error/minute} other {# errors/minute}}."
+      # keys ending with _MF use message format, see https://meta.discourse.org/t/message-format-support-for-localization/7035 for details
       exceeded_hour_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# error/hour} other {# errors/hour}}</a> exceeded site setting limit of {limit, plural, one {# error/hour} other {# errors/hour}}."
+      # keys ending with _MF use message format, see https://meta.discourse.org/t/message-format-support-for-localization/7035 for details
       exceeded_minute_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# error/minute} other {# errors/minute}}</a> exceeded site setting limit of {limit, plural, one {# error/minute} other {# errors/minute}}."
 
     learn_more: "learn more..."
@@ -1370,6 +1387,9 @@ en:
       complete_email_found: "We found an account that matches <b>%{email}</b>, you should receive an email with a login link shortly."
       complete_username_not_found: "No account matches the username <b>%{username}</b>"
       complete_email_not_found: "No account matches <b>%{email}</b>"
+      confirm_title: Continue to %{site_name}
+      logging_in_as: Logging in as %{email}
+      confirm_button: Finish Login
 
     login:
       title: "Log In"
@@ -1706,6 +1726,27 @@ en:
         confirm_body: "Success! Notifications have been enabled."
         custom: "Notification from {{username}} on %{site_title}"
 
+      titles:
+        mentioned: "mentioned"
+        replied: "new reply"
+        quoted: "quoted"
+        edited: "edited"
+        liked: "new like"
+        private_message: "new private message"
+        invited_to_private_message: "invited to private message"
+        invitee_accepted: "invite accepted"
+        posted: "new post"
+        moved_post: "post moved"
+        linked: "linked"
+        granted_badge: "badge granted"
+        invited_to_topic: "invited to topic"
+        group_mentioned: "group mentioned"
+        group_message_summary: "new group messages"
+        watching_first_post: "new topic"
+        topic_reminder: "topic reminder"
+        liked_consolidated: "new likes"
+        post_approved: "post approved"
+
     upload_selector:
       title: "Add an image"
       title_with_attachments: "Add an image or a file"
@@ -1876,6 +1917,9 @@ en:
       edit_message:
         help: "Edit first post of the message"
         title: "Edit Message"
+      defer:
+        help: "Mark as unread"
+        title: "Defer"
       list: "Topics"
       new: "new topic"
       unread: "unread"
@@ -2999,6 +3043,12 @@ en:
       title: "Discourse Admin"
       moderator: "Moderator"
 
+      tags:
+        remove_muted_tags_from_latest:
+          always: "always"
+          only_muted: "when used alone or with other muted tags"
+          never: "never"
+
       reports:
         title: "List of available reports"
 
@@ -3075,6 +3125,7 @@ en:
           groups: "All groups"
           disabled: "This report is disabled"
           totals_for_sample: "Totals for sample"
+          average_for_sample: "Average for sample"
           total: "All time total"
           no_data: "No data to display."
           trending_search:
@@ -3732,6 +3783,7 @@ en:
             embeddable_host_create: "embeddable host create"
             embeddable_host_update: "embeddable host update"
             embeddable_host_destroy: "embeddable host destroy"
+            change_theme_setting: "change theme setting"
         screened_emails:
           title: "Screened Emails"
           description: "When someone tries to create a new account, the following email addresses will be checked and the registration will be blocked, or some other action performed."

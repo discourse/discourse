@@ -61,7 +61,7 @@ nl:
           one: "%{count}d"
           other: "%{count}d"
         x_months:
-          one: "%{count} mnd"
+          one: "%{count}mnd"
           other: "%{count}mnd"
         about_x_years:
           one: "%{count}j"
@@ -153,6 +153,7 @@ nl:
     bootstrap_mode_disabled: "De bootstrapmodus wordt binnen 24 uur uitgeschakeld."
     themes:
       default_description: "Standaard"
+      broken_theme_alert: "Uw website werkt mogelijk niet, omdat het thema / onderdeel %{theme} fouten bevat. Schakel het uit via %{path}."
     s3:
       regions:
         ap_northeast_1: "Azië Pacifisch (Tokio)"
@@ -172,7 +173,7 @@ nl:
         us_east_1: "VS Oost (N. Virginia)"
         us_east_2: "VS Oost (Ohio)"
         us_gov_east_1: "AWS GovCloud (VS Oost)"
-        us_gov_west_1: "AWS GovCloud (VS)"
+        us_gov_west_1: "AWS GovCloud (VS West)"
         us_west_1: "VS West (N. Californië)"
         us_west_2: "VS West (Oregon)"
     edit: "de titel en categorie van dit topic bewerken"
@@ -307,6 +308,8 @@ nl:
         search: "Zoeken naar een bericht op titel:"
         placeholder: "typ hier de titel van het bericht"
     review:
+      order_by: "Sorteren op"
+      in_reply_to: "in reactie op"
       claim_help:
         optional: "U kunt dit item opeisen om te voorkomen dat anderen het beoordelen."
         required: "U moet items opeisen voordat u ze kunt beoordelen."
@@ -322,21 +325,20 @@ nl:
         saved: "Opgeslagen"
         save_changes: "Wijzigingen opslaan"
         title: "Instellingen"
-        score_bonuses:
-          title: "Scorebonussen"
-          description: "Via bonussen kunnen bepaalde typen hoger scoren dan andere, zodat ze prioriteiten kunnen krijgen. Opmerking: wijzigingen aan deze waarden worden niet op eerder gescoorde items toegepast."
+        priorities:
+          title: "Beoordeelbare prioriteiten"
       moderation_history: "Moderatiegeschiedenis"
       view_all: "Alle bekijken"
       grouped_by_topic: "Gegroepeerd op topic"
       none: "Er zijn geen items om te beoordelen."
       view_pending: "wachtende bekijken"
       topic_has_pending:
-        one: "Dit topic heeft<b>%{count}</b> bericht dat op goedkeuring wacht"
+        one: "Dit topic heeft <b>%{count}</b> bericht dat op goedkeuring wacht"
         other: "Dit topic heeft <b>{{count}}</b> berichten die op goedkeuring wachten"
       title: "Beoordelen"
       topic: "Topic:"
       filtered_topic: "U hebt op beoordeelbare inhoud in één topic gefilterd."
-      filtered_user: "Gebruiker:"
+      filtered_user: "Gebruiker"
       show_all_topics: "alle topics tonen"
       deleted_post: "(bericht verwijderd)"
       deleted_user: "(gebruiker verwijderd)"
@@ -374,18 +376,24 @@ nl:
       edit: "Bewerken"
       save: "Opslaan"
       cancel: "Annuleren"
-      new_topic: "Nieuw topic:"
+      new_topic: "Goedkeuren van dit item maakt een nieuw topic"
       filters:
+        all_categories: "(alle categorieën)"
         type:
-          title: "Type:"
+          title: "Type"
           all: "(alle typen)"
         minimum_score: "Minimale score:"
         refresh: "Vernieuwen"
-        status: "Status:"
-        category: "Categorie:"
+        status: "Status"
+        category: "Categorie"
+        orders:
+          priority: "Prioriteit"
+          priority_asc: "Prioriteit (omgekeerd)"
+          created_at: "Lid sinds"
+          created_at_asc: "Gemaakt op (omgekeerd)"
         priority:
-          title: "Minimale prioriteit:"
-          low: "Laag"
+          title: "Minimale prioriteit"
+          low: "(alle)"
           medium: "Gemiddeld"
           high: "Hoog"
       conversation:
@@ -410,13 +418,15 @@ nl:
         deleted:
           title: "Verwijderd"
         reviewed:
-          title: "(Alle beoordeelde)"
+          title: "(alle beoordeelde)"
         all:
-          title: "(Alles)"
+          title: "(alles)"
       types:
         reviewable_flagged_post:
           title: "Gemarkeerd bericht"
           flagged_by: "Gemarkeerd door"
+        reviewable_queued_topic:
+          title: "Topic in wachtrij"
         reviewable_queued_post:
           title: "Bericht in wachtrij"
         reviewable_user:
@@ -729,6 +739,7 @@ nl:
       allow_private_messages: "Andere gebruikers mogen mij persoonlijke berichten sturen"
       external_links_in_new_tab: "Alle externe koppelingen openen in een nieuw tabblad"
       enable_quoting: "Antwoord-met-citaat voor gemarkeerde tekst inschakelen"
+      enable_defer: "Negeren voor markeren van topics als ongelezen inschakelen"
       change: "wijzigen"
       moderator: "{{user}} is een moderator"
       admin: "{{user}} is een beheerder"
@@ -768,6 +779,7 @@ nl:
       watched_first_post_tags_instructions: "U ontvangt een melding bij het eerste bericht in elk nieuw topic met deze tags."
       muted_categories: "Genegeerd"
       muted_categories_instructions: "U ontvangt geen enkele melding over nieuwe topics en berichten in deze categorieën, en ze verschijnen niet op de pagina's Categorieën of Nieuwste."
+      muted_categories_instructions_dont_hide: "U ontvangt geen enkele melding over nieuwe topics in deze categorieën."
       no_category_access: "Als moderator hebt u beperkte toegang tot categorieën, opslaan is uitgeschakeld."
       delete_account: "Mijn account verwijderen"
       delete_account_confirm: "Weet u zeker dat u uw account definitief wilt verwijderen? Deze actie kan niet ongedaan worden gemaakt!"
@@ -845,7 +857,7 @@ nl:
       second_factor:
         title: "Twee-factor-authenticatie"
         disable: "Twee-factor-authenticatie uitschakelen"
-        enable: "Twee-factor-authenticatie inschakelen voor verbeterde accountbeveiliging"
+        enable: "Twee-factor-authenticatie inschakelen"
         confirm_password_description: "Bevestig uw wachtwoord om door te gaan"
         label: "Code"
         rate_limit: "Wacht even voordat u een andere authenticatiecode probeert."
@@ -853,6 +865,8 @@ nl:
           Scan deze QR-code in een ondersteunde app (<a href="https://www.google.com/search?q=authenticator+apps+for+android" target="_blank">Android</a> – <a href="https://www.google.com/search?q=authenticator+apps+for+ios" target="_blank">iOS</a>) en voer uw authenticatiecode in.
         disable_description: "Voer de authenticatiecode van uw app in"
         show_key_description: "Voer handmatig in"
+        short_description: |
+          Bescherm uw account met beveiligingscodes voor eenmalig gebruik.
         extended_description: |
           Twee-factor-authenticatie voegt extra beveiliging toe aan uw account door naast uw wachtwoord een eenmalige code te vereisen. Tokens kunnen op <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>Android</a>- en <a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS</a>-apparaten worden gegenereerd.
         oauth_enabled_warning: "Hou er rekening mee dat sociale aanmeldingen worden uitgeschakeld als u twee-factor-authenticatie op uw account inschakelt."
@@ -1162,11 +1176,10 @@ nl:
     too_few_topics_notice: "Laten we <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>deze discussie starten!</a> Er zijn op dit moment <strong>%{currentTopics} / %{requiredTopics}</strong> topics. Nieuwe bezoekers hebben wat conversaties nodig om te lezen en op te reageren."
     too_few_posts_notice: "Laten we <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>deze discussie starten!</a> Er zijn op dit moment <strong>%{currentPosts} / %{requiredPosts}</strong> berichten. Nieuwe bezoekers hebben wat conversaties nodig om te lezen en op te reageren."
     logs_error_rate_notice:
-      reached: "<b>%{relativeAge}</b> – <a href='%{url}' target='_blank'>%{rate}</a> heeft de limiet voor de website-instelling van %{siteSettingRate} bereikt."
-      exceeded: "<b>%{relativeAge}</b> – <a href='%{url}' target='_blank'>%{rate}</a> heeft de limiet voor de website-instelling van %{siteSettingRate} overschreden."
-      rate:
-        one: "%{count} fout/%{duration}"
-        other: "%{count} fouten/%{duration}"
+      reached_hour_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# fout/uur} other {# fouten/uur}}</a> heeft de limiet voor de website-instelling van {limit, plural, one {# fout/uur} other {# fouten/uur}} bereikt."
+      reached_minute_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# fout/minuut} other {# fouten/minuut}}</a> heeft de limiet voor de website-instelling van {limit, plural, one {# fout/minuut} other {# fouten/minuut}} bereikt."
+      exceeded_hour_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# fout/uur} other {# fouten/uur}}</a> heeft de limiet voor de website-instelling van {limit, plural, one {# fout/uur} other {# fouten/uur}} bereikt."
+      exceeded_minute_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# fout/minuut} other {# fouten/minuut}}</a> heeft de limiet voor de website-instelling van {limit, plural, one {# fout/minuut} other {# fouten/minuut}} bereikt."
     learn_more: "meer info..."
     all_time: "totaal"
     all_time_desc: "aantal aangemaakte topics"
@@ -1222,7 +1235,7 @@ nl:
     trust_level: "Vertrouwensniveau"
     search_hint: "gebruikersnaam, e-mailadres of IP-adres"
     create_account:
-      disclaimer: "Door te registreren, gaat u akkoord met het <a href='{{privacy_link}}'>privacybeleid</a> en de <a href='{{tos_link}}'>servicevoorwaarden</a>."
+      disclaimer: "Door te registreren gaat u akkoord met het <a href='{{privacy_link}}' target='blank'>privacybeleid</a> en de <a href='{{tos_link}}' target='blank'>servicevoorwaarden</a>."
       title: "Nieuwe account maken"
       failed: "Er is iets misgegaan; mogelijk is het e-mailadres al geregistreerd. Probeer de koppeling 'Wachtwoord vergeten'."
     forgot_password:
@@ -1339,6 +1352,7 @@ nl:
       shift: "Shift"
       ctrl: "Ctrl"
       alt: "Alt"
+      enter: "Enter"
     conditional_loading_section:
       loading: Laden...
     category_row:
@@ -1558,6 +1572,26 @@ nl:
         confirm_title: "Meldingen ingeschakeld - %{site_title}"
         confirm_body: "Gelukt! Meldingen zijn ingeschakeld."
         custom: "Melding van {{username}} op %{site_title}"
+      titles:
+        mentioned: "genoemd"
+        replied: "nieuw antwoord"
+        quoted: "geciteerd"
+        edited: "bewerkt"
+        liked: "nieuwe like"
+        private_message: "nieuw privébericht"
+        invited_to_private_message: "uitgenodigd voor privébericht"
+        invitee_accepted: "uitnodiging geaccepteerd"
+        posted: "nieuw bericht"
+        moved_post: "bericht verplaatst"
+        linked: "gekoppeld"
+        granted_badge: "badge toegekend"
+        invited_to_topic: "uitgenodigd voor topic"
+        group_mentioned: "groep genoemd"
+        group_message_summary: "nieuwe groepsberichten"
+        watching_first_post: "nieuw topic"
+        topic_reminder: "topic-herinnering"
+        liked_consolidated: "nieuwe likes"
+        post_approved: "bericht goedgekeurd"
     upload_selector:
       title: "Een afbeelding toevoegen"
       title_with_attachments: "Een afbeelding of bestand toevoegen"
@@ -1689,17 +1723,14 @@ nl:
         read: "U hebt nog geen topics gelezen."
         posted: "U hebt nog niet in een topic gereageerd."
         latest: "Er zijn geen nieuwste topics. Dat is jammer."
-        hot: "Er zijn geen populaire topics."
         bookmarks: "U hebt nog geen bladwijzers voor topics gemaakt."
         category: "Er zijn geen topics in {{category}}."
         top: "Er zijn geen toptopics."
-        search: "Er zijn geen zoekresultaten."
         educate:
           new: '<p>Hier verschijnen uw nieuwe topics.</p><p> Standaard worden topics als nieuw beschouwd en verschijnt de indicator <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">nieuw</span> als deze de afgelopen 2 dagen zijn aangemaakt.</p><p>Bezoek uw <a href="%{userPrefsUrl}">voorkeuren</a> om dit te wijzigen.</p>'
           unread: '<p>Hier verschijnen uw ongelezen topics.</p><p>Standaard worden topics als ongelezen beschouwd en verschijnt het aantal ongelezen <span class="badge new-posts badge-notification">1</span> als u:</p><ul><li>Het topic hebt aangemaakt</li><li>Op het topic hebt geantwoord</li><li>Het topic langer dan 4 minuten hebt gelezen</li></ul><p>Of als u het topic expliciet op Gevolgd of In de gaten gehouden hebt gezet via de meldingsinstellingen onder elk topic.</p><p>Bezoek uw <a href="%{userPrefsUrl}">voorkeuren</a> om dit te wijzigen.</p>'
       bottom:
         latest: "Er zijn geen nieuwste topics meer."
-        hot: "Er zijn geen populaire topics meer."
         posted: "Er zijn geen topics meer geplaatst."
         read: "Er zijn geen gelezen topics meer."
         new: "Er zijn geen nieuwe topics meer."
@@ -1707,7 +1738,6 @@ nl:
         category: "Er zijn geen topics meer in {{category}}."
         top: "Er zijn geen toptopics meer."
         bookmarks: "Er zijn geen topics met bladwijzers meer."
-        search: "Er zijn geen zoekresultaten meer."
     topic:
       filter_to:
         one: "%{count} bericht in topic"
@@ -1725,6 +1755,9 @@ nl:
       edit_message:
         help: "Het eerste bericht van het bericht bewerken"
         title: "Bericht bewerken"
+      defer:
+        help: "Markeren als ongelezen"
+        title: "Negeren"
       list: "Topics"
       new: "nieuw topic"
       unread: "ongelezen"
@@ -1840,6 +1873,7 @@ nl:
         jump_bottom: "naar laatste bericht"
         jump_prompt: "springen naar..."
         jump_prompt_of: "van %{count} berichten"
+        jump_prompt_long: "Springen naar..."
         jump_bottom_with_number: "naar bericht %{post_number}"
         jump_prompt_to_date: "tot datum"
         jump_prompt_or: "of"
@@ -2477,15 +2511,9 @@ nl:
           one: "Nieuwste (%{count})"
           other: "Nieuwste ({{count}})"
         help: "topics met recente berichten"
-      hot:
-        title: "Populair"
-        help: "een selectie van de meest populaire topics"
       read:
         title: "Gelezen"
         help: "topics die u hebt gelezen, in de volgorde waarin u ze voor het laatst hebt gelezen"
-      search:
-        title: "Zoeken"
-        help: "alle topics doorzoeken"
       categories:
         title: "Categorieën"
         title_in: "Categorie - {{categoryName}}"
@@ -2557,6 +2585,11 @@ nl:
       content_load_error: '<a href="%url%">De inhoud</a> kon niet worden geladen.'
       image_load_error: '<a href="%url%">De afbeelding</a> kon niet worden geladen.'
     keyboard_shortcuts_help:
+      shortcut_key_delimiter_comma: ", "
+      shortcut_key_delimiter_plus: "+"
+      shortcut_delimiter_or: "%{shortcut1} of %{shortcut2}"
+      shortcut_delimiter_slash: "%{shortcut1}/%{shortcut2}"
+      shortcut_delimiter_space: "%{shortcut1} %{shortcut2}"
       title: "Sneltoetsen"
       jump_to:
         title: "Snel naar"
@@ -2731,20 +2764,16 @@ nl:
           read: "U hebt nog geen topics gelezen."
           posted: "U hebt nog geen berichten in topics geplaatst."
           latest: "Er zijn geen nieuwste topics."
-          hot: "Er zijn geen populaire topics."
           bookmarks: "U hebt nog geen topics met bladwijzers."
           top: "Er zijn geen toptopics."
-          search: "Er zijn geen zoekresultaten."
         bottom:
           latest: "Er zijn geen nieuwste topics meer."
-          hot: "Er zijn geen populaire topics meer."
           posted: "Er zijn geen geplaatste topics meer."
           read: "Er zijn geen gelezen topics meer."
           new: "Er zijn geen nieuwe topics meer."
           unread: "Er zijn geen ongelezen topics meer."
           top: "Er zijn geen toptopics meer."
           bookmarks: "Er zijn geen topics met bladwijzers meer."
-          search: "Er zijn geen zoekresultaten meer."
     invite:
       custom_message: "Maak uw uitnodiging iets persoonlijker door een <a href>eigen bericht</a> te schrijven."
       custom_message_placeholder: "Voer uw eigen bericht in"
@@ -2758,10 +2787,17 @@ nl:
     admin:
       title: "Discourse-beheer"
       moderator: "Moderator"
+      tags:
+        remove_muted_tags_from_latest:
+          always: "altijd"
+          only_muted: "bij enkel of gebruik met andere genegeerde tags"
+          never: "nooit"
       reports:
         title: "Lijst van beschikbare rapporten"
       dashboard:
         title: "Dashboard"
+        last_updated: "Dashboard bijgewerkt:"
+        discourse_last_updated: "Discourse bijgewerkt:"
         version: "Versie"
         up_to_date: "U bent up-to-date!"
         critical_available: "Er is een kritieke update beschikbaar."
@@ -2830,6 +2866,7 @@ nl:
           groups: "Alle groepen"
           disabled: "Dit rapport is uitgeschakeld"
           totals_for_sample: "Totalen voor steekproef"
+          average_for_sample: "Gemiddelde voor steekproef"
           total: "Totaal sinds begin"
           no_data: "Geen gegevens om weer te geven."
           trending_search:
@@ -3614,6 +3651,7 @@ nl:
         delete_posts_failed: "Er is een probleem opgetreden bij het verwijderen van de berichten."
         penalty_post_actions: "Wat wilt u met het gekoppelde bericht doen?"
         penalty_post_delete: "Het bericht verwijderen"
+        penalty_post_delete_replies: "Het bericht + alle antwoorden verwijderen"
         penalty_post_edit: "Het bericht bewerken"
         penalty_post_none: "Niets doen"
         penalty_count: "Aantal minpunten"

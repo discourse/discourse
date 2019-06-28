@@ -29,6 +29,11 @@ export default Ember.Controller.extend(PreferencesTabController, {
     return this.get("currentUser.id") === this.get("model.id");
   },
 
+  @computed("siteSettings.remove_muted_tags_from_latest")
+  hideMutedTags() {
+    return this.siteSettings.remove_muted_tags_from_latest !== "never";
+  },
+
   canSave: Ember.computed.or("canSee", "currentUser.admin"),
 
   actions: {

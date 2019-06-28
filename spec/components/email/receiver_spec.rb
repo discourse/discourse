@@ -298,6 +298,13 @@ describe Email::Receiver do
       expect(post.user).to eq(user)
     end
 
+    it "raises a ReplyNotAllowedError when user without permissions is replying" do
+      Fabricate(:user, email: "bob@bar.com")
+      category.set_permissions(admins: :full)
+      category.save
+      expect { process(:reply_user_not_matching_but_known) }.to raise_error(Email::Receiver::ReplyNotAllowedError)
+    end
+
     it "raises a TopicNotFoundError when the topic was deleted" do
       topic.update_columns(deleted_at: 1.day.ago)
       expect { process(:reply_user_matching) }.to raise_error(Email::Receiver::TopicNotFoundError)
@@ -444,7 +451,7 @@ describe Email::Receiver do
       category.email_in = "category@bar.com"
       category.email_in_allow_strangers = true
       category.set_permissions(Group[:trust_level_4] => :full)
-      category.save
+      category.save!
 
       expect { process(:staged_reply_restricted) }.to change { topic.posts.count }
     end
@@ -546,38 +553,77 @@ describe Email::Receiver do
       SiteSetting.incoming_email_prefer_html = false
 
       expect { process(:no_body_with_image) }.to change { topic.posts.count }
-      expect(topic.posts.last.raw).to match(/<img/)
+
+      post = topic.posts.last
+      upload = post.uploads.first
+
+      expect(post.raw).to include(
+        "![#{upload.original_filename}|#{upload.width}x#{upload.height}](#{upload.short_url})"
+      )
 
       expect { process(:inline_image) }.to change { topic.posts.count }
-      expect(topic.posts.last.raw).to match(/Before\s+<img.+>\s+After/)
+
+      post = topic.posts.last
+      upload = post.uploads.first
+
+      expect(post.raw).to include(
+        "![#{upload.original_filename}|#{upload.width}x#{upload.height}](#{upload.short_url})"
+      )
     end
 
     it "supports attached images in HTML part" do
       SiteSetting.incoming_email_prefer_html = true
 
       expect { process(:inline_image) }.to change { topic.posts.count }
-      expect(topic.posts.last.raw).to match(/\*\*Before\*\*\s+<img.+>\s+\*After\*/)
+
+      post = topic.posts.last
+      upload = post.uploads.last
+
+      expect(post.raw).to eq(<<~MD.chomp)
+      **Before**
+
+      ![#{upload.original_filename}|#{upload.width}x#{upload.height}](#{upload.short_url})
+
+      *After*
+      MD
     end
 
     it "supports attachments" do
       SiteSetting.authorized_extensions = "txt|jpg"
       expect { process(:attached_txt_file) }.to change { topic.posts.count }
       post = topic.posts.last
-      expect(post.raw).to match(/\APlease find some text file attached\.\s+<a class='attachment' href='\/uploads\/default\/original\/.+?txt'>text\.txt<\/a> \(20 Bytes\)\z/)
-      expect(post.uploads.size).to eq 1
+      upload = post.uploads.first
+
+      expect(post.raw).to eq(<<~MD.chomp)
+      Please find some text file attached.
+
+      [#{upload.original_filename}|attachment](#{upload.short_url}) (20 Bytes)
+      MD
 
       expect { process(:apple_mail_attachment) }.to change { topic.posts.count }
       post = topic.posts.last
-      expect(post.raw).to match(/\APicture below\.\s+<img.+?src="\/uploads\/default\/original\/.+?jpeg" class="">\s+Picture above\.\z/)
-      expect(post.uploads.size).to eq 1
+      upload = post.uploads.first
+
+      expect(post.raw).to eq(<<~MD.chomp)
+      Picture below.
+
+      ![#{upload.original_filename}|#{upload.width}x#{upload.height}](#{upload.short_url})
+
+      Picture above.
+      MD
     end
 
     it "supports eml attachments" do
       SiteSetting.authorized_extensions = "eml"
       expect { process(:attached_eml_file) }.to change { topic.posts.count }
       post = topic.posts.last
-      expect(post.raw).to match(/\APlease find the eml file attached\.\s+<a class='attachment' href='\/uploads\/default\/original\/.+?eml'>sample\.eml<\/a> \(193 Bytes\)\z/)
-      expect(post.uploads.size).to eq 1
+      upload = post.uploads.first
+
+      expect(post.raw).to eq(<<~MD.chomp)
+      Please find the eml file attached.
+
+      [#{upload.original_filename}|attachment](#{upload.short_url}) (193 Bytes)
+      MD
     end
 
     context "when attachment is rejected" do
@@ -606,8 +652,11 @@ describe Email::Receiver do
       SiteSetting.authorized_extensions = "pdf"
       expect { process(:attached_pdf_file) }.to change { topic.posts.count }
       post = topic.posts.last
-      expect(post.raw).to match(/\A\s+<a class='attachment' href='\/uploads\/default\/original\/.+?pdf'>discourse\.pdf<\/a> \(64 KB\)\z/)
-      expect(post.uploads.size).to eq 1
+      upload = post.uploads.last
+
+      expect(post.raw).to include(
+        "[#{upload.original_filename}|attachment](#{upload.short_url}) (64 KB)"
+      )
     end
 
     it "supports liking via email" do
@@ -752,8 +801,13 @@ describe Email::Receiver do
     it "supports any kind of attachments when 'allow_all_attachments_for_group_messages' is enabled" do
       SiteSetting.allow_all_attachments_for_group_messages = true
       expect { process(:attached_rb_file) }.to change(Topic, :count)
-      expect(Post.last.raw).to match(/<a\sclass='attachment'[^>]*>discourse\.rb<\/a>/)
-      expect(Post.last.uploads.length).to eq 1
+
+      post = Topic.last.first_post
+      upload = post.uploads.first
+
+      expect(post.raw).to include(
+        "[#{upload.original_filename}|attachment](#{upload.short_url}) (#{upload.filesize} Bytes)"
+      )
     end
 
     it "reenables user's PM email notifications when user emails new topic to group" do
@@ -853,7 +907,7 @@ describe Email::Receiver do
       group.save
 
       category.set_permissions(group => :create_post)
-      category.save
+      category.save!
 
       # raises an InvalidAccess when the user doesn't have the privileges to create a topic
       expect { process(:existing_user) }.to raise_error(Discourse::InvalidAccess)
@@ -926,7 +980,7 @@ describe Email::Receiver do
       Fabricate(:user, email: "tl4@bar.com", trust_level: TrustLevel[4])
 
       category.set_permissions(Group[:trust_level_4] => :full)
-      category.save
+      category.save!
 
       Group.refresh_automatic_group!(:trust_level_4)
 
@@ -1257,7 +1311,7 @@ describe Email::Receiver do
     context "read-only category" do
       before do
         category.set_permissions(everyone: :readonly)
-        category.save
+        category.save!
 
         Fabricate(:user, email: "alice@foo.com")
         Fabricate(:user, email: "bob@bar.com")

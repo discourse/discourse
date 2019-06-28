@@ -255,7 +255,7 @@ class ImportScripts::Answerbase < ImportScripts::Base
         upload = @uploader.create_upload(user_id, path, filename)
 
         if upload.present? && upload.persisted? && !upload_ids.include?(upload.id)
-          raw << "\n" << @uploader.html_for_upload(upload, filename)
+          raw = "#{raw}\n#{@uploader.html_for_upload(upload, filename)}"
         end
       else
         STDERR.puts "Could not find file: #{path}"

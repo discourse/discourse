@@ -261,6 +261,24 @@ class Admin::ThemesController < Admin::AdminController
     end
   end
 
+  def update_single_setting
+    params.require("name")
+    @theme = Theme.find_by(id: params[:id])
+    raise Discourse::InvalidParameters.new(:id) unless @theme
+
+    setting_name = params[:name].to_sym
+    new_value = params[:value] || nil
+
+    previous_value = @theme.included_settings[setting_name]
+    @theme.update_setting(setting_name, new_value)
+    @theme.save
+
+    log_theme_setting_change(setting_name, previous_value, new_value)
+
+    updated_setting = @theme.included_settings.select { |key, val| key == setting_name }
+    render json: updated_setting, status: :ok
+  end
+
   private
 
   def update_default_theme
@@ -326,6 +344,10 @@ class Admin::ThemesController < Admin::AdminController
 
   def log_theme_change(old_record, new_record)
     StaffActionLogger.new(current_user).log_theme_change(old_record, new_record)
+  end
+
+  def log_theme_setting_change(setting_name, previous_value, new_value)
+    StaffActionLogger.new(current_user).log_theme_setting_change(setting_name, previous_value, new_value, @theme)
   end
 
   def handle_switch

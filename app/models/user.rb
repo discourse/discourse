@@ -130,6 +130,9 @@ class User < ActiveRecord::Base
   after_create :ensure_in_trust_level_group
   after_create :set_default_categories_preferences
 
+  after_update :trigger_user_updated_event, if: :saved_change_to_uploaded_avatar_id?
+  after_update :trigger_user_automatic_group_refresh, if: :saved_change_to_staged?
+
   before_save :update_usernames
   before_save :ensure_password_is_hashed
   before_save :match_title_to_primary_group_changes
@@ -142,6 +145,7 @@ class User < ActiveRecord::Base
   after_save :expire_old_email_tokens
   after_save :index_search
   after_save :check_site_contact_username
+
   after_commit :trigger_user_created_event, on: :create
   after_commit :trigger_user_destroyed_event, on: :destroy
 
@@ -1413,6 +1417,18 @@ class User < ActiveRecord::Base
   end
 
   private
+
+  def trigger_user_automatic_group_refresh
+    if !staged
+      Group.user_trust_level_change!(id, trust_level)
+    end
+    true
+  end
+
+  def trigger_user_updated_event
+    DiscourseEvent.trigger(:user_updated, self)
+    true
+  end
 
   def check_if_title_is_badged_granted
     if title_changed? && !new_record? && user_profile

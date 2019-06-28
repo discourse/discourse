@@ -26,7 +26,8 @@ export default class {
     // Create an interval timer if we don't have one.
     if (!this._interval) {
       this._interval = setInterval(() => this.tick(), 1000);
-      $(window).on("scroll.screentrack", this.scrolled.bind(this));
+      this._boundScrolled = Ember.run.bind(this, this.scrolled);
+      $(window).on("scroll.screentrack", this._boundScrolled);
     }
 
     this._topicId = topicId;
@@ -39,7 +40,10 @@ export default class {
       return;
     }
 
-    $(window).off("scroll.screentrack", this.scrolled);
+    if (this._boundScrolled) {
+      $(window).off("scroll.screentrack", this._boundScrolled);
+    }
+
     this.tick();
     this.flush();
     this.reset();
@@ -100,6 +104,29 @@ export default class {
     const topicId = parseInt(this._topicId, 10);
     let highestSeen = 0;
 
+    // Workaround to avoid ignored posts being "stuck unread"
+    const controller = this._topicController;
+    const stream = controller ? controller.get("model.postStream") : null;
+    if (
+      this.currentUser && // Logged in
+      this.currentUser.get("ignored_users.length") && // At least 1 user is ignored
+      stream && // Sanity check
+      stream.hasNoFilters && // The stream is not filtered (by username or summary)
+      !stream.canAppendMore && // We are at the end of the stream
+      stream.posts.lastObject && // The last post exists
+      stream.posts.lastObject.read && // The last post is read
+      stream.gaps && // The stream has gaps
+      !!stream.gaps.after[stream.posts.lastObject.id] && // Stream ends with a gap
+      stream.topic.last_read_post_number !==
+        stream.posts.lastObject.post_number +
+          stream.get(`gaps.after.${stream.posts.lastObject.id}.length`) // The last post in the gap has not been marked read
+    ) {
+      newTimings[
+        stream.posts.lastObject.post_number +
+          stream.get(`gaps.after.${stream.posts.lastObject.id}.length`)
+      ] = 1;
+    }
+
     Object.keys(newTimings).forEach(postNumber => {
       highestSeen = Math.max(highestSeen, parseInt(postNumber, 10));
     });
@@ -128,12 +155,12 @@ export default class {
           }
         })
           .then(() => {
-            const controller = this._topicController;
-            if (controller) {
+            const topicController = this._topicController;
+            if (topicController) {
               const postNumbers = Object.keys(newTimings).map(v =>
                 parseInt(v, 10)
               );
-              controller.readPosts(topicId, postNumbers);
+              topicController.readPosts(topicId, postNumbers);
             }
           })
           .catch(e => {

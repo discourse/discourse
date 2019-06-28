@@ -103,7 +103,6 @@ uk:
   read_full_topic: "Читати тему цілком"
   rss_description:
     latest: "Останні теми"
-    hot: "Гарячі теми"
     posts: "Останні дописи"
     group_posts: "Останні дописи від %{group_name}"
     user_posts: "Останні дописи @%{username}"
@@ -181,6 +180,7 @@ uk:
       half_a_minute: "< 1 хв"
     distance_in_words_verbose:
       half_a_minute: "щойно"
+      less_than_x_seconds: "щойно"
       x_seconds:
         one: "%{count} секунда тому"
         few: "%{count} секунд тому"
@@ -526,8 +526,6 @@ uk:
     see_more: "Більше"
     search_title: "Пошук на цьому сайті"
     search_button: "Пошук"
-  terms_of_service:
-    title: "Умови Використання"
   deleted: "deleted"
   image: "зображення"
   upload:
@@ -550,9 +548,6 @@ uk:
     sender_message_to_blank: "message.to is blank"
     sender_text_part_body_blank: "text_part.body is blank"
     sender_body_blank: "body is blank"
-  about: "Про"
-  guidelines: "Інструкції"
-  privacy: "Конфіденційність"
   edit_this_page: "Редагувати цю сторінку"
   csv_export:
     boolean_yes: "Так"

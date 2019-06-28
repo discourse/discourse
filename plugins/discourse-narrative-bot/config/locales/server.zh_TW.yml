@@ -6,6 +6,8 @@
 # https://www.transifex.com/projects/p/discourse-org/
 
 zh_TW:
+  site_settings:
+    discourse_narrative_bot_enabled: '啟用 Discourse 機器人'
   discourse_narrative_bot:
     magic_8_ball:
       answers:
