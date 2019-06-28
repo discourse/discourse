@@ -267,15 +267,12 @@ class Search
 
   advanced_filter(/^in:tagged$/) do |posts|
     posts
-      .joins("JOIN topic_tags ON
-        topic_tags.topic_id = posts.topic_id")
+      .where('EXISTS (SELECT 1 FROM topic_tags WHERE topic_tags.topic_id = posts.topic_id)')
   end
 
   advanced_filter(/^in:untagged$/) do |posts|
     posts
-      .joins("LEFT JOIN topic_tags ON
-        topic_tags.topic_id = posts.topic_id")
-      .where("topic_tags.id IS NULL")
+      .where('NOT EXISTS (SELECT 1 FROM topic_tags WHERE topic_tags.topic_id = posts.topic_id)')
   end
 
   advanced_filter(/^status:open$/) do |posts|
