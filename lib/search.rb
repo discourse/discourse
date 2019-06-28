@@ -272,7 +272,9 @@ class Search
 
   advanced_filter(/^in:untagged$/) do |posts|
     posts
-      .where('NOT EXISTS (SELECT 1 FROM topic_tags WHERE topic_tags.topic_id = posts.topic_id)')
+      .joins("LEFT JOIN topic_tags ON
+        topic_tags.topic_id = posts.topic_id")
+      .where("topic_tags.id IS NULL")
   end
 
   advanced_filter(/^status:open$/) do |posts|
