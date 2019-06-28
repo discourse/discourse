@@ -265,6 +265,18 @@ class Search
     @advanced_filters
   end
 
+  advanced_filter(/^in:tagged$/) do |posts|
+    posts
+      .where('EXISTS (SELECT 1 FROM topic_tags WHERE topic_tags.topic_id = posts.topic_id)')
+  end
+
+  advanced_filter(/^in:untagged$/) do |posts|
+    posts
+      .joins("LEFT JOIN topic_tags ON
+        topic_tags.topic_id = posts.topic_id")
+      .where("topic_tags.id IS NULL")
+  end
+
   advanced_filter(/^status:open$/) do |posts|
     posts.where('NOT topics.closed AND NOT topics.archived')
   end
