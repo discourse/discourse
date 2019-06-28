@@ -55,7 +55,7 @@ export default Ember.Component.extend({
   showTitle: true,
   showFilteringUI: false,
   showDatesOptions: Ember.computed.alias("model.dates_filtering"),
-  showExport: Ember.computed.not("model.onlyTable"),
+  showExport: Ember.computed.not("model.isTable"),
   showRefresh: Ember.computed.or(
     "showDatesOptions",
     "model.available_filters.length"
@@ -170,8 +170,9 @@ export default Ember.Component.extend({
       "[:prev_period]",
       this.get("reportOptions.table.limit"),
       customFilters
-        ? JSON.stringify(customFilters, (key, value) =>
-            isNumeric(value) ? value.toString() : value
+        ? JSON.stringify(
+            customFilters,
+            (key, value) => (isNumeric(value) ? value.toString() : value)
           )
         : null,
       SCHEMA_VERSION
