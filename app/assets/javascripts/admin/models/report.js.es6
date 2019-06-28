@@ -16,8 +16,8 @@ const Report = Discourse.Model.extend({
   higher_is_better: true,
 
   @computed("modes")
-  onlyTable(modes) {
-    return modes.length === 1 && modes[0] === "table";
+  isTable(modes) {
+    return modes.some(mode => mode === "table");
   },
 
   @computed("type", "start_date", "end_date")
