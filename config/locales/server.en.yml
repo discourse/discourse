@@ -2915,9 +2915,9 @@ en:
       text_body_template: |
         Hello,
 
-        This is an automated message from %{site_name} to inform you that [user's profile](%{base_url}/u/%{username}/summary) has been ignored by %{ignores_threshold} users. This could indicate a problem is developing in your community.
+        This is an automated message from %{site_name} to inform you that @%{username} has been ignored by %{ignores_threshold} users. This could indicate a problem is developing in your community.
 
-        You might want to review recent posts from this user, and potentially other users in the [ignored user report](%{base_url}/admin/reports/top_ignored_users).
+        You might want to [review recent posts](%{base_url}/u/%{username}/summary) from this user, and potentially other users in the [ignored and muted user report](%{base_url}/admin/reports/top_ignored_users).
 
         For additional guidance, please refer to our [community guidelines](%{base_url}/guidelines).
 
