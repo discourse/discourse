@@ -1,5 +1,6 @@
 # Contributor Covenant Code of Conduct
-
+Shago7932/Master
+code of confuct to all developers
 ## Our Pledge
 
 In the interest of fostering an open and welcoming environment, we as
