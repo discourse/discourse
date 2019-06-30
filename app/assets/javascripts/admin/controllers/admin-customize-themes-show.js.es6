@@ -303,16 +303,18 @@ export default Ember.Controller.extend({
       }
     },
 
-    enableComponent(model) {
-      model = model || this.model;
-      model.set("enabled", true);
-      model.saveChanges("enabled").catch(() => model.set("enabled", false));
+    enableComponent() {
+      this.model.set("enabled", true);
+      this.model
+        .saveChanges("enabled")
+        .catch(() => this.model.set("enabled", false));
     },
 
-    disableComponent(model) {
-      model = model || this.model;
-      model.set("enabled", false);
-      model.saveChanges("enabled").catch(() => model.set("enabled", true));
+    disableComponent() {
+      this.model.set("enabled", false);
+      this.model
+        .saveChanges("enabled")
+        .catch(() => this.model.set("enabled", true));
     }
   }
 });

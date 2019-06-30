@@ -3480,6 +3480,7 @@ en:
           inactive_themes: "Inactive themes:"
           inactive_components: "Unused components:"
           broken_theme_tooltip: "This theme has errors in its CSS, HTML or YAML"
+          disabled_component_tooltip: "This component has been disabled"
           default_theme_tooltip: "This theme is the site's default theme"
           updates_available_tooltip: "Updates are available for this theme"
           and_x_more: "and {{count}} more."

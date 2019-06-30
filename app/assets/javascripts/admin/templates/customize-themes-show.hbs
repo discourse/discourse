@@ -40,6 +40,9 @@
       {{else}}
         {{i18n "admin.customize.theme.disabled"}}
       {{/if}}
+      {{#d-button class='btn-default' action=(action "enableComponent") icon="check"}}
+        {{i18n "admin.customize.theme.enable"}}
+      {{/d-button}}
     </div>
   {{/unless}}
 
@@ -49,20 +52,6 @@
       {{inline-edit-checkbox action=(action "applyUserSelectable") labelKey="admin.customize.theme.user_selectable" checked=model.user_selectable}}
     </div>
   {{/unless}}
-
-  {{#if model.component}}
-    <div class="control-unit">
-      {{#unless model.enabled}}
-        {{#d-button class='btn-default' action=(action "enableComponent") icon="check"}}
-          {{i18n "admin.customize.theme.enable"}}
-        {{/d-button}}
-      {{else}}
-        {{#d-button class='btn-default' action=(action "disableComponent") icon="ban"}}
-          {{i18n "admin.customize.theme.disable"}}
-        {{/d-button}}
-      {{/unless}}
-    </div>
-  {{/if}}
 
   {{#if model.remote_theme}}
 
@@ -238,12 +227,6 @@
                 {{child.name}}
               {{/link-to}}
 
-              {{#unless child.enabled}}
-                {{d-button action=(action "enableComponent") actionParam=child class="col btn-primary" icon="check"}}
-              {{else}}
-                {{d-button action=(action "disableComponent") actionParam=child class="col btn-default" icon="ban"}}
-              {{/unless}}
-
               {{d-button action=(action "removeChildTheme") actionParam=child class="btn-default cancel-edit col" icon="times"}}
             </li>
           {{/each}}
@@ -262,5 +245,18 @@
   <a class="btn btn-default export" target="_blank" href={{downloadUrl}}>{{d-icon "download"}} {{i18n 'admin.export_json.button_text'}}</a>
 
   {{d-button action=(action "switchType") label="admin.customize.theme.convert" icon=convertIcon class="btn-default btn-normal" title=convertTooltip}}
+
+  {{#if model.component}}
+    {{#if model.enabled}}
+      {{#d-button class='btn-default' action=(action "disableComponent") icon="ban"}}
+        {{i18n "admin.customize.theme.disable"}}
+      {{/d-button}}
+    {{else}}
+      {{#d-button class='btn-default' action=(action "enableComponent") icon="check"}}
+        {{i18n "admin.customize.theme.enable"}}
+      {{/d-button}}
+    {{/if}}
+  {{/if}}
+
   {{d-button action=(action "destroy") label="admin.customize.delete" icon="trash-alt" class="btn-danger"}}
 </div>
