@@ -5,6 +5,13 @@ import computed from "ember-addons/ember-computed-decorators";
 export default Ember.Controller.extend(bufferedProperty("emailTemplate"), {
   saved: false,
 
+  @computed("buffered.body", "buffered.subject")
+  saveDisabled(body, subject) {
+    return (
+      this.emailTemplate.body === body && this.emailTemplate.subject === subject
+    );
+  },
+
   @computed("buffered")
   hasMultipleSubjects(buffered) {
     if (buffered.getProperties("subject")["subject"]) {

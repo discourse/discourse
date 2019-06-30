@@ -45,7 +45,7 @@ class Admin::SiteTextsController < Admin::AdminController
     end
 
     extras[:has_more] = true if results.size > 50
-    render_serialized(results[0..49], SiteTextSerializer, root: 'site_texts', rest_serializer: true, extras: extras)
+    render_serialized(results[0..49], SiteTextSerializer, root: 'site_texts', rest_serializer: true, extras: extras, overridden_keys: overridden_keys)
   end
 
   def show
@@ -171,5 +171,9 @@ class Admin::SiteTextsController < Admin::AdminController
     plural_keys.map do |k|
       [k, value[k] || fallback_value[k] || fallback_value[:other]]
     end.to_h
+  end
+
+  def overridden_keys
+    TranslationOverride.where(locale: I18n.locale).pluck(:translation_key)
   end
 end
