@@ -40,9 +40,11 @@
       {{else}}
         {{i18n "admin.customize.theme.disabled"}}
       {{/if}}
-      {{#d-button class='btn-default' action=(action "enableComponent") icon="check"}}
-        {{i18n "admin.customize.theme.enable"}}
-      {{/d-button}}
+      {{d-button
+        class='btn-default'
+        action=(action "enableComponent")
+        icon="check"
+        label="admin.customize.theme.enable"}}
     </div>
   {{/unless}}
 
@@ -248,13 +250,17 @@
 
   {{#if model.component}}
     {{#if model.enabled}}
-      {{#d-button class='btn-default' action=(action "disableComponent") icon="ban"}}
-        {{i18n "admin.customize.theme.disable"}}
-      {{/d-button}}
+      {{d-button
+        class='btn-default'
+        action=(action "disableComponent")
+        icon="ban"
+        label="admin.customize.theme.disable"}}
     {{else}}
-      {{#d-button class='btn-default' action=(action "enableComponent") icon="check"}}
-        {{i18n "admin.customize.theme.enable"}}
-      {{/d-button}}
+      {{d-button
+        class='btn-default'
+        action=(action "enableComponent")
+        icon="check"
+        label="admin.customize.theme.enable"}}
     {{/if}}
   {{/if}}
 
