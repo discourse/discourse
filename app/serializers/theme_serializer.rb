@@ -64,7 +64,7 @@ end
 
 class ThemeSerializer < BasicThemeSerializer
   attributes :color_scheme, :color_scheme_id, :user_selectable, :remote_theme_id,
-             :settings, :errors, :supported?, :description, :disabled?, :disabled_at
+             :settings, :errors, :supported?, :description, :enabled?, :disabled_at
 
   has_one :user, serializer: UserNameSerializer, embed: :object
   has_one :disabled_by, serializer: UserNameSerializer, embed: :object
@@ -112,7 +112,7 @@ class ThemeSerializer < BasicThemeSerializer
   end
 
   def include_disabled_at?
-    object.component? && object.disabled?
+    object.component? && !object.enabled?
   end
 
   def include_disabled_by?

@@ -305,14 +305,14 @@ export default Ember.Controller.extend({
 
     enableComponent(model) {
       model = model || this.model;
-      model.set("disabled", false);
-      model.saveChanges("disabled").catch(() => model.set("disabled", true));
+      model.set("enabled", true);
+      model.saveChanges("enabled").catch(() => model.set("enabled", false));
     },
 
     disableComponent(model) {
       model = model || this.model;
-      model.set("disabled", true);
-      model.saveChanges("disabled").catch(() => model.set("disabled", false));
+      model.set("enabled", false);
+      model.saveChanges("enabled").catch(() => model.set("enabled", true));
     }
   }
 });

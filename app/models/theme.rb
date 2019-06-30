@@ -158,7 +158,7 @@ class Theme < ActiveRecord::Base
 
       disabled_ids = Theme.where(id: all_ids)
         .includes(:remote_theme)
-        .select { |t| !t.supported? || t.disabled? }
+        .select { |t| !t.supported? || !t.enabled? }
         .pluck(:id)
 
       all_ids - disabled_ids
@@ -218,7 +218,7 @@ class Theme < ActiveRecord::Base
     return unless component
 
     Theme.transaction do
-      self.disabled = false
+      self.enabled = true
       self.component = false
       ChildTheme.where("child_theme_id = ?", id).destroy_all
       self.save!
@@ -504,7 +504,7 @@ class Theme < ActiveRecord::Base
   private
 
   def find_disable_action_log
-    if component? && disabled?
+    if component? && !enabled?
       @disable_log ||= UserHistory.where(context: id.to_s, action: UserHistory.actions[:disable_theme_component]).order("created_at DESC").first
     end
   end
@@ -525,7 +525,7 @@ end
 #  color_scheme_id  :integer
 #  remote_theme_id  :integer
 #  component        :boolean          default(FALSE), not null
-#  disabled         :boolean          default(FALSE), not null
+#  enabled          :boolean          default(TRUE), not null
 #
 # Indexes
 #

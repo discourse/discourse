@@ -75,7 +75,7 @@ describe Theme do
   it '#transform_ids filters out disabled components' do
     theme.add_child_theme!(child)
     expect(Theme.transform_ids([theme.id], extend: true)).to eq([theme.id, child.id])
-    child.update!(disabled: true)
+    child.update!(enabled: false)
     expect(Theme.transform_ids([theme.id], extend: true)).to eq([theme.id])
   end
 

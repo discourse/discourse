@@ -327,12 +327,12 @@ describe Admin::ThemesController do
 
       put "/admin/themes/#{child.id}.json", params: {
         theme: {
-          disabled: true
+          enabled: false
         }
       }
       expect(response.status).to eq(200)
       json = JSON.parse(response.body)
-      expect(json["theme"]["disabled"]).to eq(true)
+      expect(json["theme"]["enabled"]).to eq(false)
       expect(UserHistory.where(
         context: child.id.to_s,
         action: UserHistory.actions[:disable_theme_component]
@@ -340,12 +340,12 @@ describe Admin::ThemesController do
       expect(json["theme"]["disabled_by"]["id"]).to eq(admin.id)
     end
 
-    it 'enabling a component doesn\'t create a staff action log' do
+    it "enabling a component doesn't create a staff action log" do
       child = Fabricate(:theme, component: true)
 
       put "/admin/themes/#{child.id}.json", params: {
         theme: {
-          disabled: true
+          enabled: false
         }
       }
       expect(response.status).to eq(200)
@@ -356,12 +356,12 @@ describe Admin::ThemesController do
 
       put "/admin/themes/#{child.id}.json", params: {
         theme: {
-          disabled: false
+          enabled: true
         }
       }
       expect(response.status).to eq(200)
       json = JSON.parse(response.body)
-      expect(json["theme"]["disabled"]).to eq(false)
+      expect(json["theme"]["enabled"]).to eq(true)
       expect(UserHistory.where(
         context: child.id.to_s,
         action: UserHistory.actions[:disable_theme_component]

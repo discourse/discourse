@@ -156,9 +156,9 @@ class Admin::ThemesController < Admin::AdminController
     raise Discourse::InvalidParameters.new(:id) unless @theme
 
     original_json = ThemeSerializer.new(@theme, root: false).to_json
-    disables_component = [true, "true"].include?(theme_params[:disabled])
+    disables_component = [false, "false"].include?(theme_params[:enabled])
 
-    [:name, :color_scheme_id, :user_selectable, :disabled].each do |field|
+    [:name, :color_scheme_id, :user_selectable, :enabled].each do |field|
       if theme_params.key?(field)
         @theme.public_send("#{field}=", theme_params[field])
       end
@@ -307,7 +307,7 @@ class Admin::ThemesController < Admin::AdminController
           :default,
           :user_selectable,
           :component,
-          :disabled,
+          :enabled,
           settings: {},
           translations: {},
           theme_fields: [:name, :target, :value, :upload_id, :type_id],

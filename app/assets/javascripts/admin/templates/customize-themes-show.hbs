@@ -28,7 +28,7 @@
     </div>
   {{/unless}}
 
-  {{#if model.disabled}}
+  {{#unless model.enabled}}
     <div class="alert alert-error">
       {{#if model.disabled_by}}
         {{i18n "admin.customize.theme.disabled_by"}}
@@ -41,7 +41,7 @@
         {{i18n "admin.customize.theme.disabled"}}
       {{/if}}
     </div>
-  {{/if}}
+  {{/unless}}
 
   {{#unless model.component}}
     <div class="control-unit">
@@ -52,7 +52,7 @@
 
   {{#if model.component}}
     <div class="control-unit">
-      {{#if model.disabled}}
+      {{#unless model.enabled}}
         {{#d-button class='btn-default' action=(action "enableComponent") icon="check"}}
           {{i18n "admin.customize.theme.enable"}}
         {{/d-button}}
@@ -60,7 +60,7 @@
         {{#d-button class='btn-default' action=(action "disableComponent") icon="ban"}}
           {{i18n "admin.customize.theme.disable"}}
         {{/d-button}}
-      {{/if}}
+      {{/unless}}
     </div>
   {{/if}}
 
@@ -233,16 +233,16 @@
       {{#if model.childThemes.length}}
         <ul class='removable-list'>
           {{#each model.childThemes as |child|}}
-            <li class={{if child.disabled "disabled-child"}}>
+            <li class={{unless child.enabled "disabled-child"}}>
               {{#link-to 'adminCustomizeThemes.show' child replace=true class='col child-link'}}
                 {{child.name}}
               {{/link-to}}
 
-              {{#if child.disabled}}
+              {{#unless child.enabled}}
                 {{d-button action=(action "enableComponent") actionParam=child class="col btn-primary" icon="check"}}
               {{else}}
                 {{d-button action=(action "disableComponent") actionParam=child class="col btn-default" icon="ban"}}
-              {{/if}}
+              {{/unless}}
 
               {{d-button action=(action "removeChildTheme") actionParam=child class="btn-default cancel-edit col" icon="times"}}
             </li>
