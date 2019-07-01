@@ -68,10 +68,12 @@ const ApplicationRoute = Discourse.Route.extend(OpenComposer, {
     composePrivateMessage(user, post) {
       const recipient = user ? user.get("username") : "",
         reply = post
-          ? window.location.protocol +
-            "//" +
-            window.location.host +
-            post.get("url")
+          ? `${window.location.protocol}//${window.location.host}${post.url}`
+          : null,
+        title = post
+          ? I18n.t("composer.reference_topic_title", {
+              title: post.topic.fancyTitle
+            })
           : null;
 
       // used only once, one less dependency
@@ -80,7 +82,8 @@ const ApplicationRoute = Discourse.Route.extend(OpenComposer, {
         usernames: recipient,
         archetypeId: "private_message",
         draftKey: "new_private_message",
-        reply: reply
+        reply,
+        title
       });
     },
 
