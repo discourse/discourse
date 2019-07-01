@@ -41,6 +41,10 @@ module Jobs
         unless post.present?
           return skip(SkippedEmailLog.reason_types[:user_email_post_not_found])
         end
+
+        if !Guardian.new(user).can_see?(post)
+          return skip(SkippedEmailLog.reason_types[:user_email_access_denied])
+        end
       end
 
       if args[:notification_id].present?
