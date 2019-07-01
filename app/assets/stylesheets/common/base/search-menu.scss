@@ -253,6 +253,17 @@
     .topic {
       display: inline-block;
       line-height: $line-height-medium;
+
+      .second-line {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+
+        .discourse-tags {
+          flex-wrap: wrap;
+          display: contents;
+        }
+      }
     }
 
     .topic-title {
