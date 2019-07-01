@@ -167,6 +167,10 @@ module FileStore
       end
     end
 
+    def download_file(upload, destination_path)
+      @s3_helper.download_file(get_upload_key(upload), destination_path)
+    end
+
     private
 
     def get_upload_key(upload)
