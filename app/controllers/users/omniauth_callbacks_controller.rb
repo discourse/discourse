@@ -19,6 +19,15 @@ class Users::OmniauthCallbacksController < ApplicationController
   skip_before_action :verify_authenticity_token, only: :complete
 
   def complete
+    if result = request.env["omniauth.result"]
+      @auth_result = result
+
+      return respond_to do |format|
+        format.html
+        format.json { render json: @auth_result.to_client_hash }
+      end
+    end
+
     auth = request.env["omniauth.auth"]
     raise Discourse::NotFound unless request.env["omniauth.auth"]
 
