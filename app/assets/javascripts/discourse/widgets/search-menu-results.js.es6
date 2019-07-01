@@ -148,24 +148,27 @@ createSearchResult({
   builder(result, term) {
     const topic = result.topic;
 
-    const linkContent = [
-      h("div.header", [
-        this.attach("topic-status", { topic, disableActions: true }),
-        h("span.topic-title", new Highlighted(topic.fancyTitle, term))
-      ]),
+    const firstLine = [
+      this.attach("topic-status", { topic, disableActions: true }),
+      h("span.topic-title", new Highlighted(topic.fancyTitle, term))
+    ];
+
+    const secondLine = [
       this.attach("category-link", {
         category: topic.category,
         link: false
       })
     ];
-
     if (Discourse.SiteSettings.tagging_enabled) {
-      linkContent.push(
+      secondLine.push(
         this.attach("discourse-tags", { topic, tagName: "span" })
       );
     }
 
-    const link = h("span.topic", linkContent);
+    const link = h("span.topic", [
+      h("div.first-line", firstLine),
+      h("div.second-line", secondLine)
+    ]);
 
     return postResult.call(this, result, link, term);
   }
