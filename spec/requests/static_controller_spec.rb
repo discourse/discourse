@@ -262,6 +262,13 @@ describe StaticController do
       end
     end
 
+    context 'with a redirect path with query params' do
+      it 'redirects to the redirect path and preserves query params' do
+        post "/login.json", params: { redirect: '/foo?bar=1' }
+        expect(response).to redirect_to('/foo?bar=1')
+      end
+    end
+
     context 'with a period to force a new host' do
       it 'redirects to the root path' do
         post "/login.json", params: { redirect: ".org/foo" }
