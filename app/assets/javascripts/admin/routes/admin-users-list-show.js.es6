@@ -21,7 +21,7 @@ export default Discourse.Route.extend({
           refreshing: false
         });
 
-        controller._refreshUsers();
+        controller.resetFilters();
       }
     }
   }
