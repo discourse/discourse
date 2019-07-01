@@ -1632,6 +1632,10 @@ backups:
   include_thumbnails_in_backups:
     default: false
     shadowed_by_global: true
+  include_s3_uploads_in_backups:
+    default: false
+    shadowed_by_global: true
+    hidden: true
 
 search:
   min_search_term_length:
