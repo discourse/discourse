@@ -235,6 +235,24 @@ describe Jobs::UserEmail do
       expect(user.last_emailed_at).to eq(last_emailed_at)
     end
 
+    it "creates a skipped email log when the usere isn't allowed to see the post" do
+      user.user_option.update(email_level: UserOption.email_level_types[:always])
+      post.topic.convert_to_private_message(Discourse.system_user)
+
+      expect do
+        Jobs::UserEmail.new.execute(type: :user_posted, user_id: user.id, post_id: post.id)
+      end.to change { SkippedEmailLog.count }.by(1)
+
+      expect(SkippedEmailLog.exists?(
+        email_type: "user_posted",
+        user: user,
+        post: post,
+        to_address: user.email,
+        reason_type: SkippedEmailLog.reason_types[:user_email_access_denied]
+      )).to eq(true)
+
+      expect(ActionMailer::Base.deliveries).to eq([])
+    end
   end
 
   context 'args' do
