@@ -72,7 +72,7 @@ const ApplicationRoute = Discourse.Route.extend(OpenComposer, {
           : null,
         title = post
           ? I18n.t("composer.reference_topic_title", {
-              title: post.topic.fancyTitle
+              title: post.topic.title
             })
           : null;
 
