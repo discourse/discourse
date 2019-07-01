@@ -54,19 +54,15 @@ module Jobs
       # ensure directory exists
       FileUtils.mkdir_p(UserExport.base_directory) unless Dir.exists?(UserExport.base_directory)
 
-      # write to CSV file
-      CSV.open(absolute_path, "w") do |csv|
+      # Generate a compressed CSV file
+      csv_to_export = CSV.generate do |csv|
         csv << get_header if @entity != "report"
         public_send(export_method).each { |d| csv << d }
       end
 
-      # compress CSV file
       compressed_file_path = "#{absolute_path}.zip"
-
       Zip::File.open(compressed_file_path, Zip::File::CREATE) do |zipfile|
-        zipfile.add(file_name, absolute_path)
-
-        zipfile.close
+        zipfile.get_output_stream(file_name) { |f| f.puts csv_to_export }
       end
 
       # create upload

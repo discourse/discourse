@@ -16,7 +16,7 @@ class ThemeStore::TgzImporter
   def import!
     FileUtils.mkdir(@temp_folder)
 
-    if @filename.ends_with?('.zip')
+    if @filename.include?('.zip')
       name = @filename.split('/').last.gsub('.zip', '')
 
       Dir.chdir(@temp_folder) do
