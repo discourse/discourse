@@ -19,6 +19,10 @@ class Plugin::CustomEmoji
     emojis[name] = url
   end
 
+  def self.unregister(name)
+    emojis.delete(name)
+  end
+
   def self.translations
     @@translations ||= {}
   end
