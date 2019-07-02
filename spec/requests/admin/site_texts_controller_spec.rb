@@ -177,6 +177,26 @@ RSpec.describe Admin::SiteTextsController do
         expect(response.status).to eq(404)
       end
 
+      it 'returns overridden = true if there is a translation_overrides record for the key' do
+        key = 'js.topic.list'
+        put "/admin/customize/site_texts/#{key}.json", params: {
+          site_text: { value: I18n.t(key) }
+        }
+        expect(response.status).to eq(200)
+
+        get "/admin/customize/site_texts/#{key}.json"
+        expect(response.status).to eq(200)
+        json = JSON.parse(response.body)
+        expect(json['site_text']['overridden']).to eq(true)
+
+        TranslationOverride.destroy_all
+
+        get "/admin/customize/site_texts/#{key}.json"
+        expect(response.status).to eq(200)
+        json = JSON.parse(response.body)
+        expect(json['site_text']['overridden']).to eq(false)
+      end
+
       context 'plural keys' do
         before do
           I18n.backend.store_translations(:en, colour: { one: '%{count} colour', other: '%{count} colours' })
