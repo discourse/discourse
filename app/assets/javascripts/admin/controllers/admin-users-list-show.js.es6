@@ -18,7 +18,7 @@ export default Ember.Controller.extend(CanCheckEmails, {
   init() {
     this._super(...arguments);
 
-    this._page = 0;
+    this._page = 1;
     this._results = [];
     this._canLoadMore = true;
   },
@@ -33,7 +33,7 @@ export default Ember.Controller.extend(CanCheckEmails, {
   }, 250).observes("listFilter"),
 
   resetFilters() {
-    this._page = 0;
+    this._page = 1;
     this._results = [];
     this._canLoadMore = true;
     this._refreshUsers();
