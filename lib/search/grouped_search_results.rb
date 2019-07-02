@@ -24,7 +24,8 @@ class Search
       :term,
       :search_context,
       :include_blurbs,
-      :more_full_page_results
+      :more_full_page_results,
+      :error
     )
 
     attr_accessor :search_log_id
@@ -40,6 +41,11 @@ class Search
       @users = []
       @tags = []
       @groups = []
+      @error = nil
+    end
+
+    def error=(error)
+      @error = error
     end
 
     def find_user_data(guardian)
