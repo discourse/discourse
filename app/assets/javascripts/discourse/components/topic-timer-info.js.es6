@@ -1,6 +1,8 @@
 import { iconHTML } from "discourse-common/lib/icon-library";
 import { bufferedRender } from "discourse-common/lib/buffered-render";
 import Category from "discourse/models/category";
+import computed from "ember-addons/ember-computed-decorators";
+import { REMINDER_TYPE } from "discourse/controllers/edit-topic-timer";
 
 export default Ember.Component.extend(
   bufferedRender({
@@ -15,6 +17,12 @@ export default Ember.Component.extend(
       "duration",
       "categoryId"
     ],
+
+    @computed("statusType")
+    canRemoveTimer(type) {
+      if (type === REMINDER_TYPE) return true;
+      return this.currentUser && this.currentUser.get("canManageTopic");
+    },
 
     buildBuffer(buffer) {
       if (!this.executeAt) return;
@@ -65,7 +73,7 @@ export default Ember.Component.extend(
             "far-clock"
           )} ${I18n.t(this._noticeKey(), options)}</span>`
         );
-        if (this.removeTopicTimer) {
+        if (this.removeTopicTimer && this.canRemoveTimer) {
           buffer.push(
             `<button class="btn topic-timer-remove no-text" title="${I18n.t(
               "post.controls.remove_timer"
