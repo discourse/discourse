@@ -55,7 +55,6 @@ export default Ember.Component.extend({
   showTitle: true,
   showFilteringUI: false,
   showDatesOptions: Ember.computed.alias("model.dates_filtering"),
-  showExport: Ember.computed.not("model.isTable"),
   showRefresh: Ember.computed.or(
     "showDatesOptions",
     "model.available_filters.length"
