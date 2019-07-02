@@ -96,7 +96,8 @@ class UserHistory < ActiveRecord::Base
       embeddable_host_destroy: 75,
       web_hook_deactivate: 76,
       change_theme_setting: 77,
-      disable_theme_component: 78
+      disable_theme_component: 78,
+      enable_theme_component: 79
     )
   end
 

@@ -340,8 +340,9 @@ describe Admin::ThemesController do
       expect(json["theme"]["disabled_by"]["id"]).to eq(admin.id)
     end
 
-    it "enabling a component doesn't create a staff action log" do
+    it "enabling/disabling a component creates the correct staff action log" do
       child = Fabricate(:theme, component: true)
+      UserHistory.destroy_all
 
       put "/admin/themes/#{child.id}.json", params: {
         theme: {
@@ -349,10 +350,15 @@ describe Admin::ThemesController do
         }
       }
       expect(response.status).to eq(200)
+
       expect(UserHistory.where(
         context: child.id.to_s,
         action: UserHistory.actions[:disable_theme_component]
       ).size).to eq(1)
+      expect(UserHistory.where(
+        context: child.id.to_s,
+        action: UserHistory.actions[:enable_theme_component]
+      ).size).to eq(0)
 
       put "/admin/themes/#{child.id}.json", params: {
         theme: {
@@ -361,13 +367,18 @@ describe Admin::ThemesController do
       }
       expect(response.status).to eq(200)
       json = JSON.parse(response.body)
-      expect(json["theme"]["enabled"]).to eq(true)
+
       expect(UserHistory.where(
         context: child.id.to_s,
         action: UserHistory.actions[:disable_theme_component]
       ).size).to eq(1)
+      expect(UserHistory.where(
+        context: child.id.to_s,
+        action: UserHistory.actions[:enable_theme_component]
+      ).size).to eq(1)
 
       expect(json["theme"]["disabled_by"]).to eq(nil)
+      expect(json["theme"]["enabled"]).to eq(true)
     end
 
     it 'handles import errors on update' do

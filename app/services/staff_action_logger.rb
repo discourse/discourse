@@ -214,6 +214,14 @@ class StaffActionLogger
     ))
   end
 
+  def log_theme_component_enabled(component)
+    UserHistory.create!(params.merge(
+      action: UserHistory.actions[:enable_theme_component],
+      subject: component.name,
+      context: component.id
+    ))
+  end
+
   def log_theme_setting_change(setting_name, previous_value, new_value, theme, opts = {})
     raise Discourse::InvalidParameters.new(:theme) unless theme
     raise Discourse::InvalidParameters.new(:setting_name) unless theme.included_settings.has_key?(setting_name)
