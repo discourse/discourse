@@ -125,6 +125,12 @@
               {{#if searchActive}}
                 <h3>{{i18n "search.no_results"}}</h3>
 
+                {{#if model.grouped_search_result.error}}
+                  <div class="warning">
+                    {{model.grouped_search_result.error}}
+                  </div>
+                {{/if}}
+
                 {{#if showSuggestion}}
                   <div class="no-results-suggestion">
                     {{i18n "search.cant_find"}}

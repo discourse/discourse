@@ -2096,6 +2096,7 @@ en:
         value: "SSO secret"
 
   search:
+    extreme_load_error: "Site is under extreme load, search is disabled, try again later"
     within_post: "#%{post_number} by %{username}"
     types:
       category: "Categories"
