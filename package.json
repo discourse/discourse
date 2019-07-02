@@ -33,6 +33,7 @@
     "spectrum-colorpicker": "1.8.0"
   },
   "devDependencies": {
+    "@arkweid/lefthook": "^0.5.6",
     "babel-eslint": "^8.2",
     "chrome-launcher": "^0.10",
     "chrome-remote-interface": "^0.25",

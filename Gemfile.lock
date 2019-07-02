@@ -412,6 +412,7 @@ GEM
     webpush (0.3.8)
       hkdf (~> 0.2)
       jwt (~> 2.0)
+    yaml-lint (0.0.10)
 
 PLATFORMS
   ruby
@@ -533,6 +534,7 @@ DEPENDENCIES
   unicorn
   webmock
   webpush
+  yaml-lint
 
 BUNDLED WITH
    1.17.3
