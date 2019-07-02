@@ -601,7 +601,13 @@ export default Ember.Component.extend({
       this.set("value", `${pre}${hval}${example}${tail}${post}`);
       this._selectText(pre.length + hlen, example.length);
     } else if (opts && !opts.multiline) {
-      const [hval, hlen] = getHead(head);
+      let [hval, hlen] = getHead(head);
+
+      if (opts.useBlockMode && sel.value.split("\n").length > 1) {
+        hval += "\n";
+        hlen += 1;
+        tail = `\n${tail}`;
+      }
 
       if (pre.slice(-hlen) === hval && post.slice(0, tail.length) === tail) {
         this.set(
