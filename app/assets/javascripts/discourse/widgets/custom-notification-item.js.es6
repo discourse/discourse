@@ -4,7 +4,7 @@ import { formatUsername } from "discourse/lib/utilities";
 import { iconNode } from "discourse-common/lib/icon-library";
 
 createWidgetFrom(DefaultNotificationItem, "custom-notification-item", {
-  title(notificationName, data) {
+  notificationTitle(notificationName, data) {
     return data.title ? I18n.t(data.title) : "";
   },
 
