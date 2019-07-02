@@ -191,8 +191,23 @@
     }
     span.topic {
       display: flex;
-      align-items: baseline;
-      flex-wrap: wrap;
+      flex-direction: column;
+
+      .first-line {
+        flex: 1;
+      }
+
+      .second-line {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+
+        .discourse-tags {
+          flex-wrap: wrap;
+          display: contents;
+          font-size: $font-down-1;
+        }
+      }
     }
   }
 }
