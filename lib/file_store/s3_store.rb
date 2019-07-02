@@ -104,9 +104,7 @@ module FileStore
       FileStore::LocalStore.new.path_for(upload) if url && url[/^\/[^\/]/]
     end
 
-    def url_for(upload, params = {})
-      force_download = params[:dl] == "1" ? true : false
-
+    def url_for(upload, force_download: false)
       if upload.private? || force_download
         opts = { expires_in: S3Helper::DOWNLOAD_URL_EXPIRES_AFTER_SECONDS }
         opts[:response_content_disposition] = "attachment; filename=\"#{upload.original_filename}\"" if force_download

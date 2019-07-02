@@ -409,7 +409,7 @@ describe FileStore::S3Store do
 
       s3_object.expects(:presigned_url).with(:get, opts)
 
-      expect(store.url_for(upload, dl: "1")).not_to eq(upload.url)
+      expect(store.url_for(upload, force_download: true)).not_to eq(upload.url)
     end
   end
 
