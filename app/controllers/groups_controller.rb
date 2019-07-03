@@ -420,7 +420,7 @@ class GroupsController < ApplicationController
   end
 
   def request_membership
-    params.require(:reason) if !params[:topic_id].present?
+    params.require(:reason) if params[:topic_id].blank?
 
     group = find_group(:id)
 
