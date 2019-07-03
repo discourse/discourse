@@ -424,9 +424,8 @@ class GroupsController < ApplicationController
 
     group = find_group(:id)
 
-    if params[:topic_id].present?
-      topic_url = Topic.find(params[:topic_id].to_i).url
-      reason = I18n.t("groups.view_hidden_topic_request_reason", group_name: group.name, topic_url: topic_url)
+    if params[:topic_id] && topic = Topic.find_by_id(params[:topic_id])
+      reason = I18n.t("groups.view_hidden_topic_request_reason", group_name: group.name, topic_url: topic.url)
     end
 
     reason ||= params[:reason]
