@@ -302,8 +302,7 @@ widgetTest(
     beforeEach() {
       this.set("args", {
         canDeleteTopic: false,
-        yours: true,
-        firstPost: true
+        showFlagDelete: true
       });
     },
 

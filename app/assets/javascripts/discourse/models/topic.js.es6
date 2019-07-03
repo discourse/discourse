@@ -733,8 +733,13 @@ Topic.reopenClass({
     });
   },
 
-  bulkOperationByFilter(filter, operation, categoryId) {
-    const data = { filter, operation };
+  bulkOperationByFilter(filter, operation, categoryId, options) {
+    let data = { filter, operation };
+
+    if (options && options.includeSubcategories) {
+      data.include_subcategories = true;
+    }
+
     if (categoryId) data.category_id = categoryId;
     return ajax("/topics/bulk", {
       type: "PUT",

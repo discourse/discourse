@@ -13,6 +13,7 @@ class ReviewableSerializer < ApplicationSerializer
     :type,
     :topic_id,
     :topic_url,
+    :target_url,
     :topic_tags,
     :category_id,
     :created_at,
@@ -107,13 +108,21 @@ class ReviewableSerializer < ApplicationSerializer
     object.topic.present? && SiteSetting.tagging_enabled?
   end
 
+  def target_url
+    return object.target.url if object.target.is_a?(Post) && object.target.present?
+    topic_url
+  end
+
+  def include_target_url?
+    target_url.present?
+  end
+
   def topic_url
-    return object.target.url if object.target.is_a?(Post)
-    return object.topic.url
+    return object.topic&.url
   end
 
   def include_topic_url?
-    object.topic.present?
+    topic_url.present?
   end
 
   def include_topic_id?

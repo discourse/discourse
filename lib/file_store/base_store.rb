@@ -77,7 +77,8 @@ module FileStore
 
         if !file
           max_file_size_kb = [SiteSetting.max_image_size_kb, SiteSetting.max_attachment_size_kb].max.kilobytes
-          url = SiteSetting.scheme + ":" + upload.url
+          url = Discourse.store.cdn_url(upload.url)
+          url = SiteSetting.scheme + ":" + url if url =~ /^\/\//
           file = FileHelper.download(
             url,
             max_file_size: max_file_size_kb,

@@ -19,6 +19,13 @@ ru:
         many: "голосов"
         other: "голосов"
       average_rating: "Средний рейтинг: <strong>%{average}</strong>."
+      public:
+        title: "Голосов <strong>публичных</strong>."
+      results:
+        vote:
+          title: "Результаты будут показаны на <strong>голос</strong>."
+        closed:
+          title: "Результаты будут показаны один раз <strong>закрыто</strong>."
       multiple:
         help:
           at_least_min_options:
@@ -54,6 +61,9 @@ ru:
         title: "Завершить этот опрос, не принимать новые голоса"
         label: "Завершить"
         confirm: "Вы уверены, что хотите завершить этот опрос и больше не принимать голоса?"
+      automatic_close:
+        closes_in: "Закроется через <strong>%{timeLeft}</strong>."
+        age: "Закрыто <strong>%{age}</strong>"
       error_while_toggling_status: "Произошла ошибка при смене статуса опроса."
       error_while_casting_votes: "Произошла ошибка в процессе обработки вашего голоса."
       error_while_fetching_voters: "В процессе получения списка проголосовавших произошла ошибка."
@@ -71,6 +81,9 @@ ru:
           number: Шкала из чисел
         poll_result:
           label: Результаты
+          always: Всегда видимый
+          vote: На голосование
+          closed: При закрытии
         poll_config:
           max: Макс.
           min: Мин.

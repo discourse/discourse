@@ -16,4 +16,8 @@ Rails.configuration.middleware = Rails.configuration.middleware + session_operat
 if Rails.env != 'development' || ENV['TRACK_REQUESTS']
   require 'middleware/request_tracker'
   Rails.configuration.middleware.unshift Middleware::RequestTracker
+
+  if GlobalSetting.enable_performance_http_headers
+    MethodProfiler.ensure_discourse_instrumentation!
+  end
 end

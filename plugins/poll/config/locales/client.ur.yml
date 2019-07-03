@@ -15,6 +15,13 @@ ur:
         one: "کُل ووٹ"
         other: "کُل ووٹ"
       average_rating: "اوسط ریٹینگ: <strong>%{اوسط}</strong>۔"
+      public:
+        title: "ووٹ <strong>پبلک</strong> ہیں۔"
+      results:
+        vote:
+          title: "نتائج <strong>ووٹ</strong> پر دکھائے جائیں گے۔"
+        closed:
+          title: "نتائج <strong>بند ہونے</strong> پر دکھائے جائیں گے۔"
       multiple:
         help:
           at_least_min_options:
@@ -44,6 +51,9 @@ ur:
         title: "پول بند کریں"
         label: "بند کریں"
         confirm: "کیا آپ واقعی یہ پول بند کرنا چاہتے ہیں؟"
+      automatic_close:
+        closes_in: "بند ہو جائیگا <strong>%{timeLeft}</strong> میں۔"
+        age: "بند <strong>%{age}</strong>"
       error_while_toggling_status: "معذرت، اِس پول کا سٹیٹس تبدیل کرتے وقت ایک تکنیکی خرابی کا سامنا کرنا پڑا۔"
       error_while_casting_votes: "معذرت، آپ کا ووٹ ڈالتے وقت ایک تکنیکی خرابی کا سامنا کرنا پڑا"
       error_while_fetching_voters: "معذرت، ووٹرز کو دکھاتے وقت ایک تکنیکی خرابی کا سامنا کرنا پڑا"
@@ -61,6 +71,9 @@ ur:
           number: نمبر کی درجہ بندی
         poll_result:
           label: نتائج
+          always: ہمیشہ نظر آتا ہے
+          vote: ووٹ پر
+          closed: بند کر دیا جب
         poll_config:
           max: زیادہ سے زیادہ
           min: کم از کم
@@ -69,3 +82,5 @@ ur:
           label: دکھایں جنہوں نے ووٹ دیا
         poll_options:
           label: فی سطر پول کی ہر ایک آپشن درج کریں
+        automatic_close:
+          label: خود کار طریقے سے پَول بند کریں

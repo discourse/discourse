@@ -1,6 +1,7 @@
 import { cleanDOM } from "discourse/lib/clean-dom";
 import {
   startPageTracking,
+  resetPageTracking,
   googleTagManagerPageChanged
 } from "discourse/lib/page-tracker";
 import { viewTrackingRequired } from "discourse/lib/ajax";
@@ -49,5 +50,9 @@ export default {
         }
       });
     }
+  },
+
+  teardown() {
+    resetPageTracking();
   }
 };

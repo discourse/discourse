@@ -705,6 +705,7 @@ blockquote > *:last-child {
     font-weight: bold;
     font-size: $font-down-1;
     color: $primary-medium;
+    min-width: 0; // Allows flex container to shrink
 
     .custom-message {
       flex: 1 1 100%;
@@ -712,6 +713,8 @@ blockquote > *:last-child {
       font-weight: normal;
       font-size: $font-up-1;
       order: 12;
+      word-break: break-word;
+      min-width: 0; // Allows content like oneboxes to shrink
       p {
         margin-bottom: 0;
       }

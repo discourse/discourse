@@ -151,10 +151,29 @@ RSpec.describe Reviewable, type: :model do
 
         it 'Does not filter by status when status parameter is set to all' do
           rejected_reviewable = Fabricate(:reviewable, target: post, status: Reviewable.statuses[:rejected])
-
           reviewables = Reviewable.list_for(user, status: :all)
-
           expect(reviewables).to match_array [reviewable, rejected_reviewable]
+        end
+
+        it "supports sorting" do
+          r0 = Fabricate(:reviewable, score: 100, created_at: 3.months.ago)
+          r1 = Fabricate(:reviewable, score: 999, created_at: 1.month.ago)
+
+          list = Reviewable.list_for(user, sort_order: 'priority')
+          expect(list[0].id).to eq(r1.id)
+          expect(list[1].id).to eq(r0.id)
+
+          list = Reviewable.list_for(user, sort_order: 'priority_asc')
+          expect(list[0].id).to eq(r0.id)
+          expect(list[1].id).to eq(r1.id)
+
+          list = Reviewable.list_for(user, sort_order: 'created_at')
+          expect(list[0].id).to eq(r1.id)
+          expect(list[1].id).to eq(r0.id)
+
+          list = Reviewable.list_for(user, sort_order: 'created_at_asc')
+          expect(list[0].id).to eq(r0.id)
+          expect(list[1].id).to eq(r1.id)
         end
       end
     end

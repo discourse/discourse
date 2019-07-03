@@ -265,6 +265,18 @@ class Search
     @advanced_filters
   end
 
+  advanced_filter(/^in:tagged$/) do |posts|
+    posts
+      .where('EXISTS (SELECT 1 FROM topic_tags WHERE topic_tags.topic_id = posts.topic_id)')
+  end
+
+  advanced_filter(/^in:untagged$/) do |posts|
+    posts
+      .joins("LEFT JOIN topic_tags ON
+        topic_tags.topic_id = posts.topic_id")
+      .where("topic_tags.id IS NULL")
+  end
+
   advanced_filter(/^status:open$/) do |posts|
     posts.where('NOT topics.closed AND NOT topics.archived')
   end
@@ -453,17 +465,34 @@ class Search
       # try a possible tag match
       tag_id = Tag.where_name(category_slug).pluck(:id).first
       if (tag_id)
-        posts.where("topics.id IN (
-          SELECT DISTINCT(tt.topic_id)
-          FROM topic_tags tt
-          WHERE tt.tag_id = ?
-          )", tag_id)
+        posts.where(<<~SQL, tag_id)
+          topics.id IN (
+            SELECT DISTINCT(tt.topic_id)
+            FROM topic_tags tt
+            WHERE tt.tag_id = ?
+          )
+        SQL
       else
+        if tag_group_id = TagGroup.find_id_by_slug(category_slug)
+          posts.where(<<~SQL, tag_group_id)
+            topics.id IN (
+              SELECT DISTINCT(tt.topic_id)
+              FROM topic_tags tt
+              WHERE tt.tag_id in (
+                SELECT tag_id
+                FROM tag_group_memberships
+                WHERE tag_group_id = ?
+              )
+            )
+          SQL
+
         # a bit yucky but we got to add the term back in
-        if match.to_s.length >= SiteSetting.min_search_term_length
-          posts.where("posts.id IN (
-            SELECT post_id FROM post_search_data pd1
-            WHERE pd1.search_data @@ #{Search.ts_query(term: "##{match}")})")
+        elsif match.to_s.length >= SiteSetting.min_search_term_length
+          posts.where <<~SQL
+            posts.id IN (
+              SELECT post_id FROM post_search_data pd1
+              WHERE pd1.search_data @@ #{Search.ts_query(term: "##{match}")})
+          SQL
         end
       end
     end
@@ -861,7 +890,11 @@ class Search
           THEN #{SiteSetting.category_search_priority_high_weight}
           WHEN #{Searchable::PRIORITIES[:very_high]}
           THEN #{SiteSetting.category_search_priority_very_high_weight}
-          ELSE 1
+          ELSE
+            CASE WHEN topics.closed
+            THEN 0.9
+            ELSE 1
+            END
           END
         )
       )

@@ -14,9 +14,7 @@ export default Ember.Mixin.create({
     this.bodySelector = ".select-kit-body";
     this.wrapperSelector = ".select-kit-wrapper";
     this.scrollableParentSelector = ".modal-body";
-    this.fixedPlaceholderSelector = `.select-kit-fixed-placeholder-${
-      this.elementId
-    }`;
+    this.fixedPlaceholderSelector = `.select-kit-fixed-placeholder-${this.elementId}`;
   },
 
   $findRowByValue(value) {

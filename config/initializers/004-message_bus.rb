@@ -1,5 +1,10 @@
 # frozen_string_literal: true
 
+if GlobalSetting.skip_redis?
+  MessageBus.configure(backend: :memory)
+  return
+end
+
 MessageBus.site_id_lookup do |env = nil|
   if env
     setup_message_bus_env(env)

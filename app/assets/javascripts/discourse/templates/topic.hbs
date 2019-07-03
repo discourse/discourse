@@ -271,19 +271,21 @@
 
                 {{#if model.private_topic_timer.execute_at}}
                   {{topic-timer-info
-                      topicClosed=model.closed
-                      statusType=model.private_topic_timer.status_type
-                      executeAt=model.private_topic_timer.execute_at
-                      duration=model.private_topic_timer.duration}}
+                    topicClosed=model.closed
+                    statusType=model.private_topic_timer.status_type
+                    executeAt=model.private_topic_timer.execute_at
+                    duration=model.private_topic_timer.duration
+                    removeTopicTimer=(action "removeTopicTimer" model.private_topic_timer.status_type "private_topic_timer")}}
                 {{/if}}
 
                 {{topic-timer-info
-                    topicClosed=model.closed
-                    statusType=model.topic_timer.status_type
-                    executeAt=model.topic_timer.execute_at
-                    basedOnLastPost=model.topic_timer.based_on_last_post
-                    duration=model.topic_timer.duration
-                    categoryId=model.topic_timer.category_id}}
+                  topicClosed=model.closed
+                  statusType=model.topic_timer.status_type
+                  executeAt=model.topic_timer.execute_at
+                  basedOnLastPost=model.topic_timer.based_on_last_post
+                  duration=model.topic_timer.duration
+                  categoryId=model.topic_timer.category_id
+                  removeTopicTimer=(action "removeTopicTimer" model.topic_timer.status_type "topic_timer")}}
 
                 {{#if session.showSignupCta}}
                   {{! replace "Log In to Reply" with the infobox }}
@@ -311,6 +313,7 @@
                       showFlagTopic=(route-action "showFlagTopic")
                       toggleArchiveMessage=(action "toggleArchiveMessage")
                       editFirstPost=(action "editFirstPost")
+                      deferTopic=(action "deferTopic")
                       replyToPost=(action "replyToPost")}}
                   {{else}}
                     <div id="topic-footer-buttons">

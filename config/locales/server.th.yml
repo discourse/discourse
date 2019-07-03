@@ -81,6 +81,7 @@ th:
       half_a_minute: "< 1 นาที"
     distance_in_words_verbose:
       half_a_minute: "เมื่อสักครู่นี้"
+      less_than_x_seconds: "เมื่อสักครู่นี้"
   password_reset:
     choose_new: "เลือกรหัสผู้ใช้ใหม่"
     choose: "เลือกรหัสผู้ใช้"
@@ -285,11 +286,6 @@ th:
   page_not_found:
     see_more: "อื่น"
     search_button: "ค้นหา"
-  terms_of_service:
-    title: "เงื่อนไขการบริการ"
-  about: "เกี่ยวกับ"
-  guidelines: "คู่มือ"
-  privacy: "ความเป็นส่วนตัว"
   csv_export:
     boolean_yes: "ใช่"
     boolean_no: "ไม่ใช่"

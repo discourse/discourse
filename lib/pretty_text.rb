@@ -149,6 +149,7 @@ module PrettyText
       buffer = +<<~JS
         __optInput = {};
         __optInput.siteSettings = #{SiteSetting.client_settings_json};
+        #{"__optInput.disableEmojis = true" if opts[:disable_emojis]}
         __paths = #{paths_json};
         __optInput.getURL = __getURL;
         __optInput.getCurrentUser = __getCurrentUser;
@@ -347,6 +348,7 @@ module PrettyText
   def self.excerpt(html, max_length, options = {})
     # TODO: properly fix this HACK in ExcerptParser without introducing XSS
     doc = Nokogiri::HTML.fragment(html)
+    DiscourseEvent.trigger(:reduce_excerpt, doc, options)
     strip_image_wrapping(doc)
     html = doc.to_html
 

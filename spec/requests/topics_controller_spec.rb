@@ -1776,7 +1776,7 @@ RSpec.describe TopicsController do
       end
 
       it "returns a readonly header if the site is read only" do
-        Discourse.received_readonly!
+        Discourse.received_postgres_readonly!
         get "/t/#{topic.id}.json"
         expect(response.status).to eq(200)
         expect(response.headers['Discourse-Readonly']).to eq('true')
@@ -2051,6 +2051,27 @@ RSpec.describe TopicsController do
       it "requires a type field for the operation param" do
         put "/topics/bulk.json", params: { topic_ids: topic_ids, operation: {} }
         expect(response.status).to eq(400)
+      end
+
+      it "can mark sub-categories unread" do
+        # TODO do we want to skip category definition by default in fabricator
+        category = Fabricate(:category, skip_category_definition: true)
+        sub = Fabricate(:category, parent_category_id: category.id, skip_category_definition: true)
+
+        topic.update!(category_id: sub.id)
+
+        post1 = create_post(user: user, topic_id: topic.id)
+        create_post(topic_id: topic.id)
+
+        put "/topics/bulk.json", params: {
+          category_id: category.id,
+          include_subcategories: true,
+          filter: 'unread',
+          operation: { type: 'dismiss_posts' }
+        }
+
+        expect(response.status).to eq(200)
+        expect(TopicUser.get(post1.topic, post1.user).last_read_post_number).to eq(2)
       end
 
       it "can find unread" do
@@ -2691,7 +2712,6 @@ RSpec.describe TopicsController do
   end
 
   describe "crawler" do
-
     context "when not a crawler" do
       it "renders with the application layout" do
         get topic.url
@@ -2705,7 +2725,6 @@ RSpec.describe TopicsController do
 
     context "when a crawler" do
       it "renders with the crawler layout, and handles proper pagination" do
-
         page1_time = 3.months.ago
         page2_time = 2.months.ago
         page3_time = 1.month.ago
@@ -2753,8 +2772,17 @@ RSpec.describe TopicsController do
         expect(response.headers['Last-Modified']).to eq(page3_time.httpdate)
         expect(body).to include('<link rel="prev" href="' + topic.relative_url + "?page=2")
       end
-    end
 
+      context "wayback machine" do
+        it "renders crawler layout" do
+          get topic.url, env: { "HTTP_USER_AGENT" => "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36", "HTTP_VIA" => "HTTP/1.0 web.archive.org (Wayback Save Page)" }
+          body = response.body
+
+          expect(body).to have_tag(:body, with: { class: 'crawler' })
+          expect(body).to_not have_tag(:meta, with: { name: 'fragment' })
+        end
+      end
+    end
   end
 
   describe "#reset_bump_date" do

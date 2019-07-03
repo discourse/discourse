@@ -162,7 +162,6 @@ tr_TR:
   private_message_abbrev: "İlt"
   rss_description:
     latest: "En son konular"
-    hot: "Sıcak konular"
     top: "En iyi konular"
     top_all: "Tüm zamanlarda en iyi konular"
     top_yearly: "Yıllık en iyi konular"
@@ -474,6 +473,8 @@ tr_TR:
     authorize: "Yetkilendir"
     read: "okuma"
     read_write: "okuma/yazma"
+    otp_confirmation:
+      confirm_title: "%{site_name} devam et"
     no_trust_level: "Üzgünüz, kullanıcı APIsine erişmek için gerekli güvenilirlik seviyeniz yok"
   reports:
     default:
@@ -744,7 +745,7 @@ tr_TR:
     tl4_additional_likes_per_day_multiplier: "Güvenlik seviyesi 4 (Lider) olanlar için günlük beğeni limitini bu rakamla çarparak artır"
     traditional_markdown_linebreaks: "Markdown'da, satır sonundan önce yazının sağında iki tane boşluk gerektiren, geleneksel satır sonu metodunu kullan."
     post_undo_action_window_mins: "Bir gönderide yapılan yeni eylemlerin (beğenme, bildirme vb) geri alınabileceği zaman, dakika olarak"
-    must_approve_users: "Siteye erişimlerine izin verilmeden önce tüm yeni kullanıcı hesaplarının görevliler tarafından onaylanması gerekir. UYARI: yayındaki bir site için bunu etkinleştirmek görevli olmayan hesapların erişimini iptal edecek."
+    must_approve_users: "Siteye erişimlerine izin verilmeden önce tüm yeni kullanıcı hesaplarının görevliler tarafından onaylanması gerekir."
     pending_users_reminder_delay: "Belirtilen saatten daha uzun bir süredir onay bekleyen yeni kullanıcılar mevcutsa moderatörleri bilgilendir. Bilgilendirmeyi devre dışı bırakmak için -1 girin."
     maximum_session_age: "Kullanıcı son ziyaretinden bu yana n saat boyunca giriş yapmış olarak kalacak"
     moderators_create_categories: "Moderatörlerin yeni kategoriler oluşturmasına izin ver"
@@ -1395,8 +1396,6 @@ tr_TR:
     see_more: "Daha fazla"
     search_title: "Bu sitede ara"
     search_button: "Arama"
-  terms_of_service:
-    title: "Üyelik Sözleşmesi"
   deleted: "silindi"
   image: "resim"
   upload:
@@ -1432,9 +1431,6 @@ tr_TR:
     sender_body_blank: "içerik boş"
   color_schemes:
     base_theme_name: "Baz"
-  about: "Hakkında"
-  guidelines: "Yönergeler"
-  privacy: "Gizlilik İlkeleri"
   edit_this_page: "Bu sayfayı düzenle"
   csv_export:
     boolean_yes: "Evet"
@@ -1672,6 +1668,8 @@ tr_TR:
         title: "Organizasyon"
       colors:
         title: "Tema"
+      themes_further_reading:
+        title: "Temalar"
       logos:
         title: "Görseller"
         fields:
@@ -1709,6 +1707,8 @@ tr_TR:
       confirm_title: "Bildirimler etkin - %{site_title}"
       confirm_body: "Başarılı! Bildirimler etkinleştirildi."
   reviewables:
+    sensitivity:
+      disabled: "Devredışı"
     actions:
       agree_and_keep:
         title: "Gönderiyi Sakla"

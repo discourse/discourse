@@ -738,6 +738,18 @@ describe UsersController do
           expect(response.status).to eq(200)
           expect(JSON.parse(response.body)['active']).to be_falsy
         end
+
+        it "won't set the new user's locale to the admin's locale" do
+          SiteSetting.allow_user_locale = true
+          admin.update!(locale: :fr)
+
+          post "/u.json", params: post_user_params.merge(active: true, api_key: api_key.key)
+          expect(response.status).to eq(200)
+
+          json = JSON.parse(response.body)
+          new_user = User.find(json["user_id"])
+          expect(new_user.locale).not_to eq("fr")
+        end
       end
     end
 
@@ -1926,10 +1938,13 @@ describe UsersController do
       end
 
       it 'can successfully pick a custom avatar' do
-        put "/u/#{user.username}/preferences/avatar/pick.json", params: {
-          upload_id: upload.id, type: "custom"
-        }
+        events = DiscourseEvent.track_events do
+          put "/u/#{user.username}/preferences/avatar/pick.json", params: {
+            upload_id: upload.id, type: "custom"
+          }
+        end
 
+        expect(events.map { |event| event[:event_name] }).to include(:user_updated)
         expect(response.status).to eq(200)
         expect(user.reload.uploaded_avatar_id).to eq(upload.id)
         expect(user.user_avatar.reload.custom_upload_id).to eq(upload.id)
@@ -1981,8 +1996,11 @@ describe UsersController do
           end
 
           it 'can successfully select an avatar' do
-            put "/u/#{user.username}/preferences/avatar/select.json", params: { url: avatar1.url }
+            events = DiscourseEvent.track_events do
+              put "/u/#{user.username}/preferences/avatar/select.json", params: { url: avatar1.url }
+            end
 
+            expect(events.map { |event| event[:event_name] }).to include(:user_updated)
             expect(response.status).to eq(200)
             expect(user.reload.uploaded_avatar_id).to eq(avatar1.id)
             expect(user.user_avatar.reload.custom_upload_id).to eq(avatar1.id)
@@ -3021,6 +3039,54 @@ describe UsersController do
           expect(JSON.parse(response.body)).not_to have_key(:groups)
         end
       end
+
+      describe 'when searching by group name' do
+        fab!(:exclusive_group) { Fabricate(:group) }
+
+        it 'return results if the user is a group member' do
+          exclusive_group.add(user)
+
+          get "/u/search/users.json", params: {
+            group: exclusive_group.name,
+            term: user.username
+          }
+
+          expect(users_found).to contain_exactly(user.username)
+        end
+
+        it 'does not return results if the user is not a group member' do
+          get "/u/search/users.json", params: {
+            group: exclusive_group.name,
+            term: user.username
+          }
+
+          expect(users_found).to be_empty
+        end
+
+        it 'returns results if the user is member of one of the groups' do
+          exclusive_group.add(user)
+
+          get "/u/search/users.json", params: {
+            groups: [exclusive_group.name],
+            term: user.username
+          }
+
+          expect(users_found).to contain_exactly(user.username)
+        end
+
+        it 'does not return results if the user is not a member of the groups' do
+          get "/u/search/users.json", params: {
+            groups: [exclusive_group.name],
+            term: user.username
+          }
+
+          expect(users_found).to be_empty
+        end
+
+        def users_found
+          JSON.parse(response.body)['users'].map { |u| u['username'] }
+        end
+      end
     end
   end
 
@@ -3097,7 +3163,7 @@ describe UsersController do
     end
   end
 
-  describe '#create_second_factor' do
+  describe '#create_second_factor_totp' do
     context 'when not logged in' do
       it 'should return the right response' do
         post "/users/second_factors.json", params: {
@@ -3115,24 +3181,17 @@ describe UsersController do
 
       describe 'create 2fa request' do
         it 'fails on incorrect password' do
-          post "/users/second_factors.json", params: {
-            password: 'wrongpassword'
-          }
+          ApplicationController.any_instance.expects(:secure_session).returns("confirmed-password-#{user.id}" => "false")
+          post "/users/create_second_factor_totp.json"
 
-          expect(response.status).to eq(200)
-
-          expect(JSON.parse(response.body)['error']).to eq(I18n.t(
-            "login.incorrect_password")
-          )
+          expect(response.status).to eq(403)
         end
 
         describe 'when local logins are disabled' do
           it 'should return the right response' do
             SiteSetting.enable_local_logins = false
 
-            post "/users/second_factors.json", params: {
-              password: 'myawesomepassword'
-            }
+            post "/users/create_second_factor_totp.json"
 
             expect(response.status).to eq(404)
           end
@@ -3143,30 +3202,22 @@ describe UsersController do
             SiteSetting.sso_url = 'http://someurl.com'
             SiteSetting.enable_sso = true
 
-            post "/users/second_factors.json", params: {
-              password: 'myawesomepassword'
-            }
+            post "/users/create_second_factor_totp.json"
 
             expect(response.status).to eq(404)
           end
         end
 
         it 'succeeds on correct password' do
-          user.create_totp
-          user.user_second_factors.totp.update!(data: "abcdefghijklmnop")
-
-          post "/users/second_factors.json", params: {
-            password: 'myawesomepassword'
-          }
+          session = {}
+          ApplicationController.any_instance.stubs(:secure_session).returns("confirmed-password-#{user.id}" => "true")
+          post "/users/create_second_factor_totp.json"
 
           expect(response.status).to eq(200)
 
           response_body = JSON.parse(response.body)
 
-          expect(response_body['key']).to eq(
-            "abcd efgh ijkl mnop"
-          )
-
+          expect(response_body['key']).to be_present
           expect(response_body['qr']).to be_present
         end
       end
@@ -3178,10 +3229,7 @@ describe UsersController do
 
     context 'when not logged in' do
       it 'should return the right response' do
-        put "/users/second_factor.json", params: {
-          second_factor_token: ROTP::TOTP.new(user_second_factor.data).now,
-          second_factor_method: UserSecondFactor.methods[:totp]
-        }
+        put "/users/second_factor.json"
 
         expect(response.status).to eq(403)
       end
@@ -3197,52 +3245,39 @@ describe UsersController do
         context 'when token is missing' do
           it 'returns the right response' do
             put "/users/second_factor.json", params: {
-              enable: 'true',
-            }
-
-            expect(response.status).to eq(400)
-          end
-        end
-
-        context 'when token is invalid' do
-          it 'returns the right response' do
-            put "/users/second_factor.json", params: {
-              second_factor_token: '000000',
-              second_factor_method: UserSecondFactor.methods[:totp],
+              disable: 'true',
               second_factor_target: UserSecondFactor.methods[:totp],
-              enable: 'true',
+              id: user_second_factor.id
             }
 
-            expect(response.status).to eq(200)
-
-            expect(JSON.parse(response.body)['error']).to eq(I18n.t(
-              "login.invalid_second_factor_code"
-            ))
+            expect(response.status).to eq(403)
           end
         end
 
         context 'when token is valid' do
-          it 'should allow second factor for the user to be enabled' do
+          before do
+            ApplicationController.any_instance.stubs(:secure_session).returns("confirmed-password-#{user.id}" => "true")
+          end
+          it 'should allow second factor for the user to be renamed' do
             put "/users/second_factor.json", params: {
-              second_factor_token: ROTP::TOTP.new(user_second_factor.data).now,
-              second_factor_method: UserSecondFactor.methods[:totp],
-              second_factor_target: UserSecondFactor.methods[:totp],
-              enable: 'true'
-            }
+                  name: 'renamed',
+                  second_factor_target: UserSecondFactor.methods[:totp],
+                  id: user_second_factor.id
+                }
 
             expect(response.status).to eq(200)
-            expect(user.reload.user_second_factors.totp.enabled).to be true
+            expect(user.reload.user_second_factors.totps.first.name).to eq("renamed")
           end
 
           it 'should allow second factor for the user to be disabled' do
             put "/users/second_factor.json", params: {
-              second_factor_token: ROTP::TOTP.new(user_second_factor.data).now,
-              second_factor_method: UserSecondFactor.methods[:totp],
-              second_factor_target: UserSecondFactor.methods[:totp]
+                  disable: 'true',
+                  second_factor_target: UserSecondFactor.methods[:totp],
+                  id: user_second_factor.id
             }
 
             expect(response.status).to eq(200)
-            expect(user.reload.user_second_factors.totp).to eq(nil)
+            expect(user.reload.user_second_factors.totps.first).to eq(nil)
           end
         end
       end
@@ -3254,32 +3289,18 @@ describe UsersController do
               second_factor_target: UserSecondFactor.methods[:backup_codes]
             }
 
-            expect(response.status).to eq(400)
-          end
-        end
-
-        context 'when token is invalid' do
-          it 'returns the right response' do
-            put "/users/second_factor.json", params: {
-              second_factor_token: '000000',
-              second_factor_method: UserSecondFactor.methods[:totp],
-              second_factor_target: UserSecondFactor.methods[:backup_codes]
-            }
-
-            expect(response.status).to eq(200)
-
-            expect(JSON.parse(response.body)['error']).to eq(I18n.t(
-              "login.invalid_second_factor_code"
-            ))
+            expect(response.status).to eq(403)
           end
         end
 
         context 'when token is valid' do
+          before do
+            ApplicationController.any_instance.stubs(:secure_session).returns("confirmed-password-#{user.id}" => "true")
+          end
           it 'should allow second factor backup for the user to be disabled' do
             put "/users/second_factor.json", params: {
-              second_factor_token: ROTP::TOTP.new(user_second_factor.data).now,
-              second_factor_method: UserSecondFactor.methods[:totp],
-              second_factor_target: UserSecondFactor.methods[:backup_codes]
+                  second_factor_target: UserSecondFactor.methods[:backup_codes],
+                  disable: 'true'
             }
 
             expect(response.status).to eq(200)
@@ -3311,26 +3332,17 @@ describe UsersController do
 
       describe 'create 2fa request' do
         it 'fails on incorrect password' do
-          put "/users/second_factors_backup.json", params: {
-            second_factor_token: 'wrongtoken',
-            second_factor_method: UserSecondFactor.methods[:totp]
-          }
+          ApplicationController.any_instance.expects(:secure_session).returns("confirmed-password-#{user.id}" => "false")
+          put "/users/second_factors_backup.json"
 
-          expect(response.status).to eq(200)
-
-          expect(JSON.parse(response.body)['error']).to eq(I18n.t(
-            "login.invalid_second_factor_code")
-          )
+          expect(response.status).to eq(403)
         end
 
         describe 'when local logins are disabled' do
           it 'should return the right response' do
             SiteSetting.enable_local_logins = false
 
-            put "/users/second_factors_backup.json", params: {
-              second_factor_token: ROTP::TOTP.new(user_second_factor.data).now,
-              second_factor_method: UserSecondFactor.methods[:totp]
-            }
+            put "/users/second_factors_backup.json"
 
             expect(response.status).to eq(404)
           end
@@ -3341,22 +3353,16 @@ describe UsersController do
             SiteSetting.sso_url = 'http://someurl.com'
             SiteSetting.enable_sso = true
 
-            put "/users/second_factors_backup.json", params: {
-              second_factor_token: ROTP::TOTP.new(user_second_factor.data).now,
-              second_factor_method: UserSecondFactor.methods[:totp]
-            }
+            put "/users/second_factors_backup.json"
 
             expect(response.status).to eq(404)
           end
         end
 
         it 'succeeds on correct password' do
-          user_second_factor
+          ApplicationController.any_instance.expects(:secure_session).returns("confirmed-password-#{user.id}" => "true")
 
-          put "/users/second_factors_backup.json", params: {
-            second_factor_token: ROTP::TOTP.new(user_second_factor.data).now,
-            second_factor_method: UserSecondFactor.methods[:totp]
-          }
+          put "/users/second_factors_backup.json"
 
           expect(response.status).to eq(200)
 

@@ -22,6 +22,7 @@ en:
     poll_minimum_trust_level_to_create: "Define the minimum trust level needed to create polls."
 
   poll:
+    poll: "poll"
     invalid_argument: "Invalid value '%{value}' for argument '%{argument}'."
 
     multiple_polls_without_name: "There are multiple polls without a name. Use the '<code>name</code>' attribute to uniquely identify your polls."

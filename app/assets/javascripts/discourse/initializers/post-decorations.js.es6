@@ -9,25 +9,32 @@ export default {
   initialize(container) {
     withPluginApi("0.1", api => {
       const siteSettings = container.lookup("site-settings:main");
-      api.decorateCooked(highlightSyntax);
-      api.decorateCooked(lightbox);
+      api.decorateCooked(highlightSyntax, {
+        id: "discourse-syntax-highlighting"
+      });
+      api.decorateCooked(lightbox, { id: "discourse-lightbox" });
       if (siteSettings.support_mixed_text_direction) {
-        api.decorateCooked(setTextDirections);
+        api.decorateCooked(setTextDirections, {
+          id: "discourse-text-direction"
+        });
       }
 
       setupLazyLoading(api);
 
-      api.decorateCooked($elem => {
-        const players = $("audio", $elem);
-        if (players.length) {
-          players.on("play", () => {
-            const postId = parseInt($elem.closest("article").data("post-id"));
-            if (postId) {
-              api.preventCloak(postId);
-            }
-          });
-        }
-      });
+      api.decorateCooked(
+        $elem => {
+          const players = $("audio", $elem);
+          if (players.length) {
+            players.on("play", () => {
+              const postId = parseInt($elem.closest("article").data("post-id"));
+              if (postId) {
+                api.preventCloak(postId);
+              }
+            });
+          }
+        },
+        { id: "discourse-audio" }
+      );
     });
   }
 };

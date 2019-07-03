@@ -32,6 +32,8 @@ export default Ember.Component.extend({
 
   canInviteTo: Ember.computed.alias("topic.details.can_invite_to"),
 
+  canDefer: Ember.computed.alias("currentUser.enable_defer"),
+
   inviteDisabled: Ember.computed.or(
     "topic.archived",
     "topic.closed",

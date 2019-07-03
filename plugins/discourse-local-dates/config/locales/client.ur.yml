@@ -8,10 +8,34 @@
 ur:
   js:
     discourse_local_dates:
+      relative_dates:
+        today: آج %{time}
+        tomorrow: کل %{time}
+        yesterday: گزرا کَل %{time}
+      title: تاریخ / وقت شامل کریں
       create:
         form:
+          insert: شامل
+          advanced_mode: اَیڈوانسڈ مَوڈ
+          simple_mode: سادہ مَوڈ
           format_description: "صارف کو تاریخ ظاہر کرنے کیلئے استعمال کیے جانے والا فارمیٹ۔ الفاظ (یورپ/پیرس) میں صارف ٹائم زَون کو ظاہر کرنے کیلئے \"\\T\\Z\" استعمال کریں"
           timezones_title: ظاہر کیے جانے والے ٹائم زَونز
           timezones_description: پیشگی اور فالبَیک میں تاریخیں ظاہر کرنے کیلئے ٹائم زَونز استعمال کیے جائیں گے۔
+          recurring_title: دوبارہ آنا
+          recurring_description: "ایک واقعہ کی تکرار کی وضاحت کریں۔ فارم کی طرف سے پیدا ہونے والے تکرار کے اختیار کو آپ دستی طور پر ترمیم بھی کرسکتے ہیں اور مندرجہ ذیل کِیز میں سے ایک کا استعمال کر سکتے ہیں: سال، چوتھائی، مہینے، ہفتے، دن، گھنٹے، منٹ، سیکنڈ، ملی سکنڈ۔"
+          recurring_none: کوئی بار بار نہیں
+          invalid_date: غلط تاریخ، یقینی بنائیں کہ تاریخ اور وقت درست ہیں
           date_title: تاریخ
           time_title: وقت
+          format_title: تاریخ فارمَیٹ
+          timezone: ٹائم زون
+          until: جب تک...
+          recurring:
+            every_day: "ہر دن"
+            every_week: "ہر ہفتے"
+            every_two_weeks: "ہر دو ہفتے"
+            every_month: "ہر مہینے"
+            every_two_months: "ہر دو ماہ"
+            every_three_months: "ہر تین ماہ"
+            every_six_months: "ہر چھ ماہ"
+            every_year: "ہر سال"

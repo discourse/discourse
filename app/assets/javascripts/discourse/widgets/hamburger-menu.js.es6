@@ -59,7 +59,7 @@ export default createWidget("hamburger-menu", {
 
     if (currentUser.admin) {
       links.push({
-        href: "/admin/site_settings/category/required",
+        href: "/admin/site_settings",
         icon: "cog",
         label: "admin.site_settings.title",
         className: "settings-link"

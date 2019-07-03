@@ -19,6 +19,10 @@ class Plugin::CustomEmoji
     emojis[name] = url
   end
 
+  def self.unregister(name)
+    emojis.delete(name)
+  end
+
   def self.translations
     @@translations ||= {}
   end
@@ -143,6 +147,12 @@ class Plugin::Instance
   def register_editable_user_custom_field(field)
     reloadable_patch do |plugin|
       ::User.register_plugin_editable_user_custom_field(field, plugin) # plugin.enabled? is checked at runtime
+    end
+  end
+
+  def register_editable_group_custom_field(field)
+    reloadable_patch do |plugin|
+      ::Group.register_plugin_editable_group_custom_field(field, plugin) # plugin.enabled? is checked at runtime
     end
   end
 

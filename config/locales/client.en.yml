@@ -363,6 +363,8 @@ en:
         placeholder: "type the message title here"
 
     review:
+      order_by: "Order by"
+      in_reply_to: "in reply to"
       claim_help:
         optional: "You can claim this item to prevent others from reviewing it."
         required: "You must claim items before you can review them."
@@ -431,9 +433,10 @@ en:
       edit: "Edit"
       save: "Save"
       cancel: "Cancel"
-      new_topic: "New Topic:"
+      new_topic: "Approving this item will create a new topic"
 
       filters:
+        all_categories: "(all categories)"
         type:
           title: "Type"
           all: "(all types)"
@@ -441,9 +444,15 @@ en:
         refresh: "Refresh"
         status: "Status"
         category: "Category"
+        orders:
+          priority: "Priority"
+          priority_asc: "Priority (reverse)"
+          created_at: "Created At"
+          created_at_asc: "Created At (reverse)"
+
         priority:
           title: "Minimum Priority"
-          low: "Low"
+          low: "(any)"
           medium: "Medium"
           high: "High"
 
@@ -470,14 +479,16 @@ en:
         deleted:
           title: "Deleted"
         reviewed:
-          title: "(All Reviewed)"
+          title: "(all reviewed)"
         all:
-          title: "(Everything)"
+          title: "(everything)"
 
       types:
         reviewable_flagged_post:
           title: "Flagged Post"
           flagged_by: "Flagged By"
+        reviewable_queued_topic:
+          title: "Queued Topic"
         reviewable_queued_post:
           title: "Queued Post"
         reviewable_user:
@@ -803,6 +814,7 @@ en:
       allow_private_messages: "Allow other users to send me personal messages"
       external_links_in_new_tab: "Open all external links in a new tab"
       enable_quoting: "Enable quote reply for highlighted text"
+      enable_defer: "Enable defer to mark topics unread"
       change: "change"
       moderator: "{{user}} is a moderator"
       admin: "{{user}} is an admin"
@@ -843,6 +855,7 @@ en:
 
       muted_categories: "Muted"
       muted_categories_instructions: "You will not be notified of anything about new topics in these categories, and they will not appear on the categories or latest pages."
+      muted_categories_instructions_dont_hide: "You will not be notified of anything about new topics in these categories."
       no_category_access: "As a moderator you have limited category access, save is disabled."
       delete_account: "Delete My Account"
       delete_account_confirm: "Are you sure you want to permanently delete your account? This action cannot be undone!"
@@ -855,9 +868,7 @@ en:
       muted_users_instructions: "Suppress all notifications from these users."
       ignored_users: "Ignored"
       ignored_users_instructions: "Suppress all posts and notifications from these users."
-      muted_topics_link: "Show muted topics"
-      watched_topics_link: "Show watched topics"
-      tracked_topics_link: "Show tracked topics"
+      tracked_topics_link: "Show"
       automatically_unpin_topics: "Automatically unpin topics when I reach the bottom."
       apps: "Apps"
       revoke_access: "Revoke Access"
@@ -914,19 +925,19 @@ en:
         disable: "Disable"
         enable: "Enable"
         enable_long: "Enable backup codes"
-        manage: "Manage backup codes"
+        manage: "Manage backup codes. You have <strong>{{count}}</strong> backup codes remaining."
         copied_to_clipboard: "Copied to Clipboard"
         copy_to_clipboard_error: "Error copying data to Clipboard"
         remaining_codes: "You have <strong>{{count}}</strong> backup codes remaining."
         use: "<a href>Use a backup code</a>"
+        enable_prerequisites: "You must enable a primary second factor before generating backup codes."
         codes:
           title: "Backup Codes Generated"
           description: "Each of these backup codes can only be used once. Keep them somewhere safe but accessible."
 
       second_factor:
         title: "Two Factor Authentication"
-        disable: "Disable Two Factor Authentication"
-        enable: "Enable Two Factor Authentication"
+        enable: "Manage Two Factor Authentication"
         confirm_password_description: "Please confirm your password to continue"
         label: "Code"
         rate_limit: "Please wait before trying another authentication code."
@@ -941,6 +952,16 @@ en:
         oauth_enabled_warning: "Please note that social logins will be disabled once two factor authentication has been enabled on your account."
         use: "<a href>Use Authenticator app</a>"
         enforced_notice: "You are required to enable two factor authentication before accessing this site."
+        disable: "disable"
+        disable_title: "Disable Second Factor"
+        disable_confirm: "Are you sure you want to disable all second factors?"
+        edit: "Edit"
+        edit_title: "Edit Second Factor"
+        edit_description: "Second Factor Name"
+        totp:
+          title: "Token-Based Authenticators"
+          add: "New Authenticator"
+          default_name: "My Authenticator"
 
       change_about:
         title: "Change About Me"
@@ -1273,9 +1294,13 @@ en:
     too_few_topics_notice: "Let's <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>get this discussion started!</a> There are currently <strong>%{currentTopics} / %{requiredTopics}</strong> topics. New visitors need some conversations to read and respond to."
     too_few_posts_notice: "Let's <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>get this discussion started!</a> There are currently <strong>%{currentPosts} / %{requiredPosts}</strong> posts. New visitors need some conversations to read and respond to."
     logs_error_rate_notice:
+      # keys ending with _MF use message format, see https://meta.discourse.org/t/message-format-support-for-localization/7035 for details
       reached_hour_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# error/hour} other {# errors/hour}}</a> reached site setting limit of {limit, plural, one {# error/hour} other {# errors/hour}}."
+      # keys ending with _MF use message format, see https://meta.discourse.org/t/message-format-support-for-localization/7035 for details
       reached_minute_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# error/minute} other {# errors/minute}}</a> reached site setting limit of {limit, plural, one {# error/minute} other {# errors/minute}}."
+      # keys ending with _MF use message format, see https://meta.discourse.org/t/message-format-support-for-localization/7035 for details
       exceeded_hour_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# error/hour} other {# errors/hour}}</a> exceeded site setting limit of {limit, plural, one {# error/hour} other {# errors/hour}}."
+      # keys ending with _MF use message format, see https://meta.discourse.org/t/message-format-support-for-localization/7035 for details
       exceeded_minute_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# error/minute} other {# errors/minute}}</a> exceeded site setting limit of {limit, plural, one {# error/minute} other {# errors/minute}}."
 
     learn_more: "learn more..."
@@ -1370,6 +1395,9 @@ en:
       complete_email_found: "We found an account that matches <b>%{email}</b>, you should receive an email with a login link shortly."
       complete_username_not_found: "No account matches the username <b>%{username}</b>"
       complete_email_not_found: "No account matches <b>%{email}</b>"
+      confirm_title: Continue to %{site_name}
+      logging_in_as: Logging in as %{email}
+      confirm_button: Finish Login
 
     login:
       title: "Log In"
@@ -1542,6 +1570,7 @@ en:
         category: "You mentioned {{username}} but they won't be notified because they do not have access to this category. You will need to add them to a group that has access to this category."
         private: "You mentioned {{username}} but they won't be notified because they are unable to see this personal message. You will need to invite them to this PM."
       duplicate_link: "It looks like your link to <b>{{domain}}</b> was already posted in the topic by <b>@{{username}}</b> in <a href='{{post_url}}'>a reply on {{ago}}</a> – are you sure you want to post it again?"
+      reference_topic_title: "RE: {{title}}"
 
       error:
         title_missing: "Title is required"
@@ -1705,6 +1734,27 @@ en:
         confirm_title: "Notifications enabled - %{site_title}"
         confirm_body: "Success! Notifications have been enabled."
         custom: "Notification from {{username}} on %{site_title}"
+
+      titles:
+        mentioned: "mentioned"
+        replied: "new reply"
+        quoted: "quoted"
+        edited: "edited"
+        liked: "new like"
+        private_message: "new private message"
+        invited_to_private_message: "invited to private message"
+        invitee_accepted: "invite accepted"
+        posted: "new post"
+        moved_post: "post moved"
+        linked: "linked"
+        granted_badge: "badge granted"
+        invited_to_topic: "invited to topic"
+        group_mentioned: "group mentioned"
+        group_message_summary: "new group messages"
+        watching_first_post: "new topic"
+        topic_reminder: "topic reminder"
+        liked_consolidated: "new likes"
+        post_approved: "post approved"
 
     upload_selector:
       title: "Add an image"
@@ -1876,6 +1926,9 @@ en:
       edit_message:
         help: "Edit first post of the message"
         title: "Edit Message"
+      defer:
+        help: "Mark as unread"
+        title: "Defer"
       list: "Topics"
       new: "new topic"
       unread: "unread"
@@ -2382,6 +2435,7 @@ en:
         delete_topic: "delete topic"
         add_post_notice: "Add Staff Notice"
         remove_post_notice: "Remove Staff Notice"
+        remove_timer: "remove timer"
 
       actions:
         flag: "Flag"
@@ -2812,6 +2866,7 @@ en:
         up_down: "%{shortcut} Move selection &uarr; &darr;"
         open: "%{shortcut} Open selected topic"
         next_prev: "%{shortcut} Next/previous section"
+        go_to_unread_post: "%{shortcut} Go to the first unread post"
       application:
         title: "Application"
         create: "%{shortcut} Create a new topic"
@@ -2848,6 +2903,7 @@ en:
         mark_tracking: "%{shortcut} Track topic"
         mark_watching: "%{shortcut} Watch topic"
         print: "%{shortcut} Print topic"
+        defer: "%{shortcut} Defer topic"
 
     badges:
       earned_n_times:
@@ -3002,6 +3058,12 @@ en:
       title: "Discourse Admin"
       moderator: "Moderator"
 
+      tags:
+        remove_muted_tags_from_latest:
+          always: "always"
+          only_muted: "when used alone or with other muted tags"
+          never: "never"
+
       reports:
         title: "List of available reports"
 
@@ -3078,6 +3140,7 @@ en:
           groups: "All groups"
           disabled: "This report is disabled"
           totals_for_sample: "Totals for sample"
+          average_for_sample: "Average for sample"
           total: "All time total"
           no_data: "No data to display."
           trending_search:
@@ -3421,6 +3484,7 @@ en:
           inactive_themes: "Inactive themes:"
           inactive_components: "Unused components:"
           broken_theme_tooltip: "This theme has errors in its CSS, HTML or YAML"
+          disabled_component_tooltip: "This component has been disabled"
           default_theme_tooltip: "This theme is the site's default theme"
           updates_available_tooltip: "Updates are available for this theme"
           and_x_more: "and {{count}} more."
@@ -3461,6 +3525,10 @@ en:
           version: "Version:"
           authors: "Authored by:"
           source_url: "Source"
+          enable: "Enable"
+          disable: "Disable"
+          disabled: "This component has been disabled."
+          disabled_by: "This component has been disabled by"
           required_version:
             error: "This theme has been automatically disabled because it is not compatible with this version of Discourse."
             minimum: "Requires Discourse version {{version}} or above."
@@ -3735,6 +3803,7 @@ en:
             embeddable_host_create: "embeddable host create"
             embeddable_host_update: "embeddable host update"
             embeddable_host_destroy: "embeddable host destroy"
+            change_theme_setting: "change theme setting"
         screened_emails:
           title: "Screened Emails"
           description: "When someone tries to create a new account, the following email addresses will be checked and the registration will be blocked, or some other action performed."

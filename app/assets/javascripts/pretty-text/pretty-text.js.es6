@@ -29,7 +29,8 @@ export function buildOptions(state) {
     lookupUploadUrls,
     previewing,
     linkify,
-    censoredWords
+    censoredWords,
+    disableEmojis
   } = state;
 
   let features = {
@@ -76,7 +77,8 @@ export function buildOptions(state) {
     markdownIt: true,
     injectLineNumbersToPreview:
       siteSettings.enable_advanced_editor_preview_sync,
-    previewing
+    previewing,
+    disableEmojis
   };
 
   // note, this will mutate options due to the way the API is designed

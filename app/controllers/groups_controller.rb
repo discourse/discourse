@@ -211,6 +211,10 @@ class GroupsController < ApplicationController
       raise Discourse::InvalidParameters.new(:limit)
     end
 
+    if limit > 1000
+      raise Discourse::InvalidParameters.new(:limit)
+    end
+
     if offset < 0
       raise Discourse::InvalidParameters.new(:offset)
     end
@@ -552,6 +556,9 @@ class GroupsController < ApplicationController
             :automatic_membership_email_domains,
             :automatic_membership_retroactive
           ])
+
+          custom_fields = Group.editable_group_custom_fields
+          default_params << { custom_fields: custom_fields } unless custom_fields.blank?
         end
 
         default_params

@@ -237,7 +237,6 @@ nb_NO:
   private_message_abbrev: "Mld"
   rss_description:
     latest: "Siste emner"
-    hot: "Populære emner"
     top: "Mest populære emner"
     top_all: "Tidenes mest populære emner"
     top_yearly: "Årets mest populære emner"
@@ -257,10 +256,6 @@ nb_NO:
   revert_version_same: "Den gjeldende versjonen er den samme som den du prøver å rulle tilbake til."
   excerpt_image: "bilde"
   groups:
-    success:
-      bulk_add:
-        one: "%{count} bruker ble lagt til i gruppen."
-        other: "%{count} brukere ble lagt til i gruppen."
     errors:
       grant_trust_level_not_valid: "'%{trust_level}' er ikke et gyldig tillitsnivå."
       can_not_modify_automatic: "Du kan ikke modifisere en automatisk gruppe"
@@ -707,6 +702,8 @@ nb_NO:
     read: "les"
     read_write: "les/skriv"
     description: '"%{application_name}" ber om følgende tilgang til kontoen din:'
+    otp_confirmation:
+      confirm_title: "Fortsett til %{site_name}"
     no_trust_level: "Beklager, du har ikke det nødvendige tillitsnivået for tilgang til API for brukere"
     generic_error: "Beklager, vi kan ikke utstede API nøkler for brukere, denne funksjonen kan være deaktivert av administratoren"
     scopes:
@@ -1035,6 +1032,7 @@ nb_NO:
     num_tl3_flags_to_silence_new_user: "Hvis en ny brukers innlegg flagges av num_tl3_users_to_silence_new_user forskjellige brukere med tillitsnivå 3, skjul alle den nye brukerens innlegg og stans fremtidige innlegg. 0 for å deaktivere."
     num_tl3_users_to_silence_new_user: "Hvis en ny brukers innlegg flagges num_tl3_flags_to_silence_new_user ganger fra dette antallet brukere med tillitsnivå 3, skjul alle den nye brukerens innlegg og stans fremtidige innlegg. 0 for å deaktivere."
     notify_mods_when_user_silenced: "Hvis en bruker har blitt automatisk dempet, send en melding til alle moderatorene."
+    must_approve_users: "Stab må godkjenne alle nye brukere før de får lov til å ta i bruk siden."
     moderators_create_categories: "Tillat moderatorer å opprette nye kategorier"
     send_welcome_message: "Send alle nye brukere en velkomstmelding med en rask startveileder."
     topics_per_period_in_top_summary: "Antall emner som vises i standard oppsummering av mest populære emner."
@@ -1086,7 +1084,6 @@ nb_NO:
     default_categories_tracking: "Liste med kategorier som overvåkes som forvalg"
     default_categories_muted: "Liste med kategorier som er dempet som forvalg"
     default_categories_watching_first_post: "Liste over kategorier hvor det er forvalgt innstilling at det første innlegget i hvert nye emne følges."
-    remove_muted_tags_from_latest: "Ikke vis emner med dempede stikkord i listen over siste emner."
     errors:
       invalid_email: "Ugyldig e-mail adresse"
       invalid_username: "Ingen bruker med det brukernavnet."
@@ -1240,8 +1237,6 @@ nb_NO:
     see_more: "Mer"
     search_title: "Søk i denne siden"
     search_button: "Søk"
-  terms_of_service:
-    title: "Bruksvilkår"
   deleted: "slettet"
   image: "bilde"
   upload:
@@ -1265,9 +1260,6 @@ nb_NO:
     default_theme_name: "Lys"
     light_theme_name: "Lys"
     dark_theme_name: "Mørk"
-  about: "Om"
-  guidelines: "Retningslinjer"
-  privacy: "Personvern"
   edit_this_page: "Endre denne siden"
   csv_export:
     boolean_yes: "Ja"
@@ -1481,6 +1473,8 @@ nb_NO:
         title: "Organisasjon"
       colors:
         title: "Drakt"
+      themes_further_reading:
+        title: "Drakter"
       logos:
         title: "Logoer"
         fields:
@@ -1514,6 +1508,8 @@ nb_NO:
       confirm_title: "Varslinger aktivert - %{site_title}"
       confirm_body: "Suksess! Varslinger er nå aktivert."
   reviewables:
+    sensitivity:
+      disabled: "Deaktivert"
     actions:
       agree_and_keep:
         title: "Behold innlegg"

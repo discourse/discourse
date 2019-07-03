@@ -444,9 +444,9 @@ export function getUploadMarkdown(upload) {
   ) {
     return uploadLocation(upload.url);
   } else {
-    return `[${upload.original_filename} (${I18n.toHumanSize(
-      upload.filesize
-    )})|attachment](${upload.short_url})`;
+    return `[${upload.original_filename}|attachment](${
+      upload.short_url
+    }) (${I18n.toHumanSize(upload.filesize)})`;
   }
 }
 

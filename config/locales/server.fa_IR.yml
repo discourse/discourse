@@ -190,7 +190,6 @@ fa_IR:
   private_message_abbrev: "پیام"
   rss_description:
     latest: "آخرین نوشته‌ها"
-    hot: "موضوعات داغ"
     top: "برترین موضوعات"
     top_all: "برترین موضوعات در همیشه"
     top_yearly: "برترین موضوعات سالانه"
@@ -587,12 +586,17 @@ fa_IR:
       every_hour: "هر ساعت"
       daily: "روزانه"
       weekly: "هفتگی"
+      every_month: "هر ماه"
+      every_six_months: "هر شش ماه"
   user_api_key:
     title: "اجازه دسترسی به برنامه"
     authorize: "اجازه دادن"
     read: "خواندن"
     read_write: "خواندن/نوشتن"
     description: '"%{application_name}" درخواست دسترسی به حساب کاربری شما را دارد:'
+    otp_confirmation:
+      confirm_title: "ورود به %{site_name}"
+      confirm_button: اتمام ورود
     no_trust_level: "با عرض پوزش٬ شما سطح اعتماد مورد نیاز با برای دسترسی به api کاربر ندارید."
     generic_error: "با عرض پوزش، نمی‌توانیم کلید API کاربر را حل کنیم، شاید این ویژگی در قسمت مدیریت غیر‌فعال شده."
     scopes:
@@ -605,6 +609,7 @@ fa_IR:
   reports:
     default:
       labels:
+        count: تعداد
         day: روز
     post_edits:
       labels:
@@ -614,6 +619,7 @@ fa_IR:
     user_flagging_ratio:
       labels:
         user: کاربر
+        score: امتیاز
     moderators_activity:
       labels:
         moderator: مدیر
@@ -878,7 +884,7 @@ fa_IR:
     tl4_additional_likes_per_day_multiplier: "کنترل بالا رفتن پسند ها در روز برای  tl4 ( راهبران) از طریق حاصل ضرب این شماره"
     traditional_markdown_linebreaks: "در مدل‌های نشانه گزاری از خط جدید سنتی استفاده کن،‌ که برای linebreak نیاز به دو فضای انتهایی دارد ."
     post_undo_action_window_mins: "تعداد دقایقی که کاربران اجازه دارند اقدامی را که در نوشته انجام داده اند باز گردانند. (پسند، پرچم گذاری،‌ چیزهای دیگر)."
-    must_approve_users: "همکاران باید تمامی حساب‌های کاربری را قبل از اجازه دسترسی به سایت تایید کنند. اخطار: فعال‌سازی این گزینه ممکن است باعث جلوگیری از دسترسی کاربرانی که قبلا عضو شده‌اند نیز بشود!"
+    must_approve_users: "مدیران باید کاربران جدید را قبل از اجازه دسترسی به سایت تایید کنند."
     pending_users_reminder_delay: "اگر کاربر‌ها بیشتر از این مقدار ساعت منتظر تایید بودند به مدیران اعلام کن. مقدار -1 برای غیرفعال‌سازی."
     maximum_session_age: "کاربر برای n ساعت از آخرین بازدید در حالت وارد شده می‌ماند."
     moderators_create_categories: "به مدیران اجازه ایجاد دسته‌بندی جدید را بده"
@@ -1205,7 +1211,6 @@ fa_IR:
     tag_style: "سبک بصری نشان برچسب‌ها."
     min_trust_level_to_tag_topics: "حداقل سطح اعتماد مورد نیاز برای برچسب زدن به موضوع"
     suppress_overlapping_tags_in_list: "اگر برچسب با عنوان موضوع دقیقا یکی بودند، برچسب را نشان نده."
-    remove_muted_tags_from_latest: "موضوعاتی که برچسب غیر‌فعال دارند در قسمت آخرین موضوعات نمایش نده"
     errors:
       invalid_email: "آدرس ایمیل نامعتبر"
       invalid_username: "هیچ کاربری با این نام‌کاربری وجود ندارد."
@@ -1336,6 +1341,7 @@ fa_IR:
     missing_user_field: "شما تمام فیلد‌های کاربری را تکمیل نکرده اید"
     already_logged_in: "به نظر می‌رسد می‌خواهید دعوت کاربری دیگری را تایید کنید. اگر کاربر %{current_user} نیستید لطفا خارج شده و دوباره وارد سایت شوید."
     second_factor_title: "احراز هویت دو مرحله ای"
+    second_factor_backup_description: "لطفا یکی از کدهای پشتیبان را وارد کنید:"
   admin:
     email:
       sent_test: "فرستاده شد!"
@@ -1944,8 +1950,6 @@ fa_IR:
     welcome_message: |
       ## [خوش آمدید به %{title}](#welcome)
       داشتن حساب کاربری الزامی است. لطفا یک حساب کاربری بسازید یا وارد شوید.
-  terms_of_service:
-    title: "شرایط استفاده از خدمات"
   deleted: "حذف شد"
   image: "تصویر"
   upload:
@@ -1992,9 +1996,6 @@ fa_IR:
     default_theme_name: "روشن"
     light_theme_name: "روشن"
     dark_theme_name: "تیره"
-  about: "درباره"
-  guidelines: "دستورالعمل‌ها"
-  privacy: "خصوصی"
   edit_this_page: "ویرایش این صفحه"
   csv_export:
     boolean_yes: "بله"
@@ -2258,6 +2259,8 @@ fa_IR:
         title: "سازمان"
       colors:
         title: "قالب"
+      themes_further_reading:
+        title: "قالب‌ها"
       logos:
         title: "لوگو‌ها"
         fields:
@@ -2282,6 +2285,8 @@ fa_IR:
                 label: "دسته‌بندی هایی که دارای موضوعات برجسته هستند"
               categories_and_latest_topics:
                 label: "دسته‌بندی‌ها و آخرین موضوعات"
+              categories_and_top_topics:
+                label: "دسته بندی ها و مباحث داغ"
       emoji:
         title: "شکلک"
         description: "نوع شکلک مورد نظرتان را انتخاب کنید. می‌توانید از بخش مدیریت شکلک های سفارشی اضافه کنید."
@@ -2290,7 +2295,18 @@ fa_IR:
       finished:
         title: "Discourse شما آماده‌ست!"
   joined: "ملحق شده"
+  discourse_push_notifications:
+    popup:
+      confirm_body: "موفق شدید. اگاهسازی‌ها فعال شدند."
   reviewables:
+    priorities:
+      low: "کم"
+      medium: "متوسط"
+      high: "بالا"
+    sensitivity:
+      low: "کم"
+      medium: "متوسط"
+      high: "بالا"
     actions:
       agree_and_suspend:
         title: "کاربر تعلیق شده"

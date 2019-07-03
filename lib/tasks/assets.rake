@@ -207,6 +207,7 @@ task 'assets:precompile' => 'assets:precompile:before' do
     mmdb_time ||= backup_mmdb_time
     if backup_mmdb_time && backup_mmdb_time >= mmdb_time
       copy_maxmind(GlobalSetting.maxmind_backup_path, DiscourseIpInfo.path)
+      mmdb_time = backup_mmdb_time
     end
 
     if !mmdb_time || mmdb_time < refresh_days.days.ago

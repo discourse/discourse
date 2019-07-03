@@ -215,6 +215,10 @@ function logQUnit() {
 
   let durations = {};
 
+  QUnit.testStart(function(context) {
+    console.log("\n" + context.module + "::" + context.name);
+  });
+
   QUnit.testDone(function(context) {
     durations[context.module + "::" + context.name] = context.runtime;
 

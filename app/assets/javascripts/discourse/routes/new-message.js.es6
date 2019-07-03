@@ -11,7 +11,7 @@ export default Discourse.Route.extend({
       this.replaceWith("discovery.latest").then(e => {
         if (params.username) {
           // send a message to a user
-          User.findByUsername(params.username)
+          User.findByUsername(encodeURIComponent(params.username))
             .then(user => {
               if (user.can_send_private_message_to_user) {
                 Ember.run.next(() =>

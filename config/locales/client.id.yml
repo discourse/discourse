@@ -89,8 +89,12 @@ id:
       next_month: "Bulan Depan"
       placeholder: tanggal
     share:
+      topic_html: 'Topik: <span class="topic-title">%{topicTitle}</span>'
       post: "post #%{postNumber}"
       close: "tutup"
+      twitter: "Bagikan tautan ke Twitter"
+      facebook: "Bagikan tautan ke Facebook"
+      email: "Bagikan tautan ke email"
     action_codes:
       public_topic: "membuat topik ini umum %{when}"
       private_topic: "Jadikan topik ini sebagai pesan pribadi"
@@ -100,6 +104,7 @@ id:
       user_left: "%{who}keluar dari percakapan ini%{when}"
       removed_user: "menghapus %{who} %{when}"
       removed_group: "%{who}dikeluarkan %{when}"
+      autobumped: "Otomatis dibenturkan %{when}"
       autoclosed:
         enabled: "ditutup %{when}"
         disabled: "dibuka %{when}"
@@ -118,10 +123,16 @@ id:
       visible:
         enabled: "terdaftar %{when}"
         disabled: "tidak terdaftar %{when}"
+      banner:
+        enabled: "Jadikan ini sebagai spanduk %{when}.  Spanduk akan tampil di bagian atas di setiap halaman hingga diturunkan oleh pengguna."
+        disabled: "Hilangkan spanduk ini %{when}. Spanduk tidak akan lagi tampil pada bagian teratas di tiap halaman."
     topic_admin_menu: "topik aksi admin"
     emails_are_disabled: "Semua surel yang keluar telah dinonaktifkan oleh administrator. Tidak ada pemberitahuan email yang akan dikirimkan."
+    bootstrap_mode_enabled: "Untuk lebih memudahkan peluncuran situs baru Anda, Anda berada di mode bootstrap. Semua pengguna baru akan mendapat level 1 dan mendapat ringkasan email harian diaktifkan. Hal ini akan otomatis dimatikan ketika pengguna %{min_users} sudah ikut."
+    bootstrap_mode_disabled: "Mode bootstrap akan dinonaktifkan dalam 24 jam."
     themes:
       default_description: "Asal"
+      broken_theme_alert: "Situs Anda mungkin tidak akan bekerja karena tema / komponen %{theme} memiliki masalah. Nonaktifkan pada %{path}."
     s3:
       regions:
         ap_northeast_1: "Asia Pacific (Tokyo)"
@@ -129,13 +140,15 @@ id:
         ap_south_1: "Asia Pasifik (Mumbai)"
         ap_southeast_1: "Asia Pacific (Singapore)"
         ap_southeast_2: "Asia Pacific (Sydney)"
+        ca_central_1: "Kanada (Sentral)"
         cn_north_1: "Cina (Beijing)"
+        cn_northwest_1: "Cina (Ningxia)"
         eu_central_1: "EU (Frankfurt)"
+        eu_north_1: "EU (Stockholm)"
         eu_west_1: "EU (Ireland)"
         eu_west_2: "Eropa (London)"
         us_east_1: "US East (N. Virginia)"
         us_east_2: "Amerika Timur (Ohio)"
-        us_gov_west_1: "AWS GovCloud (US)"
         us_west_1: "US West (N. California)"
         us_west_2: "US West (Oregon)"
     edit: "Ubah judul dan kategori topik ini"
@@ -235,6 +248,7 @@ id:
       settings:
         save_changes: "Simpan perubahan"
       topic: "Topik:"
+      filtered_user: "Pengguna"
       user:
         username: "Nama Pengguna"
         email: "Email"
@@ -245,6 +259,7 @@ id:
       cancel: "Batal"
       filters:
         refresh: "Segarkan"
+        category: "Kategori"
       statuses:
         pending:
           title: "Tertunda"
@@ -789,6 +804,7 @@ id:
       button_help: "Bantuan"
     email_login:
       button_label: "dengan surel"
+      confirm_title: "Lanjut ke %{site_name}"
     login:
       title: "Log In"
       username: "Pengguna"
@@ -882,6 +898,8 @@ id:
     notifications:
       empty: "Tidak ada pemberitahuan."
       more: "lihat notifikasi sebelumnya"
+      titles:
+        watching_first_post: "topik baru"
     upload_selector:
       default_image_alt_text: gambar
     search:
@@ -1097,6 +1115,10 @@ id:
     admin:
       title: "Admin Discourse"
       moderator: "Moderator"
+      tags:
+        remove_muted_tags_from_latest:
+          always: "selalu"
+          never: "tidak pernah"
       dashboard:
         latest_version: "Terbaru"
         last_checked: "Terakhir dicek"

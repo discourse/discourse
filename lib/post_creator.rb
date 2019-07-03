@@ -272,8 +272,18 @@ class PostCreator
   def self.set_reply_info(post)
     return unless post.reply_to_post_number.present?
 
+    # Before the locking here was added, replying to a post and liking a post
+    # at roughly the same time could cause a deadlock.
+    #
+    # Liking a post grabs an update lock on the post and then on the topic (to
+    # update like counts).
+    #
+    # Here, we lock the replied to post before getting the topic lock so that
+    # we can update the replied to post later without causing a deadlock.
+
     reply_info = Post.where(topic_id: post.topic_id, post_number: post.reply_to_post_number)
       .select(:user_id, :post_type)
+      .lock
       .first
 
     if reply_info.present?

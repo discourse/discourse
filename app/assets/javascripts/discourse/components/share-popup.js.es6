@@ -1,6 +1,9 @@
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 import { longDateNoYear } from "discourse/lib/formatter";
-import computed from "ember-addons/ember-computed-decorators";
+import {
+  default as computed,
+  on
+} from "ember-addons/ember-computed-decorators";
 import Sharing from "discourse/lib/sharing";
 import { nativeShare } from "discourse/lib/pwa-utils";
 
@@ -148,19 +151,24 @@ export default Ember.Component.extend({
     this._showUrl($target, url);
   },
 
+  @on("init")
+  _setupHandlers() {
+    this._boundMouseDownHandler = Ember.run.bind(this, this._mouseDownHandler);
+    this._boundClickHandler = Ember.run.bind(this, this._clickHandler);
+    this._boundKeydownHandler = Ember.run.bind(this, this._keydownHandler);
+  },
+
   didInsertElement() {
     this._super(...arguments);
 
-    const $html = $("html");
-    $html.on("mousedown.outside-share-link", this._mouseDownHandler.bind(this));
-
-    $html.on(
-      "click.discourse-share-link",
-      "button[data-share-url], .post-info .post-date[data-share-url]",
-      this._clickHandler.bind(this)
-    );
-
-    $html.on("keydown.share-view", this._keydownHandler);
+    $("html")
+      .on("mousedown.outside-share-link", this._boundMouseDownHandler)
+      .on(
+        "click.discourse-share-link",
+        "button[data-share-url], .post-info .post-date[data-share-url]",
+        this._boundClickHandler
+      )
+      .on("keydown.share-view", this._boundKeydownHandler);
 
     this.appEvents.on("share:url", this._shareUrlHandler);
   },
@@ -169,9 +177,9 @@ export default Ember.Component.extend({
     this._super(...arguments);
 
     $("html")
-      .off("click.discourse-share-link", this._clickHandler)
-      .off("mousedown.outside-share-link", this._mouseDownHandler)
-      .off("keydown.share-view", this._keydownHandler);
+      .off("click.discourse-share-link", this._boundClickHandler)
+      .off("mousedown.outside-share-link", this._boundMouseDownHandler)
+      .off("keydown.share-view", this._boundKeydownHandler);
 
     this.appEvents.off("share:url", this._shareUrlHandler);
   },

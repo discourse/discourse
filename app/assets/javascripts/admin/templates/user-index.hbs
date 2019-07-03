@@ -367,7 +367,11 @@
   <div class="display-row">
     <div class="field">{{i18n "trust_level"}}</div>
     <div class="value">
-      {{combo-box content=site.trustLevels value=model.trust_level nameProperty="detailedName"}}
+      {{combo-box
+        content=site.trustLevels
+        value=model.trustLevel.id
+        nameProperty="detailedName"}}
+
       {{#if model.dirty}}
         <div>
           {{d-button class="ok no-text" action=(action "saveTrustLevel") icon="check"}}

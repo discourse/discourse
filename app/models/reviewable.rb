@@ -30,7 +30,7 @@ class Reviewable < ActiveRecord::Base
   belongs_to :category
 
   has_many :reviewable_histories
-  has_many :reviewable_scores
+  has_many :reviewable_scores, -> { order(created_at: :desc) }
 
   after_create do
     log_history(:created, created_by)
@@ -383,10 +383,21 @@ class Reviewable < ActiveRecord::Base
     limit: nil,
     offset: nil,
     priority: nil,
-    username: nil
+    username: nil,
+    sort_order: nil
   )
     min_score = Reviewable.min_score_for_priority(priority)
-    order = (status == :pending) ? 'score DESC, created_at DESC' : 'created_at DESC'
+
+    order = case sort_order
+            when 'priority_asc'
+              'score ASC, created_at DESC'
+            when 'created_at'
+              'created_at DESC, score DESC'
+            when 'created_at_asc'
+              'created_at ASC, score DESC'
+            else
+              'score DESC, created_at DESC'
+    end
 
     if username.present?
       user_id = User.find_by_username(username)&.id
@@ -454,28 +465,44 @@ class Reviewable < ActiveRecord::Base
 protected
 
   def recalculate_score
-    # Recalculate the pending score and return it
-    result = DB.query(<<~SQL, id: self.id, pending: ReviewableScore.statuses[:pending])
+    # pending/agreed scores count
+    sql = <<~SQL
       UPDATE reviewables
       SET score = COALESCE((
         SELECT sum(score)
         FROM reviewable_scores AS rs
         WHERE rs.reviewable_id = :id
+          AND rs.status IN (:pending, :agreed)
       ), 0.0)
       WHERE id = :id
       RETURNING score
     SQL
 
+    result = DB.query(
+      sql,
+      id: self.id,
+      pending: ReviewableScore.statuses[:pending],
+      agreed: ReviewableScore.statuses[:agreed]
+    )
+
     # Update topic score
-    DB.query(<<~SQL, topic_id: topic_id, pending: Reviewable.statuses[:pending])
+    sql = <<~SQL
       UPDATE topics
       SET reviewable_score = COALESCE((
         SELECT SUM(score)
         FROM reviewables AS r
         WHERE r.topic_id = :topic_id
+          AND r.status IN (:pending, :approved)
       ), 0.0)
       WHERE id = :topic_id
     SQL
+
+    DB.query(
+      sql,
+      topic_id: topic_id,
+      pending: Reviewable.statuses[:pending],
+      approved: Reviewable.statuses[:approved]
+    )
 
     self.score = result[0].score
   end

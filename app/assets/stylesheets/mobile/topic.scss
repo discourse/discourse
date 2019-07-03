@@ -41,6 +41,10 @@
   padding-top: 10px;
   h3 {
     margin: 0;
+    display: flex;
+    button {
+      align-self: flex-start;
+    }
   }
 }
 

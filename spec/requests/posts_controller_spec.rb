@@ -810,7 +810,10 @@ describe PostsController do
         it 'queues the post if min_first_post_typing_time is not met' do
           post "/posts.json", params: {
             raw: 'this is the test content',
-            title: 'this is the test title for the topic'
+            title: 'this is the test title for the topic',
+            composer_open_duration_msecs: 204,
+            typing_duration_msecs: 100,
+            reply_to_post_number: 123
           }
 
           expect(response.status).to eq(200)
@@ -822,6 +825,9 @@ describe PostsController do
           expect(user).to be_silenced
 
           rp = ReviewableQueuedPost.find_by(created_by: user)
+          expect(rp.payload['typing_duration_msecs']).to eq(100)
+          expect(rp.payload['composer_open_duration_msecs']).to eq(204)
+          expect(rp.payload['reply_to_post_number']).to eq(123)
           expect(rp.reviewable_scores.first.reason).to eq('fast_typer')
 
           expect(parsed['pending_post']).to be_present

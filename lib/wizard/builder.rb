@@ -198,7 +198,10 @@ class Wizard
         end
       end
 
-      @wizard.append_step('themes-further-reading')
+      @wizard.append_step('themes-further-reading') do |step|
+        step.banner = "further-reading.png"
+        step.add_field(id: 'popular-themes', type: 'component')
+      end
 
       @wizard.append_step('logos') do |step|
         step.add_field(id: 'logo', type: 'image', value: SiteSetting.site_logo_url)

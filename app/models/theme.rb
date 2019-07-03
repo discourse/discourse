@@ -25,6 +25,7 @@ class Theme < ActiveRecord::Base
   belongs_to :remote_theme, autosave: true
 
   has_one :settings_field, -> { where(target_id: Theme.targets[:settings], name: "yaml") }, class_name: 'ThemeField'
+  has_one :javascript_cache, dependent: :destroy
   has_many :locale_fields, -> { filter_locale_fields(I18n.fallbacks[I18n.locale]) }, class_name: 'ThemeField'
 
   validate :component_validations
@@ -51,19 +52,26 @@ class Theme < ActiveRecord::Base
     changed_fields.each(&:save!)
     changed_fields.clear
 
+    if saved_change_to_name?
+      theme_fields.select(&:basic_html_field?).each(&:invalidate_baked!)
+    end
+
     Theme.expire_site_cache! if saved_change_to_user_selectable? || saved_change_to_name?
     notify_with_scheme = saved_change_to_color_scheme_id?
-    name_changed = saved_change_to_name?
 
     reload
     settings_field&.ensure_baked! # Other fields require setting to be **baked**
     theme_fields.each(&:ensure_baked!)
 
-    if name_changed
-      theme_fields.select { |f| f.basic_html_field? }.each do |f|
-        f.value_baked = nil
-        f.ensure_baked!
-      end
+    all_extra_js = theme_fields.where(target_id: Theme.targets[:extra_js]).pluck(:value_baked).join("\n")
+    if all_extra_js.present?
+      js_compiler = ThemeJavascriptCompiler.new(id, name)
+      js_compiler.append_raw_script(all_extra_js)
+      js_compiler.prepend_settings(cached_settings) if cached_settings.present?
+      javascript_cache || build_javascript_cache
+      javascript_cache.update!(content: js_compiler.content)
+    else
+      javascript_cache&.destroy!
     end
 
     remove_from_cache!
@@ -148,8 +156,10 @@ class Theme < ActiveRecord::Base
 
       all_ids = [parent, *components]
 
-      disabled_ids = Theme.where(id: all_ids).includes(:remote_theme)
-        .reject(&:enabled?).pluck(:id)
+      disabled_ids = Theme.where(id: all_ids)
+        .includes(:remote_theme)
+        .select { |t| !t.supported? || !t.enabled? }
+        .pluck(:id)
 
       all_ids - disabled_ids
     end
@@ -169,7 +179,7 @@ class Theme < ActiveRecord::Base
     SiteSetting.default_theme_id == id
   end
 
-  def enabled?
+  def supported?
     if minimum_version = remote_theme&.minimum_discourse_version
       return false unless Discourse.has_needed_version?(Discourse::VERSION::STRING, minimum_version)
     end
@@ -208,6 +218,7 @@ class Theme < ActiveRecord::Base
     return unless component
 
     Theme.transaction do
+      self.enabled = true
       self.component = false
       ChildTheme.where("child_theme_id = ?", id).destroy_all
       self.save!
@@ -238,7 +249,7 @@ class Theme < ActiveRecord::Base
   end
 
   def self.targets
-    @targets ||= Enum.new(common: 0, desktop: 1, mobile: 2, settings: 3, translations: 4, extra_scss: 5)
+    @targets ||= Enum.new(common: 0, desktop: 1, mobile: 2, settings: 3, translations: 4, extra_scss: 5, extra_js: 6)
   end
 
   def self.lookup_target(target_id)
@@ -276,6 +287,11 @@ class Theme < ActiveRecord::Base
   end
 
   def self.resolve_baked_field(theme_ids, target, name)
+    if target == :extra_js
+      caches = JavascriptCache.where(theme_id: theme_ids)
+      caches = caches.sort_by { |cache| theme_ids.index(cache.theme_id) }
+      return caches.map { |c| "<script src='#{c.url}'></script>" }.join("\n")
+    end
     list_baked_fields(theme_ids, target, name).map { |f| f.value_baked || f.value }.join("\n")
   end
 
@@ -367,7 +383,7 @@ class Theme < ActiveRecord::Base
   end
 
   def internal_translations
-    translations(internal: true)
+    @internal_translations ||= translations(internal: true)
   end
 
   def translations(internal: false)
@@ -476,6 +492,22 @@ class Theme < ActiveRecord::Base
 
     end
   end
+
+  def disabled_by
+    find_disable_action_log&.acting_user
+  end
+
+  def disabled_at
+    find_disable_action_log&.created_at
+  end
+
+  private
+
+  def find_disable_action_log
+    if component? && !enabled?
+      @disable_log ||= UserHistory.where(context: id.to_s, action: UserHistory.actions[:disable_theme_component]).order("created_at DESC").first
+    end
+  end
 end
 
 # == Schema Information
@@ -493,6 +525,7 @@ end
 #  color_scheme_id  :integer
 #  remote_theme_id  :integer
 #  component        :boolean          default(FALSE), not null
+#  enabled          :boolean          default(TRUE), not null
 #
 # Indexes
 #

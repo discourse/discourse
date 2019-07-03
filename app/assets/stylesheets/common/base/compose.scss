@@ -280,6 +280,7 @@
     flex-basis: 50%;
     display: flex;
     align-items: center;
+    margin-right: auto;
     button {
       flex: 0 0 auto;
     }
@@ -311,15 +312,6 @@
       color: $danger;
       font-size: 20px;
       vertical-align: -5.5px;
-    }
-  }
-
-  .composer-bottom-right {
-    flex-basis: 50%;
-    display: flex;
-    flex-direction: row-reverse;
-    .toggle-preview {
-      order: 2;
     }
   }
 

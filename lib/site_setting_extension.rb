@@ -293,15 +293,9 @@ module SiteSettingExtension
 
       changes, deletions = diff_hash(new_hash, current)
 
-      changes.each do |name, val|
-        current[name] = val
-        clear_uploads_cache(name)
-      end
-
-      deletions.each do |name, _|
-        current[name] = defaults_view[name]
-        clear_uploads_cache(name)
-      end
+      changes.each { |name, val| current[name] = val }
+      deletions.each { |name, _| current[name] = defaults_view[name] }
+      uploads.clear
 
       clear_cache!
     end

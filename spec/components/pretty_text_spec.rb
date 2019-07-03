@@ -1224,7 +1224,7 @@ HTML
         ![](http://png.com/my.png)
         ![|220x100](http://png.com/my.png)
         ![stuff](http://png.com/my.png)
-        ![|220x100,50%](http://png.com/my.png)
+        ![|220x100,50%](http://png.com/my.png "some title")
       MD
 
       html = <<~HTML
@@ -1232,7 +1232,7 @@ HTML
         <img src="http://png.com/my.png" alt><br>
         <img src="http://png.com/my.png" alt width="220" height="100"><br>
         <img src="http://png.com/my.png" alt="stuff"><br>
-        <img src="http://png.com/my.png" alt width="110" height="50"></p>
+        <img src="http://png.com/my.png" alt title="some title" width="110" height="50"></p>
       HTML
 
       expect(cooked).to eq(html.strip)
@@ -1270,6 +1270,8 @@ HTML
       raw = <<~RAW
       ![upload](#{upload.short_url})
 
+      ![upload](#{upload.short_url} "some title to test")
+
       - ![upload](#{upload.short_url})
 
       - test
@@ -1285,19 +1287,20 @@ HTML
       RAW
 
       cooked = <<~HTML
-        <p><img src="#{upload.url}" alt="upload"></p>
+        <p><img src="#{upload.url}" alt="upload" data-base62-sha1="#{upload.base62_sha1}"></p>
+        <p><img src="#{upload.url}" alt="upload" title="some title to test" data-base62-sha1="#{upload.base62_sha1}"></p>
         <ul>
         <li>
-        <p><img src="#{upload.url}" alt="upload"></p>
+        <p><img src="#{upload.url}" alt="upload" data-base62-sha1="#{upload.base62_sha1}"></p>
         </li>
         <li>
         <p>test</p>
         <ul>
-        <li><img src="#{upload.url}" alt="upload"></li>
+        <li><img src="#{upload.url}" alt="upload" data-base62-sha1="#{upload.base62_sha1}"></li>
         </ul>
         </li>
         </ul>
-        <p><img src="#{upload.url}" alt="upload"></p>
+        <p><img src="#{upload.url}" alt="upload" data-base62-sha1="#{upload.base62_sha1}"></p>
         <p><a href="#{upload.short_path}">some attachment</a></p>
         <p><a class="attachment" href="#{upload.short_path}">some attachment</a></p>
         <p><a href="#{upload.short_path}">some attachment|random</a></p>

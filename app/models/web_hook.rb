@@ -58,11 +58,11 @@ class WebHook < ActiveRecord::Base
   end
 
   def self.enqueue_object_hooks(type, object, event, serializer = nil)
-    if type == :flag
-      Discourse.deprecate("The flags webhook is deprecated. Please use reviewable instead.")
-    end
-
     if active_web_hooks(type).exists?
+      if type == :flag
+        Discourse.deprecate("The flags webhook is deprecated. Please use reviewable instead.")
+      end
+
       payload = WebHook.generate_payload(type, object, serializer)
 
       WebHook.enqueue_hooks(type, event,

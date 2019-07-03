@@ -546,9 +546,18 @@
   .tracking-controls {
     label {
       align-items: center;
+      display: inline-block;
       .d-icon {
         margin-right: 3px;
       }
+    }
+    .select-kit.multi-select {
+      @include breakpoint(mobile) {
+        width: 100%;
+      }
+    }
+    .show-tracking {
+      float: right;
     }
   }
 
@@ -692,6 +701,21 @@
   .qr-code {
     padding: 5px 5px 0 5px;
     background-color: white;
+  }
+}
+
+.second-factor {
+  &.instructions {
+    color: $primary-medium;
+    margin-top: 5px;
+    margin-bottom: 10px;
+    font-size: $font-down-1;
+  }
+  .second-factor-item {
+    margin-top: 0.75em;
+  }
+  .btn.edit {
+    min-height: auto;
   }
 }
 

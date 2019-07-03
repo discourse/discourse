@@ -271,6 +271,7 @@ const User = RestModel.extend({
       "email_previous_replies",
       "dynamic_favicon",
       "enable_quoting",
+      "enable_defer",
       "automatically_unpin_topics",
       "digest_after_minutes",
       "new_topic_duration_minutes",
@@ -338,6 +339,7 @@ const User = RestModel.extend({
         const userProps = Ember.getProperties(
           this.user_option,
           "enable_quoting",
+          "enable_defer",
           "external_links_in_new_tab",
           "dynamic_favicon"
         );
@@ -364,6 +366,40 @@ const User = RestModel.extend({
     });
   },
 
+  createSecondFactorTotp() {
+    return ajax("/u/create_second_factor_totp.json", {
+      type: "POST"
+    });
+  },
+
+  enableSecondFactorTotp(authToken, name) {
+    return ajax("/u/enable_second_factor_totp.json", {
+      data: {
+        second_factor_token: authToken,
+        name
+      },
+      type: "POST"
+    });
+  },
+
+  disableAllSecondFactors() {
+    return ajax("/u/disable_second_factor.json", {
+      type: "PUT"
+    });
+  },
+
+  updateSecondFactor(id, name, disable, targetMethod) {
+    return ajax("/u/second_factor.json", {
+      data: {
+        second_factor_target: targetMethod,
+        name,
+        disable,
+        id
+      },
+      type: "PUT"
+    });
+  },
+
   toggleSecondFactor(authToken, authMethod, targetMethod, enable) {
     return ajax("/u/second_factor.json", {
       data: {
@@ -376,12 +412,8 @@ const User = RestModel.extend({
     });
   },
 
-  generateSecondFactorCodes(authToken, authMethod) {
+  generateSecondFactorCodes() {
     return ajax("/u/second_factors_backup.json", {
-      data: {
-        second_factor_token: authToken,
-        second_factor_method: authMethod
-      },
       type: "PUT"
     });
   },

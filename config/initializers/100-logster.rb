@@ -1,5 +1,12 @@
 # frozen_string_literal: true
 
+if GlobalSetting.skip_redis?
+  if Rails.logger.respond_to? :chained
+    Rails.logger = Rails.logger.chained.first
+  end
+  return
+end
+
 if Rails.env.development? && RUBY_VERSION.match?(/^2\.5\.[23]/)
   STDERR.puts "WARNING: Discourse development environment runs slower on Ruby 2.5.3 or below"
   STDERR.puts "We recommend you upgrade to Ruby 2.6.1 for the optimal development performance"
@@ -137,6 +144,8 @@ RailsMultisite::ConnectionManagement.each_connection do
 end
 
 if Rails.configuration.multisite
-  chained = Rails.logger.chained
-  chained && chained.first.formatter = RailsMultisite::Formatter.new
+  if Rails.logger.respond_to? :chained
+    chained = Rails.logger.chained
+    chained && chained.first.formatter = RailsMultisite::Formatter.new
+  end
 end

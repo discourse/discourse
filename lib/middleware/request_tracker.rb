@@ -165,6 +165,20 @@ class Middleware::RequestTracker
     # possibly transferred?
     if info && (headers = result[1])
       headers["X-Runtime"] = "%0.6f" % info[:total_duration]
+
+      if GlobalSetting.enable_performance_http_headers
+        if redis = info[:redis]
+          headers["X-Redis-Calls"] = redis[:calls].to_s
+          headers["X-Redis-Time"] = "%0.6f" % redis[:duration]
+        end
+        if sql = info[:sql]
+          headers["X-Sql-Calls"] = sql[:calls].to_s
+          headers["X-Sql-Time"] = "%0.6f" % sql[:duration]
+        end
+        if queue = env['REQUEST_QUEUE_SECONDS']
+          headers["X-Queue-Time"] = "%0.6f" % queue
+        end
+      end
     end
 
     if env[Auth::DefaultCurrentUserProvider::BAD_TOKEN] && (headers = result[1])

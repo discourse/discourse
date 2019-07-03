@@ -5,7 +5,7 @@ module Jobs
   class ReindexSearch < Jobs::Scheduled
     every 2.hours
 
-    CLEANUP_GRACE_PERIOD = 1.week.ago
+    CLEANUP_GRACE_PERIOD = 1.day.ago
 
     def execute(args)
       rebuild_problem_topics
@@ -79,8 +79,12 @@ module Jobs
           FROM post_search_data
           LEFT JOIN posts ON post_search_data.post_id = posts.id
           INNER JOIN topics ON posts.topic_id = topics.id
-          WHERE topics.deleted_at IS NOT NULL
-          AND topics.deleted_at <= :deleted_at
+          WHERE (topics.deleted_at IS NOT NULL
+          AND topics.deleted_at <= :deleted_at) OR (
+            posts.deleted_at IS NOT NULL AND
+            posts.deleted_at <= :deleted_at
+          )
+
         )
       SQL
     end
@@ -115,6 +119,7 @@ module Jobs
           AND pd.post_id = posts.id
         INNER JOIN topics ON topics.id = posts.topic_id
         WHERE pd.post_id IS NULL
+        AND posts.deleted_at IS NULL
         AND topics.deleted_at IS NULL
         AND posts.raw != ''
         ORDER BY posts.id DESC
@@ -126,6 +131,7 @@ module Jobs
       Category.joins(:category_search_data)
         .where('category_search_data.locale != ?
                 OR category_search_data.version != ?', SiteSetting.default_locale, SearchIndexer::INDEX_VERSION)
+        .order('categories.id asc')
         .limit(limit)
         .pluck(:id)
     end
@@ -134,6 +140,7 @@ module Jobs
       Topic.joins(:topic_search_data)
         .where('topic_search_data.locale != ?
                 OR topic_search_data.version != ?', SiteSetting.default_locale, SearchIndexer::INDEX_VERSION)
+        .order('topics.id desc')
         .limit(limit)
         .pluck(:id)
     end
@@ -142,6 +149,7 @@ module Jobs
       User.joins(:user_search_data)
         .where('user_search_data.locale != ?
                 OR user_search_data.version != ?', SiteSetting.default_locale, SearchIndexer::INDEX_VERSION)
+        .order('users.id asc')
         .limit(limit)
         .pluck(:id)
     end
@@ -150,6 +158,7 @@ module Jobs
       Tag.joins(:tag_search_data)
         .where('tag_search_data.locale != ?
                 OR tag_search_data.version != ?', SiteSetting.default_locale, SearchIndexer::INDEX_VERSION)
+        .order('tags.id asc')
         .limit(limit)
         .pluck(:id)
     end

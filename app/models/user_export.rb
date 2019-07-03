@@ -7,6 +7,8 @@ class UserExport < ActiveRecord::Base
 
   around_destroy :ignore_missing_post_uploads
 
+  DESTROY_CREATED_BEFORE = 2.days.ago
+
   def ignore_missing_post_uploads
     post_ids = upload.post_uploads.pluck(:post_id)
     yield
@@ -14,7 +16,7 @@ class UserExport < ActiveRecord::Base
   end
 
   def self.remove_old_exports
-    UserExport.where('created_at < ?', 2.days.ago).find_each do |user_export|
+    UserExport.where('created_at < ?', DESTROY_CREATED_BEFORE).find_each do |user_export|
       UserExport.transaction do
         begin
           Post.where(topic_id: user_export.topic_id).find_each { |p| p.destroy! }

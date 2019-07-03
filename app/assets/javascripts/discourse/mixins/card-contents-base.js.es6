@@ -127,10 +127,16 @@ export default Ember.Mixin.create({
 
     this.appEvents.on(previewClickEvent, this, "_previewClick");
 
-    this.appEvents.on(`topic-header:trigger-${id}`, (username, $target) => {
-      this.setProperties({ isFixed: true, isDocked: true });
-      return this._show(username, $target);
-    });
+    this.appEvents.on(
+      `topic-header:trigger-${id}`,
+      this,
+      "_topicHeaderTrigger"
+    );
+  },
+
+  _topicHeaderTrigger(username, $target) {
+    this.setProperties({ isFixed: true, isDocked: true });
+    return this._show(username, $target);
   },
 
   _bindMobileScroll() {
@@ -281,7 +287,14 @@ export default Ember.Mixin.create({
     $("#main")
       .off(clickDataExpand)
       .off(clickMention);
+
     this.appEvents.off(previewClickEvent, this, "_previewClick");
+
+    this.appEvents.off(
+      `topic-header:trigger-${this.elementId}`,
+      this,
+      "_topicHeaderTrigger"
+    );
   },
 
   keyUp(e) {

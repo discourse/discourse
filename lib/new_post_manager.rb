@@ -194,10 +194,17 @@ class NewPostManager
   # Enqueue this post
   def enqueue(reason = nil)
     result = NewPostResult.new(:enqueued)
+    payload = {
+      raw: @args[:raw],
+      tags: @args[:tags]
+    }
+    %w(typing_duration_msecs composer_open_duration_msecs reply_to_post_number).each do |a|
+      payload[a] = @args[a].to_i if @args[a]
+    end
 
     reviewable = ReviewableQueuedPost.new(
       created_by: @user,
-      payload: { raw: @args[:raw], tags: @args[:tags] },
+      payload: payload,
       topic_id: @args[:topic_id],
       reviewable_by_moderator: true
     )

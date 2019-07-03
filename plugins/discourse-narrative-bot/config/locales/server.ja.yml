@@ -58,3 +58,13 @@ ja:
     magic_8_ball:
       answers:
         '9': "はい"
+    new_user_narrative:
+      hello:
+        message: |-
+          ようこそ、%{title}へ参加ありがとうございます！
+
+          - 私はただのロボットですが、必要な時のサポートのため[我々の友好的なスタッフ](%{base_uri}/about)がいます。
+
+          - セキュリティの都合上、新しいユーザーは出来ることが限られています。[新しい権限](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/) (あるいは[バッジ](%{base_uri}/badges))が与えられた際にはお知らせします。
+
+          - 我々は[まともなコミュニティのありかた](%{base_uri}/guidelines)に常に従っています。

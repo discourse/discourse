@@ -61,7 +61,10 @@ if (Discourse.SiteSettings.tagging_enabled) {
     class: "btn-default"
   });
 }
-addBulkButton("deleteTopics", "delete", { icon: "trash", class: "btn-danger" });
+addBulkButton("deleteTopics", "delete", {
+  icon: "trash-alt",
+  class: "btn-danger"
+});
 
 // Modal for performing bulk actions on topics
 export default Ember.Controller.extend(ModalFunctionality, {

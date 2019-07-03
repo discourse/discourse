@@ -1,3 +1,4 @@
+import { popupAjaxError } from "discourse/lib/ajax-error";
 import { searchForTerm, isValidSearchTerm } from "discourse/lib/search";
 import { createWidget } from "discourse/widgets/widget";
 import { h } from "virtual-dom";
@@ -78,6 +79,7 @@ const SearchHelper = {
             searchData.topicId = null;
           }
         })
+        .catch(popupAjaxError)
         .finally(() => {
           searchData.loading = false;
           widget.scheduleRerender();
@@ -204,6 +206,12 @@ export default createWidget("search-menu", {
   },
 
   keyDown(e) {
+    if (e.which === 27 /* escape */) {
+      this.sendWidgetAction("toggleSearchMenu");
+      e.preventDefault();
+      return false;
+    }
+
     if (searchData.loading || searchData.noResults) {
       return;
     }

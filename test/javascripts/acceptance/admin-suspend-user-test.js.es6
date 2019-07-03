@@ -1,3 +1,4 @@
+import selectKit from "helpers/select-kit-helper";
 import { acceptance } from "helpers/qunit-helpers";
 
 acceptance("Admin - Suspend User", {

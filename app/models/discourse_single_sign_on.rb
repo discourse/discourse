@@ -4,6 +4,9 @@ require_dependency 'single_sign_on'
 
 class DiscourseSingleSignOn < SingleSignOn
 
+  class BlankExternalId < StandardError; end
+  class BannedExternalId < StandardError; end
+
   def self.sso_url
     SiteSetting.sso_url
   end
@@ -48,7 +51,21 @@ class DiscourseSingleSignOn < SingleSignOn
     "SSO_NONCE_#{nonce}"
   end
 
+  BANNED_EXTERNAL_IDS = %w{none nil blank null}
+
   def lookup_or_create_user(ip_address = nil)
+
+    # we don't want to ban 0 from being an external id
+    external_id = self.external_id.to_s
+
+    if external_id.blank?
+      raise BlankExternalId
+    end
+
+    if BANNED_EXTERNAL_IDS.include?(external_id.downcase)
+      raise BannedExternalId, external_id
+    end
+
     sso_record = SingleSignOnRecord.find_by(external_id: external_id)
 
     if sso_record && (user = sso_record.user)
