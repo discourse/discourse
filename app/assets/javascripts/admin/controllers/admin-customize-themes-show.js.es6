@@ -301,6 +301,20 @@ export default Ember.Controller.extend({
       } else {
         this.commitSwitchType();
       }
+    },
+
+    enableComponent() {
+      this.model.set("enabled", true);
+      this.model
+        .saveChanges("enabled")
+        .catch(() => this.model.set("enabled", false));
+    },
+
+    disableComponent() {
+      this.model.set("enabled", false);
+      this.model
+        .saveChanges("enabled")
+        .catch(() => this.model.set("enabled", true));
     }
   }
 });

@@ -3481,6 +3481,7 @@ en:
           inactive_themes: "Inactive themes:"
           inactive_components: "Unused components:"
           broken_theme_tooltip: "This theme has errors in its CSS, HTML or YAML"
+          disabled_component_tooltip: "This component has been disabled"
           default_theme_tooltip: "This theme is the site's default theme"
           updates_available_tooltip: "Updates are available for this theme"
           and_x_more: "and {{count}} more."
@@ -3521,6 +3522,10 @@ en:
           version: "Version:"
           authors: "Authored by:"
           source_url: "Source"
+          enable: "Enable"
+          disable: "Disable"
+          disabled: "This component has been disabled."
+          disabled_by: "This component has been disabled by"
           required_version:
             error: "This theme has been automatically disabled because it is not compatible with this version of Discourse."
             minimum: "Requires Discourse version {{version}} or above."

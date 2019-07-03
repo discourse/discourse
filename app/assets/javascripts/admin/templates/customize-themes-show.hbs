@@ -16,7 +16,7 @@
     </div>
   {{/each}}
 
-  {{#unless model.enabled}}
+  {{#unless model.supported}}
     <div class="alert alert-error">
       {{i18n "admin.customize.theme.required_version.error"}}
       {{#if model.remote_theme.minimum_discourse_version}}
@@ -25,6 +25,26 @@
       {{#if model.remote_theme.maximum_discourse_version}}
         {{i18n "admin.customize.theme.required_version.maximum" version=model.remote_theme.maximum_discourse_version}}
       {{/if}}
+    </div>
+  {{/unless}}
+
+  {{#unless model.enabled}}
+    <div class="alert alert-error">
+      {{#if model.disabled_by}}
+        {{i18n "admin.customize.theme.disabled_by"}}
+        {{#user-link user=model.disabled_by}}
+          {{avatar model.disabled_by imageSize="tiny"}}
+          {{model.disabled_by.username}}
+        {{/user-link}}
+        {{format-date model.disabled_at leaveAgo="true"}}
+      {{else}}
+        {{i18n "admin.customize.theme.disabled"}}
+      {{/if}}
+      {{d-button
+        class='btn-default'
+        action=(action "enableComponent")
+        icon="check"
+        label="admin.customize.theme.enable"}}
     </div>
   {{/unless}}
 
@@ -204,7 +224,13 @@
       {{#if model.childThemes.length}}
         <ul class='removable-list'>
           {{#each model.childThemes as |child|}}
-            <li>{{#link-to 'adminCustomizeThemes.show' child replace=true class='col'}}{{child.name}}{{/link-to}} {{d-button action=(action "removeChildTheme") actionParam=child class="btn-default cancel-edit col" icon="times"}}</li>
+            <li class={{unless child.enabled "disabled-child"}}>
+              {{#link-to 'adminCustomizeThemes.show' child replace=true class='col child-link'}}
+                {{child.name}}
+              {{/link-to}}
+
+              {{d-button action=(action "removeChildTheme") actionParam=child class="btn-default cancel-edit col" icon="times"}}
+            </li>
           {{/each}}
         </ul>
       {{/if}}
@@ -221,5 +247,22 @@
   <a class="btn btn-default export" target="_blank" href={{downloadUrl}}>{{d-icon "download"}} {{i18n 'admin.export_json.button_text'}}</a>
 
   {{d-button action=(action "switchType") label="admin.customize.theme.convert" icon=convertIcon class="btn-default btn-normal" title=convertTooltip}}
+
+  {{#if model.component}}
+    {{#if model.enabled}}
+      {{d-button
+        class='btn-default'
+        action=(action "disableComponent")
+        icon="ban"
+        label="admin.customize.theme.disable"}}
+    {{else}}
+      {{d-button
+        class='btn-default'
+        action=(action "enableComponent")
+        icon="check"
+        label="admin.customize.theme.enable"}}
+    {{/if}}
+  {{/if}}
+
   {{d-button action=(action "destroy") label="admin.customize.delete" icon="trash-alt" class="btn-danger"}}
 </div>

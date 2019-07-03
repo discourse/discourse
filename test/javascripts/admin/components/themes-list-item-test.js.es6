@@ -71,11 +71,14 @@ componentTest("with children", {
     assert.deepEqual(
       find(".components")
         .text()
-        .trim(),
+        .trim()
+        .split(",")
+        .map(n => n.trim())
+        .join(","),
       childrenList
         .splice(0, 4)
         .map(theme => theme.get("name"))
-        .join(", "),
+        .join(","),
       "lists the first 4 children"
     );
     assert.deepEqual(

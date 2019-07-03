@@ -60,9 +60,9 @@ describe Theme do
   end
 
   it "can automatically disable for mismatching version" do
-    expect(theme.enabled?).to eq(true)
+    expect(theme.supported?).to eq(true)
     theme.create_remote_theme!(remote_url: "", minimum_discourse_version: "99.99.99")
-    expect(theme.enabled?).to eq(false)
+    expect(theme.supported?).to eq(false)
 
     expect(Theme.transform_ids([theme.id])).to be_empty
   end
@@ -70,6 +70,13 @@ describe Theme do
   xit "#transform_ids works with nil values" do
     # Used in safe mode
     expect(Theme.transform_ids([nil])).to eq([nil])
+  end
+
+  it '#transform_ids filters out disabled components' do
+    theme.add_child_theme!(child)
+    expect(Theme.transform_ids([theme.id], extend: true)).to eq([theme.id, child.id])
+    child.update!(enabled: false)
+    expect(Theme.transform_ids([theme.id], extend: true)).to eq([theme.id])
   end
 
   it "doesn't allow multi-level theme components" do
