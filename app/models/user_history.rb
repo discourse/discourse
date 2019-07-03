@@ -169,7 +169,9 @@ class UserHistory < ActiveRecord::Base
       :embeddable_host_create,
       :embeddable_host_update,
       :embeddable_host_destroy,
-      :change_theme_setting
+      :change_theme_setting,
+      :disable_theme_component,
+      :enable_theme_component
     ]
   end
 
