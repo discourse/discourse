@@ -164,8 +164,8 @@ export default Ember.Component.extend({
     let reportKey = "reports:";
     reportKey += [
       dataSourceName,
-      startDate.replace(/-/g, ""),
-      endDate.replace(/-/g, ""),
+      Ember.testing ? "start" : startDate.replace(/-/g, ""),
+      Ember.testing ? "end" : endDate.replace(/-/g, ""),
       "[:prev_period]",
       this.get("reportOptions.table.limit"),
       customFilters
