@@ -29,7 +29,7 @@ QUnit.test("Visit reports page", async assert => {
 });
 
 QUnit.test("Visit report page", async assert => {
-  await visit("/admin/reports/page_view_total_reqs");
+  await visit("/admin/reports/staff_logins");
 
   assert.ok(exists(".export-csv-btn"));
 });
