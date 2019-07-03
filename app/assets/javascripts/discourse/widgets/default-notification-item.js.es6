@@ -91,7 +91,7 @@ export const DefaultNotificationItem = createWidget(
       return iconNode(`notification.${notificationName}`);
     },
 
-    title(notificationName) {
+    notificationTitle(notificationName) {
       if (notificationName) {
         return I18n.t(`notifications.titles.${notificationName}`);
       } else {
@@ -108,7 +108,7 @@ export const DefaultNotificationItem = createWidget(
       let text = emojiUnescape(this.text(notificationName, data));
       let icon = this.icon(notificationName, data);
 
-      const title = this.title(notificationName, data);
+      const title = this.notificationTitle(notificationName, data);
 
       // We can use a `<p>` tag here once other languages have fixed their HTML
       // translations.
