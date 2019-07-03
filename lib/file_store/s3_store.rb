@@ -99,6 +99,11 @@ module FileStore
       File.join("uploads", "tombstone", RailsMultisite::ConnectionManagement.current_db, "/")
     end
 
+    def download_url(upload)
+      return unless upload
+      "#{upload.short_path}?dl=1"
+    end
+
     def path_for(upload)
       url = upload&.url
       FileStore::LocalStore.new.path_for(upload) if url && url[/^\/[^\/]/]

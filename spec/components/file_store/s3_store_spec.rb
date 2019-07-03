@@ -395,6 +395,15 @@ describe FileStore::S3Store do
     end
   end
 
+  describe ".download_url" do
+    include_context "s3 helpers"
+    let(:s3_object) { stub }
+
+    it "returns correct short URL with dl=1 param" do
+      expect(store.download_url(upload)).to eq("#{upload.short_path}?dl=1")
+    end
+  end
+
   describe ".url_for" do
     include_context "s3 helpers"
     let(:s3_object) { stub }

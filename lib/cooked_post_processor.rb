@@ -383,11 +383,7 @@ class CookedPostProcessor
     img.add_next_sibling(a)
 
     if upload
-      if Discourse.store.internal?
-        a["data-download-href"] = Discourse.store.download_url(upload)
-      else
-        a["data-download-href"] = "#{upload.short_path}?dl=1"
-      end
+      a["data-download-href"] = Discourse.store.download_url(upload)
     end
 
     a.add_child(img)
