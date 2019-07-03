@@ -59,7 +59,8 @@ let signups = {
   prev_end_date: "2018-06-17T00:00:00Z",
   prev30Days: null,
   dates_filtering: true,
-  report_key: 'reports:signups:start:end:[:prev_period]:50:{"group":"88"}:4',
+  report_key:
+    'reports:signups:20180616:20180716:[:prev_period]:50:{"group":"88"}:4',
   available_filters: [
     { id: "group", allow_any: false, choices: [], default: "88" }
   ],
@@ -158,7 +159,7 @@ const page_view_total_reqs = {
   prev_end_date: "2018-07-23T00:00:00Z",
   prev30Days: 58110,
   dates_filtering: true,
-  report_key: `reports:page_view_total_reqs:start:end:[:prev_period]:${SCHEMA_VERSION}`,
+  report_key: `reports:page_view_total_reqs:start:end:[:prev_period]:50:${SCHEMA_VERSION}`,
   labels: [
     { type: "date", property: "x", title: "Day" },
     { type: "number", property: "y", title: "Count" }
