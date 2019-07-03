@@ -30,13 +30,6 @@
                   value=(unbound buffered.category_id)
                   onSelectAny=(action "topicCategoryChanged")}}
               {{/if}}
-              {{text-field id="edit-title" value=buffered.title maxlength=siteSettings.max_topic_title_length autofocus="true"}}
-              {{#if showCategoryChooser}}
-                {{category-chooser
-                  class="small"
-                  value=(unbound buffered.category_id)
-                  onSelect=(action (mut buffered.category_id))}}
-              {{/if}}
 
               {{#if canEditTags}}
                 {{mini-tag-chooser filterable=true tags=buffered.tags categoryId=buffered.category_id}}
@@ -274,54 +267,22 @@
                       topicClosed=model.closed
                       statusType=model.private_topic_timer.status_type
                       executeAt=model.private_topic_timer.execute_at
-                      duration=model.private_topic_timer.duration}}
+                      duration=model.private_topic_timer.duration
+                      removeTopicTimer=(action "removeTopicTimer" model.private_topic_timer.status_type "private_topic_timer")}}
                 {{/if}}
 
                 {{topic-timer-info
                     topicClosed=model.closed
-                    statusType=model.private_topic_timer.status_type
-                    executeAt=model.private_topic_timer.execute_at
-                    duration=model.private_topic_timer.duration
-                    removeTopicTimer=(action "removeTopicTimer" model.private_topic_timer.status_type "private_topic_timer")}}
-              {{/if}}
+                    statusType=model.topic_timer.status_type
+                    executeAt=model.topic_timer.execute_at
+                    basedOnLastPost=model.topic_timer.based_on_last_post
+                    duration=model.topic_timer.duration
+                    categoryId=model.topic_timer.category_id
+                    removeTopicTimer=(action "removeTopicTimer" model.topic_timer.status_type "topic_timer")}}
 
-              {{topic-timer-info
-                  topicClosed=model.closed
-                  statusType=model.topic_timer.status_type
-                  executeAt=model.topic_timer.execute_at
-                  basedOnLastPost=model.topic_timer.based_on_last_post
-                  duration=model.topic_timer.duration
-                  categoryId=model.topic_timer.category_id
-                  removeTopicTimer=(action "removeTopicTimer" model.topic_timer.status_type "topic_timer")}}
-
-              {{#if session.showSignupCta}}
-                {{! replace "Log In to Reply" with the infobox }}
-                {{signup-cta}}
-              {{else}}
-                {{#if currentUser}}
-                  {{plugin-outlet name="topic-above-footer-buttons" args=(hash model=model)}}
-
-                  {{topic-footer-buttons
-                    topic=model
-                    toggleMultiSelect=(action "toggleMultiSelect")
-                    hideMultiSelect=(action "hideMultiSelect")
-                    deleteTopic=(action "deleteTopic")
-                    recoverTopic=(action "recoverTopic")
-                    toggleClosed=(action "toggleClosed")
-                    toggleArchived=(action "toggleArchived")
-                    toggleVisibility=(action "toggleVisibility")
-                    showTopicStatusUpdate=(route-action "showTopicStatusUpdate")
-                    showFeatureTopic=(route-action "showFeatureTopic")
-                    showChangeTimestamp=(route-action "showChangeTimestamp")
-                    resetBumpDate=(action "resetBumpDate")
-                    convertToPublicTopic=(action "convertToPublicTopic")
-                    convertToPrivateMessage=(action "convertToPrivateMessage")
-                    toggleBookmark=(action "toggleBookmark")
-                    showFlagTopic=(route-action "showFlagTopic")
-                    toggleArchiveMessage=(action "toggleArchiveMessage")
-                    editFirstPost=(action "editFirstPost")
-                    deferTopic=(action "deferTopic")
-                    replyToPost=(action "replyToPost")}}
+                {{#if session.showSignupCta}}
+                  {{! replace "Log In to Reply" with the infobox }}
+                  {{signup-cta}}
                 {{else}}
                   {{#if currentUser}}
                     {{plugin-outlet name="topic-above-footer-buttons" args=(hash model=model)}}
@@ -345,6 +306,7 @@
                       showFlagTopic=(route-action "showFlagTopic")
                       toggleArchiveMessage=(action "toggleArchiveMessage")
                       editFirstPost=(action "editFirstPost")
+                      deferTopic=(action "deferTopic")
                       replyToPost=(action "replyToPost")}}
                   {{else}}
                     <div id="topic-footer-buttons">
