@@ -225,9 +225,13 @@ const TopicRoute = Discourse.Route.extend({
 
   model(params, transition) {
     if (params.slug.match(ID_CONSTRAINT)) {
-      return DiscourseURL.routeTo(`/t/topic/${params.slug}/${params.id}`, {
+      transition.abort();
+
+      DiscourseURL.routeTo(`/t/topic/${params.slug}/${params.id}`, {
         replaceURL: true
       });
+
+      return;
     }
 
     const queryParams = transition.to.queryParams;
