@@ -84,9 +84,11 @@ export default Discourse.Route.extend({
   },
 
   actions: {
-    willTransition(transition) {
-      const url = transition.router.generate(transition.from.name);
-      this.controllerFor("topic").set("previousURL", url);
+    willTransition() {
+      this.controllerFor("topic").set(
+        "previousURL",
+        document.location.pathname
+      );
     }
   }
 });
