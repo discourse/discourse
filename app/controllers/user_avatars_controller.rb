@@ -37,7 +37,7 @@ class UserAvatarsController < ApplicationController
   def show_proxy_letter
     is_asset_path
 
-    if SiteSetting.external_system_avatars_url !~ /^\/letter(_avatar)?_proxy/
+    if SiteSetting.external_system_avatars_url !~ /^\/letter_avatar_proxy/
       raise Discourse::NotFound
     end
 
