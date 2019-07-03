@@ -38,6 +38,11 @@ class Emoji
     Discourse.cache.fetch(cache_key("tonable_emojis")) { db['tonableEmojis'] }
   end
 
+  def self.custom?(name)
+    name = name.delete_prefix(':').delete_suffix(':')
+    Emoji.custom.detect { |e| e.name == name }.present?
+  end
+
   def self.exists?(name)
     Emoji[name].present?
   end

@@ -7,7 +7,10 @@ module EmojiHelper
     str = str.gsub(/:([\w\-+]*(?::t\d)?):/) do |name|
       code = $1
 
-      if Emoji.exists?(code)
+      if code && Emoji.custom?(code)
+        emoji = Emoji[code]
+        "<img src=\"#{emoji.url}\" title=\"#{code}\" class=\"emoji\" alt=\"#{code}\">"
+      elsif code && Emoji.exists?(code)
         "<img src=\"#{Emoji.url_for(code)}\" title=\"#{code}\" class=\"emoji\" alt=\"#{code}\">"
       else
         name
