@@ -434,13 +434,8 @@ aside.onebox.twitterstatus .onebox-body {
 
       .quoted {
         border: 1px solid $primary-low;
-        border-radius: 25px;
         padding: 1px 25px 1px 12px;
         white-space: normal;
-
-        &:hover {
-          border: 1px solid $primary-high;
-        }
 
         .quoted-title {
           font-weight: bold;
