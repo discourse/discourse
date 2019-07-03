@@ -235,7 +235,7 @@ describe Jobs::UserEmail do
       expect(user.last_emailed_at).to eq(last_emailed_at)
     end
 
-    it "creates a skipped email log when the usere isn't allowed to see the post" do
+    it "creates a skipped email log when the user isn't allowed to see the post" do
       user.user_option.update(email_level: UserOption.email_level_types[:always])
       post.topic.convert_to_private_message(Discourse.system_user)
 
