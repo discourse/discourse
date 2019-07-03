@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class HiddenTopicViewSerializer < ApplicationSerializer
   attributes :view_hidden?
 
