@@ -966,7 +966,6 @@ class TopicsController < ApplicationController
     end
   end
 
-
   def render_topic_changes(dest_topic)
     if dest_topic.present?
       render json: { success: true, url: dest_topic.relative_url }
