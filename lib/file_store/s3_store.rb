@@ -99,15 +99,23 @@ module FileStore
       File.join("uploads", "tombstone", RailsMultisite::ConnectionManagement.current_db, "/")
     end
 
+    def download_url(upload)
+      return unless upload
+      "#{upload.short_path}?dl=1"
+    end
+
     def path_for(upload)
       url = upload&.url
       FileStore::LocalStore.new.path_for(upload) if url && url[/^\/[^\/]/]
     end
 
-    def url_for(upload)
-      if upload.private?
+    def url_for(upload, force_download: false)
+      if upload.private? || force_download
+        opts = { expires_in: S3Helper::DOWNLOAD_URL_EXPIRES_AFTER_SECONDS }
+        opts[:response_content_disposition] = "attachment; filename=\"#{upload.original_filename}\"" if force_download
+
         obj = @s3_helper.object(get_upload_key(upload))
-        url = obj.presigned_url(:get, expires_in: S3Helper::DOWNLOAD_URL_EXPIRES_AFTER_SECONDS)
+        url = obj.presigned_url(:get, opts)
       else
         url = upload.url
       end

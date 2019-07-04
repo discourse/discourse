@@ -382,7 +382,7 @@ class CookedPostProcessor
     a = create_link_node("lightbox", img["src"])
     img.add_next_sibling(a)
 
-    if upload && Discourse.store.internal?
+    if upload
       a["data-download-href"] = Discourse.store.download_url(upload)
     end
 
