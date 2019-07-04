@@ -538,7 +538,7 @@ class Plugin::Instance
 
     File.delete(js_file_path) if js_asset_exists?
 
-    if contents.present? && false
+    if contents.present?
       contents.insert(0, "<%")
       contents << "%>"
       write_asset(js_file_path, contents.join("\n"))
