@@ -35,6 +35,11 @@ export default Discourse.Route.extend({
         // TODO we are seeing errors where closest post is null and this is exploding
         // we need better handling and logging for this condition.
 
+        // there are no closestPost for hidden topics
+        if (topic.view_hidden) {
+          return;
+        }
+
         // The post we requested might not exist. Let's find the closest post
         const closestPost = postStream.closestPostForPostNumber(
           params.nearPost || 1
@@ -76,5 +81,14 @@ export default Discourse.Route.extend({
           console.log("Could not view topic", e);
         }
       });
+  },
+
+  actions: {
+    willTransition() {
+      this.controllerFor("topic").set(
+        "previousURL",
+        document.location.pathname
+      );
+    }
   }
 });

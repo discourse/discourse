@@ -1279,6 +1279,7 @@ RSpec.describe TopicsController do
     context 'permission errors' do
       fab!(:allowed_user) { Fabricate(:user) }
       let(:allowed_group) { Fabricate(:group) }
+      let(:accessible_group) { Fabricate(:group, public_admission: true) }
       let(:secure_category) do
         c = Fabricate(:category)
         c.permissions = [[allowed_group, :full]]
@@ -1287,6 +1288,12 @@ RSpec.describe TopicsController do
         allowed_user.save
         c
       end
+      let(:accessible_category) do
+        Fabricate(:category).tap do |c|
+          c.set_permissions(accessible_group => :full)
+          c.save!
+        end
+      end
       let(:normal_topic) { Fabricate(:topic) }
       let(:secure_topic) { Fabricate(:topic, category: secure_category) }
       let(:private_topic) { Fabricate(:private_message_topic, user: allowed_user) }
@@ -1294,6 +1301,7 @@ RSpec.describe TopicsController do
       let(:deleted_secure_topic) { Fabricate(:topic, category: secure_category, deleted_at: 1.day.ago) }
       let(:deleted_private_topic) { Fabricate(:private_message_topic, user: allowed_user, deleted_at: 1.day.ago) }
       let(:nonexist_topic_id) { Topic.last.id + 10000 }
+      let(:secure_accessible_topic) { Fabricate(:topic, category: accessible_category) }
 
       shared_examples "various scenarios" do |expected|
         expected.each do |key, value|
@@ -1314,7 +1322,8 @@ RSpec.describe TopicsController do
           deleted_topic: 410,
           deleted_secure_topic: 403,
           deleted_private_topic: 403,
-          nonexist: 404
+          nonexist: 404,
+          secure_accessible_topic: 403
         }
         include_examples "various scenarios", expected
       end
@@ -1330,7 +1339,8 @@ RSpec.describe TopicsController do
           deleted_topic: 302,
           deleted_secure_topic: 302,
           deleted_private_topic: 302,
-          nonexist: 302
+          nonexist: 302,
+          secure_accessible_topic: 302
         }
         include_examples "various scenarios", expected
       end
@@ -1347,7 +1357,8 @@ RSpec.describe TopicsController do
           deleted_topic: 410,
           deleted_secure_topic: 403,
           deleted_private_topic: 403,
-          nonexist: 404
+          nonexist: 404,
+          secure_accessible_topic: 200
         }
         include_examples "various scenarios", expected
       end
@@ -1364,7 +1375,8 @@ RSpec.describe TopicsController do
           deleted_topic: 410,
           deleted_secure_topic: 410,
           deleted_private_topic: 410,
-          nonexist: 404
+          nonexist: 404,
+          secure_accessible_topic: 200
         }
         include_examples "various scenarios", expected
       end
@@ -1381,7 +1393,8 @@ RSpec.describe TopicsController do
           deleted_topic: 200,
           deleted_secure_topic: 403,
           deleted_private_topic: 403,
-          nonexist: 404
+          nonexist: 404,
+          secure_accessible_topic: 200
         }
         include_examples "various scenarios", expected
       end
@@ -1398,7 +1411,8 @@ RSpec.describe TopicsController do
           deleted_topic: 200,
           deleted_secure_topic: 200,
           deleted_private_topic: 200,
-          nonexist: 404
+          nonexist: 404,
+          secure_accessible_topic: 200
         }
         include_examples "various scenarios", expected
       end
