@@ -565,7 +565,7 @@ export default Ember.Component.extend({
         } else {
           const previewInputOffset = $(".d-editor-input").offset();
 
-          const pickerHeight = $(".emoji-picker").height();
+          const pickerHeight = $(".d-editor .emoji-picker").height();
           const editorHeight = $(".d-editor-input").height();
           const windowBottom = $(window).scrollTop() + $(window).height();
 
