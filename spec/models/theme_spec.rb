@@ -59,8 +59,6 @@ describe Theme do
 
   end
 
-  it { is_expected.to belong_to(:remote_theme).dependent(:destroy) }
-
   it "can automatically disable for mismatching version" do
     expect(theme.enabled?).to eq(true)
     theme.create_remote_theme!(remote_url: "", minimum_discourse_version: "99.99.99")
