@@ -1384,6 +1384,15 @@ class Topic < ActiveRecord::Base
     end
   end
 
+  def access_topic_via_group
+    Group
+      .joins(:category_groups)
+      .where("category_groups.category_id = ?", self.category_id)
+      .where("groups.public_admission OR groups.allow_membership_requests")
+      .order(:allow_membership_requests)
+      .first
+  end
+
   private
 
   def invite_to_private_message(invited_by, target_user, guardian)

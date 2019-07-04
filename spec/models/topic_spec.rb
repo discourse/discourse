@@ -2414,4 +2414,31 @@ describe Topic do
       expect { topic.reset_bumped_at }.not_to change { topic.bumped_at }
     end
   end
+
+  describe "#access_topic_via_group" do
+    let(:open_group) { Fabricate(:group, public_admission: true) }
+    let(:request_group) do
+      Fabricate(:group).tap do |g|
+        g.add_owner(user)
+        g.allow_membership_requests = true
+        g.save!
+      end
+    end
+    let(:category) { Fabricate(:category) }
+    let(:topic) { Fabricate(:topic, category: category) }
+
+    it "returns a group that is open or accepts membership requests and has access to the topic" do
+      expect(topic.access_topic_via_group).to eq(nil)
+
+      category.set_permissions(request_group => :full)
+      category.save!
+
+      expect(topic.access_topic_via_group).to eq(request_group)
+
+      category.set_permissions(request_group => :full, open_group => :full)
+      category.save!
+
+      expect(topic.access_topic_via_group).to eq(open_group)
+    end
+  end
 end
