@@ -1344,7 +1344,7 @@ en:
       disable: "Show All Posts"
 
     deleted_filter:
-      enabled_description: "This topic contains deleted posts, which have been hidden. "
+      enabled_description: "This topic contains deleted posts, which have been hidden."
       disabled_description: "Deleted posts in the topic are shown."
       enable: "Hide Deleted Posts"
       disable: "Show Deleted Posts"
@@ -1562,7 +1562,7 @@ en:
       drafts_offline: "drafts offline"
       edit_conflict: "edit conflict"
 
-      group_mentioned_limit: "<b>Warning!</b> You mentioned <a href='{{group_link}}'>{{group}}</a>, however this group has more members than the administrator configured mention limit of {{max}} users. Nobody will be notified. "
+      group_mentioned_limit: "<b>Warning!</b> You mentioned <a href='{{group_link}}'>{{group}}</a>, however this group has more members than the administrator configured mention limit of {{max}} users. Nobody will be notified."
       group_mentioned:
         one: "By mentioning {{group}}, you are about to notify <a href='{{group_link}}'>%{count} person</a> – are you sure?"
         other: "By mentioning {{group}}, you are about to notify <a href='{{group_link}}'>{{count}} people</a> – are you sure?"
@@ -2105,7 +2105,7 @@ en:
           description: "A count of new replies will be shown for this message. You will be notified if someone mentions your @name or replies to you."
         tracking:
           title: "Tracking"
-          description: "A count of new replies will be shown for this topic. You will be notified if someone mentions your @name or replies to you. "
+          description: "A count of new replies will be shown for this topic. You will be notified if someone mentions your @name or replies to you."
         regular:
           title: "Normal"
           description: "You will be notified if someone mentions your @name or replies to you."
@@ -4017,7 +4017,7 @@ en:
           other: "Can't delete all posts. Some posts are older than %{count} days old. (The delete_user_max_post_age setting.)"
         cant_delete_all_too_many_posts:
           one: "Can't delete all posts because the user has more than %{count} post. (delete_all_posts_max)"
-          other: "Can't delete all posts because the user has more than %{count} posts.  (delete_all_posts_max)"
+          other: "Can't delete all posts because the user has more than %{count} posts. (delete_all_posts_max)"
         delete_confirm: "It is generally preferable to anonymize users rather than deleting them, to avoid removing content from existing discussions.<br><br>Are you SURE you want to delete this user? This is permanent!"
         delete_and_block: "Delete and <b>block</b> this email and IP address"
         delete_dont_block: "Delete only"
@@ -4348,7 +4348,7 @@ en:
       quit: "Maybe Later"
 
       staff_count:
-        one: "Your community has %{count} staff (you). "
+        one: "Your community has %{count} staff (you)."
         other: "Your community has %{count} staff, including you."
 
       invites:
