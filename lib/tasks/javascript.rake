@@ -58,7 +58,7 @@ task 'javascript:update' do
       source: 'jquery.autoellipsis/src/jquery.autoellipsis.js',
       destination: 'jquery.autoellipsis-1.0.10.js'
     }, {
-      source: 'jquery-color/jquery.color.js'
+      source: 'jquery-color/dist/jquery.color.js'
     }, {
       source: 'jquery.cookie/jquery.cookie.js'
     }, {
