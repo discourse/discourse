@@ -66,7 +66,7 @@ export default Ember.Component.extend({
     }
 
     if (data.fixed) {
-      this.$().removeClass("hidden");
+      this.element.classList.remove("hidden");
     }
 
     if (data.title) {

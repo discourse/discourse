@@ -32,7 +32,7 @@ export default Ember.Component.extend(UploadMixin, {
   },
 
   _init: function() {
-    const $upload = this.$();
+    const $upload = $(this.element);
 
     $upload.on("fileuploadadd", (e, data) => {
       bootbox.confirm(

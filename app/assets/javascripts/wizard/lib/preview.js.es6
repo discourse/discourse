@@ -43,7 +43,7 @@ export function createPreviewComponent(width, height, obj) {
 
       didInsertElement() {
         this._super(...arguments);
-        const c = this.$("canvas")[0];
+        const c = this.element.querySelector("canvas");
         this.ctx = c.getContext("2d");
         this.ctx.scale(scale, scale);
         this.reload();

@@ -83,7 +83,7 @@ export default Ember.Component.extend({
     const $markerElement = $(markerElement);
     const markerOffset = $markerElement.offset();
     const parentScrollLeft = $markerElement.parent().scrollLeft();
-    const $quoteButton = this.$();
+    const $quoteButton = $(this.element);
 
     // remove the marker
     const parent = markerElement.parentNode;

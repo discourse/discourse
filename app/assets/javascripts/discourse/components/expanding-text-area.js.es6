@@ -5,7 +5,7 @@ export default Ember.TextArea.extend({
   @on("didInsertElement")
   _startWatching() {
     Ember.run.scheduleOnce("afterRender", () => {
-      this.$().focus();
+      $(this.element).focus();
       autosize(this.element);
     });
   },
@@ -19,6 +19,6 @@ export default Ember.TextArea.extend({
 
   @on("willDestroyElement")
   _disableAutosize() {
-    autosize.destroy(this.$());
+    autosize.destroy($(this.element));
   }
 });

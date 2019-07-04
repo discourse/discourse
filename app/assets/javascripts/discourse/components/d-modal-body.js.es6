@@ -7,7 +7,7 @@ export default Ember.Component.extend({
     this._super(...arguments);
     $("#modal-alert").hide();
 
-    let fixedParent = this.$().closest(".d-modal.fixed-modal");
+    let fixedParent = $(this.element).closest(".d-modal.fixed-modal");
     if (fixedParent.length) {
       this.set("fixed", true);
       fixedParent.modal("show");
@@ -26,8 +26,12 @@ export default Ember.Component.extend({
   },
 
   _afterFirstRender() {
-    if (!this.site.mobileView && this.autoFocus !== "false") {
-      this.$("input:first").focus();
+    if (
+      !this.site.mobileView &&
+      this.autoFocus !== "false" &&
+      this.element.querySelector("input")
+    ) {
+      this.element.querySelector("input").focus();
     }
 
     const maxHeight = this.maxHeight;
@@ -35,7 +39,7 @@ export default Ember.Component.extend({
       const maxHeightFloat = parseFloat(maxHeight) / 100.0;
       if (maxHeightFloat > 0) {
         const viewPortHeight = $(window).height();
-        this.$().css(
+        $(this.element).css(
           "max-height",
           Math.floor(maxHeightFloat * viewPortHeight) + "px"
         );

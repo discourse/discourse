@@ -22,7 +22,7 @@ export default Ember.Component.extend({
     let selectedGroups;
     let groupNames = this.groupNames;
 
-    this.$("input").autocomplete({
+    $(this.element.querySelector("input")).autocomplete({
       allowAny: false,
       items: _.isArray(groupNames)
         ? groupNames

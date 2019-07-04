@@ -962,7 +962,7 @@ function decorate(klass, evt, cb, id) {
 
   const mixin = {};
   mixin["_decorate_" + _decorateId++] = function($elem) {
-    $elem = $elem || this.$();
+    $elem = $elem || $(this.element);
     if ($elem) {
       cb($elem);
     }

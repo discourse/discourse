@@ -89,7 +89,9 @@ export default MountWidget.extend({
     const windowTop = $w.scrollTop();
 
     const postsWrapperTop = $(".posts-wrapper").offset().top;
-    const $posts = this.$(".onscreen-post, .cloaked-post");
+    const $posts = $(
+      this.element.querySelectorAll(".onscreen-post, .cloaked-post")
+    );
     const viewportTop = windowTop - slack;
     const topView = findTopView(
       $posts,
@@ -314,12 +316,12 @@ export default MountWidget.extend({
 
     this.appEvents.on("post-stream:posted", this, "_posted");
 
-    this.$().on("mouseenter.post-stream", "button.widget-button", e => {
+    $(this.element).on("mouseenter.post-stream", "button.widget-button", e => {
       $("button.widget-button").removeClass("d-hover");
       $(e.target).addClass("d-hover");
     });
 
-    this.$().on("mouseleave.post-stream", "button.widget-button", () => {
+    $(this.element).on("mouseleave.post-stream", "button.widget-button", () => {
       $("button.widget-button").removeClass("d-hover");
     });
 
@@ -331,8 +333,8 @@ export default MountWidget.extend({
     $(document).unbind("touchmove.post-stream");
     $(window).unbind("scroll.post-stream");
     this.appEvents.off("post-stream:refresh", this, "_debouncedScroll");
-    this.$().off("mouseenter.post-stream");
-    this.$().off("mouseleave.post-stream");
+    $(this.element).off("mouseenter.post-stream");
+    $(this.element).off("mouseleave.post-stream");
     this.appEvents.off("post-stream:refresh", this, "_refresh");
     this.appEvents.off("post-stream:posted", this, "_posted");
   }

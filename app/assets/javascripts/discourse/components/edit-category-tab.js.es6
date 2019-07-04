@@ -27,7 +27,7 @@ export default Ember.Component.extend({
   },
 
   _resetModalScrollState() {
-    const $modalBody = this.$()
+    const $modalBody = $(this.element)
       .parents("#discourse-modal")
       .find(".modal-body");
     if ($modalBody.length === 1) {

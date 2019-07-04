@@ -112,7 +112,7 @@ export default Ember.Component.extend({
   @observes("focusTarget")
   setFocus() {
     if (this.focusTarget === "editor") {
-      this.$("textarea").putCursorAtEnd();
+      $(this.element.querySelector("textarea")).putCursorAtEnd();
     }
   },
 
@@ -158,8 +158,8 @@ export default Ember.Component.extend({
   @on("didInsertElement")
   _composerEditorInit() {
     const topicId = this.get("topic.id");
-    const $input = this.$(".d-editor-input");
-    const $preview = this.$(".d-editor-preview-wrapper");
+    const $input = $(this.element.querySelector(".d-editor-input"));
+    const $preview = $(this.element.querySelector(".d-editor-preview-wrapper"));
 
     if (this.siteSettings.enable_mentions) {
       $input.autocomplete({
@@ -206,7 +206,7 @@ export default Ember.Component.extend({
       !this.get("composer.canEditTitle") &&
       (!this.capabilities.isIOS || safariHacksDisabled())
     ) {
-      this.$(".d-editor-input").putCursorAtEnd();
+      $(this.element.querySelector(".d-editor-input")).putCursorAtEnd();
     }
 
     this._bindUploadTarget();
@@ -345,12 +345,13 @@ export default Ember.Component.extend({
   },
 
   _teardownInputPreviewSync() {
-    [this.$(".d-editor-input"), this.$(".d-editor-preview-wrapper")].forEach(
-      $element => {
-        $element.off("mouseenter touchstart");
-        $element.off("scroll");
-      }
-    );
+    [
+      $(this.element.querySelector(".d-editor-input")),
+      $(this.element.querySelector(".d-editor-preview-wrapper"))
+    ].forEach($element => {
+      $element.off("mouseenter touchstart");
+      $element.off("scroll");
+    });
 
     REBUILD_SCROLL_MAP_EVENTS.forEach(event => {
       this.appEvents.off(event, this, this._resetShouldBuildScrollMap);
@@ -647,7 +648,7 @@ export default Ember.Component.extend({
     this._unbindUploadTarget(); // in case it's still bound, let's clean it up first
     this._pasted = false;
 
-    const $element = this.$();
+    const $element = $(this.element);
     const csrf = this.session.get("csrfToken");
 
     $element.fileupload({
@@ -890,7 +891,7 @@ export default Ember.Component.extend({
     this._validUploads = 0;
     $("#reply-control .mobile-file-upload").off("click.uploader");
     this.messageBus.unsubscribe("/uploads/composer");
-    const $uploadTarget = this.$();
+    const $uploadTarget = $(this.element);
     try {
       $uploadTarget.fileupload("destroy");
     } catch (e) {
@@ -925,7 +926,7 @@ export default Ember.Component.extend({
   },
 
   showPreview() {
-    const $preview = this.$(".d-editor-preview-wrapper");
+    const $preview = $(this.element.querySelector(".d-editor-preview-wrapper"));
     this._placeImageScaleButtons($preview);
     this.send("togglePreview");
   },
@@ -1071,7 +1072,7 @@ export default Ember.Component.extend({
       if (this._enableAdvancedEditorPreviewSync()) {
         this._syncScroll(
           this._syncEditorAndPreviewScroll,
-          this.$(".d-editor-input"),
+          $(this.element.querySelector(".d-editor-input")),
           $preview
         );
       }

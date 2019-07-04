@@ -17,7 +17,7 @@ export default Ember.Component.extend({
   didInsertElement() {
     this._super(...arguments);
 
-    const $upload = this.$();
+    const $upload = $(this.element);
 
     const id = this.get("field.id");
 
