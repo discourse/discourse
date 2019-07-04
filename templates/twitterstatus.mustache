@@ -5,7 +5,19 @@
   </a>
 </h4>
 
-<div class="tweet">{{{tweet}}}</div>
+<div class="tweet">
+    {{{tweet}}}
+    {{#quoted_tweet}}
+        <a class="quoted-link" href="{{quoted_link}}">
+            <div class="quoted">
+                <p class="quoted-title">{{quoted_full_name}} <span>@{{quoted_screen_name}}</span></p>
+                <div>
+                    {{quoted_tweet}}
+                </div>
+            </div>
+        </a>
+    {{/quoted_tweet}}
+</div>
 
 <div class='date'>
   <a href="{{link}}" target="_blank">{{timestamp}}</a>

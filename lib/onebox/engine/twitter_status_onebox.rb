@@ -23,7 +23,7 @@ module Onebox
             twitter_data[m_property.to_sym] = m_content
           end
         end
-        return twitter_data
+        twitter_data
       end
 
       def match
@@ -31,7 +31,7 @@ module Onebox
       end
 
       def twitter_data
-        @twitter_data = get_twitter_data
+        @twitter_data ||= get_twitter_data
       end
 
       def client
@@ -51,9 +51,7 @@ module Onebox
       end
 
       def access(*keys)
-        keys.reduce(raw) do |memo, key|
-          memo[key] || memo[key.to_s]
-        end
+        raw.dig *keys
       end
 
       def tweet
@@ -66,13 +64,12 @@ module Onebox
 
       def timestamp
         if twitter_api_credentials_present?
-          created_at = access(:created_at)
-          date = DateTime.strptime(created_at, "%a %b %d %H:%M:%S %z %Y")
+          date = DateTime.strptime(access(:created_at), "%a %b %d %H:%M:%S %z %Y")
           user_offset = access(:user, :utc_offset).to_i
           offset = (user_offset >= 0 ? "+" : "-") + Time.at(user_offset.abs).gmtime.strftime("%H%M")
           date.new_offset(offset).strftime("%-l:%M %p - %-d %b %Y")
         else
-          raw.at_css(".tweet-timestamp").attr('title')
+          attr_at_css(".tweet-timestamp", 'title')
         end
       end
 
@@ -80,7 +77,7 @@ module Onebox
         if twitter_api_credentials_present?
           "#{access(:user, :name)} (#{access(:user, :screen_name)})"
         else
-          "#{raw.css('.tweet.permalink-tweet')[0].attribute('data-name')} (#{raw.css('.tweet.permalink-tweet')[0].attribute('data-screen-name')})"
+          "#{attr_at_css('.tweet.permalink-tweet', 'data-name')} (#{attr_at_css('.tweet.permalink-tweet', 'data-screen-name')})"
         end
       end
 
@@ -94,30 +91,74 @@ module Onebox
 
       def likes
         if twitter_api_credentials_present?
-          count = access(:favorite_count).to_i
-          return count > 0 ? client.prettify_number(count) : nil
+          prettify_number(access(:favorite_count).to_i)
         else
-          raw.at_css(".request-favorited-popup").attr('data-compact-localized-count') rescue nil
+          attr_at_css(".request-favorited-popup", 'data-compact-localized-count')
         end
       end
 
       def retweets
         if twitter_api_credentials_present?
-          count = access(:retweet_count).to_i
-          return count > 0 ? client.prettify_number(count) : nil
+          prettify_number(access(:retweet_count).to_i)
         else
-          raw.at_css(".request-retweeted-popup").attr('data-compact-localized-count') rescue nil
+          attr_at_css(".request-retweeted-popup", 'data-compact-localized-count')
         end
       end
 
+      def quoted_full_name
+        if twitter_api_credentials_present?
+          access(:quoted_status, :user, :name)
+        else
+          raw.css('.QuoteTweet-fullname')[0]&.text
+        end
+      end
+
+      def quoted_screen_name
+        if twitter_api_credentials_present?
+          access(:quoted_status, :user, :screen_name)
+        else
+          attr_at_css(".QuoteTweet-innerContainer", "data-screen-name")
+        end
+      end
+
+      def quoted_tweet
+        if twitter_api_credentials_present?
+          access(:quoted_status, :full_text)
+        else
+          raw.css('.QuoteTweet-text')[0]&.text
+        end
+      end
+
+      def quoted_link
+        if twitter_api_credentials_present?
+          "https://twitter.com/#{quoted_screen_name}/status/#{access(:quoted_status, :id)}"
+        else
+          "https://twitter.com#{attr_at_css(".QuoteTweet-innerContainer", "href")}"
+        end
+      end
+
+      def prettify_number(count)
+        count > 0 ? client.prettify_number(count) : nil
+      end
+
+      def attr_at_css(css_property, attribute_name)
+        raw.at_css(css_property)&.attr(attribute_name)
+      end
+
       def data
-        { link: link,
+        @data ||= {
+          link: link,
           tweet: tweet,
           timestamp: timestamp,
           title: title,
           avatar: avatar,
           likes: likes,
-          retweets: retweets }
+          retweets: retweets,
+          quoted_tweet: quoted_tweet,
+          quoted_full_name: quoted_full_name,
+          quoted_screen_name: quoted_screen_name,
+          quoted_link: quoted_link
+        }
       end
     end
   end
