@@ -717,18 +717,18 @@ def correct_inline_uploads
           puts Diffy::Diff.new(PrettyText.cook(post.raw), PrettyText.cook(new_raw), context: 1)
           puts
         elsif dry_run
-          putc "🏃"
+          putc "#"
         else
-          putc "🆗"
+          putc "."
         end
 
         fixed_count += 1
       else
-        putc "❌"
+        putc "X"
         not_corrected_post_ids << post.id
       end
-    rescue => e
-      putc "🚫"
+    rescue
+      putc "!"
       failed_to_correct_post_ids << post.id
     end
   end
