@@ -12,7 +12,6 @@ RSpec.describe Users::OmniauthCallbacksController do
 
   after do
     Rails.application.env_config["omniauth.auth"] = OmniAuth.config.mock_auth[:google_oauth2] = nil
-    Rails.application.env_config["omniauth.result"] = nil
     OmniAuth.config.test_mode = false
   end
 
@@ -77,25 +76,6 @@ RSpec.describe Users::OmniauthCallbacksController do
         expect { Users::OmniauthCallbacksController.find_authenticator("ubuntu") }
           .to raise_error(Discourse::InvalidAccess)
       end
-    end
-  end
-
-  describe '.complete' do
-    it 'will return result if present' do
-      result = Auth::Result.new
-      result.user = Fabricate(:user)
-      result.authenticated = true
-      result.destination_url = "/anotherpath"
-
-      Rails.application.env_config["omniauth.origin"] = '/somepath'
-      Rails.application.env_config["omniauth.result"] = result
-
-      get "/auth/test/callback.json"
-      response_body = JSON.parse(response.body)
-
-      expect(response.status).to eq(200)
-      expect(response_body["authenticated"]).to eq(true)
-      expect(response_body["destination_url"]).to eq("/anotherpath")
     end
   end
 
