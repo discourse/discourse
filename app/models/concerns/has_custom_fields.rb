@@ -240,10 +240,7 @@ module HasCustomFields
           if v.is_a?(Array) && field_type != :json
             v.each { |subv| _custom_fields.create!(name: k, value: subv) }
           else
-            _custom_fields.create!(
-              name: k,
-              value: v.is_a?(Hash) || field_type == :json ? v.to_json : v
-            )
+            create_singular(k, v, field_type)
           end
         end
       end
@@ -252,7 +249,16 @@ module HasCustomFields
     end
   end
 
-  protected
+  def create_singular(name, value, field_type = nil)
+    write_value = value.is_a?(Hash) || field_type == :json ? value.to_json : value
+    _custom_fields.create!(name: name, value: write_value)
+  rescue ActiveRecord::RecordNotUnique
+    # We support unique indexes on certain fields. In the event two concurrenct processes attempt to
+    # update the same custom field we should catch the error and perform an update instead.
+    _custom_fields.where(name: name).update_all(value: write_value)
+  end
+
+protected
 
   def refresh_custom_fields_from_db
     target = Hash.new
