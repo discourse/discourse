@@ -51,7 +51,10 @@ module Onebox
       end
 
       def access(*keys)
-        raw.dig *keys
+        keys.reduce(raw) do |memo, key|
+          next unless memo
+          memo[key] || memo[key.to_s]
+        end
       end
 
       def tweet
