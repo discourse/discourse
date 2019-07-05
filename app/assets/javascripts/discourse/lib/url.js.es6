@@ -441,7 +441,7 @@ const DiscourseURL = Ember.Object.extend({
     // The default path has a hack to allow `/` to default to defaultHomepage
     // via BareRouter.handleUrl
     let transition;
-    if (path === "/") {
+    if (path === "/" || path.substring(0, 2) === "/?") {
       router._routerMicrolib.updateURL(path);
       transition = router.handleURL(path);
     } else {
