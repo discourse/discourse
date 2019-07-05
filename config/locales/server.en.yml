@@ -1910,7 +1910,7 @@ en:
 
     read_time_word_count: "Word count per minute for calculating estimated reading time."
 
-    topic_page_title_includes_category: "Topic page title includes the category name."
+    topic_page_title_includes_category: "Topic page <a href='https://developer.mozilla.org/en-US/docs/Web/HTML/Element/title' target='_blank'>title tag</a> includes the category name."
 
     native_app_install_banner_ios: "Displays DiscourseHub app banner on iOS devices to regular users (trust level 1 and up)."
 
