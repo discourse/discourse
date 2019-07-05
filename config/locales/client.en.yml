@@ -3173,9 +3173,10 @@ en:
               title: "Who can see this group?"
               public: "Everyone"
               logged_on_users: "Logged on users"
-              members: "Group owners, members and admins"
+              members: "Group owners and members"
               staff: "Group owners and staff"
-              owners: "Group owners and admins"
+              owners: "Group owners"
+              description: "Admins can see all groups."
           membership:
             automatic: Automatic
             trust_level: Trust Level

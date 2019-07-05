@@ -15,23 +15,23 @@ export default Ember.Component.extend({
         name: I18n.t(
           "admin.groups.manage.interaction.visibility_levels.logged_on_users"
         ),
-        value: 4
+        value: 1
       },
       {
         name: I18n.t(
           "admin.groups.manage.interaction.visibility_levels.members"
         ),
-        value: 1
+        value: 2
       },
       {
         name: I18n.t("admin.groups.manage.interaction.visibility_levels.staff"),
-        value: 2
+        value: 3
       },
       {
         name: I18n.t(
           "admin.groups.manage.interaction.visibility_levels.owners"
         ),
-        value: 3
+        value: 4
       }
     ];
 
