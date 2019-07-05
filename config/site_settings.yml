@@ -575,9 +575,6 @@ groups:
   enable_category_group_review:
     client: true
     default: false
-  group_list_changed:
-    hidden: true
-    default: true
 
 posting:
   min_post_length:

@@ -743,5 +743,4 @@ module Discourse
   def self.skip_post_deployment_migrations?
     ['1', 'true'].include?(ENV["SKIP_POST_DEPLOYMENT_MIGRATIONS"]&.to_s)
   end
-
 end

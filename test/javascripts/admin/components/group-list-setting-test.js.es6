@@ -47,7 +47,7 @@ componentTest("default", {
     );
 
     await subject.expand();
-    await subject.selectRowByName("Cheese cake");
+    await subject.selectRowByValue("2");
 
     assert.equal(
       subject.header().value(),
