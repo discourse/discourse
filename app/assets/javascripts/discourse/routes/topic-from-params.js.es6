@@ -89,6 +89,10 @@ export default Discourse.Route.extend({
         "previousURL",
         document.location.pathname
       );
+
+      // NOTE: omitting this return can break the back button when transitioning quickly between
+      // topics and the latest page.
+      return true;
     }
   }
 });
