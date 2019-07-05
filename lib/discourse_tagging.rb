@@ -83,6 +83,7 @@ module DiscourseTagging
           return false
         end
 
+        return false if tags.size == 0
         topic.tags = tags
       else
         # validate minimum required tags for a category

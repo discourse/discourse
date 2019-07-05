@@ -116,12 +116,27 @@ describe DiscourseTagging do
       other_category = Fabricate(:category, allowed_tags: [other_tag.name])
       topic = Fabricate(:topic, category: category)
 
-      DiscourseTagging.tag_topic_by_names(topic, Guardian.new(admin), [tag.name, other_tag.name, 'hello'])
+      result = DiscourseTagging.tag_topic_by_names(topic, Guardian.new(admin), [tag.name, other_tag.name, 'hello'])
+      expect(result).to eq(true)
       expect(topic.tags.pluck(:name)).to contain_exactly(tag.name)
 
       category.update!(allow_global_tags: true)
-      DiscourseTagging.tag_topic_by_names(topic, Guardian.new(admin), [tag.name, other_tag.name, 'hello'])
+      result = DiscourseTagging.tag_topic_by_names(topic, Guardian.new(admin), [tag.name, other_tag.name, 'hello'])
+      expect(result).to eq(true)
       expect(topic.tags.pluck(:name)).to contain_exactly(tag.name, 'hello')
+    end
+
+    it 'raises an error if no tags could be updated' do
+      tag = Fabricate(:tag)
+      other_tag = Fabricate(:tag)
+      tag_group = Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: [tag.name])
+      category = Fabricate(:category, allowed_tag_groups: [tag_group.name])
+      other_category = Fabricate(:category, allowed_tags: [other_tag.name])
+      topic = Fabricate(:topic, category: category)
+
+      result = DiscourseTagging.tag_topic_by_names(topic, Guardian.new(admin), [other_tag.name])
+      expect(result).to eq(false)
+      expect(topic.tags.pluck(:name)).to be_blank
     end
 
     context 'respects category minimum_required_tags setting' do
