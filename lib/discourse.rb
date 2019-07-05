@@ -205,7 +205,7 @@ module Discourse
   end
 
   def self.find_plugins(args)
-    plugins.find_all do |plugin|
+    plugins.select do |plugin|
       next if args[:include_official] == false && plugin.metadata.official?
       next if args[:include_unofficial] == false && !plugin.metadata.official?
       next if args[:include_disabled] == false && !plugin.enabled?
