@@ -267,6 +267,7 @@ RSpec.describe InlineUploads do
         #{Discourse.base_url}#{upload3.url} #{Discourse.base_url}#{upload3.url}
 
         <img src="#{upload.url}" width="5" height="4">
+        <img src="#{upload.url}" width="5px" height="auto">
         MD
 
         expect(InlineUploads.process(md)).to eq(<<~MD)
@@ -283,6 +284,7 @@ RSpec.describe InlineUploads do
         #{Discourse.base_url}#{upload3.short_path} #{Discourse.base_url}#{upload3.short_path}
 
         ![|5x4](#{upload.short_url})
+        ![](#{upload.short_url})
         MD
       end
 

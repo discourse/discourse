@@ -220,10 +220,10 @@ class InlineUploads
 
       if src && (matched_uploads(src).present? || external_src)
         text = node.attributes["alt"]&.value
-        width = node.attributes["width"]&.value
-        height = node.attributes["height"]&.value
+        width = node.attributes["width"]&.value.to_i
+        height = node.attributes["height"]&.value.to_i
         title = node.attributes["title"]&.value
-        text = "#{text}|#{width}x#{height}" if width && height
+        text = "#{text}|#{width}x#{height}" if width > 0 && height > 0
         after_html_tag = match[0].present?
 
         spaces_before =
