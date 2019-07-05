@@ -206,8 +206,16 @@ export class Tag {
           ["lightbox", "d-lazyload"].includes(attr.class) &&
           hasChild(e, "img")
         ) {
+          let href = attr.href;
+          const img = (e.children || []).find(c => c.name === "img");
+          const base62SHA1 = img.attributes["data-base62-sha1"];
           text = attr.title || "";
-          return "![" + text + "](" + attr.href + ")";
+
+          if (base62SHA1) {
+            href = `upload://${base62SHA1}`;
+          }
+
+          return "![" + text + "](" + href + ")";
         }
 
         if (attr.href && text !== attr.href) {
