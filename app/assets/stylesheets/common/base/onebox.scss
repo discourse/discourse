@@ -423,39 +423,37 @@ aside.onebox.twitterstatus .onebox-body {
   }
   p,
   .tweet {
-    white-space: pre-line;
     padding-top: 3px;
     margin-left: 70px;
 
-    .quoted-link {
-      display: inline;
-      text-decoration: none;
-      color: inherit;
+    .quoted {
+      border: 1px solid $primary-low;
+      padding: 0px 14px 0px 12px;
+      white-space: normal;
+      margin-top: 15px;
 
-      .quoted {
-        border: 1px solid $primary-low;
-        padding: 1px 25px 1px 12px;
-        white-space: normal;
+      .quoted-link {
+        color: inherit;
+      }
 
-        .quoted-title {
-          font-weight: bold;
-          margin: 5px 2px;
+      .quoted-title {
+        font-weight: bold;
+        margin: 5px 2px;
 
-          span {
-            font-weight: lighter;
-            color: $primary-medium;
-          }
+        span {
+          font-weight: lighter;
+          color: $primary-medium;
         }
+      }
 
-        div {
-          margin-bottom: 5px;
-        }
+      div {
+        margin-bottom: 5px;
       }
     }
   }
   .date {
     clear: left;
-    padding-top: 5px;
+    padding-top: 10px;
   }
 }
 
