@@ -128,5 +128,5 @@ vendor/bundle/*
 # Vagrant
 .vagrant
 
-# ignore auto-genarated plugin js assets
+# ignore auto-generated plugin js assets
 /app/assets/javascripts/plugins/*
