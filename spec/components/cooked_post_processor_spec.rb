@@ -1158,6 +1158,14 @@ describe CookedPostProcessor do
         expect(SiteSetting.download_remote_images_to_local).to eq(false)
       end
 
+      it "doesn't disable download_remote_images_to_local if site uses S3" do
+        SiteSetting.s3_access_key_id = "s3-access-key-id"
+        SiteSetting.s3_secret_access_key = "s3-secret-access-key"
+        SiteSetting.enable_s3_uploads = true
+        expect(cpp.disable_if_low_on_disk_space).to eq(false)
+        expect(SiteSetting.download_remote_images_to_local).to eq(true)
+      end
+
     end
 
   end

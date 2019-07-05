@@ -642,6 +642,7 @@ class CookedPostProcessor
   def disable_if_low_on_disk_space
     return false if !SiteSetting.download_remote_images_to_local
     return false if available_disk_space >= SiteSetting.download_remote_images_threshold
+    return false if Discourse.store.external?
 
     SiteSetting.download_remote_images_to_local = false
     # log the site setting change
