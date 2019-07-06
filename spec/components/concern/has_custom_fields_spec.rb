@@ -7,7 +7,7 @@ describe HasCustomFields do
   context "custom_fields" do
     before do
       DB.exec("create temporary table custom_fields_test_items(id SERIAL primary key)")
-      DB.exec("create temporary table custom_fields_test_item_custom_fields(id SERIAL primary key, custom_fields_test_item_id int, name varchar(256) not null, value text)")
+      DB.exec("create temporary table custom_fields_test_item_custom_fields(id SERIAL primary key, custom_fields_test_item_id int, name varchar(256) not null, value text, created_at TIMESTAMP, updated_at TIMESTAMP)")
       DB.exec(<<~SQL)
         CREATE UNIQUE INDEX ON custom_fields_test_item_custom_fields (custom_fields_test_item_id)
         WHERE NAME = 'rare'
@@ -282,6 +282,7 @@ describe HasCustomFields do
         item0 = CustomFieldsTestItem.new
         item0.custom_fields = { "rare" => "gem" }
         item0.save
+        expect(item0.reload.custom_fields['rare']).to eq("gem")
 
         item0.create_singular('rare', "diamond")
         expect(item0.reload.custom_fields['rare']).to eq("diamond")
