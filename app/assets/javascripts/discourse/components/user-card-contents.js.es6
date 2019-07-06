@@ -8,6 +8,7 @@ import { durationTiny } from "discourse/lib/formatter";
 import CanCheckEmails from "discourse/mixins/can-check-emails";
 import CardContentsBase from "discourse/mixins/card-contents-base";
 import CleansUp from "discourse/mixins/cleans-up";
+import { prioritizeNameInUx } from "discourse/lib/settings";
 
 export default Ember.Component.extend(
   CardContentsBase,
@@ -65,11 +66,7 @@ export default Ember.Component.extend(
 
     @computed("user.name")
     nameFirst(name) {
-      return (
-        !this.siteSettings.prioritize_username_in_ux &&
-        name &&
-        name.trim().length > 0
-      );
+      return prioritizeNameInUx(name, this.siteSettings);
     },
 
     @computed("username")
