@@ -53,6 +53,20 @@ describe CategoryFeaturedTopic do
       expect(CategoryFeaturedTopic.count).to be(1)
     end
 
+    it 'should not include topics from suppressed categories' do
+      CategoryFeaturedTopic.feature_topics_for(category)
+      expect(
+        CategoryFeaturedTopic.where(category_id: category.id).order('rank asc').pluck(:topic_id)
+      ).to contain_exactly(category_post.topic.id)
+
+      category.update(suppress_from_latest: true)
+
+      CategoryFeaturedTopic.feature_topics_for(category)
+      expect(
+        CategoryFeaturedTopic.where(category_id: category.id).order('rank asc').pluck(:topic_id)
+      ).to_not contain_exactly(category_post.topic.id)
+    end
+
     it 'should feature stuff in the correct order' do
       category = Fabricate(:category, num_featured_topics: 2)
       _t5 = Fabricate(:topic, category_id: category.id, bumped_at: 12.minutes.ago)
