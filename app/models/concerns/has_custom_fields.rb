@@ -259,9 +259,9 @@ module HasCustomFields
     write_value = value.is_a?(Hash) || field_type == :json ? value.to_json : value
     write_value = 't' if write_value.is_a?(TrueClass)
     write_value = 'f' if write_value.is_a?(FalseClass)
-    row_count = DB.exec(<<~SQL, name: name, value: write_value, id: id)
+    row_count = DB.exec(<<~SQL, name: name, value: write_value, id: id, now: Time.zone.now)
       INSERT INTO #{_custom_fields.table_name} (#{custom_fields_fk}, name, value, created_at, updated_at)
-      VALUES (:id, :name, :value, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
+      VALUES (:id, :name, :value, :now, :now)
       ON CONFLICT DO NOTHING
     SQL
     _custom_fields.where(name: name).update_all(value: write_value) if row_count == 0
