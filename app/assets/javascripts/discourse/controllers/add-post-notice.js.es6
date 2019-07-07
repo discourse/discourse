@@ -1,5 +1,6 @@
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import computed from "ember-addons/ember-computed-decorators";
+import { cookAsync } from "discourse/lib/text";
 
 export default Ember.Controller.extend(ModalFunctionality, {
   post: null,
@@ -42,10 +43,11 @@ export default Ember.Controller.extend(ModalFunctionality, {
 
       post
         .updatePostField("notice", notice)
-        .then(() => {
+        .then(() => cookAsync(notice, { features: { onebox: false } }))
+        .then(cookedNotice => {
           post.setProperties({
             notice_type: "custom",
-            notice_args: notice
+            notice_args: cookedNotice.string
           });
           resolve();
           this.send("closeModal");
