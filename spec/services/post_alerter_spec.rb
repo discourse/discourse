@@ -286,6 +286,14 @@ describe PostAlerter do
       }.to change(evil_trout.notifications, :count).by(0)
 
       expect(GroupMention.count).to eq(3)
+
+      group.update_columns(mentionable_level: Group::ALIAS_LEVELS[:owners_mods_and_admins])
+      group.add_owner(user)
+      expect {
+        create_post_with_alerts(raw: "Hello @group the owner can mention you", user: user)
+      }.to change(evil_trout.notifications, :count).by(1)
+
+      expect(GroupMention.count).to eq(4)
     end
 
     it "triggers :before_create_notifications_for_users" do
