@@ -17,9 +17,23 @@ WHERE table_schema='public' and (data_type like 'char%' or data_type like 'text%
 
     results = cnn.async_exec(sql).to_a
 
+    model_map = {}
+
     results.each do |result|
       table_name = result["table_name"]
       column_name = result["column_name"]
+
+      model = begin
+        model_map[table_name] ||= table_name.camelize.singularize.constantize
+      rescue NameError
+        nil
+      end
+
+      if model &&
+        model.respond_to?(:ignored_columns) &&
+        model.ignored_columns.include?(column_name)
+        next
+      end
 
       log "Remapping #{table_name} #{column_name}"
 
