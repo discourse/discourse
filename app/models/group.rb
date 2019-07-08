@@ -83,6 +83,7 @@ class Group < ActiveRecord::Base
     only_admins: 1,
     mods_and_admins: 2,
     members_mods_and_admins: 3,
+    owners_mods_and_admins: 4,
     everyone: 99
   }
 
@@ -164,6 +165,9 @@ class Group < ActiveRecord::Base
           (
             messageable_level = #{ALIAS_LEVELS[:members_mods_and_admins]} AND id in (
             SELECT group_id FROM group_users WHERE user_id = :user_id)
+          ) OR (
+            messageable_level = #{ALIAS_LEVELS[:owners_mods_and_admins]} AND id in (
+            SELECT group_id FROM group_users WHERE user_id = :user_id AND owner IS TRUE)
           )", levels: alias_levels(user), user_id: user && user.id)
   }
 
@@ -174,7 +178,11 @@ class Group < ActiveRecord::Base
       mentionable_level = #{ALIAS_LEVELS[:members_mods_and_admins]}
       AND id in (
         SELECT group_id FROM group_users WHERE user_id = :user_id)
-      )
+    ) OR (
+      mentionable_level = #{ALIAS_LEVELS[:owners_mods_and_admins]}
+      AND id in (
+        SELECT group_id FROM group_users WHERE user_id = :user_id AND owner IS TRUE)
+    )
     SQL
   end
 
@@ -185,11 +193,13 @@ class Group < ActiveRecord::Base
       levels = [ALIAS_LEVELS[:everyone],
                 ALIAS_LEVELS[:only_admins],
                 ALIAS_LEVELS[:mods_and_admins],
-                ALIAS_LEVELS[:members_mods_and_admins]]
+                ALIAS_LEVELS[:members_mods_and_admins],
+                ALIAS_LEVELS[:owners_mods_and_admins]]
     elsif user && user.moderator?
       levels = [ALIAS_LEVELS[:everyone],
                 ALIAS_LEVELS[:mods_and_admins],
-                ALIAS_LEVELS[:members_mods_and_admins]]
+                ALIAS_LEVELS[:members_mods_and_admins],
+                ALIAS_LEVELS[:owners_mods_and_admins]]
     end
 
     levels

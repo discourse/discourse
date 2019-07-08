@@ -346,6 +346,25 @@ describe Guardian do
       end
     end
 
+    it "respects the group members messageable_level" do
+      group.update!(messageable_level: Group::ALIAS_LEVELS[:members_mods_and_admins])
+      expect(Guardian.new(user).can_send_private_message?(group)).to eq(false)
+
+      group.add(user)
+      expect(Guardian.new(user).can_send_private_message?(group)).to eq(true)
+    end
+
+    it "respects the group owners messageable_level" do
+      group.update!(messageable_level: Group::ALIAS_LEVELS[:owners_mods_and_admins])
+      expect(Guardian.new(user).can_send_private_message?(group)).to eq(false)
+
+      group.add(user)
+      expect(Guardian.new(user).can_send_private_message?(group)).to eq(false)
+
+      group.add_owner(user)
+      expect(Guardian.new(user).can_send_private_message?(group)).to eq(true)
+    end
+
     context 'target user has private message disabled' do
       before do
         another_user.user_option.update!(allow_private_messages: false)

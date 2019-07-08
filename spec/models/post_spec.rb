@@ -1020,6 +1020,23 @@ describe Post do
           )
         end
       end
+
+      describe 'when group owner can mention a group' do
+        before do
+          group.update!(mentionable_level: Group::ALIAS_LEVELS[:owners_mods_and_admins])
+          group.add_owner(post.user)
+        end
+
+        it 'should create the mention' do
+          post.update!(raw: "hello @#{group.name}")
+          post.trigger_post_process
+          post.reload
+
+          expect(post.cooked).to eq(
+            %Q|<p>hello <a class="mention-group" href="/groups/#{group.name}">@#{group.name}</a></p>|
+          )
+        end
+      end
     end
   end
 
