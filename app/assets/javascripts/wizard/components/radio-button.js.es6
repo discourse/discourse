@@ -12,6 +12,8 @@ export default Ember.Component.extend({
   @on("init")
   updateVal() {
     const checked = this.value === this.radioValue;
-    Ember.run.next(() => this.$("input[type=radio]").prop("checked", checked));
+    Ember.run.next(
+      () => (this.element.querySelector("input[type=radio]").checked = checked)
+    );
   }
 });

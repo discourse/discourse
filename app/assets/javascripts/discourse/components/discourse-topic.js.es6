@@ -102,7 +102,7 @@ export default Ember.Component.extend(
 
       $(window).on("resize.discourse-on-scroll", () => this.scrolled());
 
-      this.$().on(
+      $(this.element).on(
         "click.discourse-redirect",
         ".cooked a, a.track-link",
         function(e) {
@@ -120,7 +120,10 @@ export default Ember.Component.extend(
       $(window).unbind("resize.discourse-on-scroll");
 
       // Unbind link tracking
-      this.$().off("click.discourse-redirect", ".cooked a, a.track-link");
+      $(this.element).off(
+        "click.discourse-redirect",
+        ".cooked a, a.track-link"
+      );
 
       this.resetExamineDockCache();
 

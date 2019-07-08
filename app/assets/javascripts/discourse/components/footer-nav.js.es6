@@ -91,7 +91,7 @@ const FooterNavComponent = MountWidget.extend(
     // in the header, otherwise, we hide it.
     @observes("mobileScrollDirection")
     toggleMobileFooter() {
-      this.$().toggleClass(
+      $(this.element).toggleClass(
         "visible",
         this.mobileScrollDirection === null ? true : false
       );

@@ -24,9 +24,9 @@ export default Ember.Component.extend({
   },
 
   _updateSelectedHtml() {
-    const active = this.$(".active");
-    if (active && active.html) {
-      this.set("selectedHtml", active.html());
+    const active = this.element.querySelector(".active");
+    if (active && active.innerHTML) {
+      this.set("selectedHtml", active.innerHTML);
     }
   },
 
@@ -43,7 +43,7 @@ export default Ember.Component.extend({
           $(window)
             .off("click.mobile-nav")
             .on("click.mobile-nav", e => {
-              let expander = this.$(".expander");
+              let expander = $(this.element.querySelector(".expander"));
               expander = expander && expander[0];
               if ($(e.target)[0] !== expander) {
                 this.set("expanded", false);

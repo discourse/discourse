@@ -5,7 +5,7 @@ export default Ember.Component.extend({
   type: "line",
 
   refreshChart() {
-    const ctx = this.$()[0].getContext("2d");
+    const ctx = this.element.getContext("2d");
     const model = this.model;
     const rawData = this.get("model.data");
 

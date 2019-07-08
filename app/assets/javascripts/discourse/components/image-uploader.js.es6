@@ -76,11 +76,13 @@ export default Ember.Component.extend(UploadMixin, {
   },
 
   _openLightbox() {
-    Ember.run.next(() => this.$("a.lightbox").magnificPopup("open"));
+    Ember.run.next(() =>
+      $(this.element.querySelector("a.lightbox")).magnificPopup("open")
+    );
   },
 
   _applyLightbox() {
-    if (this.imageUrl) Ember.run.next(() => lightbox(this.$()));
+    if (this.imageUrl) Ember.run.next(() => lightbox($(this.element)));
   },
 
   actions: {

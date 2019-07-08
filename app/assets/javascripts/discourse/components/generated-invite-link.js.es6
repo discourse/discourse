@@ -1,7 +1,7 @@
 export default Ember.Component.extend({
   didInsertElement() {
     this._super(...arguments);
-    this.$("input")
+    $(this.element.querySelector("input"))
       .select()
       .focus();
   }

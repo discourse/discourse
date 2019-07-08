@@ -59,7 +59,7 @@ export default Ember.Component.extend({
 
       this.set("inviteEmail", "");
       Ember.run.scheduleOnce("afterRender", () =>
-        this.$(".invite-email").focus()
+        this.element.querySelector(".invite-email").focus()
       );
     },
 

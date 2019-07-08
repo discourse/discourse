@@ -25,9 +25,9 @@ export default Ember.Component.extend({
   didRender() {
     this._super(...arguments);
 
-    const $backupCodes = this.$("#backupCodes");
-    if ($backupCodes.length) {
-      $backupCodes.height($backupCodes[0].scrollHeight);
+    const backupCodes = this.element.querySelector("#backupCodes");
+    if (backupCodes) {
+      backupCodes.style.height = backupCodes.scrollHeight;
     }
   },
 
@@ -49,8 +49,8 @@ export default Ember.Component.extend({
   },
 
   _selectAllBackupCodes() {
-    const $textArea = this.$("#backupCodes");
-    $textArea[0].focus();
-    $textArea[0].setSelectionRange(0, this.formattedBackupCodes.length);
+    const textArea = this.element.querySelector("#backupCodes");
+    textArea.focus();
+    textArea.setSelectionRange(0, this.formattedBackupCodes.length);
   }
 });

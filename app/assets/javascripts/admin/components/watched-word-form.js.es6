@@ -64,7 +64,7 @@ export default Ember.Component.extend({
             });
             this.action(WatchedWord.create(result));
             Ember.run.schedule("afterRender", () =>
-              this.$(".watched-word-input").focus()
+              this.element.querySelector(".watched-word-input").focus()
             );
           })
           .catch(e => {
@@ -75,7 +75,9 @@ export default Ember.Component.extend({
                     error: e.jqXHR.responseJSON.errors.join(". ")
                   })
                 : I18n.t("generic_error");
-            bootbox.alert(msg, () => this.$(".watched-word-input").focus());
+            bootbox.alert(msg, () =>
+              this.element.querySelector(".watched-word-input").focus()
+            );
           });
       }
     }
@@ -84,7 +86,7 @@ export default Ember.Component.extend({
   @on("didInsertElement")
   _init() {
     Ember.run.schedule("afterRender", () => {
-      this.$(".watched-word-input").keydown(e => {
+      $(this.element.querySelector(".watched-word-input")).keydown(e => {
         if (e.keyCode === 13) {
           this.send("submit");
         }
