@@ -463,6 +463,23 @@ RSpec.describe ListController do
           expect(css_select("link[rel=canonical]").length).to eq(1)
         end
       end
+
+      context "renders correct title" do
+        let!(:amazing_category) { Fabricate(:category, name: "Amazing Category") }
+
+        it 'for category default view' do
+          get "/c/#{amazing_category.slug}"
+
+          expect(response.body).to have_tag "title", text: "Amazing Category - Discourse"
+        end
+
+        it 'for category latest view' do
+          SiteSetting.short_site_description = "Best community"
+          get "/c/#{amazing_category.slug}/l/latest"
+
+          expect(response.body).to have_tag "title", text: "Amazing Category - Discourse"
+        end
+      end
     end
   end
 
