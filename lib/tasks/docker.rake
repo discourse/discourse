@@ -112,14 +112,11 @@ task 'docker:test' do
       # for js tests
       ENV["SKIP_MULTISITE"] = "1" if ENV["JS_ONLY"]
 
-      db_rake_task_prefix =
-        if ENV['USE_TURBO']
-          'parallel'
-        else
-          'db'
-        end
+      @good &&= run_or_fail("bundle exec rake db:create")
 
-      @good &&= run_or_fail("bundle exec rake #{db_rake_task_prefix}:create")
+      if ENV['USE_TURBO']
+        @good &&= run_or_fail("bundle exec rake parallel:create")
+      end
 
       if ENV["INSTALL_OFFICIAL_PLUGINS"]
         @good &&= run_or_fail("bundle exec rake plugin:install_all_official")
@@ -136,7 +133,11 @@ task 'docker:test' do
           "LOAD_PLUGINS=1 "
         end
 
-      @good &&= run_or_fail("#{command_prefix}bundle exec rake #{db_rake_task_prefix}:migrate")
+      @good &&= run_or_fail("#{command_prefix}bundle exec rake db:migrate")
+
+      if ENV['USE_TURBO']
+        @good &&= run_or_fail("bundle exec rake parallel:migrate")
+      end
 
       puts "travis_fold:end:prepare_tests" if ENV["TRAVIS"]
 
