@@ -20,7 +20,10 @@ module Onebox
           </iframe>
         HTML
       end
-      alias placeholder_html to_html
+
+      def placeholder_html
+        "<div class='onebox-placeholder-container'><span class='placeholder-icon generic'></span></div>"
+      end
 
       private
 

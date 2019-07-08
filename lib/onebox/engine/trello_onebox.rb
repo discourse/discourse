@@ -19,6 +19,10 @@ module Onebox
         HTML
       end
 
+      def placeholder_html
+        "<div class='onebox-placeholder-container'><span class='placeholder-icon generic'></span></div>"
+      end
+
       private
       def match
         return @match if @match
