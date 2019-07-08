@@ -89,9 +89,10 @@ class Group < ActiveRecord::Base
   def self.visibility_levels
     @visibility_levels = Enum.new(
       public: 0,
-      members: 1,
-      staff: 2,
-      owners: 3
+      logged_on_users: 1,
+      members: 2,
+      staff: 3,
+      owners: 4
     )
   end
 
@@ -109,6 +110,11 @@ class Group < ActiveRecord::Base
       sql = <<~SQL
         groups.id IN (
           SELECT g.id FROM groups g WHERE g.visibility_level = :public
+
+          UNION ALL
+
+          SELECT g.id FROM groups g
+          WHERE g.visibility_level = :logged_on_users AND :user_id IS NOT NULL
 
           UNION ALL
 
@@ -323,6 +329,8 @@ class Group < ActiveRecord::Base
     when :moderators
       group.update!(messageable_level: ALIAS_LEVELS[:everyone])
     end
+
+    group.update!(visibility_level: Group.visibility_levels[:logged_on_users]) if group.visibility_level == Group.visibility_levels[:public]
 
     # Remove people from groups they don't belong in.
     remove_subquery =
