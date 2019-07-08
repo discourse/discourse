@@ -93,9 +93,9 @@ export default Ember.Component.extend(KeyEnterEscape, {
   },
 
   setupComposerResizeEvents() {
-    const $composer = this.$();
-    const $grippie = this.$(".grippie");
-    const $document = Ember.$(document);
+    const $composer = $(this.element);
+    const $grippie = $(this.element.querySelector(".grippie"));
+    const $document = $(document);
     let origComposerSize = 0;
     let lastMousePos = 0;
 
@@ -105,7 +105,7 @@ export default Ember.Component.extend(KeyEnterEscape, {
       const currentMousePos = mouseYPos(event);
       let size = origComposerSize + (lastMousePos - currentMousePos);
 
-      const winHeight = Ember.$(window).height();
+      const winHeight = $(window).height();
       size = Math.min(size, winHeight - headerHeight());
       size = Math.max(size, MIN_COMPOSER_SIZE);
       this.movePanels(size);
@@ -145,11 +145,11 @@ export default Ember.Component.extend(KeyEnterEscape, {
     };
     triggerOpen();
 
-    afterTransition(this.$(), () => {
+    afterTransition($(this.element), () => {
       resize();
       triggerOpen();
     });
-    positioningWorkaround(this.$());
+    positioningWorkaround($(this.element));
   },
 
   willDestroyElement() {

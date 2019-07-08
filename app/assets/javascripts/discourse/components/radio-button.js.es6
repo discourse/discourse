@@ -12,7 +12,7 @@ export default Ember.Component.extend({
   ],
 
   click() {
-    const value = this.$().val();
+    const value = $(this.element).val();
     if (this.selection === value) {
       this.set("selection", undefined);
     }

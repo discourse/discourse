@@ -8,7 +8,7 @@ export default Ember.Component.extend({
       this.set("email", $.cookie("email"));
     }
 
-    this.$().on("keydown.discourse-create-account", e => {
+    $(this.element).on("keydown.discourse-create-account", e => {
       if (!this.disabled && e.keyCode === 13) {
         e.preventDefault();
         e.stopPropagation();
@@ -17,7 +17,7 @@ export default Ember.Component.extend({
       }
     });
 
-    this.$().on("click.dropdown-user-field-label", "[for]", event => {
+    $(this.element).on("click.dropdown-user-field-label", "[for]", event => {
       const $element = $(event.target);
       const $target = $(`#${$element.attr("for")}`);
 
@@ -31,7 +31,7 @@ export default Ember.Component.extend({
   willDestroyElement() {
     this._super(...arguments);
 
-    this.$().off("keydown.discourse-create-account");
-    this.$().off("click.dropdown-user-field-label");
+    $(this.element).off("keydown.discourse-create-account");
+    $(this.element).off("click.dropdown-user-field-label");
   }
 });

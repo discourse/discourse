@@ -5,6 +5,6 @@ export default Ember.Component.extend({
   @on("didInsertElement")
   @observes("code")
   _refresh: function() {
-    highlightSyntax(this.$());
+    highlightSyntax($(this.element));
   }
 });

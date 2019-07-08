@@ -14,7 +14,7 @@ export default Ember.Component.extend(bufferedProperty("host"), {
   @observes("editing")
   _focusOnInput() {
     Ember.run.schedule("afterRender", () => {
-      this.$(".host-name").focus();
+      this.element.querySelector(".host-name").focus();
     });
   },
 

@@ -19,7 +19,9 @@ export default Ember.Component.extend({
   },
 
   focusPermalink() {
-    Ember.run.schedule("afterRender", () => this.$(".permalink-url").focus());
+    Ember.run.schedule("afterRender", () =>
+      this.element.querySelector(".permalink-url").focus()
+    );
   },
 
   actions: {
@@ -67,7 +69,7 @@ export default Ember.Component.extend({
     this._super(...arguments);
 
     Ember.run.schedule("afterRender", () => {
-      this.$(".external-url").keydown(e => {
+      $(this.element.querySelector(".external-url")).keydown(e => {
         // enter key
         if (e.keyCode === 13) {
           this.send("submit");
