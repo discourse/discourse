@@ -127,6 +127,7 @@ module BackupRestore
       BackupMetadata.create!(name: "s3_base_url", value: SiteSetting.Upload.enable_s3_uploads ? SiteSetting.Upload.s3_base_url : nil)
       BackupMetadata.create!(name: "s3_cdn_url", value: SiteSetting.Upload.enable_s3_uploads ? SiteSetting.Upload.s3_cdn_url : nil)
       BackupMetadata.create!(name: "db_name", value: RailsMultisite::ConnectionManagement.current_db)
+      BackupMetadata.create!(name: "multisite", value: Rails.configuration.multisite)
     end
 
     def enable_readonly_mode
