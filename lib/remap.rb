@@ -49,7 +49,7 @@ WHERE table_schema='public' and (data_type like 'char%' or data_type like 'text%
             AND #{column_name} <> replace(#{column_name}, $1, $2)", [@from, @to])
       end
 
-      log "#{result.cmd_tuples} rows affected!"
+      log "#{result.cmd_tuples} rows affected!" if result.cmd_tuples > 0
     end
 
     Theme.expire_site_cache!
