@@ -905,11 +905,12 @@ a.mention-group {
 }
 
 .post-notice {
+  align-items: center;
   background-color: $tertiary-low;
   border-top: 1px solid $primary-low;
-  color: $primary;
-  padding: 0.8em;
+  display: flex;
   max-width: calc(#{$topic-body-width} + #{$topic-avatar-width} - 0.1em);
+  padding: 0.8em;
 
   &.old {
     background-color: unset;
@@ -921,8 +922,6 @@ a.mention-group {
   }
 
   p {
-    display: flex;
-    align-items: center;
     margin: 0;
   }
 

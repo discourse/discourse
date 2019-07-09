@@ -488,7 +488,7 @@ class PostsController < ApplicationController
 
     if params[:notice].present?
       post.custom_fields["notice_type"] = Post.notices[:custom]
-      post.custom_fields["notice_args"] = params[:notice]
+      post.custom_fields["notice_args"] = PrettyText.cook(params[:notice], features: { onebox: false })
       post.save_custom_fields
     else
       post.delete_post_notices
