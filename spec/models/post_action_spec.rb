@@ -718,6 +718,8 @@ describe PostAction do
       end
 
       it "will automatically pause a topic due to large community flagging" do
+        skip "heisentest"
+
         # reaching `num_flaggers_to_close_topic` isn't enough
         [flagger1, flagger2].each do |flagger|
           PostActionCreator.inappropriate(flagger, post1)
