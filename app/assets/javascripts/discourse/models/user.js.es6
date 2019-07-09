@@ -748,7 +748,9 @@ const User = RestModel.extend({
       }
     });
 
-    return _.uniq(titles).sort();
+    return _.uniq(titles)
+      .sort()
+      .map(Ember.Handlebars.Utils.escapeExpression);
   },
 
   @computed("user_option.text_size_seq", "user_option.text_size")
