@@ -78,6 +78,7 @@ gem 'discourse_image_optim', require: 'image_optim'
 gem 'multi_json'
 gem 'mustache'
 gem 'nokogiri'
+gem 'css_parser'
 
 gem 'omniauth'
 gem 'omniauth-openid'

@@ -1021,6 +1021,12 @@ email:
   enable_forwarded_emails: false
   always_show_trimmed_content: false
   private_email: false
+  email_custom_template:
+    default: ""
+    hidden: true
+  email_custom_css:
+    default: ""
+    hidden: true
 
 files:
   max_image_size_kb:

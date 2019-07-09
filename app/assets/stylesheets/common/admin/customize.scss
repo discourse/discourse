@@ -790,3 +790,18 @@
     height: 55vh;
   }
 }
+
+.admin-customize-email-style {
+  .ace-wrapper {
+    position: relative;
+    width: 100%;
+    height: 400px;
+    .ace_editor {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 0;
+      bottom: 0;
+    }
+  }
+}
