@@ -53,6 +53,8 @@ module TurboTests
       @reporter.finish
 
       @threads.each(&:join)
+
+      @reporter.failed_examples.empty?
     end
 
     protected
