@@ -458,19 +458,22 @@ module BackupRestore
     def remap_uploads(previous_db_name, current_db_name)
       log "Remapping uploads..."
 
+      was_multisite = BackupMetadata.value_for("multisite") == "true"
+      uploads_folder = was_multisite ? "/" : "/uploads/#{current_db_name}/"
+
       if (old_base_url = BackupMetadata.value_for("base_url")) && old_base_url != Discourse.base_url
         DbHelper.remap(old_base_url, Discourse.base_url)
       end
 
       current_s3_base_url = SiteSetting.Upload.enable_s3_uploads ? SiteSetting.Upload.s3_base_url : nil
       if (old_s3_base_url = BackupMetadata.value_for("s3_base_url")) && old_base_url != current_s3_base_url
-        DbHelper.remap("#{old_s3_base_url}/", "/uploads/#{current_db_name}/")
+        DbHelper.remap("#{old_s3_base_url}/", uploads_folder)
       end
 
       current_s3_cdn_url = SiteSetting.Upload.enable_s3_uploads ? SiteSetting.Upload.s3_cdn_url : nil
       if (old_s3_cdn_url = BackupMetadata.value_for("s3_cdn_url")) && old_s3_cdn_url != current_s3_cdn_url
         base_url = SiteSetting.Upload.enable_s3_uploads ? SiteSetting.Upload.s3_cdn_url : Discourse.base_url
-        DbHelper.remap("#{old_s3_cdn_url}/", UrlHelper.schemaless("#{base_url}/uploads/#{current_db_name}/"))
+        DbHelper.remap("#{old_s3_cdn_url}/", UrlHelper.schemaless("#{base_url}#{uploads_folder}"))
 
         old_host = URI.parse(old_s3_cdn_url).host
         new_host = URI.parse(base_url.presence || Discourse.base_url).host
