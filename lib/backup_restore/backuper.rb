@@ -32,6 +32,8 @@ module BackupRestore
       ensure_directory_exists(@tmp_directory)
       ensure_directory_exists(@archive_directory)
 
+      update_metadata
+
       ### READ-ONLY / START ###
       enable_readonly_mode
 
@@ -115,6 +117,16 @@ module BackupRestore
     def mark_backup_as_running
       log "Marking backup as running..."
       BackupRestore.mark_as_running!
+    end
+
+    def update_metadata
+      log "Updating metadata..."
+      BackupMetadata.delete_all
+      BackupMetadata.create!(name: "base_url", value: Discourse.base_url)
+      BackupMetadata.create!(name: "cdn_url", value: Discourse.asset_host)
+      BackupMetadata.create!(name: "s3_base_url", value: SiteSetting.Upload.enable_s3_uploads ? SiteSetting.Upload.s3_base_url : nil)
+      BackupMetadata.create!(name: "s3_cdn_url", value: SiteSetting.Upload.enable_s3_uploads ? SiteSetting.Upload.s3_cdn_url : nil)
+      BackupMetadata.create!(name: "db_name", value: RailsMultisite::ConnectionManagement.current_db)
     end
 
     def enable_readonly_mode
