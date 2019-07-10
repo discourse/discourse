@@ -280,7 +280,7 @@ basic:
     default: true
   enable_badge_sql:
     client: true
-    default: false
+    default: true
     hidden: true
   enable_whispers:
     client: true
@@ -1089,6 +1089,9 @@ files:
     default: 30
     shadowed_by_global: true
   prevent_anons_from_downloading_files:
+    default: false
+    client: true
+  secure_images:
     default: false
     client: true
   enable_s3_uploads:

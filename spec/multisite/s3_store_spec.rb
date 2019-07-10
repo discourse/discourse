@@ -133,6 +133,7 @@ RSpec.describe 'Multisite s3 uploads', type: :multisite do
       SiteSetting.s3_secret_access_key = "s3-secret-access-key"
       SiteSetting.enable_s3_uploads = true
       SiteSetting.prevent_anons_from_downloading_files = true
+      SiteSetting.authorized_extensions = "pdf|png|jpg|gif"
     end
 
     before do
@@ -142,7 +143,6 @@ RSpec.describe 'Multisite s3 uploads', type: :multisite do
     describe "when private uploads are enabled" do
       it "returns signed URL with correct path" do
         test_multisite_connection('default') do
-          SiteSetting.authorized_extensions = "pdf|png|jpg|gif"
           upload = build_upload
           upload.update!(original_filename: "small.pdf", extension: "pdf")
 
@@ -163,9 +163,10 @@ RSpec.describe 'Multisite s3 uploads', type: :multisite do
       it "updates correct file for default and second multisite db" do
         test_multisite_connection('default') do
           upload = build_upload
+          upload.update!(original_filename: "small.pdf", extension: "pdf")
 
           s3_helper.expects(:s3_bucket).returns(s3_bucket).at_least_once
-          s3_bucket.expects(:object).with("uploads/default/original/1X/#{upload.sha1}.png").returns(s3_object)
+          s3_bucket.expects(:object).with("uploads/default/original/1X/#{upload.sha1}.pdf").returns(s3_object)
           s3_object.expects(:acl).returns(s3_object)
           s3_object.expects(:put).with(acl: "private").returns(s3_object)
 
@@ -174,9 +175,10 @@ RSpec.describe 'Multisite s3 uploads', type: :multisite do
 
         test_multisite_connection('second') do
           upload = build_upload
+          upload.update!(original_filename: "small.pdf", extension: "pdf")
 
           s3_helper.expects(:s3_bucket).returns(s3_bucket).at_least_once
-          s3_bucket.expects(:object).with("uploads/second/original/1X/#{upload.sha1}.png").returns(s3_object)
+          s3_bucket.expects(:object).with("uploads/second/original/1X/#{upload.sha1}.pdf").returns(s3_object)
           s3_object.expects(:acl).returns(s3_object)
           s3_object.expects(:put).with(acl: "private").returns(s3_object)
 

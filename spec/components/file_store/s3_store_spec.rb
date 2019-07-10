@@ -355,11 +355,16 @@ describe FileStore::S3Store do
     include_context "s3 helpers"
     let(:s3_object) { stub }
 
+    before do
+      SiteSetting.authorized_extensions = "pdf|png"
+      upload.update!(original_filename: "small.pdf", extension: "pdf")
+    end
+
     describe ".update_upload_ACL" do
       it "sets acl to private when private uploads are enabled" do
         SiteSetting.prevent_anons_from_downloading_files = true
         s3_helper.expects(:s3_bucket).returns(s3_bucket)
-        s3_bucket.expects(:object).with("original/1X/#{upload.sha1}.png").returns(s3_object)
+        s3_bucket.expects(:object).with("original/1X/#{upload.sha1}.pdf").returns(s3_object)
         s3_object.expects(:acl).returns(s3_object)
         s3_object.expects(:put).with(acl: "private").returns(s3_object)
 
@@ -369,7 +374,7 @@ describe FileStore::S3Store do
       it "sets acl to public when private uploads are disabled" do
         SiteSetting.prevent_anons_from_downloading_files = false
         s3_helper.expects(:s3_bucket).returns(s3_bucket)
-        s3_bucket.expects(:object).with("original/1X/#{upload.sha1}.png").returns(s3_object)
+        s3_bucket.expects(:object).with("original/1X/#{upload.sha1}.pdf").returns(s3_object)
         s3_object.expects(:acl).returns(s3_object)
         s3_object.expects(:put).with(acl: "public-read").returns(s3_object)
 

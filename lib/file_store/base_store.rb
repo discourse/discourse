@@ -62,6 +62,10 @@ module FileStore
       !external?
     end
 
+    def secure_images_enabled?
+      not_implemented
+    end
+
     def path_for(upload)
       not_implemented
     end
@@ -77,8 +81,16 @@ module FileStore
 
         if !file
           max_file_size_kb = [SiteSetting.max_image_size_kb, SiteSetting.max_attachment_size_kb].max.kilobytes
-          url = Discourse.store.cdn_url(upload.url)
+
+          # TODO: add tests for this
+          if upload.private?
+            url = Discourse.store.signed_url_for_path(upload.url)
+          else
+            url = Discourse.store.cdn_url(upload.url)
+          end
+
           url = SiteSetting.scheme + ":" + url if url =~ /^\/\//
+
           file = FileHelper.download(
             url,
             max_file_size: max_file_size_kb,

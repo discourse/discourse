@@ -91,6 +91,10 @@ module FileStore
       true
     end
 
+    def secure_images_enabled?
+      SiteSetting.secure_images && SiteSetting.login_required
+    end
+
     def purge_tombstone(grace_period)
       @s3_helper.update_tombstone_lifecycle(grace_period)
     end
@@ -111,11 +115,7 @@ module FileStore
 
     def url_for(upload, force_download: false)
       if upload.private? || force_download
-        opts = { expires_in: S3Helper::DOWNLOAD_URL_EXPIRES_AFTER_SECONDS }
-        opts[:response_content_disposition] = "attachment; filename=\"#{upload.original_filename}\"" if force_download
-
-        obj = @s3_helper.object(get_upload_key(upload))
-        url = obj.presigned_url(:get, opts)
+        url = presigned_url(get_upload_key(upload), force_download: force_download, filename: upload.original_filename)
       else
         url = upload.url
       end
@@ -128,6 +128,11 @@ module FileStore
       schema = url[/^(https?:)?\/\//, 1]
       folder = @s3_helper.s3_bucket_folder_path.nil? ? "" : "#{@s3_helper.s3_bucket_folder_path}/"
       url.sub(File.join("#{schema}#{absolute_base_url}", folder), File.join(SiteSetting.Upload.s3_cdn_url, "/"))
+    end
+
+    def signed_url_for_path(path)
+      key = path.sub(absolute_base_url + "/", "")
+      presigned_url(key)
     end
 
     def cache_avatar(avatar, user_id)
@@ -156,12 +161,19 @@ module FileStore
       end
     end
 
-    def update_upload_ACL(upload)
-      private_uploads = SiteSetting.prevent_anons_from_downloading_files
+    def update_upload_ACL(upload, type: "attachment")
+      if type == "attachment"
+        return if FileHelper.is_supported_image?(upload.original_filename)
+        private_flag = SiteSetting.prevent_anons_from_downloading_files
+      else
+        return if !FileHelper.is_supported_image?(upload.original_filename)
+        private_flag = secure_images_enabled?
+      end
+
       key = get_upload_key(upload)
 
       begin
-        @s3_helper.object(key).acl.put(acl: private_uploads ? "private" : "public-read")
+        @s3_helper.object(key).acl.put(acl: private_flag ? "private" : "public-read")
       rescue Aws::S3::Errors::NoSuchKey
         Rails.logger.warn("Could not update ACL on upload with key: '#{key}'. Upload is missing.")
       end
@@ -172,6 +184,13 @@ module FileStore
     end
 
     private
+
+    def presigned_url(url, force_download: false, filename: false)
+      opts = { expires_in: S3Helper::DOWNLOAD_URL_EXPIRES_AFTER_SECONDS }
+      opts[:response_content_disposition] = "attachment; filename=\"#{filename}\"" if force_download && filename
+      obj = @s3_helper.object(url)
+      obj.presigned_url(:get, opts)
+    end
 
     def get_upload_key(upload)
       if Rails.configuration.multisite

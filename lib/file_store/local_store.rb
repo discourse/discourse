@@ -43,6 +43,10 @@ module FileStore
       false
     end
 
+    def secure_images_enabled?
+      false
+    end
+
     def download_url(upload)
       return unless upload
       File.join(relative_base_url, upload.sha1)

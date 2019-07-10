@@ -38,6 +38,11 @@ class UrlHelper
     url.sub(/^http:/i, "")
   end
 
+  def self.secure_image_without_cdn(url)
+    url = url.sub(SiteSetting.Upload.absolute_base_url, "/secure-image-uploads")
+    self.absolute(url, nil)
+  end
+
   DOUBLE_ESCAPED_REGEXP ||= /%25([0-9a-f]{2})/i
 
   # Prevents double URL encode
@@ -57,7 +62,11 @@ class UrlHelper
 
     no_cdn = SiteSetting.login_required || SiteSetting.prevent_anons_from_downloading_files
 
-    url = absolute_without_cdn(url)
+    if Discourse.store.secure_images_enabled?
+      url = secure_image_without_cdn(url)
+    else
+      url = absolute_without_cdn(url)
+    end
 
     unless is_attachment && no_cdn
       url = Discourse.store.cdn_url(url)

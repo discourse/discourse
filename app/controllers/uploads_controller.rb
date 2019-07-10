@@ -7,7 +7,7 @@ require_dependency "file_store/local_store"
 class UploadsController < ApplicationController
   requires_login except: [:show, :show_short]
 
-  skip_before_action :preload_json, :check_xhr, :redirect_to_login_if_required, only: [:show, :show_short]
+  skip_before_action :preload_json, :check_xhr, :redirect_to_login_if_required, only: [:show, :show_short, :show_secure]
 
   def create
     # capture current user for block later on
@@ -108,6 +108,21 @@ class UploadsController < ApplicationController
       end
     else
       render_404
+    end
+  end
+
+  def show_secure
+    # do not serve uploads requested via XHR to prevent XSS
+    return xhr_not_allowed if request.xhr?
+
+    if SiteSetting.secure_images && current_user.nil?
+      return render_404
+    end
+
+    if Discourse.store.secure_images_enabled?
+      redirect_to Discourse.store.signed_url_for_path("#{params[:path]}.#{params[:extension]}")
+    else
+      return render_404
     end
   end
 

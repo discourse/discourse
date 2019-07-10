@@ -284,6 +284,10 @@ class CookedPostProcessor
     absolute_url = url
     absolute_url = Discourse.base_url_no_prefix + absolute_url if absolute_url =~ /^\/[^\/]/
 
+    if Discourse.store.secure_images_enabled? && url.start_with?("/secure-image-uploads/")
+      absolute_url = Discourse.store.signed_url_for_path(url.sub("/secure-image-uploads/", ""))
+    end
+
     return unless absolute_url
 
     # FastImage fails when there's no scheme

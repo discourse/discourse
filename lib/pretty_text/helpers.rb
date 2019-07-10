@@ -66,13 +66,15 @@ module PrettyText
           reverse_map[value] << key
         end
 
-        Upload.where(sha1: map.values).pluck(:sha1, :url, :extension).each do |row|
-          sha1, url, extension = row
+        Upload.where(sha1: map.values).pluck(:sha1, :url, :extension, :original_filename).each do |row|
+          sha1, url, extension, original_filename = row
+          # TODO: check whether upload is an image
 
           if short_urls = reverse_map[sha1]
+
             short_urls.each do |short_url|
               result[short_url] = {
-                url: url,
+                url: Discourse.store.secure_images_enabled? ? secure_image_url(url) : url,
                 short_path: Upload.short_path(sha1: sha1, extension: extension),
                 base62_sha1: Upload.base62_sha1(sha1)
               }
@@ -82,6 +84,10 @@ module PrettyText
       end
 
       result
+    end
+
+    def secure_image_url(url)
+      url.sub(SiteSetting.Upload.absolute_base_url, "/secure-image-uploads")
     end
 
     def get_topic_info(topic_id)
