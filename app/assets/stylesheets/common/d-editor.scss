@@ -87,12 +87,9 @@
     .d-icon {
       color: $primary-medium;
     }
-    @media all and (max-width: 800px) {
-      padding: 5px;
-    }
+
     @include breakpoint(mobile-medium) {
       padding: 4px;
-      font-size: 0.96em;
     }
     svg {
       -webkit-transform: translate3d(
@@ -114,13 +111,16 @@
   .btn.italic {
     font-style: italic;
   }
-}
 
-.d-editor-spacer {
-  height: 16px;
-  margin: 0 5px;
-  display: inline-block;
-  border-left: 1px solid $primary-low-mid;
+  .d-editor-spacer {
+    height: 1em;
+    margin: 0 5px;
+    display: inline-block;
+    border-left: 1px solid $primary-low-mid;
+    @include breakpoint(mobile) {
+      margin: 0 4px;
+    }
+  }
 }
 
 .d-editor-preview-wrapper {
