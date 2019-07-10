@@ -101,7 +101,7 @@ const DiscourseLocation = Ember.Object.extend({
     const state = this.getState();
     path = this.formatURL(path);
 
-    if (state && state.path !== path) {
+    if (!state || state.path !== path) {
       this.replaceState(path);
     }
   },
