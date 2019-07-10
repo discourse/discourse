@@ -2,7 +2,6 @@
 
 require 'rails_helper'
 require 'theme_store/tgz_exporter'
-require 'zip'
 
 describe ThemeStore::TgzExporter do
   let!(:theme) do
@@ -56,19 +55,13 @@ describe ThemeStore::TgzExporter do
     filename = exporter.package_filename
     FileUtils.cp(filename, dir)
     exporter.cleanup!
-    "#{dir}/discourse-header-icons.tar.zip"
+    "#{dir}/discourse-header-icons.tar.gz"
   end
 
   it "exports the theme correctly" do
     package
-    file = 'discourse-header-icons.tar.zip'
-    dest = 'discourse-header-icons.tar'
     Dir.chdir("#{dir}") do
-      Zip::File.open(file) do |zip_file|
-        zip_file.each { |entry| entry.extract(dest) }
-      end
-
-      `tar -xvf discourse-header-icons.tar 2> /dev/null`
+      `tar -xzf discourse-header-icons.tar.gz`
     end
     Dir.chdir("#{dir}/discourse-header-icons") do
       folders = Dir.glob("**/*").reject { |f| File.file?(f) }
@@ -128,7 +121,7 @@ describe ThemeStore::TgzExporter do
     exporter = ThemeStore::TgzExporter.new(theme)
     filename = exporter.package_filename
     exporter.cleanup!
-    expect(filename).to end_with "/discourse-header-icons.tar.zip"
+    expect(filename).to end_with "/discourse-header-icons.tar.gz"
   end
 
 end
