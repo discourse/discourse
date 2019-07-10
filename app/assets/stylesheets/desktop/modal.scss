@@ -89,7 +89,7 @@
         max-width: 48%;
       }
 
-      @include breakpoint(mobile) {
+      @include breakpoint(mobile-extra-large) {
         flex: 1 1 auto;
         min-width: 49%;
         max-width: unset;

@@ -6,7 +6,7 @@
   }
   input {
     width: 4em;
-    @include breakpoint(mobile) {
+    @include breakpoint(mobile-extra-large) {
       width: 2em;
     }
   }
@@ -22,7 +22,7 @@
   }
   .badge-wrapper span.badge-category {
     max-width: 20em;
-    @include breakpoint(mobile) {
+    @include breakpoint(mobile-extra-large) {
       max-width: 30vw;
     }
   }

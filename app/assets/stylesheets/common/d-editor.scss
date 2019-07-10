@@ -117,7 +117,7 @@
     margin: 0 5px;
     display: inline-block;
     border-left: 1px solid $primary-low-mid;
-    @include breakpoint(mobile) {
+    @include breakpoint(mobile-extra-large) {
       margin: 0 4px;
     }
   }
