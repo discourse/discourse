@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'zip'
+
 module ThemeStore; end
 
 class ThemeStore::TgzImporter
@@ -13,8 +15,21 @@ class ThemeStore::TgzImporter
 
   def import!
     FileUtils.mkdir(@temp_folder)
-    Dir.chdir(@temp_folder) do
-      Discourse::Utils.execute_command("tar", "-xzvf", @filename, "--strip", "1")
+
+    if @filename.include?('.zip')
+      name = @filename.split('/').last.gsub('.zip', '')
+
+      Dir.chdir(@temp_folder) do
+        Zip::File.open(@filename) do |zip_file|
+          zip_file.each { |entry| entry.extract(name) }
+        end
+
+        Discourse::Utils.execute_command("tar", "-xvf", name, "--strip", "1")
+      end
+    else
+      Dir.chdir(@temp_folder) do
+        Discourse::Utils.execute_command("tar", "-xzvf", @filename, "--strip", "1")
+      end
     end
   rescue RuntimeError
     raise RemoteTheme::ImportError, I18n.t("themes.import_error.unpack_failed")
