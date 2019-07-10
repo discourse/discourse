@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require 'csv'
-require 'zip'
 require_dependency 'system_message'
 require_dependency 'upload_creator'
 
@@ -54,19 +53,18 @@ module Jobs
       # ensure directory exists
       FileUtils.mkdir_p(UserExport.base_directory) unless Dir.exists?(UserExport.base_directory)
 
-      # Generate a compressed CSV file
-      csv_to_export = CSV.generate do |csv|
+      # write to CSV file
+      CSV.open(absolute_path, "w") do |csv|
         csv << get_header if @entity != "report"
         public_send(export_method).each { |d| csv << d }
       end
 
-      compressed_file_path = "#{absolute_path}.zip"
-      Zip::File.open(compressed_file_path, Zip::File::CREATE) do |zipfile|
-        zipfile.get_output_stream(file_name) { |f| f.puts csv_to_export }
-      end
+      # compress CSV file
+      system('gzip', '-5', absolute_path)
 
       # create upload
       upload = nil
+      compressed_file_path = "#{absolute_path}.gz"
 
       if File.exist?(compressed_file_path)
         File.open(compressed_file_path) do |file|

@@ -1048,7 +1048,7 @@ files:
     list_type: compact
   export_authorized_extensions:
     hidden: true
-    default: "zip"
+    default: "gz"
     type: list
     list_type: compact
   responsive_post_image_sizes:
