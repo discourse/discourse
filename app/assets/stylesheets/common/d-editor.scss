@@ -90,6 +90,17 @@
     @media all and (max-width: 800px) {
       padding: 5px;
     }
+    @include breakpoint(mobile-medium) {
+      padding: 4px;
+      font-size: 0.96em;
+    }
+    svg {
+      -webkit-transform: translate3d(
+        0,
+        0,
+        0
+      ); // Hack: Reduces composer icon jitter while scrolling in Safari on iOS12
+    }
   }
 
   .btn:not(.no-text) {
