@@ -3514,7 +3514,7 @@ en:
           delete_upload_confirm: "Delete this upload? (Theme CSS may stop working!)"
           import_web_tip: "Repository containing theme"
           import_web_advanced: "Advanced..."
-          import_file_tip: ".tar.gz, .tar.zip, or .dcstyle.json file containing theme"
+          import_file_tip: ".tar.gz or .dcstyle.json file containing theme"
           is_private: "Theme is in a private git repository"
           remote_branch: "Branch name (optional)"
           public_key: "Grant the following public key access to the repo:"
