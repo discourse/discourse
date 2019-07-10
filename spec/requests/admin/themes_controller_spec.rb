@@ -51,10 +51,10 @@ describe Admin::ThemesController do
       expect(response.status).to eq(200)
 
       # Save the output in a temp file (automatically cleaned up)
-      file = Tempfile.new('archive.tar.gz')
+      file = Tempfile.new('archive.tar.zip')
       file.write(response.body)
       file.rewind
-      uploaded_file = Rack::Test::UploadedFile.new(file.path, "application/x-gzip")
+      uploaded_file = Rack::Test::UploadedFile.new(file.path, "application/zip")
 
       # Now import it again
       expect do
