@@ -3,6 +3,49 @@
 require "demon/base"
 
 class Demon::Sidekiq < Demon::Base
+  RANDOM_HEX = SecureRandom.hex
+
+  def self.heartbeat_queues_list_key
+    @@heartbeat_queues_list_key ||= "#{RANDOM_HEX}_heartbeat_queues_list"
+  end
+
+  def self.queues_last_heartbeat_hash_key
+    @@queues_last_heartbeat_hash_key ||= "#{RANDOM_HEX}_queues_last_heartbeat_hash"
+  end
+
+  def self.set_queue_heartbeat(name)
+    $redis.hset(queues_last_heartbeat_hash_key, name, Time.new.to_i.to_s)
+  end
+
+  def self.get_queue_last_heartbeat(name)
+    $redis.hget(queues_last_heartbeat_hash_key, name)&.to_i || 0
+  end
+
+  def self.heartbeat_queues
+    queues = $redis.lrange(heartbeat_queues_list_key, 0, -1)
+
+    queues.select! do |queue|
+      pid = queue.split("_").last.to_i
+      alive = alive?(pid)
+      if !alive
+        $redis.lrem(heartbeat_queues_list_key, 0, queue)
+        $redis.hdel(queues_last_heartbeat_hash_key, queue)
+      end
+      alive
+    end
+    queues
+  end
+
+  def self.create_heartbeat_queue(pid)
+    queue = "#{SecureRandom.hex}_#{pid}"
+    $redis.lpush(heartbeat_queues_list_key, queue)
+    queue
+  end
+
+  def self.clear_heartbeat_queues!
+    $redis.del(heartbeat_queues_list_key)
+    $redis.del(queues_last_heartbeat_hash_key)
+  end
 
   def self.prefix
     "sidekiq"
@@ -36,7 +79,9 @@ class Demon::Sidekiq < Demon::Base
 
     options = ["-c", GlobalSetting.sidekiq_workers.to_s]
 
-    [['critical', 8], ['default', 4], ['low', 2], ['ultra_low', 1]].each do |queue_name, weight|
+    heartbeat_queue = self.class.create_heartbeat_queue(Process.pid)
+
+    [['critical', 8], [heartbeat_queue, 8], ['default', 4], ['low', 2], ['ultra_low', 1]].each do |queue_name, weight|
       custom_queue_hostname = ENV["UNICORN_SIDEKIQ_#{queue_name.upcase}_QUEUE_HOSTNAME"]
 
       if !custom_queue_hostname || custom_queue_hostname.split(',').include?(`hostname`.strip)

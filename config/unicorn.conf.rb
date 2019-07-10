@@ -144,25 +144,35 @@ before_fork do |server, worker|
           @sidekiq_next_heartbeat_check ||= Time.new.to_i + @sidekiq_heartbeat_interval
 
           if @sidekiq_next_heartbeat_check < Time.new.to_i
-
-            last_heartbeat = Jobs::RunHeartbeat.last_heartbeat
-            restart = false
+            @sidekiq_next_heartbeat_check = Time.new.to_i + @sidekiq_heartbeat_interval
+            restarted = false
 
             if out_of_memory?
               Rails.logger.warn("Sidekiq is consuming too much memory (using: %0.2fM) for '%s', restarting" % [(max_rss.to_f / 1.megabyte), ENV["DISCOURSE_HOSTNAME"]])
-              restart = true
-            end
-
-            if last_heartbeat < Time.new.to_i - @sidekiq_heartbeat_interval
-              STDERR.puts "Sidekiq heartbeat test failed, restarting"
-              Rails.logger.warn "Sidekiq heartbeat test failed, restarting"
-
-              restart = true
-            end
-            @sidekiq_next_heartbeat_check = Time.new.to_i + @sidekiq_heartbeat_interval
-
-            if restart
               Demon::Sidekiq.restart
+              restarted = true
+            end
+
+            if !restarted
+              Demon::Sidekiq.heartbeat_queues.each do |queue|
+                last_heartbeat = Demon::Sidekiq.get_queue_last_heartbeat(queue)
+
+                if last_heartbeat < Time.new.to_i - @sidekiq_heartbeat_interval
+                  pid = queue.split("_").last.to_i
+                  STDERR.puts "Sidekiq heartbeat test for worker #{pid} failed, restarting"
+                  Rails.logger.warn "Sidekiq heartbeat test for worker #{pid} failed, restarting"
+                  Demon::Sidekiq.demons.values.each do |demon|
+                    if demon.pid == pid
+                      demon.stop
+                      demon.start
+                    end
+                  end
+                  restarted = true
+                end
+              end
+            end
+
+            if restarted
               sleep 10
               force_kill_rogue_sidekiq
             end
