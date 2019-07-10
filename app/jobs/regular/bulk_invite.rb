@@ -23,8 +23,13 @@ module Jobs
       @current_user = User.find_by(id: args[:current_user_id])
       raise Discourse::InvalidParameters.new(:current_user_id) unless @current_user
       @guardian = Guardian.new(@current_user)
+      @total_invites = invites.length
 
       process_invites(invites)
+
+      if @total_invites > Invite::BULK_INVITE_EMAIL_LIMIT
+        Jobs.enqueue(:process_bulk_invite_emails)
+      end
     ensure
       notify_user
     end
@@ -104,7 +109,15 @@ module Jobs
             end
           end
         else
-          Invite.invite_by_email(email, @current_user, topic, groups.map(&:id))
+          if @total_invites > Invite::BULK_INVITE_EMAIL_LIMIT
+            invite = Invite.create_invite_by_email(email, @current_user,
+              topic: topic,
+              group_ids: groups.map(&:id),
+              emailed_status: Invite.emailed_status_types[:bulk_pending]
+            )
+          else
+            Invite.invite_by_email(email, @current_user, topic, groups.map(&:id))
+          end
         end
       rescue => e
         save_log "Error inviting '#{email}' -- #{Rails::Html::FullSanitizer.new.sanitize(e.message)}"
