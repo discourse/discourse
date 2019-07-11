@@ -1375,8 +1375,9 @@ class User < ActiveRecord::Base
     values = []
 
     %w{watching watching_first_post tracking muted}.each do |s|
-      category_ids = SiteSetting.get("default_categories_#{s}").split("|")
+      category_ids = SiteSetting.get("default_categories_#{s}").split("|").map(&:to_i)
       category_ids.each do |category_id|
+        next if category_id == 0
         values << "(#{self.id}, #{category_id}, #{CategoryUser.notification_levels[s.to_sym]})"
       end
     end
