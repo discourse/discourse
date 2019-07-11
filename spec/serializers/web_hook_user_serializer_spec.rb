@@ -23,7 +23,7 @@ RSpec.describe WebHookUserSerializer do
 
   it 'should only include the required keys' do
     count = serializer.as_json.keys.count
-    difference = count - 43
+    difference = count - 42
 
     expect(difference).to eq(0), lambda {
       message = ""
@@ -36,5 +36,13 @@ RSpec.describe WebHookUserSerializer do
 
       message << "\nPlease verify if those key(s) are required as part of the web hook's payload."
     }
+  end
+
+  it 'should exclude attributes that depend on the user profile' do
+    included_attrs = serializer.as_json.keys
+
+    %i[bio_raw website location bio_excerpt profile_view_count].each do |attr|
+      expect(included_attrs).not_to include(attr)
+    end
   end
 end

@@ -35,6 +35,11 @@ class WebHookUserSerializer < UserSerializer
     group_users
     user_auth_tokens
     user_auth_token_logs
+    bio_raw
+    website
+    location
+    bio_excerpt
+    profile_view_count
   }.each do |attr|
     define_method("include_#{attr}?") do
       false
