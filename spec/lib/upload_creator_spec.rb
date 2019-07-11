@@ -245,6 +245,19 @@ RSpec.describe UploadCreator do
         expect(stored_upload.url).not_to eq(signed_url)
         expect(signed_url).to match(/Amz-Credential/)
       end
+
+      it 'should return signed URL for secure image upload in S3' do
+        SiteSetting.login_required = true
+        SiteSetting.secure_images = true
+
+        upload = UploadCreator.new(file, filename).create_for(user.id)
+        stored_upload = Upload.last
+        signed_url = Discourse.store.url_for(stored_upload)
+
+        expect(stored_upload.private?).to eq(true)
+        expect(stored_upload.url).not_to eq(signed_url)
+        expect(signed_url).to match(/Amz-Expires/)
+      end
     end
   end
 end

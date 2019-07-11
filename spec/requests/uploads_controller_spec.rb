@@ -352,6 +352,59 @@ describe UploadsController do
     end
   end
 
+  describe "#show_secure" do
+    describe "local store" do
+      fab!(:image_upload) { upload_file("smallest.png") }
+
+      it "does not return secure images" do
+        secure_url = image_upload.url.sub("/uploads", "/secure-image-uploads")
+        get secure_url
+
+        expect(response.status).to eq(404)
+      end
+    end
+
+    describe "s3 store" do
+      let(:upload) { Fabricate(:upload_s3) }
+
+      before do
+        SiteSetting.enable_s3_uploads = true
+        SiteSetting.s3_upload_bucket = "s3-upload-bucket"
+        SiteSetting.s3_access_key_id = "fakeid7974664"
+        SiteSetting.s3_secret_access_key = "fakesecretid7974664"
+        SiteSetting.login_required = true
+        SiteSetting.secure_images = true
+      end
+
+      it "should return 404 for anonymous requests requests" do
+        secure_url = upload.url.sub(SiteSetting.Upload.absolute_base_url, "/secure-image-uploads")
+        get secure_url
+        expect(response.status).to eq(404)
+      end
+
+      it "should return signed url for legitimate request" do
+        secure_url = upload.url.sub(SiteSetting.Upload.absolute_base_url, "/secure-image-uploads")
+        sign_in(user)
+        stub_request(:head, "https://s3-upload-bucket.s3.amazonaws.com/")
+
+        get secure_url
+
+        expect(response.status).to eq(302)
+        expect(response.redirect_url).to match("Amz-Expires")
+      end
+
+      it "should return secure image URL when looking up urls" do
+        sign_in(user)
+
+        post "/uploads/lookup-urls.json", params: { short_urls: [upload.short_url] }
+        expect(response.status).to eq(200)
+
+        result = JSON.parse(response.body)
+        expect(result[0]["url"]).to match("secure-image-uploads")
+      end
+    end
+  end
+
   describe '#lookup_urls' do
     it 'can look up long urls' do
       sign_in(user)

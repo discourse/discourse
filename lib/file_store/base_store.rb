@@ -82,7 +82,6 @@ module FileStore
         if !file
           max_file_size_kb = [SiteSetting.max_image_size_kb, SiteSetting.max_attachment_size_kb].max.kilobytes
 
-          # TODO: add tests for this
           if upload.private?
             url = Discourse.store.signed_url_for_path(upload.url)
           else
