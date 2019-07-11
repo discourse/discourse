@@ -29,6 +29,23 @@
     .reply-details {
       max-width: calc(100% - 75px);
     }
+
+    // Protection for languages with long strings on very small screens. This
+    // has no effect on most users but we need it for some cases. If this is
+    // not added, "add edit reason" will overlap with the composer controls
+    @include breakpoint(mobile-small) {
+      .reply-details {
+        flex-wrap: wrap;
+      }
+
+      .display-edit-reason {
+        margin-top: 0.5em;
+      }
+
+      .composer-controls {
+        align-self: flex-start;
+      }
+    }
   }
 
   .toggler {
@@ -141,17 +158,6 @@
   }
 
   .d-editor-button-bar .btn {
-    svg {
-      -webkit-transform: translate3d(
-        0,
-        0,
-        0
-      ); // Hack: Reduces composer icon jitter while scrolling in Safari on iOS12
-    }
-    @include breakpoint(mobile-medium) {
-      padding: 4px;
-      font-size: 0.96em;
-    }
     &.preview {
       margin: 0;
     }
