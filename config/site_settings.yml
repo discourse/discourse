@@ -708,6 +708,15 @@ posting:
     type: list
     default: "com|net|org|io|co|tv|ru|cn|us|uk|me|de|fr|fi|gov"
     list_type: compact
+  markdown_typographer_quotation_marks:
+    client: true
+    type: list
+    list_type: compact
+    validator: "MarkdownTypographerQuotationMarksValidator"
+    default: "“|”|‘|’"
+    locale_default:
+      de: "„|“|‚|‘"
+      fr: "«\xA0|\xA0»|‹\xA0|\xA0›"
   enable_rich_text_paste:
     client: true
     default: true
