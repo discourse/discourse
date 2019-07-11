@@ -1581,6 +1581,11 @@ describe User do
 
   context "when user preferences are overriden" do
 
+    fab!(:category0) { Fabricate(:category) }
+    fab!(:category1) { Fabricate(:category) }
+    fab!(:category2) { Fabricate(:category) }
+    fab!(:category3) { Fabricate(:category) }
+
     before do
       SiteSetting.default_email_digest_frequency = 1440 # daily
       SiteSetting.default_email_level = UserOption.email_level_types[:never]
@@ -1596,10 +1601,10 @@ describe User do
 
       SiteSetting.default_topics_automatic_unpin = false
 
-      SiteSetting.default_categories_watching = "1"
-      SiteSetting.default_categories_tracking = "2"
-      SiteSetting.default_categories_muted = "3"
-      SiteSetting.default_categories_watching_first_post = "4"
+      SiteSetting.default_categories_watching = category0.id.to_s
+      SiteSetting.default_categories_tracking = category1.id.to_s
+      SiteSetting.default_categories_muted = category2.id.to_s
+      SiteSetting.default_categories_watching_first_post = category3.id.to_s
     end
 
     it "has overriden preferences" do
@@ -1617,10 +1622,10 @@ describe User do
       expect(options.auto_track_topics_after_msecs).to eq(0)
       expect(options.notification_level_when_replying).to eq(3)
 
-      expect(CategoryUser.lookup(user, :watching).pluck(:category_id)).to eq([1])
-      expect(CategoryUser.lookup(user, :tracking).pluck(:category_id)).to eq([2])
-      expect(CategoryUser.lookup(user, :muted).pluck(:category_id)).to eq([3])
-      expect(CategoryUser.lookup(user, :watching_first_post).pluck(:category_id)).to eq([4])
+      expect(CategoryUser.lookup(user, :watching).pluck(:category_id)).to eq([category0.id])
+      expect(CategoryUser.lookup(user, :tracking).pluck(:category_id)).to eq([category1.id])
+      expect(CategoryUser.lookup(user, :muted).pluck(:category_id)).to eq([category2.id])
+      expect(CategoryUser.lookup(user, :watching_first_post).pluck(:category_id)).to eq([category3.id])
     end
 
     it "does not set category preferences for staged users" do
