@@ -3225,7 +3225,7 @@ nb_NO:
         revoke_moderation: "Trekk tilbake moderering"
         grant_moderation: "Innvilg moderering"
         unsuspend: "Opphev utestenging"
-        suspend: "Utestengt"
+        suspend: "Utesteng"
         show_flags_received: "Vis mottatte rapporteringer"
         flags_received_by: "Flagg mottatt av %{username}"
         flags_received_none: "Denne brukeren har ikke mottatt noen rapporteringer."
