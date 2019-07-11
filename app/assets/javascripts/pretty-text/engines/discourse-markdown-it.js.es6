@@ -287,9 +287,13 @@ export function setup(opts, siteSettings, state) {
     breaks: opts.discourse.features.newline,
     xhtmlOut: false,
     linkify: siteSettings.enable_markdown_linkify,
-    typographer: siteSettings.enable_markdown_typographer,
-    quotes: siteSettings.markdown_typographer_quotation_marks.split("|")
+    typographer: siteSettings.enable_markdown_typographer
   });
+
+  const quotation_marks = siteSettings.markdown_typographer_quotation_marks;
+  if (quotation_marks) {
+    opts.engine.options.quotes = quotation_marks.split("|");
+  }
 
   opts.engine.linkify.tlds(
     (siteSettings.markdown_linkify_tlds || "").split("|")
