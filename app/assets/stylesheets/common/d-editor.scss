@@ -265,41 +265,18 @@
 // everything in one place
 .d-editor-button-bar {
   margin: 0.25em;
-  // normal text size
-  .text-size-normal & {
-    .btn,
-    .btn-default {
-      padding: 0 0.5em;
-    }
 
-    .d-editor-spacer {
-      margin: 0 0.5em;
-    }
-
-    @include breakpoint(mobile-large) {
-      .btn,
-      .btn-default {
-        padding: 0 0.35em;
-        font-size: 0.96em;
-      }
-    }
-    @include breakpoint(mobile-medium) {
-      .d-editor-spacer {
-        margin: 0 0.25em;
-      }
-    }
+  // shared styles for all font sizes
+  .btn,
+  .btn-default {
+    padding: 0 0.5em;
   }
+  .d-editor-spacer {
+    margin: 0 0.25em;
+  }
+
   // small text size
   .text-size-smaller & {
-    .btn,
-    .btn-default {
-      padding: 0 0.5em;
-    }
-
-    .d-editor-spacer {
-      margin: 0 0.5em;
-    }
-
     @include breakpoint(mobile-large) {
       .btn,
       .btn-default {
@@ -316,22 +293,13 @@
       }
     }
   }
-  // larger text size
-  .text-size-larger & {
-    .btn,
-    .btn-default {
-      padding: 0 0.5em;
-      font-size: $font-down-1;
-    }
 
-    .d-editor-spacer {
-      margin: 0 0.25em;
-    }
-
+  // normal text size
+  .text-size-normal & {
     @include breakpoint(mobile-large) {
       .btn,
       .btn-default {
-        padding: 0 0.3em;
+        padding: 0 0.35em;
       }
     }
     @include breakpoint(mobile-medium) {
@@ -342,22 +310,33 @@
     }
   }
 
+  // larger text size
+  .text-size-larger & {
+    @include breakpoint(mobile-large) {
+      .btn,
+      .btn-default {
+        padding: 0 0.3em;
+      }
+    }
+    @include breakpoint(mobile-medium) {
+      .btn,
+      .btn-default {
+        padding: 0 0.2em;
+      }
+    }
+  }
+
   // largest text size
   .text-size-largest & {
     .btn,
     .btn-default {
-      padding: 0 0.5em;
       font-size: $font-down-1;
-    }
-
-    .d-editor-spacer {
-      margin: 0 0.2em;
     }
 
     @include breakpoint(mobile-large) {
       .btn,
       .btn-default {
-        padding: 0 0.25em;
+        padding: 0 0.3em;
       }
     }
     @include breakpoint(mobile-medium) {
