@@ -22,14 +22,14 @@ describe Validators::UploadValidator do
     it "allows 'gz' as extension when uploading export file" do
       SiteSetting.authorized_extensions = ""
 
-      expect(UploadCreator.new(csv_file, "#{filename}.gz", for_export: true).create_for(user.id)).to be_valid
+      expect(UploadCreator.new(csv_file, "#{filename}.zip", for_export: true).create_for(user.id)).to be_valid
     end
 
     it "allows uses max_export_file_size_kb when uploading export file" do
       SiteSetting.max_attachment_size_kb = "0"
-      SiteSetting.authorized_extensions = "gz"
+      SiteSetting.authorized_extensions = "zip"
 
-      expect(UploadCreator.new(csv_file, "#{filename}.gz", for_export: true).create_for(user.id)).to be_valid
+      expect(UploadCreator.new(csv_file, "#{filename}.zip", for_export: true).create_for(user.id)).to be_valid
     end
 
     describe 'when allow_staff_to_upload_any_file_in_pm is true' do
