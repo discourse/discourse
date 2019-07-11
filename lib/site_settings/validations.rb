@@ -69,6 +69,11 @@ module SiteSettings::Validations
     validate_error :s3_upload_bucket_is_required if new_val == "t" && SiteSetting.s3_upload_bucket.blank?
   end
 
+  def validate_secure_images(new_val)
+    validate_error :secure_images_requirements if new_val == "t" && SiteSetting.login_required.blank?
+    validate_error :secure_images_requirements if new_val == "t" && SiteSetting.enable_s3_uploads.blank?
+  end
+
   def validate_enable_s3_inventory(new_val)
     validate_error :enable_s3_uploads_is_required if new_val == "t" && !SiteSetting.Upload.enable_s3_uploads
   end

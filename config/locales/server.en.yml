@@ -200,6 +200,7 @@ en:
       enable_s3_uploads_is_required: "You cannot enable inventory to S3 unless you've enabled the S3 uploads."
       s3_backup_requires_s3_settings: "You cannot use S3 as backup location unless you've provided the '%{setting_name}'."
       s3_bucket_reused: "You cannot use the same bucket for 's3_upload_bucket' and 's3_backup_bucket'. Choose a different bucket or use a different path for each bucket."
+      secure_images_requirements: "You cannot enable secure images unless you've enabled 'login_required' and 'enable_s3_uploads'."
     conflicting_google_user_id: 'The Google Account ID for this account has changed; staff intervention is required for security reasons. Please contact staff and point them to <br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
 
   activemodel:
@@ -1951,7 +1952,7 @@ en:
     bootstrap_mode_min_users: "Minimum number of users required to disable bootstrap mode (set to 0 to disable)"
 
     prevent_anons_from_downloading_files: "Prevent anonymous users from downloading attachments. WARNING: this will prevent any non-image site assets posted as attachments from working."
-    secure_images: "Displays images to logged-in users only. EXPERIMENTAL"
+    secure_images: "Limits access to images to logged-in users. Can only be used when login required and S3 uploads are enabled."
     slug_generation_method: "Choose a slug generation method. 'encoded' will generate percent encoding string. 'none' will disable slug at all."
 
     enable_emoji: "Enable emoji"

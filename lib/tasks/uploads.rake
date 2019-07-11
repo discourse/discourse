@@ -908,6 +908,11 @@ task "uploads:recover" => :environment do
   end
 end
 
+task "uploads:update_acl" => :environment do
+  Jobs::UpdatePrivateUploadsAcl.new.execute({})
+  Jobs::UpdatePrivateUploadsAcl.new.execute(name: "secure_images")
+end
+
 def inline_uploads(post)
   replaced = false
 

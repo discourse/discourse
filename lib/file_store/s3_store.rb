@@ -27,7 +27,8 @@ module FileStore
 
     def store_optimized_image(file, optimized_image, content_type = nil)
       path = get_path_for_optimized_image(optimized_image)
-      url, optimized_image.etag = store_file(file, path, content_type: content_type)
+
+      url, optimized_image.etag = store_file(file, path, content_type: content_type, private: secure_images_enabled?)
       url
     end
 
@@ -162,20 +163,24 @@ module FileStore
     end
 
     def update_upload_ACL(upload, type: "attachment")
+      is_image = FileHelper.is_supported_image?(upload.original_filename)
       if type == "attachment"
-        return if FileHelper.is_supported_image?(upload.original_filename)
-        private_flag = SiteSetting.prevent_anons_from_downloading_files
+        return if is_image
+        secure_file = SiteSetting.prevent_anons_from_downloading_files
       else
-        return if !FileHelper.is_supported_image?(upload.original_filename)
-        private_flag = secure_images_enabled?
+        return if !is_image
+        secure_file = secure_images_enabled?
       end
 
       key = get_upload_key(upload)
 
-      begin
-        @s3_helper.object(key).acl.put(acl: private_flag ? "private" : "public-read")
-      rescue Aws::S3::Errors::NoSuchKey
-        Rails.logger.warn("Could not update ACL on upload with key: '#{key}'. Upload is missing.")
+      update_ACL(key, secure_file)
+
+      if is_image
+        upload.optimized_images.find_each do |optimized_image|
+          key = get_path_for_optimized_image(optimized_image)
+          update_ACL(key, secure_file)
+        end
       end
     end
 
@@ -197,6 +202,16 @@ module FileStore
         File.join(upload_path, "/", get_path_for_upload(upload))
       else
         get_path_for_upload(upload)
+      end
+    end
+
+    def update_ACL(key, secure_file)
+      puts key
+      puts secure_file
+      begin
+        @s3_helper.object(key).acl.put(acl: secure_file ? "private" : "public-read")
+      rescue Aws::S3::Errors::NoSuchKey
+        Rails.logger.warn("Could not update ACL on upload with key: '#{key}'. Upload is missing.")
       end
     end
 
