@@ -76,20 +76,29 @@
   display: flex;
   align-items: center;
   min-height: 30px;
-  padding-left: 3px;
   border-bottom: 1px solid $primary-low;
 
   .btn,
   .btn-default {
     background-color: transparent;
-    padding: 4px 8px;
     display: inline-block;
     .d-icon {
       color: $primary-medium;
     }
-    @media all and (max-width: 800px) {
-      padding: 5px;
+
+    svg {
+      -webkit-transform: translate3d(
+        0,
+        0,
+        0
+      ); // Hack: Reduces composer icon jitter while scrolling in Safari on iOS12
     }
+  }
+
+  .d-editor-spacer {
+    height: 1em;
+    display: inline-block;
+    border-left: 1px solid $primary-low-mid;
   }
 
   .btn:not(.no-text) {
@@ -103,13 +112,6 @@
   .btn.italic {
     font-style: italic;
   }
-}
-
-.d-editor-spacer {
-  height: 16px;
-  margin: 0 5px;
-  display: inline-block;
-  border-left: 1px solid $primary-low-mid;
 }
 
 .d-editor-preview-wrapper {
@@ -180,9 +182,6 @@
   }
   .d-editor-textarea-wrapper {
     border: 1px solid $primary-low;
-  }
-  .d-editor-button-bar .btn {
-    padding: 6px 8px;
   }
   .d-editor-preview-wrapper {
     max-width: 100%;
@@ -260,4 +259,91 @@
 
 .mobile-view .d-editor-preview .image-wrapper .button-wrapper {
   opacity: 1;
+}
+
+// d-editor bar button sizing for all editors - this is kept seprate to keep
+// everything in one place
+.d-editor-button-bar {
+  margin: 0.25em;
+
+  // shared styles for all font sizes
+  .btn,
+  .btn-default {
+    padding: 0 0.5em;
+  }
+  .d-editor-spacer {
+    margin: 0 0.25em;
+  }
+
+  // small text size
+  .text-size-smaller & {
+    @include breakpoint(mobile-large) {
+      .btn,
+      .btn-default {
+        padding: 0 0.4em;
+      }
+    }
+    @include breakpoint(mobile-medium) {
+      .btn,
+      .btn-default {
+        padding: 0 0.3em;
+      }
+      .d-editor-spacer {
+        margin: 0 0.25em;
+      }
+    }
+  }
+
+  // normal text size
+  .text-size-normal & {
+    @include breakpoint(mobile-large) {
+      .btn,
+      .btn-default {
+        padding: 0 0.35em;
+      }
+    }
+    @include breakpoint(mobile-medium) {
+      .btn,
+      .btn-default {
+        padding: 0 0.25em;
+      }
+    }
+  }
+
+  // larger text size
+  .text-size-larger & {
+    @include breakpoint(mobile-large) {
+      .btn,
+      .btn-default {
+        padding: 0 0.3em;
+      }
+    }
+    @include breakpoint(mobile-medium) {
+      .btn,
+      .btn-default {
+        padding: 0 0.2em;
+      }
+    }
+  }
+
+  // largest text size
+  .text-size-largest & {
+    .btn,
+    .btn-default {
+      font-size: $font-down-1;
+    }
+
+    @include breakpoint(mobile-large) {
+      .btn,
+      .btn-default {
+        padding: 0 0.3em;
+      }
+    }
+    @include breakpoint(mobile-medium) {
+      .btn,
+      .btn-default {
+        padding: 0 0.2em;
+      }
+    }
+  }
 }

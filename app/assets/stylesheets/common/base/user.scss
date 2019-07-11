@@ -552,7 +552,7 @@
       }
     }
     .select-kit.multi-select {
-      @include breakpoint(mobile) {
+      @include breakpoint(mobile-extra-large) {
         width: 100%;
       }
     }
