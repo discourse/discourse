@@ -206,8 +206,6 @@ module FileStore
     end
 
     def update_ACL(key, secure_file)
-      puts key
-      puts secure_file
       begin
         @s3_helper.object(key).acl.put(acl: secure_file ? "private" : "public-read")
       rescue Aws::S3::Errors::NoSuchKey
