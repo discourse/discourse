@@ -1,0 +1,19 @@
+<div class="robots-txt-edit">
+  <h3>{{i18n "admin.customize.robots.title"}}</h3>
+  {{#if model.overridden}}
+    <div class="overridden">
+      {{i18n "admin.customize.robots.overridden"}}
+    </div>
+  {{/if}}
+  {{textarea
+    value=buffer
+    class="robots-txt-input"
+    rows=30}}
+  {{#save-controls model=this action=(action "save") saved=saved saveDisabled=saveDisabled}}
+    {{d-button
+      class="btn-normal"
+      disabled=revertDisbaled
+      action=(action "revert")
+      label="admin.customize.robots.revert"}}
+  {{/save-controls}}
+</div>

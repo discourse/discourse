@@ -11,6 +11,17 @@ RSpec.describe RobotsTxtController do
       expect(json['header']).to be_present
       expect(json['agents']).to be_present
     end
+
+    it "includes overridden content if robots.txt is is overridden" do
+      SiteSetting.overridden_robots_txt = "something"
+
+      get "/robots-builder.json"
+      expect(response.status).to eq(200)
+      json = ::JSON.parse(response.body)
+      expect(json['header']).to be_present
+      expect(json['agents']).to be_present
+      expect(json['overridden']).to eq("something")
+    end
   end
 
   describe '#index' do
@@ -100,6 +111,13 @@ RSpec.describe RobotsTxtController do
       get '/robots.txt'
 
       expect(response.body).to_not include("Disallow: /u/")
+    end
+
+    it "returns overridden robots.txt if the file is overridden" do
+      SiteSetting.overridden_robots_txt = "blah whatever"
+      get '/robots.txt'
+      expect(response.status).to eq(200)
+      expect(response.body).to eq(SiteSetting.overridden_robots_txt)
     end
   end
 end

@@ -33,8 +33,12 @@ class RobotsTxtController < ApplicationController
   }
 
   def index
+    if SiteSetting.overridden_robots_txt.present?
+      render plain: SiteSetting.overridden_robots_txt
+      return
+    end
     if SiteSetting.allow_index_in_robots_txt?
-      @robots_info = fetch_robots_info
+      @robots_info = self.class.fetch_robots_info
       render :index, content_type: 'text/plain'
     else
       render :no_index, content_type: 'text/plain'
@@ -46,12 +50,13 @@ class RobotsTxtController < ApplicationController
   # JSON that can be used by a script to create a robots.txt that works well with your
   # existing site.
   def builder
-    render json: fetch_robots_info
+    result = self.class.fetch_robots_info
+    overridden = SiteSetting.overridden_robots_txt
+    result[:overridden] = overridden if overridden.present?
+    render json: result
   end
 
-protected
-
-  def fetch_robots_info
+  def self.fetch_robots_info
     deny_paths = DISALLOWED_PATHS.map { |p| Discourse.base_uri + p }
     deny_all = [ "#{Discourse.base_uri}/" ]
 
@@ -87,5 +92,4 @@ protected
 
     result
   end
-
 end

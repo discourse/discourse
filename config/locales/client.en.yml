@@ -3622,7 +3622,10 @@ en:
           love:
             name: "love"
             description: "The like button's color."
-
+        robots:
+          title: "Customize your site's robots.txt file:"
+          overridden: Your site's robots.txt file has been modified.
+          revert: Revert Changes
       email:
         title: "Emails"
         settings: "Settings"
