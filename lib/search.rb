@@ -213,7 +213,7 @@ class Search
 
   # Query a term
   def execute
-    if SiteSetting.log_search_queries? && @opts[:search_type].present?
+    if SiteSetting.log_search_queries? && @opts[:search_type].present? && !Discourse.readonly_mode?
       status, search_log_id = SearchLog.log(
         term: @term,
         search_type: @opts[:search_type],
