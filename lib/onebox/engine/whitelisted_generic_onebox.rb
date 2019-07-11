@@ -190,8 +190,9 @@ module Onebox
 
       def placeholder_html
         return article_html if is_article?
-        return image_html   if has_image? && (is_video? || is_image?)
-        return article_html if has_text? && is_embedded?
+        return image_html if is_image?
+        return Onebox::Helpers.video_placeholder_html if is_video? || is_card?
+        return Onebox::Helpers.generic_placeholder_html if is_embedded?
         to_html
       end
 

@@ -236,5 +236,17 @@ module Onebox
       encoded += '#' + uri_query_encode(parts[:fragment]) unless parts[:fragment].nil?
       encoded
     end
+
+    def self.video_placeholder_html
+      "<div class='onebox-placeholder-container'><span class='placeholder-icon video'></span></div>"
+    end
+
+    def self.audio_placeholder_html
+      "<div class='onebox-placeholder-container'><span class='placeholder-icon audio'></span></div>"
+    end
+
+    def self.generic_placeholder_html
+      "<div class='onebox-placeholder-container'><span class='placeholder-icon generic'></span></div>"
+    end
   end
 end

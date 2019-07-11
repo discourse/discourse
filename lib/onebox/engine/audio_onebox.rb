@@ -23,7 +23,7 @@ module Onebox
       end
 
       def placeholder_html
-        "<div class='onebox-placeholder-container'><span class='placeholder-icon audio'></span></div>"
+        ::Onebox::Helpers.audio_placeholder_html
       end
     end
   end

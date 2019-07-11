@@ -20,7 +20,7 @@ module Onebox
       end
 
       def placeholder_html
-        "<div class='onebox-placeholder-container'><span class='placeholder-icon generic'></span></div>"
+        ::Onebox::Helpers.generic_placeholder_html
       end
 
       private
