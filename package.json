@@ -38,13 +38,13 @@
     "chrome-launcher": "^0.10",
     "chrome-remote-interface": "^0.25",
     "eslint": "^4.19",
+    "lodash-cli": "https://github.com/lodash-archive/lodash-cli.git",
     "pretender": "^1.6",
     "prettier": "^1.18.2",
     "puppeteer": "1.16",
     "qunit": "2.8.0",
     "route-recognizer": "^0.3.3",
-    "sinon": "^7.2.5",
-    "lodash-cli": "^4"
+    "sinon": "^7.2.5"
   },
   "scripts": {
     "preinstall": "node -e \"if(process.env.npm_execpath.indexOf('yarn') === -1) throw new Error('NPM is not supported, please use Yarn instead. ')\""
