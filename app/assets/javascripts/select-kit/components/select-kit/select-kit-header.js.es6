@@ -18,7 +18,7 @@ export default Ember.Component.extend({
 
   isNone: Ember.computed.none("computedContent.value"),
 
-  ariaHasPopup: true,
+  ariaHasPopup: "true",
 
   ariaLabel: Ember.computed.or("computedContent.ariaLabel", "sanitizedTitle"),
 
