@@ -661,7 +661,6 @@ en:
         only_admins: "Only admins"
         mods_and_admins: "Only moderators and Admins"
         members_mods_and_admins: "Only group members, moderators and admins"
-        owners_mods_and_admins: "Only group owners, moderators and admins"
         everyone: "Everyone"
       notifications:
         watching:
@@ -2562,7 +2561,7 @@ en:
       security: "Security"
       special_warning: "Warning: This category is a pre-seeded category and the security settings cannot be edited. If you do not wish to use this category, delete it instead of repurposing it."
       uncategorized_security_warning: "This category is special. It is intended as holding area for topics that have no category; it cannot have security settings."
-      uncategorized_general_warning: 'This category is special. It is used as the default category for new topics that do not have a category selected. If you want to prevent this behavior and force category selection, <a href="%{settingLink}">please disable the setting here</a>. If you want to change the name or description, go to <a href="%{customizeLink}">Customize / Text</a>.'
+      uncategorized_general_warning: 'This category is special. It is used as the default category for new topics that do not have a category selected. If you want to prevent this behavior and force category selection, <a href="%{settingLink}">please disable the setting here</a>. If you want to change the name or description, go to <a href="%{customizeLink}">Customize / Text Content</a>.'
       images: "Images"
       email_in: "Custom incoming email address:"
       email_in_allow_strangers: "Accept emails from anonymous users with no accounts"
@@ -2716,7 +2715,8 @@ en:
         help: "This topic is pinned for you; it will display at the top of its category"
       unlisted:
         help: "This topic is unlisted; it will not be displayed in topic lists, and can only be accessed via a direct link"
-
+      personal_message:
+        title: "This topic is a personal message"
     posts: "Posts"
     posts_long: "there are {{number}} posts in this topic"
 
@@ -3186,11 +3186,9 @@ en:
             visibility_levels:
               title: "Who can see this group?"
               public: "Everyone"
-              logged_on_users: "Logged on users"
-              members: "Group owners and members"
+              members: "Group owners, members and admins"
               staff: "Group owners and staff"
-              owners: "Group owners"
-              description: "Admins can see all groups."
+              owners: "Group owners and admins"
           membership:
             automatic: Automatic
             trust_level: Trust Level
@@ -3436,7 +3434,7 @@ en:
         copy_to_clipboard_error: "Error copying data to Clipboard"
         theme_owner: "Not editable, owned by:"
         email_templates:
-          title: "Email"
+          title: "Email Templates"
           subject: "Subject"
           multiple_subjects: "This email template has multiple subjects."
           body: "Body"
@@ -4137,7 +4135,7 @@ en:
       site_text:
         description: "You can customize any of the text on your forum. Please start by searching below:"
         search: "Search for the text you'd like to edit"
-        title: "Text"
+        title: "Text Content"
         edit: "edit"
         revert: "Revert Changes"
         revert_confirm: "Are you sure you want to revert your changes?"
