@@ -12,10 +12,7 @@ export default Ember.Controller.extend({
     return buffer === orig;
   },
 
-  @computed("model.overridden")
-  revertDisbaled(overridden) {
-    return !overridden;
-  },
+  revertDisbaled: Ember.computed.not("model.overridden"),
 
   actions: {
     save(content = this.buffer) {
