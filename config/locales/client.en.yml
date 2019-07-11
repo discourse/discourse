@@ -661,7 +661,6 @@ en:
         only_admins: "Only admins"
         mods_and_admins: "Only moderators and Admins"
         members_mods_and_admins: "Only group members, moderators and admins"
-        owners_mods_and_admins: "Only group owners, moderators and admins"
         everyone: "Everyone"
       notifications:
         watching:
@@ -2716,7 +2715,8 @@ en:
         help: "This topic is pinned for you; it will display at the top of its category"
       unlisted:
         help: "This topic is unlisted; it will not be displayed in topic lists, and can only be accessed via a direct link"
-
+      personal_message:
+        title: "This topic is a personal message"
     posts: "Posts"
     posts_long: "there are {{number}} posts in this topic"
 
@@ -3011,6 +3011,7 @@ en:
         about: "Add tags to groups to manage them more easily."
         new: "New Group"
         tags_label: "Tags in this group:"
+        tags_placeholder: "tags"
         parent_tag_label: "Parent tag:"
         parent_tag_placeholder: "Optional"
         parent_tag_description: "Tags from this group can't be used unless the parent tag is present."
@@ -3186,11 +3187,9 @@ en:
             visibility_levels:
               title: "Who can see this group?"
               public: "Everyone"
-              logged_on_users: "Logged on users"
-              members: "Group owners and members"
+              members: "Group owners, members and admins"
               staff: "Group owners and staff"
-              owners: "Group owners"
-              description: "Admins can see all groups."
+              owners: "Group owners and admins"
           membership:
             automatic: Automatic
             trust_level: Trust Level
