@@ -1062,6 +1062,14 @@ HTML
     expect(PrettyText.cook('(tm)')).to eq('<p>(tm)</p>')
   end
 
+  it 'uses quotation marks from site settings' do
+    SiteSetting.enable_markdown_typographer = true
+    expect(PrettyText.cook(%q|"Do you know," he said, "what 'Discourse' is?"|)).to eq(%q|<p>“Do you know,” he said, “what ‘Discourse’ is?”</p>|)
+
+    SiteSetting.markdown_typographer_quotation_marks = "„|“|‚|‘"
+    expect(PrettyText.cook(%q|"Weißt du", sagte er, "was 'Discourse' ist?"|)).to eq(%q|<p>„Weißt du“, sagte er, „was ‚Discourse‘ ist?“</p>|)
+  end
+
   it 'handles onebox correctly' do
     expect(PrettyText.cook("http://a.com\nhttp://b.com").split("onebox").length).to eq(3)
     expect(PrettyText.cook("http://a.com\n\nhttp://b.com").split("onebox").length).to eq(3)
