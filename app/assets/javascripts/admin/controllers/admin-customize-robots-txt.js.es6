@@ -1,6 +1,5 @@
 import computed from "ember-addons/ember-computed-decorators";
 import { ajax } from "discourse/lib/ajax";
-import { popupAjaxError } from "discourse/lib/ajax-error";
 
 export default Ember.Controller.extend({
   saved: false,
@@ -12,7 +11,7 @@ export default Ember.Controller.extend({
     return buffer === orig;
   },
 
-  revertDisbaled: Ember.computed.not("model.overridden"),
+  resetDisbaled: Ember.computed.not("model.overridden"),
 
   actions: {
     save(content = this.buffer) {
@@ -37,7 +36,7 @@ export default Ember.Controller.extend({
         });
     },
 
-    revert() {
+    reset() {
       this.send("save", "");
     }
   }
