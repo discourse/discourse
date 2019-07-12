@@ -336,7 +336,7 @@ class Topic < ActiveRecord::Base
 
   def self.fancy_title(title)
     return unless escaped = ERB::Util.html_escape(title)
-    fancy_title = Emoji.unicode_unescape(HtmlPrettify.render(escaped))
+    fancy_title = Emoji.unicode_unescape(HtmlPrettify.render(escaped, SiteSetting.pretty_quote_entities))
     fancy_title.length > Topic.max_fancy_title_length ? escaped : fancy_title
   end
 
