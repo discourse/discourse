@@ -11,6 +11,7 @@ class Demon::Base
 
   def self.start(count = 1, verbose: false)
     @demons ||= {}
+    before_start
     count.times do |i|
       (@demons["#{prefix}_#{i}"] ||= new(i, verbose: verbose)).start
     end
@@ -35,6 +36,9 @@ class Demon::Base
     @demons.values.each do |demon|
       demon.ensure_running
     end
+  end
+
+  def self.before_start
   end
 
   attr_reader :pid, :parent_pid, :started, :index
