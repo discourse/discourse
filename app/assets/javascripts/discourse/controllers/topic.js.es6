@@ -523,6 +523,16 @@ export default Ember.Controller.extend(bufferedProperty("model"), {
 
       if (user.get("staff") && hasReplies) {
         ajax(`/posts/${post.id}/reply-ids.json`).then(replies => {
+          if (replies.length === 0) {
+            return post
+              .destroy(user)
+              .then(refresh)
+              .catch(error => {
+                popupAjaxError(error);
+                post.undoDeleteState();
+              });
+          }
+
           const buttons = [];
 
           buttons.push({
