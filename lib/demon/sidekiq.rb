@@ -13,7 +13,7 @@ class Demon::Sidekiq < Demon::Base
     @@queues_last_heartbeat_hash_key ||= "#{RANDOM_HEX}_queues_last_heartbeat_hash"
   end
 
-  def self.set_queue_heartbeat(name)
+  def self.trigger_heartbeat(name)
     $redis.hset(queues_last_heartbeat_hash_key, name, Time.new.to_i.to_s)
   end
 

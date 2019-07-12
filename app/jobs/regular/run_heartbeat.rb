@@ -3,7 +3,7 @@
 module Jobs
   class RunHeartbeat < Jobs::Base
     def execute(args)
-      Demon::Sidekiq.set_queue_heartbeat(args[:queue_name])
+      Demon::Sidekiq.trigger_heartbeat(args[:queue_name])
     end
   end
 end
