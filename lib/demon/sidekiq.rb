@@ -18,7 +18,7 @@ class Demon::Sidekiq < Demon::Base
   end
 
   def self.get_queue_last_heartbeat(name)
-    $redis.hget(queues_last_heartbeat_hash_key, name)&.to_i || 0
+    $redis.hget(queues_last_heartbeat_hash_key, name).to_i
   end
 
   def self.heartbeat_queues

@@ -161,13 +161,11 @@ before_fork do |server, worker|
                   pid = queue.split("_").last.to_i
                   STDERR.puts "Sidekiq heartbeat test for worker #{pid} failed, restarting"
                   Rails.logger.warn "Sidekiq heartbeat test for worker #{pid} failed, restarting"
-                  Demon::Sidekiq.demons.values.each do |demon|
-                    if demon.pid == pid
-                      demon.stop
-                      demon.start
-                    end
+                  if demon = Demon::Sidekiq.demons.values.find { |d| d.pid == pid }
+                    demon.stop
+                    demon.start
+                    restarted = true
                   end
-                  restarted = true
                 end
               end
             end
