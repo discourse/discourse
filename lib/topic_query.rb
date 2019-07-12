@@ -631,7 +631,7 @@ class TopicQuery
 
     if sort_column.start_with?('custom_fields')
       field = sort_column.split('.')[1]
-      return result.order("(SELECT CASE WHEN EXISTS (SELECT true FROM topic_custom_fields tcf WHERE tcf.topic_id::integer = topics.id::integer AND tcf.name = '#{field}') THEN (SELECT value::integer FROM topic_custom_fields tcf WHERE tcf.topic_id::integer = topics.id::integer AND tcf.name = '#{field}') ELSE 0 END) #{sort_dir}")
+      return result.order("(SELECT CASE WHEN EXISTS (SELECT true FROM topic_custom_fields tcf WHERE tcf.topic_id::integer = topics.id::integer AND tcf.name = '#{field}' LIMIT 1) THEN (SELECT value::integer FROM topic_custom_fields tcf WHERE tcf.topic_id::integer = topics.id::integer AND tcf.name = '#{field}' LIMIT 1) ELSE 0 END) #{sort_dir}")
     end
 
     result.order("topics.#{sort_column} #{sort_dir}")
