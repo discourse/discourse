@@ -41,4 +41,8 @@ DiscourseEvent.on(:site_setting_changed) do |name, old_value, new_value|
   if SiteIconManager::WATCHED_SETTINGS.include?(name)
     SiteIconManager.ensure_optimized!
   end
+
+  if SiteSetting::WATCHED_SETTINGS.include?(name)
+    SiteSetting.reset_cached_settings!
+  end
 end
