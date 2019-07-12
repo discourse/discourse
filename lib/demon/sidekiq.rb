@@ -50,7 +50,7 @@ class Demon::Sidekiq < Demon::Base
   def self.before_start
     # cleans up heartbeat queues from previous boot up
     Sidekiq::Queue.all.each do |queue|
-      next if queue.name !~ /^[a-f0-9]{32}_\d+$/
+      next if queue.name !~ /^\h{32}_\d+$/
       queue.clear if queue.size == 0
     end
   end
