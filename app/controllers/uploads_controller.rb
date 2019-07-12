@@ -118,7 +118,7 @@ class UploadsController < ApplicationController
     if Discourse.store.secure_images_enabled?
       redirect_to Discourse.store.signed_url_for_path("#{params[:path]}.#{params[:extension]}")
     else
-      return render_404
+      render_404
     end
   end
 
