@@ -1020,7 +1020,12 @@ class User < ActiveRecord::Base
       .where.not(post_id: disagreed_flag_post_ids)
       .each do |tl|
 
-      message = I18n.t('flag_reason.spam_hosts', domain: tl.domain, base_path: Discourse.base_path)
+      message = I18n.t(
+        'flag_reason.spam_hosts',
+        domain: tl.domain,
+        base_path: Discourse.base_path,
+        locale: SiteSetting.default_locale
+      )
       results << PostActionCreator.create(Discourse.system_user, tl.post, :spam, message: message)
     end
 
