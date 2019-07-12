@@ -72,9 +72,11 @@ module PrettyText
 
           if short_urls = reverse_map[sha1]
 
+            secure_image = FileHelper.is_supported_image?(original_filename) && Discourse.store.secure_images_enabled?
+
             short_urls.each do |short_url|
               result[short_url] = {
-                url: Discourse.store.secure_images_enabled? ? secure_image_url(url) : url,
+                url: secure_image ? secure_image_url(url) : url,
                 short_path: Upload.short_path(sha1: sha1, extension: extension),
                 base62_sha1: Upload.base62_sha1(sha1)
               }

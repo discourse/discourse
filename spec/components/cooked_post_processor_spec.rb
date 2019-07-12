@@ -739,8 +739,9 @@ describe CookedPostProcessor do
 
       it "is always allowed to crawl our own images" do
         store = stub
+        store.expects(:secure_images_enabled?).returns(false)
+        Discourse.expects(:store).returns(store).at_least_once
         store.expects(:has_been_uploaded?).returns(true)
-        Discourse.expects(:store).returns(store)
         FastImage.expects(:size).returns([100, 200])
         expect(cpp.get_size("http://foo.bar/image2.png")).to eq([100, 200])
       end
@@ -1010,40 +1011,60 @@ describe CookedPostProcessor do
         HTML
       end
 
-      it "uses the right CDN when uploads are on S3" do
-        Rails.configuration.action_controller.stubs(:asset_host).returns("https://local.cdn.com")
+      describe "s3_uploads" do
+        before do
+          Rails.configuration.action_controller.stubs(:asset_host).returns("https://local.cdn.com")
 
-        SiteSetting.s3_upload_bucket = "some-bucket-on-s3"
-        SiteSetting.s3_access_key_id = "s3-access-key-id"
-        SiteSetting.s3_secret_access_key = "s3-secret-access-key"
-        SiteSetting.s3_cdn_url = "https://s3.cdn.com"
-        SiteSetting.enable_s3_uploads = true
+          SiteSetting.s3_upload_bucket = "some-bucket-on-s3"
+          SiteSetting.s3_access_key_id = "s3-access-key-id"
+          SiteSetting.s3_secret_access_key = "s3-secret-access-key"
+          SiteSetting.s3_cdn_url = "https://s3.cdn.com"
+          SiteSetting.enable_s3_uploads = true
+          uploaded_file = file_from_fixtures("smallest.png")
+          upload_sha1 = Digest::SHA1.hexdigest(File.read(uploaded_file))
 
-        uploaded_file = file_from_fixtures("smallest.png")
-        upload_sha1 = Digest::SHA1.hexdigest(File.read(uploaded_file))
+          upload.update!(
+            original_filename: "smallest.png",
+            width: 10,
+            height: 20,
+            sha1: upload_sha1,
+            extension: "png",
+          )
+        end
 
-        upload.update!(
-          original_filename: "smallest.png",
-          width: 10,
-          height: 20,
-          sha1: upload_sha1,
-          extension: "png",
-        )
+        it "uses the right CDN when uploads are on S3" do
+          stored_path = Discourse.store.get_path_for_upload(upload)
+          upload.update_column(:url, "#{SiteSetting.Upload.absolute_base_url}/#{stored_path}")
 
-        stored_path = Discourse.store.get_path_for_upload(upload)
-        upload.update_column(:url, "#{SiteSetting.Upload.absolute_base_url}/#{stored_path}")
+          the_post = Fabricate(:post, raw: %Q{This post has a local emoji :+1: and an external upload\n\n![smallest.png|10x20](#{upload.short_url})})
 
-        the_post = Fabricate(:post, raw: %Q{This post has a local emoji :+1: and an external upload\n\n![smallest.png|10x20](#{upload.short_url})})
+          cpp = CookedPostProcessor.new(the_post)
+          cpp.optimize_urls
 
-        cpp = CookedPostProcessor.new(the_post)
-        cpp.optimize_urls
+          expect(cpp.html).to match_html <<~HTML
+            <p>This post has a local emoji <img src="https://local.cdn.com/images/emoji/twitter/+1.png?v=#{Emoji::EMOJI_VERSION}" title=":+1:" class="emoji" alt=":+1:"> and an external upload</p>
+            <p><img src="https://s3.cdn.com/#{stored_path}" alt="smallest.png" data-base62-sha1="#{upload.base62_sha1}" width="10" height="20"></p>
+          HTML
+        end
 
-        expect(cpp.html).to match_html <<~HTML
-          <p>This post has a local emoji <img src="https://local.cdn.com/images/emoji/twitter/+1.png?v=#{Emoji::EMOJI_VERSION}" title=":+1:" class="emoji" alt=":+1:"> and an external upload</p>
-          <p><img src="https://s3.cdn.com/#{stored_path}" alt="smallest.png" data-base62-sha1="#{upload.base62_sha1}" width="10" height="20"></p>
-        HTML
+        it "doesn't use CDN for secure images" do
+          SiteSetting.login_required = true
+          SiteSetting.secure_images = true
+
+          stored_path = Discourse.store.get_path_for_upload(upload)
+          upload.update_column(:url, "#{SiteSetting.Upload.absolute_base_url}/#{stored_path}")
+
+          the_post = Fabricate(:post, raw: %Q{This post has a local emoji :+1: and an external upload\n\n![smallest.png|10x20](#{upload.short_url})})
+
+          cpp = CookedPostProcessor.new(the_post)
+          cpp.optimize_urls
+
+          expect(cpp.html).to match_html <<~HTML
+            <p>This post has a local emoji <img src="https://local.cdn.com/images/emoji/twitter/+1.png?v=#{Emoji::EMOJI_VERSION}" title=":+1:" class="emoji" alt=":+1:"> and an external upload</p>
+            <p><img src="/secure-image-uploads/#{stored_path}" alt="smallest.png" data-base62-sha1="#{upload.base62_sha1}" width="10" height="20"></p>
+          HTML
+        end
       end
-
     end
 
   end

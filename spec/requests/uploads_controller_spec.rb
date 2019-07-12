@@ -417,6 +417,43 @@ describe UploadsController do
       expect(result[0]["url"]).to eq(upload.url)
       expect(result[0]["short_path"]).to eq(upload.short_path)
     end
+
+    describe 'secure images' do
+      let(:upload) { Fabricate(:upload_s3) }
+
+      before do
+        SiteSetting.authorized_extensions = "pdf|png"
+        SiteSetting.s3_upload_bucket = "s3-upload-bucket"
+        SiteSetting.s3_access_key_id = "s3-access-key-id"
+        SiteSetting.s3_secret_access_key = "s3-secret-access-key"
+        SiteSetting.enable_s3_uploads = true
+        SiteSetting.login_required = true
+        SiteSetting.secure_images = true
+      end
+
+      it 'returns secure urls for images when secure images is enabled' do
+        sign_in(user)
+
+        post "/uploads/lookup-urls.json", params: { short_urls: [upload.short_url] }
+        expect(response.status).to eq(200)
+
+        result = JSON.parse(response.body)
+        expect(result[0]["url"]).to match("/secure-image-uploads")
+        expect(result[0]["short_path"]).to eq(upload.short_path)
+      end
+
+      it 'does not return secure image urls for non-image uploads' do
+        upload.update!(original_filename: "not-an-image.pdf", extension: "pdf")
+        sign_in(user)
+
+        post "/uploads/lookup-urls.json", params: { short_urls: [upload.short_url] }
+        expect(response.status).to eq(200)
+
+        result = JSON.parse(response.body)
+        expect(result[0]["url"]).not_to match("/secure-image-uploads")
+        expect(result[0]["short_path"]).to eq(upload.short_path)
+      end
+    end
   end
 
   describe '#metadata' do

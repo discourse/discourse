@@ -159,6 +159,33 @@ RSpec.describe 'Multisite s3 uploads', type: :multisite do
       end
     end
 
+    describe "when secure images are enabled" do
+      before do
+        SiteSetting.login_required = true
+        SiteSetting.secure_images = true
+        s3_helper.stubs(:s3_client).returns(client)
+        Discourse.stubs(:store).returns(store)
+      end
+
+      it "returns signed URL with correct path" do
+        test_multisite_connection('default') do
+          upload = Fabricate.build(:upload_s3, sha1: upload_sha1, id: 1)
+
+          signed_url = Discourse.store.signed_url_for_path(upload.url)
+          expect(signed_url).to match(/Amz-Expires/)
+          expect(signed_url).to match("uploads/default")
+        end
+
+        test_multisite_connection('second') do
+          upload = Fabricate.build(:upload_s3, sha1: upload_sha1, id: 1)
+
+          signed_url = Discourse.store.signed_url_for_path(upload.url)
+          expect(signed_url).to match(/Amz-Expires/)
+          expect(signed_url).to match("uploads/second")
+        end
+      end
+    end
+
     describe "#update_upload_ACL" do
       it "updates correct file for default and second multisite db" do
         test_multisite_connection('default') do

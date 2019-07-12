@@ -357,11 +357,11 @@ describe FileStore::S3Store do
 
     before do
       SiteSetting.authorized_extensions = "pdf|png"
-      upload.update!(original_filename: "small.pdf", extension: "pdf")
     end
 
     describe ".update_upload_ACL" do
       it "sets acl to private when private uploads are enabled" do
+        upload.update!(original_filename: "small.pdf", extension: "pdf")
         SiteSetting.prevent_anons_from_downloading_files = true
         s3_helper.expects(:s3_bucket).returns(s3_bucket)
         s3_bucket.expects(:object).with("original/1X/#{upload.sha1}.pdf").returns(s3_object)
@@ -372,6 +372,7 @@ describe FileStore::S3Store do
       end
 
       it "sets acl to public when private uploads are disabled" do
+        upload.update!(original_filename: "small.pdf", extension: "pdf")
         SiteSetting.prevent_anons_from_downloading_files = false
         s3_helper.expects(:s3_bucket).returns(s3_bucket)
         s3_bucket.expects(:object).with("original/1X/#{upload.sha1}.pdf").returns(s3_object)
@@ -380,6 +381,28 @@ describe FileStore::S3Store do
 
         expect(store.update_upload_ACL(upload)).to be_truthy
       end
+
+      it "sets acl to private for an image when secure images are enabled" do
+        SiteSetting.login_required = true
+        SiteSetting.secure_images = true
+        s3_helper.expects(:s3_bucket).returns(s3_bucket)
+        s3_bucket.expects(:object).with("original/1X/#{upload.sha1}.png").returns(s3_object)
+        s3_object.expects(:acl).returns(s3_object)
+        s3_object.expects(:put).with(acl: "private").returns(s3_object)
+
+        expect(store.update_upload_ACL(upload, type: "image")).to be_truthy
+      end
+
+      it "sets acl to public for an image when secure images are enabled" do
+        SiteSetting.secure_images = false
+        s3_helper.expects(:s3_bucket).returns(s3_bucket)
+        s3_bucket.expects(:object).with("original/1X/#{upload.sha1}.png").returns(s3_object)
+        s3_object.expects(:acl).returns(s3_object)
+        s3_object.expects(:put).with(acl: "public-read").returns(s3_object)
+
+        expect(store.update_upload_ACL(upload, type: "image")).to be_truthy
+      end
+
     end
   end
 
@@ -424,6 +447,23 @@ describe FileStore::S3Store do
       s3_object.expects(:presigned_url).with(:get, opts)
 
       expect(store.url_for(upload, force_download: true)).not_to eq(upload.url)
+    end
+  end
+
+  describe ".signed_url_for_path" do
+    include_context "s3 helpers"
+    let(:s3_object) { stub }
+
+    it "returns signed URL for a given path" do
+      s3_helper.expects(:s3_bucket).returns(s3_bucket).at_least_once
+      s3_bucket.expects(:object).with("special/optimized/file.png").returns(s3_object)
+      opts = {
+        expires_in: S3Helper::DOWNLOAD_URL_EXPIRES_AFTER_SECONDS
+      }
+
+      s3_object.expects(:presigned_url).with(:get, opts)
+
+      expect(store.signed_url_for_path("special/optimized/file.png")).not_to eq(upload.url)
     end
   end
 

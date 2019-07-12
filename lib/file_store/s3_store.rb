@@ -182,6 +182,8 @@ module FileStore
           update_ACL(key, secure_file)
         end
       end
+
+      true
     end
 
     def download_file(upload, destination_path)
