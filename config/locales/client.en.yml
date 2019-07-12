@@ -661,6 +661,7 @@ en:
         only_admins: "Only admins"
         mods_and_admins: "Only moderators and Admins"
         members_mods_and_admins: "Only group members, moderators and admins"
+        owners_mods_and_admins: "Only group owners, moderators and admins"
         everyone: "Everyone"
       notifications:
         watching:
@@ -3187,9 +3188,12 @@ en:
             visibility_levels:
               title: "Who can see this group?"
               public: "Everyone"
-              members: "Group owners, members and admins"
+              logged_on_users: "Logged on users"
+              members: "Group owners, members"
               staff: "Group owners and staff"
-              owners: "Group owners and admins"
+              owners: "Group owners"
+              description: "Admins can see all groups."
+
           membership:
             automatic: Automatic
             trust_level: Trust Level
