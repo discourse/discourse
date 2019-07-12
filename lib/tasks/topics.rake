@@ -83,6 +83,25 @@ task "topics:watch_all_replied_topics" => :environment do
   puts "", "Done"
 end
 
+task "topics:update_fancy_titles" => :environment do
+  if !SiteSetting.title_fancy_entities?
+    puts "fancy topic titles are disabled"
+    return
+  end
+
+  DB.exec("UPDATE topics SET fancy_title = NULL")
+
+  total = Topic.count
+  count = 0
+
+  Topic.find_each do |topic|
+    topic.fancy_title
+    print_status(count += 1, total)
+  end
+
+  puts "", "Done"
+end
+
 def print_status(current, max)
   print "\r%9d / %d (%5.1f%%)" % [current, max, ((current.to_f / max.to_f) * 100).round(1)]
 end

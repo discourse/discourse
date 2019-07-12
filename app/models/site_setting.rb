@@ -3,6 +3,7 @@
 require 'site_setting_extension'
 require_dependency 'global_path'
 require_dependency 'site_settings/yaml_loader'
+require 'htmlentities'
 
 class SiteSetting < ActiveRecord::Base
   extend GlobalPath
@@ -122,6 +123,7 @@ class SiteSetting < ActiveRecord::Base
     @attachment_content_type_blacklist_regex = nil
     @attachment_filename_blacklist_regex = nil
     @unicode_username_whitelist_regex = nil
+    @pretty_quote_entities = nil
   end
 
   def self.attachment_content_type_blacklist_regex
@@ -135,6 +137,22 @@ class SiteSetting < ActiveRecord::Base
   def self.unicode_username_character_whitelist_regex
     @unicode_username_whitelist_regex ||= SiteSetting.unicode_username_character_whitelist.present? \
       ? Regexp.new(SiteSetting.unicode_username_character_whitelist) : nil
+  end
+
+  def self.pretty_quote_entities
+    @pretty_quote_entities ||= begin
+      htmlentities = HTMLEntities.new
+      quotation_marks = SiteSetting.markdown_typographer_quotation_marks
+        .split("|")
+        .map { |quote| htmlentities.encode(quote, :basic, :named, :decimal) }
+
+      {
+        double_left_quote: quotation_marks[0],
+        double_right_quote: quotation_marks[1],
+        single_left_quote: quotation_marks[2],
+        single_right_quote: quotation_marks[3]
+      }
+    end
   end
 
   # helpers for getting s3 settings that fallback to global
