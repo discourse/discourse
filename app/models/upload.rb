@@ -149,9 +149,9 @@ class Upload < ActiveRecord::Base
     return false if self.for_theme || self.for_site_setting
 
     if FileHelper.is_supported_image?(self.original_filename)
-      return Discourse.store.secure_images_enabled?
+      Discourse.store.secure_images_enabled?
     else
-      return SiteSetting.prevent_anons_from_downloading_files
+      SiteSetting.prevent_anons_from_downloading_files
     end
   end
 

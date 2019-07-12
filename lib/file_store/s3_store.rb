@@ -93,7 +93,7 @@ module FileStore
     end
 
     def secure_images_enabled?
-      SiteSetting.secure_images && SiteSetting.login_required
+      SiteSetting.secure_images? && SiteSetting.login_required?
     end
 
     def purge_tombstone(grace_period)

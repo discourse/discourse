@@ -280,7 +280,7 @@ basic:
     default: true
   enable_badge_sql:
     client: true
-    default: true
+    default: false
     hidden: true
   enable_whispers:
     client: true
