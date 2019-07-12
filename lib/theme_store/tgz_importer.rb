@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'zip'
+require 'import_export/zip_utils'
 
 module ThemeStore; end
 
@@ -16,18 +16,13 @@ class ThemeStore::TgzImporter
   def import!
     FileUtils.mkdir(@temp_folder)
 
-    if @filename.include?('.zip')
-      name = @filename.split('/').last.gsub('.zip', '')
+    Dir.chdir(@temp_folder) do
+      if @filename.include?('.zip')
+        ZipUtils.new.unzip_directory(@temp_folder, @filename)
 
-      Dir.chdir(@temp_folder) do
-        Zip::File.open(@filename) do |zip_file|
-          zip_file.each { |entry| entry.extract(name) }
-        end
-
-        Discourse::Utils.execute_command("tar", "-xvf", name, "--strip", "1")
-      end
-    else
-      Dir.chdir(@temp_folder) do
+        # --strip 1 equivalent
+        FileUtils.mv(Dir.glob("#{@temp_folder}/*/*"), @temp_folder)
+      else
         Discourse::Utils.execute_command("tar", "-xzvf", @filename, "--strip", "1")
       end
     end
@@ -59,7 +54,7 @@ class ThemeStore::TgzImporter
 
   def all_files
     Dir.chdir(@temp_folder) do
-      Dir.glob("**/*").reject { |f| File.directory?(f) }
+      Dir.glob("**/**").reject { |f| File.directory?(f) }
     end
   end
 

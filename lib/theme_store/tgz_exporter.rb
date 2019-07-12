@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'zip'
-
 module ThemeStore; end
 
 class ThemeStore::TgzExporter
@@ -58,22 +56,10 @@ class ThemeStore::TgzExporter
   end
 
   private
+
   def export_package
     export_to_folder
 
-    Dir.chdir(@temp_folder) do
-      tar_filename = "#{@export_name}.tar"
-      Discourse::Utils.execute_command('tar', '--create', '--file', tar_filename, @export_name, failure_message: "Failed to tar theme.")
-
-      zip_filename = "#{tar_filename}.zip"
-      absolute_path = "#{@temp_folder}/#{tar_filename}"
-      Zip::File.open(zip_filename, Zip::File::CREATE) do |zipfile|
-        zipfile.add(tar_filename, absolute_path)
-        zipfile.close
-      end
-
-      "#{absolute_path}.zip"
-    end
+    Dir.chdir(@temp_folder) { ZipUtils.new.zip_directory(@temp_folder, @export_name) }
   end
-
 end
