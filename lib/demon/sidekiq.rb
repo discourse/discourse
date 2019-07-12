@@ -15,13 +15,17 @@ class Demon::Sidekiq < Demon::Base
 
   def self.trigger_heartbeat(name)
     $redis.hset(queues_last_heartbeat_hash_key, name, Time.new.to_i.to_s)
+    extend_expiry(queues_last_heartbeat_hash_key)
   end
 
   def self.get_queue_last_heartbeat(name)
+    extend_expiry(queues_last_heartbeat_hash_key)
     $redis.hget(queues_last_heartbeat_hash_key, name).to_i
   end
 
   def self.heartbeat_queues
+    extend_expiry(heartbeat_queues_list_key)
+    extend_expiry(queues_last_heartbeat_hash_key)
     queues = $redis.lrange(heartbeat_queues_list_key, 0, -1)
 
     queues.select! do |queue|
@@ -39,6 +43,7 @@ class Demon::Sidekiq < Demon::Base
   def self.create_heartbeat_queue(pid)
     queue = "#{SecureRandom.hex}_#{pid}"
     $redis.lpush(heartbeat_queues_list_key, queue)
+    extend_expiry(heartbeat_queues_list_key)
     queue
   end
 
@@ -50,6 +55,10 @@ class Demon::Sidekiq < Demon::Base
   def self.before_start
     # cleans up heartbeat queues from previous boot up
     Sidekiq::Queue.all.each { |queue| queue.clear if queue.name[/^\h{32}_\d+$/] }
+  end
+
+  def self.extend_expiry(key)
+    $redis.expire(key, 60 * 60)
   end
 
   def self.prefix
