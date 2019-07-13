@@ -238,6 +238,7 @@ Discourse::Application.routes.draw do
 
       get 'robots' => 'robots_txt#show'
       put 'robots.json' => 'robots_txt#update'
+      delete 'robots.json' => 'robots_txt#reset'
     end
 
     resources :embeddable_hosts, constraints: AdminConstraint.new

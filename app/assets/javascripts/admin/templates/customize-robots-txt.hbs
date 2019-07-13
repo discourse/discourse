@@ -7,9 +7,8 @@
     </div>
   {{/if}}
   {{textarea
-    value=buffer
-    class="robots-txt-input"
-    rows=30}}
+    value=buffered.robots_txt
+    class="robots-txt-input"}}
   {{#save-controls model=this action=(action "save") saved=saved saveDisabled=saveDisabled}}
     {{d-button
       class="btn-default"

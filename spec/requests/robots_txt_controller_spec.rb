@@ -26,6 +26,27 @@ RSpec.describe RobotsTxtController do
 
   describe '#index' do
 
+    context "header for when the content is overridden" do
+      it "is not prepended if there are no overrides" do
+        sign_in(Fabricate(:admin))
+        get '/robots.txt'
+        expect(response.body).not_to start_with(RobotsTxtController::OVERRIDDEN_HEADER)
+      end
+
+      it "is prepended if there are overrides and the user is admin" do
+        SiteSetting.overridden_robots_txt = "overridden_content"
+        sign_in(Fabricate(:admin))
+        get '/robots.txt'
+        expect(response.body).to start_with(RobotsTxtController::OVERRIDDEN_HEADER)
+      end
+
+      it "is not prepended if the user is not admin" do
+        SiteSetting.overridden_robots_txt = "overridden_content"
+        get '/robots.txt'
+        expect(response.body).not_to start_with(RobotsTxtController::OVERRIDDEN_HEADER)
+      end
+    end
+
     context 'subfolder' do
       it 'prefixes the rules with the directory' do
         Discourse.stubs(:base_uri).returns('/forum')

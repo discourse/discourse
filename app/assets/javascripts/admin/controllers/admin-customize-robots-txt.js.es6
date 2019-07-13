@@ -1,20 +1,16 @@
 import computed from "ember-addons/ember-computed-decorators";
 import { ajax } from "discourse/lib/ajax";
+import { bufferedProperty } from "discourse/mixins/buffered-content";
+import { propertyEqual } from "discourse/lib/computed";
 
-export default Ember.Controller.extend({
+export default Ember.Controller.extend(bufferedProperty("model"), {
   saved: false,
   isSaving: false,
-  buffer: null,
-
-  @computed("buffer", "model.content")
-  saveDisabled(buffer, orig) {
-    return buffer === orig;
-  },
-
+  saveDisabled: propertyEqual("model.robots_txt", "buffered.robots_txt"),
   resetDisbaled: Ember.computed.not("model.overridden"),
 
   actions: {
-    save(content = this.buffer) {
+    save() {
       this.setProperties({
         isSaving: true,
         saved: false
@@ -22,22 +18,29 @@ export default Ember.Controller.extend({
 
       ajax("robots.json", {
         method: "PUT",
-        data: { content }
+        data: { robots_txt: this.buffered.get("robots_txt") }
       })
-        .then(model => {
-          this.setProperties({
-            saved: true,
-            model: model,
-            buffer: model.content
-          });
+        .then(data => {
+          this.commitBuffer();
+          this.set("saved", true);
+          this.set("model.overridden", data.overridden);
         })
-        .finally(() => {
-          this.set("isSaving", false);
-        });
+        .finally(() => this.set("isSaving", false));
     },
 
     reset() {
-      this.send("save", "");
+      this.setProperties({
+        isSaving: true,
+        saved: false
+      });
+      ajax("robots.json", { method: "DELETE" })
+        .then(data => {
+          this.buffered.set("robots_txt", data.robots_txt);
+          this.commitBuffer();
+          this.set("saved", true);
+          this.set("model.overridden", false);
+        })
+        .finally(() => this.set("isSaving", false));
     }
   }
 });
