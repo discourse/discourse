@@ -1,4 +1,3 @@
-import computed from "ember-addons/ember-computed-decorators";
 import { ajax } from "discourse/lib/ajax";
 import { bufferedProperty } from "discourse/mixins/buffered-content";
 import { propertyEqual } from "discourse/lib/computed";
