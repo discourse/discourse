@@ -9,9 +9,7 @@ export default {
     const isSupported = isSecured && "serviceWorker" in navigator;
 
     if (isSupported) {
-      const isApple = !!navigator.platform.match(/(Mac|iPhone|iPod|iPad)/i);
-
-      if (Discourse.ServiceWorkerURL && !isApple) {
+      if (Discourse.ServiceWorkerURL) {
         navigator.serviceWorker.getRegistrations().then(registrations => {
           for (let registration of registrations) {
             if (

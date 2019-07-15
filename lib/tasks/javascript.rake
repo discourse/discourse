@@ -90,6 +90,26 @@ task 'javascript:update' do
     }, {
       # TODO: drop when we eventually drop IE11, this will land in iOS in version 13
       source: 'intersection-observer/intersection-observer.js'
+    }, {
+      source: 'workbox-sw/build/.',
+      destination: 'workbox',
+      public: true
+    }, {
+      source: 'workbox-routing/build/.',
+      destination: 'workbox',
+      public: true
+    }, {
+      source: 'workbox-core/build/.',
+      destination: 'workbox',
+      public: true
+    }, {
+      source: 'workbox-strategies/build/.',
+      destination: 'workbox',
+      public: true
+    }, {
+      source: 'workbox-expiration/build/.',
+      destination: 'workbox',
+      public: true
     }
   ]
 
