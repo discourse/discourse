@@ -3625,7 +3625,10 @@ en:
           love:
             name: "love"
             description: "The like button's color."
-
+        robots:
+          title: "Override your site's robots.txt file:"
+          warning: "Warning: overriding the robots.txt file will prevent all future changes to the site settings that modify robots.txt from being applied."
+          overridden: Your site's default robots.txt file is overridden.
       email:
         title: "Emails"
         settings: "Settings"
