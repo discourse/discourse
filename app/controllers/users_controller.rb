@@ -1065,10 +1065,7 @@ class UsersController < ApplicationController
       @confirmed = true
     end
 
-    respond_to do |format|
-      format.json { render json: success_json }
-      format.html { render layout: 'no_ember' }
-    end
+    render layout: 'no_ember'
   end
 
   def list_second_factors
