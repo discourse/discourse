@@ -2372,12 +2372,12 @@ describe UsersController do
 
   describe '#confirm_admin' do
     it "fails without a valid token" do
-      get "/u/confirm-admin/invalid-token.josn"
+      get "/u/confirm-admin/invalid-token.json"
       expect(response).not_to be_successful
     end
 
     it "fails with a missing token" do
-      get "/u/confirm-admin/a0a0a0a0a0.josn"
+      get "/u/confirm-admin/a0a0a0a0a0.json"
       expect(response).to_not be_successful
     end
 
@@ -2385,7 +2385,7 @@ describe UsersController do
       user = Fabricate(:user)
       ac = AdminConfirmation.new(user, Fabricate(:admin))
       ac.create_confirmation
-      get "/u/confirm-admin/#{ac.token}.josn"
+      get "/u/confirm-admin/#{ac.token}.json"
       expect(response.status).to eq(200)
 
       user.reload
@@ -2398,7 +2398,7 @@ describe UsersController do
 
       ac = AdminConfirmation.new(user, admin)
       ac.create_confirmation
-      get "/u/confirm-admin/#{ac.token}.josn", params: { token: ac.token }
+      get "/u/confirm-admin/#{ac.token}.json", params: { token: ac.token }
       expect(response.status).to eq(200)
 
       user.reload
@@ -2411,7 +2411,7 @@ describe UsersController do
 
       ac = AdminConfirmation.new(user, Fabricate(:admin))
       ac.create_confirmation
-      get "/u/confirm-admin/#{ac.token}.josn"
+      get "/u/confirm-admin/#{ac.token}.json"
       expect(response).to_not be_successful
 
       user.reload
@@ -2423,7 +2423,7 @@ describe UsersController do
         user = Fabricate(:user)
         ac = AdminConfirmation.new(user, Fabricate(:admin))
         ac.create_confirmation
-        post "/u/confirm-admin/#{ac.token}.josn"
+        post "/u/confirm-admin/#{ac.token}.json"
         expect(response.status).to eq(200)
 
         user.reload
