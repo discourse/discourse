@@ -1929,6 +1929,10 @@ uncategorized:
     default: 50000
     hidden: true
 
+  overridden_robots_txt:
+    default: ""
+    hidden: true
+
 user_preferences:
   default_email_digest_frequency:
     enum: "DigestEmailSiteSetting"
