@@ -7,7 +7,7 @@
 
 ur:
   site_settings:
-    discourse_narrative_bot_enabled: 'ڈِسکورس نَرَیٹِو بَوٹ (ڈِسکوبَوٹ) فعال کریں'
+    discourse_narrative_bot_enabled: "ڈِسکورس نَرَیٹِو بَوٹ (ڈِسکوبَوٹ) فعال کریں"
     disable_discourse_narrative_bot_welcome_post: "ڈِسکورس نَرَیٹِو بوٹ کی طرف سے استقبالیہ پوسٹ غیر فعال کریں"
     discourse_narrative_bot_ignored_usernames: "صارف نام جو ڈِسکورس نَرَیٹِو بوٹ نظر انداز کرے"
     discourse_narrative_bot_disable_public_replies: "ڈِسکورس نَرَیٹِو بوٹ کی طرف سے عوامی جوابات غیر فعال کریں"
@@ -82,7 +82,7 @@ ur:
       results: |-
         > :left_speech_bubble: _%{quote}_ &mdash; %{author}
     magic_8_ball:
-      trigger: 'قسمت'
+      trigger: "قسمت"
       answers:
         '1': "یہ یقینی ھے"
         '2': "واضع طور پر ایسا ہے"
@@ -107,9 +107,9 @@ ur:
       result: |-
         > :crystal_ball: %{result}
     track_selector:
-      reset_trigger: 'شروع کیجیے'
-      skip_trigger: 'سکِپ کیجیے'
-      help_trigger: 'مدد دکھائیں'
+      reset_trigger: "شروع کیجیے"
+      skip_trigger: "سکِپ کیجیے"
+      help_trigger: "مدد دکھائیں"
       random_mention:
         reply: |-
           ہیلو! جاننے کیلئے کہ میں کیا کر سکتا ہوں، `@%{discobot_username} %{help_trigger}` کہیں۔
@@ -298,11 +298,11 @@ ur:
 
           (اگر آپ مزید جاننے کیلئے مجھ سے دوبارہ بات کرنا چاہتے ہیں، تو کسی بھی وقت مجھے صرف پیغام بھیجیں یا `@%{discobot_username}` زکر کریں!)
       certificate:
-        alt: 'کامیابی کا سرٹیفِکیٹ'
+        alt: "کامیابی کا سرٹیفِکیٹ"
     advanced_user_narrative:
-      reset_trigger: 'اَیڈوانسڈ ٹیوٹوریل'
+      reset_trigger: "اَیڈوانسڈ ٹیوٹوریل"
       cert_title: "اَیڈوانسڈ صارف ٹیوٹوریل کی کامیاب تکمیل کے اعتراف میں"
-      title: ':arrow_up: اَیڈوانسڈ صارف کی صلاحیتیں'
+      title: ":arrow_up: اَیڈوانسڈ صارف کی صلاحیتیں"
       start_message: |-
         ایک _اَیڈوانسڈ_ صارف کے طور پر، کیا آپ نے ابھی تک [اپنے ترجیحات کے صفحے](%{base_uri}/my/preferences) کا دورہ کیا ہے @%{username}؟ سائیٹ پر اپنے تجربے کو اپنی مرضی کے مطابق ڑھالنے کیلئے بہت سے طریقے ہیں، جیسے کہ سیاہ یا ہلکی تھِیم کو منتخب کیا جائے۔
 
@@ -332,7 +332,7 @@ ur:
 
           گفتگو کے تسلسل کو برقرار رکھنے کیلئے، حذف فوری طور پر انجام نہیں ہوتا، لہٰذا پوسٹ کچھ وقت کے بعد ہٹا دیی جائے گی۔
       recover:
-        deleted_post_raw: '%{discobot_username}نے میری پوسٹ کو کیوں حذف کردیا؟ :anguished:'
+        deleted_post_raw: "%{discobot_username}نے میری پوسٹ کو کیوں حذف کردیا؟ :anguished:"
         instructions: |-
           ارے نہیں! لگتا ہے کہ جو پوسٹ میں نے آپ کیلئے بنائی تھی، اُسے غلطی سے میں نے حذف کر دیا۔
 
@@ -425,4 +425,4 @@ ur:
 
           ابھی کے لئے الوداع! اگر آپ دوبارہ میرے ساتھ بات کرنا چاہیں، تو مجھے کسی بھی وقت ایک پیغام بھیجیں :sunglasses:
       certificate:
-        alt: 'اَیڈوانسڈ صارف ٹریک کا کامیابی کا سرٹیفِکیٹ'
+        alt: "اَیڈوانسڈ صارف ٹریک کا کامیابی کا سرٹیفِکیٹ"

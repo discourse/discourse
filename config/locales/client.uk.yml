@@ -393,6 +393,7 @@ uk:
       admin_delete: "Видалити"
       users: "Користувачі"
       muted_users: "Ігнорувати"
+      tracked_topics_link: "Показати"
       api_approved: "Схвалено:"
       staff_counters:
         flags_given: "корисні позначки"
@@ -428,6 +429,8 @@ uk:
         regenerate: "Перегенерувати"
         disable: "Відключити"
         enable: "Включити"
+      second_factor:
+        edit: "Редагувати"
       change_about:
         title: "Змінити Про мене"
       change_username:
@@ -1437,6 +1440,8 @@ uk:
           install_popular: "Популярні"
           about_theme: "Про"
           license: "Ліцензія"
+          enable: "Включити"
+          disable: "Відключити"
           update_to_latest: "Оновити до останьої"
           add: "Додати"
           scss:

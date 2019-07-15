@@ -29,6 +29,7 @@ zh_CN:
   posts: "帖子"
   loading: "载入中"
   powered_by_html: '采用 <a href="http://www.discourse.org">Discourse</a>，启用 JavaScript 以获得最佳体验'
+  sign_up: "注册"
   log_in: "登录"
   submit: "提交"
   purge_reason: "自动删除废弃，停用账户"
@@ -149,6 +150,7 @@ zh_CN:
     embed:
       load_from_remote: "载入帖子时出错了。"
     site_settings:
+      invalid_category_id: "你指定的一个分类不存在"
       invalid_choice:
         other: "你指定了无效的选择%{name}"
       default_categories_already_selected: "不能选择一个已经用于另一个列表的分类。"
@@ -1160,7 +1162,6 @@ zh_CN:
   site_settings:
     censored_words: "将被自动替换为 &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "自动删除被隐藏超过 30 天的帖子。"
-    default_locale: "此Discourse实例的默认语言。你可以在以下处替换系统生成的类别和主题的文本<a href='/admin/customize/site_texts' target='_blank'>自定义/文本内容</a>。"
     allow_user_locale: "允许用户选择他们自己的语言界面"
     set_locale_from_accept_language_header: "为未登录用户按照他们的浏览器发送的请求头部设置界面语言。（实验性，无法和匿名缓存共同使用）"
     support_mixed_text_direction: "支持混合的从左到右和从右到左的文本方向。"
@@ -1220,7 +1221,7 @@ zh_CN:
     post_onebox_maxlength: "Onebox 处理后的 Discourse 帖子的最大字符长度"
     onebox_domains_blacklist: "不会被 Onebox 的域名列表。"
     inline_onebox_domains_whitelist: "若链接不带标题会以微型形式被 Onebox 的域名列表。"
-    enable_inline_onebox_on_all_domains: "忽略  inline_onebox_domain_whitelist 站点设定并在所有域允许一致 Onebox 。"
+    enable_inline_onebox_on_all_domains: "忽略 inline_onebox_domain_whitelist 站点设定并在所有域允许一致 Onebox 。"
     max_oneboxes_per_post: "帖子中最多的 Onebox 数量。"
     logo: "你网站左上角的logo图片。使用高120且宽高比大于3:1的宽矩形图像。如果留空，将显示网站标题文本。"
     logo_small: "出现在你站点左上角的小号标志图片，当滚动后可见。使用方形120×120图像。如果留空，将显示主页图标。"
@@ -1652,7 +1653,7 @@ zh_CN:
     likes_notification_consolidation_window_mins: "当达到阈值时多个赞的提醒合并到单个的持续时间。阈值可通过`SiteSetting.likes_notification_consolidation_threshold`配置。"
     automatically_unpin_topics: "当用户到达底部时自动解除主题置顶。"
     read_time_word_count: "一分钟阅读的词的数量，用于估计阅读时间。"
-    topic_page_title_includes_category: "主题页面标题包含分类名。"
+    topic_page_title_includes_category: "主题页面<a href='https://developer.mozilla.org/en-US/docs/Web/HTML/Element/title' target='_blank'>标题标签</a>包含分类名。"
     native_app_install_banner_ios: "在iOS设备上为普通用户（信任等级1及以上）显示DiscourseHub app横幅。"
     native_app_install_banner_android: "在Android设备上为普通用户（信任等级1及以上）显示DiscourseHub app横幅。"
     share_anonymized_statistics: "分享匿名化的使用数据。"
@@ -1805,6 +1806,7 @@ zh_CN:
         key: "www.example.com"
         value: "SSO密钥"
   search:
+    extreme_load_error: "站点处于高负荷状态，搜索已关闭，稍后再试。"
     within_post: "#{{post_number}} 由 {{username}}"
     types:
       category: "分类"
@@ -2526,14 +2528,6 @@ zh_CN:
     ignored_users_summary:
       title: "忽视的用户超过了阈值"
       subject_template: "一个用户被许多用户忽视"
-      text_body_template: |
-        你好，
-
-        这是一个来自%{site_name}自动发出的消息以提醒你[用户资料](%{base_url}/u/%{username}/summary)已被%{ignores_threshold}个用户忽视。这表明你的社区有遇到了问题。
-
-        你可能需要审核这名用户最近的帖子，也可能是[被忽视用户报告](%{base_url}/admin/reports/top_ignore_users)中的其他用户。
-
-        如需其它指导，请参考[社区守则](%{base_url}/guidelines)。
     too_many_spam_flags:
       title: "太多垃圾标记"
       subject_template: "新账户被暂时封禁"
@@ -3083,6 +3077,7 @@ zh_CN:
     user_email_post_deleted: "主题被作者删除"
     user_email_user_suspended: "用户被封禁"
     user_email_already_read: "用户已阅读此帖"
+    user_email_access_denied: "用户不被允许查看此帖子"
     sender_message_blank: "消息空"
     sender_message_to_blank: "message.to为空"
     sender_text_part_body_blank: "text_part.body为空"
@@ -3141,10 +3136,10 @@ zh_CN:
 
       你可能想表达你的不同意。这没问题。但是，记住_批评观点，而不是人_。请避免：
 
-      *   指名道姓。
-      *   人生攻击。
-      *   回复帖子无关于帖子的内容。
-      *   下意识的反驳。
+      * 指名道姓。
+      * 人生攻击。
+      * 回复帖子无关于帖子的内容。
+      * 下意识的反驳。
 
       相反，提供合理的观点改善讨论。
 
@@ -3173,10 +3168,10 @@ zh_CN:
 
       粗鲁这样的行为会破坏健康的讨论：
 
-      *   文明。不要发表任何理智的人会认为冒犯的、过分的或招致怨恨的言论。
-      *   拒绝色情。不要发表任何淫秽或性暗示的东西。
-      *   尊重每一个人。不要骚扰或者让别人难过，检视别人，或暴露他们的个人信息。
-      *   尊重我们的论坛。不要发表广告或者其他垃圾信息。
+      * 文明。不要发表任何理智的人会认为冒犯的、过分的或招致怨恨的言论。
+      * 拒绝色情。不要发表任何淫秽或性暗示的东西。
+      * 尊重每一个人。不要骚扰或者让别人难过，检视别人，或暴露他们的个人信息。
+      * 尊重我们的论坛。不要发表广告或者其他垃圾信息。
 
       这些条款不是法律条文，并且没有准确的定义 &mdash; 避免任何做关于他们的_可能擦边_的事。如果你不确定，问问自己的帖子是否能出现在纽约时报的头版头条上。
 
@@ -3188,11 +3183,11 @@ zh_CN:
 
       花一点时间让东西出现在正确的位置，这样我们能花更多的时间在讨论上而非清理格式。所以：
 
-      *   不要在错误的分类发表新主题。
-      *   不要在多个主题中回复同样的内容。
-      *   不要发布没有内容的回复。
-      *   不要在中途改变主题。
-      *   不要在你的帖子中签名 &mdash; 每一贴都附有你的个人信息。
+      * 不要在错误的分类发表新主题。
+      * 不要在多个主题中回复同样的内容。
+      * 不要发布没有内容的回复。
+      * 不要在中途改变主题。
+      * 不要在你的帖子中签名 &mdash; 每一贴都附有你的个人信息。
 
       比起发表“+1”或者“同意”，使用赞按钮。比起将帖子带向一个决然不同的方向，使用“回复为关联主题”。
 
@@ -3986,6 +3981,7 @@ zh_CN:
         title: "批准"
       approve_post:
         title: "批准帖子"
+        confirm_closed: "此主题已关闭。你真的要创建帖子吗？"
       reject_post:
         title: "否决帖子"
       approve_user:

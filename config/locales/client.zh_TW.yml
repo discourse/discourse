@@ -700,8 +700,8 @@ zh_TW:
           靜音話題和分類不包含在這些郵件中。
         individual: "每當有新貼文時，傳送郵件通知給我"
         individual_no_echo: "除了我的貼文以外，每當有新貼文時，傳送郵件通知給我"
-        many_per_day: "每當有新貼文時，傳送郵件通知給我。（每天約  {{dailyEmailEstimate}} 封）"
-        few_per_day: "每當有新貼文時，傳送郵件通知給我。（每天約 2  封）"
+        many_per_day: "每當有新貼文時，傳送郵件通知給我。（每天約 {{dailyEmailEstimate}} 封）"
+        few_per_day: "每當有新貼文時，傳送郵件通知給我。（每天約 2 封）"
         warning: "已啟用郵寄名單模式。郵件通知設定已被複寫。"
       tag_settings: "標籤"
       watched_tags: "已關注"
@@ -732,9 +732,7 @@ zh_TW:
       muted_users_instructions: "不顯示來自這些使用者的所有通知。"
       ignored_users: "忽略"
       ignored_users_instructions: "不顯示來自這些使用者的所有貼文與通知。"
-      muted_topics_link: "顯示已靜音的話題"
-      watched_topics_link: "顯示已關注的話題"
-      tracked_topics_link: "顯示已追蹤的話題"
+      tracked_topics_link: "顯示"
       automatically_unpin_topics: "當我完整閲讀了話題時自動解除置頂。"
       apps: "應用"
       revoke_access: "撤銷許可"
@@ -786,7 +784,6 @@ zh_TW:
         disable: "禁用"
         enable: "啟用"
         enable_long: "啟用備用碼"
-        manage: "管理備用碼"
         copied_to_clipboard: "複製至剪貼簿"
         copy_to_clipboard_error: "複製至剪貼簿時發生錯誤"
         remaining_codes: "你還剩下 <strong>{{count}}</strong> 個可使用的備用碼"
@@ -796,8 +793,6 @@ zh_TW:
           description: "每個備用碼僅可使用一次。請將它們保存在安全且可被找到的地方。"
       second_factor:
         title: "兩步驟驗證"
-        disable: "停用兩步驟驗證"
-        enable: "啟用兩步驟驗證"
         confirm_password_description: "請確認你的密碼以繼續"
         label: "代碼"
         rate_limit: "嘗試其他驗證代碼前請稍後"
@@ -812,6 +807,7 @@ zh_TW:
         oauth_enabled_warning: "請注意，一旦啟用二步驟驗證，將自動關閉社群登入。"
         use: "<a href>使用身分驗證應用程式</a>"
         enforced_notice: "在進入網站前，需啟用兩個步驟驗證以增強帳號安全性"
+        edit: "編輯"
       change_about:
         title: "修改關於我"
         error: "修改設定值時發生錯誤"
@@ -1102,9 +1098,6 @@ zh_TW:
       enabled: "站點正處於只讀模式。你可以繼續瀏覽，但是回覆、讚和其他操作暫時被禁用。"
       login_disabled: "在唯讀模式下不能登入"
       logout_disabled: "站點在只讀模式下無法登出。"
-    too_few_topics_and_posts_notice: "一起來<a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>開始討論</a>吧！目前有 <strong>%{currentTopics}/%{requiredTopics}</strong> 個話題與 <strong>%{currentPosts}/%{requiredPosts}</strong> 個貼文。新的訪客需要有一些話題可以閱讀與回覆。"
-    too_few_topics_notice: "一起來<a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>開始討論</a>吧！目前有 <strong>%{currentTopics}/%{requiredTopics}</strong> 個話題。新的訪客需要有一些話題可以閱讀與回覆。"
-    too_few_posts_notice: "一起來<a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>開始討論</a>吧！目前有 <strong>%{currentPosts}/%{requiredPosts}</strong> 個貼文。新的訪客需要有一些話題可以閱讀與回覆。"
     learn_more: "進一步了解..."
     all_time: "總數"
     all_time_desc: "開啟的話題總量"
@@ -1480,7 +1473,7 @@ zh_TW:
         quoted: '{{username}}在“{{topic}}”引用了你的貼文 - {{site_title}}'
         replied: '{{username}}在“{{topic}}”回覆了你 - {{site_title}}'
         posted: '{{username}}在“{{topic}}”中發佈了貼文 - {{site_title}}'
-        private_message: '{{username}}  在 "{{topic}}" 中私訊了你- {{site_title}}'
+        private_message: '{{username}} 在 "{{topic}}" 中私訊了你- {{site_title}}'
         linked: '{{username}}在“{{topic}}”中連結了你的貼文 - {{site_title}}'
         watching_first_post: '{{username}} 在 "{{topic}}"中開啟了新話題 - {{site_title}}'
         confirm_title: "通知已啟用-%{site_title}"
@@ -2346,7 +2339,7 @@ zh_TW:
     likes: "讚"
     likes_lowercase:
       other: "個讚"
-    likes_long: "此話題收到了  {{number}}  個讚"
+    likes_long: "此話題收到了 {{number}} 個讚"
     users: "使用者"
     users_lowercase:
       other: "使用者"
@@ -2468,7 +2461,7 @@ zh_TW:
         log_out: "%{shortcut} 退出"
       composing:
         title: "撰寫中"
-        return: "%{shortcut}  回到編輯頁面"
+        return: "%{shortcut} 回到編輯頁面"
         fullscreen: "%{shortcut} 進入全螢幕編輯器"
       actions:
         title: "動作"
@@ -2740,9 +2733,7 @@ zh_TW:
             visibility_levels:
               title: "誰能看到這個群組？"
               public: "所有使用者"
-              members: "群組管理人、會員及系統管理員"
               staff: "群組管理人及管理人員"
-              owners: "群組管理人及系統管理員"
           membership:
             automatic: 自動
             trust_level: 信任等級
@@ -3071,6 +3062,8 @@ zh_TW:
           version: "版本："
           authors: "作者："
           source_url: "來源："
+          enable: "啟用"
+          disable: "禁用"
           required_version:
             error: "由於佈景主題與此版本的 Discourse 不相容，此佈景主題已被自動停用。"
             minimum: "需要 Discourse{{version}} 或更新的版本。"

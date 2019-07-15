@@ -29,6 +29,7 @@ pt:
   posts: "mensagens"
   loading: "A carregar"
   powered_by_html: 'Desenvolvido por <a href="https://www.discourse.org">Discourse</a>, e melhor visualização com o JavaScript ativado'
+  sign_up: "Inscrever-se"
   log_in: "Iniciar Sessão"
   submit: "Submeter"
   purge_reason: "Eliminada automaticamente como abandonada, conta desativada"
@@ -60,7 +61,7 @@ pt:
       name_too_long: "Existe uma configuração com um nome demasiado longo. O tamanho máximo é 255"
       default_value_missing: "A configuração `%{name}` não tem um valor predefinido"
       default_not_match_type: "O tipo do valor predefinido para a configuração `%{name}` não é igual ao esperado pela configuração."
-      default_out_range: "O valor predefinido da configuração  `%{name}` não se encontra nos valores possiveis."
+      default_out_range: "O valor predefinido da configuração `%{name}` não se encontra nos valores possiveis."
       enum_value_not_valid: "O valor selecionado não é um dos enumerados."
       number_value_not_valid: "O valor novo não está no intervalo permitido."
       number_value_not_valid_min_max: "Deve estar entre %{min} e %{max}."
@@ -606,7 +607,7 @@ pt:
     otp_confirmation:
       confirm_title: "Continuar para %{site_name}"
     no_trust_level: "Desculpe, não tem o nível de confiança requerido para aceder à API de utilizador"
-    generic_error: "Desculpe, não somos capazes de gerar chaves  API de uitlizador, esta funcionalidade poderá estar desactivada pela administração do site"
+    generic_error: "Desculpe, não somos capazes de gerar chaves API de uitlizador, esta funcionalidade poderá estar desactivada pela administração do site"
     scopes:
       message_bus: "Actualizações ao vivo"
       notifications: "Ler e remover notificações"
@@ -867,7 +868,7 @@ pt:
     summary_score_threshold: "Pontuação mínima necessária para que uma mensagem seja incluída em 'Resumir Este Tópico'"
     summary_posts_required: "Número mínimo de mensagens num tópico antes que 'Resumir Este Tópico' seja ativo."
     summary_likes_required: "Número mínimo de gostos num tópico antes que 'Resumir Este Tópico' seja ativo."
-    summary_percent_filter: "Quando um utilizador clica em 'Resumir Este Tópico', mostrar as melhores %  de mensagens"
+    summary_percent_filter: "Quando um utilizador clica em 'Resumir Este Tópico', mostrar as melhores % de mensagens"
     enable_personal_messages: "Permitir que utilizadores de nível de confiança 1 (configurável através do nível de confiança mínimo para enviar mensagens) criem mensagens e respostas a mensagens. Note que a equipa de apoio pode mandar mensagens de qualquer maneira."
     enable_long_polling: "O sistema de mensagens usado para notificações pode fazer solicitações longas"
     long_polling_base_url: "URL base usada para solicitação ao servidor (quando um CDN serve conteúdo dinâmico, certifique-se de configurá-lo para a 'pull' original) ex: http://origem.sítio.com"
@@ -900,7 +901,7 @@ pt:
     suppress_reply_when_quoting: "Não mostraR em-resposta-a expansível numa mensagem quando esta cita uma resposta."
     max_reply_history: "Número máximo de respostas a serem expandidas quando se expande em-resposta-a"
     topics_per_period_in_top_summary: "Número de tópicos principais mostrados no resumo padrão de tópicos principais."
-    topics_per_period_in_top_page: "Número de tópicos principais mostrados em  'Mostrar Mais' tópicos principais expandido."
+    topics_per_period_in_top_page: "Número de tópicos principais mostrados em 'Mostrar Mais' tópicos principais expandido."
     redirect_users_to_top_page: "Redirecionar automaticamente os utilizadores novos e ausentes por períodos longos para o topo da página."
     top_page_default_timeframe: "Intervalo de tempo por defeito para a página de visualizações do topo."
     prioritize_username_in_ux: "Mostrar o nome de utilizador primeiro na página de utilizador, cartão de utilizador e publicações (quando o nome desactivado é mostrado primeiro)"
@@ -919,7 +920,7 @@ pt:
     block_common_passwords: "Não permitir palavras-passe que estejam nas 10,000 palavras-passe mais comuns."
     enable_sso: "Ativar inscrição única através de um sítio externo (AVISO: OS ENDEREÇOS DE EMAIL DOS UTILIZADORES *DEVEM* SER VALIDADOS PELO SÍTIO EXTERNO!)"
     sso_url: "URL da terminação de single-sign-on (tem de incluir http:// ou https://)"
-    sso_secret: "String secreta usada para autenticar criptograficamente informação SSO, garanta que tem 10 ou  mais caracteres"
+    sso_secret: "String secreta usada para autenticar criptograficamente informação SSO, garanta que tem 10 ou mais caracteres"
     sso_overrides_bio: "Sobrepõe-se à biografia do utilizador e previne o utilizador de a mudar"
     sso_overrides_email: "Substitui o email local por um email de um sítio externo a partir de um SSO em cada início de sessão, e previne mudanças locais. (AVISO: podem ocorrer discrepâncias devido à normalização de emails locais) "
     sso_overrides_username: "Substitui nomes de utilizadores locais por nomes de utilizadores de sítios externos a partir de um SSO em cada início de sessão, e previne mudanças locais. (AVISO: podem ocorrer discrepâncias devido a diferenças no comprimento/requisitos do nome de utilizador)"
@@ -961,7 +962,7 @@ pt:
     max_topic_invitations_per_day: "Número máximo de convites para tópicos que um utilizador pode enviar por dia."
     alert_admins_if_errors_per_minute: "Número de erros por minuto necessários para disparar um alerta de administração. Um valor maior que 0 desativa esta funcionalidade. NOTA: requer reinício."
     alert_admins_if_errors_per_hour: "Número de erros por hora necessários para disparar um alerta de administração. Um valor maior que 0 desativa esta funcionalidade. NOTA: requer reinício."
-    categories_topics: "Número de tópicos a serem mostrados na página  /categories ."
+    categories_topics: "Número de tópicos a serem mostrados na página /categories ."
     suggested_topics: "Número de tópicos sugeridos mostrados no final de um tópico."
     limit_suggested_to_category: "Apenas mostrar tópicos da categoria atual nos tópicos sugeridos."
     suggested_topics_max_days_old: "Tópicos sugeridos não devem ter mais de n dias de idade."
@@ -1080,8 +1081,8 @@ pt:
     bounce_score_threshold: "Pontuação de redirecionamento máxima a partir da qual paramos de mandar email um utilizador."
     bounce_score_threshold_deactivate: "Pontuação de redirecionamento máxima a partir da qual desactivamos um utilizador."
     reset_bounce_score_after_days: "Automaticamente repor pontuação de redirecionamento após X dias."
-    attachment_content_type_blacklist: "Lista de termos-chave  usados para bloquear anexos com base no tipo de conteúdo."
-    attachment_filename_blacklist: "Lista de termos-chave  usados para bloquear anexos com base no nome do ficheiro."
+    attachment_content_type_blacklist: "Lista de termos-chave usados para bloquear anexos com base no tipo de conteúdo."
+    attachment_filename_blacklist: "Lista de termos-chave usados para bloquear anexos com base no nome do ficheiro."
     enable_forwarded_emails: "[BETA] Permitir aos utilizadores a criação de um tópico via o encaminhamento de um email."
     always_show_trimmed_content: "Mostrar sempre a parte aparada dos emails recebidos. AVISO: poderá revelar endereços de email."
     manual_polling_enabled: "Enviar emails utilizando a API de resposta por email."
@@ -1108,7 +1109,7 @@ pt:
     automatically_download_gravatars: "Transferir Gravatars para os utilizadores após a criação da conta ou alteração de e-mail."
     digest_topics: "Número máximo de publicações populares a mostrar no email de resumo."
     digest_posts: "Número máximo de publicações populares a mostrar no resumo do email."
-    digest_other_topics: "O número máximo de tópicos a mostrar na secção de  \"Novos em tópicos e categorias que segue\" do email de resumo."
+    digest_other_topics: "O número máximo de tópicos a mostrar na secção de \"Novos em tópicos e categorias que segue\" do email de resumo."
     digest_min_excerpt_length: "Tamanho mínimo dos excertos de publicações no email de resumo, em caracteres."
     suppress_digest_email_after_days: "Suprimir emails de resumos para utilizadores não vistos no sítio por mais de (n) dias."
     digest_suppress_categories: "Suprimir estas categorias dos emails de resumo."
@@ -1130,7 +1131,6 @@ pt:
     disable_edit_notifications: "Desativa as notificações de edição pelo utilizador do sistema quando 'download_remote_images_to_local' está ativo."
     automatically_unpin_topics: "Desafixar tópicos automaticamente quando um utilizador chega ao final."
     read_time_word_count: "Contagem de palavras por minuto para calcular tempo estimado de leitura."
-    topic_page_title_includes_category: "Título da página do tópico inclui o nome da categoria."
     share_anonymized_statistics: "Partilhe estatísticas de utilização anonimizadas."
     max_prints_per_hour_per_user: "Número máximo de impressões de páginas /print, por hora, por utlizador. (coloque 0 para desactivar)"
     full_name_required: "O nome completo é um campo obrigatório no perfil de utilizador."
@@ -1155,7 +1155,7 @@ pt:
     approve_post_count: "A quantidade de publicações de um novo utilizador ou utilizador básico que devem ser aprovadas"
     approve_unless_trust_level: "Mensagens para utilizadores abaixo deste nível de confiança devem ser aprovados"
     approve_new_topics_unless_trust_level: "Novos tópicos para utilizadores abaixo deste nível de confiança devem ser aprovados"
-    auto_close_messages_post_count: "Número máximo de publicações numa mensagem  antes de a fechar automáticamente (configurar a 0 para desactivar)"
+    auto_close_messages_post_count: "Número máximo de publicações numa mensagem antes de a fechar automáticamente (configurar a 0 para desactivar)"
     auto_close_topics_post_count: "Número máximo de publicações num tópico antes de o fechar automáticamente (configurar a 0 para desactivar)"
     code_formatting_style: "Botão de código no compositor por defeito usa este estilo de formatação"
     default_email_digest_frequency: "Por defeito, quantas frequentemente os utilizadores recebem emails de resumo."
@@ -1239,8 +1239,8 @@ pt:
     not_seen_in_a_month: "Bem-vindo novamente! Não o vemos há algum tempo. Estes são os tópicos mais populares desde que esteve ausente."
   merge_posts:
     edit_reason:
-      one: "Uma publicação foi unida por  %{username}"
-      other: "%{count} publicações foram unidas por  %{username}"
+      one: "Uma publicação foi unida por %{username}"
+      other: "%{count} publicações foram unidas por %{username}"
     errors:
       different_topics: "Publicações pertencentes a tópicos diferentes não podem ser unidas."
       different_users: "Publicações pertencentes a utilizadores diferentes não podem ser unidas."
@@ -1461,7 +1461,7 @@ pt:
 
         Esta é uma mensagem automática de %{site_name} para informá-lo de que a sua conta está temporariamente suspensa como medida precaucionária.
 
-        Por favor continue a navegar, mas não será capaz de criar novas respostas ou tópicos até um [membro da equipa de apoio](%{base_url}/about)  poder rever a sua conta. Pedimos desculpa pela inconveniência.
+        Por favor continue a navegar, mas não será capaz de criar novas respostas ou tópicos até um [membro da equipa de apoio](%{base_url}/about) poder rever a sua conta. Pedimos desculpa pela inconveniência.
 
         Para orientação adicional, por favor consulte as [orientações da comunidade](%{base_url}/guidelines).
     spam_post_blocked:
@@ -1718,8 +1718,8 @@ pt:
   avatar:
     missing: "Desculpe, mas não conseguimos encontrar nenhum avatar associado com esse endereço de email. Pode tentar carregá-lo novamente?"
   flag_reason:
-    sockpuppet: "Um novo utilizador criou um tópico, no qual um outro novo utilizador com o mesmo IP (%{ip_address})  respondeu. Veja as configurações de <a href='%{base_path}/admin/site_settings/category/spam'>`flag_sockpuppets`</a> nas configurações do sítio."
-    spam_hosts: "Este novo utilizador tentou criar múltiplas publicações com ligações ao mesmo domínio  (%{domain}). Verifique as configurações do sítio de <a href='%{base_path}/admin/site_settings/category/spam'>`newuser_spam_host_threshold`</a>."
+    sockpuppet: "Um novo utilizador criou um tópico, no qual um outro novo utilizador com o mesmo IP (%{ip_address}) respondeu. Veja as configurações de <a href='%{base_path}/admin/site_settings/category/spam'>`flag_sockpuppets`</a> nas configurações do sítio."
+    spam_hosts: "Este novo utilizador tentou criar múltiplas publicações com ligações ao mesmo domínio (%{domain}). Verifique as configurações do sítio de <a href='%{base_path}/admin/site_settings/category/spam'>`newuser_spam_host_threshold`</a>."
   skipped_email_log:
     exceeded_emails_limit: "Excedeu max_emails_per_day_per_user"
     exceeded_bounces_limit: "Ultrapassou bounce_score_threshold"
@@ -1918,7 +1918,7 @@ pt:
       description: Partilhou uma publicação
       long_description: |2
 
-        Este distintivo é concedido pela primeira vez que partilha uma ligação a uma publicação ou tópico utilizando o botão de partilha. Partilhar ligações é uma excelente maneira de mostrar discussões interessantes  ao resto do mundo e de fazer crescer a sua comunidade.
+        Este distintivo é concedido pela primeira vez que partilha uma ligação a uma publicação ou tópico utilizando o botão de partilha. Partilhar ligações é uma excelente maneira de mostrar discussões interessantes ao resto do mundo e de fazer crescer a sua comunidade.
     first_link:
       name: Primeira Ligação
       description: Adicionou uma ligação para outro tópico
@@ -1947,13 +1947,13 @@ pt:
       description: Publicou uma ligação externa com 300 cliques
       long_description: |2
 
-        Este distintivo é concedido quando uma ligação que partilhou obtém 300 cliques. Obrigado por publicar uma ligação fascinante que empurrou a  conversa para a frente e iluminou a discussão!
+        Este distintivo é concedido quando uma ligação que partilhou obtém 300 cliques. Obrigado por publicar uma ligação fascinante que empurrou a conversa para a frente e iluminou a discussão!
     famous_link:
       name: Ligação Famosa
       description: Publicou uma ligação externa com 1000 cliques
       long_description: |2
 
-        Este distintivo é concedido quando uma ligação que partilhou obtém 1000 cliques. Uau!  Publicou uma ligação que significativamente melhorou a conversa ao adicionar detalhe, contexto e informação essencial. Óptimo trabalho!
+        Este distintivo é concedido quando uma ligação que partilhou obtém 1000 cliques. Uau! Publicou uma ligação que significativamente melhorou a conversa ao adicionar detalhe, contexto e informação essencial. Óptimo trabalho!
     appreciated:
       name: Apreciado
       description: Recebeu 1 gosto em 20 publicações
@@ -2083,7 +2083,7 @@ pt:
           contact_email:
             label: "Email"
             placeholder: "name@example.com"
-            description: "Endereço de email da pessoa ou grupo responsáveis por esta comunidade. Usado para notificações críticas tais como denúncias não tratadas, actualizações de segurança, assim  como <a href='%{base_path}/about' target='_blank'>na sua página de descrição</a> para comunicações urgentes com a comunidade."
+            description: "Endereço de email da pessoa ou grupo responsáveis por esta comunidade. Usado para notificações críticas tais como denúncias não tratadas, actualizações de segurança, assim como <a href='%{base_path}/about' target='_blank'>na sua página de descrição</a> para comunicações urgentes com a comunidade."
           contact_url:
             label: "Página da Internet"
             description: "Página da internet com informação geral sobre si ou a sua organização. Será mostrada na <a href='%{base_path}/about' target='_blank'>sua página de descrição</a>."

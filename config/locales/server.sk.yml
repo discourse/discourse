@@ -14,7 +14,7 @@ sk:
     formats:
       short: "%Y-%m-%d"
       short_no_year: "%B %-d"
-      date_only: "%Y,  %B %-d"
+      date_only: "%Y, %B %-d"
   date:
     month_names: [~, Január, Február, Marec, Apríl, Máj, Jún, Júl, August, September, Október, November, December]
     <<: *datetime_formats
@@ -27,6 +27,7 @@ sk:
   posts: "príspevky"
   loading: "Načítava sa"
   powered_by_html: 'Beží na <a href="https://www.discourse.org">Discourse</a>, najlepšie so zapnutým JavaScriptom'
+  sign_up: "Registrovať sa"
   log_in: "Prihlásenie"
   submit: "odošli"
   purge_reason: "Automaticky zmazaný ako opustený, dezaktivovaný účet"
@@ -106,10 +107,10 @@ sk:
     template:
       body: "Nastal problém s nasledujúcimi položkami:"
       header:
-        one: "Uloženie  %{model} zlyhalo kôli chybe"
-        few: "Uloženie  %{model} zlyhalo kôli %{count} chybám"
-        many: "Uloženie  %{model} zlyhalo kôli %{count} chybám "
-        other: "Uloženie  %{model} zlyhalo kôli %{count} chybám "
+        one: "Uloženie %{model} zlyhalo kôli chybe"
+        few: "Uloženie %{model} zlyhalo kôli %{count} chybám"
+        many: "Uloženie %{model} zlyhalo kôli %{count} chybám "
+        other: "Uloženie %{model} zlyhalo kôli %{count} chybám "
     embed:
       load_from_remote: "Nastala chyba pri načítaní príspevku"
     site_settings:
@@ -166,15 +167,15 @@ sk:
   no_images_allowed: "Ľutujeme, noví používatelia nemôžu vkladať obrázky do príspevkov."
   too_many_images:
     one: "Ľutujeme, noví používatelia môžu vložiť maximálne jeden obrázok do príspevku."
-    few: "Ľutujeme, noví používatelia môžu vložiť maximálne %{count}  obrázky do príspevku."
-    many: "Ľutujeme, noví používatelia môžu vložiť maximálne %{count}  obrázkov do príspevku."
-    other: "Ľutujeme, noví používatelia môžu vložiť maximálne %{count}  obrázkov do príspevku."
+    few: "Ľutujeme, noví používatelia môžu vložiť maximálne %{count} obrázky do príspevku."
+    many: "Ľutujeme, noví používatelia môžu vložiť maximálne %{count} obrázkov do príspevku."
+    other: "Ľutujeme, noví používatelia môžu vložiť maximálne %{count} obrázkov do príspevku."
   no_attachments_allowed: "Ľutujeme, noví používatelia nemôžu vkladať prílohy do príspevkov."
   too_many_attachments:
     one: "Ľutujeme, noví používatelia môžu vložiť maximálne jednu prílohu do príspevku."
-    few: "Ľutujeme, noví používatelia môžu vložiť maximálne %{count}  prílohy do príspevku."
-    many: "Ľutujeme, noví používatelia môžu vložiť maximálne %{count}  príloh do príspevku."
-    other: "Ľutujeme, noví používatelia môžu vložiť maximálne %{count}  príloh do príspevku."
+    few: "Ľutujeme, noví používatelia môžu vložiť maximálne %{count} prílohy do príspevku."
+    many: "Ľutujeme, noví používatelia môžu vložiť maximálne %{count} príloh do príspevku."
+    other: "Ľutujeme, noví používatelia môžu vložiť maximálne %{count} príloh do príspevku."
   no_links_allowed: "Ľutujeme, noví používatelia nemôžu vkladať odkazy do príspevkov."
   too_many_links:
     one: "Ľutujeme, noví používatelia môžu vložiť maximálne jeden odkaz do príspevku."
@@ -342,7 +343,7 @@ sk:
       title: "bežný"
     leader:
       title: "vodca"
-    change_failed_explanation: "Pokúsili  ste sa znížiť úroveň %{user_name} na '%{new_trust_level}'. Ale jeho/jej aktuálna úroveň už je '%{current_trust_level}'. %{user_name} zostane na úrovni '%{current_trust_level}' - Ak chcete znížiť úroveň používateľa, najskôr uzamknite úroveň"
+    change_failed_explanation: "Pokúsili ste sa znížiť úroveň %{user_name} na '%{new_trust_level}'. Ale jeho/jej aktuálna úroveň už je '%{current_trust_level}'. %{user_name} zostane na úrovni '%{current_trust_level}' - Ak chcete znížiť úroveň používateľa, najskôr uzamknite úroveň"
   post:
     image_placeholder:
       broken: "Tento obrázok je poškodený"
@@ -493,7 +494,7 @@ sk:
     please_continue: "Váš nový účet je potvrdený. Budete presmerovaní na domovskú stránku."
     continue_button: "Pokračujte na %{site_name}"
     welcome_to: "Vitajte na %{site_name}!"
-    approval_required: "Moderátor musí manuálne povoliť Váš prístup na toto fórum.  O schválení prístupu budete upovedomení emailom."
+    approval_required: "Moderátor musí manuálne povoliť Váš prístup na toto fórum. O schválení prístupu budete upovedomení emailom."
     admin_confirm:
       title: "Potvrď admin účet"
       back_to: "Vráť sa na %{title}"
@@ -508,7 +509,7 @@ sk:
     spam:
       title: "Spam"
       long_form: "označiť toto ako spam"
-      email_title: '"%{title}"  bol označený ako spam'
+      email_title: '"%{title}" bol označený ako spam'
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: "Nevhodné"
@@ -531,8 +532,8 @@ sk:
       long_form: "záložka na tento príspevok bola vytvorená "
     like:
       title: "Páči sa mi"
-      description: "Páči sa  mi tento príspevok"
-      short_description: "Páči sa  mi tento príspevok"
+      description: "Páči sa mi tento príspevok"
+      short_description: "Páči sa mi tento príspevok"
       long_form: "páčilo sa"
   user_activity:
     no_default:
@@ -816,7 +817,7 @@ sk:
     summary_percent_filter: "Ak používateľ klikne na 'Sumarizuj túto tému', zobraz najlepších % príspevkov"
     enable_long_polling: "Zbernica správ pre upozornenia môže používať techniku long-polling"
     long_polling_base_url: "Base URL used for long polling (when a CDN is serving dynamic content, be sure to set this to origin pull) eg: http://origin.site.com"
-    long_polling_interval: "Ako dlho má server čakať pred odpovedaním klientom ak nie sú na zaslanie žiadne dáta  (iba pre prihlásených používateľov)"
+    long_polling_interval: "Ako dlho má server čakať pred odpovedaním klientom ak nie sú na zaslanie žiadne dáta (iba pre prihlásených používateľov)"
     polling_interval: "Ak sa nepoužíva technika long-polling, ako často majú byť klienti dotazovaný v milisekundách"
     anon_polling_interval: "Ako často majú byť dotazovaný anonymný klienti v milisekundách"
     background_polling_interval: "Ako často majú byť dotazovaný klienti v milisekundách (ak je okno v pozadí)"
@@ -914,8 +915,8 @@ sk:
     tl2_requires_likes_received: "Koľko \"Páči sa\" musí nový používateľ dostať pred povýšením na stupeň dôvery 2."
     tl2_requires_likes_given: "Koľko \"Páči sa\" musí nový používateľ rozdať pred povýšením na stupeň dôvery 2."
     tl2_requires_topic_reply_count: "Na koľko tém musí nový používateľ odpovedať pred povýšením na stupeň dôvery 2."
-    tl3_requires_topics_viewed_all_time: "Minimálny počet všetkých tém,  ktoré musí mať používateľ zhliadnuté pre kvalifikáciu na dosiahnute stupňa dôvery 3."
-    tl3_requires_posts_read_all_time: "Minimálny počet všetkých príspevkov,  ktoré musí mať používateľ prečítané pre kvalifikáciu na stupeň dôvery 3."
+    tl3_requires_topics_viewed_all_time: "Minimálny počet všetkých tém, ktoré musí mať používateľ zhliadnuté pre kvalifikáciu na dosiahnute stupňa dôvery 3."
+    tl3_requires_posts_read_all_time: "Minimálny počet všetkých príspevkov, ktoré musí mať používateľ prečítané pre kvalifikáciu na stupeň dôvery 3."
     tl3_promotion_min_duration: "MInimálny počet dní po pridelení stupňa dôvery 3 kým môže byť používateľ degradovaný späť na stupeň dôvery 2."
     tl3_links_no_follow: "Neodstraňujte rel=nofollow z odkazov pridaných používateľmi so stupňom dôvery 3."
     min_trust_to_create_topic: "MInimálna úroveň dôvery na vytvorenie novej témy."
@@ -925,7 +926,7 @@ sk:
     newuser_max_images: "Koľko obrázkov môže nový používateľ pridať do príspevku."
     newuser_max_attachments: "Koľko príloh môže nový používateľ pridať do príspevku."
     newuser_max_mentions_per_post: "Maximálny počet notifikácií typu @meno môže nový užívateľ použiť v príspevku."
-    newuser_max_replies_per_topic: "Maximálny počet odpovedí ktoré môže nový používateľ pridať  do jednej témy pokiaľ na ne niekto neodpovie."
+    newuser_max_replies_per_topic: "Maximálny počet odpovedí ktoré môže nový používateľ pridať do jednej témy pokiaľ na ne niekto neodpovie."
     max_mentions_per_post: "Maximálný počet notifikácií typu @meno, ktoré môže ktokoľvek použiť v rámci jedného príspevku."
     max_users_notified_per_group_mention: "Maximálny počet používateľov, ktorý môže dostať upozornenie ak je zmienená skupina (ak je dosiahnutá hranica, žiadne upozornenie nebude poslané)"
     create_thumbnails: "Vytvor náhľad a okraje pre obrázoky, ktoré sú príliš veľké aby sa zmestili do príspevku."
@@ -943,7 +944,7 @@ sk:
     max_attachment_size_kb: "Mmaximálna veľkosť vloženej prílohy v kB. Rovnako musí byť nastavená v nginx (client_max_body_size) / apache alebo na proxy."
     authorized_extensions: "Zoznam povolených príloh súborov ktoré je umožnené vkladať (použite '*' na vkladanie súborov všetkých typov)"
     max_similar_results: "Koľko podobných tém sa má zobraziť nad editorom ak vytvára novú tému. Porovnanie je založené na nadpise a tele správy."
-    title_prettify: "Predchádzať bežným malým preklepom a chybám, zapnutým kapitálkam, malému prvému znaku, duplikácií  ! a ?, extra . na konci a podobne."
+    title_prettify: "Predchádzať bežným malým preklepom a chybám, zapnutým kapitálkam, malému prvému znaku, duplikácií ! a ?, extra . na konci a podobne."
     topic_views_heat_low: "Počet zobrazení aby bolo pole zobrazení jemne zvýraznené."
     topic_views_heat_medium: "Počet zobrazení aby bolo pole zobrazení stredne zvýraznené."
     topic_views_heat_high: "Počet zobrazení aby bolo pole zobrazení výrazne zvýraznené."
@@ -1132,7 +1133,7 @@ sk:
     not_allowed_from_ip_address: "Nie je možné prihlásenie ako %{username} z tejto IP adresy."
     admin_not_allowed_from_ip_address: "Nie je možné prihlásenie ako admin z tejto IP adresy."
     suspended: "Nemôžete sa prihlásiť do %{date}."
-    suspended_with_reason: "Tento  účet je suspendovaný do %{date}: %{reason}"
+    suspended_with_reason: "Tento účet je suspendovaný do %{date}: %{reason}"
     errors: "%{errors}"
     not_available: "Nie je k dispozícii. Skúste %{suggestion}?"
     something_already_taken: "Niečo sa pokazilo, možno je tento užívateľ, alebo e-mail už registrovaný, vyskúšajte odkaz pre zabudnuté heslo"
@@ -1163,9 +1164,9 @@ sk:
       blocked: "Nové registrácie nie sú povolené z Vašej IP adresy."
       max_new_accounts_per_registration_ip: "Nové registrácie nie sú povolené z Vašej IP adresy (dosiahnutý limit). Kontaktujte člena obsluhy. "
   unsubscribe_mailer:
-    subject_template: "Potvrďte, že už ďalej nechcete dostávať aktualizácie z  %{site_title}"
+    subject_template: "Potvrďte, že už ďalej nechcete dostávať aktualizácie z %{site_title}"
   invite_password_instructions:
-    subject_template: "Nastavte heslo pre účet na  %{site_name}"
+    subject_template: "Nastavte heslo pre účet na %{site_name}"
   flag_reasons:
     off_topic: "Váš príspevok bol označený ako \"mimo-témy\": komunita cíti, že nie je vhodný do témy tak, ako je definovaná nadpisom a prvým príspevkom"
     inappropriate: "Váš príspevok bol označený ako **nevhodný**: komunita cíti, že je úrážlivý, nemiestny alebo porušuje [naše pravidlá komunity](%{base_path}/guidelines)."
@@ -1260,7 +1261,7 @@ sk:
     user_posted_pm_staged:
       subject_template: "%{optional_re}%{topic_title}"
     digest:
-      why: "Krátky súhrn zo stránky  %{site_link} od Vašej poslednej návštevy %{last_seen_at}"
+      why: "Krátky súhrn zo stránky %{site_link} od Vašej poslednej návštevy %{last_seen_at}"
       since_last_visit: "Od Vašej poslednej návštevy"
       liked_received: "Obdržaných 'páči sa mi'"
       new_users: "Noví používatelia"
@@ -1281,7 +1282,7 @@ sk:
   image: "Obrázok"
   upload:
     edit_reason: "stiahnuté lokálne kópie obrázkov"
-    unauthorized: "Ľutujeme, súbor, ktorý sa pokúšate nahrať nemá povolenú príponu  (povolené prípony sú: %{authorized_extensions})."
+    unauthorized: "Ľutujeme, súbor, ktorý sa pokúšate nahrať nemá povolenú príponu (povolené prípony sú: %{authorized_extensions})."
     pasted_image_filename: "Vložený obrázok"
     store_failure: "Zlyhalo uloženie #%{upload_id} pre užívateľa #%{user_id}."
     file_missing: "Ľutujeme, ale musíte poskytnúť súbor na nahranie."
@@ -1471,7 +1472,7 @@ sk:
       name: Prvé "Páči sa mi"
       description: "Príspevok, ktorý sa páčil"
       long_description: |
-        Tento odznak je udelený za prvé udelené "Páči sa" použitím :heart:  talčidla. Označenie príspevku "Páči sa" je najlepšia cesta ako ukázať členom komunity, že ich príspevky sú zaujímavé, užitočné, výnimočné, alebo zábavné. Podeľte sa o to!
+        Tento odznak je udelený za prvé udelené "Páči sa" použitím :heart: talčidla. Označenie príspevku "Páči sa" je najlepšia cesta ako ukázať členom komunity, že ich príspevky sú zaujímavé, užitočné, výnimočné, alebo zábavné. Podeľte sa o to!
     first_flag:
       name: Prvé označenie
       description: Označený príspevok

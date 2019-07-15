@@ -105,6 +105,9 @@ sv:
     share:
       post: "inlägg #%{postNumber}"
       close: "stäng"
+      twitter: "Dela denna länk på Twitter"
+      facebook: "Dela denna länk på Facebook"
+      email: "Skicka denna länk i ett e-postmeddelande"
     action_codes:
       public_topic: "gjorde det här ämnet publikt %{when}"
       private_topic: "gjorde det här ämnet till ett personligt meddelande %{when}"
@@ -569,9 +572,7 @@ sv:
       users: "Användare"
       muted_users: "Tystat"
       muted_users_instructions: "Undanta alla notiser från dessa användare."
-      muted_topics_link: "Visa tystade ämnen"
-      watched_topics_link: "Visa bevakade ämnen"
-      tracked_topics_link: "Visa bevakade ämnen"
+      tracked_topics_link: "Visa"
       automatically_unpin_topics: "Avklistra automatiskt ämnen när jag når botten."
       apps: "Appar"
       revoke_access: "Återkalla åtkomst"
@@ -611,11 +612,13 @@ sv:
         action: "Skicka e-post för att återställa lösenord"
         set_password: "Ange lösenord"
         choose_new: "Välj ett nytt lösenord"
-        choose: "Välj ett  lösenord"
+        choose: "Välj ett lösenord"
       second_factor_backup:
         regenerate: "Regenerera"
         disable: "Inaktivera"
         enable: "Aktivera"
+      second_factor:
+        edit: "Redigera"
       change_about:
         title: "Ändra Om Mig"
         error: "Ett fel inträffade vid ändringen av det här värdet."
@@ -1869,7 +1872,7 @@ sv:
         title: "Nya"
         title_with_count:
           one: "Ny (%{count})"
-          other: "Nya  ({{count}})"
+          other: "Nya ({{count}})"
         help: "ämnen skapade de senaste dagarna"
       posted:
         title: "Mina Inlägg"
@@ -2362,6 +2365,8 @@ sv:
           installed: "Installerad"
           install_popular: "Populära"
           about_theme: "Om"
+          enable: "Aktivera"
+          disable: "Inaktivera"
           add: "Lägg till"
           scss:
             text: "CSS"

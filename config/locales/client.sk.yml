@@ -594,7 +594,7 @@ sk:
       location_not_found: (neznáma)
       organisation: Organizácia
       phone: Telefón
-      other_accounts: "Ostatné účty s  touto IP adresou:"
+      other_accounts: "Ostatné účty s touto IP adresou:"
       delete_other_accounts: "Zmazaných %{count}"
       username: "používateľské meno"
       trust_level: "Dôvera"
@@ -657,7 +657,7 @@ sk:
       moderator_tooltip: "Tento používateľ je moderátor"
       admin_tooltip: "Tento používateľ je administrátor"
       silenced_tooltip: "Tento používateľ je umlčaný"
-      suspended_notice: "Tento  používateľ je suspendovaný do {{date}}"
+      suspended_notice: "Tento používateľ je suspendovaný do {{date}}"
       suspended_permanently: "Tento používateľ je suspendovaný"
       suspended_reason: "Dôvod:"
       github_profile: "Github"
@@ -701,9 +701,7 @@ sk:
       users: "Používatelia"
       muted_users: "Ignorovaní"
       muted_users_instructions: "Pozastaviť všetky notifikácie od týchto používateľov."
-      muted_topics_link: "Zobraziť stíšené témy"
-      watched_topics_link: "Zobraziť sledované témy"
-      tracked_topics_link: "Zobraziť sledované témy"
+      tracked_topics_link: "Zobraziť"
       automatically_unpin_topics: "Automaticky zrušiť pripnutie témy ak sa dočítam na koniec."
       apps: "Appky"
       revoke_access: "Odvolať prístup"
@@ -755,7 +753,6 @@ sk:
         disable: "Zakázať"
         enable: "Povoliť"
         enable_long: "Povoliť kódy zálohy"
-        manage: "Spravovať kódy zálohy"
         copied_to_clipboard: "Skopírované do schránky"
         copy_to_clipboard_error: "Chyba pri kopírovaní dát do schránky"
         remaining_codes: "Zostáva vám <strong>{{count}}</strong> kódov zálohy."
@@ -771,6 +768,7 @@ sk:
         show_key_description: "Vložiť ručne"
         extended_description: |
           Dvojfaktorové prihlásenie pridáva dodatočné zabezpečenie Vášho účtu prostredníctvom zadávania jednorázových hesiel. Heslá môžu byť generované na <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>Android</a> a<a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS</a> zariadeniach.
+        edit: "Upraviť"
       change_about:
         title: "Upraviť O mne"
         error: "Nastala chyba pri zmene tejto hodnoty."
@@ -788,7 +786,7 @@ sk:
       change_avatar:
         title: "Zmeniť váš profilový obrázok"
         gravatar: "<a href='//gravatar.com/emails' target='_blank'>Gravatar</a>, podľa"
-        gravatar_title: "Zmeňte váš avatar na webe Gravatar  "
+        gravatar_title: "Zmeňte váš avatar na webe Gravatar "
         gravatar_failed: "Nemohli sme nájsť žiadny Gravatar s touto emailovou adresou."
         refresh_gravatar_title: "Obnoviť váš Gravatar"
         letter_based: "Systém pridelil profilový obrázok"
@@ -1047,7 +1045,6 @@ sk:
       enabled: "Stránky sú v móde iba na čítanie. Prosím pokračujte v prezeraní, ale iné akcie, ako odpovedanie, dávanie páči sa mi alebo niektové ďalšie sú teraz vypnuté."
       login_disabled: "Keď je zapnutý mód iba na čítanie, prihlásenie nie je možné."
       logout_disabled: "Odhlásenie nie je možné, kým je stránka v móde iba na čítanie."
-    too_few_topics_and_posts_notice: "Začnite <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>diskusiu!</a> Aktuálne je <strong>%{currentTopics} / %{requiredTopics}</strong> tém a <strong>%{currentPosts} / %{requiredPosts}</strong> príspevkov. Noví návštevníci potrebujú nejaké konverzácie na čítanie a na odpovedanie."
     learn_more: "zistiť viac..."
     all_time: "celkovo"
     all_time_desc: "celkovo vytvorených tém"
@@ -1111,14 +1108,14 @@ sk:
       complete_username_found: "Našli sme účet priradený k používateľskému menu <b>%{username}</b>, čoskoro dostanete e-mail s pokynmi, ako si obnoviť svoje heslo."
       complete_email_found: "Našli sme účet priradený k <b>%{email}</b>, čoskoro dostanete e-mail s pokynmi, ako si obnoviť svoje heslo."
       complete_username_not_found: "Žiadny účet nemá priradené používateľské meno <b>%{username}</b>"
-      complete_email_not_found: "Žiadny účet nie je s e-mailom  <b>%{email}</b>"
+      complete_email_not_found: "Žiadny účet nie je s e-mailom <b>%{email}</b>"
       button_ok: "OK"
       button_help: "Pomoc"
     email_login:
       link_label: "Zaslať emailom prihlasovací link"
       button_label: "s emailom"
       complete_username_not_found: "Žiadny účet nemá priradené používateľské meno <b>%{username}</b>"
-      complete_email_not_found: "Žiadny účet nie je s e-mailom  <b>%{email}</b>"
+      complete_email_not_found: "Žiadny účet nie je s e-mailom <b>%{email}</b>"
       confirm_title: "Pokračujte na %{site_name}"
     login:
       title: "Prihlásenie"
@@ -1409,7 +1406,7 @@ sk:
         read: "Žiadne ďalšie prečítané témy."
         new: "Žiadne nové témy."
         unread: "Žiadne ďalšie neprečítané témy."
-        category: "Žiadne ďalšie témy v  {{category}}."
+        category: "Žiadne ďalšie témy v {{category}}."
         top: "Nie je už viac poulárnych tém"
         bookmarks: "Žiadne ďalšie témy v záložkách."
     topic:
@@ -1465,21 +1462,21 @@ sk:
         other: "máte {{count}} starších neprečítaných príspevkov k tejto téme"
       new_posts:
         one: "pribudol %{count} nový príspevok odkedy ste čítali túto tému naposledy "
-        few: "pribudlo  {{count}}  nové príspevky odkedy ste čítali túto tému naposledy "
-        many: "pribudlo  {{count}}  nových príspevkov odkedy ste čítali túto tému naposledy "
-        other: "pribudlo  {{count}}  nových príspevkov odkedy ste čítali túto tému naposledy "
+        few: "pribudlo {{count}} nové príspevky odkedy ste čítali túto tému naposledy "
+        many: "pribudlo {{count}} nových príspevkov odkedy ste čítali túto tému naposledy "
+        other: "pribudlo {{count}} nových príspevkov odkedy ste čítali túto tému naposledy "
       likes:
         one: "v tejto téme je jedo \"Páči sa\""
-        few: "v tejto téme je  {{count}} \"Páči sa\""
-        many: "v tejto téme je  {{count}} \"Páči sa\""
-        other: "v tejto téme je  {{count}} \"Páči sa\""
+        few: "v tejto téme je {{count}} \"Páči sa\""
+        many: "v tejto téme je {{count}} \"Páči sa\""
+        other: "v tejto téme je {{count}} \"Páči sa\""
       back_to_list: "Naspäť na zoznam tém"
       options: "Možnosti tém"
       show_links: "zobrazovať odkazy v tejto téme"
       toggle_information: "zmeniť detaily témy"
       read_more_in_category: "Chcete si prečítať viac? Prezrite si témy v {{catLink}} alebo v {{latestLink}}."
-      read_more: "Chcete si prečítať viac?  {{catLink}} alebo v {{latestLink}}."
-      read_more_MF: "Máte { UNREAD, plural, =0 {} one { <a href='{basePath}/unread'>1 neprečítanú</a> } other { <a href='{basePath}/unread'># neprečítané</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{a} false { } other{}} <a href='{basePath}/new'>1 novú</a> tému} other { {BOTH, select, true{a } false {} other{}} <a href='{basePath}/new'># nových</a> tém} } na prečítanie, prípadne {CATEGORY, select, true {si pozrite iné témy v  {catLink}} false {{latestLink}} other {}}"
+      read_more: "Chcete si prečítať viac? {{catLink}} alebo v {{latestLink}}."
+      read_more_MF: "Máte { UNREAD, plural, =0 {} one { <a href='{basePath}/unread'>1 neprečítanú</a> } other { <a href='{basePath}/unread'># neprečítané</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{a} false { } other{}} <a href='{basePath}/new'>1 novú</a> tému} other { {BOTH, select, true{a } false {} other{}} <a href='{basePath}/new'># nových</a> tém} } na prečítanie, prípadne {CATEGORY, select, true {si pozrite iné témy v {catLink}} false {{latestLink}} other {}}"
       browse_all_categories: Prezrieť všetky kategórie
       view_latest_topics: zobraziť najnošie témy
       suggest_create_topic: "Čo tak vytvoriť novú tému?"
@@ -1604,7 +1601,7 @@ sk:
         success_message: "Úspešne ste označili tému."
       feature_topic:
         title: "Vyzdvihni túto tému"
-        pin: "Zobrazuj túto tému na vrchu  {{categoryLink}} kategórie do"
+        pin: "Zobrazuj túto tému na vrchu {{categoryLink}} kategórie do"
         confirm_pin: "Máte už {{count}} pripnutých tém. Príliš veľa pripnutých tém môže byť na príťaž pre nových a anonymných používateľov. Ste si istý že chcete pripnúť ďalšiu tému v tejto kategórii?"
         unpin: "Zruš túto tému z vrcholu kategórie {{categoryLink}} . "
         unpin_until: "Zruš túto tému z vrcholu kategórie {{categoryLink}} , alebo počkaj do <strong>%{until}</strong>."
@@ -1745,9 +1742,9 @@ sk:
         other: "{{count}} Odpovedí"
       has_likes_title:
         one: "Tento príspevok sa páčil jedej osobe"
-        few: "Tento príspevok sa páčil {{count}}  ľuďom"
-        many: "Tento príspevok sa páčil {{count}}  ľuďom"
-        other: "Tento príspevok sa páčil {{count}}  ľuďom"
+        few: "Tento príspevok sa páčil {{count}} ľuďom"
+        many: "Tento príspevok sa páčil {{count}} ľuďom"
+        other: "Tento príspevok sa páčil {{count}} ľuďom"
       has_likes_title_only_you: "tento príspevok sa Vám páči"
       has_likes_title_you:
         one: "Tento príspevok sa páčil Vám a jednej ďalšej osobe"
@@ -1982,13 +1979,13 @@ sk:
         help: "Táto téma je už uzavretá a archivovaná. Nové odpovede ani zmeny už nebudú akceptované "
       unpinned:
         title: "Odopnuté"
-        help: "Túto tému ste odopli.  Bude zobrazená v bežnom poradí."
+        help: "Túto tému ste odopli. Bude zobrazená v bežnom poradí."
       pinned_globally:
         title: "Globálne pripnuté"
         help: "Tento príspevok je globálne uprednostnený. Zobrazí sa na začiatku v: zozname posledných článkov a vo svojej kategórii."
       pinned:
         title: "Pripnutý"
-        help: "Túto tému ste pripli.  Bude zobrazená na vrchole svojej kategórie"
+        help: "Túto tému ste pripli. Bude zobrazená na vrchole svojej kategórie"
       unlisted:
         help: "Táto téma je skrytá. Nebude zobrazená v zozname tém a prístup k nej bude možný len prostrednictvom priameho odkazu na ňu"
     posts: "Príspevky"
@@ -2354,8 +2351,6 @@ sk:
             visibility_levels:
               title: "Kto môže vidieť túto skupinu?"
               public: "Každý"
-              members: "Vlastníci skupiny, členovia a jej administrátori"
-              owners: "Vlastníci skupiny a jej administrátori"
           membership:
             automatic: Automaticky
             trust_level: Stupeň dôvery
@@ -2533,6 +2528,8 @@ sk:
           installed: "Nainštalované"
           install_popular: "Populárne"
           about_theme: "O stránke"
+          enable: "Povoliť"
+          disable: "Zakázať"
           check_for_updates: "Skontrolovať aktualizácie"
           updating: "Aktualizujem..."
           add: "Pridať"
@@ -2853,10 +2850,10 @@ sk:
           many: "Nepodarilo sa zmazať všetky príspevky. Niektoré príspevky sú staršie ako %{count} dní. (Nastavenie delete_user_max_post_age )"
           other: "Nepodarilo sa zmazať všetky príspevky. Niektoré príspevky sú staršie ako %{count} dní. (Nastavenie delete_user_max_post_age )"
         cant_delete_all_too_many_posts:
-          one: "Nedá sa zmazať všetky píspevky, pretože používateľ má viac ako %{count} príspevok.  (delete_all_posts_max)"
-          few: "Nedá sa zmazať všetky píspevky, pretože používateľ má viac ako %{count} príspevky.  (delete_all_posts_max)"
-          many: "Nedá sa zmazať všetky píspevky, pretože používateľ má viac ako %{count} príspevkov.  (delete_all_posts_max)"
-          other: "Nedá sa zmazať všetky píspevky, pretože používateľ má viac ako %{count} príspevkov.  (delete_all_posts_max)"
+          one: "Nedá sa zmazať všetky píspevky, pretože používateľ má viac ako %{count} príspevok. (delete_all_posts_max)"
+          few: "Nedá sa zmazať všetky píspevky, pretože používateľ má viac ako %{count} príspevky. (delete_all_posts_max)"
+          many: "Nedá sa zmazať všetky píspevky, pretože používateľ má viac ako %{count} príspevkov. (delete_all_posts_max)"
+          other: "Nedá sa zmazať všetky píspevky, pretože používateľ má viac ako %{count} príspevkov. (delete_all_posts_max)"
         delete_and_block: "Zazať a <b>zablokovať</b> tento email a IP adresu"
         delete_dont_block: "Iba vymazať"
         deleted: "Používateľ bol vymazaný."
@@ -2875,7 +2872,7 @@ sk:
         suspend_modal_title: "Zruš práva používateľovi"
         trust_level_2_users: "Používatelia na stupni dôvery 2"
         trust_level_3_requirements: "Požiadavky pre 3 stupeň dôvery"
-        trust_level_locked_tip: "stupeň dôvery je zamknutý, systém používateľovi stupeň nezvýši ani nezníži  "
+        trust_level_locked_tip: "stupeň dôvery je zamknutý, systém používateľovi stupeň nezvýši ani nezníži "
         trust_level_unlocked_tip: "stupeň dôvery je odomknutý, systém môže používateľovi stupeň zvýšiť alebo znížiť"
         lock_trust_level: "Zamknúť stupeň dôvery"
         unlock_trust_level: "Odomknúť stupeň dôvery"
@@ -3077,7 +3074,7 @@ sk:
         feed_settings: "Nastavenie kanálov"
         feed_description: "Zadaním RSS/ATOM kanála Vašich stránok zlepší schopnosť Discourse vladať Váš obsah."
         crawling_settings: "Nastavenia vyhľadávača"
-        crawling_description: "Ak Discourse vytvorí tému pre Váš príspevok a neexistuje žiadny RSS/ATOM kanál tak sa pokúsime získať Váš obsah z HTML. Získanie obsahu môže byt niekedy výzva  a preto poskytujeme možnosť špecifikovať CSS pravidlá na uľahčenie získania obsahu."
+        crawling_description: "Ak Discourse vytvorí tému pre Váš príspevok a neexistuje žiadny RSS/ATOM kanál tak sa pokúsime získať Váš obsah z HTML. Získanie obsahu môže byt niekedy výzva a preto poskytujeme možnosť špecifikovať CSS pravidlá na uľahčenie získania obsahu."
         embed_by_username: "Používateľské meno pre vytváranie tém"
         embed_post_limit: "Maximálny počet vložených príspevkov"
         embed_username_key_from_feed: "Kľúč na získanie používateľského mena discourse z kanála"

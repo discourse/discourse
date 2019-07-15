@@ -7,7 +7,7 @@
 
 zh_CN:
   site_settings:
-    discourse_narrative_bot_enabled: '启用 Discourse 代表机器人（discobot）'
+    discourse_narrative_bot_enabled: "启用 Discourse 代表机器人（discobot）"
     disable_discourse_narrative_bot_welcome_post: "禁止 Discourse 代表机器人发送欢迎帖子"
     discourse_narrative_bot_ignored_usernames: "Discourse 代表机器人应该忽略的用户名"
     discourse_narrative_bot_disable_public_replies: "禁止 Discourse 代表机器人发布公开回复"
@@ -82,7 +82,7 @@ zh_CN:
       results: |-
         > :left_speech_bubble: _%{quote}_ &mdash; %{author}
     magic_8_ball:
-      trigger: '财富'
+      trigger: "财富"
       answers:
         '1': "很可能"
         '2': "一定是"
@@ -107,9 +107,9 @@ zh_CN:
       result: |-
         > :crystal_ball: %{result}
     track_selector:
-      reset_trigger: '开始'
-      skip_trigger: '跳过'
-      help_trigger: '帮助'
+      reset_trigger: "开始"
+      skip_trigger: "跳过"
+      help_trigger: "帮助"
       random_mention:
         reply: |-
           你好！想看看我能做什么吗？说 `@%{discobot_username} %{help_trigger}`。
@@ -225,7 +225,7 @@ zh_CN:
         instructions: |-
           如果你想了解更多，请选择下方<img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16">并<img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-bookmark.png" width="16" height="16">**收藏此私信**。如果你这样做，你一会可能收到份 :gift: ！
         reply: |-
-          太棒了！现在你可以轻松地找到我们的私信了。它就在[你个人页面的收藏栏](%{profile_page_url}/activity/bookmarks)中。选择右上方你的个人头像  &#8599;
+          太棒了！现在你可以轻松地找到我们的私信了。它就在[你个人页面的收藏栏](%{profile_page_url}/activity/bookmarks)中。选择右上方你的个人头像 &#8599;
         not_found: |-
           啊哦，我没有在这个主题中看到任何收藏。你在每个帖子下找到了收藏按钮吗？如果需要的话，使用显示更多<img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16">展开更多操作。
       emoji:
@@ -253,7 +253,7 @@ zh_CN:
 
           你能在回复中提及**@%{discobot_username}**吗？
         reply: |-
-          **谁在找我！？** :raised_hand: 我觉得是你！ :wave:  好吧，我在这儿！感谢你提到我。 :ok_hand:
+          **谁在找我！？** :raised_hand: 我觉得是你！ :wave: 好吧，我在这儿！感谢你提到我。 :ok_hand:
         not_found: |-
           我没有在任何地方看到我的名字 :frowning: 你可以再 `@%{discobot_username}` 我试试？
 
@@ -262,7 +262,7 @@ zh_CN:
         instructions: |-
           我们都喜欢友善的讨论，我们也需要你的帮助来[一起保持文明](%{guidelines_url})。如果你发现了问题，请用标记告诉作者，或者通知[我们友善的管理人员](%{about_url})来处理。
 
-          >  :imp: 我在这写了些脏话
+          > :imp: 我在这写了些脏话
 
           我猜你知道要做什么了。点击**标记该贴**<img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16">为不合适！
         reply: |-
@@ -300,11 +300,11 @@ zh_CN:
 
           （如果你想再次与我交谈以了解更多信息，请随时留言或提及`@%{discobot_username}`！）
       certificate:
-        alt: '成就证明'
+        alt: "成就证明"
     advanced_user_narrative:
-      reset_trigger: '高级教程'
+      reset_trigger: "高级教程"
       cert_title: "你已经成功完成高级用户教程了"
-      title: ':arrow_up: 高级用户特性'
+      title: ":arrow_up: 高级用户特性"
       start_message: |-
         作为_advanced_用户，你是否访问过[你的偏好设置页面](%{base_uri}/my/preferences) @%{username}？ 有很多方法可以自定义你的体验，例如选择深色或浅色主题
 
@@ -335,7 +335,7 @@ zh_CN:
 
           为了讨论的连贯性，删除不会立即发生，所以帖子将在之后移除。
       recover:
-        deleted_post_raw: '为什么 @%{discobot_username}删除了我的帖子？:anguished:'
+        deleted_post_raw: "为什么 @%{discobot_username}删除了我的帖子？:anguished:"
         instructions: |-
           哦不！看起来我不小心删除了我刚刚给你创建的一个新帖子。
 
@@ -428,4 +428,4 @@ zh_CN:
 
           再见啦！如果你想要继续和我交流，随时给我发消息 :sunglasses:
       certificate:
-        alt: '高级用户终身成就证明'
+        alt: "高级用户终身成就证明"

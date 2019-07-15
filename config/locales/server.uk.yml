@@ -23,6 +23,7 @@ uk:
   topics: "Теми"
   posts: "дописи"
   loading: "Завантаження"
+  sign_up: "Зареєструватись"
   log_in: "Вхід"
   emails:
     incoming:

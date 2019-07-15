@@ -688,9 +688,7 @@ pt:
       muted_users_instructions: "Suprimir todas as notificações destes utilizadores."
       ignored_users: "Ignorados"
       ignored_users_instructions: "Suprimir todas as publicações e notificações destes utilizadores."
-      muted_topics_link: "Mostrar tópicos silenciados"
-      watched_topics_link: "Mostrar tópicos vigiados"
-      tracked_topics_link: "Mostrar tópicos seguidos"
+      tracked_topics_link: "Exibir"
       automatically_unpin_topics: "Desafixar tópicos automaticamente quando eu chegar ao final."
       apps: "Aplicações"
       revoke_access: "Rescindir Acesso"
@@ -742,7 +740,6 @@ pt:
         disable: "Desativar"
         enable: "Ativar"
         enable_long: "Ativar códigos de reserva"
-        manage: "Gerir códigos de reserva"
         copied_to_clipboard: "Copiado para a Área de Transferência"
         copy_to_clipboard_error: "Erro a copiar dados para a Área de Transferência"
         remaining_codes: "Restam <strong>{{count}}</strong> códigos de reserva."
@@ -762,6 +759,7 @@ pt:
         oauth_enabled_warning: "Note que os logins com contas sociais vão ser desativados depois da autenticação em dois passos ser ativa na sua conta."
         use: "<a href>Usar aplicação Authenticator</a>"
         enforced_notice: "É necessário ativar a autenticação em dois passos para aceder a este site."
+        edit: "Editar"
       change_about:
         title: "Modificar Sobre Mim"
         error: "Ocorreu um erro ao modificar este valor."
@@ -949,7 +947,7 @@ pt:
         create: "Enviar um Convite"
         generate_link: "Copiar Hiperligação do Convite"
         link_generated: "Hiperligação do convite gerada com sucesso!"
-        valid_for: "A hiperligação do convite é válida apenas para este endereço de e-mail:  %{email}"
+        valid_for: "A hiperligação do convite é válida apenas para este endereço de e-mail: %{email}"
         bulk_invite:
           none: "Ainda não convidou ninguém aqui. Envie convites individuais, ou convide muitas pessoas de uma vez só, <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>enviando um ficheiro CSV</a>."
           text: "Convite em série a partir do 'Ficheiro'"
@@ -1056,9 +1054,6 @@ pt:
       enabled: "Este site está no modo só de leitura. Por favor, continue a navegar, mas responder, gostar e outras ações estão de momento desativadas."
       login_disabled: "Enquanto o site se encontrar no modo só de leitura, a opção de iniciar a sessão está desativada."
       logout_disabled: "Enquanto o site se encontrar no modo só de leitura, a opção de terminar a sessão está desativada."
-    too_few_topics_and_posts_notice: "Vamos <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>começar a publicar!</a> Existem atualmente <strong>%{currentTopics} / %{requiredTopics}</strong> tópicos e <strong>%{currentPosts} / %{requiredPosts}</strong> publicações. Os novos visitantes precisam de conversas para ler e responder."
-    too_few_topics_notice: "Vamos <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>começar a publicar!</a> Existem atualmente <strong>%{currentTopics} / %{requiredTopics}</strong> tópicos. Os novos visitantes precisam de conversas para ler e responder."
-    too_few_posts_notice: "Vamos <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>começar a publicar!</a> Existem atualmente <strong>%{currentPosts} / %{requiredPosts}</strong> publicações. Os novos visitantes precisam de conversas para ler e responder."
     learn_more: "saber mais..."
     all_time: "total"
     all_time_desc: "total de tópicos criados"
@@ -1384,7 +1379,7 @@ pt:
           desc: "Responder ao tópico, não a uma publicação especifica"
         toggle_whisper:
           label: Alternar sussurro
-          desc: Os sussurros são apenas  visíveis para os membros da equipa
+          desc: Os sussurros são apenas visíveis para os membros da equipa
         create_topic:
           label: "Novo Tópico"
         shared_draft:
@@ -1538,7 +1533,7 @@ pt:
     hamburger_menu: "ir para outra lista de tópicos ou categorias"
     new_item: "novo"
     go_back: "voltar atrás"
-    not_logged_in_user: "página de utilizador com resumo da atividade atual e preferências  "
+    not_logged_in_user: "página de utilizador com resumo da atividade atual e preferências "
     current_user: "ir para a sua página de utilizador"
     topics:
       new_messages_marker: "última visita"
@@ -1563,7 +1558,7 @@ pt:
         notification_level: "Notificações"
         choose_new_category: "Escolha a nova categoria para os tópicos:"
         selected:
-          one: "Selecionou  <b>%{count}</b> tópico."
+          one: "Selecionou <b>%{count}</b> tópico."
           other: "Selecionou <b>{{count}}</b> tópicos."
         change_tags: "Substituir Etiquetas"
         append_tags: "Anexar Etiquetas"
@@ -1581,7 +1576,7 @@ pt:
         top: "Não existem tópicos recentes."
         educate:
           new: '<p>Os seus novos tópicos aparecem aqui.</p><p>Por defeito, os tópicos são considerados novos e mostrarão o indicador <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">novo</span> caso tenham sido criados nos últimos 2 dias.</p><p>Pode alterar isto nas suas <a href="%{userPrefsUrl}"> preferências</a>.</p>'
-          unread: '<p>As suas publicações não lidas aparecem aqui.</p><p>Por defeito, tópicos são considerados não lidos e mostrarão contadores de não lidos <span class="badge new-posts badge-notification">1</span> se você:</p><ul><li>Criou o tópico</li><li>Respondeu ao tópico</li><li>Leu o tópico durante mais de 4 minutos</li></ul><p>Ou marcou explicitamente  o tópico como Seguido ou Vigiado via o controle de notificações no fundo de cada tópico.</p><p>Visite as suas <a href="%{userPrefsUrl}">preferências</a> para mudar isto.</p>'
+          unread: '<p>As suas publicações não lidas aparecem aqui.</p><p>Por defeito, tópicos são considerados não lidos e mostrarão contadores de não lidos <span class="badge new-posts badge-notification">1</span> se você:</p><ul><li>Criou o tópico</li><li>Respondeu ao tópico</li><li>Leu o tópico durante mais de 4 minutos</li></ul><p>Ou marcou explicitamente o tópico como Seguido ou Vigiado via o controle de notificações no fundo de cada tópico.</p><p>Visite as suas <a href="%{userPrefsUrl}">preferências</a> para mudar isto.</p>'
       bottom:
         latest: "Não existem mais tópicos recentes."
         posted: "Não existem mais tópicos publicados."
@@ -1834,7 +1829,7 @@ pt:
           other: "Tópicos atualmente afixados globalmente: <strong class='badge badge-notification unread'>{{count}}</strong>"
         make_banner: "Tornar este tópico numa faixa que apareça no topo de todas as páginas."
         remove_banner: "Remover a faixa que aparece no topo de todas as páginas."
-        banner_note: "Os utilizadores podem  marcar vista a faixa por fecharem-na. Apenas um tópico pode ser posto como faixa em qualquer momento."
+        banner_note: "Os utilizadores podem marcar vista a faixa por fecharem-na. Apenas um tópico pode ser posto como faixa em qualquer momento."
         no_banner_exists: "Não existe tópico de faixa."
         banner_exists: "<strong class='badge badge-notification unread'>Existe</strong> atualmente um tópico de faixa."
       inviting: "A Convidar..."
@@ -2148,7 +2143,7 @@ pt:
       notify_action: "Mensagem"
       official_warning: "Aviso Oficial"
       delete_spammer: "Eliminar Spammer"
-      delete_confirm_MF: "Está prestes a eliminar {POSTS, plural, one {<b>1</b> publicação} outras {<b>#</b> publicações}} e {TOPICS, plural, one {<b>1</b> tópico} outros {<b>#</b> tópicos}}  deste utilizador, remover a conta do mesmo, bloquear registos a partir do endereço de IP <b>{ip_address}</b> correspondente, e adicionar o endereço de e-mail <b>{email}</b> dos mesmos a uma lista negra permanente. Tem a certeza que este utilizador é de facto um spammer?"
+      delete_confirm_MF: "Está prestes a eliminar {POSTS, plural, one {<b>1</b> publicação} outras {<b>#</b> publicações}} e {TOPICS, plural, one {<b>1</b> tópico} outros {<b>#</b> tópicos}} deste utilizador, remover a conta do mesmo, bloquear registos a partir do endereço de IP <b>{ip_address}</b> correspondente, e adicionar o endereço de e-mail <b>{email}</b> dos mesmos a uma lista negra permanente. Tem a certeza que este utilizador é de facto um spammer?"
       yes_delete_spammer: "Sim, Eliminar Spammer"
       ip_address_missing: "(N/A)"
       hidden_email_address: "(escondido)"
@@ -2563,9 +2558,7 @@ pt:
             visibility_levels:
               title: "Quem pode ver este grupo?"
               public: "Todos"
-              members: "Donos do grupo, membros e administradores"
               staff: "Donos do grupo e equipa"
-              owners: "Donos do grupo e administradores"
           membership:
             automatic: Automático
             trust_level: Nível de Confiança
@@ -2785,6 +2778,8 @@ pt:
           installed: "Instalado"
           install_popular: "Popular"
           about_theme: "Sobre"
+          enable: "Ativar"
+          disable: "Desativar"
           add: "Adicionar"
           scss:
             text: "CSS"
@@ -3052,7 +3047,7 @@ pt:
         suspended_by: "Suspendido por"
         silence_reason: "Motivo"
         delete_all_posts: "Eliminar todas as publicações"
-        delete_all_posts_confirm_MF: "Está prestes a apagar {POSTS, plural, one {1  publicação} other {# publicações}}  e {TOPICS, plural, one {1 tópico} other {# tópicos}}. Tem a certeza de que quer continuar?"
+        delete_all_posts_confirm_MF: "Está prestes a apagar {POSTS, plural, one {1 publicação} other {# publicações}} e {TOPICS, plural, one {1 tópico} other {# tópicos}}. Tem a certeza de que quer continuar?"
         moderator: "Moderador?"
         admin: "Administração?"
         suspended: "Suspendido?"
@@ -3137,7 +3132,7 @@ pt:
           title: "Requisitos para o Nível de Confiança 3"
           table_title:
             one: "Nos último dia:"
-            other: "Nos últimos %{count}  dias:"
+            other: "Nos últimos %{count} dias:"
           value_heading: "Valor"
           requirement_heading: "Requisito"
           visits: "Visitas"

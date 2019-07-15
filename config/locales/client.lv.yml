@@ -566,9 +566,7 @@ lv:
       users: "Lietotāji"
       muted_users: "Klusināts"
       muted_users_instructions: "Nerādīt paziņojumus no šiem lietotājiem."
-      muted_topics_link: "Rādīt klusinātās tēmas"
-      watched_topics_link: "Rādīt skatītās tēmas"
-      tracked_topics_link: "Radīt tēmas, kurām seko"
+      tracked_topics_link: "Parādīt"
       automatically_unpin_topics: "Automātiski atspraust tēmas, kad sasniedzu beigas."
       apps: "Lietotnes"
       revoke_access: "Liegt piekļuvi"
@@ -617,6 +615,8 @@ lv:
         enable: "Ieslēgt"
         copied_to_clipboard: "Nokopēts uz starpliktuvi (clipboard)"
         copy_to_clipboard_error: "Radās kļūda, kopējot uz starpliktuvi (clipboard)"
+      second_factor:
+        edit: "Labot"
       change_about:
         title: "Mainīt aprakstu par mani"
         error: "Mainot šo vērtību, notika kļūda."
@@ -2224,9 +2224,7 @@ lv:
             visibility_levels:
               title: "Kas var redzēt grupu?"
               public: "Ikviens"
-              members: "Grupu īpašnieki, biedri un administratori"
               staff: "Grupu īpašnieki un personāls"
-              owners: "Grupu īpašnieki un administratori"
           membership:
             automatic: Automātiski
             trust_level: Uzticības līmenis
@@ -2446,6 +2444,8 @@ lv:
           install_popular: "Populāri"
           about_theme: "Par"
           license: "Licence"
+          enable: "Ieslēgt"
+          disable: "Atslēgt"
           update_to_latest: "Atjaunināt uz pēdējo"
           check_for_updates: "Pārbaudīt, vai nav atjauninājumi"
           updating: "Atjaunina..."
@@ -2935,7 +2935,7 @@ lv:
         enabled: Atļaut žetonu
         icon: Ikona
         image: Bilde
-        query: Vaicājums Žetons  (SQL)
+        query: Vaicājums Žetons (SQL)
         target_posts: Vaicājums ir vērsts uz ierakstiem
         auto_revoke: Palaist anulēšanas vaicājumu ikdienā
         show_posts: Rādīt ierakstus žetonu iekš žetonu lapas

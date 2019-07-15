@@ -19,7 +19,7 @@ da:
       other: "Afstemningen skal have mindre end %{max} muligheder."
     named_poll_must_have_less_options:
       one: "Afstemningen <strong>%{name}</strong> må ikke have nogen valgmuligheder."
-      other: "Afstemningen <strong>%{name}</strong> skal have mindre end  %{max} valgmuligheder."
+      other: "Afstemningen <strong>%{name}</strong> skal have mindre end %{max} valgmuligheder."
     default_poll_must_have_different_options: "Afstemningen skal have forskellige muligheder."
     named_poll_must_have_different_options: "Afstemningen <strong>%{name}</strong> skal have forskellige valgmuligheder."
     default_poll_with_multiple_choices_has_invalid_parameters: "Afstemning med flere valgmuligheder har ugyldige parametre."

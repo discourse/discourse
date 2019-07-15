@@ -15,7 +15,7 @@ ru:
     poll: "опрос"
     invalid_argument: "Неверное значение '%{value}' для аргумента '%{argument}'."
     multiple_polls_without_name: "Обнаружено несколько опросов в одном сообщении. Чтобы система могла их различать между собой, используйте атрибут <code>name</code>' для каждого опроса. Например: <code>[poll name=A1]</code>"
-    multiple_polls_with_same_name: "Обнаружено несколько опросов с одним и тем же названием: <strong>%{name}</strong>. Чтобы система могла  различать опросы между собой, придумайте разные значения для атрибута <code>name</code>' - для каждого опроса своё."
+    multiple_polls_with_same_name: "Обнаружено несколько опросов с одним и тем же названием: <strong>%{name}</strong>. Чтобы система могла различать опросы между собой, придумайте разные значения для атрибута <code>name</code>' - для каждого опроса своё."
     default_poll_must_have_at_least_2_options: "В опросе должно быть хотябы 2 варианта ответа."
     named_poll_must_have_at_least_2_options: "В опросе с названием \"<strong>%{name}</strong>\" должно быть хотябы 2 варианта ответа."
     default_poll_must_have_less_options:

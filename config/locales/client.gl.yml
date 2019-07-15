@@ -358,7 +358,7 @@ gl:
           description: "Notificaráseche cada publicación nova en cada mensaxe e amosarase o número de novas respostas."
         tracking:
           title: "Seguimento"
-          description: "Notificaráseche se alguén menciona o teu @nome ou che responde e tamén  aparecerá o número de novas respostas."
+          description: "Notificaráseche se alguén menciona o teu @nome ou che responde e tamén aparecerá o número de novas respostas."
         regular:
           title: "Normal"
           description: "Notificaráseche se alguén menciona o teu @nome ou che responde."
@@ -451,7 +451,7 @@ gl:
       change: "cambiar"
       moderator: "{{user}} é moderador"
       admin: "{{user}} é administrador"
-      moderator_tooltip: "Este usuario é  un moderador"
+      moderator_tooltip: "Este usuario é un moderador"
       admin_tooltip: "Este usuario é un administrador"
       suspended_notice: "Este usuario está suspendido até o {{date}}."
       suspended_reason: "Razón:"
@@ -470,7 +470,7 @@ gl:
       users: "Usuarios"
       muted_users: "Silenciado"
       muted_users_instructions: "Suprimir todas as notificacións destes usuarios."
-      muted_topics_link: "Amosar os temas silenciados"
+      tracked_topics_link: "Amosar"
       automatically_unpin_topics: "Despegar os temas automaticamente cando alcance o fondo."
       staff_counters:
         flags_given: "denuncias útiles"
@@ -505,6 +505,8 @@ gl:
         regenerate: "Rexenerar"
         disable: "Desactivar"
         enable: "Activar"
+      second_factor:
+        edit: "Editar"
       change_about:
         title: "Cambiar «Verbo de min»"
       change_username:
@@ -617,7 +619,7 @@ gl:
         after_1_minute: "despois de 1 minuto"
         after_2_minutes: "despois de 2 minutos"
         after_3_minutes: "despois de 3 minutos"
-        after_4_minutes: "despois de 4  minutos"
+        after_4_minutes: "despois de 4 minutos"
         after_5_minutes: "despois de 5 minutos"
         after_10_minutes: "despois de 10 minutos"
       invited:
@@ -1897,6 +1899,8 @@ gl:
           upload: "Enviar"
           installed: "Instalado"
           about_theme: "Sobre"
+          enable: "Activar"
+          disable: "Desactivar"
           add: "Engadir"
           scss:
             text: "CSS"
@@ -2191,14 +2195,14 @@ gl:
         delete_forbidden_because_staff: "Non é posíbel eliminiar os administradores e moderadores."
         delete_posts_forbidden_because_staff: "Non é posíbel eliminar todas as publicacións dos administradores ou moderadores."
         delete_forbidden:
-          one: "Non é posíbel eliminar usuarios se teñen publicacións. Elimina as publicacións antes de eliminar o usuario (non é posíbel eliminar publicacións de máis de  %{count} día)"
-          other: "Non é posíbel eliminar usuarios se teñen publicacións. Elimina as publicacións antes de eliminar o usuario (non é posíbel eliminar publicacións de máis de  %{count} días)"
+          one: "Non é posíbel eliminar usuarios se teñen publicacións. Elimina as publicacións antes de eliminar o usuario (non é posíbel eliminar publicacións de máis de %{count} día)"
+          other: "Non é posíbel eliminar usuarios se teñen publicacións. Elimina as publicacións antes de eliminar o usuario (non é posíbel eliminar publicacións de máis de %{count} días)"
         cant_delete_all_posts:
           one: "Non é posíbel eliminar todas as publicacións. Algunhas teñen máis de %{count} día. (o axuste delete_user_max_post_age.)"
           other: "Non é posíbel eliminar todas as publicacións. Algunhas teñen máis de %{count} días. (o axuste delete_user_max_post_age.)"
         cant_delete_all_too_many_posts:
-          one: "Non é posíbel eliminar todas as publicacións porque o usuario ten máis dunha publicación.  (delete_all_posts_max)"
-          other: "Non é posíbel eliminar todas as publicacións porque o usuario ten máis de %{count} publicacións.  (delete_all_posts_max)"
+          one: "Non é posíbel eliminar todas as publicacións porque o usuario ten máis dunha publicación. (delete_all_posts_max)"
+          other: "Non é posíbel eliminar todas as publicacións porque o usuario ten máis de %{count} publicacións. (delete_all_posts_max)"
         delete_and_block: "Eliminar e <b>bloquear</b> este correo-e e enderezo IP"
         delete_dont_block: "Só eliminar"
         deleted: "Eliminouse o usuario."

@@ -574,9 +574,7 @@ da:
       users: "Brugere"
       muted_users: "Ignoreret"
       muted_users_instructions: "Undertryk alle notifikationer fra disse brugere."
-      muted_topics_link: "Vis mute emner"
-      watched_topics_link: "Vis sete emner"
-      tracked_topics_link: "Vis fulgte emner"
+      tracked_topics_link: "Vis"
       automatically_unpin_topics: "Automatisk stop med at følge emner, når jeg når til bunden."
       apps: "Apps"
       revoke_access: "Tilbagekald adgang"
@@ -626,6 +624,8 @@ da:
         enable: "Aktiver"
         copied_to_clipboard: "Kopierede til udklipsholder"
         copy_to_clipboard_error: "Fejl ved kopiering til udklipsholder"
+      second_factor:
+        edit: "Rediger"
       change_about:
         title: "Skift “Om mig”"
         error: "Der opstod en fejl i ændringen af denne værdi."
@@ -1234,8 +1234,8 @@ da:
         category: "Der er ingen emner i kategorien {{category}}."
         top: "Der er ingen top emner"
         educate:
-          new: '<p>Dine nye emner vises her.</p><p>Som standard, betragtes emner som ulæste og vil vise en  <span class="badge new-posts badge-notification" style="vertical-align:middle;line-height:inherit;">ny</span> indikator hvis de var oprettet indenfor de sidste 2 dage</p><p>Du kan ændre dette i dine <a href="%{userPrefsUrl}">indstillinger</a></p>'
-          unread: '<p>Dine nye emner vises her.</p><p>Som standard, betragtes emner som ulæste og vil vise en  <span class="badge new-posts badge-notification">1</span>  hvis du:</p><ul><li>Oprettede dette emne</li><li>Svarede dette emne</li><li>Læste emnet i mere end 4 minutter</li></ul><p> Eller hvis du udtrykkeligt sat emnet til Sporet eller Følger via notifikations indstillinger i bunden af hvert emne.</p><p> Tilgå dine <a href="%{userPrefsUrl}">indstillinger</a> for at ændre dette.</p>'
+          new: '<p>Dine nye emner vises her.</p><p>Som standard, betragtes emner som ulæste og vil vise en <span class="badge new-posts badge-notification" style="vertical-align:middle;line-height:inherit;">ny</span> indikator hvis de var oprettet indenfor de sidste 2 dage</p><p>Du kan ændre dette i dine <a href="%{userPrefsUrl}">indstillinger</a></p>'
+          unread: '<p>Dine nye emner vises her.</p><p>Som standard, betragtes emner som ulæste og vil vise en <span class="badge new-posts badge-notification">1</span> hvis du:</p><ul><li>Oprettede dette emne</li><li>Svarede dette emne</li><li>Læste emnet i mere end 4 minutter</li></ul><p> Eller hvis du udtrykkeligt sat emnet til Sporet eller Følger via notifikations indstillinger i bunden af hvert emne.</p><p> Tilgå dine <a href="%{userPrefsUrl}">indstillinger</a> for at ændre dette.</p>'
       bottom:
         latest: "Der er ikke flere populære emner."
         posted: "Der er ikke flere emner."
@@ -1449,7 +1449,7 @@ da:
         title: "Fremhæv dette emne"
         pin: "Fastgør dette emne til toppen af kategorien {{categoryLink}} indtil"
         confirm_pin: "Du har allerede {{count}} fastgjorte emner. Fastgjorte emner kan være irriterende for nye og anonyme brugere. Er du sikker på du vil fastgøre et nyt emne i denne kategori?"
-        unpin: "Fjern dette emne fra starten af listen i  {{categoryLink}} kategorien."
+        unpin: "Fjern dette emne fra starten af listen i {{categoryLink}} kategorien."
         unpin_until: "Fjern dette emne fra toppen af kategorien {{categoryLink}} eller vent til <strong>%{until}</strong>."
         pin_note: "Brugere kan unpinne emnet individuelt."
         pin_validation: "Der skal angives en dato for at fastgøre dette emne"
@@ -1518,7 +1518,7 @@ da:
         error: "Der opstod en fejl under flytningen af indlæg til emnet."
         instructions:
           one: "Vælg venligst det emne som indlægget skal flyttes til."
-          other: "Vælg venligst det emne som de  <b>{{count}}</b> indlæg skal flyttes til."
+          other: "Vælg venligst det emne som de <b>{{count}}</b> indlæg skal flyttes til."
       move_to_new_message:
         radio_label: "Ny Besked"
       merge_posts:
@@ -2193,9 +2193,7 @@ da:
             visibility_levels:
               title: "Hvem kan se denne gruppe?"
               public: "Alle"
-              members: "Gruppeejer, medlemmer og admins"
               staff: "Gruppeejer og hjælpeteam"
-              owners: "Gruppeejer og admins"
           membership:
             automatic: Automatisk
             trust_level: Tillidsniveau
@@ -2437,6 +2435,8 @@ da:
           install_popular: "Populære"
           about_theme: "Om"
           license: "Licens"
+          enable: "Aktiver"
+          disable: "Deaktiver"
           update_to_latest: "Opdatér til seneste"
           check_for_updates: "Tjek efter opdateringer"
           updating: "Opdaterer..."

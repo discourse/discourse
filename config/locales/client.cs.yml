@@ -701,9 +701,7 @@ cs:
       users: "Uživatelé"
       muted_users: "Ztišení"
       muted_users_instructions: "Umlčet všechny notifikace od těchto uživatelů."
-      muted_topics_link: "Ukázat utlumená témata"
-      watched_topics_link: "Ukázat hlídaná témata"
-      tracked_topics_link: "Ukázat sledovaná témata"
+      tracked_topics_link: "Zobrazit"
       automatically_unpin_topics: "Atomaticky odepni téma jakmile se dostanu na konec."
       apps: "Aplikace"
       revoke_access: "Odebrat přístup"
@@ -755,7 +753,6 @@ cs:
         disable: "Vypnout"
         enable: "Zapnout"
         enable_long: "Povolit záložní kódy"
-        manage: "Spravovat záložní kódy"
         copied_to_clipboard: "Zkopírováno do schránky"
         copy_to_clipboard_error: "Chyba při kopírování dat do schránky"
         remaining_codes: "Zbývá vám <strong>{{count}}</strong> záložní kód."
@@ -764,8 +761,6 @@ cs:
           description: "Každý z těchto kódů může být použit jen jednou. Uložte si je někde v bezpečí, ale dostupné."
       second_factor:
         title: "Dvoufázové přihlašování"
-        disable: "Vypnout dvoufázové přihlašování"
-        enable: "Povolit dvoufázové přihlašování"
         confirm_password_description: "Prosíme před dalším krokem potvrďte své heslo"
         label: "Kód"
         rate_limit: "Prosím počkejete před tím, než vyskoušíte další ověřovací kód."
@@ -774,6 +769,7 @@ cs:
         extended_description: |
           Dvoufaktorová autentizace přidává další bezpečnostní vrstvu k vašemu účtu, protože vedle hesla vyžaduje ještě i zadání jednorázového kódu, vytvořeného na zařízeních <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>Android</a> nebo <a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS</a>.
         oauth_enabled_warning: "Upozorňujeme, že možnost přihlásit se pomocí účtu ze sociální sítě bude vypnuta, jakmila bude na vašem účtu povolena dvoufaktorová autentizace."
+        edit: "Upravit"
       change_about:
         title: "Změna o mně"
         error: "Došlo k chybě při pokusu změnit tuto hodnotu."
@@ -1073,9 +1069,6 @@ cs:
       enabled: "Tato stránka je v režimu jen pro čtení. Prosim pokračujte v prohlížení, ale odpovídání a ostatní operace jsou momentálně vypnuté."
       login_disabled: "Přihlášení je zakázáno jelikož je stránka v režimu jen pro čtení."
       logout_disabled: "Odhlášení je zakázáno zatímco je stránka v režimu jen pro čtení."
-    too_few_topics_and_posts_notice: "Pojďme <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>rozjet diskuzi!</a> V tuto chvíli je tu <strong>%{currentTopics} / %{requiredTopics}</strong> témat a <strong>%{currentPosts} / %{requiredPosts}</strong> příspěvků. Noví návštěvníci potřebují mít co číst a na co odpovídat."
-    too_few_topics_notice: "Pojďme <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>rozjet diskuzi!</a> V tuto chvíli je tu <strong>%{currentTopics} / %{requiredTopics}</strong> témat. Noví návštěvníci potřebují mít co číst a na co odpovídat."
-    too_few_posts_notice: "Pojďme <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>rozjet diskuzi!</a> V tuto chvíli je tu <strong>%{currentPosts} / %{requiredPosts}</strong> příspěvků. Noví návštěvníci potřebují mít co číst a na co odpovídat."
     learn_more: "více informací..."
     all_time: "celkem"
     all_time_desc: "témat vytvořeno"
@@ -1603,7 +1596,7 @@ cs:
         top: "Nejsou tu žádná populární témata."
         educate:
           new: '<p>Zde se zobrazují vaše nová témata.</p><p>Dle výchozího nastavení se za nové příspěvky, které budou mít štítek<span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">nové</span> , považují příspěvky, které byly vytvořeny během posledních 2 dnů.</p><p>Toto můžete změnit ve svém <a href="%{userPrefsUrl}">nastavení</a>.</p>'
-          unread: '<p>Zde se zobrazují vaše nepřečtená témata.</p><p>Podle výchozího nastavení jsou za nepřečtená témata, u kterých se zobrazuje počet nepřečtení  <span class="badge new-posts badge-notification">1</span>, považována ta, která jste:</p><ul><li>Vytvořil toto téma</li><li>Odpověděli v tématu</li><li>Četl téma více než 4 minuty</li></ul><p>Nebo pokud jste nastavil téma jako Hlídané či Sledované pomocí nabídky na spodu každého tématu.</p><p>Toto chování můžete změnit v <a href="%{userPrefsUrl}">nastavení</a>.</p>'
+          unread: '<p>Zde se zobrazují vaše nepřečtená témata.</p><p>Podle výchozího nastavení jsou za nepřečtená témata, u kterých se zobrazuje počet nepřečtení <span class="badge new-posts badge-notification">1</span>, považována ta, která jste:</p><ul><li>Vytvořil toto téma</li><li>Odpověděli v tématu</li><li>Četl téma více než 4 minuty</li></ul><p>Nebo pokud jste nastavil téma jako Hlídané či Sledované pomocí nabídky na spodu každého tématu.</p><p>Toto chování můžete změnit v <a href="%{userPrefsUrl}">nastavení</a>.</p>'
       bottom:
         latest: "Nejsou tu žádná další témata z poslední doby."
         posted: "Nejsou tu žádná další zaslaná témata k přečtení."
@@ -1684,7 +1677,7 @@ cs:
       toggle_information: "zobrazit/skrýt detaily tématu"
       read_more_in_category: "Chcete si toho přečíst víc? Projděte si témata v {{catLink}} nebo {{latestLink}}."
       read_more: "Chcete si přečíst další informace? {{catLink}} nebo {{latestLink}}."
-      read_more_MF: "{ UNREAD, plural, =0 {} one { Zbývá <a href='{basePath}/unread'>1 nepřečtené</a> téma } other { Je tu <a href='{basePath}/unread'># nepřečtených</a> témat } } { NEW, plural, =0 {} one { {BOTH, select, true{and } false {is } other{}} <a href='{basePath}/new'>1  nové</a> téma} other { {BOTH, select, true{and } false {are } other{}} <a href='{basePath}/new'># nových</a> témat} }, nebo {CATEGORY, select, true {zobrazit další témata v kategorii {catLink}} false {{latestLink}} other {}}"
+      read_more_MF: "{ UNREAD, plural, =0 {} one { Zbývá <a href='{basePath}/unread'>1 nepřečtené</a> téma } other { Je tu <a href='{basePath}/unread'># nepřečtených</a> témat } } { NEW, plural, =0 {} one { {BOTH, select, true{and } false {is } other{}} <a href='{basePath}/new'>1 nové</a> téma} other { {BOTH, select, true{and } false {are } other{}} <a href='{basePath}/new'># nových</a> témat} }, nebo {CATEGORY, select, true {zobrazit další témata v kategorii {catLink}} false {{latestLink}} other {}}"
       browse_all_categories: Projděte všechny kategorie
       view_latest_topics: zobrazte si populární témata
       suggest_create_topic: "Co takhle založit nové téma?"
@@ -2021,7 +2014,7 @@ cs:
         edit: "Bohužel nastala chyba při editaci příspěvku. Prosím zkuste to znovu."
         upload: "Bohužel nastala chyba při nahrávání příspěvku. Prosím zkuste to znovu."
         too_many_uploads: "Bohužel, najednou smíte nahrát jen jeden soubor."
-        upload_not_authorized: "Bohužel, soubor, který se snažíš nahrát, není povolený (povolená rozšíření:  {{authorized_extensions}}). "
+        upload_not_authorized: "Bohužel, soubor, který se snažíš nahrát, není povolený (povolená rozšíření: {{authorized_extensions}}). "
         image_upload_not_allowed_for_new_user: "Bohužel, noví uživatelé nemohou nahrávat obrázky."
         attachment_upload_not_allowed_for_new_user: "Bohužel, noví uživatelé nemohou nahrávat přílohy."
         attachment_download_requires_login: "Omlouváme se, ale pro stáhnutí přílohy musíte být přihlášen."
@@ -2757,9 +2750,7 @@ cs:
             visibility_levels:
               title: "Kdo vidí tuto skupinu?"
               public: "Všichni"
-              members: "Vlastníci skupiny, členové a správci"
               staff: "Vlastníci a redaktoři skupiny"
-              owners: "Vlastníci a správci skupiny"
           membership:
             automatic: Automatické
             trust_level: Věrohodnost
@@ -3013,7 +3004,7 @@ cs:
           css_html: "Vlastí CSS/HTML"
           edit_css_html: "Upravit CSS/HTML"
           edit_css_html_help: "Neupravil jsi CSS nebo HTML"
-          delete_upload_confirm: "Smazat toto nahrávání?  (Motiv CSS by mohl přestat fungovat!)"
+          delete_upload_confirm: "Smazat toto nahrávání? (Motiv CSS by mohl přestat fungovat!)"
           import_web_tip: "Úložiště obsahující motiv"
           is_private: "Motiv je v soukromém git úložišti"
           public_key: "Přidělit přístup k repo následujícím veřejným klíčem:"
@@ -3021,6 +3012,8 @@ cs:
           install_popular: "Populární"
           about_theme: "O fóru"
           license: "Licence"
+          enable: "Zapnout"
+          disable: "Vypnout"
           update_to_latest: "Aktualizovat na nejnovější"
           check_for_updates: "kontrola aktualizací"
           updating: "Aktualizace..."

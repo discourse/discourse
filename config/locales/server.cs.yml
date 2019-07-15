@@ -28,6 +28,7 @@ cs:
   posts: "příspěvky"
   loading: "Nahrávám"
   powered_by_html: 'Systém běží na <a href="https://www.discourse.org">Discourse</a>, nejlépe funguje se zapnutým JavaScriptem'
+  sign_up: "Registrovat se"
   log_in: "Přihlásit se"
   submit: "Odeslat"
   purge_reason: "Tento účet byl automaticky smazán a deaktivován jako opuštěný"

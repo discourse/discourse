@@ -124,7 +124,7 @@ id:
         enabled: "terdaftar %{when}"
         disabled: "tidak terdaftar %{when}"
       banner:
-        enabled: "Jadikan ini sebagai spanduk %{when}.  Spanduk akan tampil di bagian atas di setiap halaman hingga diturunkan oleh pengguna."
+        enabled: "Jadikan ini sebagai spanduk %{when}. Spanduk akan tampil di bagian atas di setiap halaman hingga diturunkan oleh pengguna."
         disabled: "Hilangkan spanduk ini %{when}. Spanduk tidak akan lagi tampil pada bagian teratas di tiap halaman."
     topic_admin_menu: "topik aksi admin"
     emails_are_disabled: "Semua surel yang keluar telah dinonaktifkan oleh administrator. Tidak ada pemberitahuan email yang akan dikirimkan."
@@ -192,7 +192,7 @@ id:
       other: "{{count}} karakter"
     suggested_topics:
       title: "Topik Yang Disarankan"
-      pm_title: "Pesan Yang  Disarankan"
+      pm_title: "Pesan Yang Disarankan"
     about:
       simple_title: "Tentang"
       title: "Tentang %{title}"
@@ -448,7 +448,7 @@ id:
       read_time: "waktu baca"
       topics_entered: "memasuki topik"
       post_count: "# post"
-      confirm_delete_other_accounts: "Apakah Anda yakin  untuk menghapus akun ini?"
+      confirm_delete_other_accounts: "Apakah Anda yakin untuk menghapus akun ini?"
     user_fields:
       none: "(memilih sebuah pilihan)"
     user:
@@ -481,7 +481,7 @@ id:
         perm_denied_expl: "Anda menolak izin untuk pemberitahuan. Izinkan pemberitahuan melalui pengaturan browser anda."
         disable: "Tidak membolehkan Notifikasi"
         enable: "Membolehkan Notifikasi"
-        each_browser_note: "Catatan : Anda  harus mengubah pengaturan ini pada setiap browser yang Anda gunakan."
+        each_browser_note: "Catatan : Anda harus mengubah pengaturan ini pada setiap browser yang Anda gunakan."
       dismiss: "Bubar"
       dismiss_notifications: "Bubarkan Semua"
       dismiss_notifications_tooltip: "Tandai semua notifikasi belum dibaca telah dibaca"
@@ -517,7 +517,6 @@ id:
       users: "Pengguna"
       muted_users: "Diredam"
       muted_users_instructions: "Menekan semua pemberitahuan dari semua pengguna."
-      muted_topics_link: "Menampilkan topik yang diredam"
       apps: "Aplikasi"
       api_approved: "Disetujui:"
       theme: "Tema"
@@ -560,6 +559,7 @@ id:
       second_factor:
         label: "Kode"
         show_key_description: "Masukkan secara manual"
+        edit: "Ubah"
       change_about:
         title: "Ganti Tentang Saya"
         error: "Ada kesalahan saat mengganti nilai ini"
@@ -932,7 +932,7 @@ id:
         other: "{{count}} topik baru"
       title: "Topik"
       invalid_access:
-        description: "Maaf,  kamu tidak berhak mengakses topik tersebut."
+        description: "Maaf, kamu tidak berhak mengakses topik tersebut."
       server_error:
         title: "Gagal membuka topik"
       not_found:
@@ -1138,9 +1138,7 @@ id:
             visibility_levels:
               title: "Siapa yang bisa melihat kelompok ini?"
               public: "Semua orang"
-              members: "Pemilik kelompok, anggota, dan admin"
               staff: "Pemilik kelompok dan staf"
-              owners: "Pemilik grup dan admin"
           membership:
             automatic: Otomatis
             trust_level: Level Kepercayaan
@@ -1188,6 +1186,8 @@ id:
           edit: "Ubah"
           upload: "Unggah"
           about_theme: "Tentang"
+          enable: "Aktifkan"
+          disable: "Nonaktifkan"
           add: "Menambahkan"
       email:
         title: "Surel"

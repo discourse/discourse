@@ -650,9 +650,7 @@ bs_BA:
       users: "Korisnici"
       muted_users: "Utišani"
       muted_users_instructions: "Odbij sve notifikacije od ovih korisnika."
-      muted_topics_link: "Prikaži utišane teme"
-      watched_topics_link: "Prikaži gledane teme"
-      tracked_topics_link: "Prikaži praćene teme"
+      tracked_topics_link: "Show"
       automatically_unpin_topics: "Automatski otkači temu kada dođem do dna"
       apps: "Aplikacije"
       revoke_access: "Oduzmi pristup"
@@ -708,6 +706,7 @@ bs_BA:
         disable_description: "Molimo da uneste kod za ovjeru autentičnosti sa vaše aplikacije"
         show_key_description: "Unesi manuelno"
         oauth_enabled_warning: "Imajte na umu da će ulogovanje korištenjem socijalnih mreža biti isključeno u momentu kad uključite two factor authentication (dvofaktorsku ovjeru autentičnosti) na vašem korisničkom računu."
+        edit: "Izmijeni"
       change_about:
         title: "Promjeni O meni"
         error: "Desila se greška prilikom promjene."
@@ -1088,7 +1087,7 @@ bs_BA:
       to_continue: "Molimo vas ulogujte se"
       preferences: "Morate biti ulogovani kako bi mjenjali vaše postavke"
       forgot: "Ne sjećam se svojih detalja korisničkog imena"
-      not_approved: "Vaš korisnički račun nije još uvijek odobren od strane administratora. Dobiti ćete email kada  dobijete mogućnost da se ulogirate."
+      not_approved: "Vaš korisnički račun nije još uvijek odobren od strane administratora. Dobiti ćete email kada dobijete mogućnost da se ulogirate."
       google_oauth2:
         name: "Google"
         title: "koristeći Google"
@@ -1720,7 +1719,7 @@ bs_BA:
         pin_globally: "Postavi ovu temu da se prikazuje na vrhu svih lista tema sve do"
         confirm_pin_globally: "Već imate {{count}} globalno okačene teme. Previše okačenih tema mogu praviti teret za nove i anonimne korisnike. Da li ste sigurni da želite okačiti još jednu temu u ovoj kategoriji?"
         unpin_globally: "Uklonite ovu temu sa vrha svih lista tema."
-        unpin_globally_until: "Odklonite ovu temu sa vrha svih lista tema ili sačekajte do  <strong>%{until}</strong>."
+        unpin_globally_until: "Odklonite ovu temu sa vrha svih lista tema ili sačekajte do <strong>%{until}</strong>."
         global_pin_note: "Korisnici mogu sami individualno za sebe ukloniti okačku sa teme."
         not_pinned_globally: "Nema tema okačenih globalno."
         already_pinned_globally:
@@ -2418,6 +2417,8 @@ bs_BA:
           installed: "Installed"
           install_popular: "Popularne"
           about_theme: "O Nama"
+          enable: "Omogući"
+          disable: "Onemogući"
           add: "Dodaj"
           scss:
             text: "Stylesheet"

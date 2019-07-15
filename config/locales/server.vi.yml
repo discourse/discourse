@@ -26,6 +26,7 @@ vi:
   topics: "Chủ đề"
   posts: "bài viết"
   loading: "Đang tải"
+  sign_up: "Đăng ký"
   log_in: "Đăng nhập"
   disable_remote_images_download_reason: "Không thể tải ảnh về máy chủ vì không dung lượng lưu trữ."
   anonymous: "Ẩn danh"
@@ -250,7 +251,7 @@ vi:
       email_already_used_in_category: "'%{email}' đã được sử dụng trong danh mục '%{category_name}'."
     cannot_delete:
       has_subcategories: "Không thể xoá chuyên mục này được vì nó có chuyên mục con."
-      topic_exists_no_oldest: "Không thể xoá chuyên mục này vì nó có %{count}  chủ để."
+      topic_exists_no_oldest: "Không thể xoá chuyên mục này vì nó có %{count} chủ để."
     uncategorized_description: "Chủ đề không cần chuyên mục, hoặc không phù hợp với bất kỳ chuyên mục nào hiện có."
   trust_levels:
     newuser:
@@ -263,7 +264,7 @@ vi:
       title: "thường xuyên"
     leader:
       title: "người khởi xướng"
-    change_failed_explanation: "Bạn đã cố gắng để giảm hạng %{user_name}  xuống '%{new_trust_level}'. Tuy nhiên cấp độ  tin cậy hiện tại của họ đã là '%{current_trust_level}'. %{user_name} sẽ được giữ lại ở cấp độ '%{current_trust_level}' - nếu bạn muốn giảm hạng thành viên, trước tiên hãy khóa cấp độ tin cậy"
+    change_failed_explanation: "Bạn đã cố gắng để giảm hạng %{user_name} xuống '%{new_trust_level}'. Tuy nhiên cấp độ tin cậy hiện tại của họ đã là '%{current_trust_level}'. %{user_name} sẽ được giữ lại ở cấp độ '%{current_trust_level}' - nếu bạn muốn giảm hạng thành viên, trước tiên hãy khóa cấp độ tin cậy"
   rate_limiter:
     hours:
       other: "%{count} giờ"
@@ -408,7 +409,7 @@ vi:
     title: "Hủy đăng ký"
     log_out: "Đăng Xuất"
     digest_frequency:
-      never: "không  bao giờ"
+      never: "không bao giờ"
       every_30_minutes: "mỗi 30 phút"
       every_hour: "hàng giờ"
       daily: "hàng ngày"
@@ -471,7 +472,7 @@ vi:
     flags:
       title: "Dấu cờ - Flags"
       xaxis: "Ngày"
-      yaxis: "Số dấu cờ  - flag"
+      yaxis: "Số dấu cờ - flag"
     bookmarks:
       title: "Các đánh dấu"
       xaxis: "Ngày"
@@ -685,7 +686,7 @@ vi:
     enable_badges: "Kích hoạt hệ thống huy hiệu"
     allow_index_in_robots_txt: "Chỉ rõ trong robots.txt trang web này cho phép tạo chỉ mục bởi web search engines."
     email_domains_blacklist: "Một danh sách đuôi email mà người dùng không được phép dùng để đăng ký tài khoản. Ví dụ: maillinator.com|trashmail.net. Lưu ý mỗi tên miền cách nhau bởi dấu \"|\"."
-    email_domains_whitelist: "Danh sách tên miền người dùng ĐƯỢC PHÉP đăng ký tài khoản. CẢNH BÁO: người dùng với  tên miền email khác trong danh sách sẽ không được phép đăng ký!"
+    email_domains_whitelist: "Danh sách tên miền người dùng ĐƯỢC PHÉP đăng ký tài khoản. CẢNH BÁO: người dùng với tên miền email khác trong danh sách sẽ không được phép đăng ký!"
     log_out_strict: "Khi đăng xuất, đăng xuất TẤT CẢ session cho tất cả thiế bị"
     new_version_emails: "Gửi email đến địa chỉ contact_email khi có phiên bản Discourse mới."
     invite_expiry_days: "Key mời người dùng có giới hạn bao lâu? tính theo ngày"
@@ -969,7 +970,7 @@ vi:
     suspended: "Bạn không thể đăng nhập cho tới ngày %{date}."
     suspended_with_reason: "Tài khoản bị tạm khóa cho tới %{date}: %{reason}"
     errors: "%{errors}"
-    not_available: "Không có sẵn. Thử  %{suggestion}?"
+    not_available: "Không có sẵn. Thử %{suggestion}?"
     something_already_taken: "Có lỗi xảy ra, tên đăng nhập hoặc email đã được đăng ký. Thử sử dụng chức năng quên mật khẩu."
     omniauth_error: "Xin lỗi, có lỗi khi xác thực tài khoản của bạn. Bạn không được duyệt chứng thực?"
     omniauth_error_unknown: "Cố lỗi xảy ra khi bạn đăng nhập, vui lòng thử lại."
@@ -1176,7 +1177,7 @@ vi:
     user_email_notification_topic_nil: "post.topic is nil"
     user_email_post_deleted: "bài viết đã bị xóa bởi tác giả"
     user_email_user_suspended: "người dùng đã bị tạm khóa"
-    user_email_already_read: "người dùng đã đọc  bài viết này"
+    user_email_already_read: "người dùng đã đọc bài viết này"
     sender_message_blank: "tin nhắn rỗng"
     sender_message_to_blank: "message.to rỗng"
     sender_text_part_body_blank: "text_part.body rỗng"

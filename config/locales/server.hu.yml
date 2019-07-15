@@ -7,17 +7,18 @@
 
 hu:
   dates:
-    short_date_no_year: "D MMM"
-    short_date: "D MMM, YYYY"
-    long_date: "MMMM D, YYYY h:mma"
+    short_date_no_year: "MMM D."
+    short_date: "YYYY. MMM D."
+    long_date: "YYYY. MMMM D. h:mma"
   datetime_formats: &datetime_formats
     formats:
-      short: "%m-%d-%Y"
-      short_no_year: "%B %-d"
-      date_only: "%B %-d, %Y"
-      long: "%B %-d, %Y, %l:%M%P"
+      short: "%Y-%m-%d"
+      short_no_year: "%B %-d."
+      date_only: "%Y. %B %-d."
+      long: "%Y. %B %-d. %H:%M"
+      no_day: "%Y. %B"
   date:
-    month_names: [~, Január, Február, Március, Április, Május, Június, Július, Augusztus, Szeptember, Október, November, December]
+    month_names: [~, január, február, március, április, május, június, július, augusztus, szeptember, október, november, december]
     <<: *datetime_formats
   time:
     <<: *datetime_formats
@@ -26,49 +27,49 @@ hu:
   title: "Discourse"
   topics: "Témák"
   posts: "Bejegyzések"
-  loading: "Töltés"
-  powered_by_html: 'A motorháztető alatt: <a href="https://www.discourse.org">Discourse</a>, megtekintése JavaScript engedélyezésével ajánlott'
+  loading: "Betöltés"
+  powered_by_html: 'A motorháztető alatt: <a href="https://www.discourse.org">Discourse</a>, a megtekintése JavaScript engedélyezésével ajánlott'
+  sign_up: "Regisztráció"
   log_in: "Bejelentkezés"
   submit: "Beküldés"
-  purge_reason: "Automatikusan törölve, mint elhagyott, deaktivált account"
-  disable_remote_images_download_reason: "A távoli képletöltés ki lett kapcsolva, mivel nem áll rendelkezésre tárhely."
-  anonymous: "Anonim"
+  purge_reason: "Automatikusan törölve, mint elhagyott, deaktivált fiók"
+  disable_remote_images_download_reason: "A távoli képletöltés ki lett kapcsolva, mivel nincs elég szabad tárhely."
+  anonymous: "Névtelen"
   remove_posts_deleted_by_author: "Szerző által törölve"
   themes:
     other_error: "Hiba történt az oldal stílusának frissítése közben"
     import_error:
-      git: "Nem sikerült klónozni a git repositoryt, hozzáférés megtagadva vagy repository nem található"
+      git: "Nem sikerült klónozni a git tárolót, hozzáférés megtagadva vagy a tároló nem található"
     settings_errors:
-      invalid_yaml: "Az adott YAML érvénytelen."
-      default_value_missing: "'%{name}' beállításnak nincs alapértelmezett értéke"
+      invalid_yaml: "A megadott YAML érvénytelen."
+      default_value_missing: "A(z) „%{name}” beállításnak nincs alapértelmezett értéke."
       number_value_not_valid_min_max: "%{min} és %{max} között kell lennie."
   emails:
     incoming:
-      default_subject: "Ennek a témának címre van szüksége"
-      show_trimmed_content: "Levágott tartalom mutatása"
+      default_subject: "Cím szükséges ehhez a témához"
+      show_trimmed_content: "Levágott tartalom megjelenítése"
       no_subject: "(nincs tárgy)"
       no_body: "(nincs törzs)"
       errors:
-        empty_email_error: "Akkor fordul elő, amikor a nyers email, amit kaptunk, üres volt."
-        no_body_detected_error: "Történik, amikor nem tudtunk kivonatolni egy törzset és nem voltak csatolmányok."
-        inactive_user_error: "Történik, ha a feladó nem aktív."
-        bad_destination_address: "Történik, ha a To/Cc/Bcc mezőkben lévő email címek egyike sem illeszkedik a beállított beérkező e-mail címhez."
-        strangers_not_allowed_error: "Történik, ha egy felhasználó megpróbált létrehozni egy új témát egy kategóriában, amelynek nem tagja."
+        empty_email_error: "Akkor fordul elő, ha üres volt a kapott nyers e-mail."
+        inactive_user_error: "Akkor fordul elő, ha a feladó nem aktív."
+        bad_destination_address: "Akkor fordul elő, ha a Címzett/Másolatot kap/Vakmásolatot kap mezőkben lévő email címek egyike sem illeszkedik a beállított beérkező e-mail címhez."
+        strangers_not_allowed_error: "Akkor fordul elő, ha a felhasználó új témát akar létrehozni egy olyan kategóriában, amelynek nem tagja."
       unrecognized_error: "Ismeretlen hiba"
   errors: &errors
     format: "%{attribute} %{message}"
     format_with_full_message: "<b>%{attribute}</b>:%{message}"
     messages:
-      too_long_validation: "limitálva %{max} karakterre; megadott karakterek száma: %{length}."
+      too_long_validation: "%{max} karakterre korlátozva; megadott karakterek száma: %{length}."
       invalid_boolean: "Érvénytelen logikai érték."
       taken: "már foglalt"
-      accepted: elfogadva kell lennie
+      accepted: elfogadottnak kell lennie
       blank: nem lehet üres
-      present: üres kell hogy legyen
-      confirmation: "nem egyezik %{attribute}"
+      present: üresnek kell lennie
+      confirmation: "nem egyezik: %{attribute}"
       empty: nem lehet üres
-      equal_to: "meg kell egyeznie az alábbival: %{count}"
-      even: "páros szám kell, hogy legyen"
+      equal_to: "meg kell egyeznie ezzel: %{count}"
+      even: páros számnak kell lennie
       exclusion: foglalt
       greater_than: "nagyobbnak kell lenni, mint %{count} "
       greater_than_or_equal_to: "nagyobbnak vagy egyenlőnek kell lennie, mint %{count}"
@@ -112,7 +113,7 @@ hu:
     operation_already_running: "Egy művelet jelenleg is fut. Nem tudunk újat indítani jelenleg."
     backup_file_should_be_tar_gz: "A biztonsági mentésnek .tar.gz formátumúnak kell lennie."
     not_enough_space_on_disk: "Nincs elég hely a lemezen, hogy feltöltsük ezt a biztonsági mentést."
-    invalid_filename: "A mentési fájlnév érvénytelen karaktereket tartalmaz. Érvényes karakterek a-z 0-9 .  -  _."
+    invalid_filename: "A mentési fájlnév érvénytelen karaktereket tartalmaz. Érvényes karakterek a-z 0-9 . - _."
   not_logged_in: "Be kell jelentkezned, hogy ezt megtehesd."
   not_found: "A kért hivatkozás vagy forrás nem található."
   invalid_access: "Nincs engedélyed a kért forrás megtekintéséhez."
@@ -1135,7 +1136,7 @@ hu:
       agree_and_keep:
         title: "Bejegyzés megtartása"
       agree_and_suspend:
-        title: "Felhasználó  felfüggesztése"
+        title: "Felhasználó felfüggesztése"
         description: "Egyezz bele megjelöléssel, és függeszd fel a felhasználót"
       agree_and_silence:
         title: "Felhasználó elnémítása"

@@ -593,6 +593,7 @@ de:
         only_admins: "Nur Administratoren"
         mods_and_admins: "Nur Moderatoren und Administratoren"
         members_mods_and_admins: "Nur Gruppenmitglieder, Moderatoren und Administratoren"
+        owners_mods_and_admins: "Nur Gruppeneigentümer, Moderatoren und Administratoren"
         everyone: "Jeder"
       notifications:
         watching:
@@ -792,9 +793,7 @@ de:
       muted_users_instructions: "Benachrichtigungen von diesen Benutzern werden unterdrückt."
       ignored_users: "Ignoriert"
       ignored_users_instructions: "Alle Beiträge und Benachrichtigungen von diesen Benutzern unterdrücken."
-      muted_topics_link: "Zeige stummgeschaltete Themen"
-      watched_topics_link: "Zeige beobachtete Themen"
-      tracked_topics_link: "Zeige verfolgte Themen"
+      tracked_topics_link: "Anzeigen"
       automatically_unpin_topics: "Angeheftete Themen automatisch loslösen, wenn ich deren letzten Beitrag gelesen habe."
       apps: "Apps"
       revoke_access: "Entziehe Zugriffsrecht"
@@ -846,18 +845,18 @@ de:
         disable: "Deaktivieren"
         enable: "Aktivieren"
         enable_long: "Wiederherstellungscodes aktivieren"
-        manage: "Wiederherstellungscodes verwalten"
+        manage: "Verwalte Sicherungscodes. Du hast noch <strong>{{count}}</strong> Sicherungscodes."
         copied_to_clipboard: "Wurde in Zwischenablage kopiert"
         copy_to_clipboard_error: "Beim Kopieren in die Zwischenablage trat ein Fehler auf"
         remaining_codes: "Du hast noch <strong>{{count}}</strong> Wiederherstellungscodes übrig."
         use: "Wiederherstellungscode verwenden"
+        enable_prerequisites: "Du musst vor dem Generieren von Sicherungscodes einen primären zweiten Faktor aktivieren."
         codes:
           title: "Wiederherstellungscodes generiert"
           description: "Jeder dieser Wiederherstellungscodes kann nur einmal benutzt werden. Bewahre diese an einem sicheren aber verfügbaren Ort auf."
       second_factor:
         title: "Zwei-Faktor-Authentifizierung"
-        disable: "Zwei-Faktor-Authentifizierung deaktivieren"
-        enable: "Zwei-Faktor-Authentifizierung aktivieren"
+        enable: "Zwei-Faktor-Authentifizierung verwalten"
         confirm_password_description: "Bitte bestätige dein Passwort um fortzufahren"
         label: "Code"
         rate_limit: "Bitte warte ein wenig, bevor du es mit einem anderen Authentifizierungscode versuchst."
@@ -872,6 +871,16 @@ de:
         oauth_enabled_warning: "Beachte bitte, dass soziale Anmelde-Methoden deaktiviert werden, sobald die Zwei-Faktor-Authentifizierung für dein Konto aktiviert ist."
         use: "Authentifizierungs-App verwenden"
         enforced_notice: "Du musst Zwei-Faktor-Authentifizierung aktivieren, bevor du auf diese Seite zugreifen kannst."
+        disable: "deaktivieren"
+        disable_title: "Zweiten Faktor deaktivieren"
+        disable_confirm: "Sollen alle zweiten Faktoren deaktiviert werden?"
+        edit: "Bearbeiten"
+        edit_title: "Zweiten Faktor bearbeiten"
+        edit_description: "Name des zweiten Faktors"
+        totp:
+          title: "Token-basierte Authentifikatoren"
+          add: "Neuer Authentifikator"
+          default_name: "Mein Authentifikator"
       change_about:
         title: "„Über mich“ ändern"
         error: "Beim Ändern dieses Wertes ist ein Fehler aufgetreten."
@@ -1172,9 +1181,6 @@ de:
       enabled: "Diese Website befindet sich im Nur-Lesen-Modus. Du kannst weiterhin Inhalte lesen, aber das Erstellen von Beiträgen, Vergeben von Likes und Durchführen einiger weiterer Aktionen ist derzeit nicht möglich."
       login_disabled: "Die Anmeldung ist deaktiviert während sich die Website im Nur-Lesen-Modus befindet."
       logout_disabled: "Die Abmeldung ist deaktiviert während sich die Website im Nur-Lesen-Modus befindet."
-    too_few_topics_and_posts_notice: "Lass' <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>die Diskussionen starten!</a> Es existieren bisher <strong>%{currentTopics} von %{requiredTopics}</strong> benötigten Themen und <strong>%{currentPosts} von %{requiredPosts}</strong> benötigten Beiträgen. Neue Besucher benötigen bestehende Konversationen, die sie lesen und auf die sie antworten können."
-    too_few_topics_notice: "Lass' <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>die Diskussionen starten!</a> Es existieren bisher <strong>%{currentTopics} von %{requiredTopics}</strong> benötigten Themen. Neue Besucher benötigen bestehende Konversationen, die sie lesen und auf die sie antworten können."
-    too_few_posts_notice: "Lass' <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>die Diskussionen starten!</a> Es existieren bisher <strong>%{currentPosts} von %{requiredPosts}</strong> benötigten Beiträgen. Neue Besucher benötigen bestehende Konversationen, die sie lesen und auf die sie antworten können."
     logs_error_rate_notice:
       reached_hour_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# Fehler/Stunde} other {# errors/hour}}</a> hat die Grenze der Webseiten-Einstellung von {limit, plural, one {# Fehler/Stunde} other {# Fehler/Stunde}} erreicht."
       reached_minute_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# Fehler/Minute} other {# Fehler/Minute}}</a> hat die Grenze der Webseiten-Einstellung von {limit, plural, one {# Fehler/Minute} other {# Fehler/Minute}} erreicht."
@@ -1420,7 +1426,7 @@ de:
       cannot_see_mention:
         category: "Du hast {{username}} erwähnt, aber diese Person wird nicht benachrichtigt da sie keinen Zugriff auf diese Kategorie hat. Füge sie einer Gruppe hinzu die Zugriff auf diese Kategorie hat."
         private: "Du hast {{username}} erwähnt, aber diese Person wird nicht benachrichtigt da sie diese persönliche Nachricht nicht sehen kann. Lade sie zu dieser PM ein."
-      duplicate_link: "Es sieht so aus als wäre dein Link auf <b>{{domain}}</b> in dem Thema bereits geschrieben worden von  <b>@{{username}}</b> in <a href='{{post_url}}'>einer Antwort vor {{ago}}</a> – bist du sicher, dass du ihn noch einmal schreiben möchtest?"
+      duplicate_link: "Es sieht so aus als wäre dein Link auf <b>{{domain}}</b> in dem Thema bereits geschrieben worden von <b>@{{username}}</b> in <a href='{{post_url}}'>einer Antwort vor {{ago}}</a> – bist du sicher, dass du ihn noch einmal schreiben möchtest?"
       error:
         title_missing: "Titel ist erforderlich"
         title_too_short: "Titel muss mindestens {{min}} Zeichen lang sein"
@@ -2609,6 +2615,7 @@ de:
         up_down: "%{shortcut} Auswahl bewegen &uarr; &darr;"
         open: "%{shortcut} Ausgewähltes Thema öffnen"
         next_prev: "%{shortcut} Nächster/vorheriger Abschnitt"
+        go_to_unread_post: "%{shortcut} Zum ersten ungelesenen Beitrag gehen"
       application:
         title: "Anwendung"
         create: "%{shortcut} Neues Thema erstellen"
@@ -2645,6 +2652,7 @@ de:
         mark_tracking: "%{shortcut} Thema verfolgen"
         mark_watching: "%{shortcut} Thema beobachten"
         print: "%{shortcut} Thema ausdrucken"
+        defer: "%{shortcut} Thema ignorieren"
     badges:
       earned_n_times:
         one: "Abzeichen %{count}-mal erhalten"
@@ -2907,9 +2915,7 @@ de:
             visibility_levels:
               title: "Wer kann diese Gruppe sehen?"
               public: "Jeder"
-              members: "Gruppenbesitzer, Mitglieder und Admins"
               staff: "Gruppenbesitzer und Team"
-              owners: "Gruppenbesitzer und Admins"
           membership:
             automatic: Automatisch
             trust_level: Vertrauensstufe
@@ -3140,7 +3146,7 @@ de:
         new_style: "Neuer Style"
         install: "Installieren"
         delete: "Löschen"
-        delete_confirm: 'Möchtest du wirklich  "%{theme_name}" löschen? '
+        delete_confirm: 'Möchtest du wirklich "%{theme_name}" löschen? '
         color: "Farbe"
         opacity: "Transparenz"
         copy: "Kopieren"
@@ -3240,6 +3246,8 @@ de:
           version: "Version:"
           authors: "Erstellt von:"
           source_url: "Quelle"
+          enable: "Aktivieren"
+          disable: "Deaktivieren"
           required_version:
             error: "Dieses Theme wurde automatisch deaktiviert, weil es mit dieser Discourse-Version nicht kompatibel ist."
             minimum: "Erfordert Discourse-Version {{version}} oder höher"
@@ -3970,7 +3978,7 @@ de:
         delete_confirm: "Möchtest du wirklich das :%{name}: Emoji löschen?"
       embedding:
         get_started: "Wenn du Discourse in einer anderen Website einbetten möchtest, beginne mit dem hinzufügen des Host. "
-        confirm_delete: "Möchtest du wirklich  diesen Host löschen?"
+        confirm_delete: "Möchtest du wirklich diesen Host löschen?"
         sample: "Benutze den folgenden HTML code für deine Site um Discourse Beiträge zu erstellen und einzubetten. Ersetze <b>REPLACE_ME</b> mit der URL der Site in die du sie einbetten möchtest."
         title: "Einbettung"
         host: "Erlaubte Hosts"

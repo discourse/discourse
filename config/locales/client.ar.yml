@@ -168,8 +168,8 @@ ar:
           zero: "بعد أقل من عام"
           one: "بعد عام واحدة"
           two: "بعد عامين"
-          few: "بعد %{count}  عام"
-          many: "بعد %{count}  عام"
+          few: "بعد %{count} عام"
+          many: "بعد %{count} عام"
           other: "بعد %{count} عام"
       previous_month: "الشهر الماضي"
       next_month: "الشهر القادم"
@@ -177,9 +177,9 @@ ar:
     share:
       post: "المنشور رقم %{postNumber}"
       close: "أغلق"
-      twitter: "شارك هذا الرابط على تويتر"
-      facebook: "شارك هذا الرابط على الفيسبوك"
-      email: "ارسل هذا الرابط بالبريد الالكتروني"
+      twitter: "شارك هذا رابط على تويتر"
+      facebook: "شارك هذا رابط على الفيسبوك"
+      email: "ارسل هذا رابط الى البريد الإليكتروني"
     action_codes:
       public_topic: "أجعل هذا الموضوع عامًّا %{when}"
       private_topic: "تحويل هذا الموضوع إلى رسالة شخصية %{when}"
@@ -351,7 +351,7 @@ ar:
       title:
         search: "ابحث في الرسائل باستخدام العنوان"
     review:
-      awaiting_approval: "بأنتضار الموافقة"
+      awaiting_approval: "بأنتضار موافقة"
       delete: "أحذف"
       settings:
         saved: "تم حفظهُ"
@@ -663,7 +663,7 @@ ar:
       admin: "{{user}} هو مدير"
       moderator_tooltip: "هذا المستخدم مشرف"
       admin_tooltip: "هذا المستخدم مدير"
-      suspended_notice: "هذا المستخدم موقوف حتى تاريخ  {{date}}"
+      suspended_notice: "هذا المستخدم موقوف حتى تاريخ {{date}}"
       suspended_permanently: "هذا العضو موقوف."
       suspended_reason: "السبب:"
       github_profile: "Github"
@@ -703,9 +703,7 @@ ar:
       users: "الأعضاء"
       muted_users: "المكتومون"
       muted_users_instructions: "تجاهل الإشعارات من هؤلاء الأعضاء."
-      muted_topics_link: "أعرض الموضوعات المكتومة"
-      watched_topics_link: "أعرض الموضوعات المراقبة"
-      tracked_topics_link: "أعرض الموضوعات المتابعة"
+      tracked_topics_link: "إظهار"
       automatically_unpin_topics: "ألغِ تثبيت الموضوعات آليا عندما أصل إلى آخرها."
       apps: "تطبيقات"
       revoke_access: "سحب صلاحيات الوصول"
@@ -757,7 +755,13 @@ ar:
         copy_to_clipboard_error: "خطأ في نسخ البيانات الى لوحة العمل"
       second_factor:
         label: "كود"
+        disable_description: "يرجى ادخال رمز التوثيق من التطبيق الخاص بك"
         show_key_description: "أضف يدويا"
+        short_description: |
+          قم بحماية الحساب الخاص بك مع رمز الامان ذو الاستخدام الواحد.
+        oauth_enabled_warning: "يرجى الملاحظة ان تسجيل الدخول عن طريق حسابات مواقع التواصل الاجتماعي سيتم تعطيلها بمجرد تفعيل خاصية التوثيق بعاملين الحساب"
+        use: "<a href>استخدم تطبيق التوثيق</a>"
+        edit: "عدّل"
       change_about:
         title: "تعديل عني"
         error: "حدث عطل أثناء تغيير هذه القيمة."
@@ -774,7 +778,7 @@ ar:
       change_avatar:
         title: "غيّر صورة الملفك الشخصي"
         gravatar: "<a href='//gravatar.com/emails' target='_blank'>Gravatar</a>، من"
-        gravatar_title: "غير صورتك الشخصية على موقع  Gravatar's."
+        gravatar_title: "غير صورتك الشخصية على موقع Gravatar's."
         refresh_gravatar_title: "حدث صورة Gravatar"
         letter_based: "صورة الملف الشخصي الافتراضية"
         uploaded_avatar: "صورة مخصصة"
@@ -896,7 +900,7 @@ ar:
           two: "عرض الدعوتان الأولتان."
           few: "عرض الدعوات الأولية."
           many: "عرض الدعوات {{count}} الأولى."
-          other: "عرض الدعوات  {{count}} الأولى."
+          other: "عرض الدعوات {{count}} الأولى."
         redeemed: "دعوات محررة"
         redeemed_tab: "محررة"
         redeemed_tab_with_count: "({{count}}) محررة"
@@ -998,7 +1002,7 @@ ar:
         title: "عنوان IP التسجيل"
       avatar:
         title: "صورة الملف الشخصي"
-        header_title: "الملف الشخصي و  الرسائل و العلامات المرجعية و التفضيلات"
+        header_title: "الملف الشخصي و الرسائل و العلامات المرجعية و التفضيلات"
       title:
         title: "عنوان"
       filters:
@@ -1159,7 +1163,7 @@ ar:
       welcome_to: "مرحباً بك في %{site_name}!"
       invited_by: "لقد دعاك:"
       social_login_available: "يمكنك أيضا تسجيل الدخول عبر أي شبكة اجتماعية مستخدما هذا البريد."
-      your_email: "البريد الالكتروني الخاص بحسابك هو  <b>%{email}</b>."
+      your_email: "البريد الالكتروني الخاص بحسابك هو <b>%{email}</b>."
       accept_invite: "قُبول الدعوة "
       success: "تم إنشاء حسابك و تسجيل دخولك للموقع"
       name_label: "الإسم"
@@ -2005,7 +2009,7 @@ ar:
       none: "(غير مصنف)"
       all: "كل الأقسام"
       edit: "عدّل"
-      view: "أظهار المواضيع  في القسم"
+      view: "أظهار المواضيع في القسم"
       general: "عام"
       settings: "اعدادات"
       topic_template: "إطار الموضوع"
@@ -2107,7 +2111,7 @@ ar:
       notify_action: "رسالة"
       official_warning: "تحذير رسمي"
       delete_spammer: "احذف ناشر السبام"
-      delete_confirm_MF: "{posts, plural,\n    zero {ليس للمستخدم أيّة مشاركات}\n    other {}\n}\n{topics, plural,\n    zero {\n        {posts, plural,\n            zero {أو مواضيع.}\n            other {ليس للمستخدم أيّة مواضيع.}\n        }\n    }\n    other {{posts, plural, zero{.} other{}}}\n}\nأنت على وشك\n{posts, plural,\n    zero {{topics, plural, zero {} other {حذف}}}\n    other {حذف}\n}\n{posts, plural,\n    zero {}\n    one {مشاركة واحدة}\n    two {مشاركتين}\n    few {# مشاركات}\n    many {# مشاركة}\n    other {# مشاركة}\n}\n{posts, plural, zero {} other {{topics, plural, zero {} other {و}}}}\n{topics, plural,\n    zero {}\n    one {موضوع واحد}\n    two {موضوعين}\n    few {# مواضيع}\n    many {# موضوعًا}\n    other {# موضوع}\n}\n{posts, plural,\n    zero {{topics, plural, zero {} other {له، و}}}\n    other {{topics, plural, zero {له، و} other {للمستخدم، و}}}\n}\nإزالة حسابه، ومنع التّسجيل من عنوان IP هذا <b>{ip_address}</b>، وإضافة عنوان البريد الإلكترونيّ <b>{email}</b> إلى قائمة منع دائم. أمتأكّد حقًّا من أنّ هذا المستخدم ناشر سخام؟"
+      delete_confirm_MF: "{posts, plural,\n zero {ليس للمستخدم أيّة مشاركات}\n other {}\n}\n{topics, plural,\n zero {\n {posts, plural,\n zero {أو مواضيع.}\n other {ليس للمستخدم أيّة مواضيع.}\n }\n }\n other {{posts, plural, zero{.} other{}}}\n}\nأنت على وشك\n{posts, plural,\n zero {{topics, plural, zero {} other {حذف}}}\n other {حذف}\n}\n{posts, plural,\n zero {}\n one {مشاركة واحدة}\n two {مشاركتين}\n few {# مشاركات}\n many {# مشاركة}\n other {# مشاركة}\n}\n{posts, plural, zero {} other {{topics, plural, zero {} other {و}}}}\n{topics, plural,\n zero {}\n one {موضوع واحد}\n two {موضوعين}\n few {# مواضيع}\n many {# موضوعًا}\n other {# موضوع}\n}\n{posts, plural,\n zero {{topics, plural, zero {} other {له، و}}}\n other {{topics, plural, zero {له، و} other {للمستخدم، و}}}\n}\nإزالة حسابه، ومنع التّسجيل من عنوان IP هذا <b>{ip_address}</b>، وإضافة عنوان البريد الإلكترونيّ <b>{email}</b> إلى قائمة منع دائم. أمتأكّد حقًّا من أنّ هذا المستخدم ناشر سخام؟"
       yes_delete_spammer: "نعم، احذف ناشر السبام"
       ip_address_missing: "(N/A)"
       hidden_email_address: "(مخفي)"
@@ -2471,7 +2475,7 @@ ar:
       cancel_delete_unused: "ألغِ"
       filters:
         without_category: "مواضيع %{tag} %{filter}"
-        with_category: "موضوعات %{filter}%{tag}  في %{category}"
+        with_category: "موضوعات %{filter}%{tag} في %{category}"
         untagged_without_category: "مواضيع %{filter} غير الموسومة"
         untagged_with_category: "الموضوعات%{filter} غير الموسومة في %{category}"
       notifications:
@@ -2605,9 +2609,7 @@ ar:
             visibility_levels:
               title: "من يستطيع رؤية هذه المجموعة؟"
               public: "الكل"
-              members: "مالكي المجموعة و الأعضاء و المديرين"
               staff: "مالكي المجموعة و طاقم العمل"
-              owners: "مالكي المجموعة و المديرين"
           membership:
             automatic: تلقائي
             trust_level: مستوى الثقة
@@ -2636,7 +2638,7 @@ ar:
         none_selected: "اختر مجموعة للبدء"
         no_custom_groups: "انشئ مجموعة جديدة مخصصة"
       api:
-        generate_master: "توليد مفتاح  API رئيسى"
+        generate_master: "توليد مفتاح API رئيسى"
         none: "لا مفاتيح API نشطة حاليًّا."
         user: "الاعضاء"
         title: "API"
@@ -2652,7 +2654,7 @@ ar:
       web_hooks:
         title: "Webhooks"
         none: "لا يوجد Webhooks حاليا."
-        instruction: "Webhooks تسمح للموقع باشعار خدمات خارجية عند حدوث حدث محدد في الموقع. عندما يتم تفعيل ال Webhooks سوف يتم ارسال  POST request لعنوان ال URL للخدمة."
+        instruction: "Webhooks تسمح للموقع باشعار خدمات خارجية عند حدوث حدث محدد في الموقع. عندما يتم تفعيل ال Webhooks سوف يتم ارسال POST request لعنوان ال URL للخدمة."
         detailed_instruction: "سيُرسل POST request إلى العنوان الURL للموفر عند حدوث الحدث المنشود."
         new: "Webhook جديد"
         create: "أنشئ"
@@ -2673,7 +2675,7 @@ ar:
         event_chooser: "اي احداي يجب ان تفعل هذا الwebhook؟"
         wildcard_event: "ارسل إلى كل شئ."
         individual_event: "حدد احداث مفردة."
-        verify_certificate: "تحقق من شهادة  TLS لعنوان الURL المستهدف"
+        verify_certificate: "تحقق من شهادة TLS لعنوان الURL المستهدف"
         active: "فعل"
         active_notice: "سوف يتم ارسال تفاصيل الحدث عند حدوثة."
         topic_event:
@@ -2842,6 +2844,8 @@ ar:
           install_popular: "نَشط"
           about_theme: "حول "
           license: "الرخصة"
+          enable: "فعل"
+          disable: "عطل"
           update_to_latest: "حدث لاحدث اصدار"
           check_for_updates: "تحقق من التحديثات"
           updating: "تحديث..."
@@ -3046,7 +3050,7 @@ ar:
             allow: "سماح"
         screened_urls:
           title: "عناوين مواقع محجوبة"
-          description: "الروابط الالكترونية الموجودة هنا تم استخدامها في مشاركات  من قيل مستخدمين سبام "
+          description: "الروابط الالكترونية الموجودة هنا تم استخدامها في مشاركات من قيل مستخدمين سبام "
           url: "رابط"
           domain: "عنوان"
         screened_ips:
@@ -3195,7 +3199,7 @@ ar:
         anonymize_failed: "حدثت مشكلة في تجهيل الحساب."
         delete: "احذف المستخدم"
         delete_forbidden_because_staff: "لا يمكن حذف المدراء والمشرفين."
-        delete_posts_forbidden_because_staff: "لا يمكن حذف جميع المشاركات للمدراء والمشرفين.  "
+        delete_posts_forbidden_because_staff: "لا يمكن حذف جميع المشاركات للمدراء والمشرفين. "
         delete_forbidden:
           zero: "لا يمكن حذف مَن لديه مشاركات. احذف كل المشاركات أولا قبل حذف المستخدم. (المشاركات الآن لا يمكن حذفها.)"
           one: "لا يمكن حذف مَن لديه مشاركات. احذف كل المشاركات أولا قبل حذف المستخدم. (المشاركات الأقدم من يوم واحد لا يمكن حذفها.)"
@@ -3233,7 +3237,7 @@ ar:
         bounce_score: "سجل الترويج"
         reset_bounce_score:
           label: "اعادة تعيين"
-          title: "اعادة تعيين سجل الترويج  الى 0"
+          title: "اعادة تعيين سجل الترويج الى 0"
         deactivate_explanation: "المستخدم الغير نشط يحب أن يتأكد من البريد الالكتروني"
         suspended_explanation: "المستخدم الموقوف لايملك صلاحية تسجيل الدخول"
         staged_explanation: "العضو المنظم يمكنه فقط النشر عن طريق البريد الالكتروني في المواضيع المخصصه ."
@@ -3464,7 +3468,7 @@ ar:
         embed_truncate: "بتر المشاركات المضمنة"
         embed_whitelist_selector: "منتقي CSS للعناصر التي تسمح في التضمينات."
         embed_blacklist_selector: "منتقي CSS للعناصر التي حذفت من التضمينات."
-        embed_classname_whitelist: "اسماء  اصناف المظاهر الجمالية المسموح بها"
+        embed_classname_whitelist: "اسماء اصناف المظاهر الجمالية المسموح بها"
         feed_polling_enabled: "استورد المشاركات عبر RSS/ATOM"
         feed_polling_url: "رابط مغذي RSS/ATOM للزحف"
         save: "أحفظ الإعدادات المضمنة"
@@ -3482,11 +3486,12 @@ ar:
         form:
           label: "جديد :"
           add: "أضف"
-          filter: "بحث  ( رابط داخلي أو خارجي )"
+          filter: "بحث ( رابط داخلي أو خارجي )"
       reseed:
         modal:
           categories: "التصنيفات"
           topics: "المواضيع"
+          replace: "غير"
   wizard_js:
     wizard:
       done: "انتهى"

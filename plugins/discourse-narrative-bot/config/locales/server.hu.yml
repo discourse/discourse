@@ -35,5 +35,5 @@ hu:
         '12': "Kérdezd meg később"
         '17': "A válaszom nem."
     track_selector:
-      reset_trigger: 'start'
-      skip_trigger: 'átugrás'
+      reset_trigger: "start"
+      skip_trigger: "átugrás"

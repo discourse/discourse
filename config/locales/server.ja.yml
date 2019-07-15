@@ -28,6 +28,7 @@ ja:
   posts: "投稿"
   loading: "読み込み中"
   powered_by_html: '<a href="https://www.discourse.org">Discourse</a>により提供されています。最適な表示のために、Javascriptを有効にしてください。'
+  sign_up: "アカウントを作成"
   log_in: "ログイン"
   submit: "送信"
   purge_reason: "放棄されていたため自動的に削除、アカウントを停止しました。"
@@ -149,6 +150,8 @@ ja:
   likes: "いいね！"
   too_many_replies:
     other: "申し訳ありません、新しいユーザーの同じトピックへの返信は、一時的に %{count} 回に制限されています。"
+  max_consecutive_replies:
+    other: " %{count}回を超える連続の返信は禁止されています。以前の返信を編集するか、他の人の返信をお待ちください。"
   embed:
     start_discussion: "会話をする"
     continue: "会話を続ける"
@@ -808,7 +811,7 @@ ja:
     must_approve_users: "ユーザがサイトにアクセスするには、スタッフの承認が必要"
     moderators_create_categories: "モデレータのカテゴリ作成を許可"
     cors_origins: "CORSを許可。オリジンはhttp://かhttps://を含む必要があります。CORSを有効にするには、環境変数　DISCOURSE_ENABLE_CORSにtrueをセットする必要があります"
-    top_menu: "ホームナビゲーションに表示する項目・表示順を指定。例:  latest|new|unread|categories|top|read|posted|bookmarks"
+    top_menu: "ホームナビゲーションに表示する項目・表示順を指定。例: latest|new|unread|categories|top|read|posted|bookmarks"
     post_menu: "投稿メニューに表示する項目を指定。例 like|edit|flag|delete|share|bookmark|reply"
     post_menu_hidden_items: "開くボタンをクリックするまで投稿のメニュー項目を隠します"
     share_links: "シェアダイアログに表示する項目、表示順を指定"
@@ -909,8 +912,8 @@ ja:
     min_title_similar_length: "類似トピックのチェックに必要な最小タイトル長"
     category_colors: "カテゴリに利用可能な色 (16進数指定) のリスト"
     category_style: "カテゴリバッジのスタイル"
-    max_image_size_kb: "アップロード可能な画像の最大サイズ (kB)  nginx 側での設定 (client_max_body_size) / apache または proxy における設定も同時に行う必要があります"
-    max_attachment_size_kb: "添付可能なファイルの最大サイズ (kB)  nginx 側での設定 (client_max_body_size) / apache または proxy における設定も同時に行う必要があります"
+    max_image_size_kb: "アップロード可能な画像の最大サイズ (kB) nginx 側での設定 (client_max_body_size) / apache または proxy における設定も同時に行う必要があります"
+    max_attachment_size_kb: "添付可能なファイルの最大サイズ (kB) nginx 側での設定 (client_max_body_size) / apache または proxy における設定も同時に行う必要があります"
     authorized_extensions: "アップロード可能なファイルの拡張子のリスト('*'で全ての拡張子が有効になります)"
     max_similar_results: "新規トピック編集中に類似トピックをいくつ表示するか。比較はタイトルと本文に基づきます"
     title_prettify: "よくあるタイトルのミススペルや文法エラー (例: 最初の文字が小文字、文の最後で ! や ? や . などが重複) を防止する"
@@ -947,8 +950,8 @@ ja:
     pop3_polling_period_mins: "メールのためのPOP3アカウントを確認する期間（分） 注意: 再起動が必要"
     pop3_polling_port: "ポーリングを行うPOP3アカウントのポート"
     pop3_polling_host: "ポーリングを行うPOP3のホスト"
-    pop3_polling_username: "ポーリングを行うPOS3アカウントのユーザ名"
-    pop3_polling_password: "ポーリングを行うPOS3アカウントのパスワード"
+    pop3_polling_username: "ポーリングを行うPOP3アカウントのユーザー名"
+    pop3_polling_password: "ポーリングを行うPOP3アカウントのパスワード"
     email_in_min_trust: "メールでのトピック作成を許可する最低トラストレベル"
     email_prefix: "メールのタイトルに使用される[ラベル]。空白の場合、タイトルがデフォルトで使用されます"
     email_site_title: "サイトからのメールの送信者として使用されるタイトル。 空白の場合、タイトルがデフォルトで使用されます。タイトルにメールの送信者として使用できない文字列が含まれている場合、この設定を使用します"
@@ -1405,10 +1408,10 @@ ja:
 
       このサイトで収集された情報は、次のいくつかの方法で使用されます:
 
-      *   パーソナライズ・エクスペリエンス &mdash; あなたの情報は、あなたや他のユーザーのニーズに対応するために役立ちます。
-      *   サイトの改善・最適化 &mdash; このサービスはあなたから受け取った情報やフィードバックに基づいて提供されるサイトの改善を行いつづけます。
-      *   サービスの向上 &mdash; あなたの情報は、ユーザーからの要求やサポートへより効果的に対応するために役立ちます。
-      *   定期メールの送信 &mdash; メールアドレスは、情報の送信、トピックの変更やユーザー名に関係するお知らせ、お問い合わせに関する返答、その他のリクエストや質問に関してお知らせするために使用されます。
+      * パーソナライズ・エクスペリエンス &mdash; あなたの情報は、あなたや他のユーザーのニーズに対応するために役立ちます。
+      * サイトの改善・最適化 &mdash; このサービスはあなたから受け取った情報やフィードバックに基づいて提供されるサイトの改善を行いつづけます。
+      * サービスの向上 &mdash; あなたの情報は、ユーザーからの要求やサポートへより効果的に対応するために役立ちます。
+      * 定期メールの送信 &mdash; メールアドレスは、情報の送信、トピックの変更やユーザー名に関係するお知らせ、お問い合わせに関する返答、その他のリクエストや質問に関してお知らせするために使用されます。
 
       <a name="protect"></a>
 
@@ -1421,8 +1424,8 @@ ja:
 
       このサービスは次のことを行います:
 
-      *   このサーバーへのすべての要求に対して、IPアドレスを含むサーバーログを90日以内に渡って保持します。
-      *   登録されたユーザーとその投稿に関連付けされたIPアドレスを5年以内に渡って保持します。
+      * このサーバーへのすべての要求に対して、IPアドレスを含むサーバーログを90日以内に渡って保持します。
+      * 登録されたユーザーとその投稿に関連付けされたIPアドレスを5年以内に渡って保持します。
       <a name="cookies"></a>
 
       ## [クッキーを使用していますか？](#cookies)

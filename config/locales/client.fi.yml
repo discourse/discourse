@@ -333,7 +333,7 @@ fi:
       none: "Ei ole tarkastettavaa."
       view_pending: "tarkastele jonoa"
       topic_has_pending:
-        one: "<b>%{count}</b>  viesti tähän ketjuun odottaa hyväksyntää"
+        one: "<b>%{count}</b> viesti tähän ketjuun odottaa hyväksyntää"
         other: "<b>{{count}}</b> viestiä tähän ketjuun odottaa hyväksyntää"
       title: "Käsittele"
       topic: "Ketju:"
@@ -776,9 +776,7 @@ fi:
       muted_users_instructions: "Älä näytä ilmoituksia näiltä käyttäjiltä"
       ignored_users: "Sivuutettu"
       ignored_users_instructions: "Jätä näyttämättä kaikki viestit ja ilmoitukset näiltä käyttäjiltä."
-      muted_topics_link: "Näytä vaimennetut ketjut"
-      watched_topics_link: "Näytä tarkkailtavat ketjut"
-      tracked_topics_link: "Näytä seurattavat ketjut"
+      tracked_topics_link: "Näytä"
       automatically_unpin_topics: "Poista kiinnitetyn ketjun kiinnitys automaattisesti, kun olen selannut sen loppuun."
       apps: "Sovellukset"
       revoke_access: "Peru käyttöoikeus"
@@ -830,7 +828,6 @@ fi:
         disable: "Poista käytöstä"
         enable: "Ota käyttöön"
         enable_long: "Ota varakoodit käyttöön"
-        manage: "Hallinnoi varakoodeja"
         copied_to_clipboard: "Kopioitiin leikepöydälle"
         copy_to_clipboard_error: "Virhe kopioimisessa leikepöydälle"
         remaining_codes: "Sinulla on <strong>{{count}}</strong> varakoodia jäljellä."
@@ -840,8 +837,6 @@ fi:
           description: "Jokaista näistä varakoodeista voi käyttää vain kerran. Säilö ne johonkin turvalliseen paikkaan, mistä kuitenkin löydät ne."
       second_factor:
         title: "Kaksivaiheinen tunnistautuminen"
-        disable: "Poista kaksivaiheinen tunnistautuminen käytöstä"
-        enable: "Ota kaksivaiheinen tunnistautuminen käyttöön"
         confirm_password_description: "Jatka vahvistamalla salasanasi"
         label: "Koodi"
         rate_limit: "Odota hetki ennen toisen todennuskoodin tarjoamista."
@@ -856,6 +851,7 @@ fi:
         oauth_enabled_warning: "Huomioi, ettet voi kirjautua some-tilien avulla, jos kaksivaiheinen tunnistautuminen on käytössä."
         use: "<a href>Käytä Authenticato-sovellusta</a>"
         enforced_notice: "Kaksivaiheinen tunnistautuminen pitää ottaa käyttöön, jotta voi käyttää sivustoa."
+        edit: "Muokkaa"
       change_about:
         title: "Muokkaa kuvaustasi"
         error: "Arvon muuttamisessa tapahtui virhe."
@@ -899,7 +895,7 @@ fi:
         authenticated: "{{provider}} on todentanut sähköpostiosoitteesi"
         frequency_immediately: "Saat sähköpostia välittömästi, jollet ole jo lukenut asiaa, jota sähköpostiviesti koskee."
         frequency:
-          one: "Lähetämme sähköpostia vain, jos emme ole nähneet sinua edellisen  minuutin aikana."
+          one: "Lähetämme sähköpostia vain, jos emme ole nähneet sinua edellisen minuutin aikana."
           other: "Lähetämme sähköpostia vain, jos emme ole nähneet sinua edellisen {{count}} minuutin aikana."
       associated_accounts:
         title: "Liitetyt käyttäjätilit"
@@ -1155,9 +1151,6 @@ fi:
       enabled: "Sivusto on vain luku -tilassa. Voit jatkaa selailua, mutta vastaaminen, tykkääminen ja muita toimintoja on toistaiseksi poissa käytöstä."
       login_disabled: "Et voi kirjautua sisään, kun sivusto on vain luku -tilassa."
       logout_disabled: "Et voi kirjautua ulos, kun sivusto on vain luku -tilassa."
-    too_few_topics_and_posts_notice: "Laitetaanpa <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>keskustelu alulle!</a> Tällä hetkellä palstalla on <strong>%{currentTopics} / %{requiredTopics}</strong> ketjua ja <strong>%{currentPosts} / %{requiredPosts}</strong> viestiä. Uusia kävijöitä varten tarvitaan keskusteluita, joita voivat lukea ja joihin vastata"
-    too_few_topics_notice: "Laitetaanpa <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>keskustelu alulle!</a> Tällä hetkellä palstalla on <strong>%{currentTopics} / %{requiredTopics}</strong> ketjua. Uusia kävijöitä varten tarvitaan keskusteluja, joita voivat lukea ja joihin vastata."
-    too_few_posts_notice: "Laitetaanpa <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>keskustelu alulle!</a> Tällä hetkellä palstalla on <strong>%{currentPosts} / %{requiredPosts}</strong> viestiä. Uusia kävijöitä varten tarvitaan keskusteluja, joita voivat lukea ja joihin vastata."
     learn_more: "opi lisää..."
     all_time: "yhteensä"
     all_time_desc: "ketjuja aloitettu yhteensä"
@@ -1390,7 +1383,7 @@ fi:
       edit_conflict: "muokkauskonflikti"
       group_mentioned_limit: "<b>Varoitus!</b> Mainitsit ryhmän <a href='{{group_link}}'>{{group}}</a>, mutta ylläpitäjä on määrittänyt mainintojen enimmäismääräksi {{max}} käyttäjää, minkä tämän ryhmän jäsenmäärä ylittää. Kukaan ei saa ilmoitusta. "
       group_mentioned:
-        one: "Jos mainitset ryhmän {{group}},  <a href='{{group_link}}'>%{count} käyttäjä</a> saa ilmoituksen – oletko varma?"
+        one: "Jos mainitset ryhmän {{group}}, <a href='{{group_link}}'>%{count} käyttäjä</a> saa ilmoituksen – oletko varma?"
         other: "Jos mainitset ryhmän {{group}}, <a href='{{group_link}}'>{{count}} käyttäjää</a> saa ilmoituksen – oletko varma?"
       cannot_see_mention:
         category: "Mainitsit käyttäjän {{username}} mutta hän ei saa ilmoitusta, koska hänellä ei ole pääsyä tälle alueelle. Hänet tulee lisätä ryhmään, jolla on pääsy alueelle."
@@ -1465,7 +1458,7 @@ fi:
       exit_fullscreen: "poistu koko ruudun kirjoitustilasta"
       modal_ok: "OK"
       modal_cancel: "Peruuta"
-      cant_send_pm: "Et voi lähettää viestiä käyttäjälle  %{username}."
+      cant_send_pm: "Et voi lähettää viestiä käyttäjälle %{username}."
       yourself_confirm:
         title: "Unohditko lisätä vastaanottajia?"
         body: "Olet lähettämässä viestiä vain itsellesi!"
@@ -1942,7 +1935,7 @@ fi:
         success_message: "Ketjun liputus onnistui."
       feature_topic:
         title: "Nosta tämä ketju"
-        pin: "Kiinnitä tämä ketju alueen  {{categoryLink}} ylimmäiseksi kunnes"
+        pin: "Kiinnitä tämä ketju alueen {{categoryLink}} ylimmäiseksi kunnes"
         confirm_pin: "Jo {{count}} ketjua on kiinnitetty. Liian monta kiinnitettyä ketjua voi olla taakaksi uusille ja kirjautumattomille käyttäjille. Oletko varma, että haluat kiinnittää yhden ketjun lisää tälle alueelle?"
         unpin: "Älä enää pidä tätä ketjua {{categoryLink}}-aluen ylimmäisenä."
         unpin_until: "Poista nyt tämän ketjun kiinnitys alueen {{categoryLink}} ylimmäisenä, tai odota kunnes <strong>%{until}</strong>."
@@ -2037,7 +2030,7 @@ fi:
         participants: "Osallistujat"
         instructions:
           one: "Valitse keskustelu, johon haluat siirtää tämän viestin."
-          other: "Valitse keskustelu, johon haluat siirtää nämä  <b>{{count}}</b> viestiä."
+          other: "Valitse keskustelu, johon haluat siirtää nämä <b>{{count}}</b> viestiä."
       merge_posts:
         title: "Yhdistä valitut viestit"
         action: "yhdistä valitut viestit"
@@ -2886,9 +2879,7 @@ fi:
             visibility_levels:
               title: "Kuka näkee ryhmän?"
               public: "Kaikki"
-              members: "Ryhmän isännät, jäsenet ja ylläpitäjät"
               staff: "Ryhmän isännät ja henkilökunta"
-              owners: "Ryhmän isännät ja ylläpitäjät"
           membership:
             automatic: Automaattinen
             trust_level: Luottamustaso
@@ -3218,6 +3209,8 @@ fi:
           version: "Versio:"
           authors: "Tekijä:"
           source_url: "Lähde"
+          enable: "Ota käyttöön"
+          disable: "Poista käytöstä"
           required_version:
             error: "Teema poistettiin automaattisesti käytöstä, koska se ei ole yhteensopiva tämän Discourse-version kanssa."
             minimum: "Vaatii Discourse-version {{version}}tai uudemman."
@@ -3960,7 +3953,7 @@ fi:
         feed_settings: "Syötteen asetukset"
         feed_description: "Tarjoamalla RSS/ATOM syötteen sivustollesi, voit lisätä Discoursen kykyä tuoda sisältöä."
         crawling_settings: "Crawlerin asetukset"
-        crawling_description: "Kun Discourse aloittaa ketjuja kirjoituksistasi, se yrittää jäsentää kirjoitustesi sisältöä HTML:stä, jos RSS/ATOM-syötettä ei ole tarjolla,  Joskus kirjoitusten sisällön poimiminen on haastavaa, joten tarjoamme mahdollisuuden määrittää CSS-sääntöjä sen helpottamiseksi."
+        crawling_description: "Kun Discourse aloittaa ketjuja kirjoituksistasi, se yrittää jäsentää kirjoitustesi sisältöä HTML:stä, jos RSS/ATOM-syötettä ei ole tarjolla, Joskus kirjoitusten sisällön poimiminen on haastavaa, joten tarjoamme mahdollisuuden määrittää CSS-sääntöjä sen helpottamiseksi."
         embed_by_username: "Käyttäjänimi, jonka nimissä ketjut aloitetaan"
         embed_post_limit: "Upotettavien viestien maksimimäärä"
         embed_username_key_from_feed: "Avain, jolla erotetaan Discourse-käyttäjänimi syötteestä"
