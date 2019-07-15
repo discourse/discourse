@@ -646,20 +646,4 @@ RSpec.describe ListController do
       expect(topic_titles).to include(topic_in_sub_category.title)
     end
   end
-
-  describe "safe mode" do
-    it "handles safe mode" do
-      get "/latest"
-      expect(response.body).to match(/plugin\.js/)
-      expect(response.body).to match(/plugin-third-party\.js/)
-
-      get "/latest", params: { safe_mode: "no_plugins" }
-      expect(response.body).not_to match(/plugin\.js/)
-      expect(response.body).not_to match(/plugin-third-party\.js/)
-
-      get "/latest", params: { safe_mode: "only_official" }
-      expect(response.body).to match(/plugin\.js/)
-      expect(response.body).not_to match(/plugin-third-party\.js/)
-    end
-  end
 end
