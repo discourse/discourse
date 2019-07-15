@@ -12,6 +12,9 @@ describe BackupRestore::Restorer do
       "10.3" => false,
       "10.3.1" => false,
       "10.4" => false,
+      "11" => false,
+      "11.4" => false,
+      "21" => false,
     }.each do |key, value|
       expect(described_class.pg_produces_portable_dump?(key)).to eq(value)
     end
