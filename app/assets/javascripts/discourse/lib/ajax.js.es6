@@ -140,7 +140,7 @@ export function ajax() {
     }
 
     if (args.type === "GET" && args.cache !== true) {
-      args.cache = false;
+      args.cache = true; // Disable JQuery cache busting param, which was created to deal with IE8
     }
 
     ajaxObj = $.ajax(Discourse.getURL(url), args);
