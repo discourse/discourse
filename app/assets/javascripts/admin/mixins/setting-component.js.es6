@@ -17,6 +17,8 @@ const CUSTOM_TYPES = [
   "group_list"
 ];
 
+const AUTO_REFRESH_ON_SAVE = ["logo", "logo_small", "large_icon"];
+
 export default Ember.Mixin.create({
   classNameBindings: [":row", ":setting", "overridden", "typeClass"],
   content: Ember.computed.alias("setting"),
@@ -113,7 +115,9 @@ export default Ember.Mixin.create({
         .then(() => {
           this.set("validationMessage", null);
           this.commitBuffer();
-          this.afterSave();
+          if (AUTO_REFRESH_ON_SAVE.includes(this.get("setting.setting"))) {
+            this.afterSave();
+          }
         })
         .catch(e => {
           if (e.jqXHR.responseJSON && e.jqXHR.responseJSON.errors) {

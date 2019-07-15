@@ -184,7 +184,7 @@ GEM
     mini_portile2 (2.4.0)
     mini_racer (0.2.6)
       libv8 (>= 6.9.411)
-    mini_scheduler (0.9.2)
+    mini_scheduler (0.11.0)
       sidekiq
     mini_sql (0.2.2)
     mini_suffix (0.3.0)
@@ -238,7 +238,7 @@ GEM
     omniauth-twitter (1.4.0)
       omniauth-oauth (~> 1.1)
       rack
-    onebox (1.8.92)
+    onebox (1.9.2)
       htmlentities (~> 4.3)
       moneta (~> 1.0)
       multi_json (~> 1.11)
@@ -412,6 +412,7 @@ GEM
     webpush (0.3.8)
       hkdf (~> 0.2)
       jwt (~> 2.0)
+    yaml-lint (0.0.10)
 
 PLATFORMS
   ruby
@@ -486,7 +487,7 @@ DEPENDENCIES
   omniauth-oauth2
   omniauth-openid
   omniauth-twitter
-  onebox (= 1.8.92)
+  onebox (= 1.9.2)
   openid-redis-store
   parallel_tests
   pg
@@ -533,6 +534,7 @@ DEPENDENCIES
   unicorn
   webmock
   webpush
+  yaml-lint
 
 BUNDLED WITH
    1.17.3

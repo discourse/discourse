@@ -3,6 +3,7 @@
 require 'site_setting_extension'
 require_dependency 'global_path'
 require_dependency 'site_settings/yaml_loader'
+require 'htmlentities'
 
 class SiteSetting < ActiveRecord::Base
   extend GlobalPath
@@ -111,6 +112,20 @@ class SiteSetting < ActiveRecord::Base
     SiteSetting.manual_polling_enabled? || SiteSetting.pop3_polling_enabled?
   end
 
+  WATCHED_SETTINGS ||= [
+    :attachment_content_type_blacklist,
+    :attachment_filename_blacklist,
+    :unicode_username_character_whitelist,
+    :markdown_typographer_quotation_marks
+  ]
+
+  def self.reset_cached_settings!
+    @attachment_content_type_blacklist_regex = nil
+    @attachment_filename_blacklist_regex = nil
+    @unicode_username_whitelist_regex = nil
+    @pretty_quote_entities = nil
+  end
+
   def self.attachment_content_type_blacklist_regex
     @attachment_content_type_blacklist_regex ||= Regexp.union(SiteSetting.attachment_content_type_blacklist.split("|"))
   end
@@ -120,8 +135,24 @@ class SiteSetting < ActiveRecord::Base
   end
 
   def self.unicode_username_character_whitelist_regex
-    @unicode_username_whitelist_regex = SiteSetting.unicode_username_character_whitelist.present? \
+    @unicode_username_whitelist_regex ||= SiteSetting.unicode_username_character_whitelist.present? \
       ? Regexp.new(SiteSetting.unicode_username_character_whitelist) : nil
+  end
+
+  def self.pretty_quote_entities
+    @pretty_quote_entities ||= begin
+      htmlentities = HTMLEntities.new
+      quotation_marks = SiteSetting.markdown_typographer_quotation_marks
+        .split("|")
+        .map { |quote| htmlentities.encode(quote, :basic, :named, :decimal) }
+
+      {
+        double_left_quote: quotation_marks[0],
+        double_right_quote: quotation_marks[1],
+        single_left_quote: quotation_marks[2],
+        single_right_quote: quotation_marks[3]
+      }
+    end
   end
 
   # helpers for getting s3 settings that fallback to global

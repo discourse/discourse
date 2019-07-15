@@ -42,6 +42,43 @@ describe Jobs::ExportCsvFile do
     end
   end
 
+  context '.report_export' do
+
+    let(:user) { Fabricate(:admin) }
+
+    let(:exporter) do
+      exporter = Jobs::ExportCsvFile.new
+      exporter.instance_variable_set(:@entity, 'report')
+      exporter.instance_variable_set(:@extra, HashWithIndifferentAccess.new(start_date: '2010-01-01', end_date: '2011-01-01'))
+      exporter.instance_variable_set(:@current_user, User.find_by(id: user.id))
+      exporter
+    end
+
+    it 'works with single-column reports' do
+      user.user_visits.create!(visited_at: '2010-01-01', posts_read: 42)
+      Fabricate(:user).user_visits.create!(visited_at: '2010-01-03', posts_read: 420)
+
+      exporter.instance_variable_get(:@extra)['name'] = 'dau_by_mau'
+      report = exporter.report_export.to_a
+
+      expect(report.first).to contain_exactly("Day", "Percent")
+      expect(report.second).to contain_exactly("2010-01-01", "100.0")
+      expect(report.third).to contain_exactly("2010-01-03", "50.0")
+    end
+
+    it 'works with multi-columns reports' do
+      DiscourseIpInfo.stubs(:get).with("1.1.1.1").returns(location: "Earth")
+      user.user_auth_token_logs.create!(action: "login", client_ip: "1.1.1.1", created_at: '2010-01-01')
+
+      exporter.instance_variable_get(:@extra)['name'] = 'staff_logins'
+      report = exporter.report_export.to_a
+
+      expect(report.first).to contain_exactly("User", "Location", "Login at")
+      expect(report.second).to contain_exactly(user.username, "Earth", "2010-01-01 00:00:00 UTC")
+    end
+
+  end
+
   let(:user_list_header) {
     %w{
       id name username email title created_at last_seen_at last_posted_at

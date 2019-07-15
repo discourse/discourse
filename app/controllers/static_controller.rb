@@ -101,8 +101,7 @@ class StaticController < ApplicationController
            (uri.host.blank? || uri.host == forum_uri.host) &&
            uri.path !~ /\./
 
-          destination = uri.path
-          destination = "#{uri.path}?#{uri.query}" if uri.path =~ /new-topic/ || uri.path =~ /new-message/ || uri.path =~ /user-api-key/
+          destination = "#{uri.path}#{uri.query ? "?#{uri.query}" : ""}"
         end
       rescue URI::Error
         # Do nothing if the URI is invalid

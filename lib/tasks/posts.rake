@@ -417,7 +417,6 @@ def missing_uploads
     next if sha1.present?
     puts "Fixing missing uploads: " if count_missing == 0
     count_missing += 1
-    print "."
 
     upload_id = nil
 
@@ -434,26 +433,29 @@ def missing_uploads
     end
 
     if file_path.present?
-      tmp = Tempfile.new
-      tmp.write(File.read(file_path))
-      tmp.rewind
-
-      if upload = UploadCreator.new(tmp, File.basename(path)).create_for(Discourse.system_user.id)
+      if (upload = UploadCreator.new(File.open(file_path), File.basename(path)).create_for(Discourse.system_user.id)).persisted?
         upload_id = upload.id
-        DbHelper.remap(UrlHelper.absolute(src), upload.url)
 
         post.reload
-        post.raw.gsub!(src, upload.url)
-        post.cooked.gsub!(src, upload.url)
+        new_raw = post.raw.dup
+        new_raw = new_raw.gsub(path, upload.url)
 
-        if post.changed?
-          post.save!(validate: false)
-          post.rebake!
-        end
+        PostRevisor.new(post, Topic.with_deleted.find_by(id: post.topic_id)).revise!(
+          Discourse.system_user,
+          {
+            raw: new_raw
+          },
+          skip_validations: true,
+          force_new_version: true,
+          bypass_bump: true
+        )
+
+        print "🆗"
+      else
+        print "❌"
       end
-
-      FileUtils.rm(tmp, force: true)
     else
+      print "🚫"
       old_scheme_upload_count += 1
     end
 
@@ -471,7 +473,7 @@ def missing_uploads
       missing[:post_uploads].each do |id, uploads|
         post = Post.with_deleted.find_by(id: id)
         if post
-          puts "#{post.full_url} giving up on #{uploads.length} upload/s"
+          puts "#{post.full_url} giving up on #{uploads.length} upload(s)"
           PostCustomField.create!(post_id: post.id, name: Post::MISSING_UPLOADS_IGNORED, value: "t")
         else
           puts "could not find post #{id}"
@@ -715,18 +717,18 @@ def correct_inline_uploads
           puts Diffy::Diff.new(PrettyText.cook(post.raw), PrettyText.cook(new_raw), context: 1)
           puts
         elsif dry_run
-          putc "🏃"
+          putc "#"
         else
-          putc "🆗"
+          putc "."
         end
 
         fixed_count += 1
       else
-        putc "❌"
+        putc "X"
         not_corrected_post_ids << post.id
       end
-    rescue => e
-      putc "🚫"
+    rescue
+      putc "!"
       failed_to_correct_post_ids << post.id
     end
   end

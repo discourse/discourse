@@ -242,6 +242,16 @@ RSpec.describe ListController do
         end
       end
 
+      describe 'group restricted to logged-on-users' do
+        before { group.update!(visibility_level: Group.visibility_levels[:logged_on_users]) }
+
+        it 'should return the right response' do
+          get "/topics/groups/#{group.name}.json"
+
+          expect(response.status).to eq(403)
+        end
+      end
+
       describe 'restricted group' do
         before { group.update!(visibility_level: Group.visibility_levels[:staff]) }
 
@@ -263,6 +273,16 @@ RSpec.describe ListController do
           get "/topics/groups/#{group.name}.json"
 
           expect(response.status).to eq(403)
+        end
+      end
+
+      describe 'group restricted to logged-on-users' do
+        before { group.update!(visibility_level: Group.visibility_levels[:logged_on_users]) }
+
+        it 'should return the right response' do
+          get "/topics/groups/#{group.name}.json"
+
+          expect(response.status).to eq(200)
         end
       end
     end
@@ -461,6 +481,23 @@ RSpec.describe ListController do
           get "/c/#{category.slug}/l/latest"
           expect(response.status).to eq(200)
           expect(css_select("link[rel=canonical]").length).to eq(1)
+        end
+      end
+
+      context "renders correct title" do
+        let!(:amazing_category) { Fabricate(:category, name: "Amazing Category") }
+
+        it 'for category default view' do
+          get "/c/#{amazing_category.slug}"
+
+          expect(response.body).to have_tag "title", text: "Amazing Category - Discourse"
+        end
+
+        it 'for category latest view' do
+          SiteSetting.short_site_description = "Best community"
+          get "/c/#{amazing_category.slug}/l/latest"
+
+          expect(response.body).to have_tag "title", text: "Amazing Category - Discourse"
         end
       end
     end

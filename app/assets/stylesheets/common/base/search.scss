@@ -2,6 +2,12 @@
   display: flex;
   justify-content: space-between;
 
+  .warning {
+    background-color: $danger-medium;
+    padding: 5px 8px;
+    color: $secondary;
+  }
+
   .search-bar {
     display: flex;
     justify-content: space-between;

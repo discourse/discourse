@@ -44,4 +44,52 @@ describe Emoji do
     end
   end
 
+  describe '.url_for' do
+    expected_url = "/images/emoji/twitter/blonde_woman.png?v=#{Emoji::EMOJI_VERSION}"
+    expected_toned_url = "/images/emoji/twitter/blonde_woman/6.png?v=#{Emoji::EMOJI_VERSION}"
+
+    it 'should return url with filename' do
+      expect(Emoji.url_for("blonde_woman")).to eq(expected_url)
+    end
+
+    it 'should return url with skin toned filename' do
+      expect(Emoji.url_for("blonde_woman/6")).to eq(expected_toned_url)
+    end
+
+    it 'should return url with code' do
+      expect(Emoji.url_for(":blonde_woman:")).to eq(expected_url)
+    end
+
+    it 'should return url with skin toned code' do
+      expect(Emoji.url_for(":blonde_woman:t6:")).to eq(expected_toned_url)
+      expect(Emoji.url_for("blonde_woman:t6")).to eq(expected_toned_url)
+    end
+  end
+
+  describe '.exists?' do
+    it 'finds existing emoji' do
+      expect(Emoji.exists?(":blonde_woman:")).to be(true)
+      expect(Emoji.exists?("blonde_woman")).to be(true)
+    end
+
+    it 'finds existing skin toned emoji' do
+      expect(Emoji.exists?(":blonde_woman:t1:")).to be(true)
+      expect(Emoji.exists?("blonde_woman:t6")).to be(true)
+    end
+
+    it 'finds existing custom emoji' do
+      CustomEmoji.create!(name: 'test', upload_id: 9999)
+      Emoji.clear_cache
+      expect(Emoji.exists?(":test:")).to be(true)
+      expect(Emoji.exists?("test")).to be(true)
+    end
+
+    it 'doesn’t find non-existing emoji' do
+      expect(Emoji.exists?(":foo-bar:")).to be(false)
+      expect(Emoji.exists?(":blonde_woman:t7:")).to be(false)
+      expect(Emoji.exists?("blonde_woman:t0")).to be(false)
+      expect(Emoji.exists?("blonde_woman:t")).to be(false)
+    end
+  end
+
 end

@@ -21,7 +21,7 @@ hy:
       one: "Հարցումը պետք է ունենա ավելի քիչ քան %{count} տարբերակ"
       other: "Հարցումը պետք է ունենա ավելի քիչ քան %{count} տարբերակ"
     named_poll_must_have_less_options:
-      one: " <strong>%{name}</strong>  անվամբ հարցումը պետք է ունենա ավելի քիչ քան %{count} տարբերակ:"
+      one: " <strong>%{name}</strong> անվամբ հարցումը պետք է ունենա ավելի քիչ քան %{count} տարբերակ:"
       other: " <strong>%{name}</strong> անվամբ հարցումը պետք է ունենա ավելի քիչ քան %{count} տարբերակ:"
     default_poll_must_have_different_options: "Հարցումը պետք է ունենա ընտրության տարբեր տարբերակներ:"
     named_poll_must_have_different_options: " <strong>%{name}</strong> անվամբ հարցումը պետք է ունենա ընտրության տարբեր տարբերակներ:"

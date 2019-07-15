@@ -290,6 +290,11 @@ export function setup(opts, siteSettings, state) {
     typographer: siteSettings.enable_markdown_typographer
   });
 
+  const quotation_marks = siteSettings.markdown_typographer_quotation_marks;
+  if (quotation_marks) {
+    opts.engine.options.quotes = quotation_marks.split("|");
+  }
+
   opts.engine.linkify.tlds(
     (siteSettings.markdown_linkify_tlds || "").split("|")
   );

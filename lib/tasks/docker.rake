@@ -114,6 +114,10 @@ task 'docker:test' do
 
       @good &&= run_or_fail("bundle exec rake db:create")
 
+      if ENV['USE_TURBO']
+        @good &&= run_or_fail("bundle exec rake parallel:create")
+      end
+
       if ENV["INSTALL_OFFICIAL_PLUGINS"]
         @good &&= run_or_fail("bundle exec rake plugin:install_all_official")
       end
@@ -122,10 +126,17 @@ task 'docker:test' do
         @good &&= run_or_fail("bundle exec rake plugin:update_all")
       end
 
-      if ENV["SKIP_PLUGINS"]
-        @good &&= run_or_fail("bundle exec rake db:migrate")
-      else
-        @good &&= run_or_fail("LOAD_PLUGINS=1 bundle exec rake db:migrate")
+      command_prefix =
+        if ENV["SKIP_PLUGINS"]
+          ""
+        else
+          "LOAD_PLUGINS=1 "
+        end
+
+      @good &&= run_or_fail("#{command_prefix}bundle exec rake db:migrate")
+
+      if ENV['USE_TURBO']
+        @good &&= run_or_fail("bundle exec rake parallel:migrate")
       end
 
       puts "travis_fold:end:prepare_tests" if ENV["TRAVIS"]
@@ -134,13 +145,16 @@ task 'docker:test' do
         puts "travis_fold:start:ruby_tests" if ENV["TRAVIS"]
         unless ENV["SKIP_CORE"]
           params = []
-          params << "--profile"
-          params << "--fail-fast"
-          if ENV["BISECT"]
-            params << "--bisect"
-          end
-          if ENV["RSPEC_SEED"]
-            params << "--seed #{ENV["RSPEC_SEED"]}"
+
+          unless ENV['USE_TURBO']
+            params << "--profile"
+            params << "--fail-fast"
+            if ENV["BISECT"]
+              params << "--bisect"
+            end
+            if ENV["RSPEC_SEED"]
+              params << "--seed #{ENV["RSPEC_SEED"]}"
+            end
           end
 
           if ENV['PARALLEL']
@@ -160,7 +174,11 @@ task 'docker:test' do
             puts "Running spec subset #{subset + 1} of #{total}"
           end
 
-          @good &&= run_or_fail("bundle exec rspec #{params.join(' ')}".strip)
+          if ENV['USE_TURBO']
+            @good &&= run_or_fail("bundle exec ./bin/turbo_rspec #{params.join(' ')}".strip)
+          else
+            @good &&= run_or_fail("bundle exec rspec #{params.join(' ')}".strip)
+          end
         end
 
         unless ENV["SKIP_PLUGINS"]

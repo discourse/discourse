@@ -169,7 +169,7 @@
       margin-bottom: 5px;
       max-height: 475px;
       @media screen and (max-height: 768px) {
-        max-height: 60vh;
+        max-height: calc(60vh - 100px);
       }
       overflow-x: hidden;
       overflow-y: auto;

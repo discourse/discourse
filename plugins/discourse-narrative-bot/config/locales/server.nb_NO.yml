@@ -41,7 +41,7 @@ nb_NO:
       invalid: |-
         Jeg beklager, det er matematisk umulig å rulle den kombinasjonen av terninger. :confounded:
       not_enough_dice: |-
-        Jeg har bare %{num_of_dice} terninger. Jeg vet det er [flaut]  (http://www.therobotsvoice.com/2009/04/the_10_most_shameful_rpg_dice.php)!
+        Jeg har bare %{num_of_dice} terninger. Jeg vet det er [flaut] (http://www.therobotsvoice.com/2009/04/the_10_most_shameful_rpg_dice.php)!
       out_of_range: |-
         Visste du at [maksimalt antall sider](https://www.wired.com/2016/05/mathematical-challenge-of-designing-the-worlds-most-complex-120-sided-dice) på en matematisk rettferdig terning er 120?
       results: |-
@@ -81,7 +81,7 @@ nb_NO:
       results: |-
         > :left_speech_bubble: _%{quote}_ &mdash; %{author}
     magic_8_ball:
-      trigger: 'spådom'
+      trigger: "spådom"
       answers:
         '1': "Det er sikkert"
         '2': "Det er virkelig slik"
@@ -105,9 +105,9 @@ nb_NO:
       result: |-
         > :crystal_ball: %{result}
     track_selector:
-      reset_trigger: 'start'
-      skip_trigger: 'hopp over'
-      help_trigger: 'vis hjelp'
+      reset_trigger: "start"
+      skip_trigger: "hopp over"
+      help_trigger: "vis hjelp"
       random_mention:
         reply: |-
           Hei! Finn ut hva jeg kan gjøre, si `@%{discobot_username} %{help_trigger}`.
@@ -122,10 +122,10 @@ nb_NO:
           > :crystal_ball: Du kan stole på det
       do_not_understand:
         first_response: |-
-          Hei,  takk for svaret!
+          Hei, takk for svaret!
 
           Men dessverre, siden jeg er en dårlig programmert robot så skjønte jeg ikke helt hva du mente. :frowning:
-        track_response: Du kan prøve igjen, eller hvis du ønsker å hoppe over dette steget kan du svare  `%{skip_trigger}`. Hvis du vil begynne på nytt helt fra starten kan du si `%{reset_trigger}`.
+        track_response: Du kan prøve igjen, eller hvis du ønsker å hoppe over dette steget kan du svare `%{skip_trigger}`. Hvis du vil begynne på nytt helt fra starten kan du si `%{reset_trigger}`.
         second_response: |-
           Æsj, unnskyld. Jeg skjønner fremdeles ingenting. :anguished:
 
@@ -189,7 +189,7 @@ nb_NO:
 
           Under sitatet kan du skrive noen ord om hvorfor du valgte akkurat det sitatet, for jeg er litt nysgjerrig :thinking:
         reply: |-
-          Godt jobbet, du valgte mitt  favorittsitat! :left_speech_bubble:
+          Godt jobbet, du valgte mitt favorittsitat! :left_speech_bubble:
         not_found: |-
           Hmm, det ser ut som du ikke siterte meg i svaret ditt?
 
@@ -261,10 +261,10 @@ nb_NO:
         not_found: |-
           Hmm... det ser ut som du kanskje har trøbbel. Beklager så mye! Brukte du <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> for å søke etter **capy&#8203;bara**?
       certificate:
-        alt: 'Bevis for Utmerkelse'
+        alt: "Bevis for Utmerkelse"
     advanced_user_narrative:
       cert_title: "Som vitnesbyrd på bestått gjennomgang av den avanserte brukeropplæringen"
-      title: ':arrow_up: Avanserte brukerfunksjoner'
+      title: ":arrow_up: Avanserte brukerfunksjoner"
       edit:
         bot_created_post_raw: "@%{discobot_username} er overlegent den kuleste bot-en jeg vet om :wink:"
         instructions: |-
@@ -291,7 +291,7 @@ nb_NO:
 
           For å bevare den røde tråden i diskusjoner forsvinner ikke slettede innlegg umiddelbart, så innlegget vil bli fjernet om litt.
       recover:
-        deleted_post_raw: 'Hvorfor slettet @%{discobot_username}innlegget mitt? :anguished:'
+        deleted_post_raw: "Hvorfor slettet @%{discobot_username}innlegget mitt? :anguished:"
         instructions: |-
           Å nei! Det ser ut som jeg kom i skade for å slette et nytt innlegg som jeg akkurat hadde laget for deg.
 
@@ -376,4 +376,4 @@ nb_NO:
 
           Takk for nå! Hvis du ønsker å snakke med igjen er det bare å sende meg en melding når som helst :sunglasses:
       certificate:
-        alt: 'Bevis på Utmerkelse for Avanserte Brukere'
+        alt: "Bevis på Utmerkelse for Avanserte Brukere"

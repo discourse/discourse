@@ -19,6 +19,13 @@ pl_PL:
         many: "oddanych głosów"
         other: "oddanych głosów"
       average_rating: "Średnia ocena: <strong>%{average}</strong>."
+      public:
+        title: "Głosy są <strong>jawne</strong>."
+      results:
+        vote:
+          title: "Wyniki pojawią się po <strong>zagłosowaniu</strong>."
+        closed:
+          title: "Wyniki pojawią się po <strong>zamknięciu</strong> ankiety."
       multiple:
         help:
           at_least_min_options:
@@ -54,6 +61,9 @@ pl_PL:
         title: "Zamknij ankietę"
         label: "Zamknij"
         confirm: "Czy na pewno chcesz zamknąć tę ankietę?"
+      automatic_close:
+        closes_in: "Zamknięcie ankiety w ciągu <strong>%{timeLeft}</strong>."
+        age: "Zamknięta <strong>%{age}</strong>"
       error_while_toggling_status: "Przepraszamy, wystąpił błąd podczas przełączania statusu w tej ankiecie."
       error_while_casting_votes: "Przepraszamy, wystąpił błąd podczas oddawania głosów."
       error_while_fetching_voters: "Przepraszamy, wystąpił błąd podczas wyświetlania głosujących."
@@ -71,6 +81,9 @@ pl_PL:
           number: Liczba ocen
         poll_result:
           label: Wyniki
+          always: Zawsze widoczna
+          vote: Po zagłosowaniu
+          closed: Po zamknięciu
         poll_config:
           max: Max
           min: Min

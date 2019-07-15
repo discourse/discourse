@@ -83,15 +83,17 @@ class Group < ActiveRecord::Base
     only_admins: 1,
     mods_and_admins: 2,
     members_mods_and_admins: 3,
+    owners_mods_and_admins: 4,
     everyone: 99
   }
 
   def self.visibility_levels
     @visibility_levels = Enum.new(
       public: 0,
-      members: 1,
-      staff: 2,
-      owners: 3
+      logged_on_users: 1,
+      members: 2,
+      staff: 3,
+      owners: 4
     )
   end
 
@@ -109,6 +111,11 @@ class Group < ActiveRecord::Base
       sql = <<~SQL
         groups.id IN (
           SELECT g.id FROM groups g WHERE g.visibility_level = :public
+
+          UNION ALL
+
+          SELECT g.id FROM groups g
+          WHERE g.visibility_level = :logged_on_users AND :user_id IS NOT NULL
 
           UNION ALL
 
@@ -158,6 +165,9 @@ class Group < ActiveRecord::Base
           (
             messageable_level = #{ALIAS_LEVELS[:members_mods_and_admins]} AND id in (
             SELECT group_id FROM group_users WHERE user_id = :user_id)
+          ) OR (
+            messageable_level = #{ALIAS_LEVELS[:owners_mods_and_admins]} AND id in (
+            SELECT group_id FROM group_users WHERE user_id = :user_id AND owner IS TRUE)
           )", levels: alias_levels(user), user_id: user && user.id)
   }
 
@@ -168,7 +178,11 @@ class Group < ActiveRecord::Base
       mentionable_level = #{ALIAS_LEVELS[:members_mods_and_admins]}
       AND id in (
         SELECT group_id FROM group_users WHERE user_id = :user_id)
-      )
+    ) OR (
+      mentionable_level = #{ALIAS_LEVELS[:owners_mods_and_admins]}
+      AND id in (
+        SELECT group_id FROM group_users WHERE user_id = :user_id AND owner IS TRUE)
+    )
     SQL
   end
 
@@ -179,11 +193,13 @@ class Group < ActiveRecord::Base
       levels = [ALIAS_LEVELS[:everyone],
                 ALIAS_LEVELS[:only_admins],
                 ALIAS_LEVELS[:mods_and_admins],
-                ALIAS_LEVELS[:members_mods_and_admins]]
+                ALIAS_LEVELS[:members_mods_and_admins],
+                ALIAS_LEVELS[:owners_mods_and_admins]]
     elsif user && user.moderator?
       levels = [ALIAS_LEVELS[:everyone],
                 ALIAS_LEVELS[:mods_and_admins],
-                ALIAS_LEVELS[:members_mods_and_admins]]
+                ALIAS_LEVELS[:members_mods_and_admins],
+                ALIAS_LEVELS[:owners_mods_and_admins]]
     end
 
     levels
@@ -323,6 +339,8 @@ class Group < ActiveRecord::Base
     when :moderators
       group.update!(messageable_level: ALIAS_LEVELS[:everyone])
     end
+
+    group.update!(visibility_level: Group.visibility_levels[:logged_on_users]) if group.visibility_level == Group.visibility_levels[:public]
 
     # Remove people from groups they don't belong in.
     remove_subquery =

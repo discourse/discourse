@@ -661,6 +661,7 @@ en:
         only_admins: "Only admins"
         mods_and_admins: "Only moderators and Admins"
         members_mods_and_admins: "Only group members, moderators and admins"
+        owners_mods_and_admins: "Only group owners, moderators and admins"
         everyone: "Everyone"
       notifications:
         watching:
@@ -868,9 +869,7 @@ en:
       muted_users_instructions: "Suppress all notifications from these users."
       ignored_users: "Ignored"
       ignored_users_instructions: "Suppress all posts and notifications from these users."
-      muted_topics_link: "Show muted topics"
-      watched_topics_link: "Show watched topics"
-      tracked_topics_link: "Show tracked topics"
+      tracked_topics_link: "Show"
       automatically_unpin_topics: "Automatically unpin topics when I reach the bottom."
       apps: "Apps"
       revoke_access: "Revoke Access"
@@ -927,19 +926,19 @@ en:
         disable: "Disable"
         enable: "Enable"
         enable_long: "Enable backup codes"
-        manage: "Manage backup codes"
+        manage: "Manage backup codes. You have <strong>{{count}}</strong> backup codes remaining."
         copied_to_clipboard: "Copied to Clipboard"
         copy_to_clipboard_error: "Error copying data to Clipboard"
         remaining_codes: "You have <strong>{{count}}</strong> backup codes remaining."
         use: "<a href>Use a backup code</a>"
+        enable_prerequisites: "You must enable a primary second factor before generating backup codes."
         codes:
           title: "Backup Codes Generated"
           description: "Each of these backup codes can only be used once. Keep them somewhere safe but accessible."
 
       second_factor:
         title: "Two Factor Authentication"
-        disable: "Disable Two Factor Authentication"
-        enable: "Enable Two Factor Authentication"
+        enable: "Manage Two Factor Authentication"
         confirm_password_description: "Please confirm your password to continue"
         label: "Code"
         rate_limit: "Please wait before trying another authentication code."
@@ -954,6 +953,16 @@ en:
         oauth_enabled_warning: "Please note that social logins will be disabled once two factor authentication has been enabled on your account."
         use: "<a href>Use Authenticator app</a>"
         enforced_notice: "You are required to enable two factor authentication before accessing this site."
+        disable: "disable"
+        disable_title: "Disable Second Factor"
+        disable_confirm: "Are you sure you want to disable all second factors?"
+        edit: "Edit"
+        edit_title: "Edit Second Factor"
+        edit_description: "Second Factor Name"
+        totp:
+          title: "Token-Based Authenticators"
+          add: "New Authenticator"
+          default_name: "My Authenticator"
 
       change_about:
         title: "Change About Me"
@@ -1282,9 +1291,9 @@ en:
       enabled: "This site is in read only mode. Please continue to browse, but replying, likes, and other actions are disabled for now."
       login_disabled: "Login is disabled while the site is in read only mode."
       logout_disabled: "Logout is disabled while the site is in read only mode."
-    too_few_topics_and_posts_notice: "Let's <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>get this discussion started!</a> There are currently <strong>%{currentTopics} / %{requiredTopics}</strong> topics and <strong>%{currentPosts} / %{requiredPosts}</strong> posts. New visitors need some conversations to read and respond to."
-    too_few_topics_notice: "Let's <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>get this discussion started!</a> There are currently <strong>%{currentTopics} / %{requiredTopics}</strong> topics. New visitors need some conversations to read and respond to."
-    too_few_posts_notice: "Let's <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>get this discussion started!</a> There are currently <strong>%{currentPosts} / %{requiredPosts}</strong> posts. New visitors need some conversations to read and respond to."
+    too_few_topics_and_posts_notice: "Let's <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>start the discussion!</a> There are <strong>%{currentTopics} / %{requiredTopics}</strong> topics and <strong>%{currentPosts} / %{requiredPosts}</strong> posts – visitors need more to read and reply to. Only staff can see this message."
+    too_few_topics_notice: "Let's <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>start the discussion!</a> There are <strong>%{currentTopics} / %{requiredTopics}</strong> topics – visitors need more to read and reply to. Only staff can see this message."
+    too_few_posts_notice: "Let's <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>start the discussion!</a> There are <strong>%{currentPosts} / %{requiredPosts}</strong> posts – visitors need more to read and reply to. Only staff can see this message."
     logs_error_rate_notice:
       # keys ending with _MF use message format, see https://meta.discourse.org/t/message-format-support-for-localization/7035 for details
       reached_hour_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# error/hour} other {# errors/hour}}</a> reached site setting limit of {limit, plural, one {# error/hour} other {# errors/hour}}."
@@ -1336,7 +1345,7 @@ en:
       disable: "Show All Posts"
 
     deleted_filter:
-      enabled_description: "This topic contains deleted posts, which have been hidden. "
+      enabled_description: "This topic contains deleted posts, which have been hidden."
       disabled_description: "Deleted posts in the topic are shown."
       enable: "Hide Deleted Posts"
       disable: "Show Deleted Posts"
@@ -1554,7 +1563,7 @@ en:
       drafts_offline: "drafts offline"
       edit_conflict: "edit conflict"
 
-      group_mentioned_limit: "<b>Warning!</b> You mentioned <a href='{{group_link}}'>{{group}}</a>, however this group has more members than the administrator configured mention limit of {{max}} users. Nobody will be notified. "
+      group_mentioned_limit: "<b>Warning!</b> You mentioned <a href='{{group_link}}'>{{group}}</a>, however this group has more members than the administrator configured mention limit of {{max}} users. Nobody will be notified."
       group_mentioned:
         one: "By mentioning {{group}}, you are about to notify <a href='{{group_link}}'>%{count} person</a> – are you sure?"
         other: "By mentioning {{group}}, you are about to notify <a href='{{group_link}}'>{{count}} people</a> – are you sure?"
@@ -1562,6 +1571,7 @@ en:
         category: "You mentioned {{username}} but they won't be notified because they do not have access to this category. You will need to add them to a group that has access to this category."
         private: "You mentioned {{username}} but they won't be notified because they are unable to see this personal message. You will need to invite them to this PM."
       duplicate_link: "It looks like your link to <b>{{domain}}</b> was already posted in the topic by <b>@{{username}}</b> in <a href='{{post_url}}'>a reply on {{ago}}</a> – are you sure you want to post it again?"
+      reference_topic_title: "RE: {{title}}"
 
       error:
         title_missing: "Title is required"
@@ -1958,6 +1968,9 @@ en:
       toggle_information: "toggle topic details"
       read_more_in_category: "Want to read more? Browse other topics in {{catLink}} or {{latestLink}}."
       read_more: "Want to read more? {{catLink}} or {{latestLink}}."
+      group_request: "You need to request membership to the `{{name}}` group to see this topic"
+      group_join: "You need join the `{{name}}` group to see this topic"
+      group_request_sent: "Your group membership request has been sent. You will be informed when it's accepted."
 
       # keys ending with _MF use message format, see https://meta.discourse.org/t/message-format-support-for-localization/7035 for details
       read_more_MF: "There {
@@ -2093,7 +2106,7 @@ en:
           description: "A count of new replies will be shown for this message. You will be notified if someone mentions your @name or replies to you."
         tracking:
           title: "Tracking"
-          description: "A count of new replies will be shown for this topic. You will be notified if someone mentions your @name or replies to you. "
+          description: "A count of new replies will be shown for this topic. You will be notified if someone mentions your @name or replies to you."
         regular:
           title: "Normal"
           description: "You will be notified if someone mentions your @name or replies to you."
@@ -2369,6 +2382,7 @@ en:
       abandon:
         confirm: "Are you sure you want to abandon your post?"
         no_value: "No, keep"
+        no_save_draft: "No, save draft"
         yes_value: "Yes, abandon"
 
       via_email: "this post arrived via email"
@@ -2423,6 +2437,7 @@ en:
         delete_topic: "delete topic"
         add_post_notice: "Add Staff Notice"
         remove_post_notice: "Remove Staff Notice"
+        remove_timer: "remove timer"
 
       actions:
         flag: "Flag"
@@ -2701,7 +2716,8 @@ en:
         help: "This topic is pinned for you; it will display at the top of its category"
       unlisted:
         help: "This topic is unlisted; it will not be displayed in topic lists, and can only be accessed via a direct link"
-
+      personal_message:
+        title: "This topic is a personal message"
     posts: "Posts"
     posts_long: "there are {{number}} posts in this topic"
 
@@ -2853,6 +2869,7 @@ en:
         up_down: "%{shortcut} Move selection &uarr; &darr;"
         open: "%{shortcut} Open selected topic"
         next_prev: "%{shortcut} Next/previous section"
+        go_to_unread_post: "%{shortcut} Go to the first unread post"
       application:
         title: "Application"
         create: "%{shortcut} Create a new topic"
@@ -2889,6 +2906,7 @@ en:
         mark_tracking: "%{shortcut} Track topic"
         mark_watching: "%{shortcut} Watch topic"
         print: "%{shortcut} Print topic"
+        defer: "%{shortcut} Defer topic"
 
     badges:
       earned_n_times:
@@ -2994,6 +3012,7 @@ en:
         about: "Add tags to groups to manage them more easily."
         new: "New Group"
         tags_label: "Tags in this group:"
+        tags_placeholder: "tags"
         parent_tag_label: "Parent tag:"
         parent_tag_placeholder: "Optional"
         parent_tag_description: "Tags from this group can't be used unless the parent tag is present."
@@ -3169,9 +3188,12 @@ en:
             visibility_levels:
               title: "Who can see this group?"
               public: "Everyone"
-              members: "Group owners, members and admins"
+              logged_on_users: "Logged on users"
+              members: "Group owners, members"
               staff: "Group owners and staff"
-              owners: "Group owners and admins"
+              owners: "Group owners"
+              description: "Admins can see all groups."
+
           membership:
             automatic: Automatic
             trust_level: Trust Level
@@ -3469,6 +3491,7 @@ en:
           inactive_themes: "Inactive themes:"
           inactive_components: "Unused components:"
           broken_theme_tooltip: "This theme has errors in its CSS, HTML or YAML"
+          disabled_component_tooltip: "This component has been disabled"
           default_theme_tooltip: "This theme is the site's default theme"
           updates_available_tooltip: "Updates are available for this theme"
           and_x_more: "and {{count}} more."
@@ -3509,6 +3532,10 @@ en:
           version: "Version:"
           authors: "Authored by:"
           source_url: "Source"
+          enable: "Enable"
+          disable: "Disable"
+          disabled: "This component has been disabled."
+          disabled_by: "This component has been disabled by"
           required_version:
             error: "This theme has been automatically disabled because it is not compatible with this version of Discourse."
             minimum: "Requires Discourse version {{version}} or above."
@@ -3783,6 +3810,9 @@ en:
             embeddable_host_create: "embeddable host create"
             embeddable_host_update: "embeddable host update"
             embeddable_host_destroy: "embeddable host destroy"
+            change_theme_setting: "change theme setting"
+            disable_theme_component: "disable theme component"
+            enable_theme_component: "enable theme component"
         screened_emails:
           title: "Screened Emails"
           description: "When someone tries to create a new account, the following email addresses will be checked and the registration will be blocked, or some other action performed."
@@ -3994,7 +4024,7 @@ en:
           other: "Can't delete all posts. Some posts are older than %{count} days old. (The delete_user_max_post_age setting.)"
         cant_delete_all_too_many_posts:
           one: "Can't delete all posts because the user has more than %{count} post. (delete_all_posts_max)"
-          other: "Can't delete all posts because the user has more than %{count} posts.  (delete_all_posts_max)"
+          other: "Can't delete all posts because the user has more than %{count} posts. (delete_all_posts_max)"
         delete_confirm: "It is generally preferable to anonymize users rather than deleting them, to avoid removing content from existing discussions.<br><br>Are you SURE you want to delete this user? This is permanent!"
         delete_and_block: "Delete and <b>block</b> this email and IP address"
         delete_dont_block: "Delete only"
@@ -4325,7 +4355,7 @@ en:
       quit: "Maybe Later"
 
       staff_count:
-        one: "Your community has %{count} staff (you). "
+        one: "Your community has %{count} staff (you)."
         other: "Your community has %{count} staff, including you."
 
       invites:

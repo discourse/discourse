@@ -15,6 +15,23 @@
       display: flex;
       align-items: center;
       height: 100%;
+
+      .header-row {
+        width: 100%;
+
+        .logo-wrapper {
+          float: left;
+        }
+        .auth-buttons {
+          float: right;
+          margin-top: 0.4em;
+
+          .login-button,
+          .signup-button {
+            padding: 8px 14px;
+          }
+        }
+      }
     }
   }
 

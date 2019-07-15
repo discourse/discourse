@@ -101,9 +101,9 @@ cs:
       result: |-
         > :crystal_ball: %{result}
     track_selector:
-      reset_trigger: 'začít'
-      skip_trigger: 'přeskočit'
-      help_trigger: 'zobrazit nápovědu'
+      reset_trigger: "začít"
+      skip_trigger: "přeskočit"
+      help_trigger: "zobrazit nápovědu"
       random_mention:
         reply: |-
           Ahoj! Pokud chceš zjistit, co umím, napiš `@%{discobot_username} %{help_trigger}`.
@@ -115,4 +115,4 @@ cs:
     new_user_narrative:
       bookmark:
         instructions: |-
-          Pokud by ses chtěl dozvědět víc, klikni na <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> níže  a <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-bookmark.png" width="16" height="16"> **ulož si tuto soukromou zprávu do záložek**.  Pokud to uděláš, je možný, že tam v budoucnu najdeš :gift:!
+          Pokud by ses chtěl dozvědět víc, klikni na <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> níže a <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-bookmark.png" width="16" height="16"> **ulož si tuto soukromou zprávu do záložek**. Pokud to uděláš, je možný, že tam v budoucnu najdeš :gift:!

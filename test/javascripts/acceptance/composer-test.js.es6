@@ -586,14 +586,43 @@ QUnit.test(
     await click(".topic-post:eq(0) button.reply");
     await fillIn(".d-editor-input", "This is a dirty reply");
     await click(".toggler");
-    await click(".topic-post:eq(0) button.edit");
+    await click(".topic-post:eq(1) button.edit");
     assert.ok(exists(".bootbox.modal"), "it pops up a confirmation dialog");
+    assert.equal(
+      find(".modal-footer a:eq(1)").text(),
+      I18n.t("post.abandon.no_value")
+    );
     await click(".modal-footer a:eq(0)");
     assert.equal(
       find(".d-editor-input")
         .val()
-        .indexOf("This is the first post."),
+        .indexOf("This is the second post."),
       0,
+      "it populates the input with the post text"
+    );
+  }
+);
+
+QUnit.test(
+  "Composer draft can switch to draft in new context without destroying current draft",
+  async assert => {
+    await visit("/t/this-is-a-test-topic/9");
+
+    await click(".topic-post:eq(0) button.reply");
+    await fillIn(".d-editor-input", "This is a dirty reply");
+
+    await click("#site-logo");
+    await click("#create-topic");
+
+    assert.ok(exists(".bootbox.modal"), "it pops up a confirmation dialog");
+    assert.equal(
+      find(".modal-footer a:eq(1)").text(),
+      I18n.t("post.abandon.no_save_draft")
+    );
+    await click(".modal-footer a:eq(1)");
+    assert.equal(
+      find(".d-editor-input").val(),
+      "",
       "it populates the input with the post text"
     );
   }

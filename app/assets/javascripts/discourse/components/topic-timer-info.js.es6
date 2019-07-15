@@ -1,6 +1,8 @@
 import { iconHTML } from "discourse-common/lib/icon-library";
 import { bufferedRender } from "discourse-common/lib/buffered-render";
 import Category from "discourse/models/category";
+import computed from "ember-addons/ember-computed-decorators";
+import { REMINDER_TYPE } from "discourse/controllers/edit-topic-timer";
 
 export default Ember.Component.extend(
   bufferedRender({
@@ -15,6 +17,12 @@ export default Ember.Component.extend(
       "duration",
       "categoryId"
     ],
+
+    @computed("statusType")
+    canRemoveTimer(type) {
+      if (type === REMINDER_TYPE) return true;
+      return this.currentUser && this.currentUser.get("canManageTopic");
+    },
 
     buildBuffer(buffer) {
       if (!this.executeAt) return;
@@ -40,7 +48,7 @@ export default Ember.Component.extend(
         }
         let autoCloseHours = this.duration || 0;
 
-        buffer.push(`<h3>${iconHTML("far-clock")} `);
+        buffer.push(`<h3 class="topic-timer-heading">`);
 
         let options = {
           timeLeft: duration.humanize(true),
@@ -61,11 +69,17 @@ export default Ember.Component.extend(
         }
 
         buffer.push(
-          `<span title="${moment(this.executeAt).format("LLLL")}">${I18n.t(
-            this._noticeKey(),
-            options
-          )}</span>`
+          `<span title="${moment(this.executeAt).format("LLLL")}">${iconHTML(
+            "far-clock"
+          )} ${I18n.t(this._noticeKey(), options)}</span>`
         );
+        if (this.removeTopicTimer && this.canRemoveTimer) {
+          buffer.push(
+            `<button class="btn topic-timer-remove no-text" title="${I18n.t(
+              "post.controls.remove_timer"
+            )}">${iconHTML("trash-alt")}</button>`
+          );
+        }
         buffer.push("</h3>");
 
         // TODO Sam: concerned this can cause a heavy rerender loop
@@ -79,7 +93,21 @@ export default Ember.Component.extend(
       }
     },
 
+    didInsertElement() {
+      this._super(...arguments);
+
+      if (this.removeTopicTimer) {
+        $(this.element).on(
+          "click.topic-timer-remove",
+          "button",
+          this.removeTopicTimer
+        );
+      }
+    },
+
     willDestroyElement() {
+      $(this.element).off("click.topic-timer-remove", this.removeTopicTimer);
+
       if (this._delayedRerender) {
         Ember.run.cancel(this._delayedRerender);
       }

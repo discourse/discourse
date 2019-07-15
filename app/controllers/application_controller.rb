@@ -139,7 +139,7 @@ class ApplicationController < ActionController::Base
   end
 
   rescue_from PG::ReadOnlySqlTransaction do |e|
-    Discourse.received_readonly!
+    Discourse.received_postgres_readonly!
     Rails.logger.error("#{e.class} #{e.message}: #{e.backtrace.join("\n")}")
     raise Discourse::ReadOnly
   end
@@ -745,6 +745,7 @@ class ApplicationController < ActionController::Base
     check_totp = current_user &&
       !request.format.json? &&
       !is_api? &&
+      !(SiteSetting.allow_anonymous_posting && current_user.anonymous?) &&
       ((SiteSetting.enforce_second_factor == 'staff' && current_user.staff?) ||
         SiteSetting.enforce_second_factor == 'all') &&
       !current_user.totp_enabled?

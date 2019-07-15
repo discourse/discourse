@@ -27,3 +27,9 @@ QUnit.test("Visit reports page", async assert => {
     "List of my activities"
   );
 });
+
+QUnit.test("Visit report page", async assert => {
+  await visit("/admin/reports/staff_logins");
+
+  assert.ok(exists(".export-csv-btn"));
+});

@@ -109,7 +109,18 @@ class Category < ActiveRecord::Base
 
   TOPIC_CREATION_PERMISSIONS ||= [:full]
   POST_CREATION_PERMISSIONS  ||= [:create_post, :full]
-  scope :topic_create_allowed, -> (guardian) { scoped_to_permissions(guardian, TOPIC_CREATION_PERMISSIONS) }
+
+  scope :topic_create_allowed, -> (guardian) do
+
+    scoped = scoped_to_permissions(guardian, TOPIC_CREATION_PERMISSIONS)
+
+    if !SiteSetting.allow_uncategorized_topics && !guardian.is_staff?
+      scoped = scoped.where.not(id: SiteSetting.uncategorized_category_id)
+    end
+
+    scoped
+  end
+
   scope :post_create_allowed,  -> (guardian) { scoped_to_permissions(guardian, POST_CREATION_PERMISSIONS) }
 
   delegate :post_template, to: 'self.class'

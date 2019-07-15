@@ -336,7 +336,7 @@ class Topic < ActiveRecord::Base
 
   def self.fancy_title(title)
     return unless escaped = ERB::Util.html_escape(title)
-    fancy_title = Emoji.unicode_unescape(HtmlPrettify.render(escaped))
+    fancy_title = Emoji.unicode_unescape(HtmlPrettify.render(escaped, SiteSetting.pretty_quote_entities))
     fancy_title.length > Topic.max_fancy_title_length ? escaped : fancy_title
   end
 
@@ -1382,6 +1382,15 @@ class Topic < ActiveRecord::Base
         .where(['id = ?', category_id])
         .update_all("topic_count = topic_count " + (num > 0 ? '+' : '') + "#{num}")
     end
+  end
+
+  def access_topic_via_group
+    Group
+      .joins(:category_groups)
+      .where("category_groups.category_id = ?", self.category_id)
+      .where("groups.public_admission OR groups.allow_membership_requests")
+      .order(:allow_membership_requests)
+      .first
   end
 
   private

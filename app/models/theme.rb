@@ -22,7 +22,7 @@ class Theme < ActiveRecord::Base
   has_many :child_themes, -> { order(:name) }, through: :child_theme_relation, source: :child_theme
   has_many :parent_themes, -> { order(:name) }, through: :parent_theme_relation, source: :parent_theme
   has_many :color_schemes
-  belongs_to :remote_theme, autosave: true
+  belongs_to :remote_theme, autosave: true, dependent: :destroy
 
   has_one :settings_field, -> { where(target_id: Theme.targets[:settings], name: "yaml") }, class_name: 'ThemeField'
   has_one :javascript_cache, dependent: :destroy
@@ -156,8 +156,10 @@ class Theme < ActiveRecord::Base
 
       all_ids = [parent, *components]
 
-      disabled_ids = Theme.where(id: all_ids).includes(:remote_theme)
-        .reject(&:enabled?).pluck(:id)
+      disabled_ids = Theme.where(id: all_ids)
+        .includes(:remote_theme)
+        .select { |t| !t.supported? || !t.enabled? }
+        .pluck(:id)
 
       all_ids - disabled_ids
     end
@@ -177,7 +179,7 @@ class Theme < ActiveRecord::Base
     SiteSetting.default_theme_id == id
   end
 
-  def enabled?
+  def supported?
     if minimum_version = remote_theme&.minimum_discourse_version
       return false unless Discourse.has_needed_version?(Discourse::VERSION::STRING, minimum_version)
     end
@@ -216,6 +218,7 @@ class Theme < ActiveRecord::Base
     return unless component
 
     Theme.transaction do
+      self.enabled = true
       self.component = false
       ChildTheme.where("child_theme_id = ?", id).destroy_all
       self.save!
@@ -489,6 +492,22 @@ class Theme < ActiveRecord::Base
 
     end
   end
+
+  def disabled_by
+    find_disable_action_log&.acting_user
+  end
+
+  def disabled_at
+    find_disable_action_log&.created_at
+  end
+
+  private
+
+  def find_disable_action_log
+    if component? && !enabled?
+      @disable_log ||= UserHistory.where(context: id.to_s, action: UserHistory.actions[:disable_theme_component]).order("created_at DESC").first
+    end
+  end
 end
 
 # == Schema Information
@@ -506,6 +525,7 @@ end
 #  color_scheme_id  :integer
 #  remote_theme_id  :integer
 #  component        :boolean          default(FALSE), not null
+#  enabled          :boolean          default(TRUE), not null
 #
 # Indexes
 #

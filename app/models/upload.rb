@@ -361,7 +361,7 @@ class Upload < ActiveRecord::Base
   private
 
   def short_url_basename
-    "#{Upload.base62_sha1(sha1)}.#{extension}"
+    "#{Upload.base62_sha1(sha1)}#{extension.present? ? ".#{extension}" : ""}"
   end
 
 end

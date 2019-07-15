@@ -7,7 +7,7 @@
 
 fr:
   site_settings:
-    discourse_narrative_bot_enabled: 'Activer le rotbot de narration Discourse (discobot)'
+    discourse_narrative_bot_enabled: "Activer le rotbot de narration Discourse (discobot)"
     disable_discourse_narrative_bot_welcome_post: "Désactiver le message de bienvenue de l'assistant Discourse"
     discourse_narrative_bot_ignored_usernames: "Noms d'utilisateurs que l'assistant Discourse doit ignorer"
     discourse_narrative_bot_disable_public_replies: "Désactiver les réponses publiques de l'assistant Discourse"
@@ -80,9 +80,9 @@ fr:
         quote: "Tout ce que l'esprit de l'homme peut concevoir et croire peut être atteind."
         author: "Napoleon Hill"
       results: |-
-        > :left_speech_bubble: %{quote} __ &mdash;  %{author}
+        > :left_speech_bubble: %{quote} __ &mdash; %{author}
     magic_8_ball:
-      trigger: 'fortune'
+      trigger: "fortune"
       answers:
         '1': "C'est certain"
         '2': "C'est décidé"
@@ -107,9 +107,9 @@ fr:
       result: |-
         > :crystal_ball: %{result}
     track_selector:
-      reset_trigger: 'démarrer'
-      skip_trigger: 'passer'
-      help_trigger: 'afficher l''aide'
+      reset_trigger: "démarrer"
+      skip_trigger: "passer"
+      help_trigger: "afficher l'aide"
       random_mention:
         reply: |-
           Bonjour ! Pour voir ce que je peux faire, dites `@%{discobot_username} `.
@@ -232,9 +232,9 @@ fr:
         instructions: |-
           Vous pouvez avoir remarqué que j'utilise des petites images dans mes réponses :blue_car::dash: Elles sont appelées [emoji](https://fr.wikipedia.org/wiki/Emoji). Pouvez-vous **ajouter un emoji** à votre réponse ? N'importe lequel sera bien:
 
-          - Tapez  `:) ;) :D :P :O`
+          - Tapez `:) ;) :D :P :O`
 
-          - Tapez <kbd>:</kbd> puis complétez le nom de l'emoji  `:tada:`
+          - Tapez <kbd>:</kbd> puis complétez le nom de l'emoji `:tada:`
 
           - Appuyez sur le bouton emoji <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-smile.png" width="16" height="16"> dans l'éditeur, ou sur le clavier de votre mobile.
         reply: |-
@@ -249,7 +249,7 @@ fr:
           (Si vous êtes sur un périphérique mobile, vous pouvez aussi entrer l'émoji directement depuis votre clavier.)
       mention:
         instructions: |-
-          Parfois vous avez peut-être envie d'attirer l'attention, même si vous ne lui répondez pas directement. Tapez  `@` et complétez son pseudo pour le mentionner.
+          Parfois vous avez peut-être envie d'attirer l'attention, même si vous ne lui répondez pas directement. Tapez `@` et complétez son pseudo pour le mentionner.
 
           Pouvez vous mentionner **`@%{discobot_username}`** dans votre réponse ?
         reply: |-
@@ -297,15 +297,15 @@ fr:
 
           %{certificate}
 
-          C'est tout pour le moment ! Regardez  [**nos dernières discussions**](%{base_uri}/latest) ou [**les catégories de discussion**](%{base_uri}/categories). :sunglasses :
+          C'est tout pour le moment ! Regardez [**nos dernières discussions**](%{base_uri}/latest) ou [**les catégories de discussion**](%{base_uri}/categories). :sunglasses :
 
           (Si vous souhaitez parler avec moi encore une fois pour en apprendre plus, envoyez moi un message ou mentionnez `@%{discobot_username}` n'importe quand !)
       certificate:
-        alt: 'Certificat d''accomplissement'
+        alt: "Certificat d'accomplissement"
     advanced_user_narrative:
-      reset_trigger: 'tutoriel avancé'
+      reset_trigger: "tutoriel avancé"
       cert_title: "En reconnaissance de l'accomplissement avec succès du tutoriel utilisateur avancé "
-      title: ':arrow_up: Fonctionnalités utilisateur avancé'
+      title: ":arrow_up: Fonctionnalités utilisateur avancé"
       start_message: |-
         En tant qu'utilisateur _averti_, avez-vous déjà visité la page [mes préférences](%{base_uri}/my/preferences) @%{username} ? Il y a beaucoup de possibilité pour personnaliser votre expérience, comme en sélectionnant un thème clair ou foncé.
 
@@ -336,7 +336,7 @@ fr:
 
           Pour préserver la continuité des discussions, les suppressions ne sont pas immédiates, et le message ne sera supprimé qu'après quelques temps.
       recover:
-        deleted_post_raw: 'Pourquoi @%{discobot_username} a supprimé mon message ? :anguished:'
+        deleted_post_raw: "Pourquoi @%{discobot_username} a supprimé mon message ? :anguished:"
         instructions: |-
           Oh non ! J'ai l'impression que j'ai accidentellement supprimé un nouveau message que je venais de créer pour vous.
 
@@ -418,7 +418,7 @@ fr:
           [/details]
           ```
         reply: |-
-          Bau travail  — votre attention aux _détails_ est admirable !
+          Bau travail — votre attention aux _détails_ est admirable !
       end:
         message: |-
           Vous avez suivis ce tutoriel comme un _utiliser avancé_ :bow:
@@ -429,4 +429,4 @@ fr:
 
           Au revoir ! Si vous voulez me reparler, envoyez moi un message à tout moment :sunglasses:
       certificate:
-        alt: 'Certificat de réussite de l''utilisateur avancé'
+        alt: "Certificat de réussite de l'utilisateur avancé"

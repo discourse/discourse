@@ -513,8 +513,19 @@
     list-style: none;
     margin-left: 0;
     li {
+      &.disabled-child {
+        .child-link {
+          color: $primary-medium;
+          &:hover {
+            text-decoration: underline;
+          }
+        }
+      }
+      .btn {
+        margin-left: 5px;
+      }
       display: table-row;
-      .col:first-child {
+      .col.child-link {
         padding-right: 10px;
         padding-bottom: 10px;
         min-width: 80px;

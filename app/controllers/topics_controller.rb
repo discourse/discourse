@@ -131,6 +131,9 @@ class TopicsController < ApplicationController
     perform_show_response
 
   rescue Discourse::InvalidAccess => ex
+    if !guardian.can_see_topic?(ex.obj) && guardian.can_get_access_to_topic?(ex.obj)
+      return perform_hidden_topic_show_response(ex.obj)
+    end
 
     if current_user
       # If the user can't see the topic, clean up notifications for it.
@@ -779,7 +782,17 @@ class TopicsController < ApplicationController
     elsif params[:filter] == 'unread'
       tq = TopicQuery.new(current_user)
       topics = TopicQuery.unread_filter(tq.joined_topic_user, current_user.id, staff: guardian.is_staff?).listable_topics
-      topics = topics.where('category_id = ?', params[:category_id]) if params[:category_id]
+
+      if params[:category_id]
+        if params[:include_subcategories]
+          topics = topics.where(<<~SQL, category_id: params[:category_id])
+            category_id in (select id FROM categories WHERE parent_category_id = :category_id) OR
+            category_id = :category_id
+          SQL
+        else
+          topics = topics.where('category_id = ?', params[:category_id])
+        end
+      end
       topic_ids = topics.pluck(:id)
     else
       raise ActionController::ParameterMissing.new(:topic_ids)
@@ -936,6 +949,19 @@ class TopicsController < ApplicationController
 
       format.json do
         render_json_dump(topic_view_serializer)
+      end
+    end
+  end
+
+  def perform_hidden_topic_show_response(topic)
+    respond_to do |format|
+      format.html do
+        @topic_view = nil
+        render :show
+      end
+
+      format.json do
+        render_serialized(topic, HiddenTopicViewSerializer, root: false)
       end
     end
   end

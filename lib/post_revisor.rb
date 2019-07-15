@@ -280,12 +280,9 @@ class PostRevisor
   end
 
   def diff_size(before, after)
-    changes = 0
-    ONPDiff.new(before, after).short_diff.each do |str, type|
-      next if type == :common
-      changes += str.length
+    ONPDiff.new(before, after).short_diff.sum do |str, type|
+      type == :common ? 0 : str.size
     end
-    changes
   end
 
   def ninja_edit?
@@ -299,7 +296,7 @@ class PostRevisor
         max_diff = SiteSetting.editing_grace_period_max_diff_high_trust.to_i
       end
 
-      if (original_raw.length - new_raw.length).abs > max_diff ||
+      if (original_raw.size - new_raw.size).abs > max_diff ||
         diff_size(original_raw, new_raw) > max_diff
         return false
       end
@@ -407,6 +404,7 @@ class PostRevisor
   end
 
   def remove_flags_and_unhide_post
+    return if @opts[:deleting_post]
     return unless editing_a_flagged_and_hidden_post?
 
     flaggers = []

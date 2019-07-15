@@ -18,8 +18,8 @@ hu:
       one: "Szavazásnak kevesebb, mint %{count} lehetőséget kell tartalmaznia."
       other: "Szavazásnak legalább %{count} lehetőséget kell tartalmaznia."
     named_poll_must_have_less_options:
-      one: "<strong>%{name}</strong> nevű  szavazásnak kevesebb mint %{count} változót kell tartalmaznia"
-      other: "<strong>%{name}</strong> nevű  szavazásnak kevesebb mint %{count}válaszható lehetőséget kell tartalmaznia."
+      one: "<strong>%{name}</strong> nevű szavazásnak kevesebb mint %{count} változót kell tartalmaznia"
+      other: "<strong>%{name}</strong> nevű szavazásnak kevesebb mint %{count}válaszható lehetőséget kell tartalmaznia."
     default_poll_must_have_different_options: "A szavazásnak több különböző megszavazható tételt kell tartalmaznia."
     named_poll_must_have_different_options: "A <strong>%[name]</strong> nevű szavazásnak több különböző megszavazható tételt kell tartalmaznia."
     requires_at_least_1_valid_option: "Ki kell választanod legalább 1 érvényes lehetőséget."

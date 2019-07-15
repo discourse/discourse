@@ -65,8 +65,9 @@ nav.post-controls {
       }
       margin-left: 0;
       margin-right: 0;
-      &.my-likes {
-        // Like count on my posts
+      &.my-likes,
+      &.regular-likes {
+        // Like count on posts
         .d-icon {
           color: $primary-low-mid;
           padding-left: 0.45em;
@@ -481,6 +482,7 @@ span.post-count {
 
 button.expand-post {
   margin-top: 10px;
+  margin-left: $topic-body-width-padding;
 }
 
 .quote-button.visible {
@@ -864,8 +866,9 @@ span.highlighted {
 }
 
 .read-state.read {
+  visibility: hidden;
   opacity: 0;
-  transition: opacity ease-out 1s;
+  transition: visibility 1s, opacity ease-out 1s;
 }
 
 .signup-cta {

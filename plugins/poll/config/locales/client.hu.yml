@@ -14,7 +14,7 @@ hu:
       total_votes:
         one: "összes szavazat"
         other: "összes szavazat"
-      average_rating: "Átlagos értékelés:  <strong>%{average}</strong>."
+      average_rating: "Átlagos értékelés: <strong>%{average}</strong>."
       multiple:
         help:
           at_least_min_options:

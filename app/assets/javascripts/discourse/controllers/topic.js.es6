@@ -17,6 +17,7 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import { spinnerHTML } from "discourse/helpers/loading-spinner";
 import { userPath } from "discourse/lib/url";
 import showModal from "discourse/lib/show-modal";
+import TopicTimer from "discourse/models/topic-timer";
 
 let customPostMessageCallbacks = {};
 
@@ -522,6 +523,16 @@ export default Ember.Controller.extend(bufferedProperty("model"), {
 
       if (user.get("staff") && hasReplies) {
         ajax(`/posts/${post.id}/reply-ids.json`).then(replies => {
+          if (replies.length === 0) {
+            return post
+              .destroy(user)
+              .then(refresh)
+              .catch(error => {
+                popupAjaxError(error);
+                post.undoDeleteState();
+              });
+          }
+
           const buttons = [];
 
           buttons.push({
@@ -940,6 +951,46 @@ export default Ember.Controller.extend(bufferedProperty("model"), {
       }
     },
 
+    joinGroup() {
+      const groupId = this.get("model.group.id");
+      if (groupId) {
+        if (this.get("model.group.allow_membership_requests")) {
+          const groupName = this.get("model.group.name");
+          return ajax(`/groups/${groupName}/request_membership`, {
+            type: "POST",
+            data: {
+              topic_id: this.get("model.id")
+            }
+          })
+            .then(() => {
+              bootbox.alert(
+                I18n.t("topic.group_request_sent", {
+                  group_name: this.get("model.group.full_name")
+                }),
+                () =>
+                  this.previousURL
+                    ? DiscourseURL.routeTo(this.previousURL)
+                    : DiscourseURL.routeTo("/")
+              );
+            })
+            .catch(popupAjaxError);
+        } else {
+          const topic = this.model;
+          return ajax(`/groups/${groupId}/members`, {
+            type: "PUT",
+            data: { user_id: this.get("currentUser.id") }
+          })
+            .then(() =>
+              topic.reload().then(() => {
+                topic.set("view_hidden", false);
+                topic.postStream.refresh();
+              })
+            )
+            .catch(popupAjaxError);
+        }
+      }
+    },
+
     replyAsNewTopic(post, quotedText) {
       const composerController = this.composer;
 
@@ -1035,6 +1086,18 @@ export default Ember.Controller.extend(bufferedProperty("model"), {
 
     resetBumpDate() {
       this.model.resetBumpDate();
+    },
+
+    removeTopicTimer(statusType, topicTimer) {
+      TopicTimer.updateStatus(
+        this.get("model.id"),
+        null,
+        null,
+        statusType,
+        null
+      )
+        .then(() => this.set(`model.${topicTimer}`, Ember.Object.create({})))
+        .catch(error => popupAjaxError(error));
     }
   },
 

@@ -176,7 +176,7 @@ class DiscourseRedis
       end
 
       fallback_handler.verify_master if !fallback_handler.master
-      Discourse.received_readonly!
+      Discourse.received_redis_readonly!
       nil
     else
       raise ex

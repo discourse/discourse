@@ -58,7 +58,7 @@ task 'javascript:update' do
       source: 'jquery.autoellipsis/src/jquery.autoellipsis.js',
       destination: 'jquery.autoellipsis-1.0.10.js'
     }, {
-      source: 'jquery-color/jquery.color.js'
+      source: 'jquery-color/dist/jquery.color.js'
     }, {
       source: 'jquery.cookie/jquery.cookie.js'
     }, {
@@ -77,6 +77,9 @@ task 'javascript:update' do
     }, {
       source: 'moment-timezone/builds/moment-timezone-with-data-10-year-range.js',
       destination: 'moment-timezone-with-data.js'
+    }, {
+      source: 'lodash.js',
+      destination: 'lodash.js'
     }, {
       source: 'moment-timezone-names-translations/locales/.',
       destination: 'moment-timezone-names-locale'
@@ -122,6 +125,12 @@ task 'javascript:update' do
       dest = "#{public_js}/#{filename}"
     else
       dest = "#{vendor_js}/#{filename}"
+    end
+
+    # lodash.js needs building
+    if src.include? "lodash.js"
+      puts "Building custom lodash.js build"
+      system('yarn run lodash include="each,filter,map,range,first,isEmpty,chain,extend,every,omit,merge,union,sortBy,uniq,intersection,reject,compact,reduce,debounce,throttle,values,pick,keys,flatten,min,max,isArray,delay,isString,isEqual,without,invoke,clone,findIndex,find,groupBy" minus="template" -d -o "node_modules/lodash.js"')
     end
 
     unless File.exists?(dest)

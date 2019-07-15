@@ -42,6 +42,7 @@ import { registerCustomPostMessageCallback as registerCustomPostMessageCallback1
 import Sharing from "discourse/lib/sharing";
 import { addComposerUploadHandler } from "discourse/components/composer-editor";
 import { addCategorySortCriteria } from "discourse/components/edit-category-settings";
+import { queryRegistry } from "discourse/widgets/widget";
 
 // If you add any methods to the API ensure you bump up this number
 const PLUGIN_API_VERSION = "0.8.31";
@@ -325,7 +326,9 @@ class PluginApi {
    * ```
    **/
   attachWidgetAction(widget, actionName, fn) {
-    const widgetClass = this.container.factoryFor(`widget:${widget}`).class;
+    const widgetClass =
+      queryRegistry(widget) ||
+      this.container.factoryFor(`widget:${widget}`).class;
     widgetClass.prototype[actionName] = fn;
   }
 

@@ -1,6 +1,7 @@
 import PostCooked from "discourse/widgets/post-cooked";
 import DecoratorHelper from "discourse/widgets/decorator-helper";
 import { createWidget, applyDecorators } from "discourse/widgets/widget";
+import RawHtml from "discourse/widgets/raw-html";
 import { iconNode } from "discourse-common/lib/icon-library";
 import { transformBasicPost } from "discourse/lib/transform-post";
 import { postTransformCallbacks } from "discourse/widgets/post-stream";
@@ -459,20 +460,23 @@ createWidget("post-notice", {
     let text, icon;
     if (attrs.noticeType === "custom") {
       icon = "user-shield";
-      text = attrs.noticeMessage;
+      text = new RawHtml({ html: `<div>${attrs.noticeMessage}</div>` });
     } else if (attrs.noticeType === "new_user") {
       icon = "hands-helping";
-      text = I18n.t("post.notice.new_user", { user });
+      text = h("p", I18n.t("post.notice.new_user", { user }));
     } else if (attrs.noticeType === "returning_user") {
       icon = "far-smile";
       const distance = (new Date() - new Date(attrs.noticeTime)) / 1000;
-      text = I18n.t("post.notice.returning_user", {
-        user,
-        time: durationTiny(distance, { addAgo: true })
-      });
+      text = h(
+        "p",
+        I18n.t("post.notice.returning_user", {
+          user,
+          time: durationTiny(distance, { addAgo: true })
+        })
+      );
     }
 
-    return h("p", [iconNode(icon), text]);
+    return [iconNode(icon), text];
   }
 });
 
@@ -528,7 +532,9 @@ createWidget("post-article", {
   },
 
   html(attrs, state) {
-    const rows = [h("a.tabLoc", { attributes: { href: "" } })];
+    const rows = [
+      h("a.tabLoc", { attributes: { href: "", "aria-hidden": true } })
+    ];
     if (state.repliesAbove.length) {
       const replies = state.repliesAbove.map(p => {
         return this.attach("embedded-post", p, {

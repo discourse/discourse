@@ -55,9 +55,9 @@ et:
       result: |-
         > :crystal_ball: %{result}
     track_selector:
-      reset_trigger: 'alusta'
-      skip_trigger: 'jäta vahele'
-      help_trigger: 'näita abininfot'
+      reset_trigger: "alusta"
+      skip_trigger: "jäta vahele"
+      help_trigger: "näita abininfot"
     new_user_narrative:
       reset_trigger: "õpetus"
       hello:
@@ -66,6 +66,6 @@ et:
         reply: |-
           Suureprane töö. Valisid minu lemmiktsitaadi! :left_speech_bubble:
       certificate:
-        alt: 'Saavutuse tunnistus'
+        alt: "Saavutuse tunnistus"
     advanced_user_narrative:
-      reset_trigger: 'õpetus edasijõutnudele'
+      reset_trigger: "õpetus edasijõutnudele"

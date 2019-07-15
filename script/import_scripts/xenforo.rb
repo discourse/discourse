@@ -35,13 +35,14 @@ class ImportScripts::XenForo < ImportScripts::Base
   def import_users
     puts '', "creating users"
 
-    total_count = mysql_query("SELECT count(*) count FROM #{TABLE_PREFIX}user;").first['count']
+    total_count = mysql_query("SELECT count(*) count FROM #{TABLE_PREFIX}user WHERE user_state = 'valid' AND is_banned = 0;").first['count']
 
     batches(BATCH_SIZE) do |offset|
       results = mysql_query(
         "SELECT user_id id, username, email, custom_title title, register_date created_at,
                 last_activity last_visit_time, user_group_id, is_moderator, is_admin, is_staff
          FROM #{TABLE_PREFIX}user
+         WHERE user_state = 'valid' AND is_banned = 0
          LIMIT #{BATCH_SIZE}
          OFFSET #{offset};")
 
@@ -165,6 +166,8 @@ class ImportScripts::XenForo < ImportScripts::Base
         FROM #{TABLE_PREFIX}post p,
              #{TABLE_PREFIX}thread t
         WHERE p.thread_id = t.thread_id
+        AND p.message_state = 'visible'
+        AND t.discussion_state = 'visible'
         ORDER BY p.post_date
         LIMIT #{BATCH_SIZE}" # needs OFFSET
 

@@ -55,7 +55,7 @@ module Jobs
 
       # write to CSV file
       CSV.open(absolute_path, "w") do |csv|
-        csv << get_header
+        csv << get_header if @entity != "report"
         public_send(export_method).each { |d| csv << d }
       end
 
@@ -186,14 +186,23 @@ module Jobs
       @extra[:category_id] = @extra[:category_id].present? ? @extra[:category_id].to_i : nil
       @extra[:group_id] = @extra[:group_id].present? ? @extra[:group_id].to_i : nil
 
-      report_hash = {}
-      Report.find(@extra[:name], @extra).data.each do |row|
-        report_hash[row[:x].to_s] = row[:y].to_s
+      report = Report.find(@extra[:name], @extra)
+
+      header = []
+      titles = {}
+
+      report.labels.each do |label|
+        if label[:type] == :user
+          titles[label[:properties][:username]] = label[:title]
+          header << label[:properties][:username]
+        else
+          titles[label[:property]] = label[:title]
+          header << label[:property]
+        end
       end
 
-      (@extra[:start_date].to_date..@extra[:end_date].to_date).each do |date|
-        yield [date.to_s(:db), report_hash.fetch(date.to_s, 0)]
-      end
+      yield header.map { |k| titles[k] || k }
+      report.data.each { |row| yield row.values_at(*header).map(&:to_s) }
     end
 
     def get_header

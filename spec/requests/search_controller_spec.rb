@@ -3,6 +3,21 @@
 require 'rails_helper'
 
 describe SearchController do
+
+  fab!(:awesome_post) do
+    SearchIndexer.enable
+    Fabricate(:post, raw: 'this is my really awesome post')
+  end
+
+  fab!(:user) do
+    Fabricate(:user)
+  end
+
+  fab!(:user_post) do
+    SearchIndexer.enable
+    Fabricate(:post, raw: "#{user.username} is a cool person")
+  end
+
   context "integration" do
     before do
       SearchIndexer.enable
@@ -18,6 +33,49 @@ describe SearchController do
       $redis.flushall
     end
 
+    context "when overloaded" do
+
+      before do
+        global_setting :disable_search_queue_threshold, 0.2
+      end
+
+      let! :start_time do
+        freeze_time
+        Time.now
+      end
+
+      let! :current_time do
+        freeze_time 0.3.seconds.from_now
+      end
+
+      it "errors on #query" do
+
+        get "/search/query.json", headers: {
+          "HTTP_X_REQUEST_START" => "t=#{start_time.to_f}"
+        }, params: {
+          term: "hi there", include_blurb: true
+        }
+
+        expect(response.status).to eq(409)
+      end
+
+      it "no results and error on #index" do
+        get "/search.json", headers: {
+          "HTTP_X_REQUEST_START" => "t=#{start_time.to_f}"
+        }, params: {
+          q: "awesome"
+        }
+
+        expect(response.status).to eq(200)
+
+        data = JSON.parse(response.body)
+
+        expect(data["posts"]).to be_empty
+        expect(data["grouped_search_result"]["error"]).not_to be_empty
+      end
+
+    end
+
     it "returns a 400 error if you search for null bytes" do
       term = "hello\0hello"
 
@@ -29,22 +87,21 @@ describe SearchController do
     end
 
     it "can search correctly" do
-      my_post = Fabricate(:post, raw: 'this is my really awesome post')
-
       get "/search/query.json", params: {
         term: 'awesome', include_blurb: true
       }
 
       expect(response.status).to eq(200)
+
       data = JSON.parse(response.body)
-      expect(data['posts'][0]['id']).to eq(my_post.id)
-      expect(data['posts'][0]['blurb']).to eq('this is my really awesome post')
-      expect(data['topics'][0]['id']).to eq(my_post.topic_id)
+
+      expect(data['posts'].length).to eq(1)
+      expect(data['posts'][0]['id']).to eq(awesome_post.id)
+      expect(data['posts'][0]['blurb']).to eq(awesome_post.raw)
+      expect(data['topics'][0]['id']).to eq(awesome_post.topic_id)
     end
 
     it 'performs the query with a type filter' do
-      user = Fabricate(:user)
-      my_post = Fabricate(:post, raw: "#{user.username} is a cool person")
 
       get "/search/query.json", params: {
         term: user.username, type_filter: 'topic'
@@ -53,7 +110,7 @@ describe SearchController do
       expect(response.status).to eq(200)
       data = JSON.parse(response.body)
 
-      expect(data['posts'][0]['id']).to eq(my_post.id)
+      expect(data['posts'][0]['id']).to eq(user_post.id)
       expect(data['users']).to be_blank
 
       get "/search/query.json", params: {
@@ -71,10 +128,8 @@ describe SearchController do
       it 'should not be restricted by minimum search term length' do
         SiteSetting.min_search_term_length = 20000
 
-        post = Fabricate(:post)
-
         get "/search/query.json", params: {
-          term: post.topic_id,
+          term: awesome_post.topic_id,
           type_filter: 'topic',
           search_for_id: true
         }
@@ -82,15 +137,13 @@ describe SearchController do
         expect(response.status).to eq(200)
         data = JSON.parse(response.body)
 
-        expect(data['topics'][0]['id']).to eq(post.topic_id)
+        expect(data['topics'][0]['id']).to eq(awesome_post.topic_id)
       end
 
       it "should return the right result" do
-        user = Fabricate(:user)
-        my_post = Fabricate(:post, raw: "#{user.username} is a cool person")
 
         get "/search/query.json", params: {
-          term: my_post.topic_id,
+          term: user_post.topic_id,
           type_filter: 'topic',
           search_for_id: true
         }
@@ -98,7 +151,7 @@ describe SearchController do
         expect(response.status).to eq(200)
         data = JSON.parse(response.body)
 
-        expect(data['topics'][0]['id']).to eq(my_post.topic_id)
+        expect(data['topics'][0]['id']).to eq(user_post.topic_id)
       end
     end
   end
@@ -174,7 +227,6 @@ describe SearchController do
     end
 
     context "with a user" do
-      fab!(:user) { Fabricate(:user) }
 
       it "raises an error if the user can't see the context" do
         get "/search/query.json", params: {
@@ -205,7 +257,7 @@ describe SearchController do
     end
 
     it "doesn't record the click for a different user" do
-      sign_in(Fabricate(:user))
+      sign_in(user)
 
       _, search_log_id = SearchLog.log(
         term: SecureRandom.hex,
@@ -225,7 +277,7 @@ describe SearchController do
     end
 
     it "records the click for a logged in user" do
-      user = sign_in(Fabricate(:user))
+      sign_in(user)
 
       _, search_log_id = SearchLog.log(
         term: SecureRandom.hex,

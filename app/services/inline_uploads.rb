@@ -24,7 +24,9 @@ class InlineUploads
     cooked_fragment.traverse do |node|
       if node.name == "img"
         # Do nothing
-      elsif !(node.children.count == 1 && (node.children[0].name != "img" && node.children[0].children.blank?))
+      elsif !(node.children.count == 1 && (node.children[0].name != "img" && node.children[0].children.blank?)) &&
+        !(node.name == "a" && node.children.count > 1 && !node_children_names(node).include?("img"))
+
         next
       end
 
@@ -175,7 +177,7 @@ class InlineUploads
   end
 
   def self.match_bbcode_img(markdown, external_src: false)
-    markdown.scan(/(\[img\]\s?(.+)\s?\[\/img\])/) do |match|
+    markdown.scan(/(\[img\]\s*([^\[\]\s]+)\s*\[\/img\])/) do |match|
       if (matched_uploads(match[1]).present? && block_given?) || external_src
         yield(match[0], match[1], +"![](#{PLACEHOLDER})", $~.offset(0)[0])
       end
@@ -212,38 +214,46 @@ class InlineUploads
   end
 
   def self.match_img(markdown, external_src: false)
-    markdown.scan(/(<(?!img)[^<>]+\/?>)?(\n*)(([ ]*)<img ([^>\n]+)>([ ]*))(\n*)/) do |match|
-      node = Nokogiri::HTML::fragment(match[2].strip).children[0]
+    markdown.scan(/(([ ]*)<(?!img)[^<>]+\/?>)?([\r\n]*)(([ ]*)<img ([^>\n]+)>([ ]*))([\r\n]*)/) do |match|
+      node = Nokogiri::HTML::fragment(match[3].strip).children[0]
       src =  node.attributes["src"]&.value
 
       if src && (matched_uploads(src).present? || external_src)
         text = node.attributes["alt"]&.value
-        width = node.attributes["width"]&.value
-        height = node.attributes["height"]&.value
+        width = node.attributes["width"]&.value.to_i
+        height = node.attributes["height"]&.value.to_i
         title = node.attributes["title"]&.value
-        text = "#{text}|#{width}x#{height}" if width && height
+        text = "#{text}|#{width}x#{height}" if width > 0 && height > 0
         after_html_tag = match[0].present?
 
         spaces_before =
           if after_html_tag && !match[0].end_with?("/>")
-            (match[3].present? ? match[3] : "  ")
+            (match[4].length > 0 ? match[4] : "  ")
           else
             ""
           end
 
         replacement = +"#{spaces_before}![#{text}](#{PLACEHOLDER}#{title.present? ? " \"#{title}\"" : ""})"
 
-        if after_html_tag && (num_newlines = match[1].length) <= 1
+        if after_html_tag && (num_newlines = match[2].length) <= 1
           replacement.prepend("\n" * (num_newlines == 0 ? 2 : 1))
         end
 
-        if after_html_tag && !match[0].end_with?("/>") && (num_newlines = match[6].length) <= 1
+        if after_html_tag && !match[0].end_with?("/>") && (num_newlines = match[7].length) <= 1
           replacement += ("\n" * (num_newlines == 0 ? 2 : 1))
         end
 
-        match[2].strip! if !after_html_tag
+        match[3].strip! if !after_html_tag
 
-        yield(match[2], src, replacement, $~.offset(0)[0]) if block_given?
+        if (match[1].nil? || match[1].length < 4)
+          if (match[4].nil? || match[4].length < 4)
+            yield(match[3], src, replacement, $~.offset(0)[0]) if block_given?
+          else
+            yield(match[3], src, match[3].sub(src, PATH_PLACEHOLDER), $~.offset(0)[0]) if block_given?
+          end
+        else
+          yield(match[3], src, match[3].sub(src, PATH_PLACEHOLDER), $~.offset(0)[0]) if block_given?
+        end
       end
     end
   end
@@ -293,4 +303,18 @@ class InlineUploads
     matches
   end
   private_class_method :matched_uploads
+
+  def self.node_children_names(node, names = Set.new)
+    if node.children.blank?
+      names << node.name
+      return names
+    end
+
+    node.children.each do |child|
+      names = node_children_names(child, names)
+    end
+
+    names
+  end
+  private_class_method :node_children_names
 end

@@ -23,6 +23,7 @@ lv:
   topics: "Tēmas"
   posts: "raksti"
   loading: "Ielāde"
+  sign_up: "Reģistrēties"
   log_in: "Ienākt"
   submit: "Iesniegt"
   anonymous: "Anonīmi"
@@ -138,6 +139,8 @@ lv:
       weekly: "katru nedēļu"
   user_api_key:
     read: "izlasīts"
+    otp_confirmation:
+      confirm_title: "Turpināt %{site_name}"
   reports:
     default:
       labels:

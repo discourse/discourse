@@ -10,9 +10,7 @@ function replaceSpan($e, username, opts) {
 
   if (opts && opts.group) {
     if (opts.mentionable) {
-      extra = `data-name='${username}' data-mentionable-user-count='${
-        opts.mentionable.user_count
-      }' data-max-mentions='${maxGroupMention}'`;
+      extra = `data-name='${username}' data-mentionable-user-count='${opts.mentionable.user_count}' data-max-mentions='${maxGroupMention}'`;
       extraClass = "notify";
     }
     $e.replaceWith(

@@ -116,16 +116,15 @@ function positioningWorkaround($fixedElement) {
   var blurred = debounce(blurredNow, 250);
 
   var positioningHack = function(evt) {
-    const self = this;
     done = false;
 
     // we need this, otherwise changing focus means we never clear
-    self.addEventListener("blur", blurred);
+    this.addEventListener("blur", blurred);
 
     if (fixedElement.style.top === "0px") {
       if (this !== document.activeElement) {
         evt.preventDefault();
-        self.focus();
+        this.focus();
       }
       return;
     }
@@ -157,7 +156,7 @@ function positioningWorkaround($fixedElement) {
     $(fixedElement).addClass("no-transition");
 
     evt.preventDefault();
-    self.focus();
+    this.focus();
     workaroundActive = true;
   };
 

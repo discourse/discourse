@@ -209,6 +209,7 @@ Discourse::Application.routes.draw do
     post "themes/generate_key_pair" => "themes#generate_key_pair"
     get "themes/:id/preview" => "themes#preview"
     get "themes/:id/diff_local_changes" => "themes#diff_local_changes"
+    put "themes/:id/setting" => "themes#update_single_setting"
 
     scope "/customize", constraints: AdminConstraint.new do
       resources :user_fields, constraints: AdminConstraint.new
@@ -220,12 +221,12 @@ Discourse::Application.routes.draw do
 
       # They have periods in their URLs often:
       get 'site_texts'             => 'site_texts#index'
-      get 'site_texts/:id.json'    => 'site_texts#show',   constraints: { id: /[\w.\-\+]+/i }
-      get 'site_texts/:id'         => 'site_texts#show',   constraints: { id: /[\w.\-\+]+/i }
-      put 'site_texts/:id.json'    => 'site_texts#update', constraints: { id: /[\w.\-\+]+/i }
-      put 'site_texts/:id'         => 'site_texts#update', constraints: { id: /[\w.\-\+]+/i }
-      delete 'site_texts/:id.json' => 'site_texts#revert', constraints: { id: /[\w.\-\+]+/i }
-      delete 'site_texts/:id'      => 'site_texts#revert', constraints: { id: /[\w.\-\+]+/i }
+      get 'site_texts/:id.json'    => 'site_texts#show',   constraints: { id: /[\w.\-\+\%\&]+/i }
+      get 'site_texts/:id'         => 'site_texts#show',   constraints: { id: /[\w.\-\+\%\&]+/i }
+      put 'site_texts/:id.json'    => 'site_texts#update', constraints: { id: /[\w.\-\+\%\&]+/i }
+      put 'site_texts/:id'         => 'site_texts#update', constraints: { id: /[\w.\-\+\%\&]+/i }
+      delete 'site_texts/:id.json' => 'site_texts#revert', constraints: { id: /[\w.\-\+\%\&]+/i }
+      delete 'site_texts/:id'      => 'site_texts#revert', constraints: { id: /[\w.\-\+\%\&]+/i }
 
       get 'reseed' => 'site_texts#get_reseed_options'
       post 'reseed' => 'site_texts#reseed'
@@ -372,8 +373,11 @@ Discourse::Application.routes.draw do
       end
     end
 
-    post "#{root_path}/second_factors" => "users#create_second_factor"
+    post "#{root_path}/second_factors" => "users#list_second_factors"
     put "#{root_path}/second_factor" => "users#update_second_factor"
+    post "#{root_path}/create_second_factor_totp" => "users#create_second_factor_totp"
+    post "#{root_path}/enable_second_factor_totp" => "users#enable_second_factor_totp"
+    put "#{root_path}/disable_second_factor" => "users#disable_second_factor"
 
     put "#{root_path}/second_factors_backup" => "users#create_second_factor_backup"
 

@@ -13,7 +13,7 @@
 
 </div>
 
-{{#conditional-loading-spinner condition=refreshing}}
+{{#load-more selector=".users-list tr" action=(action "loadMore")}}
   {{#if model}}
     <table class='table users-list grid'>
       <thead>
@@ -90,8 +90,9 @@
         {{/each}}
       </tbody>
     </table>
+    {{conditional-loading-spinner condition=refreshing}}
 
   {{else}}
     <p>{{i18n 'search.no_results'}}</p>
   {{/if}}
-{{/conditional-loading-spinner}}
+{{/load-more}}

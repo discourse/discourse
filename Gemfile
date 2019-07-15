@@ -46,7 +46,7 @@ gem 'redis-namespace'
 
 gem 'active_model_serializers', '~> 0.8.3'
 
-gem 'onebox', '1.8.92'
+gem 'onebox', '1.9.2'
 
 gem 'http_accept_language', '~>2.0.5', require: false
 
@@ -152,6 +152,7 @@ group :development do
   gem 'bullet', require: !!ENV['BULLET']
   gem 'better_errors'
   gem 'binding_of_caller'
+  gem 'yaml-lint'
 
   # waiting on 2.7.5 per: https://github.com/ctran/annotate_models/pull/595
   if rails_master?

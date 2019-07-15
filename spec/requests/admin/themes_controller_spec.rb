@@ -322,6 +322,65 @@ describe Admin::ThemesController do
       expect(theme.theme_translation_overrides.count).to eq(0)
     end
 
+    it 'can disable component' do
+      child = Fabricate(:theme, component: true)
+
+      put "/admin/themes/#{child.id}.json", params: {
+        theme: {
+          enabled: false
+        }
+      }
+      expect(response.status).to eq(200)
+      json = JSON.parse(response.body)
+      expect(json["theme"]["enabled"]).to eq(false)
+      expect(UserHistory.where(
+        context: child.id.to_s,
+        action: UserHistory.actions[:disable_theme_component]
+      ).size).to eq(1)
+      expect(json["theme"]["disabled_by"]["id"]).to eq(admin.id)
+    end
+
+    it "enabling/disabling a component creates the correct staff action log" do
+      child = Fabricate(:theme, component: true)
+      UserHistory.destroy_all
+
+      put "/admin/themes/#{child.id}.json", params: {
+        theme: {
+          enabled: false
+        }
+      }
+      expect(response.status).to eq(200)
+
+      expect(UserHistory.where(
+        context: child.id.to_s,
+        action: UserHistory.actions[:disable_theme_component]
+      ).size).to eq(1)
+      expect(UserHistory.where(
+        context: child.id.to_s,
+        action: UserHistory.actions[:enable_theme_component]
+      ).size).to eq(0)
+
+      put "/admin/themes/#{child.id}.json", params: {
+        theme: {
+          enabled: true
+        }
+      }
+      expect(response.status).to eq(200)
+      json = JSON.parse(response.body)
+
+      expect(UserHistory.where(
+        context: child.id.to_s,
+        action: UserHistory.actions[:disable_theme_component]
+      ).size).to eq(1)
+      expect(UserHistory.where(
+        context: child.id.to_s,
+        action: UserHistory.actions[:enable_theme_component]
+      ).size).to eq(1)
+
+      expect(json["theme"]["disabled_by"]).to eq(nil)
+      expect(json["theme"]["enabled"]).to eq(true)
+    end
+
     it 'handles import errors on update' do
       theme.create_remote_theme!(remote_url: "https://example.com/repository")
 
@@ -385,6 +444,41 @@ describe Admin::ThemesController do
     it "should return empty for a default theme" do
       get "/admin/themes/#{theme.id}/diff_local_changes.json"
       expect(response.body).to eq("{}")
+    end
+  end
+
+  describe '#update_single_setting' do
+    let(:theme) { Fabricate(:theme) }
+
+    before do
+      theme.set_field(target: :settings, name: :yaml, value: "bg: red")
+      theme.save!
+    end
+
+    it "should update a theme setting" do
+      put "/admin/themes/#{theme.id}/setting.json", params: {
+        name: "bg",
+        value: "green"
+      }
+
+      expect(response.status).to eq(200)
+      expect(JSON.parse(response.body)["bg"]).to eq("green")
+
+      theme.reload
+      expect(theme.included_settings[:bg]).to eq("green")
+      user_history = UserHistory.last
+
+      expect(user_history.action).to eq(
+        UserHistory.actions[:change_theme_setting]
+      )
+    end
+
+    it "should clear a theme setting" do
+      put "/admin/themes/#{theme.id}/setting.json", params: { name: "bg" }
+      theme.reload
+
+      expect(response.status).to eq(200)
+      expect(theme.included_settings[:bg]).to eq("")
     end
   end
 end

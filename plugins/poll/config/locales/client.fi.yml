@@ -31,7 +31,7 @@ fi:
             one: "Valitse enintään <strong>%{count}</strong> vaihtoehto"
             other: "Valitse enintään <strong>%{count}</strong> vaihtoehtoa"
           x_options:
-            one: "Valitse  <strong>%{count}</strong> vaihtoehto"
+            one: "Valitse <strong>%{count}</strong> vaihtoehto"
             other: "Valitse <strong>%{count}</strong> vaihtoehtoa"
           between_min_and_max_options: "Valitse <strong>%{min}</strong>-<strong>%{max}</strong> vaihtoehtoa"
       cast-votes:

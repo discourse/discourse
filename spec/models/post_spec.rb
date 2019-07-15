@@ -1020,6 +1020,23 @@ describe Post do
           )
         end
       end
+
+      describe 'when group owner can mention a group' do
+        before do
+          group.update!(mentionable_level: Group::ALIAS_LEVELS[:owners_mods_and_admins])
+          group.add_owner(post.user)
+        end
+
+        it 'should create the mention' do
+          post.update!(raw: "hello @#{group.name}")
+          post.trigger_post_process
+          post.reload
+
+          expect(post.cooked).to eq(
+            %Q|<p>hello <a class="mention-group" href="/groups/#{group.name}">@#{group.name}</a></p>|
+          )
+        end
+      end
     end
   end
 
@@ -1234,6 +1251,7 @@ describe Post do
     fab!(:audio_upload) { Fabricate(:upload, extension: "ogg") }
     fab!(:attachment_upload) { Fabricate(:upload, extension: "csv") }
     fab!(:attachment_upload_2) { Fabricate(:upload) }
+    fab!(:attachment_upload_3) { Fabricate(:upload, extension: nil) }
 
     let(:base_url) { "#{Discourse.base_url_no_prefix}#{Discourse.base_uri}" }
     let(:video_url) { "#{base_url}#{video_upload.url}" }
@@ -1243,6 +1261,7 @@ describe Post do
       <<~RAW
       <a href="#{attachment_upload.url}">Link</a>
       [test|attachment](#{attachment_upload_2.short_url})
+      [test3|attachment](#{attachment_upload_3.short_url})
       <img src="#{image_upload.url}">
 
       <video width="100%" height="100%" controls>
@@ -1272,7 +1291,8 @@ describe Post do
         image_upload.id,
         audio_upload.id,
         attachment_upload.id,
-        attachment_upload_2.id
+        attachment_upload_2.id,
+        attachment_upload_3.id
       )
     end
 

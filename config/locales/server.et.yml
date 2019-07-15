@@ -27,6 +27,7 @@ et:
   topics: "Teemad"
   posts: "postitused"
   loading: "Laetakse"
+  sign_up: "Liitu"
   log_in: "Logi sisse"
   submit: "Saada"
   purge_reason: "Kustutatud automaatselt kui mahajäetud, deaktiveeritud konto"
@@ -541,6 +542,8 @@ et:
     authorize: "Autoriseeri"
     read: "lugemine"
     read_write: "lugemine ja kirjutamine"
+    otp_confirmation:
+      confirm_title: "Edasi saidile %{site_name}"
     scopes:
       read: "Loe kõiki"
       write: "Kirjuta kõikidesse"

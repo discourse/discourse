@@ -56,6 +56,31 @@ describe Jobs::PullHotlinkedImages do
       expect(post.reload.raw).to eq("![](#{Upload.last.short_url})")
     end
 
+    it 'replaces images in an anchor tag with weird indentation' do
+      stub_request(:get, "http://test.localhost/uploads/short-url/z2QSs1KJWoj51uYhDjb6ifCzxH6.gif")
+        .to_return(status: 200, body: "")
+
+      post = Fabricate(:post, raw: <<~RAW)
+      <h1></h1>
+                                <a href="https://somelink.com">
+                                    <img alt="somelink" src="#{image_url}" />
+                                </a>
+      RAW
+
+      expect do
+        Jobs::PullHotlinkedImages.new.execute(post_id: post.id)
+      end.to change { Upload.count }.by(1)
+
+      upload = post.uploads.last
+
+      expect(post.reload.raw).to eq(<<~RAW.chomp)
+      <h1></h1>
+                                <a href="https://somelink.com">
+                                    <img alt="somelink" src="#{upload.short_path}" />
+                                </a>
+      RAW
+    end
+
     it 'replaces images without protocol' do
       url = image_url.sub(/^https?\:/, '')
       post = Fabricate(:post, raw: "<img alt='test' src='#{url}'>")

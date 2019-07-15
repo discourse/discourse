@@ -390,6 +390,16 @@ describe Topic do
         expect(topic.fancy_title).to eq(long_title)
       end
 
+      it "uses the configured quote entities" do
+        SiteSetting.markdown_typographer_quotation_marks = "„|“|‚|‘"
+        topic.title = %q|"Weißt du", sagte er, "was 'Discourse' ist?"|
+        expect(topic.fancy_title).to eq('&bdquo;Weißt du&ldquo;, sagte er, &bdquo;was &sbquo;Discourse&lsquo; ist?&ldquo;')
+
+        SiteSetting.markdown_typographer_quotation_marks = "«\u00A0|\u00A0»|‹\u00A0|\u00A0›"
+        topic.title = '"Qui vivra verra"'
+        expect(topic.fancy_title).to eq('&laquo;&nbsp;Qui vivra verra&nbsp;&raquo;')
+      end
+
       context 'readonly mode' do
         before do
           Discourse.enable_readonly_mode
@@ -2412,6 +2422,33 @@ describe Topic do
       Fabricate(:post, topic: topic, post_number: 8, created_at: 3.hours.ago, post_type: Post.types[:small_action])
       Fabricate(:post, topic: topic, post_number: 9, created_at: 2.hours.ago, post_type: Post.types[:moderator_action])
       expect { topic.reset_bumped_at }.not_to change { topic.bumped_at }
+    end
+  end
+
+  describe "#access_topic_via_group" do
+    let(:open_group) { Fabricate(:group, public_admission: true) }
+    let(:request_group) do
+      Fabricate(:group).tap do |g|
+        g.add_owner(user)
+        g.allow_membership_requests = true
+        g.save!
+      end
+    end
+    let(:category) { Fabricate(:category) }
+    let(:topic) { Fabricate(:topic, category: category) }
+
+    it "returns a group that is open or accepts membership requests and has access to the topic" do
+      expect(topic.access_topic_via_group).to eq(nil)
+
+      category.set_permissions(request_group => :full)
+      category.save!
+
+      expect(topic.access_topic_via_group).to eq(request_group)
+
+      category.set_permissions(request_group => :full, open_group => :full)
+      category.save!
+
+      expect(topic.access_topic_via_group).to eq(open_group)
     end
   end
 end
