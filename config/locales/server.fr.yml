@@ -28,7 +28,8 @@ fr:
   topics: "Sujets"
   posts: "messages"
   loading: "Chargement"
-  powered_by_html: 'Powered by <a href="https://www.discourse.org">Discourse</a>,  le rendu est meilleur avec le JavaScript activé '
+  powered_by_html: 'Powered by <a href="https://www.discourse.org">Discourse</a>, le rendu est meilleur avec le JavaScript activé '
+  sign_up: "S'inscrire"
   log_in: "Se connecter"
   submit: "Envoyer"
   purge_reason: "Supprimé automatiquement comme compte abandonné et non activé"
@@ -549,7 +550,7 @@ fr:
       title: "habitué"
     leader:
       title: "meneur"
-    change_failed_explanation: "Vous avez essayé de rétrograder %{user_name} au niveau '%{new_trust_level}'. Cependant son niveau de confiance est déjà '%{current_trust_level}'. %{user_name} restera au niveau  '%{current_trust_level}' -  Si vous souhaitez rétrograder un utilisateur vous devez verrouiller le niveau de confiance au préalable"
+    change_failed_explanation: "Vous avez essayé de rétrograder %{user_name} au niveau '%{new_trust_level}'. Cependant son niveau de confiance est déjà '%{current_trust_level}'. %{user_name} restera au niveau '%{current_trust_level}' - Si vous souhaitez rétrograder un utilisateur vous devez verrouiller le niveau de confiance au préalable"
   post:
     image_placeholder:
       broken: "Cette image ne fonctionne pas"
@@ -1199,13 +1200,12 @@ fr:
     bad_favicon_url: "Impossible de charger la favicon. Vérifiez le paramètre favicon dans les <a href='%{base_path}/admin/site_settings'>paramètres du site</a>"
     poll_pop3_timeout: "La connexion vers le serveur POP3 a expiré. Les courriels entrants n'ont pas pu être téléchargés. Veuillez vérifier <a href='%{base_path}/admin/site_settings/category/email'>les paramètres POP3</a> et votre fournisseur de service courriel."
     poll_pop3_auth_error: "La connexion vers le serveur POP3 échoue avec une erreur d'authentification. Veuillez vérifier <a href='%{base_path}/admin/site_settings/category/email'>les paramètres POP3</a>."
-    force_https_warning: "Votre site web utiliser le SSL. Mais  `<a href='%{base_path}/admin/site_settings/category/all_results?filter=force_https'>force_https</a>` n'est pas encore activé dans les paramètres du site."
+    force_https_warning: "Votre site web utiliser le SSL. Mais `<a href='%{base_path}/admin/site_settings/category/all_results?filter=force_https'>force_https</a>` n'est pas encore activé dans les paramètres du site."
     out_of_date_themes: "Des mises à jour sont disponibles pour les thèmes suivants :"
     unreachable_themes: "Nous n'avons pas pu vérifier les mises à jour pour les thèmes suivants :"
   site_settings:
     censored_words: "Mots qui seront automatiquement remplacés par &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "Supprimer automatiquement les messages cachés plus de 30 jours."
-    default_locale: "La langue par défaut de cette instance Discourse. Vous pouvez remplacer le texte des catégories et des sujets généré automatiquement par le système dans <a href='%{base_path}/admin/customize/site_texts' target='_blank'>Personnaliser / Contenu</a>."
     allow_user_locale: "Autoriser les utilisateurs à choisir la langue de l'interface dans leurs préférences"
     set_locale_from_accept_language_header: "configurer la langue de l'interface pour les visiteurs à partir des entêtes de langue de leur navigateur. (EXPÉRIMENTAL, ne fonctionne pas avec le cache anonyme)"
     support_mixed_text_direction: "Permettre le mélange de textes gauche-droite et droite-gauche."
@@ -1257,7 +1257,7 @@ fr:
     responsive_post_image_sizes: "Adapter la taille des visualisations lightbox aux écrans DPI avec les ratios suivants. Retirer toutes les valeurs pour désactiver l'adaptation dynamique des images."
     fixed_category_positions: "Si coché, vous pourrez modifier l'ordre des catégories. Si décoché, elle seront triées par ordre d'activité."
     fixed_category_positions_on_create: "Si coché, le classement des catégories sera maintenu dans la fenêtre de création de sujet (nécessite fixed_category_positions)."
-    add_rel_nofollow_to_user_content: 'Ajouter rel nofollow à tous les contenus des utilisateurs, sauf les liens internes (incluant les domaines parents). Si vous modifiez ceci, vous devez exécuter la commande  "rake posts:rebake"'
+    add_rel_nofollow_to_user_content: 'Ajouter rel nofollow à tous les contenus des utilisateurs, sauf les liens internes (incluant les domaines parents). Si vous modifiez ceci, vous devez exécuter la commande "rake posts:rebake"'
     exclude_rel_nofollow_domains: "Une liste de domaines pour lesquels l'attribut nofollow ne sera pas ajouté aux liens. tld.com autorisera automatiquement sub.tld.com également. Au minimum, vous devriez ajouter le domaine de premier niveau (TLD) de ce site pour aider les robots d'indexation à trouver tout le contenu. Si d'autres parties du site sont sur d'autre domaines, ajoutez-les aussi."
     post_excerpt_maxlength: "Longueur maximale d'un extrait / résumé de message."
     show_pinned_excerpt_mobile: "Afficher les extraits des sujets épinglés en vue mobile."
@@ -1277,7 +1277,7 @@ fr:
     apple_touch_icon: "Icône utilisée pour les appareils Apple touch. Sera automatiquement redimensionné à 180x180. Si laissé vide, large_icon sera utilisé."
     opengraph_image: "Image opengraph par défaut, utilisée lorsque la page n'a pas d'autre image appropriée. Si laissé vide, large_icon sera utilisé"
     twitter_summary_large_image: "Carte Twitter 'Résumé grande image' (doit être au moins 280 en largeur et au moins 150 en hauteur). Si laissée vide, les métadonnées de carte normales sont générées à l'aide de opengraph_image."
-    notification_email: "L'adresse de courriel dans le champs De qui sera utilisée pour envoyer les courriels systèmes essentiels. Le nom de domaine spécifié  doit avoir les informations SPF, DKIM et PTR inversé renseignés correctement pour que le courriel arrive à destination."
+    notification_email: "L'adresse de courriel dans le champs De qui sera utilisée pour envoyer les courriels systèmes essentiels. Le nom de domaine spécifié doit avoir les informations SPF, DKIM et PTR inversé renseignés correctement pour que le courriel arrive à destination."
     email_custom_headers: "Une liste délimité par des (|) pipes d'entêtes de courriel"
     email_subject: "Format du sujet personnalisable pour les courriels standards. Voir <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801</a>"
     enforce_second_factor: "Forcer les utilisateurs à activer l'authentification à double facteur. Sélectionner « tous » pour l'appliquer à tous les utilisateurs. Sélectionner « responsables » pour l'imposer aux responsables uniquement."
@@ -1320,7 +1320,7 @@ fr:
     maximum_session_age: "L'utilisateur restera connecté pour n heures après la dernière visite"
     ga_universal_tracking_code: "Code de suivi Google Universal Analytics (analytics.js), par exemple : UA-12345678-9; voir <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
     ga_universal_domain_name: "Nom de domaine Google Universal Analytics (analytics.js), par exemple : monsite.com ; voir <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
-    ga_universal_auto_link_domains: "Activer Google Universal Analytics (analytics.js) pour le suivi interdomaine. Les liens sortants vers ces domaines auront l'identifiant client ajouté. Voir le guide <a href='https://support.google.com/analytics/answer/1034342?hl=en' target='_blank'>Cross-Domain Tracking  de Google</a>."
+    ga_universal_auto_link_domains: "Activer Google Universal Analytics (analytics.js) pour le suivi interdomaine. Les liens sortants vers ces domaines auront l'identifiant client ajouté. Voir le guide <a href='https://support.google.com/analytics/answer/1034342?hl=en' target='_blank'>Cross-Domain Tracking de Google</a>."
     gtm_container_id: "Identifiant de container Google Tag Manager. P.ex : GTM-ABCDEF. <br/>Note : les scripts tiers chargés par GTM devront peut-être être mis sur liste blanche dans 'content security policy script src'."
     enable_escaped_fragments: "Utiliser l'API Ajax-Crawling de Google si aucun robot n'est détecté. Voir <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
     moderators_create_categories: "Autoriser les modérateurs à créer de nouvelles catégories"
@@ -1405,13 +1405,13 @@ fr:
     google_oauth2_client_secret: "Clé secrète du client de votre application Google."
     google_oauth2_prompt: "Liste facultative de valeurs de chaînes de caractères délimitées par des espaces, qui spécifie si le serveur d'autorisation invite l'utilisateur à se réauthentifier et à donner son consentement. Voir <a href='https://developers.google.com/identity/protocols/OpenIDConnect#prompt' target='_blank'>https://developers.google.com/identity/protocols/OpenIDConnect#prompt</a> pour des valeurs possibles."
     google_oauth2_hd: "Un domaine optionnel Google Apps Hosted auquel la connexion sera limitée. Voir <a href='https://developers.google.com/identity/protocols/OpenIDConnect#hd-param' target='_blank'>https://developers.google.com/identity/protocols/OpenIDConnect#hd-param</a> pour plus de détails."
-    enable_twitter_logins: "Activer l'authentification Twitter, nécessite twitter_consumer_key et  twitter_consumer_secret. Voir <a href='https://meta.discourse.org/t/13395' target='_blank'>Configurer Twitter login (avec rich embeds) pour Discourse</a>."
+    enable_twitter_logins: "Activer l'authentification Twitter, nécessite twitter_consumer_key et twitter_consumer_secret. Voir <a href='https://meta.discourse.org/t/13395' target='_blank'>Configurer Twitter login (avec rich embeds) pour Discourse</a>."
     twitter_consumer_key: "Clé consommateur pour l'authentification Twitter, enregistrée sur <a href='https://developer.twitter.com/apps' target='_blank'>https://developer.twitter.com/apps</a>"
     twitter_consumer_secret: "Secret consommateur pour l'authentification Twitter, enregistrée sur <a href='https://developer.twitter.com/apps' target='_blank'>https://developer.twitter.com/apps</a>"
-    enable_instagram_logins: "Activer l'authentification Instagram, nécessite instagram_consumer_key et  instagram_consumer_secret"
+    enable_instagram_logins: "Activer l'authentification Instagram, nécessite instagram_consumer_key et instagram_consumer_secret"
     instagram_consumer_key: "« Consumer key » pour l'identification Instagram"
     instagram_consumer_secret: "« Consumer secret » pour l'identification Instagram"
-    enable_facebook_logins: "Activer l'authentification Facebook, nécessite facebook_app_id et  facebook_app_secret. Voir <a href='https://meta.discourse.org/t/13394' target='_blank'>Configurer Facebook login pour Discourse</a>."
+    enable_facebook_logins: "Activer l'authentification Facebook, nécessite facebook_app_id et facebook_app_secret. Voir <a href='https://meta.discourse.org/t/13394' target='_blank'>Configurer Facebook login pour Discourse</a>."
     facebook_app_id: "App id pour l'authentification Facebook, enregistré sur <a href='https://developers.facebook.com/apps/' target='_blank'>https://developers.facebook.com/apps</a>"
     facebook_app_secret: "App secret pour l'authentification Facebook, enregistré sur <a href='https://developers.facebook.com/apps/' target='_blank'>https://developers.facebook.com/apps</a>"
     enable_github_logins: "Activer l'authentification GitHub, nécessite github_client_id et github_client_secret. Voir <a href='https://meta.discourse.org/t/13745' target='_blank'>Configurer GitHub Login pour Discourse</a>."
@@ -1468,7 +1468,7 @@ fr:
     clean_orphan_uploads_grace_period_hours: "La période de grâce (en heures) avant qu'un fichier envoyé orphelin soit retiré."
     purge_deleted_uploads_grace_period_days: "La période de grâce (en jours) avant qu'un fichier envoyé et supprimé soit effacé."
     purge_unactivated_users_grace_period_days: "Période de grâce (en jours) avant qu'un utilisateur qui n'a pas activé son compte soit supprimé. Régler à 0 pour ne jamais purger les utilisateurs non activés."
-    enable_s3_uploads: "Placez les fichiers envoyés sur un stockage Amazon S3. IMPORTANT : nécessite un accès valide à S3  (l'identifiant et la clé secrète)."
+    enable_s3_uploads: "Placez les fichiers envoyés sur un stockage Amazon S3. IMPORTANT : nécessite un accès valide à S3 (l'identifiant et la clé secrète)."
     s3_use_iam_profile: 'Utiliser un <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_use_switch-role-ec2_instance-profiles.html">profile d''instance AWS EC2 </a> pour accorder l''accès au S3 bucket. NOTE: pour cela, Discourse doit être exécuté dans une instance EC2 correctement configurée, et remplace les paramètres « s3 access key id » et « s3 secret access key ».'
     s3_upload_bucket: "Le nom du bucket Amazon S3 qui contiendra les fichiers téléchargés. ATTENTION : doit être en minuscule, sans points et sans tirets bas."
     s3_access_key_id: "La clé d'accès Amazon S3 qui sera utilisée pour envoyer les images, les pièces joints et les sauvegardes."
@@ -1582,7 +1582,7 @@ fr:
     levenshtein_distance_spammer_emails: "Lorsque des courriels correspondent à des spammer, la différence du nombre de caractère permettra toujours une correspondance floue."
     max_new_accounts_per_registration_ip: "S'il y a déjà (n) Niveau de confiance 0 comptes à partir de cette adresse IP ( et aucun n'est un membre du personnel ou au NC2 ou ultérieure), ne plus accepter de nouvelles inscriptions de cette IP."
     min_ban_entries_for_roll_up: "En cliquant sur le bouton Consolider, une liste d'au moins (N) adresses interdites sera remplacée par une plage de sous réseau."
-    max_age_unmatched_emails: "Effacer les adresses de courriel sous surveillance  sans correspondance après (N) jours"
+    max_age_unmatched_emails: "Effacer les adresses de courriel sous surveillance sans correspondance après (N) jours"
     max_age_unmatched_ips: "Effacer les adresses IP sous surveillance sans correspondance après (N) jours"
     num_flaggers_to_close_topic: "Nombre minimum de signalements uniques requis pour automatiquement suspendre un sujet pour intervention"
     num_hours_to_close_topic: "Nombre d'heures de fermeture d'un sujet pour intervention."
@@ -1697,11 +1697,10 @@ fr:
     likes_notification_consolidation_window_mins: "Durée en minutes où les notifications aimées sont regroupées en une seule une fois le seuil atteint. Le seuil peut être configuré via `SiteSetting.likes_notification_consolidation_threshold`."
     automatically_unpin_topics: "Désépingler automatiquement le sujet lorsque l'utilisateur atteint la fin."
     read_time_word_count: "Nombre de mots par minute servant de base de calcul à l'estimation du temps de lecture."
-    topic_page_title_includes_category: "Le titre de la page du sujet inclut le nom de la catégorie."
     native_app_install_banner_ios: "Affiche la bannière de l'application DiscourseHub sur les appareils iOS aux utilisateurs habitués (niveau de confiance supérieur ou égal à 1)."
     native_app_install_banner_android: "Affiche la bannière de l'application DiscourseHub sur les appareils Android aux utilisateurs habitués (niveau de confiance supérieur ou égal à 1)."
     share_anonymized_statistics: "Partager les statistiques d'utilisation anonymes."
-    auto_handle_queued_age: "Gérer automatiquement les documents qui attendent d'être examinés après ce nombre de jours. Les signalements seront ignorés. Les messages et les utilisateurs en file d'attente  seront rejetés. Réglez à 0 pour désactiver cette fonction."
+    auto_handle_queued_age: "Gérer automatiquement les documents qui attendent d'être examinés après ce nombre de jours. Les signalements seront ignorés. Les messages et les utilisateurs en file d'attente seront rejetés. Réglez à 0 pour désactiver cette fonction."
     svg_icon_subset: "Rajouter des icônes supplémentaires FontAwesome 5 que vous souhaitez inclure dans vos médias. Utiliser le préfixe 'fa-' pour les icônes solides, 'far-' pour les icônes normaux et 'fab-' pour les icônes de marque."
     max_prints_per_hour_per_user: "Nombre maximum d'accès à la page /print (mettre à 0 pour désactiver)"
     full_name_required: "Le nom complet est requis dans le profil utilisateur."
@@ -1945,7 +1944,7 @@ fr:
     incorrect_password: "Mot de passe incorrect"
     wait_approval: "Merci de vous être inscrit. Nous vous informerons lorsque votre compte aura été approuvé."
     active: "Votre compte est activé et prêt à l'emploi."
-    activate_email: "<p>C'est presque terminé ! Nous avons envoyé un email d'activation à <b>%{email}</b>.  Merci de suivre les instructions pour activer votre compte.</p><p>Si vous ne le recevez pas, vérifiez le dossier Spam dans votre messagerie.</p>"
+    activate_email: "<p>C'est presque terminé ! Nous avons envoyé un email d'activation à <b>%{email}</b>. Merci de suivre les instructions pour activer votre compte.</p><p>Si vous ne le recevez pas, vérifiez le dossier Spam dans votre messagerie.</p>"
     not_activated: "Vous ne pouvez pas vous connecter pour le moment. Nous vous avons envoyé un courriel d'activation. Merci de suivre les instructions qui s'y trouve pour activer votre compte."
     not_allowed_from_ip_address: "Vous ne pouvez pas vous connecter en tant que %{username} depuis cette adresse IP."
     admin_not_allowed_from_ip_address: "Vous ne pouvez pas vous connecter depuis cette adresse IP."
@@ -2199,7 +2198,7 @@ fr:
       Votre version : %{installed_version}
       Nouvelle version : **%{new_version}**
 
-      - Mettez à jour depuis le navigateur avec notre **[mise à jour en 1 clic](/admin/upgrade)**
+      - Mettez à jour depuis le navigateur avec notre **[mise à jour en 1 clic](%{base_url}/admin/upgrade)**
 
       - Consultez les nouveautés dans les [notes de version](https://meta.discourse.org/tags/release-notes) ou l'[historique GitHub](https://github.com/discourse/discourse/commits/master).
 
@@ -2311,7 +2310,7 @@ fr:
 
         %{new_user_tips}
 
-        Nous croyons  au [comportement civilisé de la communauté](%{base_url}/guidelines) en tout temps.
+        Nous croyons au [comportement civilisé de la communauté](%{base_url}/guidelines) en tout temps.
 
         Amusez-vous bien !
 
@@ -2381,7 +2380,7 @@ fr:
       title: "Export CSV réussi"
       subject_template: "[%{export_title}] Exportation des données terminée"
       text_body_template: |
-        L'exportation de vos données a réussi !  :dvd:
+        L'exportation de vos données a réussi ! :dvd:
 
         %{download_link}
 
@@ -2421,7 +2420,7 @@ fr:
 
         Votre réponse a été envoyée depuis une adresse bloquée. Essayez de l'envoyer depuis une autre adresse, ou [contactez un responsable](%{base_url}/about).
     email_reject_inactive_user:
-      title: "Courriel rejeté -  Utilisateur inactif"
+      title: "Courriel rejeté - Utilisateur inactif"
       subject_template: "[%{email_prefix}] Problème de courriel -- Utilisateur inactif"
       text_body_template: |
         Malheureusement votre courriel à %{destination} (titled %{former_title}) a échoué.
@@ -2465,7 +2464,7 @@ fr:
 
         Nous n'avons pas pu trouver votre réponse dans le courriel. **Assurez-vous que votre réponse se trouve au début du courriel** -- nous ne pouvons pas traiter les réponses en ligne.
     email_reject_invalid_access:
-      title: "Courriel rejeté -  Accès invalide"
+      title: "Courriel rejeté - Accès invalide"
       subject_template: "[%{email_prefix}] Problème de courriel -- Accès invalide"
       text_body_template: |
         Nous sommes désolés, mais l'envoi de votre courriel à %{destination} (intitulé %{former_title}) n'a pas fonctionné.
@@ -2479,14 +2478,14 @@ fr:
 
         La catégorie vers laquelle vous avez envoyé ce courriel autorise uniquement les réponses d'utilisateurs avec un compte valide et une adresse de courriel connue. Si vous pensez qu'il s'agit d'une erreur, [contactez un responsable](%{base_url}/about).
     email_reject_invalid_post:
-      title: "Courriel rejeté -  Message invalide"
+      title: "Courriel rejeté - Message invalide"
       subject_template: "[%{email_prefix}] Problème de courriel -- Erreur d'envoi d'un message"
       text_body_template: |
         Nous sommes désolés, mais l'envoi de votre courriel à %{destination} (intitulé %{former_title}) n'a pas fonctionné.
 
         Cela peut-être à cause d'un format trop complexe, d'un message trop long ou trop court. Veuillez réessayer ou rédigez votre message directement sur le site si le problème persiste.
     email_reject_invalid_post_specified:
-      title: "Courriel rejeté -  Message invalide spécifié"
+      title: "Courriel rejeté - Message invalide spécifié"
       subject_template: "[%{email_prefix}] Problème de courriel -- Erreur d'envoi d'un message"
       text_body_template: |
         Nous sommes désolés, mais l'envoi de votre courriel à %{destination} (intitulé %{former_title}) n'a pas fonctionné.
@@ -2505,7 +2504,7 @@ fr:
 
         Afin de favoriser des discussions plus approfondies, les réponses très courtes ne sont pas permises. Est-ce que vous pouvez reformuler votre réponse avec au moins %{count} caractères ? Alternativement, vous pouvez aimer un message par courriel en répondant "+1".
     email_reject_invalid_post_action:
-      title: "Courriel rejeté -  Message action invalide"
+      title: "Courriel rejeté - Message action invalide"
       subject_template: "[%{email_prefix}] Problème de courriel -- Action de message invalide"
       text_body_template: |
         Nous sommes désolés, mais l'envoi de votre courriel à %{destination} (intitulé %{former_title}) n'a pas fonctionné.
@@ -2517,7 +2516,7 @@ fr:
       text_body_template: |
         Nous sommes désolés, mais l'envoi de votre courriel à %{destination} (intitulé %{former_title}) n'a pas fonctionné.
 
-        La clé de réponse est invalide ou inconnue et nous ne pouvons pas savoir à quel message s’adresse cette réponse.  [Contactez un responsable](%{base_url}/about).
+        La clé de réponse est invalide ou inconnue et nous ne pouvons pas savoir à quel message s’adresse cette réponse. [Contactez un responsable](%{base_url}/about).
     email_reject_bad_destination_address:
       title: "Courriel rejeté - Mauvaise adresse de destination"
       subject_template: "[%{email_prefix}] Problème de courriel - Adresse de destinataire inconnue"
@@ -2554,7 +2553,7 @@ fr:
 
         Votre courriel a été marqué comme « généré automatiquement  », ce qui signifie qu'il a été créé par un ordinateur au lieu d'être rédigé par un humain ; nous ne pouvons pas accepter ces types de courriel. Si vous pensez qu'il s'agit d'une erreur, [contacter un responsable](%{base_url}/about).
     email_reject_unrecognized_error:
-      title: "Courriel rejeté -  Erreur inconnue"
+      title: "Courriel rejeté - Erreur inconnue"
       subject_template: "[%{email_prefix}] Problème de courriel - Erreur inconnue"
       text_body_template: |
         Nous sommes désolés, mais l'envoi de votre courriel à %{destination} (intitulé %{former_title}) n'a pas fonctionné.
@@ -2601,14 +2600,6 @@ fr:
     ignored_users_summary:
       title: "Un utilisateur ignoré a dépassé le seuil"
       subject_template: "Un utilisateur a été ignoré par de nombreux utilisateurs"
-      text_body_template: |
-        Bonjour,
-
-        Ceci est un message automatique du site %{site_name} pour vous informer que [ce profil](%{base_url}/u/%{username}/summary) a été ignoré par %{ignores_threshold} utilisateurs. Cela peut indiquer qu'un problème se développe au sein de votre communauté.
-
-        Vous devriez passer en revue les messages récents de cet utilisateur, et vérifier les éventuels autres [utilisateurs ignorés](%{base_url}/admin/reports/top_ignored_users).
-
-        Pour plus d'informations, veuillez vous référer à la [charte communautaire](%{base_url}/guidelines).
     too_many_spam_flags:
       title: "Trop de signalements de spam"
       subject_template: "Nouveau compte bloqué"
@@ -2649,7 +2640,7 @@ fr:
       text_body_template: |
         Ceci est un message automatique
 
-        Le nouvel utilisateur [%{username}](%{user_url}) a été automatiquement  mis sous silence suite à plusieurs signalements par des utilisateurs.
+        Le nouvel utilisateur [%{username}](%{user_url}) a été automatiquement mis sous silence suite à plusieurs signalements par des utilisateurs.
 
         Merci de [vérifier les signalements](%{base_url}/admin/flags). Si %{username} a été injustement mis sous silence, cliquez sur le bouton d'annulation de la mise sous silence sur la [page d'administration de cet utilisateur](%{user_url}).
 
@@ -2664,7 +2655,7 @@ fr:
 
         Merci de [review the user](%{user_url}).
 
-        Ceci peut être modifier via les options `newuser_spam_host_threshold` et white_listed_spam_host_domains`.  Songez à ajouter %{domains} à la liste blanche s'ils devraient être exemptés.
+        Ceci peut être modifier via les options `newuser_spam_host_threshold` et white_listed_spam_host_domains`. Songez à ajouter %{domains} à la liste blanche s'ils devraient être exemptés.
     unsilenced:
       title: "Mise sous silence annulée"
       subject_template: "Compte débloqué"
@@ -2955,7 +2946,7 @@ fr:
       text_body_template: |
         Vous venez d'essayer de créer un compte sur %{site_name}, ou d'essayer de changer l'adresse courriel d'un compte vers %{email}. Cependant, un compte existe déjà pour %{email}.
 
-        Si vous avez oublié votre mot de passe,  [réinitialisez le maintenant](%{base_url}/password-reset).
+        Si vous avez oublié votre mot de passe, [réinitialisez le maintenant](%{base_url}/password-reset).
 
         Si vous n'avez pas essayé de créer un compte pour %{email} ou de changer votre adresse courriel, ne vous inquiétez pas – vous pouvez ignorer ce message.
 
@@ -3054,7 +3045,7 @@ fr:
       text_body_template: |
         Avant de modifier votre adresse email, nous devons confirmer votre adresse email actuelle. Ensuite, nous vous demanderons de vérifier votre nouvelle adresse email.
 
-        Confirmez votre adresse email actuelle pour %{site_name}  en cliquant sur le lien suivant :
+        Confirmez votre adresse email actuelle pour %{site_name} en cliquant sur le lien suivant :
 
         %{base_url}/u/authorize-email/%{email_token}
     notify_old_email:
@@ -3212,7 +3203,7 @@ fr:
     boolean_no: "Non"
   static_topic_first_reply: |2
 
-    Modifier le premier message de ce sujet pour changer le contenu de la page  %{page_name}.
+    Modifier le premier message de ce sujet pour changer le contenu de la page %{page_name}.
   guidelines_topic:
     title: "FAQ/Charte"
     body: |2
@@ -3328,9 +3319,9 @@ fr:
     title: "Conditions générales d'utilisation"
     body: |
       (Désolé, il n'existe pas encore de traduction de ce texte)
-      These terms govern use of the Internet forum at <%{base_url}>.  To use the forum, you must agree to these terms with %{company_name}, the company that runs the forum.
+      These terms govern use of the Internet forum at <%{base_url}>. To use the forum, you must agree to these terms with %{company_name}, the company that runs the forum.
 
-      The company may offer other products and services, under different terms.  These terms apply only to use of the forum.
+      The company may offer other products and services, under different terms. These terms apply only to use of the forum.
 
       Skip to:
 
@@ -3358,97 +3349,97 @@ fr:
 
       <h2 id="heading--permission"><a href="#heading--permission">Your Permission to Use the Forum</a></h2>
 
-      Subject to these terms, the company gives you permission to use the forum.  Everyone needs to agree to these terms to use the forum.
+      Subject to these terms, the company gives you permission to use the forum. Everyone needs to agree to these terms to use the forum.
 
       <h2 id="heading--conditions"><a href="#heading--conditions">Conditions for Use of the Forum</a></h2>
 
       Your permission to use the forum is subject to the following conditions:
 
-      1.  You must be at least thirteen years old.
+      1. You must be at least thirteen years old.
 
-      2.  You may no longer use the forum if the company contacts you directly to say that you may not.
+      2. You may no longer use the forum if the company contacts you directly to say that you may not.
 
-      3.  You must use the forum in accordance with [Acceptable Use](#heading--acceptable-use) and [Content Standards](#heading--content-standards).
+      3. You must use the forum in accordance with [Acceptable Use](#heading--acceptable-use) and [Content Standards](#heading--content-standards).
 
       <h2 id="heading--acceptable-use"><a href="#heading--acceptable-use">Acceptable Use</a></h2>
 
-      1.  You may not break the law using the forum.
+      1. You may not break the law using the forum.
 
-      2.  You may not use or try to use another's account on the forum without their specific permission.
+      2. You may not use or try to use another's account on the forum without their specific permission.
 
-      3.  You may not buy, sell, or otherwise trade in user names or other unique identifiers on the forum.
+      3. You may not buy, sell, or otherwise trade in user names or other unique identifiers on the forum.
 
-      4.  You may not send advertisements, chain letters, or other solicitations through the forum, or use the forum to gather addresses or other personal data for commercial mailing lists or databases.
+      4. You may not send advertisements, chain letters, or other solicitations through the forum, or use the forum to gather addresses or other personal data for commercial mailing lists or databases.
 
-      5.  You may not automate access to the forum, or monitor the forum, such as with a web crawler, browser plug-in or add-on, or other computer program that is not a web browser.  You may crawl the forum to index it for a publicly available search engine, if you run one.
+      5. You may not automate access to the forum, or monitor the forum, such as with a web crawler, browser plug-in or add-on, or other computer program that is not a web browser. You may crawl the forum to index it for a publicly available search engine, if you run one.
 
-      6.  You may not use the forum to send e-mail to distribution lists, newsgroups, or group mail aliases.
+      6. You may not use the forum to send e-mail to distribution lists, newsgroups, or group mail aliases.
 
-      7.  You may not falsely imply that you're affiliated with or endorsed by the company.
+      7. You may not falsely imply that you're affiliated with or endorsed by the company.
 
-      8.  You may not hyperlink to images or other non-hypertext content on the forum on other webpages.
+      8. You may not hyperlink to images or other non-hypertext content on the forum on other webpages.
 
-      9.  You may not remove any marks showing proprietary ownership from materials you download from the forum.
+      9. You may not remove any marks showing proprietary ownership from materials you download from the forum.
 
-      10.  You may not show any part of the forum on other websites with `<iframe>`.
+      10. You may not show any part of the forum on other websites with `<iframe>`.
 
       11. You may not disable, avoid, or circumvent any security or access restrictions of the forum.
 
       12. You may not strain infrastructure of the forum with an unreasonable volume of requests, or requests designed to impose an unreasonable load on information systems underlying the forum.
 
-      13.  You may not impersonate others through the forum.
+      13. You may not impersonate others through the forum.
 
       14. You may not encourage or help anyone in violation of these terms.
 
       <h2 id="heading--content-standards"><a href="#heading--content-standards">Content Standards</a></h2>
 
-      1.  You may not submit content to the forum that is illegal, offensive, or otherwise harmful to others.  This includes content that is harassing, inappropriate, or abusive.
+      1. You may not submit content to the forum that is illegal, offensive, or otherwise harmful to others. This includes content that is harassing, inappropriate, or abusive.
 
-      2.  You may not submit content to the forum that violates the law, infringes anyone's intellectual property rights, violates anyone's privacy, or breaches agreements you have with others.
+      2. You may not submit content to the forum that violates the law, infringes anyone's intellectual property rights, violates anyone's privacy, or breaches agreements you have with others.
 
-      3.  You may not submit content to the forum containing malicious computer code, such as computer viruses or spyware.
+      3. You may not submit content to the forum containing malicious computer code, such as computer viruses or spyware.
 
-      4.  You may not submit content to the forum as a mere placeholder, to hold a particular address, user name, or other unique identifier.
+      4. You may not submit content to the forum as a mere placeholder, to hold a particular address, user name, or other unique identifier.
 
-      5.  You may not use the forum to disclose information that you don't have the right to disclose, like others' confidential or personal information.
+      5. You may not use the forum to disclose information that you don't have the right to disclose, like others' confidential or personal information.
 
       <h2 id="heading--enforcement"><a href="#heading--enforcement">Enforcement</a></h2>
 
-      The company may investigate and prosecute violations of these terms to the fullest legal extent.  The company may notify and cooperate with law enforcement authorities in prosecuting violations of the law and these terms.
+      The company may investigate and prosecute violations of these terms to the fullest legal extent. The company may notify and cooperate with law enforcement authorities in prosecuting violations of the law and these terms.
 
-      The company reserves the right to change, redact, and delete content on the forum for any reason.  If you believe someone has submitted content to the forum in violation of these terms, [contact us immediately](#heading--contact).
+      The company reserves the right to change, redact, and delete content on the forum for any reason. If you believe someone has submitted content to the forum in violation of these terms, [contact us immediately](#heading--contact).
 
       <h2 id="heading--your-account"><a href="#heading--your-account">Your Account</a></h2>
 
       You must create and log into an account to use some features of the forum.
 
-      To create an account, you must provide some information about yourself.  If you create an account, you agree to provide, at a minimum, a valid e-mail address, and to keep that address up-to-date.  You may close your account at any time by e-mailing <%{contact_email}>.
+      To create an account, you must provide some information about yourself. If you create an account, you agree to provide, at a minimum, a valid e-mail address, and to keep that address up-to-date. You may close your account at any time by e-mailing <%{contact_email}>.
 
-      You agree to be responsible for all action taken using your account, whether authorized by you or not, until you either close your account or notify the company that your account has been compromised.  You agree to notify the company immediately if you suspect your account has been compromised.  You agree to select a secure password for your account, and keep it secret.
+      You agree to be responsible for all action taken using your account, whether authorized by you or not, until you either close your account or notify the company that your account has been compromised. You agree to notify the company immediately if you suspect your account has been compromised. You agree to select a secure password for your account, and keep it secret.
 
       The company may restrict, suspend, or close your account on the forum according to its policy for handling copyright-related takedown requests, or if the company reasonably believes that you've broken any rule in these terms.
 
       <h2 id="heading--your-content"><a href="#heading--your-content">Your Content</a></h2>
 
-      Nothing in these terms gives the company any ownership rights in intellectual property that you share with the forum, such as your account information, posts, or other content you submit to the forum.  Nothing in these terms gives you any ownership rights in the company's intellectual property, either.
+      Nothing in these terms gives the company any ownership rights in intellectual property that you share with the forum, such as your account information, posts, or other content you submit to the forum. Nothing in these terms gives you any ownership rights in the company's intellectual property, either.
 
-      Between you and the company, you remain solely responsible for content you submit to the forum.  You agree not to wrongly imply that content you submit to the forum is sponsored or approved by the company.  These terms do not obligate the company to store, maintain, or provide copies of content you submit, and to change it, according to these terms.
+      Between you and the company, you remain solely responsible for content you submit to the forum. You agree not to wrongly imply that content you submit to the forum is sponsored or approved by the company. These terms do not obligate the company to store, maintain, or provide copies of content you submit, and to change it, according to these terms.
 
-      Content you submit to the forum belongs to you, and you decide what permission to give others for it.  But at a minimum, you license the company to provide content that you submit to the forum to other users of the forum.  That special license allows the company to copy, publish, and analyze content you submit to the forum.
+      Content you submit to the forum belongs to you, and you decide what permission to give others for it. But at a minimum, you license the company to provide content that you submit to the forum to other users of the forum. That special license allows the company to copy, publish, and analyze content you submit to the forum.
 
-      When content you submit is removed from the forum, whether by you or by the company, the company's special license ends when the last copy disappears from the company's backups, caches, and other systems.  Other licenses you apply to content you submit, such as [Creative Commons](https://creativecommons.org) licenses, may continue after your content is removed.  Those licenses may give others, or the company itself, the right to share your content through the forum again.
+      When content you submit is removed from the forum, whether by you or by the company, the company's special license ends when the last copy disappears from the company's backups, caches, and other systems. Other licenses you apply to content you submit, such as [Creative Commons](https://creativecommons.org) licenses, may continue after your content is removed. Those licenses may give others, or the company itself, the right to share your content through the forum again.
 
-      Others who receive content you submit to the forum may violate the terms on which you license your content.  You agree that the company will not be liable to you for those violations or their consequences.
+      Others who receive content you submit to the forum may violate the terms on which you license your content. You agree that the company will not be liable to you for those violations or their consequences.
 
       <h2 id="heading--responsibility"><a href="#heading--responsibility">Your Responsibility</a></h2>
 
-      You agree to indemnify the company from legal claims by others related to your breach of these terms, or breach of these terms by others using your account on the forum.  Both you and the company agree to notify the other side of any legal claims for which you might have to indemnify the company as soon as possible.  If the company fails to notify you of a legal claim promptly, you won't have to indemnify the company for damages that you could have defended against or mitigated with prompt notice.  You agree to allow the company to control investigation, defense, and settlement of legal claims for which you would have to indemnify the company, and to cooperate with those efforts.  The company agrees not to agree to any settlement that admits fault for you or imposes obligations on you without your prior agreement.
+      You agree to indemnify the company from legal claims by others related to your breach of these terms, or breach of these terms by others using your account on the forum. Both you and the company agree to notify the other side of any legal claims for which you might have to indemnify the company as soon as possible. If the company fails to notify you of a legal claim promptly, you won't have to indemnify the company for damages that you could have defended against or mitigated with prompt notice. You agree to allow the company to control investigation, defense, and settlement of legal claims for which you would have to indemnify the company, and to cooperate with those efforts. The company agrees not to agree to any settlement that admits fault for you or imposes obligations on you without your prior agreement.
 
       <h2 id="heading--disclaimers"><a href="#heading--disclaimers">Disclaimers</a></h2>
 
-      ***You accept all risk of using the forum and content on the forum.  As far as the law allows, the company and its suppliers provide the forum as is, without any warranty whatsoever.***
+      ***You accept all risk of using the forum and content on the forum. As far as the law allows, the company and its suppliers provide the forum as is, without any warranty whatsoever.***
 
-      The forum may hyperlink to and integrate forums and services run by others.  The company does not make any warranty about services run by others, or content they may provide.  Use of services run by others may be governed by other terms between you and the one running service.
+      The forum may hyperlink to and integrate forums and services run by others. The company does not make any warranty about services run by others, or content they may provide. Use of services run by others may be governed by other terms between you and the one running service.
 
       <h2 id="heading--liability"><a href="#heading--liability">Limits on Liability</a></h2>
 
@@ -3458,13 +3449,13 @@ fr:
 
       <h2 id="heading--feedback"><a href="#heading--feedback">Feedback</a></h2>
 
-      The company welcomes your feedback and suggestions for the forum.  See the [Contact](#heading--contact) section below for ways to get in touch with us.
+      The company welcomes your feedback and suggestions for the forum. See the [Contact](#heading--contact) section below for ways to get in touch with us.
 
-      You agree that the company will be free to act on feedback and suggestions you provide, and that the company won't have to notify you that your feedback was used, get your permission to use it, or pay you.  You agree not to submit feedback or suggestions that you believe might be confidential or proprietary, to you or others.
+      You agree that the company will be free to act on feedback and suggestions you provide, and that the company won't have to notify you that your feedback was used, get your permission to use it, or pay you. You agree not to submit feedback or suggestions that you believe might be confidential or proprietary, to you or others.
 
       <h2 id="heading--termination"><a href="#heading--termination">Termination</a></h2>
 
-      Either you or the company may end the agreement written out in these terms at any time.  When our agreement ends, your permission to use the forum also ends.
+      Either you or the company may end the agreement written out in these terms at any time. When our agreement ends, your permission to use the forum also ends.
 
       The following provisions survive the end of our agreement: [Your Content](#heading--your-content), [Feedback](#heading--feedback), [Your Responsibility](#heading--responsibility), [Disclaimers](#heading--disclaimers), [Limits on Liability](#heading--liability), and [General Terms](#heading--general).
 
@@ -3472,21 +3463,21 @@ fr:
 
       %{governing_law} will govern any dispute related to these terms or your use of the forum.
 
-      You and the company agree to seek injunctions related to these terms only in state or federal court in %{city_for_disputes}.  Neither you nor the company will object to jurisdiction, forum, or venue in those courts.
+      You and the company agree to seek injunctions related to these terms only in state or federal court in %{city_for_disputes}. Neither you nor the company will object to jurisdiction, forum, or venue in those courts.
 
-      ***Other than to seek an injunction or for claims under the Computer Fraud and Abuse Act, you and the company will resolve any dispute by binding American Arbitration Association arbitration.  Arbitration will follow the AAA's Commercial Arbitration Rules and Supplementary Procedures for Consumer Related Disputes.  Arbitration will happen in %{city_for_disputes}.  You will settle any dispute as an individual, and not as part of a class action or other representative proceeding, whether as the plaintiff or a class member.  No arbitrator will consolidate any dispute with any other arbitration without the company's permission.***
+      ***Other than to seek an injunction or for claims under the Computer Fraud and Abuse Act, you and the company will resolve any dispute by binding American Arbitration Association arbitration. Arbitration will follow the AAA's Commercial Arbitration Rules and Supplementary Procedures for Consumer Related Disputes. Arbitration will happen in %{city_for_disputes}. You will settle any dispute as an individual, and not as part of a class action or other representative proceeding, whether as the plaintiff or a class member. No arbitrator will consolidate any dispute with any other arbitration without the company's permission.***
 
-      Any arbitration award will include costs of the arbitration, reasonable attorneys' fees, and reasonable costs for witnesses.  You and the company may enter arbitration awards in any court with jurisdiction.
+      Any arbitration award will include costs of the arbitration, reasonable attorneys' fees, and reasonable costs for witnesses. You and the company may enter arbitration awards in any court with jurisdiction.
 
       <h2 id="heading--general"><a href="#heading--general">General Terms</a></h2>
 
-      If a provision of these terms is unenforceable as written, but could be changed to make it enforceable, that provision should be modified to the minimum extent necessary to make it enforceable.  Otherwise, that provision should be removed.
+      If a provision of these terms is unenforceable as written, but could be changed to make it enforceable, that provision should be modified to the minimum extent necessary to make it enforceable. Otherwise, that provision should be removed.
 
-      You may not assign your agreement with the company.  The company may assign your agreement to any affiliate of the company, any other company that obtains control of the company, or any other company that buys assets of the company related to the forum.  Any attempted assignment against these terms has no legal effect.
+      You may not assign your agreement with the company. The company may assign your agreement to any affiliate of the company, any other company that obtains control of the company, or any other company that buys assets of the company related to the forum. Any attempted assignment against these terms has no legal effect.
 
       Neither the exercise of any right under this Agreement, nor waiver of any breach of this Agreement, waives any other breach of this Agreement.
 
-      These terms embody all the terms of agreement between you and the company about use of the forum.  These terms entirely replace any other agreements about your use of the forum, written or not.
+      These terms embody all the terms of agreement between you and the company about use of the forum. These terms entirely replace any other agreements about your use of the forum, written or not.
 
       <h2 id="heading--contact"><a href="#heading--contact">Contact</a></h2>
 
@@ -3496,7 +3487,7 @@ fr:
 
       <h2 id="heading--changes"><a href="#heading--changes">Changes</a></h2>
 
-      The company last updated these terms on July 12, 2018, and may update these terms again.  The company will post all updates to the forum.  For updates that contain substantial changes, the company agrees to e-mail you, if you've created an account and provided a valid e-mail address.  The company may also announce updates with special messages or alerts on the forum.
+      The company last updated these terms on July 12, 2018, and may update these terms again. The company will post all updates to the forum. For updates that contain substantial changes, the company agrees to e-mail you, if you've created an account and provided a valid e-mail address. The company may also announce updates with special messages or alerts on the forum.
 
       Once you get notice of an update to these terms, you must agree to the new terms in order to keep using the forum.
   privacy_topic:
@@ -3717,7 +3708,7 @@ fr:
         Ce badge est accordé la première fois que vous partagez un lien vers une réponse ou un sujet en utilisant le bouton de partage. Partager des liens est une excellente façon de montrer des discussions intéressantes avec le reste du monde et faire croître votre communauté.
     first_link:
       name: Premier lien
-      description: A ajouté un lien  vers un autre sujet
+      description: A ajouté un lien vers un autre sujet
       long_description: |
         Ce badge est accordé la première fois que vous ajoutez un lien vers un autre sujet. Avec l'affichage des relations entre les sujets, lier des sujets aide les autres lecteurs à trouver des conversations intéressantes. Linker librement !
     first_quote:

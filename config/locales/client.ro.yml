@@ -135,11 +135,11 @@ ro:
       public_topic: "a făcut acest subiect public %{when}"
       private_topic: "fă acest subiect un mesaj personal %{when}"
       split_topic: "desparte această discuție %{when}"
-      invited_user: "a invitat pe %{who}  %{when}"
-      invited_group: "a invitat pe %{who}  %{when}"
+      invited_user: "a invitat pe %{who} %{when}"
+      invited_group: "a invitat pe %{who} %{when}"
       user_left: "%{who} s-a îndepărtat de la acest mesaj %{when}"
-      removed_user: "a scos pe %{who}  %{when}"
-      removed_group: "scos pe  %{who}  %{when}"
+      removed_user: "a scos pe %{who} %{when}"
+      removed_group: "scos pe %{who} %{when}"
       autoclosed:
         enabled: "închis %{when}"
         disabled: "deschis %{when}"
@@ -164,7 +164,7 @@ ro:
     topic_admin_menu: "Opțiuni administrare subiect"
     wizard_required: "Bine ai venit la noul tău Discourse! Să începem cu <a href='%{url}' data-auto-route='true'>expertul de configurare</a> ✨"
     emails_are_disabled: "Trimiterea de emailuri a fost dezactivată global de către un administrator. Nu vor fi trimise notificări email de nici un fel."
-    bootstrap_mode_enabled: "Pentru a simplifica lansarea noului dv. site, sunteți în modul bootstrap. Toți utilizatorii noi vor primi nivelul 1 de încredere și vor avea activată primirea zilnică de e-mail-uri rezumat. Această funcționalitate va fi oprită automat după ce se înregistrează primii  %{min_users} membri."
+    bootstrap_mode_enabled: "Pentru a simplifica lansarea noului dv. site, sunteți în modul bootstrap. Toți utilizatorii noi vor primi nivelul 1 de încredere și vor avea activată primirea zilnică de e-mail-uri rezumat. Această funcționalitate va fi oprită automat după ce se înregistrează primii %{min_users} membri."
     bootstrap_mode_disabled: "Modul bootstrap va fi dezactivat în următoarele 24 de ore"
     themes:
       default_description: "Implicit"
@@ -353,7 +353,7 @@ ro:
       user_mentioned_you: "<a href='{{user1Url}}'>{{user}}</a> te-a menționat pe <a href='{{user2Url}}'>tine</a>"
       you_mentioned_user: "<a href='{{user1Url}}'>Tu</a> ai menționat pe <a href='{{user2Url}}'>{{another_user}}</a>"
       posted_by_user: "Postat de <a href='{{userUrl}}'>{{user}}</a>"
-      posted_by_you: "Postat de  <a href='{{userUrl}}'>tine</a>"
+      posted_by_you: "Postat de <a href='{{userUrl}}'>tine</a>"
       sent_by_user: "Trimis de <a href='{{userUrl}}'>{{user}}</a>"
       sent_by_you: "Trimis de <a href='{{userUrl}}'>tine</a>"
     directory:
@@ -657,9 +657,7 @@ ro:
       users: "Utilizatori"
       muted_users: "Silențios"
       muted_users_instructions: "Oprește toate notificările de la aceşti utilizatori."
-      muted_topics_link: "Arată subiectele dezactivate"
-      watched_topics_link: "Arată subiectele urmărite activ"
-      tracked_topics_link: "Afișează subiectele urmărite"
+      tracked_topics_link: "Arată"
       automatically_unpin_topics: "Detașare automată a subiectelor când ajung la sfârșitul paginii."
       apps: "Aplicații"
       revoke_access: "Revocă accesul"
@@ -710,6 +708,8 @@ ro:
         enable: "Activează"
         copied_to_clipboard: "Copiat în clipboard"
         copy_to_clipboard_error: "Eroare la copierea datelor în clipboard"
+      second_factor:
+        edit: "Editează"
       change_about:
         title: "Schimbare date personale"
         error: "A apărut o eroare la schimbarea acestei valori."
@@ -811,7 +811,7 @@ ro:
         always: "întotdeauna"
         never: "niciodată"
       email_messages_level: "Trimite-mi un email când cineva îmi trimite un mesaj."
-      include_tl0_in_digests: "Include conținut de la utilizatori noi în  rezumatul de pe email."
+      include_tl0_in_digests: "Include conținut de la utilizatori noi în rezumatul de pe email."
       email_in_reply_to: "Include un fragment din răspunsurile la postare în emailuri"
       other_settings: "Altele"
       categories_settings: "Categorii"
@@ -868,7 +868,7 @@ ro:
         create: "Trimite o invitație"
         generate_link: "Copiază link-ul de invitație"
         link_generated: "Link de invitare generat cu succes!"
-        valid_for: "Link-ul de invitare este valid doar pentru următoarele adrese de email:  %{email}"
+        valid_for: "Link-ul de invitare este valid doar pentru următoarele adrese de email: %{email}"
         bulk_invite:
           none: "Încă nu ai invitat pe nimeni. Trimite invitații indivituale sau invită mai multe persoane odată <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>uploadând un fișier CSV</a>."
           text: "Invitație multiplă din fișier"
@@ -1044,13 +1044,13 @@ ro:
       complete_username_found: "Am găsit un cont care se potrivește cu utilizatorul <b>%{username}</b>, vei primi un email cu instrucțiunile de resetare a parolei în cel mai scurt timp."
       complete_email_found: "Am găsit un cont care se potrivește cu adresa <b>%{email}</b>, vei primi un email cu instrucțiunile de resetare a parolei în cel mai scurt timp."
       complete_username_not_found: "Nici un cont nu se potriveşte cu utilizatorul <b>%{username}</b>"
-      complete_email_not_found: "Nici un cont nu se potrivește cu adresa  <b>%{email}</b>"
+      complete_email_not_found: "Nici un cont nu se potrivește cu adresa <b>%{email}</b>"
       help: "Email-ul nu a sosit? Asigură-te că verifici mai întâi în folderul Spam. <p>Nu ești sigur ce adresă de email folosești? Scrie adresa de email și îți vom spune dacă aceasta există.</p><p>Dacă nu mai ai acces în contul tău la adresa de email, te rog contactează <a href='%{basePath}/about'>echipa de ajutor.</a></p>"
       button_ok: "Ok"
       button_help: "Ajutor"
     email_login:
       complete_username_not_found: "Nici un cont nu se potriveşte cu utilizatorul <b>%{username}</b>"
-      complete_email_not_found: "Nici un cont nu se potrivește cu adresa  <b>%{email}</b>"
+      complete_email_not_found: "Nici un cont nu se potrivește cu adresa <b>%{email}</b>"
       confirm_title: "Continuă la %{site_name}"
     login:
       title: "Autentificare"
@@ -1161,16 +1161,16 @@ ro:
       group_mentioned_limit: "1Atenție!1 Ai menționat 2{{group}}2, dar acest grup are mai mulți membri decât limita de {{max}} utilizatori configurată de către administrator. Nimeni nu va fi notificat."
       group_mentioned:
         one: "Prin menționarea {{group}}, urmează să notifici <a href='{{group_link}}'>o persoană</a> – ești sigur?"
-        few: "Prin menționarea {{group}}, urmează să notifici <a href='{{group_link}}'>{{count}}  persoane</a> – ești sigur?"
+        few: "Prin menționarea {{group}}, urmează să notifici <a href='{{group_link}}'>{{count}} persoane</a> – ești sigur?"
         other: "Prin menționarea {{group}}, urmează să notifici <a href='{{group_link}}'>{{count}} de persoane</a> – ești sigur?"
       cannot_see_mention:
         category: "Ai menționat utilizatorii: {{username}}. Însă ei nu vor notificați pentru că nu au acces la această categorie. Va trebui să îi adaugi la într-un grup care are acces la aceasta categorie."
-        private: "Ai menționat utilizatorii:  {{username}}. Însă ei nu vor fi notificați pentru că nu au posibilitatea să vadă acest mesaj personal. Va trebui să îi inviți la acest MP. "
+        private: "Ai menționat utilizatorii: {{username}}. Însă ei nu vor fi notificați pentru că nu au posibilitatea să vadă acest mesaj personal. Va trebui să îi inviți la acest MP. "
       duplicate_link: "Se pare că link-ul dv. către <b>{{domain}}</b> a fost deja postat în cadrul discuției de către <b>@{{username}}</b> în <a href='{{post_url}}'> un răspuns {{ago}} în urmă</a> – sunteți sigur că vreți să îl postați din nou?"
       error:
         title_missing: "Trebuie un titlu"
         title_too_short: "Titlul trebuie să aibă minim {{min}} (de) caractere"
-        title_too_long: "Titlul nu poate avea mai mult de  {{max}} (de) caractere"
+        title_too_long: "Titlul nu poate avea mai mult de {{max}} (de) caractere"
         post_missing: "Postarea nu poate fi goală"
         post_length: "Postarea trebuie să aibă minim {{min}} (de) caractere"
         category_missing: "Trebuie să alegi o categorie"
@@ -1184,7 +1184,7 @@ ro:
       create_whisper: "Șoaptă"
       title: "Sau apasă Ctrl+Enter"
       users_placeholder: "Adaugă un utilizator"
-      title_placeholder: "Despre ce e vorba în acest  subiect - pe scurt?"
+      title_placeholder: "Despre ce e vorba în acest subiect - pe scurt?"
       title_or_link_placeholder: "Introdu titlul, sau copiază aici un link"
       edit_reason_placeholder: "de ce editezi?"
       show_edit_reason: "(adaugă motivul editării)"
@@ -1212,7 +1212,7 @@ ro:
       quote_title: "Bloc citat"
       quote_text: "Bloc citat"
       code_title: "Text preformatat"
-      code_text: "indentează  textul preformatat cu 4 spații"
+      code_text: "indentează textul preformatat cu 4 spații"
       paste_code_text: "tastează sau lipește cod aici"
       upload_title: "Încarcă"
       upload_description: "Descrie fișierele de încărcat"
@@ -1481,7 +1481,7 @@ ro:
       toggle_information: "comută între detaliile subiectului"
       read_more_in_category: "Vrei să citești mai mult? Răsfoiește alte subiecte din {{catLink}} sau {{latestLink}}."
       read_more: "Vrei să citești mai multe subiecte? {{catLink}} sau {{latestLink}}."
-      read_more_MF: "{ UNREAD, plural, =0 {} one { Există <a href='{basePath}/unread'>un subiect necitit</a> } other { Sunt <a href='{basePath}/unread'># subiecte necitite</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{și } false {există } other{}} <a href='{basePath}/new'>un subiect  nou</a>} other { {BOTH, select, true{și } false {sunt } other{}} <a href='{basePath}/new'># subiecte noi</a>} } rămas(e), sau {CATEGORY, select, true {răsfoiți alte subiecte în {catLink}} false {{latestLink}} other {}}"
+      read_more_MF: "{ UNREAD, plural, =0 {} one { Există <a href='{basePath}/unread'>un subiect necitit</a> } other { Sunt <a href='{basePath}/unread'># subiecte necitite</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{și } false {există } other{}} <a href='{basePath}/new'>un subiect nou</a>} other { {BOTH, select, true{și } false {sunt } other{}} <a href='{basePath}/new'># subiecte noi</a>} } rămas(e), sau {CATEGORY, select, true {răsfoiți alte subiecte în {catLink}} false {{latestLink}} other {}}"
       browse_all_categories: Răsfoiți prin toate categoriile
       view_latest_topics: arată ultimele subiecte
       suggest_create_topic: "Ce ar fi să creezi un subiect?"
@@ -1620,7 +1620,7 @@ ro:
         help: "începe să scrii un răspuns la acest subiect"
       clear_pin:
         title: "Anulează subiect fixat"
-        help: "Elimină  subiectul fixat pentru a nu mai apărea la începutul listei de subiecte."
+        help: "Elimină subiectul fixat pentru a nu mai apărea la începutul listei de subiecte."
       share:
         title: "Distribuie"
         help: "distribuie un link cu acest subiect"
@@ -1708,7 +1708,7 @@ ro:
         error: "A apărut o eroare la mutarea postărilor în acel subiect."
         instructions:
           one: "Te rugăm să alegi subiectul unde dorești să muți acest mesaj."
-          few: "Te rugăm să alegi subiectul unde dorești să muți aceste <b>{{count}}</b>  mesaje."
+          few: "Te rugăm să alegi subiectul unde dorești să muți aceste <b>{{count}}</b> mesaje."
           other: "Te rugăm să alegi subiectul unde dorești să muți aceste <b>{{count}}</b> de mesaje."
       move_to_new_message:
         radio_label: "Mesaj nou"
@@ -1742,7 +1742,7 @@ ro:
         delete: șterge selecția
         cancel: anulare selecție
         select_all: selectează tot
-        deselect_all: deselectează  tot
+        deselect_all: deselectează tot
         description:
           one: Ai selectat <b>un</b> mesaj.
           few: "Ai selectat <b>{{count}}</b> mesaje."
@@ -2007,7 +2007,7 @@ ro:
       notify_action: "Mesaj"
       official_warning: "Avertizare oficială"
       delete_spammer: "Șterge spammer"
-      delete_confirm_MF: "Ești pe cale să ștergi  {POSTS, plural, one {<b>1</b> postare} other {<b>#</b> postări}} și {TOPICS, plural, one {<b>1</b> subiect} other {<b>#</b> subiecte}} de la acest utilizator, și să îi ștergi contul, blochezi înscrierile de pe IP-ul lui <b>{ip_address}</b>, și să îi adăugi adresa de email <b>{email}</b> pe lista celor blocate permanent. Ești sigur că acest utilizator este spammer?"
+      delete_confirm_MF: "Ești pe cale să ștergi {POSTS, plural, one {<b>1</b> postare} other {<b>#</b> postări}} și {TOPICS, plural, one {<b>1</b> subiect} other {<b>#</b> subiecte}} de la acest utilizator, și să îi ștergi contul, blochezi înscrierile de pe IP-ul lui <b>{ip_address}</b>, și să îi adăugi adresa de email <b>{email}</b> pe lista celor blocate permanent. Ești sigur că acest utilizator este spammer?"
       yes_delete_spammer: "Da, șterge spammer"
       ip_address_missing: "(N/A)"
       hidden_email_address: "(ascuns)"
@@ -2444,9 +2444,7 @@ ro:
             visibility_levels:
               title: "Cine poate vedea acest grup?"
               public: "Toată lumea"
-              members: "Proprietarii grupului, membrii și adminii"
               staff: "Proprietarii grupului și echipa"
-              owners: "Proprietarii și adminii din grup"
           membership:
             automatic: Automat
             trust_level: Nivel de încredere
@@ -2537,7 +2535,7 @@ ro:
           redeliver: "Livrează din nou"
           incoming:
             one: "Există un nou eveniment "
-            few: "Există {{count}}  noi evenimente."
+            few: "Există {{count}} noi evenimente."
             other: "Există {{count}} de noi evenimente."
           completed_in:
             one: "Terminat într-o secundă."
@@ -2690,6 +2688,8 @@ ro:
           install_popular: "Populare"
           about_theme: "Despre"
           license: "Licență"
+          enable: "Activează"
+          disable: "Dezactivează"
           update_to_latest: "Actualizat la ultima"
           check_for_updates: "Caută actualizări"
           updating: "Actualizare în curs..."
@@ -2904,7 +2904,7 @@ ro:
           domain: "Domeniu"
         screened_ips:
           title: "IP-uri filtrate"
-          description: 'adrese IP  supravegheate. Folosește "permite" să marchezi IP-urile ca permise'
+          description: 'adrese IP supravegheate. Folosește "permite" să marchezi IP-urile ca permise'
           delete_confirm: "Ești sigur că vrei să anulezi regula pentru %{ip_address}?"
           roll_up_confirm: "Ești sigur că vrei să consolidezi adresele IP monitorizate în mod obișnuit în subrețele?"
           rolled_up_some_subnets: "S-au consolidat cu succes înregistrările de IP-uri blocate pe următoarele subrețele: %{subnets}."
@@ -2948,7 +2948,7 @@ ro:
         title: "Joacă rolul utilizatorului"
         help: "Folosește această unealtă pentru a imita un cont de utilizator pentru depanare. Va trebui să te deconectezi după ce termini."
         not_found: "Utilizatorul nu poate fi găsit."
-        invalid: "Ne pare rău,  nu poți prelua acest rol."
+        invalid: "Ne pare rău, nu poți prelua acest rol."
       users:
         title: "Utilizatori"
         create: "Adaugă utilizator cu titlul de admin"
@@ -2986,7 +2986,7 @@ ro:
         suspend_failed: "Ceva nu a funcționat la suspendarea acestui utilizator {{error}}"
         unsuspend_failed: "Ceva nu a funcționat la activarea acestui utilizator {{error}}"
         suspend_duration: "Pentru cât timp va fi suspendat utilizatorul?"
-        suspend_reason_label: "Motivul suspendării? Acest text <b>va fi vizibil</b> pe pagina de profil a utilizatorului, și va fi arătat utilizatorului  atunci când încearcă să se autentifice. Încearcă să fii succint."
+        suspend_reason_label: "Motivul suspendării? Acest text <b>va fi vizibil</b> pe pagina de profil a utilizatorului, și va fi arătat utilizatorului atunci când încearcă să se autentifice. Încearcă să fii succint."
         suspend_reason: "Motiv"
         suspend_message: "Mesaj email"
         suspended_by: "Suspendat de"

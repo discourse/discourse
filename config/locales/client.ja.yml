@@ -671,9 +671,7 @@ ja:
       muted_users_instructions: "ユーザーからの通知をすべて行いません"
       ignored_users: "無視する"
       ignored_users_instructions: "ユーザーからのすべての投稿と通知が抑制されます。"
-      muted_topics_link: "ミュートしたトピックを表示する"
-      watched_topics_link: "ウォッチ中のトピックを表示"
-      tracked_topics_link: "追跡トピックを表示"
+      tracked_topics_link: "詳しく見る"
       automatically_unpin_topics: "最後まで読んだら自動的に固定表示を解除する。"
       apps: "アプリ連携"
       revoke_access: "アクセス解除"
@@ -725,7 +723,6 @@ ja:
         disable: "利用できません"
         enable: "利用できます"
         enable_long: "バックアップコードを有効にします"
-        manage: "バックアップコード管理"
         copied_to_clipboard: "クリップボードにコピーしました"
         copy_to_clipboard_error: "クリップボードにコピーする際にエラーが発生しました"
         remaining_codes: "<strong>{{count}}</strong> 個のバックアップコードが残っています。"
@@ -734,12 +731,12 @@ ja:
           title: "バックアップコードが作られました"
       second_factor:
         title: "2段階認証"
-        enable: "2段階認証を有効にする"
         confirm_password_description: "続行するにはパスワードを入力してください"
         label: "コード"
         show_key_description: "手動入力"
         oauth_enabled_warning: "アカウントで2段階認証が有効になると、ソーシャルログインは無効になります。"
         enforced_notice: "このサイトにアクセスするには2段階認証を有効にする必要があります。"
+        edit: "編集"
       change_about:
         title: "プロフィールを変更"
         error: "変更中にエラーが発生しました。"
@@ -1044,7 +1041,7 @@ ja:
       enabled_description: "トピックのまとめを表示されています。"
       description: "<b>{{replyCount}}</b>件の返信があります。"
       description_time: "<b>{{replyCount}}</b> 件の返信があります。 概ね <b>{{readingTime}} 分</b>で読める文量です。"
-      enable: "このトピックを要訳する"
+      enable: "このトピックを要約する"
       disable: "すべての投稿を表示する"
     deleted_filter:
       enabled_description: "削除された投稿は非表示になっています。"
@@ -1180,8 +1177,10 @@ ja:
       filter_placeholder: 検索...
     emoji_picker:
       filter_placeholder: 絵文字を探す
+      activities: 活動
       objects: オブジェクト
-      flags: 通報
+      symbols: シンボル
+      flags: 旗
       custom: カスタム絵文字
       recent: 最近使ったもの
       default_tone: スキントーンなし
@@ -1219,6 +1218,7 @@ ja:
         title_too_long: "タイトルは最長で{{max}}未満です。"
         post_missing: "内容が何もありません。"
         post_length: "投稿は{{min}}文字以上必要です。"
+        try_like: " {{heart}} ボタンは試しましたか？"
         category_missing: "カテゴリを選択してください。"
         tags_missing: "少なくとも {{count}} つのタグが必要です。"
       save_edit: "編集内容を保存"
@@ -1238,6 +1238,7 @@ ja:
       remove_featured_link: "トピックからリンクを削除する。"
       reply_placeholder: "文章を入力してください。 Markdown, BBコード, HTMLが使用出来ます。 画像はドラッグアンドドロップで貼り付けられます。"
       reply_placeholder_no_images: "文章を入力してください。 Markdown, BBコード, HTMLが使用出来ます。"
+      reply_placeholder_choose_category: "ここで入力する前にカテゴリを選んでください。"
       view_new_post: "新しい投稿を見る。"
       saving: "保存中"
       saved: "保存しました!"
@@ -1357,7 +1358,7 @@ ja:
       no_results: "何も見つかりませんでした。"
       no_more_results: "検索結果は以上です。"
       searching: "検索中..."
-      post_format: "#{{post_number}}  {{username}}から"
+      post_format: "#{{post_number}} {{username}}から"
       more_results: "検索結果が多数あります。検索条件を絞ってください。"
       cant_find: "探しているものが見つかりませんか？"
       start_new_topic: "新しいトピックを始めてみては？"
@@ -1515,8 +1516,9 @@ ja:
       options: "トピックオプション"
       show_links: "このトピック内のリンクを表示"
       toggle_information: "トピックの詳細を切り替え"
-      read_more_in_category: "{{catLink}}の他のトピックを見る or {{latestLink}}。"
-      read_more: "{{catLink}} or {{latestLink}}。"
+      read_more_in_category: "もっと読みたいですか？{{catLink}}あるいは{{latestLink}}の他のトピックを見てみてください。"
+      read_more: "もっと見たいですか？{{catLink}}あるいは{{latestLink}}があります。"
+      read_more_MF: "{ UNREAD, plural, =0 {} one { <a href='{basePath}/unread'>1つの未読 </a>} other { are <a href='{basePath}/unread'># つの未読</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{と } false {} other{}} <a href='{basePath}/new'>1 つの新着</a> トピック} other { {BOTH, select, true{と } false {} other{}} <a href='{basePath}/new'># つの新着</a> トピック} } が残っています、あるいは {CATEGORY, select, true { {catLink}の他のトピックを見てみてください。} false {{latestLink}} other {}}"
       browse_all_categories: 全てのカテゴリを閲覧する
       view_latest_topics: 最新のトピックを見る
       suggest_create_topic: "新しいトピックを作成しませんか?"
@@ -2301,7 +2303,7 @@ ja:
         please_upgrade: "今すぐアップデートしてください!"
         no_check_performed: "アップデートの確認が正しく動作していません。sidekiq が起動していることを確認してください。"
         stale_data: "更新のチェックが最近行われておりません。Sidekiqが動作しているか確認してください。"
-        version_check_pending: "アップロードしたてです。素晴らしいです！   "
+        version_check_pending: "アップロードしたてです。素晴らしいです！ "
         installed_version: "インストール済み"
         latest_version: "最新"
         problems_found: "現在のサイト設定に基づいたアドバイス"
@@ -2364,9 +2366,7 @@ ja:
             visibility_levels:
               title: "誰がこのグループを閲覧できますか？"
               public: "だれでも"
-              members: "グループオーナー、メンバー、管理者"
               staff: "グループオーナーとスタッフ"
-              owners: "グループオーナーと管理者"
           membership:
             automatic: 自動
             trust_level: トラストレベル
@@ -2537,6 +2537,8 @@ ja:
           install_popular: "人気"
           about_theme: "このサイトについて"
           license: "ライセンス"
+          enable: "利用できます"
+          disable: "利用できません"
           check_for_updates: "アップデートを確認"
           updating: "アップデート中..."
           add: "追加"

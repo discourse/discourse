@@ -212,6 +212,8 @@ pl_PL:
         sa_east_1: "Ameryka Południowa (São Paulo)"
         us_east_1: "US East (N. Virginia)"
         us_east_2: "Wschodnie USA (Ohio)"
+        us_gov_east_1: "AWS GovCloud (US-East)"
+        us_gov_west_1: "AWS GovCloud (US-West)"
         us_west_1: "US West (N. California)"
         us_west_2: "US West (Oregon)"
     edit: "edytuj tytuł i kategorię tego tematu"
@@ -358,6 +360,7 @@ pl_PL:
     review:
       order_by: "Segreguj według:"
       in_reply_to: "w odpowiedzi na"
+      awaiting_approval: "Oczekuje na zatwierdzenie"
       delete: "Usuń"
       settings:
         saved: "Zapisano"
@@ -368,6 +371,7 @@ pl_PL:
       grouped_by_topic: "Grupuj tematycznie"
       none: "Brak elementów do przejrzenia."
       view_pending: "pokaż oczekujące"
+      title: "Sprawdź"
       topic: "Temat:"
       filtered_user: "Użytkownik"
       show_all_topics: "pokaż wszystkie tematy"
@@ -393,6 +397,7 @@ pl_PL:
       edit: "Edytuj"
       save: "Zapisz"
       cancel: "Anuluj"
+      new_topic: "Zatwierdzenie tego elementu stworzy nowy temat"
       filters:
         all_categories: "(wszystkie kategorie)"
         type:
@@ -760,7 +765,7 @@ pl_PL:
         label: "Tryb listy mailingowej"
         enabled: "Włącz tryb listy mailingowej"
         instructions: |
-          To ustawienie  nadpisuje podsumowanie aktywności. <br />
+          To ustawienie nadpisuje podsumowanie aktywności. <br />
         individual: "Wyślij e-mail dla każdego nowego postu"
         individual_no_echo: "Wysyłaj emaile dla każdego nowego postu oprócz mojego"
         many_per_day: "Wyślij mi e-mail dla każdego nowego posta (około {{dailyEmailEstimate}} na dzień)"
@@ -792,9 +797,7 @@ pl_PL:
       muted_users: "Uciszeni"
       muted_users_instructions: "Wstrzymaj powiadomienia od tych użytkowników."
       ignored_users: "Zignorowany"
-      muted_topics_link: "Pokaż wyciszone tematy"
-      watched_topics_link: "Pokaż obserwowane tematy"
-      tracked_topics_link: "Pokaż śledzone tematy"
+      tracked_topics_link: "Pokaż"
       automatically_unpin_topics: "Automatycznie odpinaj tematy kiedy dotrę do końca strony."
       apps: "Aplikacje"
       revoke_access: "Zablokuj dostęp"
@@ -845,12 +848,16 @@ pl_PL:
         enable: "Włącz"
         copied_to_clipboard: "Skopiowane do schowka"
         copy_to_clipboard_error: "Wystąpił błąd w trakcie kopiowania do schowka"
+        codes:
+          title: "Wygenerowano kody zapasowe"
       second_factor:
         title: "Dwuskładnikowe uwierzytelnianie"
+        enable: "Zarządzaj autentykacją dwuetapową"
         confirm_password_description: "Potwierdź swoje hasło, aby kontynuować"
         label: "Kod"
         disable_description: "Podaj kod uwierzytelniający ze swojej aplikacji"
         show_key_description: "Wpisz ręcznie"
+        edit: "Edytuj"
       change_about:
         title: "Zmień O mnie"
         error: "Wystąpił błąd podczas zmiany tej wartości."
@@ -949,6 +956,9 @@ pl_PL:
       text_size:
         title: "Rozmiar tekstu"
         normal: "Normalny"
+      title_count_mode:
+        notifications: "Nowe powiadomienia"
+        contextual: "Nowa zawartość strony"
       like_notification_frequency:
         title: "Powiadom o lajkach"
         always: "Zawsze"
@@ -1043,7 +1053,7 @@ pl_PL:
         same_as_username: "Twoje hasło jest takie samo jak nazwa użytkownika."
         same_as_email: "Twoje hasło jest takie samo jak twój e-mail."
         ok: "Twoje hasło jest poprawne."
-        instructions: "przynajmniej  %{count} znaków"
+        instructions: "przynajmniej %{count} znaków"
       summary:
         title: "Podsumowanie"
         stats: "Statystyki"
@@ -1182,7 +1192,7 @@ pl_PL:
       value_prop: "Jeśli założysz konto, będziemy pamiętać dokładnie to, co przeczytałeś, więc zawsze wrócisz tam, gdzie ostatnio opuściłeś temat. Otrzymasz również powiadomienia, tutaj i za pośrednictwem poczty email, gdy ktoś Ci odpowie. Możesz również polubić posty, aby dzielić się miłością. :heartpulse:"
     summary:
       enabled_description: "Przeglądasz podsumowanie tego tematu: widoczne są jedynie najbardziej wartościowe wpisy zdaniem uczestników. "
-      description: "Jest  <b>{{replyCount}}</b> odpowiedzi."
+      description: "Jest <b>{{replyCount}}</b> odpowiedzi."
       description_time: "Istnieją <b>{{replyCount}}</b> odpowiedzi z czasem czytania oszacowanym na <b>{{readingTime}} minut</b>."
       enable: "Podsumuj ten temat"
       disable: "Pokaż wszystkie wpisy"
@@ -1214,8 +1224,8 @@ pl_PL:
       reset: "Resetuj hasło"
       complete_username: "Jeśli jakieś mamy konto o nazwie użytkownika <b>%{username}</b>, za chwilę zostanie wysłana wiadomość z instrukcją jak ustawić nowe hasło."
       complete_email: "Jeśli jakieś konto użytkownika posiada adres <b>%{email}</b>, za chwilę zostanie wysłana wiadomość z instrukcją jak ustawić nowe hasło."
-      complete_username_found: "Znaleziono konto o nazwie <b>%{username}</b>,  wkrótce otrzymasz email z instrukcjami opisującymi reset hasła."
-      complete_email_found: "Znaleziono konto przypisane do adresu <b>%{email}</b>,  wkrótce otrzymasz email z instrukcjami opisującymi reset hasła."
+      complete_username_found: "Znaleziono konto o nazwie <b>%{username}</b>, wkrótce otrzymasz email z instrukcjami opisującymi reset hasła."
+      complete_email_found: "Znaleziono konto przypisane do adresu <b>%{email}</b>, wkrótce otrzymasz email z instrukcjami opisującymi reset hasła."
       complete_username_not_found: "Nie znaleziono konta o nazwie <b>%{username}</b>"
       complete_email_not_found: "Nie znaleziono konta przypisanego do <b>%{email}</b>"
       help: "Email nie dotarł? Upewnij się najpierw czy sprawdziłeś folder spam.<p>Nie jesteś pewny jaki email został użyty? Wprowadz adres tutaj, a dowiemy się czy taki istnieje.</p><p>Jeśli nie masz już dostępu do adresu email zapisanego na twoim koncie, skontaktuj się z <a href='%{basePath}/about'>naszym pomocnym zespołem.</a></p>"
@@ -1390,7 +1400,7 @@ pl_PL:
       show_edit_reason: "(dodaj powód edycji)"
       topic_featured_link_placeholder: "Wstaw link pod nazwą "
       remove_featured_link: "Usuń link z tematu."
-      reply_placeholder: "Pisz w tym miejscu. Wspierane formatowanie to Markdown, BBCode lub HTML.  Możesz też przeciągnąć tu obrazek."
+      reply_placeholder: "Pisz w tym miejscu. Wspierane formatowanie to Markdown, BBCode lub HTML. Możesz też przeciągnąć tu obrazek."
       reply_placeholder_no_images: "Pisz w tym miejscu. Wspierane formatowanie to Markdown, BBCode lub HTML."
       view_new_post: "Zobacz Twój nowy wpis."
       saving: "Zapisywanie"
@@ -1495,7 +1505,7 @@ pl_PL:
       from_my_computer: "Z mojego urządzenia"
       from_the_web: "Z Internetu"
       remote_tip: "link do obrazu"
-      remote_tip_with_attachments: "link do obrazu lub pliku  {{authorized_extensions}}"
+      remote_tip_with_attachments: "link do obrazu lub pliku {{authorized_extensions}}"
       local_tip: "wybierz obrazy ze swojego urządzenia"
       local_tip_with_attachments: "wybierz obrazy lub pliki ze swojego urządzenia {{authorized_extensions}}"
       hint: "(możesz także upuścić plik z katalogu komputera w okno edytora)"
@@ -1776,7 +1786,7 @@ pl_PL:
       notifications:
         title: Ustaw jak często chcesz być powiadamiany o tym temacie
         reasons:
-          mailing_list_mode: "Masz włączony tryb powiadomień mailowych, więc będziesz otrzymywał powiadomienia o nowych odpowiedziach w tym temacie  za pośrednictwem poczty e-mail"
+          mailing_list_mode: "Masz włączony tryb powiadomień mailowych, więc będziesz otrzymywał powiadomienia o nowych odpowiedziach w tym temacie za pośrednictwem poczty e-mail"
           "3_10": "Będziesz otrzymywał powiadomienia, ponieważ temat zawiera obserwowany przez Ciebie tag"
           "3_6": "Będziesz otrzymywać powiadomienia o każdym nowym wpisie i temacie, ponieważ obserwujesz tę kategorię."
           "3_5": "Będziesz otrzymywać powiadomienia o każdym nowym wpisie, ponieważ włączono automatyczne obserwowanie tego tematu."
@@ -1925,6 +1935,7 @@ pl_PL:
       split_topic:
         title: "Przenieś do nowego tematu"
         action: "przenieś do nowego tematu"
+        topic_name: "Nowy tytuł tematu"
         radio_label: "Nowy temat"
         error: "Wystąpił błąd podczas przenoszenia wpisów do nowego tematu."
         instructions:
@@ -2247,7 +2258,7 @@ pl_PL:
       ip_address_missing: "(N/D)"
       hidden_email_address: "(ukryto)"
       submit_tooltip: "Zapisz prywatną flagę."
-      take_action_tooltip: "Nie czekaj, aż wpis zostanie zgłoszony przez innych,  natychmiast oflaguj do działania . "
+      take_action_tooltip: "Nie czekaj, aż wpis zostanie zgłoszony przez innych, natychmiast oflaguj do działania . "
       cant: "Przepraszamy, nie możesz oflagować teraz tego wpisu."
       notify_staff: "Powiadom zespół wiadomością prywatną"
       formatted_name:
@@ -2303,7 +2314,7 @@ pl_PL:
       archived:
         help: "Ten temat został zarchiwizowany i nie można go zmieniać"
       locked_and_archived:
-        help: "Ten temat jest zamknięty i zarchiwizowany. Dodawanie odpowiedzi i jego edycja nie są  możliwe."
+        help: "Ten temat jest zamknięty i zarchiwizowany. Dodawanie odpowiedzi i jego edycja nie są możliwe."
       unpinned:
         title: "Nieprzypięty"
         help: "Temat nie jest przypięty w ramach twojego konta. Będzie wyświetlany w normalnej kolejności."
@@ -2696,7 +2707,7 @@ pl_PL:
         bulk_add:
           title: "Dodaj więcej do grupy"
           complete_users_not_added: "Podani użytkownicy nie mogą zostać dodani (Sprawdź, czy stworzyli konto):"
-          paste: "Podaj listę nazw użytkowników lub adresów e-mail,  każdy w oddzielnej linii:"
+          paste: "Podaj listę nazw użytkowników lub adresów e-mail, każdy w oddzielnej linii:"
         manage:
           interaction:
             email: Email
@@ -2706,9 +2717,7 @@ pl_PL:
             visibility_levels:
               title: "Kto może widzieć tę grupę?"
               public: "Wszyscy"
-              members: "Właściciele grupy, członkowie i administratorzy"
               staff: "Właściciele grupy i zespół"
-              owners: "Właściciele grupy i administratorzy"
           membership:
             automatic: Automatyczne
             trust_level: Poziom Zaufania
@@ -2728,7 +2737,7 @@ pl_PL:
         delete: "Usuń"
         delete_confirm: "Usunąć tę grupę?"
         delete_failed: "Nie można usunąć grupy. Jeżeli jest to grupa automatyczna, nie może zostać zniszczona."
-        delete_owner_confirm: "Usunąć status właściciela dla  '%{username}'?"
+        delete_owner_confirm: "Usunąć status właściciela dla '%{username}'?"
         add: "Dodaj"
         custom: "Niestandardowe"
         automatic: "Automatyczne"
@@ -2961,11 +2970,17 @@ pl_PL:
           install_popular: "Popularne"
           about_theme: "O stronie"
           license: "Licencja"
+          enable: "Włącz"
+          disable: "Wyłącz"
           update_to_latest: "Aktualizuj do najnowszego"
           check_for_updates: "Sprawdź dostępność aktualizacji"
           updating: "Trwa proces aktualizacji..."
           up_to_date: "Motyw jest aktualny. Ostatnio sprawdzano:"
           add: "Dodaj"
+          theme_settings: "Ustawienia tematu"
+          no_settings: "Ten temat nie ma żanych ustawień"
+          theme_translations: "Tłumaczenia tematu"
+          empty: "Brak elementu"
           commits_behind:
             one: "Motyw jest %{count} aktualizację w tyle!"
             few: "Motyw jest {{count}} aktualizacji w tyle!"
@@ -3204,7 +3219,7 @@ pl_PL:
             filter: "Wyszukaj"
           roll_up:
             text: "Zgrupuj"
-            title: "Tworzy nowy ban dla podsieci jeśli jest co najmniej  'min_ban_entries_for_roll_up' pozycji."
+            title: "Tworzy nowy ban dla podsieci jeśli jest co najmniej 'min_ban_entries_for_roll_up' pozycji."
         search_logs:
           title: "Logi wyszukiwań"
           term: "Szukana fraza"
@@ -3604,7 +3619,7 @@ pl_PL:
           what_are_badges_title: "Czym są odznaki?"
       emoji:
         title: "Emoji"
-        help: "Dodawanie nowych emoji.  (PROTIP: przeciągnij i upuść wiele plików)"
+        help: "Dodawanie nowych emoji. (PROTIP: przeciągnij i upuść wiele plików)"
         add: "Dodaj nowe Emoji"
         name: "Nazwa"
         image: "Grafika"

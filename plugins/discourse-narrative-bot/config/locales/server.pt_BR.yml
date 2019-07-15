@@ -7,7 +7,7 @@
 
 pt_BR:
   site_settings:
-    discourse_narrative_bot_enabled: 'Habilitar Discourse Narrative Bot (discobot)'
+    discourse_narrative_bot_enabled: "Habilitar Discourse Narrative Bot (discobot)"
     disable_discourse_narrative_bot_welcome_post: "Desabilitar a postagem de boas vindas do Discourse Narrative Bot"
     discourse_narrative_bot_ignored_usernames: "Nomes de usuário que o Discourse Narrative Bot deve ignorar"
     discourse_narrative_bot_disable_public_replies: "Desabilitar respostas públicas do Discourse Narrative Bot"
@@ -23,7 +23,7 @@ pt_BR:
       name: Licenciado
       description: "Completou nosso tutorial de usuário avançado"
       long_description: |
-        Este emblema é concedido após a conclusão bem-sucedida do tutorial interativo de usuário avançado. Você dominou as ferramentas avançadas de discussão  — e agora está totalmente licenciado!
+        Este emblema é concedido após a conclusão bem-sucedida do tutorial interativo de usuário avançado. Você dominou as ferramentas avançadas de discussão — e agora está totalmente licenciado!
   discourse_narrative_bot:
     bio: "Oi, eu não sou uma pessoa real. Eu sou um robô que pode te ensinar sobre este site. Para interagir comigo, me envie uma mensagem ou mencione **`@%{discobot_username}`** em qualquer lugar."
     timeout:
@@ -82,7 +82,7 @@ pt_BR:
       results: |-
         > :left_speech_bubble: _%{quote}_ &mdash; %{author}
     magic_8_ball:
-      trigger: 'sorte'
+      trigger: "sorte"
       answers:
         '1': "É certo"
         '2': "É decididamente assim"
@@ -107,9 +107,9 @@ pt_BR:
       result: |-
         > :crystal_ball: %{result}
     track_selector:
-      reset_trigger: 'começar'
-      skip_trigger: 'pular'
-      help_trigger: 'mostrar ajuda'
+      reset_trigger: "começar"
+      skip_trigger: "pular"
+      help_trigger: "mostrar ajuda"
       random_mention:
         reply: |-
           Oi! Para descobrir o que eu posso fazer diga `@%{discobot_username} %{help_trigger}`.
@@ -300,11 +300,11 @@ pt_BR:
 
           (Se você quiser falar comigo de novo para aprender mais, é só me enviar uma mensagem ou mencionar `@%{discobot_username}` a qualquer momento!)
       certificate:
-        alt: 'Certificado de Conquista'
+        alt: "Certificado de Conquista"
     advanced_user_narrative:
-      reset_trigger: 'tutorial avançado'
+      reset_trigger: "tutorial avançado"
       cert_title: "Em reconhecimento à conclusão bem-sucedida do tutorial de usuário avançado"
-      title: ':arrow_up: Recursos avançados de usuário'
+      title: ":arrow_up: Recursos avançados de usuário"
       start_message: |-
         Como um usuário _avançado_, você já visitou a sua [página de preferências](%{base_uri}/my/preferences) @%{username}? Existem inúmeras maneiras de personalizar a sua experiência, como por exemplo selecionar um tema escuro ou claro.
 
@@ -335,7 +335,7 @@ pt_BR:
 
           Para preservar a continuidade das discussões, as exclusões não são imediatas; portanto, a postagem será removida depois de um tempo.
       recover:
-        deleted_post_raw: 'Por que @%{discobot_username} excluiu a minha postagem? :anguished:'
+        deleted_post_raw: "Por que @%{discobot_username} excluiu a minha postagem? :anguished:"
         instructions: |-
           Ah não! Parece que eu acidentalmente excluí uma nova postagem que acabei de criar para você.
 
@@ -428,4 +428,4 @@ pt_BR:
 
           Por agora é só! Se você quiser falar comigo de novo para aprender mais, é só me enviar uma mensagem a qualquer momento :sunglasses:
       certificate:
-        alt: 'Certificado de Conquista do Curso de Usuário Avançado'
+        alt: "Certificado de Conquista do Curso de Usuário Avançado"

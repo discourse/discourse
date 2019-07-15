@@ -29,6 +29,7 @@ sl:
   posts: "prispevkov"
   loading: "Nalagam"
   powered_by_html: 'Uporablja tehnologijo <a href="https://www.discourse.org">Discourse</a>, za ogled te strani se priporoča omogočen JavaScript.'
+  sign_up: "Registracija"
   log_in: "Vpis"
   submit: "Pošlji"
   anonymous: "Anonimni"
@@ -730,8 +731,8 @@ sl:
   move_posts:
     new_topic_moderator_post:
       one: "%{count} prispevek je bil prestavljen v novo temo: %{topic_link}"
-      two: "%{count} prispevka sta bila prestavljena v novo temo:  %{topic_link}"
-      few: "%{count} prispevki so bili prestavljeni v novo temo:  %{topic_link}"
+      two: "%{count} prispevka sta bila prestavljena v novo temo: %{topic_link}"
+      few: "%{count} prispevki so bili prestavljeni v novo temo: %{topic_link}"
       other: "%{count} prispevkov je bilo prestavljeno v novo temo: %{topic_link}"
     new_message_moderator_post:
       one: "%{count} prispevek je bil prestavljen v novo sporočilo: %{topic_link}"
@@ -744,7 +745,7 @@ sl:
       few: "%{count} prispevki so bili združeni v obstoječo temo: %{topic_link}"
       other: "%{count} prispevkov je bilo združeno v obstoječo temo: %{topic_link}"
     existing_message_moderator_post:
-      one: "%{count} prispevek je bil združen v obstoječe sporočilo:  %{topic_link}"
+      one: "%{count} prispevek je bil združen v obstoječe sporočilo: %{topic_link}"
       two: "%{count} prispevka sta bila združena v obstoječe sporočilo: %{topic_link}"
       few: "%{count} prispevki so bili združeni v obstoječe sporočilo: %{topic_link}"
       other: "%{count} prispevkov je bilo združeno v obstoječe sporočilo: %{topic_link}"
@@ -1035,7 +1036,7 @@ sl:
       title: "Dobrodošel povabljeni"
       subject_template: "Dobrodošli na %{site_name}!"
       text_body_template: |
-        Hvala da ste sprejeli povabilo na  %{site_name} -- dobrodošli!
+        Hvala da ste sprejeli povabilo na %{site_name} -- dobrodošli!
 
         - Naredili smo uporabniški račun **%{username}** za vas. Spremenite lahko ime ali geslo v [uporabniških nastavitvah][prefs].
 
@@ -1129,7 +1130,7 @@ sl:
       text_body_template: |
         Žal nam je, ampak vaše e-sporočilo poslano na %{destination} (z naslovom %{former_title}) ni bilo sprejeto.
 
-        Vaše sporočilo je bilo poslano na neznan e-naslov.  Poskusite poslati na drug e-naslov ali [kontaktirajte osebje](%{base_url}/about).
+        Vaše sporočilo je bilo poslano na neznan e-naslov. Poskusite poslati na drug e-naslov ali [kontaktirajte osebje](%{base_url}/about).
     email_reject_screened_email:
       title: "E-sporočilo zavrnjeno - nadzorovan e-naslov"
       subject_template: "[%{email_prefix}] Napaka e-pošte -- blokiran e-naslov"
@@ -1303,14 +1304,6 @@ sl:
     ignored_users_summary:
       title: "Prezrti uporabnik je presegel prag"
       subject_template: "Uporabnik je prezrt s strani precej drugih uporabnikov"
-      text_body_template: |
-        Pozdravljeni,
-
-        To samodejno sporočilo od %{site_name} vas obvešča da je [uporabnik](%{base_url}/u/%{username}/summary) prezrt s strani %{ignores_threshold} uporabnikov. To je mogoče kaže na to, da imate problem v vaši skupnosti.
-
-        Mogoče bi bilo dobro pregledati zadnje objave tega uporabnika in mogoče tudi drugih uporabnikov v [poročilo prezrtih uporabnikov](%{base_url}/admin/reports/top_ignored_users).
-
-        Za dodatna informacije preberite [pravila skupnosti](%{base_url}/guidelines).
     too_many_spam_flags:
       title: "Preveč prijav kot neželeno"
       subject_template: "Nov uporabniški račun je na čakanju"
@@ -1341,7 +1334,7 @@ sl:
 
         To samodejno sporočilo iz %{site_name} vam sporoča da je bil vaš uporabniški račun zaradi preventivnega ukrepa začasno dan na čakanje.
 
-        Lahko še naprej brskate po forumu, vendar ne boste mogli odgovarjati na prispevke ali teme dokler [član osebja foruma](%{base_url}/about) ne pregleda vaše zadnje prispevke.  Opravičujemo se vam za neprijetnosti.
+        Lahko še naprej brskate po forumu, vendar ne boste mogli odgovarjati na prispevke ali teme dokler [član osebja foruma](%{base_url}/about) ne pregleda vaše zadnje prispevke. Opravičujemo se vam za neprijetnosti.
 
         Za dodatne informacije preberite [pravila skupnosti](%{base_url}/guidelines).
     user_automatically_silenced:
@@ -1403,7 +1396,7 @@ sl:
       text_body_template: |
         Čestitamo, osvojili ste **Nov uporabnik meseca %{month_year}**. :trophy:
 
-        Ta nagrada je podeljena dvem novim uporabnikom vsak mesec in bo stalno vidna  na [seznamu značk](%{url}).
+        Ta nagrada je podeljena dvem novim uporabnikom vsak mesec in bo stalno vidna na [seznamu značk](%{url}).
 
         Hitro ste poslali pomemben član skupnosti. Hvala za sodelovanje in nadaljujte z dobrim delom!
     queued_posts_reminder:
@@ -1469,7 +1462,7 @@ sl:
       > %{site_title} -- %{site_description}
     user_invited_to_private_message_pm_group:
       title: "Uporabnik je povabil skupino v ZS"
-      subject_template: "[%{email_prefix}] %{username} je povabil  @%{group_name} da sodelujete v '%{topic_title}'"
+      subject_template: "[%{email_prefix}] %{username} je povabil @%{group_name} da sodelujete v '%{topic_title}'"
       text_body_template: |
         %{header_instructions}
 
@@ -1641,7 +1634,7 @@ sl:
       title: "Račun že obstaja"
       subject_template: "[%{email_prefix}] Račun že obstaja"
       text_body_template: |
-        Poizkusili ste ustvariti račun na %{site_name} ali spremeniti e-naslov računa na  %{email}, vendar račun s tem naslovom že obstaja.
+        Poizkusili ste ustvariti račun na %{site_name} ali spremeniti e-naslov računa na %{email}, vendar račun s tem naslovom že obstaja.
 
         Če ste pozabili geslo [ga ponovno nastavite](%{base_url}/password-reset).
 
@@ -2082,7 +2075,7 @@ sl:
     title: "Oznake"
     forbidden:
       restricted_to:
-        one: '"%{tag_name}" oznaka je omejena za kategorijo  "%{category_names}"'
+        one: '"%{tag_name}" oznaka je omejena za kategorijo "%{category_names}"'
         two: '"%{tag_name}" oznaka je omejena samo za naslednji kategoriji: %{category_names}'
         few: '"%{tag_name}" oznaka je omejena samo za naslednje kategorije: %{category_names}'
         other: '"%{tag_name}" oznaka je omejena samo za naslednje kategorije: %{category_names}'

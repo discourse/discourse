@@ -634,9 +634,7 @@ nb_NO:
       users: "Brukere"
       muted_users: "Ignorert"
       muted_users_instructions: "Skjul alle varsler fra denne brukeren"
-      muted_topics_link: "Vis ignorerte emner"
-      watched_topics_link: "Vis fulgte emner"
-      tracked_topics_link: "Vis overvåkede emner"
+      tracked_topics_link: "Vis"
       automatically_unpin_topics: "Fjern feste for et emne automatisk når jeg når bunnen."
       apps: "Programmer"
       revoke_access: "Trekk tilbake tilgang"
@@ -687,7 +685,6 @@ nb_NO:
         disable: "Deaktiver"
         enable: "Aktiver"
         enable_long: "Aktiver reservekoder"
-        manage: "Behandle reservekoder"
         copied_to_clipboard: "Kopiert til utklippstavlen"
         copy_to_clipboard_error: "Feil ved kopiering til utklippstavlen"
         remaining_codes: "Du har <strong>{{count}}</strong> reservekoder igjen."
@@ -701,6 +698,7 @@ nb_NO:
         disable_description: "Vennligst oppgi autentiseringskoden fra appen"
         show_key_description: "Skriv inn manuelt"
         oauth_enabled_warning: "Vær oppmerksom på at sosiale login-metoder deaktiveres når tofaktor autentisering er aktivert på kontoen din."
+        edit: "Rediger"
       change_about:
         title: "Rediger om meg"
         error: "Det oppstod en feil ved endring av denne verdien."
@@ -744,7 +742,7 @@ nb_NO:
         frequency_immediately: "Vi sender deg umiddelbart en e-post hvis du ikke har lest det vi sender e-post om."
         frequency:
           one: "Vi sender deg bare e-post hvis vi ikke har sett deg deg det siste minuttet."
-          other: "Vi sender deg bare e-post hvis vi ikke har sett deg de siste {{count}}  minuttene."
+          other: "Vi sender deg bare e-post hvis vi ikke har sett deg de siste {{count}} minuttene."
       associated_accounts:
         title: "Tilknyttede kontoer"
         connect: "Koble til"
@@ -970,9 +968,6 @@ nb_NO:
       enabled: "Dette nettstedet er i lesemodus. Fortsett gjerne å lese, men du kan ikke svare, gi likes eller utføre andre handlinger som er slått av."
       login_disabled: "Innlogging er deaktivert mens nettsiden er i skrivebeskyttet modus."
       logout_disabled: "Du kan ikke logge ut når nettstedet er i lese-modus."
-    too_few_topics_and_posts_notice: "La oss <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>få i gang denne diskusjonen!</a> Det finnes for øyeblikket <strong>%{currentTopics} / %{requiredTopics}</strong> emner and <strong>%{currentPosts} / %{requiredPosts}</strong> innlegg. Nye besøkende trenger noen samtaler de kan lese og svare på."
-    too_few_topics_notice: "La oss<a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>få i gang denne diskusjonen!</a> Det finnes for øyeblikket <strong>%{currentTopics} / %{requiredTopics}</strong> emner. Nye besøkende trenger noen samtaler de kan lese og svare på."
-    too_few_posts_notice: "La oss <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>få i gang denne diskusjonen!</a> Det finnes for øyeblikket <strong>%{currentPosts} / %{requiredPosts}</strong> innlegg. Nye besøkende trenger noen samtaler de kan lese og svare på."
     learn_more: "lær mer…"
     all_time: "totalt"
     all_time_desc: "totalt antall emner opprettet"
@@ -2550,9 +2545,7 @@ nb_NO:
             visibility_levels:
               title: "Hvem kan se denne gruppen?"
               public: "Alle"
-              members: "Gruppeeiere, medlemmer og administratorer"
               staff: "Gruppeeiere og stab"
-              owners: "Gruppeeiere og administratorer"
           membership:
             automatic: Automatisk
             trust_level: Tillitsnivå
@@ -2750,7 +2743,7 @@ nb_NO:
             confirm: "Er du sikker på at du vil gjenopprette databasen til den tidligere fungerende tilstanden?"
       export_csv:
         success: "Eksportering iverksatt. Du vil bli varslet med en melding når prosessen er fullført."
-        failed: "Eksporteringen mislyktes.  Undersøk loggene."
+        failed: "Eksporteringen mislyktes. Undersøk loggene."
         button_text: "Eksporter"
         button_title:
           user: "Eksporter full medlemsliste i CSV format."
@@ -2830,6 +2823,8 @@ nb_NO:
           install_popular: "Populært"
           about_theme: "Om"
           license: "Lisens"
+          enable: "Aktiver"
+          disable: "Deaktiver"
           update_to_latest: "Oppdater til seneste"
           check_for_updates: "Se etter oppdateringer"
           updating: "Oppdaterer…"

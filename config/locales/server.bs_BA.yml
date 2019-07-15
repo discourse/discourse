@@ -28,6 +28,7 @@ bs_BA:
   posts: "objave"
   loading: "Učitava"
   powered_by_html: 'Pokretano sa <a href="https://www.discourse.org">Discourse</a>, za najbolje sučelje uključiti JavaScript'
+  sign_up: "Registruj se"
   log_in: "Uloguj se"
   submit: "Potvrdi"
   purge_reason: "Automatski obrisan kao napušten, deaktiviran račun"

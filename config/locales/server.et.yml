@@ -27,6 +27,7 @@ et:
   topics: "Teemad"
   posts: "postitused"
   loading: "Laetakse"
+  sign_up: "Liitu"
   log_in: "Logi sisse"
   submit: "Saada"
   purge_reason: "Kustutatud automaatselt kui mahajäetud, deaktiveeritud konto"

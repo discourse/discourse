@@ -28,6 +28,7 @@ da:
   posts: "indlæg"
   loading: "Indlæser"
   powered_by_html: 'Drives med brug af <a href="https://www.discourse.org">Discourse</a>, ses bedst med JavaScript slået til'
+  sign_up: "Tilmeld dig"
   log_in: "Log ind"
   purge_reason: "Automatisk slettet som forladt, deaktiveret konto"
   disable_remote_images_download_reason: "Fjerndownload af billeder deaktiveret grundet utilstrækkelig diskplads"
@@ -92,7 +93,7 @@ da:
         other: er for kort (minimum er %{count} tegn)
       wrong_length:
         one: har forkert længde (burde være %{count} tegn)
-        other: har forkert længde (burde være  %{count} tegn)
+        other: har forkert længde (burde være %{count} tegn)
       other_than: "skal være andet end %{count}"
     template:
       body: "Der var problemer med følgende felter:"
@@ -226,9 +227,9 @@ da:
     "new-topic": |
       Velkommen til %{site_name} &mdash; **Tak fordi du starter en ny samtale!**
 
-      -  Lyder title interessant hvis du læser den højt? Er det et godt resumé?
-      -  Hvem ville være interesseret i dette? Hvorfor er det vigtigt? Hvilken type svar ønsker du?
-      -  Inkludér relevante ord i dit emne så andre kan *finde* det. For at gruppere dit emne med relaterede emner, så vælg en kategori.
+      - Lyder title interessant hvis du læser den højt? Er det et godt resumé?
+      - Hvem ville være interesseret i dette? Hvorfor er det vigtigt? Hvilken type svar ønsker du?
+      - Inkludér relevante ord i dit emne så andre kan *finde* det. For at gruppere dit emne med relaterede emner, så vælg en kategori.
 
       For mere info, [se vores retningslinjer](%{base_path}/guidelines). Dette panel vil kun vises første gang for %{education_posts_text}.
     "new-reply": |
@@ -346,7 +347,7 @@ da:
     topic_prefix: "Kategoridefinition for %{category}"
     post_template: "%{replace_paragraph}\n\nBrug de følgende afsnit for en længere beskrivelse, eller introducere kategorien:\n\n- Hvorfor skal man anvende denne kategori? Hvad er formålet?\n\n- Hvordan er kategorien anderledes end de eksisterende kategorier?\n\n- Hvad skal emner i denne kategori indeholde?\n\n- Behøver vi denne kategori? Kan vi ikke flette indholdet ind i en eksisterende kategori, eller subkategori?\n"
     errors:
-      uncategorized_parent: "Ukategoriserede  kan ikke have en overordnede kategori"
+      uncategorized_parent: "Ukategoriserede kan ikke have en overordnede kategori"
       self_parent: "En underkategori kan ikke være sin egen overordnede kategori."
       depth: "Du kan ikke indlejre en underkategori i en anden underkategori."
       invalid_email_in: "'%{email}' er ikke en gyldig email adresse."
@@ -787,7 +788,7 @@ da:
     email_polling_errored_recently:
       one: "Email afstemning har afstedkommet en fejl i de seneste 24 timer. Venligst se <a href='%{base_path}/logs' target='_blank'>the logs</a> for detaljer."
       other: "Email afstemning har afstedkommet %{count} fejl i de seneste 24 timer. Se venligst <a href='%{base_path}/logs' target='_blank'>the logs</a> for detaljer."
-    poll_pop3_timeout: "Forbindelsen til til POP3 serveren er udløbet. Indkomne mail kunne ikke hentes. Venligst tjek  <a href='%{base_path}/admin/site_settings/category/email'>POP3 settings</a> og udbyderen."
+    poll_pop3_timeout: "Forbindelsen til til POP3 serveren er udløbet. Indkomne mail kunne ikke hentes. Venligst tjek <a href='%{base_path}/admin/site_settings/category/email'>POP3 settings</a> og udbyderen."
     poll_pop3_auth_error: "Forbindelsen til POP3 serveren melder fejl. Venligst tjek <a href='%{base_path}/admin/site_settings/category/email'>POP3 settings</a>."
   site_settings:
     censored_words: "Ord der automatisk vil blive erstattet med &#9632;&#9632;&#9632;&#9632;"
@@ -856,10 +857,10 @@ da:
     pending_users_reminder_delay: "Underret moderatorer hvis nye brugere har ventet på godkendelse i længere end så mange timer. Skriv -1 for at deaktivere notifikationer."
     maximum_session_age: "Bruger vil forblive logget in for n hours siden sidste besøg"
     moderators_create_categories: "Tillad moderatorer at skabe nye kategorier"
-    use_admin_ip_whitelist: "Admins kan kun logge ind hvis de logger på fra en prædefineret IP liste:  (Admin > Logs > Screened Ips)."
+    use_admin_ip_whitelist: "Admins kan kun logge ind hvis de logger på fra en prædefineret IP liste: (Admin > Logs > Screened Ips)."
     top_menu: "Afklar hvilke ting fremgår af sidens navigations bar, og i hvilken rækkefølge. Eksempel: latest|new|unread|categories|top|read|posted|bookmarks"
     post_menu: "Angiv hvilke elementer der skal vises i indlægsmenuen, og i hvilken rækkefølge. Eksempel: like|edit|flag|delete|share|bookmark|reply."
-    post_menu_hidden_items: "Menuen vil automatisk gemme disse elementer i indlægs menuen, med mindre en udvidelse  er tilvalgt."
+    post_menu_hidden_items: "Menuen vil automatisk gemme disse elementer i indlægs menuen, med mindre en udvidelse er tilvalgt."
     share_links: "Angiv hvilke elementer der skal vises i “del“-dialogboksen og i hvilken rækkefølge."
     send_welcome_message: "Send alle nye brugere en velkomstbesked, med en hurtig start guide."
     topics_per_period_in_top_summary: "Antallet af top emner der vises som standard i top emner"
@@ -1553,7 +1554,7 @@ da:
     first_reply_by_email:
       name: Første svar via email
       long_description: |
-        Dette emblem gives første gang du svarer til et indlæg via email  :e-mail:.
+        Dette emblem gives første gang du svarer til et indlæg via email :e-mail:.
   admin_login:
     success: "Email sendt"
     email_input: "Admin email"

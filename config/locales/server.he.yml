@@ -29,6 +29,7 @@ he:
   posts: "פוסטים"
   loading: "בטעינה"
   powered_by_html: 'מופעל על גבי <a href="https://www.discourse.org">Discourse</a>, לצפייה מיטבית יש להפעיל JavaScript'
+  sign_up: "הרשמה"
   log_in: "כניסה"
   submit: "הגשה"
   purge_reason: "נמחק אוטומטית כחשבון נטוש ולא פעיל"
@@ -161,6 +162,7 @@ he:
     embed:
       load_from_remote: "ארעה שגיאה בטעינת הפוסט הזה."
     site_settings:
+      invalid_category_id: "ציינת קטגוריה שאינה קיימת"
       invalid_choice:
         one: "ציינת את הבחירה השגויה %{name}"
         two: "ציינת את הבחירות השגויות %{name}"
@@ -284,7 +286,7 @@ he:
   spamming_host: "סליחה אך אינכם יכולים להוסיף קישור לאתר זה."
   user_is_suspended: "משתמשים מושעים אינם מורשים לפרסם."
   topic_not_found: "משהו השתבש אולי נושא זה נסגר או נמחק בזמן שקראתם אותו?"
-  not_accepting_pms: "מצטעים,  %{username} לא מקבל הודעות כרגע."
+  not_accepting_pms: "מצטעים, %{username} לא מקבל הודעות כרגע."
   max_pm_recepients: "מצטערים, אתם יכולים לשלוח הודעה לכל היותר ל-%{recipients_limit} נמענים."
   pm_reached_recipients_limit: "להודעה לא יכולים להיות למעלה מ־%{recipients_limit} נמענים, עמך הסליחה."
   removed_direct_reply_full_quotes: "הוסר ציטוט של כל הפוסט הקודם אוטומטית."
@@ -358,6 +360,7 @@ he:
     request_membership_pm:
       title: "בקשת חברות עבור ‎@%{group_name}‎"
       handle: "טיפול בבקשות חברות"
+    view_hidden_topic_request_reason: "אבקש להצטרף לקבוצה ‚%{group_name}’, כדי שאוכל לגשת ל[נושא הזה](%{topic_url})"
   education:
     until_posts:
       one: "פוסט אחד"
@@ -488,6 +491,10 @@ he:
           attributes:
             execute_at:
               in_the_past: "חייב להיות בעתיד."
+        translation_overrides:
+          attributes:
+            value:
+              invalid_interpolation_keys: 'מפתח/ות השילוב שלהלן שגוי/ים: „%{keys}”'
         watched_word:
           attributes:
             word:
@@ -517,6 +524,7 @@ he:
       ייתכן ותרצו לסגור נושא זה באמצעות :wrench: הניהול (בפינות משמאל למעלה ולמטה), כדי שתגובות לא ייערמו על גבי כרזה.
   lounge_welcome:
     title: "ברוכים הבאים ללאונג'"
+    body: "\nברכותינו! :confetti_ball:\n\nאם יש לך אפשרות לצפות בנושא הזה, קודמת לכדי **קבוע** (דרגת אמון 3).\n\nמעכשיו יש לך אפשרות &hellip;\n\n* לערוך כותרת של כל נושא שהוא \n* להחליף קטגוריה לנושא\n* כל הקישורים שלך יחשפו למעקב (הסרה אוטומטית של [nofollow](https://en.wikipedia.org/wiki/Nofollow))\n* גישה לקטגוריית טרקלין פרטית שנגישה רק למשתמשים מדרגת אמון 3 ומעלה\n* הסתרת ספאם בסימון של דגל אחד\n\nלהלן [הרשימה הנוכחית חבריך הקבועים](%{base_path}/badges/3/regular). לא לשכוח להגיד להם שלום.\n\nתודה לך על המעורבות המבורכת שלך בקהילה הזו!\n\n(לפרטים נוספים על דרגות אמון, [מומלץ לעיין בנושא זה][trust]. נא לשים לב שאך ורק משתמשים שממשיכים לשמור על הדרישות לאורך זמן נשארים קבועים.)\n\n[trust]: https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/\n"
   admin_quick_start_title: "לקרוא אותי קודם: מדריך זריז למנהלים מתחילים"
   category:
     topic_prefix: "על הקטגוריה %{category}"
@@ -985,11 +993,13 @@ he:
       yaxis: "מספר תורמים חדשים."
       description: "מספר המשתמשים שכתבו את הפוסט הראשון שלהם במהלך התקופה הזו."
     consolidated_page_views:
+      title: "תצוגות דף מאוחדות"
       xaxis:
         page_view_crawler: "סורקי אינטרנט"
         page_view_anon: "משתמשים אלמוניים"
-        page_view_logged_in: "משתמשים שנכנסו ונמצאים כרגע במערת"
+        page_view_logged_in: "משתמשים שנכנסו ונמצאים כרגע במערכת"
       yaxis: "יום"
+      description: "תצוגות דף עבור משתמשים מחוברים, משתמשים אנונימיים וסורקים אוטומטיים (crawlers)."
       labels:
         post: פוסט
         editor: עורכים
@@ -1058,6 +1068,7 @@ he:
         term: ביטוי
         searches: חיפושים
         click_through: שיעור לחיצה
+      description: "מונחי החיפוש הפופולאריים ביותר עם שיעורי ההקלקה שלהם."
     emails:
       title: "הודעות דואר שנשלחו"
       xaxis: "יום"
@@ -1124,6 +1135,7 @@ he:
       title: "אלמוני"
       xaxis: "יום"
       yaxis: "צפיות אנונימיות"
+      description: "מספר הצפיות החדשות בעמודים ממשתמשים שלא נכנסו לחשבון שלהם."
     page_view_logged_in_reqs:
       title: "מחובר/ת"
       xaxis: "יום"
@@ -1177,6 +1189,7 @@ he:
       title: "זמן לתגובה הראשונה"
       xaxis: "יום"
       yaxis: "זמן ממוצע (שעות)"
+      description: "זמן ממוצע (בשעות) לתגובה הראשונה על נושאים חדשים."
     topics_with_no_response:
       title: "נושאים ללא תגובות"
       xaxis: "יום"
@@ -1249,7 +1262,7 @@ he:
       other: "ניסיונות שליחת מיילים יצרו %{count} תקלות ב 24 השעות האחרונות. צפו ב<a href='%{base_path}/logs' target='_blank'>יומנים</a> לפרטים נוספים."
     missing_mailgun_api_key: "השרת מוגדר לשלוח דוא״ל דרך Mailgun אך לא סיפקת מפתח API שישמש לאימות ההודעות דרך ההתליה."
     bad_favicon_url: "טעינת סמל האתר נכשלה. נא לבדוק את הגדרות סמל האתר שלך תחת <a href='%{base_path}/admin/site_settings'>הגדרות האתר</a>."
-    poll_pop3_timeout: "החיבור לשרת POP3 התנתק. דוא\"ל נכנס לא יכול להשלף ואינו  מאוחזר. אנא בדקו את <a href='%{base_path}/admin/site_settings/category/email'> הגדרות ה-POP3 </a> שלכם ואת ספק השירות."
+    poll_pop3_timeout: "החיבור לשרת POP3 התנתק. דוא\"ל נכנס לא יכול להשלף ואינו מאוחזר. אנא בדקו את <a href='%{base_path}/admin/site_settings/category/email'> הגדרות ה-POP3 </a> שלכם ואת ספק השירות."
     poll_pop3_auth_error: "החיבור לשרת POP3 נכשל בשל שגיאת הזדהות. אנא בדקו את <a href='%{base_path}/admin/site_settings/category/email'> הגדרות ה-POP3 </a> שלכם."
     force_https_warning: "האתר שלך משתמש ב־SSL. אך `<a href='%{base_path}/admin/site_settings/category/all_results?filter=force_https'>force_https</a>` לא מופעל עדיין בהגדרות האתר שלך."
     out_of_date_themes: "יש עדכונים זמינים לערכות העיצוב הבאות:"
@@ -1257,7 +1270,7 @@ he:
   site_settings:
     censored_words: "מלים שיוחלפו אוטומטית ב־&#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "מחיקה אוטומטית של פוסטים מוסתרים כלשהם שנשארו מוסתרים למעלה מ־30 ימים."
-    default_locale: "שפת בררת המחדל של עותק ה־Discourse הזה. ניתן להחליף את השם של קטגוריות ונושאים שנוצרו על ידי המערכת דרך <a href='%{base_path}/admin/customize/site_texts' target='_blank'>התאמה / תוכן טקסט</a>."
+    default_locale: "שפת בררת המחדל של עותק ה־Discourse הזה. ניתן להחליף את השם של קטגוריות ונושאים שנוצרו על ידי המערכת דרך <a href='%{base_path}/admin/customize/site_texts' target='_blank'>התאמה / טקסט</a>."
     allow_user_locale: "לאפשר למשתמשים לבחור את העדפת שפת המנשק לעצמם באופן עצמאי"
     set_locale_from_accept_language_header: "קבעו את שפת הממשק עבור משתמשים אנונימיים לפי השפה בדפדפן. (נ-י-ס-י-ו-נ-י, לא עובד עם cache אנונימי)"
     support_mixed_text_direction: "תמיכה בכיווני שמאל לימין וימין לשמאל בצורה מעורבת."
@@ -1286,6 +1299,7 @@ he:
     title: "שם האתר הזה, כפי שהוא משמש בתגית הכותרת."
     site_description: "תארו את האתר הזה במשפט אחד, כפי שהוא מופיע במטא-תגית התיאור."
     short_site_description: "תיאור קצר, כפי שמתואר בתגית הכותרת באתר הבית."
+    contact_email: "כתובת דוא״ל של איש קשר מוביל שאחראי על האתר הזה. משמש להתראות קריטיות, כמו גם לטובת טופס יצירת הקשר ב־<a href='%{base_path}/about' target='_blank'>‎/about</a> לטיפול בנושאים דחופים."
     contact_url: "כתובת יצירת הקשר של האתר הזה. נעשה בה שימוש בטופס יצירת הקשר תחת <a href='%{base_path}/about' target='_blank'>‎/about</a> לטיפול בנושאים דחופים."
     crawl_images: "לקבל תמונות מכתובות מרוחקות כדי לציין את ממדי הרוחב והגובה הנכונים."
     download_remote_images_to_local: "המרת תמונות מרוחקות למקומיות על ידי הורדתן, פעולה זו מסייעת במניעת תמונות שבורות."
@@ -1301,7 +1315,8 @@ he:
     delete_removed_posts_after: "פוסטים שהוסרו על ידי מחבריהם ימחקו באופן אוטומטי לאחר (n) שעות. אם הגדרה זו מכוונת ל-0, פוסטים ימחקו מיידית."
     max_image_width: "הרוחב המקסימלי של תצוגת תמונה מוקטנת בפוסט"
     max_image_height: "גובה מקסימלי של תצוגת תמונה מוקטנת בפוסט"
-    fixed_category_positions: "אם אפשרות זו מסומנת, תוכלו  לארגן את הקטגוריות כך שיופיעו בסדר קבוע. אם האופציות אינן מסומנות, הקטגוריות יסודרו על פי סדר הפעילות שהתבצעה בהן."
+    responsive_post_image_sizes: "שינוי גודל תצוגה מקדימה של תמונות בתיבה קלה כדי לאפשר הצגה במסכים ברמת אבחנה גבוהה עם יחסי הפיקסלים הבאים. להסיר את כל הערכים כדי לבטל תמונות גמישות."
+    fixed_category_positions: "אם אפשרות זו מסומנת, תוכלו לארגן את הקטגוריות כך שיופיעו בסדר קבוע. אם האופציות אינן מסומנות, הקטגוריות יסודרו על פי סדר הפעילות שהתבצעה בהן."
     fixed_category_positions_on_create: "אם האפשרות תסומן, סדר הקטגוריות יוגדר בתפריט יצירת נושא (דורש fixed_category_positions)."
     add_rel_nofollow_to_user_content: 'הוספת התווית rel nofollow לכל תוכן שפורסם על ידי המשתמש/ת, פרט לקישורים פנימיים (כולל מתחם הורה parent domains). אם תשנו אפשרות זו, עליכם לאפות מחדש את כל הפרסומים עם: "rake posts:rebake"'
     post_excerpt_maxlength: "אורך מקסימלי של קטע פוסט / סיכום."
@@ -1316,8 +1331,10 @@ he:
     logo_small: "תמונת הלוגו הקטנה בפינה הימנית של האתר שלך, מופיעה בעת גלילה כלפי מטה. יש להשתמש בתמונה ריבועית בגודל של 120 × 120. במקרה של העדר בחירה, תופיע אות הבית."
     digest_logo: "תמונת הלוגו החלופית בה נעשה שימוש בתקצירי הדוא״ל שנשלחים מהאתר שלך. מוטב להשתמש בתמונה מלבנית רחבה. אין להשתמש בתמונת SVG. במקרה של העדר בחירה, ייעשה שימוש בהגדרות התמונה מה־`logo`."
     mobile_logo: "הלוגו שישמש את הגרסה לניידים של האתר שלך. יש להשתמש בתמונה מלבנית רחבה בגובה של 120 ועם יחס תצוגה שעולה על 3:1. בהעדר בחירה, ייעשה שימוש בתמונה מההגדרה `logo`."
-    manifest_icon: "תמונה שתשמש בתור לוגו/תמונת פתיח ב־Android. גודלה ישתנה אוטומטית לכדי 512 × 512. במקרה של העדר בחירה, ייעשה שימוש ב־large_icon."
+    large_icon: "תמונה שתשמש לסמלי נתוני על נוספים. אמורה להיות גדולה מאשר 512 × 512. אם השדה נשאר ריק, ייעשה שימוש ב־logo_small (לוגו קטן)."
+    manifest_icon: "תמונה שתשמש בתור לוגו/תמונת פתיח ב־Android. גודלה ישתנה אוטומטית לכדי 512 × 512. במקרה של העדר בחירה, ייעשה שימוש ב־large_icon (סמל גדול)."
     favicon: "סמל האתר שלך, לפרטים <a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>https://he.wikipedia.org/wiki/Favicon</a>. כדי שהסמל יפעל כראוי גם דרך CDN עליו להיות מסוג png. גודל הסמל ישתנה לכדי 32×32. בהעדר בחירה, ייעשה שימוש ב־large_icon."
+    apple_touch_icon: "סמל שמשמש למכשירי מגע של Apple. גודלו ישתנה אוטומטית לכדי 180 × 180. במקרה של העדר בחירה ייעשה שימוש ב־large_icon (סמל גדול)."
     notification_email: "מאת: נעשה שימוש בכתובת מייל זו כאשר שולחים את כל הודעות המערכת הנדרשות. כדי שהודעות הדוא\"ל יגיעו, המתחם (domain) המצויין כאן חייב לכלול SPF, DKIM ורשומות reverse PTR מוגדרים כהלכה."
     email_custom_headers: "רשימה מופרדת pipes (הסימון |) של כותרות מייל מותאמות אישית"
     enforce_second_factor: "מאלץ משתמשים להפעיל אימות דו־שלבי. יש לבחור ב‚הכול’ כדי לאלץ את כל המשתמשים. יש לבחור ב‚סגל’ כדי לאכוף על חברי סגל בלבד."
@@ -1367,11 +1384,13 @@ he:
     whitelist_internal_hosts: "רשימת מארחים פנימיים ש־Discourse יכול לסרוק לטובת תיבת תחימה ומטרות אחרות."
     allowed_iframes: "רשימה של קידומות שמות מתחם בתור מקור של iframe שאפשר לאפשר בבטחה בפוסטים ב־Discourse"
     whitelisted_crawler_user_agents: "סוכני משתמשים של סורקי רשת שמורשים לגשת לאתר. אזהרה! שינוי הגדרה זו תחסום את כל הסורקים שאינם מופיעים כאן!"
+    invalidate_inactive_admin_email_after_days: "חשבונות מנהלים שלא ביקרו באתר מעל כמות כזו של ימים יאלצו לאמת מחדש את כתובת הדוא״ל שלהם כדי לשוב ולהיכנס. להגדיר כ־0 כדי לנטרל."
     top_menu: "החליטו אילו פריטים יופיעו בניווט עמוד הבית ובאיזה סדר לדוגמה |אחרונים|חדשים|קטגוריות|מובילים|נקראו|פורסמו|סימניות"
     post_menu: "החליטו אילו פריטים מופיעים בתפריט הפוסט, ובאיזה סדר. למשל like|edit|flag|delete|share|bookmark|reply"
     post_menu_hidden_items: "פריטי התפריט להסתרה כברירת מחדל בתפריט הפוסט, אלא אם כן נלחץ לחצן ההרחבה."
     share_links: "החליטו אילו פריטים יופיעו בתיבת השיתוף, ובאיזה סדר."
     site_contact_username: "שם משתמש תקין של חבר סגל ממנו יישלחו כל ההודעות האוטומטיות. במקרה של העדר בחירה, ייעשה שימוש בחשבון בררת המחדל של המערכת."
+    site_contact_group_name: "שם קבוצה תקני להזמנה לכל ההודעות האוטומטיות."
     send_welcome_message: "שלחו לכל המשתמשים החדשים הודעת \"ברוכים הבאים\" עם הדרכה ראשונית כיצד להתחיל."
     send_tl1_welcome_message: "שליחת הודעת קבלת פנים למשתמשים חדשים בדרגת אמון 1."
     suppress_reply_directly_below: "אל תציגו את סך התגובות המצטבר בפוסט כאשר ישנה תגובה ישירה אחת לפוסט זה."
@@ -1409,6 +1428,7 @@ he:
     password_unique_characters: "מספר מינימלי של תווים ייחודיים שחייבים להיות בסיסמאות."
     block_common_passwords: "אל תאפשרו סיסמאות מתוך 10,000 הסיסמאות הנפוצות ביותר."
     enable_sso: "הפעלת כניסה אחודה (Single Sign On) באמצעות אתר חיצוני (א-ז-ה-ר-ה: כתובות הדוא״ל של משתמשים *חייבות* לעבור אימות על ידי האתר החיצוני!)"
+    verbose_sso_logging: "תיעוד ניתוח מורחב בנושא SSO אל <a href='%{base_path}/logs' target='_blank'>‎/logs</a>"
     sso_url: "URL of single sign on endpoint (must include http:// or https://)"
     sso_secret: "מחרוזת סודית המשמשית לאמת באופן קרפיטוגרפי מידע SSO, וודאו שהיא באורך 10 תווים ומעלה"
     sso_overrides_bio: "דורס ביוגרפיה של משתמשים בפרופיל המשתמש ומונע מהם מלשנות אותה"
@@ -1560,6 +1580,7 @@ he:
     body_min_entropy: "האנטרופיה (תוים ייחודיים, תווים שאינם באנגלית נחשבים יותר) המינימלית הנדרשת בגוף הפוסט."
     allow_uppercase_posts: "אפשרו אותיות אנגליות גדולות (Capitalized) בכותרת נושא או בגוף פוסט."
     max_consecutive_replies: "מספר הפוסטים שמשתמש עושה ברצף בתוך נושא בטרם החלת איסור על הוספת תגובות."
+    title_fancy_entities: "המרת תווי ASCII נפוצים ליישויות HTML מהודרות בכותרות הנושאים, בסגנון SmartyPants <a href='https://daringfireball.net/projects/smartypants/' target='_blank'>https://daringfireball.net/projects/smartypants/</a>"
     min_title_similar_length: "האורך המינימלי של כותרת לפני שהיא נבדקת עבור איתור נושאים דומים."
     desktop_category_page_style: "סגנון ויזואלי לדף /categories."
     category_colors: "רשימה של ערכי צבעים הקסדצימליים מותרים לסימון קטגוריות."
@@ -1573,6 +1594,7 @@ he:
     max_image_megapixels: "מספר מקסימלי מותר של מגה-פיקסלים לתמונה."
     title_prettify: "מניעת טעויות נפוצות בכותרת, בכללן טעויות עם אותיות גדולות באנגלית, מספר ! ו ?, נקודה מיותרת בסוף, וכד׳"
     title_remove_extraneous_space: "הסרת רווחים לפני ואחרי סימני פיסוק."
+    automatic_topic_heat_values: 'לעדכן אוטומטית את הגדרות „חום צפיות הנושאים” ואת „חום הלייקים של פוסט הנושא” בהתאם לפעילות האתר.'
     topic_views_heat_low: "לאחר כמות זו של צפיות, שדה הצפיות יהיה קצת יותר בהיר."
     topic_views_heat_medium: "לאחר כמות כזו של צפיות, שדה הצפיות יודגש קלות."
     topic_views_heat_high: "לאחר כמות צפיות זו, שדה הצפיות יודגש באופן בולט."
@@ -1605,11 +1627,16 @@ he:
     min_first_post_typing_time: "זמן מינימלי במילי-שניות שמשתמש חייב להקיש בזמן הפוסט הראשון, אם הסף לא נעבר הפוסט אוטומטית יכנס לתור של אלו שצריכים אישור. קיבעו 0 כדי לנטרל (לא מומלץ)"
     auto_silence_fast_typers_on_first_post: "להשתיק אוטומטית משתמשים שאינם עונים ל־min_first_post_typing_time (זמן התגובה המזערי לפוסט ראשון)"
     auto_silence_fast_typers_max_trust_level: "דרגת האמון המרבית להשתקה אוטומטית של קלדנים נמרצים"
+    auto_silence_first_post_regex: "ביטוי רגולרי שאינו מתחשב ברשיות (הבדל בין אותיות קטנות לגדולות) יגרום לכך שהפוסט הראשון שמפרסם משתמש יושתק ויועבר לתור לאישור. למשל: raging|a[bc]a, תגרום לכך שכל הפוסטים שמכילים את המילים raging או aba או aca יושתקו תחילה ובעברית: מתקפה|א[במ]א - מכילים את המילים מתקפה, אבא או אמא. תקף על הפוסט הראשון בלבד."
+    reviewable_claiming: "האם צריך לדרוש תוכן שמיועד לסקירה לפני שאפשר לפעול לגביו?"
+    reviewable_default_topics: "הצגת תוכן שמיועד לסקירה בקיבוץ לפי נושא כבררת מחדל"
+    reviewable_default_visibility: "לא להציג פריטים שמיועדים לסקירה אלמלא הם תואמים את העדיפות הזו"
     reply_by_email_enabled: "הפעלת תגובה לנושאים דרך דוא״ל."
-    reply_by_email_address: "תבנית עבור כתובות מייל של מענה באמצעות אימייל, למשל: {reply_key}@reply.example.com או  replies+%%{reply_key}@example.com"
+    reply_by_email_address: "תבנית עבור כתובות מייל של מענה באמצעות אימייל, למשל: {reply_key}@reply.example.com או replies+%%{reply_key}@example.com"
     alternative_reply_by_email_addresses: "רשימה של כמה תבניות לתגובות במייל באמצעות כתובות מייל נכנסות. למשל: %%{reply_key}@reply.example.com|replies+%%{reply_key}@example.com"
     incoming_email_prefer_html: "להשתמש ב־HTML במקום בטקסט בהודעות דוא״ל נכנסות."
     strip_incoming_email_lines: "להסיר רווחים מובילים וסוגרים בכל שורה בהודעות דוא״ל נכנסות."
+    disable_emails: "למנוע מ־Discourse לשלוח כל סוג של הודעות דוא״ל. יש לבחור ב־‚כן’ כדי לנטרל את כל הודעות הדוא״ל לכל המשתמשים. ניתן גם לבחור ב־‚ללא סגל’ כדי לנטרל את ההודעות למשתמשים שאינם נמנים עם הסגל."
     strip_images_from_short_emails: "הסרת תמונות מדוא\"ל בגודל של פחות מ-2800 בתים"
     short_email_length: "אורכו של דוא\"ל קצר בבתים (Bytes)"
     display_name_on_email_from: "הצגת שמות מלאים בשדה ה״מאת״ במיילים"
@@ -1654,7 +1681,9 @@ he:
     relative_date_duration: "מספר הימים לאחר פרסום בהם תאריך הפוסט מופיע כתאריך יחסי (7 ימים) לעומת תאריך רגיל (20 בפברואר)."
     delete_user_max_post_age: "אל תפאשרו מחיקת משתמשים שהפוסט הראשון שלהם הוא בן יותר מ-(x) ימים."
     delete_all_posts_max: "מספר הפוסטים המרבי שניתן להסיר בבת אחת עם הכפתור להסרת כל הפוסטים. אם למשתמש יש יותר פוסטים מהכמות הזאת, לא ניתן למחוק את כל הפוסטים בבת אחת וגם לא ניתן למחוק את המשתמש."
+    username_change_period: "המספר המרבי של ימים לאחר ההרשמה בהם ניתן לשנות את שם המשתמש (0 כדי למנוע שינויים לשם המשתמש)."
     email_editable: "אפשרו למשתמשים לשנות את כתובת המייל שלהם לאחר ההרשמה."
+    logout_redirect: "מיקום להפניית הדפדפן לאחר היציאה מהמערכת (למשל: https://example.com/logout)"
     allow_uploaded_avatars: "אפשרו למשתמשים להעלות תמונות פרופיל משלהם."
     allow_animated_avatars: "אפשרו למשתמשים להשתמש באנימציית gif בתור תמונת פרופיל. אזהרה: הריצו משימת rake של avatars:refresh לאחר שינוי הגדרה זו."
     allow_animated_thumbnails: "יצירת תמונות אנימציה מוקטנות קטנות של קבצי אנימציית gif."
@@ -1680,6 +1709,11 @@ he:
     anonymous_posting_min_trust_level: "רמת האמון המינמלית הנדרשת כדי לאפשר פרסום אנונימי"
     anonymous_account_duration_minutes: "בכדי להגן על האנונימות צרו חשבון אנונימי כל N דקות לכל משתמש. לדוגמה: אם מכוון ל-600, כאשר יעברו 600 דקות מהפרסום האחרון והמשתמש/ת יחליפו לזהות אנונימית, חשבון אנונימי חדש יווצר."
     hide_user_profiles_from_public: "נטרלו כרטיסי משתמשים, פרופילי משתמשים ומדריך משתמשים למשתמשים אנונימיים."
+    show_inactive_accounts: "לאפשר למשתמשים שנכנסו לעיין בפרופילים של חשבונות לא פעילים."
+    hide_suspension_reasons: "לא להציג את סיבות ההשעיה באופן ציבורי בפרופילי המשתמשים."
+    ignored_users_count_message_threshold: "להודיע למפקחים במקרה שמשתמש מסוים זכה לחסימות מצד משתמשים רבים אחרים."
+    ignored_users_message_gap_days: "כמה זמן להמתין בטרם שליחת הודעה נוספת למפקחים בנוגע למשתמש שזכה לחסימות מצד משתמשים רבים."
+    clean_up_inactive_users_after_days: "מספר הימים בטרם הסרת משתמש בלתי פעיל (דרגת אמון 0 ללא פוסטים). כדי להשבית את הפינוי יש להגדיר ל־0."
     user_website_domains_whitelist: "אתרי משתמשים יאומתו עם מתחמים אלו. רשימה מופרדת על ידי קווים-אנכיים."
     allow_profile_backgrounds: "אפשרו למשתמשים להעלות רקעים לפרופיל."
     sequential_replies_threshold: "מספר הפוסטים שעל משתמש לפרסם אחד-לאחר-השני בנושא לפני שמזכירים לו שהוא משאיר יותר מידי תגובות ברצף."
@@ -1694,8 +1728,12 @@ he:
     disable_edit_notifications: "ביטול התראות עריכה על ידי משתמש המערכת כאשר 'download_remote_images_to_local' פעיל."
     automatically_unpin_topics: "הסרת נעיצה אוטומטית של נושאים כאשר המשתמשים מגיעים לתחתית."
     read_time_word_count: "מספר המילים לדקה כדי להעריך את זמן הקריאה."
-    topic_page_title_includes_category: "כותרת דף נושא כוללת את שם הקטגוריה."
+    topic_page_title_includes_category: "<a href='https://developer.mozilla.org/en-US/docs/Web/HTML/Element/title' target='_blank'>תגית הכותרת (title)</a> בעמוד הנושא מכילה את שם הקטגוריה."
+    native_app_install_banner_ios: "הצגת מודעת היישומון DiscourseHub במכשירי iOS למשתמשים רגילים (דרגת אמון 1 ומעלה)."
+    native_app_install_banner_android: "הצגת מודעת היישומון DiscourseHub במכשירי Android למשתמשים רגילים (דרגת אמון 1 ומעלה)."
     share_anonymized_statistics: "שתפו סטטיסטיקות שימוש אנונימיות."
+    auto_handle_queued_age: "לטפל אוטומטית ברשומות שממתינות לסקירה לאחר כמות כזו של ימים. ללא התחשבות בדגלים. פוסטים ומשתמשים שממתינים בתור יידחו. יש להגדיר ל־0 כדי לנטרל את התכונה הזו."
+    svg_icon_subset: "הוספת סמלים נוספים מתוך FontAwesome 5 אותם ברצונך לכלול בין המשאבים שלך. יש להשתמש בקידומת ‚fa-‎’ לסמלים אחידים, ‚far-‎’ לסמלים רגילים וב־‚fab-‎’ לסמלים ממותגים."
     max_prints_per_hour_per_user: "מספר מקסימלי של צפיות בדף /print (הדפסה) (קיבעו ל 0 כדי לנטרל)"
     full_name_required: "שם מלא הוא שדה נדרש לפרופיל משתמש/ת."
     enable_names: "הצגת השם המלא של המשתמש/ת בעמודי הפרופיל שלהם, בכרטיסי המשתמש ובדוא\"ל שלהם. נטרלו להסתרת השם המלא בכל מקום."
@@ -1706,21 +1744,27 @@ he:
     warn_reviving_old_topic_age: "כאשר מישהם מתחילים להגיב לנושא שבו התגובה האחרונה היא בת יותר מכמה ימים, אזהרה תוצג. נטרלו באמצעות הזנה של 0."
     autohighlight_all_code: "לחייב שימוש בקוד הדגשה לכל קוד מעוצב מראש (preformatted code blocks) אפילו אם הם אינם מציינים את השפה."
     embed_truncate: "חיתוך הפוסטים המוטמעים."
+    embed_support_markdown: "תמיכה בסימון Markdown בפוסטים מוטמעים."
+    embed_whitelist_selector: "רשימה מופרדת בפסיקים של רכיבי CSS שמותר להשתמש בהם בהטמעות (embed)."
     allowed_href_schemes: "פרוטוקולים מותרים בלינקים בנוסף ל http ו https."
     embed_post_limit: "מספר מקסימלי של פוסטים להטמעה."
     embed_username_required: "נדרש שם משתמש ליצירת הנושא."
+    notify_about_flags_after: "אם יש דגלים שלא טופלו לאחר כמות זו של שעות, יש לשלוח הודעה אישית אל המפקחים. 0 לנטרול."
     show_create_topics_notice: "אם לאתר פחות מ-5 נושאים פומביים, הציגו מודעה המבקשת מן המנהלים ליצור עוד נושאים."
     delete_drafts_older_than_n_days: מחקו טיוטות בנות יותר מ (n) ימים.
     bootstrap_mode_min_users: "מספר משתמשים מינימלי שנדרש כדי לנטרל מצב איתחול (קבעו ל 0 כדי לנטרל)"
     prevent_anons_from_downloading_files: "מונע ממשתמשים אנונימיים להוריד צרופות (attachments). אזהרה: דבר זה ימנע מכל משאב שאינו תמונה ופורסם כצרופה לעבוד."
     slug_generation_method: "בחרו צורת ייצור slug. צורה של 'encoded' תגרום למחרוזות עם קידוד אחוזים. 'none' ינטרל slug לחלוטין."
     enable_emoji: "הפעלת אמוג׳י"
+    enable_emoji_shortcuts: "חייכנים נפוצים כגון ‎:) :p :(‎ יומרו לאמוג׳ים"
     emoji_set: "איך אתם אוהבים את ה-emoji שלכם?"
     emoji_autocomplete_min_chars: "מספר התווים המזערי שנדרש להקפצת חלונית השלמה אוטומטית של אמוג׳י"
     enable_inline_emoji_translation: "הפעלת תרגום לאמוג׳י כחלק מהשורה (ללא רווחים או סימני פיסוק לפני)."
     approve_post_count: "מספר הפוסטים ממשתמשים חדשים או בסיסיים שחייבים לאשר אותם"
     approve_unless_trust_level: "פוסטים של משתמשים מתחת לרמת אמון זו חייבים לעבור אישור"
     approve_new_topics_unless_trust_level: "נושאים חדשים עבור משתמשים מתחת לרמת אמון זו חייבים להיות מאושרים"
+    approve_unless_staged: "יש לאשר נושאים ופוסטים חדשים עבור משתמשים מבוימים"
+    notify_about_queued_posts_after: "אם יש פוסטים שממתינים לסקירה מעבר לכמות כזו של שעות, יש לשלוח התראה לכל המפקחים. יש להגדיר ל־0 כדי לנטרל את ההתראות האלה."
     auto_close_messages_post_count: "מספר פוסטים מקסימלי בהודעה לפני שהיא נסגרת אוטומטית (0 לניטרול)"
     auto_close_topics_post_count: "מספר מקסימלי של פוסטים בנושא לפני שהוא נסגר אוטומטית (0 לניטרול)"
     code_formatting_style: "כפתור קוד בדפדפן יציע אוטומטית סגנון קידוד זה"
@@ -1732,6 +1776,8 @@ he:
     returning_users_days: "כמה ימים אמורים לעבור לפני שמשתמש נחשב למשתמש חוזר."
     default_email_digest_frequency: "באיזו תדירות משתמשים יקבלו סיכומי מיילים כברירת מחדל."
     default_include_tl0_in_digests: "כללו פוסטים ממשתמשים חדשים בדוא\"ל מסכם כברירת מחדל. משתמשים יוכלו לשנות זאת בהעדפות האישיות."
+    default_email_level: "הגדרת רמת ההתראה בדוא״ל כבררת מחדל בעת ציטוט/תגובה/אזכורים או הזמנות של משתמשים."
+    default_email_messages_level: "הגדרת רמת ההתראה בדוא״ל כבררת מחדל בעת שליחת הודעה למשתמש."
     default_email_mailing_list_mode: "שלח מייל עבור כל פוסט חדש בתור ברירת מחדל. "
     default_email_mailing_list_mode_frequency: "משתמשים שאיפשרו את מצב רשימת התפוצה יקבלו מיילים בתדירות זו כברירת מחדל."
     disable_mailing_list_mode: "לא לאפשר למשתמשים לעבור למצב רשימת תפוצה."
@@ -1782,18 +1828,18 @@ he:
       invalid_email: "כתובת דוא\"ל לא קיימת."
       invalid_username: "אין משתמש/ת עם שם משתמש כזה."
       invalid_group: "אין קבוצה בשם הזה."
-      invalid_integer_min_max: "הערך חייב להיות בין  %{min} ל-%{max}."
-      invalid_integer_min: "הערך חייב להיות  %{min} ומעלה."
+      invalid_integer_min_max: "הערך חייב להיות בין %{min} ל-%{max}."
+      invalid_integer_min: "הערך חייב להיות %{min} ומעלה."
       invalid_integer_max: "הערך חייב לא יכול להיות גדול מ- %{max}."
       invalid_integer: "הערך חייב להיות מספר שלם."
       regex_mismatch: "הערך אינו תואם את המבנה הנדרש."
       must_include_latest: "התפריט העליון חייב להכיל את טאב ה״מובילים״."
       invalid_string: "ערך לא תקין."
-      invalid_string_min_max: "חייב להיות בין  %{min} ל- %{max} תווים."
+      invalid_string_min_max: "חייב להיות בין %{min} ל- %{max} תווים."
       invalid_string_min: "חייב להיות לפחות %{min} תווים."
       invalid_string_max: "נדרשים לא יותר מ-%{max} תווים."
       invalid_reply_by_email_address: "הערך חייב להכיל '%%{reply_key}' ולהיות שונה ממייל ההתראה."
-      invalid_alternative_reply_by_email_addresses: "על הערכים חייבים לכלול  '%%{reply_key}' ולהיות שונים ממייל העדכון."
+      invalid_alternative_reply_by_email_addresses: "על הערכים חייבים לכלול '%%{reply_key}' ולהיות שונים ממייל העדכון."
       pop3_polling_host_is_empty: "עליכם לקבוע 'שרת תשאול pop3' לפני שתאפשרו תשאול POP3."
       pop3_polling_username_is_empty: "עליכם לקבוע 'שם-משתמש לתשאול pop3' לפני שתאפשרו תשאול POP3."
       pop3_polling_password_is_empty: "עליכם לקבוע 'סיסמת תשאול pop3' לפני שתאפשרו תשאול POP3."
@@ -1809,8 +1855,9 @@ he:
       max_username_length_range: "לא ניתן לקבוע את המקסימום מתחת למינימום."
       invalid_hex_value: "ערכי הצבעים חייבים להיות קודים הקסדצימליים באורך 6 תווים."
       category_search_priority:
-        very_low_weight_invalid: "לא ניתן להגדיר משקל מעבר ל־‚category_search_priority_low_weight’."
+        very_low_weight_invalid: "לא ניתן להגדיר משקל מעבר ל־‚category_search_priority_low_weight’ (משקל נמוך לעדיפות חיפוש בקטגוריות)."
         low_weight_invalid: "לא ניתן להגדיר משקל שווה או גדול מ־1 או קטן מ־‚category_search_priority_very_low_weight’."
+        very_high_weight_invalid: "לא ניתן להגדיר משקל מתחת ל־‚category_search_priority_high_weight’ (משקל גבוה לעדיפות חיפוש בקטגוריות)."
       unicode_username_whitelist:
         regex_invalid: "הביטוי הרגולרי שגוי: %{error}"
         leading_trailing_slash: "אסור שהביטוי הרגולרי יתחיל או יסתיים בלוכסן."
@@ -1820,6 +1867,7 @@ he:
         key: "www.example.com"
         value: "סוד SSO"
   search:
+    extreme_load_error: "האתר נתון תחת עומס קיצוני, החיפוש מנוטרל, נא לנסות שוב בהמשך"
     within_post: "#%{post_number} פוסטים של %{username}"
     types:
       category: "קטגוריות"
@@ -1875,15 +1923,15 @@ he:
     post_revision_text: "הבעלות הועברה"
   topic_statuses:
     autoclosed_message_max_posts:
-      one: "הודעה זו נסגרה אוטומטית אחרי שהגיעה למספר המקסימלי  של תגובות: %{count} ."
-      two: "הודעה זו נסגרה אוטומטית אחרי שהגיעה למספר המקסימלי  של תגובות: %{count} ."
-      many: "הודעה זו נסגרה אוטומטית אחרי שהגיעה למספר המקסימלי  של תגובות: %{count} ."
-      other: "הודעה זו נסגרה אוטומטית אחרי שהגיעה למספר המקסימלי  של תגובות: %{count} ."
+      one: "הודעה זו נסגרה אוטומטית אחרי שהגיעה למספר המקסימלי של תגובות: %{count} ."
+      two: "הודעה זו נסגרה אוטומטית אחרי שהגיעה למספר המקסימלי של תגובות: %{count} ."
+      many: "הודעה זו נסגרה אוטומטית אחרי שהגיעה למספר המקסימלי של תגובות: %{count} ."
+      other: "הודעה זו נסגרה אוטומטית אחרי שהגיעה למספר המקסימלי של תגובות: %{count} ."
     autoclosed_topic_max_posts:
       one: "נושא זה נסגר אוטומטית לאחר שהגיע למספר המקסימלי של תגובות: %{count}."
-      two: "נושא זה נסגר אוטומטית אחרי שהגיע למספר המקסימלי  של תגובות: %{count} ."
-      many: "נושא זה נסגר אוטומטית אחרי שהגיע למספר המקסימלי  של תגובות: %{count} ."
-      other: "נושא זה נסגר אוטומטית אחרי שהגיע למספר המקסימלי  של תגובות: %{count} ."
+      two: "נושא זה נסגר אוטומטית אחרי שהגיע למספר המקסימלי של תגובות: %{count} ."
+      many: "נושא זה נסגר אוטומטית אחרי שהגיע למספר המקסימלי של תגובות: %{count} ."
+      other: "נושא זה נסגר אוטומטית אחרי שהגיע למספר המקסימלי של תגובות: %{count} ."
     autoclosed_enabled_days:
       one: "הנושא הזה ננעל אוטומטית לאחר יום אחד. תגובות חדשות לא מתקבלות."
       two: "נושא זה נסגר באופן אוטומטי לאחר %{count} ימים. לא ניתן להוסיף תגובות חדשות."
@@ -1906,9 +1954,9 @@ he:
       other: "נושא זה נסגר אוטומטית לאחר %{count} ימים מהתגובה האחרונה. תגובות חדשות לא מתקבלות."
     autoclosed_enabled_lastpost_hours:
       one: "נושא זה נסגר שעה לאחר התגובה האחרונה. תגובות נוספות אינן מותרות יותר."
-      two: "נושא זה נסגר אוטומטית  %{count} שעות לאחר התגובה האחרונה. תגובות נוספות אינן מותרות יותר."
-      many: "נושא זה נסגר אוטומטית  %{count} שעות לאחר התגובה האחרונה. תגובות נוספות אינן מותרות יותר."
-      other: "נושא זה נסגר אוטומטית  %{count} שעות לאחר התגובה האחרונה. תגובות נוספות אינן מותרות יותר."
+      two: "נושא זה נסגר אוטומטית %{count} שעות לאחר התגובה האחרונה. תגובות נוספות אינן מותרות יותר."
+      many: "נושא זה נסגר אוטומטית %{count} שעות לאחר התגובה האחרונה. תגובות נוספות אינן מותרות יותר."
+      other: "נושא זה נסגר אוטומטית %{count} שעות לאחר התגובה האחרונה. תגובות נוספות אינן מותרות יותר."
     autoclosed_enabled_lastpost_minutes:
       one: "נושא זה ננעל אוטומטית לאחר דקה מהתגובה האחרונה. תגובות חדשות לא מתקבלות."
       two: "נושא זה נסגר אוטומטית לאחר %{count} דקות מהתגובה האחרונה. תגובות חדשות לא מתקבלות."
@@ -1955,7 +2003,7 @@ he:
     active: "החשבון שלך הופעל ומוכן לשימוש."
     activate_email: "<p>כמעט סיימת! שלחנו הודעת הפעלה בדוא״ל אל <b>%{email}</b>. נא לעקוב אחר ההנחיות המופיעות בהודעה כדי להפעיל את החשבון שלך.</p><p>אם ההודעה לא הגיעה אליך כדאי לבדוק בתיקיית הספאם.</p>"
     not_activated: "אינכם יכולים להתחבר עדיין. שלחנו לכם הודעת דואר אלקטרוני לאישור. בבקשה עיקבו אחר ההוראות במייל כדי להפעיל את חשבונכם."
-    not_allowed_from_ip_address: "אינכם יכולים להתחבר כ-%{username}  מכתובת IP זו. "
+    not_allowed_from_ip_address: "אינכם יכולים להתחבר כ-%{username} מכתובת IP זו. "
     admin_not_allowed_from_ip_address: "אינכם יכולים להתחבר כמנהלי מערכת מכתובת IP זו."
     suspended: "אינך יכול להתחבר עד %{date}."
     suspended_with_reason: "חשבון הושעה עד %{date}: %{reason}"
@@ -2010,6 +2058,7 @@ he:
       max_new_accounts_per_registration_ip: "הרשמות חדשות אסורות מכתובת ה-IP שלך. (עברת את הסף המותר) צרו קשר עם איש צוות."
     website:
       domain_not_allowed: "אתר לא תקין. מתחמים מותרים: %{domains}"
+    auto_rejected: "נדחה אוטומטית מפאת ותק. יש לעיין בהגדרת האתר auto_handle_queued_age (טיפול אוטומטי בוותיקי התור)."
     destroy_reasons:
       same_ip_address: "אותה כתובת ה־IP (%{ip_address}) כמו משתמשים אחרים"
       inactive_user: "משתמש בלתי פעיל"
@@ -2243,6 +2292,7 @@ he:
       title: "מייל נדחה, מייל מסונן"
       subject_template: "[%{email_prefix}] בעיית מייל -- מייל חסום"
     email_reject_not_allowed_email:
+      title: "דחיית דוא״ל עקב כתובת אסורה"
       subject_template: "[%{email_prefix}] בעיית מייל -- מייל חסום"
     email_reject_inactive_user:
       title: "מייל נדחה, משתמש לא פעיל"
@@ -2251,15 +2301,29 @@ he:
         אנחנו מצטערים, אך הודעת המייל שלכם ל %{destination} (עם הכותרת %{former_title}) לא עבדה.
 
         החשבון שלכם שמקושר לכתובת המייל הזו לא הופעל. אנא הפעילו את החשבון שלכם לפני שאתם שולחים מיילים למערכת.
+    email_reject_silenced_user:
+      title: "דחיית דוא״ל עקב השתקה על משתמש"
+      text_body_template: |
+        ההודעה שניסית לשלוח בדוא״ל אל %{destination} (עם הכותרת %{former_title}) לא נשלחה, עמך הסליחה.
+
+        החשבון שלך, שמשויך לכתובת הדוא״ל הזו, הושתק.
     email_reject_reply_user_not_matching:
       title: "דחיית מייל משתמש/ת לא מתאימים"
       subject_template: "[%{email_prefix}] בעיית מייל -- נמען לא תואם"
+      text_body_template: |
+        ההודעה שניסית לשלוח בדוא״ל אל %{destination} (עם הכותרת %{former_title}) לא נשלחה, עמך הסליחה.
+
+        התגובה שלך נשלחה מכתובת שונה מכפי שציפינו, לכן, אין לנו אפשרות לדעת האם מדובר באותו מוען. נא לנסות לשלוח מכתובת דוא״ל אחרת או [ליצור קשר עם הסגל](%{base_url}/about).
     email_reject_no_account:
       title: "מייל נדחה, אין חשבון"
-      subject_template: "[%{email_prefix}]  בעיית מייל -- חשבון לא מזוהה"
+      subject_template: "[%{email_prefix}] בעיית מייל -- חשבון לא מזוהה"
+      text_body_template: |
+        ההודעה שניסית לשלוח בדוא״ל אל %{destination} (עם הכותרת %{former_title}) לא נשלחה, עמך הסליחה.
+
+        לא הצלחנו למצוא חשבון שתואם לכתובת הדוא״ל שלך. אם לדעתך מדובר בטעות, מוטב [ליצור קשר עם הסגל](%{base_url}/about).
     email_reject_empty:
       title: "מייל נדחה, ריק"
-      subject_template: "[%{email_prefix}]  בעיית מייל -- ללא תוכן"
+      subject_template: "[%{email_prefix}] בעיית מייל -- ללא תוכן"
       text_body_template: |
         אנחנו מצטערים, אך הודעת המייל שלכם ל %{destination} (עם הכותרת %{former_title}) לא עבדה.
 
@@ -2268,27 +2332,35 @@ he:
         אם אתם מקבלים את ההודעה הזו ו_כן_ כללתם תגובה, נסו שוב עם סיגנון פשוט יותר.
     email_reject_parsing:
       title: "מייל נדחה, פענוח"
-      subject_template: "[%{email_prefix}]  בעיית מייל -- תוכן לא זוהה."
+      subject_template: "[%{email_prefix}] בעיית מייל -- תוכן לא זוהה."
       text_body_template: |
-        אנחנו מצטערים, אך הודעת המייל שלכם ל- %{destination} (עם הכותרת %{former_title}) לא עבדה.
+        ההודעה שניסית לשלוח בדוא״ל אל %{destination} (עם הכותרת %{former_title}) לא נשלחה, עמך הסליחה.
 
-        לא מצאנו תוכן במייל שלכם. **אנא ודאו שהתגובה שלכם בראש המייל** -- אנחנו לא יכולים לעבד תגובות בין השורות.
+        לא הצלחנו למצוא את התגובה שלך בהודעה ששלחת. **נא לוודא שהתגובה שלך היא בראש ההודעה** -- אין לנו אפשרות לעבד תגובות ששובצו בגוף ההודעה.
     email_reject_invalid_access:
-      title: "דחיית מייל גישה לא-מורשית"
-      subject_template: "[%{email_prefix}]  בעיית מייל -- גישה לא תקינה"
+      title: "דחיית דוא״ל גישה שגויה"
+      subject_template: "[%{email_prefix}] בעיית דוא״ל -- גישה שגויה"
+      text_body_template: |
+        ההודעה שניסית לשלוח בדוא״ל אל %{destination} (עם הכותרת %{former_title}) לא נשלחה, עמך הסליחה.
+
+        לחשבון שלך אין הרשאות מתאימות לפרסם נושאים חדשים בקטגוריה הזו. אם לדעתך מדובר בטעות, מוטב [ליצור קשר עם הסגל](%{base_url}/about).
     email_reject_strangers_not_allowed:
       title: "דחיית מייל זרים לא מורשים"
       subject_template: "[%{email_prefix}] בעיית מייל -- גישה לא נכונה"
-    email_reject_invalid_post:
-      title: "דחיית מייל פוסט לא-תקין"
-      subject_template: "[%{email_prefix}] בעיית מייל -- תקלה בפרסום"
       text_body_template: |
-        אנחנו מצטערים, אך הודעת המייל שלכם ל %{destination} (עם הכותרת %{former_title}) לא עבדה.
+        ההודעה שניסית לשלוח בדוא״ל אל %{destination} (עם הכותרת %{former_title}) לא נשלחה, עמך הסליחה.
 
-        גורמים אפשריים: עיצוב מורכב, הודעה ארוכה מידי, הודעה קצרה מידי. אנא נסו שוב, או פרסמו דרך האתר אם התקלה חוזרת.
+        הקטגוריה שאליה שלחת את ההודעה הזאת מאפשרת תגובות אך ורק עבור משתמשים עם חשבון שעבר אימות ומכתובות דוא״ל מוכרות. אם לדעתך מדובר בטעות, מוטב [ליצור קשר עם הסגל](%{base_url}/about).
+    email_reject_invalid_post:
+      title: "דחיית דוא״ל פוסט שגוי"
+      subject_template: "[%{email_prefix}] בעיית דוא״ל -- תקלה בפרסום"
+      text_body_template: |
+        ההודעה שניסית לשלוח בדוא״ל אל %{destination} (עם הכותרת %{former_title}) לא נשלחה, עמך הסליחה.
+
+        חלק מהסיבות האפשריות הן: עיצוב מורכב מדי, הודעה גדולה מדי, הודעה קטנה מדי. נא לנסות שוב או לפרסם דרך האתר אם התקלה נמשכת.
     email_reject_invalid_post_specified:
-      title: "דחיית מייל הוגדר פוסט לא-תקני"
-      subject_template: "[%{email_prefix}] בעיית מייל -- תקלה בפרסום"
+      title: "דחיית דוא״ל צוין פוסט שגוי"
+      subject_template: "[%{email_prefix}] בעיית דוא״ל -- תקלה בפרסום"
       text_body_template: |
         אנחנו מצטערים, אך הודעת המייל שלכם ל %{destination} (עם הכותרת %{former_title}) לא עבדה.
 
@@ -2297,29 +2369,61 @@ he:
         %{post_error}
 
         אם תוכלו לתקן את הבעיה, אנא נסו שוב.
-    email_reject_invalid_post_action:
-      title: "דחיית מייל פעולת פוסט לא-תקנית"
-      subject_template: "[%{email_prefix}] בעיית מייל -- פעולה לא-תקנית"
+      date_invalid: "לא נמצא תאריך יצירת פוסט. האם להודעת הדוא״ל חסרה כותרת תאריך:?"
+    email_reject_post_too_short:
+      title: "דחיית הודעת דוא״ל עקב פוסט קצר מדי"
+      subject_template: "[%{email_prefix}] תקלת דוא״ל -- פוסט קצר מדי"
       text_body_template: |
-        אנחנו מצטערים, אך הודעת המייל שלכם ל %{destination} (עם הכותרת %{former_title}) לא עבדה.
+        ההודעה שניסית לשלוח בדוא״ל אל %{destination} (עם הכותרת %{former_title}) לא נשלחה, עמך הסליחה.
 
-        הפעולה לא זוהתה. אנא נסו שוב, או פרסמו דרך האתר אם התקלה נמשכת.
+        כדי לקדם שיח עמוק יותר, אסור לשלוח תגובות קצרות. נוכל לבקש ממך להגיב ב־%{count} תווים לפחות? לחלופין, אפשר לסמן פוסט בלייק על ידי שליחת תגובה עם „‎+1”.
+    email_reject_invalid_post_action:
+      title: "דחיית דוא״ל פעולה שגויה על פוסט"
+      subject_template: "[%{email_prefix}] בעיית דוא״ל -- פעולה שגויה על פוסט"
+      text_body_template: |
+        ההודעה שניסית לשלוח בדוא״ל אל %{destination} (עם הכותרת %{former_title}) לא נשלחה, עמך הסליחה.
+
+        הפעולה על הפוסט אינה מוכרת. נא לנסות שוב, או לפרסם דרך האתר אם התקלה נמשכת.
     email_reject_reply_key:
-      title: "דחיית מייל מפתח תגובה"
-      subject_template: "[%{email_prefix}]  בעיית מייל -- תו תגובה לא מוכר"
+      title: "דחיית דוא״ל מפתח תגובה"
+      subject_template: "[%{email_prefix}] בעיית דוא״ל -- מפתח תגובה לא מוכר"
+      text_body_template: |
+        ההודעה שניסית לשלוח בדוא״ל אל %{destination} (עם הכותרת %{former_title}) לא נשלחה, עמך הסליחה.
+
+        מפתח התגובה שגוי או לא ידוע, לכן אין לנו אפשרות לפענח על מה ההודעה הזו אמורה להגיב. מוטב [ליצור קשר עם הסגל](%{base_url}/about).
     email_reject_bad_destination_address:
-      title: "דחיית מייל כתובת יעד לא-נכונה"
-      subject_template: "[%{email_prefix}] בעיית מייל -- כתובת To: לא ידועה"
+      title: "דחיית דוא״ל כתובת יעד שגויה"
+      subject_template: "[%{email_prefix}] בעיית דוא״ל -- כתובת אל: לא מוכרת"
+      text_body_template: |
+        ההודעה שניסית לשלוח בדוא״ל אל %{destination} (עם הכותרת %{former_title}) לא נשלחה, עמך הסליחה.
+
+        אף אחד מנמעני הדוא״ל אינם מוכרים או שכותרת מזהה ההודעה (Message-ID) בהודעה השתנתה. נא לוודא שליחה לכתובת הדוא״ל הנכונה כפי שסופקה לך על ידי הסגל.
+    email_reject_old_destination:
+      title: "דחיית דוא״ל יעד ישן"
+      subject_template: "[%{email_prefix}] בעיית דוא״ל -- ניסית להגיב להתראה ישנה"
+      text_body_template: |
+        ההודעה שניסית לשלוח בדוא״ל אל %{destination} (עם הכותרת %{former_title}) לא נשלחה, עמך הסליחה.
+
+        אנו מקבלים תגובות להתראות מקוריות למשך %{number_of_days} ימים. נא [לבקר בנושא](%{short_url}) כדי להמשיך את הדיון.
     email_reject_topic_not_found:
-      title: "דחיית מייל נושא לא נמצא"
-      subject_template: "[%{email_prefix}]  בעיית מייל -- לא נמצא נושא"
+      title: "דחיית דוא״ל נושא לא נמצא"
+      subject_template: "[%{email_prefix}] בעיית דוא״ל -- נושא לא נמצא"
+      text_body_template: |
+        ההודעה שניסית לשלוח בדוא״ל אל %{destination} (עם הכותרת %{former_title}) לא נשלחה, עמך הסליחה.
+
+        הנושא שבחרת להגיב אליו אינו קיים עוד -- אולי נמחק? אם לדעתך מדובר בשגיאה, מוטב [ליצור קשר עם הסגל](%{base_url}/about).
     email_reject_topic_closed:
-      title: "דחיית מייל נושא סגור"
-      subject_template: "[%{email_prefix}]  בעיית מייל -- נושא נסגר"
+      title: "דחיית דוא״ל נושא נסגר"
+      subject_template: "[%{email_prefix}] בעיית דוא״ל -- נושא נסגר"
+      text_body_template: |
+        ההודעה שניסית לשלוח בדוא״ל אל %{destination} (עם הכותרת %{former_title}) לא נשלחה, עמך הסליחה.
+
+        הנושא שבחרת להגיב אליו נסגר, נכון לעכשיו, ולא ניתן להגיב אליו עוד. אם לדעתך מדובר בשגיאה, מוטב [ליצור קשר עם הסגל](%{base_url}/about).
     email_reject_auto_generated:
       title: "דחיית מייל נוצר אוטומטית"
-      subject_template: "[%{email_prefix}]  בעיית מייל -- תגובה נוצרה אוטומטית"
+      subject_template: "[%{email_prefix}] בעיית מייל -- תגובה נוצרה אוטומטית"
     email_reject_unrecognized_error:
+      title: "דחיית דוא״ל עקב שגיאה לא ידועה"
       subject_template: "[%{email_prefix}] בעיה עם הדוא״ל -- שגיאה לא מוכרת"
     email_reject_attachment:
       title: "הקובץ המצורף לדוא״ל נדחה"
@@ -2331,9 +2435,11 @@ he:
         %{rejected_errors}
 
         אם לדעתך מדובר בטעות, כדאי [ליצור קשר עם חבר סגל](‎%{base_url}/about).
+    email_reject_reply_not_allowed:
+      title: "דחיית דוא״ל עקב תגובה אסורה"
     email_error_notification:
       title: "התראת בעיית מייל"
-      subject_template: "[%{email_prefix}]  בעיית מייל -- בעיית אימות POP"
+      subject_template: "[%{email_prefix}] בעיית מייל -- בעיית אימות POP"
       text_body_template: |
         למרבה הצער, ארעה תקלה בזמן תשאול מיילים משרת ה POP.
 
@@ -2355,20 +2461,11 @@ he:
       ``` text
       %{raw}
       ```
-    ignored_users_summary:
-      text_body_template: |
-        שלום רב,
-
-        זו הודעה אוטומטית מטעם %{site_name} כדי ליידע אותך ש[פרופיל המשתמש הזה](%{base_url}/u/%{username}/summary) נכנס לרשימת ההתעלמות של %{ignores_threshold} משתמשים אחרים. ייתכן שמדובר במחדל שהולך ומתפתח בקרב קהילתנו.
-
-        מוטב אולי לסקור את הפעילות האחרונה של המשתמש הזה ואולי גם של משתמשים אחרים ב[דוח המשתמשים שבהתעלמות](%{base_url}/admin/reports/top_ignored_users).
-
-        להדרכה נוספת, ניתן לעיין ב[הנחיות הקהילה שלנו](%{base_url}/guidelines).
     too_many_spam_flags:
       title: "יותר מידי דיגלי ספאם"
       subject_template: "חשבון חדש בהשהיה"
     too_many_tl3_flags:
-      title: "יותר מידי דגלי רמת-אמון 3"
+      title: "יותר מדי דגלים מדרגת אמון 3"
       subject_template: "חשבון חדש בהשהיה"
     silenced_by_staff:
       title: "השתקה מצד הסגל"
@@ -2985,10 +3082,10 @@ he:
 
       כל מידע שאנחנו אוספים מכם יכול לשמש בכל אחת מהדרכים הבאות:
 
-      *   כדי להתאים אישית את החוויה שלכם &mdash; המידע שלכם עוזר לנו לענות טוב יותר על צרכיכם האישיים.
-      *   כדי לשפר את האתר שלנו &mdash; אנחנו כל הזמן שואפים לשפר את מה שהאתר שלנו מציע בהתחשב במידע ובמשוב שאנחנו מקבלים מכם.
-      *   כדי לשפר את שירות הלקוחות &mdash; המידע שלכם מסייע לנו להגיב בצורה אפקטיבית יותר לבקשות שירות הלקוחות שלכם וצרכי התמיכה.
-      *   כדי לשלח מיילים תקופתיים &mdash; כתובת המייל שאתם מספקים יכולה לשמש כדי לשלוח לכם אינפורמציה, התראות שביקשתם לגבי שינויים בנושאים או בתגובה לשם המשתמש שלכם, לענות לשאלות, ו/או בקשות או שאלות אחרות.
+      * כדי להתאים אישית את החוויה שלכם &mdash; המידע שלכם עוזר לנו לענות טוב יותר על צרכיכם האישיים.
+      * כדי לשפר את האתר שלנו &mdash; אנחנו כל הזמן שואפים לשפר את מה שהאתר שלנו מציע בהתחשב במידע ובמשוב שאנחנו מקבלים מכם.
+      * כדי לשפר את שירות הלקוחות &mdash; המידע שלכם מסייע לנו להגיב בצורה אפקטיבית יותר לבקשות שירות הלקוחות שלכם וצרכי התמיכה.
+      * כדי לשלח מיילים תקופתיים &mdash; כתובת המייל שאתם מספקים יכולה לשמש כדי לשלוח לכם אינפורמציה, התראות שביקשתם לגבי שינויים בנושאים או בתגובה לשם המשתמש שלכם, לענות לשאלות, ו/או בקשות או שאלות אחרות.
 
       <a name="protect"></a>
 
@@ -3002,8 +3099,8 @@ he:
 
       אנחנו נעשה מאמץ בתום לב:
 
-      *   לשמור יומנים שמכילים כתובות IP של כל הבקשות לשרת זה לא יותר מ 90 יום.
-      *   לשמור על כתובות IP שמקושרות עם משתמשים רשומים ופוסטים שלהם לא יותר מ 5 שנים.
+      * לשמור יומנים שמכילים כתובות IP של כל הבקשות לשרת זה לא יותר מ 90 יום.
+      * לשמור על כתובות IP שמקושרות עם משתמשים רשומים ופוסטים שלהם לא יותר מ 5 שנים.
 
       <a name="cookies"></a>
 
@@ -3167,7 +3264,7 @@ he:
       name: קישור ראשון
       description: הוסיפו קישור לנושא אחר
       long_description: |
-        עיטור זה מוענק בפעם הראשונה שאתם מוסיפים קישור לנושא אחר. קישור בין נושאים עוזר לקוראים  נוספים למצוא דיונים קשורים, על ידי הצגת החיבורים בין נושאים בשני הכיוונים. קשרו חופשי!
+        עיטור זה מוענק בפעם הראשונה שאתם מוסיפים קישור לנושא אחר. קישור בין נושאים עוזר לקוראים נוספים למצוא דיונים קשורים, על ידי הצגת החיבורים בין נושאים בשני הכיוונים. קשרו חופשי!
     first_quote:
       name: ציטוט ראשון
       description: ציטטו פוסט
@@ -3316,8 +3413,10 @@ he:
       button: "הרשמה"
       title: "הרשמת חשבון אדמיניסטרטור"
       help: "רישמו חשבון חדש כדי להתחיל"
+      no_emails: "לרוע המזל, לא הוגדרו כתובות דוא״ל של מנהלים במהלך ההקמה, לכן סיום התצורה עשוי להיות מורכב. נא להוסיף כתובת דוא״ל של מפתח בקובץ התצורה או <a href='https://meta.discourse.org/t/create-admin-account-from-console/17274'>ליצור חשבון מנהל מהמסוף</a>."
     confirm_email:
       title: "אשרו את המייל שלכם"
+      message: "<p>שלחנו הודעת הפעלה בדוא״ל אל <b>%{email}</b>. נא לעקוב אחר ההנחיות שבהודעה כדי להפעיל את החשבון שלך.</p><p>אם ההודעה לא הגיעה אליך, מוטב לבדוק את תיקיית הספאם, וגם <a href='https://meta.discourse.org/t/troubleshooting-email-on-a-new-discourse-install/16326'>לוודא שכתובת הדוא״ל שלך הוגדרה כראוי</a>.</p>"
     resend_email:
       title: "שליחת מייל אקטיבציה מחדש"
       message: "<p>שלחנו מחדש את מייל האקטיבציה ל<b>%{email}</b>"
@@ -3352,6 +3451,7 @@ he:
             placeholder: "הקהילה הכי טובה בעולם"
       introduction:
         title: "פתיחה"
+        disabled: "<p>לא הצלחנו למצוא אף נושא עם הכותרת „%{topic_title}”.</p> <ul> <li>אם שינית את הכותרת, עליך לערוך את הנושא הזה כדי לשנות את טקסט ההקדמה של האתר שלך.</li> <li>אם מחקת את הנושא הזה, יש ליצור אחד נוסף עם הכותרת „%{topic_title}”. התוכן של הפוסט הראשון הוא טקסט ההקדמה של האתר שלך.</li> </ul>"
         fields:
           welcome:
             label: "נושא ברוכים-הבאים"
@@ -3457,6 +3557,9 @@ he:
         disabled: "מאחר שכניסה בשליטה מקומית מנוטרלת, אי אפשר לשלוח לכולם הזמנות. נא להמשיך לשלב הבא."
       finished:
         title: "ה Discourse שלכם מוכן!"
+        description: |
+          <p>אם חשקה נפשך בשינוי ההגדרות האלו, <b>יש להפעיל את האשף הזה מחדש</b>, או לבקר ב<a href='%{base_path}/admin' target='_blank'>אגף הניהול</a>; ניתן למצוא אותו ליד סמל מפתח הברגים בתפריט האתר.</p>
+          <p>מאחלים לך הנאה מרובה ובהצלחה <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='_blank'>בהקמת הקהילה החדשה שלך!</a></p>
   search_logs:
     graph_title: "מניין חיפושים"
   joined: "הצטרפו"
@@ -3494,6 +3597,7 @@ he:
     missing_version: "עליך לספק משתנה גרסה"
     conflict: "אירעה סתירת עדכון שמונעת ממך לעשות את זה."
     reasons:
+      post_count: "הפוסטים הראשונים שמפורסמים על ידי משתמש כלשהו חייבים לעבור את אישור הסגל. למידע נוסף `approve_post_count` (מניין פוסטים לאישור)."
       trust_level: "התגובות של משתמשים בדרגות אמון נמוכות חייבות לעבור את אישור הסגל. יש לעיין ב־`approve_unless_trust_level` (אישור למעט דרגת אמון)."
       new_topics_unless_trust_level: "הפוסטים של משתמשים בדרגות אמון נמוכות חייבות לעבור את אישור הסגל. יש לעיין ב־`approve_new_topics_unless_trust_level` (אישור פוסטים חדשים למעט דרגת אמון)."
       fast_typer: "ההקלדה של הפוסט הראשון של משתמש מסוים הייתה מהירה באופן שמעלה חשד שמדובר בהתנהגות של בוט או הפצת ספאם. יש לעיין ב־`min_first_post_typing_time` (זמן מזערי להקלדת פוסט ראשון)."
@@ -3536,11 +3640,14 @@ he:
         description: "למחוק את הפוסט ואת כל התגובות שלו, אם זה הפוסט הראשון אז למחוק גם את הנושא"
         confirm: "למחוק גם את התגובות לפוסט?"
       delete_and_agree:
+        title: "למחוק את הפוסט ולהסכים"
         description: "למחוק את הפוסט, אם זה הפוסט הראשון, למחוק גם את הנושא"
       delete_and_agree_replies:
+        title: "למחוק את הפוסט + התגובות ולהסכים"
         description: "למחוק את הפוסט ואת כל התגובות שלו, אם זה הפוסט הראשון אז למחוק גם את הנושא"
         confirm: "למחוק גם את התגובות לפוסט?"
       disagree_and_restore:
+        title: "לסרב ולשחזר פוסט"
         description: "שחזור הפוסט כדי שכל המשתמשים יוכלו לצפות בו."
       disagree:
         title: "אי קבלה"
@@ -3548,6 +3655,13 @@ he:
         title: "התעלמות"
       approve:
         title: "אשר"
+      approve_post:
+        title: "לאשר פוסט"
+        confirm_closed: "נושא זה סגור. ליצור את הפוסט בכל אופן?"
+      reject_post:
+        title: "לדחות פוסט"
+      approve_user:
+        title: "לאשר משתמש"
       reject_user:
         title: "מחיקת משתמש…"
         delete:

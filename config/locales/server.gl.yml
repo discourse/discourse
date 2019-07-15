@@ -24,6 +24,7 @@ gl:
   topics: "Temas"
   posts: "publicacións"
   loading: "Cargndo"
+  sign_up: "Crear unha conta"
   log_in: "Iniciar sesión"
   submit: "Enviar"
   anonymous: "Anónimo"

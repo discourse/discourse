@@ -547,8 +547,7 @@ vi:
       users: "Thành viên"
       muted_users: "Im lặng"
       muted_users_instructions: "Ngăn chặn tất cả các thông báo từ những thành viên."
-      muted_topics_link: "Hiển thị chủ đề Im Lặng"
-      watched_topics_link: "HIển thị các chủ đề đã theo dõi."
+      tracked_topics_link: "Hiển thị"
       automatically_unpin_topics: "Tự động bỏ ghim chủ đề khi tôi xuống cuối trang."
       apps: "Ứng dụng"
       revoke_access: "Lấy lại quyền"
@@ -595,13 +594,15 @@ vi:
         regenerate: "Khởi tạo lại"
         disable: "Vô hiệu hóa"
         enable: "Kích hoạt"
+      second_factor:
+        edit: "Sửa"
       change_about:
         title: "Thay đổi thông tin về tôi"
         error: "Có lỗi xảy ra khi thay đổi giá trị này."
       change_username:
         title: "Thay Username"
         taken: "Xin lỗi, đã có username này."
-        invalid: "Username này không thích hợp. Nó chỉ chứa các ký tự  là chữ cái và chữ số. "
+        invalid: "Username này không thích hợp. Nó chỉ chứa các ký tự là chữ cái và chữ số. "
       change_email:
         title: "Thay đổi Email"
         taken: "Xin lỗi, email này không dùng được. "
@@ -698,7 +699,7 @@ vi:
       email_level:
         title: "Gửi cho tôi một email khi có người trích dẫn, trả lời cho bài viết của tôi, đề cập đến @username của tôi, hoặc mời tôi đến một chủ đề"
         always: "luôn luôn"
-        never: "không  bao giờ"
+        never: "không bao giờ"
       email_messages_level: "Gửi cho tôi email khi có ai đó nhắn tin cho tôi"
       include_tl0_in_digests: "Bao gồm nội dung của những thành viên mới trong email tóm tắt."
       email_in_reply_to: "Kèm theo đoạn dẫn trích trả lời bài viết trong email"
@@ -714,7 +715,7 @@ vi:
         after_2_weeks: "được tạo 2 tuần trước"
       auto_track_topics: "Tự động theo dõi các chủ đề tôi tạo"
       auto_track_options:
-        never: "không  bao giờ"
+        never: "không bao giờ"
         immediately: "ngay lập tức"
         after_30_seconds: "sau 30 giây"
         after_1_minute: "sau 1 phút"
@@ -832,7 +833,7 @@ vi:
       desc:
         network: "Hãy kiểm tra kết nối của bạn"
         network_fixed: "Hình như nó trở lại."
-        server: "Mã lỗi :  {{status}}"
+        server: "Mã lỗi : {{status}}"
         forbidden: "Bạn không được cho phép để xem mục này"
         not_found: "Oops, ứng dụng đang tải đường dẫn không tồn tại"
         unknown: "Có một lỗi gì đó đang xảy ra"
@@ -1009,7 +1010,7 @@ vi:
       error:
         title_missing: "Tiêu đề là bắt buộc"
         title_too_short: "Tiêu để phải có ít nhất {{min}} ký tự"
-        title_too_long: "Tiêu đề có tối đa {{max}}  ký tự"
+        title_too_long: "Tiêu đề có tối đa {{max}} ký tự"
         post_missing: "Bài viết không được bỏ trắng"
         post_length: "Bài viết phải có ít nhất {{min}} ký tự"
         category_missing: "Bạn phải chọn một phân loại"
@@ -1948,7 +1949,7 @@ vi:
       tags:
         remove_muted_tags_from_latest:
           always: "luôn luôn"
-          never: "không  bao giờ"
+          never: "không bao giờ"
       dashboard:
         title: "Bảng điều khiển"
         version: "Phiên bản"
@@ -2168,6 +2169,8 @@ vi:
           installed: "Đã cài đặt"
           install_popular: "Phổ biến"
           about_theme: "Giới thiệu"
+          enable: "Kích hoạt"
+          disable: "Vô hiệu hóa"
           add: "Thêm"
           scss:
             text: "CSS"
@@ -2451,7 +2454,7 @@ vi:
         warnings_received_count: Đã nhận Cảnh báo
         flags_given_received_count: "Đã đánh dấu / Nhận"
         approve: "Duyệt"
-        approved_by: "duyệt  bởi"
+        approved_by: "duyệt bởi"
         approve_success: "Thành viên được duyệt và đã gửi email hướng đẫn kích hoạt."
         approve_bulk_success: "Thành công! Tất cả thành viên đã chọn được duyệt và thông báo."
         time_read: "Thời gian đọc"

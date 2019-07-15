@@ -792,9 +792,7 @@ es:
       muted_users_instructions: "Omite todas las notificaciones de estos usuarios."
       ignored_users: "Ignorado"
       ignored_users_instructions: "Omitir todas las publicaciones y mensajes de estos usuarios."
-      muted_topics_link: "Mostrar temas silenciados"
-      watched_topics_link: "Mostrar temas vigilados"
-      tracked_topics_link: "Mostrar temas vigilados"
+      tracked_topics_link: "Mostrar"
       automatically_unpin_topics: "Dejar de destacar temas automáticamente cuando los leo por completo."
       apps: "Aplicaciones"
       revoke_access: "Revocar acceso"
@@ -846,7 +844,6 @@ es:
         disable: "Deshabilitar"
         enable: "Habilitar"
         enable_long: "Habilitar códigos de respaldo"
-        manage: "Gestionar códigos de respaldo"
         copied_to_clipboard: "Copiado al portapapeles"
         copy_to_clipboard_error: "Error copiando datos al portapapeles"
         remaining_codes: "Tienes <strong>{{count}}</strong> códigos de respaldo restantes."
@@ -856,8 +853,7 @@ es:
           description: "Cada uno de estos códigos de respaldo puede ser usado una única vez. Mantén los códigos en un lugar seguro, pero accesible."
       second_factor:
         title: "Autenticación Dos Factores"
-        disable: "Inhabilitar Autenticación Dos Factores"
-        enable: "Habilitar Autenticación Dos Factores"
+        enable: "Gestionar Autenticación Dos Factores"
         confirm_password_description: "Por favor confirma tu contraseña para continuar"
         label: "Código"
         rate_limit: "Por favor, espera antes de volver a intentar otro código de autenticación."
@@ -872,6 +868,9 @@ es:
         oauth_enabled_warning: "Por favor ten en cuenta que los accesos a través de redes sociales serán inhabilitados si habilitas el factor de autenticación en dos pasos de tu cuenta."
         use: "<a href>Usar Authenticator app</a>"
         enforced_notice: "Tu cuenta está obligada a activar la verificación de dos pasos antes de acceder a este sitio."
+        disable: "inhabilitar"
+        disable_title: "Inhabilitar Segundo Factor"
+        edit: "Editar"
       change_about:
         title: "Cambiar 'Acerca de mí'"
         error: "Hubo un error al cambiar este valor."
@@ -1172,9 +1171,6 @@ es:
       enabled: "Este sitio está en modo solo-lectura. Puedes continuar navegando pero algunas acciones como responder o dar \"me gusta\" no están disponibles por ahora."
       login_disabled: "Iniciar sesión está desactivado mientras el foro esté en modo solo lectura."
       logout_disabled: "Cerrar sesión está desactivado mientras el sitio se encuentre en modo de sólo lectura."
-    too_few_topics_and_posts_notice: "¡Vamos a <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>dar por comenzada la comunidad!</a> Hay <strong>%{currentTopics} / %{requiredTopics}</strong> temas y <strong>%{currentPosts} / %{requiredPosts}</strong> posts. Los nuevos visitantes necesitan algo que leer y a lo que responder."
-    too_few_topics_notice: "¡Vamos a <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>dar por comenzada la comunidad!</a> Hay <strong>%{currentTopics} / %{requiredTopics}</strong> temas. Los nuevos visitantes necesitan algo que leer y a lo que responder."
-    too_few_posts_notice: "¡Vamos a <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>dar por empezada la comunidad!</a> Hay <strong>%{currentPosts} / %{requiredPosts}</strong> posts. Los nuevos visitantes necesitan algo que leer y a lo que responder."
     logs_error_rate_notice:
       reached_hour_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# error/hour} otros {# errors/hour}}</a> alcanzó el límite de la configuración del sitio del {limit, plural, one {# error/hour} otros {# errors/hour}}."
       reached_minute_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# error/minute} otros {# errors/minute}}</a> alcanzó el límite de la configuración del sitio del {limit, plural, one {# error/minute} otros {# errors/minute}}."
@@ -1420,7 +1416,7 @@ es:
       cannot_see_mention:
         category: "Mencionaste a {{username}} pero no será notificado porque no tiene acceso a esta categoría. Necesitarás añadirlo a un grupo para que tenga acceso a esta categoría."
         private: "Mencionaste a {{username}} pero no se les notificará porque no pueden ver este mensaje personal. Necesitarás invitarlos a este MP."
-      duplicate_link: "Parece que tu enlace a <b>{{domain}}</b> ha sido ya publicado en el tema por  <b>@{{username}}</b> en <a href='{{post_url}}'>un post hace {{ago}} </a> – ¿seguro que quieres publicarlo de nuevo?"
+      duplicate_link: "Parece que tu enlace a <b>{{domain}}</b> ha sido ya publicado en el tema por <b>@{{username}}</b> en <a href='{{post_url}}'>un post hace {{ago}} </a> – ¿seguro que quieres publicarlo de nuevo?"
       error:
         title_missing: "Es necesario un título"
         title_too_short: "El título debe ser por lo menos de {{min}} caracteres."
@@ -2104,8 +2100,8 @@ es:
           one: Has seleccionado <b>%{count}</b> post.
           other: "Has seleccionado <b>{{count}}</b> posts."
       deleted_by_author:
-        one: "(tema retirado por su autor, se borrará automáticamente en %{count} hora,  salvo que sea reportado)"
-        other: "(tema retirado por su autor, se borrará automáticamente en %{count} horas,  salvo que sea reportado)"
+        one: "(tema retirado por su autor, se borrará automáticamente en %{count} hora, salvo que sea reportado)"
+        other: "(tema retirado por su autor, se borrará automáticamente en %{count} horas, salvo que sea reportado)"
     post:
       quote_reply: "Citar"
       edit_reason: "Motivo:"
@@ -2911,9 +2907,7 @@ es:
             visibility_levels:
               title: "¿Quién puede ver este grupo?"
               public: "Todos"
-              members: "Propietarios del grupo, miembros y administradores"
               staff: "Propietarios del grupo, y staff"
-              owners: "Propietarios del grupo y administradores"
           membership:
             automatic: Automático
             trust_level: Nivel de Confianza
@@ -3244,6 +3238,8 @@ es:
           version: "Versión:"
           authors: "Autoría:"
           source_url: "Fuente"
+          enable: "Habilitar"
+          disable: "Inhabilitar"
           required_version:
             error: "Este tema ha sido desactivado automáticamente por no ser compatible con la versión actual de Discourse."
             minimum: "Necesita Discourse versión {{version}} o superior."

@@ -276,7 +276,7 @@ lt:
       user_count: "Nariai"
       active_user_count: "Aktyvūs vartotojai"
       contact: "Kontaktai"
-      contact_info: "Atsiradus bet kokiai problemai susijusiai su puslapiu, prašome kontaktuoti  %{contact_info}."
+      contact_info: "Atsiradus bet kokiai problemai susijusiai su puslapiu, prašome kontaktuoti %{contact_info}."
     bookmarked:
       title: "Žymės"
       clear_bookmarks: "Pašalinti žymes"
@@ -673,8 +673,7 @@ lt:
       users: "Vartotojai"
       muted_users: "Nutildytos"
       muted_users_instructions: "Slopinti visus šių vartoojų pranešimus."
-      muted_topics_link: "Parodyti visas nutildytas temas"
-      watched_topics_link: "Parodyti jau peržiūrėtas temas"
+      tracked_topics_link: "Rodyti"
       automatically_unpin_topics: "Automatiškai atsegti temas pasiekus apačią."
       apps: "Programėlės"
       revoke_access: "Panaiktinti teises"
@@ -732,6 +731,7 @@ lt:
         confirm_password_description: "Patvirtinkite slaptažodį norėdami tęsti"
         label: "Kodas"
         show_key_description: "Įveskite rankiniu būdu"
+        edit: "Redaguoti"
       change_about:
         title: "Keisti Apie Mane"
         error: "Rasta klaida bandant pakeisti reikšmę. Prašom patikslinti veiksmus."
@@ -1030,7 +1030,7 @@ lt:
     forgot_password:
       title: "Slaptažodžio atkūrimas"
       action: "Pamiršau savo slaptažodį"
-      invite: "Irašykite savo vartotojo vardą arba el. adresą ir mes jums atsiųsime slaptažodžio atkūrimo instrukcijas  el. paštu."
+      invite: "Irašykite savo vartotojo vardą arba el. adresą ir mes jums atsiųsime slaptažodžio atkūrimo instrukcijas el. paštu."
       reset: "Keisti slaptažodį"
       complete_username: "Jei paskyra sutampa su vartotojo vardu <b>%{username}</b>, turėtum gauti el.laišką su slaptažodžio keitimo instrukcijomis."
       complete_email: "Jei paskyra sutampa su <b>%{email}</b>, turėtum gauti el.laišką su slaptažodžio keitimo instrukcijomis."
@@ -1067,7 +1067,7 @@ lt:
       admin_not_allowed_from_ip_address: "Tu negali prisijungti kaip administratorius iš šio IP adreso."
       resend_activation_email: "Spauskite čia, kad gautumėte naują aktyvacijos laišką."
       resend_title: "Persiųsti patvirtinimo laišką"
-      sent_activation_email_again: "Mes jums išsiunteme dar vieną el. laišką su aktyvacijos instrucijomis į <b>{{currentEmail}}</b>.  Prašome palaukti, gali užtrukti kelias minutes."
+      sent_activation_email_again: "Mes jums išsiunteme dar vieną el. laišką su aktyvacijos instrucijomis į <b>{{currentEmail}}</b>. Prašome palaukti, gali užtrukti kelias minutes."
       to_continue: "Prašome prisijungti"
       preferences: "Turite būti prisijungęs, kad keistumete paskyros nustatymus."
       forgot: "Negaliu atsiminti paskyros duomenų."
@@ -1469,7 +1469,7 @@ lt:
         many: "šioje temoje tu turi {{count}} neperskaitytų senų įrašų"
         other: "šioje temoje tu turi {{count}} neperskaitytų senų įrašų"
       new_posts:
-        one: "šioje temoje yra %{count}  naujas įrašas nuo paskutinio tavo skaitymo"
+        one: "šioje temoje yra %{count} naujas įrašas nuo paskutinio tavo skaitymo"
         few: "šioje temoje yra {{count}} naujų įrašų nuo paskutinio tavo skaitymo"
         many: "šioje temoje yra {{count}} naujų įrašų nuo paskutinio tavo skaitymo"
         other: "šioje temoje yra {{count}} naujų įrašų nuo paskutinio tavo skaitymo"
@@ -1616,7 +1616,7 @@ lt:
         title: "Charakterizuok šią temą"
         pin: "Nustatyk šią temą, kad laikytųsi kategorijos {{categoryLink}} viršuje"
         confirm_pin: "Tu jau turi {{count}} prisegtų temų. Per daug prisegtų temų gali atstumti anoniminius ir naujus vartotojus. Ar esi tikras, jog nori prisegti šią temą?"
-        unpin: "Pašalink šią temą iš {{categoryLink}}  kategorijos sąrašo viršaus."
+        unpin: "Pašalink šią temą iš {{categoryLink}} kategorijos sąrašo viršaus."
         unpin_until: "Pašalinti temą iš {{categoryLink}} kategorijos viršaus arba palaukti iki <strong>%{until}</strong>."
         pin_note: "Vartotojai gali Atsegti temą nuo viršaus individualiai sau."
         pin_validation: "Terminas reikalauja Prisegti šią temą."
@@ -1641,7 +1641,7 @@ lt:
         remove_banner: "Pašalinti paryškintą temą, kuri yra visų puslapių viršuje."
         banner_note: "Vartotojai gali uždaryti paryškiuntą temą. Tik viena tema gali būti paryškinta tam tikru metu"
         no_banner_exists: "Šiuo metu nėra jokių Paryškintų (banerinių) temų"
-        banner_exists: "Šiuo metu  <strong class='badge badge-notification unread'>yra</strong> Paryškinta tema."
+        banner_exists: "Šiuo metu <strong class='badge badge-notification unread'>yra</strong> Paryškinta tema."
       inviting: "Kviečiama..."
       invite_private:
         title: "Pakviesti į Žinutę"
@@ -1913,7 +1913,7 @@ lt:
       email_in: " papildomas naujas el. pašto adresas:"
       email_in_allow_strangers: "Gauti el. laiškus iš anoniminių paskyrų neturinčių vartotojų "
       email_in_disabled: "Naujų temų kūrimas per el. paštą yra negalimas Puslapio Nustatymuose. Jei nori skelbti naujas temas per el. paštą,"
-      email_in_disabled_click: 'nustatykite "email in"  nustatymus.'
+      email_in_disabled_click: 'nustatykite "email in" nustatymus.'
       sort_order: "Temų sąrasą rūšiuoti oagal\""
       allow_badges_label: "Leisti trofėjų apdovanojimus šioje kategorijoje"
       edit_permissions: "Redaguoti leidimus"
@@ -2392,9 +2392,7 @@ lt:
             visibility_levels:
               title: "Kas gali matyti šia grupę?"
               public: "Visi"
-              members: "Grupės valdytojai, nariai ir administratoriai"
               staff: "Grupės valdytojai ir moderatoriai"
-              owners: "Grupės valdytojai ir administratoriai"
           membership:
             automatic: Automatini
             trust_level: Patikimumo lygis
@@ -2568,6 +2566,8 @@ lt:
           install_popular: "Populiaros"
           about_theme: "Apie"
           license: "Licensija"
+          enable: "Įgalinti"
+          disable: "Išjungti"
           component_of: "Komponentas:"
           update_to_latest: "Atnaujinti iki paskutinės"
           check_for_updates: "Tikrinti atnaujinimus "
@@ -2921,10 +2921,10 @@ lt:
           many: "Negalima ištrinti visų pranešimų. Kaikurie pranešimai yra senesni nei %{count} dienų laikotarpio. (delete_user_max_post_age nustatymas)."
           other: "Negalima ištrinti visų pranešimų. Kaikurie pranešimai yra senesni nei %{count} dienų laikotarpio. (delete_user_max_post_age nustatymas)."
         cant_delete_all_too_many_posts:
-          one: "Negalima ištrinti visų įrašų, nes vartotojas turi daugiau nei %{count} įrašą.  (delete_all_posts_max)"
-          few: "Negalima ištrinti visų įrašų, nes vartotojas turi daugiau nei %{count} įrašus.  (delete_all_posts_max)"
-          many: "Negalima ištrinti visų įrašų, nes vartotojas turi daugiau nei %{count} įrašus.  (delete_all_posts_max)"
-          other: "Negalima ištrinti visų įrašų, nes vartotojas turi daugiau nei %{count} įrašus.  (delete_all_posts_max)"
+          one: "Negalima ištrinti visų įrašų, nes vartotojas turi daugiau nei %{count} įrašą. (delete_all_posts_max)"
+          few: "Negalima ištrinti visų įrašų, nes vartotojas turi daugiau nei %{count} įrašus. (delete_all_posts_max)"
+          many: "Negalima ištrinti visų įrašų, nes vartotojas turi daugiau nei %{count} įrašus. (delete_all_posts_max)"
+          other: "Negalima ištrinti visų įrašų, nes vartotojas turi daugiau nei %{count} įrašus. (delete_all_posts_max)"
         delete_and_block: "Ištrinti ir <b>užblokuoti</b> šį el. paštą ir IP adresą"
         delete_dont_block: "Tik Ištrinti"
         deleted: "Šis vartotojas buvo ištrintas."
@@ -3119,7 +3119,7 @@ lt:
             text: "Dingo trofėjų suteikimo pavyzdžiai. Taip nutinka, kai trofėjaus klausimai sugrąžina vartotojo ID ar įrašo ID, kurie neegzistuoja. Tai gali sukelti problemų ateityje - prašome dar kartą patikrinti savo užklausą"
           no_grant_count: "Nepriskirti jokie trofėjai"
           grant_count:
-            one: "priskirtas <b>%{count}</b>  trofėjus"
+            one: "priskirtas <b>%{count}</b> trofėjus"
             few: "priskirta <b>%{count}</b> trofėjų"
             many: "priskirta <b>%{count}</b> trofėjų"
             other: "priskirta <b>%{count}</b> trofėjų"

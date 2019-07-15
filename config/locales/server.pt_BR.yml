@@ -29,6 +29,7 @@ pt_BR:
   posts: "mensagens"
   loading: "Carregando"
   powered_by_html: 'Desenvolvido por<a href="https://www.discourse.org">Discurso</a>, melhor visualizado com JavaScript habilitado'
+  sign_up: "Cadastrar-se"
   log_in: "Entrar"
   submit: "Enviar"
   purge_reason: "Automaticamente eliminada por ser uma conta abandonada, não ativada"
@@ -155,7 +156,7 @@ pt_BR:
     site_settings:
       invalid_choice:
         one: "Você especificou a escolha inválida %{name}"
-        other: "Você especificou a escolha inválida  %{name}"
+        other: "Você especificou a escolha inválida %{name}"
       default_categories_already_selected: "Você não pode selecionar uma categoria usada noutra lista."
       s3_upload_bucket_is_required: "Você não pode habilitar uploads para o S3 a não ser que tenha provido o 's3_upload_bucket'."
       enable_s3_uploads_is_required: "Você não pode habilitar o inventário para o S3 a não ser que tenha habilitado os uploads para o S3"
@@ -186,7 +187,7 @@ pt_BR:
     operation_already_running: "Uma operação está sendo executada. Não é possível iniciar um novo trabalho agora."
     backup_file_should_be_tar_gz: "O arquivo de backup deve ser um arquivo .tar.gz."
     not_enough_space_on_disk: "Não há espaço suficiente no disco para carregar este backup."
-    invalid_filename: "O nome do arquivo de backup contém caracteres inválidos. Os caracteres válidos são a-z 0-9  . - _."
+    invalid_filename: "O nome do arquivo de backup contém caracteres inválidos. Os caracteres válidos são a-z 0-9 . - _."
     file_exists: "O arquivo que você está tentando enviar já existe."
     location:
       local: "Local"
@@ -817,7 +818,7 @@ pt_BR:
     title: "Desinscrever"
     stop_watching_topic: "Parar de observar este tópico, %{link}"
     mute_topic: "Silenciar todas as notificações para este tópico, %{link} "
-    unwatch_category: "Parar de observar todos os tópicos na categoria  %{category}"
+    unwatch_category: "Parar de observar todos os tópicos na categoria %{category}"
     mailing_list_mode: "Desativar o modo lista de discussão"
     all: "Não me envie nenhum email de %{sitename}"
     different_user_description: "No momento, você está logado como um usuário diferente daquele para o qual mandamos email. Por favor, saia ou entre no modo anônimo de seu navegador e tente novamente."
@@ -1203,7 +1204,6 @@ pt_BR:
   site_settings:
     censored_words: "Palavras que serão substituídos automaticamente por &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "Auto-apagar todas as mensagens ocultas que ficar oculta por mais de 30 dias."
-    default_locale: "O idioma padrão desta instância do Discourse. Você pode substituir o texto de categorias e tópicos gerados pelo sistema em <a href='%{base_path}/admin/customize/site_texts' target='_blank'>Personalizar/Conteúdo de Texto</a>."
     allow_user_locale: "Permitir que os usuários escolham suas próprias preferências de idioma de interface"
     set_locale_from_accept_language_header: "define a língua da interface para os usuários anônimos de acordo com os cabeçalhos de língua de seus navegadores. (EXPERIMENTAL, não funciona com cache anônimo)"
     support_mixed_text_direction: "Suporta direções de texto misturadas da esquerda para a direita e da direita para a esquerda."
@@ -1322,7 +1322,7 @@ pt_BR:
     gtm_container_id: "ID do contêiner do Google Tag Manager. por exemplo: GTM-ABCDEF. <br/>Observação: os scripts de terceiros carregados pelo GTM podem precisar estar na lista de permitidos no 'src de script de política de segurança de conteúdo'."
     enable_escaped_fragments: "Voltar para a API do Google Ajax-Crawling se não for encontrado um webcrawler. Consulte <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
     moderators_create_categories: "Permitir a criação de categorias por moderadores"
-    cors_origins: "Origens permitidas para pedidos de origem-cruzada (CORS). Cada origem deve incluir http:// ou https://.  A variável de ambiente DISCOURSE_ENABLE_CORS deve ser definida como true para habilitar CORS."
+    cors_origins: "Origens permitidas para pedidos de origem-cruzada (CORS). Cada origem deve incluir http:// ou https://. A variável de ambiente DISCOURSE_ENABLE_CORS deve ser definida como true para habilitar CORS."
     use_admin_ip_whitelist: "Administradores só podem logar se estiverem na lista de IPs Filtrados (Administração > Logs > IPs Filtrados)."
     blacklist_ip_blocks: "Uma lista de blocos IP privados que nunca devem ser rastreados pelo Discourse"
     whitelist_internal_hosts: "Uma lista de hosts internos que o discurso pode rastrear com segurança para o oneboxing e outros fins"
@@ -1467,7 +1467,7 @@ pt_BR:
     purge_deleted_uploads_grace_period_days: "Carência (em dias) antes que um upload excluído seja apagado."
     purge_unactivated_users_grace_period_days: "Período de carência (em dias) antes que um usuário que não tenha ativado sua conta seja excluído. Defina como 0 para nunca eliminar usuários não ativados."
     enable_s3_uploads: "Colocar uploads no armazenamento da Amazon S3. IMPORTANTE: exige credenciais válidas da S3 (ambos id da chave de acesso & segredo da chave de acesso)."
-    s3_use_iam_profile: 'Use um  <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_use_switch-role-ec2_instance-profiles.html">AWS EC2 instance profile</a> para conceder acesso ao bucket S3. NOTA: habilitar isso requer que o Discourse esteja sendo executado em uma instância EC2 apropriadamente configurada, e sobrescreve as configurações "s3 access key key" e "s3 secret access key".'
+    s3_use_iam_profile: 'Use um <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_use_switch-role-ec2_instance-profiles.html">AWS EC2 instance profile</a> para conceder acesso ao bucket S3. NOTA: habilitar isso requer que o Discourse esteja sendo executado em uma instância EC2 apropriadamente configurada, e sobrescreve as configurações "s3 access key key" e "s3 secret access key".'
     s3_upload_bucket: "Nome do bucket da Amazon S3 no qual os arquivos serão enviados. AVISO: precisa ser em minúsculas, sem pontos, sem underscores."
     s3_access_key_id: "O ID da chave de acesso do Amazon S3 que será usado para fazer upload de imagens, anexos e backups."
     s3_secret_access_key: "A chave de acesso secreta do Amazon S3 que será usada para fazer upload de imagens, anexos e backups."
@@ -1532,7 +1532,7 @@ pt_BR:
     max_users_notified_per_group_mention: "Número máximo de usuários que podem receber uma notificação se um grupo for mencionado (se o limite for atingido, nenhuma notificação será gerada)"
     enable_mentions: "Permitir que os usuários mencionem outros usuários."
     create_thumbnails: "Criar thumbnails e lightbox para imagens que são muito largas para caber em uma postagem."
-    email_time_window_mins: "Aguardar (n) minutos antes de enviar quaisquer emails de notificação, para dar aos usuários  uma chance de editarem e finalizarem seus posts."
+    email_time_window_mins: "Aguardar (n) minutos antes de enviar quaisquer emails de notificação, para dar aos usuários uma chance de editarem e finalizarem seus posts."
     personal_email_time_window_seconds: "Aguarde (n) segundos antes de enviar qualquer e-mail de notificação de mensagem pessoal, para dar aos usuários a chance de editar e finalizar suas mensagens."
     email_posts_context: "Quantas respostas prévias incluir como contexto em emails de notificação."
     flush_timings_secs: "Frequência, em segundos, que irá descarregar dados de tempo para o servidor."
@@ -1695,7 +1695,6 @@ pt_BR:
     likes_notification_consolidation_window_mins: "Duração em minutos em que as notificações de curtidas são consolidadas em uma única notificação quando o limite é atingido. O limite pode ser configurado via `SiteSetting.likes_notification_consolidation_threshold`."
     automatically_unpin_topics: "Desafixar automaticamente os tópicos quando o usuário atinge o fundo."
     read_time_word_count: "Palavras por minuto para calcular o tempo estimado de leitura."
-    topic_page_title_includes_category: "O título da página do tópico inclui o nome da categoria."
     native_app_install_banner_ios: "Exibir o banner do aplicativo DiscourseHub em dispositivos iOS para usuários regulares (nível de confiança 1 e superior)."
     native_app_install_banner_android: "Exibir o banner do aplicativo DiscourseHub em dispositivos Android para usuários regulares (nível de confiança 1 e superior)."
     share_anonymized_statistics: "Compartilhar estatísticas de uso anônimas."
@@ -1706,7 +1705,7 @@ pt_BR:
     enable_names: "Mostrar o nome completo do usuário em seu perfil, cartão de usuário, e emails. Desabilitar para esconder o nome completo em todos os lugares."
     display_name_on_posts: "Também exibir o nome completo do usuário em suas mensagens"
     show_time_gap_days: "Se duas mensagens são feitas com N dias de intervalo, mostre o intervalo no tópico."
-    short_progress_text_threshold: "Após o número de mensagens em um tópico for acima deste número, a barra de progresso mostrará apenas o número  da mensagem atual. Se você alterar a largura da barra de progresso, você pode precisar alterar este valor."
+    short_progress_text_threshold: "Após o número de mensagens em um tópico for acima deste número, a barra de progresso mostrará apenas o número da mensagem atual. Se você alterar a largura da barra de progresso, você pode precisar alterar este valor."
     default_code_lang: "Realce de sintaxe padrão da linguagem de programação aplicada a blocos de código GitHub (lang-auto, Ruby, Python, etc)"
     warn_reviving_old_topic_age: "Quando alguém começa a responder a um tópico mais velho do que este número de dias, um aviso será exibido para desencorajar o usuário de reviver uma velha discussão. Desabilite definindo para 0."
     autohighlight_all_code: "Aplicar código destacando todos os blocos de código pré-formatados, mesmo quando não for específica o idioma"
@@ -2093,7 +2092,7 @@ pt_BR:
       %{invite_link}
   invite_password_instructions:
     title: "Convidar instruções de senha"
-    subject_template: "Defina uma senha para a sua %{site_name}  conta"
+    subject_template: "Defina uma senha para a sua %{site_name} conta"
     text_body_template: |
       Obrigado por aceitar o convite para %{site_name} -- bem-vindo!
 
@@ -2590,14 +2589,6 @@ pt_BR:
     ignored_users_summary:
       title: "Usuário Ignorado passou o limite"
       subject_template: "Um usuário está sendo ignorado por muitos outros usuários"
-      text_body_template: |
-        Olá,
-
-        Esta é uma mensagem automatizada de %{site_name} para informá-lo de que o [perfil de usuário](%{base_url}/u/%{username}/summary) foi ignorado por %{ignores_threshold} usuários. Isto pode indicar que um problema está se desenvolvendo em sua comunidade.
-
-        Você talvez queira revisar postagens recentes deste usuário e, potencialmente, de outros usuários no [relatório de usuários ignorados](%{base_url}/admin/reports/top_ignored_users).
-
-        Para orientações adicionais, consulte nossas [diretrizes da comunidade](%{base_url}/guidelines).
     too_many_spam_flags:
       title: "Muitas Sinalizações de Spam"
       subject_template: "Nova conta suspensa"
@@ -2615,7 +2606,7 @@ pt_BR:
       text_body_template: |
         Olá,
 
-        Essa  é uma mensagem automatizada de  %{site_name} para informá-lo de que sua conta foi colocada em espera devido a um grande número de sinalizações da comunidade.
+        Essa é uma mensagem automatizada de %{site_name} para informá-lo de que sua conta foi colocada em espera devido a um grande número de sinalizações da comunidade.
 
         Como medida de precaução, sua nova conta foi silenciada para criar novas respostas ou tópicos até que um membro da equipe possa revisar sua conta. Pedimos desculpas pela inconveniência.
 
@@ -3053,7 +3044,7 @@ pt_BR:
       title: "Inscrever-se"
       subject_template: "[%{email_prefix}] Confirme sua nova conta"
       text_body_template: |
-        Bem-vindo(a)  %{site_name}!
+        Bem-vindo(a) %{site_name}!
 
         Clique no link a seguir para confirmar e ativar sua nova conta:
         %{base_url}/u/activate-account/%{email_token}
@@ -3195,10 +3186,10 @@ pt_BR:
 
       Qualquer informação que coletamos de você pode ser usada de uma das seguintes formas:
 
-      *   Para personalizar sua experiência & mdash; suas informações nos ajudam a responder melhor às suas necessidades individuais.
-      *   Para melhorar nosso site & mdash; nos esforçamos continuamente para melhorar nossas ofertas de sites com base nas informações e comentários que recebemos de você.
-      *   Para melhorar o atendimento ao cliente & mdash; suas informações nos ajudam a responder com mais eficácia às suas solicitações de atendimento ao cliente e às necessidades de suporte.
-      *   Para enviar emails periódicos & mdash; O endereço de e-mail que você fornece pode ser usado para enviar informações, notificações que você solicita sobre alterações em tópicos ou em resposta ao seu nome de usuário, responder a perguntas e / ou outras solicitações ou perguntas.
+      * Para personalizar sua experiência & mdash; suas informações nos ajudam a responder melhor às suas necessidades individuais.
+      * Para melhorar nosso site & mdash; nos esforçamos continuamente para melhorar nossas ofertas de sites com base nas informações e comentários que recebemos de você.
+      * Para melhorar o atendimento ao cliente & mdash; suas informações nos ajudam a responder com mais eficácia às suas solicitações de atendimento ao cliente e às necessidades de suporte.
+      * Para enviar emails periódicos & mdash; O endereço de e-mail que você fornece pode ser usado para enviar informações, notificações que você solicita sobre alterações em tópicos ou em resposta ao seu nome de usuário, responder a perguntas e / ou outras solicitações ou perguntas.
 
       <a name="protect"></a>
 
@@ -3212,8 +3203,8 @@ pt_BR:
 
       Faremos um esforço de boa fé para:
 
-      *   Manter logs do servidor contendo o endereço IP de todas as solicitações para esse servidor por no máximo 90 dias.
-      *   Manter os endereços IP associados aos usuários registrados e suas postagens não mais que 5 anos.
+      * Manter logs do servidor contendo o endereço IP de todas as solicitações para esse servidor por no máximo 90 dias.
+      * Manter os endereços IP associados aos usuários registrados e suas postagens não mais que 5 anos.
 
       <a name="cookies"></a>
 

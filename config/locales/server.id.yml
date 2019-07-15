@@ -25,6 +25,7 @@ id:
   topics: "Topik"
   posts: "post"
   loading: "Memuat"
+  sign_up: "Mendaftar"
   log_in: "Log In"
   purge_reason: "Secara otomatis dihapus sebagai akun yang ditinggalkan, dinon-aktifkan."
   disable_remote_images_download_reason: "Unduh gambar jarak jauh dimatikan karena ruang penyimpanan di server tidak cukup."

@@ -33,7 +33,7 @@ ko:
       long_with_year: "YYYY MMM D a h:mm"
       long_with_year_no_time: "YYYY MMM D"
       full_with_year_no_time: "YYYY MMMM Do"
-      long_date_with_year: "'YY MMM D.  LT"
+      long_date_with_year: "'YY MMM D. LT"
       long_date_without_year: "MMM D, LT"
       long_date_with_year_without_time: "'YY MMM D"
       long_date_without_year_with_linebreak: "MMM D <br/>LT"
@@ -152,6 +152,7 @@ ko:
         us_east_1: "미국 동부 (N. 버지니아)"
         us_east_2: "미국 동부 (오하이오)"
         us_gov_east_1: "AWS GovCloud (미국 동부)"
+        us_gov_west_1: "AWS GovCloud (미국 서부)"
         us_west_1: "미국 서부 (N. 캘리포니아)"
         us_west_2: "미국 서부 (오레곤)"
     edit: "이 토픽의 제목과 카테고리 편집"
@@ -284,9 +285,11 @@ ko:
       in_reply_to: "답글"
       delete: "삭제"
       settings:
+        saved: "저장 완료"
         save_changes: "변경사항 저장"
         title: "설정"
       moderation_history: "관리 히스토리"
+      view_all: "모두 보기"
       none: "검토 할 항목이 없습니다."
       view_pending: "보류중 보기"
       topic_has_pending:
@@ -299,6 +302,7 @@ ko:
         username: "아이디"
         email: "이메일"
         name: "이름"
+        fields: "필드"
       user_percentage:
         summary:
           other: "{{agreed}},{{disagreed}},{{ignored}} (전체 {{count}}개의 신고)"
@@ -319,18 +323,24 @@ ko:
       save: "저장"
       cancel: "취소"
       filters:
+        all_categories: "(전체 카테고리)"
         type:
           title: "형식"
           all: "(모든 유형)"
         minimum_score: "최소 점수:"
         refresh: "새로고침"
+        status: "상태"
         category: "카테고리"
+        priority:
+          medium: "중간"
+          high: "높음"
       conversation:
         view_full: "전체 대화 보기"
       scores:
         score: "점수"
         date: "날짜"
         type: "형식"
+        status: "상태"
         submitted_by: "제출자"
       statuses:
         pending:
@@ -358,7 +368,7 @@ ko:
     user_action:
       user_posted_topic: "<a href='{{userUrl}}'>{{user}}</a>님이 <a href='{{topicUrl}}'>토픽</a>을 게시했습니다"
       you_posted_topic: "<a href='{{userUrl}}'>회원님</a>이 <a href='{{topicUrl}}'>토픽</a>을 게시했습니다"
-      user_replied_to_post: "<a href='{{userUrl}}'>{{user}}</a>님이  <a href='{{postUrl}}'>{{post_number}}</a> 게시글에 답글 올림"
+      user_replied_to_post: "<a href='{{userUrl}}'>{{user}}</a>님이 <a href='{{postUrl}}'>{{post_number}}</a> 게시글에 답글 올림"
       you_replied_to_post: "<a href='{{userUrl}}'>내</a>가 <a href='{{postUrl}}'>{{post_number}}</a> 게시글에 답글 올림"
       user_replied_to_topic: "<a href='{{userUrl}}'>{{user}}</a>님이 <a href='{{topicUrl}}'>토픽</a>에 답글을 올렸습니다"
       you_replied_to_topic: "<a href='{{userUrl}}'>회원님</a>이 <a href='{{topicUrl}}'>토픽</a>에 댓글을 달았습니다"
@@ -396,13 +406,17 @@ ko:
         make_user_group_owner: "소유자로 지정하기"
         remove_user_as_group_owner: "소유자 지정 취소하기"
     groups:
+      member_added: "추가됨"
       add_members:
         title: "사용자 추가"
         description: "이 그룹의 회원 관리"
         usernames: "아이디"
       requests:
         reason: "사유"
+        accept: "승인"
         accepted: "승인됨"
+        deny: "거부"
+        denied: "거부됨"
       manage:
         title: "관리"
         name: "이름"
@@ -437,6 +451,7 @@ ko:
         topics: "이 그룹의 멤버가 작성한 토픽이 없습니다."
         logs: "이 그룹에 대한 기록이 없습니다."
       add: "추가"
+      leave: "나가기"
       request: "요청"
       message: "메시지"
       allow_membership_requests: "사용자가 그룹 소유자에게 가입신청을 할 수 있도록 허용합니다"
@@ -657,9 +672,7 @@ ko:
       muted_users: "알람 끄기"
       muted_users_instructions: "이 회원이 보낸 알림 모두 숨김"
       ignored_users: "무시됨"
-      muted_topics_link: "알림을 끈 토픽 보기"
-      watched_topics_link: "읽은 토픽 보기"
-      tracked_topics_link: "관심있는 토픽 보기"
+      tracked_topics_link: "보이기"
       automatically_unpin_topics: "글 끝에 다다르면 자동으로 토픽 고정을 해제합니다."
       apps: "앱"
       revoke_access: "접근권한 회수"
@@ -709,7 +722,6 @@ ko:
         disable: "해제"
         enable: "설정"
         enable_long: "백업 코드 사용"
-        manage: "백업 코드 관리"
         copied_to_clipboard: "클립보드에 복사됨"
         copy_to_clipboard_error: "데이터를 클립보드에 복사하는데 오류가 발생했습니다."
         codes:
@@ -719,6 +731,7 @@ ko:
         confirm_password_description: "비밀번호를 확인해주세요."
         label: "코드"
         use: "<a href>OTP 앱 사용</a>"
+        edit: "수정"
       change_about:
         title: "내 소개 변경"
         error: "값을 바꾸는 중 에러가 발생했습니다."
@@ -761,7 +774,7 @@ ko:
         authenticated: "내 이메일이 {{provider}}에 의해 인증되었습니다."
         frequency_immediately: "만약 전송된 메일을 읽지 않았을 경우, 즉시 메일을 다시 보내드립니다."
         frequency:
-          other: "최근  {{count}}분 동안접속하지 않을 경우에만 메일이 전송됩니다."
+          other: "최근 {{count}}분 동안접속하지 않을 경우에만 메일이 전송됩니다."
       associated_accounts:
         connect: "연결"
         revoke: "회수"
@@ -886,7 +899,7 @@ ko:
         link_generated: "초대 링크가 성공적으로 생성되었습니다!"
         valid_for: "이 초대링크는 이메일 주소 '%{email}'에 한해서만 유효합니다."
         bulk_invite:
-          none: "아직 아무도 초대하지 않으셨어요. 한 명씩 초대장을 보내거나,  <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>CSV 파일을 업로드</a>해서 여러 사람에게 한꺼번에 초대장을 보낼 수 있습니다."
+          none: "아직 아무도 초대하지 않으셨어요. 한 명씩 초대장을 보내거나, <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>CSV 파일을 업로드</a>해서 여러 사람에게 한꺼번에 초대장을 보낼 수 있습니다."
           text: "파일로 대량 초대하기"
           success: "파일이 성공적으로 업로드되었습니다. 완료되면 메시지로 알려드리겠습니다."
           error: "죄송합니다. CSV형식의 파일만 올릴 수 있습니다."
@@ -1275,7 +1288,7 @@ ko:
         quoted: '"{{topic}}" - {{site_title}}에서 {{username}} 님이 나를 인용했습니다'
         replied: '"{{topic}}" - {{site_title}}에서 {{username}} 님이 내게 답글을 달았습니다'
         posted: '"{{topic}}" - {{site_title}}에서 {{username}}님이 글을 게시하였습니다'
-        linked: '{{username}}님이  "{{topic}}" - {{site_title}}에 내 글을 링크했습니다'
+        linked: '{{username}}님이 "{{topic}}" - {{site_title}}에 내 글을 링크했습니다'
         confirm_title: "알림 활성 - %{site_title}"
         confirm_body: "완료! 알림이 활성화되었습니다."
       titles:
@@ -1512,7 +1525,7 @@ ko:
       status_update_notice:
         auto_open: "이 토픽은 %{timeLeft}후에 자동으로 열립니다."
         auto_close: "이 토픽은 %{timeLeft}후에 자동으로 닫힙니다."
-        auto_publish_to_category: "이 토픽은 <a href=%{categoryUrl}>#%{categoryName}</a>에  %{timeLeft}시간이 지나면 발행됩니다."
+        auto_publish_to_category: "이 토픽은 <a href=%{categoryUrl}>#%{categoryName}</a>에 %{timeLeft}시간이 지나면 발행됩니다."
         auto_close_based_on_last_post: "이 주제는 마지막 답글이 달린 %{duration} 후 닫힙니다."
         auto_delete: "이 토픽은 %{timeLeft}후에 자동으로 삭제됩니다."
         auto_reminder: "%{timeLeft}후에 이 토픽을 다시 알려드리겠습니다."
@@ -1666,7 +1679,7 @@ ko:
         email_placeholder: "이메일 주소"
         success_email: "<b>{{emailOrUsername}}</b>로 초대장을 발송했습니다. 초대를 수락하면 알려 드리겠습니다. 초대상태를 확인하려면 사용자 페이지에서 '초대장' 탭을 선택하세요."
         success_username: "사용자가 이 주제에 참여할 수 있도록 초대했습니다."
-        error: "그 사람을 초대할 수 없습니다. 혹시 이미 초대하진 않았나요?  (Invites are rate limited)"
+        error: "그 사람을 초대할 수 없습니다. 혹시 이미 초대하진 않았나요? (Invites are rate limited)"
         success_existing_email: "해당 email을 사용하고 있는 사용자 <b>{{emailOrUsername}}</b> 가 이미 존재합니다. 그 사용자를 이 토픽에 참여하도록 초청했습니다."
       login_reply: "로그인하고 답글 쓰기"
       filters:
@@ -1745,7 +1758,7 @@ ko:
         other: "{{count}}명이 이 글을 좋아합니다"
       has_likes_title_only_you: "당신이 이 글을 좋아합니다."
       has_likes_title_you:
-        other: "당신 외  {{count}}명이 이 글을 좋아합니다"
+        other: "당신 외 {{count}}명이 이 글을 좋아합니다"
       errors:
         create: "죄송합니다. 글을 만드는 동안 오류가 발생했습니다. 다시 시도하십시오."
         edit: "죄송합니다. 글을 수정하는 중에 오류가 발생했습니다. 다시 시도하십시오."
@@ -1938,6 +1951,7 @@ ko:
         options:
           normal: "알림 : 일반"
           ignore: "무시"
+          high: "높음"
       sort_options:
         default: "기본값"
         likes: "좋아요 수"
@@ -2388,15 +2402,13 @@ ko:
             visibility_levels:
               title: "누가 이 그룹을 볼 수 있나요?"
               public: "모두"
-              members: "그룹 소유자, 멤버, 관리자"
               staff: "그룹 소유자와 운영진"
-              owners: "그룹 소유자와 관리자"
           membership:
             automatic: 자동
             trust_level: 신뢰도
             trust_levels_title: "멤버들이 추가되면 회원등급이 자동으로 부여됩니다:"
             trust_levels_none: "없음"
-            automatic_membership_email_domains: "이 목록의 있는 항목과 사용자들이  등록한 이메일 도메인이 일치할때 이 그룹에 포함"
+            automatic_membership_email_domains: "이 목록의 있는 항목과 사용자들이 등록한 이메일 도메인이 일치할때 이 그룹에 포함"
             automatic_membership_retroactive: "이미 등록된 사용자에게 같은 이메일 도메인 규칙 적용하기"
             primary_group: "기본 그룹으로 자동 설정"
         name_placeholder: "그룹 이름, 공백 없이 username 규칙과 동일하게 입력하세요."
@@ -2546,7 +2558,7 @@ ko:
           title: "백업을 업로드"
           uploading: "업로드 중..."
           uploading_progress: "업로드중... {{progress}}%"
-          success: "'{{filename}}'이(가) 성공적으로 업로드 되었습니다.  파일은 처리중이며 몇분후에 리스트에 보여집니다."
+          success: "'{{filename}}'이(가) 성공적으로 업로드 되었습니다. 파일은 처리중이며 몇분후에 리스트에 보여집니다."
           error: "'{{filename}}' 파일 업로드중 에러가 발생하였습니다. ({{message}})"
         operations:
           is_running: "실행 중입니다."
@@ -2657,6 +2669,8 @@ ko:
           install_popular: "인기"
           about_theme: "소개"
           license: "라이센스 정보"
+          enable: "설정"
+          disable: "해제"
           update_to_latest: "최신버전으로 업데이트하기"
           check_for_updates: "업데이트 체크하기"
           updating: "업데이트 중..."
@@ -3016,7 +3030,7 @@ ko:
         logged_out: "사용자가 모든 디바이스에서 로그아웃 되었습니다."
         revoke_admin: "관리자 권한 회수"
         grant_admin: "관리자 권한 부여"
-        grant_admin_confirm: "새로운 관리자를 인증하기 위해 메일을 보냈습니다. 메일을 열어서  메일에 적힌 지시에 따라 주세요."
+        grant_admin_confirm: "새로운 관리자를 인증하기 위해 메일을 보냈습니다. 메일을 열어서 메일에 적힌 지시에 따라 주세요."
         revoke_moderation: "운영자 권한 회수"
         grant_moderation: "운영자 권한 부여"
         unsuspend: "접근 허용"

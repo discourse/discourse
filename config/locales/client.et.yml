@@ -623,9 +623,7 @@ et:
       users: "Kasutajad"
       muted_users: "Vaigistatud"
       muted_users_instructions: "Summuta kõik teavitused nendelt kasutajatelt."
-      muted_topics_link: "Näita vaigistatud teemasid"
-      watched_topics_link: "Näita vaatlusaluseid teemasid"
-      tracked_topics_link: "Näita jälgitud teemasid"
+      tracked_topics_link: "Näita"
       automatically_unpin_topics: "Eemalda lõppu jõudmisel teemadelt automaatselt esiletõstmise märgistus."
       apps: "Äpid"
       revoke_access: "Tühista ligipääs"
@@ -680,6 +678,7 @@ et:
         label: "Kood"
         rate_limit: "Palun oota enne kui proovid mõnda teist autentimise koodi."
         show_key_description: "Sisesta käsitsi"
+        edit: "Muuda"
       change_about:
         title: "Muuda minu andmeid"
         error: "Välja muutmisel tekkis viga."
@@ -851,7 +850,7 @@ et:
         create: "Saada kutse"
         generate_link: "Kopeeri viide kutsele"
         link_generated: "Kutse link edukalt genereeritud!"
-        valid_for: "Kutse link kehtib vaid meiliaadressile:  %{email}"
+        valid_for: "Kutse link kehtib vaid meiliaadressile: %{email}"
         bulk_invite:
           none: "Sa pole veel kedagi siia kutsunud. Saada üksikuid kutseid või paljudele korraga <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>laadides üles CSV faili</a>."
           text: "Masskutse Failist"
@@ -2144,7 +2143,7 @@ et:
       actions:
         title: "Tegevused"
         bookmark_topic: "%{shortcut} Lülita teema järjehoidja sisse/välja\n "
-        pin_unpin_topic: "%{shortcut}  Kinnita/Vabasta teema"
+        pin_unpin_topic: "%{shortcut} Kinnita/Vabasta teema"
         share_topic: "%{shortcut} Jaga teemat"
         share_post: "%{shortcut} Jaga postitust"
         reply_as_new_topic: "%{shortcut} Vasta viidates teemale"
@@ -2361,9 +2360,7 @@ et:
             visibility_levels:
               title: "Kes näevad seda gruppi?"
               public: "Kõik"
-              members: "Grupi omanikud, liikmed ja adminid"
               staff: "Grupi omanikud ja personal"
-              owners: "Grupi omanikud ja adminid"
           membership:
             automatic: Automaatne
             trust_level: Usalduse tase
@@ -2604,6 +2601,8 @@ et:
           install_popular: "Populaarsed"
           about_theme: "Teave"
           license: "Litsents"
+          enable: "Luba"
+          disable: "Keela"
           updating: "Uuendamine..."
           add: "Lisa"
           theme_settings: "Teema seaded"
@@ -2967,12 +2966,12 @@ et:
           one: "Kasutajaid ei saa kustutada, kui neil on postitusi. Kustuta kõik postitused enne kasutaja kustutamist. (Postitusi vanemaid, kui %{count} päev ei saa kustutada.)"
           other: "Kasutajaid ei saa kustutada, kui neil on postitusi. Kustuta kõik postitused enne kasutaja kustutamist. (Postitusi vanemaid, kui %{count} päeva ei saa kustutada.)"
         cant_delete_all_posts:
-          one: "Ei saa kustutada kõiki postitusi. Osa postitusi on vanemad, kui  %{count} päev. (delete_user_max_post_age säte.) "
-          other: "Ei saa kustutada kõiki postitusi. Osa postitusi on vanemad, kui  %{count} päeva. (delete_user_max_post_age säte.) "
+          one: "Ei saa kustutada kõiki postitusi. Osa postitusi on vanemad, kui %{count} päev. (delete_user_max_post_age säte.) "
+          other: "Ei saa kustutada kõiki postitusi. Osa postitusi on vanemad, kui %{count} päeva. (delete_user_max_post_age säte.) "
         cant_delete_all_too_many_posts:
-          one: "Ei saa kustutada kõiki postitusi, sest kasutajal on rohkem, kui  %{count} postitus. (delete_all_posts_max)"
-          other: "Ei saa kustutada kõiki postitusi, sest kasutajal on rohkem, kui  %{count} postitust. (delete_all_posts_max)"
-        delete_and_block: "Kustuta ja <b>blokeeri</b> see meiliaadress ja  IP-aadress"
+          one: "Ei saa kustutada kõiki postitusi, sest kasutajal on rohkem, kui %{count} postitus. (delete_all_posts_max)"
+          other: "Ei saa kustutada kõiki postitusi, sest kasutajal on rohkem, kui %{count} postitust. (delete_all_posts_max)"
+        delete_and_block: "Kustuta ja <b>blokeeri</b> see meiliaadress ja IP-aadress"
         delete_dont_block: "Kustuta vaid"
         deleted: "See kasutaja kustutati."
         delete_failed: "Viga selle kasutaja kustutamisel. Veendu, et kõik postitused on kustutatud enne kasutaja kustutamist."

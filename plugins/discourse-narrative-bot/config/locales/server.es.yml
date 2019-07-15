@@ -7,7 +7,7 @@
 
 es:
   site_settings:
-    discourse_narrative_bot_enabled: 'Habilitar Discourse Narrative Bot (discobot)'
+    discourse_narrative_bot_enabled: "Habilitar Discourse Narrative Bot (discobot)"
     disable_discourse_narrative_bot_welcome_post: "Deshabilitar la publiación de bienvenida de Discourse Narrative Bot"
     discourse_narrative_bot_ignored_usernames: "Nombres de usuario que el Discourse Narrative Bot debe ignorar."
     discourse_narrative_bot_disable_public_replies: "Deshabilitar las respuestas públicas de Discourse Narrative Bot"
@@ -82,7 +82,7 @@ es:
       results: |-
         > :left_speech_bubble: _%{quote}_ &mdash; %{author}
     magic_8_ball:
-      trigger: 'suerte'
+      trigger: "suerte"
       answers:
         '1': "Es cierto"
         '2': "Es decididamente así"
@@ -107,9 +107,9 @@ es:
       result: |-
         > :crystal_ball: %{result}
     track_selector:
-      reset_trigger: 'empezar'
-      skip_trigger: 'saltar'
-      help_trigger: 'mostrar ayuda'
+      reset_trigger: "empezar"
+      skip_trigger: "saltar"
+      help_trigger: "mostrar ayuda"
       random_mention:
         reply: |-
           ¡Hola! Para saber qué puedo hacer, escribe `@%{discobot_username} %{help_trigger}`.
@@ -219,11 +219,11 @@ es:
           Seleccionando cualquier texto de mi mensaje, aparecerá la palabra <kbd>**Citar**</kbd>, como si fuese un botón. Y si decides presionar **Responder** habiendo seleccionado el texto, funcionará igual! ¿Puedes intentarlo de nuevo?
       bookmark:
         instructions: |-
-          Si quieres aprender más, selecciona debajo el botón <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> y <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-bookmark.png" width="16" height="16"> **marca como favorito este mensaje personal**.  Si lo haces, ¡puede haber un :gift: en tu futuro!
+          Si quieres aprender más, selecciona debajo el botón <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> y <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-bookmark.png" width="16" height="16"> **marca como favorito este mensaje personal**. Si lo haces, ¡puede haber un :gift: en tu futuro!
         reply: |-
           Excelente! Ahora puedes encontrar fácilmente las conversaciones privadas en cualquier momento, desde la [sección de marcadores de tu perfil](%{profile_page_url}/activity/bookmarks). Sólo debes seleccionar la foto de tu perfil en la parte superior derecha de la pantalla &#8599;
         not_found: |-
-          Uh oh,  no veo ningún mensaje guardado en este tema. ¿Encontraste el botón para guardar debajo de cada mensaje?  Usa el mostrar más <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> para que aparezcan acciones adicionales si necesitas.
+          Uh oh, no veo ningún mensaje guardado en este tema. ¿Encontraste el botón para guardar debajo de cada mensaje? Usa el mostrar más <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> para que aparezcan acciones adicionales si necesitas.
       emoji:
         instructions: |-
           Me has visto usando pequeñas imágenes en mis respuestas :blue_car::dash: estos se llaman [emoji](https://es.wikipedia.org/wiki/Emoji). ¿Puedes **agregar un emoji** a tu próxima respuesta? Cualquiera de éstos funcionará:
@@ -248,7 +248,7 @@ es:
           A veces, quieres captar la atención de alguien en un debate, incluso aunque no le estés respondiendo a su mensaje directamente. Para ésto, escribe `@` seguido del nombre del usuario que quieres mencionar.
           Puedes mencionar **`@%{discobot_username}`** en tu respuesta?
         reply: |-
-          _Alguien dijo mi nombre!?_ :raised_hand: Creo que tú lo hiciste! :wave:  Bien, aquí estoy! Gracias por mencionarme.  :ok_hand:
+          _Alguien dijo mi nombre!?_ :raised_hand: Creo que tú lo hiciste! :wave: Bien, aquí estoy! Gracias por mencionarme. :ok_hand:
         not_found: |-
           No veo que hayas dicho mi nombre en ningún lugar. :frowning: ¿Puedes intentar mencionarme como `@%{discobot_username}` de nuevo por favor?
 
@@ -257,13 +257,13 @@ es:
         instructions: |-
           Nos gustan nuestras discusiones amistosas y necesitamos tu ayuda para [mantener las cosas civilizadas](%{guidelines_url}). Si ves un problema, por favor reporta anónimamente el mismo así el staff toma conocimiento o bien puedes contactar al [staff](%{about_url}), si así lo deseas.
 
-          >  :imp: Escribí algo asqueroso aquí
+          > :imp: Escribí algo asqueroso aquí
 
           Me imagino que sabes qué hacer. Anímate, **reporta este mensaje** con el botón <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16"> como inapropiado!
         reply: |-
           [Nuestro staff](%{base_uri}/groups/staff) será notificado por privado sobre tu reporte. Si un número suficiente de miembros reportan un mensaje, será ocultado automáticamente como precaución. (Puesto que no escribí algo realmente desagradable :angel:, he quitado la bandera por ahora.)
         not_found: |-
-          Oh no, mi mensaje asqueroso no ha sido reportado aún. :worried: ¿Puedes reportar como inapropiado usando la **bandera** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16">? No olvides que esa opción está oculta, así que debes primero presionar el botón <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16">  para ver otras opciones para cada mensaje.
+          Oh no, mi mensaje asqueroso no ha sido reportado aún. :worried: ¿Puedes reportar como inapropiado usando la **bandera** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16">? No olvides que esa opción está oculta, así que debes primero presionar el botón <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> para ver otras opciones para cada mensaje.
       search:
         instructions: |-
           _psst_ … He ocultado una sorpresa en este tema. Si estás listo para el desafío, **selecciona el botón para buscar** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> que está arriba a la derecha &#8599; y ahí puedes buscar palabras.
@@ -295,11 +295,11 @@ es:
 
           (Si deseas hablar conmigo de nuevo para aprender más, solo envía un mensaje privado o me mencionas `@%{discobot_username}` en cualquier momento!)
       certificate:
-        alt: 'Certificado de logro'
+        alt: "Certificado de logro"
     advanced_user_narrative:
-      reset_trigger: 'tutorial avanzado'
+      reset_trigger: "tutorial avanzado"
       cert_title: "En reconocimiento de la finalización exitosa del tutorial de usuario avanzado"
-      title: ':arrow_up: Funciones avanzadas del usuario'
+      title: ":arrow_up: Funciones avanzadas del usuario"
       start_message: |-
         Como un usuario _avanzado_, ¿no has visitado [tus preferencias](%{base_uri}/my/preferences) aún @%{username}? Hay muchas formas de personalizar tu experiencia, por ejemplo podrías elegir un diseño oscuro o bien uno claro.
 
@@ -322,13 +322,13 @@ es:
 
           ¡Vamos! **Borra** cualquiera de los posts utilizando el icono <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-trash.png" width="16" height="16"> para **borrar**. ¡No vayas a borrar todo el tema!
         not_found: |-
-          ¿No veo que hayas borrado algún post aún? Recuerda presionar <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> para que aparezca el botón  <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-trash.png" width="16" height="16"> para borrar.
+          ¿No veo que hayas borrado algún post aún? Recuerda presionar <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> para que aparezca el botón <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-trash.png" width="16" height="16"> para borrar.
         reply: |-
           Whoa! :boom:
 
           Para preservar la continuidad de las discusiones, las supresiones no son inmediatas, por lo que la publicación se eliminará después de algún tiempo.
       recover:
-        deleted_post_raw: 'Por qué @%{discobot_username} borró mi mensaje? :anguished:'
+        deleted_post_raw: "Por qué @%{discobot_username} borró mi mensaje? :anguished:"
         instructions: |-
           Oh no! Parece que accidentalmente borré un nuevo post que acababa de crear para ti.
 
@@ -419,4 +419,4 @@ es:
 
           ¡Adiós por ahora! Si desea hablar conmigo de nuevo, envíeme un mensaje en cualquier momento :sunglasses:
       certificate:
-        alt: 'Advanced User Track Certificate of Achievement'
+        alt: "Advanced User Track Certificate of Achievement"

@@ -794,9 +794,7 @@ fr:
       muted_users_instructions: "Cacher toutes les notifications de ces utilisateurs."
       ignored_users: "Ignoré"
       ignored_users_instructions: "Cacher toutes les publications et les notifications de ces utilisateurs."
-      muted_topics_link: "Afficher les sujets en silencieux"
-      watched_topics_link: "Afficher les sujets surveillés"
-      tracked_topics_link: "Afficher les sujets suivis"
+      tracked_topics_link: "Afficher"
       automatically_unpin_topics: "Désépingler automatiquement les sujets quand j'arrive à la fin."
       apps: "Applications"
       revoke_access: "Révoquer l'accès"
@@ -848,7 +846,7 @@ fr:
         disable: "Désactiver"
         enable: "Activer"
         enable_long: "Activer les codes de secours"
-        manage: "Gérer les codes de secours"
+        manage: "Gérer les codes de sauvegarde. Il vous reste <strong>{{count}}</strong> code(s) de sauvegarde."
         copied_to_clipboard: "Copié dans le presse-papiers"
         copy_to_clipboard_error: "Erreur en copiant les données dans le presse-papiers"
         remaining_codes: "Vous avez <strong>{{count}}</strong> codes de secours restants."
@@ -858,8 +856,7 @@ fr:
           description: "Chaque code de secours ne peut être utilisé qu'une seule fois. Garder les dans un endroit sûr mais accessible."
       second_factor:
         title: "Authentification à deux facteurs"
-        disable: "Désactiver l'authentification à deux facteurs"
-        enable: "Activer l'authentification à deux facteurs"
+        enable: "Paramètres d'authentification à deux facteurs"
         confirm_password_description: "Merci de confirmer votre mot de passe pour continuer"
         label: "Code"
         rate_limit: "Veuillez patienter avant d'essayer un autre code d'identification."
@@ -873,6 +870,8 @@ fr:
         oauth_enabled_warning: "Veuillez noter que les connexions sociales seront désactivées une fois que l'authentification à deux facteurs aura été activée sur votre compte."
         use: "<a href>Utiliser l'application Authenticator</a>"
         enforced_notice: "Vous devez activer l'authentification à deux facteurs pour accéder à ce site."
+        disable: "désactiver"
+        edit: "Modifier"
       change_about:
         title: "Modifier À propos de moi"
         error: "Il y a eu une erreur lors de la modification de cette valeur."
@@ -943,7 +942,7 @@ fr:
         prefilled: "L'adresse de courriel correspond à ce pseudo enregistré"
       locale:
         title: "Langue de l'interface"
-        instructions: "Langue de l'interface utilisateur.  Le changement sera pris en compte lorsque vous actualiserez la page."
+        instructions: "Langue de l'interface utilisateur. Le changement sera pris en compte lorsque vous actualiserez la page."
         default: "(par défaut)"
         any: "tous"
       password_confirmation:
@@ -1173,9 +1172,6 @@ fr:
       enabled: "Le site est en mode lecture seule. Vous pouvez continer à naviguer, mais les réponses, J'aime et autre interactions sont désactivées pour l'instant."
       login_disabled: "La connexion est désactivée quand le site est en lecture seule."
       logout_disabled: "La déconnexion est désactivée quand le site est en lecture seule."
-    too_few_topics_and_posts_notice: "Faites <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>partir la discussion !</a> Il y a actuellement <strong>%{currentTopics} / %{requiredTopics}</strong> sujets et <strong>%{currentPosts} / %{requiredPosts}</strong> messages. Les nouveaux utilisateurs ont besoin de discussions qu'ils peuvent lire et sur lesquelles ils peuvent répondre."
-    too_few_topics_notice: "<a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>Démarrons cette discussion !</a> Il y a actuellement <strong>%{currentTopics} / %{requiredTopics}</strong> sujets. Les nouveaux visiteurs ont besoin de quelques conversations à lire et répondre."
-    too_few_posts_notice: "<a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>Démarrons cette discussion !</a> Il y a actuellement <strong>%{currentPosts} / %{requiredPosts}</strong> messages. Les nouveaux visiteurs ont besoin de quelques conversations à lire et répondre."
     logs_error_rate_notice:
       reached_hour_MF: "{relativeAge} – {rate, plural, one {# erreur/heure} other {# erreurs/heure}} arrive à la limite paramétrée de {limit, plural, one {# erreur/heure} other {# erreurs/heure}}."
       reached_minute_MF: "{relativeAge} – {rate, plural, one {# erreur/minute} other {# erreurs/minute}} arrive à la limite paramétrée de {limit, plural, one {# erreur/minute} other {# erreurs/minute}}."
@@ -2474,7 +2470,7 @@ fr:
     posts_long: "il y a {{number}} messages dans ce sujet"
     posts_likes_MF: |2
 
-      Ce sujet a {count, plural, one {1 réponse} other {# réponses}}  {ratio, select,
+      Ce sujet a {count, plural, one {1 réponse} other {# réponses}} {ratio, select,
 
       low {avec un haut ratio J'aime/messages}
 
@@ -2923,9 +2919,7 @@ fr:
             visibility_levels:
               title: "Qui peut voir ce groupe ?"
               public: "Tout le monde"
-              members: "Propriétaires du groupe, membres et administrateurs"
               staff: "Propriétaires du groupe et responsables"
-              owners: "Propriétaires du groupe et administrateurs"
           membership:
             automatic: Automatique
             trust_level: Niveau de confiance
@@ -2972,7 +2966,7 @@ fr:
       web_hooks:
         title: "Webhooks"
         none: "Il n'y a aucun Webhook actuellement."
-        instruction: "Les Webhooks permettent à Discourse de notifier des services externes  lorsque certains événements se produisent sur votre site. Quand un Webhook est déclenché, une requête POST est envoyée aux URLs fournies."
+        instruction: "Les Webhooks permettent à Discourse de notifier des services externes lorsque certains événements se produisent sur votre site. Quand un Webhook est déclenché, une requête POST est envoyée aux URLs fournies."
         detailed_instruction: "Une requête POST sera envoyée à l'URL fournie lorsque l'événement choisi se produira."
         new: "Nouveau Webhook"
         create: "Créer"
@@ -3256,6 +3250,8 @@ fr:
           version: "Version :"
           authors: "Auteur :"
           source_url: "Source"
+          enable: "Activer"
+          disable: "Désactiver"
           required_version:
             error: "Ce thème a été désactivé automatiquement car il n'est pas compatible avec cette version de Discourse."
             minimum: "Nécessite version {{version}} ou supérieur de Discourse."
@@ -3274,7 +3270,7 @@ fr:
             one: "Le thème est en retard de %{count} commit !"
             other: "Le thème est en retard de {{count}} commits !"
           compare_commits: "(Voir les nouveaux changements)"
-          repo_unreachable: "Le dépôt Git de ce thème reste inaccessible. Message d'erreur :  "
+          repo_unreachable: "Le dépôt Git de ce thème reste inaccessible. Message d'erreur : "
           imported_from_archive: "Ce thème a été importé d'un fichier .tar.gz"
           scss:
             text: "CSS"
@@ -3728,8 +3724,8 @@ fr:
           one: "Les utilisateurs ne peuvent pas être supprimés s'ils ont posté des messages Supprimer tous les messages avant d'essayer de supprimer un utilisateur. (Les messages plus vieux que %{count} jour ne peut pas être supprimé.)"
           other: "Les utilisateurs ne peuvent pas être supprimés s'ils ont crée des messages. Supprimer tous les messages avant d'essayer de supprimer un utilisateur. (Les messages plus vieux que %{count} jours ne peuvent pas être supprimés.)"
         cant_delete_all_posts:
-          one: "Impossible de supprimer tout les messages. Certains messages sont âgés de plus de  %{count} jour. (voir l'option delete_user_max_post_age)"
-          other: "Impossible de supprimer tout les messages. Certains messages sont âgés de plus de  %{count} jours. (voir l'option delete_user_max_post_age)"
+          one: "Impossible de supprimer tout les messages. Certains messages sont âgés de plus de %{count} jour. (voir l'option delete_user_max_post_age)"
+          other: "Impossible de supprimer tout les messages. Certains messages sont âgés de plus de %{count} jours. (voir l'option delete_user_max_post_age)"
         cant_delete_all_too_many_posts:
           one: "Impossible de supprimer tous les messages parce que l'utilisateur a plus d'un message. (delete_all_posts_max)"
           other: "Impossible de supprimer tous les messages parce que l'utilisateur a plus de %{count} messages. (delete_all_posts_max)"
@@ -3961,7 +3957,7 @@ fr:
           error_help: "Consulter les liens suivants pour obtenir de l'aide sur les requêtes de badge."
           bad_count_warning:
             header: "ATTENTION !"
-            text: "Certains badges n'ont pas été décernés. Ceci se produit  lorsque la requête du badge retourne des identifiants d'utilisateurs ou de messages qui n’existent plus. Cela peut produire des résultats non attendus - veuillez vérifier votre requête."
+            text: "Certains badges n'ont pas été décernés. Ceci se produit lorsque la requête du badge retourne des identifiants d'utilisateurs ou de messages qui n’existent plus. Cela peut produire des résultats non attendus - veuillez vérifier votre requête."
           no_grant_count: "Aucun badge à assigner."
           grant_count:
             one: "<b>%{count}</b> badge à assigner."

@@ -7,7 +7,7 @@
 
 fi:
   site_settings:
-    discourse_narrative_bot_enabled: 'Ota Discoursen opastava botti käyttöön (discobot)'
+    discourse_narrative_bot_enabled: "Ota Discoursen opastava botti käyttöön (discobot)"
     disable_discourse_narrative_bot_welcome_post: "Estä bottia lähettämästä tervetuloviestejä"
     discourse_narrative_bot_ignored_usernames: "Käyttäjänimet, jotka botin tulisi jättää huomiotta"
     discourse_narrative_bot_disable_public_replies: "Estä bottia vastaamasta julkisesti ketjuihin"
@@ -82,7 +82,7 @@ fi:
       results: |-
         > :left_speech_bubble: _%{quote}_ &mdash; %{author}
     magic_8_ball:
-      trigger: 'ennustus'
+      trigger: "ennustus"
       answers:
         '1': "Se on varmaakin varmempaa"
         '2': "Niin on tapahtuva"
@@ -107,9 +107,9 @@ fi:
       result: |-
         > :crystal_ball: %{result}
     track_selector:
-      reset_trigger: 'aloita'
-      skip_trigger: 'ohita'
-      help_trigger: 'apua'
+      reset_trigger: "aloita"
+      skip_trigger: "ohita"
+      help_trigger: "apua"
       random_mention:
         reply: |-
           Moi! Jos haluat tietää mitä osaan, sano `@%{discobot_username} %{help_trigger}`.
@@ -208,7 +208,7 @@ fi:
           <kbd>**Lainaa**</kbd>-painike ilmestyy, kun maalaat viestini tekstiä. **Vastaa**-painike käy yhtä hyvin, jos sinulla on tekstiä maalattuna. Kokeilisitko uudelleen?
       bookmark:
         instructions: |-
-          Jos haluat oppia lisää, valitse <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> tämän viestin alta ja <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-bookmark.png" width="16" height="16"> **lisää tämä yksityisviestiketju kirjanmerkkeihisi**.  Jos teet niin, sinua voi odottaa :gift: tulevaisuudessa!
+          Jos haluat oppia lisää, valitse <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> tämän viestin alta ja <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-bookmark.png" width="16" height="16"> **lisää tämä yksityisviestiketju kirjanmerkkeihisi**. Jos teet niin, sinua voi odottaa :gift: tulevaisuudessa!
         reply: |-
           Erinomaista! Löydät yksityiskeskustelumme nyt helposti koska vain [profiilisi kirjanmerkkivälilehdeltä](%{profile_page_url}/activity/bookmarks). Klikkaat vain profiilikuvaasi oikeassa yläkulmasssa &#8599;
         not_found: |-
@@ -229,7 +229,7 @@ fi:
 
           Saat emojivalitsimen esiin näppäilemällä kaksoispisteen <kbd>:</kbd>. Ala kirjoittaa sen perään englanniksi millaisen emojin haluat - esimerkiksi lintu on `:bird:`
 
-          Voit myös painaa editorin emojikuvaketta  <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-smile.png" width="16" height="16">.
+          Voit myös painaa editorin emojikuvaketta <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-smile.png" width="16" height="16">.
 
           (Mobiililaitteella voit lisätä emojin suoraan näppäimistöltäsikin.)
       mention:
@@ -238,7 +238,7 @@ fi:
 
           Mainitsepa minut **`@%{discobot_username}`** seuraavassa vastauksessasi.
         reply: |-
-          _Kutsuiko joku minua!?_ :raised_hand: Sinäkö se olit? :wave:  Tässäpä minä! Kiitos kun mainitsit minut.  :ok_hand:
+          _Kutsuiko joku minua!?_ :raised_hand: Sinäkö se olit? :wave: Tässäpä minä! Kiitos kun mainitsit minut. :ok_hand:
         not_found: |-
           En näe nimeäni. :frowning: Yrittäisitkö nimeni `@%{discobot_username}` mainitsemista vielä kerran?
 
@@ -247,7 +247,7 @@ fi:
         instructions: |-
           Pidämme ystävällishenkisistä keskusteluista, ja tarvitsemme apuasi, jotta [pysytään asialinjalla](%{guidelines_url}). Kun näet ongelman, kerro siitä kirjoittajalle tai [avuliaalle henkilökunnalle](%{about_url}) liputtamalla.
 
-          >  :imp: Kirjoitin tähän jotain tuhmaa.
+          > :imp: Kirjoitin tähän jotain tuhmaa.
 
           Tiedät mitä tehdä. **Liputa tämä viesti** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16"> sopimattomaksi!
         reply: |-
@@ -285,10 +285,10 @@ fi:
 
           (Jos haluat vielä jutella kanssani ja oppia lisää, lähetä minulle `@%{discobot_username}` yksityisviesti tai mainitse minut koska vain!)
       certificate:
-        alt: 'Diplomi'
+        alt: "Diplomi"
     advanced_user_narrative:
       cert_title: "Tunnustuksena palstan käytön jatkokurssin menestyksekkäästä suorittamisesta"
-      title: ':arrow_up: Jatkokurssi'
+      title: ":arrow_up: Jatkokurssi"
       start_message: |-
         _Edistynyt_ käyttäjä kun olet, oletko @%{username} jo käynyt [käyttäjäasetussivulla](%{base_uri}/my/preferences)? Siellä voit mukauttaa sivustoa makusi mukaan monilla tavoin, esimerkiksi valita tumman ja vaalean teeman väliltä.
 
@@ -319,7 +319,7 @@ fi:
 
           Keskusteluiden jatkuvuuden vuoksi viesti ei poistu kokonaan välittömästi, vaan se poistuu vasta jonkin ajan kuluttua.
       recover:
-        deleted_post_raw: 'Miksi @%{discobot_username} poisti viestini? :anguished:'
+        deleted_post_raw: "Miksi @%{discobot_username} poisti viestini? :anguished:"
         instructions: |-
           Voi ei! Taisin vahingossa poistaa viestin, jonka tein sinun nimissäsi.
 
@@ -408,4 +408,4 @@ fi:
 
           Kuulemiin! Jos haluat vielä jutella kanssani, lähetä viesti milloin vain! :sunglasses:
       certificate:
-        alt: 'Diplomi jatkokurssista'
+        alt: "Diplomi jatkokurssista"

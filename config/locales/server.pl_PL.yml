@@ -29,6 +29,7 @@ pl_PL:
   posts: "posty"
   loading: "Ładowanie"
   powered_by_html: 'Oparte na <a href="https://www.discourse.org">Discourse</a>, najlepiej oglądać z włączonym JavaScriptem'
+  sign_up: "Rejestracja"
   log_in: "Logowanie"
   submit: "Prześlij"
   purge_reason: "Automatycznie usunięte jako porzucone, dezaktywowane konto."
@@ -159,10 +160,10 @@ pl_PL:
   reading_time: "Czas odczytu"
   likes: "Lajki"
   too_many_replies:
-    one: "Przepraszamy, ale nowi użytkownicy są tymczasowo ograniczeni do %{count} odpowiedzi w ramach  jednego tematu."
-    few: "Przepraszamy, ale nowi użytkownicy są tymczasowo ograniczeni do %{count} odpowiedzi w ramach  jednego tematu."
-    many: "Przepraszamy, ale nowi użytkownicy są tymczasowo ograniczeni do %{count} odpowiedzi w ramach  jednego tematu."
-    other: "Przepraszamy, ale nowi użytkownicy są tymczasowo ograniczeni do %{count} odpowiedzi w ramach  jednego tematu."
+    one: "Przepraszamy, ale nowi użytkownicy są tymczasowo ograniczeni do %{count} odpowiedzi w ramach jednego tematu."
+    few: "Przepraszamy, ale nowi użytkownicy są tymczasowo ograniczeni do %{count} odpowiedzi w ramach jednego tematu."
+    many: "Przepraszamy, ale nowi użytkownicy są tymczasowo ograniczeni do %{count} odpowiedzi w ramach jednego tematu."
+    other: "Przepraszamy, ale nowi użytkownicy są tymczasowo ograniczeni do %{count} odpowiedzi w ramach jednego tematu."
   embed:
     start_discussion: "Rozpocznij dyskusję"
     continue: "Kontynuuj dyskusję"
@@ -192,7 +193,7 @@ pl_PL:
   spamming_host: "Przepraszamy, nie możesz umieścić linka do tej strony."
   user_is_suspended: "Zawieszeni użytkownicy nie mogą wysyłać wiadomości."
   topic_not_found: "Coś poszło nie tak. Być może temat został zamknięty lub usunięty w międzyczasie?"
-  not_accepting_pms: "Przepraszamy, ale użytkownik %{username}  nie akceptuje w tej chwili wiadomości "
+  not_accepting_pms: "Przepraszamy, ale użytkownik %{username} nie akceptuje w tej chwili wiadomości "
   max_pm_recepients: "Przepraszam, możesz wysłać wiadomość tylko do %{recipients_limit} odbiorców."
   just_posted_that: "jest zbyt podobne do tego co umieściłeś niedawno"
   invalid_characters: "zawiera niepoprawne znaki"
@@ -261,7 +262,7 @@ pl_PL:
 
       - Czy tytuł brzmi interesująco, gdy przeczytasz go na głos? Czy jest dobrym podsumowaniem treści?
 
-      - Kto będzie tym zainteresowany? Dlaczego temat jest istotny?  Jakiego rodzaju odpowiedzi oczekujesz?
+      - Kto będzie tym zainteresowany? Dlaczego temat jest istotny? Jakiego rodzaju odpowiedzi oczekujesz?
 
       - Postaraj się umieścić słowa kluczowe w tytule, dzięki czemu inni będą mogli łatwo *wyszukać* temat. Przypisz go do kategorii o pokrewnej tematyce.
 
@@ -282,7 +283,7 @@ pl_PL:
 
       Opublikowałeś parę tematów i odpowiedzi, lecz Twoje zdjęcie profilowe nie jest tak unikalne jak Ty – To tylko litera.
 
-      Czy rozważyłeś  **[odwiedzenie swojego profilu](%{profile_path})** i dodanie zdjęcia które Cię reprezentuje?
+      Czy rozważyłeś **[odwiedzenie swojego profilu](%{profile_path})** i dodanie zdjęcia które Cię reprezentuje?
 
       Łatwiej jest prowadzić dyskusję i znaleźć interesujące osoby podczas rozmowy kiedy każdy ma wyjątkowe zdjęcie profilowe!
     sequential_replies: |
@@ -670,7 +671,7 @@ pl_PL:
       title: "Spam"
       description: "Ten temat jest komercyjnym ogłoszeniem. Nie zawiera wartościowej treści, jedynie reklamową. "
       long_form: "oflagowano jako spam"
-      short_description: "To jest ogłoszenie\n                  \n                    \n                      \n                    \n                  \n                "
+      short_description: "To jest ogłoszenie\n \n \n \n \n \n "
     inappropriate:
       title: "Niewłaściwe"
       long_form: "oflagowano jako niewłaściwe"
@@ -1007,9 +1008,9 @@ pl_PL:
     poll_pop3_auth_error: "Połączenie z serwerem POP3 nie powiodło się przez błąd uwierzytelnienia. Proszę sprawdź swoje <a href='%{base_path}/admin/site_settings/category/email'>ustawienia POP3</a>."
     out_of_date_themes: "Aktualizacje są dostępne dla następujących motywów:"
   site_settings:
-    censored_words: "Wskazane słowa będą automatycznie zamieniane na  &#9632;&#9632;&#9632;&#9632;"
+    censored_words: "Wskazane słowa będą automatycznie zamieniane na &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "Automatycznie kasuj wpisy ukryte dłużej niż 30 dni."
-    allow_user_locale: "Zezwól użytkownikom na zmianę języka interfejsu we własnych  ustawieniach"
+    allow_user_locale: "Zezwól użytkownikom na zmianę języka interfejsu we własnych ustawieniach"
     set_locale_from_accept_language_header: "ustaw język interfejsu dla niezalogowanych użytkowników na podstawie języka w nagłówku ich przeglądarki. (EKSPERYMENTALNE, nie działa z anonimowym cache)"
     min_post_length: "Minimalna długość wpisu w znakach"
     min_first_post_length: "Minimalna długość treści (liczba znaków) pierwszego wpisu w temacie "
@@ -1032,7 +1033,7 @@ pl_PL:
     allow_uncategorized_topics: "Zezwól na tworzenie tematów bez kategorii. UWAGA: jeśli jest jakiś nieskategoryzowany temat, musisz go przypisać do kategorii, zanim wyłączysz tę opcję."
     allow_duplicate_topic_titles: "Pozwól na tworzenie tematów o identycznych tytułach."
     unique_posts_mins: "Ile minut musi upłynąć zanim użytkownik będzie mógł ponownie zrobić wpis z tą samą treścią"
-    educate_until_posts: "Wyświetlaj okno edukacyjne po rozpoczęciu pisania  dopóki nowy użytkownik nie napisze tylu wpisów."
+    educate_until_posts: "Wyświetlaj okno edukacyjne po rozpoczęciu pisania dopóki nowy użytkownik nie napisze tylu wpisów."
     title: "Nazwa tej strony używana w tagu title."
     site_description: "Opis strony w jednym zdaniu, wykorzystywany w meta tagu description."
     crawl_images: "Pobieraj grafiki ze zdalnych URLi aby ustawić poprawną wysokość i szerokość w tagu img."
@@ -1099,7 +1100,7 @@ pl_PL:
     suppress_reply_when_quoting: "Nie pokazuj rozwijanego \"w odpowiedzi na\" przy poście, gdy w poście zacytowano odpowiedź."
     max_reply_history: "Maksymalna liczba odpowiedzi, dla której \"w odpowiedzi na\" będzie się rozwijać."
     topics_per_period_in_top_summary: "Liczba tematów wyświetlanych w domyślnym podsumowaniu najbardziej popularnych wątków"
-    topics_per_period_in_top_page: "Liczba tematów wyświetlanych w widoku 'Pokaż więcej'  na ekranie popularnych wątków."
+    topics_per_period_in_top_page: "Liczba tematów wyświetlanych w widoku 'Pokaż więcej' na ekranie popularnych wątków."
     redirect_users_to_top_page: "Automatycznie kieruj nowych i długo nieobecnych użytkowników na stronę główną."
     top_page_default_timeframe: "Domyślne ramy czasowe dla strony widoku z góry."
     prioritize_username_in_ux: "Pokaż nazwę użytkownika jako pierwszą na stronie użytkownika, karcie użytkownika i w postach (kiedy wyłączone imię jest pokazane jako pierwsze)"
@@ -1148,8 +1149,8 @@ pl_PL:
     verbose_localization: "Wyświetlaj dodatkowe identyfikatory tłumaczeń w treści etykiet"
     previous_visit_timeout_hours: "How long a visit lasts before we consider it the 'previous' visit, in hours"
     top_topics_formula_log_views_multiplier: "wartość mnożnika odsłon dziennik (n) w tematach formuła : `log(views_count) * (n) + op_likes_count * 0.5 + LEAST(likes_count / posts_count, 3) + 10 + log(posts_count)`"
-    top_topics_formula_first_post_likes_multiplier: "wartość mnożnika polubień pierwszego posta (n) w tematach formuła:  `log(views_count) * 2 + op_likes_count * (n) + LEAST(likes_count / posts_count, 3) + 10 + log(posts_count)`"
-    top_topics_formula_least_likes_per_post_multiplier: "wartość mnożnika najmniejszej liczby polubień na post w (n) tematach formuła:  `log(views_count) * 2 + op_likes_count * 0.5 + LEAST(likes_count / posts_count, (n)) + 10 + log(posts_count)`"
+    top_topics_formula_first_post_likes_multiplier: "wartość mnożnika polubień pierwszego posta (n) w tematach formuła: `log(views_count) * 2 + op_likes_count * (n) + LEAST(likes_count / posts_count, 3) + 10 + log(posts_count)`"
+    top_topics_formula_least_likes_per_post_multiplier: "wartość mnożnika najmniejszej liczby polubień na post w (n) tematach formuła: `log(views_count) * 2 + op_likes_count * 0.5 + LEAST(likes_count / posts_count, (n)) + 10 + log(posts_count)`"
     rebake_old_posts_count: "Liczba starych postów, które są ponownie wypalane co 15 minut."
     rate_limit_create_topic: "Po otworzeniu tematu użytkownicy muszą odczekać (n) sekund, zanim otworzą inny temat."
     rate_limit_create_post: "Po napisaniu posta użytkownicy muszą odczekać (n) sekund, zanim napiszą inny post."
@@ -1186,7 +1187,7 @@ pl_PL:
     strip_image_metadata: "Pasek metadanych obrazu."
     enable_flash_video_onebox: "Włącz osadzanie linków swf i flv (Adobe Flash) za pomocą funkcji onebox. Ostrzeżenie: może powodować pewne ryzyko związane z bezpieczeństwem."
     default_invitee_trust_level: "Domyślny poziom zaufania (0-4) dla zaproszonych użytkowników."
-    default_trust_level: "Domyślny poziom zaufania (0-4) dla wszystkich nowych użytkowników. Zmienianie tego  narażą na ryzyko sporej ilości Spamu."
+    default_trust_level: "Domyślny poziom zaufania (0-4) dla wszystkich nowych użytkowników. Zmienianie tego narażą na ryzyko sporej ilości Spamu."
     tl1_requires_topics_entered: "Jak wiele tematów musi odwiedzić nowy użytkownik, przed promocją na 1-szy poziom zaufania."
     tl1_requires_read_posts: "Jak wiele postów musi przeczytać nowy użytkownik, przed promocją na 1-szy poziom zaufania."
     tl1_requires_time_spent_mins: "Jak wiele minut musi spędzić nowy użytkownik czytając posty, przed promocją 1-szy poziom zaufania."
@@ -1281,7 +1282,7 @@ pl_PL:
     delete_email_logs_after_days: "Usuń logi email po (N) dniach. 0 by trzymać w nieskończoność"
     max_emails_per_day_per_user: "Maksymalna liczba maili, jakie użytkownik może wysłać w ciągu dnia. 0 wyłącza ograniczenie."
     enable_staged_users: "Automatycznie twórz wystawianych użytkowników podczas przetwarzania przychodzących emaili."
-    maximum_staged_users_per_email: "Maksymalna liczba wystawionych  stworzonych użytkowników podczas przetwarzania przychodzących emaili."
+    maximum_staged_users_per_email: "Maksymalna liczba wystawionych stworzonych użytkowników podczas przetwarzania przychodzących emaili."
     auto_generated_whitelist: "Lista adresów e-mail oddzielonych pipe'em (|), które nie będą testowane na zawartość treści generowanej automatycznie. Przykład: foo@bar.com|discourse@bar.com"
     block_auto_generated_emails: "Odrzucaj maile przychodzące zidentyfikowane jako wysłane automatycznie."
     ignore_by_title: "Ignoruj przychodzące wiadomości e-mail w oparciu o ich tytuł."
@@ -1345,9 +1346,8 @@ pl_PL:
     suppress_uncategorized_badge: "Nie pokazuj etykiety z nazwą kategorii Inne na listach tematów."
     permalink_normalizations: "Zastosuj następujący regex przed dopasowaniem permalinków, na przykład /(topic.*)\\?.*/\\1  spowoduje ściągnięcie ciągu zapytań z dróg tematu. Format to regex+strin używaj \\1 itd aby przechwycić dostęp"
     disable_edit_notifications: "Wyłącz edytowanie powiadomień przez system użytkownika gdy 'download_remote_images_to_local' jest aktywne."
-    automatically_unpin_topics: "Automatycznie odpinaj wątki,  gdy użytkownik dotknie dna."
+    automatically_unpin_topics: "Automatycznie odpinaj wątki, gdy użytkownik dotknie dna."
     read_time_word_count: "Licznik słów na minutę dla kalkulacji szacowanego czasu czytania."
-    topic_page_title_includes_category: "Tytuł strony wątku zawiera nazwę kategorii."
     share_anonymized_statistics: "Udostępnij anonimowe statystyki użytkowania."
     max_prints_per_hour_per_user: "Maksymalna liczba /drukowanych stron (ustaw na 0, aby wyłączyć)"
     full_name_required: "Pełne imię i nazwisko to wymagane pole w profilu użytkownika."
@@ -1517,7 +1517,7 @@ pl_PL:
     incorrect_username_email_or_password: "Niepoprawna nazwa użytkownika, email lub hasło"
     wait_approval: "Dziękujemy za rejestrację. Powiadomimy Cię gdy Twoje konto zostanie aktywowane."
     active: "Twoje konto zostało aktywowane i jest gotowe do użycia."
-    activate_email: "<p>Już prawie koniec! Wysłaliśmy email aktywacyjny na <b>%{email}</b>.  Postępuj zgodnie z instrukcjami w mailu, aby aktywować konto. </p><p>Jeśli email nie przyszedł, sprawdź folder spam.</p>"
+    activate_email: "<p>Już prawie koniec! Wysłaliśmy email aktywacyjny na <b>%{email}</b>. Postępuj zgodnie z instrukcjami w mailu, aby aktywować konto. </p><p>Jeśli email nie przyszedł, sprawdź folder spam.</p>"
     not_activated: "Nie możesz się jeszcze zalogować. Wysłaliśmy do Ciebie email aktywacyjny. Wykonaj instrukcje w nim zawarte by aktywować Twoje konto."
     not_allowed_from_ip_address: "Nie możesz się zalogować jako %{username} z tego adresu IP."
     admin_not_allowed_from_ip_address: "Nie możesz zalogować się jako administrator z tego adresu IP."
@@ -1609,7 +1609,7 @@ pl_PL:
     title: "Potwierdzenie admina"
     subject_template: "[%{email_prefix}] Potwierdź nowe konto admina"
     text_body_template: |
-      Proszę potwierdzić dodanie **%{target_username}**  jako administratora do twojego forum.
+      Proszę potwierdzić dodanie **%{target_username}** jako administratora do twojego forum.
 
       [Potwierdź Konto Administratora](%{admin_confirm_url})
   test_mailer:
@@ -1623,7 +1623,7 @@ pl_PL:
     subject_template: "[%{site_name}] dostępna aktualizacja"
   flag_reasons:
     off_topic: "Twój post został oznaczony jako **nie na temat**: społeczność uważa, że nie pasuje do wątku, w którym został dodany, biorąc pod uwagę jego tytuł i treść pierwszego posta."
-    inappropriate: "Twój wpis został oznaczony jako  **nieodpowiedni**: społeczność uznała, że zbyt agresywny lub niezgodny z [jej wytycznymi](%{base_path}/guidelines)."
+    inappropriate: "Twój wpis został oznaczony jako **nieodpowiedni**: społeczność uznała, że zbyt agresywny lub niezgodny z [jej wytycznymi](%{base_path}/guidelines)."
     spam: "Twój post został oznaczony jako **spam**: społeczność czuje, że jest to reklama, czyli coś nadmiernie promującego, a nie użytecznego czy odnoszącego się do tematu."
     notify_moderators: "Twój post został oznaczony jako **do uwagi moderatora**: społeczność czuje, że post wymaga ręcznej interwencji członka personelu."
   flags_dispositions:
@@ -1827,7 +1827,7 @@ pl_PL:
       text_body_template: |
         Przepraszamy, twoja wiadomość email do%{destination}( zatytułowana %{former_title}) nie została wysłana.
 
-        Twój email został oznaczony jako "wygenerowany automatycznie", co oznacza, że został automatycznie stworzony przez komputer,  zamiast wpisany przez człowieka; nie akceptujemy tego typu emaili. Jeśli wydaję ci się, że jest to błąd, [skontaktuj się z obsługą](%{base_url})/o nas).
+        Twój email został oznaczony jako "wygenerowany automatycznie", co oznacza, że został automatycznie stworzony przez komputer, zamiast wpisany przez człowieka; nie akceptujemy tego typu emaili. Jeśli wydaję ci się, że jest to błąd, [skontaktuj się z obsługą](%{base_url})/o nas).
     email_reject_unrecognized_error:
       title: "Odrzucony email nierozpoznany błąd"
       subject_template: "[%{email_prefix}] Problem z pocztą elektroniczną - Nierozpoznany błąd."
@@ -1852,7 +1852,7 @@ pl_PL:
       subject_template: "Nowe konto zawieszone"
     silenced_by_staff:
       subject_template: "Konto tymczasowo zawieszone"
-      text_body_template: "Dzień dobry, \n\nTo jest automatyczna wiadomość od %{site_name}, aby poinformować cię, że twoje konto zostało tymczasowo zablokowane jako środek zapobiegawczy.\n\nMożesz kontynuować przeglądanie, ale nie będzie mógł dodawać odpowiedzi lub tworzyć wątków dopóki [członek obsługi](%{base_url}/o nas)  przejrzy twoje ostatnie posty. Przepraszamy za niedogodności.\n\nW celu uzyskania dodatkowych wskazówek, proszę przejść do naszych [wskazówek społeczności](%{base_url}/about).\n"
+      text_body_template: "Dzień dobry, \n\nTo jest automatyczna wiadomość od %{site_name}, aby poinformować cię, że twoje konto zostało tymczasowo zablokowane jako środek zapobiegawczy.\n\nMożesz kontynuować przeglądanie, ale nie będzie mógł dodawać odpowiedzi lub tworzyć wątków dopóki [członek obsługi](%{base_url}/o nas) przejrzy twoje ostatnie posty. Przepraszamy za niedogodności.\n\nW celu uzyskania dodatkowych wskazówek, proszę przejść do naszych [wskazówek społeczności](%{base_url}/about).\n"
     spam_post_blocked:
       title: "Spam Zablokowany"
       subject_template: "Posty nowego użytkownika %{username} zablokowane za powtarzanie linków"
@@ -2255,10 +2255,10 @@ pl_PL:
 
       Możesz chcieć odpowiedzieć na post, wyrażając przeciwne zdanie. W porządku. Ale pamiętaj, aby krytykować pomysły, a nie ludzi. Prosimy unikaj:
 
-      *   Nazywania po imieniu
-      *   ataki ad hominem
-      *  Odpowiadaniu na styl postu, a nie na jego treść
-      *   automatycznej sprzeczności
+      * Nazywania po imieniu
+      * ataki ad hominem
+      * Odpowiadaniu na styl postu, a nie na jego treść
+      * automatycznej sprzeczności
 
       Zamiast tego, zawsze staraj się udzielać rozsądnej, popartej argumentami odpowiedzi, w celu ulepszenia konwersacji,
 
@@ -2278,7 +2278,7 @@ pl_PL:
 
       Moderatorzy posiadają specjalne uprawnienia; są odpowiedzialni za to forum. Ty też jesteś. Z twoją pomocą, moderatorzy mogą być facylitatorami. a nie tylko dozorcami czy policją.
 
-      Kiedy jesteś świadkiem złego zachowania, nie odpowiadaj. To zachęci do kolejnych takich aktów, spożytkuję twoją energie, a poza tym będzie to strata czasu dla wszystkich. _Po prostu to _oflaguj_.  Jeśli pojawi się wystarczająca liczba flag, zostaną podjęte działania - automatycznie lub przez moderatora.
+      Kiedy jesteś świadkiem złego zachowania, nie odpowiadaj. To zachęci do kolejnych takich aktów, spożytkuję twoją energie, a poza tym będzie to strata czasu dla wszystkich. _Po prostu to _oflaguj_. Jeśli pojawi się wystarczająca liczba flag, zostaną podjęte działania - automatycznie lub przez moderatora.
 
       W celu utrzymania naszej społeczności, moderatorzy mają prawo do usuwania jakiejkolwiek zawartości lub konta użytkownika bez podania powodu w każdym momencie. Moderatorzy nie sprawdzają nieopublikowanych postów; zarówno moderatorzy jak i operatorzy strony nie biorą żadnej odpowiedzialności za publikowane przez społeczności treści.
 
@@ -2288,10 +2288,10 @@ pl_PL:
 
       Nic nie niszczy zdrowej konwersacji jak nieuprzejmość:
 
-      *  Badź miły. Nie zamieszczaj niczego, co rozsądna osoba mogłaby uznać za ofensywne, obraźliwe lub jako mowę nienawiści.
+      * Badź miły. Nie zamieszczaj niczego, co rozsądna osoba mogłaby uznać za ofensywne, obraźliwe lub jako mowę nienawiści.
       * Nie dodaj niczego obscenicznego lub o charakterze seksualnym.
-      *   Szanujmy się wzajemnie. Nie nękaj czy zasmucaj innych,  nie podszywaj się pod innych i nie wyjawiaj ich prywatnych informacji,
-      *  Szanuj nasze forum. Nie spamuj, nie wandalizuj tego forum.
+      * Szanujmy się wzajemnie. Nie nękaj czy zasmucaj innych, nie podszywaj się pod innych i nie wyjawiaj ich prywatnych informacji,
+      * Szanuj nasze forum. Nie spamuj, nie wandalizuj tego forum.
 
       Nie są to konkretne zasady z dokładnymi definicjami .&mdash; unikaj pojawiania się którejkolwiek z wymienionych rzeczy. Jeśli nie jesteś pewien, po prostu zapytaj siebie jakbyś się czuł, jakby twój post znalazł się na pierwszej stronie New York Times.
       .
@@ -2303,11 +2303,11 @@ pl_PL:
 
       Dokładaj starań, aby wszystkie rzeczy znajdowały się we właściwym miejscu, abyśmy mogli spędzaj więcej czasu na dyskusji niż na sprzątaniu. Więc:
 
-      *  Nie zaczynaj wątku w złej kategorii.
-      *   Nie powtarzaj tej samej wiadomości w różnych tematach.
-      *  Nie zamieszczaj odpowiedzi bez treści.
-      *   Nie zakłócaj wątku poprzez zmianę tematu w środku konwersacji.
-      *   Nie podpisuj swoich postów &mdash; każda wiadomość zawiera informacje o twoim profilu.
+      * Nie zaczynaj wątku w złej kategorii.
+      * Nie powtarzaj tej samej wiadomości w różnych tematach.
+      * Nie zamieszczaj odpowiedzi bez treści.
+      * Nie zakłócaj wątku poprzez zmianę tematu w środku konwersacji.
+      * Nie podpisuj swoich postów &mdash; każda wiadomość zawiera informacje o twoim profilu.
       .
       Zamiast dodać post "+1" lub "Zgoda". posłuż się przyciskiem polubienia. Zamiast próby radykalnej zmiany tematu w konwersacji, posłuż się odpowiedzią jako powiązany temat.
 
@@ -2339,7 +2339,7 @@ pl_PL:
 
       Zbieramy takie informacje jak: kiedy zarejestrowałeś się na naszej stronie; kiedy uczestniczyłeś w życiu forum poprzez czytanie, pisanie oraz udoskolananie zawartości tu udostępnianej.
 
-      Podczas rejestracji na naszej stronie możesz być zapytany o twoje imię i nazwisko oraz adres email.  Możesz też przeglądać naszą stronę bez konieczności rejestracji. Twój adres email będzie weryfikowany poprzez przesłanie na niego unikalnego linku. Jeżeli nacisnąłeś na ten link, wiemy że ten adres email należy do Ciebie.
+      Podczas rejestracji na naszej stronie możesz być zapytany o twoje imię i nazwisko oraz adres email. Możesz też przeglądać naszą stronę bez konieczności rejestracji. Twój adres email będzie weryfikowany poprzez przesłanie na niego unikalnego linku. Jeżeli nacisnąłeś na ten link, wiemy że ten adres email należy do Ciebie.
 
       Podczas rejestracji oraz pisania treści zbieramy dane o twoim adresie IP. Możemy też zachowywać logi serwera, które pobierają dane o twoim adresie IP zawsze kiedy logujesz się na nasz serwer.
 

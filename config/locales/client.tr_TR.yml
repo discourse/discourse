@@ -109,6 +109,7 @@ tr_TR:
       next_month: "Sonraki Ay"
       placeholder: tarih
     share:
+      topic_html: 'Konu: <span class="topic-title">%{topicTitle}</span>'
       post: "#%{postNumber} numaralı gönderiyi paylaş"
       close: "kapat"
       twitter: "bu linki Twitter'da paylaş"
@@ -146,7 +147,7 @@ tr_TR:
         enabled: "Bunu pankart yaptı %{when}. Kullanıcı tarafından yoksayılana kadar her sayfanın en üstünde belirecek."
         disabled: "Pankart kaldırıldı %{when}. Bundan sonra her sayfanın en üstünde gözükmeyecek. "
     topic_admin_menu: "konu yöneticisi eylemleri"
-    wizard_required: "Yeni Discourse'una hoşgeldin!  Haydi kuruluma başlayalım! <a href='%{url}' data-auto-route='true'>Kurulum Sihirbazı</a> ✨"
+    wizard_required: "Yeni Discourse'una hoşgeldin! Haydi kuruluma başlayalım! <a href='%{url}' data-auto-route='true'>Kurulum Sihirbazı</a> ✨"
     emails_are_disabled: "Giden tüm e-postalar yönetici tarafından devre dışı bırakıldı. Herhangi bir e-posta bildirimi gönderilmeyecek."
     bootstrap_mode_enabled: "Yeni sitenizi daha kolay başlatmak için önyükleme modundasınız. Tüm yeni kullanıcılara güven düzeyi 1 verilir ve günlük e-posta özet güncellemeleri etkinleştirilir. Bu,%{min_users} kullanıcının katıldığı zaman otomatik olarak kapatılacaktır."
     bootstrap_mode_disabled: "Önyükleme modu 24 saat içinde devre dışı bırakılacak. "
@@ -332,8 +333,8 @@ tr_TR:
       you_posted_topic: "<a href='{{topicUrl}}'>konuyu</a> <a href='{{userUrl}}'>sen</a> açtın"
       user_replied_to_post: "<a href='{{userUrl}}'>{{user}}</a> <a href='{{postUrl}}'>{{post_number}}</a> gönderiyi cevapladı"
       you_replied_to_post: "<a href='{{postUrl}}'>{{post_number}}</a> gönderiyi <a href='{{userUrl}}'>sen</a> cevapladın"
-      user_replied_to_topic: "<a href='{{userUrl}}'>{{user}}</a>  <a href='{{topicUrl}}'>konuya</a> cevap verdi"
-      you_replied_to_topic: "<a href='{{userUrl}}'>Sen</a>  <a href='{{topicUrl}}'>konuya</a> cevap verdin"
+      user_replied_to_topic: "<a href='{{userUrl}}'>{{user}}</a> <a href='{{topicUrl}}'>konuya</a> cevap verdi"
+      you_replied_to_topic: "<a href='{{userUrl}}'>Sen</a> <a href='{{topicUrl}}'>konuya</a> cevap verdin"
       user_mentioned_user: "<a href='{{user1Url}}'>{{user}}</a> <a href='{{user2Url}}'>{{another_user}}</a> adlı kullanıcıdan bahsetti"
       user_mentioned_you: "<a href='{{user1Url}}'>{{user}}</a> <a href='{{user2Url}}'>sizden</a> bahsetti"
       you_mentioned_user: "<a href='{{user1Url}}'>Sen</a>, <a href='{{user2Url}}'>{{another_user}}</a> adlı kullanıcıdan bahsettin"
@@ -419,7 +420,7 @@ tr_TR:
       membership_request_template: "Üyelik talebi gönderirken kullanıcılara gösterilen özel şablon"
       membership_request:
         submit: "Talep gönderimi"
-        title: "@%{group_name}  için katılım talebi "
+        title: "@%{group_name} için katılım talebi "
         reason: "Grup sahiplerine bu gruba neden üye olduğunu bildir"
       membership: "Üyelik"
       name: "İsim"
@@ -593,7 +594,7 @@ tr_TR:
       dismiss: "Yoksay"
       dismiss_notifications: "Tümünü Yoksay"
       dismiss_notifications_tooltip: "Tüm okunmamış bildirileri okunmuş olarak işaretle"
-      first_notification: "İlk bildirimin! Başlamak için seç.  "
+      first_notification: "İlk bildirimin! Başlamak için seç. "
       allow_private_messages: "Diğer kullanıcıların bana kişisel mesaj göndermesine izin ver"
       external_links_in_new_tab: "Tüm dış bağlantıları yeni sekmede aç"
       enable_quoting: "Bahsedilen konu için yanıtlama özelliğini etkinleştir"
@@ -643,9 +644,7 @@ tr_TR:
       users: "Kullanıcılar"
       muted_users: "Sessiz"
       muted_users_instructions: "Bu kullanıcılardan gelen tüm bildirileri kapa."
-      muted_topics_link: "Sessize alınan başlıkları göster"
-      watched_topics_link: "İzlenen konuları göster"
-      tracked_topics_link: "Takip edilen konuları göster"
+      tracked_topics_link: "Göster"
       automatically_unpin_topics: "Sayfa sonuna geldiğimde en yukarıda sabitlenmiş tüm konuları kaldır. "
       apps: "Uygulamalar"
       revoke_access: "Erişimi İptal Et"
@@ -697,7 +696,6 @@ tr_TR:
         disable: "Devre dışı bırak"
         enable: "Etkinleştir"
         enable_long: "Yedek kodları etkinleştir"
-        manage: "Yedek kodları yönet"
         copied_to_clipboard: "Panoya kopyalandı"
         copy_to_clipboard_error: "Panoya kopyalanırken hata oluştu"
         remaining_codes: "<strong>{{count}}</strong> yedek kodun kaldı "
@@ -711,6 +709,7 @@ tr_TR:
         disable_description: "Lütfen kimlik doğrulama kodunu \"Uygulama\"dan gir"
         show_key_description: "Manuel olarak gir"
         oauth_enabled_warning: "Hesabınızda iki faktörlü kimlik doğrulaması etkinleştirildikten sonra sosyal girişlerin devre dışı bırakılacağını lütfen unutmayın."
+        edit: "Düzenle"
       change_about:
         title: "\"Hakkımda\"yı Değiştir"
         error: "Bu değeri değiştirirken bir hata oluştu."
@@ -1025,7 +1024,7 @@ tr_TR:
       enable: "Bu Konuyu Özetle"
       disable: "Tüm Gönderileri Göster"
     deleted_filter:
-      enabled_description: "Bu konu silinmiş gönderiler içeriyor. Silinmiş gönderiler gizli durumda.  "
+      enabled_description: "Bu konu silinmiş gönderiler içeriyor. Silinmiş gönderiler gizli durumda. "
       disabled_description: "Bu konudaki silinen gönderiler gösteriliyor."
       enable: "Silinen Gönderileri Gizle"
       disable: "Silinen Gönderileri Göster"
@@ -1043,7 +1042,7 @@ tr_TR:
     search_hint: "kullanıcı adı, e-posta veya IP adresi"
     create_account:
       title: "Yeni Hesap Oluştur"
-      failed: "Bir şeyler ters gitti. Bu e-posta ile daha önce bir kayıt oluşturulmuş olabilir. \"Şifremi unuttum\"  bağlantısına tıklayarak ilerlemeni öneririz. "
+      failed: "Bir şeyler ters gitti. Bu e-posta ile daha önce bir kayıt oluşturulmuş olabilir. \"Şifremi unuttum\" bağlantısına tıklayarak ilerlemeni öneririz. "
     forgot_password:
       title: "Şifre Sıfırlama"
       action: "Şifremi unuttum"
@@ -1051,7 +1050,7 @@ tr_TR:
       reset: "Şifre Sıfırlama "
       complete_username: " <b>%{username}</b> kullanıcı adı ile eşleşen bir hesap bulunması durumunda, kısa bir süre içerisinde şifreni nasıl sıfırlayacağını açıklayan bir e-posta alacaksın. "
       complete_email: " <b>%{email}</b> adresi ile eşleşen bir hesap bulunması durumunda, kısa bir süre içerisinde şifreni nasıl sıfırlayacağını açıklayan bir e-posta alacaksın. "
-      complete_username_found: "<b>%{username}</b> kullanıcı adı ile eşleşen bir hesap bulduk. Kısa bir süre içerisinde şifreni  nasıl sıfırlayacağını açıklayan bir e-posta alacaksın."
+      complete_username_found: "<b>%{username}</b> kullanıcı adı ile eşleşen bir hesap bulduk. Kısa bir süre içerisinde şifreni nasıl sıfırlayacağını açıklayan bir e-posta alacaksın."
       complete_email_found: "<b>%{email}</b> adresi ile eşleşen bir hesap bulduk. Kısa bir süre içerisinde şifreni nasıl sıfırlayacağını açıklayan bir e-posta alacaksın. "
       complete_username_not_found: "Hiçbir hesap kullanıcı adı <b>%{username}</b> ile eşleşmiyor"
       complete_email_not_found: "Hiçbir hesap <b>%{email}</b> adresi ile eşleşmiyor"
@@ -1203,7 +1202,7 @@ tr_TR:
         one: "{{group}} hakkında konuşarak <a href='{{group_link}}'>{{count}} kişiyi</a> bilgilendirmek üzeresin, emin misin?"
         other: "{{group}} hakkında konuşarak <a href='{{group_link}}'>{{count}} kişiyi</a> bilgilendirmek üzeresin, emin misin?"
       cannot_see_mention:
-        category: "{{username}}  adlı kullanıcıdan bahsettin fakat bildirim gönderilmeyecek çünkü kullanıcının bu kategoriye ulaşma izni yok. Kullanıcının bildirimi görebilmesi için onu bu gruba eklemen gerekiyor. "
+        category: "{{username}} adlı kullanıcıdan bahsettin fakat bildirim gönderilmeyecek çünkü kullanıcının bu kategoriye ulaşma izni yok. Kullanıcının bildirimi görebilmesi için onu bu gruba eklemen gerekiyor. "
         private: "{{username}} adlı kullanıcıdan bahsettin fakat bildirim gönderilmeyecek çünkü kullanıcının bu kişisel mesaja ulaşma izni yok. Kişisel mesaja ulaşabilmesi için kullanıcıyı PM'ye eklemen gerekiyor. "
       error:
         title_missing: "Başlık gerekli"
@@ -1541,7 +1540,7 @@ tr_TR:
       options: "Konu Seçenekleri"
       show_links: "Bu konunun içindeki bağlantıları göster. "
       toggle_information: "konu ayrıntılarını değiştir"
-      read_more_in_category: "Daha fazlası için {{catLink}} kategorisine göz atabilir ya da  {{latestLink}}yebilirsin."
+      read_more_in_category: "Daha fazlası için {{catLink}} kategorisine göz atabilir ya da {{latestLink}}yebilirsin."
       read_more: "Daha fazla okumak mı istiyorsun? {{catLink}} ya da {{latestLink}}."
       read_more_MF: "{ UNREAD, plural, =0 {} one { <a href='{basePath}/unread'>1 okunmamış mesaj</a> } other { <a href='{basePath}/unread'># okunmamış mesaj</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{ve} false {} other{}} <a href='{basePath}/new'>1 yeni</a> konu} other { {BOTH, select, true{ve } false {} other{}} <a href='{basePath}/new'># yeni</a> konu} } var. {CATEGORY, select, true {{catLink} kategorisine} false {{latestLink}} other {}} göz atabilirsin."
       browse_all_categories: Bütün kategorilere göz at
@@ -1612,7 +1611,7 @@ tr_TR:
         go: "git"
         jump_bottom: "son gönderiye geç"
         jump_prompt: "geç"
-        jump_prompt_of: " %{count}  gönderinin"
+        jump_prompt_of: " %{count} gönderinin"
         jump_bottom_with_number: "%{post_number} numaralı gönderiye geç"
         jump_prompt_to_date: "şimdiye kadar"
         jump_prompt_or: "ya da"
@@ -2070,7 +2069,7 @@ tr_TR:
       notify_action: "Mesaj"
       official_warning: "Resmi uyarı"
       delete_spammer: "İstenmeyen e-postayı göndereni sil"
-      delete_confirm_MF: "Bu kullanıcının {POSTS, plural, one {<b>1</b> gönderisini} other {<b>#</b> gönderisini}} ve {TOPICS, plural, one {<b>1</b> konusunu} other {<b>#</b> konusunu}} silmek üzeresin, ayrıca kullanıcının hesabı kaldırılacak, giriş yaptığı  <b>{ip_address}</b> IP adresinden giriş yapması engellenecek ve <b>{email}</b> e-posta adresi kalıcı yasaklı listesine eklenecek. Bu kullanıcının gerçekten bir spamcı olduğuna emin misin?"
+      delete_confirm_MF: "Bu kullanıcının {POSTS, plural, one {<b>1</b> gönderisini} other {<b>#</b> gönderisini}} ve {TOPICS, plural, one {<b>1</b> konusunu} other {<b>#</b> konusunu}} silmek üzeresin, ayrıca kullanıcının hesabı kaldırılacak, giriş yaptığı <b>{ip_address}</b> IP adresinden giriş yapması engellenecek ve <b>{email}</b> e-posta adresi kalıcı yasaklı listesine eklenecek. Bu kullanıcının gerçekten bir spamcı olduğuna emin misin?"
       yes_delete_spammer: "Evet, İstenmeyen E-postayı Göndereni Sil"
       ip_address_missing: "(uygulanamaz)"
       hidden_email_address: "(gizli)"
@@ -2524,15 +2523,13 @@ tr_TR:
             visibility_levels:
               title: "Bu grubu kimler görebilir?"
               public: "Herkes"
-              members: "Grup sahipleri, üyeler ve yöneticiler"
               staff: "Grup sahipleri ve personel"
-              owners: "Grup sahipleri ve yöneticiler"
           membership:
             automatic: Otomatik
             trust_level: Güven Seviyesi
             trust_levels_title: "Güven seviyesi, üyelere -eklendiklerinde- otomatik olarak verilir:"
             trust_levels_none: "Hiçbiri"
-            automatic_membership_email_domains: "Listede,  e-posta alan adıyla tam olarak eşleşen kayıtlı kullanıcılar, otomatik olarak bu gruba eklenir:"
+            automatic_membership_email_domains: "Listede, e-posta alan adıyla tam olarak eşleşen kayıtlı kullanıcılar, otomatik olarak bu gruba eklenir:"
             automatic_membership_retroactive: "Mevcut kayıtlı kullanıcıları eklemek için aynı e-posta alanı kuralını uygula"
             primary_group: "Otomatik olarak ana grup biçiminde ayarla"
         name_placeholder: "Grup adı, boşluksuz, kullanıcı adı kuralıyla aynı olarak"
@@ -2808,6 +2805,8 @@ tr_TR:
           install_popular: "Gözde"
           about_theme: "Hakkında"
           license: "Lisans"
+          enable: "Etkinleştir"
+          disable: "Devre dışı bırak"
           component_of: "Bileşen:"
           update_to_latest: "Sona Doğru Güncelle"
           check_for_updates: "Güncellemeleri kontrol et"
@@ -3232,8 +3231,8 @@ tr_TR:
           one: "Gönderisi olan kullanıcılar silinemez. Kullanıcıyı silmeden önce tüm gönderilerini silin. (%{count} günden eski gönderiler silinemez.)"
           other: "Gönderisi olan kullanıcılar silinemez. Kullanıcıyı silmeden önce tüm gönderilerini sil. (%{count} günden eski gönderiler silinemez.)"
         cant_delete_all_posts:
-          one: "Tüm gönderileri silemezsiniz. Bazı gönderiler %{count} günden daha eski.  (delete_user_max_post_age ayarı.)"
-          other: "Tüm gönderileri silemezsin. Bazı gönderiler %{count} günden daha eski.  (delete_user_max_post_age ayarı.)"
+          one: "Tüm gönderileri silemezsiniz. Bazı gönderiler %{count} günden daha eski. (delete_user_max_post_age ayarı.)"
+          other: "Tüm gönderileri silemezsin. Bazı gönderiler %{count} günden daha eski. (delete_user_max_post_age ayarı.)"
         cant_delete_all_too_many_posts:
           one: "Tüm gönderileri silemezsiniz çünkü kullanıcının %{count} 'ten daha fazla gönderisi var. (delete_all_posts_max)"
           other: "Tüm gönderileri silemezsin çünkü kullanıcının %{count} 'ten fazla gönderisi var. (delete_all_posts_max)"

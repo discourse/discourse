@@ -149,7 +149,7 @@ hu:
     topic_admin_menu: "Téma admin lehetőségek"
     wizard_required: "Üdvözlünk az új Discourse-on! Kezdjük a <a href='%{url}' data-auto-route='true'>beállításvarázslóval</a>! ✨"
     emails_are_disabled: "Egy adminisztrátor letilotta a kimenő emaileket. Semmilyen értesítő emailt nem küldünk."
-    bootstrap_mode_enabled: "Hogy könnyebbé tegyük az új oldalad elindítását, bootstrap módban vagy. Minden új felhasználó 1-es szintet kap és be lesz állítva, hogy napi kivonat e-mailt kapjanak. Ez a beállítás automatikusan kikapcsol amikor a felhasználók száma több mint  %{min_users}."
+    bootstrap_mode_enabled: "Hogy könnyebbé tegyük az új oldalad elindítását, bootstrap módban vagy. Minden új felhasználó 1-es szintet kap és be lesz állítva, hogy napi kivonat e-mailt kapjanak. Ez a beállítás automatikusan kikapcsol amikor a felhasználók száma több mint %{min_users}."
     bootstrap_mode_disabled: "A bootstrap mód 24 órán belül kikapcsol."
     themes:
       default_description: "Alapértelmezett"
@@ -310,7 +310,7 @@ hu:
     review:
       claim_help:
         optional: "Igényeld ezt az elemet, hogy mások ne tekinthessék át."
-        required: "Igényelned kell  az elemeket, hogy át tudd őket tekinteni."
+        required: "Igényelned kell az elemeket, hogy át tudd őket tekinteni."
         claimed_by_you: "Igényt tartottál erre az elemre, áttekintheted."
         claimed_by_other: "Ezt az elemet csak <b>{{username}}</b> vizsgálhatja felül."
       claim:
@@ -776,9 +776,7 @@ hu:
       muted_users: "Lenémítva"
       muted_users_instructions: "Minden értesítés letiltása ezektől a felhasználoktól"
       ignored_users: "Figyelmen kívül hagyva"
-      muted_topics_link: "Némított témák mutatása"
-      watched_topics_link: "Figyelt témák mutatása"
-      tracked_topics_link: "Követett témák mutatása"
+      tracked_topics_link: "Mutat"
       automatically_unpin_topics: "Automatikusan letűzi a témát amikor elérem az alját."
       apps: "Alkalmazások"
       revoke_access: "Hozzáférés visszavonása"
@@ -827,7 +825,6 @@ hu:
         regenerate: "Újragenerálás"
         disable: "Kikapcsol"
         enable: "Engedélyez"
-        manage: "Visszatérítő kódok kezelése"
         copied_to_clipboard: "Vágólapra másolva"
         copy_to_clipboard_error: "Hiba az adat Vágólapra másolása során"
       second_factor:
@@ -837,6 +834,7 @@ hu:
         disable_description: "Írd be az azonosító kódodat az alkalmazásból"
         show_key_description: "Manuális beírás"
         oauth_enabled_warning: "A közösségi bejelentkezések nem lesznek elérhetőek a fét-faktoros azonosítás aktiválása után a fiókhoz."
+        edit: "Szerkesztés"
       change_about:
         title: "Rólam megváltoztatása"
         error: "Hiba történt az adat módosításakor."
@@ -876,7 +874,7 @@ hu:
         ok: " Jóváhagyás végett e-mailt fogunk küldeni"
         invalid: "Kérünk adj meg egy érvényes e-mail címet"
         authenticated: "Az email címedet {{provider}} azonosította"
-        frequency_immediately: "Azonnal e-mailt fogunk küldeni neked, ha nem olvastad el, amit neked küldtünk egy korábbi  e-mailben."
+        frequency_immediately: "Azonnal e-mailt fogunk küldeni neked, ha nem olvastad el, amit neked küldtünk egy korábbi e-mailben."
       associated_accounts:
         title: "Társított fiókok"
         connect: "Csatlakozás"
@@ -1205,7 +1203,7 @@ hu:
       change_email: "Változtasd meg az e-mail címedet"
       provide_new_email: "Adj meg egy új címet és mi újraküldjük az aktivációs e-mailt"
       submit_new_email: "Frissítsd az e-mail címedet"
-      sent_activation_email_again: "Küldtünk egy másik aktivációs emailt a  <b>{{currentEmail}}</b> címedre. Néhány percen belül meg kell érkeznie, ha mégsem, kérjük, nézd meg a spam mappádat."
+      sent_activation_email_again: "Küldtünk egy másik aktivációs emailt a <b>{{currentEmail}}</b> címedre. Néhány percen belül meg kell érkeznie, ha mégsem, kérjük, nézd meg a spam mappádat."
       to_continue: "Kérlek jelentkezz be"
       preferences: "Bejelentkezve kell lenned ahoz hogy megváltoztasd a felhasználói beállításokat"
       forgot: "Nem emlékszem a fiók részleteire"
@@ -1287,7 +1285,7 @@ hu:
       confirm_publish: "Biztosan közzé akarod tenni ezt a vázlatot?"
       publishing: "Téma közzététele..."
     composer:
-      emoji: "Emoji  :)"
+      emoji: "Emoji :)"
       more_emoji: "több..."
       options: "Beállítások"
       whisper: "suttogás"
@@ -1466,7 +1464,7 @@ hu:
       no_more_results: "Nincs több találat."
       searching: "Keresés ..."
       post_format: "#{{post_number}} általa: {{username}}"
-      results_page: "Keresési eredmény:  '{{term}}'"
+      results_page: "Keresési eredmény: '{{term}}'"
       start_new_topic: "Esetleg kezdj egy új témát?"
       or_search_google: "Vagy helyette próbálj meg a Googlén keresni:"
       search_google: "Helyette próbálj meg a Googlén keresni:"
@@ -1724,7 +1722,7 @@ hu:
         success_message: "Sikeresen megjelölted ezt a témát."
       feature_topic:
         confirm_pin: "Jelenleg {{count}} kiemelt témaköröd van. Túl sok kiemelt téma megzavarhatja az új vagy névtelen felhasználókat. Biztosan kiemelsz egy újabb témát ebben a kategóriában?"
-        unpin: "Téma eltávolítása a  {{categoryLink}} kategória elejéről."
+        unpin: "Téma eltávolítása a {{categoryLink}} kategória elejéről."
         not_pinned: "Nincsenek kiemelt {{categoryLink}} témák. "
         already_pinned_globally:
           one: "Jelenleg globálisan rögzített témák: <strong class='badge badge-notification unread'>%{count}</strong>"
@@ -1743,7 +1741,7 @@ hu:
         title: "Meghívás"
         username_placeholder: "felhasználónév"
         action: "Meghívó küldése"
-        help: "hívj meg másokat ebbe a témakörbe emailben vagy  értesítéssel"
+        help: "hívj meg másokat ebbe a témakörbe emailben vagy értesítéssel"
         sso_enabled: "Írd be annak a felhasználónevét, akit meg szeretnél hívni ebbe a témába."
         to_topic_blank: "Írd be annak a felhasználónevét vagy email-címét, akit meg szeretnél hívni ebbe a témába."
         to_username: "Írd be annak a felhasználónevét, akit meg szeretnél hívni. Értesítést fogunk neki küldeni, ennek a témának a linkjével."
@@ -1960,7 +1958,7 @@ hu:
       notifications:
         watching:
           title: "Figyelés"
-          description: "Automatikusan figyelni fogsz minden témakört ezekben a kategóriákban. Értesítést kapsz az összes témakör minden új hozzászólásáról  és látni fogod az új hozzászólások számát."
+          description: "Automatikusan figyelni fogsz minden témakört ezekben a kategóriákban. Értesítést kapsz az összes témakör minden új hozzászólásáról és látni fogod az új hozzászólások számát."
         watching_first_post:
           title: "Első hozzászólás figyelése"
         tracking:
@@ -1992,7 +1990,7 @@ hu:
         rows: "Sorok"
       settings_sections:
         general: "Általános"
-        moderation: "Mérsékelés"
+        moderation: "Moderálás"
         email: "Email"
     flagging:
       action: "Bejegyzés megjelölése"
@@ -2349,7 +2347,7 @@ hu:
         activity_metrics: Aktivitás metrika
         all_reports: "Összes bejelentés"
         general_tab: "Általános"
-        moderation_tab: "Mérsékelés"
+        moderation_tab: "Moderálás"
         security_tab: "Biztonság"
         report_filter_any: "bármi"
         disabled: Kikapcsolt
@@ -2402,9 +2400,7 @@ hu:
             visibility_levels:
               title: "Ki láthatja ezt a csoportot?"
               public: "Mindenki"
-              members: "A csoport tulajdonosok, tagok és adminisztrátorok"
               staff: "Csoport tulajdonosok és a stáb tagjai"
-              owners: "Csoport tulajdonosok és az adminisztrátorok"
           membership:
             automatic: Autómatikus
             trust_level: Bizalmi szint
@@ -2625,6 +2621,8 @@ hu:
           install_popular: "Népszerű"
           about_theme: "About"
           license: "Licenc"
+          enable: "Engedélyez"
+          disable: "Kikapcsol"
           update_to_latest: "Legutóbbi verzióra frissített"
           check_for_updates: "Frissítések keresése"
           updating: "Frissítés..."

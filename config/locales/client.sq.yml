@@ -521,9 +521,7 @@ sq:
       users: "Anëtarët"
       muted_users: "Të heshtur"
       muted_users_instructions: "Çaktivizo të gjitha njoftimet nga këta anëtarë."
-      muted_topics_link: "Trego temat e heshtura"
-      watched_topics_link: "Trego temat e vëzhguara"
-      tracked_topics_link: "Trego temat e ndjekura"
+      tracked_topics_link: "Shfaq"
       automatically_unpin_topics: "Çngjiti temat automatikisht kur arrij fundin e faqes."
       apps: "Aplikimet"
       revoke_access: "Hiqi aksesin"
@@ -569,6 +567,8 @@ sq:
         regenerate: "Rigjenero"
         disable: "Çaktivizo"
         enable: "Aktivizo"
+      second_factor:
+        edit: "Redakto"
       change_about:
         title: "Ndrysho Rreth meje"
         error: "Pati një gabim gjatë ndryshimit të kësaj të dhëne."
@@ -1766,7 +1766,7 @@ sq:
         this_month: "Këtë muaj"
         this_week: "Këtë javë"
         today: "Sot"
-        other_periods: "shiko më  populloret"
+        other_periods: "shiko më populloret"
     permission_types:
       full: "Krijo / Përgjigju / Shiko"
       create_post: "Përgjigju / Shiko"
@@ -2158,6 +2158,8 @@ sq:
           installed: "Instaluar"
           install_popular: "Popullore"
           about_theme: "Rreth"
+          enable: "Aktivizo"
+          disable: "Çaktivizo"
           add: "Shto"
           scss:
             text: "CSS"

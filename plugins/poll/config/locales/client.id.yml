@@ -34,9 +34,9 @@ id:
       open:
         title: "Buka Polling"
         label: "Buka"
-        confirm: "Apakah Anda yakin  ingin membuka akun ini?"
+        confirm: "Apakah Anda yakin ingin membuka akun ini?"
       close:
         title: "Tutup polling"
         label: "Tutup"
-        confirm: "Apakah Anda yakin  ingin menutup akun ini?"
+        confirm: "Apakah Anda yakin ingin menutup akun ini?"
       error_while_toggling_status: "Maaf, telah terjadi kesalahan pengalihan status dari pemilihan ini."

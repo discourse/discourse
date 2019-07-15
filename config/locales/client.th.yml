@@ -170,7 +170,7 @@ th:
     every_hour: "ทุกชั่วโมง"
     daily: "ทุกวัน"
     weekly: "รายสัปดาห์"
-    max_of_count: "สูงสุดของ  {{count}}"
+    max_of_count: "สูงสุดของ {{count}}"
     alternation: "หรือ"
     character_count:
       other: "{{count}} ตัวอักษร"
@@ -502,7 +502,7 @@ th:
       users: "ผู้ใช้"
       muted_users: "ปิดการแจ้งเตือน"
       muted_users_instructions: "ยกเลิกการแจ้งเตือนทุกอย่างกับบัญชีผู้ใช้นี้"
-      muted_topics_link: "แสดงกระทู้ที่ถูกปิดการแจ้งเตือน"
+      tracked_topics_link: "แสดง"
       automatically_unpin_topics: "ยกเลิกกระทู้ปกหมุดอัตโนมัติเมื่อถึงท้ายของหน้า"
       staff_counters:
         flags_given: "ธงที่เป็นประโยชน์"
@@ -540,6 +540,8 @@ th:
       second_factor_backup:
         disable: "ปิดใช้งาน"
         enable: "เปิดใช้งาน"
+      second_factor:
+        edit: "แก้ไข"
       change_about:
         title: "เปลี่ยนข้อมูลเกี่ยวกับฉัน"
         error: "เกิดความผิดพลาดในการแก้ไขค่านี้"
@@ -796,7 +798,7 @@ th:
       hidden_for_session: "โอเค ฉันจะถามคุณอีกทีพรุ่งนี้ คุณสามารถใช้เมนู เข้าสู่ระบบ เพื่อสร้างบัญชีได้เหมือนกันนะ"
     summary:
       enabled_description: "คุณกำลังดูสรุปของกระทู้นี้ : นี่คือโพสที่น่าสนใจที่สุดที่หลายๆคนแนะนำ"
-      description: "ตอบทั้งหมด  <b>{{replyCount}}</b> ครั้ง"
+      description: "ตอบทั้งหมด <b>{{replyCount}}</b> ครั้ง"
       description_time: "ตอบทั้งหมด <b>{{replyCount}}</b> ครั้งโดยมีเวลาการอ่านประมาณ <b>{{readingTime}} นาที</b>."
       enable: "สรุปกระทู้นี้"
       disable: "แสดงโพสต์ทั้งหมด"
@@ -850,7 +852,7 @@ th:
       awaiting_activation: "บัญชีของคุณกำลังรอการเปิดใช้งาน ใช้ลิงค์ลืมรหัสผ่านถ้าค้องการส่งอีเมลยืนยันตัวตนอีกครั้ง"
       awaiting_approval: "บัญชีของคุณยังไม่ได้รับการยืนยันโดยทีมงาน คุณจะได้รับอีเมลแจ้งเมื่อคุณได้รับการยืนยันแล้ว"
       requires_invite: "ขออภัย, สามารถเข้าถึงได้เฉพาะผู้ที่ได้รับเชิญเท่านั้น"
-      not_activated: "คุณไม่สามารถเข้าสู่ระบบได้ เราได้ส่งอีเมลยืนยันตัวตนไปหาคุณที่  <b>{{sentTo}}</b> กรุณาทำตามขั้นตอนในอีเมลเพื่อยืนยันตัวตนของคุณ"
+      not_activated: "คุณไม่สามารถเข้าสู่ระบบได้ เราได้ส่งอีเมลยืนยันตัวตนไปหาคุณที่ <b>{{sentTo}}</b> กรุณาทำตามขั้นตอนในอีเมลเพื่อยืนยันตัวตนของคุณ"
       not_allowed_from_ip_address: "คุณไม่สามารถเข้าสู่ระบบด้วยไอพีนี้ได้"
       admin_not_allowed_from_ip_address: "คุณไม่สามารถเข้าสู่ระบบด้วยผู้ดูแลระบบด้วยไอพีนี้"
       resend_activation_email: "คลิกเพื่อส่งอีเมลยืนยันตัวตนอีกครั้ง"
@@ -919,7 +921,7 @@ th:
       create_pm: "ข้อความ"
       title: "หรือกด Ctrl+Enter"
       users_placeholder: "เพิ่มผู้ใช้"
-      title_placeholder: "บทสนทนานี้เกี่ยวกับอะไร ขอสั้นๆ 1  ประโยค"
+      title_placeholder: "บทสนทนานี้เกี่ยวกับอะไร ขอสั้นๆ 1 ประโยค"
       edit_reason_placeholder: "ทำไมคุณถึงแก้ไข?"
       show_edit_reason: "(เพิ่มสาเหตุที่แก้ไข)"
       reply_placeholder: "พิมพ์ที่นี่. ใช้ Markdown, BBCode หรือ HTML เพื่อจัดรูปแบบ สามารถลากหรือวางรูปภาพได้"
@@ -1571,9 +1573,7 @@ th:
             visibility_levels:
               title: "ใครสามารถเห็นกลุ่มนี้?"
               public: "ทุกคน"
-              members: "เจ้าของกลุ่ม, สมาชิก และ ผู้ดูแลระบบ"
               staff: "เจ้าของกลุ่ม และผู้ดูแล"
-              owners: "เจ้าของกลุ่ม และผู้ดูแลระบบ"
           membership:
             trust_level: ระดับความไว้ใจ
             trust_levels_title: "ระดับความไว้ใจจะถูกให้ไปยังผู้ใช้โดยอัตโนมัติเมื่อพวกเขาเพิ่ม:"
@@ -1655,6 +1655,8 @@ th:
           upload: "อัปโหลด"
           installed: "ติดตั้งแล้ว"
           about_theme: "เกี่ยวกับ"
+          enable: "เปิดใช้งาน"
+          disable: "ปิดใช้งาน"
           add: "เพิ่ม"
           scss:
             text: "CSS"

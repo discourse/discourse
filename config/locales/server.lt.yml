@@ -28,6 +28,7 @@ lt:
   posts: "žinutės"
   loading: "Kraunama"
   powered_by_html: 'Sukurta <a href="https://www.discourse.org">Discourse</a>, geriausias žiūrimumas su JavaScript igalinimu'
+  sign_up: "Registruotis"
   log_in: "Prisijungti"
   submit: "Pateikti"
   purge_reason: "Automatinis ištrynimas kaip atsisakyta, deaktyvuota sąskaita"

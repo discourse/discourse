@@ -50,7 +50,7 @@ nl:
       '9':
         author: "Bruce Lee"
     magic_8_ball:
-      trigger: 'lot'
+      trigger: "lot"
       answers:
         '1': "Het is zeker"
         '2': "Het is zo besloten"
@@ -72,6 +72,6 @@ nl:
       result: |-
         > :crystal_ball: %{result}
     track_selector:
-      reset_trigger: 'start'
-      skip_trigger: 'overslaan'
-      help_trigger: 'help weergeven'
+      reset_trigger: "start"
+      skip_trigger: "overslaan"
+      help_trigger: "help weergeven"

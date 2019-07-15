@@ -28,6 +28,7 @@ th:
   posts: "โพสต์"
   loading: "กำลังโหลด"
   powered_by_html: 'บอร์ดนี้ใช้<a href="https://www.discourse.org">Discourse</a> จะแสดงได้สมบูรณ์เมื่อเปิดการใช้งาน JavaScript'
+  sign_up: "สมัคร"
   log_in: "เข้าสู่ระบบ"
   submit: "ตกลง"
   disable_remote_images_download_reason: "ไม่สามารถดาวน์โหลดรูปได้เนื่องจากพื้นที่ไม่เพียงพอ"

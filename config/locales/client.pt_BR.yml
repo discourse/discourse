@@ -792,9 +792,7 @@ pt_BR:
       muted_users_instructions: "Suprimir todas as notificações destes usuários."
       ignored_users: "Ignorados"
       ignored_users_instructions: "Suprimir todas as postagens e notificações destes usuários."
-      muted_topics_link: "Mostrar tópicos silenciados"
-      watched_topics_link: "Mostrar tópicos observados"
-      tracked_topics_link: "Mostrar tópicos acompanhados"
+      tracked_topics_link: "Exibir"
       automatically_unpin_topics: "Desafixar automaticamente os tópicos quando eu chegar no final deles."
       apps: "Aplicativos"
       revoke_access: "Revogar Acesso"
@@ -846,7 +844,6 @@ pt_BR:
         disable: "Desabilitar"
         enable: "Habilitar"
         enable_long: "Habilitar códigos de backup"
-        manage: "Gerenciar códigos de backup"
         copied_to_clipboard: "Copiado para a Área de Transferência"
         copy_to_clipboard_error: "Erro ao copiar dados para a Área de Transferência"
         remaining_codes: "Você tem <strong>{{count}}</strong> códigos de backup restantes."
@@ -856,8 +853,6 @@ pt_BR:
           description: "Cada um destes códigos de backup só pode ser usado uma vez. Mantenha-os em algum lugar seguro, mas acessível."
       second_factor:
         title: "Autenticação de Dois Fatores"
-        disable: "Desabilitar Autenticação de Dois Fatores"
-        enable: "Habilitar Autenticação de Dois Fatores"
         confirm_password_description: "Por favor, confirme sua senha para continuar"
         label: "Código"
         rate_limit: "Por favor, aguarde antes de tentar outro código de autenticação."
@@ -872,6 +867,7 @@ pt_BR:
         oauth_enabled_warning: "Por favor, observe que os logins sociais serão desabilitados quando a autenticação de dois fatores for habilitada na sua conta."
         use: "<a href>Usar um aplicativo autenticador</a>"
         enforced_notice: "Você precisa ativar a autenticação de dois fatores antes de acessar este site."
+        edit: "Editar"
       change_about:
         title: "Modificar Sobre Mim"
         error: "Houve um erro ao alterar este valor."
@@ -1172,9 +1168,6 @@ pt_BR:
       enabled: "Este site está em modo de somente leitura. Por favor, continue a navegar, mas respostas, curtidas e outras ações estão desabilitadas por enquanto."
       login_disabled: "O login é desabilitado enquanto o site está em modo de somente leitura."
       logout_disabled: "O logout é desabilitado enquanto o site está em modo de somente leitura."
-    too_few_topics_and_posts_notice: "Vamos <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>começar esta discussão!</a> Há atualmente <strong>%{currentTopics} / %{requiredTopics}</strong> tópicos e <strong>%{currentPosts} / %{requiredPosts}</strong> postagens. Novos visitantes precisam de algumas conversas para ler e responder."
-    too_few_topics_notice: "Vamos <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>começar esta discussão!</a> Há atualmente <strong>%{currentTopics} / %{requiredTopics}</strong> tópicos. Novos visitantes precisam de algumas conversar para ler e responder."
-    too_few_posts_notice: "Vamos <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>começar esta discussão!</a> Há atualmente <strong>%{currentPosts} / %{requiredPosts}</strong> postagens. Novos visitantes precisam de algumas conversas para ler e responder."
     logs_error_rate_notice:
       reached_hour_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# erro/hora} other {# erros/hora}}</a> alcançou o limite de configuração do site de {limit, plural, one {# erro/hora} other {# erros/hora}}."
       reached_minute_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# erro/minuto} other {# erros/minuto}}</a> alcançou o limite de configuração do site de {limit, plural, one {# erro/minuto} other {# erros/minuto}}."
@@ -1967,7 +1960,7 @@ pt_BR:
         success_message: "Você sinalizou com sucesso este tópico."
       feature_topic:
         title: "Destacar este tópico"
-        pin: "Fazer que este tópico apareça no topo da categoria  {{categoryLink}} até"
+        pin: "Fazer que este tópico apareça no topo da categoria {{categoryLink}} até"
         confirm_pin: "Você já tem {{count}} tópicos fixos. Muitos tópicos fixados podem atrapalhar usuários novos e anônimos. Tem certeza que quer fixar outro tópico nesta categoria?"
         unpin: "Remover este tópico do inicio da {{categoryLink}} categoria."
         unpin_until: "Remover este tópico do topo da categoria {{categoryLink}} ou esperar até <strong>%{until}</strong>."
@@ -2357,13 +2350,13 @@ pt_BR:
       notifications:
         watching:
           title: "Observar"
-          description: "Você vai observar automaticamente todos os tópicos destas categorias. Você será notificado de todas as novas mensagens em todos os tópicos.  Além disso, a contagem de novas respostas também será exibida."
+          description: "Você vai observar automaticamente todos os tópicos destas categorias. Você será notificado de todas as novas mensagens em todos os tópicos. Além disso, a contagem de novas respostas também será exibida."
         watching_first_post:
           title: "Observando o primeiro post"
           description: "Você será notificado sobre novos tópicos nesta categoria, mas não sobre respostas aos tópicos."
         tracking:
           title: "Monitorar"
-          description: "Você vai acompanhar automaticamente todos os tópicos destas categorias. Você será notificado se alguém mencionar o seu @nome ou responder para você.  Além disso, a contagem de novas respostas também será exibida."
+          description: "Você vai acompanhar automaticamente todos os tópicos destas categorias. Você será notificado se alguém mencionar o seu @nome ou responder para você. Além disso, a contagem de novas respostas também será exibida."
         regular:
           title: "Normal"
           description: "Você será notificado se alguém mencionar o seu @nome ou responder à sua mensagem."
@@ -2911,9 +2904,7 @@ pt_BR:
             visibility_levels:
               title: "Quem pode ver este grupo?"
               public: "Todos"
-              members: "Proprietários, membros e administradores do grupo"
               staff: "Proprietários e funcionários do grupo"
-              owners: "Proprietários e administradores do grupo"
           membership:
             automatic: Automático
             trust_level: nível de confiança
@@ -3244,6 +3235,8 @@ pt_BR:
           version: "Versão:"
           authors: "Autoria:"
           source_url: "Fonte"
+          enable: "Habilitar"
+          disable: "Desabilitar"
           required_version:
             error: "Este tema foi desabilitado automaticamente porque ele não é compatível com esta versão do Discourse."
             minimum: "Requer versão {{version}} ou acima do Discourse."

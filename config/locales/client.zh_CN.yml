@@ -558,6 +558,7 @@ zh_CN:
         only_admins: "管理员"
         mods_and_admins: "版主与管理员"
         members_mods_and_admins: "组员、版主与管理员"
+        owners_mods_and_admins: "仅群组成员、版主与管理员"
         everyone: "任何人"
       notifications:
         watching:
@@ -672,7 +673,7 @@ zh_CN:
         normal_option_title: "如果用户回复、引用或提到你，你将会收到消息。"
       activity_stream: "活动"
       preferences: "设置"
-      profile_hidden: "此用户公共信息已被影藏"
+      profile_hidden: "此用户公共信息已被隐藏。"
       expand_profile: "展开"
       collapse_profile: "折叠"
       bookmarks: "收藏"
@@ -754,9 +755,7 @@ zh_CN:
       muted_users_instructions: "抑制来自这些用户的所有通知。"
       ignored_users: "忽略"
       ignored_users_instructions: "取消所有帖子和来自这些用户的通知。"
-      muted_topics_link: "显示已静音的主题"
-      watched_topics_link: "显示已关注的主题"
-      tracked_topics_link: "显示已跟踪的主题"
+      tracked_topics_link: "显示"
       automatically_unpin_topics: "当我完整阅读了主题时自动解除置顶。"
       apps: "应用"
       revoke_access: "撤销许可"
@@ -808,7 +807,7 @@ zh_CN:
         disable: "停用"
         enable: "启用"
         enable_long: "启用备份码"
-        manage: "管理备份码"
+        manage: "管理备份码。你还剩下<strong>{{count}}</strong>个备份码。"
         copied_to_clipboard: "已复制到剪贴板"
         copy_to_clipboard_error: "复制到剪贴板时出错"
         remaining_codes: "你有<strong>{{count}}</strong>个备份码"
@@ -818,14 +817,13 @@ zh_CN:
           description: "每个备份码只能使用一次。请存放于安全可读的地方。"
       second_factor:
         title: "双重验证"
-        disable: "停用双重验证"
-        enable: "启用双重验证"
+        enable: "管理两步验证"
         confirm_password_description: "确认密码以继续"
         label: "编码"
         rate_limit: "请等待另一个验证码。"
         enable_description: |
           使用我们支持的应用 (<a href="https://www.google.com/search?q=authenticator+apps+for+android" target="_blank">Android</a> – <a href="https://www.google.com/search?q=authenticator+apps+for+ios" target="_blank">iOS</a>) 扫描此二维码并输入您的授权码。
-        disable_description: "请输入来自  app  的验证码"
+        disable_description: "请输入来自 app 的验证码"
         show_key_description: "手动输入"
         short_description: |
           使用一次性安全码保护你的帐户。
@@ -834,6 +832,8 @@ zh_CN:
         oauth_enabled_warning: "请注意，一旦你的帐户启用了双重身份验证，系统就会停用社交登录。"
         use: "<a href>Authenticator app</a>"
         enforced_notice: "在访问此站点之前，你需要启用双重身份验证。"
+        disable: "停用"
+        edit: "编辑"
       change_about:
         title: "更改个人信息"
         error: "提交修改时出错了"
@@ -1124,14 +1124,11 @@ zh_CN:
       enabled: "站点正处于只读模式。你可以继续浏览，但是回复、赞和其他操作暂时被禁用。"
       login_disabled: "只读模式下不允许登录。"
       logout_disabled: "站点在只读模式下无法登出。"
-    too_few_topics_and_posts_notice: "让我们<a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>开始讨论！</a>目前有<strong>%{currentTopics} / %{requiredTopics}</strong>个主题和<strong>%{currentPosts} / %{requiredPosts}</strong>个帖子。新访客需要能够阅读和回复一些对话。"
-    too_few_topics_notice: "让我们<a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>开始讨论！</a>目前有<strong>%{currentTopics} / %{requiredTopics}</strong>个主题。新访客需要能够阅读和回复一些讨论。"
-    too_few_posts_notice: "让我们<a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>开始讨论！</a>目前有<strong>%{currentPosts} / %{requiredPosts}</strong>个帖子。新访客需要能够阅读和回复一些讨论。"
     logs_error_rate_notice:
       reached_hour_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# error/hour} other {# errors/hour}}</a>达到了站点设置中的限制{limit, plural, one {# error/hour} other {# errors/hour}}。"
-      reached_minute_MF: "<b>{relativeAge}</b>1 – <a href='{url}' target='_blank'>{rate, plural, one {# error/minute} other {# errors/minute}}</a>已经达到站点设置限制  {limit, plural, one {# error/minute} other {# errors/minute}}。"
+      reached_minute_MF: "<b>{relativeAge}</b>1 – <a href='{url}' target='_blank'>{rate, plural, one {# error/minute} other {# errors/minute}}</a>已经达到站点设置限制 {limit, plural, one {# error/minute} other {# errors/minute}}。"
       exceeded_hour_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# error/hour} other {# errors/hour}}</a>超出了站点设置中的限制{limit, plural, one {# error/hour} other {# errors/hour}}。"
-      exceeded_minute_MF: "<b>{relativeAge}</b>1 – <a href='{url}' target='_blank'>{rate, plural, one {# error/minute} other {# errors/minute}}</a>已经超出站点设置限制  {limit, plural, one {# error/minute} other {# errors/minute}}。"
+      exceeded_minute_MF: "<b>{relativeAge}</b>1 – <a href='{url}' target='_blank'>{rate, plural, one {# error/minute} other {# errors/minute}}</a>已经超出站点设置限制 {limit, plural, one {# error/minute} other {# errors/minute}}。"
     learn_more: "了解更多…"
     all_time: "总量"
     all_time_desc: "创建的主题总量"
@@ -1220,7 +1217,7 @@ zh_CN:
       username: "用户"
       password: "密码"
       second_factor_title: "双重验证"
-      second_factor_description: "请输入来自  app  的验证码："
+      second_factor_description: "请输入来自 app 的验证码："
       second_factor_backup: "<a href>使用备用码登录</a>"
       second_factor_backup_title: "两步验证备份"
       second_factor_backup_description: "请输入你的备份码："
@@ -1369,6 +1366,7 @@ zh_CN:
         category: "你提到了 {{username}} ，然而他们不能访问该分类，所以他们不会被通知。你需要把他们加入到能访问该分类的群组中。"
         private: "你提到了{{userrname}}，然而他们不能访问该私信，所以他们不会被通知。你需要邀请他们至私信中。"
       duplicate_link: "好像<b>@{{username}}</b>在<a href='{{post_url}}'>{{ago}}</a>中前的回复中已经发了你的链接 <b>{{domain}}</b> － 你想再次发表链接吗？"
+      reference_topic_title: "回复：{{title}}"
       error:
         title_missing: "标题为空"
         title_too_short: "标题过短，至少 {{min}} 个字"
@@ -1733,6 +1731,9 @@ zh_CN:
       toggle_information: "切换主题详情"
       read_more_in_category: "想阅读更多？浏览{{catLink}}的其他主题或{{latestLink}}。"
       read_more: "想阅读更多？{{catLink}}或{{latestLink}}。"
+      group_request: "你需要请求加入`{{name}}`群组才能查看此主题。"
+      group_join: "你需要加入`{{name}}`群组以查看此主题"
+      group_request_sent: "你加入群组的请求已发送。当被接受时你会收到通知。"
       read_more_MF: "还有 { UNREAD, plural, =0 {} one { <a href='{basePath}/unread'>1 个未读主题</a>} other { <a href='{basePath}/unread'># 个未读主题</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{和 } false {} other{}} <a href='{basePath}/new'>1 个新</a>主题} other { {BOTH, select, true{和 } false {} other{}} <a href='{basePath}/new'># 个近期</a>主题} }可以阅读，或者{CATEGORY, select, true {浏览{catLink}中的其他主题} false {{latestLink}} other {}}"
       browse_all_categories: 浏览所有分类
       view_latest_topics: 查阅最新主题
@@ -2074,6 +2075,7 @@ zh_CN:
       abandon:
         confirm: "确定要放弃编辑帖子吗？"
         no_value: "否"
+        no_save_draft: "不，保存草稿"
         yes_value: "是"
       via_email: "通过邮件发表的帖子"
       via_auto_generated_email: "通过自动生成邮件发表的帖子"
@@ -2121,6 +2123,7 @@ zh_CN:
         delete_topic: "删除主题"
         add_post_notice: "添加管理人员通知"
         remove_post_notice: "移除管理人员通知"
+        remove_timer: "移除计时器"
       actions:
         flag: "标记"
         defer_flags:
@@ -2378,6 +2381,8 @@ zh_CN:
         help: "本主题已置顶；它将始终显示在它所属分类的顶部"
       unlisted:
         help: "本主题被设置为不显示在主题列表中，只能通过链接来访问"
+      personal_message:
+        title: "此主题是一条私信"
     posts: "帖子"
     posts_long: "本主题有 {{number}} 个帖子"
     posts_likes_MF: |
@@ -2510,6 +2515,7 @@ zh_CN:
         up_down: "%{shortcut} 移动选择焦点 &uarr; &darr;"
         open: "%{shortcut} 打开选择的主题"
         next_prev: "%{shortcut} 下一个/前一个段落"
+        go_to_unread_post: "%{shortcut}前往第一个未读帖子"
       application:
         title: "应用"
         create: "%{shortcut} 创建新主题"
@@ -2546,6 +2552,7 @@ zh_CN:
         mark_tracking: "%{shortcut} 追踪主题"
         mark_watching: "%{shortcut} 看主题"
         print: "%{shortcut} 打印主题"
+        defer: "%{shortcut}延迟主题"
     badges:
       earned_n_times:
         other: "授予徽章 %{count} 次"
@@ -2639,6 +2646,7 @@ zh_CN:
         about: "将标签分组以便管理。"
         new: "新标签组"
         tags_label: "标签组内标签："
+        tags_placeholder: "标签"
         parent_tag_label: "上级标签："
         parent_tag_placeholder: "可选"
         parent_tag_description: "未设置上级标签前群组内标签无法使用。"
@@ -2800,9 +2808,10 @@ zh_CN:
             visibility_levels:
               title: "此群组对谁可见？"
               public: "所有人"
-              members: "群组拥有者，成员和管理员"
+              members: "群组拥有者，成员"
               staff: "群组拥有者及管理人员"
-              owners: "群组拥有者及管理员"
+              owners: "群组拥有者"
+              description: "管理员能看到所有群组。"
           membership:
             automatic: 自动
             trust_level: 信任等级
@@ -3091,6 +3100,7 @@ zh_CN:
           inactive_themes: "非活动主题："
           inactive_components: "未使用的组件："
           broken_theme_tooltip: "此主题的CSS，HTML或YAML中存在错误"
+          disabled_component_tooltip: "此组件已被停用"
           default_theme_tooltip: "此主题是网站的默认主题"
           updates_available_tooltip: "此主题有更新可用"
           and_x_more: "和{{count}}更多。"
@@ -3131,6 +3141,9 @@ zh_CN:
           version: "版本："
           authors: "作者："
           source_url: "来源"
+          enable: "启用"
+          disable: "停用"
+          disabled: "此组件已被停用。"
           required_version:
             error: "此主题已被自动禁用，因为它与此版本的Discourse不兼容。"
             minimum: "需要Discourse{{version}}版本或以上。"
@@ -3402,6 +3415,8 @@ zh_CN:
             embeddable_host_update: "更新可嵌入的主机"
             embeddable_host_destroy: "销毁可嵌入的主机"
             change_theme_setting: "更改主题设置"
+            disable_theme_component: "停用主题组件"
+            enable_theme_component: "启用主题组件"
         screened_emails:
           title: "被屏蔽的邮件地址"
           description: "当有人试图用以下邮件地址注册时，将受到阻止或其它系统操作。"

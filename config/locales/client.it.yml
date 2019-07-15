@@ -334,7 +334,7 @@ it:
       view_pending: "vedi in attesa"
       topic_has_pending:
         one: "Questo argomento ha <b>%{count}</b> messaggio in attesa di approvazione"
-        other: "Questo Argomento ha  <b>{{count}}</b> messaggi in attesa di approvazione"
+        other: "Questo Argomento ha <b>{{count}}</b> messaggi in attesa di approvazione"
       title: "Revisiona"
       topic: "Argomento:"
       filtered_topic: "Hai filtrato il contenuto revisionabile in un singolo Argomento"
@@ -745,7 +745,7 @@ it:
       admin: "{{user}} è un amministratore"
       moderator_tooltip: "Questo utente è un moderatore"
       admin_tooltip: "Questo utente è un amministratore"
-      silenced_tooltip: "Questo utente è  silenziato"
+      silenced_tooltip: "Questo utente è silenziato"
       suspended_notice: "Questo utente è sospeso fino al {{date}}."
       suspended_permanently: "Questo utente è sospeso."
       suspended_reason: "Motivo: "
@@ -764,7 +764,7 @@ it:
         warning: "Modalità Mailing List attiva. Le impostazioni per la notifica via email verranno ignorate."
       tag_settings: "Etichette"
       watched_tags: "Osservate"
-      watched_tags_instructions: "Osserverai automaticamente tutti gli argomenti con queste etichette. Verrai notificato di tutti i  nuovi messaggi e argomenti, e accanto all'argomento apparirà anche un conteggio dei nuovi messaggi."
+      watched_tags_instructions: "Osserverai automaticamente tutti gli argomenti con queste etichette. Verrai notificato di tutti i nuovi messaggi e argomenti, e accanto all'argomento apparirà anche un conteggio dei nuovi messaggi."
       tracked_tags: "Seguite"
       tracked_tags_instructions: "Seguirai automaticamente tutti gli argomenti con queste etichette. Accanto all'argomento apparirà il conteggio dei nuovi messaggi."
       muted_tags: "Silenziati"
@@ -792,9 +792,7 @@ it:
       muted_users_instructions: "Occulta tutte le notifiche da questi utenti."
       ignored_users: "Ignorato"
       ignored_users_instructions: "Nascondi tutti i messaggi e le notifiche da questi utenti."
-      muted_topics_link: "Mostra argomenti silenziati"
-      watched_topics_link: "Mostra argomenti osservati"
-      tracked_topics_link: "Mostra gli argomenti seguiti"
+      tracked_topics_link: "Mostra"
       automatically_unpin_topics: "Spunta automaticamente gli argomenti quando arrivi in fondo."
       apps: "Applicazioni"
       revoke_access: "Revoca Accesso"
@@ -846,7 +844,6 @@ it:
         disable: "Disabilita"
         enable: "Abilita"
         enable_long: "Abilita codici di backup"
-        manage: "Gestisci codici di backup"
         copied_to_clipboard: "Copiato nella Clipboard"
         copy_to_clipboard_error: "Errore durante la copia nella Clipboard"
         remaining_codes: "Ti sono rimasti <strong>{{count}}</strong> codici di backup."
@@ -856,8 +853,6 @@ it:
           description: "Ciascuno di questi codici di backup può essere usato una sola volta. Conservali in un posto sicuro ma accessibile."
       second_factor:
         title: "Autenticazione a Due Fattori"
-        disable: "Disabilita l'autenticazione a due fattori"
-        enable: "Abilita l'autenticazione a due fattori"
         confirm_password_description: "Per favore conferma la tua password per continuare"
         label: "Codice"
         rate_limit: "Per favore, attendi prima di provare un altro codice di autenticazione."
@@ -872,6 +867,7 @@ it:
         oauth_enabled_warning: "Tieni presente che gli accessi ai social network saranno disabilitati dopo aver attivato l'autenticazione a due fattori nel tuo account."
         use: "<a href>Usa l'applicazione Authenticator </a>"
         enforced_notice: "E' obbligatorio abilitare l'autenticazione a due fattori per accedere a questo sito."
+        edit: "Modifica"
       change_about:
         title: "Modifica i dati personali"
         error: "Si è verificato un errore durante la modifica del valore."
@@ -1172,9 +1168,6 @@ it:
       enabled: "Questo sito è in modalità di sola lettura. Puoi continuare a navigare nel sito, ma le risposte, i \"Mi piace\" e altre azioni sono per il momento disabilitate."
       login_disabled: "La connessione è disabilitata quando il sito è in modalità di sola lettura."
       logout_disabled: "La disconnessione è disabilitata quando il sito è in modalità di sola lettura."
-    too_few_topics_and_posts_notice: "Diamo <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>il via alle discussionii!</a> Al momento ci sono <strong>%{currentTopics} / %{requiredTopics}</strong> Argomenti e <strong>%{currentPosts} / %{requiredPosts}</strong> messaggi. I nuovi arrivati hanno bisogno di conversazioni da leggere e a cui rispondere."
-    too_few_topics_notice: "Diamo <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>il via alle discussioni!</a> Al momento ci sono <strong>%{currentTopics} / %{requiredTopics}</strong> Argomenti. I nuovi arrivati hanno bisogno di conversazioni da leggere e a cui rispondere."
-    too_few_posts_notice: "Diamo <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>il via alle discussioni!</a> Al momento ci sono <strong>%{currentPosts} / %{requiredPosts}</strong> messaggi. I nuovi arrivati hanno bisogno di conversazioni da leggere e a cui rispondere."
     logs_error_rate_notice:
       reached_hour_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# error/hour} altro {# errors/hour}}</a> il limite impostato di {limit, plural, one {# error/hour} altro {# errors/hour}}."
       reached_minute_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# error/minute} altro {# errors/minute}}</a> raggiunto il limite impostato di {limit, plural, one {# error/minute} altro {# errors/minute}}."
@@ -1244,7 +1237,7 @@ it:
       invite: "Inserisci il nome utente o l'indirizzo email. Ti manderemo un'email per l'azzeramento della password."
       reset: "Azzera Password"
       complete_username: "Se un account corrisponde al nome utente <b>%{username}</b>, a breve dovresti ricevere un'email con le istruzioni per ripristinare la tua password."
-      complete_email: "Se un account corrisponde a <b>%{email}</b>,  a breve dovresti ricevere un'email contenente le istruzioni per ripristinare la password."
+      complete_email: "Se un account corrisponde a <b>%{email}</b>, a breve dovresti ricevere un'email contenente le istruzioni per ripristinare la password."
       complete_username_found: "C'è un account che corrisponde al nome utente <b>%{username}</b>, a breve dovresti ricevere una email con le istruzioni per reimpostare la tua password. "
       complete_email_found: "C'è un account che corrisponde alla email <b>%{email}</b>, a breve dovresti ricevere una email con le istruzioni per reimpostare la tua password. "
       complete_username_not_found: "Nessun account corrisponde al nome utente <b>%{username}</b>"
@@ -1797,7 +1790,7 @@ it:
       toggle_information: "commuta i dettagli dell'argomento"
       read_more_in_category: "Vuoi saperne di più? Leggi altri argomenti in {{catLink}} o {{latestLink}}."
       read_more: "Vuoi saperne di più? {{catLink}} o {{latestLink}}."
-      read_more_MF: "{ UNREAD, plural, =0 {} one { C'è <a href='{basePath}/unread'>1 argomento non letto</a> } other { Ci sono <a href='{basePath}/unread'># argomenti non letti</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{e } false {è } other{}} <a href='{basePath}/new'>1 nuovo</a> argomento} other { {BOTH, select, true{e } false {Ci sono } other{}} <a href='{basePath}/new'># nuovi</a>  argomenti} } restanti, o {CATEGORY, select, true {visualizza altri argomenti in {catLink}} false {{latestLink}} other {}}"
+      read_more_MF: "{ UNREAD, plural, =0 {} one { C'è <a href='{basePath}/unread'>1 argomento non letto</a> } other { Ci sono <a href='{basePath}/unread'># argomenti non letti</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{e } false {è } other{}} <a href='{basePath}/new'>1 nuovo</a> argomento} other { {BOTH, select, true{e } false {Ci sono } other{}} <a href='{basePath}/new'># nuovi</a> argomenti} } restanti, o {CATEGORY, select, true {visualizza altri argomenti in {catLink}} false {{latestLink}} other {}}"
       browse_all_categories: Scorri tutte le categorie
       view_latest_topics: visualizza gli argomenti più recenti
       suggest_create_topic: "Perché non crei un argomento?"
@@ -2071,8 +2064,8 @@ it:
         error: "Si è verificato un errore durante il cambio di proprietà dei messaggi."
         placeholder: "nome utente del nuovo proprietario"
         instructions:
-          one: "Per favore, scegli un nuovo proprietario per il messaggio che apparteneva a  <b>@{{old_user}}</b>"
-          other: "Per favore, scegli un nuovo proprietario per i {{count}}  messaggio che appartenevano a <b>@{{old_user}}</b>"
+          one: "Per favore, scegli un nuovo proprietario per il messaggio che apparteneva a <b>@{{old_user}}</b>"
+          other: "Per favore, scegli un nuovo proprietario per i {{count}} messaggio che appartenevano a <b>@{{old_user}}</b>"
       change_timestamp:
         title: "Cambia Marca Temporale..."
         action: "cambia marca temporale"
@@ -2904,9 +2897,7 @@ it:
             visibility_levels:
               title: "Chi può vedere questo Gruppo?"
               public: "Chiunque"
-              members: "Proprietari del gruppo, membri e amministratori"
               staff: "Proprietari del gruppo e staff"
-              owners: "Proprietari del gruppo e amministratori"
           membership:
             automatic: Automatico
             trust_level: Livello Esperienza
@@ -3019,7 +3010,7 @@ it:
           disabled: "Disabilitato"
         events:
           none: "Non ci sono eventi correlati."
-          redeliver: "Riconsegna  "
+          redeliver: "Riconsegna "
           incoming:
             one: "C'è un nuovo evento."
             other: "Ci sono {{count}} nuovi eventi."
@@ -3237,6 +3228,8 @@ it:
           version: "Versione:"
           authors: "Creato da:"
           source_url: "Fonte"
+          enable: "Abilita"
+          disable: "Disabilita"
           required_version:
             error: "Questo tema è stato disattivato automaticamente perché non compatibile con questa versione di Discourse."
             minimum: "Richiede Discourse versione {{version}} o superiore."
@@ -3510,7 +3503,7 @@ it:
             embeddable_host_destroy: "distruggi host incorporabile"
         screened_emails:
           title: "Email Scansionate"
-          description: "Quando qualcuno cerca di creare un nuovo account, verrando controllati i seguenti indirizzi email  e la registrazione viene bloccata, o eseguita qualche altra azione."
+          description: "Quando qualcuno cerca di creare un nuovo account, verrando controllati i seguenti indirizzi email e la registrazione viene bloccata, o eseguita qualche altra azione."
           email: "Indirizzo email"
           actions:
             allow: "Permetti"
@@ -3524,7 +3517,7 @@ it:
           description: 'Gli indirizzi IP che sono sotto controllo. Usa "Permetti" per inserirli nella lista bianca.'
           delete_confirm: "Davvero vuoi rimuovere la regola per %{ip_address}?"
           roll_up_confirm: "Sicuro di voler raggruppare in sottoreti gli indirizzi IP schermati normalmente?"
-          rolled_up_some_subnets: " L'elenco di indirizzi IP interdetti sono stati sintetizzati correttamente:  %{subnets}."
+          rolled_up_some_subnets: " L'elenco di indirizzi IP interdetti sono stati sintetizzati correttamente: %{subnets}."
           rolled_up_no_subnet: "Non c'era nulla da sintetizzare"
           actions:
             block: "Blocca"
@@ -3744,7 +3737,7 @@ it:
           none: "L'indirizzo email non ha causato nessun errore di ritorno recentemente."
           some: "Sono stati ricevuti alcuni errori di ritorno per quell'indirizzo email."
           threshold_reached: "Quella email ha ricevuto troppi errori di ritorno."
-        trust_level_change_failed: "C'è stato un problema nel cambio di livello di esperienza di questo utente.  "
+        trust_level_change_failed: "C'è stato un problema nel cambio di livello di esperienza di questo utente. "
         suspend_modal_title: "Sospendi Utente"
         trust_level_2_users: "Utenti con Livello Esperienza 2"
         trust_level_3_requirements: "Requisiti per Livello Esperienza 3"

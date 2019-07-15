@@ -7,7 +7,7 @@
 
 be:
   site_settings:
-    discourse_narrative_bot_enabled: 'Уключыць Discourse Narrative Bot (discobot)'
+    discourse_narrative_bot_enabled: "Уключыць Discourse Narrative Bot (discobot)"
     disable_discourse_narrative_bot_welcome_post: "Адключэнне прывітання паста дыскурсу апавядальнай Bot"
     discourse_narrative_bot_ignored_usernames: "Usernames што Дыскурс Мастацкая Bot павінен ігнараваць"
     discourse_narrative_bot_disable_public_replies: "Адключыць публічныя адказы на дыскурсе апавядальнай Bot"
@@ -74,7 +74,7 @@ be:
       results: |-
         >: Left_speech_bubble: _% {цытата} _ & mdash; % {} Аўтар
     magic_8_ball:
-      trigger: 'стан'
+      trigger: "стан"
       answers:
         '1': "несумненна"
         '2': "Гэта рашуча так"
@@ -99,9 +99,9 @@ be:
       result: |-
         >: Crystal_ball:% {} Вынік
     track_selector:
-      reset_trigger: 'пачатак'
-      skip_trigger: 'прапускаць'
-      help_trigger: 'дысплей дапамогу'
+      reset_trigger: "пачатак"
+      skip_trigger: "прапускаць"
+      help_trigger: "дысплей дапамогу"
       random_mention:
         reply: |-
           Прывітанне! Для таго, каб высветліць, што я магу зрабіць, скажам, `@% {discobot_username}% {help_trigger}`.
@@ -192,11 +192,11 @@ be:
         message: |-
           Дзякуй за тырчаць са мной @% {імя карыстальніка}! Я зрабіў гэта для вас, я думаю, што вы заслужылі гэта:% {} СертыфікатГэта ўсё зараз! Праверце [** нашы апошнія тэмы для абмеркавання **] (% {base_uri}
       certificate:
-        alt: 'Сертыфікат дасягненняў'
+        alt: "Сертыфікат дасягненняў"
     advanced_user_narrative:
-      reset_trigger: 'пашыраны падручнік'
+      reset_trigger: "пашыраны падручнік"
       cert_title: "У знак прызнання паспяховага завяршэння прасунутага карыстальніка падручніка"
-      title: ': Arrow_up: Пашыраныя функцыі карыстальніка'
+      title: ": Arrow_up: Пашыраныя функцыі карыстальніка"
       start_message: |-
         Як _advanced_ карыстальнік, вы наведалі [вашу старонку налад] (% {base_uri}
       edit:
@@ -215,7 +215,7 @@ be:
         reply: |-
           Вау! : Бум:Для таго, каб захаваць пераемнасць дыскусій, выдаленняў не адразу, таму пост будзе выдалены праз некаторы час.
       recover:
-        deleted_post_raw: 'Чаму @% {discobot_username} выдаліць мой пост? : З болем:'
+        deleted_post_raw: "Чаму @% {discobot_username} выдаліць мой пост? : З болем:"
         instructions: |-
           О не! Падобна на тое, што я выпадкова выдаліў новы пост, які я толькі што створаны для вас.Ці можаце вы зрабіць мне ласку і <IMG SRC = "% {base_uri}
         not_found: |-
@@ -254,4 +254,4 @@ be:
         message: |-
           Вы зіхацелі праз гэта як _advanced user_ на самай справе: лук:% {} СертыфікатГэта ўсё, што ў мяне ёсць для вас.Пакуль на дадзены момант! Калі вы хочаце пагаварыць са мной зноў, адпраўце мне паведамленне ў любы час: сонцаахоўныя акуляры:
       certificate:
-        alt: 'Advanced User Certificate Калея дасягненні'
+        alt: "Advanced User Certificate Калея дасягненні"
