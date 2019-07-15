@@ -16,8 +16,9 @@ class Admin::WatchedWordsController < Admin::AdminController
   end
 
   def destroy
-    watched_word = WatchedWord.find(params[:id])
-    watched_word.destroy
+    watched_word = WatchedWord.find_by(id: params[:id])
+    raise Discourse::InvalidParameters.new(:id) unless watched_word
+    watched_word.destroy!
     render json: success_json
   end
 
