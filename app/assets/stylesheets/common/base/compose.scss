@@ -259,7 +259,7 @@
   }
 
   .popup-tip {
-    z-index: z("composer", "dropdown");
+    z-index: z("composer", "dropdown") + 1;
   }
 
   .wmd-controls {
