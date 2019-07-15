@@ -172,6 +172,18 @@ RSpec.describe Admin::SiteTextsController do
         expect(site_text['value']).to eq(I18n.t("js.topic.list"))
       end
 
+      it 'returns a site text for a key with ampersand' do
+        get "/admin/customize/site_texts/js.emoji_picker.food_&_drink.json"
+        expect(response.status).to eq(200)
+
+        json = ::JSON.parse(response.body)
+
+        site_text = json['site_text']
+
+        expect(site_text['id']).to eq('js.emoji_picker.food_&_drink')
+        expect(site_text['value']).to eq(I18n.t("js.emoji_picker.food_&_drink"))
+      end
+
       it 'returns not found for missing keys' do
         get "/admin/customize/site_texts/made_up_no_key_exists.json"
         expect(response.status).to eq(404)
@@ -263,8 +275,8 @@ RSpec.describe Admin::SiteTextsController do
         expect(json['error_type']).to eq('not_found')
       end
 
-      it "works as expectd with correct keys" do
-        put '/admin/customize/site_texts/login_required.welcome_message.json', params: {
+      it "works as expected with correct keys" do
+        put '/admin/customize/site_texts/js.emoji_picker.animals_%26_nature.json', params: {
           site_text: { value: 'foo' }
         }
 
@@ -273,7 +285,7 @@ RSpec.describe Admin::SiteTextsController do
         json = ::JSON.parse(response.body)
         site_text = json['site_text']
 
-        expect(site_text['id']).to eq('login_required.welcome_message')
+        expect(site_text['id']).to eq('js.emoji_picker.animals_&_nature')
         expect(site_text['value']).to eq('foo')
       end
 

@@ -221,12 +221,12 @@ Discourse::Application.routes.draw do
 
       # They have periods in their URLs often:
       get 'site_texts'             => 'site_texts#index'
-      get 'site_texts/:id.json'    => 'site_texts#show',   constraints: { id: /[\w.\-\+]+/i }
-      get 'site_texts/:id'         => 'site_texts#show',   constraints: { id: /[\w.\-\+]+/i }
-      put 'site_texts/:id.json'    => 'site_texts#update', constraints: { id: /[\w.\-\+]+/i }
-      put 'site_texts/:id'         => 'site_texts#update', constraints: { id: /[\w.\-\+]+/i }
-      delete 'site_texts/:id.json' => 'site_texts#revert', constraints: { id: /[\w.\-\+]+/i }
-      delete 'site_texts/:id'      => 'site_texts#revert', constraints: { id: /[\w.\-\+]+/i }
+      get 'site_texts/:id.json'    => 'site_texts#show',   constraints: { id: /[\w.\-\+\%\&]+/i }
+      get 'site_texts/:id'         => 'site_texts#show',   constraints: { id: /[\w.\-\+\%\&]+/i }
+      put 'site_texts/:id.json'    => 'site_texts#update', constraints: { id: /[\w.\-\+\%\&]+/i }
+      put 'site_texts/:id'         => 'site_texts#update', constraints: { id: /[\w.\-\+\%\&]+/i }
+      delete 'site_texts/:id.json' => 'site_texts#revert', constraints: { id: /[\w.\-\+\%\&]+/i }
+      delete 'site_texts/:id'      => 'site_texts#revert', constraints: { id: /[\w.\-\+\%\&]+/i }
 
       get 'reseed' => 'site_texts#get_reseed_options'
       post 'reseed' => 'site_texts#reseed'
