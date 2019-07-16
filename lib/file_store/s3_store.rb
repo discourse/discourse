@@ -21,7 +21,7 @@ module FileStore
 
     def store_upload(file, upload, content_type = nil)
       path = get_path_for_upload(upload)
-      url, upload.etag = store_file(file, path, filename: upload.original_filename, content_type: content_type, cache_locally: true, private: upload.private?)
+      url, upload.etag = store_file(file, path, filename: upload.original_filename, content_type: content_type, cache_locally: true, private: upload.secure?)
       url
     end
 
@@ -115,7 +115,7 @@ module FileStore
     end
 
     def url_for(upload, force_download: false)
-      if upload.private? || force_download
+      if upload.secure? || force_download
         url = presigned_url(get_upload_key(upload), force_download: force_download, filename: upload.original_filename)
       else
         url = upload.url
@@ -163,24 +163,12 @@ module FileStore
     end
 
     def update_upload_ACL(upload, type: "attachment")
-      is_image = FileHelper.is_supported_image?(upload.original_filename)
-      if type == "attachment"
-        return if is_image
-        secure_file = SiteSetting.prevent_anons_from_downloading_files
-      else
-        return if !is_image
-        secure_file = secure_images_enabled?
-      end
-
       key = get_upload_key(upload)
+      update_ACL(key, upload.secure?)
 
-      update_ACL(key, secure_file)
-
-      if is_image
-        upload.optimized_images.find_each do |optimized_image|
-          key = get_path_for_optimized_image(optimized_image)
-          update_ACL(key, secure_file)
-        end
+      upload.optimized_images.find_each do |optimized_image|
+        optimized_image_key = get_path_for_optimized_image(optimized_image)
+        update_ACL(optimized_image_key, upload.secure?)
       end
 
       true
@@ -207,9 +195,9 @@ module FileStore
       end
     end
 
-    def update_ACL(key, secure_file)
+    def update_ACL(key, secure)
       begin
-        @s3_helper.object(key).acl.put(acl: secure_file ? "private" : "public-read")
+        @s3_helper.object(key).acl.put(acl: secure ? "private" : "public-read")
       rescue Aws::S3::Errors::NoSuchKey
         Rails.logger.warn("Could not update ACL on upload with key: '#{key}'. Upload is missing.")
       end

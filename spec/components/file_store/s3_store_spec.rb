@@ -78,11 +78,11 @@ describe FileStore::S3Store do
         end
       end
 
-      describe "when private uploads are enabled" do
-        it "returns signed URL for eligible private upload" do
+      describe "when secure uploads are enabled" do
+        it "returns signed URL for secure attachment" do
           SiteSetting.prevent_anons_from_downloading_files = true
           SiteSetting.authorized_extensions = "pdf|png|jpg|gif"
-          upload.update!(original_filename: "small.pdf", extension: "pdf")
+          upload.update!(original_filename: "small.pdf", extension: "pdf", secure: true)
 
           s3_helper.expects(:s3_bucket).returns(s3_bucket).at_least_once
           s3_bucket.expects(:object).with("original/1X/#{upload.sha1}.pdf").returns(s3_object).at_least_once
@@ -95,7 +95,7 @@ describe FileStore::S3Store do
           expect(store.url_for(upload)).not_to eq(upload.url)
         end
 
-        it "returns regular URL for ineligible private upload" do
+        it "returns regular URL for image upload" do
           SiteSetting.prevent_anons_from_downloading_files = true
 
           s3_helper.expects(:s3_bucket).returns(s3_bucket).at_least_once
@@ -360,20 +360,8 @@ describe FileStore::S3Store do
     end
 
     describe ".update_upload_ACL" do
-      it "sets acl to private when private uploads are enabled" do
+      it "sets acl to public by default" do
         upload.update!(original_filename: "small.pdf", extension: "pdf")
-        SiteSetting.prevent_anons_from_downloading_files = true
-        s3_helper.expects(:s3_bucket).returns(s3_bucket)
-        s3_bucket.expects(:object).with("original/1X/#{upload.sha1}.pdf").returns(s3_object)
-        s3_object.expects(:acl).returns(s3_object)
-        s3_object.expects(:put).with(acl: "private").returns(s3_object)
-
-        expect(store.update_upload_ACL(upload)).to be_truthy
-      end
-
-      it "sets acl to public when private uploads are disabled" do
-        upload.update!(original_filename: "small.pdf", extension: "pdf")
-        SiteSetting.prevent_anons_from_downloading_files = false
         s3_helper.expects(:s3_bucket).returns(s3_bucket)
         s3_bucket.expects(:object).with("original/1X/#{upload.sha1}.pdf").returns(s3_object)
         s3_object.expects(:acl).returns(s3_object)
@@ -382,27 +370,15 @@ describe FileStore::S3Store do
         expect(store.update_upload_ACL(upload)).to be_truthy
       end
 
-      it "sets acl to private for an image when secure images are enabled" do
-        SiteSetting.login_required = true
-        SiteSetting.secure_images = true
+      it "sets acl to private when upload is marked secure" do
+        upload.update!(original_filename: "small.pdf", extension: "pdf", secure: true)
         s3_helper.expects(:s3_bucket).returns(s3_bucket)
-        s3_bucket.expects(:object).with("original/1X/#{upload.sha1}.png").returns(s3_object)
+        s3_bucket.expects(:object).with("original/1X/#{upload.sha1}.pdf").returns(s3_object)
         s3_object.expects(:acl).returns(s3_object)
         s3_object.expects(:put).with(acl: "private").returns(s3_object)
 
-        expect(store.update_upload_ACL(upload, type: "image")).to be_truthy
+        expect(store.update_upload_ACL(upload)).to be_truthy
       end
-
-      it "sets acl to public for an image when secure images are enabled" do
-        SiteSetting.secure_images = false
-        s3_helper.expects(:s3_bucket).returns(s3_bucket)
-        s3_bucket.expects(:object).with("original/1X/#{upload.sha1}.png").returns(s3_object)
-        s3_object.expects(:acl).returns(s3_object)
-        s3_object.expects(:put).with(acl: "public-read").returns(s3_object)
-
-        expect(store.update_upload_ACL(upload, type: "image")).to be_truthy
-      end
-
     end
   end
 

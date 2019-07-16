@@ -82,7 +82,7 @@ module FileStore
         if !file
           max_file_size_kb = [SiteSetting.max_image_size_kb, SiteSetting.max_attachment_size_kb].max.kilobytes
 
-          if upload.private?
+          if upload.secure?
             url = Discourse.store.signed_url_for_path(upload.url)
           else
             url = Discourse.store.cdn_url(upload.url)

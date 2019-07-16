@@ -11,7 +11,21 @@ module Jobs
       type = "image" if args[:name] && args[:name] == "secure_images"
 
       Upload.find_each do |upload|
-        Discourse.store.update_upload_ACL(upload, type: type)
+        next if upload.for_theme || upload.for_site_setting
+
+        is_image = FileHelper.is_supported_image?(upload.original_filename)
+
+        if type == "attachment" && !is_image
+          upload.secure = SiteSetting.prevent_anons_from_downloading_files?
+          upload.save
+          Discourse.store.update_upload_ACL(upload, type: type)
+        end
+
+        if type == "image" && is_image
+          upload.secure = SiteSetting.secure_images?
+          upload.save
+          Discourse.store.update_upload_ACL(upload, type: type)
+        end
       end
     end
 

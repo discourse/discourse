@@ -145,16 +145,6 @@ class Upload < ActiveRecord::Base
     !(url =~ /^(https?:)?\/\//)
   end
 
-  def private?
-    return false if self.for_theme || self.for_site_setting
-
-    if FileHelper.is_supported_image?(self.original_filename)
-      Discourse.store.secure_images_enabled?
-    else
-      SiteSetting.prevent_anons_from_downloading_files
-    end
-  end
-
   def fix_dimensions!
     return if !FileHelper.is_supported_image?("image.#{extension}")
 
@@ -391,6 +381,7 @@ end
 #  thumbnail_width   :integer
 #  thumbnail_height  :integer
 #  etag              :string
+#  secure            :boolean          default(FALSE), not null
 #
 # Indexes
 #

@@ -109,6 +109,7 @@ class UploadCreator
       if is_image
         @upload.thumbnail_width, @upload.thumbnail_height = ImageSizer.resize(*@image_info.size)
         @upload.width, @upload.height = @image_info.size
+        @upload.secure = true if Discourse.store.secure_images_enabled?
       end
 
       @upload.for_private_message = true if @opts[:for_private_message]
@@ -116,6 +117,10 @@ class UploadCreator
       @upload.for_theme           = true if @opts[:for_theme]
       @upload.for_export          = true if @opts[:for_export]
       @upload.for_site_setting    = true if @opts[:for_site_setting]
+
+      if !is_image && !@upload.for_theme && !@upload.for_site_setting && SiteSetting.prevent_anons_from_downloading_files
+        @upload.secure = true
+      end
 
       return @upload unless @upload.save
 
