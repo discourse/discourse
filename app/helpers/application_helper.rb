@@ -58,6 +58,10 @@ module ApplicationHelper
     request.env["HTTP_ACCEPT_ENCODING"] =~ /br/
   end
 
+  def is_gzip_req?
+    request.env["HTTP_ACCEPT_ENCODING"] =~ /gzip/
+  end
+
   def script_asset_path(script)
     path = asset_path("#{script}.js")
 
@@ -77,6 +81,8 @@ module ApplicationHelper
 
       if is_brotli_req?
         path = path.gsub(/\.([^.]+)$/, '.br.\1')
+      elsif is_gzip_req?
+        path = path.gsub(/\.([^.]+)$/, '.gz.\1')
       end
 
     elsif GlobalSetting.cdn_url&.start_with?("https") && is_brotli_req?
