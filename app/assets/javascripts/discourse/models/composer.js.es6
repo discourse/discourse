@@ -69,11 +69,11 @@ export const SAVE_LABELS = {
 
 export const SAVE_ICONS = {
   [EDIT]: "pencil-alt",
-  [EDIT_SHARED_DRAFT]: "clipboard",
+  [EDIT_SHARED_DRAFT]: "far-clipboard",
   [REPLY]: "reply",
   [CREATE_TOPIC]: "plus",
   [PRIVATE_MESSAGE]: "envelope",
-  [CREATE_SHARED_DRAFT]: "clipboard"
+  [CREATE_SHARED_DRAFT]: "far-clipboard"
 };
 
 const Composer = RestModel.extend({

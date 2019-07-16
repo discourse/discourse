@@ -246,7 +246,7 @@ export default {
           browser: "Google Chrome",
           device: "Linux Computer",
           os: "Linux",
-          icon: "linux",
+          icon: "fab-linux",
           created_at: "2018-09-08T21:22:56.225Z",
           seen_at: "2018-09-08T21:22:56.512Z",
           is_active: false
@@ -258,7 +258,7 @@ export default {
           browser: "Google Chrome",
           device: "Linux Computer",
           os: "Linux",
-          icon: "linux",
+          icon: "fab-linux",
           created_at: "2018-09-08T21:33:41.616Z",
           seen_at: "2018-09-08T21:33:42.209Z",
           is_active: true
@@ -270,7 +270,7 @@ export default {
           browser: "Internet Explorer",
           device: "Windows Computer",
           os: "Windows",
-          icon: "windows",
+          icon: "fab-windows",
           created_at: "2018-09-07T21:44:41.616Z",
           seen_at: "2018-09-08T21:44:42.209Z",
           is_active: false

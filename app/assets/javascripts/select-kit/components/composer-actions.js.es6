@@ -67,7 +67,7 @@ export default DropdownSelectBoxComponent.extend({
         content.title = I18n.t("composer.composer_actions.edit");
         break;
       case CREATE_SHARED_DRAFT:
-        content.icon = "clipboard";
+        content.icon = "far-clipboard";
         content.title = I18n.t("composer.composer_actions.draft");
         break;
     }
@@ -167,7 +167,7 @@ export default DropdownSelectBoxComponent.extend({
         items.push({
           name: I18n.t("composer.composer_actions.shared_draft.label"),
           description: I18n.t("composer.composer_actions.shared_draft.desc"),
-          icon: "clipboard",
+          icon: "far-clipboard",
           id: "shared_draft"
         });
       }
