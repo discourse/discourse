@@ -4240,7 +4240,7 @@ en:
         enabled: Enable badge
         icon: Icon
         image: Image
-        icon_help: "Use a Font Awesome class"
+        icon_help: "Enter a Font Awesome icon name (use prefix 'far-' for regular icons and 'fab-' for brand icons)"
         image_help: "Enter the URL of the image (overrides icon field if both are set)"
         query: Badge Query (SQL)
         target_posts: Query targets posts
