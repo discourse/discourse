@@ -12,6 +12,10 @@ describe CategoryFeaturedTopic do
     fab!(:category)      { Fabricate(:category) }
     let!(:category_post) { PostCreator.create(user, raw: "I put this post in the category", title: "categorize THIS", category: category.id) }
 
+    before do
+      CategoryFeaturedTopic.clear_exclude_category_ids
+    end
+
     it "works in batched mode" do
       category2 = Fabricate(:category)
       post2 = create_post(category: category2.id)
