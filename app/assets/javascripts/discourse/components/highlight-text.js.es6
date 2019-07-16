@@ -5,7 +5,7 @@ export default Ember.Component.extend({
 
   _highlightOnInsert: function() {
     const term = this.highlight;
-    highlightText(this.$(), term);
+    highlightText($(this.element), term);
   }
     .observes("highlight")
     .on("didInsertElement")

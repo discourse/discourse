@@ -153,7 +153,7 @@ export const ListItemDefaults = {
   navigateToTopic,
 
   highlight(opts = { isLastViewedTopic: false }) {
-    const $topic = this.$();
+    const $topic = $(this.element);
     $topic
       .addClass("highlighted")
       .attr("data-islastviewedtopic", opts.isLastViewedTopic);

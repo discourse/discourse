@@ -33,14 +33,17 @@ export default Ember.Component.extend({
 
   _scheduleChartRendering() {
     Ember.run.schedule("afterRender", () => {
-      this._renderChart(this.model, this.$(".chart-canvas"));
+      this._renderChart(
+        this.model,
+        this.element.querySelector(".chart-canvas")
+      );
     });
   },
 
-  _renderChart(model, $chartCanvas) {
-    if (!$chartCanvas || !$chartCanvas.length) return;
+  _renderChart(model, chartCanvas) {
+    if (!chartCanvas) return;
 
-    const context = $chartCanvas[0].getContext("2d");
+    const context = chartCanvas.getContext("2d");
 
     const chartData = Ember.makeArray(
       model.get("chartData") || model.get("data")

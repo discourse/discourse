@@ -124,7 +124,7 @@ const SiteHeaderComponent = MountWidget.extend(Docking, PanEvents, {
       this._isPanning = true;
     } else if (
       center.x < SCREEN_EDGE_MARGIN &&
-      !this.$(".menu-panel").length &&
+      !this.element.querySelector(".menu-panel") &&
       e.direction === "right"
     ) {
       this._animate = false;
@@ -136,7 +136,7 @@ const SiteHeaderComponent = MountWidget.extend(Docking, PanEvents, {
       window.requestAnimationFrame(() => this.panMove(e));
     } else if (
       windowWidth - center.x < SCREEN_EDGE_MARGIN &&
-      !this.$(".menu-panel").length &&
+      !this.element.querySelector(".menu-panel") &&
       e.direction === "left"
     ) {
       this._animate = false;
@@ -245,7 +245,7 @@ const SiteHeaderComponent = MountWidget.extend(Docking, PanEvents, {
 
   _cleanDom() {
     // For performance, only trigger a re-render if any menu panels are visible
-    if (this.$(".menu-panel").length) {
+    if (this.element.querySelector(".menu-panel")) {
       this.eventDispatched("dom:clean", "header");
     }
   },

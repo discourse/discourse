@@ -13,12 +13,12 @@ export default Ember.Mixin.create({
 
   didInsertElement() {
     this._super(...arguments);
-    this.addTouchListeners(this.$());
+    this.addTouchListeners($(this.element));
   },
 
   willDestroyElement() {
     this._super(...arguments);
-    this.removeTouchListeners(this.$());
+    this.removeTouchListeners($(this.element));
   },
 
   addTouchListeners($element) {

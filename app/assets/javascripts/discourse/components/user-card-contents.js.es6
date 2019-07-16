@@ -137,8 +137,8 @@ export default Ember.Component.extend(
         return;
       }
 
-      const $this = this.$();
-      if (!$this) {
+      const thisElem = this.element;
+      if (!thisElem) {
         return;
       }
 
@@ -146,7 +146,7 @@ export default Ember.Component.extend(
       const bg = Ember.isEmpty(url)
         ? ""
         : `url(${Discourse.getURLWithCDN(url)})`;
-      $this.css("background-image", bg);
+      thisElem.style.backgroundImage = bg;
     },
 
     _showCallback(username, $target) {

@@ -13,6 +13,7 @@ class ThemeJavascriptCompiler
 
       // Helper to replace old themeSetting syntax
       function generateHelper(settingParts) {
+console.log(settingParts)
         const settingName = settingParts.join('.');
         return {
             "path": {
@@ -64,7 +65,7 @@ class ThemeJavascriptCompiler
       }
 
       function manipulateNode(node) {
-        // Magically add theme id as the first param for each of these helpers
+        // Magically add theme id as the first param for each of these helpers)
         if (node.path.parts && ["theme-i18n", "theme-prefix", "theme-setting"].includes(node.path.parts[0])) {
           if(node.params.length === 1){
             node.params.unshift({
@@ -134,10 +135,16 @@ class ThemeJavascriptCompiler
 
     def discourse_extension
       <<~JS
-        Ember.HTMLBars.registerPlugin('ast', function(){
-          return { name: 'theme-template-manipulator',
-          visitor: { SubExpression: manipulateNode, MustacheStatement: manipulateNode, PathExpression: manipulatePath}
-        }});
+        Ember.HTMLBars.registerPlugin('ast', function() {
+          return {
+            name: 'theme-template-manipulator',
+            visitor: {
+              SubExpression: manipulateNode,
+              MustacheStatement: manipulateNode,
+              PathExpression: manipulatePath
+            }
+          }
+        });
       JS
     end
   end

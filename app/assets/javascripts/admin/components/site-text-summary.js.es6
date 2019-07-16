@@ -9,11 +9,13 @@ export default Ember.Component.extend({
     const term = this._searchTerm();
 
     if (term) {
-      this.$(".site-text-id, .site-text-value").highlight(term, {
+      $(
+        this.element.querySelector(".site-text-id, .site-text-value")
+      ).highlight(term, {
         className: "text-highlight"
       });
     }
-    this.$(".site-text-value").ellipsis();
+    $(this.element.querySelector(".site-text-value")).ellipsis();
   },
 
   click() {

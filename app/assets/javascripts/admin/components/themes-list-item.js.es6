@@ -38,8 +38,8 @@ export default Ember.Component.extend({
   },
 
   animate(isInitial) {
-    const $container = this.$();
-    const $list = this.$(".components-list");
+    const $container = $(this.element);
+    const $list = $(this.element.querySelector(".components-list"));
     if ($list.length === 0 || Ember.testing) {
       return;
     }

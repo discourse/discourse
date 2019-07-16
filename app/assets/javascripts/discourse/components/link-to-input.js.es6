@@ -5,7 +5,7 @@ export default Ember.Component.extend({
     this.onClick();
 
     Ember.run.schedule("afterRender", () => {
-      this.$()
+      $(this.element)
         .find("input")
         .focus();
     });

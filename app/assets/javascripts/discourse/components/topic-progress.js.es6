@@ -126,7 +126,7 @@ export default Ember.Component.extend({
       return;
     }
 
-    const $topicProgress = this.$("#topic-progress");
+    const $topicProgress = $(this.element.querySelector("#topic-progress"));
     // speeds up stuff, bypass jquery slowness and extra checks
     if (!this._totalWidth) {
       this._totalWidth = $topicProgress[0].offsetWidth;
@@ -151,7 +151,7 @@ export default Ember.Component.extend({
   },
 
   _dock() {
-    const $wrapper = this.$();
+    const $wrapper = $(this.element);
     if (!$wrapper || $wrapper.length === 0) return;
 
     const $html = $("html");

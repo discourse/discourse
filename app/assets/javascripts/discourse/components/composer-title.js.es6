@@ -14,9 +14,9 @@ export default Ember.Component.extend({
   didInsertElement() {
     this._super(...arguments);
     if (this.focusTarget === "title") {
-      const $input = this.$("input");
+      const $input = $(this.element.querySelector("input"));
 
-      afterTransition(this.$().closest("#reply-control"), () => {
+      afterTransition($(this.element).closest("#reply-control"), () => {
         $input.putCursorAtEnd();
       });
     }
@@ -133,14 +133,14 @@ export default Ember.Component.extend({
           .finally(() => {
             this.set("composer.loading", false);
             Ember.run.schedule("afterRender", () => {
-              this.$("input").putCursorAtEnd();
+              $(this.element.querySelector("input")).putCursorAtEnd();
             });
           });
       } else {
         this._updatePost(loadOnebox);
         this.set("composer.loading", false);
         Ember.run.schedule("afterRender", () => {
-          this.$("input").putCursorAtEnd();
+          $(this.element.querySelector("input")).putCursorAtEnd();
         });
       }
     }
