@@ -40,7 +40,7 @@ export default SelectKitComponent.extend({
   _setChoicesMaxWidth() {
     const width = this.$body().outerWidth(false);
     if (width > 0) {
-      this.$(".choices").css({ maxWidth: width });
+      this.element.querySelector(".choices").style.maxWidth = `${width}px`;
     }
   },
 

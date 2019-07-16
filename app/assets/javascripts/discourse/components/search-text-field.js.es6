@@ -13,7 +13,7 @@ export default TextField.extend({
 
   @on("didInsertElement")
   becomeFocused() {
-    const $searchInput = this.$();
+    const $searchInput = $(this.element);
     applySearchAutocomplete($searchInput, this.siteSettings);
 
     if (!this.hasAutofocus) {

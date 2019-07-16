@@ -86,8 +86,8 @@ export default Ember.Component.extend({
 
   @on("didInsertElement")
   _setup() {
-    this.$picker = this.$(".emoji-picker");
-    this.$modal = this.$(".emoji-picker-modal");
+    this.$picker = $(this.element.querySelector(".emoji-picker"));
+    this.$modal = $(this.element.querySelector(".emoji-picker-modal"));
 
     this.appEvents.on("emoji-picker:close", this, "_closeEmojiPicker");
 
@@ -228,8 +228,8 @@ export default Ember.Component.extend({
 
   @on("willDestroyElement")
   _unbindEvents() {
-    this.$().off();
-    this.$(window).off("resize");
+    $(this.element).off();
+    $(window).off("resize");
     clearInterval(this._refreshInterval);
     $("#reply-control").off("div-resizing");
     $("html").off("mouseup.emoji-picker");
@@ -312,7 +312,7 @@ export default Ember.Component.extend({
   },
 
   _bindResizing() {
-    this.$(window).on("resize", () => {
+    $(window).on("resize", () => {
       run.throttle(this, this._positionPicker, 16);
     });
 
@@ -468,7 +468,7 @@ export default Ember.Component.extend({
 
   _isReplyControlExpanded() {
     const verticalSpace =
-      this.$(window).height() -
+      $(window).height() -
       $(".d-header").height() -
       $("#reply-control").height();
 
@@ -480,7 +480,7 @@ export default Ember.Component.extend({
       return;
     }
 
-    let windowWidth = this.$(window).width();
+    let windowWidth = $(window).width();
 
     const desktopModalePositioning = options => {
       let attributes = {

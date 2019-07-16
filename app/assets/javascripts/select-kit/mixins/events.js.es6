@@ -82,7 +82,7 @@ export default Ember.Mixin.create({
       return true;
     }
 
-    if (Ember.$.contains(this.element, event.target)) {
+    if (this.element !== event.target && this.element.contains(event.target)) {
       event.stopPropagation();
       if (!this.renderedBodyOnce) return;
       if (!this.isFocused) return;
@@ -398,7 +398,12 @@ export default Ember.Mixin.create({
   },
 
   onFilterInputFocusout(event) {
-    if (!Ember.$.contains(this.element, event.relatedTarget)) {
+    if (
+      !(
+        this.element !== event.relatedTarget &&
+        this.element.contains(event.relatedTarget)
+      )
+    ) {
       this.close(event);
     }
   },

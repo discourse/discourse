@@ -54,7 +54,7 @@ export default Ember.Component.extend({
 
   _showUrl($target, url) {
     const $currentTargetOffset = $target.offset();
-    const $this = this.$();
+    const $this = $(this.element);
 
     if (Ember.isEmpty(url)) {
       return;

@@ -73,8 +73,8 @@ export default Ember.Component.extend({
             return;
           }
 
-          this.$(".drop a").on("click", () => {
-            this.$(".drop").hide();
+          $(this.element.querySelector(".drop a")).on("click", () => {
+            this.element.querySelector(".drop").style.display = "none";
 
             Ember.run.next(() => {
               if (!this.element || this.isDestroying || this.isDestroyed) {

@@ -75,7 +75,7 @@ export default Ember.Component.extend({
         if (!this.element || this.isDestroying || this.isDestroyed) {
           return;
         }
-        const editor = loadedAce.edit(this.$(".ace")[0]);
+        const editor = loadedAce.edit(this.element.querySelector(".ace"));
 
         editor.setTheme("ace/theme/chrome");
         editor.setShowPrintMargin(false);
@@ -89,7 +89,7 @@ export default Ember.Component.extend({
         editor.$blockScrolling = Infinity;
         editor.renderer.setScrollMargin(10, 10);
 
-        this.$().data("editor", editor);
+        this.element.setAttribute("data-editor", editor);
         this._editor = editor;
         this.changeDisabledState();
 
