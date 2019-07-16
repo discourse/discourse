@@ -3892,7 +3892,7 @@ en:
           add: "Add"
           success: "Success"
           exists: "Already exists"
-          upload: "Upload"
+          upload: "Add from file"
           upload_successful: "Upload successful. Words have been added."
 
       impersonate:
