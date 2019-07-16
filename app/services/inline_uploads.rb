@@ -73,6 +73,9 @@ class InlineUploads
 
       markdown.scan(/(\n{2,}|\A)#{regexp}$/) do |match|
         if match[1].present?
+          extension = match[1].split(".")[-1].downcase
+          next if FileHelper.supported_images.exclude?(extension)
+
           index = $~.offset(2)[0]
           indexes << index
           raw_matches << [match[1], match[1], +"![](#{PLACEHOLDER})", index]
@@ -119,6 +122,11 @@ class InlineUploads
     raw_matches
       .sort { |a, b| a[3] <=> b[3] }
       .each do |match, link, replace_with, _index|
+
+      if match == link
+        extension = match.split(".")[-1].downcase
+        next if FileHelper.supported_images.exclude?(extension)
+      end
 
       node_info = link_occurences.shift
       next unless node_info&.dig(:is_valid)
