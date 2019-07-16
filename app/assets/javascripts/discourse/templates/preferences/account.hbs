@@ -90,7 +90,6 @@
     </label>
   {{/unless}}
   <div class="controls pref-second-factor">
-    {{i18n 'user.second_factor.enable'}}
     {{#if isCurrentUser}}
       {{#link-to "preferences.second-factor" class="btn btn-default"}}
         {{d-icon "lock"}} <span>{{i18n 'user.second_factor.enable'}}</span>
