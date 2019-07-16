@@ -674,4 +674,39 @@ HTML
       expect(Theme.list_baked_fields([theme.id, theme2.id], :translations, 'fr').map(&:id)).to contain_exactly(fr_translation.id, en_translation2.id)
     end
   end
+
+  describe "automatic recompile" do
+    it 'must recompile after bumping theme_field version' do
+      def stub_const(target, const, value)
+        old = target.const_get(const)
+        target.send(:remove_const, const)
+        target.const_set(const, value)
+        yield
+      ensure
+        target.send(:remove_const, const)
+        target.const_set(const, old)
+      end
+
+      child.set_field(target: :common, name: "header", value: "World")
+      child.set_field(target: :extra_js, name: "test.js.es6", value: "const hello = 'world';")
+      child.save!
+
+      first_common_value = Theme.lookup_field(child.id, :desktop, "header")
+      first_extra_js_value = Theme.lookup_field(child.id, :extra_js, nil)
+
+      stub_const(ThemeField, :COMPILER_VERSION, "SOME_NEW_HASH") do
+        second_common_value = Theme.lookup_field(child.id, :desktop, "header")
+        second_extra_js_value = Theme.lookup_field(child.id, :extra_js, nil)
+
+        new_common_compiler_version = ThemeField.find_by(theme_id: child.id, name: "header").compiler_version
+        new_extra_js_compiler_version = ThemeField.find_by(theme_id: child.id, name: "test.js.es6").compiler_version
+
+        expect(first_common_value).to eq(second_common_value)
+        expect(first_extra_js_value).to eq(second_extra_js_value)
+
+        expect(new_common_compiler_version).to eq("SOME_NEW_HASH")
+        expect(new_extra_js_compiler_version).to eq("SOME_NEW_HASH")
+      end
+    end
+  end
 end
