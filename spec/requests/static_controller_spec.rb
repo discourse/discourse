@@ -120,6 +120,28 @@ describe StaticController do
     end
   end
 
+  context '#cdn_asset' do
+    let (:site) { RailsMultisite::ConnectionManagement.current_db }
+
+    it 'can serve assets' do
+      begin
+        assets_path = Rails.root.join("public/assets")
+
+        FileUtils.mkdir_p(assets_path)
+
+        file_path = assets_path.join("test.js.br")
+        File.write(file_path, 'fake brotli file')
+
+        get "/cdn_asset/#{site}/test.js.br"
+
+        expect(response.status).to eq(200)
+        expect(response.headers["Cache-Control"]).to match(/public/)
+      ensure
+        File.delete(file_path)
+      end
+    end
+  end
+
   context '#show' do
     before do
       post = create_post

@@ -54,6 +54,12 @@ describe ApplicationHelper do
         expect(link).to eq("<link rel='preload' href='https://s3cdn.com/assets/application.js' as='script'/>\n<script src='https://s3cdn.com/assets/application.js'></script>")
       end
 
+      it "can fall back to gzip compression" do
+        helper.request.env["HTTP_ACCEPT_ENCODING"] = 'gzip'
+        link = helper.preload_script('application')
+        expect(link).to eq("<link rel='preload' href='https://s3cdn.com/assets/application.gz.js' as='script'/>\n<script src='https://s3cdn.com/assets/application.gz.js'></script>")
+      end
+
       it "gives s3 cdn even if asset host is set" do
         set_cdn_url "https://awesome.com"
         link = helper.preload_script('application')
