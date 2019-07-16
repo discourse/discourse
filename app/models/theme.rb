@@ -63,6 +63,15 @@ class Theme < ActiveRecord::Base
     settings_field&.ensure_baked! # Other fields require setting to be **baked**
     theme_fields.each(&:ensure_baked!)
 
+    update_javascript_cache!
+
+    remove_from_cache!
+    clear_cached_settings!
+    ColorScheme.hex_cache.clear
+    notify_theme_change(with_scheme: notify_with_scheme)
+  end
+
+  def update_javascript_cache!
     all_extra_js = theme_fields.where(target_id: Theme.targets[:extra_js]).pluck(:value_baked).join("\n")
     if all_extra_js.present?
       js_compiler = ThemeJavascriptCompiler.new(id, name)
@@ -73,11 +82,6 @@ class Theme < ActiveRecord::Base
     else
       javascript_cache&.destroy!
     end
-
-    remove_from_cache!
-    clear_cached_settings!
-    ColorScheme.hex_cache.clear
-    notify_theme_change(with_scheme: notify_with_scheme)
   end
 
   after_destroy do
@@ -288,6 +292,12 @@ class Theme < ActiveRecord::Base
 
   def self.resolve_baked_field(theme_ids, target, name)
     if target == :extra_js
+      require_rebake = ThemeField.where(theme_id: theme_ids, target_id: Theme.targets[:extra_js]).
+        where("compiler_version <> ?", ThemeField::COMPILER_VERSION)
+      require_rebake.each { |tf| tf.ensure_baked! }
+      require_rebake.map(&:theme_id).uniq.each do |theme_id|
+        Theme.find(theme_id).update_javascript_cache!
+      end
       caches = JavascriptCache.where(theme_id: theme_ids)
       caches = caches.sort_by { |cache| theme_ids.index(cache.theme_id) }
       return caches.map { |c| "<script src='#{c.url}'></script>" }.join("\n")
