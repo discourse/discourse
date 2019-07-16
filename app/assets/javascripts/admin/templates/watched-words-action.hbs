@@ -16,8 +16,8 @@
   </a>
 </div>
 {{watched-word-uploader uploading=uploading actionKey=actionNameKey done=(action "uploadComplete")}}
-
 </div>
+
 <div>
   <label class="show-words-checkbox">
     {{input type="checkbox" checked=adminWatchedWords.showWords disabled=adminWatchedWords.disableShowWords}}
@@ -32,4 +32,12 @@
   {{else}}
     {{i18n 'admin.watched_words.word_count' count=wordCount}}
   {{/if}}
+</div>
+
+<div class="clear-all-row">
+  {{d-button
+    class="btn btn-danger clear-all"
+    label="admin.watched_words.clear_all"
+    icon="trash"
+    action=(action "clearAll")}}
 </div>

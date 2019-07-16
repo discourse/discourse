@@ -1,5 +1,6 @@
 import computed from "ember-addons/ember-computed-decorators";
 import WatchedWord from "admin/models/watched-word";
+import { ajax } from "discourse/lib/ajax";
 
 export default Ember.Controller.extend({
   actionNameKey: null,
@@ -17,13 +18,13 @@ export default Ember.Controller.extend({
   },
 
   @computed("actionNameKey", "adminWatchedWords.model")
-  filteredContent(actionNameKey) {
-    if (!actionNameKey) {
-      return [];
-    }
+  currentAction(actionName) {
+    return this.findAction(actionName);
+  },
 
-    const a = this.findAction(actionNameKey);
-    return a ? a.words : [];
+  @computed("currentAction.words.[]", "adminWatchedWords.model")
+  filteredContent(words) {
+    return words || [];
   },
 
   @computed("actionNameKey")
@@ -31,10 +32,9 @@ export default Ember.Controller.extend({
     return I18n.t("admin.watched_words.action_descriptions." + actionNameKey);
   },
 
-  @computed("actionNameKey", "adminWatchedWords.model")
-  wordCount(actionNameKey) {
-    const a = this.findAction(actionNameKey);
-    return a ? a.words.length : 0;
+  @computed("currentAction.count")
+  wordCount(count) {
+    return count || 0;
   },
 
   @computed("actionNameKey")
@@ -67,10 +67,9 @@ export default Ember.Controller.extend({
     },
 
     recordRemoved(arg) {
-      const a = this.findAction(this.actionNameKey);
-      if (a) {
-        a.words.removeObject(arg);
-        a.decrementProperty("count");
+      if (this.currentAction) {
+        this.currentAction.words.removeObject(arg);
+        this.currentAction.decrementProperty("count");
       }
     },
 
@@ -78,6 +77,33 @@ export default Ember.Controller.extend({
       WatchedWord.findAll().then(data => {
         this.set("adminWatchedWords.model", data);
       });
+    },
+
+    clearAll() {
+      const actionKey = this.actionNameKey;
+      bootbox.confirm(
+        I18n.t(`admin.watched_words.clear_all_confirm_${actionKey}`),
+        I18n.t("no_value"),
+        I18n.t("yes_value"),
+        result => {
+          if (result) {
+            ajax(
+              `/admin/logs/watched_words/action/${actionKey}/clear_all.json`,
+              {
+                method: "DELETE"
+              }
+            ).then(() => {
+              const action = this.findAction(actionKey);
+              if (action) {
+                action.setProperties({
+                  words: [],
+                  count: 0
+                });
+              }
+            });
+          }
+        }
+      );
     }
   }
 });

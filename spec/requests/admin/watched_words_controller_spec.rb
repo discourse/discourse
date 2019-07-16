@@ -80,4 +80,39 @@ RSpec.describe Admin::WatchedWordsController do
       end
     end
   end
+
+  context '#clear_all' do
+    context 'non admins' do
+      it "doesn't allow them to perform #clear_all" do
+        word = Fabricate(:watched_word, action: WatchedWord.actions[:block])
+        delete "/admin/logs/watched_words/action/block/clear_all"
+        expect(response.status).to eq(404)
+        expect(WatchedWord.pluck(:word)).to include(word.word)
+      end
+    end
+
+    context 'admins' do
+      before do
+        sign_in(admin)
+      end
+
+      it "allows them to perform #clear_all" do
+        word = Fabricate(:watched_word, action: WatchedWord.actions[:block])
+        delete "/admin/logs/watched_words/action/block/clear_all.json"
+        expect(response.status).to eq(200)
+        expect(WatchedWord.pluck(:word)).not_to include(word.word)
+      end
+
+      it "doesn't delete words of multiple actions in one call" do
+        block_word = Fabricate(:watched_word, action: WatchedWord.actions[:block])
+        flag_word = Fabricate(:watched_word, action: WatchedWord.actions[:flag])
+
+        delete "/admin/logs/watched_words/action/flag/clear_all.json"
+        expect(response.status).to eq(200)
+        all_words = WatchedWord.pluck(:word)
+        expect(all_words).to include(block_word.word)
+        expect(all_words).not_to include(flag_word.word)
+      end
+    end
+  end
 end

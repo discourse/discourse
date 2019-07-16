@@ -365,6 +365,17 @@ table.screened-ip-addresses {
   float: left;
 }
 
+.admin-watched-words {
+  .clear-all-row {
+    display: flex;
+    margin-top: 10px;
+
+    .btn.clear-all {
+      margin-left: auto;
+    }
+  }
+}
+
 .watched-word-controls {
   display: flex;
   flex-wrap: wrap;
@@ -379,6 +390,7 @@ table.screened-ip-addresses {
 
 .watched-words-list {
   margin-top: 20px;
+  display: inline-block;
 }
 
 .watched-word {
