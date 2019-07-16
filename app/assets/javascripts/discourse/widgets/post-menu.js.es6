@@ -178,7 +178,7 @@ registerButton("wiki-edit", attrs => {
       action: "editPost",
       className: "edit create",
       title: "post.controls.edit",
-      icon: "pencil-square-o",
+      icon: "far-edit",
       alwaysShowYours: true
     };
     if (!attrs.mobileView) {
