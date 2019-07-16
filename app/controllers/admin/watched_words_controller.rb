@@ -62,6 +62,7 @@ class Admin::WatchedWordsController < Admin::AdminController
     raise Discourse::NotFound if !action
 
     WatchedWord.where(action: action).delete_all
+    WordWatcher.clear_cache!
     render json: success_json
   end
 
