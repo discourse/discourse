@@ -1835,7 +1835,7 @@ uncategorized:
     hidden: true
     default: true
 
-  disable_edit_notifications: false
+  disable_edit_notifications: true
 
   likes_notification_consolidation_threshold:
     default: 3
