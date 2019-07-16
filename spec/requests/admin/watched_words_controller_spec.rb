@@ -49,4 +49,35 @@ RSpec.describe Admin::WatchedWordsController do
       end
     end
   end
+
+  describe '#download' do
+    context 'not logged in as admin' do
+      it "doesn't allow performing #download" do
+        get "/admin/logs/watched_words/action/block/download"
+        expect(response.status).to eq(404)
+      end
+    end
+
+    context 'logged in as admin' do
+      before do
+        sign_in(admin)
+      end
+
+      it "words of different actions are downloaded separately" do
+        block_word_1 = Fabricate(:watched_word, action: WatchedWord.actions[:block])
+        block_word_2 = Fabricate(:watched_word, action: WatchedWord.actions[:block])
+        censor_word_1 = Fabricate(:watched_word, action: WatchedWord.actions[:censor])
+
+        get "/admin/logs/watched_words/action/block/download"
+        expect(response.status).to eq(200)
+        block_words = response.body.split("\n")
+        expect(block_words).to contain_exactly(block_word_1.word, block_word_2.word)
+
+        get "/admin/logs/watched_words/action/censor/download"
+        expect(response.status).to eq(200)
+        censor_words = response.body.split("\n")
+        expect(censor_words).to eq([censor_word_1.word])
+      end
+    end
+  end
 end

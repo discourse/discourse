@@ -37,6 +37,11 @@ export default Ember.Controller.extend({
     return a ? a.words.length : 0;
   },
 
+  @computed("actionNameKey")
+  downloadLink(type) {
+    return `/admin/logs/watched_words/action/${type}/download`;
+  },
+
   actions: {
     recordAdded(arg) {
       const a = this.findAction(this.actionNameKey);

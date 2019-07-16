@@ -369,6 +369,12 @@ table.screened-ip-addresses {
   display: flex;
   flex-wrap: wrap;
   margin-bottom: 1em;
+  .download {
+    margin-left: auto;
+    .download-link {
+      min-height: 30px;
+    }
+  }
 }
 
 .watched-words-list {
@@ -395,13 +401,18 @@ table.screened-ip-addresses {
 }
 
 .watched-words-uploader {
-  margin-left: auto;
+  margin-left: 7px;
   @media screen and (max-width: 500px) {
     flex: 1 1 100%;
     margin-top: 0.5em;
   }
+  label.btn {
+    float: right;
+  }
   .instructions {
     font-size: $font-down-1;
+    margin-top: 5px;
+    float: right;
   }
 }
 

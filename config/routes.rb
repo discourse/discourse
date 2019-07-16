@@ -177,6 +177,7 @@ Discourse::Application.routes.draw do
       resources :watched_words, only: [:index, :create, :update, :destroy] do
         collection do
           get "action/:id" => "watched_words#index"
+          get "action/:id/download" => "watched_words#download"
         end
       end
       post "watched_words/upload" => "watched_words#upload"

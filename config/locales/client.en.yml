@@ -3872,6 +3872,7 @@ en:
         clear_filter: "Clear"
         show_words: "show words"
         one_word_per_line: "One word per line"
+        download: Download
         word_count:
           one: "%{count} word"
           other: "%{count} words"
