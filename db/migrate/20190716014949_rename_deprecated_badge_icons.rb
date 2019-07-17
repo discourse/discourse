@@ -7,5 +7,7 @@ class RenameDeprecatedBadgeIcons < ActiveRecord::Migration[5.2]
   end
 
   def down
+    execute "UPDATE badges SET icon = 'fa-clock-o' WHERE icon = 'far-clock'"
+    execute "UPDATE badges SET icon = 'fa-eye' WHERE icon = 'far-eye'"
   end
 end
