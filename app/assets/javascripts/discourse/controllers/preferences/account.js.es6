@@ -228,7 +228,17 @@ export default Ember.Controller.extend(
             type: "POST",
             data: token ? { token_id: token.id } : {}
           }
-        );
+        ).then(() => {
+          if (!token) {
+            const redirect = this.siteSettings.logout_redirect;
+            if (Ember.isEmpty(redirect)) {
+              window.location.pathname = Discourse.getURL("/");
+            } else {
+              window.location.href = redirect;
+            }
+          }
+        })
+        .catch(popupAjaxError);
       },
 
       showToken(token) {
