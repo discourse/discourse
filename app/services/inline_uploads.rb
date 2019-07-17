@@ -79,7 +79,7 @@ class InlineUploads
           if FileHelper.supported_images.include?(extension)
             raw_matches << [match[1], match[1], +"![](#{PLACEHOLDER})", index]
           else
-            raw_matches << [match[1], match[1], ++"#{Discourse.base_url}#{PATH_PLACEHOLDER}", index]
+            raw_matches << [match[1], match[1], +"#{Discourse.base_url}#{PATH_PLACEHOLDER}", index]
           end
         end
       end
