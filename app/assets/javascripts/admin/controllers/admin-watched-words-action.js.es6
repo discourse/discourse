@@ -1,6 +1,7 @@
 import computed from "ember-addons/ember-computed-decorators";
 import WatchedWord from "admin/models/watched-word";
 import { ajax } from "discourse/lib/ajax";
+import { fmt } from "discourse/lib/computed";
 
 export default Ember.Controller.extend({
   actionNameKey: null,
@@ -8,6 +9,10 @@ export default Ember.Controller.extend({
   showWordsList: Ember.computed.or(
     "adminWatchedWords.filtered",
     "adminWatchedWords.showWords"
+  ),
+  downloadLink: fmt(
+    "actionNameKey",
+    "/admin/logs/watched_words/action/%@/download"
   ),
 
   findAction(actionName) {
@@ -35,11 +40,6 @@ export default Ember.Controller.extend({
   @computed("currentAction.count")
   wordCount(count) {
     return count || 0;
-  },
-
-  @computed("actionNameKey")
-  downloadLink(type) {
-    return `/admin/logs/watched_words/action/${type}/download`;
   },
 
   actions: {
