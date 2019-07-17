@@ -11,10 +11,11 @@
 
   <div class="download-upload-controls">
     <div class="download">
-      <a class="btn btn-default download-link" target="_blank" href={{downloadLink}}>
-        {{d-icon "download"}}
-        {{i18n "admin.watched_words.download"}}
-      </a>
+      {{d-button
+        class="btn-default download-link"
+        href=downloadLink
+        icon="download"
+        label="admin.watched_words.download"}}
     </div>
     {{watched-word-uploader uploading=uploading actionKey=actionNameKey done=(action "uploadComplete")}}
   </div>
