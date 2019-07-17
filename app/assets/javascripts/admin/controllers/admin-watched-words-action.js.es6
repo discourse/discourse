@@ -88,7 +88,7 @@ export default Ember.Controller.extend({
         result => {
           if (result) {
             ajax(
-              `/admin/logs/watched_words/action/${actionKey}/clear_all.json`,
+              `/admin/logs/watched_words/action/${actionKey}.json`,
               {
                 method: "DELETE"
               }
