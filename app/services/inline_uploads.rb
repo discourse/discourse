@@ -123,11 +123,6 @@ class InlineUploads
       .sort { |a, b| a[3] <=> b[3] }
       .each do |match, link, replace_with, _index|
 
-      if match == link
-        extension = match.split(".")[-1].downcase
-        next if FileHelper.supported_images.exclude?(extension)
-      end
-
       node_info = link_occurences.shift
       next unless node_info&.dig(:is_valid)
 
