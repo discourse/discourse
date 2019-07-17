@@ -36,3 +36,11 @@ end
 def print_status(current, max)
   print "\r%9d / %d (%5.1f%%)" % [current, max, ((current.to_f / max.to_f) * 100).round(1)]
 end
+
+desc "Output a list of categories"
+task "categories:list" => :environment do
+  categories = Category.pluck(:id, :slug, :parent_category_id)
+  categories.each do |c|
+    puts "id: #{c[0]}, slug: #{c[1]}, parent: #{c[2]}"
+  end
+end
