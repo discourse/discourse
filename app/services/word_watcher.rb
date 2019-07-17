@@ -23,9 +23,16 @@ class WordWatcher
   def self.word_matcher_regexp(action)
     words = get_cached_words(action)
     if words
-      words = words.map { |w| word_to_regexp(w) }
-      regexp = "(#{words.join('|')})"
-      regexp = "(?<!\\w)(#{regexp})(?!\\w)" if !SiteSetting.watched_words_regular_expressions?
+      words = words.map do |w|
+        word = word_to_regexp(w)
+        word = "(#{word})" if SiteSetting.watched_words_regular_expressions?
+        word
+      end
+      regexp = words.join('|')
+      if !SiteSetting.watched_words_regular_expressions?
+        regexp = "(#{regexp})"
+        regexp = "(?<!\\w)(#{regexp})(?!\\w)"
+      end
       Regexp.new(regexp, Regexp::IGNORECASE)
     end
   end
@@ -57,8 +64,8 @@ class WordWatcher
     word_matches_for_action?(:flag)
   end
 
-  def should_block?(all_matches: false)
-    word_matches_for_action?(:block, all_matches: all_matches)
+  def should_block?
+    word_matches_for_action?(:block, all_matches: true)
   end
 
   def word_matches_for_action?(action, all_matches: false)
@@ -66,18 +73,24 @@ class WordWatcher
     if regexp
       match = regexp.match(@raw)
       return match if !all_matches || !match
+
       matches = []
-      regexps = self.class.get_cached_words(action).map do |w|
-        word = self.class.word_to_regexp(w)
-        word = "(?<!\\w)(#{word})(?!\\w)" if !SiteSetting.watched_words_regular_expressions?
-        Regexp.new(word, Regexp::IGNORECASE)
-      end
-      regexps.each do |reg|
-        if result = reg.match(@raw)
-          matches << result[0] if matches.exclude?(result[0])
+      if SiteSetting.watched_words_regular_expressions?
+        @raw.scan(regexp).each do |m|
+          if Array === m
+            matches << m.find(&:present?)
+          elsif String === m
+            matches << m
+          end
         end
+      else
+        matches = @raw.scan(regexp)
       end
-      matches.sort
+      matches.flatten!
+      matches.compact!
+      matches.uniq!
+      matches.sort!
+      matches
     else
       false
     end

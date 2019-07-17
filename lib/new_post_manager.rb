@@ -172,7 +172,7 @@ class NewPostManager
   end
 
   def perform
-    if !self.class.exempt_user?(@user) && matches = WordWatcher.new("#{@args[:title]} #{@args[:raw]}").should_block?(all_matches: true).presence
+    if !self.class.exempt_user?(@user) && matches = WordWatcher.new("#{@args[:title]} #{@args[:raw]}").should_block?.presence
       result = NewPostResult.new(:created_post, false)
       if matches.size == 1
         key = 'contains_blocked_word'

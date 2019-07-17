@@ -60,7 +60,7 @@ class Validators::PostValidator < ActiveModel::Validator
   end
 
   def watched_words(post)
-    if !post.acting_user&.staged && matches = WordWatcher.new(post.raw).should_block?(all_matches: true).presence
+    if !post.acting_user&.staged && matches = WordWatcher.new(post.raw).should_block?.presence
       if matches.size == 1
         key = 'contains_blocked_word'
         translation_args = { word: matches[0] }
