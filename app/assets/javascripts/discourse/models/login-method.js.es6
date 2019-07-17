@@ -29,7 +29,7 @@ const LoginMethod = Ember.Object.extend({
         authUrl += "?reconnect=true";
       }
 
-      if (fullScreenLogin || this.full_screen_login) {
+      if (reconnect || fullScreenLogin || this.full_screen_login) {
         document.cookie = "fsl=true";
         window.location = authUrl;
       } else {
