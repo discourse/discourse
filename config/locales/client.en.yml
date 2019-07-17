@@ -1522,7 +1522,7 @@ en:
       from: From
       to: To
       errors:
-        to_before_from: "To date must be set after from date."
+        to_before_from: "To date must be later than from date."
 
     emoji_picker:
       filter_placeholder: Search for emoji
