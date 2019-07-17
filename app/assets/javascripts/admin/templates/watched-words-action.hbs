@@ -3,19 +3,21 @@
 <p class="about">{{actionDescription}}</p>
 
 <div class="watched-word-controls">
-{{watched-word-form
-  actionKey=actionNameKey
-  action=(action "recordAdded")
-  filteredContent=filteredContent
-  regularExpressions=adminWatchedWords.regularExpressions}}
+  {{watched-word-form
+    actionKey=actionNameKey
+    action=(action "recordAdded")
+    filteredContent=filteredContent
+    regularExpressions=adminWatchedWords.regularExpressions}}
 
-<div class="download">
-  <a class="btn btn-default download-link" target="_blank" href={{downloadLink}}>
-    {{d-icon "download"}}
-    {{i18n "admin.watched_words.download"}}
-  </a>
-</div>
-{{watched-word-uploader uploading=uploading actionKey=actionNameKey done=(action "uploadComplete")}}
+  <div class="download-upload-controls">
+    <div class="download">
+      <a class="btn btn-default download-link" target="_blank" href={{downloadLink}}>
+        {{d-icon "download"}}
+        {{i18n "admin.watched_words.download"}}
+      </a>
+    </div>
+    {{watched-word-uploader uploading=uploading actionKey=actionNameKey done=(action "uploadComplete")}}
+  </div>
 </div>
 
 <div>

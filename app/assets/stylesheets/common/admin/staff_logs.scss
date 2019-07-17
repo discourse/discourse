@@ -362,17 +362,13 @@ table.screened-ip-addresses {
   display: inline-block;
   width: 250px;
   margin-bottom: 1em;
-  float: left;
 }
 
 .admin-watched-words {
   .clear-all-row {
     display: flex;
     margin-top: 10px;
-
-    .btn.clear-all {
-      margin-left: auto;
-    }
+    justify-content: flex-end;
   }
 }
 
@@ -380,8 +376,12 @@ table.screened-ip-addresses {
   display: flex;
   flex-wrap: wrap;
   margin-bottom: 1em;
+  justify-content: space-between;
+  .download-upload-controls {
+    display: flex;
+  }
   .download {
-    margin-left: auto;
+    justify-content: flex-end;
     .download-link {
       min-height: 30px;
     }
@@ -414,17 +414,16 @@ table.screened-ip-addresses {
 
 .watched-words-uploader {
   margin-left: 5px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
   @media screen and (max-width: 500px) {
     flex: 1 1 100%;
     margin-top: 0.5em;
   }
-  label.btn {
-    float: right;
-  }
   .instructions {
     font-size: $font-down-1;
     margin-top: 5px;
-    float: right;
   }
 }
 
