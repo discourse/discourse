@@ -83,6 +83,10 @@ module BackupRestore
       raise Discourse::InvalidParameters.new(:user_id) unless @user
     end
 
+    def get_parameterized_title
+      SiteSetting.title.parameterize.empty? ? "discourse" : SiteSetting.title.parameterize
+    end
+
     def initialize_state
       @success = false
       @store = BackupRestore::BackupStore.create
@@ -91,7 +95,7 @@ module BackupRestore
       @tmp_directory = File.join(Rails.root, "tmp", "backups", @current_db, @timestamp)
       @dump_filename = File.join(@tmp_directory, BackupRestore::DUMP_FILE)
       @archive_directory = BackupRestore::LocalBackupStore.base_directory(db: @current_db)
-      filename = @filename_override || "#{SiteSetting.title.parameterize}-#{@timestamp}"
+      filename = @filename_override || "#{get_parameterized_title}-#{@timestamp}"
       @archive_basename = File.join(@archive_directory, "#{filename}-#{BackupRestore::VERSION_PREFIX}#{BackupRestore.current_version}")
 
       @backup_filename =
