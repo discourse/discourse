@@ -237,12 +237,16 @@ RSpec.describe InlineUploads do
         #{Discourse.base_url}#{upload.url}
 
         #{Discourse.base_url}#{upload.url} #{Discourse.base_url}#{upload2.url}
+
+        #{GlobalSetting.cdn_url}#{upload2.url}
         MD
 
         expect(InlineUploads.process(md)).to eq(<<~MD)
         #{Discourse.base_url}#{upload.short_path}
 
         #{Discourse.base_url}#{upload.short_path} #{Discourse.base_url}#{upload2.short_path}
+
+        #{Discourse.base_url}#{upload2.short_path}
         MD
       end
 
