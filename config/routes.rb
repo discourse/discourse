@@ -598,6 +598,8 @@ Discourse::Application.routes.draw do
 
   match "/auth/:provider/callback", to: "users/omniauth_callbacks#complete", via: [:get, :post]
   match "/auth/failure", to: "users/omniauth_callbacks#failure", via: [:get, :post]
+  get "/associate/:token", to: "users/associate_accounts#connect_info", constraints: { token: /\h{32}/ }
+  post "/associate/:token", to: "users/associate_accounts#connect", constraints: { token: /\h{32}/ }
 
   resources :clicks do
     collection do

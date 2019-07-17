@@ -1021,7 +1021,10 @@ en:
         title: "Associated Accounts"
         connect: "Connect"
         revoke: "Revoke"
+        cancel: "Cancel"
         not_connected: "(not connected)"
+        confirm_modal_title: "Connect %{provider} Account"
+        confirm_description: "Your %{provider} account '%{account_description}' will be used for authentication."
 
       name:
         title: "Name"

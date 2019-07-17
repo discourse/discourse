@@ -20,6 +20,7 @@ export default Ember.Controller.extend(
       this._super(...arguments);
 
       this.saveAttrNames = ["name", "title"];
+      this.set("revoking", {});
     },
 
     canEditName: setting("enable_names"),
@@ -31,6 +32,8 @@ export default Ember.Controller.extend(
     passwordProgress: null,
 
     showAllAuthTokens: false,
+
+    revoking: null,
 
     cannotDeleteAccount: Ember.computed.not("currentUser.can_delete_account"),
     deleteDisabled: Ember.computed.or(
@@ -202,7 +205,7 @@ export default Ember.Controller.extend(
       },
 
       revokeAccount(account) {
-        this.set("revoking", true);
+        this.set(`revoking.${account.name}`, true);
 
         this.model
           .revokeAssociatedAccount(account.name)
@@ -214,7 +217,7 @@ export default Ember.Controller.extend(
             }
           })
           .catch(popupAjaxError)
-          .finally(() => this.set("revoking", false));
+          .finally(() => this.set(`revoking.${account.name}`, false));
       },
 
       toggleShowAllAuthTokens() {
