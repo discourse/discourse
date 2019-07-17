@@ -231,13 +231,18 @@ RSpec.describe InlineUploads do
       it "should correct non image URLs to the short url" do
         SiteSetting.authorized_extensions = "mp4"
         upload = Fabricate(:video_upload)
+        upload2 = Fabricate(:video_upload)
 
         md = <<~MD
-        #{GlobalSetting.cdn_url}#{upload.url}
+        #{Discourse.base_url}#{upload.url}
+
+        #{Discourse.base_url}#{upload.url} #{Discourse.base_url}#{upload2.url}
         MD
 
         expect(InlineUploads.process(md)).to eq(<<~MD)
         #{Discourse.base_url}#{upload.short_path}
+
+        #{Discourse.base_url}#{upload.short_path} #{Discourse.base_url}#{upload2.short_path}
         MD
       end
 

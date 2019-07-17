@@ -74,11 +74,13 @@ class InlineUploads
       markdown.scan(/(\n{2,}|\A)#{regexp}$/) do |match|
         if match[1].present?
           extension = match[1].split(".")[-1].downcase
-          next if FileHelper.supported_images.exclude?(extension)
-
           index = $~.offset(2)[0]
           indexes << index
-          raw_matches << [match[1], match[1], +"![](#{PLACEHOLDER})", index]
+          if FileHelper.supported_images.include?(extension)
+            raw_matches << [match[1], match[1], +"![](#{PLACEHOLDER})", index]
+          else
+            raw_matches << [match[1], match[1], ++"#{Discourse.base_url}#{PATH_PLACEHOLDER}", index]
+          end
         end
       end
 
