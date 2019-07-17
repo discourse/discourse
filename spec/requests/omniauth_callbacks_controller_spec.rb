@@ -460,7 +460,7 @@ RSpec.describe Users::OmniauthCallbacksController do
         expect(UserAssociatedAccount.count).to eq(2)
       end
 
-      it 'should reconnect if parameter supplied' do
+      it 'should redirect to associate URL if parameter supplied' do
         # Log in normally
         get "/auth/google_oauth2?reconnect=true"
         expect(response.status).to eq(302)
@@ -483,10 +483,11 @@ RSpec.describe Users::OmniauthCallbacksController do
 
         OmniAuth.config.mock_auth[:google_oauth2].uid = "123456"
         get "/auth/google_oauth2/callback.json"
-        expect(response.status).to eq(200)
-        expect(JSON.parse(response.body)["authenticated"]).to eq(true)
+        expect(response.status).to eq(302)
+        expect(response.redirect_url).to start_with("http://test.localhost/associate/")
+
         expect(session[:current_user_id]).to eq(user.id)
-        expect(UserAssociatedAccount.count).to eq(1)
+        expect(UserAssociatedAccount.count).to eq(0) # Reconnect has not yet happened
       end
 
     end
