@@ -706,7 +706,7 @@ posting:
   markdown_linkify_tlds:
     client: true
     type: list
-    default: "com|net|org|io|co|tv|ru|cn|us|uk|me|de|fr|fi|gov"
+    default: "com|net|org|io|co|tv|ru|cn|us|uk|me|de|fr|fi|gov|es"
     list_type: compact
   markdown_typographer_quotation_marks:
     client: true
@@ -717,6 +717,7 @@ posting:
     locale_default:
       de: "„|“|‚|‘"
       fr: "«\xA0|\xA0»|‹\xA0|\xA0›"
+      es: "«|»|“|”"
   enable_rich_text_paste:
     client: true
     default: true
