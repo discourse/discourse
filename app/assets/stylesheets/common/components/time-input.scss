@@ -1,0 +1,34 @@
+.d-time-input {
+  box-sizing: border-box;
+
+  .fields {
+    display: flex;
+    align-items: center;
+    border: 1px solid $primary-low;
+
+    .field {
+      text-align: center;
+      width: auto;
+      margin: 0;
+      border: none;
+      outline: none;
+      box-shadow: none;
+      width: 32px;
+
+      &.hours,
+      &.minutes {
+        text-align: center;
+        width: 45px;
+      }
+
+      &.hours {
+        padding-right: 0;
+      }
+
+      &.minutes {
+        padding-left: 10px;
+        width: 55px;
+      }
+    }
+  }
+}
