@@ -228,7 +228,7 @@ RSpec.describe InlineUploads do
         MD
       end
 
-      it "should not correct non image URLs to the short url and paths" do
+      it "should correct non image URLs to the short url" do
         SiteSetting.authorized_extensions = "mp4"
         upload = Fabricate(:video_upload)
 
@@ -236,7 +236,9 @@ RSpec.describe InlineUploads do
         #{GlobalSetting.cdn_url}#{upload.url}
         MD
 
-        expect(InlineUploads.process(md)).to eq(md)
+        expect(InlineUploads.process(md)).to eq(<<~MD)
+        #{Discourse.base_url}#{upload.short_path}
+        MD
       end
 
       it "should correct img tags with uppercase upload extension" do
