@@ -40,6 +40,13 @@ class Auth::Authenticator
     ""
   end
 
+  # return a string describing the connected account
+  #  for a given OmniAuth::AuthHash. Used in the confirmation screen
+  #  when connecting accounts
+  def description_for_auth_hash(user)
+    ""
+  end
+
   # can authorisation for this provider be revoked?
   def can_revoke?
     false
