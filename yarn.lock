@@ -1535,21 +1535,16 @@ linkify-it@^2.0.0:
     uc.micro "^1.0.1"
 
 "lodash-cli@https://github.com/lodash-archive/lodash-cli.git":
-  version "4.17.14"
-  resolved "https://github.com/lodash-archive/lodash-cli.git#169d0651a93bb46edcd23b03f48026f3326dc0bc"
+  version "4.17.15"
+  resolved "https://github.com/lodash-archive/lodash-cli.git#91176e422d7c10634a59c7e367fe224795ef5a24"
   dependencies:
     closure-compiler "0.2.12"
     glob "7.1.1"
-    lodash "4.17.13"
+    lodash "4.17.15"
     semver "5.3.0"
     uglify-js "2.7.5"
 
-lodash@4.17.13:
-  version "4.17.13"
-  resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.13.tgz#0bdc3a6adc873d2f4e0c4bac285df91b64fc7b93"
-  integrity sha512-vm3/XWXfWtRua0FkUyEHBZy8kCPjErNBT9fJx8Zvs+U6zjqPbTUOpkaoum3O5uiA8sm+yNMHXfYkTUHFoMxFNA==
-
-lodash@^4.17.11, lodash@^4.17.4, lodash@^4.2.0, lodash@^4.3.0:
+lodash@4.17.15, lodash@^4.17.11, lodash@^4.17.4, lodash@^4.2.0, lodash@^4.3.0:
   version "4.17.14"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.14.tgz#9ce487ae66c96254fe20b599f21b6816028078ba"
   integrity sha512-mmKYbW3GLuJeX+iGP+Y7Gp1AiGHGbXHCOh/jZmrawMmsE7MS4znI3RL2FsjbqOyMayHInjOeykW7PEajUk1/xw==
