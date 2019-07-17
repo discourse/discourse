@@ -1,6 +1,11 @@
 <div class="fields">
   {{#if nativePicker}}
-    {{!-- {{input class="field time" type="time" value=_time}} --}}
+    {{input
+      class="field time"
+      type="time"
+      value=(concat _hours ":" _minutes)
+      change=(action "onChangeTime")
+    }}
   {{else}}
     {{input
       class="field hours"

@@ -15,6 +15,11 @@
       box-shadow: none;
       width: 32px;
 
+      &.time {
+        width: 100%;
+        text-align: left;
+      }
+
       &.hours,
       &.minutes {
         text-align: center;

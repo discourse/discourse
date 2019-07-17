@@ -43,6 +43,17 @@ export default Ember.Component.extend({
       if (value && event.target) {
         event.target.select();
       }
+    },
+
+    onChangeTime(event) {
+      const time = event.target.value;
+
+      if (time && this.onChange) {
+        this.onChange({
+          hours: time.split(":")[0],
+          minutes: time.split(":")[1]
+        });
+      }
     }
   },
 
