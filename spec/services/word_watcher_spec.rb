@@ -62,6 +62,30 @@ describe WordWatcher do
         end
       end
 
+      context 'multiple matches' do
+        context 'non regexp words' do
+          it 'lists all matching words' do
+            Fabricate(:watched_word, word: "bananas", action: WatchedWord.actions[:block])
+            Fabricate(:watched_word, word: "hate", action: WatchedWord.actions[:block])
+            matches = WordWatcher.new("I hate bananas.").word_matches_for_action?(:block, all_matches: true)
+            expect(matches).to contain_exactly('hate', 'bananas')
+          end
+        end
+
+        context 'regexp words' do
+          before do
+            SiteSetting.watched_words_regular_expressions = true
+          end
+
+          it 'lists all matching patterns' do
+            Fabricate(:watched_word, word: "ban[a]+nas", action: WatchedWord.actions[:block])
+            Fabricate(:watched_word, word: "hates?", action: WatchedWord.actions[:block])
+            matches = WordWatcher.new("I hate banaaanas ").word_matches_for_action?(:block, all_matches: true)
+            expect(matches).to contain_exactly('banaaanas', 'hate')
+          end
+        end
+      end
+
       context "emojis" do
         it "handles emoji" do
           Fabricate(:watched_word, word: ":joy:", action: WatchedWord.actions[:require_approval])
