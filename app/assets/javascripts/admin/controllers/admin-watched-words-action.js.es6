@@ -87,12 +87,9 @@ export default Ember.Controller.extend({
         I18n.t("yes_value"),
         result => {
           if (result) {
-            ajax(
-              `/admin/logs/watched_words/action/${actionKey}.json`,
-              {
-                method: "DELETE"
-              }
-            ).then(() => {
+            ajax(`/admin/logs/watched_words/action/${actionKey}.json`, {
+              method: "DELETE"
+            }).then(() => {
               const action = this.findAction(actionKey);
               if (action) {
                 action.setProperties({
