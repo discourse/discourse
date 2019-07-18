@@ -82,8 +82,8 @@ describe "S3Inventory" do
 
   it "should backfill etags to uploads table correctly" do
     files = [
-      ["#{Discourse.store.absolute_base_url}/original/0184537a4f419224404d013414e913a4f56018f2.jpg", "defcaac0b4aca535c284e95f30d608d0"],
-      ["#{Discourse.store.absolute_base_url}/original/0789fbf5490babc68326b9cec90eeb0d6590db05.png", "25c02eaceef4cb779fc17030d33f7f06"]
+      ["#{Discourse.store.absolute_base_url}/original/1X/0184537a4f419224404d013414e913a4f56018f2.jpg", "defcaac0b4aca535c284e95f30d608d0"],
+      ["#{Discourse.store.absolute_base_url}/original/1X/0789fbf5490babc68326b9cec90eeb0d6590db05.png", "25c02eaceef4cb779fc17030d33f7f06"]
     ]
     files.each { |file| Fabricate(:upload, url: file[0]) }
 
@@ -96,5 +96,30 @@ describe "S3Inventory" do
     end
 
     expect(Upload.by_users.order(:url).pluck(:url, :etag)).to eq(files)
+  end
+
+  it "should recover missing uploads correctly" do
+    freeze_time
+
+    CSV.foreach(csv_filename, headers: false) do |row|
+      Fabricate(:upload, url: File.join(Discourse.store.absolute_base_url, row[S3Inventory::CSV_KEY_INDEX]), etag: row[S3Inventory::CSV_ETAG_INDEX], created_at: 2.days.ago)
+    end
+
+    upload = Upload.last
+    etag = upload.etag
+    post = Fabricate(:post, raw: "![](#{upload.url})")
+    post.link_post_uploads
+    upload.delete
+
+    inventory.expects(:download_inventory_files_to_tmp_directory)
+    inventory.expects(:decompress_inventory_files)
+    inventory.expects(:files).returns([{ key: "Key", filename: "#{csv_filename}.gz" }]).times(2)
+
+    output = capture_stdout do
+      inventory.backfill_etags_and_list_missing
+    end
+
+    expect(output).to eq("Listing missing post uploads...\n0 post uploads are missing.\n")
+    expect(post.uploads.first.etag).to eq(etag)
   end
 end
