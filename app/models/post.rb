@@ -955,10 +955,7 @@ class Post < ActiveRecord::Base
             upload_id = Upload.where(sha1: sha1).pluck(:id).first if sha1.present?
             upload_id ||= yield(post, src, path, sha1)
 
-            if upload_id.present?
-              attributes = { post_id: post.id, upload_id: upload_id }
-              PostUpload.create!(attributes) unless PostUpload.exists?(attributes)
-            else
+            if upload_id.blank?
               missing_uploads << src
               missing_post_uploads[post.id] << src
             end
