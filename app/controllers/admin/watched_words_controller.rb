@@ -36,7 +36,7 @@ class Admin::WatchedWordsController < Admin::AdminController
       rescue => e
         data = failed_json.merge(errors: [e.message])
       end
-      MessageBus.publish("/uploads/csv", data.as_json, client_ids: [params[:client_id]])
+      MessageBus.publish("/uploads/txt", data.as_json, client_ids: [params[:client_id]])
     end
 
     render json: success_json
