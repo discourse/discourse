@@ -173,7 +173,9 @@ export default Ember.Controller.extend(
               label: I18n.t("cancel"),
               class: "d-modal-cancel",
               link: true,
-              callback: () => this.set("deleting", false)
+              callback: () => {
+                this.set("deleting", false);
+              }
             },
             {
               label:
