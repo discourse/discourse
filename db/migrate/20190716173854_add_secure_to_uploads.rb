@@ -4,12 +4,13 @@ class AddSecureToUploads < ActiveRecord::Migration[5.2]
   def up
     add_column :uploads, :secure, :boolean, default: false, null: false
 
-    Upload.find_each do |upload|
-      next if !SiteSetting.prevent_anons_from_downloading_files || FileHelper.is_supported_image?(upload.original_filename)
-      next if upload.for_theme || upload.for_site_setting
+    if SiteSetting.prevent_anons_from_downloading_files
+      Upload.find_each do |upload|
+        next if FileHelper.is_supported_image?(upload.original_filename)
+        next if upload.for_theme || upload.for_site_setting
 
-      upload.secure = true
-      upload.save
+        execute("UPDATE uploads SET secure = 't' WHERE id = '#{upload.id}'")
+      end
     end
   end
 
