@@ -1,12 +1,12 @@
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import ModalFunctionality from "discourse/mixins/modal-functionality";
 
-export default Ember.Controller.extend({
+export default Ember.Controller.extend(ModalFunctionality, {
   publicCategoryId: null,
   saving: true,
 
   onShow() {
-    this.publicCategoryId = null;
-    this.saving = false;
+    this.setProperties({ publicCategoryId: null, saving: false });
   },
 
   actions: {
