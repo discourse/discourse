@@ -2,14 +2,14 @@ import computed from "ember-addons/ember-computed-decorators";
 import Topic from "discourse/models/topic";
 
 export default Ember.Controller.extend({
-  application: Ember.inject.controller(),
+  router: Ember.inject.service(),
   userTopicsList: Ember.inject.controller("user-topics-list"),
   user: Ember.inject.controller(),
 
   pmView: false,
   viewingSelf: Ember.computed.alias("user.viewingSelf"),
   isGroup: Ember.computed.equal("pmView", "groups"),
-  currentPath: Ember.computed.alias("application.currentPath"),
+  currentPath: Ember.computed.alias("router.currentRouteName"),
   selected: Ember.computed.alias("userTopicsList.selected"),
   bulkSelectEnabled: Ember.computed.alias("userTopicsList.bulkSelectEnabled"),
   showToggleBulkSelect: true,
