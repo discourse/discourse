@@ -177,6 +177,7 @@ module Email
       style('code', 'background-color: #f1f1ff; padding: 2px 5px;')
       style('pre code', 'display: block; background-color: #f1f1ff; padding: 5px;')
       style('.featured-topic a', "text-decoration: none; font-weight: bold; color: #{SiteSetting.email_link_color}; line-height:1.5em;")
+      style('.secure-image-notice', 'font-style: italic; background-color: #f1f1ff; padding: 5px;')
 
       onebox_styles
       plugin_styles
@@ -192,6 +193,7 @@ module Email
     def to_html
       strip_classes_and_ids
       replace_relative_urls
+      replace_secure_image_urls
       @fragment.to_html
     end
 
@@ -235,6 +237,24 @@ module Email
         href = element['href']
         if href.start_with?("\/\/#{host}")
           element['href'] = "#{scheme}:#{href}"
+        end
+      end
+    end
+
+    def replace_secure_image_urls
+      @fragment.css('[href]').each do |a|
+        if a['href'][/secure-image-uploads/]
+          a.add_next_sibling "<p class='secure-image-notice'>#{I18n.t("emails.secure_image_placeholder")}</p>"
+          a.remove
+        end
+      end
+
+      @fragment.search('img').each do |img|
+        next unless img['src']
+
+        if img['src'][/secure-image-uploads/]
+          img.add_next_sibling "<p class='secure-image-notice'>#{I18n.t("emails.secure_image_placeholder")}</p>"
+          img.remove
         end
       end
     end

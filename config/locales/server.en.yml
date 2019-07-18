@@ -138,6 +138,7 @@ en:
         unsubscribe_not_allowed: "Happens when unsubscribing via email is not allowed for this user."
         email_not_allowed: "Happens when the email address is not on the whitelist or is on the blacklist."
       unrecognized_error: "Unrecognized Error"
+    secure_image_placeholder: "Image redacted: this site has secure images enabled, visit the topic to see the attached image."
 
   errors: &errors
     format: ! "%{attribute} %{message}"
