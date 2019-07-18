@@ -201,6 +201,8 @@ class NewPostManager
     %w(typing_duration_msecs composer_open_duration_msecs reply_to_post_number).each do |a|
       payload[a] = @args[a].to_i if @args[a]
     end
+    payload[:via_email] = true if !!@args[:via_email]
+    payload[:raw_email] = @args[:raw_email] if @args[:raw_email].present?
 
     reviewable = ReviewableQueuedPost.new(
       created_by: @user,
