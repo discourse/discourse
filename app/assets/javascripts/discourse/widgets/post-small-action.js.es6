@@ -22,12 +22,12 @@ export function actionDescriptionHtml(actionCode, createdAt, username) {
 }
 
 export function actionDescription(actionCode, createdAt, username) {
-  return function() {
+  return Ember.computed(actionCode, createdAt, function() {
     const ac = this.get(actionCode);
     if (ac) {
       return actionDescriptionHtml(ac, this.get(createdAt), this.get(username));
     }
-  }.property(actionCode, createdAt);
+  });
 }
 
 const icons = {
