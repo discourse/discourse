@@ -327,7 +327,7 @@
       &:not(:empty) {
         padding: 0.5em 1em 0.5em 0;
       }
-      @include breakpoint("mobile") {
+      @include breakpoint("mobile-large") {
         overflow: hidden;
         text-overflow: ellipsis;
         padding-right: 0.5em;
@@ -370,7 +370,7 @@
   .created-by {
     margin-right: 1em;
     padding-top: 0.35em;
-    @include breakpoint("mobile") {
+    @include breakpoint("mobile-large") {
       float: left;
       margin-bottom: 1em;
     }
@@ -385,7 +385,7 @@
     margin-top: 1em;
     min-width: 275px;
     word-break: break-word;
-    @include breakpoint("mobile", min-width) {
+    @include breakpoint("mobile-large", min-width) {
       display: flex;
     }
   }
@@ -495,7 +495,7 @@
   }
 }
 
-@include breakpoint("mobile") {
+@include breakpoint("mobile-large") {
   tr.reviewable-score {
     grid-template-columns: auto auto auto;
   }
