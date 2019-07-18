@@ -13,7 +13,7 @@ export default Ember.Controller.extend({
     return this.currentUser.get("admin") && enableBadges;
   },
 
-  @computed("router.currentRouteName")
+  @computed("router._router.currentPath")
   adminContentsClassName(currentPath) {
     let cssClasses = currentPath
       .split(".")
@@ -22,16 +22,15 @@ export default Ember.Controller.extend({
           segment !== "index" &&
           segment !== "loading" &&
           segment !== "show" &&
-          segment !== "admin" &&
-          segment !== "dashboard"
+          segment !== "admin"
         );
       })
       .map(Ember.String.dasherize)
       .join(" ");
 
     // this is done to avoid breaking css customizations
-    if (currentPath.indexOf("admin.dashboard") > -1) {
-      cssClasses = `${cssClasses} dashboard dashboard-next`;
+    if (cssClasses.includes("dashboard")) {
+      cssClasses = `${cssClasses} dashboard-next`;
     }
 
     return cssClasses;

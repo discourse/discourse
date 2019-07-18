@@ -7,7 +7,7 @@ export default Ember.Controller.extend(CanCheckEmails, {
   indexStream: false,
   router: Ember.inject.service(),
   userNotifications: Ember.inject.controller("user-notifications"),
-  currentPath: Ember.computed.alias("router.currentRouteName"),
+  currentPath: Ember.computed.alias("router._router.currentPath"),
   adminTools: optionalService(),
 
   @computed("model.username")
