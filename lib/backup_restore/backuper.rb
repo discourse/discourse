@@ -84,7 +84,7 @@ module BackupRestore
     end
 
     def get_parameterized_title
-      SiteSetting.title.parameterize.empty? ? "discourse" : SiteSetting.title.parameterize
+      SiteSetting.title.parameterize.presence || "discourse"
     end
 
     def initialize_state
