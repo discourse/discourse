@@ -1309,6 +1309,91 @@ describe Post do
     end
   end
 
+  describe '#update_uploads_secure_status' do
+    fab!(:image_upload) { Fabricate(:upload) }
+    fab!(:attachment_upload) { Fabricate(:upload, extension: "csv") }
+    fab!(:user) { Fabricate(:user, trust_level: 0) }
+
+    let(:raw) do
+      <<~RAW
+      <a href="#{attachment_upload.url}">Link</a>
+      <img src="#{image_upload.url}">
+      RAW
+    end
+
+    before do
+      SiteSetting.authorized_extensions = "pdf|png|jpg|csv"
+      SiteSetting.enable_s3_uploads = true
+      SiteSetting.s3_upload_bucket = "s3-upload-bucket"
+      SiteSetting.s3_access_key_id = "some key"
+      SiteSetting.s3_secret_access_key = "some secret key"
+      SiteSetting.secure_images = true
+      attachment_upload.update!(original_filename: "hello.csv")
+
+      stub_request(:head, "https://#{SiteSetting.s3_upload_bucket}.s3.amazonaws.com/")
+
+      stub_request(
+        :put,
+        "https://#{SiteSetting.s3_upload_bucket}.s3.amazonaws.com/original/1X/#{attachment_upload.sha1}.#{attachment_upload.extension}?acl"
+      )
+
+      stub_request(
+        :put,
+        "https://#{SiteSetting.s3_upload_bucket}.s3.amazonaws.com/original/1X/#{image_upload.sha1}.#{image_upload.extension}?acl"
+      )
+    end
+
+    it "marks image uploads as secure in PMs when secure_images is ON" do
+      post = Fabricate(:post, raw: raw, user: user, topic: Fabricate(:private_message_topic, user: user))
+      post.link_post_uploads
+      post.update_uploads_secure_status
+
+      expect(PostUpload.where(post: post).joins(:upload).pluck(:upload_id, :secure)).to contain_exactly(
+        [attachment_upload.id, false],
+        [image_upload.id, true]
+      )
+    end
+
+    it "marks image uploads as not secure in PMs when when secure_images is ON" do
+      SiteSetting.secure_images = false
+      post = Fabricate(:post, raw: raw, user: user, topic: Fabricate(:private_message_topic, user: user))
+      post.link_post_uploads
+      post.update_uploads_secure_status
+
+      expect(PostUpload.where(post: post).joins(:upload).pluck(:upload_id, :secure)).to contain_exactly(
+        [attachment_upload.id, false],
+        [image_upload.id, false]
+      )
+    end
+
+    it "marks attachments as secure when relevant setting is enabled" do
+      SiteSetting.prevent_anons_from_downloading_files = true
+      post = Fabricate(:post, raw: raw, user: user, topic: Fabricate(:topic, user: user))
+      post.link_post_uploads
+      post.update_uploads_secure_status
+
+      expect(PostUpload.where(post: post).joins(:upload).pluck(:upload_id, :secure)).to contain_exactly(
+        [attachment_upload.id, true],
+        [image_upload.id, false]
+      )
+    end
+
+    it "does not mark an upload as secure if it has already been used in a public topic" do
+      post = Fabricate(:post, raw: raw, user: user, topic: Fabricate(:topic, user: user))
+      post.link_post_uploads
+      post.update_uploads_secure_status
+
+      pm = Fabricate(:post, raw: raw, user: user, topic: Fabricate(:private_message_topic, user: user))
+      pm.link_post_uploads
+      pm.update_uploads_secure_status
+
+      expect(PostUpload.where(post: pm).joins(:upload).pluck(:upload_id, :secure)).to contain_exactly(
+        [attachment_upload.id, false],
+        [image_upload.id, false]
+      )
+    end
+  end
+
   context 'topic updated_at' do
     let :topic do
       create_post.topic

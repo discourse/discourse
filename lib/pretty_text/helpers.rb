@@ -66,13 +66,11 @@ module PrettyText
           reverse_map[value] << key
         end
 
-        Upload.where(sha1: map.values).pluck(:sha1, :url, :extension, :original_filename).each do |row|
-          sha1, url, extension, original_filename = row
-          # TODO: check whether upload is an image
+        Upload.where(sha1: map.values).pluck(:sha1, :url, :extension, :original_filename, :secure).each do |row|
+          sha1, url, extension, original_filename, secure = row
 
           if short_urls = reverse_map[sha1]
-
-            secure_image = FileHelper.is_supported_image?(original_filename) && Discourse.store.secure_images_enabled?
+            secure_image = FileHelper.is_supported_image?(original_filename) && SiteSetting.secure_images? && secure
 
             short_urls.each do |short_url|
               result[short_url] = {

@@ -115,7 +115,7 @@ class UploadsController < ApplicationController
     # do not serve uploads requested via XHR to prevent XSS
     return xhr_not_allowed if request.xhr?
 
-    if Discourse.store.secure_images_enabled?
+    if SiteSetting.secure_images?
       redirect_to Discourse.store.signed_url_for_path("#{params[:path]}.#{params[:extension]}")
     else
       render_404

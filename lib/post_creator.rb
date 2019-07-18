@@ -181,6 +181,7 @@ class PostCreator
         update_user_counts
         create_embedded_topic
         link_post_uploads
+        update_uploads_secure_status
         ensure_in_allowed_users if guardian.is_staff?
         unarchive_message
         @post.advance_draft_sequence unless @opts[:import_mode]
@@ -371,6 +372,10 @@ class PostCreator
 
   def link_post_uploads
     @post.link_post_uploads
+  end
+
+  def update_uploads_secure_status
+    @post.update_uploads_secure_status
   end
 
   def handle_spam

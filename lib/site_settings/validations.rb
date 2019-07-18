@@ -70,7 +70,6 @@ module SiteSettings::Validations
   end
 
   def validate_secure_images(new_val)
-    validate_error :secure_images_requirements if new_val == "t" && !SiteSetting.login_required?
     validate_error :secure_images_requirements if new_val == "t" && !SiteSetting.enable_s3_uploads?
   end
 

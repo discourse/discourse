@@ -62,10 +62,6 @@ module FileStore
       !external?
     end
 
-    def secure_images_enabled?
-      not_implemented
-    end
-
     def path_for(upload)
       not_implemented
     end

@@ -372,7 +372,6 @@ describe UploadsController do
         SiteSetting.s3_upload_bucket = "s3-upload-bucket"
         SiteSetting.s3_access_key_id = "fakeid7974664"
         SiteSetting.s3_secret_access_key = "fakesecretid7974664"
-        SiteSetting.login_required = true
         SiteSetting.secure_images = true
       end
 
@@ -394,6 +393,7 @@ describe UploadsController do
       end
 
       it "should return secure image URL when looking up urls" do
+        upload.update_column(:secure, true)
         sign_in(user)
 
         post "/uploads/lookup-urls.json", params: { short_urls: [upload.short_url] }
@@ -419,7 +419,7 @@ describe UploadsController do
     end
 
     describe 'secure images' do
-      let(:upload) { Fabricate(:upload_s3) }
+      let(:upload) { Fabricate(:upload_s3, secure: true) }
 
       before do
         SiteSetting.authorized_extensions = "pdf|png"
@@ -427,11 +427,10 @@ describe UploadsController do
         SiteSetting.s3_access_key_id = "s3-access-key-id"
         SiteSetting.s3_secret_access_key = "s3-secret-access-key"
         SiteSetting.enable_s3_uploads = true
-        SiteSetting.login_required = true
         SiteSetting.secure_images = true
       end
 
-      it 'returns secure urls for images when secure images is enabled' do
+      it 'returns secure url for a secure image upload' do
         sign_in(user)
 
         post "/uploads/lookup-urls.json", params: { short_urls: [upload.short_url] }

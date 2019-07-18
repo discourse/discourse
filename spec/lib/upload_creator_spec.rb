@@ -170,7 +170,7 @@ RSpec.describe UploadCreator do
       end
     end
 
-    describe 'secure uploads' do
+    describe 'secure attachments' do
       let(:filename) { "small.pdf" }
       let(:file) { file_from_fixtures(filename, "pdf") }
 
@@ -179,7 +179,7 @@ RSpec.describe UploadCreator do
         SiteSetting.authorized_extensions = 'pdf|svg|jpg'
       end
 
-      it 'should mark uploads as secure' do
+      it 'should mark attachments as secure' do
         upload = UploadCreator.new(file, filename).create_for(user.id)
         stored_upload = Upload.last
 
@@ -203,7 +203,7 @@ RSpec.describe UploadCreator do
       end
     end
 
-    describe 'uploading to s3' do
+    context 'uploading to s3' do
       let(:filename) { "should_be_jpeg.png" }
       let(:file) { file_from_fixtures(filename) }
       let(:pdf_filename) { "small.pdf" }
@@ -233,7 +233,7 @@ RSpec.describe UploadCreator do
         expect(upload.etag).to eq('ETag')
       end
 
-      it 'should return signed URL for secure uploads in S3' do
+      it 'should return signed URL for secure attachments in S3' do
         SiteSetting.prevent_anons_from_downloading_files = true
         SiteSetting.authorized_extensions = 'pdf'
 
@@ -244,19 +244,6 @@ RSpec.describe UploadCreator do
         expect(stored_upload.secure?).to eq(true)
         expect(stored_upload.url).not_to eq(signed_url)
         expect(signed_url).to match(/Amz-Credential/)
-      end
-
-      it 'should return signed URL for secure image uploads in S3' do
-        SiteSetting.login_required = true
-        SiteSetting.secure_images = true
-
-        upload = UploadCreator.new(file, filename).create_for(user.id)
-        stored_upload = Upload.last
-        signed_url = Discourse.store.url_for(stored_upload)
-
-        expect(stored_upload.secure?).to eq(true)
-        expect(stored_upload.url).not_to eq(signed_url)
-        expect(signed_url).to match(/Amz-Expires/)
       end
     end
   end

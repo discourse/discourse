@@ -426,7 +426,7 @@ def migrate_to_s3
           %Q{attachment; filename="#{upload.original_filename}"}
       end
 
-      if upload&.private?
+      if upload.secure
         options[:acl] = "private"
       end
     end
@@ -908,9 +908,26 @@ task "uploads:recover" => :environment do
   end
 end
 
-task "uploads:update_acl" => :environment do
-  Jobs::UpdatePrivateUploadsAcl.new.execute({})
-  Jobs::UpdatePrivateUploadsAcl.new.execute(name: "secure_images")
+task "uploads:ensure_correct_acl" => :environment do
+  RailsMultisite::ConnectionManagement.each_connection do |db|
+    unless Discourse.store.external?
+      puts "This task only works for external storage."
+      exit 1
+    end
+
+    puts "Ensuring correct ACL for uploads in #{db}..."
+
+    Upload.find_each do |upload|
+      begin
+        upload.update_secure_status
+        upload.posts.each { |post| post.rebake! }
+        putc "."
+      rescue => e
+        puts "Skipping #{upload.original_filename} (#{upload.url}) #{e.message}"
+      end
+    end
+  end
+  puts "", "Done"
 end
 
 def inline_uploads(post)

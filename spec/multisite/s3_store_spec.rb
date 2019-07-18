@@ -119,7 +119,7 @@ RSpec.describe 'Multisite s3 uploads', type: :multisite do
     end
   end
 
-  context 'private uploads' do
+  context 'secure uploads' do
     let(:store) { FileStore::S3Store.new }
     let(:client) { Aws::S3::Client.new(stub_responses: true) }
     let(:resource) { Aws::S3::Resource.new(client: client) }
@@ -140,11 +140,11 @@ RSpec.describe 'Multisite s3 uploads', type: :multisite do
       s3_object.stubs(:put).returns(Aws::S3::Types::PutObjectOutput.new(etag: "etag"))
     end
 
-    describe "when private uploads are enabled" do
+    describe "when secure attachments are enabled" do
       it "returns signed URL with correct path" do
         test_multisite_connection('default') do
           upload = build_upload
-          upload.update!(original_filename: "small.pdf", extension: "pdf")
+          upload.update!(original_filename: "small.pdf", extension: "pdf", secure: true)
 
           s3_helper.expects(:s3_bucket).returns(s3_bucket).at_least_once
           s3_bucket.expects(:object).with("uploads/default/original/1X/#{upload.sha1}.pdf").returns(s3_object).at_least_once
@@ -190,7 +190,7 @@ RSpec.describe 'Multisite s3 uploads', type: :multisite do
       it "updates correct file for default and second multisite db" do
         test_multisite_connection('default') do
           upload = build_upload
-          upload.update!(original_filename: "small.pdf", extension: "pdf")
+          upload.update!(original_filename: "small.pdf", extension: "pdf", secure: true)
 
           s3_helper.expects(:s3_bucket).returns(s3_bucket).at_least_once
           s3_bucket.expects(:object).with("uploads/default/original/1X/#{upload.sha1}.pdf").returns(s3_object)
@@ -202,7 +202,7 @@ RSpec.describe 'Multisite s3 uploads', type: :multisite do
 
         test_multisite_connection('second') do
           upload = build_upload
-          upload.update!(original_filename: "small.pdf", extension: "pdf")
+          upload.update!(original_filename: "small.pdf", extension: "pdf", secure: true)
 
           s3_helper.expects(:s3_bucket).returns(s3_bucket).at_least_once
           s3_bucket.expects(:object).with("uploads/second/original/1X/#{upload.sha1}.pdf").returns(s3_object)

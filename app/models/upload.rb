@@ -235,6 +235,23 @@ class Upload < ActiveRecord::Base
     self.posts.where("cooked LIKE '%/_optimized/%'").find_each(&:rebake!)
   end
 
+  def update_secure_status
+    return false unless Discourse.store.external?
+    return false if self.for_theme || self.for_site_setting
+
+    if FileHelper.is_supported_image?(self.original_filename) && SiteSetting.secure_images?
+      # first post associated with upload determines secure status
+      # i.e. an already public upload will stay public even if added to a new PM
+      first_post_with_upload = self.posts.order(sort_order: :asc).first
+      mark_secure = first_post_with_upload ? first_post_with_upload.has_secure_images? : false
+    else
+      mark_secure = SiteSetting.prevent_anons_from_downloading_files?
+    end
+
+    self.update_column("secure", mark_secure)
+    Discourse.store.update_upload_ACL(self)
+  end
+
   def self.migrate_to_new_scheme(limit: nil)
     problems = []
 

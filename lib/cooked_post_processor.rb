@@ -284,7 +284,7 @@ class CookedPostProcessor
     absolute_url = url
     absolute_url = Discourse.base_url_no_prefix + absolute_url if absolute_url =~ /^\/[^\/]/
 
-    if Discourse.store.secure_images_enabled? && url.start_with?("/secure-image-uploads/")
+    if url&.start_with?("/secure-image-uploads/")
       absolute_url = Discourse.store.signed_url_for_path(url.sub("/secure-image-uploads/", ""))
     end
 
@@ -407,14 +407,14 @@ class CookedPostProcessor
           resized_h = (h * ratio).to_i
 
           if !cropped && upload.width && resized_w > upload.width
-            cooked_url = UrlHelper.cook_url(upload.url)
+            cooked_url = UrlHelper.cook_url(upload.url, secure: upload.secure?)
             srcset << ", #{cooked_url} #{ratio.to_s.sub(/\.0$/, "")}x"
           elsif t = upload.thumbnail(resized_w, resized_h)
-            cooked_url = UrlHelper.cook_url(t.url)
+            cooked_url = UrlHelper.cook_url(t.url, secure: upload.secure?)
             srcset << ", #{cooked_url} #{ratio.to_s.sub(/\.0$/, "")}x"
           end
 
-          img["srcset"] = "#{UrlHelper.cook_url(img["src"])}#{srcset}" if srcset.present?
+          img["srcset"] = "#{UrlHelper.cook_url(img["src"], secure: upload.secure?)}#{srcset}" if srcset.present?
         end
       else
         img["src"] = upload.url
@@ -601,7 +601,7 @@ class CookedPostProcessor
 
     %w{src data-small-upload}.each do |selector|
       @doc.css("img[#{selector}]").each do |img|
-        img[selector] = UrlHelper.cook_url(img[selector].to_s)
+        img[selector] = UrlHelper.cook_url(img[selector].to_s, secure: @post.has_secure_images?)
       end
     end
   end

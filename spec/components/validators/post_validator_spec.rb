@@ -285,6 +285,48 @@ describe Validators::PostValidator do
     end
   end
 
+  context "secure_upload_validator" do
+    fab!(:image_upload) { Fabricate(:upload) }
+    fab!(:user) { Fabricate(:user) }
+
+    before do
+      SiteSetting.authorized_extensions = "pdf|png|jpg|csv"
+      SiteSetting.enable_s3_uploads = true
+      SiteSetting.s3_upload_bucket = "s3-upload-bucket"
+      SiteSetting.s3_access_key_id = "some key"
+      SiteSetting.s3_secret_access_key = "some secret key"
+      SiteSetting.secure_images = true
+
+      stub_request(:head, "https://#{SiteSetting.s3_upload_bucket}.s3.amazonaws.com/")
+
+      stub_request(
+        :put,
+        "https://#{SiteSetting.s3_upload_bucket}.s3.amazonaws.com/original/1X/#{image_upload.sha1}.#{image_upload.extension}?acl"
+      )
+
+    end
+
+    it "does not allow a secure upload to be used in a public topic" do
+      pm_topic = Fabricate(:private_message_topic, user: user)
+
+      pm = Fabricate(:post, raw: "A post with an image.\n![](#{image_upload.short_path})", user: user, topic: pm_topic)
+      pm.link_post_uploads
+      pm.update_uploads_secure_status
+
+      validator.secure_upload_validator(pm)
+      expect(pm.errors.count).to eq(0)
+
+      post = Fabricate(:post, raw: "A public post with an image.\n![](#{image_upload.short_path})", user: user, topic: Fabricate(:topic, user: user))
+      validator.secure_upload_validator(post)
+      expect(post.errors.count).to eq(1)
+
+      # allow secure upload to be used in other PMs
+      pm2 = Fabricate(:post, raw: "Another PM with an image.\n![](#{image_upload.short_path})", user: user, topic: pm_topic)
+      validator.secure_upload_validator(pm2)
+      expect(pm2.errors.count).to eq(0)
+    end
+  end
+
   shared_examples "almost no validations" do
     it "skips most validations" do
       validator.expects(:stripped_length).never

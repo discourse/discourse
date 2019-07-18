@@ -739,7 +739,6 @@ describe CookedPostProcessor do
 
       it "is always allowed to crawl our own images" do
         store = stub
-        store.expects(:secure_images_enabled?).returns(false)
         Discourse.expects(:store).returns(store).at_least_once
         store.expects(:has_been_uploaded?).returns(true)
         FastImage.expects(:size).returns([100, 200])
@@ -1048,11 +1047,11 @@ describe CookedPostProcessor do
         end
 
         it "doesn't use CDN for secure images" do
-          SiteSetting.login_required = true
           SiteSetting.secure_images = true
 
           stored_path = Discourse.store.get_path_for_upload(upload)
           upload.update_column(:url, "#{SiteSetting.Upload.absolute_base_url}/#{stored_path}")
+          upload.update_column(:secure, true)
 
           the_post = Fabricate(:post, raw: %Q{This post has a local emoji :+1: and an external upload\n\n![smallest.png|10x20](#{upload.short_url})})
 

@@ -20,6 +20,7 @@ class Validators::PostValidator < ActiveModel::Validator
     can_post_links_validator(record)
     unique_post_validator(record)
     force_edit_last_validator(record)
+    secure_upload_validator(record)
   end
 
   def presence(post)
@@ -175,6 +176,13 @@ class Validators::PostValidator < ActiveModel::Validator
     guardian = Guardian.new(post.acting_user)
     if guardian.can_edit?(topic.ordered_posts.last)
       post.errors.add(:base, I18n.t(:max_consecutive_replies, count: SiteSetting.max_consecutive_replies))
+    end
+  end
+
+  def secure_upload_validator(post)
+    disallowed_uploads = post.link_post_uploads(validate_only: true)
+    if disallowed_uploads.count > 0
+      post.errors.add(:base, I18n.t('secure_upload_not_allowed_in_public_topic', upload_filenames: disallowed_uploads.join(", ")))
     end
   end
 

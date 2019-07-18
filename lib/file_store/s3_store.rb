@@ -25,10 +25,10 @@ module FileStore
       url
     end
 
-    def store_optimized_image(file, optimized_image, content_type = nil)
+    def store_optimized_image(file, optimized_image, content_type = nil, secure: false)
       path = get_path_for_optimized_image(optimized_image)
 
-      url, optimized_image.etag = store_file(file, path, content_type: content_type, private: secure_images_enabled?)
+      url, optimized_image.etag = store_file(file, path, content_type: content_type, private_acl: secure)
       url
     end
 
@@ -43,7 +43,7 @@ module FileStore
       # cache file locally when needed
       cache_file(file, File.basename(path)) if opts[:cache_locally]
       options = {
-        acl: opts[:private] ? "private" : "public-read",
+        acl: opts[:private_acl] ? "private" : "public-read",
         content_type: opts[:content_type].presence || MiniMime.lookup_by_filename(filename)&.content_type
       }
       # add a "content disposition" header for "attachments"
@@ -90,10 +90,6 @@ module FileStore
 
     def external?
       true
-    end
-
-    def secure_images_enabled?
-      SiteSetting.secure_images? && SiteSetting.login_required?
     end
 
     def purge_tombstone(grace_period)

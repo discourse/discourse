@@ -478,6 +478,12 @@ class Post < ActiveRecord::Base
     ReviewableFlaggedPost.pending.find_by(target: self)
   end
 
+  def has_secure_images?
+    return false unless SiteSetting.secure_images?
+
+    topic.private_message? || SiteSetting.login_required?
+  end
+
   def hide!(post_action_type_id, reason = nil)
     return if hidden?
 
@@ -857,7 +863,7 @@ class Post < ActiveRecord::Base
     locked_by_id.present?
   end
 
-  def link_post_uploads(fragments: nil)
+  def link_post_uploads(fragments: nil, validate_only: false)
     upload_ids = []
 
     each_upload_url(fragments: fragments) do |src, _, sha1|
@@ -868,6 +874,16 @@ class Post < ActiveRecord::Base
     end
 
     upload_ids |= Upload.where(id: downloaded_images.values).pluck(:id)
+
+    if validate_only
+      disallowed_uploads = []
+      if SiteSetting.secure_images? && !topic.private_message?
+        disallowed_uploads = Upload.where(id: upload_ids, secure: true).pluck(:original_filename)
+      end
+
+      return disallowed_uploads
+    end
+
     values = upload_ids.map! { |upload_id| "(#{self.id},#{upload_id})" }.join(",")
 
     PostUpload.transaction do
@@ -876,6 +892,12 @@ class Post < ActiveRecord::Base
       if values.size > 0
         DB.exec("INSERT INTO post_uploads (post_id, upload_id) VALUES #{values}")
       end
+    end
+  end
+
+  def update_uploads_secure_status
+    if Discourse.store.external?
+      self.uploads.each { |upload| upload.update_secure_status }
     end
   end
 
@@ -896,7 +918,6 @@ class Post < ActiveRecord::Base
 
     fragments ||= Nokogiri::HTML::fragment(self.cooked)
     links = fragments.css("a/@href", "img/@src").map { |media| media.value }.uniq
-
     links.each do |src|
       next if src.blank? || upload_patterns.none? { |pattern| src.split("?")[0] =~ pattern }
       next if Rails.configuration.multisite && src.exclude?(current_db) && src.exclude?("short-url")

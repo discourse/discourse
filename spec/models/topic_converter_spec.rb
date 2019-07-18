@@ -102,6 +102,35 @@ describe TopicConverter do
         expect(Notification.exists?(user_notification.id)).to eq(false)
         expect(Notification.exists?(admin_notification.id)).to eq(true)
       end
+
+      context "secure uploads" do
+        fab!(:image_upload) { Fabricate(:upload) }
+
+        before do
+          SiteSetting.enable_s3_uploads = true
+          SiteSetting.s3_upload_bucket = "s3-upload-bucket"
+          SiteSetting.s3_access_key_id = "some key"
+          SiteSetting.s3_secret_access_key = "some secret key"
+          SiteSetting.secure_images = true
+
+          stub_request(:head, "https://#{SiteSetting.s3_upload_bucket}.s3.amazonaws.com/")
+
+          stub_request(
+            :put,
+            "https://#{SiteSetting.s3_upload_bucket}.s3.amazonaws.com/original/1X/#{image_upload.sha1}.#{image_upload.extension}?acl"
+          )
+        end
+
+        it "converts secure uploads back to public" do
+          first_post
+          second_post = Fabricate(:post, raw: "<img src='#{image_upload.url}'>", user: other_user, topic: private_message)
+          second_post.link_post_uploads
+          second_post.update_uploads_secure_status
+
+          expect(second_post.uploads[0].secure).to eq(true)
+          private_message.convert_to_public_topic(admin)
+          expect(private_message.reload.posts.find(second_post.id).uploads[0].secure).to eq(false)
+        end
     end
   end
 

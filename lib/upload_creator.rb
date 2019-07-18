@@ -109,7 +109,6 @@ class UploadCreator
       if is_image
         @upload.thumbnail_width, @upload.thumbnail_height = ImageSizer.resize(*@image_info.size)
         @upload.width, @upload.height = @image_info.size
-        @upload.secure = true if Discourse.store.secure_images_enabled?
       end
 
       @upload.for_private_message = true if @opts[:for_private_message]
