@@ -51,8 +51,8 @@ class Admin::WatchedWordsController < Admin::AdminController
     content = WatchedWord.where(action: action).pluck(:word).join("\n")
     headers['Content-Length'] = content.bytesize.to_s
     send_data content,
-      filename: "#{Discourse.current_hostname}-watched-words-#{name}.csv",
-      content_type: "text/csv"
+      filename: "#{Discourse.current_hostname}-watched-words-#{name}.txt",
+      content_type: "text/plain"
   end
 
   def clear_all
