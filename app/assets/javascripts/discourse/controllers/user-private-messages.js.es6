@@ -9,7 +9,7 @@ export default Ember.Controller.extend({
   pmView: false,
   viewingSelf: Ember.computed.alias("user.viewingSelf"),
   isGroup: Ember.computed.equal("pmView", "groups"),
-  currentPath: Ember.computed.alias("router.currentRouteName"),
+  currentPath: Ember.computed.alias("router._router.currentPath"),
   selected: Ember.computed.alias("userTopicsList.selected"),
   bulkSelectEnabled: Ember.computed.alias("userTopicsList.bulkSelectEnabled"),
   showToggleBulkSelect: true,
