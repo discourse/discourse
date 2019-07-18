@@ -390,16 +390,6 @@ describe Topic do
         expect(topic.fancy_title).to eq(long_title)
       end
 
-      it "uses the configured quote entities" do
-        SiteSetting.markdown_typographer_quotation_marks = "„|“|‚|‘"
-        topic.title = %q|"Weißt du", sagte er, "was 'Discourse' ist?"|
-        expect(topic.fancy_title).to eq('&bdquo;Weißt du&ldquo;, sagte er, &bdquo;was &sbquo;Discourse&lsquo; ist?&ldquo;')
-
-        SiteSetting.markdown_typographer_quotation_marks = "«\u00A0|\u00A0»|‹\u00A0|\u00A0›"
-        topic.title = '"Qui vivra verra"'
-        expect(topic.fancy_title).to eq('&laquo;&nbsp;Qui vivra verra&nbsp;&raquo;')
-      end
-
       context 'readonly mode' do
         before do
           Discourse.enable_readonly_mode
