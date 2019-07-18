@@ -150,6 +150,10 @@ export default function() {
       });
     });
 
+    this.put("/t/34/convert-topic/public", () => {
+      return response({});
+    });
+
     this.put("/t/280/make-banner", () => {
       return response({});
     });

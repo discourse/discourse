@@ -599,10 +599,12 @@ const Topic = RestModel.extend({
     });
   },
 
-  convertTopic(type) {
-    return ajax(`/t/${this.id}/convert-topic/${type}`, { type: "PUT" })
-      .then(() => window.location.reload())
-      .catch(popupAjaxError);
+  convertTopic(type, opts) {
+    let args = { type: "PUT" };
+    if (opts && opts.categoryId) {
+      args.data = { category_id: opts.categoryId };
+    }
+    return ajax(`/t/${this.id}/convert-topic/${type}`, args);
   },
 
   resetBumpDate() {
