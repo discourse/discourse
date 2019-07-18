@@ -3900,7 +3900,6 @@ en:
           exists: "Already exists"
           upload: "Add from file"
           upload_successful: "Upload successful. Words have been added."
-          one_word_per_line: One word per line
 
       impersonate:
         title: "Impersonate"
