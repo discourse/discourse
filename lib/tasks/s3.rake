@@ -152,6 +152,7 @@ task 's3:correct_cachecontrol' => :environment do
   options = {
     'cache_control' => 'max-age=31556952, public, immutable'
   }
+  acl = SiteSetting.prevent_anons_from_downloading_files ? 'private' : 'public-read'
 
   objects = Upload.pluck(:id, :url).map { |array| array << :upload }
   objects.concat(OptimizedImage.pluck(:id, :url).map { |array| array << :optimized_image })
@@ -168,7 +169,7 @@ task 's3:correct_cachecontrol' => :environment do
         object = Discourse.store.s3_helper.object(key)
         name = "#{object.bucket_name}/#{object.key}"
         metadada = object.metadata.merge(options)
-        object.copy_from(copy_source: name, acl: 'public-read', metadata: metadada, metadata_directive: 'REPLACE')
+        object.copy_from(copy_source: name, acl: acl, metadata: metadada, metadata_directive: 'REPLACE')
       rescue => e
         puts "Skipping #{type} #{id} url is #{url} #{e}"
       end
