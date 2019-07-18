@@ -404,7 +404,7 @@ export default createWidget("header", {
 
       const currentPath = this.register
         .lookup("service:router")
-        .get("router._router.currentPath");
+        .get("_router.currentPath");
 
       if (currentPath === "full-page-search") {
         scrollTop();
@@ -480,7 +480,7 @@ export default createWidget("header", {
 
     const currentPath = this.register
       .lookup("service:router")
-      .get("router._router.currentPath");
+      .get("_router.currentPath");
     const blacklist = [/^discovery\.categories/];
     const whitelist = [/^topic\./];
     const check = function(regex) {
