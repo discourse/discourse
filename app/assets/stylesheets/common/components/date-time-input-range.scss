@@ -1,0 +1,42 @@
+.d-date-time-input-range {
+  padding: 0.5em;
+  background: whitesmole;
+  border: 1px solid $primary-low;
+  width: 300px;
+  display: flex;
+  flex-direction: column;
+
+  .panels {
+    display: inline-flex;
+    list-style: none;
+    margin: 0 0 0.5em 0;
+    flex: 1;
+
+    &.from {
+      .from-panel {
+        background: $danger;
+        color: $secondary;
+      }
+    }
+
+    &.to {
+      .to-panel {
+        background: $danger;
+        color: $secondary;
+      }
+    }
+
+    .btn {
+      margin-right: 0.5em;
+    }
+  }
+
+  .panel {
+    display: none;
+    flex: 1;
+
+    &.visible {
+      display: flex;
+    }
+  }
+}
