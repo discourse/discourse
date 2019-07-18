@@ -74,21 +74,22 @@ class WordWatcher
       match = regexp.match(@raw)
       return match if !all_matches || !match
 
-      matches = []
       if SiteSetting.watched_words_regular_expressions?
+        set = Set.new
         @raw.scan(regexp).each do |m|
           if Array === m
-            matches << m.find(&:present?)
+            set.add(m.find(&:present?))
           elsif String === m
-            matches << m
+            set.add(m)
           end
         end
+        matches = set.to_a
       else
         matches = @raw.scan(regexp)
+        matches.flatten!
+        matches.uniq!
       end
-      matches.flatten!
       matches.compact!
-      matches.uniq!
       matches.sort!
       matches
     else
