@@ -51,10 +51,9 @@ export function propertyLessThan(p1, p2) {
 **/
 export function i18n(...args) {
   const format = args.pop();
-  const computed = Ember.computed(function() {
+  return Ember.computed(...args, function() {
     return I18n.t(addonFmt(format, ...args.map(a => this.get(a))));
   });
-  return computed.property.apply(computed, args);
 }
 
 /**
@@ -68,10 +67,9 @@ export function i18n(...args) {
 **/
 export function fmt(...args) {
   const format = args.pop();
-  const computed = Ember.computed(function() {
+  return Ember.computed(...args, function() {
     return addonFmt(format, ...args.map(a => this.get(a)));
   });
-  return computed.property.apply(computed, args);
 }
 
 /**
@@ -85,10 +83,9 @@ export function fmt(...args) {
 **/
 export function url(...args) {
   const format = args.pop();
-  const computed = Ember.computed(function() {
+  return Ember.computed(...args, function() {
     return Discourse.getURL(addonFmt(format, ...args.map(a => this.get(a))));
   });
-  return computed.property.apply(computed, args);
 }
 
 /**
@@ -102,7 +99,7 @@ export function url(...args) {
 export function endWith() {
   const args = Array.prototype.slice.call(arguments, 0);
   const substring = args.pop();
-  const computed = Ember.computed(function() {
+  return Ember.computed(...args, function() {
     return args
       .map(a => this.get(a))
       .every(s => {
@@ -111,7 +108,6 @@ export function endWith() {
         return lastIndex !== -1 && lastIndex === position;
       });
   });
-  return computed.property.apply(computed, args);
 }
 
 /**
