@@ -161,9 +161,9 @@ export default Ember.Controller.extend({
     return (
       q &&
       this.currentUser &&
-      (q.indexOf("in:private") > -1 ||
+      (q.indexOf("in:personal") > -1 ||
         q.indexOf(
-          `private_messages:${this.currentUser.get("username_lower")}`
+          `personal_messages:${this.currentUser.get("username_lower")}`
         ) > -1)
     );
   },

@@ -262,6 +262,7 @@ en:
 
     related_messages:
       title: "Related Messages"
+      see_all: "See all messages from <a href=\"%{path}\">@%{username}...</a>"
 
     suggested_topics:
       title: "Suggested Topics"
