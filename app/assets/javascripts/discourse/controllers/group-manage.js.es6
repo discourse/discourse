@@ -1,7 +1,7 @@
 import { default as computed } from "ember-addons/ember-computed-decorators";
 
 export default Ember.Controller.extend({
-  application: Ember.inject.controller(),
+  router: Ember.inject.service(),
 
   @computed("model.automatic")
   tabs(automatic) {

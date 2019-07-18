@@ -5,9 +5,9 @@ import optionalService from "discourse/lib/optional-service";
 
 export default Ember.Controller.extend(CanCheckEmails, {
   indexStream: false,
-  application: Ember.inject.controller(),
+  router: Ember.inject.service(),
   userNotifications: Ember.inject.controller("user-notifications"),
-  currentPath: Ember.computed.alias("application.currentPath"),
+  currentPath: Ember.computed.alias("router.currentRouteName"),
   adminTools: optionalService(),
 
   @computed("model.username")
