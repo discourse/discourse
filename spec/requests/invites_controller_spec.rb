@@ -353,7 +353,7 @@ describe InvitesController do
 
           context "with password" do
             context "user was invited via email" do
-              before { invite.update_column(:via_email, true) }
+              before { invite.update_column(:emailed_status, Invite.emailed_status_types[:pending]) }
 
               it "doesn't send an activation email and activates the user" do
                 expect do
@@ -373,7 +373,7 @@ describe InvitesController do
             end
 
             context "user was invited via link" do
-              before { invite.update_column(:via_email, false) }
+              before { invite.update_column(:emailed_status, Invite.emailed_status_types[:not_required]) }
 
               it "sends an activation email and doesn't activate the user" do
                 expect do
