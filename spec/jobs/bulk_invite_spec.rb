@@ -89,6 +89,27 @@ describe Jobs::BulkInvite do
       expect(Invite.exists?(email: "test2@discourse.org")).to eq(true)
       expect(existing_user.reload.groups).to eq([group1])
     end
-  end
 
+    context 'invites are more than 200' do
+      let(:bulk_invites) { [] }
+
+      before do
+        202.times do |i|
+          bulk_invites << { "email": "test_#{i}@discourse.org" }
+        end
+      end
+
+      it 'rate limits email sending' do
+        described_class.new.execute(
+          current_user_id: admin.id,
+          invites: bulk_invites
+        )
+
+        invite = Invite.last
+        expect(invite.email).to eq("test_201@discourse.org")
+        expect(invite.emailed_status).to eq(Invite.emailed_status_types[:bulk_pending])
+        expect(Jobs::ProcessBulkInviteEmails.jobs.size).to eq(1)
+      end
+    end
+  end
 end
