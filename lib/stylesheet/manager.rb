@@ -294,9 +294,9 @@ class Stylesheet::Manager
   # so we could end up poisoning the cache with a bad file that can not be removed
   def plugins_digest
     assets = []
-    assets += DiscoursePluginRegistry.stylesheets.to_a
-    assets += DiscoursePluginRegistry.mobile_stylesheets.to_a
-    assets += DiscoursePluginRegistry.desktop_stylesheets.to_a
+    DiscoursePluginRegistry.stylesheets.each { |_, paths| assets += paths.to_a }
+    DiscoursePluginRegistry.mobile_stylesheets.each { |_, paths| assets += paths.to_a }
+    DiscoursePluginRegistry.desktop_stylesheets.each { |_, paths| assets += paths.to_a }
     Digest::SHA1.hexdigest(assets.sort.join)
   end
 
