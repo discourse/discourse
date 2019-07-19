@@ -392,26 +392,65 @@
 }
 
 .avatar-selector {
-  label.radio {
-    padding-left: 10px;
-  }
   .avatar-choice {
-    min-height: 40px;
+    display: grid;
+    grid-template-columns: 2em 1fr auto;
+    grid-template-rows: auto auto;
+    align-items: center;
+    &:not(:last-of-type) {
+      margin-bottom: 0.75em;
+    }
+    span {
+      word-break: break-word; // Prevents long emails from breaking the modal width
+    }
+    input[type="radio"] {
+      margin-top: 0;
+    }
+    button {
+      margin-left: auto;
+    }
   }
-  label {
-    display: inline-block;
-    margin-right: 10px;
+  $label-max-width: 300px;
+  label.radio {
+    display: flex;
+    align-items: center;
+    max-width: $label-max-width;
+    margin: 0 0.5em 0 0;
+    padding: 0;
+    .avatar {
+      flex: 0 0 auto;
+      margin: 0 0.75em 0 0;
+    }
   }
-  #avatar-input {
-    width: 0;
-    height: 0;
-    overflow: hidden;
-  }
-  .avatar {
-    margin: 5px 10px 5px 0;
-  }
-  p.error {
+  .error {
     color: $danger;
+    margin: 0;
+    max-width: calc(#{$label-max-width} - 20px);
+    grid-column-start: 2;
+    grid-column-end: 3;
+  }
+
+  // IE11 Support
+  .avatar-choice {
+    display: -ms-grid;
+    -ms-grid-columns: 2em 1fr auto;
+    -ms-grid-rows: auto auto;
+    input[type="radio"] {
+      -ms-grid-row: 1;
+      -ms-grid-column: 1;
+    }
+    label.radio {
+      -ms-grid-row: 1;
+      -ms-grid-column: 2;
+    }
+    button {
+      -ms-grid-row: 1;
+      -ms-grid-column: 3;
+    }
+    .error {
+      -ms-grid-row: 2;
+      -ms-grid-column-span: 3;
+    }
   }
 }
 

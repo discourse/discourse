@@ -7,9 +7,7 @@ export default Ember.Component.extend(UploadMixin, {
 
   @computed("uploading")
   uploadButtonText(uploading) {
-    return uploading
-      ? I18n.t("uploading")
-      : I18n.t("user.change_avatar.upload_picture");
+    return uploading ? I18n.t("uploading") : I18n.t("upload");
   },
 
   validateUploadedFilesOptions() {
