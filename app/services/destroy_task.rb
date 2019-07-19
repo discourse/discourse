@@ -16,14 +16,13 @@ class DestroyTask
       topics = Topic.where(category_id: c.id, pinned_at: nil).where.not(user_id: -1)
     end
     @io.puts "There are #{topics.count} topics to delete in #{descriptive_slug} category"
-    topics.each do |topic|
+    topics.find_each do |topic|
       @io.puts "Deleting #{topic.slug}..."
       first_post = topic.ordered_posts.first
       if first_post.nil?
         return @io.puts "Topic.ordered_posts.first was nil"
       end
-      system_user = User.find(-1)
-      @io.puts PostDestroyer.new(system_user, first_post).destroy
+      @io.puts PostDestroyer.new(Discourse.system_user, first_post).destroy
     end
   end
 
@@ -36,11 +35,10 @@ class DestroyTask
       topics = Topic.where(category_id: c.id, pinned_at: nil).where.not(user_id: -1)
     end
     @io.puts "There are #{topics.count} topics to delete in #{c.slug} category"
-    topics.each do |topic|
+    topics.find_each do |topic|
       first_post = topic.ordered_posts.first
       return @io.puts "Topic.ordered_posts.first was nil for topic: #{topic.id}" if first_post.nil?
-      system_user = User.find(-1)
-      PostDestroyer.new(system_user, first_post).destroy
+      PostDestroyer.new(Discourse.system_user, first_post).destroy
     end
     topics = Topic.where(category_id: c.id, pinned_at: nil)
     @io.puts "There are #{topics.count} topics that could not be deleted in #{c.slug} category"
@@ -54,22 +52,19 @@ class DestroyTask
   end
 
   def destroy_private_messages
-    pms = Topic.where(archetype: "private_message")
-    current_user = User.find(-1) #system
-    pms.each do |pm|
+    Topic.where(archetype: "private_message").find_each do |pm|
       @io.puts "Destroying #{pm.slug} pm"
       first_post = pm.ordered_posts.first
-      @io.puts PostDestroyer.new(current_user, first_post).destroy
+      @io.puts PostDestroyer.new(Discourse.system_user, first_post).destroy
     end
   end
 
   def destroy_category(category_id, destroy_system_topics = false)
     c = Category.find_by_id(category_id)
     return @io.puts "A category with the id: #{category_id} could not be found" if c.nil?
-    subcategories = Category.where(parent_category_id: c.id).pluck(:id)
+    subcategories = Category.where(parent_category_id: c.id)
     @io.puts "There are #{subcategories.count} subcategories to delete" if subcategories
-    subcategories.each do |subcategory_id|
-      s = Category.find_by_id(subcategory_id)
+    subcategories.each do |s|
       category_topic_destroyer(s, destroy_system_topics)
     end
     category_topic_destroyer(c, destroy_system_topics)
@@ -84,14 +79,9 @@ class DestroyTask
   end
 
   def destroy_users
-    users = User.where(admin: false, id: 1..Float::INFINITY)
-    @io.puts "There are #{users.count} users to delete"
-    options = {}
-    options[:delete_posts] = true
-    current_user = User.find(-1) #system
-    users.each do |user|
+    User.human_users.where(admin: false).find_each do |user|
       begin
-        if UserDestroyer.new(current_user).destroy(user, options)
+        if UserDestroyer.new(Discourse.system_user).destroy(user, delete_posts: true)
           @io.puts "#{user.username} deleted"
         else
           @io.puts "#{user.username} not deleted"
@@ -121,7 +111,7 @@ class DestroyTask
   private
 
   def category_topic_destroyer(category, destroy_system_topics = false)
-    destroy_topics_log = destroy_topics_in_category(category.id, destroy_system_topics)
+    destroy_topics_in_category(category.id, destroy_system_topics)
     @io.puts "Destroying #{category.slug} category"
     category.destroy
   end

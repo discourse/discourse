@@ -4,47 +4,41 @@
 #   content and users from your site.
 desc "Remove all topics in a category"
 task "destroy:topics", [:category, :parent_category] => :environment do |t, args|
-  destroy_task = DestroyTask.new
   category = args[:category]
   parent_category = args[:parent_category]
   descriptive_slug = parent_category ? "#{parent_category}/#{category}" : category
   puts "Going to delete all topics in the #{descriptive_slug} category"
-  destroy_task.destroy_topics(category, parent_category)
+  DestroyTask.new.destroy_topics(category, parent_category)
 end
 
 desc "Remove all topics in all categories"
 task "destroy:topics_all_categories" => :environment do
-  destroy_task = DestroyTask.new
   puts "Going to delete all topics in all categories..."
-  puts log = destroy_task.destroy_topics_all_categories
+  DestroyTask.new.destroy_topics_all_categories
 end
 
 desc "Remove all private messages"
 task "destroy:private_messages" => :environment do
-  destroy_task = DestroyTask.new
   puts "Going to delete all private messages..."
-  puts log = destroy_task.destroy_private_messages
+  DestroyTask.new.destroy_private_messages
 end
 
 desc "Destroy all groups"
 task "destroy:groups" => :environment do
-  destroy_task = DestroyTask.new
   puts "Going to delete all non-default groups..."
-  puts log = destroy_task.destroy_groups
+  DestroyTask.new.destroy_groups
 end
 
 desc "Destroy all non-admin users"
 task "destroy:users" => :environment do
-  destroy_task = DestroyTask.new
   puts "Going to delete all non-admin users..."
-  puts log = destroy_task.destroy_users
+  DestroyTask.new.destroy_users
 end
 
 desc "Destroy site stats"
 task "destroy:stats" => :environment do
-  destroy_task = DestroyTask.new
   puts "Going to delete all site stats..."
-  destroy_task.destroy_stats
+  DestroyTask.new.destroy_stats
 end
 
 # Example: rake destroy:categories[28,29,44,85]
