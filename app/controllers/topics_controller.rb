@@ -821,7 +821,7 @@ class TopicsController < ApplicationController
     guardian.ensure_can_convert_topic!(topic)
 
     if params[:type] == "public"
-      converted_topic = topic.convert_to_public_topic(current_user)
+      converted_topic = topic.convert_to_public_topic(current_user, category_id: params[:category_id])
     else
       converted_topic = topic.convert_to_private_message(current_user)
     end

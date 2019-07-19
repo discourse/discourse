@@ -2230,12 +2230,15 @@ RSpec.describe TopicsController do
       end
 
       context "success" do
+        fab!(:category) { Fabricate(:category) }
+
         it "returns success" do
           sign_in(admin)
-          put "/t/#{topic.id}/convert-topic/public.json"
+          put "/t/#{topic.id}/convert-topic/public.json?category_id=#{category.id}"
 
           topic.reload
           expect(topic.archetype).to eq(Archetype.default)
+          expect(topic.category_id).to eq(category.id)
           expect(response.status).to eq(200)
 
           result = ::JSON.parse(response.body)

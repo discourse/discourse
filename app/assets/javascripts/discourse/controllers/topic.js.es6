@@ -1073,11 +1073,17 @@ export default Ember.Controller.extend(bufferedProperty("model"), {
     },
 
     convertToPublicTopic() {
-      this.model.convertTopic("public");
+      showModal("convert-to-public-topic", {
+        model: this.model,
+        modalClass: "convert-to-public-topic"
+      });
     },
 
     convertToPrivateMessage() {
-      this.model.convertTopic("private");
+      this.model
+        .convertTopic("private")
+        .then(() => window.location.reload())
+        .catch(popupAjaxError);
     },
 
     removeFeaturedLink() {
