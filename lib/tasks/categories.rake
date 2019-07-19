@@ -39,8 +39,13 @@ end
 
 desc "Output a list of categories"
 task "categories:list" => :environment do
-  categories = Category.pluck(:id, :slug, :parent_category_id)
+  categories = Category.where(parent_category_id: nil).order(:slug).pluck(:id, :slug)
+  puts "id category-slug"
+  puts "-- -----------------"
   categories.each do |c|
-    puts "id: #{c[0]}, slug: #{c[1]}, parent: #{c[2]}"
+    puts "#{c[0]} #{c[1]}"
+    Category.where(parent_category_id: c[0]).order(:slug).pluck(:id, :slug).each do |s|
+      puts "     #{s[0]} #{s[1]}"
+    end
   end
 end
