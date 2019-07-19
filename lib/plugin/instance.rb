@@ -424,7 +424,7 @@ class Plugin::Instance
       full_path = File.dirname(path) << "/assets/" << file
     end
 
-    assets << [full_path, asset_name, opts]
+    assets << [full_path, opts, asset_name]
   end
 
   def register_service_worker(file, opts = nil)
@@ -670,7 +670,7 @@ class Plugin::Instance
   end
 
   def register_assets!
-    assets.each do |asset, asset_name, opts|
+    assets.each do |asset, opts, asset_name|
       DiscoursePluginRegistry.register_asset(asset, opts, asset_name)
     end
   end
