@@ -364,6 +364,10 @@
 }
 
 .reviewable-item {
+  .show-raw-email {
+    color: $primary-medium;
+    font-size: $font-down-2;
+  }
   .post-title {
     background-color: yellow;
   }

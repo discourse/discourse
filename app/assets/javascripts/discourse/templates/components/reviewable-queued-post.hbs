@@ -5,6 +5,11 @@
   </div>
   {{category-badge reviewable.category}}
   {{reviewable-tags tags=reviewable.payload.tags tagName=''}}
+  {{#if reviewable.payload.via_email}}
+    <a href {{action "showRawEmail"}} class='show-raw-email'>
+      {{d-icon "far-envelope" title="post.via_email"}}
+    </a>
+  {{/if}}
 {{/reviewable-topic-link}}
 
 <div class='post-contents-wrapper'>
