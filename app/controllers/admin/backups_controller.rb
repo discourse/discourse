@@ -152,6 +152,8 @@ class Admin::BackupsController < Admin::AdminController
     chunk_number = params.fetch(:resumableChunkNumber)
     current_chunk_size = params.fetch(:resumableCurrentChunkSize).to_i
 
+    raise Discourse::InvalidParameters.new(:resumableIdentifier) unless valid_filename?(identifier)
+
     # path to chunk file
     chunk = BackupRestore::LocalBackupStore.chunk_path(identifier, filename, chunk_number)
     # check chunk upload status
@@ -163,13 +165,14 @@ class Admin::BackupsController < Admin::AdminController
   def upload_backup_chunk
     filename = params.fetch(:resumableFilename)
     total_size = params.fetch(:resumableTotalSize).to_i
+    identifier = params.fetch(:resumableIdentifier)
 
+    raise Discourse::InvalidParameters.new(:resumableIdentifier) unless valid_filename?(identifier)
     return render status: 415, plain: I18n.t("backup.backup_file_should_be_tar_gz") unless valid_extension?(filename)
     return render status: 415, plain: I18n.t("backup.not_enough_space_on_disk") unless has_enough_space_on_disk?(total_size)
     return render status: 415, plain: I18n.t("backup.invalid_filename") unless valid_filename?(filename)
 
     file = params.fetch(:file)
-    identifier = params.fetch(:resumableIdentifier)
     chunk_number = params.fetch(:resumableChunkNumber).to_i
     chunk_size = params.fetch(:resumableChunkSize).to_i
     current_chunk_size = params.fetch(:resumableCurrentChunkSize).to_i
