@@ -252,11 +252,8 @@ module BackupRestore
         )
       end
 
-      if SiteSetting.Upload.enable_s3_uploads
-        add_remote_uploads_to_archive(tar_filename)
-      else
-        add_local_uploads_to_archive(tar_filename)
-      end
+      add_local_uploads_to_archive(tar_filename)
+      add_remote_uploads_to_archive(tar_filename) if SiteSetting.Upload.enable_s3_uploads
 
       remove_tmp_directory
 
@@ -280,7 +277,7 @@ module BackupRestore
             failure_message: "Failed to archive uploads.", success_status_codes: [0, 1]
           )
         else
-          log "No uploads found, skipping archiving uploads..."
+          log "No local uploads found. Skipping archiving of local uploads..."
         end
       end
     end
@@ -323,7 +320,7 @@ module BackupRestore
         end
       end
 
-      log "No uploads found, skipping archiving uploads..." if count == 0
+      log "No uploads found on S3. Skipping archiving of uploads stored on S3..." if count == 0
     end
 
     def upload_archive
