@@ -1224,11 +1224,11 @@ class UsersController < ApplicationController
       # The user should not be able to revoke the auth token of current session.
       raise Discourse::InvalidParameters.new(:token_id) if guardian.auth_token == token.auth_token
       UserAuthToken.where(id: params[:token_id], user_id: user.id).each(&:destroy!)
+
+      MessageBus.publish "/file-change", ["refresh"], user_ids: [user.id]
     else
       UserAuthToken.where(user_id: user.id).each(&:destroy!)
     end
-
-    MessageBus.publish "/file-change", ["refresh"], user_ids: [user.id]
 
     render json: success_json
   end
