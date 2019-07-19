@@ -66,3 +66,42 @@ task "topics:apply_autoclose" => :environment do
 
   puts "", "Done"
 end
+
+task "topics:watch_all_replied_topics" => :environment do
+  puts "Setting all topics to Watching on which a user has posted at least once..."
+  topics = Topic.where("archetype != ?", Archetype.private_message)
+  total = topics.count
+  count = 0
+
+  topics.find_each do |t|
+    t.topic_users.where(posted: true).find_each do |tp|
+      tp.update!(notification_level: TopicUser.notification_levels[:watching], notifications_reason_id: TopicUser.notification_reasons[:created_post])
+    end
+    print_status(count += 1, total)
+  end
+
+  puts "", "Done"
+end
+
+task "topics:update_fancy_titles" => :environment do
+  if !SiteSetting.title_fancy_entities?
+    puts "fancy topic titles are disabled"
+    return
+  end
+
+  DB.exec("UPDATE topics SET fancy_title = NULL")
+
+  total = Topic.count
+  count = 0
+
+  Topic.find_each do |topic|
+    topic.fancy_title
+    print_status(count += 1, total)
+  end
+
+  puts "", "Done"
+end
+
+def print_status(current, max)
+  print "\r%9d / %d (%5.1f%%)" % [current, max, ((current.to_f / max.to_f) * 100).round(1)]
+end

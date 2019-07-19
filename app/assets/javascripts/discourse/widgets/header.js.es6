@@ -399,14 +399,12 @@ export default createWidget("header", {
       var params = "";
 
       if (context) {
-        params = `?context=${context.type}&context_id=${
-          context.id
-        }&skip_context=${this.state.skipSearchContext}`;
+        params = `?context=${context.type}&context_id=${context.id}&skip_context=${this.state.skipSearchContext}`;
       }
 
       const currentPath = this.register
-        .lookup("controller:application")
-        .get("currentPath");
+        .lookup("service:router")
+        .get("_router.currentPath");
 
       if (currentPath === "full-page-search") {
         scrollTop();
@@ -481,8 +479,8 @@ export default createWidget("header", {
     state.contextEnabled = false;
 
     const currentPath = this.register
-      .lookup("controller:application")
-      .get("currentPath");
+      .lookup("service:router")
+      .get("_router.currentPath");
     const blacklist = [/^discovery\.categories/];
     const whitelist = [/^topic\./];
     const check = function(regex) {

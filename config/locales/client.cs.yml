@@ -204,7 +204,6 @@ cs:
         eu_west_3: "EU (Paříž)"
         us_east_1: "Východ USA (S. Virginie)"
         us_east_2: "Východ USA (Ohio)"
-        us_gov_west_1: "AWS GovCloud (USA)"
         us_west_1: "Západ USA (S. Kalifornie)"
         us_west_2: "Západ USA (Oregon)"
     edit: "upravit název a kategorii příspěvku"
@@ -338,12 +337,14 @@ cs:
       title:
         placeholder: "sem napište název tématu"
     review:
+      in_reply_to: "v odpovědi na"
       delete: "Smazat"
       settings:
         save_changes: "Uložit změny"
         title: "Nastavení"
       moderation_history: "Historie moderování"
       topic: "Téma:"
+      filtered_user: "Uživatel"
       user:
         username: "Uživatelské jméno"
         email: "Email"
@@ -355,7 +356,10 @@ cs:
       save: "Uložit"
       cancel: "Zrušit"
       filters:
+        type:
+          title: "Typ"
         refresh: "Obnovit"
+        category: "Kategorie"
       scores:
         type: "Typ"
       statuses:
@@ -697,9 +701,7 @@ cs:
       users: "Uživatelé"
       muted_users: "Ztišení"
       muted_users_instructions: "Umlčet všechny notifikace od těchto uživatelů."
-      muted_topics_link: "Ukázat utlumená témata"
-      watched_topics_link: "Ukázat hlídaná témata"
-      tracked_topics_link: "Ukázat sledovaná témata"
+      tracked_topics_link: "Zobrazit"
       automatically_unpin_topics: "Atomaticky odepni téma jakmile se dostanu na konec."
       apps: "Aplikace"
       revoke_access: "Odebrat přístup"
@@ -751,7 +753,6 @@ cs:
         disable: "Vypnout"
         enable: "Zapnout"
         enable_long: "Povolit záložní kódy"
-        manage: "Spravovat záložní kódy"
         copied_to_clipboard: "Zkopírováno do schránky"
         copy_to_clipboard_error: "Chyba při kopírování dat do schránky"
         remaining_codes: "Zbývá vám <strong>{{count}}</strong> záložní kód."
@@ -760,8 +761,6 @@ cs:
           description: "Každý z těchto kódů může být použit jen jednou. Uložte si je někde v bezpečí, ale dostupné."
       second_factor:
         title: "Dvoufázové přihlašování"
-        disable: "Vypnout dvoufaktorovou autentizaci"
-        enable: "Povolte dvoufaktorovou autentizaci pro zlepšení zabezpečení vašeho účtu"
         confirm_password_description: "Prosíme před dalším krokem potvrďte své heslo"
         label: "Kód"
         rate_limit: "Prosím počkejete před tím, než vyskoušíte další ověřovací kód."
@@ -770,6 +769,7 @@ cs:
         extended_description: |
           Dvoufaktorová autentizace přidává další bezpečnostní vrstvu k vašemu účtu, protože vedle hesla vyžaduje ještě i zadání jednorázového kódu, vytvořeného na zařízeních <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>Android</a> nebo <a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS</a>.
         oauth_enabled_warning: "Upozorňujeme, že možnost přihlásit se pomocí účtu ze sociální sítě bude vypnuta, jakmila bude na vašem účtu povolena dvoufaktorová autentizace."
+        edit: "Upravit"
       change_about:
         title: "Změna o mně"
         error: "Došlo k chybě při pokusu změnit tuto hodnotu."
@@ -1069,17 +1069,6 @@ cs:
       enabled: "Tato stránka je v režimu jen pro čtení. Prosim pokračujte v prohlížení, ale odpovídání a ostatní operace jsou momentálně vypnuté."
       login_disabled: "Přihlášení je zakázáno jelikož je stránka v režimu jen pro čtení."
       logout_disabled: "Odhlášení je zakázáno zatímco je stránka v režimu jen pro čtení."
-    too_few_topics_and_posts_notice: "Pojďme <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>rozjet diskuzi!</a> V tuto chvíli je tu <strong>%{currentTopics} / %{requiredTopics}</strong> témat a <strong>%{currentPosts} / %{requiredPosts}</strong> příspěvků. Noví návštěvníci potřebují mít co číst a na co odpovídat."
-    too_few_topics_notice: "Pojďme <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>rozjet diskuzi!</a> V tuto chvíli je tu <strong>%{currentTopics} / %{requiredTopics}</strong> témat. Noví návštěvníci potřebují mít co číst a na co odpovídat."
-    too_few_posts_notice: "Pojďme <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>rozjet diskuzi!</a> V tuto chvíli je tu <strong>%{currentPosts} / %{requiredPosts}</strong> příspěvků. Noví návštěvníci potřebují mít co číst a na co odpovídat."
-    logs_error_rate_notice:
-      reached: "<b>%{relativeAge}</b> – <a href='%{url}' target='_blank'>%{rate}</a> dosáhlo limitu stránky, který je %{siteSettingRate}."
-      exceeded: "<b>%{relativeAge}</b> – <a href='%{url}' target='_blank'>%{rate}</a> přesahuje limit stránky, který je %{siteSettingRate}."
-      rate:
-        one: "%{count} chyba/%{duration}"
-        few: "%{count} chyby/%{duration}"
-        many: "%{count} chyb/%{duration}"
-        other: "%{count} chyb/%{duration}"
     learn_more: "více informací..."
     all_time: "celkem"
     all_time_desc: "témat vytvořeno"
@@ -1137,7 +1126,6 @@ cs:
     trust_level: "Důvěryhodnost"
     search_hint: "uživatelské jméno, email nebo IP adresa"
     create_account:
-      disclaimer: "Registrací souhlasíš s <a href='{{privacy_link}}'>podmínkami soukromí</a> a <a href='{{tos_link}}'>podmínkami užívání</a>."
       title: "Vytvořit nový účet"
       failed: "Něco se nepovedlo, možná je tato e-mailová adresa již použita. Zkuste použít formulář pro obnovení hesla."
     forgot_password:
@@ -1163,6 +1151,7 @@ cs:
       complete_email_found: "Našli jsme účet s emailovou adresou <b>%{email}</b>, za chvilku by měl přijít email s přihlašovacím odkazem."
       complete_username_not_found: "Nebyl nalezen účet s uživatelským jménem <b>%{username}</b>"
       complete_email_not_found: "Nebyl nalezen účet s emailem <b>%{email}</b>"
+      confirm_title: "Pokračovat na %{site_name}"
     login:
       title: "Přihlásit se"
       username: "Uživatel"
@@ -1176,7 +1165,6 @@ cs:
       email_placeholder: "emailová adresa nebo uživatelské jméno"
       caps_lock_warning: "zapnutý Caps Lock"
       error: "Neznámá chyba"
-      cookies_error: "Vypadá to, že váš prohlížeč má zakázané cookies. Bez jejich povolení se nebude možné přihlásit."
       rate_limit: "Počkejte před dalším pokusem se přihlásit."
       blank_username: "Zadejte vaši emailovou adresu a uživatelské jméno."
       blank_username_or_password: "Vyplňte prosím email nebo uživatelské jméno, a heslo."
@@ -1466,6 +1454,8 @@ cs:
         linked: '{{username}} odkázal na vás příspěvek v "{{topic}}" - {{site_title}}'
         confirm_title: "Upozornění zapnuta - %{site_title}"
         confirm_body: "Upozornění úspěšně zapnuta."
+      titles:
+        watching_first_post: "nové téma"
     upload_selector:
       title: "Vložit obrázek"
       title_with_attachments: "Nahrát obrázek nebo soubor"
@@ -1601,17 +1591,14 @@ cs:
         read: "Zatím jste nečetli žádná témata."
         posted: "Zatím jste nepřispěli do žádného tématu."
         latest: "Nejsou tu žádná témata z poslední doby. To je docela smutné."
-        hot: "Nejsou tu žádná populární témata."
         bookmarks: "V tématech nemáte žádné záložky."
         category: "V kategorii {{category}} nejsou žádná témata."
         top: "Nejsou tu žádná populární témata."
-        search: "There are no search results."
         educate:
           new: '<p>Zde se zobrazují vaše nová témata.</p><p>Dle výchozího nastavení se za nové příspěvky, které budou mít štítek<span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">nové</span> , považují příspěvky, které byly vytvořeny během posledních 2 dnů.</p><p>Toto můžete změnit ve svém <a href="%{userPrefsUrl}">nastavení</a>.</p>'
-          unread: '<p>Zde se zobrazují vaše nepřečtená témata.</p><p>Podle výchozího nastavení jsou za nepřečtená témata, u kterých se zobrazuje počet nepřečtení  <span class="badge new-posts badge-notification">1</span>, považována ta, která jste:</p><ul><li>Vytvořil toto téma</li><li>Odpověděli v tématu</li><li>Četl téma více než 4 minuty</li></ul><p>Nebo pokud jste nastavil téma jako Hlídané či Sledované pomocí nabídky na spodu každého tématu.</p><p>Toto chování můžete změnit v <a href="%{userPrefsUrl}">nastavení</a>.</p>'
+          unread: '<p>Zde se zobrazují vaše nepřečtená témata.</p><p>Podle výchozího nastavení jsou za nepřečtená témata, u kterých se zobrazuje počet nepřečtení <span class="badge new-posts badge-notification">1</span>, považována ta, která jste:</p><ul><li>Vytvořil toto téma</li><li>Odpověděli v tématu</li><li>Četl téma více než 4 minuty</li></ul><p>Nebo pokud jste nastavil téma jako Hlídané či Sledované pomocí nabídky na spodu každého tématu.</p><p>Toto chování můžete změnit v <a href="%{userPrefsUrl}">nastavení</a>.</p>'
       bottom:
         latest: "Nejsou tu žádná další témata z poslední doby."
-        hot: "Nejsou tu žádná další populární témata k přečtení."
         posted: "Nejsou tu žádná další zaslaná témata k přečtení."
         read: "Nejsou tu žádná další přečtená témata."
         new: "Nejsou tu žádná další nová témata k přečtení."
@@ -1619,7 +1606,6 @@ cs:
         category: "V kategorii {{category}} nejsou žádná další témata."
         top: "Nejsou tu žádná další populární témata."
         bookmarks: "Žádná další oblíbená témata nejsou k dispozici."
-        search: "There are no more search results."
     topic:
       filter_to:
         one: "%{count} příspěvek v tématu"
@@ -1639,6 +1625,8 @@ cs:
       edit_message:
         help: "Upravit první příspěvek zprávy"
         title: "upravit zprávu"
+      defer:
+        title: "Odložit"
       list: "Témata"
       new: "nové téma"
       unread: "nepřečtený"
@@ -1689,7 +1677,7 @@ cs:
       toggle_information: "zobrazit/skrýt detaily tématu"
       read_more_in_category: "Chcete si toho přečíst víc? Projděte si témata v {{catLink}} nebo {{latestLink}}."
       read_more: "Chcete si přečíst další informace? {{catLink}} nebo {{latestLink}}."
-      read_more_MF: "{ UNREAD, plural, =0 {} one { Zbývá <a href='{basePath}/unread'>1 nepřečtené</a> téma } other { Je tu <a href='{basePath}/unread'># nepřečtených</a> témat } } { NEW, plural, =0 {} one { {BOTH, select, true{and } false {is } other{}} <a href='{basePath}/new'>1  nové</a> téma} other { {BOTH, select, true{and } false {are } other{}} <a href='{basePath}/new'># nových</a> témat} }, nebo {CATEGORY, select, true {zobrazit další témata v kategorii {catLink}} false {{latestLink}} other {}}"
+      read_more_MF: "{ UNREAD, plural, =0 {} one { Zbývá <a href='{basePath}/unread'>1 nepřečtené</a> téma } other { Je tu <a href='{basePath}/unread'># nepřečtených</a> témat } } { NEW, plural, =0 {} one { {BOTH, select, true{and } false {is } other{}} <a href='{basePath}/new'>1 nové</a> téma} other { {BOTH, select, true{and } false {are } other{}} <a href='{basePath}/new'># nových</a> témat} }, nebo {CATEGORY, select, true {zobrazit další témata v kategorii {catLink}} false {{latestLink}} other {}}"
       browse_all_categories: Projděte všechny kategorie
       view_latest_topics: zobrazte si populární témata
       suggest_create_topic: "Co takhle založit nové téma?"
@@ -2026,7 +2014,7 @@ cs:
         edit: "Bohužel nastala chyba při editaci příspěvku. Prosím zkuste to znovu."
         upload: "Bohužel nastala chyba při nahrávání příspěvku. Prosím zkuste to znovu."
         too_many_uploads: "Bohužel, najednou smíte nahrát jen jeden soubor."
-        upload_not_authorized: "Bohužel, soubor, který se snažíš nahrát, není povolený (povolená rozšíření:  {{authorized_extensions}}). "
+        upload_not_authorized: "Bohužel, soubor, který se snažíš nahrát, není povolený (povolená rozšíření: {{authorized_extensions}}). "
         image_upload_not_allowed_for_new_user: "Bohužel, noví uživatelé nemohou nahrávat obrázky."
         attachment_upload_not_allowed_for_new_user: "Bohužel, noví uživatelé nemohou nahrávat přílohy."
         attachment_download_requires_login: "Omlouváme se, ale pro stáhnutí přílohy musíte být přihlášen."
@@ -2402,15 +2390,9 @@ cs:
           many: "Nedávná ({{count}})"
           other: "Nedávná ({{count}})"
         help: "aktuální témata"
-      hot:
-        title: "Populární"
-        help: "populární témata z poslední doby"
       read:
         title: "Přečtená"
         help: "témata, která jste si přečetli"
-      search:
-        title: "Vyhledat"
-        help: "prohledat všechna témata"
       categories:
         title: "Kategorie"
         title_in: "Kategorie - {{categoryName}}"
@@ -2660,20 +2642,16 @@ cs:
           read: "Zatím jste nečetli žádná témata."
           posted: "Zatím jste nepřispěli do žádného tématu."
           latest: "Nejsou tu žádná další témata z poslední doby k přečtení."
-          hot: "Nejsou tu žádná populární témata."
           bookmarks: "V tématech nemáte žádné záložky."
           top: "Nejsou tu žádná populární témata."
-          search: "Vyhledávání nic nenašlo."
         bottom:
           latest: "Nejsou tu žádná další témata z poslední doby k přečtení."
-          hot: "Nejsou tu žádná další populární témata k přečtení."
           posted: "Nejsou tu žádná další zaslaná témata k přečtení."
           read: "Nejsou tu žádná další přečtená témata."
           new: "Nejsou tu žádná další nová témata k přečtení."
           unread: "Nejsou tu žádná další nepřečtená témata."
           top: "Nejsou tu žádná další populární témata."
           bookmarks: "Žádná další oblíbená témata nejsou k dispozici."
-          search: "Vyhledávání nic nenašlo."
     invite:
       custom_message: "Aby byla pozvánka osobnější, napište <a href>vlastní zprávu</a>"
       custom_message_placeholder: "Vložte vlastní zprávu"
@@ -2687,6 +2665,10 @@ cs:
     admin:
       title: "Administrátor"
       moderator: "Moderátor"
+      tags:
+        remove_muted_tags_from_latest:
+          always: "vždy"
+          never: "nikdy"
       reports:
         title: "Seznam dostupných reportů"
       dashboard:
@@ -2768,9 +2750,7 @@ cs:
             visibility_levels:
               title: "Kdo vidí tuto skupinu?"
               public: "Všichni"
-              members: "Vlastníci skupiny, členové a správci"
               staff: "Vlastníci a redaktoři skupiny"
-              owners: "Vlastníci a správci skupiny"
           membership:
             automatic: Automatické
             trust_level: Věrohodnost
@@ -3024,7 +3004,7 @@ cs:
           css_html: "Vlastí CSS/HTML"
           edit_css_html: "Upravit CSS/HTML"
           edit_css_html_help: "Neupravil jsi CSS nebo HTML"
-          delete_upload_confirm: "Smazat toto nahrávání?  (Motiv CSS by mohl přestat fungovat!)"
+          delete_upload_confirm: "Smazat toto nahrávání? (Motiv CSS by mohl přestat fungovat!)"
           import_web_tip: "Úložiště obsahující motiv"
           is_private: "Motiv je v soukromém git úložišti"
           public_key: "Přidělit přístup k repo následujícím veřejným klíčem:"
@@ -3032,6 +3012,8 @@ cs:
           install_popular: "Populární"
           about_theme: "O fóru"
           license: "Licence"
+          enable: "Zapnout"
+          disable: "Vypnout"
           update_to_latest: "Aktualizovat na nejnovější"
           check_for_updates: "kontrola aktualizací"
           updating: "Aktualizace..."
@@ -3642,7 +3624,7 @@ cs:
         granted_badges: Udělené odznaky
         grant: Udělit
         no_user_badges: "%{name} nezískal žádné oznaky."
-        no_badges: "Nejsou tu žádné odznaky, které by se dali rozdat."
+        no_badges: "Nejsou tu žádné odznaky, které by se daly rozdat."
         none_selected: "Vyberte odznak, abyste mohli začít"
         allow_title: Povolit užití odzanku jako titul
         multiple_grant: Může být přiděleno několikrát

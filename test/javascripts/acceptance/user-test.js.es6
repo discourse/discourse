@@ -2,6 +2,23 @@ import { acceptance } from "helpers/qunit-helpers";
 
 acceptance("User", { loggedIn: true });
 
+QUnit.test("Invalid usernames", async assert => {
+  // prettier-ignore
+  server.get("/u/eviltrout%2F..%2F..%2F.json", () => { // eslint-disable-line no-undef
+    return [400, { "Content-Type": "application/json" }, {}];
+  });
+
+  await visit("/u/eviltrout%2F..%2F..%2F/summary");
+
+  assert.equal(currentPath(), "exception-unknown");
+});
+
+QUnit.test("Unicode usernames", async assert => {
+  await visit("/u/%E3%83%A9%E3%82%A4%E3%82%AA%E3%83%B3/summary");
+
+  assert.equal(currentPath(), "user.summary");
+});
+
 QUnit.test("Invites", async assert => {
   await visit("/u/eviltrout/invited/pending");
   assert.ok($("body.user-invites-page").length, "has the body class");

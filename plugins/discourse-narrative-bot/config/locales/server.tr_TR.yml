@@ -7,7 +7,7 @@
 
 tr_TR:
   site_settings:
-    discourse_narrative_bot_enabled: 'Discourse Hikaye Botunu Etkinleştir (discobot)'
+    discourse_narrative_bot_enabled: "Discourse Hikaye Botunu Etkinleştir (discobot)"
     disable_discourse_narrative_bot_welcome_post: "Discourse anlatı botunu pasif hale getir"
     discourse_narrative_bot_ignored_usernames: "Discourse Hikaye Botunun kullandığı kullanıcı adları"
     discourse_narrative_bot_disable_public_replies: "Discourse Hikaye Botu tarafından verilen cevapları devre dışı bırak"
@@ -56,8 +56,10 @@ tr_TR:
       '10':
         quote: "İnsan zihni ne olursa olsun düşünebilir ve inanabilir, başarabilir."
         author: "Napoleon Hill"
+      results: |-
+        > :left_speech_bubble: _%{quote}_ &mdash; %{author}
     magic_8_ball:
-      trigger: 'kısmet'
+      trigger: "kısmet"
       answers:
         '1': "Bu kesin"
         '2': "Kesinlikle öyle"
@@ -79,23 +81,29 @@ tr_TR:
         '19': "Görünüm o kadar iyi değil"
         '20': "Çok şüpheli"
     track_selector:
-      reset_trigger: 'başla'
-      skip_trigger: 'atla'
-      help_trigger: 'yardımı görüntüle'
+      reset_trigger: "başla"
+      skip_trigger: "atla"
+      help_trigger: "yardımı görüntüle"
     new_user_narrative:
       quoting:
         reply: |-
           Güzel iş, benim en favori alıntımı aldınız! :left_speech_bubble:
+      bookmark:
+        instructions: |-
+          Daha fazla bilgi edinmek istiyorsanız aşağıdan seç<img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> ve ** bu özel ileti yi yer im lerine ekle<img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-bookmark.png" width="16" height="16"> **. Bunu yaparsanız, gelecekte bir :gift: kazanabilirsiniz!
       emoji:
         reply: |-
           Bu :sparkles: _emojitastic!_ :sparkles:
       certificate:
-        alt: 'Başarı Belgesi'
+        alt: "Başarı Belgesi"
     advanced_user_narrative:
-      title: ':arrow_up: Gelişmiş kullanıcı özellikleri'
+      title: ":arrow_up: Gelişmiş kullanıcı özellikleri"
       edit:
         bot_created_post_raw: "@%{discobot_username} bugüne kadar, bildiğim en havalı bot :wink:"
       recover:
-        deleted_post_raw: 'Neden @%{discobot_username} gönderimi sildin? :anguished:'
+        deleted_post_raw: "Neden @%{discobot_username} gönderimi Sildin? :anguished:"
+      category_hashtag:
+        reply: |-
+          Mükemmel! Unutmayın, eğer etiketler etkin ise bu iki kategoride de çalışacak. (_ ve _)
       certificate:
-        alt: 'İleri Kullanıcı İzlemesi Başarı Sertifikası'
+        alt: "İleri Kullanıcı İzlemesi Başarı Sertifikası"

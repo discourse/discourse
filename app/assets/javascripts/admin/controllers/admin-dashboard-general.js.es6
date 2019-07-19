@@ -5,11 +5,11 @@ import Report from "admin/models/report";
 import PeriodComputationMixin from "admin/mixins/period-computation";
 
 function staticReport(reportType) {
-  return function() {
+  return Ember.computed("reports.[]", function() {
     return Ember.makeArray(this.reports).find(
       report => report.type === reportType
     );
-  }.property("reports.[]");
+  });
 }
 
 export default Ember.Controller.extend(PeriodComputationMixin, {

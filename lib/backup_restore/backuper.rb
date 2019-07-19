@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "mini_mime"
+require "file_store/s3_store"
 
 module BackupRestore
 
@@ -30,6 +31,8 @@ module BackupRestore
 
       ensure_directory_exists(@tmp_directory)
       ensure_directory_exists(@archive_directory)
+
+      update_metadata
 
       ### READ-ONLY / START ###
       enable_readonly_mode
@@ -80,6 +83,10 @@ module BackupRestore
       raise Discourse::InvalidParameters.new(:user_id) unless @user
     end
 
+    def get_parameterized_title
+      SiteSetting.title.parameterize.presence || "discourse"
+    end
+
     def initialize_state
       @success = false
       @store = BackupRestore::BackupStore.create
@@ -88,7 +95,7 @@ module BackupRestore
       @tmp_directory = File.join(Rails.root, "tmp", "backups", @current_db, @timestamp)
       @dump_filename = File.join(@tmp_directory, BackupRestore::DUMP_FILE)
       @archive_directory = BackupRestore::LocalBackupStore.base_directory(db: @current_db)
-      filename = @filename_override || "#{SiteSetting.title.parameterize}-#{@timestamp}"
+      filename = @filename_override || "#{get_parameterized_title}-#{@timestamp}"
       @archive_basename = File.join(@archive_directory, "#{filename}-#{BackupRestore::VERSION_PREFIX}#{BackupRestore.current_version}")
 
       @backup_filename =
@@ -114,6 +121,17 @@ module BackupRestore
     def mark_backup_as_running
       log "Marking backup as running..."
       BackupRestore.mark_as_running!
+    end
+
+    def update_metadata
+      log "Updating metadata..."
+      BackupMetadata.delete_all
+      BackupMetadata.create!(name: "base_url", value: Discourse.base_url)
+      BackupMetadata.create!(name: "cdn_url", value: Discourse.asset_host)
+      BackupMetadata.create!(name: "s3_base_url", value: SiteSetting.Upload.enable_s3_uploads ? SiteSetting.Upload.s3_base_url : nil)
+      BackupMetadata.create!(name: "s3_cdn_url", value: SiteSetting.Upload.enable_s3_uploads ? SiteSetting.Upload.s3_cdn_url : nil)
+      BackupMetadata.create!(name: "db_name", value: RailsMultisite::ConnectionManagement.current_db)
+      BackupMetadata.create!(name: "multisite", value: Rails.configuration.multisite)
     end
 
     def enable_readonly_mode
@@ -234,9 +252,25 @@ module BackupRestore
         )
       end
 
+      if SiteSetting.Upload.enable_s3_uploads
+        add_remote_uploads_to_archive(tar_filename)
+      else
+        add_local_uploads_to_archive(tar_filename)
+      end
+
+      remove_tmp_directory
+
+      log "Gzipping archive, this may take a while..."
+      Discourse::Utils.execute_command(
+        'gzip', "-#{SiteSetting.backup_gzip_compression_level_for_uploads}", tar_filename,
+        failure_message: "Failed to gzip archive."
+      )
+    end
+
+    def add_local_uploads_to_archive(tar_filename)
+      log "Archiving uploads..."
       upload_directory = "uploads/" + @current_db
 
-      log "Archiving uploads..."
       FileUtils.cd(File.join(Rails.root, "public")) do
         if File.directory?(upload_directory)
           exclude_optimized = SiteSetting.include_thumbnails_in_backups ? '' : "--exclude=#{upload_directory}/optimized"
@@ -249,14 +283,47 @@ module BackupRestore
           log "No uploads found, skipping archiving uploads..."
         end
       end
+    end
 
-      remove_tmp_directory
+    def add_remote_uploads_to_archive(tar_filename)
+      if !SiteSetting.include_s3_uploads_in_backups
+        log "Skipping uploads stored on S3."
+        return
+      end
 
-      log "Gzipping archive, this may take a while..."
-      Discourse::Utils.execute_command(
-        'gzip', "-#{SiteSetting.backup_gzip_compression_level_for_uploads}", tar_filename,
-        failure_message: "Failed to gzip archive."
-      )
+      log "Downloading uploads from S3. This may take a while..."
+
+      store = FileStore::S3Store.new
+      upload_directory = File.join("uploads", @current_db)
+      count = 0
+
+      FileUtils.cd(@tmp_directory) do
+        Upload.find_each do |upload|
+          next if upload.local?
+          filename = File.join(@tmp_directory, upload_directory, store.get_path_for_upload(upload))
+
+          begin
+            FileUtils.mkdir_p(File.dirname(filename))
+            store.download_file(upload, filename)
+          rescue StandardError => ex
+            log "Failed to download file with upload ID #{upload.id} from S3", ex
+          end
+
+          if File.exists?(filename)
+            Discourse::Utils.execute_command(
+              'tar', '--append', '--file', tar_filename, upload_directory,
+              failure_message: "Failed to add #{upload.original_filename} to archive.", success_status_codes: [0, 1]
+            )
+
+            File.delete(filename)
+          end
+
+          count += 1
+          log "#{count} files have already been downloaded. Still downloading..." if count % 500 == 0
+        end
+      end
+
+      log "No uploads found, skipping archiving uploads..." if count == 0
     end
 
     def upload_archive

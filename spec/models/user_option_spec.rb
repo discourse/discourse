@@ -18,7 +18,7 @@ describe UserOption do
     end
   end
 
-  describe "should_be_redirected_to_top" do
+  describe "defaults" do
     fab!(:user) { Fabricate(:user) }
 
     it "should be redirected to top when there is a reason to" do
@@ -30,13 +30,26 @@ describe UserOption do
       user.user_option.expects(:redirected_to_top).returns(nil)
       expect(user.user_option.should_be_redirected_to_top).to eq(false)
     end
-  end
-
-  describe "defaults" do
-    fab!(:user) { Fabricate(:user) }
 
     it "should not hide the profile and presence by default" do
       expect(user.user_option.hide_profile_and_presence).to eq(false)
+    end
+  end
+
+  describe "site settings" do
+    it "should apply defaults from site settings" do
+
+      SiteSetting.default_other_enable_quoting = false
+      SiteSetting.default_other_enable_defer = true
+      SiteSetting.default_other_external_links_in_new_tab = true
+      SiteSetting.default_other_dynamic_favicon = true
+
+      user = Fabricate(:user)
+
+      expect(user.user_option.enable_quoting).to eq(false)
+      expect(user.user_option.enable_defer).to eq(true)
+      expect(user.user_option.external_links_in_new_tab).to eq(true)
+      expect(user.user_option.dynamic_favicon).to eq(true)
     end
   end
 

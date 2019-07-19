@@ -6,7 +6,7 @@
       <button {{action "save"}} disabled={{model.disableSave}} class='btn btn-primary'>{{i18n 'admin.customize.save'}}</button>
       {{/unless}}
       <button {{action "copy" model}} class='btn btn-default'>{{d-icon "copy"}} {{i18n 'admin.customize.copy'}}</button>
-      <button {{action "copyToClipboard" model}} class='btn btn-default'>{{d-icon "clipboard"}} {{i18n 'admin.customize.copy_to_clipboard'}}</button>
+      <button {{action "copyToClipboard" model}} class='btn btn-default'>{{d-icon "far-clipboard"}} {{i18n 'admin.customize.copy_to_clipboard'}}</button>
       {{#if model.theme_id}}
       {{i18n "admin.customize.theme_owner"}}
       {{#link-to "adminCustomizeThemes.show" model.theme_id}}{{model.theme_name}}{{/link-to}}

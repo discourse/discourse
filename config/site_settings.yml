@@ -463,7 +463,13 @@ users:
     validator: "UnicodeUsernameWhitelistValidator"
     default: ""
     locale_default:
+      cs: "[ěščřžýáíéóůúďťňĚŠČŘŽÝÁÍÉÓŮÚĎŤŇ]"
       de: "[äöüßÄÖÜẞ]"
+      fi: "[åäöÅÄÖ]"
+      ja: '[\p{Han}\p{Katakana}\p{Hiragana}]'
+      ko: '\p{Hangul}'
+      zh_CN: '\p{Han}'
+      zh_TW: '\p{Han}'
   reserved_usernames:
     type: list
     list_type: compact
@@ -702,6 +708,15 @@ posting:
     type: list
     default: "com|net|org|io|co|tv|ru|cn|us|uk|me|de|fr|fi|gov"
     list_type: compact
+  markdown_typographer_quotation_marks:
+    client: true
+    type: list
+    list_type: compact
+    validator: "MarkdownTypographerQuotationMarksValidator"
+    default: "“|”|‘|’"
+    locale_default:
+      de: "„|“|‚|‘"
+      fr: "«\xA0|\xA0»|‹\xA0|\xA0›"
   enable_rich_text_paste:
     client: true
     default: true
@@ -1042,7 +1057,7 @@ files:
     list_type: compact
   export_authorized_extensions:
     hidden: true
-    default: "gz"
+    default: "zip"
     type: list
     list_type: compact
   responsive_post_image_sizes:
@@ -1490,7 +1505,7 @@ developer:
     max: 99000
   anon_polling_interval:
     client: true
-    default: 15000
+    default: 30000
     max: 99000
   flush_timings_secs:
     client: true
@@ -1626,6 +1641,10 @@ backups:
   include_thumbnails_in_backups:
     default: false
     shadowed_by_global: true
+  include_s3_uploads_in_backups:
+    default: false
+    shadowed_by_global: true
+    hidden: true
 
 search:
   min_search_term_length:
@@ -1726,6 +1745,8 @@ uncategorized:
   summary_percent_filter: 20
   summary_max_results: 100
 
+  automatic_topic_heat_values: true
+
   # View heat thresholds
   topic_views_heat_low:
     client: true
@@ -1735,7 +1756,7 @@ uncategorized:
     default: 2000
   topic_views_heat_high:
     client: true
-    default: 5000
+    default: 3500
 
   # Post/Like heat thresholds
   topic_post_like_heat_low:
@@ -1814,7 +1835,7 @@ uncategorized:
     hidden: true
     default: true
 
-  disable_edit_notifications: false
+  disable_edit_notifications: true
 
   likes_notification_consolidation_threshold:
     default: 3
@@ -1904,6 +1925,14 @@ uncategorized:
     default: false
     hidden: true
 
+  max_bulk_invites:
+    default: 50000
+    hidden: true
+
+  overridden_robots_txt:
+    default: ""
+    hidden: true
+
 user_preferences:
   default_email_digest_frequency:
     enum: "DigestEmailSiteSetting"
@@ -1939,6 +1968,7 @@ user_preferences:
     default: 2
   default_other_external_links_in_new_tab: false
   default_other_enable_quoting: true
+  default_other_enable_defer: false
   default_other_dynamic_favicon: false
   default_other_like_notification_frequency:
     enum: "LikeNotificationFrequencySiteSetting"
@@ -2058,9 +2088,10 @@ tags:
     default: false
     client: true
   remove_muted_tags_from_latest:
-    default: false
-  mute_other_present_tags:
-    default: true
+    client: true
+    type: enum
+    default: always
+    enum: RemoveMutedTagsFromLatestSiteSetting
   force_lowercase_tags:
     default: true
     client: true

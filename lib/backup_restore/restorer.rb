@@ -11,7 +11,7 @@ module BackupRestore
     attr_reader :success
 
     def self.pg_produces_portable_dump?(version)
-      version = Gem::Version.new(version)
+      gem_version = Gem::Version.new(version)
 
       %w{
         10.3
@@ -20,7 +20,9 @@ module BackupRestore
         9.4.17
         9.3.22
       }.each do |unportable_version|
-        return false if Gem::Dependency.new("", "~> #{unportable_version}").match?("", version)
+        # anything pg 11 or above will produce a non-portable dump
+        return false if version.to_i >= 11
+        return false if Gem::Dependency.new("", "~> #{unportable_version}").match?("", gem_version)
       end
 
       true
@@ -434,7 +436,7 @@ module BackupRestore
           FileUtils.mkdir_p("uploads")
 
           tmp_uploads_path = Dir.glob(File.join(@tmp_directory, "uploads", "*")).first
-          previous_db_name = File.basename(tmp_uploads_path)
+          previous_db_name = BackupMetadata.value_for("db_name") || File.basename(tmp_uploads_path)
           current_db_name = RailsMultisite::ConnectionManagement.current_db
           optimized_images_exist = File.exist?(File.join(tmp_uploads_path, 'optimized'))
 
@@ -443,9 +445,11 @@ module BackupRestore
             failure_message: "Failed to restore uploads."
           )
 
-          if previous_db_name != current_db_name
-            log "Remapping uploads..."
-            DbHelper.remap("uploads/#{previous_db_name}", "uploads/#{current_db_name}")
+          remap_uploads(previous_db_name, current_db_name)
+
+          if SiteSetting.Upload.enable_s3_uploads
+            migrate_to_s3
+            remove_local_uploads(File.join(public_uploads_path, "uploads/#{current_db_name}"))
           end
 
           generate_optimized_images unless optimized_images_exist
@@ -453,14 +457,70 @@ module BackupRestore
       end
     end
 
+    def remap_uploads(previous_db_name, current_db_name)
+      log "Remapping uploads..."
+
+      was_multisite = BackupMetadata.value_for("multisite") == "t"
+      uploads_folder = was_multisite ? "/" : "/uploads/#{current_db_name}/"
+
+      if (old_base_url = BackupMetadata.value_for("base_url")) && old_base_url != Discourse.base_url
+        DbHelper.remap(old_base_url, Discourse.base_url)
+      end
+
+      current_s3_base_url = SiteSetting.Upload.enable_s3_uploads ? SiteSetting.Upload.s3_base_url : nil
+      if (old_s3_base_url = BackupMetadata.value_for("s3_base_url")) && old_base_url != current_s3_base_url
+        DbHelper.remap("#{old_s3_base_url}/", uploads_folder)
+      end
+
+      current_s3_cdn_url = SiteSetting.Upload.enable_s3_uploads ? SiteSetting.Upload.s3_cdn_url : nil
+      if (old_s3_cdn_url = BackupMetadata.value_for("s3_cdn_url")) && old_s3_cdn_url != current_s3_cdn_url
+        base_url = SiteSetting.Upload.enable_s3_uploads ? SiteSetting.Upload.s3_cdn_url : Discourse.base_url
+        DbHelper.remap("#{old_s3_cdn_url}/", UrlHelper.schemaless("#{base_url}#{uploads_folder}"))
+
+        old_host = URI.parse(old_s3_cdn_url).host
+        new_host = URI.parse(base_url).host
+        DbHelper.remap(old_host, new_host)
+      end
+
+      if (old_cdn_url = BackupMetadata.value_for("cdn_url")) && old_cdn_url != Discourse.asset_host
+        base_url = Discourse.asset_host || Discourse.base_url
+        DbHelper.remap("#{old_cdn_url}/", UrlHelper.schemaless("#{base_url}/"))
+
+        old_host = URI.parse(old_cdn_url).host
+        new_host = URI.parse(base_url).host
+        DbHelper.remap(old_host, new_host)
+      end
+
+      if previous_db_name != current_db_name
+        DbHelper.remap("uploads/#{previous_db_name}", "uploads/#{current_db_name}")
+      end
+
+    rescue => ex
+      log "Something went wrong while remapping uploads.", ex
+    end
+
+    def migrate_to_s3
+      log "Migrating uploads to S3..."
+      ENV["SKIP_FAILED"] = "1"
+      ENV["MIGRATE_TO_MULTISITE"] = "1" if Rails.configuration.multisite
+      Rake::Task["uploads:migrate_to_s3"].invoke
+    end
+
+    def remove_local_uploads(directory)
+      log "Removing local uploads directory..."
+      FileUtils.rm_rf(directory) if Dir[directory].present?
+    rescue => ex
+      log "Something went wrong while removing the following uploads directory: #{directory}", ex
+    end
+
     def generate_optimized_images
       log 'Optimizing site icons...'
+      DB.exec("TRUNCATE TABLE optimized_images")
       SiteIconManager.ensure_optimized!
 
       log 'Posts will be rebaked by a background job in sidekiq. You will see missing images until that has completed.'
       log 'You can expedite the process by manually running "rake posts:rebake_uncooked_posts"'
 
-      DB.exec("TRUNCATE TABLE optimized_images")
       DB.exec(<<~SQL)
         UPDATE posts
         SET baked_version = NULL
@@ -570,5 +630,4 @@ module BackupRestore
     end
 
   end
-
 end

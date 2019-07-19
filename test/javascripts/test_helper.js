@@ -24,15 +24,11 @@
 //= require pretty-text-bundle
 //= require markdown-it-bundle
 //= require application
-//= require plugin
 //= require admin
 
 //= require sinon/pkg/sinon
 
 //= require helpers/assertions
-//= require helpers/textarea-selection
-//= require helpers/select-kit-helper
-//= require helpers/d-editor-helper
 
 //= require helpers/qunit-helpers
 //= require_tree ./fixtures
@@ -101,12 +97,7 @@ function resetSite(siteSettings, extras) {
   Discourse.Site.resetCurrent(Discourse.Site.create(siteAttrs));
 }
 
-QUnit.testDone(function(ctx) {
-  console.log("-- " + ctx.runtime);
-});
-
 QUnit.testStart(function(ctx) {
-  console.log(ctx.module + " -> " + ctx.name);
   server = pretender.default();
 
   if (ctx.module.startsWith(acceptanceModulePrefix)) {
@@ -162,15 +153,26 @@ QUnit.testDone(function() {
   flushMap();
 
   server.shutdown();
+
+  window.server = null;
+
+  // ensures any event not removed is not leaking between tests
+  // most likely in intialisers, other places (controller, component...)
+  // should be fixed in code
+  var appEvents = window.Discourse.__container__.lookup("app-events:main");
+  var events = appEvents.__proto__._events;
+  Object.keys(events).forEach(function(eventKey) {
+    var event = events[eventKey];
+    event.forEach(function(listener) {
+      appEvents.off(eventKey, listener.target, listener.fn);
+    });
+  });
+
+  window.MessageBus.unsubscribe("*");
 });
 
 // Load ES6 tests
 var helpers = require("helpers/qunit-helpers");
-
-// TODO: Replace with proper imports rather than globals
-window.asyncTestDiscourse = helpers.asyncTestDiscourse;
-window.controllerFor = helpers.controllerFor;
-window.fixture = helpers.fixture;
 
 function getUrlParameter(name) {
   name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");

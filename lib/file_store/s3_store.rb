@@ -21,7 +21,7 @@ module FileStore
 
     def store_upload(file, upload, content_type = nil)
       path = get_path_for_upload(upload)
-      url, upload.etag = store_file(file, path, filename: upload.original_filename, content_type: content_type, cache_locally: true)
+      url, upload.etag = store_file(file, path, filename: upload.original_filename, content_type: content_type, cache_locally: true, private: upload.private?)
       url
     end
 
@@ -41,9 +41,8 @@ module FileStore
       filename = opts[:filename].presence || File.basename(path)
       # cache file locally when needed
       cache_file(file, File.basename(path)) if opts[:cache_locally]
-      # stored uploaded are public by default
       options = {
-        acl: "public-read",
+        acl: opts[:private] ? "private" : "public-read",
         content_type: opts[:content_type].presence || MiniMime.lookup_by_filename(filename)&.content_type
       }
       # add a "content disposition" header for "attachments"
@@ -100,9 +99,28 @@ module FileStore
       File.join("uploads", "tombstone", RailsMultisite::ConnectionManagement.current_db, "/")
     end
 
+    def download_url(upload)
+      return unless upload
+      "#{upload.short_path}?dl=1"
+    end
+
     def path_for(upload)
       url = upload&.url
       FileStore::LocalStore.new.path_for(upload) if url && url[/^\/[^\/]/]
+    end
+
+    def url_for(upload, force_download: false)
+      if upload.private? || force_download
+        opts = { expires_in: S3Helper::DOWNLOAD_URL_EXPIRES_AFTER_SECONDS }
+        opts[:response_content_disposition] = "attachment; filename=\"#{upload.original_filename}\"" if force_download
+
+        obj = @s3_helper.object(get_upload_key(upload))
+        url = obj.presigned_url(:get, opts)
+      else
+        url = upload.url
+      end
+
+      url
     end
 
     def cdn_url(url)
@@ -138,7 +156,30 @@ module FileStore
       end
     end
 
+    def update_upload_ACL(upload)
+      private_uploads = SiteSetting.prevent_anons_from_downloading_files
+      key = get_upload_key(upload)
+
+      begin
+        @s3_helper.object(key).acl.put(acl: private_uploads ? "private" : "public-read")
+      rescue Aws::S3::Errors::NoSuchKey
+        Rails.logger.warn("Could not update ACL on upload with key: '#{key}'. Upload is missing.")
+      end
+    end
+
+    def download_file(upload, destination_path)
+      @s3_helper.download_file(get_upload_key(upload), destination_path)
+    end
+
     private
+
+    def get_upload_key(upload)
+      if Rails.configuration.multisite
+        File.join(upload_path, "/", get_path_for_upload(upload))
+      else
+        get_path_for_upload(upload)
+      end
+    end
 
     def list_missing(model, prefix)
       connection = ActiveRecord::Base.connection.raw_connection

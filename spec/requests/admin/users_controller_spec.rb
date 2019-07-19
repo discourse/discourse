@@ -185,6 +185,36 @@ RSpec.describe Admin::UsersController do
         expect(response.status).to eq(200)
       end
 
+      it "won't delete a category topic" do
+        c = Fabricate(:category)
+        cat_post = c.topic.posts.first
+        put(
+          "/admin/users/#{user.id}/suspend.json",
+          params: suspend_params.merge(
+            post_action: 'delete',
+            post_id: cat_post.id
+          )
+        )
+        cat_post.reload
+        expect(cat_post.deleted_at).to be_blank
+        expect(response.status).to eq(200)
+      end
+
+      it "won't delete a category topic by replies" do
+        c = Fabricate(:category)
+        cat_post = c.topic.posts.first
+        put(
+          "/admin/users/#{user.id}/suspend.json",
+          params: suspend_params.merge(
+            post_action: 'delete_replies',
+            post_id: cat_post.id
+          )
+        )
+        cat_post.reload
+        expect(cat_post.deleted_at).to be_blank
+        expect(response.status).to eq(200)
+      end
+
       it "can delete an associated post and its replies" do
         reply = PostCreator.create(
           Fabricate(:user),
@@ -907,7 +937,7 @@ RSpec.describe Admin::UsersController do
   end
 
   describe '#disable_second_factor' do
-    let(:second_factor) { user.create_totp }
+    let(:second_factor) { user.create_totp(enabled: true) }
     let(:second_factor_backup) { user.generate_backup_codes }
 
     describe 'as an admin' do
@@ -915,7 +945,7 @@ RSpec.describe Admin::UsersController do
         sign_in(admin)
         second_factor
         second_factor_backup
-        expect(user.reload.user_second_factors.totp).to eq(second_factor)
+        expect(user.reload.user_second_factors.totps.first).to eq(second_factor)
       end
 
       it 'should able to disable the second factor for another user' do

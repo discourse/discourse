@@ -7,7 +7,7 @@ import { sanitizeAsync } from "discourse/lib/text";
 import { iconHTML } from "discourse-common/lib/icon-library";
 
 function customTagArray(fieldName) {
-  return function() {
+  return Ember.computed(fieldName, function() {
     var val = this.get(fieldName);
     if (!val) {
       return val;
@@ -16,7 +16,7 @@ function customTagArray(fieldName) {
       val = [val];
     }
     return val;
-  }.property(fieldName);
+  });
 }
 
 // This controller handles displaying of history

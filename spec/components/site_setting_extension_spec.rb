@@ -143,6 +143,25 @@ describe SiteSettingExtension do
 
       expect(settings.upload_type).to eq(upload2)
     end
+
+    it "refreshes the client_settings_json cache" do
+      upload = Fabricate(:upload)
+      settings.setting(:upload_type, upload.id.to_s, type: :upload, client: true)
+      settings.setting(:string_type, 'haha', client: true)
+      settings.refresh!
+
+      expect(settings.client_settings_json).to eq(
+        %Q|{"default_locale":"#{SiteSetting.default_locale}","upload_type":"#{upload.url}","string_type":"haha"}|
+      )
+
+      upload.update!(url: "a_new_url")
+      settings.string_type = "changed"
+      settings.refresh!
+
+      expect(settings.client_settings_json).to eq(
+        %Q|{"default_locale":"#{SiteSetting.default_locale}","upload_type":"a_new_url","string_type":"changed"}|
+      )
+    end
   end
 
   describe "multisite" do

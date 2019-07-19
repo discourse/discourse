@@ -153,7 +153,6 @@ da:
         eu_west_2: "EU (London)"
         us_east_1: "US East (N. Virginia)"
         us_east_2: "US East (Ohio)"
-        us_gov_west_1: "AWS GovCloud (US)"
         us_west_1: "US West (N. California)"
         us_west_2: "US West (Oregon)"
     edit: "redigér titel og kategori for dette emne"
@@ -254,11 +253,13 @@ da:
       title:
         placeholder: "indtast emnets titel her"
     review:
+      in_reply_to: "som svar til"
       delete: "Slet"
       settings:
         save_changes: "Gem ændringer"
         title: "Indstillinger"
       topic: "Emne:"
+      filtered_user: "bruger"
       user:
         username: "Brugernavn"
         email: "Email"
@@ -269,7 +270,10 @@ da:
       save: "Gem"
       cancel: "Afbryd"
       filters:
+        type:
+          title: "Type"
         refresh: "Opdatér"
+        category: "Kategori"
       scores:
         date: "Dato"
         type: "Type"
@@ -570,9 +574,7 @@ da:
       users: "Brugere"
       muted_users: "Ignoreret"
       muted_users_instructions: "Undertryk alle notifikationer fra disse brugere."
-      muted_topics_link: "Vis mute emner"
-      watched_topics_link: "Vis sete emner"
-      tracked_topics_link: "Vis fulgte emner"
+      tracked_topics_link: "Vis"
       automatically_unpin_topics: "Automatisk stop med at følge emner, når jeg når til bunden."
       apps: "Apps"
       revoke_access: "Tilbagekald adgang"
@@ -622,6 +624,8 @@ da:
         enable: "Aktiver"
         copied_to_clipboard: "Kopierede til udklipsholder"
         copy_to_clipboard_error: "Fejl ved kopiering til udklipsholder"
+      second_factor:
+        edit: "Rediger"
       change_about:
         title: "Skift “Om mig”"
         error: "Der opstod en fejl i ændringen af denne værdi."
@@ -870,12 +874,6 @@ da:
       enabled: "Dette website kan kun læses lige nu. Fortsæt endelig med at kigge, men der kan ikke svares, likes eller andet indtil videre."
       login_disabled: "Log in er deaktiveret midlertidigt, da forummet er i \"kun læsnings\" tilstand."
       logout_disabled: "Log ud er deaktivere mens websitet kun kan læses."
-    logs_error_rate_notice:
-      reached: "<b>%{relativeAge}</b> – <a href='%{url}' target='_blank'>%{rate}</a> nåede grænse for konfiguration af sitet på %{siteSettingRate}."
-      exceeded: "<b>%{relativeAge}</b> – <a href='%{url}' target='_blank'>%{rate}</a> overskred grænse for konfiguration af sitet på %{siteSettingRate}."
-      rate:
-        one: "%{count} fejl/%{duration}"
-        other: "%{count} fejl/%{duration}"
     learn_more: "Læs mere…"
     all_time: "i alt"
     all_time_desc: "emner oprettet i alt"
@@ -923,7 +921,6 @@ da:
     trust_level: "Tillidsniveau"
     search_hint: "brugernavn, email eller IP adresse"
     create_account:
-      disclaimer: "Gennem din tilmelding accepterer du <a href='{{privacy_link}}'>fortrolighedspolitikken</a> og <a href='{{tos_link}}'>servicevilkårene</a>."
       title: "Opret konto"
       failed: "Noget gik galt. Måske er e-mail-adressen allerede registreret – prøv “Jeg har glemt min adgangskode”-linket"
     forgot_password:
@@ -941,6 +938,7 @@ da:
     email_login:
       complete_username_not_found: "Ingen kontoer passer til brugernavnet <b>%{username}</b>"
       complete_email_not_found: "Ingen kontoer svarer til <b>%{email}</b>"
+      confirm_title: "Fortsæt til %{site_name}"
     login:
       title: "Log ind"
       username: "Bruger"
@@ -1121,6 +1119,8 @@ da:
         replied: '{{username}} svarede dig i "{{topic}}" - {{site_title}}'
         posted: '{{username}} skrev i "{{topic}}" - {{site_title}}'
         linked: '{{username}} linkede til dit indlæg fra "{{topic}}" - {{site_title}}'
+      titles:
+        watching_first_post: "nyt emne"
     upload_selector:
       title: "Indsæt billede"
       title_with_attachments: "Tilføj et billede eller en fil"
@@ -1230,17 +1230,14 @@ da:
         read: "Du har ikke læst nogen emner endnu."
         posted: "Du har ikke skrevet nogen indlæg endnu."
         latest: "Der er ikke nogen nye emner. Det er sørgeligt."
-        hot: "Der er ingen populære emner."
         bookmarks: "Du har ingen bogmærkede emner endnu."
         category: "Der er ingen emner i kategorien {{category}}."
         top: "Der er ingen top emner"
-        search: "Der er ingen søgeresultater."
         educate:
-          new: '<p>Dine nye emner vises her.</p><p>Som standard, betragtes emner som ulæste og vil vise en  <span class="badge new-posts badge-notification" style="vertical-align:middle;line-height:inherit;">ny</span> indikator hvis de var oprettet indenfor de sidste 2 dage</p><p>Du kan ændre dette i dine <a href="%{userPrefsUrl}">indstillinger</a></p>'
-          unread: '<p>Dine nye emner vises her.</p><p>Som standard, betragtes emner som ulæste og vil vise en  <span class="badge new-posts badge-notification">1</span>  hvis du:</p><ul><li>Oprettede dette emne</li><li>Svarede dette emne</li><li>Læste emnet i mere end 4 minutter</li></ul><p> Eller hvis du udtrykkeligt sat emnet til Sporet eller Følger via notifikations indstillinger i bunden af hvert emne.</p><p> Tilgå dine <a href="%{userPrefsUrl}">indstillinger</a> for at ændre dette.</p>'
+          new: '<p>Dine nye emner vises her.</p><p>Som standard, betragtes emner som ulæste og vil vise en <span class="badge new-posts badge-notification" style="vertical-align:middle;line-height:inherit;">ny</span> indikator hvis de var oprettet indenfor de sidste 2 dage</p><p>Du kan ændre dette i dine <a href="%{userPrefsUrl}">indstillinger</a></p>'
+          unread: '<p>Dine nye emner vises her.</p><p>Som standard, betragtes emner som ulæste og vil vise en <span class="badge new-posts badge-notification">1</span> hvis du:</p><ul><li>Oprettede dette emne</li><li>Svarede dette emne</li><li>Læste emnet i mere end 4 minutter</li></ul><p> Eller hvis du udtrykkeligt sat emnet til Sporet eller Følger via notifikations indstillinger i bunden af hvert emne.</p><p> Tilgå dine <a href="%{userPrefsUrl}">indstillinger</a> for at ændre dette.</p>'
       bottom:
         latest: "Der er ikke flere populære emner."
-        hot: "There are no more hot topics."
         posted: "Der er ikke flere emner."
         read: "Der er ikke flere læste emner."
         new: "Der er ikke flere nye emner."
@@ -1248,7 +1245,6 @@ da:
         category: "Der er ikke flere emner i kategorien {{category}}."
         top: "Der er ikke flere top emner"
         bookmarks: "Der er ikke flere bogmærkede emner."
-        search: "Der er ikke flere søgeresultater."
     topic:
       filter_to:
         one: "%{count} indlæg i emnet"
@@ -1264,6 +1260,8 @@ da:
         help: "Flyt beskeder tilbage til Indbakke"
       edit_message:
         title: "Rediger Besked"
+      defer:
+        title: "Udsæt"
       list: "Emner"
       new: "nyt emne"
       unread: "ulæste"
@@ -1451,7 +1449,7 @@ da:
         title: "Fremhæv dette emne"
         pin: "Fastgør dette emne til toppen af kategorien {{categoryLink}} indtil"
         confirm_pin: "Du har allerede {{count}} fastgjorte emner. Fastgjorte emner kan være irriterende for nye og anonyme brugere. Er du sikker på du vil fastgøre et nyt emne i denne kategori?"
-        unpin: "Fjern dette emne fra starten af listen i  {{categoryLink}} kategorien."
+        unpin: "Fjern dette emne fra starten af listen i {{categoryLink}} kategorien."
         unpin_until: "Fjern dette emne fra toppen af kategorien {{categoryLink}} eller vent til <strong>%{until}</strong>."
         pin_note: "Brugere kan unpinne emnet individuelt."
         pin_validation: "Der skal angives en dato for at fastgøre dette emne"
@@ -1520,7 +1518,7 @@ da:
         error: "Der opstod en fejl under flytningen af indlæg til emnet."
         instructions:
           one: "Vælg venligst det emne som indlægget skal flyttes til."
-          other: "Vælg venligst det emne som de  <b>{{count}}</b> indlæg skal flyttes til."
+          other: "Vælg venligst det emne som de <b>{{count}}</b> indlæg skal flyttes til."
       move_to_new_message:
         radio_label: "Ny Besked"
       merge_posts:
@@ -1893,15 +1891,9 @@ da:
           one: "Seneste (%{count})"
           other: "Seneste ({{count}})"
         help: "de seneste emner"
-      hot:
-        title: "Populære"
-        help: "de mest populære emner"
       read:
         title: "Læste"
         help: "emner du har læst"
-      search:
-        title: "Søg"
-        help: "søg alle emner"
       categories:
         title: "Kategorier"
         title_in: "Kategori - {{categoryName}}"
@@ -2106,20 +2098,16 @@ da:
           read: "Du har ikke læst nogen emner endnu."
           posted: "Du har ikke oprettet nogen emner endnu."
           latest: "Der er ikke nogen seneste emner."
-          hot: "Der er ikke nogen populære emner."
           bookmarks: "Du har ikke bogmærket nogen emner endnu."
           top: "Der er ikke nogen populære emner."
-          search: "Der er ikke nogen søgeresultater."
         bottom:
           latest: "Der er ikke flere seneste emner."
-          hot: "Der er ikke flere populære emner."
           posted: "Der er ikke flere oprettede emner."
           read: "Der er ikke flere læste emner."
           new: "Der er ikke flere nye emner."
           unread: "Der er ikke flere ulæste emner."
           top: "Der er ikke flere populære emner."
           bookmarks: "Der er ikke flere bogmærkede emner."
-          search: "Der er ikke flere søgeresultater."
     invite:
       custom_message_placeholder: "Skriv en personlig besked"
       custom_message_template_forum: "Hej, du burde tilmelde dig dette forum!"
@@ -2131,6 +2119,10 @@ da:
     admin:
       title: "Discourse Admin"
       moderator: "Moderator"
+      tags:
+        remove_muted_tags_from_latest:
+          always: "altid"
+          never: "aldrig"
       dashboard:
         title: "Dashboard"
         version: "Installeret version"
@@ -2201,9 +2193,7 @@ da:
             visibility_levels:
               title: "Hvem kan se denne gruppe?"
               public: "Alle"
-              members: "Gruppeejer, medlemmer og admins"
               staff: "Gruppeejer og hjælpeteam"
-              owners: "Gruppeejer og admins"
           membership:
             automatic: Automatisk
             trust_level: Tillidsniveau
@@ -2445,6 +2435,8 @@ da:
           install_popular: "Populære"
           about_theme: "Om"
           license: "Licens"
+          enable: "Aktiver"
+          disable: "Deaktiver"
           update_to_latest: "Opdatér til seneste"
           check_for_updates: "Tjek efter opdateringer"
           updating: "Opdaterer..."

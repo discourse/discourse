@@ -83,15 +83,17 @@ class Group < ActiveRecord::Base
     only_admins: 1,
     mods_and_admins: 2,
     members_mods_and_admins: 3,
+    owners_mods_and_admins: 4,
     everyone: 99
   }
 
   def self.visibility_levels
     @visibility_levels = Enum.new(
       public: 0,
-      members: 1,
-      staff: 2,
-      owners: 3
+      logged_on_users: 1,
+      members: 2,
+      staff: 3,
+      owners: 4
     )
   end
 
@@ -109,6 +111,11 @@ class Group < ActiveRecord::Base
       sql = <<~SQL
         groups.id IN (
           SELECT g.id FROM groups g WHERE g.visibility_level = :public
+
+          UNION ALL
+
+          SELECT g.id FROM groups g
+          WHERE g.visibility_level = :logged_on_users AND :user_id IS NOT NULL
 
           UNION ALL
 
@@ -158,6 +165,9 @@ class Group < ActiveRecord::Base
           (
             messageable_level = #{ALIAS_LEVELS[:members_mods_and_admins]} AND id in (
             SELECT group_id FROM group_users WHERE user_id = :user_id)
+          ) OR (
+            messageable_level = #{ALIAS_LEVELS[:owners_mods_and_admins]} AND id in (
+            SELECT group_id FROM group_users WHERE user_id = :user_id AND owner IS TRUE)
           )", levels: alias_levels(user), user_id: user && user.id)
   }
 
@@ -168,7 +178,11 @@ class Group < ActiveRecord::Base
       mentionable_level = #{ALIAS_LEVELS[:members_mods_and_admins]}
       AND id in (
         SELECT group_id FROM group_users WHERE user_id = :user_id)
-      )
+    ) OR (
+      mentionable_level = #{ALIAS_LEVELS[:owners_mods_and_admins]}
+      AND id in (
+        SELECT group_id FROM group_users WHERE user_id = :user_id AND owner IS TRUE)
+    )
     SQL
   end
 
@@ -179,14 +193,31 @@ class Group < ActiveRecord::Base
       levels = [ALIAS_LEVELS[:everyone],
                 ALIAS_LEVELS[:only_admins],
                 ALIAS_LEVELS[:mods_and_admins],
-                ALIAS_LEVELS[:members_mods_and_admins]]
+                ALIAS_LEVELS[:members_mods_and_admins],
+                ALIAS_LEVELS[:owners_mods_and_admins]]
     elsif user && user.moderator?
       levels = [ALIAS_LEVELS[:everyone],
                 ALIAS_LEVELS[:mods_and_admins],
-                ALIAS_LEVELS[:members_mods_and_admins]]
+                ALIAS_LEVELS[:members_mods_and_admins],
+                ALIAS_LEVELS[:owners_mods_and_admins]]
     end
 
     levels
+  end
+
+  def self.plugin_editable_group_custom_fields
+    @plugin_editable_group_custom_fields ||= {}
+  end
+
+  def self.register_plugin_editable_group_custom_field(custom_field_name, plugin)
+    plugin_editable_group_custom_fields[custom_field_name] = plugin
+  end
+
+  def self.editable_group_custom_fields
+    plugin_editable_group_custom_fields.reduce([]) do |fields, (k, v)|
+      next(fields) unless v.enabled?
+      fields << k
+    end.uniq
   end
 
   def downcase_incoming_email
@@ -194,8 +225,10 @@ class Group < ActiveRecord::Base
   end
 
   def cook_bio
-    if !self.bio_raw.blank?
+    if self.bio_raw.present?
       self.bio_cooked = PrettyText.cook(self.bio_raw)
+    else
+      self.bio_cooked = nil
     end
   end
 
@@ -307,17 +340,19 @@ class Group < ActiveRecord::Base
       group.update!(messageable_level: ALIAS_LEVELS[:everyone])
     end
 
+    group.update!(visibility_level: Group.visibility_levels[:logged_on_users]) if group.visibility_level == Group.visibility_levels[:public]
+
     # Remove people from groups they don't belong in.
     remove_subquery =
       case name
       when :admins
-        "SELECT id FROM users WHERE id <= 0 OR NOT admin"
+        "SELECT id FROM users WHERE id <= 0 OR NOT admin OR staged"
       when :moderators
-        "SELECT id FROM users WHERE id <= 0 OR NOT moderator"
+        "SELECT id FROM users WHERE id <= 0 OR NOT moderator OR staged"
       when :staff
-        "SELECT id FROM users WHERE id <= 0 OR (NOT admin AND NOT moderator)"
+        "SELECT id FROM users WHERE id <= 0 OR (NOT admin AND NOT moderator) OR staged"
       when :trust_level_0, :trust_level_1, :trust_level_2, :trust_level_3, :trust_level_4
-        "SELECT id FROM users WHERE id <= 0 OR trust_level < #{id - 10}"
+        "SELECT id FROM users WHERE id <= 0 OR trust_level < #{id - 10} OR staged"
       end
 
     DB.exec <<-SQL
@@ -331,15 +366,15 @@ class Group < ActiveRecord::Base
     insert_subquery =
       case name
       when :admins
-        "SELECT id FROM users WHERE id > 0 AND admin"
+        "SELECT id FROM users WHERE id > 0 AND admin AND NOT staged"
       when :moderators
-        "SELECT id FROM users WHERE id > 0 AND moderator"
+        "SELECT id FROM users WHERE id > 0 AND moderator AND NOT staged"
       when :staff
-        "SELECT id FROM users WHERE id > 0 AND (moderator OR admin)"
+        "SELECT id FROM users WHERE id > 0 AND (moderator OR admin) AND NOT staged"
       when :trust_level_1, :trust_level_2, :trust_level_3, :trust_level_4
-        "SELECT id FROM users WHERE id > 0 AND trust_level >= #{id - 10}"
+        "SELECT id FROM users WHERE id > 0 AND trust_level >= #{id - 10} AND NOT staged"
       when :trust_level_0
-        "SELECT id FROM users WHERE id > 0"
+        "SELECT id FROM users WHERE id > 0 AND NOT staged"
       end
 
     DB.exec <<-SQL

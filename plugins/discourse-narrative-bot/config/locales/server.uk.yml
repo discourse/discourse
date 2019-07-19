@@ -20,6 +20,6 @@ uk:
         '9': "Так"
         '17': "Моя відповідь - ні"
     track_selector:
-      reset_trigger: 'розпочати'
-      skip_trigger: 'пропустити'
-      help_trigger: 'показати допомогу'
+      reset_trigger: "розпочати"
+      skip_trigger: "пропустити"
+      help_trigger: "показати допомогу"

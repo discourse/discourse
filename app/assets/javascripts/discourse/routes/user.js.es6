@@ -1,6 +1,6 @@
 export default Discourse.Route.extend({
   titleToken() {
-    const username = this.modelFor("user").get("username");
+    const username = this.modelFor("user").username;
     if (username) {
       return [I18n.t("user.profile"), username];
     }
@@ -32,56 +32,52 @@ export default Discourse.Route.extend({
 
   model(params) {
     // If we're viewing the currently logged in user, return that object instead
-    const currentUser = this.currentUser;
     if (
-      currentUser &&
-      params.username.toLowerCase() === currentUser.get("username_lower")
+      this.currentUser &&
+      params.username.toLowerCase() === this.currentUser.username_lower
     ) {
-      return currentUser;
+      return this.currentUser;
     }
 
-    return Discourse.User.create({ username: params.username });
+    return Discourse.User.create({
+      username: encodeURIComponent(params.username)
+    });
   },
 
   afterModel() {
     const user = this.modelFor("user");
-    const self = this;
 
     return user
       .findDetails()
-      .then(function() {
-        return user.findStaffInfo();
-      })
-      .catch(function() {
-        return self.replaceWith("/404");
-      });
+      .then(() => user.findStaffInfo())
+      .catch(() => this.replaceWith("/404"));
   },
 
   serialize(model) {
     if (!model) return {};
-    return { username: (Ember.get(model, "username") || "").toLowerCase() };
+
+    return { username: (model.username || "").toLowerCase() };
   },
 
   setupController(controller, user) {
     controller.set("model", user);
-    this.searchService.set("searchContext", user.get("searchContext"));
+    this.searchService.set("searchContext", user.searchContext);
   },
 
   activate() {
     this._super(...arguments);
+
     const user = this.modelFor("user");
-    this.messageBus.subscribe("/u/" + user.get("username_lower"), function(
-      data
-    ) {
-      user.loadUserAction(data);
-    });
+    this.messageBus.subscribe(`/u/${user.username_lower}`, data =>
+      user.loadUserAction(data)
+    );
   },
 
   deactivate() {
     this._super(...arguments);
-    this.messageBus.unsubscribe(
-      "/u/" + this.modelFor("user").get("username_lower")
-    );
+
+    const user = this.modelFor("user");
+    this.messageBus.unsubscribe(`/u/${user.username_lower}`);
 
     // Remove the search context
     this.searchService.set("searchContext", null);

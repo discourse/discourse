@@ -16,9 +16,7 @@ export default class Connector {
 
       if (opts.templateName) {
         deprecated(
-          `Using a 'templateName' for a connector is deprecated. Use 'component' instead [${
-            opts.templateName
-          }]`
+          `Using a 'templateName' for a connector is deprecated. Use 'component' instead [${opts.templateName}]`
         );
       }
 

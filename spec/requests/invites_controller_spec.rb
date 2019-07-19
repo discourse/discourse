@@ -508,6 +508,17 @@ describe InvitesController do
         expect(response.status).to eq(200)
         expect(Jobs::BulkInvite.jobs.size).to eq(1)
       end
+
+      it "sends limited invites at a time" do
+        SiteSetting.max_bulk_invites = 3
+        sign_in(Fabricate(:admin))
+        post "/invites/upload_csv.json", params: { file: file, name: filename }
+
+        expect(response.status).to eq(422)
+        expect(Jobs::BulkInvite.jobs.size).to eq(1)
+        json = ::JSON.parse(response.body)
+        expect(json["errors"][0]).to eq(I18n.t("bulk_invite.max_rows", max_bulk_invites: SiteSetting.max_bulk_invites))
+      end
     end
   end
 end

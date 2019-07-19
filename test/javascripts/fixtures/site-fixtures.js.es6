@@ -1,4 +1,4 @@
-import { LIKED_CONSOLIDATED_TYPE } from "discourse/widgets/notification-item";
+import { NOTIFICATION_TYPES } from "fixtures/concerns/notification-types";
 
 export default {
   "site.json": {
@@ -6,21 +6,7 @@ export default {
       default_archetype: "regular",
       disabled_plugins: [],
       shared_drafts_category_id: 24,
-      notification_types: {
-        mentioned: 1,
-        replied: 2,
-        quoted: 3,
-        edited: 4,
-        liked: 5,
-        private_message: 6,
-        invited_to_private_message: 7,
-        invitee_accepted: 8,
-        posted: 9,
-        moved_post: 10,
-        linked: 11,
-        granted_badge: 12,
-        liked_consolidated: LIKED_CONSOLIDATED_TYPE
-      },
+      notification_types: NOTIFICATION_TYPES,
       post_types: {
         regular: 1,
         moderator_action: 2,

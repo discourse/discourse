@@ -481,12 +481,12 @@ const Topic = RestModel.extend({
 
   // Update our attributes from a JSON result
   updateFromJson(json) {
-    this.details.updateFromJson(json.details);
-
     const keys = Object.keys(json);
-    keys.removeObject("details");
-    keys.removeObject("post_stream");
+    if (!json.view_hidden) {
+      this.details.updateFromJson(json.details);
 
+      keys.removeObjects(["details", "post_stream"]);
+    }
     keys.forEach(key => this.set(key, json[key]));
   },
 
@@ -733,8 +733,13 @@ Topic.reopenClass({
     });
   },
 
-  bulkOperationByFilter(filter, operation, categoryId) {
-    const data = { filter, operation };
+  bulkOperationByFilter(filter, operation, categoryId, options) {
+    let data = { filter, operation };
+
+    if (options && options.includeSubcategories) {
+      data.include_subcategories = true;
+    }
+
     if (categoryId) data.category_id = categoryId;
     return ajax("/topics/bulk", {
       type: "PUT",

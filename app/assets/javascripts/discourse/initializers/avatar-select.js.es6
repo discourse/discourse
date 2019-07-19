@@ -5,27 +5,32 @@ export default {
   name: "avatar-select",
 
   initialize(container) {
-    const siteSettings = container.lookup("site-settings:main");
-    const appEvents = container.lookup("app-events:main");
+    this.selectableAvatarsEnabled = container.lookup(
+      "site-settings:main"
+    ).selectable_avatars_enabled;
 
-    appEvents.on("show-avatar-select", user => {
-      const avatarTemplate = user.get("avatar_template");
-      let selected = "uploaded";
+    container
+      .lookup("app-events:main")
+      .on("show-avatar-select", this, "_showAvatarSelect");
+  },
 
-      if (avatarTemplate === user.get("system_avatar_template")) {
-        selected = "system";
-      } else if (avatarTemplate === user.get("gravatar_avatar_template")) {
-        selected = "gravatar";
-      }
+  _showAvatarSelect(user) {
+    const avatarTemplate = user.avatar_template;
+    let selected = "uploaded";
 
-      const modal = showModal("avatar-selector");
-      modal.setProperties({ user, selected });
+    if (avatarTemplate === user.system_avatar_template) {
+      selected = "system";
+    } else if (avatarTemplate === user.gravatar_avatar_template) {
+      selected = "gravatar";
+    }
 
-      if (siteSettings.selectable_avatars_enabled) {
-        ajax("/site/selectable-avatars.json").then(avatars =>
-          modal.set("selectableAvatars", avatars)
-        );
-      }
-    });
+    const modal = showModal("avatar-selector");
+    modal.setProperties({ user, selected });
+
+    if (this.selectableAvatarsEnabled) {
+      ajax("/site/selectable-avatars.json").then(avatars =>
+        modal.set("selectableAvatars", avatars)
+      );
+    }
   }
 };

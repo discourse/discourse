@@ -52,8 +52,8 @@ export default MountWidget.extend(Docking, {
     const offsetTop = mainOffset ? mainOffset.top : 0;
     const topicTop = $(".container.posts").offset().top - offsetTop;
     const topicBottom = $("#topic-bottom").offset().top;
-    const $timeline = this.$(".timeline-container");
-    const timelineHeight = $timeline.height() || 400;
+    const timeline = this.element.querySelector(".timeline-container");
+    const timelineHeight = (timeline && timeline.offsetHeight) || 400;
     const footerHeight = $(".timeline-footer-controls").outerHeight(true) || 0;
 
     const prev = this.dockAt;

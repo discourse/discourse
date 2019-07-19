@@ -7,8 +7,8 @@ export default Ember.Component.extend({
   _hiddenChanged() {
     if (!this.hidden) {
       Ember.run.scheduleOnce("afterRender", () => {
-        const $modal = this.$();
-        const $parent = this.$().closest(".d-editor");
+        const $modal = $(this.element);
+        const $parent = $(this.element).closest(".d-editor");
         const w = $parent.width();
         const h = $parent.height();
         const dir = $("html").css("direction") === "rtl" ? "right" : "left";
@@ -27,7 +27,7 @@ export default Ember.Component.extend({
 
   @on("didInsertElement")
   _listenKeys() {
-    this.$().on("keydown.d-modal", key => {
+    $(this.element).on("keydown.d-modal", key => {
       if (this.hidden) {
         return;
       }
@@ -45,7 +45,7 @@ export default Ember.Component.extend({
 
   @on("willDestroyElement")
   _stopListening() {
-    this.$().off("keydown.d-modal");
+    $(this.element).off("keydown.d-modal");
   },
 
   actions: {

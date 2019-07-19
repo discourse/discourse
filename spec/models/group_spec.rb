@@ -223,9 +223,32 @@ describe Group do
   end
 
   describe '.refresh_automatic_group!' do
+
+    it "does not include staged users in any automatic groups" do
+      staged = Fabricate(:staged, trust_level: 1)
+
+      Group.refresh_automatic_group!(:trust_level_0)
+      Group.refresh_automatic_group!(:trust_level_1)
+
+      expect(GroupUser.where(user_id: staged.id).count).to eq(0)
+
+      staged.unstage
+      staged.save!
+
+      expect(GroupUser.where(user_id: staged.id).count).to eq(2)
+    end
+
     it "makes sure the everyone group is not visible except to staff" do
       g = Group.refresh_automatic_group!(:everyone)
       expect(g.visibility_level).to eq(Group.visibility_levels[:staff])
+    end
+
+    it "makes sure automatic groups are visible to logged on users" do
+      g = Group.refresh_automatic_group!(:moderators)
+      expect(g.visibility_level).to eq(Group.visibility_levels[:logged_on_users])
+
+      tl0 = Group.refresh_automatic_group!(:trust_level_0)
+      expect(tl0.visibility_level).to eq(Group.visibility_levels[:logged_on_users])
     end
 
     it "ensures that the moderators group is messageable by all" do
@@ -622,6 +645,10 @@ describe Group do
     group.update!(bio_raw: 'This is a group for :unicorn: lovers')
 
     expect(group.bio_cooked).to include("unicorn.png")
+
+    group.update!(bio_raw: '')
+
+    expect(group.bio_cooked).to eq(nil)
   end
 
   describe ".visible_groups" do
@@ -632,6 +659,7 @@ describe Group do
 
     it 'correctly restricts group visibility' do
       group = Fabricate.build(:group, visibility_level: Group.visibility_levels[:owners])
+      logged_on_user = Fabricate(:user)
       member = Fabricate(:user)
       group.add(member)
       group.save!
@@ -646,6 +674,7 @@ describe Group do
       expect(can_view?(owner, group)).to eq(true)
       expect(can_view?(moderator, group)).to eq(false)
       expect(can_view?(member, group)).to eq(false)
+      expect(can_view?(logged_on_user, group)).to eq(false)
       expect(can_view?(nil, group)).to eq(false)
 
       group.update_columns(visibility_level: Group.visibility_levels[:staff])
@@ -654,6 +683,7 @@ describe Group do
       expect(can_view?(owner, group)).to eq(true)
       expect(can_view?(moderator, group)).to eq(true)
       expect(can_view?(member, group)).to eq(false)
+      expect(can_view?(logged_on_user, group)).to eq(false)
       expect(can_view?(nil, group)).to eq(false)
 
       group.update_columns(visibility_level: Group.visibility_levels[:members])
@@ -662,6 +692,7 @@ describe Group do
       expect(can_view?(owner, group)).to eq(true)
       expect(can_view?(moderator, group)).to eq(false)
       expect(can_view?(member, group)).to eq(true)
+      expect(can_view?(logged_on_user, group)).to eq(false)
       expect(can_view?(nil, group)).to eq(false)
 
       group.update_columns(visibility_level: Group.visibility_levels[:public])
@@ -670,7 +701,17 @@ describe Group do
       expect(can_view?(owner, group)).to eq(true)
       expect(can_view?(moderator, group)).to eq(true)
       expect(can_view?(member, group)).to eq(true)
+      expect(can_view?(logged_on_user, group)).to eq(true)
       expect(can_view?(nil, group)).to eq(true)
+
+      group.update_columns(visibility_level: Group.visibility_levels[:logged_on_users])
+
+      expect(can_view?(admin, group)).to eq(true)
+      expect(can_view?(owner, group)).to eq(true)
+      expect(can_view?(moderator, group)).to eq(true)
+      expect(can_view?(member, group)).to eq(true)
+      expect(can_view?(logged_on_user, group)).to eq(true)
+      expect(can_view?(nil, group)).to eq(false)
     end
 
   end

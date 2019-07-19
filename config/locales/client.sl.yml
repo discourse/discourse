@@ -65,10 +65,10 @@ sl:
           few: "%{count} min"
           other: "%{count} min"
         about_x_hours:
-          one: "%{count} h"
-          two: "%{count} h"
-          few: "%{count} h"
-          other: "%{count} h"
+          one: "%{count} ura"
+          two: "%{count} uri"
+          few: "%{count} ure"
+          other: "%{count} ur"
         x_days:
           one: "%{count} d"
           two: "%{count} d"
@@ -212,7 +212,6 @@ sl:
         us_east_1: "US East (N. Virginia)"
         us_east_2: "US East (Ohio)"
         us_gov_east_1: "AWS GovCloud (US-East)"
-        us_gov_west_1: "AWS GovCloud (US)"
         us_west_1: "US West (N. California)"
         us_west_2: "US West (Oregon)"
     edit: "uredi naslov in kategorijo te teme"
@@ -363,9 +362,6 @@ sl:
         saved: "Shranjeno"
         save_changes: "Shrani spremembe"
         title: "Nastavitve"
-        score_bonuses:
-          title: "Bonus ocene"
-          description: "Bonusi omogočajo posameznim vrstam, da so ocenjeni višje kot drugi in so tako prednostni. Opomba: sprememba teh vrednosti ne bo vplivala na predhodno ocenjene predmete."
       moderation_history: "Zgodovina moderiranja"
       view_all: "Prikaži vse"
       grouped_by_topic: "Združeno po skupinah"
@@ -378,7 +374,7 @@ sl:
         other: "Ta tema ima <b>{{count}}</b> prispevkov za potrditev"
       title: "Pregled"
       topic: "Tema:"
-      filtered_user: "Uporabnik:"
+      filtered_user: "Uporabnik"
       show_all_topics: "prikaži vse teme"
       deleted_post: "(prispevek izbrisan)"
       deleted_user: "(uporabnik izbrisan)"
@@ -413,18 +409,16 @@ sl:
       edit: "Uredi"
       save: "Shrani"
       cancel: "Prekliči"
-      new_topic: "Nova tema:"
       filters:
+        all_categories: "(vse kategorije)"
         type:
-          title: "Vrsta:"
+          title: "Tip"
           all: "(vse vrste)"
         minimum_score: "Najnižja ocena:"
         refresh: "Osveži"
-        status: "Stanje:"
-        category: "Kategorija:"
+        status: "Stanje"
+        category: "Kategorija"
         priority:
-          title: "Najnižja prioriteta:"
-          low: "Nizka"
           medium: "Srednja"
           high: "Visoka"
       conversation:
@@ -448,10 +442,6 @@ sl:
           title: "Prezrto"
         deleted:
           title: "Izbrisano"
-        reviewed:
-          title: "(vsi pregledani)"
-        all:
-          title: "(vse)"
       types:
         reviewable_flagged_post:
           title: "Prijavljen prispevek"
@@ -795,7 +785,7 @@ sl:
         label: "E-sporočilo za vsak prispevek"
         enabled: "Vklopi pošiljanje e-sporočila za vsak prispevek"
         instructions: |
-          Ta nastavitev spremeni  povzetek aktivnosti.<br />
+          Ta nastavitev spremeni povzetek aktivnosti.<br />
           Izključene teme in kategorije niso vključene v ta obvestila.
         individual: "Pošlji e-sporočilo za vsako nov prispevek"
         individual_no_echo: "Pošlji e-sporočilo za vsak nov prispevek, razen mojih"
@@ -831,9 +821,7 @@ sl:
       muted_users_instructions: "Onemogoči vsa obvestila povezana s temi uporabniki."
       ignored_users: "Prezrti"
       ignored_users_instructions: "Onemogoči vse prispevke in obvestila povezana s temi uporabniki."
-      muted_topics_link: "Pokaži utišane teme"
-      watched_topics_link: "Pokaži opazovane teme"
-      tracked_topics_link: "Pokaži sledene teme"
+      tracked_topics_link: "Prikaži"
       automatically_unpin_topics: "Samodejno odpni temo, ko preberem zadnji prispevek."
       apps: "Aplikacije"
       revoke_access: "Prekliči dostop"
@@ -885,7 +873,6 @@ sl:
         disable: "Onemogoči"
         enable: "Omogoči"
         enable_long: "Omogočite rezervne potrditvene kode"
-        manage: "Upravljaj rezervne potrditvene kode"
         copied_to_clipboard: "Prenešeno na odlagališče"
         copy_to_clipboard_error: "Napaka pri prenosu na odlagališče"
         remaining_codes: "Imate <strong>{{count}}</strong> rezervnih potrditvenih kod."
@@ -895,8 +882,6 @@ sl:
           description: "Vsaka od rezervnih potrditvenih kod se lahko uporabi samo enkrat. Shranite jih na varno, ampak dostopno mesto."
       second_factor:
         title: "Preverjanje v dveh korakih"
-        disable: "Onemogoči preverjanje v dveh korakih"
-        enable: "Vključite preverjanje v dveh korakih za večjo varnost vašega računa"
         confirm_password_description: "Vnesite geslo za nadaljevanje"
         label: "Koda"
         rate_limit: "Počakajte preden uporabite novo potrditveno kodo."
@@ -909,6 +894,7 @@ sl:
         oauth_enabled_warning: "Preverjanje v dveh korakih bo onemogočila prijavo z družabnimi omrežji."
         use: "<a href>Uporabi Authenticator aplikacijo</a>"
         enforced_notice: "Obvezno morate vklopiti preverjanje v dveh korakih za dostop to tega spletnega mesta."
+        edit: "Uredi"
       change_about:
         title: "Spremeni O meni"
         error: "Prišlo je do napake pri spreminjanju te vrednosti"
@@ -977,7 +963,7 @@ sl:
         not_available_no_suggestion: "Ni na voljo"
         too_short: "Vaše uporabniško ime je prekratko"
         too_long: "Vaše uporabniško ime je predolgo"
-        checking: "Preverjam če je uporabniško ime  prosto..."
+        checking: "Preverjam če je uporabniško ime prosto..."
         prefilled: "E-naslov ustreza uporabniškemu imenu"
       locale:
         title: "Jezik vmesnika"
@@ -1229,17 +1215,6 @@ sl:
       enabled: "Stran je v načinu samo za branje. Lahko nadaljujete z branjem; odgovori, všečki in druga dejanja pa so onemogočena za zdaj."
       login_disabled: "Prijava je onemogočena dokler je stran v načinu za branje."
       logout_disabled: "Odjava je onemogočena dokler je stran v načinu za branje."
-    too_few_topics_and_posts_notice: "Omogočimo <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>da razprava steče!</a> Trenutno je objavljenih <strong>%{currentTopics} / %{requiredTopics}</strong> tem in <strong>%{currentPosts} / %{requiredPosts}</strong> prispevkov. Novi obiskovalci potrebujejo več pogovorov za branje in odgovarjanje."
-    too_few_topics_notice: "Omogočimo <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>da razprava steče!</a> Trenutno je objavljenih <strong>%{currentTopics} / %{requiredTopics}</strong> tem. Novi obiskovalci potrebujejo več pogovorov za branje in odgovarjanje."
-    too_few_posts_notice: "Omogočimo <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>da razprava steče!</a> Trenutno je objavljenih <strong>%{currentPosts} / %{requiredPosts}</strong> prispevkov. Novi obiskovalci potrebujejo več pogovorov za branje in odgovarjanje."
-    logs_error_rate_notice:
-      reached: "<b>%{relativeAge}</b> – <a href='%{url}' target='_blank'>%{rate}</a> dosega omejitev strani %{siteSettingRate}."
-      exceeded: "<b>%{relativeAge}</b> – <a href='%{url}' target='_blank'>%{rate}</a> presega omejitev strani %{siteSettingRate}."
-      rate:
-        one: "%{count} napaka/%{duration}"
-        two: "%{count} napaki/%{duration}"
-        few: "%{count} napake/%{duration}"
-        other: "%{count} napak/%{duration}"
     learn_more: "izvedite več..."
     all_time: "skupaj"
     all_time_desc: "skupaj ustvarjenih tem"
@@ -1268,7 +1243,7 @@ sl:
       sign_up: "Registracija"
       hide_session: "Spomni me jutri"
       hide_forever: "ne, hvala"
-      hidden_for_session: "V redu, vas ponovno vprašamo jutri. Vedno lahko uporabite gumb 'Prijava' da ustvarite nov račun."
+      hidden_for_session: "Hvala, ponovno vas vprašamo jutri. Vedno pa lahko uporabite gumb 'Prijava', da ustvarite nov račun."
       intro: "Pozdravljeni! Vidimo, da uživate v branju razprave, vendar se še niste registrirali kot uporabnik."
       value_prop: "Ko registrirate uporabniški račun, si lahko zapomnimo točno kaj ste že prebrali, tako da boste naslednjič lahko nadaljevali od tam, kjer ste končali. Lahko boste tudi prejemali obvestila, tukaj ali preko e-sporočila vsakič, ko vam nekdo odgovori. In lahko boste všečkali prispevke, ki so vam všeč. :heartpulse:"
     summary:
@@ -1297,7 +1272,6 @@ sl:
     trust_level: "Nivo zaupanja"
     search_hint: "uporabniško ime, e-naslov ali IP naslov"
     create_account:
-      disclaimer: "Z registracijo sprejemate <a href='{{privacy_link}}'>pravilnik o zasebnosti</a> in <a href='{{tos_link}}'>pogoje uporabe</a>."
       title: "Registracija uporabnika"
       failed: "Nekaj je šlo narobe, morda je ta e-naslov že registriran, poskusite povezavo za pozabljeno geslo."
     forgot_password:
@@ -1323,6 +1297,7 @@ sl:
       complete_email_found: "Račun z e-naslovom <b>%{email}</b> obstaja. V kratkem bi morali prejeti e-sporočilo s povezavo za samodejno prijavo."
       complete_username_not_found: "Račun z uporabniškim imenom <b>%{username}</b> ne obstaja."
       complete_email_not_found: "Noben račun se ne ujema z <b>%{email}</b>"
+      confirm_title: "Nadaljujte na %{site_name}"
     login:
       title: "Prijava"
       username: "Uporabnik"
@@ -1336,7 +1311,7 @@ sl:
       email_placeholder: "e-naslov ali uporabniško ime"
       caps_lock_warning: "Caps Lock je vključen"
       error: "Neznana napaka"
-      cookies_error: "Vaš brskalnik ima onemogočene piškotke. Prijava verjetno ne bo uspela, če jih ne boste omogočili."
+      cookies_error: "Brskalnik ima izklopljene piškotke. Mogoče se ne boste uspeli prijaviti, dokler jih ne omogočite."
       rate_limit: "Počakajte preden se poskusite ponovno prijaviti."
       blank_username: "Vnesite uporabniško ime ali e-naslov."
       blank_username_or_password: "Vpišite e-naslov ali uporabniško ime in geslo."
@@ -1347,7 +1322,7 @@ sl:
       awaiting_activation: "Vaš uporabniški račun čaka aktivacijo - uporabite povezavo za pozabljeno geslo, če želite prejeti še en e-sporočilo za aktivacijo."
       awaiting_approval: "Vaš uporabniški račun še ni bil potrjen s strani člana osebja foruma. Prejeli boste e-sporočilo, ko bo potrjen."
       requires_invite: "Oprostite, dostop do foruma je mogoč samo preko povabila."
-      not_activated: "Ne morete se še prijaviti. Pred časom smo poslali aktivacijsko e-sporočilo na  <b>{{sentTo}}</b>. Sledite navodilom v e-sporočilu da akitivirate vaš uporabniški račun."
+      not_activated: "Ne morete se še prijaviti. Pred časom smo poslali aktivacijsko e-sporočilo na <b>{{sentTo}}</b>. Sledite navodilom v e-sporočilu da akitivirate vaš uporabniški račun."
       not_allowed_from_ip_address: "Ne morete se prijaviti s tega IP naslova."
       admin_not_allowed_from_ip_address: "Ne morete se prijaviti kot administrator iz tega IP naslova."
       resend_activation_email: "Kliknite tukaj za ponovno pošiljanje aktivacijskega e-sporočila."
@@ -1414,6 +1389,7 @@ sl:
       shift: "Shift"
       ctrl: "Ctrl"
       alt: "Alt"
+      enter: "Enter"
     conditional_loading_section:
       loading: Nalagam...
     category_row:
@@ -1484,7 +1460,7 @@ sl:
       cannot_see_mention:
         category: "Omenil si uporabnika {{username}}, a ta ne bo obveščen saj nima dostopa do te kategorije. Dodati ga je potrebno v skupino ki lahko dostopa do kategorije."
         private: "Omenili ste uporabnika {{username}}, a ta ne bo obveščen, ker ne more videti tega zasebnega sporočila. Moraii ga boste povabiti v to zasebno sporočilo."
-      duplicate_link: "Povezava do <b>{{domain}}</b> bila že objavljena v temi  od <b>@{{username}}</b> v <a href='{{post_url}}'>odgovoru {{ago}}</a> – ali ste prepričani, da jo želite objaviti še enkrat?"
+      duplicate_link: "Povezava do <b>{{domain}}</b> bila že objavljena v temi od <b>@{{username}}</b> v <a href='{{post_url}}'>odgovoru {{ago}}</a> – ali ste prepričani, da jo želite objaviti še enkrat?"
       error:
         title_missing: "Naslov je obvezen"
         title_too_short: "Naslov mora vsebovati vsaj {{min}} znakov"
@@ -1648,7 +1624,10 @@ sl:
         watching_first_post: '{{username}} je ustvaril novo temo "{{topic}}" - {{site_title}}'
         confirm_title: "Obvestila omogočena - %{site_title}"
         confirm_body: "Uspelo! Obvestila so bila omogočena."
-        custom: "Obvestilo od  {{username}} na %{site_title}"
+        custom: "Obvestilo od {{username}} na %{site_title}"
+      titles:
+        watching_first_post: "nova tema"
+        post_approved: "prispevek odobren"
     upload_selector:
       title: "Dodaj sliko"
       title_with_attachments: "Dodaj sliko ali datoteko"
@@ -1784,25 +1763,21 @@ sl:
         read: "Niste prebrali še nobene teme."
         posted: "Niste objavili še v nobeni temi."
         latest: "Ni najnovejših tem. "
-        hot: "Ni vročih tem."
         bookmarks: "Nimate tem z zaznamki."
         category: "Ni tem v kategoriji {{category}} ."
         top: "Ni najboljših tem."
-        search: "Ni rezultatov iskanja."
         educate:
-          new: '<p>Tu se prikažejo vaše nove teme.</p><p>Privzeto se teme prikažejo kot nove in bodo imele oznako  <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">novo</span> če so bile ustvarjene v zadnjih  2 dneh.</p><p>Obiščite  <a href="%{userPrefsUrl}">nastavitve</a> če želite spremembo.</p>'
-          unread: '<p>Tu se prikažejo vaše neprebrane teme.</p><p>Privzeto se teme prikažejo kot neprebrane s prikazom števila <span class="badge new-posts badge-notification">1</span> če ste:</p><ul><li>Ustvarili temo</li><li>Odgovorili na temo</li><li>Brali temo več kot 4 minute</li></ul><p>Izrecno nastavili temo kot "Opazujem" ali "Sledim" preko nastavitev obveščenja na dnu teme.</p><p>Pojdite na  <a href="%{userPrefsUrl}">nastavitve</a> če želite spremembo.</p>'
+          new: '<p>Tu se prikažejo vaše nove teme.</p><p>Privzeto se teme prikažejo kot nove in bodo imele oznako <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">novo</span> če so bile ustvarjene v zadnjih 2 dneh.</p><p>Obiščite <a href="%{userPrefsUrl}">nastavitve</a> če želite spremembo.</p>'
+          unread: '<p>Tu se prikažejo vaše neprebrane teme.</p><p>Privzeto se teme prikažejo kot neprebrane s prikazom števila <span class="badge new-posts badge-notification">1</span> če ste:</p><ul><li>Ustvarili temo</li><li>Odgovorili na temo</li><li>Brali temo več kot 4 minute</li></ul><p>Izrecno nastavili temo kot "Opazujem" ali "Sledim" preko nastavitev obveščenja na dnu teme.</p><p>Pojdite na <a href="%{userPrefsUrl}">nastavitve</a> če želite spremembo.</p>'
       bottom:
         latest: "Ni več najnovejših tem."
-        hot: "Ni več vročih tem."
         posted: "Ni več objavljenih tem."
         read: "Ni več prebranih tem."
         new: "Ni več novih tem."
         unread: "Ni več neprebranih tem."
-        category: "Ni več tem v kategoriji  {{category}}."
+        category: "Ni več tem v kategoriji {{category}}."
         top: "Ni več najboljših tem."
         bookmarks: "Ni več tem z zaznamki."
-        search: "Ni več rezultatov iskanja."
     topic:
       filter_to:
         one: "{{count}} prispevek v temi"
@@ -1932,7 +1907,7 @@ sl:
         auto_close_based_on_last_post: "Ta tema se bo zaklenila %{duration} po zadnjem odgovoru."
         auto_delete: "Ta tema se bo sama izbrisala čez %{timeLeft}."
         auto_bump: "Ta tema se bo sama izpostavila %{timeLeft}."
-        auto_reminder: "Opomnili vas bomo o tej temi  %{timeLeft}."
+        auto_reminder: "Opomnili vas bomo o tej temi %{timeLeft}."
       auto_close_title: "Samodejno zapri nastavitve"
       auto_close_immediate:
         one: "Zadnji prispevek v tej temi je star že %{count} uro, zato da bo tema zaprta nemudoma."
@@ -1951,6 +1926,7 @@ sl:
         jump_bottom: "skoči na zadnji prispevek"
         jump_prompt: "skoči na..."
         jump_prompt_of: "od %{count} prispevkov"
+        jump_prompt_long: "Skoči na..."
         jump_bottom_with_number: "skoči na prispevek %{post_number}"
         jump_prompt_to_date: "na datum"
         jump_prompt_or: "ali"
@@ -2042,7 +2018,7 @@ sl:
       feature_topic:
         title: "Izpostavi to temo"
         pin: "Naj se ta tema prikaže na vrhu kategorije {{categoryLink}} do"
-        confirm_pin: "Trenutno imate  {{count}} pripetih tem. Preveč pripetih tem je lahko breme za nove in anonimne uporabnike. Ali ste prepričani da želite pripeti še eno temo v to kategorijo?"
+        confirm_pin: "Trenutno imate {{count}} pripetih tem. Preveč pripetih tem je lahko breme za nove in anonimne uporabnike. Ali ste prepričani da želite pripeti še eno temo v to kategorijo?"
         unpin: "Odpnite to temo iz vrha kategorije {{categoryLink}}."
         unpin_until: "Odstrani to temo iz vrha kategorije {{categoryLink}} ali počakaj do <strong>%{until}</strong>."
         pin_note: "Uporabniki lahko samostojno odpnejo temo."
@@ -2054,9 +2030,9 @@ sl:
           few: "Trenutno pripete teme v {{categoryLink}}: <strong class='badge badge-notification unread'>{{count}}</strong>"
           other: "Trenutno pripetih tem v {{categoryLink}}: <strong class='badge badge-notification unread'>{{count}}</strong>"
         pin_globally: "Ta tema naj se pojavi na vrhu vseh seznamov tem do"
-        confirm_pin_globally: "Trenutno imate {{count}} globalno pripetih tem. Preveč pripetih tem je lahko breme za nove in anonimne uporabnike. Ali ste prepričani da želite pripeti še eno globalno  temo?"
+        confirm_pin_globally: "Trenutno imate {{count}} globalno pripetih tem. Preveč pripetih tem je lahko breme za nove in anonimne uporabnike. Ali ste prepričani da želite pripeti še eno globalno temo?"
         unpin_globally: "Odstrani to temo z vrha vseh seznamov tem."
-        unpin_globally_until: "Odstrani to temo z vrha seznama vseh tem ali počakaj do  <strong>%{until}</strong>."
+        unpin_globally_until: "Odstrani to temo z vrha seznama vseh tem ali počakaj do <strong>%{until}</strong>."
         global_pin_note: "Uporabniki lahko samostojno odpnejo temo."
         not_pinned_globally: "Ni globalno pripetih tem."
         already_pinned_globally:
@@ -2096,7 +2072,7 @@ sl:
         success_email: "Poslali smo povabilo na <b>{{emailOrUsername}}</b>. Obvestili vas bomo, ko se bo uporabnik prvič prijavil. Na vaši uporabniški strani lahko v zavihku Povabila spremljate stanje vaših povabil."
         success_username: "Povabili smo uporabnika, da sodeluje v tej temi."
         error: "Nismo mogli povabiti to osebo. Mogoče je ta oseba že povabljena? (povabila so omejena)"
-        success_existing_email: "Uporabnik z e-naslovom <b>{{emailOrUsername}}</b>  že obstaja. Tega uporabnika smo povabili, da sodeluje v tej temi."
+        success_existing_email: "Uporabnik z e-naslovom <b>{{emailOrUsername}}</b> že obstaja. Tega uporabnika smo povabili, da sodeluje v tej temi."
       login_reply: "Za odgovor je potrebna prijava"
       filters:
         n_posts:
@@ -2117,8 +2093,8 @@ sl:
         error: "Med prestavljanjem prispevkov v novo temo je prišlo do napake."
         instructions:
           one: "Ustvarili boste novo temo in jo napolnili z <b>{{count}}</b> izbranim prispevkom."
-          two: "Ustvarili boste novo temo in jo napolnili z  <b>{{count}}</b> izbranima prispevkoma."
-          few: "Ustvarili boste novo temo in jo napolnili z  <b>{{count}}</b> izbranimi prispevki."
+          two: "Ustvarili boste novo temo in jo napolnili z <b>{{count}}</b> izbranima prispevkoma."
+          few: "Ustvarili boste novo temo in jo napolnili z <b>{{count}}</b> izbranimi prispevki."
           other: "Ustvarili boste novo temo in jo napolnili z <b>{{count}}</b> izbranimi prispevki."
       merge_topic:
         title: "Prestavi v obstoječo temo"
@@ -2524,7 +2500,7 @@ sl:
       notify_action: "Opozorilo"
       official_warning: "Uradno opozorilo"
       delete_spammer: "Izbriši spamerja"
-      delete_confirm_MF: "Izbrisali boste {POSTS, plural, one {<b>1</b> prispevek}  two {<b>2</b> prispevka} other {<b>#</b> prispevkov}} in {TOPICS, plural, one {<b>1</b> temo} two {<b>2</b> temi} other {<b>#</b> tem}} od tega uporabnika, odstranili njegov račun, blokirali prijave iz njegovih IP naslovov <b>{ip_address}</b> in dodali njegov e-naslov <b>{email}</b> na trajen seznam blokiranih. Ali ste prepričani da je ta uporabnik res spamer?"
+      delete_confirm_MF: "Izbrisali boste {POSTS, plural, one {<b>1</b> prispevek} two {<b>2</b> prispevka} other {<b>#</b> prispevkov}} in {TOPICS, plural, one {<b>1</b> temo} two {<b>2</b> temi} other {<b>#</b> tem}} od tega uporabnika, odstranili njegov račun, blokirali prijave iz njegovih IP naslovov <b>{ip_address}</b> in dodali njegov e-naslov <b>{email}</b> na trajen seznam blokiranih. Ali ste prepričani da je ta uporabnik res spamer?"
       yes_delete_spammer: "Da, izbriši spamerja"
       ip_address_missing: "(N/A)"
       hidden_email_address: "(skrito)"
@@ -2650,15 +2626,9 @@ sl:
           few: "Najnovejše ({{count}})"
           other: "Najnovejših ({{count}})"
         help: "teme z nedavnimi prispevki"
-      hot:
-        title: "Vroče"
-        help: "izbira najbolj vročih tem"
       read:
         title: "Prebrano"
-        help: "teme, ki jih prebrali, urejene po času zadnjega  branja"
-      search:
-        title: "Iskanje"
-        help: "išči po vseh temah"
+        help: "teme, ki jih prebrali, urejene po času zadnjega branja"
       categories:
         title: "Kategorije"
         title_in: "Kategorija - {{categoryName}}"
@@ -2740,6 +2710,11 @@ sl:
       content_load_error: '<a href="%url%">Te vsebina</a> ne moremo naložiti.'
       image_load_error: '<a href="%url%">Te slike</a> ne moremo naložiti.'
     keyboard_shortcuts_help:
+      shortcut_key_delimiter_comma: ","
+      shortcut_key_delimiter_plus: "+"
+      shortcut_delimiter_or: "%{shortcut1} ali %{shortcut2}"
+      shortcut_delimiter_slash: "%{shortcut1}/%{shortcut2}"
+      shortcut_delimiter_space: "%{shortcut1} %{shortcut2}"
       title: "Bližnjice na tipkovnici"
       jump_to:
         title: "Skoči na"
@@ -2824,7 +2799,7 @@ sl:
         other: "%{count} podeljenih"
       select_badge_for_title: Izberite značko za svoj naziv
       none: "(brez)"
-      successfully_granted: "%{badge} uspešno podeljena  %{username}"
+      successfully_granted: "%{badge} uspešno podeljena %{username}"
       badge_grouping:
         getting_started:
           name: Začetki
@@ -2928,20 +2903,16 @@ sl:
           read: "Niste prebrali še nobene teme."
           posted: "Niste objavili še v nobeni temi."
           latest: "Ni najnovejših tem."
-          hot: "Ni vročih tem."
           bookmarks: "Nimate tem z zaznamki."
           top: "Ni najboljših tem."
-          search: "Ni rezultatov iskanja."
         bottom:
           latest: "Ni več zadnjih tem."
-          hot: "Ni več vročih tem."
           posted: "Ni več objavljenih tem."
           read: "Ni več prebranih tem."
           new: "Ni več novih tem."
           unread: "Ni več neprebranih tem."
           top: "Ni več najboljših tem."
           bookmarks: "Ni več tem z zaznamki."
-          search: "Ni več rezultatov iskanja."
     invite:
       custom_message: "Naredite vaše povabilo bolj osebno tako da napišete <a href>osebno sporočilo</a>."
       custom_message_placeholder: "Vnesi sporočilo po meri"
@@ -2955,10 +2926,16 @@ sl:
     admin:
       title: "Discourse Admin"
       moderator: "Moderator"
+      tags:
+        remove_muted_tags_from_latest:
+          always: "vedno"
+          never: "nikoli"
       reports:
         title: "Seznam poročil"
       dashboard:
         title: "Nadzorna plošča"
+        last_updated: "Nadzorna plošča posodobljena:"
+        discourse_last_updated: "Discourse posodobljen:"
         version: "Verzija"
         up_to_date: "Imate zadnjo verzijo!"
         critical_available: "Nujna posodobitev je na voljo."
@@ -3064,9 +3041,7 @@ sl:
             visibility_levels:
               title: "Kdo lahko vidi to skupino?"
               public: "Vsi"
-              members: "Skrbniki skupine, člani in administratorji"
               staff: "Skrbniki skupine in osebje foruma"
-              owners: "Skrbniki skupine in administratorji"
           membership:
             automatic: Samodejno
             trust_level: Nivo zaupanja
@@ -3120,6 +3095,11 @@ sl:
           successful: "Uspešno"
           disabled: "Onemogočeno"
         events:
+          completed_in:
+            one: "Dokončano v %{count} sekundi."
+            two: "Dokončano v {{count}} sekundah."
+            few: "Dokončano v {{count}} sekundah."
+            other: "Dokončano v {{count}} sekundah."
           request: "Zahteva"
           timestamp: "Ustvarjeno"
           actions: "Akcije"
@@ -3216,6 +3196,8 @@ sl:
           install_popular: "Zanimivo"
           about_theme: "O nas"
           license: "Licenca"
+          enable: "Omogoči"
+          disable: "Onemogoči"
           updating: "Posodabljam..."
           add: "Dodaj"
           scss:
@@ -3325,7 +3307,7 @@ sl:
             anonymize_user: "anonimiziraj uporabnika"
             change_category_settings: "spremeni nastavitve kategorije"
             delete_category: "izbriši kategorijo"
-            create_category: "ustvari  kategorijo"
+            create_category: "ustvari kategorijo"
             silence_user: "utišaj uporabnika"
             unsilence_user: "ukini utišanje uporabnika"
             removed_silence_user: "utišaj uporabnika (odstranjen)"
@@ -3452,7 +3434,7 @@ sl:
         suspend_failed: "Nekaj je šlo narobe pri suspendiranju uporabnika {{error}}"
         unsuspend_failed: "Nekaj je šlo narobe pri preklicu suspenza {{error}}"
         suspend_duration: "Za kako dolgo bo uporabnik suspendiran?"
-        suspend_reason_label: "Zakaj je uporabnik suspendiran?  To besedilo <b>bo vidno vsem</b> na uporabnikovem profilu in se bo prikazalo uporabniku, ko se bo poskusil prijaviti. Naj bo kratko."
+        suspend_reason_label: "Zakaj je uporabnik suspendiran? To besedilo <b>bo vidno vsem</b> na uporabnikovem profilu in se bo prikazalo uporabniku, ko se bo poskusil prijaviti. Naj bo kratko."
         suspend_reason_hidden_label: "Zakaj je uporabnik suspendiran? To besedilo bo prikazano uporabniku, ko se bo poskušal vpisati. Naj bo kratko."
         suspend_reason: "Razlog"
         suspend_reason_placeholder: "Razlog za suspenz"

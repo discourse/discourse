@@ -15,6 +15,12 @@ describe ONPDiff do
       expect(ONPDiff.new("abcd", "abef").diff).to eq([["a", :common], ["b", :common], ["e", :add], ["f", :add], ["c", :delete], ["d", :delete]])
     end
 
+    it "bails out on large diffs" do
+      a = SecureRandom.alphanumeric(5_000)
+      b = SecureRandom.alphanumeric(5_000)
+      expect(ONPDiff.new(a, b).diff).to eq([])
+    end
+
   end
 
   describe "short_diff" do

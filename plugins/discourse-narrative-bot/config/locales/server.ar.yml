@@ -31,7 +31,7 @@ ar:
 
         - للاستمرار, رد علي في اي وقت.
         - ان كنت ترغب بتجاوز هذه الخطوة فقط قُل `%{skip_trigger}`.
-        - للبدء من جديد, قُل  `%{reset_trigger}`.
+        - للبدء من جديد, قُل `%{reset_trigger}`.
 
         ان كنت لا ترغب بالقيام بذلك فلا بأس ايضاً, انا روبوت. و لن تجرح مشاعري. :sob:
     dice:
@@ -39,7 +39,7 @@ ar:
       invalid: |-
         عذرا, من المستحيل رياضياً دحرجة النرد للحصول على هذه التركيبة :confounded:
       not_enough_dice: |-
-        لدي فقط %{num_of_dice} نرد. [Shameful]  (http://www.therobotsvoice.com/2009/04/the_10_most_shameful_rpg_dice.php), اعرف!
+        لدي فقط %{num_of_dice} نرد. [Shameful] (http://www.therobotsvoice.com/2009/04/the_10_most_shameful_rpg_dice.php), اعرف!
       out_of_range: |-
         هل تعلم ان [ اقصي عدد من اوجة حجر النرد ] (https://www.wired.com/2016/05/mathematical-challenge-of-designing-the-worlds-most-complex-120-sided-dice) الذي ينتج احتمال رياضي متساوي لظهور كل الاوجة هو 120 ؟!
       results: |-
@@ -78,7 +78,7 @@ ar:
       results: |-
         > :speech_balloon: _%{quote}_ &mdash; %{author}
     magic_8_ball:
-      trigger: 'اقرأ الطالع'
+      trigger: "اقرأ الطالع"
       answers:
         '1': "بالتاكيد"
         '2': "قطعاً"
@@ -102,9 +102,9 @@ ar:
       result: |-
         > :crystal_ball: %{result}
     track_selector:
-      reset_trigger: 'ابدء'
-      skip_trigger: 'تجاوز'
-      help_trigger: 'اعرض قائمة المساعدة'
+      reset_trigger: "ابدء"
+      skip_trigger: "تجاوز"
+      help_trigger: "اعرض قائمة المساعدة"
       random_mention:
         reply: |-
           مرحباً, لتكتشف ما استطيع ان افعلة, قل `@%{discobot_username} %{help_trigger}`.
@@ -183,7 +183,7 @@ ar:
           اختيار اي نص في المنشور سوف يظهر زر <kbd>**اقتبس**</kbd>, و الضغط علي زر **رد** عندما يكون النص محدد سوف يقتبس هذا الجزء ايضاً في الرد! هل يمكنك المحاولة مرة اخري؟
       bookmark:
         reply: |-
-          رائع!  الان يمكنك الرجوع بسهولة لمحادثتنا في اي وقت من خلال [ تبويب العلامات المرجعية بملفك الشخصي ](%{profile_page_url}/activity/bookmarks). او بالقائمة المنبثقة من الضغط علي صورتك الشخصية &#8598;
+          رائع! الان يمكنك الرجوع بسهولة لمحادثتنا في اي وقت من خلال [ تبويب العلامات المرجعية بملفك الشخصي ](%{profile_page_url}/activity/bookmarks). او بالقائمة المنبثقة من الضغط علي صورتك الشخصية &#8598;
       emoji:
         reply: |-
           هذا مثال علي :sparkles: _الرموز التعبيرية_ :sparkles:
@@ -206,10 +206,10 @@ ar:
 
           اذا كان لديك لوحة مفاتيح حقيقية, اضغط علي <kbd>؟</kbd> لفتح قائمة مفاتيح الاختصار.
       certificate:
-        alt: 'شهادة انجاز'
+        alt: "شهادة انجاز"
     advanced_user_narrative:
       cert_title: "في اعتراف بأتمام ناجح للدرس التعليمي للاعضاء المتقدمين"
-      title: ':arrow_up: مميزات العضو المحترف'
+      title: ":arrow_up: مميزات العضو المحترف"
       edit:
         bot_created_post_raw: "@%{discobot_username} حتي الان هو افضل روبوت انا اعرفة :wink:"
         instructions: |-
@@ -226,7 +226,7 @@ ar:
 
           للحفاظ علي ترابط النقاش, عمليات الحذف لا تنفز فوريا, سيتم تنفيذ حذف المنشور بعد بعض الوقت.
       recover:
-        deleted_post_raw: 'لماذا قام @%{discobot_username} بحذف منشوري؟ :anguished:'
+        deleted_post_raw: "لماذا قام @%{discobot_username} بحذف منشوري؟ :anguished:"
       category_hashtag:
         instructions: |-
           هل تعلم انك تستطيع الإشارة إلي قسم او وسم في منشورك؟ كمثال علي ذلك "هل رايت من قبل قسم ال%{category}؟"
@@ -270,4 +270,4 @@ ar:
 
           ولكن إذا اردت التحدث معي مجددا ارسل إلي رسالة :sunglasses:
       certificate:
-        alt: 'شهادة إنجاز مسار العضو المحترف.'
+        alt: "شهادة إنجاز مسار العضو المحترف."

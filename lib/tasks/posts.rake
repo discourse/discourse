@@ -8,20 +8,28 @@ task 'posts:rebake' => :environment do
 end
 
 task 'posts:rebake_uncooked_posts' => :environment do
-  RailsMultisite::ConnectionManagement.each_connection do
-    puts "Rebaking uncooked posts on #{RailsMultisite::ConnectionManagement.current_db}"
-    uncooked = Post.where('baked_version <> ? or baked_version IS NULL', Post::BAKED_VERSION)
+  ENV['RAILS_DB'] ? rebake_uncooked_posts : rebake_uncooked_posts_all_sites
+end
 
-    rebaked = 0
-    total = uncooked.count
-
-    uncooked.find_each do |post|
-      rebake_post(post)
-      print_status(rebaked += 1, total)
-    end
-
-    puts "", "#{rebaked} posts done!", ""
+def rebake_uncooked_posts_all_sites
+  RailsMultisite::ConnectionManagement.each_connection do |db|
+    rebake_uncooked_posts
   end
+end
+
+def rebake_uncooked_posts
+  puts "Rebaking uncooked posts on #{RailsMultisite::ConnectionManagement.current_db}"
+  uncooked = Post.where('baked_version <> ? or baked_version IS NULL', Post::BAKED_VERSION)
+
+  rebaked = 0
+  total = uncooked.count
+
+  uncooked.find_each do |post|
+    rebake_post(post)
+    print_status(rebaked += 1, total)
+  end
+
+  puts "", "#{rebaked} posts done!", ""
 end
 
 desc 'Update each post with latest markdown and refresh oneboxes'
@@ -409,7 +417,6 @@ def missing_uploads
     next if sha1.present?
     puts "Fixing missing uploads: " if count_missing == 0
     count_missing += 1
-    print "."
 
     upload_id = nil
 
@@ -426,26 +433,29 @@ def missing_uploads
     end
 
     if file_path.present?
-      tmp = Tempfile.new
-      tmp.write(File.read(file_path))
-      tmp.rewind
-
-      if upload = UploadCreator.new(tmp, File.basename(path)).create_for(Discourse.system_user.id)
+      if (upload = UploadCreator.new(File.open(file_path), File.basename(path)).create_for(Discourse.system_user.id)).persisted?
         upload_id = upload.id
-        DbHelper.remap(UrlHelper.absolute(src), upload.url)
 
         post.reload
-        post.raw.gsub!(src, upload.url)
-        post.cooked.gsub!(src, upload.url)
+        new_raw = post.raw.dup
+        new_raw = new_raw.gsub(path, upload.url)
 
-        if post.changed?
-          post.save!(validate: false)
-          post.rebake!
-        end
+        PostRevisor.new(post, Topic.with_deleted.find_by(id: post.topic_id)).revise!(
+          Discourse.system_user,
+          {
+            raw: new_raw
+          },
+          skip_validations: true,
+          force_new_version: true,
+          bypass_bump: true
+        )
+
+        print "🆗"
+      else
+        print "❌"
       end
-
-      FileUtils.rm(tmp, force: true)
     else
+      print "🚫"
       old_scheme_upload_count += 1
     end
 
@@ -463,7 +473,7 @@ def missing_uploads
       missing[:post_uploads].each do |id, uploads|
         post = Post.with_deleted.find_by(id: id)
         if post
-          puts "#{post.full_url} giving up on #{uploads.length} upload/s"
+          puts "#{post.full_url} giving up on #{uploads.length} upload(s)"
           PostCustomField.create!(post_id: post.id, name: Post::MISSING_UPLOADS_IGNORED, value: "t")
         else
           puts "could not find post #{id}"
@@ -502,38 +512,6 @@ task 'posts:missing_uploads', [:single_site] => :environment do |_, args|
   else
     RailsMultisite::ConnectionManagement.each_connection do
       missing_uploads
-    end
-  end
-end
-
-def destroy_old_data_exports
-  topics = Topic.with_deleted.where(<<~SQL, 2.days.ago)
-    slug LIKE '%-export-complete' AND
-    archetype = 'private_message' AND
-    posts_count = 1 AND
-    created_at < ? AND
-    user_id = -1
-  SQL
-
-  puts "Found #{topics.count} old CSV data exports on #{RailsMultisite::ConnectionManagement.current_db}, destroying"
-  puts
-  topics.each do |t|
-    Topic.transaction do
-      t.posts.first.destroy!
-      t.destroy!
-      print "."
-    end
-  end
-  puts "done"
-end
-
-desc 'destroys all user archive PMs (they may contain broken images)'
-task 'posts:destroy_old_data_exports' => :environment do
-  if RailsMultisite::ConnectionManagement.current_db != "default"
-    destroy_old_data_exports
-  else
-    RailsMultisite::ConnectionManagement.each_connection do
-      destroy_old_data_exports
     end
   end
 end
@@ -661,5 +639,112 @@ task 'posts:recover_uploads_from_index' => :environment do |_, args|
     RailsMultisite::ConnectionManagement.each_connection do
       recover_uploads_from_index(path)
     end
+  end
+end
+
+desc 'invalidate broken images'
+task 'posts:invalidate_broken_images' => :environment do
+  puts "Invalidating broken images.."
+
+  posts = Post.where("raw like '%<img%'")
+
+  rebaked = 0
+  total = posts.count
+
+  posts.find_each do |p|
+    rebake_post(p, invalidate_broken_images: true)
+    print_status(rebaked += 1, total)
+  end
+
+  puts
+  puts "", "#{rebaked} posts rebaked!"
+end
+
+desc "Coverts full upload URLs in `Post#raw` to short upload url"
+task 'posts:inline_uploads' => :environment do |_, args|
+  if ENV['RAILS_DB']
+    correct_inline_uploads
+  else
+    RailsMultisite::ConnectionManagement.each_connection do |db|
+      puts "Correcting #{db}..."
+      puts
+      correct_inline_uploads
+    end
+  end
+end
+
+def correct_inline_uploads
+  dry_run = (ENV["DRY_RUN"].nil? ? true : ENV["DRY_RUN"] != "false")
+  verbose = ENV["VERBOSE"]
+
+  scope = Post.joins(:post_uploads).distinct("posts.id")
+    .where(<<~SQL)
+    raw LIKE '%/uploads/#{RailsMultisite::ConnectionManagement.current_db}/original/%'
+    SQL
+
+  affected_posts_count = scope.count
+  fixed_count = 0
+  not_corrected_post_ids = []
+  failed_to_correct_post_ids = []
+
+  scope.find_each do |post|
+    if post.raw !~ Upload::URL_REGEX
+      affected_posts_count -= 1
+      next
+    end
+
+    begin
+      new_raw = InlineUploads.process(post.raw)
+
+      if post.raw != new_raw
+        if !dry_run
+          PostRevisor.new(post, Topic.with_deleted.find_by(id: post.topic_id))
+            .revise!(
+              Discourse.system_user,
+              {
+                raw: new_raw
+              },
+              skip_validations: true,
+              force_new_version: true,
+              bypass_bump: true
+            )
+        end
+
+        if verbose
+          require 'diffy'
+          Diffy::Diff.default_format = :color
+          puts "Cooked diff for Post #{post.id}"
+          puts Diffy::Diff.new(PrettyText.cook(post.raw), PrettyText.cook(new_raw), context: 1)
+          puts
+        elsif dry_run
+          putc "#"
+        else
+          putc "."
+        end
+
+        fixed_count += 1
+      else
+        putc "X"
+        not_corrected_post_ids << post.id
+      end
+    rescue
+      putc "!"
+      failed_to_correct_post_ids << post.id
+    end
+  end
+
+  puts
+  puts "#{fixed_count} out of #{affected_posts_count} affected posts corrected"
+
+  if not_corrected_post_ids.present?
+    puts "Ids of posts that were not corrected: #{not_corrected_post_ids}"
+  end
+
+  if failed_to_correct_post_ids.present?
+    puts "Ids of posts that encountered failures: #{failed_to_correct_post_ids}"
+  end
+
+  if dry_run
+    puts "Task was ran in dry run mode. Set `DRY_RUN=false` to revise affected posts"
   end
 end

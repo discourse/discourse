@@ -236,7 +236,7 @@ function applyEmoji(
 
 export function setup(helper) {
   helper.registerOptions((opts, siteSettings, state) => {
-    opts.features.emoji = !!siteSettings.enable_emoji;
+    opts.features.emoji = !state.disableEmojis && !!siteSettings.enable_emoji;
     opts.features.emojiShortcuts = !!siteSettings.enable_emoji_shortcuts;
     opts.features.inlineEmoji = !!siteSettings.enable_inline_emoji_translation;
     opts.emojiSet = siteSettings.emoji_set || "";

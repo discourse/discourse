@@ -62,6 +62,10 @@ describe GroupsController do
     end
 
     context 'sortable' do
+      before do
+        sign_in(user)
+      end
+
       let!(:other_group) { Fabricate(:group, name: "zzzzzz", users: [user]) }
 
       %w{
@@ -126,7 +130,7 @@ describe GroupsController do
       expect(group_ids).to include(group.id)
       expect(group_ids).to_not include(staff_group.id)
       expect(response_body["load_more_groups"]).to eq("/groups?page=1")
-      expect(response_body["total_rows_groups"]).to eq(2)
+      expect(response_body["total_rows_groups"]).to eq(1)
 
       expect(response_body["extras"]["type_filters"].map(&:to_sym)).to eq(
         described_class::TYPE_FILTERS.keys - [:my, :owner, :automatic]
@@ -292,7 +296,7 @@ describe GroupsController do
     end
 
     it 'should respond to HTML' do
-      group.update_attribute(:bio_cooked, 'testing group bio')
+      group.update!(bio_raw: 'testing **group** bio')
 
       get "/groups/#{group.name}.html"
 
@@ -302,8 +306,9 @@ describe GroupsController do
         property: 'og:title', content: group.name
       })
 
+      # note this uses an excerpt so it strips html
       expect(response.body).to have_tag(:meta, with: {
-        property: 'og:description', content: group.bio_cooked
+        property: 'og:description', content: 'testing group bio'
       })
     end
 
@@ -349,6 +354,9 @@ describe GroupsController do
       expect(response.status).to eq(400)
 
       get "/groups/#{group.name}/members.json?offset=-1"
+      expect(response.status).to eq(400)
+
+      get "/groups/trust_level_0/members.json?limit=2000"
       expect(response.status).to eq(400)
     end
 
@@ -469,13 +477,48 @@ describe GroupsController do
   end
 
   describe '#update' do
-    let(:group) do
+    let!(:group) do
       Fabricate(:group,
         name: 'test',
         users: [user],
         public_admission: false,
         public_exit: false
       )
+    end
+
+    context "custom_fields" do
+      before do
+        user.update!(admin: true)
+        sign_in(user)
+        plugin = Plugin::Instance.new
+        plugin.register_editable_group_custom_field :test
+        @group = Fabricate(:group)
+      end
+
+      after do
+        Group.plugin_editable_group_custom_fields.clear
+      end
+
+      it "only updates allowed user fields" do
+        put "/groups/#{@group.id}.json", params: { group: { custom_fields: { test: :hello1, test2: :hello2 } } }
+
+        @group.reload
+
+        expect(response.status).to eq(200)
+        expect(@group.custom_fields['test']).to eq('hello1')
+        expect(@group.custom_fields['test2']).to be_blank
+      end
+
+      it "is secure when there are no registered editable fields" do
+        Group.plugin_editable_group_custom_fields.clear
+        put "/groups/#{@group.id}.json", params: { group: { custom_fields: { test: :hello1, test2: :hello2 } } }
+
+        @group.reload
+
+        expect(response.status).to eq(200)
+        expect(@group.custom_fields['test']).to be_blank
+        expect(@group.custom_fields['test2']).to be_blank
+      end
     end
 
     context "when user is group owner" do
@@ -1332,7 +1375,8 @@ describe GroupsController do
     before do
       group.update!(
         name: 'GOT',
-        full_name: 'Daenerys Targaryen'
+        full_name: 'Daenerys Targaryen',
+        visibility_level: Group.visibility_levels[:logged_on_users]
       )
 
       hidden_group

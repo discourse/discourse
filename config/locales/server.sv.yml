@@ -27,6 +27,7 @@ sv:
   topics: "Ämnen"
   posts: "inlägg"
   loading: "Laddar"
+  sign_up: "Registrera"
   log_in: "Logga in"
   submit: "Skicka"
   purge_reason: "Automatiskt borttaget som övergett, avaktiverat konto"
@@ -181,7 +182,6 @@ sv:
   private_message_abbrev: "Meddelande"
   rss_description:
     latest: "Aktuella ämnen"
-    hot: "Heta ämnen"
     top: "Toppämnen"
     posts: "Senaste inläggen"
     group_posts: "Senaste inläggen från %{group_name}"
@@ -509,6 +509,8 @@ sv:
     authorize: "Auktorisera"
     read: "läs"
     read_write: "läs/skriv"
+    otp_confirmation:
+      confirm_title: "Fortsätt till %{site_name}"
     no_trust_level: "Tyvärr har ni inte den nödvändiga förtroendenivån för att få tillgång till användar API"
     generic_error: "Ledsen, vi kan inte lämna ut API nycklar, denna funktion kan inaktiveras av administratören"
     scopes:
@@ -775,7 +777,7 @@ sv:
     summary_posts_required: "Minsta antal inlägg i ett ämne innan 'Sammanfatta det här ämnet' möjliggörs"
     summary_likes_required: "Minsta antal gillningar i ett ämne innan 'Sammanfatta det här ämnet' möjliggörs"
     summary_percent_filter: "Visa högsta % av inläggen när en användare bockar i 'Sammanfatta det här ämnet'"
-    enable_personal_messages: "Tillåt användare med förtroendenivå 1 (konfigurera via minsta förtroendenivå för att skicka meddelanden) att skapa meddelanden och svara på meddelanden. Notera att personalen oavsett  alltid kan skicka meddelanden. "
+    enable_personal_messages: "Tillåt användare med förtroendenivå 1 (konfigurera via minsta förtroendenivå för att skicka meddelanden) att skapa meddelanden och svara på meddelanden. Notera att personalen oavsett alltid kan skicka meddelanden. "
     enable_long_polling: "Meddelande-buss som används för notifiering kan använda long polling"
     long_polling_base_url: "URL som används för long polling (när en CDN levererar dynamiskt innehåll, kontrollera att det här är inställt till origin pull) se: http://origin.site.com"
     long_polling_interval: "Tid som servern bör vänta innan den svarar på klienter när det inte finns någon data att skicka (endast loggad på användare)"
@@ -790,14 +792,13 @@ sv:
     tl4_additional_likes_per_day_multiplier: "Höj gränsen för antal gillningar per dag för användare med förtroendenivå 4 (ledare) genom att multiplicera med det här numret"
     traditional_markdown_linebreaks: "Använd vanliga radmatningar i Markdown, vilka kräver 2 avslutande mellanslag för en radmatning."
     post_undo_action_window_mins: "Antal minuter som en användare tillåts att upphäva handlingar på ett inlägg som gjorts nyligen (gillning, flaggning osv)."
-    must_approve_users: "Personal måste godkänna alla nya användarkonton innan de tillåts använda webbplatsen. VARNING: om det tillåts när webbplatsen är live så kommer det att upphäva tillgång för alla existerande användare som inte är personal!"
     pending_users_reminder_delay: "Notifiera moderatorer om nya användare har väntat på godkännande längre än så här många timmar. Ange -1 för att inaktivera notifikationer. "
     maximum_session_age: "Användaren kommer fortsättningsvis att vara inloggad i n timmar sedan senaste besöket"
     moderators_create_categories: "Tillåt moderatorer att skapa nya kategorier"
     cors_origins: "Tillåtna ursprung för cross-ursprungsbegäran (CORS). Varje ursprung måste inkludera http:// eller https://. DISCOURSE_ENABLE_CORS env variabeln måste sättas till true för att aktivera CORS."
     use_admin_ip_whitelist: "Administratörer kan bara logga in om de är på en IP-adress definierad i listan över granskade IP-adresser (Admin > Loggar > Granskade IP-adresser)."
     top_menu: "Bestäm vilka objekt som visas i hemsidans navigation, och i vilken ordning. Exempel: latest|new|unread|categories|top|read|posted|bookmarks"
-    post_menu: "Bestäm vilka objekt som visas i inläggsmenyn och i vilken ordning. Exempel:  like|edit|flag|delete|share|bookmark|reply"
+    post_menu: "Bestäm vilka objekt som visas i inläggsmenyn och i vilken ordning. Exempel: like|edit|flag|delete|share|bookmark|reply"
     post_menu_hidden_items: "Standardinställning för vilka menyobjekt som döljs i inläggsmenyn om inte utvidgnings-ellipsen har klickats på."
     share_links: "Bestäm vilka objekt som syns i den delade dialogen, och i vilken ordning."
     site_contact_username: "Ett giltigt personalanvändarnamn att skicka alla automatiserade meddelanden ifrån. Om lämnad blank används det System-kontot."
@@ -1022,7 +1023,7 @@ sv:
     enable_group_directory: "Förse en fil till grupper som surfar"
     allow_anonymous_posting: "Tillåt användare att växla till anonymt läge"
     anonymous_posting_min_trust_level: "Lägsta förtroendenivå som krävs för att aktivera anonyma inlägg"
-    anonymous_account_duration_minutes: "Skapa ett nytt anonymt konto var N minut för varje användare för att skydda anonymiteten. Exempel: om satt till 600: så snart som 600 minuter har gått sedan senaste inlägget OCH användaren väljer anon, så skapas ett nytt anonymt konto.  "
+    anonymous_account_duration_minutes: "Skapa ett nytt anonymt konto var N minut för varje användare för att skydda anonymiteten. Exempel: om satt till 600: så snart som 600 minuter har gått sedan senaste inlägget OCH användaren väljer anon, så skapas ett nytt anonymt konto. "
     hide_user_profiles_from_public: "Inaktivera användarkort, användarprofiler och användarförteckningar för anonyma användare."
     user_website_domains_whitelist: "Användare websidor kommer att verifieras mot dessa domäner. Pipe- avgränsad lista."
     allow_profile_backgrounds: "Tillåt användare att ladda upp profilbakgrunder."
@@ -1036,7 +1037,6 @@ sv:
     disable_edit_notifications: "Inaktivera redigering av notifikationer av systemanvändaren när 'download_remote_images_to_local' är aktiverad."
     automatically_unpin_topics: "Avklistra automatiskt ämnen när användaren når botten."
     read_time_word_count: "Ordräknare per minut för att beräkna uppskattad lästid."
-    topic_page_title_includes_category: "Ämnestitel för sidan inkluderar kategorinamnet. "
     max_prints_per_hour_per_user: "Maximalt antal av /printade sidhänvisnigar ( satt till 0 för att inaktivera)"
     full_name_required: "Fullständigt namn är ett obligatoriskt fält i en användares profil."
     enable_names: "Visa användarens fullständiga namn på dess profil, användarkort och e-post. Inaktivera för att dölja det fullständiga namnet överallt."
@@ -1096,7 +1096,6 @@ sv:
     tag_style: "Visuell stil för tagg-utmärkelser."
     min_trust_level_to_tag_topics: "Lägsta förtroendenivå som krävs för att tagga ämnen"
     suppress_overlapping_tags_in_list: "Om taggen exakt matchar orden i ämnets titel, visa inte taggen"
-    remove_muted_tags_from_latest: "Visa inte ämnen som taggats med dolda taggar i listan med senaste ämnen."
     errors:
       invalid_email: "Felaktig e-postadress."
       invalid_username: "Det finns ingen användare med detta användarnamn."
@@ -1591,8 +1590,6 @@ sv:
     see_more: "Mer"
     search_title: "Sök på hemsidan"
     search_button: "Sök"
-  terms_of_service:
-    title: "Användarvillkor"
   deleted: "raderad"
   image: "bild"
   upload:
@@ -1632,9 +1629,6 @@ sv:
     sender_body_blank: "body är tom"
   color_schemes:
     base_theme_name: "Bas"
-  about: "Om"
-  guidelines: "Riktlinjer"
-  privacy: "Integritet"
   edit_this_page: "Redigera denna sida"
   csv_export:
     boolean_yes: "Ja"

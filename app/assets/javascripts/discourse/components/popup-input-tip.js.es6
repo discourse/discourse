@@ -29,7 +29,7 @@ export default Ember.Component.extend(
     @observes("lastShownAt")
     bounce() {
       if (this.lastShownAt) {
-        var $elem = this.$();
+        var $elem = $(this.element);
         if (!this.animateAttribute) {
           this.animateAttribute =
             $elem.css("left") === "auto" ? "right" : "left";

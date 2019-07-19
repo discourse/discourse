@@ -73,9 +73,7 @@ createSearchResult({
     return h(
       "span",
       {
-        className: `tag-${tag} discourse-tag ${
-          Discourse.SiteSettings.tag_style
-        }`
+        className: `tag-${tag} discourse-tag ${Discourse.SiteSettings.tag_style}`
       },
       tag
     );
@@ -149,13 +147,27 @@ createSearchResult({
   linkField: "url",
   builder(result, term) {
     const topic = result.topic;
-    const link = h("span.topic", [
+
+    const firstLine = [
       this.attach("topic-status", { topic, disableActions: true }),
-      h("span.topic-title", new Highlighted(topic.get("fancyTitle"), term)),
+      h("span.topic-title", new Highlighted(topic.fancyTitle, term))
+    ];
+
+    const secondLine = [
       this.attach("category-link", {
-        category: topic.get("category"),
+        category: topic.category,
         link: false
       })
+    ];
+    if (Discourse.SiteSettings.tagging_enabled) {
+      secondLine.push(
+        this.attach("discourse-tags", { topic, tagName: "span" })
+      );
+    }
+
+    const link = h("span.topic", [
+      h("div.first-line", firstLine),
+      h("div.second-line", secondLine)
     ]);
 
     return postResult.call(this, result, link, term);

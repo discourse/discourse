@@ -69,6 +69,9 @@ class UploadsController < ApplicationController
   end
 
   def show
+    # do not serve uploads requested via XHR to prevent XSS
+    return xhr_not_allowed if request.xhr?
+
     return render_404 if !RailsMultisite::ConnectionManagement.has_db?(params[:site])
 
     RailsMultisite::ConnectionManagement.with_connection(params[:site]) do |db|
@@ -88,6 +91,9 @@ class UploadsController < ApplicationController
   end
 
   def show_short
+    # do not serve uploads requested via XHR to prevent XSS
+    return xhr_not_allowed if request.xhr?
+
     if SiteSetting.prevent_anons_from_downloading_files && current_user.nil?
       return render_404
     end
@@ -98,7 +104,7 @@ class UploadsController < ApplicationController
       if Discourse.store.internal?
         send_file_local_upload(upload)
       else
-        redirect_to upload.url
+        redirect_to Discourse.store.url_for(upload, force_download: params[:dl] == "1")
       end
     else
       render_404
@@ -119,6 +125,10 @@ class UploadsController < ApplicationController
   end
 
   protected
+
+  def xhr_not_allowed
+    raise Discourse::InvalidParameters.new("XHR not allowed")
+  end
 
   def render_404
     raise Discourse::NotFound

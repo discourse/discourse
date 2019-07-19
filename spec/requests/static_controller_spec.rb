@@ -120,6 +120,28 @@ describe StaticController do
     end
   end
 
+  context '#cdn_asset' do
+    let (:site) { RailsMultisite::ConnectionManagement.current_db }
+
+    it 'can serve assets' do
+      begin
+        assets_path = Rails.root.join("public/assets")
+
+        FileUtils.mkdir_p(assets_path)
+
+        file_path = assets_path.join("test.js.br")
+        File.write(file_path, 'fake brotli file')
+
+        get "/cdn_asset/#{site}/test.js.br"
+
+        expect(response.status).to eq(200)
+        expect(response.headers["Cache-Control"]).to match(/public/)
+      ensure
+        File.delete(file_path)
+      end
+    end
+  end
+
   context '#show' do
     before do
       post = create_post
@@ -262,6 +284,13 @@ describe StaticController do
       end
     end
 
+    context 'with a redirect path with query params' do
+      it 'redirects to the redirect path and preserves query params' do
+        post "/login.json", params: { redirect: '/foo?bar=1' }
+        expect(response).to redirect_to('/foo?bar=1')
+      end
+    end
+
     context 'with a period to force a new host' do
       it 'redirects to the root path' do
         post "/login.json", params: { redirect: ".org/foo" }
@@ -280,6 +309,18 @@ describe StaticController do
       it "redirects to the root" do
         post "/login.json", params: { redirect: "javascript:alert('trout')" }
         expect(response).to redirect_to('/')
+      end
+    end
+
+    context 'with an array' do
+      it "redirects to the root" do
+        post "/login.json", params: { redirect: ["/foo"] }
+        expect(response.status).to eq(400)
+        json = JSON.parse(response.body)
+        expect(json["errors"]).to be_present
+        expect(json["errors"]).to include(
+          I18n.t("invalid_params", message: "redirect")
+        )
       end
     end
 

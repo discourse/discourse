@@ -42,9 +42,10 @@ import { registerCustomPostMessageCallback as registerCustomPostMessageCallback1
 import Sharing from "discourse/lib/sharing";
 import { addComposerUploadHandler } from "discourse/components/composer-editor";
 import { addCategorySortCriteria } from "discourse/components/edit-category-settings";
+import { queryRegistry } from "discourse/widgets/widget";
 
 // If you add any methods to the API ensure you bump up this number
-const PLUGIN_API_VERSION = "0.8.30";
+const PLUGIN_API_VERSION = "0.8.31";
 
 class PluginApi {
   constructor(version, container) {
@@ -193,8 +194,14 @@ class PluginApi {
    * For example, to add a yellow background to all posts you could do this:
    *
    * ```
-   * api.decorateCooked($elem => $elem.css({ backgroundColor: 'yellow' }));
+   * api.decorateCooked(
+   *   $elem => $elem.css({ backgroundColor: 'yellow' }),
+   *   { id: 'yellow-decorator' }
+   * );
    * ```
+   *
+   * NOTE: To avoid memory leaks, it is highly recommended to pass a unique `id` parameter.
+   * You will receive a warning if you do not.
    **/
   decorateCooked(callback, opts) {
     opts = opts || {};
@@ -202,12 +209,13 @@ class PluginApi {
     addDecorator(callback);
 
     if (!opts.onlyStream) {
-      decorate(ComposerEditor, "previewRefreshed", callback);
-      decorate(DiscourseBanner, "didInsertElement", callback);
+      decorate(ComposerEditor, "previewRefreshed", callback, opts.id);
+      decorate(DiscourseBanner, "didInsertElement", callback, opts.id);
       decorate(
         this.container.factoryFor("component:user-stream").class,
         "didInsertElement",
-        callback
+        callback,
+        opts.id
       );
     }
   }
@@ -318,7 +326,9 @@ class PluginApi {
    * ```
    **/
   attachWidgetAction(widget, actionName, fn) {
-    const widgetClass = this.container.factoryFor(`widget:${widget}`).class;
+    const widgetClass =
+      queryRegistry(widget) ||
+      this.container.factoryFor(`widget:${widget}`).class;
     widgetClass.prototype[actionName] = fn;
   }
 
@@ -809,7 +819,7 @@ class PluginApi {
    *
    * Example:
    *
-   * addComposerUploadHandler(["mp4", "mov"], (file) => {
+   * addComposerUploadHandler(["mp4", "mov"], (file, editor) => {
    *    console.log("Handling upload for", file.name);
    * })
    */
@@ -930,10 +940,29 @@ export function withPluginApi(version, apiCodeCallback, opts) {
 }
 
 let _decorateId = 0;
-function decorate(klass, evt, cb) {
+let _decorated = new WeakMap();
+
+function decorate(klass, evt, cb, id) {
+  if (!id) {
+    // eslint-disable-next-line no-console
+    console.warn(
+      "`decorateCooked` should be supplied with an `id` option to avoid memory leaks."
+    );
+  } else {
+    if (!_decorated.has(klass)) {
+      _decorated.set(klass, new Set());
+    }
+    id = `${id}:${evt}`;
+    let set = _decorated.get(klass);
+    if (set.has(id)) {
+      return;
+    }
+    set.add(id);
+  }
+
   const mixin = {};
   mixin["_decorate_" + _decorateId++] = function($elem) {
-    $elem = $elem || this.$();
+    $elem = $elem || $(this.element);
     if ($elem) {
       cb($elem);
     }
@@ -943,11 +972,4 @@ function decorate(klass, evt, cb) {
 
 export function resetPluginApi() {
   _pluginv01 = null;
-}
-
-export function decorateCooked() {
-  // eslint-disable-next-line no-console
-  console.warn(
-    "`decorateCooked` has been removed. Use `getPluginApi(version).decorateCooked` instead"
-  );
 }

@@ -7,7 +7,8 @@ export default Ember.Controller.extend({
     "status",
     "category_id",
     "topic_id",
-    "username"
+    "username",
+    "sort_order"
   ],
   type: null,
   status: "pending",
@@ -17,6 +18,7 @@ export default Ember.Controller.extend({
   topic_id: null,
   filtersExpanded: false,
   username: "",
+  sort_order: "priority",
 
   init(...args) {
     this._super(...args);
@@ -45,11 +47,24 @@ export default Ember.Controller.extend({
   },
 
   @computed
+  sortOrders() {
+    return ["priority", "priority_asc", "created_at", "created_at_asc"].map(
+      order => {
+        return {
+          id: order,
+          name: I18n.t(`review.filters.orders.${order}`)
+        };
+      }
+    );
+  },
+
+  @computed
   statuses() {
     return [
       "pending",
       "approved",
       "rejected",
+      "deleted",
       "ignored",
       "reviewed",
       "all"
@@ -86,7 +101,8 @@ export default Ember.Controller.extend({
         priority: this.filterPriority,
         status: this.filterStatus,
         category_id: this.filterCategoryId,
-        username: this.filterUsername
+        username: this.filterUsername,
+        sort_order: this.filterSortOrder
       });
       this.send("refreshRoute");
     },

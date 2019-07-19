@@ -116,7 +116,7 @@
     }
   }
 
-  @include breakpoint(mobile) {
+  @include breakpoint(mobile-extra-large) {
     table.staff-logs tr {
       grid-template-columns: 1fr 1fr 0.5fr;
       td.staff-users {
@@ -433,7 +433,7 @@ table.search-logs-list {
       }
     }
   }
-  @include breakpoint(mobile) {
+  @include breakpoint(mobile-extra-large) {
     tr {
       td.term {
         grid-column-start: 1;

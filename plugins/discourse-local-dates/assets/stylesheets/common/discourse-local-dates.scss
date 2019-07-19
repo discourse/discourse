@@ -297,14 +297,16 @@
 }
 
 html:not(.mobile-view) {
-  .discourse-local-dates-create-modal.modal-body {
+  .fixed-modal .discourse-local-dates-create-modal.modal-body {
     width: 600px;
-    max-height: 400px;
+    max-height: 400px !important;
   }
 }
 
 html.mobile-view {
-  .discourse-local-dates-create-modal.modal-body {
+  .fixed-modal .discourse-local-dates-create-modal.modal-body {
+    max-height: 400px !important;
+
     .date-time-configuration {
       flex-direction: column;
     }

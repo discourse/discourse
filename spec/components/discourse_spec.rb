@@ -219,8 +219,13 @@ describe Discourse do
         expect(Discourse.readonly_mode?).to eq(true)
       end
 
-      it "returns true when Discourse is recently read only" do
-        Discourse.received_readonly!
+      it "returns true when postgres is recently read only" do
+        Discourse.received_postgres_readonly!
+        expect(Discourse.readonly_mode?).to eq(true)
+      end
+
+      it "returns true when redis is recently read only" do
+        Discourse.received_redis_readonly!
         expect(Discourse.readonly_mode?).to eq(true)
       end
 
@@ -234,21 +239,28 @@ describe Discourse do
       end
     end
 
-    describe ".received_readonly!" do
+    describe ".received_postgres_readonly!" do
       it "sets the right time" do
-        time = Discourse.received_readonly!
-        expect(Discourse.last_read_only['default']).to eq(time)
+        time = Discourse.received_postgres_readonly!
+        expect(Discourse.postgres_last_read_only['default']).to eq(time)
+      end
+    end
+
+    describe ".received_redis_readonly!" do
+      it "sets the right time" do
+        time = Discourse.received_redis_readonly!
+        expect(Discourse.redis_last_read_only['default']).to eq(time)
       end
     end
 
     describe ".clear_readonly!" do
       it "publishes the right message" do
-        Discourse.received_readonly!
+        Discourse.received_postgres_readonly!
         messages = []
 
         expect do
           messages = MessageBus.track_publish { Discourse.clear_readonly! }
-        end.to change { Discourse.last_read_only['default'] }.to(nil)
+        end.to change { Discourse.postgres_last_read_only['default'] }.to(nil)
 
         expect(messages.any? { |m| m.channel == Site::SITE_JSON_CHANNEL })
           .to eq(true)

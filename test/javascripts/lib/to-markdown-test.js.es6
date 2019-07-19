@@ -163,8 +163,18 @@ QUnit.test(
 
 QUnit.test("converts img tag", assert => {
   const url = "https://example.com/image.png";
+  const base62SHA1 = "q16M6GR110R47Z9p9Dk3PMXOJoE";
   let html = `<img src="${url}" width="100" height="50">`;
   assert.equal(toMarkdown(html), `![|100x50](${url})`);
+
+  html = `<img src="${url}" width="100" height="50" title="some title">`;
+  assert.equal(toMarkdown(html), `![|100x50](${url} "some title")`);
+
+  html = `<img src="${url}" width="100" height="50" title="some title" data-base62-sha1="${base62SHA1}">`;
+  assert.equal(
+    toMarkdown(html),
+    `![|100x50](upload://${base62SHA1} "some title")`
+  );
 
   html = `<div><span><img src="${url}" alt="description" width="50" height="100" /></span></div>`;
   assert.equal(toMarkdown(html), `![description|50x100](${url})`);
@@ -359,11 +369,20 @@ QUnit.test("converts image lightboxes to markdown", assert => {
   <span class="filename">sherlock3_sig.jpg</span><span class="informations">5496×3664 2 MB</span><span class="expand"></span>
   </div></a>
   `;
-  const markdown = `![sherlock3_sig.jpg](https://d11a6trkgmumsb.cloudfront.net/uploads/default/original/1X/8hkjhk7692f6afed3cb99d43ab2abd4e30aa8cba.jpeg)`;
+  let markdown = `![sherlock3_sig.jpg](https://d11a6trkgmumsb.cloudfront.net/uploads/default/original/1X/8hkjhk7692f6afed3cb99d43ab2abd4e30aa8cba.jpeg)`;
 
   assert.equal(toMarkdown(html), markdown);
 
   html = `<a class="lightbox" href="https://d11a6trkgmumsb.cloudfront.net/uploads/default/original/1X/8hkjhk7692f6afed3cb99d43ab2abd4e30aa8cba.jpeg" data-download-href="https://d11a6trkgmumsb.cloudfront.net/uploads/default/8hkjhk7692f6afed3cb99d43ab2abd4e30aa8cba" title="sherlock3_sig.jpg" rel="nofollow noopener"><img src="https://d11a6trkgmumsb.cloudfront.net/uploads/default/optimized/1X/8hkjhk7692f6afed3cb99d43ab2abd4e30aa8cba_2_689x459.jpeg" alt="sherlock3_sig" width="689" height="459" class="d-lazyload" srcset="https://d11a6trkgmumsb.cloudfront.net/uploads/default/optimized/1X/8hkjhk7692f6afed3cb99d43ab2abd4e30aa8cba_2_689x459.jpeg, https://d11a6trkgmumsb.cloudfront.net/uploads/default/optimized/1X/8hkjhk7692f6afed3cb99d43ab2abd4e30aa8cba_2_1033x688.jpeg 1.5x, https://d11a6trkgmumsb.cloudfront.net/uploads/default/optimized/1X/8hkjhk7692f6afed3cb99d43ab2abd4e30aa8cba_2_1378x918.jpeg 2x"></a>`;
+
+  assert.equal(toMarkdown(html), markdown);
+
+  html = `
+  <a class="lightbox" href="https://d11a6trkgmumsb.cloudfront.net/uploads/default/original/1X/8hkjhk7692f6afed3cb99d43ab2abd4e30aa8cba.jpeg" data-download-href="https://d11a6trkgmumsb.cloudfront.net/uploads/default/8hkjhk7692f6afed3cb99d43ab2abd4e30aa8cba" title="sherlock3_sig.jpg" rel="nofollow noopener"><img src="https://d11a6trkgmumsb.cloudfront.net/uploads/default/optimized/1X/8hkjhk7692f6afed3cb99d43ab2abd4e30aa8cba_2_689x459.jpeg" data-base62-sha1="1frsimI7TOtFJyD2LLyKSHM8JWe" alt="sherlock3_sig" width="689" height="459" class="d-lazyload" srcset="https://d11a6trkgmumsb.cloudfront.net/uploads/default/optimized/1X/8hkjhk7692f6afed3cb99d43ab2abd4e30aa8cba_2_689x459.jpeg, https://d11a6trkgmumsb.cloudfront.net/uploads/default/optimized/1X/8hkjhk7692f6afed3cb99d43ab2abd4e30aa8cba_2_1033x688.jpeg 1.5x, https://d11a6trkgmumsb.cloudfront.net/uploads/default/optimized/1X/8hkjhk7692f6afed3cb99d43ab2abd4e30aa8cba_2_1378x918.jpeg 2x"><div class="meta">
+  <span class="filename">sherlock3_sig.jpg</span><span class="informations">5496×3664 2 MB</span><span class="expand"></span>
+  </div></a>
+  `;
+  markdown = `![sherlock3_sig.jpg](upload://1frsimI7TOtFJyD2LLyKSHM8JWe)`;
 
   assert.equal(toMarkdown(html), markdown);
 });

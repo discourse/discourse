@@ -7,7 +7,7 @@
 
 pt_BR:
   site_settings:
-    discourse_narrative_bot_enabled: 'Habilitar Discourse Narrative Bot (discobot)'
+    discourse_narrative_bot_enabled: "Habilitar Discourse Narrative Bot (discobot)"
     disable_discourse_narrative_bot_welcome_post: "Desabilitar a postagem de boas vindas do Discourse Narrative Bot"
     discourse_narrative_bot_ignored_usernames: "Nomes de usuário que o Discourse Narrative Bot deve ignorar"
     discourse_narrative_bot_disable_public_replies: "Desabilitar respostas públicas do Discourse Narrative Bot"
@@ -23,7 +23,7 @@ pt_BR:
       name: Licenciado
       description: "Completou nosso tutorial de usuário avançado"
       long_description: |
-        Este emblema é concedido após a conclusão bem-sucedida do tutorial interativo de usuário avançado. Você dominou as ferramentas avançadas de discussão  — e agora está totalmente licenciado!
+        Este emblema é concedido após a conclusão bem-sucedida do tutorial interativo de usuário avançado. Você dominou as ferramentas avançadas de discussão — e agora está totalmente licenciado!
   discourse_narrative_bot:
     bio: "Oi, eu não sou uma pessoa real. Eu sou um robô que pode te ensinar sobre este site. Para interagir comigo, me envie uma mensagem ou mencione **`@%{discobot_username}`** em qualquer lugar."
     timeout:
@@ -82,7 +82,7 @@ pt_BR:
       results: |-
         > :left_speech_bubble: _%{quote}_ &mdash; %{author}
     magic_8_ball:
-      trigger: 'sorte'
+      trigger: "sorte"
       answers:
         '1': "É certo"
         '2': "É decididamente assim"
@@ -107,12 +107,17 @@ pt_BR:
       result: |-
         > :crystal_ball: %{result}
     track_selector:
-      reset_trigger: 'começar'
-      skip_trigger: 'pular'
-      help_trigger: 'mostrar ajuda'
+      reset_trigger: "começar"
+      skip_trigger: "pular"
+      help_trigger: "mostrar ajuda"
       random_mention:
         reply: |-
           Oi! Para descobrir o que eu posso fazer diga `@%{discobot_username} %{help_trigger}`.
+        tracks: |-
+          Eu atualmente sei como fazer as seguintes coisas:
+
+          `@%{discobot_username} %{reset_trigger} %{default_track}`
+          > Inicia um dos seguintes tutoriais interativos: %{tracks}.
         bot_actions: |-
           `@%{discobot_username} %{dice_trigger} 2d6`
           > :game_die: 3, 6
@@ -135,17 +140,19 @@ pt_BR:
 
           Enquanto isso, eu vou ficar fora do seu caminho.
     new_user_narrative:
+      reset_trigger: "tutorial"
+      title: "Certificado de conclusão de tutorial de novo usuário"
       cert_title: "Como forma de reconhecimento por completar com sucesso o tutorial de novo usuário"
       hello:
         title: "Saudações!"
         message: |-
-          Obrigado por se registrar %{title}, e seja bem vindo!
+          Obrigado por se juntar a %{title}, e seja bem vindo!
 
-          - Eu sou só um robô, mas [nossa amigável staff](%{base_uri}/about) também está aqui para ajudar se você precisar falar com uma pessoa.
+          - Eu sou apenas um robô, mas [nossa amigável staff](%{base_uri}/about) também está aqui para ajudar se você precisar falar com uma pessoa.
 
-          - Por razões de segurança, nós temporariamente limitamos o que novos usuários podem fazer. Você irá ganhar novas habilidades (e [emblemas](%{base_uri}/badges)) conforme o conhecemos.
+          - Por motivos de segurança, limitamos temporariamente o que os novos usuários podem fazer. Você ganhará [novas habilidades](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/) (e [emblemas](%{base_uri}/badges)) à medida que o conhecermos.
 
-          - Nós acreditamos em um [comportamento civilizado em comunidade](%{base_uri}/guidelines) a todo momento.
+          - Nós acreditamos em [comportamento comunitário civilizado](%{base_uri}/guidelines) em todos os momentos.
       onebox:
         instructions: |-
           Próximo, você pode compartilhar um destes links comigo? Responda com **um link em uma linha por si só**, e ele irá automaticamente expandir para incluir um elegante resumo.
@@ -293,10 +300,11 @@ pt_BR:
 
           (Se você quiser falar comigo de novo para aprender mais, é só me enviar uma mensagem ou mencionar `@%{discobot_username}` a qualquer momento!)
       certificate:
-        alt: 'Certificado de Conquista'
+        alt: "Certificado de Conquista"
     advanced_user_narrative:
+      reset_trigger: "tutorial avançado"
       cert_title: "Em reconhecimento à conclusão bem-sucedida do tutorial de usuário avançado"
-      title: ':arrow_up: Recursos avançados de usuário'
+      title: ":arrow_up: Recursos avançados de usuário"
       start_message: |-
         Como um usuário _avançado_, você já visitou a sua [página de preferências](%{base_uri}/my/preferences) @%{username}? Existem inúmeras maneiras de personalizar a sua experiência, como por exemplo selecionar um tema escuro ou claro.
 
@@ -327,13 +335,17 @@ pt_BR:
 
           Para preservar a continuidade das discussões, as exclusões não são imediatas; portanto, a postagem será removida depois de um tempo.
       recover:
-        deleted_post_raw: 'Por que @%{discobot_username} excluiu a minha postagem? :anguished:'
+        deleted_post_raw: "Por que @%{discobot_username} excluiu a minha postagem? :anguished:"
         instructions: |-
           Ah não! Parece que eu acidentalmente excluí uma nova postagem que acabei de criar para você.
 
           Você pode me fazer um favor e <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-rotate-left.png" width="16" height="16"> **desfazer a exclusão** dela?
         not_found: |-
           Tendo dificuldades? Lembre-se que <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> mostrar mais revelará <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-rotate-left.png" width="16" height="16"> desfazer exclusão.
+        reply: |-
+          Ufa, essa foi por pouco! Obrigado por corrigir aquilo :wink:
+
+          Note que você só tem %{deletion_after} hora(s) para restaurar uma postagem.
       category_hashtag:
         instructions: |-
           Você sabia que pode se referir a categorias e etiquetas em sua postagem? Por exemplo, você viu a categoria %{category}?
@@ -416,4 +428,4 @@ pt_BR:
 
           Por agora é só! Se você quiser falar comigo de novo para aprender mais, é só me enviar uma mensagem a qualquer momento :sunglasses:
       certificate:
-        alt: 'Certificado de Conquista do Curso de Usuário Avançado'
+        alt: "Certificado de Conquista do Curso de Usuário Avançado"

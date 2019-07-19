@@ -1,3 +1,4 @@
+import selectKit from "helpers/select-kit-helper";
 import DiscourseURL from "discourse/lib/url";
 import { acceptance } from "helpers/qunit-helpers";
 

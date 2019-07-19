@@ -30,6 +30,7 @@ describe BrowserDetection do
       ["Mozilla/5.0 (X11; Linux x86_64; rv:10.0) Gecko/20150101 Firefox/47.0 (Chrome)", :firefox, :linux, :linux],
       ["Opera/9.80 (X11; Linux zvav; U; en) Presto/2.12.423 Version/12.16", :opera, :linux, :linux],
       ["Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2311.135 Safari/537.36 Edge/12.246", :edge, :windows, :windows],
+      ["Mozilla/5.0 (X11; CrOS x86_64 11895.95.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.125 Safari/537.36 ", :chrome, :chromebook, :chromeos]
     ].each do |user_agent, browser, device, os|
       expect(BrowserDetection.browser(user_agent)).to eq(browser)
       expect(BrowserDetection.device(user_agent)).to eq(device)

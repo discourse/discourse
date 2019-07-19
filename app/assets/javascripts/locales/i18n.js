@@ -131,37 +131,45 @@ I18n.interpolate = function(message, options) {
 
 I18n.translate = function(scope, options) {
   options = this.prepareOptions(options);
+  options.needsPluralization = typeof options.count === "number";
+  options.ignoreMissing = !this.noFallbacks;
 
-  var translation = this.lookup(scope, options);
+  var translation = this.findTranslation(scope, options);
 
   if (!this.noFallbacks) {
     if (!translation && this.fallbackLocale) {
       options.locale = this.fallbackLocale;
-      translation = this.lookup(scope, options);
+      translation = this.findTranslation(scope, options);
     }
+
+    options.ignoreMissing = false;
+
     if (!translation && this.currentLocale() !== this.defaultLocale) {
       options.locale = this.defaultLocale;
-      translation = this.lookup(scope, options);
+      translation = this.findTranslation(scope, options);
     }
+
     if (!translation && this.currentLocale() !== 'en') {
       options.locale = 'en';
-      translation = this.lookup(scope, options);
+      translation = this.findTranslation(scope, options);
     }
   }
 
   try {
-    if (typeof translation === "object") {
-      if (typeof options.count === "number") {
-        return this.pluralize(translation, scope, options);
-      } else {
-        return translation;
-      }
-    } else {
-      return this.interpolate(translation, options);
-    }
+    return this.interpolate(translation, options);
   } catch (error) {
     return this.missingTranslation(scope);
   }
+};
+
+I18n.findTranslation = function(scope, options) {
+  var translation = this.lookup(scope, options);
+
+  if (translation && options.needsPluralization) {
+    translation = this.pluralize(translation, scope, options);
+  }
+
+  return translation;
 };
 
 I18n.toNumber = function(number, options) {
@@ -260,6 +268,8 @@ I18n.findAndTranslateValidNode = function(keys, translation) {
 };
 
 I18n.pluralize = function(translation, scope, options) {
+  if (typeof translation !== "object") return translation;
+
   options = this.prepareOptions(options);
   var count = options.count.toString();
 
@@ -268,9 +278,12 @@ I18n.pluralize = function(translation, scope, options) {
   var keys = ((typeof key === "object") && (key instanceof Array)) ? key : [key];
 
   var message = this.findAndTranslateValidNode(keys, translation);
-  if (message == null) message = this.missingTranslation(scope, keys[0]);
 
-  return this.interpolate(message, options);
+  if (message !== null || options.ignoreMissing) {
+    return message;
+  }
+
+  return this.missingTranslation(scope, keys[0]);
 };
 
 I18n.missingTranslation = function(scope, key) {

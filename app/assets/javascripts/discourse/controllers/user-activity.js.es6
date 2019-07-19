@@ -2,6 +2,7 @@ import { exportUserArchive } from "discourse/lib/export-csv";
 
 export default Ember.Controller.extend({
   application: Ember.inject.controller(),
+  router: Ember.inject.service(),
   user: Ember.inject.controller(),
   userActionType: null,
 

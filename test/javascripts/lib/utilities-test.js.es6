@@ -194,7 +194,7 @@ QUnit.test("getUploadMarkdown", assert => {
 
   assert.equal(
     testUploadMarkdown("important.txt", { short_url }),
-    `[important.txt (42 Bytes)|attachment](${short_url})`
+    `[important.txt|attachment](${short_url}) (42 Bytes)`
   );
 });
 

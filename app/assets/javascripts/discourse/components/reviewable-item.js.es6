@@ -92,7 +92,11 @@ export default Ember.Component.extend({
             this.currentUser.set("reviewable_count", result.reviewable_count);
           }
 
-          this.attrs.remove(performResult.remove_reviewable_ids);
+          if (this.attrs.remove) {
+            this.attrs.remove(performResult.remove_reviewable_ids);
+          } else {
+            return this.store.find("reviewable", reviewable.id);
+          }
         })
         .catch(popupAjaxError)
         .finally(() => this.set("updating", false));

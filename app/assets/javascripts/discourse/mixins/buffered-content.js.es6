@@ -1,11 +1,11 @@
 /* global BufferedProxy: true */
 export function bufferedProperty(property) {
   const mixin = {
-    buffered: function() {
+    buffered: Ember.computed(property, function() {
       return Ember.ObjectProxy.extend(BufferedProxy).create({
         content: this.get(property)
       });
-    }.property(property),
+    }),
 
     rollbackBuffer: function() {
       this.buffered.discardBufferedChanges();

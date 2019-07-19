@@ -17,9 +17,8 @@ export default Discourse.Route.extend({
     params = params || {};
     params.track_visit = true;
 
-    const self = this,
-      topic = this.modelFor("topic"),
-      postStream = topic.get("postStream"),
+    const topic = this.modelFor("topic"),
+      postStream = topic.postStream,
       topicController = this.controllerFor("topic"),
       composerController = this.controllerFor("composer");
 
@@ -32,30 +31,33 @@ export default Discourse.Route.extend({
 
     postStream
       .refresh(params)
-      .then(function() {
+      .then(() => {
         // TODO we are seeing errors where closest post is null and this is exploding
         // we need better handling and logging for this condition.
+
+        // there are no closestPost for hidden topics
+        if (topic.view_hidden) {
+          return;
+        }
 
         // The post we requested might not exist. Let's find the closest post
         const closestPost = postStream.closestPostForPostNumber(
           params.nearPost || 1
         );
-        const closest = closestPost.get("post_number");
+        const closest = closestPost.post_number;
 
         topicController.setProperties({
           "model.currentPost": closest,
-          enteredIndex: topic
-            .get("postStream")
-            .progressIndexOfPost(closestPost),
+          enteredIndex: topic.postStream.progressIndexOfPost(closestPost),
           enteredAt: new Date().getTime().toString()
         });
 
         topicController.subscribe();
 
         // Highlight our post after the next render
-        Ember.run.scheduleOnce("afterRender", function() {
-          self.appEvents.trigger("post:highlight", closest);
-        });
+        Ember.run.scheduleOnce("afterRender", () =>
+          this.appEvents.trigger("post:highlight", closest)
+        );
 
         const opts = {};
         if (document.location.hash && document.location.hash.length) {
@@ -63,13 +65,13 @@ export default Discourse.Route.extend({
         }
         DiscourseURL.jumpToPost(closest, opts);
 
-        if (!Ember.isEmpty(topic.get("draft"))) {
+        if (!Ember.isEmpty(topic.draft)) {
           composerController.open({
-            draft: Draft.getLocal(topic.get("draft_key"), topic.get("draft")),
-            draftKey: topic.get("draft_key"),
-            draftSequence: topic.get("draft_sequence"),
-            topic: topic,
-            ignoreIfChanged: true
+            draft: Draft.getLocal(topic.draft_key, topic.draft),
+            draftKey: topic.draft_key,
+            draftSequence: topic.draft_sequence,
+            ignoreIfChanged: true,
+            topic
           });
         }
       })
@@ -79,5 +81,18 @@ export default Discourse.Route.extend({
           console.log("Could not view topic", e);
         }
       });
+  },
+
+  actions: {
+    willTransition() {
+      this.controllerFor("topic").set(
+        "previousURL",
+        document.location.pathname
+      );
+
+      // NOTE: omitting this return can break the back button when transitioning quickly between
+      // topics and the latest page.
+      return true;
+    }
   }
 });

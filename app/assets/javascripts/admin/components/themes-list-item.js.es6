@@ -2,6 +2,8 @@ import {
   default as computed,
   observes
 } from "ember-addons/ember-computed-decorators";
+import { iconHTML } from "discourse-common/lib/icon-library";
+import { escape } from "pretty-text/sanitizer";
 
 const MAX_COMPONENTS = 4;
 
@@ -36,8 +38,8 @@ export default Ember.Component.extend({
   },
 
   animate(isInitial) {
-    const $container = this.$();
-    const $list = this.$(".components-list");
+    const $container = $(this.element);
+    const $list = $(this.element.querySelector(".components-list"));
     if ($list.length === 0 || Ember.testing) {
       return;
     }
@@ -64,7 +66,10 @@ export default Ember.Component.extend({
     children = this.childrenExpanded
       ? children
       : children.slice(0, MAX_COMPONENTS);
-    return children.map(t => t.get("name"));
+    return children.map(t => {
+      const name = escape(t.name);
+      return t.enabled ? name : `${iconHTML("ban")} ${name}`;
+    });
   },
 
   @computed("children")

@@ -130,6 +130,9 @@ class User < ActiveRecord::Base
   after_create :ensure_in_trust_level_group
   after_create :set_default_categories_preferences
 
+  after_update :trigger_user_updated_event, if: :saved_change_to_uploaded_avatar_id?
+  after_update :trigger_user_automatic_group_refresh, if: :saved_change_to_staged?
+
   before_save :update_usernames
   before_save :ensure_password_is_hashed
   before_save :match_title_to_primary_group_changes
@@ -142,6 +145,7 @@ class User < ActiveRecord::Base
   after_save :expire_old_email_tokens
   after_save :index_search
   after_save :check_site_contact_username
+
   after_commit :trigger_user_created_event, on: :create
   after_commit :trigger_user_destroyed_event, on: :destroy
 
@@ -1016,7 +1020,12 @@ class User < ActiveRecord::Base
       .where.not(post_id: disagreed_flag_post_ids)
       .each do |tl|
 
-      message = I18n.t('flag_reason.spam_hosts', domain: tl.domain, base_path: Discourse.base_path)
+      message = I18n.t(
+        'flag_reason.spam_hosts',
+        domain: tl.domain,
+        base_path: Discourse.base_path,
+        locale: SiteSetting.default_locale
+      )
       results << PostActionCreator.create(Discourse.system_user, tl.post, :spam, message: message)
     end
 
@@ -1371,8 +1380,9 @@ class User < ActiveRecord::Base
     values = []
 
     %w{watching watching_first_post tracking muted}.each do |s|
-      category_ids = SiteSetting.get("default_categories_#{s}").split("|")
+      category_ids = SiteSetting.get("default_categories_#{s}").split("|").map(&:to_i)
       category_ids.each do |category_id|
+        next if category_id == 0
         values << "(#{self.id}, #{category_id}, #{CategoryUser.notification_levels[s.to_sym]})"
       end
     end
@@ -1413,6 +1423,18 @@ class User < ActiveRecord::Base
   end
 
   private
+
+  def trigger_user_automatic_group_refresh
+    if !staged
+      Group.user_trust_level_change!(id, trust_level)
+    end
+    true
+  end
+
+  def trigger_user_updated_event
+    DiscourseEvent.trigger(:user_updated, self)
+    true
+  end
 
   def check_if_title_is_badged_granted
     if title_changed? && !new_record? && user_profile

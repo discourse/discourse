@@ -184,7 +184,7 @@ describe PostAlerter do
       }.to change(evil_trout.notifications, :count).by(0)
     end
 
-    it 'notifies a user by username' do
+    it 'does not collapse quote notifications' do
       topic = Fabricate(:topic)
 
       expect {
@@ -194,7 +194,7 @@ describe PostAlerter do
             topic: topic
           )
         end
-      }.to change(evil_trout.notifications, :count).by(1)
+      }.to change(evil_trout.notifications, :count).by(2)
     end
 
     it "won't notify the user a second time on revision" do
@@ -286,6 +286,14 @@ describe PostAlerter do
       }.to change(evil_trout.notifications, :count).by(0)
 
       expect(GroupMention.count).to eq(3)
+
+      group.update_columns(mentionable_level: Group::ALIAS_LEVELS[:owners_mods_and_admins])
+      group.add_owner(user)
+      expect {
+        create_post_with_alerts(raw: "Hello @group the owner can mention you", user: user)
+      }.to change(evil_trout.notifications, :count).by(1)
+
+      expect(GroupMention.count).to eq(4)
     end
 
     it "triggers :before_create_notifications_for_users" do
@@ -989,15 +997,16 @@ describe PostAlerter do
         SiteSetting.tagging_enabled = true
         Jobs.run_immediately!
         TagUser.change(user.id, watched_tag.id, TagUser.notification_levels[:watching_first_post])
+        TopicUser.change(Fabricate(:user).id, post.topic.id, notification_level: TopicUser.notification_levels[:watching])
       end
 
       it "triggers a notification" do
         expect(user.notifications.where(notification_type: Notification.types[:watching_first_post]).count).to eq(0)
 
-        PostRevisor.new(post).revise!(Fabricate(:user), tags: [other_tag.name, watched_tag.name])
+        expect { PostRevisor.new(post).revise!(Fabricate(:user), tags: [other_tag.name, watched_tag.name]) }.to change { Notification.count }.by(1)
         expect(user.notifications.where(notification_type: Notification.types[:watching_first_post]).count).to eq(1)
 
-        PostRevisor.new(post).revise!(Fabricate(:user), tags: [watched_tag.name, other_tag.name])
+        expect { PostRevisor.new(post).revise!(Fabricate(:user), tags: [watched_tag.name, other_tag.name]) }.to change { Notification.count }.by(0)
         expect(user.notifications.where(notification_type: Notification.types[:watching_first_post]).count).to eq(1)
       end
 

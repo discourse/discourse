@@ -31,7 +31,7 @@ table.web-hooks.grid {
       }
     }
   }
-  @include breakpoint(mobile) {
+  @include breakpoint(mobile-extra-large) {
     tbody {
       tr {
         grid-template-columns: 0.5fr 1fr;
@@ -159,7 +159,7 @@ table.api-keys {
 
     .hook-event {
       margin-bottom: 0.5em;
-      @include breakpoint(mobile) {
+      @include breakpoint(mobile-extra-large) {
         width: 100%;
       }
     }

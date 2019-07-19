@@ -61,8 +61,14 @@ function likeCount(attrs) {
         ? "post.has_likes_title_only_you"
         : "post.has_likes_title_you"
       : "post.has_likes_title";
-    const icon = attrs.yours ? "d-liked" : "";
+    let icon = attrs.yours ? "d-liked" : "";
+    let addContainer = attrs.yours;
     const additionalClass = attrs.yours ? "my-likes" : "regular-likes";
+
+    if (!attrs.showLike) {
+      icon = attrs.yours ? "d-liked" : "d-unliked";
+      addContainer = true;
+    }
 
     return {
       action: "toggleWhoLiked",
@@ -71,7 +77,7 @@ function likeCount(attrs) {
       contents: count,
       icon,
       iconRight: true,
-      addContainer: attrs.yours,
+      addContainer,
       titleOptions: { count: attrs.liked ? count - 1 : count }
     };
   }
@@ -172,7 +178,7 @@ registerButton("wiki-edit", attrs => {
       action: "editPost",
       className: "edit create",
       title: "post.controls.edit",
-      icon: "pencil-square-o",
+      icon: "far-edit",
       alwaysShowYours: true
     };
     if (!attrs.mobileView) {
@@ -307,7 +313,7 @@ registerButton("delete", attrs => {
       icon: "far-trash-alt",
       className: "delete"
     };
-  } else if (!attrs.canDelete && attrs.firstPost && attrs.yours) {
+  } else if (attrs.showFlagDelete) {
     return {
       id: "delete_topic",
       action: "showDeleteTopicModal",

@@ -147,6 +147,40 @@ HTML
     expect(result).to include(".class5")
   end
 
+  it "correctly handles extra JS fields" do
+    theme = Fabricate(:theme)
+    js_field = theme.set_field(target: :extra_js, name: "discourse/controllers/discovery.js.es6", value: "import 'discourse/lib/ajax'; console.log('hello');")
+    hbs_field = theme.set_field(target: :extra_js, name: "discourse/templates/discovery.hbs", value: "{{hello-world}}")
+    raw_hbs_field = theme.set_field(target: :extra_js, name: "discourse/templates/discovery.raw.hbs", value: "{{hello-world}}")
+    unknown_field = theme.set_field(target: :extra_js, name: "discourse/controllers/discovery.blah", value: "this wont work")
+    theme.save!
+
+    expected_js = <<~JS
+      define("discourse/controllers/discovery", ["discourse/lib/ajax"], function () {
+        "use strict";
+
+        var __theme_name__ = "#{theme.name}";
+        var settings = Discourse.__container__.lookup("service:theme-settings").getObjectForTheme(#{theme.id});
+        var themePrefix = function themePrefix(key) {
+          return "theme_translations.#{theme.id}." + key;
+        };
+        console.log('hello');
+      });
+    JS
+    expect(js_field.reload.value_baked).to eq(expected_js.strip)
+
+    expect(hbs_field.reload.value_baked).to include('Ember.TEMPLATES["discovery"]')
+    expect(raw_hbs_field.reload.value_baked).to include('Discourse.RAW_TEMPLATES["discourse/templates/discovery"]')
+    expect(unknown_field.reload.value_baked).to eq("")
+    expect(unknown_field.reload.error).to eq(I18n.t("themes.compile_error.unrecognized_extension", extension: "blah"))
+
+    # All together
+    expect(theme.javascript_cache.content).to include('Ember.TEMPLATES["discovery"]')
+    expect(theme.javascript_cache.content).to include('Discourse.RAW_TEMPLATES["discourse/templates/discovery"]')
+    expect(theme.javascript_cache.content).to include('define("discourse/controllers/discovery"')
+    expect(theme.javascript_cache.content).to include("var settings =")
+  end
+
   def create_upload_theme_field!(name)
     ThemeField.create!(
       theme_id: 1,

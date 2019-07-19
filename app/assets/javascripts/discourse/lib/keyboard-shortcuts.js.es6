@@ -65,9 +65,10 @@ const bindings = {
   "shift+p": { handler: "pinUnpinTopic" },
   "shift+r": { handler: "replyToTopic" },
   "shift+s": { click: "#topic-footer-buttons button.share", anonymous: true }, // share topic
-  "shift+u": { handler: "goToUnreadPost" },
+  "shift+l": { handler: "goToUnreadPost" },
   "shift+z shift+z": { handler: "logout" },
   "shift+f11": { handler: "fullscreenComposer", global: true },
+  "shift+u": { handler: "deferTopic" },
   t: { postAction: "replyAsNewTopic" },
   u: { handler: "goBack", anonymous: true },
   "x r": {
@@ -438,9 +439,22 @@ export default {
       $selected = $articles.filter("[data-islastviewedtopic=true]");
     }
 
+    // Discard selection if it is not in viewport, so users can combine
+    // keyboard shortcuts with mouse scrolling.
+    if ($selected.length !== 0) {
+      const offset = minimumOffset();
+      const beginScreen = $(window).scrollTop() - offset;
+      const endScreen = beginScreen + window.innerHeight + offset;
+      const beginArticle = $selected.offset().top;
+      const endArticle = $selected.offset().top + $selected.height();
+      if (beginScreen > endArticle || beginArticle > endScreen) {
+        $selected = null;
+      }
+    }
+
     // If still nothing is selected, select the first post that is
     // visible and cancel move operation.
-    if ($selected.length === 0) {
+    if (!$selected || $selected.length === 0) {
       const offset = minimumOffset();
       $selected = $articles
         .toArray()
@@ -618,5 +632,9 @@ export default {
 
   _replyToPost() {
     this.container.lookup("controller:topic").send("replyToPost");
+  },
+
+  deferTopic() {
+    this.container.lookup("controller:topic").send("deferTopic");
   }
 };

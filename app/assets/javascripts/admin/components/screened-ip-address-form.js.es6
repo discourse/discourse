@@ -62,7 +62,7 @@ export default Ember.Component.extend({
             this.setProperties({ ip_address: "", formSubmitted: false });
             this.action(ScreenedIpAddress.create(result.screened_ip_address));
             Ember.run.schedule("afterRender", () =>
-              this.$(".ip-address-input").focus()
+              this.element.querySelector(".ip-address-input").focus()
             );
           })
           .catch(e => {
@@ -73,7 +73,9 @@ export default Ember.Component.extend({
                     error: e.jqXHR.responseJSON.errors.join(". ")
                   })
                 : I18n.t("generic_error");
-            bootbox.alert(msg, () => this.$(".ip-address-input").focus());
+            bootbox.alert(msg, () =>
+              this.element.querySelector(".ip-address-input").focus()
+            );
           });
       }
     }
@@ -82,7 +84,7 @@ export default Ember.Component.extend({
   @on("didInsertElement")
   _init() {
     Ember.run.schedule("afterRender", () => {
-      this.$(".ip-address-input").keydown(e => {
+      $(this.element.querySelector(".ip-address-input")).keydown(e => {
         if (e.keyCode === 13) {
           this.send("submit");
         }

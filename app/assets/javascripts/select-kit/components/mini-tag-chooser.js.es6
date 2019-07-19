@@ -54,7 +54,7 @@ export default ComboBox.extend(TagsMixin, {
   didInsertElement() {
     this._super(...arguments);
 
-    this.$(".select-kit-body").on(
+    $(this.element.querySelector(".select-kit-body")).on(
       "mousedown touchstart",
       ".selected-tag",
       event => {
@@ -68,7 +68,9 @@ export default ComboBox.extend(TagsMixin, {
   willDestroyElement() {
     this._super(...arguments);
 
-    this.$(".select-kit-body").off("mousedown touchstart");
+    $(this.element.querySelector(".select-kit-body")).off(
+      "mousedown touchstart"
+    );
   },
 
   @computed("hasReachedMaximum")

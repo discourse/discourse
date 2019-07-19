@@ -209,6 +209,7 @@ Discourse::Application.routes.draw do
     post "themes/generate_key_pair" => "themes#generate_key_pair"
     get "themes/:id/preview" => "themes#preview"
     get "themes/:id/diff_local_changes" => "themes#diff_local_changes"
+    put "themes/:id/setting" => "themes#update_single_setting"
 
     scope "/customize", constraints: AdminConstraint.new do
       resources :user_fields, constraints: AdminConstraint.new
@@ -220,12 +221,12 @@ Discourse::Application.routes.draw do
 
       # They have periods in their URLs often:
       get 'site_texts'             => 'site_texts#index'
-      get 'site_texts/:id.json'    => 'site_texts#show',   constraints: { id: /[\w.\-\+]+/i }
-      get 'site_texts/:id'         => 'site_texts#show',   constraints: { id: /[\w.\-\+]+/i }
-      put 'site_texts/:id.json'    => 'site_texts#update', constraints: { id: /[\w.\-\+]+/i }
-      put 'site_texts/:id'         => 'site_texts#update', constraints: { id: /[\w.\-\+]+/i }
-      delete 'site_texts/:id.json' => 'site_texts#revert', constraints: { id: /[\w.\-\+]+/i }
-      delete 'site_texts/:id'      => 'site_texts#revert', constraints: { id: /[\w.\-\+]+/i }
+      get 'site_texts/:id.json'    => 'site_texts#show',   constraints: { id: /[\w.\-\+\%\&]+/i }
+      get 'site_texts/:id'         => 'site_texts#show',   constraints: { id: /[\w.\-\+\%\&]+/i }
+      put 'site_texts/:id.json'    => 'site_texts#update', constraints: { id: /[\w.\-\+\%\&]+/i }
+      put 'site_texts/:id'         => 'site_texts#update', constraints: { id: /[\w.\-\+\%\&]+/i }
+      delete 'site_texts/:id.json' => 'site_texts#revert', constraints: { id: /[\w.\-\+\%\&]+/i }
+      delete 'site_texts/:id'      => 'site_texts#revert', constraints: { id: /[\w.\-\+\%\&]+/i }
 
       get 'reseed' => 'site_texts#get_reseed_options'
       post 'reseed' => 'site_texts#reseed'
@@ -234,6 +235,10 @@ Discourse::Application.routes.draw do
       get 'email_templates/(:id)'    => 'email_templates#show',   constraints: { id: /[0-9a-z_.]+/ }
       put 'email_templates/(:id)'    => 'email_templates#update', constraints: { id: /[0-9a-z_.]+/ }
       delete 'email_templates/(:id)' => 'email_templates#revert', constraints: { id: /[0-9a-z_.]+/ }
+
+      get 'robots' => 'robots_txt#show'
+      put 'robots.json' => 'robots_txt#update'
+      delete 'robots.json' => 'robots_txt#reset'
     end
 
     resources :embeddable_hosts, constraints: AdminConstraint.new
@@ -337,9 +342,10 @@ Discourse::Application.routes.draw do
   get "session/sso_provider" => "session#sso_provider"
   get "session/current" => "session#current"
   get "session/csrf" => "session#csrf"
-  get "session/email-login/:token" => "session#email_login"
+  get "session/email-login/:token" => "session#email_login_info"
   post "session/email-login/:token" => "session#email_login"
   get "session/otp/:token" => "session#one_time_password", constraints: { token: /[0-9a-f]+/ }
+  post "session/otp/:token" => "session#one_time_password", constraints: { token: /[0-9a-f]+/ }
   get "composer_messages" => "composer_messages#index"
   post "composer/parse_html" => "composer#parse_html"
 
@@ -371,8 +377,11 @@ Discourse::Application.routes.draw do
       end
     end
 
-    post "#{root_path}/second_factors" => "users#create_second_factor"
+    post "#{root_path}/second_factors" => "users#list_second_factors"
     put "#{root_path}/second_factor" => "users#update_second_factor"
+    post "#{root_path}/create_second_factor_totp" => "users#create_second_factor_totp"
+    post "#{root_path}/enable_second_factor_totp" => "users#enable_second_factor_totp"
+    put "#{root_path}/disable_second_factor" => "users#disable_second_factor"
 
     put "#{root_path}/second_factors_backup" => "users#create_second_factor_backup"
 

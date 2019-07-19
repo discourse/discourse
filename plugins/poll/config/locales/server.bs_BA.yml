@@ -11,7 +11,7 @@ bs_BA:
     poll_maximum_options: "Najveći broj dopuštenih izbora u anketi."
     poll_edit_window_mins: "Period od objave posta u minutama u kojem je moguće urediti ankete."
   poll:
-    multiple_polls_without_name: "Postoji više anketa bez imena. Koristi  '<code>name</code>' atribut za jedinstvenu indentifikaciju anketa."
+    multiple_polls_without_name: "Postoji više anketa bez imena. Koristi '<code>name</code>' atribut za jedinstvenu indentifikaciju anketa."
     multiple_polls_with_same_name: "Postoji više anketa s istim imenom: <strong>%{name}</strong>. Koristite atribut '<code>name</code>' za jedinstvenu indentifikaciju anketa."
     default_poll_must_have_at_least_2_options: "Anketa mora imati barem 2 opcije."
     named_poll_must_have_at_least_2_options: "Anketa nazvana <strong>%{name}</strong> mora imati barem 2 opcije."

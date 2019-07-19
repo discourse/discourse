@@ -149,8 +149,10 @@ module PrettyText
       buffer = +<<~JS
         __optInput = {};
         __optInput.siteSettings = #{SiteSetting.client_settings_json};
+        #{"__optInput.disableEmojis = true" if opts[:disable_emojis]}
         __paths = #{paths_json};
         __optInput.getURL = __getURL;
+        #{"__optInput.features = #{opts[:features].to_json};" if opts[:features]}
         __optInput.getCurrentUser = __getCurrentUser;
         __optInput.lookupAvatar = __lookupAvatar;
         __optInput.lookupPrimaryUserGroup = __lookupPrimaryUserGroup;

@@ -45,6 +45,7 @@ function rule(state) {
         case "img":
           if (mapped) {
             token.attrs[srcIndex][1] = mapped.url;
+            token.attrs.push(["data-base62-sha1", mapped.base62_sha1]);
           } else {
             token.attrs[srcIndex][1] = state.md.options.discourse.getURL(
               "/images/transparent.png"
@@ -73,7 +74,12 @@ function rule(state) {
 export function setup(helper) {
   const opts = helper.getOptions();
   if (opts.previewing) helper.whiteList(["img.resizable"]);
-  helper.whiteList(["img[data-orig-src]", "a[data-orig-href]"]);
+
+  helper.whiteList([
+    "img[data-orig-src]",
+    "img[data-base62-sha1]",
+    "a[data-orig-href]"
+  ]);
 
   helper.registerPlugin(md => {
     md.core.ruler.push("upload-protocol", rule);

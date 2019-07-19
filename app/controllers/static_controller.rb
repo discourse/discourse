@@ -89,17 +89,19 @@ class StaticController < ApplicationController
 
     destination = path("/")
 
-    if params[:redirect].present? && !params[:redirect].match(login_path)
+    redirect_location = params[:redirect]
+    if redirect_location.present? && !redirect_location.is_a?(String)
+      raise Discourse::InvalidParameters.new(:redirect)
+    elsif redirect_location.present? && !redirect_location.match(login_path)
       begin
         forum_uri = URI(Discourse.base_url)
-        uri = URI(params[:redirect])
+        uri = URI(redirect_location)
 
         if uri.path.present? &&
            (uri.host.blank? || uri.host == forum_uri.host) &&
            uri.path !~ /\./
 
-          destination = uri.path
-          destination = "#{uri.path}?#{uri.query}" if uri.path =~ /new-topic/ || uri.path =~ /new-message/ || uri.path =~ /user-api-key/
+          destination = "#{uri.path}#{uri.query ? "?#{uri.query}" : ""}"
         end
       rescue URI::Error
         # Do nothing if the URI is invalid
@@ -142,7 +144,8 @@ class StaticController < ApplicationController
             file&.read || ""
           rescue => e
             AdminDashboardData.add_problem_message('dashboard.bad_favicon_url', 1800)
-            Rails.logger.warn("Failed to fetch faivcon #{favicon.url}: #{e}\n#{e.backtrace}")
+            Rails.logger.warn("Failed to fetch favicon #{favicon.url}: #{e}\n#{e.backtrace}")
+            ""
           ensure
             file&.unlink
           end

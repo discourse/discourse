@@ -6,7 +6,7 @@ export default htmlHelper(function({ icon, image }) {
     return `<img src='${image}'>`;
   }
 
-  if (Ember.isEmpty(icon) || icon.indexOf("fa-") < 0) {
+  if (Ember.isEmpty(icon)) {
     return "";
   }
 

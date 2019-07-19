@@ -26,7 +26,8 @@ class ReviewablesController < ApplicationController
       topic_id: topic_id,
       priority: params[:priority],
       username: params[:username],
-      type: params[:type]
+      type: params[:type],
+      sort_order: params[:sort_order]
     }
 
     total_rows = Reviewable.list_for(current_user, filters).count

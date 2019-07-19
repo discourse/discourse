@@ -1,7 +1,9 @@
 import { withPluginApi } from "discourse/lib/plugin-api";
 
 function initializeDetails(api) {
-  api.decorateCooked($elem => $("details", $elem).details());
+  api.decorateCooked($elem => $("details", $elem).details(), {
+    id: "discourse-details"
+  });
 
   api.addToolbarPopupMenuOptionsCallback(() => {
     return {

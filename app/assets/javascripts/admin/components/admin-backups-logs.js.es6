@@ -18,8 +18,8 @@ export default Ember.Component.extend(
     },
 
     _scrollDown() {
-      const $div = this.$()[0];
-      $div.scrollTop = $div.scrollHeight;
+      const div = this.element;
+      div.scrollTop = div.scrollHeight;
     },
 
     @on("init")

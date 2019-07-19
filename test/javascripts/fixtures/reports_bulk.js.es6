@@ -59,8 +59,7 @@ let signups = {
   prev_end_date: "2018-06-17T00:00:00Z",
   prev30Days: null,
   dates_filtering: true,
-  report_key:
-    'reports:signups:20180616:20180716:[:prev_period]:50:{"group":"88"}:4',
+  report_key: 'reports:signups:start:end:[:prev_period]:50:{"group":"88"}:4',
   available_filters: [
     { id: "group", allow_any: false, choices: [], default: "88" }
   ],
@@ -159,9 +158,7 @@ const page_view_total_reqs = {
   prev_end_date: "2018-07-23T00:00:00Z",
   prev30Days: 58110,
   dates_filtering: true,
-  report_key: `reports:page_view_total_reqs:${startDate.format(
-    "YYYYMMDD"
-  )}:${endDate.format("YYYYMMDD")}:[:prev_period]:${SCHEMA_VERSION}`,
+  report_key: `reports:page_view_total_reqs:start:end:[:prev_period]:${SCHEMA_VERSION}`,
   labels: [
     { type: "date", property: "x", title: "Day" },
     { type: "number", property: "y", title: "Count" }
@@ -174,6 +171,11 @@ const page_view_total_reqs = {
   total: 921672
 };
 
+const staff_logins = JSON.parse(JSON.stringify(page_view_total_reqs));
+staff_logins.type = "staff_logins";
+staff_logins.modes = ["table"];
+staff_logins.report_key = `reports:staff_logins:start:end:[:prev_period]:50:${SCHEMA_VERSION}`;
+
 export default {
   "/admin/reports/bulk": {
     reports: [
@@ -181,7 +183,8 @@ export default {
       signups_not_found,
       signups_exception,
       signups_timeout,
-      page_view_total_reqs
+      page_view_total_reqs,
+      staff_logins
     ]
   }
 };

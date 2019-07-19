@@ -23,8 +23,8 @@ module Discourse
   end
 
   class Utils
-    def self.execute_command(*command, failure_message: "", success_status_codes: [0])
-      stdout, stderr, status = Open3.capture3(*command)
+    def self.execute_command(*command, failure_message: "", success_status_codes: [0], chdir: ".")
+      stdout, stderr, status = Open3.capture3(*command, chdir: chdir)
 
       if !status.exited? || !success_status_codes.include?(status.exitstatus)
         failure_message = "#{failure_message}\n" if !failure_message.blank?
@@ -205,10 +205,10 @@ module Discourse
   end
 
   def self.find_plugins(args)
-    plugins.find_all do |plugin|
+    plugins.select do |plugin|
       next if args[:include_official] == false && plugin.metadata.official?
       next if args[:include_unofficial] == false && !plugin.metadata.official?
-      next if args[:include_disabled] != true && !plugin.enabled?
+      next if args[:include_disabled] == false && !plugin.enabled?
 
       true
     end
@@ -218,6 +218,12 @@ module Discourse
     self.find_plugins(args).find_all do |plugin|
       plugin.css_asset_exists?
     end.map { |plugin| plugin.asset_name }
+  end
+
+  def self.find_plugin_js_assets(args)
+    self.find_plugins(args).find_all do |plugin|
+      plugin.js_asset_exists?
+    end.map { |plugin| "plugins/#{plugin.asset_name}" }
   end
 
   def self.assets_digest
@@ -261,7 +267,13 @@ module Discourse
   end
 
   def self.cache
-    @cache ||= Cache.new
+    @cache ||= begin
+      if GlobalSetting.skip_redis?
+        ActiveSupport::Cache::MemoryStore.new
+      else
+        Cache.new
+      end
+    end
   end
 
   # Get the current base URL for the current site
@@ -387,21 +399,34 @@ module Discourse
     $redis.get(PG_READONLY_MODE_KEY).present?
   end
 
-  def self.last_read_only
-    @last_read_only ||= DistributedCache.new('last_read_only', namespace: false)
+  # Shared between processes
+  def self.postgres_last_read_only
+    @postgres_last_read_only ||= DistributedCache.new('postgres_last_read_only', namespace: false)
+  end
+
+  # Per-process
+  def self.redis_last_read_only
+    @redis_last_read_only ||= {}
   end
 
   def self.recently_readonly?
-    read_only = last_read_only[$redis.namespace]
-    read_only.present? && read_only > 15.seconds.ago
+    postgres_read_only = postgres_last_read_only[$redis.namespace]
+    redis_read_only = redis_last_read_only[$redis.namespace]
+
+    (redis_read_only.present? && redis_read_only > 15.seconds.ago) ||
+      (postgres_read_only.present? && postgres_read_only > 15.seconds.ago)
   end
 
-  def self.received_readonly!
-    last_read_only[$redis.namespace] = Time.zone.now
+  def self.received_postgres_readonly!
+    postgres_last_read_only[$redis.namespace] = Time.zone.now
+  end
+
+  def self.received_redis_readonly!
+    redis_last_read_only[$redis.namespace] = Time.zone.now
   end
 
   def self.clear_readonly!
-    last_read_only[$redis.namespace] = nil
+    postgres_last_read_only[$redis.namespace] = redis_last_read_only[$redis.namespace] = nil
     Site.clear_anon_cache!
     true
   end
@@ -677,7 +702,11 @@ module Discourse
 
     if !$redis.without_namespace.get(redis_key)
       Rails.logger.warn(warning)
-      $redis.without_namespace.setex(redis_key, 3600, "x")
+      begin
+        $redis.without_namespace.setex(redis_key, 3600, "x")
+      rescue Redis::CommandError => e
+        raise unless e.message =~ /READONLY/
+      end
     end
     warning
   end

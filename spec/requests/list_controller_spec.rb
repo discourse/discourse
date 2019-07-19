@@ -242,6 +242,16 @@ RSpec.describe ListController do
         end
       end
 
+      describe 'group restricted to logged-on-users' do
+        before { group.update!(visibility_level: Group.visibility_levels[:logged_on_users]) }
+
+        it 'should return the right response' do
+          get "/topics/groups/#{group.name}.json"
+
+          expect(response.status).to eq(403)
+        end
+      end
+
       describe 'restricted group' do
         before { group.update!(visibility_level: Group.visibility_levels[:staff]) }
 
@@ -263,6 +273,16 @@ RSpec.describe ListController do
           get "/topics/groups/#{group.name}.json"
 
           expect(response.status).to eq(403)
+        end
+      end
+
+      describe 'group restricted to logged-on-users' do
+        before { group.update!(visibility_level: Group.visibility_levels[:logged_on_users]) }
+
+        it 'should return the right response' do
+          get "/topics/groups/#{group.name}.json"
+
+          expect(response.status).to eq(200)
         end
       end
     end
@@ -463,6 +483,23 @@ RSpec.describe ListController do
           expect(css_select("link[rel=canonical]").length).to eq(1)
         end
       end
+
+      context "renders correct title" do
+        let!(:amazing_category) { Fabricate(:category, name: "Amazing Category") }
+
+        it 'for category default view' do
+          get "/c/#{amazing_category.slug}"
+
+          expect(response.body).to have_tag "title", text: "Amazing Category - Discourse"
+        end
+
+        it 'for category latest view' do
+          SiteSetting.short_site_description = "Best community"
+          get "/c/#{amazing_category.slug}/l/latest"
+
+          expect(response.body).to have_tag "title", text: "Amazing Category - Discourse"
+        end
+      end
     end
   end
 
@@ -566,52 +603,22 @@ RSpec.describe ListController do
   end
 
   describe "best_periods_for" do
-    it "returns yearly for more than 180 days" do
-      expect(ListController.best_periods_for(nil, :all)).to eq([:yearly])
-      expect(ListController.best_periods_for(180.days.ago, :all)).to eq([:yearly])
+    it "works" do
+      expect(ListController.best_periods_for(nil)).to eq([:all])
+      expect(ListController.best_periods_for(5.years.ago)).to eq([:all])
+      expect(ListController.best_periods_for(2.years.ago)).to eq([:yearly, :all])
+      expect(ListController.best_periods_for(6.months.ago)).to eq([:quarterly, :yearly, :all])
+      expect(ListController.best_periods_for(2.months.ago)).to eq([:monthly, :quarterly, :yearly, :all])
+      expect(ListController.best_periods_for(2.weeks.ago)).to eq([:weekly, :monthly, :quarterly, :yearly, :all])
+      expect(ListController.best_periods_for(2.days.ago)).to eq([:daily, :weekly, :monthly, :quarterly, :yearly, :all])
     end
 
-    it "includes monthly when less than 180 days and more than 35 days" do
-      (35...180).each do |date|
-        expect(ListController.best_periods_for(date.days.ago, :all)).to eq([:monthly, :yearly])
-      end
-    end
-
-    it "includes weekly when less than 35 days and more than 8 days" do
-      (8...35).each do |date|
-        expect(ListController.best_periods_for(date.days.ago, :all)).to eq([:weekly, :monthly, :yearly])
-      end
-    end
-
-    it "includes daily when less than 8 days" do
-      (0...8).each do |date|
-        expect(ListController.best_periods_for(date.days.ago, :all)).to eq([:daily, :weekly, :monthly, :yearly])
-      end
-    end
-
-    it "returns default even for more than 180 days" do
-      expect(ListController.best_periods_for(nil, :monthly)).to eq([:monthly, :yearly])
-      expect(ListController.best_periods_for(180.days.ago, :monthly)).to eq([:monthly, :yearly])
-    end
-
-    it "returns default even when less than 180 days and more than 35 days" do
-      (35...180).each do |date|
-        expect(ListController.best_periods_for(date.days.ago, :weekly)).to eq([:weekly, :monthly, :yearly])
-      end
-    end
-
-    it "returns default even when less than 35 days and more than 8 days" do
-      (8...35).each do |date|
-        expect(ListController.best_periods_for(date.days.ago, :daily)).to eq([:daily, :weekly, :monthly, :yearly])
-      end
-    end
-
-    it "doesn't return default when set to all" do
-      expect(ListController.best_periods_for(nil, :all)).to eq([:yearly])
-    end
-
-    it "doesn't return value twice when matches default" do
-      expect(ListController.best_periods_for(nil, :yearly)).to eq([:yearly])
+    it "supports default period" do
+      expect(ListController.best_periods_for(nil, :yearly)).to eq([:yearly, :all])
+      expect(ListController.best_periods_for(nil, :quarterly)).to eq([:quarterly, :all])
+      expect(ListController.best_periods_for(nil, :monthly)).to eq([:monthly, :all])
+      expect(ListController.best_periods_for(nil, :weekly)).to eq([:weekly, :all])
+      expect(ListController.best_periods_for(nil, :daily)).to eq([:daily, :all])
     end
   end
 
@@ -637,35 +644,6 @@ RSpec.describe ListController do
 
       topic_titles = JSON.parse(response.body)["topic_list"]["topics"].map { |t| t["title"] }
       expect(topic_titles).to include(topic_in_sub_category.title)
-    end
-  end
-
-  describe "safe mode" do
-    before do
-      plugin_fixtures = Plugin::Instance.find_all("#{Rails.root}/spec/fixtures/plugins")
-      Discourse.stubs(:plugins).returns(plugin_fixtures)
-    end
-
-    it "handles safe mode" do
-      get "/latest"
-      expect(response.body).not_to match(/my_plugin/)
-
-      my_plugin = Discourse.plugins.detect { |p| p.asset_name == "my_plugin" }
-      my_plugin.stubs(:css_asset_exists?).returns(true)
-
-      get "/latest"
-      expect(response.body).to match(/my_plugin\w*\.css/)
-
-      get "/latest", params: { safe_mode: "no_plugins" }
-      expect(response.body).not_to match(/my_plugin/)
-
-      get "/latest", params: { safe_mode: "only_official" }
-      expect(response.body).not_to match(/my_plugin/)
-
-      my_plugin.metadata.stubs(:official?).returns(true)
-
-      get "/latest", params: { safe_mode: "only_official" }
-      expect(response.body).to match(/my_plugin\w*\.css/)
     end
   end
 end

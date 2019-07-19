@@ -163,7 +163,6 @@ nb_NO:
         eu_west_3: "EU (Paris)"
         us_east_1: "USA øst (N. Virginia)"
         us_east_2: "USA øst (Ohio)"
-        us_gov_west_1: "AWS GovCloud (USA)"
         us_west_1: "USA vest (N. California)"
         us_west_2: "USA vest (Oregon)"
     edit: "endre tittelen og kategorien til dette emnet"
@@ -280,12 +279,14 @@ nb_NO:
       title:
         placeholder: "skriv tittelen på emnet her"
     review:
+      in_reply_to: "i svar til"
       delete: "Slett"
       settings:
         save_changes: "Lagre endringer"
         title: "Innstillinger"
       moderation_history: "Moderatorhistorikk"
       topic: "Emne:"
+      filtered_user: "Bruker"
       user:
         username: "Brukernavn"
         email: "E-post"
@@ -298,7 +299,11 @@ nb_NO:
       save: "Lagre"
       cancel: "Avbryt"
       filters:
+        all_categories: "(alle kategorier)"
+        type:
+          title: "Type"
         refresh: "Last inn på nytt"
+        category: "Kategori"
       scores:
         date: "Dato"
         type: "Type"
@@ -629,9 +634,7 @@ nb_NO:
       users: "Brukere"
       muted_users: "Ignorert"
       muted_users_instructions: "Skjul alle varsler fra denne brukeren"
-      muted_topics_link: "Vis ignorerte emner"
-      watched_topics_link: "Vis fulgte emner"
-      tracked_topics_link: "Vis overvåkede emner"
+      tracked_topics_link: "Vis"
       automatically_unpin_topics: "Fjern feste for et emne automatisk når jeg når bunnen."
       apps: "Programmer"
       revoke_access: "Trekk tilbake tilgang"
@@ -682,7 +685,6 @@ nb_NO:
         disable: "Deaktiver"
         enable: "Aktiver"
         enable_long: "Aktiver reservekoder"
-        manage: "Behandle reservekoder"
         copied_to_clipboard: "Kopiert til utklippstavlen"
         copy_to_clipboard_error: "Feil ved kopiering til utklippstavlen"
         remaining_codes: "Du har <strong>{{count}}</strong> reservekoder igjen."
@@ -691,12 +693,12 @@ nb_NO:
           description: "Hver av reservekodene kan kun brukes en gang. Oppbevar dem et trygt men tilgjengelig sted."
       second_factor:
         title: "Totrinnsverifisering"
-        disable: "Skru av totrinnsverifisering"
         confirm_password_description: "Bekreft passordet ditt for å fortsette"
         label: "Kode"
         disable_description: "Vennligst oppgi autentiseringskoden fra appen"
         show_key_description: "Skriv inn manuelt"
         oauth_enabled_warning: "Vær oppmerksom på at sosiale login-metoder deaktiveres når tofaktor autentisering er aktivert på kontoen din."
+        edit: "Rediger"
       change_about:
         title: "Rediger om meg"
         error: "Det oppstod en feil ved endring av denne verdien."
@@ -740,7 +742,7 @@ nb_NO:
         frequency_immediately: "Vi sender deg umiddelbart en e-post hvis du ikke har lest det vi sender e-post om."
         frequency:
           one: "Vi sender deg bare e-post hvis vi ikke har sett deg deg det siste minuttet."
-          other: "Vi sender deg bare e-post hvis vi ikke har sett deg de siste {{count}}  minuttene."
+          other: "Vi sender deg bare e-post hvis vi ikke har sett deg de siste {{count}} minuttene."
       associated_accounts:
         title: "Tilknyttede kontoer"
         connect: "Koble til"
@@ -966,15 +968,6 @@ nb_NO:
       enabled: "Dette nettstedet er i lesemodus. Fortsett gjerne å lese, men du kan ikke svare, gi likes eller utføre andre handlinger som er slått av."
       login_disabled: "Innlogging er deaktivert mens nettsiden er i skrivebeskyttet modus."
       logout_disabled: "Du kan ikke logge ut når nettstedet er i lese-modus."
-    too_few_topics_and_posts_notice: "La oss <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>få i gang denne diskusjonen!</a> Det finnes for øyeblikket <strong>%{currentTopics} / %{requiredTopics}</strong> emner and <strong>%{currentPosts} / %{requiredPosts}</strong> innlegg. Nye besøkende trenger noen samtaler de kan lese og svare på."
-    too_few_topics_notice: "La oss<a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>få i gang denne diskusjonen!</a> Det finnes for øyeblikket <strong>%{currentTopics} / %{requiredTopics}</strong> emner. Nye besøkende trenger noen samtaler de kan lese og svare på."
-    too_few_posts_notice: "La oss <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>få i gang denne diskusjonen!</a> Det finnes for øyeblikket <strong>%{currentPosts} / %{requiredPosts}</strong> innlegg. Nye besøkende trenger noen samtaler de kan lese og svare på."
-    logs_error_rate_notice:
-      reached: "<b>%{relativeAge}</b> – <a href='%{url}' target='_blank'>%{rate}</a> nådde innstillingsgrensen satt i %{siteSettingRate}."
-      exceeded: "<b>%{relativeAge}</b> – <a href='%{url}' target='_blank'>%{rate}</a> overstiger innstillingsgrensen satt i %{siteSettingRate}."
-      rate:
-        one: "%{count} feil/%{duration}"
-        other: "%{count} feil/%{duration}"
     learn_more: "lær mer…"
     all_time: "totalt"
     all_time_desc: "totalt antall emner opprettet"
@@ -1026,7 +1019,6 @@ nb_NO:
     trust_level: "Tillitsnivå"
     search_hint: "brukernavn, e-post eller IP-adresse"
     create_account:
-      disclaimer: "Ved å registrere deg samtykker du til <a href='{{privacy_link}}'>personvernserklæringen</a> og <a href='{{tos_link}}'>bruksvilkårene</a>."
       title: "Opprett ny konto"
       failed: "Noe gikk galt, kanskje denne e-postadressen allerede er registrert. Prøv lenke for glemt passord"
     forgot_password:
@@ -1052,6 +1044,7 @@ nb_NO:
       complete_email_found: "Vi fant en konto som matcher <b>%{email}</b>, du vil snart motta en e-post med lenke for innlogging."
       complete_username_not_found: "Ingen konto har med brukernavnet <b>%{username}</b> er registrert"
       complete_email_not_found: "Ingen konto med e-postadressen <b>%{email}</b> er registrert"
+      confirm_title: "Fortsett til %{site_name}"
     login:
       title: "Logg Inn"
       username: "Bruker"
@@ -1065,7 +1058,6 @@ nb_NO:
       email_placeholder: "e-postadresse eller brukernavn"
       caps_lock_warning: "Caps Lock er på"
       error: "Ukjent feil"
-      cookies_error: "Nettleseren din ser ut til å ha deaktivert informasjonskapsler (cookies). Det er mulig du ikke vil kunne logge inn uten å aktivere dem først."
       rate_limit: "Vent litt før du logger inn igjen."
       blank_username: "Vennligst oppgi din e-post eller brukernavn."
       blank_username_or_password: "Oppgi din e-postadresse eller brukernavn og ditt passord."
@@ -1334,6 +1326,9 @@ nb_NO:
         linked: '{{username}} lenket til innlegget ditt i "{{topic}}" - {{site_title}}'
         confirm_title: "Varslinger aktivert - %{site_title}"
         confirm_body: "Suksess! Varslinger er nå aktivert."
+      titles:
+        watching_first_post: "nytt emne"
+        post_approved: "innlegg godkjent"
     upload_selector:
       title: "Legg til bilde"
       title_with_attachments: "Legg til et bilde eller en fil"
@@ -1465,17 +1460,14 @@ nb_NO:
         read: "Du har ikke lest noen emner enda."
         posted: "Du har ikke skrevet innlegg i noen emner enda."
         latest: "Det finnes ingen siste emner. Det er sørgelig."
-        hot: "Det finnes ingen populære emner."
         bookmarks: "Du har ingen bokmerkede emner enda."
         category: "Det finnes ingen {{category}}-emner."
         top: "Det finnes ingen populære emner."
-        search: "Det finnes ingen søkeresultater"
         educate:
           new: '<p>Dine nye emner vil vises her.</p><p>Som forvalg anses emner som nye og viser en<span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">ny</span>-indikator hvis de be opprettet i løpet av de siste 2 dagene.</p><p>Gå til <a href="%{userPrefsUrl}">innstillinger</a> for å endre dette.</p>'
           unread: '<p>Dine uleste emner vil vises her.</p><p>Som forvalg anses emner som ulest og vil vise ulest-tall <span class="badge new-posts badge-notification">1</span> dersom du:</p><ul><li>Opprettet emnet</li><li>Svarte på emnet</li><li>Leste emnet i mer enn 4 minutter</li></ul><p>Eller dersom du uttrykkelig har satt emnet som overvåkes eller følges via varselkontrollen nederst i hvert emne.</p><p>Gå til<a href="%{userPrefsUrl}">innstillingene</a> dine for å endre dette.</p>'
       bottom:
         latest: "Det finnes ingen flere siste emner."
-        hot: "Det finnes ingen flere populære emner."
         posted: "Det finnes ingen flere emner med innlegg."
         read: "Det finnes ingen flere leste emner."
         new: "Det finnes ingen flere nye emner."
@@ -1483,7 +1475,6 @@ nb_NO:
         category: "Det finnes ingen {{category}}-emner igjen."
         top: "Det finnes ingen flere populære emner."
         bookmarks: "Det finnes ingen flere bokmerkede emner."
-        search: "Det finnes ingen flere søkeresultater"
     topic:
       filter_to:
         one: "%{count} innlegg i emnet"
@@ -1501,6 +1492,8 @@ nb_NO:
       edit_message:
         help: "Rediger første innlegg i meldingen"
         title: "Rediger melding"
+      defer:
+        title: "Utsett"
       list: "Emner"
       new: "nytt emne"
       unread: "ulest"
@@ -2194,15 +2187,9 @@ nb_NO:
           one: "Siste (%{count})"
           other: "Siste ({{count}})"
         help: "emner med nylige innlegg"
-      hot:
-        title: "Populær"
-        help: "et utvalg av de mest populære emnene"
       read:
         title: "Lest"
         help: "emner du har lest, i den rekkefølgen du sist leste dem"
-      search:
-        title: "Søk"
-        help: "søk i alle emner"
       categories:
         title: "Kategorier"
         title_in: "Kategori - {{categoryName}}"
@@ -2431,20 +2418,16 @@ nb_NO:
           read: "Du har ikke lest noen emner enda."
           posted: "Du har ikke skrevet noe innlegg i emner enda."
           latest: "Det finnes ingen flere siste emner."
-          hot: "Det finnes ingen populære emner."
           bookmarks: "Du har ikke bokmerket noen emner ennå."
           top: "Det finnes ingen populære emner."
-          search: "Det finnes ingen søkeresultater."
         bottom:
           latest: "Det finnes ingen flere siste emner."
-          hot: "Det finnes ingen flere populære emner."
           posted: "Det finnes ingen flere emner med innlegg."
           read: "Det finnes ingen flere leste emner."
           new: "Det finnes ingen flere nye emner."
           unread: "Det finnes ingen flere uleste emner."
           top: "Det finnes ingen flere populære emner."
           bookmarks: "Det finnes ingen bokmerkede emner."
-          search: "Det finnes ingen flere søkeresultater"
     invite:
       custom_message_placeholder: "Skriv inn din egendefinerte melding"
       custom_message_template_forum: "Hei, du burde ta del i dette forumet!"
@@ -2457,6 +2440,10 @@ nb_NO:
     admin:
       title: "Discourse-admin"
       moderator: "Moderator"
+      tags:
+        remove_muted_tags_from_latest:
+          always: "alltid"
+          never: "aldri"
       reports:
         title: "Liste over tilgjengelige rapporter"
       dashboard:
@@ -2558,9 +2545,7 @@ nb_NO:
             visibility_levels:
               title: "Hvem kan se denne gruppen?"
               public: "Alle"
-              members: "Gruppeeiere, medlemmer og administratorer"
               staff: "Gruppeeiere og stab"
-              owners: "Gruppeeiere og administratorer"
           membership:
             automatic: Automatisk
             trust_level: Tillitsnivå
@@ -2758,7 +2743,7 @@ nb_NO:
             confirm: "Er du sikker på at du vil gjenopprette databasen til den tidligere fungerende tilstanden?"
       export_csv:
         success: "Eksportering iverksatt. Du vil bli varslet med en melding når prosessen er fullført."
-        failed: "Eksporteringen mislyktes.  Undersøk loggene."
+        failed: "Eksporteringen mislyktes. Undersøk loggene."
         button_text: "Eksporter"
         button_title:
           user: "Eksporter full medlemsliste i CSV format."
@@ -2838,6 +2823,8 @@ nb_NO:
           install_popular: "Populært"
           about_theme: "Om"
           license: "Lisens"
+          enable: "Aktiver"
+          disable: "Deaktiver"
           update_to_latest: "Oppdater til seneste"
           check_for_updates: "Se etter oppdateringer"
           updating: "Oppdaterer…"

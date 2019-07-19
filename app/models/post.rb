@@ -886,18 +886,20 @@ class Post < ActiveRecord::Base
   end
 
   def each_upload_url(fragments: nil, include_local_upload: true)
+    current_db = RailsMultisite::ConnectionManagement.current_db
     upload_patterns = [
-      /\/uploads\/#{RailsMultisite::ConnectionManagement.current_db}\//,
+      /\/uploads\/#{current_db}\//,
       /\/original\//,
       /\/optimized\//,
-      /\/uploads\/short-url\/[a-zA-Z0-9]+\..*/
+      /\/uploads\/short-url\/[a-zA-Z0-9]+(\.[a-z0-9]+)?/
     ]
 
     fragments ||= Nokogiri::HTML::fragment(self.cooked)
     links = fragments.css("a/@href", "img/@src").map { |media| media.value }.uniq
 
     links.each do |src|
-      next if src.blank? || upload_patterns.none? { |pattern| src =~ pattern }
+      next if src.blank? || upload_patterns.none? { |pattern| src.split("?")[0] =~ pattern }
+      next if Rails.configuration.multisite && src.exclude?(current_db) && src.exclude?("short-url")
 
       src = "#{SiteSetting.force_https ? "https" : "http"}:#{src}" if src.start_with?("//")
       next unless Discourse.store.has_been_uploaded?(src) || (include_local_upload && src =~ /\A\/[^\/]/i)
@@ -953,10 +955,7 @@ class Post < ActiveRecord::Base
             upload_id = Upload.where(sha1: sha1).pluck(:id).first if sha1.present?
             upload_id ||= yield(post, src, path, sha1)
 
-            if upload_id.present?
-              attributes = { post_id: post.id, upload_id: upload_id }
-              PostUpload.create!(attributes) unless PostUpload.exists?(attributes)
-            else
+            if upload_id.blank?
               missing_uploads << src
               missing_post_uploads[post.id] << src
             end

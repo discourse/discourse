@@ -17,6 +17,21 @@ class Report
     30
   end
 
+  def self.default_labels
+    [
+      {
+        type: :date,
+        property: :x,
+        title: I18n.t("reports.default.labels.day")
+      },
+      {
+        type: :number,
+        property: :y,
+        title: I18n.t("reports.default.labels.count")
+      },
+    ]
+  end
+
   def initialize(type)
     @type = type
     @start_date ||= Report.default_days.days.ago.utc.beginning_of_day
@@ -102,18 +117,7 @@ class Report
       primary_color: self.primary_color,
       secondary_color: self.secondary_color,
       available_filters: self.available_filters.map { |k, v| { id: k }.merge(v) },
-      labels: labels || [
-        {
-          type: :date,
-          property: :x,
-          title: I18n.t("reports.default.labels.day")
-        },
-        {
-          type: :number,
-          property: :y,
-          title: I18n.t("reports.default.labels.count")
-        },
-      ],
+      labels: labels || Report.default_labels,
       average: self.average,
       percent: self.percent,
       higher_is_better: self.higher_is_better,
