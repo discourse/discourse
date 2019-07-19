@@ -207,7 +207,8 @@ en:
       <<: *errors
 
   invite:
-    not_found: "Your invite token is invalid. Please contact the site's administrator."
+    not_found: "Your invite token is invalid. Please <a href='%{base_url}/about'>contact staff</a>."
+    not_found_json: "Your invite token is invalid. Please contact staff."
     not_found_template: |
       <p>Your invite to <a href="%{base_url}">%{site_name}</a> has already been redeemed.</p>
 

@@ -14,7 +14,7 @@ describe InvitesController do
 
       body = response.body
       expect(body).to_not have_tag(:script, with: { src: '/assets/application.js' })
-      expect(CGI.unescapeHTML(body)).to include(I18n.t('invite.not_found', site_name: SiteSetting.title, base_url: Discourse.base_url))
+      expect(CGI.unescapeHTML(body)).to include(I18n.t('invite.not_found', base_url: Discourse.base_url))
     end
 
     it "renders the accept invite page if invite exists" do
@@ -210,7 +210,7 @@ describe InvitesController do
         expect(response.status).to eq(200)
         json = JSON.parse(response.body)
         expect(json["success"]).to eq(false)
-        expect(json["message"]).to eq(I18n.t('invite.not_found'))
+        expect(json["message"]).to eq(I18n.t('invite.not_found_json'))
         expect(session[:current_user_id]).to be_blank
       end
     end
@@ -245,7 +245,7 @@ describe InvitesController do
         expect(response.status).to eq(200)
         json = JSON.parse(response.body)
         expect(json["success"]).to eq(false)
-        expect(json["message"]).to eq(I18n.t('invite.not_found'))
+        expect(json["message"]).to eq(I18n.t('invite.not_found_json'))
         expect(session[:current_user_id]).to be_blank
       end
     end
