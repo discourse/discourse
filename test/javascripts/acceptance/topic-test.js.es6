@@ -213,6 +213,20 @@ QUnit.test("remove featured link", async assert => {
   // assert.ok(!exists('.title-wrapper .topic-featured-link'), 'link is gone');
 });
 
+QUnit.test("Converting to a public topic", async assert => {
+  await visit("/t/test-pm/34");
+  assert.ok(exists(".private_message"));
+  await click(".toggle-admin-menu");
+  await click(".topic-admin-convert button");
+
+  let categoryChooser = selectKit(".convert-to-public-topic .category-chooser");
+  await categoryChooser.expand();
+  await categoryChooser.selectRowByValue(21);
+
+  await click(".convert-to-public-topic .btn-primary");
+  assert.ok(!exists(".private_message"));
+});
+
 QUnit.test("Unpinning unlisted topic", async assert => {
   await visit("/t/internationalization-localization/280");
 

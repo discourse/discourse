@@ -2171,6 +2171,9 @@ en:
         title: "Flag"
         help: "privately flag this topic for attention or send a private notification about it"
         success_message: "You successfully flagged this topic."
+      make_public:
+        title: "Convert to Public Topic"
+        choose_category: "Please choose a category for the public topic:"
 
       feature_topic:
         title: "Feature this topic"

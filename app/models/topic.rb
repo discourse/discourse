@@ -1307,8 +1307,8 @@ class Topic < ActiveRecord::Base
     builder.query_single.first.to_i
   end
 
-  def convert_to_public_topic(user)
-    public_topic = TopicConverter.new(self, user).convert_to_public_topic
+  def convert_to_public_topic(user, category_id: nil)
+    public_topic = TopicConverter.new(self, user).convert_to_public_topic(category_id)
     add_small_action(user, "public_topic") if public_topic
     public_topic
   end
