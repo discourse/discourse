@@ -116,8 +116,9 @@ class DiscoursePluginRegistry
     self.svg_icons << icon
   end
 
-  def register_css(filename)
-    self.class.stylesheets << filename
+  def register_css(filename, asset_name)
+    self.class.stylesheets[asset_name] ||= Set.new
+    self.class.stylesheets[asset_name] << filename
   end
 
   def self.register_locale(locale, options = {})
@@ -166,15 +167,15 @@ class DiscoursePluginRegistry
       end
     elsif asset =~ /\.css$|\.scss$/
       if opts == :mobile
-        self.mobile_stylesheets[asset_name] ||= []
+        self.mobile_stylesheets[asset_name] ||= Set.new
         self.mobile_stylesheets[asset_name] << asset
       elsif opts == :desktop
-        self.desktop_stylesheets[asset_name] ||= []
+        self.desktop_stylesheets[asset_name] ||= Set.new
         self.desktop_stylesheets[asset_name] << asset
       elsif opts == :variables
         self.sass_variables << asset
       else
-        self.stylesheets[asset_name] ||= []
+        self.stylesheets[asset_name] ||= Set.new
         self.stylesheets[asset_name] << asset
       end
     elsif asset =~ HANDLEBARS_REGEX

@@ -36,8 +36,8 @@ class DiscoursePlugin
     @registry.register_js(file, opts)
   end
 
-  def register_css(file)
-    @registry.register_css(file)
+  def register_css(file, asset_name)
+    @registry.register_css(file, asset_name)
   end
 
   def register_archetype(name, options = {})

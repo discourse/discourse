@@ -28,8 +28,8 @@ describe DiscoursePlugin do
   end
 
   it "delegates adding css to the registry" do
-    registry.expects(:register_css).with('test.css')
-    plugin.register_css('test.css')
+    registry.expects(:register_css).with('test.css', 'test')
+    plugin.register_css('test.css', 'test')
   end
 
   it "delegates creating archetypes" do
