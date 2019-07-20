@@ -6,6 +6,10 @@
         font-size: $font-0;
         font-weight: normal;
 
+        + .badge-wrapper {
+          margin-left: 0.5em;
+        }
+
         &.box {
           margin: 0;
 
