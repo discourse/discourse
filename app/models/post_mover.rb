@@ -108,6 +108,8 @@ class PostMover
   end
 
   def create_first_post(post)
+    old_post_attributes = post_attributes(post)
+
     new_post = PostCreator.create(
       post.user,
       raw: post.raw,
@@ -123,6 +125,7 @@ class PostMover
 
     move_incoming_emails(post, new_post)
     move_email_logs(post, new_post)
+    move_notifications(old_post_attributes, new_post)
 
     PostAction.copy(post, new_post)
     new_post.update_column(:reply_count, @reply_count[1] || 0)
@@ -149,11 +152,12 @@ class PostMover
       update[:reply_to_user_id] = nil
     end
 
+    old_post_attributes = post_attributes(post)
     post.attributes = update
     post.save(validate: false)
 
     move_incoming_emails(post, post)
-    move_email_logs(post, post)
+    move_notifications(old_post_attributes, post)
 
     DiscourseEvent.trigger(:post_moved, post, original_topic.id)
 
@@ -173,6 +177,31 @@ class PostMover
     EmailLog
       .where(post_id: old_post.id)
       .update_all(post_id: new_post.id)
+  end
+
+  def move_notifications(old_post_attributes, new_post)
+    params = {
+      old_topic_id: old_post_attributes[:topic_id],
+      old_post_number: old_post_attributes[:post_number],
+      new_topic_id: new_post.topic_id,
+      new_post_number: new_post.post_number,
+      new_topic_title: new_post.topic.title
+    }
+
+    DB.exec(<<~SQL, params)
+      UPDATE notifications
+      SET topic_id  = :new_topic_id,
+        post_number = :new_post_number,
+        data        = (data :: JSONB ||
+          jsonb_strip_nulls(
+              jsonb_build_object(
+                  'topic_title', CASE WHEN data :: JSONB ->> 'topic_title' IS NULL
+                                        THEN NULL
+                                      ELSE :new_topic_title END
+                )
+            )) :: JSON
+      WHERE topic_id = :old_topic_id AND post_number = :old_post_number
+    SQL
   end
 
   def update_statistics
@@ -275,5 +304,12 @@ class PostMover
       destination_topic.topic_allowed_users.build(user_id: user.id) unless destination_topic.topic_allowed_users.where(user_id: user.id).exists?
     end
     destination_topic.save!
+  end
+
+  def post_attributes(post)
+    {
+      topic_id: post.topic_id,
+      post_number: post.post_number
+    }
   end
 end
