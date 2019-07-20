@@ -292,6 +292,22 @@ describe PostMover do
               notifications_reason_id: TopicUser.notification_reasons[:created_topic]
             )).to eq(true)
           end
+
+          it "updates existing notifications" do
+            n3 = Fabricate(:mentioned_notification, post: p3, user: another_user)
+            n4 = Fabricate(:mentioned_notification, post: p4, user: another_user)
+
+            new_topic = topic.move_posts(user, [p3.id], title: "new testing topic name")
+
+            n3.reload
+            expect(n3.topic_id).to eq(new_topic.id)
+            expect(n3.post_number).to eq(1)
+            expect(n3.data_hash[:topic_title]).to eq(new_topic.title)
+
+            n4.reload
+            expect(n4.topic_id).to eq(topic.id)
+            expect(n4.post_number).to eq(4)
+          end
         end
 
         context "to an existing topic" do
@@ -368,6 +384,22 @@ describe PostMover do
 
             moderator_post = topic.posts.find_by(post_number: 2)
             expect(moderator_post.raw).to include("4 posts were merged")
+          end
+
+          it "updates existing notifications" do
+            n3 = Fabricate(:mentioned_notification, post: p3, user: another_user)
+            n4 = Fabricate(:mentioned_notification, post: p4, user: another_user)
+
+            moved_to = topic.move_posts(user, [p3.id], destination_topic_id: destination_topic.id)
+
+            n3.reload
+            expect(n3.topic_id).to eq(moved_to.id)
+            expect(n3.post_number).to eq(2)
+            expect(n3.data_hash[:topic_title]).to eq(moved_to.title)
+
+            n4.reload
+            expect(n4.topic_id).to eq(topic.id)
+            expect(n4.post_number).to eq(4)
           end
         end
 
