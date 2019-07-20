@@ -4,8 +4,13 @@
   max-width: 700px;
   .about-page & {
     max-width: unset;
-    section:not(.admins):not(.moderators) {
+    section:not(.admins):not(.moderators):not(.category-moderators) {
       max-width: 700px;
+    }
+    .about.category-moderators {
+      .badge-wrapper.bullet .badge-category {
+        color: $primary;
+      }
     }
   }
   .mobile-view & {
