@@ -1,6 +1,7 @@
 .select-kit {
   &.combo-box {
-    &.category-drop {
+    &.category-drop,
+    &.categories-drop {
       .badge-wrapper {
         font-size: $font-0;
         font-weight: normal;
