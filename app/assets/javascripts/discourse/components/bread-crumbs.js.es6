@@ -2,7 +2,7 @@ import { default as computed } from "ember-addons/ember-computed-decorators";
 
 //  A breadcrumb including category drop downs
 export default Ember.Component.extend({
-  classNameBindings: ["hidden:hidden", ":category-breadcrumb"],
+  classNameBindings: [":category-breadcrumb"],
   tagName: "ol",
 
   parentCategory: Ember.computed.alias("category.parentCategory"),
@@ -26,11 +26,6 @@ export default Ember.Component.extend({
     }
 
     return parentCategories.sortBy("totalTopicCount").reverse();
-  },
-
-  @computed("category")
-  hidden(category) {
-    return this.site.mobileView && !category;
   },
 
   firstCategory: Ember.computed.or("{parentCategory,category}"),

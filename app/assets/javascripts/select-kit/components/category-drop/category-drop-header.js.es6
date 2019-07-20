@@ -6,7 +6,6 @@ export default ComboBoxSelectBoxHeaderComponent.extend({
   layoutName:
     "select-kit/templates/components/category-drop/category-drop-header",
   classNames: "category-drop-header",
-
   classNameBindings: ["categoryStyleClass"],
   categoryStyleClass: Ember.computed.alias("site.category_style"),
 
@@ -49,6 +48,7 @@ export default ComboBoxSelectBoxHeaderComponent.extend({
             }
           }
         }
+
         return style.htmlSafe();
       }
     }

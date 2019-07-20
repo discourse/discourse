@@ -54,20 +54,17 @@ export default SelectKitRowComponent.extend({
     }).htmlSafe();
   },
 
-  @computed("parentCategoryid")
+  @computed("parentCategoryId")
   parentCategory(parentCategoryId) {
     return Category.findById(parentCategoryId);
   },
 
-  @computed("parentCategoryid")
-  hasParentCategory(parentCategoryid) {
-    return !Ember.isNone(parentCategoryid);
+  @computed("parentCategoryId")
+  hasParentCategory(parentCategoryId) {
+    return !Ember.isNone(parentCategoryId);
   },
 
-  @computed("category")
-  parentCategoryid(category) {
-    return category.get("parent_category_id");
-  },
+  parentCategoryId: Ember.computed.reads("category.parent_category_id"),
 
   @computed(
     "category.totalTopicCount",
