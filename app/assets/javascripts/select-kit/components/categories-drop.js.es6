@@ -96,7 +96,7 @@ export default ComboBoxComponent.extend({
     const contentLength = (content && content.length) || 0;
     return (
       contentLength >= 15 ||
-      (this.isAsync && contentLength < Discourse.Category.list().length)
+      (this.isAsync && contentLength < Category.list().length)
     );
   },
 
