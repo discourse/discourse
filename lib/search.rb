@@ -268,16 +268,19 @@ class Search
   advanced_filter(/^in:personal-direct$/) do |posts|
     if @guardian.user
       posts
-        .joins("JOIN topic_allowed_users tu ON posts.topic_id = tu.topic_id")
         .joins("LEFT JOIN topic_allowed_groups tg ON posts.topic_id = tg.topic_id")
         .where(<<~SQL, user_id: @guardian.user.id)
           tg.id IS NULL
-          AND tu.user_id = :user_id
           AND posts.topic_id IN (
-            SELECT topic_id
-            FROM topic_allowed_users
-            GROUP BY topic_id
-            HAVING COUNT(*) = 2
+            SELECT tau.topic_id
+            FROM topic_allowed_users tau
+            JOIN topic_allowed_users tau2
+            ON tau2.topic_id = tau.topic_id
+            AND tau2.id != tau.id
+            WHERE tau.user_id = :user_id
+            AND tau.topic_id = posts.topic_id
+            GROUP BY tau.topic_id
+            HAVING COUNT(*) = 1
           )
         SQL
     end

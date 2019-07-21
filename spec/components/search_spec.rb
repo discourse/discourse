@@ -249,8 +249,7 @@ describe Search do
       end
 
       def create_pm(users:, group: nil)
-        pm = Fabricate(:private_message_post, user: users.first).topic
-        pm.topic_allowed_users.where.not(user_id: users.first.id).destroy_all
+        pm = Fabricate(:private_message_post_one_user, user: users.first).topic
         users[1..-1].each do |u|
           pm.invite(users.first, u.username)
           Fabricate(:post, user: u, topic: pm)
@@ -264,11 +263,23 @@ describe Search do
         pm.reload
       end
 
-      it 'includes PMs that have exactly 2 participants' do
+      it 'can find all direct PMs of the current user' do
+        pm = create_pm(users: [current, participant])
+        pm_2 = create_pm(users: [participant_2, participant])
+        pm_3 = create_pm(users: [participant, current])
+        pm_4 = create_pm(users: [participant_2, current])
+        results = Search.execute("in:personal-direct", guardian: Guardian.new(current))
+        expect(results.posts.size).to eq(3)
+        expect(results.posts.map(&:topic_id)).to contain_exactly(pm.id, pm_3.id, pm_4.id)
+      end
+
+      it 'can filter direct PMs by @username' do
         pm = create_pm(users: [current, participant])
         pm_2 = create_pm(users: [participant, current])
+        pm_3 = create_pm(users: [participant_2, current])
         results = Search.execute("@#{participant.username} in:personal-direct", guardian: Guardian.new(current))
         expect(results.posts.size).to eq(2)
+        expect(results.posts.map(&:topic_id)).to contain_exactly(pm.id, pm_2.id)
         expect(results.posts.map(&:user_id).uniq).to contain_exactly(participant.id)
       end
 
