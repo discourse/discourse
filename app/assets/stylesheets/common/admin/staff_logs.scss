@@ -362,17 +362,33 @@ table.screened-ip-addresses {
   display: inline-block;
   width: 250px;
   margin-bottom: 1em;
-  float: left;
+  vertical-align: top;
+}
+
+.admin-watched-words {
+  .clear-all-row {
+    display: flex;
+    margin-top: 10px;
+    justify-content: flex-end;
+  }
 }
 
 .watched-word-controls {
   display: flex;
   flex-wrap: wrap;
   margin-bottom: 1em;
+  justify-content: space-between;
+  .download-upload-controls {
+    display: flex;
+  }
+  .download {
+    justify-content: flex-end;
+  }
 }
 
 .watched-words-list {
   margin-top: 20px;
+  display: inline-block;
 }
 
 .watched-word {
@@ -395,13 +411,17 @@ table.screened-ip-addresses {
 }
 
 .watched-words-uploader {
-  margin-left: auto;
+  margin-left: 5px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
   @media screen and (max-width: 500px) {
     flex: 1 1 100%;
     margin-top: 0.5em;
   }
   .instructions {
     font-size: $font-down-1;
+    margin-top: 5px;
   }
 }
 

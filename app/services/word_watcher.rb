@@ -14,17 +14,27 @@ class WordWatcher
     WatchedWord.where(action: WatchedWord.actions[action.to_sym]).exists?
   end
 
-  def self.word_matcher_regexp(action)
-    s = Discourse.cache.fetch(word_matcher_regexp_key(action), expires_in: 1.day) do
-      words = words_for_action(action)
-      if words.empty?
-        nil
-      else
-        regexp = '(' + words.map { |w| word_to_regexp(w) }.join('|'.freeze) + ')'
-        SiteSetting.watched_words_regular_expressions? ? regexp : "(?<!\\w)(#{regexp})(?!\\w)"
-      end
+  def self.get_cached_words(action)
+    Discourse.cache.fetch(word_matcher_regexp_key(action), expires_in: 1.day) do
+      words_for_action(action).presence
     end
-    s.present? ? Regexp.new(s, Regexp::IGNORECASE) : nil
+  end
+
+  def self.word_matcher_regexp(action)
+    words = get_cached_words(action)
+    if words
+      words = words.map do |w|
+        word = word_to_regexp(w)
+        word = "(#{word})" if SiteSetting.watched_words_regular_expressions?
+        word
+      end
+      regexp = words.join('|')
+      if !SiteSetting.watched_words_regular_expressions?
+        regexp = "(#{regexp})"
+        regexp = "(?<!\\w)(#{regexp})(?!\\w)"
+      end
+      Regexp.new(regexp, Regexp::IGNORECASE)
+    end
   end
 
   def self.word_to_regexp(word)
@@ -37,7 +47,7 @@ class WordWatcher
   end
 
   def self.word_matcher_regexp_key(action)
-    "watched-words-regexp:#{action}"
+    "watched-words-list:#{action}"
   end
 
   def self.clear_cache!
@@ -55,12 +65,35 @@ class WordWatcher
   end
 
   def should_block?
-    word_matches_for_action?(:block)
+    word_matches_for_action?(:block, all_matches: true)
   end
 
-  def word_matches_for_action?(action)
-    r = self.class.word_matcher_regexp(action)
-    r ? r.match(@raw) : false
-  end
+  def word_matches_for_action?(action, all_matches: false)
+    regexp = self.class.word_matcher_regexp(action)
+    if regexp
+      match = regexp.match(@raw)
+      return match if !all_matches || !match
 
+      if SiteSetting.watched_words_regular_expressions?
+        set = Set.new
+        @raw.scan(regexp).each do |m|
+          if Array === m
+            set.add(m.find(&:present?))
+          elsif String === m
+            set.add(m)
+          end
+        end
+        matches = set.to_a
+      else
+        matches = @raw.scan(regexp)
+        matches.flatten!
+        matches.uniq!
+      end
+      matches.compact!
+      matches.sort!
+      matches
+    else
+      false
+    end
+  end
 end
