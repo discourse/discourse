@@ -31,6 +31,7 @@ class TopicConverter
 
       update_user_stats
       Jobs.enqueue(:topic_action_converter, topic_id: @topic.id)
+      Jobs.enqueue(:delete_inaccessible_notifications, topic_id: @topic.id)
 
       watch_topic(topic)
     end
@@ -50,6 +51,8 @@ class TopicConverter
       add_allowed_users
 
       Jobs.enqueue(:topic_action_converter, topic_id: @topic.id)
+      Jobs.enqueue(:delete_inaccessible_notifications, topic_id: @topic.id)
+
       watch_topic(topic)
     end
     @topic

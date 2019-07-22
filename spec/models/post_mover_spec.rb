@@ -308,6 +308,18 @@ describe PostMover do
             expect(n4.topic_id).to eq(topic.id)
             expect(n4.post_number).to eq(4)
           end
+
+          it "deletes notifications for users not allowed to see the topic" do
+            another_admin = Fabricate(:admin)
+            staff_category = Fabricate(:private_category, group: Group[:staff])
+            user_notification = Fabricate(:mentioned_notification, post: p3, user: another_user)
+            admin_notification = Fabricate(:mentioned_notification, post: p3, user: another_admin)
+
+            topic.move_posts(user, [p3.id], title: "new testing topic name", category_id: staff_category.id)
+
+            expect(Notification.exists?(user_notification.id)).to eq(false)
+            expect(Notification.exists?(admin_notification.id)).to eq(true)
+          end
         end
 
         context "to an existing topic" do
@@ -400,6 +412,19 @@ describe PostMover do
             n4.reload
             expect(n4.topic_id).to eq(topic.id)
             expect(n4.post_number).to eq(4)
+          end
+
+          it "deletes notifications for users not allowed to see the topic" do
+            another_admin = Fabricate(:admin)
+            staff_category = Fabricate(:private_category, group: Group[:staff])
+            user_notification = Fabricate(:mentioned_notification, post: p3, user: another_user)
+            admin_notification = Fabricate(:mentioned_notification, post: p3, user: another_admin)
+
+            destination_topic.update!(category_id: staff_category.id)
+            topic.move_posts(user, [p3.id], destination_topic_id: destination_topic.id)
+
+            expect(Notification.exists?(user_notification.id)).to eq(false)
+            expect(Notification.exists?(admin_notification.id)).to eq(true)
           end
         end
 
