@@ -137,6 +137,21 @@ Fabricator(:private_message_post, from: :post) do
   raw "Ssshh! This is our secret conversation!"
 end
 
+Fabricator(:private_message_post_one_user, from: :post) do
+  user
+  topic do |attrs|
+    Fabricate(:private_message_topic,
+      user: attrs[:user],
+      created_at: attrs[:created_at],
+      subtype: TopicSubtype.user_to_user,
+      topic_allowed_users: [
+        Fabricate.build(:topic_allowed_user, user: attrs[:user]),
+      ]
+    )
+  end
+  raw "Ssshh! This is our secret conversation!"
+end
+
 Fabricator(:post_via_email, from: :post) do
   incoming_email
   via_email true

@@ -236,6 +236,65 @@ describe Search do
 
     end
 
+    context 'personal-direct flag' do
+      let(:current) { Fabricate(:user, admin: true, username: "current_user") }
+      let(:participant) { Fabricate(:user, username: "participant_1") }
+      let(:participant_2) { Fabricate(:user, username: "participant_2") }
+
+      let(:group) do
+        group = Fabricate(:group, has_messages: true)
+        group.add(current)
+        group.add(participant)
+        group
+      end
+
+      def create_pm(users:, group: nil)
+        pm = Fabricate(:private_message_post_one_user, user: users.first).topic
+        users[1..-1].each do |u|
+          pm.invite(users.first, u.username)
+          Fabricate(:post, user: u, topic: pm)
+        end
+        if group
+          pm.invite_group(users.first, group)
+          group.users.each do |u|
+            Fabricate(:post, user: u, topic: pm)
+          end
+        end
+        pm.reload
+      end
+
+      it 'can find all direct PMs of the current user' do
+        pm = create_pm(users: [current, participant])
+        pm_2 = create_pm(users: [participant_2, participant])
+        pm_3 = create_pm(users: [participant, current])
+        pm_4 = create_pm(users: [participant_2, current])
+        results = Search.execute("in:personal-direct", guardian: Guardian.new(current))
+        expect(results.posts.size).to eq(3)
+        expect(results.posts.map(&:topic_id)).to contain_exactly(pm.id, pm_3.id, pm_4.id)
+      end
+
+      it 'can filter direct PMs by @username' do
+        pm = create_pm(users: [current, participant])
+        pm_2 = create_pm(users: [participant, current])
+        pm_3 = create_pm(users: [participant_2, current])
+        results = Search.execute("@#{participant.username} in:personal-direct", guardian: Guardian.new(current))
+        expect(results.posts.size).to eq(2)
+        expect(results.posts.map(&:topic_id)).to contain_exactly(pm.id, pm_2.id)
+        expect(results.posts.map(&:user_id).uniq).to contain_exactly(participant.id)
+      end
+
+      it "doesn't include PMs that have more than 2 participants" do
+        pm = create_pm(users: [current, participant, participant_2])
+        results = Search.execute("@#{participant.username} in:personal-direct", guardian: Guardian.new(current))
+        expect(results.posts.size).to eq(0)
+      end
+
+      it "doesn't include PMs that have groups" do
+        pm = create_pm(users: [current, participant], group: group)
+        results = Search.execute("@#{participant.username} in:personal-direct", guardian: Guardian.new(current))
+        expect(results.posts.size).to eq(0)
+      end
+    end
   end
 
   context 'topics' do
