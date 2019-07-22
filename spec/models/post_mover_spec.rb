@@ -28,14 +28,17 @@ describe PostMover do
       fab!(:another_user) { evil_trout }
       fab!(:category) { Fabricate(:category, user: user) }
       fab!(:topic) { Fabricate(:topic, user: user) }
-      fab!(:p1) { Fabricate(:post, topic: topic, user: user, created_at: 3.hours.ago) }
+      fab!(:p1) { Fabricate(:post, topic: topic, user: user, created_at: 3.hours.ago, reply_count: 2) }
 
       fab!(:p2) do
-        Fabricate(:post,
+        Fabricate(
+          :post,
           topic: topic,
           user: another_user,
           raw: "Has a link to [evil trout](http://eviltrout.com) which is a cool site.",
-          reply_to_post_number: p1.post_number)
+          reply_to_post_number: p1.post_number,
+          reply_count: 1
+        )
       end
 
       fab!(:p3) { Fabricate(:post, topic: topic, reply_to_post_number: p1.post_number, user: user) }
@@ -46,8 +49,8 @@ describe PostMover do
       before do
         SiteSetting.tagging_enabled = true
         Jobs.run_immediately!
-        p1.replies << p3
-        p2.replies << p4
+        p1.replies.push(p2, p3)
+        p2.replies.push(p4)
         UserActionManager.enable
         @like = PostActionCreator.like(another_user, p4)
       end
@@ -563,7 +566,7 @@ describe PostMover do
             expect(p1.sort_order).to eq(1)
             expect(p1.post_number).to eq(1)
             expect(p1.topic_id).to eq(topic.id)
-            expect(p1.reply_count).to eq(0)
+            expect(p1.reply_count).to eq(1)
 
             # New first post
             new_first = new_topic.posts.where(post_number: 1).first
@@ -675,6 +678,19 @@ describe PostMover do
           expect(new_topic.posts.by_post_number.first.raw).to eq(p1.raw)
           expect(new_topic.posts.by_post_number.last.raw).to eq(p2.raw)
           expect(new_topic.posts_count).to eq(2)
+        end
+
+        it "corrects reply_counts within original topic" do
+          expect do
+            topic.move_posts(user, [p4.id], title: "new testing topic name 1")
+          end.to change { PostReply.count }.by(-1)
+          expect(p1.reload.reply_count).to eq(2)
+          expect(p2.reload.reply_count).to eq(0)
+
+          expect do
+            topic.move_posts(user, [p2.id, p3.id], title: "new testing topic name 2")
+          end.to change { PostReply.count }.by(-2)
+          expect(p1.reload.reply_count).to eq(0)
         end
       end
     end
