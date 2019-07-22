@@ -27,6 +27,7 @@ class PostMover
       move_posts_to topic
     end
     add_allowed_users(participants) if participants.present? && @move_to_pm
+    enqueue_jobs(topic)
     topic
   end
 
@@ -37,7 +38,7 @@ class PostMover
     raise Discourse::InvalidParameters unless post
     archetype = @move_to_pm ? Archetype.private_message : Archetype.default
 
-    Topic.transaction do
+    topic = Topic.transaction do
       new_topic = Topic.create!(
         user: post.user,
         title: title,
@@ -50,6 +51,8 @@ class PostMover
       watch_new_topic
       new_topic
     end
+    enqueue_jobs(topic)
+    topic
   end
 
   private
@@ -77,6 +80,7 @@ class PostMover
   def move_each_post
     max_post_number = destination_topic.max_post_number + 1
 
+    @post_creator = nil
     @move_map = {}
     @reply_count = {}
     posts.each_with_index do |post, offset|
@@ -110,7 +114,7 @@ class PostMover
   def create_first_post(post)
     old_post_attributes = post_attributes(post)
 
-    new_post = PostCreator.create(
+    @post_creator = PostCreator.new(
       post.user,
       raw: post.raw,
       topic_id: destination_topic.id,
@@ -120,8 +124,10 @@ class PostMover
       raw_email: post.raw_email,
       skip_validations: true,
       created_at: post.created_at,
-      guardian: Guardian.new(user)
+      guardian: Guardian.new(user),
+      skip_jobs: true
     )
+    new_post = @post_creator.create
 
     move_incoming_emails(post, new_post)
     move_email_logs(post, new_post)
@@ -311,5 +317,14 @@ class PostMover
       topic_id: post.topic_id,
       post_number: post.post_number
     }
+  end
+
+  def enqueue_jobs(topic)
+    @post_creator.enqueue_jobs if @post_creator
+
+    Jobs.enqueue(
+      :delete_inaccessible_notifications,
+      topic_id: topic.id
+    )
   end
 end
