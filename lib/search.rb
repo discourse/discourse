@@ -265,6 +265,27 @@ class Search
     @advanced_filters
   end
 
+  advanced_filter(/^in:personal-direct$/) do |posts|
+    if @guardian.user
+      posts
+        .joins("LEFT JOIN topic_allowed_groups tg ON posts.topic_id = tg.topic_id")
+        .where(<<~SQL, user_id: @guardian.user.id)
+          tg.id IS NULL
+          AND posts.topic_id IN (
+            SELECT tau.topic_id
+            FROM topic_allowed_users tau
+            JOIN topic_allowed_users tau2
+            ON tau2.topic_id = tau.topic_id
+            AND tau2.id != tau.id
+            WHERE tau.user_id = :user_id
+            AND tau.topic_id = posts.topic_id
+            GROUP BY tau.topic_id
+            HAVING COUNT(*) = 1
+          )
+        SQL
+    end
+  end
+
   advanced_filter(/^in:tagged$/) do |posts|
     posts
       .where('EXISTS (SELECT 1 FROM topic_tags WHERE topic_tags.topic_id = posts.topic_id)')
@@ -631,10 +652,14 @@ class Search
       elsif word == 'order:likes'
         @order = :likes
         nil
-      elsif word == 'in:private'
+      elsif %w{in:private in:personal}.include?(word) # remove private after 2.4 release
         @search_pms = true
         nil
-      elsif word =~ /^private_messages:(.+)$/
+      elsif word == "in:personal-direct"
+        @search_pms = true
+        @direct_pms_only = true
+        nil
+      elsif word =~ /^personal_messages:(.+)$/
         @search_pms = true
         nil
       else
@@ -826,7 +851,7 @@ class Search
       if @search_context.present?
         if @search_context.is_a?(User)
           if opts[:private_messages]
-            posts.private_posts_for_user(@search_context)
+            @direct_pms_only ? posts : posts.private_posts_for_user(@search_context)
           else
             posts.where("posts.user_id = #{@search_context.id}")
           end

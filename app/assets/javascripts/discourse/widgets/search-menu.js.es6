@@ -114,7 +114,7 @@ export default createWidget("search-menu", {
             this.currentUser.get("username_lower") &&
           type === "private_messages"
         ) {
-          query += " in:private";
+          query += " in:personal";
         } else {
           query += encodeURIComponent(" " + type + ":" + ctx.id);
         }
