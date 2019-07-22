@@ -19,7 +19,7 @@ function categoryStripe(color, classes) {
 /**
   Generates category badge HTML
 
-  @param {Object|number} category The category to generate the badge for, or the category ID.
+  @param {Object} category The category to generate the badge for.
   @param {Object} opts
     @param {String}  [opts.url] The url that we want the category badge to link to.
     @param {Boolean} [opts.allowUncategorized] If false, returns an empty string for the uncategorized category.
@@ -28,10 +28,6 @@ function categoryStripe(color, classes) {
 **/
 export function categoryBadgeHTML(category, opts) {
   opts = opts || {};
-
-  if (typeof category === "number") {
-    category = Discourse.Site.currentProp("categories").findBy("id", category);
-  }
 
   if (
     !category ||
