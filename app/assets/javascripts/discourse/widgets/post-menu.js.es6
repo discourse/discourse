@@ -447,7 +447,7 @@ export default createWidget("post-menu", {
           if (afterButton) {
             content.push(afterButton(h));
           }
-          button = h("span", content);
+          button = h("span.extra-buttons", content);
 
           if (button) {
             switch (position) {
@@ -484,7 +484,6 @@ export default createWidget("post-menu", {
       postControls.push(this.attach("post-admin-menu", attrs));
     }
 
-    const contents = [h("nav.post-controls.clearfix", postControls)];
     if (state.likedUsers.length) {
       const remaining = state.total - state.likedUsers.length;
       contents.push(
