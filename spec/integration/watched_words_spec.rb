@@ -57,7 +57,7 @@ describe WatchedWord do
       expect {
         result = manager.perform
         expect(result).to_not be_success
-        expect(result.errors[:base]&.first).to eq(I18n.t('contains_blocked_words', words: [block_word.word, another_block_word.word].join(', ')))
+        expect(result.errors[:base]&.first).to eq(I18n.t('contains_blocked_words', words: [block_word.word, another_block_word.word].sort.join(', ')))
       }.to_not change { Post.count }
     end
 
