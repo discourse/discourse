@@ -709,6 +709,11 @@ const Composer = RestModel.extend({
       const topicProps = this.getProperties(
         Object.keys(_edit_topic_serializer)
       );
+      // frontend should have featuredLink but backend needs featured_link
+      if (topicProps.featuredLink) {
+        topicProps.featured_link = topicProps.featuredLink;
+        delete topicProps.featuredLink;
+      }
 
       const topic = this.topic;
 
