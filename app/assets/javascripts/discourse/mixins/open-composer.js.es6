@@ -3,8 +3,17 @@ import Composer from "discourse/models/composer";
 
 export default Ember.Mixin.create({
   openComposer(controller) {
+    let categoryId = controller.get("category.id");
+    if (
+      categoryId &&
+      controller.category.isUncategorizedCategory &&
+      !this.siteSettings.allow_uncategorized_topics
+    ) {
+      categoryId = null;
+    }
+
     this.controllerFor("composer").open({
-      categoryId: controller.get("category.id"),
+      categoryId,
       action: Composer.CREATE_TOPIC,
       draftKey: controller.get("model.draft_key") || Composer.CREATE_TOPIC,
       draftSequence: controller.get("model.draft_sequence") || 0
