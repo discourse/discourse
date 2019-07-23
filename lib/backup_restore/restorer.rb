@@ -504,6 +504,7 @@ module BackupRestore
       ENV["SKIP_FAILED"] = "1"
       ENV["MIGRATE_TO_MULTISITE"] = "1" if Rails.configuration.multisite
       Rake::Task["uploads:migrate_to_s3"].invoke
+      Jobs.run_later!
     end
 
     def remove_local_uploads(directory)
