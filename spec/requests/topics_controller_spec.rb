@@ -1133,6 +1133,32 @@ RSpec.describe TopicsController do
 
             expect(response.status).to eq(200)
           end
+
+          it 'can’t add a category-only tags from another category to a category' do
+            restricted_category.allowed_tags = [tag2.name]
+
+            put "/t/#{topic.slug}/#{topic.id}.json", params: {
+              tags: [tag2],
+              category_id: category.id
+            }
+
+            result = ::JSON.parse(response.body)
+            expect(response.status).to eq(422)
+            expect(result['errors']).to be_present
+            expect(topic.reload.category_id).not_to eq(restricted_category.id)
+          end
+
+          it 'will clean tag params' do
+            restricted_category.allowed_tags = [tag2.name]
+
+            put "/t/#{topic.slug}/#{topic.id}.json", params: {
+              tags: [""],
+              category_id: restricted_category.id
+            }
+
+            result = ::JSON.parse(response.body)
+            expect(response.status).to eq(200)
+          end
         end
 
         context "allow_uncategorized_topics is false" do
