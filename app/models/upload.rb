@@ -236,20 +236,26 @@ class Upload < ActiveRecord::Base
   end
 
   def update_secure_status
-    return false unless Discourse.store.external?
     return false if self.for_theme || self.for_site_setting
 
-    if FileHelper.is_supported_media?(self.original_filename) && SiteSetting.secure_media?
-      # first post associated with upload determines secure status
-      # i.e. an already public upload will stay public even if added to a new PM
-      first_post_with_upload = self.posts.order(sort_order: :asc).first
-      mark_secure = first_post_with_upload ? first_post_with_upload.with_secure_media? : false
+    if FileHelper.is_supported_media?(self.original_filename)
+      if SiteSetting.secure_media?
+        mark_secure = true if SiteSetting.login_required?
+        unless SiteSetting.login_required?
+          # first post associated with upload determines secure status
+          # i.e. an already public upload will stay public even if added to a new PM
+          first_post_with_upload = self.posts.order(sort_order: :asc).first
+          mark_secure = first_post_with_upload ? first_post_with_upload.with_secure_media? : false
+        end
+      else
+        mark_secure = false
+      end
     else
       mark_secure = SiteSetting.prevent_anons_from_downloading_files?
     end
 
     self.update_column("secure", mark_secure)
-    Discourse.store.update_upload_ACL(self)
+    Discourse.store.update_upload_ACL(self) if Discourse.store.external?
   end
 
   def self.migrate_to_new_scheme(limit: nil)

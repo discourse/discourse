@@ -871,7 +871,7 @@ class Post < ActiveRecord::Base
     locked_by_id.present?
   end
 
-  def link_post_uploads(fragments: nil, validate_only: false)
+  def link_post_uploads(fragments: nil)
     upload_ids = []
 
     each_upload_url(fragments: fragments) do |src, _, sha1|
@@ -884,11 +884,9 @@ class Post < ActiveRecord::Base
     upload_ids |= Upload.where(id: downloaded_images.values).pluck(:id)
 
     disallowed_uploads = []
-
     if SiteSetting.secure_media? && !topic&.private_message?
       disallowed_uploads = Upload.where(id: upload_ids, secure: true).pluck(:original_filename)
     end
-
     return disallowed_uploads if disallowed_uploads.count > 0
 
     values = upload_ids.map! { |upload_id| "(#{self.id},#{upload_id})" }.join(",")
