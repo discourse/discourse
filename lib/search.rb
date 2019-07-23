@@ -278,7 +278,6 @@ class Search
             ON tau2.topic_id = tau.topic_id
             AND tau2.id != tau.id
             WHERE tau.user_id = :user_id
-            AND tau.topic_id = posts.topic_id
             GROUP BY tau.topic_id
             HAVING COUNT(*) = 1
           )
