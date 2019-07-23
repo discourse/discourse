@@ -311,14 +311,15 @@ class TopicsController < ApplicationController
         return render_json_error(I18n.t('category.errors.not_found'))
       end
 
-      if category && topic_tags = (params[:tags] || topic.tags.pluck(:name))
-        category_tags = category.tags.pluck(:name)
-        category_tag_groups = category.tag_groups.joins(:tags).pluck("tags.name")
-        allowed_tags = (category_tags + category_tag_groups).uniq
+      if category && topic_tags = (params[:tags] || topic.tags.pluck(:name)).reject { |c| c.empty? }
+        if topic_tags.present?
+          allowed_tags = DiscourseTagging.filter_allowed_tags(
+            Tag.all,
+            guardian,
+            category: category
+          ).pluck("tags.name")
 
-        if topic_tags.present? && allowed_tags.present?
           invalid_tags = topic_tags - allowed_tags
-
           if !invalid_tags.empty?
             return render_json_error(I18n.t('category.errors.disallowed_topic_tags', tags: invalid_tags.join(", ")))
           end
