@@ -11,6 +11,11 @@ module BackupRestore
     attr_reader :success
 
     def self.pg_produces_portable_dump?(version)
+      # anything pg 11 or above will produce a non-portable dump
+      return false if version.to_i >= 11
+
+      # below 11, the behaviour was changed in multiple different minor
+      # versions depending on major release line - we list those versions below
       gem_version = Gem::Version.new(version)
 
       %w{
@@ -20,8 +25,6 @@ module BackupRestore
         9.4.17
         9.3.22
       }.each do |unportable_version|
-        # anything pg 11 or above will produce a non-portable dump
-        return false if version.to_i >= 11
         return false if Gem::Dependency.new("", "~> #{unportable_version}").match?("", gem_version)
       end
 
