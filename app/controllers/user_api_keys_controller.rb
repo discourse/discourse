@@ -93,9 +93,12 @@ class UserApiKeysController < ApplicationController
     end
 
     if params[:auth_redirect]
-      redirect_path = +"#{params[:auth_redirect]}?payload=#{CGI.escape(@payload)}"
-      redirect_path << "&oneTimePassword=#{CGI.escape(otp_payload)}" if scopes.include?("one_time_password")
-      redirect_to(redirect_path)
+      uri = URI.parse(params[:auth_redirect])
+      query_attributes = [uri.query, "payload=#{CGI.escape(@payload)}"]
+      query_attributes << "oneTimePassword=#{CGI.escape(otp_payload)}" if scopes.include?("one_time_password")
+      uri.query = query_attributes.compact.join('&')
+
+      redirect_to(uri.to_s)
     else
       respond_to do |format|
         format.html { render :show }
