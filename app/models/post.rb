@@ -883,14 +883,13 @@ class Post < ActiveRecord::Base
 
     upload_ids |= Upload.where(id: downloaded_images.values).pluck(:id)
 
-    if validate_only
-      disallowed_uploads = []
-      if SiteSetting.secure_media? && !topic&.private_message?
-        disallowed_uploads = Upload.where(id: upload_ids, secure: true).pluck(:original_filename)
-      end
+    disallowed_uploads = []
 
-      return disallowed_uploads
+    if SiteSetting.secure_media? && !topic&.private_message?
+      disallowed_uploads = Upload.where(id: upload_ids, secure: true).pluck(:original_filename)
     end
+
+    return disallowed_uploads if disallowed_uploads.count > 0
 
     values = upload_ids.map! { |upload_id| "(#{self.id},#{upload_id})" }.join(",")
 
