@@ -99,10 +99,9 @@ class TopicConverter
 
   def update_post_uploads_secure_status
     @topic.posts.each do |post|
-      if post.uploads.count
-        post.update_uploads_secure_status
-        post.rebake!
-      end
+      next if post.uploads.empty?
+      post.update_uploads_secure_status
+      post.rebake!
     end
   end
 end

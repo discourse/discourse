@@ -21,13 +21,12 @@ module FileStore
 
     def store_upload(file, upload, content_type = nil)
       path = get_path_for_upload(upload)
-      url, upload.etag = store_file(file, path, filename: upload.original_filename, content_type: content_type, cache_locally: true, private: upload.secure?)
+      url, upload.etag = store_file(file, path, filename: upload.original_filename, content_type: content_type, cache_locally: true, private_acl: upload.secure?)
       url
     end
 
     def store_optimized_image(file, optimized_image, content_type = nil, secure: false)
       path = get_path_for_optimized_image(optimized_image)
-
       url, optimized_image.etag = store_file(file, path, content_type: content_type, private_acl: secure)
       url
     end
@@ -115,13 +114,9 @@ module FileStore
     end
 
     def url_for(upload, force_download: false)
-      if upload.secure? || force_download
-        url = presigned_url(get_upload_key(upload), force_download: force_download, filename: upload.original_filename)
-      else
-        url = upload.url
-      end
-
-      url
+      upload.secure? || force_download ?
+        presigned_url(get_upload_key(upload), force_download: force_download, filename: upload.original_filename) :
+        upload.url
     end
 
     def cdn_url(url)
@@ -162,7 +157,7 @@ module FileStore
       end
     end
 
-    def update_upload_ACL(upload, type: "attachment")
+    def update_upload_ACL(upload)
       key = get_upload_key(upload)
       update_ACL(key, upload.secure?)
 

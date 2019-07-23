@@ -105,6 +105,7 @@ describe TopicConverter do
 
       context "secure uploads" do
         fab!(:image_upload) { Fabricate(:upload) }
+        fab!(:public_topic) { Fabricate(:topic, user: author) }
 
         before do
           SiteSetting.enable_s3_uploads = true
@@ -119,6 +120,16 @@ describe TopicConverter do
             :put,
             "https://#{SiteSetting.s3_upload_bucket}.s3.amazonaws.com/original/1X/#{image_upload.sha1}.#{image_upload.extension}?acl"
           )
+        end
+
+        it "converts regular uploads to secure when making a public post a PM" do
+          public_reply = Fabricate(:post, raw: "<img src='#{image_upload.url}'>", user: other_user, topic: public_topic)
+          public_reply.link_post_uploads
+          public_reply.update_uploads_secure_status
+
+          expect(public_reply.uploads[0].secure).to eq(false)
+          public_topic.convert_to_private_message(admin)
+          expect(public_topic.reload.posts.find(public_reply.id).uploads[0].secure).to eq(true)
         end
 
         it "converts secure uploads back to public" do

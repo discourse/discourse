@@ -43,16 +43,15 @@ describe FileStore::S3Store do
     let(:s3_object) { stub }
     let(:etag) { "etag" }
 
-    before do
-      s3_object.stubs(:put).returns(Aws::S3::Types::PutObjectOutput.new(etag: "\"#{etag}\""))
-    end
-
     describe "#store_upload" do
       it "returns an absolute schemaless url" do
         store.expects(:get_depth_for).with(upload.id).returns(0)
         s3_helper.expects(:s3_bucket).returns(s3_bucket).at_least_once
-
         s3_bucket.expects(:object).with("original/1X/#{upload.sha1}.png").returns(s3_object)
+        s3_object.expects(:put).with(
+          acl: "public-read",
+          content_type: "image/png",
+          body: uploaded_file).returns(Aws::S3::Types::PutObjectOutput.new(etag: "\"#{etag}\""))
 
         expect(store.store_upload(uploaded_file, upload)).to eq(
           "//s3-upload-bucket.s3.dualstack.us-west-1.amazonaws.com/original/1X/#{upload.sha1}.png"
@@ -62,6 +61,7 @@ describe FileStore::S3Store do
 
       describe "when s3_upload_bucket includes folders path" do
         before do
+          s3_object.stubs(:put).returns(Aws::S3::Types::PutObjectOutput.new(etag: "\"#{etag}\""))
           SiteSetting.s3_upload_bucket = "s3-upload-bucket/discourse-uploads"
         end
 
@@ -79,27 +79,33 @@ describe FileStore::S3Store do
       end
 
       describe "when secure uploads are enabled" do
-        it "returns signed URL for secure attachment" do
+        it "saves secure attachment using private ACL" do
           SiteSetting.prevent_anons_from_downloading_files = true
           SiteSetting.authorized_extensions = "pdf|png|jpg|gif"
           upload.update!(original_filename: "small.pdf", extension: "pdf", secure: true)
 
-          s3_helper.expects(:s3_bucket).returns(s3_bucket).at_least_once
-          s3_bucket.expects(:object).with("original/1X/#{upload.sha1}.pdf").returns(s3_object).at_least_once
-          s3_object.expects(:presigned_url).with(:get, expires_in: S3Helper::DOWNLOAD_URL_EXPIRES_AFTER_SECONDS)
+          s3_helper.expects(:s3_bucket).returns(s3_bucket)
+          s3_bucket.expects(:object).with("original/1X/#{upload.sha1}.pdf").returns(s3_object)
+          s3_object.expects(:put).with(
+            acl: "private",
+            content_type: "application/pdf",
+            content_disposition: "attachment; filename=\"#{upload.original_filename}\"",
+            body: uploaded_file).returns(Aws::S3::Types::PutObjectOutput.new(etag: "\"#{etag}\""))
 
           expect(store.store_upload(uploaded_file, upload)).to eq(
             "//s3-upload-bucket.s3.dualstack.us-west-1.amazonaws.com/original/1X/#{upload.sha1}.pdf"
           )
-
-          expect(store.url_for(upload)).not_to eq(upload.url)
         end
 
-        it "returns regular URL for image upload" do
+        it "saves image upload using public ACL" do
           SiteSetting.prevent_anons_from_downloading_files = true
 
           s3_helper.expects(:s3_bucket).returns(s3_bucket).at_least_once
           s3_bucket.expects(:object).with("original/1X/#{upload.sha1}.png").returns(s3_object).at_least_once
+          s3_object.expects(:put).with(
+            acl: "public-read",
+            content_type: "image/png",
+            body: uploaded_file).returns(Aws::S3::Types::PutObjectOutput.new(etag: "\"#{etag}\""))
 
           expect(store.store_upload(uploaded_file, upload)).to eq(
             "//s3-upload-bucket.s3.dualstack.us-west-1.amazonaws.com/original/1X/#{upload.sha1}.png"
@@ -111,6 +117,10 @@ describe FileStore::S3Store do
     end
 
     describe "#store_optimized_image" do
+      before do
+        s3_object.stubs(:put).returns(Aws::S3::Types::PutObjectOutput.new(etag: "\"#{etag}\""))
+      end
+
       it "returns an absolute schemaless url" do
         store.expects(:get_depth_for).with(optimized_image.upload.id).returns(0)
         s3_helper.expects(:s3_bucket).returns(s3_bucket)
