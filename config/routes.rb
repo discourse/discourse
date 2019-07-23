@@ -12,7 +12,7 @@ USERNAME_ROUTE_FORMAT = /[%\w.\-]+?/ unless defined? USERNAME_ROUTE_FORMAT
 BACKUP_ROUTE_FORMAT = /.+\.(sql\.gz|tar\.gz|tgz)/i unless defined? BACKUP_ROUTE_FORMAT
 
 Discourse::Application.routes.draw do
-  scope path: nil, constraints: { format: /(json|html)/ } do
+  scope path: nil, constraints: { format: /(json|html|\*\/\*)/ } do
     relative_url_root = (defined?(Rails.configuration.relative_url_root) && Rails.configuration.relative_url_root) ? Rails.configuration.relative_url_root + '/' : '/'
 
   match "/404", to: "exceptions#not_found", via: [:get, :post]
