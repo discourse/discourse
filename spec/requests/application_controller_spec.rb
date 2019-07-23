@@ -473,4 +473,10 @@ RSpec.describe ApplicationController do
       end.to_h
     end
   end
+
+  it 'can respond to a request with */* accept header' do
+    get '/', headers: { HTTP_ACCEPT: '*/*' }
+    expect(response.status).to eq(200)
+    expect(response.body).to include('Discourse')
+  end
 end
