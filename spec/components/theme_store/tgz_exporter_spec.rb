@@ -2,7 +2,6 @@
 
 require 'rails_helper'
 require 'theme_store/tgz_exporter'
-require 'import_export/zip_utils'
 
 describe ThemeStore::TgzExporter do
   let!(:theme) do
@@ -64,7 +63,7 @@ describe ThemeStore::TgzExporter do
     file = 'discourse-header-icons.zip'
     dest = 'discourse-header-icons'
     Dir.chdir(dir) do
-      ZipUtils.new.unzip_directory(dir, file, allow_non_root_folder: true)
+      ImportExport::ZipUtils.new.unzip_directory(dir, file, allow_non_root_folder: true)
       `rm #{file}`
 
       folders = Dir.glob("**/*").reject { |f| File.file?(f) }

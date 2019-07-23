@@ -24,7 +24,7 @@ describe ThemeStore::TgzImporter do
 
   it "can import a simple zipped theme" do
     Dir.chdir(@temp_folder) do
-      ZipUtils.new.zip_directory(@temp_folder, 'test')
+      ImportExport::ZipUtils.new.zip_directory(@temp_folder, 'test')
       FileUtils.rm_rf('test/')
     end
 

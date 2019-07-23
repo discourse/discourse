@@ -18,7 +18,7 @@ class ThemeStore::TgzImporter
 
     Dir.chdir(@temp_folder) do
       if @filename.include?('.zip')
-        ZipUtils.new.unzip_directory(@temp_folder, @filename)
+        ImportExport::ZipUtils.new.unzip_directory(@temp_folder, @filename)
 
         # --strip 1 equivalent
         FileUtils.mv(Dir.glob("#{@temp_folder}/*/*"), @temp_folder)
