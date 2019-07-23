@@ -239,11 +239,11 @@ class Upload < ActiveRecord::Base
     return false unless Discourse.store.external?
     return false if self.for_theme || self.for_site_setting
 
-    if FileHelper.is_supported_image?(self.original_filename) && SiteSetting.secure_images?
+    if FileHelper.is_supported_media?(self.original_filename) && SiteSetting.secure_media?
       # first post associated with upload determines secure status
       # i.e. an already public upload will stay public even if added to a new PM
       first_post_with_upload = self.posts.order(sort_order: :asc).first
-      mark_secure = first_post_with_upload ? first_post_with_upload.has_secure_images? : false
+      mark_secure = first_post_with_upload ? first_post_with_upload.with_secure_media? : false
     else
       mark_secure = SiteSetting.prevent_anons_from_downloading_files?
     end

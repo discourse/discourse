@@ -70,11 +70,11 @@ module PrettyText
           sha1, url, extension, original_filename, secure = row
 
           if short_urls = reverse_map[sha1]
-            secure_image = FileHelper.is_supported_image?(original_filename) && SiteSetting.secure_images? && secure
+            secure_media = FileHelper.is_supported_media?(original_filename) && SiteSetting.secure_media? && secure
 
             short_urls.each do |short_url|
               result[short_url] = {
-                url: secure_image ? secure_image_url(url) : url,
+                url: secure_media ? secure_media_url(url) : url,
                 short_path: Upload.short_path(sha1: sha1, extension: extension),
                 base62_sha1: Upload.base62_sha1(sha1)
               }
@@ -86,8 +86,8 @@ module PrettyText
       result
     end
 
-    def secure_image_url(url)
-      url.sub(SiteSetting.Upload.absolute_base_url, "/secure-image-uploads")
+    def secure_media_url(url)
+      url.sub(SiteSetting.Upload.absolute_base_url, "/secure-media-uploads")
     end
 
     def get_topic_info(topic_id)

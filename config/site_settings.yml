@@ -1091,7 +1091,7 @@ files:
   prevent_anons_from_downloading_files:
     default: false
     client: true
-  secure_images:
+  secure_media:
     default: false
     client: true
   enable_s3_uploads:

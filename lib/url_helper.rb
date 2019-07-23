@@ -39,7 +39,7 @@ class UrlHelper
   end
 
   def self.secure_proxy_without_cdn(url)
-    url = url.sub(SiteSetting.Upload.absolute_base_url, "/secure-image-uploads")
+    url = url.sub(SiteSetting.Upload.absolute_base_url, "/secure-media-uploads")
     self.absolute(url, nil)
   end
 
@@ -58,7 +58,7 @@ class UrlHelper
 
     uri = URI.parse(url)
     filename = File.basename(uri.path)
-    is_attachment = !FileHelper.is_supported_image?(filename)
+    is_attachment = !FileHelper.is_supported_media?(filename)
 
     no_cdn = SiteSetting.login_required || SiteSetting.prevent_anons_from_downloading_files
 

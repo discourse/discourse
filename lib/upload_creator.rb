@@ -117,7 +117,10 @@ class UploadCreator
       @upload.for_export          = true if @opts[:for_export]
       @upload.for_site_setting    = true if @opts[:for_site_setting]
 
-      if !is_image && !@upload.for_theme && !@upload.for_site_setting && SiteSetting.prevent_anons_from_downloading_files
+      if !FileHelper.is_supported_media?(@filename) &&
+        !@upload.for_theme &&
+        !@upload.for_site_setting &&
+        SiteSetting.prevent_anons_from_downloading_files
         @upload.secure = true
       end
 

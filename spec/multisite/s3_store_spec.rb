@@ -159,10 +159,10 @@ RSpec.describe 'Multisite s3 uploads', type: :multisite do
       end
     end
 
-    describe "when secure images are enabled" do
+    describe "when secure media are enabled" do
       before do
         SiteSetting.login_required = true
-        SiteSetting.secure_images = true
+        SiteSetting.secure_media = true
         s3_helper.stubs(:s3_client).returns(client)
         Discourse.stubs(:store).returns(store)
       end

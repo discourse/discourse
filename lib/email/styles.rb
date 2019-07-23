@@ -193,7 +193,7 @@ module Email
     def to_html
       strip_classes_and_ids
       replace_relative_urls
-      replace_secure_image_urls
+      replace_secure_media_urls
       @fragment.to_html
     end
 
@@ -241,19 +241,18 @@ module Email
       end
     end
 
-    def replace_secure_image_urls
+    def replace_secure_media_urls
       @fragment.css('[href]').each do |a|
-        if a['href'][/secure-image-uploads/]
-          a.add_next_sibling "<p class='secure-image-notice'>#{I18n.t("emails.secure_image_placeholder")}</p>"
+        if a['href'][/secure-media-uploads/]
+          a.add_next_sibling "<p class='secure-media-notice'>#{I18n.t("emails.secure_media_placeholder")}</p>"
           a.remove
         end
       end
 
       @fragment.search('img').each do |img|
         next unless img['src']
-
-        if img['src'][/secure-image-uploads/]
-          img.add_next_sibling "<p class='secure-image-notice'>#{I18n.t("emails.secure_image_placeholder")}</p>"
+        if img['src'][/secure-media-uploads/]
+          img.add_next_sibling "<p class='secure-media-notice'>#{I18n.t("emails.secure_media_placeholder")}</p>"
           img.remove
         end
       end

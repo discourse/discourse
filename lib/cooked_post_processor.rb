@@ -284,8 +284,8 @@ class CookedPostProcessor
     absolute_url = url
     absolute_url = Discourse.base_url_no_prefix + absolute_url if absolute_url =~ /^\/[^\/]/
 
-    if url&.start_with?("/secure-image-uploads/")
-      absolute_url = Discourse.store.signed_url_for_path(url.sub("/secure-image-uploads/", ""))
+    if url&.start_with?("/secure-media-uploads/")
+      absolute_url = Discourse.store.signed_url_for_path(url.sub("/secure-media-uploads/", ""))
     end
 
     return unless absolute_url
@@ -601,7 +601,7 @@ class CookedPostProcessor
 
     %w{src data-small-upload}.each do |selector|
       @doc.css("img[#{selector}]").each do |img|
-        img[selector] = UrlHelper.cook_url(img[selector].to_s, secure: @post.has_secure_images?)
+        img[selector] = UrlHelper.cook_url(img[selector].to_s, secure: @post.with_secure_media?)
       end
     end
   end

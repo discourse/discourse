@@ -286,6 +286,15 @@ class Post < ActiveRecord::Base
     options[:user_id] = post_user.id if post_user
     options[:omit_nofollow] = true if omit_nofollow?
 
+    if self.with_secure_media?
+      each_upload_url do |url|
+        uri = URI.parse(url)
+        if FileHelper.is_supported_media?(File.basename(uri.path))
+          raw = raw.sub(SiteSetting.Upload.s3_cdn_url, "#{Discourse.base_url}/secure-media-uploads")
+        end
+      end
+    end
+
     cooked = post_analyzer.cook(raw, options)
 
     new_cooked = Plugin::Filter.apply(:after_post_cook, self, cooked)
@@ -478,10 +487,9 @@ class Post < ActiveRecord::Base
     ReviewableFlaggedPost.pending.find_by(target: self)
   end
 
-  def has_secure_images?
-    return false unless SiteSetting.secure_images?
-
-    topic.private_message? || SiteSetting.login_required?
+  def with_secure_media?
+    return false unless SiteSetting.secure_media?
+    topic&.private_message? || SiteSetting.login_required?
   end
 
   def hide!(post_action_type_id, reason = nil)
@@ -877,7 +885,7 @@ class Post < ActiveRecord::Base
 
     if validate_only
       disallowed_uploads = []
-      if SiteSetting.secure_images? && !topic.private_message?
+      if SiteSetting.secure_media? && !topic&.private_message?
         disallowed_uploads = Upload.where(id: upload_ids, secure: true).pluck(:original_filename)
       end
 
