@@ -54,6 +54,10 @@ module FileStore
       not_implemented
     end
 
+    def s3_upload_host
+      not_implemented
+    end
+
     def external?
       not_implemented
     end

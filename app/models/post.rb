@@ -290,7 +290,7 @@ class Post < ActiveRecord::Base
       each_upload_url do |url|
         uri = URI.parse(url)
         if FileHelper.is_supported_media?(File.basename(uri.path))
-          raw = raw.sub(SiteSetting.Upload.s3_cdn_url, "#{Discourse.base_url}/secure-media-uploads")
+          raw = raw.sub(Discourse.store.s3_upload_host, "#{Discourse.base_url}/secure-media-uploads")
         end
       end
     end

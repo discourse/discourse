@@ -364,7 +364,7 @@ class UserNotifications < ActionMailer::Base
 
   def strip_secure_urls(raw)
     raw.each_line do |line|
-      if (line.start_with?(SiteSetting.Upload.s3_cdn_url) && FileHelper.is_supported_media?(line))
+      if (line.start_with?(Discourse.store.s3_upload_host) && FileHelper.is_supported_media?(line))
         raw = raw.sub(line, "<p class='secure-media-notice'>#{I18n.t("emails.secure_media_placeholder")}</p>")
       end
     end

@@ -88,6 +88,10 @@ module FileStore
       @absolute_base_url ||= SiteSetting.Upload.absolute_base_url
     end
 
+    def s3_upload_host
+      SiteSetting.Upload.s3_cdn_url.present? ? SiteSetting.Upload.s3_cdn_url : "https:#{absolute_base_url}"
+    end
+
     def external?
       true
     end
