@@ -661,7 +661,7 @@ module Email
     end
 
     def process_destination(destination, user, body, elided, hidden_reason_id)
-      return if SiteSetting.enable_forwarded_emails &&
+      return if SiteSetting.forwarded_emails_behaviour != "hide" &&
                 has_been_forwarded? &&
                 process_forwarded_email(destination, user)
 
@@ -801,6 +801,17 @@ module Email
 
     def process_forwarded_email(destination, user)
       user ||= stage_from_user
+      case SiteSetting.forwarded_emails_behaviour
+      when "create_replies"
+        forwarded_email_create_replies(destination, user)
+      when "quote"
+        forwarded_email_quote_forwarded(destination, user)
+      else
+        false
+      end
+    end
+
+    def forwarded_email_create_replies(destination, user)
       embedded = Mail.new(embedded_email_raw)
       email, display_name = parse_from_field(embedded)
 
@@ -858,6 +869,42 @@ module Email
         end
       end
 
+      true
+    end
+
+    def forwarded_email_quote_forwarded(destination, user)
+      embedded = embedded_email_raw
+      raw = @before_embedded +
+        "\n\n[quote=\"Forwarded message\"]\n" +
+        PlainTextToMarkdown.new(embedded).to_markdown +
+        "\n[/quote]"
+      title = subject
+
+      case destination[:type]
+      when :group
+        group = destination[:obj]
+        create_topic(user: user,
+                     raw: raw,
+                     title: title,
+                     archetype: Archetype.private_message,
+                     target_group_names: [group.name],
+                     is_group_message: true,
+                     skip_validations: true)
+
+      when :category
+        category = destination[:obj]
+
+        return false if user.staged? && !category.email_in_allow_strangers
+        return false if !user.has_trust_level?(SiteSetting.email_in_min_trust)
+
+        create_topic(user: user,
+                     raw: raw,
+                     title: title,
+                     category: category.id,
+                     skip_validations: user.staged?)
+      else
+        return false
+      end
       true
     end
 
