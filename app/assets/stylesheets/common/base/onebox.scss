@@ -338,6 +338,31 @@ pre.onebox code ol.lines li:before {
   counter-increment: li-counter;
 }
 
+.onebox.githubpullrequest {
+  .state {
+    font-size: $font-down-2;
+    padding: 4px 8px;
+    border-radius: 3px;
+    color: white;
+
+    &.open {
+      background: #2cbe4e;
+    }
+
+    &.closed {
+      background: #cb2431;
+    }
+
+    &.draft {
+      background: #6a737d;
+    }
+
+    &.merged {
+      background: #6f42c1;
+    }
+  }
+}
+
 pre.onebox code ol {
   margin-left: 0;
   line-height: $line-height-large;
