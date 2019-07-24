@@ -868,7 +868,8 @@ export default Ember.Component.extend({
     // wraps previewed upload markdown in a codeblock in its own class to keep a track
     // of indexes later on to replace the correct upload placeholder in the composer
     if ($preview.find(".codeblock-image").length === 0) {
-      this.$(".d-editor-preview *")
+      $(this.element)
+        .find(".d-editor-preview *")
         .contents()
         .each(function() {
           if (this.nodeType !== 3) return; // TEXT_NODE
