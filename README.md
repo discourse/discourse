@@ -75,7 +75,7 @@ Ruby Support
 
 The onebox library is supported on all "officially" supported versions of Ruby.
 
-This means you must be on Ruby 2.3 or above for it to work.
+This means you must be on Ruby 2.4 or above for it to work.
 
 Development Preview Interface
 -----------------------------
@@ -211,7 +211,7 @@ Issues / Discussion
 -------------------
 
 Discussion of the Onebox gem, its development and features should be done on
-[Discourse Meta](https://meta.discourse.org). 
+[Discourse Meta](https://meta.discourse.org).
 
 Contributing
 ------------

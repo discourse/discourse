@@ -1,9 +1,9 @@
 language: ruby
 sudo: false
 rvm:
-  - 2.3
   - 2.4
   - 2.5
+  - 2.6
 notifications:
   email:
     on_success: change
