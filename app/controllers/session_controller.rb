@@ -39,7 +39,7 @@ class SessionController < ApplicationController
       if SiteSetting.verbose_sso_logging
         Rails.logger.warn("Verbose SSO log: Started SSO process\n\n#{sso.diagnostics}")
       end
-      redirect_to sso.to_url
+      redirect_to sso_url(sso)
     else
       render body: nil, status: 404
     end
@@ -524,5 +524,10 @@ class SessionController < ApplicationController
   def render_sso_error(status:, text:)
     @sso_error = text
     render status: status, layout: 'no_ember'
+  end
+
+  # extension to allow plugins to customize the SSO URL
+  def sso_url(sso)
+    sso.to_url
   end
 end
