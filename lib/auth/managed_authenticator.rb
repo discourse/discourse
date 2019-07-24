@@ -85,7 +85,7 @@ class Auth::ManagedAuthenticator < Auth::Authenticator
     result = Auth::Result.new
     info = auth_token[:info]
     result.email = info[:email]
-    result.name = "#{info[:first_name]} #{info[:last_name]}"
+    result.name = info[:first_name] && info[:last_name] ? "#{info[:first_name]} #{info[:last_name]}" : info[:name] 
     result.username = info[:nickname]
     result.email_valid = primary_email_verified?(auth_token) if result.email
     result.extra_data = {
