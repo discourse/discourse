@@ -60,7 +60,9 @@ const User = RestModel.extend({
     },
 
     // prevents staff property to be overridden
-    set() {}
+    set() {
+      return this.admin || this.moderator;
+    }
   }),
 
   destroySession() {
