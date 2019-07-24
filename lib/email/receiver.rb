@@ -67,7 +67,8 @@ module Email
 
     def process!
       return if is_blacklisted?
-      DistributedMutex.synchronize(@message_id) do
+      id_hash = Digest::SHA1.hexdigest(@message_id)
+      DistributedMutex.synchronize("process_email_#{id_hash}") do
         begin
           return if IncomingEmail.exists?(message_id: @message_id)
           ensure_valid_address_lists
