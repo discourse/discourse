@@ -54,7 +54,16 @@ const User = RestModel.extend({
     return UserDraftsStream.create({ user: this });
   },
 
-  staff: Ember.computed.or("admin", "moderator"),
+  staff: Ember.computed("admin", "moderator", {
+    get() {
+      return this.admin || this.moderator;
+    },
+
+    // prevents staff property to be overridden
+    set() {
+      return this.admin || this.moderator;
+    }
+  }),
 
   destroySession() {
     return ajax(`/session/${this.username}`, { type: "DELETE" });

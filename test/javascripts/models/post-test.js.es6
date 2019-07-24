@@ -54,7 +54,7 @@ QUnit.test("updateFromPost", assert => {
 });
 
 QUnit.test("destroy by staff", assert => {
-  var user = Discourse.User.create({ username: "staff", staff: true }),
+  var user = Discourse.User.create({ username: "staff", moderator: true }),
     post = buildPost({ user: user });
 
   post.destroy(user);

@@ -156,7 +156,7 @@ test("new topic button is not available for staff-only tags", async assert => {
     }
   ]);
 
-  updateCurrentUser({ staff: false });
+  updateCurrentUser({ moderator: false, admin: false });
 
   await visit("/tags/regular-tag");
   assert.ok(find("#create-topic:disabled").length === 0);
@@ -164,7 +164,7 @@ test("new topic button is not available for staff-only tags", async assert => {
   await visit("/tags/staff-only-tag");
   assert.ok(find("#create-topic:disabled").length === 1);
 
-  updateCurrentUser({ staff: true });
+  updateCurrentUser({ moderator: true });
 
   await visit("/tags/regular-tag");
   assert.ok(find("#create-topic:disabled").length === 0);
