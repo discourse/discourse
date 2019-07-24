@@ -4,12 +4,11 @@ require 'csv'
 require 'zip'
 require_dependency 'system_message'
 require_dependency 'upload_creator'
+require_dependency 'discourse_markdown'
 
 module Jobs
 
   class ExportCsvFile < Jobs::Base
-    include ActionView::Helpers::NumberHelper
-
     sidekiq_options retry: false
 
     HEADER_ATTRS_FOR ||= HashWithIndifferentAccess.new(
@@ -406,7 +405,7 @@ module Jobs
           SystemMessage.create_from_system_user(
             @current_user,
             :csv_export_succeeded,
-            download_link: "[#{upload.original_filename}|attachment](#{upload.short_url}) (#{number_to_human_size(upload.filesize)})",
+            download_link: DiscourseMarkdown.attachment_markdown(upload),
             export_title: export_title
           )
         else

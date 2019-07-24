@@ -5,12 +5,11 @@ require_dependency "new_post_manager"
 require_dependency "html_to_markdown"
 require_dependency "plain_text_to_markdown"
 require_dependency "upload_creator"
+require_dependency "discourse_markdown"
 
 module Email
 
   class Receiver
-    include ActionView::Helpers::NumberHelper
-
     # If you add a new error, you need to
     #   * add it to Email::Processor#handle_failure()
     #   * add text to server.en.yml (parent key: "emails.incoming.errors")
@@ -1035,19 +1034,16 @@ module Email
 
                 InlineUploads.match_img(raw) do |match, src, replacement, _|
                   if src == upload.url
-                    raw = raw.sub(
-                      match,
-                      "![#{upload.original_filename}|#{upload.width}x#{upload.height}](#{upload.short_url})"
-                    )
+                    raw = raw.sub(match, DiscourseMarkdown.image_markdown(upload))
                   end
                 end
               elsif raw[/\[image:.*?\d+[^\]]*\]/i]
-                raw.sub!(/\[image:.*?\d+[^\]]*\]/i, attachment_markdown(upload))
+                raw.sub!(/\[image:.*?\d+[^\]]*\]/i, DiscourseMarkdown.upload_markdown(upload))
               else
-                raw << "\n\n#{attachment_markdown(upload)}\n\n"
+                raw << "\n\n#{DiscourseMarkdown.upload_markdown(upload)}\n\n"
               end
             else
-              raw << "\n\n#{attachment_markdown(upload)}\n\n"
+              raw << "\n\n#{DiscourseMarkdown.upload_markdown(upload)}\n\n"
             end
           else
             rejected_attachments << upload
@@ -1080,14 +1076,6 @@ module Email
 
       client_message = RejectionMailer.send_rejection(:email_reject_attachment, message.from, template_args)
       Email::Sender.new(client_message, :email_reject_attachment).send
-    end
-
-    def attachment_markdown(upload)
-      if FileHelper.is_supported_image?(upload.original_filename)
-        "![#{upload.original_filename}|#{upload.width}x#{upload.height}](#{upload.short_url})"
-      else
-        "[#{upload.original_filename}|attachment](#{upload.short_url}) (#{number_to_human_size(upload.filesize)})"
-      end
     end
 
     def create_post(options = {})

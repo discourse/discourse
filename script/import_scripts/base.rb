@@ -21,8 +21,6 @@ module ImportScripts; end
 
 class ImportScripts::Base
 
-  include ActionView::Helpers::NumberHelper
-
   def initialize
     preload_i18n
 
