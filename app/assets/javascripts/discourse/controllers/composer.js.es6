@@ -199,11 +199,7 @@ export default Ember.Controller.extend({
     );
   },
 
-  @computed
-  isStaffUser() {
-    const currentUser = this.currentUser;
-    return currentUser && currentUser.get("staff");
-  },
+  isStaffUser: Ember.computed.reads("currentUser.staff"),
 
   canUnlistTopic: Ember.computed.and("model.creatingTopic", "isStaffUser"),
 
