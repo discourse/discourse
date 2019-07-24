@@ -579,7 +579,7 @@ widgetTest("toggle moderator post", {
   template:
     '{{mount-widget widget="post" args=args togglePostType=(action "togglePostType")}}',
   beforeEach() {
-    this.currentUser.set("staff", true);
+    this.currentUser.set("moderator", true);
     this.set("args", { canManage: true });
     this.on("togglePostType", () => (this.toggled = true));
   },
@@ -595,7 +595,7 @@ widgetTest("toggle moderator post", {
   template:
     '{{mount-widget widget="post" args=args togglePostType=(action "togglePostType")}}',
   beforeEach() {
-    this.currentUser.set("staff", true);
+    this.currentUser.set("moderator", true);
     this.set("args", { canManage: true });
     this.on("togglePostType", () => (this.toggled = true));
   },
