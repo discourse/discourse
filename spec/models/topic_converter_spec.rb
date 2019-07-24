@@ -142,6 +142,7 @@ describe TopicConverter do
           private_message.convert_to_public_topic(admin)
           expect(private_message.reload.posts.find(second_post.id).uploads[0].secure).to eq(false)
         end
+      end
     end
   end
 
