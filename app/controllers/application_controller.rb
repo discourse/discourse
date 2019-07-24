@@ -741,6 +741,10 @@ class ApplicationController < ActionController::Base
     end
 
     if !current_user && SiteSetting.login_required?
+      if SiteSetting.allow_reading_topics && controller_name == "topics"
+        return
+      end
+
       flash.keep
       redirect_to_login
       return

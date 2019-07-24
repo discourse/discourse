@@ -333,6 +333,8 @@ login:
     refresh: true
     client: true
     default: false
+  allow_reading_topics:
+    default: false
   must_approve_users:
     client: true
     default: false

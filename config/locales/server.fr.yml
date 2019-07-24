@@ -1437,6 +1437,7 @@ fr:
     invite_expiry_days: "Combien de temps (en jours) les clés d'invitation sont-elles valides"
     invite_only: "Tous les nouveaux utilisateurs doivent être explicitement invités par des utilisateurs de confiance ou du personnel. L'enregistrement public est désactivé."
     login_required: "Authentification requise pour lire le contenu du site, interdit l'accès anonyme."
+    allow_reading_topics: "Si l'authentification est requise, quand même permettre de lire anonymement des sujets via l'URL."
     min_username_length: "Longueur minimale du nom d'utilisateur en caractères. ATTENTION : si des utilisateurs ou groupes existants ont des noms plus courts que celui-ci, votre site se cassera !"
     max_username_length: "Longueur maximale du nom d'utilisateur en caractères. ATTENTION : si des utilisateurs ou groupes existants ont des noms plus longs que celui-ci, votre site se cassera !"
     unicode_usernames: "Autorisez les noms d'utilisateur et noms de groupes à contenir des lettres et des chiffres Unicode."

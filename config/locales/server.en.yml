@@ -1592,6 +1592,7 @@ en:
     invite_only: "All new users must be explicitly invited by trusted users or staff. Public registration is disabled."
 
     login_required: "Require authentication to read content on this site, disallow anonymous access."
+    allow_reading_topics: "If authentication is required, still allow reading topics with the URL."
 
     min_username_length: "Minimum username length in characters. WARNING: if any existing users or groups have names shorter than this, your site will break!"
     max_username_length: "Maximum username length in characters. WARNING: if any existing users or groups have names longer than this, your site will break!"

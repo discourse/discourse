@@ -19,7 +19,11 @@ export default Controller.extend({
 
   @discourseComputed
   loginRequired() {
-    return Discourse.SiteSettings.login_required && !this.currentUser;
+    return (
+      Discourse.SiteSettings.login_required &&
+      !Discourse.SiteSettings.allow_reading_topics &&
+      !this.currentUser
+    );
   },
 
   @discourseComputed

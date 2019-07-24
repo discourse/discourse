@@ -1454,6 +1454,26 @@ RSpec.describe TopicsController do
           include_examples "various scenarios", expected
         end
 
+        context 'anonymous with login required but reading allowed' do
+          before do
+            SiteSetting.login_required = true
+            SiteSetting.allow_reading_topics = true
+          end
+
+          expected = {
+            normal_topic: 200,
+            secure_topic: 403,
+            private_topic: 403,
+            deleted_topic: 410,
+            deleted_secure_topic: 403,
+            deleted_private_topic: 403,
+            nonexist: 404,
+            secure_accessible_topic: 403
+          }
+
+          include_examples "various scenarios", expected
+        end
+
         context 'normal user' do
           before do
             sign_in(user)
