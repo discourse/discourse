@@ -87,7 +87,7 @@ a.loading-onebox {
 
 @mixin onebox-favicon($class, $image) {
   &.#{$class} .source {
-    background: image-url("favicons/#{$image}.png") no-repeat;
+    background: image-url("favicons/#{$image}.png") no-repeat 0% 50%;
     background-size: 16px 16px;
     padding-left: 20px;
   }
