@@ -4,6 +4,7 @@ import { isAppWebview, isiOSPWA } from "discourse/lib/utilities";
 export default Ember.Controller.extend({
   showTop: true,
   showFooter: false,
+  router: Ember.inject.service(),
 
   @computed
   canSignUp() {
