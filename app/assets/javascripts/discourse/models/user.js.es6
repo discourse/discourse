@@ -56,16 +56,11 @@ const User = RestModel.extend({
 
   staff: Ember.computed("admin", "moderator", {
     get() {
-      if (this._staff) {
-        return this._staff;
-      }
-
       return this.admin || this.moderator;
     },
 
-    set(_, value) {
-      return (this._staff = value);
-    }
+    // prevents staff property to be overridden
+    set() {}
   }),
 
   destroySession() {

@@ -28,7 +28,7 @@ widgetTest("extra classes and glyphs", {
     this.set("args", {
       username: "eviltrout",
       usernameUrl: "/u/eviltrout",
-      staff: true,
+      modeator: true,
       admin: true,
       moderator: true,
       new_user: true,

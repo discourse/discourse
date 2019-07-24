@@ -156,7 +156,7 @@ acceptance("Composer topic featured links when uncategorized is not allowed", {
 });
 
 QUnit.test("Pasting a link enables the text input area", async assert => {
-  updateCurrentUser({ admin: false, staff: false, trust_level: 1 });
+  updateCurrentUser({ moderator: false, admin: false, trust_level: 1 });
 
   await visit("/");
   await click("#create-topic");

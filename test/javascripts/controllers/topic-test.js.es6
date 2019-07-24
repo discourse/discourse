@@ -537,7 +537,7 @@ QUnit.test(
       posts: [post, { id: 3 }, { id: 4 }]
     });
 
-    const currentUser = Ember.Object.create({ staff: true });
+    const currentUser = Ember.Object.create({ moderator: true });
     const model = Topic.create({ postStream });
     const controller = this.subject({ model, currentUser });
 
