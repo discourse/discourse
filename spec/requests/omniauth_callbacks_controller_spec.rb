@@ -487,7 +487,7 @@ RSpec.describe Users::OmniauthCallbacksController do
         expect(response.redirect_url).to start_with("http://test.localhost/associate/")
 
         expect(session[:current_user_id]).to eq(user.id)
-        expect(UserAssociatedAccount.count).to eq(0) # Reconnect has not yet happened
+        expect(UserAssociatedAccount.count).to eq(1) # Reconnect has not yet happened
       end
 
     end
