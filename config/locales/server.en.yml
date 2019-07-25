@@ -138,6 +138,7 @@ en:
         unsubscribe_not_allowed: "Happens when unsubscribing via email is not allowed for this user."
         email_not_allowed: "Happens when the email address is not on the whitelist or is on the blacklist."
       unrecognized_error: "Unrecognized Error"
+    forwarded_message: "Forwarded message"
 
   errors: &errors
     format: ! "%{attribute} %{message}"
