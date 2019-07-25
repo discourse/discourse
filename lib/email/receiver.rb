@@ -881,13 +881,10 @@ module Email
 
     def forwarded_email_quote_forwarded(destination, user)
       embedded = embedded_email_raw
-      raw = <<~EOF
-        #{@before_embedded}
-
-        [quote="#{I18n.t('emails.forwarded_message')}"]
-        #{PlainTextToMarkdown.new(embedded).to_markdown}
-        [/quote]
-        EOF
+      raw = @before_embedded +
+        "\n\n[quote=\"Forwarded message\"]\n" +
+        PlainTextToMarkdown.new(embedded).to_markdown +
+        "\n[/quote]"
       title = subject
 
       return true if forwarded_email_create_topic(destination, user, raw, title)
