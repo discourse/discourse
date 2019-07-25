@@ -811,7 +811,7 @@ module Email
       end
     end
 
-    def forwarded_email_create_topic(destination, user, raw, title, date=nil)
+    def forwarded_email_create_topic(destination, user, raw, title, date = nil)
       case destination[:type]
       when :group
         group = destination[:obj]
