@@ -1021,6 +1021,9 @@ email:
   enable_forwarded_emails: false
   always_show_trimmed_content: false
   private_email: false
+  email_total_attachment_size_limit_kb:
+    default: 0
+    max: 51200
 
 files:
   max_image_size_kb:
