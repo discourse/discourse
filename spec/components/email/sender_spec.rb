@@ -376,10 +376,10 @@ describe Email::Sender do
     fab!(:reply) do
       raw = <<~RAW
         Hello world!
-        #{DiscourseMarkdown.attachment_markdown(small_pdf)}
-        #{DiscourseMarkdown.attachment_markdown(large_pdf)}
-        #{DiscourseMarkdown.image_markdown(image)}
-        #{DiscourseMarkdown.attachment_markdown(csv_file)}
+        #{UploadMarkdown.new(small_pdf).attachment_markdown}
+        #{UploadMarkdown.new(large_pdf).attachment_markdown}
+        #{UploadMarkdown.new(image).image_markdown}
+        #{UploadMarkdown.new(csv_file).attachment_markdown}
       RAW
       reply = Fabricate(:post, raw: raw, topic: post.topic, user: Fabricate(:user))
       reply.link_post_uploads
