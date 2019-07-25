@@ -36,8 +36,8 @@ class TopicEmbed < ActiveRecord::Base
     if SiteSetting.embed_truncate
       contents = first_paragraph_from(contents)
     end
-    contents ||= +''
-    contents << imported_from_html(url)
+    contents ||= ''
+    contents = +contents << imported_from_html(url)
 
     url = normalize_url(url)
 

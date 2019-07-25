@@ -86,6 +86,26 @@ describe TopicEmbed do
         expect(post.cook_method).to eq(Post.cook_methods[:regular])
       end
     end
+
+    describe 'embedded content truncation' do
+      MAX_LENGTH_BEFORE_TRUNCATION = 100
+
+      let(:long_content) { "<p>#{'a' * MAX_LENGTH_BEFORE_TRUNCATION}</p>\n<p>more</p>" }
+
+      it 'truncates the imported post when truncation is enabled' do
+        SiteSetting.embed_truncate = true
+        post = TopicEmbed.import(user, url, title, long_content)
+
+        expect(post.raw).not_to include(long_content)
+      end
+
+      it 'keeps everything in the imported post when truncation is disabled' do
+        SiteSetting.embed_truncate = false
+        post = TopicEmbed.import(user, url, title, long_content)
+
+        expect(post.raw).to include(long_content)
+      end
+    end
   end
 
   context '.topic_id_for_embed' do
