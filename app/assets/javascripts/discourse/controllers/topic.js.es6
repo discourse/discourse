@@ -722,11 +722,6 @@ export default Ember.Controller.extend(bufferedProperty("model"), {
       this._jumpToPostId(postId);
     },
 
-    hideMultiSelect() {
-      this.set("multiSelect", false);
-      this._forceRefreshPostStream();
-    },
-
     toggleMultiSelect() {
       this.toggleProperty("multiSelect");
       this._forceRefreshPostStream();
