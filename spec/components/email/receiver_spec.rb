@@ -726,7 +726,7 @@ describe Email::Receiver do
       expect(post.raw).to eq(<<~EOF.chomp
         @team, can you have a look at this email below?
 
-        [quote="Forwarded message"]
+        [quote]
         From: Some One &lt;some@one\\.com&gt;
         To: Ba Bar &lt;ba@bar\\.com&gt;
         Date: Mon, 1 Dec 2016 00:13:37 \\+0100
@@ -738,7 +738,7 @@ describe Email::Receiver do
 
         XoXo
         [/quote]
-        EOF
+      EOF
       )
     end
   end
