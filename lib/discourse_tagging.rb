@@ -83,7 +83,11 @@ module DiscourseTagging
           return false
         end
 
-        return false if tags.size == 0
+        if tags.size == 0
+          topic.errors.add(:base, I18n.t("tags.forbidden.invalid", count: new_tag_names.size))
+          return false
+        end
+
         topic.tags = tags
       else
         # validate minimum required tags for a category
