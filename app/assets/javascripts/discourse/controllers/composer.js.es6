@@ -81,7 +81,7 @@ export function addPopupMenuOptionsCallback(callback) {
 
 export default Ember.Controller.extend({
   topicController: Ember.inject.controller("topic"),
-  application: Ember.inject.controller(),
+  router: Ember.inject.service(),
 
   replyAsNewTopicDraft: Ember.computed.equal(
     "model.draftKey",
@@ -730,7 +730,7 @@ export default Ember.Controller.extend({
       });
 
     if (
-      this.get("application.currentRouteName").split(".")[0] === "topic" &&
+      this.router.currentRouteName.split(".")[0] === "topic" &&
       composer.get("topic.id") === this.get("topicModel.id")
     ) {
       staged = composer.get("stagedPost");
