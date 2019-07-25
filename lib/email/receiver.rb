@@ -5,7 +5,7 @@ require_dependency "new_post_manager"
 require_dependency "html_to_markdown"
 require_dependency "plain_text_to_markdown"
 require_dependency "upload_creator"
-require_dependency "discourse_markdown"
+require_dependency "upload_markdown"
 
 module Email
 
@@ -1034,16 +1034,16 @@ module Email
 
                 InlineUploads.match_img(raw) do |match, src, replacement, _|
                   if src == upload.url
-                    raw = raw.sub(match, DiscourseMarkdown.image_markdown(upload))
+                    raw = raw.sub(match, UploadMarkdown.new(upload).image_markdown)
                   end
                 end
               elsif raw[/\[image:.*?\d+[^\]]*\]/i]
-                raw.sub!(/\[image:.*?\d+[^\]]*\]/i, DiscourseMarkdown.upload_markdown(upload))
+                raw.sub!(/\[image:.*?\d+[^\]]*\]/i, UploadMarkdown.new(upload).to_markdown)
               else
-                raw << "\n\n#{DiscourseMarkdown.upload_markdown(upload)}\n\n"
+                raw << "\n\n#{UploadMarkdown.new(upload).to_markdown}\n\n"
               end
             else
-              raw << "\n\n#{DiscourseMarkdown.upload_markdown(upload)}\n\n"
+              raw << "\n\n#{UploadMarkdown.new(upload).to_markdown}\n\n"
             end
           else
             rejected_attachments << upload

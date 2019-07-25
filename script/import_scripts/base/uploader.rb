@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require_dependency 'url_helper'
-require_dependency 'discourse_markdown'
+require_dependency 'upload_markdown'
 
 module ImportScripts
   class Uploader
@@ -40,15 +40,15 @@ module ImportScripts
     end
 
     def html_for_upload(upload, display_filename)
-      DiscourseMarkdown.upload_markdown(upload, display_name: display_filename)
+      UploadMarkdown.new(upload).to_markdown(display_name: display_filename)
     end
 
     def embedded_image_html(upload)
-      DiscourseMarkdown.image_markdown(upload)
+      UploadMarkdown.new(upload).image_markdown
     end
 
     def attachment_html(upload, display_filename)
-      DiscourseMarkdown.attachment_markdown(upload, display_name: display_filename)
+      UploadMarkdown.new(upload).attachment_markdown(display_name: display_filename)
     end
 
     private

@@ -4,7 +4,7 @@ require 'csv'
 require 'zip'
 require_dependency 'system_message'
 require_dependency 'upload_creator'
-require_dependency 'discourse_markdown'
+require_dependency 'upload_markdown'
 
 module Jobs
 
@@ -405,7 +405,7 @@ module Jobs
           SystemMessage.create_from_system_user(
             @current_user,
             :csv_export_succeeded,
-            download_link: DiscourseMarkdown.attachment_markdown(upload),
+            download_link: UploadMarkdown.new(upload).attachment_markdown,
             export_title: export_title
           )
         else
