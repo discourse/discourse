@@ -49,7 +49,12 @@ class SessionController < ApplicationController
     payload ||= request.query_string
 
     if SiteSetting.enable_sso_provider
-      sso = SingleSignOnProvider.parse(payload)
+      begin
+        sso = SingleSignOnProvider.parse(payload)
+      rescue SingleSignOnProvider::BlankSecret
+        render plain: I18n.t("sso.missing_secret"), status: 400
+        return
+      end
 
       if sso.return_sso_url.blank?
         render plain: "return_sso_url is blank, it must be provided", status: 400
