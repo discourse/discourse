@@ -811,6 +811,39 @@ module Email
       end
     end
 
+    def forwarded_email_create_topic(destination, user, raw, title, date=nil)
+      case destination[:type]
+      when :group
+        group = destination[:obj]
+        topic_user = block_given? ? yield : user
+        create_topic(user: topic_user,
+                     raw: raw,
+                     title: title,
+                     archetype: Archetype.private_message,
+                     target_usernames: [user.username],
+                     target_group_names: [group.name],
+                     is_group_message: true,
+                     skip_validations: true,
+                     created_at: date)
+
+      when :category
+        category = destination[:obj]
+
+        return false if user.staged? && !category.email_in_allow_strangers
+        return false if !user.has_trust_level?(SiteSetting.email_in_min_trust)
+
+        topic_user = block_given? ? yield : user
+        create_topic(user: topic_user,
+                     raw: raw,
+                     title: title,
+                     category: category.id,
+                     skip_validations: topic_user.staged?,
+                     created_at: date)
+      else
+        false
+      end
+    end
+
     def forwarded_email_create_replies(destination, user)
       embedded = Mail.new(embedded_email_raw)
       email, display_name = parse_from_field(embedded)
@@ -820,36 +853,10 @@ module Email
       raw = try_to_encode(embedded.decoded, "UTF-8").presence || embedded.to_s
       title = embedded.subject.presence || subject
 
-      case destination[:type]
-      when :group
-        group = destination[:obj]
-        embedded_user = find_or_create_user(email, display_name)
-        post = create_topic(user: embedded_user,
-                            raw: raw,
-                            title: title,
-                            archetype: Archetype.private_message,
-                            target_usernames: [user.username],
-                            target_group_names: [group.name],
-                            is_group_message: true,
-                            skip_validations: true,
-                            created_at: embedded.date)
-
-      when :category
-        category = destination[:obj]
-
-        return false if user.staged? && !category.email_in_allow_strangers
-        return false if !user.has_trust_level?(SiteSetting.email_in_min_trust)
-
-        embedded_user = find_or_create_user(email, display_name)
-        post = create_topic(user: embedded_user,
-                            raw: raw,
-                            title: title,
-                            category: category.id,
-                            skip_validations: embedded_user.staged?,
-                            created_at: embedded.date)
-      else
-        return false
+      post = forwarded_email_create_topic(destination, user, raw, title, embedded.date) do
+        find_or_create_user(email, display_name)
       end
+      return false unless post
 
       if post&.topic
         # mark post as seen for the forwarder
@@ -858,7 +865,7 @@ module Email
         # create reply when available
         if @before_embedded.present?
           post_type = Post.types[:regular]
-          post_type = Post.types[:whisper] if post.topic.private_message? && group.usernames[user.username]
+          post_type = Post.types[:whisper] if post.topic.private_message? && destination[:obj].usernames[user.username]
 
           create_reply(user: user,
                        raw: @before_embedded,
@@ -883,32 +890,7 @@ module Email
         EOF
       title = subject
 
-      case destination[:type]
-      when :group
-        group = destination[:obj]
-        create_topic(user: user,
-                     raw: raw,
-                     title: title,
-                     archetype: Archetype.private_message,
-                     target_group_names: [group.name],
-                     is_group_message: true,
-                     skip_validations: true)
-
-      when :category
-        category = destination[:obj]
-
-        return false if user.staged? && !category.email_in_allow_strangers
-        return false if !user.has_trust_level?(SiteSetting.email_in_min_trust)
-
-        create_topic(user: user,
-                     raw: raw,
-                     title: title,
-                     category: category.id,
-                     skip_validations: user.staged?)
-      else
-        return false
-      end
-      true
+      return true if forwarded_email_create_topic(destination, user, raw, title)
     end
 
     def self.reply_by_email_address_regex(extract_reply_key = true, include_verp = false)
