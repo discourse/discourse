@@ -609,9 +609,14 @@ export default RestModel.extend({
         this.set("loadingLastPost", true);
         return this.findPostsByIds([postId])
           .then(posts => {
-            const ignoredUsers = this.get("currentUser.ignored_users");
+            const ignoredUsers =
+              Discourse.User.current() &&
+              Discourse.User.current().get("ignored_users");
             posts.forEach(p => {
-              if (ignoredUsers && ignoredUsers.includes(p.username)) return;
+              if (ignoredUsers && ignoredUsers.includes(p.username)) {
+                this.stream.removeObject(postId);
+                return;
+              }
               this.appendPost(p);
             });
           })
