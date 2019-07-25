@@ -255,6 +255,13 @@ QUnit.test("selecting posts", async assert => {
     exists(".select-all"),
     "it should allow users to select all the posts"
   );
+
+  await click(".toggle-admin-menu");
+
+  assert.ok(
+    exists(".selected-posts.hidden"),
+    "it should hide the multi select menu"
+  );
 });
 
 QUnit.test("select below", async assert => {
