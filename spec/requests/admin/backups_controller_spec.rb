@@ -93,6 +93,17 @@ RSpec.describe Admin::BackupsController do
 
       expect(response.status).to eq(200)
     end
+
+    it "doesn't start a backup if backups are disallowed" do
+      BackupRestore.disallow_backups!
+      BackupRestore.expects(:backup!).with(admin.id, publish_to_message_bus: true, with_uploads: false, client_id: "foo").never
+
+      post "/admin/backups.json", params: {
+        with_uploads: false, client_id: "foo"
+      }
+
+      expect(response.status).to eq(403)
+    end
   end
 
   describe '#show' do

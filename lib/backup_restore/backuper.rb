@@ -22,6 +22,7 @@ module BackupRestore
     end
 
     def run
+      before_run
       log "[STARTED]"
       log "'#{@user.username}' has started the backup!"
 
@@ -66,9 +67,12 @@ module BackupRestore
     ensure
       delete_old
       clean_up
+      if @final_backup
+        BackupRestore.disallow_backups!
+        SiteSetting.include_s3_uploads_in_backups = false
+      end
       notify_user
       log "Finished!"
-
       @success ? log("[SUCCESS]") : log("[FAILED]")
     end
 
@@ -415,7 +419,7 @@ module BackupRestore
     end
 
     def disable_readonly_mode
-      return if @readonly_mode_was_enabled
+      return if @readonly_mode_was_enabled || @final_backup
       log "Disabling readonly mode..."
       Discourse.disable_readonly_mode
     rescue => ex
@@ -452,6 +456,13 @@ module BackupRestore
       @logs << "[#{timestamp}] #{message}"
     end
 
+    def before_run
+      if @with_uploads && BackupRestore.strict_backup_creation?
+        Discourse.enable_readonly_mode(Discourse::USER_READONLY_MODE_KEY)
+        SiteSetting.include_s3_uploads_in_backups = true
+        @final_backup = true
+      end
+    end
   end
 
 end

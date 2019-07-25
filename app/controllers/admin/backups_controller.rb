@@ -32,6 +32,9 @@ class Admin::BackupsController < Admin::AdminController
   end
 
   def create
+    if BackupRestore.backups_disallowed?
+      raise Discourse::InvalidAccess
+    end
     opts = {
       publish_to_message_bus: true,
       with_uploads: params.fetch(:with_uploads) == "true",

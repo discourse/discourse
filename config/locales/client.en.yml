@@ -3385,6 +3385,7 @@ en:
         operations:
           is_running: "An operation is currently running..."
           failed: "The {{operation}} failed. Please check the logs."
+          disabled: "Backups have been disabled because a final backup was taken."
           cancel:
             label: "Cancel"
             title: "Cancel the current operation"
@@ -3393,7 +3394,12 @@ en:
             label: "Backup"
             title: "Create a backup"
             confirm: "Do you want to start a new backup?"
-            without_uploads: "Yes (do not include uploads)"
+            without_local_uploads: "Yes (do not include uploads)"
+            without_s3_uploads: "Yes (uploads stay on S3)"
+            without_uploads_strict: "Yes (without uploads)"
+            with_s3_uploads: "Yes (download and include S3 uploads)"
+            with_s3_uploads_strict: "Set Read-Only and take a final backup with uploads"
+
           download:
             label: "Download"
             title: "Send email with download link"

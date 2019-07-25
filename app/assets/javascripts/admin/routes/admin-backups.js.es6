@@ -53,7 +53,10 @@ export default Discourse.Route.extend({
       BackupStatus.create({
         isOperationRunning: status.is_operation_running,
         canRollback: status.can_rollback,
-        allowRestore: status.allow_restore
+        allowRestore: status.allow_restore,
+        s3Uploads: status.s3_uploads,
+        strictBackup: status.strict_backup,
+        backupsDisallowed: status.backups_disallowed
       })
     );
   },

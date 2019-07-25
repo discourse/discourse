@@ -24,6 +24,12 @@ $rollback-darker: darken($rollback, 20%) !default;
 }
 
 .admin-backups {
+  .admin-actions {
+    text-align: right;
+    .backups-disabled-reason {
+      margin-right: 5px;
+    }
+  }
   table {
     @media screen and (min-width: 550px) {
       td.backup-filename {
@@ -91,8 +97,5 @@ button.ru {
 .start-backup-modal {
   .btn {
     margin: 10px 0 10px 5px;
-  }
-  .btn:first-of-type {
-    margin-left: 10px;
   }
 }

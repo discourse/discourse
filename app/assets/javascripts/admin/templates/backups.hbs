@@ -25,7 +25,13 @@
                        class="btn-primary"
                        title="admin.backups.operations.backup.title"
                        label="admin.backups.operations.backup.label"
+                       disabled=model.backupsDisallowed
                        icon="rocket"}}
+            {{#if model.backupsDisallowed}}
+              <div class="backups-disabled-reason">
+                {{i18n "admin.backups.operations.disabled"}}
+              </div>
+            {{/if}}
           {{/if}}
         </div>
       </ul>

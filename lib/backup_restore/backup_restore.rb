@@ -60,11 +60,30 @@ module BackupRestore
     backup_tables_count > 0
   end
 
+  def self.strict_backup_creation?
+    ENV["DISCOURSE_STRICT_BACKUP_CREATION"] == "1" && Discourse.store.external?
+  end
+
+  def self.disallow_backups!
+    $redis.set(backup_disallowed_key, 1)
+  end
+
+  def self.backups_disallowed?
+    $redis.get(backup_disallowed_key).present?
+  end
+
+  def self.allow_backups!
+    $redis.del(backup_disallowed_key)
+  end
+
   def self.operations_status
     {
       is_operation_running: is_operation_running?,
       can_rollback: can_rollback?,
-      allow_restore: Rails.env.development? || SiteSetting.allow_restore
+      allow_restore: Rails.env.development? || SiteSetting.allow_restore,
+      s3_uploads: Discourse.store.external?,
+      strict_backup: strict_backup_creation?,
+      backups_disallowed: backups_disallowed?
     }
   end
 
@@ -135,6 +154,10 @@ module BackupRestore
         sleep 30.seconds
       end
     end
+  end
+
+  def self.backup_disallowed_key
+    "#{RailsMultisite::ConnectionManagement.current_db}-backups-disallowed"
   end
 
   def self.shutdown_signal_key
