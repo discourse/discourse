@@ -26,15 +26,23 @@
                   allowInitialValueMutation=true
                   allowContentReplacement=true
                   content=category.availableGroups
+                  onSelect=(action "onDropdownChange")
                   value=selectedGroup}}
       {{combo-box allowInitialValueMutation=true
                   class="permission-selector"
                   nameProperty="description"
                   content=category.availablePermissions
+                  onSelect=(action "onDropdownChange")
                   value=selectedPermission}}
-      <button {{action "addPermission" selectedGroup selectedPermission}} class="btn btn-default add-permission">
-        {{d-icon 'plus' class="add-permission-icon"}}
-      </button>
+      {{d-button
+        action=(action "addPermission" selectedGroup selectedPermission)
+        class="btn-primary add-permission"
+        icon="plus"}}
+      {{#if modal.showPendingGroupChangesAlert}}
+        <div class="pending-permission-change-alert">
+          {{i18n "category.pending_permission_change_alert" group=this.modal.pendingGroupPermission}}
+        </div>
+      {{/if}}
     {{/if}}
   {{else}}
     {{#unless category.is_special}}

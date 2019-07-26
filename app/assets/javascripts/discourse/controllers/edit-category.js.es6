@@ -22,7 +22,11 @@ export default Ember.Controller.extend(ModalFunctionality, {
   onShow() {
     this.changeSize();
     this.titleChanged();
-    this.set("hiddenTooltip", true);
+    this.setProperties({
+      hiddenTooltip: true,
+      pendingGroupPermission: null,
+      showPendingGroupChangesAlert: false
+    });
   },
 
   @observes("model.description")
@@ -76,6 +80,10 @@ export default Ember.Controller.extend(ModalFunctionality, {
 
   actions: {
     saveCategory() {
+      if (!this.showPendingGroupChangesAlert && this.pendingGroupPermission && this.selectedTab === "security") {
+        this.set("showPendingGroupChangesAlert", true);
+        return;
+      }
       const model = this.model;
       const parentCategory = this.site.categories.findBy(
         "id",

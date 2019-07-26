@@ -13,6 +13,15 @@ export default buildCategoryPanel("security", {
       }
     },
 
+    onDropdownChange() {
+      Ember.run.later(() => {
+        this.modal.setProperties({
+          pendingGroupPermission: this.selectedGroup,
+          showPendingGroupChangesAlert: false
+        });
+      }, 20);
+    },
+
     addPermission(group, id) {
       if (!this.get("category.is_special")) {
         this.category.addPermission({
@@ -25,6 +34,7 @@ export default buildCategoryPanel("security", {
         "selectedGroup",
         this.get("category.availableGroups.firstObject")
       );
+      this.modal.set("pendingGroupPermission", null);
     },
 
     removePermission(permission) {
