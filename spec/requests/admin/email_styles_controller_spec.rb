@@ -11,6 +11,11 @@ describe Admin::EmailStylesController do
     sign_in(admin)
   end
 
+  after do
+    SiteSetting.remove_override!(:email_custom_template)
+    SiteSetting.remove_override!(:email_custom_css)
+  end
+
   describe 'show' do
     it 'returns default values' do
       get '/admin/customize/email_style.json'
@@ -43,16 +48,16 @@ describe Admin::EmailStylesController do
 
     it 'changes the settings' do
       SiteSetting.email_custom_css = ".user-name { font-size: 24px; }"
-      put '/admin/customize/email_style.json', params: valid_params
+      put '/admin/customize/email_style.json', params: { email_style: valid_params }
       expect(response.status).to eq(200)
       expect(SiteSetting.email_custom_template).to eq(valid_params[:html])
       expect(SiteSetting.email_custom_css).to eq(valid_params[:css])
     end
 
     it 'reports errors' do
-      put '/admin/customize/email_style.json', params: valid_params.merge(
-        html: 'No email content'
-      )
+      put '/admin/customize/email_style.json', params: {
+        email_style: valid_params.merge(html: 'No email content')
+      }
       expect(response.status).to eq(422)
       json = JSON.parse(response.body)
       expect(json['errors']).to include(

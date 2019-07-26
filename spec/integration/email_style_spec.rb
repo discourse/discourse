@@ -8,6 +8,11 @@ describe EmailStyle do
     SiteSetting.email_custom_css = 'h1 { color: red; } div.body { color: #FAB; }'
   end
 
+  after do
+    SiteSetting.remove_override!(:email_custom_template)
+    SiteSetting.remove_override!(:email_custom_css)
+  end
+
   context 'invite' do
     fab!(:invite) { Fabricate(:invite) }
     let(:invite_mail) { InviteMailer.send_invite(invite) }
