@@ -579,13 +579,9 @@ function warnIfMissing(id) {
 }
 
 function warnIfDeprecated(oldId, newId) {
-  if (
-    typeof Discourse !== "undefined" &&
-    Discourse.Environment === "development" &&
-    !Ember.testing
-  ) {
-    deprecated(`Icon "${oldId}" is now "${newId}".`);
-  }
+  deprecated(
+    `Please replace all occurrences of "${oldId}"" with "${newId}". FontAwesome 4.7 icon names are now deprecated and will be removed in the next release.`
+  );
 }
 
 function handleIconId(icon) {
