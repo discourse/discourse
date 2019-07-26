@@ -308,12 +308,6 @@ const Composer = RestModel.extend({
     return options;
   },
 
-  @computed
-  isStaffUser() {
-    const currentUser = Discourse.User.current();
-    return currentUser && currentUser.staff;
-  },
-
   @computed(
     "loading",
     "canEditTitle",

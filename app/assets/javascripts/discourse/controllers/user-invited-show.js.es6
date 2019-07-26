@@ -42,15 +42,9 @@ export default Ember.Controller.extend({
     );
   },
 
-  @computed
-  canInviteToForum() {
-    return Discourse.User.currentProp("can_invite_to_forum");
-  },
+  canInviteToForum: Ember.computed.reads("currentUser.can_invite_to_forum"),
 
-  @computed
-  canBulkInvite() {
-    return Discourse.User.currentProp("admin");
-  },
+  canBulkInvite: Ember.computed.reads("currentUser.admin"),
 
   showSearch: Ember.computed.gte("totalInvites", 10),
 
