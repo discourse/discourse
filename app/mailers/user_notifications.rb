@@ -596,7 +596,6 @@ class UserNotifications < ActionMailer::Base
       end
 
       unless translation_override_exists
-        # TODO: need html when override exists
         html = UserNotificationRenderer.with_view_paths(Rails.configuration.paths["app/views"]).render(
           template: 'email/notification',
           format: :html,

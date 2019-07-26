@@ -39,11 +39,15 @@ module Email
       css = EmailStyle.new.css
       @custom_styles = {}
 
-      parser = CssParser::Parser.new(import: false)
-      parser.load_string!(css)
-      parser.each_selector do |selector, value|
-        @custom_styles[selector] ||= +''
-        @custom_styles[selector] << value
+      if !css.blank?
+        require 'css_parser' unless defined?(CssParser)
+
+        parser = CssParser::Parser.new(import: false)
+        parser.load_string!(css)
+        parser.each_selector do |selector, value|
+          @custom_styles[selector] ||= +''
+          @custom_styles[selector] << value
+        end
       end
 
       @custom_styles
