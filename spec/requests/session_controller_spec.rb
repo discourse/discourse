@@ -816,7 +816,7 @@ RSpec.describe SessionController do
         expect(response.status).to eq(500)
       end
 
-      it "it fails with a nice error message if secret is blank" do
+      it "fails with a nice error message if secret is blank" do
         SiteSetting.sso_provider_secrets = ""
         sso = SingleSignOnProvider.new
         sso.nonce = "mynonce"
