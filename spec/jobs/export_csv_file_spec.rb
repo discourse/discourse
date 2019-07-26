@@ -66,6 +66,18 @@ describe Jobs::ExportCsvFile do
       expect(report.third).to contain_exactly("2010-01-03", "50.0")
     end
 
+    it 'works with single-column reports with default label' do
+      user.user_visits.create!(visited_at: '2010-01-01')
+      Fabricate(:user).user_visits.create!(visited_at: '2010-01-03')
+
+      exporter.instance_variable_get(:@extra)['name'] = 'visits'
+      report = exporter.report_export.to_a
+
+      expect(report.first).to contain_exactly("Day", "Count")
+      expect(report.second).to contain_exactly("2010-01-01", "1")
+      expect(report.third).to contain_exactly("2010-01-03", "1")
+    end
+
     it 'works with multi-columns reports' do
       DiscourseIpInfo.stubs(:get).with("1.1.1.1").returns(location: "Earth")
       user.user_auth_token_logs.create!(action: "login", client_ip: "1.1.1.1", created_at: '2010-01-01')
