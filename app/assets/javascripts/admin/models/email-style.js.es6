@@ -1,4 +1,3 @@
-import { ajax } from "discourse/lib/ajax";
 import RestModel from "discourse/models/rest";
 
 export default RestModel.extend({
@@ -7,19 +6,5 @@ export default RestModel.extend({
   setField(fieldName, value) {
     this.set(`${fieldName}`, value);
     this.set("changed", true);
-  },
-
-  saveChanges() {
-    return ajax("/admin/customize/email_style.json", {
-      type: "PUT",
-      data: {
-        html: this.html,
-        css: this.css
-      }
-    }).then(result => {
-      if (!result.errors) {
-        this.set("changed", false);
-      }
-    });
   }
 });

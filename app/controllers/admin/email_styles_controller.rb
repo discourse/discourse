@@ -7,8 +7,8 @@ class Admin::EmailStylesController < Admin::AdminController
 
   def update
     updater = EmailStyleUpdater.new(current_user)
-    if updater.update(params.permit(:html, :css))
-      render json: success_json
+    if updater.update(params.require(:email_style).permit(:html, :css))
+      render_serialized(EmailStyle.new, EmailStyleSerializer)
     else
       render_json_error(updater.errors, status: 422)
     end

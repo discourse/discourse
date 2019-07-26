@@ -5,6 +5,10 @@ class EmailStyle
 
   attr_accessor :html, :css, :default_html, :default_css
 
+  def id
+    'email-style'
+  end
+
   def html
     SiteSetting.email_custom_template.presence || default_html
   end

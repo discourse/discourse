@@ -13,10 +13,10 @@ export default Ember.Controller.extend({
 
   actions: {
     save() {
-      if (!this.saving) {
+      if (!this.model.saving) {
         this.set("saving", true);
         this.model
-          .saveChanges("theme_fields")
+          .update(this.model.getProperties("html", "css"))
           .catch(e => {
             const msg =
               e.jqXHR.responseJSON && e.jqXHR.responseJSON.errors
@@ -26,7 +26,7 @@ export default Ember.Controller.extend({
                 : I18n.t("generic_error");
             bootbox.alert(msg);
           })
-          .finally(() => this.set("saving", false));
+          .finally(() => this.set("model.changed", false));
       }
     }
   }
