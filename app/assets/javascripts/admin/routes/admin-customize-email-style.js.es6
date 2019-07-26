@@ -1,6 +1,6 @@
 export default Ember.Route.extend({
   model() {
-    return this.store.find("email_style");
+    return this.store.find("email-style");
   },
 
   redirect() {
