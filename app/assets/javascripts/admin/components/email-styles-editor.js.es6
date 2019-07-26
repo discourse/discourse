@@ -1,7 +1,7 @@
 import computed from "ember-addons/ember-computed-decorators";
 
 export default Ember.Component.extend({
-  editorId: Ember.computed.alias("fieldName"),
+  editorId: Ember.computed.reads("fieldName"),
 
   @computed("fieldName", "styles.html", "styles.css")
   resetDisabled(fieldName) {

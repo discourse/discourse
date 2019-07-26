@@ -11,14 +11,14 @@ export default Ember.Route.extend({
       fieldName: model.fieldName,
       model: model.model
     });
-    this.set("shouldAlertUnsavedChanges", true);
+    this._shouldAlertUnsavedChanges = true;
   },
 
   actions: {
     willTransition(transition) {
       if (
         this.get("controller.model.changed") &&
-        this.shouldAlertUnsavedChanges &&
+        this._shouldAlertUnsavedChanges &&
         transition.intent.name !== this.routeName
       ) {
         transition.abort();
@@ -28,7 +28,7 @@ export default Ember.Route.extend({
           I18n.t("admin.customize.theme.stay"),
           result => {
             if (!result) {
-              this.set("shouldAlertUnsavedChanges", false);
+              this._shouldAlertUnsavedChanges = false;
               transition.retry();
             }
           }

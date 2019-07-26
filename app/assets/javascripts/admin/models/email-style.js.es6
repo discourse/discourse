@@ -1,7 +1,7 @@
 import { ajax } from "discourse/lib/ajax";
 import RestModel from "discourse/models/rest";
 
-const EmailStyle = RestModel.extend({
+export default RestModel.extend({
   changed: false,
 
   setField(fieldName, value) {
@@ -23,5 +23,3 @@ const EmailStyle = RestModel.extend({
     });
   }
 });
-
-export default EmailStyle;
