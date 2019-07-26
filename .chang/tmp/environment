@@ -1,0 +1,7 @@
+export RUBY_VERSION=2.6.2
+export RUBY_IMAGE=majkel/ruby-node-headway:ruby_${RUBY_VERSION}_node_8.15.1_yarn_1.13.0_mjml_4.3.1
+export POSTGRES_URL="postgres://discourse:123@postgres"
+export REDIS_URL=redis://redis:6379/0
+export TRUSTED_IP=0.0.0.0/0
+export RAILS_ENV=development
+export DISCOURSE_DEVELOPER_EMAILS

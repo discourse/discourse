@@ -1,0 +1,2 @@
+Name .DS_Store
+Path {*.swp,*.pyc,tmp,log,node_modules}

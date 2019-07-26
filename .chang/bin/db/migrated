@@ -1,0 +1,5 @@
+applied_migrations=$(chang db query 'select * from schema_migrations')
+
+while read migration; do
+  grep -wq ${migration} <<<${applied_migrations}
+done < <(find db/migrate -type f | sed -n 's/db\/migrate\/\([0-9]*\)_.*/\1/p')

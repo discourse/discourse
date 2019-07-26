@@ -1485,7 +1485,7 @@ developer:
     default: ""
   port:
     hidden: true
-    default: ""
+    default: "80"
   enable_long_polling:
     client: true
     default: true

@@ -1,0 +1,3 @@
+chang stop rails
+chang rails/rails db:drop
+chang db migrate

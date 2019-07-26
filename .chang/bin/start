@@ -1,0 +1,24 @@
+chang_start
+
+chang_compose up -d redis postgres
+
+if ! chang_compare_commit Gemfile*; then
+  chang_compose kill rails
+  chang bundle install
+  chang_update_commit Gemfile*
+fi
+
+if ! chang_compare_commit db/migrate; then
+  chang db migrate
+  chang_update_commit db/migrate
+fi
+
+chang_compose up -d rails
+
+echo
+chang_compose ps
+echo
+
+if $CHANG_REV_PROXY_ENABLED; then
+  echo "Running at: http://${CHANG_APP_NAME}.${CHANG_REV_PROXY_TLD}"
+fi

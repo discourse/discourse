@@ -1,0 +1,1 @@
+chang_exec rails bundle exec rails "${@:-}"

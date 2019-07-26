@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 Discourse::Application.configure do
-
+  config.active_record.dump_schema_after_migration = false
   # Settings specified here will take precedence over those in config/application.rb
 
   # In the development environment your application's code is reloaded on

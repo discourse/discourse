@@ -1,0 +1,1 @@
+chang db query '\dt' | grep -cqw 'schema_migrations'

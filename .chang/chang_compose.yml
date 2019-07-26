@@ -1,0 +1,42 @@
+environment:
+  - RUBY_VERSION=2.6.2
+  - RUBY_IMAGE=majkel/ruby-node-headway:ruby_${RUBY_VERSION}_node_8.15.1_yarn_1.13.0_mjml_4.3.1
+  - POSTGRES_URL="postgres://discourse:123@postgres"
+  - REDIS_URL=redis://redis:6379/0
+  - TRUSTED_IP=0.0.0.0/0
+  - RAILS_ENV=development
+  - DISCOURSE_DEVELOPER_EMAILS
+
+services:
+  ruby:
+    user: app
+    image: ${RUBY_IMAGE}
+    volumes:
+      - chang:/app:nocopy
+      - ruby-bundle-cache_${RUBY_VERSION}:/bundle
+      - yarn-cache:/app/.cache/yarn
+      - yarn-node_modules-cache:/app/node_modules
+    working_dir: /app
+
+  rails:
+    extends: ruby
+    command: bash -c "rm -f tmp/pids/server.pid; bin/rails s -b 0.0.0.0"
+    depends_on:
+      - postgres
+      - redis
+
+  postgres:
+    image: postgres:9.5
+    volumes:
+      - pgdata:/pgdata
+    environment:
+      - POSTGRES_DB=discourse_development
+      - POSTGRES_USER=discourse
+      - POSTGRES_PASSWORD=123
+      - PGDATA=/pgdata
+
+  redis:
+    image: redis:3.2-alpine
+
+server:
+  root: rails:3000

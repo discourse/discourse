@@ -1,0 +1,5 @@
+if [[ $# -gt 0 ]]; then
+  chang_exec rails bundle "${@}"
+else
+  chang_exec rails bundle install --retry 5 --verbose --jobs 2
+fi

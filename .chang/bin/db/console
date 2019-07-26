@@ -1,0 +1,8 @@
+container=$(chang_running_container_name postgres)
+if [[ -z ${container} ]]; then
+  echo "Starting postgres..."
+  chang_compose up -d postgres
+  sleep 1
+fi
+
+chang_exec postgres psql -U discourse ${@:+"$@"}
