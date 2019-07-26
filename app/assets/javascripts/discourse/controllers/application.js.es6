@@ -17,7 +17,7 @@ export default Ember.Controller.extend({
 
   @computed
   loginRequired() {
-    return Discourse.SiteSettings.login_required && !Discourse.User.current();
+    return Discourse.SiteSettings.login_required && !this.currentUser;
   },
 
   @computed

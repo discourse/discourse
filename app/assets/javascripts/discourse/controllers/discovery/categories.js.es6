@@ -14,10 +14,7 @@ export default DiscoveryController.extend({
   // this makes sure the composer isn't scoping to a specific category
   category: null,
 
-  @computed
-  canEdit() {
-    return Discourse.User.currentProp("staff");
-  },
+  canEdit: Ember.computed.reads("currentUser.staff"),
 
   @computed("model.categories.[].featuredTopics.length")
   latestTopicOnly() {

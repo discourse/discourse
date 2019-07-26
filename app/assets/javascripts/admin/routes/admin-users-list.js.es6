@@ -11,7 +11,7 @@ export default Discourse.Route.extend({
     },
 
     sendInvites() {
-      this.transitionTo("userInvited", Discourse.User.current());
+      this.transitionTo("userInvited", this.currentUser);
     },
 
     deleteUser(user) {
