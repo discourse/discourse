@@ -292,7 +292,7 @@ export default Ember.Controller.extend({
 
   @computed("model.creatingPrivateMessage", "model.targetUsernames")
   showWarning(creatingPrivateMessage, usernames) {
-    if (!Discourse.User.currentProp("staff")) {
+    if (!this.get("currentUser.staff")) {
       return false;
     }
 
