@@ -80,7 +80,11 @@ export default Ember.Controller.extend(ModalFunctionality, {
 
   actions: {
     saveCategory() {
-      if (!this.showPendingGroupChangesAlert && this.pendingGroupPermission && this.selectedTab === "security") {
+      if (
+        !this.showPendingGroupChangesAlert &&
+        this.pendingGroupPermission &&
+        this.selectedTab === "security"
+      ) {
         this.set("showPendingGroupChangesAlert", true);
         return;
       }

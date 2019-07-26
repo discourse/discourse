@@ -357,14 +357,15 @@
     color: $secondary;
     margin-top: 10px;
     padding: 5px 10px;
-    &::after {
-      top: -71px;
-      left: 150px;
+    position: relative;
+    .arrow-div {
       border: solid transparent;
       content: " ";
-      position: relative;
+      position: absolute;
       border-bottom-color: $primary-very-high;
-      border-width: 8px;
+      border-width: 7px;
+      top: -13px;
+      left: 200px;
     }
   }
 

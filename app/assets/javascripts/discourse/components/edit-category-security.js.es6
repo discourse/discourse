@@ -34,7 +34,10 @@ export default buildCategoryPanel("security", {
         "selectedGroup",
         this.get("category.availableGroups.firstObject")
       );
-      this.modal.set("pendingGroupPermission", null);
+      this.modal.setProperties({
+        pendingGroupPermission: null,
+        showPendingGroupChangesAlert: false
+      });
     },
 
     removePermission(permission) {
