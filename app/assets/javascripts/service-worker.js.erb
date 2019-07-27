@@ -17,6 +17,8 @@ workbox.routing.registerRoute(
     plugins: [
       new workbox.expiration.Plugin({
         maxAgeSeconds: 7* 24 * 60 * 60, // 7 days
+        maxEntries: 500,
+        purgeOnQuotaError: true, // safe to automatically delete if exceeding the available storage
       }),
     ],
   })
