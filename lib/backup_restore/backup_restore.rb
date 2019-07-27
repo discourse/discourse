@@ -69,7 +69,7 @@ module BackupRestore
   end
 
   def self.backups_disallowed?
-    $redis.get(backup_disallowed_key).present?
+    $redis.exists(backup_disallowed_key)
   end
 
   def self.allow_backups!

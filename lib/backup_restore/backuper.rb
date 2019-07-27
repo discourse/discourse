@@ -69,7 +69,6 @@ module BackupRestore
       clean_up
       if @final_backup
         BackupRestore.disallow_backups!
-        SiteSetting.include_s3_uploads_in_backups = false
       end
       notify_user
       log "Finished!"
@@ -287,7 +286,7 @@ module BackupRestore
     end
 
     def add_remote_uploads_to_archive(tar_filename)
-      if !SiteSetting.include_s3_uploads_in_backups
+      if !SiteSetting.include_s3_uploads_in_backups && !@final_backup
         log "Skipping uploads stored on S3."
         return
       end
@@ -459,7 +458,6 @@ module BackupRestore
     def before_run
       if @with_uploads && BackupRestore.strict_backup_creation?
         Discourse.enable_readonly_mode(Discourse::USER_READONLY_MODE_KEY)
-        SiteSetting.include_s3_uploads_in_backups = true
         @final_backup = true
       end
     end
