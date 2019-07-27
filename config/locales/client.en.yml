@@ -1024,7 +1024,9 @@ en:
         cancel: "Cancel"
         not_connected: "(not connected)"
         confirm_modal_title: "Connect %{provider} Account"
-        confirm_description: "Your %{provider} account '%{account_description}' will be used for authentication."
+        confirm_description: 
+          account_specific: "Your %{provider} account '%{account_description}' will be used for authentication."
+          generic: "Your %{provider} account will be used for authentication."
 
       name:
         title: "Name"
