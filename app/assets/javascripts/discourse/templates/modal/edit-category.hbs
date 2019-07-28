@@ -11,19 +11,9 @@
   </ul>
 
   {{#d-modal-body}}
-    {{edit-category-general selectedTab=selectedTab category=model}}
-    {{edit-category-security
-      selectedTab=selectedTab
-      category=model
-      pendingGroupPermission=pendingGroupPermission
-      showPendingGroupChangesAlert=showPendingGroupChangesAlert
-      setPendingGroupPermission=setPendingGroupPermission}}
-    {{edit-category-settings selectedTab=selectedTab category=model}}
-    {{edit-category-images selectedTab=selectedTab category=model}}
-    {{edit-category-topic-template selectedTab=selectedTab category=model}}
-    {{#if siteSettings.tagging_enabled}}
-      {{edit-category-tags selectedTab=selectedTab category=model}}
-    {{/if}}
+    {{#each panels as |tab|}}
+      {{component tab selectedTab=selectedTab category=model registerSaveBlocker=(action "registerSaveBlocker")}}
+    {{/each}}
   {{/d-modal-body}}
 
   <div class="modal-footer">

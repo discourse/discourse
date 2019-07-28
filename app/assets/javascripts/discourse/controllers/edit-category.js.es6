@@ -13,22 +13,19 @@ export default Ember.Controller.extend(ModalFunctionality, {
   deleting: false,
   panels: null,
   hiddenTooltip: true,
-  pendingGroupPermission: null,
-  showPendingGroupChangesAlert: false,
 
   @on("init")
   _initPanels() {
-    this.set("panels", []);
+    this.setProperties({
+      panels: [],
+      saveBlockers: []
+    });
   },
 
   onShow() {
     this.changeSize();
     this.titleChanged();
-    this.setProperties({
-      hiddenTooltip: true,
-      pendingGroupPermission: null,
-      showPendingGroupChangesAlert: false
-    });
+    this.set("hiddenTooltip", true);
   },
 
   @observes("model.description")
@@ -80,21 +77,13 @@ export default Ember.Controller.extend(ModalFunctionality, {
     return id ? "category.save" : "category.create";
   },
 
-  setPendingGroupPermission(group) {
-    this.setProperties({
-      pendingGroupPermission: group,
-      showPendingGroupChangesAlert: false
-    });
-  },
-
   actions: {
+    registerSaveBlocker(blocker) {
+      this.saveBlockers.push(blocker);
+    },
+
     saveCategory() {
-      if (
-        !this.showPendingGroupChangesAlert &&
-        this.pendingGroupPermission &&
-        this.selectedTab === "security"
-      ) {
-        this.set("showPendingGroupChangesAlert", true);
+      if (this.saveBlockers.some(blocker => blocker())) {
         return;
       }
       const model = this.model;
