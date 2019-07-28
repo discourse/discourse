@@ -1,22 +1,22 @@
 import { buildCategoryPanel } from "discourse/components/edit-category-panel";
 import PermissionType from "discourse/models/permission-type";
+import { observes } from "ember-addons/ember-computed-decorators";
 
 export default buildCategoryPanel("security", {
   editingPermissions: false,
   selectedGroup: null,
   selectedPermission: null,
 
+  @observes("selectedGroup", "selectedPermission")
+  updatePendingGroupPermission() {
+    this.setPendingGroupPermission(this.selectedGroup);
+  },
+
   actions: {
     editPermissions() {
       if (!this.get("category.is_special")) {
         this.set("editingPermissions", true);
       }
-    },
-
-    onDropdownChange() {
-      Ember.run.later(() => {
-        this.setPendingGroupPermission(this.selectedGroup);
-      }, 20);
     },
 
     addPermission(group, id) {

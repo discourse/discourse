@@ -26,13 +26,11 @@
                   allowInitialValueMutation=true
                   allowContentReplacement=true
                   content=category.availableGroups
-                  onSelect=(action "onDropdownChange")
                   value=selectedGroup}}
       {{combo-box allowInitialValueMutation=true
                   class="permission-selector"
                   nameProperty="description"
                   content=category.availablePermissions
-                  onSelect=(action "onDropdownChange")
                   value=selectedPermission}}
       {{d-button
         action=(action "addPermission" selectedGroup selectedPermission)
