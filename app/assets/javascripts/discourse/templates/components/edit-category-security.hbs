@@ -38,10 +38,10 @@
         action=(action "addPermission" selectedGroup selectedPermission)
         class="btn-primary add-permission"
         icon="plus"}}
-      {{#if modal.showPendingGroupChangesAlert}}
+      {{#if showPendingGroupChangesAlert}}
         <div class="pending-permission-change-alert">
           <div class="arrow-div"></div>
-          {{i18n "category.pending_permission_change_alert" group=this.modal.pendingGroupPermission}}
+          {{i18n "category.pending_permission_change_alert" group=pendingGroupPermission}}
         </div>
       {{/if}}
     {{/if}}

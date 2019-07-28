@@ -13,6 +13,8 @@ export default Ember.Controller.extend(ModalFunctionality, {
   deleting: false,
   panels: null,
   hiddenTooltip: true,
+  pendingGroupPermission: null,
+  showPendingGroupChangesAlert: false,
 
   @on("init")
   _initPanels() {
@@ -76,6 +78,13 @@ export default Ember.Controller.extend(ModalFunctionality, {
   saveLabel(saving, id) {
     if (saving) return "saving";
     return id ? "category.save" : "category.create";
+  },
+
+  setPendingGroupPermission(group) {
+    this.setProperties({
+      pendingGroupPermission: group,
+      showPendingGroupChangesAlert: false
+    });
   },
 
   actions: {
