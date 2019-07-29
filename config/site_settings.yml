@@ -908,6 +908,7 @@ email:
   disable_digest_emails:
     default: false
     client: true
+  apply_custom_styles_to_digest: true
   email_accent_bg_color: "#2F70AC"
   email_accent_fg_color: "#FFFFFF"
   email_link_color: "#006699"

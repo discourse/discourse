@@ -101,4 +101,22 @@ describe EmailStyle do
       end
     end
   end
+
+  context 'digest' do
+    fab!(:popular_topic) { Fabricate(:topic, user: Fabricate(:coding_horror), created_at: 1.hour.ago) }
+    let(:summary_email) { UserNotifications.digest(Fabricate(:user)) }
+    subject(:mail_html) { Email::Renderer.new(summary_email).html }
+
+    it "customizations are applied to html part of emails" do
+      expect(mail_html.scan('<h1 style="color: red;">FOR YOU</h1>').count).to eq(1)
+      expect(mail_html).to include(popular_topic.title)
+    end
+
+    it "doesn't apply customizations if apply_custom_styles_to_digest is disabled" do
+      SiteSetting.apply_custom_styles_to_digest = false
+      expect(mail_html).to_not include('<h1 style="color: red;">FOR YOU</h1>')
+      expect(mail_html).to_not include('FOR YOU')
+      expect(mail_html).to include(popular_topic.title)
+    end
+  end
 end

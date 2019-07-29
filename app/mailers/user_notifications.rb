@@ -675,5 +675,6 @@ class UserNotifications < ActionMailer::Base
     @anchor_color    = ColorScheme.hex_for_name('tertiary')
     @markdown_linker = MarkdownLinker.new(@base_url)
     @unsubscribe_key = UnsubscribeKey.create_key_for(@user, "digest")
+    @disable_email_custom_styles = !SiteSetting.apply_custom_styles_to_digest
   end
 end
