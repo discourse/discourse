@@ -506,8 +506,8 @@ def missing_uploads
 end
 
 desc 'Finds missing post upload records from cooked HTML content'
-task 'posts:missing_uploads', [:single_site] => :environment do |_, args|
-  if args[:single_site].to_s.downcase == "single_site"
+task 'posts:missing_uploads' => :environment do |_, args|
+  if ENV["RAILS_DB"]
     missing_uploads
   else
     RailsMultisite::ConnectionManagement.each_connection do
