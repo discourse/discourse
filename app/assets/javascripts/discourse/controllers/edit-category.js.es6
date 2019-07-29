@@ -18,7 +18,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
   _initPanels() {
     this.setProperties({
       panels: [],
-      saveValidators: []
+      validators: []
     });
   },
 
@@ -78,12 +78,12 @@ export default Ember.Controller.extend(ModalFunctionality, {
   },
 
   actions: {
-    registerSaveValidator(validator) {
-      this.saveValidators.push(validator);
+    registerValidator(validator) {
+      this.validators.push(validator);
     },
 
     saveCategory() {
-      if (this.saveValidators.some(validator => validator())) {
+      if (this.validators.some(validator => validator())) {
         return;
       }
       const model = this.model;
