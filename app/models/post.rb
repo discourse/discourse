@@ -885,7 +885,7 @@ class Post < ActiveRecord::Base
     {}
   end
 
-  def each_upload_url(fragments: nil, include_local_upload: true)
+  def each_upload_url(fragments: nil, local_store: nil)
     current_db = RailsMultisite::ConnectionManagement.current_db
     upload_patterns = [
       /\/uploads\/#{current_db}\//,
@@ -902,7 +902,7 @@ class Post < ActiveRecord::Base
       next if Rails.configuration.multisite && src.exclude?(current_db) && src.exclude?("short-url")
 
       src = "#{SiteSetting.force_https ? "https" : "http"}:#{src}" if src.start_with?("//")
-      next unless Discourse.store.has_been_uploaded?(src) || (include_local_upload && src =~ /\A\/[^\/]/i)
+      next unless Discourse.store.has_been_uploaded?(src) || (local_store && local_store.has_been_uploaded?(src))
 
       path = begin
         URI(URI.unescape(src))&.path
@@ -922,7 +922,7 @@ class Post < ActiveRecord::Base
     end
   end
 
-  def self.find_missing_uploads(include_local_upload: true)
+  def self.find_missing_uploads
     missing_uploads = []
     missing_post_uploads = {}
     count = 0
