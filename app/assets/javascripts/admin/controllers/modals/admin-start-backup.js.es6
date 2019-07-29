@@ -3,6 +3,15 @@ import computed from "ember-addons/ember-computed-decorators";
 
 export default Ember.Controller.extend(ModalFunctionality, {
   adminBackupsLogs: Ember.inject.controller(),
+  confirmFinalBackup: false,
+  withoutUploadsButtonFirst: Ember.computed.reads(
+    "adminBackupsLogs.status.s3Uploads"
+  ),
+
+  @computed("confirmFinalBackup", "adminBackupsLogs.status.strictBackup")
+  withUploadsButtonDisabled(confirmed, strict) {
+    return strict && !confirmed;
+  },
 
   @computed("adminBackupsLogs.status.{s3Uploads,strictBackup}")
   withoutUploadsButtonLabel(status) {

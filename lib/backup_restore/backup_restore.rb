@@ -7,9 +7,9 @@ module BackupRestore
 
   class OperationRunningError < RuntimeError; end
 
-  VERSION_PREFIX = "v".freeze
-  DUMP_FILE = "dump.sql.gz".freeze
-  OLD_DUMP_FILE = "dump.sql".freeze
+  VERSION_PREFIX = "v"
+  DUMP_FILE = "dump.sql.gz"
+  OLD_DUMP_FILE = "dump.sql"
   METADATA_FILE = "meta.json"
   LOGS_CHANNEL = "/admin/backups/logs"
 

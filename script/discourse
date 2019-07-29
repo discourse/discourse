@@ -76,7 +76,7 @@ class DiscourseCLI < Thor
     end
 
     puts "Starting backup..."
-    backuper = BackupRestore::Backuper.new(Discourse.system_user.id, filename: filename_without_extension)
+    backuper = BackupRestore::Backuper.new(Discourse.system_user.id, filename: filename_without_extension, via_cli: true)
     backup_filename = backuper.run
     exit(1) unless backuper.success
 

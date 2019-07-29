@@ -14,6 +14,8 @@ module BackupRestore
       @publish_to_message_bus = opts[:publish_to_message_bus] || false
       @with_uploads = opts[:with_uploads].nil? ? true : opts[:with_uploads]
       @filename_override = opts[:filename]
+      @automatic = !!opts[:automatic]
+      @via_cli = !!opts[:via_cli]
 
       ensure_no_operation_is_running
       ensure_we_have_a_user
@@ -285,8 +287,13 @@ module BackupRestore
       end
     end
 
+    def include_remote_uploads?
+      return false if @automatic && !SiteSetting.include_s3_uploads_in_automatic_backups
+      true
+    end
+
     def add_remote_uploads_to_archive(tar_filename)
-      if !SiteSetting.include_s3_uploads_in_backups && !@final_backup
+      if !include_remote_uploads?
         log "Skipping uploads stored on S3."
         return
       end
@@ -456,7 +463,7 @@ module BackupRestore
     end
 
     def before_run
-      if @with_uploads && BackupRestore.strict_backup_creation?
+      if @with_uploads && BackupRestore.strict_backup_creation? && !@via_cli && !@automatic
         Discourse.enable_readonly_mode(Discourse::USER_READONLY_MODE_KEY)
         @final_backup = true
       end

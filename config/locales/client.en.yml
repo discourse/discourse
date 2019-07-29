@@ -3399,6 +3399,8 @@ en:
             without_uploads_strict: "Yes (without uploads)"
             with_s3_uploads: "Yes (download and include S3 uploads)"
             with_s3_uploads_strict: "Set Read-Only and take a final backup with uploads"
+            final_backup_checkbox: "Allow me to take a final backup with uploads."
+            final_backup_warning: "Taking a final backup will disable future backups and set your site to <b>read-only</b>."
 
           download:
             label: "Download"

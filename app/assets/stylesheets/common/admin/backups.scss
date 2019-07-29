@@ -96,6 +96,13 @@ button.ru {
 
 .start-backup-modal {
   .btn {
-    margin: 10px 0 10px 5px;
+    margin-right: 5px;
+  }
+  .final-backup-warning {
+    margin-top: 15px;
+    margin-bottom: 5px;
+  }
+  .final-backup-checkbox {
+    margin: 0;
   }
 }
