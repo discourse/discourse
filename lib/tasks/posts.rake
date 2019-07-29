@@ -413,7 +413,7 @@ def missing_uploads
 
   count_missing = 0
 
-  missing = Post.find_missing_uploads(local_store: FileStore::LocalStore.new) do |post, src, path, sha1|
+  missing = Post.find_missing_uploads(include_local_upload: true) do |post, src, path, sha1|
     next if sha1.present?
     puts "Fixing missing uploads: " if count_missing == 0
     count_missing += 1
