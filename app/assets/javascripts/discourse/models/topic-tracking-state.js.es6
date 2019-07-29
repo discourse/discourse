@@ -69,13 +69,10 @@ const TopicTrackingState = Discourse.Model.extend({
       if (["new_topic", "unread", "read"].includes(data.message_type)) {
         tracker.notify(data);
         const old = tracker.states["t" + data.topic_id];
-
-        // don't add tracking state for read stuff that was not tracked in first place
-        if (old || data.message_type !== "read") {
-          if (!_.isEqual(old, data.payload)) {
-            tracker.states["t" + data.topic_id] = data.payload;
-            tracker.incrementMessageCount();
-          }
+        if (!_.isEqual(old, data.payload)) {
+          tracker.states["t" + data.topic_id] = data.payload;
+          tracker.notifyPropertyChange("states");
+          tracker.incrementMessageCount();
         }
       }
     };
