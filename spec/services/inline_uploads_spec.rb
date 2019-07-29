@@ -587,8 +587,10 @@ RSpec.describe InlineUploads do
     describe "s3 uploads" do
       let(:upload) { Fabricate(:upload_s3) }
       let(:upload2) { Fabricate(:upload_s3) }
+      let(:upload3) { Fabricate(:upload) }
 
       before do
+        upload3
         SiteSetting.enable_s3_uploads = true
         SiteSetting.s3_upload_bucket = "s3-upload-bucket"
         SiteSetting.s3_access_key_id = "some key"
@@ -636,6 +638,7 @@ RSpec.describe InlineUploads do
 
           <img src="#{upload.url}" alt="some image">
           <img src="#{URI.join(SiteSetting.s3_cdn_url, URI.parse(upload2.url).path).to_s}" alt="some image">
+          <img src="#{upload3.url}">
           MD
 
           expect(InlineUploads.process(md)).to eq(<<~MD)
@@ -644,6 +647,7 @@ RSpec.describe InlineUploads do
 
           ![some image](#{upload.short_url})
           ![some image](#{upload2.short_url})
+          ![](#{upload3.short_url})
           MD
         ensure
           Rails.configuration.multisite = false
