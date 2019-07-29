@@ -896,17 +896,16 @@ class Post < ActiveRecord::Base
 
     fragments ||= Nokogiri::HTML::fragment(self.cooked)
     links = fragments.css("a/@href", "img/@src").map { |media| media.value }.uniq
-    local_store = FileStore::LocalStore.new
 
     links.each do |src|
       next if src.blank? || upload_patterns.none? { |pattern| src.split("?")[0] =~ pattern }
       next if Rails.configuration.multisite && src.exclude?(current_db) && src.exclude?("short-url")
 
       src = "#{SiteSetting.force_https ? "https" : "http"}:#{src}" if src.start_with?("//")
-      next unless Discourse.store.has_been_uploaded?(src) || (include_local_upload && (src =~ /\A\/[^\/]/i || local_store.has_been_uploaded?(src)))
+      next unless Discourse.store.has_been_uploaded?(src) || (include_local_upload && src =~ /\A\/[^\/]/i)
 
       path = begin
-        URI(URI.unescape(src.gsub(GlobalSetting.cdn_url, "")))&.path
+        URI(URI.unescape(src))&.path
       rescue URI::Error
       end
 
