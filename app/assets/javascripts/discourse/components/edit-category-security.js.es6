@@ -10,8 +10,8 @@ export default buildCategoryPanel("security", {
   interactedWithDropdowns: false,
 
   @on("init")
-  registerBlocker() {
-    this.registerSaveBlocker(() => {
+  registerValidator() {
+    this.registerSaveValidator(() => {
       if (
         !this.showPendingGroupChangesAlert &&
         this.interactedWithDropdowns &&

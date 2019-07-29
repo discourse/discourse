@@ -12,7 +12,7 @@
 
   {{#d-modal-body}}
     {{#each panels as |tab|}}
-      {{component tab selectedTab=selectedTab category=model registerSaveBlocker=(action "registerSaveBlocker")}}
+      {{component tab selectedTab=selectedTab category=model registerSaveValidator=(action "registerSaveValidator")}}
     {{/each}}
   {{/d-modal-body}}
 
