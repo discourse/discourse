@@ -162,6 +162,11 @@ module Email
     end
 
     def format_html
+      correct_first_body_margin
+      correct_footer_style
+      correct_footer_style_hilight_first
+      reset_tables
+
       html_lang = SiteSetting.default_locale.sub("_", "-")
       style('html', nil, lang: html_lang, 'xml:lang' => html_lang)
       style('body', "text-align:#{ Rtl.new(nil).enabled? ? 'right' : 'left' };")
@@ -179,7 +184,7 @@ module Email
       style('a', "text-decoration: none; font-weight: bold; color: #{SiteSetting.email_link_color};")
       style('ul', 'margin: 0 0 0 10px; padding: 0 0 0 20px;')
       style('li', 'padding-bottom: 10px')
-      style('div.footer', 'color:#666; font-size:95%; text-align:center; padding-top:15px;')
+      style('div.summary-footer', 'color:#666; font-size:95%; text-align:center; padding-top:15px;')
       style('span.post-count', 'margin: 0 5px; color: #777;')
       style('pre', 'word-wrap: break-word; max-width: 694px;')
       style('code', 'background-color: #f1f1ff; padding: 2px 5px;')
@@ -200,11 +205,7 @@ module Email
       style('div.body', 'padding-top:5px;')
       style('.whisper div.body', 'font-style: italic; color: #9c9c9c;')
       style('.lightbox-wrapper .meta', 'display: none')
-      correct_first_body_margin
-      correct_footer_style
       style('div.undecorated-link-footer a', "font-weight: normal;")
-      correct_footer_style_hilight_first
-      reset_tables
 
       onebox_styles
       plugin_styles

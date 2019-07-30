@@ -401,7 +401,7 @@
 
 <%= digest_custom_html("above_footer") %>
 
-<div dir="<%= rtl? ? 'rtl' : 'ltr' %>" class='footer'>
+<div dir="<%= rtl? ? 'rtl' : 'ltr' %>" class='summary-footer'>
   <%=raw(t 'user_notifications.digest.unsubscribe',
            site_link: html_site_link(@anchor_color),
            email_preferences_link: link_to(t('user_notifications.digest.your_email_settings'), Discourse.base_url + '/my/preferences/emails'),
