@@ -34,9 +34,9 @@
     <%- end %>
 
     <%- unless customization_disabled? %>
-      <%= raw theme_translations_lookup %>
-      <%= raw theme_js_lookup %>
-      <%= raw theme_lookup("head_tag") %>
+      <%= theme_translations_lookup %>
+      <%= theme_js_lookup %>
+      <%= theme_lookup("head_tag") %>
     <%- end %>
 
     <%= render_google_tag_manager_head_code %>
@@ -112,7 +112,7 @@
     <%= preload_script 'browser-update' %>
 
     <%- unless customization_disabled? %>
-      <%= raw theme_lookup("body_tag") %>
+      <%= theme_lookup("body_tag") %>
     <%- end %>
     <%= build_plugin_html 'server:before-body-close' %>
   </body>

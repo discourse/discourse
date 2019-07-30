@@ -351,6 +351,69 @@ describe Email::Sender do
     end
   end
 
+  context "with attachments" do
+    fab!(:small_pdf) do
+      SiteSetting.authorized_extensions = 'pdf'
+      UploadCreator.new(file_from_fixtures("small.pdf", "pdf"), "small.pdf")
+        .create_for(Discourse.system_user.id)
+    end
+    fab!(:large_pdf) do
+      SiteSetting.authorized_extensions = 'pdf'
+      UploadCreator.new(file_from_fixtures("large.pdf", "pdf"), "large.pdf")
+        .create_for(Discourse.system_user.id)
+    end
+    fab!(:csv_file) do
+      SiteSetting.authorized_extensions = 'csv'
+      UploadCreator.new(file_from_fixtures("words.csv", "csv"), "words.csv")
+        .create_for(Discourse.system_user.id)
+    end
+    fab!(:image) do
+      SiteSetting.authorized_extensions = 'png'
+      UploadCreator.new(file_from_fixtures("logo.png", "images"), "logo.png")
+        .create_for(Discourse.system_user.id)
+    end
+    fab!(:post) { Fabricate(:post) }
+    fab!(:reply) do
+      raw = <<~RAW
+        Hello world!
+        #{UploadMarkdown.new(small_pdf).attachment_markdown}
+        #{UploadMarkdown.new(large_pdf).attachment_markdown}
+        #{UploadMarkdown.new(image).image_markdown}
+        #{UploadMarkdown.new(csv_file).attachment_markdown}
+      RAW
+      reply = Fabricate(:post, raw: raw, topic: post.topic, user: Fabricate(:user))
+      reply.link_post_uploads
+      reply
+    end
+    fab!(:notification) { Fabricate(:posted_notification, user: post.user, post: reply) }
+    let(:message) do
+      UserNotifications.user_posted(
+        post.user,
+        post: reply,
+        notification_type: notification.notification_type,
+        notification_data_hash: notification.data_hash
+      )
+    end
+
+    it "adds only non-image uploads as attachments to the email" do
+      SiteSetting.email_total_attachment_size_limit_kb = 10_000
+      Email::Sender.new(message, :valid_type).send
+
+      expect(message.attachments.length).to eq(3)
+      expect(message.attachments.map(&:filename))
+        .to contain_exactly(*[small_pdf, large_pdf, csv_file].map(&:original_filename))
+    end
+
+    it "respects the size limit and attaches only files that fit into the max email size" do
+      SiteSetting.email_total_attachment_size_limit_kb = 40
+      Email::Sender.new(message, :valid_type).send
+
+      expect(message.attachments.length).to eq(2)
+      expect(message.attachments.map(&:filename))
+        .to contain_exactly(*[small_pdf, csv_file].map(&:original_filename))
+    end
+  end
+
   context 'with a deleted post' do
 
     it 'should skip sending the email' do

@@ -931,3 +931,12 @@ a.mention-group {
     margin-right: 0.65em;
   }
 }
+
+#topic-footer-buttons {
+  .reason {
+    color: $primary-high;
+    display: inline;
+    margin: 0 0 0 8px;
+    line-height: $line-height-medium;
+  }
+}

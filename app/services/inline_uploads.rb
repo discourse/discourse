@@ -272,13 +272,17 @@ class InlineUploads
       cdn_url = GlobalSetting.cdn_url.sub(/https?:\/\//, "(https?://)")
     end
 
+    db = RailsMultisite::ConnectionManagement.current_db
+
     regexps = [
       /(upload:\/\/([a-zA-Z0-9]+)[a-zA-Z0-9\.]*)/,
       /(\/uploads\/short-url\/([a-zA-Z0-9]+)[a-zA-Z0-9\.]*)/,
       /(#{base_url}\/uploads\/short-url\/([a-zA-Z0-9]+)[a-zA-Z0-9\.]*)/,
+      /(\/uploads\/#{db}#{UPLOAD_REGEXP_PATTERN})/,
+      /(#{base_url}\/uploads\/#{db}#{UPLOAD_REGEXP_PATTERN})/,
     ]
 
-    db = RailsMultisite::ConnectionManagement.current_db
+    regexps << /(#{cdn_url}\/uploads\/#{db}#{UPLOAD_REGEXP_PATTERN})/ if cdn_url
 
     if Discourse.store.external?
       if Rails.configuration.multisite
@@ -287,14 +291,7 @@ class InlineUploads
       else
         regexps << /((https?:)?#{SiteSetting.Upload.s3_base_url}#{UPLOAD_REGEXP_PATTERN})/
         regexps << /(#{SiteSetting.Upload.s3_cdn_url}#{UPLOAD_REGEXP_PATTERN})/
-        regexps << /(\/uploads\/#{db}#{UPLOAD_REGEXP_PATTERN})/
-        regexps << /(#{base_url}\/uploads\/#{db}#{UPLOAD_REGEXP_PATTERN})/
-        regexps << /(#{cdn_url}\/uploads\/#{db}#{UPLOAD_REGEXP_PATTERN})/ if cdn_url
       end
-    else
-      regexps << /(\/uploads\/#{db}#{UPLOAD_REGEXP_PATTERN})/
-      regexps << /(#{base_url}\/uploads\/#{db}#{UPLOAD_REGEXP_PATTERN})/
-      regexps << /(#{cdn_url}\/uploads\/#{db}#{UPLOAD_REGEXP_PATTERN})/ if cdn_url
     end
 
     node = node.to_s

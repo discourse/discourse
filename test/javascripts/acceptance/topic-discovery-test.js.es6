@@ -76,3 +76,32 @@ QUnit.test("Clearing state after leaving a category", async assert => {
     "it doesn't expand all pinned in the latest category"
   );
 });
+
+QUnit.test("Live update unread state", async assert => {
+  await visit("/");
+  assert.ok(
+    exists(".topic-list-item:not(.visited) a[data-topic-id='11995']"),
+    "shows the topic unread"
+  );
+
+  // Mimic a messagebus message
+  window.MessageBus.callbacks.filterBy("channel", "/latest").map(c =>
+    c.func({
+      message_type: "read",
+      topic_id: 11995,
+      payload: {
+        highest_post_number: 1,
+        last_read_post_number: 2,
+        notification_level: 1,
+        topic_id: 11995
+      }
+    })
+  );
+
+  await visit("/"); // We're already there, but use this to wait for re-render
+
+  assert.ok(
+    exists(".topic-list-item.visited a[data-topic-id='11995']"),
+    "shows the topic read"
+  );
+});

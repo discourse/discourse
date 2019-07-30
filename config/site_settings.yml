@@ -307,6 +307,9 @@ basic:
   vapid_private_key:
     default: ""
     hidden: true
+  vapid_base_url:
+    default: ""
+    hidden: true
 
 login:
   invite_only:
@@ -1028,6 +1031,9 @@ email:
   email_custom_css:
     default: ""
     hidden: true
+  email_total_attachment_size_limit_kb:
+    default: 0
+    max: 51200
 
 files:
   max_image_size_kb:

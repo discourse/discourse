@@ -29,7 +29,7 @@ export default Ember.Controller.extend({
           I18n.t("yes_value"),
           confirmed => {
             if (confirmed) {
-              Discourse.User.currentProp("hideReadOnlyAlert", true);
+              this.set("currentUser.hideReadOnlyAlert", true);
               this._toggleReadOnlyMode(true);
             }
           }

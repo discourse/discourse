@@ -29,7 +29,7 @@ export default Ember.Component.extend(
 
     @computed("disableActions")
     canAct(disableActions) {
-      return Discourse.User.current() && !disableActions;
+      return this.currentUser && !disableActions;
     },
 
     buildBuffer(buffer) {

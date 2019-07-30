@@ -260,11 +260,6 @@
   .d-icon {
     color: $primary-low-mid;
   }
-  &.btn-icon-text {
-    .d-icon {
-      margin-right: 7px;
-    }
-  }
   .discourse-no-touch & {
     &:hover {
       .d-icon {

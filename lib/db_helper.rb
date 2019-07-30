@@ -50,7 +50,7 @@ class DbHelper
       SQL
     end
 
-    SiteSetting.refresh!
+    finish!
   end
 
   def self.regexp_replace(pattern, replacement, flags: "gi", match: "~*", excluded_tables: [])
@@ -82,7 +82,7 @@ class DbHelper
       SQL
     end
 
-    SiteSetting.refresh!
+    finish!
   end
 
   def self.find(needle, anchor_left: false, anchor_right: false, excluded_tables: [])
@@ -106,6 +106,14 @@ class DbHelper
     end
 
     found
+  end
+
+  private
+
+  def self.finish!
+    SiteSetting.refresh!
+    Theme.expire_site_cache!
+    SiteIconManager.ensure_optimized!
   end
 
 end

@@ -18,7 +18,7 @@ acceptance("Composer and uncategorized is not allowed", {
 });
 
 QUnit.test("Disable body until category is selected", async assert => {
-  updateCurrentUser({ admin: false, staff: false, trust_level: 1 });
+  updateCurrentUser({ moderator: false, admin: false, trust_level: 1 });
 
   await visit("/");
   await click("#create-topic");
