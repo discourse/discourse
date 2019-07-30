@@ -911,6 +911,7 @@ email:
   disable_digest_emails:
     default: false
     client: true
+  apply_custom_styles_to_digest: true
   email_accent_bg_color: "#2F70AC"
   email_accent_fg_color: "#FFFFFF"
   email_link_color: "#006699"
@@ -1024,6 +1025,12 @@ email:
   enable_forwarded_emails: false
   always_show_trimmed_content: false
   private_email: false
+  email_custom_template:
+    default: ""
+    hidden: true
+  email_custom_css:
+    default: ""
+    hidden: true
   email_total_attachment_size_limit_kb:
     default: 0
     max: 51200

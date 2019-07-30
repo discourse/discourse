@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'erb'
+
 module EmailHelper
 
   def mailing_list_topic(topic, post_count)
@@ -21,6 +23,14 @@ module EmailHelper
   def email_topic_link(topic)
     url, title = extract_details(topic)
     raw "<a href='#{Discourse.base_url}#{url}' style='color: ##{@anchor_color}'>#{title}</a>"
+  end
+
+  def email_html_template(binding_arg)
+    template = EmailStyle.new.html.sub(
+      '%{email_content}',
+      '<%= yield %><% if defined?(html_body) %><%= html_body %><% end %>'
+    )
+    ERB.new(template).result(binding_arg)
   end
 
   protected

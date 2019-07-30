@@ -260,7 +260,7 @@ describe UserNotifications do
       expect(mail.subject).to match(/Taggo/)
       expect(mail.subject).to match(/Taggie/)
 
-      mail_html = mail.html_part.to_s
+      mail_html = mail.html_part.body.to_s
 
       expect(mail_html.scan(/My super duper cool topic/).count).to eq(1)
       expect(mail_html.scan(/In Reply To/).count).to eq(1)
@@ -287,7 +287,7 @@ describe UserNotifications do
         notification_data_hash: notification.data_hash
       )
 
-      expect(mail.html_part.to_s.scan(/In Reply To/).count).to eq(0)
+      expect(mail.html_part.body.to_s.scan(/In Reply To/).count).to eq(0)
 
       SiteSetting.enable_names = true
       SiteSetting.display_name_on_posts = true
@@ -304,7 +304,7 @@ describe UserNotifications do
         notification_data_hash: notification.data_hash
       )
 
-      mail_html = mail.html_part.to_s
+      mail_html = mail.html_part.body.to_s
       expect(mail_html.scan(/>Bob Marley/).count).to eq(1)
       expect(mail_html.scan(/>bobmarley/).count).to eq(0)
 
@@ -317,7 +317,7 @@ describe UserNotifications do
         notification_data_hash: notification.data_hash
       )
 
-      mail_html = mail.html_part.to_s
+      mail_html = mail.html_part.body.to_s
       expect(mail_html.scan(/>Bob Marley/).count).to eq(0)
       expect(mail_html.scan(/>bobmarley/).count).to eq(1)
     end
@@ -331,8 +331,8 @@ describe UserNotifications do
         notification_data_hash: notification.data_hash
       )
 
-      expect(mail.html_part.to_s).to_not include(response.raw)
-      expect(mail.html_part.to_s).to_not include(topic.url)
+      expect(mail.html_part.body.to_s).to_not include(response.raw)
+      expect(mail.html_part.body.to_s).to_not include(topic.url)
       expect(mail.text_part.to_s).to_not include(response.raw)
       expect(mail.text_part.to_s).to_not include(topic.url)
     end
@@ -365,10 +365,10 @@ describe UserNotifications do
       expect(mail.subject).not_to match(/Uncategorized/)
 
       # 1 respond to links as no context by default
-      expect(mail.html_part.to_s.scan(/to respond/).count).to eq(1)
+      expect(mail.html_part.body.to_s.scan(/to respond/).count).to eq(1)
 
       # 1 unsubscribe link
-      expect(mail.html_part.to_s.scan(/To unsubscribe/).count).to eq(1)
+      expect(mail.html_part.body.to_s.scan(/To unsubscribe/).count).to eq(1)
 
       # side effect, topic user is updated with post number
       tu = TopicUser.get(post.topic_id, user)
@@ -384,7 +384,7 @@ describe UserNotifications do
         notification_data_hash: notification.data_hash
       )
 
-      expect(mail.html_part.to_s).to_not include(response.raw)
+      expect(mail.html_part.body.to_s).to_not include(response.raw)
       expect(mail.text_part.to_s).to_not include(response.raw)
     end
 
@@ -451,13 +451,13 @@ describe UserNotifications do
       expect(mail.subject).to include("[PM] ")
 
       # 1 "visit message" link
-      expect(mail.html_part.to_s.scan(/Visit Message/).count).to eq(1)
+      expect(mail.html_part.body.to_s.scan(/Visit Message/).count).to eq(1)
 
       # 1 respond to link
-      expect(mail.html_part.to_s.scan(/to respond/).count).to eq(1)
+      expect(mail.html_part.body.to_s.scan(/to respond/).count).to eq(1)
 
       # 1 unsubscribe link
-      expect(mail.html_part.to_s.scan(/To unsubscribe/).count).to eq(1)
+      expect(mail.html_part.body.to_s.scan(/To unsubscribe/).count).to eq(1)
 
       # side effect, topic user is updated with post number
       tu = TopicUser.get(topic.id, user)
@@ -473,8 +473,8 @@ describe UserNotifications do
         notification_data_hash: notification.data_hash
       )
 
-      expect(mail.html_part.to_s).to_not include(response.raw)
-      expect(mail.html_part.to_s).to_not include(topic.url)
+      expect(mail.html_part.body.to_s).to_not include(response.raw)
+      expect(mail.html_part.body.to_s).to_not include(topic.url)
       expect(mail.text_part.to_s).to_not include(response.raw)
       expect(mail.text_part.to_s).to_not include(topic.url)
     end
@@ -635,7 +635,7 @@ describe UserNotifications do
 
     # WARNING: you reached the limit of 100 email notifications per day. Further emails will be suppressed.
     # Consider watching less topics or disabling mailing list mode.
-    expect(mail.html_part.to_s).to match(I18n.t("user_notifications.reached_limit", count: 2))
+    expect(mail.html_part.body.to_s).to match(I18n.t("user_notifications.reached_limit", count: 2))
     expect(mail.body.to_s).to match(I18n.t("user_notifications.reached_limit", count: 2))
   end
 

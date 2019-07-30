@@ -3644,6 +3644,16 @@ en:
           title: "Override your site's robots.txt file:"
           warning: "This will permanently override any related site settings."
           overridden: Your site's default robots.txt file is overridden.
+        email_style:
+          title: "Email Style"
+          heading: "Customize Email Style"
+          html: "HTML Template"
+          css: "CSS"
+          reset: "Reset to default"
+          reset_confirm: "Are you sure you want to reset to the default %{fieldName} and lose all your changes?"
+          save_error_with_reason: "Your changes were not saved. %{error}"
+          instructions: "Customize the template in which all html emails are rendered, and style using CSS."
+
       email:
         title: "Emails"
         settings: "Settings"
