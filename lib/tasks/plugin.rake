@@ -16,6 +16,8 @@ task 'plugin:install_all_official' do
     'discourse-perspective' => 'https://github.com/discourse/discourse-perspective-api'
   }
 
+  STDERR.puts "Allowing write to all repos!" if ENV['GIT_WRITE']
+
   Plugin::Metadata::OFFICIAL_PLUGINS.each do |name|
     next if skip.include? name
     repo = map[name] || "https://github.com/discourse/#{name}"
@@ -28,7 +30,6 @@ task 'plugin:install_all_official' do
     end
 
     if ENV['GIT_WRITE']
-      STDERR.puts "Allowing write to all repos!"
       repo = repo.gsub("https://github.com/", "git@github.com:")
       repo += ".git"
     end
