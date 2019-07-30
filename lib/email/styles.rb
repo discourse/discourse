@@ -167,6 +167,11 @@ module Email
       style('body', "text-align:#{ Rtl.new(nil).enabled? ? 'right' : 'left' };")
       style('body', nil, dir: Rtl.new(nil).enabled? ? 'rtl' : 'ltr')
 
+      style('.with-dir',
+        "text-align:#{ Rtl.new(nil).enabled? ? 'right' : 'left' };",
+        dir: Rtl.new(nil).enabled? ? 'rtl' : 'ltr'
+      )
+
       style('.with-accent-colors', "background-color: #{SiteSetting.email_accent_bg_color}; color: #{SiteSetting.email_accent_fg_color};")
       style('h4', 'color: #222;')
       style('h3', 'margin: 15px 0 20px 0;')
@@ -271,7 +276,7 @@ module Email
     end
 
     def correct_first_body_margin
-      @fragment.css('.body p').each do |element|
+      @fragment.css('div.body p').each do |element|
         element['style'] = "margin-top:0; border: 0;"
       end
     end
