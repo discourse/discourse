@@ -21,7 +21,9 @@ if generate_vapid_key?
   SiteSetting.vapid_public_key_bytes = Base64.urlsafe_decode64(SiteSetting.vapid_public_key).bytes.join("|")
   SiteSetting.vapid_base_url = Discourse.base_url
 
-  PushSubscription.delete_all
+  if ActiveRecord::Base.connection.table_exists?(:push_subscriptions)
+    PushSubscription.delete_all
+  end
 end
 
 DiscourseEvent.on(:user_logged_out) do |user|
