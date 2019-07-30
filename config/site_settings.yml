@@ -307,6 +307,9 @@ basic:
   vapid_private_key:
     default: ""
     hidden: true
+  vapid_base_url:
+    default: ""
+    hidden: true
 
 login:
   invite_only:
