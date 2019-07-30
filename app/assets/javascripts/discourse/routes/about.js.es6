@@ -20,7 +20,7 @@ export default Discourse.Route.extend({
       const { category_moderators: categoryModerators } = result.about;
       if (categoryModerators && categoryModerators.length) {
         categoryModerators.forEach((obj, index) => {
-          const category = Discourse.Site.currentProp("categories").findBy(
+          const category = this.site.categories.findBy(
             "id",
             obj.category_id
           );
