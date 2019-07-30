@@ -91,7 +91,11 @@ class About
       WHERE c.id IN (:category_ids)
       GROUP BY c.id
     SQL
-    moderators = User.where(id: results.map(&:user_ids).flatten).map { |u| [u.id, u] }.to_h
+    moderators = {}
+    User.where(id: results.map(&:user_ids).flatten).each do |user|
+      moderators[user.id] = user
+    end
+    moderators
     results.map do |row|
       CategoryMods.new(row.category_id, row.user_ids.map { |id| moderators[id] })
     end
