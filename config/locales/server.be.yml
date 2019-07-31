@@ -1277,7 +1277,7 @@ be:
     suppress_uncategorized_badge: "Не паказваць значок для неклясыфікаваных тэма ў спісах тэмы."
     header_dropdown_category_count: "Колькі катэгорый могуць быць адлюстраваны ў меню загалоўка спісу."
     global_notice: "Дысплей настойлівая, EMERGENCY, неотстранимый глабальны банэр апавяшчэння для ўсіх наведвальнікаў, каб змяніць поле пустым, каб схаваць яго (HTML дазволена)."
-    disable_edit_notifications: "Адключае рэдагаваць апавяшчэння карыстальніка сістэмы, калі «download_remote_images_to_local» актыўна."
+    disable_system_edit_notifications: "Адключае рэдагаваць апавяшчэння карыстальніка сістэмы, калі «download_remote_images_to_local» актыўна."
     likes_notification_consolidation_threshold: "Колькасць ўпадабаных апавяшчэнняў, атрыманых да апавяшчэнняў аб'яднаны ў адну. Усталюйце 0, каб адключыць. Акно можа быць сканфігураваны з дапамогай `SiteSetting.likes_notification_consolidation_window_mins`."
     likes_notification_consolidation_window_mins: "Працягласць ў хвілінах, дзе упадабаныя апавяшчэння аб'яднаны ў адно апавяшчэнне, як толькі парог дасягнуты. Парог можа быць сканфігураваны з дапамогай `SiteSetting.likes_notification_consolidation_threshold`."
     automatically_unpin_topics: "Аўтаматычна распушчае мацаваньне тэмы, калі карыстальнік дасягае дна."
