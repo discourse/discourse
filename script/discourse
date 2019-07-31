@@ -269,7 +269,7 @@ class DiscourseCLI < Thor
 
   def do_remap(from, to, regex = false)
     begin
-      regex ? DbHelper.regexp_replace(from, to) : DbHelper.remap(from, to)
+      regex ? DbHelper.regexp_replace(from, to, verbose: true) : DbHelper.remap(from, to, verbose: true)
       puts 'Done', ''
     rescue => ex
       puts "Error: #{ex}"
