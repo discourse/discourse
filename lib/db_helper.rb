@@ -19,7 +19,7 @@ class DbHelper
      WHERE trigger_name LIKE '%_readonly'
   SQL
 
-  def self.remap(from, to, anchor_left: false, anchor_right: false, excluded_tables: [])
+  def self.remap(from, to, anchor_left: false, anchor_right: false, excluded_tables: [], verbose: false)
     like = "#{anchor_left ? '' : "%"}#{from}#{anchor_right ? '' : "%"}"
 
     triggers = DB.query(TRIGGERS_SQL).map(&:trigger_name).to_set
@@ -43,17 +43,19 @@ class DbHelper
         "#{column} IS NOT NULL AND #{column} LIKE :like"
       end.join(" OR ")
 
-      DB.exec(<<~SQL, from: from, to: to, like: like)
+      rows = DB.exec(<<~SQL, from: from, to: to, like: like)
         UPDATE #{table}
            SET #{set}
          WHERE #{where}
       SQL
+
+      puts "#{table}=#{rows}" if verbose && rows > 0
     end
 
     finish!
   end
 
-  def self.regexp_replace(pattern, replacement, flags: "gi", match: "~*", excluded_tables: [])
+  def self.regexp_replace(pattern, replacement, flags: "gi", match: "~*", excluded_tables: [], verbose: false)
     triggers = DB.query(TRIGGERS_SQL).map(&:trigger_name).to_set
 
     text_columns = Hash.new { |h, k| h[k] = [] }
@@ -75,11 +77,13 @@ class DbHelper
         "#{column} IS NOT NULL AND #{column} #{match} :pattern"
       end.join(" OR ")
 
-      DB.exec(<<~SQL, pattern: pattern, replacement: replacement, flags: flags, match: match)
+      rows = DB.exec(<<~SQL, pattern: pattern, replacement: replacement, flags: flags, match: match)
         UPDATE #{table}
            SET #{set}
          WHERE #{where}
       SQL
+
+      puts "#{table}=#{rows}" if verbose && rows > 0
     end
 
     finish!
