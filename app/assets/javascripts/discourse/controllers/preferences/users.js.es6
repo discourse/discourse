@@ -1,7 +1,5 @@
 import PreferencesTabController from "discourse/mixins/preferences-tab-controller";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import showModal from "discourse/lib/show-modal";
-import User from "discourse/models/user";
 
 export default Ember.Controller.extend(PreferencesTabController, {
   ignoredUsernames: Ember.computed.alias("model.ignored_usernames"),
