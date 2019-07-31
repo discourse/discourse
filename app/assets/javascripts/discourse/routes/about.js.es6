@@ -20,10 +20,7 @@ export default Discourse.Route.extend({
       const { category_moderators: categoryModerators } = result.about;
       if (categoryModerators && categoryModerators.length) {
         categoryModerators.forEach((obj, index) => {
-          const category = this.site.categories.findBy(
-            "id",
-            obj.category_id
-          );
+          const category = this.site.categories.findBy("id", obj.category_id);
           result.about.category_moderators[index].category = category;
         });
       }
