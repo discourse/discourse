@@ -1695,7 +1695,7 @@ nl:
     header_dropdown_category_count: "Het aantal categorieën dat in het header-vervolgkeuzemenu kan worden weergegeven."
     permalink_normalizations: "De volgende reguliere expressie toepassen voordat permalinks worden verwerkt. Voorbeeld: /(topic.*)\\?.*/\\1 verwijdert querystrings uit topicroutes. Notatie is regex+strings, gebruik \\1 etc. voor deeluitdrukkingen."
     global_notice: "Een algemene niet te verbergen DRINGEND, NOODGEVAL-bannermelding voor alle gebruikers weergeven. Laat leeg om deze te verbergen (HTML toegestaan)."
-    disable_edit_notifications: "Schakelt bewerkingsmeldingen van de systeemgebruiker uit als 'download_remote_images_to_local' actief is."
+    disable_system_edit_notifications: "Schakelt bewerkingsmeldingen van de systeemgebruiker uit als 'download_remote_images_to_local' actief is."
     likes_notification_consolidation_threshold: "Aantal ontvangen like-meldingen voordat de meldingen in een enkele worden samengevoegd. Stel dit in op 0 om uit te schakelen. Het venster kan worden geconfigureerd via `SiteSetting.likes_notification_consolidation_window_mins`."
     likes_notification_consolidation_window_mins: "Tijdsduur in minuten waarin like-meldingen in een enkele melding worden samengevoegd zodra de drempel is bereikt. De drempel kan worden geconfigureerd via `SiteSetting.likes_notification_consolidation_threshold`."
     automatically_unpin_topics: "Topics automatisch losmaken wanneer de gebruiker de onderkant bereikt."

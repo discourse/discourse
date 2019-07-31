@@ -818,7 +818,7 @@ sq:
     enable_mobile_theme: "Mobile devices use a mobile-friendly theme, with the ability to switch to the full site. Disable this if you want to use a custom stylesheet that is fully responsive."
     dominating_topic_minimum_percent: "What percentage of posts a user has to make in a topic before being reminded about overly dominating a topic."
     suppress_uncategorized_badge: "Don't show the badge for uncategorized topics in topic lists."
-    disable_edit_notifications: "Disables edit notifications by the system user when 'download_remote_images_to_local' is active."
+    disable_system_edit_notifications: "Disables edit notifications by the system user when 'download_remote_images_to_local' is active."
     automatically_unpin_topics: "Çngjiti temat automatikisht kur përdoruesi arrin fundin e faqes."
     read_time_word_count: "Numërimi i fjalëve për minutë për të llogaritur kohën e vlerësuar të leximit."
     full_name_required: "Full name is a required field of a user's profile."

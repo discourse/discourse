@@ -1690,7 +1690,7 @@ pt_BR:
     header_dropdown_category_count: "Quantas categorias podem ser exibidas no menu suspenso do cabeçalho."
     permalink_normalizations: "Aplique o seguinte regex antes de combinar permalinks, por exemplo: /(topic.*)\\?.*/\\1 irá retirar as strings de consulta das rotas de tópicos. Formato é regex + string use \\ 1 etc. para acessar capturas"
     global_notice: "Exibir um aviso de banner global URGENTE, EMERGENCIAL e não descartável para todos os visitantes, deixe em branco para ocultá-lo (permitido por HTML)."
-    disable_edit_notifications: "Desabilitar modificação de notificações pelo sistema quando 'download_remote_images_to_local' estiver ativado."
+    disable_system_edit_notifications: "Desabilitar modificação de notificações pelo sistema quando 'download_remote_images_to_local' estiver ativado."
     likes_notification_consolidation_threshold: "Número de notificações de curtidas recebidas antes que as notificações sejam consolidadas em uma única. Defina como 0 para desabilitar. A janela pode ser configurada via `SiteSetting.likes_notification_consolidation_window_mins`."
     likes_notification_consolidation_window_mins: "Duração em minutos em que as notificações de curtidas são consolidadas em uma única notificação quando o limite é atingido. O limite pode ser configurado via `SiteSetting.likes_notification_consolidation_threshold`."
     automatically_unpin_topics: "Desafixar automaticamente os tópicos quando o usuário atinge o fundo."

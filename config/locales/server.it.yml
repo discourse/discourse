@@ -1677,7 +1677,7 @@ it:
     header_dropdown_category_count: "Quante categorie possono essere visualizzate nel menu a discesa dell'intestazione."
     permalink_normalizations: "Applicare il seguente regex prima di accedere ai permalink, ad esempio: /(topic.*)\\?.*/\\1 eliminerà le stringhe query dalla route degli argomenti. Il formato è regex+string use \\1 ecc. per accedere alle catture"
     global_notice: "Mostra un banner di avviso globale URGENTE, EMERGENZA, non eliminabile a tutti i visitatori, imposta a vuoto per nasconderlo (HTML consentito)."
-    disable_edit_notifications: "Disabilita le notifiche di modifica dall'utente system quando 'download_remote_images_to_local' è attivo."
+    disable_system_edit_notifications: "Disabilita le notifiche di modifica dall'utente system quando 'download_remote_images_to_local' è attivo."
     likes_notification_consolidation_threshold: "Numero di notifiche da ricevere oltre il quale saranno consolidate in una singola notifica. Impostare su 0 per disabilitare. Il valore può essere configurato tramite 'SiteSetting.likes_notification_consolidation_window_mins'."
     likes_notification_consolidation_window_mins: "Tempo in minuti nel quale le notifiche preferite vengono consolidate in un'unica notifica una volta raggiunta una determinata soglia. La soglia può essere configurata tramite 'SiteSetting.likes_notification_consolidation_threshold'."
     automatically_unpin_topics: " Spunta automaticamente gli argomenti quando l'utente arriva in fondo. "

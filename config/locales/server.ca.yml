@@ -1695,7 +1695,7 @@ ca:
     header_dropdown_category_count: "Quantes categories es poden mostrar en el menú desplegable de la capçalera."
     permalink_normalizations: "Aplica la següent expressió regular abans de coincidir enllaços permanents, per exemple: /(topic.*)\\?.*/\\1 treurà les cadenes de consulta de les rutes de temes. El format és regex+string fes servir \\1 etc. per accedir a captures"
     global_notice: "Mostra un bàner d'avís global d'EMERGÈNCIA URGENT, no descartable, a tots els visitants. Canvieu a blanc per a amagar-lo. (Es permet HTML.)"
-    disable_edit_notifications: "Inhabilita l'edició d'alertes de l'usuari del sistema quan 'download_remote_images_to_local' estigui actiu."
+    disable_system_edit_notifications: "Inhabilita l'edició d'alertes de l'usuari del sistema quan 'download_remote_images_to_local' estigui actiu."
     likes_notification_consolidation_threshold: "Nombre de notificacions amb 'M'agrada' rebudes abans de consolidar les notificacions en una de sola. 0 per desactivar. La finestra es pot configurar mitjançant `SiteSetting.likes_notification_consolidation_window_mins`."
     likes_notification_consolidation_window_mins: "Durada en minuts en què les notificacions amb 'M'agrada' es consoliden en una única notificació una vegada s'ha assolit el llindar. El llindar es pot configurar mitjançant `SiteSetting.likes_notification_consolidation_threshold`."
     automatically_unpin_topics: "Desclava temes automàticament quan l'usuari arribi al final."
