@@ -274,6 +274,7 @@ en:
       stats: "Site Statistics"
       our_admins: "Our Admins"
       our_moderators: "Our Moderators"
+      moderators: "Moderators"
       stat:
         all_time: "All Time"
         last_7_days: "Last 7"

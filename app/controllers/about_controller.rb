@@ -11,7 +11,7 @@ class AboutController < ApplicationController
   def index
     return redirect_to path('/login') if SiteSetting.login_required? && current_user.nil?
 
-    @about = About.new
+    @about = About.new(current_user)
     @title = "#{I18n.t("js.about.simple_title")} - #{SiteSetting.title}"
     respond_to do |format|
       format.html do
