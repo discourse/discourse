@@ -43,7 +43,8 @@ class UserAvatar < ActiveRecord::Base
             tempfile,
             "gravatar#{ext}",
             origin: gravatar_url,
-            type: "avatar"
+            type: "avatar",
+            for_gravatar: true
           ).create_for(user_id)
 
           if gravatar_upload_id != upload.id

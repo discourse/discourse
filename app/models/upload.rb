@@ -29,6 +29,7 @@ class Upload < ActiveRecord::Base
   attr_accessor :for_private_message
   attr_accessor :for_export
   attr_accessor :for_site_setting
+  attr_accessor :for_gravatar
 
   validates_presence_of :filesize
   validates_presence_of :original_filename
