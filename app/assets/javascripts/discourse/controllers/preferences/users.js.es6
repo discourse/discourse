@@ -15,34 +15,6 @@ export default Ember.Controller.extend(PreferencesTabController, {
   },
 
   actions: {
-    ignoredUsernamesChanged(previous, current) {
-      if (current.length > previous.length) {
-        const username = current.pop();
-        if (username) {
-          User.findByUsername(username).then(user => {
-            if (user.get("ignored")) {
-              return;
-            }
-            const controller = showModal("ignore-duration", {
-              model: user
-            });
-            controller.setProperties({
-              onClose: () => {
-                if (!user.get("ignored")) {
-                  const usernames = this.ignoredUsernames
-                    .split(",")
-                    .removeAt(this.ignoredUsernames.split(",").length - 1)
-                    .join(",");
-                  this.set("ignoredUsernames", usernames);
-                }
-              }
-            });
-          });
-        }
-      } else {
-        return this.model.save(["ignored_usernames"]).catch(popupAjaxError);
-      }
-    },
     save() {
       this.set("saved", false);
       return this.model
