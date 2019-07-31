@@ -24,7 +24,7 @@ describe WordWatcher do
       it "is correct when watched_words_regular_expressions = false" do
         SiteSetting.watched_words_regular_expressions = false
         regexp = WordWatcher.word_matcher_regexp(:block)
-        expect(regexp.inspect).to eq("/(?<!\\w)((#{word1}|#{word2}))(?!\\w)/i")
+        expect(regexp.inspect).to eq("/(?:\\W|^)(#{word1}|#{word2})(?=\\W|$)/i")
       end
     end
   end
