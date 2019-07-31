@@ -30,7 +30,7 @@ class SiteSerializer < ApplicationSerializer
     :wizard_required,
     :topic_featured_link_allowed_category_ids,
     :user_themes,
-    :censored_words,
+    :censored_regexp,
     :shared_drafts_category_id
   )
 
@@ -156,8 +156,8 @@ class SiteSerializer < ApplicationSerializer
     scope.topic_featured_link_allowed_category_ids
   end
 
-  def censored_words
-    WordWatcher.words_for_action(:censor).join('|')
+  def censored_regexp
+    WordWatcher.word_matcher_regexp(:censor)&.source
   end
 
   def shared_drafts_category_id

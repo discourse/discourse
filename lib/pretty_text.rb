@@ -162,7 +162,7 @@ module PrettyText
         __optInput.customEmoji = #{custom_emoji.to_json};
         __optInput.emojiUnicodeReplacer = __emojiUnicodeReplacer;
         __optInput.lookupUploadUrls = __lookupUploadUrls;
-        __optInput.censoredWords = #{WordWatcher.words_for_action(:censor).join('|').to_json};
+        __optInput.censoredRegexp = #{WordWatcher.word_matcher_regexp(:censor)&.source.to_json};
       JS
 
       if opts[:topicId]

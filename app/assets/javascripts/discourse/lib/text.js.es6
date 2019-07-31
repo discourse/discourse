@@ -13,7 +13,7 @@ function getOpts(opts) {
     {
       getURL: Discourse.getURLWithCDN,
       currentUser: Discourse.__container__.lookup("current-user:main"),
-      censoredWords: site.censored_words,
+      censoredRegexp: site.censored_regexp,
       siteSettings,
       formatUsername
     },
