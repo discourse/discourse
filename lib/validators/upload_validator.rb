@@ -26,6 +26,13 @@ class Validators::UploadValidator < ActiveModel::Validator
       return true
     end
 
+    if upload.for_gravatar &&
+       FileHelper.supported_gravatar_extensions.include?(extension)
+
+      maximum_image_file_size(upload)
+      return true
+    end
+
     if is_authorized?(upload, extension)
       if FileHelper.is_supported_image?(upload.original_filename)
         authorized_image_extension(upload, extension)
