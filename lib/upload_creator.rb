@@ -21,6 +21,7 @@ class UploadCreator
   #  - for_private_message (boolean)
   #  - pasted (boolean)
   #  - for_export (boolean)
+  #  - for_gravatar (boolean)
   def initialize(file, filename, opts = {})
     @file = file
     @filename = (filename || "").gsub(/[^[:print:]]/, "")
@@ -116,6 +117,7 @@ class UploadCreator
       @upload.for_theme           = true if @opts[:for_theme]
       @upload.for_export          = true if @opts[:for_export]
       @upload.for_site_setting    = true if @opts[:for_site_setting]
+      @upload.for_gravatar        = true if @opts[:for_gravatar]
 
       return @upload unless @upload.save
 

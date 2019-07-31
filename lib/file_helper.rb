@@ -124,6 +124,10 @@ class FileHelper
     (@memoized ||= {})[args] ||= yield
   end
 
+  def self.supported_gravatar_extensions
+    @@supported_gravatar_images ||= Set.new(%w{jpg jpeg png gif})
+  end
+
   def self.supported_images
     @@supported_images ||= Set.new %w{jpg jpeg png gif svg ico}
   end
