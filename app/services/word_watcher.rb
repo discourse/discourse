@@ -20,7 +20,10 @@ class WordWatcher
     end
   end
 
-  def self.word_matcher_regexp(action)
+  # This regexp is run in miniracer, and the client JS app
+  # Make sure it is compatible with major browsers when changing
+  # hint: non-chrome browsers do not support 'lookbehind'
+  def self.word_matcher_regexp(action, raise_errors: false)
     words = get_cached_words(action)
     if words
       words = words.map do |w|
@@ -31,10 +34,13 @@ class WordWatcher
       regexp = words.join('|')
       if !SiteSetting.watched_words_regular_expressions?
         regexp = "(#{regexp})"
-        regexp = "(?<!\\w)(#{regexp})(?!\\w)"
+        regexp = "(?:\\W|^)#{regexp}(?=\\W|$)"
       end
       Regexp.new(regexp, Regexp::IGNORECASE)
     end
+  rescue RegexpError => e
+    raise if raise_errors
+    nil # Admin will be alerted via admin_dashboard_data.rb
   end
 
   def self.word_to_regexp(word)

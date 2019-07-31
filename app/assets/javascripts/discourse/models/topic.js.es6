@@ -97,7 +97,7 @@ const Topic = RestModel.extend({
   fancyTitle(title) {
     let fancyTitle = censor(
       emojiUnescape(title || ""),
-      Discourse.Site.currentProp("censored_words")
+      Discourse.Site.currentProp("censored_regexp")
     );
 
     if (Discourse.SiteSettings.support_mixed_text_direction) {
