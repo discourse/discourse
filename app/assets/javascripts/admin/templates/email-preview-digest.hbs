@@ -6,7 +6,7 @@
     {{date-picker-past value=lastSeen id="last-seen"}}
     <label>{{i18n 'admin.email.user'}}:</label>
     {{user-selector single="true" usernames=username canReceiveUpdates="true"}}
-    <button class='btn' {{action "refresh"}}>{{i18n 'admin.email.refresh'}}</button>
+    <button class='btn btn-primary digest-refresh-button' {{action "refresh"}}>{{i18n 'admin.email.refresh'}}</button>
     <div class="toggle">
       <label>{{i18n 'admin.email.format'}}</label>
       {{#if showHtml}}
