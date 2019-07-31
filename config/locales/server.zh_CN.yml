@@ -1648,7 +1648,7 @@ zh_CN:
     header_dropdown_category_count: "标题下拉菜单可显示多少分类。"
     permalink_normalizations: "在匹配永久链接之前应用如下正则表达式，例如：/(topic.*)\\?.*/\\1 将去掉所有主题路径的参数字符串。格式为使用正则表达式+使用 \\1 等字符串来访问捕获内容"
     global_notice: "为所有访客显示紧急的，不可取消的全局横幅通知，修改为空以隐藏（可使用HTML）。"
-    disable_edit_notifications: "当 'download_remote_images_to_local' 启用时禁用系统编辑提醒。"
+    disable_system_edit_notifications: "当 'download_remote_images_to_local' 启用时禁用系统编辑提醒。"
     likes_notification_consolidation_threshold: "合并为单个提醒前接受的被赞提醒数量。设置为0以关闭。窗口可以通过`SiteSetting.likes_notification_consolidation_window_mins`配置。"
     likes_notification_consolidation_window_mins: "当达到阈值时多个赞的提醒合并到单个的持续时间。阈值可通过`SiteSetting.likes_notification_consolidation_threshold`配置。"
     automatically_unpin_topics: "当用户到达底部时自动解除主题置顶。"

@@ -1345,7 +1345,7 @@ pl_PL:
     disable_avatar_education_message: "Wyłącz wiadomość edukacyjną dla zmiany avataru."
     suppress_uncategorized_badge: "Nie pokazuj etykiety z nazwą kategorii Inne na listach tematów."
     permalink_normalizations: "Zastosuj następujący regex przed dopasowaniem permalinków, na przykład /(topic.*)\\?.*/\\1  spowoduje ściągnięcie ciągu zapytań z dróg tematu. Format to regex+strin używaj \\1 itd aby przechwycić dostęp"
-    disable_edit_notifications: "Wyłącz edytowanie powiadomień przez system użytkownika gdy 'download_remote_images_to_local' jest aktywne."
+    disable_system_edit_notifications: "Wyłącz edytowanie powiadomień przez system użytkownika gdy 'download_remote_images_to_local' jest aktywne."
     automatically_unpin_topics: "Automatycznie odpinaj wątki, gdy użytkownik dotknie dna."
     read_time_word_count: "Licznik słów na minutę dla kalkulacji szacowanego czasu czytania."
     share_anonymized_statistics: "Udostępnij anonimowe statystyki użytkowania."

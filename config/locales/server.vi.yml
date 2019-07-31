@@ -867,7 +867,7 @@ vi:
     disable_avatar_education_message: "Tắt thông điệp hướng dẫn khi đổi avatar."
     suppress_uncategorized_badge: "Không hiển thị huy hiệu cho các chủ đề chưa phân loại trong danh sách chủ đề"
     permalink_normalizations: "Áp dụng regex sau trước khi khớp với permalink, ví dụ: /(topic.*)\\?.*/\\1 sẽ loại bỏ các chuỗi truy vấn từ đường dẫn chủ đề. Định dạng regex+string với \\1 ... để giữ truy cập"
-    disable_edit_notifications: "Vô hiệu hoá thông báo chỉnh sửa bởi người dùng hệ thống khi 'download_remote_images_to_local' đang hoạt động."
+    disable_system_edit_notifications: "Vô hiệu hoá thông báo chỉnh sửa bởi người dùng hệ thống khi 'download_remote_images_to_local' đang hoạt động."
     automatically_unpin_topics: "Tự động bỏ ghim chủ đề khi người dùng xuống cuối trang."
     read_time_word_count: "Đếm số từ mỗi phút để ước lượng thời gian đọc."
     full_name_required: "Tên đầy đủ là trường bắt buộc trong hồ sơ thành viên."

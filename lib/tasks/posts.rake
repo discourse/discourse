@@ -97,8 +97,8 @@ def rebake_posts(opts = {})
   puts "Rebaking post markdown for '#{RailsMultisite::ConnectionManagement.current_db}'"
 
   begin
-    disable_edit_notifications = SiteSetting.disable_edit_notifications
-    SiteSetting.disable_edit_notifications = true
+    disable_system_edit_notifications = SiteSetting.disable_system_edit_notifications
+    SiteSetting.disable_system_edit_notifications = true
 
     total = Post.count
     rebaked = 0
@@ -112,7 +112,7 @@ def rebake_posts(opts = {})
       end
     end
   ensure
-    SiteSetting.disable_edit_notifications = disable_edit_notifications
+    SiteSetting.disable_system_edit_notifications = disable_system_edit_notifications
   end
 
   puts "", "#{rebaked} posts done!", "-" * 50

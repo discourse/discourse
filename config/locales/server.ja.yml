@@ -975,7 +975,7 @@ ja:
     enable_mobile_theme: "モバイル端末にモバイル向けテーマ (通常サイト用テーマにスイッチ可能) を利用する。レスポンシブなスタイルシートを使用する場合はこの設定を無効にしてください。"
     dominating_topic_minimum_percent: "ユーザがトピックを占拠しているとリマインドを行う、ポスト投稿支配率 "
     suppress_uncategorized_badge: "トピック一覧でカテゴライズされていないトピックのバッジは表示しない"
-    disable_edit_notifications: "システムユーザが'download_remote_images_to_local' を有効にした場合、編集時の通知を無効にする"
+    disable_system_edit_notifications: "システムユーザが'download_remote_images_to_local' を有効にした場合、編集時の通知を無効にする"
     full_name_required: "ユーザープロフィールのフルネームを必須にする"
     enable_names: "ユーザーのプロフィール、ユーザーカード、メールアドレスでのフルネームを表示します。無効にすると、フルネームは非表示になります"
     display_name_on_posts: "@usernameに加えて、ポストにユーザのフルネームを表示する"

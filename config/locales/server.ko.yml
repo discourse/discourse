@@ -1223,7 +1223,7 @@ ko:
     disable_avatar_education_message: "아바타 변경 교육 메시지 해제."
     suppress_uncategorized_badge: "글타래 리스트에서 카테고리가 없는 글타래에 대한 훈장을 보여주지 않는다."
     permalink_normalizations: "퍼마링크를 매칭하기 전에 다음 정규표현식을 적용. 예: /(topic.*)\\?.*/\\1 를 적용하면 토픽 루트에서 퀴리 스트링을 뽑아냅니다. 캡쳐된 값에 접근하려면 정규표현식+스트링 형식에 \\1 등을 사용하면 됩니다."
-    disable_edit_notifications: "'download_remote_images_to_local'가 활성화되있으면 시스템 사용자에 의한 수정 알림을 비활성화합니다."
+    disable_system_edit_notifications: "'download_remote_images_to_local'가 활성화되있으면 시스템 사용자에 의한 수정 알림을 비활성화합니다."
     automatically_unpin_topics: "사용자가 하단에 도달하면 토픽 고정을 자동 해제."
     read_time_word_count: "읽은 시간 추정치 계산을 위한 1분 당 워드 카운트."
     share_anonymized_statistics: "익명화된 사용 통계 공유하기"

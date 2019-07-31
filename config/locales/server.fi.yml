@@ -1626,7 +1626,7 @@ fi:
     header_dropdown_category_count: "Kuinka monta aluetta näytetään yläpalkin pudotusvalikossa."
     permalink_normalizations: "Sovella tätä säännöllistä lauseketta ennen ikilinkkien sovittamista, esim. /(topic.*)\\?.*/\\1 riisuu hakulausekkeet ketjujen reiteistä. Muoto on regex+string, \\1 jne. avulla pääset käsiksi captureihin."
     global_notice: "Näytä kaikilla sivuilla kaikille käyttäjille KIIREELLISESTÄ HÄTÄTAPAUKSESTA kertova banneri, jota ei voi piilottaa. Vaihda tyhjäksi piilottaaksesi sen (HTML sallittu)."
-    disable_edit_notifications: "Poista muokkausilmoitukset system-käyttäjältä, kun 'download_remote_images_to_local' on asetettu."
+    disable_system_edit_notifications: "Poista muokkausilmoitukset system-käyttäjältä, kun 'download_remote_images_to_local' on asetettu."
     likes_notification_consolidation_threshold: "Kuinka monta tykkäysilmoitusta pitää saada, jotta ilmoitukset niputetaan yhdeksi. Aseta 0 poistaaksesi käytöstä. Aikaikkunan määrittää asetus `SiteSetting.likes_notification_consolidation_window_mins`."
     likes_notification_consolidation_window_mins: "Kuinka monessa minuutissa tykkäysilmoitukset pitää saada, jotta ilmoitukset niputetaan yhdeksi, jos ilmoitusten yläraja on ylittymässä. Ylärajan määrittää asetus `SiteSetting.likes_notification_consolidation_threshold`."
     automatically_unpin_topics: "Poista ketjun kiinnitys automaattisesti, kun käyttäjä on sen lopussa."

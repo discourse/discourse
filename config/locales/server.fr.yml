@@ -1692,7 +1692,7 @@ fr:
     header_dropdown_category_count: "Nombre de catégories qui peuvent être affiché dans le menu déroulant d'en-tête."
     permalink_normalizations: "Appliquer l'expression régulière suivante avant de détecter les permaliens, par exemple /(\\/topic.*)\\?.*/\\1 supprimera les chaînes de requête des chemins de sujet. Le format est regex+string, utilisez \\1 etc. pour capturer des séquences"
     global_notice: "Afficher une bannière de notification globale, d'URGENCE, et qui ne peut pas être ignoré, à tous les visiteurs, vide pour cacher (HTML admis)."
-    disable_edit_notifications: "Désactiver les notifications de modifications par l'utilisateur système lorsque l'option 'download_remote_images_to_local' est activée."
+    disable_system_edit_notifications: "Désactiver les notifications de modifications par l'utilisateur système lorsque l'option 'download_remote_images_to_local' est activée."
     likes_notification_consolidation_threshold: "Nombre de notifications reçues et aimées avant que les notifications ne soient regroupées en une seule. Régler à 0 pour désactiver. La fenêtre peut être configurée via `SiteSetting.likes_notification_consolidation_window_mins`."
     likes_notification_consolidation_window_mins: "Durée en minutes où les notifications aimées sont regroupées en une seule une fois le seuil atteint. Le seuil peut être configuré via `SiteSetting.likes_notification_consolidation_threshold`."
     automatically_unpin_topics: "Désépingler automatiquement le sujet lorsque l'utilisateur atteint la fin."

@@ -1034,7 +1034,7 @@ sv:
     disable_avatar_education_message: "Inaktivera hjälpmeddelande för byte av avatar."
     suppress_uncategorized_badge: "Visa inte utmärkelsen för okategoriserade ämnen i ämneslistan."
     permalink_normalizations: "Applicera följande regex innan matchning av permalänkar, till exempel: /(topic.*)\\?.*/\\1 kommer att rensa bort söksträngar från ämnesvägen. Formatet är regex+sträng, använd \\1 osv. för att komma åt grupperingar."
-    disable_edit_notifications: "Inaktivera redigering av notifikationer av systemanvändaren när 'download_remote_images_to_local' är aktiverad."
+    disable_system_edit_notifications: "Inaktivera redigering av notifikationer av systemanvändaren när 'download_remote_images_to_local' är aktiverad."
     automatically_unpin_topics: "Avklistra automatiskt ämnen när användaren når botten."
     read_time_word_count: "Ordräknare per minut för att beräkna uppskattad lästid."
     max_prints_per_hour_per_user: "Maximalt antal av /printade sidhänvisnigar ( satt till 0 för att inaktivera)"

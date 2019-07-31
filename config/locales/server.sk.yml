@@ -1012,7 +1012,7 @@ sk:
     dominating_topic_minimum_percent: "Koľko percent príspevkov musí používateľ pridať do témy než sa mu zobrazí pripomienka o dominovaní témy."
     disable_avatar_education_message: "Vypnúť informatívnu hlášku na zmenu avatara."
     suppress_uncategorized_badge: "V zozname tém nezobrazuj odznak za nekategorizované príspevky."
-    disable_edit_notifications: "Ak je premenná 'download_remote_images_to_local' aktívna, vypnúť notifikácie o úpravách systémového používateľa."
+    disable_system_edit_notifications: "Ak je premenná 'download_remote_images_to_local' aktívna, vypnúť notifikácie o úpravách systémového používateľa."
     automatically_unpin_topics: "Automaticky odopnúť témy ak používateľ dostanie posledný príspevok."
     read_time_word_count: "Počet slov za minútu určený na výpočet odkazovaného času čítania."
     full_name_required: "Na používateľskom profile je vyžadované plné meno."
