@@ -425,11 +425,11 @@ def missing_uploads
     public_path = "#{local_store.public_dir}#{path}"
     file_path = nil
 
-    if File.exists?(public_path)
+    if File.file?(public_path)
       file_path = public_path
     else
       tombstone_path = public_path.sub("/uploads/", "/uploads/tombstone/")
-      file_path = tombstone_path if File.exists?(tombstone_path)
+      file_path = tombstone_path if File.file?(tombstone_path)
     end
 
     if file_path.present?
