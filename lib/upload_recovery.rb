@@ -1,8 +1,9 @@
 # frozen_string_literal: true
 
 class UploadRecovery
-  def initialize(dry_run: false)
+  def initialize(dry_run: false, stop_on_error: false)
     @dry_run = dry_run
+    @stop_on_error = stop_on_error
   end
 
   def recover(posts = Post)
@@ -40,7 +41,7 @@ class UploadRecovery
           end
         end
       rescue => e
-        raise e unless @dry_run
+        raise e if @stop_on_error
         puts "#{post.full_url} #{e.class}: #{e.message}"
       end
     end
