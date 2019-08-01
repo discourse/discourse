@@ -12,7 +12,7 @@ describe DistributedMutex do
 
   it "allows only one mutex object to have the lock at a time" do
     mutexes = (1..10).map do
-      DistributedMutex.new(key)
+      DistributedMutex.new(key, redis: DiscourseRedis.new)
     end
 
     x = 0
