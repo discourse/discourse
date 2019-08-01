@@ -1238,7 +1238,8 @@ describe UsersController do
         put "/u/#{user.username}/preferences/username.json", params: { new_username: new_username }
 
         expect(response.status).to eq(422)
-        expect(::JSON.parse(response.body)['errors'].first).to  include(I18n.t('errors.messages.sso_overrides_username'))
+        expect(::JSON.parse(response.body)['errors'].first).to include(I18n.t('errors.messages.sso_overrides_username'))
+      end
     end
   end
 
