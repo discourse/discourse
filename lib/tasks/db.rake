@@ -42,9 +42,21 @@ begin
   Rake::Task['db:create'].enhance(["db:force_skip_persist"] + reqs)
 end
 
+task 'parallel:create' do |_, args|
+  if !ENV.include?('USE_MULTISITE_DB')
+    system("RAILS_ENV=test USE_MULTISITE_DB=1 rake parallel:create")
+  end
+end
+
 task 'db:drop' => [:load_config] do |_, args|
   if MultisiteTestHelpers.create_multisite?
     system("RAILS_DB=discourse_test_multisite RAILS_ENV=test rake db:drop")
+  end
+end
+
+task 'parallel:drop' do |_, args|
+  if !ENV.include?('USE_MULTISITE_DB')
+    system("RAILS_ENV=test USE_MULTISITE_DB=1 rake parallel:drop")
   end
 end
 
@@ -63,6 +75,12 @@ task 'db:migrate' => ['environment', 'set_locale'] do |_, args|
     system("rake db:schema:dump")
     system("RAILS_DB=discourse_test_multisite rake db:schema:load")
     system("RAILS_DB=discourse_test_multisite rake db:migrate")
+  end
+end
+
+task 'parallel:migrate' do |_, args|
+  if !ENV.include?('USE_MULTISITE_DB')
+    system("RAILS_ENV=test USE_MULTISITE_DB=1 rake parallel:migrate")
   end
 end
 

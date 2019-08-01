@@ -34,11 +34,10 @@ end
 # Parallel spec system
 if ENV['RAILS_ENV'] == "test" && ENV['TEST_ENV_NUMBER']
   if ENV['TEST_ENV_NUMBER'] == ''
-    n = 1
-  else
-    n = ENV['TEST_ENV_NUMBER'].to_i
+    ENV['TEST_ENV_NUMBER'] = '1'
   end
 
+  n = ENV['TEST_ENV_NUMBER'].to_i
   port = 10000 + n
 
   STDERR.puts "Setting up parallel test mode - starting Redis #{n} on port #{port}"
@@ -47,7 +46,16 @@ if ENV['RAILS_ENV'] == "test" && ENV['TEST_ENV_NUMBER']
   pid = Process.spawn("redis-server --dir tmp/test_data_#{n}/redis --port #{port}", out: "/dev/null")
 
   ENV["DISCOURSE_REDIS_PORT"] = port.to_s
-  ENV["RAILS_DB"] = "discourse_test_#{n}"
+
+  db = ['discourse_test']
+
+  if ENV['USE_MULTISITE_DB']
+    db << "multisite"
+  end
+
+  db << n.to_s
+
+  ENV["RAILS_DB"] = db.join('_')
 
   at_exit do
     Process.kill("SIGTERM", pid)

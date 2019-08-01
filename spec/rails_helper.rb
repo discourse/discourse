@@ -153,6 +153,52 @@ else
   end
 end
 
+module MultiSiteSetup
+  def self.with_temp_file(contents)
+    file = Tempfile.new
+
+    begin
+      file.write(contents)
+      file.rewind
+
+      yield file
+    ensure
+      file.close
+      file.unlink
+    end
+  end
+
+  def self.with_multisite
+    database = ['discourse_test_multisite']
+
+    if ENV['TEST_ENV_NUMBER']
+      database << ENV['TEST_ENV_NUMBER']
+    end
+
+    config = {
+      "second" => {
+        "adapter" => 'postgresql',
+        "database" => database.join('_'),
+        "host_names" => ['test2.localhost']
+      }
+    }
+
+    with_temp_file(YAML.dump(config)) do |file|
+      Rails.configuration.multisite = true
+      RailsMultisite::ConnectionManagement.config_filename = file.path
+
+      begin
+        yield
+      ensure
+        ActiveRecord::Base.clear_all_connections!
+        Rails.configuration.multisite = false
+        RailsMultisite::ConnectionManagement.clear_settings!
+        ActiveRecord::Base.establish_connection
+      end
+    end
+  end
+end
+
 RSpec.configure do |config|
   config.fail_fast = ENV['RSPEC_FAIL_FAST'] == "1"
   config.include Helpers
@@ -232,18 +278,8 @@ RSpec.configure do |config|
 
   config.before :each, &TestSetup.method(:test_setup)
 
-  config.before(:each, type: :multisite) do
-    Rails.configuration.multisite = true
-
-    RailsMultisite::ConnectionManagement.config_filename =
-      "spec/fixtures/multisite/two_dbs.yml"
-  end
-
-  config.after(:each, type: :multisite) do
-    ActiveRecord::Base.clear_all_connections!
-    Rails.configuration.multisite = false
-    RailsMultisite::ConnectionManagement.clear_settings!
-    ActiveRecord::Base.establish_connection
+  config.around(:each, type: :multisite) do |example|
+    MultiSiteSetup.with_multisite(&example.method(:run))
   end
 
   class TestCurrentUserProvider < Auth::DefaultCurrentUserProvider
