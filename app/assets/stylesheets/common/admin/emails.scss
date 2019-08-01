@@ -70,9 +70,18 @@
   padding: 0.25em 0;
 }
 
+.email-preview {
+  .digest-refresh-button {
+    margin: 0 0.5em;
+  }
+}
+
 .email-preview-digest {
   .controls {
-    margin-left: 20px;
+    margin: 1em 0.5em;
+    input[type="text"] {
+      margin-bottom: 0;
+    }
     label {
       display: inline;
     }
