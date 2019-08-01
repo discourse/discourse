@@ -584,6 +584,12 @@ describe PostMover do
             topic.reload
             expect(topic.posts.by_post_number).to match_array([p1, p3, p4])
             expect(topic.highest_post_number).to eq(p4.post_number)
+
+            # updates replies for posts moved to same topic
+            expect(PostReply.where(reply_id: p2.id).pluck(:post_id)).to contain_exactly(new_first.id)
+
+            # leaves replies to the first post of the original topic unchanged
+            expect(PostReply.where(reply_id: p3.id).pluck(:post_id)).to contain_exactly(p1.id)
           end
 
           it "preserves post actions in the new post" do
