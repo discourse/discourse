@@ -63,6 +63,7 @@ class PostMover
 
     moving_all_posts = (@original_topic.posts.pluck(:id).sort == @post_ids.sort)
 
+    create_temp_table
     move_each_post
     notify_users_that_posts_have_moved
     update_statistics
@@ -75,6 +76,26 @@ class PostMover
 
     destination_topic.reload
     destination_topic
+  ensure
+    drop_temp_table
+  end
+
+  def create_temp_table
+    DB.exec <<~SQL
+      CREATE TEMPORARY TABLE moved_posts (
+        old_topic_id INTEGER,
+        old_post_id INTEGER,
+        old_post_number INTEGER,
+        new_topic_id INTEGER,
+        new_topic_title VARCHAR,
+        new_post_id INTEGER,
+        new_post_number INTEGER
+      )
+    SQL
+  end
+
+  def drop_temp_table
+    DB.exec("DROP TABLE IF EXISTS moved_posts")
   end
 
   def move_each_post
@@ -95,29 +116,23 @@ class PostMover
     end
 
     posts.each do |post|
-      post.is_first_post? ? create_first_post(post) : move(post)
+      metadata = movement_metadata(post)
+      new_post = post.is_first_post? ? create_first_post(post) : move(post)
+
+      store_movement(metadata, new_post)
 
       if @move_to_pm && !destination_topic.topic_allowed_users.exists?(user_id: post.user_id)
         destination_topic.topic_allowed_users.create!(user_id: post.user_id)
       end
     end
 
-    PostReply.where("reply_id IN (:post_ids) OR post_id IN (:post_ids)", post_ids: post_ids).each do |post_reply|
-      if post_reply.post && post_reply.reply && post_reply.reply.topic_id != post_reply.post.topic_id
-        Post
-          .where("id = ? AND reply_count > 0", post_reply.post.id)
-          .update_all("reply_count = reply_count - 1")
-
-        PostReply
-          .where(reply_id: post_reply.reply.id, post_id: post_reply.post.id)
-          .delete_all
-      end
-    end
+    move_incoming_emails
+    move_notifications
+    update_reply_counts
+    delete_post_replies
   end
 
   def create_first_post(post)
-    old_post_attributes = post_attributes(post)
-
     @post_creator = PostCreator.new(
       post.user,
       raw: post.raw,
@@ -133,9 +148,7 @@ class PostMover
     )
     new_post = @post_creator.create
 
-    move_incoming_emails(post, new_post)
     move_email_logs(post, new_post)
-    move_notifications(old_post_attributes, new_post)
 
     PostAction.copy(post, new_post)
     new_post.update_column(:reply_count, @reply_count[1] || 0)
@@ -162,25 +175,45 @@ class PostMover
       update[:reply_to_user_id] = nil
     end
 
-    old_post_attributes = post_attributes(post)
     post.attributes = update
     post.save(validate: false)
-
-    move_incoming_emails(post, post)
-    move_notifications(old_post_attributes, post)
 
     DiscourseEvent.trigger(:post_moved, post, original_topic.id)
 
     # Move any links from the post to the new topic
     post.topic_links.update_all(topic_id: destination_topic.id)
+
+    post
   end
 
-  def move_incoming_emails(old_post, new_post)
-    return if old_post.incoming_email.nil?
+  def movement_metadata(post)
+    {
+      old_topic_id: post.topic_id,
+      old_post_id: post.id,
+      old_post_number: post.post_number,
+      new_topic_id: destination_topic.id,
+      new_post_number: @move_map[post.post_number],
+      new_topic_title: destination_topic.title
+    }
+  end
 
-    email = old_post.incoming_email
-    email.update_columns(topic_id: new_post.topic_id, post_id: new_post.id)
-    new_post.incoming_email = email
+  def store_movement(metadata, new_post)
+    metadata[:new_post_id] = new_post.id
+
+    DB.exec(<<~SQL, metadata)
+      INSERT INTO moved_posts(old_topic_id, old_post_id, old_post_number, new_topic_id, new_topic_title, new_post_id, new_post_number)
+      VALUES (:old_topic_id, :old_post_id, :old_post_number, :new_topic_id, :new_topic_title, :new_post_id, :new_post_number)
+    SQL
+  end
+
+  def move_incoming_emails
+    DB.exec <<~SQL
+      UPDATE incoming_emails ie
+      SET topic_id = mp.new_topic_id,
+          post_id = mp.new_post_id
+      FROM moved_posts mp
+      WHERE ie.topic_id = mp.old_topic_id AND ie.post_id = mp.old_post_id
+    SQL
   end
 
   def move_email_logs(old_post, new_post)
@@ -189,28 +222,44 @@ class PostMover
       .update_all(post_id: new_post.id)
   end
 
-  def move_notifications(old_post_attributes, new_post)
-    params = {
-      old_topic_id: old_post_attributes[:topic_id],
-      old_post_number: old_post_attributes[:post_number],
-      new_topic_id: new_post.topic_id,
-      new_post_number: new_post.post_number,
-      new_topic_title: new_post.topic.title
-    }
-
-    DB.exec(<<~SQL, params)
-      UPDATE notifications
-      SET topic_id  = :new_topic_id,
-        post_number = :new_post_number,
+  def move_notifications
+    DB.exec <<~SQL
+      UPDATE notifications n
+      SET topic_id  = mp.new_topic_id,
+        post_number = mp.new_post_number,
         data        = (data :: JSONB ||
           jsonb_strip_nulls(
               jsonb_build_object(
                   'topic_title', CASE WHEN data :: JSONB ->> 'topic_title' IS NULL
                                         THEN NULL
-                                      ELSE :new_topic_title END
+                                      ELSE mp.new_topic_title END
                 )
             )) :: JSON
-      WHERE topic_id = :old_topic_id AND post_number = :old_post_number
+      FROM moved_posts mp
+      WHERE n.topic_id = mp.old_topic_id AND n.post_number = mp.old_post_number
+    SQL
+  end
+
+  def update_reply_counts
+    DB.exec <<~SQL
+      UPDATE posts p
+      SET reply_count = GREATEST(0, reply_count - x.moved_reply_count)
+      FROM (
+        SELECT r.post_id, mp.new_topic_id, COUNT(1) AS moved_reply_count
+        FROM moved_posts mp
+               JOIN post_replies r ON (mp.old_post_id = r.reply_id)
+        GROUP BY r.post_id, mp.new_topic_id
+      ) x
+      WHERE x.post_id = p.id AND x.new_topic_id <> p.topic_id
+    SQL
+  end
+
+  def delete_post_replies
+    DB.exec <<~SQL
+      DELETE
+      FROM post_replies pr USING moved_posts mp, posts p, posts r
+      WHERE (pr.reply_id = mp.old_post_id OR pr.post_id = mp.old_post_id) AND
+        p.id = pr.post_id AND r.id = pr.reply_id AND p.topic_id <> r.topic_id
     SQL
   end
 
@@ -314,13 +363,6 @@ class PostMover
       destination_topic.topic_allowed_users.build(user_id: user.id) unless destination_topic.topic_allowed_users.where(user_id: user.id).exists?
     end
     destination_topic.save!
-  end
-
-  def post_attributes(post)
-    {
-      topic_id: post.topic_id,
-      post_number: post.post_number
-    }
   end
 
   def enqueue_jobs(topic)
