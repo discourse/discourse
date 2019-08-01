@@ -4492,6 +4492,9 @@ en:
       agree_and_keep:
         title: "Keep Post"
         description: "Agree with flag and keep the post unchanged."
+      agree_and_keep_hidden:
+        title: "Keep Post Hidden"
+        description: "Agree with flag and leave the post hidden."
       agree_and_suspend:
         title: "Suspend User"
         description: "Agree with flag and suspend the user."
