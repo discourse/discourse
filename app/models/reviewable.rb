@@ -41,6 +41,11 @@ class Reviewable < ActiveRecord::Base
     Jobs.enqueue(:notify_reviewable, reviewable_id: self.id) if pending?
   end
 
+  # Can be used if several actions are equivalent
+  def self.action_aliases
+    {}
+  end
+
   # The gaps are in case we want more precision in the future
   def self.priorities
     @priorities ||= Enum.new(
@@ -283,11 +288,15 @@ class Reviewable < ActiveRecord::Base
   def perform(performed_by, action_id, args = nil)
     args ||= {}
 
+    # Support this action or any aliases
+    aliases = self.class.action_aliases
+    valid = [ action_id, aliases.to_a.select { |k, v| v == action_id }.map(&:first) ].flatten
+
     # Ensure the user has access to the action
     actions = actions_for(Guardian.new(performed_by), args)
-    raise InvalidAction.new(action_id, self.class) unless actions.has?(action_id)
+    raise InvalidAction.new(action_id, self.class) unless valid.any? { |a| actions.has?(a) }
 
-    perform_method = "perform_#{action_id}".to_sym
+    perform_method = "perform_#{aliases[action_id] || action_id}".to_sym
     raise InvalidAction.new(action_id, self.class) unless respond_to?(perform_method)
 
     result = nil
