@@ -151,6 +151,12 @@ class UsersController < ApplicationController
     else
       render_json_error(user.errors.full_messages.join(','))
     end
+  rescue Discourse::InvalidAccess
+    if current_user&.staff?
+      render_json_error(I18n.t('errors.messages.sso_overrides_username'))
+    else
+      render json: failed_json, status: 403
+    end
   end
 
   def check_emails
