@@ -129,6 +129,7 @@ class PostMover
     move_incoming_emails
     move_notifications
     update_reply_counts
+    move_first_post_replies
     delete_post_replies
   end
 
@@ -251,6 +252,16 @@ class PostMover
         GROUP BY r.post_id, mp.new_topic_id
       ) x
       WHERE x.post_id = p.id AND x.new_topic_id <> p.topic_id
+    SQL
+  end
+
+  def move_first_post_replies
+    DB.exec <<~SQL
+      UPDATE post_replies pr
+      SET post_id = mp.new_post_id
+      FROM moved_posts mp, moved_posts mr
+      WHERE mp.old_post_id <> mp.new_post_id AND pr.post_id = mp.old_post_id AND
+        EXISTS (SELECT 1 FROM moved_posts mr WHERE mr.new_post_id = pr.reply_id)
     SQL
   end
 
