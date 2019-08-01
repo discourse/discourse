@@ -1227,6 +1227,18 @@ describe UsersController do
 
         expect(::JSON.parse(response.body)['username']).to eq(new_username)
       end
+
+      it 'should respond with proper error message if sso_overrides_username is enabled' do
+        SiteSetting.sso_url = 'http://someurl.com'
+        SiteSetting.enable_sso = true
+        SiteSetting.sso_overrides_username = true
+        acting_user = Fabricate(:admin)
+        sign_in(acting_user)
+
+        put "/u/#{user.username}/preferences/username.json", params: { new_username: new_username }
+
+        expect(response.status).to eq(422)
+        expect(::JSON.parse(response.body)['errors'].first).to  include(I18n.t('errors.messages.sso_overrides_username'))
     end
   end
 

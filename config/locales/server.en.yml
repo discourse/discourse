@@ -183,6 +183,7 @@ en:
         one: is the wrong length (should be %{count} character)
         other: is the wrong length (should be %{count} characters)
       other_than: "must be other than %{count}"
+      sso_overrides_username: "Username needs to be updated on SSO provider side, since `sso_overrides_username` setting is enabled."
     template:
       body: ! "There were problems with the following fields:"
       header:
