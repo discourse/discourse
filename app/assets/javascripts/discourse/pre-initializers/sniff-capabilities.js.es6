@@ -37,6 +37,8 @@ export default {
 
       caps.isIOS =
         /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+
+      caps.isIpadOS = ua.indexOf("Mac OS") !== -1 && touch;
     }
 
     // We consider high res a device with 1280 horizontal pixels. High DPI tablets like
