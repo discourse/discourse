@@ -95,6 +95,8 @@ class MigratePollsData < ActiveRecord::Migration[5.2]
         step = poll["step"].to_i.clamp(0, max)
         anonymous_voters = poll["anonymous_voters"].to_i.clamp(0, PG_INTEGER_MAX)
 
+        next if Poll.exists?(post_id: r.post_id, name: escape(name))
+
         poll_id = execute(<<~SQL
           INSERT INTO polls (
             post_id,
