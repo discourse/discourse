@@ -119,10 +119,12 @@ task 'db:stats' => 'environment' do
       from pg_class
       where oid = ('public.' || table_name)::regclass
     ) AS row_estimate,
-    pg_size_pretty(pg_relation_size(quote_ident(table_name))) size
+    pg_size_pretty(pg_table_size(quote_ident(table_name))) table_size,
+    pg_size_pretty(pg_indexes_size(quote_ident(table_name))) index_size,
+    pg_size_pretty(pg_total_relation_size(quote_ident(table_name))) total_size
     from information_schema.tables
     where table_schema = 'public'
-    order by pg_relation_size(quote_ident(table_name)) DESC
+    order by pg_total_relation_size(quote_ident(table_name)) DESC
   SQL
 
   puts
