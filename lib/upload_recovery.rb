@@ -135,9 +135,16 @@ class UploadRecovery
     @object_keys ||= begin
       s3_helper = Discourse.store.s3_helper
 
-      s3_helper.list("original").map(&:key).concat(
-        s3_helper.list("#{FileStore::S3Store::TOMBSTONE_PREFIX}original").map(&:key)
-      )
+      if Rails.configuration.multisite
+        current_db = RailsMultisite::ConnectionManagement.current_db
+        s3_helper.list("uploads/#{current_db}/original").map(&:key).concat(
+          s3_helper.list("uploads/#{FileStore::S3Store::TOMBSTONE_PREFIX}#{current_db}/original").map(&:key)
+        )
+      else
+        s3_helper.list("original").map(&:key).concat(
+          s3_helper.list("#{FileStore::S3Store::TOMBSTONE_PREFIX}original").map(&:key)
+        )
+      end
     end
 
     @object_keys.each do |key|
