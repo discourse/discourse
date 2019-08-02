@@ -811,11 +811,11 @@ module Email
       end
     end
 
-    def forwarded_email_create_topic(destination, user, raw, title, date = nil)
+    def forwarded_email_create_topic(destination, user, raw, title, date = nil, embedded_user = nil)
       case destination[:type]
       when :group
         group = destination[:obj]
-        topic_user = block_given? ? yield : user
+        topic_user = embedded_user&.call || user
         create_topic(user: topic_user,
                      raw: raw,
                      title: title,
@@ -832,7 +832,7 @@ module Email
         return false if user.staged? && !category.email_in_allow_strangers
         return false if !user.has_trust_level?(SiteSetting.email_in_min_trust)
 
-        topic_user = block_given? ? yield : user
+        topic_user = embedded_user&.call || user
         create_topic(user: topic_user,
                      raw: raw,
                      title: title,
@@ -853,9 +853,7 @@ module Email
       raw = try_to_encode(embedded.decoded, "UTF-8").presence || embedded.to_s
       title = embedded.subject.presence || subject
 
-      post = forwarded_email_create_topic(destination, user, raw, title, embedded.date) do
-        find_or_create_user(email, display_name)
-      end
+      post = forwarded_email_create_topic(destination, user, raw, title, embedded.date, lambda { find_or_create_user(email, display_name) })
       return false unless post
 
       if post&.topic
