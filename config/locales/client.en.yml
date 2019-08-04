@@ -3455,7 +3455,7 @@ en:
         copy_to_clipboard_error: "Error copying data to Clipboard"
         theme_owner: "Not editable, owned by:"
         email_templates:
-          title: "Email Templates"
+          title: "Email"
           subject: "Subject"
           multiple_subjects: "This email template has multiple subjects."
           body: "Body"
@@ -4182,7 +4182,7 @@ en:
       site_text:
         description: "You can customize any of the text on your forum. Please start by searching below:"
         search: "Search for the text you'd like to edit"
-        title: "Text Content"
+        title: "Text"
         edit: "edit"
         revert: "Revert Changes"
         revert_confirm: "Are you sure you want to revert your changes?"
