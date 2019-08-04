@@ -529,7 +529,7 @@ class PluginApi {
 
   /**
    * Exposes the widget creating ability to plugins. Plugins can
-   * register their own plugins and attach them with decorators.
+   * register their own widgets and attach them with decorators.
    * See `createWidget` in `discourse/widgets/widget` for more info.
    **/
   createWidget(name, args) {
