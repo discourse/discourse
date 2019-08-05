@@ -31,11 +31,11 @@ class DistributedMutex
         yield
       ensure
         current_time = redis.time[0]
-        unless current_time < expire_time
-          warn("held for too long")
+        if current_time > expire_time
+          warn("held for too long, expected max: #{@validity} secs, took an extra #{current_time - expire_time} secs")
         end
 
-        unless unlock(expire_time)
+        if !unlock(expire_time) && current_time <= expire_time
           warn("didn't unlock cleanly")
         end
       end
