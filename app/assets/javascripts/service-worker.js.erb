@@ -1,9 +1,9 @@
 'use strict';
 
-importScripts("<%= ::UrlHelper.absolute("/javascripts/workbox/workbox-sw.js") %>");
+importScripts("<%= "#{Discourse.asset_host}#{Discourse.base_path}/javascripts/workbox/workbox-sw.js") %>");
 
 workbox.setConfig({
-  modulePathPrefix: "<%= ::UrlHelper.absolute("/javascripts/workbox") %>",
+  modulePathPrefix: "<%= "#{Discourse.asset_host}#{Discourse.base_path}/javascripts/workbox") %>",
   debug: false
 });
 
