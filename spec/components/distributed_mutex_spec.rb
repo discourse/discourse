@@ -100,7 +100,7 @@ describe DistributedMutex do
 
   context "executions" do
     it "should not allow critical sections to overlap" do
-      connections = (0...3).map { DiscourseRedis.new }
+      connections = 3.times.map { DiscourseRedis.new }
 
       scenario =
         Concurrency::Scenario.new do |execution|
