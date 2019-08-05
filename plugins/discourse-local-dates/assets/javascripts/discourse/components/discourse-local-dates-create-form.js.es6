@@ -384,7 +384,7 @@ export default Ember.Component.extend({
             nextMonth: I18n.t("dates.next_month"),
             months: moment.months(),
             weekdays: moment.weekdays(),
-            weekdaysShort: moment.weekdaysShort()
+            weekdaysShort: moment.weekdaysMin()
           },
           onSelect: date => {
             const formattedDate = moment(date).format("YYYY-MM-DD");
