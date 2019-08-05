@@ -1165,7 +1165,7 @@ ko:
     composer:
       emoji: "이모지 :)"
       more_emoji: "더보기..."
-      options: "온셥"
+      options: "옵션"
       whisper: "귓속말"
       unlist: "목록에서 제외됨"
       blockquote_text: "Blockquote"
@@ -2590,7 +2590,7 @@ ko:
       export_csv:
         success: "Export initiated, you will be notified via message when the process is complete."
         failed: "내보내기가 실패했습니다. 로그를 확인해주세요"
-        button_text: "내보니기"
+        button_text: "내보내기"
         button_title:
           user: "모든 사용자 목록을 CSV 형식으로 내보내기"
           staff_action: "모든 스태프 행동 로그를 CSV 형식으로 내보내기"
@@ -3149,7 +3149,7 @@ ko:
         delete: "삭제"
         cancel: "취소"
         delete_confirm: "사용자 필드를 삭제할까요?"
-        options: "온셥"
+        options: "옵션"
         required:
           title: "회원가입시 필수항목?"
           enabled: "필수"
