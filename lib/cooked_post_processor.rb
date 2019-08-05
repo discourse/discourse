@@ -35,7 +35,7 @@ class CookedPostProcessor
   end
 
   def post_process(bypass_bump: false, new_post: false)
-    DistributedMutex.synchronize("post_process_#{@post.id}") do
+    DistributedMutex.synchronize("post_process_#{@post.id}", validity: 10.minutes) do
       DiscourseEvent.trigger(:before_post_process_cooked, @doc, @post)
       remove_full_quote_on_direct_reply if new_post
       post_process_oneboxes
