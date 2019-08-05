@@ -376,7 +376,6 @@ export default Ember.Component.extend({
           format: "YYYY-MM-DD",
           reposition: false,
           firstDay: 1,
-          defaultDate: moment(this.date, this.dateFormat).toDate(),
           setDefaultDate: true,
           keyboardInput: false,
           i18n: {
@@ -420,7 +419,7 @@ export default Ember.Component.extend({
     }
 
     Ember.run.schedule("afterRender", () => {
-      this._picker.setDate(date, true);
+      this._picker.setDate(moment.utc(date), true);
     });
   },
 
