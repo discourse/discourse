@@ -811,7 +811,7 @@ module Email
       end
     end
 
-    def forwarded_email_create_topic(destination, user, raw, title, date = nil, embedded_user = nil)
+    def forwarded_email_create_topic(destination: , user: , raw: , title: , date: nil, embedded_user: nil)
       case destination[:type]
       when :group
         group = destination[:obj]
@@ -850,10 +850,12 @@ module Email
 
       return false if email.blank? || !email["@"]
 
-      raw = try_to_encode(embedded.decoded, "UTF-8").presence || embedded.to_s
-      title = embedded.subject.presence || subject
-
-      post = forwarded_email_create_topic(destination, user, raw, title, embedded.date, lambda { find_or_create_user(email, display_name) })
+      post = forwarded_email_create_topic(destination: destination,
+                                          user: user,
+                                          raw: try_to_encode(embedded.decoded, "UTF-8").presence || embedded.to_s,
+                                          title: embedded.subject.presence || subject,
+                                          date: embedded.date,
+                                          embedded_user: lambda { find_or_create_user(email, display_name) })
       return false unless post
 
       if post&.topic
@@ -886,9 +888,8 @@ module Email
         #{PlainTextToMarkdown.new(embedded).to_markdown}
         [/quote]
       EOF
-      title = subject
 
-      return true if forwarded_email_create_topic(destination, user, raw, title)
+      return true if forwarded_email_create_topic(destination: destination, user: user, raw: raw, title: subject)
     end
 
     def self.reply_by_email_address_regex(extract_reply_key = true, include_verp = false)
