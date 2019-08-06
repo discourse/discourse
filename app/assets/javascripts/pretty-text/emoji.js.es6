@@ -21,11 +21,23 @@ export function extendedEmojiList() {
 
 const emojiHash = {};
 
-const unicodeRegexp = new RegExp(
-  Object.keys(replacements)
+export function buildReplacementsList(emojiReplacements) {
+  return Object.keys(emojiReplacements)
     .sort()
     .reverse()
-    .join("|") + "|\\B:[^\\s:]+(?::t\\d)?:?\\B",
+    .map(replacement => {
+      // "*️⃣".replace(/*️⃣/, "foo")
+      // would fail if not escaped
+      if (replacement === "*️⃣") {
+        return `\\${replacement}`;
+      }
+      return replacement;
+    })
+    .join("|");
+}
+
+const unicodeRegexp = new RegExp(
+  buildReplacementsList(replacements) + "|\\B:[^\\s:]+(?::t\\d)?:?\\B",
   "g"
 );
 
