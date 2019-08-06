@@ -4,13 +4,18 @@ import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 
 export default Ember.Controller.extend({
-  sortProperties: ["totalCount:desc", "id"],
   sortedByCount: true,
   sortedByName: false,
 
   canAdminTags: Ember.computed.alias("currentUser.staff"),
   groupedByCategory: Ember.computed.notEmpty("model.extras.categories"),
   groupedByTagGroup: Ember.computed.notEmpty("model.extras.tag_groups"),
+
+  init() {
+    this._super(...arguments);
+
+    this.sortProperties = ["totalCount:desc", "id"];
+  },
 
   @computed("groupedByCategory", "groupedByTagGroup")
   otherTagsTitleKey(groupedByCategory, groupedByTagGroup) {

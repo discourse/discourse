@@ -4,10 +4,14 @@ import { queryRegistry } from "discourse/widgets/widget";
 import { getRegister } from "discourse-common/lib/get-owner";
 import DirtyKeys from "discourse/lib/dirty-keys";
 
-const _cleanCallbacks = {};
+let _cleanCallbacks = {};
 export function addWidgetCleanCallback(widgetName, fn) {
   _cleanCallbacks[widgetName] = _cleanCallbacks[widgetName] || [];
   _cleanCallbacks[widgetName].push(fn);
+}
+
+export function resetWidgetCleanCallbacks() {
+  _cleanCallbacks = {};
 }
 
 export default Ember.Component.extend({
@@ -22,7 +26,7 @@ export default Ember.Component.extend({
 
   init() {
     this._super(...arguments);
-    const name = this.get("widget");
+    const name = this.widget;
 
     this.register = getRegister(this);
 
@@ -49,7 +53,7 @@ export default Ember.Component.extend({
   },
 
   willClearRender() {
-    const callbacks = _cleanCallbacks[this.get("widget")];
+    const callbacks = _cleanCallbacks[this.widget];
     if (callbacks) {
       callbacks.forEach(cb => cb());
     }
@@ -61,7 +65,7 @@ export default Ember.Component.extend({
   willDestroyElement() {
     this._dispatched.forEach(evt => {
       const [eventName, caller] = evt;
-      this.appEvents.off(eventName, caller);
+      this.appEvents.off(eventName, this, caller);
     });
     Ember.run.cancel(this._timeout);
   },
@@ -84,7 +88,7 @@ export default Ember.Component.extend({
     const caller = refreshArg =>
       this.eventDispatched(eventName, key, refreshArg);
     this._dispatched.push([eventName, caller]);
-    this.appEvents.on(eventName, caller);
+    this.appEvents.on(eventName, this, caller);
   },
 
   queueRerender(callback) {
@@ -106,9 +110,9 @@ export default Ember.Component.extend({
       }
 
       const t0 = new Date().getTime();
-      const args = this.get("args") || this.buildArgs();
+      const args = this.args || this.buildArgs();
       const opts = {
-        model: this.get("model"),
+        model: this.model,
         dirtyKeys: this.dirtyKeys
       };
       const newTree = new this._widgetClass(args, this.register, opts);

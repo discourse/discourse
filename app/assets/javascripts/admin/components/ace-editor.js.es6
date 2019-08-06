@@ -10,22 +10,23 @@ export default Ember.Component.extend({
 
   @observes("editorId")
   editorIdChanged() {
-    if (this.get("autofocus")) {
+    if (this.autofocus) {
       this.send("focus");
     }
   },
 
   @observes("content")
   contentChanged() {
+    const content = this.content || "";
     if (this._editor && !this._skipContentChangeEvent) {
-      this._editor.getSession().setValue(this.get("content"));
+      this._editor.getSession().setValue(content);
     }
   },
 
   @observes("mode")
   modeChanged() {
     if (this._editor && !this._skipContentChangeEvent) {
-      this._editor.getSession().setMode("ace/mode/" + this.get("mode"));
+      this._editor.getSession().setMode("ace/mode/" + this.mode);
     }
   },
 
@@ -37,7 +38,7 @@ export default Ember.Component.extend({
   changeDisabledState() {
     const editor = this._editor;
     if (editor) {
-      const disabled = this.get("disabled");
+      const disabled = this.disabled;
       editor.setOptions({
         readOnly: disabled,
         highlightActiveLine: !disabled,
@@ -74,12 +75,12 @@ export default Ember.Component.extend({
         if (!this.element || this.isDestroying || this.isDestroyed) {
           return;
         }
-        const editor = loadedAce.edit(this.$(".ace")[0]);
+        const editor = loadedAce.edit(this.element.querySelector(".ace"));
 
         editor.setTheme("ace/theme/chrome");
         editor.setShowPrintMargin(false);
         editor.setOptions({ fontSize: "14px" });
-        editor.getSession().setMode("ace/mode/" + this.get("mode"));
+        editor.getSession().setMode("ace/mode/" + this.mode);
         editor.on("change", () => {
           this._skipContentChangeEvent = true;
           this.set("content", editor.getSession().getValue());
@@ -88,7 +89,7 @@ export default Ember.Component.extend({
         editor.$blockScrolling = Infinity;
         editor.renderer.setScrollMargin(10, 10);
 
-        this.$().data("editor", editor);
+        this.element.setAttribute("data-editor", editor);
         this._editor = editor;
         this.changeDisabledState();
 
@@ -103,7 +104,7 @@ export default Ember.Component.extend({
           this.appEvents.on("ace:resize", this, "resize");
         }
 
-        if (this.get("autofocus")) {
+        if (this.autofocus) {
           this.send("focus");
         }
       });

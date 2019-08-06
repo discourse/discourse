@@ -21,8 +21,6 @@ module ImportScripts; end
 
 class ImportScripts::Base
 
-  include ActionView::Helpers::NumberHelper
-
   def initialize
     preload_i18n
 
@@ -883,6 +881,6 @@ class ImportScripts::Base
   end
 
   def fake_email
-    SecureRandom.hex << "@domain.com"
+    SecureRandom.hex << "@email.invalid"
   end
 end

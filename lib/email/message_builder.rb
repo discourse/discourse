@@ -107,16 +107,17 @@ module Email
         html_override.gsub!("%{respond_instructions}", "")
       end
 
-      styled = Email::Styles.new(html_override, @opts)
-      styled.format_basic
-
-      if style = @opts[:style]
-        styled.public_send("format_#{style}")
-      end
+      html = UserNotificationRenderer.with_view_paths(
+        Rails.configuration.paths["app/views"]
+      ).render(
+        template: 'layouts/email_template',
+        format: :html,
+        locals: { html_body: html_override.html_safe }
+      )
 
       Mail::Part.new do
         content_type 'text/html; charset=UTF-8'
-        body styled.to_html
+        body html
       end
     end
 

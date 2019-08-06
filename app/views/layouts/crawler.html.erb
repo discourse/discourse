@@ -35,14 +35,17 @@
     </div>
     <footer class="container wrap">
       <nav class='crawler-nav' itemscope itemtype='http://schema.org/SiteNavigationElement'>
-        <a href='<%= path "/" %>'><%= t 'home_title' %></a>
-        <%= link_to t('js.filters.categories.title'), path("/categories") %>
-        <%= link_to t('guidelines_topic.title'), path("/guidelines") %>
-        <%= link_to t('tos_topic.title'), path("/tos") %>
-        <%= link_to t('privacy_topic.title'), path("/privacy") %>
+        <ul>
+        <li itemprop="name"><a href='<%= path "/" %>' itemprop="url"><%= t 'home_title' %> </a></li>
+        <li itemprop="name"><a href='<%= path "/categories" %>' itemprop="url"><%= t 'js.filters.categories.title' %> </a></li>
+        <li itemprop="name"><a href='<%= path "/guidelines" %>' itemprop="url"><%= t 'guidelines_topic.title' %> </a></li>
+        <li itemprop="name"><a href='<%= path "/tos" %>' itemprop="url"><%= t 'tos_topic.title' %> </a></li>
+        <li itemprop="name"><a href='<%= path "/privacy" %>' itemprop="url"><%= t 'privacy_topic.title' %> </a></li>
+        </ul>
       </nav>
       <p class='powered-by-link'><%= t 'powered_by_html' %></p>
     </footer>
+    <%= theme_lookup("footer") %>
     <%= theme_lookup("body_tag") %>
   </body>
   <%= yield :after_body %>

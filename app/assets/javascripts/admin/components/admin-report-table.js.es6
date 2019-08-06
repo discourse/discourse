@@ -31,6 +31,21 @@ export default Ember.Component.extend({
     return reportTotal && total && twoColumns;
   },
 
+  @computed("model.{average,data}", "totalsForSample.1.value", "twoColumns")
+  showAverage(model, sampleTotalValue, hasTwoColumns) {
+    return (
+      model.average &&
+      model.data.length > 0 &&
+      sampleTotalValue &&
+      hasTwoColumns
+    );
+  },
+
+  @computed("totalsForSample.1.value", "model.data.length")
+  averageForSample(totals, count) {
+    return (totals / count).toFixed(0);
+  },
+
   @computed("model.data.length")
   showSortingUI(dataLength) {
     return dataLength >= 5;
@@ -134,8 +149,8 @@ export default Ember.Component.extend({
     },
 
     sortByLabel(label) {
-      if (this.get("sortLabel") === label) {
-        this.set("sortDirection", this.get("sortDirection") === 1 ? -1 : 1);
+      if (this.sortLabel === label) {
+        this.set("sortDirection", this.sortDirection === 1 ? -1 : 1);
       } else {
         this.set("sortLabel", label);
       }

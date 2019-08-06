@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class ReviewableScoreTypeSerializer < ApplicationSerializer
-  attributes :id, :title, :score_bonus, :icon
+  attributes :id, :title, :reviewable_priority, :icon
 
   # Allow us to share post action type translations for backwards compatibility
   def title
@@ -9,12 +9,12 @@ class ReviewableScoreTypeSerializer < ApplicationSerializer
       I18n.t("reviewable_score_types.#{ReviewableScore.types[id]}.title")
   end
 
-  def score_bonus
-    object.score_bonus.to_f
+  def reviewable_priority
+    object.reviewable_priority.to_i
   end
 
-  def include_score_bonus?
-    object.respond_to?(:score_bonus)
+  def include_reviewable_priority?
+    object.respond_to?(:reviewable_priority)
   end
 
   def icon

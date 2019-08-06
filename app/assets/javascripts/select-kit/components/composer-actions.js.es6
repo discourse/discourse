@@ -55,7 +55,7 @@ export default DropdownSelectBoxComponent.extend({
   computeHeaderContent() {
     let content = this._super(...arguments);
 
-    switch (this.get("action")) {
+    switch (this.action) {
       case PRIVATE_MESSAGE:
       case CREATE_TOPIC:
       case REPLY:
@@ -67,7 +67,7 @@ export default DropdownSelectBoxComponent.extend({
         content.title = I18n.t("composer.composer_actions.edit");
         break;
       case CREATE_SHARED_DRAFT:
-        content.icon = "clipboard";
+        content.icon = "far-clipboard";
         content.title = I18n.t("composer.composer_actions.draft");
         break;
     }
@@ -167,7 +167,7 @@ export default DropdownSelectBoxComponent.extend({
         items.push({
           name: I18n.t("composer.composer_actions.shared_draft.label"),
           description: I18n.t("composer.composer_actions.shared_draft.desc"),
-          icon: "clipboard",
+          icon: "far-clipboard",
           id: "shared_draft"
         });
       }
@@ -191,10 +191,9 @@ export default DropdownSelectBoxComponent.extend({
       });
     }
 
-    const currentUser = Discourse.User.current();
     const showToggleTopicBump =
-      currentUser &&
-      (currentUser.get("staff") || currentUser.trust_level === 4);
+      this.get("currentUser.staff") ||
+      this.get("currentUser.trust_level") === 4;
 
     if (action === REPLY && showToggleTopicBump) {
       items.push({
@@ -296,7 +295,7 @@ export default DropdownSelectBoxComponent.extend({
     onSelect(value) {
       let action = `${Ember.String.camelize(value)}Selected`;
       if (this[action]) {
-        let model = this.get("composerModel");
+        let model = this.composerModel;
         this[action](
           model.getProperties(
             "draftKey",

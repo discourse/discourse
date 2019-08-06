@@ -85,7 +85,7 @@ describe Scheduler::Defer do
       x = 3
     end
 
-    wait_for(10) do
+    wait_for(1000) do
       x == 3
     end
 

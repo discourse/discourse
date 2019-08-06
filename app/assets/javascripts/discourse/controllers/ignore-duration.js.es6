@@ -6,7 +6,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
   ignoredUntil: null,
   actions: {
     ignore() {
-      if (!this.get("ignoredUntil")) {
+      if (!this.ignoredUntil) {
         this.flash(
           I18n.t("user.user_notifications.ignore_duration_time_frame_required"),
           "alert-error"
@@ -14,13 +14,13 @@ export default Ember.Controller.extend(ModalFunctionality, {
         return;
       }
       this.set("loading", true);
-      this.get("model")
-        .updateNotificationLevel("ignore", this.get("ignoredUntil"))
+      this.model
+        .updateNotificationLevel("ignore", this.ignoredUntil)
         .then(() => {
           this.set("model.ignored", true);
           this.set("model.muted", false);
-          if (this.get("onSuccess")) {
-            this.get("onSuccess")();
+          if (this.onSuccess) {
+            this.onSuccess();
           }
           this.send("closeModal");
         })

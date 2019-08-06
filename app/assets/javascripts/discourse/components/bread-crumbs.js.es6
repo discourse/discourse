@@ -51,7 +51,7 @@ export default Ember.Component.extend({
       return [];
     }
 
-    return this.get("categories").filter(
+    return this.categories.filter(
       c => c.get("parentCategory") === firstCategory
     );
   }

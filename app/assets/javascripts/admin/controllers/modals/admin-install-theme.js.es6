@@ -6,103 +6,9 @@ import {
   observes
 } from "ember-addons/ember-computed-decorators";
 import { THEMES, COMPONENTS } from "admin/models/theme";
+import { POPULAR_THEMES } from "discourse-common/helpers/popular-themes";
 
 const MIN_NAME_LENGTH = 4;
-
-// TODO: use a central repository for themes/components
-const POPULAR_THEMES = [
-  {
-    name: "Graceful",
-    value: "https://github.com/discourse/graceful",
-    preview: "https://theme-creator.discourse.org/theme/awesomerobot/graceful",
-    description: "A light and graceful theme for Discourse.",
-    meta_url:
-      "https://meta.discourse.org/t/a-graceful-theme-for-discourse/93040"
-  },
-  {
-    name: "Material Design Theme",
-    value: "https://github.com/discourse/material-design-stock-theme",
-    preview: "https://newmaterial.trydiscourse.com",
-    description:
-      "Inspired by Material Design, this theme comes with several color palettes (incl. a dark one).",
-    meta_url: "https://meta.discourse.org/t/material-design-stock-theme/47142"
-  },
-  {
-    name: "Minima",
-    value: "https://github.com/discourse/minima",
-    preview: "https://theme-creator.discourse.org/theme/awesomerobot/minima",
-    description: "A minimal theme with reduced UI elements and focus on text.",
-    meta_url:
-      "https://meta.discourse.org/t/minima-a-minimal-theme-for-discourse/108178"
-  },
-  {
-    name: "Sam's Simple Theme",
-    value: "https://github.com/discourse/discourse-simple-theme",
-    preview: "https://theme-creator.discourse.org/theme/sam/simple",
-    description:
-      "Simplified front page design with classic colors and typography.",
-    meta_url:
-      "https://meta.discourse.org/t/sams-personal-minimal-topic-list-design/23552"
-  },
-  {
-    name: "Vincent",
-    value: "https://github.com/discourse/discourse-vincent-theme",
-    preview: "https://theme-creator.discourse.org/theme/awesomerobot/vincent",
-    description: "An elegant dark theme with a few color palettes.",
-    meta_url: "https://meta.discourse.org/t/discourse-vincent-theme/76662"
-  },
-  {
-    name: "Alternative Logos",
-    value: "https://github.com/discourse/discourse-alt-logo",
-    description: "Add alternative logos for dark / light themes.",
-    meta_url:
-      "https://meta.discourse.org/t/alternative-logo-for-dark-themes/88502",
-    component: true
-  },
-  {
-    name: "Brand Header Theme Component",
-    value: "https://github.com/discourse/discourse-brand-header",
-    description:
-      "Add an extra top header with your logo, navigation links and social icons.",
-    meta_url: "https://meta.discourse.org/t/brand-header-theme-component/77977",
-    component: true
-  },
-  {
-    name: "Custom Header Links",
-    value: "https://github.com/discourse/discourse-custom-header-links",
-    preview:
-      "https://theme-creator.discourse.org/theme/Johani/custom-header-links",
-    description: "Easily add custom text-based links to the header.",
-    meta_url: "https://meta.discourse.org/t/custom-header-links/90588",
-    component: true
-  },
-  {
-    name: "Category Banners",
-    value: "https://github.com/discourse/discourse-category-banners",
-    preview:
-      "https://theme-creator.discourse.org/theme/awesomerobot/discourse-category-banners",
-    description:
-      "Show banners on category pages using your existing category details.",
-    meta_url: "https://meta.discourse.org/t/discourse-category-banners/86241",
-    component: true
-  },
-  {
-    name: "Hamburger Theme Selector",
-    value: "https://github.com/discourse/discourse-hamburger-theme-selector",
-    description:
-      "Displays a theme selector in the hamburger menu provided there is more than one user-selectable theme.",
-    meta_url: "https://meta.discourse.org/t/hamburger-theme-selector/61210",
-    component: true
-  },
-  {
-    name: "Header submenus",
-    value: "https://github.com/discourse/discourse-header-submenus",
-    preview: "https://theme-creator.discourse.org/theme/Johani/header-submenus",
-    description: "Lets you build a header menu with submenus (dropdowns).",
-    meta_url: "https://meta.discourse.org/t/header-submenus/94584",
-    component: true
-  }
-];
 
 export default Ember.Controller.extend(ModalFunctionality, {
   popular: Ember.computed.equal("selection", "popular"),
@@ -121,12 +27,17 @@ export default Ember.Controller.extend(ModalFunctionality, {
   urlPlaceholder: "https://github.com/discourse/sample_theme",
   advancedVisible: false,
   themesController: Ember.inject.controller("adminCustomizeThemes"),
-  createTypes: [
-    { name: I18n.t("admin.customize.theme.theme"), value: THEMES },
-    { name: I18n.t("admin.customize.theme.component"), value: COMPONENTS }
-  ],
   selectedType: Ember.computed.alias("themesController.currentTab"),
   component: Ember.computed.equal("selectedType", COMPONENTS),
+
+  init() {
+    this._super(...arguments);
+
+    this.createTypes = [
+      { name: I18n.t("admin.customize.theme.theme"), value: THEMES },
+      { name: I18n.t("admin.customize.theme.component"), value: COMPONENTS }
+    ];
+  },
 
   @computed("themesController.installedThemes")
   themes(installedThemes) {
@@ -166,14 +77,14 @@ export default Ember.Controller.extend(ModalFunctionality, {
 
   @observes("privateChecked")
   privateWasChecked() {
-    this.get("privateChecked")
+    this.privateChecked
       ? this.set("urlPlaceholder", "git@github.com:discourse/sample_theme.git")
       : this.set("urlPlaceholder", "https://github.com/discourse/sample_theme");
 
-    const checked = this.get("privateChecked");
+    const checked = this.privateChecked;
     if (checked && !this._keyLoading) {
       this._keyLoading = true;
-      ajax(this.get("keyGenUrl"), { method: "POST" })
+      ajax(this.keyGenUrl, { method: "POST" })
         .then(pair => {
           this.setProperties({
             privateKey: pair.private_key,
@@ -228,13 +139,13 @@ export default Ember.Controller.extend(ModalFunctionality, {
     },
 
     installTheme() {
-      if (this.get("create")) {
+      if (this.create) {
         this.set("loading", true);
-        const theme = this.store.createRecord(this.get("recordType"));
+        const theme = this.store.createRecord(this.recordType);
         theme
-          .save({ name: this.get("name"), component: this.get("component") })
+          .save({ name: this.name, component: this.component })
           .then(() => {
-            this.get("themesController").send("addTheme", theme);
+            this.themesController.send("addTheme", theme);
             this.send("closeModal");
           })
           .catch(popupAjaxError)
@@ -247,21 +158,21 @@ export default Ember.Controller.extend(ModalFunctionality, {
         type: "POST"
       };
 
-      if (this.get("local")) {
+      if (this.local) {
         options.processData = false;
         options.contentType = false;
         options.data = new FormData();
-        options.data.append("theme", this.get("localFile"));
+        options.data.append("theme", this.localFile);
       }
 
-      if (this.get("remote") || this.get("popular")) {
+      if (this.remote || this.popular) {
         options.data = {
-          remote: this.get("uploadUrl"),
-          branch: this.get("branch")
+          remote: this.uploadUrl,
+          branch: this.branch
         };
 
-        if (this.get("privateChecked")) {
-          options.data.private_key = this.get("privateKey");
+        if (this.privateChecked) {
+          options.data.private_key = this.privateKey;
         }
       }
 
@@ -271,13 +182,10 @@ export default Ember.Controller.extend(ModalFunctionality, {
       }
 
       this.set("loading", true);
-      ajax(this.get("importUrl"), options)
+      ajax(this.importUrl, options)
         .then(result => {
-          const theme = this.store.createRecord(
-            this.get("recordType"),
-            result.theme
-          );
-          this.get("adminCustomizeThemes").send("addTheme", theme);
+          const theme = this.store.createRecord(this.recordType, result.theme);
+          this.adminCustomizeThemes.send("addTheme", theme);
           this.send("closeModal");
         })
         .then(() => {

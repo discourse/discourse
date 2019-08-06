@@ -10,7 +10,7 @@ export default NotificationOptionsComponent.extend({
   allowInitialValueMutation: false,
 
   mutateValue(value) {
-    this.get("category").setNotification(value);
+    this.category.setNotification(value);
   },
 
   deselect() {}

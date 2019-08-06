@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'import_export/zip_utils'
+
 module ThemeStore; end
 
 class ThemeStore::TgzExporter
@@ -56,14 +58,10 @@ class ThemeStore::TgzExporter
   end
 
   private
+
   def export_package
     export_to_folder
-    Dir.chdir(@temp_folder) do
-      tar_filename = "#{@export_name}.tar"
-      Discourse::Utils.execute_command('tar', '--create', '--file', tar_filename, @export_name, failure_message: "Failed to tar theme.")
-      Discourse::Utils.execute_command('gzip', '-5', tar_filename, failure_message: "Failed to gzip archive.")
-      "#{@temp_folder}/#{tar_filename}.gz"
-    end
-  end
 
+    Dir.chdir(@temp_folder) { ImportExport::ZipUtils.new.zip_directory(@temp_folder, @export_name) }
+  end
 end

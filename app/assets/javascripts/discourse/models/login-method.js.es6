@@ -3,57 +3,49 @@ import computed from "ember-addons/ember-computed-decorators";
 const LoginMethod = Ember.Object.extend({
   @computed
   title() {
-    return (
-      this.get("title_override") || I18n.t(`login.${this.get("name")}.title`)
-    );
+    return this.title_override || I18n.t(`login.${this.name}.title`);
   },
 
   @computed
   prettyName() {
-    return (
-      this.get("pretty_name_override") ||
-      I18n.t(`login.${this.get("name")}.name`)
-    );
+    return this.pretty_name_override || I18n.t(`login.${this.name}.name`);
   },
 
   @computed
   message() {
-    return (
-      this.get("message_override") ||
-      I18n.t("login." + this.get("name") + ".message")
-    );
+    return this.message_override || I18n.t(`login.${this.name}.message`);
   },
 
   doLogin({ reconnect = false, fullScreenLogin = true } = {}) {
-    const name = this.get("name");
-    const customLogin = this.get("customLogin");
+    const name = this.name;
+    const customLogin = this.customLogin;
 
     if (customLogin) {
       customLogin();
     } else {
-      let authUrl = this.get("custom_url") || Discourse.getURL("/auth/" + name);
+      let authUrl = this.custom_url || Discourse.getURL(`/auth/${name}`);
 
       if (reconnect) {
         authUrl += "?reconnect=true";
       }
 
-      if (fullScreenLogin) {
+      if (reconnect || fullScreenLogin || this.full_screen_login) {
         document.cookie = "fsl=true";
         window.location = authUrl;
       } else {
         this.set("authenticate", name);
-        const left = this.get("lastX") - 400;
-        const top = this.get("lastY") - 200;
+        const left = this.lastX - 400;
+        const top = this.lastY - 200;
 
-        const height = this.get("frame_height") || 400;
-        const width = this.get("frame_width") || 800;
+        const height = this.frame_height || 400;
+        const width = this.frame_width || 800;
 
         if (name === "facebook") {
           authUrl += authUrl.includes("?") ? "&" : "?";
           authUrl += "display=popup";
         }
 
-        const w = window.open(
+        const windowState = window.open(
           authUrl,
           "_blank",
           "menubar=no,status=no,height=" +
@@ -65,11 +57,11 @@ const LoginMethod = Ember.Object.extend({
             ",top=" +
             top
         );
-        const self = this;
-        const timer = setInterval(function() {
-          if (!w || w.closed) {
+
+        const timer = setInterval(() => {
+          if (!windowState || windowState.closed) {
             clearInterval(timer);
-            self.set("authenticate", null);
+            this.set("authenticate", null);
           }
         }, 1000);
       }
@@ -80,18 +72,16 @@ const LoginMethod = Ember.Object.extend({
 let methods;
 
 export function findAll() {
-  if (methods) {
-    return methods;
-  }
+  if (methods) return methods;
 
   methods = [];
 
-  Discourse.Site.currentProp("auth_providers").forEach(provider => {
-    methods.pushObject(LoginMethod.create(provider));
-  });
+  Discourse.Site.currentProp("auth_providers").forEach(provider =>
+    methods.pushObject(LoginMethod.create(provider))
+  );
 
   // exclude FA icon for Google, uses custom SVG
-  methods.forEach(m => m.set("isGoogle", m.get("name") === "google_oauth2"));
+  methods.forEach(m => m.set("isGoogle", m.name === "google_oauth2"));
 
   return methods;
 }

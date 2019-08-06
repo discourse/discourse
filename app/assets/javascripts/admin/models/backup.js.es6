@@ -3,11 +3,11 @@ import { extractError } from "discourse/lib/ajax-error";
 
 const Backup = Discourse.Model.extend({
   destroy() {
-    return ajax("/admin/backups/" + this.get("filename"), { type: "DELETE" });
+    return ajax("/admin/backups/" + this.filename, { type: "DELETE" });
   },
 
   restore() {
-    return ajax("/admin/backups/" + this.get("filename") + "/restore", {
+    return ajax("/admin/backups/" + this.filename + "/restore", {
       type: "POST",
       data: { client_id: window.MessageBus.clientId }
     });

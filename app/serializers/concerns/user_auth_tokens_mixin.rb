@@ -45,6 +45,8 @@ module UserAuthTokensMixin
     case BrowserDetection.os(object.user_agent)
     when :android
       'fab-android'
+    when :chromeos
+      'fab-chrome'
     when :macos, :ios
       'fab-apple'
     when :linux

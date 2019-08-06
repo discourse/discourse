@@ -110,19 +110,27 @@ export default (filterArg, params) => {
     },
 
     titleToken() {
-      const category = this.currentModel.category,
-        filterText = I18n.t(
-          "filters." + this.filter(category).replace("/", ".") + ".title"
-        );
+      const category = this.currentModel.category;
+
+      const filterText = I18n.t(
+        "filters." + this.filter(category).replace("/", ".") + ".title"
+      );
+
+      let categoryName = category.name;
+      if (category.parent_category_id) {
+        const list = Category.list();
+        const parentCategory = list.findBy("id", category.parent_category_id);
+        categoryName = `${parentCategory.name}/${categoryName}`;
+      }
 
       return I18n.t("filters.with_category", {
         filter: filterText,
-        category: category.get("name")
+        category: categoryName
       });
     },
 
     setupController(controller, model) {
-      const topics = this.get("topics"),
+      const topics = this.topics,
         category = model.category,
         canCreateTopic = topics.get("can_create_topic"),
         canCreateTopicOnCategory =

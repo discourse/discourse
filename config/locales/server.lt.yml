@@ -28,6 +28,7 @@ lt:
   posts: "žinutės"
   loading: "Kraunama"
   powered_by_html: 'Sukurta <a href="https://www.discourse.org">Discourse</a>, geriausias žiūrimumas su JavaScript igalinimu'
+  sign_up: "Registruotis"
   log_in: "Prisijungti"
   submit: "Pateikti"
   purge_reason: "Automatinis ištrynimas kaip atsisakyta, deaktyvuota sąskaita"
@@ -131,7 +132,6 @@ lt:
   private_message_abbrev: "Žinutė"
   rss_description:
     latest: "Naujausios temos"
-    hot: "Karštos temos"
     top: "Top temos"
     top_all: "Visų laikų Top temos"
     top_yearly: "Metų Top temos"
@@ -150,12 +150,6 @@ lt:
   too_late_to_edit: "Šis pranešimas buvo sukurtas jau labai senai, todėl jo negalima redaguoti ar ištrinti."
   excerpt_image: "paveikslėlis"
   groups:
-    success:
-      bulk_add:
-        one: "%{count} narys buvo pridėtas prie grupės"
-        few: "%{count}nariai buvo pridėti prie grupės"
-        many: "%{count}narių buvo pridėta prie grupės"
-        other: "%{count}nariai buvo pridėti prie grupės"
     default_names:
       everyone: "visi"
       admins: "administratoriai"
@@ -312,11 +306,7 @@ lt:
         other: "beveik %{count} metų"
     distance_in_words_verbose:
       half_a_minute: "ką tik"
-      less_than_x_seconds:
-        one: "ką tik"
-        few: "ką tik"
-        many: "ką tik"
-        other: "ką tik"
+      less_than_x_seconds: "ką tik"
       x_seconds:
         one: "prieš %{count} sekundę"
         few: "prieš %{count} sekundes"
@@ -453,6 +443,8 @@ lt:
       weekly: "kas savaitę"
   user_api_key:
     read: "skaityti"
+    otp_confirmation:
+      confirm_title: "Tęsti į %{site_name}"
     scopes:
       message_bus: "Tiesioginiai atnaujinimai"
       read: "Skaityti viską"
@@ -829,7 +821,6 @@ lt:
     digest:
       new_topics: "Naujos temos"
       liked_received: "Gauta patikimų"
-      new_posts: "Nauji 5ra6ai"
       new_users: "Nauji nariai"
       popular_topics: "Populiarios temos"
       follow_topic: "Sekti šią temą"
@@ -859,8 +850,6 @@ lt:
     see_more: "Daugiau"
     search_title: "Ieškoti svetainėje"
     search_button: "Paieška"
-  terms_of_service:
-    title: "Paslaugų teikimo sąlygos"
   deleted: "ištrintas"
   image: "paveikslėlis"
   upload:
@@ -874,9 +863,6 @@ lt:
     default_theme_name: "Šviesi"
     light_theme_name: "Šviesi"
     dark_theme_name: "Tamsi"
-  about: "Apie"
-  guidelines: "Instrukcijos"
-  privacy: "Privatumas"
   edit_this_page: "Redaguoti šį puslapį"
   csv_export:
     boolean_yes: "Taip"
@@ -1030,13 +1016,13 @@ lt:
         title: "Organizacija"
       colors:
         title: "Tema"
+      themes_further_reading:
+        title: "Temos"
       logos:
         title: "Logotipas"
         fields:
           logo:
             label: "Pirminis logotipas"
-          logo_small:
-            label: "Įmonės logotipas"
       homepage:
         title: "Pagrindinis puslapis"
         fields:
@@ -1069,6 +1055,8 @@ lt:
     not_found: "nerastas"
     unknown: "nežinoma"
   reviewables:
+    sensitivity:
+      disabled: "Uždrausta"
     actions:
       agree_and_keep:
         title: "Palikti įrašą"
@@ -1081,6 +1069,8 @@ lt:
         title: "Paslėpti įrašą"
       delete_spammer:
         title: "Ištrinti Vartotoją"
+      delete_single:
+        title: "Pašalinti"
       disagree:
         title: "Nesutinka"
       ignore:

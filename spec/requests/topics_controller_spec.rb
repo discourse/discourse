@@ -1133,6 +1133,32 @@ RSpec.describe TopicsController do
 
             expect(response.status).to eq(200)
           end
+
+          it 'can’t add a category-only tags from another category to a category' do
+            restricted_category.allowed_tags = [tag2.name]
+
+            put "/t/#{topic.slug}/#{topic.id}.json", params: {
+              tags: [tag2],
+              category_id: category.id
+            }
+
+            result = ::JSON.parse(response.body)
+            expect(response.status).to eq(422)
+            expect(result['errors']).to be_present
+            expect(topic.reload.category_id).not_to eq(restricted_category.id)
+          end
+
+          it 'will clean tag params' do
+            restricted_category.allowed_tags = [tag2.name]
+
+            put "/t/#{topic.slug}/#{topic.id}.json", params: {
+              tags: [""],
+              category_id: restricted_category.id
+            }
+
+            result = ::JSON.parse(response.body)
+            expect(response.status).to eq(200)
+          end
         end
 
         context "allow_uncategorized_topics is false" do
@@ -1279,6 +1305,7 @@ RSpec.describe TopicsController do
     context 'permission errors' do
       fab!(:allowed_user) { Fabricate(:user) }
       let(:allowed_group) { Fabricate(:group) }
+      let(:accessible_group) { Fabricate(:group, public_admission: true) }
       let(:secure_category) do
         c = Fabricate(:category)
         c.permissions = [[allowed_group, :full]]
@@ -1287,6 +1314,12 @@ RSpec.describe TopicsController do
         allowed_user.save
         c
       end
+      let(:accessible_category) do
+        Fabricate(:category).tap do |c|
+          c.set_permissions(accessible_group => :full)
+          c.save!
+        end
+      end
       let(:normal_topic) { Fabricate(:topic) }
       let(:secure_topic) { Fabricate(:topic, category: secure_category) }
       let(:private_topic) { Fabricate(:private_message_topic, user: allowed_user) }
@@ -1294,6 +1327,7 @@ RSpec.describe TopicsController do
       let(:deleted_secure_topic) { Fabricate(:topic, category: secure_category, deleted_at: 1.day.ago) }
       let(:deleted_private_topic) { Fabricate(:private_message_topic, user: allowed_user, deleted_at: 1.day.ago) }
       let(:nonexist_topic_id) { Topic.last.id + 10000 }
+      let(:secure_accessible_topic) { Fabricate(:topic, category: accessible_category) }
 
       shared_examples "various scenarios" do |expected|
         expected.each do |key, value|
@@ -1314,7 +1348,8 @@ RSpec.describe TopicsController do
           deleted_topic: 410,
           deleted_secure_topic: 403,
           deleted_private_topic: 403,
-          nonexist: 404
+          nonexist: 404,
+          secure_accessible_topic: 403
         }
         include_examples "various scenarios", expected
       end
@@ -1330,7 +1365,8 @@ RSpec.describe TopicsController do
           deleted_topic: 302,
           deleted_secure_topic: 302,
           deleted_private_topic: 302,
-          nonexist: 302
+          nonexist: 302,
+          secure_accessible_topic: 302
         }
         include_examples "various scenarios", expected
       end
@@ -1347,7 +1383,8 @@ RSpec.describe TopicsController do
           deleted_topic: 410,
           deleted_secure_topic: 403,
           deleted_private_topic: 403,
-          nonexist: 404
+          nonexist: 404,
+          secure_accessible_topic: 200
         }
         include_examples "various scenarios", expected
       end
@@ -1364,7 +1401,8 @@ RSpec.describe TopicsController do
           deleted_topic: 410,
           deleted_secure_topic: 410,
           deleted_private_topic: 410,
-          nonexist: 404
+          nonexist: 404,
+          secure_accessible_topic: 200
         }
         include_examples "various scenarios", expected
       end
@@ -1381,7 +1419,8 @@ RSpec.describe TopicsController do
           deleted_topic: 200,
           deleted_secure_topic: 403,
           deleted_private_topic: 403,
-          nonexist: 404
+          nonexist: 404,
+          secure_accessible_topic: 200
         }
         include_examples "various scenarios", expected
       end
@@ -1398,7 +1437,8 @@ RSpec.describe TopicsController do
           deleted_topic: 200,
           deleted_secure_topic: 200,
           deleted_private_topic: 200,
-          nonexist: 404
+          nonexist: 404,
+          secure_accessible_topic: 200
         }
         include_examples "various scenarios", expected
       end
@@ -1762,7 +1802,7 @@ RSpec.describe TopicsController do
       end
 
       it "returns a readonly header if the site is read only" do
-        Discourse.received_readonly!
+        Discourse.received_postgres_readonly!
         get "/t/#{topic.id}.json"
         expect(response.status).to eq(200)
         expect(response.headers['Discourse-Readonly']).to eq('true')
@@ -2039,6 +2079,27 @@ RSpec.describe TopicsController do
         expect(response.status).to eq(400)
       end
 
+      it "can mark sub-categories unread" do
+        # TODO do we want to skip category definition by default in fabricator
+        category = Fabricate(:category, skip_category_definition: true)
+        sub = Fabricate(:category, parent_category_id: category.id, skip_category_definition: true)
+
+        topic.update!(category_id: sub.id)
+
+        post1 = create_post(user: user, topic_id: topic.id)
+        create_post(topic_id: topic.id)
+
+        put "/topics/bulk.json", params: {
+          category_id: category.id,
+          include_subcategories: true,
+          filter: 'unread',
+          operation: { type: 'dismiss_posts' }
+        }
+
+        expect(response.status).to eq(200)
+        expect(TopicUser.get(post1.topic, post1.user).last_read_post_number).to eq(2)
+      end
+
       it "can find unread" do
         # mark all unread muted
         put "/topics/bulk.json", params: {
@@ -2195,12 +2256,15 @@ RSpec.describe TopicsController do
       end
 
       context "success" do
+        fab!(:category) { Fabricate(:category) }
+
         it "returns success" do
           sign_in(admin)
-          put "/t/#{topic.id}/convert-topic/public.json"
+          put "/t/#{topic.id}/convert-topic/public.json?category_id=#{category.id}"
 
           topic.reload
           expect(topic.archetype).to eq(Archetype.default)
+          expect(topic.category_id).to eq(category.id)
           expect(response.status).to eq(200)
 
           result = ::JSON.parse(response.body)
@@ -2677,7 +2741,6 @@ RSpec.describe TopicsController do
   end
 
   describe "crawler" do
-
     context "when not a crawler" do
       it "renders with the application layout" do
         get topic.url
@@ -2691,7 +2754,6 @@ RSpec.describe TopicsController do
 
     context "when a crawler" do
       it "renders with the crawler layout, and handles proper pagination" do
-
         page1_time = 3.months.ago
         page2_time = 2.months.ago
         page3_time = 1.month.ago
@@ -2739,8 +2801,17 @@ RSpec.describe TopicsController do
         expect(response.headers['Last-Modified']).to eq(page3_time.httpdate)
         expect(body).to include('<link rel="prev" href="' + topic.relative_url + "?page=2")
       end
-    end
 
+      context "wayback machine" do
+        it "renders crawler layout" do
+          get topic.url, env: { "HTTP_USER_AGENT" => "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36", "HTTP_VIA" => "HTTP/1.0 web.archive.org (Wayback Save Page)" }
+          body = response.body
+
+          expect(body).to have_tag(:body, with: { class: 'crawler' })
+          expect(body).to_not have_tag(:meta, with: { name: 'fragment' })
+        end
+      end
+    end
   end
 
   describe "#reset_bump_date" do

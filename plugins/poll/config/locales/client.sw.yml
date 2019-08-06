@@ -20,13 +20,13 @@ sw:
       multiple:
         help:
           at_least_min_options:
-            one: "Chagua angalau chaguo <strong>1</strong>"
+            one: "Chagua angalau chaguo <strong>%{count}</strong>"
             other: "Chagua angalau machaguo <strong>%{count}</strong>."
           up_to_max_options:
-            one: "Chagua mpaka chaguo <strong>1</strong>"
+            one: "Chagua mpaka chaguo <strong>%{count}</strong>"
             other: "Chagua mpaka machaguo <strong>%{count}</strong>"
           x_options:
-            one: "Chagua chaguo <strong>1</strong>"
+            one: "Chagua chaguo <strong>%{count}</strong>"
             other: "Chagua machaguo <strong>%{count}</strong>"
           between_min_and_max_options: "Chagua kati ya <strong>%{min}</strong> mpaka <strong>%{max}</strong>"
       cast-votes:

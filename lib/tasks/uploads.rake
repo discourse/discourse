@@ -209,7 +209,86 @@ task "uploads:migrate_to_s3" => :environment do
 end
 
 def migrate_to_s3_all_sites
-  RailsMultisite::ConnectionManagement.each_connection { migrate_to_s3 }
+  RailsMultisite::ConnectionManagement.each_connection do
+    begin
+      migrate_to_s3
+    rescue RuntimeError => e
+      if ENV["SKIP_FAILED"]
+        puts e
+      else
+        raise e unless ENV["SKIP_FAILED"]
+      end
+    end
+  end
+end
+
+def migration_successful?(db, should_raise = false)
+  success = true
+
+  failure_message = "S3 migration failed for db '#{db}'."
+  prefix = ENV["MIGRATE_TO_MULTISITE"] ? "uploads/#{db}/original/" : "original/"
+
+  base_url = File.join(SiteSetting.Upload.s3_base_url, prefix)
+  count = Upload.by_users.where("url NOT LIKE '#{base_url}%'").count
+
+  error_message = "#{count} of #{Upload.count} uploads are not migrated to S3. #{failure_message}"
+
+  raise error_message if count > 0 && should_raise
+  success &&= count == 0
+
+  puts error_message if count > 0
+
+  cdn_path = SiteSetting.cdn_path("/uploads/#{db}/original").sub(/https?:/, "")
+  count = Post.where("cooked LIKE '%#{cdn_path}%'").count
+  error_message = "#{count} posts are not remapped to new S3 upload URL. #{failure_message}"
+
+  raise error_message if count > 0 && should_raise
+  success &&= count == 0
+
+  puts error_message if count > 0
+
+  Rake::Task['posts:missing_uploads'].invoke('single_site')
+  count = PostCustomField.where(name: Post::MISSING_UPLOADS).count
+  error_message = "rake posts:missing_uploads identified #{count} issues. #{failure_message}"
+  raise error_message if count > 0 && should_raise
+
+  success &&= count == 0
+
+  puts error_message if count > 0
+
+  count = Post.where('baked_version <> ? OR baked_version IS NULL', Post::BAKED_VERSION).count
+  if count > 0
+    puts "#{count} posts still require rebaking and will be rebaked during regular job"
+    if count > 100
+      puts "To speed up migrations of posts we recommend you run 'rake posts:rebake_uncooked_posts'"
+    end
+    success = false
+  else
+    puts "No posts require rebaking"
+  end
+
+  success
+end
+
+task "uploads:s3_migration_status" => :environment do
+  success = true
+  RailsMultisite::ConnectionManagement.each_connection do
+    db = RailsMultisite::ConnectionManagement.current_db
+    success &&= migration_successful?(db)
+  end
+
+  queued_jobs = Sidekiq::Stats.new.queues.sum { |_ , x| x }
+  if queued_jobs > 50
+    puts "WARNING: There are #{queued_jobs} jobs queued! Wait till Sidekiq clears backlog prior to migrating site to a new host"
+    exit 1
+  end
+
+  if !success
+    puts "Site is not ready for migration"
+    exit 1
+  end
+
+  puts "All sites appear to have uploads in order!"
 end
 
 def migrate_to_s3
@@ -220,6 +299,9 @@ def migrate_to_s3
   db = RailsMultisite::ConnectionManagement.current_db
 
   dry_run = !!ENV["DRY_RUN"]
+
+  puts "Checking if #{db} already migrated..."
+  return puts "Already migrated #{db}!" if migration_successful?(db)
 
   puts "*" * 30 + " DRY RUN " + "*" * 30 if dry_run
   puts "Migrating uploads to S3 for '#{db}'..."
@@ -234,17 +316,25 @@ def migrate_to_s3
     exit 1
   end
 
-  unless ENV["DISCOURSE_S3_SECRET_ACCESS_KEY"].present? &&
+  unless ENV["DISCOURSE_S3_BUCKET"].present? &&
     ENV["DISCOURSE_S3_REGION"].present? &&
-    ENV["DISCOURSE_S3_ACCESS_KEY_ID"].present? &&
-    ENV["DISCOURSE_S3_SECRET_ACCESS_KEY"].present?
+    (
+      (
+        ENV["DISCOURSE_S3_ACCESS_KEY_ID"].present? &&
+        ENV["DISCOURSE_S3_SECRET_ACCESS_KEY"].present?
+      ) ||
+      ENV["DISCOURSE_S3_USE_IAM_PROFILE"].present?
+    )
 
     puts <<~TEXT
       Please provide the following environment variables
         - DISCOURSE_S3_BUCKET
         - DISCOURSE_S3_REGION
+        and either
         - DISCOURSE_S3_ACCESS_KEY_ID
         - DISCOURSE_S3_SECRET_ACCESS_KEY
+        or
+        - DISCOURSE_S3_USE_IAM_PROFILE
     TEXT
     exit 2
   end
@@ -255,6 +345,7 @@ def migrate_to_s3
   end
 
   bucket_has_folder_path = true if ENV["DISCOURSE_S3_BUCKET"].include? "/"
+  public_directory = Rails.root.join("public").to_s
 
   opts = {
     region: ENV["DISCOURSE_S3_REGION"],
@@ -279,7 +370,7 @@ def migrate_to_s3
   print " - Listing local files"
 
   local_files = []
-  IO.popen("cd public && find uploads/#{db}/original -type f").each do |file|
+  IO.popen("cd #{public_directory} && find uploads/#{db}/original -type f").each do |file|
     local_files << file.chomp
     putc "." if local_files.size % 1000 == 0
   end
@@ -306,15 +397,17 @@ def migrate_to_s3
   synced = 0
   failed = []
 
+  skip_etag_verify = ENV["SKIP_ETAG_VERIFY"].present?
   local_files.each do |file|
-    path = File.join("public", file)
+    path = File.join(public_directory, file)
     name = File.basename(path)
-    etag = Digest::MD5.file(path).hexdigest
+    etag = Digest::MD5.file(path).hexdigest unless skip_etag_verify
     key = file[file.index(prefix)..-1]
     key.prepend(folder) if bucket_has_folder_path
+    original_path = file.sub("uploads/#{db}", "")
 
-    if s3_object = s3_objects.find { |obj| file.ends_with?(obj.key) }
-      next if File.size(path) == s3_object.size && s3_object.etag[etag]
+    if s3_object = s3_objects.find { |obj| obj.key.ends_with?(original_path) }
+      next if File.size(path) == s3_object.size && (skip_etag_verify || s3_object.etag[etag])
     end
 
     options = {
@@ -332,7 +425,13 @@ def migrate_to_s3
         options[:content_disposition] =
           %Q{attachment; filename="#{upload.original_filename}"}
       end
+
+      if upload&.private?
+        options[:acl] = "private"
+      end
     end
+
+    etag ||= Digest::MD5.file(path).hexdigest
 
     if dry_run
       puts "#{file} => #{options[:key]}"
@@ -374,6 +473,14 @@ def migrate_to_s3
       [
         "src='/uploads/#{db}/original/(\\dX/(?:[a-f0-9]/)*[a-f0-9]{40}[a-z0-9\\.]*)",
         "src='#{SiteSetting.Upload.s3_base_url}/#{prefix}\\1"
+      ],
+      [
+        "href=\"/uploads/#{db}/original/(\\dX/(?:[a-f0-9]/)*[a-f0-9]{40}[a-z0-9\\.]*)",
+        "href=\"#{SiteSetting.Upload.s3_base_url}/#{prefix}\\1"
+      ],
+      [
+        "href='/uploads/#{db}/original/(\\dX/(?:[a-f0-9]/)*[a-f0-9]{40}[a-z0-9\\.]*)",
+        "href='#{SiteSetting.Upload.s3_base_url}/#{prefix}\\1"
       ],
       [
         "\\[img\\]/uploads/#{db}/original/(\\dX/(?:[a-f0-9]/)*[a-f0-9]{40}[a-z0-9\\.]*)\\[/img\\]",
@@ -432,25 +539,14 @@ def migrate_to_s3
         .where("u.id IS NOT NULL AND u.url LIKE '//%' AND optimized_images.url NOT LIKE '//%'")
         .delete_all
 
-      puts "Rebaking posts with lightboxes..."
+      puts "Flagging all posts containing lightboxes for rebake..."
 
-      Post.where("cooked LIKE '%class=\"lightbox\"%'").find_each do |post|
-        post.rebake!(priority: :ultra_low)
-      end
+      count = Post.where("cooked LIKE '%class=\"lightbox\"%'").update_all(baked_version: nil)
+      puts "#{count} posts were flagged for a rebake"
     end
   end
 
-  base_url = File.join(SiteSetting.Upload.s3_base_url, prefix)
-  count = Upload.where("url NOT LIKE '#{base_url}%'").count
-  raise "#{count} of #{Upload.count} uploads are not migrated to S3. #{failure_message}" if count > 0
-
-  cdn_path = SiteSetting.cdn_path("/uploads/#{db}").sub(/https?:/, "")
-  count = Post.where("cooked LIKE '%#{cdn_path}%'").count
-  raise "#{count} posts are not remapped to new S3 upload URL. #{failure_message}" if count > 0
-
-  Rake::Task['posts:missing_uploads'].invoke
-  count = PostCustomField.where(name: Post::MISSING_UPLOADS).count
-  raise failure_message if count > 0
+  migration_successful?(db, true)
 
   puts "Done!"
 end
@@ -553,22 +649,41 @@ def clean_up_uploads
 end
 
 ################################################################################
-#                                   missing                                    #
+#                                missing files                                 #
 ################################################################################
 
 # list all missing uploads and optimized images
-task "uploads:missing" => :environment do
+task "uploads:missing_files" => :environment do
   if ENV["RAILS_DB"]
     list_missing_uploads(skip_optimized: ENV['SKIP_OPTIMIZED'])
   else
     RailsMultisite::ConnectionManagement.each_connection do |db|
-      list_missing_uploads(skip_optimized: ENV['SKIP_OPTIMIZED'])
+      if ENV["SKIP_EXTERNAL"] == "1" && Discourse.store.external?
+        puts "#{RailsMultisite::ConnectionManagement.current_db} has uploads stored externally skipping!"
+      else
+        if Discourse.store.external?
+          puts "-" * 80
+          puts "WARNING! WARNING! WARNING!"
+          puts "-" * 80
+          puts
+          puts <<~TEXT
+            #{RailsMultisite::ConnectionManagement.current_db} has uploads on S3!
+            validating without inventory is likely to take an enormous amount of time.
+            We recommend you run SKIP_EXTERNAL=1 rake uploads:missing to skip validating if on a multisite.
+          TEXT
+        end
+        list_missing_uploads(skip_optimized: ENV['SKIP_OPTIMIZED'])
+      end
     end
   end
 end
 
 def list_missing_uploads(skip_optimized: false)
   Discourse.store.list_missing_uploads(skip_optimized: skip_optimized)
+end
+
+task "uploads:missing" => :environment do
+  Rake::Task["uploads:missing_files"].invoke
 end
 
 ################################################################################
@@ -783,12 +898,112 @@ task "uploads:recover" => :environment do
   require_dependency "upload_recovery"
 
   dry_run = ENV["DRY_RUN"].present?
+  stop_on_error = ENV["STOP_ON_ERROR"].present?
 
   if ENV["RAILS_DB"]
-    UploadRecovery.new(dry_run: dry_run).recover
+    UploadRecovery.new(dry_run: dry_run, stop_on_error: stop_on_error).recover
   else
     RailsMultisite::ConnectionManagement.each_connection do |db|
-      UploadRecovery.new(dry_run: dry_run).recover
+      UploadRecovery.new(dry_run: dry_run, stop_on_error: stop_on_error).recover
+    end
+  end
+end
+
+def inline_uploads(post)
+  replaced = false
+
+  original_raw = post.raw
+
+  post.raw = post.raw.gsub(/(\((\/uploads\S+).*\))/) do
+    upload = Upload.find_by(url: $2)
+    if !upload
+      data = Upload.extract_url($2)
+      if data && sha1 = data[2]
+        upload = Upload.find_by(sha1: sha1)
+        if !upload
+          sha_map = JSON.parse(post.custom_fields["UPLOAD_SHA1_MAP"] || "{}")
+          if mapped_sha = sha_map[sha1]
+            upload = Upload.find_by(sha1: mapped_sha)
+          end
+        end
+      end
+    end
+    result = $1
+
+    if upload&.id
+      result.sub!($2, upload.short_url)
+      replaced = true
+    else
+      puts "Upload not found #{$2} in Post #{post.id} - #{post.url}"
+    end
+    result
+  end
+
+  if replaced
+    puts "Corrected image urls in #{post.full_url} raw backup stored in custom field"
+    post.custom_fields["BACKUP_POST_RAW"] = original_raw
+    post.save_custom_fields
+    post.save!(validate: false)
+    post.rebake!
+  end
+end
+
+def inline_img_tags(post)
+  replaced = false
+
+  original_raw = post.raw
+  post.raw = post.raw.gsub(/(<img\s+src=["'](\/uploads\/[^'"]*)["'].*>)/i) do
+    next if $2.include?("..")
+
+    upload = Upload.find_by(url: $2)
+    if !upload
+      data = Upload.extract_url($2)
+      if data && sha1 = data[2]
+        upload = Upload.find_by(sha1: sha1)
+      end
+    end
+    if !upload
+      local_file = File.join(Rails.root, "public", $2)
+      if File.exist?(local_file)
+        File.open(local_file) do |f|
+          upload = UploadCreator.new(f, "image").create_for(post.user_id)
+        end
+      end
+    end
+
+    if upload
+      replaced = true
+      "![image](#{upload.short_url})"
+    else
+      puts "skipping missing upload in #{post.full_url} #{$1}"
+      $1
+    end
+  end
+
+  if replaced
+    puts "Corrected image urls in #{post.full_url} raw backup stored in custom field"
+    post.custom_fields["BACKUP_POST_RAW"] = original_raw
+    post.save_custom_fields
+    post.save!(validate: false)
+    post.rebake!
+  end
+end
+
+def fix_relative_links
+  Post.where('raw like ?', '%](/uploads%').find_each do |post|
+    inline_uploads(post)
+  end
+  Post.where("raw ilike ?", '%<img%src=%/uploads/%>%').find_each do |post|
+    inline_img_tags(post)
+  end
+end
+
+task "uploads:fix_relative_upload_links" => :environment do
+  if RailsMultisite::ConnectionManagement.current_db != "default"
+    fix_relative_links
+  else
+    RailsMultisite::ConnectionManagement.each_connection do
+      fix_relative_links
     end
   end
 end

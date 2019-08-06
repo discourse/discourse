@@ -206,8 +206,16 @@ export class Tag {
           ["lightbox", "d-lazyload"].includes(attr.class) &&
           hasChild(e, "img")
         ) {
+          let href = attr.href;
+          const img = (e.children || []).find(c => c.name === "img");
+          const base62SHA1 = img.attributes["data-base62-sha1"];
           text = attr.title || "";
-          return "![" + text + "](" + attr.href + ")";
+
+          if (base62SHA1) {
+            href = `upload://${base62SHA1}`;
+          }
+
+          return "![" + text + "](" + href + ")";
         }
 
         if (attr.href && text !== attr.href) {
@@ -230,7 +238,9 @@ export class Tag {
         const e = this.element;
         const attr = e.attributes;
         const pAttr = (e.parent && e.parent.attributes) || {};
-        const src = attr.src || pAttr.src;
+        let src = attr.src || pAttr.src;
+        const base62SHA1 = attr["data-base62-sha1"];
+        if (base62SHA1) src = `upload://${base62SHA1}`;
         const cssClass = attr.class || pAttr.class;
 
         if (cssClass && cssClass.includes("emoji")) {
@@ -241,6 +251,7 @@ export class Tag {
           let alt = attr.alt || pAttr.alt || "";
           const width = attr.width || pAttr.width;
           const height = attr.height || pAttr.height;
+          const title = attr.title;
 
           if (width && height) {
             const pipe = this.element.parentNames.includes("table")
@@ -249,7 +260,7 @@ export class Tag {
             alt = `${alt}${pipe}${width}x${height}`;
           }
 
-          return "![" + alt + "](" + src + ")";
+          return `![${alt}](${src}${title ? ` "${title}"` : ""})`;
         }
 
         return "";

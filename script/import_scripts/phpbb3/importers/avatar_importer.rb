@@ -70,7 +70,8 @@ module ImportScripts::PhpBB3
         avatar_file = FileHelper.download(
           url,
           max_file_size: max_image_size_kb,
-          tmp_file_name: 'discourse-avatar'
+          tmp_file_name: 'discourse-avatar',
+          follow_redirect: true
         )
       rescue StandardError => err
         warn "Error downloading avatar: #{err.message}. Skipping..."

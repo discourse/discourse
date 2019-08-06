@@ -39,6 +39,13 @@ class PostDestroyer
     end
   end
 
+  def self.delete_with_replies(performed_by, post)
+    reply_ids = post.reply_ids(Guardian.new(performed_by), only_replies_to_single_post: false)
+    replies = Post.where(id: reply_ids.map { |r| r[:id] })
+    PostDestroyer.new(performed_by, post).destroy
+    replies.each { |reply| PostDestroyer.new(performed_by, reply).destroy }
+  end
+
   def initialize(user, post, opts = {})
     @user = user
     @post = post
@@ -172,7 +179,8 @@ class PostDestroyer
       key = @post.is_first_post? ? 'js.topic.deleted_by_author' : 'js.post.deleted_by_author'
       @post.revise(@user,
         { raw: I18n.t(key, count: delete_removed_posts_after) },
-        force_new_version: true
+        force_new_version: true,
+        deleting_post: true
       )
 
       Post.transaction do

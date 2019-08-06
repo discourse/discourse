@@ -511,3 +511,42 @@ QUnit.test("topVisibleChanged", function(assert) {
     "it should work with a post-placehodler"
   );
 });
+
+QUnit.test(
+  "deletePost - no modal is shown if post does not have replies",
+  function(assert) {
+    /* global server */
+    server.get("/posts/2/reply-ids.json", () => {
+      return [200, { "Content-Type": "application/json" }, []];
+    });
+
+    let destroyed;
+    const post = Ember.Object.create({
+      id: 2,
+      post_number: 2,
+      can_delete: true,
+      reply_count: 3,
+      destroy: () => {
+        destroyed = true;
+        return Ember.RSVP.Promise.resolve();
+      }
+    });
+
+    const postStream = Ember.Object.create({
+      stream: [2, 3, 4],
+      posts: [post, { id: 3 }, { id: 4 }]
+    });
+
+    const currentUser = Ember.Object.create({ moderator: true });
+    const model = Topic.create({ postStream });
+    const controller = this.subject({ model, currentUser });
+
+    const done = assert.async();
+    controller.send("deletePost", post);
+
+    Ember.run.next(() => {
+      assert.ok(destroyed, "post was destroyed");
+      done();
+    });
+  }
+);

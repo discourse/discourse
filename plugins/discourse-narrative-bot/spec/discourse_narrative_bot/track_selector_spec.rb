@@ -21,7 +21,6 @@ describe DiscourseNarrativeBot::TrackSelector do
     #{I18n.t(
       'discourse_narrative_bot.track_selector.random_mention.tracks',
       discobot_username: discobot_username,
-      default_track: DiscourseNarrativeBot::NewUserNarrative.reset_trigger,
       reset_trigger: described_class.reset_trigger,
       tracks: "#{DiscourseNarrativeBot::NewUserNarrative.reset_trigger}, #{DiscourseNarrativeBot::AdvancedUserNarrative.reset_trigger}"
     )}

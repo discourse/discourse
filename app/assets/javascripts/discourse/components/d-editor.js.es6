@@ -54,7 +54,7 @@ const isInside = (text, regex) => {
 
 class Toolbar {
   constructor(opts) {
-    const { site, siteSettings } = opts;
+    const { siteSettings } = opts;
     this.shortcuts = {};
     this.context = null;
 
@@ -140,10 +140,6 @@ class Toolbar {
         title: "composer.toggle_direction",
         perform: e => e.toggleDirection()
       });
-    }
-
-    if (site.mobileView) {
-      this.groups.push({ group: "mobileExtras", buttons: [] });
     }
 
     this.groups[this.groups.length - 1].lastGroup = true;
@@ -234,8 +230,8 @@ export default Ember.Component.extend({
   _readyNow() {
     this.set("ready", true);
 
-    if (this.get("autofocus")) {
-      this.$("textarea").focus();
+    if (this.autofocus) {
+      this.element.querySelector("textarea").focus();
     }
   },
 
@@ -248,13 +244,13 @@ export default Ember.Component.extend({
   didInsertElement() {
     this._super(...arguments);
 
-    const $editorInput = this.$(".d-editor-input");
+    const $editorInput = $(this.element.querySelector(".d-editor-input"));
     this._applyEmojiAutocomplete($editorInput);
     this._applyCategoryHashtagAutocomplete($editorInput);
 
     Ember.run.scheduleOnce("afterRender", this, this._readyNow);
 
-    const mouseTrap = Mousetrap(this.$(".d-editor-input")[0]);
+    const mouseTrap = Mousetrap(this.element.querySelector(".d-editor-input"));
     const shortcuts = this.get("toolbar.shortcuts");
 
     Object.keys(shortcuts).forEach(sc => {
@@ -266,30 +262,33 @@ export default Ember.Component.extend({
     });
 
     // disable clicking on links in the preview
-    this.$(".d-editor-preview").on("click.preview", e => {
-      if (wantsNewWindow(e)) {
-        return;
+    $(this.element.querySelector(".d-editor-preview")).on(
+      "click.preview",
+      e => {
+        if (wantsNewWindow(e)) {
+          return;
+        }
+        const $target = $(e.target);
+        if ($target.is("a.mention")) {
+          this.appEvents.trigger(
+            "click.discourse-preview-user-card-mention",
+            $target
+          );
+        }
+        if ($target.is("a.mention-group")) {
+          this.appEvents.trigger(
+            "click.discourse-preview-group-card-mention-group",
+            $target
+          );
+        }
+        if ($target.is("a")) {
+          e.preventDefault();
+          return false;
+        }
       }
-      const $target = $(e.target);
-      if ($target.is("a.mention")) {
-        this.appEvents.trigger(
-          "click.discourse-preview-user-card-mention",
-          $target
-        );
-      }
-      if ($target.is("a.mention-group")) {
-        this.appEvents.trigger(
-          "click.discourse-preview-group-card-mention-group",
-          $target
-        );
-      }
-      if ($target.is("a")) {
-        e.preventDefault();
-        return false;
-      }
-    });
+    );
 
-    if (this.get("composerEvents")) {
+    if (this.composerEvents) {
       this.appEvents.on("composer:insert-block", this, "_insertBlock");
       this.appEvents.on("composer:insert-text", this, "_insertText");
       this.appEvents.on("composer:replace-text", this, "_replaceText");
@@ -307,7 +306,7 @@ export default Ember.Component.extend({
 
   @on("willDestroyElement")
   _shutDown() {
-    if (this.get("composerEvents")) {
+    if (this.composerEvents) {
       this.appEvents.off("composer:insert-block", this, "_insertBlock");
       this.appEvents.off("composer:insert-text", this, "_insertText");
       this.appEvents.off("composer:replace-text", this, "_replaceText");
@@ -317,7 +316,7 @@ export default Ember.Component.extend({
     Object.keys(this.get("toolbar.shortcuts")).forEach(sc =>
       mouseTrap.unbind(sc)
     );
-    this.$(".d-editor-preview").off("click.preview");
+    $(this.element.querySelector(".d-editor-preview")).off("click.preview");
   },
 
   @computed
@@ -340,11 +339,11 @@ export default Ember.Component.extend({
       return;
     }
 
-    const value = this.get("value");
-    const markdownOptions = this.get("markdownOptions") || {};
+    const value = this.value;
+    const markdownOptions = this.markdownOptions || {};
 
     cookAsync(value, markdownOptions).then(cooked => {
-      if (this.get("isDestroyed")) {
+      if (this.isDestroyed) {
         return;
       }
       this.set("preview", cooked);
@@ -352,7 +351,7 @@ export default Ember.Component.extend({
         if (this._state !== "inDOM") {
           return;
         }
-        const $preview = this.$(".d-editor-preview");
+        const $preview = $(this.element.querySelector(".d-editor-preview"));
         if ($preview.length === 0) return;
 
         if (this.previewUpdated) {
@@ -364,7 +363,7 @@ export default Ember.Component.extend({
 
   @observes("ready", "value")
   _watchForChanges() {
-    if (!this.get("ready")) {
+    if (!this.ready) {
       return;
     }
 
@@ -379,7 +378,7 @@ export default Ember.Component.extend({
   _applyCategoryHashtagAutocomplete() {
     const siteSettings = this.siteSettings;
 
-    this.$(".d-editor-input").autocomplete({
+    $(this.element.querySelector(".d-editor-input")).autocomplete({
       template: findRawTemplate("category-tag-autocomplete"),
       key: "#",
       afterComplete: () => this._focusTextArea(),
@@ -500,11 +499,11 @@ export default Ember.Component.extend({
   },
 
   _getSelected(trimLeading, opts) {
-    if (!this.get("ready")) {
+    if (!this.ready) {
       return;
     }
 
-    const textarea = this.$("textarea.d-editor-input")[0];
+    const textarea = this.element.querySelector("textarea.d-editor-input");
     const value = textarea.value;
     let start = textarea.selectionStart;
     let end = textarea.selectionEnd;
@@ -537,14 +536,15 @@ export default Ember.Component.extend({
 
   _selectText(from, length) {
     Ember.run.scheduleOnce("afterRender", () => {
-      const $textarea = this.$("textarea.d-editor-input");
-      const textarea = $textarea[0];
+      const textarea = this.element.querySelector("textarea.d-editor-input");
+      const $textarea = $(textarea);
       const oldScrollPos = $textarea.scrollTop();
       if (!this.capabilities.isIOS || safariHacksDisabled()) {
         $textarea.focus();
       }
       textarea.selectionStart = from;
-      textarea.selectionEnd = textarea.selectionStart + length;
+      textarea.selectionEnd = from + length;
+      Ember.run.next(() => $textarea.trigger("change"));
       $textarea.scrollTop(oldScrollPos);
     });
   },
@@ -604,7 +604,13 @@ export default Ember.Component.extend({
       this.set("value", `${pre}${hval}${example}${tail}${post}`);
       this._selectText(pre.length + hlen, example.length);
     } else if (opts && !opts.multiline) {
-      const [hval, hlen] = getHead(head);
+      let [hval, hlen] = getHead(head);
+
+      if (opts.useBlockMode && sel.value.split("\n").length > 1) {
+        hval += "\n";
+        hlen += 1;
+        tail = `\n${tail}`;
+      }
 
       if (pre.slice(-hlen) === hval && post.slice(0, tail.length) === tail) {
         this.set(
@@ -676,7 +682,7 @@ export default Ember.Component.extend({
   },
 
   _replaceText(oldVal, newVal, opts = {}) {
-    const val = this.get("value");
+    const val = this.value;
     const needleStart = val.indexOf(oldVal);
 
     if (needleStart === -1) {
@@ -684,7 +690,7 @@ export default Ember.Component.extend({
       return;
     }
 
-    const textarea = this.$("textarea.d-editor-input")[0];
+    const textarea = this.element.querySelector("textarea.d-editor-input");
 
     // Determine post-replace selection.
     const newSelection = determinePostReplaceSelection({
@@ -734,7 +740,7 @@ export default Ember.Component.extend({
     }
 
     const value = pre + text + post;
-    const $textarea = this.$("textarea.d-editor-input");
+    const $textarea = $(this.element.querySelector("textarea.d-editor-input"));
 
     this.set("value", value);
 
@@ -746,7 +752,7 @@ export default Ember.Component.extend({
   },
 
   _addText(sel, text, options) {
-    const $textarea = this.$("textarea.d-editor-input");
+    const $textarea = $(this.element.querySelector("textarea.d-editor-input"));
 
     if (options && options.ensureSpace) {
       if ((sel.pre + "").length > 0) {
@@ -767,7 +773,7 @@ export default Ember.Component.extend({
     $textarea.val(value);
     $textarea.prop("selectionStart", insert.length);
     $textarea.prop("selectionEnd", insert.length);
-
+    Ember.run.next(() => $textarea.trigger("change"));
     this._focusTextArea();
   },
 
@@ -867,18 +873,21 @@ export default Ember.Component.extend({
 
   // ensures textarea scroll position is correct
   _focusTextArea() {
-    const $textarea = this.$("textarea.d-editor-input");
-    Ember.run.scheduleOnce("afterRender", () => $textarea.blur().focus());
+    const textarea = this.element.querySelector("textarea.d-editor-input");
+    Ember.run.scheduleOnce("afterRender", () => {
+      textarea.blur();
+      textarea.focus();
+    });
   },
 
   actions: {
     emoji() {
-      if (this.get("disabled")) {
+      if (this.disabled) {
         return;
       }
 
       this.set("isEditorFocused", $("textarea.d-editor-input").is(":focus"));
-      this.set("emojiPickerIsActive", !this.get("emojiPickerIsActive"));
+      this.set("emojiPickerIsActive", !this.emojiPickerIsActive);
     },
 
     emojiSelected(code) {
@@ -900,7 +909,7 @@ export default Ember.Component.extend({
     },
 
     toolbarButton(button) {
-      if (this.get("disabled")) {
+      if (this.disabled) {
         return;
       }
 
@@ -914,7 +923,7 @@ export default Ember.Component.extend({
           this._applyList(selected, head, exampleKey, opts),
         addText: text => this._addText(selected, text),
         replaceText: text => this._addText({ pre: "", post: "" }, text),
-        getText: () => this.get("value"),
+        getText: () => this.value,
         toggleDirection: () => this._toggleDirection()
       };
 
@@ -926,7 +935,7 @@ export default Ember.Component.extend({
     },
 
     showLinkModal() {
-      if (this.get("disabled")) {
+      if (this.disabled) {
         return;
       }
 
@@ -943,7 +952,7 @@ export default Ember.Component.extend({
     },
 
     formatCode() {
-      if (this.get("disabled")) {
+      if (this.disabled) {
         return;
       }
 
@@ -986,7 +995,7 @@ export default Ember.Component.extend({
     },
 
     insertLink() {
-      const origLink = this.get("linkUrl");
+      const origLink = this.linkUrl;
       const linkUrl =
         origLink.indexOf("://") === -1 ? `http://${origLink}` : origLink;
       const sel = this._lastSel;
@@ -995,7 +1004,7 @@ export default Ember.Component.extend({
         return;
       }
 
-      const linkText = this.get("linkText") || "";
+      const linkText = this.linkText || "";
       if (linkText.length) {
         this._addText(sel, `[${linkText}](${linkUrl})`);
       } else {

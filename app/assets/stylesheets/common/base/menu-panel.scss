@@ -68,7 +68,7 @@
 .menu-panel {
   li,
   li.heading {
-    a {
+    a.widget-link {
       padding: 0.25em 0.5em;
       display: block;
       &:hover,
@@ -140,6 +140,10 @@
     overflow: hidden;
     text-overflow: ellipsis;
   }
+
+  div.discourse-tags {
+    font-size: $font-down-1;
+  }
 }
 
 .user-menu {
@@ -169,7 +173,7 @@
         display: none;
       }
 
-      span {
+      span:first-child {
         color: $primary;
       }
 

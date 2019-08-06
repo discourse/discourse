@@ -11,15 +11,15 @@ export default Ember.Component.extend({
   didInsertElement() {
     this._super(...arguments);
 
-    if (this.get("focusTarget") === "usernames") {
-      this.$("input").putCursorAtEnd();
+    if (this.focusTarget === "usernames") {
+      $(this.element.querySelector("input")).putCursorAtEnd();
     }
   },
 
   @observes("usernames")
   _checkWidth() {
     let width = 0;
-    const $acWrap = this.$().find(".ac-wrap");
+    const $acWrap = $(this.element).find(".ac-wrap");
     const limit = $acWrap.width();
     this.set("defaultUsernameCount", 0);
 
@@ -46,7 +46,7 @@ export default Ember.Component.extend({
     const selector =
       "#reply-control #reply-title, #reply-control .d-editor-input";
 
-    if (this.get("shouldHide")) {
+    if (this.shouldHide) {
       $(selector).on("focus.composer-user-selector", () => {
         this.set("showSelector", false);
         this.appEvents.trigger("composer:resize");
@@ -76,7 +76,7 @@ export default Ember.Component.extend({
       this.set("showSelector", true);
 
       Ember.run.schedule("afterRender", () => {
-        this.$()
+        $(this.element)
           .find("input")
           .focus();
       });
@@ -84,7 +84,7 @@ export default Ember.Component.extend({
 
     triggerResize() {
       this.appEvents.trigger("composer:resize");
-      const $this = this.$().find(".ac-wrap");
+      const $this = $(this.element).find(".ac-wrap");
       if ($this.height() >= 150) $this.scrollTop($this.height());
     }
   }

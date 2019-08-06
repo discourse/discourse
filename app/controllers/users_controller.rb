@@ -14,7 +14,8 @@ class UsersController < ApplicationController
   requires_login only: [
     :username, :update, :user_preferences_redirect, :upload_user_image,
     :pick_avatar, :destroy_user_image, :destroy, :check_emails,
-    :topic_tracking_state, :preferences, :create_second_factor,
+    :topic_tracking_state, :preferences, :create_second_factor_totp,
+    :enable_second_factor_totp, :disable_second_factor, :list_second_factors,
     :update_second_factor, :create_second_factor_backup, :select_avatar,
     :notification_level, :revoke_auth_token
   ]
@@ -24,6 +25,10 @@ class UsersController < ApplicationController
     :activate_account, :perform_account_activation, :user_preferences_redirect, :avatar,
     :my_redirect, :toggle_anon, :admin_login, :confirm_admin, :email_login, :summary
   ]
+
+  before_action :second_factor_check_confirmed_password, only: [
+                  :create_second_factor_totp, :enable_second_factor_totp,
+                  :disable_second_factor, :update_second_factor, :create_second_factor_backup]
 
   before_action :respond_to_suspicious_request, only: [:create]
 
@@ -145,6 +150,12 @@ class UsersController < ApplicationController
       render json: { id: user.id, username: user.username }
     else
       render_json_error(user.errors.full_messages.join(','))
+    end
+  rescue Discourse::InvalidAccess
+    if current_user&.staff?
+      render_json_error(I18n.t('errors.messages.sso_overrides_username'))
+    else
+      render json: failed_json, status: 403
     end
   end
 
@@ -351,6 +362,8 @@ class UsersController < ApplicationController
     if User.reserved_username?(params[:username])
       return fail_with("login.reserved_username")
     end
+
+    params[:locale] ||= I18n.locale unless current_user
 
     new_user_params = user_params
     user = User.unstage(new_user_params)
@@ -843,15 +856,17 @@ class UsersController < ApplicationController
     topic_id = topic_id.to_i if topic_id
     topic_allowed_users = params[:topic_allowed_users] || false
 
-    if params[:group].present?
-      @group = Group.find_by(name: params[:group])
+    group_names = params[:groups] || []
+    group_names << params[:group] if params[:group]
+    if group_names.present?
+      @groups = Group.where(name: group_names)
     end
 
     results = UserSearch.new(term,
                              topic_id: topic_id,
                              topic_allowed_users: topic_allowed_users,
                              searching_user: current_user,
-                             group: @group
+                             groups: @groups
                             ).search
 
     user_fields = [:username, :upload_avatar_template]
@@ -1056,42 +1071,38 @@ class UsersController < ApplicationController
       @confirmed = true
     end
 
-    render layout: 'no_ember'
+    respond_to do |format|
+      format.json { render json: success_json }
+      format.html { render layout: 'no_ember' }
+    end
   end
 
-  def create_second_factor
+  def list_second_factors
     raise Discourse::NotFound if SiteSetting.enable_sso || !SiteSetting.enable_local_logins
-    RateLimiter.new(nil, "login-hr-#{request.remote_ip}", SiteSetting.max_logins_per_ip_per_hour, 1.hour).performed!
-    RateLimiter.new(nil, "login-min-#{request.remote_ip}", SiteSetting.max_logins_per_ip_per_minute, 1.minute).performed!
 
-    unless current_user.confirm_password?(params[:password])
-      return render json: failed_json.merge(
-        error: I18n.t("login.incorrect_password")
-      )
+    unless params[:password].empty?
+      RateLimiter.new(nil, "login-hr-#{request.remote_ip}", SiteSetting.max_logins_per_ip_per_hour, 1.hour).performed!
+      RateLimiter.new(nil, "login-min-#{request.remote_ip}", SiteSetting.max_logins_per_ip_per_minute, 1.minute).performed!
+      unless current_user.confirm_password?(params[:password])
+        return render json: failed_json.merge(
+                        error: I18n.t("login.incorrect_password")
+                      )
+      end
+      secure_session["confirmed-password-#{current_user.id}"] = "true"
     end
 
-    qrcode_svg = RQRCode::QRCode.new(current_user.totp_provisioning_uri).as_svg(
-      offset: 0,
-      color: '000',
-      shape_rendering: 'crispEdges',
-      module_size: 4
-    )
-
-    render json: success_json.merge(
-      key: current_user.user_second_factors.totp.data.scan(/.{4}/).join(" "),
-      qr: qrcode_svg
-    )
+    if secure_session["confirmed-password-#{current_user.id}"] == "true"
+      render json: success_json.merge(
+               totps: current_user.totps.select(:id, :name, :last_used, :created_at, :method).order(:created_at)
+             )
+    else
+      render json: success_json.merge(
+               password_required: true
+             )
+    end
   end
 
   def create_second_factor_backup
-    raise Discourse::NotFound if SiteSetting.enable_sso || !SiteSetting.enable_local_logins
-
-    unless current_user.authenticate_second_factor(params[:second_factor_token], params[:second_factor_method].to_i)
-      return render json: failed_json.merge(
-        error: I18n.t("login.invalid_second_factor_code")
-      )
-    end
-
     backup_codes = current_user.generate_backup_codes
 
     render json: success_json.merge(
@@ -1099,52 +1110,91 @@ class UsersController < ApplicationController
     )
   end
 
-  def update_second_factor
-    params.require(:second_factor_token)
-    params.require(:second_factor_method)
-    params.require(:second_factor_target)
+  def create_second_factor_totp
+    totp_data = ROTP::Base32.random_base32
+    secure_session["staged-totp-#{current_user.id}"] = totp_data
+    qrcode_svg = RQRCode::QRCode.new(current_user.totp_provisioning_uri(totp_data)).as_svg(
+      offset: 0,
+      color: '000',
+      shape_rendering: 'crispEdges',
+      module_size: 4
+    )
 
-    auth_method = params[:second_factor_method].to_i
+    render json: success_json.merge(
+             key: totp_data.scan(/.{4}/).join(" "),
+             qr: qrcode_svg
+           )
+  end
+
+  def enable_second_factor_totp
+    params.require(:second_factor_token)
+    params.require(:name)
     auth_token = params[:second_factor_token]
 
-    update_second_factor_method = params[:second_factor_target].to_i
+    totp_data = secure_session["staged-totp-#{current_user.id}"]
+    totp_object = current_user.get_totp_object(totp_data)
 
     [request.remote_ip, current_user.id].each do |key|
       RateLimiter.new(nil, "second-factor-min-#{key}", 3, 1.minute).performed!
     end
 
+    authenticated = !auth_token.blank? && totp_object.verify_with_drift(auth_token, 30)
+    unless authenticated
+      return render json: failed_json.merge(
+                      error: I18n.t("login.invalid_second_factor_code")
+                    )
+    end
+    current_user.create_totp(data: totp_data, name: params[:name], enabled: true)
+    render json: success_json
+  end
+
+  def disable_second_factor
+    # delete all second factors for a user
+    current_user.user_second_factors.destroy_all
+
+    Jobs.enqueue(
+      :critical_user_email,
+      type: :account_second_factor_disabled,
+      user_id: current_user.id
+    )
+
+    render json: success_json
+  end
+
+  def update_second_factor
+    params.require(:second_factor_target)
+    update_second_factor_method = params[:second_factor_target].to_i
+
     if update_second_factor_method == UserSecondFactor.methods[:totp]
-      user_second_factor = current_user.user_second_factors.totp
+      params.require(:id)
+      second_factor_id = params[:id].to_i
+      user_second_factor = current_user.user_second_factors.totps.find_by(id: second_factor_id)
     elsif update_second_factor_method == UserSecondFactor.methods[:backup_codes]
       user_second_factor = current_user.user_second_factors.backup_codes
     end
 
     raise Discourse::InvalidParameters unless user_second_factor
 
-    unless current_user.authenticate_second_factor(auth_token, auth_method)
-      return render json: failed_json.merge(
-        error: I18n.t("login.invalid_second_factor_code")
-      )
+    if params[:name] && !params[:name].blank?
+      user_second_factor.update!(name: params[:name])
     end
-
-    if params[:enable] == "true"
-      user_second_factor.update!(enabled: true)
-    else
-      # when disabling totp, backup is disabled too
-      if update_second_factor_method == UserSecondFactor.methods[:totp]
-        current_user.user_second_factors.destroy_all
-
-        Jobs.enqueue(
-          :critical_user_email,
-          type: :account_second_factor_disabled,
-          user_id: current_user.id
-        )
-      elsif update_second_factor_method == UserSecondFactor.methods[:backup_codes]
+    if params[:disable] == "true"
+      # Disabling backup codes deletes *all* backup codes
+      if update_second_factor_method == UserSecondFactor.methods[:backup_codes]
         current_user.user_second_factors.where(method: UserSecondFactor.methods[:backup_codes]).destroy_all
+      else
+        user_second_factor.update!(enabled: false)
       end
+
     end
 
     render json: success_json
+  end
+
+  def second_factor_check_confirmed_password
+    raise Discourse::NotFound if SiteSetting.enable_sso || !SiteSetting.enable_local_logins
+
+    raise Discourse::InvalidAccess.new unless current_user && secure_session["confirmed-password-#{current_user.id}"] == "true"
   end
 
   def revoke_account
@@ -1161,6 +1211,7 @@ class UsersController < ApplicationController
 
     # We're likely going to contact the remote auth provider, so hijack request
     hijack do
+      DiscourseEvent.trigger(:before_auth_revoke, authenticator, user)
       result = authenticator.revoke(user, skip_remote: skip_remote)
       if result
         render json: success_json
@@ -1182,11 +1233,11 @@ class UsersController < ApplicationController
       # The user should not be able to revoke the auth token of current session.
       raise Discourse::InvalidParameters.new(:token_id) if guardian.auth_token == token.auth_token
       UserAuthToken.where(id: params[:token_id], user_id: user.id).each(&:destroy!)
+
+      MessageBus.publish "/file-change", ["refresh"], user_ids: [user.id]
     else
       UserAuthToken.where(user_id: user.id).each(&:destroy!)
     end
-
-    MessageBus.publish "/file-change", ["refresh"], user_ids: [user.id]
 
     render json: success_json
   end
@@ -1257,8 +1308,7 @@ class UsersController < ApplicationController
       .permit(permitted, theme_ids: [])
       .reverse_merge(
         ip_address: request.remote_ip,
-        registration_ip_address: request.remote_ip,
-        locale: user_locale
+        registration_ip_address: request.remote_ip
       )
 
     if !UsernameCheckerService.is_developer?(result['email']) &&
@@ -1275,10 +1325,6 @@ class UsersController < ApplicationController
   # Plugins can use this to modify user parameters
   def modify_user_params(attrs)
     attrs
-  end
-
-  def user_locale
-    I18n.locale
   end
 
   def fail_with(key)

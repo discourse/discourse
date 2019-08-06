@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require 'csv'
 require_dependency 'system_message'
 
 module Jobs
@@ -18,48 +17,43 @@ module Jobs
     end
 
     def execute(args)
-      filename = args[:filename]
-      raise Discourse::InvalidParameters.new(:filename) if filename.blank?
+      invites = args[:invites]
+      raise Discourse::InvalidParameters.new(:invites) if invites.blank?
 
       @current_user = User.find_by(id: args[:current_user_id])
       raise Discourse::InvalidParameters.new(:current_user_id) unless @current_user
       @guardian = Guardian.new(@current_user)
+      @total_invites = invites.length
 
-      csv_path = "#{Invite.base_directory}/#{filename}"
+      process_invites(invites)
 
-      # read csv file, and send out invitations
-      read_csv_file(csv_path)
+      if @total_invites > Invite::BULK_INVITE_EMAIL_LIMIT
+        Jobs.enqueue(:process_bulk_invite_emails)
+      end
     ensure
-      # send notification to user regarding progress
       notify_user
-      File.delete(csv_path) if csv_path
     end
 
     private
 
-    def read_csv_file(csv_path)
-      file = File.open(csv_path, encoding: 'bom|utf-8')
-      CSV.new(file).each do |csv_info|
-        if csv_info[0]
-          if (EmailValidator.email_regex =~ csv_info[0])
-            # email is valid
-            send_invite(csv_info, $INPUT_LINE_NUMBER)
-            @sent += 1
-          else
-            # invalid email
-            save_log "Invalid Email '#{csv_info[0]}' at line number '#{$INPUT_LINE_NUMBER}'"
-            @failed += 1
-          end
+    def process_invites(invites)
+      invites.each do |invite|
+        if (EmailValidator.email_regex =~ invite[:email])
+          # email is valid
+          send_invite(invite)
+          @sent += 1
+        else
+          # invalid email
+          save_log "Invalid Email '#{invite[:email]}"
+          @failed += 1
         end
       end
     rescue Exception => e
       save_log "Bulk Invite Process Failed -- '#{e.message}'"
       @failed += 1
-    ensure
-      file&.close
     end
 
-    def get_groups(group_names, csv_line_number)
+    def get_groups(group_names)
       groups = []
 
       if group_names
@@ -73,7 +67,7 @@ module Jobs
             groups.push(group)
           else
             # invalid group
-            save_log "Invalid Group '#{group_name}' at line number '#{csv_line_number}'"
+            save_log "Invalid Group '#{group_name}'"
             @failed += 1
           end
         }
@@ -82,13 +76,13 @@ module Jobs
       groups
     end
 
-    def get_topic(topic_id, csv_line_number)
+    def get_topic(topic_id)
       topic = nil
 
       if topic_id
         topic = Topic.find_by_id(topic_id)
         if topic.nil?
-          save_log "Invalid Topic ID '#{topic_id}' at line number '#{csv_line_number}'"
+          save_log "Invalid Topic ID '#{topic_id}'"
           @failed += 1
         end
       end
@@ -96,10 +90,10 @@ module Jobs
       return topic
     end
 
-    def send_invite(csv_info, csv_line_number)
-      email = csv_info[0]
-      groups = get_groups(csv_info[1], csv_line_number)
-      topic = get_topic(csv_info[2], csv_line_number)
+    def send_invite(invite)
+      email = invite[:email]
+      groups = get_groups(invite[:groups])
+      topic = get_topic(invite[:topic_id])
 
       begin
         if user = User.find_by_email(email)
@@ -115,7 +109,15 @@ module Jobs
             end
           end
         else
-          Invite.invite_by_email(email, @current_user, topic, groups.map(&:id))
+          if @total_invites > Invite::BULK_INVITE_EMAIL_LIMIT
+            invite = Invite.create_invite_by_email(email, @current_user,
+              topic: topic,
+              group_ids: groups.map(&:id),
+              emailed_status: Invite.emailed_status_types[:bulk_pending]
+            )
+          else
+            Invite.invite_by_email(email, @current_user, topic, groups.map(&:id))
+          end
         end
       rescue => e
         save_log "Error inviting '#{email}' -- #{Rails::Html::FullSanitizer.new.sanitize(e.message)}"
@@ -171,7 +173,5 @@ module Jobs
 
       result
     end
-
   end
-
 end

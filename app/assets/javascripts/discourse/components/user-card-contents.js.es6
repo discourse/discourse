@@ -8,6 +8,7 @@ import { durationTiny } from "discourse/lib/formatter";
 import CanCheckEmails from "discourse/mixins/can-check-emails";
 import CardContentsBase from "discourse/mixins/card-contents-base";
 import CleansUp from "discourse/mixins/cleans-up";
+import { prioritizeNameInUx } from "discourse/lib/settings";
 
 export default Ember.Component.extend(
   CardContentsBase,
@@ -65,11 +66,7 @@ export default Ember.Component.extend(
 
     @computed("user.name")
     nameFirst(name) {
-      return (
-        !this.siteSettings.prioritize_username_in_ux &&
-        name &&
-        name.trim().length > 0
-      );
+      return prioritizeNameInUx(name, this.siteSettings);
     },
 
     @computed("username")
@@ -133,12 +130,12 @@ export default Ember.Component.extend(
 
     @observes("user.card_background_upload_url")
     addBackground() {
-      if (!this.get("allowBackgrounds")) {
+      if (!this.allowBackgrounds) {
         return;
       }
 
-      const $this = this.$();
-      if (!$this) {
+      const thisElem = this.element;
+      if (!thisElem) {
         return;
       }
 
@@ -146,7 +143,7 @@ export default Ember.Component.extend(
       const bg = Ember.isEmpty(url)
         ? ""
         : `url(${Discourse.getURLWithCDN(url)})`;
-      $this.css("background-image", bg);
+      thisElem.style.backgroundImage = bg;
     },
 
     _showCallback(username, $target) {
@@ -188,19 +185,19 @@ export default Ember.Component.extend(
       },
 
       cancelFilter() {
-        const postStream = this.get("postStream");
+        const postStream = this.postStream;
         postStream.cancelFilter();
         postStream.refresh();
         this._close();
       },
 
       togglePosts() {
-        this.togglePosts(this.get("user"));
+        this.togglePosts(this.user);
         this._close();
       },
 
       deleteUser() {
-        this.get("user").delete();
+        this.user.delete();
         this._close();
       },
 

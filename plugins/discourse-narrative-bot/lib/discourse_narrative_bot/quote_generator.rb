@@ -8,7 +8,7 @@ module DiscourseNarrativeBot
 
     def self.generate(user)
       quote, author =
-        if user.effective_locale != 'en'
+        if !user.effective_locale.start_with?('en')
           translation_key = "discourse_narrative_bot.quote.#{rand(1..10)}"
 
           [

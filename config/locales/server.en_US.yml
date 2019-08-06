@@ -1,0 +1,25 @@
+en_US:
+  dates:
+    # Use Moment.js format string: https://momentjs.com/docs/#/displaying/format/
+    short_date_no_year: "D MMM"
+    # Use Moment.js format string: https://momentjs.com/docs/#/displaying/format/
+    short_date: "D MMM, YYYY"
+    # Use Moment.js format string: https://momentjs.com/docs/#/displaying/format/
+    long_date: "MMMM D, YYYY h:mma"
+
+  datetime_formats: &datetime_formats
+    formats:
+      # Format directives: https://ruby-doc.org/core/Time.html#method-i-strftime
+      short: "%m-%d-%Y"
+      # Format directives: https://ruby-doc.org/core/Time.html#method-i-strftime
+      short_no_year: "%B %-d"
+      # Format directives: https://ruby-doc.org/core/Time.html#method-i-strftime
+      date_only: "%B %-d, %Y"
+      # Format directives: https://ruby-doc.org/core/Time.html#method-i-strftime
+      long: "%B %-d, %Y, %l:%M%P"
+      # Format directives: https://ruby-doc.org/core/Time.html#method-i-strftime
+      no_day: "%B %Y"
+  date:
+    <<: *datetime_formats
+  time:
+    <<: *datetime_formats

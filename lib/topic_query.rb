@@ -446,10 +446,14 @@ class TopicQuery
       avatar_lookup = AvatarLookup.new(user_ids)
       primary_group_lookup = PrimaryGroupLookup.new(user_ids)
 
+      # memoize for loop so we don't keep looking these up
+      translations = TopicPostersSummary.translations
+
       topics.each do |t|
         t.posters = t.posters_summary(
           avatar_lookup: avatar_lookup,
-          primary_group_lookup: primary_group_lookup
+          primary_group_lookup: primary_group_lookup,
+          translations: translations
         )
       end
     end
@@ -875,32 +879,42 @@ class TopicQuery
     list
   end
   def remove_muted_tags(list, user, opts = nil)
-    if user.nil? || !SiteSetting.tagging_enabled || !SiteSetting.remove_muted_tags_from_latest
-      list
-    else
-      if !TagUser.lookup(user, :muted).exists?
-        list
-      else
-        showing_tag = if opts[:filter]
-          f = opts[:filter].split('/')
-          f[0] == 'tags' ? f[1] : nil
-        else
-          nil
-        end
+    if user.nil? || !SiteSetting.tagging_enabled || SiteSetting.remove_muted_tags_from_latest == 'never'
+      return list
+    end
 
-        if TagUser.lookup(user, :muted).joins(:tag).where('tags.name = ?', showing_tag).exists?
-          list # if viewing the topic list for a muted tag, show all the topics
-        else
-          muted_tag_ids = TagUser.lookup(user, :muted).pluck(:tag_id)
-          list = list.where("
-            EXISTS (
-              SELECT 1
-                FROM topic_tags tt
-               WHERE tt.tag_id NOT IN (:tag_ids)
-                 AND tt.topic_id = topics.id
-            ) OR NOT EXISTS (SELECT 1 FROM topic_tags tt WHERE tt.topic_id = topics.id)", tag_ids: muted_tag_ids)
-        end
-      end
+    muted_tag_ids = TagUser.lookup(user, :muted).pluck(:tag_id)
+    if muted_tag_ids.blank?
+      return list
+    end
+
+    showing_tag = if opts[:filter]
+      f = opts[:filter].split('/')
+      f[0] == 'tags' ? f[1] : nil
+    else
+      nil
+    end
+
+    # if viewing the topic list for a muted tag, show all the topics
+    if showing_tag.present? && TagUser.lookup(user, :muted).joins(:tag).where('tags.name = ?', showing_tag).exists?
+      return list
+    end
+
+    if SiteSetting.remove_muted_tags_from_latest == 'always'
+      list = list.where("
+        NOT EXISTS(
+          SELECT 1
+            FROM topic_tags tt
+           WHERE tt.tag_id IN (:tag_ids)
+             AND tt.topic_id = topics.id)", tag_ids: muted_tag_ids)
+    else
+      list = list.where("
+        EXISTS (
+          SELECT 1
+            FROM topic_tags tt
+           WHERE tt.tag_id NOT IN (:tag_ids)
+             AND tt.topic_id = topics.id
+        ) OR NOT EXISTS (SELECT 1 FROM topic_tags tt WHERE tt.topic_id = topics.id)", tag_ids: muted_tag_ids)
     end
   end
 

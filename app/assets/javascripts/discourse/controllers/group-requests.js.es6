@@ -20,19 +20,19 @@ export default Ember.Controller.extend({
 
   @observes("filterInput")
   _setFilter: debounce(function() {
-    this.set("filter", this.get("filterInput"));
+    this.set("filter", this.filterInput);
   }, 500),
 
   @observes("order", "desc", "filter")
   refreshRequesters(force) {
-    if (this.get("loading") || !this.get("model")) {
+    if (this.loading || !this.model) {
       return;
     }
 
     if (
       !force &&
-      this.get("count") &&
-      this.get("model.requesters.length") >= this.get("count")
+      this.count &&
+      this.get("model.requesters.length") >= this.count
     ) {
       this.set("application.showFooter", true);
       return;
@@ -44,11 +44,11 @@ export default Ember.Controller.extend({
     Group.loadMembers(
       this.get("model.name"),
       force ? 0 : this.get("model.requesters.length"),
-      this.get("limit"),
+      this.limit,
       {
-        order: this.get("order"),
-        desc: this.get("desc"),
-        filter: this.get("filter"),
+        order: this.order,
+        desc: this.desc,
+        filter: this.filter,
         requesters: true
       }
     ).then(result => {

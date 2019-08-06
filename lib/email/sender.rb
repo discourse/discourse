@@ -72,7 +72,7 @@ module Email
       # These are the links we add when a user uploads a file or image.
       # Ideally we would parse general markdown into plain text, but that is almost an intractable problem.
       url_prefix = Discourse.base_url
-      @message.parts[0].body = @message.parts[0].body.to_s.gsub(/<a class="attachment" href="(\/uploads\/default\/[^"]+)">([^<]*)<\/a>/, '[\2](' + url_prefix + '\1)')
+      @message.parts[0].body = @message.parts[0].body.to_s.gsub(/<a class="attachment" href="(\/uploads\/default\/[^"]+)">([^<]*)<\/a>/, '[\2|attachment](' + url_prefix + '\1)')
       @message.parts[0].body = @message.parts[0].body.to_s.gsub(/<img src="(\/uploads\/default\/[^"]+)"([^>]*)>/, '![](' + url_prefix + '\1)')
 
       @message.text_part.content_type = 'text/plain; charset=UTF-8'
@@ -99,6 +99,8 @@ module Email
 
         # guards against deleted posts
         return skip(SkippedEmailLog.reason_types[:sender_post_deleted]) unless post
+
+        add_attachments(post)
 
         topic = post.topic
         first_post = topic.ordered_posts.first
@@ -238,6 +240,38 @@ module Email
     end
 
     private
+
+    def add_attachments(post)
+      max_email_size = SiteSetting.email_total_attachment_size_limit_kb.kilobytes
+      return if max_email_size == 0
+
+      email_size = 0
+      post.uploads.each do |upload|
+        next if FileHelper.is_supported_image?(upload.original_filename)
+        next if email_size + upload.filesize > max_email_size
+
+        begin
+          path = if upload.local?
+            Discourse.store.path_for(upload)
+          else
+            Discourse.store.download(upload).path
+          end
+
+          @message.attachments[upload.original_filename] = File.read(path)
+          email_size += File.size(path)
+        rescue => e
+          Discourse.warn_exception(
+            e,
+            message: "Failed to attach file to email",
+            env: {
+              post_id: post.id,
+              upload_id: upload.id,
+              filename: upload.original_filename
+            }
+          )
+        end
+      end
+    end
 
     def header_value(name)
       header = @message.header[name]

@@ -195,10 +195,10 @@ export default ComboBoxComponent.extend(DatetimeMixin, {
 
   computeHeaderContent() {
     let content = this._super(...arguments);
-    content.datetime = this._computeDatetimeForValue(this.get("computedValue"));
+    content.datetime = this._computeDatetimeForValue(this.computedValue);
     content.name = this.get("selection.name") || content.name;
-    content.hasSelection = this.get("hasSelection");
-    content.icons = this._computeIconsForValue(this.get("computedValue"));
+    content.hasSelection = this.hasSelection;
+    content.icons = this._computeIconsForValue(this.computedValue);
     return content;
   },
 
@@ -216,11 +216,11 @@ export default ComboBoxComponent.extend(DatetimeMixin, {
     let opts = {
       now,
       day: now.day(),
-      includeWeekend: this.get("includeWeekend"),
-      includeMidFuture: this.get("includeMidFuture") || true,
-      includeFarFuture: this.get("includeFarFuture"),
-      includeDateTime: this.get("includeDateTime"),
-      includeBasedOnLastPost: this.get("statusType") === CLOSE_STATUS_TYPE,
+      includeWeekend: this.includeWeekend,
+      includeMidFuture: this.includeMidFuture || true,
+      includeFarFuture: this.includeFarFuture,
+      includeDateTime: this.includeDateTime,
+      includeBasedOnLastPost: this.statusType === CLOSE_STATUS_TYPE,
       canScheduleToday: 24 - now.hour() > 6
     };
 
@@ -233,7 +233,7 @@ export default ComboBoxComponent.extend(DatetimeMixin, {
   },
 
   mutateValue(value) {
-    if (value === "pick_date_and_time" || this.get("isBasedOnLastPost")) {
+    if (value === "pick_date_and_time" || this.isBasedOnLastPost) {
       this.set("value", value);
     } else {
       let input = null;

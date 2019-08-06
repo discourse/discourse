@@ -14,5 +14,3 @@ bg:
     magic_8_ball:
       answers:
         '9': "Да"
-    new_user_narrative:
-      reset_trigger: "нов потребител"

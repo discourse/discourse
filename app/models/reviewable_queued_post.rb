@@ -13,9 +13,18 @@ class ReviewableQueuedPost < Reviewable
   def build_actions(actions, guardian, args)
 
     unless approved?
-      actions.add(:approve_post) do |a|
-        a.icon = 'check'
-        a.label = "reviewables.actions.approve_post.title"
+
+      if topic&.closed?
+        actions.add(:approve_post_closed) do |a|
+          a.icon = 'check'
+          a.label = "reviewables.actions.approve_post.title"
+          a.confirm_message = "reviewables.actions.approve_post.confirm_closed"
+        end
+      else
+        actions.add(:approve_post) do |a|
+          a.icon = 'check'
+          a.label = "reviewables.actions.approve_post.title"
+        end
       end
     end
 
@@ -106,6 +115,10 @@ class ReviewableQueuedPost < Reviewable
     end
   end
 
+  def perform_approve_post_closed(performed_by, args)
+    perform_approve_post(performed_by, args)
+  end
+
   def perform_reject_post(performed_by, args)
     # Backwards compatibility, new code should listen for `reviewable_transitioned_to`
     DiscourseEvent.trigger(:rejected_post, self)
@@ -123,6 +136,9 @@ class ReviewableQueuedPost < Reviewable
     delete_options = {
       context: I18n.t('reviewables.actions.delete_user.reason'),
       delete_posts: true,
+      block_urls: true,
+      block_email: true,
+      block_ip: true,
       delete_as_spammer: true
     }
 

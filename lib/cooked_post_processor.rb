@@ -35,7 +35,7 @@ class CookedPostProcessor
   end
 
   def post_process(bypass_bump: false, new_post: false)
-    DistributedMutex.synchronize("post_process_#{@post.id}") do
+    DistributedMutex.synchronize("post_process_#{@post.id}", validity: 10.minutes) do
       DiscourseEvent.trigger(:before_post_process_cooked, @doc, @post)
       remove_full_quote_on_direct_reply if new_post
       post_process_oneboxes
@@ -63,15 +63,6 @@ class CookedPostProcessor
     BadgeGranter.grant(Badge.find(Badge::FirstEmoji), @post.user, post_id: @post.id) if has_emoji?
     BadgeGranter.grant(Badge.find(Badge::FirstOnebox), @post.user, post_id: @post.id) if @has_oneboxes
     BadgeGranter.grant(Badge.find(Badge::FirstReplyByEmail), @post.user, post_id: @post.id) if @post.is_reply_by_email?
-  end
-
-  def post_process_images
-    extract_images.each do |img|
-      unless add_image_placeholder!(img)
-        limit_size!(img)
-        convert_to_link!(img)
-      end
-    end
   end
 
   def post_process_quotes
@@ -106,12 +97,7 @@ class CookedPostProcessor
 
     return if previous.blank?
 
-    # remove click counters
-    previous_doc = Nokogiri::HTML::fragment(previous)
-    previous_doc.css("span.clicks").remove
-
-    previous_text = previous_doc.text.strip
-
+    previous_text = Nokogiri::HTML::fragment(previous).text.strip
     quoted_text = @doc.css("aside.quote:first-child blockquote").first&.text&.strip || ""
 
     return if previous_text.gsub(/(\s){2,}/, '\1') != quoted_text.gsub(/(\s){2,}/, '\1')
@@ -396,7 +382,7 @@ class CookedPostProcessor
     a = create_link_node("lightbox", img["src"])
     img.add_next_sibling(a)
 
-    if upload && Discourse.store.internal?
+    if upload
       a["data-download-href"] = Discourse.store.download_url(upload)
     end
 
@@ -640,10 +626,8 @@ class CookedPostProcessor
   end
 
   def pull_hotlinked_images(bypass_bump = false)
-    # is the job enabled?
-    return unless SiteSetting.download_remote_images_to_local?
     # have we enough disk space?
-    return if disable_if_low_on_disk_space
+    disable_if_low_on_disk_space # But still enqueue the job
     # don't download remote images for posts that are more than n days old
     return unless @post.created_at > (Date.today - SiteSetting.download_remote_images_max_days_old)
     # we only want to run the job whenever it's changed by a user
@@ -656,7 +640,9 @@ class CookedPostProcessor
   end
 
   def disable_if_low_on_disk_space
+    return false if !SiteSetting.download_remote_images_to_local
     return false if available_disk_space >= SiteSetting.download_remote_images_threshold
+    return false if Discourse.store.external?
 
     SiteSetting.download_remote_images_to_local = false
     # log the site setting change
@@ -687,6 +673,15 @@ class CookedPostProcessor
   end
 
   private
+
+  def post_process_images
+    extract_images.each do |img|
+      unless add_image_placeholder!(img)
+        limit_size!(img)
+        convert_to_link!(img)
+      end
+    end
+  end
 
   def process_inline_onebox(element)
     inline_onebox = InlineOneboxer.lookup(

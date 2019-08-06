@@ -1,4 +1,6 @@
+import selectKit from "helpers/select-kit-helper";
 import { acceptance, waitFor } from "helpers/qunit-helpers";
+
 acceptance("Search - Full Page", {
   settings: { tagging_enabled: true },
   loggedIn: true,
@@ -276,7 +278,7 @@ QUnit.test(
 );
 
 QUnit.test(
-  "update in:private filter through advanced search ui",
+  "update in:personal filter through advanced search ui",
   async assert => {
     await visit("/search");
     await fillIn(".search-query", "none");
@@ -288,8 +290,8 @@ QUnit.test(
     );
     assert.equal(
       find(".search-query").val(),
-      "none in:private",
-      'has updated search term to "none in:private"'
+      "none in:personal",
+      'has updated search term to "none in:personal"'
     );
   }
 );

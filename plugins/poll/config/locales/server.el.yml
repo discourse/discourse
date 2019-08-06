@@ -17,10 +17,10 @@ el:
     default_poll_must_have_at_least_2_options: "Μια ψηφοφορία πρέπει να έχει τουλάχιστον 2 επιλογές."
     named_poll_must_have_at_least_2_options: "Η ψηφοφορία <strong>%{name}</strong> πρέπει να έχει τουλάχιστον 2 επιλογές."
     default_poll_must_have_less_options:
-      one: "Η Δημοσκόπηση πρέπει να έχει λιγότερη από 1 επιλογή."
+      one: "Η Δημοσκόπηση πρέπει να έχει λιγότερη από %{count} επιλογή."
       other: "Η ψηφοφορία πρέπει να έχει λιγότερες από %{count} επιλογές."
     named_poll_must_have_less_options:
-      one: "Η Ψηφοφορία με το όνομα <strong>%{name}</strong> πρέπει να έχει λιγότερο απο 1 επιλογή. "
+      one: "Η Ψηφοφορία με το όνομα <strong>%{name}</strong> πρέπει να έχει λιγότερο απο %{count} επιλογή. "
       other: "Η ψηφοφορία με όνομα <strong>%{name}</strong> πρέπει να έχει λιγότερες απο %{count} επιλογές. "
     default_poll_must_have_different_options: "Η ψηφοφορία πρέπει να έχει διαφορετικές επιλογές."
     named_poll_must_have_different_options: "Η ψηφοφορία <strong>%{name}</strong> πρέπει να έχει διαφορετικές επιλογές."

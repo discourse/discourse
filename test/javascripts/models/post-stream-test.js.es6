@@ -800,6 +800,64 @@ QUnit.test("comitting and triggerNewPostInStream race condition", assert => {
   );
 });
 
+QUnit.test("triggerNewPostInStream for ignored posts", async assert => {
+  const postStream = buildStream(280, [1]);
+  const store = postStream.store;
+  Discourse.User.resetCurrent(
+    Discourse.User.create({
+      username: "eviltrout",
+      name: "eviltrout",
+      id: 321,
+      ignored_users: ["ignoreduser"]
+    })
+  );
+
+  postStream.appendPost(store.createRecord("post", { id: 1, post_number: 1 }));
+
+  const post2 = store.createRecord("post", {
+    id: 101,
+    post_number: 2,
+    username: "regularuser"
+  });
+
+  const post3 = store.createRecord("post", {
+    id: 102,
+    post_number: 3,
+    username: "ignoreduser"
+  });
+
+  var stub = sandbox
+    .stub(postStream, "findPostsByIds")
+    .returns(Promise.resolve([post2]));
+
+  await postStream.triggerNewPostInStream(101);
+  assert.equal(
+    postStream.posts.length,
+    2,
+    "it added the regular post to the posts"
+  );
+  assert.equal(
+    postStream.get("stream.length"),
+    2,
+    "it added the regular post to the stream"
+  );
+
+  stub.restore();
+  sandbox.stub(postStream, "findPostsByIds").returns(Promise.resolve([post3]));
+
+  await postStream.triggerNewPostInStream(102);
+  assert.equal(
+    postStream.posts.length,
+    2,
+    "it does not add the ignored post to the posts"
+  );
+  assert.equal(
+    postStream.stream.length,
+    2,
+    "it does not add the ignored post to the stream"
+  );
+});
+
 QUnit.test("postsWithPlaceholders", assert => {
   const postStream = buildStream(4964, [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
   const postsWithPlaceholders = postStream.get("postsWithPlaceholders");

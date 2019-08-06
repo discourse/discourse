@@ -28,6 +28,7 @@ bs_BA:
   posts: "objave"
   loading: "Učitava"
   powered_by_html: 'Pokretano sa <a href="https://www.discourse.org">Discourse</a>, za najbolje sučelje uključiti JavaScript'
+  sign_up: "Registruj se"
   log_in: "Uloguj se"
   submit: "Potvrdi"
   purge_reason: "Automatski obrisan kao napušten, deaktiviran račun"
@@ -108,7 +109,6 @@ bs_BA:
   private_message_abbrev: "PM"
   rss_description:
     latest: "Latest topics"
-    hot: "Hot topics"
   too_late_to_edit: "That post was created too long ago. It can no longer be edited or deleted."
   excerpt_image: "slika"
   groups:
@@ -201,7 +201,7 @@ bs_BA:
     change_failed_explanation: "You attempted to demote %{user_name} to '%{new_trust_level}'. However their trust level is already '%{current_trust_level}'. %{user_name} will remain at '%{current_trust_level}' - if you wish to demote user lock trust level first"
   rate_limiter:
     hours:
-      one: "1 sat"
+      one: "%{count} sat"
       few: "Par sati"
       other: "%{count} sati"
   datetime:
@@ -209,8 +209,9 @@ bs_BA:
       half_a_minute: "< 1m"
     distance_in_words_verbose:
       half_a_minute: "just now"
+      less_than_x_seconds: "just now"
       about_x_hours:
-        one: "Pred 1 sat"
+        one: "Pred %{count} sat"
         few: "Pred par sati"
         other: "Pred %{count} sata"
   password_reset:
@@ -295,6 +296,9 @@ bs_BA:
       every_hour: "po satu"
       daily: "dnevno"
       weekly: "sedmično"
+  user_api_key:
+    otp_confirmation:
+      confirm_title: "Nastavi ka %{site_name}"
   reports:
     default:
       labels:
@@ -507,7 +511,6 @@ bs_BA:
     cooldown_minutes_after_hiding_posts: "Number of minutes a user must wait before they can edit a post hidden via community flagging"
     traditional_markdown_linebreaks: "Use traditional linebreaks in Markdown, which require two trailing spaces for a linebreak."
     post_undo_action_window_mins: "Number of minutes users are allowed to undo recent actions on a post (like, flag, etc)."
-    must_approve_users: "Staff must approve all new user accounts before they are allowed to access the site."
     moderators_create_categories: "Allow moderators to create new categories"
     cors_origins: "Allowed origins for cross-origin requests (CORS). Each origin must include http:// or https://. The DISCOURSE_ENABLE_CORS env variable must be set to true to enable CORS."
     top_menu: "Determine which items appear in the homepage navigation, and in what order. Example latest|new|unread|starred|categories|top|read|posted"
@@ -637,7 +640,7 @@ bs_BA:
     enable_mobile_theme: "Mobile devices use a mobile-friendly theme, with the ability to switch to the full site. Disable this if you want to use a custom stylesheet that is fully responsive."
     dominating_topic_minimum_percent: "What percentage of posts a user has to make in a topic before being reminded about overly dominating a topic."
     suppress_uncategorized_badge: "Don't show the badge for uncategorized topics in topic lists."
-    disable_edit_notifications: "Disables edit notifications by the system user when 'download_remote_images_to_local' is active."
+    disable_system_edit_notifications: "Disables edit notifications by the system user when 'download_remote_images_to_local' is active."
     enable_names: "Allow showing user full names. Disable to hide full names."
     display_name_on_posts: "Show a user's full name on their posts in addition to their @username."
     short_progress_text_threshold: "After the number of posts in a topic goes above this number, the progress bar will only show the current post number. If you change the progress bar's width, you may need to change this value."
@@ -782,8 +785,6 @@ bs_BA:
     recent_topics: "Nove"
     see_more: "Više"
     search_title: "Pretraži stranicu"
-  terms_of_service:
-    title: "Terms of Service"
   deleted: "obrisano"
   image: "slika"
   upload:
@@ -812,9 +813,6 @@ bs_BA:
     sender_body_blank: "body is blank"
   color_schemes:
     base_theme_name: "Base"
-  about: "O Nama"
-  guidelines: "Guidelines"
-  privacy: "Privacy"
   edit_this_page: "Edit this page"
   csv_export:
     boolean_yes: "Da"
@@ -935,6 +933,8 @@ bs_BA:
         description: "Složij se sa prijavom i utišaj prijavljenog korisnika (silence)"
       delete_spammer:
         title: "Obriši Spamera"
+      delete_single:
+        title: "Delete"
       disagree:
         title: "Disagree"
       approve:

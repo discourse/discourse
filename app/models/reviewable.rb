@@ -30,7 +30,7 @@ class Reviewable < ActiveRecord::Base
   belongs_to :category
 
   has_many :reviewable_histories
-  has_many :reviewable_scores
+  has_many :reviewable_scores, -> { order(created_at: :desc) }
 
   after_create do
     log_history(:created, created_by)
@@ -39,6 +39,30 @@ class Reviewable < ActiveRecord::Base
   after_commit(on: :create) do
     DiscourseEvent.trigger(:reviewable_created, self)
     Jobs.enqueue(:notify_reviewable, reviewable_id: self.id) if pending?
+  end
+
+  # Can be used if several actions are equivalent
+  def self.action_aliases
+    {}
+  end
+
+  # The gaps are in case we want more precision in the future
+  def self.priorities
+    @priorities ||= Enum.new(
+      low: 0,
+      medium: 5,
+      high: 10
+    )
+  end
+
+  # The gaps are in case we want more precision in the future
+  def self.sensitivity
+    @sensitivity ||= Enum.new(
+      disabled: 0,
+      low: 9,
+      medium: 6,
+      high: 3
+    )
   end
 
   def self.statuses
@@ -157,15 +181,41 @@ class Reviewable < ActiveRecord::Base
     rs
   end
 
-  def self.set_priorities(medium: nil, high: nil)
-    PluginStore.set('reviewables', 'priority_medium', medium) if medium
-    PluginStore.set('reviewables', 'priority_high', high) if high
+  def self.set_priorities(values)
+    values.each do |k, v|
+      id = Reviewable.priorities[k]
+      PluginStore.set('reviewables', "priority_#{id}", v) unless id.nil?
+    end
+  end
+
+  def self.sensitivity_score(sensitivity, scale: 1.0)
+    return Float::MAX if sensitivity == 0
+
+    ratio = sensitivity / Reviewable.sensitivity[:low].to_f
+    high = PluginStore.get('reviewables', "priority_#{Reviewable.priorities[:high]}")
+    return (10.0 * scale) if high.nil?
+
+    # We want this to be hard to reach
+    (high.to_f * ratio) * scale
+  end
+
+  def self.score_to_auto_close_topic
+    sensitivity_score(SiteSetting.auto_close_topic_sensitivity, scale: 2.5)
+  end
+
+  def self.spam_score_to_silence_new_user
+    sensitivity_score(SiteSetting.silence_new_user_sensitivity, scale: 0.6)
+  end
+
+  def self.score_required_to_hide_post
+    sensitivity_score(SiteSetting.hide_post_sensitivity)
   end
 
   def self.min_score_for_priority(priority = nil)
     priority ||= SiteSetting.reviewable_default_visibility
-    return 0.0 unless ['medium', 'high'].include?(priority)
-    return PluginStore.get('reviewables', "priority_#{priority}").to_f
+    id = Reviewable.priorities[priority.to_sym]
+    return 0.0 if id.nil?
+    return PluginStore.get('reviewables', "priority_#{id}").to_f
   end
 
   def history
@@ -238,11 +288,15 @@ class Reviewable < ActiveRecord::Base
   def perform(performed_by, action_id, args = nil)
     args ||= {}
 
+    # Support this action or any aliases
+    aliases = self.class.action_aliases
+    valid = [ action_id, aliases.to_a.select { |k, v| v == action_id }.map(&:first) ].flatten
+
     # Ensure the user has access to the action
     actions = actions_for(Guardian.new(performed_by), args)
-    raise InvalidAction.new(action_id, self.class) unless actions.has?(action_id)
+    raise InvalidAction.new(action_id, self.class) unless valid.any? { |a| actions.has?(a) }
 
-    perform_method = "perform_#{action_id}".to_sym
+    perform_method = "perform_#{aliases[action_id] || action_id}".to_sym
     raise InvalidAction.new(action_id, self.class) unless respond_to?(perform_method)
 
     result = nil
@@ -338,10 +392,21 @@ class Reviewable < ActiveRecord::Base
     limit: nil,
     offset: nil,
     priority: nil,
-    username: nil
+    username: nil,
+    sort_order: nil
   )
     min_score = Reviewable.min_score_for_priority(priority)
-    order = (status == :pending) ? 'score DESC, created_at DESC' : 'created_at DESC'
+
+    order = case sort_order
+            when 'priority_asc'
+              'score ASC, created_at DESC'
+            when 'created_at'
+              'created_at DESC, score DESC'
+            when 'created_at_asc'
+              'created_at ASC, score DESC'
+            else
+              'score DESC, created_at DESC'
+    end
 
     if username.present?
       user_id = User.find_by_username(username)&.id
@@ -409,28 +474,44 @@ class Reviewable < ActiveRecord::Base
 protected
 
   def recalculate_score
-    # Recalculate the pending score and return it
-    result = DB.query(<<~SQL, id: self.id, pending: ReviewableScore.statuses[:pending])
+    # pending/agreed scores count
+    sql = <<~SQL
       UPDATE reviewables
       SET score = COALESCE((
         SELECT sum(score)
         FROM reviewable_scores AS rs
         WHERE rs.reviewable_id = :id
+          AND rs.status IN (:pending, :agreed)
       ), 0.0)
       WHERE id = :id
       RETURNING score
     SQL
 
+    result = DB.query(
+      sql,
+      id: self.id,
+      pending: ReviewableScore.statuses[:pending],
+      agreed: ReviewableScore.statuses[:agreed]
+    )
+
     # Update topic score
-    DB.query(<<~SQL, topic_id: topic_id, pending: Reviewable.statuses[:pending])
+    sql = <<~SQL
       UPDATE topics
       SET reviewable_score = COALESCE((
         SELECT SUM(score)
         FROM reviewables AS r
         WHERE r.topic_id = :topic_id
+          AND r.status IN (:pending, :approved)
       ), 0.0)
       WHERE id = :topic_id
     SQL
+
+    DB.query(
+      sql,
+      topic_id: topic_id,
+      pending: Reviewable.statuses[:pending],
+      approved: Reviewable.statuses[:approved]
+    )
 
     self.score = result[0].score
   end

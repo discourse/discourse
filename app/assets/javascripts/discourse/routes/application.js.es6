@@ -41,12 +41,12 @@ const ApplicationRoute = Discourse.Route.extend(OpenComposer, {
     ),
 
     _collectTitleTokens(tokens) {
-      tokens.push(this.get("siteTitle"));
+      tokens.push(this.siteTitle);
       if (
         window.location.pathname === Discourse.getURL("/") &&
-        this.get("shortSiteDescription") !== ""
+        this.shortSiteDescription !== ""
       ) {
-        tokens.push(this.get("shortSiteDescription"));
+        tokens.push(this.shortSiteDescription);
       }
       Discourse.set("_docTitle", tokens.join(" - "));
     },
@@ -68,10 +68,12 @@ const ApplicationRoute = Discourse.Route.extend(OpenComposer, {
     composePrivateMessage(user, post) {
       const recipient = user ? user.get("username") : "",
         reply = post
-          ? window.location.protocol +
-            "//" +
-            window.location.host +
-            post.get("url")
+          ? `${window.location.protocol}//${window.location.host}${post.url}`
+          : null,
+        title = post
+          ? I18n.t("composer.reference_topic_title", {
+              title: post.topic.title
+            })
           : null;
 
       // used only once, one less dependency
@@ -80,7 +82,8 @@ const ApplicationRoute = Discourse.Route.extend(OpenComposer, {
         usernames: recipient,
         archetypeId: "private_message",
         draftKey: "new_private_message",
-        reply: reply
+        reply,
+        title
       });
     },
 
@@ -153,10 +156,17 @@ const ApplicationRoute = Discourse.Route.extend(OpenComposer, {
       this.render("hide-modal", { into: "modal", outlet: "modalBody" });
 
       const route = getOwner(this).lookup("route:application");
-      const name = route.controllerFor("modal").get("name");
-      const controller = getOwner(this).lookup(`controller:${name}`);
-      if (controller && controller.onClose) {
-        controller.onClose();
+      let modalController = route.controllerFor("modal");
+      const controllerName = modalController.get("name");
+
+      if (controllerName) {
+        const controller = getOwner(this).lookup(
+          `controller:${controllerName}`
+        );
+        if (controller && controller.onClose) {
+          controller.onClose();
+        }
+        modalController.set("name", null);
       }
     },
 

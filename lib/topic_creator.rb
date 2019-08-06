@@ -37,6 +37,9 @@ class TopicCreator
   def create
     topic = Topic.new(setup_topic_params)
     setup_tags(topic)
+    if fields = @opts[:custom_fields]
+      topic.custom_fields = fields
+    end
 
     DiscourseEvent.trigger(:before_create_topic, topic, self)
 
@@ -150,13 +153,8 @@ class TopicCreator
         return Category.find(SiteSetting.shared_drafts_category)
       end
 
-      # Temporary fix to allow older clients to create topics.
-      # When all clients are updated the category variable should
-      # be set directly to the contents of the if statement.
       if (@opts[:category].is_a? Integer) || (@opts[:category] =~ /^\d+$/)
         Category.find_by(id: @opts[:category])
-      else
-        Category.find_by(name_lower: @opts[:category].try(:downcase))
       end
     end
   end

@@ -26,7 +26,7 @@ export default Ember.Component.extend(bufferedProperty("userField"), {
   @on("didInsertElement")
   @observes("editing")
   _focusOnEdit() {
-    if (this.get("editing")) {
+    if (this.editing) {
       Ember.run.scheduleOnce("afterRender", this, "_focusName");
     }
   },
@@ -66,7 +66,7 @@ export default Ember.Component.extend(bufferedProperty("userField"), {
 
   actions: {
     save() {
-      const buffered = this.get("buffered");
+      const buffered = this.buffered;
       const attrs = buffered.getProperties(
         "name",
         "description",
@@ -78,7 +78,7 @@ export default Ember.Component.extend(bufferedProperty("userField"), {
         "options"
       );
 
-      this.get("userField")
+      this.userField
         .save(attrs)
         .then(() => {
           this.set("editing", false);
@@ -94,7 +94,7 @@ export default Ember.Component.extend(bufferedProperty("userField"), {
     cancel() {
       const id = this.get("userField.id");
       if (Ember.isEmpty(id)) {
-        this.destroyAction(this.get("userField"));
+        this.destroyAction(this.userField);
       } else {
         this.rollbackBuffer();
         this.set("editing", false);

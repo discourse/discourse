@@ -18,8 +18,8 @@ export default Ember.Component.extend({
 
   actions: {
     dismiss() {
-      if (this.get("user")) {
-        this.get("user").dismissBanner(this.get("banner.key"));
+      if (this.user) {
+        this.user.dismissBanner(this.get("banner.key"));
       } else {
         this.set("visible", false);
         this.keyValueStore.set({

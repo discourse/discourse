@@ -7,48 +7,62 @@ module SiteSettings::Validations
     raise Discourse::InvalidParameters.new(I18n.t("errors.site_settings.#{key}", opts))
   end
 
-  def validate_default_categories(new_val, default_categories_selected)
-    validate_error :default_categories_already_selected if (new_val.split("|").to_set & default_categories_selected).size > 0
+  def validate_category_ids(category_ids)
+    category_ids = category_ids.split('|').map(&:to_i).to_set
+    validate_error :invalid_category_id if Category.where(id: category_ids).count != category_ids.size
+    category_ids
+  end
+
+  def validate_default_categories(category_ids, default_categories_selected)
+    validate_error :default_categories_already_selected if (category_ids & default_categories_selected).size > 0
   end
 
   def validate_default_categories_watching(new_val)
+    category_ids = validate_category_ids(new_val)
+
     default_categories_selected = [
       SiteSetting.default_categories_tracking.split("|"),
       SiteSetting.default_categories_muted.split("|"),
       SiteSetting.default_categories_watching_first_post.split("|")
     ].flatten.to_set
 
-    validate_default_categories(new_val, default_categories_selected)
+    validate_default_categories(category_ids, default_categories_selected)
   end
 
   def validate_default_categories_tracking(new_val)
+    category_ids = validate_category_ids(new_val)
+
     default_categories_selected = [
       SiteSetting.default_categories_watching.split("|"),
       SiteSetting.default_categories_muted.split("|"),
       SiteSetting.default_categories_watching_first_post.split("|")
     ].flatten.to_set
 
-    validate_default_categories(new_val, default_categories_selected)
+    validate_default_categories(category_ids, default_categories_selected)
   end
 
   def validate_default_categories_muted(new_val)
+    category_ids = validate_category_ids(new_val)
+
     default_categories_selected = [
       SiteSetting.default_categories_watching.split("|"),
       SiteSetting.default_categories_tracking.split("|"),
       SiteSetting.default_categories_watching_first_post.split("|")
     ].flatten.to_set
 
-    validate_default_categories(new_val, default_categories_selected)
+    validate_default_categories(category_ids, default_categories_selected)
   end
 
   def validate_default_categories_watching_first_post(new_val)
+    category_ids = validate_category_ids(new_val)
+
     default_categories_selected = [
       SiteSetting.default_categories_watching.split("|"),
       SiteSetting.default_categories_tracking.split("|"),
       SiteSetting.default_categories_muted.split("|")
     ].flatten.to_set
 
-    validate_default_categories(new_val, default_categories_selected)
+    validate_default_categories(category_ids, default_categories_selected)
   end
 
   def validate_enable_s3_uploads(new_val)

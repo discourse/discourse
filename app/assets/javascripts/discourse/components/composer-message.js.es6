@@ -11,12 +11,12 @@ export default Ember.Component.extend({
 
   didInsertElement() {
     this._super(...arguments);
-    this.$().show();
+    this.element.style.display = "block";
   },
 
   actions: {
     closeMessage() {
-      this.closeMessage(this.get("message"));
+      this.closeMessage(this.message);
     }
   }
 });

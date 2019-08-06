@@ -1,6 +1,9 @@
-import computed from "ember-addons/ember-computed-decorators";
+import {
+  on,
+  default as computed
+} from "ember-addons/ember-computed-decorators";
 
-var ButtonBackBright = {
+const ButtonBackBright = {
     classes: "btn-primary",
     action: "back",
     key: "errors.buttons.back"
@@ -14,7 +17,7 @@ var ButtonBackBright = {
     classes: "btn-primary",
     action: "tryLoading",
     key: "errors.buttons.again",
-    icon: "refresh"
+    icon: "sync"
   },
   ButtonLoadPage = {
     classes: "btn-primary",
@@ -28,11 +31,13 @@ export default Ember.Controller.extend({
   lastTransition: null,
 
   @computed
-  isNetwork: function() {
+  isNetwork() {
     // never made it on the wire
     if (this.get("thrown.readyState") === 0) return true;
+
     // timed out
     if (this.get("thrown.jqTextStatus") === "timeout") return true;
+
     return false;
   },
 
@@ -47,19 +52,20 @@ export default Ember.Controller.extend({
   networkFixed: false,
   loading: false,
 
-  _init: function() {
+  @on("init")
+  _init() {
     this.set("loading", false);
-  }.on("init"),
+  },
 
   @computed("isNetwork", "isServer", "isUnknown")
   reason() {
-    if (this.get("isNetwork")) {
+    if (this.isNetwork) {
       return I18n.t("errors.reasons.network");
-    } else if (this.get("isServer")) {
+    } else if (this.isServer) {
       return I18n.t("errors.reasons.server");
-    } else if (this.get("isNotFound")) {
+    } else if (this.isNotFound) {
       return I18n.t("errors.reasons.not_found");
-    } else if (this.get("isForbidden")) {
+    } else if (this.isForbidden) {
       return I18n.t("errors.reasons.forbidden");
     } else {
       // TODO
@@ -71,13 +77,13 @@ export default Ember.Controller.extend({
 
   @computed("networkFixed", "isNetwork", "isServer", "isUnknown")
   desc() {
-    if (this.get("networkFixed")) {
+    if (this.networkFixed) {
       return I18n.t("errors.desc.network_fixed");
-    } else if (this.get("isNetwork")) {
+    } else if (this.isNetwork) {
       return I18n.t("errors.desc.network");
-    } else if (this.get("isNotFound")) {
+    } else if (this.isNotFound) {
       return I18n.t("errors.desc.not_found");
-    } else if (this.get("isServer")) {
+    } else if (this.isServer) {
       return I18n.t("errors.desc.server", {
         status: this.get("thrown.status") + " " + this.get("thrown.statusText")
       });
@@ -89,9 +95,9 @@ export default Ember.Controller.extend({
 
   @computed("networkFixed", "isNetwork", "isServer", "isUnknown")
   enabledButtons() {
-    if (this.get("networkFixed")) {
+    if (this.networkFixed) {
       return [ButtonLoadPage];
-    } else if (this.get("isNetwork")) {
+    } else if (this.isNetwork) {
       return [ButtonBackDim, ButtonTryAgain];
     } else {
       return [ButtonBackBright, ButtonTryAgain];
@@ -99,16 +105,16 @@ export default Ember.Controller.extend({
   },
 
   actions: {
-    back: function() {
+    back() {
       window.history.back();
     },
 
-    tryLoading: function() {
+    tryLoading() {
       this.set("loading", true);
-      var self = this;
-      Ember.run.schedule("afterRender", function() {
-        self.get("lastTransition").retry();
-        self.set("loading", false);
+
+      Ember.run.schedule("afterRender", () => {
+        this.lastTransition.retry();
+        this.set("loading", false);
       });
     }
   }

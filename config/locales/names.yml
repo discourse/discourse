@@ -113,6 +113,9 @@ el:
 en:
   name: English
   nativeName: English
+en_US:
+  name: English (United States)
+  nativeName: English (United States)
 eo:
   name: Esperanto
   nativeName: Esperanto

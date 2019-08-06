@@ -15,7 +15,8 @@ describe Wizard::StepUpdater do
 
   context "locale" do
     it "does not require refresh when the language stays the same" do
-      updater = wizard.create_updater('locale', default_locale: 'en')
+      locale = SiteSettings::DefaultsProvider::DEFAULT_LOCALE
+      updater = wizard.create_updater('locale', default_locale: locale)
       updater.update
       expect(updater.refresh_required?).to eq(false)
       expect(wizard.completed_steps?('locale')).to eq(true)

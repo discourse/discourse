@@ -54,6 +54,11 @@ describe PostCreator do
       expect { creator.create }.to raise_error(Discourse::InvalidAccess)
     end
 
+    it "can be created with custom fields" do
+      post = PostCreator.create(user, basic_topic_params.merge(topic_opts: { custom_fields: { hello: "world" } }))
+      expect(post.topic.custom_fields).to eq("hello" => "world")
+    end
+
     context "reply to post number" do
       it "omits reply to post number if received on a new topic" do
         p = PostCreator.new(user, basic_topic_params.merge(reply_to_post_number: 3)).create

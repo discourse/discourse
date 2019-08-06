@@ -8,8 +8,7 @@ task 'plugin:install_all_official' do
     'customer-flair',
     'discourse-nginx-performance-report',
     'lazyYT',
-    'poll',
-    'discourse-calendar'
+    'poll'
   ])
 
   map = {
@@ -17,7 +16,8 @@ task 'plugin:install_all_official' do
     'discourse-perspective' => 'https://github.com/discourse/discourse-perspective-api'
   }
 
-  #require 'plugin/metadata'
+  STDERR.puts "Allowing write to all repos!" if ENV['GIT_WRITE']
+
   Plugin::Metadata::OFFICIAL_PLUGINS.each do |name|
     next if skip.include? name
     repo = map[name] || "https://github.com/discourse/#{name}"
@@ -30,7 +30,6 @@ task 'plugin:install_all_official' do
     end
 
     if ENV['GIT_WRITE']
-      STDERR.puts "Allowing write to all repos!"
       repo = repo.gsub("https://github.com/", "git@github.com:")
       repo += ".git"
     end
@@ -64,7 +63,11 @@ task 'plugin:update_all' do |t|
   # Loop through each directory
   plugins = Dir.glob(File.expand_path('plugins/*')).select { |f| File.directory? f }
   # run plugin:update
-  plugins.each { |plugin| Rake::Task['plugin:update'].invoke(plugin) }
+  plugins.each do |plugin|
+    next unless File.directory?(plugin + "/.git")
+    Rake::Task['plugin:update'].invoke(plugin)
+    Rake::Task['plugin:update'].reenable
+  end
 end
 
 desc 'update a plugin'
@@ -83,6 +86,30 @@ task 'plugin:update', :plugin do |t, args|
 
   update_status = system('git --git-dir "' + plugin_path + '/.git" --work-tree "' + plugin_path + '" pull')
   abort('Unable to pull latest version of plugin') unless update_status
+end
+
+desc 'install all plugin gems'
+task 'plugin:install_all_gems' do |t|
+  plugins = Dir.glob(File.expand_path('plugins/*')).select { |f| File.directory? f }
+  plugins.each do |plugin|
+    Rake::Task['plugin:install_gems'].invoke(plugin)
+    Rake::Task['plugin:install_gems'].reenable
+  end
+end
+
+desc 'install plugin gems'
+task 'plugin:install_gems', :plugin do |t, args|
+  plugin = ENV['PLUGIN'] || ENV['plugin'] || args[:plugin]
+  plugin_path = plugin + "/plugin.rb"
+
+  if File.file?(plugin_path)
+    File.open(plugin_path).each do |l|
+      next if !l.start_with? "gem"
+      next unless /gem\s['"](.*)['"],\s['"](.*)['"]/.match(l)
+      puts "gem install #{$1} -v #{$2} -i #{plugin}/gems/#{RUBY_VERSION} --no-document --ignore-dependencies --no-user-install"
+      system("gem install #{$1} -v #{$2} -i #{plugin}/gems/#{RUBY_VERSION} --no-document --ignore-dependencies --no-user-install")
+    end
+  end
 end
 
 desc 'run plugin specs'

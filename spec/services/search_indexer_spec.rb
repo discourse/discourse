@@ -17,6 +17,16 @@ describe SearchIndexer do
     SearchIndexer.scrub_html_for_search(html, strip_diacritics: strip_diacritics)
   end
 
+  it 'can correctly inject if http or https links exist' do
+
+    val = "a https://cnn.com?bob=1, http://stuff.com.au?bill=1 b abc.net/xyz=1"
+    result = SearchIndexer.inject_extra_terms(val)
+
+    expected = "a https://cnn.com?bob=1, cnn com bob=1 http://stuff.com.au?bill=1 stuff com au bill=1 b abc.net/xyz=1 net xyz=1"
+
+    expect(result).to eq(expected)
+  end
+
   it 'correctly indexes chinese' do
     SiteSetting.default_locale = 'zh_CN'
     data = "你好世界"
@@ -102,7 +112,7 @@ describe SearchIndexer do
 
     raw_data, locale, version = PostSearchData.where(post_id: post_id).pluck(:raw_data, :locale, :version)[0]
     expect(raw_data).to eq("This is a test")
-    expect(locale).to eq("en")
+    expect(locale).to eq(SiteSetting.default_locale)
     expect(version).to eq(SearchIndexer::INDEX_VERSION)
 
     SearchIndexer.update_posts_index(post_id, "tester", "", nil, nil)
@@ -141,7 +151,7 @@ describe SearchIndexer do
       topic = post.topic
 
       expect(post.post_search_data.raw_data).to eq(
-        "#{topic.title} #{topic.category.name} https://meta.discourse.org/some.png meta discourse org"
+        "#{topic.title} #{topic.category.name} https://meta.discourse.org/some.png meta discourse org some png"
       )
     end
 

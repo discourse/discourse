@@ -64,9 +64,9 @@ export default Ember.Controller.extend(
       "formSubmitted"
     )
     submitDisabled() {
-      if (!this.get("emailValidation.failed") && !this.get("passwordRequired"))
+      if (!this.get("emailValidation.failed") && !this.passwordRequired)
         return false; // 3rd party auth
-      if (this.get("formSubmitted")) return true;
+      if (this.formSubmitted) return true;
       if (this.get("nameValidation.failed")) return true;
       if (this.get("emailValidation.failed")) return true;
       if (this.get("usernameValidation.failed")) return true;
@@ -148,7 +148,7 @@ export default Ember.Controller.extend(
     @computed("accountEmail", "authOptions.email", "authOptions.email_valid")
     emailValidated() {
       return (
-        this.get("authOptions.email") === this.get("accountEmail") &&
+        this.get("authOptions.email") === this.accountEmail &&
         this.get("authOptions.email_valid")
       );
     },
@@ -163,18 +163,17 @@ export default Ember.Controller.extend(
     },
 
     prefillUsername: function() {
-      if (this.get("prefilledUsername")) {
+      if (this.prefilledUsername) {
         // If username field has been filled automatically, and email field just changed,
         // then remove the username.
-        if (this.get("accountUsername") === this.get("prefilledUsername")) {
+        if (this.accountUsername === this.prefilledUsername) {
           this.set("accountUsername", "");
         }
         this.set("prefilledUsername", null);
       }
       if (
         this.get("emailValidation.ok") &&
-        (Ember.isEmpty(this.get("accountUsername")) ||
-          this.get("authOptions.email"))
+        (Ember.isEmpty(this.accountUsername) || this.get("authOptions.email"))
       ) {
         // If email is valid and username has not been entered yet,
         // or email and username were filled automatically by 3rd parth auth,
@@ -204,7 +203,7 @@ export default Ember.Controller.extend(
 
     actions: {
       externalLogin(provider) {
-        this.get("login").send("externalLogin", provider);
+        this.login.send("externalLogin", provider);
       },
 
       createAccount() {
@@ -216,7 +215,7 @@ export default Ember.Controller.extend(
           "accountPasswordConfirm",
           "accountChallenge"
         );
-        const userFields = this.get("userFields");
+        const userFields = this.userFields;
         const destinationUrl = this.get("authOptions.destination_url");
 
         if (!Ember.isEmpty(destinationUrl)) {
@@ -262,14 +261,14 @@ export default Ember.Controller.extend(
                 result.errors.email.length > 0 &&
                 result.values
               ) {
-                this.get("rejectedEmails").pushObject(result.values.email);
+                this.rejectedEmails.pushObject(result.values.email);
               }
               if (
                 result.errors &&
                 result.errors.password &&
                 result.errors.password.length > 0
               ) {
-                this.get("rejectedPasswords").pushObject(attrs.accountPassword);
+                this.rejectedPasswords.pushObject(attrs.accountPassword);
               }
               this.set("formSubmitted", false);
               $.removeCookie("destination_url");

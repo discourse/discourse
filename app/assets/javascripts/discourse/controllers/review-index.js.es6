@@ -7,7 +7,8 @@ export default Ember.Controller.extend({
     "status",
     "category_id",
     "topic_id",
-    "username"
+    "username",
+    "sort_order"
   ],
   type: null,
   status: "pending",
@@ -17,6 +18,7 @@ export default Ember.Controller.extend({
   topic_id: null,
   filtersExpanded: false,
   username: "",
+  sort_order: "priority",
 
   init(...args) {
     this._super(...args);
@@ -26,7 +28,7 @@ export default Ember.Controller.extend({
 
   @computed("reviewableTypes")
   allTypes() {
-    return (this.get("reviewableTypes") || []).map(type => {
+    return (this.reviewableTypes || []).map(type => {
       return {
         id: type,
         name: I18n.t(`review.types.${type.underscore()}.title`)
@@ -45,11 +47,24 @@ export default Ember.Controller.extend({
   },
 
   @computed
+  sortOrders() {
+    return ["priority", "priority_asc", "created_at", "created_at_asc"].map(
+      order => {
+        return {
+          id: order,
+          name: I18n.t(`review.filters.orders.${order}`)
+        };
+      }
+    );
+  },
+
+  @computed
   statuses() {
     return [
       "pending",
       "approved",
       "rejected",
+      "deleted",
       "ignored",
       "reviewed",
       "all"
@@ -69,7 +84,7 @@ export default Ember.Controller.extend({
         return;
       }
 
-      let newList = this.get("reviewables").reject(reviewable => {
+      let newList = this.reviewables.reject(reviewable => {
         return ids.indexOf(reviewable.id) !== -1;
       });
       this.set("reviewables", newList);
@@ -82,17 +97,18 @@ export default Ember.Controller.extend({
 
     refresh() {
       this.setProperties({
-        type: this.get("filterType"),
-        priority: this.get("filterPriority"),
-        status: this.get("filterStatus"),
-        category_id: this.get("filterCategoryId"),
-        username: this.get("filterUsername")
+        type: this.filterType,
+        priority: this.filterPriority,
+        status: this.filterStatus,
+        category_id: this.filterCategoryId,
+        username: this.filterUsername,
+        sort_order: this.filterSortOrder
       });
       this.send("refreshRoute");
     },
 
     loadMore() {
-      return this.get("reviewables").loadMore();
+      return this.reviewables.loadMore();
     },
 
     toggleFilters() {

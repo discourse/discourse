@@ -19,21 +19,21 @@ en:
     # Use Moment.js format string: https://momentjs.com/docs/#/displaying/format/
     short_date_no_year: "D MMM"
     # Use Moment.js format string: https://momentjs.com/docs/#/displaying/format/
-    short_date: "D MMM, YYYY"
+    short_date: "D MMM YYYY"
     # Use Moment.js format string: https://momentjs.com/docs/#/displaying/format/
-    long_date: "MMMM D, YYYY h:mma"
+    long_date: "D MMMM YYYY LT"
 
   datetime_formats: &datetime_formats
     formats:
-      # Format directives: https://ruby-doc.org/core-2.6.1/Time.html#method-i-strftime
-      short: "%m-%d-%Y"
-      # Format directives: https://ruby-doc.org/core-2.6.1/Time.html#method-i-strftime
-      short_no_year: "%B %-d"
-      # Format directives: https://ruby-doc.org/core-2.6.1/Time.html#method-i-strftime
-      date_only: "%B %-d, %Y"
-      # Format directives: https://ruby-doc.org/core-2.6.1/Time.html#method-i-strftime
-      long: "%B %-d, %Y, %l:%M%P"
-      # Format directives: https://ruby-doc.org/core-2.6.1/Time.html#method-i-strftime
+      # Format directives: https://ruby-doc.org/core/Time.html#method-i-strftime
+      short: "%d-%m-%Y"
+      # Format directives: https://ruby-doc.org/core/Time.html#method-i-strftime
+      short_no_year: "%-d %B"
+      # Format directives: https://ruby-doc.org/core/Time.html#method-i-strftime
+      date_only: "%-d %B %Y"
+      # Format directives: https://ruby-doc.org/core/Time.html#method-i-strftime
+      long: "%-d %B %Y %H:%M"
+      # Format directives: https://ruby-doc.org/core/Time.html#method-i-strftime
       no_day: "%B %Y"
   date:
     # Do not remove the brackets and commas and do not translate the first month name. It should be "null".
@@ -64,6 +64,7 @@ en:
   posts: "posts"
   loading: "Loading"
   powered_by_html: 'Powered by <a href="https://www.discourse.org">Discourse</a>, best viewed with JavaScript enabled'
+  sign_up: "Sign Up"
   log_in: "Log In"
   submit: "Submit"
   purge_reason: "Automatically deleted as abandoned, deactivated account"
@@ -76,6 +77,8 @@ en:
   themes:
     bad_color_scheme: "Can not update theme, invalid color palette"
     other_error: "Something went wrong updating theme"
+    compile_error:
+      unrecognized_extension: "Unrecognized file extension: %{extension}"
     import_error:
       generic: An error occured while importing that theme
       about_json: "Import Error: about.json does not exist, or is invalid"
@@ -171,23 +174,25 @@ en:
         one: "Cannot delete record because a dependent %{record} exists"
         many: "Cannot delete record because dependent %{record} exist"
       too_long:
-        one: is too long (maximum is 1 character)
+        one: is too long (maximum is %{count} character)
         other: is too long (maximum is %{count} characters)
       too_short:
-        one: is too short (minimum is 1 character)
+        one: is too short (minimum is %{count} character)
         other: is too short (minimum is %{count} characters)
       wrong_length:
-        one: is the wrong length (should be 1 character)
+        one: is the wrong length (should be %{count} character)
         other: is the wrong length (should be %{count} characters)
       other_than: "must be other than %{count}"
+      sso_overrides_username: "Username needs to be updated on SSO provider side, since `sso_overrides_username` setting is enabled."
     template:
       body: ! "There were problems with the following fields:"
       header:
-        one: 1 error prohibited this %{model} from being saved
+        one: "%{count} error prohibited this %{model} from being saved"
         other: ! "%{count} errors prohibited this %{model} from being saved"
     embed:
       load_from_remote: "There was an error loading that post."
     site_settings:
+      invalid_category_id: "You specified a category that does not exist"
       invalid_choice:
         one: "You specified the invalid choice %{name}"
         other: "You specified the invalid choices %{name}"
@@ -203,7 +208,8 @@ en:
       <<: *errors
 
   invite:
-    not_found: "Your invite token is invalid. Please contact the site's administrator."
+    not_found: "Your invite token is invalid. Please <a href='%{base_url}/about'>contact staff</a>."
+    not_found_json: "Your invite token is invalid. Please contact staff."
     not_found_template: |
       <p>Your invite to <a href="%{base_url}">%{site_name}</a> has already been redeemed.</p>
 
@@ -216,6 +222,7 @@ en:
 
   bulk_invite:
     file_should_be_csv: "The uploaded file should be of csv format."
+    max_rows: "First %{max_bulk_invites} invites has been sent. Try splitting the file in smaller parts."
     error: "There was an error uploading that file. Please try again later."
 
   topic_invite:
@@ -249,7 +256,7 @@ en:
   likes: "Likes"
 
   too_many_replies:
-    one: "We're sorry, but new users are temporarily limited to 1 reply in the same topic."
+    one: "We're sorry, but new users are temporarily limited to %{count} reply in the same topic."
     other: "We're sorry, but new users are temporarily limited to %{count} replies in the same topic."
 
   max_consecutive_replies:
@@ -265,7 +272,7 @@ en:
     no_hosts: "No hosts were set up for embedding."
     configure: "Configure Embedding"
     more_replies:
-      one: "1 more reply"
+      one: "%{count} more reply"
       other: "%{count} more replies"
 
     loading: "Loading Discussion..."
@@ -298,7 +305,8 @@ en:
   too_many_links:
     one: "Sorry, new users can only put one link in a post."
     other: "Sorry, new users can only put %{count} links in a post."
-  contains_blocked_words: "Your post contains a word that's not allowed: %{word}"
+  contains_blocked_word: "Your post contains a word that's not allowed: %{word}"
+  contains_blocked_words: "Your post contains multiple words that aren't allowed: %{words}"
 
   spamming_host: "Sorry you cannot post a link to that host."
   user_is_suspended: "Suspended users are not allowed to post."
@@ -326,7 +334,6 @@ en:
 
   rss_description:
     latest: "Latest topics"
-    hot: "Hot topics"
     top: "Top topics"
     top_all: "All time top topics"
     top_yearly: "Yearly top topics"
@@ -352,7 +359,7 @@ en:
   groups:
     success:
       bulk_add:
-        one: "%{count} user have been added to the group."
+        one: "%{count} user has been added to the group."
         other: "%{count} users have been added to the group."
     errors:
       grant_trust_level_not_valid: "'%{trust_level}' is not a valid trust level."
@@ -379,10 +386,11 @@ en:
     request_membership_pm:
       title: "Membership Request for @%{group_name}"
       handle: "handle membership request"
+    view_hidden_topic_request_reason: "I would like to join the group '%{group_name}', so I may access [this topic](%{topic_url})"
 
   education:
     until_posts:
-      one: "1 post"
+      one: "%{count} post"
       other: "%{count} posts"
 
     "new-topic": |
@@ -437,7 +445,7 @@ en:
 
       You’ve replied %{count} times to @%{reply_username} in this particular topic!
 
-      A great discussion involves many voices and perspectives. Can you get anybody else involved? 
+      A great discussion involves many voices and perspectives. Can you get anybody else involved?
 
       And don’t forget, if you’d like to continue your conversation with this particular user at length outside of public view, [send them a personal message](%{base_path}/u/%{reply_username}).
 
@@ -604,7 +612,7 @@ en:
       uncategorized: "This category is special. It is intended as a holding area for topics that have no category; it cannot be deleted."
       has_subcategories: "Can't delete this category because it has sub-categories."
       topic_exists:
-        one: "Can't delete this category because it has 1 topic. Oldest topic is %{topic_link}."
+        one: "Can't delete this category because it has %{count} topic. Oldest topic is %{topic_link}."
         other: "Can't delete this category because it has %{count} topics. Oldest topic is %{topic_link}."
       topic_exists_no_oldest: "Can't delete this category because topic count is %{count}."
     uncategorized_description: "Topics that don't need a category, or don't fit into any other existing category."
@@ -648,13 +656,13 @@ en:
       topic_invitations_per_day: "You’ve reached the maximum number of topic invitations. Please wait %{time_left} before trying again."
 
     hours:
-      one: "1 hour"
+      one: "%{count} hour"
       other: "%{count} hours"
     minutes:
-      one: "1 minute"
+      one: "%{count} minute"
       other: "%{count} minutes"
     seconds:
-      one: "1 second"
+      one: "%{count} second"
       other: "%{count} seconds"
     short_time: "a few seconds"
 
@@ -662,73 +670,71 @@ en:
     distance_in_words:
       half_a_minute: "< 1m"
       less_than_x_seconds:
-        one: "< 1s"
+        one: "< %{count}s"
         other: "< %{count}s"
       x_seconds:
-        one: "1s"
+        one: "%{count}s"
         other: "%{count}s"
       less_than_x_minutes:
-        one: "< 1m"
+        one: "< %{count}m"
         other: "< %{count}m"
       x_minutes:
-        one: "1m"
+        one: "%{count}m"
         other: "%{count}m"
       about_x_hours:
-        one: "1h"
+        one: "%{count}h"
         other: "%{count}h"
       x_days:
-        one: "1d"
+        one: "%{count}d"
         other: "%{count}d"
       about_x_months:
-        one: "1mon"
+        one: "%{count}mon"
         other: "%{count}mon"
       x_months:
-        one: "1mon"
+        one: "%{count}mon"
         other: "%{count}mon"
       about_x_years:
-        one: "1y"
+        one: "%{count}y"
         other: "%{count}y"
       over_x_years:
-        one: "> 1y"
+        one: "> %{count}y"
         other: "> %{count}y"
       almost_x_years:
-        one: "1y"
+        one: "%{count}y"
         other: "%{count}y"
 
     distance_in_words_verbose:
       half_a_minute: "just now"
-      less_than_x_seconds:
-        one: "just now"
-        other: "just now"
+      less_than_x_seconds: "just now"
       x_seconds:
-        one: "1 second ago"
+        one: "%{count} second ago"
         other: "%{count} seconds ago"
       less_than_x_minutes:
-        one: "less than 1 minute ago"
+        one: "less than %{count} minute ago"
         other: "less than %{count} minutes ago"
       x_minutes:
-        one: "1 minute ago"
+        one: "%{count} minute ago"
         other: "%{count} minutes ago"
       about_x_hours:
-        one: "1 hour ago"
+        one: "%{count} hour ago"
         other: "%{count} hours ago"
       x_days:
-        one: "1 day ago"
+        one: "%{count} day ago"
         other: "%{count} days ago"
       about_x_months:
-        one: "about 1 month ago"
+        one: "about %{count} month ago"
         other: "about %{count} months ago"
       x_months:
-        one: "1 month ago"
+        one: "%{count} month ago"
         other: "%{count} months ago"
       about_x_years:
-        one: "about 1 year ago"
+        one: "about %{count} year ago"
         other: "about %{count} years ago"
       over_x_years:
-        one: "over 1 year ago"
+        one: "over %{count} year ago"
         other: "over %{count} years ago"
       almost_x_years:
-        one: "almost 1 year ago"
+        one: "almost %{count} year ago"
         other: "almost %{count} years ago"
 
   password_reset:
@@ -748,28 +754,30 @@ en:
   user_auth_tokens:
     browser:
       chrome: "Google Chrome"
-      safari: "Safari"
-      firefox: "Firefox"
-      opera: "Opera"
-      ie: "Internet Explorer"
-      edge: "Microsoft Edge"
       discoursehub: "DiscourseHub app"
+      edge: "Microsoft Edge"
+      firefox: "Firefox"
+      ie: "Internet Explorer"
+      opera: "Opera"
+      safari: "Safari"
       unknown: "unknown browser"
     device:
       android: "Android Device"
+      chromebook: "Chromebook"
       ipad: "iPad"
       iphone: "iPhone"
       ipod: "iPod"
-      mobile: "Mobile Device"
-      mac: "Mac"
       linux: "GNU/Linux Computer"
+      mac: "Mac"
+      mobile: "Mobile Device"
       windows: "Windows Computer"
       unknown: "unknown device"
     os:
       android: "Android"
+      chromeos: "ChromeOS"
       ios: "iOS"
-      macos: "macOS"
       linux: "Linux"
+      macos: "macOS"
       windows: "Microsoft Windows"
       unknown: "unknown operating system"
 
@@ -785,6 +793,7 @@ en:
 
   associated_accounts:
     revoke_failed: "Failed to revoke your account with %{provider_name}."
+    connected: "(connected)"
 
   activation:
     action: "Click here to activate your account"
@@ -936,6 +945,10 @@ en:
     description: '"%{application_name}" is requesting the following access to your account:'
     instructions: 'We just generated a new user API key for you to use with "%{application_name}", please paste the following key into your application:'
     otp_description: 'Would you like to allow "%{application_name}" to access this site?'
+    otp_confirmation:
+      confirm_title: Continue to %{site_name}
+      logging_in_as: Logging in as %{username}
+      confirm_button: Finish Login
     no_trust_level: "Sorry, you do not have the required trust level to access the user API"
     generic_error: "Sorry, we are unable to issue user API keys, this feature may be disabled by the site admin"
     scopes:
@@ -1004,7 +1017,7 @@ en:
       title: "User Visits"
       xaxis: "Day"
       yaxis: "Number of visits"
-      description: "Number of all unique user visits."
+      description: "Number of all user visits."
     signups:
       title: "Signups"
       xaxis: "Day"
@@ -1160,7 +1173,7 @@ en:
       title: "Anonymous"
       xaxis: "Day"
       yaxis: "Anonymous Pageviews"
-      description: "Number of new page views by visitors not logged in to an account."
+      description: "Number of new pageviews by visitors not logged in to an account."
     page_view_logged_in_reqs:
       title: "Logged In"
       xaxis: "Day"
@@ -1214,7 +1227,7 @@ en:
       title: "Time to first response"
       xaxis: "Day"
       yaxis: "Average time (hours)"
-      description: "Average time  (in hours) of the first response to new topics."
+      description: "Average time (in hours) of the first response to new topics."
     topics_with_no_response:
       title: "Topics with no response"
       xaxis: "Day"
@@ -1291,11 +1304,12 @@ en:
     force_https_warning: "Your website is using SSL. But `<a href='%{base_path}/admin/site_settings/category/all_results?filter=force_https'>force_https</a>` is not yet enabled in your site settings."
     out_of_date_themes: "Updates are available for the following themes:"
     unreachable_themes: "We were unable to check for updates on the following themes:"
+    watched_word_regexp_error: "The regular expression for %{action} watched words is invalid. Please check your <a href='%{base_path}/admin/logs/watched_words'>Watched Word settings</a>, or disable the 'watched words regular expressions' site setting."
 
   site_settings:
     censored_words: "Words that will be automatically replaced with &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "Auto-delete any hidden posts that stay hidden for more than 30 days."
-    default_locale: "The default language of this Discourse instance. You can replace the text of system generated categories and topics at <a href='%{base_path}/admin/customize/site_texts' target='_blank'>Customize / Text Content</a>."
+    default_locale: "The default language of this Discourse instance. You can replace the text of system generated categories and topics at <a href='%{base_path}/admin/customize/site_texts' target='_blank'>Customize / Text</a>."
     allow_user_locale: "Allow users to choose their own language interface preference"
     set_locale_from_accept_language_header: "set interface language for anonymous users from their web browser's language headers. (EXPERIMENTAL, does not work with anonymous cache)"
     support_mixed_text_direction: "Support mixed left-to-right and right-to-left text directions."
@@ -1391,7 +1405,10 @@ en:
     anon_polling_interval: "How often should anonymous clients poll in milliseconds"
     background_polling_interval: "How often should the clients poll in milliseconds (when the window is in the background)"
 
-    score_required_to_hide_post: "Score threshold that causes a post to be automatically hidden and message sent to the user (0 to disable)"
+    hide_post_sensitivity: "The likelihood that a flagged post will be hidden"
+    silence_new_user_sensitivity: "The likelihood that a new user will be silenced based on spam flags"
+    auto_close_topic_sensitivity: "The likelihood that a flagged topic will be automatically closed"
+
     cooldown_minutes_after_hiding_posts: "Number of minutes a user must wait before they can edit a post hidden via community flagging"
 
     max_topics_in_first_day: "The maximum number of topics a user is allowed to create in the 24 hour period after creating their first post"
@@ -1400,8 +1417,6 @@ en:
     tl2_additional_likes_per_day_multiplier: "Increase limit of likes per day for tl2 (member) by multiplying with this number"
     tl3_additional_likes_per_day_multiplier: "Increase limit of likes per day for tl3 (regular) by multiplying with this number"
     tl4_additional_likes_per_day_multiplier: "Increase limit of likes per day for tl4 (leader) by multiplying with this number"
-
-    spam_score_to_silence_new_user: "If a new user's posts receive this score from num_users_to_silence_new_user different users, hide all their posts and prevent future posting. 0 to disable."
     num_users_to_silence_new_user: "If a new user's posts get num_spam_flags_to_silence_new_user spam flags from this many different users, hide all their posts and prevent future posting. 0 to disable."
     num_tl3_flags_to_silence_new_user: "If a new user's posts get this many flags from num_tl3_users_to_silence_new_user different trust level 3 users, hide all their posts and prevent future posting. 0 to disable."
     num_tl3_users_to_silence_new_user: "If a new user's posts get num_tl3_flags_to_silence_new_user flags from this many different trust level 3 users, hide all their posts and prevent future posting. 0 to disable."
@@ -1412,14 +1427,15 @@ en:
     enable_markdown_typographer: "Use typography rules to improve readability of text: replace straight quotes ' with curly quotes ’, (c) (tm) with symbols, -- with emdash –, etc"
     enable_markdown_linkify: "Automatically treat text that looks like a link as a link: www.example.com and https://example.com will be automatically linked"
     markdown_linkify_tlds: "List of top level domains that get automatically treated as links"
+    markdown_typographer_quotation_marks: "List of double and single quotes replacement pairs"
     post_undo_action_window_mins: "Number of minutes users are allowed to undo recent actions on a post (like, flag, etc)."
-    must_approve_users: "Staff must approve all new user accounts before they are allowed to access the site. WARNING: enabling this for a live site will revoke access for existing non-staff users!"
+    must_approve_users: "Staff must approve all new user accounts before they are allowed to access the site."
     pending_users_reminder_delay: "Notify moderators if new users have been waiting for approval for longer than this many hours. Set to -1 to disable notifications."
     maximum_session_age: "User will remain logged in for n hours since last visit"
-    ga_universal_tracking_code: "Google Universal Analytics (analytics.js) tracking code code, eg: UA-12345678-9; see <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
+    ga_universal_tracking_code: "Google Universal Analytics (analytics.js) tracking code ID, eg: UA-12345678-9; see <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
     ga_universal_domain_name: "Google Universal Analytics (analytics.js) domain name, eg: mysite.com; see <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
     ga_universal_auto_link_domains: "Enable Google Universal Analytics (analytics.js) cross-domain tracking. Outgoing links to these domains will have the client id added to them. See <a href='https://support.google.com/analytics/answer/1034342?hl=en' target='_blank'>Google's Cross-Domain Tracking guide.</a>"
-    gtm_container_id: "Google Tag Manager container id. eg: GTM-ABCDEF. <br/>Note: third-party scripts loaded by GTM may need to be whitelisted in 'content security policy script src'."
+    gtm_container_id: "Google Tag Manager container id. eg: GTM-ABCDEF. <br/>Note: Third-party scripts loaded by GTM may need to be whitelisted in 'content security policy script src'."
     enable_escaped_fragments: "Fall back to Google's Ajax-Crawling API if no webcrawler is detected. See <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
     moderators_create_categories: "Allow moderators to create new categories"
     cors_origins: "Allowed origins for cross-origin requests (CORS). Each origin must include http:// or https://. The DISCOURSE_ENABLE_CORS env variable must be set to true to enable CORS."
@@ -1493,7 +1509,7 @@ en:
     enable_sso_provider: "Implement Discourse SSO provider protocol at the /session/sso_provider endpoint, requires sso_provider_secrets to be set"
     sso_url: "URL of single sign on endpoint (must include http:// or https://)"
     sso_secret: "Secret string used to cryptographically authenticate SSO information, be sure it is 10 characters or longer"
-    sso_provider_secrets: "A list of domain-secret pairs that are using Discourse as a SSO provider. Make sure SSO secret is 10 characters or longer. Wildcard symbol * can be used to match any domain or only a part of it (e.g. *.example.com)."
+    sso_provider_secrets: "A list of domain-secret pairs that are using Discourse as an SSO provider. Make sure SSO secret is 10 characters or longer. Wildcard symbol * can be used to match any domain or only a part of it (e.g. *.example.com)."
     sso_overrides_bio: "Overrides user bio in user profile and prevents user from changing it"
     sso_overrides_groups: "Synchronize all manual group membership with groups specified in the groups sso attribute (WARNING: if you do not specify groups all manual group membership will be cleared for user)"
     sso_overrides_email: "Overrides local email with external site email from SSO payload on every login, and prevent local changes. (WARNING: discrepancies can occur due to normalization of local emails)"
@@ -1710,6 +1726,9 @@ en:
     max_image_megapixels: "Maximum number of megapixels allowed for an image."
 
     title_prettify: "Prevent common title typos and errors, including all caps, lowercase first character, multiple ! and ?, extra . at end, etc."
+    title_remove_extraneous_space: "Remove leading whitespaces in front of the end punctuation."
+
+    automatic_topic_heat_values: 'Automatically update the "topic views heat" and "topic post like heat" settings based on site activity.'
 
     topic_views_heat_low: "After this many views, the views field is slightly highlighted."
     topic_views_heat_medium: "After this many views, the views field is moderately highlighted."
@@ -1747,7 +1766,6 @@ en:
     max_age_unmatched_ips: "Delete unmatched screened IP entries after (N) days."
 
     num_flaggers_to_close_topic: "Minimum number of unique flaggers that is required to automatically pause a topic for intervention"
-    score_to_auto_close_topic: "The total flag score of that is required to automatically pause a topic for intervention"
     num_hours_to_close_topic: "Number of hours to pause a topic for intervention."
 
     auto_respond_to_flag_actions: "Enable automatic reply when disposing a flag."
@@ -1796,6 +1814,7 @@ en:
     enable_forwarded_emails: "[BETA] Allow users to create a topic by forwarding an email in."
     always_show_trimmed_content: "Always show trimmed part of incoming emails. WARNING: might reveal email addresses."
     private_email: "Don't include content from posts or topics in email title or email body. NOTE: also disables digest emails."
+    email_total_attachment_size_limit_kb: "Max total size of files attached to outgoing emails. Set to 0 to disable sending of attachments."
 
     manual_polling_enabled: "Push emails using the API for email replies."
     pop3_polling_enabled: "Poll via POP3 for email replies."
@@ -1848,6 +1867,7 @@ en:
     suppress_digest_email_after_days: "Suppress summary emails for users not seen on the site for more than (n) days."
     digest_suppress_categories: "Suppress these categories from summary emails."
     disable_digest_emails: "Disable summary emails for all users."
+    apply_custom_styles_to_digest: "Custom email template and css are applied to summary emails."
     email_accent_bg_color: "The accent color to be used as the background of some elements in HTML emails. Enter a color name ('red') or hex value ('#FF0000')."
     email_accent_fg_color: "The color of text rendered on the email bg color in HTML emails. Enter a color name ('white') or hex value ('#FFFFFF')."
     email_link_color: "The color of links in HTML emails. Enter a color name ('blue') or hex value ('#0000FF')."
@@ -1900,7 +1920,7 @@ en:
 
     global_notice: "Display an URGENT, EMERGENCY, non-dismissible global banner notice to all visitors, change to blank to hide it (HTML allowed)."
 
-    disable_edit_notifications: "Disables edit notifications by the system user when 'download_remote_images_to_local' is active."
+    disable_system_edit_notifications: "Disables edit notifications by the system user when 'download_remote_images_to_local' is active."
 
     likes_notification_consolidation_threshold: "Number of liked notifications received before the notifications are consolidated into a single one. Set to 0 to disable. The window can be configured via `SiteSetting.likes_notification_consolidation_window_mins`."
 
@@ -1910,7 +1930,7 @@ en:
 
     read_time_word_count: "Word count per minute for calculating estimated reading time."
 
-    topic_page_title_includes_category: "Topic page title includes the category name."
+    topic_page_title_includes_category: "Topic page <a href='https://developer.mozilla.org/en-US/docs/Web/HTML/Element/title' target='_blank'>title tag</a> includes the category name."
 
     native_app_install_banner_ios: "Displays DiscourseHub app banner on iOS devices to regular users (trust level 1 and up)."
 
@@ -1919,7 +1939,7 @@ en:
     share_anonymized_statistics: "Share anonymized usage statistics."
 
     auto_handle_queued_age: "Automatically handle records that are waiting to be reviewed after this many days. Flags will be ignored. Queued posts and users will be rejected. Set to 0 to disable this feature."
-    svg_icon_subset: "Add additional FontAwesome 5 icons that you would like to include in your assets. Use prefix 'fa-' for solid icons, 'far-' for regular icons and 'fab-' for brand icons. "
+    svg_icon_subset: "Add additional FontAwesome 5 icons that you would like to include in your assets. Use prefix 'fa-' for solid icons, 'far-' for regular icons and 'fab-' for brand icons."
     max_prints_per_hour_per_user: "Maximum number of /print page impressions (set to 0 to disable)"
 
     full_name_required: "Full name is a required field of a user's profile."
@@ -1989,6 +2009,7 @@ en:
     default_other_notification_level_when_replying: "Global default notification level when the user replies to a topic."
     default_other_external_links_in_new_tab: "Open external links in a new tab by default."
     default_other_enable_quoting: "Enable quote reply for highlighted text by default."
+    default_other_enable_defer: "Enable defer topic functionality by default."
     default_other_dynamic_favicon: "Show new/updated topic count on browser icon by default."
 
     default_other_like_notification_frequency: "Notify users on likes by default"
@@ -2013,7 +2034,7 @@ en:
     min_trust_level_for_user_api_key: "Trust level required for generation of user API keys"
     allowed_user_api_auth_redirects: "Allowed URL for authentication redirect for user API keys. Wildcard symbol * can be used to match any part of it (e.g. www.example.com/*)."
     allowed_user_api_push_urls: "Allowed URLs for server push to user API"
-    expire_user_api_keys_days: "Number of days before an user API key automatically expires (0 for never)"
+    expire_user_api_keys_days: "Number of days before a user API key automatically expires (0 for never)"
 
     tagging_enabled: "Enable tags on topics?"
     min_trust_to_create_tag: "The minimum trust level required to create a tag."
@@ -2028,7 +2049,7 @@ en:
     allow_staff_to_tag_pms: "Allow staff members to tag any personal message"
     min_trust_level_to_tag_topics: "Minimum trust level required to tag topics"
     suppress_overlapping_tags_in_list: "If tags match exact words in topic titles, don't show the tag"
-    remove_muted_tags_from_latest: "Don't show topics tagged with muted tags in the latest topic list."
+    remove_muted_tags_from_latest: "Don't show topics tagged only with muted tags in the latest topic list."
     force_lowercase_tags: "Force all new tags to be entirely lowercase."
 
     company_name: "Company Name"
@@ -2089,6 +2110,7 @@ en:
         regex_invalid: "The regular expression is invalid: %{error}"
         leading_trailing_slash: "The regular expression must not start and end with a slash."
       unicode_usernames_avatars: "The internal system avatars do not support Unicode usernames."
+      list_value_count: "The list must contain exactly %{count} values."
 
     placeholder:
       sso_provider_secrets:
@@ -2096,6 +2118,7 @@ en:
         value: "SSO secret"
 
   search:
+    extreme_load_error: "Site is under extreme load, search is disabled, try again later"
     within_post: "#%{post_number} by %{username}"
     types:
       category: "Categories"
@@ -2111,6 +2134,7 @@ en:
     timeout_expired: "Account login timed out, please try logging in again."
     no_email: "No email address was provided. Please contact the site's administrator."
     email_error: "An account could not be registered with the email address <b>%{email}</b>. Please contact the site's administrator."
+    missing_secret: "SSO authentication failed due to missing secret. Contact the site administrators to fix this problem."
 
   original_poster: "Original Poster"
   most_posts: "Most Posts"
@@ -2148,47 +2172,47 @@ en:
 
   topic_statuses:
     autoclosed_message_max_posts:
-      one: "This message was automatically closed after reaching the maximum limit of 1 reply."
+      one: "This message was automatically closed after reaching the maximum limit of %{count} reply."
       other: "This message was automatically closed after reaching the maximum limit of %{count} replies."
     autoclosed_topic_max_posts:
-      one: "This topic was automatically closed after reaching the maximum limit of 1 reply."
+      one: "This topic was automatically closed after reaching the maximum limit of %{count} reply."
       other: "This topic was automatically closed after reaching the maximum limit of %{count} replies."
     autoclosed_enabled_days:
-      one: "This topic was automatically closed after 1 day. New replies are no longer allowed."
+      one: "This topic was automatically closed after %{count} day. New replies are no longer allowed."
       other: "This topic was automatically closed after %{count} days. New replies are no longer allowed."
     autoclosed_enabled_hours:
-      one: "This topic was automatically closed after 1 hour. New replies are no longer allowed."
+      one: "This topic was automatically closed after %{count} hour. New replies are no longer allowed."
       other: "This topic was automatically closed after %{count} hours. New replies are no longer allowed."
     autoclosed_enabled_minutes:
-      one: "This topic was automatically closed after 1 minute. New replies are no longer allowed."
+      one: "This topic was automatically closed after %{count} minute. New replies are no longer allowed."
       other: "This topic was automatically closed after %{count} minutes. New replies are no longer allowed."
     autoclosed_enabled_lastpost_days:
-      one: "This topic was automatically closed 1 day after the last reply. New replies are no longer allowed."
+      one: "This topic was automatically closed %{count} day after the last reply. New replies are no longer allowed."
       other: "This topic was automatically closed %{count} days after the last reply. New replies are no longer allowed."
     autoclosed_enabled_lastpost_hours:
-      one: "This topic was automatically closed 1 hour after the last reply. New replies are no longer allowed."
+      one: "This topic was automatically closed %{count} hour after the last reply. New replies are no longer allowed."
       other: "This topic was automatically closed %{count} hours after the last reply. New replies are no longer allowed."
     autoclosed_enabled_lastpost_minutes:
-      one: "This topic was automatically closed 1 minute after the last reply. New replies are no longer allowed."
+      one: "This topic was automatically closed %{count} minute after the last reply. New replies are no longer allowed."
       other: "This topic was automatically closed %{count} minutes after the last reply. New replies are no longer allowed."
 
     autoclosed_disabled_days:
-      one: "This topic was automatically opened after 1 day."
+      one: "This topic was automatically opened after %{count} day."
       other: "This topic was automatically opened after %{count} days."
     autoclosed_disabled_hours:
-      one: "This topic was automatically opened after 1 hour."
+      one: "This topic was automatically opened after %{count} hour."
       other: "This topic was automatically opened after %{count} hours."
     autoclosed_disabled_minutes:
-      one: "This topic was automatically opened after 1 minute."
+      one: "This topic was automatically opened after %{count} minute."
       other: "This topic was automatically opened after %{count} minutes."
     autoclosed_disabled_lastpost_days:
-      one: "This topic was automatically opened 1 day after the last reply."
+      one: "This topic was automatically opened %{count} day after the last reply."
       other: "This topic was automatically opened %{count} days after the last reply."
     autoclosed_disabled_lastpost_hours:
-      one: "This topic was automatically opened 1 hour after the last reply."
+      one: "This topic was automatically opened %{count} hour after the last reply."
       other: "This topic was automatically opened %{count} hours after the last reply."
     autoclosed_disabled_lastpost_minutes:
-      one: "This topic was automatically opened 1 minute after the last reply."
+      one: "This topic was automatically opened %{count} minute after the last reply."
       other: "This topic was automatically opened %{count} minutes after the last reply."
 
     autoclosed_disabled: "This topic is now opened. New replies are allowed."
@@ -2269,10 +2293,10 @@ en:
 
   reviewables_reminder:
     submitted:
-      one: "Items were submitted over 1 hour ago. [Please review them](%{base_path}/review)."
+      one: "Items were submitted over %{count} hour ago. [Please review them](%{base_path}/review)."
       other: "Items were submitted over %{count} hours ago. [Please review them](%{base_path}/review)."
     subject_template:
-      one: "1 item needs to be reviewed"
+      one: "%{count} item needs to be reviewed"
       other: "%{count} items need to be reviewed"
 
   unsubscribe_mailer:
@@ -2483,7 +2507,7 @@ en:
     ignored_and_deleted: "Thanks for letting us know. We've removed the post."
 
   temporarily_closed_due_to_flags:
-    one: "This topic is temporarily closed for at least 1 hour due to a large number of community flags."
+    one: "This topic is temporarily closed for at least %{count} hour due to a large number of community flags."
     other: "This topic is temporarily closed for at least %{count} hours due to a large number of community flags."
 
   system_messages:
@@ -2661,11 +2685,11 @@ en:
       text_body_template: |
         Your data export was successful! :dvd:
 
-        <a class="attachment" href="%{download_link}">%{file_name}</a> (%{file_size})
+        %{download_link}
 
         The above download link will be valid for 48 hours.
 
-        The data is compressed as a gzip archive. If the archive does not extract itself when you open it, use the tools recommended here: https://www.gzip.org/#faq4
+        The data is compressed as a zip archive. If the archive does not extract itself when you open it, use the tool recommended here: https://www.7-zip.org/
 
     csv_export_failed:
       title: "CSV Export Failed"
@@ -2874,6 +2898,14 @@ en:
 
         If you believe this is an error, [contact a staff member](%{base_url}/about).
 
+    email_reject_reply_not_allowed:
+      title: "Email Reject Reply Not Allowed"
+      subject_template: "[%{email_prefix}] Email issue -- Reply Not Allowed"
+      text_body_template: |
+        We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
+
+        You don't have permissions to reply to the topic. If you believe this is an error, [contact a staff member](%{base_url}/about).
+
     email_error_notification:
       title: "Email Error Notification"
       subject_template: "[%{email_prefix}] Email issue -- POP authentication error"
@@ -2907,9 +2939,9 @@ en:
       text_body_template: |
         Hello,
 
-        This is an automated message from %{site_name} to inform you that [user's profile](%{base_url}/u/%{username}/summary) has been ignored by %{ignores_threshold} users. This could indicate a problem is developing in your community.
+        This is an automated message from %{site_name} to inform you that @%{username} has been ignored by %{ignores_threshold} users. This could indicate a problem is developing in your community.
 
-        You might want to review recent posts from this user, and potentially other users in the [ignored user report](%{base_url}/admin/reports/top_ignored_users).
+        You might want to [review recent posts](%{base_url}/u/%{username}/summary) from this user, and potentially other users in the [ignored and muted user report](%{base_url}/admin/reports/top_ignored_users).
 
         For additional guidance, please refer to our [community guidelines](%{base_url}/guidelines).
 
@@ -2932,7 +2964,7 @@ en:
 
         This is an automated message from %{site_name} to let you know you that your account has been placed on hold due to a large number of community flags.
 
-        As a precautionary measure, your new account has been silenced from creating new replies or topics until a staff member can review your account.  We apologize for the inconvenience.
+        As a precautionary measure, your new account has been silenced from creating new replies or topics until a staff member can review your account. We apologize for the inconvenience.
 
         For additional guidance, please refer to our [community guidelines](%{base_url}/guidelines).
     silenced_by_staff:
@@ -2984,7 +3016,7 @@ en:
     pending_users_reminder:
       title: "Pending Users Reminder"
       subject_template:
-        one: "1 user waiting for approval"
+        one: "%{count} user waiting for approval"
         other: "%{count} users waiting for approval"
       text_body_template: |
         There are new user signups waiting to be approved (or rejected) before they can access this forum.
@@ -3017,7 +3049,7 @@ en:
     queued_posts_reminder:
       title: "Queued Posts Reminder"
       subject_template:
-        one: "1 post waiting to be reviewed"
+        one: "%{count} post waiting to be reviewed"
         other: "%{count} posts waiting to be reviewed"
       text_body_template: |
         Hello,
@@ -3042,7 +3074,7 @@ en:
   user_notifications:
     previous_discussion: "Previous Replies"
     reached_limit:
-      one: "Heads up: We send a maximum of 1 daily email. Check the site to see the ones that might be held back."
+      one: "Heads up: We send a maximum of %{count} daily email. Check the site to see the ones that might be held back."
       other: "Heads up: We send a maximum of %{count} daily emails. Check the site to see the ones that might be held back. PS thanks for being popular!"
     in_reply_to: "In Reply To"
     unsubscribe:
@@ -3509,10 +3541,6 @@ en:
       ## [Welcome to %{title}](#welcome)
       An account is required. Please ask an existing member for an invite or log in to continue.
 
-  terms_of_service:
-    title: "Terms of Service"
-    signup_form_message: 'I have read and accept the <a href="%{base_path}/tos" target="_blank">Terms of Service</a>.'
-
   deleted: "deleted"
 
   image: "image"
@@ -3556,6 +3584,7 @@ en:
     user_email_post_deleted: "post was deleted by the author"
     user_email_user_suspended: "user was suspended"
     user_email_already_read: "user has already read this post"
+    user_email_access_denied: "user is not allowed to see this post"
     sender_message_blank: "message is blank"
     sender_message_to_blank: "message.to is blank"
     sender_text_part_body_blank: "text_part.body is blank"
@@ -3583,10 +3612,6 @@ en:
     summer_theme_name: "Summer"
     dark_rose_theme_name: "Dark Rose"
 
-  about: "About"
-  guidelines: "Guidelines"
-  privacy: "Privacy"
-
   edit_this_page: "Edit this page"
 
   csv_export:
@@ -3603,7 +3628,7 @@ en:
 
       ## [This is a Civilized Place for Public Discussion](#civilized)
 
-      Please treat this discussion forum with the same respect you would a public park.  We, too, are a shared community resource &mdash; a place to share skills, knowledge and interests through ongoing conversation.
+      Please treat this discussion forum with the same respect you would a public park. We, too, are a shared community resource &mdash; a place to share skills, knowledge and interests through ongoing conversation.
 
       These are not hard and fast rules, merely guidelines to aid the human judgment of our community and keep this a clean and well-lighted place for civilized public discourse.
 
@@ -3623,10 +3648,10 @@ en:
 
       You may wish to respond to something by disagreeing with it. That’s fine. But remember to _criticize ideas, not people_. Please avoid:
 
-      *   Name-calling
-      *   Ad hominem attacks
-      *   Responding to a post’s tone instead of its actual content
-      *   Knee-jerk contradiction
+      * Name-calling
+      * Ad hominem attacks
+      * Responding to a post’s tone instead of its actual content
+      * Knee-jerk contradiction
 
       Instead, provide reasoned counter-arguments that improve the conversation.
 
@@ -3656,10 +3681,10 @@ en:
 
       Nothing sabotages a healthy conversation like rudeness:
 
-      *   Be civil. Don’t post anything that a reasonable person would consider offensive, abusive, or hate speech.
-      *   Keep it clean. Don’t post anything obscene or sexually explicit.
-      *   Respect each other. Don’t harass or grief anyone, impersonate people, or expose their private information.
-      *   Respect our forum. Don’t post spam or otherwise vandalize the forum.
+      * Be civil. Don’t post anything that a reasonable person would consider offensive, abusive, or hate speech.
+      * Keep it clean. Don’t post anything obscene or sexually explicit.
+      * Respect each other. Don’t harass or grief anyone, impersonate people, or expose their private information.
+      * Respect our forum. Don’t post spam or otherwise vandalize the forum.
 
       These are not concrete terms with precise definitions &mdash; avoid even the _appearance_ of any of these things. If you’re unsure, ask yourself how you would feel if your post was featured on the front page of the New York Times.
 
@@ -3671,11 +3696,11 @@ en:
 
       Make the effort to put things in the right place, so that we can spend more time discussing and less cleaning up. So:
 
-      *   Don’t start a topic in the wrong category.
-      *   Don’t cross-post the same thing in multiple topics.
-      *   Don’t post no-content replies.
-      *   Don’t divert a topic by changing it midstream.
-      *   Don’t sign your posts &mdash; every post has your profile information attached to it.
+      * Don’t start a topic in the wrong category.
+      * Don’t cross-post the same thing in multiple topics.
+      * Don’t post no-content replies.
+      * Don’t divert a topic by changing it midstream.
+      * Don’t sign your posts &mdash; every post has your profile information attached to it.
 
       Rather than posting “+1” or “Agreed”, use the Like button. Rather than taking an existing topic in a radically different direction, use Reply as a Linked Topic.
 
@@ -3700,9 +3725,9 @@ en:
   tos_topic:
     title: "Terms of Service"
     body: |
-      These terms govern use of the Internet forum at <%{base_url}>.  To use the forum, you must agree to these terms with %{company_name}, the company that runs the forum.
+      These terms govern use of the Internet forum at <%{base_url}>. To use the forum, you must agree to these terms with %{company_name}, the company that runs the forum.
 
-      The company may offer other products and services, under different terms.  These terms apply only to use of the forum.
+      The company may offer other products and services, under different terms. These terms apply only to use of the forum.
 
       Skip to:
 
@@ -3730,97 +3755,97 @@ en:
 
       <h2 id="heading--permission"><a href="#heading--permission">Your Permission to Use the Forum</a></h2>
 
-      Subject to these terms, the company gives you permission to use the forum.  Everyone needs to agree to these terms to use the forum.
+      Subject to these terms, the company gives you permission to use the forum. Everyone needs to agree to these terms to use the forum.
 
       <h2 id="heading--conditions"><a href="#heading--conditions">Conditions for Use of the Forum</a></h2>
 
       Your permission to use the forum is subject to the following conditions:
 
-      1.  You must be at least thirteen years old.
+      1. You must be at least thirteen years old.
 
-      2.  You may no longer use the forum if the company contacts you directly to say that you may not.
+      2. You may no longer use the forum if the company contacts you directly to say that you may not.
 
-      3.  You must use the forum in accordance with [Acceptable Use](#heading--acceptable-use) and [Content Standards](#heading--content-standards).
+      3. You must use the forum in accordance with [Acceptable Use](#heading--acceptable-use) and [Content Standards](#heading--content-standards).
 
       <h2 id="heading--acceptable-use"><a href="#heading--acceptable-use">Acceptable Use</a></h2>
 
-      1.  You may not break the law using the forum.
+      1. You may not break the law using the forum.
 
-      2.  You may not use or try to use another's account on the forum without their specific permission.
+      2. You may not use or try to use another's account on the forum without their specific permission.
 
-      3.  You may not buy, sell, or otherwise trade in user names or other unique identifiers on the forum.
+      3. You may not buy, sell, or otherwise trade in user names or other unique identifiers on the forum.
 
-      4.  You may not send advertisements, chain letters, or other solicitations through the forum, or use the forum to gather addresses or other personal data for commercial mailing lists or databases.
+      4. You may not send advertisements, chain letters, or other solicitations through the forum, or use the forum to gather addresses or other personal data for commercial mailing lists or databases.
 
-      5.  You may not automate access to the forum, or monitor the forum, such as with a web crawler, browser plug-in or add-on, or other computer program that is not a web browser.  You may crawl the forum to index it for a publicly available search engine, if you run one.
+      5. You may not automate access to the forum, or monitor the forum, such as with a web crawler, browser plug-in or add-on, or other computer program that is not a web browser. You may crawl the forum to index it for a publicly available search engine, if you run one.
 
-      6.  You may not use the forum to send e-mail to distribution lists, newsgroups, or group mail aliases.
+      6. You may not use the forum to send e-mail to distribution lists, newsgroups, or group mail aliases.
 
-      7.  You may not falsely imply that you're affiliated with or endorsed by the company.
+      7. You may not falsely imply that you're affiliated with or endorsed by the company.
 
-      8.  You may not hyperlink to images or other non-hypertext content on the forum on other webpages.
+      8. You may not hyperlink to images or other non-hypertext content on the forum on other webpages.
 
-      9.  You may not remove any marks showing proprietary ownership from materials you download from the forum.
+      9. You may not remove any marks showing proprietary ownership from materials you download from the forum.
 
-      10.  You may not show any part of the forum on other websites with `<iframe>`.
+      10. You may not show any part of the forum on other websites with `<iframe>`.
 
       11. You may not disable, avoid, or circumvent any security or access restrictions of the forum.
 
       12. You may not strain infrastructure of the forum with an unreasonable volume of requests, or requests designed to impose an unreasonable load on information systems underlying the forum.
 
-      13.  You may not impersonate others through the forum.
+      13. You may not impersonate others through the forum.
 
       14. You may not encourage or help anyone in violation of these terms.
 
       <h2 id="heading--content-standards"><a href="#heading--content-standards">Content Standards</a></h2>
 
-      1.  You may not submit content to the forum that is illegal, offensive, or otherwise harmful to others.  This includes content that is harassing, inappropriate, or abusive.
+      1. You may not submit content to the forum that is illegal, offensive, or otherwise harmful to others. This includes content that is harassing, inappropriate, or abusive.
 
-      2.  You may not submit content to the forum that violates the law, infringes anyone's intellectual property rights, violates anyone's privacy, or breaches agreements you have with others.
+      2. You may not submit content to the forum that violates the law, infringes anyone's intellectual property rights, violates anyone's privacy, or breaches agreements you have with others.
 
-      3.  You may not submit content to the forum containing malicious computer code, such as computer viruses or spyware.
+      3. You may not submit content to the forum containing malicious computer code, such as computer viruses or spyware.
 
-      4.  You may not submit content to the forum as a mere placeholder, to hold a particular address, user name, or other unique identifier.
+      4. You may not submit content to the forum as a mere placeholder, to hold a particular address, user name, or other unique identifier.
 
-      5.  You may not use the forum to disclose information that you don't have the right to disclose, like others' confidential or personal information.
+      5. You may not use the forum to disclose information that you don't have the right to disclose, like others' confidential or personal information.
 
       <h2 id="heading--enforcement"><a href="#heading--enforcement">Enforcement</a></h2>
 
-      The company may investigate and prosecute violations of these terms to the fullest legal extent.  The company may notify and cooperate with law enforcement authorities in prosecuting violations of the law and these terms.
+      The company may investigate and prosecute violations of these terms to the fullest legal extent. The company may notify and cooperate with law enforcement authorities in prosecuting violations of the law and these terms.
 
-      The company reserves the right to change, redact, and delete content on the forum for any reason.  If you believe someone has submitted content to the forum in violation of these terms, [contact us immediately](#heading--contact).
+      The company reserves the right to change, redact, and delete content on the forum for any reason. If you believe someone has submitted content to the forum in violation of these terms, [contact us immediately](#heading--contact).
 
       <h2 id="heading--your-account"><a href="#heading--your-account">Your Account</a></h2>
 
       You must create and log into an account to use some features of the forum.
 
-      To create an account, you must provide some information about yourself.  If you create an account, you agree to provide, at a minimum, a valid e-mail address, and to keep that address up-to-date.  You may close your account at any time by e-mailing <%{contact_email}>.
+      To create an account, you must provide some information about yourself. If you create an account, you agree to provide, at a minimum, a valid e-mail address, and to keep that address up-to-date. You may close your account at any time by e-mailing <%{contact_email}>.
 
-      You agree to be responsible for all action taken using your account, whether authorized by you or not, until you either close your account or notify the company that your account has been compromised.  You agree to notify the company immediately if you suspect your account has been compromised.  You agree to select a secure password for your account, and keep it secret.
+      You agree to be responsible for all action taken using your account, whether authorized by you or not, until you either close your account or notify the company that your account has been compromised. You agree to notify the company immediately if you suspect your account has been compromised. You agree to select a secure password for your account, and keep it secret.
 
       The company may restrict, suspend, or close your account on the forum according to its policy for handling copyright-related takedown requests, or if the company reasonably believes that you've broken any rule in these terms.
 
       <h2 id="heading--your-content"><a href="#heading--your-content">Your Content</a></h2>
 
-      Nothing in these terms gives the company any ownership rights in intellectual property that you share with the forum, such as your account information, posts, or other content you submit to the forum.  Nothing in these terms gives you any ownership rights in the company's intellectual property, either.
+      Nothing in these terms gives the company any ownership rights in intellectual property that you share with the forum, such as your account information, posts, or other content you submit to the forum. Nothing in these terms gives you any ownership rights in the company's intellectual property, either.
 
-      Between you and the company, you remain solely responsible for content you submit to the forum.  You agree not to wrongly imply that content you submit to the forum is sponsored or approved by the company.  These terms do not obligate the company to store, maintain, or provide copies of content you submit, and to change it, according to these terms.
+      Between you and the company, you remain solely responsible for content you submit to the forum. You agree not to wrongly imply that content you submit to the forum is sponsored or approved by the company. These terms do not obligate the company to store, maintain, or provide copies of content you submit, and to change it, according to these terms.
 
-      Content you submit to the forum belongs to you, and you decide what permission to give others for it.  But at a minimum, you license the company to provide content that you submit to the forum to other users of the forum.  That special license allows the company to copy, publish, and analyze content you submit to the forum.
+      Content you submit to the forum belongs to you, and you decide what permission to give others for it. But at a minimum, you license the company to provide content that you submit to the forum to other users of the forum. That special license allows the company to copy, publish, and analyze content you submit to the forum.
 
-      When content you submit is removed from the forum, whether by you or by the company, the company's special license ends when the last copy disappears from the company's backups, caches, and other systems.  Other licenses you apply to content you submit, such as [Creative Commons](https://creativecommons.org) licenses, may continue after your content is removed.  Those licenses may give others, or the company itself, the right to share your content through the forum again.
+      When content you submit is removed from the forum, whether by you or by the company, the company's special license ends when the last copy disappears from the company's backups, caches, and other systems. Other licenses you apply to content you submit, such as [Creative Commons](https://creativecommons.org) licenses, may continue after your content is removed. Those licenses may give others, or the company itself, the right to share your content through the forum again.
 
-      Others who receive content you submit to the forum may violate the terms on which you license your content.  You agree that the company will not be liable to you for those violations or their consequences.
+      Others who receive content you submit to the forum may violate the terms on which you license your content. You agree that the company will not be liable to you for those violations or their consequences.
 
       <h2 id="heading--responsibility"><a href="#heading--responsibility">Your Responsibility</a></h2>
 
-      You agree to indemnify the company from legal claims by others related to your breach of these terms, or breach of these terms by others using your account on the forum.  Both you and the company agree to notify the other side of any legal claims for which you might have to indemnify the company as soon as possible.  If the company fails to notify you of a legal claim promptly, you won't have to indemnify the company for damages that you could have defended against or mitigated with prompt notice.  You agree to allow the company to control investigation, defense, and settlement of legal claims for which you would have to indemnify the company, and to cooperate with those efforts.  The company agrees not to agree to any settlement that admits fault for you or imposes obligations on you without your prior agreement.
+      You agree to indemnify the company from legal claims by others related to your breach of these terms, or breach of these terms by others using your account on the forum. Both you and the company agree to notify the other side of any legal claims for which you might have to indemnify the company as soon as possible. If the company fails to notify you of a legal claim promptly, you won't have to indemnify the company for damages that you could have defended against or mitigated with prompt notice. You agree to allow the company to control investigation, defense, and settlement of legal claims for which you would have to indemnify the company, and to cooperate with those efforts. The company agrees not to agree to any settlement that admits fault for you or imposes obligations on you without your prior agreement.
 
       <h2 id="heading--disclaimers"><a href="#heading--disclaimers">Disclaimers</a></h2>
 
-      ***You accept all risk of using the forum and content on the forum.  As far as the law allows, the company and its suppliers provide the forum as is, without any warranty whatsoever.***
+      ***You accept all risk of using the forum and content on the forum. As far as the law allows, the company and its suppliers provide the forum as is, without any warranty whatsoever.***
 
-      The forum may hyperlink to and integrate forums and services run by others.  The company does not make any warranty about services run by others, or content they may provide.  Use of services run by others may be governed by other terms between you and the one running service.
+      The forum may hyperlink to and integrate forums and services run by others. The company does not make any warranty about services run by others, or content they may provide. Use of services run by others may be governed by other terms between you and the one running service.
 
       <h2 id="heading--liability"><a href="#heading--liability">Limits on Liability</a></h2>
 
@@ -3830,13 +3855,13 @@ en:
 
       <h2 id="heading--feedback"><a href="#heading--feedback">Feedback</a></h2>
 
-      The company welcomes your feedback and suggestions for the forum.  See the [Contact](#heading--contact) section below for ways to get in touch with us.
+      The company welcomes your feedback and suggestions for the forum. See the [Contact](#heading--contact) section below for ways to get in touch with us.
 
-      You agree that the company will be free to act on feedback and suggestions you provide, and that the company won't have to notify you that your feedback was used, get your permission to use it, or pay you.  You agree not to submit feedback or suggestions that you believe might be confidential or proprietary, to you or others.
+      You agree that the company will be free to act on feedback and suggestions you provide, and that the company won't have to notify you that your feedback was used, get your permission to use it, or pay you. You agree not to submit feedback or suggestions that you believe might be confidential or proprietary, to you or others.
 
       <h2 id="heading--termination"><a href="#heading--termination">Termination</a></h2>
 
-      Either you or the company may end the agreement written out in these terms at any time.  When our agreement ends, your permission to use the forum also ends.
+      Either you or the company may end the agreement written out in these terms at any time. When our agreement ends, your permission to use the forum also ends.
 
       The following provisions survive the end of our agreement: [Your Content](#heading--your-content), [Feedback](#heading--feedback), [Your Responsibility](#heading--responsibility), [Disclaimers](#heading--disclaimers), [Limits on Liability](#heading--liability), and [General Terms](#heading--general).
 
@@ -3844,21 +3869,21 @@ en:
 
       %{governing_law} will govern any dispute related to these terms or your use of the forum.
 
-      You and the company agree to seek injunctions related to these terms only in state or federal court in %{city_for_disputes}.  Neither you nor the company will object to jurisdiction, forum, or venue in those courts.
+      You and the company agree to seek injunctions related to these terms only in state or federal court in %{city_for_disputes}. Neither you nor the company will object to jurisdiction, forum, or venue in those courts.
 
-      ***Other than to seek an injunction or for claims under the Computer Fraud and Abuse Act, you and the company will resolve any Dispute by binding American Arbitration Association arbitration.  Arbitration will follow the AAA's Commercial Arbitration Rules and Supplementary Procedures for Consumer Related Disputes.  Arbitration will happen in San Francisco, California.  You will settle any dispute as an individual, and not as part of a class action or other representative proceeding, whether as the plaintiff or a class member.  No arbitrator will consolidate any dispute with any other arbitration without the company's permission.***
+      ***Other than to seek an injunction or for claims under the Computer Fraud and Abuse Act, you and the company will resolve any dispute by binding American Arbitration Association arbitration. Arbitration will follow the AAA's Commercial Arbitration Rules and Supplementary Procedures for Consumer Related Disputes. Arbitration will happen in %{city_for_disputes}. You will settle any dispute as an individual, and not as part of a class action or other representative proceeding, whether as the plaintiff or a class member. No arbitrator will consolidate any dispute with any other arbitration without the company's permission.***
 
-      Any arbitration award will include costs of the arbitration, reasonable attorneys' fees, and reasonable costs for witnesses.  You and the company may enter arbitration awards in any court with jurisdiction.
+      Any arbitration award will include costs of the arbitration, reasonable attorneys' fees, and reasonable costs for witnesses. You and the company may enter arbitration awards in any court with jurisdiction.
 
       <h2 id="heading--general"><a href="#heading--general">General Terms</a></h2>
 
-      If a provision of these terms is unenforceable as written, but could be changed to make it enforceable, that provision should be modified to the minimum extent necessary to make it enforceable.  Otherwise, that provision should be removed.
+      If a provision of these terms is unenforceable as written, but could be changed to make it enforceable, that provision should be modified to the minimum extent necessary to make it enforceable. Otherwise, that provision should be removed.
 
-      You may not assign your agreement with the company.  The company may assign your agreement to any affiliate of the company, any other company that obtains control of the company, or any other company that buys assets of the company related to the forum.  Any attempted assignment against these terms has no legal effect.
+      You may not assign your agreement with the company. The company may assign your agreement to any affiliate of the company, any other company that obtains control of the company, or any other company that buys assets of the company related to the forum. Any attempted assignment against these terms has no legal effect.
 
       Neither the exercise of any right under this Agreement, nor waiver of any breach of this Agreement, waives any other breach of this Agreement.
 
-      These terms embody all the terms of agreement between you and the company about use of the forum.  These terms entirely replace any other agreements about your use of the forum, written or not.
+      These terms embody all the terms of agreement between you and the company about use of the forum. These terms entirely replace any other agreements about your use of the forum, written or not.
 
       <h2 id="heading--contact"><a href="#heading--contact">Contact</a></h2>
 
@@ -3868,7 +3893,7 @@ en:
 
       <h2 id="heading--changes"><a href="#heading--changes">Changes</a></h2>
 
-      The company last updated these terms on July 12, 2018, and may update these terms again.  The company will post all updates to the forum.  For updates that contain substantial changes, the company agrees to e-mail you, if you've created an account and provided a valid e-mail address.  The company may also announce updates with special messages or alerts on the forum.
+      The company last updated these terms on July 12, 2018, and may update these terms again. The company will post all updates to the forum. For updates that contain substantial changes, the company agrees to e-mail you, if you've created an account and provided a valid e-mail address. The company may also announce updates with special messages or alerts on the forum.
 
       Once you get notice of an update to these terms, you must agree to the new terms in order to keep using the forum.
 
@@ -3891,10 +3916,10 @@ en:
 
       Any of the information we collect from you may be used in one of the following ways:
 
-      *   To personalize your experience &mdash; your information helps us to better respond to your individual needs.
-      *   To improve our site &mdash; we continually strive to improve our site offerings based on the information and feedback we receive from you.
-      *   To improve customer service &mdash; your information helps us to more effectively respond to your customer service requests and support needs.
-      *   To send periodic emails &mdash; The email address you provide may be used to send you information, notifications that you request about changes to topics or in response to your user name, respond to inquiries, and/or other requests or questions.
+      * To personalize your experience &mdash; your information helps us to better respond to your individual needs.
+      * To improve our site &mdash; we continually strive to improve our site offerings based on the information and feedback we receive from you.
+      * To improve customer service &mdash; your information helps us to more effectively respond to your customer service requests and support needs.
+      * To send periodic emails &mdash; The email address you provide may be used to send you information, notifications that you request about changes to topics or in response to your user name, respond to inquiries, and/or other requests or questions.
 
       <a name="protect"></a>
 
@@ -3908,8 +3933,8 @@ en:
 
       We will make a good faith effort to:
 
-      *   Retain server logs containing the IP address of all requests to this server no more than 90 days.
-      *   Retain the IP addresses associated with registered users and their posts no more than 5 years.
+      * Retain server logs containing the IP address of all requests to this server no more than 90 days.
+      * Retain the IP addresses associated with registered users and their posts no more than 5 years.
 
       <a name="cookies"></a>
 
@@ -4221,6 +4246,9 @@ en:
       other: "You must select at least %{count} tags."
     upload_row_too_long: "The CSV file should have one tag per line. Optionally the tag can be followed by a comma, then the tag group name."
     forbidden:
+      invalid:
+        one: "The tag you selected cannot be used"
+        other: "None of the tags you selected can be used"
       in_this_category: '"%{tag_name}" cannot be used in this category'
       restricted_to:
         one: '"%{tag_name}" is restricted to the "%{category_names}" category'
@@ -4351,6 +4379,16 @@ en:
       colors:
         title: "Theme"
 
+      themes_further_reading:
+        title: "Themes"
+        description:
+          "Looking to customize your Discourse? Take advantage of our powerful theming system:
+          <ul>
+          <li><a href='https://meta.discourse.org/t/63682' target='_blank'>How do I install a theme or theme component?</a></li>
+          <li><a href='https://meta.discourse.org/t/110448' target='_blank'>Theme Developer Quick Reference Guide</a></li>
+          </ul>
+          Popular theme components (for more, browse <a href='https://meta.discourse.org/c/theme/l/latest' target='_blank'>#theme</a>)"
+
       logos:
         title: "Logos"
         fields:
@@ -4435,6 +4473,15 @@ en:
     webhook_deactivation_reason: "Your webhook has been automatically deactivated. We received multiple '%{status}' HTTP status failure responses."
 
   reviewables:
+    priorities:
+      low: "Low"
+      medium: "Medium"
+      high: "High"
+    sensitivity:
+      disabled: "Disabled"
+      low: "Low"
+      medium: "Medium"
+      high: "High"
     must_claim: "You must claim items before acting on them."
     user_claimed: "This item has been claimed by another user."
     missing_version: "You must supply a version parameter"
@@ -4445,7 +4492,7 @@ en:
       new_topics_unless_trust_level: "Users at low trust levels must have topics approved by staff. See `approve_new_topics_unless_trust_level`."
       fast_typer: "New user typed their first post suspiciously fast, suspected bot or spammer behavior. See `min_first_post_typing_time`."
       auto_silence_regexp: "New user whose first post matches the `auto_silence_first_post_regex` setting."
-      watched_word: "Post included a Watched Word."
+      watched_word: "This post included a Watched Word. See your <a href='%{base_url}/admin/logs/watched_words'>list of watched words</a>."
       staged: "New topics and posts for staged users must be approved by staff. See `approve_unless_staged`."
       category: "Posts in this category require manual approval by staff. See the category settings."
       must_approve_users: "All new users must be approved by staff. See `must_approve_users`."
@@ -4457,6 +4504,9 @@ en:
       agree_and_keep:
         title: "Keep Post"
         description: "Agree with flag and keep the post unchanged."
+      agree_and_keep_hidden:
+        title: "Keep Post Hidden"
+        description: "Agree with flag and leave the post hidden."
       agree_and_suspend:
         title: "Suspend User"
         description: "Agree with flag and suspend the user."
@@ -4502,6 +4552,7 @@ en:
         title: "Approve"
       approve_post:
         title: "Approve Post"
+        confirm_closed: "This topic is closed. Would you like to create the post anyway?"
       reject_post:
         title: "Reject Post"
       approve_user:
@@ -4520,3 +4571,6 @@ en:
         title: "Delete User"
         confirm: "Are you sure you want to delete that user? This will remove all of their posts and block their email and IP address."
         reason: "Deleted via review queue"
+
+  email_style:
+    html_missing_placeholder: "The html template must include %{placeholder}"

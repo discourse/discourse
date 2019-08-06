@@ -6,6 +6,11 @@ Fabricator(:optimized_image) do
   extension ".png"
   width 100
   height 200
-  url "138569_100x200.png"
   version OptimizedImage::VERSION
+
+  after_build do |optimized_image, _|
+    unless optimized_image.url
+      optimized_image.url = Discourse.store.get_path_for_optimized_image(optimized_image)
+    end
+  end
 end

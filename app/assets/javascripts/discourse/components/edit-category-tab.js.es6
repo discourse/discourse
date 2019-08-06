@@ -23,11 +23,11 @@ export default Ember.Component.extend({
   },
 
   _addToCollection: function() {
-    this.get("panels").addObject(this.get("tabClassName"));
+    this.panels.addObject(this.tabClassName);
   },
 
   _resetModalScrollState() {
-    const $modalBody = this.$()
+    const $modalBody = $(this.element)
       .parents("#discourse-modal")
       .find(".modal-body");
     if ($modalBody.length === 1) {
@@ -37,7 +37,7 @@ export default Ember.Component.extend({
 
   actions: {
     select: function() {
-      this.set("selectedTab", this.get("tab"));
+      this.set("selectedTab", this.tab);
       this._resetModalScrollState();
     }
   }

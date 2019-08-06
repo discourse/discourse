@@ -1,3 +1,4 @@
+import { on } from "ember-addons/ember-computed-decorators";
 import { ajax } from "discourse/lib/ajax";
 import { url } from "discourse/lib/computed";
 import UserAction from "discourse/models/user-action";
@@ -5,13 +6,14 @@ import UserAction from "discourse/models/user-action";
 export default Discourse.Model.extend({
   loaded: false,
 
-  _initialize: function() {
+  @on("init")
+  _initialize() {
     this.setProperties({
       itemsLoaded: 0,
       canLoadMore: true,
       content: []
     });
-  }.on("init"),
+  },
 
   url: url(
     "user.username_lower",
@@ -21,7 +23,7 @@ export default Discourse.Model.extend({
   ),
 
   filterBy(opts) {
-    if (this.get("loaded") && this.get("filter") === opts.filter) {
+    if (this.loaded && this.filter === opts.filter) {
       return Ember.RSVP.resolve();
     }
 
@@ -40,29 +42,24 @@ export default Discourse.Model.extend({
   },
 
   findItems() {
-    const self = this;
-    if (this.get("loading") || !this.get("canLoadMore")) {
+    if (this.loading || !this.canLoadMore) {
       return Ember.RSVP.reject();
     }
 
     this.set("loading", true);
 
-    return ajax(this.get("url"), { cache: false })
-      .then(function(result) {
+    return ajax(this.url, { cache: false })
+      .then(result => {
         if (result) {
-          const posts = result.map(function(post) {
-            return UserAction.create(post);
-          });
-          self.get("content").pushObjects(posts);
-          self.setProperties({
+          const posts = result.map(post => UserAction.create(post));
+          this.content.pushObjects(posts);
+          this.setProperties({
             loaded: true,
-            itemsLoaded: self.get("itemsLoaded") + posts.length,
+            itemsLoaded: this.itemsLoaded + posts.length,
             canLoadMore: posts.length > 0
           });
         }
       })
-      .finally(function() {
-        self.set("loading", false);
-      });
+      .finally(() => this.set("loading", false));
   }
 });

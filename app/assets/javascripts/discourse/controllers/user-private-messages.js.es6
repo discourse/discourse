@@ -2,26 +2,24 @@ import computed from "ember-addons/ember-computed-decorators";
 import Topic from "discourse/models/topic";
 
 export default Ember.Controller.extend({
-  application: Ember.inject.controller(),
+  router: Ember.inject.service(),
   userTopicsList: Ember.inject.controller("user-topics-list"),
   user: Ember.inject.controller(),
 
   pmView: false,
   viewingSelf: Ember.computed.alias("user.viewingSelf"),
   isGroup: Ember.computed.equal("pmView", "groups"),
-  currentPath: Ember.computed.alias("application.currentPath"),
+  currentPath: Ember.computed.alias("router._router.currentPath"),
   selected: Ember.computed.alias("userTopicsList.selected"),
   bulkSelectEnabled: Ember.computed.alias("userTopicsList.bulkSelectEnabled"),
   showToggleBulkSelect: true,
   pmTaggingEnabled: Ember.computed.alias("site.can_tag_pms"),
   tagId: null,
 
-  @computed("user.viewingSelf")
-  showNewPM(viewingSelf) {
-    return (
-      viewingSelf && Discourse.User.currentProp("can_send_private_messages")
-    );
-  },
+  showNewPM: Ember.computed.and(
+    "user.viewingSelf",
+    "currentUser.can_send_private_messages"
+  ),
 
   @computed("selected.[]", "bulkSelectEnabled")
   hasSelection(selected, bulkSelectEnabled) {
@@ -39,10 +37,10 @@ export default Ember.Controller.extend({
   },
 
   bulkOperation(operation) {
-    const selected = this.get("selected");
+    const selected = this.selected;
     var params = { type: operation };
-    if (this.get("isGroup")) {
-      params.group = this.get("groupFilter");
+    if (this.isGroup) {
+      params.group = this.groupFilter;
     }
 
     Topic.bulkOperation(selected, params).then(

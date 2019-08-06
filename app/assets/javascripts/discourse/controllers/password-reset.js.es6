@@ -37,9 +37,9 @@ export default Ember.Controller.extend(PasswordValidation, {
         url: userPath(`password-reset/${this.get("model.token")}.json`),
         type: "PUT",
         data: {
-          password: this.get("accountPassword"),
-          second_factor_token: this.get("secondFactorToken"),
-          second_factor_method: this.get("secondFactorMethod")
+          password: this.accountPassword,
+          second_factor_token: this.secondFactorToken,
+          second_factor_method: this.secondFactorMethod
         }
       })
         .then(result => {
@@ -59,7 +59,7 @@ export default Ember.Controller.extend(PasswordValidation, {
                 password: null,
                 errorMessage: result.message
               });
-            } else if (this.get("secondFactorRequired")) {
+            } else if (this.secondFactorRequired) {
               this.setProperties({
                 secondFactorRequired: false,
                 errorMessage: null
@@ -69,11 +69,9 @@ export default Ember.Controller.extend(PasswordValidation, {
               result.errors.password &&
               result.errors.password.length > 0
             ) {
-              this.get("rejectedPasswords").pushObject(
-                this.get("accountPassword")
-              );
-              this.get("rejectedPasswordsMessages").set(
-                this.get("accountPassword"),
+              this.rejectedPasswords.pushObject(this.accountPassword);
+              this.rejectedPasswordsMessages.set(
+                this.accountPassword,
                 result.errors.password[0]
               );
             }
@@ -94,7 +92,7 @@ export default Ember.Controller.extend(PasswordValidation, {
 
     done() {
       this.set("redirected", true);
-      DiscourseURL.redirectTo(this.get("redirectTo") || "/");
+      DiscourseURL.redirectTo(this.redirectTo || "/");
     }
   }
 });

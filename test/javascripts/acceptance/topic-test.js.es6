@@ -1,3 +1,4 @@
+import selectKit from "helpers/select-kit-helper";
 import { acceptance } from "helpers/qunit-helpers";
 import { IMAGE_VERSION as v } from "pretty-text/emoji/version";
 
@@ -5,18 +6,6 @@ acceptance("Topic", {
   loggedIn: true,
   pretend(server, helper) {
     server.put("/posts/398/wiki", () => {
-      return helper.response({});
-    });
-
-    server.get("/topics/feature_stats.json", () => {
-      return helper.response({
-        pinned_in_category_count: 0,
-        pinned_globally_count: 0,
-        banner_count: 0
-      });
-    });
-
-    server.put("/t/280/make-banner", () => {
       return helper.response({});
     });
   }
@@ -33,9 +22,7 @@ QUnit.test("Reply as new topic", async assert => {
     find(".d-editor-input")
       .val()
       .trim(),
-    `Continuing the discussion from [Internationalization / localization](${
-      window.location.origin
-    }/t/internationalization-localization/280):`,
+    `Continuing the discussion from [Internationalization / localization](${window.location.origin}/t/internationalization-localization/280):`,
     "it fills composer with the ring string"
   );
   assert.equal(
@@ -58,9 +45,7 @@ QUnit.test("Reply as new message", async assert => {
     find(".d-editor-input")
       .val()
       .trim(),
-    `Continuing the discussion from [PM for testing](${
-      window.location.origin
-    }/t/pm-for-testing/12):`,
+    `Continuing the discussion from [PM for testing](${window.location.origin}/t/pm-for-testing/12):`,
     "it fills composer with the ring string"
   );
 
@@ -210,7 +195,7 @@ acceptance("Topic featured links", {
 });
 
 QUnit.test("remove featured link", async assert => {
-  await visit("/t/299/1");
+  await visit("/t/-/299/1");
   assert.ok(
     exists(".title-wrapper .topic-featured-link"),
     "link is shown with topic title"
@@ -226,6 +211,20 @@ QUnit.test("remove featured link", async assert => {
   // await click('.title-wrapper .remove-featured-link');
   // await click('.title-wrapper .submit-edit');
   // assert.ok(!exists('.title-wrapper .topic-featured-link'), 'link is gone');
+});
+
+QUnit.test("Converting to a public topic", async assert => {
+  await visit("/t/test-pm/34");
+  assert.ok(exists(".private_message"));
+  await click(".toggle-admin-menu");
+  await click(".topic-admin-convert button");
+
+  let categoryChooser = selectKit(".convert-to-public-topic .category-chooser");
+  await categoryChooser.expand();
+  await categoryChooser.selectRowByValue(21);
+
+  await click(".convert-to-public-topic .btn-primary");
+  assert.ok(!exists(".private_message"));
 });
 
 QUnit.test("Unpinning unlisted topic", async assert => {
@@ -255,13 +254,6 @@ QUnit.test("selecting posts", async assert => {
   assert.ok(
     exists(".select-all"),
     "it should allow users to select all the posts"
-  );
-
-  await click(".toggle-admin-menu");
-
-  assert.ok(
-    exists(".selected-posts.hidden"),
-    "it should hide the multi select menu"
   );
 });
 

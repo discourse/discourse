@@ -137,7 +137,7 @@ module ImportScripts::Mbox
         body = receiver.add_attachments(body, user)
       end
 
-      body << Email::Receiver.elided_html(elided) if elided.present?
+      body = "#{body}#{Email::Receiver.elided_html(elided)}" if elided.present?
       body
     end
 

@@ -9,7 +9,7 @@ export default Ember.Controller.extend({
 
   actions: {
     generateMasterKey() {
-      ApiKey.generateMasterKey().then(key => this.get("model").pushObject(key));
+      ApiKey.generateMasterKey().then(key => this.model.pushObject(key));
     },
 
     regenerateKey(key) {
@@ -32,7 +32,7 @@ export default Ember.Controller.extend({
         I18n.t("yes_value"),
         result => {
           if (result) {
-            key.revoke().then(() => this.get("model").removeObject(key));
+            key.revoke().then(() => this.model.removeObject(key));
           }
         }
       );

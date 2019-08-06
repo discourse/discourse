@@ -49,10 +49,10 @@ export default MultiSelectComponent.extend(TagsMixin, {
     },
 
     onExpand() {
-      if (isEmpty(this.get("collectionComputedContent"))) {
+      if (isEmpty(this.collectionComputedContent)) {
         this.set(
           "searchDebounce",
-          run.debounce(this, this._prepareSearch, this.get("filter"), 200)
+          run.debounce(this, this._prepareSearch, this.filter, 200)
         );
       }
     },
@@ -60,14 +60,14 @@ export default MultiSelectComponent.extend(TagsMixin, {
     onDeselect() {
       this.set(
         "searchDebounce",
-        run.debounce(this, this._prepareSearch, this.get("filter"), 200)
+        run.debounce(this, this._prepareSearch, this.filter, 200)
       );
     },
 
     onSelect() {
       this.set(
         "searchDebounce",
-        run.debounce(this, this._prepareSearch, this.get("filter"), 50)
+        run.debounce(this, this._prepareSearch, this.filter, 50)
       );
     }
   },

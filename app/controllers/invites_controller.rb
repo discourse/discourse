@@ -35,7 +35,7 @@ class InvitesController < ApplicationController
         render layout: 'no_ember'
       end
     else
-      flash.now[:error] = I18n.t('invite.not_found')
+      flash.now[:error] = I18n.t('invite.not_found', base_url: Discourse.base_url)
       render layout: 'no_ember'
     end
   end
@@ -70,7 +70,7 @@ class InvitesController < ApplicationController
         }
       end
     else
-      render json: { success: false, message: I18n.t('invite.not_found') }
+      render json: { success: false, message: I18n.t('invite.not_found_json') }
     end
   end
 
@@ -172,24 +172,33 @@ class InvitesController < ApplicationController
   def upload_csv
     guardian.ensure_can_bulk_invite_to_forum!(current_user)
 
-    file = params[:file] || params[:files].first
-    name = params[:name] || File.basename(file.original_filename, ".*")
-    extension = File.extname(file.original_filename)
+    hijack do
+      begin
+        file = params[:file] || params[:files].first
 
-    begin
-      data = if extension.downcase == ".csv"
-        path = Invite.create_csv(file, name)
-        Jobs.enqueue(:bulk_invite, filename: "#{name}#{extension}", current_user_id: current_user.id)
-        { url: path }
-      else
-        failed_json.merge(errors: [I18n.t("bulk_invite.file_should_be_csv")])
+        count = 0
+        invites = []
+        max_bulk_invites = SiteSetting.max_bulk_invites
+        CSV.foreach(file.tempfile) do |row|
+          count += 1
+          invites.push(email: row[0], groups: row[1], topic_id: row[2]) if row[0].present?
+          break if count >= max_bulk_invites
+        end
+
+        if invites.present?
+          Jobs.enqueue(:bulk_invite, invites: invites, current_user_id: current_user.id)
+          if count >= max_bulk_invites
+            render json: failed_json.merge(errors: [I18n.t("bulk_invite.max_rows", max_bulk_invites: max_bulk_invites)]), status: 422
+          else
+            render json: success_json
+          end
+        else
+          render json: failed_json.merge(errors: [I18n.t("bulk_invite.error")]), status: 422
+        end
+      rescue
+        render json: failed_json.merge(errors: [I18n.t("bulk_invite.error")]), status: 422
       end
-    rescue
-      failed_json.merge(errors: [I18n.t("bulk_invite.error")])
     end
-    MessageBus.publish("/uploads/csv", data.as_json, user_ids: [current_user.id])
-
-    render json: success_json
   end
 
   def fetch_username
@@ -222,6 +231,8 @@ class InvitesController < ApplicationController
 
   def post_process_invite(user)
     user.enqueue_welcome_message('welcome_invite') if user.send_welcome_message
+
+    Group.refresh_automatic_groups!(:admins, :moderators, :staff) if user.staff?
 
     if user.has_password?
       send_activation_email(user) unless user.active

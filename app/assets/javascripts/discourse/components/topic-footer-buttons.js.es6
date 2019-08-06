@@ -32,6 +32,8 @@ export default Ember.Component.extend({
 
   canInviteTo: Ember.computed.alias("topic.details.can_invite_to"),
 
+  canDefer: Ember.computed.alias("currentUser.enable_defer"),
+
   inviteDisabled: Ember.computed.or(
     "topic.archived",
     "topic.closed",
@@ -53,7 +55,7 @@ export default Ember.Component.extend({
   ),
 
   @computed("topic.message_archived")
-  archiveIcon: archived => (archived ? "" : "folder"),
+  archiveIcon: archived => (archived ? "envelope" : "folder"),
 
   @computed("topic.message_archived")
   archiveTitle: archived =>

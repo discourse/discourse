@@ -17,13 +17,13 @@ export default Ember.Controller.extend({
   },
 
   fetchProblems() {
-    if (this.get("isLoadingProblems")) return;
+    if (this.isLoadingProblems) return;
 
     if (
-      !this.get("problemsFetchedAt") ||
+      !this.problemsFetchedAt ||
       moment()
         .subtract(PROBLEMS_CHECK_MINUTES, "minutes")
-        .toDate() > this.get("problemsFetchedAt")
+        .toDate() > this.problemsFetchedAt
     ) {
       this._loadProblems();
     }
@@ -32,13 +32,13 @@ export default Ember.Controller.extend({
   fetchDashboard() {
     const versionChecks = this.siteSettings.version_checks;
 
-    if (this.get("isLoading") || !versionChecks) return;
+    if (this.isLoading || !versionChecks) return;
 
     if (
-      !this.get("dashboardFetchedAt") ||
+      !this.dashboardFetchedAt ||
       moment()
         .subtract(30, "minutes")
-        .toDate() > this.get("dashboardFetchedAt")
+        .toDate() > this.dashboardFetchedAt
     ) {
       this.set("isLoading", true);
 
@@ -55,7 +55,7 @@ export default Ember.Controller.extend({
           this.setProperties(properties);
         })
         .catch(e => {
-          this.get("exceptionController").set("thrown", e.jqXHR);
+          this.exceptionController.set("thrown", e.jqXHR);
           this.replaceRoute("exception");
         })
         .finally(() => {

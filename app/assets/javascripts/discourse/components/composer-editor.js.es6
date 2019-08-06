@@ -36,12 +36,12 @@ import {
 import {
   cacheShortUploadUrl,
   resolveAllShortUrls
-} from "pretty-text/image-short-url";
+} from "pretty-text/upload-short-url";
 
 import {
   INLINE_ONEBOX_LOADING_CSS_CLASS,
   INLINE_ONEBOX_CSS_CLASS
-} from "pretty-text/inline-oneboxer";
+} from "pretty-text/context/inline-onebox-css-classes";
 
 const REBUILD_SCROLL_MAP_EVENTS = ["composer:resized", "composer:typed-reply"];
 
@@ -111,8 +111,8 @@ export default Ember.Component.extend({
 
   @observes("focusTarget")
   setFocus() {
-    if (this.get("focusTarget") === "editor") {
-      this.$("textarea").putCursorAtEnd();
+    if (this.focusTarget === "editor") {
+      $(this.element.querySelector("textarea")).putCursorAtEnd();
     }
   },
 
@@ -124,7 +124,7 @@ export default Ember.Component.extend({
       formatUsername,
 
       lookupAvatarByPostNumber: (postNumber, topicId) => {
-        const topic = this.get("topic");
+        const topic = this.topic;
         if (!topic) {
           return;
         }
@@ -139,7 +139,7 @@ export default Ember.Component.extend({
       },
 
       lookupPrimaryUserGroupByPostNumber: (postNumber, topicId) => {
-        const topic = this.get("topic");
+        const topic = this.topic;
         if (!topic) {
           return;
         }
@@ -158,8 +158,8 @@ export default Ember.Component.extend({
   @on("didInsertElement")
   _composerEditorInit() {
     const topicId = this.get("topic.id");
-    const $input = this.$(".d-editor-input");
-    const $preview = this.$(".d-editor-preview-wrapper");
+    const $input = $(this.element.querySelector(".d-editor-input"));
+    const $preview = $(this.element.querySelector(".d-editor-preview-wrapper"));
 
     if (this.siteSettings.enable_mentions) {
       $input.autocomplete({
@@ -206,7 +206,7 @@ export default Ember.Component.extend({
       !this.get("composer.canEditTitle") &&
       (!this.capabilities.isIOS || safariHacksDisabled())
     ) {
-      this.$(".d-editor-input").putCursorAtEnd();
+      $(this.element.querySelector(".d-editor-input")).putCursorAtEnd();
     }
 
     this._bindUploadTarget();
@@ -237,7 +237,7 @@ export default Ember.Component.extend({
       reason = I18n.t("composer.error.post_missing");
     } else if (missingReplyCharacters > 0) {
       reason = I18n.t("composer.error.post_length", { min: minimumPostLength });
-      const tl = Discourse.User.currentProp("trust_level");
+      const tl = this.get("currentUser.trust_level");
       if (tl === 0 || tl === 1) {
         reason +=
           "<br/>" +
@@ -336,28 +336,22 @@ export default Ember.Component.extend({
   },
 
   _syncScroll($callback, $input, $preview) {
-    if (!this.get("scrollMap") || this.get("shouldBuildScrollMap")) {
+    if (!this.scrollMap || this.shouldBuildScrollMap) {
       this.set("scrollMap", this._buildScrollMap($input, $preview));
       this.set("shouldBuildScrollMap", false);
     }
 
-    Ember.run.throttle(
-      this,
-      $callback,
-      $input,
-      $preview,
-      this.get("scrollMap"),
-      20
-    );
+    Ember.run.throttle(this, $callback, $input, $preview, this.scrollMap, 20);
   },
 
   _teardownInputPreviewSync() {
-    [this.$(".d-editor-input"), this.$(".d-editor-preview-wrapper")].forEach(
-      $element => {
-        $element.off("mouseenter touchstart");
-        $element.off("scroll");
-      }
-    );
+    [
+      $(this.element.querySelector(".d-editor-input")),
+      $(this.element.querySelector(".d-editor-preview-wrapper"))
+    ].forEach($element => {
+      $element.off("mouseenter touchstart");
+      $element.off("scroll");
+    });
 
     REBUILD_SCROLL_MAP_EVENTS.forEach(event => {
       this.appEvents.off(event, this, this._resetShouldBuildScrollMap);
@@ -565,7 +559,7 @@ export default Ember.Component.extend({
 
   _warnMentionedGroups($preview) {
     Ember.run.scheduleOnce("afterRender", () => {
-      var found = this.get("warnedGroupMentions") || [];
+      var found = this.warnedGroupMentions || [];
       $preview.find(".mention-group.notify").each((idx, e) => {
         const $e = $(e);
         var name = $e.data("name");
@@ -598,7 +592,7 @@ export default Ember.Component.extend({
     }
 
     Ember.run.scheduleOnce("afterRender", () => {
-      let found = this.get("warnedCannotSeeMentions") || [];
+      let found = this.warnedCannotSeeMentions || [];
 
       $preview.find(".mention.cannot-see").each((idx, e) => {
         const $e = $(e);
@@ -642,7 +636,7 @@ export default Ember.Component.extend({
       if (removePlaceholder) {
         this.appEvents.trigger(
           "composer:replace-text",
-          this.get("uploadPlaceholder"),
+          this.uploadPlaceholder,
           ""
         );
       }
@@ -654,7 +648,7 @@ export default Ember.Component.extend({
     this._unbindUploadTarget(); // in case it's still bound, let's clean it up first
     this._pasted = false;
 
-    const $element = this.$();
+    const $element = $(this.element);
     const csrf = this.session.get("csrfToken");
 
     $element.fileupload({
@@ -701,7 +695,7 @@ export default Ember.Component.extend({
 
       const matchingHandler = uploadHandlers.find(matcher);
       if (data.files.length === 1 && matchingHandler) {
-        if (!matchingHandler.method(data.files[0])) {
+        if (!matchingHandler.method(data.files[0], this)) {
           return false;
         }
       }
@@ -739,10 +733,7 @@ export default Ember.Component.extend({
 
       this._setUploadPlaceholderSend(data);
 
-      this.appEvents.trigger(
-        "composer:insert-text",
-        this.get("uploadPlaceholder")
-      );
+      this.appEvents.trigger("composer:insert-text", this.uploadPlaceholder);
 
       if (data.xhr && data.originalFiles.length === 1) {
         this.set("isCancellable", true);
@@ -758,7 +749,7 @@ export default Ember.Component.extend({
         cacheShortUploadUrl(upload.short_url, upload.url);
         this.appEvents.trigger(
           "composer:replace-text",
-          this.get("uploadPlaceholder").trim(),
+          this.uploadPlaceholder.trim(),
           markdown
         );
         this._resetUpload(false);
@@ -877,7 +868,8 @@ export default Ember.Component.extend({
     // wraps previewed upload markdown in a codeblock in its own class to keep a track
     // of indexes later on to replace the correct upload placeholder in the composer
     if ($preview.find(".codeblock-image").length === 0) {
-      this.$(".d-editor-preview *")
+      $(this.element)
+        .find(".d-editor-preview *")
         .contents()
         .each(function() {
           if (this.nodeType !== 3) return; // TEXT_NODE
@@ -900,7 +892,7 @@ export default Ember.Component.extend({
     this._validUploads = 0;
     $("#reply-control .mobile-file-upload").off("click.uploader");
     this.messageBus.unsubscribe("/uploads/composer");
-    const $uploadTarget = this.$();
+    const $uploadTarget = $(this.element);
     try {
       $uploadTarget.fileupload("destroy");
     } catch (e) {
@@ -935,7 +927,7 @@ export default Ember.Component.extend({
   },
 
   showPreview() {
-    const $preview = this.$(".d-editor-preview-wrapper");
+    const $preview = $(this.element.querySelector(".d-editor-preview-wrapper"));
     this._placeImageScaleButtons($preview);
     this.send("togglePreview");
   },
@@ -958,22 +950,18 @@ export default Ember.Component.extend({
         id: "quote",
         group: "fontStyles",
         icon: "far-comment",
-        sendAction: this.get("importQuote"),
+        sendAction: this.importQuote,
         title: "composer.quote_post_title",
         unshift: true
       });
 
-      if (
-        this.get("allowUpload") &&
-        this.get("uploadIcon") &&
-        !this.site.mobileView
-      ) {
+      if (this.allowUpload && this.uploadIcon && !this.site.mobileView) {
         toolbar.addButton({
           id: "upload",
           group: "insertions",
-          icon: this.get("uploadIcon"),
+          icon: this.uploadIcon,
           title: "upload",
-          sendAction: this.get("showUploadModal")
+          sendAction: this.showUploadModal
         });
       }
 
@@ -985,16 +973,6 @@ export default Ember.Component.extend({
         sendAction: this.onExpandPopupMenuOptions.bind(this),
         popupMenu: true
       });
-
-      if (this.site.mobileView) {
-        toolbar.addButton({
-          id: "preview",
-          group: "mobileExtras",
-          icon: "television",
-          title: "composer.show_preview",
-          sendAction: this.showPreview.bind(this)
-        });
-      }
     },
 
     previewUpdated($preview) {
@@ -1095,7 +1073,7 @@ export default Ember.Component.extend({
       if (this._enableAdvancedEditorPreviewSync()) {
         this._syncScroll(
           this._syncEditorAndPreviewScroll,
-          this.$(".d-editor-input"),
+          $(this.element.querySelector(".d-editor-input")),
           $preview
         );
       }

@@ -1,12 +1,11 @@
 <div class='reviewable-settings'>
-  <h4>{{i18n "review.settings.score_bonuses.title"}}</h4>
-  <p class='description'>{{i18n "review.settings.score_bonuses.description"}}</p>
+  <h4>{{i18n "review.settings.priorities.title"}}</h4>
 
   {{#each settings.reviewable_score_types as |rst|}}
     <div class='reviewable-score-type'>
       <div class='title'>{{rst.title}}</div>
       <div class='field'>
-        {{input value=rst.score_bonus}}
+        {{combo-box value=rst.reviewable_priority content=settings.reviewable_priorities}}
       </div>
     </div>
   {{/each}}

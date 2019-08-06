@@ -271,7 +271,6 @@ class PostAlerter
 
   COLLAPSED_NOTIFICATION_TYPES ||= [
     Notification.types[:replied],
-    Notification.types[:quoted],
     Notification.types[:posted],
     Notification.types[:private_message],
   ]

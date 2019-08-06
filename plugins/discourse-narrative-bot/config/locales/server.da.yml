@@ -37,5 +37,3 @@ da:
     magic_8_ball:
       answers:
         '9': "Ja"
-    new_user_narrative:
-      reset_trigger: "ny bruger"

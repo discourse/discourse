@@ -44,7 +44,7 @@ export function performEmojiUnescape(string, opts) {
   }
 
   return string.replace(unicodeRegexp, m => {
-    const isEmoticon = !!translations[m];
+    const isEmoticon = opts.enableEmojiShortcuts && !!translations[m];
     const isUnicodeEmoticon = !!replacements[m];
     let emojiVal;
     if (isEmoticon) {
@@ -70,12 +70,12 @@ export function performEmojiUnescape(string, opts) {
   return string;
 }
 
-export function performEmojiEscape(string) {
+export function performEmojiEscape(string, opts) {
   return string.replace(unicodeRegexp, m => {
     if (!!translations[m]) {
-      return ":" + translations[m] + ":";
+      return opts.emojiShortcuts ? `:${translations[m]}:` : m;
     } else if (!!replacements[m]) {
-      return ":" + replacements[m] + ":";
+      return `:${replacements[m]}:`;
     } else {
       return m;
     }

@@ -21,16 +21,16 @@ export default Ember.Controller.extend({
 
   @observes("filterInput")
   _setFilter: debounce(function() {
-    this.set("filter", this.get("filterInput"));
+    this.set("filter", this.filterInput);
   }, 500),
 
   @observes("order", "desc", "filter")
   refreshMembers() {
     this.set("loading", true);
-    const model = this.get("model");
+    const model = this.model;
 
     if (model) {
-      model.findMembers(this.get("memberParams")).finally(() => {
+      model.findMembers(this.memberParams).finally(() => {
         this.set(
           "application.showFooter",
           model.members.length >= model.user_count
@@ -70,21 +70,21 @@ export default Ember.Controller.extend({
     },
 
     removeMember(user) {
-      this.get("model").removeMember(user, this.get("memberParams"));
+      this.model.removeMember(user, this.memberParams);
     },
 
     makeOwner(username) {
-      this.get("model").addOwners(username);
+      this.model.addOwners(username);
     },
 
     removeOwner(user) {
-      this.get("model").removeOwner(user);
+      this.model.removeOwner(user);
     },
 
     addMembers() {
-      const usernames = this.get("usernames");
+      const usernames = this.usernames;
       if (usernames && usernames.length > 0) {
-        this.get("model")
+        this.model
           .addMembers(usernames)
           .then(() => this.set("usernames", []))
           .catch(popupAjaxError);
@@ -92,7 +92,7 @@ export default Ember.Controller.extend({
     },
 
     loadMore() {
-      if (this.get("loading")) {
+      if (this.loading) {
         return;
       }
       if (this.get("model.members.length") >= this.get("model.user_count")) {
@@ -105,8 +105,8 @@ export default Ember.Controller.extend({
       Group.loadMembers(
         this.get("model.name"),
         this.get("model.members.length"),
-        this.get("limit"),
-        { order: this.get("order"), desc: this.get("desc") }
+        this.limit,
+        { order: this.order, desc: this.desc }
       ).then(result => {
         this.get("model.members").addObjects(
           result.members.map(member => Discourse.User.create(member))

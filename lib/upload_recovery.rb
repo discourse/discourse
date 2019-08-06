@@ -1,8 +1,9 @@
 # frozen_string_literal: true
 
 class UploadRecovery
-  def initialize(dry_run: false)
+  def initialize(dry_run: false, stop_on_error: false)
     @dry_run = dry_run
+    @stop_on_error = stop_on_error
   end
 
   def recover(posts = Post)
@@ -40,7 +41,7 @@ class UploadRecovery
           end
         end
       rescue => e
-        raise e unless @dry_run
+        raise e if @stop_on_error
         puts "#{post.full_url} #{e.class}: #{e.message}"
       end
     end
@@ -63,15 +64,32 @@ class UploadRecovery
     end
   end
 
+  def ensure_upload!(post:, sha1:, upload:)
+    return if !upload.persisted?
+
+    if upload.sha1 != sha1
+      STDERR.puts "Warning #{post.url} had an incorrect #{sha1} should be #{upload.sha1} storing in custom field 'rake uploads:fix_relative_upload_links' can fix this"
+
+      sha_map = post.custom_fields["UPLOAD_SHA1_MAP"] || "{}"
+      sha_map = JSON.parse(sha_map)
+      sha_map[sha1] = upload.sha1
+
+      post.custom_fields["UPLOAD_SHA1_MAP"] = sha_map.to_json
+      post.save_custom_fields
+    end
+
+    post.rebake!
+  end
+
   def recover_post_upload_from_local(post:, sha1:)
     recover_from_local(sha1: sha1, user_id: post.user_id) do |upload|
-      post.rebake! if upload.persisted?
+      ensure_upload!(post: post, sha1: sha1, upload: upload)
     end
   end
 
   def recover_post_upload_from_s3(post:, sha1:)
     recover_from_s3(sha1: sha1, user_id: post.user_id) do |upload|
-      post.rebake! if upload.persisted?
+      ensure_upload!(post: post, sha1: sha1, upload: upload)
     end
   end
 
@@ -117,9 +135,16 @@ class UploadRecovery
     @object_keys ||= begin
       s3_helper = Discourse.store.s3_helper
 
-      s3_helper.list("original").map(&:key).concat(
-        s3_helper.list("#{FileStore::S3Store::TOMBSTONE_PREFIX}original").map(&:key)
-      )
+      if Rails.configuration.multisite
+        current_db = RailsMultisite::ConnectionManagement.current_db
+        s3_helper.list("uploads/#{current_db}/original").map(&:key).concat(
+          s3_helper.list("uploads/#{FileStore::S3Store::TOMBSTONE_PREFIX}#{current_db}/original").map(&:key)
+        )
+      else
+        s3_helper.list("original").map(&:key).concat(
+          s3_helper.list("#{FileStore::S3Store::TOMBSTONE_PREFIX}original").map(&:key)
+        )
+      end
     end
 
     @object_keys.each do |key|

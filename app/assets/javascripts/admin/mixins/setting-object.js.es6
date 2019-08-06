@@ -12,7 +12,7 @@ export default Ember.Mixin.create({
   @computed("valid_values")
   validValues(validValues) {
     const vals = [],
-      translateNames = this.get("translate_names");
+      translateNames = this.translate_names;
 
     validValues.forEach(v => {
       if (v.name && v.name.length > 0 && translateNames) {

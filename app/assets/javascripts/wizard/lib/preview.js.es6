@@ -43,7 +43,7 @@ export function createPreviewComponent(width, height, obj) {
 
       didInsertElement() {
         this._super(...arguments);
-        const c = this.$("canvas")[0];
+        const c = this.element.querySelector("canvas");
         this.ctx = c.getContext("2d");
         this.ctx.scale(scale, scale);
         this.reload();
@@ -79,9 +79,7 @@ export function createPreviewComponent(width, height, obj) {
           return false;
         }
 
-        const colors = this.get("wizard").getCurrentColors(
-          this.get("colorsId")
-        );
+        const colors = this.wizard.getCurrentColors(this.colorsId);
         if (!colors) {
           return;
         }

@@ -132,7 +132,10 @@ WidgetClickHook.setupDocumentCallback = function() {
     let node = e.target;
     const $outside = $("[data-click-outside]");
     $outside.each((i, outNode) => {
-      if (outNode.contains(node) || outNode.style.position === "absolute") {
+      if (
+        outNode.contains(node) ||
+        (outNode === node && outNode.style.position === "absolute")
+      ) {
         return;
       }
 

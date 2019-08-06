@@ -33,13 +33,13 @@ const controllerOpts = {
 
   actions: {
     changeSort(sortBy) {
-      if (sortBy === this.get("order")) {
+      if (sortBy === this.order) {
         this.toggleProperty("ascending");
       } else {
         this.setProperties({ order: sortBy, ascending: false });
       }
 
-      this.get("model").refreshSort(sortBy, this.get("ascending"));
+      this.model.refreshSort(sortBy, this.ascending);
     },
 
     // Show newly inserted topics
@@ -47,7 +47,7 @@ const controllerOpts = {
       const tracker = this.topicTrackingState;
 
       // Move inserted into topics
-      this.get("model").loadBefore(tracker.get("newIncoming"), true);
+      this.model.loadBefore(tracker.get("newIncoming"), true);
       tracker.resetTracking();
       return false;
     },
@@ -68,7 +68,7 @@ const controllerOpts = {
 
       this.topicTrackingState.resetTracking();
       this.store.findFiltered("topicList", { filter }).then(list => {
-        TopicList.hideUniformCategory(list, this.get("category"));
+        TopicList.hideUniformCategory(list, this.category);
 
         this.setProperties({ model: list });
         this.resetSelected();
@@ -132,7 +132,7 @@ const controllerOpts = {
   footerMessage(allLoaded, topicsLength) {
     if (!allLoaded) return;
 
-    const category = this.get("category");
+    const category = this.category;
     if (category) {
       return I18n.t("topics.bottom.category", {
         category: category.get("name")

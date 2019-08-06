@@ -4,7 +4,7 @@ export default Ember.Component.extend({
   @on("init")
   _init() {
     if (!this.get("site.mobileView")) {
-      var classes = this.get("desktopClass");
+      var classes = this.desktopClass;
       if (classes) {
         classes = classes.split(" ");
         this.set("classNames", classes);
@@ -24,9 +24,9 @@ export default Ember.Component.extend({
   },
 
   _updateSelectedHtml() {
-    const active = this.$(".active");
-    if (active && active.html) {
-      this.set("selectedHtml", active.html());
+    const active = this.element.querySelector(".active");
+    if (active && active.innerHTML) {
+      this.set("selectedHtml", active.innerHTML);
     }
   },
 
@@ -39,11 +39,11 @@ export default Ember.Component.extend({
       this.toggleProperty("expanded");
 
       Ember.run.next(() => {
-        if (this.get("expanded")) {
+        if (this.expanded) {
           $(window)
             .off("click.mobile-nav")
             .on("click.mobile-nav", e => {
-              let expander = this.$(".expander");
+              let expander = $(this.element.querySelector(".expander"));
               expander = expander && expander[0];
               if ($(e.target)[0] !== expander) {
                 this.set("expanded", false);

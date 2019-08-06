@@ -18,10 +18,10 @@ nl:
     default_poll_must_have_at_least_2_options: "De poll moet minimaal 2 opties hebben."
     named_poll_must_have_at_least_2_options: "De poll met de naam <strong>%{name}</strong> moet minimaal 2 opties hebben."
     default_poll_must_have_less_options:
-      one: "De poll moet minder dan 1 optie hebben."
+      one: "De poll moet minder dan %{count} optie hebben."
       other: "De poll moet minder dan %{count} opties hebben."
     named_poll_must_have_less_options:
-      one: "De poll met de naam <strong>%{name}</strong> moet minder dan 1 optie hebben."
+      one: "De poll met de naam <strong>%{name}</strong> moet minder dan %{count} optie hebben."
       other: "De poll met de naam <strong>%{name}</strong> moet minder dan %{count} opties hebben."
     default_poll_must_have_different_options: "De poll moet verschillende opties hebben."
     named_poll_must_have_different_options: "De poll met de naam <strong>%{name}</strong> moet verschillende opties hebben."

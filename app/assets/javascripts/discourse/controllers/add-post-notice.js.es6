@@ -1,5 +1,6 @@
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import computed from "ember-addons/ember-computed-decorators";
+import { cookAsync } from "discourse/lib/text";
 
 export default Ember.Controller.extend(ModalFunctionality, {
   post: null,
@@ -22,7 +23,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
   },
 
   onClose() {
-    const reject = this.get("reject");
+    const reject = this.reject;
     if (reject) {
       reject();
     }
@@ -32,20 +33,21 @@ export default Ember.Controller.extend(ModalFunctionality, {
     setNotice() {
       this.set("saving", true);
 
-      const post = this.get("post");
-      const resolve = this.get("resolve");
-      const reject = this.get("reject");
-      const notice = this.get("notice");
+      const post = this.post;
+      const resolve = this.resolve;
+      const reject = this.reject;
+      const notice = this.notice;
 
       // Let `updatePostField` handle state.
       this.setProperties({ resolve: null, reject: null });
 
       post
         .updatePostField("notice", notice)
-        .then(() => {
+        .then(() => cookAsync(notice, { features: { onebox: false } }))
+        .then(cookedNotice => {
           post.setProperties({
             notice_type: "custom",
-            notice_args: notice
+            notice_args: cookedNotice.string
           });
           resolve();
           this.send("closeModal");

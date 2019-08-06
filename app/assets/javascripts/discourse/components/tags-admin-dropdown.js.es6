@@ -5,8 +5,13 @@ export default DropdownSelectBoxComponent.extend({
   classNames: "tags-admin-dropdown",
   showFullTitle: false,
   allowInitialValueMutation: false,
-  headerIcon: ["bars", "caret-down"],
   actionsMapping: null,
+
+  init() {
+    this._super(...arguments);
+
+    this.headerIcon = ["bars", "caret-down"];
+  },
 
   autoHighlight() {},
 
@@ -40,7 +45,7 @@ export default DropdownSelectBoxComponent.extend({
 
   actions: {
     onSelect(id) {
-      const action = this.get("actionsMapping")[id];
+      const action = this.actionsMapping[id];
 
       if (action) {
         action();

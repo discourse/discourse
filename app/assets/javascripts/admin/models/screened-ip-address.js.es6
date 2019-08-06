@@ -22,18 +22,17 @@ const ScreenedIpAddress = Discourse.Model.extend({
       {
         type: this.id ? "PUT" : "POST",
         data: {
-          ip_address: this.get("ip_address"),
-          action_name: this.get("action_name")
+          ip_address: this.ip_address,
+          action_name: this.action_name
         }
       }
     );
   },
 
   destroy() {
-    return ajax(
-      "/admin/logs/screened_ip_addresses/" + this.get("id") + ".json",
-      { type: "DELETE" }
-    );
+    return ajax("/admin/logs/screened_ip_addresses/" + this.id + ".json", {
+      type: "DELETE"
+    });
   }
 });
 

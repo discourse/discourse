@@ -4,6 +4,14 @@ require_dependency 'reviewable'
 
 class ReviewableFlaggedPost < Reviewable
 
+  # Penalties are handled by the modal after the action is performed
+  def self.action_aliases
+    { agree_and_keep_hidden: :agree_and_keep,
+      agree_and_silence: :agree_and_keep,
+      agree_and_suspend: :agree_and_keep,
+      disagree_and_restore: :disagree }
+  end
+
   def self.counts_for(posts)
     result = {}
 
@@ -36,7 +44,16 @@ class ReviewableFlaggedPost < Reviewable
 
     agree = actions.add_bundle("#{id}-agree", icon: 'thumbs-up', label: 'reviewables.actions.agree.title')
 
-    build_action(actions, :agree_and_keep, icon: 'thumbs-up', bundle: agree)
+    if !post.user_deleted? && !post.hidden?
+      build_action(actions, :agree_and_hide, icon: 'far-eye-slash', bundle: agree)
+    end
+
+    if post.hidden?
+      build_action(actions, :agree_and_keep_hidden, icon: 'thumbs-up', bundle: agree)
+    else
+      build_action(actions, :agree_and_keep, icon: 'thumbs-up', bundle: agree)
+    end
+
     if guardian.can_suspend?(target_created_by)
       build_action(actions, :agree_and_suspend, icon: 'ban', bundle: agree, client_action: 'suspend')
       build_action(actions, :agree_and_silence, icon: 'microphone-slash', bundle: agree, client_action: 'silence')
@@ -54,8 +71,6 @@ class ReviewableFlaggedPost < Reviewable
 
     if post.user_deleted?
       build_action(actions, :agree_and_restore, icon: 'far-eye', bundle: agree)
-    elsif !post.hidden?
-      build_action(actions, :agree_and_hide, icon: 'far-eye-slash', bundle: agree)
     end
 
     if post.hidden?
@@ -66,7 +81,7 @@ class ReviewableFlaggedPost < Reviewable
 
     build_action(actions, :ignore, icon: 'external-link-alt')
 
-    if guardian.is_staff?
+    if guardian.can_delete_post_or_topic?(post)
       delete = actions.add_bundle("#{id}-delete", icon: "far-trash-alt", label: "reviewables.actions.delete.title")
       build_action(actions, :delete_and_ignore, icon: 'external-link-alt', bundle: delete)
       if post.reply_count > 0
@@ -101,7 +116,9 @@ class ReviewableFlaggedPost < Reviewable
       action.deferred_by_id = performed_by.id
       # so callback is called
       action.save
-      action.add_moderator_post_if_needed(performed_by, :ignored, args[:post_was_deleted])
+      unless args[:expired]
+        action.add_moderator_post_if_needed(performed_by, :ignored, args[:post_was_deleted])
+      end
     end
 
     if actions.first.present?
@@ -115,16 +132,7 @@ class ReviewableFlaggedPost < Reviewable
     end
   end
 
-  # Penalties are handled by the modal after the action is performed
   def perform_agree_and_keep(performed_by, args)
-    agree(performed_by, args)
-  end
-
-  def perform_agree_and_suspend(performed_by, args)
-    agree(performed_by, args)
-  end
-
-  def perform_agree_and_silence(performed_by, args)
     agree(performed_by, args)
   end
 
@@ -153,10 +161,6 @@ class ReviewableFlaggedPost < Reviewable
     agree(performed_by, args) do
       PostDestroyer.new(performed_by, post).recover
     end
-  end
-
-  def perform_disagree_and_restore(performed_by, args)
-    perform_disagree(performed_by, args)
   end
 
   def perform_disagree(performed_by, args)
@@ -229,12 +233,7 @@ class ReviewableFlaggedPost < Reviewable
 
   def perform_delete_and_agree_replies(performed_by, args)
     result = agree(performed_by, args)
-
-    reply_ids = post.reply_ids(Guardian.new(performed_by), only_replies_to_single_post: false)
-    replies = Post.where(id: reply_ids.map { |r| r[:id] })
-    PostDestroyer.new(performed_by, post).destroy
-    replies.each { |reply| PostDestroyer.new(performed_by, reply).destroy }
-
+    PostDestroyer.delete_with_replies(performed_by, post)
     result
   end
 

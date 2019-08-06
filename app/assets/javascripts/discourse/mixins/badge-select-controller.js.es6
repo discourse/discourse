@@ -27,7 +27,7 @@ export default Ember.Mixin.create({
   selectedUserBadge(selectedUserBadgeId) {
     selectedUserBadgeId = parseInt(selectedUserBadgeId);
     let selectedUserBadge = null;
-    this.get("selectableUserBadges").forEach(function(userBadge) {
+    this.selectableUserBadges.forEach(function(userBadge) {
       if (userBadge.get("id") === selectedUserBadgeId) {
         selectedUserBadge = userBadge;
       }

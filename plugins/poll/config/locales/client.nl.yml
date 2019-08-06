@@ -25,13 +25,13 @@ nl:
       multiple:
         help:
           at_least_min_options:
-            one: "Kies minstens <strong>1</strong> optie"
+            one: "Kies minstens <strong>%{count}</strong> optie"
             other: "Kies minstens <strong>%{count}</strong> opties"
           up_to_max_options:
-            one: "Kies maximaal <strong>1</string> optie"
+            one: "Kies maximaal <strong>%{count}</string> optie"
             other: "Kies maximaal <strong>%{count}</string> opties"
           x_options:
-            one: "Kies <strong>1</strong> optie"
+            one: "Kies <strong>%{count}</strong> optie"
             other: "Kies <strong>%{count}</strong> opties"
           between_min_and_max_options: "Kies <strong>%{min}</strong> tot <strong>%{max}</strong> opties"
       cast-votes:

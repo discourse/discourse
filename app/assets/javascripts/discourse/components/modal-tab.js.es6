@@ -12,6 +12,6 @@ export default Ember.Component.extend({
   isActive: propertyEqual("panel.id", "selectedPanel.id"),
 
   click() {
-    this.onSelectPanel(this.get("panel"));
+    this.onSelectPanel(this.panel);
   }
 });

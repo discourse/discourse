@@ -159,24 +159,33 @@
                 </div>
               {{/if}}
               <div id='draft-status' class="{{if isUploading 'hidden'}}">
-                {{#if model.draftConflictUser}}
-                  {{avatar model.draftConflictUser imageSize="small"}}
-                {{/if}}
                 {{#if model.draftSaving}}<div class="spinner small"></div>{{/if}}
                 {{#if model.draftSaved}}{{d-icon 'check' class='save-animation'}}{{/if}}
                 {{#if model.draftStatus}}
-                  <span title="{{model.draftStatus}}">{{d-icon 'user-edit'}}</span>
+                  <span title="{{model.draftStatus}}">
+                    {{#if model.draftConflictUser}}
+                      {{avatar model.draftConflictUser imageSize="small"}} {{d-icon 'user-edit'}}
+                    {{else}}
+                      {{d-icon 'sync-alt'}}
+                    {{/if}}
+                    {{#unless site.mobileView}}
+                      {{model.draftStatus}}
+                    {{/unless}}
+                  </span>
                 {{/if}}
               </div>
             </div>
 
-            <div class="composer-bottom-right">
               {{#if site.mobileView}}
                 {{#if allowUpload}}
                   <a class="btn btn-default no-text mobile-file-upload {{if isUploading 'hidden'}}">
                     {{d-icon uploadIcon}}
                   </a>
                 {{/if}}
+
+                <a class="btn btn-default no-text mobile-preview" title="{{i18n 'composer.show_preview'}}" {{action "togglePreview"}}>
+                  {{d-icon "desktop"}}
+                </a>
 
                 {{#if showPreview}}
                   {{d-button action=(action "togglePreview") class="hide-preview" label="composer.hide_preview"}}
@@ -185,7 +194,6 @@
                 <a href {{action "togglePreview"}} class='toggle-preview'>{{{toggleText}}}</a>
               {{/if}}
 
-            </div>
           </div>
         </div>
 

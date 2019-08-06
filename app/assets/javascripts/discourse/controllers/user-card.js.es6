@@ -6,11 +6,11 @@ import {
 
 export default Ember.Controller.extend({
   topic: Ember.inject.controller(),
-  application: Ember.inject.controller(),
+  router: Ember.inject.service(),
 
   actions: {
     togglePosts(user) {
-      const topicController = this.get("topic");
+      const topicController = this.topic;
       topicController.send("toggleParticipant", user);
     },
 

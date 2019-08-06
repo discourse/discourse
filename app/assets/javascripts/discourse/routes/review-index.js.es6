@@ -20,7 +20,8 @@ export default Discourse.Route.extend({
       filterCategoryId: meta.category_id,
       filterPriority: meta.priority,
       reviewableTypes: meta.reviewable_types,
-      filterUsername: meta.username
+      filterUsername: meta.username,
+      filterSortOrder: meta.sort_order
     });
   },
 

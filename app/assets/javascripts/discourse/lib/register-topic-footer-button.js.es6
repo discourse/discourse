@@ -53,9 +53,7 @@ export function registerTopicFooterButton(button) {
     !normalizedButton.translatedTitle
   ) {
     Ember.error(
-      `Attempted to register a topic button: ${
-        button.id
-      } with no icon or title.`
+      `Attempted to register a topic button: ${button.id} with no icon or title.`
     );
     return;
   }
@@ -70,7 +68,7 @@ export function getTopicFooterButtons() {
       .filter(x => x)
   );
 
-  const computedFunc = Ember.computed({
+  return Ember.computed(...dependentKeys, {
     get() {
       const _isFunction = descriptor =>
         descriptor && typeof descriptor === "function";
@@ -124,8 +122,6 @@ export function getTopicFooterButtons() {
         .reverse();
     }
   });
-
-  return computedFunc.property.apply(computedFunc, dependentKeys);
 }
 
 export function clearTopicFooterButtons() {

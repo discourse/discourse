@@ -26,11 +26,9 @@ export default Ember.Controller.extend({
 
   @observes("searchTerm")
   _searchTermChanged: debounce(function() {
-    Invite.findInvitedBy(
-      this.get("user"),
-      this.get("filter"),
-      this.get("searchTerm")
-    ).then(invites => this.set("model", invites));
+    Invite.findInvitedBy(this.user, this.filter, this.searchTerm).then(
+      invites => this.set("model", invites)
+    );
   }, 250),
 
   inviteRedeemed: Ember.computed.equal("filter", "redeemed"),
@@ -39,20 +37,14 @@ export default Ember.Controller.extend({
   showBulkActionButtons(filter) {
     return (
       filter === "pending" &&
-      this.get("model").invites.length > 4 &&
+      this.model.invites.length > 4 &&
       this.currentUser.get("staff")
     );
   },
 
-  @computed
-  canInviteToForum() {
-    return Discourse.User.currentProp("can_invite_to_forum");
-  },
+  canInviteToForum: Ember.computed.reads("currentUser.can_invite_to_forum"),
 
-  @computed
-  canBulkInvite() {
-    return Discourse.User.currentProp("admin");
-  },
+  canBulkInvite: Ember.computed.reads("currentUser.admin"),
 
   showSearch: Ember.computed.gte("totalInvites", 10),
 
@@ -112,14 +104,14 @@ export default Ember.Controller.extend({
     },
 
     loadMore() {
-      const model = this.get("model");
+      const model = this.model;
 
-      if (this.get("canLoadMore") && !this.get("invitesLoading")) {
+      if (this.canLoadMore && !this.invitesLoading) {
         this.set("invitesLoading", true);
         Invite.findInvitedBy(
-          this.get("user"),
-          this.get("filter"),
-          this.get("searchTerm"),
+          this.user,
+          this.filter,
+          this.searchTerm,
           model.invites.length
         ).then(invite_model => {
           this.set("invitesLoading", false);

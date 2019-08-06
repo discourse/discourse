@@ -1,3 +1,4 @@
+# coding: utf-8
 # frozen_string_literal: true
 require 'current_user'
 require 'canonical_url'
@@ -57,12 +58,17 @@ module ApplicationHelper
     request.env["HTTP_ACCEPT_ENCODING"] =~ /br/
   end
 
+  def is_gzip_req?
+    request.env["HTTP_ACCEPT_ENCODING"] =~ /gzip/
+  end
+
   def script_asset_path(script)
     path = asset_path("#{script}.js")
 
     if GlobalSetting.use_s3? && GlobalSetting.s3_cdn_url
       if GlobalSetting.cdn_url
-        path = path.gsub(GlobalSetting.cdn_url, GlobalSetting.s3_cdn_url)
+        folder = ActionController::Base.config.relative_url_root || "/"
+        path = path.gsub(File.join(GlobalSetting.cdn_url, folder, "/"), File.join(GlobalSetting.s3_cdn_url, "/"))
       else
         # we must remove the subfolder path here, assets are uploaded to s3
         # without it getting involved
@@ -75,6 +81,8 @@ module ApplicationHelper
 
       if is_brotli_req?
         path = path.gsub(/\.([^.]+)$/, '.br.\1')
+      elsif is_gzip_req?
+        path = path.gsub(/\.([^.]+)$/, '.gz.\1')
       end
 
     elsif GlobalSetting.cdn_url&.start_with?("https") && is_brotli_req?
@@ -431,6 +439,11 @@ module ApplicationHelper
       &.html_safe
   end
 
+  def theme_js_lookup
+    Theme.lookup_field(theme_ids, :extra_js, nil)
+      &.html_safe
+  end
+
   def discourse_stylesheet_link_tag(name, opts = {})
     if opts.key?(:theme_ids)
       ids = opts[:theme_ids] unless customization_disabled?
@@ -493,5 +506,11 @@ module ApplicationHelper
       absolute_url = "#{Discourse.base_url_no_prefix}#{link}"
     end
     absolute_url
+  end
+
+  def can_sign_up?
+    SiteSetting.allow_new_registrations &&
+    !SiteSetting.invite_only &&
+    !SiteSetting.enable_sso
   end
 end

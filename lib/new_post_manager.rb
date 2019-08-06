@@ -22,7 +22,7 @@ class NewPostManager
   end
 
   def self.clear_handlers!
-    @sorted_handlers = [{ priority: 0, proc: method(:default_handler) }]
+    @sorted_handlers = []
   end
 
   def self.add_handler(priority = 0, &block)
@@ -172,37 +172,48 @@ class NewPostManager
   end
 
   def perform
-    if !self.class.exempt_user?(@user) && matches = WordWatcher.new("#{@args[:title]} #{@args[:raw]}").should_block?
+    if !self.class.exempt_user?(@user) && matches = WordWatcher.new("#{@args[:title]} #{@args[:raw]}").should_block?.presence
       result = NewPostResult.new(:created_post, false)
-      result.errors.add(:base, I18n.t('contains_blocked_words', word: matches[0]))
+      if matches.size == 1
+        key = 'contains_blocked_word'
+        translation_args = { word: matches[0] }
+      else
+        key = 'contains_blocked_words'
+        translation_args = { words: matches.join(', ') }
+      end
+      result.errors.add(:base, I18n.t(key, translation_args))
       return result
     end
 
-    # We never queue private messages
-    return perform_create_post if @args[:archetype] == Archetype.private_message
-
-    if args[:topic_id] && Topic.where(id: args[:topic_id], archetype: Archetype.private_message).exists?
-      return perform_create_post
-    end
-
     # Perform handlers until one returns a result
-    handled = NewPostManager.handlers.any? do |handler|
+    NewPostManager.handlers.any? do |handler|
       result = handler.call(self)
       return result if result
-
-      false
     end
 
-    perform_create_post unless handled
+    # We never queue private messages
+    return perform_create_post if @args[:archetype] == Archetype.private_message ||
+                                  (args[:topic_id] && Topic.where(id: args[:topic_id], archetype: Archetype.private_message).exists?)
+
+    NewPostManager.default_handler(self) || perform_create_post
   end
 
   # Enqueue this post
   def enqueue(reason = nil)
     result = NewPostResult.new(:enqueued)
+    payload = {
+      raw: @args[:raw],
+      tags: @args[:tags]
+    }
+    %w(typing_duration_msecs composer_open_duration_msecs reply_to_post_number).each do |a|
+      payload[a] = @args[a].to_i if @args[a]
+    end
+    payload[:via_email] = true if !!@args[:via_email]
+    payload[:raw_email] = @args[:raw_email] if @args[:raw_email].present?
 
     reviewable = ReviewableQueuedPost.new(
       created_by: @user,
-      payload: { raw: @args[:raw], tags: @args[:tags] },
+      payload: payload,
       topic_id: @args[:topic_id],
       reviewable_by_moderator: true
     )

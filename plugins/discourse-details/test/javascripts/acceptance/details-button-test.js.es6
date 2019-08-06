@@ -1,5 +1,6 @@
 import { acceptance } from "helpers/qunit-helpers";
 import { clearPopupMenuOptionsCallback } from "discourse/controllers/composer";
+import selectKit from "helpers/select-kit-helper";
 
 acceptance("Details Button", {
   loggedIn: true,

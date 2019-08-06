@@ -17,29 +17,33 @@
     {{format-date rs.created_at format="tiny"}}
   </td>
 
-  <td class="reviewable-score-spacer">
-    {{d-icon "angle-double-right"}}
-  </td>
+  {{#if showStatus}}
+    <td class="reviewable-score-spacer">
+      {{d-icon "angle-double-right"}}
+    </td>
 
-  <td class='reviewed-by'>
-    {{#if rs.reviewed_by}}
-      {{#user-link user=rs.reviewed_by}}
-        {{avatar rs.reviewed_by imageSize="tiny"}}
-        {{rs.reviewed_by.username}}
-      {{/user-link}}
-    {{else}}
-      &mdash;
-    {{/if}}
-  </td>
+    <td class='reviewed-by'>
+      {{#if rs.reviewed_by}}
+        {{#user-link user=rs.reviewed_by}}
+          {{avatar rs.reviewed_by imageSize="tiny"}}
+          {{rs.reviewed_by.username}}
+        {{/user-link}}
+      {{else}}
+        &mdash;
+      {{/if}}
+    </td>
 
-  <td>
-    {{reviewable-status rs.status}}
-  </td>
-  <td>
-    {{#if rs.reviewed_by}}
-      {{format-date rs.reviewed_at format="tiny"}}
-    {{/if}}
-  </td>
+    <td>
+      {{reviewable-status rs.status}}
+    </td>
+    <td>
+      {{#if rs.reviewed_by}}
+        {{format-date rs.reviewed_at format="tiny"}}
+      {{/if}}
+    </td>
+  {{else}}
+    <td colspan="4"></td>
+  {{/if}}
 </tr>
 
 {{#if rs.reason}}

@@ -31,7 +31,7 @@ class DiscourseCLI < Thor
   option :regex, type: :boolean
   def remap(from, to)
     load_rails
-    require 'remap'
+    require 'db_helper'
 
     if options[:regex]
       puts "Rewriting all occurences of #{from} to #{to} using regexp_replace"
@@ -269,7 +269,7 @@ class DiscourseCLI < Thor
 
   def do_remap(from, to, regex = false)
     begin
-      Remap.new(from, to, regex: regex, verbose: true).perform
+      regex ? DbHelper.regexp_replace(from, to, verbose: true) : DbHelper.remap(from, to, verbose: true)
       puts 'Done', ''
     rescue => ex
       puts "Error: #{ex}"

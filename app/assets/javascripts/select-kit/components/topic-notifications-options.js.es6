@@ -18,7 +18,7 @@ export default NotificationOptionsComponent.extend({
   },
 
   _changed(msg) {
-    if (this.get("computedValue") !== msg.id) {
+    if (this.computedValue !== msg.id) {
       this.get("topic.details").updateNotifications(msg.id);
     }
   },
@@ -34,7 +34,7 @@ export default NotificationOptionsComponent.extend({
   },
 
   mutateValue(value) {
-    if (value !== this.get("value")) {
+    if (value !== this.value) {
       this.get("topic.details").updateNotifications(value);
     }
   },

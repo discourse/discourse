@@ -346,6 +346,25 @@ describe Guardian do
       end
     end
 
+    it "respects the group members messageable_level" do
+      group.update!(messageable_level: Group::ALIAS_LEVELS[:members_mods_and_admins])
+      expect(Guardian.new(user).can_send_private_message?(group)).to eq(false)
+
+      group.add(user)
+      expect(Guardian.new(user).can_send_private_message?(group)).to eq(true)
+    end
+
+    it "respects the group owners messageable_level" do
+      group.update!(messageable_level: Group::ALIAS_LEVELS[:owners_mods_and_admins])
+      expect(Guardian.new(user).can_send_private_message?(group)).to eq(false)
+
+      group.add(user)
+      expect(Guardian.new(user).can_send_private_message?(group)).to eq(false)
+
+      group.add_owner(user)
+      expect(Guardian.new(user).can_send_private_message?(group)).to eq(true)
+    end
+
     context 'target user has private message disabled' do
       before do
         another_user.user_option.update!(allow_private_messages: false)
@@ -775,6 +794,13 @@ describe Guardian do
 
         PostActionCreator.create(user, first_post, :off_topic)
         expect(Guardian.new(moderator).can_see?(private_topic)).to be_truthy
+      end
+
+      it "allows staff to set banner topics" do
+        topic = Fabricate(:topic)
+
+        expect(Guardian.new(admin).can_banner_topic?(nil)).to be_falsey
+        expect(Guardian.new(admin).can_banner_topic?(topic)).to be_truthy
       end
     end
 
@@ -1419,6 +1445,16 @@ describe Guardian do
         expect(Guardian.new(coding_horror).can_edit?(topic)).to be_falsey
       end
 
+      context "locked" do
+        let(:post) { Fabricate(:post, locked_by_id: admin.id) }
+        let(:topic) { post.topic }
+
+        it "doesn't allow users to edit locked topics" do
+          expect(Guardian.new(topic.user).can_edit?(topic)).to eq(false)
+          expect(Guardian.new(admin).can_edit?(topic)).to eq(true)
+        end
+      end
+
       context 'not archived' do
         it 'returns true as a moderator' do
           expect(Guardian.new(moderator).can_edit?(topic)).to eq(true)
@@ -1648,6 +1684,40 @@ describe Guardian do
       GroupUser.create!(group_id: group.id, user_id: user.id)
       topic.category.update!(reviewable_by_group_id: group.id)
       expect(Guardian.new(user).can_review_topic?(topic)).to eq(true)
+    end
+  end
+
+  context "can_create_topic?" do
+    it 'returns true for staff user' do
+      expect(Guardian.new(moderator).can_create_topic?(topic)).to eq(true)
+    end
+
+    it 'returns false for user with insufficient trust level' do
+      SiteSetting.min_trust_to_create_topic = 3
+      expect(Guardian.new(user).can_create_topic?(topic)).to eq(false)
+    end
+
+    it 'returns true for user with sufficient trust level' do
+      SiteSetting.min_trust_to_create_topic = 3
+      expect(Guardian.new(trust_level_4).can_create_topic?(topic)).to eq(true)
+    end
+
+    it 'returns false when posting in "uncategorized" is disabled and there is no other category available for posting' do
+      SiteSetting.allow_uncategorized_topics = false
+
+      plain_category.set_permissions(group => :readonly)
+      plain_category.save
+      expect(Guardian.new(user).can_create_topic?(topic)).to eq(false)
+    end
+
+    it 'returns true when there is a category available for posting' do
+      SiteSetting.allow_uncategorized_topics = false
+
+      plain_category.set_permissions(group => :full)
+      plain_category.save
+      group.add(user)
+      group.save
+      expect(Guardian.new(user).can_create_topic?(topic)).to eq(true)
     end
   end
 
@@ -2976,7 +3046,7 @@ describe Guardian do
   end
 
   describe(:can_see_group) do
-    it 'Correctly handles owner visibile groups' do
+    it 'Correctly handles owner visible groups' do
       group = Group.new(name: 'group', visibility_level: Group.visibility_levels[:owners])
 
       member = Fabricate(:user)
@@ -2988,13 +3058,14 @@ describe Guardian do
       group.reload
 
       expect(Guardian.new(admin).can_see_group?(group)).to eq(true)
+      expect(Guardian.new(another_user).can_see_group?(group)).to eq(false)
       expect(Guardian.new(moderator).can_see_group?(group)).to eq(false)
       expect(Guardian.new(member).can_see_group?(group)).to eq(false)
       expect(Guardian.new.can_see_group?(group)).to eq(false)
       expect(Guardian.new(owner).can_see_group?(group)).to eq(true)
     end
 
-    it 'Correctly handles staff visibile groups' do
+    it 'Correctly handles staff visible groups' do
       group = Group.new(name: 'group', visibility_level: Group.visibility_levels[:staff])
 
       member = Fabricate(:user)
@@ -3005,6 +3076,7 @@ describe Guardian do
       group.add_owner(owner)
       group.reload
 
+      expect(Guardian.new(another_user).can_see_group?(group)).to eq(false)
       expect(Guardian.new(member).can_see_group?(group)).to eq(false)
       expect(Guardian.new(admin).can_see_group?(group)).to eq(true)
       expect(Guardian.new(moderator).can_see_group?(group)).to eq(true)
@@ -3012,7 +3084,7 @@ describe Guardian do
       expect(Guardian.new.can_see_group?(group)).to eq(false)
     end
 
-    it 'Correctly handles member visibile groups' do
+    it 'Correctly handles member visible groups' do
       group = Group.new(name: 'group', visibility_level: Group.visibility_levels[:members])
 
       member = Fabricate(:user)
@@ -3025,9 +3097,28 @@ describe Guardian do
 
       expect(Guardian.new(moderator).can_see_group?(group)).to eq(false)
       expect(Guardian.new.can_see_group?(group)).to eq(false)
+      expect(Guardian.new(another_user).can_see_group?(group)).to eq(false)
       expect(Guardian.new(admin).can_see_group?(group)).to eq(true)
       expect(Guardian.new(member).can_see_group?(group)).to eq(true)
       expect(Guardian.new(owner).can_see_group?(group)).to eq(true)
+    end
+
+    it 'Correctly handles logged-on-user visible groups' do
+      group = Group.new(name: 'group', visibility_level: Group.visibility_levels[:logged_on_users])
+      member = Fabricate(:user)
+      group.add(member)
+      group.save!
+
+      owner = Fabricate(:user)
+      group.add_owner(owner)
+      group.reload
+
+      expect(Guardian.new.can_see_group?(group)).to eq(false)
+      expect(Guardian.new(moderator).can_see_group?(group)).to eq(true)
+      expect(Guardian.new(admin).can_see_group?(group)).to eq(true)
+      expect(Guardian.new(member).can_see_group?(group)).to eq(true)
+      expect(Guardian.new(owner).can_see_group?(group)).to eq(true)
+      expect(Guardian.new(another_user).can_see_group?(group)).to eq(true)
     end
 
     it 'Correctly handles public groups' do
@@ -3036,6 +3127,138 @@ describe Guardian do
       expect(Guardian.new.can_see_group?(group)).to eq(true)
     end
 
+  end
+
+  describe '#can_see_groups?' do
+    it 'correctly handles owner visible groups' do
+      group = Group.new(name: 'group', visibility_level: Group.visibility_levels[:owners])
+
+      member = Fabricate(:user)
+      group.add(member)
+      group.save!
+
+      owner = Fabricate(:user)
+      group.add_owner(owner)
+      group.reload
+
+      expect(Guardian.new(admin).can_see_groups?([group])).to eq(true)
+      expect(Guardian.new(another_user).can_see_groups?([group])).to eq(false)
+      expect(Guardian.new(moderator).can_see_groups?([group])).to eq(false)
+      expect(Guardian.new(member).can_see_groups?([group])).to eq(false)
+      expect(Guardian.new.can_see_groups?([group])).to eq(false)
+      expect(Guardian.new(owner).can_see_groups?([group])).to eq(true)
+    end
+
+    it 'correctly handles the case where the user does not own every group' do
+      group = Group.new(name: 'group', visibility_level: Group.visibility_levels[:owners])
+      group2 = Group.new(name: 'group2', visibility_level: Group.visibility_levels[:owners])
+      group2.save!
+
+      member = Fabricate(:user)
+      group.add(member)
+      group.save!
+
+      owner = Fabricate(:user)
+      group.add_owner(owner)
+      group.reload
+
+      expect(Guardian.new(admin).can_see_groups?([group, group2])).to eq(true)
+      expect(Guardian.new(moderator).can_see_groups?([group, group2])).to eq(false)
+      expect(Guardian.new(member).can_see_groups?([group, group2])).to eq(false)
+      expect(Guardian.new.can_see_groups?([group, group2])).to eq(false)
+      expect(Guardian.new(owner).can_see_groups?([group, group2])).to eq(false)
+      expect(Guardian.new(another_user).can_see_groups?([group, group2])).to eq(false)
+    end
+
+    it 'correctly handles staff visible groups' do
+      group = Group.new(name: 'group', visibility_level: Group.visibility_levels[:staff])
+
+      member = Fabricate(:user)
+      group.add(member)
+      group.save!
+
+      owner = Fabricate(:user)
+      group.add_owner(owner)
+      group.reload
+
+      expect(Guardian.new(member).can_see_groups?([group])).to eq(false)
+      expect(Guardian.new(admin).can_see_groups?([group])).to eq(true)
+      expect(Guardian.new(moderator).can_see_groups?([group])).to eq(true)
+      expect(Guardian.new(owner).can_see_groups?([group])).to eq(true)
+      expect(Guardian.new.can_see_groups?([group])).to eq(false)
+      expect(Guardian.new(another_user).can_see_groups?([group])).to eq(false)
+    end
+
+    it 'correctly handles member visible groups' do
+      group = Group.new(name: 'group', visibility_level: Group.visibility_levels[:members])
+
+      member = Fabricate(:user)
+      group.add(member)
+      group.save!
+
+      owner = Fabricate(:user)
+      group.add_owner(owner)
+      group.reload
+
+      expect(Guardian.new(another_user).can_see_groups?([group])).to eq(false)
+      expect(Guardian.new(moderator).can_see_groups?([group])).to eq(false)
+      expect(Guardian.new.can_see_groups?([group])).to eq(false)
+      expect(Guardian.new(admin).can_see_groups?([group])).to eq(true)
+      expect(Guardian.new(member).can_see_groups?([group])).to eq(true)
+      expect(Guardian.new(owner).can_see_groups?([group])).to eq(true)
+    end
+
+    it 'correctly handles logged-on-user visible groups' do
+      group = Group.new(name: 'group', visibility_level: Group.visibility_levels[:logged_on_users])
+
+      member = Fabricate(:user)
+      group.add(member)
+      group.save!
+
+      owner = Fabricate(:user)
+      group.add_owner(owner)
+      group.reload
+
+      expect(Guardian.new(member).can_see_groups?([group])).to eq(true)
+      expect(Guardian.new(admin).can_see_groups?([group])).to eq(true)
+      expect(Guardian.new(moderator).can_see_groups?([group])).to eq(true)
+      expect(Guardian.new(owner).can_see_groups?([group])).to eq(true)
+      expect(Guardian.new.can_see_groups?([group])).to eq(false)
+      expect(Guardian.new(another_user).can_see_groups?([group])).to eq(true)
+    end
+
+    it 'correctly handles the case where the user is not a member of every group' do
+      group1 = Group.new(name: 'group', visibility_level: Group.visibility_levels[:members])
+      group2 = Group.new(name: 'group2', visibility_level: Group.visibility_levels[:members])
+      group2.save!
+
+      member = Fabricate(:user)
+      group1.add(member)
+      group1.save!
+
+      owner = Fabricate(:user)
+      group1.add_owner(owner)
+      group1.reload
+
+      expect(Guardian.new(moderator).can_see_groups?([group1, group2])).to eq(false)
+      expect(Guardian.new.can_see_groups?([group1, group2])).to eq(false)
+      expect(Guardian.new(admin).can_see_groups?([group1, group2])).to eq(true)
+      expect(Guardian.new(member).can_see_groups?([group1, group2])).to eq(false)
+      expect(Guardian.new(owner).can_see_groups?([group1, group2])).to eq(false)
+    end
+
+    it 'correctly handles public groups' do
+      group = Group.new(name: 'group', visibility_level: Group.visibility_levels[:public])
+
+      expect(Guardian.new.can_see_groups?([group])).to eq(true)
+    end
+
+    it 'correctly handles case where not every group is public' do
+      group1 = Group.new(name: 'group', visibility_level: Group.visibility_levels[:public])
+      group2 = Group.new(name: 'group', visibility_level: Group.visibility_levels[:private])
+
+      expect(Guardian.new.can_see_groups?([group1, group2])).to eq(false)
+    end
   end
 
   context 'topic featured link category restriction' do

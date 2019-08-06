@@ -1,4 +1,5 @@
 import { default as computed } from "ember-addons/ember-computed-decorators";
+import DiscourseURL from "discourse/lib/url";
 
 export default Ember.Component.extend({
   // subclasses need this
@@ -53,15 +54,20 @@ export default Ember.Component.extend({
   },
 
   click() {
-    if (typeof this.get("action") === "string") {
-      this.sendAction("action", this.get("actionParam"));
-    } else if (
-      typeof this.get("action") === "object" &&
-      this.get("action").value
-    ) {
-      this.get("action").value(this.get("actionParam"));
-    } else if (typeof this.get("action") === "function") {
-      this.get("action")(this.get("actionParam"));
+    let { action } = this;
+
+    if (action) {
+      if (typeof action === "string") {
+        this.sendAction("action", this.actionParam);
+      } else if (typeof action === "object" && action.value) {
+        action.value(this.actionParam);
+      } else if (typeof this.action === "function") {
+        action(this.actionParam);
+      }
+    }
+
+    if (this.href && this.href.length) {
+      DiscourseURL.routeTo(this.href);
     }
 
     return false;

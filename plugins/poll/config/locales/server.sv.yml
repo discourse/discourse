@@ -15,10 +15,10 @@ sv:
     default_poll_must_have_at_least_2_options: "Omröstningen måste ha minst 2 alternativ."
     named_poll_must_have_at_least_2_options: "Omröstningen med namnet <strong>%{name}</strong> måste ha minst 2 alternativ."
     default_poll_must_have_less_options:
-      one: "Omröstningen måste ha mindre än 1 alternativ."
+      one: "Omröstningen måste ha mindre än %{count} alternativ."
       other: "Omröstningen måste ha mindre än %{count} alternativ."
     named_poll_must_have_less_options:
-      one: "Omröstningen med namnet <strong>%{name}</strong> måste ha mindre än 1 alternativ."
+      one: "Omröstningen med namnet <strong>%{name}</strong> måste ha mindre än %{count} alternativ."
       other: "Omröstningen med namnet <strong>%{name}</strong> måste ha mindre än %{count} alternativ."
     default_poll_must_have_different_options: "Omröstningen måste ha olika alternativ."
     named_poll_must_have_different_options: "Omröstning med namnet <strong>%{name}</strong> måste ha olika alternativ."

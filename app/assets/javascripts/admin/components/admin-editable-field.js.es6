@@ -11,13 +11,13 @@ export default Ember.Component.extend({
 
   actions: {
     edit() {
-      this.set("buffer", this.get("value"));
+      this.set("buffer", this.value);
       this.toggleProperty("editing");
     },
 
     save() {
       // Action has to toggle 'editing' property.
-      this.action(this.get("buffer"));
+      this.action(this.buffer);
     }
   }
 });

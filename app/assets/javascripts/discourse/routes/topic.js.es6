@@ -51,9 +51,9 @@ const TopicRoute = Discourse.Route.extend({
     showInvite() {
       let invitePanelTitle;
 
-      if (this.get("isPM")) {
+      if (this.isPM) {
         invitePanelTitle = "topic.invite_private.title";
-      } else if (this.get("invitingToTopic")) {
+      } else if (this.invitingToTopic) {
         invitePanelTitle = "topic.invite_reply.title";
       } else {
         invitePanelTitle = "user.invited.create";
@@ -225,9 +225,13 @@ const TopicRoute = Discourse.Route.extend({
 
   model(params, transition) {
     if (params.slug.match(ID_CONSTRAINT)) {
-      return DiscourseURL.routeTo(`/t/topic/${params.slug}/${params.id}`, {
+      transition.abort();
+
+      DiscourseURL.routeTo(`/t/topic/${params.slug}/${params.id}`, {
         replaceURL: true
       });
+
+      return;
     }
 
     const queryParams = transition.to.queryParams;

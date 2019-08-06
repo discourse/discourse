@@ -7,13 +7,13 @@ const CookText = Ember.Component.extend({
 
   didReceiveAttrs() {
     this._super(...arguments);
-    cookAsync(this.get("rawText")).then(cooked => {
+    cookAsync(this.rawText).then(cooked => {
       this.set("cooked", cooked);
       // no choice but to defer this cause
       // pretty text may only be loaded now
       Ember.run.next(() =>
         window
-          .requireModule("pretty-text/image-short-url")
+          .requireModule("pretty-text/upload-short-url")
           .resolveAllShortUrls(ajax)
       );
     });

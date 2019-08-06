@@ -33,14 +33,14 @@ export default Ember.Mixin.create({
       return false;
     }
 
-    const currentUsername = this.get("username");
-    if (username === currentUsername && this.get("loading") === username) {
+    const currentUsername = this.username;
+    if (username === currentUsername && this.loading === username) {
       return;
     }
 
     const postId = $target.parents("article").data("post-id");
-    const wasVisible = this.get("visible");
-    const previousTarget = this.get("cardTarget");
+    const wasVisible = this.visible;
+    const previousTarget = this.cardTarget;
     const target = $target[0];
 
     if (wasVisible) {
@@ -51,8 +51,8 @@ export default Ember.Mixin.create({
     }
 
     const post =
-      this.get("viewingTopic") && postId
-        ? this.get("postStream").findLoadedPost(postId)
+      this.viewingTopic && postId
+        ? this.postStream.findLoadedPost(postId)
         : null;
     this.setProperties({
       username,
@@ -73,9 +73,9 @@ export default Ember.Mixin.create({
 
   didInsertElement() {
     this._super(...arguments);
-    afterTransition(this.$(), this._hide.bind(this));
-    const id = this.get("elementId");
-    const triggeringLinkClass = this.get("triggeringLinkClass");
+    afterTransition($(this.element), this._hide.bind(this));
+    const id = this.elementId;
+    const triggeringLinkClass = this.triggeringLinkClass;
     const clickOutsideEventName = `mousedown.outside-${id}`;
     const clickDataExpand = `click.discourse-${id}`;
     const clickMention = `click.discourse-${id}-${triggeringLinkClass}`;
@@ -93,7 +93,7 @@ export default Ember.Mixin.create({
     $("html")
       .off(clickOutsideEventName)
       .on(clickOutsideEventName, e => {
-        if (this.get("visible")) {
+        if (this.visible) {
           const $target = $(e.target);
           if (
             $target.closest(`[data-${id}]`).data(id) ||
@@ -127,14 +127,20 @@ export default Ember.Mixin.create({
 
     this.appEvents.on(previewClickEvent, this, "_previewClick");
 
-    this.appEvents.on(`topic-header:trigger-${id}`, (username, $target) => {
-      this.setProperties({ isFixed: true, isDocked: true });
-      return this._show(username, $target);
-    });
+    this.appEvents.on(
+      `topic-header:trigger-${id}`,
+      this,
+      "_topicHeaderTrigger"
+    );
+  },
+
+  _topicHeaderTrigger(username, $target) {
+    this.setProperties({ isFixed: true, isDocked: true });
+    return this._show(username, $target);
   },
 
   _bindMobileScroll() {
-    const mobileScrollEvent = this.get("mobileScrollEvent");
+    const mobileScrollEvent = this.mobileScrollEvent;
     const onScroll = () => {
       Ember.run.throttle(this, this._close, 1000);
     };
@@ -143,7 +149,7 @@ export default Ember.Mixin.create({
   },
 
   _unbindMobileScroll() {
-    const mobileScrollEvent = this.get("mobileScrollEvent");
+    const mobileScrollEvent = this.mobileScrollEvent;
 
     $(window).off(mobileScrollEvent);
   },
@@ -158,10 +164,10 @@ export default Ember.Mixin.create({
     if (!target) {
       return;
     }
-    const width = this.$().width();
+    const width = $(this.element).width();
     const height = 175;
-    const isFixed = this.get("isFixed");
-    const isDocked = this.get("isDocked");
+    const isFixed = this.isFixed;
+    const isDocked = this.isDocked;
 
     let verticalAdjustments = 0;
 
@@ -221,7 +227,7 @@ export default Ember.Mixin.create({
               position.top = avatarOverflowSize;
             }
 
-            this.$().css(position);
+            $(this.element).css(position);
           }
         }
 
@@ -230,23 +236,26 @@ export default Ember.Mixin.create({
           let position = target.offset();
           position.top = "10%"; // match modal behaviour
           position.left = 0;
-          this.$().css(position);
+          $(this.element).css(position);
         }
-        this.$().toggleClass("docked-card", isDocked);
+        $(this.element).toggleClass("docked-card", isDocked);
 
         // After the card is shown, focus on the first link
         //
         // note: we DO NOT use afterRender here cause _positionCard may
         // run afterwards, if we allowed this to happen the usercard
         // may be offscreen and we may scroll all the way to it on focus
-        Ember.run.next(null, () => this.$("a:first").focus());
+        Ember.run.next(null, () => {
+          const firstLink = this.element.querySelector("a");
+          firstLink && firstLink.focus();
+        });
       }
     });
   },
 
   _hide() {
-    if (!this.get("visible")) {
-      this.$().css({ left: -9999, top: -9999 });
+    if (!this.visible) {
+      $(this.element).css({ left: -9999, top: -9999 });
       if (this.site.mobileView) {
         $(".card-cloak").addClass("hidden");
       }
@@ -272,22 +281,29 @@ export default Ember.Mixin.create({
 
   willDestroyElement() {
     this._super(...arguments);
-    const clickOutsideEventName = this.get("clickOutsideEventName");
-    const clickDataExpand = this.get("clickDataExpand");
-    const clickMention = this.get("clickMention");
-    const previewClickEvent = this.get("previewClickEvent");
+    const clickOutsideEventName = this.clickOutsideEventName;
+    const clickDataExpand = this.clickDataExpand;
+    const clickMention = this.clickMention;
+    const previewClickEvent = this.previewClickEvent;
 
     $("html").off(clickOutsideEventName);
     $("#main")
       .off(clickDataExpand)
       .off(clickMention);
+
     this.appEvents.off(previewClickEvent, this, "_previewClick");
+
+    this.appEvents.off(
+      `topic-header:trigger-${this.elementId}`,
+      this,
+      "_topicHeaderTrigger"
+    );
   },
 
   keyUp(e) {
     if (e.keyCode === 27) {
       // ESC
-      const target = this.get("cardTarget");
+      const target = this.cardTarget;
       this._close();
       target.focus();
     }

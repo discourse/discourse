@@ -10,6 +10,8 @@ module Jobs
 
       ActiveRecord::Base.transaction do
         User.where(id: args[:user_ids]).find_each do |user|
+          next if post_revision.hidden && !user.staff?
+
           PostActionNotifier.alerter.create_notification(
             user,
             Notification.types[:edited],

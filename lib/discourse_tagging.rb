@@ -56,7 +56,7 @@ module DiscourseTagging
           selected_tags: tag_names
         ).to_a
 
-        if tags.size < tag_names.size && (category.nil? || (category.tags.count == 0 && category.tag_groups.count == 0))
+        if tags.size < tag_names.size && (category.nil? || category.allow_global_tags || (category.tags.count == 0 && category.tag_groups.count == 0))
           tag_names.each do |name|
             unless Tag.where_name(name).exists?
               tags << Tag.create(name: name)
@@ -80,6 +80,11 @@ module DiscourseTagging
         # validate minimum required tags for a category
         if !guardian.is_staff? && category && category.minimum_required_tags > 0 && tags.length < category.minimum_required_tags
           topic.errors.add(:base, I18n.t("tags.minimum_required_tags", count: category.minimum_required_tags))
+          return false
+        end
+
+        if tags.size == 0
+          topic.errors.add(:base, I18n.t("tags.forbidden.invalid", count: new_tag_names.size))
           return false
         end
 

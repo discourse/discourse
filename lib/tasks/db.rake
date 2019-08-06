@@ -13,6 +13,10 @@ module MultisiteTestHelpers
   def self.load_multisite?
     Rails.env.test? && !ENV["RAILS_DB"] && !ENV["SKIP_MULTISITE"]
   end
+
+  def self.create_multisite?
+    (ENV["RAILS_ENV"] == "test" || !ENV["RAILS_ENV"]) && !ENV["RAILS_DB"] && !ENV["SKIP_MULTISITE"]
+  end
 end
 
 task 'db:environment:set' => [:load_config]  do |_, args|
@@ -21,15 +25,26 @@ task 'db:environment:set' => [:load_config]  do |_, args|
   end
 end
 
+task 'db:force_skip_persist' do
+  GlobalSetting.skip_db = true
+  GlobalSetting.skip_redis = true
+end
+
 task 'db:create' => [:load_config] do |_, args|
-  if MultisiteTestHelpers.load_multisite?
-    system("RAILS_DB=discourse_test_multisite rake db:create")
+  if MultisiteTestHelpers.create_multisite?
+    system("RAILS_ENV=test RAILS_DB=discourse_test_multisite rake db:create")
   end
 end
 
+begin
+  reqs = Rake::Task['db:create'].prerequisites.map(&:to_sym)
+  Rake::Task['db:create'].clear_prerequisites
+  Rake::Task['db:create'].enhance(["db:force_skip_persist"] + reqs)
+end
+
 task 'db:drop' => [:load_config] do |_, args|
-  if MultisiteTestHelpers.load_multisite?
-    system("RAILS_DB=discourse_test_multisite rake db:drop")
+  if MultisiteTestHelpers.create_multisite?
+    system("RAILS_DB=discourse_test_multisite RAILS_ENV=test rake db:drop")
   end
 end
 
@@ -41,11 +56,6 @@ task 'db:migrate' => ['environment', 'set_locale'] do |_, args|
     puts
     print "Optimizing site icons... "
     SiteIconManager.ensure_optimized!
-    puts "Done"
-    puts
-    print "Recompiling theme fields... "
-    ThemeField.force_recompilation!
-    Theme.expire_site_cache!
     puts "Done"
   end
 
@@ -109,10 +119,12 @@ task 'db:stats' => 'environment' do
       from pg_class
       where oid = ('public.' || table_name)::regclass
     ) AS row_estimate,
-    pg_size_pretty(pg_relation_size(quote_ident(table_name))) size
+    pg_size_pretty(pg_table_size(quote_ident(table_name))) table_size,
+    pg_size_pretty(pg_indexes_size(quote_ident(table_name))) index_size,
+    pg_size_pretty(pg_total_relation_size(quote_ident(table_name))) total_size
     from information_schema.tables
     where table_schema = 'public'
-    order by pg_relation_size(quote_ident(table_name)) DESC
+    order by pg_total_relation_size(quote_ident(table_name)) DESC
   SQL
 
   puts

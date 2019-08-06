@@ -53,9 +53,9 @@ describe TopicCreator do
           expect(topic.public_topic_timer).to eq(nil)
         end
 
-        it "category name is case insensitive" do
+        it "can create a topic in a category" do
           category = Fabricate(:category, name: "Neil's Blog")
-          topic = TopicCreator.create(user, Guardian.new(user), valid_attrs.merge(category: "neil's blog"))
+          topic = TopicCreator.create(user, Guardian.new(user), valid_attrs.merge(category: category.id))
           expect(topic).to be_valid
           expect(topic.category).to eq(category)
         end
@@ -103,18 +103,18 @@ describe TopicCreator do
 
         it "fails for regular user if minimum_required_tags is not satisfied" do
           expect do
-            TopicCreator.create(user, Guardian.new(user), valid_attrs.merge(category: "beta"))
+            TopicCreator.create(user, Guardian.new(user), valid_attrs.merge(category: category.id))
           end.to raise_error(ActiveRecord::Rollback)
         end
 
         it "lets admin create a topic regardless of minimum_required_tags" do
-          topic = TopicCreator.create(admin, Guardian.new(admin), valid_attrs.merge(tags: [tag1.name], category: "beta"))
+          topic = TopicCreator.create(admin, Guardian.new(admin), valid_attrs.merge(tags: [tag1.name], category: category.id))
           expect(topic).to be_valid
           expect(topic.tags.length).to eq(1)
         end
 
         it "works for regular user if minimum_required_tags is satisfied" do
-          topic = TopicCreator.create(user, Guardian.new(user), valid_attrs.merge(tags: [tag1.name, tag2.name], category: "beta"))
+          topic = TopicCreator.create(user, Guardian.new(user), valid_attrs.merge(tags: [tag1.name, tag2.name], category: category.id))
           expect(topic).to be_valid
           expect(topic.tags.length).to eq(2)
         end
@@ -122,7 +122,7 @@ describe TopicCreator do
         it "lets new user create a topic if they don't have sufficient trust level to tag topics" do
           SiteSetting.min_trust_level_to_tag_topics = 1
           new_user = Fabricate(:newuser)
-          topic = TopicCreator.create(new_user, Guardian.new(new_user), valid_attrs.merge(category: "beta"))
+          topic = TopicCreator.create(new_user, Guardian.new(new_user), valid_attrs.merge(category: category.id))
           expect(topic).to be_valid
         end
       end

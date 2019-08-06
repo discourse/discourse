@@ -6,7 +6,7 @@ export default Ember.Controller.extend({
   filter: null,
 
   show: debounce(function() {
-    Permalink.findAll(this.get("filter")).then(result => {
+    Permalink.findAll(this.filter).then(result => {
       this.set("model", result);
       this.set("loading", false);
     });
@@ -14,7 +14,7 @@ export default Ember.Controller.extend({
 
   actions: {
     recordAdded(arg) {
-      this.get("model").unshiftObject(arg);
+      this.model.unshiftObject(arg);
     },
 
     destroy: function(record) {
@@ -27,7 +27,7 @@ export default Ember.Controller.extend({
             record.destroy().then(
               deleted => {
                 if (deleted) {
-                  this.get("model").removeObject(record);
+                  this.model.removeObject(record);
                 } else {
                   bootbox.alert(I18n.t("generic_error"));
                 }

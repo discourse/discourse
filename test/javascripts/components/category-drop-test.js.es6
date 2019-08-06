@@ -1,3 +1,4 @@
+import selectKit from "helpers/select-kit-helper";
 import componentTest from "helpers/component-test";
 import Category from "discourse/models/category";
 
@@ -25,25 +26,19 @@ componentTest("subcatgories - no selection", {
 
   async test(assert) {
     assert.equal(
-      this.get("subject")
-        .header()
-        .title(),
+      this.subject.header().title(),
       I18n.t("categories.all_subcategories")
     );
 
-    await this.get("subject").expand();
+    await this.subject.expand();
 
     assert.equal(
-      this.get("subject")
-        .rowByIndex(0)
-        .name(),
+      this.subject.rowByIndex(0).name(),
       I18n.t("categories.no_subcategory")
     );
 
     assert.equal(
-      this.get("subject")
-        .rowByIndex(1)
-        .name(),
+      this.subject.rowByIndex(1).name(),
       this.get("childCategories.firstObject.name")
     );
   }
@@ -67,25 +62,19 @@ componentTest("subcatgories - selection", {
 
   async test(assert) {
     assert.equal(
-      this.get("subject")
-        .header()
-        .title(),
+      this.subject.header().title(),
       this.get("childCategories.firstObject.name")
     );
 
-    await this.get("subject").expand();
+    await this.subject.expand();
 
     assert.equal(
-      this.get("subject")
-        .rowByIndex(0)
-        .name(),
+      this.subject.rowByIndex(0).name(),
       I18n.t("categories.all_subcategories")
     );
 
     assert.equal(
-      this.get("subject")
-        .rowByIndex(1)
-        .name(),
+      this.subject.rowByIndex(1).name(),
       I18n.t("categories.no_subcategory")
     );
   }

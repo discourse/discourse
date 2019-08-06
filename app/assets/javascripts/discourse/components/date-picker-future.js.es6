@@ -6,11 +6,11 @@ export default DatePicker.extend({
   _opts() {
     return {
       defaultDate:
-        this.get("defaultDate") ||
+        this.defaultDate ||
         moment()
           .add(1, "day")
           .toDate(),
-      setDefaultDate: !!this.get("defaultDate")
+      setDefaultDate: !!this.defaultDate
     };
   }
 });

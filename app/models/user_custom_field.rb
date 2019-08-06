@@ -17,6 +17,5 @@ end
 #
 # Indexes
 #
-#  idx_user_custom_fields_last_reminded_at       (name,user_id) UNIQUE WHERE ((name)::text = 'last_reminded_at'::text)
 #  index_user_custom_fields_on_user_id_and_name  (user_id,name)
 #

@@ -244,12 +244,13 @@ describe TopicQuery do
   context 'muted tags' do
     it 'is removed from new and latest lists' do
       SiteSetting.tagging_enabled = true
-      SiteSetting.remove_muted_tags_from_latest = true
+      SiteSetting.remove_muted_tags_from_latest = 'always'
 
       muted_tag, other_tag = Fabricate(:tag), Fabricate(:tag)
 
       muted_topic = Fabricate(:topic, tags: [muted_tag])
       tagged_topic = Fabricate(:topic, tags: [other_tag])
+      muted_tagged_topic = Fabricate(:topic, tags: [muted_tag, other_tag])
       untagged_topic = Fabricate(:topic)
 
       TagUser.create!(user_id: user.id,
@@ -257,14 +258,26 @@ describe TopicQuery do
                       notification_level: CategoryUser.notification_levels[:muted])
 
       topic_ids = topic_query.list_latest.topics.map(&:id)
-      expect(topic_ids).not_to include(muted_topic.id)
-      expect(topic_ids).to include(tagged_topic.id)
-      expect(topic_ids).to include(untagged_topic.id)
+      expect(topic_ids).to contain_exactly(tagged_topic.id, untagged_topic.id)
 
       topic_ids = topic_query.list_new.topics.map(&:id)
-      expect(topic_ids).not_to include(muted_topic.id)
-      expect(topic_ids).to include(tagged_topic.id)
-      expect(topic_ids).to include(untagged_topic.id)
+      expect(topic_ids).to contain_exactly(tagged_topic.id, untagged_topic.id)
+
+      SiteSetting.remove_muted_tags_from_latest = 'only_muted'
+
+      topic_ids = topic_query.list_latest.topics.map(&:id)
+      expect(topic_ids).to contain_exactly(tagged_topic.id, muted_tagged_topic.id, untagged_topic.id)
+
+      topic_ids = topic_query.list_new.topics.map(&:id)
+      expect(topic_ids).to contain_exactly(tagged_topic.id, muted_tagged_topic.id, untagged_topic.id)
+
+      SiteSetting.remove_muted_tags_from_latest = 'never'
+
+      topic_ids = topic_query.list_latest.topics.map(&:id)
+      expect(topic_ids).to contain_exactly(muted_topic.id, tagged_topic.id, muted_tagged_topic.id, untagged_topic.id)
+
+      topic_ids = topic_query.list_new.topics.map(&:id)
+      expect(topic_ids).to contain_exactly(muted_topic.id, tagged_topic.id, muted_tagged_topic.id, untagged_topic.id)
     end
   end
 

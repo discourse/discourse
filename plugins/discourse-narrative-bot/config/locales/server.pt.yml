@@ -7,7 +7,7 @@
 
 pt:
   site_settings:
-    discourse_narrative_bot_enabled: 'Activar o bot do Discourse (discobot)'
+    discourse_narrative_bot_enabled: "Activar o bot do Discourse (discobot)"
     disable_discourse_narrative_bot_welcome_post: "Desativar a publicação de boas-vindas do Discourse Narrative Bot"
     discourse_narrative_bot_ignored_usernames: "Nomes de utilizador que o Discourse Narrative Bot deverá ignorar"
     discourse_narrative_bot_disable_public_replies: "Desativar as respostas públicas do Discourse Narrative Bot"
@@ -23,7 +23,7 @@ pt:
       name: Licenciado
       description: "Completou o nosso tutorial de utilizador avançado"
   discourse_narrative_bot:
-    bio: "Olá. Não sou humano. Sou um bot que pode ensiná-lo acerca deste sítio. Para interagir comigo, envie-me uma mensagem ou mencione-me  %{discobot_username} em qualquer lado."
+    bio: "Olá. Não sou humano. Sou um bot que pode ensiná-lo acerca deste sítio. Para interagir comigo, envie-me uma mensagem ou mencione-me %{discobot_username} em qualquer lado."
     dice:
       not_enough_dice: |-
         Só tenho %{num_of_dice} dado. [Vergonhoso] http://www.therobotsvoice.com/2009/04/the_10_most_shameful_rpg_dice.php), bem sei!
@@ -57,7 +57,7 @@ pt:
       results: |-
         > :left_speech_bubble: _%{quote}_ &mdash; %{author}
     magic_8_ball:
-      trigger: 'fortuna'
+      trigger: "fortuna"
       answers:
         '3': "Sem dúvida"
         '4': "Sim, definitivamente"
@@ -71,16 +71,14 @@ pt:
       result: |-
         > :crystal_ball: %{result}
     track_selector:
-      reset_trigger: 'iniciar'
-      skip_trigger: 'ignorar'
-      help_trigger: 'exibir ajuda'
+      reset_trigger: "iniciar"
+      skip_trigger: "ignorar"
+      help_trigger: "exibir ajuda"
     new_user_narrative:
-      reset_trigger: "novo utilizador"
       certificate:
-        alt: 'Certificado de Realização'
+        alt: "Certificado de Realização"
     advanced_user_narrative:
-      reset_trigger: 'utilizador avançado'
-      title: ':arrow_up: Funcionalidades de utilizador avançadas'
+      title: ":arrow_up: Funcionalidades de utilizador avançadas"
       details:
         reply: |-
           Ótimo trabalho — a sua atenção para o _detalhe_ é admirável!

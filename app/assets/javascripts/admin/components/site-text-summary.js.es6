@@ -9,26 +9,28 @@ export default Ember.Component.extend({
     const term = this._searchTerm();
 
     if (term) {
-      this.$(".site-text-id, .site-text-value").highlight(term, {
+      $(
+        this.element.querySelector(".site-text-id, .site-text-value")
+      ).highlight(term, {
         className: "text-highlight"
       });
     }
-    this.$(".site-text-value").ellipsis();
+    $(this.element.querySelector(".site-text-value")).ellipsis();
   },
 
   click() {
-    this.editAction(this.get("siteText"));
+    this.editAction(this.siteText);
   },
 
   _searchTerm() {
-    const regex = this.get("searchRegex");
-    const siteText = this.get("siteText");
+    const regex = this.searchRegex;
+    const siteText = this.siteText;
 
     if (regex && siteText) {
       const matches = siteText.value.match(new RegExp(regex, "i"));
       if (matches) return matches[0];
     }
 
-    return this.get("term");
+    return this.term;
   }
 });

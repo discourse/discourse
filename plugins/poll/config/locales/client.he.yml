@@ -19,29 +19,36 @@ he:
         many: "מספר הצבעות כולל"
         other: "מספר הצבעות"
       average_rating: "דירוג ממוצע: <strong>%{average}</strong>."
+      public:
+        title: "ההצבעות הן <strong>ציבוריות</strong>."
+      results:
+        vote:
+          title: "התוצאות יופיעו לאחר <strong>ההצבעה</strong>."
+        closed:
+          title: "התוצאות יופיעו לאחר <strong>הסגירה</strong>."
       multiple:
         help:
           at_least_min_options:
-            one: "בחרו לפחות אפשרות אחת"
-            two: "בחרו לפחות <strong>%{count}</strong> אפשרויות"
-            many: "בחרו לפחות <strong>%{count}</strong> אפשרויות"
-            other: "בחרו לפחות <strong>%{count}</strong> אפשרויות"
+            one: "נא לבחור באפשרות <strong>אחת</strong> לפחות"
+            two: "נא לבחור ב־<strong>%{count}</strong> אפשרויות לפחות"
+            many: "נא לבחור ב־<strong>%{count}</strong> אפשרויות לפחות"
+            other: "נא לבחור ב־<strong>%{count}</strong> אפשרויות לפחות"
           up_to_max_options:
-            one: "בחרו לכל היותר אפשרות אחת."
-            two: "בחרו עד <strong>%{count}</strong> אפשרויות"
-            many: "בחרו עד <strong>%{count}</strong> אפשרויות"
-            other: "בחרו עד <strong>%{count}</strong> אפשרויות"
+            one: "נא לבחור עד אפשרות <strong>אחת</strong>."
+            two: "נא לבחור עד <strong>%{count}</strong> אפשרויות"
+            many: "נא לבחור עד <strong>%{count}</strong> אפשרויות"
+            other: "נא לבחור עד <strong>%{count}</strong> אפשרויות"
           x_options:
-            one: "בחרו אפשרות אחת"
-            two: "בחרו <strong>%{count}</strong> אפשרויות"
-            many: "בחרו <strong>%{count}</strong> אפשרויות"
-            other: "בחרו <strong>%{count}</strong> אפשרויות"
-          between_min_and_max_options: "בחרו בין <strong>%{min}</strong> ל-<strong>%{max}</strong> אפשרויות"
+            one: "נא לבחור באפשרות אחת"
+            two: "נא לבחור <strong>%{count}</strong> אפשרויות"
+            many: "נא לבחור <strong>%{count}</strong> אפשרויות"
+            other: "נא לבחור <strong>%{count}</strong> אפשרויות"
+          between_min_and_max_options: "נא לבחור בין <strong>%{min}</strong> ל־<strong>%{max}</strong> אפשרויות"
       cast-votes:
-        title: "הצביעו"
-        label: "הצביעו עכשיו!"
+        title: "להצביע"
+        label: "להצביע עכשיו!"
       show-results:
-        title: "להציג את תוצאות הסקר"
+        title: "הצגת תוצאות הסקר"
         label: "הצגת תוצאות"
       hide-results:
         title: "חזרה להצבעות שלך"
@@ -49,20 +56,23 @@ he:
       open:
         title: "פתיחת הסקר"
         label: "פתיחה"
-        confirm: "האם אתם בטוחים שאתם רוצים לפתוח את הסקר הזה?"
+        confirm: "לפתוח את הסקר הזה?"
       close:
         title: "סגירת הסקר"
         label: "סגירה"
-        confirm: "האם אתם בטוחים שאתם רוצים לסגור סקר זה?"
-      error_while_toggling_status: "מצטערים, חלה שגיאה בשינוי המצב של סקר זה."
-      error_while_casting_votes: "מצטערים, ארעה שגיאה בהצבעתכם."
-      error_while_fetching_voters: "מצטערים, ארעה שגיאה בהצגת המצביעים."
+        confirm: "לסגור סקר זה?"
+      automatic_close:
+        closes_in: "נסגר בעוד <strong>%{timeLeft}</strong>."
+        age: "נסגר ב־<strong>%{age}</strong>"
+      error_while_toggling_status: " חלה שגיאה בשינוי המצב של סקר זה, עמך הסליחה."
+      error_while_casting_votes: "חלה שגיאה בהצבעתך, עמך הסליחה."
+      error_while_fetching_voters: "חלה שגיאה בהצגת המצביעים, עמך הסליחה."
       ui_builder:
         title: בניית סקר
         insert: הכנסת סקר
         help:
-          options_count: הכניסו לפחות 2 אפשרויות
-          invalid_values: ערך מינימלי חייב להיות קטן מערך מקסימלי.
+          options_count: יש להכניס 2 אפשרויות לפחות
+          invalid_values: הערך המזערי חייב להיות קטן מהערך המרבי.
           min_step_value: ערך הצעד המזערי הוא 1
         poll_type:
           label: סוג
@@ -71,11 +81,16 @@ he:
           number: ציון מספרי
         poll_result:
           label: תוצאות
+          always: גלוי תמיד
+          vote: בהליכי הצבעה
+          closed: כאשר סגור
         poll_config:
-          max: מקסימום
-          min: מינימום
+          max: מרבי
+          min: מזערי
           step: צעד
         poll_public:
-          label: הצג מי הצביעו
+          label: להציג מי המצביעים
         poll_options:
-          label: הכניסו אפשרות בחירה אחת בכל שורה
+          label: נא להכניס אפשרות בחירה אחת בכל שורה
+        automatic_close:
+          label: לסגור את הסקר אוטומטית

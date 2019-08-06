@@ -22,11 +22,11 @@ export default Ember.Component.extend({
       return;
     }
 
-    const routeParam = this.get("routeParam");
+    const routeParam = this.routeParam;
     if (routeParam && currentRoute) {
       return currentRoute.params["filter"] === routeParam;
     }
 
-    return this.get("router").isActive(route);
+    return this.router.isActive(route);
   }
 });

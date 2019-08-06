@@ -10,8 +10,13 @@ export const IGNORED = 3;
 export const DELETED = 4;
 
 export default RestModel.extend({
-  @computed("type")
-  humanType(type) {
+  @computed("type", "topic")
+  humanType(type, topic) {
+    // Display "Queued Topic" if the post will create a topic
+    if (type === "ReviewableQueuedPost" && !topic) {
+      type = "ReviewableQueuedTopic";
+    }
+
     return I18n.t(`review.types.${type.underscore()}.title`, {
       defaultValue: ""
     });
@@ -25,12 +30,12 @@ export default RestModel.extend({
 
     let adapter = this.store.adapterFor("reviewable");
     return ajax(
-      `/review/${this.get("id")}?version=${this.get("version")}`,
+      `/review/${this.id}?version=${this.version}`,
       adapter.getPayload("PUT", { reviewable: updates })
     ).then(updated => {
       updated.payload = Object.assign(
         {},
-        this.get("payload") || {},
+        this.payload || {},
         updated.payload || {}
       );
 

@@ -35,6 +35,11 @@ unless Rails.env.test? && ENV['LOAD_PLUGINS'] != "1"
 end
 GlobalSetting.load_defaults
 
+if ENV['SKIP_DB_AND_REDIS'] == '1'
+  GlobalSetting.skip_db = true
+  GlobalSetting.skip_redis = true
+end
+
 require 'pry-rails' if Rails.env.development?
 
 if defined?(Bundler)
@@ -127,8 +132,6 @@ module Discourse
       pretty-text-bundle.js
       wizard-application.js
       wizard-vendor.js
-      plugin.js
-      plugin-third-party.js
       markdown-it-bundle.js
       service-worker.js
       google-tag-manager.js
@@ -254,6 +257,10 @@ module Discourse
       end
     else
       Discourse.activate_plugins!
+    end
+
+    Discourse.find_plugin_js_assets(include_disabled: true).each do |file|
+      config.assets.precompile << "#{file}.js"
     end
 
     require_dependency 'stylesheet/manager'

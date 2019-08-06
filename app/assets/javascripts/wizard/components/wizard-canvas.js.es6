@@ -62,7 +62,7 @@ export default Ember.Component.extend({
   didInsertElement() {
     this._super(...arguments);
 
-    const canvas = this.$()[0];
+    const canvas = this.element;
     this.ctx = canvas.getContext("2d");
     this.resized();
 
@@ -86,7 +86,7 @@ export default Ember.Component.extend({
     width = $(window).width();
     height = $(window).height();
 
-    const canvas = this.$()[0];
+    const canvas = this.element;
     canvas.width = width;
     canvas.height = height;
   },

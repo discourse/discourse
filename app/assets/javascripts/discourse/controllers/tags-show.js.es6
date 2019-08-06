@@ -124,7 +124,7 @@ export default Ember.Controller.extend(BulkTopicSelection, {
   },
 
   loadMoreTopics() {
-    return this.get("list").loadMore();
+    return this.list.loadMore();
   },
 
   @observes("list.canLoadMore")
@@ -151,7 +151,7 @@ export default Ember.Controller.extend(BulkTopicSelection, {
 
   actions: {
     changeSort(order) {
-      if (order === this.get("order")) {
+      if (order === this.order) {
         this.toggleProperty("ascending");
       } else {
         this.setProperties({ order, ascending: false });
@@ -182,7 +182,7 @@ export default Ember.Controller.extend(BulkTopicSelection, {
       bootbox.confirm(confirmText, result => {
         if (!result) return;
 
-        this.get("tag")
+        this.tag
           .destroyRecord()
           .then(() => this.transitionToRoute("tags.index"))
           .catch(() => bootbox.alert(I18n.t("generic_error")));
@@ -190,7 +190,7 @@ export default Ember.Controller.extend(BulkTopicSelection, {
     },
 
     changeTagNotification(id) {
-      const tagNotification = this.get("tagNotification");
+      const tagNotification = this.tagNotification;
       tagNotification.update({ notification_level: id });
     }
   }

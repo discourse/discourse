@@ -29,6 +29,23 @@
     .reply-details {
       max-width: calc(100% - 75px);
     }
+
+    // Protection for languages with long strings on very small screens. This
+    // has no effect on most users but we need it for some cases. If this is
+    // not added, "add edit reason" will overlap with the composer controls
+    @include breakpoint(mobile-small) {
+      .reply-details {
+        flex-wrap: wrap;
+      }
+
+      .display-edit-reason {
+        margin-top: 0.5em;
+      }
+
+      .composer-controls {
+        align-self: flex-start;
+      }
+    }
   }
 
   .toggler {
@@ -71,18 +88,29 @@
       flex: 1 1 auto;
       #draft-status,
       #file-uploading {
-        margin-left: 15px;
+        margin-left: 6px;
       }
       .cancel {
-        font-size: 1.6em;
+        font-size: 1.4em;
         color: $primary-low-mid;
         margin-left: 0.6em;
-        padding: 0 5px;
+        padding: 3px 6px;
       }
     }
-    .composer-bottom-right {
-      margin-left: auto;
-      flex: 1 1 auto;
+    .mobile-file-upload:not(.hidden),
+    .mobile-preview {
+      // Alignment fix, remove if converted to buttons
+      display: inline-flex;
+    }
+    .mobile-file-upload {
+      &.hidden + .mobile-preview {
+        // Hide preview button while file is uploading to make room for upload progress
+        display: none;
+      }
+    }
+
+    .mobile-preview {
+      margin-left: 0.25em;
     }
   }
 
@@ -93,7 +121,7 @@
   &.show-preview {
     .d-editor-preview-wrapper {
       position: fixed;
-      z-index: z("base") + 1;
+      z-index: z("fullscreen");
       top: 0;
       bottom: 0;
       left: 0;
@@ -111,7 +139,7 @@
       position: fixed;
       right: 5px;
       bottom: 5px;
-      z-index: z("base") + 2;
+      z-index: z("fullscreen") + 1;
     }
   }
 
@@ -130,17 +158,6 @@
   }
 
   .d-editor-button-bar .btn {
-    svg {
-      -webkit-transform: translate3d(
-        0,
-        0,
-        0
-      ); // Hack: Reduces composer icon jitter while scrolling in Safari on iOS12
-    }
-    @include breakpoint(mobile-medium) {
-      padding: 4px;
-      font-size: 0.96em;
-    }
     &.preview {
       margin: 0;
     }

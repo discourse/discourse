@@ -8,6 +8,8 @@ class S3Helper
 
   attr_reader :s3_bucket_name, :s3_bucket_folder_path
 
+  DOWNLOAD_URL_EXPIRES_AFTER_SECONDS ||= 15
+
   def initialize(s3_bucket_name, tombstone_prefix = '', options = {})
     @s3_client = options.delete(:client)
     @s3_options = default_s3_options.merge(options)
@@ -69,7 +71,9 @@ class S3Helper
     if !Rails.configuration.multisite
       options[:copy_source] = File.join(@s3_bucket_name, source)
     else
-      if @s3_bucket_folder_path
+      if source.include?(multisite_upload_path) || source.include?(@tombstone_prefix)
+        options[:copy_source] = File.join(@s3_bucket_name, source)
+      elsif @s3_bucket_folder_path
         folder, filename = begin
           source.split("/".freeze, 2)
         end

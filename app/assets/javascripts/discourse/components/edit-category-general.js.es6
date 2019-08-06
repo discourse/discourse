@@ -4,7 +4,12 @@ import Category from "discourse/models/category";
 import computed from "ember-addons/ember-computed-decorators";
 
 export default buildCategoryPanel("general", {
-  foregroundColors: ["FFFFFF", "000000"],
+  init() {
+    this._super(...arguments);
+
+    this.foregroundColors = ["FFFFFF", "000000"];
+  },
+
   canSelectParentCategory: Ember.computed.not(
     "category.isUncategorizedCategory"
   ),
@@ -66,7 +71,7 @@ export default buildCategoryPanel("general", {
     "category.text_color"
   )
   categoryBadgePreview(parentCategoryId, name, color, textColor) {
-    const category = this.get("category");
+    const category = this.category;
     const c = Category.create({
       name,
       color,

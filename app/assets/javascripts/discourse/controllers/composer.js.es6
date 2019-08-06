@@ -81,7 +81,7 @@ export function addPopupMenuOptionsCallback(callback) {
 
 export default Ember.Controller.extend({
   topicController: Ember.inject.controller("topic"),
-  application: Ember.inject.controller(),
+  router: Ember.inject.service(),
 
   replyAsNewTopicDraft: Ember.computed.equal(
     "model.draftKey",
@@ -199,11 +199,7 @@ export default Ember.Controller.extend({
     );
   },
 
-  @computed
-  isStaffUser() {
-    const currentUser = this.currentUser;
-    return currentUser && currentUser.get("staff");
-  },
+  isStaffUser: Ember.computed.reads("currentUser.staff"),
 
   canUnlistTopic: Ember.computed.and("model.creatingTopic", "isStaffUser"),
 
@@ -296,7 +292,7 @@ export default Ember.Controller.extend({
 
   @computed("model.creatingPrivateMessage", "model.targetUsernames")
   showWarning(creatingPrivateMessage, usernames) {
-    if (!Discourse.User.currentProp("staff")) {
+    if (!this.get("currentUser.staff")) {
       return false;
     }
 
@@ -507,7 +503,9 @@ export default Ember.Controller.extend({
     },
 
     cancel() {
-      this.cancelComposer();
+      const differentDraftContext =
+        this.get("topic.id") !== this.get("model.topic.id");
+      this.cancelComposer(differentDraftContext);
     },
 
     save() {
@@ -673,7 +671,7 @@ export default Ember.Controller.extend({
     });
 
     const promise = composer
-      .save({ imageSizes, editReason: this.get("editReason") })
+      .save({ imageSizes, editReason: this.editReason })
       .then(result => {
         if (result.responseJson.action === "enqueued") {
           this.send("postWasEnqueued", result.responseJson);
@@ -732,7 +730,7 @@ export default Ember.Controller.extend({
       });
 
     if (
-      this.get("application.currentRouteName").split(".")[0] === "topic" &&
+      this.router.currentRouteName.split(".")[0] === "topic" &&
       composer.get("topic.id") === this.get("topicModel.id")
     ) {
       staged = composer.get("stagedPost");
@@ -830,7 +828,12 @@ export default Ember.Controller.extend({
         }
 
         // If it's a different draft, cancel it and try opening again.
-        return this.cancelComposer()
+        const differentDraftContext =
+          opts.post && composerModel.topic
+            ? composerModel.topic.id !== opts.post.topic_id
+            : true;
+
+        return this.cancelComposer(differentDraftContext)
           .then(() => this.open(opts))
           .then(resolve, reject);
       }
@@ -984,11 +987,23 @@ export default Ember.Controller.extend({
     }
   },
 
-  cancelComposer() {
+  cancelComposer(differentDraft = false) {
     return new Ember.RSVP.Promise(resolve => {
       if (this.get("model.hasMetaData") || this.get("model.replyDirty")) {
         bootbox.dialog(I18n.t("post.abandon.confirm"), [
-          { label: I18n.t("post.abandon.no_value") },
+          {
+            label: differentDraft
+              ? I18n.t("post.abandon.no_save_draft")
+              : I18n.t("post.abandon.no_value"),
+            callback: () => {
+              // cancel composer without destroying draft on new draft context
+              if (differentDraft) {
+                this.model.clearState();
+                this.close();
+                resolve();
+              }
+            }
+          },
           {
             label: I18n.t("post.abandon.yes_value"),
             class: "btn-danger",

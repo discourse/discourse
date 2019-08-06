@@ -90,7 +90,7 @@ createWidget("user-menu-links", {
       label: "user.preferences",
       className: "user-preferences-link",
       icon: "cog",
-      href: `${path}/preferences/account`
+      href: `${path}/preferences`
     });
 
     return h("ul.menu-links-row", [

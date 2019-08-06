@@ -40,9 +40,11 @@ export default Ember.Component.extend({
   didInsertElement() {
     this._super(...arguments);
 
-    const shareUrl = this.get("shareUrl");
-    const $linkInput = this.$(".topic-share-url");
-    const $linkForTouch = this.$(".topic-share-url-for-touch a");
+    const shareUrl = this.shareUrl;
+    const $linkInput = $(this.element.querySelector(".topic-share-url"));
+    const $linkForTouch = $(
+      this.element.querySelector(".topic-share-url-for-touch a")
+    );
 
     Ember.run.schedule("afterRender", () => {
       if (!this.capabilities.touch) {
@@ -67,7 +69,7 @@ export default Ember.Component.extend({
   actions: {
     share(source) {
       Sharing.shareSource(source, {
-        url: this.get("shareUrl"),
+        url: this.shareUrl,
         title: this.get("topic.title")
       });
     }

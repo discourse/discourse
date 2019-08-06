@@ -8,6 +8,12 @@ import PreloadStore from "preload-store";
 const Site = RestModel.extend({
   isReadOnly: Ember.computed.alias("is_readonly"),
 
+  init() {
+    this._super(...arguments);
+
+    this.topicCountDesc = ["topic_count:desc"];
+  },
+
   @computed("notification_types")
   notificationLookup(notificationTypes) {
     const result = [];
@@ -19,18 +25,17 @@ const Site = RestModel.extend({
 
   @computed("post_action_types.[]")
   flagTypes() {
-    const postActionTypes = this.get("post_action_types");
+    const postActionTypes = this.post_action_types;
     if (!postActionTypes) return [];
     return postActionTypes.filterBy("is_flag", true);
   },
 
-  topicCountDesc: ["topic_count:desc"],
   categoriesByCount: Ember.computed.sort("categories", "topicCountDesc"),
 
   collectUserFields(fields) {
     fields = fields || {};
 
-    let siteFields = this.get("user_fields");
+    let siteFields = this.user_fields;
 
     if (!Ember.isEmpty(siteFields)) {
       return siteFields.map(f => {
@@ -79,8 +84,8 @@ const Site = RestModel.extend({
   @computed
   categoriesList() {
     return this.siteSettings.fixed_category_positions
-      ? this.get("categories")
-      : this.get("sortedCategories");
+      ? this.categories
+      : this.sortedCategories;
   },
 
   postActionTypeById(id) {
@@ -92,16 +97,16 @@ const Site = RestModel.extend({
   },
 
   removeCategory(id) {
-    const categories = this.get("categories");
+    const categories = this.categories;
     const existingCategory = categories.findBy("id", id);
     if (existingCategory) {
       categories.removeObject(existingCategory);
-      delete this.get("categoriesById").categoryId;
+      delete this.categoriesById.categoryId;
     }
   },
 
   updateCategory(newCategory) {
-    const categories = this.get("categories");
+    const categories = this.categories;
     const categoryId = Ember.get(newCategory, "id");
     const existingCategory = categories.findBy("id", categoryId);
 
@@ -116,7 +121,7 @@ const Site = RestModel.extend({
       // TODO insert in right order?
       newCategory = this.store.createRecord("category", newCategory);
       categories.pushObject(newCategory);
-      this.get("categoriesById")[categoryId] = newCategory;
+      this.categoriesById[categoryId] = newCategory;
     }
   }
 });

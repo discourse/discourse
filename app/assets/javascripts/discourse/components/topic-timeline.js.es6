@@ -13,23 +13,23 @@ export default MountWidget.extend(Docking, {
 
   buildArgs() {
     let attrs = {
-      topic: this.get("topic"),
-      notificationLevel: this.get("notificationLevel"),
+      topic: this.topic,
+      notificationLevel: this.notificationLevel,
       topicTrackingState: this.topicTrackingState,
-      enteredIndex: this.get("enteredIndex"),
+      enteredIndex: this.enteredIndex,
       dockAt: this.dockAt,
       dockBottom: this.dockBottom,
       mobileView: this.get("site.mobileView")
     };
 
-    let event = this.get("prevEvent");
+    let event = this.prevEvent;
     if (event) {
       attrs.enteredIndex = event.postIndex - 1;
     }
 
-    if (this.get("fullscreen")) {
+    if (this.fullscreen) {
       attrs.fullScreen = true;
-      attrs.addShowClass = this.get("addShowClass");
+      attrs.addShowClass = this.addShowClass;
     } else {
       attrs.top = this.dockAt || headerPadding();
     }
@@ -52,8 +52,8 @@ export default MountWidget.extend(Docking, {
     const offsetTop = mainOffset ? mainOffset.top : 0;
     const topicTop = $(".container.posts").offset().top - offsetTop;
     const topicBottom = $("#topic-bottom").offset().top;
-    const $timeline = this.$(".timeline-container");
-    const timelineHeight = $timeline.height() || 400;
+    const timeline = this.element.querySelector(".timeline-container");
+    const timelineHeight = (timeline && timeline.offsetHeight) || 400;
     const footerHeight = $(".timeline-footer-controls").outerHeight(true) || 0;
 
     const prev = this.dockAt;
@@ -85,7 +85,7 @@ export default MountWidget.extend(Docking, {
   didInsertElement() {
     this._super(...arguments);
 
-    if (this.get("fullscreen") && !this.get("addShowClass")) {
+    if (this.fullscreen && !this.addShowClass) {
       Ember.run.next(() => {
         this.set("addShowClass", true);
         this.queueRerender();

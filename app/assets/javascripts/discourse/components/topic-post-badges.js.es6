@@ -23,10 +23,10 @@ export default Ember.Component.extend(
         this.currentUser && this.currentUser.trust_level > 0
           ? " "
           : I18n.t("filters.new.lower_title");
-      const url = this.get("url");
-      link(buffer, this.get("unread"), url, "unread", "unread_posts");
-      link(buffer, this.get("newPosts"), url, "new-posts", "new_posts");
-      link(buffer, this.get("unseen"), url, "new-topic", "new", newDotText);
+      const url = this.url;
+      link(buffer, this.unread, url, "unread", "unread_posts");
+      link(buffer, this.newPosts, url, "new-posts", "new_posts");
+      link(buffer, this.unseen, url, "new-topic", "new", newDotText);
     }
   })
 );

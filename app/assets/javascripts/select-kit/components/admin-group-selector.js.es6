@@ -13,12 +13,12 @@ export default MultiSelectComponent.extend({
   @computed("buffer")
   values(buffer) {
     return buffer === null
-      ? makeArray(this.get("selected")).map(s => this.valueForContentItem(s))
+      ? makeArray(this.selected).map(s => this.valueForContentItem(s))
       : buffer;
   },
 
   computeContent() {
-    return makeArray(this.get("available"));
+    return makeArray(this.available);
   },
 
   computeContentItem(contentItem, name) {

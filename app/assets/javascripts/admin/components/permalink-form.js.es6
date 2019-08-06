@@ -19,18 +19,20 @@ export default Ember.Component.extend({
   },
 
   focusPermalink() {
-    Ember.run.schedule("afterRender", () => this.$(".permalink-url").focus());
+    Ember.run.schedule("afterRender", () =>
+      this.element.querySelector(".permalink-url").focus()
+    );
   },
 
   actions: {
     submit() {
-      if (!this.get("formSubmitted")) {
+      if (!this.formSubmitted) {
         this.set("formSubmitted", true);
 
         Permalink.create({
-          url: this.get("url"),
-          permalink_type: this.get("permalinkType"),
-          permalink_type_value: this.get("permalink_type_value")
+          url: this.url,
+          permalink_type: this.permalinkType,
+          permalink_type_value: this.permalink_type_value
         })
           .save()
           .then(
@@ -67,7 +69,7 @@ export default Ember.Component.extend({
     this._super(...arguments);
 
     Ember.run.schedule("afterRender", () => {
-      this.$(".external-url").keydown(e => {
+      $(this.element.querySelector(".external-url")).keydown(e => {
         // enter key
         if (e.keyCode === 13) {
           this.send("submit");

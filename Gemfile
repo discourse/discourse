@@ -46,12 +46,12 @@ gem 'redis-namespace'
 
 gem 'active_model_serializers', '~> 0.8.3'
 
-gem 'onebox', '1.8.89'
+gem 'onebox', '1.9.7'
 
 gem 'http_accept_language', '~>2.0.5', require: false
 
 gem 'ember-rails', '0.18.5'
-gem 'discourse-ember-source', '~> 3.8.0'
+gem 'discourse-ember-source', '~> 3.10.0'
 gem 'ember-handlebars-template', '0.8.0'
 gem 'barber'
 
@@ -78,6 +78,7 @@ gem 'discourse_image_optim', require: 'image_optim'
 gem 'multi_json'
 gem 'mustache'
 gem 'nokogiri'
+gem 'css_parser', require: false
 
 gem 'omniauth'
 gem 'omniauth-openid'
@@ -89,8 +90,7 @@ gem 'omniauth-github'
 
 gem 'omniauth-oauth2', require: false
 
-# pinned until we test verified email change in the gem
-gem 'omniauth-google-oauth2', '0.6.0'
+gem 'omniauth-google-oauth2'
 
 gem 'oj'
 gem 'pg'
@@ -100,6 +100,7 @@ gem 'r2', '~> 0.2.5', require: false
 gem 'rake'
 
 gem 'thor', require: false
+gem 'diffy', require: false
 gem 'rinku'
 gem 'sanitize'
 gem 'sidekiq'
@@ -152,6 +153,7 @@ group :development do
   gem 'bullet', require: !!ENV['BULLET']
   gem 'better_errors'
   gem 'binding_of_caller'
+  gem 'yaml-lint'
 
   # waiting on 2.7.5 per: https://github.com/ctran/annotate_models/pull/595
   if rails_master?
@@ -201,6 +203,8 @@ gem "sassc-rails"
 
 gem 'rotp'
 gem 'rqrcode'
+
+gem 'rubyzip', require: false
 
 gem 'sshkey', require: false
 

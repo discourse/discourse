@@ -12,6 +12,7 @@ ru:
         today: Сегодня %{time}
         tomorrow: Завтра %{time}
         yesterday: 'Вчера %{time} '
+      title: Введите дату / время
       create:
         form:
           insert: Вставить
@@ -27,3 +28,14 @@ ru:
           date_title: Дата
           time_title: Время
           format_title: Формат даты
+          timezone: Часовой пояс
+          until: До...
+          recurring:
+            every_day: "Каждый день"
+            every_week: "Каждую неделю"
+            every_two_weeks: "Каждые две недели"
+            every_month: "Каждый месяц"
+            every_two_months: "Каждые два месяца"
+            every_three_months: "Каждые три месяца"
+            every_six_months: "Каждые шесть месяцев"
+            every_year: "Каждый год"

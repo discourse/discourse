@@ -1,4 +1,4 @@
-import { acceptance, logIn } from "helpers/qunit-helpers";
+import { acceptance } from "helpers/qunit-helpers";
 
 acceptance("New Message");
 
@@ -10,10 +10,8 @@ QUnit.test("accessing new-message route when logged out", async assert => {
   assert.ok(exists(".modal.login-modal"), "it shows the login modal");
 });
 
+acceptance("New Message", { loggedIn: true });
 QUnit.test("accessing new-message route when logged in", async assert => {
-  logIn();
-  Discourse.reset();
-
   await visit(
     "/new-message?username=charlie&title=message%20title&body=message%20body"
   );

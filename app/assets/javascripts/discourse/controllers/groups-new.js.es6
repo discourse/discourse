@@ -6,7 +6,7 @@ export default Ember.Controller.extend({
   actions: {
     save() {
       this.set("saving", true);
-      const group = this.get("model");
+      const group = this.model;
 
       group
         .create()

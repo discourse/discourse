@@ -13,12 +13,12 @@ export default Ember.Mixin.create({
 
   didInsertElement() {
     this._super(...arguments);
-    this.addTouchListeners(this.$());
+    this.addTouchListeners($(this.element));
   },
 
   willDestroyElement() {
     this._super(...arguments);
-    this.removeTouchListeners(this.$());
+    this.removeTouchListeners($(this.element));
   },
 
   addTouchListeners($element) {
@@ -115,11 +115,11 @@ export default Ember.Mixin.create({
   },
 
   _panMove(e, originalEvent) {
-    if (!this.get("_panState")) {
+    if (!this._panState) {
       this._panStart(e);
       return;
     }
-    const previousState = this.get("_panState");
+    const previousState = this._panState;
     const newState = this._calculateNewPanState(previousState, e);
     if (previousState.start && newState.distance < MINIMUM_SWIPE_DISTANCE) {
       return;

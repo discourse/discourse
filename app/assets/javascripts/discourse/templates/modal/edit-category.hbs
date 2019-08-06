@@ -12,7 +12,7 @@
 
   {{#d-modal-body}}
     {{#each panels as |tab|}}
-      {{component tab selectedTab=selectedTab category=model}}
+      {{component tab selectedTab=selectedTab category=model registerValidator=(action "registerValidator")}}
     {{/each}}
   {{/d-modal-body}}
 

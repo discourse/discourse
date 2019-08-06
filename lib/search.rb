@@ -41,19 +41,22 @@ class Search
     # But it may not appear there based on pg extension configuration.
     # base docker config
     #
-    case locale.to_sym
-    when :da     then 'danish'
-    when :de     then 'german'
-    when :en     then 'english'
-    when :es     then 'spanish'
-    when :fr     then 'french'
-    when :it     then 'italian'
-    when :nl     then 'dutch'
-    when :nb_NO  then 'norwegian'
-    when :pt     then 'portuguese'
-    when :pt_BR  then 'portuguese'
-    when :sv     then 'swedish'
-    when :ru     then 'russian'
+    case locale.split("_")[0].to_sym
+    when :da then 'danish'
+    when :nl then 'dutch'
+    when :en then 'english'
+    when :fi then 'finnish'
+    when :fr then 'french'
+    when :de then 'german'
+    when :hu then 'hungarian'
+    when :it then 'italian'
+    when :nb then 'norwegian'
+    when :pt then 'portuguese'
+    when :ro then 'romanian'
+    when :ru then 'russian'
+    when :es then 'spanish'
+    when :sv then 'swedish'
+    when :tr then 'turkish'
     else 'simple' # use the 'simple' stemmer for other languages
     end
   end
@@ -210,7 +213,7 @@ class Search
 
   # Query a term
   def execute
-    if SiteSetting.log_search_queries? && @opts[:search_type].present?
+    if SiteSetting.log_search_queries? && @opts[:search_type].present? && !Discourse.readonly_mode?
       status, search_log_id = SearchLog.log(
         term: @term,
         search_type: @opts[:search_type],
@@ -260,6 +263,38 @@ class Search
 
   def self.advanced_filters
     @advanced_filters
+  end
+
+  advanced_filter(/^in:personal-direct$/) do |posts|
+    if @guardian.user
+      posts
+        .joins("LEFT JOIN topic_allowed_groups tg ON posts.topic_id = tg.topic_id")
+        .where(<<~SQL, user_id: @guardian.user.id)
+          tg.id IS NULL
+          AND posts.topic_id IN (
+            SELECT tau.topic_id
+            FROM topic_allowed_users tau
+            JOIN topic_allowed_users tau2
+            ON tau2.topic_id = tau.topic_id
+            AND tau2.id != tau.id
+            WHERE tau.user_id = :user_id
+            GROUP BY tau.topic_id
+            HAVING COUNT(*) = 1
+          )
+        SQL
+    end
+  end
+
+  advanced_filter(/^in:tagged$/) do |posts|
+    posts
+      .where('EXISTS (SELECT 1 FROM topic_tags WHERE topic_tags.topic_id = posts.topic_id)')
+  end
+
+  advanced_filter(/^in:untagged$/) do |posts|
+    posts
+      .joins("LEFT JOIN topic_tags ON
+        topic_tags.topic_id = posts.topic_id")
+      .where("topic_tags.id IS NULL")
   end
 
   advanced_filter(/^status:open$/) do |posts|
@@ -450,17 +485,34 @@ class Search
       # try a possible tag match
       tag_id = Tag.where_name(category_slug).pluck(:id).first
       if (tag_id)
-        posts.where("topics.id IN (
-          SELECT DISTINCT(tt.topic_id)
-          FROM topic_tags tt
-          WHERE tt.tag_id = ?
-          )", tag_id)
+        posts.where(<<~SQL, tag_id)
+          topics.id IN (
+            SELECT DISTINCT(tt.topic_id)
+            FROM topic_tags tt
+            WHERE tt.tag_id = ?
+          )
+        SQL
       else
+        if tag_group_id = TagGroup.find_id_by_slug(category_slug)
+          posts.where(<<~SQL, tag_group_id)
+            topics.id IN (
+              SELECT DISTINCT(tt.topic_id)
+              FROM topic_tags tt
+              WHERE tt.tag_id in (
+                SELECT tag_id
+                FROM tag_group_memberships
+                WHERE tag_group_id = ?
+              )
+            )
+          SQL
+
         # a bit yucky but we got to add the term back in
-        if match.to_s.length >= SiteSetting.min_search_term_length
-          posts.where("posts.id IN (
-            SELECT post_id FROM post_search_data pd1
-            WHERE pd1.search_data @@ #{Search.ts_query(term: "##{match}")})")
+        elsif match.to_s.length >= SiteSetting.min_search_term_length
+          posts.where <<~SQL
+            posts.id IN (
+              SELECT post_id FROM post_search_data pd1
+              WHERE pd1.search_data @@ #{Search.ts_query(term: "##{match}")})
+          SQL
         end
       end
     end
@@ -599,10 +651,14 @@ class Search
       elsif word == 'order:likes'
         @order = :likes
         nil
-      elsif word == 'in:private'
+      elsif %w{in:private in:personal}.include?(word) # remove private after 2.4 release
         @search_pms = true
         nil
-      elsif word =~ /^private_messages:(.+)$/
+      elsif word == "in:personal-direct"
+        @search_pms = true
+        @direct_pms_only = true
+        nil
+      elsif word =~ /^personal_messages:(.+)$/
         @search_pms = true
         nil
       else
@@ -794,7 +850,7 @@ class Search
       if @search_context.present?
         if @search_context.is_a?(User)
           if opts[:private_messages]
-            posts.private_posts_for_user(@search_context)
+            @direct_pms_only ? posts : posts.private_posts_for_user(@search_context)
           else
             posts.where("posts.user_id = #{@search_context.id}")
           end
@@ -858,7 +914,11 @@ class Search
           THEN #{SiteSetting.category_search_priority_high_weight}
           WHEN #{Searchable::PRIORITIES[:very_high]}
           THEN #{SiteSetting.category_search_priority_very_high_weight}
-          ELSE 1
+          ELSE
+            CASE WHEN topics.closed
+            THEN 0.9
+            ELSE 1
+            END
           END
         )
       )

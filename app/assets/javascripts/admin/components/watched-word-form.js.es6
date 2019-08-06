@@ -21,17 +21,15 @@ export default Ember.Component.extend({
 
   @observes("word")
   removeMessage() {
-    if (this.get("showMessage") && !Ember.isEmpty(this.get("word"))) {
+    if (this.showMessage && !Ember.isEmpty(this.word)) {
       this.set("showMessage", false);
     }
   },
 
   @computed("word")
   isUniqueWord(word) {
-    const words = this.get("filteredContent") || [];
-    const filtered = words.filter(
-      content => content.action === this.get("actionKey")
-    );
+    const words = this.filteredContent || [];
+    const filtered = words.filter(content => content.action === this.actionKey);
     return filtered.every(
       content => content.word.toLowerCase() !== word.toLowerCase()
     );
@@ -39,7 +37,7 @@ export default Ember.Component.extend({
 
   actions: {
     submit() {
-      if (!this.get("isUniqueWord")) {
+      if (!this.isUniqueWord) {
         this.setProperties({
           showMessage: true,
           message: I18n.t("admin.watched_words.form.exists")
@@ -47,12 +45,12 @@ export default Ember.Component.extend({
         return;
       }
 
-      if (!this.get("formSubmitted")) {
+      if (!this.formSubmitted) {
         this.set("formSubmitted", true);
 
         const watchedWord = WatchedWord.create({
-          word: this.get("word"),
-          action: this.get("actionKey")
+          word: this.word,
+          action: this.actionKey
         });
 
         watchedWord
@@ -66,7 +64,7 @@ export default Ember.Component.extend({
             });
             this.action(WatchedWord.create(result));
             Ember.run.schedule("afterRender", () =>
-              this.$(".watched-word-input").focus()
+              this.element.querySelector(".watched-word-input").focus()
             );
           })
           .catch(e => {
@@ -77,7 +75,9 @@ export default Ember.Component.extend({
                     error: e.jqXHR.responseJSON.errors.join(". ")
                   })
                 : I18n.t("generic_error");
-            bootbox.alert(msg, () => this.$(".watched-word-input").focus());
+            bootbox.alert(msg, () =>
+              this.element.querySelector(".watched-word-input").focus()
+            );
           });
       }
     }
@@ -86,7 +86,7 @@ export default Ember.Component.extend({
   @on("didInsertElement")
   _init() {
     Ember.run.schedule("afterRender", () => {
-      this.$(".watched-word-input").keydown(e => {
+      $(this.element.querySelector(".watched-word-input")).keydown(e => {
         if (e.keyCode === 13) {
           this.send("submit");
         }

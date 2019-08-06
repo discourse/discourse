@@ -34,13 +34,17 @@ class S3Inventory
       download_inventory_files_to_tmp_directory
       decompress_inventory_files
 
+      multisite_prefix = "uploads/#{RailsMultisite::ConnectionManagement.current_db}/"
       ActiveRecord::Base.transaction do
         begin
-          connection.exec("CREATE TEMP TABLE #{table_name}(key text UNIQUE, etag text, PRIMARY KEY(etag, key))")
+          connection.exec("CREATE TEMP TABLE #{table_name}(url text UNIQUE, etag text, PRIMARY KEY(etag, url))")
           connection.copy_data("COPY #{table_name} FROM STDIN CSV") do
             files.each do |file|
               CSV.foreach(file[:filename][0...-3], headers: false) do |row|
-                connection.put_copy_data("#{row[CSV_KEY_INDEX]},#{row[CSV_ETAG_INDEX]}\n")
+                key = row[CSV_KEY_INDEX]
+                next if Rails.configuration.multisite && key.exclude?(multisite_prefix)
+                url = File.join(Discourse.store.absolute_base_url, key)
+                connection.put_copy_data("#{url},#{row[CSV_ETAG_INDEX]}\n")
               end
             end
           end
@@ -50,7 +54,7 @@ class S3Inventory
             SET etag = #{table_name}.etag
             FROM #{table_name}
             WHERE #{model.table_name}.etag IS NULL
-              AND url ILIKE '%' || #{table_name}.key")
+              AND #{model.table_name}.url = #{table_name}.url")
 
           list_missing_post_uploads if type == "original"
 
@@ -78,27 +82,33 @@ class S3Inventory
   def list_missing_post_uploads
     log "Listing missing post uploads..."
 
-    missing = Post.find_missing_uploads(include_local_upload: false) do |_, _, _, sha1|
+    missing = Post.find_missing_uploads(include_local_upload: false) do |post, _, _, sha1|
       next if sha1.blank?
 
       upload_id = nil
-      result = connection.exec("SELECT * FROM #{table_name} WHERE key LIKE '%original/%/#{sha1}%'")
+      result = connection.exec("SELECT * FROM #{table_name} WHERE url LIKE '%original/%/#{sha1}%'")
 
       if result.count >= 1
-        key = result[0]["key"]
-        data = @s3_helper.object(key).data
-        filename = (data.content_disposition&.match(/filename=\"(.*)\"/) || [])[1]
+        begin
+          url = result[0]["url"]
+          key = url.sub(/^#{Discourse.store.absolute_base_url}\//, "")
+          data = @s3_helper.object(key).data
+          filename = (data.content_disposition&.match(/filename=\"(.*)\"/) || [])[1]
 
-        upload = Upload.new(
-          user_id: Discourse.system_user.id,
-          original_filename: filename || File.basename(key),
-          filesize: data.content_length,
-          url: File.join(Discourse.store.absolute_base_url, key),
-          sha1: sha1,
-          etag: result[0]["etag"]
-        )
-        upload.save!(validate: false)
-        upload_id = upload.id
+          upload = Upload.new(
+            user_id: Discourse.system_user.id,
+            original_filename: filename || File.basename(key),
+            filesize: data.content_length,
+            url: url,
+            sha1: sha1,
+            etag: result[0]["etag"]
+          )
+          upload.save!(validate: false)
+          upload_id = upload.id
+          post.link_post_uploads
+        rescue Aws::S3::Errors::NotFound
+          next
+        end
       end
 
       upload_id
@@ -110,6 +120,8 @@ class S3Inventory
 
   def download_inventory_files_to_tmp_directory
     files.each do |file|
+      next if File.exists?(file[:filename])
+
       log "Downloading inventory file '#{file[:key]}' to tmp directory..."
       failure_message = "Failed to inventory file '#{file[:key]}' to tmp directory."
 
@@ -118,11 +130,9 @@ class S3Inventory
   end
 
   def decompress_inventory_files
-    FileUtils.cd(tmp_directory) do
-      files.each do |file|
-        log "Decompressing inventory file '#{file[:filename]}', this may take a while..."
-        Discourse::Utils.execute_command('gzip', '--decompress', file[:filename], failure_message: "Failed to decompress inventory file '#{file[:filename]}'.")
-      end
+    files.each do |file|
+      log "Decompressing inventory file '#{file[:filename]}', this may take a while..."
+      Discourse::Utils.execute_command('gzip', '--decompress', file[:filename], failure_message: "Failed to decompress inventory file '#{file[:filename]}'.", chdir: tmp_directory)
     end
   end
 
@@ -249,11 +259,8 @@ class S3Inventory
 
   def inventory_id
     @inventory_id ||= begin
-      if bucket_folder_path.present?
-        "#{bucket_folder_path}-#{type}"
-      else
-        type
-      end
+      id = Rails.configuration.multisite ? "original" : type  # TODO: rename multisite path to "uploads"
+      bucket_folder_path.present? ? "#{bucket_folder_path}-#{id}" : id
     end
   end
 

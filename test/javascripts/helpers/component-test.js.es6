@@ -54,8 +54,15 @@ export default function(name, opts) {
     andThen(() => {
       return this.render(opts.template);
     });
+
     andThen(() => {
-      opts.test.call(this, assert);
+      try {
+        opts.test.call(this, assert);
+      } finally {
+        if (opts.afterEach) {
+          opts.afterEach.call(opts);
+        }
+      }
     });
   });
 }

@@ -32,6 +32,7 @@
 #       docker run -e SKIP_CORE=1 SINGLE_PLUGIN='my-awesome-plugin' -v $(pwd)/my-awesome-plugin:/var/www/discourse/plugins/my-awesome-plugin discourse/discourse_test:release
 
 def run_or_fail(command)
+  log(command)
   pid = Process.spawn(command)
   Process.wait(pid)
   $?.exitstatus == 0
@@ -45,6 +46,10 @@ def run_or_fail_prettier(*patterns)
     puts "Skipping prettier. Pattern not found."
     true
   end
+end
+
+def log(message)
+  puts "[#{Time.now.strftime("%Y-%m-%d %H:%M:%S")}] #{message}"
 end
 
 desc 'Run all tests (JS and code in a standalone environment)'
@@ -65,6 +70,7 @@ task 'docker:test' do
         puts "Listing prettier offenses in #{ENV['SINGLE_PLUGIN']}:"
         @good &&= run_or_fail_prettier("plugins/#{ENV['SINGLE_PLUGIN']}/**/*.scss", "plugins/#{ENV['SINGLE_PLUGIN']}/**/*.es6")
       else
+        @good &&= run_or_fail("bundle exec rake plugin:update_all") unless ENV["SKIP_PLUGINS"]
         @good &&= run_or_fail("bundle exec rubocop --parallel") unless ENV["SKIP_CORE"]
         @good &&= run_or_fail("yarn eslint app/assets/javascripts test/javascripts") unless ENV["SKIP_CORE"]
         @good &&= run_or_fail("yarn eslint --ext .es6 app/assets/javascripts test/javascripts plugins") unless ENV["SKIP_PLUGINS"]
@@ -108,14 +114,29 @@ task 'docker:test' do
 
       @good &&= run_or_fail("bundle exec rake db:create")
 
+      if ENV['USE_TURBO']
+        @good &&= run_or_fail("bundle exec rake parallel:create")
+      end
+
       if ENV["INSTALL_OFFICIAL_PLUGINS"]
         @good &&= run_or_fail("bundle exec rake plugin:install_all_official")
       end
 
-      if ENV["SKIP_PLUGINS"]
-        @good &&= run_or_fail("bundle exec rake db:migrate")
-      else
-        @good &&= run_or_fail("LOAD_PLUGINS=1 bundle exec rake db:migrate")
+      if ENV["UPDATE_ALL_PLUGINS"]
+        @good &&= run_or_fail("bundle exec rake plugin:update_all")
+      end
+
+      command_prefix =
+        if ENV["SKIP_PLUGINS"]
+          ""
+        else
+          "LOAD_PLUGINS=1 "
+        end
+
+      @good &&= run_or_fail("#{command_prefix}bundle exec rake db:migrate")
+
+      if ENV['USE_TURBO']
+        @good &&= run_or_fail("bundle exec rake parallel:migrate")
       end
 
       puts "travis_fold:end:prepare_tests" if ENV["TRAVIS"]
@@ -124,13 +145,16 @@ task 'docker:test' do
         puts "travis_fold:start:ruby_tests" if ENV["TRAVIS"]
         unless ENV["SKIP_CORE"]
           params = []
-          params << "--profile"
-          params << "--fail-fast"
-          if ENV["BISECT"]
-            params << "--bisect"
-          end
-          if ENV["RSPEC_SEED"]
-            params << "--seed #{ENV["RSPEC_SEED"]}"
+
+          unless ENV['USE_TURBO']
+            params << "--profile"
+            params << "--fail-fast"
+            if ENV["BISECT"]
+              params << "--bisect"
+            end
+            if ENV["RSPEC_SEED"]
+              params << "--seed #{ENV["RSPEC_SEED"]}"
+            end
           end
 
           if ENV['PARALLEL']
@@ -150,7 +174,11 @@ task 'docker:test' do
             puts "Running spec subset #{subset + 1} of #{total}"
           end
 
-          @good &&= run_or_fail("bundle exec rspec #{params.join(' ')}".strip)
+          if ENV['USE_TURBO']
+            @good &&= run_or_fail("bundle exec ./bin/turbo_rspec #{params.join(' ')}".strip)
+          else
+            @good &&= run_or_fail("bundle exec rspec #{params.join(' ')}".strip)
+          end
         end
 
         unless ENV["SKIP_PLUGINS"]

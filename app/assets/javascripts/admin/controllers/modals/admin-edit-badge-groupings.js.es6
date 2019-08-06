@@ -5,7 +5,7 @@ import { observes } from "ember-addons/ember-computed-decorators";
 export default Ember.Controller.extend(ModalFunctionality, {
   @observes("model")
   modelChanged() {
-    const model = this.get("model");
+    const model = this.model;
     const copy = Ember.A();
     const store = this.store;
 
@@ -19,7 +19,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
   },
 
   moveItem(item, delta) {
-    const copy = this.get("workingCopy");
+    const copy = this.workingCopy;
     const index = copy.indexOf(item);
     if (index + delta < 0 || index + delta >= copy.length) {
       return;
@@ -37,7 +37,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
       this.moveItem(item, 1);
     },
     delete(item) {
-      this.get("workingCopy").removeObject(item);
+      this.workingCopy.removeObject(item);
     },
     cancel() {
       this.setProperties({ model: null, workingCopy: null });
@@ -54,10 +54,10 @@ export default Ember.Controller.extend(ModalFunctionality, {
         editing: true,
         name: I18n.t("admin.badges.badge_grouping")
       });
-      this.get("workingCopy").pushObject(obj);
+      this.workingCopy.pushObject(obj);
     },
     saveAll() {
-      let items = this.get("workingCopy");
+      let items = this.workingCopy;
       const groupIds = items.map(i => i.get("id") || -1);
       const names = items.map(i => i.get("name"));
 
@@ -66,7 +66,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
         method: "POST"
       }).then(
         data => {
-          items = this.get("model");
+          items = this.model;
           items.clear();
           data.badge_groupings.forEach(g => {
             items.pushObject(this.store.createRecord("badge-grouping", g));

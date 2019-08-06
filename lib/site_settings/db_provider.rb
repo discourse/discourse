@@ -58,12 +58,7 @@ class SiteSettings::DbProvider
   # table is not in the db yet, initial migration, etc
   def table_exists?
     @table_exists ||= {}
-    begin
-      @table_exists[current_site] ||= ActiveRecord::Base.connection.table_exists?(@model.table_name)
-    rescue
-      STDERR.puts "No connection to db, unable to retrieve site settings! (normal when running db:create)"
-      @table_exists[current_site] = false
-    end
+    @table_exists[current_site] ||= ActiveRecord::Base.connection.table_exists?(@model.table_name)
   end
 
 end

@@ -13,6 +13,8 @@ import { flushMap } from "discourse/models/store";
 import { clearRewrites } from "discourse/lib/url";
 import { initSearchData } from "discourse/widgets/search-menu";
 import { resetDecorators } from "discourse/widgets/widget";
+import { resetWidgetCleanCallbacks } from "discourse/components/mount-widget";
+import { resetDecorators as resetPostCookedDecorators } from "discourse/widgets/post-cooked";
 import { resetCache as resetOneboxCache } from "pretty-text/oneboxer";
 import { resetCustomPostMessageCallbacks } from "discourse/controllers/topic";
 
@@ -22,12 +24,11 @@ export function currentUser() {
   );
 }
 
-export function replaceCurrentUser(properties) {
-  const user = Discourse.User.current();
-  user.setProperties(properties);
-  Discourse.User.resetCurrent(user);
+export function updateCurrentUser(properties) {
+  Discourse.User.current().setProperties(properties);
 }
 
+// Note: do not use this in acceptance tests. Use `loggedIn: true` instead
 export function logIn() {
   Discourse.User.resetCurrent(currentUser());
 }
@@ -57,17 +58,18 @@ function AcceptanceModal(option, _relatedTarget) {
 window.bootbox.$body = $("#ember-testing");
 $.fn.modal = AcceptanceModal;
 
-let _pretenderCallbacks = [];
+let _pretenderCallbacks = {};
 
-export function applyPretender(server, helper) {
-  _pretenderCallbacks.forEach(cb => cb(server, helper));
+export function applyPretender(name, server, helper) {
+  const cb = _pretenderCallbacks[name];
+  if (cb) cb(server, helper);
 }
 
 export function acceptance(name, options) {
   options = options || {};
 
   if (options.pretend) {
-    _pretenderCallbacks.push(options.pretend);
+    _pretenderCallbacks[name] = options.pretend;
   }
 
   QUnit.module("Acceptance: " + name, {
@@ -123,9 +125,21 @@ export function acceptance(name, options) {
       clearRewrites();
       initSearchData();
       resetDecorators();
+      resetPostCookedDecorators();
       resetOneboxCache();
       resetCustomPostMessageCallbacks();
+      Discourse._runInitializer("instanceInitializers", function(
+        initName,
+        initializer
+      ) {
+        if (initializer && initializer.teardown) {
+          initializer.teardown(Discourse.__container__);
+        }
+      });
       Discourse.reset();
+
+      // We do this after reset so that the willClearRender will have already fired
+      resetWidgetCleanCallbacks();
     }
   });
 }

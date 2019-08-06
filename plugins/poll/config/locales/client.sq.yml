@@ -18,13 +18,13 @@ sq:
       multiple:
         help:
           at_least_min_options:
-            one: "Zgjidhni të paktën <strong>1</strong> alternativë"
+            one: "Zgjidhni të paktën <strong>%{count}</strong> alternativë"
             other: "Zgjidhni të paktën <strong>%{count}</strong> alternativa"
           up_to_max_options:
-            one: "Zgjidhni deri në <strong>1</strong> alternativë"
+            one: "Zgjidhni deri në <strong>%{count}</strong> alternativë"
             other: "Zgjidhni deri në <strong>%{count}</strong> alternativa"
           x_options:
-            one: "Zgjidhni <strong>1</strong> alternativë"
+            one: "Zgjidhni <strong>%{count}</strong> alternativë"
             other: "Zgjidhni <strong>%{count}</strong> alternativa"
           between_min_and_max_options: "Zgjidhni midis <strong>%{min}</strong> dhe <strong>%{max}</strong> alternativash"
       cast-votes:

@@ -66,6 +66,10 @@ module HasCustomFields
 
     attr_accessor :preloaded_custom_fields
 
+    def custom_fields_fk
+      @custom_fields_fk ||= "#{_custom_fields.reflect_on_all_associations(:belongs_to)[0].name}_id"
+    end
+
     # To avoid n+1 queries, use this function to retrieve lots of custom fields in one go
     # and create a "sideloaded" version for easy querying by id.
     def self.custom_fields_for_ids(ids, whitelisted_fields)
@@ -240,10 +244,7 @@ module HasCustomFields
           if v.is_a?(Array) && field_type != :json
             v.each { |subv| _custom_fields.create!(name: k, value: subv) }
           else
-            _custom_fields.create!(
-              name: k,
-              value: v.is_a?(Hash) || field_type == :json ? v.to_json : v
-            )
+            create_singular(k, v, field_type)
           end
         end
       end
@@ -252,7 +253,21 @@ module HasCustomFields
     end
   end
 
-  protected
+  # We support unique indexes on certain fields. In the event two concurrenct processes attempt to
+  # update the same custom field we should catch the error and perform an update instead.
+  def create_singular(name, value, field_type = nil)
+    write_value = value.is_a?(Hash) || field_type == :json ? value.to_json : value
+    write_value = 't' if write_value.is_a?(TrueClass)
+    write_value = 'f' if write_value.is_a?(FalseClass)
+    row_count = DB.exec(<<~SQL, name: name, value: write_value, id: id, now: Time.zone.now)
+      INSERT INTO #{_custom_fields.table_name} (#{custom_fields_fk}, name, value, created_at, updated_at)
+      VALUES (:id, :name, :value, :now, :now)
+      ON CONFLICT DO NOTHING
+    SQL
+    _custom_fields.where(name: name).update_all(value: write_value) if row_count == 0
+  end
+
+protected
 
   def refresh_custom_fields_from_db
     target = Hash.new

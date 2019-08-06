@@ -25,8 +25,8 @@ export default Ember.Component.extend({
       return eventTypeExists;
     },
     set(value, eventTypeExists) {
-      const type = this.get("type");
-      const model = this.get("model");
+      const type = this.type;
+      const model = this.model;
       // add an association when not exists
       if (value !== eventTypeExists) {
         if (value) {

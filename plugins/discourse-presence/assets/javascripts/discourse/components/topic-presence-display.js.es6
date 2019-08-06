@@ -14,7 +14,7 @@ export default Ember.Component.extend({
   presenceUsers: null,
 
   clear() {
-    if (!this.get("isDestroyed")) this.set("presenceUsers", []);
+    if (!this.isDestroyed) this.set("presenceUsers", []);
   },
 
   @on("didInsertElement")
@@ -22,9 +22,9 @@ export default Ember.Component.extend({
     this.clear();
 
     this.messageBus.subscribe(
-      this.get("channel"),
+      this.channel,
       message => {
-        if (!this.get("isDestroyed")) this.set("presenceUsers", message.users);
+        if (!this.isDestroyed) this.set("presenceUsers", message.users);
         this._clearTimer = Ember.run.debounce(
           this,
           "clear",
@@ -38,7 +38,7 @@ export default Ember.Component.extend({
   @on("willDestroyElement")
   _destroyed() {
     Ember.run.cancel(this._clearTimer);
-    this.messageBus.unsubscribe(this.get("channel"));
+    this.messageBus.unsubscribe(this.channel);
   },
 
   @computed("topicId")

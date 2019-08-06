@@ -70,7 +70,7 @@ const path = require("path");
   page.on("console", msg => console.log(`PAGE LOG: ${msg.text()}`));
 
   page.on("response", resp => {
-    if (resp.status() !== 200) {
+    if (resp.status() !== 200 && resp.status() !== 302) {
       console.log(
         "FAILED HTTP REQUEST TO " + resp.url() + " Status is: " + resp.status()
       );
@@ -219,6 +219,8 @@ const path = require("path");
       return promise;
     });
 
+    await page.waitFor(1000);
+
     await exec("submit the topic", () => {
       return page.click(".submit-panel .create");
     });
@@ -249,6 +251,8 @@ const path = require("path");
       );
     });
 
+    await page.waitFor(5000);
+
     await exec("submit the topic", () => {
       return page.click("#reply-control .create");
     });
@@ -268,6 +272,55 @@ const path = require("path");
       },
       output => {
         return output === 2;
+      }
+    );
+
+    await page.waitFor(1000);
+
+    await exec("open composer to edit first post", () => {
+      return page.click(".post-controls:first-of-type .edit");
+    });
+
+    await exec("update post raw in composer", () => {
+      let promise = page.waitForSelector("#reply-control .d-editor-input", {
+        visible: true
+      });
+
+      promise = promise.then(() => page.waitFor(5000));
+
+      promise = promise.then(() => {
+        const post = `I edited this post`;
+        return page.type("#reply-control .d-editor-input", post);
+      });
+
+      return promise;
+    });
+
+    await exec("submit the edit", () => {
+      return page.click("#reply-control .create");
+    });
+
+    await assert(
+      "reply is created",
+      () => {
+        let promise = page.waitForSelector("#reply-control.closed", {
+          visible: false
+        });
+
+        promise = promise.then(() => {
+          return page.waitForSelector("#post_1", { visible: true });
+        });
+
+        promise = promise.then(() => {
+          return page.evaluate(() => {
+            return document.querySelector("#post_1 .cooked").textContent;
+          });
+        });
+
+        return promise;
+      },
+      output => {
+        return output.includes(`I edited this post`);
       }
     );
   }

@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class Admin::WatchedWordsController < Admin::AdminController
+  skip_before_action :check_xhr, only: [:download]
 
   def index
     render_json_dump WatchedWordListSerializer.new(WatchedWord.by_action, scope: guardian, root: false)
@@ -16,8 +17,9 @@ class Admin::WatchedWordsController < Admin::AdminController
   end
 
   def destroy
-    watched_word = WatchedWord.find(params[:id])
-    watched_word.destroy
+    watched_word = WatchedWord.find_by(id: params[:id])
+    raise Discourse::InvalidParameters.new(:id) unless watched_word
+    watched_word.destroy!
     render json: success_json
   end
 
@@ -34,9 +36,33 @@ class Admin::WatchedWordsController < Admin::AdminController
       rescue => e
         data = failed_json.merge(errors: [e.message])
       end
-      MessageBus.publish("/uploads/csv", data.as_json, client_ids: [params[:client_id]])
+      MessageBus.publish("/uploads/txt", data.as_json, client_ids: [params[:client_id]])
     end
 
+    render json: success_json
+  end
+
+  def download
+    params.require(:id)
+    name = watched_words_params[:id].to_sym
+    action = WatchedWord.actions[name]
+    raise Discourse::NotFound if !action
+
+    content = WatchedWord.where(action: action).pluck(:word).join("\n")
+    headers['Content-Length'] = content.bytesize.to_s
+    send_data content,
+      filename: "#{Discourse.current_hostname}-watched-words-#{name}.txt",
+      content_type: "text/plain"
+  end
+
+  def clear_all
+    params.require(:id)
+    name = watched_words_params[:id].to_sym
+    action = WatchedWord.actions[name]
+    raise Discourse::NotFound if !action
+
+    WatchedWord.where(action: action).delete_all
+    WordWatcher.clear_cache!
     render json: success_json
   end
 

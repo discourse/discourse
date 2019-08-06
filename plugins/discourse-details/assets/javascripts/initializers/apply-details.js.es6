@@ -1,7 +1,9 @@
 import { withPluginApi } from "discourse/lib/plugin-api";
 
 function initializeDetails(api) {
-  api.decorateCooked($elem => $("details", $elem).details());
+  api.decorateCooked($elem => $("details", $elem).details(), {
+    id: "discourse-details"
+  });
 
   api.addToolbarPopupMenuOptionsCallback(() => {
     return {
@@ -14,7 +16,7 @@ function initializeDetails(api) {
   api.modifyClass("controller:composer", {
     actions: {
       insertDetails() {
-        this.get("toolbarEvent").applySurround(
+        this.toolbarEvent.applySurround(
           "\n" + `[details="${I18n.t("composer.details_title")}"]` + "\n",
           "\n[/details]\n",
           "details_text",

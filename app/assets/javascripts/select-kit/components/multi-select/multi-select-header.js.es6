@@ -22,15 +22,15 @@ export default SelectKitHeaderComponent.extend({
 
   @on("didRender")
   _positionFilter() {
-    if (!this.get("shouldDisplayFilter")) return;
+    if (!this.shouldDisplayFilter) return;
 
-    const $filter = this.$(".filter");
+    const $filter = $(this.element.querySelector(".filter"));
     $filter.width(0);
 
-    const leftHeaderOffset = this.$().offset().left;
+    const leftHeaderOffset = $(this.element).offset().left;
     const leftFilterOffset = $filter.offset().left;
     const offset = leftFilterOffset - leftHeaderOffset;
-    const width = this.$().outerWidth(false);
+    const width = $(this.element).outerWidth(false);
     const availableSpace = width - offset;
     const $choices = $filter.parent(".choices");
     const parentRightPadding = parseInt($choices.css("padding-right"), 10);

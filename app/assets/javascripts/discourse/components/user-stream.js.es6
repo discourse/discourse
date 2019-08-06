@@ -30,8 +30,12 @@ export default Ember.Component.extend(LoadMore, {
 
     $(window).on("resize.discourse-on-scroll", () => this.scrolled());
 
-    this.$().on("click.details-disabled", "details.disabled", () => false);
-    this.$().on("click.discourse-redirect", ".excerpt a", function(e) {
+    $(this.element).on(
+      "click.details-disabled",
+      "details.disabled",
+      () => false
+    );
+    $(this.element).on("click.discourse-redirect", ".excerpt a", function(e) {
       return ClickTrack.trackClick(e);
     });
   }.on("didInsertElement"),
@@ -40,15 +44,15 @@ export default Ember.Component.extend(LoadMore, {
   _destroyed: function() {
     this.unbindScrolling("user-stream-view");
     $(window).unbind("resize.discourse-on-scroll");
-    this.$().off("click.details-disabled", "details.disabled");
+    $(this.element).off("click.details-disabled", "details.disabled");
 
     // Unbind link tracking
-    this.$().off("click.discourse-redirect", ".excerpt a");
+    $(this.element).off("click.discourse-redirect", ".excerpt a");
   }.on("willDestroyElement"),
 
   actions: {
     removeBookmark(userAction) {
-      const stream = this.get("stream");
+      const stream = this.stream;
       Post.updateBookmark(userAction.get("post_id"), false)
         .then(() => {
           stream.remove(userAction);
@@ -81,7 +85,7 @@ export default Ember.Component.extend(LoadMore, {
     },
 
     removeDraft(draft) {
-      const stream = this.get("stream");
+      const stream = this.stream;
       Draft.clear(draft.draft_key, draft.sequence)
         .then(() => {
           stream.remove(draft);
@@ -92,15 +96,15 @@ export default Ember.Component.extend(LoadMore, {
     },
 
     loadMore() {
-      if (this.get("loading")) {
+      if (this.loading) {
         return;
       }
 
       this.set("loading", true);
-      const stream = this.get("stream");
+      const stream = this.stream;
       stream.findItems().then(() => {
         this.set("loading", false);
-        this.get("eyeline").flushRest();
+        this.eyeline.flushRest();
       });
     }
   }

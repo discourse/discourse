@@ -1,5 +1,6 @@
 import { iconHTML } from "discourse-common/lib/icon-library";
 import { bufferedRender } from "discourse-common/lib/buffered-render";
+import { escapeExpression } from "discourse/lib/utilities";
 
 export default Ember.Component.extend(
   bufferedRender({
@@ -7,14 +8,14 @@ export default Ember.Component.extend(
 
     buildBuffer(buffer) {
       buffer.push(iconHTML("times"));
-      buffer.push(" " + this.get("word.word"));
+      buffer.push(` ${escapeExpression(this.get("word.word"))}`);
     },
 
     click() {
-      this.get("word")
+      this.word
         .destroy()
         .then(() => {
-          this.action(this.get("word"));
+          this.action(this.word);
         })
         .catch(e => {
           bootbox.alert(

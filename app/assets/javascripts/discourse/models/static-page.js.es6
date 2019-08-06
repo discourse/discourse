@@ -12,11 +12,11 @@ StaticPage.reopenClass({
         text = text.match(
           /<!-- preload-content: -->((?:.|[\n\r])*)<!-- :preload-content -->/
         )[1];
-        resolve(StaticPage.create({ path: path, html: text }));
+        resolve(StaticPage.create({ path, html: text }));
       } else {
-        ajax(path + ".html", { dataType: "html" }).then(function(result) {
-          resolve(StaticPage.create({ path: path, html: result }));
-        });
+        ajax(`/${path}.html`, { dataType: "html" }).then(result =>
+          resolve(StaticPage.create({ path, html: result }))
+        );
       }
     });
   }

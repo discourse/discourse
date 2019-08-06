@@ -16,7 +16,7 @@ module Jobs
         .each do |reviewable|
 
         if reviewable.is_a?(ReviewableFlaggedPost)
-          reviewable.perform(Discourse.system_user, :ignore)
+          reviewable.perform(Discourse.system_user, :ignore, expired: true)
         elsif reviewable.is_a?(ReviewableQueuedPost)
           reviewable.perform(Discourse.system_user, :reject_post)
         elsif reviewable.is_a?(ReviewableUser)

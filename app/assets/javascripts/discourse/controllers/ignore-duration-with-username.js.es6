@@ -8,7 +8,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
   ignoredUsername: null,
   actions: {
     ignore() {
-      if (!this.get("ignoredUntil") || !this.get("ignoredUsername")) {
+      if (!this.ignoredUntil || !this.ignoredUsername) {
         this.flash(
           I18n.t("user.user_notifications.ignore_duration_time_frame_required"),
           "alert-error"
@@ -16,11 +16,11 @@ export default Ember.Controller.extend(ModalFunctionality, {
         return;
       }
       this.set("loading", true);
-      User.findByUsername(this.get("ignoredUsername")).then(user => {
+      User.findByUsername(this.ignoredUsername).then(user => {
         user
-          .updateNotificationLevel("ignore", this.get("ignoredUntil"))
+          .updateNotificationLevel("ignore", this.ignoredUntil)
           .then(() => {
-            this.onUserIgnored(this.get("ignoredUsername"));
+            this.onUserIgnored(this.ignoredUsername);
             this.send("closeModal");
           })
           .catch(popupAjaxError)

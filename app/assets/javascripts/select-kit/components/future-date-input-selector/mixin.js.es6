@@ -37,7 +37,7 @@ export default Ember.Mixin.create({
       return {
         time: details.when(
           moment(),
-          this.get("statusType") !== CLOSE_STATUS_TYPE ? 8 : 18
+          this.statusType !== CLOSE_STATUS_TYPE ? 8 : 18
         ),
         icon: details.icon
       };

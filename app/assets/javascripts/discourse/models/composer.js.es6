@@ -69,11 +69,11 @@ export const SAVE_LABELS = {
 
 export const SAVE_ICONS = {
   [EDIT]: "pencil-alt",
-  [EDIT_SHARED_DRAFT]: "clipboard",
+  [EDIT_SHARED_DRAFT]: "far-clipboard",
   [REPLY]: "reply",
   [CREATE_TOPIC]: "plus",
   [PRIVATE_MESSAGE]: "envelope",
-  [CREATE_SHARED_DRAFT]: "clipboard"
+  [CREATE_SHARED_DRAFT]: "far-clipboard"
 };
 
 const Composer = RestModel.extend({
@@ -306,12 +306,6 @@ const Composer = RestModel.extend({
     }
 
     return options;
-  },
-
-  @computed
-  isStaffUser() {
-    const currentUser = Discourse.User.current();
-    return currentUser && currentUser.staff;
   },
 
   @computed(
@@ -709,6 +703,11 @@ const Composer = RestModel.extend({
       const topicProps = this.getProperties(
         Object.keys(_edit_topic_serializer)
       );
+      // frontend should have featuredLink but backend needs featured_link
+      if (topicProps.featuredLink) {
+        topicProps.featured_link = topicProps.featuredLink;
+        delete topicProps.featuredLink;
+      }
 
       const topic = this.topic;
 
@@ -724,6 +723,7 @@ const Composer = RestModel.extend({
     }
 
     const props = {
+      topic_id: this.topic.id,
       raw: this.reply,
       raw_old: this.editConflict ? null : this.originalText,
       edit_reason: opts.editReason,
@@ -954,7 +954,6 @@ const Composer = RestModel.extend({
       "action",
       "title",
       "categoryId",
-      "postId",
       "archetypeId",
       "whisper",
       "metaData",
@@ -964,9 +963,12 @@ const Composer = RestModel.extend({
       "noBump"
     );
 
-    data = Object.assign(data, { usernames: this.targetUsernames });
+    data = Object.assign(data, {
+      usernames: this.targetUsernames,
+      postId: this.get("post.id")
+    });
 
-    if (this.get("post.id") && !Ember.isEmpty(this.originalText)) {
+    if (data.postId && !Ember.isEmpty(this.originalText)) {
       data.originalText = this.originalText;
     }
 

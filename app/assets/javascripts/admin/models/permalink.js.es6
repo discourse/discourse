@@ -4,15 +4,15 @@ const Permalink = Discourse.Model.extend({
     return ajax("/admin/permalinks.json", {
       type: "POST",
       data: {
-        url: this.get("url"),
-        permalink_type: this.get("permalink_type"),
-        permalink_type_value: this.get("permalink_type_value")
+        url: this.url,
+        permalink_type: this.permalink_type,
+        permalink_type_value: this.permalink_type_value
       }
     });
   },
 
   destroy: function() {
-    return ajax("/admin/permalinks/" + this.get("id") + ".json", {
+    return ajax("/admin/permalinks/" + this.id + ".json", {
       type: "DELETE"
     });
   }

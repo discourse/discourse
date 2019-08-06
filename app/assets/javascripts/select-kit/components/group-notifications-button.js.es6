@@ -7,6 +7,6 @@ export default NotificationOptionsComponent.extend({
   allowInitialValueMutation: false,
 
   mutateValue(value) {
-    this.get("group").setNotification(value, this.get("user.id"));
+    this.group.setNotification(value, this.get("user.id"));
   }
 });

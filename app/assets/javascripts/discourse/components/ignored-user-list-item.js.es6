@@ -3,7 +3,7 @@ export default Ember.Component.extend({
   items: null,
   actions: {
     removeIgnoredUser(item) {
-      this.get("onRemoveIgnoredUser")(item);
+      this.onRemoveIgnoredUser(item);
     }
   }
 });

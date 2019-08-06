@@ -1,5 +1,5 @@
 const OBSERVER_OPTIONS = {
-  rootMargin: "50%" // load images slightly before they're visible
+  rootMargin: "66%" // load images slightly before they're visible
 };
 
 // Min size in pixels for consideration for lazy loading
@@ -53,9 +53,20 @@ function show(image) {
     copyImg.style.position = "absolute";
     copyImg.style.top = `${image.offsetTop}px`;
     copyImg.style.left = `${image.offsetLeft}px`;
-    copyImg.style.width = imageData.width;
-    copyImg.style.height = imageData.height;
     copyImg.className = imageData.className;
+
+    let inOnebox = false;
+    for (let element = image; element; element = element.parentElement) {
+      if (element.classList.contains("onebox")) {
+        inOnebox = true;
+        break;
+      }
+    }
+
+    if (!inOnebox) {
+      copyImg.style.width = `${imageData.width}px`;
+      copyImg.style.height = `${imageData.height}px`;
+    }
 
     image.parentNode.insertBefore(copyImg, image);
   } else {
@@ -84,6 +95,6 @@ export function setupLazyLoading(api) {
         }
       });
     },
-    { onlyStream: true }
+    { onlyStream: true, id: "discourse-lazy-load" }
   );
 }

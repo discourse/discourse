@@ -20,12 +20,8 @@ describe Badge do
     badge = Badge.find_by_name("Basic User")
     name_english = badge.name
 
-    begin
-      I18n.locale = 'fr'
-
+    I18n.with_locale(:fr) do
       expect(badge.display_name).not_to eq(name_english)
-    ensure
-      I18n.locale = :en
     end
   end
 

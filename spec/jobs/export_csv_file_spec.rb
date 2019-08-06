@@ -4,7 +4,7 @@ require 'rails_helper'
 
 describe Jobs::ExportCsvFile do
 
-  context '.execute' do
+  context '#execute' do
     fab!(:user) { Fabricate(:user, username: "john_doe") }
 
     it 'raises an error when the entity is missing' do
@@ -13,18 +13,82 @@ describe Jobs::ExportCsvFile do
 
     it 'works' do
       begin
-        Jobs::ExportCsvFile.new.execute(user_id: user.id, entity: "user_archive")
+        expect do
+          Jobs::ExportCsvFile.new.execute(
+            user_id: user.id,
+            entity: "user_archive"
+          )
+        end.to change { Upload.count }.by(1)
 
-        expect(user.topics_allowed.last.title).to eq(I18n.t(
+        system_message = user.topics_allowed.last
+
+        expect(system_message.title).to eq(I18n.t(
           "system_messages.csv_export_succeeded.subject_template",
           export_title: "User Archive"
         ))
 
-        expect(user.topics_allowed.last.first_post.raw).to include("user-archive-john_doe-")
+        upload = system_message.first_post.uploads.first
+
+        expect(system_message.first_post.raw).to eq(I18n.t(
+          "system_messages.csv_export_succeeded.text_body_template",
+          download_link: "[#{upload.original_filename}|attachment](#{upload.short_url}) (#{upload.filesize} Bytes)"
+        ).chomp)
+
+        expect(system_message.id).to eq(UserExport.last.topic_id)
+        expect(system_message.closed).to eq(true)
       ensure
         user.uploads.each(&:destroy!)
       end
     end
+  end
+
+  context '.report_export' do
+
+    let(:user) { Fabricate(:admin) }
+
+    let(:exporter) do
+      exporter = Jobs::ExportCsvFile.new
+      exporter.instance_variable_set(:@entity, 'report')
+      exporter.instance_variable_set(:@extra, HashWithIndifferentAccess.new(start_date: '2010-01-01', end_date: '2011-01-01'))
+      exporter.instance_variable_set(:@current_user, User.find_by(id: user.id))
+      exporter
+    end
+
+    it 'works with single-column reports' do
+      user.user_visits.create!(visited_at: '2010-01-01', posts_read: 42)
+      Fabricate(:user).user_visits.create!(visited_at: '2010-01-03', posts_read: 420)
+
+      exporter.instance_variable_get(:@extra)['name'] = 'dau_by_mau'
+      report = exporter.report_export.to_a
+
+      expect(report.first).to contain_exactly("Day", "Percent")
+      expect(report.second).to contain_exactly("2010-01-01", "100.0")
+      expect(report.third).to contain_exactly("2010-01-03", "50.0")
+    end
+
+    it 'works with single-column reports with default label' do
+      user.user_visits.create!(visited_at: '2010-01-01')
+      Fabricate(:user).user_visits.create!(visited_at: '2010-01-03')
+
+      exporter.instance_variable_get(:@extra)['name'] = 'visits'
+      report = exporter.report_export.to_a
+
+      expect(report.first).to contain_exactly("Day", "Count")
+      expect(report.second).to contain_exactly("2010-01-01", "1")
+      expect(report.third).to contain_exactly("2010-01-03", "1")
+    end
+
+    it 'works with multi-columns reports' do
+      DiscourseIpInfo.stubs(:get).with("1.1.1.1").returns(location: "Earth")
+      user.user_auth_token_logs.create!(action: "login", client_ip: "1.1.1.1", created_at: '2010-01-01')
+
+      exporter.instance_variable_get(:@extra)['name'] = 'staff_logins'
+      report = exporter.report_export.to_a
+
+      expect(report.first).to contain_exactly("User", "Location", "Login at")
+      expect(report.second).to contain_exactly(user.username, "Earth", "2010-01-01 00:00:00 UTC")
+    end
+
   end
 
   let(:user_list_header) {

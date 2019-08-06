@@ -26,7 +26,7 @@ export default ComboBoxComponent.extend(TagsMixin, {
 
   @computed("tagId")
   noTagsSelected() {
-    return this.get("tagId") === "none";
+    return this.tagId === "none";
   },
 
   @computed("showFilterByTag", "content")
@@ -44,16 +44,16 @@ export default ComboBoxComponent.extend(TagsMixin, {
     let content = this._super(...arguments);
 
     if (!content.value) {
-      if (this.get("tagId")) {
-        if (this.get("tagId") === "none") {
-          content.title = this.get("noTagsLabel");
+      if (this.tagId) {
+        if (this.tagId === "none") {
+          content.title = this.noTagsLabel;
         } else {
-          content.title = this.get("tagId");
+          content.title = this.tagId;
         }
-      } else if (this.get("noTagsSelected")) {
-        content.title = this.get("noTagsLabel");
+      } else if (this.noTagsSelected) {
+        content.title = this.noTagsLabel;
       } else {
-        content.title = this.get("allTagsLabel");
+        content.title = this.allTagsLabel;
       }
     } else {
       content.title = content.value;
@@ -69,7 +69,7 @@ export default ComboBoxComponent.extend(TagsMixin, {
 
   @computed("firstCategory", "secondCategory")
   allTagsUrl() {
-    if (this.get("currentCategory")) {
+    if (this.currentCategory) {
       return Discourse.getURL(this.get("currentCategory.url") + "?allTags=1");
     } else {
       return Discourse.getURL("/");
@@ -79,7 +79,7 @@ export default ComboBoxComponent.extend(TagsMixin, {
   @computed("firstCategory", "secondCategory")
   noTagsUrl() {
     var url = "/tags";
-    if (this.get("currentCategory")) {
+    if (this.currentCategory) {
       url += this.get("currentCategory.url");
     }
     return Discourse.getURL(`${url}/none`);
@@ -150,12 +150,12 @@ export default ComboBoxComponent.extend(TagsMixin, {
       let url;
 
       if (tagId === "all-tags") {
-        url = Discourse.getURL(this.get("allTagsUrl"));
+        url = Discourse.getURL(this.allTagsUrl);
       } else if (tagId === "no-tags") {
-        url = Discourse.getURL(this.get("noTagsUrl"));
+        url = Discourse.getURL(this.noTagsUrl);
       } else {
         url = "/tags";
-        if (this.get("currentCategory")) {
+        if (this.currentCategory) {
           url += this.get("currentCategory.url");
         }
         url = Discourse.getURL(`${url}/${tagId.toLowerCase()}`);
@@ -165,14 +165,14 @@ export default ComboBoxComponent.extend(TagsMixin, {
     },
 
     onExpand() {
-      if (isEmpty(this.get("asyncContent"))) {
-        this.set("asyncContent", this.get("content"));
+      if (isEmpty(this.asyncContent)) {
+        this.set("asyncContent", this.content);
       }
     },
 
     onFilter(filter) {
       if (isEmpty(filter)) {
-        this.set("asyncContent", this.get("content"));
+        this.set("asyncContent", this.content);
         return;
       }
 

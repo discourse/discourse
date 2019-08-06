@@ -88,7 +88,7 @@ class Admin::ThemesController < Admin::AdminController
       rescue RemoteTheme::ImportError => e
         render_json_error e.message
       end
-    elsif params[:bundle] || (params[:theme] && ["application/x-gzip", "application/gzip"].include?(params[:theme].content_type))
+    elsif params[:bundle] || (params[:theme] && ["application/x-gzip", "application/gzip", "application/zip"].include?(params[:theme].content_type))
       # params[:bundle] used by theme CLI. params[:theme] used by admin UI
       bundle = params[:bundle] || params[:theme]
       theme_id = params[:theme_id]
@@ -156,8 +156,10 @@ class Admin::ThemesController < Admin::AdminController
     raise Discourse::InvalidParameters.new(:id) unless @theme
 
     original_json = ThemeSerializer.new(@theme, root: false).to_json
+    disables_component = [false, "false"].include?(theme_params[:enabled])
+    enables_component = [true, "true"].include?(theme_params[:enabled])
 
-    [:name, :color_scheme_id, :user_selectable].each do |field|
+    [:name, :color_scheme_id, :user_selectable, :enabled].each do |field|
       if theme_params.key?(field)
         @theme.public_send("#{field}=", theme_params[field])
       end
@@ -203,7 +205,13 @@ class Admin::ThemesController < Admin::AdminController
         update_default_theme
 
         @theme.reload
-        log_theme_change(original_json, @theme)
+
+        if (!disables_component && !enables_component) || theme_params.keys.size > 1
+          log_theme_change(original_json, @theme)
+        end
+        log_theme_component_disabled if disables_component
+        log_theme_component_enabled if enables_component
+
         format.json { render json: @theme, status: :ok }
       else
         format.json do
@@ -244,6 +252,7 @@ class Admin::ThemesController < Admin::AdminController
 
     exporter = ThemeStore::TgzExporter.new(@theme)
     file_path = exporter.package_filename
+
     headers['Content-Length'] = File.size(file_path).to_s
     send_data File.read(file_path),
       filename: File.basename(file_path),
@@ -259,6 +268,24 @@ class Admin::ThemesController < Admin::AdminController
     respond_to do |format|
       format.json { render json: changes || {} }
     end
+  end
+
+  def update_single_setting
+    params.require("name")
+    @theme = Theme.find_by(id: params[:id])
+    raise Discourse::InvalidParameters.new(:id) unless @theme
+
+    setting_name = params[:name].to_sym
+    new_value = params[:value] || nil
+
+    previous_value = @theme.included_settings[setting_name]
+    @theme.update_setting(setting_name, new_value)
+    @theme.save
+
+    log_theme_setting_change(setting_name, previous_value, new_value)
+
+    updated_setting = @theme.included_settings.select { |key, val| key == setting_name }
+    render json: updated_setting, status: :ok
   end
 
   private
@@ -286,6 +313,7 @@ class Admin::ThemesController < Admin::AdminController
           :default,
           :user_selectable,
           :component,
+          :enabled,
           settings: {},
           translations: {},
           theme_fields: [:name, :target, :value, :upload_id, :type_id],
@@ -326,6 +354,18 @@ class Admin::ThemesController < Admin::AdminController
 
   def log_theme_change(old_record, new_record)
     StaffActionLogger.new(current_user).log_theme_change(old_record, new_record)
+  end
+
+  def log_theme_setting_change(setting_name, previous_value, new_value)
+    StaffActionLogger.new(current_user).log_theme_setting_change(setting_name, previous_value, new_value, @theme)
+  end
+
+  def log_theme_component_disabled
+    StaffActionLogger.new(current_user).log_theme_component_disabled(@theme)
+  end
+
+  def log_theme_component_enabled
+    StaffActionLogger.new(current_user).log_theme_component_enabled(@theme)
   end
 
   def handle_switch

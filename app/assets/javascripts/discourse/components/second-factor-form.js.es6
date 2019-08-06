@@ -31,7 +31,7 @@ export default Ember.Component.extend({
 
   actions: {
     toggleSecondFactorMethod() {
-      const secondFactorMethod = this.get("secondFactorMethod");
+      const secondFactorMethod = this.secondFactorMethod;
       this.set("secondFactorToken", "");
       if (secondFactorMethod === SECOND_FACTOR_METHODS.TOTP) {
         this.set("secondFactorMethod", SECOND_FACTOR_METHODS.BACKUP_CODE);

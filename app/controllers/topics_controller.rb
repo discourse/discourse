@@ -131,6 +131,9 @@ class TopicsController < ApplicationController
     perform_show_response
 
   rescue Discourse::InvalidAccess => ex
+    if !guardian.can_see_topic?(ex.obj) && guardian.can_get_access_to_topic?(ex.obj)
+      return perform_hidden_topic_show_response(ex.obj)
+    end
 
     if current_user
       # If the user can't see the topic, clean up notifications for it.
@@ -308,14 +311,15 @@ class TopicsController < ApplicationController
         return render_json_error(I18n.t('category.errors.not_found'))
       end
 
-      if category && topic_tags = (params[:tags] || topic.tags.pluck(:name))
-        category_tags = category.tags.pluck(:name)
-        category_tag_groups = category.tag_groups.joins(:tags).pluck("tags.name")
-        allowed_tags = (category_tags + category_tag_groups).uniq
+      if category && topic_tags = (params[:tags] || topic.tags.pluck(:name)).reject { |c| c.empty? }
+        if topic_tags.present?
+          allowed_tags = DiscourseTagging.filter_allowed_tags(
+            Tag.all,
+            guardian,
+            category: category
+          ).pluck("tags.name")
 
-        if topic_tags.present? && allowed_tags.present?
           invalid_tags = topic_tags - allowed_tags
-
           if !invalid_tags.empty?
             return render_json_error(I18n.t('category.errors.disallowed_topic_tags', tags: invalid_tags.join(", ")))
           end
@@ -779,7 +783,17 @@ class TopicsController < ApplicationController
     elsif params[:filter] == 'unread'
       tq = TopicQuery.new(current_user)
       topics = TopicQuery.unread_filter(tq.joined_topic_user, current_user.id, staff: guardian.is_staff?).listable_topics
-      topics = topics.where('category_id = ?', params[:category_id]) if params[:category_id]
+
+      if params[:category_id]
+        if params[:include_subcategories]
+          topics = topics.where(<<~SQL, category_id: params[:category_id])
+            category_id in (select id FROM categories WHERE parent_category_id = :category_id) OR
+            category_id = :category_id
+          SQL
+        else
+          topics = topics.where('category_id = ?', params[:category_id])
+        end
+      end
       topic_ids = topics.pluck(:id)
     else
       raise ActionController::ParameterMissing.new(:topic_ids)
@@ -808,7 +822,7 @@ class TopicsController < ApplicationController
     guardian.ensure_can_convert_topic!(topic)
 
     if params[:type] == "public"
-      converted_topic = topic.convert_to_public_topic(current_user)
+      converted_topic = topic.convert_to_public_topic(current_user, category_id: params[:category_id])
     else
       converted_topic = topic.convert_to_private_message(current_user)
     end
@@ -936,6 +950,19 @@ class TopicsController < ApplicationController
 
       format.json do
         render_json_dump(topic_view_serializer)
+      end
+    end
+  end
+
+  def perform_hidden_topic_show_response(topic)
+    respond_to do |format|
+      format.html do
+        @topic_view = nil
+        render :show
+      end
+
+      format.json do
+        render_serialized(topic, HiddenTopicViewSerializer, root: false)
       end
     end
   end

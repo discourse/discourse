@@ -4,7 +4,7 @@ export default Ember.Component.extend(LoadMore, {
   init() {
     this._super(...arguments);
 
-    this.set("eyelineSelector", this.get("selector"));
+    this.set("eyelineSelector", this.selector);
   },
 
   actions: {

@@ -7,7 +7,7 @@ import { sanitizeAsync } from "discourse/lib/text";
 import { iconHTML } from "discourse-common/lib/icon-library";
 
 function customTagArray(fieldName) {
-  return function() {
+  return Ember.computed(fieldName, function() {
     var val = this.get(fieldName);
     if (!val) {
       return val;
@@ -16,7 +16,7 @@ function customTagArray(fieldName) {
       val = [val];
     }
     return val;
-  }.property(fieldName);
+  });
 }
 
 // This controller handles displaying of history
@@ -180,9 +180,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
   @computed("model.previous_hidden", "model.current_hidden", "displayingInline")
   hiddenClasses(prevHidden, currentHidden, displayingInline) {
     if (displayingInline) {
-      return this.get("isEitherRevisionHidden")
-        ? "hidden-revision-either"
-        : null;
+      return this.isEitherRevisionHidden ? "hidden-revision-either" : null;
     } else {
       var result = [];
       if (prevHidden) {
@@ -256,7 +254,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
 
   @observes("viewMode", "model.body_changes")
   bodyDiffChanged() {
-    const viewMode = this.get("viewMode");
+    const viewMode = this.viewMode;
     const html = this.get(`model.body_changes.${viewMode}`);
     if (viewMode === "side_by_side_markdown") {
       this.set("bodyDiff", html);
@@ -299,12 +297,12 @@ export default Ember.Controller.extend(ModalFunctionality, {
     },
 
     editPost() {
-      this.get("topicController").send("editPost", this.get("post"));
+      this.topicController.send("editPost", this.post);
       this.send("closeModal");
     },
 
     revertToVersion() {
-      this.revert(this.get("post"), this.get("model.current_revision"));
+      this.revert(this.post, this.get("model.current_revision"));
     },
 
     displayInline() {

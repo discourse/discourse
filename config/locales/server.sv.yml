@@ -27,6 +27,7 @@ sv:
   topics: "Ämnen"
   posts: "inlägg"
   loading: "Laddar"
+  sign_up: "Registrera"
   log_in: "Logga in"
   submit: "Skicka"
   purge_reason: "Automatiskt borttaget som övergett, avaktiverat konto"
@@ -83,19 +84,19 @@ sv:
         one: "Kan inte radera förteckning på grund av att ett beroende %{record} existerar"
         many: "Kan inte radera förteckning på grund av att beroende %{record} existerar"
       too_long:
-        one: är för långt (högsta tillåtna är 1 tecken)
+        one: är för långt (högsta tillåtna är %{count} tecken)
         other: är för långt (högsta tillåtna är %{count} tecken)
       too_short:
-        one: är för kort (minsta tillåtna är 1 tecken)
+        one: är för kort (minsta tillåtna är %{count} tecken)
         other: är för kort (minsta tillåtna är %{count} tecken)
       wrong_length:
-        one: har fel längd (borde vara 1 tecken)
+        one: har fel längd (borde vara %{count} tecken)
         other: har fel längd (borde vara %{count} tecken)
       other_than: "måste vara skilt från %{count}"
     template:
       body: "Det uppstod problem med följande fält:"
       header:
-        one: Ett fel förhindrade %{model} från att sparas
+        one: "Ett fel förhindrade %{model} från att sparas"
         other: "%{count} fel förhindrade %{model} från att sparas"
     embed:
       load_from_remote: "Det uppstod ett fel vid laddning av inlägget."
@@ -124,7 +125,7 @@ sv:
   reading_time: "Lästid"
   likes: "Gillningar"
   too_many_replies:
-    one: "Vi är ledsna men nya användare är tillfälligt begränsade till 1 svar i samma ämne."
+    one: "Vi är ledsna men nya användare är tillfälligt begränsade till %{count} svar i samma ämne."
     other: "Vi är ledsna men nya användare är tillfälligt begränsade till &{count} svar i samma ämne."
   embed:
     start_discussion: "Starta diskussion"
@@ -134,7 +135,7 @@ sv:
     no_hosts: "Inga värdar var uppsatta för textinbäddningen"
     configure: "konfigurera inbäddningen"
     more_replies:
-      one: "1 till svar"
+      one: "%{count} till svar"
       other: "%{count} till svar"
     loading: "Laddar diskussion..."
     permalink: "Permalänk"
@@ -181,7 +182,6 @@ sv:
   private_message_abbrev: "Meddelande"
   rss_description:
     latest: "Aktuella ämnen"
-    hot: "Heta ämnen"
     top: "Toppämnen"
     posts: "Senaste inläggen"
     group_posts: "Senaste inläggen från %{group_name}"
@@ -211,7 +211,7 @@ sv:
       trust_level_4: "trust_level_4"
   education:
     until_posts:
-      one: "1 inlägg"
+      one: "%{count} inlägg"
       other: "%{count} inlägg"
     "new-topic": |
       Välkommen till %{site_name} &mdash; **tack för att du startade en ny konversation!**
@@ -315,84 +315,82 @@ sv:
     change_failed_explanation: "Du försökte degradera %{user_name} till '%{new_trust_level}'. Användarens förtroendenivå är redan '%{current_trust_level}'. %{user_name} kommer behålla '%{current_trust_level}'. Om du vill degradera användaren, lås förtroendenivån först"
   rate_limiter:
     hours:
-      one: "1 timme"
+      one: "%{count} timme"
       other: "%{count} timmar"
     minutes:
-      one: "1 minut"
+      one: "%{count} minut"
       other: "%{count} minuter"
     seconds:
-      one: "1 sekund"
+      one: "%{count} sekund"
       other: "%{count} sekunder"
   datetime:
     distance_in_words:
       half_a_minute: "< 1m"
       less_than_x_seconds:
-        one: "< 1s"
+        one: "< %{count}s"
         other: "< %{count}s"
       x_seconds:
-        one: "1s"
+        one: "%{count}s"
         other: "%{count}s"
       less_than_x_minutes:
-        one: "< 1m"
+        one: "< %{count}m"
         other: "< %{count}m"
       x_minutes:
-        one: "1m"
+        one: "%{count}m"
         other: "%{count}m"
       about_x_hours:
-        one: "1h"
+        one: "%{count}h"
         other: "%{count}h"
       x_days:
-        one: "1d"
+        one: "%{count}d"
         other: "%{count}d"
       about_x_months:
-        one: "1mån"
+        one: "%{count}mån"
         other: "%{count}mån"
       x_months:
-        one: "1mån"
+        one: "%{count}mån"
         other: "%{count}mån"
       about_x_years:
-        one: "1år"
+        one: "%{count}år"
         other: "%{count}år"
       over_x_years:
-        one: "> 1år"
+        one: "> %{count}år"
         other: "> %{count}år"
       almost_x_years:
-        one: "1år"
+        one: "%{count}år"
         other: "%{count}år"
     distance_in_words_verbose:
       half_a_minute: "nyss"
-      less_than_x_seconds:
-        one: "nyss"
-        other: "nyss"
+      less_than_x_seconds: "nyss"
       x_seconds:
-        one: "1 sekund sedan"
+        one: "%{count} sekund sedan"
         other: "%{count} sekunder sedan"
       less_than_x_minutes:
-        one: "mindre än 1 minut sedan"
+        one: "mindre än %{count} minut sedan"
         other: "mindre än %{count} minuter sedan"
       x_minutes:
-        one: "1 minut sedan"
+        one: "%{count} minut sedan"
         other: "%{count} minuter sedan"
       about_x_hours:
-        one: "1 timme sedan"
+        one: "%{count} timme sedan"
         other: "%{count} timmar sedan"
       x_days:
-        one: "1 dag sedan"
+        one: "%{count} dag sedan"
         other: "%{count} dagar sedan"
       about_x_months:
-        one: "ungefär 1 månad sedan"
+        one: "ungefär %{count} månad sedan"
         other: "ungefär %{count} månader sedan"
       x_months:
-        one: "1 månad sedan"
+        one: "%{count} månad sedan"
         other: "%{count} månader sedan"
       about_x_years:
-        one: "ungefär 1 år sedan"
+        one: "ungefär %{count} år sedan"
         other: "ungefär %{count} år sedan"
       over_x_years:
-        one: "över 1 år sedan"
+        one: "över %{count} år sedan"
         other: "över %{count} år sedan"
       almost_x_years:
-        one: "nästan 1 år sedan"
+        one: "nästan %{count} år sedan"
         other: "nästan %{count} år sedan"
   password_reset:
     no_token: "Tyvärr, din lösenordslänk har löpt ut. Klicka på inloggningsknappen och välj \"jag har glömt mitt lösenord\" för att få en ny länk."
@@ -511,6 +509,8 @@ sv:
     authorize: "Auktorisera"
     read: "läs"
     read_write: "läs/skriv"
+    otp_confirmation:
+      confirm_title: "Fortsätt till %{site_name}"
     no_trust_level: "Tyvärr har ni inte den nödvändiga förtroendenivån för att få tillgång till användar API"
     generic_error: "Ledsen, vi kan inte lämna ut API nycklar, denna funktion kan inaktiveras av administratören"
     scopes:
@@ -777,7 +777,7 @@ sv:
     summary_posts_required: "Minsta antal inlägg i ett ämne innan 'Sammanfatta det här ämnet' möjliggörs"
     summary_likes_required: "Minsta antal gillningar i ett ämne innan 'Sammanfatta det här ämnet' möjliggörs"
     summary_percent_filter: "Visa högsta % av inläggen när en användare bockar i 'Sammanfatta det här ämnet'"
-    enable_personal_messages: "Tillåt användare med förtroendenivå 1 (konfigurera via minsta förtroendenivå för att skicka meddelanden) att skapa meddelanden och svara på meddelanden. Notera att personalen oavsett  alltid kan skicka meddelanden. "
+    enable_personal_messages: "Tillåt användare med förtroendenivå 1 (konfigurera via minsta förtroendenivå för att skicka meddelanden) att skapa meddelanden och svara på meddelanden. Notera att personalen oavsett alltid kan skicka meddelanden. "
     enable_long_polling: "Meddelande-buss som används för notifiering kan använda long polling"
     long_polling_base_url: "URL som används för long polling (när en CDN levererar dynamiskt innehåll, kontrollera att det här är inställt till origin pull) se: http://origin.site.com"
     long_polling_interval: "Tid som servern bör vänta innan den svarar på klienter när det inte finns någon data att skicka (endast loggad på användare)"
@@ -792,14 +792,13 @@ sv:
     tl4_additional_likes_per_day_multiplier: "Höj gränsen för antal gillningar per dag för användare med förtroendenivå 4 (ledare) genom att multiplicera med det här numret"
     traditional_markdown_linebreaks: "Använd vanliga radmatningar i Markdown, vilka kräver 2 avslutande mellanslag för en radmatning."
     post_undo_action_window_mins: "Antal minuter som en användare tillåts att upphäva handlingar på ett inlägg som gjorts nyligen (gillning, flaggning osv)."
-    must_approve_users: "Personal måste godkänna alla nya användarkonton innan de tillåts använda webbplatsen. VARNING: om det tillåts när webbplatsen är live så kommer det att upphäva tillgång för alla existerande användare som inte är personal!"
     pending_users_reminder_delay: "Notifiera moderatorer om nya användare har väntat på godkännande längre än så här många timmar. Ange -1 för att inaktivera notifikationer. "
     maximum_session_age: "Användaren kommer fortsättningsvis att vara inloggad i n timmar sedan senaste besöket"
     moderators_create_categories: "Tillåt moderatorer att skapa nya kategorier"
     cors_origins: "Tillåtna ursprung för cross-ursprungsbegäran (CORS). Varje ursprung måste inkludera http:// eller https://. DISCOURSE_ENABLE_CORS env variabeln måste sättas till true för att aktivera CORS."
     use_admin_ip_whitelist: "Administratörer kan bara logga in om de är på en IP-adress definierad i listan över granskade IP-adresser (Admin > Loggar > Granskade IP-adresser)."
     top_menu: "Bestäm vilka objekt som visas i hemsidans navigation, och i vilken ordning. Exempel: latest|new|unread|categories|top|read|posted|bookmarks"
-    post_menu: "Bestäm vilka objekt som visas i inläggsmenyn och i vilken ordning. Exempel:  like|edit|flag|delete|share|bookmark|reply"
+    post_menu: "Bestäm vilka objekt som visas i inläggsmenyn och i vilken ordning. Exempel: like|edit|flag|delete|share|bookmark|reply"
     post_menu_hidden_items: "Standardinställning för vilka menyobjekt som döljs i inläggsmenyn om inte utvidgnings-ellipsen har klickats på."
     share_links: "Bestäm vilka objekt som syns i den delade dialogen, och i vilken ordning."
     site_contact_username: "Ett giltigt personalanvändarnamn att skicka alla automatiserade meddelanden ifrån. Om lämnad blank används det System-kontot."
@@ -1024,7 +1023,7 @@ sv:
     enable_group_directory: "Förse en fil till grupper som surfar"
     allow_anonymous_posting: "Tillåt användare att växla till anonymt läge"
     anonymous_posting_min_trust_level: "Lägsta förtroendenivå som krävs för att aktivera anonyma inlägg"
-    anonymous_account_duration_minutes: "Skapa ett nytt anonymt konto var N minut för varje användare för att skydda anonymiteten. Exempel: om satt till 600: så snart som 600 minuter har gått sedan senaste inlägget OCH användaren väljer anon, så skapas ett nytt anonymt konto.  "
+    anonymous_account_duration_minutes: "Skapa ett nytt anonymt konto var N minut för varje användare för att skydda anonymiteten. Exempel: om satt till 600: så snart som 600 minuter har gått sedan senaste inlägget OCH användaren väljer anon, så skapas ett nytt anonymt konto. "
     hide_user_profiles_from_public: "Inaktivera användarkort, användarprofiler och användarförteckningar för anonyma användare."
     user_website_domains_whitelist: "Användare websidor kommer att verifieras mot dessa domäner. Pipe- avgränsad lista."
     allow_profile_backgrounds: "Tillåt användare att ladda upp profilbakgrunder."
@@ -1035,10 +1034,9 @@ sv:
     disable_avatar_education_message: "Inaktivera hjälpmeddelande för byte av avatar."
     suppress_uncategorized_badge: "Visa inte utmärkelsen för okategoriserade ämnen i ämneslistan."
     permalink_normalizations: "Applicera följande regex innan matchning av permalänkar, till exempel: /(topic.*)\\?.*/\\1 kommer att rensa bort söksträngar från ämnesvägen. Formatet är regex+sträng, använd \\1 osv. för att komma åt grupperingar."
-    disable_edit_notifications: "Inaktivera redigering av notifikationer av systemanvändaren när 'download_remote_images_to_local' är aktiverad."
+    disable_system_edit_notifications: "Inaktivera redigering av notifikationer av systemanvändaren när 'download_remote_images_to_local' är aktiverad."
     automatically_unpin_topics: "Avklistra automatiskt ämnen när användaren når botten."
     read_time_word_count: "Ordräknare per minut för att beräkna uppskattad lästid."
-    topic_page_title_includes_category: "Ämnestitel för sidan inkluderar kategorinamnet. "
     max_prints_per_hour_per_user: "Maximalt antal av /printade sidhänvisnigar ( satt till 0 för att inaktivera)"
     full_name_required: "Fullständigt namn är ett obligatoriskt fält i en användares profil."
     enable_names: "Visa användarens fullständiga namn på dess profil, användarkort och e-post. Inaktivera för att dölja det fullständiga namnet överallt."
@@ -1098,7 +1096,6 @@ sv:
     tag_style: "Visuell stil för tagg-utmärkelser."
     min_trust_level_to_tag_topics: "Lägsta förtroendenivå som krävs för att tagga ämnen"
     suppress_overlapping_tags_in_list: "Om taggen exakt matchar orden i ämnets titel, visa inte taggen"
-    remove_muted_tags_from_latest: "Visa inte ämnen som taggats med dolda taggar i listan med senaste ämnen."
     errors:
       invalid_email: "Felaktig e-postadress."
       invalid_username: "Det finns ingen användare med detta användarnamn."
@@ -1147,28 +1144,28 @@ sv:
       different_users: "Inlägg som hör till olika användare kan inte lägga ihop."
   topic_statuses:
     autoclosed_message_max_posts:
-      one: "Det här ämnet stängdes automatiskt efter att ha nått den övre gränsen av 1 inlägg."
+      one: "Det här ämnet stängdes automatiskt efter att ha nått den övre gränsen av %{count} inlägg."
       other: "Det här ämnet stängdes automatiskt efter att ha uppnått den övre gränsen av %{count} inlägg. "
     autoclosed_topic_max_posts:
-      one: "Det här ämnet stängdes automatiskt efter att ha uppnått den övre gränsen av 1 inlägg."
+      one: "Det här ämnet stängdes automatiskt efter att ha uppnått den övre gränsen av %{count} inlägg."
       other: "Det här ämnet stängdes automatiskt efter att ha uppnått den övre gränsen av %{count} inlägg. "
     autoclosed_enabled_days:
-      one: "Detta ämne stängdes automatiskt efter 1 dag. Nya svar är ej längre tillåtet."
+      one: "Detta ämne stängdes automatiskt efter %{count} dag. Nya svar är ej längre tillåtet."
       other: "Detta ämne stängdes automatiskt efter %{count} dagar. Nya svar är ej längre tillåtna."
     autoclosed_enabled_hours:
-      one: "Detta ämne stängdes automatiskt efter 1 timme. Nya svar är ej längre tillåtna."
+      one: "Detta ämne stängdes automatiskt efter %{count} timme. Nya svar är ej längre tillåtna."
       other: "Detta ämne stängdes automatiskt efter %{count} timmar. Nya svar är ej längre tillåtna."
     autoclosed_enabled_minutes:
-      one: "Detta ämne stängdes automatiskt efter 1 minut. Nya svar är ej längre tillåtna."
+      one: "Detta ämne stängdes automatiskt efter %{count} minut. Nya svar är ej längre tillåtna."
       other: "Detta ämne stängdes automatiskt efter %{count} minuter. Nya svar är ej längre tillåtna."
     autoclosed_enabled_lastpost_days:
-      one: "Detta ämne stängdes automatiskt 1 dag efter det senaste svaret. Nya svar är ej längre tillåtna."
+      one: "Detta ämne stängdes automatiskt %{count} dag efter det senaste svaret. Nya svar är ej längre tillåtna."
       other: "Detta ämne stängdes automatiskt %{count} dagar efter det senaste svaret. Nya svar är ej längre tillåtna."
     autoclosed_enabled_lastpost_hours:
-      one: "Detta ämne stängdes automatiskt 1 timme efter det senaste svaret. Nya svar är ej längre tillåtna."
+      one: "Detta ämne stängdes automatiskt %{count} timme efter det senaste svaret. Nya svar är ej längre tillåtna."
       other: "Detta ämne stängdes automatiskt %{count} timmar efter det senaste svaret. Nya svar är ej längre tillåtna."
     autoclosed_enabled_lastpost_minutes:
-      one: "Detta ämne stängdes automatiskt 1 minut efter det senaste svaret. Nya svar är ej längre tillåtna."
+      one: "Detta ämne stängdes automatiskt %{count} minut efter det senaste svaret. Nya svar är ej längre tillåtna."
       other: "Detta ämne stängdes automatiskt %{count} minuter efter det senaste svaret. Nya svar är ej längre tillåtna."
     autoclosed_disabled: "Detta ämne är nu öppet. Nya svar är tillåtna."
     autoclosed_disabled_lastpost: "Detta ämne är nu öppnat. Nya svar är tillåtna."
@@ -1368,7 +1365,7 @@ sv:
     pending_users_reminder:
       title: "Påminnelse om väntande användare"
       subject_template:
-        one: "1 användare väntar på godkännande"
+        one: "%{count} användare väntar på godkännande"
         other: "%{count} användare väntar på godkännande"
     download_remote_images_disabled:
       title: "Nerladdningen av externa bilder är avaktiverad"
@@ -1378,10 +1375,6 @@ sv:
       title: "Instrumentpanels problem"
     queued_posts_reminder:
       title: "Påminnelse om köande inlägg"
-      text_body_template: |
-        Hej!
-
-        Meddelanden från nya användare väntar för närvarande på att granskas. [Godkänn eller avvisa dem här](%{base_url}/queued-posts).
   unsubscribe_link: |
     [Klicka här ](%{unsubscribe_url}) för att avprenumerera från de här e-postmeddelandena.
   unsubscribe_link_and_mail: |
@@ -1549,7 +1542,6 @@ sv:
       unread_messages: "olästa meddelanden"
       unread_notifications: "Olästa meddelanden"
       liked_received: "Gillanden mottagna"
-      new_posts: "Nytt meddelande"
       new_users: "Ny användare"
       popular_topics: "Populära ämnen"
       follow_topic: "Glöm detta ämne"
@@ -1598,8 +1590,6 @@ sv:
     see_more: "Mer"
     search_title: "Sök på hemsidan"
     search_button: "Sök"
-  terms_of_service:
-    title: "Användarvillkor"
   deleted: "raderad"
   image: "bild"
   upload:
@@ -1639,9 +1629,6 @@ sv:
     sender_body_blank: "body är tom"
   color_schemes:
     base_theme_name: "Bas"
-  about: "Om"
-  guidelines: "Riktlinjer"
-  privacy: "Integritet"
   edit_this_page: "Redigera denna sida"
   csv_export:
     boolean_yes: "Ja"
@@ -1887,14 +1874,10 @@ sv:
         fields:
           logo:
             label: "Primär logo"
-          logo_small:
-            label: "Kompakt logo"
       icons:
         title: "Ikoner"
         fields:
-          favicon:
-            label: "Små ikoner"
-          apple_touch_icon:
+          large_icon:
             label: "Stora ikoner"
       homepage:
         title: "Hemsida"
@@ -1923,6 +1906,8 @@ sv:
         title: "Stäng av användare"
       delete_spammer:
         title: "Radera spammare"
+      delete_single:
+        title: "Radera"
       disagree:
         title: "Håll inte med"
       approve:

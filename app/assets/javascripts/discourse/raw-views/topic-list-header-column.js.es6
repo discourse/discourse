@@ -32,7 +32,7 @@ export default Ember.Object.extend({
     if (this.sortable) {
       name.push("sortable");
 
-      if (this.get("isSorting")) {
+      if (this.isSorting) {
         name.push("sorting");
       }
     }

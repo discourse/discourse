@@ -15,15 +15,15 @@ export default Ember.Component.extend({
 
   @on("didReceiveAttrs")
   _setupCollection() {
-    const values = this.get("values");
-    if (this.get("inputType") === "array") {
+    const values = this.values;
+    if (this.inputType === "array") {
       this.set("collection", values || []);
       return;
     }
 
     this.set(
       "collection",
-      this._splitValues(values, this.get("inputDelimiter") || "\n")
+      this._splitValues(values, this.inputDelimiter || "\n")
     );
   },
 
@@ -33,7 +33,7 @@ export default Ember.Component.extend({
   },
 
   keyDown(event) {
-    if (event.keyCode === 13) this.send("addValue", this.get("newValue"));
+    if (event.keyCode === 13) this.send("addValue", this.newValue);
   },
 
   actions: {
@@ -42,7 +42,7 @@ export default Ember.Component.extend({
     },
 
     addValue(newValue) {
-      if (this.get("inputInvalid")) return;
+      if (this.inputInvalid) return;
 
       this.set("newValue", "");
       this._addValue(newValue);
@@ -58,31 +58,28 @@ export default Ember.Component.extend({
   },
 
   _addValue(value) {
-    this.get("collection").addObject(value);
+    this.collection.addObject(value);
     this._saveValues();
   },
 
   _removeValue(value) {
-    const collection = this.get("collection");
+    const collection = this.collection;
     collection.removeObject(value);
     this._saveValues();
   },
 
   _replaceValue(index, newValue) {
-    this.get("collection").replace(index, 1, [newValue]);
+    this.collection.replace(index, 1, [newValue]);
     this._saveValues();
   },
 
   _saveValues() {
-    if (this.get("inputType") === "array") {
-      this.set("values", this.get("collection"));
+    if (this.inputType === "array") {
+      this.set("values", this.collection);
       return;
     }
 
-    this.set(
-      "values",
-      this.get("collection").join(this.get("inputDelimiter") || "\n")
-    );
+    this.set("values", this.collection.join(this.inputDelimiter || "\n"));
   },
 
   _splitValues(values, delimiter) {

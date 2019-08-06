@@ -4,8 +4,13 @@ import computed from "ember-addons/ember-computed-decorators";
 
 export default Ember.Controller.extend({
   pingDisabled: false,
-  incomingEventIds: [],
   incomingCount: Ember.computed.alias("incomingEventIds.length"),
+
+  init() {
+    this._super(...arguments);
+
+    this.incomingEventIds = [];
+  },
 
   @computed("incomingCount")
   hasIncoming(incomingCount) {
@@ -29,7 +34,7 @@ export default Ember.Controller.extend({
   },
 
   _addIncoming(eventId) {
-    const incomingEventIds = this.get("incomingEventIds");
+    const incomingEventIds = this.incomingEventIds;
 
     if (incomingEventIds.indexOf(eventId) === -1) {
       incomingEventIds.pushObject(eventId);
@@ -38,7 +43,7 @@ export default Ember.Controller.extend({
 
   actions: {
     loadMore() {
-      this.get("model").loadMore();
+      this.model.loadMore();
     },
 
     ping() {
@@ -60,12 +65,12 @@ export default Ember.Controller.extend({
 
       ajax(`/admin/api/web_hooks/${webHookId}/events/bulk`, {
         type: "GET",
-        data: { ids: this.get("incomingEventIds") }
+        data: { ids: this.incomingEventIds }
       }).then(data => {
         const objects = data.map(event =>
           this.store.createRecord("web-hook-event", event)
         );
-        this.get("model").unshiftObjects(objects);
+        this.model.unshiftObjects(objects);
         this.set("incomingEventIds", []);
       });
     }

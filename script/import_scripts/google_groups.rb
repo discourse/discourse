@@ -6,7 +6,6 @@ require "bundler/inline"
 gemfile(true) do
   source "https://rubygems.org"
 
-  gem "net-http-persistent"
   gem "nokogiri"
   gem "webdrivers"
 end
@@ -15,7 +14,6 @@ require "fileutils"
 require "nokogiri"
 require "optparse"
 require "webdrivers"
-require 'selenium/webdriver/remote/http/persistent'
 require "set"
 require "yaml"
 
@@ -26,8 +24,7 @@ def driver
     chrome_args = ["headless", "disable-gpu"]
     chrome_args << "no-sandbox" if inside_container?
     options = Selenium::WebDriver::Chrome::Options.new(args: chrome_args)
-    http_client = Selenium::WebDriver::Remote::Http::Persistent.new
-    Selenium::WebDriver.for(:chrome, options: options, http_client: http_client)
+    Selenium::WebDriver.for(:chrome, options: options)
   end
 end
 

@@ -11,9 +11,8 @@ export default Discourse.Route.extend(ViewingActionType, {
 
   afterModel(model, transition) {
     return model.filterBy({
-      filter: this.get("userActionType"),
-      noContentHelpKey:
-        this.get("noContentHelpKey") || "user_activity.no_default",
+      filter: this.userActionType,
+      noContentHelpKey: this.noContentHelpKey || "user_activity.no_default",
       actingUsername: transition.to.queryParams.acting_username
     });
   },
@@ -24,7 +23,7 @@ export default Discourse.Route.extend(ViewingActionType, {
 
   setupController(controller, model) {
     controller.set("model", model);
-    this.viewingActionType(this.get("userActionType"));
+    this.viewingActionType(this.userActionType);
   },
 
   actions: {

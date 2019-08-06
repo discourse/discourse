@@ -22,7 +22,7 @@ sk:
       many: "Hlasovanie musí mať menej ako %{count} možnosti."
       other: "Hlasovanie musí mať menej ako %{count} možnosti."
     named_poll_must_have_less_options:
-      one: "Hlasovanie s názvom <strong>%{name}</strong> musí mať menej ako 1 možnost."
+      one: "Hlasovanie s názvom <strong>%{name}</strong> musí mať menej ako %{count} možnost."
       few: "Hlasovanie s názvom <strong>%{name}</strong> musí mať menej ako %{count} možnosti."
       many: "Hlasovanie s názvom <strong>%{name}</strong> musí mať menej ako %{count} možností."
       other: "Hlasovanie s názvom <strong>%{name}</strong> musí mať menej ako %{count} možností."

@@ -132,7 +132,7 @@ module SeedData
         title: title,
         raw: raw,
         skip_validations: true,
-        category: category&.name
+        category: category&.id
       )
 
       if static_first_reply

@@ -2,7 +2,7 @@
 require_dependency 'search'
 
 class SearchIndexer
-  INDEX_VERSION = 2
+  INDEX_VERSION = 3
   REINDEX_VERSION = 0
 
   def self.disable
@@ -21,16 +21,13 @@ class SearchIndexer
     # insert some extra words for I.am.a.word so "word" is tokenized
     # I.am.a.word becomes I.am.a.word am a word
     raw.gsub(/[^[:space:]]*[\.]+[^[:space:]]*/) do |with_dot|
-      if with_dot.match?(PlainTextToMarkdown::URL_REGEX)
-        "#{with_dot} #{URI.parse(with_dot).hostname.gsub('.', ' ')}"
-      else
-        split = with_dot.split(".")
 
-        if split.length > 1
-          with_dot + ((+" ") << split[1..-1].join(" "))
-        else
-          with_dot
-        end
+      split = with_dot.split(/https?:\/\/|[?:;,.\/]/)
+
+      if split.length > 1
+        with_dot + ((+" ") << split[1..-1].reject { |x| x.blank? }.join(" "))
+      else
+        with_dot
       end
     end
   end

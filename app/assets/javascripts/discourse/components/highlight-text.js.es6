@@ -4,8 +4,8 @@ export default Ember.Component.extend({
   tagName: "span",
 
   _highlightOnInsert: function() {
-    const term = this.get("highlight");
-    highlightText(this.$(), term);
+    const term = this.highlight;
+    highlightText($(this.element), term);
   }
     .observes("highlight")
     .on("didInsertElement")

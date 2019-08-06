@@ -5,12 +5,11 @@ require_dependency "new_post_manager"
 require_dependency "html_to_markdown"
 require_dependency "plain_text_to_markdown"
 require_dependency "upload_creator"
+require_dependency "upload_markdown"
 
 module Email
 
   class Receiver
-    include ActionView::Helpers::NumberHelper
-
     # If you add a new error, you need to
     #   * add it to Email::Processor#handle_failure()
     #   * add text to server.en.yml (parent key: "emails.incoming.errors")
@@ -27,6 +26,7 @@ module Email
     class SilencedUserError            < ProcessingError; end
     class BadDestinationAddress        < ProcessingError; end
     class StrangersNotAllowedError     < ProcessingError; end
+    class ReplyNotAllowedError         < ProcessingError; end
     class InsufficientTrustLevelError  < ProcessingError; end
     class ReplyUserNotMatchingError    < ProcessingError; end
     class TopicNotFoundError           < ProcessingError; end
@@ -67,7 +67,8 @@ module Email
 
     def process!
       return if is_blacklisted?
-      DistributedMutex.synchronize(@message_id) do
+      id_hash = Digest::SHA1.hexdigest(@message_id)
+      DistributedMutex.synchronize("process_email_#{id_hash}") do
         begin
           @incoming_email = IncomingEmail.find_by(message_id: @message_id)
           if @incoming_email
@@ -703,12 +704,12 @@ module Email
         raise BadDestinationAddress if user.blank?
 
         post_reply_key = destination[:obj]
+        post = Post.with_deleted.find(post_reply_key.post_id)
+        raise ReplyNotAllowedError if !Guardian.new(user).can_create_post?(post&.topic)
 
         if post_reply_key.user_id != user.id && !forwarded_reply_key?(post_reply_key, user)
           raise ReplyUserNotMatchingError, "post_reply_key.user_id => #{post_reply_key.user_id.inspect}, user.id => #{user.id.inspect}"
         end
-
-        post = Post.with_deleted.find(post_reply_key.post_id)
 
         create_reply(user: user,
                      raw: body,
@@ -1040,13 +1041,19 @@ module Email
             if attachment.content_type&.start_with?("image/")
               if raw[attachment.url]
                 raw.sub!(attachment.url, upload.url)
+
+                InlineUploads.match_img(raw) do |match, src, replacement, _|
+                  if src == upload.url
+                    raw = raw.sub(match, UploadMarkdown.new(upload).image_markdown)
+                  end
+                end
               elsif raw[/\[image:.*?\d+[^\]]*\]/i]
-                raw.sub!(/\[image:.*?\d+[^\]]*\]/i, attachment_markdown(upload))
+                raw.sub!(/\[image:.*?\d+[^\]]*\]/i, UploadMarkdown.new(upload).to_markdown)
               else
-                raw << "\n\n#{attachment_markdown(upload)}\n\n"
+                raw << "\n\n#{UploadMarkdown.new(upload).to_markdown}\n\n"
               end
             else
-              raw << "\n\n#{attachment_markdown(upload)}\n\n"
+              raw << "\n\n#{UploadMarkdown.new(upload).to_markdown}\n\n"
             end
           else
             rejected_attachments << upload
@@ -1079,14 +1086,6 @@ module Email
 
       client_message = RejectionMailer.send_rejection(:email_reject_attachment, message.from, template_args)
       Email::Sender.new(client_message, :email_reject_attachment).send
-    end
-
-    def attachment_markdown(upload)
-      if FileHelper.is_supported_image?(upload.original_filename)
-        "<img src='#{upload.url}' width='#{upload.width}' height='#{upload.height}'>"
-      else
-        "<a class='attachment' href='#{upload.url}'>#{upload.original_filename}</a> (#{number_to_human_size(upload.filesize)})"
-      end
     end
 
     def create_post(options = {})

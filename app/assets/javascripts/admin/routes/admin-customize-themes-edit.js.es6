@@ -42,7 +42,7 @@ export default Ember.Route.extend({
     willTransition(transition) {
       if (
         this.get("controller.model.changed") &&
-        this.get("shouldAlertUnsavedChanges") &&
+        this.shouldAlertUnsavedChanges &&
         transition.intent.name !== this.routeName
       ) {
         transition.abort();

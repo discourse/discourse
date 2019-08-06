@@ -53,14 +53,14 @@ export default Ember.Component.extend(UtilsMixin, {
   @on("didReceiveAttrs")
   _setSelectionState() {
     this.setProperties({
-      isSelected: this.get("computedValue") === this.get("value"),
-      isHighlighted: this.get("highlighted.value") === this.get("value")
+      isSelected: this.computedValue === this.value,
+      isHighlighted: this.get("highlighted.value") === this.value
     });
   },
 
   @on("willDestroyElement")
   _clearDebounce() {
-    const hoverDebounce = this.get("hoverDebounce");
+    const hoverDebounce = this.hoverDebounce;
     if (isPresent(hoverDebounce)) {
       run.cancel(hoverDebounce);
     }
@@ -86,10 +86,10 @@ export default Ember.Component.extend(UtilsMixin, {
   },
 
   click() {
-    this.onClickRow(this.get("computedContent"));
+    this.onClickRow(this.computedContent);
   },
 
   _sendMouseoverAction() {
-    this.onMouseoverRow(this.get("computedContent"));
+    this.onMouseoverRow(this.computedContent);
   }
 });

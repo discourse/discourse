@@ -20,7 +20,7 @@ export default {
       description:
         "Discussion about the next-generation open source Discourse forum software",
       title: "Discourse Meta",
-      locale: "en",
+      locale: "en_US",
       version: "2.2.0.beta8",
       https: true,
       admins: [

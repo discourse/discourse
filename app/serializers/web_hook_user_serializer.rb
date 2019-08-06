@@ -3,6 +3,10 @@
 class WebHookUserSerializer < UserSerializer
   attributes :external_id
 
+  def omit_stats
+    true
+  end
+
   # remove staff attributes
   def staff_attributes(*attrs)
   end

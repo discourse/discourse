@@ -6,6 +6,8 @@ class SearchController < ApplicationController
 
   skip_before_action :check_xhr, only: :show
 
+  before_action :cancel_overloaded_search, only: [:query]
+
   def self.valid_context_types
     %w{user topic category private_messages}
   end
@@ -44,10 +46,14 @@ class SearchController < ApplicationController
     search_args[:ip_address] = request.remote_ip
     search_args[:user_id] = current_user.id if current_user.present?
 
-    search = Search.new(@search_term, search_args)
-    result = search.execute
-
-    result.find_user_data(guardian) if result
+    if site_overloaded?
+      result = Search::GroupedSearchResults.new(search_args[:type_filter], @search_term, context, false, 0)
+      result.error = I18n.t("search.extreme_load_error")
+    else
+      search = Search.new(@search_term, search_args)
+      result = search.execute
+      result.find_user_data(guardian) if result
+    end
 
     serializer = serialize_data(result, GroupedSearchResultSerializer, result: result)
 
@@ -82,8 +88,12 @@ class SearchController < ApplicationController
     search_args[:user_id] = current_user.id if current_user.present?
     search_args[:restrict_to_archetype] = params[:restrict_to_archetype] if params[:restrict_to_archetype].present?
 
-    search = Search.new(params[:term], search_args)
-    result = search.execute
+    if site_overloaded?
+      result = GroupedSearchResults.new(search_args["type_filter"], params[:term], context, false, 0)
+    else
+      search = Search.new(params[:term], search_args)
+      result = search.execute
+    end
     render_serialized(result, GroupedSearchResultSerializer, result: result)
   end
 
@@ -117,6 +127,18 @@ class SearchController < ApplicationController
   end
 
   protected
+
+  def site_overloaded?
+    (queue_time = request.env['REQUEST_QUEUE_SECONDS']) &&
+      (GlobalSetting.disable_search_queue_threshold > 0) &&
+      (queue_time > GlobalSetting.disable_search_queue_threshold)
+  end
+
+  def cancel_overloaded_search
+    if site_overloaded?
+      render_json_error I18n.t("search.extreme_load_error"), status: 409
+    end
+  end
 
   def lookup_search_context
 

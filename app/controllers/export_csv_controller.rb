@@ -12,6 +12,7 @@ class ExportCsvController < ApplicationController
   end
 
   private
+
   def export_params
     @_export_params ||= begin
       params.require(:entity)

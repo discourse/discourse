@@ -10,30 +10,22 @@ describe Jobs::BulkInvite do
     fab!(:group2) { Fabricate(:group, name: 'group2') }
     fab!(:topic) { Fabricate(:topic, id: 999) }
     let(:email) { "test@discourse.org" }
-    let(:basename) { "bulk_invite.csv" }
-    let(:filename) { "#{Invite.base_directory}/#{basename}" }
+    let(:invites) { [{ email: 'test2@discourse.org' }, { email: 'test@discourse.org', groups: 'GROUP1;group2', topic_id: 999 }] }
 
-    before do
-      Invite.create_csv(
-        fixture_file_upload("#{Rails.root}/spec/fixtures/csv/#{basename}"),
-        "bulk_invite"
-      )
-    end
-
-    it 'raises an error when the filename is missing' do
+    it 'raises an error when the invites array is missing' do
       expect { Jobs::BulkInvite.new.execute(current_user_id: user.id) }
-        .to raise_error(Discourse::InvalidParameters, /filename/)
+        .to raise_error(Discourse::InvalidParameters, /invites/)
     end
 
     it 'raises an error when current_user_id is not valid' do
-      expect { Jobs::BulkInvite.new.execute(filename: filename) }
+      expect { Jobs::BulkInvite.new.execute(invites: invites) }
         .to raise_error(Discourse::InvalidParameters, /current_user_id/)
     end
 
     it 'creates the right invites' do
       described_class.new.execute(
         current_user_id: admin.id,
-        filename: basename,
+        invites: invites
       )
 
       invite = Invite.last
@@ -53,7 +45,7 @@ describe Jobs::BulkInvite do
 
       described_class.new.execute(
         current_user_id: admin.id,
-        filename: basename,
+        invites: invites
       )
 
       invite = Invite.last
@@ -70,7 +62,7 @@ describe Jobs::BulkInvite do
 
       described_class.new.execute(
         current_user_id: user.id,
-        filename: basename
+        invites: invites
       )
 
       invite = Invite.last
@@ -90,13 +82,34 @@ describe Jobs::BulkInvite do
       expect do
         described_class.new.execute(
           current_user_id: admin.id,
-          filename: basename
+          invites: invites
         )
       end.to change { Invite.count }.by(1)
 
       expect(Invite.exists?(email: "test2@discourse.org")).to eq(true)
       expect(existing_user.reload.groups).to eq([group1])
     end
-  end
 
+    context 'invites are more than 200' do
+      let(:bulk_invites) { [] }
+
+      before do
+        202.times do |i|
+          bulk_invites << { "email": "test_#{i}@discourse.org" }
+        end
+      end
+
+      it 'rate limits email sending' do
+        described_class.new.execute(
+          current_user_id: admin.id,
+          invites: bulk_invites
+        )
+
+        invite = Invite.last
+        expect(invite.email).to eq("test_201@discourse.org")
+        expect(invite.emailed_status).to eq(Invite.emailed_status_types[:bulk_pending])
+        expect(Jobs::ProcessBulkInviteEmails.jobs.size).to eq(1)
+      end
+    end
+  end
 end

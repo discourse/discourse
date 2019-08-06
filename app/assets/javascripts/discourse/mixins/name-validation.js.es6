@@ -16,7 +16,7 @@ export default Ember.Mixin.create({
   nameValidation() {
     if (
       this.siteSettings.full_name_required &&
-      Ember.isEmpty(this.get("accountName"))
+      Ember.isEmpty(this.accountName)
     ) {
       return InputValidation.create({ failed: true });
     }

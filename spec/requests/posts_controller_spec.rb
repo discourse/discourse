@@ -810,7 +810,10 @@ describe PostsController do
         it 'queues the post if min_first_post_typing_time is not met' do
           post "/posts.json", params: {
             raw: 'this is the test content',
-            title: 'this is the test title for the topic'
+            title: 'this is the test title for the topic',
+            composer_open_duration_msecs: 204,
+            typing_duration_msecs: 100,
+            reply_to_post_number: 123
           }
 
           expect(response.status).to eq(200)
@@ -822,6 +825,9 @@ describe PostsController do
           expect(user).to be_silenced
 
           rp = ReviewableQueuedPost.find_by(created_by: user)
+          expect(rp.payload['typing_duration_msecs']).to eq(100)
+          expect(rp.payload['composer_open_duration_msecs']).to eq(204)
+          expect(rp.payload['reply_to_post_number']).to eq(123)
           expect(rp.reviewable_scores.first.reason).to eq('fast_typer')
 
           expect(parsed['pending_post']).to be_present
@@ -958,6 +964,23 @@ describe PostsController do
         }
 
         expect(response.status).to eq(403)
+      end
+
+      it 'can not create a post with a tag that is restricted' do
+        SiteSetting.tagging_enabled = true
+        tag = Fabricate(:tag)
+        category.allowed_tags = [tag.name]
+        category.save!
+
+        post "/posts.json", params: {
+          raw: 'this is the test content',
+          title: 'this is the test title for the topic',
+          tags: [tag.name],
+        }
+
+        expect(response.status).to eq(422)
+        json = JSON.parse(response.body)
+        expect(json['errors']).to be_present
       end
 
       it 'creates the post' do
@@ -1781,6 +1804,29 @@ describe PostsController do
       expect(response.status).to eq(200)
       public_post.reload
       expect(public_post).not_to be_locked
+    end
+  end
+
+  describe "#notice" do
+    before do
+      sign_in(moderator)
+    end
+
+    it 'can create and remove notices' do
+      put "/posts/#{public_post.id}/notice.json", params: { notice: "Hello *world*!\n\nhttps://github.com/discourse/discourse" }
+
+      expect(response.status).to eq(200)
+      public_post.reload
+      expect(public_post.custom_fields['notice_type']).to eq(Post.notices[:custom])
+      expect(public_post.custom_fields['notice_args']).to include('<p>Hello <em>world</em>!</p>')
+      expect(public_post.custom_fields['notice_args']).not_to include('onebox')
+
+      put "/posts/#{public_post.id}/notice.json", params: { notice: nil }
+
+      expect(response.status).to eq(200)
+      public_post.reload
+      expect(public_post.custom_fields['notice_type']).to eq(nil)
+      expect(public_post.custom_fields['notice_args']).to eq(nil)
     end
   end
 end

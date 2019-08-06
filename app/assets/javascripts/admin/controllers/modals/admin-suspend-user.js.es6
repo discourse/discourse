@@ -19,20 +19,20 @@ export default Ember.Controller.extend(PenaltyController, {
 
   actions: {
     suspend() {
-      if (this.get("submitDisabled")) {
+      if (this.submitDisabled) {
         return;
       }
 
       this.set("suspending", true);
 
       this.penalize(() => {
-        return this.get("user").suspend({
-          suspend_until: this.get("suspendUntil"),
-          reason: this.get("reason"),
-          message: this.get("message"),
-          post_id: this.get("postId"),
-          post_action: this.get("postAction"),
-          post_edit: this.get("postEdit")
+        return this.user.suspend({
+          suspend_until: this.suspendUntil,
+          reason: this.reason,
+          message: this.message,
+          post_id: this.postId,
+          post_action: this.postAction,
+          post_edit: this.postEdit
         });
       }).finally(() => this.set("suspending", false));
     }

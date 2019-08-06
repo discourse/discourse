@@ -236,6 +236,65 @@ describe Search do
 
     end
 
+    context 'personal-direct flag' do
+      let(:current) { Fabricate(:user, admin: true, username: "current_user") }
+      let(:participant) { Fabricate(:user, username: "participant_1") }
+      let(:participant_2) { Fabricate(:user, username: "participant_2") }
+
+      let(:group) do
+        group = Fabricate(:group, has_messages: true)
+        group.add(current)
+        group.add(participant)
+        group
+      end
+
+      def create_pm(users:, group: nil)
+        pm = Fabricate(:private_message_post_one_user, user: users.first).topic
+        users[1..-1].each do |u|
+          pm.invite(users.first, u.username)
+          Fabricate(:post, user: u, topic: pm)
+        end
+        if group
+          pm.invite_group(users.first, group)
+          group.users.each do |u|
+            Fabricate(:post, user: u, topic: pm)
+          end
+        end
+        pm.reload
+      end
+
+      it 'can find all direct PMs of the current user' do
+        pm = create_pm(users: [current, participant])
+        pm_2 = create_pm(users: [participant_2, participant])
+        pm_3 = create_pm(users: [participant, current])
+        pm_4 = create_pm(users: [participant_2, current])
+        results = Search.execute("in:personal-direct", guardian: Guardian.new(current))
+        expect(results.posts.size).to eq(3)
+        expect(results.posts.map(&:topic_id)).to contain_exactly(pm.id, pm_3.id, pm_4.id)
+      end
+
+      it 'can filter direct PMs by @username' do
+        pm = create_pm(users: [current, participant])
+        pm_2 = create_pm(users: [participant, current])
+        pm_3 = create_pm(users: [participant_2, current])
+        results = Search.execute("@#{participant.username} in:personal-direct", guardian: Guardian.new(current))
+        expect(results.posts.size).to eq(2)
+        expect(results.posts.map(&:topic_id)).to contain_exactly(pm.id, pm_2.id)
+        expect(results.posts.map(&:user_id).uniq).to contain_exactly(participant.id)
+      end
+
+      it "doesn't include PMs that have more than 2 participants" do
+        pm = create_pm(users: [current, participant, participant_2])
+        results = Search.execute("@#{participant.username} in:personal-direct", guardian: Guardian.new(current))
+        expect(results.posts.size).to eq(0)
+      end
+
+      it "doesn't include PMs that have groups" do
+        pm = create_pm(users: [current, participant], group: group)
+        results = Search.execute("@#{participant.username} in:personal-direct", guardian: Guardian.new(current))
+        expect(results.posts.size).to eq(0)
+      end
+    end
   end
 
   context 'topics' do
@@ -358,6 +417,26 @@ describe Search do
         expect(result.posts.pluck(:id)).to eq([
           post.id, category.topic.first_post.id, post2.id
         ])
+      end
+
+      it 'applies a small penalty to closed topic when ranking' do
+        post = Fabricate(:post,
+          raw: "My weekly update",
+          topic: Fabricate(:topic,
+            title: "A topic that will be closed",
+            closed: true
+          )
+        )
+
+        post2 = Fabricate(:post,
+          raw: "My weekly update",
+          topic: Fabricate(:topic,
+            title: "A topic that will be open"
+          )
+        )
+
+        result = Search.execute('weekly update')
+        expect(result.posts.pluck(:id)).to eq([post2.id, post.id])
       end
     end
 
@@ -1065,19 +1144,39 @@ describe Search do
     end
 
     context 'tags' do
-      let(:tag1) { Fabricate(:tag, name: 'lunch') }
-      let(:tag2) { Fabricate(:tag, name: 'eggs') }
-      let(:tag3) { Fabricate(:tag, name: 'sandwiches') }
-      let(:topic1) { Fabricate(:topic, tags: [tag2, Fabricate(:tag)]) }
-      let(:topic2) { Fabricate(:topic, tags: [tag2]) }
-      let(:topic3) { Fabricate(:topic, tags: [tag1, tag2]) }
-      let(:topic4) { Fabricate(:topic, tags: [tag1, tag2, tag3]) }
-      let(:topic5) { Fabricate(:topic, tags: [tag2, tag3]) }
-      let!(:post1) { Fabricate(:post, topic: topic1) }
-      let!(:post2) { Fabricate(:post, topic: topic2) }
-      let!(:post3) { Fabricate(:post, topic: topic3) }
-      let!(:post4) { Fabricate(:post, topic: topic4) }
-      let!(:post5) { Fabricate(:post, topic: topic5) }
+      fab!(:tag1) { Fabricate(:tag, name: 'lunch') }
+      fab!(:tag2) { Fabricate(:tag, name: 'eggs') }
+      fab!(:tag3) { Fabricate(:tag, name: 'sandwiches') }
+
+      fab!(:tag_group) do
+        group = TagGroup.create!(name: 'mid day')
+        TagGroupMembership.create!(tag_id: tag1.id, tag_group_id: group.id)
+        TagGroupMembership.create!(tag_id: tag3.id, tag_group_id: group.id)
+        group
+      end
+
+      fab!(:topic1) { Fabricate(:topic, tags: [tag2, Fabricate(:tag)]) }
+      fab!(:topic2) { Fabricate(:topic, tags: [tag2]) }
+      fab!(:topic3) { Fabricate(:topic, tags: [tag1, tag2]) }
+      fab!(:topic4) { Fabricate(:topic, tags: [tag1, tag2, tag3]) }
+      fab!(:topic5) { Fabricate(:topic, tags: [tag2, tag3]) }
+
+      def indexed_post(*args)
+        SearchIndexer.enable
+        Fabricate(:post, *args)
+      end
+
+      fab!(:post1) { indexed_post(topic: topic1) }
+      fab!(:post2) { indexed_post(topic: topic2) }
+      fab!(:post3) { indexed_post(topic: topic3) }
+      fab!(:post4) { indexed_post(topic: topic4) }
+      fab!(:post5) { indexed_post(topic: topic5) }
+
+      it 'can find posts by tag group' do
+        expect(Search.execute('#mid-day').posts.map(&:id)).to (
+          contain_exactly(post3.id, post4.id, post5.id)
+        )
+      end
 
       it 'can find posts with tag' do
         post4 = Fabricate(:post, topic: topic3, raw: "It probably doesn't help that they're green...")
@@ -1095,8 +1194,6 @@ describe Search do
       end
 
       it 'can find posts with any tag from multiple tags' do
-        Fabricate(:post)
-
         expect(Search.execute('tags:eggs,lunch').posts.map(&:id).sort).to eq([post1.id, post2.id, post3.id, post4.id, post5.id].sort)
       end
 
@@ -1337,6 +1434,34 @@ describe Search do
       expect(results.more_full_page_results).to eq(nil)
     end
 
+  end
+
+  context 'in:tagged' do
+    it 'allows for searching by presence of any tags' do
+      topic = Fabricate(:topic, title: 'I am testing a tagged search')
+      _post = Fabricate(:post, topic: topic, raw: 'this is the first post')
+      tag = Fabricate(:tag)
+      topic_tag = Fabricate(:topic_tag, topic: topic, tag: tag)
+
+      results = Search.execute('in:untagged')
+      expect(results.posts.length).to eq(0)
+
+      results = Search.execute('in:tagged')
+      expect(results.posts.length).to eq(1)
+    end
+  end
+
+  context 'in:untagged' do
+    it 'allows for searching by presence of no tags' do
+      topic = Fabricate(:topic, title: 'I am testing a untagged search')
+      _post = Fabricate(:post, topic: topic, raw: 'this is the first post')
+
+      results = Search.execute('in:untagged')
+      expect(results.posts.length).to eq(1)
+
+      results = Search.execute('in:tagged')
+      expect(results.posts.length).to eq(0)
+    end
   end
 
 end

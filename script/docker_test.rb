@@ -10,7 +10,12 @@
 
 puts "travis_fold:end:starting_docker_container" if ENV["TRAVIS"]
 
+def log(message)
+  puts "[#{Time.now.strftime("%Y-%m-%d %H:%M:%S")}] #{message}"
+end
+
 def run_or_fail(command)
+  log(command)
   pid = Process.spawn(command)
   Process.wait(pid)
   exit 1 unless $?.exitstatus == 0
@@ -18,7 +23,9 @@ end
 
 unless ENV['NO_UPDATE']
   puts "travis_fold:start:pulling_latest_discourse" if ENV["TRAVIS"]
+
   run_or_fail("git reset --hard")
+
   run_or_fail("git pull")
 
   checkout = ENV['COMMIT_HASH'] || "HEAD"
@@ -32,6 +39,7 @@ unless ENV['NO_UPDATE']
   puts "travis_fold:end:bundle" if ENV["TRAVIS"]
 end
 
+log("Running tests")
 if ENV['RUN_SMOKE_TESTS']
   run_or_fail("bundle exec rake smoke:test")
 else

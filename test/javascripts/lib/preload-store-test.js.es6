@@ -1,4 +1,5 @@
 import PreloadStore from "preload-store";
+import { asyncTestDiscourse } from "helpers/qunit-helpers";
 
 QUnit.module("preload-store", {
   beforeEach() {

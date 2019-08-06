@@ -1308,8 +1308,8 @@ class Topic < ActiveRecord::Base
     builder.query_single.first.to_i
   end
 
-  def convert_to_public_topic(user)
-    public_topic = TopicConverter.new(self, user).convert_to_public_topic
+  def convert_to_public_topic(user, category_id: nil)
+    public_topic = TopicConverter.new(self, user).convert_to_public_topic(category_id)
     add_small_action(user, "public_topic") if public_topic
     public_topic
   end
@@ -1374,7 +1374,7 @@ class Topic < ActiveRecord::Base
       .pluck("COUNT(DISTINCT reviewable_scores.user_id), COALESCE(SUM(reviewable_scores.score), 0.0)")
       .first
 
-    scores[0] >= SiteSetting.num_flaggers_to_close_topic && scores[1] >= SiteSetting.score_to_auto_close_topic
+    scores[0] >= SiteSetting.num_flaggers_to_close_topic && scores[1] >= Reviewable.score_to_auto_close_topic
   end
 
   def update_category_topic_count_by(num)
@@ -1383,6 +1383,15 @@ class Topic < ActiveRecord::Base
         .where(['id = ?', category_id])
         .update_all("topic_count = topic_count " + (num > 0 ? '+' : '') + "#{num}")
     end
+  end
+
+  def access_topic_via_group
+    Group
+      .joins(:category_groups)
+      .where("category_groups.category_id = ?", self.category_id)
+      .where("groups.public_admission OR groups.allow_membership_requests")
+      .order(:allow_membership_requests)
+      .first
   end
 
   private

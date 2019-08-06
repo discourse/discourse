@@ -218,6 +218,10 @@ class GroupsController < ApplicationController
       raise Discourse::InvalidParameters.new(:limit)
     end
 
+    if limit > 1000
+      raise Discourse::InvalidParameters.new(:limit)
+    end
+
     if offset < 0
       raise Discourse::InvalidParameters.new(:offset)
     end
@@ -328,8 +332,14 @@ class GroupsController < ApplicationController
       ))
     else
       users.each do |user|
-        group.add(user)
-        GroupActionLogger.new(current_user, group).log_add_user_to_group(user)
+        begin
+          group.add(user)
+          GroupActionLogger.new(current_user, group).log_add_user_to_group(user)
+        rescue ActiveRecord::RecordNotUnique
+          # Under concurrency, we might attempt to insert two records quickly and hit a DB
+          # constraint. In this case we can safely ignore the error and act as if the user
+          # was added to the group.
+        end
       end
 
       render json: success_json.merge!(
@@ -417,12 +427,18 @@ class GroupsController < ApplicationController
   end
 
   def request_membership
-    params.require(:reason)
+    params.require(:reason) if params[:topic_id].blank?
 
     group = find_group(:id)
 
+    if params[:topic_id] && topic = Topic.find_by_id(params[:topic_id])
+      reason = I18n.t("groups.view_hidden_topic_request_reason", group_name: group.name, topic_url: topic.url)
+    end
+
+    reason ||= params[:reason]
+
     begin
-      GroupRequest.create!(group: group, user: current_user, reason: params[:reason])
+      GroupRequest.create!(group: group, user: current_user, reason: reason)
     rescue ActiveRecord::RecordNotUnique => e
       return render json: failed_json.merge(error: I18n.t("groups.errors.already_requested_membership")), status: 409
     end
@@ -435,7 +451,7 @@ class GroupsController < ApplicationController
     )
 
     raw = <<~EOF
-      #{params[:reason]}
+      #{reason}
 
       ---
       <a href="#{Discourse.base_uri}/g/#{group.name}/requests">
@@ -566,6 +582,9 @@ class GroupsController < ApplicationController
             :automatic_membership_email_domains,
             :automatic_membership_retroactive
           ])
+
+          custom_fields = Group.editable_group_custom_fields
+          default_params << { custom_fields: custom_fields } unless custom_fields.blank?
         end
 
         default_params

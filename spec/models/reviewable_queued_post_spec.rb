@@ -87,7 +87,8 @@ RSpec.describe ReviewableQueuedPost, type: :model do
           newuser.update!(trust_level: 0)
           post = Fabricate(:post, user: newuser)
           PostActionCreator.spam(moderator, post)
-          SiteSetting.spam_score_to_silence_new_user = 1
+          Reviewable.set_priorities(high: 1.0)
+          SiteSetting.silence_new_user_sensitivity = Reviewable.sensitivity[:low]
           SiteSetting.num_users_to_silence_new_user = 1
           expect(Guardian.new(newuser).can_create_post?(topic)).to eq(false)
 

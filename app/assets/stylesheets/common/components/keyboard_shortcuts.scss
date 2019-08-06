@@ -42,16 +42,14 @@
       margin: 5px 0;
     }
 
-    b {
-      padding: 2px 6px;
-      border-radius: 4px;
-      box-shadow: shadow("kbd");
-      background: dark-light-choose(#fafafa, #333);
-      border: 1px solid dark-light-choose(#ccc, #555);
-      border-bottom: medium none dark-light-choose(#fff, #000);
+    kbd {
+      font-size: $base-font-size;
+      font-family: $base-font-family;
+      margin: 0;
       color: dark-light-choose(#444, #aaa);
+      font-weight: bold;
+      padding: 2px 6px;
       white-space: nowrap;
-      display: inline-block;
     }
   }
 }

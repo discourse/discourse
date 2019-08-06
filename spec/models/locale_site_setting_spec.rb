@@ -13,7 +13,7 @@ describe LocaleSiteSetting do
     value[:name]
   end
 
-  describe 'valid_value?' do
+  describe '.valid_value?' do
     it 'returns true for a locale that we have translations for' do
       expect(LocaleSiteSetting.valid_value?('en')).to eq(true)
     end
@@ -23,7 +23,7 @@ describe LocaleSiteSetting do
     end
   end
 
-  describe 'values' do
+  describe '.values' do
     it 'returns all the locales that we have translations for' do
       expect(LocaleSiteSetting.values.map { |x| x[:value] }).to include(*core_locales)
     end
@@ -50,9 +50,10 @@ describe LocaleSiteSetting do
 
     after do
       DiscoursePluginRegistry.reset!
+      LocaleSiteSetting.reset!
     end
 
-    describe 'valid_value?' do
+    describe '.valid_value?' do
       it 'returns true for locales from core' do
         expect(LocaleSiteSetting.valid_value?('en')).to eq(true)
         expect(LocaleSiteSetting.valid_value?('de')).to eq(true)
@@ -64,7 +65,7 @@ describe LocaleSiteSetting do
       end
     end
 
-    describe 'values' do
+    describe '.values' do
       it 'returns native names added by plugin' do
         expect(native_locale_name('foo')).to eq('Native Foo')
         expect(native_locale_name('bar')).to eq('Native Bar')
@@ -79,7 +80,7 @@ describe LocaleSiteSetting do
       end
     end
 
-    describe 'fallback_locale' do
+    describe '.fallback_locale' do
       it 'returns the fallback locale registered by plugin' do
         expect(LocaleSiteSetting.fallback_locale('de_AT')).to eq(:de)
         expect(LocaleSiteSetting.fallback_locale(:de_AT)).to eq(:de)
@@ -88,6 +89,16 @@ describe LocaleSiteSetting do
       it 'returns nothing when no fallback locale was registered' do
         expect(LocaleSiteSetting.fallback_locale('foo')).to be_nil
       end
+
+      it 'returns English for English (United States)' do
+        expect(LocaleSiteSetting.fallback_locale('en_US')).to eq(:en)
+      end
+    end
+  end
+
+  describe '.fallback_locale' do
+    it 'returns English for English (United States)' do
+      expect(LocaleSiteSetting.fallback_locale('en_US')).to eq(:en)
     end
   end
 end
