@@ -759,7 +759,12 @@ const User = RestModel.extend({
 
     return _.uniq(titles)
       .sort()
-      .map(Ember.Handlebars.Utils.escapeExpression);
+      .map(title => {
+        return {
+          name: Ember.Handlebars.Utils.escapeExpression(title),
+          id: title
+        };
+      });
   },
 
   @computed("user_option.text_size_seq", "user_option.text_size")
