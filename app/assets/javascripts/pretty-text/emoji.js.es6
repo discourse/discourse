@@ -25,13 +25,16 @@ export function buildReplacementsList(emojiReplacements) {
   return Object.keys(emojiReplacements)
     .sort()
     .reverse()
-    .map(replacement => {
-      // "*️⃣".replace(/*️⃣/, "foo")
-      // would fail if not escaped
-      if (replacement === "*️⃣") {
-        return `\\${replacement}`;
-      }
-      return replacement;
+    .map(emoji => {
+      return emoji.split("").map(chr => {
+        return (
+          "\\u" +
+          chr
+            .charCodeAt(0)
+            .toString(16)
+            .padStart(4, "0")
+        );
+      }).join("");
     })
     .join("|");
 }
