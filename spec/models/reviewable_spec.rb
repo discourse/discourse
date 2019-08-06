@@ -302,6 +302,13 @@ RSpec.describe Reviewable, type: :model do
   end
 
   context ".score_required_to_hide_post" do
+
+    it "will return the default visibility if it's higher" do
+      Reviewable.set_priorities(low: 40.0, high: 100.0)
+      SiteSetting.hide_post_sensitivity = Reviewable.sensitivity[:high]
+      expect(Reviewable.score_required_to_hide_post).to eq(40.0)
+    end
+
     it "returns 10 if we can't calculated any percentiles" do
       SiteSetting.hide_post_sensitivity = Reviewable.sensitivity[:low]
       expect(Reviewable.score_required_to_hide_post).to eq(10.0)
@@ -346,6 +353,7 @@ RSpec.describe Reviewable, type: :model do
   end
 
   context ".score_to_auto_close_topic" do
+
     it "returns 25 if we can't calculated any percentiles" do
       SiteSetting.auto_close_topic_sensitivity = Reviewable.sensitivity[:low]
       expect(Reviewable.score_to_auto_close_topic).to eq(25.0)
