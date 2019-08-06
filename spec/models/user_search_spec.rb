@@ -33,15 +33,12 @@ describe UserSearch do
     group.add(user)
     group.save
 
-    category = Fabricate.build(
-      :category,
-      read_restricted: true,
-      user: user
-    )
-    # TODO: maybe we amend all category fabrication to skip this?
-    # test is half a second faster
-    category.skip_category_definition = true
-    category.save!
+    category =
+      Fabricate(
+        :category,
+        read_restricted: true,
+        user: user
+      )
 
     Fabricate(:category_group, category: category, group: group)
 

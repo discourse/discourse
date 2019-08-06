@@ -5,13 +5,13 @@ require 'rails_helper'
 describe DestroyTask do
 
   describe 'destroy topics' do
-    fab!(:c) { Fabricate(:category) }
+    fab!(:c) { Fabricate(:category_with_definition) }
     fab!(:t) { Fabricate(:topic, category: c) }
     let!(:p) { Fabricate(:post, topic: t) }
-    fab!(:c2) { Fabricate(:category) }
+    fab!(:c2) { Fabricate(:category_with_definition) }
     fab!(:t2) { Fabricate(:topic, category: c2) }
     let!(:p2) { Fabricate(:post, topic: t2) }
-    fab!(:sc) { Fabricate(:category, parent_category: c2) }
+    fab!(:sc) { Fabricate(:category_with_definition, parent_category: c2) }
     fab!(:t3) { Fabricate(:topic, category: sc) }
     let!(:p3) { Fabricate(:post, topic: t3) }
 
@@ -41,13 +41,13 @@ describe DestroyTask do
   end
 
   describe 'destroy categories' do
-    fab!(:c) { Fabricate(:category) }
+    fab!(:c) { Fabricate(:category_with_definition) }
     fab!(:t) { Fabricate(:topic, category: c) }
     let!(:p) { Fabricate(:post, topic: t) }
-    fab!(:c2) { Fabricate(:category) }
+    fab!(:c2) { Fabricate(:category_with_definition) }
     fab!(:t2) { Fabricate(:topic, category: c) }
     let!(:p2) { Fabricate(:post, topic: t2) }
-    fab!(:sc) { Fabricate(:category, parent_category: c2) }
+    fab!(:sc) { Fabricate(:category_with_definition, parent_category: c2) }
     fab!(:t3) { Fabricate(:topic, category: sc) }
     let!(:p3) { Fabricate(:post, topic: t3) }
 

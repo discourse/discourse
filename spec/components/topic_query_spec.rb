@@ -19,7 +19,7 @@ describe TopicQuery do
 
   context 'secure category' do
     it "filters categories out correctly" do
-      category = Fabricate(:category)
+      category = Fabricate(:category_with_definition)
       group = Fabricate(:group)
       category.set_permissions(group => :full)
       category.save
@@ -133,9 +133,8 @@ describe TopicQuery do
   end
 
   context 'category filter' do
-    let(:category) { Fabricate(:category) }
-
-    let(:diff_category) { Fabricate(:diff_category) }
+    let(:category) { Fabricate(:category_with_definition) }
+    let(:diff_category) { Fabricate(:category_with_definition, name: "Different Category") }
 
     it "returns topics in the category when we filter to it" do
       expect(TopicQuery.new(moderator).list_latest.topics.size).to eq(0)
@@ -153,7 +152,7 @@ describe TopicQuery do
     end
 
     context 'subcategories' do
-      let!(:subcategory) { Fabricate(:category, parent_category_id: category.id) }
+      let!(:subcategory) { Fabricate(:category_with_definition, parent_category_id: category.id) }
 
       it "works with subcategories" do
         expect(TopicQuery.new(moderator, category: category.id).list_latest.topics.size).to eq(1)
@@ -214,8 +213,8 @@ describe TopicQuery do
     end
 
     context "and categories too" do
-      let(:category1) { Fabricate(:category) }
-      let(:category2) { Fabricate(:category) }
+      let(:category1) { Fabricate(:category_with_definition) }
+      let(:category2) { Fabricate(:category_with_definition) }
 
       it "returns topics in the given category with the given tag" do
         tagged_topic1 = Fabricate(:topic, category: category1, tags: [tag])
@@ -231,7 +230,7 @@ describe TopicQuery do
 
   context 'muted categories' do
     it 'is removed from new and latest lists' do
-      category = Fabricate(:category)
+      category = Fabricate(:category_with_definition)
       topic = Fabricate(:topic, category: category)
       CategoryUser.create!(user_id: user.id,
                            category_id: category.id,
@@ -430,7 +429,7 @@ describe TopicQuery do
   end
 
   context 'categorized' do
-    fab!(:category) { Fabricate(:category) }
+    fab!(:category) { Fabricate(:category_with_definition) }
     let(:topic_category) { category.topic }
     fab!(:topic_no_cat) { Fabricate(:topic) }
     fab!(:topic_in_cat1) { Fabricate(:topic, category: category,
@@ -948,12 +947,12 @@ describe TopicQuery do
     fab!(:user3) { Fabricate(:user) }
 
     fab!(:private_category) do
-      Fabricate(:private_category, group: group)
+      Fabricate(:private_category_with_definition, group: group)
     end
 
     let!(:private_message_topic) { Fabricate(:private_message_post, user: user).topic }
     let!(:topic1) { Fabricate(:topic, user: user) }
-    let!(:topic2) { Fabricate(:topic, user: user, category: Fabricate(:category)) }
+    let!(:topic2) { Fabricate(:topic, user: user, category: Fabricate(:category_with_definition)) }
     let!(:topic3) { Fabricate(:topic, user: user, category: private_category) }
     let!(:topic4) { Fabricate(:topic) }
     let!(:topic5) { Fabricate(:topic, user: user, visible: false) }
@@ -1024,8 +1023,8 @@ describe TopicQuery do
   end
 
   context "shared drafts" do
-    fab!(:category) { Fabricate(:category) }
-    fab!(:shared_drafts_category) { Fabricate(:category) }
+    fab!(:category) { Fabricate(:category_with_definition) }
+    fab!(:shared_drafts_category) { Fabricate(:category_with_definition) }
     fab!(:topic) { Fabricate(:topic, category: shared_drafts_category) }
     fab!(:shared_draft) { Fabricate(:shared_draft, topic: topic, category: category) }
     fab!(:admin) { Fabricate(:admin) }
