@@ -38,7 +38,27 @@ class BasicPostSerializer < ApplicationSerializer
         I18n.t('flagging.user_must_edit')
       end
     else
-      object.filter_quotes(@parent_post)
+      cooked = object.filter_quotes(@parent_post)
+
+      if scope&.user
+        group = Group
+          .joins('JOIN group_users ON groups.id = group_users.group_id')
+          .find_by(
+            id: object.custom_fields['requested_group_id'].to_i,
+            group_users: { user_id: scope.user.id, owner: true }
+          )
+
+        if group
+          cooked << <<~EOF
+            <hr />
+            <a href="#{Discourse.base_uri}/g/#{group.name}/requests">
+              #{I18n.t('groups.request_membership_pm.handle')}
+            </a>
+          EOF
+        end
+      end
+
+      cooked
     end
   end
 

@@ -443,20 +443,12 @@ class GroupsController < ApplicationController
         .pluck("users.username")
     )
 
-    raw = <<~EOF
-      #{reason}
-
-      ---
-      <a href="#{Discourse.base_uri}/g/#{group.name}/requests">
-        #{I18n.t('groups.request_membership_pm.handle')}
-      </a>
-    EOF
-
     post = PostCreator.new(current_user,
       title: I18n.t('groups.request_membership_pm.title', group_name: group.name),
-      raw: raw,
+      raw: params[:reason],
       archetype: Archetype.private_message,
       target_usernames: usernames.join(','),
+      custom_fields: { requested_group_id: group.id },
       skip_validations: true
     ).create!
 
