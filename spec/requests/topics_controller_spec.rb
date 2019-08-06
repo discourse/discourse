@@ -2080,9 +2080,8 @@ RSpec.describe TopicsController do
       end
 
       it "can mark sub-categories unread" do
-        # TODO do we want to skip category definition by default in fabricator
-        category = Fabricate(:category, skip_category_definition: true)
-        sub = Fabricate(:category, parent_category_id: category.id, skip_category_definition: true)
+        category = Fabricate(:category)
+        sub = Fabricate(:category, parent_category_id: category.id)
 
         topic.update!(category_id: sub.id)
 

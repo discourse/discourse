@@ -186,7 +186,7 @@ RSpec.describe Admin::UsersController do
       end
 
       it "won't delete a category topic" do
-        c = Fabricate(:category)
+        c = Fabricate(:category_with_definition)
         cat_post = c.topic.posts.first
         put(
           "/admin/users/#{user.id}/suspend.json",
@@ -201,7 +201,7 @@ RSpec.describe Admin::UsersController do
       end
 
       it "won't delete a category topic by replies" do
-        c = Fabricate(:category)
+        c = Fabricate(:category_with_definition)
         cat_post = c.topic.posts.first
         put(
           "/admin/users/#{user.id}/suspend.json",

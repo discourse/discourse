@@ -46,7 +46,7 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
       end
 
       it "doesn't include deletes for category topics" do
-        c = Fabricate(:category)
+        c = Fabricate(:category_with_definition)
         flag = PostActionCreator.spam(user, c.topic.posts.first).reviewable
         actions = flag.actions_for(guardian)
         expect(actions.has?(:delete_and_ignore)).to eq(false)

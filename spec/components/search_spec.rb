@@ -13,7 +13,7 @@ describe Search do
 
   context 'post indexing observer' do
     before do
-      @category = Fabricate(:category, name: 'america')
+      @category = Fabricate(:category_with_definition, name: 'america')
       @topic = Fabricate(:topic, title: 'sam saffron test topic', category: @category)
       @post = Fabricate(:post, topic: @topic, raw: 'this <b>fun test</b> <img src="bla" title="my image">')
       @indexed = @post.post_search_data.search_data
@@ -48,7 +48,7 @@ describe Search do
 
   context 'category indexing observer' do
     before do
-      @category = Fabricate(:category, name: 'america')
+      @category = Fabricate(:category_with_definition, name: 'america')
       @indexed = @category.category_search_data.search_data
     end
 
@@ -397,7 +397,7 @@ describe Search do
       end
 
       it 'does not allow a post with repeated words to dominate the ranking' do
-        category = Fabricate(:category, name: "winter is coming")
+        category = Fabricate(:category_with_definition, name: "winter is coming")
 
         post = Fabricate(:post,
           raw: "I think winter will end soon",
@@ -495,7 +495,7 @@ describe Search do
       end
 
       it 'secures results correctly' do
-        category = Fabricate(:category)
+        category = Fabricate(:category_with_definition)
 
         topic.category_id = category.id
         topic.save
@@ -532,12 +532,12 @@ describe Search do
   end
 
   context 'categories' do
-    let(:category) { Fabricate(:category, name: "monkey Category 2") }
+    let(:category) { Fabricate(:category_with_definition, name: "monkey Category 2") }
     let(:topic) { Fabricate(:topic, category: category) }
     let!(:post) { Fabricate(:post, topic: topic, raw: "snow monkey") }
 
     let!(:ignored_category) do
-      Fabricate(:category,
+      Fabricate(:category_with_definition,
         name: "monkey Category 1",
         slug: "test",
         search_priority: Searchable::PRIORITIES[:ignore]
@@ -560,7 +560,7 @@ describe Search do
 
     describe "with child categories" do
       let!(:child_of_ignored_category) do
-        Fabricate(:category,
+        Fabricate(:category_with_definition,
           name: "monkey Category 3",
           parent_category: ignored_category
         )
@@ -606,7 +606,7 @@ describe Search do
     end
 
     describe 'categories with different priorities' do
-      let(:category2) { Fabricate(:category) }
+      let(:category2) { Fabricate(:category_with_definition) }
 
       it "should return posts in the right order" do
         raw = "The pure genuine evian"
@@ -667,7 +667,7 @@ describe Search do
     let!(:tag) { Fabricate(:tag) }
     let!(:uppercase_tag) { Fabricate(:tag, name: "HeLlO") }
     let(:tag_group) { Fabricate(:tag_group) }
-    let(:category) { Fabricate(:category) }
+    let(:category) { Fabricate(:category_with_definition) }
 
     context 'post searching' do
       it 'can find posts with tags' do
@@ -731,7 +731,7 @@ describe Search do
   context 'type_filter' do
 
     let!(:user) { Fabricate(:user, username: 'amazing', email: 'amazing@amazing.com') }
-    let!(:category) { Fabricate(:category, name: 'amazing category', user: user) }
+    let!(:category) { Fabricate(:category_with_definition, name: 'amazing category', user: user) }
 
     context 'user filter' do
       let(:results) { Search.execute('amazing', type_filter: 'user') }
@@ -773,7 +773,7 @@ describe Search do
     end
 
     it 'can use category as a search context' do
-      category = Fabricate(:category,
+      category = Fabricate(:category_with_definition,
         search_priority: Searchable::PRIORITIES[:ignore]
       )
 
@@ -781,7 +781,7 @@ describe Search do
       topic_no_cat = Fabricate(:topic)
 
       # includes subcategory in search
-      subcategory = Fabricate(:category, parent_category_id: category.id)
+      subcategory = Fabricate(:category_with_definition, parent_category_id: category.id)
       sub_topic = Fabricate(:topic, category: subcategory)
 
       post = Fabricate(:post, topic: topic, user: topic.user)
@@ -1044,7 +1044,7 @@ describe Search do
       today        = Date.today
       yesterday    = 1.day.ago
       two_days_ago = 2.days.ago
-      category = Fabricate(:category)
+      category = Fabricate(:category_with_definition)
 
       old_topic = Fabricate(:topic,
         title: 'First Topic, testing the created_at sort',
@@ -1098,7 +1098,7 @@ describe Search do
 
     it 'supports category slug and tags' do
       # main category
-      category = Fabricate(:category, name: 'category 24', slug: 'cateGory-24')
+      category = Fabricate(:category_with_definition, name: 'category 24', slug: 'cateGory-24')
       topic = Fabricate(:topic, created_at: 3.months.ago, category: category)
       post = Fabricate(:post, raw: 'Sams first post', topic: topic)
 
@@ -1106,7 +1106,7 @@ describe Search do
       expect(Search.execute("sams post category:#{category.id}").posts.length).to eq(1)
       expect(Search.execute('sams post #categoRy-25').posts.length).to eq(0)
 
-      sub_category = Fabricate(:category, name: 'sub category', slug: 'sub-category', parent_category_id: category.id)
+      sub_category = Fabricate(:category_with_definition, name: 'sub category', slug: 'sub-category', parent_category_id: category.id)
       second_topic = Fabricate(:topic, created_at: 3.months.ago, category: sub_category)
       Fabricate(:post, raw: 'sams second post', topic: second_topic)
 
@@ -1214,7 +1214,7 @@ describe Search do
       end
 
       it 'orders posts correctly when combining tags with categories or terms' do
-        cat1 = Fabricate(:category, name: 'food')
+        cat1 = Fabricate(:category_with_definition, name: 'food')
         topic6 = Fabricate(:topic, tags: [tag1, tag2], category: cat1)
         topic7 = Fabricate(:topic, tags: [tag1, tag2, tag3], category: cat1)
         post7 = Fabricate(:post, topic: topic6, raw: "Wakey, wakey, eggs and bakey.", like_count: 5)
