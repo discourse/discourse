@@ -852,8 +852,13 @@ class UsersController < ApplicationController
 
   def search_users
     term = params[:term].to_s.strip
+
     topic_id = params[:topic_id]
     topic_id = topic_id.to_i if topic_id
+
+    category_id = params[:category_id]
+    category_id = category_id.to_i if category_id
+
     topic_allowed_users = params[:topic_allowed_users] || false
 
     group_names = params[:groups] || []
@@ -862,12 +867,21 @@ class UsersController < ApplicationController
       @groups = Group.where(name: group_names)
     end
 
-    results = UserSearch.new(term,
-                             topic_id: topic_id,
-                             topic_allowed_users: topic_allowed_users,
-                             searching_user: current_user,
-                             groups: @groups
-                            ).search
+    options = {
+     topic_allowed_users: topic_allowed_users,
+     searching_user: current_user,
+     groups: @groups
+    }
+
+    if topic_id
+      options[:topic_id] = topic_id
+    end
+
+    if category_id
+      options[:category_id] = category_id
+    end
+
+    results = UserSearch.new(term, options).search
 
     user_fields = [:username, :upload_avatar_template]
     user_fields << :name if SiteSetting.enable_names?

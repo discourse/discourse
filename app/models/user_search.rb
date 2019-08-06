@@ -9,6 +9,7 @@ class UserSearch
     @term = term
     @term_like = "#{term.downcase.gsub("_", "\\_")}%"
     @topic_id = opts[:topic_id]
+    @category_id = opts[:category_id]
     @topic_allowed_users = opts[:topic_allowed_users]
     @searching_user = opts[:searching_user]
     @include_staged_users = opts[:include_staged_users] || false
@@ -81,7 +82,8 @@ class UserSearch
 
     # 2. in topic
     if @topic_id
-      in_topic = filtered_by_term_users.where('users.id IN (SELECT p.user_id FROM posts p WHERE topic_id = ?)', @topic_id)
+      in_topic = filtered_by_term_users
+        .where('users.id IN (SELECT p.user_id FROM posts p WHERE topic_id = ?)', @topic_id)
 
       if @searching_user.present?
         in_topic = in_topic.where('users.id <> ?', @searching_user.id)
@@ -96,8 +98,55 @@ class UserSearch
 
     return users.to_a if users.length >= @limit
 
-    # 3. global matches
-    if !@topic_id || @term.present?
+    secure_category_id = nil
+
+    if @category_id
+      secure_category_id = DB.query_single(<<~SQL, @category_id).first
+        SELECT id FROM categories
+        WHERE read_restricted AND id = ?
+      SQL
+    elsif @topic_id
+      secure_category_id = DB.query_single(<<~SQL, @topic_id).first
+        SELECT id FROM categories
+        WHERE read_restricted AND id IN (
+          SELECT category_id FROM topics
+          WHERE id = ?
+        )
+      SQL
+    end
+
+    # 3. category matches
+    # 10,11,12: trust level groups (tl0/1/2) explicitly bypassed
+    # may amend this in future to allow them if count in the group
+    # is small enough
+    if secure_category_id
+      in_category = filtered_by_term_users
+        .where(<<~SQL, secure_category_id)
+          users.id IN (
+            SELECT gu.user_id
+            FROM group_users gu
+            WHERE group_id IN (
+              SELECT group_id FROM category_groups
+              WHERE category_id = ?
+            ) AND group_id NOT IN (10,11,12)
+            LIMIT 200
+          )
+          SQL
+
+      if @searching_user.present?
+        in_category = in_category.where('users.id <> ?', @searching_user.id)
+      end
+
+      in_category
+        .order('last_seen_at DESC')
+        .limit(@limit - users.length)
+        .pluck(:id)
+        .each { |id| users << id }
+    end
+
+    return users.to_a if users.length >= @limit
+    # 4. global matches
+    if @term.present?
       filtered_by_term_users.order('last_seen_at DESC')
         .limit(@limit - users.length)
         .pluck(:id)

@@ -155,21 +155,29 @@ export default Ember.Component.extend({
     };
   },
 
+  userSearchTerm(term) {
+    const topicId = this.get("topic.id");
+    // maybe this is a brand new topic, so grab category from composer
+    const categoryId =
+      this.get("topic.category_id") || this.get("composer._categoryId");
+
+    return userSearch({
+      term,
+      topicId,
+      categoryId,
+      includeMentionableGroups: true
+    });
+  },
+
   @on("didInsertElement")
   _composerEditorInit() {
-    const topicId = this.get("topic.id");
     const $input = $(this.element.querySelector(".d-editor-input"));
     const $preview = $(this.element.querySelector(".d-editor-preview-wrapper"));
 
     if (this.siteSettings.enable_mentions) {
       $input.autocomplete({
         template: findRawTemplate("user-selector-autocomplete"),
-        dataSource: term =>
-          userSearch({
-            term,
-            topicId,
-            includeMentionableGroups: true
-          }),
+        dataSource: term => this.userSearchTerm.call(this, term),
         key: "@",
         transformComplete: v => v.username || v.name,
         afterComplete() {
