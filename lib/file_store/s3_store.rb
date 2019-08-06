@@ -43,6 +43,7 @@ module FileStore
       cache_file(file, File.basename(path)) if opts[:cache_locally]
       options = {
         acl: opts[:private] ? "private" : "public-read",
+        cache_control: 'max-age=31556952, public, immutable',
         content_type: opts[:content_type].presence || MiniMime.lookup_by_filename(filename)&.content_type
       }
       # add a "content disposition" header for "attachments"
