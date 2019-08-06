@@ -1238,18 +1238,31 @@ describe CookedPostProcessor do
     end
 
     context "onebox" do
-      let(:post) { Fabricate(:post, raw: "onebox me:\n\nhttps://www.youtube.com/watch?v=Wji-BZ0oCwg\n") }
+      before do
+        Oneboxer.stubs(:onebox).with(anything, anything).returns(nil)
+        Oneboxer.stubs(:onebox).with('https://discourse.org', anything).returns("<aside class=\"onebox whitelistedgeneric\">the rest of the onebox</aside>")
+      end
 
-      before { Oneboxer.stubs(:onebox) }
-
-      it "awards a badge for using an onebox" do
+      it "awards the badge for using an onebox" do
+        post = Fabricate(:post, raw: "onebox me:\n\nhttps://discourse.org\n")
+        cpp = CookedPostProcessor.new(post)
         cpp.post_process_oneboxes
         cpp.grant_badges
         expect(post.user.user_badges.where(badge_id: Badge::FirstOnebox).exists?).to eq(true)
       end
 
-      it "doesn't award the badge when the badge is disabled" do
+      it "does not award the badge when link is not oneboxed" do
+        post = Fabricate(:post, raw: "onebox me:\n\nhttp://example.com\n")
+        cpp = CookedPostProcessor.new(post)
+        cpp.post_process_oneboxes
+        cpp.grant_badges
+        expect(post.user.user_badges.where(badge_id: Badge::FirstOnebox).exists?).to eq(false)
+      end
+
+      it "does not award the badge when the badge is disabled" do
         Badge.where(id: Badge::FirstOnebox).update_all(enabled: false)
+        post = Fabricate(:post, raw: "onebox me:\n\nhttps://discourse.org\n")
+        cpp = CookedPostProcessor.new(post)
         cpp.post_process_oneboxes
         cpp.grant_badges
         expect(post.user.user_badges.where(badge_id: Badge::FirstOnebox).exists?).to eq(false)
