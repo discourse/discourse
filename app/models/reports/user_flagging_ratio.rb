@@ -53,7 +53,10 @@ Report.add_report("user_flagging_ratio") do |report|
            #{disagreed} AS disagreed_flags,
            #{agreed} AS agreed_flags,
            #{ignored} AS ignored_flags,
-           ROUND((1-(#{agreed} / #{disagreed})) * (#{disagreed} - #{agreed})) AS score
+           (
+            CASE #{disagreed} WHEN 0 THEN #{agreed} * #{agreed}
+            ELSE ROUND((1-(#{agreed} / #{disagreed})) * (#{disagreed} - #{agreed})) END
+           ) AS score
     FROM users AS u
     INNER JOIN reviewable_scores AS rs ON rs.user_id = u.id
     WHERE u.id > 0
@@ -63,7 +66,6 @@ Report.add_report("user_flagging_ratio") do |report|
       u.username,
       u.uploaded_avatar_id,
       u.silenced_till
-    HAVING #{disagreed} > #{agreed}
     ORDER BY score DESC
     LIMIT 100
     SQL
