@@ -5,7 +5,7 @@
   <%- if SiteSetting.private_email? %>
     <p><%= t('system_messages.contents_hidden') %></p>
   <% else %>
-    <%= render partial: 'email/post', locals: { post: post, use_excerpt: false } %>
+    <%= render partial: 'email/post', locals: { post: post, use_excerpt: SiteSetting.post_excerpts_in_emails } %>
 
     <% if in_reply_to_post.present? || context_posts.present? %>
       <div class='footer'>%{respond_instructions}</div>

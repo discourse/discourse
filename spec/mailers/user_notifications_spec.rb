@@ -336,6 +336,25 @@ describe UserNotifications do
       expect(mail.text_part.to_s).to_not include(response.raw)
       expect(mail.text_part.to_s).to_not include(topic.url)
     end
+
+    it "includes excerpt when post_excerpts_in_emails is enabled" do
+      paragraphs = [
+        "This is the first paragraph, but you should read more.",
+        "And here is its friend, the second paragraph."
+      ]
+      SiteSetting.post_excerpts_in_emails = true
+      SiteSetting.post_excerpt_maxlength = paragraphs.first.length
+      response.update_attributes!(raw: paragraphs.join("\n\n"))
+      mail = UserNotifications.user_replied(
+        user,
+        post: response,
+        notification_type: notification.notification_type,
+        notification_data_hash: notification.data_hash
+      )
+      mail_html = mail.html_part.body.to_s
+      expect(mail_html.scan(/#{paragraphs[0]}/).count).to eq(1)
+      expect(mail_html.scan(/#{paragraphs[1]}/).count).to eq(0)
+    end
   end
 
   describe '.user_posted' do

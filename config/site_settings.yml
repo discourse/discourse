@@ -1034,6 +1034,7 @@ email:
   email_total_attachment_size_limit_kb:
     default: 0
     max: 51200
+  post_excerpts_in_emails: false
 
 files:
   max_image_size_kb:
