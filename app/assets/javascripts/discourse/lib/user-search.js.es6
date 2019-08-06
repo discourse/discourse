@@ -4,7 +4,7 @@ import { userPath } from "discourse/lib/url";
 import { emailValid } from "discourse/lib/utilities";
 
 var cache = {},
-  cacheTopicId,
+  cacheKey,
   cacheTime,
   currentTerm,
   oldSearch;
@@ -12,6 +12,7 @@ var cache = {},
 function performSearch(
   term,
   topicId,
+  categoryId,
   includeGroups,
   includeMentionableGroups,
   includeMessageableGroups,
@@ -28,7 +29,7 @@ function performSearch(
   // I am not strongly against unconditionally returning
   // however this allows us to return a list of probable
   // users we want to mention, early on a topic
-  if (term === "" && !topicId) {
+  if (term === "" && !topicId && !categoryId) {
     return [];
   }
 
@@ -37,6 +38,7 @@ function performSearch(
     data: {
       term: term,
       topic_id: topicId,
+      category_id: categoryId,
       include_groups: includeGroups,
       include_mentionable_groups: includeMentionableGroups,
       include_messageable_groups: includeMessageableGroups,
@@ -140,6 +142,7 @@ export default function userSearch(options) {
     includeMessageableGroups = options.includeMessageableGroups,
     allowedUsers = options.allowedUsers,
     topicId = options.topicId,
+    categoryId = options.categoryId,
     groupMembersOf = options.groupMembersOf;
 
   if (oldSearch) {
@@ -150,11 +153,13 @@ export default function userSearch(options) {
   currentTerm = term;
 
   return new Ember.RSVP.Promise(function(resolve) {
-    if (new Date() - cacheTime > 30000 || cacheTopicId !== topicId) {
+    const newCacheKey = `${topicId}-${categoryId}`;
+
+    if (new Date() - cacheTime > 30000 || cacheKey !== newCacheKey) {
       cache = {};
     }
 
-    cacheTopicId = topicId;
+    cacheKey = newCacheKey;
 
     var clearPromise = setTimeout(function() {
       resolve(CANCELLED_STATUS);
@@ -168,6 +173,7 @@ export default function userSearch(options) {
     debouncedSearch(
       term,
       topicId,
+      categoryId,
       includeGroups,
       includeMentionableGroups,
       includeMessageableGroups,

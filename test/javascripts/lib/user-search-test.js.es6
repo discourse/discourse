@@ -7,7 +7,22 @@ QUnit.module("lib:user-search", {
     };
 
     // prettier-ignore
-    server.get("/u/search/users", () => { //eslint-disable-line
+    server.get("/u/search/users", request => { //eslint-disable-line
+
+      // special responder for per category search
+      const categoryMatch = request.url.match(/category_id=([0-9]+)/);
+      if (categoryMatch) {
+        return response({
+          users: [
+            {
+              username: `category_${categoryMatch[1]}`,
+              name: "category user",
+              avatar_template:
+                "https://avatars.discourse.org/v3/letter/t/41988e/{size}.png"
+            }
+          ]});
+      }
+
       return response({
         users: [
           {
@@ -60,6 +75,21 @@ QUnit.module("lib:user-search", {
       });
     });
   }
+});
+
+QUnit.test("it flushes cache when switching categories", async assert => {
+  let results = await userSearch({ term: "hello", categoryId: 1 });
+  assert.equal(results[0].username, "category_1");
+  assert.equal(results.length, 1);
+
+  // this is cached ... so let's check the cache is good
+  results = await userSearch({ term: "hello", categoryId: 1 });
+  assert.equal(results[0].username, "category_1");
+  assert.equal(results.length, 1);
+
+  results = await userSearch({ term: "hello", categoryId: 2 });
+  assert.equal(results[0].username, "category_2");
+  assert.equal(results.length, 1);
 });
 
 QUnit.test("it places groups unconditionally for exact match", async assert => {
