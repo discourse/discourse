@@ -188,7 +188,7 @@ class Reviewable < ActiveRecord::Base
     end
   end
 
-  def self.sensitivity_score(sensitivity, scale: 1.0)
+  def self.sensitivity_score_value(sensitivity, scale)
     return Float::MAX if sensitivity == 0
 
     ratio = sensitivity / Reviewable.sensitivity[:low].to_f
@@ -197,6 +197,13 @@ class Reviewable < ActiveRecord::Base
 
     # We want this to be hard to reach
     (high.to_f * ratio) * scale
+  end
+
+  def self.sensitivity_score(sensitivity, scale: 1.0)
+    # If the score is less than the default visibility, bring it up to that level.
+    # Otherwise we have the confusing situation where a post might be hidden and
+    # moderators would never see it!
+    [sensitivity_score_value(sensitivity, scale), min_score_for_priority].max
   end
 
   def self.score_to_auto_close_topic
