@@ -1730,6 +1730,7 @@ en:
       granted_badge: "Earned '{{description}}'"
       topic_reminder: "<span>{{username}}</span> {{description}}"
       watching_first_post: "<span>New Topic</span> {{description}}"
+      membership_request_accepted: "Membership accepted in '{{group_name}}'"
 
       group_message_summary:
         one: "{{count}} message in your {{group_name}} inbox"
