@@ -588,7 +588,7 @@ export function clipboardData(e, canUpload) {
     files = toArray(clipboard.items).filter(i => i.kind === "file");
   }
 
-  canUpload = files && canUpload && !types.includes("text/plain");
+  canUpload = files && canUpload && types.includes("Files");
   const canUploadImage =
     canUpload && files.filter(f => f.type.match("^image/"))[0];
   const canPasteHtml =
