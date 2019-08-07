@@ -19,13 +19,13 @@
 
     {{#if showMinMax}}
       <div class="input-group poll-number">
-        {{input-tip validation=minMaxValueValidation}}
         <label class="input-group-label">{{i18n 'poll.ui_builder.poll_config.min'}}</label>
         {{input type='number'
                 value=pollMin
                 valueAttribute="value"
                 class="poll-options-min"}}
       </div>
+      {{input-tip validation=minMaxValueValidation}}
 
 
       <div class="input-group poll-number">
@@ -44,8 +44,8 @@
                   valueAttribute="value"
                   min="1"
                   class="poll-options-step"}}
-          {{input-tip validation=minStepValueValidation}}
         </div>
+        {{input-tip validation=minStepValueValidation}}
       {{/if}}
     {{/if}}
 
@@ -53,8 +53,8 @@
       <div class="input-group poll-textarea">
         <label>{{i18n 'poll.ui_builder.poll_options.label'}}</label>
         {{textarea value=pollOptions autocomplete="discourse"}}
-        {{input-tip validation=minNumOfOptionsValidation}}
       </div>
+      {{input-tip validation=minNumOfOptionsValidation}}
     {{/unless}}
 
     <div class="input-group poll-checkbox">
