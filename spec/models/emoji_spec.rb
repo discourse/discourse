@@ -12,11 +12,6 @@ describe Emoji do
     expect(Emoji.replacement_code('1f1e9-1f1ea').codepoints).to eq([127465, 127466])
   end
 
-  it "returns nil for weird cases" do
-    expect(Emoji.replacement_code('32')).to be_nil
-    expect(Emoji.replacement_code('robin')).to be_nil
-  end
-
   describe '.load_custom' do
     describe 'when a custom emoji has an invalid upload_id' do
       it 'should return the custom emoji without a URL' do
