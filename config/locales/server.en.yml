@@ -1811,7 +1811,7 @@ en:
     attachment_content_type_blacklist: "List of keywords used to blacklist attachments based on the content type."
     attachment_filename_blacklist: "List of keywords used to blacklist attachments based on the filename."
 
-    enable_forwarded_emails: "[BETA] Allow users to create a topic by forwarding an email in."
+    forwarded_emails_behaviour: "How to treat a forwarded email to Discourse"
     always_show_trimmed_content: "Always show trimmed part of incoming emails. WARNING: might reveal email addresses."
     private_email: "Don't include content from posts or topics in email title or email body. NOTE: also disables digest emails."
     email_total_attachment_size_limit_kb: "Max total size of files attached to outgoing emails. Set to 0 to disable sending of attachments."
