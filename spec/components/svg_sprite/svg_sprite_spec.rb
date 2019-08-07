@@ -29,6 +29,11 @@ describe SvgSprite do
     expect(SvgSprite.search("this-is-not-an-icon")).to eq(false)
   end
 
+  it 'can get a raw SVG for an icon' do
+    expect(SvgSprite.raw_svg("fa-heart")).to match(/svg.*svg/) # SVG inside SVG
+    expect(SvgSprite.raw_svg("this-is-not-an-icon")).to eq("")
+  end
+
   it 'can get a consistent version string' do
     version1 = SvgSprite.version
     version2 = SvgSprite.version
