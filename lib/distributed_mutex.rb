@@ -83,7 +83,7 @@ class DistributedMutex
 
     current_expire_time = redis.get key
 
-    if current_expire_time.present? && current_expire_time.to_i > now
+    if current_expire_time && current_expire_time.to_i > now
       redis.unwatch
 
       got_lock = false
@@ -94,7 +94,7 @@ class DistributedMutex
           redis.expire key, validity
         end
 
-      got_lock = result.present?
+      got_lock = !result.nil?
     end
 
     [got_lock, expire_time]
@@ -109,7 +109,7 @@ class DistributedMutex
         redis.multi do
           redis.del key
         end
-      return result.present?
+      return !result.nil?
     else
       redis.unwatch
       return false
