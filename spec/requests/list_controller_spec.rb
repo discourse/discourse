@@ -341,7 +341,7 @@ RSpec.describe ListController do
 
   describe 'category' do
     context 'in a category' do
-      let(:category) { Fabricate(:category) }
+      let(:category) { Fabricate(:category_with_definition) }
       let(:group) { Fabricate(:group) }
       let(:private_category) { Fabricate(:private_category, group: group) }
 
@@ -367,7 +367,7 @@ RSpec.describe ListController do
       end
 
       context 'with a link that has a parent slug, slug and id in its path' do
-        let(:child_category) { Fabricate(:category, parent_category: category) }
+        let(:child_category) { Fabricate(:category_with_definition, parent_category: category) }
 
         context "with valid slug" do
           it "redirects to the child category" do
@@ -390,7 +390,7 @@ RSpec.describe ListController do
 
       context 'another category exists with a number at the beginning of its name' do
         # One category has another category's id at the beginning of its name
-        let!(:other_category) { Fabricate(:category, name: "#{category.id} name") }
+        let!(:other_category) { Fabricate(:category_with_definition, name: "#{category.id} name") }
 
         it 'uses the correct category' do
           get "/c/#{other_category.slug}/l/latest.json"
@@ -402,7 +402,7 @@ RSpec.describe ListController do
       end
 
       context 'a child category' do
-        let(:sub_category) { Fabricate(:category, parent_category_id: category.id) }
+        let(:sub_category) { Fabricate(:category_with_definition, parent_category_id: category.id) }
 
         context 'when parent and child are requested' do
           it "succeeds" do
@@ -485,7 +485,7 @@ RSpec.describe ListController do
       end
 
       context "renders correct title" do
-        let!(:amazing_category) { Fabricate(:category, name: "Amazing Category") }
+        let!(:amazing_category) { Fabricate(:category_with_definition, name: "Amazing Category") }
 
         it 'for category default view' do
           get "/c/#{amazing_category.slug}"
@@ -623,11 +623,11 @@ RSpec.describe ListController do
   end
 
   describe "categories suppression" do
-    let(:category_one) { Fabricate(:category) }
-    let(:sub_category) { Fabricate(:category, parent_category: category_one, suppress_from_latest: true) }
+    let(:category_one) { Fabricate(:category_with_definition) }
+    let(:sub_category) { Fabricate(:category_with_definition, parent_category: category_one, suppress_from_latest: true) }
     let!(:topic_in_sub_category) { Fabricate(:topic, category: sub_category) }
 
-    let(:category_two) { Fabricate(:category, suppress_from_latest: true) }
+    let(:category_two) { Fabricate(:category_with_definition, suppress_from_latest: true) }
     let!(:topic_in_category_two) { Fabricate(:topic, category: category_two) }
 
     it "suppresses categories from the latest list" do

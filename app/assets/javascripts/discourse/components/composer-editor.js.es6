@@ -155,21 +155,29 @@ export default Ember.Component.extend({
     };
   },
 
+  userSearchTerm(term) {
+    const topicId = this.get("topic.id");
+    // maybe this is a brand new topic, so grab category from composer
+    const categoryId =
+      this.get("topic.category_id") || this.get("composer.categoryId");
+
+    return userSearch({
+      term,
+      topicId,
+      categoryId,
+      includeMentionableGroups: true
+    });
+  },
+
   @on("didInsertElement")
   _composerEditorInit() {
-    const topicId = this.get("topic.id");
     const $input = $(this.element.querySelector(".d-editor-input"));
     const $preview = $(this.element.querySelector(".d-editor-preview-wrapper"));
 
     if (this.siteSettings.enable_mentions) {
       $input.autocomplete({
         template: findRawTemplate("user-selector-autocomplete"),
-        dataSource: term =>
-          userSearch({
-            term,
-            topicId,
-            includeMentionableGroups: true
-          }),
+        dataSource: term => this.userSearchTerm.call(this, term),
         key: "@",
         transformComplete: v => v.username || v.name,
         afterComplete() {
@@ -237,7 +245,7 @@ export default Ember.Component.extend({
       reason = I18n.t("composer.error.post_missing");
     } else if (missingReplyCharacters > 0) {
       reason = I18n.t("composer.error.post_length", { min: minimumPostLength });
-      const tl = Discourse.User.currentProp("trust_level");
+      const tl = this.get("currentUser.trust_level");
       if (tl === 0 || tl === 1) {
         reason +=
           "<br/>" +

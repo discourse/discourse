@@ -374,6 +374,13 @@ class Plugin::Instance
     end
   end
 
+  # Applies to all sites in a multisite environment. Ignores plugin.enabled?
+  def register_user_custom_field_type(name, type)
+    reloadable_patch do |plugin|
+      ::User.register_custom_field_type(name, type)
+    end
+  end
+
   def register_seedfu_fixtures(paths)
     paths = [paths] if !paths.kind_of?(Array)
     SeedFu.fixture_paths.concat(paths)

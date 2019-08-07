@@ -1626,7 +1626,7 @@ zh_TW:
     header_dropdown_category_count: "在下拉式功能表中可以顯示多少類別"
     permalink_normalizations: "在匹配永久連結之前應用如下正則表達式，例如：/(topic.*)\\?.*/\\1 將去掉所有主題路徑的參數字元串。格式為使用正則表達式+使用 \\1 等字元串來訪問捕獲內容"
     global_notice: "向所有訪客顯示緊急的、不可駁回的全版面橫幅通知，設定留空將會隱藏它（允許使用HTML）。"
-    disable_edit_notifications: "當 'download_remote_images_to_local' 啟用時禁用系統編輯提醒。"
+    disable_system_edit_notifications: "當 'download_remote_images_to_local' 啟用時禁用系統編輯提醒。"
     likes_notification_consolidation_threshold: "在將通知合併為單個通知之前收到的已通知數。 設定0為禁用。該視窗可以通過`SiteSetting.likes_notification_consolidation_window_mins`進行設定。"
     likes_notification_consolidation_window_mins: "達到門檻值後，將受歡迎的通知合併為單個通知的持續時間（分鐘）。 可以通過`SiteSetting.likes_notification_consolidation_threshold`設定門檻值。"
     automatically_unpin_topics: "當使用者到達底部時自動解除主題置頂。"

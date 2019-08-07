@@ -1692,7 +1692,7 @@ es:
     header_dropdown_category_count: "Cuántas categorías pueden ser mostradas en el dropdown menú de encabezado."
     permalink_normalizations: "Aplicar la siguiente expresión regular antes de los enlaces, por ejemplo: /(topic.*)\\?.*/\\1 despojará las cadenas de consulta de las rutas de los temas. El formato es regex+string usa \\1 etc. para acceder a capturas"
     global_notice: "Mostrar un global banner de URGENCIA o EMERGENCIA que no puedan ocultar, para todos los visitantes. Deja este campo en blanco para ocultarla (se puede utilizar código HTML)."
-    disable_edit_notifications: "Inhabilitar editar notificaciones por el usuario system cuando 'download_remote_images_to_local' este activo."
+    disable_system_edit_notifications: "Inhabilitar editar notificaciones por el usuario system cuando 'download_remote_images_to_local' este activo."
     likes_notification_consolidation_threshold: "Número de notificaciones de \"me gusta\" recibidas antes de que las notificaciones se consoliden en una sola. Pon 0 para deshabilitar. La ventana se puede configurar a través de `SiteSetting.likes_notification_consolidation_window_mins`."
     likes_notification_consolidation_window_mins: "Duración en minutos donde se consolidan las notificaciones preferidas en una sola notificación una vez que se ha alcanzado el umbral. El umbral se puede configurar a través de `SiteSetting.likes_notification_consolidation_threshold`."
     automatically_unpin_topics: "Quitar destacado automáticamente cuando el usuario llega al final del tema."

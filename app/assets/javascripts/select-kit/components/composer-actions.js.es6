@@ -191,10 +191,9 @@ export default DropdownSelectBoxComponent.extend({
       });
     }
 
-    const currentUser = Discourse.User.current();
     const showToggleTopicBump =
-      currentUser &&
-      (currentUser.get("staff") || currentUser.trust_level === 4);
+      this.get("currentUser.staff") ||
+      this.get("currentUser.trust_level") === 4;
 
     if (action === REPLY && showToggleTopicBump) {
       items.push({

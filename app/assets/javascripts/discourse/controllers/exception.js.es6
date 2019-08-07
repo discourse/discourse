@@ -17,7 +17,7 @@ const ButtonBackBright = {
     classes: "btn-primary",
     action: "tryLoading",
     key: "errors.buttons.again",
-    icon: "refresh"
+    icon: "sync"
   },
   ButtonLoadPage = {
     classes: "btn-primary",

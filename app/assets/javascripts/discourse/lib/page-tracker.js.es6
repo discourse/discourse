@@ -37,7 +37,7 @@ export function startPageTracking(router, appEvents) {
       appEvents.trigger("page:changed", {
         url,
         title,
-        currentRouteName: router.get("currentRouteName"),
+        currentRouteName: router.currentRouteName,
         replacedOnlyQueryParams
       });
     });

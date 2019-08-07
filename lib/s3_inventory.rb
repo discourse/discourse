@@ -120,6 +120,8 @@ class S3Inventory
 
   def download_inventory_files_to_tmp_directory
     files.each do |file|
+      next if File.exists?(file[:filename])
+
       log "Downloading inventory file '#{file[:key]}' to tmp directory..."
       failure_message = "Failed to inventory file '#{file[:key]}' to tmp directory."
 
@@ -257,11 +259,8 @@ class S3Inventory
 
   def inventory_id
     @inventory_id ||= begin
-      if bucket_folder_path.present?
-        "#{bucket_folder_path}-#{type}"
-      else
-        type
-      end
+      id = Rails.configuration.multisite ? "original" : type  # TODO: rename multisite path to "uploads"
+      bucket_folder_path.present? ? "#{bucket_folder_path}-#{id}" : id
     end
   end
 

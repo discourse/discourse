@@ -97,8 +97,8 @@ def rebake_posts(opts = {})
   puts "Rebaking post markdown for '#{RailsMultisite::ConnectionManagement.current_db}'"
 
   begin
-    disable_edit_notifications = SiteSetting.disable_edit_notifications
-    SiteSetting.disable_edit_notifications = true
+    disable_system_edit_notifications = SiteSetting.disable_system_edit_notifications
+    SiteSetting.disable_system_edit_notifications = true
 
     total = Post.count
     rebaked = 0
@@ -112,7 +112,7 @@ def rebake_posts(opts = {})
       end
     end
   ensure
-    SiteSetting.disable_edit_notifications = disable_edit_notifications
+    SiteSetting.disable_system_edit_notifications = disable_system_edit_notifications
   end
 
   puts "", "#{rebaked} posts done!", "-" * 50
@@ -425,11 +425,11 @@ def missing_uploads
     public_path = "#{local_store.public_dir}#{path}"
     file_path = nil
 
-    if File.exists?(public_path)
+    if File.file?(public_path)
       file_path = public_path
     else
       tombstone_path = public_path.sub("/uploads/", "/uploads/tombstone/")
-      file_path = tombstone_path if File.exists?(tombstone_path)
+      file_path = tombstone_path if File.file?(tombstone_path)
     end
 
     if file_path.present?
@@ -506,8 +506,8 @@ def missing_uploads
 end
 
 desc 'Finds missing post upload records from cooked HTML content'
-task 'posts:missing_uploads', [:single_site] => :environment do |_, args|
-  if args[:single_site].to_s.downcase == "single_site"
+task 'posts:missing_uploads' => :environment do |_, args|
+  if ENV["RAILS_DB"]
     missing_uploads
   else
     RailsMultisite::ConnectionManagement.each_connection do

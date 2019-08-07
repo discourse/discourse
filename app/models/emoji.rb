@@ -133,9 +133,10 @@ class Emoji
   end
 
   def self.replacement_code(code)
-    hexes = code.split('-'.freeze).map!(&:hex)
-    # Don't replace digits, letters and some symbols
-    hexes.pack("U*".freeze) if hexes[0] > 255
+    code
+      .split('-'.freeze)
+      .map!(&:hex)
+      .pack("U*".freeze)
   end
 
   def self.unicode_replacements
@@ -146,6 +147,10 @@ class Emoji
 
       db['emojis'].each do |e|
         name = e['name']
+
+        # special cased as we prefer to keep these as symbols
+        next if name == 'registered'.freeze
+        next if name == 'copyright'.freeze
         next if name == 'tm'.freeze
 
         code = replacement_code(e['code'])

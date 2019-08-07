@@ -28,7 +28,7 @@ class PluginTxUpdater
     'discourse-patreon',
     'discourse-saved-searches',
     'discourse-solved',
-    'discourse-staff-notes',
+    'discourse-user-notes',
     'discourse-voting'
   ]
 

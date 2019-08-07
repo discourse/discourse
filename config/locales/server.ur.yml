@@ -1695,7 +1695,7 @@ ur:
     header_dropdown_category_count: "ہیڈر ڈراپ ڈاؤن مینو میں کتنے زُمرہ جات ظاہر کیے جا سکتے ہیں۔"
     permalink_normalizations: "دائمی لِنکس میچ کرنے سے پہلے درج ذیل رَیج اَیکس کا اطلاق کریں، مثال کے طور پر: /(topic.*)\\?.*/\\1 ٹاپک روٹس میں سے قُوَیری سٹرِنگ کو نکال دے گا۔ فارمیٹ regex+string ہے، میچ کردہ کو ایکسَیس کرنے کیلئے \\1 وغیرہ کا استعمال کریں"
     global_notice: "تمام زائرین کو فوری،اَیمرجنسی ناقابلِ برطرف گلوبل بَینر نوٹِس دکھائیں، اِسے چھپانے کیلئے خالی جگہ میں تبدیل کریں (HTML کی اجازت)۔"
-    disable_edit_notifications: "سِسٹم صارف کی طرف سے ترمیم اطلاعات کو غیر فعال کریں جب 'download_remote_images_to_local' فعال ہو۔"
+    disable_system_edit_notifications: "سِسٹم صارف کی طرف سے ترمیم اطلاعات کو غیر فعال کریں جب 'download_remote_images_to_local' فعال ہو۔"
     likes_notification_consolidation_threshold: "لائیک اطلاعات کی تعداد جس سے پہلے اطلاعات ایک میں جمع کر دی جائیں۔ غیر فعال کرنے کیلئے 0 پر سَیٹ کریں۔ ونڈو بذریعہ `SiteSetting.likes_notification_consolidation_window_mins` ترتیب دی جا سکتی ہے۔"
     likes_notification_consolidation_window_mins: "منٹوں میں مدت جہاں لائیک اطلاعات کو ایک میں جمع کر دیا جاتا ہے، جب حد تک پہنچ جایا جائے۔ حد کو بذریعہ `SiteSetting.likes_notification_consolidation_threshold` ترتیب دیا جا سکتا ہے۔"
     automatically_unpin_topics: "صارفین جب ٹاپک کے آخر تک پہنچ جائیں تو خود بخود ٹاپکس پر سے پِن ہٹا دیں۔"

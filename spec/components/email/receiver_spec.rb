@@ -708,6 +708,41 @@ describe Email::Receiver do
 
   end
 
+  shared_examples "creates topic with forwarded message as quote" do |destination, address|
+    it "creates topic with forwarded message as quote" do
+      expect { process(:forwarded_email_1) }.to change(Topic, :count)
+
+      topic = Topic.last
+      if destination == :category
+        expect(topic.category).to eq(Category.where(email_in: address).first)
+      else
+        expect(topic.archetype).to eq(Archetype.private_message)
+        expect(topic.allowed_groups).to eq(Group.where(incoming_email: address))
+      end
+
+      post = Post.last
+
+      expect(post.user.email).to eq("ba@bar.com")
+      expect(post.raw).to eq(<<~EOF.chomp
+        @team, can you have a look at this email below?
+
+        [quote]
+        From: Some One &lt;some@one\\.com&gt;
+        To: Ba Bar &lt;ba@bar\\.com&gt;
+        Date: Mon, 1 Dec 2016 00:13:37 \\+0100
+        Subject: Discoursing much?
+
+        Hello Ba Bar,
+
+        Discoursing much today?
+
+        XoXo
+        [/quote]
+      EOF
+      )
+    end
+  end
+
   context "new message to a group" do
 
     fab!(:group) { Fabricate(:group, incoming_email: "team@bar.com|meat@bar.com") }
@@ -818,10 +853,10 @@ describe Email::Receiver do
       expect(user.user_option.email_messages_level).to eq(UserOption.email_level_types[:always])
     end
 
-    context "with forwarded emails enabled" do
+    context "with forwarded emails behaviour set to create replies" do
       before do
         Fabricate(:group, incoming_email: "some_group@bar.com")
-        SiteSetting.enable_forwarded_emails = true
+        SiteSetting.forwarded_emails_behaviour = "create_replies"
       end
 
       it "handles forwarded emails" do
@@ -842,7 +877,7 @@ describe Email::Receiver do
         group.add(Fabricate(:user, email: "ba@bar.com"))
         group.save
 
-        SiteSetting.enable_forwarded_emails = true
+        SiteSetting.forwarded_emails_behaviour = "create_replies"
         expect { process(:forwarded_email_2) }.to change(Topic, :count)
 
         forwarded_post, last_post = *Post.last(2)
@@ -861,6 +896,14 @@ describe Email::Receiver do
         expect { process(:forwarded_email_3) }.to change(Topic, :count)
       end
 
+    end
+
+    context "with forwarded emails behaviour set to quote" do
+      before do
+        SiteSetting.forwarded_emails_behaviour = "quote"
+      end
+
+      include_examples "creates topic with forwarded message as quote", :group, "team@bar.com|meat@bar.com"
     end
 
     context "when message sent to a group has no key and find_related_post_with_key is enabled" do
@@ -1202,6 +1245,22 @@ describe Email::Receiver do
 
         include_examples "does not create staged users", :no_date, Email::Receiver::InvalidPost
       end
+
+      context "with forwarded emails behaviour set to quote" do
+        before do
+          SiteSetting.forwarded_emails_behaviour = "quote"
+        end
+
+        context "with a category which allows strangers" do
+          fab!(:category) { Fabricate(:category, email_in: "team@bar.com", email_in_allow_strangers: true) }
+          include_examples "creates topic with forwarded message as quote", :category, "team@bar.com"
+        end
+
+        context "with a category which doesn't allow strangers" do
+          fab!(:category) { Fabricate(:category, email_in: "team@bar.com", email_in_allow_strangers: false) }
+          include_examples "cleans up staged users", :forwarded_email_1, Email::Receiver::StrangersNotAllowedError
+        end
+      end
     end
 
     context "email is a reply" do
@@ -1220,9 +1279,9 @@ describe Email::Receiver do
         include_examples "does not create staged users", :reply_user_not_matching, Email::Receiver::ReplyUserNotMatchingError
       end
 
-      context "when forwarded emails are enabled" do
+      context "with forwarded emails behaviour set to create replies" do
         before do
-          SiteSetting.enable_forwarded_emails = true
+          SiteSetting.forwarded_emails_behaviour = "create_replies"
         end
 
         context "when a reply contains a forwareded email" do

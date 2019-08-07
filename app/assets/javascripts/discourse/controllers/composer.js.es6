@@ -81,7 +81,7 @@ export function addPopupMenuOptionsCallback(callback) {
 
 export default Ember.Controller.extend({
   topicController: Ember.inject.controller("topic"),
-  application: Ember.inject.controller(),
+  router: Ember.inject.service(),
 
   replyAsNewTopicDraft: Ember.computed.equal(
     "model.draftKey",
@@ -199,11 +199,7 @@ export default Ember.Controller.extend({
     );
   },
 
-  @computed
-  isStaffUser() {
-    const currentUser = this.currentUser;
-    return currentUser && currentUser.get("staff");
-  },
+  isStaffUser: Ember.computed.reads("currentUser.staff"),
 
   canUnlistTopic: Ember.computed.and("model.creatingTopic", "isStaffUser"),
 
@@ -296,7 +292,7 @@ export default Ember.Controller.extend({
 
   @computed("model.creatingPrivateMessage", "model.targetUsernames")
   showWarning(creatingPrivateMessage, usernames) {
-    if (!Discourse.User.currentProp("staff")) {
+    if (!this.get("currentUser.staff")) {
       return false;
     }
 
@@ -734,7 +730,7 @@ export default Ember.Controller.extend({
       });
 
     if (
-      this.get("application.currentRouteName").split(".")[0] === "topic" &&
+      this.router.currentRouteName.split(".")[0] === "topic" &&
       composer.get("topic.id") === this.get("topicModel.id")
     ) {
       staged = composer.get("stagedPost");

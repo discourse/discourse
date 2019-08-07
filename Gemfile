@@ -46,7 +46,7 @@ gem 'redis-namespace'
 
 gem 'active_model_serializers', '~> 0.8.3'
 
-gem 'onebox', '1.9.2'
+gem 'onebox', '1.9.7'
 
 gem 'http_accept_language', '~>2.0.5', require: false
 
@@ -78,6 +78,7 @@ gem 'discourse_image_optim', require: 'image_optim'
 gem 'multi_json'
 gem 'mustache'
 gem 'nokogiri'
+gem 'css_parser', require: false
 
 gem 'omniauth'
 gem 'omniauth-openid'

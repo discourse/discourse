@@ -766,6 +766,14 @@ describe Group do
         .and change { user.title }.from('AAAA').to('BBBB')
     end
 
+    it "can send a notification to the user" do
+      expect { group.add(user, notify: true) }.to change { Notification.count }.by(1)
+
+      notification = Notification.last
+      expect(notification.notification_type).to eq(Notification.types[:membership_request_accepted])
+      expect(notification.user_id).to eq(user.id)
+    end
+
     context 'when adding a user into a public group' do
       fab!(:category) { Fabricate(:category) }
 

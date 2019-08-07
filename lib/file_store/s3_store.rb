@@ -43,6 +43,7 @@ module FileStore
       cache_file(file, File.basename(path)) if opts[:cache_locally]
       options = {
         acl: opts[:private_acl] ? "private" : "public-read",
+        cache_control: 'max-age=31556952, public, immutable',
         content_type: opts[:content_type].presence || MiniMime.lookup_by_filename(filename)&.content_type
       }
       # add a "content disposition" header for "attachments"
@@ -177,7 +178,12 @@ module FileStore
 
     def presigned_url(url, force_download: false, filename: false)
       opts = { expires_in: S3Helper::DOWNLOAD_URL_EXPIRES_AFTER_SECONDS }
-      opts[:response_content_disposition] = "attachment; filename=\"#{filename}\"" if force_download && filename
+      if force_download && filename
+        opts[:response_content_disposition] = ActionDispatch::Http::ContentDisposition.format(
+          disposition: "attachment", filename: filename
+        )
+      end
+
       obj = @s3_helper.object(url)
       obj.presigned_url(:get, opts)
     end

@@ -54,7 +54,16 @@ const User = RestModel.extend({
     return UserDraftsStream.create({ user: this });
   },
 
-  staff: Ember.computed.or("admin", "moderator"),
+  staff: Ember.computed("admin", "moderator", {
+    get() {
+      return this.admin || this.moderator;
+    },
+
+    // prevents staff property to be overridden
+    set() {
+      return this.admin || this.moderator;
+    }
+  }),
 
   destroySession() {
     return ajax(`/session/${this.username}`, { type: "DELETE" });
@@ -750,7 +759,12 @@ const User = RestModel.extend({
 
     return _.uniq(titles)
       .sort()
-      .map(Ember.Handlebars.Utils.escapeExpression);
+      .map(title => {
+        return {
+          name: Ember.Handlebars.Utils.escapeExpression(title),
+          id: title
+        };
+      });
   },
 
   @computed("user_option.text_size_seq", "user_option.text_size")

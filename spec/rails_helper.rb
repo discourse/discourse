@@ -264,18 +264,10 @@ RSpec.configure do |config|
   # force a rollback after using a multisite connection.
   def test_multisite_connection(name)
     RailsMultisite::ConnectionManagement.with_connection(name) do
-      spec_exception = nil
-
-      ActiveRecord::Base.transaction do
-        begin
-          yield
-        rescue Exception => spec_exception
-        ensure
-          raise ActiveRecord::Rollback
-        end
+      ActiveRecord::Base.transaction(joinable: false) do
+        yield
+        raise ActiveRecord::Rollback
       end
-
-      raise spec_exception if spec_exception
     end
   end
 

@@ -244,6 +244,9 @@ Discourse::Application.routes.draw do
       get 'robots' => 'robots_txt#show'
       put 'robots.json' => 'robots_txt#update'
       delete 'robots.json' => 'robots_txt#reset'
+
+      resource :email_style, only: [:show, :update]
+      get 'email_style/:field' => 'email_styles#show', constraints: { field: /html|css/ }
     end
 
     resources :embeddable_hosts, constraints: AdminConstraint.new

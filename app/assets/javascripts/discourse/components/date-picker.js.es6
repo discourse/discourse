@@ -41,7 +41,7 @@ export default Ember.Component.extend({
             nextMonth: I18n.t("dates.next_month"),
             months: moment.months(),
             weekdays: moment.weekdays(),
-            weekdaysShort: moment.weekdaysShort()
+            weekdaysShort: moment.weekdaysMin()
           },
           onSelect: date => this._handleSelection(date)
         };

@@ -898,12 +898,13 @@ task "uploads:recover" => :environment do
   require_dependency "upload_recovery"
 
   dry_run = ENV["DRY_RUN"].present?
+  stop_on_error = ENV["STOP_ON_ERROR"].present?
 
   if ENV["RAILS_DB"]
-    UploadRecovery.new(dry_run: dry_run).recover
+    UploadRecovery.new(dry_run: dry_run, stop_on_error: stop_on_error).recover
   else
     RailsMultisite::ConnectionManagement.each_connection do |db|
-      UploadRecovery.new(dry_run: dry_run).recover
+      UploadRecovery.new(dry_run: dry_run, stop_on_error: stop_on_error).recover
     end
   end
 end

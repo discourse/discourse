@@ -183,6 +183,32 @@ export default Ember.Component.extend({
   },
 
   actions: {
+    onChangeEndDate(date) {
+      const startDate = moment(this.startDate);
+      const newEndDate = moment(date).endOf("day");
+
+      if (newEndDate.isSameOrAfter(startDate)) {
+        this.set("endDate", newEndDate.format("YYYY-MM-DD"));
+      } else {
+        this.set("endDate", startDate.endOf("day").format("YYYY-MM-DD"));
+      }
+
+      this.send("refreshReport");
+    },
+
+    onChangeStartDate(date) {
+      const endDate = moment(this.endDate);
+      const newStartDate = moment(date).startOf("day");
+
+      if (newStartDate.isSameOrBefore(endDate)) {
+        this.set("startDate", newStartDate.format("YYYY-MM-DD"));
+      } else {
+        this.set("startDate", endDate.startOf("day").format("YYYY-MM-DD"));
+      }
+
+      this.send("refreshReport");
+    },
+
     applyFilter(id, value) {
       let customFilters = this.get("filters.customFilters") || {};
 

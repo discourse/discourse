@@ -16,12 +16,10 @@ export default Ember.Controller.extend({
   pmTaggingEnabled: Ember.computed.alias("site.can_tag_pms"),
   tagId: null,
 
-  @computed("user.viewingSelf")
-  showNewPM(viewingSelf) {
-    return (
-      viewingSelf && Discourse.User.currentProp("can_send_private_messages")
-    );
-  },
+  showNewPM: Ember.computed.and(
+    "user.viewingSelf",
+    "currentUser.can_send_private_messages"
+  ),
 
   @computed("selected.[]", "bulkSelectEnabled")
   hasSelection(selected, bulkSelectEnabled) {

@@ -36,8 +36,8 @@ class TopicEmbed < ActiveRecord::Base
     if SiteSetting.embed_truncate
       contents = first_paragraph_from(contents)
     end
-    contents ||= +''
-    contents << imported_from_html(url)
+    contents ||= ''
+    contents = +contents << imported_from_html(url)
 
     url = normalize_url(url)
 
@@ -227,7 +227,7 @@ class TopicEmbed < ActiveRecord::Base
     return result unless result.blank?
 
     # If there is no first paragaph, return the first div (onebox)
-    doc.css('div').first
+    doc.css('div').first.to_s
   end
 
   def self.expanded_for(post)

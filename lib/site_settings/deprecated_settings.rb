@@ -15,7 +15,8 @@ module SiteSettings::DeprecatedSettings
     ['twitter_summary_large_image_url', 'twitter_summary_large_image', false, '2.3'],
     ['push_notifications_icon_url', 'push_notifications_icon', false, '2.3'],
     ['show_email_on_profile', 'moderators_view_emails', true, '2.4'],
-    ['allow_moderators_to_create_categories', 'moderators_create_categories', true, '2.4']
+    ['allow_moderators_to_create_categories', 'moderators_create_categories', true, '2.4'],
+    ['disable_edit_notifications', 'disable_system_edit_notifications', true, '2.4']
   ]
 
   def setup_deprecated_methods

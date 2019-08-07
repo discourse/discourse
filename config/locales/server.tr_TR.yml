@@ -949,7 +949,7 @@ tr_TR:
     dominating_topic_minimum_percent: "Konuyu domine ettiğine dair uyarı almadan önce konudaki gönderilerin yüzde kaçının kullanıcıya ait olması gerekir."
     disable_avatar_education_message: "Avatar değiştirme için eğitici iletileri kapat."
     suppress_uncategorized_badge: "Kategorisiz konular için olan rozeti konu listesinde gösterme."
-    disable_edit_notifications: " 'download_remote_images_to_local' etkin olduğunda, sistem kullanıcısından gelen düzenleme bildirilerini devre dışı bırakır"
+    disable_system_edit_notifications: " 'download_remote_images_to_local' etkin olduğunda, sistem kullanıcısından gelen düzenleme bildirilerini devre dışı bırakır"
     automatically_unpin_topics: "Kullanıcı sayfa sonuna eriştiğinde tutturulmuş konuları otomatik olarak sayfadan ayır."
     read_time_word_count: "Tahmini okuma süresini hesaplamak için dakika başına kelime sayısı."
     full_name_required: "Kullanıcı profili için tam ad zorunlu bir alandır."

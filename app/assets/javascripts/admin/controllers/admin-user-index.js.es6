@@ -134,7 +134,7 @@ export default Ember.Controller.extend(CanCheckEmails, {
       return this.model.resetBounceScore();
     },
     approve() {
-      return this.model.approve();
+      return this.model.approve(this.currentUser);
     },
     deactivate() {
       return this.model.deactivate();

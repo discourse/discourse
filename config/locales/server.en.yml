@@ -184,6 +184,7 @@ en:
         one: is the wrong length (should be %{count} character)
         other: is the wrong length (should be %{count} characters)
       other_than: "must be other than %{count}"
+      sso_overrides_username: "Username needs to be updated on SSO provider side, since `sso_overrides_username` setting is enabled."
     template:
       body: ! "There were problems with the following fields:"
       header:
@@ -1306,6 +1307,7 @@ en:
     force_https_warning: "Your website is using SSL. But `<a href='%{base_path}/admin/site_settings/category/all_results?filter=force_https'>force_https</a>` is not yet enabled in your site settings."
     out_of_date_themes: "Updates are available for the following themes:"
     unreachable_themes: "We were unable to check for updates on the following themes:"
+    watched_word_regexp_error: "The regular expression for %{action} watched words is invalid. Please check your <a href='%{base_path}/admin/logs/watched_words'>Watched Word settings</a>, or disable the 'watched words regular expressions' site setting."
 
   site_settings:
     censored_words: "Words that will be automatically replaced with &#9632;&#9632;&#9632;&#9632;"
@@ -1812,9 +1814,11 @@ en:
     attachment_content_type_blacklist: "List of keywords used to blacklist attachments based on the content type."
     attachment_filename_blacklist: "List of keywords used to blacklist attachments based on the filename."
 
-    enable_forwarded_emails: "[BETA] Allow users to create a topic by forwarding an email in."
+    forwarded_emails_behaviour: "How to treat a forwarded email to Discourse"
     always_show_trimmed_content: "Always show trimmed part of incoming emails. WARNING: might reveal email addresses."
     private_email: "Don't include content from posts or topics in email title or email body. NOTE: also disables digest emails."
+    email_total_attachment_size_limit_kb: "Max total size of files attached to outgoing emails. Set to 0 to disable sending of attachments."
+    post_excerpts_in_emails: "In notification emails, always send excerpts instead of full posts"
 
     manual_polling_enabled: "Push emails using the API for email replies."
     pop3_polling_enabled: "Poll via POP3 for email replies."
@@ -1856,6 +1860,7 @@ en:
     suppress_digest_email_after_days: "Suppress summary emails for users not seen on the site for more than (n) days."
     digest_suppress_categories: "Suppress these categories from summary emails."
     disable_digest_emails: "Disable summary emails for all users."
+    apply_custom_styles_to_digest: "Custom email template and css are applied to summary emails."
     email_accent_bg_color: "The accent color to be used as the background of some elements in HTML emails. Enter a color name ('red') or hex value ('#FF0000')."
     email_accent_fg_color: "The color of text rendered on the email bg color in HTML emails. Enter a color name ('white') or hex value ('#FFFFFF')."
     email_link_color: "The color of links in HTML emails. Enter a color name ('blue') or hex value ('#0000FF')."
@@ -1908,7 +1913,7 @@ en:
 
     global_notice: "Display an URGENT, EMERGENCY, non-dismissible global banner notice to all visitors, change to blank to hide it (HTML allowed)."
 
-    disable_edit_notifications: "Disables edit notifications by the system user when 'download_remote_images_to_local' is active."
+    disable_system_edit_notifications: "Disables edit notifications by the system user when 'download_remote_images_to_local' is active."
 
     likes_notification_consolidation_threshold: "Number of liked notifications received before the notifications are consolidated into a single one. Set to 0 to disable. The window can be configured via `SiteSetting.likes_notification_consolidation_window_mins`."
 
@@ -2122,6 +2127,7 @@ en:
     timeout_expired: "Account login timed out, please try logging in again."
     no_email: "No email address was provided. Please contact the site's administrator."
     email_error: "An account could not be registered with the email address <b>%{email}</b>. Please contact the site's administrator."
+    missing_secret: "SSO authentication failed due to missing secret. Contact the site administrators to fix this problem."
 
   original_poster: "Original Poster"
   most_posts: "Most Posts"
@@ -4233,6 +4239,9 @@ en:
       other: "You must select at least %{count} tags."
     upload_row_too_long: "The CSV file should have one tag per line. Optionally the tag can be followed by a comma, then the tag group name."
     forbidden:
+      invalid:
+        one: "The tag you selected cannot be used"
+        other: "None of the tags you selected can be used"
       in_this_category: '"%{tag_name}" cannot be used in this category'
       restricted_to:
         one: '"%{tag_name}" is restricted to the "%{category_names}" category'
@@ -4488,6 +4497,9 @@ en:
       agree_and_keep:
         title: "Keep Post"
         description: "Agree with flag and keep the post unchanged."
+      agree_and_keep_hidden:
+        title: "Keep Post Hidden"
+        description: "Agree with flag and leave the post hidden."
       agree_and_suspend:
         title: "Suspend User"
         description: "Agree with flag and suspend the user."
@@ -4552,3 +4564,6 @@ en:
         title: "Delete User"
         confirm: "Are you sure you want to delete that user? This will remove all of their posts and block their email and IP address."
         reason: "Deleted via review queue"
+
+  email_style:
+    html_missing_placeholder: "The html template must include %{placeholder}"

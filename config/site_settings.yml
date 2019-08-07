@@ -307,6 +307,9 @@ basic:
   vapid_private_key:
     default: ""
     hidden: true
+  vapid_base_url:
+    default: ""
+    hidden: true
 
 login:
   invite_only:
@@ -908,6 +911,7 @@ email:
   disable_digest_emails:
     default: false
     client: true
+  apply_custom_styles_to_digest: true
   email_accent_bg_color: "#2F70AC"
   email_accent_fg_color: "#FFFFFF"
   email_link_color: "#006699"
@@ -1018,9 +1022,25 @@ email:
     type: list
     default: "smime.p7s|signature.asc|winmail.dat"
     list_type: compact
-  enable_forwarded_emails: false
+  forwarded_emails_behaviour:
+    type: enum
+    default: hide
+    choices:
+      - hide
+      - quote
+      - create_replies
   always_show_trimmed_content: false
   private_email: false
+  email_custom_template:
+    default: ""
+    hidden: true
+  email_custom_css:
+    default: ""
+    hidden: true
+  email_total_attachment_size_limit_kb:
+    default: 0
+    max: 51200
+  post_excerpts_in_emails: false
 
 files:
   max_image_size_kb:
@@ -1838,7 +1858,7 @@ uncategorized:
     hidden: true
     default: true
 
-  disable_edit_notifications: true
+  disable_system_edit_notifications: true
 
   likes_notification_consolidation_threshold:
     default: 3

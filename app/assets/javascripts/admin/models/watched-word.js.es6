@@ -42,7 +42,8 @@ WatchedWord.reopenClass({
           name: I18n.t("admin.watched_words.actions." + n),
           words: actions[n],
           count: actions[n].length,
-          regularExpressions: list.regular_expressions
+          regularExpressions: list.regular_expressions,
+          compiledRegularExpression: list.compiled_regular_expressions[n]
         });
       });
     });

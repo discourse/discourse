@@ -921,6 +921,13 @@ describe PrettyText do
       expect(PrettyText.cook("☺")).to match(/\:slight_smile\:/)
     end
 
+    it "replaces digits" do
+      expect(PrettyText.cook("🔢")).to match(/\:1234\:/)
+      expect(PrettyText.cook("1️⃣")).to match(/\:one\:/)
+      expect(PrettyText.cook("#️⃣")).to match(/\:hash\:/)
+      expect(PrettyText.cook("*️⃣")).to match(/\:asterisk\:/)
+    end
+
     it "doesn't replace unicode emoji if emoji is disabled" do
       SiteSetting.enable_emoji = false
       expect(PrettyText.cook("💣")).not_to match(/\:bomb\:/)
@@ -1086,15 +1093,88 @@ HTML
     expect(PrettyText.cook("abcde ^:;-P")).to include("emoji")
   end
 
-  it 'can censor words correctly' do
-    begin
-      ['apple', 'banana'].each { |w| Fabricate(:watched_word, word: w, action: WatchedWord.actions[:censor]) }
-      expect(PrettyText.cook('yay banana yay')).not_to include('banana')
-      expect(PrettyText.cook('yay `banana` yay')).not_to include('banana')
-      expect(PrettyText.cook("# banana")).not_to include('banana')
-      expect(PrettyText.cook("# banana")).to include("\u25a0\u25a0")
-    ensure
-      $redis.flushall
+  describe "censoring" do
+    after(:all) { $redis.flushall }
+
+    def expect_cooked_match(raw, expected_cooked)
+      expect(PrettyText.cook(raw)).to eq(expected_cooked)
+    end
+
+    context "with basic words" do
+      fab!(:watched_words) do
+        ["shucks", "whiz", "whizzer", "a**le", "badword*", "shuck$", "café", "$uper"].each do |word|
+          Fabricate(:watched_word, action: WatchedWord.actions[:censor], word: word)
+        end
+      end
+
+      it "works correctly" do
+        expect_cooked_match("aw shucks, golly gee whiz.",
+                            "<p>aw ■■■■■■, golly gee ■■■■.</p>")
+      end
+
+      it "doesn't censor words unless they have boundaries." do
+        expect_cooked_match("you are a whizzard! I love cheesewhiz. Whiz.",
+                            "<p>you are a whizzard! I love cheesewhiz. ■■■■.</p>")
+      end
+
+      it "censors words even if previous partial matches exist." do
+        expect_cooked_match("you are a whizzer! I love cheesewhiz. Whiz.",
+                            "<p>you are a ■■■■■■■! I love cheesewhiz. ■■■■.</p>")
+      end
+
+      it "won't break links by censoring them." do
+        expect_cooked_match("The link still works. [whiz](http://www.whiz.com)",
+                            '<p>The link still works. <a href="http://www.whiz.com" rel="nofollow noopener">■■■■</a></p>')
+      end
+
+      it "escapes regexp characters" do
+        expect_cooked_match(
+          "I have a pen, I have an a**le",
+          "<p>I have a pen, I have an ■■■■■</p>"
+        )
+      end
+
+      it "works for words ending in non-word characters" do
+        expect_cooked_match(
+          "Aw shuck$, I can't fix the problem with money",
+          "<p>Aw ■■■■■■, I can't fix the problem with money</p>")
+      end
+
+      it "works for words ending in accented characters" do
+        expect_cooked_match(
+          "Let's go to a café today",
+          "<p>Let's go to a ■■■■ today</p>")
+      end
+
+      it "works for words starting with non-word characters" do
+        expect_cooked_match(
+          "Discourse is $uper amazing",
+          "<p>Discourse is ■■■■■ amazing</p>")
+      end
+
+      it "handles * as wildcard" do
+        expect_cooked_match(
+          "No badword or apple here plz.",
+          "<p>No ■■■■■■■ or ■■■■■ here plz.</p>")
+      end
+    end
+
+    context "with watched words as regular expressions" do
+      before { SiteSetting.watched_words_regular_expressions = true }
+      it "supports words as regular expressions" do
+        ["xyz*", "plee+ase"].each do |word|
+          Fabricate(:watched_word, action: WatchedWord.actions[:censor], word: word)
+        end
+
+        expect_cooked_match("Pleased to meet you, but pleeeease call me later, xyz123",
+        "<p>Pleased to meet you, but ■■■■■■■■■ call me later, ■■■123</p>")
+      end
+
+      it "supports custom boundaries" do
+        Fabricate(:watched_word, action: WatchedWord.actions[:censor], word: "\\btown\\b")
+        expect_cooked_match("Meet downtown in your town at the townhouse on Main St.",
+                            "<p>Meet downtown in your ■■■■ at the townhouse on Main St.</p>")
+      end
     end
   end
 
