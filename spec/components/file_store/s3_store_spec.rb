@@ -50,6 +50,7 @@ describe FileStore::S3Store do
         s3_bucket.expects(:object).with("original/1X/#{upload.sha1}.png").returns(s3_object)
         s3_object.expects(:put).with(
           acl: "public-read",
+          cache_control: "max-age=31556952, public, immutable",
           content_type: "image/png",
           body: uploaded_file).returns(Aws::S3::Types::PutObjectOutput.new(etag: "\"#{etag}\""))
 
@@ -88,6 +89,7 @@ describe FileStore::S3Store do
           s3_bucket.expects(:object).with("original/1X/#{upload.sha1}.pdf").returns(s3_object)
           s3_object.expects(:put).with(
             acl: "private",
+            cache_control: "max-age=31556952, public, immutable",
             content_type: "application/pdf",
             content_disposition: "attachment; filename=\"#{upload.original_filename}\"",
             body: uploaded_file).returns(Aws::S3::Types::PutObjectOutput.new(etag: "\"#{etag}\""))
@@ -104,6 +106,7 @@ describe FileStore::S3Store do
           s3_bucket.expects(:object).with("original/1X/#{upload.sha1}.png").returns(s3_object).at_least_once
           s3_object.expects(:put).with(
             acl: "public-read",
+            cache_control: "max-age=31556952, public, immutable",
             content_type: "image/png",
             body: uploaded_file).returns(Aws::S3::Types::PutObjectOutput.new(etag: "\"#{etag}\""))
 
