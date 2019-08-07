@@ -105,6 +105,16 @@ describe TopicEmbed do
 
         expect(post.raw).to include(long_content)
       end
+
+      it 'looks at first div when there is no paragraph' do
+
+        no_para = "<div><h>testing it</h></div>"
+
+        SiteSetting.embed_truncate = true
+        post = TopicEmbed.import(user, url, title, no_para)
+
+        expect(post.raw).to include("testing it")
+      end
     end
   end
 
