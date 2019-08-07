@@ -159,7 +159,7 @@ export default Ember.Component.extend({
     const topicId = this.get("topic.id");
     // maybe this is a brand new topic, so grab category from composer
     const categoryId =
-      this.get("topic.category_id") || this.get("composer._categoryId");
+      this.get("topic.category_id") || this.get("composer.categoryId");
 
     return userSearch({
       term,
