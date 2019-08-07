@@ -1022,7 +1022,13 @@ email:
     type: list
     default: "smime.p7s|signature.asc|winmail.dat"
     list_type: compact
-  enable_forwarded_emails: false
+  forwarded_emails_behaviour:
+    type: enum
+    default: hide
+    choices:
+      - hide
+      - quote
+      - create_replies
   always_show_trimmed_content: false
   private_email: false
   email_custom_template:
