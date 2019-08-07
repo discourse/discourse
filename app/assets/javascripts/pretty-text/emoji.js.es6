@@ -26,15 +26,18 @@ export function buildReplacementsList(emojiReplacements) {
     .sort()
     .reverse()
     .map(emoji => {
-      return emoji.split("").map(chr => {
-        return (
-          "\\u" +
-          chr
-            .charCodeAt(0)
-            .toString(16)
-            .padStart(4, "0")
-        );
-      }).join("");
+      return emoji
+        .split("")
+        .map(chr => {
+          return (
+            "\\u" +
+            chr
+              .charCodeAt(0)
+              .toString(16)
+              .padStart(4, "0")
+          );
+        })
+        .join("");
     })
     .join("|");
 }
