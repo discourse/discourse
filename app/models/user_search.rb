@@ -5,6 +5,8 @@ require_dependency 'search'
 
 class UserSearch
 
+  MAX_SIZE_PRIORITY_MENTION ||= 500
+
   def initialize(term, opts = {})
     @term = term
     @term_like = "#{term.downcase.gsub("_", "\\_")}%"
@@ -116,19 +118,19 @@ class UserSearch
     end
 
     # 3. category matches
-    # 10,11,12: trust level groups (tl0/1/2) explicitly bypassed
-    # may amend this in future to allow them if count in the group
-    # is small enough
     if secure_category_id
       in_category = filtered_by_term_users
-        .where(<<~SQL, secure_category_id)
+        .where(<<~SQL, secure_category_id, MAX_SIZE_PRIORITY_MENTION)
           users.id IN (
             SELECT gu.user_id
             FROM group_users gu
             WHERE group_id IN (
               SELECT group_id FROM category_groups
-              WHERE category_id = ?
-            ) AND group_id NOT IN (10,11,12)
+              JOIN groups g ON group_id = g.id
+              WHERE
+                category_id = ? AND
+                user_count < ?
+            )
             LIMIT 200
           )
           SQL
