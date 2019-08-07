@@ -113,7 +113,12 @@ module FileStore
     def url_for(upload, force_download: false)
       if upload.private? || force_download
         opts = { expires_in: S3Helper::DOWNLOAD_URL_EXPIRES_AFTER_SECONDS }
-        opts[:response_content_disposition] = "attachment; filename=\"#{upload.original_filename}\"" if force_download
+
+        if force_download
+          opts[:response_content_disposition] = ActionDispatch::Http::ContentDisposition.format(
+            disposition: "attachment", filename: upload.original_filename
+          )
+        end
 
         obj = @s3_helper.object(get_upload_key(upload))
         url = obj.presigned_url(:get, opts)
