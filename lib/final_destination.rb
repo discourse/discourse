@@ -238,7 +238,7 @@ class FinalDestination
       old_port = @uri.port
       location = "#{location}##{@uri.fragment}" if @preserve_fragment_url && @uri.fragment.present?
       location = "#{@uri.scheme}://#{@uri.host}#{location}" if location[0] == "/"
-      @uri = redirect_uri
+      @uri = uri(location)
       @limit -= 1
 
       # https redirect, so just cache that whole new domain is https
