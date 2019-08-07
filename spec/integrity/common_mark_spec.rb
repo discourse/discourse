@@ -26,6 +26,7 @@ describe "CommonMark" do
         html.gsub!('<br />', '<br>')
         html.gsub!('<hr />', '<hr>')
         html.gsub!(/<img([^>]+) \/>/, "<img\\1>")
+        html.gsub!('©', "<img src=\"/images/emoji/twitter/copyright.png?v=#{Emoji::EMOJI_VERSION}\" title=\":copyright:\" class=\"emoji\" alt=\":copyright:\">")
 
         SiteSetting.enable_markdown_linkify = false
         cooked = PrettyText.markdown(md, sanitize: false)
