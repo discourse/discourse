@@ -4,7 +4,6 @@
 
 require 'rails_helper'
 require 'theme_store/tgz_importer'
-require 'import_export/zip_utils'
 
 describe ThemeStore::TgzImporter do
   before do
@@ -24,11 +23,12 @@ describe ThemeStore::TgzImporter do
 
   it "can import a simple zipped theme" do
     Dir.chdir(@temp_folder) do
-      ImportExport::ZipUtils.new.zip_directory(@temp_folder, 'test')
+      Compression::Zip.new.compress(@temp_folder, 'test')
       FileUtils.rm_rf('test/')
     end
 
-    importer = ThemeStore::TgzImporter.new("#{@temp_folder}/test.zip")
+    file_name = 'test.zip'
+    importer = ThemeStore::TgzImporter.new("#{@temp_folder}/#{file_name}", file_name)
     importer.import!
 
     expect(importer["hello.txt"]).to eq("hello world")
@@ -42,7 +42,8 @@ describe ThemeStore::TgzImporter do
       `tar -cvzf test.tar.gz test/* 2> /dev/null`
     end
 
-    importer = ThemeStore::TgzImporter.new("#{@temp_folder}/test.tar.gz")
+    file_name = 'test.tar.gz'
+    importer = ThemeStore::TgzImporter.new("#{@temp_folder}/#{file_name}", file_name)
     importer.import!
 
     expect(importer["hello.txt"]).to eq("hello world")

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'import_export/zip_utils'
+require_dependency 'compression/engine'
 
 module ThemeStore; end
 
@@ -8,25 +8,24 @@ class ThemeStore::TgzImporter
 
   attr_reader :url
 
-  def initialize(filename)
+  def initialize(filename, original_filename)
     @temp_folder = "#{Pathname.new(Dir.tmpdir).realpath}/discourse_theme_#{SecureRandom.hex}"
     @filename = filename
+    @original_filename = original_filename
   end
 
   def import!
     FileUtils.mkdir(@temp_folder)
 
     Dir.chdir(@temp_folder) do
-      if @filename.include?('.zip')
-        ImportExport::ZipUtils.new.unzip_directory(@temp_folder, @filename)
-
-        # --strip 1 equivalent
-        FileUtils.mv(Dir.glob("#{@temp_folder}/*/*"), @temp_folder)
-      else
-        Discourse::Utils.execute_command("tar", "-xzvf", @filename, "--strip", "1")
+      Compression::Engine.engine_for(@original_filename).tap do |engine|
+        engine.decompress(@temp_folder, @filename)
       end
+
+      # --strip 1 equivalent
+      FileUtils.mv(Dir.glob("#{@temp_folder}/*/*"), @temp_folder)
     end
-  rescue RuntimeError
+  rescue RuntimeError, Compression::Zip::ExtractFailed
     raise RemoteTheme::ImportError, I18n.t("themes.import_error.unpack_failed")
   end
 

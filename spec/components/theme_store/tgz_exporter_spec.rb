@@ -63,7 +63,7 @@ describe ThemeStore::TgzExporter do
     file = 'discourse-header-icons.zip'
     dest = 'discourse-header-icons'
     Dir.chdir(dir) do
-      ImportExport::ZipUtils.new.unzip_directory(dir, file, allow_non_root_folder: true)
+      Compression::Zip.new.decompress(dir, file, allow_non_root_folder: true)
       `rm #{file}`
 
       folders = Dir.glob("**/*").reject { |f| File.file?(f) }
