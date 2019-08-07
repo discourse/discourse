@@ -227,7 +227,7 @@ class TopicEmbed < ActiveRecord::Base
     return result unless result.blank?
 
     # If there is no first paragaph, return the first div (onebox)
-    doc.css('div').first
+    doc.css('div').first.to_s
   end
 
   def self.expanded_for(post)
