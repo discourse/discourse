@@ -16,7 +16,7 @@ class Cache < ActiveSupport::Cache::Store
   end
 
   def redis
-    $redis
+    $cache_redis
   end
 
   def reconnect

@@ -153,6 +153,7 @@ class GlobalSetting
   def self.reset_redis_config!
     @config = nil
     @message_bus_config = nil
+    @cache_redis_config = nil
   end
 
   def self.redis_config
@@ -195,6 +196,29 @@ class GlobalSetting
         c[:db] = message_bus_redis_db if message_bus_redis_db != 0
         c[:db] = 1 if Rails.env == "test"
         c[:id] = nil if message_bus_redis_skip_client_commands
+
+        c.freeze
+      end
+  end
+
+  def self.cache_redis_config
+    return redis_config unless cache_redis_enabled
+    @cache_redis_config ||=
+      begin
+        c = {}
+        c[:host] = cache_redis_host if cache_redis_host
+        c[:port] = cache_redis_port if cache_redis_port
+
+        if cache_redis_slave_host && cache_redis_slave_port
+          c[:slave_host] = cache_redis_slave_host
+          c[:slave_port] = cache_redis_slave_port
+          c[:connector] = DiscourseRedis::Connector
+        end
+
+        c[:password] = cache_redis_password if cache_redis_password.present?
+        c[:db] = cache_redis_db if cache_redis_db != 0
+        c[:db] = 1 if Rails.env == "test"
+        c[:id] = nil if cache_redis_skip_client_commands
 
         c.freeze
       end
