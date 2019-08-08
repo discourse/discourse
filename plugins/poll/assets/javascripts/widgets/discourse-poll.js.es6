@@ -402,7 +402,7 @@ createWidget("discourse-poll-info", {
       }
     }
 
-    if (!attrs.isClosed && !attrs.showResults && poll.get("public")) {
+    if (!attrs.isClosed && !attrs.showResults && poll.get("public") && (poll.get("results") !== "staff_only")) {
       contents.push(infoTextHtml(I18n.t("poll.public.title")));
     }
 
@@ -418,7 +418,9 @@ createWidget("discourse-poll-buttons", {
     const { poll, post } = attrs;
     const topicArchived = post.get("topic.archived");
     const closed = attrs.isClosed;
-    const hideResultsDisabled = closed || topicArchived;
+    const staff_only = poll.get("results") === "staff_only";
+    const is_staff = this.currentUser && this.currentUser.get("staff");
+    const hideResultsDisabled = !staff_only && (closed || topicArchived);
 
     if (attrs.isMultiple && !hideResultsDisabled) {
       const castVotesDisabled = !attrs.canCastVotes;
@@ -452,6 +454,8 @@ createWidget("discourse-poll-buttons", {
         contents.push(infoTextHtml(I18n.t("poll.results.vote.title")));
       } else if (poll.get("results") === "on_close" && !closed) {
         contents.push(infoTextHtml(I18n.t("poll.results.closed.title")));
+      } else if (poll.get("results") === "staff_only" && !is_staff) {
+        contents.push(infoTextHtml(I18n.t("poll.results.staff.title")));
       } else {
         contents.push(
           this.attach("button", {
@@ -491,7 +495,7 @@ createWidget("discourse-poll-buttons", {
     if (
       this.currentUser &&
       (this.currentUser.get("id") === post.get("user_id") ||
-        this.currentUser.get("staff")) &&
+        is_staff) &&
       !topicArchived
     ) {
       if (closed) {
@@ -540,7 +544,9 @@ export default createWidget("discourse-poll", {
     const showResults =
       post.get("topic.archived") ||
       this.isClosed() ||
-      (poll.get("results") !== "on_close" && this.hasVoted());
+      (poll.get("results") !== "on_close" &&
+        this.hasVoted() &&
+        !(poll.get("results") === "staff_only"));
 
     return { loading: false, showResults };
   },
@@ -721,6 +727,13 @@ export default createWidget("discourse-poll", {
         attrs.poll.setProperties(poll);
         if (attrs.poll.get("results") !== "on_close") {
           state.showResults = true;
+        }
+        if (attrs.poll.get("results") === "staff_only") {
+          if (this.currentUser && this.currentUser.get("staff")) {
+            state.showResults = true;
+          } else {
+            state.showResults = false;
+          }
         }
       })
       .catch(error => {
