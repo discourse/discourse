@@ -219,7 +219,7 @@ class RemoteTheme < ActiveRecord::Base
         override = normalize_override(colors[variable_name])
         color_scheme_color = scheme.color_scheme_colors.to_a.find { |c| c.name == variable_name }
         if override
-          color_scheme_color = color_scheme_color || scheme.color_scheme_colors.build(name: variable_name)
+          color_scheme_color ||= scheme.color_scheme_colors.build(name: variable_name)
           color_scheme_color.hex = override
           theme.notify_color_change(color_scheme_color)
         elsif color_scheme_color # No longer specified in about.json, delete record
