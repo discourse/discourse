@@ -22,7 +22,7 @@ module Onebox
       private
 
       def get_oembed_url
-        if id = url.scan(/\A.*?-([a-zA-Z0-9]*)\Z/).flatten.first
+        if id = url.scan(/([a-zA-Z0-9]*)\Z/).flatten.first
           oembed_url = "https://simplecast.com/s/#{id}"
         else
           oembed_url = url
