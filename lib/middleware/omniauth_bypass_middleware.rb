@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "csrf_token_verifier"
+
 # omniauth loves spending lots cycles in its magic middleware stack
 # this middleware bypasses omniauth middleware and only hits it when needed
 class Middleware::OmniauthBypassMiddleware
@@ -19,6 +21,9 @@ class Middleware::OmniauthBypassMiddleware
     end
 
     @omniauth.before_request_phase do |env|
+      # Check for CSRF token
+      CSRFTokenVerifier.new.call(env)
+
       # If the user is trying to reconnect to an existing account, store in session
       request = ActionDispatch::Request.new(env)
       request.session[:auth_reconnect] = !!request.params["reconnect"]
