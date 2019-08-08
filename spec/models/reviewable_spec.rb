@@ -239,33 +239,50 @@ RSpec.describe Reviewable, type: :model do
     fab!(:moderator) { Fabricate(:moderator) }
 
     it "triggers a notification on create" do
-      Jobs.expects(:enqueue).with(:notify_reviewable, has_key(:reviewable_id))
-      Fabricate(:reviewable_queued_post)
+      reviewable = Fabricate(:reviewable_queued_post)
+      job = Jobs::NotifyReviewable.jobs.last
+
+      expect(job["args"].first["reviewable_id"]).to eq(reviewable.id)
     end
 
     it "triggers a notification on pending -> approve" do
       reviewable = Fabricate(:reviewable_queued_post)
-      Jobs.stubs(:enqueue)
-      Jobs.expects(:enqueue).with(:notify_reviewable, has_key(:reviewable_id))
-      reviewable.perform(moderator, :approve_post)
+
+      expect do
+        reviewable.perform(moderator, :approve_post)
+      end.to change { Jobs::NotifyReviewable.jobs.size }.by(1)
+
+      job = Jobs::NotifyReviewable.jobs.last
+
+      expect(job["args"].first["reviewable_id"]).to eq(reviewable.id)
     end
 
     it "triggers a notification on pending -> reject" do
       reviewable = Fabricate(:reviewable_queued_post)
-      Jobs.expects(:enqueue).with(:notify_reviewable, has_key(:reviewable_id))
-      reviewable.perform(moderator, :reject_post)
+
+      expect do
+        reviewable.perform(moderator, :reject_post)
+      end.to change { Jobs::NotifyReviewable.jobs.size }.by(1)
+
+      job = Jobs::NotifyReviewable.jobs.last
+
+      expect(job["args"].first["reviewable_id"]).to eq(reviewable.id)
     end
 
     it "doesn't trigger a notification on approve -> reject" do
       reviewable = Fabricate(:reviewable_queued_post, status: Reviewable.statuses[:approved])
-      Jobs.expects(:enqueue).with(:notify_reviewable, has_key(:reviewable_id)).never
-      reviewable.perform(moderator, :reject_post)
+
+      expect do
+        reviewable.perform(moderator, :reject_post)
+      end.to_not change { Jobs::NotifyReviewable.jobs.size }
     end
 
     it "doesn't trigger a notification on reject -> approve" do
-      reviewable = Fabricate(:reviewable_queued_post, status: Reviewable.statuses[:approved])
-      Jobs.expects(:enqueue).with(:notify_reviewable, has_key(:reviewable_id)).never
-      reviewable.perform(moderator, :reject_post)
+      reviewable = Fabricate(:reviewable_queued_post, status: Reviewable.statuses[:rejected])
+
+      expect do
+        reviewable.perform(moderator, :approve_post)
+      end.to_not change { Jobs::NotifyReviewable.jobs.size }
     end
   end
 
