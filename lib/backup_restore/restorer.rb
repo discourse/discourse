@@ -63,6 +63,7 @@ module BackupRestore
       validate_metadata
 
       extract_dump
+      create_missing_discourse_functions
 
       if !can_restore_into_different_schema?
         log "Cannot restore into different schema, restoring in-place"
@@ -144,6 +145,7 @@ module BackupRestore
 
       @logs = []
       @readonly_mode_was_enabled = Discourse.readonly_mode?
+      @created_functions_for_table_columns = []
     end
 
     def listen_for_shutdown_signal
@@ -561,8 +563,46 @@ module BackupRestore
       log "Something went wrong while notifying user.", ex
     end
 
+    def create_missing_discourse_functions
+      log "Creating missing functions in the discourse_functions schema"
+
+      all_readonly_table_columns = []
+
+      Dir[Rails.root.join(Discourse::DB_POST_MIGRATE_PATH, "*.rb")].each do |path|
+        require path
+        class_name = File.basename(path, ".rb").sub(/^\d+_/, "").camelize
+        migration_class = class_name.constantize
+
+        if migration_class.const_defined?(:DROPPED_TABLES)
+          migration_class::DROPPED_TABLES.each do |table_name|
+            all_readonly_table_columns << [table_name]
+          end
+        end
+
+        if migration_class.const_defined?(:DROPPED_COLUMNS)
+          migration_class::DROPPED_COLUMNS.each do |table_name, column_names|
+            column_names.each do |column_name|
+              all_readonly_table_columns << [table_name, column_name]
+            end
+          end
+        end
+      end
+
+      existing_function_names = Migration::BaseDropper.existing_discourse_function_names.map { |name| "#{name}()" }
+
+      all_readonly_table_columns.each do |table_name, column_name|
+        function_name = Migration::BaseDropper.readonly_function_name(table_name, column_name, with_schema: false)
+
+        if !existing_function_names.include?(function_name)
+          Migration::BaseDropper.create_readonly_function(table_name, column_name)
+          @created_functions_for_table_columns << [table_name, column_name]
+        end
+      end
+    end
+
     def clean_up
       log "Cleaning stuff up..."
+      drop_created_discourse_functions
       remove_tmp_directory
       unpause_sidekiq
       disable_readonly_mode if Discourse.readonly_mode?
@@ -588,6 +628,15 @@ module BackupRestore
       ThemeField.force_recompilation!
       Theme.expire_site_cache!
       Stylesheet::Manager.cache.clear
+    end
+
+    def drop_created_discourse_functions
+      log "Dropping function from the discourse_functions schema"
+      @created_functions_for_table_columns.each do |table_name, column_name|
+        Migration::BaseDropper.drop_readonly_function(table_name, column_name)
+      end
+    rescue => ex
+      log "Something went wrong while dropping functions from the discourse_functions schema", ex
     end
 
     def disable_readonly_mode
