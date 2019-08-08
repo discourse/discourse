@@ -12,7 +12,7 @@
               <%- end %>
             </a>
           </div>
-          <%- unless current_user %>
+          <%- unless current_user || local_assigns[:hide_auth_buttons] %>
             <div class='auth-buttons'>
               <%- if can_sign_up? %>
                 <a href="<%= path "/signup"%>" class='btn btn-primary btn-small signup-button'><%= I18n.t('sign_up') %></a>

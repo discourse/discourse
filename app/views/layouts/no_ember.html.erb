@@ -16,7 +16,7 @@
   <%= theme_lookup("header") %>
   <%= build_plugin_html 'server:header' %>
   <section id='main'>
-    <%= render partial: 'header' %>
+    <%= render partial: 'header', locals: { hide_auth_buttons: local_assigns[:hide_auth_buttons] } %>
     <div id="main-outlet" class="<%= @container_class ? @container_class : 'wrap' %>">
       <%= yield %>
     </div>

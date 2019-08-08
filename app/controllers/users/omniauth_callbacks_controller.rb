@@ -20,6 +20,7 @@ class Users::OmniauthCallbacksController < ApplicationController
 
   def confirm_request
     self.class.find_authenticator(params[:provider])
+    render locals: { hide_auth_buttons: true }
   end
 
   def complete
