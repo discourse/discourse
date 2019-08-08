@@ -191,10 +191,10 @@ class Guardian
 
   def can_see_group?(group)
     return false if group.blank?
-    return true if group.visibility_level == Group.visibility_levels[:public]
     return true if is_admin?
-    return true if is_staff? && group.visibility_level == Group.visibility_levels[:staff]
-    return true if authenticated? && group.visibility_level == Group.visibility_levels[:logged_on_users]
+    return true if group.visibility_level == Group.visibility_levels[:public]
+    return true if authenticated? && group.visibility_level <= Group.visibility_levels[:logged_on_users]
+    return true if is_staff? && group.visibility_level <= Group.visibility_levels[:staff]
     return false if user.blank?
 
     membership = GroupUser.find_by(group_id: group.id, user_id: user.id)
@@ -211,10 +211,10 @@ class Guardian
 
   def can_see_groups?(groups)
     return false if groups.blank?
-    return true if groups.all? { |g| g.visibility_level == Group.visibility_levels[:public] }
     return true if is_admin?
-    return true if is_staff? && groups.all? { |g| g.visibility_level == Group.visibility_levels[:staff] }
-    return true if authenticated? && groups.all? { |g| g.visibility_level == Group.visibility_levels[:logged_on_users] }
+    return true if groups.all? { |g| g.visibility_level == Group.visibility_levels[:public] }
+    return true if authenticated? && groups.all? { |g| g.visibility_level <= Group.visibility_levels[:logged_on_users] }
+    return true if is_staff? && groups.all? { |g| g.visibility_level <= Group.visibility_levels[:staff] }
     return false if user.blank?
 
     memberships = GroupUser.where(group: groups, user_id: user.id).pluck(:owner)
