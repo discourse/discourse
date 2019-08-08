@@ -535,7 +535,7 @@ describe DiscourseNarrativeBot::TrackSelector do
         describe 'when asking discobot to start new user track' do
           describe 'invalid text' do
             it 'should not trigger the bot' do
-              post.update!(raw: '`@discobot start new user track`')
+              post.update!(raw: "`@discobot #{I18n.t('discourse_narrative_bot.track_selector.reset_trigger')} #{I18n.t(DiscourseNarrativeBot::NewUserNarrative.reset_trigger)}`")
 
               expect { described_class.new(:reply, user, post_id: post.id).select }
                 .to_not change { Post.count }
@@ -651,7 +651,7 @@ describe DiscourseNarrativeBot::TrackSelector do
               another_post = Fabricate(:post,
                 user: Fabricate(:user),
                 topic: topic,
-                raw: "@discobot start new user"
+                raw: "@discobot #{I18n.t('discourse_narrative_bot.track_selector.reset_trigger')} #{I18n.t(DiscourseNarrativeBot::NewUserNarrative.reset_trigger)}"
               )
 
               user
