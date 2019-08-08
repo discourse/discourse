@@ -20,7 +20,7 @@ describe RemoteTheme do
       repo_dir
     end
 
-    def about_json(love_color: "FAFAFA", color_scheme_name: "Amazing", about_url: "https://www.site.com/about")
+    def about_json(love_color: "FAFAFA", tertiary_low_color: "FFFFFF", color_scheme_name: "Amazing", about_url: "https://www.site.com/about")
       <<~JSON
         {
           "name": "awesome theme",
@@ -33,7 +33,8 @@ describe RemoteTheme do
           },
           "color_schemes": {
             "#{color_scheme_name}": {
-              "love": "#{love_color}"
+              "love": "#{love_color}",
+              "tertiary-low": "#{tertiary_low_color}"
             }
           }
         }
@@ -105,6 +106,7 @@ describe RemoteTheme do
       scheme = ColorScheme.find_by(theme_id: @theme.id)
       expect(scheme.name).to eq("Amazing")
       expect(scheme.colors.find_by(name: 'love').hex).to eq('fafafa')
+      expect(scheme.colors.find_by(name: 'tertiary-low').hex).to eq('ffffff')
 
       expect(@theme.color_scheme_id).to eq(scheme.id)
       @theme.update(color_scheme_id: nil)
@@ -150,7 +152,7 @@ describe RemoteTheme do
       expect(remote.about_url).to eq("https://newsite.com/about")
 
       # It should be able to remove old colors as well
-      File.write("#{initial_repo}/about.json", about_json(love_color: "BABABA", color_scheme_name: "Amazing 2"))
+      File.write("#{initial_repo}/about.json", about_json(love_color: "BABABA", tertiary_low_color: "", color_scheme_name: "Amazing 2"))
       `cd #{initial_repo} && git commit -am "update"`
 
       remote.update_from_remote
@@ -159,6 +161,9 @@ describe RemoteTheme do
 
       scheme_count = ColorScheme.where(theme_id: @theme.id).count
       expect(scheme_count).to eq(1)
+
+      scheme = ColorScheme.find_by(theme_id: @theme.id)
+      expect(scheme.colors.find_by(name: 'tertiary_low_color')).to eq(nil)
 
       # It should detect local changes
       @theme.set_field(target: :common, name: :scss, value: 'body {background-color: blue};')

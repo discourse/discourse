@@ -10,6 +10,16 @@ export default Ember.Controller.extend({
     }
   },
 
+  @computed("colors.@each")
+  mainColors(colors) {
+    colors.filter(c => !c.is_advanced);
+  },
+
+  @computed("colors.@each")
+  advancedColors(colors) {
+    colors.filter(c => c.is_advanced);
+  },
+
   actions: {
     revert: function(color) {
       color.revert();
