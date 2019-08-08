@@ -20,6 +20,7 @@ export default Ember.Component.extend({
         model: this.model
       });
       modal.setProperties({
+        ignoredUsername: null,
         onUserIgnored: username => {
           this.items.addObject(username);
         }
