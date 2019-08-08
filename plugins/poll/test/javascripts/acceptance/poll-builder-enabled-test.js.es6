@@ -51,3 +51,12 @@ test("staff - with insufficient trust level", assert => {
     );
   });
 });
+
+test("poll preview", async assert => {
+  displayPollBuilderButton();
+  await click(".select-kit-row[title='Build Poll']");
+  await fillIn(".poll-textarea textarea", "First option\nSecond option");
+
+  assert.equal(find(".d-editor-preview li:first-child").text(), "First option");
+  assert.equal(find(".d-editor-preview li:last-child").text(), "Second option");
+});
