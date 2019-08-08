@@ -18,6 +18,7 @@ module Migration
 
     def self.execute_drop(table_name)
       DB.exec("DROP TABLE IF EXISTS #{table_name}")
+      BaseDropper.drop_readonly_function(table_name)
     end
   end
 end
