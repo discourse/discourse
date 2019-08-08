@@ -84,6 +84,12 @@ RSpec.describe Users::OmniauthCallbacksController do
       SiteSetting.enable_google_oauth2_logins = true
     end
 
+    it "should display the failure message if needed" do
+      get "/auth/failure"
+      expect(response.status).to eq(200)
+      expect(response.body).to include(I18n.t("login.omniauth_error"))
+    end
+
     describe "request" do
       it "should error for non existant authenticators" do
         post "/auth/fake_auth"
