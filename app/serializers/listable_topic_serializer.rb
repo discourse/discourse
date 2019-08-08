@@ -25,7 +25,8 @@ class ListableTopicSerializer < BasicTopicSerializer
              :notification_level,
              :bookmarked,
              :liked,
-             :unicode_title
+             :unicode_title,
+             :read_by_group_member
 
   has_one :last_poster, serializer: BasicUserSerializer, embed: :objects
 
@@ -119,6 +120,10 @@ class ListableTopicSerializer < BasicTopicSerializer
 
   def unpinned
     PinnedCheck.unpinned?(object, object.user_data)
+  end
+
+  def read_by_group_member
+    object.topic_list.publish_read_state
   end
 
   protected

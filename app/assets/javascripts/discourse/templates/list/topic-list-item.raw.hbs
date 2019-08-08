@@ -23,6 +23,9 @@
     {{~#if showTopicPostBadges}}
     {{~raw "topic-post-badges" unread=topic.unread newPosts=topic.displayNewPosts unseen=topic.unseen url=topic.lastUnreadUrl newDotText=newDotText}}
     {{~/if}}
+    {{~#if topic.read_by_group_member}}
+      {{~d-icon "eye"}}
+    {{~/if}}
   </span>
   <div class="link-bottom-line">
     {{#unless hideCategory}}

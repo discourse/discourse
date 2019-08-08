@@ -344,11 +344,11 @@ class TopicQuery
 
   def list_private_messages_group(user)
     list = private_messages_for(user, :group)
-    group_id = Group.where('name ilike ?', @options[:group_name]).pluck(:id).first
+    group = Group.where('name ilike ?', @options[:group_name]).select(:id, :publish_read_state).first
     list = list.joins("LEFT JOIN group_archived_messages gm ON gm.topic_id = topics.id AND
-                      gm.group_id = #{group_id.to_i}")
+                      gm.group_id = #{group&.id&.to_i}")
     list = list.where("gm.id IS NULL")
-    create_list(:private_messages, {}, list)
+    create_list(:private_messages, { publish_read_state: group&.publish_read_state }, list)
   end
 
   def list_private_messages_group_archive(user)
