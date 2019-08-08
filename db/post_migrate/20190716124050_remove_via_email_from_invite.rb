@@ -3,8 +3,14 @@
 require 'migration/column_dropper'
 
 class RemoveViaEmailFromInvite < ActiveRecord::Migration[5.2]
+  DROPPED_COLUMNS ||= {
+    invites: %i{via_email}
+  }
+
   def up
-    Migration::ColumnDropper.execute_drop(:invites, %i{via_email})
+    DROPPED_COLUMNS.each do |table, columns|
+      Migration::ColumnDropper.execute_drop(table, columns)
+    end
   end
 
   def down
