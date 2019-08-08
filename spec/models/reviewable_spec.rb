@@ -237,12 +237,25 @@ RSpec.describe Reviewable, type: :model do
 
   context "message bus notifications" do
     fab!(:moderator) { Fabricate(:moderator) }
+    let(:post) { Fabricate(:post) }
 
     it "triggers a notification on create" do
       reviewable = Fabricate(:reviewable_queued_post)
       job = Jobs::NotifyReviewable.jobs.last
 
       expect(job["args"].first["reviewable_id"]).to eq(reviewable.id)
+    end
+
+    it "triggers a notification on update" do
+      reviewable = PostActionCreator.spam(moderator, post).reviewable
+      reviewable.perform(moderator, :disagree)
+
+      expect { PostActionCreator.spam(Fabricate(:user), post) }
+        .to change { reviewable.reload.status }
+        .from(Reviewable.statuses[:rejected])
+        .to(Reviewable.statuses[:pending])
+        .and change { Jobs::NotifyReviewable.jobs.size }
+        .by(1)
     end
 
     it "triggers a notification on pending -> approve" do
