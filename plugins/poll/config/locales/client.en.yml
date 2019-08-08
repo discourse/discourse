@@ -36,7 +36,7 @@ en:
         closed:
           title: "Results will be shown once <strong>closed</strong>."
         staff:
-          title: "Results will be shown once <strong>staff</strong>."
+          title: "Results are only shown to <strong>staff</strong> members."
 
       multiple:
         help:
