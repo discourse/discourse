@@ -38,6 +38,9 @@ class Reviewable < ActiveRecord::Base
 
   after_commit(on: :create) do
     DiscourseEvent.trigger(:reviewable_created, self)
+  end
+
+  after_commit(on: [:create, :update]) do
     Jobs.enqueue(:notify_reviewable, reviewable_id: self.id) if pending?
   end
 
