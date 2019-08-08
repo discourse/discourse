@@ -84,6 +84,41 @@ RSpec.describe Users::OmniauthCallbacksController do
       SiteSetting.enable_google_oauth2_logins = true
     end
 
+    describe "request" do
+      it "should error for non existant authenticators" do
+        post "/auth/fake_auth"
+        expect(response.status).to eq(404)
+        get "/auth/fake_auth"
+        expect(response.status).to eq(403)
+      end
+
+      it "should only start auth with a POST request" do
+        post "/auth/google_oauth2"
+        expect(response.status).to eq(302)
+        get "/auth/google_oauth2"
+        expect(response.status).to eq(200)
+      end
+
+      context "with CSRF protection enabled" do
+        before { ActionController::Base.allow_forgery_protection = true }
+        after { ActionController::Base.allow_forgery_protection = false }
+
+        it "should be CSRF protected" do
+          post "/auth/google_oauth2"
+          expect(response.status).to eq(422)
+
+          post "/auth/google_oauth2", params: { authenticity_token: "faketoken" }
+          expect(response.status).to eq(422)
+
+          get "/session/csrf.json"
+          token = JSON.parse(response.body)["csrf"]
+
+          post "/auth/google_oauth2", params: { authenticity_token: token }
+          expect(response.status).to eq(302)
+        end
+      end
+    end
+
     context "without an `omniauth.auth` env" do
       it "should return a 404" do
         get "/auth/eviltrout/callback"
@@ -348,7 +383,7 @@ RSpec.describe Users::OmniauthCallbacksController do
         end
 
         it "doesn't attempt redirect to external origin" do
-          get "/auth/google_oauth2?origin=https://example.com/external"
+          post "/auth/google_oauth2?origin=https://example.com/external"
           get "/auth/google_oauth2/callback"
 
           expect(response.status).to eq 302
@@ -359,7 +394,7 @@ RSpec.describe Users::OmniauthCallbacksController do
         end
 
         it "redirects to internal origin" do
-          get "/auth/google_oauth2?origin=http://test.localhost/t/123"
+          post "/auth/google_oauth2?origin=http://test.localhost/t/123"
           get "/auth/google_oauth2/callback"
 
           expect(response.status).to eq 302
@@ -370,7 +405,7 @@ RSpec.describe Users::OmniauthCallbacksController do
         end
 
         it "redirects to relative origin" do
-          get "/auth/google_oauth2?origin=/t/123"
+          post "/auth/google_oauth2?origin=/t/123"
           get "/auth/google_oauth2/callback"
 
           expect(response.status).to eq 302
@@ -381,7 +416,7 @@ RSpec.describe Users::OmniauthCallbacksController do
         end
 
         it "redirects with query" do
-          get "/auth/google_oauth2?origin=/t/123?foo=bar"
+          post "/auth/google_oauth2?origin=/t/123?foo=bar"
           get "/auth/google_oauth2/callback"
 
           expect(response.status).to eq 302
@@ -392,7 +427,7 @@ RSpec.describe Users::OmniauthCallbacksController do
         end
 
         it "removes authentication_data cookie on logout" do
-          get "/auth/google_oauth2?origin=https://example.com/external"
+          post "/auth/google_oauth2?origin=https://example.com/external"
           get "/auth/google_oauth2/callback"
 
           provider = log_in_user(Fabricate(:user))
@@ -440,7 +475,7 @@ RSpec.describe Users::OmniauthCallbacksController do
 
       it 'should not reconnect normally' do
         # Log in normally
-        get "/auth/google_oauth2"
+        post "/auth/google_oauth2"
         expect(response.status).to eq(302)
         expect(session[:auth_reconnect]).to eq(false)
 
@@ -450,7 +485,7 @@ RSpec.describe Users::OmniauthCallbacksController do
 
         # Log into another user
         OmniAuth.config.mock_auth[:google_oauth2].uid = "123456"
-        get "/auth/google_oauth2"
+        post "/auth/google_oauth2"
         expect(response.status).to eq(302)
         expect(session[:auth_reconnect]).to eq(false)
 
@@ -462,7 +497,7 @@ RSpec.describe Users::OmniauthCallbacksController do
 
       it 'should redirect to associate URL if parameter supplied' do
         # Log in normally
-        get "/auth/google_oauth2?reconnect=true"
+        post "/auth/google_oauth2?reconnect=true"
         expect(response.status).to eq(302)
         expect(session[:auth_reconnect]).to eq(true)
 
@@ -477,7 +512,7 @@ RSpec.describe Users::OmniauthCallbacksController do
         UserAssociatedAccount.find_by(user_id: user.id).destroy
 
         # Reconnect flow:
-        get "/auth/google_oauth2?reconnect=true"
+        post "/auth/google_oauth2?reconnect=true"
         expect(response.status).to eq(302)
         expect(session[:auth_reconnect]).to eq(true)
 
