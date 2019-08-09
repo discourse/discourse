@@ -100,7 +100,7 @@ RSpec.describe Users::OmniauthCallbacksController do
 
       it "should error for disabled authenticators" do
         SiteSetting.enable_google_oauth2_logins = false
-        post "/auth/fake_auth"
+        post "/auth/google_oauth2"
         expect(response.status).to eq(404)
         get "/auth/google_oauth2"
         expect(response.status).to eq(403)
