@@ -791,6 +791,17 @@
   }
 }
 
+.admin-customize-email-templates {
+  .email-template,
+  .controls {
+    margin-top: 1em;
+  }
+
+  .d-editor {
+    height: 50vh;
+  }
+}
+
 .admin-customize-email-style {
   .ace-wrapper {
     position: relative;
