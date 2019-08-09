@@ -112,12 +112,12 @@ RSpec.describe Users::OmniauthCallbacksController do
         )
         post "/auth/google_oauth2"
         expect(response.status).to eq(302)
-        expect(response.location).to end_with("/auth/failure?message=request_error")
+        expect(response.location).to include("/auth/failure?message=request_error")
 
         OmniAuth::Strategies::GoogleOauth2.any_instance.stubs(:mock_request_call).raises(JWT::InvalidIatError.new)
         post "/auth/google_oauth2"
         expect(response.status).to eq(302)
-        expect(response.location).to end_with("/auth/failure?message=invalid_iat")
+        expect(response.location).to include("/auth/failure?message=invalid_iat")
       end
 
       it "should only start auth with a POST request" do
