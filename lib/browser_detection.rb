@@ -16,7 +16,7 @@ module BrowserDetection
       :safari
     when /MSIE/i, /Trident/i
       :ie
-    when /DiscourseHub/i
+    when /Discourse/i
       :discoursehub
     else
       :unknown
@@ -54,7 +54,7 @@ module BrowserDetection
       :android
     when /CrOS/i
       :chromeos
-    when /iPhone|iPad|iPod/i
+    when /iPhone|iPad|iPod|Darwin/i
       :ios
     when /Macintosh/i
       :macos
