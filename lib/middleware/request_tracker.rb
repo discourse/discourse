@@ -139,17 +139,23 @@ class Middleware::RequestTracker
 
   end
 
+  def self.populate_request_queue_seconds!(env)
+    if !env['REQUEST_QUEUE_SECONDS']
+      if queue_start = env['HTTP_X_REQUEST_START']
+        queue_start = queue_start.split("t=")[1].to_f
+        queue_time = (Time.now.to_f - queue_start)
+        env['REQUEST_QUEUE_SECONDS'] = queue_time
+      end
+    end
+  end
+
   def call(env)
     result = nil
     log_request = true
 
     # doing this as early as possible so we have an
     # accurate counter
-    if queue_start = env['HTTP_X_REQUEST_START']
-      queue_start = queue_start.split("t=")[1].to_f
-      queue_time = (Time.now.to_f - queue_start)
-      env['REQUEST_QUEUE_SECONDS'] = queue_time
-    end
+    ::Middleware::RequestTracker.populate_request_queue_seconds!(env)
 
     request = Rack::Request.new(env)
 
