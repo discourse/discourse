@@ -1858,10 +1858,10 @@ he:
         category: "אין נושאים בקטגוריה {{category}}."
         top: "אין נושאים מובילים."
         educate:
-          new: '<p>הנושאים החדשים שלכם יופיעו כאן.</p><p>כברירת מחדל, נושאים נחשבים חדשים ויופיעו עם האינדיקציה <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">חדש</span> אם הם נוצרו ב-2 הימים האחרונים </p><p>בקרו בעמוד ה<a href="%{userPrefsUrl}">העדפות</a> שלכם כדי לשנות זאת.</p>'
+          new: '<p>הנושאים החדשים שלכם יופיעו כאן.</p><p>כברירת מחדל, נושאים נחשבים חדשים ויופיעו עם האינדיקציה <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">חדש</span> אם הם נוצרו ב-2 הימים האחרונים </p><p>בקרו בעמוד ה<a href="%{userPrefsNotificationsUrl}">העדפות</a> שלכם כדי לשנות זאת.</p>'
           unread: '<p>הנושאים הלא נקראים שלכם יופיעו כאן.</p><p>כברירת מחדל, נושאים נחשבים כלא-נקראים ויציגו את הספירה <span class="badge new-posts badge-notification">1</span> אם את/ה: </p> <ul><li>יצרת את הנושא </li><li>קראת את הנושא במשך יותר מ-4 דקות</li></ul>
 
-            <p>או אם הגדרת בצורה מפורשת את הנושא כנושא במעקב או בצפייה דרך מנגנון ההתראות המופיע בתחתית כל נושא. </p> <p>בקר/י בעמוד ה<a href="%{userPrefsUrl}">העדפות</a> שלך כדי לשנות זאת </a>'
+            <p>או אם הגדרת בצורה מפורשת את הנושא כנושא במעקב או בצפייה דרך מנגנון ההתראות המופיע בתחתית כל נושא. </p> <p>בקר/י בעמוד ה<a href="%{userPrefsNotificationsUrl}">העדפות</a> שלך כדי לשנות זאת </a>'
       bottom:
         latest: "אין עוד נושאים אחרונים."
         posted: "אין עוד נושאים שפורסמו."

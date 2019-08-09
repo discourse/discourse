@@ -1414,8 +1414,8 @@ ko:
         category: "{{category}}에 주제가 없습니다."
         top: "Top 주제가 없습니다."
         educate:
-          new: '<p>회원님의 주제는 여기에 나타납니다.</p><p>기본적으로 생긴 지 이틀 안된 주제는 새것으로 간주하고 <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">new</span> 표시가 뜹니다.</p><p>바꾸고 싶으면 <a href="%{userPrefsUrl}">환경설정</a>으로 가보세요.</p>'
-          unread: '<p>회원님이 읽지 않은 주제는 여기에 나타납니다.</p><p>기본적으로 주제는 읽지 않은 것으로 간주하고 다음과 같은 조건 중 하나를 만족하면 읽지 않은 글갯수 <span class="badge new-posts badge-notification">1</span> 을 표시합니다:</p><ul><li>주제 만들기</li><li>주제에 댓글달기</li><li>주제를 4분 이상 읽기</li></ul><p>또는 주제를 추적하거나 지켜보기 위해 각 주제의 밑부분에 달린 알림제어판에서 설정하는 경우도 포합됩니다.</p><p>설정을 바꾸려면 <a href="%{userPrefsUrl}">환경설정</a> 페이지로 가세요.</p>'
+          new: '<p>회원님의 주제는 여기에 나타납니다.</p><p>기본적으로 생긴 지 이틀 안된 주제는 새것으로 간주하고 <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">new</span> 표시가 뜹니다.</p><p>바꾸고 싶으면 <a href="%{userPrefsNotificationsUrl}">환경설정</a>으로 가보세요.</p>'
+          unread: '<p>회원님이 읽지 않은 주제는 여기에 나타납니다.</p><p>기본적으로 주제는 읽지 않은 것으로 간주하고 다음과 같은 조건 중 하나를 만족하면 읽지 않은 글갯수 <span class="badge new-posts badge-notification">1</span> 을 표시합니다:</p><ul><li>주제 만들기</li><li>주제에 댓글달기</li><li>주제를 4분 이상 읽기</li></ul><p>또는 주제를 추적하거나 지켜보기 위해 각 주제의 밑부분에 달린 알림제어판에서 설정하는 경우도 포합됩니다.</p><p>설정을 바꾸려면 <a href="%{userPrefsNotificationsUrl}">환경설정</a> 페이지로 가세요.</p>'
       bottom:
         latest: "더 이상 읽을 최신 주제가 없습니다"
         posted: "더 이상 작성된 주제가 없습니다"

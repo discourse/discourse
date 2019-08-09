@@ -1628,8 +1628,8 @@ pl_PL:
         category: "Nie ma tematów w kategorii {{category}}."
         top: "Brak najlepszych tematów."
         educate:
-          new: '<p>Nowe tematy będą pojawiać się tutaj.</p><p>Domyślnie tematy są określane jako nowe i będą oznaczone jako<span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">nowe</span> jeśli były stworzone w ciągu ostatnich 2 dni.</p><p>Odwiedź swoje <a href="%{userPrefsUrl}">ustawienia</a> by to zmienić.</p>'
-          unread: '<p>Twoje nie przeczytane tematy będą pojawiać się tutaj.</p><p>Domyślnie tematy są określane jako nieprzeczytane a ich liczba zostanie wyświetlona<span class="badge new-posts badge-notification">1</span> Jeśli:</p><ul><li>Utworzyłeś temat</li><li>Odpowiedziałeś w temacie</li><li>Czytałeś temat dłużej niż 4 minuty</li></ul><p>Albo ustawiłeś śledzenie lub obserwowanie tematu przez kontrolę powiadomień na dole każdego tematu .</p><p>Odwiedź swoje <a href="%{userPrefsUrl}">ustawienia</a> by to zmienić.</p>'
+          new: '<p>Nowe tematy będą pojawiać się tutaj.</p><p>Domyślnie tematy są określane jako nowe i będą oznaczone jako<span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">nowe</span> jeśli były stworzone w ciągu ostatnich 2 dni.</p><p>Odwiedź swoje <a href="%{userPrefsNotificationsUrl}">ustawienia</a> by to zmienić.</p>'
+          unread: '<p>Twoje nie przeczytane tematy będą pojawiać się tutaj.</p><p>Domyślnie tematy są określane jako nieprzeczytane a ich liczba zostanie wyświetlona<span class="badge new-posts badge-notification">1</span> Jeśli:</p><ul><li>Utworzyłeś temat</li><li>Odpowiedziałeś w temacie</li><li>Czytałeś temat dłużej niż 4 minuty</li></ul><p>Albo ustawiłeś śledzenie lub obserwowanie tematu przez kontrolę powiadomień na dole każdego tematu .</p><p>Odwiedź swoje <a href="%{userPrefsNotificationsUrl}">ustawienia</a> by to zmienić.</p>'
       bottom:
         latest: "Nie ma więcej najnowszych tematów."
         posted: "Nie ma więcej tematów w których pisałeś."

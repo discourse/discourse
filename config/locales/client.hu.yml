@@ -1531,8 +1531,8 @@ hu:
         category: "Nincsenek témakörök a {{category}} kategóriában."
         top: "Nincsenek top témák"
         educate:
-          new: '<p> Itt jelennek meg az új témáid. </p><p> Alapértelmezés szerint a témák újnak számítanak, és <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">új</span> jelzővel szereplenek, ha az elmúlt 2 napban készültek. </p><p> Látogasd meg a <a href="%{userPrefsUrl}">beállításokat,</a> ha ezen változtatni szeretnél. </p>'
-          unread: '<p> Az olvasatlan témáid itt jelennek meg. </p><p> Alapértelmezés szerint a témák olvasatlanok és a <span class="badge new-posts badge-notification">1</span> számlálót mutatják, ha te: </p><ul><li> Hoztad létre a témát </li><li> Válaszoltál a témára </li><li> Több mint 4 percig olvastad a témát </li></ul><p> Vagy ha az egyes témák alján található értesítésvezérlés segítségével kifejezetten követettre vagy figyeltre állítottad a témát. </p><p> Látogasd meg a <a href="%{userPrefsUrl}">beállításokat,</a> ha változtatnál ezen. </p>'
+          new: '<p> Itt jelennek meg az új témáid. </p><p> Alapértelmezés szerint a témák újnak számítanak, és <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">új</span> jelzővel szereplenek, ha az elmúlt 2 napban készültek. </p><p> Látogasd meg a <a href="%{userPrefsNotificationsUrl}">beállításokat,</a> ha ezen változtatni szeretnél. </p>'
+          unread: '<p> Az olvasatlan témáid itt jelennek meg. </p><p> Alapértelmezés szerint a témák olvasatlanok és a <span class="badge new-posts badge-notification">1</span> számlálót mutatják, ha te: </p><ul><li> Hoztad létre a témát </li><li> Válaszoltál a témára </li><li> Több mint 4 percig olvastad a témát </li></ul><p> Vagy ha az egyes témák alján található értesítésvezérlés segítségével kifejezetten követettre vagy figyeltre állítottad a témát. </p><p> Látogasd meg a <a href="%{userPrefsNotificationsUrl}">beállításokat,</a> ha változtatnál ezen. </p>'
       bottom:
         latest: "Nincs több friss téma."
         posted: "Nincsen több közzétett téma"

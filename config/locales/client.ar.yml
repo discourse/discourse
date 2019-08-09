@@ -1468,8 +1468,8 @@ ar:
         category: "لا يوجد موضوعات في قسم ’{{category}}‘."
         top: "لا يوجد موضوعات مشاهدة بكثرة"
         educate:
-          new: '<p>سوف تظهر موضوعاتك هنا.</p><p>بشكل افتراضي تعتبر الموضوعات جديدة و يظهر بجانبها كلمه <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">جديد</span> إذا لم يمضي علي نشرها اكثر من يومين.</p><p>زور صفحة <a href="%{userPrefsUrl}">التفضيلات</a> لتغيير هذا السلوك</p>'
-          unread: '<p>الموضوعات الغير مقروءة تظهر هنا.</p><p>بشكل افتراضي تعتبر الموضوعات غير مقروءة و يظهر بجانبها عداد <span class="badge new-posts badge-notification">1</span> في حال:</p><ul><li>انشأت الموضوع</li><li>رددت علي الموضوع</li><li>قرأت الموضوع لاكثر من اربع دقائق</li></ul><p>او قمت بضبط مستوي اشعارات الموضوع إلي مراقب او متابع.</p><p>زور صفحة <a href="%{userPrefsUrl}">التفضيلات</a> لتغيير هذا السلوك.</p>'
+          new: '<p>سوف تظهر موضوعاتك هنا.</p><p>بشكل افتراضي تعتبر الموضوعات جديدة و يظهر بجانبها كلمه <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">جديد</span> إذا لم يمضي علي نشرها اكثر من يومين.</p><p>زور صفحة <a href="%{userPrefsNotificationsUrl}">التفضيلات</a> لتغيير هذا السلوك</p>'
+          unread: '<p>الموضوعات الغير مقروءة تظهر هنا.</p><p>بشكل افتراضي تعتبر الموضوعات غير مقروءة و يظهر بجانبها عداد <span class="badge new-posts badge-notification">1</span> في حال:</p><ul><li>انشأت الموضوع</li><li>رددت علي الموضوع</li><li>قرأت الموضوع لاكثر من اربع دقائق</li></ul><p>او قمت بضبط مستوي اشعارات الموضوع إلي مراقب او متابع.</p><p>زور صفحة <a href="%{userPrefsNotificationsUrl}">التفضيلات</a> لتغيير هذا السلوك.</p>'
       bottom:
         latest: "لا يوجد موضوعات حديثة أخرى."
         posted: "لا يوجد مواضيع منشورة أخرى."
