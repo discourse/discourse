@@ -5,6 +5,7 @@ require "csrf_token_verifier"
 # omniauth loves spending lots cycles in its magic middleware stack
 # this middleware bypasses omniauth middleware and only hits it when needed
 class Middleware::OmniauthBypassMiddleware
+  class AuthenticatorDisabled < StandardError; end
 
   def initialize(app, options = {})
     @app = app
@@ -24,6 +25,11 @@ class Middleware::OmniauthBypassMiddleware
       # Check for CSRF token
       CSRFTokenVerifier.new.call(env)
 
+      # Check whether the authenticator is enabled
+      if !Discourse.enabled_authenticators.any? { |a| a.name == env['omniauth.strategy'].name }
+        raise AuthenticatorDisabled
+      end
+
       # If the user is trying to reconnect to an existing account, store in session
       request = ActionDispatch::Request.new(env)
       request.session[:auth_reconnect] = !!request.params["reconnect"]
@@ -32,7 +38,27 @@ class Middleware::OmniauthBypassMiddleware
 
   def call(env)
     if env["PATH_INFO"].start_with?("/auth")
-      @omniauth.call(env)
+      begin
+        @omniauth.call(env)
+      rescue AuthenticatorDisabled => e
+        #  Authenticator is disabled, pretend it doesn't exist and pass request to app
+        @app.call(env)
+      rescue OAuth::Unauthorized => e
+        # OAuth1 (i.e. Twitter) makes a web request during the setup phase
+        # If it fails, Omniauth does not handle the error. Handle it here
+        env["omniauth.error.type"] ||= "request_error"
+        Rails.logger.error "Authentication failure! request_error: #{e.class}, #{e.message}"
+        OmniAuth::FailureEndpoint.call(env)
+      rescue JWT::InvalidIatError => e
+        # Happens for openid-connect (including google) providers, when the server clock is wrong
+        env["omniauth.error.type"] ||= "invalid_iat"
+        Rails.logger.error "Authentication failure! invalid_iat: #{e.class}, #{e.message}"
+        OmniAuth::FailureEndpoint.call(env)
+      rescue CSRFTokenVerifier::InvalidCSRFToken => e
+        # Happens when CSRF token is missing from request
+        env["omniauth.error.type"] ||= "csrf_detected"
+        OmniAuth::FailureEndpoint.call(env)
+      end
     else
       @app.call(env)
     end
