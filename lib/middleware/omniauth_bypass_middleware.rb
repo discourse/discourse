@@ -22,8 +22,10 @@ class Middleware::OmniauthBypassMiddleware
     end
 
     @omniauth.before_request_phase do |env|
-      # Check for CSRF token
-      CSRFTokenVerifier.new.call(env)
+      request = ActionDispatch::Request.new(env)
+
+      # Check for CSRF token in POST requests
+      CSRFTokenVerifier.new.call(env) if request.request_method.downcase.to_sym != :get
 
       # Check whether the authenticator is enabled
       if !Discourse.enabled_authenticators.any? { |a| a.name == env['omniauth.strategy'].name }
@@ -31,7 +33,6 @@ class Middleware::OmniauthBypassMiddleware
       end
 
       # If the user is trying to reconnect to an existing account, store in session
-      request = ActionDispatch::Request.new(env)
       request.session[:auth_reconnect] = !!request.params["reconnect"]
     end
   end
@@ -39,6 +40,10 @@ class Middleware::OmniauthBypassMiddleware
   def call(env)
     if env["PATH_INFO"].start_with?("/auth")
       begin
+        # When only one provider is enabled, assume it can be completely trusted, and allow GET requests
+        only_one_provider = !SiteSetting.enable_local_logins && Discourse.enabled_authenticators.length == 1
+        OmniAuth.config.allowed_request_methods = only_one_provider ? [:get, :post] : [:post]
+
         @omniauth.call(env)
       rescue AuthenticatorDisabled => e
         #  Authenticator is disabled, pretend it doesn't exist and pass request to app
