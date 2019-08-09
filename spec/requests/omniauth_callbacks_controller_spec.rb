@@ -146,6 +146,14 @@ RSpec.describe Users::OmniauthCallbacksController do
           post "/auth/google_oauth2", params: { authenticity_token: token }
           expect(response.status).to eq(302)
         end
+
+        it "should not be CSRF protected if it is the only auth method" do
+          get "/auth/google_oauth2"
+          expect(response.status).to eq(200)
+          SiteSetting.enable_local_logins = false
+          get "/auth/google_oauth2"
+          expect(response.status).to eq(302)
+        end
       end
     end
 
