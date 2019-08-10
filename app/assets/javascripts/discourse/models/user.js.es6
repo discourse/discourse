@@ -630,13 +630,9 @@ const User = RestModel.extend({
     );
   },
 
-  @computed("can_delete_account", "reply_count", "topic_count")
-  canDeleteAccount(canDeleteAccount, replyCount, topicCount) {
-    return (
-      !Discourse.SiteSettings.enable_sso &&
-      canDeleteAccount &&
-      (replyCount || 0) + (topicCount || 0) <= 1
-    );
+  @computed("can_delete_account")
+  canDeleteAccount(canDeleteAccount) {
+    return !Discourse.SiteSettings.enable_sso && canDeleteAccount;
   },
 
   delete: function() {
