@@ -40,7 +40,7 @@
   .draft-type {
     display: block;
     float: right;
-    color: lighten($primary, 40%);
+    color: $primary-medium;
     font-size: $font-down-2;
   }
 
@@ -57,7 +57,7 @@
     float: right;
     margin-right: 0.5em;
     line-height: $line-height-small;
-    color: lighten($primary, 40%);
+    color: $primary-medium;
   }
 
   .avatar-link {
