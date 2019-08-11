@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 CMD="cd /src && USER=discourse RAILS_ENV=development rake db:migrate"
 docker exec -it -u discourse:discourse discourse_dev /bin/bash -c "$CMD"

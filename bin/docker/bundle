@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 PARAMS="$@"
 CMD="cd /src && USER=discourse RAILS_ENV=${RAILS_ENV:=development} bundle $PARAMS"

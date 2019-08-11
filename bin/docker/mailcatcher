@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 CMD="USER=discourse mailcatcher --http-ip 0.0.0.0 -f"
 docker exec -it discourse_dev /bin/bash -c "$CMD"

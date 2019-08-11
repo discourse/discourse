@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 set -e
 
 SCRIPTPATH=$(cd "$(dirname "$0")" > /dev/null; pwd -P)
