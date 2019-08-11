@@ -314,7 +314,7 @@ class Guardian
     authenticated? &&
     (SiteSetting.max_invites_per_day.to_i > 0 || is_staff?) &&
     !SiteSetting.enable_sso &&
-    SiteSetting.enable_local_logins &&
+    (SiteSetting.enable_invite_only_oauth || SiteSetting.enable_local_logins) &&
     (
       (!SiteSetting.must_approve_users? && @user.has_trust_level?(TrustLevel[2])) ||
       is_staff?

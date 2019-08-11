@@ -5,6 +5,7 @@ import { ajax } from "discourse/lib/ajax";
 import PasswordValidation from "discourse/mixins/password-validation";
 import UsernameValidation from "discourse/mixins/username-validation";
 import NameValidation from "discourse/mixins/name-validation";
+import InviteEmailAuthValidation from "discourse/mixins/invite-email-auth-validation";
 import UserFieldsValidation from "discourse/mixins/user-fields-validation";
 import { findAll as findLoginMethods } from "discourse/models/login-method";
 
@@ -12,8 +13,11 @@ export default Ember.Controller.extend(
   PasswordValidation,
   UsernameValidation,
   NameValidation,
+  InviteEmailAuthValidation,
   UserFieldsValidation,
   {
+    login: Ember.inject.controller(),
+
     invitedBy: Ember.computed.alias("model.invited_by"),
     email: Ember.computed.alias("model.email"),
     accountUsername: Ember.computed.alias("model.username"),
@@ -22,6 +26,7 @@ export default Ember.Controller.extend(
     errorMessage: null,
     userFields: null,
     inviteImageUrl: getUrl("/images/envelope.svg"),
+    hasAuthOptions: Ember.computed.notEmpty("authOptions"),
 
     @computed
     welcomeTitle() {
@@ -35,24 +40,40 @@ export default Ember.Controller.extend(
       return I18n.t("invites.your_email", { email: email });
     },
 
+    authProviderDisplayName(providerName) {
+      const matchingProvider = findLoginMethods().find(provider => {
+        return provider.name === providerName;
+      });
+      return matchingProvider
+        ? matchingProvider.get("prettyName")
+        : providerName;
+    },
+
     @computed
     externalAuthsEnabled() {
       return findLoginMethods().length > 0;
+    },
+
+    @computed
+    inviteOnlyOauthEnabled() {
+      return this.siteSettings.enable_invite_only_oauth;
     },
 
     @computed(
       "usernameValidation.failed",
       "passwordValidation.failed",
       "nameValidation.failed",
-      "userFieldsValidation.failed"
+      "userFieldsValidation.failed",
+      "inviteEmailAuthValidation.failed",
     )
     submitDisabled(
       usernameFailed,
       passwordFailed,
       nameFailed,
-      userFieldsFailed
+      userFieldsFailed,
+      inviteEmailAuthFailed,
     ) {
-      return usernameFailed || passwordFailed || nameFailed || userFieldsFailed;
+      return usernameFailed || passwordFailed || nameFailed || userFieldsFailed || inviteEmailAuthFailed;
     },
 
     @computed
@@ -63,6 +84,10 @@ export default Ember.Controller.extend(
     },
 
     actions: {
+      externalLogin(provider) {
+        this.login.send("externalLogin", provider);
+      },
+
       submit() {
         const userFields = this.userFields;
         let userCustomFields = {};
