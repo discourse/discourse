@@ -20,6 +20,7 @@ const AuthErrors = [
 
 export default Ember.Controller.extend(ModalFunctionality, {
   createAccount: Ember.inject.controller(),
+  invitesShow: Ember.inject.controller(),
   forgotPassword: Ember.inject.controller(),
   application: Ember.inject.controller(),
 
@@ -353,14 +354,23 @@ export default Ember.Controller.extend(ModalFunctionality, {
       return;
     }
 
-    const createAccountController = this.createAccount;
-    createAccountController.setProperties({
-      accountEmail: options.email,
-      accountUsername: options.username,
-      accountName: options.name,
-      authOptions: Ember.Object.create(options)
-    });
-
-    showModal("createAccount");
+    if (this.siteSettings.enable_invite_only_oauth) {
+      const invitesShowController = this.invitesShow;
+      invitesShowController.setProperties({
+        accountEmail: options.email,
+        accountUsername: options.username,
+        accountName: options.name,
+        authOptions: Ember.Object.create(options)
+      });
+    } else {
+      const createAccountController = this.createAccount;
+      createAccountController.setProperties({
+        accountEmail: options.email,
+        accountUsername: options.username,
+        accountName: options.name,
+        authOptions: Ember.Object.create(options)
+      });
+      showModal("createAccount");
+    }
   }
 });
