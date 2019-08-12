@@ -233,6 +233,13 @@ aside.onebox {
         max-height: 100%;
         float: none;
       }
+
+      @include breakpoint(mobile-extra-large) {
+        // Prevent twitter embeds from being taller than the mobile viewport
+        iframe {
+          max-height: 70vh;
+        }
+      }
     }
 
     &.user-onebox {
