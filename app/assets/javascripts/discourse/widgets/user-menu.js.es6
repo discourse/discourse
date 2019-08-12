@@ -13,6 +13,28 @@ export function addUserMenuGlyph(glyph) {
 createWidget("user-menu-links", {
   tagName: "div.menu-links-header",
 
+  bookmarksGlyph() {
+    return {
+      label: "user.bookmarks",
+      className: "user-bookmarks-link",
+      icon: "bookmark",
+      href: `${this.attrs.path}/activity/bookmarks`
+    };
+  },
+
+  messagesGlyph() {
+    return {
+      label: "user.private_messages",
+      className: "user-pms-link",
+      icon: "envelope",
+      href: `${this.attrs.path}/messages`
+    };
+  },
+
+  glyphHtml(glyph) {
+    return this.attach("link", $.extend(glyph, { hideLabel: true }));
+  },
+
   html(attrs) {
     const { currentUser, siteSettings } = this;
 
@@ -37,20 +59,10 @@ createWidget("user-menu-links", {
       });
     }
 
-    glyphs.push({
-      label: "user.bookmarks",
-      className: "user-bookmarks-link",
-      icon: "bookmark",
-      href: `${path}/activity/bookmarks`
-    });
+    glyphs.push(this.bookmarksGlyph());
 
     if (siteSettings.enable_personal_messages) {
-      glyphs.push({
-        label: "user.private_messages",
-        className: "user-pms-link",
-        icon: "envelope",
-        href: `${path}/messages`
-      });
+      glyphs.push(this.messagesGlyph());
     }
 
     const profileLink = {
@@ -95,10 +107,7 @@ createWidget("user-menu-links", {
 
     return h("ul.menu-links-row", [
       links.map(l => h("li.user", this.attach("link", l))),
-      h(
-        "li.glyphs",
-        glyphs.map(l => this.attach("link", $.extend(l, { hideLabel: true })))
-      )
+      h("li.glyphs", glyphs.map(l => this.glyphHtml(l)))
     ]);
   }
 });
