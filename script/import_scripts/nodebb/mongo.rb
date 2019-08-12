@@ -14,17 +14,17 @@ module NodeBB
     end
 
     def groups
-      group_keys = mongo.find( { :_key => "groups:visible:createtime" } ).pluck(:value)
+      group_keys = mongo.find(_key: "groups:visible:createtime").pluck(:value)
 
       group_keys.map { |group_key| group(group_key) }
     end
 
     def group(id)
-      group = mongo.find( { :_key => "group:#{id}" } ).first
+      group = mongo.find(_key: "group:#{id}").first
       group["createtime"] = timestamp_to_date(group["createtime"])
-      group["member_ids"] = mongo.find( { :_key => "group:#{id}:members" } ).pluck(:value)
-      if mongo.find( { :_key => "group:#{id}:owners" } ).first
-        group["owner_ids"] = mongo.find( { :_key => "group:#{id}:owners" } ).first[:members]
+      group["member_ids"] = mongo.find(_key: "group:#{id}:members").pluck(:value)
+      if mongo.find(_key: "group:#{id}:owners").first
+        group["owner_ids"] = mongo.find(_key: "group:#{id}:owners").first[:members]
       else
         group["owner_ids"] = []
       end
@@ -33,13 +33,13 @@ module NodeBB
     end
 
     def users
-      user_keys = mongo.find( { :_key => "users:joindate" } ).pluck(:value)
+      user_keys = mongo.find(_key: "users:joindate").pluck(:value)
 
       user_keys.map { |user_key| user(user_key) }
     end
 
     def user(id)
-      user = mongo.find( { :_key => "user:#{id}" } ).first
+      user = mongo.find(_key: "user:#{id}").first
 
       user["joindate"] = timestamp_to_date(user["joindate"])
       user["lastonline"] = timestamp_to_date(user["lastonline"])
@@ -50,11 +50,11 @@ module NodeBB
     end
 
     def categories
-      category_keys = mongo.find( { :_key => "categories:cid" } ).pluck(:value)
+      category_keys = mongo.find(_key: "categories:cid").pluck(:value)
 
       {}.tap do |categories|
         category_keys.each do |category_key|
-          category = mongo.find( { :_key => "category:#{category_key}" } ).first
+          category = mongo.find(_key: "category:#{category_key}").first
 
           category['parentCid'] = category['parentCid'].to_s
           category['disabled'] = category['disabled'].to_s
@@ -66,13 +66,13 @@ module NodeBB
     end
 
     def topics(offset = 0, page_size = 2000)
-      topic_keys = mongo.find( { :_key => 'topics:tid' } ).skip(offset).limit(page_size).pluck(:value)
+      topic_keys = mongo.find(_key: 'topics:tid').skip(offset).limit(page_size).pluck(:value)
 
       topic_keys.map { |topic_key| topic(topic_key) }
     end
 
     def topic(id)
-      topic = mongo.find( { :_key => "topic:#{id}" } ).first
+      topic = mongo.find(_key: "topic:#{id}").first
 
       topic["lastposttime"] = timestamp_to_date(topic["lastposttime"])
       topic["timestamp"] = timestamp_to_date(topic["timestamp"])
@@ -86,20 +86,20 @@ module NodeBB
     end
 
     def topic_count
-      mongo.find( { :_key => 'topics:tid' } ).count
+      mongo.find(_key: 'topics:tid').count
     end
 
     def posts(offset = 0, page_size = 2000)
-      post_keys = mongo.find( { :_key => 'posts:pid' } ).skip(offset).limit(page_size).pluck(:value)
+      post_keys = mongo.find(_key: 'posts:pid').skip(offset).limit(page_size).pluck(:value)
 
       post_keys.map { |post_key| post(post_key) }
     end
 
     def post(id)
-      post = mongo.find( { :_key => "post:#{id}" } ).first
+      post = mongo.find(_key: "post:#{id}").first
       post["timestamp"] = timestamp_to_date(post["timestamp"])
-      if post["upvoted_by"] = mongo.find( { :_key => "pid:#{id}:upvote" } ).first
-        post["upvoted_by"] = mongo.find( { :_key => "pid:#{id}:upvote" } ).first[:members]
+      if post["upvoted_by"] = mongo.find(_key: "pid:#{id}:upvote").first
+        post["upvoted_by"] = mongo.find(_key: "pid:#{id}:upvote").first[:members]
       else
         post["upvoted_by"] = []
       end
@@ -111,7 +111,7 @@ module NodeBB
     end
 
     def post_count
-      mongo.find( { :_key => 'posts:pid' } ).count
+      mongo.find(_key: 'posts:pid').count
     end
 
     private
