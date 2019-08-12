@@ -201,7 +201,7 @@ module Onebox
       # = *( pchar / "/" / "?" )
       # CGI.escape turns space into + which is the most backward compatible
       # however it doesn't roundtrip through URI.unescape which prefers %20
-      CGI.escape(query_string).gsub('+', '%20')
+      CGI.escape(query_string).gsub('%25', '%').gsub('+', '%20')
     end
 
     # Percent-encodes a URI string per RFC3986 - https://tools.ietf.org/html/rfc3986
