@@ -205,7 +205,6 @@ private
       post_action.recover!
       action_attrs.each { |attr, val| post_action.public_send("#{attr}=", val) }
       post_action.save
-      PostActionNotifier.post_action_created(post_action)
     else
       post_action = PostAction.create(where_attrs.merge(action_attrs))
       if post_action && post_action.errors.count == 0
