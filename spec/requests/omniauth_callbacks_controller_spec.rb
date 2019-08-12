@@ -87,7 +87,7 @@ RSpec.describe Users::OmniauthCallbacksController do
     it "should display the failure message if needed" do
       get "/auth/failure"
       expect(response.status).to eq(200)
-      expect(response.body).to include(I18n.t("login.omniauth_error"))
+      expect(response.body).to include(I18n.t("login.omniauth_error.generic"))
     end
 
     describe "request" do
@@ -96,6 +96,28 @@ RSpec.describe Users::OmniauthCallbacksController do
         expect(response.status).to eq(404)
         get "/auth/fake_auth"
         expect(response.status).to eq(403)
+      end
+
+      it "should error for disabled authenticators" do
+        SiteSetting.enable_google_oauth2_logins = false
+        post "/auth/google_oauth2"
+        expect(response.status).to eq(404)
+        get "/auth/google_oauth2"
+        expect(response.status).to eq(403)
+      end
+
+      it "should handle common errors" do
+        OmniAuth::Strategies::GoogleOauth2.any_instance.stubs(:mock_request_call).raises(
+          OAuth::Unauthorized.new(mock().tap { |m| m.stubs(:code).returns(403); m.stubs(:message).returns("Message") })
+        )
+        post "/auth/google_oauth2"
+        expect(response.status).to eq(302)
+        expect(response.location).to include("/auth/failure?message=request_error")
+
+        OmniAuth::Strategies::GoogleOauth2.any_instance.stubs(:mock_request_call).raises(JWT::InvalidIatError.new)
+        post "/auth/google_oauth2"
+        expect(response.status).to eq(302)
+        expect(response.location).to include("/auth/failure?message=invalid_iat")
       end
 
       it "should only start auth with a POST request" do
@@ -111,10 +133,12 @@ RSpec.describe Users::OmniauthCallbacksController do
 
         it "should be CSRF protected" do
           post "/auth/google_oauth2"
-          expect(response.status).to eq(422)
+          expect(response.status).to eq(302)
+          expect(response.location).to include("/auth/failure?message=csrf_detected")
 
           post "/auth/google_oauth2", params: { authenticity_token: "faketoken" }
-          expect(response.status).to eq(422)
+          expect(response.status).to eq(302)
+          expect(response.location).to include("/auth/failure?message=csrf_detected")
 
           get "/session/csrf.json"
           token = JSON.parse(response.body)["csrf"]

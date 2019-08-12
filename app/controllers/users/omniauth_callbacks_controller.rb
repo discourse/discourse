@@ -91,7 +91,8 @@ class Users::OmniauthCallbacksController < ApplicationController
   end
 
   def failure
-    flash[:error] = I18n.t("login.omniauth_error")
+    error_key = params[:message].to_s.gsub(/[^\w-]/, "") || "generic"
+    flash[:error] = I18n.t("login.omniauth_error.#{error_key}", default: I18n.t("login.omniauth_error.generic"))
     render 'failure'
   end
 
