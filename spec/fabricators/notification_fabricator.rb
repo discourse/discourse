@@ -72,3 +72,17 @@ Fabricator(:mentioned_notification, from: :notification) do
     }.to_json
   end
 end
+
+Fabricator(:watching_first_post_notification, from: :notification) do
+  notification_type Notification.types[:watching_first_post]
+  data do |attrs|
+    {
+      topic_title: attrs[:topic].title,
+      original_post_id: attrs[:post].id,
+      original_post_type: attrs[:post].post_type,
+      original_username: attrs[:post].user.username,
+      revision_number: nil,
+      display_username: attrs[:post].user.username
+    }.to_json
+  end
+end

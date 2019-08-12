@@ -238,6 +238,7 @@ class PostMover
             )) :: JSON
       FROM moved_posts mp
       WHERE n.topic_id = mp.old_topic_id AND n.post_number = mp.old_post_number
+        AND n.notification_type <> #{Notification.types[:watching_first_post]}
     SQL
   end
 
