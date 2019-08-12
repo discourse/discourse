@@ -64,16 +64,22 @@ export default Ember.Controller.extend(
       "passwordValidation.failed",
       "nameValidation.failed",
       "userFieldsValidation.failed",
-      "inviteEmailAuthValidation.failed",
+      "inviteEmailAuthValidation.failed"
     )
     submitDisabled(
       usernameFailed,
       passwordFailed,
       nameFailed,
       userFieldsFailed,
-      inviteEmailAuthFailed,
+      inviteEmailAuthFailed
     ) {
-      return usernameFailed || passwordFailed || nameFailed || userFieldsFailed || inviteEmailAuthFailed;
+      return (
+        usernameFailed ||
+        passwordFailed ||
+        nameFailed ||
+        userFieldsFailed ||
+        inviteEmailAuthFailed
+      );
     },
 
     @computed

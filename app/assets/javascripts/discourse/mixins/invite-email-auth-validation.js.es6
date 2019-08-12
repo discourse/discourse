@@ -8,13 +8,18 @@ export default Ember.Mixin.create({
   },
 
   // Validate the name.
-  @computed("accountEmail", "authOptions.email", "authOptions.email_valid", "authOptions.auth_provider")
+  @computed(
+    "accountEmail",
+    "authOptions.email",
+    "authOptions.email_valid",
+    "authOptions.auth_provider"
+  )
   inviteEmailAuthValidation() {
     if (
       !this.siteSettings.enable_invite_only_oauth ||
       (this.siteSettings.enable_invite_only_oauth &&
-      this.get("authOptions.email") === this.email &&
-      this.get("authOptions.email_valid"))
+        this.get("authOptions.email") === this.email &&
+        this.get("authOptions.email_valid"))
     ) {
       return InputValidation.create({
         ok: true,
