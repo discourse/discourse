@@ -90,5 +90,8 @@ RSpec.describe Onebox::Helpers do
     it { expect(described_class.uri_encode("http://example.com/index.html?message=<script>alert('XSS');</script>")).to eq("http://example.com/index.html?message=%3Cscript%3Ealert%28%27XSS%27%29%3B%3C%2Fscript%3E") }
     it { expect(described_class.uri_encode("http://example.com/index.php/<IFRAME SRC=source.com onload='alert(document.cookie)'></IFRAME>")).to eq("http://example.com/index.php/%3CIFRAME%20SRC=source.com%20onload='alert(document.cookie)'%3E%3C/IFRAME%3E") }
     it { expect(described_class.uri_encode("https://en.wiktionary.org/wiki/greengrocer%27s_apostrophe")).to eq("https://en.wiktionary.org/wiki/greengrocer%27s_apostrophe") }
+
+    it { expect(described_class.uri_encode("https://example.com/random%2Bpath?q=random%2Bquery")).to eq("https://example.com/random%2Bpath?q=random%2Bquery") }
+    it { expect(described_class.uri_encode("https://glitch.com/edit/#!/equinox-watch")).to eq("https://glitch.com/edit/#!/equinox-watch") }
   end
 end

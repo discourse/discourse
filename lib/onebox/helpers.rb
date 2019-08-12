@@ -233,7 +233,10 @@ module Onebox
         encoded += '?' + query_string
       end
 
-      encoded += '#' + uri_query_encode(parts[:fragment]) unless parts[:fragment].nil?
+      unless parts[:fragment].nil?
+        encoded += '#' + uri_query_encode(parts[:fragment])&.gsub('%21%2F', '!/')
+      end
+
       encoded
     end
 
