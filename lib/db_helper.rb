@@ -21,20 +21,9 @@ class DbHelper
 
   def self.remap(from, to, anchor_left: false, anchor_right: false, excluded_tables: [], verbose: false)
     like = "#{anchor_left ? '' : "%"}#{from}#{anchor_right ? '' : "%"}"
-
-    triggers = DB.query(TRIGGERS_SQL).map(&:trigger_name).to_set
-
-    text_columns = Hash.new { |h, k| h[k] = [] }
-
-    DB.query(REMAP_SQL).each do |r|
-      unless triggers.include?(Migration::BaseDropper.readonly_trigger_name(r.table_name, r.column_name))
-        text_columns[r.table_name] << r.column_name
-      end
-    end
+    text_columns = find_text_columns(excluded_tables)
 
     text_columns.each do |table, columns|
-      next if excluded_tables.include?(table)
-
       set = columns.map do |column|
         "#{column} = REPLACE(#{column}, :from, :to)"
       end.join(", ")
@@ -56,19 +45,9 @@ class DbHelper
   end
 
   def self.regexp_replace(pattern, replacement, flags: "gi", match: "~*", excluded_tables: [], verbose: false)
-    triggers = DB.query(TRIGGERS_SQL).map(&:trigger_name).to_set
-
-    text_columns = Hash.new { |h, k| h[k] = [] }
-
-    DB.query(REMAP_SQL).each do |r|
-      unless triggers.include?(Migration::BaseDropper.readonly_trigger_name(r.table_name, r.column_name))
-        text_columns[r.table_name] << r.column_name
-      end
-    end
+    text_columns = find_text_columns(excluded_tables)
 
     text_columns.each do |table, columns|
-      next if excluded_tables.include?(table)
-
       set = columns.map do |column|
         "#{column} = REGEXP_REPLACE(#{column}, :pattern, :replacement, :flags)"
       end.join(", ")
@@ -120,4 +99,17 @@ class DbHelper
     SiteIconManager.ensure_optimized!
   end
 
+  def self.find_text_columns(excluded_tables)
+    triggers = DB.query(TRIGGERS_SQL).map(&:trigger_name).to_set
+    text_columns = Hash.new { |h, k| h[k] = [] }
+
+    DB.query(REMAP_SQL).each do |r|
+      next if excluded_tables.include?(r.table_name) ||
+        triggers.include?(Migration::BaseDropper.readonly_trigger_name(r.table_name, r.column_name))
+
+      text_columns[r.table_name] << r.column_name
+    end
+
+    text_columns
+  end
 end
