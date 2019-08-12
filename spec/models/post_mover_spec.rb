@@ -312,6 +312,17 @@ describe PostMover do
             expect(n4.post_number).to eq(4)
           end
 
+          it "doesn't update notifications of type 'watching_first_post'" do
+            n1 = Fabricate(:watching_first_post_notification, post: p1, user: another_user)
+
+            topic.move_posts(user, [p1.id], title: "new testing topic name")
+
+            n1.reload
+            expect(n1.topic_id).to eq(topic.id)
+            expect(n1.data_hash[:topic_title]).to eq(topic.title)
+            expect(n1.post_number).to eq(1)
+          end
+
           it "deletes notifications for users not allowed to see the topic" do
             another_admin = Fabricate(:admin)
             staff_category = Fabricate(:private_category, group: Group[:staff])
