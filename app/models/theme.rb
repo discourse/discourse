@@ -34,20 +34,18 @@ class Theme < ActiveRecord::Base
     where('user_selectable OR id = ?', SiteSetting.default_theme_id)
   }
 
-  def notify_color_change(color)
-    changed_colors << color
+  def notify_color_change(color, scheme: nil)
+    scheme ||= color.color_scheme
+    changed_colors << color if color
+    changed_schemes << scheme if scheme
   end
 
   after_save do
-    color_schemes = {}
-    changed_colors.each do |color|
-      color.save!
-      color_schemes[color.color_scheme_id] ||= color.color_scheme
-    end
-
-    color_schemes.values.each(&:save!)
+    changed_colors.each(&:save!)
+    changed_schemes.each(&:save!)
 
     changed_colors.clear
+    changed_schemes.clear
 
     changed_fields.each(&:save!)
     changed_fields.clear
@@ -341,6 +339,10 @@ class Theme < ActiveRecord::Base
 
   def changed_colors
     @changed_colors ||= []
+  end
+
+  def changed_schemes
+    @changed_schemes ||= Set.new
   end
 
   def set_field(target:, name:, value: nil, type: nil, type_id: nil, upload_id: nil)
