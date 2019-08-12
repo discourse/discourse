@@ -469,39 +469,44 @@ module BackupRestore
       uploads_folder = was_multisite ? "/" : "/uploads/#{current_db_name}/"
 
       if (old_base_url = BackupMetadata.value_for("base_url")) && old_base_url != Discourse.base_url
-        DbHelper.remap(old_base_url, Discourse.base_url)
+        remap(old_base_url, Discourse.base_url)
       end
 
       current_s3_base_url = SiteSetting.Upload.enable_s3_uploads ? SiteSetting.Upload.s3_base_url : nil
       if (old_s3_base_url = BackupMetadata.value_for("s3_base_url")) && old_base_url != current_s3_base_url
-        DbHelper.remap("#{old_s3_base_url}/", uploads_folder)
+        remap("#{old_s3_base_url}/", uploads_folder)
       end
 
       current_s3_cdn_url = SiteSetting.Upload.enable_s3_uploads ? SiteSetting.Upload.s3_cdn_url : nil
       if (old_s3_cdn_url = BackupMetadata.value_for("s3_cdn_url")) && old_s3_cdn_url != current_s3_cdn_url
         base_url = SiteSetting.Upload.enable_s3_uploads ? SiteSetting.Upload.s3_cdn_url : Discourse.base_url
-        DbHelper.remap("#{old_s3_cdn_url}/", UrlHelper.schemaless("#{base_url}#{uploads_folder}"))
+        remap("#{old_s3_cdn_url}/", UrlHelper.schemaless("#{base_url}#{uploads_folder}"))
 
         old_host = URI.parse(old_s3_cdn_url).host
         new_host = URI.parse(base_url).host
-        DbHelper.remap(old_host, new_host)
+        remap(old_host, new_host)
       end
 
       if (old_cdn_url = BackupMetadata.value_for("cdn_url")) && old_cdn_url != Discourse.asset_host
         base_url = Discourse.asset_host || Discourse.base_url
-        DbHelper.remap("#{old_cdn_url}/", UrlHelper.schemaless("#{base_url}/"))
+        remap("#{old_cdn_url}/", UrlHelper.schemaless("#{base_url}/"))
 
         old_host = URI.parse(old_cdn_url).host
         new_host = URI.parse(base_url).host
-        DbHelper.remap(old_host, new_host)
+        remap(old_host, new_host)
       end
 
       if previous_db_name != current_db_name
-        DbHelper.remap("uploads/#{previous_db_name}", "uploads/#{current_db_name}")
+        remap("uploads/#{previous_db_name}", "uploads/#{current_db_name}")
       end
 
     rescue => ex
       log "Something went wrong while remapping uploads.", ex
+    end
+
+    def remap(from, to)
+      puts "Remapping '#{from}' to '#{to}'"
+      DbHelper.remap(from, to, verbose: true, excluded_tables: ["backup_metadata"])
     end
 
     def migrate_to_s3
