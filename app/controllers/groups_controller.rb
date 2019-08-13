@@ -542,6 +542,7 @@ class GroupsController < ApplicationController
             :incoming_email,
             :primary_group,
             :visibility_level,
+            :members_visibility_level,
             :name,
             :grant_trust_level,
             :automatic_membership_email_domains,
