@@ -85,7 +85,7 @@ class MigratePollsData < ActiveRecord::Migration[5.2]
       end
 
       r.polls.values.each do |poll|
-        name = poll["name"].presence || "poll"
+        name = escape(poll["name"].presence || "poll")
         type = POLL_TYPES[(poll["type"].presence || "")[/(regular|multiple|number)/, 1] || "regular"]
         status = poll["status"] == "open" ? 0 : 1
         visibility = poll["public"] == "true" ? 1 : 0
@@ -95,7 +95,7 @@ class MigratePollsData < ActiveRecord::Migration[5.2]
         step = poll["step"].to_i.clamp(0, max)
         anonymous_voters = poll["anonymous_voters"].to_i.clamp(0, PG_INTEGER_MAX)
 
-        next if Poll.exists?(post_id: r.post_id, name: escape(name))
+        next if DB.query_single("SELECT COUNT(*) FROM polls WHERE post_id = ? AND name = ? LIMIT 1", r.post_id, name).first > 0
 
         poll_id = execute(<<~SQL
           INSERT INTO polls (
@@ -113,7 +113,7 @@ class MigratePollsData < ActiveRecord::Migration[5.2]
             updated_at
           ) VALUES (
             #{r.post_id},
-            '#{escape(name)}',
+            '#{name}',
             #{type},
             #{status},
             #{visibility},
