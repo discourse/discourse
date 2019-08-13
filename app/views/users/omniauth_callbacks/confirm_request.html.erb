@@ -1,5 +1,5 @@
 <div id='simple-container'>
-  <h2><%= t('login.omniauth_confirm_title', provider:(t "js.login.#{params[:provider]}.name")) %></h2>
+  <h2><%= t('login.omniauth_confirm_title', provider:(t "js.login.#{params[:provider]}.name", default: params[:provider])) %></h2>
   <br/>
 
   <%= form_tag do %>
