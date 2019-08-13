@@ -108,7 +108,6 @@ const SiteHeaderComponent = MountWidget.extend(Docking, PanEvents, {
   panStart(e) {
     const center = e.center;
     const $centeredElement = $(document.elementFromPoint(center.x, center.y));
-    const $window = $(window);
     if (
       ($centeredElement.hasClass("panel-body") ||
         $centeredElement.hasClass("header-cloak") ||
