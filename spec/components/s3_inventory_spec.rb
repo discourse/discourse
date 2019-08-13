@@ -48,6 +48,8 @@ describe "S3Inventory" do
         next_marker: "eyJNYXJrZXIiOiBudWxsLCAiYm90b190cnVuY2F0ZV9hbW91bnQiOiAyfQ=="
       }
     })
+
+    inventory.stubs(:cleanup!)
   end
 
   it "should raise error if an inventory file is not found" do
@@ -67,9 +69,7 @@ describe "S3Inventory" do
     Fabricate(:upload, etag: "ETag2", created_at: Time.now)
     Fabricate(:upload, created_at: 2.days.ago)
 
-    inventory.expects(:download_inventory_files_to_tmp_directory)
-    inventory.expects(:decompress_inventory_files)
-    inventory.expects(:files).returns([{ key: "Key", filename: "#{csv_filename}.gz" }]).times(2)
+    inventory.expects(:files).returns([{ key: "Key", filename: "#{csv_filename}.gz" }]).times(3)
     inventory.expects(:inventory_date).returns(Time.now)
 
     output = capture_stdout do
@@ -87,9 +87,7 @@ describe "S3Inventory" do
     ]
     files.each { |file| Fabricate(:upload, url: file[0]) }
 
-    inventory.expects(:download_inventory_files_to_tmp_directory)
-    inventory.expects(:decompress_inventory_files)
-    inventory.expects(:files).returns([{ key: "Key", filename: "#{csv_filename}.gz" }]).times(2)
+    inventory.expects(:files).returns([{ key: "Key", filename: "#{csv_filename}.gz" }]).times(3)
 
     output = capture_stdout do
       expect { inventory.backfill_etags_and_list_missing }.to change { Upload.where(etag: nil).count }.by(-2)
@@ -111,9 +109,7 @@ describe "S3Inventory" do
     post.link_post_uploads
     upload.delete
 
-    inventory.expects(:download_inventory_files_to_tmp_directory)
-    inventory.expects(:decompress_inventory_files)
-    inventory.expects(:files).returns([{ key: "Key", filename: "#{csv_filename}.gz" }]).times(2)
+    inventory.expects(:files).returns([{ key: "Key", filename: "#{csv_filename}.gz" }]).times(3)
 
     output = capture_stdout do
       inventory.backfill_etags_and_list_missing
