@@ -1,3 +1,4 @@
+import selectKit from "helpers/select-kit-helper";
 import { acceptance, updateCurrentUser } from "helpers/qunit-helpers";
 import { displayPollBuilderButton } from "discourse/plugins/poll/helpers/display-poll-builder-button";
 import { clearPopupMenuOptionsCallback } from "discourse/controllers/composer";
@@ -50,4 +51,16 @@ test("staff - with insufficient trust level", assert => {
       "it shows the builder button"
     );
   });
+});
+
+test("poll preview", async assert => {
+  displayPollBuilderButton();
+  const popupMenu = selectKit(".toolbar-popup-menu-options");
+  await popupMenu.expand();
+  await popupMenu.selectRowByValue("showPollBuilder");
+
+  await fillIn(".poll-textarea textarea", "First option\nSecond option");
+
+  assert.equal(find(".d-editor-preview li:first-child").text(), "First option");
+  assert.equal(find(".d-editor-preview li:last-child").text(), "Second option");
 });

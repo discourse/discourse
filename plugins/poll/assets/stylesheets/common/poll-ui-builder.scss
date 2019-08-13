@@ -1,7 +1,18 @@
 $poll-margin: 10px;
 
 .poll-ui-builder-form {
+  display: flex;
   margin: 0;
+
+  .options {
+    flex-shrink: 0;
+    width: 280px;
+  }
+
+  .d-editor-preview {
+    margin-left: $poll-margin * 2;
+    width: 360px;
+  }
 
   label {
     font-weight: bold;
@@ -45,7 +56,8 @@ $poll-margin: 10px;
     margin-top: $poll-margin;
   }
 
-  .poll-checkbox {
+  .poll-checkbox,
+  .poll-date {
     margin-top: $poll-margin / 2;
   }
 }
