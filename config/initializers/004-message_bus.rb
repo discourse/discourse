@@ -45,6 +45,9 @@ def setup_message_bus_env(env)
       Discourse.warn_exception(e, message: "Unexpected error in Message Bus")
     end
     user_id = user && user.id
+
+    raise Discourse::InvalidAccess if !user_id && SiteSetting.login_required
+
     is_admin = !!(user && user.admin?)
     group_ids = if is_admin
       # special rule, admin is allowed access to all groups
