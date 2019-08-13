@@ -1,0 +1,11 @@
+<%- if @list && @list.topics.present? %>
+  <table class='topics-list' data-embed-state='loaded' <%- if @embed_id %>data-embed-id="<%= @embed_id %>"<%- end %>>
+    <%- @list.topics.each do |t| %>
+      <tr class='topic-list-item'>
+        <td class='main-link'>
+          <a target="_parent" href="<%= t.url %>" class="title raw-link raw-topic-link" data-topic-id="<%= t.id %>"><%= t.title %></a>
+        </td>
+      </div>
+    <%- end %>
+  </table>
+<%- end %>
