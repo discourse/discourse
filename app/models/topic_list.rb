@@ -59,7 +59,7 @@ class TopicList
       @tags = Tag.where(id: @opts[:tags]).all
     end
 
-    @publish_read_state = opts[:publish_read_state]
+    @publish_read_state = !!@opts[:publish_read_state]
   end
 
   def top_tags

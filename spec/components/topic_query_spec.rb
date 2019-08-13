@@ -1053,6 +1053,15 @@ describe TopicQuery do
 
         expect(listed_message.minimum_unread_count).to eq(1)
       end
+
+      it 'returns the minimum number of unread posts when there are more than one user' do
+        new_user = Fabricate(:topic_allowed_user, topic: group_message).user
+        group_message.update!(highest_post_number: 3)
+        TopicUser.create!(user: creator, topic: group_message, highest_seen_post_number: 1)
+        TopicUser.create!(user: new_user, topic: group_message, highest_seen_post_number: 2)
+
+        expect(listed_message.minimum_unread_count).to eq(2)
+      end
     end
   end
 

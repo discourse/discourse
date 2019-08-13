@@ -254,6 +254,58 @@ describe TopicTrackingState do
     end
   end
 
+  describe '#publish_read' do
+    fab!(:group) { Fabricate(:group) }
+    let(:key) { "/private-messages/group-read/#{@group_message.id}" }
+    let(:latest_post_number) { 3 }
+
+    before do
+      group.add(user)
+      @group_message = Fabricate(:private_message_topic,
+        allowed_groups: [group],
+        topic_allowed_users: [Fabricate.build(:topic_allowed_user, user: user)],
+        highest_post_number: latest_post_number
+      )
+    end
+
+    it 'does not publish the read indicator if the option is disabled' do
+      messages = MessageBus.track_publish(key) do
+        TopicTrackingState.publish_read(@group_message.id, latest_post_number, user.id)
+      end
+
+      expect(messages).to be_empty
+    end
+
+    context 'when the read indicator is enabled' do
+      before { group.update!(publish_read_state: true) }
+
+      it 'does publish the read indicator' do
+        message = MessageBus.track_publish(key) do
+          TopicTrackingState.publish_read(@group_message.id, latest_post_number, user.id)
+        end.first
+
+        expect(message.data['topic_id']).to eq @group_message.id
+      end
+
+      it 'does not publish the read indicator if the message is not the last one' do
+        messages = MessageBus.track_publish(key) do
+          TopicTrackingState.publish_read(@group_message.id, latest_post_number - 1, user.id)
+        end
+
+        expect(messages).to be_empty
+      end
+
+      it 'does not publish the read indicator if the user is not a group member' do
+        allowed_user = Fabricate(:topic_allowed_user, topic: @group_message)
+        messages = MessageBus.track_publish(key) do
+          TopicTrackingState.publish_read(@group_message.id, latest_post_number, allowed_user.user_id)
+        end
+
+        expect(messages).to be_empty
+      end
+    end
+  end
+
   it "correctly handles muted categories" do
 
     user = Fabricate(:user)

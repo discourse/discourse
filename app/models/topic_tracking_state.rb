@@ -128,20 +128,39 @@ class TopicTrackingState
   end
 
   def self.publish_read(topic_id, last_read_post_number, user_id, notification_level = nil)
-    highest_post_number = Topic.where(id: topic_id).pluck(:highest_post_number).first
+    topic = Topic.select(:highest_post_number, :archetype, :id).find_by(id: topic_id)
 
     message = {
       topic_id: topic_id,
       message_type: "read",
       payload: {
         last_read_post_number: last_read_post_number,
-        highest_post_number: highest_post_number,
+        highest_post_number: topic.highest_post_number,
         topic_id: topic_id,
         notification_level: notification_level
       }
     }
 
+    update_read_indicator(topic, last_read_post_number, user_id, :read) if topic.private_message?
     MessageBus.publish(self.unread_channel_key(user_id), message.as_json, user_ids: [user_id])
+  end
+
+  def self.update_read_indicator(topic, last_read_post_number, user_id, event)
+    read_event = event == :read
+    groups = topic.allowed_groups
+      .joins(:group_users)
+      .select('ARRAY_AGG(group_users.user_id) AS members', :name, :publish_read_state)
+      .group('groups.id')
+
+    group_member = groups.any? { |g| g.members.include?(user_id) }
+
+    groups.each do |group|
+      next unless group.publish_read_state? && last_read_post_number == topic.highest_post_number
+      next if (read_event && !group_member) || (!read_event && group_member)
+      message = { topic_id: topic.id, show_indicator: read_event }.as_json
+
+      MessageBus.publish("/private-messages/group-read/#{topic.id}", message, user_ids: group.members)
+    end
   end
 
   def self.treat_as_new_topic_clause
@@ -332,6 +351,8 @@ SQL
     message = {
       topic_id: topic.id
     }
+
+    update_read_indicator(topic, topic.highest_post_number, topic.last_post_user_id, :unread)
 
     channels.each do |channel, ids|
       MessageBus.publish(

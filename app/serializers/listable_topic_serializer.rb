@@ -123,10 +123,13 @@ class ListableTopicSerializer < BasicTopicSerializer
   end
 
   def read_by_group_member
-    return false unless object.topic_list.publish_read_state
     return false unless object.respond_to?(:minimum_unread_count)
 
-    object.minimum_unread_count && object.minimum_unread_count >= 0
+    object.minimum_unread_count && object.minimum_unread_count <= 0
+  end
+
+  def include_read_by_group_member?
+    !!object.topic_list&.publish_read_state
   end
 
   protected

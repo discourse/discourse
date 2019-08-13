@@ -133,6 +133,15 @@
     .raw-topic-link > * {
       pointer-events: none;
     }
+
+    .read-indicator {
+      &.read {
+        display: inline;
+      }
+      &.unread {
+        display: none;
+      }
+    }
   }
 
   .link-bottom-line {
