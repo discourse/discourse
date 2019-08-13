@@ -974,6 +974,7 @@ en:
     post_edits:
       title: "Post Edits"
       labels:
+        edited_at: Date
         post: Post
         editor: Editor
         author: Author
