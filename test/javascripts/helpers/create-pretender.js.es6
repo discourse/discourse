@@ -604,7 +604,10 @@ export default function() {
     this.delete("/admin/badges/:id", success);
 
     this.get("/admin/logs/staff_action_logs.json", () => {
-      return response(200, { staff_action_logs: [], user_history_actions: [] });
+      return response(200, {
+        staff_action_logs: [],
+        extras: { user_history_actions: [] }
+      });
     });
 
     this.get("/admin/logs/watched_words", () => {

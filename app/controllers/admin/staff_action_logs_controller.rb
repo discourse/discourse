@@ -5,11 +5,24 @@ class Admin::StaffActionLogsController < Admin::AdminController
   def index
     filters = params.slice(*UserHistory.staff_filters + [:page, :limit])
 
-    staff_action_logs = UserHistory.staff_action_records(current_user, filters).to_a
-    render json: StaffActionLogsSerializer.new({
-      staff_action_logs: staff_action_logs,
-      user_history_actions: staff_available_actions
-    }, root: false)
+    page = (params[:page] || 0).to_i
+    page_size = (params[:limit] || 200).to_i.clamp(1, 200)
+
+    staff_action_logs = UserHistory.staff_action_records(current_user, filters)
+    count = staff_action_logs.count
+    staff_action_logs = staff_action_logs.offset(page * page_size).limit(page_size).to_a
+
+    load_more_params = params.permit(UserHistory.staff_filters)
+    load_more_params.merge!(page: page + 1, page_size: page_size)
+
+    render_json_dump(
+      staff_action_logs: serialize_data(staff_action_logs, UserHistorySerializer),
+      total_rows_staff_action_logs: count,
+      load_more_staff_action_logs: admin_staff_action_logs_path(load_more_params),
+      extras: {
+        user_history_actions: staff_available_actions
+      }
+    )
   end
 
   def diff
