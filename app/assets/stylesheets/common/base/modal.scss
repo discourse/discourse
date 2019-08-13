@@ -142,7 +142,7 @@
   overflow: auto;
 
   &:not(.history-modal) {
-    .modal-body:not(.reorder-categories) {
+    .modal-body:not(.reorder-categories):not(.poll-ui-builder) {
       max-height: none !important;
     }
   }
@@ -475,10 +475,12 @@
   }
 }
 
+.change-timestamp {
+  max-width: 420px;
+}
+
 .change-timestamp,
 .poll-ui-builder {
-  max-width: 420px;
-
   #date-container {
     .pika-single {
       position: relative !important; // overriding another important
