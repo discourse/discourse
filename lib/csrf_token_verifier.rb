@@ -23,6 +23,8 @@ class CSRFTokenVerifier
     end
   end
 
+  public :form_authenticity_token
+
   private
 
   attr_reader :request
