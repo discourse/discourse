@@ -73,6 +73,7 @@ Report.add_report('post_edits') do |report|
     ON editor.id = pr.user_id
   /*join*/
   /*where*/
+  ORDER BY pr.created_at ASC
   /*limit*/
   SQL
 
@@ -88,7 +89,6 @@ Report.add_report('post_edits') do |report|
   builder.where("editor.id > 0 AND editor.id != author.id")
   builder.where("pr.created_at >= :start_date", start_date: report.start_date)
   builder.where("pr.created_at <= :end_date", end_date: report.end_date)
-  builder.limit(report.limit || 20)
 
   result = builder.query
 
