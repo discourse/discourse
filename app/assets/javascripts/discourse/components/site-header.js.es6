@@ -9,10 +9,6 @@ import PanEvents, {
 
 const PANEL_BODY_MARGIN = 30;
 
-//android supports pulling in from the screen edges
-const SCREEN_EDGE_MARGIN = 20;
-const SCREEN_OFFSET = 300;
-
 const SiteHeaderComponent = MountWidget.extend(Docking, PanEvents, {
   widget: "header",
   docAt: null,
@@ -113,7 +109,6 @@ const SiteHeaderComponent = MountWidget.extend(Docking, PanEvents, {
     const center = e.center;
     const $centeredElement = $(document.elementFromPoint(center.x, center.y));
     const $window = $(window);
-    const windowWidth = parseInt($window.width());
     if (
       ($centeredElement.hasClass("panel-body") ||
         $centeredElement.hasClass("header-cloak") ||
@@ -122,30 +117,6 @@ const SiteHeaderComponent = MountWidget.extend(Docking, PanEvents, {
     ) {
       e.originalEvent.preventDefault();
       this._isPanning = true;
-    } else if (
-      center.x < SCREEN_EDGE_MARGIN &&
-      !this.element.querySelector(".menu-panel") &&
-      e.direction === "right"
-    ) {
-      this._animate = false;
-      this._panMenuOrigin = "left";
-      this._panMenuOffset = -SCREEN_OFFSET;
-      this._isPanning = true;
-      $("header.d-header").removeClass("scroll-down scroll-up");
-      this.eventDispatched(this._leftMenuAction(), "header");
-      window.requestAnimationFrame(() => this.panMove(e));
-    } else if (
-      windowWidth - center.x < SCREEN_EDGE_MARGIN &&
-      !this.element.querySelector(".menu-panel") &&
-      e.direction === "left"
-    ) {
-      this._animate = false;
-      this._panMenuOrigin = "right";
-      this._panMenuOffset = -SCREEN_OFFSET;
-      this._isPanning = true;
-      $("header.d-header").removeClass("scroll-down scroll-up");
-      this.eventDispatched(this._rightMenuAction(), "header");
-      window.requestAnimationFrame(() => this.panMove(e));
     } else {
       this._isPanning = false;
     }
@@ -224,7 +195,6 @@ const SiteHeaderComponent = MountWidget.extend(Docking, PanEvents, {
 
   didInsertElement() {
     this._super(...arguments);
-    const { isAndroid } = this.capabilities;
     $(window).on("resize.discourse-menu-panel", () => this.afterRender());
 
     this.appEvents.on("header:show-topic", this, "setTopic");
@@ -235,12 +205,6 @@ const SiteHeaderComponent = MountWidget.extend(Docking, PanEvents, {
     this.dispatch("search-autocomplete:after-complete", "search-term");
 
     this.appEvents.on("dom:clean", this, "_cleanDom");
-
-    // Only add listeners for opening menus by swiping them in on Android devices
-    // iOS will respond to these events, but also does swiping for back/forward
-    if (isAndroid) {
-      this.addTouchListeners($("body"));
-    }
   },
 
   _cleanDom() {
@@ -252,17 +216,12 @@ const SiteHeaderComponent = MountWidget.extend(Docking, PanEvents, {
 
   willDestroyElement() {
     this._super(...arguments);
-    const { isAndroid } = this.capabilities;
     $("body").off("keydown.header");
     $(window).off("resize.discourse-menu-panel");
 
     this.appEvents.off("header:show-topic", this, "setTopic");
     this.appEvents.off("header:hide-topic", this, "setTopic");
     this.appEvents.off("dom:clean", this, "_cleanDom");
-
-    if (isAndroid) {
-      this.removeTouchListeners($("body"));
-    }
 
     Ember.run.cancel(this._scheduledRemoveAnimate);
     window.cancelAnimationFrame(this._scheduledMovingAnimation);
