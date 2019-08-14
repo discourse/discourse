@@ -1,6 +1,9 @@
 import computed from "ember-addons/ember-computed-decorators";
 
 export default Ember.Component.extend({
+  router: Ember.inject.service(),
+  persistedQueryParams: null,
+
   tagName: "",
 
   @computed("category")
@@ -27,9 +30,25 @@ export default Ember.Component.extend({
     if (filterMode.indexOf("top/") === 0) {
       filterMode = filterMode.replace("top/", "");
     }
+
+    let params;
+    const currentRouteQueryParams = this.get("router.currentRoute.queryParams");
+    if (this.persistedQueryParams && currentRouteQueryParams) {
+      const currentKeys = Object.keys(currentRouteQueryParams);
+      const discoveryKeys = Object.keys(this.persistedQueryParams);
+      const supportedKeys = currentKeys.filter(
+        i => discoveryKeys.indexOf(i) > 0
+      );
+      params = supportedKeys.reduce((object, key) => {
+        object[key] = currentRouteQueryParams[key];
+        return object;
+      }, {});
+    }
+
     return Discourse.NavItem.buildList(category, {
       filterMode,
-      noSubcategories
+      noSubcategories,
+      persistedQueryParams: params
     });
   }
 });
