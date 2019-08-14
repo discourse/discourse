@@ -28,7 +28,7 @@ class Middleware::OmniauthBypassMiddleware
       CSRFTokenVerifier.new.call(env) if request.request_method.downcase.to_sym != :get
 
       # Check whether the authenticator is enabled
-      if !Discourse.enabled_authenticators.any? { |a| a.name == env['omniauth.strategy'].name }
+      if !Discourse.enabled_authenticators.any? { |a| a.name.to_sym == env['omniauth.strategy'].name.to_sym }
         raise AuthenticatorDisabled
       end
 
