@@ -140,6 +140,17 @@ describe Auth::ManagedAuthenticator do
         result = authenticator.after_authenticate(hash)
         expect(result.user.id).to eq(user.id)
       end
+
+      it 'works if there is no email' do
+        expect {
+          result = authenticator.after_authenticate(hash.deep_merge(info: { email: nil }))
+          expect(result.user).to eq(nil)
+          expect(result.username).to eq("IAmGroot")
+          expect(result.email).to eq(nil)
+        }.to change { UserAssociatedAccount.count }.by(1)
+        expect(UserAssociatedAccount.last.user).to eq(nil)
+        expect(UserAssociatedAccount.last.info["nickname"]).to eq("IAmGroot")
+      end
     end
 
     describe "avatar on update" do
