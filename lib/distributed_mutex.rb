@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 # Cross-process locking using Redis.
+#
+# Expiration happens when the current time is greater than the expire time
 class DistributedMutex
   DEFAULT_VALIDITY ||= 60
 
@@ -36,7 +38,7 @@ class DistributedMutex
         end
 
         if !unlock(expire_time) && current_time <= expire_time
-          warn("didn't unlock cleanly")
+          warn("the redis key appears to have been tampered with before expiration")
         end
       end
     end
@@ -79,40 +81,46 @@ class DistributedMutex
     now = redis.time[0]
     expire_time = now + validity
 
-    redis.watch key
-
-    current_expire_time = redis.get key
-
-    if current_expire_time && current_expire_time.to_i > now
+    redis.synchronize do
       redis.unwatch
+      redis.watch key
 
-      got_lock = false
-    else
-      result =
-        redis.multi do
-          redis.set key, expire_time.to_s
-          redis.expire key, validity
-        end
+      current_expire_time = redis.get key
 
-      got_lock = !result.nil?
+      if current_expire_time && now <= current_expire_time.to_i
+        redis.unwatch
+
+        got_lock = false
+      else
+        result =
+          redis.multi do
+            redis.set key, expire_time.to_s
+            redis.expire key, validity
+          end
+
+        got_lock = !result.nil?
+      end
+
+      [got_lock, expire_time]
     end
-
-    [got_lock, expire_time]
   end
 
   def unlock(expire_time)
-    redis.watch key
-    current_expire_time = redis.get key
-
-    if current_expire_time == expire_time.to_s
-      result =
-        redis.multi do
-          redis.del key
-        end
-      return !result.nil?
-    else
+    redis.synchronize do
       redis.unwatch
-      return false
+      redis.watch key
+      current_expire_time = redis.get key
+
+      if current_expire_time == expire_time.to_s
+        result =
+          redis.multi do
+            redis.del key
+          end
+        return !result.nil?
+      else
+        redis.unwatch
+        return false
+      end
     end
   end
 end
