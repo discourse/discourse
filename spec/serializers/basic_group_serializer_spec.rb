@@ -89,4 +89,29 @@ describe BasicGroupSerializer do
       end
     end
   end
+
+  describe '#can_see_members' do
+    fab!(:group) { Fabricate(:group, members_visibility_level: Group.visibility_levels[:members]) }
+
+    describe 'for a group user' do
+      fab!(:user) { Fabricate(:user) }
+      let(:guardian) { Guardian.new(user) }
+
+      before do
+        group.add(user)
+      end
+
+      it 'should be true' do
+        expect(subject.as_json[:can_see_members]).to eq(true)
+      end
+    end
+
+    describe 'for a normal user' do
+      let(:guardian) { Guardian.new(Fabricate(:user)) }
+
+      it 'should be false' do
+        expect(subject.as_json[:can_see_members]).to eq(false)
+      end
+    end
+  end
 end

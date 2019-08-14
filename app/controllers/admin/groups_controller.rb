@@ -135,6 +135,7 @@ class Admin::GroupsController < Admin::AdminController
       :mentionable_level,
       :messageable_level,
       :visibility_level,
+      :members_visibility_level,
       :automatic_membership_email_domains,
       :automatic_membership_retroactive,
       :title,
