@@ -261,6 +261,16 @@ RSpec.describe ListController do
           expect(response.status).to eq(403)
         end
       end
+
+      describe 'group members visibility restricted to logged-on-users' do
+        before { group.update!(members_visibility_level: Group.visibility_levels[:logged_on_users]) }
+
+        it 'should return the right response' do
+          get "/topics/groups/#{group.name}.json"
+
+          expect(response.status).to eq(403)
+        end
+      end
     end
 
     describe 'for a normal user' do
