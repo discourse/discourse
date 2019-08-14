@@ -136,6 +136,9 @@ NavItem.reopenClass({
     if (opts.category) {
       args.category = opts.category;
     }
+    if (opts.persistedQueryParams) {
+      args.persistedQueryParams = opts.persistedQueryParams;
+    }
     if (opts.noSubcategories) {
       args.noSubcategories = true;
     }
