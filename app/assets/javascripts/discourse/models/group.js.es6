@@ -162,6 +162,7 @@ const Group = RestModel.extend({
       mentionable_level: this.mentionable_level,
       messageable_level: this.messageable_level,
       visibility_level: this.visibility_level,
+      members_visibility_level: this.members_visibility_level,
       automatic_membership_email_domains: this.emailDomains,
       automatic_membership_retroactive: !!this.automatic_membership_retroactive,
       title: this.title,
