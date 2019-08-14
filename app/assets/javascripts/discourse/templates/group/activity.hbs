@@ -1,7 +1,9 @@
   <section class="user-secondary-navigation">
   {{#mobile-nav class='activity-nav' desktopClass='action-list activity-list nav-stacked' currentPath=router._router.currentPath}}
-    {{group-activity-filter filter="posts" categoryId=category_id}}
-    {{group-activity-filter filter="topics" categoryId=category_id}}
+    {{#if model.can_see_members}}
+      {{group-activity-filter filter="posts" categoryId=category_id}}
+      {{group-activity-filter filter="topics" categoryId=category_id}}
+    {{/if}}
     {{#if siteSettings.enable_mentions}}
       {{group-activity-filter filter="mentions" categoryId=category_id}}
     {{/if}}

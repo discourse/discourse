@@ -161,6 +161,7 @@ class ListController < ApplicationController
     group = Group.find_by(name: params[:group_name])
     raise Discourse::NotFound unless group
     guardian.ensure_can_see_group!(group)
+    guardian.ensure_can_see_group_members!(group)
 
     list_opts = build_topic_list_options
     list = generate_list_for("group_topics", group, list_opts)

@@ -29,7 +29,7 @@ export default Ember.Controller.extend({
     this.set("loading", true);
     const model = this.model;
 
-    if (model) {
+    if (model && model.can_see_members) {
       model.findMembers(this.memberParams).finally(() => {
         this.set(
           "application.showFooter",

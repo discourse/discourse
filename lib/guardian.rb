@@ -209,6 +209,26 @@ class Guardian
     true
   end
 
+  def can_see_group_members?(group)
+    return false if group.blank?
+    return true if group.members_visibility_level == Group.visibility_levels[:public]
+    return true if is_admin?
+    return true if is_staff? && group.members_visibility_level == Group.visibility_levels[:staff]
+    return true if authenticated? && group.members_visibility_level == Group.visibility_levels[:logged_on_users]
+    return false if user.blank?
+
+    membership = GroupUser.find_by(group_id: group.id, user_id: user.id)
+
+    return false unless membership
+
+    if !membership.owner
+      return false if group.members_visibility_level == Group.visibility_levels[:owners]
+      return false if group.members_visibility_level == Group.visibility_levels[:staff]
+    end
+
+    true
+  end
+
   def can_see_groups?(groups)
     return false if groups.blank?
     return true if groups.all? { |g| g.visibility_level == Group.visibility_levels[:public] }

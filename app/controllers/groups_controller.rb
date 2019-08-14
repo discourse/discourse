@@ -159,6 +159,8 @@ class GroupsController < ApplicationController
 
   def posts
     group = find_group(:group_id)
+    guardian.ensure_can_see_group_members!(group)
+
     posts = group.posts_for(
       guardian,
       params.permit(:before_post_id, :category_id)
@@ -168,6 +170,8 @@ class GroupsController < ApplicationController
 
   def posts_feed
     group = find_group(:group_id)
+    guardian.ensure_can_see_group_members!(group)
+
     @posts = group.posts_for(
       guardian,
       params.permit(:before_post_id, :category_id)
@@ -203,6 +207,8 @@ class GroupsController < ApplicationController
 
   def members
     group = find_group(:group_id)
+
+    guardian.ensure_can_see_group_members!(group)
 
     limit = (params[:limit] || 20).to_i
     offset = params[:offset].to_i
