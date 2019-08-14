@@ -657,7 +657,7 @@ describe GroupsController do
         expect(group.incoming_email).to eq("test@mail.org")
         expect(group.primary_group).to eq(true)
         expect(group.visibility_level).to eq(1)
-        expect(group.membersvisibility_level).to eq(3)
+        expect(group.members_visibility_level).to eq(3)
         expect(group.automatic_membership_email_domains).to eq('test.org')
         expect(group.automatic_membership_retroactive).to eq(true)
         expect(group.grant_trust_level).to eq(2)
