@@ -19,7 +19,7 @@ class Auth::Result
   end
 
   def email
-    @email.downcase
+    @email&.downcase
   end
 
   def failed?
