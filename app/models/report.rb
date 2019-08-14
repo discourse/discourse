@@ -83,8 +83,7 @@ class Report
 
   def self.wrap_slow_query(timeout = 20000)
     ActiveRecord::Base.connection.transaction do
-      # Setting transaction to read only prevents shoot-in-foot actions like SELECT FOR UPDATE
-      # see test 'doesn't allow you to modify the database #1'
+      # Allows only read only transactions
       DB.exec "SET TRANSACTION READ ONLY"
       # Set a statement timeout so we can't tie up the server
       DB.exec "SET LOCAL statement_timeout = #{timeout}"
