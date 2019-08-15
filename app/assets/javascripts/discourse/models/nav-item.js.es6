@@ -102,7 +102,7 @@ const NavItem = Discourse.Model.extend({
 
 const ExtraNavItem = NavItem.extend({
   href: Ember.computed({
-    set(key, value) {
+    set(key) {
       let customHref;
       NavItem.customNavItemHrefs.forEach(function(cb) {
         customHref = cb.call(this, this);
