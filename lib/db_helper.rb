@@ -105,6 +105,7 @@ class DbHelper
     SiteSetting.refresh!
     Theme.expire_site_cache!
     SiteIconManager.ensure_optimized!
+    ApplicationController.banner_json_cache.clear
   end
 
   def self.find_text_columns(excluded_tables)
