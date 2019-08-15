@@ -1,11 +1,11 @@
 import { acceptance } from "helpers/qunit-helpers";
 import { IMAGE_VERSION as v } from "pretty-text/emoji/version";
-import EmojisStore from "discourse/lib/emojis-store";
 
 acceptance("EmojiPicker", {
   loggedIn: true,
   beforeEach() {
-    EmojisStore.reset();
+    const store = Discourse.__container__.lookup("service:emojis-store");
+    store.reset();
   }
 });
 

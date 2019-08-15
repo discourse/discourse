@@ -21,7 +21,6 @@ import { wantsNewWindow } from "discourse/lib/intercept-click";
 import { translations } from "pretty-text/emoji/data";
 import { emojiSearch, isSkinTonableEmoji } from "pretty-text/emoji";
 import { emojiUrlFor } from "discourse/lib/text";
-import EmojisStore from "discourse/lib/emojis-store";
 
 // Our head can be a static string or a function that returns a string
 // based on input (like for numbered lists).
@@ -221,6 +220,7 @@ export default Ember.Component.extend({
   _mouseTrap: null,
   showLink: true,
   emojiPickerIsActive: false,
+  emojisStore: Ember.inject.service("emojis-store"),
 
   @computed("placeholder")
   placeholderTranslated(placeholder) {
@@ -240,7 +240,6 @@ export default Ember.Component.extend({
     this._super(...arguments);
 
     this.register = getRegister(this);
-    this._emojisStore = new EmojisStore();
   },
 
   didInsertElement() {
@@ -424,7 +423,7 @@ export default Ember.Component.extend({
 
       transformComplete: v => {
         if (v.code) {
-          this._emojisStore.track(v.code);
+          this.emojisStore.track(v.code);
           return `${v.code}:`;
         } else {
           $editorInput.autocomplete({ cancel: true });

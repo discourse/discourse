@@ -1,7 +1,6 @@
 import { on, observes } from "ember-addons/ember-computed-decorators";
 import { findRawTemplate } from "discourse/lib/raw-templates";
 import { emojiUrlFor } from "discourse/lib/text";
-import EmojisStore from "discourse/lib/emojis-store";
 
 import {
   extendedEmojiList,
@@ -18,6 +17,7 @@ const customEmojis = _.keys(extendedEmojiList()).map(code => {
 
 export default Ember.Component.extend({
   automaticPositioning: true,
+  emojisStore: Ember.inject.service("emojis-store"),
 
   close() {
     this._unbindEvents();
@@ -40,8 +40,8 @@ export default Ember.Component.extend({
     this.$list = this.$picker.find(".list");
 
     this.setProperties({
-      selectedDiversity: this._emojisStore.diversity,
-      recentEmojis: this._emojisStore.favorites
+      selectedDiversity: this.emojisStore.diversity,
+      recentEmojis: this.emojisStore.favorites
     });
 
     run.scheduleOnce("afterRender", this, function() {
@@ -62,7 +62,6 @@ export default Ember.Component.extend({
 
   @on("init")
   _setInitialValues() {
-    this._emojisStore = new EmojisStore();
     this._checkTimeout = null;
     this.scrollPosition = 0;
     this.$visibleSections = [];
@@ -98,7 +97,7 @@ export default Ember.Component.extend({
 
   @observes("selectedDiversity")
   selectedDiversityChanged() {
-    this._emojisStore.diversity = this.selectedDiversity;
+    this.emojisStore.diversity = this.selectedDiversity;
 
     $.each(
       this.$list.find(".emoji[data-loaded='1'].diversity"),
@@ -305,7 +304,7 @@ export default Ember.Component.extend({
       ".section[data-section='recent'] .clear-recent"
     );
     $recent.on("click", () => {
-      this._emojisStore.favorites = [];
+      this.emojisStore.favorites = [];
       this.set("recentEmojis", []);
       this._scrollTo(0);
       return false;
@@ -587,8 +586,8 @@ export default Ember.Component.extend({
   },
 
   _trackEmojiUsage(code) {
-    this._emojisStore.track(code);
-    this.set("recentEmojis", this._emojisStore.favorites.slice(0, PER_ROW));
+    this.emojisStore.track(code);
+    this.set("recentEmojis", this.emojisStore.favorites.slice(0, PER_ROW));
   },
 
   _scrollTo(y) {
