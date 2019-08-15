@@ -9,7 +9,9 @@ export default class EmojisStore {
   constructor() {
     this.store = new KeyValueStore(STORE_NAMESPACE);
 
-    this._setup();
+    if (!this.store.getObject(EMOJI_USAGE)) {
+      this.favorites = [];
+    }
   }
 
   get diversity() {
@@ -40,11 +42,5 @@ export default class EmojisStore {
     const store = new KeyValueStore(STORE_NAMESPACE);
     store.setObject({ key: EMOJI_USAGE, value: [] });
     store.setObject({ key: EMOJI_SELECTED_DIVERSITY, value: 1 });
-  }
-
-  _setup() {
-    if (!this.store.getObject(EMOJI_USAGE)) {
-      this.favorites = [];
-    }
   }
 }
