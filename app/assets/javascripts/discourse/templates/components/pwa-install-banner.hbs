@@ -1,0 +1,10 @@
+{{#if showPWAInstallBanner}}
+  <div class="row">
+    <div class="pwa-install-banner alert alert-info">
+      <div class="close" {{action "dismiss"}}>
+        {{d-icon 'times'}}
+      </div>
+      {{i18n 'pwa.install_banner.prompt' title=siteSettings.title}} <a {{action "turnon"}}>{{i18n 'pwa.install_banner.install'}}</a>.
+    </div>
+  </div>
+{{/if}}
