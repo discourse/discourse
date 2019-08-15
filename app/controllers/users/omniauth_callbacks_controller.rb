@@ -108,7 +108,7 @@ class Users::OmniauthCallbacksController < ApplicationController
   def complete_response_data
     if @auth_result.user
       user_found(@auth_result.user)
-    elsif invite_required?
+    elsif SiteSetting.invite_only?
       @auth_result.requires_invite = true
     else
       session[:authentication] = @auth_result.session_data
@@ -154,12 +154,6 @@ class Users::OmniauthCallbacksController < ApplicationController
         @auth_result.awaiting_activation = true
       end
     end
-  end
-
-  # If invite_only and enable_invite_only_oauth allow the user to authenticate if coming from the invite page
-  def invite_required?
-    (SiteSetting.invite_only? && !SiteSetting.enable_invite_only_oauth) ||
-      (SiteSetting.invite_only? && (!@origin.include?('invites') && SiteSetting.enable_invite_only_oauth))
   end
 
 end
