@@ -354,8 +354,8 @@ en:
 
     pwa:
       install_banner:
-        prompt: "Do you want to install %{title} on this device?"
-        install: "Install"
+        question: "Do you want to"
+        link: "install %{title} on this device?"
 
     choose_topic:
       none_found: "No topics found."
