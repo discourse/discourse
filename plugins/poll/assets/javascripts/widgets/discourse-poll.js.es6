@@ -402,7 +402,7 @@ createWidget("discourse-poll-info", {
       }
     }
 
-    if (!attrs.isClosed && !attrs.showResults && poll.get("public")) {
+    if (!attrs.isClosed && !attrs.showResults && poll.public && (poll.results !== "staff_only")) {
       contents.push(infoTextHtml(I18n.t("poll.public.title")));
     }
 
@@ -418,7 +418,9 @@ createWidget("discourse-poll-buttons", {
     const { poll, post } = attrs;
     const topicArchived = post.get("topic.archived");
     const closed = attrs.isClosed;
-    const hideResultsDisabled = closed || topicArchived;
+    const staffOnly = poll.results === "staff_only";
+    const isStaff = this.currentUser && this.currentUser.staff;
+    const hideResultsDisabled = !staffOnly && (closed || topicArchived);
 
     if (attrs.isMultiple && !hideResultsDisabled) {
       const castVotesDisabled = !attrs.canCastVotes;
@@ -452,6 +454,8 @@ createWidget("discourse-poll-buttons", {
         contents.push(infoTextHtml(I18n.t("poll.results.vote.title")));
       } else if (poll.get("results") === "on_close" && !closed) {
         contents.push(infoTextHtml(I18n.t("poll.results.closed.title")));
+      } else if (poll.results === "staff_only" && !isStaff) {
+        contents.push(infoTextHtml(I18n.t("poll.results.staff.title")));
       } else {
         contents.push(
           this.attach("button", {
@@ -491,7 +495,7 @@ createWidget("discourse-poll-buttons", {
     if (
       this.currentUser &&
       (this.currentUser.get("id") === post.get("user_id") ||
-        this.currentUser.get("staff")) &&
+        isStaff) &&
       !topicArchived
     ) {
       if (closed) {
@@ -536,18 +540,21 @@ export default createWidget("discourse-poll", {
 
   defaultState(attrs) {
     const { post, poll } = attrs;
+    const staffOnly = attrs.poll.results === "staff_only";
 
     const showResults =
-      post.get("topic.archived") ||
-      this.isClosed() ||
-      (poll.get("results") !== "on_close" && this.hasVoted());
+      (post.get("topic.archived") && !staffOnly) ||
+      (this.isClosed() && !staffOnly) ||
+      (poll.results !== "on_close" &&
+       this.hasVoted() && !staffOnly);
 
     return { loading: false, showResults };
   },
 
   html(attrs, state) {
+    const staffOnly = attrs.poll.results === "staff_only";
     const showResults =
-      state.showResults || attrs.post.get("topic.archived") || this.isClosed();
+      state.showResults || (attrs.post.get("topic.archived") && !staffOnly) || (this.isClosed() && !staffOnly);
 
     const newAttrs = jQuery.extend({}, attrs, {
       canCastVotes: this.canCastVotes(),
@@ -721,6 +728,13 @@ export default createWidget("discourse-poll", {
         attrs.poll.setProperties(poll);
         if (attrs.poll.get("results") !== "on_close") {
           state.showResults = true;
+        }
+        if (attrs.poll.results === "staff_only") {
+          if (this.currentUser && this.currentUser.get("staff")) {
+            state.showResults = true;
+          } else {
+            state.showResults = false;
+          }
         }
       })
       .catch(error => {
