@@ -70,6 +70,33 @@ describe EmbedController do
     end
   end
 
+  context "#topics" do
+    it "raises an error when not enabled" do
+      get '/embed/topics?embed_id=de-1234'
+      expect(response.status).to eq(400)
+    end
+
+    context "when enabled" do
+      before do
+        SiteSetting.embed_topics_list = true
+      end
+
+      it "raises an error with a weird id" do
+        get '/embed/topics?discourse_embed_id=../asdf/-1234', headers: headers
+        expect(response.status).to eq(400)
+      end
+
+      it "returns a list of topics" do
+        topic = Fabricate(:topic)
+        get '/embed/topics?discourse_embed_id=de-1234', headers: headers
+        expect(response.status).to eq(200)
+        expect(response.headers['X-Frame-Options']).to eq("ALLOWALL")
+        expect(response.body).to match("data-embed-id=\"de-1234\"")
+        expect(response.body).to match("data-topic-id=\"#{topic.id}\"")
+      end
+    end
+  end
+
   context "with a host" do
     let!(:embeddable_host) { Fabricate(:embeddable_host) }
     let(:headers) { { 'REFERER' => embed_url } }

@@ -268,6 +268,7 @@ en:
     continue: "Continue Discussion"
     error: "Error Embedding"
     referer: "Referer:"
+    error_topics: "The `embed topics list` site setting was not enabled"
     mismatch: "The referer was either not sent, or did not match any of the following hosts:"
     no_hosts: "No hosts were set up for embedding."
     configure: "Configure Embedding"
@@ -1943,6 +1944,7 @@ en:
     autohighlight_all_code: "Force apply code highlighting to all preformatted code blocks even when they didn't explicitly specify the language."
     highlighted_languages: "Included syntax highlighting rules. (Warning: including too many languages may impact performance) see: <a href='https://highlightjs.org/static/demo/' target='_blank'>https://highlightjs.org/static/demo</a> for a demo"
 
+    embed_topics_list: "Support HTML embedding of topics lists"
     embed_truncate: "Truncate the embedded posts."
     embed_support_markdown: "Support Markdown formatting for embedded posts."
     embed_whitelist_selector: "A comma separated list of CSS elements that are allowed in embeds."
