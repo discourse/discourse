@@ -83,6 +83,8 @@ class Report
 
   def self.wrap_slow_query(timeout = 20000)
     ActiveRecord::Base.connection.transaction do
+      # Allows only read only transactions
+      DB.exec "SET TRANSACTION READ ONLY"
       # Set a statement timeout so we can't tie up the server
       DB.exec "SET LOCAL statement_timeout = #{timeout}"
       yield
