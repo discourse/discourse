@@ -5,7 +5,7 @@ const EMOJI_SELECTED_DIVERSITY = "emojiSelectedDiversity";
 const TRACKED_EMOJIS = 15;
 const STORE_NAMESPACE = "discourse_emojis_";
 
-export default class EmojiStore {
+export default class EmojisStore {
   constructor() {
     this.store = new KeyValueStore(STORE_NAMESPACE);
 
