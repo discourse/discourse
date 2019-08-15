@@ -26,6 +26,10 @@ class Notification < ActiveRecord::Base
   after_commit :send_email, on: :create
   after_commit :refresh_notification_count, on: [:create, :update, :destroy]
 
+  after_commit(on: :create) do
+    DiscourseEvent.trigger(:notification_created, self)
+  end
+
   def self.ensure_consistency!
     DB.exec(<<~SQL, Notification.types[:private_message])
       DELETE
