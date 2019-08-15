@@ -3,10 +3,11 @@ import KeyValueStore from "discourse/lib/key-value-store";
 const EMOJI_USAGE = "emojiUsage";
 const EMOJI_SELECTED_DIVERSITY = "emojiSelectedDiversity";
 const TRACKED_EMOJIS = 15;
+const STORE_NAMESPACE = "discourse_emojis_";
 
 export default class EmojiStore {
   constructor() {
-    this.store = new KeyValueStore("discourse_emojis_");
+    this.store = new KeyValueStore(STORE_NAMESPACE);
 
     this._setup();
   }
@@ -36,7 +37,7 @@ export default class EmojiStore {
   }
 
   static reset() {
-    const store = new KeyValueStore("discourse_emojis_");
+    const store = new KeyValueStore(STORE_NAMESPACE);
     store.setObject({ key: EMOJI_USAGE, value: [] });
     store.setObject({ key: EMOJI_SELECTED_DIVERSITY, value: 1 });
   }
