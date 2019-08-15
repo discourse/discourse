@@ -175,3 +175,19 @@ aside.onebox {
 div.lightbox-wrapper {
   margin-bottom: 20px;
 }
+
+.topics-list {
+  width: 100%;
+  .topic-list-item {
+    td {
+      padding: 0.5rem;
+    }
+
+    .main-link a {
+      color: $primary;
+    }
+    .main-link a:visited {
+      color: $primary-medium;
+    }
+  }
+}

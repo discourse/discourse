@@ -849,6 +849,7 @@ posting:
     choices:
       - 4-spaces-indent
       - code-fences
+  embed_topics_list: false
   embed_truncate:
     default: true
   embed_support_markdown:
