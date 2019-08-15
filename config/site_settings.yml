@@ -327,10 +327,6 @@ login:
   enable_local_logins:
     client: true
     default: true
-  enable_invite_only_oauth:
-    client: true
-    default: false
-    hidden: true
   enable_local_logins_via_email:
     client: true
     default: true

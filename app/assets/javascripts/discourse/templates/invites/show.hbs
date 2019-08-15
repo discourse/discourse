@@ -14,98 +14,55 @@
       {{else}}
         <p>{{i18n 'invites.invited_by'}}</p>
         <p>{{user-info user=invitedBy}}</p>
-        <p>
-        {{{yourEmailMessage}}}
-        {{#if inviteOnlyOauthEnabled }}
-          {{login-buttons externalLogin=(action "externalLogin")}}
-        {{/if}}
+
+        <p>{{{yourEmailMessage}}}
         {{#if externalAuthsEnabled}}
-          {{#unless inviteOnlyOauthEnabled}}
-            {{i18n 'invites.social_login_available'}}
-          {{/unless}}
+             {{i18n 'invites.social_login_available'}}
         {{/if}}
         </p>
 
-        {{#if hasAuthOptions}}
-          {{#if inviteOnlyOauthEnabled }}
-            {{input-tip validation=inviteEmailAuthValidation id="account-email-validation"}}
+        <form>
+          <div class="input username-input">
+            <label>{{i18n 'user.username.title'}}</label>
+            {{input value=accountUsername id="new-account-username" name="username" maxlength=maxUsernameLength autocomplete="discourse"}}
+            &nbsp;{{input-tip validation=usernameValidation id="username-validation"}}
+            <div class="instructions">{{i18n 'user.username.instructions'}}</div>
+          </div>
+
+          {{#if fullnameRequired}}
+            <div class="input name-input">
+              <label>{{i18n 'invites.name_label'}}</label>
+              {{input value=accountName id="new-account-name" name="name"}}
+              <div class="instructions">{{nameInstructions}}</div>
+            </div>
           {{/if}}
-          <form>
-            <div class="input username-input">
-              <label>{{i18n 'user.username.title'}}</label>
-              {{input value=accountUsername id="new-account-username" name="username" maxlength=maxUsernameLength autocomplete="discourse"}}
-              &nbsp;{{input-tip validation=usernameValidation id="username-validation"}}
-              <div class="instructions">{{i18n 'user.username.instructions'}}</div>
+
+          <div class="input password-input">
+            <label>{{i18n 'invites.password_label'}}</label>
+            {{password-field value=accountPassword type="password" id="new-account-password" capsLockOn=capsLockOn}}
+            &nbsp;{{input-tip validation=passwordValidation}}
+            <div class="instructions">
+              {{passwordInstructions}} {{i18n 'invites.optional_description'}}
+              <div class="caps-lock-warning {{unless capsLockOn 'invisible'}}">
+                {{d-icon "exclamation-triangle"}} {{i18n 'login.caps_lock_warning'}}</div>
             </div>
+          </div>
 
-            {{#if fullnameRequired}}
-              <div class="input name-input">
-                <label>{{i18n 'invites.name_label'}}</label>
-                {{input value=accountName id="new-account-name" name="name"}}
-                <div class="instructions">{{nameInstructions}}</div>
-              </div>
-            {{/if}}
-
-            {{#if userFields}}
-              <div class='user-fields'>
-                {{#each userFields as |f|}}
-                  {{user-field field=f.field value=f.value}}
-                {{/each}}
-              </div>
-            {{/if}}
-
-            <button class='btn btn-primary' {{action "submit"}} disabled={{submitDisabled}}>{{i18n 'invites.accept_invite'}}</button>
-
-            {{#if errorMessage}}
-              <br/><br/>
-              <div class='alert alert-error'>{{errorMessage}}</div>
-            {{/if}}
-          </form>
-        {{/if}}
-        {{#unless inviteOnlyOauthEnabled}}
-          <form>
-            <div class="input username-input">
-              <label>{{i18n 'user.username.title'}}</label>
-              {{input value=accountUsername id="new-account-username" name="username" maxlength=maxUsernameLength autocomplete="discourse"}}
-              &nbsp;{{input-tip validation=usernameValidation id="username-validation"}}
-              <div class="instructions">{{i18n 'user.username.instructions'}}</div>
+          {{#if userFields}}
+            <div class='user-fields'>
+              {{#each userFields as |f|}}
+                {{user-field field=f.field value=f.value}}
+              {{/each}}
             </div>
+          {{/if}}
 
-            {{#if fullnameRequired}}
-              <div class="input name-input">
-                <label>{{i18n 'invites.name_label'}}</label>
-                {{input value=accountName id="new-account-name" name="name"}}
-                <div class="instructions">{{nameInstructions}}</div>
-              </div>
-            {{/if}}
+          <button class='btn btn-primary' {{action "submit"}} disabled={{submitDisabled}}>{{i18n 'invites.accept_invite'}}</button>
 
-            <div class="input password-input">
-              <label>{{i18n 'invites.password_label'}}</label>
-              {{password-field value=accountPassword type="password" id="new-account-password" capsLockOn=capsLockOn}}
-              &nbsp;{{input-tip validation=passwordValidation}}
-              <div class="instructions">
-                {{passwordInstructions}} {{i18n 'invites.optional_description'}}
-                <div class="caps-lock-warning {{unless capsLockOn 'invisible'}}">
-                  {{d-icon "exclamation-triangle"}} {{i18n 'login.caps_lock_warning'}}</div>
-              </div>
-            </div>
-
-            {{#if userFields}}
-              <div class='user-fields'>
-                {{#each userFields as |f|}}
-                  {{user-field field=f.field value=f.value}}
-                {{/each}}
-              </div>
-            {{/if}}
-
-            <button class='btn btn-primary' {{action "submit"}} disabled={{submitDisabled}}>{{i18n 'invites.accept_invite'}}</button>
-
-            {{#if errorMessage}}
-              <br/><br/>
-              <div class='alert alert-error'>{{errorMessage}}</div>
-            {{/if}}
-          </form>
-        {{/unless}}
+          {{#if errorMessage}}
+            <br/><br/>
+            <div class='alert alert-error'>{{errorMessage}}</div>
+          {{/if}}
+        </form>
       {{/if}}
     </div>
   </div>
