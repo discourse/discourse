@@ -17,7 +17,7 @@ const customEmojis = _.keys(extendedEmojiList()).map(code => {
 
 export default Ember.Component.extend({
   automaticPositioning: true,
-  emojisStore: Ember.inject.service("emojis-store"),
+  emojiStore: Ember.inject.service("emoji-store"),
 
   close() {
     this._unbindEvents();
@@ -40,8 +40,8 @@ export default Ember.Component.extend({
     this.$list = this.$picker.find(".list");
 
     this.setProperties({
-      selectedDiversity: this.emojisStore.diversity,
-      recentEmojis: this.emojisStore.favorites
+      selectedDiversity: this.emojiStore.diversity,
+      recentEmojis: this.emojiStore.favorites
     });
 
     run.scheduleOnce("afterRender", this, function() {
@@ -97,7 +97,7 @@ export default Ember.Component.extend({
 
   @observes("selectedDiversity")
   selectedDiversityChanged() {
-    this.emojisStore.diversity = this.selectedDiversity;
+    this.emojiStore.diversity = this.selectedDiversity;
 
     $.each(
       this.$list.find(".emoji[data-loaded='1'].diversity"),
@@ -304,7 +304,7 @@ export default Ember.Component.extend({
       ".section[data-section='recent'] .clear-recent"
     );
     $recent.on("click", () => {
-      this.emojisStore.favorites = [];
+      this.emojiStore.favorites = [];
       this.set("recentEmojis", []);
       this._scrollTo(0);
       return false;
@@ -586,8 +586,8 @@ export default Ember.Component.extend({
   },
 
   _trackEmojiUsage(code) {
-    this.emojisStore.track(code);
-    this.set("recentEmojis", this.emojisStore.favorites.slice(0, PER_ROW));
+    this.emojiStore.track(code);
+    this.set("recentEmojis", this.emojiStore.favorites.slice(0, PER_ROW));
   },
 
   _scrollTo(y) {
