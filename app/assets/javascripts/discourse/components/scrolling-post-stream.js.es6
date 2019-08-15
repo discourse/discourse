@@ -40,7 +40,8 @@ export default MountWidget.extend({
       "gaps",
       "selectedQuery",
       "selectedPostsCount",
-      "searchService"
+      "searchService",
+      "showReadIndicator"
     );
   },
 

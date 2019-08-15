@@ -52,6 +52,37 @@ export function buildButton(name, widget) {
   }
 }
 
+registerButton("read-count", attrs => {
+  if (attrs.showReadIndicator) {
+    const count = attrs.readCount;
+    if (count > 0) {
+      return {
+        action: "",
+        title: "Read indicator",
+        className: "button-count",
+        contents: count,
+        icon: "",
+        iconRight: true,
+        addContainer: false
+      };
+    }
+  }
+});
+
+registerButton("read", attrs => {
+  const disabled = attrs.readCount === 0;
+  if (attrs.showReadIndicator) {
+    return {
+      action: "readIndicator",
+      className: "read",
+      title: "post.controls.read_indicator",
+      icon: "far-eye",
+      before: "read-count",
+      disabled
+    };
+  }
+});
+
 function likeCount(attrs) {
   const count = attrs.likeCount;
 
