@@ -91,10 +91,7 @@
           width: 100%; //IE11
           font-size: $font-down-1;
           font-weight: normal;
-          color: dark-light-choose(
-            scale-color($primary, $lightness: 50%),
-            scale-color($secondary, $lightness: 40%)
-          );
+          color: $primary-medium;
           white-space: normal;
         }
       }
