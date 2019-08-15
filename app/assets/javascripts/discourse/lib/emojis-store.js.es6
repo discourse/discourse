@@ -1,12 +1,11 @@
 import KeyValueStore from "discourse/lib/key-value-store";
 
-const keyValueStore = new KeyValueStore("discourse_emojis_");
 const EMOJI_USAGE = "emojiUsage";
 const EMOJI_SELECTED_DIVERSITY = "emojiSelectedDiversity";
 const TRACKED_EMOJIS = 15;
 
 export default class EmojiStore {
-  constructor(name) {
+  constructor() {
     this.store = new KeyValueStore("discourse_emojis_");
 
     this._setup();
