@@ -40,9 +40,11 @@ module Email
       @custom_styles = {}
 
       if !css.blank?
-        require 'css_parser' unless defined?(CssParser)
+        # there is a minor race condition here, CssParser could be
+        # loaded by ::CssParser::Parser not loaded
+        require 'css_parser' unless defined?(::CssParser::Parser)
 
-        parser = CssParser::Parser.new(import: false)
+        parser = ::CssParser::Parser.new(import: false)
         parser.load_string!(css)
         parser.each_selector do |selector, value|
           @custom_styles[selector] ||= +''
