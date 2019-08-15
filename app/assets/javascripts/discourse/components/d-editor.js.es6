@@ -460,8 +460,8 @@ export default Ember.Component.extend({
           }
 
           if (term === "") {
-            if (this._emojisStore.favorites.length) {
-              return resolve(this._emojisStore.favorites.slice(0, 4));
+            if (this.emojisStore.favorites.length) {
+              return resolve(this.emojisStore.favorites.slice(0, 5));
             } else {
               return resolve([
                 "slight_smile",
