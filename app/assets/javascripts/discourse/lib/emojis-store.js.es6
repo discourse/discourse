@@ -17,7 +17,7 @@ export default class EmojiStore {
   }
 
   set diversity(value) {
-    this.store.setObject({ key: EMOJI_SELECTED_DIVERSITY, value });
+    this.store.setObject({ key: EMOJI_SELECTED_DIVERSITY, value: value || 1 });
   }
 
   get favorites() {
@@ -25,7 +25,7 @@ export default class EmojiStore {
   }
 
   set favorites(value) {
-    this.store.setObject({ key: EMOJI_USAGE, value });
+    this.store.setObject({ key: EMOJI_USAGE, value: value || [] });
   }
 
   track(code) {
