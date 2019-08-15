@@ -927,7 +927,7 @@ class Post < ActiveRecord::Base
     missing_post_uploads = {}
     count = 0
 
-    DistributedMutex.synchronize("find_missing_uploads") do
+    DistributedMutex.synchronize("find_missing_uploads", validity: 30.minutes) do
       PostCustomField.where(name: Post::MISSING_UPLOADS).delete_all
       query = Post
         .have_uploads

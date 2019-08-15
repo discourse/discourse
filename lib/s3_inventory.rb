@@ -30,7 +30,7 @@ class S3Inventory
       return
     end
 
-    DistributedMutex.synchronize("s3_inventory_list_missing_#{type}") do
+    DistributedMutex.synchronize("s3_inventory_list_missing_#{type}", validity: 30.minutes) do
       begin
         files.each do |file|
           next if File.exists?(file[:filename][0...-3])
