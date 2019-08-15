@@ -70,22 +70,22 @@ describe DiscoursePluginRegistry do
   end
 
   context '.register_css' do
-    let(:asset_name) { "hello" }
+    let(:plugin_directory_name) { "hello" }
 
     before do
-      registry_instance.register_css('hello.css', asset_name)
+      registry_instance.register_css('hello.css', plugin_directory_name)
     end
 
     it 'is not leaking' do
-      expect(DiscoursePluginRegistry.new.stylesheets[asset_name]).to be_nil
+      expect(DiscoursePluginRegistry.new.stylesheets[plugin_directory_name]).to be_nil
     end
 
     it 'is returned by DiscoursePluginRegistry.stylesheets' do
-      expect(registry_instance.stylesheets[asset_name].include?('hello.css')).to eq(true)
+      expect(registry_instance.stylesheets[plugin_directory_name].include?('hello.css')).to eq(true)
     end
 
     it "won't add the same file twice" do
-      expect { registry_instance.register_css('hello.css', asset_name) }.not_to change(registry.stylesheets[asset_name], :size)
+      expect { registry_instance.register_css('hello.css', plugin_directory_name) }.not_to change(registry.stylesheets[plugin_directory_name], :size)
     end
   end
 
@@ -159,12 +159,12 @@ describe DiscoursePluginRegistry do
     end
 
     it "does register general css properly" do
-      asset_name = "my_plugin"
-      registry.register_asset("test.css", nil, asset_name)
-      registry.register_asset("test2.css", nil, asset_name)
+      plugin_directory_name = "my_plugin"
+      registry.register_asset("test.css", nil, plugin_directory_name)
+      registry.register_asset("test2.css", nil, plugin_directory_name)
 
-      expect(registry.mobile_stylesheets[asset_name]).to be_nil
-      expect(registry.stylesheets[asset_name].count).to eq(2)
+      expect(registry.mobile_stylesheets[plugin_directory_name]).to be_nil
+      expect(registry.stylesheets[plugin_directory_name].count).to eq(2)
     end
 
     it "registers desktop css properly" do
