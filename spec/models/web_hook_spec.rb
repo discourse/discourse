@@ -508,6 +508,16 @@ describe WebHook do
       expect(payload["id"]).to eq(reviewable.id)
     end
 
+    it 'should enqueue the right hooks for notifications' do
+      Fabricate(:notification_web_hook)
+      notification = Fabricate(:notification)
+      job_args = Jobs::EmitWebHookEvent.jobs.last["args"].first
+
+      expect(job_args["event_name"]).to eq("notification_created")
+      payload = JSON.parse(job_args["payload"])
+      expect(payload["id"]).to eq(notification.id)
+    end
+
     it 'should enqueue the right hooks for reviewables' do
       Fabricate(:reviewable_web_hook)
       reviewable = Fabricate(:reviewable)

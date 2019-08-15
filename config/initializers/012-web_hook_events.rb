@@ -106,3 +106,7 @@ DiscourseEvent.on(:reviewable_transitioned_to) do |status, reviewable|
     end
   end
 end
+
+DiscourseEvent.on(:notification_created) do |notification|
+  WebHook.enqueue_object_hooks(:notification, notification, :notification_created, NotificationSerializer)
+end

@@ -3322,6 +3322,9 @@ en:
         reviewable_event:
           name: "Reviewable Event"
           details: "When a new item is ready for review and when its status is updated."
+        notification_event:
+          name: "Notification Event"
+          details: "When a user receives a notification in their feed."
         delivery_status:
           title: "Delivery Status"
           inactive: "Inactive"

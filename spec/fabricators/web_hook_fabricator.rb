@@ -94,3 +94,11 @@ Fabricator(:reviewable_web_hook, from: :web_hook) do
     web_hook.web_hook_event_types = [transients[:reviewable_hook]]
   end
 end
+
+Fabricator(:notification_web_hook, from: :web_hook) do
+  transient notification_hook: WebHookEventType.find_by(name: 'notification')
+
+  after_build do |web_hook, transients|
+    web_hook.web_hook_event_types = [transients[:notification_hook]]
+  end
+end
