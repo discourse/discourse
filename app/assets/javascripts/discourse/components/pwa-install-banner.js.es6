@@ -3,38 +3,42 @@ import {
   on
 } from "ember-addons/ember-computed-decorators";
 
-const userDismissedPromptKey = "dismissed-pwa-install-banner";
+const USER_DISMISSED_PROMPT_KEY = "dismissed-pwa-install-banner";
 
 export default Ember.Component.extend({
   deferredInstallPromptEvent: null,
 
+  _handleInstallPromptEvent(event) {
+    // Prevent Chrome 76+ from automatically showing the prompt
+    event.preventDefault();
+    // Stash the event so it can be triggered later
+    this.set("deferredInstallPromptEvent", event);
+  },
+
   @on("init")
   _registerListener() {
-    var that = this;
-    window.addEventListener("beforeinstallprompt", e => {
-      // Prevent Chrome 76+ from automatically showing the prompt
-      e.preventDefault();
-      // Stash the event so it can be triggered later
-      that.set("deferredInstallPromptEvent", e);
-    });
+    this._promptEventHandler = Ember.run.bind(
+      this,
+      this._handleInstallPromptEvent
+    );
+    window.addEventListener("beforeinstallprompt", this._promptEventHandler);
   },
 
   @computed
   bannerDismissed: {
     set(value) {
-      localStorage.setItem(userDismissedPromptKey, value);
-      return localStorage.getItem(userDismissedPromptKey);
+      localStorage.setItem(USER_DISMISSED_PROMPT_KEY, value);
+      return localStorage.getItem(USER_DISMISSED_PROMPT_KEY);
     },
     get() {
-      return localStorage.getItem(userDismissedPromptKey);
+      return localStorage.getItem(USER_DISMISSED_PROMPT_KEY);
     }
   },
 
   @computed("deferredInstallPromptEvent", "bannerDismissed")
   showPWAInstallBanner() {
     return (
-      this.currentUser && // User must be logged in
-      this.currentUser.trust_level > 0 && // Be at least trust_level 1
+      this.get("currentUser.trust_level") > 0 &&
       this.deferredInstallPromptEvent && // Pass the browser engagement checks
       !window.matchMedia("(display-mode: standalone)").matches && // Not be in the installed PWA already
       !this.bannerDismissed // Have not a previously dismissed install banner
@@ -42,9 +46,13 @@ export default Ember.Component.extend({
   },
 
   actions: {
-    turnon() {
+    turnOn() {
       this.set("bannerDismissed", true);
       this.deferredInstallPromptEvent.prompt();
+      window.removeEventListener(
+        "beforeinstallprompt",
+        this._promptEventHandler
+      );
     },
     dismiss() {
       this.set("bannerDismissed", true);
