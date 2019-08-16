@@ -353,7 +353,7 @@ en:
       edit: "Edit this banner >>"
 
     pwa:
-      install_banner:
+      install_banner: "Do you want to <a href>install %{title} on this device?</a>"
         question: "Do you want to"
         link: "install %{title} on this device?"
 
