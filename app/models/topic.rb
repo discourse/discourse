@@ -822,8 +822,17 @@ class Topic < ActiveRecord::Base
       group_id = group.id
 
       group.users.where(
-        "group_users.notification_level > ? AND user_id != ?",
-        NotificationLevels.all[:muted], user.id
+        "group_users.notification_level = :level",
+        level: NotificationLevels.all[:tracking],
+        id: user.id
+      ).find_each do |u|
+        PostAlerter.new.notify_group_summary(u, last_post)
+      end
+
+      group.users.where(
+        "group_users.notification_level in (:levels) AND user_id != :id",
+        levels: [NotificationLevels.all[:watching], NotificationLevels.all[:watching_first_post]],
+        id: user.id
       ).find_each do |u|
 
         u.notifications.create!(

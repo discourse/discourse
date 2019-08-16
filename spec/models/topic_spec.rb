@@ -786,29 +786,65 @@ describe Topic do
             expect(topic.allowed_groups.include?(admins)).to eq(false)
           end
 
+          def set_state!(group, user, state)
+            group.group_users.find_by(user_id: user.id).update!(
+              notification_level: NotificationLevels.all[state]
+            )
+          end
+
           it 'creates a notification for each user in the group' do
-            user = Fabricate(:user)
-            user_2 = Fabricate(:user)
+
+            # trigger notification
+            user_watching_first = Fabricate(:user)
+            user_watching = Fabricate(:user)
+
+            # trigger rollup
+            user_tracking = Fabricate(:user)
+
+            # trigger nothing
+            user_normal = Fabricate(:user)
+            user_muted = Fabricate(:user)
+
             Fabricate(:post, topic: topic)
 
-            group.add(user)
-            group.add(user_2)
-            group.add(topic.user)
+            group.add(topic.user) # no notification even though watching
+            group.add(user_watching_first)
+            group.add(user_watching)
+            group.add(user_normal)
+            group.add(user_muted)
+            group.add(user_tracking)
 
-            group.group_users.find_by(user: user_2).update!(
-              notification_level: NotificationLevels.all[:muted]
-            )
+            set_state!(group, topic.user, :watching)
+            set_state!(group, user_watching, :watching)
+            set_state!(group, user_watching_first, :watching_first_post)
+            set_state!(group, user_tracking, :tracking)
+            set_state!(group, user_normal, :regular)
+            set_state!(group, user_muted, :muted)
 
-            expect { topic.invite_group(topic.user, group) }
-              .to change { Notification.count }.by(1)
+            Notification.delete_all
+            topic.invite_group(topic.user, group)
 
-            notification = Notification.last
+            expect(Notification.count).to eq(3)
 
-            expect(notification.user).to eq(user)
-            expect(notification.topic).to eq(topic)
+            [user_watching, user_watching_first].each do |u|
+              notifications = Notification.where(user_id: u.id).to_a
+              expect(notifications.length).to eq(1)
+
+              notification = notifications.first
+
+              expect(notification.topic).to eq(topic)
+              expect(notification.notification_type)
+                .to eq(Notification.types[:invited_to_private_message])
+
+            end
+
+            notifications = Notification.where(user_id: user_tracking.id).to_a
+            expect(notifications.length).to eq(1)
+            notification = notifications.first
 
             expect(notification.notification_type)
-              .to eq(Notification.types[:invited_to_private_message])
+              .to eq(Notification.types[:group_message_summary])
+
           end
         end
       end
