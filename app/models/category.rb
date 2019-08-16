@@ -264,6 +264,15 @@ class Category < ActiveRecord::Base
     end
   end
 
+  def access_category_via_group
+    Group
+      .joins(:category_groups)
+      .where("category_groups.category_id = ?", self.id)
+      .where("groups.public_admission OR groups.allow_membership_requests")
+      .order(:allow_membership_requests)
+      .first
+  end
+
   def duplicate_slug?
     Category.where(slug: self.slug, parent_category_id: parent_category_id).where.not(id: id).any?
   end

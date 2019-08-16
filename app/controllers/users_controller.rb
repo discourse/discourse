@@ -606,8 +606,6 @@ class UsersController < ApplicationController
         end
       end
     end
-  rescue RateLimiter::LimitExceeded => e
-    render_rate_limit_error(e)
   rescue ::Webauthn::SecurityKeyError => err
     render json: {
       message: err.message,

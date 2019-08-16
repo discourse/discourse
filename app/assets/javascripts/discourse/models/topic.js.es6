@@ -17,16 +17,15 @@ import {
 } from "ember-addons/ember-computed-decorators";
 
 export function loadTopicView(topic, args) {
-  const topicId = topic.get("id");
   const data = _.merge({}, args);
-  const url = `${Discourse.getURL("/t/")}${topicId}`;
+  const url = `${Discourse.getURL("/t/")}${topic.id}`;
   const jsonUrl = (data.nearPost ? `${url}/${data.nearPost}` : url) + ".json";
 
   delete data.nearPost;
   delete data.__type;
   delete data.store;
 
-  return PreloadStore.getAndRemove(`topic_${topicId}`, () =>
+  return PreloadStore.getAndRemove(`topic_${topic.id}`, () =>
     ajax(jsonUrl, { data })
   ).then(json => {
     topic.updateFromJson(json);

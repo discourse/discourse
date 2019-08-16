@@ -368,7 +368,13 @@ class ListController < ApplicationController
     raise Discourse::NotFound.new("category not found", check_permalinks: true) if !@category
 
     @description_meta = @category.description_text
-    raise Discourse::NotFound unless guardian.can_see?(@category)
+    if !guardian.can_see?(@category)
+      if SiteSetting.detailed_404
+        raise Discourse::InvalidAccess
+      else
+        raise Discourse::NotFound
+      end
+    end
 
     if use_crawler_layout?
       @subcategories = @category.subcategories.select { |c| guardian.can_see?(c) }
