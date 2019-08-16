@@ -52,12 +52,7 @@ export default Ember.Controller.extend(
       nameFailed,
       userFieldsFailed
     ) {
-      return (
-        usernameFailed ||
-        passwordFailed ||
-        nameFailed ||
-        userFieldsFailed
-      );
+      return usernameFailed || passwordFailed || nameFailed || userFieldsFailed;
     },
 
     @computed
