@@ -256,7 +256,8 @@ describe TopicTrackingState do
 
   describe '#publish_read' do
     fab!(:group) { Fabricate(:group) }
-    let(:key) { "/private-messages/group-read/#{@group_message.id}" }
+    let(:read_topic_key) { "/private-messages/group-read/#{@group_message.id}" }
+    let(:read_post_key) { "/topic/#{@group_message.id}" }
     let(:latest_post_number) { 3 }
 
     before do
@@ -266,10 +267,19 @@ describe TopicTrackingState do
         topic_allowed_users: [Fabricate.build(:topic_allowed_user, user: user)],
         highest_post_number: latest_post_number
       )
+      @post = Fabricate(:post, topic: @group_message, post_number: latest_post_number)
     end
 
     it 'does not publish the read indicator if the option is disabled' do
-      messages = MessageBus.track_publish(key) do
+      messages = MessageBus.track_publish(read_topic_key) do
+        TopicTrackingState.publish_read(@group_message.id, latest_post_number, user.id)
+      end
+
+      expect(messages).to be_empty
+    end
+
+    it 'does not trigger a read count update if no allowed groups have the option enabled' do
+      messages = MessageBus.track_publish(read_post_key) do
         TopicTrackingState.publish_read(@group_message.id, latest_post_number, user.id)
       end
 
@@ -280,7 +290,7 @@ describe TopicTrackingState do
       before { group.update!(publish_read_state: true) }
 
       it 'does publish the read indicator' do
-        message = MessageBus.track_publish(key) do
+        message = MessageBus.track_publish(read_topic_key) do
           TopicTrackingState.publish_read(@group_message.id, latest_post_number, user.id)
         end.first
 
@@ -288,8 +298,10 @@ describe TopicTrackingState do
       end
 
       it 'does not publish the read indicator if the message is not the last one' do
-        messages = MessageBus.track_publish(key) do
-          TopicTrackingState.publish_read(@group_message.id, latest_post_number - 1, user.id)
+        not_last_post_number = latest_post_number - 1
+        Fabricate(:post, topic: @group_message, post_number: not_last_post_number)
+        messages = MessageBus.track_publish(read_topic_key) do
+          TopicTrackingState.publish_read(@group_message.id, not_last_post_number, user.id)
         end
 
         expect(messages).to be_empty
@@ -297,11 +309,19 @@ describe TopicTrackingState do
 
       it 'does not publish the read indicator if the user is not a group member' do
         allowed_user = Fabricate(:topic_allowed_user, topic: @group_message)
-        messages = MessageBus.track_publish(key) do
+        messages = MessageBus.track_publish(read_topic_key) do
           TopicTrackingState.publish_read(@group_message.id, latest_post_number, allowed_user.user_id)
         end
 
         expect(messages).to be_empty
+      end
+
+      it 'publish a read count update to every client' do
+        message = MessageBus.track_publish(read_post_key) do
+          TopicTrackingState.publish_read(@group_message.id, latest_post_number, user.id)
+        end.first
+
+        expect(message.data[:type]).to eq :read
       end
     end
   end

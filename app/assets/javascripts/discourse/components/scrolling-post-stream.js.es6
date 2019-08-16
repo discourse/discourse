@@ -292,6 +292,12 @@ export default MountWidget.extend({
             onRefresh: "refreshLikes"
           });
         }
+
+        if (args.refreshReaders) {
+          this.dirtyKeys.keyDirty(`post-menu-${args.id}`, {
+            onRefresh: "refreshReaders"
+          });
+        }
       } else if (args.force) {
         this.dirtyKeys.forceAll();
       }
