@@ -821,6 +821,8 @@ class Topic < ActiveRecord::Base
 
       group_id = group.id
 
+      group.set_message_default_notification_levels!(self, ignore_existing: true)
+
       group.users.where(
         "group_users.notification_level = :level",
         level: NotificationLevels.all[:tracking],
@@ -845,6 +847,7 @@ class Topic < ActiveRecord::Base
             group_id: group_id
           }.to_json
         )
+
       end
     end
 

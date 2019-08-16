@@ -84,21 +84,8 @@ class TopicCreator
       topic.notifier.watch!(tau.user_id)
     end
 
-    topic.reload.topic_allowed_groups.each do |tag|
-      tag.group.group_users.each do |gu|
-        next if gu.user_id == -1 || gu.user_id == topic.user_id
-
-        action =
-          case gu.notification_level
-          when TopicUser.notification_levels[:tracking] then "track!"
-          when TopicUser.notification_levels[:regular]  then "regular!"
-          when TopicUser.notification_levels[:muted]    then "mute!"
-          when TopicUser.notification_levels[:watching] then "watch!"
-          else "track!"
-          end
-
-        topic.notifier.public_send(action, gu.user_id)
-      end
+    topic.reload.topic_allowed_groups.each do |topic_allowed_group|
+      topic_allowed_group.group.set_message_default_notification_levels!(topic)
     end
   end
 

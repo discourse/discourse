@@ -359,6 +359,25 @@ class Group < ActiveRecord::Base
     (10..19).to_a
   end
 
+  def set_message_default_notification_levels!(topic, ignore_existing: false)
+    group_users.pluck(:user_id, :notification_level).each do |user_id, notification_level|
+      next if user_id == -1
+      next if user_id == topic.user_id
+      next if ignore_existing && TopicUser.where(user_id: user_id, topic_id: topic.id).exists?
+
+      action =
+        case notification_level
+        when TopicUser.notification_levels[:tracking] then "track!"
+        when TopicUser.notification_levels[:regular]  then "regular!"
+        when TopicUser.notification_levels[:muted]    then "mute!"
+        when TopicUser.notification_levels[:watching] then "watch!"
+        else "track!"
+        end
+
+      topic.notifier.public_send(action, user_id)
+    end
+  end
+
   def self.refresh_automatic_group!(name)
     return unless id = AUTO_GROUPS[name]
 
