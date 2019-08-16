@@ -220,6 +220,7 @@ export default Ember.Component.extend({
   _mouseTrap: null,
   showLink: true,
   emojiPickerIsActive: false,
+  emojiStore: Ember.inject.service("emoji-store"),
 
   @computed("placeholder")
   placeholderTranslated(placeholder) {
@@ -422,6 +423,7 @@ export default Ember.Component.extend({
 
       transformComplete: v => {
         if (v.code) {
+          this.emojiStore.track(v.code);
           return `${v.code}:`;
         } else {
           $editorInput.autocomplete({ cancel: true });
@@ -458,7 +460,17 @@ export default Ember.Component.extend({
           }
 
           if (term === "") {
-            return resolve(["slight_smile", "smile", "wink", "sunny", "blush"]);
+            if (this.emojiStore.favorites.length) {
+              return resolve(this.emojiStore.favorites.slice(0, 5));
+            } else {
+              return resolve([
+                "slight_smile",
+                "smile",
+                "wink",
+                "sunny",
+                "blush"
+              ]);
+            }
           }
 
           if (translations[full]) {
