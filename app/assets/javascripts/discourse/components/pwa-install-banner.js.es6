@@ -24,14 +24,19 @@ export default Ember.Component.extend({
     window.addEventListener("beforeinstallprompt", this._promptEventHandler);
   },
 
+  @on("willDestroyElement")
+  _unregisterListener() {
+    window.removeEventListener("beforeinstallprompt", this._promptEventHandler);
+  },
+
   @computed
   bannerDismissed: {
     set(value) {
-      localStorage.setItem(USER_DISMISSED_PROMPT_KEY, value);
-      return localStorage.getItem(USER_DISMISSED_PROMPT_KEY);
+      this.keyValueStore.set({key: USER_DISMISSED_PROMPT_KEY, value: value});
+      return this.keyValueStore.get(USER_DISMISSED_PROMPT_KEY);
     },
     get() {
-      return localStorage.getItem(USER_DISMISSED_PROMPT_KEY);
+      return this.keyValueStore.get(USER_DISMISSED_PROMPT_KEY);
     }
   },
 
@@ -49,13 +54,11 @@ export default Ember.Component.extend({
     turnOn() {
       this.set("bannerDismissed", true);
       this.deferredInstallPromptEvent.prompt();
-      window.removeEventListener(
-        "beforeinstallprompt",
-        this._promptEventHandler
-      );
+      this._unregisterListener();
     },
     dismiss() {
       this.set("bannerDismissed", true);
+      this._unregisterListener();
     }
   }
 });
