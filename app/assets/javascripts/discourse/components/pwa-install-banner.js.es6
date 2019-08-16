@@ -32,7 +32,7 @@ export default Ember.Component.extend({
   @computed
   bannerDismissed: {
     set(value) {
-      this.keyValueStore.set({key: USER_DISMISSED_PROMPT_KEY, value: value});
+      this.keyValueStore.set({ key: USER_DISMISSED_PROMPT_KEY, value: value });
       return this.keyValueStore.get(USER_DISMISSED_PROMPT_KEY);
     },
     get() {
