@@ -37,8 +37,18 @@ export default Ember.Controller.extend({
     ];
   },
 
-  @computed("alwaysPollResult", "votePollResult", "closedPollResult", "staffPollResult")
-  pollResults(alwaysPollResult, votePollResult, closedPollResult, staffPollResult) {
+  @computed(
+    "alwaysPollResult",
+    "votePollResult",
+    "closedPollResult",
+    "staffPollResult"
+  )
+  pollResults(
+    alwaysPollResult,
+    votePollResult,
+    closedPollResult,
+    staffPollResult
+  ) {
     return [
       {
         name: I18n.t("poll.ui_builder.poll_result.always"),
