@@ -461,8 +461,10 @@ class PostSerializer < BasicPostSerializer
   end
 
   def readers_count
-    count = object.reads
-    yours ? count - 1 : count
+    read_count = object.reads - 1 # Exclude logged user
+    read_count -= 1 unless yours
+
+    read_count < 0 ? 0 : read_count
   end
 
 private
