@@ -5,7 +5,7 @@
         {{d-icon 'times'}}
       </div>
       <span>
-        {{i18n 'pwa.install_banner.question'}} <a {{action "turnOn"}}>{{i18n 'pwa.install_banner.link' title=siteSettings.title}}</a>
+        {{discourse-linked-text action=(action "turnOn") translatedText=(i18n "pwa.install_banner" title=siteSettings.title)}}</a>
       </span>
     </div>
   </div>
