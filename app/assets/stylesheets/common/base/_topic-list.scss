@@ -135,9 +135,6 @@
     }
 
     .read-indicator {
-      &.read {
-        display: inline;
-      }
       &.unread {
         display: none;
       }

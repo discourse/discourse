@@ -42,16 +42,14 @@ export const ListItemDefaults = {
       this.messageBus.subscribe(
         `/private-messages/group-read/${this.get("topic.id")}`,
         data => {
-          const node = document.querySelectorAll(
+          const nodeClassList = document.querySelector(
             `.indicator-topic-${data.topic_id}`
-          )[0];
+          ).classList;
 
           if (data.show_indicator) {
-            node.classList.add("read");
-            node.classList.remove("unread");
+            nodeClassList.remove("unread");
           } else {
-            node.classList.add("unread");
-            node.classList.remove("read");
+            nodeClassList.add("unread");
           }
         }
       );
@@ -59,8 +57,8 @@ export const ListItemDefaults = {
   },
 
   @computed("topic.read_by_group_member")
-  readStatus(readByGroupMember) {
-    return readByGroupMember ? "read" : "unread";
+  unreadClass(readByGroupMember) {
+    return readByGroupMember ? "" : "unread";
   },
 
   @computed
