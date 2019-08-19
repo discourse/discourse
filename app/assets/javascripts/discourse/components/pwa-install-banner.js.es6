@@ -15,7 +15,7 @@ export default Ember.Component.extend({
     this.set("deferredInstallPromptEvent", event);
   },
 
-  @on("init")
+  @on("didInsertElement")
   _registerListener() {
     this._promptEventHandler = Ember.run.bind(
       this,
@@ -54,11 +54,9 @@ export default Ember.Component.extend({
     turnOn() {
       this.set("bannerDismissed", true);
       this.deferredInstallPromptEvent.prompt();
-      this._unregisterListener();
     },
     dismiss() {
       this.set("bannerDismissed", true);
-      this._unregisterListener();
     }
   }
 });
