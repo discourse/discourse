@@ -93,6 +93,7 @@ componentTest("prevents toDate to be before fromDate", {
       "it didnt trigger a mutation"
     );
 
+    await click("button.to-panel");
     await click(toDateInput());
     await pika(2019, 0, 30);
 
