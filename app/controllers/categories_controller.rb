@@ -117,6 +117,8 @@ class CategoriesController < ApplicationController
   end
 
   def show
+    guardian.ensure_can_see!(@category)
+
     if Category.topic_create_allowed(guardian).where(id: @category.id).exists?
       @category.permission = CategoryGroup.permission_types[:full]
     end
