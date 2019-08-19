@@ -73,6 +73,8 @@ if defined?(Rack::MiniProfiler) && defined?(Rack::MiniProfiler::Config)
   Rack::MiniProfiler.config.backtrace_ignores << /config\/initializers\/silence_logger/
   Rack::MiniProfiler.config.backtrace_ignores << /config\/initializers\/quiet_logger/
 
+  Rack::MiniProfiler.config.backtrace_includes = [/^\/?(app|config|lib|test|plugins)/]
+
   # Rack::MiniProfiler.counter_method(ActiveRecord::QueryMethods, 'build_arel')
   # Rack::MiniProfiler.counter_method(Array, 'uniq')
   # require "#{Rails.root}/vendor/backports/notification"
