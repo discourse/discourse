@@ -352,6 +352,9 @@ en:
       close: "Dismiss this banner."
       edit: "Edit this banner >>"
 
+    pwa:
+      install_banner: "Do you want to <a href>install %{title} on this device?</a>"
+
     choose_topic:
       none_found: "No topics found."
       title:
