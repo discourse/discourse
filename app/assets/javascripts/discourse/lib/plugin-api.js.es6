@@ -734,8 +734,8 @@ class PluginApi {
    *   name: "link-to-bugs-category",
    *   displayName: "bugs"
    *   href: "/c/bugs",
-   *   customFilter: (category, args, router) => { category && category.get('name') !== 'bug' }
-   *   customHref: (category, args, router) => { return "/foo" }
+   *   customFilter: (category, args, router) => { category && category.name !== 'bug' }
+   *   customHref: (category, args, router) => {  if (category && category.name) === 'not-a-bug') "/a-feature"; }
    * })
    */
   addNavigationBarItem(item) {
