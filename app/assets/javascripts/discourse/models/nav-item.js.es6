@@ -101,18 +101,8 @@ const NavItem = Discourse.Model.extend({
 });
 
 const ExtraNavItem = NavItem.extend({
-  href: Ember.computed({
-    set(key, value) {
-      let customHref;
-      NavItem.customNavItemHrefs.forEach(function(cb) {
-        customHref = cb.call(this, this);
-        if (customHref) {
-          return false;
-        }
-      }, this);
-      return customHref || value;
-    }
-  }),
+  @computed("href")
+  href: href => href,
 
   customFilter: null
 });
@@ -187,6 +177,11 @@ NavItem.reopenClass({
     const extraItems = NavItem.extraNavItems.filter(item => {
       if (!item.customFilter) return true;
       return item.customFilter.call(this, category, args);
+    });
+
+    extraItems.forEach(item => {
+      if (!item.customHref) return;
+      item.set("href", item.customHref.call(this, category, args));
     });
 
     return items.concat(extraItems);
