@@ -188,6 +188,33 @@ describe CategoriesController do
     end
   end
 
+  context '#show' do
+    before do
+      category.set_permissions(admins: :full)
+      category.save!
+    end
+
+    it "requires the user to be logged in" do
+      get "/c/#{category.id}/show.json"
+      expect(response.status).to eq(403)
+    end
+
+    describe "logged in" do
+      it "raises an exception if they don't have permission to see it" do
+        admin.update!(admin: false)
+        sign_in(admin)
+        get "/c/#{category.id}/show.json"
+        expect(response.status).to eq(403)
+      end
+
+      it "renders category for users that have permission" do
+        sign_in(admin)
+        get "/c/#{category.id}/show.json"
+        expect(response.status).to eq(200)
+      end
+    end
+  end
+
   context '#destroy' do
     it "requires the user to be logged in" do
       delete "/categories/category.json"
