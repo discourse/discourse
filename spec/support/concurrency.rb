@@ -174,6 +174,10 @@ module Concurrency
           end
         end
       end
+
+      def new_mutex
+        Mutex.new(self)
+      end
     end
 
     def run_with_path(path)
@@ -248,6 +252,47 @@ module Concurrency
       end
 
       result
+    end
+  end
+
+  class Mutex
+    def initialize(execution)
+      @execution = execution
+      @locked_by = nil
+    end
+
+    def lock
+      @execution.yield
+
+      fiber = Fiber.current
+      while true
+        if @locked_by.nil?
+          @locked_by = fiber
+          return
+        elsif @locked_by == fiber
+          raise ThreadError, "deadlock; recursive locking"
+        else
+          @execution.yield
+        end
+      end
+    end
+
+    def unlock
+      @execution.yield
+
+      if @locked_by != Fiber.current
+        raise ThreadError, "Attempt to unlock a mutex which is locked by another thread"
+      end
+      @locked_by = nil
+    end
+
+    def synchronize
+      lock
+      begin
+        return yield
+      ensure
+        unlock
+      end
     end
   end
 end
