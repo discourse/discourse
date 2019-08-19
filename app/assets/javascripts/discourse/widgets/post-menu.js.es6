@@ -61,7 +61,6 @@ registerButton("read-count", attrs => {
         title: "post.controls.read_indicator",
         className: "button-count read-indicator",
         contents: count,
-        icon: "",
         iconRight: true,
         addContainer: false
       };
@@ -74,7 +73,6 @@ registerButton("read", attrs => {
   if (attrs.showReadIndicator) {
     return {
       action: "toggleWhoRead",
-      className: "",
       title: "post.controls.read_indicator",
       icon: "far-eye",
       before: "read-count",

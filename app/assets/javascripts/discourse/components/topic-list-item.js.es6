@@ -35,25 +35,35 @@ export const ListItemDefaults = {
   attributeBindings: ["data-topic-id"],
   "data-topic-id": Ember.computed.alias("topic.id"),
 
-  init() {
+  didInsertElement() {
     this._super(...arguments);
 
     if (typeof this.get("topic.read_by_group_member") !== "undefined") {
-      this.messageBus.subscribe(
-        `/private-messages/group-read/${this.get("topic.id")}`,
-        data => {
-          const nodeClassList = document.querySelector(
-            `.indicator-topic-${data.topic_id}`
-          ).classList;
+      this.messageBus.subscribe(this.readIndicatorChannel, data => {
+        const nodeClassList = document.querySelector(
+          `.indicator-topic-${data.topic_id}`
+        ).classList;
 
-          if (data.show_indicator) {
-            nodeClassList.remove("unread");
-          } else {
-            nodeClassList.add("unread");
-          }
+        if (data.show_indicator) {
+          nodeClassList.remove("unread");
+        } else {
+          nodeClassList.add("unread");
         }
-      );
+      });
     }
+  },
+
+  willDestroyElement() {
+    this._super(...arguments);
+
+    if (typeof this.get("topic.read_by_group_member") !== "undefined") {
+      this.messageBus.unsubscribe(this.readIndicatorChannel);
+    }
+  },
+
+  @computed("topic.id")
+  readIndicatorChannel(topicId) {
+    return `/private-messages/group-read/${topicId}`;
   },
 
   @computed("topic.read_by_group_member")

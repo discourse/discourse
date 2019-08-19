@@ -123,6 +123,8 @@ class ListableTopicSerializer < BasicTopicSerializer
   end
 
   def read_by_group_member
+    # object#minimum_unread_count is a dynamically generated attribute.
+    # See TopicQuery#append_read_state for more information.
     return false unless object.respond_to?(:minimum_unread_count)
 
     object.minimum_unread_count && object.minimum_unread_count <= 0
