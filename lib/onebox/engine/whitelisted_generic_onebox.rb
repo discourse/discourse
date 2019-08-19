@@ -220,6 +220,7 @@ module Onebox
           # prefer secure URLs
           d[:image] = d[:image_secure_url] || d[:image_url] || d[:thumbnail_url] || d[:image]
           d[:image] = Onebox::Helpers::get_absolute_image_url(d[:image], @url)
+          d[:image] = Onebox::Helpers::normalize_url_for_output(html_entities.decode(d[:image]))
 
           d[:video] = d[:video_secure_url] || d[:video_url] || d[:video]
 
