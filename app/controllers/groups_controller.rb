@@ -552,7 +552,8 @@ class GroupsController < ApplicationController
             :name,
             :grant_trust_level,
             :automatic_membership_email_domains,
-            :automatic_membership_retroactive
+            :automatic_membership_retroactive,
+            :publish_read_state
           ])
 
           custom_fields = Group.editable_group_custom_fields
