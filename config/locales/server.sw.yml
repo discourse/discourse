@@ -1310,13 +1310,6 @@ sw:
         Tunaomba radhi, ila ujumbe wa barua pepe kwenda kwa %{destination} (jina la %{former_title}) haujafika.
 
         Jibu lako limetumwa kwa kutumia barua pepe tofauti ambayo hatukuitegemea, kwa hiyo hatuna uhakika kuwa ni mtu mmoja. Jaribu kutumia barua pepe nyingine, au [wasiliana na msaidizi](%{base_url}/kuhusu).
-    email_reject_no_account:
-      title: "Barua Pepe Kataza Akaunti Haipo"
-      subject_template: "[%{email_prefix}] Tatizo la Barua Pepe -- Akaunti Haijulikani"
-      text_body_template: |
-        Tunaomba radhi, ila ujumbe wa barua pepe kwenda kwa %{destination} (jina la %{former_title}) haujafika.
-
-        Jibu lako limetumwa kwa kutumia barua pepe iliyojulikana. Jaribu kutumia barua pepe nyingine, au [wasiliana na msaidizi](%{base_url}/kuhusu).
     email_reject_empty:
       title: "Barua Pepe Kataa Wazi"
       subject_template: "[%{email_prefix}] Tatizo la Barua Pepe -- Hakuna Maandishi"

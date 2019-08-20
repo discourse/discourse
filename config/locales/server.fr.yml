@@ -2440,13 +2440,6 @@ fr:
         Malheureusement votre courriel à %{destination} (titled %{former_title}) a échoué.
 
         Votre réponses nous est parvenue d'une autre adresse courriel que celle attendue, nous ne savons donc pas s'il s'agit de la même personne. Essayez de l'envoyer depuis une autre adresse, ou [contactez un responsable](%{base_url}/about).
-    email_reject_no_account:
-      title: "Courriel rejeté - Aucun compte"
-      subject_template: "[%{email_prefix}] Problème de courriel - Compte inconnu"
-      text_body_template: |
-        Nous sommes désolés, mais l'envoi de votre courriel à %{destination} (intitulé %{former_title}) n'a pas fonctionné.
-
-        Aucun compte utilisateur avec cette adresse n'a été trouvé. Essayez de l'envoyer depuis une autre adresse ou [contactez un responsable](%{base_url}/about).
     email_reject_empty:
       title: "Courriel rejeté - Vide"
       subject_template: "[%{email_prefix}] Problème de courriel - Aucun contenu"

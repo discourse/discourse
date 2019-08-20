@@ -22,7 +22,6 @@ class Admin::EmailTemplatesController < Admin::AdminController
       "system_messages.email_reject_auto_generated",
       "system_messages.email_reject_empty",
       "system_messages.email_reject_invalid_access",
-      "system_messages.email_reject_no_account",
       "system_messages.email_reject_parsing",
       "system_messages.email_reject_reply_key",
       "system_messages.email_reject_screened_email",

@@ -2427,13 +2427,6 @@ pt_BR:
         Desculpe, mas sua mensagem de e-mail para %{destination} (intulada %{former_title}) não funcionou.
 
         Sua resposta foi enviada de um endereço de e-mail diferente daquele que esperávamos, por isso não temos certeza se essa é a mesma pessoa. Tente enviar de outro endereço de e-mail, ou[contate um membro da equipe](%{base_url}/sobre isso).
-    email_reject_no_account:
-      title: "E-mail Rejeitado, Nenhuma Conta"
-      subject_template: "[%{email_prefix}] Problema de e-mail - conta desconhecida"
-      text_body_template: |
-        Desculpe, mas sua mensagem de e-mail para %{destination} (intulada %{former_title}) não funcionou.
-
-        Não conseguimos encontrar nenhuma conta que corresponda ao seu endereço de e-mail. Tente enviar de um endereço de e-mail diferente ou [contate um membro da equipe](%{base_url}/sobre isso).
     email_reject_empty:
       title: "E-mail Rejeitado, Vazio"
       subject_template: "[%{email_prefix}] Problema de e-mail - sem conteúdo"

@@ -1289,8 +1289,6 @@ sv:
         Kontot associerat till den här e-postadressen är inte aktiverat. Var god se till att ditt konto är aktiverat innan du skickar e-post.
     email_reject_reply_user_not_matching:
       title: "Emailet avslås användare hittas ej"
-    email_reject_no_account:
-      title: "Emailet avslås det finns inget konto"
     email_reject_empty:
       title: "Emailet avslås - tomt"
       text_body_template: |

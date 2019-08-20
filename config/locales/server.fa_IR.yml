@@ -1514,9 +1514,6 @@ fa_IR:
     email_reject_reply_user_not_matching:
       title: "ایمیل رد شده کاربر تطابق ندارد"
       subject_template: "[%{email_prefix}] مشکل ایمیل -- آدرس پاسخ غیر منتظره"
-    email_reject_no_account:
-      title: "ایمیل رد شده حساب کاربر ی وجود ندارد"
-      subject_template: "[%{email_prefix}] مشکل ایمیل -- حساب کاربری ناشناس"
     email_reject_empty:
       title: "ایمیل رد شده خالی"
       subject_template: "[%{email_prefix}] مشکل ایمیل -- محتوا وجود ندارد"
