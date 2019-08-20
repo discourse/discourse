@@ -25,8 +25,7 @@ class ListableTopicSerializer < BasicTopicSerializer
              :notification_level,
              :bookmarked,
              :liked,
-             :unicode_title,
-             :read_by_group_member
+             :unicode_title
 
   has_one :last_poster, serializer: BasicUserSerializer, embed: :objects
 
@@ -120,18 +119,6 @@ class ListableTopicSerializer < BasicTopicSerializer
 
   def unpinned
     PinnedCheck.unpinned?(object, object.user_data)
-  end
-
-  def read_by_group_member
-    # object#minimum_unread_count is a dynamically generated attribute.
-    # See TopicQuery#append_read_state for more information.
-    return false unless object.respond_to?(:minimum_unread_count)
-
-    object.minimum_unread_count && object.minimum_unread_count <= 0
-  end
-
-  def include_read_by_group_member?
-    !!object.topic_list&.publish_read_state
   end
 
   protected
