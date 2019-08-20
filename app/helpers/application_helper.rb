@@ -475,6 +475,7 @@ module ApplicationHelper
       disable_custom_css: loading_admin?,
       highlight_js_path: HighlightJs.path,
       svg_sprite_path: SvgSprite.path(theme_ids),
+      enable_js_error_reporting: GlobalSetting.enable_js_error_reporting,
     }
 
     if Rails.env.development?
