@@ -12,6 +12,9 @@
 
   var setupData = document.getElementById("data-discourse-setup").dataset;
 
+  window.Logster = window.Logster || {};
+  window.Logster.enabled = setupData.enableJsErrorReporting === "true";
+
   Discourse.CDN = setupData.cdn;
   Discourse.BaseUrl = setupData.baseUrl;
   Discourse.BaseUri = setupData.baseUri;
