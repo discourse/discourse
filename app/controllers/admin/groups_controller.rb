@@ -153,8 +153,7 @@ class Admin::GroupsController < Admin::AdminController
       :default_notification_level,
       :membership_request_template,
       :owner_usernames,
-      :usernames,
-      :publish_read_state
+      :usernames
     ]
     custom_fields = Group.editable_group_custom_fields
     permitted << { custom_fields: custom_fields } unless custom_fields.blank?

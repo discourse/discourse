@@ -178,8 +178,7 @@ const Group = RestModel.extend({
       allow_membership_requests: this.allow_membership_requests,
       full_name: this.full_name,
       default_notification_level: this.default_notification_level,
-      membership_request_template: this.membership_request_template,
-      publish_read_state: this.publish_read_state
+      membership_request_template: this.membership_request_template
     };
 
     if (!this.id) {
