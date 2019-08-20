@@ -2431,13 +2431,6 @@ es:
         Lo sentimos, pero tu mensaje de correo a %{destination} (titulado %{former_title}) no ha funcionado.
 
         Tu respuesta ha sido enviada desde un correo diferente al que esperábamos, así que no estamos seguros de que seas la misma persona. Intenta usar otro correo, o [contacta a un miembro del staff](%{base_url}/about).
-    email_reject_no_account:
-      title: "Email rechazado, no hay cuenta"
-      subject_template: "[%{email_prefix}] Problema con el correo -- Cuenta Desconocida"
-      text_body_template: |
-        Lo sentimos, pero tu mensaje de correo a %{destination} (titulado %{former_title}) no ha funcionado.
-
-        No podemos encontrar ninguna cuenta que coincida con tu dirección de email. Intenta usar otro correo, o [contacta a un miembro del staff](%{base_url}/about).
     email_reject_empty:
       title: "Email rechazado, email vacío"
       subject_template: "[%{email_prefix}] Problema con el correo -- Sin Contenido"

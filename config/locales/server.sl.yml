@@ -1166,13 +1166,6 @@ sl:
         Žal nam je, ampak vaše e-sporočilo poslano na %{destination} (z naslovom %{former_title}) ni bilo sprejeto.
 
         Vaše e-sporočilo je bilo poslano iz drugega e-naslova, kot je bilo pričakovano, tako da nismo prepričani ali gre za istega uporabnika. Poskusite poslati iz drugega e-naslova ali [kontaktirajte osebje](%{base_url}/about).
-    email_reject_no_account:
-      title: "E-sporočilo zavrnjeno - ni računa"
-      subject_template: "[%{email_prefix}] Napaka e-pošte -- ni računa"
-      text_body_template: |
-        Žal nam je, ampak vaše e-sporočilo poslano na %{destination} (z naslovom %{former_title}) ni bilo sprejeto.
-
-        Ne najdemo nobenega uporabniškega računa s tem e-naslovom. Poskusite poslati iz drugega e-naslova ali [kontaktirajte osebje](%{base_url}/about).
     email_reject_empty:
       title: "E-sporočilo zavrnjeno - ni vsebine"
       subject_template: "[%{email_prefix}] Napaka e-pošte -- ni vsebine"
