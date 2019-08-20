@@ -199,14 +199,6 @@ Discourse::Application.routes.draw do
     get "customize/embedding" => "embedding#show", constraints: AdminConstraint.new
     put "customize/embedding" => "embedding#update", constraints: AdminConstraint.new
 
-    get "flags" => "flags#index"
-    get "flags/:filter" => "flags#index", as: 'flags_filtered'
-    get "flags/topics/:topic_id" => "flags#index"
-    post "flags/agree/:id" => "flags#agree"
-    post "flags/disagree/:id" => "flags#disagree"
-    post "flags/defer/:id" => "flags#defer"
-
-    resources :flagged_topics, constraints: StaffConstraint.new
     resources :themes, constraints: AdminConstraint.new
 
     post "themes/import" => "themes#import"
