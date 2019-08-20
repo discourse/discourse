@@ -6,18 +6,17 @@ class UserActionsController < ApplicationController
     params.require(:username)
     params.permit(:filter, :offset, :acting_username)
 
-    per_chunk = 30
-
     user = fetch_user_from_params(include_inactive: current_user.try(:staff?) || (current_user && SiteSetting.show_inactive_accounts))
     raise Discourse::NotFound unless guardian.can_see_profile?(user)
 
+    offset = [0, params[:offset].to_i].max
     action_types = (params[:filter] || "").split(",").map(&:to_i)
 
     opts = {
       user_id: user.id,
       user: user,
-      offset: params[:offset].to_i,
-      limit: per_chunk,
+      offset: offset,
+      limit: 30,
       action_types: action_types,
       guardian: guardian,
       ignore_private_messages: params[:filter] ? false : true,
@@ -25,7 +24,7 @@ class UserActionsController < ApplicationController
     }
 
     stream = UserAction.stream(opts).to_a
-    if stream.length == 0 && (help_key = params['no_results_help_key'])
+    if stream.empty? && (help_key = params['no_results_help_key'])
       if user.id == guardian.user.try(:id)
         help_key += ".self"
       else
