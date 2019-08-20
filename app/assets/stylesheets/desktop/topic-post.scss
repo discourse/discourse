@@ -66,6 +66,7 @@ nav.post-controls {
       margin-left: 0;
       margin-right: 0;
       &.my-likes,
+      &.read-indicator,
       &.regular-likes {
         // Like count on posts
         .d-icon {
@@ -838,7 +839,8 @@ a.attachment:before {
   }
 }
 
-.who-liked {
+.who-liked,
+.who-read {
   margin-top: 20px;
   margin-bottom: 0;
   width: 100%;

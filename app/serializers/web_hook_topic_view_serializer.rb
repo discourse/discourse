@@ -28,6 +28,10 @@ class WebHookTopicViewSerializer < TopicViewSerializer
     end
   end
 
+  def include_show_read_indicator?
+    false
+  end
+
   def created_by
     BasicUserSerializer.new(object.topic.user, scope: scope, root: false)
   end

@@ -71,7 +71,8 @@ export function transformBasicPost(post) {
     expandablePost: false,
     replyCount: post.reply_count,
     locked: post.locked,
-    userCustomFields: post.user_custom_fields
+    userCustomFields: post.user_custom_fields,
+    readCount: post.readers_count
   };
 
   _additionalAttributes.forEach(a => (postAtts[a] = post[a]));
