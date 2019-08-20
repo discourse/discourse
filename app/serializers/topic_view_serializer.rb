@@ -71,7 +71,8 @@ class TopicViewSerializer < ApplicationSerializer
     :participant_count,
     :destination_category_id,
     :pm_with_non_human_user,
-    :queued_posts_count
+    :queued_posts_count,
+    :show_read_indicator
   )
 
   has_one :details, serializer: TopicViewDetailsSerializer, root: false, embed: :objects
@@ -247,5 +248,9 @@ class TopicViewSerializer < ApplicationSerializer
 
   def include_queued_posts_count?
     scope.is_staff? && object.queued_posts_enabled
+  end
+
+  def show_read_indicator
+    object.show_read_indicator?
   end
 end
