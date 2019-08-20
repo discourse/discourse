@@ -23,8 +23,6 @@ export default Ember.Mixin.create({
       getUrl(this.getWithDefault("uploadUrl", "/uploads")) +
       ".json?client_id=" +
       (this.messageBus && this.messageBus.clientId) +
-      "&authenticity_token=" +
-      encodeURIComponent(Discourse.Session.currentProp("csrfToken")) +
       this.uploadUrlParams
     );
   },
