@@ -38,6 +38,7 @@ span.badge-posts {
       flex: 0 1 auto;
       button {
         &.like,
+        &.read-indicator,
         &.create-flag {
           flex: 1 1 auto;
         }
