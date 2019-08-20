@@ -94,8 +94,8 @@ describe Plugin::Instance do
 
       plugin.send :register_assets!
 
-      expect(DiscoursePluginRegistry.mobile_stylesheets.count).to eq(0)
-      expect(DiscoursePluginRegistry.stylesheets.count).to eq(2)
+      expect(DiscoursePluginRegistry.mobile_stylesheets[plugin.directory_name]).to be_nil
+      expect(DiscoursePluginRegistry.stylesheets[plugin.directory_name].count).to eq(2)
     end
 
     it "remaps vendored_core_pretty_text asset" do
@@ -220,10 +220,10 @@ describe Plugin::Instance do
 
       expect(DiscoursePluginRegistry.javascripts.count).to eq(2)
       expect(DiscoursePluginRegistry.admin_javascripts.count).to eq(2)
-      expect(DiscoursePluginRegistry.desktop_stylesheets.count).to eq(2)
+      expect(DiscoursePluginRegistry.desktop_stylesheets[plugin.directory_name].count).to eq(2)
       expect(DiscoursePluginRegistry.sass_variables.count).to eq(2)
-      expect(DiscoursePluginRegistry.stylesheets.count).to eq(2)
-      expect(DiscoursePluginRegistry.mobile_stylesheets.count).to eq(1)
+      expect(DiscoursePluginRegistry.stylesheets[plugin.directory_name].count).to eq(2)
+      expect(DiscoursePluginRegistry.mobile_stylesheets[plugin.directory_name].count).to eq(1)
     end
   end
 

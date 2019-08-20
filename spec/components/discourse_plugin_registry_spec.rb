@@ -13,14 +13,14 @@ describe DiscoursePluginRegistry do
   context '#stylesheets' do
     it 'defaults to an empty Set' do
       registry.stylesheets = nil
-      expect(registry.stylesheets).to eq(Set.new)
+      expect(registry.stylesheets).to eq(Hash.new)
     end
   end
 
   context '#mobile_stylesheets' do
     it 'defaults to an empty Set' do
       registry.mobile_stylesheets = nil
-      expect(registry.mobile_stylesheets).to eq(Set.new)
+      expect(registry.mobile_stylesheets).to eq(Hash.new)
     end
   end
 
@@ -70,20 +70,22 @@ describe DiscoursePluginRegistry do
   end
 
   context '.register_css' do
+    let(:plugin_directory_name) { "hello" }
+
     before do
-      registry_instance.register_css('hello.css')
+      registry_instance.register_css('hello.css', plugin_directory_name)
     end
 
     it 'is not leaking' do
-      expect(DiscoursePluginRegistry.new.stylesheets).to be_blank
+      expect(DiscoursePluginRegistry.new.stylesheets[plugin_directory_name]).to be_nil
     end
 
     it 'is returned by DiscoursePluginRegistry.stylesheets' do
-      expect(registry_instance.stylesheets.include?('hello.css')).to eq(true)
+      expect(registry_instance.stylesheets[plugin_directory_name].include?('hello.css')).to eq(true)
     end
 
     it "won't add the same file twice" do
-      expect { registry_instance.register_css('hello.css') }.not_to change(registry.stylesheets, :size)
+      expect { registry_instance.register_css('hello.css', plugin_directory_name) }.not_to change(registry.stylesheets[plugin_directory_name], :size)
     end
   end
 
@@ -157,11 +159,12 @@ describe DiscoursePluginRegistry do
     end
 
     it "does register general css properly" do
-      registry.register_asset("test.css")
-      registry.register_asset("test2.css")
+      plugin_directory_name = "my_plugin"
+      registry.register_asset("test.css", nil, plugin_directory_name)
+      registry.register_asset("test2.css", nil, plugin_directory_name)
 
-      expect(registry.mobile_stylesheets.count).to eq(0)
-      expect(registry.stylesheets.count).to eq(2)
+      expect(registry.mobile_stylesheets[plugin_directory_name]).to be_nil
+      expect(registry.stylesheets[plugin_directory_name].count).to eq(2)
     end
 
     it "registers desktop css properly" do

@@ -214,10 +214,16 @@ module Discourse
     end
   end
 
+  def self.find_plugin_css_assets(args)
+    self.find_plugins(args).find_all do |plugin|
+      plugin.css_asset_exists?
+    end.map { |plugin| plugin.directory_name }
+  end
+
   def self.find_plugin_js_assets(args)
     self.find_plugins(args).find_all do |plugin|
       plugin.js_asset_exists?
-    end.map { |plugin| "plugins/#{plugin.asset_name}" }
+    end.map { |plugin| "plugins/#{plugin.directory_name}" }
   end
 
   def self.assets_digest
