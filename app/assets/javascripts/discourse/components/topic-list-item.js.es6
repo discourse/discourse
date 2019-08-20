@@ -38,7 +38,7 @@ export const ListItemDefaults = {
   didInsertElement() {
     this._super(...arguments);
 
-    if (typeof this.get("topic.read_by_group_member") !== "undefined") {
+    if (this.includeReadIndicator) {
       this.messageBus.subscribe(this.readIndicatorChannel, data => {
         const nodeClassList = document.querySelector(
           `.indicator-topic-${data.topic_id}`
@@ -56,7 +56,7 @@ export const ListItemDefaults = {
   willDestroyElement() {
     this._super(...arguments);
 
-    if (typeof this.get("topic.read_by_group_member") !== "undefined") {
+    if (this.includeReadIndicator) {
       this.messageBus.unsubscribe(this.readIndicatorChannel);
     }
   },
@@ -69,6 +69,11 @@ export const ListItemDefaults = {
   @computed("topic.read_by_group_member")
   unreadClass(readByGroupMember) {
     return readByGroupMember ? "" : "unread";
+  },
+
+  @computed("topic.read_by_group_member")
+  includeReadIndicator(readByGroupMember) {
+    return typeof readByGroupMember !== "undefined";
   },
 
   @computed
