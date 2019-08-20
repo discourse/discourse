@@ -2309,13 +2309,6 @@ zh_TW:
         我們非常抱歉，但是你發送至 %{destination}（名為%{former_title}） 的郵件出問題了。
 
         你發送回覆的郵件地址與我們等待的地址不同，所以我們不確定你是不是同一個人。試試從另外一個郵件地址發送，或者[聯絡管理成員](%{base_url}/about)。
-    email_reject_no_account:
-      title: "電子郵件拒絕 沒有帳號"
-      subject_template: "[%{email_prefix}] 電子郵件錯誤 -- 未知的帳號"
-      text_body_template: |
-        我們非常抱歉，但是你發送至 %{destination}（名為%{former_title}） 的郵件出問題了。
-
-        我們找不到匹配你郵件地址的帳號。試試從另外一個郵件地址發送，或者[聯絡管理成員](%{base_url}/about)。
     email_reject_empty:
       title: "電子郵件拒絕 空白"
       subject_template: "[%{email_prefix}] 電子郵件錯誤 -- 沒有內容"

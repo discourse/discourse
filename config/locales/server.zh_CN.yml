@@ -2365,13 +2365,6 @@ zh_CN:
         我们非常抱歉，但是你发送至 %{destination}（名为%{former_title}） 的邮件出问题了。
 
         你发送回复的邮件地址与我们预期的地址不同，所以我们不确定你是不是同一个人。试试从另外一个邮件地址发送，或者[联系管理人员](%{base_url}/about)。
-    email_reject_no_account:
-      title: "Email被拒绝：帐户不存在"
-      subject_template: "[%{email_prefix}] 邮件问题 -- 位置账户"
-      text_body_template: |
-        我们非常抱歉，但是你发送至 %{destination}（名为%{former_title}） 的邮件出问题了。
-
-        我们找不到匹配你邮件地址的账户。试试从另外一个邮件地址发送，或者[联系管理人员](%{base_url}/about)。
     email_reject_empty:
       title: "Email被拒绝：空"
       subject_template: "[%{email_prefix}] 邮件问题 -- 无内容"

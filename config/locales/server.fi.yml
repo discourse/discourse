@@ -2303,13 +2303,6 @@ fi:
         Pahoittelut, sähköpostin lähettäminen kohteeseen %{destination} (titled %{former_title}) ei onnistunut.
 
         Vastauksesi ei saapunut siitä sähköpostiosoitteesta kuin odotimme, joten emme voineet olla varmoja lähettäjästä. Kokeile lähettää viestisi toisesta sähköpostiosoitteesta tai [ota yhteyttä henkilökuntaan](%{base_url}/about).
-    email_reject_no_account:
-      title: "Sähköposti hylätty - ei käyttäjätiliä"
-      subject_template: "[%{email_prefix}] Sähköpostiongelma -- Tuntematon tili"
-      text_body_template: |
-        Pahoittelut, sähköpostiviestisi lähetys kohteeseen %{destination} (titled %{former_title}) ei onnistunut.
-
-        Sähköpostiosoitteesi ei kuulu kenellekään käyttäjistä. Kokeile lähettää viestisi toisesta sähköpostiosoitteesta tai [ota yhteyttä henkilökuntaan](%{base_url}/about)..
     email_reject_empty:
       title: "Sähköposti hylätty - tyhjä"
       subject_template: "[%{email_prefix}] Sähköpostiongelma -- Ei sisältöä"

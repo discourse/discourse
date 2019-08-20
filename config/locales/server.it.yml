@@ -2225,13 +2225,6 @@ it:
         Spiacenti, ma il tuo messaggio email per %{destination} (intitolato %{former_title}) non ha funzionato.
 
         La tua risposta è stata inviata da un indirizzo email diverso da quello previsto quindi non sappiamo se proviene dalla stessa persona. Prova a rispondere da un altro indirizzo email, o [contatta un membro dello staff](%{base_url}/about).
-    email_reject_no_account:
-      title: "Email Rifiutata Nessun Account"
-      subject_template: "[%{email_prefix}] Problema email -- Account Sconosciuto"
-      text_body_template: |
-        Spiacenti, ma il tuo messaggio email per %{destination} (intitolato %{former_title}) non ha funzionato.
-
-        Non troviamo nessun account che corrisponda al tuo indirizzo email. Prova a inviare da un altro indirizzo email, o [contatta un membro dello staff](%{base_url}/about).
     email_reject_empty:
       title: "Email Rifiutata Vuota"
       subject_template: "[%{email_prefix}] Problema email -- Nessun Contenuto"

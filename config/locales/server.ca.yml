@@ -2235,13 +2235,6 @@ ca:
       title: "Correu rebutjat: usuari no coincident"
       subject_template: "[%{email_prefix}] Problema de correu electrònic: adreça de resposta inesperada"
       text_body_template: "Ho sentim, però el vostre missatge de correu a %{destination} (titulat %{former_title}) no ha funcionat. \n\nLa vostra resposta s’ha enviat des d’una adreça de correu diferent de la que esperàvem, de manera que no estem segurs si és la mateixa persona. Proveu d’enviar des d’una altra adreça de correu o bé [contacteu amb un membre de l'equip responsable] (%{base_url}/about).\n"
-    email_reject_no_account:
-      title: "Correu rebutjat: compte inexistent"
-      subject_template: "[%{email_prefix}] Problema de correu electrònic: compte desconegut"
-      text_body_template: |
-        Ho sentim, però el vostre missatge de correu a %{destination} (titulat %{former_title}) no ha funcionat.
-
-        No trobem cap compte que coincideixi amb la vostra adreça de correu.  Intenteu enviar-lo des d’una altra adreça de correu o bé [poseu-vos en contacte amb un membre de l'equip responsable] (%{base_url}/about).
     email_reject_empty:
       title: "Correu rebutjat: buit"
       subject_template: "[%{email_prefix}] Problema de correu electrònic: sense contingut"

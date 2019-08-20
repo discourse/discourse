@@ -1735,13 +1735,6 @@ pl_PL:
         Przepraszamy, ale twoja wiadomość email do %{destination}(zatytułowana %{former_title}) nie została wysłana.
 
         Twoja odpowiedź została wysłana z innego adresu email niż się spodziewaliśmy. Nie jesteśmy pewni czy jest to ta sama osoba, spróbuj wysłać wiadomość z innego adresu email lub [skontaktuj się z obsługą] %{base_url}/about).
-    email_reject_no_account:
-      title: "Email odrzucony Brak konta"
-      subject_template: "[%{email_prefix}] Problem z pocztą elektroniczną - Nieznane Konto"
-      text_body_template: |
-        Przepraszamy, ale twoja wiadomość email do %{destination}(zatytułowana %{former_title}) nie została wysłana.
-
-        Nie możemy znaleźć kont, które pasują do tego adresu email. Spróbuj wysłać wiadomość z innego adresu email, lub [skontaktuj się z obsługą] %{base_url}/about).
     email_reject_empty:
       title: "Email odrzucony Pusty"
       subject_template: "[%{email_prefix}]email\" original-title=\"<span class=\"glossary-highlight\" title=\"email (click to copy)\" data-copy-glossary=\"email\">email (click to copy)\"> Problem z pocztą elektroniczną - brak zawartości"

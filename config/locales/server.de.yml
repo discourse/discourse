@@ -2408,13 +2408,6 @@ de:
         Es tut uns leid, aber deine E-Mail-Nachricht an %{destination} (Betreff: %{former_title}) hat nicht funktioniert.
 
         Deine Antwort wurde von einer anderen E-Mail-Adresse als erwartet gesendet, sodass wir nicht sicher sind, ob dies die gleiche Person ist. Probiere eine andere Absende-Adresse oder [kontaktiere ein Team-Mitglied](%{base_url}/about).
-    email_reject_no_account:
-      title: "E-Mail abgelehnt weil unbekanntes Konto"
-      subject_template: "[%{email_prefix}] E-Mail-Problem -- Konto unbekannt"
-      text_body_template: |
-        Es tut uns leid, aber deine E-Mail-Nachricht an %{destination} (Betreff: %{former_title}) hat nicht funktioniert.
-
-        Wir konnten kein passendes Benutzerkonto zu einer E-Mail-Adresse finden. Probiere eine andere Absende-Adresse oder [kontaktiere ein Team-Mitglied](%{base_url}/about).
     email_reject_empty:
       title: "E-Mail abgelehnt weil kein Inhalt"
       subject_template: "[%{email_prefix}] E-Mail-Problem -- Kein Inhalt"
