@@ -2421,6 +2421,7 @@ en:
         reply: "begin composing a reply to this post"
         like: "like this post"
         has_liked: "you've liked this post"
+        read_indicator: "members who read this post"
         undo_like: "undo like"
         edit: "edit this post"
         edit_action: "Edit"
@@ -2478,6 +2479,7 @@ en:
           notify_user: "sent a message"
           bookmark: "bookmarked this"
           like: "liked this"
+          read: "read this"
           like_capped:
             one: "and {{count}} other liked this"
             other: "and {{count}} others liked this"
@@ -3217,6 +3219,7 @@ en:
             members_visibility_levels:
               title: "Who can see this group members?"
               description: "Admins can see members of all groups."
+            publish_read_state: "On group messages publish group read state"
 
           membership:
             automatic: Automatic
