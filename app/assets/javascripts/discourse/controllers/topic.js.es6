@@ -1348,17 +1348,6 @@ export default Ember.Controller.extend(bufferedProperty("model"), {
               })
               .then(() => refresh({ id: data.id, refreshLikes: true }));
             break;
-          case "read":
-            postStream
-              .triggerChangedPost(data.id, data.updated_at, {
-                preserveCooked: true
-              })
-              .then(() =>
-                refresh({
-                  id: data.id,
-                  refreshReaders: topic.show_read_indicator
-                })
-              );
           case "revised":
           case "rebaked": {
             postStream

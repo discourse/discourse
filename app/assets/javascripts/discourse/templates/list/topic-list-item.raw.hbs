@@ -23,9 +23,6 @@
     {{~#if showTopicPostBadges}}
     {{~raw "topic-post-badges" unread=topic.unread newPosts=topic.displayNewPosts unseen=topic.unseen url=topic.lastUnreadUrl newDotText=newDotText}}
     {{~/if}}
-    <span class='read-indicator indicator-topic-{{topic.id}} {{readStatus}}'>
-      {{~d-icon "far-eye"}}
-    </span>
   </span>
   <div class="link-bottom-line">
     {{#unless hideCategory}}

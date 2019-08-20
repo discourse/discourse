@@ -344,13 +344,11 @@ class TopicQuery
 
   def list_private_messages_group(user)
     list = private_messages_for(user, :group)
-    group = Group.where('name ilike ?', @options[:group_name]).select(:id, :publish_read_state).first
-    publish_read_state = !!group&.publish_read_state
+    group_id = Group.where('name ilike ?', @options[:group_name]).pluck(:id).first
     list = list.joins("LEFT JOIN group_archived_messages gm ON gm.topic_id = topics.id AND
-                      gm.group_id = #{group&.id&.to_i}")
+                      gm.group_id = #{group_id.to_i}")
     list = list.where("gm.id IS NULL")
-    list = append_read_state(list, group) if publish_read_state
-    create_list(:private_messages, { publish_read_state: publish_read_state }, list)
+    create_list(:private_messages, {}, list)
   end
 
   def list_private_messages_group_archive(user)
@@ -1058,24 +1056,5 @@ class TopicQuery
 
   def sanitize_sql_array(input)
     ActiveRecord::Base.public_send(:sanitize_sql_array, input.join(','))
-  end
-
-  def append_read_state(list, group)
-    group_id = group&.id
-    return list if group_id.nil?
-
-    selected_values = list.select_values.empty? ? ['topics.*'] : list.select_values
-    selected_values << "tuig.minimum_unread_count"
-
-    # The calculation was borrowed from lib/unread.rb
-    minimum_unread_count = TopicUser
-      .joins(:topic)
-      .joins("INNER JOIN group_users ON group_users.user_id = topic_users.user_id")
-      .where(group_users: { group_id: group_id })
-      .select(
-      "MIN(COALESCE(topics.highest_post_number, 0) - COALESCE(highest_seen_post_number, 0)) AS minimum_unread_count, topic_id"
-    ).group(:topic_id).to_sql
-
-    list.joins("LEFT OUTER JOIN (#{minimum_unread_count}) tuig ON topics.id = tuig.topic_id").select(*selected_values)
   end
 end

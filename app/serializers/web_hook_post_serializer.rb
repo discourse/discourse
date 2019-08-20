@@ -32,7 +32,4 @@ class WebHookPostSerializer < PostSerializer
     object.topic ? object.topic.posts_count : 0
   end
 
-  def include_readers_count?
-    false
-  end
 end
