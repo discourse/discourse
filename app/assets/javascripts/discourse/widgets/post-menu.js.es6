@@ -578,7 +578,7 @@ export default createWidget("post-menu", {
       : Ember.RSVP.resolve();
 
     return likesPromise.then(() => {
-      if (!this.state.readers.length) {
+      if (!this.state.readers.length && this.attrs.showReadIndicator) {
         return this.getWhoRead();
       }
     });
