@@ -43,6 +43,7 @@ export default Ember.Component.extend({
   @computed("deferredInstallPromptEvent", "bannerDismissed")
   showPWAInstallBanner() {
     return (
+      this.capabilities.isAndroid &&
       this.get("currentUser.trust_level") > 0 &&
       this.deferredInstallPromptEvent && // Pass the browser engagement checks
       !window.matchMedia("(display-mode: standalone)").matches && // Not be in the installed PWA already
