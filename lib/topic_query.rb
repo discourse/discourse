@@ -1065,17 +1065,10 @@ class TopicQuery
     return list if group_id.nil?
 
     selected_values = list.select_values.empty? ? ['topics.*'] : list.select_values
-    selected_values << "tuig.minimum_unread_count"
+    selected_values << "COALESCE(tg.last_read_post_number, 0) AS last_read_post_number"
 
-    # The calculation was borrowed from lib/unread.rb
-    minimum_unread_count = TopicUser
-      .joins(:topic)
-      .joins("INNER JOIN group_users ON group_users.user_id = topic_users.user_id")
-      .where(group_users: { group_id: group_id })
-      .select(
-      "MIN(COALESCE(topics.highest_post_number, 0) - COALESCE(highest_seen_post_number, 0)) AS minimum_unread_count, topic_id"
-    ).group(:topic_id).to_sql
-
-    list.joins("LEFT OUTER JOIN (#{minimum_unread_count}) tuig ON topics.id = tuig.topic_id").select(*selected_values)
+    list
+      .joins("LEFT OUTER JOIN topic_groups tg ON topics.id = tg.topic_id AND tg.group_id = #{group_id}")
+      .select(*selected_values)
   end
 end

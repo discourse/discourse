@@ -141,13 +141,6 @@ class TopicTrackingState
       }
     }
 
-    if topic.private_message?
-      groups = read_allowed_groups_of(topic)
-      post = Post.find_by(topic_id: topic.id, post_number: last_read_post_number)
-      trigger_post_read_count_update(post, groups)
-      update_topic_list_read_indicator(topic, groups, last_read_post_number, user_id, true)
-    end
-
     MessageBus.publish(self.unread_channel_key(user_id), message.as_json, user_ids: [user_id])
   end
 
@@ -351,26 +344,46 @@ SQL
     end
   end
 
+  def self.publish_read_private_message(topic_id, last_read_post_number, user_id)
+    topic = Topic.includes(:allowed_groups).select(:highest_post_number, :archetype, :id).find_by(id: topic_id)
+
+    if topic.private_message?
+      groups = read_allowed_groups_of(topic)
+      post = Post.find_by(topic_id: topic.id, post_number: last_read_post_number)
+      trigger_post_read_count_update(post, groups)
+      update_topic_list_read_indicator(topic, groups, last_read_post_number, user_id, true)
+    end
+  end
+
   def self.read_allowed_groups_of(topic)
     topic.allowed_groups
       .joins(:group_users)
-      .select('ARRAY_AGG(group_users.user_id) AS members', :name, :publish_read_state)
+      .where(publish_read_state: true)
+      .select('ARRAY_AGG(group_users.user_id) AS members', :name, :id)
       .group('groups.id')
   end
 
   def self.update_topic_list_read_indicator(topic, groups, last_read_post_number, user_id, read_event)
+    return unless last_read_post_number == topic.highest_post_number
+    message = { topic_id: topic.id, show_indicator: read_event }.as_json
+    groups_to_update = []
+
     groups.each do |group|
       member = group.members.include?(user_id)
-      next unless group.publish_read_state? && last_read_post_number == topic.highest_post_number
-      next if (read_event && !member) || (!read_event && member)
-      message = { topic_id: topic.id, show_indicator: read_event }.as_json
 
-      MessageBus.publish("/private-messages/group-read/#{topic.id}", message, user_ids: group.members)
+      member_writing = (!read_event && member)
+      non_member_reading = (read_event && !member)
+      next if non_member_reading || member_writing
+
+      groups_to_update << group
     end
+
+    return if groups_to_update.empty?
+    MessageBus.publish("/private-messages/group-read/#{topic.id}", message, user_ids: groups_to_update.flat_map(&:members))
   end
 
   def self.trigger_post_read_count_update(post, groups)
-    return if groups.none?(&:publish_read_state?)
+    return if groups.empty?
     post.publish_change_to_clients!(:read)
   end
 end

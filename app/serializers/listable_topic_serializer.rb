@@ -123,11 +123,11 @@ class ListableTopicSerializer < BasicTopicSerializer
   end
 
   def read_by_group_member
-    # object#minimum_unread_count is a dynamically generated attribute.
+    # object#last_read_post_number is an attribute selected from a joined table.
     # See TopicQuery#append_read_state for more information.
-    return false unless object.respond_to?(:minimum_unread_count)
+    return false unless object.respond_to?(:last_read_post_number)
 
-    object.minimum_unread_count && object.minimum_unread_count <= 0
+    object.last_read_post_number >= object.highest_post_number
   end
 
   def include_read_by_group_member?

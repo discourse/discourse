@@ -21,6 +21,7 @@ class PostJobsEnqueuer
     end
 
     if @topic.private_message?
+      TopicGroup.update_last_read(@topic.last_poster, @topic.id, @post.post_number)
       TopicTrackingState.publish_private_message(@topic, post: @post)
     end
   end
