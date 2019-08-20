@@ -657,13 +657,10 @@ export default Ember.Component.extend({
     this._pasted = false;
 
     const $element = $(this.element);
-    const csrf = this.session.get("csrfToken");
 
     $element.fileupload({
       url: Discourse.getURL(
-        `/uploads.json?client_id=${
-          this.messageBus.clientId
-        }&authenticity_token=${encodeURIComponent(csrf)}`
+        `/uploads.json?client_id=${this.messageBus.clientId}`
       ),
       dataType: "json",
       pasteZone: $element
