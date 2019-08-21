@@ -1,20 +1,8 @@
 {{#avatar}}<img src="{{avatar}}" class="thumbnail onebox-avatar">{{/avatar}}
-<h4>
-  <a href='{{link}}' target='_blank'>
-    {{title}}
-  </a>
-</h4>
 
-<div class="tweet">{{{tweet}}}
-  {{#quoted_tweet}}
-    <div class="quoted">
-      <a class="quoted-link" href="{{quoted_link}}">
-        <p class="quoted-title">{{quoted_full_name}} <span>@{{quoted_screen_name}}</span></p>
-      </a>
-      <div>
-        {{quoted_tweet}}
-      </div>
-    </div>{{/quoted_tweet}}</div>
+<h4><a href='{{link}}' target='_blank'>{{title}}</a></h4>
+
+<div class="tweet"> {{{tweet}}}{{#quoted_tweet}}<div class="quoted"><a class="quoted-link" href="{{quoted_link}}"><p class="quoted-title">{{quoted_full_name}} <span>@{{quoted_screen_name}}</span></p></a><div>{{quoted_tweet}}</div></div>{{/quoted_tweet}}</div>
 
 <div class='date'>
   <a href="{{link}}" target="_blank">{{timestamp}}</a>

@@ -59,7 +59,7 @@ module Onebox
 
       def tweet
         if twitter_api_credentials_present?
-          client.prettify_tweet(raw)
+          client.prettify_tweet(raw)&.strip
         else
           twitter_data[:description].gsub(/“(.+?)”/im) { $1 } if twitter_data[:description]
         end
