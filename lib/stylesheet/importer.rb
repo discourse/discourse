@@ -63,6 +63,7 @@ module Stylesheet
       end
 
       theme&.included_settings&.each do |name, value|
+        next if name == "theme_uploads"
         contents << to_scss_variable(name, value)
       end
 

@@ -546,6 +546,18 @@ HTML
     expect(messages.first.data.map { |d| d[:target] }).to contain_exactly(:admin, :desktop, :desktop_theme, :mobile, :mobile_theme)
   end
 
+  it 'includes theme_uploads in settings' do
+    Theme.destroy_all
+
+    upload = Fabricate(:upload)
+    theme.set_field(type: :theme_upload_var, target: :common, name: "bob", upload_id: upload.id)
+    theme.save!
+
+    json = JSON.parse(cached_settings(theme.id))
+
+    expect(json["theme_uploads"]["bob"]).to eq(upload.url)
+  end
+
   it 'handles settings cache correctly' do
     Theme.destroy_all
 
