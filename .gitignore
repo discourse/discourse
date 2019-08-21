@@ -46,7 +46,7 @@ bootsnap-compile-cache/
 
 # Ignore plugins except for the bundled ones.
 /plugins/*
-!/plugins/lazyYT/
+!/plugins/lazy-yt/
 !/plugins/poll/
 !/plugins/discourse-details/
 !/plugins/discourse-nginx-performance-report
