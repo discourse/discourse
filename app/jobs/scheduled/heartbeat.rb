@@ -7,8 +7,8 @@ module Jobs
     every 3.minute
 
     def execute(args)
-      Demon::Sidekiq.heartbeat_queues.each do |queue|
-        Jobs.enqueue(:run_heartbeat, queue_name: queue, queue: queue)
+      Demon::Sidekiq::QUEUE_IDS.each do |identifier|
+        Jobs.enqueue(:run_heartbeat, queue_name: identifier, queue: identifier)
       end
     end
   end

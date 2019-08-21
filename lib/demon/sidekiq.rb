@@ -4,10 +4,7 @@ require "demon/base"
 
 class Demon::Sidekiq < Demon::Base
   RANDOM_HEX = SecureRandom.hex
-
-  def self.heartbeat_queues_list_key
-    @@heartbeat_queues_list_key ||= "#{RANDOM_HEX}_heartbeat_queues_list"
-  end
+  QUEUE_IDS = []
 
   def self.queues_last_heartbeat_hash_key
     @@queues_last_heartbeat_hash_key ||= "#{RANDOM_HEX}_queues_last_heartbeat_hash"
@@ -23,38 +20,16 @@ class Demon::Sidekiq < Demon::Base
     $redis.hget(queues_last_heartbeat_hash_key, name).to_i
   end
 
-  def self.heartbeat_queues
-    extend_expiry(heartbeat_queues_list_key)
-    extend_expiry(queues_last_heartbeat_hash_key)
-    queues = $redis.lrange(heartbeat_queues_list_key, 0, -1)
-
-    queues.select! do |queue|
-      pid = queue.split("_").last.to_i
-      alive = alive?(pid)
-      if !alive
-        $redis.lrem(heartbeat_queues_list_key, 0, queue)
-        $redis.hdel(queues_last_heartbeat_hash_key, queue)
-      end
-      alive
-    end
-    queues
-  end
-
-  def self.create_heartbeat_queue(pid)
-    queue = "#{SecureRandom.hex}_#{pid}"
-    $redis.lpush(heartbeat_queues_list_key, queue)
-    extend_expiry(heartbeat_queues_list_key)
-    queue
-  end
-
   def self.clear_heartbeat_queues!
-    $redis.del(heartbeat_queues_list_key)
     $redis.del(queues_last_heartbeat_hash_key)
   end
 
-  def self.before_start
+  def self.before_start(count)
     # cleans up heartbeat queues from previous boot up
-    Sidekiq::Queue.all.each { |queue| queue.clear if queue.name[/^\h{32}_\d+$/] }
+    Sidekiq::Queue.all.each { |queue| queue.clear if queue.name[/^\h{32}$/] }
+    count.times do
+      QUEUE_IDS << SecureRandom.hex
+    end
   end
 
   def self.extend_expiry(key)
@@ -67,6 +42,11 @@ class Demon::Sidekiq < Demon::Base
 
   def self.after_fork(&blk)
     blk ? (@blk = blk) : @blk
+  end
+
+  def run
+    @identifier = QUEUE_IDS[@index]
+    super
   end
 
   private
@@ -93,9 +73,7 @@ class Demon::Sidekiq < Demon::Base
 
     options = ["-c", GlobalSetting.sidekiq_workers.to_s]
 
-    heartbeat_queue = self.class.create_heartbeat_queue(Process.pid)
-
-    [['critical', 8], [heartbeat_queue, 8], ['default', 4], ['low', 2], ['ultra_low', 1]].each do |queue_name, weight|
+    [['critical', 8], [@identifier, 8], ['default', 4], ['low', 2], ['ultra_low', 1]].each do |queue_name, weight|
       custom_queue_hostname = ENV["UNICORN_SIDEKIQ_#{queue_name.upcase}_QUEUE_HOSTNAME"]
 
       if !custom_queue_hostname || custom_queue_hostname.split(',').include?(`hostname`.strip)
