@@ -1138,14 +1138,53 @@ RSpec.describe TopicsController do
             restricted_category.allowed_tags = [tag2.name]
 
             put "/t/#{topic.slug}/#{topic.id}.json", params: {
-              tags: [tag2],
+              tags: [tag2.name],
               category_id: category.id
             }
 
             result = ::JSON.parse(response.body)
             expect(response.status).to eq(422)
             expect(result['errors']).to be_present
+            expect(result['errors'][0]).to include(tag2.name)
             expect(topic.reload.category_id).not_to eq(restricted_category.id)
+          end
+
+          it 'allows category change when topic has a hidden tag' do
+            Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: [tag1.name])
+
+            put "/t/#{topic.slug}/#{topic.id}.json", params: {
+              category_id: category.id
+            }
+
+            result = ::JSON.parse(response.body)
+            expect(response.status).to eq(200)
+            expect(topic.reload.tags).to include(tag1)
+          end
+
+          it 'allows category change when topic has a read-only tag' do
+            Fabricate(:tag_group, permissions: { "staff" => 1, "everyone" => 3 }, tag_names: [tag1.name])
+
+            put "/t/#{topic.slug}/#{topic.id}.json", params: {
+              category_id: category.id
+            }
+
+            result = ::JSON.parse(response.body)
+            expect(response.status).to eq(200)
+            expect(topic.reload.tags).to include(tag1)
+          end
+
+          it 'does not leak tag name when trying to use a staff tag' do
+            Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: [tag2.name])
+
+            put "/t/#{topic.slug}/#{topic.id}.json", params: {
+              tags: [tag2.name],
+              category_id: category.id
+            }
+
+            result = ::JSON.parse(response.body)
+            expect(response.status).to eq(422)
+            expect(result['errors']).to be_present
+            expect(result['errors'][0]).not_to include(tag2.name)
           end
 
           it 'will clean tag params' do
