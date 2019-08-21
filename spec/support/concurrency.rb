@@ -30,7 +30,7 @@ module Concurrency
         end
 
         def choose_with_weights(*options)
-          choose(options.map(&:first))
+          choose(*options.map(&:first))
         end
 
         def dead_end
@@ -147,10 +147,11 @@ module Concurrency
       def initialize(path)
         @path = path
         @tasks = []
+        @time = 0
       end
 
       def yield
-        Fiber.yield
+        sleep(0)
       end
 
       def choose(*options)
@@ -161,16 +162,45 @@ module Concurrency
         @path.choose_with_weights(*options)
       end
 
-      def spawn(&blk)
-        @tasks << Fiber.new(&blk)
+      def stop
+        @tasks.clear
+        Fiber.yield
       end
 
-      def run
+      def sleep(length)
+        Fiber.yield(@time + length)
+      end
+
+      def spawn(&blk)
+        descriptor = {
+          fiber: Fiber.new(&blk),
+          run_at: @time
+        }
+
+        @tasks << descriptor
+
+        self.yield
+      end
+
+      def run(sleep_order: false)
         until @tasks.empty?
-          task = @path.choose(*@tasks)
-          task.resume
-          unless task.alive?
-            @tasks.delete(task)
+          descriptor =
+            if sleep_order
+              @tasks.sort_by! { |x| x[:run_at] }
+              run_at = @tasks.first[:run_at]
+              @path.choose(*@tasks.take_while { |x| x[:run_at] == run_at })
+            else
+              @path.choose(*@tasks)
+            end
+
+          @time = [@time, descriptor[:run_at]].max
+          fiber = descriptor[:fiber]
+          run_at = fiber.resume
+
+          if fiber.alive?
+            descriptor[:run_at] = run_at
+          else
+            @tasks.delete(descriptor)
           end
         end
       end
@@ -180,15 +210,17 @@ module Concurrency
       end
     end
 
-    def run_with_path(path)
+    def run_with_path(path, sleep_order: false)
       execution = Execution.new(path)
       result = @blk.call(execution)
-      execution.run
+      execution.run(sleep_order: sleep_order)
       result
     end
 
-    def run(**opts)
-      Logic.run(**opts, &method(:run_with_path))
+    def run(sleep_order: false, **opts)
+      Logic.run(**opts) do |path|
+        run_with_path(path, sleep_order: sleep_order)
+      end
     end
   end
 
