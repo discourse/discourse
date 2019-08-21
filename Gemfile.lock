@@ -56,7 +56,7 @@ GEM
     multipart-post (2.0.0)
     mustache (1.1.0)
     nenv (0.3.0)
-    nokogiri (1.10.3)
+    nokogiri (1.10.4)
       mini_portile2 (~> 2.4.0)
     nokogumbo (2.0.1)
       nokogiri (~> 1.8, >= 1.8.4)
