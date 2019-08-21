@@ -28,6 +28,7 @@ module SvgSprite
     "bell-slash",
     "bold",
     "book",
+    "book-reader",
     "bookmark",
     "briefcase",
     "calendar-alt",

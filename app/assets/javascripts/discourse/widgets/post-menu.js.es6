@@ -74,7 +74,7 @@ registerButton("read", attrs => {
     return {
       action: "toggleWhoRead",
       title: "post.controls.read_indicator",
-      icon: "far-eye",
+      icon: "book-reader",
       before: "read-count",
       addContainer: false,
       disabled
