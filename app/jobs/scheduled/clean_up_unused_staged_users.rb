@@ -10,7 +10,7 @@ module Jobs
 
       User.joins("LEFT JOIN posts ON posts.user_id = users.id")
         .where("posts.user_id IS NULL")
-        .where(staged: true)
+        .where(staged: true, admin: false, moderator: false)
         .where("users.created_at < ?", 1.year.ago)
         .find_each do |user|
 
