@@ -609,6 +609,7 @@ en:
       description_incomplete: "The category description post must have at least one paragraph."
       permission_conflict: "Any group that is allowed to access a subcategory must also be allowed to access the parent category. The following groups have access to one of the subcategories, but no access to parent category: %{group_names}."
       disallowed_topic_tags: "This topic has tags not allowed by this category: '%{tags}'"
+      disallowed_tags_generic: "This topic has disallowed tags."
     cannot_delete:
       uncategorized: "This category is special. It is intended as a holding area for topics that have no category; it cannot be deleted."
       has_subcategories: "Can't delete this category because it has sub-categories."
@@ -2227,7 +2228,7 @@ en:
     errors: "%{errors}"
     not_available: "Not available. Try %{suggestion}?"
     something_already_taken: "Something went wrong, perhaps the username or email is already registered. Try the forgot password link."
-    omniauth_error: 
+    omniauth_error:
       generic: "Sorry, there was an error authorizing your account. Please try again."
       csrf_detected: "Authorization timed out, or you have switched browsers. Please try again."
       request_error: "An error occured when starting authorization. Please try again."
