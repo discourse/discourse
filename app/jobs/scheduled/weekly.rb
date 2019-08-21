@@ -14,6 +14,7 @@ module Jobs
       MiniScheduler::Stat.purge_old
       Draft.cleanup!
       UserAuthToken.cleanup!
+      Upload.reset_unknown_extensions!
     end
   end
 end

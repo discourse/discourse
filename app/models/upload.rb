@@ -359,6 +359,10 @@ class Upload < ActiveRecord::Base
     problems
   end
 
+  def self.reset_unknown_extensions!
+    Upload.where(extension: "unknown").update_all(extension: nil)
+  end
+
   private
 
   def short_url_basename
