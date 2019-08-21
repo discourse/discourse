@@ -762,9 +762,6 @@ Discourse::Application.routes.draw do
   get "/posts/:id/raw-email" => "posts#raw_email"
   get "raw/:topic_id(/:post_number)" => "posts#markdown_num"
 
-  resources :queued_posts, constraints: StaffConstraint.new
-  get 'queued-posts' => 'queued_posts#index'
-
   resources :invites
   post "invites/upload_csv" => "invites#upload_csv"
   post "invites/rescind-all" => "invites#rescind_all_invites"
