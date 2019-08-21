@@ -430,6 +430,16 @@ class Theme < ActiveRecord::Base
       self.settings.each do |setting|
         hash[setting.name] = setting.value
       end
+
+      theme_uploads = {}
+      theme_fields
+        .joins(:upload)
+        .where(type_id: ThemeField.types[:theme_upload_var]).each do |field|
+
+        theme_uploads[field.name] = field.upload.url
+      end
+      hash['theme_uploads'] = theme_uploads if theme_uploads.present?
+
       hash
     end
   end
