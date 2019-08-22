@@ -412,6 +412,8 @@ module BackupRestore
       log "Reloading site settings..."
       SiteSetting.refresh!
 
+      DiscourseEvent.trigger(:site_settings_restored)
+
       if @disable_emails && SiteSetting.disable_emails == 'no'
         log "Disabling outgoing emails for non-staff users..."
         user = User.find_by_email(@user_info[:email]) || Discourse.system_user
