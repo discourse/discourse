@@ -6,18 +6,17 @@ class TopicGroup < ActiveRecord::Base
 
   def self.update_last_read(user, topic_id, post_number)
     update_query = <<~SQL
-      UPDATE topic_groups
+      UPDATE topic_groups tg
       SET
         last_read_post_number = GREATEST(:post_number, tg.last_read_post_number),
         updated_at = :now
-      FROM topic_groups tg
-      INNER JOIN group_users gu ON gu.group_id = tg.group_id
-      INNER JOIN topic_allowed_groups tag ON tag.topic_id = tg.topic_id
+      FROM topic_allowed_groups tag
+      INNER JOIN group_users gu ON gu.group_id = tag.group_id
       WHERE gu.user_id = :user_id
+      AND tag.topic_id = :topic_id
       AND tg.topic_id = :topic_id
-      AND tg.group_id = tag.group_id
       RETURNING
-        tg.group_id, tg.last_read_post_number old_number
+        tg.group_id
     SQL
 
     updated_groups = DB.query(
@@ -34,7 +33,7 @@ class TopicGroup < ActiveRecord::Base
     query = <<~SQL
       INSERT INTO topic_groups (topic_id, group_id, last_read_post_number, created_at, updated_at)
       SELECT tag.topic_id, tag.group_id, :post_number, :now, :now
-      FROM topic_allowed_groups AS tag
+      FROM topic_allowed_groups tag
       INNER JOIN group_users gu ON gu.group_id = tag.group_id
       WHERE gu.user_id = :user_id
       AND tag.topic_id = :topic_id
@@ -44,7 +43,7 @@ class TopicGroup < ActiveRecord::Base
 
     DB.exec(
       query,
-      user_id: user.id, topic_id: topic_id, post_number: post_number, now: DateTime.now, already_updated_groups: updated_group_ids.join(',')
+      user_id: user.id, topic_id: topic_id, post_number: post_number, now: DateTime.now, already_updated_groups: updated_group_ids
     )
   end
 end

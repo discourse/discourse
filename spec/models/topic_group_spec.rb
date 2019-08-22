@@ -67,5 +67,19 @@ describe TopicGroup do
 
       expect(created_topic_group.last_read_post_number).to eq @topic.highest_post_number
     end
+
+    it 'Only updates the record that shares the same topic_id' do
+      new_post_number = 100
+      topic2 = Fabricate(:private_message_topic, allowed_groups: [group], topic_allowed_users: [])
+      described_class.create!(topic: @topic, group: group, last_read_post_number: @topic.highest_post_number)
+      described_class.create!(topic: topic2, group: group, last_read_post_number: topic2.highest_post_number)
+
+      described_class.update_last_read(user, @topic.id, new_post_number)
+      created_topic_group = described_class.find_by(topic: @topic, group: group)
+      created_topic_group2 = described_class.find_by(topic: topic2, group: group)
+
+      expect(created_topic_group.last_read_post_number).to eq new_post_number
+      expect(created_topic_group2.last_read_post_number).to eq topic2.highest_post_number
+    end
   end
 end
