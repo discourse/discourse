@@ -451,8 +451,9 @@ const Composer = RestModel.extend({
       return reply.length;
     }
 
-    if (Quote.REGEXP.test(reply)) {
-      // make it global so we can strip all quotes at once
+    while (Quote.REGEXP.test(reply)) {
+      // make it global so we can strip as many quotes at once
+      // keep in mind nested quotes mean we still need a loop here
       const regex = new RegExp(Quote.REGEXP.source, "img");
       reply = reply.replace(regex, "");
     }
