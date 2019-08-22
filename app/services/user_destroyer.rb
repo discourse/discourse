@@ -111,7 +111,7 @@ class UserDestroyer
           end
           StaffActionLogger.new(deleted_by).log_user_deletion(user, opts.slice(:context))
         end
-        MessageBus.publish "/file-change", ["refresh"], user_ids: [result.id]
+        MessageBus.publish "/logout", result.id, user_ids: [result.id]
       end
     end
 
