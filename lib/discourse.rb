@@ -215,9 +215,18 @@ module Discourse
   end
 
   def self.find_plugin_css_assets(args)
-    self.find_plugins(args).find_all do |plugin|
+    plugins = self.find_plugins(args)
+
+    assets = plugins.find_all do |plugin|
       plugin.css_asset_exists?
     end.map { |plugin| plugin.directory_name }
+
+    target = args[:mobile_view] ? :mobile : :desktop
+    assets += plugins.find_all do |plugin|
+      plugin.css_asset_exists?(target)
+    end.map { |plugin| "#{plugin.directory_name}_#{target}" }
+
+    assets
   end
 
   def self.find_plugin_js_assets(args)

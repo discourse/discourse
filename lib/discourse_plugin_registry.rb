@@ -183,8 +183,15 @@ class DiscoursePluginRegistry
     end
   end
 
-  def self.stylesheets_exists?(plugin_directory_name)
-    self.stylesheets[plugin_directory_name].present? || self.mobile_stylesheets[plugin_directory_name].present? || self.desktop_stylesheets[plugin_directory_name].present?
+  def self.stylesheets_exists?(plugin_directory_name, target = nil)
+    case target
+    when :desktop
+      self.desktop_stylesheets[plugin_directory_name].present?
+    when :mobile
+      self.mobile_stylesheets[plugin_directory_name].present?
+    else
+      self.stylesheets[plugin_directory_name].present?
+    end
   end
 
   def self.register_seed_data(key, value)

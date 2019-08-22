@@ -658,8 +658,8 @@ class Plugin::Instance
     @directory_name ||= File.dirname(path).split("/").last
   end
 
-  def css_asset_exists?
-    DiscoursePluginRegistry.stylesheets_exists?(directory_name)
+  def css_asset_exists?(target = nil)
+    DiscoursePluginRegistry.stylesheets_exists?(directory_name, target)
   end
 
   def js_asset_exists?
