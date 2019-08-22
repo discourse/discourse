@@ -170,16 +170,15 @@ describe DiscoursePluginRegistry do
     it "registers desktop css properly" do
       registry.register_asset("test.css", :desktop, plugin_directory_name)
 
-      expect(registry.mobile_stylesheets[plugin_directory_name].count).to eq(0)
       expect(registry.desktop_stylesheets[plugin_directory_name].count).to eq(1)
-      expect(registry.stylesheets[plugin_directory_name].count).to eq(0)
+      expect(registry.stylesheets[plugin_directory_name]).to eq(nil)
+      expect(registry.mobile_stylesheets[plugin_directory_name]).to eq(nil)
     end
 
     it "registers mobile css properly" do
       registry.register_asset("test.css", :mobile, plugin_directory_name)
-
       expect(registry.mobile_stylesheets[plugin_directory_name].count).to eq(1)
-      expect(registry.stylesheets[plugin_directory_name].count).to eq(0)
+      expect(registry.stylesheets[plugin_directory_name]).to eq(nil)
     end
 
     it "registers sass variable properly" do
