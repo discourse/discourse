@@ -370,6 +370,23 @@ en:
     review:
       order_by: "Order by"
       in_reply_to: "in reply to"
+      explain:
+        why: "explain why this item ended up in the queue"
+        title: "Reviewable Scoring"
+        formula: "Formula"
+        subtotal: "Subtotal"
+        total: "Total"
+        min_score_visibility: "Minimum Score for Visibility"
+        score_to_hide: "Score to Hide Post"
+        user_accuracy_bonus:
+          name: "user accuracy"
+          title: "Users whose flags have been historically agreed with are given a bonus."
+        trust_level_bonus:
+          name: "trust level"
+          title: "Reviewable items created by higher trust level users have a higher score."
+        type_bonus:
+          name: "type bonus"
+          title: "Certain reviewable types can be assigned a bonus by staff to make them a higher priority."
       claim_help:
         optional: "You can claim this item to prevent others from reviewing it."
         required: "You must claim items before you can review them."
