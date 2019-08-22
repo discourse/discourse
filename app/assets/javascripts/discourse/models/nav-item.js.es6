@@ -101,8 +101,19 @@ const NavItem = Discourse.Model.extend({
 });
 
 const ExtraNavItem = NavItem.extend({
-  @computed("href")
-  href: href => href,
+  href: computed("href", {
+    get() {
+      if (this._href) {
+        return this._href;
+      }
+
+      return this.href;
+    },
+
+    set(key, value) {
+      return (this._href = value);
+    }
+  }),
 
   customFilter: null
 });
