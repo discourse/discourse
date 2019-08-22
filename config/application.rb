@@ -214,6 +214,9 @@ module Discourse
     config.middleware.delete Rack::ETag
 
     unless Rails.env.development?
+      require 'middleware/early_data_check'
+      config.middleware.insert_after Rack::MethodOverride, Middleware::EarlyDataCheck
+
       require 'middleware/enforce_hostname'
       config.middleware.insert_after Rack::MethodOverride, Middleware::EnforceHostname
     end
