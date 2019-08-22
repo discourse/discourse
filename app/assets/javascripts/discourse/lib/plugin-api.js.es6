@@ -45,7 +45,7 @@ import { addCategorySortCriteria } from "discourse/components/edit-category-sett
 import { queryRegistry } from "discourse/widgets/widget";
 
 // If you add any methods to the API ensure you bump up this number
-const PLUGIN_API_VERSION = "0.8.31";
+const PLUGIN_API_VERSION = "0.8.32";
 
 class PluginApi {
   constructor(version, container) {
