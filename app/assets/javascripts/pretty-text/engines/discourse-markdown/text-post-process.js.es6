@@ -87,7 +87,7 @@ function textPostProcess(content, state, ruler) {
 
   const matcher = ruler.getMatcher();
 
-  while (match = matcher.exec(content)) {
+  while ((match = matcher.exec(content))) {
     // something is wrong
     if (match.index < pos) break;
 
