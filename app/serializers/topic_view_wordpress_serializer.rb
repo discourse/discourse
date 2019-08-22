@@ -28,7 +28,7 @@ class TopicViewWordpressSerializer < ApplicationSerializer
   end
 
   def posts
-    object.posts
+    object.posts.select { |post| post.hidden === false }
   end
 
 end
