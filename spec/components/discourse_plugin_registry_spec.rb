@@ -153,13 +153,13 @@ describe DiscoursePluginRegistry do
 
   context '#register_asset' do
     let(:registry) { DiscoursePluginRegistry }
+    let(:plugin_directory_name) { "my_plugin" }
 
     after do
       registry.reset!
     end
 
     it "does register general css properly" do
-      plugin_directory_name = "my_plugin"
       registry.register_asset("test.css", nil, plugin_directory_name)
       registry.register_asset("test2.css", nil, plugin_directory_name)
 
@@ -168,25 +168,18 @@ describe DiscoursePluginRegistry do
     end
 
     it "registers desktop css properly" do
-      registry.register_asset("test.css", :desktop)
+      registry.register_asset("test.css", :desktop, plugin_directory_name)
 
-      expect(registry.mobile_stylesheets.count).to eq(0)
-      expect(registry.desktop_stylesheets.count).to eq(1)
-      expect(registry.stylesheets.count).to eq(0)
+      expect(registry.mobile_stylesheets[plugin_directory_name].count).to eq(0)
+      expect(registry.desktop_stylesheets[plugin_directory_name].count).to eq(1)
+      expect(registry.stylesheets[plugin_directory_name].count).to eq(0)
     end
 
     it "registers mobile css properly" do
-      registry.register_asset("test.css", :mobile)
+      registry.register_asset("test.css", :mobile, plugin_directory_name)
 
-      expect(registry.mobile_stylesheets.count).to eq(1)
-      expect(registry.stylesheets.count).to eq(0)
-    end
-
-    it "registers desktop css properly" do
-      registry.register_asset("test.css", :desktop)
-
-      expect(registry.desktop_stylesheets.count).to eq(1)
-      expect(registry.stylesheets.count).to eq(0)
+      expect(registry.mobile_stylesheets[plugin_directory_name].count).to eq(1)
+      expect(registry.stylesheets[plugin_directory_name].count).to eq(0)
     end
 
     it "registers sass variable properly" do
