@@ -188,7 +188,7 @@ export default ComboBox.extend(TagsMixin, {
     return content;
   },
 
-  _prepareSearch(query) {
+  _prepareSearch(query, options) {
     const data = {
       q: query,
       limit: this.get("siteSettings.max_tag_search_results"),
@@ -203,7 +203,7 @@ export default ComboBox.extend(TagsMixin, {
 
     if (!this.everyTag) data.filterForInput = true;
 
-    this.searchTags("/tags/filter/search", data, this._transformJson);
+    this.searchTags("/tags/filter/search", data, this._transformJson, options);
   },
 
   _transformJson(context, json) {
@@ -243,6 +243,12 @@ export default ComboBox.extend(TagsMixin, {
 
   didDeselect(tags) {
     this.destroyTags(tags);
+  },
+
+  didUpdateAttrs() {
+    this._super(...arguments);
+
+    this._prepareSearch(this.filter, { background: true });
   },
 
   _tagsChanged() {
