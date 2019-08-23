@@ -175,7 +175,8 @@ class TopicsController < ApplicationController
       min_score: params[:min_score].to_i,
       min_replies: params[:min_replies].to_i,
       bypass_trust_level_score: params[:bypass_trust_level_score].to_i, # safe cause 0 means ignore
-      only_moderator_liked: params[:only_moderator_liked].to_s == "true"
+      only_moderator_liked: params[:only_moderator_liked].to_s == "true",
+      exclude_hidden: true
     }
 
     @topic_view = TopicView.new(params[:topic_id], current_user, opts)
