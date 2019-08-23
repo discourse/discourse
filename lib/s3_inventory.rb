@@ -265,6 +265,7 @@ class S3Inventory
     objects
   rescue Aws::Errors::ServiceError => e
     log("Failed to list inventory from S3", e)
+    []
   end
 
   def inventory_id
