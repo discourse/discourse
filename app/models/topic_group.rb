@@ -5,6 +5,18 @@ class TopicGroup < ActiveRecord::Base
   belongs_to :topic
 
   def self.update_last_read(user, topic_id, post_number)
+    updated_groups = update_read_count(user, topic_id, post_number)
+    create_topic_group(user, topic_id, post_number, updated_groups.map(&:group_id))
+    TopicTrackingState.publish_read_indicator_on_read(topic_id, post_number, user.id)
+  end
+
+  def self.new_message_update(user, topic_id, post_number)
+    updated_groups = update_read_count(user, topic_id, post_number)
+    create_topic_group(user, topic_id, post_number, updated_groups.map(&:group_id))
+    TopicTrackingState.publish_read_indicator_on_write(topic_id, post_number, user.id)
+  end
+
+  def self.update_read_count(user, topic_id, post_number)
     update_query = <<~SQL
       UPDATE topic_groups tg
       SET
@@ -23,10 +35,6 @@ class TopicGroup < ActiveRecord::Base
       update_query,
       user_id: user.id, topic_id: topic_id, post_number: post_number, now: DateTime.now
     )
-
-    create_topic_group(user, topic_id, post_number, updated_groups.map(&:group_id))
-
-    TopicTrackingState.publish_read_private_message(topic_id, post_number, user.id)
   end
 
   def self.create_topic_group(user, topic_id, post_number, updated_group_ids)

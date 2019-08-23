@@ -332,8 +332,6 @@ SQL
     message = {
       topic_id: topic.id
     }
-    groups = read_allowed_groups_of(topic)
-    update_topic_list_read_indicator(topic, groups, topic.highest_post_number, topic.last_post_user_id, false)
 
     channels.each do |channel, ids|
       MessageBus.publish(
@@ -344,7 +342,16 @@ SQL
     end
   end
 
-  def self.publish_read_private_message(topic_id, last_read_post_number, user_id)
+  def self.publish_read_indicator_on_write(topic_id, last_read_post_number, user_id)
+    topic = Topic.includes(:allowed_groups).select(:highest_post_number, :archetype, :id).find_by(id: topic_id)
+
+    if topic.private_message?
+      groups = read_allowed_groups_of(topic)
+      update_topic_list_read_indicator(topic, groups, topic.highest_post_number, user_id, false)
+    end
+  end
+
+  def self.publish_read_indicator_on_read(topic_id, last_read_post_number, user_id)
     topic = Topic.includes(:allowed_groups).select(:highest_post_number, :archetype, :id).find_by(id: topic_id)
 
     if topic.private_message?
@@ -379,7 +386,7 @@ SQL
     end
 
     return if groups_to_update.empty?
-    MessageBus.publish("/private-messages/group-read/#{topic.id}", message, user_ids: groups_to_update.flat_map(&:members))
+    MessageBus.publish("/private-messages/read-indicator/#{topic.id}", message, user_ids: groups_to_update.flat_map(&:members))
   end
 
   def self.trigger_post_read_count_update(post, groups)

@@ -63,7 +63,7 @@ export const ListItemDefaults = {
 
   @computed("topic.id")
   readIndicatorChannel(topicId) {
-    return `/private-messages/group-read/${topicId}`;
+    return `/private-messages/read-indicator/${topicId}`;
   },
 
   @computed("topic.read_by_group_member")
