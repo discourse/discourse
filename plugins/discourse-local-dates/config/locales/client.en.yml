@@ -5,6 +5,8 @@ en:
         today: Today %{time}
         tomorrow: Tomorrow %{time}
         yesterday: Yesterday %{time}
+        countdown:
+          passed: date has passed
       title: Insert date / time
       create:
         form:
