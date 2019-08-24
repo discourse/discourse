@@ -12,6 +12,10 @@
     &.past {
       border-bottom-color: $primary-low-mid;
     }
+
+    &.past[data-countdown] {
+      color: $primary-medium;
+    }
   }
 }
 
