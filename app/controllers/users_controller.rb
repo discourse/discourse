@@ -1111,7 +1111,8 @@ class UsersController < ApplicationController
 
     if secure_session["confirmed-password-#{current_user.id}"] == "true"
       render json: success_json.merge(
-               totps: current_user.totps.select(:id, :name, :last_used, :created_at, :method).order(:created_at)
+               totps: current_user.totps.select(:id, :name, :last_used, :created_at, :method).order(:created_at),
+               webauthns: current_user.webauthns.select(:id, :name, :last_used, :created_at, :method).order(:created_at)
              )
     else
       render json: success_json.merge(

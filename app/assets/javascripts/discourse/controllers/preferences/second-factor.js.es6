@@ -68,12 +68,13 @@ export default Ember.Controller.extend(CanCheckEmails, {
           errorMessage: null,
           loaded: true,
           totps: response.totps,
+          webauthns: response.webauthns,
           password: null,
           dirty: false
         });
         this.set(
           "model.second_factor_enabled",
-          response.totps && response.totps.length > 0
+          (response.totps && response.totps.length > 0) || (response.webauthns && response.webauthns.length > 0)
         );
       })
       .catch(e => this.handleError(e))
@@ -145,6 +146,10 @@ export default Ember.Controller.extend(CanCheckEmails, {
         markDirty: () => this.markDirty(),
         onError: e => this.handleError(e)
       });
+    },
+
+    createWebauthn() {
+      // TODO (martin) - implement this modal show code
     },
 
     editSecondFactor(second_factor) {

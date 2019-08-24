@@ -2170,4 +2170,24 @@ describe User do
       end
     end
   end
+
+  describe "Second-factor authenticators" do
+    describe "#totps" do
+      it "only includes enabled totp 2FA" do
+        enabled_totp_2fa = Fabricate(:user_second_factor_totp, user: user, name: 'Enabled TOTP', enabled: true)
+        disabled_totp_2fa = Fabricate(:user_second_factor_totp, user: user, name: 'Disabled TOTP', enabled: false)
+
+        expect(user.totps.map(&:id)).to eq([enabled_totp_2fa.id])
+      end
+    end
+
+    describe "#webauthns" do
+      it "only includes enabled webauthn 2FA" do
+        enabled_webauthn_2fa = Fabricate(:user_second_factor_webauthn, user: user, name: 'Enabled YubiKey', enabled: true)
+        disabled_webauthn_2fa = Fabricate(:user_second_factor_webauthn, user: user, name: 'Disabled YubiKey', enabled: false)
+
+        expect(user.webauthns.map(&:id)).to eq([enabled_webauthn_2fa.id])
+      end
+    end
+  end
 end

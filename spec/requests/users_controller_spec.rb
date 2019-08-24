@@ -3540,4 +3540,88 @@ describe UsersController do
     end
 
   end
+
+  describe '#list_second_factors' do
+    before do
+      sign_in(user)
+    end
+
+    context 'when SSO is enabled' do
+      before do
+        SiteSetting.sso_url = 'https://discourse.test/sso'
+        SiteSetting.enable_sso = true
+      end
+
+      it 'does not allow access' do
+        post "/u/second_factors.json"
+        expect(response.status).to eq(404)
+      end
+    end
+
+    context 'when local logins are not enabled' do
+      before do
+        SiteSetting.enable_local_logins = false
+      end
+
+      it 'does not allow access' do
+        post "/u/second_factors.json"
+        expect(response.status).to eq(404)
+      end
+    end
+
+    context 'when the site settings allow second factors' do
+      before do
+        SiteSetting.enable_local_logins = true
+        SiteSetting.enable_sso = false
+      end
+
+      context 'when the password parameter is not provided' do
+        let(:password) { '' }
+
+        before do
+          post "/u/second_factors.json", params: { password: password }
+        end
+
+        it 'returns password required response' do
+          expect(response.status).to eq(200)
+          response_body = JSON.parse(response.body)
+          expect(response_body['password_required']).to eq(true)
+        end
+      end
+
+      context 'when the password is provided' do
+        let(:user) { Fabricate(:user, password: '8555039dd212cc66ec68') }
+
+        context 'when the password is correct' do
+          let(:password) { '8555039dd212cc66ec68' }
+
+          it 'returns a list of enabled totps and webauthn second factors' do
+            totp_second_factor = Fabricate(:user_second_factor_totp, user: user)
+            webauthn_second_factor = Fabricate(:user_second_factor_webauthn, user: user)
+
+            post "/u/second_factors.json", params: { password: password }
+
+            expect(response.status).to eq(200)
+            response_body = JSON.parse(response.body)
+            expect(response_body['totps'].map { |second_factor| second_factor['id'] }).to include(totp_second_factor.id)
+            expect(response_body['webauthns'].map { |second_factor| second_factor['id'] }).to include(webauthn_second_factor.id)
+          end
+        end
+
+        context 'when the password is not correct' do
+          let(:password) { 'wrongpassword' }
+
+          it 'returns the incorrect password response' do
+
+            post "/u/second_factors.json", params: { password: password }
+
+            response_body = JSON.parse(response.body)
+            expect(response_body['error']).to eq(
+              I18n.t("login.incorrect_password")
+            )
+          end
+        end
+      end
+    end
+  end
 end
