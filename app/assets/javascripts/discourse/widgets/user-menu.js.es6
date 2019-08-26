@@ -13,6 +13,23 @@ export function addUserMenuGlyph(glyph) {
 createWidget("user-menu-links", {
   tagName: "div.menu-links-header",
 
+  profileLink() {
+    const link = {
+      route: "user",
+      model: this.currentUser,
+      className: "user-activity-link",
+      icon: "user",
+      rawLabel: formatUsername(this.currentUser.username)
+    };
+
+    if (this.currentUser.is_anonymous) {
+      link.label = "user.profile";
+      link.rawLabel = null;
+    }
+
+    return link;
+  },
+
   bookmarksGlyph() {
     return {
       label: "user.bookmarks",
@@ -31,6 +48,10 @@ createWidget("user-menu-links", {
     };
   },
 
+  linkHtml(link) {
+    return this.attach("link", link);
+  },
+
   glyphHtml(glyph) {
     return this.attach("link", $.extend(glyph, { hideLabel: true }));
   },
@@ -46,6 +67,7 @@ createWidget("user-menu-links", {
       isAnon;
 
     const path = attrs.path;
+    const links = [this.profileLink()];
     const glyphs = [];
 
     if (extraGlyphs) {
@@ -65,20 +87,6 @@ createWidget("user-menu-links", {
       glyphs.push(this.messagesGlyph());
     }
 
-    const profileLink = {
-      route: "user",
-      model: currentUser,
-      className: "user-activity-link",
-      icon: "user",
-      rawLabel: formatUsername(currentUser.username)
-    };
-
-    if (currentUser.is_anonymous) {
-      profileLink.label = "user.profile";
-      profileLink.rawLabel = null;
-    }
-
-    const links = [profileLink];
     if (allowAnon) {
       if (!isAnon) {
         glyphs.push({
@@ -106,7 +114,7 @@ createWidget("user-menu-links", {
     });
 
     return h("ul.menu-links-row", [
-      links.map(l => h("li.user", this.attach("link", l))),
+      links.map(l => h("li.user", this.linkHtml(l))),
       h("li.glyphs", glyphs.map(l => this.glyphHtml(l)))
     ]);
   }
