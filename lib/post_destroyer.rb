@@ -39,10 +39,10 @@ class PostDestroyer
     end
   end
 
-  def self.delete_with_replies(performed_by, post)
+  def self.delete_with_replies(performed_by, post, reviewable = nil)
     reply_ids = post.reply_ids(Guardian.new(performed_by), only_replies_to_single_post: false)
     replies = Post.where(id: reply_ids.map { |r| r[:id] })
-    PostDestroyer.new(performed_by, post).destroy
+    PostDestroyer.new(performed_by, post, reviewable: reviewable).destroy
     replies.each { |reply| PostDestroyer.new(performed_by, reply).destroy }
   end
 
@@ -156,12 +156,10 @@ class PostDestroyer
       TopicUser.update_post_action_cache(post_id: @post.id)
 
       DB.after_commit do
-        if reviewable = @post.reviewable_flag
-          if @opts[:defer_flags]
-            ignore(reviewable)
-          else
-            agree(reviewable)
-          end
+        if @opts[:reviewable]
+          notify_deletion(@opts[:reviewable])
+        elsif reviewable = @post.reviewable_flag
+          @opts[:defer_flags] ? ignore(reviewable) : agree(reviewable)
         end
       end
     end
@@ -263,23 +261,7 @@ class PostDestroyer
   end
 
   def agree(reviewable)
-    if @user.human? && @user.staff? && rs = reviewable.reviewable_scores.order('created_at DESC').first
-      Jobs.enqueue(
-        :send_system_message,
-        user_id: @post.user_id,
-        message_type: :flags_agreed_and_post_deleted,
-        message_options: {
-          flagged_post_raw_content: @post.raw,
-          url: @post.url,
-          flag_reason: I18n.t(
-            "flag_reasons.#{PostActionType.types[rs.reviewable_score_type]}",
-            locale: SiteSetting.default_locale,
-            base_path: Discourse.base_path
-          )
-        }
-      )
-    end
-
+    notify_deletion(reviewable)
     result = reviewable.perform(@user, :agree_and_keep, post_was_deleted: true)
     reviewable.transition_to(result.transition_to, @user)
   end
@@ -287,6 +269,26 @@ class PostDestroyer
   def ignore(reviewable)
     reviewable.perform_ignore(@user, post_was_deleted: true)
     reviewable.transition_to(:ignored, @user)
+  end
+
+  def notify_deletion(reviewable)
+    allowed_user = @user.human? && @user.staff?
+    return unless allowed_user && rs = reviewable.reviewable_scores.order('created_at DESC').first
+
+    Jobs.enqueue(
+      :send_system_message,
+      user_id: @post.user_id,
+      message_type: :flags_agreed_and_post_deleted,
+      message_options: {
+        flagged_post_raw_content: @post.raw,
+        url: @post.url,
+        flag_reason: I18n.t(
+          "flag_reasons.#{PostActionType.types[rs.reviewable_score_type]}",
+          locale: SiteSetting.default_locale,
+          base_path: Discourse.base_path
+        )
+      }
+    )
   end
 
   def trash_user_actions

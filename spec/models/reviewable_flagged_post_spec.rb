@@ -273,4 +273,18 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
 
   end
 
+  describe "#perform_delete_and_agree" do
+    it "notifies the user about the flagged post deletion" do
+      reviewable = Fabricate(:reviewable_flagged_post)
+      reviewable.add_score(
+        moderator, PostActionType.types[:spam],
+        created_at: reviewable.created_at
+      )
+
+      expect do
+        reviewable.perform(moderator, :delete_and_agree)
+      end.to change(Jobs::SendSystemMessage.jobs, :size).by(1)
+    end
+  end
+
 end
