@@ -115,7 +115,6 @@ cs:
     errors:
       <<: *errors
   invite:
-    not_found: "Odkaz pozvánky je neplatný. Kontaktujte prosím administrátora stránky."
     user_exists: "Netřeba posílat pozvánku na <b>%{email}</b>. Tento email <a href='%{base_path}/u/%{username}/summary'>je veden u tohoto účtu!</a>"
   bulk_invite:
     file_should_be_csv: "Nahraný soubor by měl být ve formátu csv."
@@ -892,6 +891,7 @@ cs:
     not_available: "Není k dispozici. Nechcete zkusit %{suggestion}?"
     something_already_taken: "Nastala chyba při zpracování, zřejmě je dané uživatelské jméno nebo email již zaregistrován. Zkuste odkaz pro obnovení hesla."
     omniauth_error_unknown: "Nastala chyba při zpracování vašeho přihlášení, prosím zkuste to znovu."
+    omniauth_confirm_button: "Pokračovat"
     click_to_continue: "Pro pokračování klikněte zde."
     second_factor_title: "Dvoufázové přihlašování"
     second_factor_backup_description: "Prosíme zadejte jeden ze svých záložních kódů:"

@@ -555,6 +555,7 @@ et:
         day: Päev
     post_edits:
       labels:
+        edited_at: Date
         post: Postitus
         author: Autor
         edit_reason: Põhjus
@@ -786,6 +787,7 @@ et:
   login:
     not_approved: "Kontot pole veel kinnitatud. Teid teavitatakse e-post teel, kui sisselogimine on võimaldatud."
     admin_not_allowed_from_ip_address: "Sellelt IP-aadressilt ei saa adminnina sisse logida."
+    omniauth_confirm_button: "Jätka"
     already_logged_in: "Oih, näib, et üritad vastu võtta võõra kasutaja kutset. Kui Sa ei ole kasutaja %{current_user}, logi palun välja ja proovi uuesti."
   admin:
     email:

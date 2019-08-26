@@ -113,11 +113,6 @@ pt_BR:
       random_mention:
         reply: |-
           Oi! Para descobrir o que eu posso fazer diga `@%{discobot_username} %{help_trigger}`.
-        tracks: |-
-          Eu atualmente sei como fazer as seguintes coisas:
-
-          `@%{discobot_username} %{reset_trigger} %{default_track}`
-          > Inicia um dos seguintes tutoriais interativos: %{tracks}.
         bot_actions: |-
           `@%{discobot_username} %{dice_trigger} 2d6`
           > :game_die: 3, 6

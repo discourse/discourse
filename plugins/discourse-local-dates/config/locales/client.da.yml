@@ -8,7 +8,34 @@
 da:
   js:
     discourse_local_dates:
+      relative_dates:
+        today: I dag %{time}
+        tomorrow: I morgen %{time}
+        yesterday: I går %{time}
+      title: Indsæt dato / tid
       create:
         form:
+          insert: Indsæt
+          advanced_mode: Avanceret tilstand
+          simple_mode: Enkel tilstand
+          format_description: "Format, der bruges til at vise datoen til brugeren. Brug \"\\T\\Z\" til at vise brugerens tidszone i ord (Europa / Paris)"
+          timezones_title: Tidszoner, der skal vises
+          timezones_description: Tidszoner vil blive brugt til at vise datoer i forhåndsvisning og fallback.
+          recurring_title: Tilbagevenden
+          recurring_description: "Definer gentagelsen af en begivenhed. Du kan også manuelt redigere den tilbagevendende mulighed genereret af formularen og bruge en af følgende nøgler: år, kvartaler, måneder, uger, dage, timer, minutter, sekunder, millisekunder."
+          recurring_none: Ingen gentagelse
+          invalid_date: Ugyldig dato, sørg for, at dato og klokkeslæt er korrekte
           date_title: Dato
           time_title: Tidspunkt
+          format_title: Datoformat
+          timezone: Tidszone
+          until: Indtil...
+          recurring:
+            every_day: "Hver dag"
+            every_week: "Hver uge"
+            every_two_weeks: "Hver anden uge"
+            every_month: "Hver måned"
+            every_two_months: "Hver anden måned"
+            every_three_months: "Hver tredje måned"
+            every_six_months: "Hvert halvår"
+            every_year: "Hvert år"

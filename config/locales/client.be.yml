@@ -456,7 +456,6 @@ be:
         uploaded_avatar: "Іншая выява"
         uploaded_avatar_empty: "Дадаць малюнак"
         upload_title: "Загрузіць свой малюнак"
-        upload_picture: "загрузіць малюнак"
       change_profile_background:
         title: "фон профілю"
         instructions: "Фон профілю будзе адцэнтраваны, яго шырыня 850 кропак (па змаўчанні)."
@@ -467,6 +466,7 @@ be:
         invalid: "Калі ласка, увядзіце верны email"
       associated_accounts:
         revoke: "ануляваць"
+        cancel: "адмяніць"
       name:
         title: "імя"
         instructions_required: "Ваша поўнае імя"
@@ -705,6 +705,9 @@ be:
       loading: Загрузка ...
     select_kit:
       filter_placeholder_with_any: Знайсці альбо стварыць...
+    date_time_picker:
+      from: ад
+      to: да
     emoji_picker:
       flags: Скаргі
     composer:
@@ -1227,8 +1230,6 @@ be:
           7_days_ago: "7 дзён таму"
           30_days_ago: "30 дзён таму"
           all: "усе"
-          start_date: "дата пачатку"
-          end_date: "дата завяршэння"
           filters:
             group:
               label: група
@@ -1352,7 +1353,7 @@ be:
         opacity: "непразрыстасць"
         copy: "капіяваць"
         email_templates:
-          title: "шаблоны лістоў"
+          title: "электронная пошта"
           subject: "тэма"
           body: "цела"
           revert: "вярнуць змены"
@@ -1532,13 +1533,13 @@ be:
       watched_words:
         search: "пошук"
         clear_filter: "ачысціць"
+        download: спампаваць
         actions:
           block: "заблакаваць"
           flag: "паскардзіцца"
         form:
           add: "дадаць"
           success: "поспех"
-          upload: "Загрузіць"
       impersonate:
         title: "ўвасобіцца"
         not_found: "Карыстача не ўдалося знайсці."

@@ -12,6 +12,8 @@ he:
         today: היום ב־%{time}
         tomorrow: מחר ב־%{time}
         yesterday: אתמול ב־%{time}
+        countdown:
+          passed: התאריך חלף
       title: הוספת תאריך / שעה
       create:
         form:

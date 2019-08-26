@@ -239,6 +239,7 @@ ro:
       stats: "Statisticile site-ului"
       our_admins: "Administratori"
       our_moderators: "Moderatori"
+      moderators: "Moderatori"
       stat:
         all_time: "Tot timpul"
         last_7_days: "Ultimele 7"
@@ -733,7 +734,6 @@ ro:
         uploaded_avatar: "Poză preferată"
         uploaded_avatar_empty: "Adaugă poza preferată"
         upload_title: "Încarcă poza preferată"
-        upload_picture: "Încarcă poza"
         image_is_not_a_square: "Atenţie: poza este decupată, înălțimea și lățimea nu erau egale."
       change_profile_background:
         title: "Fundal pentru pagina de profil"
@@ -753,6 +753,7 @@ ro:
           other: "Vom trimite un email doar dacă nu te-am văzut în ultimele {{count}} de minute."
       associated_accounts:
         revoke: "Revocă"
+        cancel: "Anulează"
       name:
         title: "Nume"
         instructions: "Numele tău complet (opțional)"
@@ -1135,6 +1136,9 @@ ro:
       default_header_text: Selectează...
       no_content: Nu s-au găsit potriviri
       filter_placeholder: Caută...
+    date_time_picker:
+      from: De la
+      to: Către
     emoji_picker:
       filter_placeholder: Caută emoji
       objects: Obiecte
@@ -2417,8 +2421,6 @@ ro:
           view_table: "tabel"
           view_graph: "grafic"
           refresh_report: "Reactualizează raportul"
-          start_date: "Data de început "
-          end_date: "Data de sfârşit"
           groups: "Toate grupurile"
           filters:
             group:
@@ -2651,7 +2653,7 @@ ro:
         copy_to_clipboard_error: "Eroare la copierea datelor în clipboard"
         theme_owner: "Nemodificabil, deținut de:"
         email_templates:
-          title: "Șabloane de emailuri"
+          title: "Email"
           subject: "Subiect"
           multiple_subjects: "Acest șablon are mai multe subiecte"
           body: "Body"
@@ -2747,6 +2749,8 @@ ro:
           love:
             name: "apreciere"
             description: "Culoarea butonului de apreciere."
+        email_style:
+          css: "CSS"
       email:
         title: "Email"
         settings: "Opțiuni"
@@ -2934,6 +2938,8 @@ ro:
         search: "caută"
         clear_filter: "Șterge"
         show_words: "arată cuvinte"
+        download: Descărcare
+        clear_all: Deselectează tot
         actions:
           block: "Blochează"
           censor: "Cenzurează"
@@ -2943,7 +2949,9 @@ ro:
           label: "Cuvânt nou:"
           add: "Adaugă"
           success: "Succes"
-          upload: "Urcă"
+        test:
+          button_label: "Test"
+          no_matches: "Nu s-au găsit potriviri"
       impersonate:
         title: "Joacă rolul utilizatorului"
         help: "Folosește această unealtă pentru a imita un cont de utilizator pentru depanare. Va trebui să te deconectezi după ce termini."
@@ -3159,7 +3167,7 @@ ro:
       site_text:
         description: "Poți personaliza orice text pe forum. Te rugăm să începi prin a căuta mai jos:"
         search: "Caută textul pe care vrei să îl editezi"
-        title: "Conținut text"
+        title: "Text"
         edit: "Editează"
         revert: "Revocați schimbările"
         revert_confirm: "Ești sigur că vrei să revoci schimbările?"

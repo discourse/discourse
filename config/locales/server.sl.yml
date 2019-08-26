@@ -83,7 +83,6 @@ sl:
     errors:
       <<: *errors
   invite:
-    not_found: "Vaša koda povabila ni pravilna. Kontaktirajte administatorja."
     not_found_template: |
       <p>Vaše povabilo na <a href="%{base_url}">%{site_name}</a> je bilo že sprejeto.</p>
 
@@ -620,6 +619,7 @@ sl:
         count: Število
     post_edits:
       labels:
+        edited_at: Datum
         post: Prispevek
         editor: Urednik
         edit_reason: Razlog
@@ -836,8 +836,8 @@ sl:
     errors: "%{errors}"
     not_available: "Ni na voljo. Poskusite %{suggestion}?"
     something_already_taken: "Prišlo je do napake, mogoče je uporabniško ime ali e-naslov že registriran. Poskusite povezavo za pozabljeno geslo."
-    omniauth_error: "Prišlo je do napake pri preverjanju vašega računa. Mogoče niste potrdili avtorizacije?"
     omniauth_error_unknown: "Prišlo je do napake pri vaši prijavi, poskusite ponovno."
+    omniauth_confirm_button: "Nadaljuj"
     authenticator_error_no_valid_email: "E-naslov povezan z računom %{account} ni dovoljen. Morali boste uporabiti drug e-naslov."
     new_registrations_disabled: "Nove registracije uporabniških računov trenutno niso mogoče."
     password_too_long: "Geslo je omejeno na 200 znakov."
@@ -964,35 +964,9 @@ sl:
     post_hidden:
       title: "Prispevek skrit"
       subject_template: "Prispevek je bil skrit zaradi prijav iz skupnosti"
-      text_body_template: |
-        Pozdravljeni,
-
-        To je samodejno sporočilo od %{site_name} da je vaš prispevek skrit.
-
-        <%{base_url}%{url}>
-
-        %{flag_reason}
-
-        Več članov skupnosti je prijavilo vaš prispevek preden je bil skrit, zato premislite kako bi lahko prispevek spremenili, da bo upošteval njihove pripombe. **Če vaš prispevek uredite najkasneje %{edit_delay} minut po objavi, bo samodejno ponovno prikazan.**
-
-        Vendar, če bo prispevek ponovno skrit zaradi prijav članov skupnosti, potem bo skrit dokler ga ne pregleda član osebja foruma.
-
-        Za dodatne informacije preberite [pravila skupnosti](%{base_url}/guidelines).
     post_hidden_again:
       title: "Prispevek ponovno skrit"
       subject_template: "Prispevek je bil ponovno skrit zaradi prijav iz skupnosti zato smo obvestili osebje"
-      text_body_template: |
-        Pozdravljeni,
-
-        To je samodejno sporočilo od %{site_name} da je vaš prispevek skrit.
-
-        <%{base_url}%{url}>
-
-        %{flag_reason}
-
-        Več članov skupnosti je prijavilo vaš prispevek preden je bil skrit. **Ker je bil prispevek skrit večkrat, bo ostal skrit dokler ga ne pregleda član osebja foruma.**
-
-        Za dodatna informacije preberite [pravila skupnosti](%{base_url}/guidelines).
     flags_agreed_and_post_deleted:
       title: "Prijavljen prispevek odstranjen s strani osebja"
       subject_template: "Prijavljen prispevek odstranjen s strani osebja"

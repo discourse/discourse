@@ -160,7 +160,6 @@ zh_TW:
     errors:
       <<: *errors
   invite:
-    not_found: "您的邀請碼無效。請聯絡管理人員。"
     not_found_template: |
       你的%{site_name}邀請已被兌換<p>
 
@@ -236,7 +235,7 @@ zh_TW:
   links_require_trust: "抱歉，您不能在貼文中插入連結"
   too_many_links:
     other: "抱歉，新使用者只能在貼文中放置 %{count} 個連結。"
-  contains_blocked_words: "您的貼文包含被禁用的文字：%{word}"
+  contains_blocked_word: "您的貼文包含被禁用的文字：%{word}"
   spamming_host: "抱歉，你不能張貼該網站之連結。"
   user_is_suspended: "被停權的使用者無法張貼貼文。"
   topic_not_found: "出現問題。也許這個話題被關閉或刪除。"
@@ -820,6 +819,7 @@ zh_TW:
     post_edits:
       title: "編輯貼文"
       labels:
+        edited_at: 日期
         post: 貼文
         editor: 編輯者
         author: 作者
@@ -1298,7 +1298,6 @@ zh_TW:
     email_token_valid_hours: "\"忘記密碼\" / \"重啟帳號\" token 有效的小時數 (n)"
     enable_badges: "啟用勳章系統"
     enable_whispers: "允許工作人員在主題中私密交流。"
-    allow_index_in_robots_txt: "在 robots.txt 中記錄這個網站允許被搜尋引擎索引的部分"
     email_domains_blacklist: "用管道符“|”分隔的郵箱域名黑名單列表，其中的域名將不能用來註冊賬戶，例如：mailinator.com|trashmail.net"
     email_domains_whitelist: "用管道符“|”分隔的電子郵箱域名的列表，使用者必須使用這些郵箱域名註冊。警告：使用者使用不包含在這個列表裡的郵箱域名，將無法成功註冊。"
     hide_email_address_taken: "註冊或忘記密碼時，不提示使用者帳號、Email 已存在"
@@ -1555,7 +1554,6 @@ zh_TW:
     reset_bounce_score_after_days: "自動在 X 天后重置累計退信分值。"
     attachment_content_type_blacklist: "基于 content type 禁止附件的黑名單列表。"
     attachment_filename_blacklist: "基于檔案名禁止附件的黑名單列表。"
-    enable_forwarded_emails: "[測試] 允許使用者通過抄送郵件發表主題。"
     always_show_trimmed_content: "永遠顯示進入站內郵件中被截短的部分。警告：可能顯露出郵件地址。"
     private_email: "不要在郵件標題、郵件內容中包含貼文或討論話題的內容。注意：也禁用摘要電子郵件。"
     manual_polling_enabled: "用 API 推送郵件回覆。"
@@ -1865,8 +1863,8 @@ zh_TW:
     errors: "%{errors}"
     not_available: "不可用，試試 %{suggestion}？"
     something_already_taken: "出了一些問題，可能此使用者名或電子郵箱已經被註冊。試試 忘記密碼 連結吧。"
-    omniauth_error: "抱歉，在驗證你的帳號時發生了錯誤。可能你沒有批准授權申請？"
     omniauth_error_unknown: "在處理你的登入過程中發生了錯誤，請重試。"
+    omniauth_confirm_button: "繼續"
     authenticator_error_no_valid_email: "關聯%{account}的賬戶沒有優秀的郵件地址。你可能需要用不同的郵件地址配置你的賬戶。"
     new_registrations_disabled: "現在不允許註冊新的帳戶"
     password_too_long: "密碼不能超過 200 個字符。"
@@ -2106,35 +2104,9 @@ zh_TW:
     post_hidden:
       title: "貼文已隱藏"
       subject_template: "貼文因社群標記隱藏"
-      text_body_template: |
-        你好
-
-        這是 %{site_name} 自動發出的郵件，通知你下列貼文已被隱藏：
-
-        %{base_url}%{url}
-
-        %{flag_reason}
-
-        有多位社群成員投訴此貼文，導致貼文被自動隱藏。請考慮他們的回饋並重新修改貼文。**你可以在 %{edit_delay} 分鐘後重新編輯貼文，以自動解除貼文隱藏。**
-
-        然而，如果貼文再次受到社群投訴，它將會恢復隱藏狀態，並等候管理員手動處理。
-
-        想了解更多指引，請查看我們的[社群準則](%{base_url}/guidelines)。
     post_hidden_again:
       title: "貼文再次被隱藏"
       subject_template: "因社群成員投訴的關係，貼文已隱藏，已通知管理員。"
-      text_body_template: |
-        你好
-
-        這是 %{site_name} 自動發出的郵件，通知你下列貼文已再次被隱藏：
-
-        %{base_url}%{url}
-
-        %{flag_reason}
-
-        有多位社群成員投訴此貼文，導致貼文被自動隱藏。由於此篇貼文已被投訴多次過，不是第一次被隱藏，你的貼文將隱藏直到管理員手動處理，才會取消自動隱藏。
-
-        想了解更多指引，請查看我們的[社群準則](%{base_url}/guidelines)。
     flags_agreed_and_post_deleted:
       title: "被投訴貼文已被版主移除"
       subject_template: "被投訴貼文已被版主移除"

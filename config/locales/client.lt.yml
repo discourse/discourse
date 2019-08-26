@@ -266,6 +266,7 @@ lt:
       stats: "Svetainės statistika"
       our_admins: "Mūsų Administratoriai"
       our_moderators: "Mūsų Moderatoriai"
+      moderators: "Moderatoriai"
       stat:
         all_time: "Per visą laiką"
         last_7_days: "Paskutinės 7"
@@ -753,7 +754,6 @@ lt:
         uploaded_avatar: "Paveiksliukas"
         uploaded_avatar_empty: "Pridėti paveiksliuką"
         upload_title: "Įkelti savo nuotrauką"
-        upload_picture: "Įkelti nuotrauką"
         image_is_not_a_square: "Įspėjimas: jūs ką tik apkirpote nuotrauką, tačiau plotis ir ilgis nėra vienodi."
       change_profile_background:
         title: "Profilio fonas"
@@ -779,6 +779,7 @@ lt:
       associated_accounts:
         connect: "Prisijungti"
         revoke: "Atšaukti"
+        cancel: "Atšaukti"
         not_connected: "(neprisijungęs)"
       name:
         title: "Vardas"
@@ -1135,6 +1136,9 @@ lt:
         few: "Pasirinkite bent {{count}} elementus."
         many: "Pasirinkite bent {{count}} elementus."
         other: "Pasirinkite bent {{count}} elementus."
+    date_time_picker:
+      from: Nuo
+      to: Kam
     emoji_picker:
       objects: Objektai
       flags: Pažymėk!
@@ -2356,8 +2360,6 @@ lt:
           all: "Visi"
           view_table: "table"
           refresh_report: "Refresh Report"
-          start_date: "Pražios data"
-          end_date: "End Date"
           groups: "Visos grupės"
           trending_search:
             more: '<a href="%{basePath}/admin/logs/search_logs">Paieškos įrašai</a>'
@@ -2538,7 +2540,7 @@ lt:
         copied_to_clipboard: "Nukopijuota į iškirptę"
         copy_to_clipboard_error: "Klaida kopijuojant duomenis į iškarpinę"
         email_templates:
-          title: "El. laiškų Pavyzdžiai"
+          title: "Epaštas"
           subject: "Tema"
           multiple_subjects: "El. laiško pavyzdys priskirtas keletui subjektų"
           body: "Tekstas"
@@ -2630,6 +2632,8 @@ lt:
           love:
             name: "patinka"
             description: "Mygtuko \"Patinka\" spalva."
+        email_style:
+          css: "CSS"
       email:
         title: "El. laiškai"
         settings: "Nustatymai"
@@ -2795,6 +2799,8 @@ lt:
         title: "Peržiūrėti Žodžiai"
         clear_filter: "Išvalyti"
         show_words: "rodyti žodžius"
+        download: Atsisiųsti
+        clear_all: Išvalyti viską
         word_count:
           one: "%{count} žodis"
           few: "%{count} žodžiai"
@@ -2809,7 +2815,8 @@ lt:
           add: "Pridėti"
           success: "Sėkmingai"
           exists: "Jau egzistuoja"
-          upload: "Įkelti"
+        test:
+          no_matches: "Atitikmenų nerasta"
       impersonate:
         title: "Apsimesti"
         help: "Naudok šį įrankį, kad pavaizduotum kito vartotojo paskyrą dėl klaidų paieškos ir sistemos atstatymo. Kai tik baigsi procedūrą, turėsi atsijungti."
@@ -3011,7 +3018,7 @@ lt:
       site_text:
         description: "Tu gali keisti bet kurį forumo tekstą. Prašom pradėti naudojant paiešką žemiau:"
         search: "Ieškoti teksto, kurį norėtum keisti"
-        title: "Teksto Turinys"
+        title: "Tekstas"
         edit: "redaguoti"
         revert: "Atstatyti Pakeitimus"
         revert_confirm: "Ar tikrai nori atstatyti pakeitimus?"

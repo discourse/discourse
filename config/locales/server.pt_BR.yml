@@ -154,6 +154,7 @@ pt_BR:
     embed:
       load_from_remote: "Houve um erro ao carregar essa mensagem."
     site_settings:
+      invalid_category_id: "Você especificou uma categoria que não existe"
       invalid_choice:
         one: "Você especificou a escolha inválida %{name}"
         other: "Você especificou a escolha inválida %{name}"
@@ -167,7 +168,6 @@ pt_BR:
     errors:
       <<: *errors
   invite:
-    not_found: "O token do seu convite é inválido. Por favor entre em contato com o administrador do site."
     not_found_template: |
       <p>Seu convite para <a href="%{base_url}">%{site_name}</a>já foi resgatado.
       <p>Se você lembrar de sua senha, você pode <a href="%{base_url}/login">Login</a>.</p>
@@ -252,7 +252,7 @@ pt_BR:
   too_many_links:
     one: "Desculpe, usuários novos podem colocar apenas %{count} link nas postagens."
     other: "Desculpe, usuários novos podem colocar apenas %{count} links nas postagens."
-  contains_blocked_words: "Sua postagem contém uma palavra que não é permitida:%{word}"
+  contains_blocked_word: "Sua postagem contém uma palavra que não é permitida:%{word}"
   spamming_host: "Desculpe, você não pode colocar um link para este site."
   user_is_suspended: "Usuários suspensos não tem permissão para postar."
   topic_not_found: "Ocorreu um erro. Talvez este tópico foi fechado ou removido enquanto você estava visualizando?"
@@ -872,6 +872,7 @@ pt_BR:
     post_edits:
       title: "Postar Edições"
       labels:
+        edited_at: Data
         post: Publicar
         editor: Editor
         author: Autor
@@ -1359,7 +1360,6 @@ pt_BR:
     email_token_valid_hours: "Tokens de Esqueceu senha / ativar conta são válidas por (n) horas."
     enable_badges: "Habilita o sistema de emblemas"
     enable_whispers: "Permitir a comunicação pessoal da equipe nos tópicos."
-    allow_index_in_robots_txt: "Especificar no robots.txt que este site é permitido de ser indexado por sistemas de busca na web."
     email_domains_blacklist: "Lista delimitada por barras (|) de domínios de email que não são permitidos registros de contas. Exemplo: mailinator.com|trashmail.net"
     email_domains_whitelist: "Lista separada por barra (|) de domínios de email que usuários DEVEM usar para registrar contas. CUIDADO: Usuário com domínio de email diferentes da lista não serão permitidos!"
     hide_email_address_taken: "Não informe os usuários de que existe uma conta com um determinado endereço de e-mail durante a inscrição e o formulário de senha esquecida."
@@ -1619,7 +1619,6 @@ pt_BR:
     reset_bounce_score_after_days: "Redefinir automaticamente a pontuação de rejeição após X dias."
     attachment_content_type_blacklist: "Lista de palavras-chave usadas para anexos de lista negra com base no tipo de conteúdo."
     attachment_filename_blacklist: "Lista de palavras-chave usadas para anexos de lista negra com base no nome do arquivo."
-    enable_forwarded_emails: "[BETA] Permitir que os usuários criem um tópico encaminhando um e-mail para."
     always_show_trimmed_content: "Sempre mostre a parte aparada dos emails recebidos. AVISO: pode revelar endereços de e-mail."
     private_email: "Não incluir conteúdo de postagens ou tópicos no título do e-mail ou no corpo do e-mail. NOTA: também desabilita e-mails de resumo."
     manual_polling_enabled: "Enviar e-mails usando a API para respostas por e-mail."
@@ -1847,6 +1846,7 @@ pt_BR:
         key: "www.exemplo.com.br"
         value: "Segredo SSO"
   search:
+    extreme_load_error: "O site está sob carga extrema, a busca está desabilitada, tente novamente mais tarde"
     within_post: "#%{post_number} por %{username}"
     types:
       category: "Categorias"
@@ -1951,8 +1951,8 @@ pt_BR:
     errors: "%{errors}"
     not_available: "Não disponível. Tente %{suggestion}?"
     something_already_taken: "Algo deu errado, talvez o nome de usuário ou o email já estejam registrados. Tente o link Esqueci minha Senha."
-    omniauth_error: "Desculpe, houve um erro ao autorizar a sua conta. Talvez você não aprovou a autorização?"
     omniauth_error_unknown: "Algo deu errado no processamento do seu login, por favor tente novamente."
+    omniauth_confirm_button: "Continuar"
     authenticator_error_no_valid_email: "Nenhum endereço de e-mail associado a%{account} são autorizados. Você pode precisar configurar sua conta com um endereço de e-mail diferente."
     new_registrations_disabled: "Novas contas não são permitidas neste momento."
     password_too_long: "Senhas são limitadas a 200 caracteres."
@@ -2214,35 +2214,9 @@ pt_BR:
     post_hidden:
       title: "Post oculto"
       subject_template: "Post oculto pelas sinalizações da comunidade"
-      text_body_template: |
-        Olá,
-
-        Esta é uma mensagem automatizada de %{site_name}para que você saiba que sua postagem estava oculta.
-
-        <%{base_url}%{url}>
-
-        %{flag_reason}
-
-        Vários membros da comunidade sinalizaram esta postagem antes que ela estivesse oculta. Por isso, considere como você pode revisar sua postagem para refletir o feedback dela. ** Você pode editar sua postagem depois de %{edit_delay} minutos, e será automaticamente reexibido. **
-
-        No entanto, se a postagem estiver oculta pela comunidade uma segunda vez, ela permanecerá oculta até ser tratada pela equipe.
-
-        Para orientações adicionais, consulte nossas [diretrizes da comunidade](%{base_url}/diretrizes).
     post_hidden_again:
       title: "Posto oculto novamente"
       subject_template: "Post escondido por sinalizações da comunidade, equipe notificada"
-      text_body_template: |
-        Olá,
-
-        Essa é uma mensagem automatizada de %{site_name}para que você saiba que sua postagem foi ocultada novamente.
-
-        <%{base_url}%{url}>
-
-        %{flag_reason}
-
-        Vários membros da comunidade sinalizaram esta postagem antes que ela estivesse oculta. ** Como esta postagem foi ocultada mais de uma vez, sua postagem permanecerá oculta até que seja manipulada por um membro da equipe. **
-
-        Para orientação adicional, por favor consulte as nossas [diretrizes da comunidade](%{base_url}/diretrizes).
     flags_agreed_and_post_deleted:
       title: "Postagem sinalizada removida pela equipe"
       subject_template: "Postagem sinalizada removida pela equipe"
@@ -2366,14 +2340,6 @@ pt_BR:
     csv_export_succeeded:
       title: "Exportação CSV foi bem-sucedida"
       subject_template: "[%{export_title}] Exportação de dados completa"
-      text_body_template: |
-        Sua exportação de dados foi bem sucedida! :dvd:
-
-        %{download_link}
-
-        O link de download acima será válido por 48 horas.
-
-        Os dados são compactados como um arquivo gzip. Se o arquivo não se extrair quando você abri-lo, use as ferramentas recomendadas aqui: https://www.gzip.org/#faq4
     csv_export_failed:
       title: "Falha na exportação de CSV"
       subject_template: "A exportação de dados falhou"
@@ -3124,6 +3090,7 @@ pt_BR:
     user_email_post_deleted: "post foi excluído pelo autor"
     user_email_user_suspended: "usuário foi suspenso"
     user_email_already_read: "usuário já leu este post"
+    user_email_access_denied: "usuário não tem permissão para ver esta postagem"
     sender_message_blank: "mensagem está em branco"
     sender_message_to_blank: "message.to está em branco"
     sender_text_part_body_blank: "text_part.body está em branco"
@@ -3761,6 +3728,7 @@ pt_BR:
         title: "Aprovar"
       approve_post:
         title: "Aprovar Postagem"
+        confirm_closed: "Este tópico está fechado. Gostaria de criar a postagem mesmo assim?"
       reject_post:
         title: "Rejeitar Postagem"
       approve_user:

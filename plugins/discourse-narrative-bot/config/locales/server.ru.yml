@@ -113,11 +113,6 @@ ru:
       random_mention:
         reply: |-
           Привет! Tтобы узнать, что я могу сделать, наберите: `@%{discobot_username} %{help_trigger}`.
-        tracks: |-
-          В настоящее время я знаю, как сделать следующие вещи:
-
-          `@%{discobot_username} %{reset_trigger} %{default_track}`
-          > Запускает одно из следующих интерактивных руководств: %{tracks}.
         bot_actions: |-
           `@%{discobot_username} %{dice_trigger} 2d6`
           > :game_die: 3, 6

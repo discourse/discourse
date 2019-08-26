@@ -159,7 +159,7 @@ zh_TW:
     not_implemented: "抱歉，此功能尚未開放。"
     no_value: "否"
     yes_value: "是"
-    submit: "提交"
+    submit: "送出"
     generic_error: "抱歉，發生錯誤。"
     generic_error_with_reason: "發生錯誤: %{error}"
     go_ahead: "下一步"
@@ -210,6 +210,7 @@ zh_TW:
       stats: "網站統計數據"
       our_admins: "我們的管理員"
       our_moderators: "我們的版主"
+      moderators: "板主"
       stat:
         all_time: "所有時間"
         last_7_days: "最近 7"
@@ -358,7 +359,7 @@ zh_TW:
         date: "日期"
         type: "類型"
         status: "狀態"
-        submitted_by: "提交由"
+        submitted_by: "送出者"
         reviewed_by: "審核由"
       statuses:
         pending:
@@ -832,7 +833,6 @@ zh_TW:
         uploaded_avatar: "自訂圖片"
         uploaded_avatar_empty: "新增一張自訂圖片"
         upload_title: "上傳你的圖片"
-        upload_picture: "上傳圖片"
         image_is_not_a_square: "警告：我們裁切了你的圖片，因為該圖片不是正方形的。"
       change_profile_background:
         title: "基本資料背景圖案"
@@ -857,6 +857,7 @@ zh_TW:
         title: "關聯帳號"
         connect: "連結"
         revoke: "撤銷"
+        cancel: "取消"
         not_connected: "（無任何連結）"
       name:
         title: "名稱"
@@ -1282,6 +1283,9 @@ zh_TW:
         other: "您只能選擇{{count}}個項目"
       min_content_not_reached:
         other: "至少要選擇{{count}}個項目"
+    date_time_picker:
+      from: 自
+      to: 至
     emoji_picker:
       filter_placeholder: 搜尋表情符號
       smileys_&_emotion: 表情符號
@@ -1834,8 +1838,8 @@ zh_TW:
         extended_title: "分享連結"
         help: "分享此話題的連結"
       print:
-        title: "打印"
-        help: "打開該話題對打印友好的版本"
+        title: "列印"
+        help: "打開此討論話題列印友善的版本"
       flag_topic:
         title: "檢舉"
         help: "檢舉此話題，或以私訊通知管理員"
@@ -2482,7 +2486,7 @@ zh_TW:
         mark_regular: "%{shortcut} 常規 (預設) 話題"
         mark_tracking: "%{shortcut} 追蹤話題"
         mark_watching: "%{shortcut} 看話題"
-        print: "%{shortcut} 打印話題"
+        print: "%{shortcut} 列印討論話題"
     badges:
       earned_n_times:
         other: "授予徽章 %{count} 次"
@@ -2510,7 +2514,7 @@ zh_TW:
         other:
           name: 其它
         posting:
-          name: 發帖
+          name: 發文
     google_search: |
       <h3>用 Google 搜索</h3>
       <p>
@@ -2584,15 +2588,15 @@ zh_TW:
         save: "保存"
         delete: "刪除"
         confirm_delete: "確定要刪除此標籤組嗎？"
-        everyone_can_use: "所有用戶都能使用標籤。"
-        usable_only_by_staff: "所有用戶都能看到標籤，但只有管理員能使用。"
+        everyone_can_use: "所有使用者都能使用標籤。"
+        usable_only_by_staff: "所有使用者都能看到標籤，但只有管理員能使用。"
         visible_only_to_staff: "只有管理員能看到標籤。"
       topics:
         none:
           unread: "你沒有未讀話題。"
           new: "你沒有新的話題。"
           read: "你尚未閲讀任何話題。"
-          posted: "你尚未在任何話題中發帖。"
+          posted: "你尚未在任何話題中發文。"
           latest: "沒有最新話題。"
           bookmarks: "你還沒有收藏話題。"
           top: "沒有最佳話題。"
@@ -2687,8 +2691,6 @@ zh_TW:
           view_table: "表格"
           view_graph: "圖表"
           refresh_report: "重新整理報告"
-          start_date: "開始日期"
-          end_date: "結束日期"
           groups: "所有群組"
           disabled: "該使用者已被禁言"
           totals_for_sample: "樣本總計"
@@ -2739,8 +2741,8 @@ zh_TW:
             trust_level: 信任等級
             trust_levels_title: "當這些成員加入時，自動提升信任等級："
             trust_levels_none: "無"
-            automatic_membership_email_domains: "當註冊用戶的電子郵件所屬網域，完全符合列表裡某項時，將會自動加進這個群組裡："
-            automatic_membership_retroactive: "套用相同的電子郵件網域規則到已經註冊的用戶上："
+            automatic_membership_email_domains: "當註冊使用者的電子郵件所屬網域，完全符合列表裡某項時，將會自動加進這個群組裡："
+            automatic_membership_retroactive: "套用相同的電子郵件網域規則到已經註冊的使用者上："
             primary_group: "自動設為主要群組"
         name_placeholder: "群組名稱：不可含有空白字元，和使用者名稱的規則相同"
         primary: "主要群組"
@@ -2971,7 +2973,7 @@ zh_TW:
         copy_to_clipboard_error: "複製資料到剪貼簿時發生錯誤"
         theme_owner: "無法編輯，擁有者為："
         email_templates:
-          title: "電子郵件範本"
+          title: "電子信箱"
           subject: "主旨"
           multiple_subjects: "這個電子郵件範本有多重主旨."
           body: "內容"
@@ -3031,11 +3033,11 @@ zh_TW:
           add_upload: "新增上傳檔案"
           upload_file_tip: "選擇一個物件上傳 (png, woff2, etc...)"
           variable_name: "SCSS 的變數名稱"
-          variable_name_invalid: "無效的變量名稱，僅能輸入字母且需以字母作為開頭，不可與其他用戶相同。"
+          variable_name_invalid: "無效的變量名稱，僅能輸入字母且需以字母作為開頭，不可與其他使用者相同。"
           variable_name_error:
             invalid_syntax: "無效的變量名稱，僅能輸入字母且需以字母作為開頭。"
             no_overwrite: "無效的變量名稱，不可複寫已存在的變量名稱。"
-            must_be_unique: "無效的變量名稱，不可與其他用戶相同。"
+            must_be_unique: "無效的變量名稱，不可與其他使用者相同。"
           upload: "上傳"
           select_component: "選擇元件⋯⋯"
           unsaved_changes_alert: "您尚未儲存變更的內容，您是否要棄用內容並繼續進行？"
@@ -3047,7 +3049,6 @@ zh_TW:
           delete_upload_confirm: "刪除此上傳檔案 ？（佈景主題的 CSS 可能會因此無法運作）"
           import_web_tip: "含有佈景主題的版本庫"
           import_web_advanced: "進階⋯⋯"
-          import_file_tip: "含有佈景主題的 .tar.gz 或 .dcstyle.json 檔"
           is_private: "佈景主題在私人git版本庫中"
           remote_branch: "分支名稱 (選填)"
           public_key: "授予公鑰以進入Repo（倉庫）的訪問權限："
@@ -3152,6 +3153,8 @@ zh_TW:
           love:
             name: "愛"
             description: "按讚按鈕的顏色"
+        email_style:
+          css: "CSS"
       email:
         title: "電子郵件"
         settings: "設定"
@@ -3275,8 +3278,8 @@ zh_TW:
             change_site_text: "更改站點文字"
             suspend_user: "將使用者停權"
             unsuspend_user: "恢復使用者權限"
-            removed_suspend_user: "停權用戶（已移除）"
-            removed_unsuspend_user: "取消停權用戶（已移除）"
+            removed_suspend_user: "停權使用者（已移除）"
+            removed_unsuspend_user: "取消停權使用者（已移除）"
             grant_badge: "升級徽章"
             revoke_badge: "撤回徽章"
             check_email: "檢查電子郵件"
@@ -3382,6 +3385,8 @@ zh_TW:
         search: "搜尋"
         clear_filter: "清除"
         show_words: "顯示文字"
+        download: 下載
+        clear_all: 清除全部
         word_count:
           other: "%{count}個字"
         actions:
@@ -3401,8 +3406,9 @@ zh_TW:
           add: "新增"
           success: "成功"
           exists: "已存在"
-          upload: "上傳"
           upload_successful: "上傳成功，文字已被添加。"
+        test:
+          no_matches: "找不到符合的項目"
       impersonate:
         title: "檢視角度"
         help: "使用此工具以使用者的檢視角度進行除錯。完成後將需登出。"
@@ -3441,7 +3447,7 @@ zh_TW:
           silenced: "被靜音的使用者"
           suspended: "已停權的使用者"
           suspect: "嫌疑使用者"
-          staged: "暫存用戶"
+          staged: "暫存使用者"
         not_verified: "未確認"
         check_email:
           title: "顯示使用者 Email"
@@ -3455,7 +3461,7 @@ zh_TW:
         suspend_reason: "原因"
         suspend_reason_placeholder: "停權原因"
         suspend_message: "Email 訊息"
-        suspend_message_placeholder: "提供更多停權使用者的原因，並且會以郵件發信給該用戶。（可選）"
+        suspend_message_placeholder: "提供更多停權使用者的原因，並且會以郵件發信給該使用者。（可選）"
         suspended_by: "將其停權者"
         silence_reason: "原因"
         silenced_by: "已靜音，由"
@@ -3477,7 +3483,7 @@ zh_TW:
         penalty_count: "違規次數"
         clear_penalty_history:
           title: "清除違規紀錄"
-          description: "有違規紀錄的用戶無法抵達 TL3"
+          description: "有違規紀錄的使用者無法抵達 TL3"
         delete_all_posts_confirm_MF: "你將要刪除 {POSTS, plural, one {1 個貼文} other {# 個貼文}}和 {TOPICS, plural, one {1 個話題} other {# 個話題}}。確定嗎？"
         silence: "靜音"
         unsilence: "取消靜音"
@@ -3559,7 +3565,7 @@ zh_TW:
         visit_profile: "到<a href='%{url}'>這位使用者的偏好設定頁面</a>去編輯他們的個人檔案"
         deactivate_explanation: "帳號的啟用狀態被取消的使用者必需重新啟用帳號。"
         suspended_explanation: "被停權的使用者無法登入。"
-        silence_explanation: "被靜音的用戶無法建立話題或貼文"
+        silence_explanation: "被靜音的使用者無法建立話題或貼文"
         staged_explanation: "暫存使用者只能通過郵件回覆指定話題。"
         bounce_score_explanation:
           none: "近期該郵箱沒有退信。"
@@ -3592,8 +3598,6 @@ zh_TW:
           likes_received: "收到的讚"
           likes_received_days: "收到的讚：唯一日"
           likes_received_users: "收到的讚：唯一使用者"
-          suspended: "停權 (永久)"
-          silenced: "靜音 (永久)"
           qualifies: "符合信任等級 3 的條件。"
           does_not_qualify: "不符合信任等級 3 的條件。"
           will_be_promoted: "將會在近期升級。"
@@ -3645,7 +3649,7 @@ zh_TW:
       site_text:
         description: "你可以自定義論壇的任意文本。請按以下搜索："
         search: "搜索你想要編輯的文本"
-        title: "文字內容"
+        title: "文字"
         edit: "編輯"
         revert: "恢復變更"
         revert_confirm: "你確定要撤回這個改動?"
@@ -3740,7 +3744,6 @@ zh_TW:
         enabled: 啟用徽章
         icon: 圖示
         image: 圖片
-        icon_help: "使用 FontAwesome 的 CSS Class"
         image_help: "請輸入圖片的網址（如果兩者設置皆一樣，將會覆寫 Icon）"
         query: 徽章查詢語法 (SQL)
         target_posts: 查詢貼文張貼目標
