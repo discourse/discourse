@@ -439,25 +439,6 @@ class User < ActiveRecord::Base
     !skip_email_validation && !staged?
   end
 
-  # Approve this user
-  def approve(approved_by, send_mail = true)
-    Discourse.deprecate("User#approve is deprecated. Please use the Reviewable API instead.", output_in_test: true, since: "2.3.0beta5", drop_from: "2.4")
-
-    # Backwards compatibility - in case plugins or something is using the old API which accepted
-    # either a Number or object. Probably should remove at some point
-    approved_by = User.find_by(id: approved_by) if approved_by.is_a?(Numeric)
-
-    if reviewable_user = ReviewableUser.find_by(target: self)
-      result = reviewable_user.perform(approved_by, :approve_user, send_email: send_mail)
-      if result.success?
-        Reviewable.set_approved_fields!(self, approved_by)
-        return true
-      end
-    end
-
-    false
-  end
-
   def self.email_hash(email)
     Digest::MD5.hexdigest(email.strip.downcase)
   end
