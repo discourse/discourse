@@ -806,6 +806,11 @@ describe Group do
       user.update(primary_group: group)
       expect { group.remove(user) }.to change { user.reload.primary_group }.from(group).to(nil)
     end
+
+    it 'triggers a user_removed_from_group event' do
+      events = DiscourseEvent.track_events { group.remove(user) }.map { |e| e[:event_name] }
+      expect(events).to include(:user_removed_from_group)
+    end
   end
 
   describe '#add' do
@@ -837,6 +842,11 @@ describe Group do
       notification = Notification.last
       expect(notification.notification_type).to eq(Notification.types[:membership_request_accepted])
       expect(notification.user_id).to eq(user.id)
+    end
+
+    it 'triggers a user_added_to_group event' do
+      events = DiscourseEvent.track_events { group.add(user) }.map { |e| e[:event_name] }
+      expect(events).to include(:user_added_to_group)
     end
 
     context 'when adding a user into a public group' do
