@@ -60,6 +60,9 @@ describe Onebox::Engine::AmazonOnebox do
         check_link("in", "https://www.amazon.in/Fireflies-Rabindranath-Tagore/dp/9381523169/")
       end
 
+      it "matches mexican domains" do
+        check_link("com.mx", "https://www.amazon.com.mx/Legend-Zelda-Links-Awakening-Nintendo/dp/B07SG15148/")
+      end
     end
 
     describe "#url" do
