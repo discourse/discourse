@@ -185,6 +185,8 @@ module JsLocaleHelper
   end
 
   def self.find_locale(locale_chain, path, type, fallback_to_english:)
+    locale_chain.map!(&:to_s)
+
     locale_chain.each do |locale|
       plugin_locale = DiscoursePluginRegistry.locales[locale]
       return plugin_locale[type] if plugin_locale&.has_key?(type)
