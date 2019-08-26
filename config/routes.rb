@@ -107,7 +107,6 @@ Discourse::Application.routes.draw do
         delete "delete-others-with-same-ip" => "users#delete_other_accounts_with_same_ip"
         get "total-others-with-same-ip" => "users#total_other_accounts_with_same_ip"
         put "approve-bulk" => "users#approve_bulk"
-        delete "reject-bulk" => "users#reject_bulk"
       end
       delete "penalty_history", constraints: AdminConstraint.new
       put "suspend"
@@ -199,14 +198,6 @@ Discourse::Application.routes.draw do
     get "customize/embedding" => "embedding#show", constraints: AdminConstraint.new
     put "customize/embedding" => "embedding#update", constraints: AdminConstraint.new
 
-    get "flags" => "flags#index"
-    get "flags/:filter" => "flags#index", as: 'flags_filtered'
-    get "flags/topics/:topic_id" => "flags#index"
-    post "flags/agree/:id" => "flags#agree"
-    post "flags/disagree/:id" => "flags#disagree"
-    post "flags/defer/:id" => "flags#defer"
-
-    resources :flagged_topics, constraints: StaffConstraint.new
     resources :themes, constraints: AdminConstraint.new
 
     post "themes/import" => "themes#import"
@@ -770,9 +761,6 @@ Discourse::Application.routes.draw do
   get "/posts/:id/raw" => "posts#markdown_id"
   get "/posts/:id/raw-email" => "posts#raw_email"
   get "raw/:topic_id(/:post_number)" => "posts#markdown_num"
-
-  resources :queued_posts, constraints: StaffConstraint.new
-  get 'queued-posts' => 'queued_posts#index'
 
   resources :invites
   post "invites/upload_csv" => "invites#upload_csv"

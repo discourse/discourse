@@ -370,23 +370,6 @@ class Admin::UsersController < Admin::AdminController
     )
   end
 
-  # Kept for backwards compatibility, but is replaced by the Reviewable Queue
-  def reject_bulk
-    Discourse.deprecate("AdminUsersController#reject_bulk is deprecated. Please use the Reviewable API instead.", since: "2.3.0beta5", drop_from: "2.4")
-
-    success_count = 0
-    d = UserDestroyer.new(current_user)
-
-    User.where(id: params[:users]).each do |u|
-      success_count += 1 if guardian.can_delete_user?(u) && d.destroy(u, params.slice(:context)) rescue UserDestroyer::PostsExistError
-    end
-
-    render json: {
-      success: success_count,
-      failed: (params[:users].try(:size) || 0) - success_count
-    }
-  end
-
   def disable_second_factor
     guardian.ensure_can_disable_second_factor!(@user)
     user_second_factor = @user.user_second_factors
