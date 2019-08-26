@@ -198,6 +198,7 @@ class ReviewableFlaggedPost < Reviewable
 
     # Undo hide/silence if applicable
     if post&.hidden?
+      notify_poster(performed_by)
       post.unhide!
       UserSilencer.unsilence(post.user) if UserSilencer.was_silenced_for?(post)
     end
@@ -283,6 +284,20 @@ private
 
   def destroyer(performed_by, post)
     PostDestroyer.new(performed_by, post, reviewable: self)
+  end
+
+  def notify_poster(performed_by)
+    return unless performed_by.human? && performed_by.staff?
+
+    Jobs.enqueue(
+      :send_system_message,
+      user_id: @post.user_id,
+      message_type: :flags_disagreed,
+      message_options: {
+        flagged_post_raw_content: @post.raw,
+        url: @post.url
+      }
+    )
   end
 end
 

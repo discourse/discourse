@@ -287,4 +287,15 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
     end
   end
 
+  describe "#perform_disagree" do
+    it "notifies the user about the flagged post being restored" do
+      reviewable = Fabricate(:reviewable_flagged_post)
+      reviewable.post.hide!(PostActionType.types[:spam])
+
+      expect do
+        reviewable.perform(moderator, :disagree)
+      end.to change(Jobs::SendSystemMessage.jobs, :size).by(1)
+    end
+  end
+
 end
