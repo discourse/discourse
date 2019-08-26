@@ -191,6 +191,7 @@ vi:
       stats: "Thống kê trang"
       our_admins: "Các quản trị viên"
       our_moderators: "Các điều hành viên"
+      moderators: "Điều hành viên"
       stat:
         all_time: "Từ trước tới nay"
       like_count: "Lượt thích"
@@ -617,7 +618,6 @@ vi:
         uploaded_avatar: "Chính sửa hình ảnh"
         uploaded_avatar_empty: "Thêm một ảnh chỉnh sửa"
         upload_title: "Upload hình ảnh của bạn"
-        upload_picture: "Úp hình"
         image_is_not_a_square: "Cảnh báo: chúng tôi đã cắt hình ảnh của bạn; chiều rộng và chiều cao không bằng nhau."
       change_profile_background:
         title: "Hình nền trang hồ sơ"
@@ -636,6 +636,7 @@ vi:
           other: "Chúng tôi sẽ chỉ gửi email cho bạn nếu chúng tôi đã không nhìn thấy bạn trong {{count}} phút cuối."
       associated_accounts:
         revoke: "Thu hồi"
+        cancel: "Hủy"
       name:
         title: "Tên"
         instructions: "Tên đầy đủ của bạn (tuỳ chọn)"
@@ -991,6 +992,9 @@ vi:
       default_header_text: Chọn...
       no_content: Không tìm thấy
       filter_placeholder: Tìm kiến...
+    date_time_picker:
+      from: Từ
+      to: Tới
     emoji_picker:
       objects: Vật th
       flags: Dấu cờ - Flags
@@ -1987,8 +1991,6 @@ vi:
           all: "Tất cả"
           view_table: "bảng"
           refresh_report: "Làm mới báo cáo"
-          start_date: "Từ ngày"
-          end_date: "Đến ngày"
           groups: "Các nhóm"
           filters:
             group:
@@ -2151,7 +2153,7 @@ vi:
         opacity: "Độ mờ"
         copy: "Sao chép"
         email_templates:
-          title: "Email Templates"
+          title: "Email"
           subject: "Chủ đề"
           multiple_subjects: "Email template này có nhiều chủ đề."
           body: "Nội dung"
@@ -2222,6 +2224,8 @@ vi:
           love:
             name: "đáng yêu"
             description: "Màu của nút like"
+        email_style:
+          css: "CSS"
       email:
         title: "Emails"
         settings: "Cấu hình"
@@ -2372,12 +2376,15 @@ vi:
           title: "Log lỗi"
       watched_words:
         clear_filter: "Xóa"
+        download: Tải xuống
+        clear_all: Xóa tất cả
         actions:
           block: "Khóa"
           flag: "Gắn cờ"
         form:
           add: "Thêm"
-          upload: "Tải lên"
+        test:
+          no_matches: "Không tìm thấy"
       impersonate:
         title: "Mạo danh"
         help: "Sử dụng công cụ này để mạo danh một tài khoản thành viên cho mục đích gỡ lỗi, bạn sẽ phải đăng xuất sau khi hoàn tất."
@@ -2561,7 +2568,7 @@ vi:
       site_text:
         description: "Bạn có thể tùy chỉnh bất kỳ nội dung nào trên diễn đàn. Hãy bắt đầu bằng cách tìm kiếm dưới đây:"
         search: "Tìm kiếm nội dung bạn muốn sửa"
-        title: "Nội Dung Chữ"
+        title: "Văn bản"
         edit: "sửa"
         revert: "Hoàn nguyên thay đổi"
         revert_confirm: "Bạn có chắc chắn muốn hoàn nguyên các thay đổi?"

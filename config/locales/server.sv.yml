@@ -106,8 +106,6 @@ sv:
   activemodel:
     errors:
       <<: *errors
-  invite:
-    not_found: "Ert invitations lösenord är ogiltigt. Vänlig kontakta webbplatsens administratör."
   bulk_invite:
     file_should_be_csv: "De uppladdade filerna skall vara i csv format."
     error: "Det uppstod ett problem när filerna skulle laddas upp. Vad snäll och försök senare igen."
@@ -815,7 +813,6 @@ sv:
     email_token_valid_hours: "Glömt lösenord / aktivera konto länkar är giltiga i (n) timmar."
     enable_badges: "Aktivera utmärkelsesystemet"
     enable_whispers: "Tiliåt privat kommunikation inom ämnena."
-    allow_index_in_robots_txt: "Specificera i robots.txt att den här webbplatsen tillåter att bli indexerad av sökmotorer. "
     email_domains_blacklist: "En pipe-avgränsad lista av alla e-postdomän som användare inte tillåts registrera konton med. Exempel: mailinator.com, trashmail.net"
     email_domains_whitelist: "En pipe-avgränsad lista av alla e-postdomän som användare MÅSTE registrera konton med. VARNING: Användare med e-postdomän som inte finns på listan kommer inte att tillåtas!"
     log_out_strict: "Vid utloggning, logga ut ALLA sessioner för den användaren på alla apparater"
@@ -987,7 +984,6 @@ sv:
     reset_bounce_score_after_days: "Nollställ studspoäng automatiskt efter X dagar."
     attachment_content_type_blacklist: "lista av fraser som används till att svartlista bilagor baserade på innehållstyper"
     attachment_filename_blacklist: "Lista över fraser som används till att svartlista bilagor baserade på filnamnet"
-    enable_forwarded_emails: "[BETA] Tillåt användare att skapa ett ämne genom att vidarebefordra ett email"
     always_show_trimmed_content: "Tillåt visning av trimmade delar av incomna emails. Varning: kan avslöja emailadresser."
     manual_polling_enabled: "Flytta emails med hjälp av API för email svar."
     pop3_polling_enabled: "Poll via POP3 för e-postsvar."
@@ -1183,8 +1179,8 @@ sv:
     errors: "%{errors}"
     not_available: "Inte tillgänglig. Testa %{suggestion}?"
     something_already_taken: "Något gick fel. Kanske är användarnamnet eller e-postadressen redan registrerat. Testa glömt lösenord-länken."
-    omniauth_error: "Tyvärr uppstod ett fel vid aktiveringen av ditt konto. Har du godkänt autentiseringen?"
     omniauth_error_unknown: "Något gick fel med din inloggning, var god och försök igen."
+    omniauth_confirm_button: "Fortsätt"
     new_registrations_disabled: "Nya kontoregistreringar är för närvarande inte tillåtna."
     password_too_long: "Lösenord har en gräns på 200 tecken."
     email_too_long: "E-postadressen du tillhandahöll är för lång. E-postadresser kan på sin höjd vara 254 tecken och domännamn inte mer än 253 tecken."

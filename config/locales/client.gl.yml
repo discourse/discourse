@@ -199,6 +199,7 @@ gl:
       stats: "Estatísticas do sitio"
       our_admins: "Administradores"
       our_moderators: "Os moderadores"
+      moderators: "Moderadores"
       stat:
         all_time: "Todos"
       like_count: "Gústames"
@@ -527,7 +528,6 @@ gl:
         uploaded_avatar: "Imaxe personalizada"
         uploaded_avatar_empty: "Engadir unha imaxe personalizada"
         upload_title: "Envía a túa imaxe"
-        upload_picture: "Enviar imaxe"
         image_is_not_a_square: "Aviso: recortamos a túa imaxe; a largura e a altura eran distintas."
       change_profile_background:
         title: "Fondo do perfil"
@@ -546,6 +546,7 @@ gl:
           other: "Só che eviaremos un correo-e se non te vimos nos últimos {{count}} minutos."
       associated_accounts:
         revoke: "Revogar"
+        cancel: "Cancelar"
       name:
         title: "Nome"
         instructions_required: "Nome completo"
@@ -836,6 +837,9 @@ gl:
       alt: "Alt"
     conditional_loading_section:
       loading: Cargando...
+    date_time_picker:
+      from: De
+      to: A
     emoji_picker:
       flags: Denuncias
     composer:
@@ -1727,8 +1731,6 @@ gl:
           all: "Todo"
           view_table: "táboa"
           refresh_report: "Actualiza informe"
-          start_date: "Data de inicio"
-          end_date: "Data de remate"
           groups: "Todos os grupos"
           filters:
             group:
@@ -1884,7 +1886,7 @@ gl:
         opacity: "Opacidade"
         copy: "Copiar"
         email_templates:
-          title: "Modelos de correo-e"
+          title: "Correo electrónico"
           subject: "Asunto"
           multiple_subjects: "Este modelo de correo-e ten varios asuntos."
           body: "Corpo"
@@ -1952,6 +1954,8 @@ gl:
           love:
             name: "gústame"
             description: "Cor do botón Gústame."
+        email_style:
+          css: "CSS"
       email:
         title: "Correos electrónicos"
         settings: "Axustes"
@@ -2101,12 +2105,13 @@ gl:
           title: "Rexistros de erros"
       watched_words:
         clear_filter: "Borrar"
+        download: Descargar
+        clear_all: Borrar todo
         actions:
           block: "Bloquear"
           flag: "Denunciar"
         form:
           add: "Engadir"
-          upload: "Enviar"
       impersonate:
         title: "Suplantar"
         help: "Usar esta ferramenta para suplantar unha conta de usuario co obxecto de detectar e corrixir erros. Deberás saír da sesión ao rematar."
@@ -2289,7 +2294,6 @@ gl:
       site_text:
         description: "Podes personalizar calquera texto do teu foro. Comeza por buscar debaixo:"
         search: "Busca o texto que queres editar"
-        title: "Contido do texto"
         edit: "editar"
         revert: "Reverter os cambios"
         revert_confirm: "Confirmas a reversión dos cambios?"

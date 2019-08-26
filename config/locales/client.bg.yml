@@ -201,6 +201,7 @@ bg:
       stats: "Статистика на сайта"
       our_admins: "Нашите админи"
       our_moderators: "Нашите модератори"
+      moderators: "Модератори"
       stat:
         all_time: "От началото"
       like_count: "Харесвания"
@@ -633,7 +634,6 @@ bg:
         uploaded_avatar: "Собствено изображение"
         uploaded_avatar_empty: "Добавете собствено изображение"
         upload_title: "Качете изображение"
-        upload_picture: "Качи изображение"
         image_is_not_a_square: "Внимание: изрязахмеИзрязахме вашата снимка,снимка защото не е с квадратна форма."
       change_profile_background:
         title: "Фон на профила"
@@ -653,6 +653,7 @@ bg:
           other: "Ние ще ви изпратим имейл само ако не сме ви виждали през последните {{count}} минути."
       associated_accounts:
         revoke: "Анулирай"
+        cancel: "Отмени"
       name:
         title: "Име"
         instructions: "вашето пълно име (опционално)"
@@ -986,6 +987,9 @@ bg:
     select_kit:
       default_header_text: Изберете...
       filter_placeholder: "Търсене ... "
+    date_time_picker:
+      from: От
+      to: До
     emoji_picker:
       filter_placeholder: Търсене на имотикони
       flags: Сигнали
@@ -1999,8 +2003,6 @@ bg:
           all: "Всички"
           view_table: "таблица"
           refresh_report: "Обнови доклада"
-          start_date: "Начална дата"
-          end_date: "Крайна дата"
           groups: "Всички групи"
           filters:
             group:
@@ -2164,7 +2166,7 @@ bg:
         opacity: "Прозрачност"
         copy: "Копирай"
         email_templates:
-          title: "Мейл шаблони"
+          title: "Имейл"
           subject: "Тема"
           multiple_subjects: "Този мейл шаблон има няколко теми."
           body: "Тяло"
@@ -2234,6 +2236,8 @@ bg:
           love:
             name: "любов"
             description: "Цвят на бутона харесвам. "
+        email_style:
+          css: "CSS"
       email:
         title: "Имейли"
         settings: "Настройки"
@@ -2412,6 +2416,8 @@ bg:
         search: "търсене"
         clear_filter: "Изчисти"
         show_words: "покажи думите"
+        download: Изтегли
+        clear_all: Изчисти всички
         actions:
           block: "Блокирай "
           censor: "Цензуриране"
@@ -2419,7 +2425,6 @@ bg:
           flag: "Сигнализиране"
         form:
           add: "Добави"
-          upload: "Качване"
       impersonate:
         title: "Представи"
         help: "Използвайте този инструмент, за да предоставите потребителски профили за отстраняване на грешките. Трябва да излезете когато приключите."
@@ -2606,7 +2611,6 @@ bg:
       site_text:
         description: "Можете да персонализирате всеки текст от вашия форум. Моля, започнете, като търсите по-долу:"
         search: "Търсене на текст които искате да редактирате"
-        title: "Текстово съдържание. "
         edit: "промени"
         revert: "Върни промените"
         revert_confirm: "Сигурен ли си, че искаш да върнеш промените?"

@@ -146,6 +146,7 @@ it:
         one: ha una lunghezza errata (dovrebbe essere di %{count} carattere)
         other: ha una lunghezza errata (dovrebbe essere di %{count} caratteri)
       other_than: "deve essere diverso da %{count}"
+      sso_overrides_username: "Lo Username deve essere aggiornato nel provider SSO, dato che `sso_overrides_username` è abilitato."
     template:
       body: "Sono stati riscontrati problemi con i seguenti campi:"
       header:
@@ -154,6 +155,7 @@ it:
     embed:
       load_from_remote: "Si è verificato un errore nel caricamento del messaggio."
     site_settings:
+      invalid_category_id: "Hai specificato una categoria che non esiste"
       invalid_choice:
         one: "Hai specificato la scelta non valida %{name}"
         other: "Hai specificato le scelte non valide %{name}"
@@ -167,7 +169,8 @@ it:
     errors:
       <<: *errors
   invite:
-    not_found: "Il tuo token di invito non è valido. Per favore contatta l'amministratore del sito."
+    not_found: "Il tuo token di invito è invalido. <a href='%{base_url}/about'>Per favore contatta lo staff</a>."
+    not_found_json: "Il tuo token di invito è invalido. Per favore contatta lo staff."
     not_found_template: |
       <p>Il tuo invito a <a href="%{base_url}">%{site_name}</a> è già stato riscattato.</p>
 
@@ -218,6 +221,7 @@ it:
     continue: "Continua Discussione"
     error: "Errore Inclusione"
     referer: "Referer:"
+    error_topics: "Il settaggio `includi la lista degli argomenti` non era abilitato"
     mismatch: "Il referer non è stato inviato o non corrispondeva ad alcuno dei seguenti host:"
     no_hosts: "Non sono stati configurati host per l'inclusione."
     configure: "Configura Inclusione"
@@ -253,7 +257,8 @@ it:
   too_many_links:
     one: "Spiacenti, i nuovi utenti possono inserire al massimo un collegamento in un messaggio."
     other: "Spiacenti, i nuovi utenti possono inserire al massimo %{count} collegamenti in un messaggio."
-  contains_blocked_words: "Il tuo messaggio contiene una parola non consentita: %{word}"
+  contains_blocked_word: "Il tuo messaggio contiene una parola non consentita: %{word}"
+  contains_blocked_words: "Il tuo post contiene parole non permesse: %{words}"
   spamming_host: "Spiacenti, non puoi inserire un collegamento verso quel dominio."
   user_is_suspended: "Agli utenti sospesi non è permesso creare messaggi."
   topic_not_found: "Quancosa non ha funzionato. Forse questo argomento è stato chiuso o cancellato mentre lo leggevi."
@@ -327,6 +332,7 @@ it:
     request_membership_pm:
       title: "Richesta di Adesione per @%{group_name}"
       handle: "gestisci le richieste di iscrizione"
+    view_hidden_topic_request_reason: "Vorrei far parte del gruppo '%{group_name}', per accedere [all'argomento](%{topic_url})"
   education:
     until_posts:
       one: "%{count} messaggio"
@@ -834,6 +840,8 @@ it:
     otp_description: 'Vuoi consentire ad "%{application_name}" di accedere al sito?'
     otp_confirmation:
       confirm_title: "Procedi su %{site_name}."
+      logging_in_as: "Accedi come %{username}"
+      confirm_button: Completa l'accesso
     no_trust_level: "Spiacenti, non hai il livello di esperienza richiesto per accedere alle user API"
     generic_error: "Spiacenti, non siamo in grado di produrre user API keys, questa caratteristica potrebbe essere stata disabilitata dall'amministratore di sistema"
     scopes:
@@ -859,6 +867,7 @@ it:
     post_edits:
       title: "Modifiche Messaggio"
       labels:
+        edited_at: Data
         post: Messaggio
         editor: Redattore
         author: Autore
@@ -1188,9 +1197,11 @@ it:
     force_https_warning: "Il tuo sito web utilizza SSL. Ma ` <a href='%{base_path}/admin/site_settings/category/all_results?filter=force_https'>force_https`</a> non è ancora abilitato nelle impostazioni del tuo sito."
     out_of_date_themes: "Sono disponibili aggiornamenti per i seguenti temi:"
     unreachable_themes: "È fallita la verifica della presenza di aggiornamenti per i seguenti temi:"
+    watched_word_regexp_error: "L'espressione regolare per %{action} per le parole osservate è invalida. Per favore controlla le <a href='%{base_path}/admin/logs/watched_words'>impostazioni Parola Osservata</a>, o disabilita le impostazioni del sito 'espressioni regolari delle parole osservate'."
   site_settings:
     censored_words: "Parole che saranno automaticamente sostituite con &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "Cancella automaticamente tutti i messaggi nascosti che restano nascosti per più di 30 giorni."
+    default_locale: "La lingua di default di questa istanza di Discourse. Puoi rimpiazzare il testo delle categorie e argomenti generati dal sistema in <a href='%{base_path}/admin/customize/site_texts' target='_blank'>Personalizza / Testo </a>."
     allow_user_locale: "Permetti agli utenti di personalizzare la lingua dell'interfaccia"
     set_locale_from_accept_language_header: "imposta la lingua di interfaccia per gli utenti anonimi in base ai language header del loro browser.\n(SPERIMENTALE, non funziona con cache anonima)"
     support_mixed_text_direction: "Supporto misto di direzioni del testo da sinistra a destra e da destra a sinistra."
@@ -1281,7 +1292,7 @@ it:
     polling_interval: "Se non si esegue il long polling, quanto spesso i client autenticati devono fare poll in millisecondi"
     anon_polling_interval: "Frequenza in millisecondi con cui client anonimi effettuano il poll"
     background_polling_interval: "Quanto spesso i client devono fare poll in millisecondi (quando la finestra è in background)"
-    hide_post_sensitivity: "La probabilità che un post segnalato venga nascosto"
+    hide_post_sensitivity: "La probabilità che un messaggio segnalato venga nascosto"
     silence_new_user_sensitivity: "La probabilità che un nuovo utente venga silenziato in base a segnalazioni di spam"
     auto_close_topic_sensitivity: "La probabilità che un argomento segnalato venga automaticamente chiuso"
     cooldown_minutes_after_hiding_posts: "Quanti minuti l'utente deve attendere prima di poter modificare un messaggio che è stato nascosto a causa di segnalazioni"
@@ -1299,6 +1310,7 @@ it:
     enable_markdown_typographer: "Usa le regole della tipografia per migliorare la leggibilità del testo: sostituisci le virgolette semplici con le virgolette inglesi, (c) (tm) con i simboli, - con emdash -, ecc."
     enable_markdown_linkify: "Tratta automaticamente il testo che assomiglia a un collegamento come un collegamento: www.example.com e https://example.com saranno automaticamente collegati"
     markdown_linkify_tlds: "Elenco dei domini di primo livello che vengono automaticamente considerati come collegamenti"
+    markdown_typographer_quotation_marks: "Lista delle coppie di citazioni di rimpiazzo doppie e singole"
     post_undo_action_window_mins: "Numero di minuti durante i quali gli utenti possono annullare le loro azioni recenti su un messaggio (segnalazioni, Mi piace, ecc.)."
     must_approve_users: "Lo staff deve approvare tutti i nuovi account utente prima che essi possano accedere al sito."
     pending_users_reminder_delay: "Notifica i moderatori se nuovi utenti sono in attesa di approvazione per più di queste ore. Imposta a -1 per disabilitare le notifiche."
@@ -1346,7 +1358,7 @@ it:
     email_token_valid_hours: "I messaggi di password dimenticata / attivazione account sono validi per (n) ore."
     enable_badges: "Attiva il sistema a distintivi"
     enable_whispers: "Consenti allo staff comunicazioni private all'interno degli argomenti."
-    allow_index_in_robots_txt: "Specifica nel file robots.txt che questo sito permette l'indicizzazione da parte dei motori di ricerca."
+    allow_index_in_robots_txt: "Specifica in robots.txt che questo sito permette l'indicizzazione da parte dei motori di ricerca. In casi eccezionali puoi permanentemente <a href='%{base_path}/admin/customize/robots'>ignorare robots.txt</a>."
     email_domains_blacklist: "Una lista di domini email separati dal carattere pipe \"|\" con cui gli utenti non possono registrare un account. Ad esempio: mailinator.com/trashmail.net"
     email_domains_whitelist: "Una lista di domini email delimitati da carattere pipe (|) che gli utenti DEVONO usare per poter registrare i propri account. ATTENZIONE: gli utenti con domini email differenti da questi non saranno accettati!"
     hide_email_address_taken: "Durante l'iscrizione e nel modulo per la password dimenticata, non informare gli utenti che già esiste un account con un dato indirizzo email."
@@ -1541,7 +1553,7 @@ it:
     max_similar_results: "Quanti argomenti simili mostrare sopra l'editor quando si scrive un nuovo argomento. Il paragone viene fatto sul titolo e sul corpo."
     max_image_megapixels: "Massimo numero di megapixel consentito per un'immagine."
     title_prettify: "Evita refusi ed errori comuni nei titoli, incluso il testo tutto maiuscolo, il primo carattere minuscolo, troppi caratteri ! e ?, puntini aggiuntivi alla fine della parola ecc."
-    title_remove_extraneous_space: "Rimuovi gli spazi bianchi iniziali davanti alla punteggiatura di fine."
+    title_remove_extraneous_space: "Rimuovi gli spazi bianchi davanti alla punteggiatura."
     automatic_topic_heat_values: 'Aggiorna automaticamente le impostazioni "topic views heat" e "topic post like heat" in base all''attività del sito.'
     topic_views_heat_low: "Dopo tale numero di visualizzazioni, il campo visite viene leggermente evidenziato."
     topic_views_heat_medium: "Dopo tale numero di visualizzazioni, il campo visite viene mediamente evidenziato."
@@ -1606,9 +1618,11 @@ it:
     reset_bounce_score_after_days: "Ripristina automaticamente il punteggio di rimbalzo dopo X giorni."
     attachment_content_type_blacklist: "Elenco delle parole chiave utilizzate per mettere in lista nera gli allegati in base al tipo di contenuto."
     attachment_filename_blacklist: "Elenco delle parole chiave utilizzate per mettere in lista nera gli allegati in base al nome del file."
-    enable_forwarded_emails: "[BETA] Consenti agli utenti di creare un argomento inviando una email."
+    forwarded_emails_behaviour: "Come gestire una mail inoltrata a Discourse"
     always_show_trimmed_content: "Mostra sempre la parte tagliata delle email in arrivo. ATTENZIONE: potrebbe rivelare indirizzi email."
     private_email: "Non includere contenuti da messaggi o argomenti nel titolo o nel corpo dell'email. NOTA: disabilita anche le email riassuntive."
+    email_total_attachment_size_limit_kb: "Dimensione massima dei files allegati alle email in uscita. Imposta a 0 per disabilitare l'invio di allegati."
+    post_excerpts_in_emails: "Nelle emails di notifica, invia sempre un estratto invece del messaggio completo"
     manual_polling_enabled: "Push delle email utilizzando le API per le risposte email."
     pop3_polling_enabled: "Cerca le risposte via email tramite POP3."
     pop3_polling_ssl: "Usa SSL per la connessione al server POP3 (raccomandato)."
@@ -1645,6 +1659,7 @@ it:
     suppress_digest_email_after_days: "Sopprimi le email di riepilogo per gli utenti che non visitano il sito per più di (n) giorni."
     digest_suppress_categories: "Sopprimi queste categorie dalle email riepilogative."
     disable_digest_emails: "Disabilita le email riepilogative per tutti gli utenti."
+    apply_custom_styles_to_digest: "I template email e i css sono applicati alle emails di riepilogo."
     email_accent_bg_color: "Colore da usare come background per alcuni elementi delle email HTML. Inserire il nome di un colore ('red') o un valore esadecimale ('#FF0000')."
     email_accent_fg_color: "Colore del testo reso sul colore di background delle email bg nelle email HTML. Inserire il nome di un colore ('white') o un valore esadecimale ('#FFFFFF'). "
     email_link_color: "Colore dei collegamenti nelle email HTML. Inserire il nome di un colore ('blue') o un valore esadecimale ('#0000FF')."
@@ -1654,7 +1669,7 @@ it:
     staff_user_custom_fields: "Un elenco di campi utente personalizzati dei membri dello staff che possono essere recuperati tramite API."
     enable_user_directory: "Fornire una directory degli utenti per la navigazione"
     enable_group_directory: "Fornire una directory dei gruppi per la navigazione"
-    enable_category_group_review: "Consenti ai gruppi di revisionare i contenuti in categorie specifiche"
+    enable_category_group_review: "Consentire ai gruppi di revisionare i contenuti in categorie specifiche"
     group_in_subject: "Imposta %%{optional_pm} nell'oggetto dell'email con il nome del primo gruppo in Messaggio Privato, vedi: <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>Personalizza il formato oggetto per le e-mail standard</a>"
     allow_anonymous_posting: "Permetti agli utenti di passare alla modalità anonima"
     anonymous_posting_min_trust_level: "Livello di esperienza minimo richiesto per abilitare la pubblicazione in modalità anonima"
@@ -1682,6 +1697,7 @@ it:
     likes_notification_consolidation_window_mins: "Tempo in minuti nel quale le notifiche preferite vengono consolidate in un'unica notifica una volta raggiunta una determinata soglia. La soglia può essere configurata tramite 'SiteSetting.likes_notification_consolidation_threshold'."
     automatically_unpin_topics: " Spunta automaticamente gli argomenti quando l'utente arriva in fondo. "
     read_time_word_count: "Conteggio di parole al minuto per calcolare il tempo stimato di lettura."
+    topic_page_title_includes_category: "La pagina dell'argomento <a href='https://developer.mozilla.org/en-US/docs/Web/HTML/Element/title' target='_blank'>titolo etichetta</a> include il nome della categoria."
     native_app_install_banner_ios: "Visualizza il banner delle app DiscourseHub su dispositivi iOS agli utenti regolari (Livello Esperienza 1 e superiori)"
     native_app_install_banner_android: "Visualizza il banner delle app DiscourseHub sui dispositivi Android agli utenti regolari (Livello Esperienza 1 e successivi)."
     share_anonymized_statistics: "Condividi statistiche anonime di utilizzo."
@@ -1697,6 +1713,7 @@ it:
     warn_reviving_old_topic_age: "Quando qualcuno inizia a rispondere ad un argomento in cui l'ultima risposta è più vecchia di tale numero di giorni, verrà visualizzato un avviso. Disabilita impostando su 0."
     autohighlight_all_code: "Forza l'evidenziazione della sintassi del codice nei blocchi di testo preformattato, anche se non è stato specificato il linguaggio di programmazione. "
     highlighted_languages: "Regole di evidenziazione della sintassi incluse. (Attenzione: includere troppi linguaggi può influire sulle prestazioni) vedi: <a href='https://highlightjs.org/static/demo/' target='_blank'>https://highlightjs.org/static/demo</a> per una demo"
+    embed_topics_list: "Supporta l'inclusione delle liste di argomenti nell'HTML"
     embed_truncate: "Tronca i messaggi incorporati."
     embed_support_markdown: "Supporta la formattazione Markdown per i messaggi incorporati."
     embed_whitelist_selector: "Un elenco separato da virgole di elementi CSS consentiti negli incorporamenti."
@@ -1829,11 +1846,13 @@ it:
         regex_invalid: "L'espressione regolare non è valida: %{error}"
         leading_trailing_slash: "L'espressione regolare non può iniziare o terminare con una barra."
       unicode_usernames_avatars: "Gli avatar di sistema interni non supportano i nomi utente Unicode."
+      list_value_count: "La lista contiene esattamente %{count} valori."
     placeholder:
       sso_provider_secrets:
         key: "www.example.com"
         value: "SSO secret"
   search:
+    extreme_load_error: "Il sito è sovraccarico, la ricerca disabilitata, riprovare più tardi"
     within_post: "n°%{post_number} di %{username}"
     types:
       category: "Categorie"
@@ -1848,6 +1867,7 @@ it:
     timeout_expired: "Il tempo di connessione dell'account è scaduto, prova a connetterti di nuovo."
     no_email: "Nessun indirizzo email è stato fornito. Si prega di contattare l'amministratore del sito."
     email_error: "Non è possibile registrare un account con l'indirizzo email <b>%{email}</b>. Si prega di contattare l'amministratore del sito."
+    missing_secret: "L'autenticazione SSO è fallita a causa di un segreto mancante. Contatta gli amministratori del sito per risolvere il problema."
   original_poster: "Autore iniziale"
   most_posts: "Maggioranza Messaggi"
   most_recent_poster: "Autore più recente"
@@ -1938,8 +1958,14 @@ it:
     errors: "%{errors}"
     not_available: "Non disponibile. Prova %{suggestion}?"
     something_already_taken: "Qualcosa è andato storto, forse il nome utente o l'email sono già registrati. Prova a recuperare la password."
-    omniauth_error: "Si è verificato un errore nell'autorizzazione del tuo account. Hai approvato l'autorizzazione?"
+    omniauth_error:
+      generic: "Siamo spiacenti, c'è stato un errore durante l'autorizzazione del tuo account. Per favore riprova."
+      csrf_detected: "L'autorizzazione è scaduta, o hai cambiato browser. Per favore riprova."
+      request_error: "C'è stato un errore all'avvio dell'autorizzazione. Per favore riprova."
+      invalid_iat: "Impossibile verificare il token di autorizzazione a causa della differenza di orario degli orologi dei servers. Per favore riprova."
     omniauth_error_unknown: "Qualcosa è andato storto durante il collegamento, per favore riprova."
+    omniauth_confirm_title: "Accedi usando %{provider}"
+    omniauth_confirm_button: "Continua"
     authenticator_error_no_valid_email: "Non sono ammessi gli indirizzi email associati a %{account}. Potrebbe essere necessario configurare il tuo account con un diverso indirizzo email."
     new_registrations_disabled: "Non sono permesse nuove registrazioni al momento."
     password_too_long: "Le password sono limitate a 200 caratteri."
@@ -2012,12 +2038,53 @@ it:
   invite_mailer:
     title: "Mailer Invito"
     subject_template: "%{inviter_name} ti ha invitato a '%{topic_title}' su %{site_domain_name}"
+    text_body_template: |
+      %{inviter_name} ti ha invitato a una discussione
+
+      > **%{topic_title}**
+      >
+      > %{topic_excerpt}
+
+      a
+
+      > %{site_title} -- %{site_description}
+
+      Se sei interessato, clicca il link sottostante:
+
+      %{invite_link}
   custom_invite_mailer:
     title: "Mailer Invito Personalizzato"
     subject_template: "%{inviter_name} ti ha invitato a '%{topic_title}' su %{site_domain_name}"
+    text_body_template: |
+      %{inviter_name} ti ha invitato a una discussione
+
+      > **%{topic_title}**
+      >
+      > %{topic_excerpt}
+
+      a
+
+      > %{site_title} -- %{site_description}
+
+      Con questa nota
+
+      > %{user_custom_message}
+
+      Se sei interessato, clicca il link sottostante:
+      %{invite_link}
   invite_forum_mailer:
     title: "Mailer Invito Forum"
     subject_template: "%{inviter_name} ti ha invitato a partecipare a %{site_domain_name}"
+    text_body_template: |
+      %{inviter_name} ti ha invitato a partecipare a
+
+      > **%{site_title}**
+      >
+      > %{site_description}
+
+      Se sei interessato, clicca il link sottostante:
+
+      %{invite_link}
   custom_invite_forum_mailer:
     title: "Mailer Invito Forum Personalizzato"
     subject_template: "%{inviter_name} ti ha invitato a partecipare a %{site_domain_name}"
@@ -2056,9 +2123,35 @@ it:
   new_version_mailer:
     title: "Mailer Nuova Versione"
     subject_template: "[%{email_prefix}] Nuova versione di Discourse, aggiornamento disponibile"
+    text_body_template: |
+      Evviva, una nuova versione di [Discourse](https://www.discourse.org) è disponibile!
+
+      Versione corrente: %{installed_version}
+      Nuova versione: **%{new_version}**
+
+      - Aggiorna con il nostro semplice **[one-click browser upgrade](%{base_url}/admin/upgrade)**
+
+      - Cosa c'è di nuovo nelle [release notes](https://meta.discourse.org/tags/release-notes) o guarda il [raw GitHub changelog](https://github.com/discourse/discourse/commits/master)
+
+      - Visita [meta.discourse.org](https://meta.discourse.org) per informazioni, discussioni o supporto su Discourse
   new_version_mailer_with_notes:
     title: "Mailer Nuova Versione con Note"
     subject_template: "[%{email_prefix}] aggiornamento disponibile"
+    text_body_template: |
+      Evviva, una nuova versione di [Discourse](https://www.discourse.org) è disponibile!
+
+      Versione corrente: %{installed_version}
+      Nuova versione: **%{new_version}**
+
+      - Aggiorna con il nostro semplice **[one-click browser upgrade](%{base_url}/admin/upgrade)**
+
+      - Cosa c'è di nuovo nelle [release notes](https://meta.discourse.org/tags/release-notes) o guarda il [raw GitHub changelog](https://github.com/discourse/discourse/commits/master)
+
+      - Visita [meta.discourse.org](https://meta.discourse.org) per informazioni, discussioni o supporto su Discourse
+
+      ### Note di rilascio
+
+      %{notes}
   flag_reasons:
     off_topic: "Il tuo messaggio è stato segnalato come **fuori tema**: la comunità pensa non riguardi l'argomento, come attualmente definito dal titolo e dal contenuto del primo messaggio."
     inappropriate: "Il tuo messaggio è stato segnalato come **inappropriato**: la comunità lo ritiene offensivo, ingiurioso o una violazione delle [linee guida della comunità](%{base_path}/guidelines)."
@@ -2079,11 +2172,35 @@ it:
     post_hidden:
       title: "Messaggio Nascosto"
       subject_template: "Messaggio nascosto a causa di segnalazioni dalla comunità"
-      text_body_template: "Ciao, \n\nquesto è un messaggio automatico da %{site_name} per farti sapere che il tuo messaggio è stato nascosto. \n\n<%{base_url}%{url}> \n\n%{flag_reason} \n\nPiù membri della comunità hanno segnalato questo post prima che fosse nascosto, quindi ti preghiamo di considerare come potresti rivederne il contenuto per tener conto del loro feedback. ** Puoi modificare il tuo messaggio dopo %{edit_delay} minuti, e sarà automaticamente visibile. ** \n\nTuttavia, se il messaggio venisse nascosto dalla community una seconda volta, allora resterà nascosto fino a quando non sarà gestito dallo staff. \n\nPer ulteriori informazioni, consultare le [linee guida della community] (%{base_url}/guidelines).\n"
+      text_body_template: |
+        Ciao,
+
+        Questo è un messaggio automatico da %{site_name} per farti sapere che il tuo messaggio è stato nascosto.
+
+        <%{base_url}%{url}>
+
+        %{flag_reason}
+
+        Questo messaggio è stato nascosto perché segnalato dalla comunità, quindi cerca di riscriverlo tenendo conto del loro feedback. **Puoi editare il tuo messaggio dopo %{edit_delay} minuti e ritornerà visibile.**
+
+        Tuttavia, se il messaggio verrà nascosto dalla comunità una seconda volta, rimarrà nascosto fino a che non interverrà lo staff.
+
+        Per ulteriori informazioni, per favore fai riferimento alle nostre [community guidelines](%{base_url}/guidelines).
     post_hidden_again:
       title: "Messaggio nascosto nuovamente"
       subject_template: "Messaggio nascosto dalle segnalazioni della comunità, Lo staff è stato informato"
-      text_body_template: "Ciao, \n\nQuesto è un messaggio automatico da %{site_name} per farti sapere che il tuo messaggio è stato nuovamente nascosto. \n\n<%{base_url}%{url}> \n\n%{flag_reason} \n\nPiù membri della comunità hanno segnalato questo messaggio prima che fosse nascosto. **Poiché questo messaggio è stato nascosto più di una volta, rimarrà nascosto fino a quando non verrà gestito da un membro dello staff.**\n\nPer ulteriori informazioni, fai riferimento alle [linee guida della community] (%{base_url}/guidelines).\n"
+      text_body_template: |
+        Ciao,
+
+        Questo è un messaggio automatico da %{site_name} per farti sapere che il tuo messaggio è stato nuovamente nascosto.
+
+        <%{base_url}%{url}>
+
+        %{flag_reason}
+
+        La comunità ha segnalato questo messaggio ed è ora nascosto. **Siccome questo messaggio è stato nascosto più di una volta, il tuo messaggio rimarrà ora nascosto fino ad intervento dello staff.**
+
+        Per ulteriori informazioni, per favore fai riferimento alle nostre [community guidelines](%{base_url}/guidelines).
     flags_agreed_and_post_deleted:
       title: "Post segnalato rimosso dallo staff"
       subject_template: "Post segnalato rimosso dallo staff"
@@ -2171,7 +2288,14 @@ it:
     csv_export_succeeded:
       title: "Esportazione CSV Riuscita"
       subject_template: "[%{export_title}] Esportazione dati completata"
-      text_body_template: "La tua esportazione dati ha avuto successo! :dvd: \n\n%{download_link}\n\nIl collegamento di download sopra riportato sarà valido per 48 ore. I dati sono compressi in un archivio gzip. Se l'archivio non si espande quando lo apri, utilizza gli strumenti consigliati qui: https://www.gzip.org/#faq4\n"
+      text_body_template: |
+        L'export dei dati è avvenuto con successo! :dvd:
+
+        %{download_link}
+
+        Il link qui sopra sarà valido per 48 ore.
+
+        I dati sono compressi in un file zip. Se il file non si apre automaticamente, puoi usare questo tool: https://www.7-zip.org/
     csv_export_failed:
       title: "Esportazione CSV Fallita"
       subject_template: "Esportazione dati fallita"
@@ -2366,6 +2490,14 @@ it:
     ignored_users_summary:
       title: "Utenti Ignorati che hanno superato il limite"
       subject_template: "Un utente è stato ignorato da vari altri utenti"
+      text_body_template: |
+        Ciao,
+
+        Questo è un messaggio automatico da %{site_name} per informarti che @%{username} è stato ignorato da %{ignores_threshold} utenti. Questo può indicare un potenziale problema nella tua comunità.
+
+        Potresti  [review recent posts](%{base_url}/u/%{username}/summary) di questo utente, e in caso anche degli altri utenti nella [ignored and muted user report](%{base_url}/admin/reports/top_ignored_users).
+
+        Per ulteriori informazioni, per favore fai riferimento alle nostre [community guidelines](%{base_url}/guidelines).
     too_many_spam_flags:
       title: "Troppe Segnalazioni Spam"
       subject_template: "Nuovo account sospeso"
@@ -2879,6 +3011,7 @@ it:
     user_email_post_deleted: "il messaggio è stato cancellato dal suo autore"
     user_email_user_suspended: "l'utente è stato sospeso"
     user_email_already_read: "l'utente ha già letto questo messaggio"
+    user_email_access_denied: "l'utente non è abilitato alla visualizzazione di questo post"
     sender_message_blank: "il messaggio è vuoto"
     sender_message_to_blank: "message.to è vuoto"
     sender_text_part_body_blank: "text_part.body è vuoto"
@@ -3357,6 +3490,9 @@ it:
       other: "Devi selezionare almeno le Etichette %{count}."
     upload_row_too_long: "Il file CSV dovrebbe avere un'Etichetta per riga. Opzionalmente l'Etichetta può essere seguita da una virgola, quindi dal nome del gruppo dell'Etichetta."
     forbidden:
+      invalid:
+        one: "Il tag selezionato non può essere utilizzato"
+        other: "Nessuno dei tags selezionati può essere utilizzato"
       in_this_category: '''%{tag_name}'' non può essere utilizzato in questa categoria'
       restricted_to:
         one: '&quot;%{tag_name}&quot; è limitato alla categoria &quot;%{category_names}&quot;'
@@ -3547,8 +3683,8 @@ it:
       low: "Bassa"
       medium: "Media"
       high: "Alta"
-    must_claim: "Devi rivendicare gli oggetti prima di agire su di essi."
-    user_claimed: "Questo elemento è stato usato da un altro utente."
+    must_claim: "Devi rivendicare gli elementi prima di poterli manipolare."
+    user_claimed: "Questo elemento è stato rivendicato da un altro utente."
     missing_version: "Devi fornire un parametro versione"
     conflict: "C'è stato un conflitto di aggiornamento che ti impedisce di compiere questa azione."
     reasons:
@@ -3568,6 +3704,9 @@ it:
       agree_and_keep:
         title: "Mantieni il messaggio"
         description: "Accetta la segnalazione e mantieni invariato il messaggio."
+      agree_and_keep_hidden:
+        title: "Tieni il Messaggio Nascosto"
+        description: "Accetta la segnalazione e lascia il messaggio nascosto."
       agree_and_suspend:
         title: "Sospendi Utente"
         description: "Accetta la segnalazione e sospendi l'utente."
@@ -3613,6 +3752,7 @@ it:
         title: "Approva"
       approve_post:
         title: "Approva Messaggio"
+        confirm_closed: "Questo argomento è chiuso. Vuoi creare un messaggio comunque?"
       reject_post:
         title: "Scarta Messaggio"
       approve_user:
@@ -3631,3 +3771,5 @@ it:
         title: "Cancella utente"
         confirm: "Sei sicuro di voler eliminare quell'utente? Ciò cancellerà tutti i suoi messaggi e bloccherà il suo indirizzo email e l'IP."
         reason: "Eliminato tramite la coda di revisione"
+  email_style:
+    html_missing_placeholder: "Il template html deve includere %{placeholder}"

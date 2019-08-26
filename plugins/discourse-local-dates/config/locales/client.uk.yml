@@ -10,4 +10,5 @@ uk:
     discourse_local_dates:
       create:
         form:
+          date_title: Дата
           time_title: Time

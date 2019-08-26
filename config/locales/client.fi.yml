@@ -234,6 +234,7 @@ fi:
       stats: "Sivuston tilastot"
       our_admins: "Ylläpitäjät"
       our_moderators: "Valvojat"
+      moderators: "Valvojat"
       stat:
         all_time: "Yhteensä"
         last_7_days: "Viimeiset 7"
@@ -876,7 +877,6 @@ fi:
         uploaded_avatar: "Oma kuva"
         uploaded_avatar_empty: "Lisää oma kuva"
         upload_title: "Lataa oma kuva"
-        upload_picture: "Valitse kuva"
         image_is_not_a_square: "Varoitus: olemme rajanneet kuvaasti; korkeus ja leveys eivät olleet samoja"
       change_profile_background:
         title: "Profiilin taustakuva"
@@ -901,6 +901,7 @@ fi:
         title: "Liitetyt käyttäjätilit"
         connect: "Yhdistä"
         revoke: "Kumoa yhdistäminen"
+        cancel: "Peru"
         not_connected: "(ei liitetty)"
       name:
         title: "Nimi"
@@ -1232,6 +1233,7 @@ fi:
       complete_username_not_found: "Ei löytynyt käyttäjänimeä <b>%{username}</b>"
       complete_email_not_found: "Ei löytynyt sähköpostiosoitetta <b>%{email}</b>"
       confirm_title: "Jatka sivustolle %{site_name}"
+      confirm_button: Kirjaudu
     login:
       title: "Kirjaudu"
       username: "Käyttäjä"
@@ -1340,6 +1342,9 @@ fi:
       min_content_not_reached:
         one: "Valitse ainakin {{count}} kohde."
         other: "Valitse ainakin {{count}} kohdetta."
+    date_time_picker:
+      from: Mistä
+      to: Vastaanottaja
     emoji_picker:
       filter_placeholder: Etsi emojia
       smileys_&_emotion: Hymiöt ja tunteet
@@ -2832,8 +2837,6 @@ fi:
           view_table: "taulukko"
           view_graph: "graafi"
           refresh_report: "Päivitä raportti"
-          start_date: "Alkupäivämäärä"
-          end_date: "Loppupäivämäärä"
           groups: "Kaikki ryhmät"
           disabled: "Raportti ei ole käytössä"
           totals_for_sample: "Otos yhteensä"
@@ -3119,7 +3122,7 @@ fi:
         copy_to_clipboard_error: "Virhe kopioimisessa leikepöydälle"
         theme_owner: "Et voi muokata, omistaja:"
         email_templates:
-          title: "Sähköpostipohjat"
+          title: "Sähköposti"
           subject: "Otsikko"
           multiple_subjects: "Tällä sähköpostiluonnoksella on useita vastaanottajia."
           body: "Leipäteksti"
@@ -3194,7 +3197,6 @@ fi:
           delete_upload_confirm: "Poista ladattu tiedosto? (Teeman CSS voi lakata toimimasta!)"
           import_web_tip: "Tietovarasto, jossa teema on"
           import_web_advanced: "Lisäasetukset..."
-          import_file_tip: ".tar.gz or .dcstyle.json -tiedosto, jossa teema on"
           is_private: "Teema on yksityisessä git-tietovarastossa"
           remote_branch: "Haaran nimi (valinnainen)"
           public_key: "Anna repositorioon pääsy seuraavalle julkiselle avaimelle:"
@@ -3300,6 +3302,8 @@ fi:
           love:
             name: "tykkäys"
             description: "Tykkäyspainikkeen väri."
+        email_style:
+          css: "CSS"
       email:
         title: "Sähköpostit"
         settings: "Asetukset"
@@ -3530,6 +3534,8 @@ fi:
         search: "haku"
         clear_filter: "Tyhjennä"
         show_words: "näytä sanat"
+        download: Lataa
+        clear_all: Tyhjennä kaikki
         word_count:
           one: "%{count} sana"
           other: "%{count} sanaa"
@@ -3550,8 +3556,9 @@ fi:
           add: "Lisää"
           success: "Onnistui"
           exists: "On jo olemassa"
-          upload: "Lataa"
           upload_successful: "Lataus onnistui. Sanoja lisättiin."
+        test:
+          no_matches: "Ei osumia"
       impersonate:
         title: "Esiinny käyttäjänä"
         help: "Tällä työkalulla voi esiintyä toisena käyttäjänä virheiden paikantamista varten. Sinun täytyy kirjautua ulos, kun olet valmis."
@@ -3746,8 +3753,6 @@ fi:
           likes_received: "Saatuja tykkäyksiä"
           likes_received_days: "Saadut tykkäykset: uniikit päivät"
           likes_received_users: "Saadut tykkäykset: uniikit käyttäjät"
-          suspended: "Hyllytetty (kaikkina aikoina)"
-          silenced: "Hiljennetty (kaikkina aikoina)"
           qualifies: "Täyttää luottamustaso 3:n vaatimukset."
           does_not_qualify: "Ei täytä luottamustaso 3:n vaatimuksia."
           will_be_promoted: "Ylennetään piakkoin."
@@ -3799,7 +3804,7 @@ fi:
       site_text:
         description: "Omalla palstallasi voit muokata mitä tahansa tekstisisältöä. Käytä alla sijaitsevaa hakutoimintoa:"
         search: "Hae tekstinpätkää, jota haluaisit muokata"
-        title: "Tekstit"
+        title: "Teksti"
         edit: "muokkaa"
         revert: "Kumoa muutokset"
         revert_confirm: "Oletko varma, että haluat kumota tekemäsi muutokset?"
@@ -3894,7 +3899,6 @@ fi:
         enabled: Ota ansiomerkki käyttöön
         icon: Ikoni
         image: Kuva
-        icon_help: "Käytä Font Awesome -luokkaa"
         image_help: "Syötä kuvan URL (kumoaa ikonikentän, jos molemmat on asetettu)"
         query: Ansiomerkkien haku tietokannasta (SQL)
         target_posts: Tietokantakyselyn kohdeviestit

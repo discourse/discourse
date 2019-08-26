@@ -279,6 +279,7 @@ gl:
         day: Día
     post_edits:
       labels:
+        edited_at: Data
         post: Publicación
         editor: Editor
         edit_reason: Razón

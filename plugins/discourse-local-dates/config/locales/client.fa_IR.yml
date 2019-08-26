@@ -8,6 +8,7 @@
 fa_IR:
   js:
     discourse_local_dates:
+      title: درج تاریخ / ساعت
       create:
         form:
           insert: درج کردن

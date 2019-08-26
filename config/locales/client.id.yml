@@ -580,7 +580,6 @@ id:
         uploaded_avatar: "Gambar kustom"
         uploaded_avatar_empty: "Tambah gambar kustom"
         upload_title: "Unggah gambar anda"
-        upload_picture: "Unggah Gambar"
         image_is_not_a_square: "Peringatan: kami telah memotong gambar anda; lebar dan tinggi tidak sama."
       change_profile_background:
         title: "Latar Belakang Profil"
@@ -595,6 +594,8 @@ id:
         authenticated: "Email anda sudah dikonfirmasi oleh {{provider}}"
         frequency:
           other: "Kami akan mengirimkan email kepada anda jika kami tidak melihat anda selama {{count}} menit."
+      associated_accounts:
+        cancel: "Batal"
       name:
         title: "Name"
         instructions: "Nama lengkap anda (opsional)"
@@ -843,6 +844,9 @@ id:
       loading: Diproses...
     select_kit:
       filter_placeholder: Cari...
+    date_time_picker:
+      from: Dari
+      to: Kepada
     emoji_picker:
       filter_placeholder: Cari emoji
       objects: Objek
@@ -1178,6 +1182,7 @@ id:
         new_style: "preview"
         delete: "Hapus"
         email_templates:
+          title: "Email"
           subject: "Judul"
           body: "Konten"
         theme:
@@ -1241,7 +1246,6 @@ id:
       watched_words:
         form:
           add: "Menambahkan"
-          upload: "Unggah"
       users:
         title: "Pengguna"
         last_emailed: "Terakhir Surel Dikirimkan"

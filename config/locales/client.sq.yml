@@ -199,6 +199,7 @@ sq:
       stats: "Statistikat e faqjes"
       our_admins: "Administratorët tanë"
       our_moderators: "Moderatorët tanë"
+      moderators: "Moderatorë"
       stat:
         all_time: "Gjithë kohës"
       like_count: "Pëlqime"
@@ -591,7 +592,6 @@ sq:
         uploaded_avatar: "Foto e personalizuar"
         uploaded_avatar_empty: "Shto një foto të personalizuar"
         upload_title: "Ngarkoni foton tuaj"
-        upload_picture: "Ngarko Foto"
         image_is_not_a_square: "Vini re: fotoja juaj është përshtatur, pasi nuk ishte katrore."
       change_profile_background:
         title: "Sfondi i profilit"
@@ -611,6 +611,7 @@ sq:
           other: "Do t'ju dërgojmë një email vetëm nëse nuk të kemi parë në faqe në {{count}} minutat e fundit."
       associated_accounts:
         revoke: "Revoko"
+        cancel: "Anulo"
       name:
         title: "Emri juaj"
         instructions: "emri i plotë (opsional)"
@@ -952,6 +953,9 @@ sq:
       alt: "Alt"
     conditional_loading_section:
       loading: Duke ngarkuar...
+    date_time_picker:
+      from: Nga
+      to: Për
     emoji_picker:
       flags: Sinjalizime
     composer:
@@ -1975,8 +1979,6 @@ sq:
           view_table: "tabelë"
           view_graph: "grafik"
           refresh_report: "Rifresko raportin"
-          start_date: "Dita e fillimit"
-          end_date: "Dita e fundit"
           groups: "Të gjitha grupet"
           filters:
             group:
@@ -2139,7 +2141,7 @@ sq:
         opacity: "Opaciteti"
         copy: "Kopjo"
         email_templates:
-          title: "Shabllonët email"
+          title: "Email"
           subject: "Subjekti"
           multiple_subjects: "Ky shabllon ka disa tituj për mesazhin."
           body: "Përmbajtja"
@@ -2211,6 +2213,8 @@ sq:
           love:
             name: "zemra"
             description: "Ngjyra e butonit të pëlqimeve."
+        email_style:
+          css: "CSS"
       email:
         title: "Emailat"
         settings: "Rregullimet"
@@ -2368,12 +2372,13 @@ sq:
           title: "Ditar Gabimesh"
       watched_words:
         clear_filter: "Pastro"
+        download: Shkarko
+        clear_all: Pastro kriteret
         actions:
           block: "Blloko"
           flag: "Sinjalizoni"
         form:
           add: "Shto"
-          upload: "Ngarko"
       impersonate:
         title: "Personifiko"
         help: "Use this tool to impersonate a user account for debugging purposes. You will have to log out once finished."
@@ -2562,7 +2567,7 @@ sq:
       site_text:
         description: "Mund të adaptoni çdo tekst në këtë faqe. Filloni duke bërë një kërkim më poshtë: "
         search: "Kërkoni për tekstin që dëshironi të redaktoni"
-        title: "Përmbajtje Tekstit"
+        title: "Tekst"
         edit: "redakto"
         revert: "Rikthe ndryshimet"
         revert_confirm: "A jeni të sigurtë se doni të riktheni mbrapsht ndryshimet e bëra?"

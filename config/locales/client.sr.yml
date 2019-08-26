@@ -232,6 +232,7 @@ sr:
       stats: "Statistike sajta"
       our_admins: "Naši admini"
       our_moderators: "Naši moderatori"
+      moderators: "Moderatori"
       stat:
         all_time: "Sve vreme"
       like_count: "Sviđanja"
@@ -538,7 +539,6 @@ sr:
         uploaded_avatar: "Vaša slika"
         uploaded_avatar_empty: "Dodajte vašu sliku"
         upload_title: "Učitajte vašu sliku"
-        upload_picture: "Učitajte sliku"
       change_profile_background:
         title: "Pozadina Profila"
         instructions: "Profilne pozadine će biti centrirane i imati standardnu širinu 850px "
@@ -553,6 +553,7 @@ sr:
         frequency_immediately: "Odmah ćemo vam poslati e-mail ako niste pročitali ono o ćemu vam šaljemo e-mailove."
       associated_accounts:
         revoke: "Povuci"
+        cancel: "Odustani"
       name:
         title: "Ime"
         instructions: "vaše ime (opciono)"
@@ -1619,8 +1620,6 @@ sr:
           all: "Sve"
           view_table: "tablica"
           refresh_report: "Osveži Prijave"
-          start_date: "Datum početka"
-          end_date: "Datum kraja"
           filters:
             group:
               label: Grupa
@@ -1751,6 +1750,7 @@ sr:
         opacity: "Prozirnost"
         copy: "Kopija"
         email_templates:
+          title: "E-mail"
           subject: "Predmet"
         theme:
           create_name: "Ime foruma"
@@ -1810,6 +1810,8 @@ sr:
           love:
             name: "lajk"
             description: "Boja dugmeta za lajk"
+        email_style:
+          css: "CSS"
       email:
         settings: "Podešavanje"
         preview_digest: "Pregled sažetka"
@@ -1932,12 +1934,12 @@ sr:
           title: "Logovi Grešaka"
       watched_words:
         clear_filter: "Čisto"
+        download: Preuzmi
         actions:
           block: "Blokiraj"
           flag: "Označi Zastavom"
         form:
           add: "Dodaj"
-          upload: "Učitaj"
       impersonate:
         title: "Predstavi se kao"
         help: "Koristite ovaj alat da se predstavite kao određeni korisnički nalog za potrebe ispravljanja grešaka. Moraćete se odjaviti kad završite."
@@ -2111,7 +2113,6 @@ sr:
           text: "Tekst Polja"
           confirm: "Potvrda"
       site_text:
-        title: "Sadžaj Teksta"
         edit: "izmeni"
         show_overriden: "Pokazuj samo promenjeno"
       settings:

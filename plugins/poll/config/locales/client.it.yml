@@ -22,6 +22,8 @@ it:
           title: "I risultati saranno mostrati al momento del <strong>voto</strong>."
         closed:
           title: "I risultati saranno mostrati a sondaggio <strong>chiuso</strong>."
+        staff:
+          title: "I risultati saranno mostrati solo ai membri dello <strong>staff</strong>"
       multiple:
         help:
           at_least_min_options:
@@ -74,6 +76,7 @@ it:
           always: Sempre visibile
           vote: Al momento del voto
           closed: Quando chiuso
+          staff: Solo staff
         poll_config:
           max: Massimo
           min: Minimo

@@ -20,58 +20,60 @@ ca:
       long_description: |
         Aquesta insígnia es concedeix després d'haver completat amb èxit el nou tutorial interactiu d'usuaris. Heu pres la iniciativa d'aprendre les eines bàsiques de discussió i ara esteu acreditat!
     licensed:
-      name: Llicenciat
+      name: Amb llicència
       description: "Heu completat el nostre tutorial d'usuari avançat"
       long_description: |
         Aquesta insígnia es concedeix després d'haver completat amb èxit el tutorial interactiu d'usuari avançat. Heu dominat les eines avançades de discussió, i ara teniu esteu completament acreditat!
   discourse_narrative_bot:
-    bio: "Hola, no sóc una persona real, sóc un robot que us pot ensenyar coses sobre aquest lloc. Per a interactuar amb mi, envieu-me un missatge o feu una menció a **%{discobot_username}** en qualsevol lloc. "
+    bio: "Hola, no sóc una persona real, sóc un robot que us pot ensenyar coses sobre aquest lloc web. Per a interactuar amb mi, envieu-me un missatge o feu una menció a **%{discobot_username}** en qualsevol lloc. "
     timeout:
       message: |-
-        Hola @%{username}, contacto amb tu perquè fa temps que no sé res de tu.
+        Bon dia @%{username},
 
-        - Per continuar, pots respondre'm en qualsevol moment.
+        Us escric perquè fa temps que no tinc notícies vostres.
 
-        - Si vols saltar aquest pas, digues `%{skip_trigger}`.
+        - Per a continuar, podeu respondre'm en qualsevol moment.
 
-        - Per començar de nou digues `%{reset_trigger}`.
+        - Si voleu saltar aquest pas, digueu `%{skip_trigger}`.
 
-        - Si així i tot és no, també està bé. Sóc un robot. No feriràs els meus sentiments. :sob:
+        - Per a començar de nou, digueu `%{reset_trigger}`.
+
+        Si no voleu, també està bé. Sóc un robot. No ferireu pas els meus sentiments. :sob:
     dice:
-      trigger: "tirar"
+      trigger: "tira"
       invalid: |-
         Ho sento, és matemàticament impossible fer aquesta combinació de daus. :confounded:
       not_enough_dice: |-
         Només tinc %{num_of_dice} daus. [Vergonyós] (http://www.therobotsvoice.com/2009/04/the_10_most_shameful_rpg_dice.php), ho sé!
       out_of_range: |-
-        Sabíeu que [el nombre màxim de cares] (https://www.wired.com/2016/05/mathematical-challenge-of-designing-the-worlds-most-complex-120-sided-dice) per a un dau matemàtic és 120?
+        ¿Sabíeu que [el nombre màxim de cares](https://www.wired.com/2016/05/mathematical-challenge-of-designing-the-worlds-most-complex-120-sided-dice) per a un dau matemàtic és 120?
       results: |-
         > :game_die: %{results}
     quote:
-      trigger: "citació"
+      trigger: "cita"
       '1':
-        quote: "Enmig de cada dificultat, hi ha una oportunitat"
+        quote: "Enmig de cada dificultat, hi ha una oportunitat."
         author: "Albert Einstein"
       '2':
-        quote: "La llibertat no val la pena si no connota el dret a errar. "
+        quote: "La llibertat no val la pena si no implica el dret d'errar. "
         author: "Mahatma Gandhi"
       '3':
         quote: "No ploris perquè s'ha acabat, somriu perquè ha succeït."
         author: "Dr. Seuss"
       '4':
-        quote: "Si voleu que una cosa estigui ben feta, feu-la vós mateix. "
+        quote: "Si vols que una cosa estigui ben feta, fes-la tu mateix. "
         author: "Charles-Guillaume Étienne"
       '5':
-        quote: "Creu que pots i estaràs a mig camí."
+        quote: "Confia que pots fer-ho i ja hauràs fet mig camí. "
         author: "Theodore Roosevelt"
       '6':
-        quote: "La vida és com una caixa de bombons. Mai no saps què hi trobaràs a dins."
+        quote: "La vida és com una caixa de bombons. No saps mai què hi trobaràs a dins."
         author: "La mare de Forrest Gump"
       '7':
         quote: "Això és un petit pas per a l'home, i un gran salt per a la humanitat."
         author: "Neil Armstrong"
       '8':
-        quote: "Fes cada dia alguna cosa que et faci por. "
+        quote: "Fes cada dia alguna cosa que et faci por. "
         author: "Eleanor Roosevelt"
       '9':
         quote: "Els errors són sempre perdonables, si tenim el valor d'admetre'ls."
@@ -85,7 +87,7 @@ ca:
       trigger: "sort"
       answers:
         '1': "És inqüestionable"
-        '2': "És així sens dubte"
+        '2': "És així sens dubte."
         '3': "Sens dubte"
         '4': "És clar que sí"
         '5': "Podeu confiar-hi"
@@ -94,11 +96,11 @@ ca:
         '8': "Bon pronòstic"
         '9': "Sí"
         '10': "Sembla que sí"
-        '11': "Resposta boirosa, torneu a provar-ho."
+        '11': "Resposta boirosa, proveu-ho una altra vegada."
         '12': "Pregunta-ho més tard"
         '13': "Val més que no us ho expliqui ara"
         '14': "No es pot predir ara"
-        '15': "Concentreu-vos i torneu-ho a preguntar."
+        '15': "Concentreu-vos i torneu a preguntar."
         '16': "No hi compteu"
         '17': "La meva resposta és no"
         '18': "Les meves fonts indiquen que no"
@@ -112,11 +114,12 @@ ca:
       help_trigger: "mostra ajuda"
       random_mention:
         reply: |-
-          Hola! Per trobar què puc fer, digues `@%{discobot_username} %{help_trigger}`.
+          Hola! Per a trobar què puc fer, digueu `@%{discobot_username} %{help_trigger}`.
         tracks: |-
           Ara sé com fer les coses següents:
-          `@ %{discobot_username} %{reset_trigger} %{default_track}`
-          > Inicia un dels següents tutorials interactius: %{tracks}.
+
+          `@ %{discobot_username} %{reset_trigger} {name-of-tutorial}`
+          > Inicia un tutorial interactiu. El `{name-of-tutorial}` pot ser un dels següents: `%{tracks}`.
         bot_actions: |-
           `@%{discobot_username} %{dice_trigger} 2d6`
           > :game_die: 3, 6
@@ -125,19 +128,19 @@ ca:
           > :left_speech_bubble: _Porta a terme un acte aleatori de generositat, sense cap expectativa de recompensa, amb la certesa que qualsevol dia potser algú farà el mateix per tu_&mdash; Princesa Diana
 
           `@%{discobot_username}%{magic_8_ball_trigger}`
-          > :crystal_ball: Hi pots confiar
+          > :crystal_ball: Pots comptar-hi
       do_not_understand:
         first_response: |-
           Hola, gràcies per la resposta!
 
           Desafortunadament, com que sóc un robot programat de qualsevol manera, em costa entendre-ho. :frowning:
-        track_response: Ho podeu tornar a provar, o si preferiu ometre aquest pas, digueu `%{skip_trigger}`. En cas contrari, per a començar de nou, digueu `%{reset_trigger}`.
+        track_response: Podeu provar-ho una altra vegada, o si preferiu ometre aquest pas, digueu `%{skip_trigger}`. En cas contrari, per a començar de nou, digueu `%{reset_trigger}`.
         second_response: |-
           Ai, ho sento. Encara no ho he captat. :anguished:
 
-          Només sóc un robot, però si vols contactar amb una persona, vés a [la nostra pàgina de contacte](%{base_path}/about).
+          Només sóc un robot, però si voleu contactar amb una persona, aneu a [la nostra pàgina de contacte](%{base_path}/about).
 
-          Mentrestant, no et destorbaré.
+          Mentrestant, no us destorbaré més.
     new_user_narrative:
       reset_trigger: "tutorial"
       title: "Certificat de finalització del tutorial d'usuari nou"
@@ -147,21 +150,21 @@ ca:
         message: |-
           Gràcies per unir-vos a %{title}, i benvingut!
 
-          - Sóc un robot, però [el nostre equip responsable] (%{base_uri}/about) també és aquí per a ajudar-vos si necessiteu contactar amb algú.
+          - Sóc un robot, però [el nostre equip responsable](%{base_uri}/about) també és aquí per a ajudar-vos si necessiteu contactar amb algú.
 
           - Per motius de seguretat, limitem temporalment el que poden fer els usuaris nous. Obtindreu [noves habilitats](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/) (i [insígnies](%{base_uri}/badges)) quan us coneguem més.
 
-          - Creiem en un [comportament civilitzat de la comunitat] (%{base_uri})/guidelines) en tot moment.
+          - Creiem en un [comportament civilitzat de la comunitat](%{base_uri})/guidelines) en tot moment.
       onebox:
         instructions: |-
-          Ara podeu compartir un d’aquests enllaços amb mi? Responeu amb **un enllaç per línia**, i s’expandirà automàticament per a incloure un resum molt atractiu.
+          Ara podeu compartir un d'aquests enllaços amb mi? Responeu amb **un enllaç per línia tot sol**, i s'expandirà automàticament per a incloure un resum molt atractiu.
 
           Per a copiar qualsevol enllaç, toqueu i manteniu en el mòbil o feu clic amb el botó dret del ratolí:
           <https://en.wikipedia.org/wiki/Inherently_funny_word>
           <https://en.wikipedia.org/wiki/Death_by_coconut>
           <https://en.wikipedia.org/wiki/Calculator_spelling>
         reply: |-
-          Genial! Això funcionarà per a la majoria d'enllaços <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-link.png" width="16" height="16">. Recorda, ha d'estar en una línia _tot per si mateix_, res a davant, ni a darrere.
+          Genial! Això funcionarà per a la majoria d'enllaços <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-link.png" width="16" height="16">. Recordeu: ha d'estar en una línia _tot sol_, res davant ni darrere.
         not_found: |-
           Ho sento. No he pogut trobar l'enllaç en la vostra resposta! :cry:
 
@@ -170,122 +173,122 @@ ca:
           <https://ca.wikipedia.org/wiki/Gat_exòtic>
       images:
         instructions: |-
-          Aquí tens una imatge d'un unicorn:
+          Vet aquí una imatge d'un unicorn:
 
           <img src="%{base_uri}/plugins/discourse-narrative-bot/images/unicorn.png" width="520" height="520">
 
-          Si t'agrada (a qui no!) vinga, fes un clic al botó m'agrada :heart: situat a sota d'aquesta publicació per fer-m'ho saber.
+          Si us agrada (a qui no!), apa, feu un clic en el botó 'M'agrada' :heart: sota d'aquesta publicació per a fer-m'ho saber.
 
-          Pots **respondre amb una imatge?** Amb qualsevol imatge! Arrossega i deixa-la anar, clica el botó carregar, o si vols, també pots copiar i enganxar.
+          Podeu **respondre amb una imatge?** Amb qualsevol imatge! Arrossegueu-la i deixeu-la anar, feu clic en el botó de carregar, o si voleu, també podeu copiar i enganxar.
         reply: |-
-          Excel·lent imatge - He clicat el botó m'agrada :heart: perquè sàpigues que m'ha agradat molt :heart_eyes:
+          Excel·lent imatge. He premut el botó 'M'agrada' :heart: perquè sapigueu que m'ha agradat molt :heart_eyes:
         like_not_found: |-
-          Heu oblidat de clicar en 'm'agrada' :heart: en la meva [publicació?](%{url}) :crying_cat_face:
+          Us heu descuidat de fer clic en 'M'agrada' :heart: en la meva [publicació?](%{url}) :crying_cat_face:
         not_found: |-
-          Sembla ser que no has carregat cap imatge així que he triat una imatge que estic segur que t'agradarà.
+          Sembla que no heu carregat cap imatge, així que he triat una imatge que estic segur que us agradarà.
 
           `%{image_url}`
 
-          Intenta carregar aquesta, o bé enganxa l'enllaç en una sola línia!
+          Intenteu carregar aquesta, o bé enganxeu l'enllaç tot sol en una línia!
       formatting:
         instructions: |-
-          Pots convertir algunes paraules en **negreta** o _cursiva_ a la teva resposta?
+          ¿Podeu convertir algunes paraules en **negreta** o _cursiva_ en la vostra resposta?
 
-          - escriu `**negreta**` or `_cursiva_`
+          - escriviu `**negreta**` or `_cursiva_`
 
-          - o clica els botons <kbd><b>B</b></kbd> o <kbd><i>I</i></kbd> de l'editor.
+          - o premeu els botons <kbd><b>B</b></kbd> o <kbd><i>I</i></kbd> de l'editor.
         reply: |-
           Bona feina! HTML i BBCode també funcionen per a formatar. Per a saber-ne més, proveu [aquest tutorial](http://commonmark.org/help) :nerd:
         not_found: |-
           Ai, no s'ha trobat cap formatació en la vostra resposta. :pencil2:
 
-          Podeu tornar-ho a intentar? Feu servir els botons <kbd><b>B</b></kbd> negreta o <kbd><i>I</i></kbd> cursiva de l'editor si heu quedat encallat.
+          Podeu tornar-ho a intentar? Feu servir els botons <kbd><b>B</b></kbd> negreta o <kbd><i>I</i></kbd> cursiva de l'editor si quedeu encallat.
       quoting:
         instructions: |-
-          Pots citar-me quan responguis? D'aquesta manera sé quina part exacta estàs responent?
+          Podeu citar-me en la vostra resposta? D'aquesta manera sé a quina part exacta responeu?
 
-          > Si això és cafè, si us plau, porta'm te; però si és te, si us plau, porta'm cafè.
+          > Si això és cafè, porteu-me te, si us plau; però si és te, si us plau, porteu-me cafè.
           >
-          > Un avantatge de parlar amb tu mateix és que com a mínim saps que algú t'està escoltant.
+          > Un avantatge de parlar amb tu mateix és que com a mínim saps que algú t'escolta.
           >
-          > Algunes persones tenen facilitat de paraula, i altres persones... d'aixòs, vull dir, potser que no.
+          > Algunes persones tenen facilitat de paraula, i altres persones... daixò, vull dir, potser no.
 
-          Selecciona el text &uarr; de la cita que prefereixis, després clica el botó **Cita** que apareix a sobre de la selecció - o el botó **Resposta** al final d'aquest missatge.
+          Seleccioneu el text &uarr; de la citació que preferiu, després feu clic en el botó **Cita** que apareix per damunt de la selecció, o el botó **Respon** al capdavall de la publicació.
 
-          A sota de la cita, escriu una paraula o dues que expliquin per què l'has triat, que estic intrigat :thinking:
+          Sota la citació, escriviu una paraula o dues que expliquin per què l'heu triada, que estic intrigat :thinking:
         reply: |-
           Bona feina, heu triat la meva citació preferida! :left_speech_bubble:
         not_found: |-
-          Vaja, sembla que no m'has citat a la teva resposta?
+          Vaja! Sembla que no m'heu citat en la resposta.
 
-          Seleccionant qualsevol text de la meva publicació farà que aparegui el botó <kbd>**Cita**</kbd>. També funcionarà clicant **Resposta** amb qualsevol text seleccionat. Pots tornar-ho a provar?
+          Seleccionant qualsevol text de la meva publicació fareu que aparegui el botó <kbd>**Cita**</kbd>. També funcionarà fent clic en **Respon** amb qualsevol text seleccionat. Podeu tornar-ho a provar?
       bookmark:
         instructions: |-
-          Si voleu saber-ne més, seleccioneu <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> a sota i <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-bookmark.png" width="16" height="16"> **marqueu com a preferit aquest missatge privat**. Si ho feu, potser tindreu un :gift: més endavant!
+          Si voleu saber-ne més, seleccioneu <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> a sota i <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-bookmark.png" width="16" height="16"> **marqueu com a preferit aquest missatge privat**. Si ho feu, potser tindreu un :gift: més avant!
         reply: |-
-          Fantàstic! Ara podeu trobar fàcilment com tornar a la nostra conversa privada en qualsevol moment, exactament des de [la pestanya de favorits del teu perfil](%{profile_page_url}/activity/bookmarks). Només heu de seleccionar la vostra imatge de perfil dalt a la dreta &#8599;
+          Fantàstic! Ara podeu trobar fàcilment com tornar a la nostra conversa privada en qualsevol moment, exactament des de [la pestanya de favorits del vostre perfil](%{profile_page_url}/activity/bookmarks). Només heu de seleccionar la vostra imatge de perfil dalt a la dreta &#8599;
         not_found: |-
-          Ui, no veig cap favorit marcat en aquest tema. Has trobat el marcador de favorits a sota de cada publicació? Fes servir el veure més <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> per mostrar accions addicionals en cas que les necessitis.
+          Ui, no veig cap favorit marcat en aquest tema. ¿Heu trobat el marcador de favorits a sota de cada publicació? Utilitzeu "mostra'n més" <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> per a mostrar accions addicionals si calen.
       emoji:
         instructions: |-
-          Deus haver vist que utilitzo petites imatges a les meves respostes :blue_car::dash: s'anomenen [emoji](https://ca.wikipedia.org/wiki/Emoji). Pots **afegir un emoji** a la teva resposta? Qualsevol d'aquestes funcionarà:
+          Deveu haver vist que utilitzo petites imatges en les meves respostes :blue_car::dash:. S'anomenen [emojis](https://ca.wikipedia.org/wiki/Emoji). ¿Podeu **afegir un emoji** a la vostra resposta? Qualsevol d'aquestes funcionarà:
 
-          - Escriu `:) ;) :D :P :O`
+          - Escriviu `:) ;) :D :P :O`.
 
-          - Escriu dos punts <kbd>:</kbd> i després completa el nom de l'emoji `:tada:`
+          - Escriviu dos punts <kbd>:</kbd> i després completeu el nom de l'emoji `:tada:`.
 
-          - Clica el botó emoji <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-smile.png" width="16" height="16"> de l'editor, o al teclat del teu mòbil
+          - Feu clic en el botó d'emojis <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-smile.png" width="16" height="16"> de l'editor, o en el teclat del vostre mòbil.
         reply: |-
           Això és :sparkles: _emojitàstic!_ :sparkles:
         not_found: |-
-          Vaja, no veig cap Emoji a la teva resposta? Oh, no! :sob:
+          Vaja! No veig cap emoji en la resposta. Oh, no! :sob:
 
-          Prova d'escriure dos punts <kbd>:</kbd> per desplegar el selector de emoji, seguidament escriu la primera lletra d'allò que vols triar, com per exemple `:bird:`
+          Proveu d'escriure dos punts <kbd>:</kbd> per a desplegar el selector d'emojis. Tot seguit escriviu la primera lletra d'allò que voleu triar, com ara `:bird:`
 
-          O selecciona el botó emoji <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-smile.png" width="16" height="16"> dins l'editor.
+          O seleccioneu el botó d'emojis <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-smile.png" width="16" height="16"> en l'editor.
 
-          (Si estàs amb un dispositiu mòbil, també pots introduir Emoji directament del teclat.)
+          (Si esteu en un dispositiu mòbil, també podeu introduir emojis directament des del teclat.)
       mention:
         instructions: |-
-          Algun cop potser voldràs cridar l'atenció d'algunes persones, encara que no els estiguis responent directament. Escriu `@` i completa els seus noms d'usuaris per mencionar-los.
+          A vegades potser voldreu cridar l'atenció d'algunes persones, encara que no els respongueu a ells directament. Escriviu `@` i completeu el nom d'usuari per a mencionar-los.
 
-          Pots mencionar **`@%{discobot_username}`** a la teva resposta?
+          ¿Podeu mencionar **`@%{discobot_username}`** en la vostra resposta?
         reply: |-
-          _Algú ha dit el meu nom!?_ :raised_hand: Crec que ho has fet tu! :wave: Bé, sóc aquí! Gràcies per mencionar-me. :ok_hand:
+          _Algú ha dit el meu nom!?_ :raised_hand: Crec que ho heu fet vós! :wave: Bé, sóc aquí! Gràcies per mencionar-me. :ok_hand:
         not_found: |-
           No veig el meu nom enlloc :frowning: Podeu mencionar-me com `@%{discobot_username}` una altra vegada?
 
           (Doncs sí, el meu nom d'usuari és _disco_, com en les discos de moda dels anys 70. [M'encanta la vida nocturna!](https://www.youtube.com/watch?v=B_wGI3_sGf8) :dancer:)
       flag:
         instructions: |-
-          Ens agrada que les nostres discussions siguin amistoses, i necessitem que ens ajudeu a [mantenir les coses de manera civilitzada](%{guidelines_url}). Si detecteu qualsevol problema, feu-ho saber de manera privada a l'autor, o [al nostre equip responsable d'ajuda](%{about_url}).
+          Ens agrada que les nostres discussions siguin amistoses, i necessitem que ens ajudeu a [mantenir un ambient civilitzat](%{guidelines_url}). Si detecteu qualsevol problema, feu-ho saber de manera privada a l'autor, o [a l'equip responsable](%{about_url}).
 
           > :imp: He escrit una cosa desagradable aquí
 
-          Crec que ja saps què s'ha de fer. Endavant i **informa d'aquest missatge** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16"> com a inapropiat!
+          Crec que ja sabeu què s'ha de fer. Tireu avant i **marqueu amb bandera la publicació** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16"> com a inapropiada!
         reply: |-
-          [El nostre equip responsable] (%{base_uri}/groups/staff) serà notificat de manera privada sobre la vostra bandera. Si hi ha prou membres de la comunitat que marquen amb bandera una publicació, també serà amagada automàticament per precaució. (Com que no he escrit un missatge desagradable :angel:, he tirat endavant i de moment he eliminat la bandera.)
+          [El nostre equip responsable](%{base_uri}/groups/staff) serà notificat de manera privada sobre la vostra bandera. Si hi ha prou membres de la comunitat que marquen amb bandera una publicació, també serà amagada automàticament per precaució. (Com que no he escrit un missatge desagradable :angel:, he tirat avant i de moment he eliminat la bandera.)
         not_found: |-
-          Oh no, la meva publicació desagradable encara no ha estat avisada! :worried: Pots fer un avís de publicació inapropiada utilitzant la **bandera** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16">? No oblidis utilitzar el botó mostrar més <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> per desplegar més accions per a cada publicació.
+          Oh no, la meva publicació desagradable encara no ha estat marcada amb bandera! :worried: ¿Podeu marcar-la com a inapropiada utilitzant la **bandera** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16">? No oblideu utilitzar el botó "mostra'n més" <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> per a desplegar més accions per a cada publicació.
       search:
         instructions: |-
-          _psst_ ... He amagat una sorpresa en aquest tema. Si et ve de gust el repte, **selecciona la icona de buscador** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16">a la part superior dreta &#8599; per buscar-lo.
+          _psst_ ... He amagat una sorpresa en aquest tema. Si us ve de gust el repte, **seleccioneu la icona de cerca** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16">a la part superior dreta &#8599; per a cercar-la.
 
-          Prova de cercar el terme "capi&#8203;bara" en aquest tema
+          Proveu de cercar el terme "capi&#8203;bara" en aquest tema.
         hidden_message: |-
-          Com has pogut oblidar-te d'aquest capibara? :wink:
+          Com heu pogut oblidar aquest capibara? :wink:
 
           <img src="%{base_uri}/plugins/discourse-narrative-bot/images/capybara-eating.gif"/>
 
-          T'has adonat que tornes a ser al principi? Dóna menjar a aquest pobre capibara **responent amb el `:herb:` emoji** i seràs enviat automàticament al final.
+          Us heu adonat que torneu a ser al principi? Doneu menjar a aquest pobre capibara **responent amb l'emoji `:herb:`** i sereu enviat automàticament al final.
         reply: |-
-          Visca ho has trobat :tada:
+          Visca, ho heu trobat :tada:
 
-          - Per a cerques més detallades, dirigiu-vos a la [pàgina de cerca completa](%{search_url})
+          - Per a cerques més detallades, dirigiu-vos a la [pàgina de cerca avançada](%{search_url})
 
-          - Per saltar a algun punt de la discussió, prova amb els controls de la cronologia del tema a la dreta (i a baix, al mòbil).
+          - Per a saltar a qualsevol punt de la discussió, proveu amb els controls de la cronologia del tema a la dreta (i a baix en mòbil).
 
-          - Si tens un :keyboard: físic, prem <kbd>?</kbd> per visualitzar les nostres dreceres de teclat.
+          - Si teniu un :keyboard: físic, premeu <kbd>?</kbd> per a visualitzar les dreceres de teclat.
         not_found: |-
           Ui... sembla que teniu problemes. Em sap greu. Heu buscat <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> el terme **capy&#8203;bara**?
       end:
@@ -304,7 +307,7 @@ ca:
       cert_title: "En reconeixement a la finalització satisfactòria del tutorial d'usuari avançat"
       title: ":arrow_up: Funcionalitats d'usuari avançat"
       start_message: |-
-        Com a usuari _avançat_, heu visitat [la vostra pàgina de preferències](%{base_uri}/my/preferences), @%{username}? Hi ha moltes maneres de personalitzar la vostra experiència, com ara seleccionar un tema fosc o clar.
+        Com a usuari _avançat_, heu visitat [la vostra pàgina de preferències](%{base_uri}/my/preferences), @%{username}? Hi ha moltes maneres de personalitzar la vostra experiència, com ara seleccionar una aparença fosca o clara.
 
         Però deixem estar això, comencem!
       edit:
@@ -313,40 +316,40 @@ ca:
           Tothom comet errors. Però no us preocupeu, sempre podeu editar les vostres publicacions per a corregir-les!
           Podeu començar **editant** la publicació que us he creat?
         not_found: |-
-          Sembla que encara has d'editar la [publicació](%{url}) que he creat per a tu. Pots tornar-ho a intentar?
+          Sembla que encara heu d'editar la [publicació](%{url}) que us he creat. Podeu tornar-ho a intentar?
 
-          Fes servir la icona <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-pencil.png" width="16" height="16"> per desplegar l'editor.
+          Feu servir la icona <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-pencil.png" width="16" height="16"> per a obrir l'editor.
         reply: |-
           Bona feina!
 
           Tingueu en compte que les modificacions fetes al cap de 5 minuts es mostraran com a revisions d'edició públiques, i apareixerà una petita icona d'un llapis a la part superior dreta amb el recompte de revisió.
       delete:
         instructions: |-
-          Si vols retirar una publicació que tu mateix has fet, pots suprimir-la.
+          Si voleu retirar una publicació que vós mateix heu fet, podeu suprimir-la.
 
-          Endavant, **suprimeix** alguna de les teves publicacions de més amunt utilitzant l'acció <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-trash.png" width="16" height="16">**suprimeix**. Però no esborris la primera publicació!
+          Avant, **suprimiu** alguna de les vostres publicacions de més amunt utilitzant l'acció <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-trash.png" width="16" height="16">**Suprimeix**. Però no suprimiu la primera publicació!
         not_found: |-
-          Encara no veig cap publicació eliminada? Recorda que <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> mostra més desplegarà <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-trash.png" width="16" height="16"> eliminar.
+          Encara no veig cap publicació suprimida. Recordeu que <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> "mostra'n més" desplegarà <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-trash.png" width="16" height="16"> "Suprimeix".
         reply: |-
           Apa! :boom:
 
-          Per preservar la continuïtat de les discussions, les eliminacions no són immediates, de manera que la publicació es retirarà després d'un cert temps.
+          Per a preservar la continuïtat de les discussions, les supressions no són immediates, de manera que la publicació serà eliminada al cap d'un cert temps.
       recover:
-        deleted_post_raw: "Per què @%{discobot_username}ha esborrat la meva publicació? :anguished:"
+        deleted_post_raw: "Per què @%{discobot_username} ha suprimit la meva publicació? :anguished:"
         instructions: |-
-          Oh no! Crec que he eliminat sense voler una nova publicació que acabo de crear per a tu.
+          Oh no! Crec que he suprimit sense voler una nova publicació que us he creat ara mateix.
 
-          Pots fer-me un favor i <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-rotate-left.png" width="16" height="16"> **restaurar** la publicacio?
+          Podeu fer-me un favor i <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-rotate-left.png" width="16" height="16"> **restaurar** la publicació?
         not_found: |-
-          Tens problemes? Recorda <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> mostra més desplegarà <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-rotate-left.png" width="16" height="16"> restaurar.
+          Teniu problemes? Recordeu <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> "mostra'n més" revelarà <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-rotate-left.png" width="16" height="16"> "Restaura".
         reply: |-
           Uf, ha anat d'un pèl! Gràcies per arreglar-ho :wink:
-          Tingueu en compte que només teniu %{deletion_after} hora/hores per a recuperar una publicació.
+          Tingueu en compte que només teniu %{deletion_after} hora/hores per a restaurar una publicació.
       category_hashtag:
         instructions: |-
-          Saps que pots fer referència a categories i etiquetes a la teva publicació? Per exemple, has vist la %{category} categoria?
+          ¿Sabeu que podeu fer referència a categories i etiquetes en la vostra publicació? Per exemple, ¿heu vist la categoria %{category}?
 
-          Escriu `#` al centre d'una frase i selecciona qualsevol categoria o etiqueta.
+          Escriviu `#` al mig d'una frase i seleccioneu qualsevol categoria o etiqueta.
         not_found: |-
           Vaja, no veig cap categoria enlloc. Tingueu en compte que `#` no pot ser el primer caràcter. Podeu copiar això en la vostra pròxima resposta?
 
@@ -365,16 +368,16 @@ ca:
         not_found: |-
           Sembla que encara esteu vigilant :eyes: aquest tema! Si teniu problemes per a trobar-lo, el botó de nivell de notificació és a la part inferior del tema.
         reply: |-
-          Un treball increïble! Espero que no hàgiu silenciat aquest tema, perquè a vegades sóc una mica xerraire :grin:.
+          Una grandíssima feina! Espero que no hàgiu silenciat aquest tema, perquè a vegades sóc una mica xerraire :grin:.
 
-          Tingueu en compte que quan responeu a un tema o llegiu un tema durant més d'uns minuts s'estableix automàticament un nivell de notificació de "seguiment". Podeu canviar-ho en [les preferències d'usuari](%{base_uri}/my/preferences).
+          Tingueu en compte que quan responeu a un tema o el llegiu durant més d'uns quants minuts s'estableix automàticament un nivell de notificació de "seguiment". Podeu canviar-ho en [les preferències d'usuari](%{base_uri}/my/preferences).
       poll:
         instructions: |-
           Sabíeu que podeu incorporar una enquesta a qualsevol publicació? Proveu-ho utilitzant l'eina <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> en l'editor per a **crear una enquesta**.
         not_found: |-
-          Vaja! No hi havia cap enquesta a la teva resposta.
+          Vaja! No hi havia cap enquesta en la vostra resposta.
 
-          Utilitza la icona de l'engranatge <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> de l'editor, o copia i enganxa aquesta enquesta a la teva pròxima resposta:
+          Utilitzeu la icona de roda dentada <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> de l'editor, o copieu i enganxeu aquesta enquesta en la vostra pròxima resposta:
 
           ```text
           [poll]
@@ -391,37 +394,37 @@ ca:
           [/poll]
       details:
         instructions: |-
-          A vegades potser voldràs **amagar detalls** a les teves respostes:
+          A vegades potser us convindrà **amagar els detalls** en les respostes:
 
-          - Quan estiguis debatent punts de la trama d'una pel·lícula o programa de televisió que podría ser considerat una filtració.
+          - Quan discutiu algun element de la trama d'una pel·lícula o d'un programa de televisió que podria considerar-se un espòiler.
 
-          - Quan la teva publicació necessita molts detalls opcionals que puguin resultar aclaparadors quan es llegeixin alhora.
+          - Quan la publicació necessita molts detalls opcionals que podrien resultar aclaparadors si es llegeixen de cop.
 
-          [details = Selecciona-ho per veure com funciona!]
-          1. Selecciona l'engranatge <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> a l'editor.
-          2. Selecciona "Amaga els detalls".
-          3. Edita el resum de les dades i afegeix el teu contingut.
-          [/ detalls]
+          [details=Seleccioneu això per a veure com funciona!]
+          1. Seleccioneu l'eina <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> en l'editor.
+          2. Seleccioneu "Amaga els detalls".
+          3. Editeu el resum de les dades i afegiu el vostre contingut.
+          [/details]
 
-          Pots utilitzar l'engranatge <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> a l'editor per afegir una secció de detalls a la seva pròxima resposta?
+          ¿Podeu fer servir l'eina <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> en l'editor per a afegir una secció de detalls en la vostra resposta següent?
         not_found: |-
-          Teniu problemes per a crear un giny de detalls? Proveu d'incloure el següent en la pròxima resposta:
+          Teniu problemes per a crear un giny de detalls? Proveu d'incloure el text següent en la pròxima resposta:
 
           ```text
-          [details = Seleccioneu-me per a obtenir informació]
+          [details=Seleccioneu-me per a més informació]
           Aquests són els detalls
           [/detalls]
           ```
         reply: |-
-          Bona feina — la teva atenció al _detall_ és admirable!
+          Bona feina. La vostra atenció al _detall_ és admirable!
       end:
         message: |-
-          Ho has fet com un _usuari avançat_ de veritat :bow:
+          Ho heu fet com un _usuari avançat_ de veritat :bow:
 
           %{certificate}
 
-          Això és tot el que tinc per a tu.
+          Això és tot el que tinc per a vós.
 
-          Adèu per ara! Si vols tornar a parlar amb mi, envia'm un missatge quan vulguis :sunglasses:
+          Adéu de moment! Si voleu tornar a parlar amb mi, envieu-me un missatge quan vulgueu :sunglasses:
       certificate:
         alt: "Certificat d'aptitud del curs d'usuari avançat"

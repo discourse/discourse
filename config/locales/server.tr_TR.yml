@@ -469,6 +469,8 @@ tr_TR:
       every_hour: "saatlik"
       daily: "günlük"
       weekly: "haftalık"
+      every_month: "her ay"
+      every_six_months: "her altı ayda bir"
   user_api_key:
     title: "Uygulama erişimini yetkilendir"
     authorize: "Yetkilendir"
@@ -480,15 +482,18 @@ tr_TR:
   reports:
     default:
       labels:
+        count: say
         day: Gün
     post_edits:
       labels:
+        edited_at: Tarih
         post: Gönderi
         editor: Düzenleyici
         edit_reason: Sebep
     user_flagging_ratio:
       labels:
         user: Kullanıcı
+        score: Skor
     moderators_activity:
       labels:
         moderator: Moderatör
@@ -769,7 +774,6 @@ tr_TR:
     prioritize_username_in_ux: "Kullanıcı sayfası, kullanıcı kartı ve gönderilerde kullanıcı adını ilk olarak göster(devre dışı ise gerçek isim önce gözükür)"
     email_token_valid_hours: "Parolamı unuttum / hesap etkinleştirme jetonları (n) saat geçerlidir."
     enable_badges: "Rozet sistemini etkinleştir"
-    allow_index_in_robots_txt: "robots.txt dosyasında bu sitenin arama motorları tarafından dizinlenmesine izin verildiğini belirt."
     email_domains_blacklist: "Kullanıcıların kayıt olurken kullanamayacağı e-posta alan adlarının, dikey çizgilerle ayrıştırılmış listesi. Örneğin: mailinator.com|trashmail.net"
     email_domains_whitelist: "Kullanıcıların kayıt olurken kullanmak ZORUNDA olduğu e-posta alan adlarının, dikey çizgilerle ayrıştırılmış listesi. UYARI: Bu listede yer almayan e-posta alan adları kabul edilmeyecektir!"
     log_out_strict: "Çıkış yapılırken, kullanıcının tüm cihazlardaki TÜM seanslarını sonlandır"
@@ -1077,8 +1081,8 @@ tr_TR:
     errors: "%{errors}"
     not_available: "Uygun değil. Bunu denemeye ne dersiniz? %{suggestion}"
     something_already_taken: "Bir şeyler ters gitti. Kullanıcı adı veya e-posta zaten kayıtlı olabilir. Parolamı unuttum bağlantısını deneyin."
-    omniauth_error: "Üzgünüz, hesabınız doğrulanırken bir hata oluştu. Doğrulama işlemini onaylamamış olabilir misiniz?"
     omniauth_error_unknown: "Girişiniz yapılırken bir şeyler ters gitti, lütfen tekrar deneyin."
+    omniauth_confirm_button: "Devam et"
     new_registrations_disabled: "Şu an yeni hesap oluşturulamıyor. "
     password_too_long: "Parolalar en fazla 200 karakter olabilir."
     email_too_long: "Vermiş olduğun e-posta çok uzun. E-posta kutusu isimleri 254, alan adı isimleri ise 253 karakterden daha uzun olamaz."
@@ -1708,8 +1712,13 @@ tr_TR:
       confirm_title: "Bildirimler etkin - %{site_title}"
       confirm_body: "Başarılı! Bildirimler etkinleştirildi."
   reviewables:
+    priorities:
+      medium: "Orta"
+      high: "Yüksek"
     sensitivity:
       disabled: "Devredışı"
+      medium: "Orta"
+      high: "Yüksek"
     actions:
       agree_and_keep:
         title: "Gönderiyi Sakla"

@@ -12,21 +12,23 @@ ca:
         today: Avui %{time}
         tomorrow: Demà %{time}
         yesterday: Ahir %{time}
-      title: Inseriu la data i l’hora
+        countdown:
+          passed: la data ha passat
+      title: Inseriu la data i l'hora
       create:
         form:
           insert: Insereix
           advanced_mode: Mode avançat
           simple_mode: Mode simple
-          format_description: "Format usat per a mostrar la data a l'usuari. Utilitzeu \"\\T\\Z\" per a mostrar la zona horària de l’usuari en paraules (ex. Europa/París)"
+          format_description: "Format usat per a mostrar la data a l'usuari. Utilitzeu \"\\T\\Z\" per a mostrar la zona horària de l'usuari en paraules (ex. Europa/París)"
           timezones_title: Zones horàries que s'han de mostrar
-          timezones_description: Les zones horàries es faran servir per a visualitzar les dates en previsualització i recurs (fallback).
+          timezones_description: Les zones horàries es faran servir per a mostrar les dates en previsualització i recurs (fallback).
           recurring_title: Recurrència
-          recurring_description: "Defineix la recurrència d'un esdeveniment. També podeu editar manualment l’opció recurrent generada pel formulari i utilitzar una de les claus següents: anys, trimestres, mesos, setmanes, dies, hores, minuts, segons i mil·lisegons."
+          recurring_description: "Defineix la recurrència d'un esdeveniment. També podeu editar manualment l'opció recurrent generada pel formulari i utilitzar una de les claus següents: anys, trimestres, mesos, setmanes, dies, hores, minuts, segons i mil·lisegons."
           recurring_none: Sense recurrència
           invalid_date: La data no és vàlida. Assegureu-vos que la data i l'hora són correctes
           date_title: Data
-          time_title: Temps
+          time_title: Hora
           format_title: Format de data
           timezone: Zona horària
           until: Fins a...

@@ -144,6 +144,7 @@ lv:
   reports:
     default:
       labels:
+        count: Skaits
         day: Diena
     post_edits:
       labels:
@@ -282,6 +283,7 @@ lv:
   login:
     not_approved: "Jūsu konts vēl nav apstiprināts. Jums tiks paziņots e-pastā, kad varēsiet pieslēgties."
     admin_not_allowed_from_ip_address: "Jūs nevarat ieiet kā administrators no šīs IP adreses."
+    omniauth_confirm_button: "Turpināt"
   admin:
     email:
       sent_test: "nosūtīts!"

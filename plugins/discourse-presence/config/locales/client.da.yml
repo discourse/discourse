@@ -9,4 +9,7 @@ da:
   js:
     presence:
       replying: "svarer"
-      editing: "redigering"
+      editing: "redigerer"
+      replying_to_topic:
+        one: "svar"
+        other: "svarer"

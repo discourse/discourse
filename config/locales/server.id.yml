@@ -505,6 +505,8 @@ id:
   topic_statuses:
     autoclosed_disabled: "Topik telah dibuka. Jawaban baru sekarang diijinkan."
     autoclosed_disabled_lastpost: "Topik telah dibuka. Jawaban baru sekarang diijinkan."
+  login:
+    omniauth_confirm_button: "Lanjutkan"
   admin:
     email:
       sent_test: "terkirim!"

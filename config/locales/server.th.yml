@@ -113,6 +113,7 @@ th:
   reports:
     post_edits:
       labels:
+        edited_at: วันที่
         post: โพส
         edit_reason: เหตุผล
     user_flagging_ratio:

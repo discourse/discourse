@@ -163,7 +163,8 @@ zh_CN:
     errors:
       <<: *errors
   invite:
-    not_found: "你的邀请码不正确。请联系网站管理员。"
+    not_found: "你的邀请码不正确。请联系<a href='%{base_url}/about'>工作人员</a>。"
+    not_found_json: "你的邀请码不正确。请联系工作人员。"
     not_found_template: |
       <p>你的<a href="%{base_url}">%{site_name} </a>邀请已被兑换。</ p>
 
@@ -240,7 +241,8 @@ zh_CN:
   links_require_trust: "抱歉，你的帖子中不能包含链接。"
   too_many_links:
     other: "抱歉，访客一次仅能贴 %{count} 条链接。"
-  contains_blocked_words: "你的帖子中包含不允许的词：%{word}"
+  contains_blocked_word: "你的帖子中包含不允许的词：%{word}"
+  contains_blocked_words: "你的帖子中含有多个被禁止的字符：%{words}"
   spamming_host: "抱歉，你不能添加一个链接到那个地址的链接。"
   user_is_suspended: "被封禁的用户不允许发贴。"
   topic_not_found: "出现问题。或许这个主题在你看的时候已经被关闭或删除了。"
@@ -312,6 +314,7 @@ zh_CN:
     request_membership_pm:
       title: "%{group_name}的成员请求"
       handle: "处理成员请求"
+    view_hidden_topic_request_reason: "我希望加入群组 “%{group_name}” 以访问[此主题](%{topic_url})"
   education:
     until_posts:
       other: "%{count} 个帖子"
@@ -831,6 +834,7 @@ zh_CN:
     post_edits:
       title: "帖子编辑"
       labels:
+        edited_at: 日期
         post: 帖子
         editor: 编辑器
         author: 作者
@@ -1162,6 +1166,7 @@ zh_CN:
   site_settings:
     censored_words: "将被自动替换为 &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "自动删除被隐藏超过 30 天的帖子。"
+    default_locale: "此Discourse实例的默认语言。你可以在<a href='%{base_path}/admin/customize/site_texts' target='_blank'>自定义/文本内容</a>替换系统生成的分类或主题的文本。"
     allow_user_locale: "允许用户选择他们自己的语言界面"
     set_locale_from_accept_language_header: "为未登录用户按照他们的浏览器发送的请求头部设置界面语言。（实验性，无法和匿名缓存共同使用）"
     support_mixed_text_direction: "支持混合的从左到右和从右到左的文本方向。"
@@ -1270,6 +1275,7 @@ zh_CN:
     enable_markdown_typographer: "使用排版规则来提高文本的可读性：用引号替换直引号'，用符号代替（c）（tm），用emdash等等"
     enable_markdown_linkify: "自动将看起来像链接的文本视为链接：www.example.com和https://example.com将自动链接"
     markdown_linkify_tlds: " 自动视为链接的顶级域列表"
+    markdown_typographer_quotation_marks: "双引号和单引号替换对的列表"
     post_undo_action_window_mins: "允许用户在帖子上进行撤销操作（赞、标记等）所需等待的间隔分钟数"
     must_approve_users: "新注册用户必须获得职员批准方能访问"
     pending_users_reminder_delay: "如果新用户等待批准时间超过此小时设置则通知版主。设置 -1 关闭通知。"
@@ -1317,7 +1323,6 @@ zh_CN:
     email_token_valid_hours: "“忘记密码”/“激活账户”令牌有效的小时数。"
     enable_badges: "启用徽章系统"
     enable_whispers: "允许管理人员在主题中私密交流。"
-    allow_index_in_robots_txt: "在 robots.txt 中详细指出这个站点允许被网页搜索引擎检索。"
     email_domains_blacklist: "用管道符“|”分隔的邮箱域名黑名单列表，其中的域名将不能用来注册账户，例如：mailinator.com|trashmail.net"
     email_domains_whitelist: "用管道符“|”分隔的电子邮箱域名的列表，用户必须使用这些邮箱域名注册。警告：用户使用不包含在这个列表里的邮箱域名，将无法成功注册。"
     hide_email_address_taken: "通过邮件地址注册账户或忘记密码时不反馈用户账户是否存在的信息。"
@@ -1577,7 +1582,6 @@ zh_CN:
     reset_bounce_score_after_days: "自动在 X 天后重置累计退信分值。"
     attachment_content_type_blacklist: "基于 content type 禁止附件的黑名单列表。"
     attachment_filename_blacklist: "基于文件名禁止附件的黑名单列表。"
-    enable_forwarded_emails: "[测试] 允许用户通过抄送邮件发表主题。"
     always_show_trimmed_content: "总是显示进站邮件中被截断的部分。警告：可能显示某些邮件地址。"
     private_email: "不要在邮件标题和主体中包含帖子或主题的内容。注意：会一并关闭摘要邮件。"
     manual_polling_enabled: "用 API 推送邮件回复。"
@@ -1801,6 +1805,7 @@ zh_CN:
         regex_invalid: "该正则表达式无效：%{error}"
         leading_trailing_slash: "正则表达式不能以斜杠作为开头或结尾。"
       unicode_usernames_avatars: "内置的头像系统不支持Unicode用户名。"
+      list_value_count: "该列表必须包含%{count}个值。"
     placeholder:
       sso_provider_secrets:
         key: "www.example.com"
@@ -1823,7 +1828,7 @@ zh_CN:
     email_error: "不能注册邮箱为<b>%{email}</b>的账户。请联系站点管理员。"
   original_poster: "原始作者"
   most_posts: "大部分帖子"
-  most_recent_poster: "当前大部分帖子作者"
+  most_recent_poster: "最新发帖者"
   frequent_poster: "频繁发帖者"
   redirected_to_top_reasons:
     new_user: "欢迎来到我们的社区！这些都是最近热门主题。"
@@ -1892,8 +1897,8 @@ zh_CN:
     errors: "%{errors}"
     not_available: "不可用，试试%{suggestion}？"
     something_already_taken: "出了一些问题，可能此用户名或电子邮箱已经被注册。试试 忘记密码链接吧。"
-    omniauth_error: "抱歉，在验证你的账户时发生了错误。可能你没有批准授权申请？"
     omniauth_error_unknown: "在处理你的登录过程中发生了错误，请重试。"
+    omniauth_confirm_button: "继续"
     authenticator_error_no_valid_email: "关联%{account}的账户没有优秀的邮件地址。你可能需要用不同的邮件地址配置你的账户。"
     new_registrations_disabled: "现在不允许注册新账户。"
     password_too_long: "密码不能超过 200 个字符。"
@@ -2153,35 +2158,9 @@ zh_CN:
     post_hidden:
       title: "帖子隐藏"
       subject_template: "帖子因社区标记隐藏"
-      text_body_template: |
-        你好，
-
-        这是%{site_name}自动发出的邮件，通知你的帖子已被隐藏。
-
-        <%{base_url}%{url}>
-
-        %{flag_reason}
-
-        你的帖子是因为被多个社区成员标记才被隐藏的，所以请考虑根据他们的反馈修改你的帖子。**你可以在 %{edit_delay} 分钟后开始编辑你的帖子，然后它将重新被显示。**
-
-        然而，如果帖子再次被社区成员标记并隐藏，它将被隐藏至版主处理后。
-
-        想了解更多，请查看我们的[社区指引](%{base_url}/guidelines)。
     post_hidden_again:
       title: "再次发布隐藏"
       subject_template: "被社区标记所隐藏，已通知管理人员"
-      text_body_template: |
-        你好，
-
-        这是来自%{site_name}的自动消息，通知你的帖子再次被隐藏。
-
-        <%{base_url}}%{url}>
-
-        %{flag_reason}
-
-        多个社区成员在隐藏之前标记了此帖子。**由于此帖子已被隐藏多次，你的帖子现在将保持隐藏，直到由工作人员处理。**
-
-        有关其他指导，请参阅我们的[社区指引](%{base_url}/guidelines)。
     flags_agreed_and_post_deleted:
       title: "管理人员删除了已标记的帖子"
       subject_template: "管理人员删除了已标记的帖子"
@@ -2309,9 +2288,9 @@ zh_CN:
 
         %{download_link}
 
-        上面的下载链接有效期为48小时。
+        上方的下载地址将在 48 小时后失效。
 
-        数据被压缩为一个gzip存档。如果你无法打开存档，使用这里推荐的工具：https://www.gzip.org/#faq4
+        用户数据以 Zip 格式归档。若归档文件无法在你开启时自动解压，请使用此处推荐的工具：https://www.7-zip.org/
     csv_export_failed:
       title: "导致CSV失败"
       subject_template: "数据导出失败"
@@ -2521,6 +2500,14 @@ zh_CN:
     ignored_users_summary:
       title: "忽视的用户超过了阈值"
       subject_template: "一个用户被许多用户忽视"
+      text_body_template: |
+        您好，
+
+        这是一条来自 %{site_name} 的自动消息，告知您 @%{username} 已被 %{ignores_threshold} 名用户忽略。这可能表示您的社区已开始产生问题。
+
+        您可能想查阅[此用户的近期发帖](%{base_url}/u/%{username}/summary)和[忽略及禁言汇报](%{base_url}/admin/reports/top_ignored_users)中的其他用户。
+
+        若您需要额外帮助，请参见我们的[社区准则](%{base_url}/guidelines)。
     too_many_spam_flags:
       title: "太多垃圾标记"
       subject_template: "新账户被暂时封禁"

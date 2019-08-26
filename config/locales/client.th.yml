@@ -563,7 +563,6 @@ th:
         uploaded_avatar: "รูปกำหนดเอง"
         uploaded_avatar_empty: "เพิ่มรูปกำหนดเอง"
         upload_title: "อัปโหลดรูปภาพของคุณ"
-        upload_picture: "อัปโหลดรูปภาพ"
         image_is_not_a_square: "ระวัง: เราได้ตัวรูปภาพบางส่วนของคุณ; ความยาวและความสูงจะไม่เท่ากัน"
       change_profile_background:
         title: "พื้นหลังโปรไฟล์"
@@ -582,6 +581,7 @@ th:
           other: "เราจะอีเมลหาคุณเฉพาะสิ่งที่คุณไม่ได้เห็นในช่วง {{count}} นาที"
       associated_accounts:
         revoke: "เอาออก"
+        cancel: "ยกเลิก"
       name:
         title: "ชื่อ"
         instructions: "ชื่อเต็มของคุณ (ไม่บังคับ)"
@@ -891,6 +891,9 @@ th:
       alt: "Alt"
     conditional_loading_section:
       loading: กำลังโหลด...
+    date_time_picker:
+      from: จาก
+      to: ถึง
     emoji_picker:
       flags: ธง
     composer:
@@ -1553,8 +1556,6 @@ th:
           view_table: "ตาราง"
           view_graph: "กราฟ"
           refresh_report: "โหลดรายงานใหม่"
-          start_date: "วันที่เริ่ม"
-          end_date: "วันที่จบ"
           groups: "กลุ่มทั้งหมด"
           filters:
             group:
@@ -1643,6 +1644,7 @@ th:
         new: "ใหม่"
         delete: "ลบ"
         email_templates:
+          title: "อีเมล"
           subject: "หัวข้อ"
           revert: "ย้อนกลับการแก้ไข"
           revert_confirm: "คุณแน่ใจหรือว่าจะย้อนกลับการแก้ไข"
@@ -1668,6 +1670,8 @@ th:
             text: "Embedded CSS"
           head_tag:
             text: "</head>"
+        email_style:
+          css: "CSS"
       email:
         title: "อีเมล"
         settings: "การตั้งค่า"
@@ -1732,11 +1736,11 @@ th:
             header: "Header"
       watched_words:
         clear_filter: "ล้าง"
+        clear_all: ล้างทั้งหมด
         actions:
           flag: "ธง"
         form:
           add: "เพิ่ม"
-          upload: "อัปโหลด"
       users:
         title: "ผู้ใช้"
         last_emailed: "อีเมลล่าสุด"
@@ -1857,7 +1861,6 @@ th:
       site_text:
         description: "คุณสามารถปรับแต่งข้อความบนฟอรั่มของคุณได้คุณอย่าง เริ่มได้โดยการค้นหาข้างล่างนี่"
         search: "ค้นหาข้อความที่คุณต้องการแก้ไข"
-        title: "เนื้อความของข้อความ"
         edit: "แก้ไข"
         revert: "ย้อนกลับการแก้ไข"
         revert_confirm: "คุณแน่ใจหรือว่าจะย้อนกลับการแก้ไข"
