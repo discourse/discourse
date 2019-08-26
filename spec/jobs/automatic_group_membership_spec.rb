@@ -23,7 +23,10 @@ describe Jobs::AutomaticGroupMembership do
 
     group = Fabricate(:group, automatic_membership_email_domains: "wat.com", automatic_membership_retroactive: true)
 
-    Jobs::AutomaticGroupMembership.new.execute(group_id: group.id)
+    events = DiscourseEvent.track_events {
+      Jobs::AutomaticGroupMembership.new.execute(group_id: group.id)
+    }.map { |e| e[:event_name] }
+    expect(events).to include(:user_added_to_group)
 
     group.reload
     expect(group.users.include?(user1)).to eq(false)
