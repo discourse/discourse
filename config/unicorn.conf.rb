@@ -144,25 +144,32 @@ before_fork do |server, worker|
           @sidekiq_next_heartbeat_check ||= Time.new.to_i + @sidekiq_heartbeat_interval
 
           if @sidekiq_next_heartbeat_check < Time.new.to_i
-
-            last_heartbeat = Jobs::RunHeartbeat.last_heartbeat
-            restart = false
+            @sidekiq_next_heartbeat_check = Time.new.to_i + @sidekiq_heartbeat_interval
+            restarted = false
 
             if out_of_memory?
               Rails.logger.warn("Sidekiq is consuming too much memory (using: %0.2fM) for '%s', restarting" % [(max_rss.to_f / 1.megabyte), ENV["DISCOURSE_HOSTNAME"]])
-              restart = true
-            end
-
-            if last_heartbeat < Time.new.to_i - @sidekiq_heartbeat_interval
-              STDERR.puts "Sidekiq heartbeat test failed, restarting"
-              Rails.logger.warn "Sidekiq heartbeat test failed, restarting"
-
-              restart = true
-            end
-            @sidekiq_next_heartbeat_check = Time.new.to_i + @sidekiq_heartbeat_interval
-
-            if restart
               Demon::Sidekiq.restart
+              restarted = true
+            end
+
+            if !restarted
+              Demon::Sidekiq::QUEUE_IDS.each do |identifier|
+                last_heartbeat = Demon::Sidekiq.get_queue_last_heartbeat(identifier)
+
+                if last_heartbeat < Time.new.to_i - @sidekiq_heartbeat_interval
+                  if demon = Demon::Sidekiq.demons.values.find { |d| d.identifier == identifier }
+                    STDERR.puts "Sidekiq heartbeat test for worker #{demon.pid} failed, restarting"
+                    Rails.logger.warn "Sidekiq heartbeat test for worker #{demon.pid} failed, restarting"
+                    demon.stop
+                    demon.start
+                    restarted = true
+                  end
+                end
+              end
+            end
+
+            if restarted
               sleep 10
               force_kill_rogue_sidekiq
             end
