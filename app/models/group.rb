@@ -635,7 +635,7 @@ class Group < ActiveRecord::Base
       Discourse.request_refresh!(user_ids: [user.id])
     end
 
-    DiscourseEvent.trigger("user_added_to_group", user, self)
+    DiscourseEvent.trigger(:user_added_to_group, user, self)
 
     self
   end
@@ -643,7 +643,7 @@ class Group < ActiveRecord::Base
   def remove(user)
     self.group_users.where(user: user).each(&:destroy)
     user.update_columns(primary_group_id: nil) if user.primary_group_id == self.id
-    DiscourseEvent.trigger("user_removed_from_group", user, self)
+    DiscourseEvent.trigger(:user_removed_from_group, user, self)
   end
 
   def add_owner(user)
