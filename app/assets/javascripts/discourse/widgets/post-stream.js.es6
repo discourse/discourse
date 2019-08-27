@@ -136,6 +136,7 @@ export default createWidget("post-stream", {
           this.attach("post-small-action", transformed, { model: post })
         );
       } else {
+        transformed.showReadIndicator = attrs.showReadIndicator;
         result.push(this.attach("post", transformed, { model: post }));
       }
 

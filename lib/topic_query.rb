@@ -344,11 +344,13 @@ class TopicQuery
 
   def list_private_messages_group(user)
     list = private_messages_for(user, :group)
-    group_id = Group.where('name ilike ?', @options[:group_name]).pluck(:id).first
+    group = Group.where('name ilike ?', @options[:group_name]).select(:id, :publish_read_state).first
+    publish_read_state = !!group&.publish_read_state
     list = list.joins("LEFT JOIN group_archived_messages gm ON gm.topic_id = topics.id AND
-                      gm.group_id = #{group_id.to_i}")
+                      gm.group_id = #{group&.id&.to_i}")
     list = list.where("gm.id IS NULL")
-    create_list(:private_messages, {}, list)
+    list = append_read_state(list, group) if publish_read_state
+    create_list(:private_messages, { publish_read_state: publish_read_state }, list)
   end
 
   def list_private_messages_group_archive(user)
@@ -1056,5 +1058,17 @@ class TopicQuery
 
   def sanitize_sql_array(input)
     ActiveRecord::Base.public_send(:sanitize_sql_array, input.join(','))
+  end
+
+  def append_read_state(list, group)
+    group_id = group&.id
+    return list if group_id.nil?
+
+    selected_values = list.select_values.empty? ? ['topics.*'] : list.select_values
+    selected_values << "COALESCE(tg.last_read_post_number, 0) AS last_read_post_number"
+
+    list
+      .joins("LEFT OUTER JOIN topic_groups tg ON topics.id = tg.topic_id AND tg.group_id = #{group_id}")
+      .select(*selected_values)
   end
 end
