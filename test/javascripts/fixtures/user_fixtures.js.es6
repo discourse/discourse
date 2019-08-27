@@ -2380,7 +2380,6 @@ export default {
       can_change_bio: true,
       user_api_keys: null,
       user_auth_tokens: [],
-      user_auth_token_logs: [],
       invited_by: null,
       groups: [
         {
@@ -2675,19 +2674,6 @@ export default {
           created_at: "2019-06-26T08:41:18.436Z",
           seen_at: "2019-06-26T09:24:24.683Z",
           is_active: true
-        }
-      ],
-      user_auth_token_logs: [
-        {
-          id: 4,
-          client_ip: "127.0.0.1",
-          location: "unknown",
-          browser: "Google Chrome",
-          device: "GNU/Linux Computer",
-          os: "Linux",
-          icon: "fab-linux",
-          created_at: "2019-06-26T08:41:18.448Z",
-          action: "Log In"
         }
       ],
       invited_by: null,
