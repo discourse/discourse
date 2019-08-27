@@ -40,7 +40,8 @@ export default MountWidget.extend({
       "gaps",
       "selectedQuery",
       "selectedPostsCount",
-      "searchService"
+      "searchService",
+      "showReadIndicator"
     );
   },
 
@@ -289,6 +290,12 @@ export default MountWidget.extend({
         if (args.refreshLikes) {
           this.dirtyKeys.keyDirty(`post-menu-${args.id}`, {
             onRefresh: "refreshLikes"
+          });
+        }
+
+        if (args.refreshReaders) {
+          this.dirtyKeys.keyDirty(`post-menu-${args.id}`, {
+            onRefresh: "refreshReaders"
           });
         }
       } else if (args.force) {
