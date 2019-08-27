@@ -2549,7 +2549,7 @@ en:
         For additional guidance, please refer to our [community guidelines](%{base_url}/guidelines).
     
     flags_disagreed:
-      title: "Flagged port restored by staff"
+      title: "Flagged post restored by staff"
       subject_template: "Flagged post restored by staff"
       text_body_template: |
         Hello,
