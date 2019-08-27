@@ -34,7 +34,25 @@ describe Plugin::Instance do
     context "with a plugin that extends things" do
 
       class Trout; end
-      class TroutSerializer < ApplicationSerializer; end
+      class TroutSerializer < ApplicationSerializer
+        attribute :name
+
+        def name
+          "a trout"
+        end
+      end
+      class TroutJuniorSerializer < TroutSerializer
+
+        attribute :i_am_child
+
+        def name
+          "a trout jr"
+        end
+
+        def i_am_child
+          true
+        end
+      end
 
       class TroutPlugin < Plugin::Instance
         attr_accessor :enabled
@@ -47,6 +65,12 @@ describe Plugin::Instance do
         @plugin = TroutPlugin.new
         @trout = Trout.new
 
+        poison = TroutSerializer.new(@trout)
+        poison.attributes
+
+        poison = TroutJuniorSerializer.new(@trout)
+        poison.attributes
+
         # New method
         @plugin.add_to_class(:trout, :status?) { "evil" }
 
@@ -57,7 +81,9 @@ describe Plugin::Instance do
 
         # Serializer
         @plugin.add_to_serializer(:trout, :scales) { 1024 }
+
         @serializer = TroutSerializer.new(@trout)
+        @child_serializer = TroutJuniorSerializer.new(@trout)
       end
 
       after do
@@ -74,6 +100,8 @@ describe Plugin::Instance do
         expect(@serializer.scales).to eq(1024)
         expect(@serializer.include_scales?).to eq(true)
 
+        expect(@child_serializer.attributes[:scales]).to eq(1024)
+
         # When a plugin is disabled
         @plugin.enabled = false
         expect(@trout.status?).to eq(nil)
@@ -81,7 +109,11 @@ describe Plugin::Instance do
         expect(@hello_count).to eq(1)
         expect(@serializer.scales).to eq(1024)
         expect(@serializer.include_scales?).to eq(false)
+        expect(@serializer.name).to eq("a trout")
 
+        expect(@child_serializer.scales).to eq(1024)
+        expect(@child_serializer.include_scales?).to eq(false)
+        expect(@child_serializer.name).to eq("a trout jr")
       end
     end
   end

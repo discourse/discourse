@@ -94,18 +94,21 @@ class Plugin::Instance
 
   def add_to_serializer(serializer, attr, define_include_method = true, &block)
     reloadable_patch do |plugin|
-      klass = "#{serializer.to_s.classify}Serializer".constantize rescue "#{serializer.to_s}Serializer".constantize
+      base = "#{serializer.to_s.classify}Serializer".constantize rescue "#{serializer.to_s}Serializer".constantize
 
-      unless attr.to_s.start_with?("include_")
-        klass.attributes(attr)
+      # we have to work through descendants cause serializers may already be baked and cached
+      ([base] + base.descendants).each do |klass|
+        unless attr.to_s.start_with?("include_")
+          klass.attributes(attr)
 
-        if define_include_method
-          # Don't include serialized methods if the plugin is disabled
-          klass.public_send(:define_method, "include_#{attr}?") { plugin.enabled? }
+          if define_include_method
+            # Don't include serialized methods if the plugin is disabled
+            klass.public_send(:define_method, "include_#{attr}?") { plugin.enabled? }
+          end
         end
-      end
 
-      klass.public_send(:define_method, attr, &block)
+        klass.public_send(:define_method, attr, &block)
+      end
     end
   end
 
