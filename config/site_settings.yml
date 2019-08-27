@@ -1932,12 +1932,10 @@ uncategorized:
     hidden: true
 
   app_association_android:
-    client: false
     default: ""
     textarea: true
 
   app_association_ios:
-    client: false
     default: ""
     textarea: true
 
