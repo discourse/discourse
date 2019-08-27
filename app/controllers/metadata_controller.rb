@@ -12,6 +12,16 @@ class MetadataController < ApplicationController
     render template: "metadata/opensearch.xml"
   end
 
+  def app_association_android
+    raise Discourse::NotFound unless SiteSetting.app_association_android.present?
+    render plain: SiteSetting.app_association_android, content_type: 'application/json'
+  end
+
+  def app_association_ios
+    raise Discourse::NotFound unless SiteSetting.app_association_ios.present?
+    render plain: SiteSetting.app_association_ios, content_type: 'application/json'
+  end
+
   private
 
   def default_manifest
