@@ -24,7 +24,11 @@ const LoginMethod = Ember.Object.extend({
     if (customLogin) {
       customLogin();
     } else {
-      let authUrl = this.custom_url || Discourse.getURL(`/auth/${name}`);
+      if (this.custom_url) {
+        window.location = this.custom_url;
+        return;
+      }
+      let authUrl = Discourse.getURL(`/auth/${name}`);
 
       if (reconnect) {
         authUrl += "?reconnect=true";
