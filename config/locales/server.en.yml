@@ -1929,6 +1929,9 @@ en:
 
     native_app_install_banner_android: "Displays DiscourseHub app banner on Android devices to regular users (trust level 1 and up)."
 
+    app_association_android: "Contents of <a href='/.well-known/assetlinks.json'>.well-known/assetlinks.json</a> endpoint, used for Google's Digital Asset Links API."
+    app_association_ios: "Contents of <a href='/apple-app-site-association'>apple-app-site-association</a> endpoint, used to create Universal Links between this site and iOS apps."
+
     share_anonymized_statistics: "Share anonymized usage statistics."
 
     auto_handle_queued_age: "Automatically handle records that are waiting to be reviewed after this many days. Flags will be ignored. Queued posts and users will be rejected. Set to 0 to disable this feature."
