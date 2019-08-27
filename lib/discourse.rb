@@ -135,7 +135,7 @@ module Discourse
 
     SiteSetting.avatar_sizes.split("|").map(&:to_i).each do |size|
       PIXEL_RATIOS.each do |pixel_ratio|
-        set << size * pixel_ratio
+        set << (size * pixel_ratio).to_i
       end
     end
 
