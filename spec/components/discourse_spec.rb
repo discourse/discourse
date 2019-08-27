@@ -10,11 +10,15 @@ describe Discourse do
   end
 
   context 'current_hostname' do
-
     it 'returns the hostname from the current db connection' do
       expect(Discourse.current_hostname).to eq('foo.com')
     end
+  end
 
+  context 'avatar_sizes' do
+    it 'returns a list of integers' do
+      expect(Discourse.avatar_sizes).to contain_exactly(20, 25, 30, 32, 37, 40, 45, 48, 50, 60, 64, 67, 75, 90, 96, 120, 135, 180, 240, 360)
+    end
   end
 
   context 'running_in_rack' do
