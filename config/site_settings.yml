@@ -1117,7 +1117,9 @@ files:
     default: false
     client: true
     shadowed_by_global: true
-  s3_use_iam_profile: false
+  s3_use_iam_profile:
+    default: false
+    shadowed_by_global: true
   s3_access_key_id:
     default: ""
     secret: true
