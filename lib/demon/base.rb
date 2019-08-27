@@ -11,7 +11,6 @@ class Demon::Base
 
   def self.start(count = 1, verbose: false)
     @demons ||= {}
-    before_start(count)
     count.times do |i|
       (@demons["#{prefix}_#{i}"] ||= new(i, verbose: verbose)).start
     end
@@ -38,10 +37,7 @@ class Demon::Base
     end
   end
 
-  def self.before_start(count)
-  end
-
-  attr_reader :pid, :parent_pid, :started, :index, :identifier
+  attr_reader :pid, :parent_pid, :started, :index
   attr_accessor :stop_timeout
 
   def initialize(index, rails_root: nil, parent_pid: nil, verbose: false)
