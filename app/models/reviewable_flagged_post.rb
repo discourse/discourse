@@ -291,11 +291,11 @@ private
 
     Jobs.enqueue(
       :send_system_message,
-      user_id: @post.user_id,
+      user_id: post.user_id,
       message_type: :flags_disagreed,
       message_options: {
-        flagged_post_raw_content: @post.raw,
-        url: @post.url
+        flagged_post_raw_content: post.raw,
+        url: post.url
       }
     )
   end
