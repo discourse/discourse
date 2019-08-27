@@ -338,6 +338,12 @@ module ApplicationHelper
     current_user && current_user.trust_level >= 1 && SiteSetting.native_app_install_banner_ios
   end
 
+  def ios_app_argument
+    # argument only makes sense for DiscourseHub app
+    SiteSetting.ios_app_id == "1173672076" ?
+      ", app-argument=discourse://new?siteUrl=#{Discourse.base_url}" : ""
+  end
+
   def allow_plugins?
     !request.env[ApplicationController::NO_PLUGINS]
   end
