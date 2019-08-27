@@ -65,6 +65,16 @@ describe PostReadersController do
 
          expect(reader).to be_nil
       end
+
+      it "doesn't include users without reading progress on first post" do
+        @post.update(post_number: 1)
+        TopicUser.create!(user: reader, topic: @group_message, last_read_post_number: nil)
+
+        get '/post_readers.json', params: { id: @post.id }
+        readers = JSON.parse(response.body)['post_readers']
+
+        expect(readers).to be_empty
+      end
     end
 
     def assert_reader_is_correctly_serialized(reader_data, reader, post)
