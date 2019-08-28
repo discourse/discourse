@@ -38,16 +38,16 @@ export const ListItemDefaults = {
   didInsertElement() {
     this._super(...arguments);
 
-    if (this.includeReadIndicator) {
-      this.messageBus.subscribe(this.readIndicatorChannel, data => {
+    if (this.includeUnreadIndicator) {
+      this.messageBus.subscribe(this.unreadIndicatorChannel, data => {
         const nodeClassList = document.querySelector(
           `.indicator-topic-${data.topic_id}`
         ).classList;
 
         if (data.show_indicator) {
-          nodeClassList.remove("unread");
+          nodeClassList.remove("read");
         } else {
-          nodeClassList.add("unread");
+          nodeClassList.add("read");
         }
       });
     }
@@ -56,24 +56,24 @@ export const ListItemDefaults = {
   willDestroyElement() {
     this._super(...arguments);
 
-    if (this.includeReadIndicator) {
-      this.messageBus.unsubscribe(this.readIndicatorChannel);
+    if (this.includeUnreadIndicator) {
+      this.messageBus.unsubscribe(this.unreadIndicatorChannel);
     }
   },
 
   @computed("topic.id")
-  readIndicatorChannel(topicId) {
-    return `/private-messages/read-indicator/${topicId}`;
+  unreadIndicatorChannel(topicId) {
+    return `/private-messages/unread-indicator/${topicId}`;
   },
 
-  @computed("topic.read_by_group_member")
-  unreadClass(readByGroupMember) {
-    return readByGroupMember ? "" : "unread";
+  @computed("topic.unread_by_group_member")
+  unreadClass(unreadByGroupMember) {
+    return unreadByGroupMember ? "" : "read";
   },
 
-  @computed("topic.read_by_group_member")
-  includeReadIndicator(readByGroupMember) {
-    return typeof readByGroupMember !== "undefined";
+  @computed("topic.unread_by_group_member")
+  includeUnreadIndicator(unreadByGroupMember) {
+    return typeof unreadByGroupMember !== "undefined";
   },
 
   @computed

@@ -20,13 +20,9 @@
     {{~topic-featured-link topic}}
     {{~/if}}
     {{~raw-plugin-outlet name="topic-list-after-title"}}
+    {{~raw "list/unread-indicator" includeUnreadIndicator=topic.unread_by_group_member topicId=topic.id ~}}
     {{~#if showTopicPostBadges}}
     {{~raw "topic-post-badges" unread=topic.unread newPosts=topic.displayNewPosts unseen=topic.unseen url=topic.lastUnreadUrl newDotText=newDotText}}
-    {{~/if}}
-    {{~#if includeReadIndicator}}
-      <span class='read-indicator indicator-topic-{{topic.id}} {{unreadClass}}'>
-        {{~d-icon "book-reader"}}
-      </span>
     {{~/if}}
   </span>
   <div class="link-bottom-line">
