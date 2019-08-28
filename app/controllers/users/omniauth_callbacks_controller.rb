@@ -134,7 +134,10 @@ class Users::OmniauthCallbacksController < ApplicationController
         user.email_tokens.create!(email: user.email)
       end
 
-      user.activate
+      if !user.active || !user.email_confirmed?
+        user.update!(password: SecureRandom.hex)
+        user.activate
+      end
       user.update!(registration_ip_address: request.remote_ip) if user.registration_ip_address.blank?
     end
 
