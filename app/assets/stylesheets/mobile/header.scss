@@ -38,7 +38,7 @@
       &:not(.two-rows) {
         min-height: 2.25em;
       }
-      h1 {
+      .header-title {
         font-size: $font-0;
       }
       .private-message-glyph-wrapper {
