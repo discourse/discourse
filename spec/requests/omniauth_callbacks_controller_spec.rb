@@ -286,7 +286,7 @@ RSpec.describe Users::OmniauthCallbacksController do
         expect(user.email_confirmed?).to eq(true)
       end
 
-      it "should activate/unstage staged user" do
+      it "should unstage staged user" do
         user.update!(staged: true, registration_ip_address: nil)
 
         user.reload
@@ -304,6 +304,22 @@ RSpec.describe Users::OmniauthCallbacksController do
         user.reload
         expect(user.staged).to eq(false)
         expect(user.registration_ip_address).to be_present
+      end
+
+      it "should activate user with matching email" do
+        user.update!(password: "securepassword", active: false, registration_ip_address: "1.1.1.1")
+
+        user.reload
+        expect(user.active).to eq(false)
+        expect(user.confirm_password?("securepassword")).to eq(true)
+
+        get "/auth/google_oauth2/callback.json"
+
+        user.reload
+        expect(user.active).to eq(true)
+
+        # Delete the password, it may have been set by someone else
+        expect(user.confirm_password?("securepassword")).to eq(false)
       end
 
       context 'when user has second factor enabled' do
