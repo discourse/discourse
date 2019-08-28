@@ -258,7 +258,11 @@
     }
   }
   .header-title {
-    margin: 0 0 0.2em 0;
+    margin: 0 0 0.25em 0;
+    .archetype-private_message & {
+      // PMs might have participant avatars in the header
+      margin: 0 0 0.1em 0;
+    }
     font-size: $font-up-3;
     width: 100%;
   }
