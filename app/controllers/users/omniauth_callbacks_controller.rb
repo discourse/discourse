@@ -127,15 +127,15 @@ class Users::OmniauthCallbacksController < ApplicationController
       user.unstage
       user.save
 
-      # ensure there is an active email token
-      unless EmailToken.where(email: user.email, confirmed: true).exists? ||
-        user.email_tokens.active.where(email: user.email).exists?
-
-        user.email_tokens.create!(email: user.email)
-      end
-
       if !user.active || !user.email_confirmed?
         user.update!(password: SecureRandom.hex)
+
+        # Ensure there is an active email token
+        unless EmailToken.where(email: user.email, confirmed: true).exists? ||
+          user.email_tokens.active.where(email: user.email).exists?
+          user.email_tokens.create!(email: user.email)
+        end
+
         user.activate
       end
       user.update!(registration_ip_address: request.remote_ip) if user.registration_ip_address.blank?
