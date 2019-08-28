@@ -257,8 +257,12 @@
       color: $danger;
     }
   }
-  h1 {
-    margin: 0 0 0.25em 0;
+  .header-title {
+    margin: 0 0 0.15em 0;
+    .archetype-private_message & {
+      // PMs might have participant avatars in the header
+      margin: 0;
+    }
     font-size: $font-up-3;
     width: 100%;
   }
@@ -277,9 +281,6 @@
   }
   .badge-wrapper {
     margin-right: 8px;
-    &.bullet {
-      padding-top: 2px; // alignment hack
-    }
   }
   .badge-wrapper.bullet {
     .badge-category-parent-bg,
