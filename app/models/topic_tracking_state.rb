@@ -128,14 +128,14 @@ class TopicTrackingState
   end
 
   def self.publish_read(topic_id, last_read_post_number, user_id, notification_level = nil)
-    topic = Topic.select(:highest_post_number, :archetype, :id).find_by(id: topic_id)
+    highest_post_number = DB.query_single("SELECT highest_post_number FROM topics WHERE id = ?", topic_id).first
 
     message = {
       topic_id: topic_id,
       message_type: "read",
       payload: {
         last_read_post_number: last_read_post_number,
-        highest_post_number: topic.highest_post_number,
+        highest_post_number: highest_post_number,
         topic_id: topic_id,
         notification_level: notification_level
       }
