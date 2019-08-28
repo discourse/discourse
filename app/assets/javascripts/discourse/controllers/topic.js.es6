@@ -238,6 +238,10 @@ export default Ember.Controller.extend(bufferedProperty("model"), {
       this.set("buffered.category_id", selection.value);
     },
 
+    topicTagsChanged({ target }) {
+      this.set("buffered.tags", target.value);
+    },
+
     deletePending(pending) {
       return ajax(`/review/${pending.id}`, { type: "DELETE" })
         .then(() => {
