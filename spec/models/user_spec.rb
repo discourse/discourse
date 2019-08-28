@@ -1867,6 +1867,12 @@ describe User do
       expect(inactive.active).to eq(true)
     end
 
+    it 'works without needing to reload the model' do
+      inactive.activate
+      expect(inactive.email_confirmed?).to eq(true)
+      expect(inactive.active).to eq(true)
+    end
+
     it 'activates user even if email token is already confirmed' do
       token = inactive.email_tokens.find_by(email: inactive.email)
       token.update_column(:confirmed, true)
