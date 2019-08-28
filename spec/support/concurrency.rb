@@ -162,13 +162,21 @@ module Concurrency
         @path.choose_with_weights(*options)
       end
 
-      def stop
-        @tasks.clear
-        Fiber.yield
+      def stop_other_tasks
+        @tasts = @tasks.select! { |task| task[:fiber] == Fiber.current }
       end
 
       def sleep(length)
         Fiber.yield(@time + length)
+      end
+
+      def start_root(&blk)
+        descriptor = {
+          fiber: Fiber.new(&blk),
+          run_at: 0
+        }
+
+        @tasks << descriptor
       end
 
       def spawn(&blk)
@@ -195,13 +203,23 @@ module Concurrency
 
           @time = [@time, descriptor[:run_at]].max
           fiber = descriptor[:fiber]
-          run_at = fiber.resume
+
+          begin
+            run_at = fiber.resume
+          rescue Exception
+          end
 
           if fiber.alive?
             descriptor[:run_at] = run_at
           else
             @tasks.delete(descriptor)
           end
+        end
+      end
+
+      def wait_done
+        until @tasks.size == 1
+          self.sleep(1e9)
         end
       end
 
@@ -212,7 +230,10 @@ module Concurrency
 
     def run_with_path(path, sleep_order: false)
       execution = Execution.new(path)
-      result = @blk.call(execution)
+      result = {}
+      execution.start_root {
+        result[:value] = @blk.call(execution)
+      }
       execution.run(sleep_order: sleep_order)
       result
     end
