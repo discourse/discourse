@@ -70,6 +70,7 @@ module SvgSprite
     "fab-android",
     "fab-apple",
     "fab-chrome",
+    "fab-discord",
     "fab-discourse",
     "fab-facebook-square",
     "fab-facebook",

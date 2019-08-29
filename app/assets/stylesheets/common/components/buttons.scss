@@ -231,6 +231,12 @@
       background: lighten($github, 20%);
     }
   }
+  &.discord {
+    background: $discord;
+    &:hover {
+      background: darken($discord, 10%);
+    }
+  }
 }
 
 // Button Sizes
