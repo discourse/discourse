@@ -136,11 +136,19 @@ describe Admin::ThemesController do
       existing_theme = Fabricate(:theme, name: "Header Icons")
       other_existing_theme = Fabricate(:theme, name: "Some other name")
 
-      expect do
-        post "/admin/themes/import.json", params: { bundle: theme_archive, theme_id: other_existing_theme.id }
-      end.to change { Theme.count }.by (0)
+      messages = MessageBus.track_publish do
+        expect do
+          post "/admin/themes/import.json", params: { bundle: theme_archive, theme_id: other_existing_theme.id }
+        end.to change { Theme.count }.by (0)
+      end
       expect(response.status).to eq(201)
       json = ::JSON.parse(response.body)
+
+      # Ensure only one refresh message is sent.
+      # More than 1 is wasteful, and can trigger unusual race conditions in the client
+      # If this test fails, it probably means `theme.save` is being called twice - check any 'autosave' relations
+      file_change_messages = messages.filter { |m| m[:channel] == "/file-change" }
+      expect(file_change_messages.count).to eq(1)
 
       expect(json["theme"]["name"]).to eq("Some other name")
       expect(json["theme"]["id"]).to eq(other_existing_theme.id)
@@ -383,6 +391,7 @@ describe Admin::ThemesController do
 
     it 'handles import errors on update' do
       theme.create_remote_theme!(remote_url: "https://example.com/repository")
+      theme.save!
 
       # RemoteTheme is extensively tested, and setting up the test scaffold is a large overhead
       # So use a stub here to test the controller

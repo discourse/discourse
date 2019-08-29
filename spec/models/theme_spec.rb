@@ -62,6 +62,7 @@ describe Theme do
   it "can automatically disable for mismatching version" do
     expect(theme.supported?).to eq(true)
     theme.create_remote_theme!(remote_url: "", minimum_discourse_version: "99.99.99")
+    theme.save!
     expect(theme.supported?).to eq(false)
 
     expect(Theme.transform_ids([theme.id])).to be_empty
