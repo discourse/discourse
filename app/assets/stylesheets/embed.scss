@@ -178,16 +178,22 @@ div.lightbox-wrapper {
 
 .topics-list {
   width: 100%;
-  .topic-list-item {
-    td {
-      padding: 0.5rem;
-    }
 
-    .main-link a {
-      color: $primary;
-    }
-    .main-link a:visited {
-      color: $primary-medium;
+  .topic-list-item {
+    clear: both;
+
+    .main-link {
+      border-bottom: 1px solid #e9e9e9;
+      padding: 0.5rem;
+      width: 100%;
+
+      a {
+        color: $primary;
+      }
+
+      a:visited {
+        color: $primary-medium;
+      }
     }
   }
 }
