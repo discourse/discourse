@@ -345,7 +345,7 @@ SQL
   def self.publish_read_indicator_on_write(topic_id, last_read_post_number, user_id)
     topic = Topic.includes(:allowed_groups).select(:highest_post_number, :archetype, :id).find_by(id: topic_id)
 
-    if topic.private_message?
+    if topic&.private_message?
       groups = read_allowed_groups_of(topic)
       update_topic_list_read_indicator(topic, groups, topic.highest_post_number, user_id, true)
     end
@@ -354,7 +354,7 @@ SQL
   def self.publish_read_indicator_on_read(topic_id, last_read_post_number, user_id)
     topic = Topic.includes(:allowed_groups).select(:highest_post_number, :archetype, :id).find_by(id: topic_id)
 
-    if topic.private_message?
+    if topic&.private_message?
       groups = read_allowed_groups_of(topic)
       post = Post.find_by(topic_id: topic.id, post_number: last_read_post_number)
       trigger_post_read_count_update(post, groups)
