@@ -16,6 +16,9 @@
             <div class='main-link'>
               {{topic-status topic=t}}
               {{topic-link t}}
+              {{raw "list/unread-indicator" includeUnreadIndicator=showUnreadIndicator
+                                            topicId=t.id 
+                                            unreadClass=(if t.unread_by_group_member "" "read")}}
               {{#if t.unseen}}
                 <span class="badge-notification new-topic"></span>
               {{/if}}

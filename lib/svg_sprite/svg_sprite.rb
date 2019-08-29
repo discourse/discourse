@@ -21,6 +21,7 @@ module SvgSprite
     "arrows-alt-h",
     "arrows-alt-v",
     "at",
+    "asterisk",
     "backward",
     "ban",
     "bars",

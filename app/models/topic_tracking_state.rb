@@ -347,7 +347,7 @@ SQL
 
     if topic.private_message?
       groups = read_allowed_groups_of(topic)
-      update_topic_list_read_indicator(topic, groups, topic.highest_post_number, user_id, false)
+      update_topic_list_read_indicator(topic, groups, topic.highest_post_number, user_id, true)
     end
   end
 
@@ -358,7 +358,7 @@ SQL
       groups = read_allowed_groups_of(topic)
       post = Post.find_by(topic_id: topic.id, post_number: last_read_post_number)
       trigger_post_read_count_update(post, groups)
-      update_topic_list_read_indicator(topic, groups, last_read_post_number, user_id, true)
+      update_topic_list_read_indicator(topic, groups, last_read_post_number, user_id, false)
     end
   end
 
@@ -370,23 +370,23 @@ SQL
       .group('groups.id')
   end
 
-  def self.update_topic_list_read_indicator(topic, groups, last_read_post_number, user_id, read_event)
+  def self.update_topic_list_read_indicator(topic, groups, last_read_post_number, user_id, write_event)
     return unless last_read_post_number == topic.highest_post_number
-    message = { topic_id: topic.id, show_indicator: read_event }.as_json
+    message = { topic_id: topic.id, show_indicator: write_event }.as_json
     groups_to_update = []
 
     groups.each do |group|
       member = group.members.include?(user_id)
 
-      member_writing = (!read_event && member)
-      non_member_reading = (read_event && !member)
+      member_writing = (write_event && member)
+      non_member_reading = (!write_event && !member)
       next if non_member_reading || member_writing
 
       groups_to_update << group
     end
 
     return if groups_to_update.empty?
-    MessageBus.publish("/private-messages/read-indicator/#{topic.id}", message, user_ids: groups_to_update.flat_map(&:members))
+    MessageBus.publish("/private-messages/unread-indicator/#{topic.id}", message, user_ids: groups_to_update.flat_map(&:members))
   end
 
   def self.trigger_post_read_count_update(post, groups)
