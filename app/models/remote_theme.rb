@@ -21,7 +21,7 @@ class RemoteTheme < ActiveRecord::Base
   GITHUB_REGEXP = /^https?:\/\/github\.com\//
   GITHUB_SSH_REGEXP = /^git@github\.com:/
 
-  has_one :theme
+  has_one :theme, autosave: false
   scope :joined_remotes, -> {
     joins("JOIN themes ON themes.remote_theme_id = remote_themes.id").where.not(remote_url: "")
   }
@@ -211,7 +211,7 @@ class RemoteTheme < ActiveRecord::Base
         color_scheme_color = scheme.color_scheme_colors.to_a.find { |c| c.name == color[:name] } ||
                   scheme.color_scheme_colors.build(name: color[:name])
         color_scheme_color.hex = override || color[:hex]
-        theme.notify_color_change(color_scheme_color)
+        theme.notify_color_change(color_scheme_color) if color_scheme_color.hex_changed?
       end
 
       # Update advanced colors
@@ -221,7 +221,7 @@ class RemoteTheme < ActiveRecord::Base
         if override
           color_scheme_color ||= scheme.color_scheme_colors.build(name: variable_name)
           color_scheme_color.hex = override
-          theme.notify_color_change(color_scheme_color)
+          theme.notify_color_change(color_scheme_color) if color_scheme_color.hex_changed?
         elsif color_scheme_color # No longer specified in about.json, delete record
           scheme.color_scheme_colors.delete(color_scheme_color)
           theme.notify_color_change(nil, scheme: scheme)
