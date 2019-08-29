@@ -591,6 +591,11 @@ class TopicQuery
   end
 
   def apply_shared_drafts(result, category_id, options)
+
+    # PERF: avoid any penalty if there are no shared drafts enabled
+    # on some sites the cost can be high eg: gearbox
+    return result if SiteSetting.shared_drafts_category == ""
+
     drafts_category_id = SiteSetting.shared_drafts_category.to_i
     viewing_shared = category_id && category_id == drafts_category_id
     can_create_shared = guardian.can_create_shared_draft?
