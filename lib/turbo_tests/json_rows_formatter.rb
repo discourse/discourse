@@ -39,6 +39,13 @@ module TurboTests
       }
     end
 
+    def stack_frame_to_json(frame)
+      {
+        shared_group_name: frame.shared_group_name,
+        inclusion_location: frame.inclusion_location
+      }
+    end
+
     def example_to_json(example)
       {
         execution_result: execution_result_to_json(example.execution_result),
@@ -46,7 +53,9 @@ module TurboTests
         full_description: example.full_description,
         metadata: {
           shared_group_inclusion_backtrace:
-            example.metadata[:shared_group_inclusion_backtrace]
+            example
+              .metadata[:shared_group_inclusion_backtrace]
+              .map(&method(:stack_frame_to_json))
         },
         location_rerun_argument: example.location_rerun_argument
       }
