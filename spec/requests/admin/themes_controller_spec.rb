@@ -330,6 +330,22 @@ describe Admin::ThemesController do
       expect(theme.theme_translation_overrides.count).to eq(0)
     end
 
+    it 'checking for updates saves the remote_theme record' do
+      theme.remote_theme = RemoteTheme.create!(remote_url: "http://discourse.org", remote_version: "a", local_version: "a", commits_behind: 0)
+      theme.save!
+      ThemeStore::GitImporter.any_instance.stubs(:import!)
+      ThemeStore::GitImporter.any_instance.stubs(:commits_since).returns(["b", 1])
+
+      put "/admin/themes/#{theme.id}.json", params: {
+        theme: {
+          remote_check: true
+        }
+      }
+      theme.reload
+      expect(theme.remote_theme.remote_version).to eq("b")
+      expect(theme.remote_theme.commits_behind).to eq(1)
+    end
+
     it 'can disable component' do
       child = Fabricate(:theme, component: true)
 
