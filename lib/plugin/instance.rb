@@ -730,6 +730,12 @@ class Plugin::Instance
     end
   end
 
+  def allow_new_queued_post_payload_attribute(attribute_name)
+    reloadable_patch do
+      NewPostManager.add_plugin_payload_attribute(attribute_name)
+    end
+  end
+
   private
 
   def write_asset(path, contents)

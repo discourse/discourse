@@ -402,7 +402,7 @@ after_initialize do
     true
   end
 
-  NewPostManager.add_plugin_payload_attribute("is_poll")
+  allow_new_queued_post_payload_attribute("is_poll")
 
   NewPostManager.add_handler(1) do |manager|
     post = Post.new(raw: manager.args[:raw])
