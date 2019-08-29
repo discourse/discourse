@@ -155,6 +155,7 @@ end
 
 RSpec.configure do |config|
   config.fail_fast = ENV['RSPEC_FAIL_FAST'] == "1"
+  config.silence_filter_announcements = ENV['RSPEC_SILENCE_FILTER_ANNOUNCEMENTS'] == "1"
   config.include Helpers
   config.include MessageBus
   config.include RSpecHtmlMatchers
