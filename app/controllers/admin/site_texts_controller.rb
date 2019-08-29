@@ -112,7 +112,7 @@ class Admin::SiteTextsController < Admin::AdminController
       value = override&.first
     end
 
-    value ||= I18n.t(key)
+    value ||= I18n.t(key, default: '')
     { id: key, value: value }
   end
 
@@ -149,6 +149,8 @@ class Admin::SiteTextsController < Admin::AdminController
     results = []
 
     translations.each do |key, value|
+      next unless I18n.exists?(key, :en)
+
       if value&.is_a?(Hash)
         value = fix_plural_keys(key, value)
         value.each do |plural_key, plural_value|
@@ -167,7 +169,7 @@ class Admin::SiteTextsController < Admin::AdminController
     plural_keys = I18n.t('i18n.plural.keys')
     return value if value.keys.size == plural_keys.size && plural_keys.all? { |k| value.key?(k) }
 
-    fallback_value = I18n.t(key, locale: :en)
+    fallback_value = I18n.t(key, locale: :en, default: {})
     plural_keys.map do |k|
       [k, value[k] || fallback_value[k] || fallback_value[:other]]
     end.to_h
