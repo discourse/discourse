@@ -133,11 +133,15 @@
     .raw-topic-link > * {
       pointer-events: none;
     }
+  }
 
-    .read-indicator {
-      &.unread {
-        display: none;
-      }
+  .unread-indicator {
+    &.read {
+      display: none;
+    }
+    .d-icon {
+      vertical-align: 0em;
+      font-size: $font-down-5;
     }
   }
 
