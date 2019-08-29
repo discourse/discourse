@@ -186,22 +186,16 @@ class Admin::ThemesController < Admin::AdminController
     update_translations
     handle_switch
 
-    save_remote = false
     if params[:theme][:remote_check]
       @theme.remote_theme.update_remote_version
-      save_remote = true
     end
 
     if params[:theme][:remote_update]
       @theme.remote_theme.update_from_remote
-      save_remote = true
     end
 
     respond_to do |format|
       if @theme.save
-
-        @theme.remote_theme.save! if save_remote
-
         update_default_theme
 
         @theme.reload

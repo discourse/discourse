@@ -106,6 +106,8 @@ class RemoteTheme < ActiveRecord::Base
       self.updated_at = Time.zone.now
       self.remote_version, self.commits_behind = importer.commits_since(local_version)
       self.last_error_text = nil
+    ensure
+      self.save!
     end
   end
 
@@ -119,6 +121,7 @@ class RemoteTheme < ActiveRecord::Base
         importer.import!
       rescue RemoteTheme::ImportError => err
         self.last_error_text = err.message
+        self.save!
         return self
       else
         self.last_error_text = nil
@@ -163,6 +166,7 @@ class RemoteTheme < ActiveRecord::Base
 
     update_theme_color_schemes(theme, theme_info["color_schemes"]) unless theme.component
 
+    self.save!
     self
   ensure
     begin
