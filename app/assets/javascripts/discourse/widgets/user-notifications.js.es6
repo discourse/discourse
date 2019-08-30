@@ -1,21 +1,79 @@
+import { h } from "virtual-dom";
+
 import { createWidget } from "discourse/widgets/widget";
 import { headerHeight } from "discourse/components/site-header";
-import { h } from "virtual-dom";
-import DiscourseURL from "discourse/lib/url";
-import { ajax } from "discourse/lib/ajax";
 
-export default createWidget("user-notifications", {
-  tagName: "div.notifications",
-  buildKey: () => "user-notifications",
+/**
+ * This tries to enforce a consistent flow of fetching, caching, refreshing,
+ * and rendering for "quick access items".
+ *
+ * There are parts to introducing a new quick access panel:
+ * 1. A user menu link that sends a `quickAccess` action, with a unique `type`.
+ * 2. A `quick-access-${type}` widget, extended from `quick-access-panel`.
+ */
+export default createWidget("quick-access-panel", {
+  tagName: "div.quick-access-panel",
+  emptyStatePlaceholderItemKey: "",
+
+  buildKey: () => {
+    throw Error('Cannot attach abstract widget "quick-access-panel"');
+  },
+
+  markReadRequest() {
+    return Ember.RSVP.Promise.resolve();
+  },
+
+  hasUnread() {
+    return false;
+  },
+
+  showAll() {},
+
+  hasMore() {
+    return this.state.items.length >= this.estimateItemLimit();
+  },
+
+  findStaleItems() {
+    return [];
+  },
+
+  findNewItems() {
+    return Ember.RSVP.Promise.resolve([]);
+  },
+
+  newItemsLoaded() {},
+
+  itemHtml(item) {}, // eslint-disable-line no-unused-vars
+
+  emptyStatePlaceholderItem() {
+    if (this.emptyStatePlaceholderItemKey) {
+      return h("li.read", I18n.t(this.emptyStatePlaceholderItemKey));
+    }
+  },
 
   defaultState() {
-    return { notifications: [], loading: false, loaded: false };
+    return { items: [], loading: false, loaded: false };
   },
 
   markRead() {
-    ajax("/notifications/mark-read", { method: "PUT" }).then(() => {
+    this.markReadRequest().then(() => {
       this.refreshNotifications(this.state);
     });
+  },
+
+  estimateItemLimit() {
+    // Estimate (poorly) the amount of notifications to return.
+    let limit = Math.round(($(window).height() - headerHeight()) / 55);
+
+    // We REALLY don't want to be asking for negative counts of notifications
+    // less than 5 is also not that useful.
+    if (limit < 5) {
+      limit = 5;
+    } else if (limit > 40) {
+      limit = 40;
+    }
+
+    return limit;
   },
 
   refreshNotifications(state) {
@@ -23,56 +81,27 @@ export default createWidget("user-notifications", {
       return;
     }
 
-    // estimate (poorly) the amount of notifications to return
-    let limit = Math.round(($(window).height() - headerHeight()) / 55);
-    // we REALLY don't want to be asking for negative counts of notifications
-    // less than 5 is also not that useful
-    if (limit < 5) {
-      limit = 5;
-    }
-    if (limit > 40) {
-      limit = 40;
-    }
+    const staleItems = this.findStaleItems();
 
-    const silent = this.currentUser.get("enforcedSecondFactor");
-    const stale = this.store.findStale(
-      "notification",
-      { recent: true, silent, limit },
-      { cacheKey: "recent-notifications" }
-    );
-
-    if (stale.hasResults) {
-      const results = stale.results;
-      let content = results.get("content");
-
-      // we have to truncate to limit, otherwise we will render too much
-      if (content && content.length > limit) {
-        content = content.splice(0, limit);
-        results.set("content", content);
-        results.set("totalRows", limit);
-      }
-
-      state.notifications = results;
+    if (staleItems.length > 0) {
+      state.items = staleItems;
     } else {
       state.loading = true;
     }
 
-    stale
-      .refresh()
-      .then(notifications => {
-        if (!silent) {
-          this.currentUser.set("unread_notifications", 0);
-        }
-        state.notifications = notifications;
+    this.findNewItems()
+      .then(items => {
+        state.items = items;
       })
       .catch(() => {
-        state.notifications = [];
+        state.items = [];
       })
       .finally(() => {
         state.loading = false;
         state.loaded = true;
-        this.sendWidgetAction("notificationsLoaded", {
-          notifications: state.notifications,
+        this.newItemsLoaded();
+        this.sendWidgetAction("itemsLoaded", {
+          hasUnread: this.hasUnread(),
           markRead: () => this.markRead()
         });
         this.scheduleRerender();
@@ -84,48 +113,28 @@ export default createWidget("user-notifications", {
       this.refreshNotifications(state);
     }
 
-    const result = [];
     if (state.loading) {
-      result.push(h("div.spinner-container", h("div.spinner")));
-    } else if (state.notifications.length) {
-      const notificationItems = state.notifications.map(notificationAttrs => {
-        const notificationName = this.site.notificationLookup[
-          notificationAttrs.notification_type
-        ];
-
-        return this.attach(
-          `${notificationName.dasherize()}-notification-item`,
-          notificationAttrs,
-          {},
-          { fallbackWidgetName: "default-notification-item" }
-        );
-      });
-
-      result.push(h("hr"));
-
-      const items = [notificationItems];
-
-      if (notificationItems.length > 5) {
-        items.push(
-          h(
-            "li.read.last.heading.show-all",
-            this.attach("button", {
-              title: "notifications.more",
-              icon: "chevron-down",
-              action: "showAllNotifications",
-              className: "btn"
-            })
-          )
-        );
-      }
-
-      result.push(h("ul", items));
+      return [h("div.spinner-container", h("div.spinner"))];
     }
 
-    return result;
-  },
+    const items = state.items.length
+      ? state.items.map(this.itemHtml.bind(this))
+      : [this.emptyStatePlaceholderItem()];
 
-  showAllNotifications() {
-    DiscourseURL.routeTo(`${this.attrs.path}/notifications`);
+    if (this.hasMore()) {
+      items.push(
+        h(
+          "li.read.last.heading.show-all",
+          this.attach("button", {
+            title: "notifications.more",
+            icon: "chevron-down",
+            action: "showAll",
+            className: "btn"
+          })
+        )
+      );
+    }
+
+    return [h("ul", items)];
   }
 });
