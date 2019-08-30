@@ -933,9 +933,11 @@ email:
   reply_by_email_enabled:
     default: false
     validator: "ReplyByEmailEnabledValidator"
+    shadowed_by_global: true
   reply_by_email_address:
     default: ""
     validator: "ReplyByEmailAddressValidator"
+    shadowed_by_global: true
   alternative_reply_by_email_addresses:
     default: ""
     validator: "AlternativeReplyByEmailAddressesValidator"
@@ -943,9 +945,11 @@ email:
     default: true
   manual_polling_enabled:
     default: false
+    shadowed_by_global: true
   pop3_polling_enabled:
     default: false
     validator: "POP3PollingEnabledSettingValidator"
+    shadowed_by_global: true
   pop3_polling_ssl: true
   pop3_polling_openssl_verify: true
   pop3_polling_period_mins: 5
@@ -962,6 +966,7 @@ email:
   email_in:
     default: false
     client: true
+    shadowed_by_global: true
   email_in_min_trust:
     default: 2
     enum: "TrustLevelSetting"
@@ -1379,6 +1384,7 @@ security:
   slow_down_crawler_rate: 60
   content_security_policy:
     default: false
+    shadowed_by_global: true
   content_security_policy_report_only:
     default: false
   content_security_policy_collect_reports:
