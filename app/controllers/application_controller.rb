@@ -102,6 +102,13 @@ class ApplicationController < ActionController::Base
   end
 
   def set_layout
+    case request.headers["Discourse-Render"]
+    when "desktop"
+      return "application"
+    when "crawler"
+      return "crawler"
+    end
+
     use_crawler_layout? ? 'crawler' : 'application'
   end
 
