@@ -198,6 +198,7 @@ class ReviewableFlaggedPost < Reviewable
 
     # Undo hide/silence if applicable
     if post&.hidden?
+      notify_poster(performed_by)
       post.unhide!
       UserSilencer.unsilence(post.user) if UserSilencer.was_silenced_for?(post)
     end
@@ -210,30 +211,26 @@ class ReviewableFlaggedPost < Reviewable
 
   def perform_delete_and_ignore(performed_by, args)
     result = perform_ignore(performed_by, args)
-    PostDestroyer.new(performed_by, post).destroy
+    destroyer(performed_by, post).destroy
     result
   end
 
   def perform_delete_and_ignore_replies(performed_by, args)
     result = perform_ignore(performed_by, args)
-
-    reply_ids = post.reply_ids(Guardian.new(performed_by), only_replies_to_single_post: false)
-    replies = Post.where(id: reply_ids.map { |r| r[:id] })
-    PostDestroyer.new(performed_by, post).destroy
-    replies.each { |reply| PostDestroyer.new(performed_by, reply).destroy }
+    PostDestroyer.delete_with_replies(performed_by, post, self)
 
     result
   end
 
   def perform_delete_and_agree(performed_by, args)
     result = agree(performed_by, args)
-    PostDestroyer.new(performed_by, post).destroy
+    destroyer(performed_by, post).destroy
     result
   end
 
   def perform_delete_and_agree_replies(performed_by, args)
     result = agree(performed_by, args)
-    PostDestroyer.delete_with_replies(performed_by, post)
+    PostDestroyer.delete_with_replies(performed_by, post, self)
     result
   end
 
@@ -283,6 +280,25 @@ protected
     end
   end
 
+private
+
+  def destroyer(performed_by, post)
+    PostDestroyer.new(performed_by, post, reviewable: self)
+  end
+
+  def notify_poster(performed_by)
+    return unless performed_by.human? && performed_by.staff?
+
+    Jobs.enqueue(
+      :send_system_message,
+      user_id: post.user_id,
+      message_type: :flags_disagreed,
+      message_options: {
+        flagged_post_raw_content: post.raw,
+        url: post.url
+      }
+    )
+  end
 end
 
 # == Schema Information

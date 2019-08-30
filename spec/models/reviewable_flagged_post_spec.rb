@@ -273,4 +273,35 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
 
   end
 
+  describe "#perform_delete_and_agree" do
+    it "notifies the user about the flagged post deletion" do
+      reviewable = Fabricate(:reviewable_flagged_post)
+      reviewable.add_score(
+        moderator, PostActionType.types[:spam],
+        created_at: reviewable.created_at
+      )
+
+      reviewable.perform(moderator, :delete_and_agree)
+
+      assert_pm_creation_enqueued(reviewable.post.user_id, "flags_agreed_and_post_deleted")
+    end
+  end
+
+  describe "#perform_disagree" do
+    it "notifies the user about the flagged post being restored" do
+      reviewable = Fabricate(:reviewable_flagged_post)
+      reviewable.post.update(hidden: true, hidden_at: Time.zone.now, hidden_reason_id: PostActionType.types[:spam])
+
+      reviewable.perform(moderator, :disagree)
+
+      assert_pm_creation_enqueued(reviewable.post.user_id, "flags_disagreed")
+    end
+  end
+
+  def assert_pm_creation_enqueued(user_id, pm_type)
+    expect(Jobs::SendSystemMessage.jobs.length).to eq(1)
+      job = Jobs::SendSystemMessage.jobs[0]
+      expect(job["args"][0]["user_id"]).to eq(user_id)
+      expect(job["args"][0]["message_type"]).to eq(pm_type)
+  end
 end
