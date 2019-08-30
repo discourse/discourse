@@ -869,6 +869,10 @@ describe PrettyText do
       expect(PrettyText.cook("💣")).to match(/\:bomb\:/)
     end
 
+    it "does not replace left right arrow" do
+      expect(PrettyText.cook("&harr;")).to eq('<p>↔</p>')
+    end
+
     it "doesn't replace emoji in inline code blocks with our emoji sets if emoji is enabled" do
       expect(PrettyText.cook("`💣`")).not_to match(/\:bomb\:/)
     end
