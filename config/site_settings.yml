@@ -390,6 +390,16 @@ login:
     default: ""
     regex: "^[a-f0-9]+$"
     secret: true
+  enable_discord_logins:
+    default: false
+  discord_client_id:
+    default: ''
+  discord_secret:
+    default: ''
+    secret: true
+  discord_trusted_guilds:
+    default: ''
+    type: list
   enable_sso:
     client: true
     default: false
