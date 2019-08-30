@@ -362,6 +362,12 @@ export default SiteHeaderComponent;
 
 export function headerHeight() {
   const $header = $("header.d-header");
+
+  // Header may not exist in tests (e.g. in the user menu component test).
+  if ($header.length === 0) {
+    return 0;
+  }
+
   const headerOffset = $header.offset();
   const headerOffsetTop = headerOffset ? headerOffset.top : 0;
   return parseInt(

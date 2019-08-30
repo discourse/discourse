@@ -3,6 +3,8 @@ import { h } from "virtual-dom";
 import { createWidget } from "discourse/widgets/widget";
 import { headerHeight } from "discourse/components/site-header";
 
+const AVERAGE_ITEM_HEIGHT = 55;
+
 /**
  * This tries to enforce a consistent flow of fetching, caching, refreshing,
  * and rendering for "quick access items".
@@ -16,7 +18,7 @@ export default createWidget("quick-access-panel", {
   emptyStatePlaceholderItemKey: "",
 
   buildKey: () => {
-    throw Error('Cannot attach abstract widget "quick-access-panel"');
+    throw Error('Cannot attach abstract widget "quick-access-panel".');
   },
 
   markReadRequest() {
@@ -48,6 +50,8 @@ export default createWidget("quick-access-panel", {
   emptyStatePlaceholderItem() {
     if (this.emptyStatePlaceholderItemKey) {
       return h("li.read", I18n.t(this.emptyStatePlaceholderItemKey));
+    } else {
+      return "";
     }
   },
 
@@ -63,7 +67,9 @@ export default createWidget("quick-access-panel", {
 
   estimateItemLimit() {
     // Estimate (poorly) the amount of notifications to return.
-    let limit = Math.round(($(window).height() - headerHeight()) / 55);
+    let limit = Math.round(
+      ($(window).height() - headerHeight()) / AVERAGE_ITEM_HEIGHT
+    );
 
     // We REALLY don't want to be asking for negative counts of notifications
     // less than 5 is also not that useful.
@@ -126,7 +132,7 @@ export default createWidget("quick-access-panel", {
         h(
           "li.read.last.heading.show-all",
           this.attach("button", {
-            title: "notifications.more",
+            title: "view_all",
             icon: "chevron-down",
             action: "showAll",
             className: "btn"
