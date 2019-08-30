@@ -690,7 +690,7 @@ posting:
     type: category
     default: ""
   post_edit_time_limit:
-    default: 86400
+    default: 43200
     max: 525600
   edit_history_visible_to_public:
     client: true
