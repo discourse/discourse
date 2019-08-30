@@ -184,6 +184,14 @@ export default Ember.Component.extend(
         this._close();
       },
 
+      composePM(user, post) {
+        this._close();
+
+        Ember.getOwner(this)
+          .lookup("router:main")
+          .send("composePrivateMessage", user, post);
+      },
+
       cancelFilter() {
         const postStream = this.postStream;
         postStream.cancelFilter();
