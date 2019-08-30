@@ -34,20 +34,33 @@ module TurboTests
       check_for_migrations
 
       @num_processes = ParallelTests.determine_number_of_processes(nil)
+      use_runtime_info = @files == ['spec']
+
+      group_opts = {}
+
+      if use_runtime_info
+        group_opts[:runtime_log] = "tmp/turbo_rspec_runtime.log"
+      else
+        group_opts[:group_by] = :filesize
+      end
 
       tests_in_groups =
         ParallelTests::RSpec::Runner.tests_in_groups(
           @files,
           @num_processes,
-          group_by: :filesize
+          **group_opts,
         )
 
       setup_tmp_dir
 
-      start_multisite_subprocess(@files)
+      subprocess_opts = {
+        record_runtime: use_runtime_info
+      }
+
+      start_multisite_subprocess(@files, **subprocess_opts)
 
       tests_in_groups.each_with_index do |tests, process_id|
-        start_regular_subprocess(tests, process_id + 1)
+        start_regular_subprocess(tests, process_id + 1, **subprocess_opts)
       end
 
       handle_messages
@@ -85,25 +98,27 @@ module TurboTests
       FileUtils.mkdir_p('tmp/test-pipes/')
     end
 
-    def start_multisite_subprocess(tests)
+    def start_multisite_subprocess(tests, **opts)
       start_subprocess(
         {},
         ["--tag", "type:multisite"],
         tests,
-        "multisite"
+        "multisite",
+        **opts
       )
     end
 
-    def start_regular_subprocess(tests, process_id)
+    def start_regular_subprocess(tests, process_id, **opts)
       start_subprocess(
         { 'TEST_ENV_NUMBER' => process_id.to_s },
         ["--tag", "~type:multisite"],
         tests,
-        process_id
+        process_id,
+        **opts
       )
     end
 
-    def start_subprocess(env, extra_args, tests, process_id)
+    def start_subprocess(env, extra_args, tests, process_id, record_runtime:)
       if tests.empty?
         @messages << {
           type: 'exit',
@@ -119,11 +134,22 @@ module TurboTests
 
         env['RSPEC_SILENCE_FILTER_ANNOUNCEMENTS'] = '1'
 
+        record_runtime_options =
+          if record_runtime
+            [
+              "--format", "ParallelTests::RSpec::RuntimeLogger",
+              "--out", "tmp/turbo_rspec_runtime.log",
+            ]
+          else
+            []
+          end
+
         command = [
           "bundle", "exec", "rspec",
           *extra_args,
           "--format", "TurboTests::JsonRowsFormatter",
           "--out", tmp_filename,
+          *record_runtime_options,
           *tests
         ]
 
