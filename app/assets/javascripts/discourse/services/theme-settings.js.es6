@@ -12,7 +12,7 @@ export default Ember.Service.extend({
 
   getSetting(themeId, settingsKey) {
     if (this._settings[themeId]) {
-      return this._settings[themeId][settingsKey];
+      return Ember.get(this._settings[themeId], settingsKey);
     }
     return null;
   },
