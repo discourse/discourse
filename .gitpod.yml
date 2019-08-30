@@ -1,0 +1,32 @@
+image:
+  file: .gitpod.Dockerfile
+
+ports:
+  - port: 3000
+    onOpen: open-preview
+  - port: 5432
+    onOpen: ignore
+  - port: 6379
+    onOpen: ignore
+
+tasks:
+  - name: Redis
+    before: redis-server &
+  - name: Discourse
+    init: >
+      bundle install &&
+      gp await-port 6379 &&
+      bundle exec rake db:create db:migrate &&
+      RAILS_ENV=test bundle exec rake db:create db:migrate
+    command: DISCOURSE_DEV_HOSTS=.gitpod.io bundle exec rails s -b 0.0.0.0
+
+github:
+  prebuilds:
+    master: true
+    branches: true
+    pullRequests: true
+    pullRequestsFromForks: true
+    addCheck: true
+    addComment: true
+    addBadge: false
+    addLabel: false
