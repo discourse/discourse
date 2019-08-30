@@ -12,9 +12,10 @@ module Middleware
     end
 
     class Helper
-      USER_AGENT = "HTTP_USER_AGENT"
-      RACK_SESSION = "rack.session"
-      ACCEPT_ENCODING = "HTTP_ACCEPT_ENCODING"
+      RACK_SESSION     = "rack.session"
+      USER_AGENT       = "HTTP_USER_AGENT"
+      ACCEPT_ENCODING  = "HTTP_ACCEPT_ENCODING"
+      DISCOURSE_RENDER = "HTTP_DISCOURSE_RENDER"
 
       def initialize(env)
         @env = env
@@ -28,7 +29,7 @@ module Middleware
         !@request.path.ends_with?('srv/status') &&
         @request[Auth::DefaultCurrentUserProvider::API_KEY].nil? &&
         @env[Auth::DefaultCurrentUserProvider::USER_API_KEY].nil? &&
-        CrawlerDetection.is_blocked_crawler?(@request.env['HTTP_USER_AGENT'])
+        CrawlerDetection.is_blocked_crawler?(@env[USER_AGENT])
       end
 
       def is_mobile=(val)
@@ -39,12 +40,11 @@ module Middleware
         @is_mobile ||=
           begin
             session = @env[RACK_SESSION]
-            # don't initialize params until later otherwise
-            # you get a broken params on the request
+            # don't initialize params until later
+            # otherwise you get a broken params on the request
             params = {}
-            user_agent = @env[USER_AGENT]
 
-            MobileDetection.resolve_mobile_view!(user_agent, params, session) ? :true : :false
+            MobileDetection.resolve_mobile_view!(@env[USER_AGENT], params, session) ? :true : :false
           end
 
         @is_mobile == :true
@@ -62,7 +62,8 @@ module Middleware
         @is_crawler ||=
           begin
             user_agent = @env[USER_AGENT]
-            if CrawlerDetection.crawler?(user_agent, @env["HTTP_VIA"])
+
+            if @env[DISCOURSE_RENDER] == "crawler" || CrawlerDetection.crawler?(user_agent, @env["HTTP_VIA"])
               :true
             else
               user_agent.downcase.include?("discourse") ? :true : :false
@@ -122,7 +123,7 @@ module Middleware
       def logged_in_anon_limiter
         @logged_in_anon_limiter ||= RateLimiter.new(
           nil,
-          "logged_in_anon_cache_#{@env["HOST"]}/#{@env["REQUEST_URI"]}",
+          "logged_in_anon_cache_#{@env["HTTP_HOST"]}/#{@env["REQUEST_URI"]}",
           GlobalSetting.force_anonymous_min_per_10_seconds,
           10
         )
@@ -225,7 +226,6 @@ module Middleware
       end
 
       result
-
     end
 
   end
