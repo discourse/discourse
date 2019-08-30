@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'lz4-ruby'
+
 require_dependency "mobile_detection"
 require_dependency "crawler_detection"
 require_dependency "guardian"
@@ -93,6 +95,18 @@ module Middleware
         @cache_key_other || "#{cache_key}_other"
       end
 
+      def compress(value)
+        LZ4::compress(value)
+      end
+
+      def uncompress(value)
+        begin
+          return LZ4::uncompress(value) unless value.nil?
+        rescue LZ4Internal::Error
+          return nil
+        end
+      end
+
       def get?
         @env["REQUEST_METHOD"] == "GET"
       end
@@ -153,8 +167,8 @@ module Middleware
       end
 
       def cached
-        if body = $redis.get(cache_key_body)
-          if other = $redis.get(cache_key_other)
+        if body = uncompress($redis.get(cache_key_body))
+          if other = uncompress($redis.get(cache_key_other))
             other = JSON.parse(other)
             [other[0], other[1], [body]]
           end
@@ -179,8 +193,8 @@ module Middleware
             parts << part
           end
 
-          $redis.setex(cache_key_body,  cache_duration, parts.join)
-          $redis.setex(cache_key_other, cache_duration, [status, headers_stripped].to_json)
+          $redis.setex(cache_key_body,  cache_duration, compress(parts.join))
+          $redis.setex(cache_key_other, cache_duration, compress([status, headers_stripped].to_json))
         else
           parts = response
         end

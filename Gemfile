@@ -211,6 +211,8 @@ gem 'sshkey', require: false
 
 gem 'rchardet', require: false
 
+gem 'lz4-ruby', require: false, platform: :mri
+
 if ENV["IMPORT"] == "1"
   gem 'mysql2'
   gem 'redcarpet'
