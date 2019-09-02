@@ -1883,10 +1883,10 @@ de:
       one: "Ein Beitrag wurde in eine neue Nachricht verschoben: %{topic_link}"
       other: "%{count} Beiträge wurden in eine neue Nachricht verschoben: %{topic_link}"
     existing_topic_moderator_post:
-      one: "Ein Beitrag wurde in ein existierendes Thema veschoben: %{topic_link} "
-      other: " %{count} Beiträge wurden in ein existierendes Thema veschoben: %{topic_link} "
+      one: "Ein Beitrag wurde in ein existierendes Thema verschoben: %{topic_link} "
+      other: " %{count} Beiträge wurden in ein existierendes Thema verschoben: %{topic_link} "
     existing_message_moderator_post:
-      one: "Ein Beitrag wurde in eine existierende Nachricht veschoben: %{topic_link}"
+      one: "Ein Beitrag wurde in eine existierende Nachricht verschoben: %{topic_link}"
       other: "%{count} Beiträge wurden in eine existierende Nachricht verschoben: %{topic_link}"
   change_owner:
     post_revision_text: "Eigentümer übertragen."
