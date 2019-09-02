@@ -210,7 +210,9 @@ div.lightbox-wrapper {
       }
     }
 
-    .topic-last-posted-at, .topic-author-avatar-timestamp, .topic-stats {
+    .topic-last-posted-at,
+    .topic-author-avatar-timestamp,
+    .topic-stats {
       clear: left;
       float: left;
       padding-top: 5px;
@@ -225,7 +227,9 @@ div.lightbox-wrapper {
       vertical-align: middle;
     }
 
-    .topic-last-posted-at, .topic-created-at, .topic-stats {
+    .topic-last-posted-at,
+    .topic-created-at,
+    .topic-stats {
       color: $primary-medium;
     }
   }
