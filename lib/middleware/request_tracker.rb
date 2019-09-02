@@ -105,7 +105,7 @@ class Middleware::RequestTracker
     track_view &&= env_track_view || (request.get? && !request.xhr? && headers["Content-Type"] =~ /text\/html/)
     track_view = !!track_view
 
-    {
+    h = {
       status: status,
       is_crawler: helper.is_crawler?,
       has_auth_cookie: helper.has_auth_cookie?,
@@ -114,9 +114,16 @@ class Middleware::RequestTracker
       track_view: track_view,
       timing: timing,
       queue_seconds: env['REQUEST_QUEUE_SECONDS']
-    }.tap do |h|
-      h[:user_agent] = env['HTTP_USER_AGENT'] if h[:is_crawler]
+    }
+
+    if h[:is_crawler]
+      h[:user_agent] = env['HTTP_USER_AGENT']
     end
+
+    if cache = headers["X-Discourse-Cached"]
+      h[:cache] = cache
+    end
+    h
   end
 
   def log_request_info(env, result, info)
