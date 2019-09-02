@@ -1399,6 +1399,29 @@ describe Post do
       )
     end
 
+    it "correctly identifies missing uploads with short url" do
+      upload = Fabricate(:upload)
+      url = upload.short_url
+      sha1 = upload.sha1
+      upload.destroy!
+
+      post = Fabricate(:post, raw: "![upload](#{url})")
+
+      urls = []
+      paths = []
+      sha1s = []
+
+      post.each_upload_url do |src, path, sha1|
+        urls << src
+        paths << path
+        sha1s << sha1
+      end
+
+      expect(urls).to contain_exactly(url)
+      expect(paths).to contain_exactly(nil)
+      expect(sha1s).to contain_exactly(sha1)
+    end
+
     it "should skip external urls with upload url in query string" do
       SiteSetting.enable_s3_uploads = true
       SiteSetting.s3_upload_bucket = "s3-upload-bucket"
