@@ -36,6 +36,12 @@ class EmbedController < ApplicationController
       raise Discourse::InvalidParameters.new(:embed_id) unless @embed_id =~ /^de\-[a-zA-Z0-9]+$/
     end
 
+    if params.has_key?(:template)
+      @template = params[:template]
+    else
+      @template = "basic"
+    end
+
     list_options = build_topic_list_options
     list_options[:per_page] = params[:per_page].to_i if params.has_key?(:per_page)
     topic_query = TopicQuery.new(current_user, list_options)

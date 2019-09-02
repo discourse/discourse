@@ -283,6 +283,11 @@ en:
     replies:
       one: "%{count} reply"
       other: "%{count} replies"
+    likes:
+      one: "%{count} like"
+      other: "%{count} likes"
+    last_reply: "Last reply"
+    created: "Created"
 
   no_mentions_allowed: "Sorry, you can't mention other users."
   too_many_mentions:
