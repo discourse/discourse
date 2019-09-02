@@ -895,10 +895,27 @@ class Post < ActiveRecord::Base
     ]
 
     fragments ||= Nokogiri::HTML::fragment(self.cooked)
-    links = fragments.css("a/@href", "img/@src").map { |media| media.value }.uniq
+    links = fragments.css("a/@href", "img/@src").map do |media|
+      src = media.value
+      next if src.blank?
+
+      if src.end_with?("/images/transparent.png") && (parent = media.parent)["data-orig-src"].present?
+        parent["data-orig-src"]
+      else
+        src
+      end
+    end.compact.uniq
 
     links.each do |src|
-      next if src.blank? || upload_patterns.none? { |pattern| src.split("?")[0] =~ pattern }
+      src = src.split("?")[0]
+
+      if src.start_with?("upload://")
+        sha1 = Upload.sha1_from_short_url(src)
+        yield(src, nil, sha1)
+        next
+      end
+
+      next if upload_patterns.none? { |pattern| src =~ pattern }
       next if Rails.configuration.multisite && src.exclude?(current_db) && src.exclude?("short-url")
 
       src = "#{SiteSetting.force_https ? "https" : "http"}:#{src}" if src.start_with?("//")
