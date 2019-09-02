@@ -1411,10 +1411,10 @@ describe Post do
       paths = []
       sha1s = []
 
-      post.each_upload_url do |src, path, sha1|
+      post.each_upload_url do |src, path, sha|
         urls << src
         paths << path
-        sha1s << sha1
+        sha1s << sha
       end
 
       expect(urls).to contain_exactly(url)
