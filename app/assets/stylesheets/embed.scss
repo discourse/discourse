@@ -186,6 +186,7 @@ div.lightbox-wrapper {
       border-bottom: 1px solid $primary-low;
       padding: 0.5rem;
       width: 100%;
+      display: inline-block;
 
       a {
         color: $primary;
@@ -194,6 +195,38 @@ div.lightbox-wrapper {
       a:visited {
         color: $primary-medium;
       }
+    }
+
+    .topic-title-link {
+      float: left;
+    }
+
+    .topic-featured-image {
+      float: right;
+
+      img {
+        max-width: 200px;
+        max-height: 100px;
+      }
+    }
+
+    .topic-last-posted-at, .topic-author-avatar-timestamp, .topic-stats {
+      clear: left;
+      float: left;
+      padding-top: 5px;
+    }
+
+    .topic-author-avatar-timestamp img {
+      max-height: 20px;
+    }
+
+    .topic-created-at {
+      padding-left: 5px;
+      vertical-align: middle;
+    }
+
+    .topic-last-posted-at, .topic-created-at, .topic-stats {
+      color: $primary-medium;
     }
   }
 }
