@@ -983,6 +983,7 @@ email:
     client: true
     type: enum
     default: "no"
+    shadowed_by_global: true
     choices:
       - "no"
       - "yes"
