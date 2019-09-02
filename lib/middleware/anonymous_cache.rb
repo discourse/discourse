@@ -182,6 +182,8 @@ module Middleware
 
           $redis.setex(cache_key_body,  cache_duration, parts.join)
           $redis.setex(cache_key_other, cache_duration, [status, headers_stripped].to_json)
+
+          headers["X-Discourse-Cached"] = "store"
         else
           parts = response
         end
