@@ -3220,7 +3220,7 @@ en:
               owners: "Group owners"
               description: "Admins can see all groups."
             members_visibility_levels:
-              title: "Who can see this group members?"
+              title: "Who can see this group's members?"
               description: "Admins can see members of all groups."
             publish_read_state: "On group messages publish group read state"
 
