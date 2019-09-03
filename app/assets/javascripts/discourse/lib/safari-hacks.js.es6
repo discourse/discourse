@@ -63,7 +63,6 @@ function calcHeight() {
 }
 
 let workaroundActive = false;
-let composingTopic = false;
 
 export function isWorkaroundActive() {
   return workaroundActive;
