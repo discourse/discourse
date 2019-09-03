@@ -277,12 +277,24 @@ describe Middleware::RequestTracker do
       tracker = Middleware::RequestTracker.new(cache)
 
       uri = "/path?#{SecureRandom.hex}"
-      tracker.call(env("REQUEST_URI" => uri, "ANON_CACHE_DURATION" => 60))
+
+      request_params = {
+        "a" => "b",
+        "action" => "bob",
+        "controller" => "jane"
+      }
+
+      tracker.call(env("REQUEST_URI" => uri, "ANON_CACHE_DURATION" => 60, "action_dispatch.request.parameters" => request_params))
 
       expect(@data[:cache]).to eq("store")
 
       tracker.call(env("REQUEST_URI" => uri, "ANON_CACHE_DURATION" => 60))
       expect(@data[:cache]).to eq("true")
+
+      # not whitelisted
+      request_params.delete("a")
+
+      expect(@env["action_dispatch.request.parameters"]).to eq(request_params)
     end
 
     it "can correctly log detailed data" do

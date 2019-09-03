@@ -133,6 +133,7 @@ module Middleware
       end
 
       MIN_TIME_TO_CHECK = 0.05
+      ADP = "action_dispatch.request.parameters"
 
       def should_force_anonymous?
         if (queue_time = @env['REQUEST_QUEUE_SECONDS']) && get?
@@ -152,10 +153,13 @@ module Middleware
         !!(!has_auth_cookie? && get? && no_cache_bypass)
       end
 
-      def cached
+      def cached(env = {})
         if body = $redis.get(cache_key_body)
           if other = $redis.get(cache_key_other)
             other = JSON.parse(other)
+            if req_params = other[1].delete(ADP)
+              env[ADP] = req_params
+            end
             [other[0], other[1], [body]]
           end
         end
@@ -168,7 +172,7 @@ module Middleware
       # NOTE in an ideal world cache still serves out cached content except for one magic worker
       #  that fills it up, this avoids a herd killing you, we can probably do this using a job or redis tricks
       #  but coordinating this is tricky
-      def cache(result)
+      def cache(result, env = {})
         status, headers, response = result
 
         if status == 200 && cache_duration
@@ -177,6 +181,13 @@ module Middleware
           parts = []
           response.each do |part|
             parts << part
+          end
+
+          if req_params = env[ADP]
+            headers_stripped[ADP] = {
+              "action" => req_params["action"],
+              "controller" => req_params["controller"]
+            }
           end
 
           $redis.setex(cache_key_body,  cache_duration, parts.join)
@@ -217,7 +228,7 @@ module Middleware
 
       result =
         if helper.cacheable?
-          helper.cached || helper.cache(@app.call(env))
+          helper.cached(env) || helper.cache(@app.call(env), env)
         else
           @app.call(env)
         end
