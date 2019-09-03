@@ -39,8 +39,13 @@ function loadDraft(store, opts) {
     ((draft.title && draft.title !== "") || (draft.reply && draft.reply !== ""))
   ) {
     const composer = store.createRecord("composer");
+    var serialized = Composer.serializedFieldsForDraft();
+    var serializedObject = {};
+    serialized.forEach( key=>{
+      serializedObject[key] = draft[key] ;
+    })
 
-    composer.open({
+    var attrs = {
       draftKey,
       draftSequence,
       action: draft.action,
@@ -57,8 +62,11 @@ function loadDraft(store, opts) {
       typingTime: draft.typingTime,
       whisper: draft.whisper,
       tags: draft.tags,
-      noBump: draft.noBump
-    });
+      noBump: draft.noBump,
+    }
+
+ attrs = Object.assign(attrs, serializedObject)
+    composer.open(attrs);
     return composer;
   }
 }
@@ -898,6 +906,14 @@ export default Ember.Controller.extend({
     composerModel.setProperties({
       composeState: Composer.OPEN,
       isWarning: false
+    });
+    var draftKeys = Composer.serializedFieldsForDraft();
+    var draftOpts = JSON.parse(opts.draft)
+    var currentModel = this.model;
+    draftKeys.forEach(function(k){
+          if(draftOpts[k]){
+            Ember.set(currentModel, k, draftOpts[k]);
+          }
     });
 
     if (opts.usernames && !this.get("model.targetUsernames")) {

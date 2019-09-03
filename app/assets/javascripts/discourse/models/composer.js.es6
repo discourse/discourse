@@ -59,6 +59,10 @@ const CLOSED = "closed",
   },
   FAST_REPLY_LENGTH_THRESHOLD = 10000;
 
+const draft_serializer = {
+ 
+}
+
 export const SAVE_LABELS = {
   [EDIT]: "composer.save_edit",
   [REPLY]: "composer.reply",
@@ -1021,6 +1025,8 @@ const Composer = RestModel.extend({
       usernames: this.targetUsernames,
       postId: this.get("post.id")
     });
+    var serializedFields = this.serialize(draft_serializer);
+    Object.assign(data,serializedFields)
 
     if (data.postId && !Ember.isEmpty(this.originalText)) {
       data.originalText = this.originalText;
@@ -1095,6 +1101,18 @@ Composer.reopenClass({
 
   serializedFieldsForCreate() {
     return Object.keys(_create_serializer);
+  },
+
+ serializeToDraft(fieldName, property){
+    if (!property) {
+      property = fieldName;
+    }
+    draft_serializer[fieldName] = property;
+
+  },
+
+  serializedFieldsForDraft() {
+    return Object.keys(draft_serializer);
   },
 
   // The status the compose view can have
