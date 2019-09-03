@@ -139,20 +139,13 @@ const Group = RestModel.extend({
 
   @computed("visibility_level")
   isPrivate(visibilityLevel) {
-    return visibilityLevel !== 0;
+    return ![0, 1].includes(visibilityLevel);
   },
 
   @observes("isPrivate", "canEveryoneMention")
   _updateAllowMembershipRequests() {
     if (this.isPrivate || !this.canEveryoneMention) {
       this.set("allow_membership_requests", false);
-    }
-  },
-
-  @observes("visibility_level")
-  _updatePublic() {
-    if (this.isPrivate) {
-      this.setProperties({ public: false, allow_membership_requests: false });
     }
   },
 
