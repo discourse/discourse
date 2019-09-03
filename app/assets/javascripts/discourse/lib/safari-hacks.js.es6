@@ -142,8 +142,8 @@ function positioningWorkaround($fixedElement) {
       return;
     }
 
-    // don't trigger keyboard on disabled input (input is disabled when a category is required)
-    if (evt.target.disabled) {
+    // don't trigger keyboard on disabled element (happens when a category is required)
+    if (this.disabled) {
       return;
     }
 
