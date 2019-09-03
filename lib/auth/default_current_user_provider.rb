@@ -292,15 +292,22 @@ class Auth::DefaultCurrentUserProvider
         return nil
       end
 
-      if api_key.user
-        api_key.user if !api_username || (api_key.user.username_lower == api_username.downcase)
-      elsif api_username
-        User.find_by(username_lower: api_username.downcase)
-      elsif user_id = header_api_key? ? @env[HEADER_API_USER_ID] : request["api_user_id"]
-        User.find_by(id: user_id.to_i)
-      elsif external_id = header_api_key? ? @env[HEADER_API_USER_EXTERNAL_ID] : request["api_user_external_id"]
-        SingleSignOnRecord.find_by(external_id: external_id.to_s).try(:user)
+      user =
+        if api_key.user
+          api_key.user if !api_username || (api_key.user.username_lower == api_username.downcase)
+        elsif api_username
+          User.find_by(username_lower: api_username.downcase)
+        elsif user_id = header_api_key? ? @env[HEADER_API_USER_ID] : request["api_user_id"]
+          User.find_by(id: user_id.to_i)
+        elsif external_id = header_api_key? ? @env[HEADER_API_USER_EXTERNAL_ID] : request["api_user_external_id"]
+          SingleSignOnRecord.find_by(external_id: external_id.to_s).try(:user)
+        end
+
+      if user
+        api_key.update_columns(last_used_at: Time.zone.now)
       end
+
+      user
     end
   end
 

@@ -56,11 +56,14 @@ describe Auth::DefaultCurrentUserProvider do
     it "raises for a user pretending" do
       user = Fabricate(:user)
       user2 = Fabricate(:user)
-      ApiKey.create!(key: "hello", user_id: user.id, created_by_id: -1)
+      key = ApiKey.create!(key: "hello", user_id: user.id, created_by_id: -1)
 
       expect {
         provider("/?api_key=hello&api_username=#{user2.username.downcase}").current_user
       }.to raise_error(Discourse::InvalidAccess)
+
+      key.reload
+      expect(key.last_used_at).to eq(nil)
     end
 
     it "raises for a user with a mismatching ip" do
@@ -74,8 +77,10 @@ describe Auth::DefaultCurrentUserProvider do
     end
 
     it "allows a user with a matching ip" do
+      freeze_time
+
       user = Fabricate(:user)
-      ApiKey.create!(key: "hello", user_id: user.id, created_by_id: -1, allowed_ips: ['100.0.0.0/24'])
+      key = ApiKey.create!(key: "hello", user_id: user.id, created_by_id: -1, allowed_ips: ['100.0.0.0/24'])
 
       found_user = provider("/?api_key=hello&api_username=#{user.username.downcase}",
                             "REMOTE_ADDR" => "100.0.0.22").current_user
@@ -86,6 +91,8 @@ describe Auth::DefaultCurrentUserProvider do
                             "HTTP_X_FORWARDED_FOR" => "10.1.1.1, 100.0.0.22").current_user
       expect(found_user.id).to eq(user.id)
 
+      key.reload
+      expect(key.last_used_at).to eq_time(Time.zone.now)
     end
 
     it "finds a user for a correct system api key" do

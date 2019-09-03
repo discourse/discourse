@@ -35,6 +35,7 @@ end
 #  updated_at    :datetime         not null
 #  allowed_ips   :inet             is an Array
 #  hidden        :boolean          default(FALSE), not null
+#  last_used_at  :datetime
 #
 # Indexes
 #
