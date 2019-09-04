@@ -3,6 +3,7 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import computed from "ember-addons/ember-computed-decorators";
 import Category from "discourse/models/category";
 import optionalService from "discourse/lib/optional-service";
+import showModal from "discourse/lib/show-modal";
 
 let _components = {};
 
@@ -140,6 +141,13 @@ export default Ember.Component.extend({
   },
 
   actions: {
+    explainReviewable(reviewable) {
+      showModal("explain-reviewable", {
+        title: "review.explain.title",
+        model: reviewable
+      });
+    },
+
     edit() {
       this.set("editing", true);
       this._updates = { payload: {} };

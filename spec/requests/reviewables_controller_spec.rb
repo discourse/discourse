@@ -236,6 +236,30 @@ describe ReviewablesController do
       end
     end
 
+    context "#explain" do
+      context "basics" do
+        fab!(:reviewable) { Fabricate(:reviewable) }
+
+        before do
+          sign_in(Fabricate(:moderator))
+        end
+
+        it "returns the explanation as json" do
+          get "/review/#{reviewable.id}/explain.json"
+          expect(response.code).to eq("200")
+
+          json = ::JSON.parse(response.body)
+          expect(json['reviewable_explanation']['id']).to eq(reviewable.id)
+          expect(json['reviewable_explanation']['total_score']).to eq(reviewable.score)
+        end
+
+        it "returns 404 for a missing reviewable" do
+          get "/review/123456789/explain.json"
+          expect(response.code).to eq("404")
+        end
+      end
+    end
+
     context "#perform" do
       fab!(:reviewable) { Fabricate(:reviewable) }
       before do
