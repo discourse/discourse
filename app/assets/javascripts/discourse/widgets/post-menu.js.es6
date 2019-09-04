@@ -69,15 +69,14 @@ registerButton("read-count", attrs => {
 });
 
 registerButton("read", attrs => {
-  const disabled = attrs.readCount === 0;
-  if (attrs.showReadIndicator) {
+  const readBySomeone = attrs.readCount > 0;
+  if (attrs.showReadIndicator && readBySomeone) {
     return {
       action: "toggleWhoRead",
       title: "post.controls.read_indicator",
       icon: "book-reader",
       before: "read-count",
-      addContainer: false,
-      disabled
+      addContainer: false
     };
   }
 });
