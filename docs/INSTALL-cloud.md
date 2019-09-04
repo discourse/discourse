@@ -12,7 +12,7 @@ Create your new cloud server, for example [on DigitalOcean][do]:
 
 - The default of **New York** is a good choice for most US and European audiences. Or select a region that is geographically closer to your audience.
 
-- Enter your domain `discourse.example.com` as the name.
+- Enter your domain `discourse.example.com` as the Droplet name.
 
 Create your new Droplet. You will receive an email with the root password. (However, if you know [how to use SSH keys](https://www.google.com/search?q=digitalocean+ssh+keys), you may not need a password to log in.)
 
