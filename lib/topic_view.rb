@@ -7,6 +7,7 @@ require_dependency 'gaps'
 
 class TopicView
   MEGA_TOPIC_POSTS_COUNT = 10000
+  MIN_POST_READ_TIME = 4.0
 
   attr_reader(
     :topic,
@@ -39,7 +40,7 @@ class TopicView
   end
 
   def self.default_post_custom_fields
-    @default_post_custom_fields ||= ["action_code_who", "notice_type", "notice_args"]
+    @default_post_custom_fields ||= ["action_code_who", "notice_type", "notice_args", "requested_group_id"]
   end
 
   def self.post_custom_fields_whitelisters
@@ -106,6 +107,14 @@ class TopicView
     @can_review_topic = @guardian.can_review_topic?(@topic)
     @queued_posts_enabled = NewPostManager.queue_enabled?
     @personal_message = @topic.private_message?
+  end
+
+  def show_read_indicator?
+    return false unless @user || topic.private_message?
+
+    topic.allowed_groups.any? do |group|
+      group.publish_read_state? && group.users.include?(@user)
+    end
   end
 
   def canonical_path
@@ -208,7 +217,13 @@ class TopicView
 
   def read_time
     return nil if @post_number > 1 # only show for topic URLs
-    (@topic.word_count / SiteSetting.read_time_word_count).floor if @topic.word_count
+
+    if @topic.word_count && SiteSetting.read_time_word_count > 0
+      [
+        @topic.word_count / SiteSetting.read_time_word_count,
+        @topic.posts_count * MIN_POST_READ_TIME / 60
+      ].max.ceil
+    end
   end
 
   def like_count

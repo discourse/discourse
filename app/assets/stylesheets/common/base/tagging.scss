@@ -31,7 +31,14 @@
 
 .tag-show-heading {
   display: inline-flex;
+  flex-wrap: wrap;
   align-items: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: hidden;
+  @include breakpoint(mobile-large) {
+    width: 100%;
+  }
   .d-icon {
     margin: 0 0.25em;
   }

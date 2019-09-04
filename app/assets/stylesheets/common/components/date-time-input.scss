@@ -1,0 +1,15 @@
+.d-date-time-input {
+  display: flex;
+  align-items: center;
+  border: 1px solid $primary-low;
+  width: 258px;
+  box-sizing: border-box;
+  position: relative;
+  flex: 1;
+  justify-content: space-between;
+
+  .date-picker,
+  .fields {
+    border: 0;
+  }
+}

@@ -60,7 +60,7 @@ class Plugin::Metadata
     "discourse-sitemap",
     "discourse-solved",
     "discourse-spoiler-alert",
-    "discourse-staff-notes",
+    "discourse-user-notes",
     "discourse-styleguide",
     "discourse-tooltips",
     "discourse-translator",
@@ -69,7 +69,7 @@ class Plugin::Metadata
     "discourse-yearly-review",
     "discourse-openid-connect",
     "docker_manager",
-    "lazyYT",
+    "lazy-yt",
     "poll"
   ])
 

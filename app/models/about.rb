@@ -1,6 +1,16 @@
 # frozen_string_literal: true
 
 class About
+  class CategoryMods
+    include ActiveModel::Serialization
+    attr_reader :category_id, :moderators
+
+    def initialize(category_id, moderators)
+      @category_id = category_id
+      @moderators = moderators
+    end
+  end
+
   include ActiveModel::Serialization
   include StatsCacheable
 
@@ -13,6 +23,10 @@ class About
 
   def self.fetch_stats
     About.new.stats
+  end
+
+  def initialize(user = nil)
+    @user = user
   end
 
   def version
@@ -66,4 +80,24 @@ class About
     }
   end
 
+  def category_moderators
+    category_ids = Guardian.new(@user).allowed_category_ids
+    return [] if category_ids.blank?
+    results = DB.query(<<~SQL, category_ids: category_ids)
+      SELECT c.id category_id, array_agg(gu.user_id) user_ids
+      FROM categories c
+      JOIN group_users gu
+      ON gu.group_id = reviewable_by_group_id
+      WHERE c.id IN (:category_ids)
+      GROUP BY c.id
+    SQL
+    moderators = {}
+    User.where(id: results.map(&:user_ids).flatten).each do |user|
+      moderators[user.id] = user
+    end
+    moderators
+    results.map do |row|
+      CategoryMods.new(row.category_id, row.user_ids.map { |id| moderators[id] })
+    end
+  end
 end

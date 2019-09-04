@@ -22,6 +22,11 @@ const DiscoveryTopicsListComponent = Ember.Component.extend(
       }
     },
 
+    @observes("topicTrackingState.states")
+    _updateTopics() {
+      this.topicTrackingState.updateTopics(this.model.topics);
+    },
+
     @observes("incomingCount")
     _updateTitle() {
       Discourse.updateContextCount(this.incomingCount);

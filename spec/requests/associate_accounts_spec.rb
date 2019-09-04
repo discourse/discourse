@@ -38,7 +38,7 @@ RSpec.describe Users::AssociateAccountsController do
         sign_in(user)
 
         # Reconnect flow:
-        get "/auth/google_oauth2?reconnect=true"
+        post "/auth/google_oauth2?reconnect=true"
         expect(response.status).to eq(302)
         expect(session[:auth_reconnect]).to eq(true)
 

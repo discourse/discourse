@@ -225,6 +225,7 @@ nl:
       other: "{{count}} tekens"
     related_messages:
       title: "Gerelateerde berichten"
+      see_all: '<a href="%{path}">Alle berichten</a> van @%{username}bekijken...'
     suggested_topics:
       title: "Aanbevolen topics"
       pm_title: "Voorgestelde berichten"
@@ -234,6 +235,7 @@ nl:
       stats: "Websitestatistieken"
       our_admins: "Onze beheerders"
       our_moderators: "Onze moderators"
+      moderators: "Moderators"
       stat:
         all_time: "Sinds het begin"
         last_7_days: "Laatste 7"
@@ -297,6 +299,8 @@ nl:
     banner:
       close: "Deze banner verbergen"
       edit: "Deze banner bewerken >>"
+    pwa:
+      install_banner: "Wilt u <a href>%{title} op dit apparaat installeren?</a>"
     choose_topic:
       none_found: "Geen topics gevonden."
       title:
@@ -581,6 +585,7 @@ nl:
         remove_owner: "Verwijderen als eigenaar"
         remove_owner_description: "<b>%{username}</b> als een eigenaar van deze groep verwijderen"
         owner: "Eigenaar"
+        forbidden: "U mag de leden niet bekijken."
       topics: "Topics"
       posts: "Berichten"
       mentions: "Vermeldingen"
@@ -905,7 +910,6 @@ nl:
         uploaded_avatar: "Eigen afbeelding"
         uploaded_avatar_empty: "Een eigen afbeelding toevoegen"
         upload_title: "Uw afbeelding uploaden"
-        upload_picture: "Afbeelding uploaden"
         image_is_not_a_square: "Waarschuwing: we hebben uw afbeelding bijgesneden; breedte en hoogte waren niet gelijk."
       change_profile_background:
         title: "Profielachtergrond"
@@ -931,7 +935,12 @@ nl:
         title: "Gekoppelde accounts"
         connect: "Verbinden"
         revoke: "Intrekken"
+        cancel: "Annuleren"
         not_connected: "(niet verbonden)"
+        confirm_modal_title: "%{provider}-account koppelen"
+        confirm_description:
+          account_specific: "Uw %{provider}-account '%{account_description}' wordt voor authenticatie gebruikt."
+          generic: "Uw %{provider}-account wordt voor authenticatie gebruikt."
       name:
         title: "Naam"
         instructions: "uw volledige naam (optioneel)"
@@ -1332,6 +1341,10 @@ nl:
         name: "GitHub"
         title: "met GitHub"
         message: "Authenticeren met GitHub (zorg ervoor dat pop-upblokkeringen zijn uitgeschakeld)"
+      discord:
+        name: "Discord"
+        title: "met Discord"
+        message: "Authenticeren met Discord"
     invites:
       accept_title: "Uitnodiging"
       welcome_to: "Welkom bij %{site_name}!"
@@ -1381,6 +1394,11 @@ nl:
       min_content_not_reached:
         one: "Selecteer minstens {{count}} item."
         other: "Selecteer minstens {{count}} items."
+    date_time_picker:
+      from: Van
+      to: Aan
+      errors:
+        to_before_from: "Tot-datum moet later zijn dan van-datum."
     emoji_picker:
       filter_placeholder: Zoeken naar emoji
       smileys_&_emotion: Smileys en Emotie
@@ -1570,6 +1588,7 @@ nl:
       granted_badge: "'{{description}}' ontvangen"
       topic_reminder: "<span>{{username}}</span> {{description}}"
       watching_first_post: "<span>Nieuw Topic</span> {{description}}"
+      membership_request_accepted: "Lidmaatschap geaccepteerd in '{{group_name}}'"
       group_message_summary:
         one: "{{count}} bericht in uw Postvak IN voor {{group_name}}"
         other: "{{count}} berichten in uw Postvak IN voor {{group_name}}"
@@ -1812,6 +1831,7 @@ nl:
       group_request: "U dient lidmaatschap voor de groep `{{name}}` aan te vragen om dit topic te zien"
       group_join: "U dient lid van de groep `{{name}}` te zijn om dit topic te zien"
       group_request_sent: "Uw lidmaatschapsaanvraag voor de groep is verstuurd. U ontvangt een melding zodra deze is geaccepteerd."
+      unread_indicator: "Nog geen enkel lid heeft het laatste bericht van dit topic gelezen."
       read_more_MF: "Er { UNREAD, plural, =0 {} one { is <a href='{basePath}/unread'>1 ongelezen</a> } other { zijn <a href='{basePath}/unread'># ongelezen</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{and } false {is } other{}} <a href='{basePath}/new'>1 nieuw</a> topic} other { {BOTH, select, true{and } false {zijn } other{}} <a href='{basePath}/new'># nieuwe</a> topics} } over, of {CATEGORY, select, true {blader door andere topics in {catLink}} false {{latestLink}} other {}}"
       browse_all_categories: Alle categorieën bekijken
       view_latest_topics: nieuwste topics bekijken
@@ -1978,6 +1998,9 @@ nl:
         title: "Markeren"
         help: "een privémarkering aan dit topic geven of er een privébericht over sturen"
         success_message: "U hebt dit topic gemarkeerd."
+      make_public:
+        title: "Converteren naar openbaar topic"
+        choose_category: "Kies een categorie voor het openbare topic:"
       feature_topic:
         title: "Dit topic aanbevelen"
         pin: "Dit topic boven in de categorie {{categoryLink}} laten verschijnen tot"
@@ -2183,6 +2206,7 @@ nl:
         reply: "beginnen met opstellen van een antwoord op dit bericht"
         like: "dit bericht liken"
         has_liked: "u hebt dit bericht geliket"
+        read_indicator: "leden die dit bericht hebben gelezen"
         undo_like: "like ongedaan maken"
         edit: "dit bericht bewerken"
         edit_action: "Bewerken"
@@ -2239,6 +2263,7 @@ nl:
           notify_user: "heeft een bericht gestuurd"
           bookmark: "heeft dit aan bladwijzers toegevoegd"
           like: "heeft dit geliket"
+          read: "heeft dit gelezen"
           like_capped:
             one: "en {{count}} ander heeft dit geliket"
             other: "en {{count}} anderen hebben dit geliket"
@@ -2339,6 +2364,7 @@ nl:
       special_warning: "Waarschuwing: deze categorie is een vooraf geseede categorie, en de beveiligingsinstellingen kunnen niet worden bewerkt. Als u deze categorie niet wenst te gebruiken, verwijder deze dan in plaats van het doel ervan te wijzigen."
       uncategorized_security_warning: "Deze categorie is bijzonder. Hij is bedoeld als wachtruimte voor topics die geen categorie hebben, en kan geen beveiligingsinstellingen bevatten."
       uncategorized_general_warning: 'Deze categorie is bijzonder. Hij is bedoeld als de standaardcategorie voor nieuwe topics die geen selecteerde categorie hebben. Als u dit gedrag wilt voorkomen en categorieselectie wilt afdwingen, <a href="%{settingLink}">schakel de instelling dan hier uit</a>. Als u de naam of omschrijving wilt wijzigen, ga dan naar <a href="%{customizeLink}">Aanpassen / Tekstinhoud</a>.'
+      pending_permission_change_alert: "U hebt %{group} niet aan deze categorie toegevoegd; klik op deze knop om de groep toe te voegen."
       images: "Afbeeldingen"
       email_in: "Aangepast adres voor inkomende e-mail:"
       email_in_allow_strangers: "E-mails van anonieme gebruikers zonder account accepteren"
@@ -2884,8 +2910,8 @@ nl:
           view_table: "tabel"
           view_graph: "grafiek"
           refresh_report: "Rapport vernieuwen"
-          start_date: "Begindatum"
-          end_date: "Einddatum"
+          start_date: "Startdatum (UTC)"
+          end_date: "Einddatum (UTC)"
           groups: "Alle groepen"
           disabled: "Dit rapport is uitgeschakeld"
           totals_for_sample: "Totalen voor steekproef"
@@ -2936,6 +2962,10 @@ nl:
               staff: "Groepseigenaren en stafleden"
               owners: "Groepseigenaren"
               description: "Beheerders kunnen alle groepen zien."
+            members_visibility_levels:
+              title: "Wie kan de leden van deze groep zien?"
+              description: "Beheerders kunnen leden van alle groepen zien."
+            publish_read_state: "Bij groepsberichten leesstatus van groep publiceren"
           membership:
             automatic: Automatisch
             trust_level: Vertrouwensniveau
@@ -3040,6 +3070,9 @@ nl:
         reviewable_event:
           name: "Beoordeelbare gebeurtenis"
           details: "Wanneer een nieuw item gereed is voor beoordeling en wanneer de status ervan is bijgewerkt."
+        notification_event:
+          name: "Meldingsgebeurtenis"
+          details: "Wanneer een gebruiker een melding in zijn of haar feed ontvangt."
         delivery_status:
           title: "Afleveringsstatus"
           inactive: "Inactief"
@@ -3175,7 +3208,7 @@ nl:
         copy_to_clipboard_error: "Fout bij kopiëren van gegevens naar klembord"
         theme_owner: "Niet bewerkbaar, eigendom van:"
         email_templates:
-          title: "E-mailsjablonen"
+          title: "E-mailadres"
           subject: "Onderwerp"
           multiple_subjects: "Deze e-mailsjabloon heeft meerdere onderwerpen."
           body: "Body"
@@ -3252,7 +3285,7 @@ nl:
           delete_upload_confirm: "Deze upload verwijderen? (Thema-CSS zou kunnen stoppen met werken!)"
           import_web_tip: "Repository die thema bevat"
           import_web_advanced: "Geavanceerd..."
-          import_file_tip: ".tar.gz- of .dcstyle.json-bestand dat thema bevat"
+          import_file_tip: ".tar.gz-, .zip- of .dcstyle.json-bestand dat thema bevat"
           is_private: "Thema bevindt zich in een privé-git-repository"
           remote_branch: "Branchnaam (optioneel)"
           public_key: "De volgende openbare sleutel toegang tot de repo verlenen:"
@@ -3360,6 +3393,19 @@ nl:
           love:
             name: "liefde"
             description: "De kleur van de likeknop."
+        robots:
+          title: "Bestand robots.txt van uw website negeren:"
+          warning: "Gerelateerde website-instellingen worden hierdoor blijvend genegeerd."
+          overridden: Het standaard robots.txt-bestand van uw website wordt genegeerd.
+        email_style:
+          title: "E-mailstijl"
+          heading: "E-mailstijl aanpassen"
+          html: "HTML-sjabloon"
+          css: "CSS"
+          reset: "Standaardwaarden terugzetten"
+          reset_confirm: "Weet u zeker dat u de standaardwaarden van %{fieldName} wilt terugzetten en alle wijzigingen wilt verwerpen?"
+          save_error_with_reason: "Uw wijzigingen zijn niet opgeslagen. %{error}"
+          instructions: "De sjabloon waarin alle html-e-mails worden gerenderd aanpassen, en stileren via CSS."
       email:
         title: "E-mails"
         settings: "Instellingen"
@@ -3593,6 +3639,13 @@ nl:
         search: "zoeken"
         clear_filter: "Wissen"
         show_words: "woorden tonen"
+        one_word_per_line: "Eén woord per regel"
+        download: Downloaden
+        clear_all: Alles wissen
+        clear_all_confirm_block: "Weet u zeker dat u alle in de gaten gehouden woorden voor de actie Blokkeren wilt wissen?"
+        clear_all_confirm_censor: "Weet u zeker dat u alle in de gaten gehouden woorden voor de actie Censureren wilt wissen?"
+        clear_all_confirm_flag: "Weet u zeker dat u alle in de gaten gehouden woorden voor de actie Markeren wilt wissen?"
+        clear_all_confirm_require_approval: "Weet u zeker dat u alle in de gaten gehouden woorden voor de actie Heeft goedkeuring nodig wilt wissen?"
         word_count:
           one: "%{count} woord"
           other: "%{count} woorden"
@@ -3613,8 +3666,14 @@ nl:
           add: "Toevoegen"
           success: "Succes"
           exists: "Bestaat al"
-          upload: "Uploaden"
+          upload: "Toevoegen vanuit bestand"
           upload_successful: "Uploaden geslaagd. Woorden zijn toegevoegd."
+        test:
+          button_label: "Testen"
+          modal_title: "In de gaten gehouden woorden voor '%{action}' testen"
+          description: "Voer hieronder tekst in voor controle op in de gaten gehouden woorden"
+          found_matches: "Gevonden overeenkomsten:"
+          no_matches: "Geen overeenkomsten gevonden"
       impersonate:
         title: "Aanmelden als gebruiker"
         help: "Gebruik dit hulpmiddel om een gebruikersaccount voor debugdoeleinden te imiteren. U moet zich afmelden als u klaar bent."
@@ -3809,8 +3868,8 @@ nl:
           likes_received: "Ontvangen likes"
           likes_received_days: "Ontvangen likes: unieke dagen"
           likes_received_users: "Ontvangen likes: unieke gebruikers"
-          suspended: "Geschorst (sinds begin)"
-          silenced: "Gedempt (sinds begin)"
+          suspended: "Geschorst (afgelopen 6 maanden)"
+          silenced: "Gedempt (afgelopen 6 maanden)"
           qualifies: "Komt in aanmerking voor vertrouwensniveau 3."
           does_not_qualify: "Komt niet in aanmerking voor vertrouwensniveau 3."
           will_be_promoted: "Zal binnenkort worden gepromoveerd."
@@ -3862,7 +3921,7 @@ nl:
       site_text:
         description: "U kunt alle tekst op uw forum aanpassen. Begin door hieronder te zoeken:"
         search: "Zoek de tekst die u wilt bewerken"
-        title: "Tekstinhoud"
+        title: "Tekst"
         edit: "bewerken"
         revert: "Wijzigingen ongedaan maken"
         revert_confirm: "Weet u zeker dat u uw wijzigingen ongedaan wilt maken?"
@@ -3957,7 +4016,7 @@ nl:
         enabled: Badge inschakelen
         icon: Pictogram
         image: Afbeelding
-        icon_help: "Een Font Awesome-klasse gebruiken"
+        icon_help: "Voer een Font Awesome-pictogramnaam in (gebruik het voorvoegsel 'far-' voor normale pictogrammen en 'fab-' voor merkpictogrammen)"
         image_help: "Voer de URL van de afbeelding in (negeert pictogramveld als beide zijn ingesteld)"
         query: Badgequery (SQL)
         target_posts: Geassocieerde berichten opvragen

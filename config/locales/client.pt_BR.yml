@@ -225,6 +225,7 @@ pt_BR:
       other: "{{count}} caracteres"
     related_messages:
       title: "Mensagens Relacionadas"
+      see_all: 'Ver <a href="%{path}">todas as mensagens</a> de @ %{username} ...'
     suggested_topics:
       title: "Tópicos Sugeridos"
       pm_title: "Mensagens Sugeridas"
@@ -234,6 +235,7 @@ pt_BR:
       stats: "Estatísticas do Site"
       our_admins: "Nossos Administradores"
       our_moderators: "Nossos Moderadores"
+      moderators: "Moderadores"
       stat:
         all_time: "Desde o Começo"
         last_7_days: "Últimos 7"
@@ -593,6 +595,7 @@ pt_BR:
         only_admins: "Somente administradores"
         mods_and_admins: "Somente moderadores e administradores"
         members_mods_and_admins: "Somente membros do grupo, moderadores e administradores"
+        owners_mods_and_admins: "Somente proprietários do grupo, moderadores e administradores"
         everyone: "Todos"
       notifications:
         watching:
@@ -844,15 +847,18 @@ pt_BR:
         disable: "Desabilitar"
         enable: "Habilitar"
         enable_long: "Habilitar códigos de backup"
+        manage: "Gerenciar códigos de backup. Você tem <strong>{{count}}</strong> códigos de backup restantes."
         copied_to_clipboard: "Copiado para a Área de Transferência"
         copy_to_clipboard_error: "Erro ao copiar dados para a Área de Transferência"
         remaining_codes: "Você tem <strong>{{count}}</strong> códigos de backup restantes."
         use: "<a href>Usar um código de backup</a>"
+        enable_prerequisites: "Você deve habilitar um segundo fator primário antes de gerar códigos de backup."
         codes:
           title: "Códigos de Backup Gerados"
           description: "Cada um destes códigos de backup só pode ser usado uma vez. Mantenha-os em algum lugar seguro, mas acessível."
       second_factor:
         title: "Autenticação de Dois Fatores"
+        enable: "Gerenciar Autenticação de Dois Fatores"
         confirm_password_description: "Por favor, confirme sua senha para continuar"
         label: "Código"
         rate_limit: "Por favor, aguarde antes de tentar outro código de autenticação."
@@ -867,7 +873,16 @@ pt_BR:
         oauth_enabled_warning: "Por favor, observe que os logins sociais serão desabilitados quando a autenticação de dois fatores for habilitada na sua conta."
         use: "<a href>Usar um aplicativo autenticador</a>"
         enforced_notice: "Você precisa ativar a autenticação de dois fatores antes de acessar este site."
+        disable: "Desabilitar"
+        disable_title: "Desabilitar Segundo Fator"
+        disable_confirm: "Tem certeza que você quer desabilitar todos os segundos fatores?"
         edit: "Editar"
+        edit_title: "Editar Segundo Fator"
+        edit_description: "Nome do Segundo Fator"
+        totp:
+          title: "Autenticadores Baseados em Token"
+          add: "Novo Autenticador"
+          default_name: "Meu Autenticador"
       change_about:
         title: "Modificar Sobre Mim"
         error: "Houve um erro ao alterar este valor."
@@ -892,7 +907,6 @@ pt_BR:
         uploaded_avatar: "Imagem personalizada"
         uploaded_avatar_empty: "Adicionar uma imagem personalizada"
         upload_title: "Enviar sua imagem"
-        upload_picture: "Enviar Imagem"
         image_is_not_a_square: "Aviso: nós cortamos a sua imagem; largura e altura não eram iguais."
       change_profile_background:
         title: "Plano de Fundo do Perfil"
@@ -918,7 +932,12 @@ pt_BR:
         title: "Contas Associadas"
         connect: "Conectar"
         revoke: "Revogar"
+        cancel: "Cancelar"
         not_connected: "(não conectado)"
+        confirm_modal_title: "Conecte-se à conta %{provider}"
+        confirm_description:
+          account_specific: "Sua conta %{provider} &#39;%{account_description}&#39; será usada para autenticação."
+          generic: "Sua conta %{provider} será usada para autenticação."
       name:
         title: "Nome"
         instructions: "seu nome completo (opcional)"
@@ -1168,6 +1187,9 @@ pt_BR:
       enabled: "Este site está em modo de somente leitura. Por favor, continue a navegar, mas respostas, curtidas e outras ações estão desabilitadas por enquanto."
       login_disabled: "O login é desabilitado enquanto o site está em modo de somente leitura."
       logout_disabled: "O logout é desabilitado enquanto o site está em modo de somente leitura."
+    too_few_topics_and_posts_notice: "Vamos <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>começar a discussão!</a> Há <strong>%{currentTopics} / %{requiredTopics}</strong> tópicos e <strong>%{currentPosts} / %{requiredPosts}</strong> postagens – visitantes precisam de mais para ler e responder. Apenas administradores podem ver esta mensagem."
+    too_few_topics_notice: "Vamos <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>começar a discussão!</a> Há <strong>%{currentTopics} / %{requiredTopics}</strong> tópicos– visitantes precisam de mais para ler e responder. Apenas administradores podem ver esta mensagem."
+    too_few_posts_notice: "Vamos <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>começar a discussão!</a> Há <strong>%{currentPosts} / %{requiredPosts}</strong> postagens – visitantes precisam de mais para ler e responder. Apenas administradores podem ver esta mensagem."
     logs_error_rate_notice:
       reached_hour_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# erro/hora} other {# erros/hora}}</a> alcançou o limite de configuração do site de {limit, plural, one {# erro/hora} other {# erros/hora}}."
       reached_minute_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# erro/minuto} other {# erros/minuto}}</a> alcançou o limite de configuração do site de {limit, plural, one {# erro/minuto} other {# erros/minuto}}."
@@ -1316,6 +1338,8 @@ pt_BR:
         name: "GitHub"
         title: "com GitHub"
         message: "Autenticando com GitHub (certifique-se de que os bloqueadores de pop-up estejam desabilitados)"
+      discord:
+        name: "Discord"
     invites:
       accept_title: "Convite"
       welcome_to: "Bem vindo à %{site_name}!"
@@ -1365,6 +1389,11 @@ pt_BR:
       min_content_not_reached:
         one: "Selecione pelo menos {{count}} item."
         other: "Selecione pelo menos {{count}} itens."
+    date_time_picker:
+      from: De
+      to: Para
+      errors:
+        to_before_from: "Até a data deve ser posterior a partir da data."
     emoji_picker:
       filter_placeholder: Pesquisar por emoji
       smileys_&_emotion: Smileys e Emotion
@@ -1414,6 +1443,7 @@ pt_BR:
         category: "Você mencionou {{username}}, mas ele(a) não será notificado(a), pois ele(a) não tem acesso à esta categoria. Você precisará adicioná-lo(a) ao grupo que tem acesso à categoria."
         private: "Você mencionou {{username}}, mas ele(a) não será notificado(a), pois ele(a) não pode ver esta mensagem pessoal. Você precisará convidá-lo(a) para esta MP."
       duplicate_link: "Parece que o seu link para <b>{{domain}}</b> já foi postado neste tópico por <b>@{{username}}</b> em <a href='{{post_url}}'>uma resposta em {{ago}}</a> – você tem certeza de que deseja postá-lo novamente?"
+      reference_topic_title: "RE: {{title}}"
       error:
         title_missing: "Título é obrigatório"
         title_too_short: "Título precisa ter no mínimo {{min}} caracteres"
@@ -1553,6 +1583,7 @@ pt_BR:
       granted_badge: "Ganhou '{{description}}'"
       topic_reminder: "<span>{{username}}</span> {{description}}"
       watching_first_post: "<span>Novo Tópico</span> {{description}}"
+      membership_request_accepted: "Afiliação aceita em &#39;{{group_name}}&#39;"
       group_message_summary:
         one: "{{count}} mensagem na caixa de entrada de {{group_name}}"
         other: "{{count}} mensagens na caixa de entrada de {{group_name}}"
@@ -1792,6 +1823,9 @@ pt_BR:
       toggle_information: "alternar detalhes do tópico"
       read_more_in_category: "Quer ler mais? Veja outros tópicos em {{catLink}} ou {{latestLink}}."
       read_more: "Quer ler mais? {{catLink}} ou {{latestLink}}."
+      group_request: "Você precisa solicitar filiação ao grupo `{{name}}` para ver este tópico"
+      group_join: "Você precisa juntar-se ao grupo `{{name}}` para ver este tópico"
+      group_request_sent: "Sua solicitação de filiação ao grupo foi enviada. Você será informado(a) quando ela for aceita."
       read_more_MF: "Há { UNREAD, plural, =0 {} one { <a href='{basePath}/unread'>1 não lido</a> } other { <a href='{basePath}/unread'># não lidos</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{e } false {} other{}} <a href='{basePath}/new'>1 novo</a> tópico} other { {BOTH, select, true{e } false {} other{}} <a href='{basePath}/new'># novos</a> tópicos} } restantes, ou {CATEGORY, select, true {veja outros tópicos em {catLink}} false {{latestLink}} other {}}"
       browse_all_categories: Ver todas as categorias
       view_latest_topics: ver últimos tópicos
@@ -1958,6 +1992,9 @@ pt_BR:
         title: "Sinalizar"
         help: "sinaliza privativamente este tópico para chamar atenção ou notificar privativamente sobre isto"
         success_message: "Você sinalizou com sucesso este tópico."
+      make_public:
+        title: "Converter para o tópico público"
+        choose_category: "Por favor, escolha uma categoria para o tópico público:"
       feature_topic:
         title: "Destacar este tópico"
         pin: "Fazer que este tópico apareça no topo da categoria {{categoryLink}} até"
@@ -2149,6 +2186,7 @@ pt_BR:
       abandon:
         confirm: "Tem certeza que quer abandonar a sua mensagem?"
         no_value: "Não, manter"
+        no_save_draft: "Não, salvar rascunho"
         yes_value: "Sim, abandone"
       via_email: "post recebido via e-mail"
       via_auto_generated_email: "esta mensagem chegou através de um e-mail gerado automaticamente"
@@ -2198,6 +2236,7 @@ pt_BR:
         delete_topic: "apagar tópico"
         add_post_notice: "Adicionar Aviso da Staff"
         remove_post_notice: "Remover Aviso da Staff"
+        remove_timer: "remover contador"
       actions:
         flag: "Sinalização"
         defer_flags:
@@ -2317,6 +2356,7 @@ pt_BR:
       special_warning: "Atenção: Esta categoria é uma categoria padrão e as configurações de segurança e não podem ser editadas. Se você não quer usar esta categoria, apague-a ao invés de reaproveitá-la."
       uncategorized_security_warning: "Esta categoria é especial. Ela é destinada para tópicos que não têm categoria; ela não pode ter configurações de segurança."
       uncategorized_general_warning: 'Esta categoria é especial. Ela é usada como a categoria padrão para novos tópicos que não possuem uma categoria selecionada. Se você quiser evitar este comportamento e forçar a seleção de categoria, <a href="%{settingLink}">desative a configuração aqui</a>. Se você quiser alterar o nome ou a descrição, vá para <a href="%{customizeLink}">Personalização / Conteúdo de Texto</a>.'
+      pending_permission_change_alert: "Você não adicionou %{group} a esta categoria; Clique neste botão para adicioná-los."
       images: "Imagens"
       email_in: "Endereço de e-mail personalizado de entrada:"
       email_in_allow_strangers: "Aceitar e-mails de usuários anônimos sem cont"
@@ -2464,6 +2504,8 @@ pt_BR:
         help: "Este tópico está fixado para você; ele será mostrado no topo de sua categoria"
       unlisted:
         help: "Este tópico não está listado; ele não será exibido em listas de tópicos e só pode ser acessado por meio de um link direto"
+      personal_message:
+        title: "Este tópico é uma mensagem pessoal"
     posts: "Postagens"
     posts_long: "há {{number}} mensagens neste tópico"
     posts_likes_MF: |
@@ -2606,6 +2648,7 @@ pt_BR:
         up_down: "%{shortcut} Move seleção &uarr; &darr;"
         open: "%{shortcut} Abre tópico selecionado"
         next_prev: "%{shortcut} Pŕoxima seção/seção anterior"
+        go_to_unread_post: "%{shortcut} Ir para a primeira postagem não lida"
       application:
         title: "Aplicação"
         create: "%{shortcut} Criar um tópico novo"
@@ -2642,6 +2685,7 @@ pt_BR:
         mark_tracking: "%{shortcut} Monitorar o tópico"
         mark_watching: "%{shortcut} Observar o tópico"
         print: "%{shortcut} Imprimir tópico"
+        defer: "%{shortcut} Adiar tópico"
     badges:
       earned_n_times:
         one: "Emblema adquirido %{count} vez"
@@ -2742,6 +2786,7 @@ pt_BR:
         about: "Adicione marcadores aos grupos para gerenciá-los mais facilmente"
         new: "Novo grupo"
         tags_label: "Marcadores neste grupo"
+        tags_placeholder: "etiquetas"
         parent_tag_label: "Categoria Principal"
         parent_tag_placeholder: "Opcional"
         parent_tag_description: "Etiquetas deste grupo não podem ser usadas a menos que a etiqueta principal esteja presente."
@@ -2857,8 +2902,8 @@ pt_BR:
           view_table: "tabela"
           view_graph: "gráfico"
           refresh_report: "Atualizar Relatório"
-          start_date: "Data de Início"
-          end_date: "Data do Final"
+          start_date: "Data de início (UTC)"
+          end_date: "Data de término (UTC)"
           groups: "Todos os grupos"
           disabled: "Este relatório está desativado"
           totals_for_sample: "Totais para amostra"
@@ -2904,7 +2949,11 @@ pt_BR:
             visibility_levels:
               title: "Quem pode ver este grupo?"
               public: "Todos"
+              logged_on_users: "Usuários conectados"
+              members: "Proprietários do grupo, membros"
               staff: "Proprietários e funcionários do grupo"
+              owners: "Proprietários do grupo"
+              description: "Administradores podem ver todos os grupos."
           membership:
             automatic: Automático
             trust_level: nível de confiança
@@ -3144,7 +3193,7 @@ pt_BR:
         copy_to_clipboard_error: "Erro ao copiar dados para a área de transferência"
         theme_owner: "Não editável, pertencente a:"
         email_templates:
-          title: "Modelos de E-mail"
+          title: "E-mail"
           subject: "Assunto"
           multiple_subjects: "Este modelo de e-mail tem vários assuntos."
           body: "Corpo"
@@ -3195,6 +3244,7 @@ pt_BR:
           inactive_themes: "Temas inativos:"
           inactive_components: "Componentes não usados"
           broken_theme_tooltip: "Este tema possui erros em seu CSS, HTML ou YAML"
+          disabled_component_tooltip: "Este componente foi desabilitado"
           default_theme_tooltip: "Este tema é o tema padrão do site"
           updates_available_tooltip: "Atualizações estão disponíveis para este tema"
           and_x_more: "e {{count}} mais."
@@ -3220,7 +3270,7 @@ pt_BR:
           delete_upload_confirm: "Excluir este upload? (CSS tema pode parar de funcionar!)"
           import_web_tip: "Repositório contendo tema"
           import_web_advanced: "Avançado…"
-          import_file_tip: "arquivo .tar.gz ou .dcstyle.json contendo tema"
+          import_file_tip: "Arquivo .tar.gz, .zip ou .dcstyle.json contendo tema"
           is_private: "O tema está em um repositório git privado"
           remote_branch: "Nome do branch (opcional)"
           public_key: "Conceda o seguinte acesso de chave pública ao repo:"
@@ -3237,6 +3287,8 @@ pt_BR:
           source_url: "Fonte"
           enable: "Habilitar"
           disable: "Desabilitar"
+          disabled: "Este componente foi desabilitado."
+          disabled_by: "Este componente foi desabilitado por"
           required_version:
             error: "Este tema foi desabilitado automaticamente porque ele não é compatível com esta versão do Discourse."
             minimum: "Requer versão {{version}} ou acima do Discourse."
@@ -3326,6 +3378,19 @@ pt_BR:
           love:
             name: "curtir"
             description: "A cor do botão curtir."
+        robots:
+          title: "Sobrepor o arquivo robots.txt do seu site:"
+          warning: "Isso vai sobrepor permanentemente qualquer configuração relacionada do site."
+          overridden: O arquivo robots.txt padrão de seu site foi sobreposto.
+        email_style:
+          title: "Estilo de email"
+          heading: "Personalize o estilo do email"
+          html: "Template HTML"
+          css: "CSS"
+          reset: "Restaurar ao padrão"
+          reset_confirm: "Tem certeza de que deseja redefinir para o padrão %{fieldName} e perder todas as suas alterações?"
+          save_error_with_reason: "Suas alterações não foram salvas. %{error}"
+          instructions: "Personalize o modelo no qual todos os e-mails em HTML são renderizados e estilize usando CSS."
       email:
         title: "Emails"
         settings: "Settings"
@@ -3509,6 +3574,8 @@ pt_BR:
             embeddable_host_update: "atualização de host incorporável"
             embeddable_host_destroy: "exclusão de host incorporável"
             change_theme_setting: "alterar configurações do tema"
+            disable_theme_component: "desabilitar componente de tema"
+            enable_theme_component: "habilitar componente de tema"
         screened_emails:
           title: "Emails Filtrados"
           description: "Quando alguém tenta cria uma nova conta, os seguintes endereços de e-mail serão verificados e o registro será bloqueado, ou outra ação será executada."
@@ -3557,6 +3624,13 @@ pt_BR:
         search: "pesquisa"
         clear_filter: "Limpo"
         show_words: "mostrar palavras"
+        one_word_per_line: "Uma palavra por linha"
+        download: Download
+        clear_all: Limpar Todos
+        clear_all_confirm_block: "Tem certeza de que deseja limpar todas as palavras observadas para a ação Bloquear?"
+        clear_all_confirm_censor: "Tem certeza de que deseja limpar todas as palavras observadas para a ação Censor?"
+        clear_all_confirm_flag: "Tem certeza de que deseja limpar todas as palavras observadas para a ação Sinalizar?"
+        clear_all_confirm_require_approval: "Tem certeza de que deseja limpar todas as palavras observadas para a ação Exigir aprovação?"
         word_count:
           one: "%{count} palavra"
           other: "%{count} palavras"
@@ -3577,8 +3651,14 @@ pt_BR:
           add: "Adicionar"
           success: "Sucesso"
           exists: "Já existe"
-          upload: "Upload"
+          upload: "Adicionar do arquivo"
           upload_successful: "Upload successful. Words have been added."
+        test:
+          button_label: "Testar"
+          modal_title: "Teste &#39;%{action}&#39; palavras assistidas"
+          description: "Digite o texto abaixo para verificar as correspondências com palavras observadas"
+          found_matches: "Encontros encontrados:"
+          no_matches: "Nenhuma correspondência encontrada"
       impersonate:
         title: "Personificar"
         help: "Utilize esta ferramenta para personificar uma conta de usuário para efeitos de depuração. Você terá que sair dela assim que terminar."
@@ -3773,8 +3853,8 @@ pt_BR:
           likes_received: "Curtidas recebidos"
           likes_received_days: "Curtidas recebidas: dias únicos"
           likes_received_users: "Curtidas recebidas: usuários únicos"
-          suspended: "Suspenso (todos os tempos)"
-          silenced: "Silenciado (todos os tempos)"
+          suspended: "Suspenso (últimos 6 meses)"
+          silenced: "Silenciado (últimos 6 meses)"
           qualifies: "Qualificado para o nível 3 de confiança."
           does_not_qualify: "Não qualificado para o nível 3 de confiança."
           will_be_promoted: "Será promovido em breve."
@@ -3826,7 +3906,7 @@ pt_BR:
       site_text:
         description: "Você pode personalizar qualquer parte do texto em seu fórum. Por favor, comece pesquisando abaixo:"
         search: "Procure peloo texto que você gostaria de editar"
-        title: "Conteúdo do Texto"
+        title: "Texto"
         edit: "editar"
         revert: "Reverter alterações"
         revert_confirm: "Tem certeza que deseja reverter as alterações?"
@@ -3921,7 +4001,7 @@ pt_BR:
         enabled: Habilitar emblema
         icon: Ícone
         image: Imagem
-        icon_help: "Use uma classe Font Awesome"
+        icon_help: "Digite um nome de ícone do tipo Font Awesome (use o prefixo &#39;far-&#39; para ícones regulares e &#39;fab-&#39; para ícones de marca)"
         image_help: "Digite o URL da imagem (substitui o campo de ícone se ambos estiverem configurados)"
         query: Badge Query (SQL)
         target_posts: Consultar respostas selecionadas

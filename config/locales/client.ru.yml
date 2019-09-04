@@ -269,6 +269,7 @@ ru:
       other: "{{count}} букв"
     related_messages:
       title: "Связанные сообщения"
+      see_all: 'Смотреть <a href="%{path}">все сообщения </a> из @%{username}...'
     suggested_topics:
       title: "Похожие темы"
       pm_title: "Похожие сообщения"
@@ -278,6 +279,7 @@ ru:
       stats: "Статистика сайта"
       our_admins: "Наши администраторы"
       our_moderators: "Наши модераторы"
+      moderators: "Модераторы"
       stat:
         all_time: "За все время"
         last_7_days: "7 дней"
@@ -347,6 +349,8 @@ ru:
     banner:
       close: "Больше не показывать это объявление."
       edit: "Редактировать это объявление >>"
+    pwa:
+      install_banner: "Хотите ли вы <a href> установить %{title} на это устройство?</a>"
     choose_topic:
       none_found: "Не найдено ни одной темы."
       title:
@@ -651,6 +655,7 @@ ru:
         remove_owner: "Удалить Владельца"
         remove_owner_description: "Удалить <b>%{username}</b> как владельца этой группы"
         owner: "Владелец"
+        forbidden: "Вы не можете просматривать участников."
       topics: "Темы"
       posts: "Сообщения"
       mentions: "Упоминания"
@@ -981,7 +986,6 @@ ru:
         uploaded_avatar: "Собственный аватар"
         uploaded_avatar_empty: "Добавить собственный аватар"
         upload_title: "Загрузка собственного аватара"
-        upload_picture: "Загрузить изображение"
         image_is_not_a_square: "Внимание: мы обрезали ваше изображение; ширина и высота не равны друг другу."
       change_profile_background:
         title: "Фон профиля"
@@ -1009,7 +1013,12 @@ ru:
         title: "Связанные Учетные Записи"
         connect: "Связать"
         revoke: "Отозвать"
+        cancel: "Отмена"
         not_connected: "(не связанный)"
+        confirm_modal_title: "Подключить%{provider} Аккаунт"
+        confirm_description:
+          account_specific: "Ваш %{provider} аккаунт '%{account_description}' будет использоваться для аутентификации."
+          generic: "Ваша%{provider} учетная запись будет использоваться для аутентификации."
       name:
         title: "Имя"
         instructions: "ваше полное имя (опционально)"
@@ -1430,6 +1439,10 @@ ru:
         name: "GitHub"
         title: "GitHub"
         message: "Вход с помощью учетной записи GitHub (убедитесь, что блокировщик всплывающих окон отключен)"
+      discord:
+        name: "Discord"
+        title: "с Discord"
+        message: "Аутентификация с помощью Discord"
     invites:
       accept_title: "Приглашение"
       welcome_to: "Добро пожаловать на %{site_name}!"
@@ -1483,6 +1496,11 @@ ru:
         few: "Введите хотя бы {{count}} элементов."
         many: "Введите хотя бы {{count}} элементов."
         other: "Введите хотя бы {{count}} элемент."
+    date_time_picker:
+      from: От
+      to: Кому
+      errors:
+        to_before_from: "На сегодняшний день должно быть позже, чем с даты."
     emoji_picker:
       filter_placeholder: Искать emoji
       smileys_&_emotion: Смайлики и эмоции
@@ -1682,6 +1700,7 @@ ru:
       granted_badge: "Заслужил(а) '{{description}}'"
       topic_reminder: "<span>{{username}}</span> {{description}}"
       watching_first_post: "<span>Новая тема</span> {{description}}"
+      membership_request_accepted: "Запрос на вступление принят '{{group_name}}'"
       group_message_summary:
         one: "{{count}} сообщение в вашей группе: {{group_name}} "
         few: "{{count}} сообщений в вашей группе: {{group_name}} "
@@ -1944,6 +1963,7 @@ ru:
       group_request: "Вам нужно запросить членство в группе `{{name}}` чтобы увидеть эту тему."
       group_join: "Вам нужно присоединиться к группе `{{name}}` чтобы увидеть эту тему."
       group_request_sent: "Ваш запрос на членство в группе был отправлен. Вам сообщат, когда  будет одобрено."
+      unread_indicator: "Ни один участник еще не прочитал последний пост этой темы."
       read_more_MF: "У вас осталось { UNREAD, plural, =0 {} one { <a href='{basePath}/unread'>1 непрочитанная</a> } other { <a href='{basePath}/unread'># непрочитанных</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{и } false { } other{}} <a href='{basePath}/new'>1 новая</a> тема} other { {BOTH, select, true{и } false { } other{}} <a href='{basePath}/new'># новых</a> тем} }, или {CATEGORY, select, true {посмотрите другие темы в разделе {catLink}} false {{latestLink}} other {}}"
       browse_all_categories: Просмотреть все разделы
       view_latest_topics: посмотреть последние темы
@@ -2112,6 +2132,9 @@ ru:
         title: "Жалоба"
         help: "пожаловаться на сообщение"
         success_message: "Вы пожаловались на тему."
+      make_public:
+        title: "Преобразовать в Публичную Тему"
+        choose_category: "Пожалуйста, выберите категорию для публичной темы:"
       feature_topic:
         title: "Закрепить эту тему"
         pin: "Закрепить эту тему вверху раздела {{categoryLink}} до"
@@ -2347,6 +2370,7 @@ ru:
         reply: "начать составление ответа на сообщение"
         like: "мне нравится"
         has_liked: "Вам понравилось это сообщение"
+        read_indicator: "пользователи, которые читают этот пост"
         undo_like: "больше не нравится"
         edit: "Изменить сообщение"
         edit_action: "Изменить"
@@ -2374,7 +2398,7 @@ ru:
         unwiki: "Отменить вики-сообщение"
         convert_to_moderator: "Добавить цвет модератора"
         revert_to_regular: "Убрать цвет модератора"
-        rebake: "Обработать сообщение заново - HTML"
+        rebake: "Обработать сообщение  - HTML"
         unhide: "Снова сделать видимым"
         change_owner: "Изменить владельца"
         grant_badge: "Выдать награду"
@@ -2409,6 +2433,7 @@ ru:
           notify_user: "отправил сообщение"
           bookmark: "добавить закладку"
           like: "понравилось это"
+          read: "читать это"
           like_capped:
             one: "и {{count}} понравилось"
             few: "и {{count}} другим понравилось"
@@ -2515,6 +2540,7 @@ ru:
       special_warning: "Внимание: данный раздел был предустановлен и настройки безопасности не могут быть изменены. Если не хотите использовать этот раздел, удалите его вместо изменения."
       uncategorized_security_warning: "Эта категория особенная. Он предназначен для хранения тем, которые не имеют категории; у него не может быть настроек безопасности."
       uncategorized_general_warning: 'Эта категория особенная. Он используется в качестве категории по умолчанию для новых тем, для которых не выбрана категория. Если вы хотите предотвратить такое поведение и принудительно выбрать категорию, отключите настройку здесь </a>. Если вы хотите изменить имя или описание, перейдите к <a href="%{customizeLink}">Настроить / Текстовое содержимое </a>.'
+      pending_permission_change_alert: "Вы не добавили %{group} в эту категорию; нажмите эту кнопку, чтобы добавить их."
       images: "Изображения"
       email_in: "Индивидуальный адрес входящей почты:"
       email_in_allow_strangers: "Принимать письма от анонимных пользователей без учётных записей"
@@ -3106,8 +3132,8 @@ ru:
           view_table: "Таблица"
           view_graph: "График"
           refresh_report: "Обновить отчет"
-          start_date: "Дата от"
-          end_date: "Дата до"
+          start_date: "Дата Начала (UTC)"
+          end_date: "Дата Окончания (UTC)"
           groups: "Все группы"
           disabled: "Этот отчет отключен"
           totals_for_sample: "Итоги по выборке"
@@ -3158,6 +3184,9 @@ ru:
               staff: "Владельцы группы и персонал"
               owners: "Владельцы группы"
               description: "Администраторы могут видеть все группы."
+            members_visibility_levels:
+              description: "Администраторы могут видеть участников всех групп."
+            publish_read_state: "В сообщениях группы публикуют состояние чтения группы"
           membership:
             automatic: Автоматическая
             trust_level: Уровень Доверия
@@ -3262,6 +3291,9 @@ ru:
         reviewable_event:
           name: "Пересмотрены События"
           details: "Когда новый элемент готов к рассмотрению и когда его статус обновляется."
+        notification_event:
+          name: "Событие Уведомления"
+          details: "Когда пользователь получает уведомление в своей ленте."
         delivery_status:
           title: "Статус передачи"
           inactive: "Неактивна"
@@ -3401,7 +3433,7 @@ ru:
         copy_to_clipboard_error: "Ошибка при копировании данных в буфер омена"
         theme_owner: "Нередактируемо, владелец: "
         email_templates:
-          title: "Шаблоны писем"
+          title: "Email"
           subject: "Тема"
           multiple_subjects: "Этот шаблон электронной почты имеет множество тем."
           body: "Текст сообщения"
@@ -3478,7 +3510,7 @@ ru:
           delete_upload_confirm: "Удалить этот файл? CSS стиля может перестать функционировать!"
           import_web_tip: "Репозиторий стиля"
           import_web_advanced: "Дополнительно..."
-          import_file_tip: "Файл .tar.gz или .dcstyle.json, содержащий тему"
+          import_file_tip: ".tar.gz, .zip, или .dcstyle.json файл, содержащий тему"
           is_private: "Тема находится в частном репозитории git"
           remote_branch: "Имя ветви (необязательно)"
           public_key: "Предоставьте доступ к репозиторию со следующим открытым ключом:"
@@ -3588,6 +3620,19 @@ ru:
           love:
             name: "любовь"
             description: "Цвет кнопки «Мне нравится»."
+        robots:
+          title: "Переопределите файл robots.txt вашего сайта:"
+          warning: "Это навсегда переопределит любые связанные настройки сайта."
+          overridden: Файл robots.txt по умолчанию вашего сайта перезаписан.
+        email_style:
+          title: "E-mail Стиль"
+          heading: "Настроить Стиля E-mail Почты"
+          html: "HTML Шаблон"
+          css: "CSS"
+          reset: "Сбросить по умолчанию"
+          reset_confirm: "Вы уверены, что хотите сбросить настройки по умолчанию %{fieldName} и потерять все свои изменения?"
+          save_error_with_reason: "Ваши изменения не были сохранены. %{error}"
+          instructions: "Настройка шаблона, в котором отображаются все html-сообщения e-mail почты, и стиль с помощью CSS."
       email:
         title: "Почта"
         settings: "Настройки"
@@ -3821,6 +3866,13 @@ ru:
         search: "поиск"
         clear_filter: "Очистить"
         show_words: "показать слова"
+        one_word_per_line: "Одно слово в строке"
+        download: Скачать
+        clear_all: Сбросить все
+        clear_all_confirm_block: "Вы уверены, что хотите удалить все просматриваемые слова для действия Блокировать?"
+        clear_all_confirm_censor: "Вы уверены, что хотите очистить все просматриваемые слова для действия Цензора?"
+        clear_all_confirm_flag: "Вы уверены, что хотите удалить все просматриваемые слова для действия Флаг?"
+        clear_all_confirm_require_approval: "Вы уверены, что хотите удалить все просматриваемые слова для действия Требовать утверждение?"
         word_count:
           one: "%{count} слово"
           few: "%{count}слова"
@@ -3843,8 +3895,14 @@ ru:
           add: "Добавить"
           success: "Успех"
           exists: "Уже существует"
-          upload: "Загрузить"
+          upload: "Добавить из файла"
           upload_successful: "Загрузка прошла успешна. Слова добавлены."
+        test:
+          button_label: "Тест"
+          modal_title: "Тест '%{action}' Наблюдаемые Слова"
+          description: "Введите текст ниже, чтобы проверить совпадения с наблюдаемыми словами"
+          found_matches: "Найденные совпадения:"
+          no_matches: "Совпадений не найдено"
       impersonate:
         title: "Войти от имени пользователя"
         help: "Используйте этот инструмент, чтобы войти от имени пользователя. Может быть полезно для отладки. После этого необходимо выйти и зайти под своей учетной записью снова."
@@ -4047,8 +4105,8 @@ ru:
           likes_received: "Получил симпатий"
           likes_received_days: "Получено симпатий: отдельные дни"
           likes_received_users: "Получено симпатий: уникальные пользователи"
-          suspended: "Приостановлено (на все время)"
-          silenced: "Отключенные (за все время)"
+          suspended: "Приостановлен (за последние 6 месяцев)"
+          silenced: "Заморожен (последние 6 месяцев)"
           qualifies: "Заслуживает уровень доверия 3."
           does_not_qualify: "Не заслуживает уровень доверия 3."
           will_be_promoted: "Пользователь будет скоро продвинут до этого уровня."
@@ -4100,7 +4158,7 @@ ru:
       site_text:
         description: "Вы можете отредактировать любой текст на вашем форуме. Начните с поиска ниже:"
         search: "Найти текст, который вы хотите отредактировать"
-        title: "Текстовое содержание"
+        title: "Текст"
         edit: "изменить"
         revert: "Отменить изменения"
         revert_confirm: "Вы уверены что хите отменить ваши изменения?"
@@ -4195,7 +4253,7 @@ ru:
         enabled: Активировать использование награды
         icon: Иконка
         image: Картинка
-        icon_help: "Используйте класс Font Awesome"
+        icon_help: "Введите имя значка Font Awesome (используйте префикс 'far-' для обычных значков и 'fab-' для значков брендов)"
         image_help: "Введите URL-адрес изображения (переопределяет поле награды, если установлены оба)"
         query: Выборка награды (SQL)
         target_posts: Выборка целевых сообщений

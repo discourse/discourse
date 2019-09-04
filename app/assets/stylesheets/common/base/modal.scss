@@ -142,7 +142,7 @@
   overflow: auto;
 
   &:not(.history-modal) {
-    .modal-body:not(.reorder-categories) {
+    .modal-body:not(.reorder-categories):not(.poll-ui-builder) {
       max-height: none !important;
     }
   }
@@ -350,13 +350,28 @@
     margin-right: 0.25em;
   }
 
+  .pending-permission-change-alert {
+    margin-left: auto;
+    max-width: 250px;
+    background: $primary-very-high;
+    color: $secondary;
+    margin-top: 10px;
+    padding: 5px 10px;
+    position: relative;
+    .arrow-div {
+      border: solid transparent;
+      content: " ";
+      position: absolute;
+      border-bottom-color: $primary-very-high;
+      border-width: 7px;
+      top: -13px;
+      left: 200px;
+    }
+  }
+
   .add-permission {
     position: relative;
     top: 0.1em;
-  }
-
-  .add-permission-icon {
-    margin: 0;
   }
 
   .edit-category-tab-settings {
@@ -460,10 +475,12 @@
   }
 }
 
+.change-timestamp {
+  max-width: 420px;
+}
+
 .change-timestamp,
 .poll-ui-builder {
-  max-width: 420px;
-
   #date-container {
     .pika-single {
       position: relative !important; // overriding another important

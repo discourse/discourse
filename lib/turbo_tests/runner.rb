@@ -34,18 +34,33 @@ module TurboTests
       check_for_migrations
 
       @num_processes = ParallelTests.determine_number_of_processes(nil)
+      use_runtime_info = @files == ['spec']
+
+      group_opts = {}
+
+      if use_runtime_info
+        group_opts[:runtime_log] = "tmp/turbo_rspec_runtime.log"
+      else
+        group_opts[:group_by] = :filesize
+      end
 
       tests_in_groups =
         ParallelTests::RSpec::Runner.tests_in_groups(
           @files,
           @num_processes,
-          group_by: :filesize
+          **group_opts,
         )
 
       setup_tmp_dir
 
-      tests_in_groups.each_with_index do |tests, process_num|
-        start_subprocess(tests, process_num + 1)
+      subprocess_opts = {
+        record_runtime: use_runtime_info
+      }
+
+      start_multisite_subprocess(@files, **subprocess_opts)
+
+      tests_in_groups.each_with_index do |tests, process_id|
+        start_regular_subprocess(tests, process_id + 1, **subprocess_opts)
       end
 
       handle_messages
@@ -83,23 +98,58 @@ module TurboTests
       FileUtils.mkdir_p('tmp/test-pipes/')
     end
 
-    def start_subprocess(tests, process_num)
+    def start_multisite_subprocess(tests, **opts)
+      start_subprocess(
+        {},
+        ["--tag", "type:multisite"],
+        tests,
+        "multisite",
+        **opts
+      )
+    end
+
+    def start_regular_subprocess(tests, process_id, **opts)
+      start_subprocess(
+        { 'TEST_ENV_NUMBER' => process_id.to_s },
+        ["--tag", "~type:multisite"],
+        tests,
+        process_id,
+        **opts
+      )
+    end
+
+    def start_subprocess(env, extra_args, tests, process_id, record_runtime:)
       if tests.empty?
         @messages << {
           type: 'exit',
-          process_num: process_num
+          process_id: process_id
         }
       else
+        tmp_filename = "tmp/test-pipes/subprocess-#{process_id}"
+
         begin
-          File.mkfifo("tmp/test-pipes/subprocess-#{process_num}")
+          File.mkfifo(tmp_filename)
         rescue Errno::EEXIST
         end
 
-        env = { 'TEST_ENV_NUMBER' => process_num.to_s }
+        env['RSPEC_SILENCE_FILTER_ANNOUNCEMENTS'] = '1'
+
+        record_runtime_options =
+          if record_runtime
+            [
+              "--format", "ParallelTests::RSpec::RuntimeLogger",
+              "--out", "tmp/turbo_rspec_runtime.log",
+            ]
+          else
+            []
+          end
+
         command = [
           "bundle", "exec", "rspec",
-          "-f", "TurboTests::JsonRowsFormatter",
-          "-o", "tmp/test-pipes/subprocess-#{process_num}",
+          *extra_args,
+          "--format", "TurboTests::JsonRowsFormatter",
+          "--out", tmp_filename,
+          *record_runtime_options,
           *tests
         ]
 
@@ -107,25 +157,25 @@ module TurboTests
           command_str = [
             env.map { |k, v| "#{k}=#{v}" }.join(' '),
             command.join(' ')
-          ].join(' ')
+          ].select { |x| x.size > 0 }.join(' ')
 
-          STDERR.puts "Process #{process_num}: #{command_str}"
+          STDERR.puts "Process #{process_id}: #{command_str}"
         end
 
         _stdin, stdout, stderr, _wait_thr = Open3.popen3(env, *command)
 
         @threads <<
           Thread.new do
-            File.open("tmp/test-pipes/subprocess-#{process_num}") do |fd|
+            File.open(tmp_filename) do |fd|
               fd.each_line do |line|
                 message = JSON.parse(line)
                 message = message.symbolize_keys
-                message[:process_num] = process_num
+                message[:process_id] = process_id
                 @messages << message
               end
             end
 
-            @messages << { type: 'exit', process_num: process_num }
+            @messages << { type: 'exit', process_id: process_id }
           end
 
         @threads << start_copy_thread(stdout, STDOUT)
@@ -167,7 +217,7 @@ module TurboTests
           when 'close'
           when 'exit'
             exited += 1
-            if exited == @num_processes
+            if exited == @num_processes + 1
               break
             end
           else

@@ -227,14 +227,14 @@ const AdminUser = Discourse.User.extend({
       .catch(popupAjaxError);
   },
 
-  approve() {
+  approve(approvedBy) {
     return ajax(`/admin/users/${this.id}/approve`, {
       type: "PUT"
     }).then(() => {
       this.setProperties({
         can_approve: false,
         approved: true,
-        approved_by: Discourse.User.current()
+        approved_by: approvedBy
       });
     });
   },

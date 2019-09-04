@@ -209,6 +209,7 @@ el:
       stats: "Στατιστικά Ιστοσελίδας"
       our_admins: "Οι διαχειριστές μας"
       our_moderators: "Οι συντονιστές μας"
+      moderators: "Συντονιστές"
       stat:
         all_time: "Συνολικά"
       like_count: "Αρέσει"
@@ -647,7 +648,6 @@ el:
         uploaded_avatar: "Προσαρμοσμένη εικόνα"
         uploaded_avatar_empty: "Πρόσθεσε μια δική σου εικόνα"
         upload_title: "Ανέβασε την εικόνα σου"
-        upload_picture: "Ανέβασμα Εικόνας"
         image_is_not_a_square: "Προσοχή: Περικόψαμε την εικόνα σου γιατί το ύψος και το πλάτος δεν ήταν ίσα."
       change_profile_background:
         title: "Φόντο Προφίλ"
@@ -666,6 +666,7 @@ el:
           other: "Θα σου στείλουμε ηλεκτρονικό μήνυμα μόνο εάν δεν σε έχουμε δει τα τελευταία {{count}} λεπτά."
       associated_accounts:
         revoke: "Ανάκληση"
+        cancel: "Άκυρο"
       name:
         title: "Όνομα"
         instructions: "το ονοματεπώνυμό σου (προαιρετικό)"
@@ -1035,6 +1036,9 @@ el:
       default_header_text: Επιλογή...
       no_content: Δεν βρέθηκαν αποτελέσματα
       filter_placeholder: Αναζήτηση...
+    date_time_picker:
+      from: Από
+      to: Προς
     emoji_picker:
       filter_placeholder: Αναζήτηση για emoji
       objects: Αντικείμενα
@@ -2259,8 +2263,6 @@ el:
           view_table: "πίνακας"
           view_graph: "γράφημα"
           refresh_report: "Ανανέωση αναφοράς"
-          start_date: "Ημερομηνία Έναρξης"
-          end_date: "Ημερομηνία Λήξης"
           groups: "Όλες οι ομάδες"
           filters:
             group:
@@ -2492,7 +2494,7 @@ el:
         copy_to_clipboard_error: "Σφάλμα αντιγραφής δεδομένων στο Clipboard"
         theme_owner: "Μη επεξεργάσιμο, ανήκει σε:"
         email_templates:
-          title: "Πρότυπα Email"
+          title: "Διεύθυνση Email"
           subject: "Θέμα"
           multiple_subjects: "Αυτό το πρότυπο email έχει πολλά θέματα."
           body: "Σώμα"
@@ -2601,6 +2603,8 @@ el:
           love:
             name: "αγάπη"
             description: "Το χρώμα του κουμπιού «μου αρέσει»."
+        email_style:
+          css: "CSS"
       email:
         title: "Emails"
         settings: "Ρυθμίσεις"
@@ -2780,6 +2784,8 @@ el:
         search: "αναζήτηση"
         clear_filter: "Καθαρισμός"
         show_words: "προβολή λέξεων"
+        download: Κατέβασμα
+        clear_all: Καθαρισμός Όλων
         word_count:
           one: "%{count} λέξη"
           other: "%{count} λέξεις"
@@ -2799,8 +2805,9 @@ el:
           placeholder_regexp: "regular expression"
           add: "Προσθήκη"
           success: "Επιτυχία"
-          upload: "Μεταφόρτωση"
           upload_successful: "Επιτυχημένη μεταφόρτωση. Οι λέξεις προστέθηκαν."
+        test:
+          no_matches: "Δεν βρέθηκαν αποτελέσματα"
       impersonate:
         title: "Υποδυθείτε"
         help: "Χρησιμοποίησε αυτό το εργαλείο για να εντοπίσεις λάθη υποδυόμενος κάποιον άλλο χρήστη. Θα πρέπει να αποσυνδεθείς όταν τελειώσεις."
@@ -3025,7 +3032,7 @@ el:
       site_text:
         description: "Μπορείς να προσαρμόσεις οποιοδήποτε κείμενο στο χώρο συζητήσεων σου. Παρακαλώ ξεκίνησε κάνοντας αναζήτηση παρακάτω:"
         search: "Αναζήτησε το κείμενο που θα ήθελες να επεξεργαστείς"
-        title: "Περιεχόμενο κειμένου"
+        title: "Κείμενο"
         edit: "επεξεργασία"
         revert: "Επαναφορά αλλαγών"
         revert_confirm: "Είσαι βέβαιος πως θέλεις να επαναφέρεις τις αλλαγές;"

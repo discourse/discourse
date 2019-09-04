@@ -1,14 +1,14 @@
 # frozen_string_literal: true
 
 require 'csv'
+require 'zip'
 require_dependency 'system_message'
 require_dependency 'upload_creator'
+require_dependency 'upload_markdown'
 
 module Jobs
 
   class ExportCsvFile < Jobs::Base
-    include ActionView::Helpers::NumberHelper
-
     sidekiq_options retry: false
 
     HEADER_ATTRS_FOR ||= HashWithIndifferentAccess.new(
@@ -53,18 +53,19 @@ module Jobs
       # ensure directory exists
       FileUtils.mkdir_p(UserExport.base_directory) unless Dir.exists?(UserExport.base_directory)
 
-      # write to CSV file
-      CSV.open(absolute_path, "w") do |csv|
+      # Generate a compressed CSV file
+      csv_to_export = CSV.generate do |csv|
         csv << get_header if @entity != "report"
         public_send(export_method).each { |d| csv << d }
       end
 
-      # compress CSV file
-      system('gzip', '-5', absolute_path)
+      compressed_file_path = "#{absolute_path}.zip"
+      Zip::File.open(compressed_file_path, Zip::File::CREATE) do |zipfile|
+        zipfile.get_output_stream(file_name) { |f| f.puts csv_to_export }
+      end
 
       # create upload
       upload = nil
-      compressed_file_path = "#{absolute_path}.gz"
 
       if File.exist?(compressed_file_path)
         File.open(compressed_file_path) do |file|
@@ -404,7 +405,7 @@ module Jobs
           SystemMessage.create_from_system_user(
             @current_user,
             :csv_export_succeeded,
-            download_link: "[#{upload.original_filename}|attachment](#{upload.short_url}) (#{number_to_human_size(upload.filesize)})",
+            download_link: UploadMarkdown.new(upload).attachment_markdown,
             export_title: export_title
           )
         else

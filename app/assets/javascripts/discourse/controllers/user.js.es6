@@ -2,12 +2,13 @@ import CanCheckEmails from "discourse/mixins/can-check-emails";
 import computed from "ember-addons/ember-computed-decorators";
 import User from "discourse/models/user";
 import optionalService from "discourse/lib/optional-service";
+import { prioritizeNameInUx } from "discourse/lib/settings";
 
 export default Ember.Controller.extend(CanCheckEmails, {
   indexStream: false,
-  application: Ember.inject.controller(),
+  router: Ember.inject.service(),
   userNotifications: Ember.inject.controller("user-notifications"),
-  currentPath: Ember.computed.alias("application.currentPath"),
+  currentPath: Ember.computed.alias("router._router.currentPath"),
   adminTools: optionalService(),
 
   @computed("model.username")
@@ -87,11 +88,7 @@ export default Ember.Controller.extend(CanCheckEmails, {
 
   @computed("model.name")
   nameFirst(name) {
-    return (
-      !this.get("siteSettings.prioritize_username_in_ux") &&
-      name &&
-      name.trim().length > 0
-    );
+    return prioritizeNameInUx(name, this.siteSettings);
   },
 
   @computed("model.badge_count")

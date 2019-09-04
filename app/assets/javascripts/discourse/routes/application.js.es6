@@ -156,10 +156,17 @@ const ApplicationRoute = Discourse.Route.extend(OpenComposer, {
       this.render("hide-modal", { into: "modal", outlet: "modalBody" });
 
       const route = getOwner(this).lookup("route:application");
-      const name = route.controllerFor("modal").get("name");
-      const controller = getOwner(this).lookup(`controller:${name}`);
-      if (controller && controller.onClose) {
-        controller.onClose();
+      let modalController = route.controllerFor("modal");
+      const controllerName = modalController.get("name");
+
+      if (controllerName) {
+        const controller = getOwner(this).lookup(
+          `controller:${controllerName}`
+        );
+        if (controller && controller.onClose) {
+          controller.onClose();
+        }
+        modalController.set("name", null);
       }
     },
 

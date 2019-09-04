@@ -212,6 +212,7 @@ et:
       stats: "Statistika"
       our_admins: "Meie adminid"
       our_moderators: "Meie moderaatorid"
+      moderators: "Moderaatorid"
       stat:
         all_time: "Alates algusest"
         last_7_days: "Viimased 7"
@@ -701,7 +702,6 @@ et:
         uploaded_avatar: "Individuaalne pilt"
         uploaded_avatar_empty: "Lisage individuaalne pilt"
         upload_title: "Lae üles oma pilt"
-        upload_picture: "Lae pilt üles"
         image_is_not_a_square: "Hoiatus: lõikasime pilti, kuna laius ja kõrgus ei olnud võrdsed."
       change_profile_background:
         title: "Profiili taustpilt"
@@ -726,6 +726,7 @@ et:
         title: "Seotud kontod"
         connect: "Ühenda"
         revoke: "Tühista"
+        cancel: "Tühista"
         not_connected: "(pole ühendatud)"
       name:
         title: "Nimi"
@@ -1108,6 +1109,9 @@ et:
       no_content: Midagi ei leitud
       filter_placeholder: Otsi...
       filter_placeholder_with_any: Otsi või loo...
+    date_time_picker:
+      from: Kellelt
+      to: Kellele
     emoji_picker:
       filter_placeholder: Otsi emojit
       objects: Objektid
@@ -2326,8 +2330,6 @@ et:
           view_table: "tabel"
           view_graph: "diagramm"
           refresh_report: "Värskenda raportit"
-          start_date: "Alguskuupäev"
-          end_date: "Lõpukuupäev"
           groups: "Kõik grupid"
           no_data: "Pole andmeid, mida näidata."
           filters:
@@ -2562,7 +2564,7 @@ et:
         copy_to_clipboard: "Kopeeri lõikelauale"
         copied_to_clipboard: "Kopeeritud lõikelauale"
         email_templates:
-          title: "Meilimallid"
+          title: "E-post"
           subject: "Teema"
           multiple_subjects: "Sellel meilimallil on mitu pealkirja."
           body: "Sisu"
@@ -2663,6 +2665,8 @@ et:
           love:
             name: "armastus"
             description: "Meeldimise nupu värvus."
+        email_style:
+          css: "CSS"
       email:
         title: "Meilid"
         settings: "Sätted"
@@ -2847,6 +2851,8 @@ et:
         title: "Vaadatud sõnad"
         search: "otsi"
         clear_filter: "Tühjenda"
+        download: Lae alla
+        clear_all: Puhasta kõik
         word_count:
           one: "%{count} sõna"
           other: "%{count} sõna"
@@ -2860,7 +2866,9 @@ et:
           placeholder_regexp: "regulaaravaldis"
           add: "isa"
           success: "Korras"
-          upload: "Laadi üles"
+        test:
+          button_label: "Proovi"
+          no_matches: "Midagi ei leitud"
       impersonate:
         title: "Kehasta"
         help: "Kasuta seda töövahendit kasutajakonto ülevõtmiseks silumise eesmärgil. Tühistamiseks pead välja logima."
@@ -3022,7 +3030,6 @@ et:
           likes_received: "Meeldimisi saadud"
           likes_received_days: "Meeldimisi saadud: unikaalseid päevi"
           likes_received_users: "Meeldimisi saadud: unikaalseid kasutajaid"
-          silenced: "Vaigistatud (kogu aeg)"
           qualifies: "Kvalifitseerub usaldustasemele 3."
           does_not_qualify: "Ei kvalifitseeru usaldustasemele 3."
           will_be_promoted: "Edutatakse varsti."
@@ -3074,7 +3081,7 @@ et:
       site_text:
         description: "Võid oma foorumi kõiki tekste muuta. Alustamiseks otsi allolevast:"
         search: "Otsi teksi, mida soovid muuta"
-        title: "Teksti sisu"
+        title: "Tekst"
         edit: "muuda"
         revert: "Pööra tagasi muudatused"
         revert_confirm: "Oled Sa kindel, et soovid tagasi pöörata muudatusi?"

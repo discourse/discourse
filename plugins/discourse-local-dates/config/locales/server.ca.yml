@@ -7,7 +7,7 @@
 
 ca:
   site_settings:
-    discourse_local_dates_enabled: "Habilita la funció de dates locals de Discourse. Això afegirà suport a les dates de la zona horària local en funció de l’element [date]."
+    discourse_local_dates_enabled: "Habilita la funció de dates locals de Discourse. Això afegirà suport a les dates de la zona horària local en funció de l'element [date]."
     discourse_local_dates_default_formats: "Formats de data i hora més freqüents, vegeu: <a target='_blank' rel='noopener' href='https://momentjs.com/docs/#/parsing/string-format/'>format de cadena de momentjs</a>"
     discourse_local_dates_default_timezones: "La llista predeterminada de zones horàries. Ha de ser una <a target='_blank' rel='noopener' href='https://en.wikipedia.org/wiki/List_of_tz_database_time_zones'>TZ</a> vàlida."
     discourse_local_dates_email_format: "Format usat per a mostrar una data en els correus electrònics."

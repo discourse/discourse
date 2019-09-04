@@ -24,18 +24,18 @@ describe TrustLevel3Requirements do
 
     describe "penalty_counts" do
 
-      it "returns if the user has ever been silenced" do
+      it "returns if the user has been silenced in last 6 months" do
         expect(tl3_requirements.penalty_counts.silenced).to eq(0)
         expect(tl3_requirements.penalty_counts.total).to eq(0)
         UserSilencer.new(user, moderator).silence
         expect(tl3_requirements.penalty_counts.silenced).to eq(1)
         expect(tl3_requirements.penalty_counts.total).to eq(1)
         UserSilencer.new(user, moderator).unsilence
-        expect(tl3_requirements.penalty_counts.silenced).to eq(0)
-        expect(tl3_requirements.penalty_counts.total).to eq(0)
+        expect(tl3_requirements.penalty_counts.silenced).to eq(1)
+        expect(tl3_requirements.penalty_counts.total).to eq(1)
       end
 
-      it "returns if the user has ever been suspended" do
+      it "returns if the user has been suspended in last 6 months" do
         user.save!
 
         expect(tl3_requirements.penalty_counts.suspended).to eq(0)
@@ -54,8 +54,29 @@ describe TrustLevel3Requirements do
           action: UserHistory.actions[:unsuspend_user]
         )
 
+        expect(tl3_requirements.penalty_counts.suspended).to eq(1)
+        expect(tl3_requirements.penalty_counts.total).to eq(1)
+      end
+
+      it "does not return if the user been silenced or suspended over 6 months ago" do
+        freeze_time 1.year.ago do
+          UserSilencer.new(user, moderator, silenced_till: 1.months.from_now).silence
+          UserHistory.create!(target_user_id: user.id, action: UserHistory.actions[:suspend_user])
+        end
+
+        expect(tl3_requirements.penalty_counts.silenced).to eq(0)
         expect(tl3_requirements.penalty_counts.suspended).to eq(0)
         expect(tl3_requirements.penalty_counts.total).to eq(0)
+
+        freeze_time 3.months.ago do
+          UserSilencer.new(user).unsilence
+          UserSilencer.new(user, moderator, silenced_till: 1.months.from_now).silence
+          UserHistory.create!(target_user_id: user.id, action: UserHistory.actions[:suspend_user])
+        end
+
+        expect(tl3_requirements.penalty_counts.silenced).to eq(1)
+        expect(tl3_requirements.penalty_counts.suspended).to eq(1)
+        expect(tl3_requirements.penalty_counts.total).to eq(2)
       end
     end
 

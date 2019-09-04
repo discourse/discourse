@@ -131,12 +131,7 @@ export default {
 
         if (isPushNotificationsEnabled(user, site.mobileView)) {
           disableDesktopNotifications();
-          registerPushNotifications(
-            Discourse.User.current(),
-            site.mobileView,
-            router,
-            appEvents
-          );
+          registerPushNotifications(user, site.mobileView, router, appEvents);
         } else {
           unsubscribePushNotifications(user);
         }

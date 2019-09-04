@@ -101,8 +101,20 @@ const NavItem = Discourse.Model.extend({
 });
 
 const ExtraNavItem = NavItem.extend({
-  @computed("href")
-  href: href => href,
+  href: computed("href", {
+    get() {
+      if (this._href) {
+        return this._href;
+      }
+
+      return this.href;
+    },
+
+    set(key, value) {
+      return (this._href = value);
+    }
+  }),
+
   customFilter: null
 });
 
@@ -135,6 +147,9 @@ NavItem.reopenClass({
       self = this;
     if (opts.category) {
       args.category = opts.category;
+    }
+    if (opts.persistedQueryParams) {
+      args.persistedQueryParams = opts.persistedQueryParams;
     }
     if (opts.noSubcategories) {
       args.noSubcategories = true;
@@ -173,6 +188,11 @@ NavItem.reopenClass({
     const extraItems = NavItem.extraNavItems.filter(item => {
       if (!item.customFilter) return true;
       return item.customFilter.call(this, category, args);
+    });
+
+    extraItems.forEach(item => {
+      if (!item.customHref) return;
+      item.set("href", item.customHref.call(this, category, args));
     });
 
     return items.concat(extraItems);

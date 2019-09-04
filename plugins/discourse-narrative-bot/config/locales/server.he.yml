@@ -114,10 +114,10 @@ he:
         reply: |-
           הי! כדי לגלות מה אני יכול לעשות, אימרו `@%{discobot_username} %{help_trigger}`.
         tracks: |-
-          אלו הפעולות שכרגע אני יודע לבצע:
+          אלו הפעולות שאני יודע לבצע נכון להיום:
 
-          `@%{discobot_username} %{reset_trigger} %{default_track}`
-          > מתחיל את אחד מהמדריכים האינטראקטיביים הבאים: %{tracks}.
+          ‏`@%{discobot_username} %{reset_trigger} {name-of-tutorial}‏`
+          > מתחיל מדריך אינטראקטיבי. `{name-of-tutorial}` יכול להיות כל אחד מבין: `%{tracks}`.
         bot_actions: |-
           `@%{discobot_username} %{dice_trigger} 2d6`
           > :game_die: 3, 6

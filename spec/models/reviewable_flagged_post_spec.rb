@@ -31,6 +31,7 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
         actions = reviewable.actions_for(guardian)
         expect(actions.has?(:agree_and_hide)).to eq(true)
         expect(actions.has?(:agree_and_keep)).to eq(true)
+        expect(actions.has?(:agree_and_keep_hidden)).to eq(false)
         expect(actions.has?(:agree_and_silence)).to eq(true)
         expect(actions.has?(:agree_and_suspend)).to eq(true)
         expect(actions.has?(:delete_spammer)).to eq(true)
@@ -45,13 +46,20 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
       end
 
       it "doesn't include deletes for category topics" do
-        c = Fabricate(:category)
+        c = Fabricate(:category_with_definition)
         flag = PostActionCreator.spam(user, c.topic.posts.first).reviewable
         actions = flag.actions_for(guardian)
         expect(actions.has?(:delete_and_ignore)).to eq(false)
         expect(actions.has?(:delete_and_ignore_replies)).to eq(false)
         expect(actions.has?(:delete_and_agree)).to eq(false)
         expect(actions.has?(:delete_and_replies)).to eq(false)
+      end
+
+      it "changes `agree_and_keep` to `agree_and_keep_hidden` if it's been hidden" do
+        post.hidden = true
+        actions = reviewable.actions_for(guardian)
+        expect(actions.has?(:agree_and_keep)).to eq(false)
+        expect(actions.has?(:agree_and_keep_hidden)).to eq(true)
       end
 
       it "returns `agree_and_restore` if the post is user deleted" do
@@ -265,4 +273,35 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
 
   end
 
+  describe "#perform_delete_and_agree" do
+    it "notifies the user about the flagged post deletion" do
+      reviewable = Fabricate(:reviewable_flagged_post)
+      reviewable.add_score(
+        moderator, PostActionType.types[:spam],
+        created_at: reviewable.created_at
+      )
+
+      reviewable.perform(moderator, :delete_and_agree)
+
+      assert_pm_creation_enqueued(reviewable.post.user_id, "flags_agreed_and_post_deleted")
+    end
+  end
+
+  describe "#perform_disagree" do
+    it "notifies the user about the flagged post being restored" do
+      reviewable = Fabricate(:reviewable_flagged_post)
+      reviewable.post.update(hidden: true, hidden_at: Time.zone.now, hidden_reason_id: PostActionType.types[:spam])
+
+      reviewable.perform(moderator, :disagree)
+
+      assert_pm_creation_enqueued(reviewable.post.user_id, "flags_disagreed")
+    end
+  end
+
+  def assert_pm_creation_enqueued(user_id, pm_type)
+    expect(Jobs::SendSystemMessage.jobs.length).to eq(1)
+      job = Jobs::SendSystemMessage.jobs[0]
+      expect(job["args"][0]["user_id"]).to eq(user_id)
+      expect(job["args"][0]["message_type"]).to eq(pm_type)
+  end
 end

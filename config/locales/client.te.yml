@@ -144,6 +144,7 @@ te:
       stats: "సైటు గణాంకాలు"
       our_admins: "మా అధికారులు"
       our_moderators: "మా నిర్వాహకులు"
+      moderators: "నిర్వాహకులు"
       stat:
         all_time: "ఆల్ టైమ్"
         last_7_days: "చివరి 7"
@@ -431,7 +432,6 @@ te:
         uploaded_avatar: "అనురూప బొమ్మ"
         uploaded_avatar_empty: "అనురూప బొమ్మను కలపండి"
         upload_title: "మీ బొమ్మను కలపండి"
-        upload_picture: "బొమ్మను ఎగుమతించండి"
       change_profile_background:
         title: "ప్రవర వెనుతలం"
         instructions: "ప్రవర వెనుతలాలు కేంద్రీకరించబడతాయి మరియు అప్రమేయ వెడల్పు 850 పిక్సెలు ఉంటాయి."
@@ -446,6 +446,7 @@ te:
         frequency_immediately: "మీకు వెంటనే ఈమెయిల్ చేసాము, మీరు ఈమెయిల్ విషయం చదవకపోతే. "
       associated_accounts:
         revoke: "రివోక్"
+        cancel: "రద్దుచేయి"
       name:
         title: "పేరు"
         instructions: "మీ పూర్తి పేరు (ఐచ్ఛికం)"
@@ -1363,8 +1364,6 @@ te:
           all: "అన్ని"
           view_table: "టేబుల్"
           refresh_report: "రిపోర్టు తాజాపరుచు"
-          start_date: "ఆరంభ తేదీ"
-          end_date: "ముగింపు తేదీ"
           filters:
             group:
               label: సమూహం
@@ -1502,6 +1501,7 @@ te:
         opacity: "అపారదర్శకత"
         copy: "నకలు"
         email_templates:
+          title: "ఈమెయిల్"
           subject: "సబ్జెక్టు"
           body: "శరీరం"
         theme:
@@ -1565,6 +1565,8 @@ te:
           love:
             name: "ప్రేమ"
             description: "ఇష్ఠ బటను రంగు."
+        email_style:
+          css: "సీయస్ యస్"
       email:
         settings: "అమరికలు"
         preview_digest: "డైజెస్టు మునుజూపు"
@@ -1686,12 +1688,12 @@ te:
           title: "దోష లాగులు"
       watched_words:
         clear_filter: "శుభ్రపరుచు"
+        download: దిగుమతి
         actions:
           block: "ఖండం"
           flag: "కేతనం"
         form:
           add: "కలుపు"
-          upload: "ఎక్కించు"
       impersonate:
         title: "పరకాయప్రవేశించు"
         help: "అనుకరించిన వినియోగదారుని ఖాతా దోషవిశ్లేషణ ప్రయోజనాలకు ఈ ఉపకరణం వినియోగించండి.పూర్తి అయిన తర్వాత మీరు లాగవుట్ చేయండి."
@@ -1854,7 +1856,6 @@ te:
           text: "పాఠ్య క్షేత్రం"
           confirm: "ఖాయము"
       site_text:
-        title: "పాఠ్య కాంటెంటు"
         edit: "సవరించు"
         show_overriden: "ప్రాబల్యం ఉన్న వాటిని మాత్రమే చూపించు"
       settings:

@@ -14,6 +14,16 @@ describe Migration::TableDropper do
     SQL
   end
 
+  def function_exists?(function_name, schema_name = 'public')
+    DB.exec(<<~SQL) > 0
+      SELECT 1
+      FROM information_schema.routines
+      WHERE routine_type = 'FUNCTION' AND
+            routine_name = '#{function_name}' AND
+            specific_schema = '#{schema_name}'
+    SQL
+  end
+
   let(:table_name) { 'table_with_old_name' }
 
   before do
@@ -54,6 +64,16 @@ describe Migration::TableDropper do
       ))).to eq(false)
 
       expect(table_exists?(table_name)).to eq(false)
+    end
+
+    it "should drop the read_only function" do
+      Migration::TableDropper.execute_drop(table_name)
+
+      schema_name, function_name = Migration::BaseDropper
+        .readonly_function_name(table_name)
+        .delete_suffix('()').split('.')
+
+      expect(function_exists?(function_name, schema_name)).to eq(false)
     end
 
     it 'should prevent insertions to the table' do

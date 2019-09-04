@@ -262,6 +262,7 @@ en:
 
     related_messages:
       title: "Related Messages"
+      see_all: 'See <a href="%{path}">all messages</a> from @%{username}...'
 
     suggested_topics:
       title: "Suggested Topics"
@@ -273,6 +274,7 @@ en:
       stats: "Site Statistics"
       our_admins: "Our Admins"
       our_moderators: "Our Moderators"
+      moderators: "Moderators"
       stat:
         all_time: "All Time"
         last_7_days: "Last 7"
@@ -349,6 +351,9 @@ en:
     banner:
       close: "Dismiss this banner."
       edit: "Edit this banner >>"
+
+    pwa:
+      install_banner: "Do you want to <a href>install %{title} on this device?</a>"
 
     choose_topic:
       none_found: "No topics found."
@@ -649,6 +654,7 @@ en:
         remove_owner: "Remove as Owner"
         remove_owner_description: "Remove <b>%{username}</b> as an owner of this group"
         owner: "Owner"
+        forbidden: "You're not allowed to view the members."
       topics: "Topics"
       posts: "Posts"
       mentions: "Mentions"
@@ -800,9 +806,7 @@ en:
         perm_denied_btn: "Permission Denied"
         perm_denied_expl: "You denied permission for notifications. Allow notifications via your browser settings."
         disable: "Disable Notifications"
-        currently_enabled: ""
         enable: "Enable Notifications"
-        currently_disabled: ""
         each_browser_note: "Note: You have to change this setting on every browser you use."
         consent_prompt: "Do you want live notifications when people reply to your posts?"
       dismiss: "Dismiss"
@@ -991,7 +995,6 @@ en:
         uploaded_avatar: "Custom picture"
         uploaded_avatar_empty: "Add a custom picture"
         upload_title: "Upload your picture"
-        upload_picture: "Upload Picture"
         image_is_not_a_square: "Warning: we've cropped your image; width and height were not equal."
 
       change_profile_background:
@@ -1024,7 +1027,9 @@ en:
         cancel: "Cancel"
         not_connected: "(not connected)"
         confirm_modal_title: "Connect %{provider} Account"
-        confirm_description: "Your %{provider} account '%{account_description}' will be used for authentication."
+        confirm_description:
+          account_specific: "Your %{provider} account '%{account_description}' will be used for authentication."
+          generic: "Your %{provider} account will be used for authentication."
 
       name:
         title: "Name"
@@ -1464,6 +1469,10 @@ en:
         name: "GitHub"
         title: "with GitHub"
         message: "Authenticating with GitHub (make sure pop up blockers are not enabled)"
+      discord:
+        name: "Discord"
+        title: "with Discord"
+        message: "Authenticating with Discord"
     invites:
       accept_title: "Invitation"
       welcome_to: "Welcome to %{site_name}!"
@@ -1520,6 +1529,12 @@ en:
       min_content_not_reached:
         one: "Select at least {{count}} item."
         other: "Select at least {{count}} items."
+
+    date_time_picker:
+      from: From
+      to: To
+      errors:
+        to_before_from: "To date must be later than from date."
 
     emoji_picker:
       filter_placeholder: Search for emoji
@@ -1721,6 +1736,7 @@ en:
       granted_badge: "Earned '{{description}}'"
       topic_reminder: "<span>{{username}}</span> {{description}}"
       watching_first_post: "<span>New Topic</span> {{description}}"
+      membership_request_accepted: "Membership accepted in '{{group_name}}'"
 
       group_message_summary:
         one: "{{count}} message in your {{group_name}} inbox"
@@ -1974,6 +1990,7 @@ en:
       group_request: "You need to request membership to the `{{name}}` group to see this topic"
       group_join: "You need join the `{{name}}` group to see this topic"
       group_request_sent: "Your group membership request has been sent. You will be informed when it's accepted."
+      unread_indicator: "No member has read the last post of this topic yet."
 
       # keys ending with _MF use message format, see https://meta.discourse.org/t/message-format-support-for-localization/7035 for details
       read_more_MF: "There {
@@ -2169,6 +2186,9 @@ en:
         title: "Flag"
         help: "privately flag this topic for attention or send a private notification about it"
         success_message: "You successfully flagged this topic."
+      make_public:
+        title: "Convert to Public Topic"
+        choose_category: "Please choose a category for the public topic:"
 
       feature_topic:
         title: "Feature this topic"
@@ -2404,6 +2424,7 @@ en:
         reply: "begin composing a reply to this post"
         like: "like this post"
         has_liked: "you've liked this post"
+        read_indicator: "members who read this post"
         undo_like: "undo like"
         edit: "edit this post"
         edit_action: "Edit"
@@ -2461,6 +2482,7 @@ en:
           notify_user: "sent a message"
           bookmark: "bookmarked this"
           like: "liked this"
+          read: "read this"
           like_capped:
             one: "and {{count}} other liked this"
             other: "and {{count}} others liked this"
@@ -2566,6 +2588,7 @@ en:
       special_warning: "Warning: This category is a pre-seeded category and the security settings cannot be edited. If you do not wish to use this category, delete it instead of repurposing it."
       uncategorized_security_warning: "This category is special. It is intended as holding area for topics that have no category; it cannot have security settings."
       uncategorized_general_warning: 'This category is special. It is used as the default category for new topics that do not have a category selected. If you want to prevent this behavior and force category selection, <a href="%{settingLink}">please disable the setting here</a>. If you want to change the name or description, go to <a href="%{customizeLink}">Customize / Text Content</a>.'
+      pending_permission_change_alert: "You haven't added %{group} to this category; click this button to add them."
       images: "Images"
       email_in: "Custom incoming email address:"
       email_in_allow_strangers: "Accept emails from anonymous users with no accounts"
@@ -3142,8 +3165,8 @@ en:
           view_table: "table"
           view_graph: "graph"
           refresh_report: "Refresh Report"
-          start_date: "Start Date"
-          end_date: "End Date"
+          start_date: "Start Date (UTC)"
+          end_date: "End Date (UTC)"
           groups: "All groups"
           disabled: "This report is disabled"
           totals_for_sample: "Totals for sample"
@@ -3196,6 +3219,10 @@ en:
               staff: "Group owners and staff"
               owners: "Group owners"
               description: "Admins can see all groups."
+            members_visibility_levels:
+              title: "Who can see this group's members?"
+              description: "Admins can see members of all groups."
+            publish_read_state: "On group messages publish group read state"
 
           membership:
             automatic: Automatic
@@ -3303,6 +3330,9 @@ en:
         reviewable_event:
           name: "Reviewable Event"
           details: "When a new item is ready for review and when its status is updated."
+        notification_event:
+          name: "Notification Event"
+          details: "When a user receives a notification in their feed."
         delivery_status:
           title: "Delivery Status"
           inactive: "Inactive"
@@ -3442,7 +3472,7 @@ en:
         copy_to_clipboard_error: "Error copying data to Clipboard"
         theme_owner: "Not editable, owned by:"
         email_templates:
-          title: "Email Templates"
+          title: "Email"
           subject: "Subject"
           multiple_subjects: "This email template has multiple subjects."
           body: "Body"
@@ -3520,7 +3550,7 @@ en:
           delete_upload_confirm: "Delete this upload? (Theme CSS may stop working!)"
           import_web_tip: "Repository containing theme"
           import_web_advanced: "Advanced..."
-          import_file_tip: ".tar.gz or .dcstyle.json file containing theme"
+          import_file_tip: ".tar.gz, .zip, or .dcstyle.json file containing theme"
           is_private: "Theme is in a private git repository"
           remote_branch: "Branch name (optional)"
           public_key: "Grant the following public key access to the repo:"
@@ -3628,6 +3658,19 @@ en:
           love:
             name: "love"
             description: "The like button's color."
+        robots:
+          title: "Override your site's robots.txt file:"
+          warning: "This will permanently override any related site settings."
+          overridden: Your site's default robots.txt file is overridden.
+        email_style:
+          title: "Email Style"
+          heading: "Customize Email Style"
+          html: "HTML Template"
+          css: "CSS"
+          reset: "Reset to default"
+          reset_confirm: "Are you sure you want to reset to the default %{fieldName} and lose all your changes?"
+          save_error_with_reason: "Your changes were not saved. %{error}"
+          instructions: "Customize the template in which all html emails are rendered, and style using CSS."
 
       email:
         title: "Emails"
@@ -3865,6 +3908,13 @@ en:
         search: "search"
         clear_filter: "Clear"
         show_words: "show words"
+        one_word_per_line: "One word per line"
+        download: Download
+        clear_all: Clear All
+        clear_all_confirm_block: "Are you sure you want to clear all watched words for the Block action?"
+        clear_all_confirm_censor: "Are you sure you want to clear all watched words for the Censor action?"
+        clear_all_confirm_flag: "Are you sure you want to clear all watched words for the Flag action?"
+        clear_all_confirm_require_approval: "Are you sure you want to clear all watched words for the Require Approval action?"
         word_count:
           one: "%{count} word"
           other: "%{count} words"
@@ -3885,8 +3935,14 @@ en:
           add: "Add"
           success: "Success"
           exists: "Already exists"
-          upload: "Upload"
+          upload: "Add from file"
           upload_successful: "Upload successful. Words have been added."
+        test:
+          button_label: "Test"
+          modal_title: "Test '%{action}' Watched Words"
+          description: "Enter text below to check for matches with watched words"
+          found_matches: "Found matches:"
+          no_matches: "No matches found"
 
       impersonate:
         title: "Impersonate"
@@ -4087,8 +4143,8 @@ en:
           likes_received: "Likes Received"
           likes_received_days: "Likes Received: unique days"
           likes_received_users: "Likes Received: unique users"
-          suspended: "Suspended (all time)"
-          silenced: "Silenced (all time)"
+          suspended: "Suspended (last 6 months)"
+          silenced: "Silenced (last 6 months)"
           qualifies: "Qualifies for trust level 3."
           does_not_qualify: "Doesn't qualify for trust level 3."
           will_be_promoted: "Will be promoted soon."
@@ -4143,7 +4199,7 @@ en:
       site_text:
         description: "You can customize any of the text on your forum. Please start by searching below:"
         search: "Search for the text you'd like to edit"
-        title: "Text Content"
+        title: "Text"
         edit: "edit"
         revert: "Revert Changes"
         revert_confirm: "Are you sure you want to revert your changes?"
@@ -4240,7 +4296,7 @@ en:
         enabled: Enable badge
         icon: Icon
         image: Image
-        icon_help: "Use a Font Awesome class"
+        icon_help: "Enter a Font Awesome icon name (use prefix 'far-' for regular icons and 'fab-' for brand icons)"
         image_help: "Enter the URL of the image (overrides icon field if both are set)"
         query: Badge Query (SQL)
         target_posts: Query targets posts

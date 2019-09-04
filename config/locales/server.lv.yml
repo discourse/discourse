@@ -46,6 +46,7 @@ lv:
       other: "vel %{count} atbildes"
     loading: "Diskusijas Ielādēšana..."
     in_reply_to: "▶ %{username}"
+    created: "Radīts"
   next_page: "nākošo lapu →"
   prev_page: "← iepriekšējo lapu"
   page_num: "Lapa %{num}"
@@ -144,6 +145,7 @@ lv:
   reports:
     default:
       labels:
+        count: Skaits
         day: Diena
     post_edits:
       labels:
@@ -282,6 +284,7 @@ lv:
   login:
     not_approved: "Jūsu konts vēl nav apstiprināts. Jums tiks paziņots e-pastā, kad varēsiet pieslēgties."
     admin_not_allowed_from_ip_address: "Jūs nevarat ieiet kā administrators no šīs IP adreses."
+    omniauth_confirm_button: "Turpināt"
   admin:
     email:
       sent_test: "nosūtīts!"
@@ -324,6 +327,14 @@ lv:
     step:
       forum_title:
         title: "Vārds"
+      privacy:
+        fields:
+          privacy:
+            choices:
+              open:
+                label: "Publisks"
+              restricted:
+                label: "Privāts"
       contact:
         fields:
           contact_email:
@@ -357,6 +368,8 @@ lv:
         title: "Dzēst"
       disagree:
         title: "Nepiekrist"
+      ignore:
+        title: "Ignorēt"
       approve:
         title: "Apstiprināt"
       reject_user:

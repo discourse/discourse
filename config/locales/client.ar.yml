@@ -273,6 +273,8 @@ ar:
     every_hour: "كل ساعة"
     daily: "يوميا"
     weekly: "أسبوعيا"
+    every_month: "كل شهر"
+    every_six_months: "كل ستة اشهر"
     max_of_count: "أقصى عدد هو {{count}}"
     alternation: "أو"
     character_count:
@@ -293,6 +295,7 @@ ar:
       stats: "إحصاءات الموقع "
       our_admins: "المدراء"
       our_moderators: "المشرفين"
+      moderators: "المشرفون"
       stat:
         all_time: "منذ التأسيس"
         last_7_days: "آخر 7"
@@ -784,7 +787,6 @@ ar:
         uploaded_avatar: "صورة مخصصة"
         uploaded_avatar_empty: "اضافة صورة مخصصة"
         upload_title: "ارفع صورتك "
-        upload_picture: "ارفع صورة"
         image_is_not_a_square: "تحذير: لقد قصصنا صورتك، لأن عرضها وارتفاعها غير متساويان."
       change_profile_background:
         title: "خلفية الملف الشخصي"
@@ -807,6 +809,7 @@ ar:
           other: "سنراسلك على بريدك فقط في حال لم تزر الموقع منذ {{count}} دقيقة."
       associated_accounts:
         revoke: "تعطيل"
+        cancel: "ألغِ"
       name:
         title: "الاسم"
         instructions: "اسمك الكامل (اختياريّ)"
@@ -860,6 +863,8 @@ ar:
         every_hour: "كل ساعة"
         daily: "يوميا"
         weekly: "أسبوعيا"
+        every_month: "كل شهر"
+        every_six_months: "كل ستة اشهر"
       email_level:
         title: "أرسل إليّ رسائل إلكترونية عندما يقتبس أحد كلامي، أو يرد على إحدى منشوراتي، أو يشير إلي @اسمي أو يدعوني إلى أحد الموضوعات"
         always: "دائما"
@@ -1194,6 +1199,9 @@ ar:
       no_content: لا يوجد نتائج مطابقة
       filter_placeholder: بحث...
       filter_placeholder_with_any: ابحث أو أنشئً ...
+    date_time_picker:
+      from: من
+      to: إلى
     emoji_picker:
       filter_placeholder: بحث عن الرموز التعبيرية
       objects: اشياء
@@ -2578,8 +2586,6 @@ ar:
           view_table: "جدول"
           view_graph: "رسم بياني"
           refresh_report: "تحديث التقرير "
-          start_date: "تاريخ البدء"
-          end_date: "تاريخ الإنتهاء"
           groups: "كل المجموعات"
           filters:
             group:
@@ -2803,7 +2809,7 @@ ar:
         copy_to_clipboard_error: "خطأ في نسخ البيانات الى لوحة العمل"
         theme_owner: "غير قابل للتعديل ، مملوك بواسطة : "
         email_templates:
-          title: "قالب البريد الالكتروني "
+          title: "البريد الإلكتروني"
           subject: "الموضوع"
           multiple_subjects: "قالب البريد الإلكتروني هذا لديه موضوعات متعددة."
           body: "المحتوى"
@@ -2905,6 +2911,8 @@ ar:
           love:
             name: "إعجاب"
             description: "لون زر الإعجاب."
+        email_style:
+          css: "CSS"
       email:
         title: "البريد الالكتروني"
         settings: "إعدادات"
@@ -3084,6 +3092,8 @@ ar:
         search: "بحث"
         clear_filter: "امسح"
         show_words: "اظهر الكلمات"
+        download: حمل
+        clear_all: إلغ إختيار الكل
         actions:
           block: "احجب"
           censor: "راقب (ضلل)"
@@ -3097,8 +3107,10 @@ ar:
           placeholder_regexp: "تعبير اعتيادي"
           add: "اضف"
           success: "نجاح"
-          upload: "حمل"
           upload_successful: "تم الرفع بنجاح. تم اضافة الكلمات"
+        test:
+          button_label: "اختبار"
+          no_matches: "لا يوجد نتائج مطابقة"
       impersonate:
         title: "انتحال الشخصية"
         help: "استخدم هذه الأداة لانتحال شخصية حساب مستخدم لأغراض التصحيح. سيتم تسجيل خروجك عندما تنتهي."
@@ -3321,7 +3333,7 @@ ar:
       site_text:
         description: "يمكنك تخصيص أيّ من نصوص هذا المنتدى. يمكنك استكشاف ذلك أدناه:"
         search: "ابحث عن النص الذي تريد تعديله"
-        title: "محتوى النص"
+        title: "نص"
         edit: "تعديل"
         revert: "حفظ التعديلات"
         revert_confirm: "هل انت متاكد من انك تريد اعاده التغيرات؟ "

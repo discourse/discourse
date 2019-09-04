@@ -151,6 +151,12 @@ class UsersController < ApplicationController
     else
       render_json_error(user.errors.full_messages.join(','))
     end
+  rescue Discourse::InvalidAccess
+    if current_user&.staff?
+      render_json_error(I18n.t('errors.messages.sso_overrides_username'))
+    else
+      render json: failed_json, status: 403
+    end
   end
 
   def check_emails
@@ -846,8 +852,13 @@ class UsersController < ApplicationController
 
   def search_users
     term = params[:term].to_s.strip
+
     topic_id = params[:topic_id]
     topic_id = topic_id.to_i if topic_id
+
+    category_id = params[:category_id]
+    category_id = category_id.to_i if category_id
+
     topic_allowed_users = params[:topic_allowed_users] || false
 
     group_names = params[:groups] || []
@@ -856,12 +867,21 @@ class UsersController < ApplicationController
       @groups = Group.where(name: group_names)
     end
 
-    results = UserSearch.new(term,
-                             topic_id: topic_id,
-                             topic_allowed_users: topic_allowed_users,
-                             searching_user: current_user,
-                             groups: @groups
-                            ).search
+    options = {
+     topic_allowed_users: topic_allowed_users,
+     searching_user: current_user,
+     groups: @groups
+    }
+
+    if topic_id
+      options[:topic_id] = topic_id
+    end
+
+    if category_id
+      options[:category_id] = category_id
+    end
+
+    results = UserSearch.new(term, options).search
 
     user_fields = [:username, :upload_avatar_template]
     user_fields << :name if SiteSetting.enable_names?
@@ -1065,7 +1085,10 @@ class UsersController < ApplicationController
       @confirmed = true
     end
 
-    render layout: 'no_ember'
+    respond_to do |format|
+      format.json { render json: success_json }
+      format.html { render layout: 'no_ember' }
+    end
   end
 
   def list_second_factors
@@ -1224,11 +1247,11 @@ class UsersController < ApplicationController
       # The user should not be able to revoke the auth token of current session.
       raise Discourse::InvalidParameters.new(:token_id) if guardian.auth_token == token.auth_token
       UserAuthToken.where(id: params[:token_id], user_id: user.id).each(&:destroy!)
+
+      MessageBus.publish "/file-change", ["refresh"], user_ids: [user.id]
     else
       UserAuthToken.where(user_id: user.id).each(&:destroy!)
     end
-
-    MessageBus.publish "/file-change", ["refresh"], user_ids: [user.id]
 
     render json: success_json
   end

@@ -278,6 +278,7 @@ pl_PL:
       stats: "Statystyki strony"
       our_admins: "Administratorzy"
       our_moderators: "Moderatoratorzy"
+      moderators: "Moderatoratorzy"
       stat:
         all_time: "Ogółem"
         last_7_days: "Ostatnie 7"
@@ -881,7 +882,6 @@ pl_PL:
         uploaded_avatar: "Zwyczajny obrazek"
         uploaded_avatar_empty: "Dodaj zwyczajny obrazek"
         upload_title: "Wyślij swoją grafikę"
-        upload_picture: "Wyślij grafikę"
         image_is_not_a_square: "Uwaga: grafika została przycięta ponieważ jej wysokość i szerokość nie były równe. "
       change_profile_background:
         title: "Tło profilu"
@@ -891,7 +891,7 @@ pl_PL:
         instructions: "Tło karty użytkownika est wycentrowane i posiada domyślną szerokość 590px."
       email:
         title: "Email"
-        primary: "Podstawowe adres email"
+        primary: "Podstawowy adres email"
         secondary: "Drugorzędne adresy email"
         no_secondary: "Brak drugorzędnych adresów email"
         instructions: "Nie będzie publicznie widoczny."
@@ -908,6 +908,7 @@ pl_PL:
         title: "Powiązane konta"
         connect: "Połącz"
         revoke: "Unieważnij"
+        cancel: "Anuluj"
         not_connected: "(nie połączony)"
       name:
         title: "Pełna nazwa"
@@ -1290,6 +1291,8 @@ pl_PL:
         name: "GitHub"
         title: "przez GitHub"
         message: "Uwierzytelnianie przez GitHub (upewnij się, że blokada wyskakujących okienek nie jest włączona)"
+      discord:
+        name: "Discord"
     invites:
       accept_title: "Zaproszenie"
       welcome_to: "Witaj na %{site_name}!"
@@ -1337,6 +1340,9 @@ pl_PL:
         few: "Wybierz co najmniej {{count}} elementy."
         many: "Wybierz co najmniej {{count}} elementów."
         other: "Wybierz co najmniej {{count}} elementów."
+    date_time_picker:
+      from: Od
+      to: Do
     emoji_picker:
       filter_placeholder: Szukaj emoji
       objects: Obiekty
@@ -2682,8 +2688,6 @@ pl_PL:
           view_table: "tabela"
           view_graph: "wykres"
           refresh_report: "Odśwież raport"
-          start_date: "Data początkowa"
-          end_date: "Data końcowa"
           groups: "Wszystkie grupy"
           disabled: "Ten raport jest nieaktywny"
           filters:
@@ -2927,7 +2931,7 @@ pl_PL:
         copy_to_clipboard_error: "Wystąpił błąd w trakcie kopiowania do schowka."
         theme_owner: "Nie możliwe do edycji, należy do:"
         email_templates:
-          title: "Szablony email"
+          title: "Email"
           subject: "Temat"
           multiple_subjects: "Ten szablon e-mail zawiera wiele tematów."
           body: "Treść"
@@ -3045,6 +3049,8 @@ pl_PL:
           love:
             name: "polubienie"
             description: "Kolor przycisku lajkuj"
+        email_style:
+          css: "CSS"
       email:
         title: "Emaile"
         settings: "Ustawienia"
@@ -3236,6 +3242,8 @@ pl_PL:
         search: "szukaj"
         clear_filter: "Wyczyść"
         show_words: "pokaż słowa"
+        download: Pobierz
+        clear_all: Wyczyść wszystko
         word_count:
           one: "%{count} słowo"
           few: "%{count} słówa"
@@ -3257,8 +3265,10 @@ pl_PL:
           placeholder_regexp: "wyrażenie regularne"
           add: "Dodaj"
           success: "Sukces"
-          upload: "Prześlij"
           upload_successful: "Przesyłanie zakończone sukcesem. Słowa zostały dodane."
+        test:
+          button_label: "Sprawdź"
+          no_matches: "Nie znaleziono dopasowań"
       impersonate:
         title: "Zaloguj się na to konto"
         help: "Użyj tego narzędzia, aby logować się jako dowolny użytkownik w celach diagnozy problemów."
@@ -3441,8 +3451,6 @@ pl_PL:
           likes_received: "Lajki otrzymane"
           likes_received_days: "Lajki otrzymane: unikalne dni"
           likes_received_users: "Lajki otrzymane: unikalni użytkownicy"
-          suspended: "Zawieszony (cały czas)"
-          silenced: "Wyciszony (cały czas)"
           qualifies: "Kwalifikuje się do 3 poziomu zaufania."
           does_not_qualify: "Nie kwalifikuje się do 3 poziomu zaufania."
           will_be_promoted: "Zostanie awansowany wkrótce."
@@ -3494,7 +3502,7 @@ pl_PL:
       site_text:
         description: "Możesz dostosować dowolny tekst na swoim forum. Rozpocznij wyszukując poniżej:"
         search: "Znajdź etykietę lub tekst który chcesz zmienić"
-        title: "Kontekst"
+        title: "Tekst"
         edit: "edytuj"
         revert: "Cofnij zmiany"
         revert_confirm: "Czy na pewno chcesz wycofać swoje zmiany?"
@@ -3581,7 +3589,6 @@ pl_PL:
         enabled: Włącz odznakę
         icon: Ikona
         image: Grafika
-        icon_help: "Użyj klasy Font Awesome"
         query: "Zapytanie odznaki (SQL) "
         target_posts: Wpisy powiązane z odznaką
         auto_revoke: Codziennie uruchamiaj zapytanie odbierające odznakę

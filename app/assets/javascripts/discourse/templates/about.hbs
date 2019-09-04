@@ -57,8 +57,21 @@
                     connectorTagName='section'
                     args=(hash model=model)}}
 
+      {{#if model.category_moderators.length}}
+        {{#each model.category_moderators as |cm|}}
+          <section class='about category-moderators'>
+            <h3>{{category-link cm.category}}{{i18n "about.moderators"}}</h3>
+            <div class='users'>
+              {{#each cm.moderators as |m|}}
+                {{user-info user=m}}
+              {{/each}}
+            </div>
+            <div class='clearfix'></div>
+          </section>
+        {{/each}}
+      {{/if}}
       <section class='about stats'>
-        <h3>{{d-icon "bar-chart"}}  {{i18n 'about.stats'}}</h3>
+        <h3>{{d-icon "far-chart-bar"}}  {{i18n 'about.stats'}}</h3>
 
         <table class='table'>
           <tr>

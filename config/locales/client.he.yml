@@ -269,6 +269,7 @@ he:
       other: "{{count}} תווים"
     related_messages:
       title: "הודעות קשורות"
+      see_all: 'להציג את <a href="%{path}">כל ההודעות</a> מאת ‎@%{username}‎…'
     suggested_topics:
       title: "נושאים מוצעים"
       pm_title: "הודעות מוצעות"
@@ -278,6 +279,7 @@ he:
       stats: "סטטיסטיקות אתר"
       our_admins: "המנהלים שלנו"
       our_moderators: "המפקחים שלנו"
+      moderators: "מפקחים"
       stat:
         all_time: "כל הזמנים"
         last_7_days: "7 הימים האחרונים"
@@ -347,6 +349,8 @@ he:
     banner:
       close: "שחרור באנר זה."
       edit: "עריכת הבאנר הזה >>"
+    pwa:
+      install_banner: "<a href>להתקין את %{title} על המכשיר הזה?</a>"
     choose_topic:
       none_found: "לא נמצאו נושאים."
       title:
@@ -651,6 +655,7 @@ he:
         remove_owner: "הסרת בעלות"
         remove_owner_description: "הסרת הבעלות של <b>%{username}</b> על קבוצה זו"
         owner: "בעלות"
+        forbidden: "אין לך הרשאות לצפות ברשימת החברים."
       topics: "נושאים"
       posts: "פוסטים"
       mentions: "אזכורים"
@@ -816,7 +821,7 @@ he:
       allow_private_messages: "אפשר למשתמשים אחרים לשלוח לי הודעות פרטיות"
       external_links_in_new_tab: "פתח את כל הקישורים החיצוניים בעמוד חדש"
       enable_quoting: "הפעלת תגובת ציטוט לטקסט מסומן"
-      enable_defer: "הפעלת דחייה כדי לסמן נושאים כלא נקראו"
+      enable_defer: "הפעלת דחייה לאחר כך כדי לסמן נושאים כלא נקראו"
       change: "שנה"
       moderator: "ל־{{user}} יש תפקיד פיקוח"
       admin: "{{user}} הוא מנהל מערכת"
@@ -981,7 +986,6 @@ he:
         uploaded_avatar: "תמונה אישית"
         uploaded_avatar_empty: "הוסיפו תמונה אישית"
         upload_title: "העלו את התמונה שלכם"
-        upload_picture: "העלאת תמונה"
         image_is_not_a_square: "אזהרה: קיצצנו את התמונה שלך; האורך והרוחב לא היו שווים."
       change_profile_background:
         title: "שינוי רקע פרופיל"
@@ -1009,7 +1013,12 @@ he:
         title: "חשבונות מקושרים"
         connect: "התחבר"
         revoke: "בטל"
+        cancel: "ביטול"
         not_connected: "(לא מחובר)"
+        confirm_modal_title: "חיבור חשבון %{provider}"
+        confirm_description:
+          account_specific: "החשבון שלך ‚%{account_description}’ ב־%{provider} ישמש לאימות."
+          generic: "החשבון של אצל %{provider} ישמש לאימות."
       name:
         title: "שם"
         instructions: "שמך המלא (רשות)"
@@ -1430,6 +1439,10 @@ he:
         name: "GitHub"
         title: "עם GitHub"
         message: "אימות עם GitHub (יש לוודא שחוסם חלונות קופצים אינו פעיל)"
+      discord:
+        name: "Discord"
+        title: "עם Discord"
+        message: "אימות עם Discord"
     invites:
       accept_title: "הזמנה"
       welcome_to: "ברוך בואך אל %{site_name}!"
@@ -1483,6 +1496,11 @@ he:
         two: "נא לבחור ב־{{count}} פריטים לפחות."
         many: "נא לבחור ב־{{count}} פריטים לפחות."
         other: "נא לבחור ב־{{count}} פריטים לפחות."
+    date_time_picker:
+      from: מאת
+      to: אל
+      errors:
+        to_before_from: "תאריך היעד חייב להיות לאחר תאריך ההתחלה."
     emoji_picker:
       filter_placeholder: חיפוש אחר אמוג׳י
       smileys_&_emotion: חייכנים ורגש
@@ -1682,6 +1700,7 @@ he:
       granted_badge: "הרווחת '{{description}}'"
       topic_reminder: "<span>{{username}}</span> {{description}}"
       watching_first_post: "<span>נושא חדש</span> {{description}}"
+      membership_request_accepted: "התקבלת לחברות בקבוצה ‚{{group_name}}’"
       group_message_summary:
         one: "הודעה {{count}} בתיבת ה{{group_name}} שלך"
         two: "{{count}} הודעות בתיבת ה{{group_name}} שלך"
@@ -1892,7 +1911,7 @@ he:
         title: "ערוך הודעה"
       defer:
         help: "סימון כלא נקראו"
-        title: "דחייה"
+        title: "אחר כך"
       list: "נושאים"
       new: "נושא חדש"
       unread: "לא נקראו"
@@ -1946,6 +1965,7 @@ he:
       group_request: "עליך לבקש חברות בקבוצה `{{name}}` כדי לצפות בנושא הזה"
       group_join: "עליך להצטרף לקבוצה `{{name}}` כדי לצפות בנושא הזה"
       group_request_sent: "בקשת החברות שלך נשלחה לקבוצה הזו. ניידע אותך כשהיא תתקבל."
+      unread_indicator: "אף אחד מהחברים לא קרא את הפוסט האחרון של הנושא הזה עדיין."
       read_more_MF: "יש { UNREAD, plural, =0 {} one { <a href='{basePath}/unread'>1 שלא נקרא</a> } other { <a href='{basePath}/unread'># שלא נקראו</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{ו} false {} other{}} נושא חדש <a href='{basePath}/new'>אחד</a>} other { {BOTH, select, true{ו} false {} other{}} <a href='{basePath}/new'>#</a> נושאים חדשים} } נותרים, or {CATEGORY, select, true {עיין בנושאים אחרים ב {catLink}} false {{latestLink}} other {}}"
       browse_all_categories: עיינו בכל הקטגוריות
       view_latest_topics: הצגת נושאים אחרונים
@@ -2114,6 +2134,9 @@ he:
         title: "דגל"
         help: "דגלו נושא זה באופן פרטי לתשומת לב או שלחו התראה פרטית בנוגע אליו"
         success_message: "דיגלתם נושא זה בהצלחה."
+      make_public:
+        title: "המרה לנושא ציבורי"
+        choose_category: "נא לבחור קטגוריה לנושא הציבורי:"
       feature_topic:
         title: "המליצו על נושא זה"
         pin: "גרמו לנושא זה להופיע בראש קטגוריה {{categoryLink}} עד"
@@ -2349,6 +2372,7 @@ he:
         reply: "התחילו לכתוב תגובה לפוסט זה"
         like: "תנו לייק לפוסט זה"
         has_liked: "אהבת פוסט זה"
+        read_indicator: "חברים שקוראים את הפוסט הזה"
         undo_like: "בטל 'אהוב'"
         edit: "עירכו פוסט זה"
         edit_action: "עריכה"
@@ -2411,6 +2435,7 @@ he:
           notify_user: "נשלחה הודעה"
           bookmark: "סומן"
           like: "אהבו את זה"
+          read: "קוראים את זה"
           like_capped:
             one: "ועוד מישהו אהב את זה"
             two: "ועוד 2 נוספים אהבו את זה"
@@ -2517,6 +2542,7 @@ he:
       special_warning: "אזהרה: קטגוריה זו הגיעה מראש והגדרות האבטחה שלה אינן ניתנות לשינוי. אם אתם מעוניינים להשתמש בקטגוריה זו, מחקו אותה במקום להשתמש בה מחדש."
       uncategorized_security_warning: "קטגוריה זו היא מיוחדת. היא מיועדת להחזקת מגוון של נושאים שאין להם קטגוריה, לא יכולות להיות לקבוצה זו הגדרות אבטחה."
       uncategorized_general_warning: 'קטגוריה זו היא מיוחדת. היא משמשת כקטגוריית בררת המחדל לנושאים חדשים שלא נבחרה עבורם קטגוריה. אם ברצונך למנוע את ההתנהגות הזאת ולאלץ בחירת קטגוריה, <a href="%{settingLink}">נא לנטרל את ההגדרה הזאת כאן</a>. אם מעניין אותך לשנות את השם או את התיאור, עליך לגשת אל <a href="%{customizeLink}">התאמה אישית / תוכן טקסט</a>.'
+      pending_permission_change_alert: "לא הוספת %{group} לקטגוריה הזאת, יש ללחוץ על הכפתור הזה כדי להוסיף אותן."
       images: "תמונות"
       email_in: "כתובת דואר נכנס מותאמת אישית:"
       email_in_allow_strangers: "קבלת דוא\"ל ממשתמשים אנונימיים ללא חשבונות במערכת הפורומים"
@@ -2875,7 +2901,7 @@ he:
         mark_tracking: "%{shortcut} עקבו אחר נושא"
         mark_watching: "%{shortcut} צפו בנושא"
         print: "%{shortcut} הדפסת נושא"
-        defer: "%{shortcut} לדחות נושא"
+        defer: "%{shortcut} לדחות נושא לאחר כך"
     badges:
       earned_n_times:
         one: "הרוויחו עיטור זה פעם אחת"
@@ -3108,8 +3134,8 @@ he:
           view_table: "טבלה"
           view_graph: "גרף"
           refresh_report: "רענון דו\"ח"
-          start_date: "תאריך התחלה"
-          end_date: "תאריך סיום"
+          start_date: "תאריך התחלה (UTC)"
+          end_date: "תאריך סיום (UTC)"
           groups: "כל הקבוצות"
           disabled: "דוח זה מנוטרל"
           totals_for_sample: "סיכומים לדוגמה"
@@ -3160,6 +3186,10 @@ he:
               staff: "בעלי קבוצות וסגל"
               owners: "בעלי קבוצות"
               description: "מנהלים יכולים לראות את כל הקבוצות."
+            members_visibility_levels:
+              title: "מי יכול לראות את חברי הקבוצה הזו?"
+              description: "מנהלים יכולים לראות את רשימות חברי כל הקבוצות."
+            publish_read_state: "בהודעות קבוצתית לפרסם את מצב הקריאה של הקבוצה"
           membership:
             automatic: אוטומטי
             trust_level: רמת אמון
@@ -3264,6 +3294,9 @@ he:
         reviewable_event:
           name: "אירוע סקירה"
           details: "כאשר פריט חדש ממתין לסקירה וכאשר המצב שלו מתעדכן."
+        notification_event:
+          name: "אירוע התראה"
+          details: "כשמשתמש מקבל התראה בהזנה שלו."
         delivery_status:
           title: "מצב שליחה"
           inactive: "לא פעיל"
@@ -3403,7 +3436,7 @@ he:
         copy_to_clipboard_error: "שגיאה בהעתקת מידע ללוח"
         theme_owner: "לא ניתן לעריכה, שייך ל:"
         email_templates:
-          title: "תבניות דואר אלקטרוני"
+          title: "דוא״ל"
           subject: "נושא"
           multiple_subjects: "תבנית מייל זו מכילה מספר נושאים."
           body: "גוף"
@@ -3480,7 +3513,7 @@ he:
           delete_upload_confirm: "להסיר העלאה זו? (ערכת נושא CSS עלולה להפסיק לעבוד!)"
           import_web_tip: "מאגר שמכיל ערכת עיצוב"
           import_web_advanced: "מתקדם…"
-          import_file_tip: "קובץ ‎.tar.gz או ‎.dcstyle.json המכיל ערכת עיצוב"
+          import_file_tip: "קובץ ‎.tar.gz,‏ ‎.zip,‏ או ‎.dcstyle.json שמכיל ערכת עיצוב"
           is_private: "ערכת העיצוב נמצאת במאגר git פרטי"
           remote_branch: "שם ענף (רשות)"
           public_key: "להעניק למפתח הציבורי הבא גישה למאגר:"
@@ -3590,6 +3623,19 @@ he:
           love:
             name: "חבב"
             description: "צבע הרקע של הכפתור \"חבב\""
+        robots:
+          title: "דריסת קובץ ה־robots.txt של האתר שלך:"
+          warning: "הגדרה זו תדרוס הגדרות אתר כלשהן שקשורות לכך."
+          overridden: קובץ ה־robots.txt כבררת מחדל של האתר שלך נדרס.
+        email_style:
+          title: "סגנון דוא״ל"
+          heading: "התאמת סגנון דוא״ל"
+          html: "תבנית HTML"
+          css: "CSS"
+          reset: "איפוס לבררת מחדל"
+          reset_confirm: "לאפס אל בררת המחדל %{fieldName} ולאבד את כל השינויים שלך?"
+          save_error_with_reason: "השינויים שלך לא נשמרו. %{error}"
+          instructions: "התאמת התבנית שמשמשת כתבנית להודעות html, לצד עיצוב עם CSS."
       email:
         title: "מיילים"
         settings: "הגדרות"
@@ -3823,6 +3869,13 @@ he:
         search: "חיפוש"
         clear_filter: "ניקוי"
         show_words: "הצגת מילים"
+        one_word_per_line: "מילה בשורה"
+        download: הורדה
+        clear_all: נקו הכל
+        clear_all_confirm_block: "לפנות את כל המילים שבמעקב לפעולת החסימה?"
+        clear_all_confirm_censor: "לפנות את כל המילים שבמעקב לפעולת הצנזורה?"
+        clear_all_confirm_flag: "לפנות את כל המילים שבמעקב לפעולת הסימון בדגל?"
+        clear_all_confirm_require_approval: "לפנות את כל המילים שבמעקב לפעולת בקשת האישור?"
         word_count:
           one: "מילה %{count}"
           two: "%{count} מילים"
@@ -3845,8 +3898,14 @@ he:
           add: "הוספה"
           success: "הצלחה"
           exists: "כבר קיימת"
-          upload: "העלאה"
+          upload: "הוספה מקובץ"
           upload_successful: "העלאה הצליחה. מילים נוספו."
+        test:
+          button_label: "נסיון"
+          modal_title: "בדיקת מילים במעקב ‚%{action}’"
+          description: "נא להקליד טקסט להלן כדי לבדוק התאמות מול מילים שבמעקב"
+          found_matches: "נמצאו התאמות:"
+          no_matches: "לא נמצאו התאמות"
       impersonate:
         title: "התחזות"
         help: "ניתן להשתמש בכלי הזה כדי להתחזות לחשבון משתמש למטרות טיפול בשגיאות. יהיה עליך לצאת לאחר הסיום."
@@ -4049,8 +4108,8 @@ he:
           likes_received: "לייקים שהתקבלו"
           likes_received_days: "לייקים שהתקבלו: לפי ימים "
           likes_received_users: "לייקים שהתקבלו: לפי משתמשים"
-          suspended: "בהשעיה (כל הזמן)"
-          silenced: "בהשתקה (כל הזמן)"
+          suspended: "השעיה (בחצי השנה האחרונה)"
+          silenced: "השתקה (בחצי השנה האחרונה)"
           qualifies: "דרישות עבור רמת אמון 3"
           does_not_qualify: "אין עומד בדרישות עבור רמת אמון 3."
           will_be_promoted: "יקודם בקרוב."
@@ -4102,7 +4161,7 @@ he:
       site_text:
         description: "אתם יכולים להתאים כל טקסט בפורום שלכם. בבקשה התחילו בחיפוש אחרי:"
         search: "חפשו טקסט שברצונכם לערוך"
-        title: "תוכן טקסט"
+        title: "טקסט"
         edit: "ערוך"
         revert: "בטל שינויים"
         revert_confirm: "האם אתם בטוחים שאתם מעוניינים לבטל את השינויים שלכם?"
@@ -4197,7 +4256,7 @@ he:
         enabled: הפעלת עיטורים
         icon: סמליל
         image: תמונה
-        icon_help: "להשתמש במחלקה של Font Awesome"
+        icon_help: "נא להכניס שם של סמל מתוך FontAwesome (קידומת ‚far-‎’ לסמלים רגילים וב־‚fab-‎’ לסמלים ממותגים)"
         image_help: "נא להקליד את כתובת התמונה (דורסת את שדה הסמל אם שניהם מוגדרים)"
         query: שאילתת עיטור (SQL)
         target_posts: השאילתה מוכוונת פוסטים

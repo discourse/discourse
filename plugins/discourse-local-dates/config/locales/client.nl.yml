@@ -12,6 +12,8 @@ nl:
         today: Vandaag %{time}
         tomorrow: Morgen %{time}
         yesterday: Gisteren %{time}
+        countdown:
+          passed: datum is verstreken
       title: Datum / tijd invoegen
       create:
         form:

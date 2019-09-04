@@ -24,10 +24,43 @@ class DistributedMutex
 
   # NOTE wrapped in mutex to maintain its semantics
   def synchronize
-    @mutex.lock
+    @mutex.synchronize do
+      expire_time = get_lock
+
+      begin
+        yield
+      ensure
+        current_time = redis.time[0]
+        if current_time > expire_time
+          warn("held for too long, expected max: #{@validity} secs, took an extra #{current_time - expire_time} secs")
+        end
+
+        if !unlock(expire_time) && current_time <= expire_time
+          warn("didn't unlock cleanly")
+        end
+      end
+    end
+  end
+
+  private
+
+  attr_reader :key
+  attr_reader :redis
+  attr_reader :validity
+
+  def warn(msg)
+    Rails.logger.warn("DistributedMutex(#{key.inspect}): #{msg}")
+  end
+
+  def get_lock
     attempts = 0
 
-    while !try_to_get_lock
+    while true
+      got_lock, expire_time = try_to_get_lock
+      if got_lock
+        return expire_time
+      end
+
       sleep 0.001
       # in readonly we will never be able to get a lock
       if @using_global_redis && Discourse.recently_readonly?
@@ -38,38 +71,48 @@ class DistributedMutex
         end
       end
     end
-
-    yield
-
-  ensure
-    @redis.del @key
-    @mutex.unlock
   end
-
-  private
 
   def try_to_get_lock
     got_lock = false
 
-    if @redis.setnx @key, Time.now.to_i + @validity
-      @redis.expire @key, @validity
-      got_lock = true
-    else
-      begin
-        @redis.watch @key
-        time = @redis.get @key
+    now = redis.time[0]
+    expire_time = now + validity
 
-        if time && time.to_i < Time.now.to_i
-          got_lock = @redis.multi do
-            @redis.set @key, Time.now.to_i + @validity
-          end
+    redis.watch key
+
+    current_expire_time = redis.get key
+
+    if current_expire_time && current_expire_time.to_i > now
+      redis.unwatch
+
+      got_lock = false
+    else
+      result =
+        redis.multi do
+          redis.set key, expire_time.to_s
+          redis.expire key, validity
         end
-      ensure
-        @redis.unwatch
-      end
+
+      got_lock = !result.nil?
     end
 
-    got_lock
+    [got_lock, expire_time]
   end
 
+  def unlock(expire_time)
+    redis.watch key
+    current_expire_time = redis.get key
+
+    if current_expire_time == expire_time.to_s
+      result =
+        redis.multi do
+          redis.del key
+        end
+      return !result.nil?
+    else
+      redis.unwatch
+      return false
+    end
+  end
 end

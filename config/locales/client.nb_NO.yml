@@ -10,7 +10,7 @@ nb_NO:
     number:
       format:
         separator: ","
-        delimiter: " "
+        delimiter: " "
       human:
         storage_units:
           format: "%n %u"
@@ -31,14 +31,14 @@ nb_NO:
       long_no_year: "D MMM LT"
       long_no_year_no_time: "D MMM"
       full_no_year_no_time: "D. MMMM"
-      long_with_year: "D MMM, YYYY LT"
-      long_with_year_no_time: "D MMM, YYYY"
-      full_with_year_no_time: "D. MMMM, YYYY"
-      long_date_with_year: "D MMM, 'YY LT"
+      long_with_year: "D MMM YYYY LT"
+      long_with_year_no_time: "D MMM YYYY"
+      full_with_year_no_time: "D. MMMM YYYY"
+      long_date_with_year: "D MMM 'YY LT"
       long_date_without_year: "D MMM, LT"
-      long_date_with_year_without_time: "D MMM, 'YY"
+      long_date_with_year_without_time: "D MMM 'YY"
       long_date_without_year_with_linebreak: "D MMM <br/>LT"
-      long_date_with_year_with_linebreak: "D. MMM, 'YY <br/>LT"
+      long_date_with_year_with_linebreak: "D. MMM 'YY <br/>LT"
       wrap_ago: "%{date} siden"
       tiny:
         half_a_minute: "< 1m"
@@ -109,8 +109,12 @@ nb_NO:
       next_month: "Neste måned"
       placeholder: dato
     share:
+      topic_html: 'Emne: <span class="topic-title">%{topicTitle}</span>'
       post: "innlegg #%{postNumber}"
       close: "lukk"
+      twitter: "Del denne lenka på Twitter"
+      facebook: "Del denne lenka på Facebook"
+      email: "Send denne lenka i en e-post"
     action_codes:
       public_topic: "gjorde dette emnet offentlig %{when}"
       private_topic: "gjorde dette emnet om til en personlig melding %{when}"
@@ -173,6 +177,7 @@ nb_NO:
     submit: "Utfør"
     generic_error: "Beklager, det har oppstått en feil."
     generic_error_with_reason: "Det oppstod et problem: %{error}"
+    go_ahead: "Fortsett"
     sign_up: "Registrer deg"
     log_in: "Logg inn"
     age: "Alder"
@@ -189,6 +194,7 @@ nb_NO:
     privacy_policy: "Personvernerklæring"
     privacy: "Personvern"
     tos: "Bruksvilkår"
+    rules: "Regler"
     mobile_view: "Mobilvisning"
     desktop_view: "Skrivebordsvisning"
     you: "Du"
@@ -202,11 +208,16 @@ nb_NO:
     every_hour: "hver time"
     daily: "daglig"
     weekly: "ukentlig"
+    every_month: "hver måned"
+    every_six_months: "hver sjette måned"
     max_of_count: "maksimum av {{count}}"
     alternation: "eller"
     character_count:
       one: "{{count}} tegn"
       other: "{{count}} tegn"
+    related_messages:
+      title: "Relaterte meldinger"
+      see_all: 'se <a href="%{path}">alle meldinger</a> fra @%{username} …'
     suggested_topics:
       title: "Anbefalte emner"
       pm_title: "Anbefalte meldinger"
@@ -216,6 +227,7 @@ nb_NO:
       stats: "Nettstedsstatistikk"
       our_admins: "Våre administratorer"
       our_moderators: "Våre moderatorer"
+      moderators: "Moderatorer"
       stat:
         all_time: "Gjennom tidene"
         last_7_days: "Siste 7"
@@ -235,6 +247,7 @@ nb_NO:
         unbookmark: "Klikk for å fjerne alle bokmerker i dette emnet"
     bookmarks:
       created: "du har bokmerket dette innlegget"
+      not_bookmarked: "bokmerk dette innlegget"
       remove: "Fjern bokmerke"
     drafts:
       resume: "Fortsett"
@@ -261,6 +274,8 @@ nb_NO:
     saved: "Lagret!"
     upload: "Last opp"
     uploading: "Laster opp…"
+    uploading_filename: "Laster opp {{filename}}"
+    clipboard: "utklippstavle"
     uploaded: "Lastet opp!"
     pasting: "Limer inn…"
     enable: "Aktiver"
@@ -274,27 +289,55 @@ nb_NO:
     banner:
       close: "Fjern dette banneret."
       edit: "Endre dette banneret >>"
+    pwa:
+      install_banner: "Ønsker du å <a href>installere %{title} på denne enheten</a>?"
     choose_topic:
       none_found: "Ingen emner funnet."
       title:
         placeholder: "skriv tittelen på emnet her"
+    choose_message:
+      none_found: "Ingen meldinger funnet."
+      title:
+        placeholder: "skriv meldingstittelen her"
     review:
+      order_by: "Sorter etter"
       in_reply_to: "i svar til"
+      awaiting_approval: "Venter på godkjenning"
       delete: "Slett"
       settings:
+        saved: "Lagret"
         save_changes: "Lagre endringer"
         title: "Innstillinger"
       moderation_history: "Moderatorhistorikk"
+      view_all: "Vis alle"
+      grouped_by_topic: "Gruppert etter emne"
+      view_pending: "vis ventende"
+      topic_has_pending:
+        one: "Dette emnet har <b>%{count}</b> post som venter på godkjenning"
+        other: "Dette emnet har <b>{{count}}</b> poster som venter på godkjenning"
       topic: "Emne:"
       filtered_user: "Bruker"
+      show_all_topics: "vis alle emner"
+      deleted_post: "(post slettet)"
+      deleted_user: "(bruker slettet)"
       user:
         username: "Brukernavn"
         email: "E-post"
         name: "Navn"
+        fields: "Felter"
       topics:
         topic: "Emne"
         reviewable_count: "Antall"
+        reported_by: "Rapporter av"
+        deleted: "[Emne slettet]"
+        original: "(opprinnelig emne)"
         details: "detaljer"
+        unique_users:
+          one: "%{count} bruker"
+          other: "{{count}} brukere"
+      replies:
+        one: "%{count} svar"
+        other: "{{count}} svar"
       edit: "Rediger"
       save: "Lagre"
       cancel: "Avbryt"
@@ -302,11 +345,17 @@ nb_NO:
         all_categories: "(alle kategorier)"
         type:
           title: "Type"
+          all: "(alle typer)"
         refresh: "Last inn på nytt"
+        status: "Status"
         category: "Kategori"
+        orders:
+          priority: "Prioritet"
+          priority_asc: "Prioritet (motsatt)"
       scores:
         date: "Dato"
         type: "Type"
+        status: "Status"
       statuses:
         pending:
           title: "På vent"
@@ -366,7 +415,9 @@ nb_NO:
         description: "Endre medlemskapet i denne gruppen"
         usernames: "Brukernavn"
       requests:
+        title: "Forespørsler"
         reason: "Begrunnelse"
+        accept: "Godta"
         accepted: "godtatt"
       manage:
         title: "Behandle"
@@ -425,6 +476,7 @@ nb_NO:
         all: "Alle grupper"
         empty: "Det finnes ingen synlige grupper"
         filter: "Filtrer etter gruppetype"
+        owner_groups: "Grupper jeg eier"
         close_groups: "Lukkede grupper"
         automatic_groups: "Automatiske grupper"
         automatic: "Automatisk"
@@ -453,6 +505,7 @@ nb_NO:
         remove_owner: "Fjern som eier"
         remove_owner_description: "Fjern <b>%{username}</b> som eier av denne gruppen"
         owner: "Eier"
+        forbidden: "Du har ikke tillatelse til å vise medlemmene."
       topics: "Emner"
       posts: "Innlegg"
       mentions: "Omtalelser"
@@ -465,6 +518,7 @@ nb_NO:
         only_admins: "Kun administratorer"
         mods_and_admins: "Kun moderatorer og administratorer"
         members_mods_and_admins: "Kun gruppemedlemmer, moderatorer og administratorer"
+        owners_mods_and_admins: "Bare gruppeeiere, moderatorer og administratorer"
         everyone: "Alle"
       notifications:
         watching:
@@ -557,6 +611,7 @@ nb_NO:
       user_notifications:
         ignore_duration_username: "Brukernavn"
         ignore_duration_save: "Ignorer"
+        add_ignored_user: "Legg til …"
         mute_option: "Ignorert"
         normal_option: "Normal"
       activity_stream: "Aktivitet"
@@ -722,7 +777,6 @@ nb_NO:
         uploaded_avatar: "Egendefinert bilde"
         uploaded_avatar_empty: "Legg til egendefinert bilde"
         upload_title: "Last opp bilde"
-        upload_picture: "Last opp bilde"
         image_is_not_a_square: "Vi har beskåret bildet ditt, høyde og bredde er ikke lik"
       change_profile_background:
         title: "Profilbakgrunn"
@@ -747,6 +801,7 @@ nb_NO:
         title: "Tilknyttede kontoer"
         connect: "Koble til"
         revoke: "Trekk tilbake"
+        cancel: "Avbryt"
         not_connected: "(ikke tilkoblet)"
       name:
         title: "Navn"
@@ -801,6 +856,8 @@ nb_NO:
         every_hour: "hver time"
         daily: "daglig"
         weekly: "ukentlig"
+        every_month: "hver måned"
+        every_six_months: "hver sjette måned"
       email_level:
         title: "Send meg en e-post når noen siterer meg, svarer på innlegget mitt, nevner @brukernavnet mitt eller inviterer meg til et emne"
         always: "alltid"
@@ -1145,6 +1202,9 @@ nb_NO:
       min_content_not_reached:
         one: "Velg minst {{count}} element."
         other: "Velg minst {{count}} elementer."
+    date_time_picker:
+      from: Fra
+      to: Til
     emoji_picker:
       filter_placeholder: Søk etter emoji
       objects: Objekter
@@ -2501,8 +2561,6 @@ nb_NO:
           view_table: "tabell"
           view_graph: "graf"
           refresh_report: "Refresh Rapport"
-          start_date: "Startdato"
-          end_date: "Sluttdato"
           groups: "Alle grupper"
           disabled: "Denne rapporten er deaktivert"
           totals_for_sample: "Totalt for tidsrom"
@@ -2773,7 +2831,7 @@ nb_NO:
         copy_to_clipboard_error: "Feil ved kopiering av data til utklippstavle"
         theme_owner: "Kan ikke endres, eid av:"
         email_templates:
-          title: "E-postmaler"
+          title: "E-post"
           subject: "Emne"
           multiple_subjects: "Denne e-postmalen har flere emner."
           body: "Meldingstekst"
@@ -2895,6 +2953,8 @@ nb_NO:
           love:
             name: "liker"
             description: "Fargen til Liker-knappen."
+        email_style:
+          css: "CSS"
       email:
         title: "E-poster"
         settings: "Instillinger"
@@ -3106,6 +3166,8 @@ nb_NO:
         search: "søk"
         clear_filter: "Tøm"
         show_words: "vis ord"
+        download: Last ned
+        clear_all: Fjern alle
         word_count:
           one: "ett ord"
           other: "%{count} ord"
@@ -3126,8 +3188,10 @@ nb_NO:
           add: "Legg til"
           success: "Suksess"
           exists: "Eksisterer fra før"
-          upload: "Last opp"
           upload_successful: "Opplastet. Ord lagt til."
+        test:
+          button_label: "Test"
+          no_matches: "Ingen treff funnet"
       impersonate:
         title: "Fremstå som"
         help: "Bruk dette verktøyet for å fremstå som en annen bruker for feilsøking. Du må logge ut når du er ferdig."
@@ -3316,8 +3380,6 @@ nb_NO:
           likes_received: "Likes mottatt"
           likes_received_days: "Likes mottatt: Unike dager"
           likes_received_users: "Likes mottatt: Unike brukere"
-          suspended: "Suspenderte (gjennom tidene)"
-          silenced: "Dempet (gjennom tidene)"
           qualifies: "Kvalifiserer til tillitsnivå 3."
           does_not_qualify: "Kvalifiserer ikke til tillitsnivå 3."
           will_be_promoted: "Vil snart forfremmes."
@@ -3369,7 +3431,7 @@ nb_NO:
       site_text:
         description: "Du kan skreddersy all tekst på forumet ditt. Start ved å søke nedenfor:"
         search: "Søk etter tekst du ønsker å endre"
-        title: "Tekstinnhold"
+        title: "Tekst"
         edit: "rediger"
         revert: "Tilbakestill endringer"
         revert_confirm: "Er du sikker på at du ønsker å tilbakestille dine endringer?"
@@ -3459,7 +3521,6 @@ nb_NO:
         enabled: Aktiver merke
         icon: Ikon
         image: Bilde
-        icon_help: "Bruk en Font Awesome-klasse"
         image_help: "Oppgi URL for bildet (overstyrer ikonfeltet hvis begge er satt)"
         query: Spørring for merke (SQL)
         target_posts: Spørring har innlegg som mål

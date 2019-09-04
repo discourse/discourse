@@ -210,6 +210,7 @@ ja:
       stats: " サイトの統計"
       our_admins: "管理者"
       our_moderators: "モデレータ"
+      moderators: "モデレータ"
       stat:
         all_time: "すべて"
         last_7_days: "過去7日間"
@@ -303,29 +304,54 @@ ja:
       topic: "トピック:"
       filtered_user: "ユーザー"
       show_all_topics: "すべてのトピックを表示"
+      deleted_post: "(削除されたポスト)"
+      deleted_user: "(削除されたユーザー)"
       user:
         username: "ユーザー名"
         email: "Eメール"
         name: "名前"
+        fields: "広場"
+      user_percentage:
+        agreed:
+          other: "{{count}}%同意"
+        disagreed:
+          other: "{{count}}%同意しない"
+        ignored:
+          other: "{{count}}%無投票"
       topics:
         topic: "トピック"
+        deleted: "[デリートされたトピック]"
+        original: "(もとのトピック)"
         details: "詳細"
+        unique_users:
+          other: "{{count}}ユーザー"
+      replies:
+        other: "{{count}}件の返信"
       edit: "編集"
       save: "保存"
       cancel: "キャンセル"
       filters:
+        all_categories: "(すべてのカテゴリ)"
         type:
           title: "タイプ"
           all: "(すべてのタイプ)"
         minimum_score: "最小スコア:"
         refresh: "更新"
+        status: "ステータス"
         category: "カテゴリ"
         orders:
+          priority: "優先度"
           created_at: "作られた"
+        priority:
+          medium: "普通"
+          high: "高い"
+      conversation:
+        view_full: "すべての会話を見る"
       scores:
         score: "スコア"
         date: "日付"
         type: "タイプ"
+        status: "ステータス"
       statuses:
         pending:
           title: "保留中"
@@ -333,6 +359,10 @@ ja:
           title: "拒否されたメール"
         ignored:
           title: "無視する"
+        deleted:
+          title: "削除済み"
+        all:
+          title: "(すべて)"
       types:
         reviewable_user:
           title: "ユーザー"
@@ -760,7 +790,6 @@ ja:
         uploaded_avatar: "カスタム画像"
         uploaded_avatar_empty: "カスタム画像を追加"
         upload_title: "画像をアップロード"
-        upload_picture: "画像をアップロード"
         image_is_not_a_square: "警告: アップロードされた画像は高さと幅が違うため切り落されました。"
       change_profile_background:
         title: "プロフィールの背景画像"
@@ -784,6 +813,7 @@ ja:
         title: "関連アカウント"
         connect: "接続"
         revoke: "解除"
+        cancel: "キャンセル"
         not_connected: "(接続されていない)"
       name:
         title: "名前"
@@ -1175,6 +1205,9 @@ ja:
       default_header_text: 選択...
       no_content: 一致する項目が見つかりませんでした
       filter_placeholder: 検索...
+    date_time_picker:
+      from: 発信元
+      to: 宛先
     emoji_picker:
       filter_placeholder: 絵文字を探す
       activities: 活動
@@ -1970,6 +2003,7 @@ ja:
         options:
           normal: "通常"
           ignore: "無視する"
+          high: "高い"
       sort_options:
         likes: "いいね！"
         views: "表示"
@@ -2337,8 +2371,6 @@ ja:
           all: "全て"
           view_table: "table"
           refresh_report: "Refresh Report"
-          start_date: "Start Date"
-          end_date: "End Date"
           groups: "すべてのグループ"
           disabled: "このレポートは利用不可"
           filters:
@@ -2515,7 +2547,7 @@ ja:
         copied_to_clipboard: "クリップボードにコピーしました"
         copy_to_clipboard_error: "クリップボードにコピーする際にエラーが発生しました"
         email_templates:
-          title: "メールテンプレート"
+          title: "Eメール"
           subject: "件名"
           multiple_subjects: "このメールのテンプレートは複数の件名があります。"
           body: "本文"
@@ -2590,6 +2622,8 @@ ja:
           love:
             name: "love"
             description: "「いいね！」ボタンの色"
+        email_style:
+          css: "CSS"
       email:
         title: "メール"
         settings: "設定"
@@ -2753,6 +2787,8 @@ ja:
         title: "監視ワード"
         search: "検索"
         clear_filter: "クリア"
+        download: ダウンロード
+        clear_all: すべてクリア
         actions:
           block: "ブロック"
           flag: "通報"
@@ -2764,8 +2800,9 @@ ja:
           add: "追加"
           success: "成功"
           exists: "既に存在します。"
-          upload: "アップロード"
           upload_successful: "アップロードが成功し、単語が追加されました。"
+        test:
+          no_matches: "一致する項目が見つかりませんでした"
       impersonate:
         title: "このユーザに切り替える"
         help: "Use this tool to impersonate a user account for debugging purposes. You will have to log out once finished."
@@ -2971,7 +3008,7 @@ ja:
       site_text:
         description: "フォーラム上のテキストを編集することができます。下のフォームで検索する事ができます:"
         search: "編集したいものを入力して検索"
-        title: "テキストコンテンツ"
+        title: "Text"
         edit: "編集"
         revert: "変更を元に戻す"
         revert_confirm: "本当に変更を元に戻しますか?"

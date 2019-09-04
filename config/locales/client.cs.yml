@@ -264,6 +264,7 @@ cs:
       stats: "Statistiky webu"
       our_admins: "Naši Admini"
       our_moderators: "Naši Moderátoři"
+      moderators: "Moderátoři"
       stat:
         all_time: "Za celou dobu"
         last_7_days: "Posledních 7"
@@ -794,7 +795,6 @@ cs:
         uploaded_avatar: "Vlastní obrázek"
         uploaded_avatar_empty: "Přidat vlastní obrázek"
         upload_title: "Nahrát obrázek"
-        upload_picture: "Nahrát obrázek"
         image_is_not_a_square: "Varování: Ořízli jsme váš obrázek; šířka a délka nebyla stejná."
       change_profile_background:
         title: "Pozadí profilu"
@@ -821,6 +821,7 @@ cs:
         title: "Propojené účty"
         connect: "Připojit"
         revoke: "Odpojit"
+        cancel: "Zrušit"
         not_connected: "(nepřipojeno)"
       name:
         title: "Jméno"
@@ -1209,6 +1210,8 @@ cs:
         name: "GitHub"
         title: "přes GitHub"
         message: "Autentizuji přes GitHub (ujistěte se, že nemáte zablokovaná popup okna)"
+      discord:
+        name: "Discord"
     invites:
       accept_title: "Pozvání"
       welcome_to: "Vítejte na %{site_name}!"
@@ -1259,6 +1262,9 @@ cs:
         few: "Vyberte nejméně {{count}} položky."
         many: "Vyberte nejméně {{count}} položek."
         other: "Vyberte nejméně {{count}} položek."
+    date_time_picker:
+      from: Od koho
+      to: Komu
     emoji_picker:
       filter_placeholder: Hledat emoji
       objects: Objekty
@@ -2715,8 +2721,6 @@ cs:
           view_table: "tabulka"
           view_graph: "graf"
           refresh_report: "Obnovit hlášení"
-          start_date: "Datum začátku"
-          end_date: "Datum konce"
           groups: "Všechny skupiny"
           filters:
             group:
@@ -2964,7 +2968,7 @@ cs:
         copy_to_clipboard_error: "Při kopírování dat do schránky došlo k chybě"
         theme_owner: "není editovatelné, vlastněno:"
         email_templates:
-          title: "Šablona emailu"
+          title: "Email"
           subject: "Předmět"
           multiple_subjects: "Tato šablona emailu má více předmětů."
           body: "Tělo"
@@ -3086,6 +3090,8 @@ cs:
           love:
             name: "láska"
             description: "Barva tlačítka \"Líbí se\"."
+        email_style:
+          css: "CSS"
       email:
         title: "Emaily"
         settings: "Nastavení"
@@ -3284,6 +3290,8 @@ cs:
         search: "hledat"
         clear_filter: "Zrušit"
         show_words: "zobrazit slova"
+        download: Stáhnout
+        clear_all: Vymazat vše
         word_count:
           one: "%{count} slovo"
           few: "%{count} slova"
@@ -3305,8 +3313,9 @@ cs:
           placeholder_regexp: "obvyklý výraz"
           add: "přidat"
           success: "Úspěch"
-          upload: "Nahrát"
           upload_successful: "Nahráno úspěšně. Slova byla přidána "
+        test:
+          no_matches: "Nebyly nalezeny žádné výsledky"
       impersonate:
         title: "Přihlásit se jako"
         help: "Použijte tento nástroj k přihlášení za jiného uživatele pro ladící a vývojové potřeby. Po dokončení se budete muset odhlásit."
@@ -3548,7 +3557,7 @@ cs:
       site_text:
         description: "Můžete uzpůsobit jakýkoli text na fóru. Začnětj s vyhledáváním níže, prosím:"
         search: "Hledat text, který byste chtěli upravit"
-        title: "Texty"
+        title: "Text"
         edit: "upravit"
         revert: "Vrátit změny"
         revert_confirm: "Opravdu chcete vrátit změny?"

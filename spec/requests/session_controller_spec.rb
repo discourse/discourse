@@ -816,6 +816,16 @@ RSpec.describe SessionController do
         expect(response.status).to eq(500)
       end
 
+      it "fails with a nice error message if secret is blank" do
+        SiteSetting.sso_provider_secrets = ""
+        sso = SingleSignOnProvider.new
+        sso.nonce = "mynonce"
+        sso.return_sso_url = "http://website.without.secret.com/sso"
+        get "/session/sso_provider", params: Rack::Utils.parse_query(sso.payload("aasdasdasd"))
+        expect(response.status).to eq(400)
+        expect(response.body).to eq(I18n.t("sso.missing_secret"))
+      end
+
       it "successfully redirects user to return_sso_url when the user is logged in" do
         sign_in(@user)
 

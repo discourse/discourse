@@ -1,7 +1,7 @@
 import computed from "ember-addons/ember-computed-decorators";
 
 export default Ember.Controller.extend({
-  application: Ember.inject.controller(),
+  router: Ember.inject.service(),
 
   @computed("siteSettings.enable_group_directory")
   showGroups(enableGroupDirectory) {
@@ -13,7 +13,7 @@ export default Ember.Controller.extend({
     return this.currentUser.get("admin") && enableBadges;
   },
 
-  @computed("application.currentPath")
+  @computed("router._router.currentPath")
   adminContentsClassName(currentPath) {
     let cssClasses = currentPath
       .split(".")

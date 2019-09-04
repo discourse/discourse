@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class ExtraLocalesController < ApplicationController
-
   layout :false
 
   skip_before_action :check_xhr,
@@ -11,13 +10,14 @@ class ExtraLocalesController < ApplicationController
 
   def show
     bundle = params[:bundle]
-    raise Discourse::InvalidAccess.new unless bundle =~ /^(admin|wizard)$/
-    if params[:v] && params[:v].length == 32
+
+    raise Discourse::InvalidAccess.new if bundle !~ /^(admin|wizard)$/ || !current_user&.staff?
+
+    if params[:v]&.size == 32
       hash = ExtraLocalesController.bundle_js_hash(bundle)
-      if hash == params[:v]
-        immutable_for 24.hours
-      end
+      immutable_for(24.hours) if hash == params[:v]
     end
+
     render plain: ExtraLocalesController.bundle_js(bundle), content_type: "application/javascript"
   end
 

@@ -22,7 +22,7 @@ class Theme < ActiveRecord::Base
   has_many :child_themes, -> { order(:name) }, through: :child_theme_relation, source: :child_theme
   has_many :parent_themes, -> { order(:name) }, through: :parent_theme_relation, source: :parent_theme
   has_many :color_schemes
-  belongs_to :remote_theme, autosave: true, dependent: :destroy
+  belongs_to :remote_theme, dependent: :destroy
 
   has_one :settings_field, -> { where(target_id: Theme.targets[:settings], name: "yaml") }, class_name: 'ThemeField'
   has_one :javascript_cache, dependent: :destroy
@@ -34,20 +34,18 @@ class Theme < ActiveRecord::Base
     where('user_selectable OR id = ?', SiteSetting.default_theme_id)
   }
 
-  def notify_color_change(color)
-    changed_colors << color
+  def notify_color_change(color, scheme: nil)
+    scheme ||= color.color_scheme
+    changed_colors << color if color
+    changed_schemes << scheme if scheme
   end
 
   after_save do
-    color_schemes = {}
-    changed_colors.each do |color|
-      color.save!
-      color_schemes[color.color_scheme_id] ||= color.color_scheme
-    end
-
-    color_schemes.values.each(&:save!)
+    changed_colors.each(&:save!)
+    changed_schemes.each(&:save!)
 
     changed_colors.clear
+    changed_schemes.clear
 
     changed_fields.each(&:save!)
     changed_fields.clear
@@ -63,6 +61,15 @@ class Theme < ActiveRecord::Base
     settings_field&.ensure_baked! # Other fields require setting to be **baked**
     theme_fields.each(&:ensure_baked!)
 
+    update_javascript_cache!
+
+    remove_from_cache!
+    clear_cached_settings!
+    ColorScheme.hex_cache.clear
+    notify_theme_change(with_scheme: notify_with_scheme)
+  end
+
+  def update_javascript_cache!
     all_extra_js = theme_fields.where(target_id: Theme.targets[:extra_js]).pluck(:value_baked).join("\n")
     if all_extra_js.present?
       js_compiler = ThemeJavascriptCompiler.new(id, name)
@@ -73,11 +80,6 @@ class Theme < ActiveRecord::Base
     else
       javascript_cache&.destroy!
     end
-
-    remove_from_cache!
-    clear_cached_settings!
-    ColorScheme.hex_cache.clear
-    notify_theme_change(with_scheme: notify_with_scheme)
   end
 
   after_destroy do
@@ -288,6 +290,12 @@ class Theme < ActiveRecord::Base
 
   def self.resolve_baked_field(theme_ids, target, name)
     if target == :extra_js
+      require_rebake = ThemeField.where(theme_id: theme_ids, target_id: Theme.targets[:extra_js]).
+        where("compiler_version <> ?", ThemeField::COMPILER_VERSION)
+      require_rebake.each { |tf| tf.ensure_baked! }
+      require_rebake.map(&:theme_id).uniq.each do |theme_id|
+        Theme.find(theme_id).update_javascript_cache!
+      end
       caches = JavascriptCache.where(theme_id: theme_ids)
       caches = caches.sort_by { |cache| theme_ids.index(cache.theme_id) }
       return caches.map { |c| "<script src='#{c.url}'></script>" }.join("\n")
@@ -331,6 +339,10 @@ class Theme < ActiveRecord::Base
 
   def changed_colors
     @changed_colors ||= []
+  end
+
+  def changed_schemes
+    @changed_schemes ||= Set.new
   end
 
   def set_field(target:, name:, value: nil, type: nil, type_id: nil, upload_id: nil)
@@ -418,6 +430,16 @@ class Theme < ActiveRecord::Base
       self.settings.each do |setting|
         hash[setting.name] = setting.value
       end
+
+      theme_uploads = {}
+      theme_fields
+        .joins(:upload)
+        .where(type_id: ThemeField.types[:theme_upload_var]).each do |field|
+
+        theme_uploads[field.name] = field.upload.url
+      end
+      hash['theme_uploads'] = theme_uploads if theme_uploads.present?
+
       hash
     end
   end

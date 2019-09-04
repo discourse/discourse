@@ -90,7 +90,7 @@ export default Ember.Mixin.create({
   },
 
   _watchEnterKey: function() {
-    this.$().on("keydown.setting-enter", ".input-setting-string", e => {
+    $(this.element).on("keydown.setting-enter", ".input-setting-string", e => {
       if (e.keyCode === 13) {
         // enter key
         this.send("save");
@@ -99,7 +99,7 @@ export default Ember.Mixin.create({
   }.on("didInsertElement"),
 
   _removeBindings: function() {
-    this.$().off("keydown.setting-enter");
+    $(this.element).off("keydown.setting-enter");
   }.on("willDestroyElement"),
 
   _save() {

@@ -30,11 +30,11 @@ class SiteSerializer < ApplicationSerializer
     :wizard_required,
     :topic_featured_link_allowed_category_ids,
     :user_themes,
-    :censored_words,
+    :censored_regexp,
     :shared_drafts_category_id
   )
 
-  has_many :categories, serializer: BasicCategorySerializer, embed: :objects
+  has_many :categories, serializer: SiteCategorySerializer, embed: :objects
   has_many :trust_levels, embed: :objects
   has_many :archetypes, embed: :objects, serializer: ArchetypeSerializer
   has_many :user_fields, embed: :objects, serializer: UserFieldSerializer
@@ -156,8 +156,8 @@ class SiteSerializer < ApplicationSerializer
     scope.topic_featured_link_allowed_category_ids
   end
 
-  def censored_words
-    WordWatcher.words_for_action(:censor).join('|')
+  def censored_regexp
+    WordWatcher.word_matcher_regexp(:censor)&.source
   end
 
   def shared_drafts_category_id

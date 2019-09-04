@@ -215,6 +215,7 @@ sw:
       stats: "Takwimu za tovuti."
       our_admins: "Viongozi Wetu"
       our_moderators: "Wasimamizi Wetu"
+      moderators: "Wasimamizi"
       stat:
         all_time: "Mda Wote"
         last_7_days: "7 za Mwisho"
@@ -715,7 +716,6 @@ sw:
         uploaded_avatar: "Picha Binafsi"
         uploaded_avatar_empty: "Ongeza picha yako binafsi"
         upload_title: "Pakia picha yako"
-        upload_picture: "Pakia Picha"
         image_is_not_a_square: "Onyo: tumepogoa picha yako; upana na urefu hauko sawa."
       change_profile_background:
         title: "Mandharinyuma ya Umbo"
@@ -738,6 +738,7 @@ sw:
         title: "Akaunti inayohusiana"
         connect: "Unganisha"
         revoke: "Nyang'anya"
+        cancel: "Ghairi"
         not_connected: "(haijaunganishwa)"
       name:
         title: "Jina"
@@ -1092,6 +1093,8 @@ sw:
         name: "GitHub"
         title: "na Github"
         message: "uthibitisho na Github (hakikisha vizuizi vya pop-up havijaruhusiwa)"
+      discord:
+        name: "Matatizo"
     invites:
       accept_title: "Mialiko"
       welcome_to: "Karibu %{site_name}"
@@ -1135,6 +1138,9 @@ sw:
       min_content_not_reached:
         one: " Chagua japo kitu {{count}}."
         other: " Chagua japo vitu {{count}}."
+    date_time_picker:
+      from: Kutoka
+      to: Kwenda
     emoji_picker:
       filter_placeholder: Tafuta picha-hisia
       objects: Vitu
@@ -2363,8 +2369,6 @@ sw:
           view_table: "jedwali"
           view_graph: "grafu"
           refresh_report: "Rudisha tena Ripoti"
-          start_date: "Tarehe ya Kuanza"
-          end_date: "Tarehe ya Kumaliza"
           groups: "Vikundi vyote"
           disabled: "Hii ripoti imezuiwa"
           total: "Jumla ya wakati wote"
@@ -2600,7 +2604,7 @@ sw:
         copy_to_clipboard_error: "Hitilafu imetokea wakati wa kunakili taarifa kwenye ubao nakili."
         theme_owner: "haiwezi kufanyiwa uhariri, inamilikiwa na:"
         email_templates:
-          title: "Violezo vya Barua Pepe"
+          title: "Barua Pepe"
           subject: "Maudhui"
           body: "Mwili"
           none_selected: "Chagua kiolezo cha barua pepe kuanza kuhariri"
@@ -2712,6 +2716,8 @@ sw:
           love:
             name: "upendo"
             description: "Rangi ya kitufe cha upendo."
+        email_style:
+          css: "CSS"
       email:
         title: "Barua Pepe"
         settings: "Mipangilio"
@@ -2905,6 +2911,8 @@ sw:
         search: "tafuta"
         clear_filter: "Futa"
         show_words: "onyesha maneno"
+        download: Pakua
+        clear_all: Futa Zote
         actions:
           block: "Zuia"
           censor: "Kizuizi"
@@ -2922,8 +2930,10 @@ sw:
           add: "Ongeza"
           success: "Mafanikio"
           exists: "Tayari ipo"
-          upload: "Upakiaji"
           upload_successful: "Upakiaji Umemalizika. Maneno yameongezwa."
+        test:
+          button_label: "Majaribio"
+          no_matches: "Hakuna uwiano uliopatikana"
       impersonate:
         title: "Iga Utambulisho"
         help: "Tumia kifaa hiki kuiga utambulisho wa mtumiaji ili uweze kutatua matatizo. Itabidi utoke ukishamaliza."
@@ -3151,7 +3161,7 @@ sw:
       site_text:
         description: "Unaweza kufanya maneno ya jamii yako yawe unavyotaka wewe. Tafadhali anza kwa kufanya utafiti hapo chini:"
         search: "tafuta maneno ambayo ungependa kuhariri"
-        title: "Maandishi"
+        title: "Neno"
         edit: "hariri"
         revert: "Ondoa Mabadiliko"
         revert_confirm: "Una uhakika unataka kuondoa mabadiliko?"

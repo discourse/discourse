@@ -1,10 +1,10 @@
-**Set up Discourse in the cloud in under 30 minutes** with zero knowledge of Rails or Linux shell. We recommend [DigitalOcean][do], but these steps will work on any **Docker-compatible** cloud provider or local server.
+**Set up Discourse in the cloud in under 30 minutes** with zero knowledge of Rails or Linux shell. One example is [DigitalOcean][do], but these steps will work on any **Docker-compatible** cloud provider or local server.
 
 >  🔔 Don't have 30 minutes to set this up? For a flat one-time fee of $99, the community can install Discourse in the cloud for you. [Click here to purchase a self-supported community install](https://www.literatecomputing.com/product/discourse-install/).
 
 ### Create New Cloud Server
 
-[Sign up for DigitalOcean][do], update billing info, then create your new cloud server.
+Create your new cloud server, for example [on DigitalOcean][do]:
 
 - The default of **Ubuntu 18.04 LTS x64** works fine. At minimum, a 64-bit Linux OS with a kernel version of 3.10+ is required.
 
@@ -58,7 +58,7 @@ You will need to be root through the rest of the setup and bootstrap process.
 
 - Already own a domain name? Great. Select a subdomain such as `discourse.example.com` or `talk.example.com` or `forum.example.com` for your Discourse instance.
 
-- No domain name? We can [recommend NameCheap](https://www.namecheap.com/domains/domain-name-search.aspx?utm_source=SAS&utm_medium=Affiliate&utm_campaign=1632369&affnetwork=sas), or there are many other [great domain name registrars](https://www.google.com/search?q=best+domain+name+registrars) to choose from.
+- No domain name? We can [recommend NameCheap](https://www.namecheap.com/domains/domain-name-search/), or there are many other [great domain name registrars](https://www.google.com/search?q=best+domain+name+registrars) to choose from.
 
 - Your DNS controls should be accessible from the place where you purchased your domain name. Create a DNS A record for the `discourse.example.com` subdomain in your DNS control panel, pointing to the IP address of your cloud instance where you are installing Discourse.
 

@@ -60,8 +60,15 @@ class Validators::PostValidator < ActiveModel::Validator
   end
 
   def watched_words(post)
-    if !post.acting_user&.staged && matches = WordWatcher.new(post.raw).should_block?
-      post.errors.add(:base, I18n.t('contains_blocked_words', word: matches[0]))
+    if !post.acting_user&.staged && matches = WordWatcher.new(post.raw).should_block?.presence
+      if matches.size == 1
+        key = 'contains_blocked_word'
+        translation_args = { word: matches[0] }
+      else
+        key = 'contains_blocked_words'
+        translation_args = { words: matches.join(', ') }
+      end
+      post.errors.add(:base, I18n.t(key, translation_args))
     end
   end
 

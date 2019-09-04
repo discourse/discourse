@@ -230,6 +230,7 @@ hy:
       stats: "Կայքի Վիճակագրություն"
       our_admins: "Մեր Ադմինները"
       our_moderators: "Մեր Մոդերատորները"
+      moderators: "Մոդերատորներ"
       stat:
         all_time: "Ամբողջ Ժամանակ"
         last_7_days: "Վերջին 7 օրում"
@@ -782,7 +783,6 @@ hy:
         uploaded_avatar: "Անհատական նկար"
         uploaded_avatar_empty: "Ավելացնել անհատական նկար"
         upload_title: "Վերբեռնեք Ձեր նկարը"
-        upload_picture: "Վերբեռնել նկար"
         image_is_not_a_square: "Ուշադրություն. մենք կտրել ենք Ձեր նկարը; լայնությունն ու երկարությունը հավասար չէին:"
       change_profile_background:
         title: "Պրոֆիլի Ֆոն"
@@ -808,6 +808,7 @@ hy:
         title: "Կապակցված Հաշիվներ"
         connect: "Կապել"
         revoke: "Հետ կանչել"
+        cancel: "Չեղարկել"
         not_connected: "(չկապակցված)"
       name:
         title: "Անուն"
@@ -1191,6 +1192,8 @@ hy:
         name: "GitHub"
         title: "GitHub-ով"
         message: "Վավերացում GitHub-ով (համոզվեք, որ փոփ-ափ արգելափակումները միացված չեն)"
+      discord:
+        name: "Discord"
     invites:
       accept_title: "Հրավեր"
       welcome_to: "Բարի Գալուստ %{site_name}!"
@@ -1237,6 +1240,9 @@ hy:
       min_content_not_reached:
         one: "Ընտրեք առնվազն{{count}} տարր:"
         other: "Ընտրեք առնվազն {{count}} տարր:"
+    date_time_picker:
+      from: Ում կողմից
+      to: Ում
     emoji_picker:
       filter_placeholder: Փնտրել էմոջի
       smileys_&_emotion: Սմայլիկներ և Էմոցինաեր
@@ -2674,8 +2680,6 @@ hy:
           view_table: "աղյուսակ"
           view_graph: "գրաֆիկ"
           refresh_report: "Թարմացնել Հաշվետվությունը"
-          start_date: "Մեկնարկի Ամսաթիվ"
-          end_date: "Ավարտի Ամսաթիվ"
           groups: "Բոլոր խմբերը"
           disabled: "Այս հաշվետվությունն անջատված է"
           totals_for_sample: "Ընդհանուրները օրինակի համար"
@@ -2954,7 +2958,7 @@ hy:
         copy_to_clipboard_error: "Փոխանակման Հարթակում տվյալների կրկնօրինակման սխալ"
         theme_owner: "Խմբագրելի չէ, սեփականատերն է՝ "
         email_templates:
-          title: "Էլ. նամակի Ձևանմուշներ"
+          title: "Էլ. հասցե"
           subject: "Թեմա"
           multiple_subjects: "Այս էլ. նամակի ձևանմուշն ունի շատ թեմաներ:"
           body: "Մարմին"
@@ -3027,7 +3031,6 @@ hy:
           delete_upload_confirm: "Ջնջե՞լ այս վերբեռնումը (Թեմայի CSS-ը կարող է դադարել աշխատել!):"
           import_web_tip: "Թեմա պարունակող ռեպոզիտորիա"
           import_web_advanced: "Ընդլայնված..."
-          import_file_tip: ".tar.gz կամ .dcstyle.json ֆայլ պարունակող թեմա"
           is_private: "Թեման մասնավոր git ռեպոզիտորիայում է:"
           remote_branch: "Ճյուղի անունը (ըստ ցանկության)"
           public_key: "Շնորհել հետևյալ public key թույլտվություն ռեպոյին՝ "
@@ -3133,6 +3136,8 @@ hy:
           love:
             name: "սեր"
             description: "Հավանման կոճակի գույնը:"
+        email_style:
+          css: "CSS"
       email:
         title: "Էլ. հասցեներ"
         settings: "Կարգավորումներ"
@@ -3359,6 +3364,8 @@ hy:
         search: "որոնում"
         clear_filter: "Ջնջել"
         show_words: "ցուցադրել բառերը"
+        download: Ներբեռնել
+        clear_all: Ջնջել Բոլորը
         word_count:
           one: "%{count} բառ"
           other: "%{count} բառ"
@@ -3379,8 +3386,10 @@ hy:
           add: "Ավելացնել"
           success: "Հաջողություն"
           exists: "Արդեն գոյություն ունի"
-          upload: "Վերբեռնել"
           upload_successful: "Վերբեռնումը հաջող էր: Բառերն ավելացվել են:"
+        test:
+          button_label: "Փորձարկել"
+          no_matches: "Համընկնումներ չեն գտնվել"
       impersonate:
         title: "Նմանակել"
         help: "Օգտագործեք այս գործիքը՝ վրիպազերծման նպատակով օգտատիրոջ հաշիվը նմանակելու համար: Դուք պետք է ավարտելուց հետո դուրս գրվեք:"
@@ -3574,8 +3583,6 @@ hy:
           likes_received: "Ստացած Հավանումները"
           likes_received_days: "Ստացված Հավանումները. եզակի օրեր"
           likes_received_users: "Ստացված Հավանումները. եզակի օգտատերեր"
-          suspended: "Սառեցված (ամբողջ ժամանակ)"
-          silenced: "Լռեցված (ամբողջ ժամանակ)"
           qualifies: "Արժանի է վստահության 3-րդ մակարդակի"
           does_not_qualify: "Արժանի չէ վստահության 3-րդ մակարդակի"
           will_be_promoted: "Շուտով մակարդակը կբարձրացվի"
@@ -3627,7 +3634,7 @@ hy:
       site_text:
         description: "Դուք կարող եք անհատականացնել Ձեր ֆորումի տեսքտերից ցանկացածը: Խնդրում ենք սկսել ներքևի որոնումից՝ "
         search: "Որոնել տեքստը, որը կցանկանայիք խմբագրել"
-        title: "Տեքստի Բովանդակությունը"
+        title: "Տեքստ"
         edit: "խմբագրել"
         revert: "Վերադարձնել Փոփոխությունները"
         revert_confirm: "Դուք համոզվա՞ծ եք, որ ցանկանում եք վերադարձնել կատարված փոփոխությունները:"
@@ -3720,7 +3727,6 @@ hy:
         enabled: Միացնել կրծքանշանը
         icon: Պատկերակ
         image: Նկար
-        icon_help: "Օգտագործեք Font Awesome class"
         image_help: "Մուտքագրեք նկարի URL-ը (վերասահմանում է պատկերակի դաշտը, եթե երկուսն ել հաստատված են)"
         query: Կրծքանշանի Հարցում (SQL)
         target_posts: Հարցման նպատակային գրառումներ

@@ -237,35 +237,65 @@ RSpec.describe Reviewable, type: :model do
 
   context "message bus notifications" do
     fab!(:moderator) { Fabricate(:moderator) }
+    let(:post) { Fabricate(:post) }
 
     it "triggers a notification on create" do
-      Jobs.expects(:enqueue).with(:notify_reviewable, has_key(:reviewable_id))
-      Fabricate(:reviewable_queued_post)
+      reviewable = Fabricate(:reviewable_queued_post)
+      job = Jobs::NotifyReviewable.jobs.last
+
+      expect(job["args"].first["reviewable_id"]).to eq(reviewable.id)
+    end
+
+    it "triggers a notification on update" do
+      reviewable = PostActionCreator.spam(moderator, post).reviewable
+      reviewable.perform(moderator, :disagree)
+
+      expect { PostActionCreator.spam(Fabricate(:user), post) }
+        .to change { reviewable.reload.status }
+        .from(Reviewable.statuses[:rejected])
+        .to(Reviewable.statuses[:pending])
+        .and change { Jobs::NotifyReviewable.jobs.size }
+        .by(1)
     end
 
     it "triggers a notification on pending -> approve" do
       reviewable = Fabricate(:reviewable_queued_post)
-      Jobs.stubs(:enqueue)
-      Jobs.expects(:enqueue).with(:notify_reviewable, has_key(:reviewable_id))
-      reviewable.perform(moderator, :approve_post)
+
+      expect do
+        reviewable.perform(moderator, :approve_post)
+      end.to change { Jobs::NotifyReviewable.jobs.size }.by(1)
+
+      job = Jobs::NotifyReviewable.jobs.last
+
+      expect(job["args"].first["reviewable_id"]).to eq(reviewable.id)
     end
 
     it "triggers a notification on pending -> reject" do
       reviewable = Fabricate(:reviewable_queued_post)
-      Jobs.expects(:enqueue).with(:notify_reviewable, has_key(:reviewable_id))
-      reviewable.perform(moderator, :reject_post)
+
+      expect do
+        reviewable.perform(moderator, :reject_post)
+      end.to change { Jobs::NotifyReviewable.jobs.size }.by(1)
+
+      job = Jobs::NotifyReviewable.jobs.last
+
+      expect(job["args"].first["reviewable_id"]).to eq(reviewable.id)
     end
 
     it "doesn't trigger a notification on approve -> reject" do
       reviewable = Fabricate(:reviewable_queued_post, status: Reviewable.statuses[:approved])
-      Jobs.expects(:enqueue).with(:notify_reviewable, has_key(:reviewable_id)).never
-      reviewable.perform(moderator, :reject_post)
+
+      expect do
+        reviewable.perform(moderator, :reject_post)
+      end.to_not change { Jobs::NotifyReviewable.jobs.size }
     end
 
     it "doesn't trigger a notification on reject -> approve" do
-      reviewable = Fabricate(:reviewable_queued_post, status: Reviewable.statuses[:approved])
-      Jobs.expects(:enqueue).with(:notify_reviewable, has_key(:reviewable_id)).never
-      reviewable.perform(moderator, :reject_post)
+      reviewable = Fabricate(:reviewable_queued_post, status: Reviewable.statuses[:rejected])
+
+      expect do
+        reviewable.perform(moderator, :approve_post)
+      end.to_not change { Jobs::NotifyReviewable.jobs.size }
     end
   end
 
@@ -302,6 +332,13 @@ RSpec.describe Reviewable, type: :model do
   end
 
   context ".score_required_to_hide_post" do
+
+    it "will return the default visibility if it's higher" do
+      Reviewable.set_priorities(low: 40.0, high: 100.0)
+      SiteSetting.hide_post_sensitivity = Reviewable.sensitivity[:high]
+      expect(Reviewable.score_required_to_hide_post).to eq(40.0)
+    end
+
     it "returns 10 if we can't calculated any percentiles" do
       SiteSetting.hide_post_sensitivity = Reviewable.sensitivity[:low]
       expect(Reviewable.score_required_to_hide_post).to eq(10.0)
@@ -346,6 +383,7 @@ RSpec.describe Reviewable, type: :model do
   end
 
   context ".score_to_auto_close_topic" do
+
     it "returns 25 if we can't calculated any percentiles" do
       SiteSetting.auto_close_topic_sensitivity = Reviewable.sensitivity[:low]
       expect(Reviewable.score_to_auto_close_topic).to eq(25.0)

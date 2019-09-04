@@ -265,6 +265,7 @@ sk:
       stats: "Štatistiky stránky"
       our_admins: "Naši admini"
       our_moderators: "Naši moderátori"
+      moderators: "Moderátori"
       stat:
         all_time: "Za celú dobu"
         last_7_days: "Posledných 7"
@@ -793,7 +794,6 @@ sk:
         uploaded_avatar: "Vlastný obrázok"
         uploaded_avatar_empty: "Pridať vlastný obrázok"
         upload_title: "Nahrať váš obrázok"
-        upload_picture: "Nahrať obrázok"
         image_is_not_a_square: "Upozornenie: váš obrázok sme orezali; mal rozdielnu šírku a výšku"
       change_profile_background:
         title: "Pozadie profilu"
@@ -818,6 +818,7 @@ sk:
       associated_accounts:
         connect: "Pripojiť"
         revoke: "Odobrať"
+        cancel: "Zrušiť"
         not_connected: "(nepripojený)"
       name:
         title: "Meno"
@@ -1165,6 +1166,8 @@ sk:
       github:
         title: "pomocou GitHub"
         message: "Prihlásenie pomocou GitHub účtu (prosím uistite sa, že vyskakovacie okná sú povolené)"
+      discord:
+        name: "Discord"
     invites:
       accept_title: "Pozvánka"
       welcome_to: "Vitajte na %{site_name}!"
@@ -1193,6 +1196,9 @@ sk:
     select_kit:
       default_header_text: Vybrať...
       filter_placeholder: Hľadať
+    date_time_picker:
+      from: Od
+      to: Komu
     emoji_picker:
       objects: Objekty
       flags: Označenia
@@ -2316,8 +2322,6 @@ sk:
           view_table: "tabuľka"
           view_graph: "graf"
           refresh_report: "Obnoviť report"
-          start_date: "Od"
-          end_date: "Do"
           groups: "Všetky skupiny"
           filters:
             group:
@@ -2496,7 +2500,7 @@ sk:
         copied_to_clipboard: "Skopírované do schránky"
         copy_to_clipboard_error: "Chyba pri kopírovaní dát do schránky"
         email_templates:
-          title: "Emailové šablóny"
+          title: "Email"
           subject: "Predmet"
           multiple_subjects: "Táto emailova šablóna obsahuje viac predmetov"
           body: "Telo"
@@ -2585,6 +2589,8 @@ sk:
           love:
             name: "obľúbené"
             description: "Farba tlačidla \"Páči sa\""
+        email_style:
+          css: "CSS"
       email:
         title: "Email"
         settings: "Nastavenia"
@@ -2742,6 +2748,8 @@ sk:
           title: "Chybové Logy"
       watched_words:
         clear_filter: "Vyčistiť"
+        download: Stiahnuť
+        clear_all: Odznač všetky
         actions:
           block: "Zablokovať"
           censor: "Cenzor"
@@ -2749,7 +2757,8 @@ sk:
           flag: "Označenie"
         form:
           add: "Pridať"
-          upload: "Upload"
+        test:
+          button_label: "Test"
       impersonate:
         title: "Privlastniť"
         help: "Použite tento nástroj na privlastnenie si používateľského účtu na účely debugovania. Po skončení sa budete musieť odhlásiť."
@@ -2940,7 +2949,7 @@ sk:
       site_text:
         description: "Môžete prispôsobiť hociktorý text na Vašom fóre. Prosím začnite hľadaním nižšie:"
         search: "Hľadajte text, ktorý chcete upraviť"
-        title: "Textový obsah"
+        title: "Text"
         edit: "uprav"
         revert: "Vrátiť zmeny"
         revert_confirm: "Ste si istý, že chcete vrátiť vykonané zmeny späť?"

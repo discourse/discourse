@@ -62,7 +62,7 @@ if Sidekiq.server?
     scheduler_hostname = ENV["UNICORN_SCHEDULER_HOSTNAME"]
 
     if !scheduler_hostname || scheduler_hostname.split(',').include?(`hostname`.strip)
-      MiniScheduler.start
+      MiniScheduler.start(workers: GlobalSetting.mini_scheduler_workers)
     end
   end
 end

@@ -87,7 +87,7 @@ a.loading-onebox {
 
 @mixin onebox-favicon($class, $image) {
   &.#{$class} .source {
-    background: image-url("favicons/#{$image}.png") no-repeat;
+    background: image-url("favicons/#{$image}.png") no-repeat 0% 50%;
     background-size: 16px 16px;
     padding-left: 20px;
   }
@@ -232,6 +232,13 @@ aside.onebox {
         max-width: 100%;
         max-height: 100%;
         float: none;
+      }
+
+      @include breakpoint(mobile-extra-large) {
+        // Prevent twitter embeds from being taller than the mobile viewport
+        iframe {
+          max-height: 70vh;
+        }
       }
     }
 
@@ -454,7 +461,6 @@ aside.onebox.twitterstatus .onebox-body {
   }
   .date {
     clear: left;
-    padding-top: 10px;
   }
 }
 

@@ -1,4 +1,5 @@
 import computed from "ember-addons/ember-computed-decorators";
+import { updateCsrfToken } from "discourse/lib/ajax";
 
 const LoginMethod = Ember.Object.extend({
   @computed
@@ -23,15 +24,21 @@ const LoginMethod = Ember.Object.extend({
     if (customLogin) {
       customLogin();
     } else {
-      let authUrl = this.custom_url || Discourse.getURL(`/auth/${name}`);
+      if (this.custom_url) {
+        window.location = this.custom_url;
+        return;
+      }
+      let authUrl = Discourse.getURL(`/auth/${name}`);
 
       if (reconnect) {
         authUrl += "?reconnect=true";
       }
 
       if (reconnect || fullScreenLogin || this.full_screen_login) {
-        document.cookie = "fsl=true";
-        window.location = authUrl;
+        LoginMethod.buildPostForm(authUrl).then(form => {
+          document.cookie = "fsl=true";
+          form.submit();
+        });
       } else {
         this.set("authenticate", name);
         const left = this.lastX - 400;
@@ -44,28 +51,48 @@ const LoginMethod = Ember.Object.extend({
           authUrl += authUrl.includes("?") ? "&" : "?";
           authUrl += "display=popup";
         }
+        LoginMethod.buildPostForm(authUrl).then(form => {
+          const windowState = window.open(
+            authUrl,
+            "auth_popup",
+            `menubar=no,status=no,height=${height},width=${width},left=${left},top=${top}`
+          );
 
-        const windowState = window.open(
-          authUrl,
-          "_blank",
-          "menubar=no,status=no,height=" +
-            height +
-            ",width=" +
-            width +
-            ",left=" +
-            left +
-            ",top=" +
-            top
-        );
+          form.target = "auth_popup";
+          form.submit();
 
-        const timer = setInterval(() => {
-          if (!windowState || windowState.closed) {
-            clearInterval(timer);
-            this.set("authenticate", null);
-          }
-        }, 1000);
+          const timer = setInterval(() => {
+            // If the process is aborted, reset state in this window
+            if (!windowState || windowState.closed) {
+              clearInterval(timer);
+              this.set("authenticate", null);
+            }
+          }, 1000);
+        });
       }
     }
+  }
+});
+
+LoginMethod.reopenClass({
+  buildPostForm(url) {
+    // Login always happens in an anonymous context, with no CSRF token
+    // So we need to fetch it before sending a POST request
+    return updateCsrfToken().then(() => {
+      const form = document.createElement("form");
+      form.setAttribute("style", "display:none;");
+      form.setAttribute("method", "post");
+      form.setAttribute("action", url);
+
+      const input = document.createElement("input");
+      input.setAttribute("name", "authenticity_token");
+      input.setAttribute("value", Discourse.Session.currentProp("csrfToken"));
+      form.appendChild(input);
+
+      document.body.appendChild(form);
+
+      return form;
+    });
   }
 });
 

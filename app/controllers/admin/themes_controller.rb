@@ -88,7 +88,7 @@ class Admin::ThemesController < Admin::AdminController
       rescue RemoteTheme::ImportError => e
         render_json_error e.message
       end
-    elsif params[:bundle] || (params[:theme] && ["application/x-gzip", "application/gzip"].include?(params[:theme].content_type))
+    elsif params[:bundle] || (params[:theme] && ["application/x-gzip", "application/gzip", "application/zip"].include?(params[:theme].content_type))
       # params[:bundle] used by theme CLI. params[:theme] used by admin UI
       bundle = params[:bundle] || params[:theme]
       theme_id = params[:theme_id]
@@ -186,22 +186,16 @@ class Admin::ThemesController < Admin::AdminController
     update_translations
     handle_switch
 
-    save_remote = false
     if params[:theme][:remote_check]
       @theme.remote_theme.update_remote_version
-      save_remote = true
     end
 
     if params[:theme][:remote_update]
       @theme.remote_theme.update_from_remote
-      save_remote = true
     end
 
     respond_to do |format|
       if @theme.save
-
-        @theme.remote_theme.save! if save_remote
-
         update_default_theme
 
         @theme.reload
@@ -252,6 +246,7 @@ class Admin::ThemesController < Admin::AdminController
 
     exporter = ThemeStore::TgzExporter.new(@theme)
     file_path = exporter.package_filename
+
     headers['Content-Length'] = File.size(file_path).to_s
     send_data File.read(file_path),
       filename: File.basename(file_path),

@@ -52,6 +52,36 @@ export function buildButton(name, widget) {
   }
 }
 
+registerButton("read-count", attrs => {
+  if (attrs.showReadIndicator) {
+    const count = attrs.readCount;
+    if (count > 0) {
+      return {
+        action: "toggleWhoRead",
+        title: "post.controls.read_indicator",
+        className: "button-count read-indicator",
+        contents: count,
+        iconRight: true,
+        addContainer: false
+      };
+    }
+  }
+});
+
+registerButton("read", attrs => {
+  const disabled = attrs.readCount === 0;
+  if (attrs.showReadIndicator) {
+    return {
+      action: "toggleWhoRead",
+      title: "post.controls.read_indicator",
+      icon: "book-reader",
+      before: "read-count",
+      addContainer: false,
+      disabled
+    };
+  }
+});
+
 function likeCount(attrs) {
   const count = attrs.likeCount;
 
@@ -178,7 +208,7 @@ registerButton("wiki-edit", attrs => {
       action: "editPost",
       className: "edit create",
       title: "post.controls.edit",
-      icon: "pencil-square-o",
+      icon: "far-edit",
       alwaysShowYours: true
     };
     if (!attrs.mobileView) {
@@ -341,7 +371,12 @@ export default createWidget("post-menu", {
   },
 
   defaultState() {
-    return { collapsed: true, likedUsers: [], adminVisible: false };
+    return {
+      collapsed: true,
+      likedUsers: [],
+      readers: [],
+      adminVisible: false
+    };
   },
 
   buildKey: attrs => `post-menu-${attrs.id}`,
@@ -447,7 +482,7 @@ export default createWidget("post-menu", {
           if (afterButton) {
             content.push(afterButton(h));
           }
-          button = h("span", content);
+          button = h("span.extra-buttons", content);
 
           if (button) {
             switch (position) {
@@ -484,7 +519,14 @@ export default createWidget("post-menu", {
       postControls.push(this.attach("post-admin-menu", attrs));
     }
 
-    const contents = [h("nav.post-controls.clearfix", postControls)];
+    const contents = [
+      h(
+        "nav.post-controls.clearfix" +
+          (this.state.collapsed ? ".collapsed" : ".expanded"),
+        postControls
+      )
+    ];
+
     if (state.likedUsers.length) {
       const remaining = state.total - state.likedUsers.length;
       contents.push(
@@ -496,6 +538,19 @@ export default createWidget("post-menu", {
             remaining > 0
               ? "post.actions.people.like_capped"
               : "post.actions.people.like",
+          count: remaining
+        })
+      );
+    }
+
+    if (state.readers.length) {
+      const remaining = state.totalReaders - state.readers.length;
+      contents.push(
+        this.attach("small-user-list", {
+          users: state.readers,
+          addSelf: false,
+          listClassName: "who-read",
+          description: "post.actions.people.read",
           count: remaining
         })
       );
@@ -518,9 +573,15 @@ export default createWidget("post-menu", {
 
   showMoreActions() {
     this.state.collapsed = false;
-    if (!this.state.likedUsers.length) {
-      return this.getWhoLiked();
-    }
+    const likesPromise = !this.state.likedUsers.length
+      ? this.getWhoLiked()
+      : Ember.RSVP.resolve();
+
+    return likesPromise.then(() => {
+      if (!this.state.readers.length && this.attrs.showReadIndicator) {
+        return this.getWhoRead();
+      }
+    });
   },
 
   like() {
@@ -555,6 +616,12 @@ export default createWidget("post-menu", {
     }
   },
 
+  refreshReaders() {
+    if (this.state.readers.length) {
+      return this.getWhoRead();
+    }
+  },
+
   getWhoLiked() {
     const { attrs, state } = this;
 
@@ -569,12 +636,30 @@ export default createWidget("post-menu", {
       });
   },
 
+  getWhoRead() {
+    const { attrs, state } = this;
+
+    return this.store.find("post-reader", { id: attrs.id }).then(users => {
+      state.readers = users.map(avatarAtts);
+      state.totalReaders = users.totalRows;
+    });
+  },
+
   toggleWhoLiked() {
     const state = this.state;
     if (state.likedUsers.length) {
       state.likedUsers = [];
     } else {
       return this.getWhoLiked();
+    }
+  },
+
+  toggleWhoRead() {
+    const state = this.state;
+    if (this.state.readers.length) {
+      state.readers = [];
+    } else {
+      return this.getWhoRead();
     }
   }
 });

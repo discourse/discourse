@@ -234,6 +234,7 @@ it:
       stats: "Statistiche Sito"
       our_admins: "I Nostri Amministratori"
       our_moderators: "I Nostri Moderatori"
+      moderators: "Moderatori"
       stat:
         all_time: "Sempre"
         last_7_days: "Ultimi 7"
@@ -311,14 +312,14 @@ it:
       order_by: "Ordina per"
       in_reply_to: "in risposta a"
       claim_help:
-        optional: "Puoi rivendicare questo elemento per prevenire che altri lo revisionino."
-        required: "Devi rivendicare questo elemento per poterlo revisionare."
+        optional: "Puoi rivendicare questo elemento per evitare che altri lo revisionino."
+        required: "Per poter revisionare gli elementi devi prima rivendicarli."
         claimed_by_you: "Hai rivendicato questo elemento e puoi revisionarlo."
         claimed_by_other: "Questo elemento può essere revisionato esclusivamente da <b>{{username}}</b>."
       claim:
-        title: "Rivendica questo Argomento"
+        title: "rivendica questo argomento"
       unclaim:
-        help: "Rimuovi questa rivendicazione"
+        help: "rimuovi questa rivendicazione"
       awaiting_approval: "In attesa di approvazione"
       delete: "Elimina"
       settings:
@@ -326,7 +327,7 @@ it:
         save_changes: "Salva Modifiche"
         title: "Impostazioni"
         priorities:
-          title: "Priorità"
+          title: "Priorità Revisionabili"
       moderation_history: "Storico Moderazione"
       view_all: "Vedi tutti"
       grouped_by_topic: "Raggruppati per Argomento"
@@ -392,7 +393,7 @@ it:
           created_at: "Creato il"
           created_at_asc: "Data creazione (inversa)"
         priority:
-          title: "Priorità minima"
+          title: "Priorità Minima"
           low: "(qualsiasi)"
           medium: "Media"
           high: "Alta"
@@ -739,7 +740,7 @@ it:
       allow_private_messages: "Consenti agli altri utenti di inviarmi messaggi privati"
       external_links_in_new_tab: "Apri tutti i link esterni in nuove schede"
       enable_quoting: "Abilita \"rispondi quotando\" per il testo evidenziato"
-      enable_defer: "Abilita differimento per marcare gli Argomenti come non letti"
+      enable_defer: "Abilita il rinvio per contrassegnare gli argomenti come non letti"
       change: "cambia"
       moderator: "{{user}} è un moderatore"
       admin: "{{user}} è un amministratore"
@@ -892,7 +893,6 @@ it:
         uploaded_avatar: "Immagine personalizzata"
         uploaded_avatar_empty: "Aggiungi un'immagine personalizzata"
         upload_title: "Carica la tua foto"
-        upload_picture: "Carica Immagine"
         image_is_not_a_square: "Attenzione: abbiamo ritagliato l'immagine; la larghezza e l'altezza non erano uguali."
       change_profile_background:
         title: "Sfondo Profilo"
@@ -918,6 +918,7 @@ it:
         title: "Account associati"
         connect: "Connetti"
         revoke: "Revoca"
+        cancel: "Annulla"
         not_connected: "(non connesso)"
       name:
         title: "Nome"
@@ -1255,6 +1256,7 @@ it:
       complete_username_not_found: "Nessun account con nome utente <b>%{username}</b>"
       complete_email_not_found: "Nessun account con email <b>%{email}</b>"
       confirm_title: "Procedi su %{site_name}."
+      confirm_button: Completa l'accesso
     login:
       title: "Connetti"
       username: "Utente"
@@ -1314,6 +1316,8 @@ it:
         name: "GitHub"
         title: "con GitHub"
         message: "Autenticazione con GitHub (assicurati che il blocco pop up non sia attivo)"
+      discord:
+        name: "Discord"
     invites:
       accept_title: "Invito"
       welcome_to: "Benvenuto su %{site_name}!"
@@ -1363,6 +1367,9 @@ it:
       min_content_not_reached:
         one: "Seleziona almeno {{count}} elemento."
         other: "Seleziona almeno {{count}} elementi."
+    date_time_picker:
+      from: Da
+      to: A
     emoji_picker:
       filter_placeholder: Ricerca per emoji
       smileys_&_emotion: Smileys ed Emotion
@@ -1690,7 +1697,7 @@ it:
         relist_topics: "Ripubblica Argomenti"
         reset_read: "Reimposta stato lettura"
         delete: "Elimina argomenti"
-        dismiss: "Nascondi"
+        dismiss: "Letti"
         dismiss_read: "Nascondi tutti i non letti"
         dismiss_button: "Nascondi..."
         dismiss_tooltip: "Nascondi solo i nuovi messaggi o smetti di seguire gli argomenti"
@@ -1750,8 +1757,8 @@ it:
         help: "Modifica la prima versione del Messaggio"
         title: "Modifica Messaggio"
       defer:
-        help: "Segna come non letto"
-        title: "Ignora"
+        help: "Contrassegna come non letto"
+        title: "Rinvia"
       list: "Argomenti"
       new: "nuovo argomento"
       unread: "non letto"
@@ -1956,6 +1963,9 @@ it:
         title: "Segnala"
         help: "segnala questo argomento o invia una notifica privata"
         success_message: "Hai segnalato questo argomento con successo."
+      make_public:
+        title: "Converti in argomento pubblico"
+        choose_category: "Scegli una categoria per l'argomento pubblico:"
       feature_topic:
         title: "Poni argomento in primo piano"
         pin: "Poni questo argomento in cima alla categoria {{categoryLink}} fino a"
@@ -1975,8 +1985,8 @@ it:
         global_pin_note: "Gli utenti possono spuntare gli argomenti autonomamente per loro stessi."
         not_pinned_globally: "Non ci sono argomenti appuntati globalmente."
         already_pinned_globally:
-          one: "Argomenti attualmente appuntati globalmente in {{categoryLink}}: <strong class='badge badge-notification unread'>%{count}</strong>"
-          other: "Argomenti attualmente appuntati globalmente {{categoryLink}}: <strong class='badge badge-notification unread'>{{count}}</strong>"
+          one: "Argomenti attualmente appuntati globalmente: <strong class='badge badge-notification unread'>%{count}</strong>"
+          other: "Argomenti attualmente appuntati globalmente: <strong class='badge badge-notification unread'>{{count}}</strong>"
         make_banner: "Rendi questo argomento uno striscione che apparirà in cima a tutte le pagine."
         remove_banner: "Rimuovi lo striscione che appare in cima a tutte le pagine."
         banner_note: "Gli utenti possono nascondere l'annuncio chiudendolo. Solo un argomento per volta può diventare un annuncio."
@@ -2332,7 +2342,7 @@ it:
       default_top_period: "Periodo Predefinito Argomenti Di Punta:"
       allow_badges_label: "Permetti l'assegnazione di distintivi in questa categoria"
       edit_permissions: "Modifica Permessi"
-      reviewable_by_group: "Oltre che dallo Staff, i messaggi e le segnalazioni in questa Categoria possono essere revisionati da:"
+      reviewable_by_group: "Oltre che dallo staff, i messaggi e le segnalazioni in questa categoria possono essere revisionati da:"
       review_group_name: "nome gruppo"
       require_topic_approval: "Richiedi l'approvazione di un moderatore per tutti i nuovi argomenti"
       require_reply_approval: "Richiedi l'approvazione di un moderatore per tutti i nuovi argomenti"
@@ -2779,7 +2789,7 @@ it:
       tags:
         remove_muted_tags_from_latest:
           always: "sempre"
-          only_muted: "quando usato da solo o con altre Etichette silenziate"
+          only_muted: "quando usato da solo o con altre etichette silenziate"
           never: "mai"
       reports:
         title: "Lista dei rapporti disponibili"
@@ -2850,8 +2860,6 @@ it:
           view_table: "tabella"
           view_graph: "grafico"
           refresh_report: "Aggiorna Rapporto"
-          start_date: "Data Inizio"
-          end_date: "Data Fine"
           groups: "Tutti i gruppi"
           disabled: "Il rapporto è disabilitato"
           totals_for_sample: "Totale per campione"
@@ -3137,7 +3145,7 @@ it:
         copy_to_clipboard_error: "Errore nel copiare i dati negli Appunti"
         theme_owner: "Non modificabile, di proprietà di:"
         email_templates:
-          title: "Modelli e-mail"
+          title: "Email"
           subject: "Oggetto"
           multiple_subjects: "Questo modello email ha più di un campo oggetto."
           body: "Corpo"
@@ -3213,7 +3221,6 @@ it:
           delete_upload_confirm: "Elimina questo caricamento? (Il CSS del tema potrebbe non funzionare!)"
           import_web_tip: "Repository contenente il tema"
           import_web_advanced: "Avanzate..."
-          import_file_tip: "file .tar.gz o .dcstyle.json contenenti un tema"
           is_private: "Il tema è in un repository git privato"
           remote_branch: "Nome del branch (opzionale)"
           public_key: "Concedi l'accesso al repository alla seguente chiave pubblica:"
@@ -3319,6 +3326,8 @@ it:
           love:
             name: "amo"
             description: "Il colore del bottone \"Mi piace\"."
+        email_style:
+          css: "CSS"
       email:
         title: "Email"
         settings: "Impostazioni"
@@ -3549,6 +3558,9 @@ it:
         search: "ricerca"
         clear_filter: "Pulisci"
         show_words: "mostra le parole"
+        one_word_per_line: "Una parola per riga"
+        download: Scarica
+        clear_all: Deseleziona Tutto
         word_count:
           one: "%{count} word"
           other: "%{count} parole"
@@ -3569,8 +3581,10 @@ it:
           add: "Aggiungi"
           success: "Successo"
           exists: "Già esistente"
-          upload: "Carica"
           upload_successful: "Caricamento andato a buon fine. Le parole sono state aggiunte."
+        test:
+          button_label: "Test"
+          no_matches: "Nessun risultato trovato"
       impersonate:
         title: "Impersona"
         help: "Usa questo strumento per impersonare un account utente ai fini del debugging. Una volta finito dovrai disconnetterti."
@@ -3765,8 +3779,6 @@ it:
           likes_received: "Mi piace - Ricevuti"
           likes_received_days: "\"Mi piace\" Ricevuti: singoli giorni"
           likes_received_users: "\"Mi piace\" Ricevuti: singoli utenti"
-          suspended: "Sospeso (da sempre)"
-          silenced: "Silenziati (da sempre)"
           qualifies: "Requisiti soddisfatti per il livello di esperienza 3."
           does_not_qualify: "Mancano i requisiti per il livello esperienza 3."
           will_be_promoted: "Verrà presto promosso."
@@ -3818,7 +3830,7 @@ it:
       site_text:
         description: "Puoi personalizzare qualsiasi testo del tuo forum. Comincia effettuando una ricerca qui sotto:"
         search: "Trova il testo che vorresti modificare"
-        title: "Contenuto Testuale"
+        title: "Testo"
         edit: "modifica"
         revert: "Annulla Modifiche"
         revert_confirm: "Sei sicuro di voler annullare le modifiche?"
@@ -3913,7 +3925,6 @@ it:
         enabled: Attiva distintivo
         icon: Icona
         image: Immagine
-        icon_help: "Usa una classe Font Awesome"
         image_help: "Inserisci l'URL dell'immagine (sovrascrive il campo icona, se entrambi sono impostati)"
         query: Query Distintivo (SQL)
         target_posts: Interroga i messaggi destinazione
@@ -3987,7 +3998,7 @@ it:
         save: "Salva Impostazioni Inclusione"
       permalink:
         title: "Collegamenti permanenti"
-        description: "Per favore, nota che questo si applica solo alle fonti esterne, i link inviati sul tuo forum non saranno rediretti."
+        description: "Nota bene: ciò si applica solo alle fonti esterne, i collegamenti inviati sul tuo forum non saranno rediretti."
         url: "URL"
         topic_id: "ID dell'argomento"
         topic_title: "Argomento"

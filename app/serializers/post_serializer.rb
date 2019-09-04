@@ -4,7 +4,6 @@ class PostSerializer < BasicPostSerializer
 
   # To pass in additional information we might need
   INSTANCE_VARS ||= [
-    :topic_view,
     :parent_post,
     :add_raw,
     :add_title,
@@ -27,6 +26,7 @@ class PostSerializer < BasicPostSerializer
              :quote_count,
              :incoming_link_count,
              :reads,
+             :readers_count,
              :score,
              :yours,
              :topic_id,
@@ -459,6 +459,13 @@ class PostSerializer < BasicPostSerializer
     can_review_topic?
   end
 
+  def readers_count
+    read_count = object.reads - 1 # Exclude logged user
+    read_count -= 1 unless yours
+
+    read_count < 0 ? 0 : read_count
+  end
+
 private
 
   def can_review_topic?
@@ -488,14 +495,6 @@ private
 
   def post_actions
     @post_actions ||= (@topic_view&.all_post_actions || {})[object.id]
-  end
-
-  def post_custom_fields
-    @post_custom_fields ||= if @topic_view
-      (@topic_view.post_custom_fields || {})[object.id] || {}
-    else
-      object.custom_fields
-    end
   end
 
 end

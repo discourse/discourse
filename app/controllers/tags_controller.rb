@@ -1,11 +1,13 @@
 # frozen_string_literal: true
 
 require_dependency 'topic_list_responder'
+require_dependency 'topic_query_params'
 require_dependency 'topics_bulk_action'
 require_dependency 'topic_query'
 
 class TagsController < ::ApplicationController
   include TopicListResponder
+  include TopicQueryParams
 
   before_action :ensure_tags_enabled
 
@@ -355,7 +357,7 @@ class TagsController < ::ApplicationController
   end
 
   def build_topic_list_options
-    options = {
+    options = super.merge(
       page: params[:page],
       topic_ids: param_to_integer_list(:topic_ids),
       exclude_category_ids: params[:exclude_category_ids],
@@ -369,7 +371,7 @@ class TagsController < ::ApplicationController
       state: params[:state],
       search: params[:search],
       q: params[:q]
-    }
+    )
     options[:no_subcategories] = true if params[:no_subcategories] == 'true'
 
     if params[:tag_id] == 'none'

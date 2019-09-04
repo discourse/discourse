@@ -114,10 +114,10 @@ it:
         reply: |-
           Ciao! Per sapere cosa posso fare, dimmi `@%{discobot_username} %{help_trigger}`.
         tracks: |-
-          Attualmente so fare le seguenti cose:
+          Al momento so fare le seguenti cose:
 
-          `@%{discobot_username} %{reset_trigger} %{default_track}`
-          > Avvia uno dei seguenti resoconti interattivi: %{tracks}.
+          `@%{discobot_username} %{reset_trigger} {name-of-tutorial}`
+          > Inizia un tutorial interattivo. `{name-of-tutorial}` può essere uno di: `%{tracks}`.
         bot_actions: |-
           `@%{discobot_username} %{dice_trigger} 2d6`
           > :game_die: 3, 6

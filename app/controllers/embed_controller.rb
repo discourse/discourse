@@ -1,10 +1,14 @@
 # frozen_string_literal: true
 
+require_dependency 'topic_query_params'
+
 class EmbedController < ApplicationController
+  include TopicQueryParams
+
   skip_before_action :check_xhr, :preload_json, :verify_authenticity_token
 
-  before_action :ensure_embeddable, except: [ :info ]
-  before_action :get_embeddable_css_class, except: [ :info ]
+  before_action :ensure_embeddable, except: [ :info, :topics ]
+  before_action :get_embeddable_css_class, except: [ :info, :topics ]
   before_action :ensure_api_request, only: [ :info ]
 
   layout 'embed'
@@ -16,7 +20,32 @@ class EmbedController < ApplicationController
       @show_reason = true
       @hosts = EmbeddableHost.all
     end
-    render 'embed_error'
+    render 'embed_error', status: 400
+  end
+
+  def topics
+    discourse_expires_in 1.minute
+
+    response.headers['X-Frame-Options'] = "ALLOWALL"
+    unless SiteSetting.embed_topics_list?
+      render 'embed_topics_error', status: 400
+      return
+    end
+
+    if @embed_id = params[:discourse_embed_id]
+      raise Discourse::InvalidParameters.new(:embed_id) unless @embed_id =~ /^de\-[a-zA-Z0-9]+$/
+    end
+
+    if params.has_key?(:template) && params[:template] == "complete"
+      @template = "complete"
+    else
+      @template = "basic"
+    end
+
+    list_options = build_topic_list_options
+    list_options[:per_page] = params[:per_page].to_i if params.has_key?(:per_page)
+    topic_query = TopicQuery.new(current_user, list_options)
+    @list = topic_query.list_latest
   end
 
   def comments

@@ -12,6 +12,7 @@ export default Ember.Controller.extend({
   alwaysPollResult: "always",
   votePollResult: "on_vote",
   closedPollResult: "on_close",
+  staffPollResult: "staff_only",
 
   init() {
     this._super(...arguments);
@@ -36,8 +37,18 @@ export default Ember.Controller.extend({
     ];
   },
 
-  @computed("alwaysPollResult", "votePollResult", "closedPollResult")
-  pollResults(alwaysPollResult, votePollResult, closedPollResult) {
+  @computed(
+    "alwaysPollResult",
+    "votePollResult",
+    "closedPollResult",
+    "staffPollResult"
+  )
+  pollResults(
+    alwaysPollResult,
+    votePollResult,
+    closedPollResult,
+    staffPollResult
+  ) {
     return [
       {
         name: I18n.t("poll.ui_builder.poll_result.always"),
@@ -50,6 +61,10 @@ export default Ember.Controller.extend({
       {
         name: I18n.t("poll.ui_builder.poll_result.closed"),
         value: closedPollResult
+      },
+      {
+        name: I18n.t("poll.ui_builder.poll_result.staff"),
+        value: staffPollResult
       }
     ];
   },

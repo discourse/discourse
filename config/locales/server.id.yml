@@ -108,6 +108,7 @@ id:
     loading: "Sedang memuat diskusi..."
     imported_from: "Ini adalah topik diskusi tambahan untuk topik utama di %{link}"
     in_reply_to: "▶ %{username}"
+    created: "Dibuat"
   no_mentions_allowed: "Maaf, Anda tidak dapat menyebut pengguna lain."
   too_many_mentions:
     other: "Maaf, Anda hanya diperbolehkan untuk menyebut %{count} pengguna dalam satu posting."
@@ -505,6 +506,8 @@ id:
   topic_statuses:
     autoclosed_disabled: "Topik telah dibuka. Jawaban baru sekarang diijinkan."
     autoclosed_disabled_lastpost: "Topik telah dibuka. Jawaban baru sekarang diijinkan."
+  login:
+    omniauth_confirm_button: "Lanjutkan"
   admin:
     email:
       sent_test: "terkirim!"

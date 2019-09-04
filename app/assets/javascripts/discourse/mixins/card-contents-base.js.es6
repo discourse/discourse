@@ -73,7 +73,7 @@ export default Ember.Mixin.create({
 
   didInsertElement() {
     this._super(...arguments);
-    afterTransition(this.$(), this._hide.bind(this));
+    afterTransition($(this.element), this._hide.bind(this));
     const id = this.elementId;
     const triggeringLinkClass = this.triggeringLinkClass;
     const clickOutsideEventName = `mousedown.outside-${id}`;
@@ -164,7 +164,7 @@ export default Ember.Mixin.create({
     if (!target) {
       return;
     }
-    const width = this.$().width();
+    const width = $(this.element).width();
     const height = 175;
     const isFixed = this.isFixed;
     const isDocked = this.isDocked;
@@ -227,7 +227,7 @@ export default Ember.Mixin.create({
               position.top = avatarOverflowSize;
             }
 
-            this.$().css(position);
+            $(this.element).css(position);
           }
         }
 
@@ -236,23 +236,26 @@ export default Ember.Mixin.create({
           let position = target.offset();
           position.top = "10%"; // match modal behaviour
           position.left = 0;
-          this.$().css(position);
+          $(this.element).css(position);
         }
-        this.$().toggleClass("docked-card", isDocked);
+        $(this.element).toggleClass("docked-card", isDocked);
 
         // After the card is shown, focus on the first link
         //
         // note: we DO NOT use afterRender here cause _positionCard may
         // run afterwards, if we allowed this to happen the usercard
         // may be offscreen and we may scroll all the way to it on focus
-        Ember.run.next(null, () => this.$("a:first").focus());
+        Ember.run.next(null, () => {
+          const firstLink = this.element.querySelector("a");
+          firstLink && firstLink.focus();
+        });
       }
     });
   },
 
   _hide() {
     if (!this.visible) {
-      this.$().css({ left: -9999, top: -9999 });
+      $(this.element).css({ left: -9999, top: -9999 });
       if (this.site.mobileView) {
         $(".card-cloak").addClass("hidden");
       }

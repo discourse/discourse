@@ -15,7 +15,7 @@ def sentence
     gabbler.learn(story)
   end
 
-  sentence = ""
+  sentence = +""
   until sentence.length > 800 do
     sentence << @gabbler.sentence
     sentence << "\n"

@@ -28,13 +28,11 @@ module Migration
       end
     end
 
-    def self.drop_readonly(table, column)
-      DB.exec <<~SQL
-        DROP FUNCTION IF EXISTS #{BaseDropper.readonly_function_name(table, column)} CASCADE;
-        -- Backward compatibility for old functions created in the public
-        -- schema
-        DROP FUNCTION IF EXISTS #{BaseDropper.old_readonly_function_name(table, column)} CASCADE;
-      SQL
+    def self.drop_readonly(table_name, column_name)
+      BaseDropper.drop_readonly_function(table_name, column_name)
+
+      # Backward compatibility for old functions created in the public schema
+      DB.exec("DROP FUNCTION IF EXISTS #{BaseDropper.old_readonly_function_name(table_name, column_name)} CASCADE")
     end
   end
 end

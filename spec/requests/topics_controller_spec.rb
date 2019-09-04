@@ -1133,6 +1133,71 @@ RSpec.describe TopicsController do
 
             expect(response.status).to eq(200)
           end
+
+          it 'can’t add a category-only tags from another category to a category' do
+            restricted_category.allowed_tags = [tag2.name]
+
+            put "/t/#{topic.slug}/#{topic.id}.json", params: {
+              tags: [tag2.name],
+              category_id: category.id
+            }
+
+            result = ::JSON.parse(response.body)
+            expect(response.status).to eq(422)
+            expect(result['errors']).to be_present
+            expect(result['errors'][0]).to include(tag2.name)
+            expect(topic.reload.category_id).not_to eq(restricted_category.id)
+          end
+
+          it 'allows category change when topic has a hidden tag' do
+            Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: [tag1.name])
+
+            put "/t/#{topic.slug}/#{topic.id}.json", params: {
+              category_id: category.id
+            }
+
+            result = ::JSON.parse(response.body)
+            expect(response.status).to eq(200)
+            expect(topic.reload.tags).to include(tag1)
+          end
+
+          it 'allows category change when topic has a read-only tag' do
+            Fabricate(:tag_group, permissions: { "staff" => 1, "everyone" => 3 }, tag_names: [tag1.name])
+
+            put "/t/#{topic.slug}/#{topic.id}.json", params: {
+              category_id: category.id
+            }
+
+            result = ::JSON.parse(response.body)
+            expect(response.status).to eq(200)
+            expect(topic.reload.tags).to include(tag1)
+          end
+
+          it 'does not leak tag name when trying to use a staff tag' do
+            Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: [tag2.name])
+
+            put "/t/#{topic.slug}/#{topic.id}.json", params: {
+              tags: [tag2.name],
+              category_id: category.id
+            }
+
+            result = ::JSON.parse(response.body)
+            expect(response.status).to eq(422)
+            expect(result['errors']).to be_present
+            expect(result['errors'][0]).not_to include(tag2.name)
+          end
+
+          it 'will clean tag params' do
+            restricted_category.allowed_tags = [tag2.name]
+
+            put "/t/#{topic.slug}/#{topic.id}.json", params: {
+              tags: [""],
+              category_id: restricted_category.id
+            }
+
+            result = ::JSON.parse(response.body)
+            expect(response.status).to eq(200)
+          end
         end
 
         context "allow_uncategorized_topics is false" do
@@ -2054,9 +2119,8 @@ RSpec.describe TopicsController do
       end
 
       it "can mark sub-categories unread" do
-        # TODO do we want to skip category definition by default in fabricator
-        category = Fabricate(:category, skip_category_definition: true)
-        sub = Fabricate(:category, parent_category_id: category.id, skip_category_definition: true)
+        category = Fabricate(:category)
+        sub = Fabricate(:category, parent_category_id: category.id)
 
         topic.update!(category_id: sub.id)
 
@@ -2230,12 +2294,15 @@ RSpec.describe TopicsController do
       end
 
       context "success" do
+        fab!(:category) { Fabricate(:category) }
+
         it "returns success" do
           sign_in(admin)
-          put "/t/#{topic.id}/convert-topic/public.json"
+          put "/t/#{topic.id}/convert-topic/public.json?category_id=#{category.id}"
 
           topic.reload
           expect(topic.archetype).to eq(Archetype.default)
+          expect(topic.category_id).to eq(category.id)
           expect(response.status).to eq(200)
 
           result = ::JSON.parse(response.body)

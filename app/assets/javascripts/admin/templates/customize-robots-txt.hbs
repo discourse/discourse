@@ -1,0 +1,20 @@
+<div class="robots-txt-edit">
+  <h3>{{i18n "admin.customize.robots.title"}}</h3>
+  <p>{{i18n "admin.customize.robots.warning"}}</p>
+  {{#if model.overridden}}
+    <div class="overridden">
+      {{i18n "admin.customize.robots.overridden"}}
+    </div>
+  {{/if}}
+  {{textarea
+    value=buffered.robots_txt
+    class="robots-txt-input"}}
+  {{#save-controls model=this action=(action "save") saved=saved saveDisabled=saveDisabled}}
+    {{d-button
+      class="btn-default"
+      disabled=resetDisbaled
+      icon="undo"
+      action=(action "reset")
+      label="admin.settings.reset"}}
+  {{/save-controls}}
+</div>

@@ -112,7 +112,7 @@ export default Ember.Component.extend({
   @observes("focusTarget")
   setFocus() {
     if (this.focusTarget === "editor") {
-      this.$("textarea").putCursorAtEnd();
+      $(this.element.querySelector("textarea")).putCursorAtEnd();
     }
   },
 
@@ -155,21 +155,29 @@ export default Ember.Component.extend({
     };
   },
 
+  userSearchTerm(term) {
+    const topicId = this.get("topic.id");
+    // maybe this is a brand new topic, so grab category from composer
+    const categoryId =
+      this.get("topic.category_id") || this.get("composer.categoryId");
+
+    return userSearch({
+      term,
+      topicId,
+      categoryId,
+      includeMentionableGroups: true
+    });
+  },
+
   @on("didInsertElement")
   _composerEditorInit() {
-    const topicId = this.get("topic.id");
-    const $input = this.$(".d-editor-input");
-    const $preview = this.$(".d-editor-preview-wrapper");
+    const $input = $(this.element.querySelector(".d-editor-input"));
+    const $preview = $(this.element.querySelector(".d-editor-preview-wrapper"));
 
     if (this.siteSettings.enable_mentions) {
       $input.autocomplete({
         template: findRawTemplate("user-selector-autocomplete"),
-        dataSource: term =>
-          userSearch({
-            term,
-            topicId,
-            includeMentionableGroups: true
-          }),
+        dataSource: term => this.userSearchTerm.call(this, term),
         key: "@",
         transformComplete: v => v.username || v.name,
         afterComplete() {
@@ -206,7 +214,7 @@ export default Ember.Component.extend({
       !this.get("composer.canEditTitle") &&
       (!this.capabilities.isIOS || safariHacksDisabled())
     ) {
-      this.$(".d-editor-input").putCursorAtEnd();
+      $(this.element.querySelector(".d-editor-input")).putCursorAtEnd();
     }
 
     this._bindUploadTarget();
@@ -237,7 +245,7 @@ export default Ember.Component.extend({
       reason = I18n.t("composer.error.post_missing");
     } else if (missingReplyCharacters > 0) {
       reason = I18n.t("composer.error.post_length", { min: minimumPostLength });
-      const tl = Discourse.User.currentProp("trust_level");
+      const tl = this.get("currentUser.trust_level");
       if (tl === 0 || tl === 1) {
         reason +=
           "<br/>" +
@@ -345,12 +353,13 @@ export default Ember.Component.extend({
   },
 
   _teardownInputPreviewSync() {
-    [this.$(".d-editor-input"), this.$(".d-editor-preview-wrapper")].forEach(
-      $element => {
-        $element.off("mouseenter touchstart");
-        $element.off("scroll");
-      }
-    );
+    [
+      $(this.element.querySelector(".d-editor-input")),
+      $(this.element.querySelector(".d-editor-preview-wrapper"))
+    ].forEach($element => {
+      $element.off("mouseenter touchstart");
+      $element.off("scroll");
+    });
 
     REBUILD_SCROLL_MAP_EVENTS.forEach(event => {
       this.appEvents.off(event, this, this._resetShouldBuildScrollMap);
@@ -647,14 +656,11 @@ export default Ember.Component.extend({
     this._unbindUploadTarget(); // in case it's still bound, let's clean it up first
     this._pasted = false;
 
-    const $element = this.$();
-    const csrf = this.session.get("csrfToken");
+    const $element = $(this.element);
 
     $element.fileupload({
       url: Discourse.getURL(
-        `/uploads.json?client_id=${
-          this.messageBus.clientId
-        }&authenticity_token=${encodeURIComponent(csrf)}`
+        `/uploads.json?client_id=${this.messageBus.clientId}`
       ),
       dataType: "json",
       pasteZone: $element
@@ -867,7 +873,8 @@ export default Ember.Component.extend({
     // wraps previewed upload markdown in a codeblock in its own class to keep a track
     // of indexes later on to replace the correct upload placeholder in the composer
     if ($preview.find(".codeblock-image").length === 0) {
-      this.$(".d-editor-preview *")
+      $(this.element)
+        .find(".d-editor-preview *")
         .contents()
         .each(function() {
           if (this.nodeType !== 3) return; // TEXT_NODE
@@ -890,7 +897,7 @@ export default Ember.Component.extend({
     this._validUploads = 0;
     $("#reply-control .mobile-file-upload").off("click.uploader");
     this.messageBus.unsubscribe("/uploads/composer");
-    const $uploadTarget = this.$();
+    const $uploadTarget = $(this.element);
     try {
       $uploadTarget.fileupload("destroy");
     } catch (e) {
@@ -925,7 +932,7 @@ export default Ember.Component.extend({
   },
 
   showPreview() {
-    const $preview = this.$(".d-editor-preview-wrapper");
+    const $preview = $(this.element.querySelector(".d-editor-preview-wrapper"));
     this._placeImageScaleButtons($preview);
     this.send("togglePreview");
   },
@@ -1071,7 +1078,7 @@ export default Ember.Component.extend({
       if (this._enableAdvancedEditorPreviewSync()) {
         this._syncScroll(
           this._syncEditorAndPreviewScroll,
-          this.$(".d-editor-input"),
+          $(this.element.querySelector(".d-editor-input")),
           $preview
         );
       }

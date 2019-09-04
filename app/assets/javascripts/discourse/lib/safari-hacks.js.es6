@@ -41,6 +41,11 @@ function calcHeight() {
       withoutKeyboard = smallViewport ? 340 : 370;
     }
 
+    // iPhone Xs Max and iPhone Xʀ
+    if (window.screen.height === 896) {
+      withoutKeyboard = smallViewport ? 410 : 440;
+    }
+
     // iPad can use innerHeight cause it renders nothing in the footer
     if (window.innerHeight > 920) {
       withoutKeyboard -= 45;
@@ -58,7 +63,6 @@ function calcHeight() {
 }
 
 let workaroundActive = false;
-let composingTopic = false;
 
 export function isWorkaroundActive() {
   return workaroundActive;
@@ -124,8 +128,21 @@ function positioningWorkaround($fixedElement) {
     if (fixedElement.style.top === "0px") {
       if (this !== document.activeElement) {
         evt.preventDefault();
+
+        // this tricks safari into assuming current input is at top of the viewport
+        // via https://stackoverflow.com/questions/38017771/mobile-safari-prevent-scroll-page-when-focus-on-input
+        this.style.transform = "translateY(-200px)";
         this.focus();
+        let _this = this;
+        setTimeout(function() {
+          _this.style.transform = "none";
+        }, 50);
       }
+      return;
+    }
+
+    // don't trigger keyboard on disabled element (happens when a category is required)
+    if (this.disabled) {
       return;
     }
 
@@ -148,9 +165,7 @@ function positioningWorkaround($fixedElement) {
 
     fixedElement.style.top = "0px";
 
-    composingTopic = $("#reply-control .category-chooser").length > 0;
-
-    const height = calcHeight(composingTopic);
+    const height = calcHeight();
     fixedElement.style.height = height + "px";
 
     $(fixedElement).addClass("no-transition");

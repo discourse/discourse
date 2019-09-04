@@ -191,9 +191,10 @@ basic:
   post_menu:
     client: true
     type: list
-    default: "like|share|flag|edit|bookmark|delete|admin|reply"
+    default: "read|like|share|flag|edit|bookmark|delete|admin|reply"
     allow_any: false
     choices:
+      - read
       - like
       - edit
       - flag
@@ -307,6 +308,9 @@ basic:
   vapid_private_key:
     default: ""
     hidden: true
+  vapid_base_url:
+    default: ""
+    hidden: true
 
 login:
   invite_only:
@@ -386,6 +390,16 @@ login:
     default: ""
     regex: "^[a-f0-9]+$"
     secret: true
+  enable_discord_logins:
+    default: false
+  discord_client_id:
+    default: ''
+  discord_secret:
+    default: ''
+    secret: true
+  discord_trusted_guilds:
+    default: ''
+    type: list
   enable_sso:
     client: true
     default: false
@@ -686,7 +700,7 @@ posting:
     type: category
     default: ""
   post_edit_time_limit:
-    default: 86400
+    default: 43200
     max: 525600
   edit_history_visible_to_public:
     client: true
@@ -842,6 +856,7 @@ posting:
     choices:
       - 4-spaces-indent
       - code-fences
+  embed_topics_list: false
   embed_truncate:
     default: true
   embed_support_markdown:
@@ -908,6 +923,7 @@ email:
   disable_digest_emails:
     default: false
     client: true
+  apply_custom_styles_to_digest: true
   email_accent_bg_color: "#2F70AC"
   email_accent_fg_color: "#FFFFFF"
   email_link_color: "#006699"
@@ -1018,9 +1034,25 @@ email:
     type: list
     default: "smime.p7s|signature.asc|winmail.dat"
     list_type: compact
-  enable_forwarded_emails: false
+  forwarded_emails_behaviour:
+    type: enum
+    default: hide
+    choices:
+      - hide
+      - quote
+      - create_replies
   always_show_trimmed_content: false
   private_email: false
+  email_custom_template:
+    default: ""
+    hidden: true
+  email_custom_css:
+    default: ""
+    hidden: true
+  email_total_attachment_size_limit_kb:
+    default: 0
+    max: 51200
+  post_excerpts_in_emails: false
 
 files:
   max_image_size_kb:
@@ -1040,7 +1072,7 @@ files:
     default: 50000
     max: 1024000
   theme_authorized_extensions:
-    default: "jpg|jpeg|png|woff|woff2|svg|eot|ttf|otf|gif"
+    default: "jpg|jpeg|png|woff|woff2|svg|eot|ttf|otf|gif|js"
     type: list
     list_type: compact
   authorized_extensions:
@@ -1057,7 +1089,7 @@ files:
     list_type: compact
   export_authorized_extensions:
     hidden: true
-    default: "gz"
+    default: "zip"
     type: list
     list_type: compact
   responsive_post_image_sizes:
@@ -1095,7 +1127,9 @@ files:
     default: false
     client: true
     shadowed_by_global: true
-  s3_use_iam_profile: false
+  s3_use_iam_profile:
+    default: false
+    shadowed_by_global: true
   s3_access_key_id:
     default: ""
     secret: true
@@ -1835,7 +1869,7 @@ uncategorized:
     hidden: true
     default: true
 
-  disable_edit_notifications: false
+  disable_system_edit_notifications: true
 
   likes_notification_consolidation_threshold:
     default: 3
@@ -1909,6 +1943,14 @@ uncategorized:
     default: "iPad|iPhone"
     hidden: true
 
+  app_association_android:
+    default: ""
+    textarea: true
+
+  app_association_ios:
+    default: ""
+    textarea: true
+
   share_anonymized_statistics: true
 
   auto_handle_queued_age:
@@ -1927,6 +1969,10 @@ uncategorized:
 
   max_bulk_invites:
     default: 50000
+    hidden: true
+
+  overridden_robots_txt:
+    default: ""
     hidden: true
 
 user_preferences:

@@ -139,7 +139,7 @@ const Group = RestModel.extend({
 
   @computed("visibility_level")
   isPrivate(visibilityLevel) {
-    return visibilityLevel !== 0;
+    return ![0, 1].includes(visibilityLevel);
   },
 
   @observes("isPrivate", "canEveryoneMention")
@@ -149,19 +149,13 @@ const Group = RestModel.extend({
     }
   },
 
-  @observes("visibility_level")
-  _updatePublic() {
-    if (this.isPrivate) {
-      this.setProperties({ public: false, allow_membership_requests: false });
-    }
-  },
-
   asJSON() {
     const attrs = {
       name: this.name,
       mentionable_level: this.mentionable_level,
       messageable_level: this.messageable_level,
       visibility_level: this.visibility_level,
+      members_visibility_level: this.members_visibility_level,
       automatic_membership_email_domains: this.emailDomains,
       automatic_membership_retroactive: !!this.automatic_membership_retroactive,
       title: this.title,
@@ -177,7 +171,8 @@ const Group = RestModel.extend({
       allow_membership_requests: this.allow_membership_requests,
       full_name: this.full_name,
       default_notification_level: this.default_notification_level,
-      membership_request_template: this.membership_request_template
+      membership_request_template: this.membership_request_template,
+      publish_read_state: this.publish_read_state
     };
 
     if (!this.id) {

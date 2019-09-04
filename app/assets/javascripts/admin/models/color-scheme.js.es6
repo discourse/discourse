@@ -128,7 +128,8 @@ ColorScheme.reopenClass({
               return ColorSchemeColor.create({
                 name: c.name,
                 hex: c.hex,
-                default_hex: c.default_hex
+                default_hex: c.default_hex,
+                is_advanced: c.is_advanced
               });
             })
           })

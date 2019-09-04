@@ -23,8 +23,6 @@ export default Ember.Mixin.create({
       getUrl(this.getWithDefault("uploadUrl", "/uploads")) +
       ".json?client_id=" +
       (this.messageBus && this.messageBus.clientId) +
-      "&authenticity_token=" +
-      encodeURIComponent(Discourse.Session.currentProp("csrfToken")) +
       this.uploadUrlParams
     );
   },
@@ -36,7 +34,7 @@ export default Ember.Mixin.create({
   },
 
   _initialize: function() {
-    const $upload = this.$();
+    const $upload = $(this.element);
     const reset = () =>
       this.setProperties({ uploading: false, uploadProgress: 0 });
     const maxFiles = this.getWithDefault(
@@ -108,7 +106,7 @@ export default Ember.Mixin.create({
   _destroy: function() {
     this.messageBus && this.messageBus.unsubscribe("/uploads/" + this.type);
 
-    const $upload = this.$();
+    const $upload = $(this.element);
     try {
       $upload.fileupload("destroy");
     } catch (e) {

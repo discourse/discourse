@@ -155,6 +155,7 @@ end
 
 RSpec.configure do |config|
   config.fail_fast = ENV['RSPEC_FAIL_FAST'] == "1"
+  config.silence_filter_announcements = ENV['RSPEC_SILENCE_FILTER_ANNOUNCEMENTS'] == "1"
   config.include Helpers
   config.include MessageBus
   config.include RSpecHtmlMatchers
@@ -264,18 +265,10 @@ RSpec.configure do |config|
   # force a rollback after using a multisite connection.
   def test_multisite_connection(name)
     RailsMultisite::ConnectionManagement.with_connection(name) do
-      spec_exception = nil
-
-      ActiveRecord::Base.transaction do
-        begin
-          yield
-        rescue Exception => spec_exception
-        ensure
-          raise ActiveRecord::Rollback
-        end
+      ActiveRecord::Base.transaction(joinable: false) do
+        yield
+        raise ActiveRecord::Rollback
       end
-
-      raise spec_exception if spec_exception
     end
   end
 

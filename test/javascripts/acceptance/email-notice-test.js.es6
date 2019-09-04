@@ -26,7 +26,7 @@ QUnit.test("shows banner when required", async assert => {
     "alert is displayed when email disabled for non-staff"
   );
 
-  updateCurrentUser({ staff: true, moderator: true });
+  updateCurrentUser({ moderator: true });
   await visit("/");
   assert.ok(
     exists(".alert-emails-disabled"),

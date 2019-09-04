@@ -58,6 +58,10 @@ module ApplicationHelper
     request.env["HTTP_ACCEPT_ENCODING"] =~ /br/
   end
 
+  def is_gzip_req?
+    request.env["HTTP_ACCEPT_ENCODING"] =~ /gzip/
+  end
+
   def script_asset_path(script)
     path = asset_path("#{script}.js")
 
@@ -77,6 +81,8 @@ module ApplicationHelper
 
       if is_brotli_req?
         path = path.gsub(/\.([^.]+)$/, '.br.\1')
+      elsif is_gzip_req?
+        path = path.gsub(/\.([^.]+)$/, '.gz.\1')
       end
 
     elsif GlobalSetting.cdn_url&.start_with?("https") && is_brotli_req?
@@ -330,6 +336,12 @@ module ApplicationHelper
 
   def include_ios_native_app_banner?
     current_user && current_user.trust_level >= 1 && SiteSetting.native_app_install_banner_ios
+  end
+
+  def ios_app_argument
+    # argument only makes sense for DiscourseHub app
+    SiteSetting.ios_app_id == "1173672076" ?
+      ", app-argument=discourse://new?siteUrl=#{Discourse.base_url}" : ""
   end
 
   def allow_plugins?

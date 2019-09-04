@@ -7,6 +7,7 @@
 
 bg:
   site_settings:
+    poll_enabled: "Позволи анкети?"
     poll_maximum_options: "Максимален брой опции позволени в анкетата."
     poll_edit_window_mins: "Брой минути след създаването на анкета когато тя може да бъде редактирана."
   poll:

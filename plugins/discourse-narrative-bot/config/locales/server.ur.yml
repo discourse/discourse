@@ -116,8 +116,8 @@ ur:
         tracks: |-
           میں فی الحال مندرجہ ذیل چیزوں کو کرنا جانتا ہوں:
 
-          `@%{discobot_username} %{reset_trigger} %{default_track}`
-          > مندرجہ ذیل انٹرایکٹو ٹیوٹوریل میں سے ایک کو شروع کر دیتا ہے: %{tracks}۔
+          `@%{discobot_username} %{reset_trigger} {ٹیوٹوریل-کا-نام}`
+          > ایک انٹرایکٹو ٹیوٹوریل شروع کر دیتا ہے۔ {ٹیوٹوریل-کا-نام} اِن میں سے ایک ہوسکتا ہے: `%{tracks}`۔
         bot_actions: |-
           `@%{discobot_username} %{dice_trigger} 2d6`
           > :game_die: 3، 6

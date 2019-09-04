@@ -895,17 +895,34 @@ class Post < ActiveRecord::Base
     ]
 
     fragments ||= Nokogiri::HTML::fragment(self.cooked)
-    links = fragments.css("a/@href", "img/@src").map { |media| media.value }.uniq
+    links = fragments.css("a/@href", "img/@src").map do |media|
+      src = media.value
+      next if src.blank?
+
+      if src.end_with?("/images/transparent.png") && (parent = media.parent)["data-orig-src"].present?
+        parent["data-orig-src"]
+      else
+        src
+      end
+    end.compact.uniq
 
     links.each do |src|
-      next if src.blank? || upload_patterns.none? { |pattern| src.split("?")[0] =~ pattern }
+      src = src.split("?")[0]
+
+      if src.start_with?("upload://")
+        sha1 = Upload.sha1_from_short_url(src)
+        yield(src, nil, sha1)
+        next
+      end
+
+      next if upload_patterns.none? { |pattern| src =~ pattern }
       next if Rails.configuration.multisite && src.exclude?(current_db) && src.exclude?("short-url")
 
       src = "#{SiteSetting.force_https ? "https" : "http"}:#{src}" if src.start_with?("//")
       next unless Discourse.store.has_been_uploaded?(src) || (include_local_upload && src =~ /\A\/[^\/]/i)
 
       path = begin
-        URI(URI.unescape(src))&.path
+        URI(URI.unescape(GlobalSetting.cdn_url ? src.sub(GlobalSetting.cdn_url, "") : src))&.path
       rescue URI::Error
       end
 
@@ -927,7 +944,7 @@ class Post < ActiveRecord::Base
     missing_post_uploads = {}
     count = 0
 
-    DistributedMutex.synchronize("find_missing_uploads") do
+    DistributedMutex.synchronize("find_missing_uploads", validity: 30.minutes) do
       PostCustomField.where(name: Post::MISSING_UPLOADS).delete_all
       query = Post
         .have_uploads
@@ -955,10 +972,7 @@ class Post < ActiveRecord::Base
             upload_id = Upload.where(sha1: sha1).pluck(:id).first if sha1.present?
             upload_id ||= yield(post, src, path, sha1)
 
-            if upload_id.present?
-              attributes = { post_id: post.id, upload_id: upload_id }
-              PostUpload.create!(attributes) unless PostUpload.exists?(attributes)
-            else
+            if upload_id.blank?
               missing_uploads << src
               missing_post_uploads[post.id] << src
             end

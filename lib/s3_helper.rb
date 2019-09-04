@@ -71,7 +71,9 @@ class S3Helper
     if !Rails.configuration.multisite
       options[:copy_source] = File.join(@s3_bucket_name, source)
     else
-      if @s3_bucket_folder_path
+      if source.include?(multisite_upload_path) || source.include?(@tombstone_prefix)
+        options[:copy_source] = File.join(@s3_bucket_name, source)
+      elsif @s3_bucket_folder_path
         folder, filename = begin
           source.split("/".freeze, 2)
         end

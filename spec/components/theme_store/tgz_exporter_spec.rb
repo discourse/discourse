@@ -55,15 +55,17 @@ describe ThemeStore::TgzExporter do
     filename = exporter.package_filename
     FileUtils.cp(filename, dir)
     exporter.cleanup!
-    "#{dir}/discourse-header-icons.tar.gz"
+    "#{dir}/discourse-header-icons.zip"
   end
 
   it "exports the theme correctly" do
     package
-    Dir.chdir("#{dir}") do
-      `tar -xzf discourse-header-icons.tar.gz`
-    end
-    Dir.chdir("#{dir}/discourse-header-icons") do
+    file = 'discourse-header-icons.zip'
+    dest = 'discourse-header-icons'
+    Dir.chdir(dir) do
+      ImportExport::ZipUtils.new.unzip_directory(dir, file, allow_non_root_folder: true)
+      `rm #{file}`
+
       folders = Dir.glob("**/*").reject { |f| File.file?(f) }
       expect(folders).to contain_exactly("assets", "common", "locales", "mobile")
 
@@ -121,7 +123,7 @@ describe ThemeStore::TgzExporter do
     exporter = ThemeStore::TgzExporter.new(theme)
     filename = exporter.package_filename
     exporter.cleanup!
-    expect(filename).to end_with "/discourse-header-icons.tar.gz"
+    expect(filename).to end_with "/discourse-header-icons.zip"
   end
 
 end

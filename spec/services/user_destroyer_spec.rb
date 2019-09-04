@@ -313,7 +313,7 @@ describe UserDestroyer do
     end
 
     context 'user created a category' do
-      let!(:category) { Fabricate(:category, user: @user) }
+      let!(:category) { Fabricate(:category_with_definition, user: @user) }
 
       it "assigns the system user to the categories" do
         UserDestroyer.new(@admin).destroy(@user, delete_posts: true)

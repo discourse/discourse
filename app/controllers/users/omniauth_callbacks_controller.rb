@@ -18,6 +18,11 @@ class Users::OmniauthCallbacksController < ApplicationController
   # will not have a CSRF token, however the payload is all validated so its safe
   skip_before_action :verify_authenticity_token, only: :complete
 
+  def confirm_request
+    self.class.find_authenticator(params[:provider])
+    render locals: { hide_auth_buttons: true }
+  end
+
   def complete
     auth = request.env["omniauth.auth"]
     raise Discourse::NotFound unless request.env["omniauth.auth"]
@@ -86,7 +91,8 @@ class Users::OmniauthCallbacksController < ApplicationController
   end
 
   def failure
-    flash[:error] = I18n.t("login.omniauth_error")
+    error_key = params[:message].to_s.gsub(/[^\w-]/, "") || "generic"
+    flash[:error] = I18n.t("login.omniauth_error.#{error_key}", default: I18n.t("login.omniauth_error.generic"))
     render 'failure'
   end
 

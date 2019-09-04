@@ -215,6 +215,7 @@ sv:
       stats: "Sitestatistik"
       our_admins: "Våra administratörer"
       our_moderators: "Våra moderatorer"
+      moderators: "Moderatorer"
       stat:
         all_time: "Alla dagar"
         last_7_days: "Senaste 7"
@@ -640,7 +641,6 @@ sv:
         uploaded_avatar: "Anpassad bild"
         uploaded_avatar_empty: "Lägg till en anpassad bild"
         upload_title: "Ladda upp din bild"
-        upload_picture: "Ladda upp bild"
         image_is_not_a_square: "Varning: vi beskar din bild; bredden och höjden var inte samma."
       change_profile_background:
         title: "Profilbakgrund"
@@ -660,6 +660,7 @@ sv:
           other: "Vi skickar bara e-post om du inte synts till de senaste {{count}} minuterna."
       associated_accounts:
         revoke: "Återkalla"
+        cancel: "Avbryt"
       name:
         title: "Namn"
         instructions: "ditt fullständiga namn (tillval)"
@@ -1007,6 +1008,9 @@ sv:
       alt: "Alt"
     conditional_loading_section:
       loading: Laddar...
+    date_time_picker:
+      from: Från
+      to: Till
     emoji_picker:
       flags: Flaggor
     composer:
@@ -2122,8 +2126,6 @@ sv:
           view_table: "tabell"
           view_graph: "graf"
           refresh_report: "Uppdatera rapport"
-          start_date: "Startdatum"
-          end_date: "Slutdatum"
           groups: "Alla grupper"
           filters:
             group:
@@ -2345,7 +2347,7 @@ sv:
         opacity: "Opacitet"
         copy: "Kopiera"
         email_templates:
-          title: "E-postmallar"
+          title: "E-post"
           subject: "Ämne"
           multiple_subjects: "Den här e-postmallen har flera ämnen."
           body: "Huvuddel"
@@ -2418,6 +2420,8 @@ sv:
           love:
             name: "älska"
             description: "Gillaknappens färg."
+        email_style:
+          css: "CSS"
       email:
         title: "E-post"
         settings: "Inställningar"
@@ -2584,12 +2588,13 @@ sv:
           title: "Felprotokoll"
       watched_words:
         clear_filter: "Rensa"
+        download: Ladda ner
+        clear_all: Rensa alla
         actions:
           block: "Blockera"
           flag: "Flagga"
         form:
           add: "Lägg till"
-          upload: "Ladda upp"
       impersonate:
         title: "Imitera"
         help: "Använd det här verktyget för att imitera ett användarkonto för avlusningssyften. Du kommer behöva logga ut när du är klar."
@@ -2790,7 +2795,7 @@ sv:
       site_text:
         description: "Du kan anpassa all text på ditt forum. Börja genom att söka nedanför:"
         search: "Sök efter texten som du vill redigera"
-        title: "Textinnehåll"
+        title: "Text"
         edit: "redigera"
         revert: "Ångra ändringarna"
         revert_confirm: "Är du säker på att du vill ångra dina ändringar?"

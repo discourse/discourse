@@ -121,7 +121,6 @@ sw:
     errors:
       <<: *errors
   invite:
-    not_found: "Mwaliko wako sio sahihi. Tafadhali wasiliana na msimazi wa tovuti."
     user_exists: "Hakuna haja ya kumualika <b>%{email}</b>, tayaru wana <a href='%{base_path}/u/%{username}/summary'>miliki akaunti!</a>"
   bulk_invite:
     file_should_be_csv: "Faili unalopakia inabidi liwe na csv umbizo "
@@ -147,6 +146,7 @@ sw:
     loading: "Inapakua Majadiliano..."
     permalink: "Kiungo cha mtandao cha Mda Mrefu"
     in_reply_to: "▶ %{username}"
+    created: "Imetengenezwa"
   no_mentions_allowed: "Samahani, hauwezi kutaja watumiaji wengine."
   no_mentions_allowed_newuser: "Samahani, watumiaji wapya hawawezi kutaja watumiaji wengine."
   no_images_allowed_trust: "Samahani, hauwezi kuweka picha ndani ya chapisho"
@@ -154,7 +154,7 @@ sw:
   no_attachments_allowed: "Samahani watumiaji wapya hawawezi kuambatanisha picha, sauti, video au dokument kwenye machapisho."
   no_links_allowed: "Samahani watumiaji wapya hawawezi kuweka viungo kwenye machapisho."
   links_require_trust: "Samahani, hauwezi kuweka viungo kwenye machapisho yako."
-  contains_blocked_words: "Chapisho lako lina neno lisiloruhusiwa: %{word}"
+  contains_blocked_word: "Chapisho lako lina neno lisiloruhusiwa: %{word}"
   spamming_host: "Samahani hauwezi kuchapisha kiungo kwenye computer hiyo."
   user_is_suspended: "Watumiaji waliosimamishwa hawaruhusiwi kuchapisha."
   topic_not_found: "Kuna tatizo limetokea. Labda hii mada ilifungwa au kufutwa ukiwa unaangalia?"
@@ -547,6 +547,7 @@ sw:
         day: Siku
     post_edits:
       labels:
+        edited_at: Tarehe
         post: Ujumbe
         editor: Mhariri
         edit_reason: Sababu
@@ -1018,8 +1019,8 @@ sw:
     errors: "%{errors}"
     not_available: "Haipatikani. Jaribu %{suggestion}?"
     something_already_taken: "Tatizo limetokea, labda jina la mtumiaji au barua pepe imesajiliwa tayari. Jaribu kiungo cha kusahau nywila."
-    omniauth_error: "Samahani, tatizo limetokea wakati wa kuthibitisha akaunti yako. Labda haujatoa kibali ya kuthibitisha?"
     omniauth_error_unknown: "Tatizo limetokea kwenye mfumo wa kuingia, tafadhali jaribu tena."
+    omniauth_confirm_button: "Endelea"
     authenticator_error_no_valid_email: "Barua pepe zinazoendana na %{account}haziruhusiwi. Itakubidi usanidi akaunti yako kupitia barua pepe nyingine."
     new_registrations_disabled: "Usajili wa akaunti mpya hauruhusiwi kwa sasa."
     password_too_long: "Nywila haziruhusiwi kuwa na herufi zaidi ya 200."
@@ -1181,35 +1182,9 @@ sw:
     post_hidden:
       title: "Chapisho Limefichwa"
       subject_template: "Chapisho limefichwa sababu ya ripoti nyingi za jumuiya"
-      text_body_template: |
-        Habari,
-
-        Ujumbe huu ni otomatiki kutoka kwa %{site_name} kukujulisha kuwa chapisho lako limefichwa.
-
-        <%{base_url}%{url}>
-
-        %{flag_reason}
-
-        Wanachama wengi kwenye jumuiya wameripoti chapisho hili kabla ya kufichwa, kwa hiyo gikiria vizuri kabla ya kusahihisha chapisho lako. **Unaweza kuhariri chapisho baada ya dakika %{edit_delay}, na chapisho litarejeshwa.**
-
-        Kama chapisho likifichwa tena, litabaki kwenye maficho mpaka msaidizi akilipitia.
-
-        Kwa maelezo zaidi, tafadhali pitia [mwongozo wa jumuiya](%{base_url}/mwongozo).
     post_hidden_again:
       title: "Chapisho Limefichwa tena"
       subject_template: "Chapisho limefichwa sababu ya ripoti nyingi za jumuiya, msaidizi amejulishwa"
-      text_body_template: |
-        Habari,
-
-        Ujumbe huu ni otomatiki kutoka kwa %{site_name} kukujulisha kuwa chapisho lako limefichwa tena.
-
-        <%{base_url}%{url}>
-
-        %{flag_reason}
-
-        Wanachama wengi kwenye jumuiya wameripoti chapisho hili kabla ya kufichwa. **Kwa vile chapisho limefichwa zaidi ya mara moja, chapisho litabaki kwenye maficho mpaka litakapopitiwa na msaidizi.**
-
-        Kwa maelezo zaidi, tafadhali pitia [mwongozo wa jumuiya](%{base_url}/mwongozo).
     welcome_user:
       title: "Karibu Mtumiaji"
       subject_template: "Karibu kwenye %{site_name}!"
@@ -1310,13 +1285,6 @@ sw:
         Tunaomba radhi, ila ujumbe wa barua pepe kwenda kwa %{destination} (jina la %{former_title}) haujafika.
 
         Jibu lako limetumwa kwa kutumia barua pepe tofauti ambayo hatukuitegemea, kwa hiyo hatuna uhakika kuwa ni mtu mmoja. Jaribu kutumia barua pepe nyingine, au [wasiliana na msaidizi](%{base_url}/kuhusu).
-    email_reject_no_account:
-      title: "Barua Pepe Kataza Akaunti Haipo"
-      subject_template: "[%{email_prefix}] Tatizo la Barua Pepe -- Akaunti Haijulikani"
-      text_body_template: |
-        Tunaomba radhi, ila ujumbe wa barua pepe kwenda kwa %{destination} (jina la %{former_title}) haujafika.
-
-        Jibu lako limetumwa kwa kutumia barua pepe iliyojulikana. Jaribu kutumia barua pepe nyingine, au [wasiliana na msaidizi](%{base_url}/kuhusu).
     email_reject_empty:
       title: "Barua Pepe Kataa Wazi"
       subject_template: "[%{email_prefix}] Tatizo la Barua Pepe -- Hakuna Maandishi"

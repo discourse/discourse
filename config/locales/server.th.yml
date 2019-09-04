@@ -51,6 +51,7 @@ th:
     start_discussion: "เริ่มการสนทนา"
     continue: "ดำเนินการสนทนาต่อ"
     loading: "กำลังโหลดการสนทนา"
+    created: "สร้างเมื่อ"
   user_is_suspended: "ผู้ใช้ที่ถูกระงับการใช้งานไม่สามารถโพสได้"
   just_posted_that: "คล้ายกับสิ่งคุณเพิ่งโพสมากเกินไป"
   invalid_characters: "มีตัวอักษรที่ไม่สามารถใช้งานได้"
@@ -113,6 +114,7 @@ th:
   reports:
     post_edits:
       labels:
+        edited_at: วันที่
         post: โพส
         edit_reason: เหตุผล
     user_flagging_ratio:

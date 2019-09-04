@@ -3,6 +3,7 @@
     color: $primary;
     cursor: pointer;
     border-bottom: 1px dashed $primary-medium;
+    white-space: nowrap;
 
     .d-icon {
       color: $primary;
@@ -10,6 +11,10 @@
 
     &.past {
       border-bottom-color: $primary-low-mid;
+    }
+
+    &.past[data-countdown] {
+      color: $primary-medium;
     }
   }
 }

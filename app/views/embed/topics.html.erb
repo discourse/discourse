@@ -1,0 +1,55 @@
+<%- if @list && @list.topics.present? %>
+  <div class='topics-list' data-embed-state='loaded' <%- if @embed_id %>data-embed-id="<%= @embed_id %>"<%- end %>>
+    <%- @list.topics.each do |t| %>
+      <div class='topic-list-item'>
+        <%- if @template == "complete" %>
+          <div class='main-link'>
+            <div class="topic-details-flex">
+              <div class='topic-details-column-1'>
+                <div class='topic-title-link'>
+                  <a target="_parent" href="<%= t.url %>" class="title raw-link raw-topic-link" data-topic-id="<%= t.id %>"><%= t.title %></a>
+                </div>
+
+                <%- if t.posts_count > 1 %>
+                  <div class="topic-last-posted-at" title="<%= t.last_posted_at.strftime("%B %e, %Y %l:%M%P") %>">
+                    <%= "#{I18n.t('embed.last_reply')} #{time_ago_in_words(t.last_posted_at, scope: :'datetime.distance_in_words_verbose')}" %>
+                  </div>
+                <%- end %>
+                <div class='topic-author-avatar-timestamp'>
+                  <img src="<%= t.user.avatar_template.gsub('{size}', '20') %>">
+                  <span class="topic-created-at" title="<%= t.created_at.strftime("%B %e, %Y %l:%M%P") %>">
+                    <%= "#{I18n.t('embed.created')} #{time_ago_in_words(t.created_at, scope: :'datetime.distance_in_words_verbose')}" %>
+                  </span>
+                </div>
+                <div class='topic-stats'>
+                  <%- if t.like_count > 0 %>
+                    <div class='topic-like-count'>
+                      <%= I18n.t('embed.likes', count: t.like_count) %>
+                    </div>
+                  <%- end %>
+                  <%- if t.posts_count > 1 %>
+                    <div class='topic-post-count'>
+                      <%= I18n.t('embed.replies', count: (t.posts_count - 1)) %>
+                    </div>
+                  <%- end %>
+                </div>
+              </div>
+
+              <div class='topic-details-column-2'>
+                <%- if t.image_url.present? %>
+                  <div class='topic-featured-image'>
+                    <img src="<%= t.image_url %>">
+                  </div>
+                <%- end %>
+              </div>
+            </div>
+          </div>
+        <%- else %>
+          <div class='main-link'>
+            <a target="_parent" href="<%= t.url %>" class="title raw-link raw-topic-link" data-topic-id="<%= t.id %>"><%= t.title %></a>
+          </div>
+        <%- end %>
+      </div>
+    <%- end %>
+  </div>
+<%- end %>

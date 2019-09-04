@@ -35,7 +35,7 @@ class InvitesController < ApplicationController
         render layout: 'no_ember'
       end
     else
-      flash.now[:error] = I18n.t('invite.not_found')
+      flash.now[:error] = I18n.t('invite.not_found', base_url: Discourse.base_url)
       render layout: 'no_ember'
     end
   end
@@ -70,7 +70,7 @@ class InvitesController < ApplicationController
         }
       end
     else
-      render json: { success: false, message: I18n.t('invite.not_found') }
+      render json: { success: false, message: I18n.t('invite.not_found_json') }
     end
   end
 

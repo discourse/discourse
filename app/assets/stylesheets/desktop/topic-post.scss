@@ -66,6 +66,7 @@ nav.post-controls {
       margin-left: 0;
       margin-right: 0;
       &.my-likes,
+      &.read-indicator,
       &.regular-likes {
         // Like count on posts
         .d-icon {
@@ -441,9 +442,6 @@ nav.post-controls {
 #topic-footer-buttons {
   padding: 10px 10px 0 0;
   float: left;
-  p {
-    color: dark-light-choose($primary-medium, $secondary-medium);
-  }
   .btn {
     @include topic-footer-button;
     .d-icon-bookmark.bookmarked {
@@ -512,52 +510,6 @@ video {
   }
   to {
     opacity: 1;
-  }
-}
-
-.extra-info-wrapper {
-  overflow: hidden;
-  .badge-wrapper,
-  i,
-  .topic-link {
-    -webkit-animation: fadein 0.7s;
-    animation: fadein 0.7s;
-  }
-  .topic-statuses {
-    .d-icon {
-      color: $header_primary-medium;
-    }
-    .d-icon-envelope {
-      color: $danger;
-    }
-  }
-  .topic-link {
-    color: $header_primary;
-    display: block;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-}
-
-/* default docked header CSS for all topics, including those without categories */
-
-.extra-info {
-  h1 {
-    margin: 5px 0 0 0;
-    font-size: $font-up-3;
-    line-height: $line-height-large;
-    width: 100%;
-  }
-}
-
-/* override docked header CSS for topics with categories */
-
-.extra-info.two-rows {
-  h1 {
-    line-height: $line-height-medium;
-    margin: 0;
-    width: 100%;
   }
 }
 
@@ -841,7 +793,8 @@ a.attachment:before {
   }
 }
 
-.who-liked {
+.who-liked,
+.who-read {
   margin-top: 20px;
   margin-bottom: 0;
   width: 100%;

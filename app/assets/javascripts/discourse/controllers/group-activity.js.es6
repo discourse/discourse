@@ -1,4 +1,4 @@
 export default Ember.Controller.extend({
-  application: Ember.inject.controller(),
+  router: Ember.inject.service(),
   queryParams: ["category_id"]
 });

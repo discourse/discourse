@@ -13,6 +13,49 @@ export function addUserMenuGlyph(glyph) {
 createWidget("user-menu-links", {
   tagName: "div.menu-links-header",
 
+  profileLink() {
+    const link = {
+      route: "user",
+      model: this.currentUser,
+      className: "user-activity-link",
+      icon: "user",
+      rawLabel: formatUsername(this.currentUser.username)
+    };
+
+    if (this.currentUser.is_anonymous) {
+      link.label = "user.profile";
+      link.rawLabel = null;
+    }
+
+    return link;
+  },
+
+  bookmarksGlyph() {
+    return {
+      label: "user.bookmarks",
+      className: "user-bookmarks-link",
+      icon: "bookmark",
+      href: `${this.attrs.path}/activity/bookmarks`
+    };
+  },
+
+  messagesGlyph() {
+    return {
+      label: "user.private_messages",
+      className: "user-pms-link",
+      icon: "envelope",
+      href: `${this.attrs.path}/messages`
+    };
+  },
+
+  linkHtml(link) {
+    return this.attach("link", link);
+  },
+
+  glyphHtml(glyph) {
+    return this.attach("link", $.extend(glyph, { hideLabel: true }));
+  },
+
   html(attrs) {
     const { currentUser, siteSettings } = this;
 
@@ -24,6 +67,7 @@ createWidget("user-menu-links", {
       isAnon;
 
     const path = attrs.path;
+    const links = [this.profileLink()];
     const glyphs = [];
 
     if (extraGlyphs) {
@@ -37,36 +81,12 @@ createWidget("user-menu-links", {
       });
     }
 
-    glyphs.push({
-      label: "user.bookmarks",
-      className: "user-bookmarks-link",
-      icon: "bookmark",
-      href: `${path}/activity/bookmarks`
-    });
+    glyphs.push(this.bookmarksGlyph());
 
     if (siteSettings.enable_personal_messages) {
-      glyphs.push({
-        label: "user.private_messages",
-        className: "user-pms-link",
-        icon: "envelope",
-        href: `${path}/messages`
-      });
+      glyphs.push(this.messagesGlyph());
     }
 
-    const profileLink = {
-      route: "user",
-      model: currentUser,
-      className: "user-activity-link",
-      icon: "user",
-      rawLabel: formatUsername(currentUser.username)
-    };
-
-    if (currentUser.is_anonymous) {
-      profileLink.label = "user.profile";
-      profileLink.rawLabel = null;
-    }
-
-    const links = [profileLink];
     if (allowAnon) {
       if (!isAnon) {
         glyphs.push({
@@ -94,11 +114,8 @@ createWidget("user-menu-links", {
     });
 
     return h("ul.menu-links-row", [
-      links.map(l => h("li.user", this.attach("link", l))),
-      h(
-        "li.glyphs",
-        glyphs.map(l => this.attach("link", $.extend(l, { hideLabel: true })))
-      )
+      links.map(l => h("li.user", this.linkHtml(l))),
+      h("li.glyphs", glyphs.map(l => this.glyphHtml(l)))
     ]);
   }
 });

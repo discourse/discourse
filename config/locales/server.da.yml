@@ -16,6 +16,7 @@ da:
       short_no_year: "%-d. %B"
       date_only: "%-d. %B, %Y"
       long: "%-d. %B %Y, %H:%M"
+      no_day: "%B %Y"
   date:
     month_names: [~, Januar, Februar, Marts, April, Maj, Juni, Juli, August, September, Oktober, November, December]
     <<: *datetime_formats
@@ -30,23 +31,64 @@ da:
   powered_by_html: 'Drives med brug af <a href="https://www.discourse.org">Discourse</a>, ses bedst med JavaScript slået til'
   sign_up: "Tilmeld dig"
   log_in: "Log ind"
+  submit: "Færdiggør"
   purge_reason: "Automatisk slettet som forladt, deaktiveret konto"
   disable_remote_images_download_reason: "Fjerndownload af billeder deaktiveret grundet utilstrækkelig diskplads"
   anonymous: "Anonym"
   remove_posts_deleted_by_author: "Slettet af forfatteren"
+  redirect_warning: "Vi kunne ikke bekræfte, at det link, du valgte, faktisk blev sendt til forummet. Hvis du alligevel ønsker at fortsætte, så vælg nedenstående link."
+  on_another_topic: "På et andet emne"
   themes:
+    bad_color_scheme: "Kan ikke opdatere tema, ugyldigt farvepalet"
     other_error: "Der opstod en fejl under opdatering af temaet"
+    compile_error:
+      unrecognized_extension: "Ikke anerkendt filtypenavn: %{extension}"
+    import_error:
+      generic: Der opstod en fejl under importen af dette tema
+      about_json: "Importfejl: about.json findes ikke eller er ugyldig"
+      about_json_values: "about.json indeholder ugyldige værdier: %{errors}"
+      git: "Fejl ved kloning af git repo, adgang nægtes, eller depot findes ikke"
+      unpack_failed: "Kunne ikke pakke filen ud"
+      unknown_file_type: "Den fil, du uploadede, ser ikke ud til at være et gyldigt Discourse-tema."
+    errors:
+      component_no_user_selectable: "Temakomponenter kan ikke vælges af en bruger"
+      component_no_default: "Temakomponenter kan ikke være standard temaet"
+      component_no_color_scheme: "Temakomponenter kan ikke have farvepaletter"
+      no_multilevels_components: "Temaer med børnetemaer kan ikke selv være børn af andre temaer"
+    settings_errors:
+      invalid_yaml: "Forsynet YAML er ugyldig."
+      data_type_not_a_number: "Indstillingen `%{name}`s type er ikke understøttet. Understøttede typer er `integer`, `bool`, `list` og `enum`"
+      name_too_long: "Der er en indstilling med et for langt navn. Maksimal længde er 255"
+      default_value_missing: "Indstilling af `%{name}` har ingen standard værdi"
+      default_not_match_type: "Indstilling af `%{name}`s standard værdi's type stemmer ikke overens med den type fundet i indstillingerne."
+      default_out_range: "Indstilling af `%{name}` standard værdi er ikke inden for det specificerede interval."
+      enum_value_not_valid: "Den valgte værdi er ikke et af enum-valgene."
+      number_value_not_valid: "Ny værdi er ikke inden for det tilladte interval."
+      number_value_not_valid_min_max: "Det skal være mellem %{min} og %{max}."
+      number_value_not_valid_min: "Det skal være større end eller lig med %{min}."
+      number_value_not_valid_max: "Det skal være mindre end eller lig med %{max}."
+      string_value_not_valid: "Ny værdi længde er ikke inden for det tilladte interval."
+      string_value_not_valid_min_max: "Det skal være mellem %{min} og %{max} tegn langt."
+      string_value_not_valid_min: "Det skal være mindst %{min} tegn langt."
+      string_value_not_valid_max: "Den skal højst være %{max} tegn langt."
+    locale_errors:
+      top_level_locale: "Den øverste nøgle i en locale fil skal matche det relevante locale's navn."
   emails:
     incoming:
       default_subject: "Emnet mangler en titel"
       show_trimmed_content: "Vis trimmet indhold"
       maximum_staged_user_per_email_reached: "Maksimalt antal af brugere oprettet pr. email."
+      no_subject: "(intet emne)"
+      missing_attachment: "(Vedhæftning %{filename} mangler)"
       errors:
         empty_email_error: "Dette sker når den rå email der modtages er tom."
         no_message_id_error: "Dette sker når emailen ikke har nogen 'Message-Id' header."
         auto_generated_email_error: "Dette sker når headeren 'precedence' er angivet til: list, junk, bulk eller auto_reply, eller når enhver anden header indeholder: auto-submitted, auto-replied eller auto-generated."
         no_body_detected_error: "Dette sker når vi ikke kunne trække noget indhold ud og der heller ikke var nogen vedhæftninger."
+        no_sender_detected_error: "Det sker, når vi ikke kunne finde en gyldig emailadresse i Fra-overskriften."
+        from_reply_by_address_error: "Det sker, når Fra-overskriften matcher svaret via e-mail-adresse."
         inactive_user_error: "Dette sker når afsenderen ikke er aktiv."
+        silenced_user_error: "Det sker, når afsenderen er silenced."
         bad_destination_address: "Dette sker når ingen af email adresserne i To/Cc/Bcc felterne matcher en opsat indgående email adresse."
         strangers_not_allowed_error: "Dette sker når en bruger prøver at oprette et nyt emne i en kategori som de ikke er medlem af."
         insufficient_trust_level_error: "Dette sker når en bruger prøvede at oprette et nyt emne i en kategori som de ikke har den krævne \"trust level\" til."
@@ -55,8 +97,12 @@ da:
         topic_closed_error: "Dette sker når et svar er kommet, men det relaterede emne er blevet lukket."
         bounced_email_error: "Emailen er en \"bounced email\" rapport"
         screened_email_error: "Dette sker når afsenderens email adresse allerede er screenet."
+        unsubscribe_not_allowed: "Det sker, når afmelding via e-mail ikke er tilladt for denne bruger."
+        email_not_allowed: "Det sker, når emailadressen ikke er på hvid-listen eller er på sort-listen."
+      unrecognized_error: "Ukendt fejl"
   errors: &errors
     format: "%{attribute} %{message}"
+    format_with_full_message: "<b>%{attribute}</b>: %{message}"
     messages:
       too_long_validation: "er begrænset til %{max} tegn; du har brugt %{length}."
       invalid_boolean: "Ugyldig boolsk operator"
@@ -82,6 +128,9 @@ da:
       not_an_integer: skal være et heltal
       odd: skal være et ulige tal
       record_invalid: "Kunne ikke valideres: %{errors}"
+      max_emojis: "kan ikke have mere end %{max_emojis_count}humørikoner"
+      emojis_disabled: "kan ikke have humørikon"
+      ip_address_already_screened: "er allerede inkluderet i en eksisterende regel"
       restrict_dependent_destroy:
         one: "Kan ikke slette fordi en afhængighed %{record} findes"
         many: "Kan ikke slette fordi en afhængighed %{record} findes"
@@ -103,38 +152,63 @@ da:
     embed:
       load_from_remote: "Der opstod en fejl ved indlæsningen af dette indlæg."
     site_settings:
+      invalid_category_id: "Du specificerede en kategori, der ikke findes"
+      invalid_choice:
+        one: "Du specificerede det ugyldige valg %{name}"
+        other: "Du specificerede de ugyldige valg %{name}"
       default_categories_already_selected: "Du kan ikke vælge en kategori der er brugt i en anden liste."
       s3_upload_bucket_is_required: "Du kan ikke oploade til S3 med mindre du har angivet 's3_upload_bucket'."
+      enable_s3_uploads_is_required: "Du kan ikke aktivere beholdning til S3, medmindre du har aktiveret S3-uploads."
+      s3_backup_requires_s3_settings: "Du kan ikke bruge S3 som backupplacering, medmindre du har angivet '%{setting_name}'."
   activemodel:
     errors:
       <<: *errors
   invite:
-    not_found: "Dit invitation-token er ugyldigt. Kontakt veligst sitets administrator."
+    not_found: "Dit invitationstoken er ugyldigt. Kontakt venligst <a href='%{base_url}/about'>personale</a> ."
+    not_found_json: "Dit invitationstoken er ugyldigt. Kontakt venligst personale."
     user_exists: "Der er ingen grund til at invitere <b>%{email}</b>, personen <a href='%{base_path}/u/%{username}/summary'>har allerede en profil!</a>"
+    confirm_email: "<p> Du er næsten færdig! Vi har sendt en aktiveringsmail til din emailadresse. Følg instruktionerne i mailen for at aktivere din konto. </p><p> Hvis den ikke ankommer, så tjek din spam-mappe. </p>"
   bulk_invite:
     file_should_be_csv: "Den uploadede fil skal være i csv format."
+    max_rows: "De første %{max_bulk_invites} invitationer er blevet sendt. Prøv at opdele filen i mindre dele."
     error: "Der skete en fejl ved upload af filen. Prøv venligst igen senere."
   topic_invite:
+    failed_to_invite: "Brugeren kan ikke inviteres til dette emne uden et gruppemedlemskab i en af følgende grupper: %{group_names}."
     user_exists: "Beklager, men brugeren er allerede inviteret. Du kan kun invitere en bruger til et emne én gang."
   backup:
     operation_already_running: "Der kører allerede en %{operation}. Kan ikke starte et nyt %{operation} job lige nu."
     backup_file_should_be_tar_gz: "Backup filen skal være et .tar.gz arkiv."
     not_enough_space_on_disk: "Der er ikke nok diskplads til at uploade denne backup."
     invalid_filename: "Backup filnavnet indeholder ugyldige tegn. Gyldige tegn er a-z 0-9 . - _."
+    file_exists: "Den fil, du prøver at uploade, findes allerede."
+    location:
+      local: "Lokal"
+      s3: "Amazon S3"
+  invalid_params: "Du leverede ugyldige parametre til anmodningen: %{message}"
   not_logged_in: "Du skal logge på for at kunne dette."
   not_found: "Den anmodede URL eller ressource kunne ikke findes."
   invalid_access: "Du har ikke tilladelse til at se den anmodede ressource."
+  authenticator_not_found: "Autentificeringsmetode findes ikke eller er deaktiveret."
+  invalid_api_credentials: "Du har ikke tilladelse til at se den ønskede ressource. API-brugernavnet eller -nøglen er ugyldig."
+  provider_not_enabled: "Du har ikke tilladelse til at se den ønskede ressource. Godkendelsesudbyderen er ikke aktiveret."
+  provider_not_found: "Du har ikke tilladelse til at se den ønskede ressource. Godkendelsesudbyderen findes ikke."
   read_only_mode_enabled: "Forummet er i \"kun læsning\" tilstand. Interaktioner er deaktiverede."
+  email_template_cant_be_modified: "Denne email skabelon kan ikke ændres"
+  invalid_whisper_access: "Enten er hvisken ikke aktiveret, eller du har ikke adgang til at oprette hviskende indlæg"
   reading_time: "Læsetid"
   likes: "Synes godt om"
   too_many_replies:
     one: "Beklager, men nye brugere kan kun skrive %{count} svar i hvert emne til at starte med."
     other: "Beklager, men nye brugere kan kun skrive %{count} svar i hvert emne til at starte med."
+  max_consecutive_replies:
+    one: "Ingen på hinanden følgende svar er tilladt. Rediger dit tidligere svar, eller vent, til nogen svarer dig."
+    other: "Ikke mere end %{count} på hinanden følgende svar er tilladt. Rediger dit tidligere svar, eller vent, til nogen svarer dig."
   embed:
     start_discussion: "Start diskussion"
     continue: "Fortsæt diskussion"
     error: "Fejl ved indlejring"
     referer: "Henviser:"
+    mismatch: "Henviseren blev enten ikke sendt eller matchede ikke nogen af følgende værter:"
     no_hosts: "Ingen værter var konfigureret til indlejring."
     configure: "Konfigurér indlejring"
     more_replies:
@@ -144,6 +218,10 @@ da:
     permalink: "Permalink"
     imported_from: "Importeret fra: %{link}"
     in_reply_to: "▶ %{username}"
+    replies:
+      one: "%{count} svar"
+      other: "%{count} svarer"
+    created: "Oprettet"
   no_mentions_allowed: "Beklager, du kan ikke nævne andre brugere."
   too_many_mentions:
     one: "Beklager, men du kan kun nævne %{count} brugere i et indlæg."
@@ -152,6 +230,7 @@ da:
   too_many_mentions_newuser:
     one: "Beklager, nye brugere kan kun nævne en bruger i et indlæg."
     other: "Beklager, nye brugere kan kun nævne %{count} brugere i et indlæg."
+  no_images_allowed_trust: "Beklager, du kan ikke placere billeder i et indlæg"
   no_images_allowed: "Beklager, nye brugere kan ikke postere billeder i indlæg."
   too_many_images:
     one: "Beklager, nye brugere kan kun anvende et billede i et indlæg."
@@ -161,14 +240,19 @@ da:
     one: "Beklager, nye brugere kan kun vedhæfte en fil i et indlæg."
     other: "Beklager, nye brugere kan kun vedhæfte %{count} filer i et indlæg."
   no_links_allowed: "Beklager, nye brugere kan ikke bruge links i indlæg."
+  links_require_trust: "Beklager, du kan ikke inkludere links i dine indlæg."
   too_many_links:
     one: "Beklager, nye brugere kan kun indsætte et link i et indlæg."
     other: "Beklager, nye brugere kan kun indsætte %{count} links i et indlæg."
+  contains_blocked_word: "Dit indlæg indeholder et ord, der ikke er tilladt: %{word}"
+  contains_blocked_words: "Dit indlæg indeholder flere ord, der ikke er tilladt: %{words}"
   spamming_host: "Beklager, du kan ikke indsætte et link til det pågældende domæne."
   user_is_suspended: "Suspenderede brugere tilllades ikke at oprette indlæg."
   topic_not_found: "Der er gået noget galt. Måske er emnet blevet lukket eller slettet mens du kiggede på det?"
   not_accepting_pms: "Beklager, %{username} tager ikke imod beskeder i øjeblikket."
   max_pm_recepients: "Du kan desværre kun sende til %{recipients_limit} modtagere."
+  pm_reached_recipients_limit: "Beklager, du kan ikke have mere end %{recipients_limit}-modtagere i en meddelelse."
+  removed_direct_reply_full_quotes: "Fjernet citat af hele tidligere indlæg automatisk."
   just_posted_that: "ligner et andet indlæg, som du har skrevet for nyligt, for meget"
   invalid_characters: "indeholder ugyldige tegn"
   is_invalid: "lader til at være uklart - er det en komplet sætning?"
@@ -200,16 +284,27 @@ da:
     user_posts: "Seneste indlæg af @%{username}"
     user_topics: "Sidste emner af @%{username}"
     tag: "Markerede emner"
+    badge: "%{display_name} badge på %{site_title}"
   too_late_to_edit: "Dette indlæg er gammelt og kan ikke længere redigeres eller slettes."
+  edit_conflict: "Dette indlæg blev redigeret af en anden bruger, og dine ændringer kan ikke længere gemmes."
   revert_version_same: "Den nuværende udgave er den samme udgave/version som den du prøver at vende tilbage til."
   excerpt_image: "billede"
   groups:
+    success:
+      bulk_add:
+        one: "%{count} bruger er føjet til gruppen."
+        other: "%{count} brugere er blevet føjet til gruppen."
     errors:
+      grant_trust_level_not_valid: "&#39;%{trust_level}&#39; er ikke et gyldigt tillidsniveau."
       can_not_modify_automatic: "Du kan ikke modificere en automatisk gruppe"
+      member_already_exist:
+        one: "&#39;%{username}&#39; er allerede medlem af denne gruppe."
+        other: "Følgende brugere er allerede medlemmer af denne gruppe: %{username}"
       invalid_domain: "'%{domain}' er ikke et gyldigt domæne."
       invalid_incoming_email: "'%{email}' er ikke en gyldig email adresse."
       email_already_used_in_group: "'%{email}' er allerede brugt af en bruger i gruppen '%{group_name}'."
       email_already_used_in_category: "'%{email}' er allerede brugt af en bruger i kategorien '%{category_name}'."
+      cant_allow_membership_requests: "Du kan ikke tillade medlemskabsanmodninger om en gruppe uden nogen ejere."
     default_names:
       everyone: "Alle"
       admins: "admins"
@@ -565,6 +660,8 @@ da:
       every_hour: "hver time"
       daily: "dagligt"
       weekly: "ugenligt"
+      every_month: "hver måned"
+      every_six_months: "hver sjette måned"
   user_api_key:
     title: "Autoriser venligst at applikationen kan få adgang"
     authorize: "Autoriser"
@@ -573,6 +670,7 @@ da:
     description: '"%{application_name}" anmoder om følgende adgang til din konto:'
     otp_confirmation:
       confirm_title: "Fortsæt til %{site_name}"
+      confirm_button: Afslut login
     no_trust_level: "Beklager, du har ikke adgang til brugerens API"
     generic_error: "Beklager, vi er ikke i stand til at give dig API nøgler, denne funktionalitet er muligvis bestemt af sitets administrator"
     scopes:
@@ -585,15 +683,18 @@ da:
   reports:
     default:
       labels:
+        count: Tælle
         day: Dag
     post_edits:
       labels:
+        edited_at: Dato
         post: Indlæg
         editor: Redaktør
         edit_reason: Grund
     user_flagging_ratio:
       labels:
         user: bruger
+        score: Score
     moderators_activity:
       labels:
         moderator: Moderator
@@ -655,6 +756,12 @@ da:
         admin: Admin
         moderator: Moderator
         suspended: Suspenderet
+        silenced: Mådeholdt (silenced)
+    trending_search:
+      labels:
+        term: Betingelse
+        searches: søgninger
+        click_through: CTR
     emails:
       title: "Sendte e-mails"
       xaxis: "Dag"
@@ -917,6 +1024,8 @@ da:
     unsubscribe_via_email: "Tillad brugere at afmelde sig fra emails ved at sende en email med \"unsubscribe\" i emne eller indholdsfeltet"
     ignore_by_title: "Ignorér indgående emails baseret på deres titel."
     mailgun_api_key: "Mailgun Secret API key used to verify webhook messages."
+    attachment_content_type_blacklist: "Liste over nøgleord, der bruges til sortliste vedhæftede filer baseret på indholdstypen."
+    always_show_trimmed_content: "Vis altid beskåret del af indgående e-mails. ADVARSEL: afslører muligvis e-mail-adresser."
     delete_all_posts_max: "Det maksimale antal indlæg der kan slettes på én gang med “Slet alle indlæg”-knappen. Hvis en bruger har mere end dette antal indlæg, kan indlæggene ikke slettes på én gang og brugeren kan ikke slettes."
     email_editable: "Lad brugerne skifte deres e-mail-adresse efter oprettelsen."
     digest_topics: "Maximalt antal af populære emner vist i mails med sammendrag."
@@ -934,6 +1043,12 @@ da:
     full_name_required: "Fuldt navn er et påkrævet felt på en brugerprofil."
     short_progress_text_threshold: "Når antallet af indlæg overstiger dette tal viser statuslinjen kun det aktuelle indlægsnummer. Hvis du ændrer bredden af statuslinjen kan det være nødvendigt at opdatere denne værdi."
     default_code_lang: "Standard syntax highlighting som bruges i GitHub kodeblokke (lang-auto, ruby, python etc.)."
+    embed_truncate: "Afkort de indlejrede indlæg."
+    embed_support_markdown: "Support markdown formatering af indlejrede indlæg."
+    embed_whitelist_selector: "En kommasepareret liste over CSS-elementer, der er tilladt i embeds."
+    embed_post_limit: "Maksimum antal indlæg, der skal indlejres."
+    embed_username_required: "Brugernavnet til oprettelse af emne er påkrævet."
+    delete_drafts_older_than_n_days: "Slet kladder, der er ældre end (n) dage."
     enable_emoji: "Aktivér emojis"
     emoji_set: "Hvordan kunne du tænke dig din emoji?"
     default_email_digest_frequency: "Hvor ofte brugere som standard modtager mails med sammendrag."
@@ -1009,8 +1124,8 @@ da:
     errors: "%{errors}"
     not_available: "Ikke ledigt. Prøv %{suggestion}?"
     something_already_taken: "Noget gik galt, måske er brugernavnet eller e-mail-adressen allerede registreret. Prøv “Glemt adgangskode“-linket."
-    omniauth_error: "Beklager, der opstod en fejl i forbindelse med godkendelsen af din brugerkonto. Måske har du ikke givet tilsagn om godkendelse?"
     omniauth_error_unknown: "Noget gik galt ved behandlingen af dit login, prøv venligst igen."
+    omniauth_confirm_button: "Fortsæt"
     authenticator_error_no_valid_email: "Mailadresser, der har tilknytning til %{account}, er ikke tilladt. Du er måske nødt til at bruge en anden mailadresse i forbindelse med din konto."
     new_registrations_disabled: "Det er ikke tilladt at oprette nye brugerkonti på nuværende tidspunkt."
     password_too_long: "Kodeord er begrænset til 200 tegn."
@@ -1018,6 +1133,8 @@ da:
     reserved_username: "Dette brugernavn er ikke tilladt."
     missing_user_field: "Du har ikke udfyldt alle felterne"
     already_logged_in: "Hovsa, det ser ud til, at du forsøger at acceptere en invitation til en anden bruger. Hvis du ikke er %{current_user}, så log venligst ud og prøv igen."
+    second_factor_title: "To-faktor godkendelse"
+    second_factor_backup_description: "Indtast en af dine backup koder:"
   admin:
     email:
       sent_test: "sendt!"
@@ -1555,6 +1672,7 @@ da:
       name: Første svar via email
       long_description: |
         Dette emblem gives første gang du svarer til et indlæg via email :e-mail:.
+    badge_title_metadata: "%{display_name} badge på %{site_title}"
   admin_login:
     success: "Email sendt"
     email_input: "Admin email"
@@ -1636,6 +1754,8 @@ da:
                 label: "Kategorier med Fremhævede Emner"
               categories_and_latest_topics:
                 label: "Kategorier og Seneste Emner"
+              categories_and_top_topics:
+                label: "Kategorier og top emner"
       emoji:
         title: "Emoji"
         description: "Hvilken Emoji-stil foretrækker du for dit fællesskab? Du kan tilføje flere brugerdefinerede Emoji'er senere via Admin, Tilpas, Emoji."
@@ -1644,10 +1764,25 @@ da:
       finished:
         title: "Discourse er gjort klar til dig!"
   joined: "Tilmeldt"
+  discourse_push_notifications:
+    popup:
+      confirm_title: "Notifikationer aktiveret - %{site_title}"
+      confirm_body: "Succes! notifikationer er aktiveret."
   reviewables:
+    priorities:
+      low: "Lav"
+      medium: "Medium"
+      high: "Høj"
+    sensitivity:
+      disabled: "Deaktiveret"
+      low: "Lav"
+      medium: "Medium"
+      high: "Høj"
     actions:
       agree_and_suspend:
         title: "Suspendér bruger"
+      agree_and_silence:
+        title: "Mådehold (silence) Bruger"
       agree_and_hide:
         title: "Skjul Indlæg"
       delete_spammer:
@@ -1656,6 +1791,8 @@ da:
         title: "Slet"
       disagree:
         title: "Uenig"
+      ignore:
+        title: "Ignorér"
       approve:
         title: "Godkend"
       reject_user:

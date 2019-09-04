@@ -86,6 +86,17 @@ export default function() {
             this.route("edit", { path: "/:id" });
           }
         );
+        this.route("adminCustomizeRobotsTxt", {
+          path: "/robots",
+          resetNamespace: true
+        });
+        this.route(
+          "adminCustomizeEmailStyle",
+          { path: "/email_style", resetNamespace: true },
+          function() {
+            this.route("edit", { path: "/:field_name" });
+          }
+        );
       }
     );
 

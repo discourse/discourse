@@ -14,7 +14,7 @@
     </div>
     <div class="avatar-choice">
       {{radio-button id="gravatar" name="avatar" value="gravatar" selection=selected}}
-      <label class="radio" for="gravatar">{{bound-avatar-template user.gravatar_avatar_template "large"}} {{{i18n 'user.change_avatar.gravatar'}}} {{user.email}}</label>
+      <label class="radio" for="gravatar">{{bound-avatar-template user.gravatar_avatar_template "large"}} <span>{{{i18n 'user.change_avatar.gravatar'}}} {{user.email}}</span></label>
 
       {{d-button action=(action "refreshGravatar")
                  title="user.change_avatar.refresh_gravatar_title"
@@ -41,6 +41,7 @@
                           uploadedAvatarTemplate=user.custom_avatar_template
                           uploadedAvatarId=user.custom_avatar_upload_id
                           uploading=uploading
+                          class="avatar-uploader"
                           done=(action "uploadComplete")}}
       </div>
     {{/if}}

@@ -56,7 +56,8 @@ const CLOSED = "closed",
     categoryId: "topic.category.id",
     tags: "topic.tags",
     featuredLink: "topic.featured_link"
-  };
+  },
+  FAST_REPLY_LENGTH_THRESHOLD = 10000;
 
 export const SAVE_LABELS = {
   [EDIT]: "composer.save_edit",
@@ -69,11 +70,11 @@ export const SAVE_LABELS = {
 
 export const SAVE_ICONS = {
   [EDIT]: "pencil-alt",
-  [EDIT_SHARED_DRAFT]: "clipboard",
+  [EDIT_SHARED_DRAFT]: "far-clipboard",
   [REPLY]: "reply",
   [CREATE_TOPIC]: "plus",
   [PRIVATE_MESSAGE]: "envelope",
-  [CREATE_SHARED_DRAFT]: "clipboard"
+  [CREATE_SHARED_DRAFT]: "far-clipboard"
 };
 
 const Composer = RestModel.extend({
@@ -308,12 +309,6 @@ const Composer = RestModel.extend({
     return options;
   },
 
-  @computed
-  isStaffUser() {
-    const currentUser = Discourse.User.current();
-    return currentUser && currentUser.staff;
-  },
-
   @computed(
     "loading",
     "canEditTitle",
@@ -451,10 +446,63 @@ const Composer = RestModel.extend({
   @computed("reply")
   replyLength(reply) {
     reply = reply || "";
-    while (Quote.REGEXP.test(reply)) {
-      reply = reply.replace(Quote.REGEXP, "");
+
+    if (reply.length > FAST_REPLY_LENGTH_THRESHOLD) {
+      return reply.length;
     }
-    return reply.replace(/\s+/gim, " ").trim().length;
+
+    while (Quote.REGEXP.test(reply)) {
+      // make it global so we can strip as many quotes at once
+      // keep in mind nested quotes mean we still need a loop here
+      const regex = new RegExp(Quote.REGEXP.source, "img");
+      reply = reply.replace(regex, "");
+    }
+
+    // This is in place so we do not generate any intermediate
+    // strings while calculating the length, this is issued
+    // every keypress in the composer so it needs to be very fast
+    let len = 0,
+      skipSpace = true;
+
+    for (let i = 0; i < reply.length; i++) {
+      const code = reply.charCodeAt(i);
+
+      let isSpace = false;
+      if (code >= 0x2000 && code <= 0x200a) {
+        isSpace = true;
+      } else {
+        switch (code) {
+          case 0x09: // \t
+          case 0x0a: // \n
+          case 0x0b: // \v
+          case 0x0c: // \f
+          case 0x0d: // \r
+          case 0x20:
+          case 0xa0:
+          case 0x1680:
+          case 0x202f:
+          case 0x205f:
+          case 0x3000:
+            isSpace = true;
+        }
+      }
+
+      if (isSpace) {
+        if (!skipSpace) {
+          len++;
+          skipSpace = true;
+        }
+      } else {
+        len++;
+        skipSpace = false;
+      }
+    }
+
+    if (len > 0 && skipSpace) {
+      len--;
+    }
+
+    return len;
   },
 
   @on("init")
@@ -709,6 +757,11 @@ const Composer = RestModel.extend({
       const topicProps = this.getProperties(
         Object.keys(_edit_topic_serializer)
       );
+      // frontend should have featuredLink but backend needs featured_link
+      if (topicProps.featuredLink) {
+        topicProps.featured_link = topicProps.featuredLink;
+        delete topicProps.featuredLink;
+      }
 
       const topic = this.topic;
 

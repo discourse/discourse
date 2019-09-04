@@ -28,14 +28,17 @@ describe PostMover do
       fab!(:another_user) { evil_trout }
       fab!(:category) { Fabricate(:category, user: user) }
       fab!(:topic) { Fabricate(:topic, user: user) }
-      fab!(:p1) { Fabricate(:post, topic: topic, user: user, created_at: 3.hours.ago) }
+      fab!(:p1) { Fabricate(:post, topic: topic, user: user, created_at: 3.hours.ago, reply_count: 2) }
 
       fab!(:p2) do
-        Fabricate(:post,
+        Fabricate(
+          :post,
           topic: topic,
           user: another_user,
           raw: "Has a link to [evil trout](http://eviltrout.com) which is a cool site.",
-          reply_to_post_number: p1.post_number)
+          reply_to_post_number: p1.post_number,
+          reply_count: 1
+        )
       end
 
       fab!(:p3) { Fabricate(:post, topic: topic, reply_to_post_number: p1.post_number, user: user) }
@@ -46,8 +49,8 @@ describe PostMover do
       before do
         SiteSetting.tagging_enabled = true
         Jobs.run_immediately!
-        p1.replies << p3
-        p2.replies << p4
+        p1.replies.push(p2, p3)
+        p2.replies.push(p4)
         UserActionManager.enable
         @like = PostActionCreator.like(another_user, p4)
       end
@@ -292,6 +295,45 @@ describe PostMover do
               notifications_reason_id: TopicUser.notification_reasons[:created_topic]
             )).to eq(true)
           end
+
+          it "updates existing notifications" do
+            n3 = Fabricate(:mentioned_notification, post: p3, user: another_user)
+            n4 = Fabricate(:mentioned_notification, post: p4, user: another_user)
+
+            new_topic = topic.move_posts(user, [p3.id], title: "new testing topic name")
+
+            n3.reload
+            expect(n3.topic_id).to eq(new_topic.id)
+            expect(n3.post_number).to eq(1)
+            expect(n3.data_hash[:topic_title]).to eq(new_topic.title)
+
+            n4.reload
+            expect(n4.topic_id).to eq(topic.id)
+            expect(n4.post_number).to eq(4)
+          end
+
+          it "doesn't update notifications of type 'watching_first_post'" do
+            n1 = Fabricate(:watching_first_post_notification, post: p1, user: another_user)
+
+            topic.move_posts(user, [p1.id], title: "new testing topic name")
+
+            n1.reload
+            expect(n1.topic_id).to eq(topic.id)
+            expect(n1.data_hash[:topic_title]).to eq(topic.title)
+            expect(n1.post_number).to eq(1)
+          end
+
+          it "deletes notifications for users not allowed to see the topic" do
+            another_admin = Fabricate(:admin)
+            staff_category = Fabricate(:private_category, group: Group[:staff])
+            user_notification = Fabricate(:mentioned_notification, post: p3, user: another_user)
+            admin_notification = Fabricate(:mentioned_notification, post: p3, user: another_admin)
+
+            topic.move_posts(user, [p3.id], title: "new testing topic name", category_id: staff_category.id)
+
+            expect(Notification.exists?(user_notification.id)).to eq(false)
+            expect(Notification.exists?(admin_notification.id)).to eq(true)
+          end
         end
 
         context "to an existing topic" do
@@ -368,6 +410,35 @@ describe PostMover do
 
             moderator_post = topic.posts.find_by(post_number: 2)
             expect(moderator_post.raw).to include("4 posts were merged")
+          end
+
+          it "updates existing notifications" do
+            n3 = Fabricate(:mentioned_notification, post: p3, user: another_user)
+            n4 = Fabricate(:mentioned_notification, post: p4, user: another_user)
+
+            moved_to = topic.move_posts(user, [p3.id], destination_topic_id: destination_topic.id)
+
+            n3.reload
+            expect(n3.topic_id).to eq(moved_to.id)
+            expect(n3.post_number).to eq(2)
+            expect(n3.data_hash[:topic_title]).to eq(moved_to.title)
+
+            n4.reload
+            expect(n4.topic_id).to eq(topic.id)
+            expect(n4.post_number).to eq(4)
+          end
+
+          it "deletes notifications for users not allowed to see the topic" do
+            another_admin = Fabricate(:admin)
+            staff_category = Fabricate(:private_category, group: Group[:staff])
+            user_notification = Fabricate(:mentioned_notification, post: p3, user: another_user)
+            admin_notification = Fabricate(:mentioned_notification, post: p3, user: another_admin)
+
+            destination_topic.update!(category_id: staff_category.id)
+            topic.move_posts(user, [p3.id], destination_topic_id: destination_topic.id)
+
+            expect(Notification.exists?(user_notification.id)).to eq(false)
+            expect(Notification.exists?(admin_notification.id)).to eq(true)
           end
         end
 
@@ -506,7 +577,7 @@ describe PostMover do
             expect(p1.sort_order).to eq(1)
             expect(p1.post_number).to eq(1)
             expect(p1.topic_id).to eq(topic.id)
-            expect(p1.reply_count).to eq(0)
+            expect(p1.reply_count).to eq(1)
 
             # New first post
             new_first = new_topic.posts.where(post_number: 1).first
@@ -524,6 +595,12 @@ describe PostMover do
             topic.reload
             expect(topic.posts.by_post_number).to match_array([p1, p3, p4])
             expect(topic.highest_post_number).to eq(p4.post_number)
+
+            # updates replies for posts moved to same topic
+            expect(PostReply.where(reply_id: p2.id).pluck(:post_id)).to contain_exactly(new_first.id)
+
+            # leaves replies to the first post of the original topic unchanged
+            expect(PostReply.where(reply_id: p3.id).pluck(:post_id)).to contain_exactly(p1.id)
           end
 
           it "preserves post actions in the new post" do
@@ -618,6 +695,19 @@ describe PostMover do
           expect(new_topic.posts.by_post_number.first.raw).to eq(p1.raw)
           expect(new_topic.posts.by_post_number.last.raw).to eq(p2.raw)
           expect(new_topic.posts_count).to eq(2)
+        end
+
+        it "corrects reply_counts within original topic" do
+          expect do
+            topic.move_posts(user, [p4.id], title: "new testing topic name 1")
+          end.to change { PostReply.count }.by(-1)
+          expect(p1.reload.reply_count).to eq(2)
+          expect(p2.reload.reply_count).to eq(0)
+
+          expect do
+            topic.move_posts(user, [p2.id, p3.id], title: "new testing topic name 2")
+          end.to change { PostReply.count }.by(-2)
+          expect(p1.reload.reply_count).to eq(0)
         end
       end
     end

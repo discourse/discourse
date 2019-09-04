@@ -183,6 +183,7 @@ en:
         one: is the wrong length (should be %{count} character)
         other: is the wrong length (should be %{count} characters)
       other_than: "must be other than %{count}"
+      sso_overrides_username: "Username needs to be updated on SSO provider side, since `sso_overrides_username` setting is enabled."
     template:
       body: ! "There were problems with the following fields:"
       header:
@@ -207,7 +208,8 @@ en:
       <<: *errors
 
   invite:
-    not_found: "Your invite token is invalid. Please contact the site's administrator."
+    not_found: "Your invite token is invalid. Please <a href='%{base_url}/about'>contact staff</a>."
+    not_found_json: "Your invite token is invalid. Please contact staff."
     not_found_template: |
       <p>Your invite to <a href="%{base_url}">%{site_name}</a> has already been redeemed.</p>
 
@@ -266,6 +268,7 @@ en:
     continue: "Continue Discussion"
     error: "Error Embedding"
     referer: "Referer:"
+    error_topics: "The `embed topics list` site setting was not enabled"
     mismatch: "The referer was either not sent, or did not match any of the following hosts:"
     no_hosts: "No hosts were set up for embedding."
     configure: "Configure Embedding"
@@ -280,6 +283,11 @@ en:
     replies:
       one: "%{count} reply"
       other: "%{count} replies"
+    likes:
+      one: "%{count} like"
+      other: "%{count} likes"
+    last_reply: "Last reply"
+    created: "Created"
 
   no_mentions_allowed: "Sorry, you can't mention other users."
   too_many_mentions:
@@ -303,7 +311,8 @@ en:
   too_many_links:
     one: "Sorry, new users can only put one link in a post."
     other: "Sorry, new users can only put %{count} links in a post."
-  contains_blocked_words: "Your post contains a word that's not allowed: %{word}"
+  contains_blocked_word: "Your post contains a word that's not allowed: %{word}"
+  contains_blocked_words: "Your post contains multiple words that aren't allowed: %{words}"
 
   spamming_host: "Sorry you cannot post a link to that host."
   user_is_suspended: "Suspended users are not allowed to post."
@@ -605,6 +614,7 @@ en:
       description_incomplete: "The category description post must have at least one paragraph."
       permission_conflict: "Any group that is allowed to access a subcategory must also be allowed to access the parent category. The following groups have access to one of the subcategories, but no access to parent category: %{group_names}."
       disallowed_topic_tags: "This topic has tags not allowed by this category: '%{tags}'"
+      disallowed_tags_generic: "This topic has disallowed tags."
     cannot_delete:
       uncategorized: "This category is special. It is intended as a holding area for topics that have no category; it cannot be deleted."
       has_subcategories: "Can't delete this category because it has sub-categories."
@@ -971,6 +981,7 @@ en:
     post_edits:
       title: "Post Edits"
       labels:
+        edited_at: Date
         post: Post
         editor: Editor
         author: Author
@@ -1301,6 +1312,7 @@ en:
     force_https_warning: "Your website is using SSL. But `<a href='%{base_path}/admin/site_settings/category/all_results?filter=force_https'>force_https</a>` is not yet enabled in your site settings."
     out_of_date_themes: "Updates are available for the following themes:"
     unreachable_themes: "We were unable to check for updates on the following themes:"
+    watched_word_regexp_error: "The regular expression for %{action} watched words is invalid. Please check your <a href='%{base_path}/admin/logs/watched_words'>Watched Word settings</a>, or disable the 'watched words regular expressions' site setting."
 
   site_settings:
     censored_words: "Words that will be automatically replaced with &#9632;&#9632;&#9632;&#9632;"
@@ -1474,7 +1486,7 @@ en:
     enable_badges: "Enable the badge system"
     enable_whispers: "Allow staff private communication within topics."
 
-    allow_index_in_robots_txt: "Specify in robots.txt that this site is allowed to be indexed by web search engines."
+    allow_index_in_robots_txt: "Specify in robots.txt that this site is allowed to be indexed by web search engines. In exceptional cases you can permanently <a href='%{base_path}/admin/customize/robots'>override robots.txt</a>."
     email_domains_blacklist: "A pipe-delimited list of email domains that users are not allowed to register accounts with. Example: mailinator.com|trashmail.net"
     email_domains_whitelist: "A pipe-delimited list of email domains that users MUST register accounts with. WARNING: Users with email domains other than those listed will not be allowed!"
     hide_email_address_taken: "Don't inform users that an account exists with a given email address during signup and from the forgot password form."
@@ -1543,6 +1555,11 @@ en:
     enable_github_logins: "Enable Github authentication, requires github_client_id and github_client_secret. See <a href='https://meta.discourse.org/t/13745' target='_blank'>Configuring GitHub login for Discourse</a>."
     github_client_id: "Client id for Github authentication, registered at <a href='https://github.com/settings/developers/' target='_blank'>https://github.com/settings/developers</a>"
     github_client_secret: "Client secret for Github authentication, registered at <a href='https://github.com/settings/developers/' target='_blank'>https://github.com/settings/developers</a>"
+
+    enable_discord_logins: 'Allow users to authenticate using Discord?'
+    discord_client_id: 'Discord Client ID (need one? visit <a href="https://discordapp.com/developers/applications/me">the Discord developer portal</a>)'
+    discord_secret: 'Discord Secret Key'
+    discord_trusted_guilds: 'Only allow members of these Discord guilds to login via Discord. Use the numeric ID for the guild. For more information, check the instructions <a href="https://meta.discourse.org/t/configuring-discord-login-for-discourse/127129">here</a>. Leave blank to allow any guild.'
 
     readonly_mode_during_backup: "Enable read only mode while taking a backup"
     enable_backups: "Allow administrators to create backups of the forum"
@@ -1807,9 +1824,11 @@ en:
     attachment_content_type_blacklist: "List of keywords used to blacklist attachments based on the content type."
     attachment_filename_blacklist: "List of keywords used to blacklist attachments based on the filename."
 
-    enable_forwarded_emails: "[BETA] Allow users to create a topic by forwarding an email in."
+    forwarded_emails_behaviour: "How to treat a forwarded email to Discourse"
     always_show_trimmed_content: "Always show trimmed part of incoming emails. WARNING: might reveal email addresses."
     private_email: "Don't include content from posts or topics in email title or email body. NOTE: also disables digest emails."
+    email_total_attachment_size_limit_kb: "Max total size of files attached to outgoing emails. Set to 0 to disable sending of attachments."
+    post_excerpts_in_emails: "In notification emails, always send excerpts instead of full posts"
 
     manual_polling_enabled: "Push emails using the API for email replies."
     pop3_polling_enabled: "Poll via POP3 for email replies."
@@ -1851,6 +1870,7 @@ en:
     suppress_digest_email_after_days: "Suppress summary emails for users not seen on the site for more than (n) days."
     digest_suppress_categories: "Suppress these categories from summary emails."
     disable_digest_emails: "Disable summary emails for all users."
+    apply_custom_styles_to_digest: "Custom email template and css are applied to summary emails."
     email_accent_bg_color: "The accent color to be used as the background of some elements in HTML emails. Enter a color name ('red') or hex value ('#FF0000')."
     email_accent_fg_color: "The color of text rendered on the email bg color in HTML emails. Enter a color name ('white') or hex value ('#FFFFFF')."
     email_link_color: "The color of links in HTML emails. Enter a color name ('blue') or hex value ('#0000FF')."
@@ -1903,7 +1923,7 @@ en:
 
     global_notice: "Display an URGENT, EMERGENCY, non-dismissible global banner notice to all visitors, change to blank to hide it (HTML allowed)."
 
-    disable_edit_notifications: "Disables edit notifications by the system user when 'download_remote_images_to_local' is active."
+    disable_system_edit_notifications: "Disables edit notifications by the system user when 'download_remote_images_to_local' is active."
 
     likes_notification_consolidation_threshold: "Number of liked notifications received before the notifications are consolidated into a single one. Set to 0 to disable. The window can be configured via `SiteSetting.likes_notification_consolidation_window_mins`."
 
@@ -1918,6 +1938,9 @@ en:
     native_app_install_banner_ios: "Displays DiscourseHub app banner on iOS devices to regular users (trust level 1 and up)."
 
     native_app_install_banner_android: "Displays DiscourseHub app banner on Android devices to regular users (trust level 1 and up)."
+
+    app_association_android: "Contents of <a href='%{base_path}/.well-known/assetlinks.json'>.well-known/assetlinks.json</a> endpoint, used for Google's Digital Asset Links API."
+    app_association_ios: "Contents of <a href='%{base_path}/apple-app-site-association'>apple-app-site-association</a> endpoint, used to create Universal Links between this site and iOS apps."
 
     share_anonymized_statistics: "Share anonymized usage statistics."
 
@@ -1935,6 +1958,7 @@ en:
     autohighlight_all_code: "Force apply code highlighting to all preformatted code blocks even when they didn't explicitly specify the language."
     highlighted_languages: "Included syntax highlighting rules. (Warning: including too many languages may impact performance) see: <a href='https://highlightjs.org/static/demo/' target='_blank'>https://highlightjs.org/static/demo</a> for a demo"
 
+    embed_topics_list: "Support HTML embedding of topics lists"
     embed_truncate: "Truncate the embedded posts."
     embed_support_markdown: "Support Markdown formatting for embedded posts."
     embed_whitelist_selector: "A comma separated list of CSS elements that are allowed in embeds."
@@ -2062,8 +2086,8 @@ en:
       invalid_string_min_max: "Must be between %{min} and %{max} characters."
       invalid_string_min: "Must be at least %{min} characters."
       invalid_string_max: "Must be no more than %{max} characters."
-      invalid_reply_by_email_address: "Value must contain '%%{reply_key}' and be different from the notification email."
-      invalid_alternative_reply_by_email_addresses: "All values must contain '%%{reply_key}' and be different from the notification email."
+      invalid_reply_by_email_address: "Value must contain '%{reply_key}' and be different from the notification email."
+      invalid_alternative_reply_by_email_addresses: "All values must contain '%{reply_key}' and be different from the notification email."
       pop3_polling_host_is_empty: "You must set a 'pop3 polling host' before enabling POP3 polling."
       pop3_polling_username_is_empty: "You must set a 'pop3 polling username' before enabling POP3 polling."
       pop3_polling_password_is_empty: "You must set a 'pop3 polling password' before enabling POP3 polling."
@@ -2117,6 +2141,7 @@ en:
     timeout_expired: "Account login timed out, please try logging in again."
     no_email: "No email address was provided. Please contact the site's administrator."
     email_error: "An account could not be registered with the email address <b>%{email}</b>. Please contact the site's administrator."
+    missing_secret: "SSO authentication failed due to missing secret. Contact the site administrators to fix this problem."
 
   original_poster: "Original Poster"
   most_posts: "Most Posts"
@@ -2216,8 +2241,14 @@ en:
     errors: "%{errors}"
     not_available: "Not available. Try %{suggestion}?"
     something_already_taken: "Something went wrong, perhaps the username or email is already registered. Try the forgot password link."
-    omniauth_error: "Sorry, there was an error authorizing your account. Perhaps you did not approve authorization?"
+    omniauth_error:
+      generic: "Sorry, there was an error authorizing your account. Please try again."
+      csrf_detected: "Authorization timed out, or you have switched browsers. Please try again."
+      request_error: "An error occurred when starting authorization. Please try again."
+      invalid_iat: "Unable to verify authorization token due to server clock differences. Please try again."
     omniauth_error_unknown: "Something went wrong processing your log in, please try again."
+    omniauth_confirm_title: "Log in using %{provider}"
+    omniauth_confirm_button: "Continue"
     authenticator_error_no_valid_email: "No email addresses associated with %{account} are allowed. You may need to configure your account with a different email address."
     new_registrations_disabled: "New account registrations are not allowed at this time."
     password_too_long: "Passwords are limited to 200 characters."
@@ -2508,7 +2539,7 @@ en:
 
         %{flag_reason}
 
-        Multiple community members flagged this post before it was hidden, so please consider how you might revise your post to reflect their feedback. **You can edit your post after %{edit_delay} minutes, and it will be automatically unhidden.**
+        This post was hidden due to flags from the community, so please consider how you might revise your post to reflect their feedback. **You can edit your post after %{edit_delay} minutes, and it will be automatically unhidden.**
 
         However, if the post is hidden by the community a second time, it will remain hidden until handled by staff.
 
@@ -2526,10 +2557,26 @@ en:
 
         %{flag_reason}
 
-        Multiple community members flagged this post before it was hidden. **Because this post has been hidden more than once, your post will now remain hidden until it is handled by a staff member.**
+        The community flagged this post and now it is hidden. **Because this post has been hidden more than once, your post will now remain hidden until it is handled by a staff member.**
 
         For additional guidance, please refer to our [community guidelines](%{base_url}/guidelines).
+    
+    flags_disagreed:
+      title: "Flagged post restored by staff"
+      subject_template: "Flagged post restored by staff"
+      text_body_template: |
+        Hello,
 
+        This is an automated message from %{site_name} to let you know that [your post](%{base_url}%{url}) was restored.
+
+        This post was flagged by the community and a staff member opted to restore it.
+
+        [details="Click to expand restored post"]
+        ``` markdown
+        %{flagged_post_raw_content}
+        ```
+        [/details]
+  
     flags_agreed_and_post_deleted:
       title: "Flagged post removed by staff"
       subject_template: "Flagged post removed by staff"
@@ -2671,7 +2718,7 @@ en:
 
         The above download link will be valid for 48 hours.
 
-        The data is compressed as a gzip archive. If the archive does not extract itself when you open it, use the tools recommended here: https://www.gzip.org/#faq4
+        The data is compressed as a zip archive. If the archive does not extract itself when you open it, use the tool recommended here: https://www.7-zip.org/
 
     csv_export_failed:
       title: "CSV Export Failed"
@@ -2733,14 +2780,6 @@ en:
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
         Your reply was sent from a different email address than the one we expected, so we're not sure if this is the same person. Try sending from another email address, or [contact a staff member](%{base_url}/about).
-
-    email_reject_no_account:
-      title: "Email Reject No Account"
-      subject_template: "[%{email_prefix}] Email issue -- Unknown Account"
-      text_body_template: |
-        We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
-
-        We can't find any accounts that match your email address. Try sending from a different email address, or [contact a staff member](%{base_url}/about).
 
     email_reject_empty:
       title: "Email Reject Empty"
@@ -4228,6 +4267,9 @@ en:
       other: "You must select at least %{count} tags."
     upload_row_too_long: "The CSV file should have one tag per line. Optionally the tag can be followed by a comma, then the tag group name."
     forbidden:
+      invalid:
+        one: "The tag you selected cannot be used"
+        other: "None of the tags you selected can be used"
       in_this_category: '"%{tag_name}" cannot be used in this category'
       restricted_to:
         one: '"%{tag_name}" is restricted to the "%{category_names}" category'
@@ -4483,6 +4525,9 @@ en:
       agree_and_keep:
         title: "Keep Post"
         description: "Agree with flag and keep the post unchanged."
+      agree_and_keep_hidden:
+        title: "Keep Post Hidden"
+        description: "Agree with flag and leave the post hidden."
       agree_and_suspend:
         title: "Suspend User"
         description: "Agree with flag and suspend the user."
@@ -4547,3 +4592,9 @@ en:
         title: "Delete User"
         confirm: "Are you sure you want to delete that user? This will remove all of their posts and block their email and IP address."
         reason: "Deleted via review queue"
+
+  email_style:
+    html_missing_placeholder: "The html template must include %{placeholder}"
+
+  discord:
+    not_in_allowed_guild: 'Authentication failed. You are not a member of a permitted Discord guild.'

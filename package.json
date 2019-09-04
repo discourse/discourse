@@ -30,7 +30,12 @@
     "mousetrap": "https://github.com/discourse/mousetrap#firefox-alt-key",
     "pikaday": "1.8.0",
     "resumablejs": "1.1.0",
-    "spectrum-colorpicker": "1.8.0"
+    "spectrum-colorpicker": "1.8.0",
+    "workbox-core": "^4.3.1",
+    "workbox-expiration": "^4.3.1",
+    "workbox-routing": "^4.3.1",
+    "workbox-strategies": "^4.3.1",
+    "workbox-sw": "^4.3.1"
   },
   "devDependencies": {
     "@arkweid/lefthook": "^0.5.6",

@@ -3,7 +3,7 @@ import {
   observes,
   on
 } from "ember-addons/ember-computed-decorators";
-import { propertyNotEqual, i18n } from "discourse/lib/computed";
+import { propertyNotEqual } from "discourse/lib/computed";
 
 const ColorSchemeColor = Discourse.Model.extend({
   @on("init")
@@ -42,9 +42,23 @@ const ColorSchemeColor = Discourse.Model.extend({
     }
   },
 
-  translatedName: i18n("name", "admin.customize.colors.%@.name"),
+  @computed("name")
+  translatedName(name) {
+    if (!this.is_advanced) {
+      return I18n.t(`admin.customize.colors.${name}.name`);
+    } else {
+      return name;
+    }
+  },
 
-  description: i18n("name", "admin.customize.colors.%@.description"),
+  @computed("name")
+  description(name) {
+    if (!this.is_advanced) {
+      return I18n.t(`admin.customize.colors.${name}.description`);
+    } else {
+      return "";
+    }
+  },
 
   /**
     brightness returns a number between 0 (darkest) to 255 (brightest).

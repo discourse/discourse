@@ -6,22 +6,60 @@ module Jobs
     every 12.hours
 
     def execute(args)
-      UserVisit.ensure_consistency!
-      Group.ensure_consistency!
-      Notification.ensure_consistency!
-      UserAction.ensure_consistency!
-      TopicFeaturedUsers.ensure_consistency!
-      PostRevision.ensure_consistency!
+      start_measure
+
+      [
+        UserVisit,
+        Group,
+        Notification,
+        TopicFeaturedUsers,
+        PostRevision,
+        Topic,
+        Badge,
+        CategoryUser,
+        UserOption,
+        Tag,
+        CategoryTagStat,
+        User,
+        UserAvatar,
+        Category
+      ].each do |klass|
+        klass.ensure_consistency!
+        measure(klass)
+      end
+
+      UserAction.ensure_consistency!(13.hours.ago)
+      measure(UserAction)
+
       UserStat.ensure_consistency!(13.hours.ago)
-      Topic.ensure_consistency!
-      Badge.ensure_consistency!
-      CategoryUser.ensure_consistency!
-      UserOption.ensure_consistency!
-      Tag.ensure_consistency!
-      CategoryTagStat.ensure_consistency!
-      User.ensure_consistency!
-      UserAvatar.ensure_consistency!
-      Category.ensure_consistency!
+      measure(UserStat)
+
+      Rails.logger.debug(format_measure)
+      nil
     end
+
+    private
+
+    def format_measure
+      result = +"EnsureDbConsitency Times\n"
+      result << @measure_times.map do |name, duration|
+        "  #{name}: #{duration}"
+      end.join("\n")
+      result
+    end
+
+    def start_measure
+      @measure_times = []
+      @measure_start = Process.clock_gettime(Process::CLOCK_MONOTONIC)
+    end
+
+    def measure(step = nil)
+      @measure_now = Process.clock_gettime(Process::CLOCK_MONOTONIC)
+      if @measure_start
+        @measure_times << [step, @measure_now - @measure_start]
+      end
+      @measure_start = @measure_now
+    end
+
   end
 end

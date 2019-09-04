@@ -12,6 +12,7 @@ class UserNotifications < ActionMailer::Base
   include ApplicationHelper
   helper :application, :email
   default charset: 'UTF-8'
+  layout 'email_template'
 
   include Email::BuildEmailHelper
 
@@ -362,11 +363,6 @@ class UserNotifications < ActionMailer::Base
     result
   end
 
-  class UserNotificationRenderer < ActionView::Base
-    include UserNotificationsHelper
-    include EmailHelper
-  end
-
   def self.get_context_posts(post, topic_user, user)
     if (user.user_option.email_previous_replies == UserOption.previous_replies_type[:never]) ||
        SiteSetting.private_email?
@@ -580,15 +576,7 @@ class UserNotifications < ActionMailer::Base
         site_description: SiteSetting.site_description
       )
 
-      unless translation_override_exists
-        html = UserNotificationRenderer.with_view_paths(Rails.configuration.paths["app/views"]).render(
-          template: 'email/invite',
-          format: :html,
-          locals: { message: PrettyText.cook(message, sanitize: false).html_safe,
-                    classes: Rtl.new(user).css_class
-          }
-        )
-      end
+      html = PrettyText.cook(message, sanitize: false).html_safe
     else
       reached_limit = SiteSetting.max_emails_per_day_per_user > 0
       reached_limit &&= (EmailLog.where(user_id: user.id)
@@ -608,7 +596,6 @@ class UserNotifications < ActionMailer::Base
       end
 
       unless translation_override_exists
-
         html = UserNotificationRenderer.with_view_paths(Rails.configuration.paths["app/views"]).render(
           template: 'email/notification',
           format: :html,
@@ -651,7 +638,6 @@ class UserNotifications < ActionMailer::Base
       site_description: SiteSetting.site_description,
       site_title: SiteSetting.title,
       site_title_url_encoded: URI.encode(SiteSetting.title),
-      style: :notification,
       locale: locale
     }
 
@@ -689,13 +675,6 @@ class UserNotifications < ActionMailer::Base
     @anchor_color    = ColorScheme.hex_for_name('tertiary')
     @markdown_linker = MarkdownLinker.new(@base_url)
     @unsubscribe_key = UnsubscribeKey.create_key_for(@user, "digest")
-  end
-
-  def apply_notification_styles(email)
-    email.html_part.body = Email::Styles.new(email.html_part.body.to_s).tap do |styles|
-      styles.format_basic
-      styles.format_notification
-    end.to_html
-    email
+    @disable_email_custom_styles = !SiteSetting.apply_custom_styles_to_digest
   end
 end

@@ -46,12 +46,12 @@ gem 'redis-namespace'
 
 gem 'active_model_serializers', '~> 0.8.3'
 
-gem 'onebox', '1.9.2'
+gem 'onebox', '1.9.12'
 
 gem 'http_accept_language', '~>2.0.5', require: false
 
 gem 'ember-rails', '0.18.5'
-gem 'discourse-ember-source', '~> 3.8.0'
+gem 'discourse-ember-source', '~> 3.10.0'
 gem 'ember-handlebars-template', '0.8.0'
 gem 'barber'
 
@@ -74,10 +74,12 @@ gem 'unf', require: false
 gem 'email_reply_trimmer', '~> 0.1'
 
 # Forked until https://github.com/toy/image_optim/pull/162 is merged
+# https://github.com/discourse/image_optim
 gem 'discourse_image_optim', require: 'image_optim'
 gem 'multi_json'
 gem 'mustache'
 gem 'nokogiri'
+gem 'css_parser', require: false
 
 gem 'omniauth'
 gem 'omniauth-openid'
@@ -203,9 +205,12 @@ gem "sassc-rails"
 gem 'rotp'
 gem 'rqrcode'
 
+gem 'rubyzip', require: false
+
 gem 'sshkey', require: false
 
 gem 'rchardet', require: false
+gem 'lz4-ruby', require: false, platform: :mri
 
 if ENV["IMPORT"] == "1"
   gem 'mysql2'

@@ -16,19 +16,22 @@ module Stylesheet
     end
 
     register_import "theme_field" do
-      Import.new("#{theme_dir}/theme_field.scss", source: @theme_field)
+      Import.new("#{theme_dir(@theme_id)}/theme_field.scss", source: @theme_field)
     end
 
-    register_import "plugins" do
-      import_files(DiscoursePluginRegistry.stylesheets)
-    end
+    Discourse.plugins.each do |plugin|
+      plugin_directory_name = plugin.directory_name
 
-    register_import "plugins_mobile" do
-      import_files(DiscoursePluginRegistry.mobile_stylesheets)
-    end
+      ["", "mobile", "desktop"].each do |type|
+        asset_name = type.present? ? "#{plugin_directory_name}_#{type}" : plugin_directory_name
+        stylesheets = type.present? ? DiscoursePluginRegistry.send("#{type}_stylesheets") : DiscoursePluginRegistry.stylesheets
 
-    register_import "plugins_desktop" do
-      import_files(DiscoursePluginRegistry.desktop_stylesheets)
+        if stylesheets[plugin_directory_name].present?
+          register_import asset_name do
+            import_files(stylesheets[plugin_directory_name])
+          end
+        end
+      end
     end
 
     register_import "plugins_variables" do
@@ -60,6 +63,7 @@ module Stylesheet
       end
 
       theme&.included_settings&.each do |name, value|
+        next if name == "theme_uploads"
         contents << to_scss_variable(name, value)
       end
 
@@ -101,6 +105,7 @@ module Stylesheet
         # make up an id so other stuff does not bail out
         @theme_id = @theme.id || -1
       end
+      @importable_theme_fields = {}
     end
 
     def import_files(files)
@@ -140,15 +145,19 @@ module Stylesheet
       @theme == :nil ? nil : @theme
     end
 
-    def theme_dir
-      "theme_#{theme.id}"
+    def theme_dir(import_theme_id)
+      "theme_#{import_theme_id}"
     end
 
-    def importable_theme_fields
-      return {} unless theme
-      @importable_theme_fields ||= begin
+    def extract_theme_id(path)
+      path[/^theme_([0-9]+)\//, 1]
+    end
+
+    def importable_theme_fields(import_theme_id)
+      return {} unless theme && import_theme = Theme.find(import_theme_id)
+      @importable_theme_fields[import_theme_id] ||= begin
         hash = {}
-        @theme.theme_fields.where(target_id: Theme.targets[:extra_scss]).each do |field|
+        import_theme.theme_fields.where(target_id: Theme.targets[:extra_scss]).each do |field|
           hash[field.name] = field.value
         end
         hash
@@ -156,18 +165,18 @@ module Stylesheet
     end
 
     def match_theme_import(path, parent_path)
-      # Only allow importing theme stylesheets from within other theme stylesheets
-      return false unless theme && parent_path.start_with?("#{theme_dir}/")
+      # Only allow importing theme stylesheets from within stylesheets in the same theme
+      return false unless theme && import_theme_id = extract_theme_id(parent_path) # Could be a child theme
       parent_dir, _ = File.split(parent_path)
 
       # Could be relative to the importing file, or relative to the root of the theme directory
-      search_paths = [parent_dir, theme_dir].uniq
+      search_paths = [parent_dir, theme_dir(import_theme_id)].uniq
       search_paths.each do |search_path|
         resolved = Pathname.new("#{search_path}/#{path}").cleanpath.to_s # Remove unnecessary ./ and ../
-        next unless resolved.start_with?("#{theme_dir}/")
-        resolved.sub!("#{theme_dir}/", "")
-        if importable_theme_fields.keys.include?(resolved)
-          return resolved
+        next unless resolved.start_with?("#{theme_dir(import_theme_id)}/")
+        resolved_within_theme = resolved.sub(/^theme_[0-9]+\//, "")
+        if importable_theme_fields(import_theme_id).keys.include?(resolved_within_theme)
+          return resolved, importable_theme_fields(import_theme_id)[resolved_within_theme]
         end
       end
       false
@@ -189,8 +198,8 @@ module Stylesheet
         end
       elsif callback = Importer.special_imports[asset]
         instance_eval(&callback)
-      elsif resolved = match_theme_import(asset, parent_path)
-        Import.new("#{theme_dir}/#{resolved}", source: importable_theme_fields[resolved])
+      elsif (path, source = match_theme_import(asset, parent_path))
+        Import.new(path, source: source)
       else
         Import.new(asset + ".scss")
       end

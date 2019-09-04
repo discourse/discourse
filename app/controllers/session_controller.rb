@@ -39,7 +39,7 @@ class SessionController < ApplicationController
       if SiteSetting.verbose_sso_logging
         Rails.logger.warn("Verbose SSO log: Started SSO process\n\n#{sso.diagnostics}")
       end
-      redirect_to sso.to_url
+      redirect_to sso_url(sso)
     else
       render body: nil, status: 404
     end
@@ -49,7 +49,12 @@ class SessionController < ApplicationController
     payload ||= request.query_string
 
     if SiteSetting.enable_sso_provider
-      sso = SingleSignOnProvider.parse(payload)
+      begin
+        sso = SingleSignOnProvider.parse(payload)
+      rescue SingleSignOnProvider::BlankSecret
+        render plain: I18n.t("sso.missing_secret"), status: 400
+        return
+      end
 
       if sso.return_sso_url.blank?
         render plain: "return_sso_url is blank, it must be provided", status: 400
@@ -382,7 +387,7 @@ class SessionController < ApplicationController
       @error = I18n.t('user_api_key.invalid_token')
     end
 
-    render layout: 'no_ember'
+    render layout: 'no_ember', locals: { hide_auth_buttons: true }
   end
 
   def forgot_password
@@ -524,5 +529,10 @@ class SessionController < ApplicationController
   def render_sso_error(status:, text:)
     @sso_error = text
     render status: status, layout: 'no_ember'
+  end
+
+  # extension to allow plugins to customize the SSO URL
+  def sso_url(sso)
+    sso.to_url
   end
 end

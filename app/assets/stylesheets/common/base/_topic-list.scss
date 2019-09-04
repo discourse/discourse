@@ -135,6 +135,16 @@
     }
   }
 
+  .unread-indicator {
+    &.read {
+      display: none;
+    }
+    .d-icon {
+      vertical-align: middle;
+      font-size: $font-down-5;
+    }
+  }
+
   .link-bottom-line {
     font-size: $font-down-1;
     display: flex;

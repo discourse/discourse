@@ -113,11 +113,6 @@ zh_CN:
       random_mention:
         reply: |-
           你好！想看看我能做什么吗？说 `@%{discobot_username} %{help_trigger}`。
-        tracks: |-
-          我现在知道怎么做这些：
-
-          `@%{discobot_username} %{reset_trigger} %{default_track}`
-          > 试试这些交互教程：%{tracks}。
         bot_actions: |-
           `@%{discobot_username} %{dice_trigger} 2d6`
           > :game_die: 3，6

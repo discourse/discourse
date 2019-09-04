@@ -25,22 +25,18 @@
     <%= preload_script "vendor" %>
     <%= preload_script "pretty-text-bundle" %>
     <%= preload_script "application" %>
-    <%- if allow_plugins? %>
-    <%= preload_script "plugin" %>
+    <%- Discourse.find_plugin_js_assets(include_official: allow_plugins?, include_unofficial: allow_third_party_plugins?).each do |file| %>
+      <%= preload_script file %>
     <%- end %>
-    <%- if allow_third_party_plugins? %>
-    <%= preload_script "plugin-third-party" %>
-    <%- end %>
-
     <%- if staff? %>
       <script src="<%= ExtraLocalesController.url('admin') %>"></script>
       <%= preload_script "admin" %>
     <%- end %>
 
     <%- unless customization_disabled? %>
-      <%= raw theme_translations_lookup %>
-      <%= raw theme_js_lookup %>
-      <%= raw theme_lookup("head_tag") %>
+      <%= theme_translations_lookup %>
+      <%= theme_js_lookup %>
+      <%= theme_lookup("head_tag") %>
     <%- end %>
 
     <%= render_google_tag_manager_head_code %>
@@ -48,7 +44,7 @@
     <link rel="manifest" href="<%= Discourse.base_uri %>/manifest.webmanifest" crossorigin="use-credentials">
 
     <%- if include_ios_native_app_banner? %>
-        <meta name="apple-itunes-app" content="app-id=<%= SiteSetting.ios_app_id %>, app-argument=discourse://new?siteUrl=<%= Discourse.base_url %>">
+        <meta name="apple-itunes-app" content="app-id=<%= SiteSetting.ios_app_id %><%= ios_app_argument %>">
     <%- end %>
 
     <%= render partial: "common/discourse_stylesheet" %>
@@ -116,7 +112,7 @@
     <%= preload_script 'browser-update' %>
 
     <%- unless customization_disabled? %>
-      <%= raw theme_lookup("body_tag") %>
+      <%= theme_lookup("body_tag") %>
     <%- end %>
     <%= build_plugin_html 'server:before-body-close' %>
   </body>

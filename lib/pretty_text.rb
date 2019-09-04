@@ -162,7 +162,7 @@ module PrettyText
         __optInput.customEmoji = #{custom_emoji.to_json};
         __optInput.emojiUnicodeReplacer = __emojiUnicodeReplacer;
         __optInput.lookupUploadUrls = __lookupUploadUrls;
-        __optInput.censoredWords = #{WordWatcher.words_for_action(:censor).join('|').to_json};
+        __optInput.censoredRegexp = #{WordWatcher.word_matcher_regexp(:censor)&.source.to_json};
       JS
 
       if opts[:topicId]
@@ -186,19 +186,6 @@ module PrettyText
       DiscourseEvent.trigger(:markdown_context, context)
       baked = context.eval("__pt.cook(#{text.inspect})")
     end
-
-    # if baked.blank? && !(opts || {})[:skip_blank_test]
-    #   # we may have a js engine issue
-    #   test = markdown("a", skip_blank_test: true)
-    #   if test.blank?
-    #     Rails.logger.warn("Markdown engine appears to have crashed, resetting context")
-    #     reset_context
-    #     opts ||= {}
-    #     opts = opts.dup
-    #     opts[:skip_blank_test] = true
-    #     baked = markdown(text, opts)
-    #   end
-    # end
 
     baked
   end

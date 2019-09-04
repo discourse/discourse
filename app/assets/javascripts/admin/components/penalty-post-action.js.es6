@@ -23,10 +23,10 @@ export default Ember.Component.extend({
       // If we switch to edit mode, jump to the edit textarea
       if (postAction === "edit") {
         Ember.run.scheduleOnce("afterRender", () => {
-          let $elem = this.$();
-          let body = $elem.closest(".modal-body");
+          let elem = this.element;
+          let body = elem.closest(".modal-body");
           body.scrollTop(body.height());
-          $elem.find(".post-editor").focus();
+          elem.querySelector(".post-editor").focus();
         });
       }
     }

@@ -147,7 +147,6 @@ nb_NO:
     errors:
       <<: *errors
   invite:
-    not_found: "Ditt invitasjonssymbol er ugyldig. Kontakt sidens administrator."
     not_found_template: |
       <p>Invitasjonen din til <a href="%{base_url}">%{site_name}</a> er allerede brukt.</p>
 
@@ -193,6 +192,7 @@ nb_NO:
     permalink: "Permalink"
     imported_from: "Dette er en relatert diskusjon ved siden av det originale innlegget ved %{link}"
     in_reply_to: "▶ %{username}"
+    created: "Opprettet"
   no_mentions_allowed: "Beklager, du kan ikke nevne andre brukere."
   too_many_mentions:
     one: "Beklager, du kan bare nevne en bruker i et innlegg. "
@@ -215,7 +215,7 @@ nb_NO:
   too_many_links:
     one: "Beklager, nye brukere kan bare legge til én lenke i et innlegg."
     other: "Beklager, nye brukere kan bare legge til %{count} lenker i et innlegg."
-  contains_blocked_words: "Innlegget ditt inneholder et ord som ikke er tillatt: %{word}"
+  contains_blocked_word: "Innlegget ditt inneholder et ord som ikke er tillatt: %{word}"
   spamming_host: "Beklager, du kan ikke lenke til det domenet."
   user_is_suspended: "Utestengte brukere kan ikke skrive innlegg."
   topic_not_found: "Noe gikk galt. Kanskje emnet ble lukket eller slettet mens du leste det?"
@@ -697,6 +697,8 @@ nb_NO:
       every_hour: "hver time"
       daily: "daglig"
       weekly: "ukentlig"
+      every_month: "hver måned"
+      every_six_months: "hver sjette måned"
   user_api_key:
     title: "Autoriser tilgang fra applikasjon"
     authorize: "Autoriser"
@@ -722,6 +724,7 @@ nb_NO:
         day: Dag
     post_edits:
       labels:
+        edited_at: Dato
         post: Innlegg
         editor: Tekstbehandler
         author: Forfatter
@@ -1136,6 +1139,7 @@ nb_NO:
     not_available: "Ikke mulig. Prøv %{suggestion}?"
     something_already_taken: "Noe gikk galt, kanskje brukernavn eller email er allerede i bruk? Prøv 'glemt passord' linken."
     omniauth_error_unknown: "Noe gikk galt under innloggingsprosessen, prøv igjen."
+    omniauth_confirm_button: "Fortsett"
     new_registrations_disabled: "Nye kontoregistreringer tillates ikke per nå."
     password_too_long: "Passord er begrenset til 200 tegn."
     reserved_username: "Det brukernavnet tillates ikke."

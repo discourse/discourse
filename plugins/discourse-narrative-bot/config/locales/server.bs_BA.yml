@@ -7,6 +7,7 @@
 
 bs_BA:
   site_settings:
+    discourse_narrative_bot_enabled: "Omogući Discourse narativnog robota (discobot)"
     disable_discourse_narrative_bot_welcome_post: "Isključi objavu dobrodošlice od strane Discourse Narrative bot"
     discourse_narrative_bot_ignored_usernames: "Korisnička imena koja Discourse Narrative bot bi trebao ignorisati"
     discourse_narrative_bot_disable_public_replies: "Isključi javne odgovore od strane Discourse Narrative bot"
@@ -44,6 +45,8 @@ bs_BA:
         Posjedujem samo %{num_of_dice} kockice. [Sramežljiv](http://www.therobotsvoice.com/2009/04/the_10_most_shameful_rpg_dice.php), Znam!
       out_of_range: |-
         Da li ste znali da [maksimalan broj strana](https://www.wired.com/2016/05/mathematical-challenge-of-designing-the-worlds-most-complex-120-sided-dice) za matematički ispravan ishod jeste 120?
+      results: |-
+        &gt;: game_die: %{results}
     quote:
       trigger: "citat"
       '1':
@@ -91,6 +94,7 @@ bs_BA:
         '8': "Izgled dobar"
         '9': "Da"
         '10': "Signali ukazuju na da"
+        '11': "Odgovorite mutno, pokušajte ponovo"
         '12': "Upitaj ponovo kasnije"
         '13': "Bolje da vam ne kažem odmah"
         '14': "Ne mogu predvodjeti sada"
@@ -100,6 +104,8 @@ bs_BA:
         '18': "Moji izvori kažu ne"
         '19': "Izgled ne tako dobar"
         '20': "Veoma upitno"
+      result: |-
+        &gt;: crystal_ball: %{result}
     track_selector:
       reset_trigger: "start"
       skip_trigger: "preskoči"
@@ -121,3 +127,148 @@ bs_BA:
           Hej, hvala za odgovor!
 
           Nažalost, kako sam programiran ograničenim mogućnostima, ne mogu jasno razumjeti na što ste mislili. :frowning:
+        track_response: Možete pokušati ponovo, ili ako želite preskočiti ovaj korak, recite `%{skip_trigger}`. Inače, za početak, recite &#39;%{reset_trigger}&#39;.
+        second_response: |-
+          Žao mi je. Još uvek ne shvatam. : anguished: Ja sam samo bot, ali ako želite doći do prave osobe, pogledajte [našu kontakt stranicu] (%{base_path} / about). U međuvremenu, neću vam smetati.
+    new_user_narrative:
+      reset_trigger: "kurs"
+      title: "Potvrda o završetku korisničkog kursa"
+      cert_title: "Kao priznanje za uspješan završetak novog korisničkog kursa"
+      hello:
+        title: "Pozdrav!"
+        message: |-
+          Hvala što ste se pridružili %{title}, i dobrodošli! - Ja sam samo robot, ali [naše ljubazno osoblje] (%{base_uri} / about) takođe je tu da pomogne ako treba da dođe do osobe. - Iz sigurnosnih razloga, privremeno ograničavamo što novi korisnici mogu učiniti. Dobit ćete [nove sposobnosti] (https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/) (i [značke] (%{base_uri} / badges)) kako vas upoznamo. - Mi vjerujemo u [civilizirano ponašanje zajednice] (%{base_uri} / smjernice) u svako doba.
+      onebox:
+        instructions: |-
+          Dalje, možete li podijeliti jednu od ovih veza sa mnom? Odgovorite sa ** linkom na liniji po sebi ** i automatski će se proširiti da uključi divan sažetak. Da biste kopirali bilo koju vezu, kucnite i držite na mobilnom uređaju ili desnim klikom na pokazivački uređaj: <https://en.wikipedia.org/wiki/Inherently_funny_word><https://en.wikipedia.org/wiki/Death_by_coconut><https://en.wikipedia.org/wiki/Calculator_spelling>
+        reply: |-
+          Cool! Ovo će raditi za većinu <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-link.png" width="16" height="16"> linkovi. Zapamtite, on mora biti na liniji _all by same_, sa ništa drugo ispred ili iza.
+        not_found: |-
+          Žao mi je, nisam mogao naći link u vašem odgovoru! : cry: Možete li pokušati da dodate sljedeći link, u svojoj liniji, u sljedećem odgovoru? <https://en.wikipedia.org/wiki/Exotic_Shorthair>
+      images:
+        instructions: |-
+          Evo slike jednoroga: <img src="%{base_uri}/plugins/discourse-narrative-bot/images/unicorn.png" width="520" height="520"> Ako vam se sviđa (a ko ne bi!) Idite naprijed i pritisnite slično: srce: dugme ispod ovog posta da me obavijestite. Možete li ** odgovoriti sa slikom? ** Svaka slika će učiniti! Prevucite i ispustite, pritisnite dugme za otpremanje, ili ga čak kopirajte i nalepite.
+        reply: |-
+          Divna slika - pritisnuo sam dugme kao: srce: da bih vas obavestio koliko ga cijenim: heart_eyes:
+        like_not_found: |-
+          Da li ste zaboravili da volite: heart: my [post?] (%{url}): crying_cat_face:
+        not_found: |-
+          Izgleda da niste učitali sliku tako da sam odabrao sliku koju ću ti uživati. `%{image_url}` Pokušajte da ga postavite pored, ili zalijepite link na liniji!
+      formatting:
+        instructions: |-
+          Možete li napraviti neke riječi ** bold ** ili _italic_ u vašem odgovoru? - upišite `** bold **` ili `_italic_` - ili pritisnite gumbe <kbd><b>B</b></kbd> ili <kbd><i>I</i></kbd> u editoru
+        reply: |-
+          Odličan posao! HTML i BBCode također rade za formatiranje - da biste saznali više, [probajte ovaj vodič] (http://commonmark.org/help): nerd:
+        not_found: |-
+          Aww, nisam pronašao nikakvo formatiranje u vašem odgovoru. : pencil2: Možete li pokušati ponovo? Koristite tipke <kbd><b>B</b></kbd> podebljano ili <kbd><i>I</i></kbd> kurziv u uređivaču ako zapnete.
+      quoting:
+        instructions: |-
+          Možete li pokušati da me citirate kada odgovorite, tako da znam tačno na koji dio odgovarate? &gt; Ako je ovo kava, donesite mi čaj; ali ako je ovo čaj, molim vas donesite mi kafu. Jedna od prednosti razgovora sa samim sobom je da znate da neko sluša. Neki ljudi imaju način sa riječima, a drugi ljudi ... oh, uh, nemaju načina. Odaberite tekst željene ponude, a zatim pritisnite gumb ** Citat ** koji se pojavljuje iznad vašeg odabira - ili gumb ** Odgovori ** na dnu ovog posta. Ispod citata, upišite riječ ili dvije o tome zašto ste odabrali tu, jer me zanima: razmišljanje:
+        reply: |-
+          Dobar posao, izabrali ste moj omiljeni citat! : left_speech_bubble: \ t
+        not_found: |-
+          Hmm, izgleda da me niste citirali u svom odgovoru? Odabirom bilo kojeg teksta u mojoj poruci pojavit će se gumb <kbd>** Quote **</kbd> . I pritiskanje ** Reply ** sa bilo kojim odabranim tekstom će takođe funkcionisati! Možete li pokušati ponovo?
+      bookmark:
+        instructions: |-
+          Ako želite da saznate više, izaberite <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> ispod i <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-bookmark.png" width="16" height="16"> ** označi ovu osobnu poruku **. Ako to učinite, možda postoji: dar: u vašoj budućnosti!
+        reply: |-
+          Odlično! Sada možete lako pronaći put do našeg privatnog razgovora u bilo koje vrijeme, direktno iz [kartice oznaka u vašem profilu] (%{profile_page_url} / activity / bookmarks). Samo izaberite sliku u gornjem desnom uglu
+        not_found: |-
+          Uh oh, ne vidim oznake u ovoj temi. Da li ste pronašli oznaku ispod svakog posta? Koristite show više <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> da otkrije dodatne akcije ako je potrebno.
+      emoji:
+        instructions: |-
+          Možda ste videli da koristim male slike u mojim odgovorima: blue_car :: dash: oni se zovu [emoji] (https://en.wikipedia.org/wiki/Emoji). Možete li ** dodati svoj emotikon ** vašem odgovoru? Bilo koja od ovih opcija će raditi: - Upišite `:);): D: P: O` - Upišite debelo crijevo <kbd>:</kbd> zatim dovršite ime emotikona`: tada: `- Pritisnite tipku emojija <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-smile.png" width="16" height="16"> u uređivaču ili na mobilnoj tipkovnici
+        reply: |-
+          To je: iskre: _emojitastic! _: Iskre:
+        not_found: |-
+          Ups, ne vidim nikakav Emoji u vašem odgovoru? O ne! : sob: Pokušajte da otkucate dvotočku <kbd>:</kbd> da biste podigli emotikon, a zatim otkucajte prvih nekoliko slova onoga što želite, kao što je `: bird:` Ili, pritisnite emotikon <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-smile.png" width="16" height="16"> u uredniku. (Ako ste na mobilnom uređaju, možete i Emoji direktno unijeti s tipkovnice.)
+      mention:
+        instructions: |-
+          Ponekad biste možda želeli da privučete pažnju neke osobe, čak i ako im ne odgovarate direktno. Upišite `@` zatim upotpunite svoje korisničko ime da biste ih spomenuli. Možete li spomenuti ** `@ %{discobot_username}` ** u svom odgovoru?
+        reply: |-
+          _Da li je netko rekao moje ime !? _: raise_hand: Vjerujem da jeste! : wave: Pa, evo me! Hvala što si me spomenuo. : ok_hand: \ t
+        not_found: |-
+          Ne vidim svoje ime tamo negdje: namršteno: Možete li pokušati spomenuti mene kao &#39;@ %{discobot_username}` opet? (I da, moje korisničko ime je napisano _disco_, kao u plesnoj ludosti sedamdesetih godina. Ja [volim noćni život!] (Https://www.youtube.com/watch?v=B_wGI3_sGf8): plesač :)
+      flag:
+        instructions: |-
+          Mi volimo naše diskusije prijateljske, i potrebna nam je vaša pomoć da [održimo civilizovane stvari] (%{guidelines_url}). Ako vidite problem, označite da privatno pustite autora, ili [naše korisno osoblje] (%{about_url}), da znate za njega. Napisao sam nešto ružno ovdje, pretpostavljam da znaš šta da radiš. Naprijed i ** označite ovaj post ** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16"> kao neprikladno!
+        reply: |-
+          [Naše osoblje] (%{base_uri} / grupe / osoblje) će biti privatno obaviješteno o vašoj zastavi. Ako dovoljan broj članova zajednice označi post, on će se automatski sakriti kao mjera opreza. (Budući da nisam napisao gadan post: angel:, otišao sam naprijed i uklonio zastavu za sada.)
+        not_found: |-
+          Oh ne, moj gadan post još nije označen. : worried: Možete li označiti kao neprikladan pomoću ** zastavice ** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16"> ? Ne zaboravite da koristite dugme show more <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> da otkrije više akcija za svaki post.
+      search:
+        instructions: |-
+          _psst_… Sakrio sam iznenađenje u ovoj temi. Ako ste spremni za izazov, ** odaberite ikonu za pretraživanje ** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> gore desno ↗ da ga potražite. Pokušajte tražiti pojam &quot;capy bara&quot; u ovoj temi
+        hidden_message: |-
+          Kako ti nedostaje ova kapybara? : wink: \ t <img src="%{base_uri}/plugins/discourse-narrative-bot/images/capybara-eating.gif"/> Da li ste primetili da ste se vratili na početak? Nahranite ovu siromašnu gladnu capybaru ** odgovorom sa `: herb:` emoji ** i automatski ćete se prebaciti na kraj.
+        reply: |-
+          Yay ste ga pronašli: tada: - Za detaljnije pretrage, pređite na [full search page] (%{search_url}). - Da biste skočili bilo gdje u dugoj diskusiji, pokušajte kontrolirati vremensku liniju teme desno (i na dnu, na mobitelu). - Ako imate fizičku tipkovnicu: pritisnite <kbd>?</kbd> da biste videli naše korisne prečice na tastaturi.
+        not_found: |-
+          Hmm… izgleda da imate problema. Izvini zbog toga. Jeste li pretražili <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> za termin ** capy bara **?
+      end:
+        message: |-
+          Hvala što ste se držali mene @ %{username}! Napravio sam ovo za tebe, mislim da si ga zaradio: %{certificate} To je sve za sada! Pogledajte [** naše najnovije teme diskusije **] (%{base_uri} / latest) ili [** kategorije za diskusiju **] (%{base_uri} / categories). : sunčane naočale: (Ako želite da ponovo razgovarate sa mnom kako biste saznali više, samo poručite ili navedite `@ %{discobot_username}` bilo koje vrijeme!)
+      certificate:
+        alt: "Certificate of Achievement"
+    advanced_user_narrative:
+      reset_trigger: "advanced tutorial"
+      cert_title: "Kao priznanje za uspješan završetak naprednog korisničkog vodiča"
+      title: ": arrow_up: Napredne funkcije korisnika"
+      start_message: |-
+        Kao _advanced_ korisnik, jeste li posjetili [stranicu vaših postavki] (%{base_uri} / my / preferences) još @ %{username}? Postoji mnogo načina da prilagodite svoje iskustvo, kao što je odabir tamne ili svetle teme. Ali skrećem, počnimo!
+      edit:
+        bot_created_post_raw: "@ %{discobot_username} je daleko najsladji bot koji znam: wink:"
+        instructions: |-
+          Svi prave greške. Ali ne brinite, uvijek možete urediti svoje postove da biste ih popravili! Možete li početi sa ** uređivanjem posta koji sam upravo kreirao u vaše ime?
+        not_found: |-
+          Izgleda da ste još uredili [post] (%{url}) koji sam kreirao za vas. Možete li pokušati ponovo? Koristiti <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-pencil.png" width="16" height="16"> da bi se pojavio editor.
+        reply: |-
+          Veliki posao! Imajte na umu da će se uređivanja napravljena nakon 5 minuta prikazati kao javne izmjene uređivanja, a mala ikona olovke će se pojaviti u gornjem desnom kutu sa brojem revizija.
+      delete:
+        instructions: |-
+          Ako želite da povučete objavljeni post, možete ga izbrisati. Idite naprijed i ** izbrišite ** bilo koji od vaših postova gore pomoću <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-trash.png" width="16" height="16"> ** brisanje ** akcije. Ne brišite prvi post!
+        not_found: |-
+          Još ne vidim izbrisane postove? Zapamti <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> pokazati više će otkriti <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-trash.png" width="16" height="16"> delete.
+        reply: |-
+          Whoa! : boom: Da bi se sačuvao kontinuitet diskusija, brisanje nije odmah, tako da će post biti uklonjen nakon nekog vremena.
+      recover:
+        deleted_post_raw: "Zašto je @ %{discobot_username} izbrisao moj post? : anguished: \\ t"
+        instructions: |-
+          O ne! Izgleda da sam slučajno izbrisao novi post koji sam upravo kreirao za vas. Možeš li mi učiniti uslugu i <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-rotate-left.png" width="16" height="16"> ** undelete ** it?
+        not_found: |-
+          Imate problema? Zapamti <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> pokazati više će otkriti <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-rotate-left.png" width="16" height="16"> undelete.
+        reply: |-
+          Uf, to je bilo blizu! Hvala za popravku da: wink: Imajte na umu da imate samo %{deletion_after} sat (e) da povratite post.
+      category_hashtag:
+        instructions: |-
+          Da li ste znali da možete koristiti kategorije i oznake u svom postu? Na primjer, jeste li vidjeli kategoriju %{category}? Upišite &quot;#&quot; u sredinu rečenice i odaberite bilo koju kategoriju ili oznaku.
+        not_found: |-
+          Hmm, tamo ne vidim nijednu kategoriju. Imajte na umu da `#` ne može biti prvi znak. Možete li ovo kopirati u sljedećem odgovoru? `` `tekst Mogu kreirati link za kategoriju preko #` ``
+        reply: |-
+          Odlično! Zapamtite ovo radi za obje kategorije _i_ oznake, ako su oznake omogućene.
+      change_topic_notification_level:
+        instructions: |-
+          Svaka tema ima nivo obaveštenja. Počinje na &#39;normalnom&#39;, što znači da ćete obično biti obaviješteni samo kada netko govori izravno vama. Podrazumevano, nivo obaveštenja za privatnu poruku postavljen je na najviši nivo &quot;gledanja&quot;, što znači da ćete biti obaviješteni o svakom novom odgovoru. Ali možete pregaziti nivo obavijesti za _any_ temu da biste &#39;gledali&#39;, &#39;pratili&#39; ili &#39;isključili&#39;. Pokušajmo da promenimo nivo obaveštenja za ovu temu. Na dnu teme naći ćete dugme koje pokazuje da ** gledate ** ovu temu. Možete li promijeniti nivo obavijesti na ** praćenje **?
+        not_found: |-
+          Izgleda da i dalje gledate: oči: ova tema! Ako imate problema sa pronalaženjem, dugme nivoa obaveštenja nalazi se na dnu teme.
+        reply: |-
+          Awesome work! Nadam se da niste isključili ovu temu jer ja ponekad mogu malo da pričam: ceri :. Imajte na umu da kada odgovorite na temu ili pročitate neku temu duže od nekoliko minuta, ona se automatski postavlja na nivo obaveštenja o „praćenju“. Ovo možete promijeniti u [vašim korisničkim postavkama] (%{base_uri} / my / preferences).
+      poll:
+        instructions: |-
+          Da li ste znali da možete dodati anketu u bilo koji post? Pokušajte da koristite <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> opremu u uređivaču ** napravite anketu **.
+        not_found: |-
+          Ups! Nije bilo ankete u vašem odgovoru. Koristiti <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> ikona zupčanika u uređivaču, ili kopirajte i zalijepite ovu anketu u vaš sljedeći odgovor: `` `text [poll] *: cat: *: dog: [/ poll]` ``
+        reply: |-
+          Hej, lepa anketa! Kako sam te naučio? [anketa] *: +1: *: -1: [/ poll]
+      details:
+        instructions: |-
+          Ponekad možete poželeti da ** sakrijete detalje ** u odgovorima: - Kada raspravljate o točkama filma ili TV emisije koje bi se smatrale spojlerom. - Kada je vašoj poruci potrebno puno neobaveznih detalja koji mogu biti neodoljivi kada se pročitaju odjednom. [details = Izaberite ovo da vidite kako radi!] 1. Izaberite <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> opremu u uredniku. 2. Izaberite &quot;Sakrij detalje&quot;. 3. Uredite sažetak detalja i dodajte svoj sadržaj. Možete li koristiti <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> opremite u uredniku da dodate sledeći odeljak detaljima?
+        not_found: |-
+          Imate problema sa kreiranjem widgeta detalja? Pokušajte uključiti sljedeće u sljedećem odgovoru: `` `tekst [detalji = Izaberite me za detalje] Ovdje su detalji [/ details]` ``
+        reply: |-
+          Odličan rad - vaša pažnja na _detail_ je divna!
+      end:
+        message: |-
+          Prošli ste kroz ovo kao _advanced user_ really: bow: %{certificate} To je sve što imam za vas. Ćao za sada! Ako želite ponovo da razgovarate sa mnom, pošaljite mi poruku bilo kada: sunčane naočale:
+      certificate:
+        alt: "Advanced User Track Certificate of Achievement"

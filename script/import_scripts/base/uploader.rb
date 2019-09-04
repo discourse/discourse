@@ -1,12 +1,10 @@
 # frozen_string_literal: true
 
 require_dependency 'url_helper'
-require_dependency 'file_helper'
+require_dependency 'upload_markdown'
 
 module ImportScripts
   class Uploader
-    include ActionView::Helpers::NumberHelper
-
     # Creates an upload.
     # Expects path to be the full path and filename of the source file.
     # @return [Upload]
@@ -42,22 +40,15 @@ module ImportScripts
     end
 
     def html_for_upload(upload, display_filename)
-      if FileHelper.is_supported_image?(upload.url)
-        embedded_image_html(upload)
-      else
-        attachment_html(upload, display_filename)
-      end
+      UploadMarkdown.new(upload).to_markdown(display_name: display_filename)
     end
 
     def embedded_image_html(upload)
-      image_width = [upload.width, SiteSetting.max_image_width].compact.min
-      image_height = [upload.height, SiteSetting.max_image_height].compact.min
-      upload_name = upload.short_url || upload.url
-      %Q~![#{upload.original_filename}|#{image_width}x#{image_height}](#{upload_name})~
+      UploadMarkdown.new(upload).image_markdown
     end
 
     def attachment_html(upload, display_filename)
-      "[#{display_filename}|attachment](#{upload.short}) (#{number_to_human_size(upload.filesize)})"
+      UploadMarkdown.new(upload).attachment_markdown(display_name: display_filename)
     end
 
     private

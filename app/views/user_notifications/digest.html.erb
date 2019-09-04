@@ -1,19 +1,4 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" lang="<%= html_lang %>" xml:lang="<%= html_lang %>">
-
-<head>
-  <meta http-equiv="Content-type" name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no, width=device-width">
-  <title></title>
-</head>
-
-<body dir="<%= rtl? ? 'rtl' : 'ltr' %>" style="-moz-box-sizing:border-box;-ms-text-size-adjust:100%;-webkit-box-sizing:border-box;-webkit-text-size-adjust:100%;box-sizing:border-box;color:#0a0a0a;font-family:Helvetica,Arial,sans-serif;font-size:14px;font-weight:400;line-height:1.3;margin:0;min-width:100%;padding:0;text-align:<%= rtl? ? 'right' : 'left' %>;width:100%">
-
-
-<!--[if mso]>
-<style type="text/css">
-body, table, td, th, h1, h2, h3 {font-family: Helvetica, Arial, sans-serif !important;}
-</style>
-<![endif]-->
+<div class="summary-email">
 
 <span class="preheader" style="display:none!important;color:#f3f3f3;font-size:1px;line-height:1px;max-height:0;max-width:0;mso-hide:all!important;opacity:0;overflow:hidden;visibility:hidden">
   <%= @preheader_text %>
@@ -416,7 +401,7 @@ body, table, td, th, h1, h2, h3 {font-family: Helvetica, Arial, sans-serif !impo
 
 <%= digest_custom_html("above_footer") %>
 
-<div dir="<%= rtl? ? 'rtl' : 'ltr' %>" class='footer'>
+<div dir="<%= rtl? ? 'rtl' : 'ltr' %>" class='summary-footer'>
   <%=raw(t 'user_notifications.digest.unsubscribe',
            site_link: html_site_link(@anchor_color),
            email_preferences_link: link_to(t('user_notifications.digest.your_email_settings'), Discourse.base_url + '/my/preferences/emails'),
@@ -425,10 +410,4 @@ body, table, td, th, h1, h2, h3 {font-family: Helvetica, Arial, sans-serif !impo
 
 <%= digest_custom_html("below_footer") %>
 
-<!-- prevent Gmail on iOS font size manipulation -->
-<div style="display:none;white-space:nowrap;font:15px courier;line-height:0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</div>
-
-</body>
-
-</html>
+</div>

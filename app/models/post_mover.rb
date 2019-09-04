@@ -27,6 +27,7 @@ class PostMover
       move_posts_to topic
     end
     add_allowed_users(participants) if participants.present? && @move_to_pm
+    enqueue_jobs(topic)
     topic
   end
 
@@ -37,7 +38,7 @@ class PostMover
     raise Discourse::InvalidParameters unless post
     archetype = @move_to_pm ? Archetype.private_message : Archetype.default
 
-    Topic.transaction do
+    topic = Topic.transaction do
       new_topic = Topic.create!(
         user: post.user,
         title: title,
@@ -50,6 +51,8 @@ class PostMover
       watch_new_topic
       new_topic
     end
+    enqueue_jobs(topic)
+    topic
   end
 
   private
@@ -60,6 +63,7 @@ class PostMover
 
     moving_all_posts = (@original_topic.posts.pluck(:id).sort == @post_ids.sort)
 
+    create_temp_table
     move_each_post
     notify_users_that_posts_have_moved
     update_statistics
@@ -72,11 +76,32 @@ class PostMover
 
     destination_topic.reload
     destination_topic
+  ensure
+    drop_temp_table
+  end
+
+  def create_temp_table
+    DB.exec <<~SQL
+      CREATE TEMPORARY TABLE moved_posts (
+        old_topic_id INTEGER,
+        old_post_id INTEGER,
+        old_post_number INTEGER,
+        new_topic_id INTEGER,
+        new_topic_title VARCHAR,
+        new_post_id INTEGER,
+        new_post_number INTEGER
+      )
+    SQL
+  end
+
+  def drop_temp_table
+    DB.exec("DROP TABLE IF EXISTS moved_posts")
   end
 
   def move_each_post
     max_post_number = destination_topic.max_post_number + 1
 
+    @post_creator = nil
     @move_map = {}
     @reply_count = {}
     posts.each_with_index do |post, offset|
@@ -91,24 +116,25 @@ class PostMover
     end
 
     posts.each do |post|
-      post.is_first_post? ? create_first_post(post) : move(post)
+      metadata = movement_metadata(post)
+      new_post = post.is_first_post? ? create_first_post(post) : move(post)
+
+      store_movement(metadata, new_post)
 
       if @move_to_pm && !destination_topic.topic_allowed_users.exists?(user_id: post.user_id)
         destination_topic.topic_allowed_users.create!(user_id: post.user_id)
       end
     end
 
-    PostReply.where("reply_id IN (:post_ids) OR post_id IN (:post_ids)", post_ids: post_ids).each do |post_reply|
-      if post_reply.post && post_reply.reply && post_reply.reply.topic_id != post_reply.post.topic_id
-        PostReply
-          .where(reply_id: post_reply.reply.id, post_id: post_reply.post.id)
-          .delete_all
-      end
-    end
+    move_incoming_emails
+    move_notifications
+    update_reply_counts
+    move_first_post_replies
+    delete_post_replies
   end
 
   def create_first_post(post)
-    new_post = PostCreator.create(
+    @post_creator = PostCreator.new(
       post.user,
       raw: post.raw,
       topic_id: destination_topic.id,
@@ -118,10 +144,11 @@ class PostMover
       raw_email: post.raw_email,
       skip_validations: true,
       created_at: post.created_at,
-      guardian: Guardian.new(user)
+      guardian: Guardian.new(user),
+      skip_jobs: true
     )
+    new_post = @post_creator.create
 
-    move_incoming_emails(post, new_post)
     move_email_logs(post, new_post)
 
     PostAction.copy(post, new_post)
@@ -152,27 +179,100 @@ class PostMover
     post.attributes = update
     post.save(validate: false)
 
-    move_incoming_emails(post, post)
-    move_email_logs(post, post)
-
     DiscourseEvent.trigger(:post_moved, post, original_topic.id)
 
     # Move any links from the post to the new topic
     post.topic_links.update_all(topic_id: destination_topic.id)
+
+    post
   end
 
-  def move_incoming_emails(old_post, new_post)
-    return if old_post.incoming_email.nil?
+  def movement_metadata(post)
+    {
+      old_topic_id: post.topic_id,
+      old_post_id: post.id,
+      old_post_number: post.post_number,
+      new_topic_id: destination_topic.id,
+      new_post_number: @move_map[post.post_number],
+      new_topic_title: destination_topic.title
+    }
+  end
 
-    email = old_post.incoming_email
-    email.update_columns(topic_id: new_post.topic_id, post_id: new_post.id)
-    new_post.incoming_email = email
+  def store_movement(metadata, new_post)
+    metadata[:new_post_id] = new_post.id
+
+    DB.exec(<<~SQL, metadata)
+      INSERT INTO moved_posts(old_topic_id, old_post_id, old_post_number, new_topic_id, new_topic_title, new_post_id, new_post_number)
+      VALUES (:old_topic_id, :old_post_id, :old_post_number, :new_topic_id, :new_topic_title, :new_post_id, :new_post_number)
+    SQL
+  end
+
+  def move_incoming_emails
+    DB.exec <<~SQL
+      UPDATE incoming_emails ie
+      SET topic_id = mp.new_topic_id,
+          post_id = mp.new_post_id
+      FROM moved_posts mp
+      WHERE ie.topic_id = mp.old_topic_id AND ie.post_id = mp.old_post_id
+    SQL
   end
 
   def move_email_logs(old_post, new_post)
     EmailLog
       .where(post_id: old_post.id)
       .update_all(post_id: new_post.id)
+  end
+
+  def move_notifications
+    DB.exec <<~SQL
+      UPDATE notifications n
+      SET topic_id  = mp.new_topic_id,
+        post_number = mp.new_post_number,
+        data        = (data :: JSONB ||
+          jsonb_strip_nulls(
+              jsonb_build_object(
+                  'topic_title', CASE WHEN data :: JSONB ->> 'topic_title' IS NULL
+                                        THEN NULL
+                                      ELSE mp.new_topic_title END
+                )
+            )) :: JSON
+      FROM moved_posts mp
+      WHERE n.topic_id = mp.old_topic_id AND n.post_number = mp.old_post_number
+        AND n.notification_type <> #{Notification.types[:watching_first_post]}
+    SQL
+  end
+
+  def update_reply_counts
+    DB.exec <<~SQL
+      UPDATE posts p
+      SET reply_count = GREATEST(0, reply_count - x.moved_reply_count)
+      FROM (
+        SELECT r.post_id, mp.new_topic_id, COUNT(1) AS moved_reply_count
+        FROM moved_posts mp
+               JOIN post_replies r ON (mp.old_post_id = r.reply_id)
+        GROUP BY r.post_id, mp.new_topic_id
+      ) x
+      WHERE x.post_id = p.id AND x.new_topic_id <> p.topic_id
+    SQL
+  end
+
+  def move_first_post_replies
+    DB.exec <<~SQL
+      UPDATE post_replies pr
+      SET post_id = mp.new_post_id
+      FROM moved_posts mp, moved_posts mr
+      WHERE mp.old_post_id <> mp.new_post_id AND pr.post_id = mp.old_post_id AND
+        EXISTS (SELECT 1 FROM moved_posts mr WHERE mr.new_post_id = pr.reply_id)
+    SQL
+  end
+
+  def delete_post_replies
+    DB.exec <<~SQL
+      DELETE
+      FROM post_replies pr USING moved_posts mp, posts p, posts r
+      WHERE (pr.reply_id = mp.old_post_id OR pr.post_id = mp.old_post_id) AND
+        p.id = pr.post_id AND r.id = pr.reply_id AND p.topic_id <> r.topic_id
+    SQL
   end
 
   def update_statistics
@@ -275,5 +375,14 @@ class PostMover
       destination_topic.topic_allowed_users.build(user_id: user.id) unless destination_topic.topic_allowed_users.where(user_id: user.id).exists?
     end
     destination_topic.save!
+  end
+
+  def enqueue_jobs(topic)
+    @post_creator.enqueue_jobs if @post_creator
+
+    Jobs.enqueue(
+      :delete_inaccessible_notifications,
+      topic_id: topic.id
+    )
   end
 end

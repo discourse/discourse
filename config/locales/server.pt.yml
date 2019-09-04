@@ -161,8 +161,6 @@ pt:
   activemodel:
     errors:
       <<: *errors
-  invite:
-    not_found: "O seu código de convite é inválido. Por favor, contacte o administrador do site."
   bulk_invite:
     file_should_be_csv: "O ficheiro carregado deve ser do formato CSV."
     error: "Ocorreu um erro ao carregar esse ficheiro. Por favor tente mais tarde."
@@ -199,6 +197,7 @@ pt:
     permalink: "Hiperligação Permanente"
     imported_from: "Este é um tópico de discussão de acompanhamento para a entrada original em %{link}"
     in_reply_to: "▶ %{username}"
+    created: "Criado"
   no_mentions_allowed: "Pedimos desculpa, não pode mencionar outros utilizadores."
   too_many_mentions:
     one: "Pedimos desculpa, pode mencionar apenas %{count} outro utilizador numa mensagem."
@@ -621,6 +620,7 @@ pt:
         day: Dia
     post_edits:
       labels:
+        edited_at: Data
         post: Publicação
         editor: Editor
         edit_reason: Motivo
@@ -908,7 +908,6 @@ pt:
     email_token_valid_hours: "Os símbolos para palavra-passe esquecida /conta ativada são válidos por (n) horas."
     enable_badges: "Ativar o sistema de distintivos"
     enable_whispers: "Permitir à equipa de apio comunicar de forma privada dentro de tópicos."
-    allow_index_in_robots_txt: "Especificar em robots.txt que este sítio permite ser indexado pelos motores de pesquisa."
     email_domains_blacklist: "Lista de domínios de email que os utilizadores não podem usar para registo de contas. Exemplo: mailinator.com|trashmail.net"
     email_domains_whitelist: "Lista de domínios de email que os utilizadores DEVEM usar para registar contas. AVISO: Utilizadores com domínios de email diferentes dos listados não serão permitidos!"
     log_out_strict: "Ao terminar sessão, saia de TODAS as sessões do utilizador em todos dispositivos"
@@ -1083,7 +1082,6 @@ pt:
     reset_bounce_score_after_days: "Automaticamente repor pontuação de redirecionamento após X dias."
     attachment_content_type_blacklist: "Lista de termos-chave usados para bloquear anexos com base no tipo de conteúdo."
     attachment_filename_blacklist: "Lista de termos-chave usados para bloquear anexos com base no nome do ficheiro."
-    enable_forwarded_emails: "[BETA] Permitir aos utilizadores a criação de um tópico via o encaminhamento de um email."
     always_show_trimmed_content: "Mostrar sempre a parte aparada dos emails recebidos. AVISO: poderá revelar endereços de email."
     manual_polling_enabled: "Enviar emails utilizando a API de resposta por email."
     pop3_polling_enabled: "Solicitação através de POP3 para respostas de emails"
@@ -1128,7 +1126,7 @@ pt:
     disable_avatar_education_message: "Desativar mensagem educativa para alteração de avatar."
     suppress_uncategorized_badge: "Não mostrar distintivos para tópicos sem categoria nas listagens de tópicos."
     permalink_normalizations: "Aplicar a seguinte expressão regular antes de igualar ligações permanentes, por exemplo: /(topic.*)\\?.*/\\1 irá remover rotas de tópico. O formato é regex+string utilize \\1 etc. para aceder a capturas"
-    disable_edit_notifications: "Desativa as notificações de edição pelo utilizador do sistema quando 'download_remote_images_to_local' está ativo."
+    disable_system_edit_notifications: "Desativa as notificações de edição pelo utilizador do sistema quando 'download_remote_images_to_local' está ativo."
     automatically_unpin_topics: "Desafixar tópicos automaticamente quando um utilizador chega ao final."
     read_time_word_count: "Contagem de palavras por minuto para calcular tempo estimado de leitura."
     share_anonymized_statistics: "Partilhe estatísticas de utilização anonimizadas."
@@ -1206,8 +1204,8 @@ pt:
       invalid_string_min_max: "Deve ser entre %{min} e %{max} caracteres."
       invalid_string_min: "Deve ser pelo menos %{min} caracteres."
       invalid_string_max: "Não deve ser mais que %{max} caracteres."
-      invalid_reply_by_email_address: "O valor deve conter '%%{reply_key}' e ser diferente do email de notificação."
-      invalid_alternative_reply_by_email_addresses: "Todos os valores devem conter '%%{reply_key}' e ser diferentes do email de notificação."
+      invalid_reply_by_email_address: "O valor deve conter '%{reply_key}' e ser diferente do email de notificação."
+      invalid_alternative_reply_by_email_addresses: "Todos os valores devem conter '%{reply_key}' e ser diferentes do email de notificação."
       pop3_polling_host_is_empty: "Deve configurar um 'pop3 polling host' antes de ativar o polling POP3."
       pop3_polling_username_is_empty: "Deve configurar um 'nome de utilizador de polling pop3' antes de ativar o polling POP3."
       pop3_polling_password_is_empty: "Deve configurar uma 'palavra-passe de polling pop3' antes de ativar o polling POP3."
@@ -1284,8 +1282,8 @@ pt:
     errors: "%{errors}"
     not_available: "Não disponível. Tente %{suggestion}?"
     something_already_taken: "Algo de errado ocorreu, talvez o nome de utilizador ou o email já estejam registados. Tente a hiperligação Esqueci a minha palavra-passe."
-    omniauth_error: "Pedimos desculpa, ocorreu um erro ao autorizar a sua conta. Talvez não tenha aprovado a sua autorização?"
     omniauth_error_unknown: "Algo ocorreu ao processar o seu início de sessão, por favor tente novamente."
+    omniauth_confirm_button: "Continuar"
     authenticator_error_no_valid_email: "Nenhum endereço de email associado com %{account} são permitidos. Talvez precise de configurar a sua conta com um endereço de email diferente."
     new_registrations_disabled: "Neste momento não é permitido novo registo de contas."
     password_too_long: "As palavras-passe estão limitadas a 200 caracteres."

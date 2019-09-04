@@ -11,11 +11,17 @@ import { userPath } from "discourse/lib/url";
 import Composer from "discourse/models/composer";
 
 const Post = RestModel.extend({
-  @computed()
-  siteSettings() {
-    // TODO: Remove this once one instantiate all `Discourse.Post` models via the store.
-    return Discourse.SiteSettings;
-  },
+  // TODO: Remove this once one instantiate all `Discourse.Post` models via the store.
+  siteSettings: Ember.computed({
+    get() {
+      return Discourse.SiteSettings;
+    },
+
+    // prevents model created from json to overridde this property
+    set() {
+      return Discourse.SiteSettings;
+    }
+  }),
 
   @computed("url")
   shareUrl(url) {

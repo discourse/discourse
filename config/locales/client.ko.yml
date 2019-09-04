@@ -211,6 +211,7 @@ ko:
       stats: "사이트 통계"
       our_admins: "관리자"
       our_moderators: "운영자"
+      moderators: "운영자"
       stat:
         all_time: "전체"
         last_7_days: "최근 7일"
@@ -755,7 +756,6 @@ ko:
         uploaded_avatar: "커스텀 사진"
         uploaded_avatar_empty: "커스텀 사진 추가"
         upload_title: "프로필 사진 업로드"
-        upload_picture: "사진 업로드"
         image_is_not_a_square: "경고: 정사각형 이미지가 아니기 때문에 사진을 수정하였습니다."
       change_profile_background:
         title: "프로필 배경"
@@ -778,6 +778,7 @@ ko:
       associated_accounts:
         connect: "연결"
         revoke: "회수"
+        cancel: "취소"
         not_connected: "(연결되지 않음)"
       name:
         title: "이름"
@@ -1150,6 +1151,9 @@ ko:
       default_header_text: 선택...
       no_content: 일치하는 결과가 없습니다
       filter_placeholder: 검색...
+    date_time_picker:
+      from: 보내는사람
+      to: 받는사람
     emoji_picker:
       filter_placeholder: 이모지 찾기
       objects: 사물
@@ -1165,7 +1169,7 @@ ko:
     composer:
       emoji: "이모지 :)"
       more_emoji: "더보기..."
-      options: "온셥"
+      options: "옵션"
       whisper: "귓속말"
       unlist: "목록에서 제외됨"
       blockquote_text: "Blockquote"
@@ -2366,8 +2370,6 @@ ko:
           view_table: "테이블"
           view_graph: "그래프"
           refresh_report: "보고서 새로고침"
-          start_date: "시작일"
-          end_date: "종료일"
           groups: "모든 그룹"
           no_data: "표시할 정보가 없습니다."
           filters:
@@ -2590,7 +2592,7 @@ ko:
       export_csv:
         success: "Export initiated, you will be notified via message when the process is complete."
         failed: "내보내기가 실패했습니다. 로그를 확인해주세요"
-        button_text: "내보니기"
+        button_text: "내보내기"
         button_title:
           user: "모든 사용자 목록을 CSV 형식으로 내보내기"
           staff_action: "모든 스태프 행동 로그를 CSV 형식으로 내보내기"
@@ -2619,7 +2621,7 @@ ko:
         copy_to_clipboard_error: "클립보드로 복사하는 중 에러가 발생하였습니다"
         theme_owner: "편집불가, 소유자:"
         email_templates:
-          title: "이메일 템플릿"
+          title: "이메일"
           subject: "제목"
           multiple_subjects: "이 이메일 양식은 제목이 여러가지 있습니다."
           body: "본문"
@@ -2739,6 +2741,8 @@ ko:
           love:
             name: "사랑"
             description: "좋아요 버튼 색"
+        email_style:
+          css: "CSS"
       email:
         title: "이메일"
         settings: "설정"
@@ -2932,6 +2936,8 @@ ko:
         search: "검색"
         clear_filter: "지우기"
         show_words: "단어 보이기"
+        download: 다운로드
+        clear_all: 모두 지우기
         word_count:
           other: "%{count}개 단어"
         actions:
@@ -2951,8 +2957,10 @@ ko:
           add: "추가"
           success: "성공"
           exists: "이미 존재 함"
-          upload: "업로드"
           upload_successful: "성공적으로 업로드되었습니다. 단어가 추가되었습니다."
+        test:
+          button_label: "테스트"
+          no_matches: "일치하는 결과가 없습니다"
       impersonate:
         title: "이 사용자 행세하기"
         help: "디버깅 목적으로 사용자 계정으로 로그인 할 수 있습니다. 사용이 끝나면 로그아웃하여야 합니다."
@@ -3149,7 +3157,7 @@ ko:
         delete: "삭제"
         cancel: "취소"
         delete_confirm: "사용자 필드를 삭제할까요?"
-        options: "온셥"
+        options: "옵션"
         required:
           title: "회원가입시 필수항목?"
           enabled: "필수"
@@ -3173,7 +3181,7 @@ ko:
       site_text:
         description: "포럼에 있는 그 어떤 텍스트도 수정이 가능합니다. 아래의 검색기능을 통해 시작하세요."
         search: "편집하고 싶은 텍스트를 검색하세요."
-        title: "텍스트 콘텐츠"
+        title: "텍스트"
         edit: "편집"
         revert: "변경사항 취소"
         revert_confirm: "정말로 변경사항을 되돌리시겠습니까?"
@@ -3266,7 +3274,6 @@ ko:
         enabled: 배지 기능 사용
         icon: 아이콘
         image: 이미지
-        icon_help: "Font Awesome 클래스 사용"
         image_help: "이미지의 URL을 입력하세요 (둘 다 설정된 경우 아이콘 필드보다 우선함)"
         query: 배지 쿼리(SQL)
         target_posts: 글들을 대상으로 하는 쿼리

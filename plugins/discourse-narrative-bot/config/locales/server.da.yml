@@ -7,14 +7,23 @@
 
 da:
   site_settings:
+    discourse_narrative_bot_enabled: "Aktivér Discourse Narrative Bot (discobot)"
     disable_discourse_narrative_bot_welcome_post: "Deaktiver velkomst beskeden fra Discourse Botten"
+    discourse_narrative_bot_ignored_usernames: "Brugernavne, som Discourse Narrative Bot skal ignorere"
+    discourse_narrative_bot_disable_public_replies: "Deaktivér offentlige svar fra Discourse Narrative Bot"
+    discourse_narrative_bot_welcome_post_type: "Type af velkomstindlæg, som Discourse Narrative Bot skal sende ud"
+    discourse_narrative_bot_welcome_post_delay: "Vent (n) sekunder, før du sender Discourse Narrative Bot-velkomstposten."
   badges:
     certified:
       name: Certificeret
       description: "Fuldførte vores \"ny bruger\" vejledning"
+      long_description: |
+        Denne badge tildeles, når den interaktive nye brugervejledning er afsluttet. Du har taget initiativ til at lære de grundlæggende redskaber til diskussion, og nu er du certificeret!
     licensed:
       name: Licenseret
       description: "Gennemført vores advancerede bruger vejledning"
+      long_description: |
+        Denne badge tildeles, når den interaktive avancerede brugervejledning er afsluttet. Du har mestret de avancerede diskussionsværktøjer - og nu er du fuldt licenseret!
   discourse_narrative_bot:
     bio: "Hej, jeg er ikke en rigtigt person. Jeg er en bot der kan lære dig om dette site. For at interaggere med mig, send mig en besked, eller nævn **`@%{discobot_username}`** overalt."
     timeout:
@@ -34,6 +43,152 @@ da:
         Jeg beklager, det er matematisk umuligt at rulle den kombination af terninger. :confounded:
       not_enough_dice: |-
         I only have %{num_of_dice} dice. [Skamfuldt](http://www.therobotsvoice.com/2009/04/the_10_most_shameful_rpg_dice.php), jeg ved det!
+      out_of_range: |-
+        Vidste du, at [det maksimale antal sider] (https://www.wired.com/2016/05/mathematical-challenge-of-designing-the-worlds-most-complex-120-sided-dice) for en matematisk retfærdig terning er 120?
+      results: |-
+        > :game_die: %{results}
+    quote:
+      trigger: "citat"
+      '1':
+        quote: "Midt i enhver vanskelighed ligger muligheden"
+        author: "Albert Einstein"
+      '2':
+        quote: "Frihed er ikke værd at have, hvis det ikke giver frihed til at fejle."
+        author: "Mahatma Gandhi"
+      '3':
+        quote: "Græd ikke, fordi det er forbi, smil fordi det skete."
+        author: "Dr. Seuss"
+      '4':
+        quote: "Hvis man vil have noget gjort rigtigt, må man gøre det selv."
+        author: "Charles-Guillaume Étienne"
+      '5':
+        quote: "Tro på du kan og du er allerede halvvejs."
+        author: "Theodore Roosevelt"
+      '6':
+        quote: "Livet er som en æske chokolade. Du ved aldrig, hvad du får."
+        author: "Forrest Gumps mor"
+      '7':
+        quote: "Det er et lille skridt for en mand, et kæmpespring for menneskeheden."
+        author: "Neil Armstrong"
+      '8':
+        quote: "Gør en ting hver dag, der skræmmer dig."
+        author: "Eleanor Roosevelt"
+      '9':
+        quote: "Fejl er altid tilforladelige, hvis man har modet til at indrømme dem."
+        author: "Bruce Lee"
+      '10':
+        quote: "Uanset hvad menneskets sind kan begribe og tro på, kan det opnå."
+        author: "Napoleon Hill"
+      results: |-
+        > :left_speech_bubble: _%{quote}_ &mdash; %{author}
     magic_8_ball:
+      trigger: "formue"
       answers:
+        '1': "Det er sikkert"
+        '2': "Det er bestemt"
+        '3': "Uden tvivl"
+        '4': "Ja helt sikkert"
+        '5': "Du kan stole på det"
+        '6': "Som jeg ser det, ja"
+        '7': "Højst sandsynlig"
         '9': "Ja"
+        '10': "Det tyder på ja"
+        '11': "Svar uklar, prøv igen"
+        '12': "Spørg igen senere"
+        '13': "Bedre ikke at fortælle dig nu"
+        '14': "Kan ikke forudsige nu"
+        '15': "Koncentrer dig og spørg igen"
+        '16': "Stol ikke på det"
+        '17': "Mit svar er nej"
+        '18': "Mine kilder siger nej"
+        '20': "Meget tvivlsom"
+      result: |-
+        > :crystal_ball: %{result}
+    track_selector:
+      reset_trigger: "Start"
+      skip_trigger: "springe over"
+      help_trigger: "vis hjælp"
+      random_mention:
+        reply: |-
+          Hej! For at finde ud af, hvad jeg kan gøre, skal du sige `@ %{discobot_username} %{help_trigger}`.
+        bot_actions: |-
+          `@%{discobot_username} %{dice_trigger} 2d6`
+          > :game_die: 3, 6
+
+          `@%{discobot_username} %{quote_trigger}`
+          > :left_speech_bubble: _Gør en tilfældig, god gerning, uden at forvente belønning, i vished om at en dag vil nogen måske gøre det samme for dig._ &mdash; Prinsesse Diana
+
+          `@%{discobot_username} %{magic_8_ball_trigger}`
+          > :crystal_ball: Det kan du stole på
+      do_not_understand:
+        first_response: |-
+          Hej tak for svaret!
+
+          Desværre, som en dårligt programmeret bot, kan jeg ikke helt forstå det. :frowning:
+        track_response: Du kan prøve igen, eller hvis du vil springe over dette trin, skal du sige `%{skip_trigger}`. Ellers skal du sige `%{reset_trigger}` for at starte forfra.
+    new_user_narrative:
+      reset_trigger: "tutorial"
+      cert_title: "Som anerkendelse af en vellykket gennemførelse af den nye bruger tutorial"
+      hello:
+        title: "Vær hilset!"
+      onebox:
+        reply: |-
+          Fedt nok! Dette fungerer for de fleste <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-link.png" width="16" height="16"> links. Husk, at det skal være på en linje _ alt i sig selv_, med intet andet foran eller bag.
+        not_found: |-
+          Beklager, jeg kunne ikke finde linket i dit svar! :cry:
+
+          Kan du prøve at tilføje følgende link på sin egen linje i dit næste svar?
+
+          <https://en.wikipedia.org/wiki/Exotic_Shorthair>
+      images:
+        reply: |-
+          Nifty billede - Jeg tryk på linket :heart: knap for at fortælle dig, hvor meget jeg satte pris på det: heart_eyes:
+        like_not_found: |-
+          Har du glemt at like :heart: mit [indlæg?] (%{url}) :crying_cat_face:
+      formatting:
+        reply: |-
+          Godt arbejde! HTML og BBCode fungerer også til formatering - for at lære mere, [prøv denne tutorial] (http://commonmark.org/help) :nerd:
+      quoting:
+        reply: |-
+          Godt arbejde, du valgte mit yndlings citat! :Left_speech_bubble:
+        not_found: |-
+          Hmm det ser ud til, at du ikke citerede mig i dit svar?
+
+          Hvis du vælger en tekst i mit indlæg, åbnes knappen <kbd>** Citat **</kbd> . Og at trykke på ** Svar ** med valgt tekst fungerer også! Kan du prøve igen?
+      certificate:
+        alt: "Diplom"
+    advanced_user_narrative:
+      reset_trigger: "avanceret tutorial"
+      cert_title: "Som anerkendelse af en vellykket gennemførelse af den avancerede bruger tutorial"
+      title: ": arrow_up: Avancerede brugerfunktioner"
+      edit:
+        bot_created_post_raw: "@ %{discobot_username} er langt den fedeste bot, jeg kender :wink:"
+        instructions: |-
+          Alle begår fejl. Men bare rolig, du kan altid redigere dine indlæg for at rette dem!
+
+          Kan du begynde med ** at redigere ** det indlæg, jeg lige har oprettet på dine vegne?
+        not_found: |-
+          Det ser ud til, at du endnu ikke har redigeret [indlæget] (%{url}), jeg oprettede til dig. Kan du prøve igen?
+
+          Brug <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-pencil.png" width="16" height="16"> ikon for at få redaktøren frem.
+        reply: |-
+          Flot arbejde!
+
+          Bemærk, at ændringer foretaget efter 5 minutter vises som offentlige redigeringsrevisioner, og et lille blyantikon vises øverst til højre med revisionstællingen.
+      delete:
+        instructions: |-
+          Hvis du gerne vil trække et indlæg tilbage, du har oprettet, kan du slette det.
+
+          Gå videre og **slet** alle dine indlæg ovenfor ved hjælp af <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-trash.png" width="16" height="16"> **Slet** handling. Slet dog ikke det første indlæg!
+        not_found: |-
+          Jeg kan ikke se nogen slettede indlæg endnu? Husk <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> vis mere vil afsløre <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-trash.png" width="16" height="16"> slette.
+        reply: |-
+          Whoa! : boom:
+
+          For at bevare kontinuiteten i diskussionerne, er sletninger ikke øjeblikkelige, så indlægget fjernes efter et stykke tid.
+      recover:
+        deleted_post_raw: "Hvorfor slettede @ %{discobot_username} mit indlæg? :anguished:"
+        instructions: |-
+          Åh nej! Det ser ud til, at jeg ved et uheld har slettet et nyt indlæg, som jeg lige har oprettet til dig. Kan du gøre mig en tjeneste og <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-rotate-left.png" width="16" height="16"> **anullere sletningen**?
+        not_found: |-
+          Har problemer? Husk <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> vis mere vil afsløre <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-rotate-left.png" width="16" height="16"> anullér slet.

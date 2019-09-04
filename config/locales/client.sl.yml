@@ -919,7 +919,6 @@ sl:
         uploaded_avatar: "Slika po meri"
         uploaded_avatar_empty: "Dodaj sliko po meri"
         upload_title: "Prenesi svojo sliko"
-        upload_picture: "Prenesi sliko"
         image_is_not_a_square: "Opozorilo: obrezali smo vašo sliko; širina in višina nista bili enaki."
       change_profile_background:
         title: "Ozadje profila"
@@ -947,6 +946,7 @@ sl:
         title: "Povezani računi"
         connect: "Poveži"
         revoke: "Prekliči"
+        cancel: "Prekliči"
         not_connected: "(ni povezano)"
       name:
         title: "Polno ime"
@@ -1410,6 +1410,9 @@ sl:
         two: "Izberite vsaj {{count}} stvari."
         few: "Izberite vsaj {{count}} stvari."
         other: "Izberite vsaj {{count}} stvari."
+    date_time_picker:
+      from: Od
+      to: Za
     emoji_picker:
       filter_placeholder: Išči emoji
       smileys_&_emotion: Smeški in emotikoni
@@ -3001,8 +3004,6 @@ sl:
           view_table: "tabela"
           view_graph: "graf"
           refresh_report: "Osveži poročilo"
-          start_date: "Začetni datum"
-          end_date: "Končni datum"
           groups: "Vse skupine"
           disabled: "To poročilo je onemogočeno"
           totals_for_sample: "Skupaj za vzorec"
@@ -3164,7 +3165,7 @@ sl:
         copied_to_clipboard: "Kopirano v odložišče"
         copy_to_clipboard_error: "Prišlo je do napake pri kopiranju v odložišče"
         email_templates:
-          title: "E-sporočila predloge"
+          title: "E-sporočila"
           subject: "Naslov"
           multiple_subjects: "Ta e-sporočilo predloga ima več naslovov."
           revert: "Prekliči spremembe"
@@ -3220,6 +3221,8 @@ sl:
             name: "nevarnost"
           success:
             name: "uspeh"
+        email_style:
+          css: "CSS"
       email:
         title: "E-pošta"
         settings: "Nastavitve"
@@ -3373,6 +3376,8 @@ sl:
         search: "išči"
         clear_filter: "Počisti"
         show_words: "pokaži besede"
+        download: Naloži
+        clear_all: Počisti vse
         word_count:
           one: "%{count} beseda"
           two: "%{count} besedi"
@@ -3394,7 +3399,8 @@ sl:
           placeholder_regexp: "Regularni izraz"
           add: "Dodaj"
           success: "Uspeh"
-          upload: "Prenesi"
+        test:
+          no_matches: "Ni zadetkov"
       impersonate:
         title: "Poosebi uporabnika"
         help: "Uporabljajte to orodje za poosebljanje uporabnika za iskanje in odpravljanje napak. Ko končate se morate odjaviti."
@@ -3558,8 +3564,6 @@ sl:
           likes_received: "Všečkov prejetih"
           likes_received_days: "Všečkov prejetih: dni"
           likes_received_users: "Všečkov prejetih: uporabnikov"
-          suspended: "Suspendiran (ves čas)"
-          silenced: "Utišan (ves čas)"
           qualifies: "Se kvalificira za nivo zaupanja 3."
           does_not_qualify: "Se ne kvalificira za nivo zaupanja 3."
           will_be_promoted: "Bo povišan kmalu."
@@ -3607,7 +3611,7 @@ sl:
       site_text:
         description: "Lahko spremenite katerikoli besedilo na forumu. Začnite tako da poiščete spodaj:"
         search: "Išči besedilo, ki bi ga rad/a uredil/a"
-        title: "Vsebina besedila"
+        title: "Besedilo"
         edit: "uredi"
         revert: "Prekliči spremembe"
         revert_confirm: "Ste prepričani, da želite preklicati spremembe?"
@@ -3689,7 +3693,6 @@ sl:
         enabled: Omogoči značko
         icon: Ikona
         image: Slika
-        icon_help: "Uporabi Font Awesome ikono"
         image_help: "Vnesi URL do slike (ima prednost pred ikono)"
         query: poizvedba (SQL) značke
         show_posts: Prikaži prispevek za značko na strani z značkami

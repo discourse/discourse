@@ -36,7 +36,11 @@
             label="user.second_factor.totp.add"}}
           {{#each totps as |totp|}}
             <div class="second-factor-item">
-              {{totp.name}}
+              {{#if totp.name}}
+                {{totp.name}}
+              {{else}}
+                {{i18n "user.second_factor.totp.default_name"}}
+              {{/if}}
 
               {{#if isCurrentUser}}
                 {{d-button action=(action "editSecondFactor" totp)

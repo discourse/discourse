@@ -83,6 +83,10 @@ module BackupRestore
       raise Discourse::InvalidParameters.new(:user_id) unless @user
     end
 
+    def get_parameterized_title
+      SiteSetting.title.parameterize.presence || "discourse"
+    end
+
     def initialize_state
       @success = false
       @store = BackupRestore::BackupStore.create
@@ -91,7 +95,7 @@ module BackupRestore
       @tmp_directory = File.join(Rails.root, "tmp", "backups", @current_db, @timestamp)
       @dump_filename = File.join(@tmp_directory, BackupRestore::DUMP_FILE)
       @archive_directory = BackupRestore::LocalBackupStore.base_directory(db: @current_db)
-      filename = @filename_override || "#{SiteSetting.title.parameterize}-#{@timestamp}"
+      filename = @filename_override || "#{get_parameterized_title}-#{@timestamp}"
       @archive_basename = File.join(@archive_directory, "#{filename}-#{BackupRestore::VERSION_PREFIX}#{BackupRestore.current_version}")
 
       @backup_filename =
@@ -248,11 +252,8 @@ module BackupRestore
         )
       end
 
-      if SiteSetting.Upload.enable_s3_uploads
-        add_remote_uploads_to_archive(tar_filename)
-      else
-        add_local_uploads_to_archive(tar_filename)
-      end
+      add_local_uploads_to_archive(tar_filename)
+      add_remote_uploads_to_archive(tar_filename) if SiteSetting.Upload.enable_s3_uploads
 
       remove_tmp_directory
 
@@ -276,7 +277,7 @@ module BackupRestore
             failure_message: "Failed to archive uploads.", success_status_codes: [0, 1]
           )
         else
-          log "No uploads found, skipping archiving uploads..."
+          log "No local uploads found. Skipping archiving of local uploads..."
         end
       end
     end
@@ -319,7 +320,7 @@ module BackupRestore
         end
       end
 
-      log "No uploads found, skipping archiving uploads..." if count == 0
+      log "No uploads found on S3. Skipping archiving of uploads stored on S3..." if count == 0
     end
 
     def upload_archive

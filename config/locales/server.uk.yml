@@ -25,6 +25,7 @@ uk:
   loading: "Завантаження"
   sign_up: "Зареєструватись"
   log_in: "Вхід"
+  submit: "Надіслати"
   emails:
     incoming:
       errors:
@@ -70,6 +71,7 @@ uk:
     loading: "Завантаження обговорення..."
     permalink: "Постійне посилання"
     imported_from: "Discussion topic for the original blog entry at: %{link}"
+    created: "Створено"
   no_images_allowed: "Даруйте, нові користувачі не можуть вставляти зображення в дописи."
   too_many_images:
     one: "Даруйте, нові користувачі можуть вставляти тільки одне зображення в допис."
@@ -188,6 +190,8 @@ uk:
         many: "%{count} секунд тому"
         other: "%{count} секунд тому"
   password_reset:
+    choose_new: "Вибрати новий пароль"
+    choose: "Вибрати пароль"
     update: "Оновити пароль"
     save: "Встановити пароль"
     title: "Скинути пароль"
@@ -253,21 +257,26 @@ uk:
       every_hour: "щогодини"
       daily: "щодня"
       weekly: "щотижня"
+      every_month: "щомісяця"
+      every_six_months: "що шість місяців"
   user_api_key:
     otp_confirmation:
       confirm_title: "Продовжити у %{site_name}"
   reports:
     default:
       labels:
+        count: Кількість
         day: День
     post_edits:
       labels:
+        edited_at: Дата
         post: Допис
         editor: Редактор
         edit_reason: Причина
     user_flagging_ratio:
       labels:
         user: Користувач
+        score: Бал
     moderators_activity:
       labels:
         moderator: Модератор
@@ -484,6 +493,8 @@ uk:
     not_available: "Not available. Try %{suggestion}?"
     something_already_taken: "Щось пішло не так, можливо, ім'я користувача або електронна скринька вже зареєстровані. Спробуйте посилання \"Я забув пароль\"."
     omniauth_error_unknown: "Something went wrong processing your log in, please try again."
+    omniauth_confirm_button: "Продовжити"
+    second_factor_title: "Двофакторна автентифікація"
   admin:
     email:
       sent_test: "надіслано!"
@@ -565,6 +576,8 @@ uk:
   badges:
     editor:
       name: Редактор
+    member:
+      name: Учасник
     regular:
       name: Звичайний
     welcome:
@@ -593,14 +606,31 @@ uk:
     step:
       forum_title:
         title: "Ім'я"
+      privacy:
+        title: "Доступ"
+        fields:
+          privacy:
+            choices:
+              open:
+                label: "Публічні"
+              restricted:
+                label: "Приватні"
       contact:
         fields:
           contact_email:
             placeholder: "електронна скринька"
       corporate:
         title: "Організація"
+      colors:
+        title: "Тема"
   joined: "Приєднався(лась)"
   reviewables:
+    priorities:
+      medium: "Середній"
+      high: "Високий"
+    sensitivity:
+      medium: "Середній"
+      high: "Високий"
     actions:
       agree_and_suspend:
         title: "Призупинити користувача"
@@ -610,6 +640,8 @@ uk:
         title: "Видалити"
       disagree:
         title: "Відмовитися"
+      ignore:
+        title: "Ігнорувати"
       approve:
         title: "Схвалити"
       reject_user:

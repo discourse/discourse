@@ -414,7 +414,7 @@ describe Topic do
   end
 
   context 'category validation' do
-    fab!(:category) { Fabricate(:category) }
+    fab!(:category) { Fabricate(:category_with_definition) }
 
     context 'allow_uncategorized_topics is false' do
       before do
@@ -459,7 +459,7 @@ describe Topic do
     end
 
     context "with a category definition" do
-      let!(:category) { Fabricate(:category) }
+      let!(:category) { Fabricate(:category_with_definition) }
 
       it "excludes the category definition topic from similar_to" do
         expect(Topic.similar_to('category definition for', "no body")).to be_blank
@@ -478,7 +478,7 @@ describe Topic do
       end
 
       context "secure categories" do
-        fab!(:category) { Fabricate(:category, read_restricted: true) }
+        fab!(:category) { Fabricate(:category_with_definition, read_restricted: true) }
 
         before do
           topic.category = category
@@ -680,7 +680,7 @@ describe Topic do
           fab!(:group) { Fabricate(:group) }
 
           fab!(:category) do
-            Fabricate(:category, groups: [group]).tap do |category|
+            Fabricate(:category_with_definition, groups: [group]).tap do |category|
               category.set_permissions(group => :full)
               category.save!
             end
@@ -786,29 +786,65 @@ describe Topic do
             expect(topic.allowed_groups.include?(admins)).to eq(false)
           end
 
+          def set_state!(group, user, state)
+            group.group_users.find_by(user_id: user.id).update!(
+              notification_level: NotificationLevels.all[state]
+            )
+          end
+
           it 'creates a notification for each user in the group' do
-            user = Fabricate(:user)
-            user_2 = Fabricate(:user)
+
+            # trigger notification
+            user_watching_first = Fabricate(:user)
+            user_watching = Fabricate(:user)
+
+            # trigger rollup
+            user_tracking = Fabricate(:user)
+
+            # trigger nothing
+            user_normal = Fabricate(:user)
+            user_muted = Fabricate(:user)
+
             Fabricate(:post, topic: topic)
 
-            group.add(user)
-            group.add(user_2)
-            group.add(topic.user)
+            group.add(topic.user) # no notification even though watching
+            group.add(user_watching_first)
+            group.add(user_watching)
+            group.add(user_normal)
+            group.add(user_muted)
+            group.add(user_tracking)
 
-            group.group_users.find_by(user: user_2).update!(
-              notification_level: NotificationLevels.all[:muted]
-            )
+            set_state!(group, topic.user, :watching)
+            set_state!(group, user_watching, :watching)
+            set_state!(group, user_watching_first, :watching_first_post)
+            set_state!(group, user_tracking, :tracking)
+            set_state!(group, user_normal, :regular)
+            set_state!(group, user_muted, :muted)
 
-            expect { topic.invite_group(topic.user, group) }
-              .to change { Notification.count }.by(1)
+            Notification.delete_all
+            topic.invite_group(topic.user, group)
 
-            notification = Notification.last
+            expect(Notification.count).to eq(3)
 
-            expect(notification.user).to eq(user)
-            expect(notification.topic).to eq(topic)
+            [user_watching, user_watching_first].each do |u|
+              notifications = Notification.where(user_id: u.id).to_a
+              expect(notifications.length).to eq(1)
+
+              notification = notifications.first
+
+              expect(notification.topic).to eq(topic)
+              expect(notification.notification_type)
+                .to eq(Notification.types[:invited_to_private_message])
+
+            end
+
+            notifications = Notification.where(user_id: user_tracking.id).to_a
+            expect(notifications.length).to eq(1)
+            notification = notifications.first
 
             expect(notification.notification_type)
-              .to eq(Notification.types[:invited_to_private_message])
+              .to eq(Notification.types[:group_message_summary])
+
           end
         end
       end
@@ -1171,7 +1207,7 @@ describe Topic do
   describe 'with category' do
 
     before do
-      @category = Fabricate(:category)
+      @category = Fabricate(:category_with_definition)
     end
 
     it "should not increase the topic_count with no category" do
@@ -1259,7 +1295,7 @@ describe Topic do
   describe '#change_category_to_id' do
     fab!(:topic) { Fabricate(:topic) }
     fab!(:user) { topic.user }
-    fab!(:category) { Fabricate(:category, user: user) }
+    fab!(:category) { Fabricate(:category_with_definition, user: user) }
 
     describe 'without a previous category' do
       it 'changes the category' do
@@ -1303,7 +1339,7 @@ describe Topic do
       end
 
       describe 'to a different category' do
-        fab!(:new_category) { Fabricate(:category, user: user, name: '2nd category') }
+        fab!(:new_category) { Fabricate(:category_with_definition, user: user, name: '2nd category') }
 
         it 'should work' do
           topic.change_category_to_id(new_category.id)
@@ -1416,7 +1452,7 @@ describe Topic do
           SiteSetting.allow_uncategorized_topics = false
         end
 
-        let!(:topic) { Fabricate(:topic, category: Fabricate(:category)) }
+        let!(:topic) { Fabricate(:topic, category: Fabricate(:category_with_definition)) }
 
         it 'returns false' do
           expect(topic.change_category_to_id(nil)).to eq(false) # don't use "== false" here because it would also match nil
@@ -1480,9 +1516,9 @@ describe Topic do
 
     describe '#in_category_and_subcategories' do
       it 'returns topics in a category and its subcategories' do
-        c1 = Fabricate(:category)
-        c2 = Fabricate(:category, parent_category_id: c1.id)
-        c3 = Fabricate(:category)
+        c1 = Fabricate(:category_with_definition)
+        c2 = Fabricate(:category_with_definition, parent_category_id: c1.id)
+        c3 = Fabricate(:category_with_definition)
 
         t1 = Fabricate(:topic, user: user, category_id: c1.id)
         t2 = Fabricate(:topic, user: user, category_id: c2.id)
@@ -1640,7 +1676,7 @@ describe Topic do
     end
 
     describe "when category's default auto close is set" do
-      let(:category) { Fabricate(:category, auto_close_hours: 4) }
+      let(:category) { Fabricate(:category_with_definition, auto_close_hours: 4) }
       let(:topic) { Fabricate(:topic, category: category) }
 
       it "should be able to override category's default auto close" do
@@ -1705,7 +1741,7 @@ describe Topic do
       end
 
       it "doesn't return category topics" do
-        Fabricate(:category)
+        Fabricate(:category_with_definition)
         expect(Topic.for_digest(user, 1.year.ago, top_order: true)).to be_blank
       end
 
@@ -1716,7 +1752,7 @@ describe Topic do
 
       it "doesn't return topics from muted categories" do
         user = Fabricate(:user)
-        category = Fabricate(:category)
+        category = Fabricate(:category_with_definition)
         Fabricate(:topic, category: category)
 
         CategoryUser.set_notification_level_for_category(user, CategoryUser.notification_levels[:muted], category.id)
@@ -1739,7 +1775,7 @@ describe Topic do
 
       it "doesn't return topics from suppressed categories" do
         user = Fabricate(:user)
-        category = Fabricate(:category)
+        category = Fabricate(:category_with_definition)
         Fabricate(:topic, category: category)
 
         SiteSetting.digest_suppress_categories = "#{category.id}"
@@ -1802,7 +1838,7 @@ describe Topic do
       end
 
       it "sorts by category notification levels" do
-        category1, category2 = Fabricate(:category), Fabricate(:category)
+        category1, category2 = Fabricate(:category_with_definition), Fabricate(:category_with_definition)
         2.times { |i| Fabricate(:topic, category: category1) }
         topic1 = Fabricate(:topic, category: category2)
         2.times { |i| Fabricate(:topic, category: category1) }
@@ -1837,12 +1873,12 @@ describe Topic do
 
   describe '.secured' do
     it 'should return the right topics' do
-      category = Fabricate(:category, read_restricted: true)
+      category = Fabricate(:category_with_definition, read_restricted: true)
       topic = Fabricate(:topic, category: category, created_at: 1.day.ago)
       group = Fabricate(:group)
       user = Fabricate(:user)
       group.add(user)
-      private_category = Fabricate(:private_category, group: group)
+      private_category = Fabricate(:private_category_with_definition, group: group)
 
       expect(Topic.secured(Guardian.new(nil))).to eq([])
 
@@ -1941,7 +1977,7 @@ describe Topic do
   describe 'trash!' do
     context "its category's topic count" do
       fab!(:moderator) { Fabricate(:moderator) }
-      fab!(:category) { Fabricate(:category) }
+      fab!(:category) { Fabricate(:category_with_definition) }
 
       it "subtracts 1 if topic is being deleted" do
         topic = Fabricate(:topic, category: category)
@@ -1966,7 +2002,7 @@ describe Topic do
 
   describe 'recover!' do
     context "its category's topic count" do
-      fab!(:category) { Fabricate(:category) }
+      fab!(:category) { Fabricate(:category_with_definition) }
 
       it "adds 1 if topic is deleted" do
         topic = Fabricate(:topic, category: category, deleted_at: 1.day.ago)
@@ -2195,7 +2231,7 @@ describe Topic do
       end
 
       it 'can not save the featured link if category does not allow it' do
-        topic.category = Fabricate(:category, topic_featured_link_allowed: false)
+        topic.category = Fabricate(:category_with_definition, topic_featured_link_allowed: false)
         topic.featured_link = 'https://github.com/discourse/discourse'
         expect(topic.save).to be_falsey
       end
@@ -2424,7 +2460,7 @@ describe Topic do
         g.save!
       end
     end
-    let(:category) { Fabricate(:category) }
+    let(:category) { Fabricate(:category_with_definition) }
     let(:topic) { Fabricate(:topic, category: category) }
 
     it "returns a group that is open or accepts membership requests and has access to the topic" do

@@ -16,7 +16,10 @@ export default Ember.Controller.extend(ModalFunctionality, {
 
   @on("init")
   _initPanels() {
-    this.set("panels", []);
+    this.setProperties({
+      panels: [],
+      validators: []
+    });
   },
 
   onShow() {
@@ -75,7 +78,14 @@ export default Ember.Controller.extend(ModalFunctionality, {
   },
 
   actions: {
+    registerValidator(validator) {
+      this.validators.push(validator);
+    },
+
     saveCategory() {
+      if (this.validators.some(validator => validator())) {
+        return;
+      }
       const model = this.model;
       const parentCategory = this.site.categories.findBy(
         "id",

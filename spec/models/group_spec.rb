@@ -716,6 +716,71 @@ describe Group do
 
   end
 
+  describe ".members_visible_groups" do
+
+    def can_view?(user, group)
+      Group.members_visible_groups(user).exists?(id: group.id)
+    end
+
+    it 'correctly restricts group members visibility' do
+      group = Fabricate.build(:group, members_visibility_level: Group.visibility_levels[:owners])
+      logged_on_user = Fabricate(:user)
+      member = Fabricate(:user)
+      group.add(member)
+      group.save!
+
+      owner = Fabricate(:user)
+      group.add_owner(owner)
+
+      moderator = Fabricate(:user, moderator: true)
+      admin = Fabricate(:user, admin: true)
+
+      expect(can_view?(admin, group)).to eq(true)
+      expect(can_view?(owner, group)).to eq(true)
+      expect(can_view?(moderator, group)).to eq(false)
+      expect(can_view?(member, group)).to eq(false)
+      expect(can_view?(logged_on_user, group)).to eq(false)
+      expect(can_view?(nil, group)).to eq(false)
+
+      group.update_columns(members_visibility_level: Group.visibility_levels[:staff])
+
+      expect(can_view?(admin, group)).to eq(true)
+      expect(can_view?(owner, group)).to eq(true)
+      expect(can_view?(moderator, group)).to eq(true)
+      expect(can_view?(member, group)).to eq(false)
+      expect(can_view?(logged_on_user, group)).to eq(false)
+      expect(can_view?(nil, group)).to eq(false)
+
+      group.update_columns(members_visibility_level: Group.visibility_levels[:members])
+
+      expect(can_view?(admin, group)).to eq(true)
+      expect(can_view?(owner, group)).to eq(true)
+      expect(can_view?(moderator, group)).to eq(false)
+      expect(can_view?(member, group)).to eq(true)
+      expect(can_view?(logged_on_user, group)).to eq(false)
+      expect(can_view?(nil, group)).to eq(false)
+
+      group.update_columns(members_visibility_level: Group.visibility_levels[:public])
+
+      expect(can_view?(admin, group)).to eq(true)
+      expect(can_view?(owner, group)).to eq(true)
+      expect(can_view?(moderator, group)).to eq(true)
+      expect(can_view?(member, group)).to eq(true)
+      expect(can_view?(logged_on_user, group)).to eq(true)
+      expect(can_view?(nil, group)).to eq(true)
+
+      group.update_columns(members_visibility_level: Group.visibility_levels[:logged_on_users])
+
+      expect(can_view?(admin, group)).to eq(true)
+      expect(can_view?(owner, group)).to eq(true)
+      expect(can_view?(moderator, group)).to eq(true)
+      expect(can_view?(member, group)).to eq(true)
+      expect(can_view?(logged_on_user, group)).to eq(true)
+      expect(can_view?(nil, group)).to eq(false)
+    end
+
+  end
+
   describe '#remove' do
     before { group.add(user) }
 
@@ -764,6 +829,14 @@ describe Group do
         user.reload
       }.to change { user.primary_group }.from(group).to(new_group)
         .and change { user.title }.from('AAAA').to('BBBB')
+    end
+
+    it "can send a notification to the user" do
+      expect { group.add(user, notify: true) }.to change { Notification.count }.by(1)
+
+      notification = Notification.last
+      expect(notification.notification_type).to eq(Notification.types[:membership_request_accepted])
+      expect(notification.user_id).to eq(user.id)
     end
 
     context 'when adding a user into a public group' do

@@ -79,7 +79,7 @@ export function reopenWidget(name, opts) {
   Object.keys(opts).forEach(k => {
     let old = existing.prototype[k];
 
-    if (old) {
+    if (old instanceof Function) {
       // Add support for `this._super()` to reopened widgets if the prototype exists in the
       // base object
       existing.prototype[k] = function(...args) {

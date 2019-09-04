@@ -220,6 +220,7 @@ export default Ember.Component.extend({
   _mouseTrap: null,
   showLink: true,
   emojiPickerIsActive: false,
+  emojiStore: Ember.inject.service("emoji-store"),
 
   @computed("placeholder")
   placeholderTranslated(placeholder) {
@@ -231,7 +232,7 @@ export default Ember.Component.extend({
     this.set("ready", true);
 
     if (this.autofocus) {
-      this.$("textarea").focus();
+      this.element.querySelector("textarea").focus();
     }
   },
 
@@ -244,13 +245,13 @@ export default Ember.Component.extend({
   didInsertElement() {
     this._super(...arguments);
 
-    const $editorInput = this.$(".d-editor-input");
+    const $editorInput = $(this.element.querySelector(".d-editor-input"));
     this._applyEmojiAutocomplete($editorInput);
     this._applyCategoryHashtagAutocomplete($editorInput);
 
     Ember.run.scheduleOnce("afterRender", this, this._readyNow);
 
-    const mouseTrap = Mousetrap(this.$(".d-editor-input")[0]);
+    const mouseTrap = Mousetrap(this.element.querySelector(".d-editor-input"));
     const shortcuts = this.get("toolbar.shortcuts");
 
     Object.keys(shortcuts).forEach(sc => {
@@ -262,28 +263,31 @@ export default Ember.Component.extend({
     });
 
     // disable clicking on links in the preview
-    this.$(".d-editor-preview").on("click.preview", e => {
-      if (wantsNewWindow(e)) {
-        return;
+    $(this.element.querySelector(".d-editor-preview")).on(
+      "click.preview",
+      e => {
+        if (wantsNewWindow(e)) {
+          return;
+        }
+        const $target = $(e.target);
+        if ($target.is("a.mention")) {
+          this.appEvents.trigger(
+            "click.discourse-preview-user-card-mention",
+            $target
+          );
+        }
+        if ($target.is("a.mention-group")) {
+          this.appEvents.trigger(
+            "click.discourse-preview-group-card-mention-group",
+            $target
+          );
+        }
+        if ($target.is("a")) {
+          e.preventDefault();
+          return false;
+        }
       }
-      const $target = $(e.target);
-      if ($target.is("a.mention")) {
-        this.appEvents.trigger(
-          "click.discourse-preview-user-card-mention",
-          $target
-        );
-      }
-      if ($target.is("a.mention-group")) {
-        this.appEvents.trigger(
-          "click.discourse-preview-group-card-mention-group",
-          $target
-        );
-      }
-      if ($target.is("a")) {
-        e.preventDefault();
-        return false;
-      }
-    });
+    );
 
     if (this.composerEvents) {
       this.appEvents.on("composer:insert-block", this, "_insertBlock");
@@ -313,7 +317,7 @@ export default Ember.Component.extend({
     Object.keys(this.get("toolbar.shortcuts")).forEach(sc =>
       mouseTrap.unbind(sc)
     );
-    this.$(".d-editor-preview").off("click.preview");
+    $(this.element.querySelector(".d-editor-preview")).off("click.preview");
   },
 
   @computed
@@ -348,7 +352,7 @@ export default Ember.Component.extend({
         if (this._state !== "inDOM") {
           return;
         }
-        const $preview = this.$(".d-editor-preview");
+        const $preview = $(this.element.querySelector(".d-editor-preview"));
         if ($preview.length === 0) return;
 
         if (this.previewUpdated) {
@@ -375,7 +379,7 @@ export default Ember.Component.extend({
   _applyCategoryHashtagAutocomplete() {
     const siteSettings = this.siteSettings;
 
-    this.$(".d-editor-input").autocomplete({
+    $(this.element.querySelector(".d-editor-input")).autocomplete({
       template: findRawTemplate("category-tag-autocomplete"),
       key: "#",
       afterComplete: () => this._focusTextArea(),
@@ -419,6 +423,7 @@ export default Ember.Component.extend({
 
       transformComplete: v => {
         if (v.code) {
+          this.emojiStore.track(v.code);
           return `${v.code}:`;
         } else {
           $editorInput.autocomplete({ cancel: true });
@@ -455,7 +460,17 @@ export default Ember.Component.extend({
           }
 
           if (term === "") {
-            return resolve(["slight_smile", "smile", "wink", "sunny", "blush"]);
+            if (this.emojiStore.favorites.length) {
+              return resolve(this.emojiStore.favorites.slice(0, 5));
+            } else {
+              return resolve([
+                "slight_smile",
+                "smile",
+                "wink",
+                "sunny",
+                "blush"
+              ]);
+            }
           }
 
           if (translations[full]) {
@@ -500,7 +515,7 @@ export default Ember.Component.extend({
       return;
     }
 
-    const textarea = this.$("textarea.d-editor-input")[0];
+    const textarea = this.element.querySelector("textarea.d-editor-input");
     const value = textarea.value;
     let start = textarea.selectionStart;
     let end = textarea.selectionEnd;
@@ -533,8 +548,8 @@ export default Ember.Component.extend({
 
   _selectText(from, length) {
     Ember.run.scheduleOnce("afterRender", () => {
-      const $textarea = this.$("textarea.d-editor-input");
-      const textarea = $textarea[0];
+      const textarea = this.element.querySelector("textarea.d-editor-input");
+      const $textarea = $(textarea);
       const oldScrollPos = $textarea.scrollTop();
       if (!this.capabilities.isIOS || safariHacksDisabled()) {
         $textarea.focus();
@@ -687,7 +702,7 @@ export default Ember.Component.extend({
       return;
     }
 
-    const textarea = this.$("textarea.d-editor-input")[0];
+    const textarea = this.element.querySelector("textarea.d-editor-input");
 
     // Determine post-replace selection.
     const newSelection = determinePostReplaceSelection({
@@ -737,7 +752,7 @@ export default Ember.Component.extend({
     }
 
     const value = pre + text + post;
-    const $textarea = this.$("textarea.d-editor-input");
+    const $textarea = $(this.element.querySelector("textarea.d-editor-input"));
 
     this.set("value", value);
 
@@ -749,7 +764,7 @@ export default Ember.Component.extend({
   },
 
   _addText(sel, text, options) {
-    const $textarea = this.$("textarea.d-editor-input");
+    const $textarea = $(this.element.querySelector("textarea.d-editor-input"));
 
     if (options && options.ensureSpace) {
       if ((sel.pre + "").length > 0) {
@@ -870,8 +885,11 @@ export default Ember.Component.extend({
 
   // ensures textarea scroll position is correct
   _focusTextArea() {
-    const $textarea = this.$("textarea.d-editor-input");
-    Ember.run.scheduleOnce("afterRender", () => $textarea.blur().focus());
+    const textarea = this.element.querySelector("textarea.d-editor-input");
+    Ember.run.scheduleOnce("afterRender", () => {
+      textarea.blur();
+      textarea.focus();
+    });
   },
 
   actions: {

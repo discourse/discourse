@@ -225,6 +225,7 @@ fr:
       other: "{{count}} caractères"
     related_messages:
       title: "Messages Connexes"
+      see_all: 'Voir <a href="%{path}">tous les messages</a> de @%{username}...'
     suggested_topics:
       title: "À lire ensuite"
       pm_title: "À lire ensuite"
@@ -234,6 +235,7 @@ fr:
       stats: "Statistiques du site"
       our_admins: "Nos administrateurs"
       our_moderators: "Nos modérateurs"
+      moderators: "Modérateurs"
       stat:
         all_time: "Depuis toujours"
         last_7_days: "Derniers 7"
@@ -297,6 +299,8 @@ fr:
     banner:
       close: "Ignorer cette bannière."
       edit: "Modifier cette bannière >>"
+    pwa:
+      install_banner: "Voulez-vous <a href>installer %{title} sur cet appareil?</a>"
     choose_topic:
       none_found: "Aucun sujet trouvé."
       title:
@@ -581,6 +585,7 @@ fr:
         remove_owner: "Enlever comme propriétaire"
         remove_owner_description: "Enlever <b>%{username}</b> comme propriétaire de ce groupe"
         owner: "Propriétaire"
+        forbidden: "Vous n'êtes pas autorisé à voir les membres."
       topics: "Sujets"
       posts: "Messages"
       mentions: "Mentions"
@@ -593,6 +598,7 @@ fr:
         only_admins: "Seulement les administrateurs "
         mods_and_admins: "Seulement les modérateurs et les administrateurs "
         members_mods_and_admins: "Seulement les membres du groupe, les modérateurs et les administrateurs "
+        owners_mods_and_admins: "Seuls les propriétaires, modérateurs et administrateurs du groupe"
         everyone: "Tout le monde"
       notifications:
         watching:
@@ -851,6 +857,7 @@ fr:
         copy_to_clipboard_error: "Erreur en copiant les données dans le presse-papiers"
         remaining_codes: "Vous avez <strong>{{count}}</strong> codes de secours restants."
         use: "<a href>Utiliser un code de sauvegarde</a>"
+        enable_prerequisites: "Vous devez activer un second facteur principal avant de générer des codes de sauvegarde."
         codes:
           title: "Codes de secours générés"
           description: "Chaque code de secours ne peut être utilisé qu'une seule fois. Garder les dans un endroit sûr mais accessible."
@@ -871,7 +878,15 @@ fr:
         use: "<a href>Utiliser l'application Authenticator</a>"
         enforced_notice: "Vous devez activer l'authentification à deux facteurs pour accéder à ce site."
         disable: "désactiver"
+        disable_title: "Désactiver le second facteur"
+        disable_confirm: "Êtes-vous sûr de vouloir désactiver tous les facteurs secondaires ?"
         edit: "Modifier"
+        edit_title: "Modifier le second facteur"
+        edit_description: "Nom du second facteur"
+        totp:
+          title: "Authentificateurs à base de jetons"
+          add: "Nouveau Authentificateur"
+          default_name: "Mon Authentificateur"
       change_about:
         title: "Modifier À propos de moi"
         error: "Il y a eu une erreur lors de la modification de cette valeur."
@@ -896,7 +911,6 @@ fr:
         uploaded_avatar: "Avatar personnalisé"
         uploaded_avatar_empty: "Ajouter un avatar personnalisé"
         upload_title: "Envoyer votre avatar"
-        upload_picture: "Envoyer une image"
         image_is_not_a_square: "Attention : nous avons découpé votre image ; la largeur et la hauteur n'étaient pas égales."
       change_profile_background:
         title: "Arrière-plan du profil"
@@ -922,7 +936,12 @@ fr:
         title: "Comptes associés"
         connect: "Connecter"
         revoke: "Révoquer"
+        cancel: "Annuler"
         not_connected: "(non connecté)"
+        confirm_modal_title: "Connectez le compte %{provider}"
+        confirm_description:
+          account_specific: "Votre compte %{provider} &#39;%{account_description}&#39; sera utilisé pour l&#39;authentification."
+          generic: "Votre compte %{provider} sera utilisé pour l&#39;authentification."
       name:
         title: "Nom d'utilisateur"
         instructions: "votre nom complet (facultatif)"
@@ -1172,6 +1191,9 @@ fr:
       enabled: "Le site est en mode lecture seule. Vous pouvez continer à naviguer, mais les réponses, J'aime et autre interactions sont désactivées pour l'instant."
       login_disabled: "La connexion est désactivée quand le site est en lecture seule."
       logout_disabled: "La déconnexion est désactivée quand le site est en lecture seule."
+    too_few_topics_and_posts_notice: "<a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>Commençons la discussion!</a> Il y a <strong>%{currentTopics} / %{requiredTopics}</strong> sujets et <strong>%{currentPosts} / %{requiredPosts}</strong> messages - les visiteurs ont besoin de plus à consulter et répondre. Seul le personnel peut voir ce message."
+    too_few_topics_notice: "<a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>Commençons la discussion!</a> Il y a <strong>%{currentTopics} / %{requiredTopics}</strong> sujets - les visiteurs ont besoin de plus à lire pour répondre. Seul le personnel peut voir ce message."
+    too_few_posts_notice: "<a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>Commençons la discussion!</a> Il y a <strong>%{currentPosts} / %{requiredPosts}</strong> messages - les visiteurs ont besoin de plus à lire pour répondre. Seul le personnel peut voir ce message."
     logs_error_rate_notice:
       reached_hour_MF: "{relativeAge} – {rate, plural, one {# erreur/heure} other {# erreurs/heure}} arrive à la limite paramétrée de {limit, plural, one {# erreur/heure} other {# erreurs/heure}}."
       reached_minute_MF: "{relativeAge} – {rate, plural, one {# erreur/minute} other {# erreurs/minute}} arrive à la limite paramétrée de {limit, plural, one {# erreur/minute} other {# erreurs/minute}}."
@@ -1259,6 +1281,8 @@ fr:
       complete_username_not_found: "Aucun compte ne correspond au pseudo <b>%{username}</b>"
       complete_email_not_found: "Aucun compte ne correspond à <b>%{email}</b>"
       confirm_title: "Continuer vers %{site_name}"
+      logging_in_as: "Connexion en tant que %{email}"
+      confirm_button: Complétez la connexion
     login:
       title: "Se connecter"
       username: "Utilisateur"
@@ -1318,6 +1342,8 @@ fr:
         name: "GitHub"
         title: "via GitHub"
         message: "Authentification via GitHub (assurez-vous que les popups ne soient pas bloquées)"
+      discord:
+        name: "Discord"
     invites:
       accept_title: "Invitation"
       welcome_to: "Bienvenue sur %{site_name} !"
@@ -1367,6 +1393,11 @@ fr:
       min_content_not_reached:
         one: "Séléctionner au moins {{count}} élément."
         other: "Séléctionner au moins {{count}} éléments."
+    date_time_picker:
+      from: From
+      to: À
+      errors:
+        to_before_from: "La date de fin doit être postérieure à celle de début."
     emoji_picker:
       filter_placeholder: Chercher un emoji
       smileys_&_emotion: Frimousses et Émotions
@@ -1416,6 +1447,7 @@ fr:
         category: "Vous avez mentionné {{username}} mais il ne sera pas notifié car il n'a pas accès à cette catégorie. Vous devez ajouter cet utilisateur à un groupe ayant accès à cette catégorie."
         private: "Vous avez mentionné {{username}} mais il ne sera pas notifié car il ne peut pas voir ce message direct. Vous devez inviter cet utilisateur à la discussion."
       duplicate_link: "Il semblerait que votre lien vers <b>{{domain}}</b> a déjà été publié dans le sujet par <b>@{{username}}</b> dans <a href='{{post_url}}'>une réponse de {{ago}}</a> – êtes vous sûr de vouloir le publier à nouveau ?"
+      reference_topic_title: "RE: {{title}}"
       error:
         title_missing: "Le titre est obligatoire."
         title_too_short: "Le titre doit avoir au moins {{min}} caractères"
@@ -1555,6 +1587,7 @@ fr:
       granted_badge: "Vous avez gagné « {{description}} »"
       topic_reminder: "<span>{{username}}</span> {{description}}"
       watching_first_post: "<span>Nouveau sujet</span> {{description}}"
+      membership_request_accepted: "Adhésion acceptée dans '{{group_name}}'"
       group_message_summary:
         one: "{{count}} message dans la boîte de réception de {{group_name}}"
         other: "{{count}} messages dans la boîte de réception de {{group_name}}"
@@ -1794,6 +1827,9 @@ fr:
       toggle_information: "basculer affichage des détails de ce sujet"
       read_more_in_category: "Vous voulez en lire plus ? Découvrez d'autres sujets dans {{catLink}} ou {{latestLink}}."
       read_more: "Vous voulez en lire plus ? {{catLink}} ou {{latestLink}}."
+      group_request: "Effectuez une demande d'adhésion au groupe `{{name}}` pour afficher ce sujet."
+      group_join: "Vous devez rejoindre le groupe `{{name}}` pour voir ce sujet"
+      group_request_sent: "Votre demande d'adhésion au groupe a été envoyée. Vous serez averti de son acceptation."
       read_more_MF: "Il y { UNREAD, plural, =0 {} one { a <a href='{basePath}/unread'>1 sujet non lu</a> } other { a <a href='{basePath}/unread'># sujets non lus</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{et } false {a } other{}} <a href='{basePath}/new'>1 nouveau sujet</a> } other { {BOTH, select, true{et } false {a } other{}} <a href='{basePath}/new'># nouveaux sujets</a> } } restant, ou {CATEGORY, select, true {consulter les autres sujets dans {catLink}} false {{latestLink}} other {}}"
       browse_all_categories: Voir toutes les catégories
       view_latest_topics: voir les derniers sujets
@@ -1960,6 +1996,9 @@ fr:
         title: "Signaler"
         help: "signaler secrètement ce sujet pour attirer l'attention ou envoyer une notification privée à son propos."
         success_message: "Vous avez signalé ce sujet avec succès."
+      make_public:
+        title: "Convertir en sujet public"
+        choose_category: "Veuillez choisir une catégorie pour le sujet public :"
       feature_topic:
         title: "Mettre ce sujet en évidence"
         pin: "Faire apparaître ce sujet en haut de la catégorie {{categoryLink}} jusqu'à"
@@ -2151,6 +2190,7 @@ fr:
       abandon:
         confirm: "Êtes-vous sûr de vouloir abandonner votre message ?"
         no_value: "Non, le conserver"
+        no_save_draft: "Non, enregistrer le brouillon"
         yes_value: "Oui, abandonner"
       via_email: "ce message est arrivé par courriel"
       via_auto_generated_email: "ce message est arrivé via un courriel généré automatiquement"
@@ -2164,6 +2204,7 @@ fr:
         reply: "commencez à répondre à ce message"
         like: "J'aime ce message"
         has_liked: "vous avez aimé ce message"
+        read_indicator: "Membres ayant lu cette publication"
         undo_like: "annuler le J'aime"
         edit: "modifier ce message"
         edit_action: "Modifier"
@@ -2200,6 +2241,7 @@ fr:
         delete_topic: "supprimer le sujet"
         add_post_notice: "Ajouter note pour responsables"
         remove_post_notice: "Retirer le note pour responsables"
+        remove_timer: "retirer le compteur"
       actions:
         flag: "Signaler"
         defer_flags:
@@ -2219,6 +2261,7 @@ fr:
           notify_user: "a envoyé un message"
           bookmark: "signet ajouté"
           like: "a aimé ceci"
+          read: "Lisez ceci"
           like_capped:
             one: "et {{count}} autre a aimé ça"
             other: "et {{count}} autres ont aimé ça"
@@ -2319,6 +2362,7 @@ fr:
       special_warning: "Avertissement : cette catégorie est une catégorie pré-remplie et les réglages de sécurité ne peuvent pas être modifiés. Si vous ne souhaitez pas utiliser cette catégorie, supprimez là au lieu de détourner sa fonction."
       uncategorized_security_warning: "Cette catégorie est spéciale. Elle sert de zone d'attente pour les sujets qui n'ont pas de catégorie ; vous ne pouvez pas changer ses paramètres de sécurité."
       uncategorized_general_warning: 'Cette catégorie est spéciale. Elle sert de catégorie par défaut pour les nouveaux sujets qui ne sont pas liés à une catégorie. Si vous souhaitez changer cela et forcer la sélection de catégorie, <a href="%{settingLink}">veuillez désactiver ce paramètre</a>. Si vous voulez modifier son nom ou sa description, allez dans <a href="%{customizeLink}">Personnaliser / Contenu</a>.'
+      pending_permission_change_alert: "Vous n&#39;avez pas ajouté %{group} à cette catégorie; cliquez sur ce bouton pour les ajouter."
       images: "Images"
       email_in: "Adresse de courriel entrant personnalisée :"
       email_in_allow_strangers: "Accepter les courriels d'utilisateurs anonymes sans compte"
@@ -2466,6 +2510,8 @@ fr:
         help: "Ce sujet est épinglé pour vous ; il s'affichera en haut de sa catégorie"
       unlisted:
         help: "Ce sujet n'apparait plus dans la liste des sujets et sera seulement accessible via un lien direct"
+      personal_message:
+        title: "Ce sujet est un message personnel"
     posts: "Messages"
     posts_long: "il y a {{number}} messages dans ce sujet"
     posts_likes_MF: |2
@@ -2613,6 +2659,7 @@ fr:
         up_down: "%{shortcut} Déplacer la sélection &uarr; &darr;"
         open: "%{shortcut} Ouvrir le sujet sélectionné"
         next_prev: "%{shortcut} Section suivante/précédente"
+        go_to_unread_post: "%{shortcut} Voir le premier message non lu"
       application:
         title: "Application"
         create: "%{shortcut} Créer un nouveau sujet"
@@ -2649,6 +2696,7 @@ fr:
         mark_tracking: "%{shortcut} Suivre le sujet"
         mark_watching: "%{shortcut} Surveiller le sujet"
         print: "%{shortcut} Imprimer le sujet"
+        defer: "%{shortcut} Reporter le sujet"
     badges:
       earned_n_times:
         one: "A reçu ce badge %{count} fois"
@@ -2757,6 +2805,7 @@ fr:
         about: "Ajouter des étiquettes aux groupes pour les gérer plus facilement."
         new: "Nouveau groupe"
         tags_label: "Étiquettes dans ce groupe :"
+        tags_placeholder: "Mots clés"
         parent_tag_label: "Étiquette parent :"
         parent_tag_placeholder: "Facultatif"
         parent_tag_description: "Les étiquette de ce groupe ne peuvent pas être utilisées sauf si l'étiquette parent est présente."
@@ -2872,8 +2921,8 @@ fr:
           view_table: "tableau"
           view_graph: "graphique"
           refresh_report: "Actualiser le rapport"
-          start_date: "Date de début"
-          end_date: "Date de fin"
+          start_date: "Date de début (UTC)"
+          end_date: "Date de fin (UTC)"
           groups: "Tous les groupes"
           disabled: "Ce rapport est désactivé"
           totals_for_sample: "Totaux pour l'échantillon"
@@ -2919,7 +2968,13 @@ fr:
             visibility_levels:
               title: "Qui peut voir ce groupe ?"
               public: "Tout le monde"
+              logged_on_users: "Utilisateurs connectés"
+              members: "Propriétaires du groupe, membres"
               staff: "Propriétaires du groupe et responsables"
+              owners: "Propriétaires du groupe"
+              description: "Les administrateurs peuvent voir tous les groupes."
+            members_visibility_levels:
+              description: "Les administrateurs peuvent voir les membres de tous les groupes."
           membership:
             automatic: Automatique
             trust_level: Niveau de confiance
@@ -3024,6 +3079,9 @@ fr:
         reviewable_event:
           name: "Evènement vérifiable"
           details: "Quand un nouvel élément est prêt à être vérifié et quand son état est mis à jour."
+        notification_event:
+          name: "Notification d'Événement"
+          details: "Lorsqu&#39;un utilisateur reçoit une notification dans son flux."
         delivery_status:
           title: "État de l'envoi"
           inactive: "Inactif"
@@ -3159,7 +3217,7 @@ fr:
         copy_to_clipboard_error: "Erreur en copiant les données dans le presse-papiers"
         theme_owner: "Non modifiable, appartient à :"
         email_templates:
-          title: "Modèle de courriel"
+          title: "Courriel"
           subject: "Objet"
           multiple_subjects: "Ce modèle de courriel a plusieurs objets."
           body: "Corps"
@@ -3210,6 +3268,7 @@ fr:
           inactive_themes: "Thèmes inactifs : "
           inactive_components: "Composants non-utilisés :"
           broken_theme_tooltip: "Ce thème comporte des erreurs de CSS, HTML ou YAML"
+          disabled_component_tooltip: "Ce composant a été désactivé"
           default_theme_tooltip: "Ce thème est celui par défaut du site"
           updates_available_tooltip: "Des mises à jour sont disponibles pour ce thème"
           and_x_more: "et {{count}} en plus."
@@ -3235,7 +3294,7 @@ fr:
           delete_upload_confirm: "Supprimer cet upload ? (Le thème CSS pourrait ne plus fonctionner !)"
           import_web_tip: "Dépôt contenant le thème"
           import_web_advanced: "Avancé..."
-          import_file_tip: "Fichier .tar.gz ou .dcstyle.json contenant le thème"
+          import_file_tip: "Fichier .tar.gz, .zip ou .dcstyle.json contenant le thème"
           is_private: "Le thème est dans un dépôt git privé"
           remote_branch: "Nom de branche (optionnel)"
           public_key: "Accorder un accès dépôt à la clef publique suivante :"
@@ -3252,6 +3311,8 @@ fr:
           source_url: "Source"
           enable: "Activer"
           disable: "Désactiver"
+          disabled: "Ce composant a été désactivé."
+          disabled_by: "Ce composant a été désactivé par"
           required_version:
             error: "Ce thème a été désactivé automatiquement car il n'est pas compatible avec cette version de Discourse."
             minimum: "Nécessite version {{version}} ou supérieur de Discourse."
@@ -3341,6 +3402,19 @@ fr:
           love:
             name: "aimer"
             description: "La couleur du bouton J'aime."
+        robots:
+          title: "Remplacez le fichier robots.txt de votre site :"
+          warning: "Cela remplacera définitivement tous les paramètres de sites associés."
+          overridden: Le fichier robots.txt par défaut de votre site est remplacé.
+        email_style:
+          title: "Style du courriel"
+          heading: "Personnaliser le style du courriel"
+          html: "Modèle HTML"
+          css: "CSS"
+          reset: "Réinitialiser aux valeurs par défaut"
+          reset_confirm: "Êtes-vous sûr de vouloir rétablir la valeur par défaut %{fieldName} et perdre toutes vos modifications ?"
+          save_error_with_reason: "Vos modifications n'ont pas été enregistrées. %{error}"
+          instructions: "Personnalisez le modèle dans lequel tous les courriels HTML sont générés et stylés à l'aide de CSS."
       email:
         title: "Courriels"
         settings: "Paramètrage"
@@ -3523,6 +3597,9 @@ fr:
             embeddable_host_create: "créer hôte intégré"
             embeddable_host_update: "mettre à jour hôte intégré"
             embeddable_host_destroy: "détruire hôte intégré"
+            change_theme_setting: "changer le réglage du thème"
+            disable_theme_component: "désactiver le composant de thème"
+            enable_theme_component: "activer le composant de thème"
         screened_emails:
           title: "Courriels sous surveillance"
           description: "Lorsque quelqu'un essaye de créer un nouveau compte, les adresses de courriel suivantes seront vérifiées et l'inscription sera bloquée, ou une autre action sera réalisée."
@@ -3571,6 +3648,13 @@ fr:
         search: "recherche"
         clear_filter: "Vider"
         show_words: "Afficher les mots"
+        one_word_per_line: "Un mot par ligne"
+        download: Télécharger
+        clear_all: Tout désélectionner
+        clear_all_confirm_block: "Êtes-vous sûr de vouloir effacer tous les mots observés pour l'action Bloquer ?"
+        clear_all_confirm_censor: "Etes-vous sûr de vouloir effacer tous les mots observés pour l'action Censeur ?"
+        clear_all_confirm_flag: "Etes-vous sûr de vouloir effacer tous les mots observés pour l'action Drapeau ?"
+        clear_all_confirm_require_approval: "Êtes-vous sûr de vouloir effacer tous les mots observés pour l'action Requérir une approbation ?"
         word_count:
           one: "%{count} mot"
           other: "%{count} mots"
@@ -3591,8 +3675,14 @@ fr:
           add: "Ajouter"
           success: "Succès"
           exists: "Existe déjà"
-          upload: "Envoyer"
+          upload: "Ajouter depuis un fichier"
           upload_successful: "Envoi réussi. Les mots ont été ajoutés."
+        test:
+          button_label: "Test"
+          modal_title: "Test Mot observé '%{action}'"
+          description: "Entrez le texte ci-dessous pour vérifier les correspondances avec les mots surveillés"
+          found_matches: "Correspondances trouvées :"
+          no_matches: "Aucune correspondance trouvée"
       impersonate:
         title: "Incarner"
         help: "Utiliser cet outil pour incarner un compte utilisateur à des fins de tests.\nVous devrez vous déconnecter une fois terminé."
@@ -3787,8 +3877,8 @@ fr:
           likes_received: "J'aime reçus"
           likes_received_days: "J'aime reçus : par jour"
           likes_received_users: "J'aime reçus : par utilisateur"
-          suspended: "Suspendu (pour toujours)"
-          silenced: "Mis sous silence (pour toujours)"
+          suspended: "Suspendu (6 derniers mois)"
+          silenced: "Mis sous silence (6 derniers mois)"
           qualifies: "Admissible au niveau de confiance 3."
           does_not_qualify: "Non admissible au niveau de confiance 3."
           will_be_promoted: "Sera bientôt promu."
@@ -3840,7 +3930,7 @@ fr:
       site_text:
         description: "Vous pouvez personnaliser n'importe quel texte de votre forum. Commencez en utilisant la recherche ci-dessous :"
         search: "Cherchez le texte que vous souhaitez modifier"
-        title: "Contenu"
+        title: "Texte"
         edit: "modifier"
         revert: "Annuler les changements"
         revert_confirm: "Êtes-vous sûr de vouloir annuler vos changements ?"
@@ -3935,7 +4025,7 @@ fr:
         enabled: Activer le badge
         icon: Icône
         image: Image
-        icon_help: "Utiliser une classe de Font Awesome"
+        icon_help: "Entrez un nom d'icône Font Awesome (utilisez le préfixe 'far-' pour les icônes classiques et 'fab-' pour les icônes de la marque)"
         image_help: "Entrez l'URL de l'image (remplace le champ de l'icône si les deux sont définis)"
         query: Requête du badge (SQL)
         target_posts: Requête sur les messages

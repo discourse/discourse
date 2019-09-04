@@ -21,7 +21,7 @@ widgetTest("notifications", {
   test(assert) {
     const $links = find(".notifications li a");
 
-    assert.equal($links.length, 2);
+    assert.equal($links.length, 5);
     assert.ok($links[0].href.includes("/t/a-slug/123"));
 
     assert.ok(
@@ -35,6 +35,32 @@ widgetTest("notifications", {
       `aquaman ${I18n.t("notifications.liked_consolidated_description", {
         count: 5
       })}`
+    );
+
+    assert.ok($links[2].href.includes("/u/test2/messages/group/test"));
+    assert.ok(
+      $links[2].innerHTML.includes(
+        I18n.t("notifications.group_message_summary", {
+          count: 5,
+          group_name: "test"
+        })
+      )
+    );
+
+    assert.ok($links[3].href.includes("/u/test1"));
+    assert.ok(
+      $links[3].innerHTML.includes(
+        I18n.t("notifications.invitee_accepted", { username: "test1" })
+      )
+    );
+
+    assert.ok($links[4].href.includes("/g/test"));
+    assert.ok(
+      $links[4].innerHTML.includes(
+        I18n.t("notifications.membership_request_accepted", {
+          group_name: "test"
+        })
+      )
     );
   }
 });

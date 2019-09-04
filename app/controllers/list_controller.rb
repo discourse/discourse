@@ -1,9 +1,11 @@
 # frozen_string_literal: true
 
 require_dependency 'topic_list_responder'
+require_dependency 'topic_query_params'
 
 class ListController < ApplicationController
   include TopicListResponder
+  include TopicQueryParams
 
   skip_before_action :check_xhr
 
@@ -161,6 +163,7 @@ class ListController < ApplicationController
     group = Group.find_by(name: params[:group_name])
     raise Discourse::NotFound unless group
     guardian.ensure_can_see_group!(group)
+    guardian.ensure_can_see_group_members!(group)
 
     list_opts = build_topic_list_options
     list = generate_list_for("group_topics", group, list_opts)
@@ -373,28 +376,6 @@ class ListController < ApplicationController
     if use_crawler_layout?
       @subcategories = @category.subcategories.select { |c| guardian.can_see?(c) }
     end
-  end
-
-  def build_topic_list_options
-    options = {}
-    params[:tags] = [params[:tag_id].parameterize] if params[:tag_id].present? && guardian.can_tag_pms?
-
-    TopicQuery.public_valid_options.each do |key|
-      if params.key?(key)
-        val = options[key] = params[key]
-        if !TopicQuery.validate?(key, val)
-          raise Discourse::InvalidParameters.new key
-        end
-      end
-    end
-
-    # hacky columns get special handling
-    options[:topic_ids] = param_to_integer_list(:topic_ids)
-    if options[:no_subcategories] == 'true'
-      options[:no_subcategories] = true
-    end
-
-    options
   end
 
   def list_target_user

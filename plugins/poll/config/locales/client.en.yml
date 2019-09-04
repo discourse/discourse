@@ -35,6 +35,8 @@ en:
           title: "Results will be shown on <strong>vote</strong>."
         closed:
           title: "Results will be shown once <strong>closed</strong>."
+        staff:
+          title: "Results are only shown to <strong>staff</strong> members."
 
       multiple:
         help:
@@ -96,6 +98,7 @@ en:
           always: Always visible
           vote: On vote
           closed: When closed
+          staff: Staff only
         poll_config:
           max: Max
           min: Min

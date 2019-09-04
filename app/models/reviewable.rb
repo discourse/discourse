@@ -38,7 +38,15 @@ class Reviewable < ActiveRecord::Base
 
   after_commit(on: :create) do
     DiscourseEvent.trigger(:reviewable_created, self)
+  end
+
+  after_commit(on: [:create, :update]) do
     Jobs.enqueue(:notify_reviewable, reviewable_id: self.id) if pending?
+  end
+
+  # Can be used if several actions are equivalent
+  def self.action_aliases
+    {}
   end
 
   # The gaps are in case we want more precision in the future
@@ -183,7 +191,7 @@ class Reviewable < ActiveRecord::Base
     end
   end
 
-  def self.sensitivity_score(sensitivity, scale: 1.0)
+  def self.sensitivity_score_value(sensitivity, scale)
     return Float::MAX if sensitivity == 0
 
     ratio = sensitivity / Reviewable.sensitivity[:low].to_f
@@ -192,6 +200,13 @@ class Reviewable < ActiveRecord::Base
 
     # We want this to be hard to reach
     (high.to_f * ratio) * scale
+  end
+
+  def self.sensitivity_score(sensitivity, scale: 1.0)
+    # If the score is less than the default visibility, bring it up to that level.
+    # Otherwise we have the confusing situation where a post might be hidden and
+    # moderators would never see it!
+    [sensitivity_score_value(sensitivity, scale), min_score_for_priority].max
   end
 
   def self.score_to_auto_close_topic
@@ -283,11 +298,15 @@ class Reviewable < ActiveRecord::Base
   def perform(performed_by, action_id, args = nil)
     args ||= {}
 
+    # Support this action or any aliases
+    aliases = self.class.action_aliases
+    valid = [ action_id, aliases.to_a.select { |k, v| v == action_id }.map(&:first) ].flatten
+
     # Ensure the user has access to the action
     actions = actions_for(Guardian.new(performed_by), args)
-    raise InvalidAction.new(action_id, self.class) unless actions.has?(action_id)
+    raise InvalidAction.new(action_id, self.class) unless valid.any? { |a| actions.has?(a) }
 
-    perform_method = "perform_#{action_id}".to_sym
+    perform_method = "perform_#{aliases[action_id] || action_id}".to_sym
     raise InvalidAction.new(action_id, self.class) unless respond_to?(perform_method)
 
     result = nil

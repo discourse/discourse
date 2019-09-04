@@ -140,6 +140,7 @@ et:
     permalink: "Püsilink"
     imported_from: "See on kaasnev vestlusteema originaalsisestusele %{link}"
     in_reply_to: "▶ %{username}"
+    created: "Loodud"
   no_mentions_allowed: "Vabandust, sa ei saa teisi kasutajaid mainida."
   too_many_mentions:
     one: "Vabandust, sa tohid postituses vaid üht kasutajat mainida."
@@ -555,6 +556,7 @@ et:
         day: Päev
     post_edits:
       labels:
+        edited_at: Date
         post: Postitus
         author: Autor
         edit_reason: Põhjus
@@ -786,6 +788,7 @@ et:
   login:
     not_approved: "Kontot pole veel kinnitatud. Teid teavitatakse e-post teel, kui sisselogimine on võimaldatud."
     admin_not_allowed_from_ip_address: "Sellelt IP-aadressilt ei saa adminnina sisse logida."
+    omniauth_confirm_button: "Jätka"
     already_logged_in: "Oih, näib, et üritad vastu võtta võõra kasutaja kutset. Kui Sa ei ole kasutaja %{current_user}, logi palun välja ja proovi uuesti."
   admin:
     email:

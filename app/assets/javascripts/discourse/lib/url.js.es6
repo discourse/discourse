@@ -23,7 +23,8 @@ const SERVER_SIDE_ONLY = [
   /\.rss$/,
   /\.json$/,
   /^\/admin\/upgrade$/,
-  /^\/logs($|\/)/
+  /^\/logs($|\/)/,
+  /^\/admin\/logs\/watched_words\/action\/[^\/]+\/download$/
 ];
 
 export function rewritePath(path) {
@@ -405,11 +406,9 @@ const DiscourseURL = Ember.Object.extend({
 
     @property router
   **/
-  router: function() {
+  get router() {
     return Discourse.__container__.lookup("router:main");
-  }
-    .property()
-    .volatile(),
+  },
 
   // Get a controller. Note that currently it uses `__container__` which is not
   // advised but there is no other way to access the router.

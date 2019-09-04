@@ -229,6 +229,12 @@ class FinalDestination
     end
 
     if location
+      redirect_uri = uri(location)
+      if @uri.host == redirect_uri.host && (redirect_uri.path =~ /\/login/ || redirect_uri.path =~ /\/session/)
+        @status = :resolved
+        return @uri
+      end
+
       old_port = @uri.port
       location = "#{location}##{@uri.fragment}" if @preserve_fragment_url && @uri.fragment.present?
       location = "#{@uri.scheme}://#{@uri.host}#{location}" if location[0] == "/"

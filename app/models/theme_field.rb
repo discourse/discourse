@@ -64,7 +64,7 @@ class ThemeField < ActiveRecord::Base
   validates :name, format: { with: /\A[a-z_][a-z0-9_-]*\z/i },
                    if: Proc.new { |field| ThemeField.theme_var_type_ids.include?(field.type_id) }
 
-  BASE_COMPILER_VERSION = 11
+  BASE_COMPILER_VERSION = 12
   DEPENDENT_CONSTANTS = [BASE_COMPILER_VERSION,
                         GlobalSetting.cdn_url]
   COMPILER_VERSION = Digest::SHA1.hexdigest(DEPENDENT_CONSTANTS.join)

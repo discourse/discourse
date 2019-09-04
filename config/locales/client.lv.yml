@@ -121,6 +121,7 @@ lv:
       next_month: "Nākamais mēnesis"
       placeholder: datums
     share:
+      topic_html: 'Temats: <span class="topic-title">%{topicTitle}</span>'
       post: "ieraksts #%{postNumber}"
       close: "aizvērt"
     action_codes:
@@ -196,6 +197,7 @@ lv:
     privacy_policy: "Privātuma politika"
     privacy: "Privātums"
     tos: "Pakalpojuma noteikumi"
+    rules: "Noteikumi"
     mobile_view: "Mobilais skats"
     desktop_view: "Datora skats"
     you: "Tu"
@@ -215,6 +217,8 @@ lv:
       zero: "{{count}} zīmes"
       one: "{{count}} zīme"
       other: "{{count}} zīmes"
+    related_messages:
+      title: "Saistītās ziņas"
     suggested_topics:
       title: "Ieteiktās tēmas"
       pm_title: "Ieteiktās ziņas"
@@ -224,6 +228,7 @@ lv:
       stats: "Vietnes statistika"
       our_admins: "Mūsu administratori"
       our_moderators: "Mūsu moderatori"
+      moderators: "Moderātori"
       stat:
         all_time: "Visi"
       like_count: "Atzinības"
@@ -243,6 +248,7 @@ lv:
       created: "tu esi pievienojies šim ierakstam grāmatzīmi"
       remove: "Noņemt grāmatzīmi"
     drafts:
+      resume: "Turpināt"
       remove: "Atcelt"
       abandon:
         yes_value: "Jā, pamest"
@@ -257,6 +263,7 @@ lv:
     uploaded: "Augšuplādēts!"
     enable: "Ieslēgt"
     disable: "Atslēgt"
+    continue: "Turpināt"
     undo: "Atsaukt"
     revert: "Atgriezt"
     failed: "Neizdevās"
@@ -270,24 +277,37 @@ lv:
       title:
         placeholder: "ierakstiet tēmas nosaukumu šeit"
     review:
+      order_by: "Kārtot pēc"
       delete: "Dzēst"
       settings:
+        saved: "Saglabāts"
         save_changes: "Saglabāt izmaiņas"
         title: "Iestatījumi"
       topic: "Tēma:"
       filtered_user: "Lietotājs"
+      deleted_post: "(ieraksts dzēsts)"
+      deleted_user: "(lietotājs dzēsts)"
       user:
         username: "Lietotājvārds"
         email: "E-pasts"
         name: "Vārds"
+        fields: "Lauki"
       topics:
         topic: "Tēmas"
+        reviewable_count: "Skaits"
+        deleted: "[Temats dzēsts]"
+        original: "(sākotnējais temats)"
       edit: "Labot"
       save: "Saglabāt"
       cancel: "Atcelt"
       filters:
         refresh: "Pārlādēt"
+        status: "Statuss"
         category: "Sadaļa"
+        orders:
+          priority: "Prioritāte"
+      scores:
+        status: "Statuss"
       statuses:
         pending:
           title: "Gaidošie"
@@ -391,8 +411,15 @@ lv:
         title: "Grupas"
         empty: "Nav redzamu grupu."
         automatic: "Automātiski"
+        closed: "Slēgts"
+        public: "Publisks"
+        private: "Privāts"
         automatic_group: Automātiska grupa
         my_groups: "Manas grupas"
+      title:
+        zero: "Grupas"
+        one: "Grupa"
+        other: "Grupas"
       activity: "Aktivitāte"
       members:
         title: "Dalībnieki"
@@ -497,6 +524,9 @@ lv:
       private_messages: "Ziņas"
       user_notifications:
         ignore_duration_username: "Lietotājvārds"
+        ignore_duration_when: "Ilgums:"
+        ignore_duration_save: "Ignorēt"
+        add_ignored_user: "Pievienot..."
         mute_option: "Noklusināts"
         normal_option: "Normāls"
       activity_stream: "Aktivitāte"
@@ -638,7 +668,6 @@ lv:
         uploaded_avatar: "Savs attēls"
         uploaded_avatar_empty: "Pievienot savu attēlu"
         upload_title: "Augšupielādēt savu attēlu"
-        upload_picture: "Augšupielādēt attēlu"
         image_is_not_a_square: "Uzmanību: mēs apgriezām jūsu attēlu; platums un augstums nebija vienādi."
       change_profile_background:
         title: "Profila fons"
@@ -658,6 +687,7 @@ lv:
           other: "Mēs sūtīsim jums e-pastu tikai tad, ja nebūsim jūs redzējuši pēdējo {{count}} minūšu laikā."
       associated_accounts:
         revoke: "Atsaukt"
+        cancel: "Atcelt"
       name:
         title: "Vārds"
         instructions: "jūsu pilnais vārds (neobligāti)"
@@ -1017,6 +1047,9 @@ lv:
       alt: "Alt"
     conditional_loading_section:
       loading: Ielādē...
+    date_time_picker:
+      from: No
+      to: Kam
     emoji_picker:
       filter_placeholder: Meklēt emoji
       objects: Priekšmeti
@@ -1778,6 +1811,7 @@ lv:
       search_priority:
         options:
           normal: "Normāls"
+          ignore: "Ignorēt"
       sort_options:
         default: "noklusējuma"
         likes: "Atzinības"
@@ -2197,8 +2231,6 @@ lv:
           view_table: "tabula"
           view_graph: "grafiks"
           refresh_report: "Pārlādēt ziņojumu"
-          start_date: "Sākuma datums"
-          end_date: "Beigu datums"
           groups: "Visas grupas"
           filters:
             group:
@@ -2405,7 +2437,7 @@ lv:
         copy_to_clipboard_error: "Radās kļūda, kopējot uz starpliktuvi (clipboard)"
         theme_owner: "Nevar labot; īpašnieks ir"
         email_templates:
-          title: "E-pasta šabloni"
+          title: "E-pasts"
           subject: "Virsraksts"
           multiple_subjects: "Šim e-pasta šablonam ir vairāki virsraksti"
           body: "Saturs"
@@ -2456,6 +2488,8 @@ lv:
         colors:
           love:
             description: "Atzinības pogas krāsa."
+        email_style:
+          css: "CSS"
       email:
         title: "E-pasti"
         settings: "Iestatījumi"
@@ -2626,6 +2660,8 @@ lv:
         search: "meklēt"
         clear_filter: "Notīrīt"
         show_words: "parādīt vārdus"
+        download: Lejuplādēt
+        clear_all: Noņemt visus
         word_count:
           zero: "%{count} vārdi"
           one: "%{count} vārds"
@@ -2644,7 +2680,6 @@ lv:
           label: "Jauns vārds:"
           add: "Pievienot"
           success: "Veiksmīgi"
-          upload: "Augšupielādēt"
           upload_successful: "Augšupielāde ir veiksmīga. Vārdi ir pievienoti."
       impersonate:
         title: "Izlikties (impersonate)"
@@ -2813,15 +2848,15 @@ lv:
           external_username: "Lietotājvārds"
           external_name: "Vārds"
           external_email: "E-pasts"
-          external_avatar_url: "Profila Bildes URL"
+          external_avatar_url: "Profila attēla URL"
       user_fields:
-        title: "Lietotāja Lauki"
+        title: "Lietotāja lauki"
         help: "Pievienot lauku, kuru lietotāji var aizpildīt."
         create: "Izveidot Lietotāja lauku"
         untitled: "Bez nosaukuma"
-        name: "Lauka Nosaukums"
-        type: "Lauka Tips"
-        description: "Lauka Apraksts"
+        name: "Lauka nosaukums"
+        type: "Lauka veids"
+        description: "Lauka apraksts"
         save: "Saglabāt"
         edit: "Labot"
         delete: "Dzēst"
@@ -2845,13 +2880,13 @@ lv:
           enabled: "redzams lietotāja kartē"
           disabled: "nav redzams lietotāja kartē"
         field_types:
-          text: "Teksta Lauks"
+          text: "Teksta lauks"
           confirm: "Apstiprinājums"
           dropdown: "Nolaižams izvēļu saraksts"
       site_text:
         description: "Jūs varat pielāgot jebkuru tekstu jūsu forumā. Sāciet, meklējot sekojošo:"
         search: "Meklēt tekstu, kuru vēlies rediģēt"
-        title: "Teksta Saturs"
+        title: "Teksts"
         edit: "labot"
         revert: "Atsaukt Izmaiņas"
         revert_confirm: "Vai tiešām vēlies atsaukt izmaiņas?"

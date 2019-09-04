@@ -1,3 +1,4 @@
+import Category from "discourse/models/category";
 import ComboBox from "select-kit/components/combo-box";
 import TagsMixin from "select-kit/mixins/tags";
 import { default as computed } from "ember-addons/ember-computed-decorators";
@@ -51,10 +52,31 @@ export default ComboBox.extend(TagsMixin, {
     );
   },
 
+  @computed(
+    "computedValue",
+    "filter",
+    "collectionComputedContent.[]",
+    "hasReachedMaximum",
+    "hasReachedMinimum",
+    "categoryId"
+  )
+  shouldDisplayCreateRow() {
+    if (this.categoryId) {
+      const category = Category.findById(this.categoryId);
+      if (
+        (category.allowed_tags && category.allowed_tags.length > 0) ||
+        (category.allowed_tag_groups && category.allowed_tag_groups.length > 0)
+      ) {
+        return category.allow_global_tags && this._super(...arguments);
+      }
+    }
+    return this._super(...arguments);
+  },
+
   didInsertElement() {
     this._super(...arguments);
 
-    this.$(".select-kit-body").on(
+    $(this.element.querySelector(".select-kit-body")).on(
       "mousedown touchstart",
       ".selected-tag",
       event => {
@@ -68,7 +90,9 @@ export default ComboBox.extend(TagsMixin, {
   willDestroyElement() {
     this._super(...arguments);
 
-    this.$(".select-kit-body").off("mousedown touchstart");
+    $(this.element.querySelector(".select-kit-body")).off(
+      "mousedown touchstart"
+    );
   },
 
   @computed("hasReachedMaximum")
@@ -164,7 +188,7 @@ export default ComboBox.extend(TagsMixin, {
     return content;
   },
 
-  _prepareSearch(query) {
+  _prepareSearch(query, options) {
     const data = {
       q: query,
       limit: this.get("siteSettings.max_tag_search_results"),
@@ -179,7 +203,7 @@ export default ComboBox.extend(TagsMixin, {
 
     if (!this.everyTag) data.filterForInput = true;
 
-    this.searchTags("/tags/filter/search", data, this._transformJson);
+    this.searchTags("/tags/filter/search", data, this._transformJson, options);
   },
 
   _transformJson(context, json) {
@@ -219,6 +243,12 @@ export default ComboBox.extend(TagsMixin, {
 
   didDeselect(tags) {
     this.destroyTags(tags);
+  },
+
+  didUpdateAttrs() {
+    this._super(...arguments);
+
+    this._prepareSearch(this.filter, { background: true });
   },
 
   _tagsChanged() {

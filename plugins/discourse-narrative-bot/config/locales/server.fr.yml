@@ -114,10 +114,10 @@ fr:
         reply: |-
           Bonjour ! Pour voir ce que je peux faire, dites `@%{discobot_username} `.
         tracks: |-
-          Pour l'instant j'ai les compétences suivantes :
+          Pour le moment, je sais faire les choses suivantes :
 
-          `@%{discobot_username} %{reset_trigger} %{default_track}`
-          > Démarre une des tutoriaux intéractifs suivants : %{tracks}.
+          `@%{discobot_username} %{reset_trigger} {nom-du-tutoriel}`
+          > Débute un tutoriel interactif. `{nom-du-tutoriel}` est l'une des options suivantes : `%{tracks}`.
         bot_actions: |-
           `@%{discobot_username} %{dice_trigger} 2d6`
           > :game_die: 3, 6
@@ -249,9 +249,9 @@ fr:
           (Si vous êtes sur un périphérique mobile, vous pouvez aussi entrer l'émoji directement depuis votre clavier.)
       mention:
         instructions: |-
-          Parfois vous avez peut-être envie d'attirer l'attention, même si vous ne lui répondez pas directement. Tapez `@` et complétez son pseudo pour le mentionner.
+          Parfois vous avez peut-être envie d'attirer l'attention de quelqu'un, même si vous ne lui répondez pas directement. Tapez `@` et complétez son pseudo pour le mentionner.
 
-          Pouvez vous mentionner **`@%{discobot_username}`** dans votre réponse ?
+          Pouvez-vous mentionner **`@%{discobot_username}`** dans votre réponse ?
         reply: |-
           _Quelqu'un a dit mon nom ?_ :raised_hand: Je pense que vous l'avez fait ! :wave: Bien, je suis là ! Merci de m'avoir mentionné. :ok_hand:
         not_found: |-

@@ -1,5 +1,18 @@
+$poll-margin: 10px;
+
 .poll-ui-builder-form {
+  display: flex;
   margin: 0;
+
+  .options {
+    flex-shrink: 0;
+    width: 280px;
+  }
+
+  .d-editor-preview {
+    margin-left: $poll-margin * 2;
+    width: 360px;
+  }
 
   label {
     font-weight: bold;
@@ -8,30 +21,28 @@
 
   .tip {
     display: block;
-  }
-
-  .input-group-label {
-    display: inline-block;
-    min-width: 55px;
+    margin-bottom: $poll-margin * 1.5;
+    margin-top: $poll-margin / 2;
+    font-size: $font-down-1;
   }
 
   .poll-select {
-    line-height: 3em;
+    margin-bottom: $poll-margin;
+    display: flex;
+    align-items: center;
+  }
+
+  .input-group-label {
+    min-width: 85px;
   }
 
   .poll-number {
-    margin: 8px 0;
-
-    .tip {
-      margin-bottom: 6px;
-    }
+    margin: $poll-margin 0;
+    display: flex;
+    align-items: center;
 
     input {
       width: 70px;
-    }
-
-    input + .tip {
-      margin-top: 4px;
     }
   }
 
@@ -42,10 +53,11 @@
   }
 
   .poll-select + .poll-textarea {
-    margin-top: 12px;
+    margin-top: $poll-margin;
   }
 
-  .poll-checkbox {
-    margin-top: 4px;
+  .poll-checkbox,
+  .poll-date {
+    margin-top: $poll-margin / 2;
   }
 }

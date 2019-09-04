@@ -285,7 +285,9 @@ describe Middleware::RequestTracker do
       }
 
       tracker.call(env("REQUEST_URI" => uri, "ANON_CACHE_DURATION" => 60, "action_dispatch.request.parameters" => request_params))
+      expect(@data[:cache]).to eq("skip")
 
+      tracker.call(env("REQUEST_URI" => uri, "ANON_CACHE_DURATION" => 60, "action_dispatch.request.parameters" => request_params))
       expect(@data[:cache]).to eq("store")
 
       tracker.call(env("REQUEST_URI" => uri, "ANON_CACHE_DURATION" => 60))

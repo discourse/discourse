@@ -12,6 +12,8 @@ fr:
         today: Aujourd'hui %{time}
         tomorrow: Demain %{time}
         yesterday: Hier %{time}
+        countdown:
+          passed: la date est passée
       title: Insérer date / heure
       create:
         form:

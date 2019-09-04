@@ -45,7 +45,7 @@ import { addCategorySortCriteria } from "discourse/components/edit-category-sett
 import { queryRegistry } from "discourse/widgets/widget";
 
 // If you add any methods to the API ensure you bump up this number
-const PLUGIN_API_VERSION = "0.8.31";
+const PLUGIN_API_VERSION = "0.8.32";
 
 class PluginApi {
   constructor(version, container) {
@@ -529,7 +529,7 @@ class PluginApi {
 
   /**
    * Exposes the widget creating ability to plugins. Plugins can
-   * register their own plugins and attach them with decorators.
+   * register their own widgets and attach them with decorators.
    * See `createWidget` in `discourse/widgets/widget` for more info.
    **/
   createWidget(name, args) {
@@ -734,7 +734,8 @@ class PluginApi {
    *   name: "link-to-bugs-category",
    *   displayName: "bugs"
    *   href: "/c/bugs",
-   *   customFilter: (category, args) => { category && category.get('name') !== 'bug' }
+   *   customFilter: (category, args, router) => { category && category.name !== 'bug' }
+   *   customHref: (category, args, router) => {  if (category && category.name) === 'not-a-bug') "/a-feature"; }
    * })
    */
   addNavigationBarItem(item) {
@@ -745,6 +746,22 @@ class PluginApi {
         item
       );
     } else {
+      const customHref = item.customHref;
+      if (customHref) {
+        const router = this.container.lookup("service:router");
+        item.customHref = function(category, args) {
+          return customHref(category, args, router);
+        };
+      }
+
+      const customFilter = item.customFilter;
+      if (customFilter) {
+        const router = this.container.lookup("service:router");
+        item.customFilter = function(category, args) {
+          return customFilter(category, args, router);
+        };
+      }
+
       addNavItem(item);
     }
   }
@@ -962,7 +979,7 @@ function decorate(klass, evt, cb, id) {
 
   const mixin = {};
   mixin["_decorate_" + _decorateId++] = function($elem) {
-    $elem = $elem || this.$();
+    $elem = $elem || $(this.element);
     if ($elem) {
       cb($elem);
     }

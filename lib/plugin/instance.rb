@@ -377,6 +377,13 @@ class Plugin::Instance
     end
   end
 
+  # Applies to all sites in a multisite environment. Ignores plugin.enabled?
+  def register_user_custom_field_type(name, type)
+    reloadable_patch do |plugin|
+      ::User.register_custom_field_type(name, type)
+    end
+  end
+
   def register_seedfu_fixtures(paths)
     paths = [paths] if !paths.kind_of?(Array)
     SeedFu.fixture_paths.concat(paths)
@@ -427,7 +434,7 @@ class Plugin::Instance
       full_path = File.dirname(path) << "/assets/" << file
     end
 
-    assets << [full_path, opts]
+    assets << [full_path, opts, directory_name]
   end
 
   def register_service_worker(file, opts = nil)
@@ -532,6 +539,24 @@ class Plugin::Instance
       Discourse::Utils.execute_command('rm', '-f', target)
       Discourse::Utils.execute_command('ln', '-s', public_data, target)
     end
+
+    ensure_directory(Plugin::Instance.js_path)
+
+    contents = []
+    handlebars_includes.each { |hb| contents << "require_asset('#{hb}')" }
+    javascript_includes.each { |js| contents << "require_asset('#{js}')" }
+
+    each_globbed_asset do |f, is_dir|
+      contents << (is_dir ? "depend_on('#{f}')" : "require_asset('#{f}')")
+    end
+
+    File.delete(js_file_path) if js_asset_exists?
+
+    if contents.present?
+      contents.insert(0, "<%")
+      contents << "%>"
+      write_asset(js_file_path, contents.join("\n"))
+    end
   end
 
   def auth_provider(opts)
@@ -632,11 +657,31 @@ class Plugin::Instance
     end
   end
 
+  def directory_name
+    @directory_name ||= File.dirname(path).split("/").last
+  end
+
+  def css_asset_exists?(target = nil)
+    DiscoursePluginRegistry.stylesheets_exists?(directory_name, target)
+  end
+
+  def js_asset_exists?
+    File.exists?(js_file_path)
+  end
+
   protected
 
+  def self.js_path
+    File.expand_path "#{Rails.root}/app/assets/javascripts/plugins"
+  end
+
+  def js_file_path
+    @file_path ||= "#{Plugin::Instance.js_path}/#{directory_name}.js.erb"
+  end
+
   def register_assets!
-    assets.each do |asset, opts|
-      DiscoursePluginRegistry.register_asset(asset, opts)
+    assets.each do |asset, opts, plugin_directory_name|
+      DiscoursePluginRegistry.register_asset(asset, opts, plugin_directory_name)
     end
   end
 
@@ -682,6 +727,12 @@ class Plugin::Instance
           puts msg
         end
       end
+    end
+  end
+
+  def allow_new_queued_post_payload_attribute(attribute_name)
+    reloadable_patch do
+      NewPostManager.add_plugin_payload_attribute(attribute_name)
     end
   end
 

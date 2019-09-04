@@ -225,6 +225,7 @@ ur:
       other: "{{count}} حروف"
     related_messages:
       title: "متعلقہ پیغامات"
+      see_all: '@%{username} کی طرف سے <a href="%{path}">تمام پیغامات</a> دیکھیں...'
     suggested_topics:
       title: "تجویز کیے گئے ٹاپک"
       pm_title: "تجویز کیے گئے پیغامات"
@@ -234,6 +235,7 @@ ur:
       stats: "سائٹ کے اعدادوشمار"
       our_admins: "ہمارے ایڈمن"
       our_moderators: "ہمارے ماڈریٹرز"
+      moderators: "ماڈریٹرز"
       stat:
         all_time: "تمام اوقات"
         last_7_days: "آخری 7"
@@ -297,6 +299,8 @@ ur:
     banner:
       close: "اس بینر کو برخاست کریں۔"
       edit: "اس بینر میں ترمیم کریں >>"
+    pwa:
+      install_banner: "کیا آپ <a href>اِس ڈیوائس پر %{title} انسٹال کرنا چاہتے ہیں؟</a>"
     choose_topic:
       none_found: "کوئی ٹاپک نہیں ملے۔"
       title:
@@ -581,6 +585,7 @@ ur:
         remove_owner: "مالک کے طور پر ہٹائیں"
         remove_owner_description: "اِس گروپ پر سے <b>%{username}</b> کو مالک کے طور پر ہٹائیں"
         owner: "مالِک"
+        forbidden: "آپ کو ممبران دیکھنے کی اجازت نہیں ہے۔"
       topics: "ٹاپک"
       posts: "پوسٹ"
       mentions: "ذکر"
@@ -905,7 +910,6 @@ ur:
         uploaded_avatar: "اپنی مرضی کی تصویر"
         uploaded_avatar_empty: "اپنی مرضی کی تصویر شامل کریں"
         upload_title: "آپنی تصویر اَپ لوڈ کریں"
-        upload_picture: "تصویر اَپ لوڈ کریں"
         image_is_not_a_square: "انتباہ: ہم نے آپ کی تصویر کو کراپ کیا ہے؛ چوڑائی اور اونچائی برابر نہیں تھے۔"
       change_profile_background:
         title: "پروفائل کا پسِ منظر"
@@ -931,7 +935,12 @@ ur:
         title: "ایسوسی ایٹ اکاؤنٹس"
         connect: "کنَیکٹ"
         revoke: "منسوخ کریں"
+        cancel: "منسوخ"
         not_connected: "(غیر کنَیکٹ شدہ)"
+        confirm_modal_title: "%{provider} اکاؤنٹ کنیکٹ کریں"
+        confirm_description:
+          account_specific: "آپ کا %{provider} اکاؤنٹ '%{account_description}' تصدیق کیلئے استعمال کیا جائے گا۔"
+          generic: "آپ کا %{provider} اکاؤنٹ تصدیق کیلئے استعمال کیا جائے گا۔"
       name:
         title: "نام"
         instructions: "آپ کا پورا نام (اختیاری)"
@@ -1327,6 +1336,10 @@ ur:
         name: "گِٹ ہَب"
         title: "گِٹ ہَب سے"
         message: "گِٹ ہَب کے زریعے تصدیق کی جا رہی ہے (یقینی بنائیں کہ پاپ اَپ بلاکرز فعال نہیں ہیں)"
+      discord:
+        name: "ڈِسکَورڈ"
+        title: "ڈِسکَورڈ کے ساتھ"
+        message: "ڈِسکَورڈ کے ساتھ تصدیق"
     invites:
       accept_title: "دعوت نامہ"
       welcome_to: "%{site_name} پر خوش آمدید!"
@@ -1376,6 +1389,11 @@ ur:
       min_content_not_reached:
         one: "کم از کم {{count}} چیز منتخب کریں۔"
         other: "کم از کم {{count}} اشیاء منتخب کریں۔"
+    date_time_picker:
+      from: سے
+      to: کیلئے
+      errors:
+        to_before_from: "'کب تک' کی تاریخ 'کب سے' کی تاریخ کے بعد ہونا ضروری ہے۔"
     emoji_picker:
       filter_placeholder: اِیمَوجی تلاش کریں
       smileys_&_emotion: سمائیلیاں اور جذبات
@@ -1565,6 +1583,7 @@ ur:
       granted_badge: "'{{description}}' حاصل کیا"
       topic_reminder: "<span>{{username}}</span> {{description}}"
       watching_first_post: "<span>نیا ٹاپک</span> {{description}}"
+      membership_request_accepted: "'{{group_name}}' میں رکنیت قبول کر لی گئی"
       group_message_summary:
         one: "آپ کے {{group_name}} اِن باکس میں {{count}} پیغام"
         other: "آپ کے {{group_name}} اِن باکس میں {{count}} پیغامات"
@@ -1807,6 +1826,7 @@ ur:
       group_request: "آپ کو اِس ٹاپک کو دیکھنے کیلئے `{{name}}` گروپ میں رکنیت کیلئے درخواست کی ضرورت ہے"
       group_join: "آپ کو اِس ٹاپک کو دیکھنے کیلئے `{{name}}` گروپ میں شامل ہونے کی ضرورت ہے"
       group_request_sent: "آپ کی گروپ میں رکنیت کی درخواست بھیج دی گئی ہے۔ اُس کے قبول ہونے پر آپ کو مطلع کر دیا جائے گا۔"
+      unread_indicator: "کسی ممبر نے ابھی تک اِس ٹاپک کی آخری پوسٹ نہیں پڑھی ہے۔"
       read_more_MF: "{ UNREAD, plural, =0 {} one { <a href='{basePath}/unread'>1 غیر پڑھا</a> } other { <a href='{basePath}/unread'># غیر پڑھے</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{اور } false {} other{}} <a href='{basePath}/new'>1 نیا</a> ٹاپک} other { {BOTH, select, true{and } false {are } other{}} <a href='{basePath}/new'># نئے</a> ٹاپکس} } باقی، یا {CATEGORY, select, true {میں دیگر ٹاپکس براؤز کریں {catLink}} false {{latestLink}} other {}}"
       browse_all_categories: تمام زمرہ جات براؤز کریں
       view_latest_topics: تازہ ترین ٹاپک دیکھیے
@@ -1973,6 +1993,9 @@ ur:
         title: "فلَیگ"
         help: "اس ٹاپک پر توجہ کے لئے نجی طور پر اِسے فلَیگ کریں یا اس کے بارے میں ایک نجی نوٹیفکیشن بھیجیں"
         success_message: "آپ نے کامیابی سے اِس ٹاپک کو فلَیگ کیا"
+      make_public:
+        title: "پبلک ٹاپک میں تبدیل کریں"
+        choose_category: "براہ کرم پبلک ٹاپک کیلئے ایک زمرہ منتخب کریں:"
       feature_topic:
         title: "اس ٹاپک کو نمایاں کریں"
         pin: "اِس ٹاپک کو {{categoryLink}} زمرہ کے سب سے اُپر ظاہر کریں جب تک کہ"
@@ -2178,6 +2201,7 @@ ur:
         reply: "اس پوسٹ کا جواب لکھنا شروع کریں"
         like: " اِس پوسٹ کو لائیک کریں"
         has_liked: " آپ اِس پوسٹ کو لائیک کر چکے ہیں"
+        read_indicator: "ممبران جنہوں نے اِس پوسٹ کو پڑھ لیا"
         undo_like: "لائیک کالعدم کریں"
         edit: " اِس پوسٹ کو ترمیم کریں"
         edit_action: "ترمیم"
@@ -2234,6 +2258,7 @@ ur:
           notify_user: "ایک پیغام بھیجا"
           bookmark: "اِس کو بُک مارک"
           like: "اِس کو لائیک کیا"
+          read: "اِسے پڑھیے"
           like_capped:
             one: "اور {{count}} دوسرے شخص نے اِس کو لائیک کیا"
             other: "اور {{count}} دوسرے لوگوں نے اِس کو لائیک کیا"
@@ -2334,6 +2359,7 @@ ur:
       special_warning: "انتباہ: یہ زمرہ ایک پہلے سے بنایا ہوا زمرہ ہے اور اِس کی سیکورٹی سیٹِنگ میں ترمیم نہیں کی جا سکتی۔ اگر آپ اِس زمرہ کو استعمال کرنے کی خواہش نہیں رکھتے، تو اِسے کسی اور حوالے سے استعمال کرنے کی بجائے، حذف کردیں۔"
       uncategorized_security_warning: "یہ زمرہ خاص ہے۔ اِس کا مقصد بغیر زمرہ والے ٹاپکس کیلئے جگہ فراہم کرنا ہے؛ اِس میں سیکورٹی کی ترتیبات نہیں ہو سکتیں۔"
       uncategorized_general_warning: 'یہ زمرہ خاص ہے۔ یہ نئے ٹاپکس جن کیلئے کسی زمرہ کا انتخاب نہ ہوا ہو، اُن کیلئے پہلے سے طے شدہ زمرہ کے طور پر استعمال ہوتا ہے۔ اگر آپ اِس رویے کو روکنے اور کسی زمرہ کے انتخاب کو لازمی کرنا چاہتے ہیں، تو <a href="%{settingLink}">برائے مہربانی یہاں ترتیب کو غیر فعال کریں</a>۔ اگر آپ نام یا تفصیل تبدیل کرنا چاہتے ہیں، تو <a href="%{customizeLink}">مرضی کے مطابق / ٹَیکسٹ متن</a> پر جائیں۔'
+      pending_permission_change_alert: "آپ نے اِس زمرہ میں %{group} کو شامل نہیں کیا ہے؛ اِن کو شامل کرنے کیلئے اِس بٹن پر کلک کریں۔"
       images: "تصاویر"
       email_in: "اپنی مرضی کا اِنکَمِنگ اِیمیل ایڈریس:"
       email_in_allow_strangers: "اکاؤنٹس نہ رکھنے والے گمنام صارفین کی طرف سے اِیمیلز کو قبول کریں"
@@ -2879,8 +2905,8 @@ ur:
           view_table: "ٹیبل"
           view_graph: "گراف"
           refresh_report: "رپورٹ رِیفریش کریں"
-          start_date: "شروع کی تاریخ"
-          end_date: "آخر کی تاریخ"
+          start_date: "شروع کی تاریخ (UTC)"
+          end_date: "اختتام کی تاریخ (UTC)"
           groups: "تمام گروپس"
           disabled: "یہ رپورٹ غیر فعال ہے"
           totals_for_sample: "نمونہ کیلئے کل"
@@ -2931,6 +2957,9 @@ ur:
               staff: "گروپ کے مالکان اور اسٹاف"
               owners: "گروپ مالکان"
               description: "ایڈمن تمام گروپس دیکھ سکتے ہیں۔"
+            members_visibility_levels:
+              description: "ایڈمن تمام گروپس کے ممبران کو دیکھ سکتے ہیں۔"
+            publish_read_state: "گروپ پیغامات پر گروپ رِیڈ اسٹیٹ شائع کریں۔"
           membership:
             automatic: خود کار طریقے سے
             trust_level: ٹرسٹ لَیول
@@ -3035,6 +3064,9 @@ ur:
         reviewable_event:
           name: "قابل تجدید واقعہ"
           details: "جب ایک نئی چیز جائزہ کیلئے تیار ہو اور جب اُس کا اسٹیٹس اپ ڈیٹ کیا جائے۔"
+        notification_event:
+          name: "اطلاع واقعہ"
+          details: "جب صارف کو اپنی فِیڈ میں اطلاع موصول ہوتی ہے۔"
         delivery_status:
           title: "موصول ہونے کی آگاہی"
           inactive: "غیر فعال"
@@ -3170,7 +3202,7 @@ ur:
         copy_to_clipboard_error: "کلِپ بورڈ میں ڈیٹا کاپی کرنے پر خرابی کا سامنا کر نا پرا"
         theme_owner: "ناقابلِ ترمیم، ملکیت:"
         email_templates:
-          title: "اِیمیل ٹَیمپلیٹ"
+          title: "اِی میل"
           subject: "موضوع"
           multiple_subjects: "اِس اِیمیل ٹَیمپلیٹ کے ایک سے زیادہ مضامین ہیں۔"
           body: "متن"
@@ -3247,7 +3279,7 @@ ur:
           delete_upload_confirm: "اِس اَپ لوڈ کو حذف کریں؟ (تِھیم CSS کام کرنا بند کر سکتی ہے!)"
           import_web_tip: "رِیپَوزِٹَری میں موجود تِھیم"
           import_web_advanced: "اَیڈوانسڈ..."
-          import_file_tip: ".tar.gz یا .dcstyle.json فائل میں موجود تِھیم"
+          import_file_tip: ".tar.gz، .zip، یا .dcstyle.json فائل میں موجود تِھیم"
           is_private: "تھِیم ایک ذاتی گِٹ رِیپَوزِٹَری میں ہے"
           remote_branch: "برانچ کا نام (اختیاری)"
           public_key: "رِیپَوزِٹَری کو درج ذیل پبلک کلید ایکسَیس فراہم کریں:"
@@ -3355,6 +3387,19 @@ ur:
           love:
             name: "محبت"
             description: "لائیک بٹن کا رنگ۔"
+        robots:
+          title: "آپ کی سائٹ کی robots.txt فائل کی جگہ لے لیتی ہے:"
+          warning: "یہ مستقل طور پر کسی بھی متعلقہ سائٹ ترتیبات کی جگہ لے لیگی۔"
+          overridden: آپ کی سائٹ کی ڈیفالٹ robots.txt فائل کی جگہ لی جا چکی ہے۔
+        email_style:
+          title: "اِیمیل کا انداز"
+          heading: "اِیمیل کے انداز کو اپنی مرضی کے مطابق بنائیں"
+          html: "HTML ٹَیمپلَیٹ"
+          css: "CSS"
+          reset: "دوبارہ پہلے جیسا کر دیں"
+          reset_confirm: "کیا آپ واقعی میں ڈیفالٹ %{fieldName} پر دوبارہ ترتیب اور اپنی ساری تبدیلیاں ضائع کرنا چاہتے ہیں؟"
+          save_error_with_reason: "آپ کی تبدیلیاں محفوظ نہیں ہوئیں۔ %{error}"
+          instructions: "اس ٹَیمپلَیٹ کو حسب ضرورت بنائیں جس میں تمام HTML ایمیلز پیش کی جاتی ہیں، اور CSS کا استعمال کرتے ہوئے سٹائیل کریں۔"
       email:
         title: "اِیمیل"
         settings: "سیٹِنگ"
@@ -3588,6 +3633,13 @@ ur:
         search: "سرچ"
         clear_filter: "صاف کریں"
         show_words: "الفاظ دکھائیں"
+        one_word_per_line: "فی سطر ایک لفظ"
+        download: ڈاؤن لوڈ
+        clear_all: تمام کو صاف کریں
+        clear_all_confirm_block: "کیا آپ واقعی بلاک کارروائی کیلئے تمام نظر رکھے ہوئے الفاظ کو ہٹانا چاہتے ہیں؟"
+        clear_all_confirm_censor: "کیا آپ واقعی سینسر کارروائی کیلئے تمام نظر رکھے ہوئے الفاظ کو ہٹانا چاہتے ہیں؟"
+        clear_all_confirm_flag: "کیا آپ واقعی فلَیگ کارروائی کیلئے تمام نظر رکھے ہوئے الفاظ کو ہٹانا چاہتے ہیں؟"
+        clear_all_confirm_require_approval: "کیا آپ واقعی ضرورتِ منظوری کارروائی کیلئے تمام نظر رکھے ہوئے الفاظ کو ہٹانا چاہتے ہیں؟"
         word_count:
           one: "%{count} لفظ"
           other: "%{count}الفاظ "
@@ -3608,8 +3660,14 @@ ur:
           add: "شامل کریں"
           success: "کامیابی"
           exists: "پہلے سے موجود"
-          upload: "اَپ لوڈ"
+          upload: "فائل میں سے شامل کریں"
           upload_successful: "اَپ لوڈ کامیاب ہوا۔ الفاظ شامل کردیے گئے ہیں۔"
+        test:
+          button_label: "ٹیسٹ"
+          modal_title: "ٹیسٹ '%{action}' نظر رکھے ہوئے الفاظ"
+          description: "نظر رکھے ہوئے الفاظ کے ساتھ مَیچ چَیک کرنے کیلئے نیچے ٹَیکسٹ درج کریں۔"
+          found_matches: "ملے مَیچ:"
+          no_matches: "کوئی میل نہیں ملے"
       impersonate:
         title: "نقالی"
         help: "ڈِیبَگ مقاصد کیلئے اِس آلے کو استعمال کر کہ ایک صارف کے اکاؤنٹ کی نقالی کریں۔ کام ختم ہونے کے بعد آپ کے ایک دفعہ لاگ آؤٹ کرنا ہو گا۔"
@@ -3804,8 +3862,8 @@ ur:
           likes_received: "لائیکس موصول ہوے"
           likes_received_days: "لائیکس موصول ہوے: منفرد دنوں میں"
           likes_received_users: "لائیکس موصول ہوے: منفرد صارفین سے"
-          suspended: "معطل کردہ (تمام اوقات)"
-          silenced: "خاموش کردہ (تمام اوقات)"
+          suspended: "معطل کردہ (گزشتہ 6 ماہ)"
+          silenced: "خاموش کردہ (گزشتہ 6 ماہ)"
           qualifies: "ٹرسٹ سطح 3 کے لئے اِہل ہے۔"
           does_not_qualify: "ٹرسٹ سطح 3 کے لئے اِہل نہیں ہے۔"
           will_be_promoted: "جلد ہی ترقی دے دی جائے گا۔"
@@ -3857,7 +3915,7 @@ ur:
       site_text:
         description: "آپ اپنے فورم پر کسی بھی ٹَیکسٹ کو اپنی مرضی کے مطابق بدل سکتے ہیں۔ براہ مہربانی شروع کرنے کیلئے ذیل میں سرچ کریں:"
         search: "آپ جس ٹَیکسٹ میں ترمیم کرنا چاہتے اُسے سرچ کریں"
-        title: " ٹَیکسٹ کا متن"
+        title: "ٹیکسٹ"
         edit: "ترمیم"
         revert: "تبدیلیاں لوٹائیں"
         revert_confirm: "کیا آپ واقعی تبدیلیاں لوٹانا چاہتے ہیں؟"
@@ -3952,7 +4010,7 @@ ur:
         enabled: بَیج فعال کریں
         icon: آئیکن
         image: تصویر
-        icon_help: "فونٹ اَوسم کلاس استعمال کریں"
+        icon_help: "ایک فونٹ اَوسم آئیکن کا نام درج کریں (عام آئیکنز کیلئے 'far-' سابقہ اور برانڈ آئیکنز کیلئے 'fab-' سابقہ استعمال کریں)"
         image_help: "تصویر کا یو آر ایل درج کریں (آئیکن فیلڈ کی جگے لے لیگا اگر دونوں سیٹ کیے ہوں)"
         query: بَیج قُوَیری (SQL)
         target_posts: ھدف پوسٹس کو قُوَیری کریں

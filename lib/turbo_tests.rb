@@ -57,11 +57,23 @@ module TurboTests
   class FakeExample
     def self.from_obj(obj)
       obj = obj.symbolize_keys
+      metadata =
+        obj[:metadata].symbolize_keys
+
+      metadata[:shared_group_inclusion_backtrace]
+        .map! { |frame|
+          frame = frame.symbolize_keys
+          RSpec::Core::SharedExampleGroupInclusionStackFrame.new(
+            frame[:shared_group_name],
+            frame[:inclusion_location]
+          )
+        }
+
       new(
         FakeExecutionResult.from_obj(obj[:execution_result]),
         obj[:location],
         obj[:full_description],
-        obj[:metadata].symbolize_keys,
+        metadata,
         obj[:location_rerun_argument],
       )
     end

@@ -175,3 +175,62 @@ aside.onebox {
 div.lightbox-wrapper {
   margin-bottom: 20px;
 }
+
+.topics-list {
+  width: 100%;
+
+  .topic-list-item {
+    clear: both;
+
+    .main-link {
+      border-bottom: 1px solid $primary-low;
+      padding: 0.5rem;
+      width: 100%;
+
+      a {
+        color: $primary;
+      }
+
+      a:visited {
+        color: $primary-medium;
+      }
+    }
+
+    .topic-details-flex {
+      display: flex;
+
+      .topic-details-column-1 {
+        flex-direction: column;
+        width: 80%;
+
+        .topic-last-posted-at,
+        .topic-author-avatar-timestamp,
+        .topic-stats {
+          padding-top: 5px;
+        }
+
+        .topic-author-avatar-timestamp img {
+          max-height: 20px;
+        }
+
+        .topic-created-at {
+          padding-left: 5px;
+          vertical-align: middle;
+        }
+
+        .topic-last-posted-at,
+        .topic-created-at,
+        .topic-stats {
+          color: $primary-medium;
+        }
+      }
+
+      .topic-details-column-2 {
+        .topic-featured-image img {
+          max-width: 200px;
+          max-height: 100px;
+        }
+      }
+    }
+  }
+}

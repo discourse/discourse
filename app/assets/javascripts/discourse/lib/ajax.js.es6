@@ -40,6 +40,12 @@ function handleRedirect(data) {
   }
 }
 
+export function updateCsrfToken() {
+  return ajax("/session/csrf").then(result => {
+    Discourse.Session.currentProp("csrfToken", result.csrf);
+  });
+}
+
 /**
   Our own $.ajax method. Makes sure the .then method executes in an Ember runloop
   for performance reasons. Also automatically adjusts the URL to support installs
@@ -140,7 +146,7 @@ export function ajax() {
     }
 
     if (args.type === "GET" && args.cache !== true) {
-      args.cache = false;
+      args.cache = true; // Disable JQuery cache busting param, which was created to deal with IE8
     }
 
     ajaxObj = $.ajax(Discourse.getURL(url), args);
@@ -157,10 +163,7 @@ export function ajax() {
     !Discourse.Session.currentProp("csrfToken")
   ) {
     promise = new Ember.RSVP.Promise((resolve, reject) => {
-      ajaxObj = $.ajax(Discourse.getURL("/session/csrf"), {
-        cache: false
-      }).done(result => {
-        Discourse.Session.currentProp("csrfToken", result.csrf);
+      ajaxObj = updateCsrfToken().then(() => {
         performAjax(resolve, reject);
       });
     });

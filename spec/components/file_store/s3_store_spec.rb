@@ -413,7 +413,7 @@ describe FileStore::S3Store do
       s3_bucket.expects(:object).with("original/1X/#{upload.sha1}.png").returns(s3_object)
       opts = {
         expires_in: S3Helper::DOWNLOAD_URL_EXPIRES_AFTER_SECONDS,
-        response_content_disposition: "attachment; filename=\"#{upload.original_filename}\""
+        response_content_disposition: %Q|attachment; filename="#{upload.original_filename}"; filename*=UTF-8''#{upload.original_filename}|
       }
 
       s3_object.expects(:presigned_url).with(:get, opts)

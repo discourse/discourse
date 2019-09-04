@@ -29,15 +29,11 @@ export function setup(helper) {
   });
 
   helper.registerPlugin(md => {
-    const words = md.options.discourse.censoredWords;
+    const censoredRegexp = md.options.discourse.censoredRegexp;
 
-    if (words && words.length > 0) {
+    if (censoredRegexp) {
       const replacement = String.fromCharCode(9632);
-      const censor = censorFn(
-        words,
-        replacement,
-        md.options.discourse.watchedWordsRegularExpressions
-      );
+      const censor = censorFn(censoredRegexp, replacement);
       md.core.ruler.push("censored", state => censorTree(state, censor));
     }
   });
