@@ -2873,7 +2873,7 @@ describe Guardian do
       let(:old_post) { build(:post, user: trust_level_2, created_at: 6.minutes.ago) }
       before do
         SiteSetting.min_trust_to_allow_self_wiki = 2
-        SiteSetting.post_edit_time_limit = 5
+        SiteSetting.tl2_post_edit_time_limit = 5
       end
 
       it 'returns false when user satisfies trust level and owns the post' do
