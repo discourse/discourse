@@ -224,6 +224,7 @@ zh_CN:
     in_reply_to: "▶ %{username}"
     replies:
       other: "%{count}个回复"
+    created: "创建时间"
   no_mentions_allowed: "抱歉，你无法提到其他用户。"
   too_many_mentions:
     other: "抱歉，你一次仅能提到 %{count} 个用户。"
@@ -1774,8 +1775,8 @@ zh_CN:
       invalid_string_min_max: "必须在 %{min} 和 %{max} 字内。"
       invalid_string_min: "必须超过 %{min} 个字符。"
       invalid_string_max: "必须不超过 %{max} 个字符。"
-      invalid_reply_by_email_address: "值必须包含 '%%{reply_key' 并且要与通知邮件不同。"
-      invalid_alternative_reply_by_email_addresses: "必须包括 “%%{reply_key}” 并与通知邮件地址不同。"
+      invalid_reply_by_email_address: "值必须包含 '%{reply_key' 并且要与通知邮件不同。"
+      invalid_alternative_reply_by_email_addresses: "必须包括 “%{reply_key}” 并与通知邮件地址不同。"
       pop3_polling_host_is_empty: "在启用 POP3 轮询前，你必须设置 'pop3 polling host'。"
       pop3_polling_username_is_empty: "在启用 POP3 轮询前，你必须设置 'pop3 polling username'。"
       pop3_polling_password_is_empty: "在启用 POP3 轮询前，你必须设置 'pop3 polling password'。"

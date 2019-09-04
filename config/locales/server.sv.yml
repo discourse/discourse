@@ -139,6 +139,7 @@ sv:
     permalink: "Permalänk"
     imported_from: "Detta är ett kopplat diskussionsämne till det ursprungliga inlägget på %{link}"
     in_reply_to: "▶ %{username}"
+    created: "Skapad"
   no_mentions_allowed: "Tyvärr, du kan inte omnämna andra användare."
   too_many_mentions:
     one: "Tyvärr, du kan bara omnämna en annan användare i ett inlägg."
@@ -1105,8 +1106,8 @@ sv:
       invalid_string_min_max: "Måste vara mellan %{min} och %{max} tecken."
       invalid_string_min: "Måste vara minst %{min} tecken."
       invalid_string_max: "Måste vara högst %{max} tecken."
-      invalid_reply_by_email_address: "Värdet måste innehålla '%%{reply_key}' och vara annorlunda från e-postnotifieringen."
-      invalid_alternative_reply_by_email_addresses: "Alla värden måste innehålla '%%{reply_key}' och vara annorlunda från e-postnotifieringen."
+      invalid_reply_by_email_address: "Värdet måste innehålla '%{reply_key}' och vara annorlunda från e-postnotifieringen."
+      invalid_alternative_reply_by_email_addresses: "Alla värden måste innehålla '%{reply_key}' och vara annorlunda från e-postnotifieringen."
       pop3_polling_host_is_empty: "Du måste ställa in en 'pop3 polling host' innan du aktiverar POP3 polling."
       pop3_polling_username_is_empty: "Du måste ställa in ett 'pop3 polling username' innan du aktiverar POP3 polling."
       pop3_polling_password_is_empty: "Du måste ställa in ett 'pop3 polling password' innan du aktiverar POP3 polling."

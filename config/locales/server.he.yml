@@ -253,6 +253,13 @@ he:
       two: "%{count} תגובות"
       many: "%{count} תגובות"
       other: "%{count} תגובות"
+    likes:
+      one: "לייק %{count}"
+      two: "%{count} לייקים"
+      many: "%{count} לייקים"
+      other: "%{count} לייקים"
+    last_reply: "תגובה אחרונה"
+    created: "נוצר"
   no_mentions_allowed: "אין לך אפשרות לאזכר משתמשים אחרים, עמך הסליחה."
   too_many_mentions:
     one: "מצטערים, ניתן לאזכר משתמש אחד בלבד בפוסט"
@@ -1398,7 +1405,9 @@ he:
     maximum_session_age: "משתמשים ישארו מחוברים ל n שעות מאז ביקורם האחרון"
     ga_universal_tracking_code: "מזהה קוד מעקב של Google Universal Analytics (analytics.js), למשל: UA-12345678-9; ניתן לעיין ב־<a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
     ga_universal_domain_name: "שם המתחם של Google Universal Analytics (analytics.js), למשל: mysite.com; יש לעיין ב־<a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
+    ga_universal_auto_link_domains: "הפעלת מעקב חוצה שמות מתחם מטעם Google Universal Analytics (analytics.js). לקישורים יוצאים המקשרים לשמות מתחם אלה יצורף מזהה הלקוח. יש לעיין ב<a href='https://support.google.com/analytics/answer/1034342?hl=en' target='_blank'>מדריך למעקב חוצה שמות מתחם מבית Google.</a>"
     gtm_container_id: "מזהה מכולה של Google Tag Manager. למשל: GTM-ABCDEF. <br/>לתשומת לבך: סקריפטים של צד‏־שלישי שנטענים על ידי GTM דורשים הוספה לרשימת ההיתר תחת ‚content security policy script src’."
+    enable_escaped_fragments: "נסיגה ל־API של Google's Ajax-Crawling אם לא זוהה סורק אינטרנט. מידע נוסף בכתובת <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
     moderators_create_categories: "לאפשר למפקחים ליצור קטגוריות חדשות"
     cors_origins: "מקורות שאפשר לבצע להם בקשות קרוס-דומיין (Cross origin requests). כל מקור צריך לכלול את התחילית http:// או https:// . משתנה הסביבה DISCOURCE_ENABLE_CORS חייב להיות true כדי לאפשר CORS."
     use_admin_ip_whitelist: "מנהלים יכולים להתחבר רק אם הכתובת שלהם מופיע ברשימת ה IPs המסוננים (ניהול > לוגים > כתובות IP מסוננות)."
@@ -1406,7 +1415,12 @@ he:
     whitelist_internal_hosts: "רשימת מארחים פנימיים ש־Discourse יכול לסרוק לטובת תיבת תחימה ומטרות אחרות."
     allowed_iframes: "רשימה של קידומות שמות מתחם בתור מקור של iframe שאפשר לאפשר בבטחה בפוסטים ב־Discourse"
     whitelisted_crawler_user_agents: "סוכני משתמשים של סורקי רשת שמורשים לגשת לאתר. אזהרה! שינוי הגדרה זו תחסום את כל הסורקים שאינם מופיעים כאן!"
+    blacklisted_crawler_user_agents: "מילה ייחודית שאינה תלוית רישיות במחרוזת סוכן המשתמש (user agent) שמגדירה לאילו סורקי רשת אין הרשאת גישה לאתר. לא חל במקרה שהגדרת רשימת היתר."
+    slow_down_crawler_user_agents: "סוכני משתמש (user agents) של סורקי אינטרנט אמורים להיות כפופים להגבלת קצב דרך robots.txt בעזרת ההנחיה Crawl-delay (השהיית סריקה)"
     slow_down_crawler_rate: "אם הוגדר slow_down_crawler_user_agents (האטת סורקי אינטרנט) קצב זה יחול על כל סורקי האינטרנט (כמות ההמתנה בשניות בין בקשות)"
+    content_security_policy: "הפעלת Content-Security-Policy (מדיניות אבטחת תוכן)"
+    content_security_policy_report_only: "הפעלת Content-Security-Policy-Report-Only (מדיניות אבטחת תוכן בדיווח בלבד)"
+    content_security_policy_collect_reports: "הפעלת איסוף דוחות הפרה של CSP (מדיניות אבטחת תוכן) תחת ‎/csp_reports"
     content_security_policy_script_src: "רשימת מקורות מורשים נוספים לסקריפטים. המארח וה־CDN הנוכחיים נוספים כבררת מחדל."
     invalidate_inactive_admin_email_after_days: "חשבונות מנהלים שלא ביקרו באתר מעל כמות כזו של ימים יאלצו לאמת מחדש את כתובת הדוא״ל שלהם כדי לשוב ולהיכנס. להגדיר כ־0 כדי לנטרל."
     top_menu: "החליטו אילו פריטים יופיעו בניווט עמוד הבית ובאיזה סדר לדוגמה |אחרונים|חדשים|קטגוריות|מובילים|נקראו|פורסמו|סימניות"
@@ -1453,8 +1467,10 @@ he:
     block_common_passwords: "אל תאפשרו סיסמאות מתוך 10,000 הסיסמאות הנפוצות ביותר."
     enable_sso: "הפעלת כניסה אחודה (Single Sign On) באמצעות אתר חיצוני (א-ז-ה-ר-ה: כתובות הדוא״ל של משתמשים *חייבות* לעבור אימות על ידי האתר החיצוני!)"
     verbose_sso_logging: "תיעוד ניתוח מורחב בנושא SSO אל <a href='%{base_path}/logs' target='_blank'>‎/logs</a>"
+    enable_sso_provider: "הטמעת פרוטוקול ספק SSO מטעם Discourse תחת נקודת הקצה ‎/session/sso_provider, נדרשת הפעלת ההגדרה sso_provider_secrets (סודות ספק SSO)"
     sso_url: "URL of single sign on endpoint (must include http:// or https://)"
     sso_secret: "מחרוזת סודית המשמשית לאמת באופן קרפיטוגרפי מידע SSO, וודאו שהיא באורך 10 תווים ומעלה"
+    sso_provider_secrets: "רשימת צמדי סודות שמות מתחם שמשתמשים ב־Discourse כספק SSO. עליך לוודא שאורך סוד ה־SSO הוא 10 תווים ומעלה. ניתן להשתמש בתו המכליל * כדי להרחיב את ההתאמה לכל שם מתחם שהוא או חלק נרחב משם מתחם (למשל: ‎*.example.com)"
     sso_overrides_bio: "דורס ביוגרפיה של משתמשים בפרופיל המשתמש ומונע מהם מלשנות אותה"
     sso_overrides_groups: "סנכרון כל החברויות הידניות בקבוצות מול הקבוצות שהוגדרו במאפייני הקבוצות של ה־sso (אזהרה: אם לא תצויינה קבוצות כל החברויות הידניות בקבוצות יוסרו עבור המשתמש)"
     sso_overrides_email: "דורס מייל מקומי עם אתר מייל חיצוני מתוכן SSO בכל התחברות, ומונע שינויים מקומיים. (אזהרה: אי-התאמות עלולות להתרחש בעקבות נורמליזציה של מיילים מקומיים)"
@@ -1486,6 +1502,10 @@ he:
     enable_github_logins: "הפעלת אימות עם GitHub, דורש github_client_id ו־github_client_secret. יש לעיין ב<a href='https://meta.discourse.org/t/13745' target='_blank'>הגדרת כניסה עם GitHub ל־Discourse</a>."
     github_client_id: "מזהה לקוח לאימות מול Github, ניתן להירשם ב־<a href='https://github.com/settings/developers/' target='_blank'>https://github.com/settings/developers</a>"
     github_client_secret: "סוד לקוח לאימות מול Github, ניתן להירשם ב־<a href='https://github.com/settings/developers/' target='_blank'>https://github.com/settings/developers</a>"
+    enable_discord_logins: 'לאפשר למשתמשים לעבור אימות דרך Discord?'
+    discord_client_id: 'מזהה לקוח Discord (אין לך כזה? יש לבקר ב<a href="https://discordapp.com/developers/applications/me">פורטל המפתחים של Discord</a>)'
+    discord_secret: 'מפתח סודי של Discord'
+    discord_trusted_guilds: 'לאפשר רק למשתמש מגילדות ה־Discord האלה להיכנס באמצעות Discord. עליך להשתמש במזהה המספרי של הגילדה. למידע נוסף, יש לעיין בהנחיות ש<a href="https://meta.discourse.org/t/configuring-discord-login-for-discourse/127129">כאן</a>. שדה ריק משמעו כל גילדה שהיא.'
     readonly_mode_during_backup: "הפעלת מצב קריאה בלבד בזמן גיבוי"
     enable_backups: "לאפשר למנהלים ליצור גיבויים של הפורום"
     allow_restore: "אפשר שחזור, אשר יכול להחליף את כל(!) המידע באתר! הותירו על \"שלילי\" (false) אלא אם כן אתם מתכננים לשחזר גיבוי."
@@ -1772,6 +1792,8 @@ he:
     topic_page_title_includes_category: "<a href='https://developer.mozilla.org/en-US/docs/Web/HTML/Element/title' target='_blank'>תגית הכותרת (title)</a> בעמוד הנושא מכילה את שם הקטגוריה."
     native_app_install_banner_ios: "הצגת מודעת היישומון DiscourseHub במכשירי iOS למשתמשים רגילים (דרגת אמון 1 ומעלה)."
     native_app_install_banner_android: "הצגת מודעת היישומון DiscourseHub במכשירי Android למשתמשים רגילים (דרגת אמון 1 ומעלה)."
+    app_association_android: "תכני נקודת הקצה <a href='%{base_path}/.well-known/assetlinks.json'>‎.well-known/assetlinks.json</a> שמשמשת לטובת ה־API של Google's Digital Asset Links."
+    app_association_ios: "תכני נקודת הקצה <a href='%{base_path}/apple-app-site-association'>apple-app-site-association</a> שמשמשת ליצירת Universal Links (קישורים אוניברסליים) בין האתר הזה ויישומוני iOS."
     share_anonymized_statistics: "שתפו סטטיסטיקות שימוש אנונימיות."
     auto_handle_queued_age: "לטפל אוטומטית ברשומות שממתינות לסקירה לאחר כמות כזו של ימים. ללא התחשבות בדגלים. פוסטים ומשתמשים שממתינים בתור יידחו. יש להגדיר ל־0 כדי לנטרל את התכונה הזו."
     svg_icon_subset: "הוספת סמלים נוספים מתוך FontAwesome 5 אותם ברצונך לכלול בין המשאבים שלך. יש להשתמש בקידומת ‚fa-‎’ לסמלים אחידים, ‚far-‎’ לסמלים רגילים וב־‚fab-‎’ לסמלים ממותגים."
@@ -1887,8 +1909,8 @@ he:
       invalid_string_min_max: "חייב להיות בין %{min} ל- %{max} תווים."
       invalid_string_min: "חייב להיות לפחות %{min} תווים."
       invalid_string_max: "נדרשים לא יותר מ-%{max} תווים."
-      invalid_reply_by_email_address: "הערך חייב להכיל '%%{reply_key}' ולהיות שונה ממייל ההתראה."
-      invalid_alternative_reply_by_email_addresses: "על הערכים חייבים לכלול '%%{reply_key}' ולהיות שונים ממייל העדכון."
+      invalid_reply_by_email_address: "הערך חייב להכיל '%{reply_key}' ולהיות שונה ממייל ההתראה."
+      invalid_alternative_reply_by_email_addresses: "על הערכים חייבים לכלול  '%{reply_key}' ולהיות שונים ממייל העדכון."
       pop3_polling_host_is_empty: "עליכם לקבוע 'שרת תשאול pop3' לפני שתאפשרו תשאול POP3."
       pop3_polling_username_is_empty: "עליכם לקבוע 'שם-משתמש לתשאול pop3' לפני שתאפשרו תשאול POP3."
       pop3_polling_password_is_empty: "עליכם לקבוע 'סיסמת תשאול pop3' לפני שתאפשרו תשאול POP3."
@@ -2071,7 +2093,7 @@ he:
     omniauth_error:
       generic: "אירעה שגיאה באישור החשבון שלך. נא לנסות שוב."
       csrf_detected: "זמן ההמתנה לאישור הסתיים או שהחלפת דפדפנים. נא לנסות שוב."
-      request_error: "אירעה שגיאה בעת הפעלת האישור. נא לנסות שוב."
+      request_error: "אירעה שגיאה בעת התחלת האישור. נא לנסות שוב."
       invalid_iat: "לא ניתן לאמת את אסימון האישור עקב הפרשים בשעון השרת. נא לנסות שוב."
     omniauth_error_unknown: "משהו השתבש במהלך עיבוד ההתחברות שלך, אנא נסו שנית."
     omniauth_confirm_title: "כניסה עם %{provider}"
@@ -2380,6 +2402,21 @@ he:
         הקהילה סימנה את הפוסט הזה בדגל והוא מוסתר כעת. **כיוון שהפוסט הזה הוסתר למעלה מפעם אחת, הפוסט שלך יוסתר מעתה ועד לסריקה מצד חבר סגל.**
 
         להנחיות נוספות, נא לפנות אל [הנחיות הקהילה](%{base_url}/guidelines).
+    flags_disagreed:
+      title: "פוסט שסומן בגדל שוחזר על ידי הסגל"
+      subject_template: "פוסט שסומן בגדל שוחזר על ידי הסגל"
+      text_body_template: |
+        שלום,
+
+        זו הודעה אוטומטית מאת %{site_name} כדי ליידע אותך שה[פוסט שלך](%{base_url}%{url}) שוחזר.
+
+        הפוסט סומן בדגל על ידי הקהילה וחבר סגל ערער על כך ושחזר אותו.
+
+        [details="יש ללחוץ כדי להרחיב פוסטים ששוחזרו"]
+        ``` markdown
+        %{flagged_post_raw_content}
+        ```
+        [/details]
     flags_agreed_and_post_deleted:
       title: "הפוסט שסומן הוסר על ידי הסגל"
       subject_template: "הפוסט שסומן הוסר על ידי הסגל"
@@ -4064,3 +4101,5 @@ he:
         reason: "למחוק דרך תור סקירה"
   email_style:
     html_missing_placeholder: "תבנית ה־html חייבת לכלול %{placeholder}"
+  discord:
+    not_in_allowed_guild: 'האימות נכשל. הגילדה ב־Discord אליה הצטרפת אינה מורשית לגשת.'

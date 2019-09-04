@@ -247,7 +247,7 @@ bs_BA:
       other: "{{count}} karaktera"
     related_messages:
       title: "Povezane Poruke"
-      see_all: "Prikaži <a href=\"%{path}\">sve poruke</a> od @ %{username} ..."
+      see_all: 'Prikaži <a href="%{path}">sve poruke</a> od @ %{username} ...'
     suggested_topics:
       title: "Preporučene teme"
       pm_title: "Preporučene Poruke"

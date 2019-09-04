@@ -12,6 +12,7 @@ fi:
     poll_edit_window_mins: "Kuinka monta minuuttia on aikaa muokata äänestystä sen luomisen jälkeen."
     poll_minimum_trust_level_to_create: "Vähimmäisluottamustaso, jolla voi luoda äänestyksiä."
   poll:
+    poll: "äänestys"
     invalid_argument: "Arvo \"%{value}\" ei kelpaa argumentiksi \"%{argument}\"."
     multiple_polls_without_name: "Viesti sisältää useamman nimettömän äänestyskyselyn. Nimeä ne '<code>name</code>'-määreellä."
     multiple_polls_with_same_name: "Useamman kyselyn nimi on <strong>%{name}</strong>. Anna kaikille eri nimet '<code>name</code>'-määreellä."

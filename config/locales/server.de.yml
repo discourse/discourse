@@ -235,6 +235,7 @@ de:
     replies:
       one: "%{count} Antwort"
       other: "%{count} Antworten"
+    created: "Erstellt"
   no_mentions_allowed: "Entschuldigung, du kannst keine Benutzer erwähnen."
   too_many_mentions:
     one: "Entschuldigung, du kannst nur einen anderen Benutzer in einem Beitrag erwähnen."
@@ -1693,6 +1694,8 @@ de:
     topic_page_title_includes_category: "Themen-Seite <a href='https://developer.mozilla.org/en-US/docs/Web/HTML/Element/title' target='_blank'>title tag</a> enthält einen Kategorienamen."
     native_app_install_banner_ios: "Zeigt das DiscourseHub Applikationsbanner auf iOS Geräten für Stammgäste (Vertrauensstufe 1 und höher) an."
     native_app_install_banner_android: "Zeigt das DiscourseHub Applikationsbanner auf Android Geräten für Stammgäste (Vertrauensstufe 1 und höher) an. "
+    app_association_android: "Inhalte vom <a href='%{base_path}/.well-known/assetlinks.json'>.well-known/assetlinks.json</a> Endpunkt, für Googles Digital Asset Links API verwendet."
+    app_association_ios: "Inhalte vom <a href='%{base_path}/apple-app-site-association'>apple-app-site-association</a> Endpunkt, zum Anlegen von Universal Links zwischen dieser Sieite und iOS Apps verwendet."
     share_anonymized_statistics: "Anonymisierte Nutzungsdaten teilen."
     auto_handle_queued_age: "Bearbeite Einträge automatisch, die so viele Tage auf Überprüfung warten. Meldungen werden ignorieren. Beiträge und Benutzer in der Warteschlange werden zurückgewiesen. Setze den Wert auf 0, um diese Funktion zu deaktivieren."
     svg_icon_subset: "Füge zusätzliche Font Awesome 5 Icons hinzu, die du verfügbar machen möchtest. Verwende das Präfix 'fa-' für Icons der Kategorie 'solid', 'far-' für die Kategorie 'regular' und 'fab-' für die Kategorie 'brand'."
@@ -1808,8 +1811,8 @@ de:
       invalid_string_min_max: "Anzahl der Zeichen muss zwischen %{min} und %{max} liegen."
       invalid_string_min: "Muss mindestens %{min} Zeichen lang sein."
       invalid_string_max: "Darf nicht länger als %{max} Zeichen sein."
-      invalid_reply_by_email_address: "Adresse muss '%%{reply_key}' enthalten und sich von der E-Mail-Benachrichtigung unterscheiden."
-      invalid_alternative_reply_by_email_addresses: "Alle Werte müssen '%%{reply_key}' enthalten und sich von der Benachrichtigungsmail unterscheiden."
+      invalid_reply_by_email_address: "Adresse muss '%{reply_key}' enthalten und sich von der E-Mail-Benachrichtigung unterscheiden."
+      invalid_alternative_reply_by_email_addresses: "Alle Werte müssen '%{reply_key}' enthalten und sich von der Benachrichtigungsmail unterscheiden."
       pop3_polling_host_is_empty: "Du musst 'pop3 polling host' definieren, um POP3 Abfragen zu aktivieren."
       pop3_polling_username_is_empty: "Du musst 'pop3 polling username' definieren, um POP3 Abfragen zu aktivieren."
       pop3_polling_password_is_empty: "Du musst 'pop3 polling password' definieren, um POP3 Abfragen zu aktivieren."
@@ -1883,10 +1886,10 @@ de:
       one: "Ein Beitrag wurde in eine neue Nachricht verschoben: %{topic_link}"
       other: "%{count} Beiträge wurden in eine neue Nachricht verschoben: %{topic_link}"
     existing_topic_moderator_post:
-      one: "Ein Beitrag wurde in ein existierendes Thema veschoben: %{topic_link} "
-      other: " %{count} Beiträge wurden in ein existierendes Thema veschoben: %{topic_link} "
+      one: "Ein Beitrag wurde in ein existierendes Thema verschoben: %{topic_link} "
+      other: " %{count} Beiträge wurden in ein existierendes Thema verschoben: %{topic_link} "
     existing_message_moderator_post:
-      one: "Ein Beitrag wurde in eine existierende Nachricht veschoben: %{topic_link}"
+      one: "Ein Beitrag wurde in eine existierende Nachricht verschoben: %{topic_link}"
       other: "%{count} Beiträge wurden in eine existierende Nachricht verschoben: %{topic_link}"
   change_owner:
     post_revision_text: "Eigentümer übertragen."
@@ -1954,7 +1957,6 @@ de:
     omniauth_error:
       generic: "Entschuldigung, bei der Authentifizierung deines Kontos ist ein Fehler aufgetreten. Versuch es bitte noch einmal."
       csrf_detected: "Authentifizierung abgelaufen oder Browser gewechselt. Bitte noch einmal versuchen."
-      request_error: "Beim Start der Authentifizierung ist ein Fehler aufgetreten. Versuch es bitte noch einmal."
       invalid_iat: "Authentifizierungstoken kann wegen Differenzen der Server Uhrzeit nicht geprüft werden. Versuch es bitte noch einmal."
     omniauth_error_unknown: "Während des Anmeldens ist etwas schief gelaufen, bitte versuche es noch einmal."
     omniauth_confirm_title: "Anmeldung per %{provider}"

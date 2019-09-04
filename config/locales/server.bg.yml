@@ -114,6 +114,7 @@ bg:
     permalink: "Постоянен адрес"
     imported_from: "Това е упътваща дискусионна тема за първоначалното влизане в %{link}"
     in_reply_to: "▶ %{username}"
+    created: "Създадени"
   no_mentions_allowed: "Съжаляваме, не може да споменавате други потребители."
   too_many_mentions:
     one: "Съжеляваме, можете да споменавате само един потребител в публикация."
@@ -898,7 +899,7 @@ bg:
       invalid_string_min_max: "Трябва да бъде между %{min} и %{max} символа."
       invalid_string_min: "Трябва да бъде минимум %{min} символа."
       invalid_string_max: "Трябва да не бъде с повече от %{max} символа."
-      invalid_reply_by_email_address: "Стойността трябва да съдържа '%%{reply_key}' и да бъде различна от известяващия имейл."
+      invalid_reply_by_email_address: "Стойността трябва да съдържа '%{reply_key}' и да бъде различна от известяващия имейл."
   search:
     within_post: "#%{post_number} от %{username}"
     types:

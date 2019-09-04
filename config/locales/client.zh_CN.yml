@@ -44,21 +44,21 @@ zh_CN:
         less_than_x_seconds:
           other: "%{count}秒内"
         x_seconds:
-          other: "%{count}秒前"
+          other: "%{count}秒"
         less_than_x_minutes:
           other: "%{count}分钟内"
         x_minutes:
-          other: "%{count}分钟前"
+          other: "%{count}分钟"
         about_x_hours:
-          other: "%{count}小时前"
+          other: "约%{count}小时"
         x_days:
-          other: "%{count}天前"
+          other: "%{count}天"
         x_months:
           other: "%{count} 个月"
         about_x_years:
           other: "%{count}年内"
         over_x_years:
-          other: "%{count}年前"
+          other: "> %{count}年"
         almost_x_years:
           other: "近%{count}年"
         date_month: "MMMDo"
@@ -203,7 +203,7 @@ zh_CN:
       other: "%{count} 个字符"
     related_messages:
       title: "相关消息"
-      see_all: "查看来自@ %{username}的<a href=\"%{path}\">所有消息</a> ..."
+      see_all: '查看来自@ %{username}的<a href="%{path}">所有消息</a> ...'
     suggested_topics:
       title: "推荐主题"
       pm_title: "推荐私信"
@@ -548,6 +548,7 @@ zh_CN:
         remove_owner: "撤销所有者"
         remove_owner_description: "把<b>%{username}</b>从群组所有者中移除"
         owner: "所有者"
+        forbidden: "你不可以查看成员列表。"
       topics: "主题"
       posts: "帖子"
       mentions: "提及"
@@ -1285,6 +1286,8 @@ zh_CN:
         name: "GitHub"
         title: "GitHub 登录"
         message: "正在通过 GitHub 帐号验证登录（请确保浏览器没有禁止弹出窗口）"
+      discord:
+        name: "Discord"
     invites:
       accept_title: "邀请"
       welcome_to: "欢迎来到%{site_name}！"
@@ -2833,6 +2836,8 @@ zh_CN:
               staff: "群组拥有者及管理人员"
               owners: "群组拥有者"
               description: "管理员能看到所有群组。"
+            members_visibility_levels:
+              description: "管理员可以查看所有群组的成员。"
           membership:
             automatic: 自动
             trust_level: 信任等级
@@ -2937,6 +2942,8 @@ zh_CN:
         reviewable_event:
           name: "需审核事件"
           details: "当新条目准备审核时及其状态更新时。"
+        notification_event:
+          name: "通知事件"
         delivery_status:
           title: "分发状态"
           inactive: "不活跃"

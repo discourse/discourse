@@ -150,6 +150,7 @@ el:
     permalink: "Μόνιμος σύνδεσμος"
     imported_from: "Αυτό είναι ένα συνοδό θέμα συζητησης για την αρχική ανάρτηση στο %{link}"
     in_reply_to: "▶ %{username}"
+    created: "Δημιουργήθηκε"
   no_mentions_allowed: "Λυπούμαστε, δεν μπορείς να αναφέρεις άλλους χρήστες."
   too_many_mentions:
     one: "Λυπούμαστε, μπορείς να αναφέρεις μόνο έναν χρήστη σε κάθε ανάρτηση."
@@ -1262,8 +1263,8 @@ el:
       invalid_string_min_max: "Πρέπει να είναι μεταξύ %{min} και %{max} χαρακτήρες."
       invalid_string_min: "Πρέπει να είναι τουλάχιστον %{min} χαρακτήρες."
       invalid_string_max: "Δεν πρέπει να είναι περισσότεροι από %{max} χαρακτήρες."
-      invalid_reply_by_email_address: "Η αξία πρέπει να περιέχει '%%{reply_key}' και να είναι διαφορετική από την ειδοποίηση μέσω email."
-      invalid_alternative_reply_by_email_addresses: "Όλες οι αξίες πρέπει να περιέχουν '%%{reply_key}' και να είναι διαφορετικές από την ειδοποίηση μέσω email."
+      invalid_reply_by_email_address: "Η αξία πρέπει να περιέχει '%{reply_key}' και να είναι διαφορετική από την ειδοποίηση μέσω email."
+      invalid_alternative_reply_by_email_addresses: "Όλες οι αξίες πρέπει να περιέχουν '%{reply_key}' και να είναι διαφορετικές από την ειδοποίηση μέσω email."
       pop3_polling_host_is_empty: "Πρέπει να ρυθμίσετε εναν 'pop3 polling host' πρίν ενεργοποιήσετε το POP3 polling."
       pop3_polling_username_is_empty: "Πρέπει να θέσετε ένα 'pop3 polling όνομα χρήστη' πριν ενεργοποιήσετε το POP3 polling."
       pop3_polling_password_is_empty: "Πρέπει να θέσετε ένα 'pop3 polling κωδικό πρόσβασης' πριν ενεργοποιήσετε το POP3 polling."

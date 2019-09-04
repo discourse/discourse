@@ -1093,6 +1093,8 @@ sw:
         name: "GitHub"
         title: "na Github"
         message: "uthibitisho na Github (hakikisha vizuizi vya pop-up havijaruhusiwa)"
+      discord:
+        name: "Matatizo"
     invites:
       accept_title: "Mialiko"
       welcome_to: "Karibu %{site_name}"

@@ -225,7 +225,7 @@ es:
       other: "{{count}} caracteres"
     related_messages:
       title: " Mensajes relacionados"
-      see_all: "Ver <a href=\"%{path}\">todos los mensajes</a> de @%{username}..."
+      see_all: 'Ver <a href="%{path}">todos los mensajes</a> de @%{username}...'
     suggested_topics:
       title: "Temas sugeridos"
       pm_title: "Mensajes sugeridos"
@@ -1341,6 +1341,10 @@ es:
         name: "GitHub"
         title: "con GitHub"
         message: "Autenticando con GitHub (asegúrate de no tener habilitado ningún bloqueador de elementos emergentes)"
+      discord:
+        name: "Discord"
+        title: "con Discord"
+        message: "Autenticando con Discord"
     invites:
       accept_title: "Invitación"
       welcome_to: "¡Bienvenido a %{site_name}!"
@@ -1827,6 +1831,7 @@ es:
       group_request: "Necesitas solicitar la membresía al grupo «{{name}}» para ver este tema"
       group_join: "Debes unirte al grupo «{{name}}» para ver este tema"
       group_request_sent: "Tu solicitud de membresía al grupo fue enviada. Se te informará cuando seas aceptado."
+      unread_indicator: "Ningún miembro ha leído todavía la última publicación de este tema."
       read_more_MF: "Hay { UNREAD, plural, =0 {} one { <a href='{basePath}/unread'>1 no leído</a> } other { <a href='{basePath}/unread'># no leídos</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{y } false { } other{}} <a href='{basePath}/new'>1 nuevo</a> tema} other { {BOTH, select, true{y } false { } other{}} <a href='{basePath}/new'># nuevos</a> temas} } restantes, o {CATEGORY, select, true {explora otros temas en {catLink}} false {{latestLink}} other {}}"
       browse_all_categories: Ver todas las categorías
       view_latest_topics: ver los temas recientes
@@ -2201,6 +2206,7 @@ es:
         reply: "crear una respuesta a esta publicación"
         like: "me gusta esta publicación"
         has_liked: "te gusta esta publicación"
+        read_indicator: "miembros que han leído esta publicación"
         undo_like: "deshacer me gusta"
         edit: "editar esta publicación"
         edit_action: "Editar"
@@ -2257,6 +2263,7 @@ es:
           notify_user: "envió un mensaje"
           bookmark: "guardó esto en marcadores"
           like: "le dio me gusta a esto"
+          read: "leyeron esto"
           like_capped:
             one: "y {{count}} otro le gustó esto"
             other: "y {{count}} otros le dieron me gusta a esto"
@@ -2956,8 +2963,8 @@ es:
               owners: "Propietarios del grupo"
               description: "Los administradores pueden ver todos los grupos."
             members_visibility_levels:
-              title: "¿Quién puede ver los miembros de este grupo?"
               description: "Los administradores pueden ver los miembros de todos los grupos."
+            publish_read_state: "Publicar confirmaciones de lectura en los mensajes grupales"
           membership:
             automatic: Automático
             trust_level: Nivel de confianza

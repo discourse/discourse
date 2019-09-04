@@ -149,6 +149,7 @@ sk:
     permalink: "Trvalý odkaz"
     imported_from: "Toto je sprievodná diskusia k pôvodnej téme na %{link}"
     in_reply_to: "▶ %{username}"
+    created: "Vytvorené"
   no_mentions_allowed: "Ľutujeme, nesmiete zmieňovať iných používateľov"
   too_many_mentions:
     one: "Ľutujeme, v príspevku môžete zmieniť maximálne jedného používateľa."
@@ -1059,7 +1060,7 @@ sk:
       invalid_string_min_max: "Musí byť medzi %{min} a %{max} znakmi."
       invalid_string_min: "Musí byť minimálne %{min} znakov."
       invalid_string_max: "Nesmie byť viac ako %{max} znakov."
-      invalid_reply_by_email_address: "Hodnota musí obsahovať '%%{reply_key}' a byť odlišná od notifikačného emailu."
+      invalid_reply_by_email_address: "Hodnota musí obsahovať '%{reply_key}' a byť odlišná od notifikačného emailu."
       pop3_polling_host_is_empty: "Pred nastavením POP3 sťahovania musíte nastaviť 'pop3 adresu'."
       pop3_polling_username_is_empty: "Pred nastavením POP3 sťahovania musíte nastaviť 'pop3 používateľské meno'."
       pop3_polling_password_is_empty: "Pred nastavením POP3 sťahovania musíte nastaviť 'pop3 heslo'."

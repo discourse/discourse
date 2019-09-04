@@ -158,6 +158,7 @@ fa_IR:
     replies:
       one: "%{count} پاسخ"
       other: "%{count} پاسخ"
+    created: "ساخته شده"
   no_mentions_allowed: "متأسفیم، شما نمی‌توانید به کاربران دیگر اشاره کنید."
   too_many_mentions:
     one: "متأسفیم، شما در هر نوشته تنها می‌توانید به %{count} کاربر اشاره کنید."
@@ -1232,8 +1233,8 @@ fa_IR:
       invalid_string_min_max: "باید بین %{min} و %{max} نویسه باشد"
       invalid_string_min: "باید حداقل %{min} نویسه باشد "
       invalid_string_max: "نباید بیشتر از %{max} نویسه باشد"
-      invalid_reply_by_email_address: "مقدار باید شامل '%%{reply_key}' و از ایمیل آگاه سازی متفاوت باشد"
-      invalid_alternative_reply_by_email_addresses: "تمام مقدار‌ها باید شامل '%%{reply_key}' و ازسایر ایمیل‌های اطلاع‌رسانی جدا باشند."
+      invalid_reply_by_email_address: "مقدار باید شامل '%{reply_key}' و از ایمیل آگاه سازی متفاوت باشد"
+      invalid_alternative_reply_by_email_addresses: "تمام مقدار‌ها باید شامل '%{reply_key}' و ازسایر ایمیل‌های اطلاع‌رسانی جدا باشند."
       pop3_polling_host_is_empty: "حداقل باید یک 'هاست رای‌گیری pop3' قبل از فعالسازی رای‌گیری POP3 تنظیم کرده باشید."
       pop3_polling_username_is_empty: "حداقل باید یک 'نام کاربری رای‌گیری pop3' قبل از فعالسازی رای‌گیری POP3 تنظیم کرده باشید."
       pop3_polling_password_is_empty: "حداقل باید یک 'رمز‌عبور رای‌گیری pop3' قبل از فعالسازی رای‌گیری POP3 تنظیم کرده باشید."

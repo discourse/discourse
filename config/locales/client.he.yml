@@ -269,7 +269,7 @@ he:
       other: "{{count}} תווים"
     related_messages:
       title: "הודעות קשורות"
-      see_all: "להציג את <a href=\"%{path}\">כל ההודעות</a> מאת ‎@%{username}‎…"
+      see_all: 'להציג את <a href="%{path}">כל ההודעות</a> מאת ‎@%{username}‎…'
     suggested_topics:
       title: "נושאים מוצעים"
       pm_title: "הודעות מוצעות"
@@ -1439,6 +1439,10 @@ he:
         name: "GitHub"
         title: "עם GitHub"
         message: "אימות עם GitHub (יש לוודא שחוסם חלונות קופצים אינו פעיל)"
+      discord:
+        name: "Discord"
+        title: "עם Discord"
+        message: "אימות עם Discord"
     invites:
       accept_title: "הזמנה"
       welcome_to: "ברוך בואך אל %{site_name}!"
@@ -1961,6 +1965,7 @@ he:
       group_request: "עליך לבקש חברות בקבוצה `{{name}}` כדי לצפות בנושא הזה"
       group_join: "עליך להצטרף לקבוצה `{{name}}` כדי לצפות בנושא הזה"
       group_request_sent: "בקשת החברות שלך נשלחה לקבוצה הזו. ניידע אותך כשהיא תתקבל."
+      unread_indicator: "אף אחד מהחברים לא קרא את הפוסט האחרון של הנושא הזה עדיין."
       read_more_MF: "יש { UNREAD, plural, =0 {} one { <a href='{basePath}/unread'>1 שלא נקרא</a> } other { <a href='{basePath}/unread'># שלא נקראו</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{ו} false {} other{}} נושא חדש <a href='{basePath}/new'>אחד</a>} other { {BOTH, select, true{ו} false {} other{}} <a href='{basePath}/new'>#</a> נושאים חדשים} } נותרים, or {CATEGORY, select, true {עיין בנושאים אחרים ב {catLink}} false {{latestLink}} other {}}"
       browse_all_categories: עיינו בכל הקטגוריות
       view_latest_topics: הצגת נושאים אחרונים
@@ -2367,6 +2372,7 @@ he:
         reply: "התחילו לכתוב תגובה לפוסט זה"
         like: "תנו לייק לפוסט זה"
         has_liked: "אהבת פוסט זה"
+        read_indicator: "חברים שקוראים את הפוסט הזה"
         undo_like: "בטל 'אהוב'"
         edit: "עירכו פוסט זה"
         edit_action: "עריכה"
@@ -2429,6 +2435,7 @@ he:
           notify_user: "נשלחה הודעה"
           bookmark: "סומן"
           like: "אהבו את זה"
+          read: "קוראים את זה"
           like_capped:
             one: "ועוד מישהו אהב את זה"
             two: "ועוד 2 נוספים אהבו את זה"
@@ -3180,8 +3187,9 @@ he:
               owners: "בעלי קבוצות"
               description: "מנהלים יכולים לראות את כל הקבוצות."
             members_visibility_levels:
-              title: "למי יש הרשאה לצפות ברשימת חברי הקבוצה?"
+              title: "מי יכול לראות את חברי הקבוצה הזו?"
               description: "מנהלים יכולים לראות את רשימות חברי כל הקבוצות."
+            publish_read_state: "בהודעות קבוצתית לפרסם את מצב הקריאה של הקבוצה"
           membership:
             automatic: אוטומטי
             trust_level: רמת אמון

@@ -225,7 +225,7 @@ fa_IR:
       other: "{{count}} نویسه"
     related_messages:
       title: "پیام‌های مرتبط"
-      see_all: "<a href=\"%{path}\">تمام پیام‌های</a>از طرف%{username}@ را ببینید"
+      see_all: '<a href="%{path}">تمام پیام‌های</a>از طرف%{username}@ را ببینید'
     suggested_topics:
       title: "موضوعات پیشنهادی"
       pm_title: "پیام‌های پیشنهادی"

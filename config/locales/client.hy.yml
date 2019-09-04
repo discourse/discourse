@@ -1192,6 +1192,8 @@ hy:
         name: "GitHub"
         title: "GitHub-ով"
         message: "Վավերացում GitHub-ով (համոզվեք, որ փոփ-ափ արգելափակումները միացված չեն)"
+      discord:
+        name: "Discord"
     invites:
       accept_title: "Հրավեր"
       welcome_to: "Բարի Գալուստ %{site_name}!"

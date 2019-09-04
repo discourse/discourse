@@ -124,6 +124,7 @@ sl:
       two: "%{count} odgovora"
       few: "%{count} odgovori"
       other: "%{count} odgovorov"
+    created: "Ustvarjeno"
   no_mentions_allowed: "Ne morete omenjati drugih uporabnikov."
   too_many_mentions:
     one: "V prispevku lahko omenite samo %{count} uporabnika."

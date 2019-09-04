@@ -225,7 +225,7 @@ hu:
       other: "{{count}} karakter"
     related_messages:
       title: "Kapcsolódó üzenetek"
-      see_all: "Az <a href=\"%{path}\">összes üzenet</a> megjelenítése @%{username} felhasználótól…"
+      see_all: 'Az <a href="%{path}">összes üzenet</a> megjelenítése @%{username} felhasználótól…'
     suggested_topics:
       title: "Ajánlott témák"
       pm_title: "Ajánlott üzenetek"
@@ -1257,6 +1257,8 @@ hu:
         name: "GitHub"
         title: "GitHub"
         message: "Azonosítás a GitHub-bal (ellenőrizd, hogy a felugró ablakok engedélyezve vannak)"
+      discord:
+        name: "Discord"
     invites:
       accept_title: "Meghívás"
       welcome_to: "Üdvözöllek a%{site_name}"

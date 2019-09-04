@@ -1291,6 +1291,8 @@ pl_PL:
         name: "GitHub"
         title: "przez GitHub"
         message: "Uwierzytelnianie przez GitHub (upewnij się, że blokada wyskakujących okienek nie jest włączona)"
+      discord:
+        name: "Discord"
     invites:
       accept_title: "Zaproszenie"
       welcome_to: "Witaj na %{site_name}!"

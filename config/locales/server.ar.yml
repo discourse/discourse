@@ -164,6 +164,7 @@ ar:
     permalink: "الرابط الثابت"
     imported_from: "هذا موضوع نقاش مصاحب للمدخل الأصلي على %{link}"
     in_reply_to: "◀ %{username}"
+    created: "أُنشئ في"
   no_mentions_allowed: "نأسف، لا يمكنك الإشارة إلى الغير."
   too_many_mentions:
     zero: "عذرا، لا يمكنك الإشارة إلى أحد في كلّ مشاركة."
@@ -1216,7 +1217,7 @@ ar:
       invalid_string_min_max: "يجب أن تكون الأحرف بين %{min} و %{max}."
       invalid_string_min: "يجب أن تكون على الأقل %{min} أحرف"
       invalid_string_max: "يجب ان لا تكون الاحرف اكثر من %{max} "
-      invalid_reply_by_email_address: "القيمة يجب أن تحتوي '%%{reply_key}' وتختلف عن إشعار البريد الإلكتروني."
+      invalid_reply_by_email_address: "القيمة يجب أن تحتوي '%{reply_key}' وتختلف عن إشعار البريد الإلكتروني."
       min_username_length_range: "لا يمكن أن تكون القيمة الدنيا أكبر من العليا."
       max_username_length_range: "لا يمكن أن تكون القيمة العليا أصغر من الدنيا."
   search:

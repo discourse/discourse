@@ -125,6 +125,7 @@ bs_BA:
     permalink: "Permalink"
     imported_from: "This is a companion discussion topic for the original entry at %{link}"
     in_reply_to: "▶ %{username}"
+    created: "Kreiran"
   no_mentions_allowed: "Žao nam je, ne možete spominjati druge korisnike."
   no_mentions_allowed_newuser: "Žao nam je, novi korisnici ne mogu spominjati druge korisnike."
   no_images_allowed: "Sorry, new users can't put images in posts."

@@ -221,6 +221,7 @@ da:
     replies:
       one: "%{count} svar"
       other: "%{count} svarer"
+    created: "Oprettet"
   no_mentions_allowed: "Beklager, du kan ikke nævne andre brugere."
   too_many_mentions:
     one: "Beklager, men du kan kun nævne %{count} brugere i et indlæg."

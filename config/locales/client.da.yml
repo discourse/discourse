@@ -225,7 +225,7 @@ da:
       other: "{{count}} tegn"
     related_messages:
       title: "Relaterede beskeder"
-      see_all: "Se <a href=\"%{path}\">alle beskeder</a> fra @ %{username} ..."
+      see_all: 'Se <a href="%{path}">alle beskeder</a> fra @ %{username} ...'
     suggested_topics:
       title: "Foreslåede emner"
       pm_title: "Foreslåede beskeder"

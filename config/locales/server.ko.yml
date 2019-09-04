@@ -160,6 +160,7 @@ ko:
     in_reply_to: "▶ %{username}"
     replies:
       other: "%{count} 댓글"
+    created: "생성일자"
   no_mentions_allowed: "죄송합니다, 다른 사용자를 언급할 수 없습니다."
   too_many_mentions:
     other: "죄송합니다, 이 포스트에서 %{count}명의 사용자만 언급할 수 있습니다."
@@ -1261,7 +1262,7 @@ ko:
       invalid_string_min_max: "글자 수가 %{min}자 이상 %{max}자 이하이어야 합니다."
       invalid_string_min: "글자수가 %{min}자 이상이어야 합니다."
       invalid_string_max: "글자 수가 %{max}자 이상이어야 합니다."
-      invalid_reply_by_email_address: "값이 반드시 '%%{reply_key}'를 갖고 있어야하며 알림 이메일과 달라야합니다."
+      invalid_reply_by_email_address: "값이 반드시 '%{reply_key}'를 갖고 있어야하며 알림 이메일과 달라야합니다."
       invalid_regex: "허용되지 않거나 올바르지 않은 정규표현식입니다."
       min_username_length_range: "최소값은 최대값보다 크게 설정할 수 없습니다."
       max_username_length_range: "최대값은 최소값보다 작게 설정할 수 없습니다."

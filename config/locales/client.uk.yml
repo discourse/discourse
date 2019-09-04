@@ -269,7 +269,7 @@ uk:
       other: "{{count}} символів"
     related_messages:
       title: "Пов'язані повідомлення"
-      see_all: "Переглянути <a href=\"%{path}\">усі повідомлення</a> від @%{username}…"
+      see_all: 'Переглянути <a href="%{path}">усі повідомлення</a> від @%{username}…'
     suggested_topics:
       title: "Пропоновані теми"
       pm_title: "Пропоновані повідомлення"

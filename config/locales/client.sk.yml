@@ -1166,6 +1166,8 @@ sk:
       github:
         title: "pomocou GitHub"
         message: "Prihlásenie pomocou GitHub účtu (prosím uistite sa, že vyskakovacie okná sú povolené)"
+      discord:
+        name: "Discord"
     invites:
       accept_title: "Pozvánka"
       welcome_to: "Vitajte na %{site_name}!"

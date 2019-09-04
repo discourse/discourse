@@ -225,7 +225,7 @@ nl:
       other: "{{count}} tekens"
     related_messages:
       title: "Gerelateerde berichten"
-      see_all: "<a href=\"%{path}\">Alle berichten</a> van @%{username}bekijken..."
+      see_all: '<a href="%{path}">Alle berichten</a> van @%{username}bekijken...'
     suggested_topics:
       title: "Aanbevolen topics"
       pm_title: "Voorgestelde berichten"
@@ -1341,6 +1341,10 @@ nl:
         name: "GitHub"
         title: "met GitHub"
         message: "Authenticeren met GitHub (zorg ervoor dat pop-upblokkeringen zijn uitgeschakeld)"
+      discord:
+        name: "Discord"
+        title: "met Discord"
+        message: "Authenticeren met Discord"
     invites:
       accept_title: "Uitnodiging"
       welcome_to: "Welkom bij %{site_name}!"
@@ -1827,6 +1831,7 @@ nl:
       group_request: "U dient lidmaatschap voor de groep `{{name}}` aan te vragen om dit topic te zien"
       group_join: "U dient lid van de groep `{{name}}` te zijn om dit topic te zien"
       group_request_sent: "Uw lidmaatschapsaanvraag voor de groep is verstuurd. U ontvangt een melding zodra deze is geaccepteerd."
+      unread_indicator: "Nog geen enkel lid heeft het laatste bericht van dit topic gelezen."
       read_more_MF: "Er { UNREAD, plural, =0 {} one { is <a href='{basePath}/unread'>1 ongelezen</a> } other { zijn <a href='{basePath}/unread'># ongelezen</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{and } false {is } other{}} <a href='{basePath}/new'>1 nieuw</a> topic} other { {BOTH, select, true{and } false {zijn } other{}} <a href='{basePath}/new'># nieuwe</a> topics} } over, of {CATEGORY, select, true {blader door andere topics in {catLink}} false {{latestLink}} other {}}"
       browse_all_categories: Alle categorieën bekijken
       view_latest_topics: nieuwste topics bekijken
@@ -2201,6 +2206,7 @@ nl:
         reply: "beginnen met opstellen van een antwoord op dit bericht"
         like: "dit bericht liken"
         has_liked: "u hebt dit bericht geliket"
+        read_indicator: "leden die dit bericht hebben gelezen"
         undo_like: "like ongedaan maken"
         edit: "dit bericht bewerken"
         edit_action: "Bewerken"
@@ -2257,6 +2263,7 @@ nl:
           notify_user: "heeft een bericht gestuurd"
           bookmark: "heeft dit aan bladwijzers toegevoegd"
           like: "heeft dit geliket"
+          read: "heeft dit gelezen"
           like_capped:
             one: "en {{count}} ander heeft dit geliket"
             other: "en {{count}} anderen hebben dit geliket"
@@ -2956,8 +2963,9 @@ nl:
               owners: "Groepseigenaren"
               description: "Beheerders kunnen alle groepen zien."
             members_visibility_levels:
-              title: "Wie kan deze groepsleden zien?"
+              title: "Wie kan de leden van deze groep zien?"
               description: "Beheerders kunnen leden van alle groepen zien."
+            publish_read_state: "Bij groepsberichten leesstatus van groep publiceren"
           membership:
             automatic: Automatisch
             trust_level: Vertrouwensniveau
