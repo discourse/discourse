@@ -73,7 +73,7 @@ module Middleware
       end
 
       def cache_key
-        @cache_key ||= "ANON_CACHE_#{@env["HTTP_ACCEPT"]}_#{@env["HTTP_HOST"]}#{@env["REQUEST_URI"]}|m=#{is_mobile?}|c=#{is_crawler?}|b=#{has_brotli?}|t=#{theme_ids.join(",")}"
+        @cache_key ||= "ANON_CACHE_#{@env["HTTP_ACCEPT"]}_#{@env["HTTP_HOST"]}#{@env["REQUEST_URI"]}|m=#{is_mobile?}|c=#{is_crawler?}|b=#{has_brotli?}|t=#{theme_ids.join(",")}#{GlobalSetting.compress_anon_cache}"
       end
 
       def theme_ids
@@ -84,6 +84,10 @@ module Middleware
         else
           []
         end
+      end
+
+      def cache_key_count
+        @cache_key_count ||= "#{cache_key}_count"
       end
 
       def cache_key_body
@@ -154,8 +158,26 @@ module Middleware
         !!(!has_auth_cookie? && get? && no_cache_bypass)
       end
 
+      def compress(val)
+        if val && GlobalSetting.compress_anon_cache
+          require "lz4-ruby" if !defined?(LZ4)
+          LZ4::compress(val)
+        else
+          val
+        end
+      end
+
+      def decompress(val)
+        if val && GlobalSetting.compress_anon_cache
+          require "lz4-ruby" if !defined?(LZ4)
+          LZ4::uncompress(val)
+        else
+          val
+        end
+      end
+
       def cached(env = {})
-        if body = $redis.get(cache_key_body)
+        if body = decompress($redis.get(cache_key_body))
           if other = $redis.get(cache_key_other)
             other = JSON.parse(other)
             if req_params = other[1].delete(ADP)
@@ -174,9 +196,27 @@ module Middleware
       #  that fills it up, this avoids a herd killing you, we can probably do this using a job or redis tricks
       #  but coordinating this is tricky
       def cache(result, env = {})
+        return result if GlobalSetting.anon_cache_store_threshold == 0
+
         status, headers, response = result
 
         if status == 200 && cache_duration
+
+          if GlobalSetting.anon_cache_store_threshold > 1
+            count = $redis.eval(<<~REDIS, [cache_key_count], [cache_duration])
+              local current = redis.call("incr", KEYS[1])
+              redis.call("expire",KEYS[1],ARGV[1])
+              return current
+            REDIS
+
+            # technically lua will cast for us, but might as well be
+            # prudent here, hence the to_i
+            if count.to_i < GlobalSetting.anon_cache_store_threshold
+              headers["X-Discourse-Cached"] = "skip"
+              return [status, headers, response]
+            end
+          end
+
           headers_stripped = headers.dup.delete_if { |k, _| ["Set-Cookie", "X-MiniProfiler-Ids"].include? k }
           headers_stripped["X-Discourse-Cached"] = "true"
           parts = []
@@ -191,7 +231,7 @@ module Middleware
             }
           end
 
-          $redis.setex(cache_key_body,  cache_duration, parts.join)
+          $redis.setex(cache_key_body,  cache_duration, compress(parts.join))
           $redis.setex(cache_key_other, cache_duration, [status, headers_stripped].to_json)
 
           headers["X-Discourse-Cached"] = "store"
