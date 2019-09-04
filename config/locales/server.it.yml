@@ -235,6 +235,7 @@ it:
     replies:
       one: "%{count} risposta"
       other: "%{count} risposte"
+    created: "Creazione"
   no_mentions_allowed: "Spiacenti, non puoi menzionare altri utenti."
   too_many_mentions:
     one: "Spiacenti, puoi menzionare al massimo un utente in un messaggio."
@@ -1815,8 +1816,8 @@ it:
       invalid_string_min_max: "Il numero di caratteri deve essere tra %{min} e %{max}."
       invalid_string_min: "Il numero di caratteri deve essere di almeno %{min}."
       invalid_string_max: "Il numero di caratteri non deve eccedere %{max}."
-      invalid_reply_by_email_address: "Il valore deve contenere '%%{reply_key}' ed essere differente dalla email di notifica."
-      invalid_alternative_reply_by_email_addresses: "Tutti i valori devono contenere '%%{reply_key}' ed essere differenti dalla email di notifica."
+      invalid_reply_by_email_address: "Il valore deve contenere '%{reply_key}' ed essere differente dalla email di notifica."
+      invalid_alternative_reply_by_email_addresses: "Tutti i valori devono contenere '%{reply_key}' ed essere differenti dalla email di notifica."
       pop3_polling_host_is_empty: "È necessario impostare 'pop3 polling host' prima di attivare il polling POP3."
       pop3_polling_username_is_empty: "È necessario impostare 'pop3 polling username' prima di attivare il polling POP3."
       pop3_polling_password_is_empty: "È necessario impostare 'pop3 polling password' prima di attivare il polling POP3."
@@ -1961,7 +1962,6 @@ it:
     omniauth_error:
       generic: "Siamo spiacenti, c'è stato un errore durante l'autorizzazione del tuo account. Per favore riprova."
       csrf_detected: "L'autorizzazione è scaduta, o hai cambiato browser. Per favore riprova."
-      request_error: "C'è stato un errore all'avvio dell'autorizzazione. Per favore riprova."
       invalid_iat: "Impossibile verificare il token di autorizzazione a causa della differenza di orario degli orologi dei servers. Per favore riprova."
     omniauth_error_unknown: "Qualcosa è andato storto durante il collegamento, per favore riprova."
     omniauth_confirm_title: "Accedi usando %{provider}"

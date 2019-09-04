@@ -134,6 +134,7 @@ hu:
     permalink: "Közvetlen hivatkozás"
     imported_from: "Ez egy kapcsolódó beszélgetési téma, az eredeti bejegyzés itt található: %{link}"
     in_reply_to: "▶ %{username}"
+    created: "Létrehozott"
   no_mentions_allowed: "Sajnáljuk, de nem említhet meg más felhasználókat."
   too_many_mentions:
     one: "Sajnáljuk, de csak egy felhasználót említhet meg egy bejegyzésben."

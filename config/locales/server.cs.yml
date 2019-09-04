@@ -151,6 +151,7 @@ cs:
     permalink: "Permalink"
     imported_from: "Diskuze k původnímu příspěvku na blogu: %{link}"
     in_reply_to: "▶ %{username}"
+    created: "Vytvořený"
   no_mentions_allowed: "Bohužel, nemůžete zmiňovat ostatní uživatele."
   too_many_mentions:
     one: "Bohužel, můžete zmínit jen jednoho uživatele v jednom příspěvku."

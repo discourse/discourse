@@ -217,6 +217,8 @@ lv:
       zero: "{{count}} zīmes"
       one: "{{count}} zīme"
       other: "{{count}} zīmes"
+    related_messages:
+      title: "Saistītās ziņas"
     suggested_topics:
       title: "Ieteiktās tēmas"
       pm_title: "Ieteiktās ziņas"
@@ -275,6 +277,7 @@ lv:
       title:
         placeholder: "ierakstiet tēmas nosaukumu šeit"
     review:
+      order_by: "Kārtot pēc"
       delete: "Dzēst"
       settings:
         saved: "Saglabāts"
@@ -282,6 +285,8 @@ lv:
         title: "Iestatījumi"
       topic: "Tēma:"
       filtered_user: "Lietotājs"
+      deleted_post: "(ieraksts dzēsts)"
+      deleted_user: "(lietotājs dzēsts)"
       user:
         username: "Lietotājvārds"
         email: "E-pasts"
@@ -290,12 +295,19 @@ lv:
       topics:
         topic: "Tēmas"
         reviewable_count: "Skaits"
+        deleted: "[Temats dzēsts]"
+        original: "(sākotnējais temats)"
       edit: "Labot"
       save: "Saglabāt"
       cancel: "Atcelt"
       filters:
         refresh: "Pārlādēt"
+        status: "Statuss"
         category: "Sadaļa"
+        orders:
+          priority: "Prioritāte"
+      scores:
+        status: "Statuss"
       statuses:
         pending:
           title: "Gaidošie"
@@ -399,8 +411,15 @@ lv:
         title: "Grupas"
         empty: "Nav redzamu grupu."
         automatic: "Automātiski"
+        closed: "Slēgts"
+        public: "Publisks"
+        private: "Privāts"
         automatic_group: Automātiska grupa
         my_groups: "Manas grupas"
+      title:
+        zero: "Grupas"
+        one: "Grupa"
+        other: "Grupas"
       activity: "Aktivitāte"
       members:
         title: "Dalībnieki"
@@ -505,6 +524,9 @@ lv:
       private_messages: "Ziņas"
       user_notifications:
         ignore_duration_username: "Lietotājvārds"
+        ignore_duration_when: "Ilgums:"
+        ignore_duration_save: "Ignorēt"
+        add_ignored_user: "Pievienot..."
         mute_option: "Noklusināts"
         normal_option: "Normāls"
       activity_stream: "Aktivitāte"
@@ -1789,6 +1811,7 @@ lv:
       search_priority:
         options:
           normal: "Normāls"
+          ignore: "Ignorēt"
       sort_options:
         default: "noklusējuma"
         likes: "Atzinības"

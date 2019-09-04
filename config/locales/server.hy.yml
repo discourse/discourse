@@ -225,6 +225,7 @@ hy:
     replies:
       one: "%{count} պատասխան"
       other: "%{count} պատասխան"
+    created: "Ստեղծված"
   no_mentions_allowed: "Ներողություն, Դուք չեք կարող նշել այլ օգտատերերի:"
   too_many_mentions:
     one: "Ներողություն, Դուք կարող եք գրառման մեջ նշել միայն մեկ այլ օգտատիրոջ:"
@@ -1678,8 +1679,6 @@ hy:
       invalid_string_min_max: "Պետք է ունենա %{min} -ից %{max} սիմվոլ:"
       invalid_string_min: "Պետք է ունենա առնվազն %{min} սիմվոլ:"
       invalid_string_max: "Պետք է լինի %{max} սիմվոլից ոչ ավելի:"
-      invalid_reply_by_email_address: "Արժեքը պետք է պարունակի '%%{reply_key}' և տարբերվի ծանուցման նամակից:"
-      invalid_alternative_reply_by_email_addresses: "Բոլոր արժեքները պետք է պարունակեն '%%{reply_key}' և տարբեր լինեն ծանուցումների հաղորդագրությունից:"
       pop3_polling_host_is_empty: "Դուք պետք է սահմանեք 'pop3 polling հոսթ' ՝ մինչ POP3 polling -ը միացնելը:"
       pop3_polling_username_is_empty: "Դուք պետք է սահմանեք 'pop3 polling օգտանուն' ՝ մինչ POP3 polling -ը միացնելը:"
       pop3_polling_password_is_empty: "Դուք պետք է սահմանեք 'pop3 polling գաղտնաբառ' ՝ մինչ POP3 polling-ը միացնելը:"

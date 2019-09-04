@@ -68,6 +68,7 @@ sr:
   embed:
     start_discussion: "Započnite diskusiju"
     continue: "Nastavite diskusiju"
+    created: "Napravljeno"
   no_links_allowed: "Žao nam je, novi korisnici ne mogu postavljati linkove u svoje postove."
   user_is_suspended: "Suspendovanim korisnicima nije dozvoljeno da objavljuju postove."
   topic_not_found: "Nešto se dogodilo. Možda je tema zatvorena ili izbrisana dok ste je gledali?"

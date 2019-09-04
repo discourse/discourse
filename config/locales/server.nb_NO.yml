@@ -192,6 +192,7 @@ nb_NO:
     permalink: "Permalink"
     imported_from: "Dette er en relatert diskusjon ved siden av det originale innlegget ved %{link}"
     in_reply_to: "▶ %{username}"
+    created: "Opprettet"
   no_mentions_allowed: "Beklager, du kan ikke nevne andre brukere."
   too_many_mentions:
     one: "Beklager, du kan bare nevne en bruker i et innlegg. "

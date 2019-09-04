@@ -71,6 +71,7 @@ uk:
     loading: "Завантаження обговорення..."
     permalink: "Постійне посилання"
     imported_from: "Discussion topic for the original blog entry at: %{link}"
+    created: "Створено"
   no_images_allowed: "Даруйте, нові користувачі не можуть вставляти зображення в дописи."
   too_many_images:
     one: "Даруйте, нові користувачі можуть вставляти тільки одне зображення в допис."

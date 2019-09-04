@@ -144,6 +144,7 @@ ro:
     permalink: "Link permanent"
     imported_from: "Acesta este un subiect de discuție adăugat la discuția originală de la %{link}"
     in_reply_to: "▶ %{username}"
+    created: "Creat"
   no_mentions_allowed: "Ne pare rău, nu poți menționa alți utilizatori."
   too_many_mentions:
     one: "Ne pare rău, poți menționa doar un utilizator într-o postare."
@@ -1174,8 +1175,8 @@ ro:
       invalid_string_min_max: "Trebuie să aibă între %{min} și %{max} caractere."
       invalid_string_min: "Trebuie să aibă %{min} caractere."
       invalid_string_max: "Nu trebuie să depășească %{max} caractere."
-      invalid_reply_by_email_address: "Valoarea trebuie să conțină '%%{reply_key}' și să fie diferită de emailul de notificare."
-      invalid_alternative_reply_by_email_addresses: "Toate valorile trebuie să conțină '%%{reply_key}' și să fie diferite de emailul de notificare."
+      invalid_reply_by_email_address: "Valoarea trebuie să conțină '%{reply_key}' și să fie diferită de emailul de notificare."
+      invalid_alternative_reply_by_email_addresses: "Toate valorile trebuie să conțină '%{reply_key}' și să fie diferite de emailul de notificare."
       pop3_polling_host_is_empty: "Trebuie să setezi „numele serverului de POP3” înainte să poți activa retragerea de emailuri prin POP3"
       pop3_polling_username_is_empty: "Trebuie să setezi „numele utilizator pe serverul POP3” înainte să poți activa retragerea de emailuri prin POP3."
       pop3_polling_password_is_empty: "Trebuie să setezi „parola pe serverul POP3” înainte să poți activa retragerea de emailuri prin POP3."

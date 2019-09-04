@@ -113,6 +113,11 @@ fi:
       random_mention:
         reply: |-
           Moi! Jos haluat tietää mitä osaan, sano `@%{discobot_username} %{help_trigger}`.
+        tracks: |-
+          Osaan tehdä seuraavat asiat:
+
+          `@%{discobot_username}%{reset_trigger}{name-of-tutorial}`
+          > Aloittaa interaktiivisen kurssin. `{name-of-tutorial} ` voi olla jokin seuraavista: `%{tracks}`.
         bot_actions: |-
           `@%{discobot_username} %{dice_trigger} 2d6`
           > :game_die: dice roll: 3, 6
@@ -135,9 +140,19 @@ fi:
 
           En häiritse sinua enempää nyt.
     new_user_narrative:
+      reset_trigger: "opastus"
+      title: "Diplomi opastuksen suorittamisesta"
       cert_title: "Tunnustuksena palstan käytön peruskurssin menestyksekkäästä suorittamisesta"
       hello:
         title: "Tervehdys!"
+        message: |
+          Kiitos kun liityit sivustolle %{title}. Tervetuloa!
+
+          - Olen vain robotti, mutta [avulias henkilökuntamme](%{base_uri}/about) on myös täällä auttamassa, jos sinun tarvitsee saada yhteys ihmiseen.
+
+          - Turvallisuussyistä uusi käyttäjä ei voi heti tehdä kaikkea. Saat [uusia kykyjä] (https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/) (ja [ansiomerkkejä] (%{base_uri}/badges)) sitä mukaa, kun tutustumme sinuun.
+
+          Vannomme [sivistyneen yhteisökäyttäytymisen](%{base_uri}/guidelines) nimeen kaikissa tilanteissa.
       onebox:
         instructions: |-
           Voisitko nyt jakaa jonkun seuraavista linkeistä minulle? Laita vastaukseesi **linkin osoite yksin omalle rivilleen**, jolloin siitä muotoillaan automaattisesti kätevä tiivistelmälaatikko.
@@ -287,6 +302,7 @@ fi:
       certificate:
         alt: "Diplomi"
     advanced_user_narrative:
+      reset_trigger: "edistynyt opastus"
       cert_title: "Tunnustuksena palstan käytön jatkokurssin menestyksekkäästä suorittamisesta"
       title: ":arrow_up: Jatkokurssi"
       start_message: |-
@@ -326,6 +342,10 @@ fi:
           Tekisitkö palveluksen ja <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-rotate-left.png" width="16" height="16"> **palauttaisit** sen?
         not_found: |-
           Onko ongelmia? Muista, että <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> näytä lisää -kuvake paljastaa <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-rotate-left.png" width="16" height="16"> palauta-kuvakkeen.
+        reply: |-
+          Huh, sydäntä kylmäsi! Kiitos, kun korjasit mokani. :wink:
+
+          Huomioi, että viestin voi palauttaa vain %{deletion_after} tunnin sisällä sen poistamisesta.
       category_hashtag:
         instructions: |-
           Tiesitkö, että viesteissä voi viitata alueisiin ja tunnisteisiin? Esimerkiksi, oletko käynyt %{category}-alueella?

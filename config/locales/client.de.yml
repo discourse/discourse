@@ -225,7 +225,7 @@ de:
       other: "{{count}} Zeichen"
     related_messages:
       title: "Verwandte Nachrichten"
-      see_all: "Siehe <a href=\"%{path}\">alle Nachrichten</a> von @%{username}..."
+      see_all: 'Siehe <a href="%{path}">alle Nachrichten</a> von @%{username}...'
     suggested_topics:
       title: "Vorgeschlagene Themen"
       pm_title: "Vorgeschlagene Nachrichten"
@@ -1341,6 +1341,8 @@ de:
         name: "GitHub"
         title: "mit GitHub"
         message: "Authentifiziere mit GitHub (stelle sicher, dass keine Pop-up-Blocker aktiviert sind)"
+      discord:
+        name: "Discord"
     invites:
       accept_title: "Einladung"
       welcome_to: "Willkommen bei %{site_name}!"
@@ -2201,6 +2203,7 @@ de:
         reply: "verfasse eine Antwort auf diesen Beitrag"
         like: "dieser Beitrag gefällt mir"
         has_liked: "dir gefällt dieser Beitrag"
+        read_indicator: "Mitglieder, die diesen Beitrag gelesen haben"
         undo_like: "gefällt mir nicht mehr"
         edit: "diesen Beitrag bearbeiten"
         edit_action: "Bearbeiten"
@@ -2257,6 +2260,7 @@ de:
           notify_user: "hat eine Nachricht gesendet"
           bookmark: "hat/haben ein Lesezeichen gesetzt"
           like: "gefällt dies"
+          read: "lies dies"
           like_capped:
             one: "und {{count}} anderen gefällt das"
             other: "und {{count}} anderen gefällt das"
@@ -2952,8 +2956,8 @@ de:
               owners: "Gruppenbesitzer"
               description: "Administratoren können alle Gruppen sehen."
             members_visibility_levels:
-              title: "Wer kann diese Gruppenmitglieder sehen?"
               description: "Administratoren können die Mitglieder aller Gruppen sehen."
+            publish_read_state: "Auf Gruppen-Benachrichtigungen veröffentliche Gruppen-gelesen-Status"
           membership:
             automatic: Automatisch
             trust_level: Vertrauensstufe

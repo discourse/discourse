@@ -146,6 +146,7 @@ fr:
         one: c'est la mauvaise longueur (devrait être de %{count} caractère)
         other: est de la mauvaise longueur (devrait être de %{count} caractères)
       other_than: "doit être différent de %{count}"
+      sso_overrides_username: "Le nom d'utilisateur doit être mis à jour côté fournisseur SSO, car le paramètre `sso_overrides_username` est activé."
     template:
       body: "Des problèmes ont été rencontrés sur les champs suivants : "
       header:
@@ -154,6 +155,7 @@ fr:
     embed:
       load_from_remote: "Il y a eu une erreur lors du chargement de ce message."
     site_settings:
+      invalid_category_id: "Vous avez spécifiez une catégorie qui n'existe pas"
       invalid_choice:
         one: "Vous avez spécifié le choix invalide %{name}"
         other: "Vous avez spécifié les choix invalides %{name}"
@@ -167,6 +169,8 @@ fr:
     errors:
       <<: *errors
   invite:
+    not_found: "Votre jeton d'invitation est invalide. Veuillez <a href='%{base_url}/about'>contacter le personnel</a>."
+    not_found_json: "Votre jeton d'invitation est invalide. Veuillez contacter le personnel."
     not_found_template: |
       <p>Votre invitation à <a href="%{base_url}">%{site_name}</a> a déjà été utilisée.</p>
 
@@ -217,6 +221,7 @@ fr:
     continue: "Continuer la discussion"
     error: "Erreur d'intégration"
     referer: "Référent :"
+    error_topics: "Le paramètre de site `Embed Topics List` n'a pas été activé"
     mismatch: "Le référent n'a pas été envoyé, ou ne correspondait à aucun des hôtes suivants :"
     no_hosts: "Aucun hôte n'a été configuré pour l'intégration."
     configure: "Configurer l'intégration"
@@ -230,6 +235,7 @@ fr:
     replies:
       one: "%{count} réponse"
       other: "%{count} réponses"
+    created: "Créé"
   no_mentions_allowed: "Désolé, vous ne pouvez pas mentionner d'autres utilisateurs."
   too_many_mentions:
     one: "Désolé, vous ne pouvez mentionner qu'un utilisateur dans un message."
@@ -253,6 +259,7 @@ fr:
     one: "Désolé, les nouveaux utilisateurs ne peuvent insérer qu'un seul lien par message."
     other: "Désolé, les nouveaux utilisateurs ne peuvent insérer que %{count} liens par message."
   contains_blocked_word: "Votre message contient un mot qui n'est pas permis : %{word}"
+  contains_blocked_words: "Votre message contient plusieurs mots qui ne sont pas autorisés: %{words}"
   spamming_host: "Désolé, vous ne pouvez pas insérer de lien vers ce domaine."
   user_is_suspended: "Les utilisateurs suspendus ne sont pas autorisés à poster de messages."
   topic_not_found: "Une erreur est survenue. Peut-être que ce sujet a été fermé ou supprimé pendant que vous le regardiez ?"
@@ -326,6 +333,7 @@ fr:
     request_membership_pm:
       title: "Demande d'adhésion pour @%{group_name}"
       handle: "Gérer demande d'adhésion"
+    view_hidden_topic_request_reason: "J'aimerais rejoindre le groupe '%{group_name}' afin d'accéder à [ce sujet] (%{topic_url})."
   education:
     until_posts:
       one: "%{count} message"
@@ -530,6 +538,7 @@ fr:
       description_incomplete: "Le message de description de la catégorie doit avoir au moins un paragraphe."
       permission_conflict: "Tout groupe autorisé à accéder à une sous-catégorie doit également avoir accès à la catégorie parente. Les groupes suivants ont accès à une des sous-catégories, mais n'ont pas accès à la catégorie parente : %{group_names}."
       disallowed_topic_tags: "Ce sujet contient des étiquettes qui ne sont pas autorisées dans cette catégorie : %{tags}"
+      disallowed_tags_generic: "Ce sujet contient des étiquettes interdits."
     cannot_delete:
       uncategorized: "Cette catégorie est spéciale. Elle sert de zone d'attente pour les sujets qui n'ont pas de catégorie ; elle ne peut pas être supprimée."
       has_subcategories: "Vous ne pouvez pas supprimer cette catégorie car elle a des sous-catégories."
@@ -1205,9 +1214,11 @@ fr:
     force_https_warning: "Votre site web utiliser le SSL. Mais `<a href='%{base_path}/admin/site_settings/category/all_results?filter=force_https'>force_https</a>` n'est pas encore activé dans les paramètres du site."
     out_of_date_themes: "Des mises à jour sont disponibles pour les thèmes suivants :"
     unreachable_themes: "Nous n'avons pas pu vérifier les mises à jour pour les thèmes suivants :"
+    watched_word_regexp_error: "L'expression régulière pour les mots surveillés %{action} n'est pas valide. Vérifiez vos <a href='%{base_path}/admin/logs/watched_words'>paramètres de mots surveillés</a> ou désactivez le paramètre de site 'watched words regular expressions'"
   site_settings:
     censored_words: "Mots qui seront automatiquement remplacés par &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "Supprimer automatiquement les messages cachés plus de 30 jours."
+    default_locale: "La langue par défaut de cette instance de Discourse. Vous pouvez remplacer le texte des catégories et des sujets générés par le système dans <a href='%{base_path}/admin/customize/site_texts' target='_blank'>Personnaliser / Texte</a> ."
     allow_user_locale: "Autoriser les utilisateurs à choisir la langue de l'interface dans leurs préférences"
     set_locale_from_accept_language_header: "configurer la langue de l'interface pour les visiteurs à partir des entêtes de langue de leur navigateur. (EXPÉRIMENTAL, ne fonctionne pas avec le cache anonyme)"
     support_mixed_text_direction: "Permettre le mélange de textes gauche-droite et droite-gauche."
@@ -1316,6 +1327,7 @@ fr:
     enable_markdown_typographer: "Utiliser des règles typographiques pour améliorer la lisibilité du texte : remplacer les guillemets simples ' avec les guillemets bouclés ’, (c) (tm) avec les symbôles, -- avec emdash –, etc."
     enable_markdown_linkify: "Traiter automatiquement le texte qui ressemble à un lien comme un lien : www.site.com et https://site.com seront automatiquement liés."
     markdown_linkify_tlds: "Liste des domaines de premier niveau qui sont automatiquement traités comme des liens."
+    markdown_typographer_quotation_marks: "Liste des paires de rechange doubles et simples"
     post_undo_action_window_mins: "Nombre de minutes pendant lesquelles un utilisateur peut annuler une action sur un message (J'aime, signaler, etc.)"
     must_approve_users: "L'équipe du forum doit approuver tous les nouveaux utilisateurs avant qu'il aient accès au site."
     pending_users_reminder_delay: "Avertir les modérateurs si des nouveaux utilisateurs sont en attente d'approbation depuis x heures. Mettre -1 pour désactiver les notifications."
@@ -1363,6 +1375,7 @@ fr:
     email_token_valid_hours: "Les jetons (tokens) de Mot de passe oublié / Activation de comptes sont valides (n) jours."
     enable_badges: "Activer le système de badges"
     enable_whispers: "Autoriser les communications privées entre responsables au sein d'un sujet."
+    allow_index_in_robots_txt: "Spécifiez dans le fichier robots.txt que ce site peut être indexé par les moteurs de recherche Web. Dans des cas exceptionnels, vous pouvez remplacer définitivement le fichier <a href='%{base_path}/admin/customize/robots'>robots.txt</a>."
     email_domains_blacklist: "Liste des domaines de courriel qui ne sont pas autorisés lors de la création de compte, délimitée par des pipes. Exemple : mailinator.com|trashmail.net"
     email_domains_whitelist: "Liste des domaines de courriel avec lesquelles les utilisateurs DOIVENT s'enregistrer, délimités par un pipe. ATTENTION : les utilisateurs ayant une adresse de courriel sur un autre domaine ne pourront pas s'enregistrer !"
     hide_email_address_taken: "Ne pas informer les utilisateurs qu'un compte existe avec un courriel donné lors de l'inscription ou à partir du formulaire d'oubli du mot de passe."
@@ -1622,8 +1635,11 @@ fr:
     reset_bounce_score_after_days: "Rétablir automatiquement le score de rejet après X jours."
     attachment_content_type_blacklist: "Liste des mots-clés utilisés pour filtrer les pièces jointes en fonction du type de contenu."
     attachment_filename_blacklist: "Liste des mots-clés utilisés pour filtrer les pièces jointes en fonction du nom de fichier."
+    forwarded_emails_behaviour: "Comment traiter un courriel transféré à Discourse"
     always_show_trimmed_content: "Toujours montrer la partie réduite des courriels entrants. ATTENTION : cela peut révéler les adresses courriels."
     private_email: "Ne pas inclure le contenu de messages ou de sujets dans le titre ou le corps du courriel. REMARQUE : désactive également les courriels de résumé."
+    email_total_attachment_size_limit_kb: "Taille totale maximale des fichiers joints aux courriels sortants. Définissez la valeur sur 0 pour désactiver l'envoi de pièces jointes."
+    post_excerpts_in_emails: "Dans les courriels de notification, envoyez toujours des extraits au lieu de messages complets."
     manual_polling_enabled: "Envoyer les courriels en utilisant l'API des réponses par courriel."
     pop3_polling_enabled: "Utiliser POP3 pour les réponses via courriel."
     pop3_polling_ssl: "Utiliser SSL pour les connexions au serveur POP3. (Recommandé)"
@@ -1660,6 +1676,7 @@ fr:
     suppress_digest_email_after_days: "Ne pas envoyer de résumés par courriel aux utilisateurs qui n'ont pas visité le site depuis plus de (n) jours."
     digest_suppress_categories: "Ne pas inclure ces catégories dans les résumés par courriel."
     disable_digest_emails: "Désactiver les résumés par courriel pour tous les utilisateurs."
+    apply_custom_styles_to_digest: "Les modèles et css de courrier électronique personnalisés sont appliqués aux courriers électroniques récapitulatifs."
     email_accent_bg_color: "La couleur d'accentuation utilisée comme arrière-plan de certains éléments des courriels HTML. Entrez un nom de couleur (« red ») ou une valeur hexadécimale (« #FF0000 »)."
     email_accent_fg_color: "La couleur des textes rendus sur la couleur d'arrière-plan des courriels HTML. Entrez un nom de couleur (« white ») ou une valeur hexadécimale (« #FFFFFF »)."
     email_link_color: "La couleur des liens dans les courriels HTML. Entrez un nom de couleur (« blue ») ou une valeur hexadécimale (« #0000FF »)."
@@ -1697,6 +1714,7 @@ fr:
     likes_notification_consolidation_window_mins: "Durée en minutes où les notifications aimées sont regroupées en une seule une fois le seuil atteint. Le seuil peut être configuré via `SiteSetting.likes_notification_consolidation_threshold`."
     automatically_unpin_topics: "Désépingler automatiquement le sujet lorsque l'utilisateur atteint la fin."
     read_time_word_count: "Nombre de mots par minute servant de base de calcul à l'estimation du temps de lecture."
+    topic_page_title_includes_category: "La <a href='https://developer.mozilla.org/en-US/docs/Web/HTML/Element/title' target='_blank'>balise de titre de</a> la page du sujet comprend le nom de la catégorie."
     native_app_install_banner_ios: "Affiche la bannière de l'application DiscourseHub sur les appareils iOS aux utilisateurs habitués (niveau de confiance supérieur ou égal à 1)."
     native_app_install_banner_android: "Affiche la bannière de l'application DiscourseHub sur les appareils Android aux utilisateurs habitués (niveau de confiance supérieur ou égal à 1)."
     share_anonymized_statistics: "Partager les statistiques d'utilisation anonymes."
@@ -1712,6 +1730,7 @@ fr:
     warn_reviving_old_topic_age: "Lorsque quelqu'un commence à répondre à un sujet dont la dernière réponse est vielle de plusieurs jours, un avertissement sera affiché. Désactiver la fonctionnalité en indiquant: 0."
     autohighlight_all_code: "Forcer la mise en évidence de tout les textes dans les balises code, même si ils ne correspondent à aucun langage de programmation."
     highlighted_languages: "Règles de coloration syntaxique supportées. (Attention : supporter trop de langages peut impacter les performances) voir : <a href='https://highlightjs.org/static/demo/' target='_blank'>https://highlightjs.org/static/demo/</a> pour une démo"
+    embed_topics_list: "Soutenir l'intégration HTML des listes de sujets"
     embed_truncate: "Tronquer les messages embarqués."
     embed_support_markdown: "Prise en charge du formatage Markdown pour les messages intégrés."
     embed_whitelist_selector: "Une liste séparée par des virgules des éléments CSS autorisés à être intégrés."
@@ -1813,8 +1832,8 @@ fr:
       invalid_string_min_max: "Doit être compris(e) entre %{min} et %{max} caractères."
       invalid_string_min: "Doit être d'au moins %{count} caractères."
       invalid_string_max: "Ne doit pas être supérieur à %{max} caractères."
-      invalid_reply_by_email_address: "La valeur doit contenir « %%{reply_key} » et être différente du courriel de notification."
-      invalid_alternative_reply_by_email_addresses: "Toutes les valeurs doivent contenir « %%{reply_key} » et être différentes du courriel de notification."
+      invalid_reply_by_email_address: "La valeur doit contenir « %{reply_key} » et être différente du courriel de notification."
+      invalid_alternative_reply_by_email_addresses: "Toutes les valeurs doivent contenir « %{reply_key} » et être différentes du courriel de notification."
       pop3_polling_host_is_empty: "Vous devez définir « pop3 polling host » avant d'activer le relevé via POP3."
       pop3_polling_username_is_empty: "Vous devez définir « pop3 polling username » avant d'activer le relevé via POP3."
       pop3_polling_password_is_empty: "Vous devez définir « pop3 polling password » avant d'activer le relevé via POP3."
@@ -1844,11 +1863,13 @@ fr:
         regex_invalid: "L'expression régulière n'est pas valide : %{error}"
         leading_trailing_slash: "L'expression régulière ne doit pas commencer et se terminer par une barre oblique."
       unicode_usernames_avatars: "Les avatars du système interne ne prennent pas en charge les noms d'utilisateur Unicode."
+      list_value_count: "La liste doit contenir exactement les valeurs %{count}."
     placeholder:
       sso_provider_secrets:
         key: "www.example.com"
         value: "Secret SSO"
   search:
+    extreme_load_error: "Le site est soumis à une charge extrême, la recherche est désactivée, réessayez plus tard"
     within_post: "#%{post_number} par %{username}"
     types:
       category: "Catégories"
@@ -1863,6 +1884,7 @@ fr:
     timeout_expired: "La connexion au compte a expiré, veuillez essayer de vous reconnecter."
     no_email: "Aucune adresse de courriel n'a été fournie. Veuillez contacter l'administrateur du site."
     email_error: "Un compte n'a pas pu être enregistré avec l'adresse de courriel <b>%{email}</b>. Veuillez contacter l'administrateur du site."
+    missing_secret: "L'authentification SSO a échoué en raison d'un secret manquant. Contactez les administrateurs du site pour résoudre ce problème."
   original_poster: "Créateur du sujet"
   most_posts: "Le plus de messages"
   most_recent_poster: "Auteur le plus récent"
@@ -1953,7 +1975,12 @@ fr:
     errors: "%{errors}"
     not_available: "Indisponible. Essayez %{suggestion} ?"
     something_already_taken: "Quelque chose c'est mal passé. Peut-être que votre pseudo ou votre adresse de courriel est déjà enregistré ? Essayez le lien : j'ai oublié mon mot de passe."
+    omniauth_error:
+      generic: "Désolé, une erreur s'est produite lors de l'autorisation de votre compte. Veuillez réessayer."
+      csrf_detected: "L'autorisation a expiré ou vous avez changé de navigateur. Veuillez réessayer."
+      invalid_iat: "Impossible de vérifier le jeton d'autorisation en raison de différences d'horloge du serveur. Veuillez réessayer."
     omniauth_error_unknown: "Quelque chose s'est mal passé lors de votre connexion, merci de réessayer."
+    omniauth_confirm_title: "Connectez-vous à l'aide de %{provider}"
     omniauth_confirm_button: "Poursuivre"
     authenticator_error_no_valid_email: "Aucune adresse courriel associée à %{account}n'est autorisée. Vous devriez configurer votre compte avec une autre adresse."
     new_registrations_disabled: "La création de nouveau compte n'est pas autorisé pour le moment."
@@ -2227,9 +2254,24 @@ fr:
     post_hidden:
       title: "Message caché"
       subject_template: "Message caché suite à des signalements de la communauté"
+      text_body_template: |
+        Bonjour,
+
+        Ceci est un message automatisé de %{site_name} vous informant que votre message a été masqué.
+
+        <%{base_url}%{url}>
+
+        %{flag_reason}
+
+        Ce message a été masqué en raison des drapeaux de la communauté. Veuillez donc réfléchir à la manière dont vous pourriez le réviser pour refléter leurs commentaires. ** Vous pouvez éditer votre message après %{edit_delay} minutes et celui-ci sera automatiquement masqué.**
+
+        Toutefois, si le message est caché par la communauté une seconde fois, il le restera jusqu'à ce qu'il soit traité par le personnel.
+
+        Pour des conseils supplémentaires, veuillez vous reporter à notre [charte communautaire] (%{base_url}/charte).
     post_hidden_again:
       title: "Message caché à nouveau"
       subject_template: "Message caché suite à des signalements de la communauté, responsables avertis"
+      text_body_template: "Bonjour, Ceci est un message automatisé de %{site_name} pour vous informer que votre message a été caché à nouveau.\n\n <%{base_url}%{url}>\n\n %{flag_reason}\n\nLa communauté a signalé cet article, il est maintenant masqué. ** Ce message ayant été masqué plus d'une fois, votre message le restera jusqu'à ce qu'il soit géré par un membre du personnel. ** \n\nPour plus de précisions, veuillez consulter nos [charte communautaire] (%{base_url}/charte).\n"
     flags_agreed_and_post_deleted:
       title: "Message signalé, retiré par un responsable"
       subject_template: "Message signalé, retiré par un responsable"
@@ -2353,6 +2395,7 @@ fr:
     csv_export_succeeded:
       title: "Export CSV réussi"
       subject_template: "[%{export_title}] Exportation des données terminée"
+      text_body_template: "Votre export de données a réussi! : dvd: \n\n%{download_link} \n\nLe lien de téléchargement ci-dessus sera valide pendant 48 heures. \n\nLes données sont compressées sous forme d'archive zip. Si l'archive ne s'extrait pas lorsque vous l'ouvrez, utilisez l'outil recommandé ici: https://www.7-zip.org/\n"
     csv_export_failed:
       title: "Export CSV échoué"
       subject_template: "Échec de l'exportation des données "
@@ -2559,6 +2602,7 @@ fr:
     ignored_users_summary:
       title: "Un utilisateur ignoré a dépassé le seuil"
       subject_template: "Un utilisateur a été ignoré par de nombreux utilisateurs"
+      text_body_template: "Bonjour, \n\nCeci est un message automatisé de %{site_name} pour vous informer que @ %{username} a été ignoré par les utilisateurs de %{ignores_threshold}. Cela pourrait indiquer qu'un problème se développe dans votre communauté. \n\nVous voudrez peut-être [revoir les messages récents] (%{base_url}/u/%{username}/résumé) de cet utilisateur et éventuellement d'autres utilisateurs du [rapport d'utilisateur ignoré et mis en sourdine] (%{base_url}/administrateur/reports/top_ignored_users). \n\nPour des conseils supplémentaires, veuillez vous reporter à notre [charte communautaire] (%{base_url}/charte).\n"
     too_many_spam_flags:
       title: "Trop de signalements de spam"
       subject_template: "Nouveau compte bloqué"
@@ -3131,6 +3175,7 @@ fr:
     user_email_post_deleted: "le message a été supprimé son auteur"
     user_email_user_suspended: "l'utilisateur a été suspendu"
     user_email_already_read: "l'utilisateur a déjà lu ce message"
+    user_email_access_denied: "l'utilisateur n'est pas autorisé à voir ce message"
     sender_message_blank: "le message est vide"
     sender_message_to_blank: "message.to est vide"
     sender_text_part_body_blank: "text_part.body est vide"
@@ -3812,6 +3857,9 @@ fr:
       other: "Vous devez choisir au moins %{count} étiquettes."
     upload_row_too_long: "Le fichier CSV devrait avoir une étiquette par ligne. L'étiquette peut être suivie d'une virgule et par un nom de groupe d'étiquettes."
     forbidden:
+      invalid:
+        one: "Le tag que vous avez sélectionné ne peut pas être utilisé"
+        other: "Aucune des étiquettes que vous avez sélectionnées ne peut être utilisée"
       in_this_category: '"%{tag_name}" ne peut pas être utilisé dans cette catégorie'
       restricted_to:
         one: '« %{tag_name} » est réservée à la catégorie « %{category_names} »'
@@ -4023,6 +4071,9 @@ fr:
       agree_and_keep:
         title: "Conserver le message"
         description: "Accepter le signalement et conserver le message tel quel."
+      agree_and_keep_hidden:
+        title: "Garder le message caché"
+        description: "Acceptez le signalement et laissez le message caché."
       agree_and_suspend:
         title: "Suspendre l'utilisateur"
         description: "Accepter le signalement et suspendre l'utilisateur."
@@ -4068,6 +4119,7 @@ fr:
         title: "Approuver"
       approve_post:
         title: "Approuver message"
+        confirm_closed: "Ce sujet est fermé. Voulez-vous créer le post quand même?"
       reject_post:
         title: "Rejeter message"
       approve_user:
@@ -4086,3 +4138,5 @@ fr:
         title: "Supprimer l'utilisateur"
         confirm: "Êtes-vous sûr de vouloir supprimer cet utilisateur ? Cela va retirer tous ses messages et va bloquer son courriel ainsi que son adresse IP."
         reason: "Supprimé via la liste des messages en attente de validation"
+  email_style:
+    html_missing_placeholder: "Le modèle HTML doit inclure %{placeholder}"

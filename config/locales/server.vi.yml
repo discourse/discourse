@@ -28,6 +28,7 @@ vi:
   loading: "Đang tải"
   sign_up: "Đăng ký"
   log_in: "Đăng nhập"
+  submit: "Gửi đi"
   disable_remote_images_download_reason: "Không thể tải ảnh về máy chủ vì không dung lượng lưu trữ."
   anonymous: "Ẩn danh"
   emails:
@@ -114,6 +115,7 @@ vi:
     permalink: "Liên kết cố định"
     imported_from: "Đây là cuộc thảo luận đi kèm chủ đề gốc tại %{link}"
     in_reply_to: "▶ %{username}"
+    created: "Tạo bởi"
   no_mentions_allowed: "Xin lỗi, bạn không thể nhắc tới thành viên khác."
   too_many_mentions:
     other: "Xin lỗi, bạn chỉ có thể nhắc tới %{count} thành viên trong một bài viết."
@@ -414,21 +416,27 @@ vi:
       every_hour: "hàng giờ"
       daily: "hàng ngày"
       weekly: "hàng tuần"
+      every_month: "mỗi tháng"
+      every_six_months: "mỗi sáu tháng"
   user_api_key:
     otp_confirmation:
       confirm_title: "Tiếp tục tới %{site_name}"
+      confirm_button: Kết thúc đăng nhập
   reports:
     default:
       labels:
+        count: Đếm
         day: Ngày
     post_edits:
       labels:
+        edited_at: ày
         post: Bài viết
         editor: Biên tập
         edit_reason: Lý do
     user_flagging_ratio:
       labels:
         user: Người dùng
+        score: Điểm số
     moderators_activity:
       labels:
         moderator: Điều hành
@@ -915,7 +923,7 @@ vi:
       invalid_string_min_max: "Phải nằm giữa %{min} và %{max} ký tự."
       invalid_string_min: "Phải ít nhất %{min} ký tự."
       invalid_string_max: "Không nhiều hơn %{max} ký tự."
-      invalid_reply_by_email_address: "Giá trị phải chứa '%%{reply_key}' và phải khác với email thông báo."
+      invalid_reply_by_email_address: "Giá trị phải chứa '%{reply_key}' và phải khác với email thông báo."
       pop3_polling_host_is_empty: "Bạn phải thiết lập 'pop3 polling host' trước khi kích hoạt POP3 polling."
       pop3_polling_username_is_empty: "Bạn phải thiết lập 'pop3 polling username' trước khi kích hoạt POP3 polling."
       pop3_polling_password_is_empty: "Bạn phải thiết lập 'pop3 polling password' trước khi kích hoạt POP3 polling."
@@ -979,6 +987,7 @@ vi:
     reserved_username: "Tên đăng nhập không được cho phép."
     missing_user_field: "Bạn không hoàn tất tất cả các trường người dùng"
     already_logged_in: "Rất tiếc, có vẻ như bạn đang cố gắng để chấp nhận lời mời của một người dùng khác. Nếu bạn không phải là %{current_user}, xin vui lòng đăng xuất và thử lại."
+    second_factor_title: "Xác minh hai bước"
   admin:
     email:
       sent_test: "đã gửi!"
@@ -1365,6 +1374,15 @@ vi:
     step:
       forum_title:
         title: "Tên"
+      privacy:
+        title: "Truy cập"
+        fields:
+          privacy:
+            choices:
+              open:
+                label: "Công khai"
+              restricted:
+                label: "Riêng tư"
       contact:
         fields:
           contact_email:
@@ -1383,10 +1401,18 @@ vi:
                 label: "Các chuyên mục và chủ đề nổi bật"
               categories_and_latest_topics:
                 label: "Các chuyên mục và chủ đề mới"
+              categories_and_top_topics:
+                label: "Chuyên mục và Chủ đề nổi bật"
       emoji:
         title: "Emoji"
   joined: "Đã tham gia"
   reviewables:
+    priorities:
+      medium: "Trung bình"
+      high: "Cao"
+    sensitivity:
+      medium: "Trung bình"
+      high: "Cao"
     actions:
       agree_and_suspend:
         title: "Tạm khóa Thành viên"
@@ -1396,6 +1422,8 @@ vi:
         title: "Xóa"
       disagree:
         title: "Không đồng ý"
+      ignore:
+        title: "Bỏ qua"
       approve:
         title: "Duyệt"
       reject_user:

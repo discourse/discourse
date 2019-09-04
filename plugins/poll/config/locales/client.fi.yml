@@ -22,6 +22,8 @@ fi:
           title: "Näet äänet, kun <strong>olet äänestänyt</strong>."
         closed:
           title: "Tulokset näytetään äänestyksen <strong>sulkeuduttua</strong>."
+        staff:
+          title: "Tulokset näytetään vain <strong>henkilökunnan</strong> jäsenille. "
       multiple:
         help:
           at_least_min_options:
@@ -74,6 +76,7 @@ fi:
           always: Näkyvät aina
           vote: Kun on äänestänyt
           closed: Kun äänestys suljettu
+          staff: Vain henkilökunta
         poll_config:
           max: Enint.
           min: Väh.

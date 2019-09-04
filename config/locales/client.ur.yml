@@ -225,7 +225,7 @@ ur:
       other: "{{count}} حروف"
     related_messages:
       title: "متعلقہ پیغامات"
-      see_all: "@%{username} کی طرف سے <a href=\"%{path}\">تمام پیغامات</a> دیکھیں..."
+      see_all: '@%{username} کی طرف سے <a href="%{path}">تمام پیغامات</a> دیکھیں...'
     suggested_topics:
       title: "تجویز کیے گئے ٹاپک"
       pm_title: "تجویز کیے گئے پیغامات"
@@ -299,6 +299,8 @@ ur:
     banner:
       close: "اس بینر کو برخاست کریں۔"
       edit: "اس بینر میں ترمیم کریں >>"
+    pwa:
+      install_banner: "کیا آپ <a href>اِس ڈیوائس پر %{title} انسٹال کرنا چاہتے ہیں؟</a>"
     choose_topic:
       none_found: "کوئی ٹاپک نہیں ملے۔"
       title:
@@ -583,6 +585,7 @@ ur:
         remove_owner: "مالک کے طور پر ہٹائیں"
         remove_owner_description: "اِس گروپ پر سے <b>%{username}</b> کو مالک کے طور پر ہٹائیں"
         owner: "مالِک"
+        forbidden: "آپ کو ممبران دیکھنے کی اجازت نہیں ہے۔"
       topics: "ٹاپک"
       posts: "پوسٹ"
       mentions: "ذکر"
@@ -937,6 +940,7 @@ ur:
         confirm_modal_title: "%{provider} اکاؤنٹ کنیکٹ کریں"
         confirm_description:
           account_specific: "آپ کا %{provider} اکاؤنٹ '%{account_description}' تصدیق کیلئے استعمال کیا جائے گا۔"
+          generic: "آپ کا %{provider} اکاؤنٹ تصدیق کیلئے استعمال کیا جائے گا۔"
       name:
         title: "نام"
         instructions: "آپ کا پورا نام (اختیاری)"
@@ -1332,6 +1336,10 @@ ur:
         name: "گِٹ ہَب"
         title: "گِٹ ہَب سے"
         message: "گِٹ ہَب کے زریعے تصدیق کی جا رہی ہے (یقینی بنائیں کہ پاپ اَپ بلاکرز فعال نہیں ہیں)"
+      discord:
+        name: "ڈِسکَورڈ"
+        title: "ڈِسکَورڈ کے ساتھ"
+        message: "ڈِسکَورڈ کے ساتھ تصدیق"
     invites:
       accept_title: "دعوت نامہ"
       welcome_to: "%{site_name} پر خوش آمدید!"
@@ -1575,6 +1583,7 @@ ur:
       granted_badge: "'{{description}}' حاصل کیا"
       topic_reminder: "<span>{{username}}</span> {{description}}"
       watching_first_post: "<span>نیا ٹاپک</span> {{description}}"
+      membership_request_accepted: "'{{group_name}}' میں رکنیت قبول کر لی گئی"
       group_message_summary:
         one: "آپ کے {{group_name}} اِن باکس میں {{count}} پیغام"
         other: "آپ کے {{group_name}} اِن باکس میں {{count}} پیغامات"
@@ -1817,6 +1826,7 @@ ur:
       group_request: "آپ کو اِس ٹاپک کو دیکھنے کیلئے `{{name}}` گروپ میں رکنیت کیلئے درخواست کی ضرورت ہے"
       group_join: "آپ کو اِس ٹاپک کو دیکھنے کیلئے `{{name}}` گروپ میں شامل ہونے کی ضرورت ہے"
       group_request_sent: "آپ کی گروپ میں رکنیت کی درخواست بھیج دی گئی ہے۔ اُس کے قبول ہونے پر آپ کو مطلع کر دیا جائے گا۔"
+      unread_indicator: "کسی ممبر نے ابھی تک اِس ٹاپک کی آخری پوسٹ نہیں پڑھی ہے۔"
       read_more_MF: "{ UNREAD, plural, =0 {} one { <a href='{basePath}/unread'>1 غیر پڑھا</a> } other { <a href='{basePath}/unread'># غیر پڑھے</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{اور } false {} other{}} <a href='{basePath}/new'>1 نیا</a> ٹاپک} other { {BOTH, select, true{and } false {are } other{}} <a href='{basePath}/new'># نئے</a> ٹاپکس} } باقی، یا {CATEGORY, select, true {میں دیگر ٹاپکس براؤز کریں {catLink}} false {{latestLink}} other {}}"
       browse_all_categories: تمام زمرہ جات براؤز کریں
       view_latest_topics: تازہ ترین ٹاپک دیکھیے
@@ -2191,6 +2201,7 @@ ur:
         reply: "اس پوسٹ کا جواب لکھنا شروع کریں"
         like: " اِس پوسٹ کو لائیک کریں"
         has_liked: " آپ اِس پوسٹ کو لائیک کر چکے ہیں"
+        read_indicator: "ممبران جنہوں نے اِس پوسٹ کو پڑھ لیا"
         undo_like: "لائیک کالعدم کریں"
         edit: " اِس پوسٹ کو ترمیم کریں"
         edit_action: "ترمیم"
@@ -2247,6 +2258,7 @@ ur:
           notify_user: "ایک پیغام بھیجا"
           bookmark: "اِس کو بُک مارک"
           like: "اِس کو لائیک کیا"
+          read: "اِسے پڑھیے"
           like_capped:
             one: "اور {{count}} دوسرے شخص نے اِس کو لائیک کیا"
             other: "اور {{count}} دوسرے لوگوں نے اِس کو لائیک کیا"
@@ -2347,6 +2359,7 @@ ur:
       special_warning: "انتباہ: یہ زمرہ ایک پہلے سے بنایا ہوا زمرہ ہے اور اِس کی سیکورٹی سیٹِنگ میں ترمیم نہیں کی جا سکتی۔ اگر آپ اِس زمرہ کو استعمال کرنے کی خواہش نہیں رکھتے، تو اِسے کسی اور حوالے سے استعمال کرنے کی بجائے، حذف کردیں۔"
       uncategorized_security_warning: "یہ زمرہ خاص ہے۔ اِس کا مقصد بغیر زمرہ والے ٹاپکس کیلئے جگہ فراہم کرنا ہے؛ اِس میں سیکورٹی کی ترتیبات نہیں ہو سکتیں۔"
       uncategorized_general_warning: 'یہ زمرہ خاص ہے۔ یہ نئے ٹاپکس جن کیلئے کسی زمرہ کا انتخاب نہ ہوا ہو، اُن کیلئے پہلے سے طے شدہ زمرہ کے طور پر استعمال ہوتا ہے۔ اگر آپ اِس رویے کو روکنے اور کسی زمرہ کے انتخاب کو لازمی کرنا چاہتے ہیں، تو <a href="%{settingLink}">برائے مہربانی یہاں ترتیب کو غیر فعال کریں</a>۔ اگر آپ نام یا تفصیل تبدیل کرنا چاہتے ہیں، تو <a href="%{customizeLink}">مرضی کے مطابق / ٹَیکسٹ متن</a> پر جائیں۔'
+      pending_permission_change_alert: "آپ نے اِس زمرہ میں %{group} کو شامل نہیں کیا ہے؛ اِن کو شامل کرنے کیلئے اِس بٹن پر کلک کریں۔"
       images: "تصاویر"
       email_in: "اپنی مرضی کا اِنکَمِنگ اِیمیل ایڈریس:"
       email_in_allow_strangers: "اکاؤنٹس نہ رکھنے والے گمنام صارفین کی طرف سے اِیمیلز کو قبول کریں"
@@ -2892,6 +2905,8 @@ ur:
           view_table: "ٹیبل"
           view_graph: "گراف"
           refresh_report: "رپورٹ رِیفریش کریں"
+          start_date: "شروع کی تاریخ (UTC)"
+          end_date: "اختتام کی تاریخ (UTC)"
           groups: "تمام گروپس"
           disabled: "یہ رپورٹ غیر فعال ہے"
           totals_for_sample: "نمونہ کیلئے کل"
@@ -2942,6 +2957,9 @@ ur:
               staff: "گروپ کے مالکان اور اسٹاف"
               owners: "گروپ مالکان"
               description: "ایڈمن تمام گروپس دیکھ سکتے ہیں۔"
+            members_visibility_levels:
+              description: "ایڈمن تمام گروپس کے ممبران کو دیکھ سکتے ہیں۔"
+            publish_read_state: "گروپ پیغامات پر گروپ رِیڈ اسٹیٹ شائع کریں۔"
           membership:
             automatic: خود کار طریقے سے
             trust_level: ٹرسٹ لَیول
@@ -3046,6 +3064,9 @@ ur:
         reviewable_event:
           name: "قابل تجدید واقعہ"
           details: "جب ایک نئی چیز جائزہ کیلئے تیار ہو اور جب اُس کا اسٹیٹس اپ ڈیٹ کیا جائے۔"
+        notification_event:
+          name: "اطلاع واقعہ"
+          details: "جب صارف کو اپنی فِیڈ میں اطلاع موصول ہوتی ہے۔"
         delivery_status:
           title: "موصول ہونے کی آگاہی"
           inactive: "غیر فعال"
@@ -3371,7 +3392,14 @@ ur:
           warning: "یہ مستقل طور پر کسی بھی متعلقہ سائٹ ترتیبات کی جگہ لے لیگی۔"
           overridden: آپ کی سائٹ کی ڈیفالٹ robots.txt فائل کی جگہ لی جا چکی ہے۔
         email_style:
+          title: "اِیمیل کا انداز"
+          heading: "اِیمیل کے انداز کو اپنی مرضی کے مطابق بنائیں"
+          html: "HTML ٹَیمپلَیٹ"
           css: "CSS"
+          reset: "دوبارہ پہلے جیسا کر دیں"
+          reset_confirm: "کیا آپ واقعی میں ڈیفالٹ %{fieldName} پر دوبارہ ترتیب اور اپنی ساری تبدیلیاں ضائع کرنا چاہتے ہیں؟"
+          save_error_with_reason: "آپ کی تبدیلیاں محفوظ نہیں ہوئیں۔ %{error}"
+          instructions: "اس ٹَیمپلَیٹ کو حسب ضرورت بنائیں جس میں تمام HTML ایمیلز پیش کی جاتی ہیں، اور CSS کا استعمال کرتے ہوئے سٹائیل کریں۔"
       email:
         title: "اِیمیل"
         settings: "سیٹِنگ"
@@ -3636,6 +3664,9 @@ ur:
           upload_successful: "اَپ لوڈ کامیاب ہوا۔ الفاظ شامل کردیے گئے ہیں۔"
         test:
           button_label: "ٹیسٹ"
+          modal_title: "ٹیسٹ '%{action}' نظر رکھے ہوئے الفاظ"
+          description: "نظر رکھے ہوئے الفاظ کے ساتھ مَیچ چَیک کرنے کیلئے نیچے ٹَیکسٹ درج کریں۔"
+          found_matches: "ملے مَیچ:"
           no_matches: "کوئی میل نہیں ملے"
       impersonate:
         title: "نقالی"

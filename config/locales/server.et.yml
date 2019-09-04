@@ -140,6 +140,7 @@ et:
     permalink: "Püsilink"
     imported_from: "See on kaasnev vestlusteema originaalsisestusele %{link}"
     in_reply_to: "▶ %{username}"
+    created: "Loodud"
   no_mentions_allowed: "Vabandust, sa ei saa teisi kasutajaid mainida."
   too_many_mentions:
     one: "Vabandust, sa tohid postituses vaid üht kasutajat mainida."

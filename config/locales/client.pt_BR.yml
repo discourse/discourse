@@ -225,7 +225,7 @@ pt_BR:
       other: "{{count}} caracteres"
     related_messages:
       title: "Mensagens Relacionadas"
-      see_all: "Ver <a href=\"%{path}\">todas as mensagens</a> de @ %{username} ..."
+      see_all: 'Ver <a href="%{path}">todas as mensagens</a> de @ %{username} ...'
     suggested_topics:
       title: "Tópicos Sugeridos"
       pm_title: "Mensagens Sugeridas"
@@ -1338,6 +1338,8 @@ pt_BR:
         name: "GitHub"
         title: "com GitHub"
         message: "Autenticando com GitHub (certifique-se de que os bloqueadores de pop-up estejam desabilitados)"
+      discord:
+        name: "Discord"
     invites:
       accept_title: "Convite"
       welcome_to: "Bem vindo à %{site_name}!"

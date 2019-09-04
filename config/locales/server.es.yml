@@ -112,7 +112,7 @@ es:
       accepted: debe ser aceptado
       blank: no puede dejarse en blanco
       present: debe dejarse en blanco
-      confirmation: "no coincide %{attribute}"
+      confirmation: "no coincide con %{attribute}"
       empty: no puede estar vacío
       equal_to: "debe ser igual a %{count}"
       even: debe ser par
@@ -153,18 +153,18 @@ es:
         one: "%{count} error impidió guardar este %{model}"
         other: "%{count} errores impidieron guardar este %{model}"
     embed:
-      load_from_remote: "Hubo un error al cargar esta publicación."
+      load_from_remote: "Se produjo un error al cargar esta publicación."
     site_settings:
-      invalid_category_id: "Usted especificó una categoría que no existe"
+      invalid_category_id: "Especificaste una categoría que no existe"
       invalid_choice:
         one: "Has especificado la opción inválida %{name}"
-        other: "Has especificado las opciones inválidas %{name}"
+        other: "Especificaste las opciones inválidas %{name}"
       default_categories_already_selected: "No se puede seleccionar una categoría ya utilizada en otra lista."
       s3_upload_bucket_is_required: "No se pueden activar las subidas a S3 a menos que se haya proporcionado un valor a «s3_upload_bucket»."
       enable_s3_uploads_is_required: "No puedes activar el inventario en S3 a menos que se haya habilitado las subidas en S3."
       s3_backup_requires_s3_settings: "No puedes usar S3 como método de respaldo salvo que hayas rellenado «%{setting_name}»."
-      s3_bucket_reused: "No puedes usar el mismo bucket para «s3_upload_bucket» y «s3_backup_bucket». Por favor, selecciona otro bucket o usa una ruta diferente para cada bucket."
-    conflicting_google_user_id: 'El ID de la cuenta Google para esta cuenta ha cambiado; el staff debe intervenir por razones de seguridad. Por favor póngase en contacto con miembros del staff y envíe esta referencia <br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
+      s3_bucket_reused: "No puedes usar el mismo bucket para «s3_upload_bucket» y «s3_backup_bucket». Por favor selecciona otro bucket o usa una ruta diferente para cada bucket."
+    conflicting_google_user_id: 'El ID de la cuenta Google para esta cuenta ha cambiado; el staff debe intervenir por razones de seguridad. Por favor ponte en contacto con el staff y envía esta referencia <br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
   activemodel:
     errors:
       <<: *errors
@@ -235,6 +235,7 @@ es:
     replies:
       one: "%{count} respuesta"
       other: "%{count} respuestas"
+    created: "Creado"
   no_mentions_allowed: "Lo sentimos, no puedes mencionar a otros usuarios."
   too_many_mentions:
     one: "Lo sentimos, solo puedes mencionar a un usuario en un post."
@@ -534,6 +535,7 @@ es:
       description_incomplete: "La publicación que contiene la descripción de la categoría debe tener al menos un párrafo."
       permission_conflict: "Cualquier grupo que tenga acceso a una subcategoría también debe tener acceso a la categoría primaria. Los siguientes grupos tienen acceso a una de las subcategorías, pero no a la categoría primaria: %{group_names}."
       disallowed_topic_tags: "Este tema tiene etiquetas no permitidas en esta categoría: «%{tags}»"
+      disallowed_tags_generic: "Este tema tiene etiquetas no permitidas."
     cannot_delete:
       uncategorized: "Esta categoría es especial Se usa para agrupar los temas que no tienen ninguna categoría asignada. No se puede eliminar."
       has_subcategories: "No se puede eliminar esta categoría porque tiene subcategorías."
@@ -935,13 +937,13 @@ es:
       yaxis: "Número de colaboradores nuevos"
       description: "Número de usuarios que han publicado su primer mensaje durante este periodo."
     consolidated_page_views:
-      title: "Impresiones de páginas consolidadas"
+      title: "Vistas de página consolidadas"
       xaxis:
         page_view_crawler: "Crawlers"
         page_view_anon: "Usuarios anónimos"
         page_view_logged_in: "Usuarios conectados"
       yaxis: "Día"
-      description: "Impresiones de página para usuarios con sesión iniciada, anónimos y crawlers."
+      description: "Vistas de página de usuarios con una sesión iniciada, usuarios anónimos y crawlers."
       labels:
         post: Publicación
         editor: Editor
@@ -951,14 +953,14 @@ es:
       title: "UAD/UAM"
       xaxis: "Día"
       yaxis: "UAD/UAM"
-      description: "Número de miembros que han iniciado sesión dividido entre el número de miembros que han iniciado sesión durante el último mes – devuelve un % que indica el grado de \"permanencia\". Apuntar a >30%."
+      description: "Número de miembros que han iniciado sesión durante el último día dividido entre el número de miembros que han iniciado sesión durante el último mes – resulta en un % que indica el grado de «permanencia» de la comunidad. Apuntar a >30%."
     daily_engaged_users:
-      title: "Usuarios comprometidos a diario"
+      title: "Usuarios involucrados a diario"
       xaxis: "Día"
-      yaxis: "Usuarios Comprometidos"
+      yaxis: "Usuarios involucrados"
       description: "Número de usuarios que han dado me gusta o han publicado en el último día."
     profile_views:
-      title: "Visitas a perfil de usuario"
+      title: "Visitas al perfil de usuario"
       xaxis: "Día"
       yaxis: "Número de perfiles de usuario vistos"
       description: "Número total de visitas a perfiles de usuario."
@@ -966,45 +968,45 @@ es:
       title: "Temas nuevos"
       xaxis: "Día"
       yaxis: "Número de temas nuevos"
-      description: "Nuevos temas creados durante este periodo."
+      description: "Temas nuevos creados durante este periodo."
     posts:
-      title: "Nuevos posts"
-      xaxis: "día"
-      yaxis: "Número de posts nuevos"
-      description: "Nuevos posts creados durante este periodo"
+      title: "Publicaciones"
+      xaxis: "Día"
+      yaxis: "Número de publicaciones nuevas"
+      description: "Publicaciones nuevas creadas durante este periodo"
     likes:
       title: "Me gusta"
       xaxis: "Día"
-      yaxis: "Número de 'me gusta' nuevos"
+      yaxis: "Número de nuevos me gusta"
       description: "Número de nuevos me gusta."
     flags:
       title: "Reportes"
       xaxis: "Día"
       yaxis: "Número de reportes"
-      description: "Número de nuevos reportes."
+      description: "Número de reportes nuevos."
     bookmarks:
       title: "Marcadores"
       xaxis: "Día"
       yaxis: "Número de nuevos marcadores"
-      description: "Número de nuevos temas y mensajes añadidos a marcadores."
+      description: "Número de temas y mensajes nuevos guardados en marcadores."
     users_by_trust_level:
       title: "Usuarios por nivel de confianza"
-      xaxis: "Día"
+      xaxis: "Nivel de confianza"
       yaxis: "Número de usuarios"
       labels:
         level: Nivel
       description: "Número de usuarios agrupados por nivel de confianza."
     users_by_type:
-      title: "Usuarios por Tipos"
+      title: "Usuarios por tipos"
       xaxis: "Tipo"
-      yaxis: "Número de Usuarios"
+      yaxis: "Número de usuarios"
       labels:
         type: Tipo
       xaxis_labels:
-        admin: Admin
+        admin: Administrador
         moderator: Moderador
-        suspended: Suspendidos
-        silenced: Silenciados
+        suspended: Suspendido
+        silenced: Silenciado
       description: "Número de usuarios agrupados por administradores, moderadores, suspendidos y silenciados."
     trending_search:
       title: Tendencias de búsqueda
@@ -1014,15 +1016,15 @@ es:
         click_through: CTR
       description: "Términos de búsqueda más populares con sus porcentajes de clic"
     emails:
-      title: "Correos enviados"
+      title: "Correos electrónicos enviados"
       xaxis: "Día"
-      yaxis: "Número de correos"
-      description: "Número de nuevos emails enviados."
+      yaxis: "Número de correos electrónicos"
+      description: "Número de correos electrónicos nuevos enviados."
     user_to_user_private_messages:
       title: "Usuario a usuario (respuestas excluidas)"
       xaxis: "Día"
       yaxis: "Número de mensajes"
-      description: "Número de nuevos mensajes personales iniciados."
+      description: "Número de mensajes personales nuevos iniciados."
     user_to_user_private_messages_with_replies:
       title: "Usuario a usuario (con respuestas)"
       xaxis: "Día"
@@ -1037,7 +1039,7 @@ es:
       title: "Advertencias al moderador"
       xaxis: "Día"
       yaxis: "Número de mensajes"
-      description: "Número de advertencias enviadas por mensaje personal por moderadores."
+      description: "Número de advertencias enviadas a través de mensaje personal por moderadores."
     notify_moderators_private_messages:
       title: "Notificaciones a moderadores"
       xaxis: "Día"
@@ -1047,9 +1049,9 @@ es:
       title: "Notificaciones a usuarios"
       xaxis: "Día"
       yaxis: "Número de mensajes"
-      description: "Número de veces que los usuarios han sido notificados de forma privada por un reporte."
+      description: "Número de veces que se le ha notificado a los usuarios de forma privada debido a un reporte."
     top_referrers:
-      title: "Los que más recomiendan"
+      title: "Aquellos que realizan la mayor cantidad de recomendaciones"
       xaxis: "Usuario"
       num_clicks: "Clics"
       num_topics: "Temas"
@@ -1059,7 +1061,7 @@ es:
         num_topics: "Temas"
       description: "Usuarios listados por número de clics en enlaces que han compartido"
     top_traffic_sources:
-      title: "Las mayores fuentes de tráfico"
+      title: "Mayores fuentes de tráfico"
       xaxis: "Dominio"
       num_clicks: "Clics"
       num_topics: "Temas"
@@ -1074,37 +1076,37 @@ es:
       labels:
         num_clicks: "Clics"
         topic: "Tema"
-      description: "Los temas que más clics de fuentes externas han recibido."
+      description: "Los temas que han recibido más clics de fuentes externas."
     page_view_anon_reqs:
       title: "Anónimas"
       xaxis: "Día"
       yaxis: "Páginas vistas anónimas"
-      description: "Número de visitas de página nuevas por visitantes que no han iniciado sesión en una cuenta."
+      description: "Número de nuevas vistas de página de visitantes que no han iniciado sesión en una cuenta."
     page_view_logged_in_reqs:
-      title: "Registrados"
+      title: "Con una sesión iniciada"
       xaxis: "Día"
-      yaxis: "Páginas vistas de usuarios logueados"
-      description: "Número de impresiones de página de usuarios con sesión iniciada."
+      yaxis: "Vistas de página realizadas de con una sesión iniciada"
+      description: "Número de nuevas vistas de página de usuarios con una sesión iniciada."
     page_view_crawler_reqs:
-      title: "Impresiones de página de crawlers"
+      title: "Vistas de página de crawlers"
       xaxis: "Día"
-      yaxis: "Páginas vistas de rastreadores web"
-      description: "Impresiones totales de página de crawlers en el tiempo."
+      yaxis: "Vistas de página de crawlers"
+      description: "Total de vistas de página de crawlers a través del tiempo."
     page_view_total_reqs:
-      title: "Páginas vistas"
+      title: "Vistas de página"
       xaxis: "Día"
-      yaxis: "Total páginas vistas"
-      description: "Número de nuevas impresiones de páginas de todos los visitantes."
+      yaxis: "Total de vistas de página"
+      description: "Número de nuevas vistas de página de todos los visitantes."
     page_view_logged_in_mobile_reqs:
-      title: "Páginas vistas de usuarios logueados"
+      title: "Vistas de página de usuarios con una sesión iniciada"
       xaxis: "Día"
-      yaxis: "Páginas vistas de usuarios logueados a través de móvil"
-      description: "Número de impresiones de página de usuarios en dispositivos móviles y con sesión iniciada."
+      yaxis: "Vistas de página de usuarios con una sesión iniciada a través de una conexión móvil"
+      description: "Número de vistas de página nuevas de usuarios en dispositivos móviles y con una sesión iniciada."
     page_view_anon_mobile_reqs:
-      title: "Páginas vistas anónimas"
+      title: "Vistas de página anónimas"
       xaxis: "Día"
-      yaxis: "Páginas vistas anónimas desde móvil"
-      description: "Número de impresiones de página de visitantes desde dispositivos móviles que no tenían sesión iniciada."
+      yaxis: "Vistas de página anónimas desde una conexión móvil"
+      description: "Número de vistas de página nuevas de visitantes en dispositivos móviles y con una sesión iniciada."
     http_background_reqs:
       title: "Background"
       xaxis: "Día"
@@ -1112,7 +1114,7 @@ es:
     http_2xx_reqs:
       title: "Status 2xx (OK)"
       xaxis: "Día"
-      yaxis: "Peticiones con éxito (Status 2xx)"
+      yaxis: "Peticiones exitosas (Status 2xx)"
     http_3xx_reqs:
       title: "HTTP 3xx (Redirecciones)"
       xaxis: "Día"
@@ -1142,14 +1144,14 @@ es:
     mobile_visits:
       title: "Visitas de usuarios (móvil)"
       xaxis: "Día"
-      yaxis: "Número de visita"
+      yaxis: "Número de visitas"
       description: "Número de usuarios únicos que han visitado desde dispositivos móviles."
     web_crawlers:
-      title: "User agent de crawlers"
+      title: "Agentes de usuario de crawlers"
       labels:
         user_agent: "Agente de usuario"
-        page_views: "Páginas vistas"
-      description: "Lista de agente de usuario de crawlers ordenado por impresiones de página."
+        page_views: "Vistas de página"
+      description: "Lista de los agentes de usuario de crawlers ordenado por vistas de página."
     suspicious_logins:
       title: "Inicios de sesión sospechosos"
       labels:
@@ -1166,7 +1168,7 @@ es:
       labels:
         user: Usuario
         location: Ubicación
-        login_at: Inicio de sesión el
+        login_at: Inicio de sesión a las
       description: "Lista de inicios de sesión de administradores con su ubicación"
     top_uploads:
       title: "Top archivos subidos"
@@ -1177,7 +1179,7 @@ es:
         filesize: Tamaño del archivo
       description: "Lista de archivos subidos por extensión, tamaño y autor."
     top_ignored_users:
-      title: "Principales usuarios ignorados / silenciados"
+      title: "Usuarios ignorados / silenciados destacados"
       labels:
         ignored_user: Usuario ignorado
         ignores_count: Número de ignorados
@@ -1185,209 +1187,211 @@ es:
       description: "Usuarios que han sido silenciados y/o ignorados por muchos otros usuarios."
   dashboard:
     rails_env_warning: "Tu servidor está funcionando en modo de %{env}."
-    host_names_warning: "Tu archivo 'config/database.yml' está utilizando un hostname predeterminado de 'localhost'. Actualízalo para usar el hostname de tu sitio."
-    gc_warning: 'Tu servidor está usando recolección de residuos predeterminada por Ruby, que no te proveerá el mejor rendimiento. Lee este tema acerca de optimización del rendimiento: <a href="https://meta.discourse.org/t/tuning-ruby-and-rails-for-discourse/4126" target="_blank">Tuning Ruby and Rails for Discourse</a>.'
-    sidekiq_warning: 'Sidekiq no está funcionando. Muchas tareas, por ejemplo el envío de correos, están realizadas desincronizadamente por sidekiq. Por favor asegúrate de que por lo menos un proceso de sidekiq está funcionando. <a href="https://github.com/mperham/sidekiq" target="_blank">Learn about Sidekiq here</a>.'
-    queue_size_warning: "El número de jobs en cola es %{queue_size}, se trata de una cifra alta. Esto podría indicar un problema en el proceso (o procesos) de Sidekiq, o quizá se deba añadir más Sidekiq workers."
-    memory_warning: "Tu servidor está funcionando con menos de 1 GB de memoria total. Por lo menos 1 GB de memoria es recomendado."
-    google_oauth2_config_warning: 'El servidor está configurado para permitir el registro e inicia sesión con Google OAuth2 (enable_google_oauth2_logins), pero los valores client id y client secret están vacíos. Ve a <a href="%{base_path}/admin/site_settings">Ajustes del sitio</a> y actualiza la configuración. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">Mira esta guía para saber más</a>.'
-    facebook_config_warning: 'El servidor está configurado para permitir crear una cuenta e ingresar utilizando Facebook (enable_facebook_logins), pero los valores id y secreto de la app no están configurados. Ingresa a <a href="%{base_path}/admin/site_settings">la Configuración del Sitio</a> y actualiza la configuración. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">Revisa la guía para aprender más</a>.'
-    twitter_config_warning: 'El servidor está configurado para permitir crear una cuenta e ingresar utilizando Twitter (enable_twitter_logins), pero los valores clave y secreto de la app no están configurados. Ingresa a <a href="%{base_path}/admin/site_settings">la Configuración del Sitio</a> y actualiza la configuración. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">Revisa la guía para aprender más</a>.'
-    github_config_warning: 'El servidor está configurado para permitir crear una cuenta e ingresar utilizando GitHub (enable_github_logins), pero los valores de cliente clave y cliente secreto no están configurados. Ingresa a <a href="%{base_path}/admin/site_settings">la Configuración del Sitio</a> y actualiza la configuración. <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">Revisa la guía para aprender más</a>.'
-    s3_config_warning: 'El servidor está configurado para permitir subir los archivos a s3, pero por al menos una de las siguientes configuraciones no está realizada: s3_access_key_id, s3_secret_access_key o s3_upload_bucket. Ve a <a href="%{base_path}/admin/site_settings">la Configuración del Sitio</a> y actualiza la configuración. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Revisa "How to set up image uploads to S3?" para aprender más</a>.'
-    s3_backup_config_warning: 'El servidor está configurado para permitir subir los archivos a s3, pero por al menos una de las siguientes configuraciones no está realizada: s3_access_key_id, s3_secret_access_key o s3_upload_bucket. Ve a <a href="%{base_path}/admin/site_settings">la Configuración del Sitio</a> y actualiza la configuración. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Revisa "How to set up image uploads to S3?" para aprender más</a>.'
-    image_magick_warning: 'El servidor está configurado para permitir miniaturas de imágenes grandes, pero ImageMagick no está instalado. Instala ImageMagick usando tu administrador de paquetes favorito o <a href="https://www.imagemagick.org/script/binary-releases.php" target="_blank">descárgate la última versión</a>.'
-    failing_emails_warning: 'Hay %{num_failed_jobs} jobs de email que fallaron. Revisa tu app.yml y asegúrate que la configuración del servidor de mail es correcta. <a href="%{base_path}/sidekiq/retries" target="_blank">Mira los jobs fallados en Sidekiq</a>.'
+    host_names_warning: "Tu archivo config/database.yml está utilizando el hostname localhost predeterminado. Actualízalo para usar el hostname de tu sitio."
+    gc_warning: 'Tu servidor está usando los parámetros predeterminados de ruby para la recolección de residuos, lo cual no te proveerá el mejor rendimiento. Lee este tema sobre la optimización del rendimiento: <a href="https://meta.discourse.org/t/tuning-ruby-and-rails-for-discourse/4126" target="_blank">Optimización de Ruby and Rails para Discourse</a>.'
+    sidekiq_warning: 'Sidekiq no está funcionando. Muchas tareas, tal como el envío de correos electrónicos, están siendo realizadas desincronizadamente por sidekiq. Por favor asegúrate de que por lo menos un proceso de sidekiq está funcionando. <a href="https://github.com/mperham/sidekiq" target="_blank">Aprende sobre Sidekiq aquí</a>.'
+    queue_size_warning: "El número de tareas en cola es %{queue_size}, que es una cifra alta. Esto podría indicar un problema en el proceso (o procesos) de Sidekiq, o tal vez deberías añadir más trabajadores de Sidekiq."
+    memory_warning: "Tu servidor está funcionando con menos de 1 GB de memoria total. Se recomienda una memoria de al menos 1 GB de capacidad."
+    google_oauth2_config_warning: 'El servidor está configurado para permitir el registro e inicio sesión mediante Google OAuth2 (enable_google_oauth2_logins), pero los valores ID del cliente y secreto del cliente no han sido establecidos. Ve a <a href="%{base_path}/admin/site_settings">los ajustes del sitio</a> y actualiza la configuración. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">Revisa esta guía para conocer más</a>.'
+    facebook_config_warning: 'El servidor está configurado para permitir el registro e inicio sesión mediante Facebook (enable_facebook_logins), pero los valores ID de la aplicación y secreto de la aplicación no han sido establecidos. Ve a <a href="%{base_path}/admin/site_settings">los ajustes del sitio</a> y actualiza la configuración. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">Revisa esta guía para conocer más</a>.'
+    twitter_config_warning: 'El servidor está configurado para permitir el registro e inicio de sesión mediante Twitter (enable_twitter_logins), pero los valores clave y secreto no están configurados. Ve a <a href="%{base_path}/admin/site_settings">los ajustes del sitio</a> y actualiza la configuración. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">Revisa esta guía para conocer más</a>.'
+    github_config_warning: 'El servidor está configurado para permitir el registro e inicio de sesión mediante GitHub (enable_github_logins), pero los valores de clave del cliente y secreto no están configurados. Ingresa a <a href="%{base_path}/admin/site_settings">los ajustes del sitio</a> y actualiza la configuración. <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">Revisa esta guía para conocer más</a>.'
+    s3_config_warning: 'El servidor está configurado para permitir subir archivos a S3, pero por al menos una de las siguientes configuraciones no se ha establecido: s3_access_key_id, s3_secret_access_key o s3_upload_bucket. Ve a <a href="%{base_path}/admin/site_settings">los ajustes del sitio</a> y actualiza la configuración. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Revisa «How to set up image uploads to S3?» para aprender más</a>.'
+    s3_backup_config_warning: 'El servidor está configurado para permitir subir los respaldos a S3, pero por al menos una de las siguientes configuraciones no se ha establecido: : s3_access_key_id, s3_secret_access_key, s3_use_iam_profile, o s3_backup_bucket. Ve a <a href="%{base_path}/admin/site_settings">los ajustes del sitio</a> y actualiza la configuración. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Revisa «How to set up image uploads to S3?» para aprender más</a>.'
+    image_magick_warning: 'El servidor está configurado para permitir miniaturas de imágenes grandes, pero ImageMagick no está instalado. Instala ImageMagick usando tu administrador de paquetes favorito o <a href="https://www.imagemagick.org/script/download.php" target="_blank">descarga la última versión</a>.'
+    failing_emails_warning: 'Hay %{num_failed_jobs} tareas de correo electrónico que fallaron. Revisa tu app.yml y asegúrate de que la configuración del servidor de correo es correcta. <a href="%{base_path}/sidekiq/retries" target="_blank">Mira las tareas que fallaron en Sidekiq</a>.'
     subfolder_ends_in_slash: "La configuación del subdirectorio no es correcta; el campo DISCOURSE_RELATIVE_URL_ROOT termina con una barra."
     email_polling_errored_recently:
       one: "El email polling ha generado un error en las pasadas 24 horas. Mira en <a href='%{base_path}/logs' target='_blank'>los logs</a> para más detalles."
-      other: "El email polling ha generado %{count} errores en las pasadas 24 horas. Mira en <a href='%{base_path}/logs' target='_blank'>los logs</a> para más detalles."
-    missing_mailgun_api_key: "El servidor está configurado para enviar correos electrónicos a través de Mailgun pero no ha proporcionado una clave API utilizada para verificar los mensajes de webhook."
-    bad_favicon_url: "El favicon está dando fallos en su carga. Revisa la opción favicon_url en <a href='%{base_path}/admin/site_settings'>Ajustes del sitio</a>."
-    poll_pop3_timeout: "La conexión al servidor POP3 está rebasando el tiempo de espera. Los emails entrantes no han podido ser recogidos. Por favor revisa los <a href='%{base_path}/admin/site_settings/category/email'>ajustes de POP3</a> y tu proveedor de servicio."
+      other: "El polling por correo electrónico ha generado %{count} errores en las últimas 24 horas. Revisa <a href='%{base_path}/logs' target='_blank'>los registros</a> para más detalles."
+    missing_mailgun_api_key: "El servidor está configurado para enviar correos electrónicos a través de Mailgun pero no has proporcionado una clave API que se utiliza para verificar los mensajes de webhook."
+    bad_favicon_url: "El favicon está produciendo errores en el proceso de carga. Revisa la opción favicon en los <a href='%{base_path}/admin/site_settings'>ajustes del sitio</a>."
+    poll_pop3_timeout: "La conexión al servidor POP3 está superando el tiempo de espera. No se pudieron recuperar los correos electrónicos entrantes. Por favor revisa los <a href='%{base_path}/admin/site_settings/category/email'>ajustes de POP3</a> y tu proveedor de servicio."
     poll_pop3_auth_error: "La conexión al servidor POP3 está fallando debido a un error de autenticación. Por favor revisa los <a href='%{base_path}/admin/site_settings/category/email'>ajustes POP3</a>."
-    force_https_warning: "Tu sitio web está usando SSL. Pero `<a href='%{base_path}/admin/site_settings/category/all_results?filter=force_https'>force_https</a>` no está aún habilitado en la configuración de tu sitio."
+    force_https_warning: "Tu sitio web está usando SSL. Pero «<a href='%{base_path}/admin/site_settings/category/all_results?filter=force_https'>force_https</a>» no está habilitado todavía en la configuración de tu sitio."
     out_of_date_themes: "Hay actualizaciones disponibles para los siguientes temas:"
-    unreachable_themes: "No pudimos verificar actualizaciones de los siguientes themes:"
+    unreachable_themes: "No pudimos verificar actualizaciones de los siguientes temas:"
+    watched_word_regexp_error: "La expresión regular para %{action} las palabras vigiladas es inválida. Por favor revisa tu <a href='%{base_path}/admin/logs/watched_words'>configuración de palabras vigiladas</a> o desactiva la opción «expresiones regulares de palabras vigiladas»"
   site_settings:
     censored_words: "Las palabras serán reemplazadas con &#9632;&#9632;&#9632;&#9632;"
-    delete_old_hidden_posts: "Auto-borrar cualquier post que se quede oculto por mas de 30 días."
+    delete_old_hidden_posts: "Eliminar automaticamente cualquier publicación que se mantenga oculta por mas de 30 días."
     default_locale: "El idioma por defecto de esta instancia de Discourse. Puedes reemplazar el texto de las categorías y temas generados por el sistema en <a href='%{base_path}/admin/customize/site_texts' target='_blank'>Personalizar / Texto</a>."
     allow_user_locale: "Permitir que los usuarios escojan su propio idioma para la interfaz"
-    set_locale_from_accept_language_header: "Establece el lenguaje de la interfaz para usuarios anónimos desde el lenguaje declarado por su navegador web. (EXPERIMENTAL, no funciona con caché anónimo)"
+    set_locale_from_accept_language_header: "establece el idioma de la interfaz para usuarios anónimos a partir del idioma de su navegador web. (EXPERIMENTAL, no funciona con caché anónimo)"
     support_mixed_text_direction: "Admite direcciones mixtas de texto de izquierda a derecha y de derecha a izquierda."
-    min_post_length: "Extensión mínima de los posts, en número de caracteres"
-    min_first_post_length: "Extensión mínima permitida en el primer mensaje (cuerpo del tema) en caracteres"
-    min_personal_message_post_length: "Longitud mínima permitida de publicación en caracteres para mensajes"
-    max_post_length: "Extensión máxima de los posts, en número de caracteres"
-    topic_featured_link_enabled: "Activar publicar temas a partir de un enlace."
-    show_topic_featured_link_in_digest: "Mostrar el enlace destacado por el tema en el email de resumen."
-    min_topic_title_length: "Extensión mínima del título de los temas, en número de caracteres"
-    max_topic_title_length: "Extensión máxima del título de los temas, en número de caracteres"
-    min_personal_message_title_length: "Longitud mínima permitida del título para un mensaje en caracteres"
-    max_emojis_in_title: "Emojis máximos permitidos en el título del tema"
-    min_search_term_length: "Extensión mínima de una búsqueda válida, en número de caracteres"
-    search_tokenize_chinese_japanese_korean: "Forzar la búsqueda a tokenizar Chino/Japonés/Coreano incluso en sitios que no basados en esos idiomas"
-    search_prefer_recent_posts: "Si la búsqueda en tu foro gigante es lenta, esta opción prueba primero un índice de posts más recientes"
-    search_recent_posts_size: "Cuántos posts recientes mantener en el índice"
-    log_search_queries: "Log de búsquedas de los usuarios"
-    search_query_log_max_size: "Cantidad máxima de consultas a conservar"
-    search_query_log_max_retention_days: "Cantidad máxima de tiempo para mantener consultas de búsqueda, en días."
-    search_ignore_accents: "Ignora los acentos cuando busques texto."
+    min_post_length: "Extensión mínima de las publicaciones en número de caracteres"
+    min_first_post_length: "Extensión mínima en la primera publicación (cuerpo del tema) en en número de caracteres"
+    min_personal_message_post_length: "Longitud mínima de una publicación en número de caracteres para mensajes"
+    max_post_length: "Extensión máxima de las publicaciones en número de caracteres"
+    topic_featured_link_enabled: "Activar la publicación de temas a partir de un enlace."
+    show_topic_featured_link_in_digest: "Mostrar el enlace destacado del tema en el correo electrónico de resumen."
+    min_topic_title_length: "Extensión mínima del título de los temas en número de caracteres"
+    max_topic_title_length: "Extensión máxima del título de los temas en número de caracteres"
+    min_personal_message_title_length: "Longitud mínima del título para un mensaje en número de caracteres"
+    max_emojis_in_title: "Cantidad máxima de emojis en el título del tema"
+    min_search_term_length: "Extensión mínima de una búsqueda válida en número de caracteres"
+    search_tokenize_chinese_japanese_korean: "Forzar la búsqueda a tokenizar Chino/Japonés/Coreano incluso en sitios no basados en esos idiomas"
+    search_prefer_recent_posts: "Si la búsqueda en tu foro grande es lenta, esta opción prueba primero en un índice de publicaciones más recientes"
+    search_recent_posts_size: "Cantidad de publicaciones recientes que se mantienen en el índice"
+    log_search_queries: "Registro de búsquedas realizadas por los usuarios"
+    search_query_log_max_size: "Cantidad máxima de consultas que se conservan"
+    search_query_log_max_retention_days: "Tiempo máximo que se mantienen las consultas de búsqueda, en días."
+    search_ignore_accents: "Ignorar los acentos en busquedas de texto."
     category_search_priority_very_low_weight: "Peso aplicado para la ordenación de categorías con prioridad muy baja."
     category_search_priority_low_weight: "Peso aplicado para la ordenación de categorías con prioridad baja."
     category_search_priority_high_weight: "Peso aplicado para la ordenación de categorías con prioridad alta."
     category_search_priority_very_high_weight: "Peso aplicado para la ordenación de categorías con prioridad muy alta."
     allow_uncategorized_topics: "Permitir la creación de temas sin categoría. AVISO: Si ya hay algún tema sin categoría, debes recategorizarlo antes de activar esta opción."
     allow_duplicate_topic_titles: "Permitir temas con títulos idénticos, duplicados."
-    unique_posts_mins: "¿Cuántos minutos deben pasar antes de que un usuario pueda publicar el mismo contenido de nuevo?"
-    educate_until_posts: "Cuando el usuario comienza a escribir su primer o primeros (n) posts, mostrar un pop-up con el panel de consejos para nuevos usuarios en el editor."
-    title: "El nombre de este sitio, utilizado en la etiqueta title."
+    unique_posts_mins: "Cantidad de minutos que deben pasar antes de que un usuario pueda publicar el mismo contenido de nuevo"
+    educate_until_posts: "Cuando el usuario comienza a escribir sus primeras (n) publicaciones, mostrar el panel emergente de consejos para usuarios nuevos en el editor."
+    title: "El nombre de este sitio, utilizada en la etiqueta título."
     site_description: "Describe este sitio en una frase, utilizada en la etiqueta meta description."
-    short_site_description: "Descripción breve, usada como el título de la etiqueta en la página principal."
-    contact_email: "Dirección de correo electrónico del responsable de este sitio. Utilizado para notificaciones críticas, así como en la página <a href='%{base_path}/about' target='_blank'>/about</a> de contacto para asuntos urgentes."
-    contact_url: "URL de contacto para este sitio. Usada en la página <a href='%{base_path}/about' target='_blank'>/about</a> como formulario de contacto para temas urgentes."
+    short_site_description: "Descripción breve, utilizada como el título de la etiqueta en la página principal."
+    contact_email: "Dirección de correo electrónico del responsable de este sitio. Utilizado para notificaciones críticas, así como en la página de <a href='%{base_path}/about' target='_blank'>/información</a> de contacto para asuntos urgentes."
+    contact_url: "URL de contacto para este sitio. Utilizada en el formulario de contacto para temas urgentes en <a href='%{base_path}/about' target='_blank'>/información</a>."
     crawl_images: "Recuperar imágenes desde URLs remotas para insertarlas con las dimensiones correctas de ancho y de largo."
     download_remote_images_to_local: "Convertir imágenes remotas a imágenes locales descargándolas; esto previene imágenes rotas."
-    download_remote_images_threshold: "Mínimo espacio en disco necesario para descargar imágenes remotas de forma local (porcentaje)"
-    download_remote_images_max_days_old: "No descargar imágenes remotas de posts que sean más antiguos de n días."
+    download_remote_images_threshold: "Espacio mínimo en el disco necesario para descargar imágenes remotas de forma local (porcentaje)"
+    download_remote_images_max_days_old: "No descargar imágenes remotas de publicaciones que tengan más de n días de antigüedad."
     disabled_image_download_domains: "Las imágenes remotas que provengan de estos dominios no serán descargadas. Lista delimitada por barras."
-    editing_grace_period: "Durante (n) segundos después de publicar un post, se puede editar ese post sin crear una nueva versión en el historial."
-    editing_grace_period_max_diff: "Número máximo de cambios de caracteres permitidos en el período de gracia de edición, si hay más cambios, almacene otra revisión de publicación (nivel de confianza 0 y 1)"
-    editing_grace_period_max_diff_high_trust: "Número máximo de cambios de caracteres permitidos en el período de gracia de edición, si hay más cambios, almacene otra revisión de publicación (nivel de confianza 2 y superior)"
-    staff_edit_locks_post: "Se bloqueará la publicación de las publicaciones si son editadas por miembros del staff."
-    post_edit_time_limit: "El autor puede editar o eliminar su post durante (n) minutos después de publicarlo. Pon un 0 para que pueda hacerlo siempre."
-    edit_history_visible_to_public: "Permitir a todos ver las versiones previas de un post editado. Si se deshabilita, solo los miembros del staff podrán verlas."
-    delete_removed_posts_after: "Los posts borrados por su autor serán automáticamente eliminados después de (n) horas. Si se establece este valor a 0, los posts serán eliminados automáticamente."
-    max_image_width: "Ancho máximo de las miniaturas de las imágenes en un post"
-    max_image_height: "Alto máximo de las miniaturas de las imágenes en un post"
-    responsive_post_image_sizes: "Cambiar el tamaño de las imágenes de vista previa con lightbox para permitir en pantallas de alto DPI de las siguientes proporciones de píxeles. Eliminar todos los valores para deshabilitar las imágenes responsivas."
-    fixed_category_positions: "Si está marcado, podrás ordenar las categorías en un orden fijado. Si no, las categorías se mostrarán según su actividad reciente."
-    fixed_category_positions_on_create: "Al marcar esta opción, el orden de las categorías se mantendrá en el diálogo de creación de temas (requiere fixed_category_positions)."
-    add_rel_nofollow_to_user_content: 'Añadir la etiqueta rel nofollow a todo el contenido introducido por los usuarios, excepto por los enlaces entrantes (incluyendo dominios padre). Si cambias esto, deberás hacer un rebake de todos los posts con: "rake posts:rebake"'
+    editing_grace_period: "Durante (n) segundos después de que se publique algún mensaje, se puede editar la publicación sin crear una nueva versión en el historial."
+    editing_grace_period_max_diff: "Número máximo de cambios de caracteres permitidos en el período de gracia de edición, si hay más cambios, almacenar otra revisión de publicación (nivel de confianza 0 y 1)"
+    editing_grace_period_max_diff_high_trust: "Número máximo de cambios de caracteres permitidos en el período de gracia de edición, si hay más cambios, almacenar otra revisión de publicación (nivel de confianza 2 y superiores)"
+    staff_edit_locks_post: "Se bloqueará la posibilidad de editar publicaciones si estas son editadas por un miembro del staff."
+    post_edit_time_limit: "El autor puede editar su publicación durante (n) minutos después de publicarla. Establece el valor en 0 para que pueda hacerlo siempre."
+    edit_history_visible_to_public: "Permitir a todos ver las versiones previas de una publicación editada. Si se deshabilita, solo los miembros del staff podrán verlas."
+    delete_removed_posts_after: "Las publicaciones eliminadas por su autor se eliminarán automáticamente después de (n) horas. Si se establece este valor a 0, las publicaciones se eliminarán inmediatamente."
+    max_image_width: "Anchura máxima de las miniaturas de las imágenes en una publicación"
+    max_image_height: "Altura máxima de las miniaturas de las imágenes en una publicación"
+    responsive_post_image_sizes: "Cambiar el tamaño de las imágenes de vista previa de lightbox para permitir su visualización en pantallas de alto DPI de las siguientes proporciones de píxeles. Eliminar todos los valores para deshabilitar las imágenes responsivas."
+    fixed_category_positions: "Si está marcada, podrás organizar las categorías en un orden determinado. Si no, las categorías se mostrarán según su actividad reciente."
+    fixed_category_positions_on_create: "Si está marcada, el orden de las categorías se mantendrá en el diálogo de creación de temas (requiere fixed_category_positions)."
+    add_rel_nofollow_to_user_content: 'Añadir la etiqueta rel nofollow a todo el contenido introducido por los usuarios, excepto por los enlaces internos (incluyendo dominios padre). Si cambias esto, deberás hacer un rebake de todos las publicaciones con: «rake posts:rebake»'
     exclude_rel_nofollow_domains: "Una lista de dominios a cuyos enlaces no se les añadirá la etiqueta nofollow. ejemplo.com permitirá automáticamente sub.ejemplo.com también. Como mínimo, deberías añadir el dominio de este sitio para ayudar a los rastreadores web a encontrar todo el contenido. Si otras partes de este sitio web están en otros dominios, añádelos también."
-    post_excerpt_maxlength: "Extensión máxima del resumen / extracto de un post."
+    post_excerpt_maxlength: "Extensión máxima del resumen / extracto de una publicación."
     show_pinned_excerpt_mobile: "Mostrar extracto de temas destacados en la vista móvil."
     show_pinned_excerpt_desktop: "Mostrar extracto de temas destacados en la vista de escritorio."
-    post_onebox_maxlength: "Extensión máxima en caracteres de un post de Discourse en formato Onebox."
-    onebox_domains_blacklist: "Una lista de dominios que nunca se mostrarán en un obenox."
-    inline_onebox_domains_whitelist: "Lista de dominios que serán oneboxed en miniatura si son enlazados sin un título"
-    enable_inline_onebox_on_all_domains: "Ignorar configuración inline_onebox_domain_whitelist site y permitir inline onebox en todos los dominios."
-    max_oneboxes_per_post: "Número máximo de oneboxes en un tema."
-    logo: "La imagen del logotipo en la parte superior izquierda de su sitio. Utilice una imagen rectangular ancha con una altura de 120 y una relación de aspecto superior a 3:1. Si se deja en blanco, se mostrará el texto del título del sitio."
-    logo_small: "La pequeña imagen del logotipo en la parte superior izquierda de su sitio debe ser una forma cuadrada de 120 por 120. Si se deja en blanco, se mostrará el home glyph."
-    digest_logo: "La imagen de logotipo alternativa utilizada en la parte superior del resumen de correo electrónico de su sitio. Debe ser una forma de rectángulo ancho. No debe ser una imagen SVG. Si se deja en blanco, se utilizará la del `logo`."
-    mobile_logo: "El logo utilizado en la versión móvil de su sitio. Use una imagen rectangular ancha de 120 y un ratio mayor a 3:1. Si se deja en blanco, se usará la imagen que se configuró en `logo`."
-    large_icon: "Imagen utilizada como base para otros iconos de metadatos. Lo ideal sería que fuera mayor que 512 x 512. Si se deja en blanco, se usará logo_small."
-    manifest_icon: "Imagen utilizada como logo/imagen de bienvenida en Android. Se cambiará automáticamente de tamaño a 512 × 512. Si se deja en blanco, se utilizará large_icon."
-    favicon: "Un favicon para su sitio, ve <a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>https://es.wikipedia.org/wiki/Favicon</a>. Para trabajar correctamente sobre un CDN debe ser un png. Será redimensionado a 32x32. Si se deja en blanco, se utilizará large_icon."
+    post_onebox_maxlength: "Extensión máxima en caracteres de una publicación de Discourse en formato onebox."
+    onebox_domains_blacklist: "Una lista de dominios que nunca se mostrarán en formato onebox"
+    inline_onebox_domains_whitelist: "Lista de dominios que se transformarán en formato onebox en miniatura si son enlazados sin un título"
+    enable_inline_onebox_on_all_domains: "Ignorar el ajuste del sitio inline_onebox_domain_whitelist y permitir inline onebox en todos los dominios."
+    max_oneboxes_per_post: "Número máximo de oneboxes en una publicación."
+    logo: "La imagen del logotipo en la parte superior izquierda de tu sitio. Utiliza una imagen rectangular ancha con una altura de 120 y una relación de aspecto superior a 3:1. Si se deja en blanco, se mostrará el texto del título del sitio."
+    logo_small: "La pequeña imagen del logotipo en la parte superior izquierda de tu sitio al desplazarse hacia abajo. Utiliza un cuadrado de 120 x 120. Si se deja en blanco, se mostrará un glifo local."
+    digest_logo: "La imagen de logotipo alternativa utilizada en la parte superior del resumen de correo electrónico de su sitio. Utiliza un rectángulo ancho. No debe ser una imagen SVG. Si se deja en blanco, se utilizará la imagen del «logo»."
+    mobile_logo: "El logo utilizado en la versión móvil de su sitio. Utiliza una imagen rectangular ancha de 120 y un ratio mayor a 3:1. Si se deja en blanco, se usará la imagen que se configuró en «logo»."
+    large_icon: "Imagen utilizada como base para otros iconos de metadatos. Lo ideal sería que fuera mayor que 512 x 512. Si se deja en blanco, se utilizará logo_small."
+    manifest_icon: "Imagen utilizada como logo/imagen de bienvenida en Android. Se cambiará automáticamente el tamaño a 512 × 512. Si se deja en blanco, se utilizará large_icon."
+    favicon: "Un favicon para su sitio, ve <a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>https://es.wikipedia.org/wiki/Favicon</a>. Para trabajar correctamente sobre un CDN debe ser un png. Se cambiará automáticamente el tamaño a 32x32. Si se deja en blanco, se utilizará large_icon."
     apple_touch_icon: "Icono utilizado para dispositivos táctiles de Apple. Se redimensionará automáticamente a 180x180. Si se deja en blanco, se utilizará el icono grande."
-    opengraph_image: "Imagen de gráfico abierto predeterminada, utilizada cuando la página no tiene otra imagen adecuada. Si se deja en blanco, se utilizará el icono grande"
-    twitter_summary_large_image: "La 'imagen grande de resumen' de la tarjeta de Twitter (debe tener al menos 280 de ancho y al menos 150 de altura). Si se deja en blanco, se generan metadatos de tarjetas normales utilizando opengraph_image."
-    notification_email: "La dirección de correo electrónico \"remitente\", utilizada al enviar todos los emails esenciales de sistema. El dominio especificado debe tener correctamente configurados los registros SPF, DKIM y PTR inversos para que los emails se reciban correctamente."
-    email_custom_headers: "Lista de emails separados por una barra"
-    email_subject: "Formato de asunto personalizable para emails estándar. Lee <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801</a>"
-    enforce_second_factor: "Obliga a usar la verificación en dos pasos. Selecciona 'all' para obligar a todos los usuarios. Selecciona 'staff' para obligar solo a los miembros del staff."
-    force_https: "Forzar al sitio a utilizar solo HTTPS. AVISO: ¡NO actives esta opción a menos que verifiques completamente la configuración y funcione correctamente en todas partes! ¿Has verificado también que el CDN, los inicios de sesión social y cualquier logo externo / dependencia son compatibles con HTTPS?"
-    same_site_cookies: "Usar las mismas cookies del sitio, ellos eliminan todos los vectores CSRF -Cross-site request forgery o falsificación de petición en sitios cruzados- de los navegadores soportados (Lax o Strict). Advertencia: Strict solo funcionará en sitios que forcen el inicio de sesión y usen SSO. "
-    summary_score_threshold: "La puntuación mínima requerida para que un post sea incluido en el 'Resumen de este tema\""
-    summary_posts_required: "El mínimo número de posts en un tema para habilitar el 'Resumen de este tema'"
-    summary_likes_required: "Mínimo de \"me gusta\" en un tema para habilitar 'Resumen de este tema'"
-    summary_percent_filter: "Cuando un usuario hace clic en 'Resumen de este tema', se muestra el n % mejores posts"
-    summary_max_results: "Máximo de posts devueltos en 'Resumen de este tema'"
-    enable_personal_messages: "Permitir que los usuarios con nivel de confianza 1 (configurable a través del mínimo nivel de confianza para enviar mensajes) crear mensajes y responder a ellos. Tenga en cuenta que el staff siempre puede enviar mensajes pase lo que pase."
+    opengraph_image: "Imagen de gráfico abierto predeterminada, utilizada cuando la página no tiene otra imagen adecuada. Si se deja en blanco, se utilizará large_icon"
+    twitter_summary_large_image: "La «imagen grande de resumen» de la tarjeta de Twitter (debe tener al menos 280 de anchura y al menos 150 de altura). Si se deja en blanco, se generan metadatos de tarjetas normales utilizando opengraph_image."
+    notification_email: "La dirección de correo electrónico remitente utilizada al enviar todos los correos electrónicos esenciales de sistema. El dominio especificado debe tener correctamente configurados los registros SPF, DKIM y PTR inversos para que los correos electrónicos se reciban correctamente."
+    email_custom_headers: "Lista de correos electrónicos separados por barras"
+    email_subject: "Formato de asunto personalizable para correos electrónicos estándar. Revisa <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801</a>"
+    enforce_second_factor: "Obliga a usar la autenticación en dos pasos. Selecciona «all» para obligar a todos los usuarios. Selecciona «staff» para obligar solo a los miembros del staff."
+    force_https: "Forzar al sitio a utilizar solo HTTPS. AVISO: ¡NO actives esta opción a menos que verifiques completamente la configuración y funcione correctamente en todas partes! ¿Has verificado también que el CDN, los inicios de sesión a través de redes sociales y cualquier logo externo / dependencia son compatibles con HTTPS?"
+    same_site_cookies: "Usar las mismas cookies del sitio, ellos eliminan todos los vectores CSRF (falsificación de petición en sitios cruzados) de los navegadores soportados (Lax o Strict). Advertencia: Strict solo funcionará en sitios que forcen el inicio de sesión y usen SSO. "
+    summary_score_threshold: "La puntuación mínima requerida para que una publicación se incluya en el «resumen de este tema»"
+    summary_posts_required: "Cantidad mínima de publicaciones en un tema para habilitar el «resumen de este tema»"
+    summary_likes_required: "Cantidad mínina de me gusta en un tema para habilitar «resumen de este tema»"
+    summary_percent_filter: "Cuando un usuario hace clic en «resumen de este tema», mostrar el % de las publicaciones destacadas"
+    summary_max_results: "Cantidad máxima de publicaciones devueltas en «resumen de este tema»"
+    enable_personal_messages: "Permitir que los usuarios con nivel de confianza 1 (configurable a través del mínimo nivel de confianza para enviar mensajes) crear mensajes y responder a ellos. Ten en cuenta que el staff siempre puede enviar mensajes pase lo que pase."
     enable_system_message_replies: "Permite a los usuarios responder a los mensajes del sistema, incluso si los mensajes privados están inhabilitados."
     enable_long_polling: "Los mensajes usados para notificaciones pueden usar el long polling"
-    long_polling_base_url: "URL base usada para el 'long polling' (cuando un CDN esta sirviendo contenido dinámico, asegúrate de ajustar esto al 'pull' de origen) ejemplo: http://origin.site.com"
-    long_polling_interval: "Cantidad de tiempo que el servidor debe de esperar antes de responder a los clientes que no hay datos enviados (solamente usuarios con sesión iniciada)."
-    polling_interval: "Cuando no este en 'long polling', ¿Qué tan frecuente debe los clientes con sesión iniciada hacer 'poll' en milisegundos?"
-    anon_polling_interval: "¿Cuán a menudo deben hacer poll los usuarios anónimos en milisegundos"
-    background_polling_interval: "Cada cuántos milisegundos debería hacerse cargarse información (mientras que la ventana esté en segundo plano)"
-    hide_post_sensitivity: "La probabilidad de que una publicación marcada se oculte"
-    silence_new_user_sensitivity: "La probabilidad de que un nuevo usuario sea silenciado basado en los reportes de spam"
-    auto_close_topic_sensitivity: "La probabilidad de que un tema reportado sea automáticamente cerrado"
-    cooldown_minutes_after_hiding_posts: "Número de minutos que un usuario debe esperar para poder editar un post oculto por los reportes de la comunidad"
-    max_topics_in_first_day: "El máximo número de temas que un usuario puede crear en las 24 horas posteriores a publicar su primer post"
-    max_replies_in_first_day: "El máximo número de respuestas que un usuario puede crear en las 24 horas posteriores a publicar su primer post"
-    tl2_additional_likes_per_day_multiplier: "Incrementar el límite de likes por día para el nivel de confianza 2 (miembro) multiplicando por este número"
-    tl3_additional_likes_per_day_multiplier: "Incrementar el límite de likes por día para el nivel de confianza 3 (habitual) multiplicando por este número"
-    tl4_additional_likes_per_day_multiplier: "Incrementar el límite de likes por día para el nivel de confianza 4 (líder) multiplicando por este número"
-    num_users_to_silence_new_user: "Si los posts de un nuevo usuario son reportados como spam por num_spam_flags_to_silence_new_user usuarios diferentes, ocultar todos sus posts y evitar que publique en el futuro. 0 para deshabilitar."
-    num_tl3_flags_to_silence_new_user: "Si los posts de un nuevo usuario obtienen este número de reportes de num_tl3_users_to_silence_new_user diferentes usuarios con nivel de confianza 3, se ocultarán todos sus posts y no podrá publicar más en un futuro. 0 para deshabilitar."
-    num_tl3_users_to_silence_new_user: "Si los posts de un nuevo usuario reciben num_tl3_flags_to_silence_new_user reportes de este número de usuarios de nivel 3 de confianza, ocultar todos sus posts y prevenir futuras publicaciones. 0 para desactivar esta opción."
+    long_polling_base_url: "URL base usada para el long polling (cuando un CDN esta sirviendo contenido dinámico, asegúrate de ajustar esto al pull de origen) ejemplo: http://origin.site.com"
+    long_polling_interval: "Cantidad de tiempo que el servidor debe de esperar antes de responder a los clientes que no hay datos para enviar (solamente usuarios con sesión iniciada)."
+    polling_interval: "Cuando no este en long polling, frecuencia con la que los clientes con sesión iniciada hacen poll en milisegundos"
+    anon_polling_interval: "Frecuencia en milisegundos con la que los clientes anónimos hacen poll"
+    background_polling_interval: "Frecuencia en milisegundos con la que los clientes con sesión iniciada hacen poll (mientras que la ventana está en segundo plano)"
+    hide_post_sensitivity: "La probabilidad de que una publicación reportada se oculte"
+    silence_new_user_sensitivity: "La probabilidad de que un usuario nuevo sea silenciado con base en reportes de spam"
+    auto_close_topic_sensitivity: "La probabilidad de que un tema reportado se cierre automáticamente"
+    cooldown_minutes_after_hiding_posts: "Número de minutos que un usuario debe esperar para poder editar una publicación oculta debido a reportes de la comunidad"
+    max_topics_in_first_day: "El número máximo de temas que un usuario puede crear durante las 24 horas posteriores a su primera publicación"
+    max_replies_in_first_day: "El número máximo de respuestas que un usuario puede crear durante las 24 horas posteriores a su primera publicación"
+    tl2_additional_likes_per_day_multiplier: "Incrementar el límite de me gusta por día para los usuarios con nivel de confianza 2 (miembros) multiplicándolo por este número"
+    tl3_additional_likes_per_day_multiplier: "Incrementar el límite de me gusta por día para los usuarios con nivel de confianza 3 (regular) multiplicándolo por este número"
+    tl4_additional_likes_per_day_multiplier: "Incrementar el límite de me gusta por día para los usuarios con nivel de confianza 4 (líder) multiplicándolo por este número"
+    num_users_to_silence_new_user: "Si las publicaciones de un usuario nuevo se reportan como spam por num_spam_flags_to_silence_new_user usuarios diferentes, ocultar todas sus publicaciones y evitar que publique en el futuro. Establece el valor en 0 para deshabilitar."
+    num_tl3_flags_to_silence_new_user: "Si las publicaciones de un usuario nuevo obtienen este número de reportes de num_tl3_users_to_silence_new_user diferentes usuarios con nivel de confianza 3, se ocultarán todas sus publicaciones y no podrá publicar más en un futuro. Establece el valor en 0 para deshabilitar."
+    num_tl3_users_to_silence_new_user: "Si las publicaciones de un usuario nuevo reciben num_tl3_flags_to_silence_new_user reportes de este número de usuarios de nivel 3 de confianza, ocultar todos sus posts y prevenir futuras publicaciones. Establece el valor en 0 para deshabilitar."
     notify_mods_when_user_silenced: "Si un usuario es silenciado automáticamente, enviar un mensaje a todos los moderadores."
-    flag_sockpuppets: "Si un nuevo usuario responde a un tema desde la misma dirección de IP que el nuevo usuario que inició el tema, reportar los posts de los dos como spam en potencia."
-    traditional_markdown_linebreaks: "Utiliza saltos de línea tradicionales en Markdown, que requieren dos espacios al final para un salto de línea."
-    enable_markdown_typographer: "Utilice reglas de tipografía para mejorar la legibilidad de texto: remplace citas rectas 'con comillas', (c) (tm) con símbolos, - con emdash -, etc."
-    enable_markdown_linkify: "Trate automáticamente el texto que se ve como un enlace como un enlace: www.ejemplo.com y https://ejemplo.com se vincularán automáticamente"
+    flag_sockpuppets: "Si un usuario nuevo responde a un tema desde la misma dirección de IP que el usuario que inició el tema, reportar las publicaciones de ambos spam en potencia."
+    traditional_markdown_linebreaks: "Utilizar saltos de línea tradicionales en Markdown, los cuales requieren dos espacios al final para un salto de línea."
+    enable_markdown_typographer: "Utilizar reglas de tipografía para mejorar la legibilidad de texto: remplaza citas rectas «con comillas», (c) (tm) con símbolos, -- con guion largo –, etc"
+    enable_markdown_linkify: "Tratar automáticamente el texto que parezca un enlace como un enlace: www.ejemplo.com y https://ejemplo.com se vincularán automáticamente"
     markdown_linkify_tlds: "Lista de dominios de nivel superior que se tratan automáticamente como enlaces"
     markdown_typographer_quotation_marks: "Lista de pares de reemplazo de comillas dobles y simples"
-    post_undo_action_window_mins: "Número de minutos durante los cuales los usuarios pueden deshacer sus acciones recientes en un post (me gusta, reportes, etc)."
-    must_approve_users: "Los miembros del Staff deben aprobar todas las nuevas cuentas antes de que se les permita acceder al sitio."
-    pending_users_reminder_delay: "Notificar a los moderadores si hay nuevos usuarios que hayan estado esperando aprbación durante más estas horas. Usa -1 para desactivar estas notificaciones."
-    maximum_session_age: "El usuario permanecerá n horas con su sesión iniciada desde su última visita"
+    post_undo_action_window_mins: "Número de minutos durante los cuales los usuarios pueden deshacer sus acciones recientes en una publicación (me gusta, reportes, etc)."
+    must_approve_users: "El staff deben aprobar todas las cuentas nuevas antes de que se les permita acceder al sitio."
+    pending_users_reminder_delay: "Notificar a los moderadores si hay usuarios nuevos que hayan estado esperando aprobación durante más de esta cantidad de horas. Usa -1 para desactivar estas notificaciones."
+    maximum_session_age: "El usuario permanecerá con su sesión iniciada n horas desde su última visita"
     ga_universal_tracking_code: "Código de seguimiento de Google Universal Analytics (analytics.js), ejemplo: UA-12345678-9; visita <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
     ga_universal_domain_name: "Nombre del dominio establecido en Google Universal Analytics (analytics.js), ejemplo: misitio.com; visita <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
-    ga_universal_auto_link_domains: "Habilitar el seguimiento multidominio de Google Universal Analytics (analytics.js). Enlaces salientes de estos dominios serán del client id agregados. Leer <a href='https://support.google.com/analytics/answer/1034342?hl=en' target='_blank'>Google's Cross-Domain Tracking guide.</a>"
-    gtm_container_id: "Google Tag Manager container id. ejempo: GTM-ABCDEF. <br/>Nota: los script de terceros que cargan a través de GTM puede que sea necesario ponerlos en la lista blanca en 'content security policy script src'."
-    enable_escaped_fragments: "Ir a la API Ajax-Crawling de Google si no se detecta ningún webcrawler. Mira <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
+    ga_universal_auto_link_domains: "Habilitar el seguimiento multidominio de Google Universal Analytics (analytics.js). Los enlaces salientes de estos dominios tendrán la ID del cliente agregados. Revisa <a href='https://support.google.com/analytics/answer/1034342?hl=en' target='_blank'>La guía de Google para el seguimiento multidominio.</a>"
+    gtm_container_id: "ID del contenedor de Google Tag Manager. Ejempo: GTM-ABCDEF. <br/>Nota: se puede requerir que los scripts de terceros cargados a través de GTM se añadan a lista blanca en «content security policy script src»."
+    enable_escaped_fragments: "Ir a la API Ajax-Crawling de Google si no se detecta ningún webcrawler. Visita </a>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
     moderators_create_categories: "Permitir que los moderadores creen nuevas categorías"
-    cors_origins: "Orígenes permitidos para las cross-origin requests (CORS). Cada origen debe incluir http:// or https://. La variable env DISCOURSE_ENABLE_CORS debe establecerse a verdadero para activar CORS."
-    use_admin_ip_whitelist: "Los admins solo pueden iniciar sesión si están en una dirección IP definida en la lista de Screened IPs (Admin > Logs > Screened Ips)."
-    blacklist_ip_blocks: "Una lista de IPs bloqueadas privadas que nunca deberían ser rastreadas por Discourse"
-    whitelist_internal_hosts: "Una lista con hosts internos que discourse puede rastrear de forma segura para oneboxing y otros propósitos"
-    allowed_iframes: "Una lista de dominios para iframe src donde discourse pueda permitir de forma segura en mensajes"
-    whitelisted_crawler_user_agents: "User agents de rastreadores web a los que se debe permitir el acceso al sitio. ¡ADVERTENCIA! ¡CONFIGURAR ESTO INHABILITARÁ TODOS LOS RASTREADORES QUE NO SE ENUMERAN AQUÍ!"
-    blacklisted_crawler_user_agents: "Palabra única insensible a mayúsculas y minúsculas en la cadena del user agent que identifica rastreadores web a los que no se debe permitir el acceso al sitio. No se aplica si se define una lista blanca."
-    slow_down_crawler_user_agents: "User agents de rastreadores web a los que se debe aplicar una tarifa limitada en robots.txt utilizando la directiva de retardo de rastreo"
-    slow_down_crawler_rate: "Si slow_down_crawler_user_agents es especificado, este ratio aplicará para todos los crawlers (la solicitud demora número de segundos)"
+    cors_origins: "Orígenes permitidos para las solicitudes de origen cruzado (CORS). Cada origen debe incluir http:// or https://. La variable env DISCOURSE_ENABLE_CORS debe establecerse como verdadero para activar CORS."
+    use_admin_ip_whitelist: "Los administradores solo pueden iniciar sesión si están en una dirección IP definida en la lista de direcciones IP revisadas (Administrados > Registros > Direcciones IP)."
+    blacklist_ip_blocks: "Una lista privada de direcciones IP bloqueadas que nunca deberían ser rastreadas por Discourse"
+    whitelist_internal_hosts: "Una lista con hosts internos que discourse puede rastrear de forma segura para utilizar con onebox y otros propósitos"
+    allowed_iframes: "Una lista de prefijos de dominios para iframe src que discourse puede permitir de forma segura en publicaciones"
+    whitelisted_crawler_user_agents: "Agentes de usuario de crawlers a los que se debe permitir el acceso al sitio. ¡ADVERTENCIA! ¡CONFIGURAR ESTO INHABILITARÁ A TODOS LOS CRAWLERS QUE NO SE ENCUENTRAN AQUÍ!"
+    blacklisted_crawler_user_agents: "Palabra única insensible a mayúsculas y minúsculas en la cadena del agente de usuario que identifica a los que no se debe permitir el acceso al sitio. No se aplica si se define una lista blanca."
+    slow_down_crawler_user_agents: "Agentes de usuario de crawlers a los que se debe aplicar una cuota limitada en robots.txt utilizando la directiva de retardo de rastreo"
+    slow_down_crawler_rate: "Si slow_down_crawler_user_agents es especificado, esta proporción aplicará para todos los crawlers (número de segundos de demora entre solicitudes)"
     content_security_policy: "Activar la política de seguridad de contenido (CSP)"
     content_security_policy_report_only: "Activar solo el informe de la política de seguridad de contenido (CPS)"
-    content_security_policy_collect_reports: "Habilitar CSP violation report collection en /csp_reports"
+    content_security_policy_collect_reports: "Habilitar la recolección de reportes de violación de CSP en /csp_reports"
     content_security_policy_script_src: "Fuentes adicionales de script en la lista blanca. El host actual y CDN se incluyen de forma predeterminada."
     invalidate_inactive_admin_email_after_days: "Las cuentas administrativas que no hayan visitado la página en este número de días deberán validar de nuevo su dirección de correo electrónico antes de iniciar sesión. Establecer a 0 para desactivar."
-    top_menu: "Determinar que items aparecen en la navegación de la home y en qué orden. Ejemplo latest|new|unread|categories|top|read|posted|bookmarks"
-    post_menu: "Determina qué elementos aparecen en el menú de un post y en qué orden. Ejemplo: like|edit|flag|delete|share|bookmark|reply"
-    post_menu_hidden_items: "Los elementos del menú a ocultar por defecto en el menú de cada post a menos que se haga clic en el botón para expandir las opciones."
-    share_links: "Determina qué elementos aparecen en el cuadro de compartir y en qué orden"
-    site_contact_username: "Nombre de usuario de moderador o administrador desde donde se enviarán mensajes automáticos. Si se deja en blanco, se utilizará la cuenta system por defecto."
+    top_menu: "Determinar los elementos que aparecen en el menú de navegación de la página de inicio y su orden. Ejemplo últimos|nuevos|no leídos|categorías|destacados|leídos|publicados|marcadores"
+    post_menu: "Determinar los elementos que aparecen en el menú de publicación  y su orden. Ejemplo: me gusta|editar|reportar|eliminar|compartir|guardar en marcadores|responder"
+    post_menu_hidden_items: "Los elementos del menú que se ocultan por defecto en el menú de publicación a menos que se haga clic en el botón para expandir las opciones."
+    share_links: "Determinar los elementos que aparecen en el cuadro de compartir y su orden."
+    site_contact_username: "Nombre de usuario de miembro del staff desde donde se enviarán todos los mensajes automáticos. Si se deja en blanco, se utilizará la cuenta por defecto del sistema."
     site_contact_group_name: "Un nombre de grupo válido para que sea invitado a todos los mensajes automáticos."
-    send_welcome_message: "Enviar a todos los nuevos usuarios un mensaje de bienvenida con una guía rápida para comenzar."
+    send_welcome_message: "Enviar a todos los usuarios nuevos un mensaje de bienvenida con una guía rápida de inicio."
     send_tl1_welcome_message: "Enviar a los nuevos usuarios con nivel de confianza 1 un mensaje de bienvenida."
-    suppress_reply_directly_below: "No mostrar el contador de respuestas desplegable en un post si solo hay una única respuesta y está justamente debajo del post en cuestión."
-    suppress_reply_directly_above: "No mostrar el en-respuesta-a desplegable en un post cuando solo hay una sola respuesta justo encima del post."
+    suppress_reply_directly_below: "No mostrar el contador de respuestas desplegable en una publicación si solo hay una única respuesta justo debajo de esta publicación."
+    suppress_reply_directly_above: "No mostrar el desplegable en-respuesta-a en una publicación cuando solo hay una sola respuesta justo encima de esta publicación."
     remove_full_quote: "Quitar automáticamente citas completas en respuestas directas"
-    suppress_reply_when_quoting: "No mostrar el desplegable en-respuesta-a en un post cuando el post cite la respuesta."
-    max_reply_history: "Número máximo de respuestas a mostrar al expandir en-respuesta-a"
-    topics_per_period_in_top_summary: "Número de mejores temas mostrados en el resumen de mejores temas."
-    topics_per_period_in_top_page: "Número de mejores temas mostrados en la vista expandida al clicar en 'ver más'."
-    redirect_users_to_top_page: "Redirigir automáticamente a los nuevos usuarios y a los ausentes de larga duración a la página de mejores temas."
-    top_page_default_timeframe: "Período de tiempo por defecto para la página de temas top"
+    suppress_reply_when_quoting: "No mostrar el desplegable en-respuesta-a en una publicación cuando la publicación cite la respuesta."
+    max_reply_history: "Número máximo de respuestas que se muestran al expandir en-respuesta-a"
+    topics_per_period_in_top_summary: "Número de temas destacados que se muestran en el resumen de temas destacados."
+    topics_per_period_in_top_page: "Número de temas destacados que se muestran en la vista expandida al hacer clic en «ver más»."
+    redirect_users_to_top_page: "Redirigir automáticamente a la página de destacados a los usuarios nuevos y a los que se ausenten durante largo tiempo."
+    top_page_default_timeframe: "Período de tiempo por defecto para la página de temas destacados"
     moderators_view_emails: "Permitir que los moderadores puedan ver los correos electrónicos de los usuarios"
-    prioritize_username_in_ux: "Mostrar username primero en la página de usuario, tarjeta de usuario y mensajes (cuando el nombre ha sido desactivado se muestra primero)"
-    enable_rich_text_paste: "Habilitar conversión automática de HTML a Markdown cuando pegues texto en el compositor. (Experimental)"
+    prioritize_username_in_ux: "Mostrar el nombre de usuario primero en la página de usuario, tarjeta de usuario y publicaciones (cuando está desactivado, el nombre se muestra primero)"
+    enable_rich_text_paste: "Habilitar conversión automática de HTML a Markdown al pegar texto en el compositor. (Experimental)"
     email_token_valid_hours: "Los tokens para restablecer contraseña olvidada / activar cuenta son válidos durante (n) horas."
     enable_badges: "Activar el sistema de medallas"
-    enable_whispers: "Permitir a los miembros del staff comunicarse privadamente entre ellos en temas públicos."
-    email_domains_blacklist: "Una lista de dominios de correo electrónico con los que los usuarios no se podrán registrar. Ejemplo: mailinator.com|trashmail.net"
-    email_domains_whitelist: "Una lista de dominios de email con los que los usuarios DEBERÁN registrar sus cuentas. AVISO: ¡los usuarios con un email con diferente dominio a los listados no estarán permitidos!"
-    hide_email_address_taken: "No informar a los usuarios de la existencia de una cuenta con el email durante el registro y desde el formulario de contraseña olvidada."
+    enable_whispers: "Permitir que los miembros del staff se comuniquen entre ellos en privado dentro de los temas."
+    allow_index_in_robots_txt: "Especificar en robots.txt que se permite que este sitio sea indexado por los motores de búsqueda en Internet. En casos excepcionales, puedes <a href='%{base_path}/admin/customize/robots'>sobrescribir robots.txt</a> permanentemente."
+    email_domains_blacklist: "Una lista de dominios de correo electrónico que los usuarios no pueden utilizar para registrarse. Ejemplo: mailinator.com|trashmail.net"
+    email_domains_whitelist: "Una lista de dominios de correo electrónico con los que los usuarios DEBEN registrar sus cuentas. AVISO: ¡no se permitirá el registro de usuarios cuyo correo electrónico sea de un dominio diferente a los aquí listados!"
+    hide_email_address_taken: "No informar a los usuarios de la existencia de una cuenta con un correo electrónico dado durante el registro y desde el formulario de contraseña olvidada."
     log_out_strict: "Al cerrar sesión, cierra TODAS las sesiones del usuario en todos los dispositivos"
     version_checks: "Ping el Discourse Hub para actualizaciones de versión y mostrar mensajes del número de versión en el dashboard <a href='/admin' target='_blank'>/admin</a>."
-    new_version_emails: "Enviar un email a la dirección contact_email cuando esté disponible una nueva versión de Discourse."
-    invite_expiry_days: "Durante cuánto tiempo son válidas las claves de invitación de usuarios, en días"
-    invite_only: "Todos los nuevos usuarios deben ser explícitamente invitados por usuarios de confianza o el staff. Los registros públicos están desactivados."
-    login_required: "Se requiere haber iniciado sesión para leer el contenido de este sitio, deshabilita el acceso anónimo."
-    min_username_length: "Longitud mínima del nombre de usuario en caracteres. ADVERTENCIA: si existen usuarios o grupos con nombres de menor longitud que ésta, tu sitio se romperá."
-    max_username_length: "Longitud máxima del nombre de usuario en caracteres. ADVERTENCIA: si tienes usuarios o grupos con mayor cantidad de caracteres que ésta, tu sitio se romperá."
+    new_version_emails: "Enviar un correo electrónico a la dirección contact_email cuando esté disponible una nueva versión de Discourse."
+    invite_expiry_days: "Tiempo durante el cual las claves de invitación de usuarios son válidas, en días"
+    invite_only: "Todos los usuarios nuevos deben ser invitados de forma explícita por usuarios de confianza o un miembro del staff. Los registros públicos están desactivados."
+    login_required: "Requerir inicio de sesión para leer el contenido de este sitio, deshabilitar el acceso anónimo."
+    min_username_length: "Longitud mínima del nombre de usuario en caracteres. ADVERTENCIA: ¡si existen usuarios o grupos con nombres de menor longitud que esta, tu sitio se romperá!"
+    max_username_length: "Longitud máxima del nombre de usuario en caracteres. ADVERTENCIA: ¡si existen usuarios o grupos con nombres de mayor longitud que esta, tu sitio se romperá!"
     unicode_usernames: "Permitir que los nombres de usuario contengan algunas letras y números Unicode."
-    unicode_username_character_whitelist: "Expresión Regular para permitir únicamente algunos caracteres Unicode dentro de los nombres de usuario. Letras ASCII y números serán siempre permitidos y no es necesario que los incluyas en una lista blanca. "
-    reserved_usernames: "Nombres de usuario que no están permitidos. El símbolo Asterisco * puede ser usado para coincidir con cualquier carácter cero o más veces."
-    min_password_length: "Longitud mínima de contraseña."
-    min_admin_password_length: "Longitud mínima de la contraseña para un Admin."
+    unicode_username_character_whitelist: "Expresión regular para permitir únicamente algunos caracteres Unicode dentro de los nombres de usuario. Las letras ASCII y números siempre se permitirán y no es necesario que los incluyas en una lista blanca. "
+    reserved_usernames: "Nombres de usuario que no están permitidos. El símbolo asterisco * se puede usar para coincidir con cualquier carácter cero o más veces."
+    min_password_length: "Longitud mínima de la contraseña."
+    min_admin_password_length: "Longitud mínima de la contraseña para un administrador."
     password_unique_characters: "Número mínimo de caracteres únicos que la contraseña debe tener."
-    block_common_passwords: "No permitir contraseñas que están entre las 10.000 más comunes."
-    enable_sso: "Activar single sign on a través de un sitio externo (AVISO: ¡LAS DIRECCIONES DE EMAIL SERÁN VALIDADAS POR EL SITIO EXTERNO!)"
+    block_common_passwords: "No permitir contraseñas que formen parte de las 10.000 contraseñas más comunes."
+    enable_sso: "Habilitar el inicio de sesión único a través de un sitio externo (AVISO: ¡LAS DIRECCIONES DE CORREO ELECTRÓNICO DE LOS USUARIOS *TIENEN* QUE SER VALIDADAS POR EL SITIO EXTERNO!)"
     verbose_sso_logging: "Registrar diagnósticos detallados relacionados con SSO en <a href='%{base_path}/logs' target='_blank'>/logs</a>"
     enable_sso_provider: "Implementar el protocolo del proveedor de SSO de Discourse en el /session/sso_provider endpoint, requiere que se configure sso_provider_secrets"
     sso_url: "URL del endpoint para el single sign on (debe incluir http:// o https://)"
@@ -1424,6 +1428,10 @@ es:
     enable_github_logins: "Activar autenticación por Github, requiere una github_client_id y un github_client_secret. Ver <a href='https://meta.discourse.org/t/13745' target='_blank'>Configuring GitHub login for Discourse</a>."
     github_client_id: "Client id para la autenticación por Github, registrado en <a href='https://github.com/settings/developers/' target='_blank'>https://github.com/settings/developers</a>"
     github_client_secret: "Client secret para la autenticación por Github, registrado en <a href='https://github.com/settings/developers/' target='_blank'>https://github.com/settings/developers</a>"
+    enable_discord_logins: '¿Permitir a los usuarios la autenticación mediante Discord?'
+    discord_client_id: 'ID de cliente de Discord (¿necesitas una? visita <a href="https://discordapp.com/developers/applications/me">el portal del desarrollador</a>)'
+    discord_secret: 'Clave secreta de Discord'
+    discord_trusted_guilds: 'Solo permitir a los miembros de estos clanes de Discord conectarse mediante Discord. Utiliza la ID numérica del clan. Para más información, revisa las instrucciones <a href="https://meta.discourse.org/t/configuring-discord-login-for-discourse/127129">aquí</a>. Déjalo en blanco para permitir todos los clanes.'
     readonly_mode_during_backup: "Habilitar el modo de 'solo-lectura' mientras se hace el backup"
     enable_backups: "Permitir a los administradores crear backups del foro"
     allow_restore: "Permitir restauración, la cual puede sobreescribir TODOS los datos del sitio! Dejela en falso a menos que tenga planeado recuperar sus datos desde una copia de respaldo. "
@@ -1628,9 +1636,11 @@ es:
     reset_bounce_score_after_days: "Restablecer la puntuación de reobte automáticamente pasados X días."
     attachment_content_type_blacklist: "Lista de palabras clave utilizadas para bloquear adjuntos basados en el tipo de contenido."
     attachment_filename_blacklist: "Lista de palabras clave utilizadas para bloquear adjuntos basados en el nombre de archivo."
+    forwarded_emails_behaviour: "Como tratar un correo reenviado a Discourse"
     always_show_trimmed_content: "Mostrar siempre la parte recortada de los emails entrantes. AVISO: podría revelar direcciones de correo."
     private_email: "No incluir contenido de publicaciones o temas en el título del correo electrónico o el cuerpo del correo electrónico. NOTA: también desactiva los correos electrónicos de digestión."
     email_total_attachment_size_limit_kb: "Tamaño máximo total de archivos adjuntos a correos electrónicos salientes. Ajusta a 0 la configuración para desactivar el envío de archivos adjuntos."
+    post_excerpts_in_emails: "En los correos electrónicos de notificación, siempre incluye extractos en lugar de publicaciones enteras."
     manual_polling_enabled: "Lanza emails usando la API para las respuestas por email."
     pop3_polling_enabled: "Poll vía POP3 para respuestas de e-mail."
     pop3_polling_ssl: "Usar SSL mientras se conecta al servidor POP3. (Recomendado)"
@@ -1642,7 +1652,7 @@ es:
     pop3_polling_password: "La contraseña de la cuenta POP3 para hacer polling de correos."
     pop3_polling_delete_from_server: "Eliminar correos electrónicos del servidor. NOTA: si desactiva esto, debe limpiar manualmente su bandeja de entrada de correo"
     log_mail_processing_failures: "Registra todos los fallos de procesamiento de <a href='%{base_path}/logs' target='_blank'>/logs</a>"
-    email_in: 'Permitir a los usuarios crear nuevos temas por email (requiere el polling pop3). Configura las direcciones en la pestaña "Ajustes" de cada categoría.'
+    email_in: 'Permitir a los usuarios crear nuevos temas por correo electrónico (requiere el polling manual o pop3). Configura las direcciones en la pestaña «ajustes» de cada categoría.'
     email_in_min_trust: "El mínimo nivel de confianza requerido para poder publicar nuevos temas por email."
     email_in_spam_header: "El encabezado del correo electrónico para detectar spam."
     email_prefix: "La [etiqueta] utilizada en el asunto de los emails. Si no está configurado, será por defecto el 'título'."
@@ -1673,8 +1683,8 @@ es:
     email_link_color: "El color de los enlaces en el HTML de los emails. Introduce un nombre de color ('blue') o un valor hexadecimal ('#0000FF')."
     detect_custom_avatars: "Verificar o no que los usuarios han subido una imagen de perfil."
     max_daily_gravatar_crawls: "Máximo número de veces que Discourse comprobará Gravatar en busca de avatares personalizados en un día"
-    public_user_custom_fields: "Una lista con campos personalizados para el usuario que pueden ser obtenidos con la API."
-    staff_user_custom_fields: "Una lista con campos personalizados para el usuario que pueden ser traídos a los moderadores o admin a través del API."
+    public_user_custom_fields: "Una lista con campos personalizados para el usuario que se pueden recuperar a través de la API."
+    staff_user_custom_fields: "Una lista con campos personalizados para el usuario que se pueden recuperar para miembros del staff través de la API."
     enable_user_directory: "Proporcionar un directorio de usuarios"
     enable_group_directory: "Activa un directorio de grupos para explorar"
     enable_category_group_review: "Permitir que los grupos revisen el contenido en categorías específicas"
@@ -1708,6 +1718,8 @@ es:
     topic_page_title_includes_category: "La etiqueta del título de la página del tema incluye el nombre de la categoría."
     native_app_install_banner_ios: "Muestra el banner de la aplicación DiscourseHub en dispositivos iOS a usuarios regulares (nivel de confianza 1 y superior)."
     native_app_install_banner_android: "Muestra el banner de la aplicación DiscourseHub en dispositivos Android a usuarios regulares (nivel de confianza 1 y superior)."
+    app_association_android: "Los contenidos del extremo <a href='%{base_path}/.well-known/assetlinks.json'>.well-known/assetlinks.json</a>, utilizado por la API de «Digital Asset Links» de Google."
+    app_association_ios: "Los contenidos del extremo <a href='%{base_path}/apple-app-site-association'>apple-app-site-association</a>, utilizado para crear enlaces universales entre este sitio y las aplicacios iOS."
     share_anonymized_statistics: "Compartir estadísticas del uso anónimas."
     auto_handle_queued_age: "Maneja automáticamente los registros que están esperando para ser revisados después de estos días. Los reportes serán ignorados. Los mensajes en cola y los usuarios serán rechazados. Establezca en 0 para desactivar esta función."
     svg_icon_subset: "Agregue iconos adicionales de FontAwesome 5 que le gustaría incluir en sus activos. Use el prefijo 'fa-' para los iconos sólidos, 'far-' para los iconos regulares y 'fab-' para los iconos de marca."
@@ -1721,6 +1733,7 @@ es:
     warn_reviving_old_topic_age: "Cuando alguien publica en un tema cuya última respuesta fue hace este número de días o más, se le mostrará un aviso para desalentar el hecho de revivir una antigua discusión. Deshabilita esta opción introduciendo el valor 0."
     autohighlight_all_code: "Forzar el resaltado de código a los bloques de código preformateado cuando no se especifique el lenguaje del código."
     highlighted_languages: "Reglas de resaltado de sintaxis incluidas. (Aviso: incluir demasiados lenguajes puede afectar al rendimiento) mira: <a href='https://highlightjs.org/static/demo/' target='_blank'>https://highlightjs.org/static/demo</a> para un demo."
+    embed_topics_list: "Soportar la inserción HTML de listas de temas"
     embed_truncate: "Truncar los posts embebidos."
     embed_support_markdown: "Soporte de formato Markdown para publicaciones incrustadas."
     embed_whitelist_selector: "Lista separada por comas de elementos CSS que están permitidos en los embeds."
@@ -1822,14 +1835,14 @@ es:
       invalid_string_min_max: "Debe contener entre %{min} y %{max} caracteres."
       invalid_string_min: "Debe contener como mínimo %{min} caracteres. "
       invalid_string_max: "No debe exceder los %{max} caracteres. "
-      invalid_reply_by_email_address: "El valor debe contener '%%{reply_key}' y debe ser diferente del email de notificación."
-      invalid_alternative_reply_by_email_addresses: "Todas los valores deben contener '%%{reply_key}' y deben ser diferentes del email de notificación."
-      pop3_polling_host_is_empty: "Debes establecer un host de 'pop3 polling' antes de activar el polling POP3."
-      pop3_polling_username_is_empty: "Debes establecer un usuario de 'pop3 polling' antes de activar el polling POP3."
-      pop3_polling_password_is_empty: "Debes establecer una contraseña de 'pop3 polling' antes de activar el polling POP3."
+      invalid_reply_by_email_address: "El valor debe contener '%{reply_key}' y debe ser diferente del email de notificación."
+      invalid_alternative_reply_by_email_addresses: "Todas los valores deben contener  '%{reply_key}' y deben ser diferentes del email de notificación."
+      pop3_polling_host_is_empty: "Debes establecer un host de «pop3 polling» antes de activar el polling POP3."
+      pop3_polling_username_is_empty: "Debes establecer un nombre de usuario de «pop3 polling» antes de activar el polling POP3."
+      pop3_polling_password_is_empty: "Debes establecer una contraseña de «pop3 polling» antes de activar el polling POP3."
       pop3_polling_authentication_failed: "La autenticación POP3 falló. Por favor, verifica tus credenciales pop3."
       reply_by_email_address_is_empty: "Debes establecer el campo 'reply by email address' antes de activar respuesta por email."
-      email_polling_disabled: "Debes activar el polling POP3 o bien el manual antes de activar la respuesta por email."
+      email_polling_disabled: "Debes activar el polling sea manual o POP3 antes de activar la respuesta por correo electrónico."
       user_locale_not_enabled: "Debes activar primero 'allow user locale' antes de activar esta opción."
       invalid_regex: "El código Regex es inválido o no está permitido."
       email_editable_enabled: "Debes desactivar primero 'email editable' antes de activar esta opción."
@@ -1965,7 +1978,12 @@ es:
     errors: "%{errors}"
     not_available: "No disponible. Prueba %{suggestion}?"
     something_already_taken: "Algo ha salido mal, quizá el nombre de usuario o el email ya han sido registrados. Prueba con el enlace de olvidé mi contraseña."
+    omniauth_error:
+      generic: "Lo sentimos, se produjo un error al autorizar tu cuenta. Por favor intenta de nuevo."
+      csrf_detected: "Se agotó el tiempo de autorización o cambiaste de navegador. Por favor intenta de nuevo."
+      invalid_iat: "No se pudo verificar el token de autorización debido a diferencias en el horario del servidor. Por favor intenta de nuevo."
     omniauth_error_unknown: "Algo ha salido mal procesando tu inicio de sesión, por favor, vuelve a intentarlo."
+    omniauth_confirm_title: "Inicia sesión a través de %{provider}"
     omniauth_confirm_button: "Continuar"
     authenticator_error_no_valid_email: "Ninguna dirección de email asociada con %{account} está permitida. Puede que necesites configurar tu cuenta con una dirección de email diferente."
     new_registrations_disabled: "El registro de nuevas cuentas no está permitido en este momento."
@@ -2228,9 +2246,50 @@ es:
     post_hidden:
       title: "Post oculto"
       subject_template: "Mensaje ocultado debido a varios reportes de la comnuidad"
+      text_body_template: |
+        Hola:
+
+        Este es un mensaje automático de %{site_name} para informarte que tu publicación fue ocultada.
+
+        <%{base_url}%{url}>
+
+        %{flag_reason}
+
+        Esta publicación se ocultó debido a reportes de la comunidad. Por esto, por favor considera cómo podrías editar tus publicaciones tomando en cuenta esta respuesta de la comunidad. **Podrás editar tu publicación dentro de %{edit_delay} minutos y la misma dejará de estar oculta automáticamente.**
+
+        Sin embargo, si la publicación es ocultada por la comunidad una segunda vez, se mantendrá oculta hasta que un miembro del staff la gestione.
+
+        Para más consejos, por favor consulta nuestras [community guidelines](%{base_url}/guidelines).
     post_hidden_again:
       title: "Mensaje ocultado de nuevo"
       subject_template: "Mensaje ocultado debido a reportes de la comunidad, staff notificado"
+      text_body_template: |
+        Hola:
+
+        Este es un mensaje automático de %{site_name} para informarte que tu publicación ha sido ocultada de nuevo.
+
+        <%{base_url}%{url}>
+
+        %{flag_reason}
+
+        La comunidad reportó esta publicación y ahora se encuentra oculta. **Dado que esta publicación se ha ocultado más de una vez, tu publicación se mantendrá oculta hasta que la gestione un miembro del staff.**
+
+        Para más consejos, por favor consulta nuestras [community guidelines](%{base_url}/guidelines).
+    flags_disagreed:
+      title: "Publicación reportada recuperada por el staff"
+      subject_template: "Publicación reportada recuperada por el staff"
+      text_body_template: |
+        Hola:
+
+        Este es un mensaje automático de %{site_name} para informarte que [tu publicación](%{base_url}%{url}) fue recuperada.
+
+        Esta publicación fue reportada por la comunidad y un miembro del staff optó por recuperarla.
+
+        [detalles=«Clic aquí para expandir la publicación recuperada»]
+        ``` reducción
+        %{flagged_post_raw_content}
+        ```
+        [/details]
     flags_agreed_and_post_deleted:
       title: "Tema reportado y eliminado por el staff"
       subject_template: "Tema reportado y eliminado por el staff"
@@ -2550,11 +2609,11 @@ es:
       title: "Email, error de notificación"
       subject_template: "[%{email_prefix}] Problema con el correo -- Error de autenticación POP"
       text_body_template: |
-        Hubo un error de autenticación mientras se ejecutaba el polling de los emails desde el servidor POP.
+        Hubo un error de autenticación mientras se ejecutaba el polling de los correos electrponicos desde el servidor POP.
 
         Por favor, asegúrate de que se han configurado las credenciales POP correctamente en los [ajustes del sitio](%{base_url}/admin/site_settings/category/email).
 
-        Si dispones de una interfaz de usuario web para la cuenta de correo POP, es posible que debas iniciar sesión allí y comprobar su configuración.
+        Si dispones de una interfaz de usuario web para la cuenta de correo POP, es posible que debas iniciar sesión allí y comprobar tu configuración.
     email_revoked:
       title: "Email revocado"
       subject_template: "¿Es tu correo electrónico correcto?"
@@ -3925,6 +3984,9 @@ es:
       agree_and_keep:
         title: "Mantener publicación"
         description: "Estar de acuerdo y mantener la publicación intacta."
+      agree_and_keep_hidden:
+        title: "Mantener la publicación oculta"
+        description: "Concordar con el reporte y mantener la publicación oculta."
       agree_and_suspend:
         title: "Suspender usuario"
         description: "Estar de acuerdo con el reporte y suspender el usuario."
@@ -3991,3 +4053,5 @@ es:
         reason: "Eliminado a través de la cola de revisiones"
   email_style:
     html_missing_placeholder: "La plantilla html debe incluir %{placeholder}"
+  discord:
+    not_in_allowed_guild: 'La autenticación falló. No eres miembro de ningún clan de Discord permitido.'

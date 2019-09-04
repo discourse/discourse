@@ -269,7 +269,7 @@ ru:
       other: "{{count}} букв"
     related_messages:
       title: "Связанные сообщения"
-      see_all: "Смотреть <a href=\"%{path}\">все сообщения </a> из @%{username}..."
+      see_all: 'Смотреть <a href="%{path}">все сообщения </a> из @%{username}...'
     suggested_topics:
       title: "Похожие темы"
       pm_title: "Похожие сообщения"
@@ -350,7 +350,7 @@ ru:
       close: "Больше не показывать это объявление."
       edit: "Редактировать это объявление >>"
     pwa:
-      install_banner: "Хотите ли вы <a href> установить%{title} на это устройство?</a>"
+      install_banner: "Хотите ли вы <a href> установить %{title} на это устройство?</a>"
     choose_topic:
       none_found: "Не найдено ни одной темы."
       title:
@@ -1439,6 +1439,10 @@ ru:
         name: "GitHub"
         title: "GitHub"
         message: "Вход с помощью учетной записи GitHub (убедитесь, что блокировщик всплывающих окон отключен)"
+      discord:
+        name: "Discord"
+        title: "с Discord"
+        message: "Аутентификация с помощью Discord"
     invites:
       accept_title: "Приглашение"
       welcome_to: "Добро пожаловать на %{site_name}!"
@@ -1959,6 +1963,7 @@ ru:
       group_request: "Вам нужно запросить членство в группе `{{name}}` чтобы увидеть эту тему."
       group_join: "Вам нужно присоединиться к группе `{{name}}` чтобы увидеть эту тему."
       group_request_sent: "Ваш запрос на членство в группе был отправлен. Вам сообщат, когда  будет одобрено."
+      unread_indicator: "Ни один участник еще не прочитал последний пост этой темы."
       read_more_MF: "У вас осталось { UNREAD, plural, =0 {} one { <a href='{basePath}/unread'>1 непрочитанная</a> } other { <a href='{basePath}/unread'># непрочитанных</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{и } false { } other{}} <a href='{basePath}/new'>1 новая</a> тема} other { {BOTH, select, true{и } false { } other{}} <a href='{basePath}/new'># новых</a> тем} }, или {CATEGORY, select, true {посмотрите другие темы в разделе {catLink}} false {{latestLink}} other {}}"
       browse_all_categories: Просмотреть все разделы
       view_latest_topics: посмотреть последние темы
@@ -2365,6 +2370,7 @@ ru:
         reply: "начать составление ответа на сообщение"
         like: "мне нравится"
         has_liked: "Вам понравилось это сообщение"
+        read_indicator: "пользователи, которые читают этот пост"
         undo_like: "больше не нравится"
         edit: "Изменить сообщение"
         edit_action: "Изменить"
@@ -2427,6 +2433,7 @@ ru:
           notify_user: "отправил сообщение"
           bookmark: "добавить закладку"
           like: "понравилось это"
+          read: "читать это"
           like_capped:
             one: "и {{count}} понравилось"
             few: "и {{count}} другим понравилось"
@@ -3178,8 +3185,8 @@ ru:
               owners: "Владельцы группы"
               description: "Администраторы могут видеть все группы."
             members_visibility_levels:
-              title: "Кто может видеть участников этой группы?"
               description: "Администраторы могут видеть участников всех групп."
+            publish_read_state: "В сообщениях группы публикуют состояние чтения группы"
           membership:
             automatic: Автоматическая
             trust_level: Уровень Доверия

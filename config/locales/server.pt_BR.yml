@@ -230,6 +230,7 @@ pt_BR:
     replies:
       one: "%{count} resposta"
       other: "%{count} respostas"
+    created: "Criado"
   no_mentions_allowed: "Desculpe, você não pode mencionar outros usuários."
   too_many_mentions:
     one: "Desculpe, você pode mencionar apenas %{count} usuário em um post."
@@ -1810,8 +1811,8 @@ pt_BR:
       invalid_string_min_max: "Precisa estar entre %{min} e %{max} caracteres."
       invalid_string_min: "Precisa ter no mínimo %{min} caracteres."
       invalid_string_max: "Deve ser não mais que %{max} caracteres."
-      invalid_reply_by_email_address: "O valor deve conter '%%{reply_key}' e ser diferente do email de notificação."
-      invalid_alternative_reply_by_email_addresses: "Todos os valores devem conter '%%{reply_key}' e ser diferente do e-mail de notificação."
+      invalid_reply_by_email_address: "O valor deve conter '%{reply_key}' e ser diferente do email de notificação."
+      invalid_alternative_reply_by_email_addresses: "Todos os valores devem conter '%{reply_key}' e ser diferente do e-mail de notificação."
       pop3_polling_host_is_empty: "Você deve definir um 'host de pesquisa pop3' antes de ativar a consulta POP3."
       pop3_polling_username_is_empty: "Você deve definir um 'nome de usuário de pesquisa pop3' antes de ativar a consulta POP3."
       pop3_polling_password_is_empty: "Você deve definir uma 'senha de pesquisa pop3' antes de ativar a consulta POP3."

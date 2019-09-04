@@ -164,6 +164,7 @@ ja:
     in_reply_to: "▶ %{username}"
     replies:
       other: "%{count}件のリプライ"
+    created: "作成者"
   no_mentions_allowed: "あなたは他のユーザーへメンションを送ることができません。"
   no_mentions_allowed_newuser: "申し訳ありませんが、新規ユーザはこのポストにおいて他のユーザをタグ付けできません。"
   no_images_allowed_trust: "ごめんなさい、ポストに画像を添付することができません"
@@ -1009,6 +1010,7 @@ ja:
       invalid_string_min_max: "文字数は%{min}と%{max}の間である必要があります"
       invalid_string_min: "少なくとも%{min}文字は必要です"
       invalid_string_max: "%{max}文字以下である必要があります"
+      invalid_reply_by_email_address: "値は'%{reply_key}'を含む必要があり、通知メールとは異なる必要があります"
       min_username_length_range: "最小値を最大値より上にすることはできません。"
   search:
     within_post: "#%{post_number} by %{username}"

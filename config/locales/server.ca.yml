@@ -235,6 +235,7 @@ ca:
     replies:
       one: "%{count} resposta"
       other: "%{count} respostes"
+    created: "Creat"
   no_mentions_allowed: "No podeu mencionar altres usuaris"
   too_many_mentions:
     one: "Només podeu mencionar un usuari en una publicació."
@@ -1713,6 +1714,8 @@ ca:
     topic_page_title_includes_category: "L'<a href='https://developer.mozilla.org/en-US/docs/Web/HTML/Element/title' target='_blank'>etiqueta del títol</a>  de la pàgina del tema inclou el nom de la categoria."
     native_app_install_banner_ios: "Mostra el bàner de l'aplicació DiscourseHub en els dispositius iOS a usuaris habituals (nivell de confiança 1 i superior)."
     native_app_install_banner_android: "Mostra el bàner de l'aplicació DiscourseHub en els dispositius Android a usuaris habituals (nivell de confiança 1 i superior)."
+    app_association_android: "Contingut del punt final (endpoint) <a href='%{base_path}/.well-known/assetlinks.json'>.well-known/assetlinks.json</a>, utilitzat per a l’API de Digital Asset Links de Google."
+    app_association_ios: "Contingut del punt final (endpoint) <a href='%{base_path}/apple-app-site-association'>apple-app-site-association</a>, utilitzat per a crear enllaços universals entre aquest lloc i les aplicacions iOS."
     share_anonymized_statistics: "Comparteix estadístiques d'ús anonimitzades."
     auto_handle_queued_age: "Tracta automàticament els registres que esperen ser revisats després d'aquest nombre de dies. Les banderes s'ignoraran. Les publicacions en cua i els usuaris seran rebutjats. Poseu-ho a 0 per a desactivar la funció."
     svg_icon_subset: "Afegiu 5 icones FontAwesome addicionals que voleu incloure en els vostres actius. Utilitzeu el prefix \"fa-\" per a icones sòlides, \"far-\" per a les icones habituals i \"fab-\" per a les icones de marca."
@@ -1828,8 +1831,8 @@ ca:
       invalid_string_min_max: "Ha de tenir entre %{min} i %{max} caràcters."
       invalid_string_min: "Com a mínim ha de tenir %{min} caràcters."
       invalid_string_max: "No ha de tenir més de %{max} caràcters."
-      invalid_reply_by_email_address: "El valor ha de contenir '%%{reply_key}' i ser diferent del correu de notificació."
-      invalid_alternative_reply_by_email_addresses: "Tots els valors han d'incloure '%%{reply_key}' i ser diferents del correu de notificació."
+      invalid_reply_by_email_address: "El valor ha d'incloure '%{reply_key}' i ser diferent del correu de notificació."
+      invalid_alternative_reply_by_email_addresses: "Tots els valors han d'incloure '%{reply_key}' i ser diferents del correu de notificació."
       pop3_polling_host_is_empty: "Heu de configurar 'pop3 polling host' abans d'activar la consulta POP3."
       pop3_polling_username_is_empty: "Cal configurar 'pop3 polling username' abans d'activar la consulta POP3."
       pop3_polling_password_is_empty: "Cal configurar 'pop3 polling password' abans d'activar la consulta POP3."
@@ -1974,7 +1977,6 @@ ca:
     omniauth_error:
       generic: "Ho sentim, s'ha produït un error en autoritzar el vostre compte. Torneu a intentar-ho."
       csrf_detected: "L'autorització ha esgotat el temps o heu canviat de navegador. Torneu a intentar-ho."
-      request_error: "S'ha produït un error en iniciar l'autorització. Torneu a intentar-ho."
       invalid_iat: "No es pot verificar el testimoni d'autorització a causa de les diferències del rellotge del servidor. Torneu a intentar-ho."
     omniauth_error_unknown: "Alguna cosa ha fallat en processar l'inici de sessió. Torneu a provar-ho."
     omniauth_confirm_title: "Inici de sessió mitjançant %{provider}"

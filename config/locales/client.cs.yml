@@ -1210,6 +1210,8 @@ cs:
         name: "GitHub"
         title: "přes GitHub"
         message: "Autentizuji přes GitHub (ujistěte se, že nemáte zablokovaná popup okna)"
+      discord:
+        name: "Discord"
     invites:
       accept_title: "Pozvání"
       welcome_to: "Vítejte na %{site_name}!"

@@ -104,6 +104,7 @@ sq:
     permalink: "Permalink"
     imported_from: "This is a companion discussion topic for the original entry at %{link}"
     in_reply_to: "▶ %{username}"
+    created: "Krijuar"
   no_mentions_allowed: "Na vjen keq, por s'mund të citosh anëtarë të tjerë."
   no_mentions_allowed_newuser: "Na vjen keq, anëtarët e rinj nuk mund të citojnë anëtarë të tjerë."
   too_many_mentions_newuser:
@@ -853,7 +854,7 @@ sq:
       invalid_string_min_max: "Must be between %{min} and %{max} characters."
       invalid_string_min: "Must be at least %{min} characters."
       invalid_string_max: "Must be no more than %{max} characters."
-      invalid_reply_by_email_address: "Value must contain '%%{reply_key}' and be different from the notification email."
+      invalid_reply_by_email_address: "Value must contain '%{reply_key}' and be different from the notification email."
   search:
     within_post: "#%{post_number} nga %{username}"
     types:

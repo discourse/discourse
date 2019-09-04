@@ -105,6 +105,7 @@ lt:
     loading: "Kraunama diskusija..."
     permalink: "Nuoroda"
     in_reply_to: "▶ %{username}"
+    created: "Sukurta"
   no_mentions_allowed: "Apgailestaujame, tačiau jūs negalite minėti kitų vartotojų."
   too_many_mentions:
     one: "Apgailestaujame, tačiau jūs galite paminėti tik vieną vartotoją įraše"

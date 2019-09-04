@@ -1316,6 +1316,8 @@ it:
         name: "GitHub"
         title: "con GitHub"
         message: "Autenticazione con GitHub (assicurati che il blocco pop up non sia attivo)"
+      discord:
+        name: "Discord"
     invites:
       accept_title: "Invito"
       welcome_to: "Benvenuto su %{site_name}!"
