@@ -145,6 +145,7 @@
               topic=model
               expanded=info.topicProgressExpanded
               jumpToPost=(action "jumpToPost")}}
+              {{plugin-outlet name="before-topic-progress" args=(hash model=model jumpToPost=(action "jumpToPost"))}}
               {{#if info.renderAdminMenuButton}}
                 {{topic-admin-menu-button
                   topic=model
