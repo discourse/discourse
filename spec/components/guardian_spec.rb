@@ -1389,32 +1389,51 @@ describe Guardian do
         expect(Guardian.new(post.user).can_edit?(post)).to be_truthy
       end
 
-      context 'post is older than post_edit_time_limit' do
-        let(:old_post) { build(:post, topic: topic, user: topic.user, created_at: 6.minutes.ago) }
+      describe 'post edit time limits' do
 
-        before do
-          SiteSetting.post_edit_time_limit = 5
+        shared_examples "edit old posts" do
+          it 'returns false to the author of the post' do
+            expect(Guardian.new(old_post.user).can_edit?(old_post)).to be_falsey
+          end
+
+          it 'returns true as a moderator' do
+            expect(Guardian.new(moderator).can_edit?(old_post)).to eq(true)
+          end
+
+          it 'returns true as an admin' do
+            expect(Guardian.new(admin).can_edit?(old_post)).to eq(true)
+          end
+
+          it 'returns false for another regular user trying to edit your post' do
+            expect(Guardian.new(coding_horror).can_edit?(old_post)).to be_falsey
+          end
+
+          it 'returns true for another regular user trying to edit a wiki post' do
+            old_post.wiki = true
+            expect(Guardian.new(coding_horror).can_edit?(old_post)).to be_truthy
+          end
         end
 
-        it 'returns false to the author of the post' do
-          expect(Guardian.new(old_post.user).can_edit?(old_post)).to be_falsey
+        context 'post is older than post_edit_time_limit' do
+          let(:old_post) { build(:post, topic: topic, user: topic.user, created_at: 6.minutes.ago) }
+
+          before do
+            topic.user.trust_level = 1
+            SiteSetting.post_edit_time_limit = 5
+          end
+
+          include_examples "edit old posts"
         end
 
-        it 'returns true as a moderator' do
-          expect(Guardian.new(moderator).can_edit?(old_post)).to eq(true)
-        end
+        context 'post is older than tl2_post_edit_time_limit' do
+          let(:old_post) { build(:post, topic: topic, user: topic.user, created_at: 12.minutes.ago) }
 
-        it 'returns true as an admin' do
-          expect(Guardian.new(admin).can_edit?(old_post)).to eq(true)
-        end
+          before do
+            topic.user.trust_level = 2
+            SiteSetting.tl2_post_edit_time_limit = 10
+          end
 
-        it 'returns false for another regular user trying to edit your post' do
-          expect(Guardian.new(coding_horror).can_edit?(old_post)).to be_falsey
-        end
-
-        it 'returns true for another regular user trying to edit a wiki post' do
-          old_post.wiki = true
-          expect(Guardian.new(coding_horror).can_edit?(old_post)).to be_truthy
+          include_examples "edit old posts"
         end
       end
 
