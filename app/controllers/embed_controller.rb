@@ -36,8 +36,8 @@ class EmbedController < ApplicationController
       raise Discourse::InvalidParameters.new(:embed_id) unless @embed_id =~ /^de\-[a-zA-Z0-9]+$/
     end
 
-    if params.has_key?(:template)
-      @template = params[:template]
+    if params.has_key?(:template) && params[:template] == "complete"
+      @template = "complete"
     else
       @template = "basic"
     end
