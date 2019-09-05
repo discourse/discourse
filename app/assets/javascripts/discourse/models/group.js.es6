@@ -139,7 +139,7 @@ const Group = RestModel.extend({
 
   @computed("visibility_level")
   isPrivate(visibilityLevel) {
-    return ![0, 1].includes(visibilityLevel);
+    return visibility_level > 1;
   },
 
   @observes("isPrivate", "canEveryoneMention")
