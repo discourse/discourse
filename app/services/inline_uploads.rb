@@ -278,7 +278,7 @@ class InlineUploads
       /(upload:\/\/([a-zA-Z0-9]+)[a-zA-Z0-9\.]*)/,
       /(\/uploads\/short-url\/([a-zA-Z0-9]+)[a-zA-Z0-9\.]*)/,
       /(#{base_url}\/uploads\/short-url\/([a-zA-Z0-9]+)[a-zA-Z0-9\.]*)/,
-      /(\/uploads\/#{db}#{UPLOAD_REGEXP_PATTERN})/,
+      /(#{GlobalSetting.relative_url_root}\/uploads\/#{db}#{UPLOAD_REGEXP_PATTERN})/,
       /(#{base_url}\/uploads\/#{db}#{UPLOAD_REGEXP_PATTERN})/,
     ]
 

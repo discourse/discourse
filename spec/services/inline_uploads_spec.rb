@@ -206,6 +206,28 @@ RSpec.describe InlineUploads do
         MD
       end
 
+      context "subfolder" do
+        before do
+          global_setting :relative_url_root, "/community"
+          ActionController::Base.config.relative_url_root = "/community"
+        end
+
+        after do
+          ActionController::Base.config.relative_url_root = nil
+        end
+
+        it "should correct subfolder images" do
+
+          md = <<~MD
+            <img src="/community#{upload.url}">
+          MD
+
+          expect(InlineUploads.process(md)).to eq(<<~MD)
+            ![](#{upload.short_url})
+          MD
+        end
+      end
+
       it "should correct raw image URLs to the short url and paths" do
         md = <<~MD
         #{Discourse.base_url}#{upload.url}
