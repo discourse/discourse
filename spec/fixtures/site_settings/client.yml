@@ -9,4 +9,4 @@ category2:
     client: true
   must_approve_users:
     default: false
-    client: true
+    client: false

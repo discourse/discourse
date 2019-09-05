@@ -1,15 +1,14 @@
 # -*- encoding : utf-8 -*-
 # frozen_string_literal: true
 
-require_dependency 'email'
-require_dependency 'enum'
-require_dependency 'user_name_suggester'
+require_dependency "email"
+require_dependency "enum"
+require_dependency "user_name_suggester"
 
 class Users::OmniauthCallbacksController < ApplicationController
-
   skip_before_action :redirect_to_login_if_required
 
-  layout 'no_ember'
+  layout "no_ember"
 
   # need to be able to call this
   skip_before_action :check_xhr
@@ -37,7 +36,7 @@ class Users::OmniauthCallbacksController < ApplicationController
       DiscourseEvent.trigger(:after_auth, authenticator, @auth_result)
     end
 
-    preferred_origin = request.env['omniauth.origin']
+    preferred_origin = request.env["omniauth.origin"]
 
     if SiteSetting.enable_sso_provider && payload = cookies.delete(:sso_payload)
       preferred_origin = session_sso_provider_url + "?" + payload
@@ -48,9 +47,9 @@ class Users::OmniauthCallbacksController < ApplicationController
 
     if preferred_origin.present?
       parsed = begin
-        URI.parse(preferred_origin)
-      rescue URI::Error
-      end
+                 URI.parse(preferred_origin)
+               rescue URI::Error
+               end
 
       if parsed && (parsed.host == nil || parsed.host == Discourse.current_hostname)
         @origin = +"#{parsed.path}"
@@ -66,14 +65,14 @@ class Users::OmniauthCallbacksController < ApplicationController
 
     if @auth_result.failed?
       flash[:error] = @auth_result.failed_reason.html_safe
-      return render('failure')
+      return render("failure")
     else
       @auth_result.authenticator_name = authenticator.name
       complete_response_data
 
-      if provider&.full_screen_login || cookies['fsl']
-        cookies.delete('fsl')
-        cookies['_bypass_cache'] = true
+      if provider&.full_screen_login || cookies["fsl"]
+        cookies.delete("fsl")
+        cookies["_bypass_cache"] = true
         cookies[:authentication_data] = @auth_result.to_client_hash.to_json
         redirect_to @origin
       else
@@ -87,14 +86,14 @@ class Users::OmniauthCallbacksController < ApplicationController
 
   def failure
     flash[:error] = I18n.t("login.omniauth_error")
-    render 'failure'
+    render "failure"
   end
 
   def self.find_authenticator(name)
     Discourse.enabled_authenticators.each do |authenticator|
       return authenticator if authenticator.name == name
     end
-    raise Discourse::InvalidAccess.new(I18n.t('authenticator_not_found'))
+    raise Discourse::InvalidAccess.new(I18n.t("authenticator_not_found"))
   end
 
   protected
@@ -123,15 +122,14 @@ class Users::OmniauthCallbacksController < ApplicationController
 
       # ensure there is an active email token
       unless EmailToken.where(email: user.email, confirmed: true).exists? ||
-        user.email_tokens.active.where(email: user.email).exists?
-
+             user.email_tokens.active.where(email: user.email).exists?
         user.email_tokens.create!(email: user.email)
       end
 
       user.activate
       user.update!(registration_ip_address: request.remote_ip) if user.registration_ip_address.blank?
     end
-
+    user.active = true
     if ScreenedIpAddress.should_block?(request.remote_ip)
       @auth_result.not_allowed_from_ip_address = true
     elsif ScreenedIpAddress.block_admin_login?(user, request.remote_ip)
@@ -149,5 +147,4 @@ class Users::OmniauthCallbacksController < ApplicationController
       end
     end
   end
-
 end

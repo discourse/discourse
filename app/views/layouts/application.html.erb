@@ -115,5 +115,15 @@
       <%= theme_lookup("body_tag") %>
     <%- end %>
     <%= build_plugin_html 'server:before-body-close' %>
+    <%# <script src="https://cdnjs.cloudflare.com/ajax/libs/arrive/2.4.1/arrive.min.js" type="text/javascript">
+    </script>
+
+    <script type="text/javascript">
+      $(document).ready(function() {
+        $(document).arrive('.login-modal', function() {
+            $('.login-modal button.oauth2_basic').click();
+        });
+      });
+    </script> %>
   </body>
 </html>

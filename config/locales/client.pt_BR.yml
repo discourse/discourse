@@ -1278,7 +1278,7 @@ pt_BR:
       logging_in: "Entrando..."
       or: "Ou"
       authenticating: "Autenticando..."
-      awaiting_activation: "Sua conta está aguardando ativação, utilize o link de esqueci a senha para enviar um novo e-mail de ativação."
+      awaiting_activation: "Parabéns, agora você pode utilizar nosso fórum para retirar suas dúvidas sobre o OpLab ou discutir a melhor estratégia, clique no botão abaixo para utilizar nosso fórum."
       awaiting_approval: "Sua conta ainda não foi aprovada por um membro da staff. Você receberá um e-mail quando sua conta for aprovada."
       requires_invite: "Desculpe, o acesso a este fórum é permitido somente por convite de outro membro."
       not_activated: "Você não pode entrar ainda. Nós lhe enviamos um e-mail de ativação anteriormente para endereço <b>{{sentTo}}</b>. Por favor, siga as instruções contidas neste e-mail para ativar a sua conta."

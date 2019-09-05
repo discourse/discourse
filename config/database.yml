@@ -4,14 +4,17 @@ development:
   database: <%= ENV['DISCOURSE_DEV_DB'] || 'discourse_development' %>
   min_messages: warning
   pool: 5
+  username: dev
+  password: 12qwaszx
   timeout: 5000
   checkout_timeout: <%= ENV['CHECKOUT_TIMEOUT'] || 5 %>
+  host: localhost
   host_names:
     ### Don't include the port number here. Change the "port" site setting instead, at /admin/site_settings.
     ### If you change this setting you will need to
     ###   - restart sidekiq if you change this setting
     ###   - rebake all to posts using: `RAILS_ENV=production bundle exec rake posts:rebake`
-    - "localhost"
+    #- "localhost"
 
 # Warning: The database defined as "test" will be erased and
 # re-generated from your development database when you run "rake".
