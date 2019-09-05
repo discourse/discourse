@@ -17,6 +17,9 @@
                 <%- end %>
                 <div class='topic-author-avatar-timestamp'>
                   <img src="<%= t.user.avatar_template.gsub('{size}', '20') %>">
+                  <span class="topic-author-username">
+                    <%= t.user.username %>
+                  </span>
                   <span class="topic-created-at" title="<%= t.created_at.strftime("%B %e, %Y %l:%M%P") %>">
                     <%= "#{I18n.t('embed.created')} #{time_ago_in_words(t.created_at, scope: :'datetime.distance_in_words_verbose')}" %>
                   </span>
