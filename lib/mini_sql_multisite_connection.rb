@@ -36,6 +36,7 @@ class MiniSqlMultisiteConnection < MiniSql::Postgres::Connection
 
     def before_committed!(*); end
     def rolledback!(*); end
+    def trigger_transactional_callbacks?; end
   end
 
   # Allows running arbitrary code after the current transaction has been committed.
