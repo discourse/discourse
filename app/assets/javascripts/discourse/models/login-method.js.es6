@@ -53,7 +53,7 @@ const LoginMethod = Ember.Object.extend({
         }
         LoginMethod.buildPostForm(authUrl).then(form => {
           const windowState = window.open(
-            authUrl,
+            "about:blank",
             "auth_popup",
             `menubar=no,status=no,height=${height},width=${width},left=${left},top=${top}`
           );
