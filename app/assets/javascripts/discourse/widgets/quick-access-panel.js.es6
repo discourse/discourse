@@ -60,7 +60,7 @@ export default createWidget("quick-access-panel", {
   },
 
   markRead() {
-    this.markReadRequest().then(() => {
+    return this.markReadRequest().then(() => {
       this.refreshNotifications(this.state);
     });
   },
