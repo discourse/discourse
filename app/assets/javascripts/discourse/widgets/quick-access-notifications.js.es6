@@ -18,7 +18,7 @@ createWidgetFrom(QuickAccessPanel, "quick-access-notifications", {
   },
 
   findStaleItems() {
-    const staleItems = this.findStaleItemsInStore_();
+    const staleItems = this._findStaleItemsInStore();
     return staleItems.hasResults ? staleItems.results : [];
   },
 
@@ -36,7 +36,7 @@ createWidgetFrom(QuickAccessPanel, "quick-access-notifications", {
   },
 
   findNewItems() {
-    return this.findStaleItemsInStore_().refresh();
+    return this._findStaleItemsInStore().refresh();
   },
 
   showAll() {
@@ -47,7 +47,7 @@ createWidgetFrom(QuickAccessPanel, "quick-access-notifications", {
     return this.state.items.filterBy("read", false).length > 0;
   },
 
-  findStaleItemsInStore_() {
+  _findStaleItemsInStore() {
     return this.store.findStale(
       "notification",
       {

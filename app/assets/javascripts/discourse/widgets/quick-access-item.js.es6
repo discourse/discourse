@@ -18,15 +18,11 @@ createWidget("quick-access-item", {
     return result;
   },
 
-  usernameHtml() {
-    return this.attrs.username ? `<span>${this.attrs.username}</span> ` : "";
-  },
-
   html({ icon, href, content }) {
     return h("a", { attributes: { href } }, [
       iconNode(icon),
       new RawHtml({
-        html: `<div>${this.usernameHtml()}${emojiUnescape(
+        html: `<div>${this._usernameHtml()}${emojiUnescape(
           Handlebars.Utils.escapeExpression(content)
         )}</div>`
       })
@@ -39,5 +35,9 @@ createWidget("quick-access-item", {
       e.preventDefault();
       return this.sendWidgetAction(this.attrs.action, this.attrs.actionParam);
     }
+  },
+
+  _usernameHtml() {
+    return this.attrs.username ? `<span>${this.attrs.username}</span> ` : "";
   }
 });
