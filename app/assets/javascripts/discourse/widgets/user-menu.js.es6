@@ -121,8 +121,8 @@ createWidget("user-menu-links", {
   markAsActive(definition) {
     // Clicking on an active quick access tab icon should redirect the user to
     // the full page.
-    delete definition.action;
-    delete definition.actionParam;
+    definition.action = null;
+    definition.actionParam = null;
 
     if (definition.className) {
       definition.className += " active";
