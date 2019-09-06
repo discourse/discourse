@@ -313,8 +313,26 @@ describe PostsController do
         sign_in(user)
       end
 
-      it 'does not allow to update when edit time limit expired' do
+      it 'does not allow TL0 or TL1 to update when edit time limit expired' do
         SiteSetting.post_edit_time_limit = 5
+        SiteSetting.tl2_post_edit_time_limit = 30
+
+        post = Fabricate(:post, created_at: 10.minutes.ago, user: user)
+
+        user.update_columns(trust_level: 1)
+
+        put "/posts/#{post.id}.json", params: update_params
+
+        expect(response.status).to eq(422)
+        expect(JSON.parse(response.body)['errors']).to include(I18n.t('too_late_to_edit'))
+      end
+
+      it 'does not allow TL2 to update when edit time limit expired' do
+        SiteSetting.post_edit_time_limit = 12
+        SiteSetting.tl2_post_edit_time_limit = 8
+
+        user.update_columns(trust_level: 2)
+
         post = Fabricate(:post, created_at: 10.minutes.ago, user: user)
 
         put "/posts/#{post.id}.json", params: update_params
