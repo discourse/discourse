@@ -14,13 +14,13 @@ function toItem(message) {
     message.highest_post_number
   );
 
-  return Ember.Object.create({
+  return {
     content: message.fancy_title,
     href: postUrl(message.slug, message.id, nextUnreadPostNumber),
     icon: ICON,
     read: message.last_read_post_number >= message.highest_post_number,
     username: message.last_poster_username
-  });
+  };
 }
 
 createWidgetFrom(QuickAccessPanel, "quick-access-messages", {

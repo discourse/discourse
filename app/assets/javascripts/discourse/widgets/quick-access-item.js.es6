@@ -34,6 +34,7 @@ createWidget("quick-access-item", {
   },
 
   click(e) {
+    this.attrs.read = true;
     if (this.attrs.action) {
       e.preventDefault();
       return this.sendWidgetAction(this.attrs.action, this.attrs.actionParam);
