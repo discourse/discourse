@@ -204,7 +204,7 @@ class PostsController < ApplicationController
 
     if !guardian.public_send("can_edit?", post) &&
        post.user_id == current_user.id &&
-       post.edit_time_limit_expired?
+       post.edit_time_limit_expired?(current_user)
 
       return render_json_error(I18n.t('too_late_to_edit'))
     end
