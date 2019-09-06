@@ -100,6 +100,16 @@ describe UserDestroyer do
       end
     end
 
+    context "with a reviewable user" do
+      let(:reviewable) { Fabricate(:reviewable, created_by: admin) }
+
+      it 'sets the reviewable user as rejected' do
+        UserDestroyer.new(admin).destroy(reviewable.target)
+
+        expect(reviewable.reload.status).to eq(Reviewable.statuses[:rejected])
+      end
+    end
+
     context "with a directory item record" do
 
       it "removes the directory item" do

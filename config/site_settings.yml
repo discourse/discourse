@@ -700,6 +700,9 @@ posting:
     type: category
     default: ""
   post_edit_time_limit:
+    default: 1440
+    max: 10080
+  tl2_post_edit_time_limit:
     default: 43200
     max: 525600
   edit_history_visible_to_public:

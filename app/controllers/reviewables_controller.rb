@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+require_dependency 'reviewable_explanation_serializer'
 
 class ReviewablesController < ApplicationController
   requires_login
@@ -99,6 +100,17 @@ class ReviewablesController < ApplicationController
       meta: {
         types: meta_types
       }
+    )
+  end
+
+  def explain
+    reviewable = find_reviewable
+
+    render_serialized(
+      { reviewable: reviewable, scores: reviewable.explain_score },
+      ReviewableExplanationSerializer,
+      rest_serializer: true,
+      root: 'reviewable_explanation'
     )
   end
 

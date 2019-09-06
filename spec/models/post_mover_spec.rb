@@ -114,6 +114,17 @@ describe PostMover do
         before do
           TopicUser.update_last_read(user, topic.id, p4.post_number, p4.post_number, 0)
           TopicLink.extract_from(p2)
+
+          freeze_time Time.now
+        end
+
+        def create_post_timing(post, user, msecs)
+          PostTiming.create!(
+            topic_id: post.topic_id,
+            user_id: user.id,
+            post_number: post.post_number,
+            msecs: msecs
+          )
         end
 
         context "post replies" do
@@ -207,7 +218,7 @@ describe PostMover do
             p4.reload
             expect(new_topic.last_post_user_id).to eq(p4.user_id)
             expect(new_topic.last_posted_at).to eq(p4.created_at)
-            expect(new_topic.bumped_at).to eq(p4.created_at)
+            expect(new_topic.bumped_at).to be_within(1.second).of(Time.now)
 
             p2.reload
             expect(p2.sort_order).to eq(1)
@@ -234,7 +245,7 @@ describe PostMover do
               notification_level: TopicUser.notification_levels[:watching],
               notifications_reason_id: TopicUser.notification_reasons[:created_topic]
             )).to eq(true)
-            expect(TopicUser.exists?(user_id: user, topic_id: new_topic.id)).to eq(false)
+            expect(TopicUser.exists?(user_id: user, topic_id: new_topic.id)).to eq(true)
           end
 
           it "moving all posts will close the topic" do
@@ -334,11 +345,113 @@ describe PostMover do
             expect(Notification.exists?(user_notification.id)).to eq(false)
             expect(Notification.exists?(admin_notification.id)).to eq(true)
           end
+
+          it "moves post timings" do
+            some_user = Fabricate(:user)
+            create_post_timing(p1, some_user, 500)
+            create_post_timing(p2, some_user, 1000)
+            create_post_timing(p3, some_user, 1500)
+            create_post_timing(p4, some_user, 750)
+
+            new_topic = topic.move_posts(user, [p1.id, p4.id], title: "new testing topic name")
+
+            expect(PostTiming.where(topic_id: topic.id, user_id: some_user.id).pluck(:post_number, :msecs))
+              .to contain_exactly([1, 500], [2, 1000], [3, 1500])
+
+            expect(PostTiming.where(topic_id: new_topic.id, user_id: some_user.id).pluck(:post_number, :msecs))
+              .to contain_exactly([1, 500], [2, 750])
+          end
+
+          context "read state and other stats per user" do
+            def create_topic_user(user, opts = {})
+              notification_level = opts.delete(:notification_level) || :regular
+
+              Fabricate(:topic_user, opts.merge(
+                notification_level: TopicUser.notification_levels[notification_level],
+                topic: topic,
+                user: user
+              ))
+            end
+
+            fab!(:user1) { Fabricate(:user) }
+            fab!(:user2) { Fabricate(:user) }
+            fab!(:user3) { Fabricate(:user) }
+            fab!(:admin1) { Fabricate(:admin) }
+            fab!(:admin2) { Fabricate(:admin) }
+
+            it "correctly moves topic_user records" do
+              create_topic_user(
+                user1,
+                last_read_post_number: 4,
+                highest_seen_post_number: 4,
+                last_emailed_post_number: 3,
+                notification_level: :tracking
+              )
+              create_topic_user(
+                user3,
+                last_read_post_number: 1,
+                highest_seen_post_number: 2,
+                last_emailed_post_number: 4,
+                notification_level: :watching
+              )
+
+              new_topic = topic.move_posts(user, [p1.id, p2.id], title: "new testing topic name")
+
+              expect(TopicUser.where(topic_id: topic.id).count).to eq(3)
+              expect(TopicUser.find_by(topic: topic, user: user))
+                .to have_attributes(
+                      last_read_post_number: 4,
+                      highest_seen_post_number: 4,
+                      last_emailed_post_number: nil,
+                      notification_level: TopicUser.notification_levels[:tracking]
+                    )
+              expect(TopicUser.find_by(topic: topic, user: user1))
+                .to have_attributes(
+                      last_read_post_number: 4,
+                      highest_seen_post_number: 4,
+                      last_emailed_post_number: 3,
+                      notification_level: TopicUser.notification_levels[:tracking]
+                    )
+              expect(TopicUser.find_by(topic: topic, user: user3))
+                .to have_attributes(
+                      last_read_post_number: 1,
+                      highest_seen_post_number: 2,
+                      last_emailed_post_number: 4,
+                      notification_level: TopicUser.notification_levels[:watching]
+                    )
+
+              expect(TopicUser.where(topic_id: new_topic.id).count).to eq(3)
+              expect(TopicUser.find_by(topic: new_topic, user: user))
+                .to have_attributes(
+                      last_read_post_number: 1,
+                      highest_seen_post_number: 1,
+                      last_emailed_post_number: nil,
+                      notification_level: TopicUser.notification_levels[:watching],
+                      posted: true
+                    )
+              expect(TopicUser.find_by(topic: new_topic, user: user1))
+                .to have_attributes(
+                      last_read_post_number: 2,
+                      highest_seen_post_number: 2,
+                      last_emailed_post_number: 2,
+                      notification_level: TopicUser.notification_levels[:tracking],
+                      posted: false
+                    )
+              expect(TopicUser.find_by(topic: new_topic, user: user3))
+                .to have_attributes(
+                      last_read_post_number: 1,
+                      highest_seen_post_number: 2,
+                      last_emailed_post_number: 2,
+                      notification_level: TopicUser.notification_levels[:watching],
+                      posted: false
+                    )
+            end
+          end
         end
 
         context "to an existing topic" do
           fab!(:destination_topic) { Fabricate(:topic, user: another_user) }
-          fab!(:destination_op) { Fabricate(:post, topic: destination_topic, user: another_user) }
+          fab!(:destination_op) { Fabricate(:post, topic: destination_topic, user: another_user, created_at: 1.day.ago) }
 
           it "works correctly" do
             topic.expects(:add_moderator_post).once
@@ -355,7 +468,7 @@ describe PostMover do
             p4.reload
             expect(moved_to.last_post_user_id).to eq(p4.user_id)
             expect(moved_to.last_posted_at).to eq(p4.created_at)
-            expect(moved_to.bumped_at).to eq(p4.created_at)
+            expect(moved_to.bumped_at).to be_within(1.second).of(Time.now)
 
             # Posts should be re-ordered
             p2.reload
@@ -440,6 +553,189 @@ describe PostMover do
             expect(Notification.exists?(user_notification.id)).to eq(false)
             expect(Notification.exists?(admin_notification.id)).to eq(true)
           end
+
+          it "moves post timings" do
+            some_user = Fabricate(:user)
+            create_post_timing(p1, some_user, 500)
+            create_post_timing(p2, some_user, 1000)
+            create_post_timing(p3, some_user, 1500)
+            create_post_timing(p4, some_user, 750)
+
+            moved_to = topic.move_posts(user, [p1.id, p4.id], destination_topic_id: destination_topic.id)
+
+            expect(PostTiming.where(topic_id: topic.id, user_id: some_user.id).pluck(:post_number, :msecs))
+              .to contain_exactly([1, 500], [2, 1000], [3, 1500])
+
+            expect(PostTiming.where(topic_id: moved_to.id, user_id: some_user.id).pluck(:post_number, :msecs))
+              .to contain_exactly([2, 500], [3, 750])
+          end
+
+          context "read state and other stats per user" do
+            def create_topic_user(user, topic, opts = {})
+              notification_level = opts.delete(:notification_level) || :regular
+
+              Fabricate(:topic_user, opts.merge(
+                notification_level: TopicUser.notification_levels[notification_level],
+                topic: topic,
+                user: user
+              ))
+            end
+
+            fab!(:user1) { Fabricate(:user) }
+            fab!(:user2) { Fabricate(:user) }
+            fab!(:user3) { Fabricate(:user) }
+            fab!(:admin1) { Fabricate(:admin) }
+            fab!(:admin2) { Fabricate(:admin) }
+
+            it "leaves post numbers unchanged when they were lower then the topic's highest post number" do
+              Fabricate(:post, topic: destination_topic)
+              Fabricate(:whisper, topic: destination_topic)
+
+              destination_topic.reload
+              expect(destination_topic.highest_post_number).to eq(2)
+              expect(destination_topic.highest_staff_post_number).to eq(3)
+
+              create_topic_user(
+                user1, topic,
+                last_read_post_number: 3,
+                highest_seen_post_number: 3,
+                last_emailed_post_number: 3
+              )
+              create_topic_user(
+                user1, destination_topic,
+                last_read_post_number: 1,
+                highest_seen_post_number: 2,
+                last_emailed_post_number: 1
+              )
+
+              create_topic_user(
+                user2, topic,
+                last_read_post_number: 3,
+                highest_seen_post_number: 3,
+                last_emailed_post_number: 3
+              )
+              create_topic_user(
+                user2, destination_topic,
+                last_read_post_number: 2,
+                highest_seen_post_number: 1,
+                last_emailed_post_number: 2
+              )
+
+              create_topic_user(
+                admin1, topic,
+                last_read_post_number: 3,
+                highest_seen_post_number: 3,
+                last_emailed_post_number: 3
+              )
+              create_topic_user(
+                admin1, destination_topic,
+                last_read_post_number: 2,
+                highest_seen_post_number: 3,
+                last_emailed_post_number: 1
+              )
+
+              create_topic_user(
+                admin2, topic,
+                last_read_post_number: 3,
+                highest_seen_post_number: 3,
+                last_emailed_post_number: 3
+              )
+              create_topic_user(
+                admin2, destination_topic,
+                last_read_post_number: 3,
+                highest_seen_post_number: 2,
+                last_emailed_post_number: 3
+              )
+
+              moved_to_topic = topic.move_posts(user, [p1.id, p2.id], destination_topic_id: destination_topic.id)
+
+              expect(TopicUser.find_by(topic: moved_to_topic, user: user1))
+                .to have_attributes(
+                      last_read_post_number: 1,
+                      highest_seen_post_number: 5,
+                      last_emailed_post_number: 1
+                    )
+
+              expect(TopicUser.find_by(topic: moved_to_topic, user: user2))
+                .to have_attributes(
+                      last_read_post_number: 5,
+                      highest_seen_post_number: 1,
+                      last_emailed_post_number: 5
+                    )
+
+              expect(TopicUser.find_by(topic: moved_to_topic, user: admin1))
+                .to have_attributes(
+                      last_read_post_number: 2,
+                      highest_seen_post_number: 5,
+                      last_emailed_post_number: 1
+                    )
+
+              expect(TopicUser.find_by(topic: moved_to_topic, user: admin2))
+                .to have_attributes(
+                      last_read_post_number: 5,
+                      highest_seen_post_number: 2,
+                      last_emailed_post_number: 5
+                    )
+            end
+
+            it "correctly updates existing topic_user records" do
+              destination_topic.update!(created_at: 1.day.ago)
+
+              original_topic_user1 = create_topic_user(
+                user1, topic,
+                highest_seen_post_number: 5,
+                first_visited_at: 5.hours.ago,
+                last_visited_at: 30.minutes.ago,
+                notification_level: :tracking
+              ).reload
+              destination_topic_user1 = create_topic_user(
+                user1, destination_topic,
+                highest_seen_post_number: 5,
+                first_visited_at: 7.hours.ago,
+                last_visited_at: 2.hours.ago,
+                notification_level: :watching
+              ).reload
+
+              original_topic_user2 = create_topic_user(
+                user2, topic,
+                highest_seen_post_number: 5,
+                first_visited_at: 3.hours.ago,
+                last_visited_at: 1.hour.ago,
+                notification_level: :watching
+              ).reload
+              destination_topic_user2 = create_topic_user(
+                user2, destination_topic,
+                highest_seen_post_number: 5,
+                first_visited_at: 2.hours.ago,
+                last_visited_at: 1.hour.ago,
+                notification_level: :tracking
+              ).reload
+
+              new_topic = topic.move_posts(user, [p1.id, p2.id], destination_topic_id: destination_topic.id)
+
+              expect(TopicUser.find_by(topic: new_topic, user: user))
+                .to have_attributes(
+                      notification_level: TopicUser.notification_levels[:tracking],
+                      posted: true
+                    )
+
+              expect(TopicUser.find_by(topic: new_topic, user: user1))
+                .to have_attributes(
+                      first_visited_at: destination_topic_user1.first_visited_at,
+                      last_visited_at: original_topic_user1.last_visited_at,
+                      notification_level: destination_topic_user1.notification_level,
+                      posted: false
+                    )
+
+              expect(TopicUser.find_by(topic: new_topic, user: user2))
+                .to have_attributes(
+                      first_visited_at: original_topic_user2.first_visited_at,
+                      last_visited_at: destination_topic_user2.last_visited_at,
+                      notification_level: destination_topic_user2.notification_level,
+                      posted: false
+                    )
+            end
+          end
         end
 
         context "to a message" do
@@ -465,7 +761,7 @@ describe PostMover do
             p4.reload
             expect(new_topic.last_post_user_id).to eq(p4.user_id)
             expect(new_topic.last_posted_at).to eq(p4.created_at)
-            expect(new_topic.bumped_at).to eq(p4.created_at)
+            expect(new_topic.bumped_at).to be_within(1.second).of(Time.now)
 
             p2.reload
             expect(p2.sort_order).to eq(1)

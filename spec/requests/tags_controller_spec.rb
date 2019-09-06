@@ -207,6 +207,11 @@ describe TagsController do
     end
 
     context 'tagging enabled' do
+      def parse_topic_ids
+        JSON.parse(response.body)["topic_list"]["topics"]
+          .map { |topic| topic["id"] }
+      end
+
       it "can filter by tag" do
         get "/tags/#{tag.name}/l/latest.json"
         expect(response.status).to eq(200)
@@ -221,9 +226,7 @@ describe TagsController do
 
         expect(response.status).to eq(200)
 
-        topic_ids = JSON.parse(response.body)["topic_list"]["topics"]
-          .map { |topic| topic["id"] }
-
+        topic_ids = parse_topic_ids
         expect(topic_ids).to include(all_tag_topic.id)
         expect(topic_ids).to include(multi_tag_topic.id)
         expect(topic_ids).to_not include(single_tag_topic.id)
@@ -238,9 +241,7 @@ describe TagsController do
 
         expect(response.status).to eq(200)
 
-        topic_ids = JSON.parse(response.body)["topic_list"]["topics"]
-          .map { |topic| topic["id"] }
-
+        topic_ids = parse_topic_ids
         expect(topic_ids).to include(all_tag_topic.id)
         expect(topic_ids).to_not include(multi_tag_topic.id)
         expect(topic_ids).to_not include(single_tag_topic.id)
@@ -255,9 +256,7 @@ describe TagsController do
 
         expect(response.status).to eq(200)
 
-        topic_ids = JSON.parse(response.body)["topic_list"]["topics"]
-          .map { |topic| topic["id"] }
-
+        topic_ids = parse_topic_ids
         expect(topic_ids).to_not include(single_tag_topic.id)
       end
 
@@ -288,17 +287,53 @@ describe TagsController do
 
         expect(response.status).to eq(200)
 
-        topic_ids = JSON.parse(response.body)["topic_list"]["topics"]
-          .map { |topic| topic["id"] }
-
+        topic_ids = parse_topic_ids
         expect(topic_ids).to include(t.id)
       end
 
-      it "can filter by bookmarked" do
-        sign_in(Fabricate(:user))
-        get "/tags/#{tag.name}/l/bookmarks.json"
+      context "when logged in" do
+        fab!(:user) { Fabricate(:user) }
 
-        expect(response.status).to eq(200)
+        before do
+          sign_in(user)
+        end
+
+        it "can filter by bookmarked" do
+          get "/tags/#{tag.name}/l/bookmarks.json"
+
+          expect(response.status).to eq(200)
+        end
+
+        context "muted tags" do
+          before do
+            TagUser.create!(
+              user_id: user.id,
+              tag_id: tag.id,
+              notification_level: CategoryUser.notification_levels[:muted]
+            )
+          end
+
+          it "includes topics when filtered by muted tag" do
+            single_tag_topic
+
+            get "/tags/#{tag.name}/l/latest.json"
+            expect(response.status).to eq(200)
+
+            topic_ids = parse_topic_ids
+            expect(topic_ids).to include(single_tag_topic.id)
+          end
+
+          it "includes topics when filtered by category and muted tag" do
+            category = Fabricate(:category)
+            single_tag_topic.update!(category: category)
+
+            get "/tags/c/#{category.slug}/#{tag.name}/l/latest.json"
+            expect(response.status).to eq(200)
+
+            topic_ids = parse_topic_ids
+            expect(topic_ids).to include(single_tag_topic.id)
+          end
+        end
       end
     end
   end
