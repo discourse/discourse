@@ -9,9 +9,6 @@ const ICON = "bookmark";
 
 let staleItems = [];
 
-// The empty state help text for bookmarks page is localized on the server.
-let emptyStatePlaceholderItemText = "";
-
 createWidgetFrom(QuickAccessPanel, "quick-access-bookmarks", {
   buildKey: () => "quick-access-bookmarks",
 
@@ -25,7 +22,7 @@ createWidgetFrom(QuickAccessPanel, "quick-access-bookmarks", {
   },
 
   emptyStatePlaceholderItem() {
-    return h("li.read", emptyStatePlaceholderItemText);
+    return h("li.read", this.state.emptyStatePlaceholderItemText);
   },
 
   findStaleItems() {
@@ -42,7 +39,9 @@ createWidgetFrom(QuickAccessPanel, "quick-access-bookmarks", {
         no_results_help_key: "user_activity.no_bookmarks"
       }
     }).then(({ user_actions, no_results_help }) => {
-      emptyStatePlaceholderItemText = no_results_help;
+      // The empty state help text for bookmarks page is localized on the
+      // server.
+      this.state.emptyStatePlaceholderItemText = no_results_help;
       return (staleItems = user_actions.slice(0, this.estimateItemLimit()));
     });
   },
