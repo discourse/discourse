@@ -863,6 +863,7 @@ class TopicQuery
 
     list
   end
+
   def remove_muted_categories(list, user, opts = nil)
     category_id = get_category_id(opts[:exclude]) if opts
 
@@ -885,6 +886,7 @@ class TopicQuery
 
     list
   end
+
   def remove_muted_tags(list, user, opts = nil)
     if user.nil? || !SiteSetting.tagging_enabled || SiteSetting.remove_muted_tags_from_latest == 'never'
       return list
@@ -895,16 +897,9 @@ class TopicQuery
       return list
     end
 
-    showing_tag = if opts[:filter]
-      f = opts[:filter].split('/')
-      f[0] == 'tags' ? f[1] : nil
-    else
-      nil
-    end
-
     # if viewing the topic list for a muted tag, show all the topics
-    if showing_tag.present? && TagUser.lookup(user, :muted).joins(:tag).where('tags.name = ?', showing_tag).exists?
-      return list
+    if !opts[:no_tags] && opts[:tags].present?
+      return list if TagUser.lookup(user, :muted).joins(:tag).where('tags.name = ?', opts[:tags].first).exists?
     end
 
     if SiteSetting.remove_muted_tags_from_latest == 'always'
