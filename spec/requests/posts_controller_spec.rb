@@ -319,8 +319,7 @@ describe PostsController do
 
         post = Fabricate(:post, created_at: 10.minutes.ago, user: user)
 
-        user.trust_level = 1
-        user.save!
+        user.update_columns(trust_level: 1)
 
         put "/posts/#{post.id}.json", params: update_params
 
@@ -329,11 +328,10 @@ describe PostsController do
       end
 
       it 'does not allow TL2 to update when edit time limit expired' do
-        SiteSetting.tl2_post_edit_time_limit = 0
+        SiteSetting.post_edit_time_limit = 12
         SiteSetting.tl2_post_edit_time_limit = 8
 
-        user.trust_level = 2
-        user.save!
+        user.update_columns(trust_level: 2)
 
         post = Fabricate(:post, created_at: 10.minutes.ago, user: user)
 
