@@ -170,6 +170,11 @@ class Post < ActiveRecord::Base
     end
   end
 
+  def readers_count
+    read_count = reads - 1 # Excludes poster
+    read_count < 0 ? 0 : read_count
+  end
+
   def publish_change_to_clients!(type, opts = {})
     # special failsafe for posts missing topics consistency checks should fix,
     # but message is safe to skip
