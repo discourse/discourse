@@ -426,7 +426,7 @@ describe GroupsController do
       get "/groups/#{group.name}/posts.rss"
 
       expect(response.status).to eq(200)
-      expect(response.content_type).to eq('application/rss+xml')
+      expect(response.media_type).to eq('application/rss+xml')
     end
   end
 
@@ -435,7 +435,7 @@ describe GroupsController do
       get "/groups/#{group.name}/mentions.rss"
 
       expect(response.status).to eq(200)
-      expect(response.content_type).to eq('application/rss+xml')
+      expect(response.media_type).to eq('application/rss+xml')
     end
 
     it 'fails when disabled' do

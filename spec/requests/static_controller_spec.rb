@@ -26,7 +26,7 @@ describe StaticController do
         get '/favicon/proxied'
 
         expect(response.status).to eq(200)
-        expect(response.content_type).to eq('image/png')
+        expect(response.media_type).to eq('image/png')
         expect(response.body.bytesize).to eq(SiteIconManager.favicon.filesize)
       end
 
@@ -36,7 +36,7 @@ describe StaticController do
         get '/favicon/proxied'
 
         expect(response.status).to eq(200)
-        expect(response.content_type).to eq('image/png')
+        expect(response.media_type).to eq('image/png')
         expect(response.body.bytesize).to eq(upload.filesize)
       end
     end
@@ -66,7 +66,7 @@ describe StaticController do
         get '/favicon/proxied'
 
         expect(response.status).to eq(200)
-        expect(response.content_type).to eq('image/png')
+        expect(response.media_type).to eq('image/png')
         expect(response.body.bytesize).to eq(upload.filesize)
       end
     end

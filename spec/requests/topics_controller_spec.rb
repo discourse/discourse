@@ -1998,7 +1998,7 @@ RSpec.describe TopicsController do
     it 'renders rss of the topic' do
       get "/t/foo/#{topic.id}.rss"
       expect(response.status).to eq(200)
-      expect(response.content_type).to eq('application/rss+xml')
+      expect(response.media_type).to eq('application/rss+xml')
     end
 
     it 'renders rss of the topic correctly with subfolder' do
