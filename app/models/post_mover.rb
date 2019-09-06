@@ -90,7 +90,10 @@ class PostMover
         new_topic_title VARCHAR,
         new_post_id INTEGER,
         new_post_number INTEGER
-      )
+      );
+
+      CREATE INDEX moved_posts_old_post_number ON moved_posts(old_post_number);
+      CREATE INDEX moved_posts_old_post_id ON moved_posts(old_post_id);
     SQL
   end
 
@@ -105,11 +108,8 @@ class PostMover
     @move_map = {}
     @reply_count = {}
     posts.each_with_index do |post, offset|
-      unless post.is_first_post?
-        @move_map[post.post_number] = offset + max_post_number
-      else
-        @move_map[post.post_number] = 1
-      end
+      @move_map[post.post_number] = offset + max_post_number
+
       if post.reply_to_post_number.present?
         @reply_count[post.reply_to_post_number] = (@reply_count[post.reply_to_post_number] || 0) + 1
       end
@@ -131,6 +131,9 @@ class PostMover
     update_reply_counts
     move_first_post_replies
     delete_post_replies
+    copy_first_post_timings
+    move_post_timings
+    copy_topic_users
   end
 
   def create_first_post(post)
@@ -260,7 +263,7 @@ class PostMover
     DB.exec <<~SQL
       UPDATE post_replies pr
       SET post_id = mp.new_post_id
-      FROM moved_posts mp, moved_posts mr
+      FROM moved_posts mp
       WHERE mp.old_post_id <> mp.new_post_id AND pr.post_id = mp.old_post_id AND
         EXISTS (SELECT 1 FROM moved_posts mr WHERE mr.new_post_id = pr.reply_id)
     SQL
@@ -275,11 +278,124 @@ class PostMover
     SQL
   end
 
+  def copy_first_post_timings
+    DB.exec <<~SQL
+      INSERT INTO post_timings (topic_id, user_id, post_number, msecs)
+      SELECT mp.new_topic_id, pt.user_id, mp.new_post_number, pt.msecs
+      FROM post_timings pt
+           JOIN moved_posts mp ON (pt.topic_id = mp.old_topic_id AND pt.post_number = mp.old_post_number)
+      WHERE mp.old_post_id <> mp.new_post_id
+      ON CONFLICT (topic_id, post_number, user_id) DO UPDATE
+        SET msecs = GREATEST(post_timings.msecs, excluded.msecs)
+    SQL
+  end
+
+  def move_post_timings
+    DB.exec <<~SQL
+      UPDATE post_timings pt
+      SET topic_id    = mp.new_topic_id,
+          post_number = mp.new_post_number
+      FROM moved_posts mp
+      WHERE pt.topic_id = mp.old_topic_id
+        AND pt.post_number = mp.old_post_number
+        AND mp.old_post_id = mp.new_post_id
+    SQL
+  end
+
+  def copy_topic_users
+    params = {
+      old_topic_id: original_topic.id,
+      new_topic_id: destination_topic.id,
+      old_highest_post_number: destination_topic.highest_post_number,
+      old_highest_staff_post_number: destination_topic.highest_staff_post_number
+    }
+
+    DB.exec(<<~SQL, params)
+      INSERT INTO topic_users(user_id, topic_id, posted, last_read_post_number, highest_seen_post_number,
+                              last_emailed_post_number, first_visited_at, last_visited_at, notification_level,
+                              notifications_changed_at, notifications_reason_id)
+      SELECT tu.user_id,
+             :new_topic_id                               AS topic_id,
+             EXISTS(
+                 SELECT 1
+                 FROM posts p
+                 WHERE p.topic_id = tu.topic_id
+                   AND p.user_id = tu.user_id
+               )                                         AS posted,
+             MAX(lr.new_post_number)                     AS last_read_post_number,
+             MAX(hs.new_post_number)                     AS highest_seen_post_number,
+             MAX(le.new_post_number)                     AS last_emailed_post_number,
+             GREATEST(tu.first_visited_at, t.created_at) AS first_visited_at,
+             GREATEST(tu.last_visited_at, t.created_at)  AS last_visited_at,
+             tu.notification_level,
+             tu.notifications_changed_at,
+             tu.notifications_reason_id
+      FROM topic_users tu
+           JOIN topics t
+                ON (t.id = :new_topic_id)
+           LEFT OUTER JOIN moved_posts lr
+                           ON (lr.old_topic_id = tu.topic_id AND lr.old_post_number <= tu.last_read_post_number)
+           LEFT OUTER JOIN moved_posts hs
+                           ON (hs.old_topic_id = tu.topic_id AND hs.old_post_number <= tu.highest_seen_post_number)
+           LEFT OUTER JOIN moved_posts le
+                           ON (le.old_topic_id = tu.topic_id AND le.old_post_number <= tu.last_emailed_post_number)
+      WHERE tu.topic_id = :old_topic_id
+        AND GREATEST(
+                tu.last_read_post_number,
+                tu.highest_seen_post_number,
+                tu.last_emailed_post_number
+              ) >= (SELECT MIN(old_post_number) FROM moved_posts)
+      GROUP BY tu.topic_id, tu.user_id, tu.first_visited_at, tu.last_visited_at, t.created_at, tu.notification_level,
+               tu.notifications_changed_at,
+               tu.notifications_reason_id
+      ON CONFLICT (topic_id, user_id) DO UPDATE
+        SET posted                   = excluded.posted,
+            last_read_post_number    = CASE
+                                         WHEN topic_users.last_read_post_number = :old_highest_staff_post_number OR (
+                                             :old_highest_post_number < :old_highest_staff_post_number
+                                             AND topic_users.last_read_post_number = :old_highest_post_number
+                                             AND NOT EXISTS(SELECT 1
+                                                            FROM users u
+                                                            WHERE u.id = topic_users.user_id
+                                                              AND (admin OR moderator))
+                                           ) THEN
+                                           GREATEST(topic_users.last_read_post_number,
+                                                    excluded.last_read_post_number)
+                                         ELSE topic_users.last_read_post_number END,
+            highest_seen_post_number = CASE
+                                         WHEN topic_users.highest_seen_post_number = :old_highest_staff_post_number OR (
+                                             :old_highest_post_number < :old_highest_staff_post_number
+                                             AND topic_users.highest_seen_post_number = :old_highest_post_number
+                                             AND NOT EXISTS(SELECT 1
+                                                            FROM users u
+                                                            WHERE u.id = topic_users.user_id
+                                                              AND (admin OR moderator))
+                                           ) THEN
+                                           GREATEST(topic_users.highest_seen_post_number,
+                                                    excluded.highest_seen_post_number)
+                                         ELSE topic_users.highest_seen_post_number END,
+            last_emailed_post_number = CASE
+                                         WHEN topic_users.last_emailed_post_number = :old_highest_staff_post_number OR (
+                                             :old_highest_post_number < :old_highest_staff_post_number
+                                             AND topic_users.last_emailed_post_number = :old_highest_post_number
+                                             AND NOT EXISTS(SELECT 1
+                                                            FROM users u
+                                                            WHERE u.id = topic_users.user_id
+                                                              AND (admin OR moderator))
+                                           ) THEN
+                                           GREATEST(topic_users.last_emailed_post_number,
+                                                    excluded.last_emailed_post_number)
+                                         ELSE topic_users.last_emailed_post_number END,
+            first_visited_at         = LEAST(topic_users.first_visited_at, excluded.first_visited_at),
+            last_visited_at          = GREATEST(topic_users.last_visited_at, excluded.last_visited_at)
+    SQL
+  end
+
   def update_statistics
     destination_topic.update_statistics
     original_topic.update_statistics
-    TopicUser.update_post_action_cache(topic_id: original_topic.id, post_action_type: :bookmark)
-    TopicUser.update_post_action_cache(topic_id: destination_topic.id, post_action_type: :bookmark)
+    TopicUser.update_post_action_cache(topic_id: original_topic.id)
+    TopicUser.update_post_action_cache(topic_id: destination_topic.id)
   end
 
   def update_user_actions
@@ -340,7 +456,7 @@ class PostMover
       attrs = {}
       attrs[:last_posted_at] = post.created_at
       attrs[:last_post_user_id] = post.user_id
-      attrs[:bumped_at] = post.created_at unless post.no_bump
+      attrs[:bumped_at] = Time.now
       attrs[:updated_at] = Time.now
       destination_topic.update_columns(attrs)
     end
