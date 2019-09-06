@@ -1,6 +1,5 @@
 import { ajax } from "discourse/lib/ajax";
 import { createWidgetFrom } from "discourse/widgets/widget";
-import DiscourseURL from "discourse/lib/url";
 import QuickAccessPanel from "discourse/widgets/quick-access-panel";
 
 createWidgetFrom(QuickAccessPanel, "quick-access-notifications", {
@@ -39,8 +38,8 @@ createWidgetFrom(QuickAccessPanel, "quick-access-notifications", {
     return this._findStaleItemsInStore().refresh();
   },
 
-  showAll() {
-    DiscourseURL.routeTo(`${this.attrs.path}/notifications`);
+  showAllHref() {
+    return `${this.attrs.path}/notifications`;
   },
 
   hasUnread() {

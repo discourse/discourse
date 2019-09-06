@@ -1,4 +1,3 @@
-import DiscourseURL from "discourse/lib/url";
 import QuickAccessPanel from "discourse/widgets/quick-access-panel";
 import { createWidgetFrom } from "discourse/widgets/widget";
 import { postUrl } from "discourse/lib/utilities";
@@ -33,8 +32,8 @@ createWidgetFrom(QuickAccessPanel, "quick-access-messages", {
     return true;
   },
 
-  showAll() {
-    DiscourseURL.routeTo(`${this.attrs.path}/messages`);
+  showAllHref() {
+    return `${this.attrs.path}/messages`;
   },
 
   findStaleItems() {

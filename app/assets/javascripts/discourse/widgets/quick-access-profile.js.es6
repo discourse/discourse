@@ -1,4 +1,3 @@
-import DiscourseURL from "discourse/lib/url";
 import QuickAccessPanel from "discourse/widgets/quick-access-panel";
 import { createWidgetFrom } from "discourse/widgets/widget";
 
@@ -8,10 +7,6 @@ createWidgetFrom(QuickAccessPanel, "quick-access-profile", {
   hasMore() {
     // Never show the button to the full profile page.
     return false;
-  },
-
-  showAll() {
-    DiscourseURL.routeTo(this.attrs.path);
   },
 
   findStaleItems() {

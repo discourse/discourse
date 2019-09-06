@@ -228,9 +228,12 @@
       border-width: 2px;
       margin: 0 auto;
     }
-    .show-all .btn {
+    .show-all a {
       width: 100%;
-      padding: 2px 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 30px;
       color: dark-light-choose($primary-medium, $secondary-high);
       background: blend-primary-secondary(5%);
       &:hover {

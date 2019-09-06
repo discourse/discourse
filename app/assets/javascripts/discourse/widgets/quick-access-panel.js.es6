@@ -29,7 +29,9 @@ export default createWidget("quick-access-panel", {
     return false;
   },
 
-  showAll() {},
+  showAllHref() {
+    return "";
+  },
 
   hasMore() {
     return this.state.items.length >= this.estimateItemLimit();
@@ -126,12 +128,11 @@ export default createWidget("quick-access-panel", {
     if (this.hasMore()) {
       items.push(
         h(
-          "li.read.last.heading.show-all",
-          this.attach("button", {
+          "li.read.last.show-all",
+          this.attach("link", {
             title: "view_all",
             icon: "chevron-down",
-            action: "showAll",
-            className: "btn"
+            href: this.showAllHref()
           })
         )
       );

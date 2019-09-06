@@ -1,5 +1,4 @@
 import { h } from "virtual-dom";
-import DiscourseURL from "discourse/lib/url";
 import QuickAccessPanel from "discourse/widgets/quick-access-panel";
 import UserAction from "discourse/models/user-action";
 import { ajax } from "discourse/lib/ajax";
@@ -21,8 +20,8 @@ createWidgetFrom(QuickAccessPanel, "quick-access-bookmarks", {
     return true;
   },
 
-  showAll() {
-    DiscourseURL.routeTo(`${this.attrs.path}/activity/bookmarks`);
+  showAllHref() {
+    return `${this.attrs.path}/activity/bookmarks`;
   },
 
   emptyStatePlaceholderItem() {
