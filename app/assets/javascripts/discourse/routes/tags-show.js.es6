@@ -73,8 +73,9 @@ export default Discourse.Route.extend({
     const params = filterQueryParams(transition.to.queryParams, {});
     const categorySlug = this.categorySlug;
     const parentCategorySlug = this.parentCategorySlug;
-    const filter = this.navMode;
+    const topicFilter = this.navMode;
     const tagId = tag ? tag.id.toLowerCase() : "none";
+    let filter;
 
     if (categorySlug) {
       const category = Discourse.Category.findBySlug(
@@ -82,31 +83,25 @@ export default Discourse.Route.extend({
         parentCategorySlug
       );
       if (parentCategorySlug) {
-        params.filter = `tags/c/${parentCategorySlug}/${categorySlug}/${tagId}/l/${filter}`;
+        filter = `tags/c/${parentCategorySlug}/${categorySlug}/${tagId}/l/${topicFilter}`;
       } else {
-        params.filter = `tags/c/${categorySlug}/${tagId}/l/${filter}`;
+        filter = `tags/c/${categorySlug}/${tagId}/l/${topicFilter}`;
       }
       if (category) {
         category.setupGroupsAndPermissions();
         this.set("category", category);
       }
     } else if (this.additionalTags) {
-      params.filter = `tags/intersection/${tagId}/${this.get(
-        "additionalTags"
-      ).join("/")}`;
+      filter = `tags/intersection/${tagId}/${this.additionalTags.join("/")}`;
       this.set("category", null);
     } else {
-      params.filter = `tags/${tagId}/l/${filter}`;
+      filter = `tags/${tagId}/l/${topicFilter}`;
       this.set("category", null);
     }
 
-    return findTopicList(
-      this.store,
-      this.topicTrackingState,
-      params.filter,
-      params,
-      { cached: true }
-    ).then(list => {
+    return findTopicList(this.store, this.topicTrackingState, filter, params, {
+      cached: true
+    }).then(list => {
       if (list.topic_list.tags && list.topic_list.tags.length === 1) {
         // Update name of tag (case might be different)
         tag.setProperties({
