@@ -96,12 +96,8 @@ export default createWidget("quick-access-panel", {
     }
 
     this.findNewItems()
-      .then(items => {
-        state.items = items;
-      })
-      .catch(() => {
-        state.items = [];
-      })
+      .then(items => (state.items = items))
+      .catch(() => (state.items = []))
       .finally(() => {
         state.loading = false;
         state.loaded = true;
