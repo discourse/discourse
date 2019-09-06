@@ -124,6 +124,12 @@ en:
         x_days:
           one: "%{count} day ago"
           other: "%{count} days ago"
+        x_months:
+          one: "%{count} month ago"
+          other: "%{count} months ago"
+        x_years:
+          one: "%{count} year ago"
+          other: "%{count} years ago"
       later:
         x_days:
           one: "%{count} day later"

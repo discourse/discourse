@@ -893,7 +893,7 @@ widgetTest("post notice - with username", {
         .trim(),
       I18n.t("post.notice.returning_user", {
         user: "codinghorror",
-        time: "2d ago"
+        time: "2 days ago"
       })
     );
   }
