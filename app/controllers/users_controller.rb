@@ -17,7 +17,8 @@ class UsersController < ApplicationController
     :topic_tracking_state, :preferences, :create_second_factor_totp,
     :enable_second_factor_totp, :disable_second_factor, :list_second_factors,
     :update_second_factor, :create_second_factor_backup, :select_avatar,
-    :notification_level, :revoke_auth_token
+    :notification_level, :revoke_auth_token, :register_second_factor_security_key,
+    :create_second_factor_security_key
   ]
 
   skip_before_action :check_xhr, only: [
@@ -28,7 +29,9 @@ class UsersController < ApplicationController
 
   before_action :second_factor_check_confirmed_password, only: [
                   :create_second_factor_totp, :enable_second_factor_totp,
-                  :disable_second_factor, :update_second_factor, :create_second_factor_backup]
+                  :disable_second_factor, :update_second_factor, :create_second_factor_backup,
+                  :register_second_factor_security_key, :create_second_factor_security_key
+                ]
 
   before_action :respond_to_suspicious_request, only: [:create]
 
@@ -1149,6 +1152,131 @@ class UsersController < ApplicationController
              key: totp_data.scan(/.{4}/).join(" "),
              qr: qrcode_svg
            )
+  end
+
+  def create_second_factor_security_key
+    challenge = SecureRandom.hex(30)
+    secure_session["staged-webauthn-challenge-#{current_user.id}"] = challenge
+    secure_session["staged-webauthn-rp-id-#{current_user.id}"] = Discourse.current_hostname
+    secure_session["staged-webauthn-rp-name-#{current_user.id}"] = SiteSetting.title
+
+    render json: success_json.merge(
+      challenge: challenge,
+      rp_id: Discourse.current_hostname,
+      rp_name: SiteSetting.title,
+      supported_algoriths: [-7]
+    )
+  end
+
+  def register_second_factor_security_key
+    # https://w3c.github.io/webauthn/#sctn-registering-a-new-credential
+    # 2. Let JSONtext be the result of running UTF-8 decode on the value of response.clientDataJSON.
+    client_data_json = Base64.decode64(params[:clientData])
+
+    # 3. Let C, the client data claimed as collected during the credential creation, be the result of running an implementation-specific JSON parser on JSONtext.
+    client_data = JSON.parse(client_data_json)
+    challenge = client_data['challenge']
+    type = client_data['type']
+    origin = client_data['origin']
+
+    # 4. Verify that the value of C.type is webauthn.create.
+    type == "webauthn.create"
+
+    # 5. Verify that the value of C.challenge equals the base64url encoding of options.challenge.
+    Base64.decode64(challenge) == secure_session["staged-webauthn-challenge-#{current_user.id}"]
+
+    # 6. Verify that the value of C.origin matches the Relying Party's origin.
+    origin == Discourse.base_url
+
+    # 7. Verify that the value of C.tokenBinding.status matches the state of Token Binding for the TLS
+    #    connection over which the assertion was obtained. If Token Binding was used on that TLS connection,
+    #    also verify that C.tokenBinding.id matches the base64url encoding of the Token Binding ID for the connection.
+
+    # 8. Let hash be the result of computing a hash over response.clientDataJSON using SHA-256.
+    hash = OpenSSL::Digest::SHA256.digest(client_data_json)
+
+    # 9. Perform CBOR decoding on the attestationObject field of the AuthenticatorAttestationResponse
+    #    structure to obtain the attestation statement format fmt, the authenticator data authData,
+    #    and the attestation statement attStmt.
+    attestation = CBOR.decode(Base64.decode64(params[:attestation]))
+
+    # 10. Verify that the rpIdHash in authData is the SHA-256 hash of the RP ID expected by the Relying Party.
+    # check the SHA256 hash of the rpId is the same as the authData bytes 0..31
+    rp_id_hash = attestation['authData'][0..31]
+    rp_id_hash == OpenSSL::Digest::SHA256.digest(secure_session["staged-webauthn-rp-id-#{current_user.id}"])
+
+    # 11. Verify that the User Present bit of the flags in authData is set.
+    # https://blog.bigbinary.com/2011/07/20/ruby-pack-unpack.html
+    # bit 0 is the least significant bit - LSB first
+    flags = attestation['authData'][32].unpack("b*")[0].split('')
+
+    # 12. If user verification is required for this registration, verify that
+    #     the User Verified bit of the flags in authData is set.
+    flags[0] == '1'
+
+    # 13. Verify that the "alg" parameter in the credential public key in authData matches the alg attribute of one of the items in options.pubKeyCredParams.
+    # https://w3c.github.io/webauthn/#table-attestedCredentialData
+    length = attestation['authData'].size - 37
+    attestedCredentialData = attestation['authData'][37..(37 + length - 1)]
+
+    aaguid = attestedCredentialData[0..15]
+    credlength = attestedCredentialData[16..18].unpack("n*")[0]
+    credentialid = attestedCredentialData[18..(18 + credlength)]
+
+    keystartpos = 18 + credlength
+    credentialpublickeybytes = attestedCredentialData[keystartpos..(keystartpos + attestedCredentialData.size - 1)]
+    credentialpublickey = COSE::Key.deserialize(credentialpublickeybytes)
+
+    [-7].include?(credentialpublickey.alg)
+
+    # 14. Verify that the values of the client extension outputs in clientExtensionResults and the authenticator
+    #     extension outputs in the extensions in authData are as expected, considering the client extension input
+    #     values that were given in options.extensions. In particular, any extension identifier values in the
+    #     clientExtensionResults and the extensions in authData MUST also be present as extension identifier values
+    #     in options.extensions, i.e., no extensions are present that were not requested. In the general case, the
+    #     meaning of "are as expected" is specific to the Relying Party and which extensions are in use.
+
+    # 15. Determine the attestation statement format by performing a USASCII case-sensitive match on fmt against the
+    #     set of supported WebAuthn Attestation Statement Format Identifier values. An up-to-date list of registered
+    #     WebAuthn Attestation Statement Format Identifier values is maintained in the IANA registry of the same
+    #     name [WebAuthn-Registries].
+    ['none', 'packed', 'fido-u2f'].include?(attestation['fmt'])
+
+    # ONLY APPLY IF fmt !== none, this is all to do with verifying attestation
+    #
+    # 16. Verify that attStmt is a correct attestation statement, conveying a valid attestation signature,
+    #     by using the attestation statement format fmt’s verification procedure given attStmt, authData and hash.
+    attestation['fmt'] == 'none' # raise error if not none
+
+    # 17. If validation is successful, obtain a list of acceptable trust anchors (attestation root certificates or
+    #     ECDAA-Issuer public keys) for that attestation type and attestation statement format fmt, from a trusted
+    #     source or from policy. For example, the FIDO Metadata Service [FIDOMetadataService] provides one way
+    #     to obtain such information, using the aaguid in the attestedCredentialData in authData.
+    # ignore for none
+
+    # 18. Assess the attestation trustworthiness using the outputs of the verification procedure in step 16, as follows:
+    #     If no attestation was provided, verify that None attestation is acceptable under Relying Party policy.\
+    # ignore for none
+
+    # 19. Check that the credentialId is not yet registered to any other user. If registration is requested for a
+    #     credential that is already registered to a different user, the Relying Party SHOULD fail this registration ceremony,
+    #     or it MAY decide to accept the registration, e.g. while deleting the older registration.
+    encoded_credential_id = Base64.encode64(credentialid)
+    endcoded_public_key = Base64.encode64(credentialpublickeybytes)
+    if !UserSecurityKey.exists?(credential_id: encoded_credential_id)
+      UserSecurityKey.create(
+        user: current_user,
+        credential_id: encoded_credential_id,
+        public_key: endcoded_public_key,
+        name: params[:name],
+        factor_type: UserSecurityKey.factor_types[:second_factor]
+      )
+    end
+
+    # 20. If the attestation statement attStmt verified successfully and is found to be trustworthy, then register
+    #     the new credential with the account that was denoted in options.user, by associating it with the credentialId
+    #     and credentialPublicKey in the attestedCredentialData in authData, as appropriate for the Relying Party's system.
+    render json: success_json
   end
 
   def enable_second_factor_totp
