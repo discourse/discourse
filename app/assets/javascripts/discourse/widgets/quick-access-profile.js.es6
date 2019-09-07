@@ -9,10 +9,6 @@ createWidgetFrom(QuickAccessPanel, "quick-access-profile", {
     return false;
   },
 
-  findStaleItems() {
-    return this._getItems();
-  },
-
   findNewItems() {
     return Ember.RSVP.Promise.resolve(this._getItems());
   },

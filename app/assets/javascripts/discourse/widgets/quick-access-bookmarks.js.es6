@@ -7,8 +7,6 @@ import { postUrl } from "discourse/lib/utilities";
 
 const ICON = "bookmark";
 
-let staleItems = [];
-
 createWidgetFrom(QuickAccessPanel, "quick-access-bookmarks", {
   buildKey: () => "quick-access-bookmarks",
 
@@ -25,10 +23,6 @@ createWidgetFrom(QuickAccessPanel, "quick-access-bookmarks", {
     return h("li.read", this.state.emptyStatePlaceholderItemText);
   },
 
-  findStaleItems() {
-    return staleItems || [];
-  },
-
   findNewItems() {
     return ajax("/user_actions.json", {
       cache: "false",
@@ -42,7 +36,7 @@ createWidgetFrom(QuickAccessPanel, "quick-access-bookmarks", {
       // The empty state help text for bookmarks page is localized on the
       // server.
       this.state.emptyStatePlaceholderItemText = no_results_help;
-      return (staleItems = user_actions.slice(0, this.estimateItemLimit()));
+      return user_actions.slice(0, this.estimateItemLimit());
     });
   },
 

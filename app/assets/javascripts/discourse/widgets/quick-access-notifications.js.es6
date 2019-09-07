@@ -16,11 +16,6 @@ createWidgetFrom(QuickAccessPanel, "quick-access-notifications", {
     }
   },
 
-  findStaleItems() {
-    const staleItems = this._findStaleItemsInStore();
-    return staleItems.hasResults ? staleItems.results : [];
-  },
-
   itemHtml(notification) {
     const notificationName = this.site.notificationLookup[
       notification.notification_type
@@ -43,7 +38,7 @@ createWidgetFrom(QuickAccessPanel, "quick-access-notifications", {
   },
 
   hasUnread() {
-    return this.state.items.filterBy("read", false).length > 0;
+    return this.getItems().filterBy("read", false).length > 0;
   },
 
   _findStaleItemsInStore() {

@@ -4,8 +4,6 @@ import { postUrl } from "discourse/lib/utilities";
 
 const ICON = "notification.private_message";
 
-let staleItems = [];
-
 function toItem(message) {
   const lastReadPostNumber = message.last_read_post_number || 0;
   const nextUnreadPostNumber = Math.min(
@@ -36,19 +34,13 @@ createWidgetFrom(QuickAccessPanel, "quick-access-messages", {
     return `${this.attrs.path}/messages`;
   },
 
-  findStaleItems() {
-    return staleItems || [];
-  },
-
   findNewItems() {
     return this.store
       .findFiltered("topicList", {
         filter: `topics/private-messages/${this.currentUser.username_lower}`
       })
       .then(({ topic_list }) => {
-        return (staleItems = topic_list.topics
-          .map(toItem)
-          .slice(0, this.estimateItemLimit()));
+        return topic_list.topics.map(toItem).slice(0, this.estimateItemLimit());
       });
   },
 

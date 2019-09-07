@@ -34,11 +34,7 @@ export default createWidget("quick-access-panel", {
   },
 
   hasMore() {
-    return this.state.items.length >= this.estimateItemLimit();
-  },
-
-  findStaleItems() {
-    return [];
+    return this.getItems().length >= this.estimateItemLimit();
   },
 
   findNewItems() {
@@ -89,17 +85,13 @@ export default createWidget("quick-access-panel", {
       return;
     }
 
-    const staleItems = this.findStaleItems();
-
-    if (staleItems.length > 0) {
-      state.items = staleItems;
-    } else {
+    if (this.getItems().length === 0) {
       state.loading = true;
     }
 
     this.findNewItems()
-      .then(items => (state.items = items))
-      .catch(() => (state.items = []))
+      .then(newItems => this.setItems(newItems))
+      .catch(() => this.setItems([]))
       .finally(() => {
         state.loading = false;
         state.loaded = true;
@@ -121,8 +113,8 @@ export default createWidget("quick-access-panel", {
       return [h("div.spinner-container", h("div.spinner"))];
     }
 
-    const items = state.items.length
-      ? state.items.map(this.itemHtml.bind(this))
+    const items = this.getItems().length
+      ? this.getItems().map(item => this.itemHtml(item))
       : [this.emptyStatePlaceholderItem()];
 
     if (this.hasMore()) {
@@ -139,5 +131,13 @@ export default createWidget("quick-access-panel", {
     }
 
     return [h("ul", items)];
+  },
+
+  getItems() {
+    return Discourse.Session.currentProp(`${this.key}-items`) || [];
+  },
+
+  setItems(newItems) {
+    Discourse.Session.currentProp(`${this.key}-items`, newItems);
   }
 });
