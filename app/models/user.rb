@@ -79,9 +79,9 @@ class User < ActiveRecord::Base
     where(method: UserSecondFactor.methods[:totp], enabled: true)
   }, class_name: "UserSecondFactor"
 
-  has_many :webauthns, -> {
-    where(method: UserSecondFactor.methods[:webauthn], enabled: true)
-  }, class_name: "UserSecondFactor"
+  has_many :security_keys, -> {
+    where(enabled: true)
+  }, class_name: "UserSecurityKey"
 
   has_one :anonymous_user_master, class_name: 'AnonymousUser'
   has_one :anonymous_user_shadow, ->(record) { where(active: true) }, foreign_key: :master_user_id, class_name: 'AnonymousUser'

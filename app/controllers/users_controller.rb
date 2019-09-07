@@ -1110,11 +1110,15 @@ class UsersController < ApplicationController
     end
 
     if secure_session["confirmed-password-#{current_user.id}"] == "true"
-      second_factors = current_user.user_second_factors.select(:id, :name, :last_used, :created_at, :method)
-                                                       .where(enabled: true, method: [UserSecondFactor.methods[:webauthn], UserSecondFactor.methods[:totp]])
+      totp_second_factors = current_user.totps
+        .select(:id, :name, :last_used, :created_at, :method)
+        .where(enabled: true).order(:created_at)
+
+      security_keys = current_user.security_keys.where(factor_type: UserSecurityKey.factor_types[:second_factor]).order(:created_at)
+
       render json: success_json.merge(
-               totps: second_factors.select { |sf| sf.method == UserSecondFactor.methods[:totp] }.sort(&:created_at),
-               webauthns: second_factors.select { |sf| sf.method == UserSecondFactor.methods[:webauthn] }.sort(&:created_at)
+               totps: totp_second_factors,
+               security_keys: security_keys
              )
     else
       render json: success_json.merge(

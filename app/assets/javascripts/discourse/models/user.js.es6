@@ -375,6 +375,25 @@ const User = RestModel.extend({
     });
   },
 
+  requestSecurityKeyChallenge() {
+    return ajax("/u/create_second_factor_security_key.json", {
+      type: "POST"
+    });
+  },
+
+  registerSecurityKey(credential) {
+    let formData = new FormData();
+    for (const [key, value] of Object.entries(credential)) {
+      formData.set(key, value);
+    };
+    return ajax('/u/register_second_factor_security_key.json', {
+      data: formData,
+      processData: false,
+      contentType: false,
+      type: "POST"
+    });
+  },
+
   createSecondFactorTotp() {
     return ajax("/u/create_second_factor_totp.json", {
       type: "POST"

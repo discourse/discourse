@@ -2181,12 +2181,12 @@ describe User do
       end
     end
 
-    describe "#webauthns" do
-      it "only includes enabled webauthn 2FA" do
-        enabled_webauthn_2fa = Fabricate(:user_second_factor_webauthn, user: user, name: 'Enabled YubiKey', enabled: true)
-        disabled_webauthn_2fa = Fabricate(:user_second_factor_webauthn, user: user, name: 'Disabled YubiKey', enabled: false)
+    describe "#security_keys" do
+      it "only includes enabled security_key 2FA" do
+        enabled_security_key_2fa = Fabricate(:user_security_key, user: user, name: 'Enabled YubiKey', enabled: true)
+        disabled_security_key_2fa = Fabricate(:user_security_key, user: user, name: 'Disabled YubiKey', enabled: false)
 
-        expect(user.webauthns.map(&:id)).to eq([enabled_webauthn_2fa.id])
+        expect(user.security_keys.map(&:id)).to eq([enabled_security_key_2fa.id])
       end
     end
   end

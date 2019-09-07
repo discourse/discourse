@@ -989,10 +989,17 @@ en:
         edit: "Edit"
         edit_title: "Edit Second Factor"
         edit_description: "Second Factor Name"
+        enable_security_key_description: "When you have your physical security key prepared press the Register button below."
         totp:
           title: "Token-Based Authenticators"
           add: "New Authenticator"
           default_name: "My Authenticator"
+        security_key:
+          register: "Register"
+          title: 'Security Keys'
+          add: "Register Security Key"
+          default_name: "Main Security Key"
+          not_allowed_error: "The security key registration process either timed out or was cancelled."
 
       change_about:
         title: "Change About Me"

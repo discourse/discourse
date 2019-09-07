@@ -7,13 +7,6 @@ Fabricator(:user_second_factor_totp, from: :user_second_factor) do
   method UserSecondFactor.methods[:totp]
 end
 
-Fabricator(:user_second_factor_webauthn, from: :user_second_factor) do
-  user
-  data 'TODO (martin) - fill this in with a good approximation'
-  enabled true
-  method UserSecondFactor.methods[:webauthn]
-end
-
 Fabricator(:user_second_factor_backup, from: :user_second_factor) do
   user
   # backup code: iAmValidBackupCode

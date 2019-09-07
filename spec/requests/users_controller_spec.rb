@@ -3595,16 +3595,16 @@ describe UsersController do
         context 'when the password is correct' do
           let(:password) { '8555039dd212cc66ec68' }
 
-          it 'returns a list of enabled totps and webauthn second factors' do
+          it 'returns a list of enabled totps and security_key second factors' do
             totp_second_factor = Fabricate(:user_second_factor_totp, user: user)
-            webauthn_second_factor = Fabricate(:user_second_factor_webauthn, user: user)
+            security_key_second_factor = Fabricate(:user_security_key, user: user, factor_type: UserSecurityKey.factor_types[:second_factor])
 
             post "/u/second_factors.json", params: { password: password }
 
             expect(response.status).to eq(200)
             response_body = JSON.parse(response.body)
             expect(response_body['totps'].map { |second_factor| second_factor['id'] }).to include(totp_second_factor.id)
-            expect(response_body['webauthns'].map { |second_factor| second_factor['id'] }).to include(webauthn_second_factor.id)
+            expect(response_body['security_keys'].map { |second_factor| second_factor['id'] }).to include(security_key_second_factor.id)
           end
         end
 
