@@ -36,7 +36,7 @@ createWidgetFrom(QuickAccessPanel, "quick-access-bookmarks", {
       // The empty state help text for bookmarks page is localized on the
       // server.
       this.state.emptyStatePlaceholderItemText = no_results_help;
-      return user_actions.slice(0, this.estimateItemLimit());
+      return user_actions;
     });
   },
 
