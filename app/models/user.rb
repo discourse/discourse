@@ -1267,6 +1267,13 @@ class User < ActiveRecord::Base
     SQL
   end
 
+  def create_or_fetch_secure_identifier
+    return secure_identifier if secure_identifier.present?
+    new_secure_identifier = SecureRandom.hex(20)
+    self.update(secure_identifier: new_secure_identifier)
+    new_secure_identifier
+  end
+
   protected
 
   def badge_grant

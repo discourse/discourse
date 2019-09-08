@@ -1165,7 +1165,8 @@ class UsersController < ApplicationController
       challenge: challenge,
       rp_id: Discourse.current_hostname,
       rp_name: SiteSetting.title,
-      supported_algoriths: ::Webauthn::SUPPORTED_ALGORITHMS
+      supported_algoriths: ::Webauthn::SUPPORTED_ALGORITHMS,
+      user_secure_id: current_user.create_or_fetch_secure_identifier
     )
   end
 

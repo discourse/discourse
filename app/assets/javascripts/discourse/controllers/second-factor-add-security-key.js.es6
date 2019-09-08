@@ -7,11 +7,6 @@ export default Ember.Controller.extend(ModalFunctionality, {
   errorMessage: null,
 
   onShow() {
-    // TODO (martin) - this is where we will fetch the security key (webauthn)
-    //                 challenge from the server; either this or
-    //                 we will show the user a UI first and they
-    //                 click a "set up" button or something
-
     // clear properties every time because the controller is a singleton
     this.setProperties({
       errorMessage: null,
@@ -35,7 +30,8 @@ export default Ember.Controller.extend(ModalFunctionality, {
             id: response.rp_id,
             name: response.rp_name
           },
-          supported_algoriths: response.supported_algoriths
+          supported_algoriths: response.supported_algoriths,
+          user_secure_id: response.user_secure_id
         });
       })
       .catch(error => {
@@ -56,7 +52,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
         },
         user: {
           id: Uint8Array.from(
-            this.model.id, c => c.charCodeAt(0)),
+            this.get('user_secure_id'), c => c.charCodeAt(0)),
           displayName: this.model.username_lower,
           name: this.model.username_lower
         },
