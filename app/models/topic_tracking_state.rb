@@ -357,7 +357,7 @@ SQL
     if topic&.private_message?
       groups = read_allowed_groups_of(topic)
       post = Post.find_by(topic_id: topic.id, post_number: last_read_post_number)
-      trigger_post_read_count_update(post, groups)
+      trigger_post_read_count_update(post, groups, last_read_post_number, user_id)
       update_topic_list_read_indicator(topic, groups, last_read_post_number, user_id, false)
     end
   end
@@ -389,8 +389,9 @@ SQL
     MessageBus.publish("/private-messages/unread-indicator/#{topic.id}", message, user_ids: groups_to_update.flat_map(&:members))
   end
 
-  def self.trigger_post_read_count_update(post, groups)
+  def self.trigger_post_read_count_update(post, groups, last_read_post_number, user_id)
     return if groups.empty?
-    post.publish_change_to_clients!(:read)
+    opts = { readers_count: post.readers_count, reader_id: user_id }
+    post.publish_change_to_clients!(:read, opts)
   end
 end
