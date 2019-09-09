@@ -196,10 +196,10 @@ div.lightbox-wrapper {
       }
     }
 
-    .topic-details-flex {
+    .topic-column-wrapper {
       display: flex;
 
-      .topic-details-column-1 {
+      .topic-column.details-column {
         flex-direction: column;
         width: 80%;
 
@@ -225,7 +225,7 @@ div.lightbox-wrapper {
         }
       }
 
-      .topic-details-column-2 {
+      .topic-column.featured-image-column {
         .topic-featured-image img {
           max-width: 200px;
           max-height: 100px;
