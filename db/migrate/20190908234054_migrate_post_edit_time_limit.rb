@@ -19,8 +19,6 @@ class MigratePostEditTimeLimit < ActiveRecord::Migration[5.2]
       FROM site_settings
       WHERE
         name = 'post_edit_time_limit'
-      AND
-        CAST(value AS INTEGER) > 43200
     ON CONFLICT
     DO NOTHING
     SQL
