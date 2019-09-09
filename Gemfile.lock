@@ -139,7 +139,6 @@ GEM
     hashdiff (0.3.9)
     hashie (3.6.0)
     highline (1.7.10)
-    hiredis (0.6.3)
     hkdf (0.3.0)
     htmlentities (4.3.4)
     http_accept_language (2.0.5)
@@ -305,7 +304,7 @@ GEM
       msgpack (>= 0.4.3)
       optimist (>= 3.0.0)
     rchardet (1.8.0)
-    redis (4.0.1)
+    redis (4.1.2)
     redis-namespace (1.6.0)
       redis (>= 3.0.4)
     request_store (1.4.1)
@@ -458,7 +457,6 @@ DEPENDENCIES
   flamegraph
   gc_tracer
   highline (~> 1.7.0)
-  hiredis
   htmlentities
   http_accept_language (~> 2.0.5)
   listen
@@ -508,7 +506,7 @@ DEPENDENCIES
   rb-inotify (~> 0.9)
   rbtrace
   rchardet
-  redis (= 4.0.1)
+  redis (= 4.1.2)
   redis-namespace
   rinku
   rotp
