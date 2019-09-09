@@ -13,6 +13,9 @@ class DiscourseRedis
     CONNECTION_TYPES = %w{normal pubsub}.each(&:freeze)
 
     def initialize(master_config, slave_config)
+      master_config = master_config.dup.freeze unless master_config.frozen?
+      slave_config = slave_config.dup.freeze unless slave_config.frozen?
+
       @master_config = master_config
       @slave_config = slave_config
     end
@@ -199,6 +202,8 @@ class DiscourseRedis
     end
 
     def handler_for(config)
+      config = config.dup.freeze unless config.frozen?
+
       @mutex.synchronize do
         @fallback_handlers[[config[:host], config[:port]]] ||= begin
           log_prefix = "FallbackHandler #{config[:host]}:#{config[:port]}"
@@ -232,8 +237,10 @@ class DiscourseRedis
 
   class Connector < Redis::Client::Connector
     def initialize(options)
+      options = options.dup.freeze unless options.frozen?
+
       super(options)
-      @slave_options = DiscourseRedis.slave_config(options)
+      @slave_options = DiscourseRedis.slave_config(options).freeze
       @fallback_handler = DiscourseRedis::FallbackHandlers.handler_for(options)
     end
 
