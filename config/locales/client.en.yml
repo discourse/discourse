@@ -1726,7 +1726,6 @@ en:
       title: "notifications of @name mentions, replies to your posts and topics, messages, etc"
       none: "Unable to load notifications at this time."
       empty: "No notifications found."
-      more: "view older notifications"
       post_approved: "Your post was approved"
       reviewable_items: "items requiring review"
       mentioned: "<span>{{username}}</span> {{description}}"
@@ -1892,6 +1891,7 @@ en:
     go_back: "go back"
     not_logged_in_user: "user page with summary of current activity and preferences"
     current_user: "go to your user page"
+    view_all: "view all"
 
     topics:
       new_messages_marker: "last visit"
