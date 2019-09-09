@@ -74,3 +74,23 @@
     }
   }
 }
+
+// TMP: RTL overrides
+.rtl {
+  span.presence-text {
+    margin-left: 2px;
+    margin-right: 5px;
+  }
+
+  .composer-fields .presence-users {
+    right: unset;
+    left: 95px;
+  }
+
+  &.mobile-view {
+    .composer-fields .presence-users {
+      right: unset;
+      left: 65px;
+    }
+  }
+}
