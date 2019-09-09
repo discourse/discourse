@@ -1,6 +1,6 @@
-import { h } from "virtual-dom";
-
+import Session from "discourse/models/session";
 import { createWidget } from "discourse/widgets/widget";
+import { h } from "virtual-dom";
 import { headerHeight } from "discourse/components/site-header";
 
 const AVERAGE_ITEM_HEIGHT = 55;
@@ -134,10 +134,10 @@ export default createWidget("quick-access-panel", {
   },
 
   getItems() {
-    return Discourse.Session.currentProp(`${this.key}-items`) || [];
+    return Session.currentProp(`${this.key}-items`) || [];
   },
 
   setItems(newItems) {
-    Discourse.Session.currentProp(`${this.key}-items`, newItems);
+    Session.currentProp(`${this.key}-items`, newItems);
   }
 });
