@@ -1,15 +1,17 @@
 # frozen_string_literal: true
 
 module Webauthn
-  class InvalidOriginError < StandardError; end
-  class InvalidRelyingPartyIdError < StandardError; end
-  class UserVerificationError < StandardError; end
-  class ChallengeMismatchError < StandardError; end
-  class InvalidTypeError < StandardError; end
-  class UnsupportedPublicKeyAlgorithmError < StandardError; end
-  class UnsupportedAttestationFormatError < StandardError; end
-  class CredentialIdInUseError < StandardError; end
-  class MalformedAttestationError < StandardError; end
+  class RegistrationError < StandardError; end
+
+  class InvalidOriginError < RegistrationError; end
+  class InvalidRelyingPartyIdError < RegistrationError; end
+  class UserVerificationError < RegistrationError; end
+  class ChallengeMismatchError < RegistrationError; end
+  class InvalidTypeError < RegistrationError; end
+  class UnsupportedPublicKeyAlgorithmError < RegistrationError; end
+  class UnsupportedAttestationFormatError < RegistrationError; end
+  class CredentialIdInUseError < RegistrationError; end
+  class MalformedAttestationError < RegistrationError; end
 
   class SecurityKeyRegistrationService
     def initialize(current_user, params, challenge_params)
@@ -34,6 +36,7 @@ module Webauthn
       # 7. Verify that the value of C.tokenBinding.status matches the state of Token Binding for the TLS
       #    connection over which the assertion was obtained. If Token Binding was used on that TLS connection,
       #    also verify that C.tokenBinding.id matches the base64url encoding of the Token Binding ID for the connection.
+      #    Not using this right now.
 
       # 8. Let hash be the result of computing a hash over response.clientDataJSON using SHA-256.
       hash = OpenSSL::Digest::SHA256.digest(client_data_json)
@@ -58,10 +61,11 @@ module Webauthn
       flags = attestation['authData'][32].unpack("b*")[0].split('')
       raise(UserVerificationError, I18n.t('webauthn.registration.user_verification_error')) if flags[0] != '1'
 
-      # 13. Verify that the "alg" parameter in the credential public key in authData matches the alg attribute of one of the items in options.pubKeyCredParams.
-      # https://w3c.github.io/webauthn/#table-attestedCredentialData
-      # See https://www.iana.org/assignments/cose/cose.xhtml#algorithms for supported algorithm
-      # codes, -7 which discourse uses is ECDSA w/ SHA-256
+      # 13. Verify that the "alg" parameter in the credential public key in authData matches the alg
+      #     attribute of one of the items in options.pubKeyCredParams.
+      #     https://w3c.github.io/webauthn/#table-attestedCredentialData
+      #     See https://www.iana.org/assignments/cose/cose.xhtml#algorithms for supported algorithm
+      #     codes, -7 which Discourse uses is ECDSA w/ SHA-256
       credential_public_key, credential_public_key_bytes, credential_id = extract_public_key_and_credential_from_attestation(attestation['authData'])
       raise(UnsupportedPublicKeyAlgorithmError, I18n.t('webauthn.registration.unsupported_public_key_algorithm_error')) if ::Webauthn::SUPPORTED_ALGORITHMS.exclude?(credential_public_key.alg)
 
@@ -92,23 +96,23 @@ module Webauthn
       #     ECDAA-Issuer public keys) for that attestation type and attestation statement format fmt, from a trusted
       #     source or from policy. For example, the FIDO Metadata Service [FIDOMetadataService] provides one way
       #     to obtain such information, using the aaguid in the attestedCredentialData in authData.
-      # ignore for none
       #
       # 18. Assess the attestation trustworthiness using the outputs of the verification procedure in step 16, as follows:
-      #     If no attestation was provided, verify that None attestation is acceptable under Relying Party policy.\
-      # ignore for none
+      #     If no attestation was provided, verify that None attestation is acceptable under Relying Party policy.
       #==================================================
 
-      # 19. Check that the credentialId is not yet registered to any other user. If registration is requested for a
-      #     credential that is already registered to a different user, the Relying Party SHOULD fail this registration ceremony,
-      #     or it MAY decide to accept the registration, e.g. while deleting the older registration.
+      # 19. Check that the credentialId is not yet registered to any other user. If registration
+      #     is requested for a credential that is already registered to a different user,
+      #     the Relying Party SHOULD fail this registration ceremony, or it MAY decide to accept
+      #     the registration, e.g. while deleting the older registration.
       encoded_credential_id = Base64.encode64(credential_id)
       endcoded_public_key = Base64.encode64(credential_public_key_bytes)
       raise(CredentialIdInUseError, I18n.t('webauthn.registration.credential_id_in_use_error')) if UserSecurityKey.exists?(credential_id: encoded_credential_id)
 
-      # 20. If the attestation statement attStmt verified successfully and is found to be trustworthy, then register
-      #     the new credential with the account that was denoted in options.user, by associating it with the credentialId
-      #     and credentialPublicKey in the attestedCredentialData in authData, as appropriate for the Relying Party's system.
+      # 20. If the attestation statement attStmt verified successfully and is found to be trustworthy,
+      #     then register the new credential with the account that was denoted in options.user, by
+      #     associating it with the credentialId and credentialPublicKey in the attestedCredentialData
+      #     in authData, as appropriate for the Relying Party's system.
       UserSecurityKey.create(
         user: @current_user,
         credential_id: encoded_credential_id,
@@ -128,7 +132,8 @@ module Webauthn
       @client_data_json ||= Base64.decode64(@params[:clientData])
     end
 
-    # 3. Let C, the client data claimed as collected during the credential creation, be the result of running an implementation-specific JSON parser on JSONtext.
+    # 3. Let C, the client data claimed as collected during the credential creation, be the result of running
+    # an implementation-specific JSON parser on JSONtext.
     def client_data
       @client_data ||= JSON.parse(client_data_json)
     end
@@ -169,7 +174,9 @@ module Webauthn
       credential_id = attested_credential_data[18..(18 + credential_id_length)]
 
       public_key_start_position = 18 + credential_id_length
-      public_key_bytes = attested_credential_data[public_key_start_position..(public_key_start_position + attested_credential_data.size - 1)]
+      public_key_bytes = attested_credential_data[
+        public_key_start_position..(public_key_start_position + attested_credential_data.size - 1)
+      ]
       public_key = COSE::Key.deserialize(public_key_bytes)
 
       [public_key, public_key_bytes, credential_id]

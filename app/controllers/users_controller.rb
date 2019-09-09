@@ -1171,6 +1171,10 @@ class UsersController < ApplicationController
   end
 
   def register_second_factor_security_key
+    params.require(:name)
+    params.require(:attestation)
+    params.require(:clientData)
+
     ::Webauthn::SecurityKeyRegistrationService.new(
       current_user,
       params,
@@ -1180,14 +1184,24 @@ class UsersController < ApplicationController
       origin: Discourse.base_url
     ).register_second_factor_security_key
     render json: success_json
-  rescue ::Webauthn::InvalidOriginError, ::Webauthn::InvalidRelyingPartyIdError,
-         ::Webauthn::UserVerificationError, ::Webauthn::ChallengeMismatchError,
-         ::Webauthn::InvalidTypeError, ::Webauthn::UnsupportedPublicKeyAlgorithmError,
-         ::Webauthn::UnsupportedAttestationFormatError,
-         ::Webauthn::CredentialIdInUseError, ::Webauthn::MalformedAttestationError
+  rescue ::Webauthn::RegistrationError => err
     render json: failed_json.merge(
       error: err.message
     )
+  end
+
+  def update_security_key
+    user_security_key = current_user.security_keys.find_by(id: params[:id].to_i)
+    raise Discourse::InvalidParameters unless user_security_key
+
+    if params[:name] && !params[:name].blank?
+      user_security_key.update!(name: params[:name])
+    end
+    if params[:disable] == "true"
+      user_security_key.update!(enabled: false)
+    end
+
+    render json: success_json
   end
 
   def enable_second_factor_totp

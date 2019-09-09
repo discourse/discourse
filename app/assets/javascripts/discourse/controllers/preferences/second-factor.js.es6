@@ -149,12 +149,24 @@ export default Ember.Controller.extend(CanCheckEmails, {
     },
 
     createSecurityKey() {
-      // TODO (martin) - implement this modal show code
       const controller = showModal("second-factor-add-security-key", {
         model: this.model,
         title: "user.second_factor.security_key.add"
       });
       controller.setProperties({
+        onClose: () => this.loadSecondFactors(),
+        markDirty: () => this.markDirty(),
+        onError: e => this.handleError(e)
+      });
+    },
+
+    editSecurityKey(security_key) {
+      const controller = showModal("second-factor-edit-security-key", {
+        model: security_key,
+        title: "user.second_factor.security_key.edit"
+      });
+      controller.setProperties({
+        user: this.model,
         onClose: () => this.loadSecondFactors(),
         markDirty: () => this.markDirty(),
         onError: e => this.handleError(e)

@@ -73,11 +73,15 @@ export default Ember.Controller.extend(ModalFunctionality, {
           name: this.get('securityKeyName')
         };
 
-        this.model.registerSecurityKey(serverData).then(() => {
+        this.model.registerSecurityKey(serverData).then(response => {
+          if (response.error) {
+            this.set("errorMessage", response.error);
+            return;
+          }
           this.markDirty();
           this.set("errorMessage", null);
           this.send("closeModal");
-        });
+        }).catch(error => this.onError(error)).finally(() => this.set("loading", false));;
       }, (err) => {
         if (err.name === 'NotAllowedError') {
           return this.set("errorMessage", I18n.t('user.second_factor.security_key.not_allowed_error'));

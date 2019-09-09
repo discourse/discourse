@@ -428,6 +428,17 @@ const User = RestModel.extend({
     });
   },
 
+  updateSecurityKey(id, name, disable) {
+    return ajax("/u/security_key.json", {
+      data: {
+        name,
+        disable,
+        id
+      },
+      type: "PUT"
+    });
+  },
+
   toggleSecondFactor(authToken, authMethod, targetMethod, enable) {
     return ajax("/u/second_factor.json", {
       data: {

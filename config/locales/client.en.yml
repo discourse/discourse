@@ -1000,6 +1000,9 @@ en:
           add: "Register Security Key"
           default_name: "Main Security Key"
           not_allowed_error: "The security key registration process either timed out or was cancelled."
+          edit: 'Edit Security Key'
+          edit_description: 'Security Key Name'
+          disable: 'Disable'
 
       change_about:
         title: "Change About Me"
