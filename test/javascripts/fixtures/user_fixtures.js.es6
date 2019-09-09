@@ -302,7 +302,7 @@ export default {
         acting_username: "Abhishek_Gupta",
         acting_name: "Abhishek Gupta",
         acting_user_id: 8021,
-        title: "How to check the user level via ajax?",
+        title: "How to check the user level via ajax? :/",
         deleted: false,
         hidden: false,
         moderator_action: false,

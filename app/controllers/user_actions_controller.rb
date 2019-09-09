@@ -4,19 +4,20 @@ class UserActionsController < ApplicationController
 
   def index
     params.require(:username)
-    params.permit(:filter, :offset, :acting_username)
+    params.permit(:filter, :offset, :acting_username, :limit)
 
     user = fetch_user_from_params(include_inactive: current_user.try(:staff?) || (current_user && SiteSetting.show_inactive_accounts))
     raise Discourse::NotFound unless guardian.can_see_profile?(user)
 
     offset = [0, params[:offset].to_i].max
     action_types = (params[:filter] || "").split(",").map(&:to_i)
+    limit = params.fetch(:limit, 30).to_i
 
     opts = {
       user_id: user.id,
       user: user,
       offset: offset,
-      limit: 30,
+      limit: limit,
       action_types: action_types,
       guardian: guardian,
       ignore_private_messages: params[:filter] ? false : true,
