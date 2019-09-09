@@ -459,13 +459,6 @@ class PostSerializer < BasicPostSerializer
     can_review_topic?
   end
 
-  def readers_count
-    read_count = object.reads - 1 # Exclude logged user
-    read_count -= 1 unless yours
-
-    read_count < 0 ? 0 : read_count
-  end
-
 private
 
   def can_review_topic?

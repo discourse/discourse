@@ -12,7 +12,7 @@ class PostReadersController < ApplicationController
       .joins(:topic_users)
       .where.not(topic_users: { last_read_post_number: nil })
       .where('topic_users.topic_id = ? AND topic_users.last_read_post_number >= ?', post.topic_id, post.post_number)
-      .where.not(id: [current_user.id, post.user_id])
+      .where.not(id: post.user_id)
 
     readers = readers.map do |r|
       {
