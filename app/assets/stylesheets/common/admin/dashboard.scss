@@ -626,7 +626,8 @@
       flex: 1 0 auto;
       white-space: nowrap;
     }
-    h4, .sha-link {
+    h4,
+    .sha-link {
       font-size: $font-down-2;
       margin-bottom: 0;
     }
