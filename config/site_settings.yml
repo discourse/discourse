@@ -859,6 +859,7 @@ posting:
     choices:
       - 4-spaces-indent
       - code-fences
+  embed_any_origin: false
   embed_topics_list: false
   embed_truncate:
     default: true
