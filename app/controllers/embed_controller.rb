@@ -8,7 +8,7 @@ class EmbedController < ApplicationController
   skip_before_action :check_xhr, :preload_json, :verify_authenticity_token
 
   before_action :ensure_embeddable, except: [ :info, :topics ]
-  before_action :get_embeddable_css_class, except: [ :info, :topics ]
+  before_action :prepare_embeddable, except: [ :info ]
   before_action :ensure_api_request, only: [ :info ]
 
   layout 'embed'
@@ -123,10 +123,13 @@ class EmbedController < ApplicationController
 
   private
 
-  def get_embeddable_css_class
+  def prepare_embeddable
     @embeddable_css_class = ""
     embeddable_host = EmbeddableHost.record_for_url(request.referer)
     @embeddable_css_class = " class=\"#{embeddable_host.class_name}\"" if embeddable_host.present? && embeddable_host.class_name.present?
+
+    @data_referer = request.referer
+    @data_referer = '*' if SiteSetting.embed_any_origin? && @data_referer.blank?
   end
 
   def ensure_api_request
