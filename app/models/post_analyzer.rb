@@ -9,10 +9,11 @@ class PostAnalyzer
     @raw = raw
     @topic_id = topic_id
     @onebox_urls = []
+    @found_oneboxes = false
   end
 
   def found_oneboxes?
-    @onebox_urls.present?
+    @found_oneboxes
   end
 
   def has_oneboxes?
@@ -36,7 +37,9 @@ class PostAnalyzer
     result = Oneboxer.apply(cooked) do |url|
       @onebox_urls << url
       Oneboxer.invalidate(url) if opts[:invalidate_oneboxes]
-      Oneboxer.cached_onebox(url)
+      onebox = Oneboxer.cached_onebox(url)
+      @found_oneboxes = true if onebox.present?
+      onebox
     end
 
     cooked = result.to_html if result.changed?
@@ -126,7 +129,7 @@ class PostAnalyzer
 
   # How many links are present in the post
   def link_count
-    raw_links.size
+    raw_links.size + @onebox_urls.size
   end
 
   def cooked_stripped

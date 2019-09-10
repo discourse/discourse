@@ -268,6 +268,7 @@ describe DiscourseNarrativeBot::NewUserNarrative do
 
     describe 'onebox tutorial' do
       before do
+        Oneboxer.stubs(:cached_onebox).with('https://en.wikipedia.org/wiki/ROT13').returns('oneboxed Wikipedia')
         narrative.set_data(user, state: :tutorial_onebox, topic_id: topic.id)
       end
 
