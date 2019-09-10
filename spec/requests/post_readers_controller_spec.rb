@@ -66,6 +66,16 @@ describe PostReadersController do
 
         expect(readers).to be_empty
       end
+
+      it "doesn't include staged users" do
+        TopicUser.create!(user: reader, topic: @group_message, last_read_post_number: 4)
+        reader.update(staged: true)
+
+        get '/post_readers.json', params: { id: @post.id }
+        readers = JSON.parse(response.body)['post_readers']
+
+        expect(readers).to be_empty
+      end
     end
 
     def assert_reader_is_correctly_serialized(reader_data, reader, post)
