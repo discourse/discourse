@@ -23,7 +23,22 @@ describe Jobs::AutomaticGroupMembership do
 
     group = Fabricate(:group, automatic_membership_email_domains: "wat.com", automatic_membership_retroactive: true)
 
-    Jobs::AutomaticGroupMembership.new.execute(group_id: group.id)
+    begin
+      automatic = nil
+      called = false
+
+      DiscourseEvent.on(:user_added_to_group) do |_u, _g, options|
+        automatic = options[:automatic]
+        called = true
+      end
+
+      Jobs::AutomaticGroupMembership.new.execute(group_id: group.id)
+
+      expect(automatic).to eql(true)
+      expect(called).to eq(true)
+    ensure
+      DiscourseEvent.off(:user_added_to_group)
+    end
 
     group.reload
     expect(group.users.include?(user1)).to eq(false)

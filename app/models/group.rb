@@ -613,7 +613,7 @@ class Group < ActiveRecord::Base
 
   PUBLISH_CATEGORIES_LIMIT = 10
 
-  def add(user, notify: false)
+  def add(user, notify: false, automatic: false)
     self.users.push(user) unless self.users.include?(user)
 
     if notify
@@ -635,12 +635,15 @@ class Group < ActiveRecord::Base
       Discourse.request_refresh!(user_ids: [user.id])
     end
 
+    DiscourseEvent.trigger(:user_added_to_group, user, self, automatic: automatic)
+
     self
   end
 
   def remove(user)
     self.group_users.where(user: user).each(&:destroy)
     user.update_columns(primary_group_id: nil) if user.primary_group_id == self.id
+    DiscourseEvent.trigger(:user_removed_from_group, user, self)
   end
 
   def add_owner(user)
