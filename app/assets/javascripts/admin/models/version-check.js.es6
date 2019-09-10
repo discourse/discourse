@@ -19,16 +19,18 @@ const VersionCheck = Discourse.Model.extend({
 
   @computed("git_branch", "installed_sha")
   gitLink(gitBranch, installedSHA) {
-    if (gitBranch) {
+    if (gitBranch && installedSHA) {
       return `https://github.com/discourse/discourse/compare/${installedSHA}...${gitBranch}`;
-    } else {
+    } else if (installedSHA) {
       return `https://github.com/discourse/discourse/tree/${installedSHA}`;
     }
   },
 
   @computed("installed_sha")
   shortSha(installedSHA) {
-    return installedSHA.substr(0, 10);
+    if (installedSHA) {
+      return installedSHA.substr(0, 10);
+    }
   }
 });
 
