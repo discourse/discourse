@@ -613,7 +613,7 @@ class Group < ActiveRecord::Base
 
   PUBLISH_CATEGORIES_LIMIT = 10
 
-  def add(user, notify: false)
+  def add(user, notify: false, automatic: false)
     self.users.push(user) unless self.users.include?(user)
 
     if notify
@@ -635,7 +635,7 @@ class Group < ActiveRecord::Base
       Discourse.request_refresh!(user_ids: [user.id])
     end
 
-    DiscourseEvent.trigger(:user_added_to_group, user, self)
+    DiscourseEvent.trigger(:user_added_to_group, user, self, automatic: automatic)
 
     self
   end

@@ -845,8 +845,22 @@ describe Group do
     end
 
     it 'triggers a user_added_to_group event' do
-      events = DiscourseEvent.track_events { group.add(user) }.map { |e| e[:event_name] }
-      expect(events).to include(:user_added_to_group)
+      begin
+        automatic = nil
+        called = false
+
+        DiscourseEvent.on(:user_added_to_group) do |_u, _g, options|
+          automatic = options[:automatic]
+          called = true
+        end
+
+        group.add(user)
+
+        expect(automatic).to eql(false)
+        expect(called).to eq(true)
+      ensure
+        DiscourseEvent.off(:user_added_to_group)
+      end
     end
 
     context 'when adding a user into a public group' do
