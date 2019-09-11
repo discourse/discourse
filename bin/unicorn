@@ -50,10 +50,9 @@ if ARGV.include?("--help")
   exit
 end
 
-# this dev_mode hackery enables, the following script to be used to restart unicorn:
+# this dev_mode hackery enables, the following to be used to restart unicorn:
 #
-# #!/usr/bin/env bash
-# kill -s USR2 `ps aux | grep ruby\ bin\/unicorn | grep -v grep | awk '{print $2}'`
+# pkill -USR2 -f 'ruby bin/unicorn'
 #
 # This is handy if you want to bind a key to restarting unicorn in dev
 
