@@ -217,7 +217,10 @@ export default Ember.Controller.extend(ModalFunctionality, {
       // On Mobile, Android or iOS always go with full screen
       if (
         this.isMobileDevice ||
-        (capabilities && (capabilities.isIOS || capabilities.isAndroid))
+        (capabilities &&
+          (capabilities.isIOS ||
+            capabilities.isAndroid ||
+            capabilities.isSafari))
       ) {
         fullScreenLogin = true;
       }
