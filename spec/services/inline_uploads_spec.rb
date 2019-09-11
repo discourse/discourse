@@ -217,12 +217,15 @@ RSpec.describe InlineUploads do
         end
 
         it "should correct subfolder images" do
-
           md = <<~MD
             <img src="/community#{upload.url}">
+
+            #{Discourse.base_url}#{upload.url}
           MD
 
           expect(InlineUploads.process(md)).to eq(<<~MD)
+            ![](#{upload.short_url})
+
             ![](#{upload.short_url})
           MD
         end

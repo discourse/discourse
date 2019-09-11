@@ -284,7 +284,10 @@ class InlineUploads
 
     if cdn_url
       regexps << /(#{cdn_url}\/uploads\/#{db}#{UPLOAD_REGEXP_PATTERN})/
-      regexps << /(#{cdn_url}#{GlobalSetting.relative_url_root}\/uploads\/#{db}#{UPLOAD_REGEXP_PATTERN})/ unless GlobalSetting.relative_url_root.nil?
+      if GlobalSetting.relative_url_root.present?
+        regexps << /(#{cdn_url}#{GlobalSetting.relative_url_root}\/uploads\/#{db}#{UPLOAD_REGEXP_PATTERN})/
+
+      end
     end
 
     if Discourse.store.external?
