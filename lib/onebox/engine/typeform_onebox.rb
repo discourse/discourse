@@ -5,7 +5,7 @@ module Onebox
     class TypeformOnebox
       include Engine
 
-      matches_regexp(/^https?:\/\/[a-z0-9]+\.typeform\.com\/to\/[a-zA-Z0-9]+/)
+      matches_regexp(/^https?:\/\/[a-z0-9\-_]+\.typeform\.com\/to\/[a-zA-Z0-9]+/)
       always_https
 
       def to_html
