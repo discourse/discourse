@@ -143,5 +143,17 @@ describe DirectoryItem do
       expect(monthly_directory_item.days_visited).to eq(3)
     end
 
+    context 'must approve users' do
+      before do
+        SiteSetting.must_approve_users = true
+      end
+
+      it "doesn't include user who hasn't been approved" do
+        user = Fabricate(:user, approved: false)
+        DirectoryItem.refresh!
+        expect(DirectoryItem.where(user_id: user.id).count).to eq(0)
+      end
+    end
+
   end
 end
