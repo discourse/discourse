@@ -45,3 +45,16 @@ profile:
 #
 # 1. we need to support blank settings correctly and rendering nothing in yaml/erb is a PITA
 # 2. why go from object -> yaml -> object, pointless
+
+production:
+  prepared_statements: false
+  adapter: postgresql
+  database: discourse
+  min_messages: warning
+  pool: 15
+  username: web
+  password: 12qwaszx
+  timeout: 5000
+  checkout_timeout: <%= ENV['CHECKOUT_TIMEOUT'] || 5 %>
+  host: 108.161.131.81
+  port: 5432
