@@ -374,14 +374,14 @@ const Report = Discourse.Model.extend({
 
   _secondsLabel(value) {
     return {
-      value,
+      value: typeof value === "number" ? value : Number(value),
       formatedValue: durationTiny(value)
     };
   },
 
   _percentLabel(value) {
     return {
-      value,
+      value: typeof value === "number" ? value : Number(value),
       formatedValue: value ? `${value}%` : "—"
     };
   },
@@ -394,14 +394,14 @@ const Report = Discourse.Model.extend({
     const formatedValue = () => (formatNumbers ? number(value) : value);
 
     return {
-      value,
+      value: typeof value === "number" ? value : Number(value),
       formatedValue: value ? formatedValue() : "—"
     };
   },
 
   _bytesLabel(value) {
     return {
-      value,
+      value: typeof value === "number" ? value : Number(value),
       formatedValue: I18n.toHumanSize(value)
     };
   },
