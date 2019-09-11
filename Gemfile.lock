@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    onebox (1.9.12)
+    onebox (1.9.13)
       htmlentities (~> 4.3)
       moneta (~> 1.0)
       multi_json (~> 1.11)
