@@ -54,7 +54,7 @@
 {{/d-section}}
 
 <section class='user-content user-preferences'>
-  {{plugin-outlet name="above-user-preferences"}}
+  {{plugin-outlet name="above-user-preferences" args=(hash model=model)}}
 
   <form class="form-vertical">
     {{outlet}}
