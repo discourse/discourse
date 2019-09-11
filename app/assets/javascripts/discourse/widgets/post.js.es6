@@ -14,7 +14,7 @@ import {
   formatUsername
 } from "discourse/lib/utilities";
 import hbs from "discourse/widgets/hbs-compiler";
-import { durationTiny } from "discourse/lib/formatter";
+import { relativeAgeMediumSpan } from "discourse/lib/formatter";
 import { prioritizeNameInUx } from "discourse/lib/settings";
 
 function transformWithCallbacks(post) {
@@ -472,7 +472,7 @@ createWidget("post-notice", {
         "p",
         I18n.t("post.notice.returning_user", {
           user,
-          time: durationTiny(distance, { addAgo: true })
+          time: relativeAgeMediumSpan(distance, true)
         })
       );
     }
