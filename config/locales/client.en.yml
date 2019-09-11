@@ -384,6 +384,9 @@ en:
         total: "Total"
         min_score_visibility: "Minimum Score for Visibility"
         score_to_hide: "Score to Hide Post"
+        take_action_bonus:
+          name: 'took action'
+          title: 'When a staff member chooses to take action the flag is given a bonus.'
         user_accuracy_bonus:
           name: "user accuracy"
           title: "Users whose flags have been historically agreed with are given a bonus."
