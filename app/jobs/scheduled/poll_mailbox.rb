@@ -34,7 +34,7 @@ module Jobs
 
       if SiteSetting.pop3_polling_ssl
         if SiteSetting.pop3_polling_openssl_verify
-          pop3.enable_ssl
+          pop3.enable_ssl(max_version: OpenSSL::SSL::TLS1_2_VERSION)
         else
           pop3.enable_ssl(OpenSSL::SSL::VERIFY_NONE)
         end
