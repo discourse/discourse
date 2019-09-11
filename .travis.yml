@@ -43,7 +43,6 @@ sudo: required
 dist: trusty
 
 cache:
-  apt: true
   yarn: true
   directories:
     - vendor/bundle
