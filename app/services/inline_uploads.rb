@@ -282,7 +282,10 @@ class InlineUploads
       /(#{base_url}\/uploads\/#{db}#{UPLOAD_REGEXP_PATTERN})/,
     ]
 
-    regexps << /(#{cdn_url}\/uploads\/#{db}#{UPLOAD_REGEXP_PATTERN})/ if cdn_url
+    if cdn_url
+      regexps << /(#{cdn_url}\/uploads\/#{db}#{UPLOAD_REGEXP_PATTERN})/
+      regexps << /(#{cdn_url}#{GlobalSetting.relative_url_root}\/uploads\/#{db}#{UPLOAD_REGEXP_PATTERN})/ unless GlobalSetting.relative_url_root.nil?
+    end
 
     if Discourse.store.external?
       if Rails.configuration.multisite
