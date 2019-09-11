@@ -4,6 +4,8 @@ require_dependency 'distributed_mutex'
 require_dependency 'user_action_manager'
 
 class PostAlerter
+  @mutex = Mutex.new
+
   def self.post_created(post, opts = {})
     PostAlerter.new(opts).after_save_post(post, true)
     post
@@ -195,9 +197,22 @@ class PostAlerter
     end
   end
 
-  NOTIFIABLE_TYPES = [:mentioned, :replied, :quoted, :posted, :linked, :private_message, :group_mentioned, :watching_first_post].map { |t|
-    Notification.types[t]
-  }
+  def self.notifiable_types
+    return @notifiable_types if @notifiable_types
+
+    @mutex.synchronize {
+      @notifiable_types ||= [
+        :mentioned,
+        :replied,
+        :quoted,
+        :posted,
+        :linked,
+        :private_message,
+        :group_mentioned,
+        :watching_first_post
+      ].map { |t| Notification.types[t] }
+    }
+  end
 
   def group_stats(topic)
     sql = <<~SQL
@@ -269,11 +284,17 @@ class PostAlerter
     end
   end
 
-  COLLAPSED_NOTIFICATION_TYPES ||= [
-    Notification.types[:replied],
-    Notification.types[:posted],
-    Notification.types[:private_message],
-  ]
+  def self.collapsed_notification_types
+    return @collapsed_notification_types if @collapsed_notification_types
+
+    @mutex.synchronize {
+      @collapsed_notification_types ||= [
+        Notification.types[:replied],
+        Notification.types[:posted],
+        Notification.types[:private_message]
+      ]
+    }
+  end
 
   def create_notification(user, type, post, opts = {})
     opts = @default_opts.merge(opts)
@@ -360,8 +381,8 @@ class PostAlerter
 
     collapsed = false
 
-    if COLLAPSED_NOTIFICATION_TYPES.include?(type)
-      destroy_notifications(user, COLLAPSED_NOTIFICATION_TYPES, post.topic)
+    if self.class.collapsed_notification_types.include?(type)
+      destroy_notifications(user, self.class.collapsed_notification_types, post.topic)
       collapsed = true
     end
 
@@ -417,7 +438,7 @@ class PostAlerter
       skip_send_email: skip_send_email
     )
 
-    if created.id && existing_notifications.empty? && NOTIFIABLE_TYPES.include?(type) && !user.suspended?
+    if created.id && existing_notifications.empty? && self.class.notifiable_types.include?(type) && !user.suspended?
       create_notification_alert(user: user, post: original_post, notification_type: type, username: original_username)
     end
 
