@@ -19,6 +19,11 @@
         return "http://twitter.com/intent/tweet?url=" + encodeURIComponent(link) + "&text=" + encodeURIComponent(title);
       },
 
+      // If provided, handle by custom javascript rather than default url open
+      clickHandler: function(link, title){
+        alert("Hello!")
+      }
+
       // If true, opens in a popup of `popupHeight` size. If false it's opened in a new tab
       shouldOpenInPopup: true,
       popupHeight: 265
@@ -48,6 +53,9 @@ export default {
   },
 
   shareSource(source, data) {
+    if (typeof source.clickHandler === "function"){
+      source.clickHandler(data.url, data.title)
+    } else {
     const url = source.generateUrl(data.url, data.title);
     const options = {
       menubar: "no",
@@ -65,6 +73,7 @@ export default {
       window.open(url, "", stringOptions);
     } else {
       window.open(url, "_blank");
+    }
     }
   },
 
