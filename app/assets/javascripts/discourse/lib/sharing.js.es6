@@ -53,8 +53,8 @@ export default {
   },
 
   shareSource(source, data) {
-    if (typeof source.clickHandler === "function"){
-      source.clickHandler(data.url, data.title)
+    if (source.clickHandler){
+      source.clickHandler(data.url, data.title);
     } else {
     const url = source.generateUrl(data.url, data.title);
     const options = {
