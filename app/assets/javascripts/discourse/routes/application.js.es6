@@ -265,9 +265,7 @@ const ApplicationRoute = Discourse.Route.extend(OpenComposer, {
     const methods = findAll();
 
     if (!this.siteSettings.enable_local_logins && methods.length === 1) {
-      this.controllerFor("login").send("externalLogin", methods[0], {
-        fullScreenLogin: true
-      });
+      this.controllerFor("login").send("externalLogin", methods[0]);
     } else {
       showModal(modal);
       this.controllerFor("modal").set("modalClass", modalClass);

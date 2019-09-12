@@ -252,7 +252,7 @@ export default Ember.Controller.extend(
       },
 
       connectAccount(method) {
-        method.doLogin({ reconnect: true, fullScreenLogin: false });
+        method.doLogin({ reconnect: true });
       }
     }
   }

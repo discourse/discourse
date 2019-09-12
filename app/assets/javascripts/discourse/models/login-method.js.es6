@@ -17,60 +17,29 @@ const LoginMethod = Ember.Object.extend({
     return this.message_override || I18n.t(`login.${this.name}.message`);
   },
 
-  doLogin({ reconnect = false, fullScreenLogin = true } = {}) {
+  doLogin({ reconnect = false } = {}) {
     const name = this.name;
     const customLogin = this.customLogin;
 
     if (customLogin) {
       customLogin();
-    } else {
-      if (this.custom_url) {
-        window.location = this.custom_url;
-        return;
-      }
-      let authUrl = Discourse.getURL(`/auth/${name}`);
-
-      if (reconnect) {
-        authUrl += "?reconnect=true";
-      }
-
-      if (reconnect || fullScreenLogin || this.full_screen_login) {
-        LoginMethod.buildPostForm(authUrl).then(form => {
-          document.cookie = "fsl=true";
-          form.submit();
-        });
-      } else {
-        this.set("authenticate", name);
-        const left = this.lastX - 400;
-        const top = this.lastY - 200;
-
-        const height = this.frame_height || 400;
-        const width = this.frame_width || 800;
-
-        if (name === "facebook") {
-          authUrl += authUrl.includes("?") ? "&" : "?";
-          authUrl += "display=popup";
-        }
-        LoginMethod.buildPostForm(authUrl).then(form => {
-          const windowState = window.open(
-            "about:blank",
-            "auth_popup",
-            `menubar=no,status=no,height=${height},width=${width},left=${left},top=${top}`
-          );
-
-          form.target = "auth_popup";
-          form.submit();
-
-          const timer = setInterval(() => {
-            // If the process is aborted, reset state in this window
-            if (!windowState || windowState.closed) {
-              clearInterval(timer);
-              this.set("authenticate", null);
-            }
-          }, 1000);
-        });
-      }
+      return Ember.RSVP.resolve();
     }
+
+    if (this.custom_url) {
+      window.location = this.custom_url;
+      return Ember.RSVP.resolve();
+    }
+
+    let authUrl = Discourse.getURL(`/auth/${name}`);
+
+    if (reconnect) {
+      authUrl += "?reconnect=true";
+    }
+
+    return LoginMethod.buildPostForm(authUrl).then(form => {
+      form.submit();
+    });
   }
 });
 

@@ -601,7 +601,6 @@ export default {
           message_override: null,
           frame_width: 580,
           frame_height: 400,
-          full_screen_login: false,
           can_connect: true,
           can_revoke: true
         }

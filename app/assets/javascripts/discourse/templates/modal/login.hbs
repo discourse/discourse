@@ -73,13 +73,8 @@
       {{/if}}
     {{/if}}
 
-    {{#if authenticate}}
-      &nbsp;{{i18n 'login.authenticating'}}
-    {{/if}}
-
     {{conditional-loading-spinner condition=showSpinner size="small"}}
   </div>
 
-  <div class="auth-message">{{authMessage}}</div>
   <div id='login-alert' class={{alertClass}}>{{alert}}</div>
 {{/login-modal}}
