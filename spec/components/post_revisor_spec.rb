@@ -734,7 +734,7 @@ describe PostRevisor do
             let(:bumped_at) { 1.day.ago }
 
             before do
-              topic.update_attributes!(bumped_at: bumped_at)
+              topic.update!(bumped_at: bumped_at)
               create_hidden_tags(['important', 'secret'])
               topic = post.topic
               topic.tags = [Fabricate(:tag, name: "super"), Tag.where(name: "important").first, Fabricate(:tag, name: "stuff")]
