@@ -11,7 +11,17 @@ class Reviewable < ActiveRecord::Base
       def initialize(post)
         @user = post.user
         @id = post.id
-        @excerpt = FlagQuery.excerpt(post.cooked)
+        @excerpt = self.class.excerpt(post.cooked)
+      end
+
+      def self.excerpt(cooked)
+        excerpt = ::Post.excerpt(cooked, 200, keep_emoji_images: true)
+        # remove the first link if it's the first node
+        fragment = Nokogiri::HTML.fragment(excerpt)
+        if fragment.children.first == fragment.css("a:first").first && fragment.children.first
+          fragment.children.first.remove
+        end
+        fragment.to_html.strip
       end
     end
 

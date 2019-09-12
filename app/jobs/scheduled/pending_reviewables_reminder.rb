@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require_dependency 'flag_query'
-
 module Jobs
 
   class PendingReviewablesReminder < Jobs::Scheduled
