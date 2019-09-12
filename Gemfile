@@ -16,13 +16,13 @@ if rails_master?
 else
   # until rubygems gives us optional dependencies we are stuck with this
   # bundle update actionmailer actionpack actionview activemodel activerecord activesupport railties
-  gem 'actionmailer', '5.2.3'
-  gem 'actionpack', '5.2.3'
-  gem 'actionview', '5.2.3'
-  gem 'activemodel', '5.2.3'
-  gem 'activerecord', '5.2.3'
-  gem 'activesupport', '5.2.3'
-  gem 'railties', '5.2.3'
+  gem 'actionmailer', '6.0.0'
+  gem 'actionpack', '6.0.0'
+  gem 'actionview', '6.0.0'
+  gem 'activemodel', '6.0.0'
+  gem 'activerecord', '6.0.0'
+  gem 'activesupport', '6.0.0'
+  gem 'railties', '6.0.0'
   gem 'sprockets-rails'
 end
 
@@ -140,7 +140,7 @@ group :test, :development do
   gem 'mocha', require: false
   gem 'rb-fsevent', require: RUBY_PLATFORM =~ /darwin/i ? 'rb-fsevent' : false
   gem 'rb-inotify', '~> 0.9', require: RUBY_PLATFORM =~ /linux/i ? 'rb-inotify' : false
-  gem 'rspec-rails', require: false
+  gem 'rspec-rails', '4.0.0.beta2', require: false
   gem 'shoulda-matchers', '~> 3.1', '>= 3.1.3', require: false
   gem 'rspec-html-matchers'
   gem 'pry-nav'

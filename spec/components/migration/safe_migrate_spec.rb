@@ -14,8 +14,8 @@ describe Migration::SafeMigrate do
   end
 
   def migrate_up(path)
-    migrations = ActiveRecord::MigrationContext.new(path).migrations
-    ActiveRecord::Migrator.new(:up, migrations, migrations.first.version).run
+    migrations = ActiveRecord::MigrationContext.new(path, ActiveRecord::SchemaMigration).migrations
+    ActiveRecord::Migrator.new(:up, migrations, ActiveRecord::SchemaMigration, migrations.first.version).run
   end
 
   it "bans all table removal" do
