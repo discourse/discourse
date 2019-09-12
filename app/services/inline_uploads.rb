@@ -34,7 +34,7 @@ class InlineUploads
         if (actual_link = (node.attributes["href"]&.value || node.attributes["src"]&.value))
           link_occurences << { link: actual_link, is_valid: true }
         elsif node.name != "p"
-          link_occurences << { link: actual_link, is_valid: false }
+          link_occurences << { link: seen_link, is_valid: false }
         end
       end
     end
@@ -219,8 +219,8 @@ class InlineUploads
   end
 
   def self.match_img(markdown, external_src: false)
-    markdown.scan(/(([ ]*)<(?!img)[^<>]+\/?>)?([\r\n]*)(([ ]*)<img ([^>\n]+)>([ ]*))([\r\n]*)/i) do |match|
-      node = Nokogiri::HTML::fragment(match[3].strip).children[0]
+    markdown.scan(/(<(?!img)[^<>]+\/?>)?(\s*)(<img [^>\n]+>)/i) do |match|
+      node = Nokogiri::HTML::fragment(match[2].strip).children[0]
       src =  node.attributes["src"]&.value
 
       if src && (matched_uploads(src).present? || external_src)
@@ -229,36 +229,10 @@ class InlineUploads
         height = node.attributes["height"]&.value.to_i
         title = node.attributes["title"]&.value
         text = "#{text}|#{width}x#{height}" if width > 0 && height > 0
-        after_html_tag = match[0].present?
+        spaces_before = match[1].present? ? match[1][/ +$/].size : 0
+        replacement = +"#{" " * spaces_before}![#{text}](#{PLACEHOLDER}#{title.present? ? " \"#{title}\"" : ""})"
 
-        spaces_before =
-          if after_html_tag && !match[0].end_with?("/>")
-            (match[4].length > 0 ? match[4] : "  ")
-          else
-            ""
-          end
-
-        replacement = +"#{spaces_before}![#{text}](#{PLACEHOLDER}#{title.present? ? " \"#{title}\"" : ""})"
-
-        if after_html_tag && (num_newlines = match[2].length) <= 1
-          replacement.prepend("\n" * (num_newlines == 0 ? 2 : 1))
-        end
-
-        if after_html_tag && !match[0].end_with?("/>") && (num_newlines = match[7].length) <= 1
-          replacement += ("\n" * (num_newlines == 0 ? 2 : 1))
-        end
-
-        match[3].strip! if !after_html_tag
-
-        if (match[1].nil? || match[1].length < 4)
-          if (match[4].nil? || match[4].length < 4)
-            yield(match[3], src, replacement, $~.offset(0)[0]) if block_given?
-          else
-            yield(match[3], src, match[3].sub(src, PATH_PLACEHOLDER), $~.offset(0)[0]) if block_given?
-          end
-        else
-          yield(match[3], src, match[3].sub(src, PATH_PLACEHOLDER), $~.offset(0)[0]) if block_given?
-        end
+        yield(match[2], src, replacement, $~.offset(0)[0]) if block_given?
       end
     end
   end
