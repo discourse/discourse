@@ -277,26 +277,6 @@ task 'posts:delete_all_likes' => :environment do
   puts "", "#{likes_deleted} likes deleted!", ""
 end
 
-desc 'Defer all flags'
-task 'posts:defer_all_flags' => :environment do
-
-  active_flags = FlagQuery.flagged_post_actions('active')
-
-  flags_deferred = 0
-  total = active_flags.count
-
-  active_flags.each do |post_action|
-    begin
-      PostAction.defer_flags!(Post.find(post_action.post_id), Discourse.system_user)
-      print_status(flags_deferred += 1, total)
-    rescue
-      # skip
-    end
-  end
-
-  puts "", "#{flags_deferred} flags deferred!", ""
-end
-
 desc 'Refreshes each post that was received via email'
 task 'posts:refresh_emails', [:topic_id] => [:environment] do |_, args|
   posts = Post.where.not(raw_email: nil).where(via_email: true)
