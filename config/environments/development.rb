@@ -41,6 +41,7 @@ Discourse::Application.configure do
   BetterErrors::Middleware.allow_ip! ENV['TRUSTED_IP'] if ENV['TRUSTED_IP']
 
   config.load_mini_profiler = true
+  config.hosts << ENV['DISCOURSE_DEV_HOST'] if ENV['DISCOURSE_DEV_HOST']
 
   require 'middleware/turbo_dev'
   config.middleware.insert 0, Middleware::TurboDev
