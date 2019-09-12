@@ -269,10 +269,11 @@ protected
     end
   end
 
-  def build_action(actions, id, icon:, bundle: nil, client_action: nil, confirm: false)
+  def build_action(actions, id, icon:, button_class: nil, bundle: nil, client_action: nil, confirm: false)
     actions.add(id, bundle: bundle) do |action|
       prefix = "reviewables.actions.#{id}"
       action.icon = icon
+      action.button_class = button_class
       action.label = "#{prefix}.title"
       action.description = "#{prefix}.description"
       action.client_action = client_action
