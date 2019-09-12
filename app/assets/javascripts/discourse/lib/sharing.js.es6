@@ -56,24 +56,24 @@ export default {
     if (source.clickHandler){
       source.clickHandler(data.url, data.title);
     } else {
-    const url = source.generateUrl(data.url, data.title);
-    const options = {
-      menubar: "no",
-      toolbar: "no",
-      resizable: "yes",
-      scrollbars: "yes",
-      width: 600,
-      height: source.popupHeight || 315
-    };
-    const stringOptions = Object.keys(options)
-      .map(k => `${k}=${options[k]}`)
-      .join(",");
+      const url = source.generateUrl(data.url, data.title);
+      const options = {
+        menubar: "no",
+        toolbar: "no",
+        resizable: "yes",
+        scrollbars: "yes",
+        width: 600,
+        height: source.popupHeight || 315
+      };
+      const stringOptions = Object.keys(options)
+        .map(k => `${k}=${options[k]}`)
+        .join(",");
 
-    if (source.shouldOpenInPopup) {
-      window.open(url, "", stringOptions);
-    } else {
+      if (source.shouldOpenInPopup) {
+        window.open(url, "", stringOptions);
+      } else {
       window.open(url, "_blank");
-    }
+      }
     }
   },
 
