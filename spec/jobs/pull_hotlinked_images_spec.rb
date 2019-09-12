@@ -77,7 +77,7 @@ describe Jobs::PullHotlinkedImages do
       expect(post.reload.raw).to eq(<<~RAW.chomp)
       <h1></h1>
                                 <a href="https://somelink.com">
-                                    <img alt="somelink" src="#{upload.short_path}" />
+                                    ![somelink](#{upload.short_url})
                                 </a>
       RAW
     end
