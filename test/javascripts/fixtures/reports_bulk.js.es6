@@ -7,7 +7,7 @@ let signups = {
   yaxis: "Number of signups",
   description: "New account registrations for this period",
   data: [
-    { x: "2018-06-16", y: 12 },
+    { x: "2018-06-16", y: "12" },
     { x: "2018-06-17", y: 16 },
     { x: "2018-06-18", y: 42 },
     { x: "2018-06-19", y: 38 },
@@ -18,7 +18,7 @@ let signups = {
     { x: "2018-06-24", y: 17 },
     { x: "2018-06-25", y: 27 },
     { x: "2018-06-26", y: 32 },
-    { x: "2018-06-27", y: 7 }
+    { x: "2018-06-27", y: "7" }
   ],
   start_date: "2018-06-16T00:00:00Z",
   end_date: "2018-07-16T23:59:59Z",
