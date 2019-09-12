@@ -206,6 +206,20 @@ RSpec.describe InlineUploads do
         MD
       end
 
+      it "should correct html and markdown uppercase references" do
+        md = <<~MD
+        [IMG]#{upload.url}[/IMG]
+        <IMG src="#{upload2.url}" />
+        <A class="attachment" href="#{upload3.url}">Text</A>
+        MD
+
+        expect(InlineUploads.process(md)).to eq(<<~MD)
+        ![](#{upload.short_url})
+        ![](#{upload2.short_url})
+        [Text|attachment](#{upload3.short_url})
+        MD
+      end
+
       context "subfolder" do
         before do
           global_setting :relative_url_root, "/community"
