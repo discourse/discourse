@@ -1012,7 +1012,7 @@ email:
     default: ""
   mailgun_api_key:
     default: ""
-    regex: '^(key-\h{32}|\h{32}-\h{8}-\h{8})$'
+    regex: '^((key-)?\h{32}|\h{32}-\h{8}-\h{8})$'
     secret: true
   bounce_score_threshold:
     client: true
