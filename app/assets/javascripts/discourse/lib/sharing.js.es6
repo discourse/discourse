@@ -53,7 +53,7 @@ export default {
   },
 
   shareSource(source, data) {
-    if (source.clickHandler){
+    if (source.clickHandler) {
       source.clickHandler(data.url, data.title);
     } else {
       const url = source.generateUrl(data.url, data.title);
@@ -72,7 +72,7 @@ export default {
       if (source.shouldOpenInPopup) {
         window.open(url, "", stringOptions);
       } else {
-      window.open(url, "_blank");
+        window.open(url, "_blank");
       }
     }
   },
