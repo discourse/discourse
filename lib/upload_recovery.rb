@@ -7,43 +7,44 @@ class UploadRecovery
   end
 
   def recover(posts = Post)
-    posts.have_uploads.find_each do |post|
+    posts.have_uploads.find_each { |post| recover_post post }
+  end
 
-      begin
-        analyzer = PostAnalyzer.new(post.raw, post.topic_id)
+  def recover_post(post)
+    begin
+      analyzer = PostAnalyzer.new(post.raw, post.topic_id)
 
-        analyzer.cooked_stripped.css("img", "a").each do |media|
-          if media.name == "img" && orig_src = media["data-orig-src"]
-            if dom_class = media["class"]
-              if (Post.white_listed_image_classes & dom_class.split).count > 0
-                next
-              end
+      analyzer.cooked_stripped.css("img", "a").each do |media|
+        if media.name == "img" && orig_src = media["data-orig-src"]
+          if dom_class = media["class"]
+            if (Post.white_listed_image_classes & dom_class.split).count > 0
+              next
             end
+          end
 
+          if @dry_run
+            puts "#{post.full_url} #{orig_src}"
+          else
+            recover_post_upload(post, Upload.sha1_from_short_url(orig_src))
+          end
+        elsif url = (media["href"] || media["src"])
+          data = Upload.extract_url(url)
+          next unless data
+
+          sha1 = data[2]
+
+          unless upload = Upload.get_from_url(url)
             if @dry_run
-              puts "#{post.full_url} #{orig_src}"
+              puts "#{post.full_url} #{url}"
             else
-              recover_post_upload(post, Upload.sha1_from_short_url(orig_src))
-            end
-          elsif url = (media["href"] || media["src"])
-            data = Upload.extract_url(url)
-            next unless data
-
-            sha1 = data[2]
-
-            unless upload = Upload.get_from_url(url)
-              if @dry_run
-                puts "#{post.full_url} #{url}"
-              else
-                recover_post_upload(post, sha1)
-              end
+              recover_post_upload(post, sha1)
             end
           end
         end
-      rescue => e
-        raise e if @stop_on_error
-        puts "#{post.full_url} #{e.class}: #{e.message}"
       end
+    rescue => e
+      raise e if @stop_on_error
+      puts "#{post.full_url} #{e.class}: #{e.message}"
     end
   end
 
