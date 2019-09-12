@@ -516,7 +516,7 @@ class Plugin::Instance
     Rake.add_rakelib(File.dirname(path) + "/lib/tasks")
 
     # Automatically include migrations
-    migration_paths = Rails.configuration.paths["db/migrate"]
+    migration_paths = ActiveRecord::Migrator.migrations_paths
     migration_paths << File.dirname(path) + "/db/migrate"
 
     unless Discourse.skip_post_deployment_migrations?
