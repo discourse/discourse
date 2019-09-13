@@ -231,7 +231,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
       return false;
     },
 
-    externalLogin(loginMethod, {} = {}) {
+    externalLogin(loginMethod) {
       if (this.loginDisabled) {
         return;
       }

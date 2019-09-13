@@ -18,11 +18,8 @@ const LoginMethod = Ember.Object.extend({
   },
 
   doLogin({ reconnect = false } = {}) {
-    const name = this.name;
-    const customLogin = this.customLogin;
-
-    if (customLogin) {
-      customLogin();
+    if (this.customLogin) {
+      this.customLogin();
       return Ember.RSVP.resolve();
     }
 
@@ -31,15 +28,13 @@ const LoginMethod = Ember.Object.extend({
       return Ember.RSVP.resolve();
     }
 
-    let authUrl = Discourse.getURL(`/auth/${name}`);
+    let authUrl = Discourse.getURL(`/auth/${this.name}`);
 
     if (reconnect) {
       authUrl += "?reconnect=true";
     }
 
-    return LoginMethod.buildPostForm(authUrl).then(form => {
-      form.submit();
-    });
+    return LoginMethod.buildPostForm(authUrl).then(form => form.submit());
   }
 });
 
