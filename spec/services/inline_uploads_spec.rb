@@ -220,6 +220,32 @@ RSpec.describe InlineUploads do
         MD
       end
 
+      it "should correct image URLs with v parameters" do
+        md = <<~MD
+        <img src="#{upload.url}?v=1">
+
+        <img src="#{Discourse.base_url}#{upload.url}?v=2">
+
+        <img src="#{GlobalSetting.cdn_url}#{upload.url}?v=3">
+
+        #{Discourse.base_url}#{upload.url}?v=45
+
+        #{GlobalSetting.cdn_url}#{upload.url}?v=999
+        MD
+
+        expect(InlineUploads.process(md)).to eq(<<~MD)
+        ![](#{upload.short_url})
+
+        ![](#{upload.short_url})
+
+        ![](#{upload.short_url})
+
+        ![](#{upload.short_url})
+
+        ![](#{upload.short_url})
+        MD
+      end
+
       context "subfolder" do
         before do
           global_setting :relative_url_root, "/community"

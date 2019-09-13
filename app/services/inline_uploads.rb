@@ -6,7 +6,7 @@ class InlineUploads
   PLACEHOLDER = "__replace__"
   PATH_PLACEHOLDER = "__replace_path__"
 
-  UPLOAD_REGEXP_PATTERN = "/original/(\\dX/(?:[a-f0-9]/)*[a-f0-9]{40}[a-zA-Z0-9.]*)"
+  UPLOAD_REGEXP_PATTERN = "/original/(\\dX/(?:\\h/)*\\h{40}[a-zA-Z0-9.]*)(\\?v=\\d+)?"
   private_constant :UPLOAD_REGEXP_PATTERN
 
   def self.process(markdown, on_missing: nil)
@@ -26,7 +26,6 @@ class InlineUploads
         # Do nothing
       elsif !(node.children.count == 1 && (node.children[0].name != "img" && node.children[0].children.blank?)) &&
         !(node.name == "a" && node.children.count > 1 && !node_children_names(node).include?("img"))
-
         next
       end
 
@@ -64,7 +63,7 @@ class InlineUploads
     ]
 
     if Discourse.store.external?
-      regexps << /((https?:)?#{SiteSetting.Upload.s3_base_url}#{UPLOAD_REGEXP_PATTERN})/
+      regexps << /((?:https?:)?#{SiteSetting.Upload.s3_base_url}#{UPLOAD_REGEXP_PATTERN})/
       regexps << /(#{SiteSetting.Upload.s3_cdn_url}#{UPLOAD_REGEXP_PATTERN})/
     end
 
@@ -72,8 +71,8 @@ class InlineUploads
       indexes = Set.new
 
       markdown.scan(/(\n{2,}|\A)#{regexp}$/) do |match|
-        if match[1].present?
-          extension = match[1].split(".")[-1].downcase
+        if match[1].present? && match[2].present?
+          extension = match[2].split(".")[-1].downcase
           index = $~.offset(2)[0]
           indexes << index
           if FileHelper.supported_images.include?(extension)
@@ -87,36 +86,20 @@ class InlineUploads
       markdown.scan(/^#{regexp}(\s)/) do |match|
         if match[0].present?
           index = $~.offset(0)[0]
-          next if indexes.include?(index)
-          indexes << index
-
-          raw_matches << [
-            match[0],
-            match[0],
-            +"#{Discourse.base_url}#{PATH_PLACEHOLDER}",
-            $~.offset(0)[0]
-          ]
+          next if !indexes.add?(index)
+          raw_matches << [match[0], match[0], +"#{Discourse.base_url}#{PATH_PLACEHOLDER}", index]
         end
       end
 
       markdown.scan(/\[[^\[\]]*\]: #{regexp}/) do |match|
-        if match[0].present?
-          index = $~.offset(1)[0]
-          next if indexes.include?(index)
-          indexes << index
-        end
+        indexes.add($~.offset(1)[0]) if match[0].present?
       end
 
       markdown.scan(/(([\n\s\)\]\<])+)#{regexp}/) do |match|
         if matched_uploads(match[2]).present?
-          next if indexes.include?($~.offset(3)[0])
-
-          raw_matches << [
-            match[2],
-            match[2],
-            +"#{Discourse.base_url}#{PATH_PLACEHOLDER}",
-            $~.offset(0)[0]
-          ]
+          next if !indexes.add?($~.offset(3)[0])
+          index = $~.offset(0)[0]
+          raw_matches << [match[2], match[2], +"#{Discourse.base_url}#{PATH_PLACEHOLDER}", index]
         end
       end
     end
@@ -160,7 +143,7 @@ class InlineUploads
       end
     end
 
-    markdown.scan(/(__([a-f0-9]{40})__)/) do |match|
+    markdown.scan(/(__(\h{40})__)/) do |match|
       upload = Upload.find_by(sha1: match[1])
       markdown = markdown.sub(match[0], upload.short_path)
     end
@@ -238,15 +221,8 @@ class InlineUploads
   end
 
   def self.matched_uploads(node)
-    matches = []
-
-    base_url = Discourse.base_url.sub(/https?:\/\//, "(https?://)")
-
-    if GlobalSetting.cdn_url
-      cdn_url = GlobalSetting.cdn_url.sub(/https?:\/\//, "(https?://)")
-    end
-
     db = RailsMultisite::ConnectionManagement.current_db
+    base_url = Discourse.base_url.sub(/https?:\/\//, "(https?://)")
 
     regexps = [
       /(upload:\/\/([a-zA-Z0-9]+)[a-zA-Z0-9\.]*)/,
@@ -256,11 +232,10 @@ class InlineUploads
       /(#{base_url}\/uploads\/#{db}#{UPLOAD_REGEXP_PATTERN})/,
     ]
 
-    if cdn_url
+    if GlobalSetting.cdn_url && (cdn_url = GlobalSetting.cdn_url.sub(/https?:\/\//, "(https?://)"))
       regexps << /(#{cdn_url}\/uploads\/#{db}#{UPLOAD_REGEXP_PATTERN})/
       if GlobalSetting.relative_url_root.present?
         regexps << /(#{cdn_url}#{GlobalSetting.relative_url_root}\/uploads\/#{db}#{UPLOAD_REGEXP_PATTERN})/
-
       end
     end
 
@@ -274,6 +249,7 @@ class InlineUploads
       end
     end
 
+    matches = []
     node = node.to_s
 
     regexps.each do |regexp|
