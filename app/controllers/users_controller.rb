@@ -141,6 +141,10 @@ class UsersController < ApplicationController
   def username
     params.require(:new_username)
 
+    if clashing_with_existing_route?(params[:new_username]) || User.reserved_username?(params[:new_username])
+      return render_json_error(I18n.t("login.reserved_username"))
+    end
+
     user = fetch_user_from_params
     guardian.ensure_can_edit_username!(user)
 
@@ -359,7 +363,7 @@ class UsersController < ApplicationController
       return fail_with("login.email_too_long")
     end
 
-    if User.reserved_username?(params[:username])
+    if clashing_with_existing_route?(params[:username]) || User.reserved_username?(params[:username])
       return fail_with("login.reserved_username")
     end
 
@@ -1355,4 +1359,18 @@ class UsersController < ApplicationController
     end
   end
 
+  def clashing_with_existing_route?(username)
+    normalized_username = User.normalize_username(username)
+    http_verbs = %w[GET POST PUT DELETE PATCH]
+    allowed_actions = %w[show update destroy]
+
+    http_verbs.any? do |verb|
+      begin
+        path = Rails.application.routes.recognize_path("/u/#{normalized_username}", method: verb)
+        allowed_actions.exclude?(path[:action])
+      rescue ActionController::RoutingError
+        false
+      end
+    end
+  end
 end

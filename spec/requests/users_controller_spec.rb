@@ -1005,8 +1005,13 @@ describe UsersController do
     end
 
     context 'with a reserved username' do
-      let(:create_params) { { name: @user.name, username: 'Reserved', email: @user.email, password: "x" * 20 } }
+      let(:create_params) { { name: @user.name, username: 'Reserved', email: @user.email, password: 'strongpassword' } }
       before { SiteSetting.reserved_usernames = 'a|reserved|b' }
+      include_examples 'failed signup'
+    end
+
+    context 'with a username that matches a user route' do
+      let(:create_params) { { name: @user.name, username: 'account-created', email: @user.email, password: 'strongpassword' } }
       include_examples 'failed signup'
     end
 
@@ -1195,6 +1200,23 @@ describe UsersController do
 
         expect(response.status).to eq(200)
         expect(user.reload.username).to eq(new_username)
+      end
+
+      it 'raises an error when the username clashes with an existing user route' do
+        put "/u/#{user.username}/preferences/username.json", params: { new_username: 'account-created' }
+
+        body = JSON.parse(response.body)
+
+        expect(body['errors'].first).to include(I18n.t('login.reserved_username'))
+      end
+
+      it 'raises an error when the username is in the reserved list' do
+        SiteSetting.reserved_usernames = 'reserved'
+
+        put "/u/#{user.username}/preferences/username.json", params: { new_username: 'reserved' }
+        body = JSON.parse(response.body)
+
+        expect(body['errors'].first).to include(I18n.t('login.reserved_username'))
       end
 
       it 'should fail if the user is old' do
