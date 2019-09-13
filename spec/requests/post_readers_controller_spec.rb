@@ -77,7 +77,7 @@ describe PostReadersController do
         expect(readers).to be_empty
       end
 
-      it 'xxxxx' do
+      it "doesn't include non-members when the post is a whisper" do
         @post.update(post_type: Post.types[:whisper])
         non_member_reader = Fabricate(:user)
         @group_message.allowed_users << non_member_reader
