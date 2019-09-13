@@ -19,7 +19,10 @@ const NavItem = Discourse.Model.extend({
   displayName(categoryName, name, count) {
     count = count || 0;
 
-    if (name === "latest" && !Discourse.Site.currentProp("mobileView")) {
+    if (
+      name === "latest" &&
+      (!Discourse.Site.currentProp("mobileView") || this.tagId !== undefined)
+    ) {
       count = 0;
     }
 
