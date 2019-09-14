@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require "backup_restore/backup_restore"
+require "backup_restore"
 require "backup_restore/backup_store"
 
 class Admin::BackupsController < Admin::AdminController
