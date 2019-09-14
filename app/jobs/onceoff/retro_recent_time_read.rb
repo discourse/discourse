@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Jobs
-  class RetroRecentTimeRead < OnceoffBase
+  class RetroRecentTimeRead < ::Jobs::Onceoff
     def execute_onceoff(args)
       # update past records by evenly distributing total time reading among each post read
       sql = <<~SQL

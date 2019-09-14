@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Jobs
-  class RemoveOldAutoCloseJobs < OnceoffBase
+  class RemoveOldAutoCloseJobs < ::Jobs::Onceoff
     def execute_onceoff(args)
       Jobs.cancel_scheduled_job(:close_topic)
 

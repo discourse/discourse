@@ -6,7 +6,7 @@ module Jobs
     every 10.minutes
 
     def execute(args)
-      OnceoffBase.enqueue_all
+      ::Jobs::Onceoff.enqueue_all
     end
   end
 
