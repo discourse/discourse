@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Jobs
-  class AnonymizeUser < Jobs::Base
+  class AnonymizeUser < ::Jobs::Base
 
     sidekiq_options queue: 'low'
 

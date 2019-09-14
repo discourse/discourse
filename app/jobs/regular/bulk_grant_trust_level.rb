@@ -2,7 +2,7 @@
 
 module Jobs
 
-  class BulkGrantTrustLevel < Jobs::Base
+  class BulkGrantTrustLevel < ::Jobs::Base
 
     def execute(args)
       trust_level = args[:trust_level]

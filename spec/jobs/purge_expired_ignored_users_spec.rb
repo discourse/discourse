@@ -2,7 +2,6 @@
 
 require 'rails_helper'
 
-
 describe Jobs::PurgeExpiredIgnoredUsers do
   subject { Jobs::PurgeExpiredIgnoredUsers.new.execute({}) }
 

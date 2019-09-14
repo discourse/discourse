@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Jobs
-  class TopicReminder < Jobs::Base
+  class TopicReminder < ::Jobs::Base
 
     def execute(args)
       topic_timer = TopicTimer.find_by(id: args[:topic_timer_id])

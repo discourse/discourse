@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Jobs
-  class NotifyPostRevision < Jobs::Base
+  class NotifyPostRevision < ::Jobs::Base
     def execute(args)
       raise Discourse::InvalidParameters.new(:user_ids) unless args[:user_ids]
 

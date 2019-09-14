@@ -3,7 +3,7 @@
 require_dependency 'email/sender'
 
 module Jobs
-  class AdminConfirmationEmail < Jobs::Base
+  class AdminConfirmationEmail < ::Jobs::Base
     sidekiq_options queue: 'critical'
 
     def execute(args)

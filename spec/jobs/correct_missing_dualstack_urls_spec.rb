@@ -2,7 +2,6 @@
 
 require 'rails_helper'
 
-
 describe Jobs::CorrectMissingDualstackUrls do
 
   it 'corrects the urls' do

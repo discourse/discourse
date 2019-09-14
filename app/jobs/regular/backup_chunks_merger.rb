@@ -5,7 +5,7 @@ require_dependency "backup_restore/backup_store"
 
 module Jobs
 
-  class BackupChunksMerger < Jobs::Base
+  class BackupChunksMerger < ::Jobs::Base
     sidekiq_options queue: 'critical', retry: false
 
     def execute(args)

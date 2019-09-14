@@ -8,7 +8,7 @@ require_dependency 'upload_markdown'
 
 module Jobs
 
-  class ExportCsvFile < Jobs::Base
+  class ExportCsvFile < ::Jobs::Base
     sidekiq_options retry: false
 
     HEADER_ATTRS_FOR ||= HashWithIndifferentAccess.new(

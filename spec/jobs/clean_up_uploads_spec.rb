@@ -2,7 +2,6 @@
 
 require 'rails_helper'
 
-
 describe Jobs::CleanUpUploads do
 
   def fabricate_upload(attributes = {})

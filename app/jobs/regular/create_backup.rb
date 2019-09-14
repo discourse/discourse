@@ -3,7 +3,7 @@
 require "backup_restore"
 
 module Jobs
-  class CreateBackup < Jobs::Base
+  class CreateBackup < ::Jobs::Base
     sidekiq_options retry: false
 
     def execute(args)

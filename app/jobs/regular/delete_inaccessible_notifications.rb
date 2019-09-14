@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Jobs
-  class DeleteInaccessibleNotifications < Jobs::Base
+  class DeleteInaccessibleNotifications < ::Jobs::Base
     def execute(args)
       raise Discourse::InvalidParameters.new(:topic_id) if args[:topic_id].blank?
 
