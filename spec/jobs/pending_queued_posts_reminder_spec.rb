@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-describe Jobs::PendingQueuedPostReminder do
+describe Jobs::PendingQueuedPostsReminder do
   let(:job) { described_class.new }
 
   context "notify_about_queued_posts_after is 0" do
