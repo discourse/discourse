@@ -3,8 +3,7 @@
 require_dependency 'system_message'
 
 module Jobs
-
-  class BulkInvite < Jobs::Base
+  class BulkInvite < ::Jobs::Base
     sidekiq_options retry: false
 
     def initialize
