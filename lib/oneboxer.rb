@@ -277,7 +277,7 @@ module Oneboxer
       options = {
         cache: {},
         max_width: 695,
-        sanitize_config: Sanitize::Config::DISCOURSE_ONEBOX
+        sanitize_config: Onebox::DiscourseOneboxSanitizeConfig::Config::DISCOURSE_ONEBOX
       }
 
       options[:cookie] = fd.cookie if fd.cookie
