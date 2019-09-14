@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-module Jobs ; end
-
 require_relative './base.rb'
 
 class Jobs::Onceoff < ::Jobs::Base
