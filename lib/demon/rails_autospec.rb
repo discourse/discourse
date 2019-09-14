@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-require "demon/base"
+require "demon/demon_base"
 
-class Demon::RailsAutospec < Demon::Base
+class Demon::RailsAutospec < Demon::DemonBase
 
   def self.prefix
     "rails-autospec"
