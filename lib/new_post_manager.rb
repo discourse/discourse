@@ -127,7 +127,7 @@ class NewPostManager
     reason = post_needs_approval?(manager)
     return if reason == :skip
 
-    validator = Validators::PostValidator.new
+    validator = PostValidator.new
     post = Post.new(raw: manager.args[:raw])
     post.user = manager.user
     validator.validate(post)
