@@ -2,7 +2,7 @@
 
 module Jobs
   module DiscourseNarrativeBot
-    class GrantBadges < ::Jobs::Onceoff
+    class GrantBadges < OnceoffBase
       def execute_onceoff(args)
         new_user_track_badge = Badge.find_by(
           name: ::DiscourseNarrativeBot::NewUserNarrative::BADGE_NAME

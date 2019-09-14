@@ -2,7 +2,7 @@
 
 module Jobs
   module DiscourseNarrativeBot
-    class RemapOldBotImages < ::Jobs::Onceoff
+    class RemapOldBotImages < OnceoffBase
       def execute_onceoff(args)
         paths = [
           "/images/font-awesome-link.png",

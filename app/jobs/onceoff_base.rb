@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Jobs::Onceoff < Jobs::Base
+class OnceoffBase < Jobs::Base
   sidekiq_options retry: false
 
   def self.name_for(klass)

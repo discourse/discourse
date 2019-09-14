@@ -2,7 +2,7 @@
 
 module Jobs
 
-  class GrantEmoji < Jobs::Onceoff
+  class GrantEmoji < OnceoffBase
     def execute_onceoff(args)
       return unless SiteSetting.enable_badges
       to_award = {}

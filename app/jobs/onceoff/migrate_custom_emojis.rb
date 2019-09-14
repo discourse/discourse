@@ -3,7 +3,7 @@
 require_dependency 'upload_creator'
 
 module Jobs
-  class MigrateCustomEmojis < Jobs::Onceoff
+  class MigrateCustomEmojis < OnceoffBase
     def execute_onceoff(args)
       return if Rails.env.test?
 

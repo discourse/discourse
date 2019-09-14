@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Jobs
-  class CorrectMissingDualstackUrls < Jobs::Onceoff
+  class CorrectMissingDualstackUrls < OnceoffBase
     def execute_onceoff(args)
       # s3 now uses dualstack urls, keep them around correctly
       # in both uploads and optimized_image tables

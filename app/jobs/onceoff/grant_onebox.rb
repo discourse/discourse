@@ -2,7 +2,7 @@
 
 module Jobs
 
-  class GrantOnebox < Jobs::Onceoff
+  class GrantOnebox < OnceoffBase
     sidekiq_options queue: 'low'
 
     def execute_onceoff(args)

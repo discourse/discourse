@@ -2,7 +2,7 @@
 
 module Jobs
 
-  class MigrateTaggingPlugin < Jobs::Onceoff
+  class MigrateTaggingPlugin < OnceoffBase
 
     def execute_onceoff(args)
       all_tags = TopicCustomField.where(name: "tags").select('DISTINCT value').all.map(&:value)

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Jobs
-  class FixOutOfSyncUserUploadedAvatar < Jobs::Onceoff
+  class FixOutOfSyncUserUploadedAvatar < OnceoffBase
     def execute_onceoff(args)
       DB.exec(<<~SQL)
       WITH X AS (
