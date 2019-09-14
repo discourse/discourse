@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 require 'rails_helper'
-require_dependency 'site_setting'
-require_dependency 'site_setting_extension'
 
 describe SiteSetting do
 

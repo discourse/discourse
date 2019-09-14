@@ -2,7 +2,6 @@
 
 require 'rails_helper'
 
-require_dependency 'jobs/scheduled/invalidate_inactive_admins'
 
 describe Jobs::InvalidateInactiveAdmins do
   fab!(:active_admin) { Fabricate(:admin, last_seen_at: 1.hour.ago) }

@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require 'rails_helper'
-require_dependency 'user'
 
 describe AdminUserListSerializer do
   fab!(:user) { Fabricate(:user_second_factor_totp).user }

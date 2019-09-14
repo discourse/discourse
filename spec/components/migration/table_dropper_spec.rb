@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require 'rails_helper'
-require_dependency 'migration/table_dropper'
 
 describe Migration::TableDropper do
 

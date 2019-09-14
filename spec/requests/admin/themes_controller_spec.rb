@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require 'rails_helper'
-require_dependency 'theme_serializer'
 
 describe Admin::ThemesController do
   fab!(:admin) { Fabricate(:admin) }
