@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require_dependency 'post_action_result'
-
 class PostActionCreator
   class CreateResult < PostActionResult
     attr_accessor :post_action, :reviewable, :reviewable_score

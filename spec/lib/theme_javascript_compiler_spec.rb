@@ -2,8 +2,6 @@
 
 require 'rails_helper'
 
-require_dependency 'theme_javascript_compiler'
-
 describe ThemeJavascriptCompiler do
 
   let(:theme_id) { 22 }

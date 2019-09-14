@@ -1,10 +1,5 @@
 # frozen_string_literal: true
 
-require_dependency 'guardian'
-require_dependency 'topic_query'
-require_dependency 'filter_best_posts'
-require_dependency 'gaps'
-
 class TopicView
   MEGA_TOPIC_POSTS_COUNT = 10000
   MIN_POST_READ_TIME = 4.0

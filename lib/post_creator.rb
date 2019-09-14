@@ -2,11 +2,6 @@
 
 # Responsible for creating posts and topics
 #
-require_dependency 'rate_limiter'
-require_dependency 'topic_creator'
-require_dependency 'post_jobs_enqueuer'
-require_dependency 'distributed_mutex'
-require_dependency 'has_errors'
 
 class PostCreator
   include HasErrors

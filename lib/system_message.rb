@@ -1,9 +1,6 @@
 # frozen_string_literal: true
 
 # Handle sending a message to a user from the system.
-require_dependency 'post_creator'
-require_dependency 'topic_subtype'
-require_dependency 'discourse'
 
 class SystemMessage
 
