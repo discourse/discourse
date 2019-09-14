@@ -8,6 +8,7 @@ module ActiveSupport::Dependencies::ZeitwerkIntegration::Inflector
   setup('base', 'Base', /lib\/demon\/base\.rb$/)
   setup('base', 'Jobs')
   setup('canonical_url', 'CanonicalURL')
+  setup('clean_up_unmatched_ips', 'CleanUpUnmatchedIPs')
   setup('homepage_constraint', 'HomePageConstraint')
   setup('ip_addr', 'IPAddr')
   setup('onpdiff', 'ONPDiff')

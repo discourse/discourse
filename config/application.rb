@@ -105,6 +105,8 @@ module Discourse
     config.autoload_paths += Dir["#{config.root}/lib/i18n"]
     config.autoload_paths += Dir["#{config.root}/lib/validators/"]
 
+    Rails.autoloaders.main.ignore(Dir["#{config.root}/app/models/reports"])
+
     if !Sidekiq.server?
       config.autoload_paths += Dir["#{config.root}/lib"]
     end
