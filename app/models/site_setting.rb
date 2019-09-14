@@ -1,9 +1,5 @@
 # frozen_string_literal: true
 
-require 'site_setting_extension'
-require_dependency 'global_path'
-require_dependency 'site_settings/yaml_loader'
-
 class SiteSetting < ActiveRecord::Base
   extend GlobalPath
   extend SiteSettingExtension
