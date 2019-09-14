@@ -1,6 +1,4 @@
 # frozen_string_literal: true
-#
-require_dependency 'archetype'
 
 class PostTiming < ActiveRecord::Base
   belongs_to :topic

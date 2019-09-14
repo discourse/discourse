@@ -1,8 +1,5 @@
 # frozen_string_literal: true
 
-require_dependency 'oneboxer'
-require_dependency 'email_cook'
-
 class PostAnalyzer
 
   def initialize(raw, topic_id)

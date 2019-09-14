@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 require 'uri'
-require_dependency 'slug'
-require_dependency 'discourse'
 
 class TopicLink < ActiveRecord::Base
 

@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require_dependency 'enum_site_setting'
-
 class EmailLevelSiteSetting < EnumSiteSetting
 
   def self.valid_value?(val)

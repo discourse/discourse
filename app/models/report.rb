@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require_dependency 'topic_subtype'
-
 class Report
   # Change this line each time report format change
   # and you want to ensure cache is reset
