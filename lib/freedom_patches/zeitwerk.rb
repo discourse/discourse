@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module ActiveSupport::Dependencies::ZeitwerkIntegration::Inflector
   @@custom_paths = {}
 
