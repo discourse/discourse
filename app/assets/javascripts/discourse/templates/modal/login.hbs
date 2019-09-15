@@ -8,11 +8,11 @@
           <table>
             <tr>
               <td><label for='login-account-name'>{{i18n 'login.username'}}</label></td>
-              <td>{{text-field value=loginName placeholderKey="login.email_placeholder" id="login-account-name" autocorrect="off" autocapitalize="off" autofocus="autofocus" disabled=showSecondFactor}}</td>
+              <td>{{text-field value=loginName placeholderKey="login.email_placeholder" id="login-account-name" autocorrect="off" autocapitalize="off" autofocus="autofocus" disabled=disableLoginFields}}</td>
             </tr>
             <tr>
               <td><label for='login-account-password'>{{i18n 'login.password'}}</label></td>
-              <td>{{password-field value=loginPassword type="password" id="login-account-password" maxlength="200" capsLockOn=capsLockOn disabled=showSecondFactor}}</td>
+              <td>{{password-field value=loginPassword type="password" id="login-account-password" maxlength="200" capsLockOn=capsLockOn disabled=disableLoginFields}}</td>
               <td><a id="forgot-password-link" {{action "forgotPassword"}}>{{i18n 'forgot_password.action'}}</a></td>
             </tr>
             <tr>
@@ -22,6 +22,13 @@
             </tr>
           </table>
         </div>
+        {{#if showSecurityKey}}
+          {{#security-key-form
+            allowedCredentialIds=securityKeyAllowedCredentialIds
+            challenge=securityKeyChallenge
+            action=(action "authenticateSecurityKey")}}
+          {{/security-key-form}}
+        {{/if}}
         {{#second-factor-form
           secondFactorMethod=secondFactorMethod
           secondFactorToken=secondFactorToken

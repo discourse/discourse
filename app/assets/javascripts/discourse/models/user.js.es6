@@ -21,7 +21,7 @@ import { defaultHomepage } from "discourse/lib/utilities";
 import { userPath } from "discourse/lib/url";
 import Category from "discourse/models/category";
 
-export const SECOND_FACTOR_METHODS = { TOTP: 1, BACKUP_CODE: 2 };
+export const SECOND_FACTOR_METHODS = { TOTP: 1, BACKUP_CODE: 2, SECURITY_KEY: 3 };
 
 const isForever = dt => moment().diff(dt, "years") < -500;
 

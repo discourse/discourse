@@ -4,6 +4,7 @@ require_dependency 'rate_limiter'
 require_dependency 'single_sign_on'
 require_dependency 'single_sign_on_provider'
 require_dependency 'url_helper'
+require_dependency 'webauthn/webauthn'
 
 class SessionController < ApplicationController
   class LocalLoginNotAllowed < StandardError; end
@@ -298,6 +299,13 @@ class SessionController < ApplicationController
     if payload = login_error_check(user)
       render json: payload
     else
+      security_key_valid = ::Webauthn::SecurityKeyAuthenticationService.new(user, params[:security_key_credential],
+        challenge: secure_session["staged-webauthn-challenge-#{user.id}"],
+        rp_id: secure_session["staged-webauthn-rp-id-#{user.id}"],
+        origin: Discourse.base_url
+      ).authenticate_security_key
+      return invalid_security_key(user) if user.security_keys_enabled? && !security_key_valid
+
       if user.totp_enabled? && !user.authenticate_second_factor(params[:second_factor_token], params[:second_factor_method].to_i)
         return render json: failed_json.merge(
           error: I18n.t("login.invalid_second_factor_code"),
@@ -308,6 +316,21 @@ class SessionController < ApplicationController
 
       (user.active && user.email_confirmed?) ? login(user) : not_activated(user)
     end
+  rescue ::Webauthn::SecurityKeyError => err
+    invalid_security_key(user, err.message)
+  end
+
+  def invalid_security_key(user, err_message = nil)
+    challenge = SecureRandom.hex(30)
+    secure_session["staged-webauthn-challenge-#{user.id}"] = challenge
+    secure_session["staged-webauthn-rp-id-#{user.id}"] = Discourse.current_hostname
+    return render json: failed_json.merge(
+      error: err_message || I18n.t("login.invalid_security_key"),
+      reason: "invalid_security_key",
+      backup_enabled: user.backup_codes_enabled?,
+      allowed_credential_ids: user.security_keys.where(factor_type: UserSecurityKey.factor_types[:second_factor]).pluck(:credential_id),
+      challenge: challenge
+    )
   end
 
   def email_login_info

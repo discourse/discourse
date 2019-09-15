@@ -1,18 +1,6 @@
 # frozen_string_literal: true
 
 module Webauthn
-  class RegistrationError < StandardError; end
-
-  class InvalidOriginError < RegistrationError; end
-  class InvalidRelyingPartyIdError < RegistrationError; end
-  class UserVerificationError < RegistrationError; end
-  class ChallengeMismatchError < RegistrationError; end
-  class InvalidTypeError < RegistrationError; end
-  class UnsupportedPublicKeyAlgorithmError < RegistrationError; end
-  class UnsupportedAttestationFormatError < RegistrationError; end
-  class CredentialIdInUseError < RegistrationError; end
-  class MalformedAttestationError < RegistrationError; end
-
   class SecurityKeyRegistrationService
     def initialize(current_user, params, challenge_params)
       @current_user = current_user
@@ -75,6 +63,7 @@ module Webauthn
       #     clientExtensionResults and the extensions in authData MUST also be present as extension identifier values
       #     in options.extensions, i.e., no extensions are present that were not requested. In the general case, the
       #     meaning of "are as expected" is specific to the Relying Party and which extensions are in use.
+      #     Not using this right now.
 
       # 15. Determine the attestation statement format by performing a USASCII case-sensitive match on fmt against the
       #     set of supported WebAuthn Attestation Statement Format Identifier values. An up-to-date list of registered
@@ -105,8 +94,8 @@ module Webauthn
       #     is requested for a credential that is already registered to a different user,
       #     the Relying Party SHOULD fail this registration ceremony, or it MAY decide to accept
       #     the registration, e.g. while deleting the older registration.
-      encoded_credential_id = Base64.encode64(credential_id)
-      endcoded_public_key = Base64.encode64(credential_public_key_bytes)
+      encoded_credential_id = Base64.strict_encode64(credential_id)
+      endcoded_public_key = Base64.strict_encode64(credential_public_key_bytes)
       raise(CredentialIdInUseError, I18n.t('webauthn.registration.credential_id_in_use_error')) if UserSecurityKey.exists?(credential_id: encoded_credential_id)
 
       # 20. If the attestation statement attStmt verified successfully and is found to be trustworthy,

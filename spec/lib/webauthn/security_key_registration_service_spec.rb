@@ -32,12 +32,10 @@ describe Webauthn::SecurityKeyRegistrationService do
   # The above attestation was generated in localhost; Discourse.current_hostname
   # returns test.localhost which we do not want
   let(:rp_id) { 'localhost' }
-  let(:rp_name) { SiteSetting.title }
   let(:challenge_params) do
     {
       challenge: challenge,
       rp_id: rp_id,
-      rp_name: rp_name,
       origin: Discourse.base_url
     }
   end

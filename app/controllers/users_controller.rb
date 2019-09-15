@@ -1180,11 +1180,10 @@ class UsersController < ApplicationController
       params,
       challenge: secure_session["staged-webauthn-challenge-#{current_user.id}"],
       rp_id: secure_session["staged-webauthn-rp-id-#{current_user.id}"],
-      rp_name: secure_session["staged-webauthn-rp-name-#{current_user.id}"],
       origin: Discourse.base_url
     ).register_second_factor_security_key
     render json: success_json
-  rescue ::Webauthn::RegistrationError => err
+  rescue ::Webauthn::SecurityKeyError => err
     render json: failed_json.merge(
       error: err.message
     )

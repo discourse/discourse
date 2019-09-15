@@ -1,0 +1,10 @@
+<div id="security-key">
+  <h3>{{i18n 'login.second_factor_title'}}</h3>
+  <p>{{i18n 'login.security_key_description'}}</p>
+  {{d-button
+      action=(action "authenticateSecurityKey")
+      icon="key"
+      label="login.security_key_authenticate"
+      type="button"
+      class='btn btn-large btn-primary'}}
+</div>

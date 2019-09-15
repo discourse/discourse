@@ -1,3 +1,4 @@
+/* global base64js:true */
 import { ajax } from "discourse/lib/ajax";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import showModal from "discourse/lib/show-modal";
@@ -8,6 +9,7 @@ import { escapeExpression, areCookiesEnabled } from "discourse/lib/utilities";
 import { extractError } from "discourse/lib/ajax-error";
 import computed from "ember-addons/ember-computed-decorators";
 import { SECOND_FACTOR_METHODS } from "discourse/models/user";
+import { stringToBuffer } from "discourse/lib/utilities";
 
 // This is happening outside of the app via popup
 const AuthErrors = [
@@ -43,14 +45,15 @@ export default Ember.Controller.extend(ModalFunctionality, {
       loggedIn: false,
       secondFactorRequired: false,
       showSecondFactor: false,
+      showSecurityKey: false,
       showLoginButtons: true,
       awaitingApproval: false
     });
   },
 
-  @computed("showSecondFactor")
-  credentialsClass(showSecondFactor) {
-    return showSecondFactor ? "hidden" : "";
+  @computed("showSecondFactor", "showSecurityKey")
+  credentialsClass(showSecondFactor, showSecurityKey) {
+    return (showSecondFactor || showSecurityKey) ? "hidden" : "";
   },
 
   @computed("showSecondFactor")
@@ -64,6 +67,11 @@ export default Ember.Controller.extend(ModalFunctionality, {
     if (awaitingApproval) classes.push("awaiting-approval");
     if (hasAtLeastOneLoginButton) classes.push("has-alt-auth");
     return classes.join(" ");
+  },
+
+  @computed("showSecondFactor", "showSecurityKey")
+  disableLoginFields(showSecondFactor, showSecurityKey) {
+    return showSecondFactor || showSecurityKey;
   },
 
   @computed("canLoginLocalWithEmail")
@@ -109,7 +117,8 @@ export default Ember.Controller.extend(ModalFunctionality, {
           login: this.loginName,
           password: this.loginPassword,
           second_factor_token: this.secondFactorToken,
-          second_factor_method: this.secondFactorMethod
+          second_factor_method: this.secondFactorMethod,
+          security_key_credential: this.securityKeyCredential
         }
       }).then(
         result => {
@@ -117,7 +126,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
           if (result && result.error) {
             this.set("loggingIn", false);
             if (
-              result.reason === "invalid_second_factor" &&
+              (result.reason === "invalid_second_factor" || result.reason === "invalid_security_key") &&
               !this.secondFactorRequired
             ) {
               document.getElementById("modal-alert").style.display = "none";
@@ -126,7 +135,11 @@ export default Ember.Controller.extend(ModalFunctionality, {
                 secondFactorRequired: true,
                 showLoginButtons: false,
                 backupEnabled: result.backup_enabled,
-                showSecondFactor: true
+                showSecondFactor: result.reason === "invalid_second_factor",
+                showSecurityKey: result.reason === "invalid_security_key",
+                loginDisabled: result.reason === "invalid_security_key",
+                securityKeyChallenge: result.challenge,
+                securityKeyAllowedCredentialIds: result.allowed_credential_ids
               });
 
               Ember.run.schedule("afterRender", () =>
@@ -286,6 +299,46 @@ export default Ember.Controller.extend(ModalFunctionality, {
         })
         .catch(e => this.flash(extractError(e), "error"))
         .finally(() => this.set("processingEmailLink", false));
+    },
+
+    authenticateSecurityKey() {
+      let challengeBuffer = stringToBuffer(this.get('securityKeyChallenge'));
+      let allowCredentials = this.get('securityKeyAllowedCredentialIds').map((credentialId) => {
+        return {
+          id: stringToBuffer(atob(credentialId)),
+          type: 'public-key'
+        };
+      });
+      navigator.credentials.get({
+        publicKey: {
+          challenge: challengeBuffer,
+          allowCredentials: allowCredentials,
+          timeout: 60000,
+
+          // see https://chromium.googlesource.com/chromium/src/+/master/content/browser/webauth/uv_preferred.md for why
+          // default value of preferred is not necesarrily what we want, it limits webauthn to only devices that support
+          // user verification, which usually requires entering a PIN
+          authenticatorSelection: {
+            userVerification: 'discouraged'
+          }
+        }
+      }).then((credential) => {
+        // 1. if there is a credential, check if the raw ID base64 matches
+        // any of the allowed credential ids
+        this.get('securityKeyAllowedCredentialIds').some(credentialId => base64js.fromByteArray(new Uint8Array(credential.rawId)) === credentialId);
+
+        this.set('securityKeyCredential', {
+          signature: base64js.fromByteArray(new Uint8Array(credential.response.signature)),
+          clientData: base64js.fromByteArray(new Uint8Array(credential.response.clientDataJSON)),
+          authenticatorData: base64js.fromByteArray(new Uint8Array(credential.response.authenticatorData)),
+          credentialId: base64js.fromByteArray(new Uint8Array(credential.rawId))
+        });
+        this.send('login');
+      }, (err) => {
+        if (err.name === 'NotAllowedError') {
+          return this.flash(I18n.t('login.security_key_not_allowed_error'), 'error');
+        }
+      });
     }
   },
 
