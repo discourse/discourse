@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require_dependency 'user'
-
 module Jobs
   class NarrativeInit < ::Jobs::Base
     sidekiq_options queue: 'critical'

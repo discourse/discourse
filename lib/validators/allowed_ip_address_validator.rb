@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require_dependency "spam_handler"
-
 class AllowedIpAddressValidator < ActiveModel::EachValidator
 
   def validate_each(record, attribute, value)

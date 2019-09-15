@@ -300,8 +300,6 @@ after_initialize do
     end
   end
 
-  require_dependency "application_controller"
-
   class DiscoursePoll::PollsController < ::ApplicationController
     requires_plugin PLUGIN_NAME
 
