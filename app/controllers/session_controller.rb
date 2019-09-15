@@ -299,14 +299,18 @@ class SessionController < ApplicationController
     if payload = login_error_check(user)
       render json: payload
     else
-      security_key_valid = ::Webauthn::SecurityKeyAuthenticationService.new(user, params[:security_key_credential],
-        challenge: secure_session["staged-webauthn-challenge-#{user.id}"],
-        rp_id: secure_session["staged-webauthn-rp-id-#{user.id}"],
-        origin: Discourse.base_url
-      ).authenticate_security_key
-      return invalid_security_key(user) if user.security_keys_enabled? && !security_key_valid
+      if (params[:second_factor_token].blank?)
+        security_key_valid = ::Webauthn::SecurityKeyAuthenticationService.new(user, params[:security_key_credential],
+          challenge: secure_session["staged-webauthn-challenge-#{user.id}"],
+          rp_id: secure_session["staged-webauthn-rp-id-#{user.id}"],
+          origin: Discourse.base_url
+        ).authenticate_security_key
+        return invalid_security_key(user) if user.security_keys_enabled? && !security_key_valid
+      end
 
-      if user.totp_enabled? && !user.authenticate_second_factor(params[:second_factor_token], params[:second_factor_method].to_i)
+      if user.totp_enabled? && \
+         !user.authenticate_second_factor(params[:second_factor_token], params[:second_factor_method].to_i) &&
+         !params[:security_key_credential].present?
         return render json: failed_json.merge(
           error: I18n.t("login.invalid_second_factor_code"),
           reason: "invalid_second_factor",

@@ -1455,7 +1455,7 @@ en:
       second_factor_backup_description: "Please enter one of your backup codes:"
       second_factor: "<a href>Log in using Authenticator app</a>"
       security_key_description: "When you have your physical security key prepared press the Authenticate with Security Key button below."
-      security_key_alternative: "I don't have my security key"
+      security_key_alternative: "<a href>Can't find your security key or want to use another method?</a>"
       security_key_authenticate: "Authenticate with Security Key"
       security_key_not_allowed_error: "The security key authentication process either timed out or was cancelled."
       email_placeholder: "email or username"

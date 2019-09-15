@@ -22,20 +22,24 @@
             </tr>
           </table>
         </div>
-        {{#if showSecurityKey}}
-          {{#security-key-form
-            allowedCredentialIds=securityKeyAllowedCredentialIds
-            challenge=securityKeyChallenge
-            action=(action "authenticateSecurityKey")}}
-          {{/security-key-form}}
-        {{/if}}
         {{#second-factor-form
           secondFactorMethod=secondFactorMethod
           secondFactorToken=secondFactorToken
           class=secondFactorClass
           backupEnabled=backupEnabled
           isLogin=true}}
-          {{second-factor-input value=secondFactorToken inputId='login-second-factor' secondFactorMethod=secondFactorMethod backupEnabled=backupEnabled}}
+          {{#if showSecurityKey}}
+            {{#security-key-form
+              allowedCredentialIds=securityKeyAllowedCredentialIds
+              challenge=securityKeyChallenge
+              showSecurityKey=showSecurityKey
+              showSecondFactor=showSecondFactor
+              secondFactorMethod=secondFactorMethod
+              action=(action "authenticateSecurityKey")}}
+            {{/security-key-form}}
+          {{else}}
+            {{second-factor-input value=secondFactorToken inputId='login-second-factor' secondFactorMethod=secondFactorMethod backupEnabled=backupEnabled}}
+          {{/if}}
         {{/second-factor-form}}
       </form>
     {{/if}}

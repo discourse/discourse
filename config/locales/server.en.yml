@@ -2280,6 +2280,7 @@ en:
     second_factor_backup_description: "Please enter one of your backup codes:"
     second_factor_backup_title: "Two Factor Backup Code"
     invalid_second_factor_code: "Invalid authentication code. Each code can only be used once."
+    invalid_security_key: "Invalid security key."
     second_factor_toggle:
       totp: "Use an authenticator app instead"
       backup_code: "Use a backup code instead"

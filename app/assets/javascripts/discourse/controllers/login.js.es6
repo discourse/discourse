@@ -56,9 +56,9 @@ export default Ember.Controller.extend(ModalFunctionality, {
     return (showSecondFactor || showSecurityKey) ? "hidden" : "";
   },
 
-  @computed("showSecondFactor")
-  secondFactorClass(showSecondFactor) {
-    return showSecondFactor ? "" : "hidden";
+  @computed("showSecondFactor", "showSecurityKey")
+  secondFactorClass(showSecondFactor, showSecurityKey) {
+    return (showSecondFactor || showSecurityKey) ? "" : "hidden";
   },
 
   @computed("awaitingApproval", "hasAtLeastOneLoginButton")
@@ -137,17 +137,20 @@ export default Ember.Controller.extend(ModalFunctionality, {
                 backupEnabled: result.backup_enabled,
                 showSecondFactor: result.reason === "invalid_second_factor",
                 showSecurityKey: result.reason === "invalid_security_key",
-                loginDisabled: result.reason === "invalid_security_key",
+                secondFactorMethod: result.reason === "invalid_security_key" ? SECOND_FACTOR_METHODS.SECURITY_KEY : SECOND_FACTOR_METHODS.TOTP,
                 securityKeyChallenge: result.challenge,
                 securityKeyAllowedCredentialIds: result.allowed_credential_ids
               });
 
-              Ember.run.schedule("afterRender", () =>
-                document
-                  .getElementById("second-factor")
-                  .querySelector("input")
-                  .focus()
-              );
+              // only need to focus the 2FA input for TOTP
+              if (!this.showSecurityKey) {
+                Ember.run.schedule("afterRender", () =>
+                  document
+                    .getElementById("second-factor")
+                    .querySelector("input")
+                    .focus()
+                );
+              }
 
               return;
             } else if (result.reason === "not_activated") {
