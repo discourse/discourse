@@ -48,7 +48,7 @@ describe Webauthn::SecurityKeyRegistrationService do
 
     it 'raises an InvalidTypeError' do
       expect { subject.register_second_factor_security_key }.to raise_error(
-        Webauthn::InvalidTypeError, I18n.t('webauthn.registration.invalid_type_error')
+        Webauthn::InvalidTypeError, I18n.t('webauthn.validation.invalid_type_error')
       )
     end
   end
@@ -58,7 +58,7 @@ describe Webauthn::SecurityKeyRegistrationService do
 
     it 'raises a ChallengeMismatchError' do
       expect { subject.register_second_factor_security_key }.to raise_error(
-        Webauthn::ChallengeMismatchError, I18n.t('webauthn.registration.challenge_mismatch_error')
+        Webauthn::ChallengeMismatchError, I18n.t('webauthn.validation.challenge_mismatch_error')
       )
     end
   end
@@ -68,7 +68,7 @@ describe Webauthn::SecurityKeyRegistrationService do
 
     it 'raises a InvalidOriginError' do
       expect { subject.register_second_factor_security_key }.to raise_error(
-        Webauthn::InvalidOriginError, I18n.t('webauthn.registration.invalid_origin_error')
+        Webauthn::InvalidOriginError, I18n.t('webauthn.validation.invalid_origin_error')
       )
     end
   end
@@ -78,7 +78,7 @@ describe Webauthn::SecurityKeyRegistrationService do
 
     it 'raises a InvalidRelyingPartyIdError' do
       expect { subject.register_second_factor_security_key }.to raise_error(
-        Webauthn::InvalidRelyingPartyIdError, I18n.t('webauthn.registration.invalid_relying_party_id_error')
+        Webauthn::InvalidRelyingPartyIdError, I18n.t('webauthn.validation.invalid_relying_party_id_error')
       )
     end
   end
@@ -86,34 +86,42 @@ describe Webauthn::SecurityKeyRegistrationService do
   context 'when the public key algorithm is not supported by the server' do
     before do
       @original_supported_alg_value = Webauthn::SUPPORTED_ALGORITHMS
-      Webauthn::SUPPORTED_ALGORITHMS = [-257]
+      silence_warnings do
+        Webauthn::SUPPORTED_ALGORITHMS = [-257]
+      end
     end
 
     it 'raises a UnsupportedPublicKeyAlgorithmError' do
       expect { subject.register_second_factor_security_key }.to raise_error(
-        Webauthn::UnsupportedPublicKeyAlgorithmError, I18n.t('webauthn.registration.unsupported_public_key_algorithm_error')
+        Webauthn::UnsupportedPublicKeyAlgorithmError, I18n.t('webauthn.validation.unsupported_public_key_algorithm_error')
       )
     end
 
     after do
-      Webauthn::SUPPORTED_ALGORITHMS = @original_supported_alg_value
+      silence_warnings do
+        Webauthn::SUPPORTED_ALGORITHMS = @original_supported_alg_value
+      end
     end
   end
 
   context 'when the attestation format is not supported' do
     before do
       @original_supported_alg_value = Webauthn::VALID_ATTESTATION_FORMATS
-      Webauthn::VALID_ATTESTATION_FORMATS = ['err']
+      silence_warnings do
+        Webauthn::VALID_ATTESTATION_FORMATS = ['err']
+      end
     end
 
     it 'raises a UnsupportedAttestationFormatError' do
       expect { subject.register_second_factor_security_key }.to raise_error(
-        Webauthn::UnsupportedAttestationFormatError, I18n.t('webauthn.registration.unsupported_attestation_format_error')
+        Webauthn::UnsupportedAttestationFormatError, I18n.t('webauthn.validation.unsupported_attestation_format_error')
       )
     end
 
     after do
-      Webauthn::VALID_ATTESTATION_FORMATS = @original_supported_alg_value
+      silence_warnings do
+        Webauthn::VALID_ATTESTATION_FORMATS = @original_supported_alg_value
+      end
     end
   end
 
@@ -128,7 +136,7 @@ describe Webauthn::SecurityKeyRegistrationService do
 
       # error!
       expect { subject.register_second_factor_security_key }.to raise_error(
-        Webauthn::CredentialIdInUseError, I18n.t('webauthn.registration.credential_id_in_use_error')
+        Webauthn::CredentialIdInUseError, I18n.t('webauthn.validation.credential_id_in_use_error')
       )
     end
   end
@@ -140,7 +148,7 @@ describe Webauthn::SecurityKeyRegistrationService do
 
     it 'raises a MalformedAttestationError' do
       expect { subject.register_second_factor_security_key }.to raise_error(
-        Webauthn::MalformedAttestationError, I18n.t('webauthn.registration.malformed_attestation_error')
+        Webauthn::MalformedAttestationError, I18n.t('webauthn.validation.malformed_attestation_error')
       )
     end
   end

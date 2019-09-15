@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+require 'webauthn/security_key_base_validation_service'
 require 'webauthn/security_key_registration_service'
 require 'webauthn/security_key_authentication_service'
 

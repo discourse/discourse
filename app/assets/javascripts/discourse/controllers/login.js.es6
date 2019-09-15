@@ -327,7 +327,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
         // 1. if there is a credential, check if the raw ID base64 matches
         // any of the allowed credential ids
         if (!this.get('securityKeyAllowedCredentialIds').some(credentialId => base64js.fromByteArray(new Uint8Array(credential.rawId)) === credentialId)) {
-          this.flash(I18n.t('login.security_key_no_matching_credential_error'), 'error');
+          return this.flash(I18n.t('login.security_key_no_matching_credential_error'), 'error');
         };
 
         this.set('securityKeyCredential', {

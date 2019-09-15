@@ -67,7 +67,7 @@ describe Webauthn::SecurityKeyAuthenticationService do
 
     it 'raises a NotFoundError' do
       expect { subject.authenticate_security_key }.to raise_error(
-        Webauthn::NotFoundError, I18n.t('webauthn.registration.not_found_error')
+        Webauthn::NotFoundError, I18n.t('webauthn.validation.not_found_error')
       )
     end
   end
@@ -77,7 +77,7 @@ describe Webauthn::SecurityKeyAuthenticationService do
 
     it 'raises an OwnershipError' do
       expect { subject.authenticate_security_key }.to raise_error(
-        Webauthn::OwnershipError, I18n.t('webauthn.registration.ownership_error')
+        Webauthn::OwnershipError, I18n.t('webauthn.validation.ownership_error')
       )
     end
   end
@@ -87,7 +87,7 @@ describe Webauthn::SecurityKeyAuthenticationService do
 
     it 'raises an InvalidTypeError' do
       expect { subject.authenticate_security_key }.to raise_error(
-        Webauthn::InvalidTypeError, I18n.t('webauthn.registration.invalid_type_error')
+        Webauthn::InvalidTypeError, I18n.t('webauthn.validation.invalid_type_error')
       )
     end
   end
@@ -97,7 +97,7 @@ describe Webauthn::SecurityKeyAuthenticationService do
 
     it 'raises a ChallengeMismatchError' do
       expect { subject.authenticate_security_key }.to raise_error(
-        Webauthn::ChallengeMismatchError, I18n.t('webauthn.registration.challenge_mismatch_error')
+        Webauthn::ChallengeMismatchError, I18n.t('webauthn.validation.challenge_mismatch_error')
       )
     end
   end
@@ -107,7 +107,7 @@ describe Webauthn::SecurityKeyAuthenticationService do
 
     it 'raises a InvalidOriginError' do
       expect { subject.authenticate_security_key }.to raise_error(
-        Webauthn::InvalidOriginError, I18n.t('webauthn.registration.invalid_origin_error')
+        Webauthn::InvalidOriginError, I18n.t('webauthn.validation.invalid_origin_error')
       )
     end
   end
@@ -117,7 +117,7 @@ describe Webauthn::SecurityKeyAuthenticationService do
 
     it 'raises a InvalidRelyingPartyIdError' do
       expect { subject.authenticate_security_key }.to raise_error(
-        Webauthn::InvalidRelyingPartyIdError, I18n.t('webauthn.registration.invalid_relying_party_id_error')
+        Webauthn::InvalidRelyingPartyIdError, I18n.t('webauthn.validation.invalid_relying_party_id_error')
       )
     end
   end
@@ -127,7 +127,7 @@ describe Webauthn::SecurityKeyAuthenticationService do
 
     it 'raises a PublicKeyError' do
       expect { subject.authenticate_security_key }.to raise_error(
-        Webauthn::PublicKeyError, I18n.t('webauthn.registration.public_key_error')
+        Webauthn::PublicKeyError, I18n.t('webauthn.validation.public_key_error')
       )
     end
   end
