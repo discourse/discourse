@@ -2,6 +2,8 @@
 
 return if GlobalSetting.skip_db?
 
+require_dependency 'webpush'
+
 def generate_vapid_key?
   SiteSetting.vapid_public_key.blank? ||
     SiteSetting.vapid_private_key.blank? ||

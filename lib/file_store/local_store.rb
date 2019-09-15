@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require_dependency 'file_store/base_store'
+
 module FileStore
 
   class LocalStore < BaseStore
