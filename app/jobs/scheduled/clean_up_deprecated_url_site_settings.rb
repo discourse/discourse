@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Jobs
-  class CleanUpDeprecatedUrlSiteSettings < Jobs::Scheduled
+  class CleanUpDeprecatedUrlSiteSettings < ::Jobs::Scheduled
     every 1.day
 
     def execute(args)

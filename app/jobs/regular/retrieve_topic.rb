@@ -1,8 +1,5 @@
 # frozen_string_literal: true
 
-require_dependency 'email/sender'
-require_dependency 'topic_retriever'
-
 module Jobs
 
   # Asynchronously retrieve a topic from an embedded site

@@ -275,7 +275,7 @@ module Jobs
     extend MiniScheduler::Schedule
 
     def perform(*args)
-      if (Jobs::Heartbeat === self) || !Discourse.readonly_mode?
+      if (::Jobs::Heartbeat === self) || !Discourse.readonly_mode?
         super
       end
     end

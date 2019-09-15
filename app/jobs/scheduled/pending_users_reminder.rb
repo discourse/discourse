@@ -2,7 +2,7 @@
 
 module Jobs
 
-  class PendingUsersReminder < Jobs::Scheduled
+  class PendingUsersReminder < ::Jobs::Scheduled
     every 1.hour
 
     def execute(args)

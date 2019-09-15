@@ -1,20 +1,6 @@
 # frozen_string_literal: true
 
 require 'current_user'
-require_dependency 'canonical_url'
-require_dependency 'discourse'
-require_dependency 'custom_renderer'
-require_dependency 'archetype'
-require_dependency 'rate_limiter'
-require_dependency 'crawler_detection'
-require_dependency 'json_error'
-require_dependency 'letter_avatar'
-require_dependency 'distributed_cache'
-require_dependency 'global_path'
-require_dependency 'secure_session'
-require_dependency 'topic_query'
-require_dependency 'hijack'
-require_dependency 'read_only_header'
 
 class ApplicationController < ActionController::Base
   include CurrentUser

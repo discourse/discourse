@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-describe Jobs::Heartbeat do
+describe ::Jobs::Heartbeat do
   after do
     Discourse.disable_readonly_mode
   end
@@ -13,8 +13,8 @@ describe Jobs::Heartbeat do
     Discourse.enable_readonly_mode
 
     Sidekiq::Testing.inline! do
-      Jobs::Heartbeat.new.perform(nil)
-      expect(Jobs::RunHeartbeat.last_heartbeat).to eq(Time.new.to_i)
+      ::Jobs::Heartbeat.new.perform(nil)
+      expect(::Jobs::RunHeartbeat.last_heartbeat).to eq(Time.new.to_i)
     end
   end
 end

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Jobs
-  class DirectoryRefreshOlder < Jobs::Scheduled
+  class DirectoryRefreshOlder < ::Jobs::Scheduled
     every 1.day
 
     def execute(args)

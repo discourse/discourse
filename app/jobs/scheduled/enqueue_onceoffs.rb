@@ -2,7 +2,7 @@
 
 module Jobs
 
-  class EnqueueOnceoffs < Jobs::Scheduled
+  class EnqueueOnceoffs < ::Jobs::Scheduled
     every 10.minutes
 
     def execute(args)

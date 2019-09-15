@@ -2,7 +2,7 @@
 
 module Jobs
 
-  class InvalidateInactiveAdmins < Jobs::Scheduled
+  class InvalidateInactiveAdmins < ::Jobs::Scheduled
     every 1.day
 
     def execute(_)

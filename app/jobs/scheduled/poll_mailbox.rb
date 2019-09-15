@@ -3,7 +3,7 @@
 require 'net/pop'
 
 module Jobs
-  class PollMailbox < Jobs::Scheduled
+  class PollMailbox < ::Jobs::Scheduled
     every SiteSetting.pop3_polling_period_mins.minutes
     sidekiq_options retry: false
 

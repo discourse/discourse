@@ -7,7 +7,7 @@ require 'digest/sha1'
 require 'excon'
 
 module Jobs
-  class PollFeed < Jobs::Scheduled
+  class PollFeed < ::Jobs::Scheduled
     every 5.minutes
 
     sidekiq_options retry: false

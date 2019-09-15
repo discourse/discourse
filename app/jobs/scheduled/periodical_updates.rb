@@ -4,7 +4,7 @@ module Jobs
 
   # This job will run on a regular basis to update statistics and denormalized data.
   # If it does not run, the site will not function properly.
-  class PeriodicalUpdates < Jobs::Scheduled
+  class PeriodicalUpdates < ::Jobs::Scheduled
     every 15.minutes
 
     def self.should_update_long_topics?
