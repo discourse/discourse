@@ -1,9 +1,5 @@
 # frozen_string_literal: true
 
-require_dependency 'admin_dashboard_data'
-require_dependency 'group'
-require_dependency 'group_message'
-
 module Jobs
   class DashboardStats < Jobs::Scheduled
     every 30.minutes

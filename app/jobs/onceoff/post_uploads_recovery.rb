@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require_dependency "upload_recovery"
-
 module Jobs
   class PostUploadsRecovery < ::Jobs::Onceoff
     MIN_PERIOD = 30

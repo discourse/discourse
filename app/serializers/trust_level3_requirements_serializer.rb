@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require_dependency 'penalty_counts_serializer'
-
 class TrustLevel3RequirementsSerializer < ApplicationSerializer
 
   has_one :penalty_counts, embed: :object, serializer: PenaltyCountsSerializer

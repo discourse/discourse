@@ -1,10 +1,6 @@
 # -*- encoding : utf-8 -*-
 # frozen_string_literal: true
 
-require_dependency 'email'
-require_dependency 'enum'
-require_dependency 'user_name_suggester'
-
 class Users::OmniauthCallbacksController < ApplicationController
 
   skip_before_action :redirect_to_login_if_required

@@ -1,13 +1,5 @@
 # frozen_string_literal: true
 
-require_dependency 'discourse_hub'
-require_dependency 'user_name_suggester'
-require_dependency 'rate_limiter'
-require_dependency 'wizard'
-require_dependency 'wizard/builder'
-require_dependency 'admin_confirmation'
-require_dependency 'webauthn/webauthn'
-
 class UsersController < ApplicationController
 
   skip_before_action :authorize_mini_profiler, only: [:avatar]

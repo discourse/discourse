@@ -1,9 +1,5 @@
 # frozen_string_literal: true
 
-require_dependency 'user_destroyer'
-require_dependency 'admin_user_index_query'
-require_dependency 'admin_confirmation'
-
 class Admin::UsersController < Admin::AdminController
 
   before_action :fetch_user, only: [:suspend,

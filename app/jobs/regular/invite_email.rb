@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require_dependency 'email/sender'
-
 module Jobs
 
   # Asynchronously send an email

@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require_dependency "post_alerter"
-
 module Jobs
   class NotifyTagChange < ::Jobs::Base
     def execute(args)

@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require 'image_sizer'
-require_dependency 'system_message'
 
 module Jobs
 

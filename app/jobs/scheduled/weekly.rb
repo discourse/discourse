@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require_dependency 'score_calculator'
-
 module Jobs
 
   # This job will run on a regular basis to update statistics and denormalized data.

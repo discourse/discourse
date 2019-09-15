@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require_dependency 'user_destroyer'
-
 module Jobs
   class FixPrimaryEmailsForStagedUsers < ::Jobs::Onceoff
     def execute_onceoff(args)

@@ -1,5 +1,4 @@
 # frozen_string_literal: true
-require_dependency 'reviewable_score_explanation_serializer'
 
 class ReviewableExplanationSerializer < ApplicationSerializer
   attributes(

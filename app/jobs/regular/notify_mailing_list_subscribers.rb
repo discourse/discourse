@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require_dependency 'post'
-
 module Jobs
 
   class NotifyMailingListSubscribers < ::Jobs::Base

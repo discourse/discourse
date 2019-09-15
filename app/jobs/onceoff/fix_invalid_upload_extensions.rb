@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require_dependency "upload_fixer"
-
 module Jobs
   class FixInvalidUploadExtensions < ::Jobs::Onceoff
     def execute_onceoff(args)

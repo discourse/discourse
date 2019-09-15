@@ -1,8 +1,5 @@
 # frozen_string_literal: true
 
-require_dependency 'topic_list_responder'
-require_dependency 'topic_query_params'
-
 class ListController < ApplicationController
   include TopicListResponder
   include TopicQueryParams

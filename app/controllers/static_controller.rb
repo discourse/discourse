@@ -1,8 +1,5 @@
 # frozen_string_literal: true
 
-require_dependency 'distributed_memoizer'
-require_dependency 'file_helper'
-
 class StaticController < ApplicationController
 
   skip_before_action :check_xhr, :redirect_to_login_if_required

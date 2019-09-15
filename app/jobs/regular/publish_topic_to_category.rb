@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require_dependency 'topic_publisher'
-
 module Jobs
   class PublishTopicToCategory < ::Jobs::Base
     def execute(args)
