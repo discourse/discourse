@@ -321,14 +321,14 @@ export default Ember.Controller.extend(ModalFunctionality, {
           // see https://chromium.googlesource.com/chromium/src/+/master/content/browser/webauth/uv_preferred.md for why
           // default value of preferred is not necesarrily what we want, it limits webauthn to only devices that support
           // user verification, which usually requires entering a PIN
-          authenticatorSelection: {
-            userVerification: 'discouraged'
-          }
+          userVerification: 'discouraged'
         }
       }).then((credential) => {
         // 1. if there is a credential, check if the raw ID base64 matches
         // any of the allowed credential ids
-        this.get('securityKeyAllowedCredentialIds').some(credentialId => base64js.fromByteArray(new Uint8Array(credential.rawId)) === credentialId);
+        if (!this.get('securityKeyAllowedCredentialIds').some(credentialId => base64js.fromByteArray(new Uint8Array(credential.rawId)) === credentialId)) {
+          this.flash(I18n.t('login.security_key_no_matching_credential_error'), 'error');
+        };
 
         this.set('securityKeyCredential', {
           signature: base64js.fromByteArray(new Uint8Array(credential.response.signature)),
@@ -341,6 +341,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
         if (err.name === 'NotAllowedError') {
           return this.flash(I18n.t('login.security_key_not_allowed_error'), 'error');
         }
+        this.flash(err, 'error');
       });
     }
   },

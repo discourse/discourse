@@ -6,7 +6,7 @@ require 'webauthn/security_key_registration_service'
 describe Webauthn::SecurityKeyRegistrationService do
   let(:client_data_challenge) { Base64.encode64(challenge) }
   let(:client_data_webauthn_type) { 'webauthn.create' }
-  let(:client_data_origin) { Discourse.base_url }
+  let(:client_data_origin) { 'http://localhost:3000' }
   let(:client_data_param) {
     {
       challenge: client_data_challenge,
@@ -36,7 +36,7 @@ describe Webauthn::SecurityKeyRegistrationService do
     {
       challenge: challenge,
       rp_id: rp_id,
-      origin: Discourse.base_url
+      origin: 'http://localhost:3000'
     }
   end
   let(:challenge) { 'f1e04530f34a1b6a08d032d8550e23eb8330be04e4166008f26c0e1b42ad' }

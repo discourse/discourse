@@ -70,6 +70,8 @@ module Webauthn
 
       # Success! Update the last used at time for the key.
       security_key.update(last_used: Time.zone.now)
+    rescue OpenSSL::PKey::PKeyError
+      raise(PublicKeyError, I18n.t('webauthn.registration.public_key_error'))
     end
 
     private
