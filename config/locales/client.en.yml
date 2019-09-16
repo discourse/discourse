@@ -1626,6 +1626,7 @@ en:
         try_like: "Have you tried the {{heart}} button?"
         category_missing: "You must choose a category"
         tags_missing: "You must choose at least {{count}} tags"
+        topic_template_not_modified: "You have not modified the topic template. Please update the topic."
 
       save_edit: "Save Edit"
       overwrite_edit: "Overwrite Edit"
