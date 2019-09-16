@@ -7,6 +7,8 @@ module Stylesheet
   class Importer < SassC::Importer
     include GlobalPath
 
+    THEME_TARGETS = %w{embedded_theme mobile_theme desktop_theme}
+
     def self.special_imports
       @special_imports ||= {}
     end
@@ -15,87 +17,94 @@ module Stylesheet
       special_imports[name] = blk
     end
 
-    register_import "theme_field" do
-      Import.new("#{theme_dir(@theme_id)}/theme_field.scss", source: @theme_field)
-    end
+    # Contained in function so that it can be called repeatedly from test mode
+    def self.register_imports!
+      @special_imports = {}
 
-    Discourse.plugins.each do |plugin|
-      plugin_directory_name = plugin.directory_name
+      register_import "theme_field" do
+        Import.new("#{theme_dir(@theme_id)}/theme_field.scss", source: @theme_field)
+      end
 
-      ["", "mobile", "desktop"].each do |type|
-        asset_name = type.present? ? "#{plugin_directory_name}_#{type}" : plugin_directory_name
-        stylesheets = type.present? ? DiscoursePluginRegistry.send("#{type}_stylesheets") : DiscoursePluginRegistry.stylesheets
+      Discourse.plugins.each do |plugin|
+        plugin_directory_name = plugin.directory_name
 
-        if stylesheets[plugin_directory_name].present?
-          register_import asset_name do
-            import_files(stylesheets[plugin_directory_name])
+        ["", "mobile", "desktop"].each do |type|
+          asset_name = type.present? ? "#{plugin_directory_name}_#{type}" : plugin_directory_name
+          stylesheets = type.present? ? DiscoursePluginRegistry.send("#{type}_stylesheets") : DiscoursePluginRegistry.stylesheets
+
+          if stylesheets[plugin_directory_name].present?
+            register_import asset_name do
+              import_files(stylesheets[plugin_directory_name])
+            end
           end
         end
       end
-    end
 
-    register_import "plugins_variables" do
-      import_files(DiscoursePluginRegistry.sass_variables)
-    end
-
-    register_import "theme_colors" do
-      contents = +""
-      colors = (@theme_id && theme.color_scheme) ? theme.color_scheme.resolved_colors : ColorScheme.base_colors
-      colors.each do |n, hex|
-        contents << "$#{n}: ##{hex} !default;\n"
+      register_import "plugins_variables" do
+        import_files(DiscoursePluginRegistry.sass_variables)
       end
 
-      Import.new("theme_colors.scss", source: contents)
-    end
-
-    register_import "theme_variables" do
-      contents = +""
-
-      theme&.all_theme_variables&.each do |field|
-        if field.type_id == ThemeField.types[:theme_upload_var]
-          if upload = field.upload
-            url = upload_cdn_path(upload.url)
-            contents << "$#{field.name}: unquote(\"#{url}\");\n"
-          end
-        else
-          contents << to_scss_variable(field.name, field.value)
+      register_import "theme_colors" do
+        contents = +""
+        colors = (@theme_id && theme.color_scheme) ? theme.color_scheme.resolved_colors : ColorScheme.base_colors
+        colors.each do |n, hex|
+          contents << "$#{n}: ##{hex} !default;\n"
         end
+
+        Import.new("theme_colors.scss", source: contents)
       end
 
-      theme&.included_settings&.each do |name, value|
-        next if name == "theme_uploads"
-        contents << to_scss_variable(name, value)
+      register_import "theme_variables" do
+        contents = +""
+
+        theme&.all_theme_variables&.each do |field|
+          if field.type_id == ThemeField.types[:theme_upload_var]
+            if upload = field.upload
+              url = upload_cdn_path(upload.url)
+              contents << "$#{field.name}: unquote(\"#{url}\");\n"
+            end
+          else
+            contents << to_scss_variable(field.name, field.value)
+          end
+        end
+
+        theme&.included_settings&.each do |name, value|
+          next if name == "theme_uploads"
+          contents << to_scss_variable(name, value)
+        end
+
+        Import.new("theme_variable.scss", source: contents)
       end
 
-      Import.new("theme_variable.scss", source: contents)
-    end
+      register_import "category_backgrounds" do
+        contents = +""
+        Category.where('uploaded_background_id IS NOT NULL').each do |c|
+          contents << category_css(c) if c.uploaded_background&.url.present?
+        end
 
-    register_import "category_backgrounds" do
-      contents = +""
-      Category.where('uploaded_background_id IS NOT NULL').each do |c|
-        contents << category_css(c) if c.uploaded_background&.url.present?
+        Import.new("category_background.scss", source: contents)
       end
 
-      Import.new("category_background.scss", source: contents)
+      register_import "embedded_theme" do
+        next unless @theme_id
+
+        theme_import(:common, :embedded_scss)
+      end
+
+      register_import "mobile_theme" do
+        next unless @theme_id
+
+        theme_import(:mobile, :scss)
+      end
+
+      register_import "desktop_theme" do
+        next unless @theme_id
+
+        theme_import(:desktop, :scss)
+      end
     end
 
-    register_import "embedded_theme" do
-      next unless @theme_id
-
-      theme_import(:common, :embedded_scss)
-    end
-
-    register_import "mobile_theme" do
-      next unless @theme_id
-
-      theme_import(:mobile, :scss)
-    end
-
-    register_import "desktop_theme" do
-      next unless @theme_id
-
-      theme_import(:desktop, :scss)
-    end
+    register_imports!
 
     def initialize(options)
       @theme = options[:theme]
