@@ -190,7 +190,7 @@ export default Ember.Controller.extend(
                   () => {
                     bootbox.alert(
                       I18n.t("user.deleted_yourself"),
-                      () => (window.location.pathname = Discourse.getURL("/"))
+                      () => (window.location = Discourse.getURL("/"))
                     );
                   },
                   () => {
@@ -238,7 +238,7 @@ export default Ember.Controller.extend(
             if (!token) {
               const redirect = this.siteSettings.logout_redirect;
               if (Ember.isEmpty(redirect)) {
-                window.location.pathname = Discourse.getURL("/");
+                window.location = Discourse.getURL("/");
               } else {
                 window.location.href = redirect;
               }

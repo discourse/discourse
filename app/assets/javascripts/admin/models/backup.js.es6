@@ -63,7 +63,7 @@ Backup.reopenClass({
         bootbox.alert(result.message);
       } else {
         // redirect to homepage (session might be lost)
-        window.location.pathname = Discourse.getURL("/");
+        window.location = Discourse.getURL("/");
       }
     });
   }
