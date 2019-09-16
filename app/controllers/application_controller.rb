@@ -64,7 +64,7 @@ class ApplicationController < ActionController::Base
     after_action :remember_theme_id
 
     def remember_theme_id
-      if @theme_ids.present?
+      if @theme_ids.present? && request.format == "html"
         Stylesheet::Watcher.theme_id = @theme_ids.first if defined? Stylesheet::Watcher
       end
     end
