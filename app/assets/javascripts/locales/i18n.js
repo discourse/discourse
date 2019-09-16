@@ -116,7 +116,15 @@ I18n.interpolate = function(message, options) {
   for (var i = 0; placeholder = matches[i]; i++) {
     name = placeholder.replace(this.PLACEHOLDER, "$1");
 
-    value = options[name];
+    if (typeof options[name] === "string") {
+      // The dollar sign (`$`) is a special replace pattern, and `$&` inserts
+      // the matched string. Thus dollars signs need to be escaped with the
+      // special pattern `$$`, which inserts a single `$`.
+      // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/replace#Specifying_a_string_as_a_parameter
+      value = options[name].replace(/\$/g, "$$$$");
+    } else {
+      value = options[name];
+    }
 
     if (!this.isValidNode(options, name)) {
       value = "[missing " + placeholder + " value]";
