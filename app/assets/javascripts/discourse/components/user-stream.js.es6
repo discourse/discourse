@@ -70,13 +70,16 @@ export default Ember.Component.extend(LoadMore, {
       } else {
         Draft.get(item.draft_key)
           .then(d => {
-            if (d.draft) {
-              composer.open({
-                draft: d.draft,
-                draftKey: item.draft_key,
-                draftSequence: d.draft_sequence
-              });
+            const draft = d.draft || item.data;
+            if (!draft) {
+              return;
             }
+
+            composer.open({
+              draft,
+              draftKey: item.draft_key,
+              draftSequence: d.draft_sequence
+            });
           })
           .catch(error => {
             popupAjaxError(error);
