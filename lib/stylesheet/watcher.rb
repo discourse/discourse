@@ -78,7 +78,9 @@ module Stylesheet
 
       Stylesheet::Manager.cache.clear
 
-      message = ["desktop", "mobile", "admin"].map do |name|
+      targets = ["desktop", "mobile", "admin"]
+      targets.append(*Discourse.find_plugin_css_assets(mobile_view: true, desktop_view: true))
+      message = targets.map do |name|
         Stylesheet::Manager.stylesheet_data(name.to_sym, Stylesheet::Watcher.theme_id)
       end.flatten
       MessageBus.publish '/file-change', message
