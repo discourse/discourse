@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'badge_granter'
-
 module Jobs
   class GrantNewUserOfTheMonthBadges < ::Jobs::Scheduled
     every 1.day

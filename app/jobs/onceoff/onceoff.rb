@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative './base.rb'
+require_relative '../base.rb'
 
 class Jobs::Onceoff < ::Jobs::Base
   sidekiq_options retry: false
