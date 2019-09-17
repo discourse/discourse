@@ -52,12 +52,12 @@ export default Ember.Controller.extend(ModalFunctionality, {
 
   @computed("showSecondFactor", "showSecurityKey")
   credentialsClass(showSecondFactor, showSecurityKey) {
-    return (showSecondFactor || showSecurityKey) ? "hidden" : "";
+    return showSecondFactor || showSecurityKey ? "hidden" : "";
   },
 
   @computed("showSecondFactor", "showSecurityKey")
   secondFactorClass(showSecondFactor, showSecurityKey) {
-    return (showSecondFactor || showSecurityKey) ? "" : "hidden";
+    return showSecondFactor || showSecurityKey ? "" : "hidden";
   },
 
   @computed("awaitingApproval", "hasAtLeastOneLoginButton")
@@ -125,7 +125,8 @@ export default Ember.Controller.extend(ModalFunctionality, {
           if (result && result.error) {
             this.set("loggingIn", false);
             if (
-              (result.reason === "invalid_second_factor" || result.reason === "invalid_security_key") &&
+              (result.reason === "invalid_second_factor" ||
+                result.reason === "invalid_security_key") &&
               !this.secondFactorRequired
             ) {
               document.getElementById("modal-alert").style.display = "none";
@@ -136,7 +137,10 @@ export default Ember.Controller.extend(ModalFunctionality, {
                 backupEnabled: result.backup_enabled,
                 showSecondFactor: result.reason === "invalid_second_factor",
                 showSecurityKey: result.reason === "invalid_security_key",
-                secondFactorMethod: result.reason === "invalid_security_key" ? SECOND_FACTOR_METHODS.SECURITY_KEY : SECOND_FACTOR_METHODS.TOTP,
+                secondFactorMethod:
+                  result.reason === "invalid_security_key"
+                    ? SECOND_FACTOR_METHODS.SECURITY_KEY
+                    : SECOND_FACTOR_METHODS.TOTP,
                 securityKeyChallenge: result.challenge,
                 securityKeyAllowedCredentialIds: result.allowed_credential_ids
               });
@@ -304,44 +308,61 @@ export default Ember.Controller.extend(ModalFunctionality, {
     },
 
     authenticateSecurityKey() {
-      let challengeBuffer = stringToBuffer(this.get('securityKeyChallenge'));
-      let allowCredentials = this.get('securityKeyAllowedCredentialIds').map((credentialId) => {
-        return {
-          id: stringToBuffer(atob(credentialId)),
-          type: 'public-key'
-        };
-      });
-      navigator.credentials.get({
-        publicKey: {
-          challenge: challengeBuffer,
-          allowCredentials: allowCredentials,
-          timeout: 60000,
-
-          // see https://chromium.googlesource.com/chromium/src/+/master/content/browser/webauth/uv_preferred.md for why
-          // default value of preferred is not necesarrily what we want, it limits webauthn to only devices that support
-          // user verification, which usually requires entering a PIN
-          userVerification: 'discouraged'
+      let challengeBuffer = stringToBuffer(this.get("securityKeyChallenge"));
+      let allowCredentials = this.get("securityKeyAllowedCredentialIds").map(
+        credentialId => {
+          return {
+            id: stringToBuffer(atob(credentialId)),
+            type: "public-key"
+          };
         }
-      }).then((credential) => {
-        // 1. if there is a credential, check if the raw ID base64 matches
-        // any of the allowed credential ids
-        if (!this.get('securityKeyAllowedCredentialIds').some(credentialId => bufferToBase64(credential.rawId) === credentialId)) {
-          return this.flash(I18n.t('login.security_key_no_matching_credential_error'), 'error');
-        };
+      );
+      navigator.credentials
+        .get({
+          publicKey: {
+            challenge: challengeBuffer,
+            allowCredentials: allowCredentials,
+            timeout: 60000,
 
-        this.set('securityKeyCredential', {
-          signature: bufferToBase64(credential.response.signature),
-          clientData: bufferToBase64(credential.response.clientDataJSON),
-          authenticatorData: bufferToBase64(credential.response.authenticatorData),
-          credentialId: bufferToBase64(credential.rawId)
+            // see https://chromium.googlesource.com/chromium/src/+/master/content/browser/webauth/uv_preferred.md for why
+            // default value of preferred is not necesarrily what we want, it limits webauthn to only devices that support
+            // user verification, which usually requires entering a PIN
+            userVerification: "discouraged"
+          }
+        })
+        .then(credential => {
+          // 1. if there is a credential, check if the raw ID base64 matches
+          // any of the allowed credential ids
+          if (
+            !this.get("securityKeyAllowedCredentialIds").some(
+              credentialId => bufferToBase64(credential.rawId) === credentialId
+            )
+          ) {
+            return this.flash(
+              I18n.t("login.security_key_no_matching_credential_error"),
+              "error"
+            );
+          }
+
+          this.set("securityKeyCredential", {
+            signature: bufferToBase64(credential.response.signature),
+            clientData: bufferToBase64(credential.response.clientDataJSON),
+            authenticatorData: bufferToBase64(
+              credential.response.authenticatorData
+            ),
+            credentialId: bufferToBase64(credential.rawId)
+          });
+          this.send("login");
+        })
+        .catch(err => {
+          if (err.name === "NotAllowedError") {
+            return this.flash(
+              I18n.t("login.security_key_not_allowed_error"),
+              "error"
+            );
+          }
+          this.flash(err, "error");
         });
-        this.send('login');
-      }).catch((err) => {
-        if (err.name === 'NotAllowedError') {
-          return this.flash(I18n.t('login.security_key_not_allowed_error'), 'error');
-        }
-        this.flash(err, 'error');
-      });
     }
   },
 

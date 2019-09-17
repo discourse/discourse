@@ -4,11 +4,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
   actions: {
     disableSecurityKey() {
       this.user
-        .updateSecurityKey(
-          this.model.id,
-          this.model.name,
-          true
-        )
+        .updateSecurityKey(this.model.id, this.model.name, true)
         .then(response => {
           if (response.error) {
             return;
@@ -27,11 +23,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
 
     editSecurityKey() {
       this.user
-        .updateSecurityKey(
-          this.model.id,
-          this.model.name,
-          false
-        )
+        .updateSecurityKey(this.model.id, this.model.name, false)
         .then(response => {
           if (response.error) {
             return;

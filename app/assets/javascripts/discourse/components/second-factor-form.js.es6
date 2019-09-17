@@ -4,7 +4,7 @@ import { SECOND_FACTOR_METHODS } from "discourse/models/user";
 export default Ember.Component.extend({
   @computed("secondFactorMethod")
   secondFactorTitle(secondFactorMethod) {
-    switch(secondFactorMethod) {
+    switch (secondFactorMethod) {
       case SECOND_FACTOR_METHODS.TOTP:
         return I18n.t("login.second_factor_title");
       case SECOND_FACTOR_METHODS.SECURITY_KEY:
@@ -16,7 +16,7 @@ export default Ember.Component.extend({
 
   @computed("secondFactorMethod")
   secondFactorDescription(secondFactorMethod) {
-    switch(secondFactorMethod) {
+    switch (secondFactorMethod) {
       case SECOND_FACTOR_METHODS.TOTP:
         return I18n.t("login.second_factor_description");
       case SECOND_FACTOR_METHODS.SECURITY_KEY:
@@ -41,7 +41,9 @@ export default Ember.Component.extend({
 
   @computed("backupEnabled", "secondFactorMethod")
   showToggleMethodLink(backupEnabled, secondFactorMethod) {
-    return backupEnabled && secondFactorMethod !== SECOND_FACTOR_METHODS.SECURITY_KEY;
+    return (
+      backupEnabled && secondFactorMethod !== SECOND_FACTOR_METHODS.SECURITY_KEY
+    );
   },
 
   actions: {

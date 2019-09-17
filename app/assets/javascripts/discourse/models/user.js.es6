@@ -21,7 +21,11 @@ import { defaultHomepage } from "discourse/lib/utilities";
 import { userPath } from "discourse/lib/url";
 import Category from "discourse/models/category";
 
-export const SECOND_FACTOR_METHODS = { TOTP: 1, BACKUP_CODE: 2, SECURITY_KEY: 3 };
+export const SECOND_FACTOR_METHODS = {
+  TOTP: 1,
+  BACKUP_CODE: 2,
+  SECURITY_KEY: 3
+};
 
 const isForever = dt => moment().diff(dt, "years") < -500;
 
@@ -382,7 +386,7 @@ const User = RestModel.extend({
   },
 
   registerSecurityKey(credential) {
-    return ajax('/u/register_second_factor_security_key.json', {
+    return ajax("/u/register_second_factor_security_key.json", {
       data: credential,
       type: "POST"
     });
