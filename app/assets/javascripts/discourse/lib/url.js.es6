@@ -93,6 +93,12 @@ const DiscourseURL = Ember.Object.extend({
       let elementId;
       let holder;
 
+      if (opts.jumpEnd) {
+        $(window).scrollTop($(document).height() - $(window).height());
+        _transitioning = false;
+        return;
+      }
+
       if (postNumber === 1 && !opts.anchor) {
         $(window).scrollTop(0);
         _transitioning = false;
@@ -347,7 +353,8 @@ const DiscourseURL = Ember.Object.extend({
 
           this.appEvents.trigger("post:highlight", closest);
           const jumpOpts = {
-            skipIfOnScreen: routeOpts.skipIfOnScreen
+            skipIfOnScreen: routeOpts.skipIfOnScreen,
+            jumpEnd: routeOpts.jumpEnd
           };
 
           const m = /#.+$/.exec(path);
