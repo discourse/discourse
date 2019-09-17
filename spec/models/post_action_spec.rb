@@ -608,6 +608,20 @@ describe PostAction do
       post.reload
       expect(post.hidden).to eq(true)
     end
+    it "hide tl0 posts that are flagged as spam by a tl3 user" do
+      newuser = Fabricate(:newuser)
+      post = create_post(user: newuser)
+
+      Discourse.stubs(:site_contact_user).returns(admin)
+
+      PostActionCreator.spam(Fabricate(:leader), post)
+
+      post.reload
+
+      expect(post.hidden).to eq(true)
+      expect(post.hidden_at).to be_present
+      expect(post.hidden_reason_id).to eq(Post.hidden_reasons[:flagged_by_tl3_user])
+    end
 
     it "can flag the topic instead of a post" do
       post1 = create_post
