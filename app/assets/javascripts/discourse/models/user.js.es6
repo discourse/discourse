@@ -382,14 +382,8 @@ const User = RestModel.extend({
   },
 
   registerSecurityKey(credential) {
-    let formData = new FormData();
-    for (const [key, value] of Object.entries(credential)) {
-      formData.set(key, value);
-    };
     return ajax('/u/register_second_factor_security_key.json', {
-      data: formData,
-      processData: false,
-      contentType: false,
+      data: credential,
       type: "POST"
     });
   },

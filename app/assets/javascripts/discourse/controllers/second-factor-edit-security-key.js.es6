@@ -39,7 +39,6 @@ export default Ember.Controller.extend(ModalFunctionality, {
           this.markDirty();
         })
         .catch(error => {
-          this.send("closeModal");
           this.onError(error);
         })
         .finally(() => {

@@ -7,10 +7,7 @@
   {{yield}}
   {{#if showToggleMethodLink}}
     <p>
-      {{discourse-linked-text
-        class="toggle-second-factor-method"
-        action=(action "toggleSecondFactorMethod")
-        text=linkText}}
+      <a href="" class="toggle-second-factor-method" {{action "toggleSecondFactorMethod"}}>{{ i18n linkText }}</a>
     </p>
   {{/if}}
 </div>

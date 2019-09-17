@@ -143,7 +143,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
 
               // only need to focus the 2FA input for TOTP
               if (!this.showSecurityKey) {
-                Ember.run.schedule("afterRender", () =>
+                Ember.run.scheduleOnce("afterRender", () =>
                   document
                     .getElementById("second-factor")
                     .querySelector("input")
@@ -336,7 +336,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
           credentialId: bufferToBase64(credential.rawId)
         });
         this.send('login');
-      }, (err) => {
+      }).catch((err) => {
         if (err.name === 'NotAllowedError') {
           return this.flash(I18n.t('login.security_key_not_allowed_error'), 'error');
         }

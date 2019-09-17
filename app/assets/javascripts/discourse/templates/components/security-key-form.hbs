@@ -6,9 +6,6 @@
       type="button"
       class='btn btn-large btn-primary'}}
   <p>
-    {{discourse-linked-text
-      class="toggle-second-factor-method"
-      action=(action "useAnotherMethod")
-      text="login.security_key_alternative"}}
+    <a href="" class="toggle-second-factor-method" {{action "useAnotherMethod"}}>{{ i18n 'login.security_key_alternative' }}</a>
   </p>
 </div>
