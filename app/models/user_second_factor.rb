@@ -15,19 +15,10 @@ class UserSecondFactor < ActiveRecord::Base
     where(method: UserSecondFactor.methods[:totp])
   end
 
-  scope :webauthns, -> do
-    where(method: UserSecondFactor.methods[:webauthn], enabled: true)
-  end
-
-  scope :all_webauthns, -> do
-    where(method: UserSecondFactor.methods[:webauthn])
-  end
-
   def self.methods
     @methods ||= Enum.new(
       totp: 1,
       backup_codes: 2,
-      webauthn: 3,
     )
   end
 

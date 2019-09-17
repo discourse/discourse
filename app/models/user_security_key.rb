@@ -3,6 +3,10 @@
 class UserSecurityKey < ActiveRecord::Base
   belongs_to :user
 
+  scope :second_factors, -> do
+    where(factor_type: UserSecurityKey.factor_types[:second_factor], enabled: true)
+  end
+
   def self.factor_types
     @factor_types ||= Enum.new(
       second_factor: 0,
