@@ -107,10 +107,11 @@ RSpec.describe ReviewableScore, type: :model do
       user_stat.flags_disagreed = 2
       expect(ReviewableScore.user_accuracy_bonus(user).floor(2)).to eq(3.33)
 
+      # Ignored flags don't count
       user_stat.flags_agreed = 121
       user_stat.flags_disagreed = 44
       user_stat.flags_ignored = 4
-      expect(ReviewableScore.user_accuracy_bonus(user).floor(2)).to eq(3.57)
+      expect(ReviewableScore.user_accuracy_bonus(user).floor(2)).to eq(3.66)
     end
 
   end
@@ -137,7 +138,7 @@ RSpec.describe ReviewableScore, type: :model do
         user_stat.flags_agreed = 12
         user_stat.flags_disagreed = 2
         user_stat.flags_ignored = 2
-        expect(ReviewableScore.user_flag_score(user)).to eq(6.75)
+        expect(ReviewableScore.user_flag_score(user).floor(2)).to eq(7.28)
       end
     end
   end
