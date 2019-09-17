@@ -609,56 +609,6 @@ describe PostAction do
       expect(post.hidden).to eq(true)
     end
 
-    it "hide tl0 posts that are flagged as spam by a tl3 user" do
-      newuser = Fabricate(:newuser)
-      post = create_post(user: newuser)
-
-      Discourse.stubs(:site_contact_user).returns(admin)
-
-      PostActionCreator.spam(Fabricate(:leader), post)
-
-      post.reload
-
-      expect(post.hidden).to eq(true)
-      expect(post.hidden_at).to be_present
-      expect(post.hidden_reason_id).to eq(Post.hidden_reasons[:flagged_by_tl3_user])
-    end
-
-    it "hide non-tl4 posts that are flagged by a tl4 user" do
-      SiteSetting.site_contact_username = admin.username
-
-      tl4_user = Fabricate(:trust_level_4)
-      user = Fabricate(:leader)
-      post = create_post(user: user)
-
-      PostActionCreator.spam(tl4_user, post)
-
-      post.reload
-
-      expect(post.hidden).to be_truthy
-      expect(post.hidden_at).to be_present
-      expect(post.hidden_reason_id).to eq(Post.hidden_reasons[:flagged_by_tl4_user])
-
-      post = create_post(user: user)
-      PostActionCreator.spam(Fabricate(:leader), post)
-      post.reload
-
-      expect(post.hidden).to be_falsey
-
-      post = create_post(user: user)
-      PostActionCreator.spam(Fabricate(:moderator), post)
-      post.reload
-
-      expect(post.hidden).to be_falsey
-
-      user = Fabricate(:trust_level_4)
-      post = create_post(user: user)
-      PostActionCreator.spam(tl4_user, post)
-      post.reload
-
-      expect(post.hidden).to be_falsey
-    end
-
     it "can flag the topic instead of a post" do
       post1 = create_post
       create_post(topic: post1.topic)
