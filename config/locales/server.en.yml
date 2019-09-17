@@ -3058,6 +3058,8 @@ en:
         We have some new advice and recommendations for you based on your current site settings.
 
         [Visit your site dashboard](%{base_url}/admin) to see it.
+        
+        If nothing is visible on your dashboard, another staff member may have already acted on this advice.
 
     new_user_of_the_month:
       title: "You're a New User of the Month!"
