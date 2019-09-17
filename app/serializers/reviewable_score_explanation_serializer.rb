@@ -14,11 +14,7 @@ class ReviewableScoreExplanationSerializer < ApplicationSerializer
   )
 
   def user_accuracy_bonus
-    ReviewableScore.calc_user_accuracy_bonus(
-      object.flags_agreed,
-      object.flags_disagreed,
-      object.flags_ignored
-    )
+    ReviewableScore.calc_user_accuracy_bonus(object.flags_agreed, object.flags_disagreed)
   end
 
 end

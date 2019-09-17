@@ -59,19 +59,14 @@ class ReviewableScore < ActiveRecord::Base
     user_stat = user&.user_stat
     return 0.0 if user_stat.blank?
 
-    calc_user_accuracy_bonus(
-      user_stat.flags_agreed,
-      user_stat.flags_disagreed,
-      user_stat.flags_ignored
-    )
+    calc_user_accuracy_bonus(user_stat.flags_agreed, user_stat.flags_disagreed)
   end
 
-  def self.calc_user_accuracy_bonus(agreed, disagreed, ignored)
+  def self.calc_user_accuracy_bonus(agreed, disagreed)
     agreed ||= 0
     disagreed ||= 0
-    ignored ||= 0
 
-    total = (agreed + disagreed + ignored).to_f
+    total = (agreed + disagreed).to_f
     return 0.0 if total <= 5
 
     (agreed / total) * 5.0
