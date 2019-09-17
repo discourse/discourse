@@ -363,7 +363,7 @@ const Composer = RestModel.extend({
       const category = this.category;
       if (category && category.topic_template) {
         if (this.reply.trim() === category.topic_template.trim()) {
-          bootbox.alert(I18n.t("composer.error.topic_template_not_modified"))
+          bootbox.alert(I18n.t("composer.error.topic_template_not_modified"));
           return true;
         }
       }
