@@ -162,6 +162,12 @@ module I18n
       end
 
       by_site[locale].with_indifferent_access
+    rescue ActiveRecord::StatementInvalid => e
+      if PG::UndefinedTable === e.cause
+        {}
+      else
+        raise
+      end
     end
 
     def client_overrides_json(locale)
