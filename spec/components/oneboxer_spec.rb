@@ -113,6 +113,25 @@ describe Oneboxer do
       expect(preview("#{path}.mov")).to include("<video ")
     end
 
+    it "strips HTML from user profile location" do
+      user = Fabricate(:user)
+      profile = user.reload.user_profile
+
+      expect(preview("/u/#{user.username}")).not_to include("<span class=\"location\">")
+
+      profile.update!(
+        location: "<img src=x onerror=alert(document.domain)>",
+      )
+
+      expect(preview("/u/#{user.username}")).to include("<span class=\"location\">")
+      expect(preview("/u/#{user.username}")).not_to include("<img src=x")
+
+      profile.update!(
+        location: "Thunderland",
+      )
+
+      expect(preview("/u/#{user.username}")).to include("Thunderland")
+    end
   end
 
   context ".onebox_raw" do
@@ -140,5 +159,4 @@ describe Oneboxer do
 
     expect(Oneboxer.external_onebox(url)[:onebox]).to be_present
   end
-
 end
