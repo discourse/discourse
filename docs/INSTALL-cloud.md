@@ -26,15 +26,13 @@ Enter the root password from the email DigitalOcean sent you when the server was
 
 <img src="https://www.discourse.org/images/install/15/ssh-login-terminal.png" width="600px">
 
-### Install Docker / Git
+### Install Docker / Git (Optional)
 
-    wget -qO- https://get.docker.com/ | sh
-
-This command installs the latest versions of Docker and Git on your server. Alternately, you can manually [install Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git) and the [Docker package for your OS](https://docs.docker.com/installation/).
+If you have reason to install your own version of Docker, you may do so. If docker is not installed, `discourse-setup` will automatically install it from get.docker.com.
 
 ### Install Discourse
 
-Create a `/var/discourse` folder, clone the [Official Discourse Docker Image][dd] into it:
+Clone the [Official Discourse Docker Image][dd] into `/var/discourse`.
 
     sudo -s
     git clone https://github.com/discourse/discourse_docker.git /var/discourse
