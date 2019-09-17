@@ -1,4 +1,6 @@
 # frozen_string_literal: true
+require 'cbor'
+require 'cose'
 
 module Webauthn
   class SecurityKeyRegistrationService < SecurityKeyBaseValidationService
