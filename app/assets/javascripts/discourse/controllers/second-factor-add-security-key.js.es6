@@ -1,5 +1,5 @@
-/* global base64js:true */
 import ModalFunctionality from "discourse/mixins/modal-functionality";
+import { bufferToBase64 } from "discourse/lib/utilities";
 
 // model for this controller is user.js.es6
 export default Ember.Controller.extend(ModalFunctionality, {
@@ -66,10 +66,10 @@ export default Ember.Controller.extend(ModalFunctionality, {
       }).then((credential) => {
         let serverData = {
           id: credential.id,
-          rawId: base64js.fromByteArray(new Uint8Array(credential.rawId)),
+          rawId: bufferToBase64(credential.rawId),
           type: credential.type,
-          attestation: base64js.fromByteArray(new Uint8Array(credential.response.attestationObject)),
-          clientData: base64js.fromByteArray(new Uint8Array(credential.response.clientDataJSON)),
+          attestation: bufferToBase64(credential.response.attestationObject),
+          clientData: bufferToBase64(credential.response.clientDataJSON),
           name: this.get('securityKeyName')
         };
 

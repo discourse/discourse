@@ -701,5 +701,9 @@ export function stringToBuffer(str) {
   return buffer;
 }
 
+export function bufferToBase64(buffer) {
+  return btoa(String.fromCharCode(...new Uint8Array(buffer)));
+}
+
 // This prevents a mini racer crash
 export default {};

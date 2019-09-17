@@ -21,9 +21,6 @@ task 'javascript:update' do
 
   dependencies = [
     {
-      source: 'base64-js/base64js.min.js'
-    },
-    {
       source: 'bootstrap/js/modal.js',
       destination: 'bootstrap-modal.js'
     }, {

@@ -1,4 +1,3 @@
-/* global base64js:true */
 import { ajax } from "discourse/lib/ajax";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import showModal from "discourse/lib/show-modal";
@@ -9,7 +8,7 @@ import { escapeExpression, areCookiesEnabled } from "discourse/lib/utilities";
 import { extractError } from "discourse/lib/ajax-error";
 import computed from "ember-addons/ember-computed-decorators";
 import { SECOND_FACTOR_METHODS } from "discourse/models/user";
-import { stringToBuffer } from "discourse/lib/utilities";
+import { stringToBuffer, bufferToBase64 } from "discourse/lib/utilities";
 
 // This is happening outside of the app via popup
 const AuthErrors = [
@@ -326,15 +325,15 @@ export default Ember.Controller.extend(ModalFunctionality, {
       }).then((credential) => {
         // 1. if there is a credential, check if the raw ID base64 matches
         // any of the allowed credential ids
-        if (!this.get('securityKeyAllowedCredentialIds').some(credentialId => base64js.fromByteArray(new Uint8Array(credential.rawId)) === credentialId)) {
+        if (!this.get('securityKeyAllowedCredentialIds').some(credentialId => bufferToBase64(credential.rawId) === credentialId)) {
           return this.flash(I18n.t('login.security_key_no_matching_credential_error'), 'error');
         };
 
         this.set('securityKeyCredential', {
-          signature: base64js.fromByteArray(new Uint8Array(credential.response.signature)),
-          clientData: base64js.fromByteArray(new Uint8Array(credential.response.clientDataJSON)),
-          authenticatorData: base64js.fromByteArray(new Uint8Array(credential.response.authenticatorData)),
-          credentialId: base64js.fromByteArray(new Uint8Array(credential.rawId))
+          signature: bufferToBase64(credential.response.signature),
+          clientData: bufferToBase64(credential.response.clientDataJSON),
+          authenticatorData: bufferToBase64(credential.response.authenticatorData),
+          credentialId: bufferToBase64(credential.rawId)
         });
         this.send('login');
       }, (err) => {
