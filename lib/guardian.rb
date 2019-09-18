@@ -407,7 +407,7 @@ class Guardian
     # User is authenticated
     authenticated? &&
     # Have to be a basic level at least
-    (@user.has_trust_level?(SiteSetting.min_trust_to_send_messages) || notify_moderators) &&
+    (is_group || @user.has_trust_level?(SiteSetting.min_trust_to_send_messages) || notify_moderators) &&
     # User disabled private message
     (is_staff? || is_group || target.user_option.allow_private_messages) &&
     # PMs are enabled
