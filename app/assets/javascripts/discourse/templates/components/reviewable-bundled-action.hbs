@@ -9,7 +9,7 @@
     disabled=reviewableUpdating}}
 {{else}}
   {{d-button
-    class=(concat "reviewable-action " (dasherize first.id))
+    class=(concat "reviewable-action " (dasherize first.id) " " first.button_class)
     icon=first.icon
     action=(action "perform" first)
     translatedLabel=first.label
