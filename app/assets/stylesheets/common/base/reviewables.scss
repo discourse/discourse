@@ -262,10 +262,6 @@
     .reviewable-action,
     .reviewable-action-dropdown {
       margin-right: 0.5em;
-
-      &.delete-user {
-        @extend .btn-danger;
-      }
     }
   }
   padding-bottom: 1em;
