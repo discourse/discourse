@@ -100,7 +100,7 @@ def crawl_topic(url)
   @scraped_topic_urls << url
 rescue
   puts "Failed to scrape topic at #{url}".red
-  raise
+  raise if @abort_on_error
 end
 
 def crawl_message(url, might_be_deleted)
@@ -122,11 +122,15 @@ def crawl_message(url, might_be_deleted)
 
   File.write(filename, content)
 rescue Selenium::WebDriver::Error::NoSuchElementError
-  raise unless might_be_deleted
-  puts "Message might be deleted. Skipping #{url}"
+  if might_be_deleted
+    puts "Message might be deleted. Skipping #{url}"
+  else
+    puts "Failed to scrape message at #{url}".red
+    raise if @abort_on_error
+  end
 rescue
   puts "Failed to scrape message at #{url}".red
-  raise
+  raise if @abort_on_error
 end
 
 def login
@@ -195,7 +199,10 @@ end
 def parse_arguments
   puts ""
 
+  # default values
   @force_import = false
+  @abort_on_error = false
+  @cookies = DEFAULT_COOKIES_TXT if File.exist?(DEFAULT_COOKIES_TXT)
 
   parser = OptionParser.new do |opts|
     opts.banner = "Usage: google_groups.rb [options]"
@@ -204,6 +211,7 @@ def parse_arguments
     opts.on("-c", "--cookies PATH", "path to cookies.txt") { |v| @cookies = v }
     opts.on("--path PATH", "output path for emails") { |v| @path = v }
     opts.on("-f", "--force", "force import when user isn't allowed to see email addresses") { @force_import = true }
+    opts.on("-a", "--abort-on-error", "abort crawl on error instead of skipping message") { @abort_on_error = true }
     opts.on("-h", "--help") do
       puts opts
       exit
@@ -216,15 +224,13 @@ def parse_arguments
     exit_with_error(e.message, "", parser)
   end
 
-  @cookies = DEFAULT_COOKIES_TXT if @cookies.nil? && File.exist?(DEFAULT_COOKIES_TXT)
-  @path = File.join(DEFAULT_OUTPUT_PATH, @groupname) if @path.nil?
-
   mandatory = [:groupname, :cookies]
   missing = mandatory.select { |name| instance_variable_get("@#{name}").nil? }
 
   exit_with_error("Missing arguments: #{missing.join(', ')}".red.bold, "", parser, "") if missing.any?
   exit_with_error("cookies.txt not found at #{@cookies}".red.bold, "") if !File.exist?(@cookies)
 
+  @path = File.join(DEFAULT_OUTPUT_PATH, @groupname) if @path.nil?
   FileUtils.mkpath(@path)
 end
 
