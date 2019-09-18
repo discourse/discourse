@@ -545,6 +545,19 @@ describe PostAction do
       expect(post.hidden_at).to be_present
     end
 
+    it "will not trigger auto hide on like" do
+      mod = Fabricate(:moderator)
+      post = Fabricate(:post, user: mod)
+
+      result = PostActionCreator.spam(eviltrout, post)
+      result.reviewable.update!(score: 1000.0)
+      PostActionCreator.like(Fabricate(:admin), post)
+
+      post.reload
+
+      expect(post.hidden).to eq(false)
+    end
+
     it 'should follow the rules for automatic hiding workflow' do
       post = create_post
       walterwhite = Fabricate(:walter_white)
