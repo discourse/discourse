@@ -163,11 +163,11 @@ private
         @post.user&.trust_level == TrustLevel[0]
       @post.hide!(@post_action_type_id, Post.hidden_reasons[:flagged_by_tl3_user])
       return
-    end
-
-    score = ReviewableFlaggedPost.find_by(target: @post)&.score || 0
-    if score >= Reviewable.score_required_to_hide_post
-      @post.hide!(@post_action_type_id)
+    elsif PostActionType.auto_action_flag_types.include?(@post_action_name)
+      score = ReviewableFlaggedPost.find_by(target: @post)&.score || 0
+      if score >= Reviewable.score_required_to_hide_post
+        @post.hide!(@post_action_type_id)
+      end
     end
   end
 
