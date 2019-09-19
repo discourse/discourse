@@ -19,12 +19,8 @@ class CreateUserSecurityKeys < ActiveRecord::Migration[5.2]
   end
 
   def down
-    if column_exists?(:user_second_factors, :user_security_key_id)
-      remove_column(:user_second_factors, :user_security_key_id)
-    end
-
-    if table_exists?(:user_second_factors)
-      drop_table(:user_second_factors)
+    if table_exists?(:user_security_keys)
+      drop_table(:user_security_keys)
     end
   end
 end

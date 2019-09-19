@@ -44,17 +44,17 @@ export default Ember.Controller.extend(ModalFunctionality, {
   actions: {
     registerSecurityKey() {
       const publicKeyCredentialCreationOptions = {
-        challenge: Uint8Array.from(this.get("challenge"), c => c.charCodeAt(0)),
+        challenge: Uint8Array.from(this.challenge, c => c.charCodeAt(0)),
         rp: {
-          name: this.get("relayingParty.name"),
-          id: this.get("relayingParty.id")
+          name: this.relayingParty.name,
+          id: this.relayingParty.id
         },
         user: {
-          id: Uint8Array.from(this.get("user_secure_id"), c => c.charCodeAt(0)),
+          id: Uint8Array.from(this.user_secure_id, c => c.charCodeAt(0)),
           displayName: this.model.username_lower,
           name: this.model.username_lower
         },
-        pubKeyCredParams: this.get("supported_algoriths").map(alg => {
+        pubKeyCredParams: this.supported_algoriths.map(alg => {
           return { type: "public-key", alg: alg };
         }),
         timeout: 20000,
@@ -75,7 +75,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
                 credential.response.attestationObject
               ),
               clientData: bufferToBase64(credential.response.clientDataJSON),
-              name: this.get("securityKeyName")
+              name: this.securityKeyName
             };
 
             this.model

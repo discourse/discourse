@@ -11,3 +11,12 @@ Fabricator(:user_security_key) do
   factor_type { UserSecurityKey.factor_types[:second_factor] }
   name { sequence(:name) { |i| "Security Key #{i + 1}" } }
 end
+
+##
+# Useful for specs that just need a user security key model but not
+# any of the related usefulness as a webauthn credential, because the
+# credential_id has a UNIQUE index
+Fabricator(:user_security_key_with_random_credential, from: :user_security_key) do
+  credential_id { SecureRandom.base64(40) }
+  public_key { SecureRandom.base64(40) }
+end

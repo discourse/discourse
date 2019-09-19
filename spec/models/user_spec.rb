@@ -2183,8 +2183,8 @@ describe User do
 
     describe "#security_keys" do
       it "only includes enabled security_key 2FA" do
-        enabled_security_key_2fa = Fabricate(:user_security_key, user: user, name: 'Enabled YubiKey', enabled: true)
-        disabled_security_key_2fa = Fabricate(:user_security_key, user: user, name: 'Disabled YubiKey', enabled: false)
+        enabled_security_key_2fa = Fabricate(:user_security_key_with_random_credential, user: user, name: 'Enabled YubiKey', enabled: true)
+        disabled_security_key_2fa = Fabricate(:user_security_key_with_random_credential, user: user, name: 'Disabled YubiKey', enabled: false)
 
         expect(user.security_keys.map(&:id)).to eq([enabled_security_key_2fa.id])
       end

@@ -308,8 +308,8 @@ export default Ember.Controller.extend(ModalFunctionality, {
     },
 
     authenticateSecurityKey() {
-      let challengeBuffer = stringToBuffer(this.get("securityKeyChallenge"));
-      let allowCredentials = this.get("securityKeyAllowedCredentialIds").map(
+      let challengeBuffer = stringToBuffer(this.securityKeyChallenge);
+      let allowCredentials = this.securityKeyAllowedCredentialIds.map(
         credentialId => {
           return {
             id: stringToBuffer(atob(credentialId)),
@@ -334,7 +334,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
           // 1. if there is a credential, check if the raw ID base64 matches
           // any of the allowed credential ids
           if (
-            !this.get("securityKeyAllowedCredentialIds").some(
+            !this.securityKeyAllowedCredentialIds.some(
               credentialId => bufferToBase64(credential.rawId) === credentialId
             )
           ) {
