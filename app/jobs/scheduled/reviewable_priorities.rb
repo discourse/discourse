@@ -3,7 +3,12 @@
 class Jobs::ReviewablePriorities < Jobs::Scheduled
   every 1.day
 
+  def self.min_reviewables
+    15
+  end
+
   def execute(args)
+    return unless Reviewable.where('score > 0').count >= self.class.min_reviewables
 
     # We calculate the percentiles here for medium and high. Low is always 0 (all)
     res = DB.query_single(<<~SQL)
