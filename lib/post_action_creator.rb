@@ -155,6 +155,7 @@ private
   def auto_hide_if_needed
     return if @post.hidden?
     return if !@created_by.staff? && @post.user&.staff?
+    return unless PostActionType.auto_action_flag_types.include?(@post_action_name)
 
     # Special case: If you have TL3 and the user is TL0, and the flag is spam,
     # hide it immediately.
@@ -163,11 +164,11 @@ private
         @post.user&.trust_level == TrustLevel[0]
       @post.hide!(@post_action_type_id, Post.hidden_reasons[:flagged_by_tl3_user])
       return
-    elsif PostActionType.auto_action_flag_types.include?(@post_action_name)
-      score = ReviewableFlaggedPost.find_by(target: @post)&.score || 0
-      if score >= Reviewable.score_required_to_hide_post
-        @post.hide!(@post_action_type_id)
-      end
+    end
+
+    score = ReviewableFlaggedPost.find_by(target: @post)&.score || 0
+    if score >= Reviewable.score_required_to_hide_post
+      @post.hide!(@post_action_type_id)
     end
   end
 
