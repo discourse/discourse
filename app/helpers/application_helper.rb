@@ -384,7 +384,7 @@ module ApplicationHelper
     return "" if erbs.blank?
 
     result = +""
-    erbs.each { |erb| result << render(file: erb) }
+    erbs.each { |erb| result << render(inline: File.read(erb)) }
     result.html_safe
   end
 
