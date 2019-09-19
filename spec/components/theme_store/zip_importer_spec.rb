@@ -3,9 +3,9 @@
 # frozen_string_literal: true
 
 require 'rails_helper'
-require 'theme_store/tgz_importer'
+require 'theme_store/zip_importer'
 
-describe ThemeStore::TgzImporter do
+describe ThemeStore::ZipImporter do
   before do
     @temp_folder = "#{Pathname.new(Dir.tmpdir).realpath}/discourse_theme_#{SecureRandom.hex}"
 
@@ -28,7 +28,7 @@ describe ThemeStore::TgzImporter do
     end
 
     file_name = 'test.zip'
-    importer = ThemeStore::TgzImporter.new("#{@temp_folder}/#{file_name}", file_name)
+    importer = ThemeStore::ZipImporter.new("#{@temp_folder}/#{file_name}", file_name)
     importer.import!
 
     expect(importer["hello.txt"]).to eq("hello world")
@@ -43,7 +43,7 @@ describe ThemeStore::TgzImporter do
     end
 
     file_name = 'test.tar.gz'
-    importer = ThemeStore::TgzImporter.new("#{@temp_folder}/#{file_name}", file_name)
+    importer = ThemeStore::ZipImporter.new("#{@temp_folder}/#{file_name}", file_name)
     importer.import!
 
     expect(importer["hello.txt"]).to eq("hello world")

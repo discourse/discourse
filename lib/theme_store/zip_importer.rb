@@ -4,7 +4,7 @@ require_dependency 'compression/engine'
 
 module ThemeStore; end
 
-class ThemeStore::TgzImporter
+class ThemeStore::ZipImporter
 
   attr_reader :url
 

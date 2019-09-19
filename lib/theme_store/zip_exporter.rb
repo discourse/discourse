@@ -4,7 +4,7 @@ require_dependency 'compression/zip'
 
 module ThemeStore; end
 
-class ThemeStore::TgzExporter
+class ThemeStore::ZipExporter
 
   def initialize(theme)
     @theme = theme

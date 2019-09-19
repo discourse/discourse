@@ -242,7 +242,7 @@ class Admin::ThemesController < Admin::AdminController
     @theme = Theme.find_by(id: params[:id])
     raise Discourse::InvalidParameters.new(:id) unless @theme
 
-    exporter = ThemeStore::TgzExporter.new(@theme)
+    exporter = ThemeStore::ZipExporter.new(@theme)
     file_path = exporter.package_filename
 
     headers['Content-Length'] = File.size(file_path).to_s
