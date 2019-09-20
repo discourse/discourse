@@ -247,8 +247,8 @@ class Middleware::RequestTracker
       limiter60 = RateLimiter.new(
         nil,
         "global_ip_limit_60_#{ip}",
-        GlobalSetting.max_reqs_per_ip_per_10_seconds,
-        10,
+        GlobalSetting.max_reqs_per_ip_per_minute,
+        60,
         global: true
       )
 
