@@ -121,7 +121,7 @@ function defaultCategoryLinkRenderer(category, opts) {
     'data-drop-close="true" class="' +
     classNames +
     '"' +
-    (description ? 'title="' + escapeExpression(description) + '" ' : "") +
+    (description ? 'title="' + description + '" ' : "") +
     ">";
 
   let categoryName = escapeExpression(get(category, "name"));
