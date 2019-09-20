@@ -40,6 +40,7 @@ describe Stylesheet::Compiler do
       after do
         Discourse.plugins.pop
         Stylesheet::Importer.register_imports!
+        DiscoursePluginRegistry.reset!
       end
 
       it "does not include theme variables in plugins" do
