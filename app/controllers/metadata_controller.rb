@@ -49,6 +49,7 @@ class MetadataController < ApplicationController
     logo = SiteSetting.site_manifest_icon_url
     manifest[:icons] << {
       src: UrlHelper.absolute(logo),
+      purpose: "maskable",
       sizes: "512x512",
       type: MiniMime.lookup_by_filename(logo)&.content_type || "image/png"
     } if logo
