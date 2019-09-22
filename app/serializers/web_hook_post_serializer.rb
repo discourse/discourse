@@ -2,7 +2,9 @@
 
 class WebHookPostSerializer < PostSerializer
 
-  attributes :topic_posts_count
+  attributes :topic_posts_count,
+             :topic_archetype,
+             :category_slug
 
   def include_topic_title?
     true
@@ -30,6 +32,18 @@ class WebHookPostSerializer < PostSerializer
 
   def topic_posts_count
     object.topic ? object.topic.posts_count : 0
+  end
+
+  def topic_archetype
+    object.topic ? object.topic.archetype : ''
+  end
+
+  def include_category_slug?
+    object.topic && object.topic.category
+  end
+
+  def category_slug
+    object.topic && object.topic.category ? object.topic.category.slug_for_url : ''
   end
 
   def include_readers_count?
