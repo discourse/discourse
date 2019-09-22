@@ -918,10 +918,14 @@ class Post < ActiveRecord::Base
         sha1 = Upload.sha1_from_short_url(src)
         yield(src, nil, sha1)
         next
+      elsif src.include?("/uploads/short-url/")
+        sha1 = Upload.sha1_from_short_path(src)
+        yield(src, nil, sha1)
+        next
       end
 
       next if upload_patterns.none? { |pattern| src =~ pattern }
-      next if Rails.configuration.multisite && src.exclude?(current_db) && src.exclude?("short-url")
+      next if Rails.configuration.multisite && src.exclude?(current_db)
 
       src = "#{SiteSetting.force_https ? "https" : "http"}:#{src}" if src.start_with?("//")
       next unless Discourse.store.has_been_uploaded?(src) || (include_local_upload && src =~ /\A\/[^\/]/i)

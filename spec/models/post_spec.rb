@@ -1362,13 +1362,15 @@ describe Post do
 
   describe '#each_upload_url' do
     it "correctly identifies all upload urls" do
+      SiteSetting.authorized_extensions = "*"
       upload1 = Fabricate(:upload)
       upload2 = Fabricate(:upload)
+      upload3 = Fabricate(:video_upload)
 
       set_cdn_url "https://awesome.com/somepath"
 
       post = Fabricate(:post, raw: <<~RAW)
-      A post with image and link upload.
+      A post with image, video and link upload.
 
       ![](#{upload1.short_url})
 
@@ -1376,6 +1378,8 @@ describe Post do
 
       <a href='#{Discourse.base_url}#{upload2.url}'>Link to upload</a>
       ![](http://example.com/external.png)
+
+      #{Discourse.base_url}#{upload3.short_path}
       RAW
 
       urls = []
@@ -1389,13 +1393,15 @@ describe Post do
       expect(urls).to contain_exactly(
         upload1.url,
         "#{GlobalSetting.cdn_url}#{upload1.url}",
-        "#{Discourse.base_url}#{upload2.url}"
+        "#{Discourse.base_url}#{upload2.url}",
+        "#{Discourse.base_url}#{upload3.short_path}"
       )
 
       expect(paths).to contain_exactly(
         upload1.url,
         upload1.url,
-        upload2.url
+        upload2.url,
+        nil
       )
     end
 
