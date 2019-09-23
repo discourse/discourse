@@ -325,6 +325,7 @@ class SessionController < ApplicationController
   end
 
   def invalid_security_key(user, err_message = nil)
+    stage_webauthn_security_key_challenge(user)
     return render json: failed_json.merge(
       error: err_message || I18n.t("login.invalid_security_key"),
       reason: "invalid_security_key",
