@@ -200,7 +200,7 @@ describe UsersController do
         expect(response.status).to eq(200)
         expect(response.body).to have_tag("div#data-preloaded") do |element|
           json = JSON.parse(element.current_scope.attribute('data-preloaded').value)
-          expect(json['password_reset']).to include('{"is_developer":false,"admin":false,"second_factor_required":false,"backup_enabled":false}')
+          expect(json['password_reset']).to include('{"is_developer":false,"admin":false,"second_factor_required":false,"security_key_required":false,"backup_enabled":false}')
         end
 
         expect(session["password-#{token}"]).to be_blank
@@ -313,7 +313,7 @@ describe UsersController do
 
           expect(response.body).to have_tag("div#data-preloaded") do |element|
             json = JSON.parse(element.current_scope.attribute('data-preloaded').value)
-            expect(json['password_reset']).to include('{"is_developer":false,"admin":false,"second_factor_required":true,"backup_enabled":false}')
+            expect(json['password_reset']).to include('{"is_developer":false,"admin":false,"second_factor_required":true,"security_key_required":false,"backup_enabled":false}')
           end
 
           put "/u/password-reset/#{token}", params: {
@@ -338,6 +338,58 @@ describe UsersController do
             password: 'hg9ow8yHG32O',
             second_factor_token: ROTP::TOTP.new(second_factor.data).now,
             second_factor_method: UserSecondFactor.methods[:totp]
+          }
+
+          user.reload
+          expect(response.status).to eq(200)
+          expect(user.confirm_password?('hg9ow8yHG32O')).to eq(true)
+          expect(user.user_auth_tokens.count).to eq(1)
+        end
+      end
+
+      context 'security key authentication required' do
+        let!(:security_key) { Fabricate(:user_security_key, user: user, factor_type: UserSecurityKey.factor_types[:second_factor]) }
+
+        it 'preloads with a security key challenge and allowed credential ids' do
+          token = user.email_tokens.create!(email: user.email).token
+
+          get "/u/password-reset/#{token}"
+
+          expect(response.body).to have_tag("div#data-preloaded") do |element|
+            json = JSON.parse(element.current_scope.attribute('data-preloaded').value)
+            password_reset = JSON.parse(json['password_reset'])
+            expect(password_reset['challenge']).not_to eq(nil)
+            expect(password_reset['allowed_credential_ids']).to eq([security_key.credential_id])
+            expect(password_reset['security_key_required']).to eq(true)
+          end
+        end
+
+        it 'stages a webauthn challenge and rp-id for the user' do
+          token = user.email_tokens.create!(email: user.email).token
+
+          get "/u/password-reset/#{token}"
+
+          secure_session = SecureSession.new(session["secure_session_id"])
+          expect(secure_session["staged-webauthn-challenge-#{user.id}"]).not_to eq(nil)
+          expect(secure_session["staged-webauthn-rp-id-#{user.id}"]).to eq(Discourse.current_hostname)
+        end
+
+        it 'changes password with valid security key challenge and authentication' do
+          token = user.email_tokens.create(email: user.email).token
+
+          get "/u/password-reset/#{token}"
+
+          ::Webauthn::SecurityKeyAuthenticationService.any_instance.stubs(:authenticate_security_key).returns(true)
+
+          put "/u/password-reset/#{token}", params: {
+            password: 'hg9ow8yHG32O',
+            security_key_credential: {
+              signature: 'test',
+              clientData: 'test',
+              authenticatorData: 'test',
+              credentialId: 'test'
+            },
+            second_factor_method: UserSecondFactor.methods[:security_key]
           }
 
           user.reload

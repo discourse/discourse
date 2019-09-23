@@ -6,6 +6,8 @@
       type="button"
       class='btn btn-large btn-primary'}}
   <p>
-    <a href="" class="toggle-second-factor-method" {{action "useAnotherMethod"}}>{{ i18n 'login.security_key_alternative' }}</a>
+    {{#if otherMethodAllowed}}
+      <a href="" class="toggle-second-factor-method" {{action "useAnotherMethod"}}>{{ i18n 'login.security_key_alternative' }}</a>
+    {{/if}}
   </p>
 </div>

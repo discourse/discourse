@@ -500,17 +500,33 @@ class UsersController < ApplicationController
 
     second_factor_token = params[:second_factor_token]
     second_factor_method = params[:second_factor_method].to_i
+    security_key_credential = params[:security_key_credential]
 
     if second_factor_token.present? && UserSecondFactor.methods[second_factor_method]
       RateLimiter.new(nil, "second-factor-min-#{request.remote_ip}", 3, 1.minute).performed!
       second_factor_authenticated = @user&.authenticate_second_factor(second_factor_token, second_factor_method)
+    elsif security_key_credential.present?
+      security_key_authenticated = ::Webauthn::SecurityKeyAuthenticationService.new(
+        @user,
+        security_key_credential,
+        challenge: secure_session["staged-webauthn-challenge-#{@user.id}"],
+        rp_id: secure_session["staged-webauthn-rp-id-#{@user.id}"],
+        origin: Discourse.base_url
+      ).authenticate_security_key
     end
 
-    if second_factor_authenticated || !@user&.totp_enabled?
+    second_factor_totp_disabled = !@user&.totp_enabled?
+    if second_factor_authenticated || second_factor_totp_disabled || security_key_authenticated
       secure_session["second-factor-#{token}"] = "true"
     end
 
+    security_key_disabled = !@user&.security_keys_enabled?
+    if security_key_authenticated || security_key_disabled
+      secure_session["security-key-#{token}"] = "true"
+    end
+
     valid_second_factor = secure_session["second-factor-#{token}"] == "true"
+    valid_security_key = secure_session["security-key-#{token}"] == "true"
 
     if !@user
       @error = I18n.t('password_reset.no_token')
@@ -543,13 +559,17 @@ class UsersController < ApplicationController
         if @error
           render layout: 'no_ember'
         else
+          stage_webauthn_security_key_challenge(@user)
           store_preloaded(
             "password_reset",
             MultiJson.dump(
-              is_developer: UsernameCheckerService.is_developer?(@user.email),
-              admin: @user.admin?,
-              second_factor_required: !valid_second_factor,
-              backup_enabled: @user.backup_codes_enabled?
+              {
+                is_developer: UsernameCheckerService.is_developer?(@user.email),
+                admin: @user.admin?,
+                second_factor_required: !valid_second_factor,
+                security_key_required: !valid_security_key,
+                backup_enabled: @user.backup_codes_enabled?
+              }.merge(webauthn_security_key_challenge_and_allowed_credentials(@user))
             )
           )
         end
@@ -582,18 +602,25 @@ class UsersController < ApplicationController
               errors: @user&.errors&.to_hash
             }
           else
+            stage_webauthn_security_key_challenge(@user) if !valid_security_key && !security_key_credential.present?
             render json: {
               is_developer: UsernameCheckerService.is_developer?(@user.email),
               admin: @user.admin?,
               second_factor_required: !valid_second_factor,
+              security_key_required: !valid_security_key,
               backup_enabled: @user.backup_codes_enabled?
-            }
+            }.merge(webauthn_security_key_challenge_and_allowed_credentials(@user))
           end
         end
       end
     end
   rescue RateLimiter::LimitExceeded => e
     render_rate_limit_error(e)
+  rescue ::Webauthn::SecurityKeyError => err
+    render json: {
+      message: err.message,
+      errors: [err.message]
+    }
   end
 
   def confirm_email_token
@@ -1431,5 +1458,22 @@ class UsersController < ApplicationController
         false
       end
     end
+  end
+
+  def stage_webauthn_security_key_challenge(user)
+    challenge = SecureRandom.hex(30)
+    secure_session["staged-webauthn-challenge-#{user.id}"] = challenge
+    secure_session["staged-webauthn-rp-id-#{user.id}"] = Discourse.current_hostname
+  end
+
+  def webauthn_security_key_challenge_and_allowed_credentials(user)
+    return {} if !user.security_keys_enabled?
+    credential_ids = user.security_keys.select(:credential_id)
+      .where(factor_type: UserSecurityKey.factor_types[:second_factor])
+      .pluck(:credential_id)
+    {
+      allowed_credential_ids: credential_ids,
+      challenge: secure_session["staged-webauthn-challenge-#{user.id}"]
+    }
   end
 end

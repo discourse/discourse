@@ -325,7 +325,7 @@ class SessionController < ApplicationController
   end
 
   def invalid_security_key(user, err_message = nil)
-    stage_webauthn_security_key_challenge(user)
+    stage_webauthn_security_key_challenge(user) if !params[:security_key_credential]
     return render json: failed_json.merge(
       error: err_message || I18n.t("login.invalid_security_key"),
       reason: "invalid_security_key",
@@ -588,6 +588,7 @@ class SessionController < ApplicationController
   end
 
   def webauthn_security_key_challenge_and_allowed_credentials(user)
+    return {} if !user.security_keys_enabled?
     credential_ids = user.security_keys.select(:credential_id)
       .where(factor_type: UserSecurityKey.factor_types[:second_factor])
       .pluck(:credential_id)
