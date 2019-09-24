@@ -1356,6 +1356,7 @@ describe Post do
       ids << Fabricate(:post, cooked: "A post with optimized image <img src='https://cdn.example.com/bucket/optimized/1X/abc/defghijklmno.png'>").id
       Fabricate(:post, cooked: "A post with external link <a href='https://example.com/wp-content/uploads/abcdef.gif'>")
       ids << Fabricate(:post, cooked: 'A post with missing upload <img src="https://cdn.example.com/images/transparent.png" data-orig-src="upload://defghijklmno.png">').id
+      ids << Fabricate(:post, cooked: 'A post with video upload <video width="100%" height="100%" controls=""><source src="https://cdn.example.com/uploads/short-url/XefghijklmU9.mp4"><a href="https://cdn.example.com/uploads/short-url/XefghijklmU9.mp4">https://cdn.example.com/uploads/short-url/XefghijklmU9.mp4</a></video>').id
       expect(Post.have_uploads.order(:id).pluck(:id)).to eq(ids)
     end
   end
