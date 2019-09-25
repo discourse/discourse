@@ -1,7 +1,7 @@
 import computed from "ember-addons/ember-computed-decorators";
 import { userPath } from "discourse/lib/url";
 
-function normalize(name) {
+export function normalize(name) {
   return name.replace(/[\-\_ \.]/g, "").toLowerCase();
 }
 
