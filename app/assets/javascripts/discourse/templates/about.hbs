@@ -62,8 +62,7 @@
           <section class='about category-moderators'>
             <h3>{{category-link cm.category}}{{i18n "about.moderators"}}</h3>
             <div class='users'>
-              {{mount-widget widget="user-info-list" args=(hash users=cm.moderators)}}
-              {{!-- about-page-com users=cm.moderators --}}
+              {{about-page-com users=cm.moderators}}
             </div>
             <div class='clearfix'></div>
           </section>
