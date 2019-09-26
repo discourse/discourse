@@ -1088,7 +1088,6 @@ lv:
         title_missing: "Vajadzīgs nosaukums"
         title_too_short: "Nosaukumā jābūt vismaz {{min}} burtiem"
         title_too_long: "Nosaukums nevar būt garāks par {{max}} burtiem"
-        post_missing: "Ieraksts nevar būt tukšs"
         post_length: "Ierakstā jābūt vismaz {{min}} burtiem"
         category_missing: "Jums ir jāizvēlas sadaļa"
       save_edit: "Saglabāt izmaiņas"
@@ -1151,7 +1150,6 @@ lv:
       title: "paziņojumi par @vārda pieminēšanu, atbildēm uz jūsu ierakstiem un tēmām, ziņām, utt."
       none: "Pašlaik neizdodas ielādēt paziņojumus."
       empty: "Nav atrasti paziņojumi."
-      more: "skatīt senākus paziņojumus"
       popup:
         mentioned: '{{username}} pieminēja jūs "{{topic}}" - {{site_title}}'
         group_mentioned: '{{username}} pieminēja jūs "{{topic}}" - {{site_title}}'

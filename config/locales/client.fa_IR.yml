@@ -95,6 +95,12 @@ fa_IR:
         x_days:
           one: "%{count} روز پیش"
           other: "%{count} روز پیش"
+        x_months:
+          one: "%{count} ماه قبل"
+          other: "%{count} ماه‌های قبل"
+        x_years:
+          one: "%{count} سال قبل"
+          other: "%{count} سال قبل"
       later:
         x_days:
           one: "%{count} روز بعد"
@@ -299,6 +305,8 @@ fa_IR:
     banner:
       close: "این بنر را ببند."
       edit: "این بنر را ویرایش کنید >>"
+    pwa:
+      install_banner: "ایامایل هستید تا <a href>، %{title} را بر‌روی دستگاه شما نصب کند؟</a>"
     choose_topic:
       none_found: "موضوعی یافت نشد."
       title:
@@ -312,6 +320,9 @@ fa_IR:
     review:
       order_by: "به ترتیب"
       in_reply_to: "در پاسخ به"
+      explain:
+        why: "توضیح دهید که چرا این مورد در صف پایان یافت"
+        total: "مجموع"
       claim_help:
         optional: "می‌توانید این مورد را درخواست کنید تا دیگران را از بازنگری آن بازنگه دارید."
         required: "شما قبل از بازنگری موارد باید آن‌ها را درخواست دهید ."
@@ -1212,7 +1223,7 @@ fa_IR:
     time_read_recently_tooltip: "%{time_read} زمان مطالعه کل (%{recent_time_read}در ۶۰ روز گذشته)"
     last_reply_lowercase: آخرین پاسخ
     replies_lowercase:
-      one: 'پاسخ‌ها '
+      one: پاسخ
       other: 'پاسخ‌ها '
     signup_cta:
       sign_up: "ثبت نام"
@@ -1437,17 +1448,18 @@ fa_IR:
         title_missing: "عنوان الزامی است"
         title_too_short: "عنوان دست‌کم باید {{min}} نویسه باشد"
         title_too_long: "عنوان نمی‌تواند بیش‌تر از {{max}} نویسه باشد"
-        post_missing: "نوشته نمی‌تواند خالی باشد"
         post_length: "نوشته باید دست‌کم {{min}} نویسه داشته باشد"
         category_missing: "باید یک دسته‌بندی انتخاب کنید"
         tags_missing: "شما باید حداقل {{count}}برچسب انتخاب کنید"
       save_edit: "ذخیره ویرایش"
+      overwrite_edit: "بازنویسی ویرایش"
       reply_original: "پاسخ دادن در موضوع اصلی"
       reply_here: "در اینجا پاسخ دهید"
       reply: "پاسخ"
       cancel: "لغو کردن"
       create_topic: "ایجاد موضوع"
       create_pm: "پیام"
+      create_whisper: "زمزمه"
       create_shared_draft: "ایجاد پیش‌نویس مشترک"
       edit_shared_draft: "ویرایش درفت مشترک"
       title: "یا Ctrl+Enter را بفشارید"
@@ -1509,6 +1521,7 @@ fa_IR:
         draft: درفت
         edit: ویرایش
         reply_to_post:
+          label: "پاسخ به پست %{postNumber} توسط %{postUsername}"
           desc: پاسخ به یک پست خاص
         reply_as_new_topic:
           label: پاسخ به تاپیک لینک شده
@@ -1541,7 +1554,6 @@ fa_IR:
       title: "اطلاع‌رسانی‌های اشاره به @نام، پاسخ به نوشته‌ها، موضوعات، پیام‌های شما و ..."
       none: "قادر به بارگیری اعلان‌ها در این زمان نیستیم."
       empty: "اعلانی پیدا نشد."
-      more: "نمایش اعلان‌های قدیمی‌تر"
       post_approved: "نوشته ی شما تایید شد"
       reviewable_items: "موارد نیازمند بازبینی است"
       mentioned: "<span>{{username}}</span>{{description}}"
@@ -1578,8 +1590,12 @@ fa_IR:
         quoted: '{{username}} از شما در "{{topic}}" - {{site_title}} نقل قول کرد '
         replied: '{{username}} در "{{topic}}" - {{site_title}} به شما پاسخ داد'
         posted: '{{username}} در "{{topic}}" - {{site_title}} مطلبی نوشت'
+        private_message: '{{username}} برای شما یک پیام خصوصی در "{{topic}}" - {{site_title}} ارسال کرد'
         linked: '{{username}} در "{{topic}}" - {{site_title}} به نوشته‌ی شما پیوندی قرار داد'
+        watching_first_post: '{{username}} یک مبحث جدید در "{{topic}}" - {{site_title}} ساخته'
+        confirm_title: "اعلانات فعال شد - %{site_title}"
         confirm_body: "موفق شدید. اگاهسازی‌ها فعال شدند."
+        custom: "اعلان از طرف {{username}} بر روی %{site_title}"
       titles:
         mentioned: "احضار شده"
         replied: "پاسخ جدید"
@@ -1691,6 +1707,7 @@ fa_IR:
     go_back: "برگردید"
     not_logged_in_user: "صفحه کاربر با خلاصه ای از فعالیت های و تنظیمات"
     current_user: "به صفحه‌ی کاربریتان بروید"
+    view_all: "مشاهده همه"
     topics:
       new_messages_marker: "آخرین بازدید"
       bulk:
@@ -1800,6 +1817,7 @@ fa_IR:
       toggle_information: " تغییر وضعیت جزئیات موضوع"
       read_more_in_category: "می‌خواهید بیشتر بخوانید؟موضوعات دیگر را در {{catLink}} یا {{latestLink}} مرور کنید."
       read_more: "می‌خواهید بیشتر بخوانید؟ {{catLink}} یا {{latestLink}}."
+      group_join: "برای مشاهده این مبحث نیازمند پیوستن به گروه `{{name}}` می‌باشید"
       read_more_MF: "{ UNREAD, plural, =0 {} one { <a href='{basePath}/unread'>یک پیام خوانده نشده</a> } other { <a href='{basePath}/unread'># پیام خوانده نشده</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{و } false { } other{}} <a href='{basePath}/new'>1 موضوع جدید</a> } other { {BOTH, select, true{و } false { } other{}} <a href='{basePath}/new'># موضوع جدید</a> } } وجود دارد, یا {CATEGORY, select, true {نمایش سایر موضوعات دسته‌بندی {catLink}} false {{latestLink}} other {}}"
       browse_all_categories: جستوجوی همه‌ی دسته‌‌بندی‌ها
       view_latest_topics: مشاهده آخرین موضوع
@@ -2431,7 +2449,7 @@ fa_IR:
     original_post: "نوشته اصلی"
     views: "نمایش‌ها"
     views_lowercase:
-      one: "بازدیدها"
+      one: "بازدید"
       other: "بازدیدها"
     replies: "پاسخ‌ها"
     views_long:

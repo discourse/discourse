@@ -36,22 +36,54 @@ hu:
   disable_remote_images_download_reason: "A távoli képletöltés ki lett kapcsolva, mivel nincs elég szabad tárhely."
   anonymous: "Névtelen"
   remove_posts_deleted_by_author: "Szerző által törölve"
+  redirect_warning: "Nem tudtuk megerősíteni, hogy a kiválasztott hivatkozás tényleg közzé lett-e téve a fórumban. Ha mindenképp folytatni szeretné, akkor kattintson a lenti hivatkozásra."
+  on_another_topic: "Egy másik témában"
   themes:
+    bad_color_scheme: "A téma nem frissíthető, érvénytelen színpaletta"
     other_error: "Hiba történt az oldal stílusának frissítésekor"
+    compile_error:
+      unrecognized_extension: "Ismeretlen fájlkiterjesztés: %{extension}"
     import_error:
+      generic: Hiba történt a téma importálásákor
+      about_json: "Importálási hiba: az about.json nem létezik vagy érvénytelen"
+      about_json_values: "Az about.json érvénytelen értékeket tartalmaz: %{errors}"
       git: "Nem sikerült klónozni a git tárolót, a hozzáférés meg lett tagadva vagy a tároló nem található"
+      unpack_failed: "A fájl kibontása sikertelen"
+      unknown_file_type: "A feltöltött fájl nem tűnik érvényes Discourse témának."
+    errors:
+      component_no_user_selectable: "A téma összetevőit nem választhatja ki a felhasználó"
+      component_no_default: "A témaösszetevő nem lehet alapértelmezett téma"
+      component_no_color_scheme: "A témaösszevető nem tartalmazhat színpalettát"
+      no_multilevels_components: "A gyermektémákat tartalmazó témák nem lehet maguk is gyermektémák"
     settings_errors:
       invalid_yaml: "A megadott YAML érvénytelen."
+      data_type_not_a_number: "A(z) „%{name}” típus beállítása nem támogatott. A támogatott típusok: „integer”, „bool”, „list” és „enum”."
+      name_too_long: "Az egyik beállítás neve túl hosszú. A legnagyobb hossz 255"
       default_value_missing: "A(z) „%{name}” beállításnak nincs alapértelmezett értéke."
+      default_not_match_type: "A(z) „%{name}” beállítás alapértelmezett értékének típusa nem egyezik a beállítás típusával."
+      default_out_range: "A(z) „%{name}” alapértelmezett értéke a tartományon kívül esik."
+      enum_value_not_valid: "A kiválasztott érték nem szerepel az enum lehetőségei között."
+      number_value_not_valid: "Az új érték nem esik az engedélyezett tartományon belülre."
       number_value_not_valid_min_max: "%{min} és %{max} között kell lennie."
+      number_value_not_valid_min: "Nagyobb vagy egyenlőnek kell lennie, mint %{min}."
+      number_value_not_valid_max: "Kisebb vagy egyenlőnek kell lennie, mint %{max}."
+      string_value_not_valid: "Az új érték hossza nem esik az engedélyezett tartományon belülre."
+      string_value_not_valid_min_max: "A karakterek számának %{min} és %{max} között kell lennie."
+      string_value_not_valid_min: "Legalább %{min} karakter hosszúnak kell lennie."
+      string_value_not_valid_max: "Legfeljebb %{max} karakter hosszúnak kell lennie."
+    locale_errors:
+      top_level_locale: "A felsőszintű kulcsnak a területibeállítás-fájlban egyeznie kell a területi beállítás nevével"
+      invalid_yaml: "A fordítási YAML érvénytelen"
   emails:
     incoming:
       default_subject: "Cím szükséges ehhez a témához"
       show_trimmed_content: "Levágott tartalom megjelenítése"
       no_subject: "(nincs tárgy)"
       no_body: "(nincs törzs)"
+      missing_attachment: "(A(z) %{filename} melléklet hiányzik)"
       errors:
         empty_email_error: "Akkor fordul elő, ha üres volt a kapott nyers e-mail."
+        no_message_id_error: "Akkor történik, ha a levélnek nincs „Message-Id” fejléce."
         inactive_user_error: "Akkor fordul elő, ha a feladó nem aktív."
         bad_destination_address: "Akkor fordul elő, ha a Címzett/Másolatot kap/Vakmásolatot kap mezőkben lévő email címek egyike sem illeszkedik a beállított beérkező e-mail címhez."
         strangers_not_allowed_error: "Akkor fordul elő, ha a felhasználó új témát akar létrehozni egy olyan kategóriában, amelynek nem tagja."
@@ -108,11 +140,27 @@ hu:
   activemodel:
     errors:
       <<: *errors
+  invite:
+    not_found: "A meghívási token érvénytelen. Lépjen kapcsolatba a <a href='%{base_url}/about'>stábbal</a>."
+    not_found_json: "A meghívási token érvénytelen. Lépjen kapcsolatba a stábbal."
+    not_found_template: |
+      <p>A(z) <a href="%{base_url}">%{site_name}</a> meghívóját már felhasználta.</p>
+
+      <p>Ha emlékszik a jelszóra, akkor <a href="%{base_url}/login">bejelentkezhet</a>.</p>
+
+      <p>Egyébként <a href="%{base_url}/password-reset">állítsa helyre a jelszavát</a>.</p>
+    error_message: "Hiba történt a meghívó elfogadásakor. Lépjen kapcsolatba az oldal rendszergazdájával."
+    user_exists: "Nincs szükség <b>%{email}</b> meghívására, már <a href='%{base_path}/u/%{username}/summary'>rendelkezik fiókkal.</a>"
   backup:
     operation_already_running: "Egy művelet jelenleg is fut. Most nem indítható új feladat."
     backup_file_should_be_tar_gz: "A biztonsági mentésnek .tar.gz archívumnak kell lennie."
     not_enough_space_on_disk: "Nincs elég hely a lemezen a biztonsági mentés feltöltéséhez."
     invalid_filename: "A mentési fájlnév érvénytelen karaktereket tartalmaz. Érvényes karakterek: a-z 0-9 . - _."
+    file_exists: "A fájl, amit próbál feltölteni, már létezik."
+    location:
+      local: "Helyi"
+      s3: "Amazon S3"
+  invalid_params: "Érvénytelen paramétereket adott meg a kéréshez: %{message}"
   not_logged_in: "Ehhez be kell jelentkeznie."
   not_found: "A kért URL vagy erőforrás nem található."
   invalid_access: "Nincs engedélye a kért erőforrás megtekintéséhez."
@@ -134,6 +182,12 @@ hu:
     permalink: "Közvetlen hivatkozás"
     imported_from: "Ez egy kapcsolódó beszélgetési téma, az eredeti bejegyzés itt található: %{link}"
     in_reply_to: "▶ %{username}"
+    replies:
+      one: "%{count} válasz"
+      other: "%{count} válasz"
+    likes:
+      one: "%{count} kedvelés"
+      other: "%{count} kedvelés"
     created: "Létrehozott"
   no_mentions_allowed: "Sajnáljuk, de nem említhet meg más felhasználókat."
   too_many_mentions:
@@ -207,10 +261,19 @@ hu:
       trust_level_2: "bizalmi_szint_2"
       trust_level_3: "bizalmi_szint_3"
       trust_level_4: "bizalmi_szint_4"
+    view_hidden_topic_request_reason: "Szeretnék csatlakozni a(z) „%{group_name}” csoporthoz, hogy elérjem [ezt a témát](%{topic_url})"
   education:
     until_posts:
       one: "%{count} bejegyzés"
       other: "%{count} bejegyzés"
+    get_a_room: |
+      ### Biztasson mindenkit, hogy csatlakozzanak a beszélgetéshez
+
+      %{count} alkalommal válaszoz @%{reply_username} felhasználónak ebben a témában.
+
+      A jó beszélgetések számos hangot és perspektívát tartalmaznak. Be tud valaki mást is vonni?
+
+      És ne feledje, ha nem nyilvánosan szeretné folytatni a párbeszédet ezzel a felhasználóval, akkor [személyes üzenetet is küldhet neki](%{base_path}/u/%{reply_username}).
   activerecord:
     attributes:
       category:
@@ -285,9 +348,14 @@ hu:
   post:
     image_placeholder:
       broken: "Ez a kép hibás"
+    has_likes:
+      one: "%{count} kedvelés"
+      other: "%{count} kedvelés"
   rate_limiter:
     slow_down: "Túl sokszor hajtotta végre ezt a műveletet, próbálja újra később."
     too_many_requests: "Túl sokszor hajtotta végre ezt a műveletet. Az újrapróbálkozás előtt várjon ennyi időt: %{time_left}."
+    by_type:
+      create_like: "Elérte a kedvelések maximális számát. Az újrapróbálkozásig ennyit várjon: %{time_left}."
     hours:
       one: "%{count} óra"
       other: "%{count} óra"
@@ -432,6 +500,7 @@ hu:
     no_bookmarks:
       others: "Nincsenek könyvjelzők."
     no_likes_given:
+      self: "Egyetlen bejegyzést sem kedvelt."
       others: "Nincsenek kedvelt bejegyzések."
     no_replies:
       others: "Nincsenek válaszok."
@@ -469,6 +538,7 @@ hu:
     authorize: "Engedélyezés"
     read: "olvasható"
     read_write: "olvasható/írható"
+    otp_description: 'Szeretné, hogy a(z) „%{application_name}” hozzáférjen ehhez az oldalhoz?'
     otp_confirmation:
       confirm_title: "Tovább a(z) %{site_name} oldalra"
   reports:
@@ -516,6 +586,7 @@ hu:
       xaxis: "Nap"
     daily_engaged_users:
       xaxis: "Nap"
+      description: "A felhasználók száma, akik az előző nap bejegyzéseket kedveltek vagy osztottak meg."
     profile_views:
       title: "Felhasználói profil megtekintések"
       xaxis: "Nap"
@@ -532,6 +603,7 @@ hu:
       title: "Kedvelések"
       xaxis: "Nap"
       yaxis: "Új kedvelések száma"
+      description: "Új kedvelések száma."
     flags:
       title: "Jelölések"
       xaxis: "Nap"
@@ -689,6 +761,7 @@ hu:
     reply_by_email_enabled: "E-mail válaszok engedélyezése."
     enable_emoji: "Emodzsi engedélyezése"
     enable_emoji_shortcuts: "A gyakori mosolyt jelző szövegek, mint a :) :p és :( emodzsikká lesznek alakítva"
+    emoji_set: "Hogy szeretné az emodzsiját?"
     company_name: "Cégnév"
     errors:
       invalid_email: "Érvénytelen e-mail cím."

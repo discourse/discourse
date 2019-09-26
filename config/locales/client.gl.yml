@@ -245,6 +245,8 @@ gl:
       title:
         placeholder: "escribe o título do tema aquí"
     review:
+      explain:
+        total: "Total"
       delete: "Eliminar"
       settings:
         save_changes: "Gardar os cambios"
@@ -858,7 +860,6 @@ gl:
         title_missing: "O título é obrigatorio"
         title_too_short: "O título debe ter alomenos {{min}} caracteres"
         title_too_long: "O título non debe ter máis de {{max}} caracteres"
-        post_missing: "A publicación non pode estar baleira"
         post_length: "A publicación debe ter alomenos {{min}} caracteres"
         category_missing: "Debes seleccionar unha categoría"
       save_edit: "Gardar a edición"
@@ -912,7 +913,6 @@ gl:
     notifications:
       title: "notificacións das mencións ao teu @nome, respostas ás túas publicacións e temas, mensaxes, etc"
       none: "Non é posíbel cargar as notificacións neste intre"
-      more: "ver notificacións anteriores"
       popup:
         mentioned: '{{username}} mencionoute en "{{topic}}" - {{site_title}}'
         group_mentioned: '{{username}} mencionoute en "{{topic}}" - {{site_title}}'

@@ -314,6 +314,10 @@ tr_TR:
     review:
       order_by: "Sırala"
       in_reply_to: "cevap olarak"
+      explain:
+        total: "Toplam"
+        trust_level_bonus:
+          name: "güven seviyesi"
       claim_help:
         optional: "Başkalarının incelemesini engellemek için bu öğeyi talep edebilirsiniz."
         required: "Öğeleri inceleyebilmeniz için önce hak talebinde bulunmalısınız."
@@ -339,7 +343,7 @@ tr_TR:
       topic_has_pending:
         one: "Bu konuda <b>%{count}</b> adet onay bekleyen gönderi var"
         other: "Bu konuda <b>{{count}}</b> adet onay bekleyen gönderi var"
-      title: "incele"
+      title: "Gözden geçirmeler"
       topic: "Konu:"
       filtered_topic: "Tek konu içerisinde görüntülenebilir içerikleri filtrelediniz."
       filtered_user: "Kullanıcı"
@@ -1188,7 +1192,6 @@ tr_TR:
       enabled: "Bu site salt-okunur modda. Lütfen taramaya devam et, ancak yanıtlama, beğenme ve diğer eylemler şu an için devre dışı durumda. "
       login_disabled: "Site salt-okunur modda iken giriş işlemi devre dışı bırakılır ."
       logout_disabled: "Site salt-okunur modda iken çıkış işlemi yapılamaz."
-    too_few_topics_and_posts_notice: "<a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>Tartışmaya</a> başlayalım <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>!</a> <strong>%{currentTopics} / %{requiredTopics}</strong> konuları ve <strong>%{currentPosts} / %{requiredPosts}</strong> gönderileri vardır - ziyaretçilerin okuması ve yanıtlaması gereken daha çok şey vardır. Bu mesajı yalnızca personel görebilir."
     learn_more: "daha fazlasını öğren..."
     all_time: "toplam"
     all_time_desc: "oluşturulan tüm konular "
@@ -1278,8 +1281,10 @@ tr_TR:
       password: "Şifre"
       second_factor_title: "İki Faktörlü Kimlik Doğrulama"
       second_factor_description: "Lütfen uygulamadan \"Kimlik Doğrulama Kodu\"nu gir:"
+      second_factor_backup: "Yedek kodları kullanarak oturum açın"
       second_factor_backup_title: "İki Faktörlü Yedekleme"
       second_factor_backup_description: "Lütfen yedek kodlarından birini gir:"
+      second_factor: "Authenticator uygulamasını kullanarak oturum açın"
       email_placeholder: "e-posta veya kullanıcı adı"
       caps_lock_warning: "Caps Lock açık"
       error: "Bilinmeyen hata"
@@ -1439,8 +1444,8 @@ tr_TR:
         title_missing: "Başlık gerekli"
         title_too_short: "Başlık en az {{min}} karakter olmalı"
         title_too_long: "Başlık {{max}} karakterden daha uzun olamaz"
-        post_missing: "Gönderiler boş olamaz"
         post_length: "Gönderi en az {{min}} karakter olmalı"
+        try_like: "{{heart}} düğmesini denediniz mi?"
         category_missing: "Bir kategori seçmelisin"
         tags_missing: "En azından {{count}} etiket seçmelisin"
       save_edit: "Değişikliği Kaydet"
@@ -1544,7 +1549,6 @@ tr_TR:
       title: "@isime yapılan bildirimler, gönderilerin ve konularına verilen cevaplar, mesajlarla vb. ilgili bildiriler"
       none: "Şu an için bildirimler yüklenemiyor."
       empty: "Bildirim yok."
-      more: "Eski bildirimleri görüntüle"
       post_approved: "Gönderiniz onaylandı"
       reviewable_items: "inceleme gerektiren öğeler"
       mentioned: "<span>{{username}}</span> {{description}}"
@@ -1692,6 +1696,7 @@ tr_TR:
     go_back: "geri dön"
     not_logged_in_user: "güncel aktivitelerin ve tercihlerin özetinin bulunduğu kullanıcı sayfası"
     current_user: "kendi kullanıcı sayfana git"
+    view_all: "tümünü görüntüle"
     topics:
       new_messages_marker: "son ziyaret"
       bulk:
@@ -2133,7 +2138,9 @@ tr_TR:
         create: "Üzgünüz, gönderin oluşturulurken bir hata oluştu. Lütfen tekrar dene."
         edit: "Üzgünüz, gönderin düzenlenirken bir hata oluştu. Lütfen tekrar dene. "
         upload: "Üzgünüz, dosya yüklenirken bir hata oluştu. Lütfen tekrar dene."
+        file_too_large: "Üzgünüz, bu dosya çok büyük (en fazla {{max_size_kb}}kb). Neden paylaşımını bir bulut sağlayıcısına yükleyip bağlantısını paylaşmıyorsun ?"
         too_many_uploads: "Üzgünüz, aynı anda sadece tek dosya yüklenebilir."
+        too_many_dragged_and_dropped_files: "Üzgünüz, tek seferde sadece {{max}} dosya yükleyebilirsin."
         upload_not_authorized: "Üzgünüz, yüklemeye çalıştığın dosya izinli değil (izinli uzantılar : {{izinli uzantılar}})."
         image_upload_not_allowed_for_new_user: "Üzgünüz, yeni kullanıcılar resim yükleyemez."
         attachment_upload_not_allowed_for_new_user: "Üzgünüz, yeni kullanıcılar dosya yükleyemez."
@@ -2167,6 +2174,9 @@ tr_TR:
         more: "Daha fazla"
         delete_replies:
           confirm: "Bu gönderideki yanıtları da silmek istiyor musun?"
+          all_replies:
+            one: "Evet, ve %{count} yanıt"
+            other: "Evet, ve tüm {{count}} yanıtlar"
           just_the_post: "Hayır, sadece bu gönderi"
         admin: "gönderi yönetici eylemleri"
         wiki: "Wiki Yap"
@@ -2207,6 +2217,9 @@ tr_TR:
           bookmark: "bunu işaretledi"
           like: "bunu beğendi"
           read: "bunu oku"
+          like_capped:
+            one: "ve {{count}} diğer kişi bunu beğendi"
+            other: "ve {{count}} diğerleri bunu beğendi"
         by_you:
           off_topic: "Bunu bayrakla \"konu dışı\" olarak işaretledin"
           spam: "Bunu bayrakla \"istenmeyen e-posta\" olarak işaretledin"
@@ -2234,6 +2247,7 @@ tr_TR:
           revert: "Bu uyarlamaya geri dön"
           edit_wiki: "Wiki'yi düzenle"
           edit_post: "Gönderiyi düzenle"
+          comparing_previous_to_current_out_of_total: "<strong>{{previous}}</strong>{{icon}}<strong>{{current}}</strong>/{{total}}"
         displays:
           inline:
             title: "Hazırlanan cevabı ekleme ve çıkarmalarla birlikte göster"
@@ -2302,6 +2316,7 @@ tr_TR:
       security: "Güvenlik"
       special_warning: "Uyarı: Bu kategori önceden ayarlanmış bir kategoridir ve güvenlik ayarları değiştirilemez. Eğer bu kategoriyi kullanmak istemiyorsan, başka bir amaçla kullanmak yerine sil."
       uncategorized_security_warning: "Bu kategori özeldir. Kategorisi olmayan konular için tutma alanı olarak tasarlanmıştır; güvenlik ayarlarına sahip olamaz."
+      uncategorized_general_warning: 'Bu kategori özeldir. Kategori seçilmeyen yeni konular için varsayılan kategori olarak kullanılır. Bu davranışı önlemek ve kategori seçimini zorlamak istiyorsanız, <a href="%{settingLink}">lütfen buradaki ayarı</a> devre dışı bırakın. Adı veya açıklamayı değiştirmek istiyorsanız, <a href="%{customizeLink}">Özelleştir / Metin İçeriği</a>''ne gidin.'
       images: "Resimler"
       email_in: "Kişiselleşmiş gelen e-posta adresi:"
       email_in_allow_strangers: "Hesabı olmayan, isimsiz kullanıcılardan e-posta kabul et"
@@ -2554,6 +2569,7 @@ tr_TR:
         this_week: "Hafta"
         today: "Bugün"
         other_periods: "yukarı bak"
+    browser_update: 'Maalesef,  <a href="https://www.discourse.org/faq/#browser">tarayıcın bu site için çok eski</a>. Lütfen <a href="https://browsehappy.com">tarayıcını güncelle</a>.'
     permission_types:
       full: "Oluştur / Cevapla / Bak"
       create_post: "Cevapla / Bak"
@@ -2586,6 +2602,7 @@ tr_TR:
         up_down: "%{shortcut} Seçileni taşı &uarr; &darr;"
         open: "%{shortcut} Seçili konuyu aç"
         next_prev: "%{shortcut} Önceki/Sonraki bölüm"
+        go_to_unread_post: "%{shortcut} Okunmamış ilk gönderiye git"
       application:
         title: "Uygulama"
         create: "%{shortcut} Yeni konu oluştur"
@@ -2678,6 +2695,11 @@ tr_TR:
       sort_by_name: "isim"
       manage_groups: "Etiket Grubunu Yönet"
       manage_groups_description: "Etiket grubunu yönetmek için grup tanımla"
+      upload: "Etiketleri Yükle"
+      upload_description: "Toplu olarak etiket oluşturmak için bir csv dosyası yükleyin"
+      upload_successful: "Etiketler başarıyla yüklendi"
+      delete_unused: "Kullanılmayan Etiketleri Sil"
+      delete_unused_description: "Hiçbir konuya veya kişisel mesaja eklenmeyen tüm etiketleri sil"
       cancel_delete_unused: "İptal"
       filters:
         without_category: "%{filter} %{tag} konular"
@@ -2690,6 +2712,7 @@ tr_TR:
           description: "Bu etiketi içeren tüm konuları otomatik olarak izleyeceksin. Tüm yeni mesajlar ve konulardan haberdar edileceksin, ayrıca konuların yanında okunmamış ve yeni mesajların sayısı da görünecek."
         watching_first_post:
           title: "İlk gönderi izlemesi"
+          description: "Bu etiketteki yeni konular size bildirilecektir ancak konulara cevap verilmeyecektir."
         tracking:
           title: "Takip ediliyor"
           description: "Bu etiketi içeren tüm konuları otomatik olarak takip edeceksin. Konunun yanında okunmamış ve yeni yayınların sayısı görünecek."
@@ -2704,6 +2727,7 @@ tr_TR:
         about: "Konuları kolayca yönetmek için onlara etiket ekle."
         new: "Yeni Grup"
         tags_label: "Bu gruptaki etiketler:"
+        tags_placeholder: "etiketler"
         parent_tag_label: "Üst etiket:"
         parent_tag_placeholder: "İsteğe Bağlı"
         parent_tag_description: "Bu gruptaki etiketler üst etiket olduğu sürece kullanılamaz."
@@ -2752,6 +2776,8 @@ tr_TR:
         title: "Mevcut raporlar listesi"
       dashboard:
         title: "Gösterge Paneli"
+        last_updated: "Kontrol paneli güncellendi:"
+        discourse_last_updated: "Discourse güncellendi:"
         version: "Sürüm"
         up_to_date: "Sistemin güncel durumda!"
         critical_available: "Önemli bir güncelleme var."
@@ -2762,6 +2788,7 @@ tr_TR:
         version_check_pending: "Yeni güncelleme yaptın. Harika!"
         installed_version: "Yüklendi"
         latest_version: "En son"
+        problems_found: "Mevcut site ayarlarınıza göre bazı öneriler"
         last_checked: "Son kontrol"
         refresh_problems: "Yenile"
         no_problems: "Herhangi bir sorun bulunamadı."
@@ -2772,6 +2799,8 @@ tr_TR:
         private_messages_short: "Mesajlar"
         private_messages_title: "Mesajlar"
         mobile_title: "Mobil"
+        space_used: "%{usedSize} kullanıldı"
+        space_used_and_free: "%{usedSize} (%{freeSize} kullanılabilir)"
         uploads: "Yüklemeler"
         backups: "Yedekler"
         lastest_backup: "Güncel: %{date}"
@@ -2788,10 +2817,14 @@ tr_TR:
         general_tab: "Genel"
         moderation_tab: "Moderasyon"
         security_tab: "Güvenlik"
+        reports_tab: "Raporlar"
         report_filter_any: "hiçbir"
         disabled: Devredışı
         timeout_error: "Üzgünüz, sorgu çok uzun sürüyor. Lütfen daha kısa bir aralık seç."
         exception_error: "Üzgünüz, sorguyu yürütürken bir hata oluştu"
+        too_many_requests: Bu işlemi çok fazla yaptınız. Lütfen tekrar denemeden önce bekleyin.
+        not_found_error: "Üzgünüz, bu rapor mevcut değil"
+        filter_reports: Raporları filtrele
         reports:
           today: "Bugün"
           yesterday: "Dün"
@@ -2804,14 +2837,19 @@ tr_TR:
           view_table: "tablo"
           view_graph: "grafik"
           refresh_report: "Raporu Yenile"
+          start_date: "Başlangıç Tarihi (UTC)"
+          end_date: "Bitiş Tarihi (UTC)"
           groups: "Tüm gruplar"
           disabled: "Bu rapor devre dışı"
           totals_for_sample: "Örnek toplamlar"
+          average_for_sample: "Örnek için ortalama"
           total: "Tüm zamanlar toplamı"
           no_data: "Gösterilecek bilgi yok."
           trending_search:
             more: '<a href="%{basePath}/admin/logs/search_logs">Arama Günlükleri</a>'
           filters:
+            file-extension:
+              label: Dosya uzantısı
             group:
               label: Grup
             category:
@@ -2845,7 +2883,15 @@ tr_TR:
             visibility_levels:
               title: "Bu grubu kimler görebilir?"
               public: "Herkes"
+              logged_on_users: "Giriş yapan kullanıcılar"
+              members: "Grup yöneticileri, üyeler"
               staff: "Grup sahipleri ve personel"
+              owners: "Grup yöneticileri"
+              description: "Yöneticiler tüm grupları görebilir."
+            members_visibility_levels:
+              title: "Bu grubun üyelerini kim görebilir?"
+              description: "Yöneticiler tüm grupların üyelerini görebilir."
+            publish_read_state: "Grup mesajlarında grup okuma durumunu yayınla"
           membership:
             automatic: Otomatik
             trust_level: Güven Seviyesi
@@ -2918,6 +2964,7 @@ tr_TR:
         active_notice: "Etkinlik olduğunda, detaylarını göndereceğiz."
         categories_filter_instructions: "İlgili web sayfaları yalnızca etkinlik belirtilen kategorilerle ilgiliyse tetiklenir. Tüm kategoriler için web sayfalarını tetiklemek için boş bırakın."
         categories_filter: "Tetiklenmiş Kategoriler"
+        tags_filter: "Etkilenen Etiketler"
         groups_filter_instructions: "İlgili web sayfaları yalnızca etkinlik belirtilen gruplarla ilgiliyse tetiklenir. Tüm gruplar için web sayfalarını tetiklemek için boş bırakın."
         groups_filter: "Tetiklenmiş Gruplar"
         delete_confirm: "Bu web kancası silinsin mi?"
@@ -3011,6 +3058,7 @@ tr_TR:
           label: "Yükle"
           title: "Bu oluşuma bir yedek yükle"
           uploading: "Yükleniyor..."
+          uploading_progress: "Yükleniyor... {{progress}}%"
           error: "'{{filename}}': {{message}} yüklenirken bir hata oluştu"
         operations:
           is_running: "İşlem devam ediyor..."
@@ -3040,6 +3088,8 @@ tr_TR:
             label: "Geri al"
             title: "Veritabanını calışan son haline geri al"
             confirm: "Veritabanını çalışan son haline döndürmek istediğine emin misin?"
+        location:
+          local: "Yerel Depolama"
       export_csv:
         success: "Dışa aktarma işlemi başlatıldı. İşlem tamamlandığında mesajla bilgilendirileceksin."
         failed: "Dışa aktarımda bir hata oluştu. Lütfen kayıtları kontrol et."
@@ -3063,6 +3113,7 @@ tr_TR:
         save: "Kaydet"
         new: "Yeni"
         new_style: "Yeni Biçim"
+        install: "Yükle"
         delete: "Sil"
         color: "Renk"
         opacity: "Saydam"
@@ -3094,9 +3145,11 @@ tr_TR:
           desktop: "Masaüstü"
           mobile: "Mobil"
           settings: "Ayarlar"
+          translations: "Çeviriler"
           preview: "Önizleme"
           is_default: "Tema varsayılan olarak etkinleştirildi"
           user_selectable: "Tema kullanıcılar tarafından seçilebilir"
+          color_scheme: "Renk Paleti"
           color_scheme_select: "Temada kullanılacak renkleri seç"
           custom_sections: "İsteğe uyarlanmış bölümler:"
           theme_components: "Tema Öğeleri"
@@ -3120,13 +3173,18 @@ tr_TR:
           edit_css_html_help: "Herhangi bir CSS veya HTML düzenlemedin"
           delete_upload_confirm: "Yükleme silinsin mi?(Tema CSS çalışmayı durdurabilir!)"
           import_web_tip: "Veri havuzu içeren tema"
+          import_web_advanced: "Gelişmiş..."
           is_private: "Tema özel bir git veri havuzunda"
           remote_branch: "Şube adı (isteğe bağlı)"
           public_key: "Repo'ya aşağıdaki genel anahtar erişimini ver:"
+          install: "Yükle"
           installed: "Yüklendi"
           install_popular: "Gözde"
+          install_create: "Yeni oluştur"
           about_theme: "Hakkında"
           license: "Lisans"
+          version: "Versiyon:"
+          source_url: "Kaynak"
           enable: "Etkinleştir"
           disable: "Devre dışı bırak"
           component_of: "Bileşen:"
@@ -3848,9 +3906,11 @@ tr_TR:
         modal:
           categories: "Kategoriler"
           topics: "Konular"
+          replace: "Değiştir"
   wizard_js:
     wizard:
       done: "Tamamlandı"
+      finish: "Bitir"
       back: "Geri"
       next: "İleri"
       step: "%{current} / %{total}"

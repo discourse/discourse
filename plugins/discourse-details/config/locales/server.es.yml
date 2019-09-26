@@ -7,6 +7,6 @@
 
 es:
   site_settings:
-    details_enabled: "Habilitar la característica de detalles. Si cambias esto, debes rehacer todos los mensajes con: \"rake posts:rebake\"."
+    details_enabled: "Habilitar la característica de detalles. Si cambias esto, debes hacer rebake de todos los mensajes con: «rake posts:rebake»."
   details:
     excerpt_details: "(haz clic para más detalles)"

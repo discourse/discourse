@@ -866,7 +866,6 @@ sr:
         title_missing: "Naslov je obavezan"
         title_too_short: "Naslov mora biti barem {{min}} karaktera"
         title_too_long: "Naslov ne može biti više od {{max}} karaktera"
-        post_missing: "Poruka ne može biti prazna"
         post_length: "Poruka mora imati barem {{min}} karaktera"
         category_missing: "Morate odabrati kategoriju"
       save_edit: "Sačuvaj izmenu"
@@ -925,7 +924,6 @@ sr:
     notifications:
       none: "Nemoguće je učitati notifikacije ovog trenutka."
       empty: "Nisu pronađene notifikacije"
-      more: "pogledaj starije notifikacije"
       titles:
         watching_first_post: "nova tema"
     upload_selector:

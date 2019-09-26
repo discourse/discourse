@@ -311,6 +311,8 @@ it:
     review:
       order_by: "Ordina per"
       in_reply_to: "in risposta a"
+      explain:
+        total: "Totale"
       claim_help:
         optional: "Puoi rivendicare questo elemento per evitare che altri lo revisionino."
         required: "Per poter revisionare gli elementi devi prima rivendicarli."
@@ -1423,7 +1425,6 @@ it:
         title_missing: "Il titolo è richiesto"
         title_too_short: "Il titolo deve essere lungo almeno {{min}} caratteri"
         title_too_long: "Il titolo non può essere più lungo di {{max}} caratteri"
-        post_missing: "Il messaggio non può essere vuoto"
         post_length: "Il messaggio deve essere lungo almeno {{min}} caratteri"
         try_like: "Hai provato ad usare il pulsante {{heart}} ?"
         category_missing: "Devi scegliere una categoria"
@@ -1531,7 +1532,6 @@ it:
       title: "notifiche di menzioni @nome, risposte ai tuoi messaggi e argomenti ecc."
       none: "Impossibile caricare le notifiche al momento."
       empty: "Nessuna notifica trovata."
-      more: "visualizza le notifiche precedenti"
       post_approved: "Il tuo messaggio è stato approvato"
       reviewable_items: "elementi in attesa di revisione"
       mentioned: "<span>{{username}}</span> {{description}}"

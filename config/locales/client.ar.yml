@@ -354,6 +354,8 @@ ar:
       title:
         search: "ابحث في الرسائل باستخدام العنوان"
     review:
+      explain:
+        total: "مجموع"
       awaiting_approval: "بأنتضار موافقة"
       delete: "أحذف"
       settings:
@@ -1243,7 +1245,6 @@ ar:
         title_missing: "العنوان مطلوب"
         title_too_short: "العنوان يجب أن يكون علي الاقل {{min}} حرف"
         title_too_long: "العنوان يجب أن لا يزيد عن {{max}} حرف"
-        post_missing: "لا يمكن أن يكون المنشور فارغ"
         post_length: "المنشور يجب أن يكون علي الاقل {{min}} حرف"
         category_missing: "يجب عليك إختيار احد الأقسام"
       save_edit: "أحفظ التعديل"
@@ -1307,7 +1308,6 @@ ar:
       title: "إشعارات الإشارة إلى @اسمك، والردود على موضوعاتك و منشوراتك ، والرسائل، وغيرها"
       none: "تعذّر تحميل الإشعارات الآن."
       empty: "لا إشعارات."
-      more: "اعرض الإشعارات الأقدم من هذه"
       mentioned: "<span>{{username}}</span>{{description}}"
       group_mentioned: "<span>{{username}}</span>{{description}} "
       quoted: "<span>{{username}}</span>{{description}} "

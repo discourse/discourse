@@ -26,9 +26,9 @@ hy:
         thousands: "{{number}}հզ"
         millions: "{{number}}մլն"
     dates:
-      time: "h:mm a"
+      time: "h:mm"
       timeline_date: "MMM YYYY"
-      long_no_year: "MMM D h:mm a"
+      long_no_year: "MMM D h:mm"
       long_no_year_no_time: "MMM D"
       full_no_year_no_time: "MMMM Do"
       long_with_year: "MMM D, YYYY h:mm a"
@@ -95,6 +95,12 @@ hy:
         x_days:
           one: "%{count} օր առաջ"
           other: "%{count} օր առաջ"
+        x_months:
+          one: "%{count} ամիս առաջ"
+          other: "%{count} ամիս առաջ"
+        x_years:
+          one: "%{count} տարի առաջ"
+          other: "%{count} տարի առաջ"
       later:
         x_days:
           one: "%{count} օր հետո"
@@ -214,6 +220,8 @@ hy:
     every_hour: "ժամը մեկ"
     daily: "ամեն օր"
     weekly: "շաբաթական"
+    every_month: "ամիսը մեկ"
+    every_six_months: "վեց ամիսը մեկ"
     max_of_count: "առավելագույնը {{count}}"
     alternation: "կամ"
     character_count:
@@ -221,6 +229,7 @@ hy:
       other: "{{count}} սիմվոլ"
     related_messages:
       title: " Առնչվող Հաղորդագրություններ"
+      see_all: 'Տեսնել %{username}-ի @<a href="%{path}">բոլոր նամակները</a>'
     suggested_topics:
       title: "Առաջարկվող Թեմաներ"
       pm_title: "Առաջարկվող Հաղորդագրություններ"
@@ -294,6 +303,8 @@ hy:
     banner:
       close: "Փակել այս բանները"
       edit: "Խմբագրել այս բանները >>"
+    pwa:
+      install_banner: "Դուք ցանկանու՞մ եք <a href>տեղադրել %{title}-ը այս սարքի վրա?</a>"
     choose_topic:
       none_found: "Թեմաներ չեն գտնվել"
       title:
@@ -305,6 +316,11 @@ hy:
         search: "Փնտրել Հաղորդագրություն ըստ վերնագրի՝"
         placeholder: "գրեք հաղորդագրության վերնագիրն այստեղ"
     review:
+      order_by: "Դասավորել ըստ"
+      in_reply_to: "ի պատասխան"
+      explain:
+        formula: "Բանաձև"
+        total: "Ամբողջը"
       delete: "Ջնջել"
       settings:
         save_changes: "Պահպանել Փոփոխությունները"
@@ -330,16 +346,16 @@ hy:
         refresh: "Թարմացնել"
         category: "Կատեգորիա"
         priority:
-          high: "Ցածր"
+          high: "Կարևոր"
       scores:
-        score: "Քանակ"
+        score: "Միավոր"
         date: "Ամսաթիվ"
         type: "Տիպ"
       statuses:
         pending:
           title: "Սպասող"
         rejected:
-          title: "Մերժված է"
+          title: "Մերժված"
         ignored:
           title: "Անտեսված"
       types:
@@ -347,7 +363,7 @@ hy:
           title: "Օգտատեր"
       approval:
         title: "Գրառումը Հաստատման Կարիք Ունի"
-        description: "Մենք ստացել ենք Ձեր նոր գրառումը, սակայն այն պետք է հաստատվի մոդերատորի կողմից մինչև ցուցադրվելը: Խնդրում ենք լինել համբերատար:"
+        description: "Մենք ստացել ենք Ձեր նոր գրառումը, սակայն այն պետք է հաստատվի մոդերատորի կողմից մինչև ցուցադրվելը: Խնդրում ենք սպասել:"
         ok: "ՕԿ"
     user_action:
       user_posted_topic: "<a href='{{userUrl}}'>{{user}}</a>-ը հրապարակել է <a href='{{topicUrl}}'>այս թեման</a>"
@@ -418,7 +434,7 @@ hy:
           title: "Գրառումներ"
           when: "Երբ"
           action: "Գործողություն"
-          acting_user: "Գործող օգտատեր"
+          acting_user: "Կատարող օգտատեր"
           target_user: "Նպատակային օգտատեր"
           subject: "Թեմա"
           details: "Մանրամասներ"
@@ -629,8 +645,8 @@ hy:
       dismiss_notifications: "Չեղարկել Բոլորը"
       dismiss_notifications_tooltip: "Նշել բոլոր չկարդացած ծանուցումները որպես կարդացած:"
       first_notification: "Ձեր առաջին ծանուցումն է! Ընտրեք այն՝ սկսելու համար:"
-      theme_default_on_all_devices: "Դարձնել սա լռելյայն թեմա իմ բոլոր սարքավորումների վրա"
-      text_size_default_on_all_devices: "Դարձնել սա լռելյայն տեքստի չափ իմ բոլոր սարքերի վրա"
+      theme_default_on_all_devices: "Դարձնել սա լռելյայն թեմա իմ բոլոր սարքավորումների համար"
+      text_size_default_on_all_devices: "Դարձնել սա լռելյայն տեքստի չափ իմ բոլոր սարքավորում համար"
       allow_private_messages: "Թույլ տալ այլ օգտատերերին ուղարկել ինձ անձնական հաղորդագրություններ"
       external_links_in_new_tab: "Բացել բոլոր արտաքին հղումները նոր ներդիրում(tab)"
       enable_quoting: "Միացնել մեջբերմամբ պատասխանելը ընդգծված տեքստի համար"
@@ -881,6 +897,8 @@ hy:
         every_hour: "ժամը մեկ"
         daily: "օրը մեկ"
         weekly: "շաբաթական"
+        every_month: "ամիսը մեկ"
+        every_six_months: "վեց ամիսը մեկ"
       email_level:
         title: "Ուղարկել ինձ էլ, նամակ, երբ որևէ մեկը մեջբերում է ինձ, պատասխանում է իմ գրառմանը, նշում է իմ @օգտանունը կամ հրավիրում է ինձ թեմայի:"
         always: "միշտ"
@@ -1296,7 +1314,6 @@ hy:
         title_missing: "Վերնագիրը պարտադիր է:"
         title_too_short: "Վերնագիրը պետք է լինի առնվազն {{min}} սիմվոլ:"
         title_too_long: "Վերնագիրը չպետք է գերազանցի {{max}} սիմվոլը:"
-        post_missing: "Գրառումը չի կարող դատարկ լինել:"
         post_length: "Գրառումը պետք է լինի առնվազն {{min}} սիմվոլ:"
         try_like: "Դուք փորձե՞լ եք {{heart}} կոճակը:"
         category_missing: "Դուք պետք է ընտրեք կատեգորիա:"
@@ -1403,7 +1420,6 @@ hy:
       title: "@անունի հիշատակումների, Ձեր գրառումների և թեմաների պատասխանների, հաղորդագրությունների և այլնի մասին ծանուցումներ "
       none: "Սյս պահին հնարավոր չէ բեռնել ծանուցումները"
       empty: "Ծանուցումներ չեն գտնվել:"
-      more: "դիտել ավելի հին ծանուցումները"
       mentioned: "<span>{{username}}</span> {{description}}"
       group_mentioned: "<span>{{username}}</span> {{description}}"
       quoted: "<span>{{username}}</span> {{description}}"

@@ -2306,6 +2306,7 @@ fa_IR:
   joined: "ملحق شده"
   discourse_push_notifications:
     popup:
+      confirm_title: "اعلانات فعال شد - %{site_title}"
       confirm_body: "موفق شدید. اگاهسازی‌ها فعال شدند."
   reviewables:
     priorities:

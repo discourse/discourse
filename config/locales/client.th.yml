@@ -912,7 +912,6 @@ th:
         title_missing: "ต้องมีชื่อเรื่อง"
         title_too_short: "ชื่อเรื่องต้องมีอย่างน้อย {{min}} ตัวอักษร"
         title_too_long: "ชื่อเรื่องต้องไม่ยาวเกิน {{max}} ตัวอักษร"
-        post_missing: "โพสไม่สามารถว่างได้"
         post_length: "โพสต้องมีอย่างน้อย {{min}} ตัวอักษร"
         category_missing: "คุณต้องเลือกหมวดหมู่"
       save_edit: "บันทึกการแก้ไข"
@@ -966,7 +965,6 @@ th:
     notifications:
       title: "การแจ้งเตือนการพูดถึง,การตอบกลับไปยังโพส กระทู้ หรือข้อความส่วนตัว และอื่นๆของ @name "
       none: "ไม่สามารถโหลดการแจ้งเตือนในขณะนี้"
-      more: "ดูการแจ้งเตือนก่อนหน้านี้"
       popup:
         mentioned: '{{username}} พูดถึงคุณใน "{{topic}}" - {{site_title}}'
         group_mentioned: '{{username}} พูดถึงคุณใน "{{topic}}" - {{site_title}}'

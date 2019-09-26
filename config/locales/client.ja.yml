@@ -284,6 +284,8 @@ ja:
     review:
       order_by: "順"
       in_reply_to: "こちらへの回答"
+      explain:
+        total: "合計"
       claim:
         title: "トピックを要請する"
       unclaim:
@@ -1249,7 +1251,6 @@ ja:
         title_missing: "タイトルを入力してください。"
         title_too_short: "タイトルは{{min}}文字以上必要です。"
         title_too_long: "タイトルは最長で{{max}}未満です。"
-        post_missing: "内容が何もありません。"
         post_length: "投稿は{{min}}文字以上必要です。"
         try_like: " {{heart}} ボタンは試しましたか？"
         category_missing: "カテゴリを選択してください。"
@@ -1329,7 +1330,6 @@ ja:
       title: "@ユーザ名 のメンション、投稿やトピックへの返信、メッセージなどの通知"
       none: "通知を読み込むことができませんでした。"
       empty: "通知はありません。"
-      more: "通知をすべて確認する"
       mentioned: "<span>{{username}}</span> {{description}}"
       group_mentioned: "<span>{{username}}</span> {{description}}"
       quoted: "<span>{{username}}</span> {{description}}"

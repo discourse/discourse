@@ -1262,7 +1262,6 @@ fr:
     editing_grace_period_max_diff: "Nombre maximum de changements de caractères autorisés dans le délai de grâce d'édition, si plus de changements, enregistrez une autre révision de poste (niveaux de confiance 0 et 1)."
     editing_grace_period_max_diff_high_trust: "Nombre maximum de changements de caractères autorisés dans le délai de grâce d'édition, si plus de changements, enregistrez une autre révision de poste (niveaux de confiance 2 et plus)."
     staff_edit_locks_post: "Les messages seront vérouillés à la modification si modifiés par des responsables"
-    post_edit_time_limit: "L'auteur peut modifier ses messages pendant (n) minutes après leur publication. Mettre à 0 pour l'autoriser sans limite de temps."
     edit_history_visible_to_public: "Autoriser tout le monde à voir les versions précédentes d'un message modifié. Quand désactivé, seuls les responsables peuvent voir l'historique."
     delete_removed_posts_after: "Les messages retirés par leur auteur seront automatiquement supprimés après (n) heures. Pour une valeur renseignée à 0, les messages seront supprimés immédiatement."
     max_image_width: "Largeur maximale des images dans un message"
@@ -2684,10 +2683,6 @@ fr:
     dashboard_problems:
       title: "Problèmes du tableau de bord"
       subject_template: "Des nouveaux conseils sur votre tableau de bord"
-      text_body_template: |
-        Nous avons de nouveaux conseils et recommendations pour vous, sur la base de vos paramètres.
-
-        [Rendez-vous sur votre tableau de bord](%{base_url}/admin) pour les voir.
     new_user_of_the_month:
       title: "Vous êtes un nouvel utilisateur du mois !"
       subject_template: "Vous êtes un nouvel utilisateur du mois !"

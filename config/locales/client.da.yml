@@ -312,6 +312,8 @@ da:
     review:
       order_by: "Filtrér efter"
       in_reply_to: "som svar til"
+      explain:
+        total: "Total"
       claim_help:
         optional: "Du kan gøre krav på dette punkt, for at forhindre andre i at gennemgå det."
         required: "Du skal kræve punkter, før du kan gennemgå dem."
@@ -1187,9 +1189,6 @@ da:
       enabled: "Dette website kan kun læses lige nu. Fortsæt endelig med at kigge, men der kan ikke svares, likes eller andet indtil videre."
       login_disabled: "Log in er deaktiveret midlertidigt, da forummet er i \"kun læsnings\" tilstand."
       logout_disabled: "Log ud er deaktiveret mens websitet er i læs kun tilstand"
-    too_few_topics_and_posts_notice: "Lad os <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>starte diskussionen!</a> Der er <strong>%{currentTopics} / %{requiredTopics}</strong> emner og <strong>%{currentPosts} / %{requiredPosts}</strong> indlæg - besøgende har brug for mere at læse og svare på. Kun hjælperteam kan se denne besked."
-    too_few_topics_notice: "Lad os <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>starte diskussionen!</a> Der er <strong>%{currentTopics} / %{requiredTopics}</strong> emner - besøgende har brug for mere at læse og svare på. Kun hjælperteam kan se denne besked."
-    too_few_posts_notice: "Lad os <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>starte diskussionen!</a> Der er <strong>%{currentPosts} / %{requiredPosts}</strong> indlæg - besøgende har brug for mere at læse og svare på. Kun hjælperteam kan se denne besked."
     logs_error_rate_notice:
       reached_hour_MF: "<b>{relativeAge}</b> - <a href='{url}' target='_blank'>{rate, plural, en {# error / hour} anden {# fejl / time}}</a> nåede indstillingsgrænsen på {limit, plural, en {# error / hour} anden {# fejl / hour}}."
       reached_minute_MF: "<b>{relativeAge}</b> - <a href='{url}' target='_blank'>{rate, plural, en {# error / minute} other {# fejl / minut}}</a> nåede indstillingsgrænsen på {limit, plural, en {# error / minute} anden {# fejl / minut}}."
@@ -1446,7 +1445,6 @@ da:
         title_missing: "Titlen er påkrævet"
         title_too_short: "Titlen skal være på mindst {{min}} tegn"
         title_too_long: "Titlen skal være kortere end {{max}} tegn."
-        post_missing: "Indlægget kan ikke være tomt."
         post_length: "Indlægget skal være på mindst {{min}} tegn."
         try_like: "Har du prøvet {{heart}}knappen?"
         category_missing: "Du skal vælge en kategori."
@@ -1554,7 +1552,6 @@ da:
       title: "notifikationer ved @navns nævnelse, svar på dine indlæg og emner, beskeder, mv."
       none: "Ikke i stand til at indlæse notifikationer for tiden."
       empty: "Ingen notifikationer fundet."
-      more: "se ældre notifikationer"
       post_approved: "Dit indlæg blev godkendt"
       reviewable_items: "genstande, der kræver gennemgang"
       mentioned: "<span>{{username}}</span> {{description}}"

@@ -16,12 +16,14 @@ es:
         other: "total de votos"
       average_rating: "Puntuación media: <strong>%{average}</strong>."
       public:
-        title: "Votos son <strong>públicos</strong>."
+        title: "Los votos son <strong>públicos</strong>."
       results:
         vote:
-          title: "Los resultados se mostrarán cuando <strong>vote</strong>."
+          title: "Los resultados se mostrarán cuando <strong>votes</strong>."
         closed:
-          title: "Los resultados se mostrarán una vez que esté <strong>cerrado</strong>."
+          title: "Los resultados se mostrarán una vez que la encuesta esté <strong>cerrada</strong>."
+        staff:
+          title: "Los resultados solo se muestran a miembros del <strong>staff</strong>."
       multiple:
         help:
           at_least_min_options:
@@ -33,7 +35,7 @@ es:
           x_options:
             one: "Elige <strong>%{count}</strong> opción"
             other: "Elige <strong>%{count}</strong> opciones"
-          between_min_and_max_options: "Elige entre las opciones <strong>%{min}</strong> y <strong>%{max}</strong>."
+          between_min_and_max_options: "Elige entre <strong>%{min}</strong> y <strong>%{max}</strong> opciones."
       cast-votes:
         title: "Emite tus votos"
         label: "¡Vota ahora!"
@@ -55,14 +57,14 @@ es:
         closes_in: "Cierra en <strong>%{timeLeft}</strong>."
         age: "Cerrado <strong>%{age}</strong>"
       error_while_toggling_status: "Lo sentimos, se produjo un error al cambiar el estado de esta encuesta."
-      error_while_casting_votes: "Lo sentimos, hubo un error al emitir tus votos."
-      error_while_fetching_voters: "Lo sentimos, hubo un error al mostrar los votantes."
+      error_while_casting_votes: "Lo sentimos, se produjo un error al emitir tus votos."
+      error_while_fetching_voters: "Lo sentimos, se produjo un error al mostrar los votantes."
       ui_builder:
-        title: Crear Encuesta
-        insert: Insertar Encuesta
+        title: Crear encuesta
+        insert: Insertar encuesta
         help:
-          options_count: Introducir al menos 2 opciones
-          invalid_values: Valor mínimo debe ser más pequeño que el valor máximo.
+          options_count: Ingresar al menos 2 opciones
+          invalid_values: El valor mínimo debe ser menor que el valor máximo.
           min_step_value: El valor mínimo es 1
         poll_type:
           label: Tipo
@@ -72,8 +74,9 @@ es:
         poll_result:
           label: Resultados
           always: Siempre visible
-          vote: En votos
-          closed: Cuando estén cerrados
+          vote: En votación
+          closed: Cuando esté cerrada
+          staff: Solo staff
         poll_config:
           max: Máximo
           min: Mínimo

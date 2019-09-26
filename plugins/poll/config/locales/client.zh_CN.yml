@@ -20,6 +20,8 @@ zh_CN:
           title: "结果将显示在<strong>投票</strong>上。"
         closed:
           title: "结果将显示一次<strong>关闭</strong>。"
+        staff:
+          title: "结果仅显示给<strong>管理</strong>成员。"
       multiple:
         help:
           at_least_min_options:
@@ -69,6 +71,7 @@ zh_CN:
           always: 总是可见
           vote: 投票
           closed: 关闭时
+          staff: 仅管理人员
         poll_config:
           max: 最大
           min: 最小

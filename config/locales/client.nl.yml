@@ -95,6 +95,12 @@ nl:
         x_days:
           one: "%{count} dag geleden"
           other: "%{count} dagen geleden"
+        x_months:
+          one: "%{count} maand geleden"
+          other: "%{count} maanden geleden"
+        x_years:
+          one: "%{count} jaar geleden"
+          other: "%{count} jaar geleden"
       later:
         x_days:
           one: "%{count} dag later"
@@ -314,6 +320,26 @@ nl:
     review:
       order_by: "Sorteren op"
       in_reply_to: "in reactie op"
+      explain:
+        why: "leg uit waarom dit item in de wachtrij is beland"
+        title: "Beoordeelbare scores"
+        formula: "Formule"
+        subtotal: "Subtotaal"
+        total: "Totaal"
+        min_score_visibility: "Minimale score voor zichtbaarheid"
+        score_to_hide: "Score voor verbergen van bericht"
+        take_action_bonus:
+          name: 'heeft actie ondernomen'
+          title: 'Wanneer een staflid kiest voor het ondernemen van actie, wordt een bonus aan de markering gegeven.'
+        user_accuracy_bonus:
+          name: "gebruikersnauwkeurigheid"
+          title: "Gebruikers waarvan markeringen in het verleden zijn geaccordeerd ontvangen een bonus."
+        trust_level_bonus:
+          name: "vertrouwensniveau"
+          title: "Beoordeelbare items die door gebruikers met een hoger vertrouwensniveau zijn gemaakt hebben een hogere score."
+        type_bonus:
+          name: "type bonus"
+          title: "Aan bepaalde beoordeelbare typen kan door stafleden een bonus worden toegekend om ze hogere prioriteit te geven."
       claim_help:
         optional: "U kunt dit item opeisen om te voorkomen dat anderen het beoordelen."
         required: "U moet items opeisen voordat u ze kunt beoordelen."
@@ -1190,9 +1216,9 @@ nl:
       enabled: "Deze website bevindt zich in alleen-lezenmodus. U kunt doorgaan met browsen, maar berichten beantwoorden, likes geven en andere acties zijn momenteel uitgeschakeld."
       login_disabled: "Aanmelden is uitgeschakeld zolang de website zich in alleen-lezenmodus bevindt."
       logout_disabled: "Afmelden is uitgeschakeld zolang de website zich in alleen-lezenmodus bevindt."
-    too_few_topics_and_posts_notice: "Laten we <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>de discussie starten!</a> Er zijn <strong>%{currentTopics} / %{requiredTopics}</strong> topics en <strong>%{currentPosts} / %{requiredPosts}</strong> berichten – bezoekers hebben er meer nodig om te lezen en op te antwoorden. Alleen stafleden kunnen dit bericht zien."
-    too_few_topics_notice: "Laten we <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>de discussie starten!</a> Er zijn <strong>%{currentTopics} / %{requiredTopics}</strong> topics – bezoekers hebben er meer nodig om te lezen en op te antwoorden. Alleen stafleden kunnen dit bericht zien."
-    too_few_posts_notice: "Laten we <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>de discussie starten!</a> Er zijn <strong>%{currentPosts} / %{requiredPosts}</strong> berichten – bezoekers hebben er meer nodig om te lezen en op te antwoorden. Alleen stafleden kunnen dit bericht zien."
+    too_few_topics_and_posts_notice: "Laten we <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>de discussie starten!</a> Er zijn <strong>%{currentTopics}</strong> topics en <strong>%{currentPosts}</strong> berichten. Bezoekers hebben er meer nodig om te lezen en op te antwoorden – minstens <strong>%{requiredTopics}</strong> topics en <strong>%{requiredPosts}</strong> berichten wordt aanbevolen. Alleen stafleden kunnen dit bericht zien."
+    too_few_topics_notice: "Laten we <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>de discussie starten!</a> Er zijn <strong>%{currentTopics}</strong> topics. Bezoekers hebben er meer nodig om te lezen en op te antwoorden – minstens <strong>%{requiredTopics}</strong> topics wordt aanbevolen. Alleen stafleden kunnen dit bericht zien."
+    too_few_posts_notice: "Laten we <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>de discussie starten!</a> Er zijn <strong>%{currentPosts}</strong> berichten. Bezoekers hebben er meer nodig om te lezen en op te antwoorden – minstens <strong>%{requiredPosts}</strong> berichten wordt aanbevolen. Alleen stafleden kunnen dit bericht zien."
     logs_error_rate_notice:
       reached_hour_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# fout/uur} other {# fouten/uur}}</a> heeft de limiet voor de website-instelling van {limit, plural, one {# fout/uur} other {# fouten/uur}} bereikt."
       reached_minute_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# fout/minuut} other {# fouten/minuut}}</a> heeft de limiet voor de website-instelling van {limit, plural, one {# fout/minuut} other {# fouten/minuut}} bereikt."
@@ -1458,6 +1484,7 @@ nl:
         try_like: "Hebt u de knop {{heart}} geprobeerd?"
         category_missing: "U moet een categorie kiezen"
         tags_missing: "U moet minstens {{count}} tags kiezen"
+        topic_template_not_modified: "Voeg details en specifieke kenmerken toe aan uw topic door de topicsjabloon te bewerken."
       save_edit: "Bewerking opslaan"
       overwrite_edit: "Bewerking overschrijven"
       reply_original: "Antwoorden op oorspronkelijke topic"
@@ -1561,7 +1588,6 @@ nl:
       title: "meldingen van @naam-vermeldingen, antwoorden op uw berichten en topics, berichten, etc."
       none: "Meldingen kunnen momenteel niet worden geladen."
       empty: "Geen meldingen gevonden."
-      more: "oudere meldingen bekijken"
       post_approved: "Uw bericht is goedgekeurd"
       reviewable_items: "items die beoordeling nodig hebben"
       mentioned: "<span>{{username}}</span> {{description}}"
@@ -1719,6 +1745,7 @@ nl:
     go_back: "terug"
     not_logged_in_user: "gebruikerspagina met samenvatting van huidige activiteit en voorkeuren"
     current_user: "naar uw gebruikerspagina"
+    view_all: "alle bekijken"
     topics:
       new_messages_marker: "laatste bezoek"
       bulk:

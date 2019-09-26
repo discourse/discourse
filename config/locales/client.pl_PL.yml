@@ -361,6 +361,8 @@ pl_PL:
     review:
       order_by: "Segreguj według:"
       in_reply_to: "w odpowiedzi na"
+      explain:
+        total: "Łącznie"
       awaiting_approval: "Oczekuje na zatwierdzenie"
       delete: "Usuń"
       settings:
@@ -1386,7 +1388,6 @@ pl_PL:
         title_missing: "tytuł jest wymagany"
         title_too_short: "tytuł musi zawierać co najmniej {{min}} znaków"
         title_too_long: "Tytuł nie może zawierać więcej niż {{max}} znaków"
-        post_missing: "wpis nie może być pusty"
         post_length: "Wpis musi zawierać przynajmniej {{min}} znaków"
         category_missing: "Musisz wybrać kategorię"
         tags_missing: "Musisz wybrać co najmniej {{count}} tagów"
@@ -1467,7 +1468,6 @@ pl_PL:
       title: "powiadomienia o wywołanej @nazwie, odpowiedzi do twoich wpisów i tematów, prywatne wiadomości, itp"
       none: "Nie udało się załadować listy powiadomień."
       empty: "Nie znaleziono powiadomień."
-      more: "pokaż starsze powiadomienia"
       mentioned: "<span>{{username}}</span> {{description}}"
       group_mentioned: "<span>{{username}}</span> {{description}}"
       quoted: "<span>{{username}}</span> {{description}}"

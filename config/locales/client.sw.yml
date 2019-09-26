@@ -280,6 +280,8 @@ sw:
       title:
         placeholder: "andika kichwa cha mada hapa"
     review:
+      explain:
+        total: "Jumla"
       delete: "Futa"
       settings:
         save_changes: "Hifadhi Mabadiliko"
@@ -1186,7 +1188,6 @@ sw:
         title_missing: "Kichwa cha habari ni muhimu"
         title_too_short: "Kichwa kinatakiwa kuwa na tarakimu japo {{min}}"
         title_too_long: "Kichwa hakitakiwi kuwa na tarakimu zaidi ya {{max}}"
-        post_missing: "Chapisho haliwezi kuwa tupu"
         post_length: "Posti/Chapisho linatakiwa kuwa na tarakimu japo {{min}}"
         category_missing: "Ni sharti uchague kategoria"
         tags_missing: "Unatakiwa kuchagua japo vitambulisho {{count}}"
@@ -1283,7 +1284,6 @@ sw:
       title: "taarifa za @jina lililotajwa, majibu ya machapisho na mada, ujumbe, na zingine"
       none: "Imeshindwa kupakia taarifa kwa mda huu."
       empty: "Hakuna taarifa zilizopatikana."
-      more: "angalia taarifa za mda zaidi"
       mentioned: "<span>{{jina la mtumiaji}} </span>{{maelezo}}"
       group_mentioned: "<span>{{jina la mtumiaji}} </span>{{maelezo}}"
       quoted: "<span>{{jina la mtumiaji}}</span> {{maelezo}}"

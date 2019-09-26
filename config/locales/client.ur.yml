@@ -95,6 +95,12 @@ ur:
         x_days:
           one: "%{count} دن قبل"
           other: "%{count} دن قبل"
+        x_months:
+          one: "%{count} ماہ قبل"
+          other: " %{count} مہینے قبل"
+        x_years:
+          one: "%{count} سال قبل"
+          other: "%{count} سال قبل"
       later:
         x_days:
           one: "%{count} دن بعد"
@@ -314,6 +320,26 @@ ur:
     review:
       order_by: "کے حساب سے آرڈر"
       in_reply_to: "کے جواب میں"
+      explain:
+        why: "وضاحت کریں کہ یہ شے آخر میں قطار میں کیوں داخل ہو گئی"
+        title: "قابل تجدید اسکورنگ"
+        formula: "فارمولا"
+        subtotal: "ذیلی کل"
+        total: "کُل"
+        min_score_visibility: "نموداری کیلئے کم از کم اسکور"
+        score_to_hide: "پوسٹ چھپانے کیلئے اسکور"
+        take_action_bonus:
+          name: 'کارروائی کی'
+          title: 'جب سٹاف کا ایک ممبر کارروائی کرنے کا انتخاب کرتا ہے تو فلَیگ کو بَونَس دیا جاتا ہے۔'
+        user_accuracy_bonus:
+          name: "صارف کی درستگی"
+          title: "جن صارفین کے فلَیگز کے ساتھ تاریخی طور پر اتفاق کیا گیا ہو انہیں بَونَس دیا جاتا ہے۔"
+        trust_level_bonus:
+          name: "ٹرسٹ لَیول"
+          title: "اعلی ٹرسٹ لَیول صارفین کی طرف سے تخلیق کردہ قابل تجدید اشیاء کا اسکور زیادہ ہوتا ہے۔"
+        type_bonus:
+          name: "قِسم بَونَس"
+          title: "سٹاف کی طرف سے کچھ قابل تجدید اقسام کو بَونَس تفویض کیا جاسکتا ہے تاکہ ان کو اعلیٰ ترجیح بنایا جاسکے۔"
       claim_help:
         optional: "آپ اس چیز کو کََلیم کرسکتے ہیں کہ دوسروں کو اِسکا جائزہ لینے سے روکا جا سکے۔"
         required: "اشیاء کا جائزہ لینے سے پہلے آپ کا اُن کو کََلیم کرنا ضروری ہے۔"
@@ -1190,9 +1216,9 @@ ur:
       enabled: "یہ سائٹ صرف پڑھنے کے مَوڈ میں ہے۔ براہِ مہربانی براؤز کرتے رہئیے، لیکن جواب دینا، لائکس دینا، اور دیگر اعمال ابھی کے لئے غیر فعال ہیں۔"
       login_disabled: "جب تک سائٹ صرف پڑھنے کے مَوڈ میں ہے لاگ اِن غیر فعال رہے گا۔"
       logout_disabled: "جب تک سائٹ صرف پڑھنے کے مَوڈ میں ہے لاگ آؤٹ غیر فعال رہے گا۔"
-    too_few_topics_and_posts_notice: "چلیں <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>اِس بحث کو شروع کریں!</a> <strong>%{currentTopics}/%{requiredTopics}</strong> ٹاپکس اور <strong>%{currentPosts}/%{requiredPosts}</strong> پوسٹس موجود ہیں – زائرین کو پڑھنے اور اُن کا جواب دینے کیلئے مذید اور کی ضرورت ہے۔ صرف سٹاف اِس پیغام کو دیکھ سکتے ہیں۔"
-    too_few_topics_notice: "چلیں <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>اِس بحث کو شروع کریں!</a> <strong>%{currentTopics}/%{requiredTopics}</strong> ٹاپکس موجود ہیں – زائرین کو پڑھنے اور اُن کا جواب دینے کیلئے مذید اور کی ضرورت ہے۔ صرف سٹاف اِس پیغام کو دیکھ سکتے ہیں۔"
-    too_few_posts_notice: "چلیں <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>اِس بحث کو شروع کریں!</a> <strong>%{currentPosts}/%{requiredPosts}</strong> پوسٹس موجود ہیں – زائرین کو پڑھنے اور اُن کا جواب دینے کیلئے مذید اور کی ضرورت ہے۔ صرف سٹاف اِس پیغام کو دیکھ سکتے ہیں۔"
+    too_few_topics_and_posts_notice: "چلیں <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>اِس بحث کو شروع کریں!</a> <strong>%{currentTopics}</strong> ٹاپکس اور <strong>%{currentPosts}</strong> پوسٹس موجود ہیں۔ زائرین کو پڑھنے اور اُن کا جواب دینے کیلئے مذید اور کی ضرورت ہے – ہم کم از کم <strong>%{requiredTopics}</strong> ٹاپکس اور <strong>%{requiredPosts}</strong> پوسٹس کی تجویز دیتے ہیں۔ صرف سٹاف اِس پیغام کو دیکھ سکتے ہیں۔"
+    too_few_topics_notice: "چلیں <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>اِس بحث کو شروع کریں!</a> <strong>%{currentTopics}</strong> ٹاپکس موجود ہیں۔ زائرین کو پڑھنے اور اُن کا جواب دینے کیلئے مذید اور کی ضرورت ہے – ہم کم از کم <strong>%{requiredTopics}</strong> ٹاپکس کی تجویز دیتے ہیں۔ صرف سٹاف اِس پیغام کو دیکھ سکتے ہیں۔"
+    too_few_posts_notice: "چلیں <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>اِس بحث کو شروع کریں!</a> <strong>%{currentPosts}</strong> پوسٹس موجود ہیں۔ زائرین کو پڑھنے اور اُن کا جواب دینے کیلئے مذید اور کی ضرورت ہے – ہم کم از کم <strong>%{requiredPosts}</strong> پوسٹس کی تجویز دیتے ہیں۔ صرف سٹاف اِس پیغام کو دیکھ سکتے ہیں۔"
     learn_more: "اورجانیے..."
     all_time: "کُل"
     all_time_desc: "کُل ٹاپک بنائے گئے"
@@ -1453,6 +1479,7 @@ ur:
         try_like: "کیا آپ نے {{heart}} بٹن اِستعمال کیا ہے؟"
         category_missing: "ایک زمرہ کا انتخاب کرنا ضروری ہے"
         tags_missing: "آپ کا کم از کم {{count}} ٹیگز کا انتخاب کرنا ضروری ہے"
+        topic_template_not_modified: "براہ مہربانی ٹاپک ٹَیمپلیٹ میں ترمیم کرکے اپنے ٹاپک میں تفصیلات اور مخصوصیات شامل کریں۔"
       save_edit: "ترمیم محفوظ کریں"
       overwrite_edit: "دوسری ترمیم کے اوپر لکھ ڈالیں"
       reply_original: "حقیقی ٹاپک پر جواب دیں"
@@ -1556,7 +1583,6 @@ ur:
       title: "@نام کے ذکر، آپ کی پوسٹ اور ٹاپک پر جوابات، پیغامات، وغیرہ کی اطلاعات"
       none: "اِس وقت ویب سائٹ اطلاعات لوڈ کرنے سے قاصر ہے۔"
       empty: "کوئی اطلاعات نہیں ملیں۔"
-      more: "پرانی اطلاعات دیکھیے"
       post_approved: "آپ کی پوسٹ منظور ہو گئی تھی"
       reviewable_items: "اشیاء جن کا جائزہ لینے کی ضرورت ہے"
       mentioned: "<span>{{username}}</span> {{description}}"
@@ -1714,6 +1740,7 @@ ur:
     go_back: "واپس جائیں"
     not_logged_in_user: "موجودہ سرگرمی کے خلاصہ اور ترجیحات کے ساتھ صفحہِ صارف"
     current_user: "اپنے صفحہِ صارف پر جائیں"
+    view_all: "سب دیکھیں"
     topics:
       new_messages_marker: "آخری وزٹ"
       bulk:
@@ -2958,6 +2985,7 @@ ur:
               owners: "گروپ مالکان"
               description: "ایڈمن تمام گروپس دیکھ سکتے ہیں۔"
             members_visibility_levels:
+              title: "کون اِس گروپ  کے ممبران کو دیکھ سکتا ہے؟"
               description: "ایڈمن تمام گروپس کے ممبران کو دیکھ سکتے ہیں۔"
             publish_read_state: "گروپ پیغامات پر گروپ رِیڈ اسٹیٹ شائع کریں۔"
           membership:

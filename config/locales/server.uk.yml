@@ -403,11 +403,13 @@ uk:
     http_5xx_reqs:
       xaxis: "День"
     http_total_reqs:
+      title: "Всього"
       xaxis: "День"
     time_to_first_response:
       xaxis: "День"
     topics_with_no_response:
       xaxis: "День"
+      yaxis: "Всього"
     mobile_visits:
       xaxis: "День"
       yaxis: "Кількість відвідин"
@@ -602,6 +604,9 @@ uk:
       name: Читач
   tags:
     title: "Теги"
+  finish_installation:
+    resend_email:
+      title: "Надіслати ще раз листа для активації"
   wizard:
     step:
       forum_title:
