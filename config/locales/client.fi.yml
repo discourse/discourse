@@ -311,6 +311,8 @@ fi:
     review:
       order_by: "Järjestä"
       in_reply_to: "vastauksena"
+      explain:
+        total: "Yhteensä"
       claim_help:
         optional: "Voit vaatia tämän itsellesi, jolloin muut eivät voi käsitellä sitä."
         required: "Sinun täytyy osoittaa asia itsellesi ennen kuin voit käsitellä sen."
@@ -1400,7 +1402,6 @@ fi:
         title_missing: "Otsikko on pakollinen"
         title_too_short: "Otsikon täytyy olla vähintään {{min}} merkkiä pitkä"
         title_too_long: "Otsikko voi olla korkeintaan {{max}} merkkiä pitkä"
-        post_missing: "Viesti ei voi olla tyhjä"
         post_length: "Viestissä täytyy olla vähintään {{min}} merkkiä"
         try_like: "Oletko kokeillut {{heart}}-nappia?"
         category_missing: "Sinun täytyy valita viestille alue"
@@ -1508,7 +1509,6 @@ fi:
       title: "ilmoitukset @nimeen viittauksista, vastauksista omiin viesteihin ja ketjuihin, viesteistä ym."
       none: "Ilmoitusten lataaminen ei onnistunut."
       empty: "Ilmoituksia ei löydetty."
-      more: "vanhat ilmoitukset"
       post_approved: "Viestisi hyväksyttiin"
       reviewable_items: "käsittelyä odottavaa asiaa"
       mentioned: "<span>{{username}}</span> {{description}}"

@@ -95,6 +95,12 @@ ca:
         x_days:
           one: "fa %{count} dia"
           other: "fa %{count} dies"
+        x_months:
+          one: "fa %{count} mes"
+          other: "fa %{count} mesos"
+        x_years:
+          one: "fa %{count} any"
+          other: "fa %{count} anys"
       later:
         x_days:
           one: "%{count} dia després"
@@ -314,6 +320,26 @@ ca:
     review:
       order_by: "Ordena per"
       in_reply_to: "en resposta a"
+      explain:
+        why: "expliqueu per què aquest element ha acabat a la cua"
+        title: "Puntuació revisable"
+        formula: "Fórmula"
+        subtotal: "Subtotal"
+        total: "Total"
+        min_score_visibility: "Puntuació mínima per a visibilitat"
+        score_to_hide: "Puntuació per a amagar la publicació"
+        take_action_bonus:
+          name: 'ha actuat'
+          title: 'Quan un membre de l''equip responsable decideix actuar, es dóna una bonificació a la bandera. '
+        user_accuracy_bonus:
+          name: "precisió de l’usuari"
+          title: "Es dóna una bonificació als usuaris que hagin creat banderes amb les quals històricament s'hagi estat d'acord. "
+        trust_level_bonus:
+          name: "nivell de confiança"
+          title: "Els elements revisables creats per usuaris de nivell superior de confiança tenen una puntuació més alta."
+        type_bonus:
+          name: "bonificació tipus"
+          title: "El personal pot assignar una bonificació a certs tipus revisables perquè tinguin una prioritat més alta."
       claim_help:
         optional: "Podeu reclamar aquest element per a impedir que altres el revisin."
         required: "Heu de reclamar elements abans de poder revisar-los"
@@ -1138,8 +1164,8 @@ ca:
         more_badges: "Més insígnies"
         top_links: "Enllaços principals"
         no_links: "Encara no hi ha enllaços"
-        most_liked_by: "Més apreciat per"
-        most_liked_users: "Més apreciat"
+        most_liked_by: "Ha tingut més 'm'agrada' per"
+        most_liked_users: "Ha tingut més 'm'agrada'"
         most_replied_to_users: "Amb més respostes"
         no_likes: "Encara sense :heart:"
         top_categories: "Categories principals"
@@ -1190,9 +1216,9 @@ ca:
       enabled: "El lloc web és en mode només de lectura. Continueu navegant, però de moment estan desactivades les accions de respondre, 'm'agrada' i altres."
       login_disabled: "S'ha desactivat l'inici de sessió mentre aquest lloc web es trobi en mode només de lectura."
       logout_disabled: "S'ha desactivat el tancament de sessió mentre aquest lloc web es trobi en mode només de lectura."
-    too_few_topics_and_posts_notice: "Comencem <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>la discussió!</a> Hi ha <strong>%{currentTopics} / %{requiredTopics}</strong> temes i <strong> %{currentPosts} / %{requiredPosts}</strong> publicacions. Els visitants en necessiten més per a llegir i respondre. Sols l'equip responsable pot veure aquest missatge."
-    too_few_topics_notice: "Comencem <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>la discussió!</a> Hi ha <strong>%{currentTopics} / %{requiredTopics}</strong> temes. Els visitants en necessiten més per a llegir i respondre. Sols l'equip responsable pot veure aquest missatge."
-    too_few_posts_notice: "Comencem <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>la discussió!</a> Hi ha <strong>%{currentPosts} / %{requiredPosts}</strong> publicacions. Els visitants en necessiten més per a llegir i respondre. Sols l'equip responsable pot veure aquest missatge."
+    too_few_topics_and_posts_notice: "Comencem <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>la discussió!</a> Hi ha <strong>%{currentTopics}</strong> temes i <strong>%{currentPosts}</strong> publicacions. Els visitants en necessiten més per a llegir i respondre. Recomanem almenys <strong>%{requiredTopics}</strong> temes i <strong>%{requiredPosts}</strong> publicacions. Sols l'equip responsable pot veure aquest missatge."
+    too_few_topics_notice: "Comencem <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>la discussió!</a> Hi ha <strong>%{currentTopics} / </strong> temes. Els visitants en necessiten més per a llegir i respondre. Recomanem almenys <strong>%{requiredTopics}</strong> temes. Sols l'equip responsable pot veure aquest missatge."
+    too_few_posts_notice: "Comencem <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>la discussió!</a> Hi ha <strong>%{currentPosts} </strong> publicacions. Els visitants en necessiten més per a llegir i respondre.  Recomanem almenys <strong>%{requiredPosts}</strong> publicacions. Sols l'equip responsable pot veure aquest missatge."
     logs_error_rate_notice:
       reached_hour_MF: "<b>{relativeAge}</b> - <a href='{url}' target='_blank'>{rate, plural, one {# error/hora} other {# errors/hora} </a> s'ha arribat al límit de configuració del lloc web de {limit, plural, one {# error/hora} other {# errors/hora}}."
       reached_minute_MF: "<b>{relativeAge}</b> - <a href='{url}' target='_blank'>{rate, plural, one {# error/minut} other {# errors/minut}}</a> s'ha arribat al límit de configuració del lloc web de {limit, plural, one {# error/minut} other {# errors/minut}}."
@@ -1343,6 +1369,8 @@ ca:
         message: "Autenticant amb GitHub (assegureu-vos que no teniu activats els blocadors de finestres emergents)"
       discord:
         name: "Discord"
+        title: "amb Discord"
+        message: "Autenticació amb Discord"
     invites:
       accept_title: "Invitació"
       welcome_to: "Benvingut a %{site_name}!"
@@ -1456,6 +1484,7 @@ ca:
         try_like: "Heu provat el botó {{heart}}?"
         category_missing: "Heu de triar una categoria"
         tags_missing: "Cal triar almenys {{count}} etiquetes."
+        topic_template_not_modified: "Afegiu detalls i especificacions al tema editant la plantilla."
       save_edit: "Desa l'edició"
       overwrite_edit: "Sobreescriu l'edició"
       reply_original: "Respon en el tema original"
@@ -1559,7 +1588,6 @@ ca:
       title: "notificacions de mencions via @nom, respostes a les vostres  publicacions i temes, missatges, etc."
       none: "És impossible carregar ara mateix les notificacions"
       empty: "No hi ha notificacions."
-      more: "mostra notificacions més antigues"
       post_approved: "La vostra publicació ha estat aprovada"
       reviewable_items: "elements que requereixen revisió"
       mentioned: "<span>{{username}}</span> {{description}}"
@@ -1643,7 +1671,7 @@ ca:
       latest_post: "Publicacions més recents"
       latest_topic: "Temes més recents"
       most_viewed: "Més vists"
-      most_liked: "Més apreciats"
+      most_liked: "Ha tingut més 'm'agrada'"
       select_all: "Selecciona-ho tot"
       clear_all: "Neteja-ho tot"
       too_short: "El terme de la vostra cerca és massa curt"
@@ -1717,6 +1745,7 @@ ca:
     go_back: "vés enrere"
     not_logged_in_user: "pàgina d'usuari amb resum de l'activitat actual i preferències "
     current_user: "vés a la meva pàgina d'usuari"
+    view_all: "mostra-ho tot"
     topics:
       new_messages_marker: "darrera visita"
       bulk:
@@ -2878,7 +2907,7 @@ ca:
         traffic: "Peticions d'aplicacions web"
         page_views: "Pàgines vistes"
         page_views_short: "Pàgines vistes"
-        show_traffic_report: "Mostra l'informe detallat de tràfic"
+        show_traffic_report: "Mostra el report detallat de tràfic"
         community_health: Salut de la comunitat
         moderators_activity: Activitat dels moderadors
         whats_new_in_discourse: "Què hi ha de nou en Discourse?"
@@ -2907,7 +2936,7 @@ ca:
           all: "Tot"
           view_table: "taula"
           view_graph: "gràfica"
-          refresh_report: "Actualitza l'informe"
+          refresh_report: "Actualitza el report"
           start_date: "Data d'inici (UTC)"
           end_date: "Data de finalització (UTC)"
           groups: "Tots els grups"
@@ -2961,6 +2990,7 @@ ca:
               owners: "Propietaris del grup"
               description: "Els administradors poden veure tots els grups."
             members_visibility_levels:
+              title: "Qui pot veure els membres d’aquest grup?"
               description: "Els administradors poden veure membres de tots els grups."
             publish_read_state: "En els missatges de grup publica l'estat de lectura del grup"
           membership:
@@ -3101,17 +3131,17 @@ ca:
           completion: "Temps de finalització"
           actions: "Accions"
       plugins:
-        title: "Connectors (plugins)"
-        installed: "Connectors (plugins) instal·lats"
+        title: "Connectors"
+        installed: "Connectors instal·lats"
         name: "Nom"
-        none_installed: "No teniu cap complement instal·lat."
+        none_installed: "No teniu cap connector instal·lat."
         version: "Versió"
         enabled: "Activat?"
         is_enabled: "S"
         not_enabled: "N"
         change_settings: "Canvia la configuració"
         change_settings_short: "Configuració"
-        howto: "Com instal·lo complements?"
+        howto: "Com s'instal·len els connectors?"
         official: "Connector (plugin) oficial"
       backups:
         title: "Còpies de seguretat"
@@ -3969,7 +3999,7 @@ ca:
           uncategorized: "Altres"
           backups: "Còpies de seguretat"
           login: "Inicia la sessió"
-          plugins: "Connectors (plugins)"
+          plugins: "Connectors"
           user_preferences: "Preferències d'usuari"
           tags: "Etiquetes"
           search: "Cerca"

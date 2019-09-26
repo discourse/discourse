@@ -1249,7 +1249,6 @@ pt_BR:
     editing_grace_period_max_diff: "Número máximo de alterações de caracteres permitidas no período de carência de edição, se mais alterações forem armazenadas, outra revisão de publicação (nível de confiança 0 e 1)"
     editing_grace_period_max_diff_high_trust: "Número máximo de alterações de caracteres permitidas no período de carência de edição, se mais alterações forem armazenadas, outra revisão de postagem (nível de confiança 2 e superior)"
     staff_edit_locks_post: "As postagens não serão editadas se forem editadas por membros da equipe"
-    post_edit_time_limit: "O autor pode editar sua postagem por (n) minutos após a publicação. Defina como 0 para sempre."
     edit_history_visible_to_public: "Permitir que todos vejam as versões anteriores de uma postagem editada. Quando desativado, somente membros da equipe podem ver o histórico de alterações."
     delete_removed_posts_after: "Postagens removidas pelo autor serão automaticamente deletadas depois de (n) horas. Se o valor definido for 0, as postagens serão deletadas imediatamente."
     max_image_width: "Largura máxima para imagens em um post"
@@ -2629,10 +2628,6 @@ pt_BR:
     dashboard_problems:
       title: "Problemas do painel"
       subject_template: "Nova recomendação no painel do seu site"
-      text_body_template: |
-        Nós temos alguns conselhos novos e recomendações para você com base nas configurações atuais do seu site.
-
-        [Visite o painel do seu site](%{base_url}/admin) para vê-las.
     new_user_of_the_month:
       title: "Você é um novo usuário do mês!"
       subject_template: "Você é um novo usuário do mês!"

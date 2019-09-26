@@ -270,6 +270,8 @@ sv:
         placeholder: "skriv ämnets rubrik här"
     review:
       in_reply_to: "som svar till"
+      explain:
+        total: "Totalt"
       delete: "Radera"
       settings:
         save_changes: "Spara ändringar"
@@ -1037,7 +1039,6 @@ sv:
         title_missing: "Du måste ange en rubrik"
         title_too_short: "Rubriken måste vara minst {{min}} tecken lång."
         title_too_long: "Rubriken får inte vara längre än {{max}} tecken"
-        post_missing: "Inlägg får inte vara tomma"
         post_length: "Inlägg måste vara minst {{min}} tecken långa."
         category_missing: "Du måste välja en kategori"
       save_edit: "Spara ändring"
@@ -1100,7 +1101,6 @@ sv:
       title: "notiser från @namn-omnämnanden, svar på dina inlägg och ämnen, meddelanden, etc"
       none: "Kan inte ladda notiser just nu."
       empty: "Inga notifieringar hittades."
-      more: "visa äldre notifikationer"
       granted_badge: "Förtjänade '{{description}}'"
       popup:
         mentioned: '{{username}} nämnde dig i "{{topic}}" - {{site_title}}'

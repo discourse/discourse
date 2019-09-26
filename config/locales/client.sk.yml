@@ -339,6 +339,8 @@ sk:
     choose_message:
       none_found: "Žiadne správy."
     review:
+      explain:
+        total: "Celkovo"
       delete: "Odstrániť"
       settings:
         save_changes: "Uložiť zmeny"
@@ -1223,7 +1225,6 @@ sk:
         title_missing: "Názov je povinný"
         title_too_short: "Názov musí mať minimálne {{min}} znakov"
         title_too_long: "Názov nesmie byť dlhší než {{max}} znakov"
-        post_missing: "Príspevok nesmie byť prázdny"
         post_length: "Príspevok musí mať minimálne {{min}} znakov"
         category_missing: "Musíte vybrať kategóriu"
       save_edit: "Uložiť úpravy"
@@ -1285,7 +1286,6 @@ sk:
       title: "oznámenia o zmienkach pomocou @meno, odpovede na Vaše príspevky a témy, správy, atď."
       none: "Notifikácie sa nepodarilo načítať"
       empty: "Žiadne upozornenia sa nenašli."
-      more: "zobraziť staršie upozornenia"
       popup:
         mentioned: '{{username}} Vás zmienil v "{{topic}}" - {{site_title}}'
         group_mentioned: '{{username}} Vás zmienil v "{{topic}}" - {{site_title}}'

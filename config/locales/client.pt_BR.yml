@@ -312,6 +312,8 @@ pt_BR:
     review:
       order_by: "Ordenar por"
       in_reply_to: "Em resposta a"
+      explain:
+        total: "Total"
       claim_help:
         optional: "Você pode reivindicar este item para impedir que outras pessoas o revisem."
         required: "Você precisa reivindicar itens antes de poder revisá-los."
@@ -1187,9 +1189,6 @@ pt_BR:
       enabled: "Este site está em modo de somente leitura. Por favor, continue a navegar, mas respostas, curtidas e outras ações estão desabilitadas por enquanto."
       login_disabled: "O login é desabilitado enquanto o site está em modo de somente leitura."
       logout_disabled: "O logout é desabilitado enquanto o site está em modo de somente leitura."
-    too_few_topics_and_posts_notice: "Vamos <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>começar a discussão!</a> Há <strong>%{currentTopics} / %{requiredTopics}</strong> tópicos e <strong>%{currentPosts} / %{requiredPosts}</strong> postagens – visitantes precisam de mais para ler e responder. Apenas administradores podem ver esta mensagem."
-    too_few_topics_notice: "Vamos <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>começar a discussão!</a> Há <strong>%{currentTopics} / %{requiredTopics}</strong> tópicos– visitantes precisam de mais para ler e responder. Apenas administradores podem ver esta mensagem."
-    too_few_posts_notice: "Vamos <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>começar a discussão!</a> Há <strong>%{currentPosts} / %{requiredPosts}</strong> postagens – visitantes precisam de mais para ler e responder. Apenas administradores podem ver esta mensagem."
     logs_error_rate_notice:
       reached_hour_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# erro/hora} other {# erros/hora}}</a> alcançou o limite de configuração do site de {limit, plural, one {# erro/hora} other {# erros/hora}}."
       reached_minute_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# erro/minuto} other {# erros/minuto}}</a> alcançou o limite de configuração do site de {limit, plural, one {# erro/minuto} other {# erros/minuto}}."
@@ -1448,7 +1447,6 @@ pt_BR:
         title_missing: "Título é obrigatório"
         title_too_short: "Título precisa ter no mínimo {{min}} caracteres"
         title_too_long: "Título não pode ter mais de {{max}} caracteres"
-        post_missing: "Postagem não pode estar vazia"
         post_length: "Postagem precisa ter no mínimo {{min}} caracteres"
         try_like: "Você já tentou o botão {{heart}}?"
         category_missing: "Você precisa escolher uma categoria"
@@ -1556,7 +1554,6 @@ pt_BR:
       title: "notificações de menção de @nome, respostas às suas postagens, tópicos, mensagens, etc"
       none: "Não foi possível carregar notificações no momento."
       empty: "Nenhuma notificação foi encontrada."
-      more: "ver notificações antigas"
       post_approved: "Sua postagem foi aprovada"
       reviewable_items: "itens que exigem revisão"
       mentioned: "<span>{{username}}</span> {{description}}"

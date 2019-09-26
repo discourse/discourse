@@ -284,6 +284,8 @@ ko:
         placeholder: "여기에 메시지 제목을 입력하십시오"
     review:
       in_reply_to: "답글"
+      explain:
+        total: "총"
       delete: "삭제"
       settings:
         saved: "저장 완료"
@@ -1190,7 +1192,6 @@ ko:
         title_missing: "제목은 필수 항목입니다"
         title_too_short: "제목은 최소 {{min}} 글자 이상이어야 합니다."
         title_too_long: "제목은 {{max}} 글자 이상일 수 없습니다."
-        post_missing: "글 내용은 필수 입니다."
         post_length: "글은 최소 {{min}} 글자 이상이어야 합니다."
         category_missing: "카테고리를 선택해주세요."
       save_edit: "편집 저장"
@@ -1263,7 +1264,6 @@ ko:
       title: "@name 언급, 글과 주제에 대한 답글, 개인 메시지 등에 대한 알림"
       none: "현재 알림을 불러올 수 없습니다."
       empty: "알림이 없습니다."
-      more: "이전 알림을 볼 수 있습니다."
       mentioned: "<span>{{username}}</span> {{description}}"
       group_mentioned: "<span>{{username}}</span> {{description}}"
       quoted: "<span>{{username}}</span> {{description}}"
@@ -1379,6 +1379,7 @@ ko:
     go_back: "돌아가기"
     not_logged_in_user: "user page with summary of current activity and preferences"
     current_user: "사용자 페이지로 이동"
+    view_all: "모두 보기"
     topics:
       new_messages_marker: "마지막 조회시간"
       bulk:

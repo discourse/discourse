@@ -213,6 +213,7 @@ zh_CN:
     continue: "继续讨论"
     error: "嵌入故障"
     referer: "来源："
+    error_topics: "站点设置`embed topics list`未启用"
     mismatch: "引用头要么未发送，要么不匹配以下任何主机："
     no_hosts: "嵌入没有设置任何主机地址。"
     configure: "配置嵌入"
@@ -224,6 +225,9 @@ zh_CN:
     in_reply_to: "▶ %{username}"
     replies:
       other: "%{count}个回复"
+    likes:
+      other: "%{count}赞"
+    last_reply: "最新回复"
     created: "创建时间"
   no_mentions_allowed: "抱歉，你无法提到其他用户。"
   too_many_mentions:
@@ -516,6 +520,7 @@ zh_CN:
       description_incomplete: "分类描述帖至少要有一段。"
       permission_conflict: "所有被允许访问一个子分类的群组也必须能够访问其上级分类。下列群组能够访问某个子分类，但不能访问上级分类： %{group_names}。"
       disallowed_topic_tags: "此主题包含此类别不允许的标签：%{tags}"
+      disallowed_tags_generic: "此主题有反对标签。"
     cannot_delete:
       uncategorized: "这是个特殊的分类。如果不知道应该话题属于哪个分类，那么请使用这个分类；这个分类不能被删除。"
       has_subcategories: "不能删除该分类，因为它有子分类"
@@ -1211,7 +1216,8 @@ zh_CN:
     editing_grace_period_max_diff: "编辑宽限期允许的最大字符更改数，如果更改存储后的另一个修订版（信任级别0和1）"
     editing_grace_period_max_diff_high_trust: "编辑宽限期允许的最大字符更改数，如果更改存储后的另一个修订版（信任级别2和更高）"
     staff_edit_locks_post: "如果管理人员编辑过帖子，将锁定编辑"
-    post_edit_time_limit: "作者可以在发布后的(n)分钟内编辑他们的帖子。设置为0为永久。"
+    post_edit_time_limit: "tl0或tl1的作者可以在发表的（n）分钟后编辑帖子。设置为0为永远（不可以编辑）。"
+    tl2_post_edit_time_limit: "tl2的作者可以在发表的（n）分钟后编辑帖子。设置为0为永远（不可以编辑）。"
     edit_history_visible_to_public: "允许任何人查看编辑过的帖子的老版本。当禁用时，只有管理人员才能查看浏览。"
     delete_removed_posts_after: "帖子被作者删除，将在(n)小时后被自动删除。"
     max_image_width: "帖子中图片允许的最大缩略图宽度"
@@ -1379,6 +1385,8 @@ zh_CN:
     enable_github_logins: "启用Github身份验证，需要github_client_id和github_client_secret。请参阅<a href='https://meta.discourse.org/t/13745'target='_blank'>配置GitHub登录Discourse</a>。"
     github_client_id: "Github身份验证的客户端ID，在<a href='https://github.com/settings/developers/' target='_blank'>https://github.com/settings/developers</a>中注册"
     github_client_secret: "Github身份验证的客户端secret，在<a href='https://github.com/settings/developers/' target='_blank'>https://github.com/settings/developers</a>上注册"
+    enable_discord_logins: '允许用户使用DIscord认证？'
+    discord_secret: 'Discord Secret Key'
     readonly_mode_during_backup: "备份时启用只读模式"
     enable_backups: "允许管理员创建论坛备份"
     allow_restore: "允许导入数据，这将能替换所有全站数据！除非你计划导入数据，否则请保持设置为 false"
@@ -1674,6 +1682,7 @@ zh_CN:
     warn_reviving_old_topic_age: "当有人开始回复最后一贴超过一定天数前的主题时，将有一个警告显示，不鼓励他们复活一个老的讨论。将其设置为 0 以禁用。"
     autohighlight_all_code: "即使未显式设定语言，仍为所有预编排代码块应用语法高亮。"
     highlighted_languages: "包含语法突出显示规则。（警告：包含太多语言可能会影响性能）请参阅：<a href='https://highlightjs.org/static/demo/' target='_blank'>https://highlightjs.org/static/demo</a>用于演示"
+    embed_topics_list: "主题列表支持HTML嵌入"
     embed_truncate: "截断嵌入的帖子。"
     embed_support_markdown: "为嵌入式帖子支持Markdown格式。"
     embed_whitelist_selector: "以逗号分隔允许嵌入的CSS元素列表"
@@ -1898,7 +1907,12 @@ zh_CN:
     errors: "%{errors}"
     not_available: "不可用，试试%{suggestion}？"
     something_already_taken: "出了一些问题，可能此用户名或电子邮箱已经被注册。试试 忘记密码链接吧。"
+    omniauth_error:
+      generic: "抱歉，您的帐户授权时出错。请重试。"
+      csrf_detected: "授权超时，或者您已切换浏览器。请重试。"
+      request_error: "授权时发生错误。请重试。"
     omniauth_error_unknown: "在处理你的登录过程中发生了错误，请重试。"
+    omniauth_confirm_title: "使用%{provider}登录"
     omniauth_confirm_button: "继续"
     authenticator_error_no_valid_email: "关联%{account}的账户没有优秀的邮件地址。你可能需要用不同的邮件地址配置你的账户。"
     new_registrations_disabled: "现在不允许注册新账户。"
@@ -2162,6 +2176,9 @@ zh_CN:
     post_hidden_again:
       title: "再次发布隐藏"
       subject_template: "被社区标记所隐藏，已通知管理人员"
+    flags_disagreed:
+      title: "管理人员恢复了被标记的帖子"
+      subject_template: "管理人员恢复了被标记的帖子"
     flags_agreed_and_post_deleted:
       title: "管理人员删除了已标记的帖子"
       subject_template: "管理人员删除了已标记的帖子"
@@ -2588,10 +2605,6 @@ zh_CN:
     dashboard_problems:
       title: "管理面板问题"
       subject_template: "站点仪表盘的新建议"
-      text_body_template: |
-        基于你当前的站点设置我们有一些建议。
-
-        [查看你的站点管理仪表盘](%{base_url}/admin)中的建议。
     new_user_of_the_month:
       title: "你是这个月的最佳新用户！"
       subject_template: "你是这个月的最佳新用户！"
@@ -3707,6 +3720,8 @@ zh_CN:
       other: "你必须选择至少%{count}个标签"
     upload_row_too_long: "CSV文件每行应该有一个标签。可选地，标签后面可以是逗号，然后是标签组名称。"
     forbidden:
+      invalid:
+        other: "你选择的可以使用的标签为空"
       in_this_category: '"%{tag_name}不能用于此类别"'
       restricted_to:
         other: '“%{tag_name}”被限制在以下分类：%{category_names}'
@@ -3917,6 +3932,9 @@ zh_CN:
       agree_and_keep:
         title: "保持帖子"
         description: "确认标记并保持帖子不变。"
+      agree_and_keep_hidden:
+        title: "持续隐藏帖子"
+        description: "确认标记并隐藏帖子。"
       agree_and_suspend:
         title: "禁用用户"
         description: "同意标记并暂停用户。"
@@ -3981,3 +3999,7 @@ zh_CN:
         title: "删除用户"
         confirm: "你确定要删除这个用户吗？这将删除用户的所有帖子并封禁这个邮箱和 IP 地址。"
         reason: "通过审核队列删除的"
+  email_style:
+    html_missing_placeholder: "HTML模板必须包含%{placeholder}"
+  discord:
+    not_in_allowed_guild: '验证失败。您不是允许的Discord公会的成员。'

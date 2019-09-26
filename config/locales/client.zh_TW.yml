@@ -283,6 +283,8 @@ zh_TW:
         placeholder: "輸入訊息標題"
     review:
       in_reply_to: "回覆給"
+      explain:
+        total: "總計"
       claim_help:
         optional: "您可以聲明此項目以防止其他人審核。"
         required: "您必須先審核項目才能查看它們。"
@@ -1338,7 +1340,6 @@ zh_TW:
         title_missing: "標題為必填欄位"
         title_too_short: "標題必須至少 {{min}} 個字"
         title_too_long: "標題不能超過 {{max}} 個字"
-        post_missing: "貼文不可空白"
         post_length: "貼文必須至少 {{min}} 個字。"
         try_like: "您用過{{heart}}了嗎？"
         category_missing: "你必須選擇一個分類。"
@@ -1444,7 +1445,6 @@ zh_TW:
       title: "當有人以「@使用者名稱」提及您、回覆您的貼文、或是傳送訊息給您的時候通知您的設定。"
       none: "目前無法載入通知。"
       empty: "未找到任何通知。"
-      more: "檢視較舊的通知"
       post_approved: "你的貼文已通過"
       reviewable_items: "需要審查的項目"
       mentioned: "<span>{{username}}</span> {{description}}"
@@ -1580,6 +1580,7 @@ zh_TW:
     go_back: "返回"
     not_logged_in_user: "使用者頁面（包含目前活動及喜好的摘要）"
     current_user: "到你的使用者頁面"
+    view_all: "查看全部"
     topics:
       new_messages_marker: "上次到訪"
       bulk:

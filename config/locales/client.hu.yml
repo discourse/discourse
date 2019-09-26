@@ -312,6 +312,14 @@ hu:
     review:
       order_by: "Rendezés:"
       in_reply_to: "válasz erre:"
+      explain:
+        total: "Összesen"
+        user_accuracy_bonus:
+          name: "felhasználói pontosság"
+        trust_level_bonus:
+          name: "bizalmi szint"
+        type_bonus:
+          name: "típusbónusz"
       claim_help:
         optional: "Zárolhatja ezt az elemet, hogy mások ne hagyhassák jóvá."
         required: "Zárolnia kell az elemeket, hogy jóvá tudja őket hagyni."
@@ -1300,10 +1308,10 @@ hu:
       from: From
       to: To
     emoji_picker:
-      filter_placeholder: Emoyi keresése
+      filter_placeholder: Emodzsi keresése
       objects: Tárgyak
       flags: Jelölések
-      custom: Egyéni emojik
+      custom: Egyéni emodzsik
       recent: Nemrég használt
       default_tone: Nincs bőrszín
       light_tone: Világos bőrszín
@@ -1319,7 +1327,7 @@ hu:
       confirm_publish: "Biztosan közzé akarod tenni ezt a vázlatot?"
       publishing: "Téma közzététele..."
     composer:
-      emoji: "Emoji :)"
+      emoji: "Emodzsi :)"
       more_emoji: "több..."
       options: "Beállítások"
       whisper: "suttogás"
@@ -1341,7 +1349,6 @@ hu:
         title_missing: "A címet kötelező megadni"
         title_too_short: "A címnek legalább {{min}} karakter hosszúnak kell lennie"
         title_too_long: "A cím nem lehet hosszabb, mint {{max}} katakter."
-        post_missing: "A bejegyzés nem lehet üres"
         post_length: "A bejegyzésnek legalább {{min}} karakter hosszúnak kell lennie"
         category_missing: "Ki kéne választanod egy kategóriát"
         tags_missing: "Kikell választanod legalább {{count}}  címkét"
@@ -1433,7 +1440,6 @@ hu:
       title: "értesítések @felhasználónév hivatkozásokról, a hozzászólásaidra adott válaszokról, üzenetekről stb."
       none: "Az értesítések betöltése sikertelen."
       empty: "Nincs értesítés."
-      more: "régebbi értesítések megtekintése"
       reviewable_items: "felülvizsgálatot igénylő elemek"
       mentioned: "<span>{{username}}</span>{{description}}"
       group_mentioned: "<span>{{username}} </span>{{description}}"
@@ -1539,6 +1545,7 @@ hu:
     go_back: "visszalépés"
     not_logged_in_user: "felhasználói oldal összesítéssel a jelenleg aktivitásokról és beállításokról"
     current_user: "a felhasználói oldalad meglátogatása"
+    view_all: "mindent megtekint"
     topics:
       new_messages_marker: "utoljára megtekintett"
       bulk:
@@ -3153,10 +3160,12 @@ hu:
           what_are_badges_title: "Mik azok a jelvények?"
           badge_query_examples_title: "Jelvény lekérdezési példák"
       emoji:
-        title: "Emoji"
-        add: "Új emoji hozzáadása"
+        title: "Emodzsi"
+        help: "Adjon hozzá egy új emodzsit, amely mindenki számára elérhető lesz. (PROTIP: fogjon és vigyen több fájlt egyszerre)"
+        add: "Új emodzsi hozzáadása"
         name: "Név"
         image: "Kép"
+        delete_confirm: "Biztos, hogy törli a(z) :%{name}: emodzsit?"
       embedding:
         get_started: "Ha szeretnéd a Discourse-t egy másik weboldalba ágyazni, kezdd a hoszt megadásával."
         title: "Beágyazás"

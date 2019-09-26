@@ -249,6 +249,8 @@ bg:
       title:
         placeholder: "Въведете заглавието на темата тук"
     review:
+      explain:
+        total: "Общо"
       delete: "Изтрий"
       settings:
         save_changes: "Запази промените"
@@ -1010,7 +1012,6 @@ bg:
         title_missing: "Заглавието е задължително"
         title_too_short: "Заглавието трябва да е минимум {{min}} символа"
         title_too_long: "Заглавието не може да е повече от {{max}} символа"
-        post_missing: "Публикацията не може да е празна"
         post_length: "Публикацията трябва да е най-малко {{min}} символа."
         category_missing: "Трябва да изберете категория"
         tags_missing: "Трябва да изберете поне %{count} етикети."
@@ -1068,7 +1069,6 @@ bg:
       title: "уведомления за @name споменавания, отговори на вашите публикации и теми, лични съобщения, и т.н."
       none: "В момента не могат да бъдат заредени уведомленията."
       empty: "Няма намерени нотификации."
-      more: "виж стари известия"
       popup:
         mentioned: '{{username}} ви спомена в "{{topic}}" - {{site_title}}'
         group_mentioned: '{{username}} ви спомена в "{{topic}}" - {{site_title}}'
@@ -1251,7 +1251,7 @@ bg:
       toggle_information: "Показване / скриване на подробна информация за дадена тема "
       read_more_in_category: "Искате да прочетете повече ? Разгледайте други теми в {{catLink}} или {{latestLink}}."
       read_more: "Искате да прочетете повече ? {{catLink}} или {{latestLink}}."
-      read_more_MF: "Ето { UNREAD, plural, =0 {} one { <a href='{basePath}/unread'>1 непрочетено</a> } other { <a href='{basePath}/unread'># непрочетено </a> } } { NEW, plural, =0 {} one { {BOTH, select, true{and } false {is } other{}} <a href='{basePath}/new'>1 нова </a> тема} other { {BOTH, select, true{and } false {are } other{}} <a href='{basePath}/new'># теми </a>} } напомняне, или {CATEGORY, select, true {потърски други теми в {catLink}} погрешен {{latestLink}} other {}}"
+      read_more_MF: "Има { UNREAD, plural, =0 {} one { <a href='{basePath}/unread'>1 непрочетено</a> } other { <a href='{basePath}/unread'># непрочетени </a> } } { NEW, plural, =0 {} one { {BOTH, select, true{and } false {is } other{}} <a href='{basePath}/new'>1 нова </a> тема} other { {BOTH, select, true{and } false {are } other{}} <a href='{basePath}/new'># теми </a>} } или {CATEGORY, select, true {потърси други теми в {catLink}} false {{latestLink}} other {}}"
       browse_all_categories: Прегледай всички категории
       view_latest_topics: виж последните теми
       suggest_create_topic: "Защо не създадете тема ?"

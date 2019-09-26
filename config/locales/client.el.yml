@@ -256,6 +256,8 @@ el:
       title:
         placeholder: "γράψε εδώ τον τίτλο του νήματος"
     review:
+      explain:
+        total: "Σύνολο"
       delete: "Σβήσιμο"
       settings:
         save_changes: "Αποθήκευση Αλλαγών"
@@ -1076,7 +1078,6 @@ el:
         title_missing: "Απαιτείται τίτλος"
         title_too_short: "Ο τίτλος πρέπει να έχει τουλάχιστον {{min}} χαρακτήρες"
         title_too_long: "Ο τίτλος δεν μπορεί να έχει πάνω από {{max}} χαρακτήρες"
-        post_missing: "Μία ανάρτηση δεν μπορεί να είναι κενή"
         post_length: "Κάθε ανάρτηση πρέπει να περιέχει τουλάχιστον {{min}} χαρακτήρες"
         category_missing: "Πρέπει να διαλέξεις μια κατηγορία"
       save_edit: "Αποθήκευση Επεξεργασίας"
@@ -1140,7 +1141,6 @@ el:
       title: "ειδοποιήσεις για αναφορές στο @name, απαντήσεις στις αναρτήσεις σου και στα νήματά σου, προσωπικά μηνύματα, κλπ."
       none: "Αυτή τη στιγμή δεν είναι δυνατόν να φορτωθούν οι ειδοποιήσεις."
       empty: "Δεν βρέθηκαν ειδοποιήσεις."
-      more: "εμφάνιση παλαιότερων ειδοποιήσεων"
       mentioned: "<span>{{username}}</span> {{description}}"
       group_mentioned: "<span>{{username}}</span> {{description}}"
       quoted: "<span>{{username}}</span> {{description}}"

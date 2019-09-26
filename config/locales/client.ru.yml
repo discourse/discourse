@@ -98,10 +98,10 @@ ru:
         date_year: "MMM YYYY"
       medium:
         x_minutes:
-          one: "%{count} минута"
-          few: "%{count} минуты"
-          many: "%{count} минут"
-          other: "%{count} минут"
+          one: "%{count} мин"
+          few: "%{count} мин"
+          many: "%{count} мин"
+          other: "%{count} мин"
         x_hours:
           one: "%{count} час"
           few: "%{count} часа"
@@ -115,20 +115,30 @@ ru:
         date_year: "D MMM, YYYY"
       medium_with_ago:
         x_minutes:
-          one: "%{count} минуту назад"
-          few: "%{count} минуты назад"
-          many: "%{count} минут назад"
-          other: "%{count} минут назад"
+          one: "%{count} мин. назад"
+          few: "%{count} мин. назад"
+          many: "%{count} мин. назад"
+          other: "%{count} мин. назад"
         x_hours:
-          one: "%{count} час назад"
-          few: "%{count} часа назад"
-          many: "%{count} часов назад"
-          other: "%{count} часов назад"
+          one: "%{count} ч. назад"
+          few: "%{count} ч. назад"
+          many: "%{count} ч. назад"
+          other: "%{count} ч. назад"
         x_days:
-          one: "%{count} день назад"
-          few: "%{count} дня назад"
-          many: "%{count} дней назад"
-          other: "%{count} дней назад"
+          one: "%{count} дн. назад"
+          few: "%{count} дн. назад"
+          many: "%{count} дн. назад"
+          other: "%{count} дн. назад"
+        x_months:
+          one: "%{count} мес. назад"
+          few: "%{count} мес. назад"
+          many: "%{count} мес. назад"
+          other: "%{count} мес. назад"
+        x_years:
+          one: "%{count} г. назад"
+          few: "%{count} г. назад"
+          many: "%{count} г. назад"
+          other: "%{count} г. назад"
       later:
         x_days:
           one: "%{count} день спустя"
@@ -344,7 +354,7 @@ ru:
     undo: "Отменить"
     revert: "Вернуть"
     failed: "Проблема"
-    switch_to_anon: "Войти в Анонимный режим"
+    switch_to_anon: "Войти в анонимный режим"
     switch_from_anon: "Выйти из Анонимного режима"
     banner:
       close: "Больше не показывать это объявление."
@@ -364,6 +374,26 @@ ru:
     review:
       order_by: "Сортировать по"
       in_reply_to: "в ответе"
+      explain:
+        why: "объяснить, почему этот элемент оказался в очереди"
+        title: "Обзорная Оценка"
+        formula: "Формула"
+        subtotal: "Промежуточный итог"
+        total: "Всего"
+        min_score_visibility: "Минимальная Оценка для Видимости"
+        score_to_hide: "Оценка, чтобы скрыть сообщение"
+        take_action_bonus:
+          name: 'принята мера'
+          title: 'Когда сотрудник решает принять меры, флаг получает бонус.'
+        user_accuracy_bonus:
+          name: "точность пользователя"
+          title: "Пользователи, чьи флаги были исторически согласованы, получают бонус."
+        trust_level_bonus:
+          name: "уровень доверия"
+          title: "Проверяемые элементы, созданные пользователями с более высоким уровнем доверия, имеют более высокий балл."
+        type_bonus:
+          name: "тип бонуса"
+          title: "Некоторые проверяемые типы могут быть назначены бонус сотрудниками, чтобы сделать их более приоритетными."
       claim_help:
         optional: "Вы можете запросить этот элемент, чтобы другие не могли его просмотреть."
         required: "Вы должны подать заявку до того, как сможете их просмотреть."
@@ -1286,9 +1316,9 @@ ru:
       enabled: "Сайт работает в режиме \"только для чтения\". Сейчас вы можете продолжать просматривать сайт, но другие действия будут недоступны. "
       login_disabled: "Вход отключён, пока сайт в режиме «только для чтения»"
       logout_disabled: "Выход отключён, пока сайт в режиме «только для чтения»"
-    too_few_topics_and_posts_notice: "Давайте <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>приступим к обсуждению!</a> Есть <strong>%{currentTopics} / %{requiredTopics}</strong> тем и <strong>%{currentPosts} / %{requiredPosts}</strong> постов – посетителям нужно больше читать и отвечать на них. Только сотрудники могут видеть это сообщение."
-    too_few_topics_notice: "Давайте <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>приступим к обсуждению!</a> Есть <strong>%{currentTopics} / %{requiredTopics}</strong> тем – посетители должны больше читать и отвечать. Только сотрудники могут видеть это сообщение."
-    too_few_posts_notice: "Давайте <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>приступим к обсуждению!</a> Есть <strong>%{currentPosts} / %{requiredPosts}</strong> постов – посетителям нужно больше читать и отвечать на них. Только сотрудники могут видеть это сообщение."
+    too_few_topics_and_posts_notice: "Давайте <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>приступим к обсуждению!</a> Есть <strong>%{currentTopics}</strong> тем и <strong>%{currentPosts}</strong> постов. Пользователи должны больше читать и отвечать – мы рекомендуем, по крайней мере <strong>%{requiredTopics}</strong> тем и <strong>%{requiredPosts}</strong> постов. Только сотрудники могут видеть это сообщение."
+    too_few_topics_notice: "Давайте <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>приступим к обсуждению!</a> Есть <strong>%{currentTopics}</strong> тем. Пользователи должны больше читать и отвечать – мы рекомендуем, по крайней мере <strong>%{requiredTopics}</strong> тем. Только сотрудники могут видеть это сообщение."
+    too_few_posts_notice: "Давайте <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>приступим к обсуждению!</a> Есть <strong>%{currentPosts}</strong> постов. Пользователям нужно больше читать и отвечать - мы рекомендуем хотя бы <strong>%{requiredPosts}</strong> постов. Только сотрудники могут видеть это сообщение."
     logs_error_rate_notice:
       reached_hour_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# error/hour} или {# errors/hour}}</a> достигнут предел настройки сайта {limit, plural, one {# error/hour} или {# errors/hour}}."
       reached_minute_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# error/minute} или {# errors/minute}}</a> достигнут предел настройки сайта {limit, plural, one {# error/minute} или {# errors/minute}}."
@@ -1530,7 +1560,7 @@ ru:
     composer:
       emoji: "Смайлики :)"
       more_emoji: "еще..."
-      options: "Дополнительные опции"
+      options: "Опции"
       whisper: "внутреннее сообщение"
       unlist: "исключена из списков тем"
       blockquote_text: "Цитата"
@@ -1560,8 +1590,9 @@ ru:
         post_missing: "Сообщение не может быть пустым"
         post_length: "Сообщение должно быть не короче {{min}} символов"
         try_like: "Вы пробовали нажать на {{heart}} кнопку?"
-        category_missing: "Нужно выбрать раздел"
+        category_missing: "Выберите раздел"
         tags_missing: "Необходимо выбрать по крайней мере {{count}} тег"
+        topic_template_not_modified: "Впишите детали темы в шаблон"
       save_edit: "Сохранить"
       overwrite_edit: "Перезаписать, править"
       reply_original: "Ответ в первоначальной теме"
@@ -1669,7 +1700,6 @@ ru:
       title: "уведомления об упоминании @псевдонима, ответах на ваши посты и темы, сообщения и т.д."
       none: "Уведомления не могут быть загружены."
       empty: "Уведомления не найдены."
-      more: "посмотреть более ранние уведомления"
       post_approved: "Ваш пост был одобрен"
       reviewable_items: "пункты, требующие рассмотрения"
       mentioned: "<span>{{username}}</span> {{description}}"
@@ -1835,6 +1865,7 @@ ru:
     go_back: "вернуться"
     not_logged_in_user: "страница пользователя с историей его последней активности и настроек"
     current_user: "перейти на вашу страницу пользователя"
+    view_all: "посмотреть все"
     topics:
       new_messages_marker: "последний визит"
       bulk:
@@ -3185,6 +3216,7 @@ ru:
               owners: "Владельцы группы"
               description: "Администраторы могут видеть все группы."
             members_visibility_levels:
+              title: "Кто может видеть участников этой группы?"
               description: "Администраторы могут видеть участников всех групп."
             publish_read_state: "В сообщениях группы публикуют состояние чтения группы"
           membership:

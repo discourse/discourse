@@ -1192,7 +1192,6 @@ zh_TW:
     editing_grace_period_max_diff: "編輯寬限期允許的字元更改的最大數量，如果有更多的更改，將另儲存為另一個版本的修訂（信任等級0和1）"
     editing_grace_period_max_diff_high_trust: "編輯寬限期允許的最大字元更改數，如果更改將另存為另一個修訂版（信任級別2和更高）"
     staff_edit_locks_post: "如果版主編輯過貼文，貼文將被鎖定編輯"
-    post_edit_time_limit: "作者可以在發表貼文後的 ( n ) 分鐘內編輯或刪除他們的貼文，設 0 為永遠"
     edit_history_visible_to_public: "允許任何人查看編輯過的貼文的舊版本。當禁用時，只有職員才能查看。"
     delete_removed_posts_after: "貼文被作者刪除，將在 (n) 小時後被自動刪除。如果設置為 0，貼文將被立即刪除。"
     max_image_width: "貼文中最大的縮圖寬度"
@@ -2514,7 +2513,6 @@ zh_TW:
     dashboard_problems:
       title: "控制台問題"
       subject_template: "有新的建議出現在後台儀表板"
-      text_body_template: "我們根據您當前的網站設定為您提供一些新的建議和建議。 \n\n[前往後台儀表板](%{base_url}/admin) 查看它。\n"
     new_user_of_the_month:
       title: "你是本月最佳新人！"
       subject_template: "你是本月最佳新人！"

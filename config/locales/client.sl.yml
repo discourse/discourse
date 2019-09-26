@@ -1468,7 +1468,6 @@ sl:
         title_missing: "Naslov je obvezen"
         title_too_short: "Naslov mora vsebovati vsaj {{min}} znakov"
         title_too_long: "Naslov ne more imeti več kot {{max}} znakov"
-        post_missing: "Prispevek ne sme biti prazen"
         post_length: "Prispevek mora vsebovati vsaj {{min}} znakov"
         try_like: "Ste že uporabili {{heart}} gumb za všečkanje?"
         category_missing: "Izbrati morate kategorijo"
@@ -1580,7 +1579,6 @@ sl:
       title: "obvestila ko omeni vaše @ime, odgovorih na vaše prispevke in teme, zasebna sporočila"
       none: "Ta trenutek ne moremo naložiti obvestil."
       empty: "Ni obvestil."
-      more: "prikaži starejša obvestila"
       post_approved: "Vaš prispevek je bil odobren"
       reviewable_items: "čakajo na pregled"
       mentioned: "<span>{{username}}</span> {{description}}"
@@ -1728,6 +1726,7 @@ sl:
     go_back: "pojdi nazaj"
     not_logged_in_user: "stran uporabnika s povzetkom trenutnih aktivnosti in nastavitev"
     current_user: "pojdi na svojo uporabniško stran"
+    view_all: "prikaži vse"
     topics:
       new_messages_marker: "zadnji obisk"
       bulk:

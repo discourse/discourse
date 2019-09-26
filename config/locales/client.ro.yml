@@ -306,6 +306,8 @@ ro:
       title:
         placeholder: "Scrieți aici titlul subiectului"
     review:
+      explain:
+        total: "Total"
       delete: "Șterge"
       settings:
         save_changes: "Salvează schimbările"
@@ -1175,7 +1177,6 @@ ro:
         title_missing: "Trebuie un titlu"
         title_too_short: "Titlul trebuie să aibă minim {{min}} (de) caractere"
         title_too_long: "Titlul nu poate avea mai mult de {{max}} (de) caractere"
-        post_missing: "Postarea nu poate fi goală"
         post_length: "Postarea trebuie să aibă minim {{min}} (de) caractere"
         category_missing: "Trebuie să alegi o categorie"
       save_edit: "Salvează editarea"
@@ -1258,7 +1259,6 @@ ro:
       title: "notificări la menționările @numelui tău, răspunsuri la postările sau subiectele tale, mesaje, etc."
       none: "Nu pot încărca notificările în acest moment."
       empty: "Nu au fost găsite notificări."
-      more: "vezi notificările mai vechi"
       mentioned: "<span>{{username}}</span> {{description}}"
       group_mentioned: "<span>{{username}}</span> {{description}}"
       quoted: "<span>{{username}}</span> {{description}}"

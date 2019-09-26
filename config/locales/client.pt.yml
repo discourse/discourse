@@ -308,6 +308,8 @@ pt:
         placeholder: "escreva o título da mensagem aqui"
     review:
       in_reply_to: "Em resposta a"
+      explain:
+        total: "Total"
       claim_help:
         optional: "Pode reivindicar este item para prevenir que outras pessoas o revejam."
         required: "Deve reivindicar items antes de as poder rever."
@@ -1296,7 +1298,6 @@ pt:
         title_missing: "O título é obrigatório"
         title_too_short: "O título tem que ter pelo menos {{min}} carateres."
         title_too_long: "O título não pode conter mais do que {{max}} carateres."
-        post_missing: "A publicação não pode estar vazia"
         post_length: "A publicação tem que ter pelo menos {{min}} carateres"
         try_like: "Já experimentou o botão {{heart}}?"
         category_missing: "Tem de escolher uma categoria"
@@ -1403,7 +1404,6 @@ pt:
       title: "notificações de menções de @name, respostas às suas publicações e tópicos, mensagens, etc"
       none: "De momento, não é possível carregar as notificações."
       empty: "Não foram encontradas notificações."
-      more: "ver notificações antigas"
       mentioned: "<span>{{username}}</span> {{description}}"
       group_mentioned: "<span>{{username}}</span> {{description}}"
       quoted: "<span>{{username}}</span> {{description}}"

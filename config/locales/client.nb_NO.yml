@@ -302,6 +302,8 @@ nb_NO:
     review:
       order_by: "Sorter etter"
       in_reply_to: "i svar til"
+      explain:
+        total: "Total"
       awaiting_approval: "Venter på godkjenning"
       delete: "Slett"
       settings:
@@ -1250,7 +1252,6 @@ nb_NO:
         title_missing: "Tittel er påkrevd"
         title_too_short: "Tittel må være på minst {{min}} tegn"
         title_too_long: "Tittel kan ikke være mer enn {{max}} tegn"
-        post_missing: "Innlegget kan ikke være tomt"
         post_length: "Innlegget må være på minst {{min}} tegn"
         try_like: "Har du prøvd {{heart}}-knappen?"
         category_missing: "Du må velge en kategori"
@@ -1351,7 +1352,6 @@ nb_NO:
       title: "varsler om at @navnet ditt blir nevnt, svar på dine innlegg og emner, meldinger, osv"
       none: "Notifikasjoner er ikke tilgjengelig for øyeblikket."
       empty: "Ingen varsler funnet."
-      more: "se gamle varsler"
       mentioned: "<span>{{username}}</span> {{description}}"
       group_mentioned: "<span>{{username}}</span> {{description}}"
       quoted: "<span>{{username}}</span> {{description}}"

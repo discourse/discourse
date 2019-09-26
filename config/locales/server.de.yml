@@ -235,6 +235,10 @@ de:
     replies:
       one: "%{count} Antwort"
       other: "%{count} Antworten"
+    likes:
+      one: "%{count} \"Gefällt mir\"-Angabe"
+      other: "%{count} \"Gefällt mir\"-Angaben"
+    last_reply: "letzte Antwort"
     created: "Erstellt"
   no_mentions_allowed: "Entschuldigung, du kannst keine Benutzer erwähnen."
   too_many_mentions:
@@ -1239,7 +1243,8 @@ de:
     editing_grace_period_max_diff: "Maximale Anzahl von Zeichenänderungen, die während der Bearbeitungsfrist erlaubt sind. Bei größeren Änderungen wird eine neue Beitragsversion gespeichert (Vertrauensstufe 0 und 1)"
     editing_grace_period_max_diff_high_trust: "Maximale Anzahl von Zeichenänderungen, die während der Bearbeitungsfrist erlaubt sind. Bei größeren Änderungen wird eine neue Beitragsversion gespeichert (Vertrauensstufe 2 und höher)"
     staff_edit_locks_post: "Beiträge werden für die Bearbeitung gesperrt, wenn sie von Team-Mitgliedern bearbeitet werden"
-    post_edit_time_limit: "Autoren können ihre Beiträge für (n) Minuten nach dem Absenden bearbeiten. Auf 0 setzen um permanente Bearbeitung zu erlauben."
+    post_edit_time_limit: "Autoren der Vertrauensstufen 0 und 1 können ihre Beiträge (n) Minuten nach dem Schreiben noch ändern. 0 bedeutet immer."
+    tl2_post_edit_time_limit: "Ein Autor der Vertrauensstufen 2 kann seine Beiträge (n) Minuten nach dem Schreiben noch ändern. 0 bedeutet immer."
     edit_history_visible_to_public: "Erlaube jedem, vorherige Versionen eines bearbeiteten Beitrags zu sehen. Wenn deaktiviert sind diese nur für Team-Mitglieder sichtbar."
     delete_removed_posts_after: "Beiträge, die deren Verfasser selbst entfernt hat, werden nach (n) Stunden automatisch gelöscht. Die Beiträge werden sofort gelöscht, wenn dieser Wert auf 0 gesetzt wird."
     max_image_width: "Maximale Breite von Thumbnails von Bildern in einem Beitrag."
@@ -1408,6 +1413,10 @@ de:
     enable_github_logins: "GitHub-Authentifizierung aktivieren, erfordert github_client_id und github_client_secret. Siehe <a href='https://meta.discourse.org/t/13745' target='_blank'>Configuring GitHub login for Discourse</a>."
     github_client_id: "Client-ID für GitHub-Authentifizierung, registriert auf <a href='https://github.com/settings/developers/' target='_blank'>https://github.com/settings/developers</a>"
     github_client_secret: "Client-Secret für GitHub-Authentifizierung, registriert auf <a href='https://github.com/settings/developers/' target='_blank'>https://github.com/settings/developers</a>"
+    enable_discord_logins: 'Benutzern erlauben, sich mit Discord zu authentifizieren?'
+    discord_client_id: 'Discord Client ID (benötigst du eine? besuche<a href="https://discordapp.com/developers/applications/me">das Discord Entwickler Portal</a>)'
+    discord_secret: 'Discord geheimer Schlüssel'
+    discord_trusted_guilds: 'Das Einloggen per Discord nur Mitgliedern dieser Discord Gilden gestatten. Verwende die numerische ID der Gilde. Lies die Anleitung <a href="https://meta.discourse.org/t/configuring-discord-login-for-discourse/127129">hier</a>, um mehr zu erfahren. Leer lassen um jede Gilde zuzulassen.'
     readonly_mode_during_backup: "Nur-Lesen-Modus beim Erstellen einer Sicherung aktivieren"
     enable_backups: "Erlaube Administratoren, Backups des Forums zu erstellen"
     allow_restore: "Wiederherstellung von Sicherungen zulassen, die ALLE vorhandenen Daten überschreiben! Auf 'false' lassen, sofern Sie nicht planen, eine Sicherung wiederherzustellen."
@@ -1709,6 +1718,7 @@ de:
     warn_reviving_old_topic_age: "Wenn jemand beginnt auf ein Thema zu antworten, dessen letzte Antwort älter als diese Anzahl an Tagen ist, wird eine Warnung angezeigt. Deaktiviere dies durch setzen auf 0."
     autohighlight_all_code: "Erzwinge Syntaxhervorhebung für alle Quellcode-Blöcke, auch dann wenn keine Sprache angeben wurde."
     highlighted_languages: "Aktivierter Regeln für das Syntax-Hervorhebung. (Warnung: Das Aktivieren zu vieler Sprachen kann die Leistung beeinträchtigen) siehe: <a href='https://highlightjs.org/static/demo/' target='_blank'>https://highlightjs.org/static/demo</a> für eine Demonstration"
+    embed_any_origin: "Einbettbaren Inhalt ohne Berücksichtigung der Herkunft erlauben. Dies ist notwend für mobile Applikationen mit statischem HTML."
     embed_topics_list: "Unterstütze HTML-Einbettung von Themenlisten"
     embed_truncate: "Kürze die eingebetteten Beiträge"
     embed_support_markdown: "Unterstütze Markdown-Formatierung für eingebettete Beiträge"
@@ -1957,6 +1967,7 @@ de:
     omniauth_error:
       generic: "Entschuldigung, bei der Authentifizierung deines Kontos ist ein Fehler aufgetreten. Versuch es bitte noch einmal."
       csrf_detected: "Authentifizierung abgelaufen oder Browser gewechselt. Bitte noch einmal versuchen."
+      request_error: "Ein Fehler ist beim Start der Anmeldung aufgetreten. Bitte noch einmal versuchen."
       invalid_iat: "Authentifizierungstoken kann wegen Differenzen der Server Uhrzeit nicht geprüft werden. Versuch es bitte noch einmal."
     omniauth_error_unknown: "Während des Anmeldens ist etwas schief gelaufen, bitte versuche es noch einmal."
     omniauth_confirm_title: "Anmeldung per %{provider}"
@@ -2251,6 +2262,21 @@ de:
         Die Community hat den Beitrag gemeldet und er ist nun verborgen. **Da er mehr als einmal verborgen wurde, wird er es bleiben, bis ein Teammitglied ihn prüft.**
 
         Für zusätzliche Hinweise informiere dich bitte über unsere [Community Richtlinien](%{base_url}/guidelines).
+    flags_disagreed:
+      title: "Gemeldeter Beitrag vom Team wiederhergestellt"
+      subject_template: "Gemeldeter Beitrag vom Team wiederhergestellt"
+      text_body_template: |
+        Hallo,
+
+        dies ist eine automatische Nachricht von %{site_name} um dich zu informieren, dass [dein Beitrag](%{base_url}%{url}) wiederhergestellt worden ist.
+
+        Dieser Beitrag wurde von der Community gemeldet, und ein Teammitglied hat entschieden, ihn wiederherzustellen.
+
+        [details="Hier klicken um wiederhergestellten Beitrag auszuklappen"]
+        ``` markdown
+        %{flagged_post_raw_content}
+        ```
+        [/details]
     flags_agreed_and_post_deleted:
       title: "Gemeldeter Beitrag von Team entfernt"
       subject_template: "Gemeldeter Beitrag von Team entfernt"
@@ -2679,10 +2705,7 @@ de:
     dashboard_problems:
       title: "Dashboard-Probleme"
       subject_template: "Neue Ratschläge auf deinem Website-Dashboard"
-      text_body_template: |
-        Wir haben ein paar neue Ratschläge und Empfehlungen basierend auf deinen aktuellen Website-Einstellungen.
-
-        [Besuche dein Website-Dashboard](%{base_url}/admin), um sie zu sehen.
+      text_body_template: "Basierend auf deinen aktuellen Seiteneinstellungen haben wir  einige neue Ratschläge und Empfehlungen für dich. \n\n[Besuche das Dashboard deiner Seite](%{base_url}/admin), um sie zu sehen.\n\nSollte im Dashboard nichts sichtbar sein, hat bereits ein anderes Teammitglied auf die Ratschläge reagiert. Eine Liste der Team Handlungen finden sich in den  [Team Handlungs Logs](%{base_url}/admin/logs/staff_action_logs).\n"
     new_user_of_the_month:
       title: "Du bist ein neuer Benutzer des Monats!"
       subject_template: "Du bist ein neuer Benutzer des Monats!"
@@ -4085,3 +4108,5 @@ de:
         reason: "Gelöscht via Review-Warteschlange"
   email_style:
     html_missing_placeholder: "Die HTML Vorlage muss %{placeholder}beinhalten"
+  discord:
+    not_in_allowed_guild: 'Authentifizierung fehlgeschlagen. Du bist kein Mitglied einer erlaubten Discord Gilde.'
