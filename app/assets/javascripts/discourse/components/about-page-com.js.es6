@@ -7,7 +7,6 @@ import { renderAvatar } from "discourse/helpers/user-avatar";
 export default Ember.Component.extend({
   @computed("users")
   html(users) {
-    return;
     let html = "";
     users.forEach(user => {
       let name = "";
