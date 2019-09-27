@@ -59,7 +59,7 @@
 
       {{#if model.category_moderators.length}}
         {{#each model.category_moderators as |cm|}}
-          <section class='about category-moderators'>
+          <section class='about category-moderators moderators-{{cm.category.slug}}'>
             <h3>{{category-link cm.category}}{{i18n "about.moderators"}}</h3>
             <div class='users'>
               {{#each cm.moderators as |m|}}
