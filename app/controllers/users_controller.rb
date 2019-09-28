@@ -689,6 +689,14 @@ class UsersController < ApplicationController
             rp_id: secure_session["staged-webauthn-rp-id-#{email_token_user&.id}"],
             origin: Discourse.base_url
           ).authenticate_security_key
+          @message = I18n.t('login.security_key_invalid') if !confirm_email
+        elsif security_keys_enabled
+          confirm_email = false
+          @message = I18n.t("login.second_factor_title")
+          if totp_enabled
+            @second_factor_required = true
+            @backup_codes_enabled = true
+          end
         else
           confirm_email =
             if totp_enabled

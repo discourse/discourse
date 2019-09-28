@@ -552,6 +552,55 @@ describe UsersController do
           expect(session[:current_user_id]).to eq(admin.id)
         end
       end
+
+      describe 'when security key authentication required' do
+        fab!(:security_key) { Fabricate(:user_security_key, user: admin) }
+        fab!(:email_token) { Fabricate(:email_token, user: admin) }
+
+        it 'does not log in when token required' do
+          security_key
+          get "/u/admin-login/#{email_token.token}"
+          expect(response).not_to redirect_to('/')
+          expect(session[:current_user_id]).not_to eq(admin.id)
+          expect(response.body).to include(I18n.t('login.security_key_authenticate'))
+        end
+
+        describe 'invalid security key' do
+          it 'should display the right error' do
+            ::Webauthn::SecurityKeyAuthenticationService.any_instance.stubs(:authenticate_security_key).returns(false)
+
+            put "/u/admin-login/#{email_token.token}", params: {
+              security_key_credential: {
+                signature: 'test',
+                clientData: 'test',
+                authenticatorData: 'test',
+                credentialId: 'test'
+              }.to_json,
+              second_factor_method: UserSecondFactor.methods[:security_key]
+            }
+
+            expect(response.status).to eq(200)
+            expect(response.body).to include(I18n.t('login.security_key_invalid'))
+          end
+        end
+
+        it 'logs in when a valid security key is given' do
+          ::Webauthn::SecurityKeyAuthenticationService.any_instance.stubs(:authenticate_security_key).returns(true)
+
+          put "/u/admin-login/#{email_token.token}", params: {
+            security_key_credential: {
+              signature: 'test',
+              clientData: 'test',
+              authenticatorData: 'test',
+              credentialId: 'test'
+            }.to_json,
+            second_factor_method: UserSecondFactor.methods[:security_key]
+          }
+
+          expect(response).to redirect_to('/')
+          expect(session[:current_user_id]).to eq(admin.id)
+        end
+      end
     end
   end
 
