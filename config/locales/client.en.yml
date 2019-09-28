@@ -1515,6 +1515,9 @@ en:
         name: "Discord"
         title: "with Discord"
         message: "Authenticating with Discord"
+      second_factor_toggle:
+        totp: "Use an authenticator app instead"
+        backup_code: "Use a backup code instead"
     invites:
       accept_title: "Invitation"
       welcome_to: "Welcome to %{site_name}!"

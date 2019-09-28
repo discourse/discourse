@@ -1,4 +1,15 @@
-import { stringToBuffer, bufferToBase64 } from "discourse/lib/utilities";
+export function stringToBuffer(str) {
+  let buffer = new ArrayBuffer(str.length);
+  let byteView = new Uint8Array(buffer);
+  for (let i = 0; i < str.length; i++) {
+    byteView[i] = str.charCodeAt(i);
+  }
+  return buffer;
+}
+
+export function bufferToBase64(buffer) {
+  return btoa(String.fromCharCode(...new Uint8Array(buffer)));
+}
 
 export function getWebauthnCredential(
   challenge,

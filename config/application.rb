@@ -144,6 +144,10 @@ module Discourse
       activate-account.js
       auto-redirect.js
       wizard-start.js
+      locales/i18n.js
+      discourse/lib/webauthn.js
+      admin-login/admin-login.js
+      admin-login/admin-login.no-module.js
       onpopstate-handler.js
       embed-application.js
     }

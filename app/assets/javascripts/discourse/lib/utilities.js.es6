@@ -692,18 +692,5 @@ export function rescueThemeError(name, error, api) {
   document.body.prepend(alertDiv);
 }
 
-export function stringToBuffer(str) {
-  let buffer = new ArrayBuffer(str.length);
-  let byteView = new Uint8Array(buffer);
-  for (let i = 0; i < str.length; i++) {
-    byteView[i] = str.charCodeAt(i);
-  }
-  return buffer;
-}
-
-export function bufferToBase64(buffer) {
-  return btoa(String.fromCharCode(...new Uint8Array(buffer)));
-}
-
 // This prevents a mini racer crash
 export default {};
