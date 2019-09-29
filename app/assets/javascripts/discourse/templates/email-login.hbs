@@ -37,7 +37,9 @@
           <p>{{i18n "email_login.logging_in_as" email=model.token_email}}</p>
         {{/if}}
 
-        {{d-button label="email_login.confirm_button" action=(action "finishLogin") class="btn-primary"}}
+        {{#unless model.security_key_required }}
+          {{d-button label="email_login.confirm_button" action=(action "finishLogin") class="btn-primary"}}
+        {{/unless}}    
       {{/if}}
     </form>
   </div>

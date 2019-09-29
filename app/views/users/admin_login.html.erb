@@ -10,13 +10,14 @@
 
       <%=form_tag({}, method: :put) do %>
         <p><strong><%= t('login.security_key_authenticate') %></strong></p>
+        <p><%= t('login.security_key_description') %></p>
         <%= hidden_field_tag 'second_factor_method', '3' %>
         <%= hidden_field_tag 'security_key_credential', nil, id: 'security-key-credential' %>
 
         <% if @second_factor_required %>
           <%= link_to t('login.security_key_alternative'), '#', id: 'activate-security-key-alternative' %><br/><br/>
         <% end %>
-        <%= button_tag t('submit'), id: 'submit-security-key' %>
+        <%= button_tag t('login.security_key_authenticate'), id: 'submit-security-key' %>
       <% end %>
     </div>
   <% end %>

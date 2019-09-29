@@ -690,7 +690,7 @@ class UsersController < ApplicationController
             origin: Discourse.base_url
           ).authenticate_security_key
           @message = I18n.t('login.security_key_invalid') if !confirm_email
-        elsif security_keys_enabled
+        elsif security_keys_enabled && second_factor_token.blank?
           confirm_email = false
           @message = I18n.t("login.second_factor_title")
           if totp_enabled

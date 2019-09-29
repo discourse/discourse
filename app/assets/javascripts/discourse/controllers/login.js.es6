@@ -124,9 +124,12 @@ export default Ember.Controller.extend(ModalFunctionality, {
           // Successful login
           if (result && result.error) {
             this.set("loggingIn", false);
+            const invalidSecurityKey = result.reason === "invalid_security_key";
+            const invalidSecondFactor =
+              result.reason === "invalid_second_factor";
+
             if (
-              (result.reason === "invalid_second_factor" ||
-                result.reason === "invalid_security_key") &&
+              (invalidSecondFactor || invalidSecurityKey) &&
               !this.secondFactorRequired
             ) {
               document.getElementById("modal-alert").style.display = "none";
@@ -135,14 +138,14 @@ export default Ember.Controller.extend(ModalFunctionality, {
                 secondFactorRequired: true,
                 showLoginButtons: false,
                 backupEnabled: result.backup_enabled,
-                showSecondFactor: result.reason === "invalid_second_factor",
-                showSecurityKey: result.reason === "invalid_security_key",
-                secondFactorMethod:
-                  result.reason === "invalid_security_key"
-                    ? SECOND_FACTOR_METHODS.SECURITY_KEY
-                    : SECOND_FACTOR_METHODS.TOTP,
+                showSecondFactor: invalidSecondFactor,
+                showSecurityKey: invalidSecurityKey,
+                secondFactorMethod: invalidSecurityKey
+                  ? SECOND_FACTOR_METHODS.SECURITY_KEY
+                  : SECOND_FACTOR_METHODS.TOTP,
                 securityKeyChallenge: result.challenge,
-                securityKeyAllowedCredentialIds: result.allowed_credential_ids
+                securityKeyAllowedCredentialIds: result.allowed_credential_ids,
+                loginDisabled: !invalidSecurityKey
               });
 
               // only need to focus the 2FA input for TOTP

@@ -1,5 +1,5 @@
 import ModalFunctionality from "discourse/mixins/modal-functionality";
-import { bufferToBase64 } from "discourse/lib/utilities";
+import { bufferToBase64 } from "discourse/lib/webauthn";
 
 // model for this controller is user.js.es6
 export default Ember.Controller.extend(ModalFunctionality, {
