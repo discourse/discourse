@@ -5,6 +5,7 @@ import {
   observes
 } from "ember-addons/ember-computed-decorators";
 import FocusEvent from "discourse-common/mixins/focus-event";
+import { getOwner } from "discourse-common/lib/get-owner";
 
 const _pluginCallbacks = [];
 
@@ -17,8 +18,20 @@ const Discourse = Ember.Application.extend(FocusEvent, {
     paste: "paste"
   },
 
+  hasFocus: true,
+
+  ready() {
+    this._super(...arguments);
+
+    const appEvents = getOwner(this).lookup("app-events:main");
+    appEvents.on("discourse:focus-changed", this, "_focusChanged");
+  },
+
   reset() {
     this._super(...arguments);
+
+    const appEvents = getOwner(this).lookup("app-events:main");
+    appEvents.off("discourse:focus-changed", this, "_focusChanged");
 
     Mousetrap.reset();
   },
@@ -58,9 +71,11 @@ const Discourse = Ember.Application.extend(FocusEvent, {
       $("title").text(title);
     }
 
-    var displayCount = this.displayCount;
-    if (displayCount > 0 && !Discourse.User.currentProp("dynamic_favicon")) {
-      title = `(${displayCount}) ${title}`;
+    if (
+      this.displayCount > 0 &&
+      !Discourse.User.currentProp("dynamic_favicon")
+    ) {
+      title = `(${this.displayCount}) ${title}`;
     }
 
     document.title = title;
@@ -194,6 +209,10 @@ const Discourse = Ember.Application.extend(FocusEvent, {
 
   _registerPluginCode(version, code) {
     _pluginCallbacks.push({ version, code });
+  },
+
+  _focusChanged(hasFocus) {
+    this.set("hasFocus", hasFocus);
   },
 
   assetVersion: Ember.computed({

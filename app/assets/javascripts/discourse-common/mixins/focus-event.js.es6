@@ -1,36 +1,28 @@
-function gotFocus() {
-  if (!Discourse.get("hasFocus")) {
-    Discourse.setProperties({ hasFocus: true, notify: false });
-  }
-}
-
-function lostFocus() {
-  if (Discourse.get("hasFocus")) {
-    Discourse.set("hasFocus", false);
-  }
-}
-
-let onchange;
+import { getOwner } from "discourse-common/lib/get-owner";
 
 export default Ember.Mixin.create({
   ready() {
     this._super(...arguments);
 
-    onchange = () => {
-      document.visibilityState === "hidden" ? lostFocus() : gotFocus();
-    };
+    this.onChangeHandler = Ember.run.bind(this, "_onChange");
 
-    // Default to true
-    Discourse.set("hasFocus", true);
-
-    document.addEventListener("visibilitychange", onchange);
+    document.addEventListener("visibilitychange", this.onChangeHandler);
   },
 
   reset() {
     this._super(...arguments);
 
-    document.removeEventListener("visibilitychange", onchange);
+    document.removeEventListener("visibilitychange", this.onChangeHandler);
 
-    onchange = undefined;
+    this.onchangeHandler = null;
+  },
+
+  _onChange() {
+    const appEvents = getOwner(this).lookup("app-events:main");
+
+    appEvents.trigger(
+      "discourse:focus-changed",
+      document.visibilityState === "visible"
+    );
   }
 });

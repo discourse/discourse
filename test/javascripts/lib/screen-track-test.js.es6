@@ -1,3 +1,4 @@
+import { currentUser } from "helpers/qunit-helpers";
 import TopicTrackingState from "discourse/models/topic-tracking-state";
 import Session from "discourse/models/session";
 import ScreenTrack from "discourse/lib/screen-track";
@@ -15,7 +16,7 @@ QUnit.module("lib:screen-track", {
 });
 
 // skip for now test leaks state
-QUnit.skip("Correctly flushes posts as needed", assert => {
+QUnit.test("Correctly flushes posts as needed", assert => {
   const timings = [];
 
   // prettier-ignore
@@ -29,13 +30,11 @@ QUnit.skip("Correctly flushes posts as needed", assert => {
     flush_timings_secs: 60
   };
 
-  const currentUser = { id: 1, username: "sam" };
-
   const tracker = new ScreenTrack(
     trackingState,
     siteSettings,
     Session.current(),
-    currentUser
+    currentUser()
   );
 
   const topicController = null;

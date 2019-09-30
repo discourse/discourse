@@ -1,3 +1,4 @@
+import { getOwner } from "discourse-common/lib/get-owner";
 import DiscourseURL from "discourse/lib/url";
 import AddArchetypeClass from "discourse/mixins/add-archetype-class";
 import ClickTrack from "discourse/lib/click-track";
@@ -110,6 +111,7 @@ export default Ember.Component.extend(
         }
       );
 
+      this.appEvents.on("discourse:focus-changed", this, "focusChanged");
       this.appEvents.on("post:highlight", this, "_highlightPost");
       this.appEvents.on("header:update-topic", this, "_updateTopic");
     },
@@ -129,14 +131,20 @@ export default Ember.Component.extend(
 
       // this happens after route exit, stuff could have trickled in
       this._hideTopicInHeader();
+      this.appEvents.off("discourse:focus-changed", this, "focusChanged");
       this.appEvents.off("post:highlight", this, "_highlightPost");
       this.appEvents.off("header:update-topic", this, "_updateTopic");
     },
 
-    @observes("Discourse.hasFocus")
-    gotFocus() {
-      if (Discourse.get("hasFocus")) {
+    focusChanged(hasFocus) {
+      const screenTrack = getOwner(this).lookup("screen-track:main");
+
+      if (hasFocus) {
+        screenTrack.start();
+
         this.scrolled();
+      } else {
+        screenTrack.stop();
       }
     },
 

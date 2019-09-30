@@ -186,7 +186,10 @@ export default class {
         // Save unique topic IDs up to a max
         let topicIds = storage.get("anon-topic-ids");
         if (topicIds) {
-          topicIds = topicIds.split(",").map(e => parseInt(e));
+          topicIds = topicIds
+            .split(",")
+            .filter(Boolean)
+            .map(tid => parseInt(tid, 10));
         } else {
           topicIds = [];
         }
@@ -239,16 +242,14 @@ export default class {
       this.flush();
     }
 
-    if (Discourse.get("hasFocus")) {
-      this._topicTime += diff;
+    this._topicTime += diff;
 
-      this._onscreen.forEach(
-        postNumber => (timings[postNumber] = (timings[postNumber] || 0) + diff)
-      );
+    this._onscreen.forEach(
+      postNumber => (timings[postNumber] = (timings[postNumber] || 0) + diff)
+    );
 
-      this._readOnscreen.forEach(postNumber => {
-        this._readPosts[postNumber] = true;
-      });
-    }
+    this._readOnscreen.forEach(postNumber => {
+      this._readPosts[postNumber] = true;
+    });
   }
 }
