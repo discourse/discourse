@@ -1,6 +1,9 @@
 import debounce from "discourse/lib/debounce";
 import { isAppleDevice, safariHacksDisabled } from "discourse/lib/utilities";
 
+// TODO: remove calcHeight once iOS 13 adoption > 90%
+// In iOS 13 and up we use visualViewport API to calculate height
+
 // we can't tell what the actual visible window height is
 // because we cannot account for the height of the mobile keyboard
 // and any other mobile autocomplete UI that may appear
@@ -89,9 +92,14 @@ function positioningWorkaround($fixedElement) {
 
       fixedElement.style.position = "";
       fixedElement.style.top = "";
-      fixedElement.style.height = oldHeight;
 
-      Ember.run.later(() => $(fixedElement).removeClass("no-transition"), 500);
+      if (window.visualViewport === undefined) {
+        fixedElement.style.height = oldHeight;
+        Ember.run.later(
+          () => $(fixedElement).removeClass("no-transition"),
+          500
+        );
+      }
 
       $(window).scrollTop(originalScrollTop);
 
@@ -165,10 +173,11 @@ function positioningWorkaround($fixedElement) {
 
     fixedElement.style.top = "0px";
 
-    const height = calcHeight();
-    fixedElement.style.height = height + "px";
-
-    $(fixedElement).addClass("no-transition");
+    if (window.visualViewport === undefined) {
+      const height = calcHeight();
+      fixedElement.style.height = height + "px";
+      $(fixedElement).addClass("no-transition");
+    }
 
     evt.preventDefault();
     this.focus();
