@@ -65,6 +65,10 @@ describe EmbeddableHost do
     end
   end
 
+  it "doesn't allow forum own URL if no hosts exist" do
+    expect(EmbeddableHost.url_allowed?(Discourse.base_url)).to eq(false)
+  end
+
   describe "url_allowed?" do
     fab!(:host) { Fabricate(:embeddable_host) }
 
