@@ -140,11 +140,11 @@ export default Ember.Component.extend(
       const screenTrack = getOwner(this).lookup("screen-track:main");
 
       if (hasFocus) {
-        screenTrack.start();
+        screenTrack.resume();
 
         this.scrolled();
       } else {
-        screenTrack.stop();
+        screenTrack.pause();
       }
     },
 

@@ -1,3 +1,4 @@
+import pageVisible from "discourse/lib/page-visible";
 import { ajax } from "discourse/lib/ajax";
 
 // We use this class to track how long posts in a topic are on the screen.
@@ -23,15 +24,20 @@ export default class {
 
     this.reset();
 
-    // Create an interval timer if we don't have one.
-    if (!this._interval) {
-      this._interval = setInterval(() => this.tick(), 1000);
-      this._boundScrolled = Ember.run.bind(this, this.scrolled);
-      $(window).on("scroll.screentrack", this._boundScrolled);
-    }
+    this._setupScrollListener();
 
     this._topicId = topicId;
     this._topicController = topicController;
+  }
+
+  pause() {
+    this._destroyScrollListener();
+    this.tick();
+    this.flush();
+  }
+
+  resume() {
+    this._setupScrollListener();
   }
 
   stop() {
@@ -242,14 +248,32 @@ export default class {
       this.flush();
     }
 
-    this._topicTime += diff;
+    if (pageVisible()) {
+      this._topicTime += diff;
 
-    this._onscreen.forEach(
-      postNumber => (timings[postNumber] = (timings[postNumber] || 0) + diff)
-    );
+      this._onscreen.forEach(
+        postNumber => (timings[postNumber] = (timings[postNumber] || 0) + diff)
+      );
 
-    this._readOnscreen.forEach(postNumber => {
-      this._readPosts[postNumber] = true;
-    });
+      this._readOnscreen.forEach(postNumber => {
+        this._readPosts[postNumber] = true;
+      });
+    }
+  }
+
+  _setupScrollListener() {
+    // Create an interval timer if we don't have one.
+    if (!this._interval) {
+      this._interval = setInterval(() => this.tick(), 1000);
+      this._boundScrolled = Ember.run.bind(this, this.scrolled);
+      $(window).on("scroll.screentrack", this._boundScrolled);
+    }
+  }
+
+  _destroyScrollListener() {
+    if (this._interval) {
+      clearInterval(this._interval);
+      this._interval = null;
+    }
   }
 }
