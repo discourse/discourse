@@ -1,16 +1,23 @@
 # frozen_string_literal: true
 
 require_dependency 'compression/zip'
-require_dependency 'compression/tar_gzip'
+require_dependency 'compression/pipeline'
+require_dependency 'compression/gzip'
 require_dependency 'compression/tar'
 
 module Compression
   class Engine
-    ExtractFailed = Class.new(StandardError)
+    def self.default_strategies
+      [
+        Compression::Zip.new,
+        Compression::Pipeline.new([Compression::Tar.new, Compression::Gzip.new]),
+        Compression::Gzip.new,
+        Compression::Tar.new
+      ]
+    end
 
-    def self.engine_for(filename)
-      available_engines = [::Compression::Zip, ::Compression::TarGzip, ::Compression::Tar]
-      strategy = available_engines.detect { |e| e.can_handle?(filename) }.new
+    def self.engine_for(filename, strategies: default_strategies)
+      strategy = strategies.detect { |e| e.can_handle?(filename) }
       new(strategy)
     end
 

@@ -2,9 +2,6 @@
 
 require 'rails_helper'
 require 'compression/engine'
-require 'compression/zip'
-require 'compression/tar_gzip'
-require 'compression/tar'
 
 describe Compression::Engine do
   before do

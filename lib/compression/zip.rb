@@ -5,8 +5,8 @@ require_dependency 'compression/strategy'
 
 module Compression
   class Zip < Strategy
-    def self.can_handle?(file_name)
-      file_name.include?('.zip')
+    def extension
+      '.zip'
     end
 
     def compress(path, target_name)

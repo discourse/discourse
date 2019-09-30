@@ -1,11 +1,12 @@
 # frozen_string_literal: true
 
 require_dependency 'compression/strategy'
+require 'rubygems/package'
 
 module Compression
   class Tar < Strategy
-    def self.can_handle?(file_name)
-      file_name.include?('.tar')
+    def extension
+      '.tar'
     end
 
     def compress(path, target_name)
@@ -34,26 +35,6 @@ module Compression
       File.join(dest_path, entry.full_name).tap do |entry_path|
         FileUtils.mkdir_p(File.dirname(entry_path))
       end
-    end
-
-    def extract_file(entry, entry_path, available_size)
-      remaining_size = available_size
-
-      if ::File.exist?(entry_path)
-        raise ::Zip::DestinationFileExistsError,
-              "Destination '#{entry_path}' already exists"
-      end # Change this later.
-
-      ::File.open(entry_path, 'wb') do |os|
-        buf = ''.dup
-        while (buf = entry.read(chunk_size))
-          remaining_size -= chunk_size
-          raise ExtractFailed if remaining_size.negative?
-          os << buf
-        end
-      end
-
-      remaining_size
     end
   end
 end

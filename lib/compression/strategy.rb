@@ -2,18 +2,24 @@
 
 module Compression
   class Strategy
+    ExtractFailed = Class.new(StandardError)
+
+    def can_handle?(file_name)
+      file_name.include?(extension)
+    end
+
     def decompress(dest_path, compressed_file_path, allow_non_root_folder: false)
       get_compressed_file_stream(compressed_file_path) do |compressed_file|
         available_size = calculate_available_size(compressed_file_path, compressed_file)
 
-        compressed_file.each do |entry|
+        entries_of(compressed_file).each do |entry|
           entry_path = build_entry_path(
             compressed_file, dest_path,
             compressed_file_path, entry,
             allow_non_root_folder
           )
 
-          if entry.file?
+          if is_file?(entry)
             remaining_size = extract_file(entry, entry_path, available_size)
             available_size = remaining_size
           else
@@ -25,8 +31,36 @@ module Compression
 
     private
 
+    def entries_of(compressed_file)
+      compressed_file
+    end
+
+    def is_file?(entry)
+      entry.file?
+    end
+
     def chunk_size
       @chunk_size ||= ::Zip::Decompressor::CHUNK_SIZE
+    end
+
+    def extract_file(entry, entry_path, available_size)
+      remaining_size = available_size
+
+      if ::File.exist?(entry_path)
+        raise ::Zip::DestinationFileExistsError,
+              "Destination '#{entry_path}' already exists"
+      end # Change this later.
+
+      ::File.open(entry_path, 'wb') do |os|
+        buf = ''.dup
+        while (buf = entry.read(chunk_size))
+          remaining_size -= chunk_size
+          raise ExtractFailed if remaining_size.negative?
+          os << buf
+        end
+      end
+
+      remaining_size
     end
   end
 end
