@@ -144,8 +144,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
                   ? SECOND_FACTOR_METHODS.SECURITY_KEY
                   : SECOND_FACTOR_METHODS.TOTP,
                 securityKeyChallenge: result.challenge,
-                securityKeyAllowedCredentialIds: result.allowed_credential_ids,
-                loginDisabled: !invalidSecurityKey
+                securityKeyAllowedCredentialIds: result.allowed_credential_ids
               });
 
               // only need to focus the 2FA input for TOTP
