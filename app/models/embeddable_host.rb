@@ -44,7 +44,7 @@ class EmbeddableHost < ActiveRecord::Base
 
   def self.url_allowed?(url)
     # Work around IFRAME reload on WebKit where the referer will be set to the Forum URL
-    return true if url&.starts_with?(Discourse.base_url)
+    return true if url&.starts_with?(Discourse.base_url) && EmbeddableHost.exists?
 
     uri = begin
       URI(UrlHelper.escape_uri(url))
