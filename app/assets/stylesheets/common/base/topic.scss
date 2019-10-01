@@ -23,28 +23,29 @@
   animation-name: button-jump-up;
   width: 145px;
   text-align: center;
-  position: relative;
   margin-bottom: 0px;
+  position: absolute;
+  right: 0;
+  top: -2em;
   .btn {
     margin: 0;
   }
 }
 
 #topic-progress-wrapper {
+  display: flex;
   .topic-admin-menu-button-container {
-    position: absolute;
-    bottom: 0px;
-    left: -38px;
-    width: 0px;
-    .widget-button {
-      height: 35px;
-      border-right: 1px solid dark-light-diff($primary, $secondary, 80%, -70%);
+    display: flex;
+    > span {
+      display: flex;
     }
   }
   .topic-admin-popup-menu.right-side {
-    position: relative;
-    right: 50px;
+    position: absolute;
+    bottom: 0;
+    right: 0;
     left: auto;
+    transition: bottom 0.5s;
     transform: translateZ(
       0
     ); // iOS11 Rendering bug https://meta.discourse.org/t/wrench-menu-not-disappearing-on-ios/94297
