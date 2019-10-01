@@ -25,19 +25,21 @@ export default class {
     this.reset();
 
     this._setupScrollListener();
+    this._boundScrolled = Ember.run.bind(this, this.scrolled);
+    $(window).on("scroll.screentrack", this._boundScrolled);
 
     this._topicId = topicId;
     this._topicController = topicController;
   }
 
   pause() {
-    this._destroyScrollListener();
+    this._destroyTickListener();
     this.tick();
     this.flush();
   }
 
   resume() {
-    this._setupScrollListener();
+    this._setupTickListener();
   }
 
   stop() {
@@ -48,6 +50,7 @@ export default class {
 
     if (this._boundScrolled) {
       $(window).off("scroll.screentrack", this._boundScrolled);
+      this._boundScrolled = null;
     }
 
     this.tick();
@@ -261,16 +264,14 @@ export default class {
     }
   }
 
-  _setupScrollListener() {
+  _setupTickListener() {
     // Create an interval timer if we don't have one.
     if (!this._interval) {
       this._interval = setInterval(() => this.tick(), 1000);
-      this._boundScrolled = Ember.run.bind(this, this.scrolled);
-      $(window).on("scroll.screentrack", this._boundScrolled);
     }
   }
 
-  _destroyScrollListener() {
+  _destroyTickListener() {
     if (this._interval) {
       clearInterval(this._interval);
       this._interval = null;
