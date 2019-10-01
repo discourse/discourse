@@ -437,17 +437,14 @@ module ApplicationHelper
 
   def theme_lookup(name)
     Theme.lookup_field(theme_ids, mobile_view? ? :mobile : :desktop, name)
-      &.html_safe
   end
 
   def theme_translations_lookup
     Theme.lookup_field(theme_ids, :translations, I18n.locale)
-      &.html_safe
   end
 
   def theme_js_lookup
     Theme.lookup_field(theme_ids, :extra_js, nil)
-      &.html_safe
   end
 
   def discourse_stylesheet_link_tag(name, opts = {})

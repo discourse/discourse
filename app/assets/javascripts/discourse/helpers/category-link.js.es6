@@ -75,7 +75,7 @@ export function categoryLinkHTML(category, options) {
 registerUnbound("category-link", categoryLinkHTML);
 
 function defaultCategoryLinkRenderer(category, opts) {
-  let description = get(category, "description_text");
+  let descriptionText = get(category, "description_text");
   let restricted = get(category, "read_restricted");
   let url = opts.url
     ? opts.url
@@ -121,7 +121,7 @@ function defaultCategoryLinkRenderer(category, opts) {
     'data-drop-close="true" class="' +
     classNames +
     '"' +
-    (description ? 'title="' + escapeExpression(description) + '" ' : "") +
+    (descriptionText ? 'title="' + descriptionText + '" ' : "") +
     ">";
 
   let categoryName = escapeExpression(get(category, "name"));
