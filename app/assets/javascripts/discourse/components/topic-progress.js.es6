@@ -158,12 +158,17 @@ export default Ember.Component.extend({
     const offset = window.pageYOffset || $html.scrollTop();
     const progressHeight = this.site.mobileView
       ? 0
-      : $("#topic-progress").height();
+      : $("#topic-progress").outerHeight();
     const maximumOffset = $("#topic-bottom").offset().top + progressHeight;
     const windowHeight = $(window).height();
     const composerHeight = $("#reply-control").height() || 0;
     const isDocked = offset >= maximumOffset - windowHeight + composerHeight;
-    const bottom = $("body").height() - maximumOffset;
+    let bottom = $("body").height() - maximumOffset;
+
+    const $iPadFooterNav = $(".footer-nav-ipad .footer-nav");
+    if ($iPadFooterNav && $iPadFooterNav.length > 0) {
+      bottom += $iPadFooterNav.outerHeight();
+    }
     const wrapperDir = $html.hasClass("rtl") ? "left" : "right";
 
     if (composerHeight > 0) {
@@ -175,7 +180,7 @@ export default Ember.Component.extend({
     this.set("docked", isDocked);
 
     const $replyArea = $("#reply-control .reply-area");
-    if ($replyArea && $replyArea.length > 0) {
+    if ($replyArea && $replyArea.length > 0 && wrapperDir === "left") {
       $wrapper.css(wrapperDir, `${$replyArea.offset().left}px`);
     } else {
       $wrapper.css(wrapperDir, "1em");
