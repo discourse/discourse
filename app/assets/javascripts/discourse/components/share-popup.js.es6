@@ -170,7 +170,7 @@ export default Ember.Component.extend({
       )
       .on("keydown.share-view", this._boundKeydownHandler);
 
-    this.appEvents.on("share:url", this._shareUrlHandler);
+    this.appEvents.on("share:url", this, "_shareUrlHandler");
   },
 
   willDestroyElement() {
@@ -181,7 +181,7 @@ export default Ember.Component.extend({
       .off("mousedown.outside-share-link", this._boundMouseDownHandler)
       .off("keydown.share-view", this._boundKeydownHandler);
 
-    this.appEvents.off("share:url", this._shareUrlHandler);
+    this.appEvents.off("share:url", this, "_shareUrlHandler");
   },
 
   actions: {
