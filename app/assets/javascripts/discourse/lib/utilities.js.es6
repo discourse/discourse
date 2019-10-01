@@ -538,10 +538,8 @@ export function determinePostReplaceSelection({
 export function isAppleDevice() {
   // IE has no DOMNodeInserted so can not get this hack despite saying it is like iPhone
   // This will apply hack on all iDevices
-  return (
-    navigator.userAgent.match(/(iPad|iPhone|iPod)/g) &&
-    !navigator.userAgent.match(/Trident/g)
-  );
+  const caps = Discourse.__container__.lookup("capabilities:main");
+  return caps.isIOS && !navigator.userAgent.match(/Trident/g);
 }
 
 let iPadDetected = undefined;
