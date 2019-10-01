@@ -192,6 +192,8 @@ be:
       title:
         placeholder: "увядзіце назву тэмы"
     review:
+      explain:
+        total: "агульны"
       delete: "Выдаліць"
       settings:
         save_changes: "Захаваць"
@@ -722,7 +724,6 @@ be:
         title_missing: "Загаловак неабходна"
         title_too_short: "Загаловак павінен быць мінімум {{min}} сімвалаў"
         title_too_long: "Загаловак не можа быць менш, чым {{max}} сімвалаў"
-        post_missing: "Паведамленне не можа быць пустым"
         post_length: "Найменшы памер паведамленні павінна быць {{min}} сімвалаў"
         category_missing: "Вы павінны выбраць катэгорыю"
       save_edit: "захаваць змены"
@@ -736,7 +737,6 @@ be:
       users_placeholder: "дадаць карыстальніка"
       title_placeholder: "Пра што гэта абмеркаванне, у адным кароткім сказе?"
       edit_reason_placeholder: "чаму Вы рэдагуеце паведамленне?"
-      show_edit_reason: "(Дадаць прычыну рэдагавання)"
       view_new_post: "Перагледзьце свой новы паведамленне."
       saving: "захаванне"
       saved: "Захавана!"
@@ -772,7 +772,6 @@ be:
         create_topic:
           label: "пачаць новую тэму"
     notifications:
-      more: "перагледзець старыя абвесткі"
       popup:
         confirm_title: "Апавяшчэння ўключаная -% {SITE_TITLE}"
         confirm_body: "Поспех! Паведамлення былі ўключаны."

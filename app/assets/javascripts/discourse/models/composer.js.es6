@@ -358,6 +358,17 @@ const Composer = RestModel.extend({
       }
     }
 
+    if (topicFirstPost) {
+      // user should modify topic template
+      const category = this.category;
+      if (category && category.topic_template) {
+        if (this.reply.trim() === category.topic_template.trim()) {
+          bootbox.alert(I18n.t("composer.error.topic_template_not_modified"));
+          return true;
+        }
+      }
+    }
+
     if (this.privateMessage) {
       // need at least one user when sending a PM
       return (

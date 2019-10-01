@@ -2,7 +2,6 @@ import MountWidget from "discourse/components/mount-widget";
 import MobileScrollDirection from "discourse/mixins/mobile-scroll-direction";
 import Scrolling from "discourse/mixins/scrolling";
 import { observes } from "ember-addons/ember-computed-decorators";
-import { isiPad } from "discourse/lib/utilities";
 import { isAppWebview, postRNWebviewMessage } from "discourse/lib/utilities";
 
 const MOBILE_SCROLL_DIRECTION_CHECK_THROTTLE = 150;
@@ -37,7 +36,7 @@ const FooterNavComponent = MountWidget.extend(
         this.appEvents.on("modal:body-dismissed", this, "_modalOff");
       }
 
-      if (isiPad()) {
+      if (this.capabilities.isIpadOS) {
         $("body").addClass("footer-nav-ipad");
       } else {
         this.bindScrolling({ name: "footer-nav" });
@@ -56,7 +55,7 @@ const FooterNavComponent = MountWidget.extend(
         this.appEvents.off("modal:body-removed", this, "_modalOff");
       }
 
-      if (isiPad()) {
+      if (this.capabilities.isIpadOS) {
         $("body").removeClass("footer-nav-ipad");
       } else {
         this.unbindScrolling("footer-nav");

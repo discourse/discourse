@@ -1258,7 +1258,6 @@ fi:
     editing_grace_period_max_diff: "Kuinka monen merkin muutos sallitaan katumusaikana. Jos muutos on isompi tallennetaan uusi viestirevisio (luottamustasolla 0 ja 1)."
     editing_grace_period_max_diff_high_trust: "Kuinka monen merkin muutos sallitaan katumusaikana. Jos muutos on isompi tallennetaan uusi viestirevisio (luottamustasosta 2 ylöspäin)."
     staff_edit_locks_post: "Viesti lukitaan muokkauksilta, jos henkilökunnan jäsen muokkaa sitä"
-    post_edit_time_limit: "Kirjoittaja voi muokata viestiään (n) minuutin ajan viestin lähettämisen jälkeen. Aseta 0 niin voi muokata aina."
     edit_history_visible_to_public: "Salli kaikkien nähdä muokatun viestin edelliset versiot. Jos asetus otetaan pois käytöstä, vain henkilökunta näkee versiot."
     delete_removed_posts_after: "Kirjoittajalta poistetut viestit poistetaan automaattisesti (n) tunnin kuluttua. Jos asetetaan 0, viestit poistetaan välittömästi."
     max_image_width: "Esikatselukuvan suurin sallittu leveys viestissä"
@@ -2539,10 +2538,6 @@ fi:
     dashboard_problems:
       title: "Hallintapaneelissa ongelmia"
       subject_template: "Uusia neuvoja sivustosi hallintapaneelissa"
-      text_body_template: |
-        Meillä on joitakin neuvoja ja suosituksia nykyisiin sivustoasetuksiisi pohjautuen.
-
-        Katsele niitä [sivuston hallintapaneelissa](%{base_url}/admin).
     new_user_of_the_month:
       title: "Olet kuukauden tulokas!"
       subject_template: "Olet kuukauden tulokas!"

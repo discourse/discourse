@@ -4,6 +4,7 @@ import Category from "discourse/models/category";
 import { search as searchCategoryTag } from "discourse/lib/category-tag-search";
 import userSearch from "discourse/lib/user-search";
 import { userPath } from "discourse/lib/url";
+import { emojiUnescape } from "discourse/lib/text";
 import User from "discourse/models/user";
 import Post from "discourse/models/post";
 import Topic from "discourse/models/topic";
@@ -31,6 +32,7 @@ export function translateResults(results, opts) {
     }
     post = Post.create(post);
     post.set("topic", topicMap[post.topic_id]);
+    post.blurb = emojiUnescape(post.blurb);
     return post;
   });
 

@@ -1,7 +1,11 @@
 import { escapeExpression } from "discourse/lib/utilities";
 import { ajax } from "discourse/lib/ajax";
 import round from "discourse/lib/round";
-import { fillMissingDates, formatUsername } from "discourse/lib/utilities";
+import {
+  fillMissingDates,
+  formatUsername,
+  toNumber
+} from "discourse/lib/utilities";
 import computed from "ember-addons/ember-computed-decorators";
 import { number, durationTiny } from "discourse/lib/formatter";
 import { renderAvatar } from "discourse/helpers/user-avatar";
@@ -374,14 +378,14 @@ const Report = Discourse.Model.extend({
 
   _secondsLabel(value) {
     return {
-      value,
+      value: toNumber(value),
       formatedValue: durationTiny(value)
     };
   },
 
   _percentLabel(value) {
     return {
-      value,
+      value: toNumber(value),
       formatedValue: value ? `${value}%` : "—"
     };
   },
@@ -394,14 +398,14 @@ const Report = Discourse.Model.extend({
     const formatedValue = () => (formatNumbers ? number(value) : value);
 
     return {
-      value,
+      value: toNumber(value),
       formatedValue: value ? formatedValue() : "—"
     };
   },
 
   _bytesLabel(value) {
     return {
-      value,
+      value: toNumber(value),
       formatedValue: I18n.toHumanSize(value)
     };
   },

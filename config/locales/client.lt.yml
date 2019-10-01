@@ -328,6 +328,8 @@ lt:
     choose_message:
       none_found: "Žinučių nėra."
     review:
+      explain:
+        total: "Viso"
       delete: "Pašalinti"
       settings:
         save_changes: "Išsaugoti pakeitimus"
@@ -1165,7 +1167,6 @@ lt:
         title_missing: "Antraštė turi būti užpildyta"
         title_too_short: "Tekstas turi būti bent {{min}} simbolių ilgumo"
         title_too_long: "Tekstas negali būti viršyti {{max}} simbolių"
-        post_missing: "Įrašas negali būti tuščias"
         post_length: "Įrašas turi būti bent {{min}} simbolių ilgumo"
         category_missing: "Jūs privalote pasirinkti kategoriją"
         tags_missing: "Privalote pasirinkti bent {{count}} gairę"
@@ -1182,7 +1183,6 @@ lt:
       title_placeholder: "Apibūdinkite apie ka bus ši diskusija vienu trumpu sakiniu"
       title_or_link_placeholder: "Įveskite pavadinimą, arba įklijuokite nuorodą čia"
       edit_reason_placeholder: "kodėl jūs redaguojate?"
-      show_edit_reason: "(pridėti redagavimo priežastį)"
       reply_placeholder: "Įrašyti čia. "
       view_new_post: "Peržiūrėksavo naują įrašą."
       saving: "Saugoma..."
@@ -1248,7 +1248,6 @@ lt:
       title: "pranešimai kai paminimas @name , atsakomi tavo įrašai, temos, žinutės ir pan."
       none: "Šiuo metu neįmanoma pakrauti pranešimų."
       empty: "Pranešimų nėra"
-      more: "Žiūrėti senesnius pranešimus"
       mentioned: "<span>{{username}}</span> {{description}}"
       group_mentioned: "<span>{{username}}</span> {{description}}"
       quoted: "<span>{{username}}</span> {{description}}"

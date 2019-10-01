@@ -116,6 +116,7 @@ class PostRevisor
   # - bypass_bump: do not bump the topic, even if last post
   # - skip_validations: ask ActiveRecord to skip validations
   # - skip_revision: do not create a new PostRevision record
+  # - skip_staff_log: skip creating an entry in the staff action log
   def revise!(editor, fields, opts = {})
     @editor = editor
     @fields = fields.with_indifferent_access
@@ -183,7 +184,7 @@ class PostRevisor
     end
 
     # We log staff edits to posts
-    if @editor.staff? && @editor.id != @post.user.id && @fields.has_key?('raw')
+    if @editor.staff? && @editor.id != @post.user.id && @fields.has_key?('raw') && !@opts[:skip_staff_log]
       StaffActionLogger.new(@editor).log_post_edit(
         @post,
         old_raw: old_raw

@@ -61,6 +61,23 @@ before_fork do |server, worker|
       table.classify.constantize.first rescue nil
     end
 
+    # ensure we have a full schema cache in case we missed something above
+    ActiveRecord::Base.connection.data_sources.each do |table|
+      ActiveRecord::Base.connection.schema_cache.add(table)
+    end
+
+    schema_cache = ActiveRecord::Base.connection.schema_cache
+
+    # load up schema cache for all multisite assuming all dbs have
+    # an identical schema
+    RailsMultisite::ConnectionManagement.each_connection do
+      dup_cache = schema_cache.dup
+      # this line is not really needed, but just in case the
+      # underlying implementation changes lets give it a shot
+      dup_cache.connection = nil
+      ActiveRecord::Base.connection.schema_cache = dup_cache
+    end
+
     # router warm up
     Rails.application.routes.recognize_path('abc') rescue nil
 

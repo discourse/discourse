@@ -28,7 +28,7 @@ class CookedPostProcessor
     @cooking_options = @cooking_options.symbolize_keys
 
     @doc = Nokogiri::HTML::fragment(post.cook(post.raw, @cooking_options))
-    @has_oneboxes = @doc.css("aside.onebox").count > 0
+    @has_oneboxes = post.post_analyzer.found_oneboxes?
     @size_cache = {}
 
     @disable_loading_image = !!opts[:disable_loading_image]

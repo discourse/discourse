@@ -78,6 +78,12 @@ class Reviewable < ActiveRecord::Base
     )
   end
 
+  # This number comes from looking at forums in the wild and what numbers work.
+  # As the site accumulates real data it'll be based on the site activity instead.
+  def self.typical_sensitivity
+    12.5
+  end
+
   # Generate `pending?`, `rejected?`, etc helper methods
   statuses.each do |name, id|
     define_method("#{name}?") { status == id }
@@ -195,11 +201,13 @@ class Reviewable < ActiveRecord::Base
     return Float::MAX if sensitivity == 0
 
     ratio = sensitivity / Reviewable.sensitivity[:low].to_f
-    high = PluginStore.get('reviewables', "priority_#{Reviewable.priorities[:high]}")
-    return (10.0 * scale) if high.nil?
+    high = (
+      PluginStore.get('reviewables', "priority_#{Reviewable.priorities[:high]}") ||
+      typical_sensitivity
+    ).to_f
 
     # We want this to be hard to reach
-    (high.to_f * ratio) * scale
+    ((high.to_f * ratio) * scale).truncate(2)
   end
 
   def self.sensitivity_score(sensitivity, scale: 1.0)

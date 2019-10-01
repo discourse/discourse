@@ -1246,7 +1246,6 @@ it:
     editing_grace_period_max_diff: "Numero massimo di modifiche ai caratteri consentite durante la modifica del periodo di tolleranza, se più modifiche memorizzano un'altra revisione post (Livello Esperienza 0 e 1)"
     editing_grace_period_max_diff_high_trust: "Numero massimo di modifiche ai caratteri consentite durante la modifica del periodo di tolleranza, se più modifiche memorizzano un'altra revisione post (Livello Esperienza 2 e successivi)"
     staff_edit_locks_post: "I post saranno bloccati dalla modifica se sono modificati dai membri dello staff"
-    post_edit_time_limit: "L'autore può modificare il proprio post per (n) minuti dopo la pubblicazione. Imposta su 0 per sempre."
     edit_history_visible_to_public: "Permetti a tutti di vedere le precedenti versioni di un messaggio modificato. Se disabilitato solo i membri dello staff possono vederle."
     delete_removed_posts_after: "I messaggi rimossi dall'autore saranno automaticamente cancellati dopo (n) ore. Se impostato a 0, i messaggi saranno cancellati subito."
     max_image_width: "Larghezza massima delle miniature delle immagini in un messaggio"
@@ -2568,10 +2567,6 @@ it:
     dashboard_problems:
       title: "Problemi Cruscotto"
       subject_template: "Nuovo consiglio sul Cruscotto del tuo sito"
-      text_body_template: |
-        Abbiamo alcuni nuovi consigli e raccomandazioni per te in base alle tue attuali impostazioni del sito.
-
-         [Visita il Cruscotto del tuo sito] (%{base_url}/admin) per vederlo.
     new_user_of_the_month:
       title: "Sei il Nuovo Utente del Mese!"
       subject_template: "Sei il Nuovo Utente del Mese!"

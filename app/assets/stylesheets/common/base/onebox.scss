@@ -464,8 +464,9 @@ aside.onebox.twitterstatus .onebox-body {
   }
 }
 
-// Onebox - Imgur - Album
-.onebox.imgur-album {
+// Onebox - Imgur/Flickr - Album
+.onebox.imgur-album,
+.onebox.flickr-album {
   .outer-box {
     position: absolute;
     z-index: z("base");

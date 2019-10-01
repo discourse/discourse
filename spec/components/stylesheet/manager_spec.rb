@@ -68,7 +68,7 @@ describe Stylesheet::Manager do
 
   describe 'digest' do
     after do
-      DiscoursePluginRegistry.stylesheets.delete "fake_file"
+      DiscoursePluginRegistry.reset!
     end
 
     it 'can correctly account for plugins in digest' do

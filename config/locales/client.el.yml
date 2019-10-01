@@ -256,6 +256,8 @@ el:
       title:
         placeholder: "γράψε εδώ τον τίτλο του νήματος"
     review:
+      explain:
+        total: "Σύνολο"
       delete: "Σβήσιμο"
       settings:
         save_changes: "Αποθήκευση Αλλαγών"
@@ -1076,7 +1078,6 @@ el:
         title_missing: "Απαιτείται τίτλος"
         title_too_short: "Ο τίτλος πρέπει να έχει τουλάχιστον {{min}} χαρακτήρες"
         title_too_long: "Ο τίτλος δεν μπορεί να έχει πάνω από {{max}} χαρακτήρες"
-        post_missing: "Μία ανάρτηση δεν μπορεί να είναι κενή"
         post_length: "Κάθε ανάρτηση πρέπει να περιέχει τουλάχιστον {{min}} χαρακτήρες"
         category_missing: "Πρέπει να διαλέξεις μια κατηγορία"
       save_edit: "Αποθήκευση Επεξεργασίας"
@@ -1092,7 +1093,6 @@ el:
       title_placeholder: "Τι αφορά αυτή η συζήτησης σε μία σύντομη πρόταση;"
       title_or_link_placeholder: "Πληκτρολόγησε τίτλο, ή κάνε επικόλληση ένα σύνδεσμο εδώ"
       edit_reason_placeholder: "γιατί αναθεωρείς;"
-      show_edit_reason: "(δώσε αιτιολόγηση για την επεξεργασία) "
       topic_featured_link_placeholder: "Εισάγετε τον συνδέσμο που εμφανίζεται με τον τίτλο"
       reply_placeholder: "Πληκτρολόγησε εδώ. Χρησιμοποίησε την μορφή Markdown, BBCode, ή HTML. Σύρε ή επικόλλησε εικόνες."
       view_new_post: "Δες τη νέα σου ανάρτηση."
@@ -1140,7 +1140,6 @@ el:
       title: "ειδοποιήσεις για αναφορές στο @name, απαντήσεις στις αναρτήσεις σου και στα νήματά σου, προσωπικά μηνύματα, κλπ."
       none: "Αυτή τη στιγμή δεν είναι δυνατόν να φορτωθούν οι ειδοποιήσεις."
       empty: "Δεν βρέθηκαν ειδοποιήσεις."
-      more: "εμφάνιση παλαιότερων ειδοποιήσεων"
       mentioned: "<span>{{username}}</span> {{description}}"
       group_mentioned: "<span>{{username}}</span> {{description}}"
       quoted: "<span>{{username}}</span> {{description}}"

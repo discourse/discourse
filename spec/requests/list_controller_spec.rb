@@ -320,7 +320,7 @@ RSpec.describe ListController do
     it 'renders latest RSS' do
       get "/latest.rss"
       expect(response.status).to eq(200)
-      expect(response.content_type).to eq('application/rss+xml')
+      expect(response.media_type).to eq('application/rss+xml')
     end
 
     it 'renders links correctly with subfolder' do
@@ -337,14 +337,14 @@ RSpec.describe ListController do
     it 'renders top RSS' do
       get "/top.rss"
       expect(response.status).to eq(200)
-      expect(response.content_type).to eq('application/rss+xml')
+      expect(response.media_type).to eq('application/rss+xml')
     end
 
     TopTopic.periods.each do |period|
       it "renders #{period} top RSS" do
         get "/top/#{period}.rss"
         expect(response.status).to eq(200)
-        expect(response.content_type).to eq('application/rss+xml')
+        expect(response.media_type).to eq('application/rss+xml')
       end
     end
   end
@@ -433,7 +433,7 @@ RSpec.describe ListController do
         it 'renders RSS' do
           get "/c/#{category.slug}.rss"
           expect(response.status).to eq(200)
-          expect(response.content_type).to eq('application/rss+xml')
+          expect(response.media_type).to eq('application/rss+xml')
         end
 
         it "renders RSS in subfolder correctly" do

@@ -112,6 +112,7 @@ class SiteSetting < ActiveRecord::Base
   end
 
   WATCHED_SETTINGS ||= [
+    :default_locale,
     :attachment_content_type_blacklist,
     :attachment_filename_blacklist,
     :unicode_username_character_whitelist,

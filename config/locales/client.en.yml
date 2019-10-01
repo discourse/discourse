@@ -124,6 +124,12 @@ en:
         x_days:
           one: "%{count} day ago"
           other: "%{count} days ago"
+        x_months:
+          one: "%{count} month ago"
+          other: "%{count} months ago"
+        x_years:
+          one: "%{count} year ago"
+          other: "%{count} years ago"
       later:
         x_days:
           one: "%{count} day later"
@@ -378,6 +384,9 @@ en:
         total: "Total"
         min_score_visibility: "Minimum Score for Visibility"
         score_to_hide: "Score to Hide Post"
+        take_action_bonus:
+          name: "took action"
+          title: "When a staff member chooses to take action the flag is given a bonus."
         user_accuracy_bonus:
           name: "user accuracy"
           title: "Users whose flags have been historically agreed with are given a bonus."
@@ -1316,9 +1325,9 @@ en:
       enabled: "This site is in read only mode. Please continue to browse, but replying, likes, and other actions are disabled for now."
       login_disabled: "Login is disabled while the site is in read only mode."
       logout_disabled: "Logout is disabled while the site is in read only mode."
-    too_few_topics_and_posts_notice: "Let's <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>start the discussion!</a> There are <strong>%{currentTopics} / %{requiredTopics}</strong> topics and <strong>%{currentPosts} / %{requiredPosts}</strong> posts – visitors need more to read and reply to. Only staff can see this message."
-    too_few_topics_notice: "Let's <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>start the discussion!</a> There are <strong>%{currentTopics} / %{requiredTopics}</strong> topics – visitors need more to read and reply to. Only staff can see this message."
-    too_few_posts_notice: "Let's <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>start the discussion!</a> There are <strong>%{currentPosts} / %{requiredPosts}</strong> posts – visitors need more to read and reply to. Only staff can see this message."
+    too_few_topics_and_posts_notice: "Let's <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>start the discussion!</a> There are <strong>%{currentTopics}</strong> topics and <strong>%{currentPosts}</strong> posts. Visitors need more to read and reply to – we recommend at least <strong>%{requiredTopics}</strong> topics and <strong>%{requiredPosts}</strong> posts. Only staff can see this message."
+    too_few_topics_notice: "Let's <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>start the discussion!</a> There are <strong>%{currentTopics}</strong> topics. Visitors need more to read and reply to – we recommend at least <strong>%{requiredTopics}</strong> topics. Only staff can see this message."
+    too_few_posts_notice: "Let's <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>start the discussion!</a> There are <strong>%{currentPosts}</strong> posts. Visitors need more to read and reply to – we recommend at least <strong>%{requiredPosts}</strong> posts. Only staff can see this message."
     logs_error_rate_notice:
       # keys ending with _MF use message format, see https://meta.discourse.org/t/message-format-support-for-localization/7035 for details
       reached_hour_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# error/hour} other {# errors/hour}}</a> reached site setting limit of {limit, plural, one {# error/hour} other {# errors/hour}}."
@@ -1612,11 +1621,12 @@ en:
         title_missing: "Title is required"
         title_too_short: "Title must be at least {{min}} characters"
         title_too_long: "Title can't be more than {{max}} characters"
-        post_missing: "Post can't be empty"
+        post_missing: "Post can’t be empty"
         post_length: "Post must be at least {{min}} characters"
         try_like: "Have you tried the {{heart}} button?"
         category_missing: "You must choose a category"
         tags_missing: "You must choose at least {{count}} tags"
+        topic_template_not_modified: "Please add details and specifics to your topic by editing the topic template."
 
       save_edit: "Save Edit"
       overwrite_edit: "Overwrite Edit"
@@ -1635,7 +1645,6 @@ en:
       title_placeholder: "What is this discussion about in one brief sentence?"
       title_or_link_placeholder: "Type title, or paste a link here"
       edit_reason_placeholder: "why are you editing?"
-      show_edit_reason: "(add edit reason)"
       topic_featured_link_placeholder: "Enter link shown with title."
       remove_featured_link: "Remove link from topic."
       reply_placeholder: "Type here. Use Markdown, BBCode, or HTML to format. Drag or paste images."
@@ -1726,7 +1735,6 @@ en:
       title: "notifications of @name mentions, replies to your posts and topics, messages, etc"
       none: "Unable to load notifications at this time."
       empty: "No notifications found."
-      more: "view older notifications"
       post_approved: "Your post was approved"
       reviewable_items: "items requiring review"
       mentioned: "<span>{{username}}</span> {{description}}"
@@ -1892,6 +1900,7 @@ en:
     go_back: "go back"
     not_logged_in_user: "user page with summary of current activity and preferences"
     current_user: "go to your user page"
+    view_all: "view all"
 
     topics:
       new_messages_marker: "last visit"

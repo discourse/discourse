@@ -1356,19 +1356,22 @@ describe Post do
       ids << Fabricate(:post, cooked: "A post with optimized image <img src='https://cdn.example.com/bucket/optimized/1X/abc/defghijklmno.png'>").id
       Fabricate(:post, cooked: "A post with external link <a href='https://example.com/wp-content/uploads/abcdef.gif'>")
       ids << Fabricate(:post, cooked: 'A post with missing upload <img src="https://cdn.example.com/images/transparent.png" data-orig-src="upload://defghijklmno.png">').id
+      ids << Fabricate(:post, cooked: 'A post with video upload <video width="100%" height="100%" controls=""><source src="https://cdn.example.com/uploads/short-url/XefghijklmU9.mp4"><a href="https://cdn.example.com/uploads/short-url/XefghijklmU9.mp4">https://cdn.example.com/uploads/short-url/XefghijklmU9.mp4</a></video>').id
       expect(Post.have_uploads.order(:id).pluck(:id)).to eq(ids)
     end
   end
 
   describe '#each_upload_url' do
     it "correctly identifies all upload urls" do
+      SiteSetting.authorized_extensions = "*"
       upload1 = Fabricate(:upload)
       upload2 = Fabricate(:upload)
+      upload3 = Fabricate(:video_upload)
 
       set_cdn_url "https://awesome.com/somepath"
 
       post = Fabricate(:post, raw: <<~RAW)
-      A post with image and link upload.
+      A post with image, video and link upload.
 
       ![](#{upload1.short_url})
 
@@ -1376,6 +1379,8 @@ describe Post do
 
       <a href='#{Discourse.base_url}#{upload2.url}'>Link to upload</a>
       ![](http://example.com/external.png)
+
+      #{Discourse.base_url}#{upload3.short_path}
       RAW
 
       urls = []
@@ -1389,13 +1394,15 @@ describe Post do
       expect(urls).to contain_exactly(
         upload1.url,
         "#{GlobalSetting.cdn_url}#{upload1.url}",
-        "#{Discourse.base_url}#{upload2.url}"
+        "#{Discourse.base_url}#{upload2.url}",
+        "#{Discourse.base_url}#{upload3.short_path}"
       )
 
       expect(paths).to contain_exactly(
         upload1.url,
         upload1.url,
-        upload2.url
+        upload2.url,
+        nil
       )
     end
 

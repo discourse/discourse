@@ -138,7 +138,7 @@ class ThemeField < ActiveRecord::Base
       when "hbs"
         js_compiler.append_ember_template(filename.sub("discourse/templates/", ""), content)
       when "raw.hbs"
-        js_compiler.append_raw_template(filename, content)
+        js_compiler.append_raw_template(filename.sub("discourse/templates/", ""), content)
       else
         raise ThemeJavascriptCompiler::CompileError.new(I18n.t("themes.compile_error.unrecognized_extension", extension: extension))
       end
@@ -343,7 +343,7 @@ class ThemeField < ActiveRecord::Base
   end
 
   def compile_scss
-    Stylesheet::Compiler.compile("@import \"common/foundation/variables\"; @import \"theme_variables\"; @import \"theme_field\";",
+    Stylesheet::Compiler.compile("@import \"common/foundation/variables\"; @import \"common/foundation/mixins\"; @import \"theme_variables\"; @import \"theme_field\";",
       "theme.scss",
       theme_field: self.value.dup,
       theme: self.theme

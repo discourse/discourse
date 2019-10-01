@@ -1026,39 +1026,37 @@ export default Ember.Component.extend({
       Ember.run.debounce(
         this,
         () => {
-          const inlineOneboxes = {};
           const oneboxes = {};
+          const inlineOneboxes = {};
 
-          let oneboxLeft =
-            this.siteSettings.max_oneboxes_per_post -
-            $(
-              `aside.onebox, a.${INLINE_ONEBOX_CSS_CLASS}, a.${LOADING_ONEBOX_CSS_CLASS}`
-            ).length;
+          // Oneboxes = `a.onebox` -> `a.onebox-loading` -> `aside.onebox`
+          // Inline Oneboxes = `a.inline-onebox-loading` -> `a.inline-onebox`
+
+          let loadedOneboxes = $preview.find(
+            `aside.onebox, a.${LOADING_ONEBOX_CSS_CLASS}, a.${INLINE_ONEBOX_CSS_CLASS}`
+          ).length;
 
           $preview
-            .find(`a.${INLINE_ONEBOX_LOADING_CSS_CLASS}, a.onebox`)
-            .each((_index, link) => {
+            .find(`a.onebox, a.${INLINE_ONEBOX_LOADING_CSS_CLASS}`)
+            .each((_, link) => {
               const $link = $(link);
               const text = $link.text();
-
               const isInline =
                 $link.attr("class") === INLINE_ONEBOX_LOADING_CSS_CLASS;
+              const m = isInline ? inlineOneboxes : oneboxes;
 
-              const map = isInline ? inlineOneboxes : oneboxes;
-
-              if (oneboxLeft <= 0) {
-                if (map[text] !== undefined) {
-                  map[text].push(link);
+              if (loadedOneboxes < this.siteSettings.max_oneboxes_per_post) {
+                if (m[text] === undefined) {
+                  m[text] = [];
+                  loadedOneboxes++;
+                }
+                m[text].push(link);
+              } else {
+                if (m[text] !== undefined) {
+                  m[text].push(link);
                 } else if (isInline) {
                   $link.removeClass(INLINE_ONEBOX_LOADING_CSS_CLASS);
                 }
-              } else {
-                if (!map[text]) {
-                  map[text] = [];
-                  oneboxLeft--;
-                }
-
-                map[text].push(link);
               }
             });
 
@@ -1072,6 +1070,7 @@ export default Ember.Component.extend({
         },
         450
       );
+
       // Short upload urls need resolution
       resolveAllShortUrls(ajax);
 

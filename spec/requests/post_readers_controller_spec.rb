@@ -57,18 +57,31 @@ describe PostReadersController do
         expect(readers).to be_empty
       end
 
-      it "doesn't include current_user in the readers list" do
-        TopicUser.create!(user: admin, topic: @group_message, last_read_post_number: 3)
-
-         get '/post_readers.json', params: { id: @post.id }
-         reader = JSON.parse(response.body)['post_readers'].detect { |r| r['username'] == admin.username }
-
-         expect(reader).to be_nil
-      end
-
       it "doesn't include users without reading progress on first post" do
         @post.update(post_number: 1)
         TopicUser.create!(user: reader, topic: @group_message, last_read_post_number: nil)
+
+        get '/post_readers.json', params: { id: @post.id }
+        readers = JSON.parse(response.body)['post_readers']
+
+        expect(readers).to be_empty
+      end
+
+      it "doesn't include staged users" do
+        TopicUser.create!(user: reader, topic: @group_message, last_read_post_number: 4)
+        reader.update(staged: true)
+
+        get '/post_readers.json', params: { id: @post.id }
+        readers = JSON.parse(response.body)['post_readers']
+
+        expect(readers).to be_empty
+      end
+
+      it "doesn't include non-members when the post is a whisper" do
+        @post.update(post_type: Post.types[:whisper])
+        non_member_reader = Fabricate(:user)
+        @group_message.allowed_users << non_member_reader
+        TopicUser.create!(user: non_member_reader, topic: @group_message, last_read_post_number: 4)
 
         get '/post_readers.json', params: { id: @post.id }
         readers = JSON.parse(response.body)['post_readers']

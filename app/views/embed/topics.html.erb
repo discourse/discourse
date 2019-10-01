@@ -4,8 +4,8 @@
       <div class='topic-list-item'>
         <%- if @template == "complete" %>
           <div class='main-link'>
-            <div class="topic-details-flex">
-              <div class='topic-details-column-1'>
+            <div class="topic-column-wrapper">
+              <div class='topic-column details-column'>
                 <div class='topic-title-link'>
                   <a target="_parent" href="<%= t.url %>" class="title raw-link raw-topic-link" data-topic-id="<%= t.id %>"><%= t.title %></a>
                 </div>
@@ -38,7 +38,7 @@
                 </div>
               </div>
 
-              <div class='topic-details-column-2'>
+              <div class='topic-column featured-image-column'>
                 <%- if t.image_url.present? %>
                   <div class='topic-featured-image'>
                     <img src="<%= t.image_url %>">

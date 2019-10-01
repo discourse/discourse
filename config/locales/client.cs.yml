@@ -339,6 +339,8 @@ cs:
         placeholder: "sem napište název tématu"
     review:
       in_reply_to: "v odpovědi na"
+      explain:
+        total: "Celkem"
       delete: "Smazat"
       settings:
         save_changes: "Uložit změny"
@@ -1312,7 +1314,6 @@ cs:
         title_missing: "Název musí být vyplněn"
         title_too_short: "Název musí být dlouhý alespoň {{min}} znaků"
         title_too_long: "Název nemůže být delší než {{max}} znaků"
-        post_missing: "Příspěvek nemůže být prázdný"
         post_length: "Příspěvek musí být alespoň {{min}} znaků dlouhý"
         category_missing: "Musíte vybrat kategorii"
         tags_missing: "Vybraných tagů musí být nejméně {{count}}"
@@ -1332,7 +1333,6 @@ cs:
       title_placeholder: "O čem je ve zkratce tato diskuze?"
       title_or_link_placeholder: "Sem vložte název téma"
       edit_reason_placeholder: "proč byla nutná úprava?"
-      show_edit_reason: "(přidat důvod úpravy)"
       topic_featured_link_placeholder: "Zadej odkaz ukázaný názvem"
       remove_featured_link: "Odstranit odkaz z tématu."
       reply_placeholder: "Pište sem. Můžete použít Markdown, BBCode nebo HTML. Obrázky nahrajte přetáhnutím nebo vložením ze schránky."
@@ -1421,7 +1421,6 @@ cs:
       title: "oznámení o zmínkách pomocí @name, odpovědi na vaše příspěvky a témata, zprávy, atd."
       none: "Notifikace nebylo možné načíst."
       empty: "Žádné upozornění nenalezeny."
-      more: "zobrazit starší oznámení"
       mentioned: "<span>{{username}}</span> {{description}}"
       group_mentioned: "<span>{{username}}</span> {{description}}"
       quoted: "<span>{{username}}</span> {{description}}"

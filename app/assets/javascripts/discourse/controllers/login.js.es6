@@ -217,7 +217,10 @@ export default Ember.Controller.extend(ModalFunctionality, {
       // On Mobile, Android or iOS always go with full screen
       if (
         this.isMobileDevice ||
-        (capabilities && (capabilities.isIOS || capabilities.isAndroid))
+        (capabilities &&
+          (capabilities.isIOS ||
+            capabilities.isAndroid ||
+            capabilities.isSafari))
       ) {
         fullScreenLogin = true;
       }
@@ -346,7 +349,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
         $.removeCookie("destination_url");
         window.location.href = destinationUrl;
       } else if (window.location.pathname === Discourse.getURL("/login")) {
-        window.location.pathname = Discourse.getURL("/");
+        window.location = Discourse.getURL("/");
       } else {
         window.location.reload();
       }

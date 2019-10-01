@@ -716,6 +716,19 @@ export default RestModel.extend({
     return resolved;
   },
 
+  triggerReadPost(postId, readersCount) {
+    const resolved = Ember.RSVP.Promise.resolve();
+    resolved.then(() => {
+      const post = this.findLoadedPost(postId);
+      if (post && readersCount > post.readers_count) {
+        post.set("readers_count", readersCount);
+        this.storePost(post);
+      }
+    });
+
+    return resolved;
+  },
+
   postForPostNumber(postNumber) {
     if (!this.hasPosts) {
       return;

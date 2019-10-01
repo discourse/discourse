@@ -99,6 +99,7 @@ pt:
         topic_closed_error: "Acontece quando é recebida uma resposta, mas que o tópico relacionado foi encerrado."
         bounced_email_error: "A mensagem é um relatório de mensagem redirecionado."
         screened_email_error: "Acontece quando o endereço de e-mail do remetente já foi confirmado."
+        unsubscribe_not_allowed: "Acontece quando desubescrever via e-mail não é permitido para este utilizador."
         email_not_allowed: "Acontece quando um endereço de e-mail não está na lista branca ou está na lista negra."
       unrecognized_error: "Erro Desconhecido"
   errors: &errors
@@ -145,6 +146,7 @@ pt:
         one: tem o comprimento errado (deve ter %{count} caracter)
         other: tem o comprimento errado (deve ter %{count} caracteres)
       other_than: "tem que ser diferente de %{count}"
+      sso_overrides_username: "Nome de utilizador precisa de ser atualizado do lado do fornecedor de SSO, visto a configuração `sso_overrides_username` estar ativada."
     template:
       body: "Ocorreram problemas com os seguintes campos:"
       header:
@@ -153,11 +155,15 @@ pt:
     embed:
       load_from_remote: "Ocorreu um erro no carregamento dessa mensagem."
     site_settings:
+      invalid_category_id: "Especificou uma categoria que não existe"
       invalid_choice:
         one: "Especificou a escolha inválida %{name}"
         other: "Especificou escolhas inválidas %{name}"
       default_categories_already_selected: "Não pode selecionar uma categoria usada noutra lista."
       s3_upload_bucket_is_required: "Não pode ativar carregamentos para o S3 excepto se tiver fornecido o 's3_upload_bucket'."
+      enable_s3_uploads_is_required: "Não pode ativar envio de inventório para S3 a não ser que tenha ativado carregamentos para S3."
+      s3_backup_requires_s3_settings: "Não pode utilizar S3 como local para cópia de segurança a não ser que providencie '%{setting_name}'."
+      s3_bucket_reused: "Não pode utilizar o mesmo balde para 's3_upload_bucket' e 's3_backup_bucket'. Escolha um balde diferente ou use uma localização diferente para cada balde."
   activemodel:
     errors:
       <<: *errors
@@ -628,8 +634,15 @@ pt:
       labels:
         user: Utilizador
     moderators_activity:
+      title: "Atividade de Moderador"
       labels:
         moderator: Moderador
+        flag_count: Bandeiras revistas
+        time_read: Tempo em leitura
+        topic_count: Tópicos criados
+        post_count: Publicações criadas
+        pm_count: PMs criadas
+        revision_count: Revisões
     flags_status:
       labels:
         flag: Tipo

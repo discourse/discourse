@@ -36,7 +36,7 @@ export default Discourse.Route.extend({
         );
         if (log.operation === "restore") {
           // redirect to homepage when the restore is done (session might be lost)
-          window.location.pathname = Discourse.getURL("/");
+          window.location = Discourse.getURL("/");
         }
       } else {
         this.controllerFor("adminBackupsLogs")

@@ -139,7 +139,7 @@ export default function() {
     });
 
     this.get("/topics/private-messages/eviltrout.json", () => {
-      return response({ topic_list: { topics: [] } });
+      return response(fixturesByUrl["/topics/private-messages/eviltrout.json"]);
     });
 
     this.get("/topics/feature_stats.json", () => {

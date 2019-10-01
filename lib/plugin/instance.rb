@@ -129,12 +129,6 @@ class Plugin::Instance
     end
   end
 
-  def whitelist_flag_post_custom_field(field)
-    reloadable_patch do |plugin|
-      ::FlagQuery.register_plugin_post_custom_field(field, plugin) # plugin.enabled? is checked at runtime
-    end
-  end
-
   def whitelist_staff_user_custom_field(field)
     reloadable_patch do |plugin|
       ::User.register_plugin_staff_custom_field(field, plugin) # plugin.enabled? is checked at runtime
@@ -272,7 +266,7 @@ class Plugin::Instance
     automatic_assets.each do |path, contents|
       write_asset(path, contents)
       paths << path
-      assets << [path]
+      assets << [path, nil, directory_name]
     end
 
     delete_extra_automatic_assets(paths)
@@ -522,7 +516,7 @@ class Plugin::Instance
     Rake.add_rakelib(File.dirname(path) + "/lib/tasks")
 
     # Automatically include migrations
-    migration_paths = Rails.configuration.paths["db/migrate"]
+    migration_paths = ActiveRecord::Migrator.migrations_paths
     migration_paths << File.dirname(path) + "/db/migrate"
 
     unless Discourse.skip_post_deployment_migrations?

@@ -53,6 +53,9 @@
       &:hover {
         color: $primary-medium;
         background: $primary-low;
+        .d-icon {
+          color: $primary-medium;
+        }
       }
     }
   }

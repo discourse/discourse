@@ -95,6 +95,12 @@ da:
         x_days:
           one: "%{count} dag siden"
           other: "%{count} dage siden"
+        x_months:
+          one: "%{count} måned siden"
+          other: "%{count} måneder siden"
+        x_years:
+          one: "%{count} år siden"
+          other: "%{count} år siden"
       later:
         x_days:
           one: "%{count} dag senere"
@@ -312,6 +318,10 @@ da:
     review:
       order_by: "Filtrér efter"
       in_reply_to: "som svar til"
+      explain:
+        total: "Total"
+        trust_level_bonus:
+          name: "tillidsniveau"
       claim_help:
         optional: "Du kan gøre krav på dette punkt, for at forhindre andre i at gennemgå det."
         required: "Du skal kræve punkter, før du kan gennemgå dem."
@@ -583,6 +593,7 @@ da:
         remove_owner: "Fjern som Ejer"
         remove_owner_description: "Fjern <b>%{username}</b> som ejer af denne gruppe"
         owner: "Ejer"
+        forbidden: "Du har ikke tilladelse til at se medlemmerne."
       topics: "Emner"
       posts: "Indlæg"
       mentions: "Omtaler"
@@ -1187,9 +1198,6 @@ da:
       enabled: "Dette website kan kun læses lige nu. Fortsæt endelig med at kigge, men der kan ikke svares, likes eller andet indtil videre."
       login_disabled: "Log in er deaktiveret midlertidigt, da forummet er i \"kun læsnings\" tilstand."
       logout_disabled: "Log ud er deaktiveret mens websitet er i læs kun tilstand"
-    too_few_topics_and_posts_notice: "Lad os <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>starte diskussionen!</a> Der er <strong>%{currentTopics} / %{requiredTopics}</strong> emner og <strong>%{currentPosts} / %{requiredPosts}</strong> indlæg - besøgende har brug for mere at læse og svare på. Kun hjælperteam kan se denne besked."
-    too_few_topics_notice: "Lad os <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>starte diskussionen!</a> Der er <strong>%{currentTopics} / %{requiredTopics}</strong> emner - besøgende har brug for mere at læse og svare på. Kun hjælperteam kan se denne besked."
-    too_few_posts_notice: "Lad os <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>starte diskussionen!</a> Der er <strong>%{currentPosts} / %{requiredPosts}</strong> indlæg - besøgende har brug for mere at læse og svare på. Kun hjælperteam kan se denne besked."
     logs_error_rate_notice:
       reached_hour_MF: "<b>{relativeAge}</b> - <a href='{url}' target='_blank'>{rate, plural, en {# error / hour} anden {# fejl / time}}</a> nåede indstillingsgrænsen på {limit, plural, en {# error / hour} anden {# fejl / hour}}."
       reached_minute_MF: "<b>{relativeAge}</b> - <a href='{url}' target='_blank'>{rate, plural, en {# error / minute} other {# fejl / minut}}</a> nåede indstillingsgrænsen på {limit, plural, en {# error / minute} anden {# fejl / minut}}."
@@ -1338,6 +1346,9 @@ da:
         name: "GitHub"
         title: "med GitHub"
         message: "Logger ind med GitHub (kontrollér at pop-op-blokering ikke er aktiv)"
+      discord:
+        name: "Discord"
+        title: "med Discord"
     invites:
       accept_title: "Invitation"
       welcome_to: "Velkommen til %{site_name}!"
@@ -1446,7 +1457,7 @@ da:
         title_missing: "Titlen er påkrævet"
         title_too_short: "Titlen skal være på mindst {{min}} tegn"
         title_too_long: "Titlen skal være kortere end {{max}} tegn."
-        post_missing: "Indlægget kan ikke være tomt."
+        post_missing: "Indlæg kan ikke være tomt"
         post_length: "Indlægget skal være på mindst {{min}} tegn."
         try_like: "Har du prøvet {{heart}}knappen?"
         category_missing: "Du skal vælge en kategori."
@@ -1467,7 +1478,6 @@ da:
       title_placeholder: "Hvad handler diskussionen om i korte træk?"
       title_or_link_placeholder: "Skriv titlen eller indsæt et link her"
       edit_reason_placeholder: "hvorfor redigerer du?"
-      show_edit_reason: "(tilføj en begrundelse for ændringen)"
       topic_featured_link_placeholder: "Indtast link som vises med titel."
       remove_featured_link: "Fjern link fra emne."
       reply_placeholder: "Skriv her. Brug Markdown, BBCode eller HTML til at formattere. Træk eller indsæt billeder."
@@ -1554,7 +1564,6 @@ da:
       title: "notifikationer ved @navns nævnelse, svar på dine indlæg og emner, beskeder, mv."
       none: "Ikke i stand til at indlæse notifikationer for tiden."
       empty: "Ingen notifikationer fundet."
-      more: "se ældre notifikationer"
       post_approved: "Dit indlæg blev godkendt"
       reviewable_items: "genstande, der kræver gennemgang"
       mentioned: "<span>{{username}}</span> {{description}}"
@@ -1711,6 +1720,7 @@ da:
     go_back: "gå tilbage"
     not_logged_in_user: "bruger side, med oversigt over aktivitet og indstillinger"
     current_user: "gå til brugerside"
+    view_all: "vis alle"
     topics:
       new_messages_marker: "sidste besøg"
       bulk:
@@ -2197,6 +2207,7 @@ da:
         reply: "begynd at skrive et svar på dette indlæg"
         like: "like dette indlæg"
         has_liked: "Du liker dette indlæg"
+        read_indicator: "medlemmer der har læst dette indlæg"
         undo_like: "fortryd like"
         edit: "redigér dette indlæg"
         edit_action: "Rediger"
@@ -2898,6 +2909,8 @@ da:
           view_table: "tabel"
           view_graph: "graf"
           refresh_report: "Genopfrisk rapporten"
+          start_date: "Startdato (UTC)"
+          end_date: "Slutdato (UTC)"
           groups: "Alle grupper"
           disabled: "Denne rapport er deaktiveret"
           totals_for_sample: "Totaler for prøve"
@@ -2948,6 +2961,9 @@ da:
               staff: "Gruppeejer og hjælpeteam"
               owners: "Gruppeejere"
               description: "Administratorer kan se alle grupper."
+            members_visibility_levels:
+              title: "Hvem kan se medlemmer for denne gruppe?"
+              description: "Admins kan se medlemmer af alle grupper."
           membership:
             automatic: Automatisk
             trust_level: Tillidsniveau
@@ -3377,6 +3393,7 @@ da:
           warning: "Dette vil tilsidesætte alle relaterede sideindstillinger permanent."
           overridden: Dit websteds standard robots.txt-fil er tilsidesat.
         email_style:
+          html: "HTML skabelon"
           css: "CSS"
       email:
         title: "Emails"

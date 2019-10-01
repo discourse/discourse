@@ -19,6 +19,7 @@ describe Guardian do
   fab!(:automatic_group) { Fabricate(:group, automatic: true) }
   fab!(:plain_category) { Fabricate(:category) }
 
+  let(:trust_level_0) { build(:user, trust_level: 0) }
   let(:trust_level_1) { build(:user, trust_level: 1) }
   let(:trust_level_2) { build(:user, trust_level: 2) }
   let(:trust_level_3) { build(:user, trust_level: 3) }
@@ -346,12 +347,24 @@ describe Guardian do
       end
     end
 
+    it "allows TL0 to message group with messageable_level = everyone" do
+      group.update!(messageable_level: Group::ALIAS_LEVELS[:everyone])
+      expect(Guardian.new(trust_level_0).can_send_private_message?(group)).to eq(true)
+      expect(Guardian.new(user).can_send_private_message?(group)).to eq(true)
+    end
+
     it "respects the group members messageable_level" do
       group.update!(messageable_level: Group::ALIAS_LEVELS[:members_mods_and_admins])
       expect(Guardian.new(user).can_send_private_message?(group)).to eq(false)
 
       group.add(user)
       expect(Guardian.new(user).can_send_private_message?(group)).to eq(true)
+
+      expect(Guardian.new(trust_level_0).can_send_private_message?(group)).to eq(false)
+
+      #  group membership trumps min_trust_to_send_messages setting
+      group.add(trust_level_0)
+      expect(Guardian.new(trust_level_0).can_send_private_message?(group)).to eq(true)
     end
 
     it "respects the group owners messageable_level" do

@@ -116,10 +116,19 @@ class Post < ActiveRecord::Base
   }
 
   scope :have_uploads, -> {
-    where(
-      "(posts.cooked LIKE '%<a %' OR posts.cooked LIKE '%<img %') AND (posts.cooked LIKE ? OR posts.cooked LIKE '%/original/%' OR posts.cooked LIKE '%/optimized/%' OR posts.cooked LIKE '%data-orig-src=%')",
-      "%/uploads/#{RailsMultisite::ConnectionManagement.current_db}/%"
-    )
+    where("
+          (
+            posts.cooked LIKE '%<a %' OR
+            posts.cooked LIKE '%<img %' OR
+            posts.cooked LIKE '%<video %'
+          ) AND (
+            posts.cooked LIKE ? OR
+            posts.cooked LIKE '%/original/%' OR
+            posts.cooked LIKE '%/optimized/%' OR
+            posts.cooked LIKE '%data-orig-src=%' OR
+            posts.cooked LIKE '%/uploads/short-url/%'
+          )", "%/uploads/#{RailsMultisite::ConnectionManagement.current_db}/%"
+        )
   }
 
   delegate :username, to: :user
@@ -168,6 +177,11 @@ class Post < ActiveRecord::Base
     if user && user.new_user_posting_on_first_day? && post_number && post_number > 1
       RateLimiter.new(user, "first-day-replies-per-day", SiteSetting.max_replies_in_first_day, 1.day.to_i)
     end
+  end
+
+  def readers_count
+    read_count = reads - 1 # Excludes poster
+    read_count < 0 ? 0 : read_count
   end
 
   def publish_change_to_clients!(type, opts = {})
@@ -913,10 +927,14 @@ class Post < ActiveRecord::Base
         sha1 = Upload.sha1_from_short_url(src)
         yield(src, nil, sha1)
         next
+      elsif src.include?("/uploads/short-url/")
+        sha1 = Upload.sha1_from_short_path(src)
+        yield(src, nil, sha1)
+        next
       end
 
       next if upload_patterns.none? { |pattern| src =~ pattern }
-      next if Rails.configuration.multisite && src.exclude?(current_db) && src.exclude?("short-url")
+      next if Rails.configuration.multisite && src.exclude?(current_db)
 
       src = "#{SiteSetting.force_https ? "https" : "http"}:#{src}" if src.start_with?("//")
       next unless Discourse.store.has_been_uploaded?(src) || (include_local_upload && src =~ /\A\/[^\/]/i)

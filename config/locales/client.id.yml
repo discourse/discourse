@@ -244,6 +244,8 @@ id:
       title:
         placeholder: "tulis judul topik disini"
     review:
+      explain:
+        total: "Total"
       delete: "Hapus"
       settings:
         save_changes: "Simpan perubahan"
@@ -859,7 +861,6 @@ id:
         title_missing: "Judul harus ada"
         title_too_short: "Judul setidaknya {{min}} karakter"
         title_too_long: "Judul tidak boleh lebih dari {{max}} karakter"
-        post_missing: "Tulisan tidak boleh kosong"
         post_length: "Tulisan setidaknya harus {{min}} karakter"
         category_missing: "Anda harus memilih kategori"
       save_edit: "Simpah Ubahan"
@@ -873,7 +874,6 @@ id:
       users_placeholder: "Tambahkan pengguna"
       title_placeholder: "Tentang apa diskusi ini dalam satu kalimat pendek?"
       title_or_link_placeholder: "Ketik judul, atau tempel tautan disini"
-      show_edit_reason: "(tambahkan alasan pengubahan)"
       topic_featured_link_placeholder: "Masukkan tautan yang terlihat dengan judul."
       remove_featured_link: "Hapus tautan dari topik"
       reply_placeholder: "Ketik disini. Gunakan Markdown, BBCode, atau HTML untuk memformat. Tarik atau tempel gambar."
@@ -901,7 +901,6 @@ id:
           label: "Topik Baru"
     notifications:
       empty: "Tidak ada pemberitahuan."
-      more: "lihat notifikasi sebelumnya"
       titles:
         watching_first_post: "topik baru"
     upload_selector:

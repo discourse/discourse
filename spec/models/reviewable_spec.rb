@@ -339,11 +339,13 @@ RSpec.describe Reviewable, type: :model do
       expect(Reviewable.score_required_to_hide_post).to eq(40.0)
     end
 
-    it "returns 10 if we can't calculated any percentiles" do
+    it "returns a default if we can't calculated any percentiles" do
       SiteSetting.hide_post_sensitivity = Reviewable.sensitivity[:low]
-      expect(Reviewable.score_required_to_hide_post).to eq(10.0)
+      expect(Reviewable.score_required_to_hide_post).to eq(12.5)
       SiteSetting.hide_post_sensitivity = Reviewable.sensitivity[:medium]
-      expect(Reviewable.score_required_to_hide_post).to eq(10.0)
+      expect(Reviewable.score_required_to_hide_post).to eq(8.33)
+      SiteSetting.hide_post_sensitivity = Reviewable.sensitivity[:high]
+      expect(Reviewable.score_required_to_hide_post).to eq(4.16)
     end
 
     it "returns a fraction of the high percentile" do
@@ -360,37 +362,37 @@ RSpec.describe Reviewable, type: :model do
   end
 
   context ".spam_score_to_silence_new_user" do
-    it "returns 6 if we can't calculated any percentiles" do
+    it "returns a default value if we can't calculated any percentiles" do
       SiteSetting.silence_new_user_sensitivity = Reviewable.sensitivity[:low]
-      expect(Reviewable.spam_score_to_silence_new_user).to eq(6.0)
+      expect(Reviewable.spam_score_to_silence_new_user).to eq(7.5)
       SiteSetting.silence_new_user_sensitivity = Reviewable.sensitivity[:medium]
-      expect(Reviewable.spam_score_to_silence_new_user).to eq(6.0)
+      expect(Reviewable.spam_score_to_silence_new_user).to eq(4.99)
       SiteSetting.silence_new_user_sensitivity = Reviewable.sensitivity[:high]
-      expect(Reviewable.spam_score_to_silence_new_user).to eq(6.0)
+      expect(Reviewable.spam_score_to_silence_new_user).to eq(2.49)
     end
 
     it "returns a fraction of the high percentile" do
       Reviewable.set_priorities(high: 100.0)
       SiteSetting.silence_new_user_sensitivity = Reviewable.sensitivity[:disabled]
-      expect(Reviewable.spam_score_to_silence_new_user.to_f.truncate(2)).to eq(Float::MAX)
+      expect(Reviewable.spam_score_to_silence_new_user.to_f).to eq(Float::MAX)
       SiteSetting.silence_new_user_sensitivity = Reviewable.sensitivity[:low]
-      expect(Reviewable.spam_score_to_silence_new_user.to_f.truncate(2)).to eq(60.0)
+      expect(Reviewable.spam_score_to_silence_new_user.to_f).to eq(60.0)
       SiteSetting.silence_new_user_sensitivity = Reviewable.sensitivity[:medium]
-      expect(Reviewable.spam_score_to_silence_new_user.to_f.truncate(2)).to eq(39.99)
+      expect(Reviewable.spam_score_to_silence_new_user.to_f).to eq(39.99)
       SiteSetting.silence_new_user_sensitivity = Reviewable.sensitivity[:high]
-      expect(Reviewable.spam_score_to_silence_new_user.to_f.truncate(2)).to eq(19.99)
+      expect(Reviewable.spam_score_to_silence_new_user.to_f).to eq(19.99)
     end
   end
 
   context ".score_to_auto_close_topic" do
 
-    it "returns 25 if we can't calculated any percentiles" do
+    it "returns the default if we can't calculated any percentiles" do
       SiteSetting.auto_close_topic_sensitivity = Reviewable.sensitivity[:low]
-      expect(Reviewable.score_to_auto_close_topic).to eq(25.0)
+      expect(Reviewable.score_to_auto_close_topic).to eq(31.25)
       SiteSetting.auto_close_topic_sensitivity = Reviewable.sensitivity[:medium]
-      expect(Reviewable.score_to_auto_close_topic).to eq(25.0)
+      expect(Reviewable.score_to_auto_close_topic).to eq(20.83)
       SiteSetting.auto_close_topic_sensitivity = Reviewable.sensitivity[:high]
-      expect(Reviewable.score_to_auto_close_topic).to eq(25.0)
+      expect(Reviewable.score_to_auto_close_topic).to eq(10.41)
     end
 
     it "returns a fraction of the high percentile" do

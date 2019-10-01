@@ -538,10 +538,8 @@ export function determinePostReplaceSelection({
 export function isAppleDevice() {
   // IE has no DOMNodeInserted so can not get this hack despite saying it is like iPhone
   // This will apply hack on all iDevices
-  return (
-    navigator.userAgent.match(/(iPad|iPhone|iPod)/g) &&
-    !navigator.userAgent.match(/Trident/g)
-  );
+  const caps = Discourse.__container__.lookup("capabilities:main");
+  return caps.isIOS && !navigator.userAgent.match(/Trident/g);
 }
 
 let iPadDetected = undefined;
@@ -599,8 +597,12 @@ export function clipboardData(e, canUpload) {
   return { clipboard, types, canUpload, canPasteHtml };
 }
 
+export function toNumber(input) {
+  return typeof input === "number" ? input : parseFloat(input);
+}
+
 export function isNumeric(input) {
-  return !isNaN(parseFloat(input)) && isFinite(input);
+  return !isNaN(toNumber(input)) && isFinite(input);
 }
 
 export function fillMissingDates(data, startDate, endDate) {

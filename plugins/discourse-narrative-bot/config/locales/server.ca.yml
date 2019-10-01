@@ -293,11 +293,11 @@ ca:
           Ui... sembla que teniu problemes. Em sap greu. Heu buscat <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> el terme **capy&#8203;bara**?
       end:
         message: |-
-          Gràcies per restar amb mi, @ %{username}! Us he preparat això. Crec que us ho heu guanyat:
+          Gràcies per restar amb mi, @%{username}! Us he preparat això. Crec que us ho heu guanyat:
 
           %{certificate}
 
-          Això és tot per ara! Consulteu els [**temes de discussió més recents**] (%{base_uri}/latest) o les [**categories de discussió**] (%{base_uri}/categories). :sunglasses:
+          Això és tot per ara! Consulteu els [**temes de discussió més recents**](%{base_uri}/latest) o les [**categories de discussió**](%{base_uri}/categories). :sunglasses:
 
           (Si voleu parlar amb mi de nou per a obtenir més informació, sols heu de fer un missatge a o mencionar  `@%{discobot_username}` en qualsevol moment!)
       certificate:

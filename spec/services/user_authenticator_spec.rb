@@ -57,5 +57,15 @@ describe UserAuthenticator do
       expect(user.email_confirmed?).to be_falsey
       expect(group.usernames).not_to include(user.username)
     end
+
+    it "clears the authentication info from the session" do
+      user = Fabricate(:user, email: "user53@discourse.org")
+      session = { authentication: github_auth(true) }
+
+      UserAuthenticator.new(user, session).finish
+      expect(user.email_confirmed?).to be_truthy
+
+      expect(session[:authentication]).to eq(nil)
+    end
   end
 end

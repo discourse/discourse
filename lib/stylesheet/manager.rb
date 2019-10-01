@@ -168,7 +168,7 @@ class Stylesheet::Manager
          source_map_file: source_map_filename
       )
     rescue SassC::SyntaxError => e
-      if %w{embedded_theme mobile_theme desktop_theme}.include?(@target.to_s)
+      if Stylesheet::Importer::THEME_TARGETS.include?(@target.to_s)
         # no special errors for theme, handled in theme editor
         ["", nil]
       else

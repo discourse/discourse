@@ -286,6 +286,8 @@ vi:
     review:
       order_by: "Lọc bởi"
       in_reply_to: "trong trả lời tới"
+      explain:
+        total: "Tổng số"
       claim_help:
         optional: "Bạn có thể phàn nàn mục này để tránh những người khác đánh giá nó."
       awaiting_approval: "Đang đợi Phê duyệt"
@@ -1230,7 +1232,6 @@ vi:
         title_missing: "Tiêu đề là bắt buộc"
         title_too_short: "Tiêu để phải có ít nhất {{min}} ký tự"
         title_too_long: "Tiêu đề có tối đa {{max}} ký tự"
-        post_missing: "Bài viết không được bỏ trắng"
         post_length: "Bài viết phải có ít nhất {{min}} ký tự"
         category_missing: "Bạn phải chọn một phân loại"
       save_edit: "Lưu chỉnh sửa"
@@ -1245,7 +1246,6 @@ vi:
       title_placeholder: "Tóm tắt lại thảo luận này trong một câu ngắn gọn"
       title_or_link_placeholder: "Nhập tiêu đề, hoặc dán đường dẫn vào đây"
       edit_reason_placeholder: "Tại sao bạn sửa"
-      show_edit_reason: "(thêm lý do sửa)"
       reply_placeholder: "Gõ ở đây. Sử dụng Markdown, BBCode, hoặc HTML để định dạng. Kéo hoặc dán ảnh."
       view_new_post: "Xem bài đăng mới của bạn. "
       saving: "Đang lưu"
@@ -1291,7 +1291,6 @@ vi:
       title: "thông báo của @name nhắc đến, trả lời bài của bạn và chủ đề, tin nhắn, vv"
       none: "Không thể tải các thông báo tại thời điểm này."
       empty: "Không có thông báo"
-      more: "xem thông báo cũ hơn"
       post_approved: "Bài đăng của bạn đã được phê duyệt"
       liked_consolidated_description:
         other: "đã thích {{count}} bài viết của bạn"
