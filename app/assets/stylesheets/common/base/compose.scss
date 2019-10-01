@@ -169,12 +169,23 @@
     font-style: italic;
   }
 
+  .whisper {
+    margin-right: 0.25em;
+  }
+
   .display-edit-reason {
-    display: inline;
+    display: inline-flex;
+    a {
+      display: inline-flex;
+    }
+    .d-icon {
+      padding: 0.3em 0.5em;
+      color: $tertiary;
+    }
   }
 
   #edit-reason {
-    margin: 4px;
+    margin: 0 4px;
   }
 
   .user-selector,
