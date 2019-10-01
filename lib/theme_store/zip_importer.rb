@@ -25,8 +25,10 @@ class ThemeStore::ZipImporter
       # --strip 1 equivalent
       FileUtils.mv(Dir.glob("#{@temp_folder}/*/*"), @temp_folder)
     end
-  rescue RuntimeError, Compression::Zip::ExtractFailed
+  rescue RuntimeError
     raise RemoteTheme::ImportError, I18n.t("themes.import_error.unpack_failed")
+  rescue Compression::Zip::ExtractFailed
+    raise RemoteTheme::ImportError, I18n.t("themes.import_error.file_too_big")
   end
 
   def cleanup!

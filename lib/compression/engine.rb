@@ -7,6 +7,8 @@ require_dependency 'compression/tar'
 
 module Compression
   class Engine
+    UnsupportedFileExtension = Class.new(StandardError)
+
     def self.default_strategies
       [
         Compression::Zip.new,
@@ -17,7 +19,7 @@ module Compression
     end
 
     def self.engine_for(filename, strategies: default_strategies)
-      strategy = strategies.detect { |e| e.can_handle?(filename) }
+      strategy = strategies.detect(-> { raise UnsupportedFileExtension }) { |e| e.can_handle?(filename) }
       new(strategy)
     end
 

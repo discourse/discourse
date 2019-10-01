@@ -3,6 +3,7 @@
 module Compression
   class Strategy
     ExtractFailed = Class.new(StandardError)
+    DestinationFileExistsError = Class.new(StandardError)
 
     def can_handle?(file_name)
       file_name.include?(extension)
@@ -31,6 +32,10 @@ module Compression
 
     private
 
+    def calculate_available_size(compressed_file_path, compressed_file)
+      1024**2 * (SiteSetting.decompressed_file_max_size_mb / 1.049) # Mb to Mib
+    end
+
     def entries_of(compressed_file)
       compressed_file
     end
@@ -40,16 +45,15 @@ module Compression
     end
 
     def chunk_size
-      @chunk_size ||= ::Zip::Decompressor::CHUNK_SIZE
+      @chunk_size ||= 1024**2 * 2 # 2MiB
     end
 
     def extract_file(entry, entry_path, available_size)
       remaining_size = available_size
 
       if ::File.exist?(entry_path)
-        raise ::Zip::DestinationFileExistsError,
-              "Destination '#{entry_path}' already exists"
-      end # Change this later.
+        raise DestinationFileExistsError, "Destination '#{entry_path}' already exists"
+      end
 
       ::File.open(entry_path, 'wb') do |os|
         buf = ''.dup

@@ -18,6 +18,11 @@ describe Compression::Engine do
 
   after { FileUtils.rm_rf @temp_folder }
 
+  it 'raises an exception when the file is not supported' do
+    unknown_extension = 'a_file.crazyext'
+    expect { described_class.engine_for(unknown_extension) }.to raise_error Compression::Engine::UnsupportedFileExtension
+  end
+
   describe 'compressing and decompressing files' do
     before do
       Dir.chdir(@temp_folder) do

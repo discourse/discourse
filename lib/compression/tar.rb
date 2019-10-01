@@ -20,10 +20,6 @@ module Compression
 
     def extract_folder(_entry, _entry_path); end
 
-    def calculate_available_size(compressed_file_path, compressed_file)
-      @available_size ||= [(File.size(compressed_file_path) * 5), 10000000].max
-    end
-
     def get_compressed_file_stream(compressed_file_path)
       file_stream = IO.new(IO.sysopen(compressed_file_path))
       tar_extract = Gem::Package::TarReader.new(file_stream)

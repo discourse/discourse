@@ -23,10 +23,6 @@ module Compression
       true
     end
 
-    def calculate_available_size(compressed_file_path, compressed_file)
-      @available_size ||= [(File.size(compressed_file_path) * 5), 1000000].max
-    end
-
     def extract_folder(_entry, _entry_path); end
 
     def get_compressed_file_stream(compressed_file_path)

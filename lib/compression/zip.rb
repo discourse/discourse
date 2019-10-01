@@ -27,10 +27,6 @@ module Compression
 
     private
 
-    def calculate_available_size(compressed_file_path, compressed_file)
-      @available_size ||= [(File.size(compressed_file_path) * 5), (chunk_size * compressed_file.size * 2)].max
-    end
-
     def extract_folder(entry, entry_path)
       entry.extract(entry_path)
     end
