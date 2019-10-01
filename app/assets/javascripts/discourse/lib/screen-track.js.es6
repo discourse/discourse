@@ -24,7 +24,7 @@ export default class {
 
     this.reset();
 
-    this._setupScrollListener();
+    this._setupTickListener();
     this._boundScrolled = Ember.run.bind(this, this.scrolled);
     $(window).on("scroll.screentrack", this._boundScrolled);
 
