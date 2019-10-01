@@ -1488,7 +1488,6 @@ sl:
       title_placeholder: "Kaj je tema prispevka v kratkem stavku?"
       title_or_link_placeholder: "vpiši naslov ali prilepi povezavo "
       edit_reason_placeholder: "zakaj spreminjate prispevek?"
-      show_edit_reason: "(dodaj razlog za spremembo)"
       topic_featured_link_placeholder: "Vnesite povezavo prikazano z naslovom."
       remove_featured_link: "Odstrani povezavo iz teme."
       reply_placeholder: "Tu lahko pišeš. Možna je uporaba Markdown, BBcode ali HTML za oblikovanje. Sem lahko povlečeš ali prilepiš sliko."

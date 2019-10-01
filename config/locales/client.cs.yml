@@ -1333,7 +1333,6 @@ cs:
       title_placeholder: "O čem je ve zkratce tato diskuze?"
       title_or_link_placeholder: "Sem vložte název téma"
       edit_reason_placeholder: "proč byla nutná úprava?"
-      show_edit_reason: "(přidat důvod úpravy)"
       topic_featured_link_placeholder: "Zadej odkaz ukázaný názvem"
       remove_featured_link: "Odstranit odkaz z tématu."
       reply_placeholder: "Pište sem. Můžete použít Markdown, BBCode nebo HTML. Obrázky nahrajte přetáhnutím nebo vložením ze schránky."

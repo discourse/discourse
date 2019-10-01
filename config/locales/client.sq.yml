@@ -997,7 +997,6 @@ sq:
       title_placeholder: "Në një fjali të shkurtër shpjegoni për çfarë bën fjalë tema"
       title_or_link_placeholder: "Shkruani titullin ose ngjitni lidhjen këtu. "
       edit_reason_placeholder: "pse jeni duke e redaktuar?"
-      show_edit_reason: "(vendosni arsyen e redaktimit)"
       reply_placeholder: "Shkruani këtu. Mund të përdorni Markdown, BBCode, ose kod HTML për formatimin. Tërhiqni (drag and drop) ose kopjoni dhe ngjisni imazhet. "
       view_new_post: "Shikoni postimin tuaj të ri."
       saving: "Duke e ruajtur"

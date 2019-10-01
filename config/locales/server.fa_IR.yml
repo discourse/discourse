@@ -693,6 +693,9 @@ fa_IR:
         admin: مدیر
         moderator: مدیر
         suspended: "تعلیق شد "
+    trending_search:
+      labels:
+        searches: جستجوها
     emails:
       title: "ایمیل ها ارسال شد"
       xaxis: "روز"

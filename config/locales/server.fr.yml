@@ -235,6 +235,7 @@ fr:
     replies:
       one: "%{count} réponse"
       other: "%{count} réponses"
+    last_reply: "Dernière réponse"
     created: "Créé"
   no_mentions_allowed: "Désolé, vous ne pouvez pas mentionner d'autres utilisateurs."
   too_many_mentions:
@@ -1262,6 +1263,8 @@ fr:
     editing_grace_period_max_diff: "Nombre maximum de changements de caractères autorisés dans le délai de grâce d'édition, si plus de changements, enregistrez une autre révision de poste (niveaux de confiance 0 et 1)."
     editing_grace_period_max_diff_high_trust: "Nombre maximum de changements de caractères autorisés dans le délai de grâce d'édition, si plus de changements, enregistrez une autre révision de poste (niveaux de confiance 2 et plus)."
     staff_edit_locks_post: "Les messages seront vérouillés à la modification si modifiés par des responsables"
+    post_edit_time_limit: "Un auteur du niveau de confiance 0 ou 1 peut modifier ses messages pendant (n) minutes après leur publication. Mettre à 0 pour retirer cette limite."
+    tl2_post_edit_time_limit: "Un auteur du niveau de confiance 2 peut modifier ses messages pendant (n) minutes après leur publication. Mettre à 0 pour retirer cette limite. "
     edit_history_visible_to_public: "Autoriser tout le monde à voir les versions précédentes d'un message modifié. Quand désactivé, seuls les responsables peuvent voir l'historique."
     delete_removed_posts_after: "Les messages retirés par leur auteur seront automatiquement supprimés après (n) heures. Pour une valeur renseignée à 0, les messages seront supprimés immédiatement."
     max_image_width: "Largeur maximale des images dans un message"
@@ -1430,6 +1433,10 @@ fr:
     enable_github_logins: "Activer l'authentification GitHub, nécessite github_client_id et github_client_secret. Voir <a href='https://meta.discourse.org/t/13745' target='_blank'>Configurer GitHub Login pour Discourse</a>."
     github_client_id: "Id client pour l'authentification Github, enregistré sur <a href='https://github.com/settings/developers/' target='_blank'>https://github.com/settings/developers</a>"
     github_client_secret: "Secret client pour l'authentification Github, enregistré sur <a href='https://github.com/settings/developers/' target='_blank'>https://github.com/settings/developers</a>"
+    enable_discord_logins: 'Permettre aux utilisateurs de s''authentifier via Discord ?'
+    discord_client_id: 'Identifiant de l''utilisateur Discord (en cas de besoin, le créer via <a href="https://discordapp.com/developers/applications/me">le portail de développement Discord</a>)'
+    discord_secret: 'Clé secrète Discord'
+    discord_trusted_guilds: ' Seuls les membres de ces guildes Discord peuvent se connecter via Discord. Utiliser les identifiants numériques des guildes. Pour plus d''informations, suivre les instructions<a href="https://meta.discourse.org/t/configuring-discord-login-for-discourse/127129">ici</a>. Laisser blanc pour autoriser toutes les guildes.'
     readonly_mode_during_backup: "Activer le mode lecture seule pendant une sauvegarde"
     enable_backups: "Autoriser les administrateurs à créer de nouveaux sauvegardes du forum"
     allow_restore: "Autoriser la restauration, qui peut remplacer TOUTES les données du site ! Laissez à faux, sauf si vous envisagez de faire restaurer une sauvegarde"
@@ -2271,6 +2278,9 @@ fr:
       title: "Message caché à nouveau"
       subject_template: "Message caché suite à des signalements de la communauté, responsables avertis"
       text_body_template: "Bonjour, Ceci est un message automatisé de %{site_name} pour vous informer que votre message a été caché à nouveau.\n\n <%{base_url}%{url}>\n\n %{flag_reason}\n\nLa communauté a signalé cet article, il est maintenant masqué. ** Ce message ayant été masqué plus d'une fois, votre message le restera jusqu'à ce qu'il soit géré par un membre du personnel. ** \n\nPour plus de précisions, veuillez consulter nos [charte communautaire] (%{base_url}/charte).\n"
+    flags_disagreed:
+      title: "Message signalé rétabli par un responsable"
+      subject_template: "Message signalé rétabli par un responsable"
     flags_agreed_and_post_deleted:
       title: "Message signalé, retiré par un responsable"
       subject_template: "Message signalé, retiré par un responsable"
@@ -4135,3 +4145,5 @@ fr:
         reason: "Supprimé via la liste des messages en attente de validation"
   email_style:
     html_missing_placeholder: "Le modèle HTML doit inclure %{placeholder}"
+  discord:
+    not_in_allowed_guild: 'L''authentification a échoué. Vous n''êtes membre d''aucune guilde Discord autorisée.'

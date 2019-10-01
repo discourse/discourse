@@ -1467,7 +1467,6 @@ pt_BR:
       title_placeholder: "Sobre o que é esta discussão em uma breve frase?"
       title_or_link_placeholder: "Digite um título, ou cole um link aqui"
       edit_reason_placeholder: "por que você está editando?"
-      show_edit_reason: "(adicionar motivo da edição)"
       topic_featured_link_placeholder: "Inserir link mostrado no título."
       remove_featured_link: "Remover link do tópico."
       reply_placeholder: "Digite aqui. Use Markdown, BBCode, ou HTML para formatar. Arraste ou cole imagens."

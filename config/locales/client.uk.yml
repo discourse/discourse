@@ -1276,7 +1276,6 @@ uk:
       users_placeholder: "Додати користувача"
       title_placeholder: "Про що це обговорення, у одному короткому реченні?"
       edit_reason_placeholder: "чому Ви редагуєте допис?"
-      show_edit_reason: "(додати причину редагування)"
       view_new_post: "Перегляньте свій новий допис."
       saving: "Збереження"
       saved: "Збережено!"

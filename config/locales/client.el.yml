@@ -1093,7 +1093,6 @@ el:
       title_placeholder: "Τι αφορά αυτή η συζήτησης σε μία σύντομη πρόταση;"
       title_or_link_placeholder: "Πληκτρολόγησε τίτλο, ή κάνε επικόλληση ένα σύνδεσμο εδώ"
       edit_reason_placeholder: "γιατί αναθεωρείς;"
-      show_edit_reason: "(δώσε αιτιολόγηση για την επεξεργασία) "
       topic_featured_link_placeholder: "Εισάγετε τον συνδέσμο που εμφανίζεται με τον τίτλο"
       reply_placeholder: "Πληκτρολόγησε εδώ. Χρησιμοποίησε την μορφή Markdown, BBCode, ή HTML. Σύρε ή επικόλλησε εικόνες."
       view_new_post: "Δες τη νέα σου ανάρτηση."

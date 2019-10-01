@@ -329,8 +329,8 @@ de:
         min_score_visibility: "Minimaler Score für Sichtbarkeit"
         score_to_hide: "Score, um den Beitrag zu verbergen"
         take_action_bonus:
-          name: 'Maßnahme ergriffen'
-          title: 'Wenn ein Teammitglied entscheidet, eine Maßnahme zu ergreifen, bekommt das Kennzeichen einen Bonus.'
+          name: "Maßnahme ergriffen"
+          title: "Wenn ein Teammitglied entscheidet, eine Maßnahme zu ergreifen, bekommt das Kennzeichen einen Bonus."
         user_accuracy_bonus:
           name: "Benutzer-Genauigkeit"
           title: "Benutzer, deren Kennzeichen in Vergangenheit mit einem gewährten Bonus übereinstimmten"
@@ -1501,7 +1501,6 @@ de:
       title_placeholder: "Um was geht es in dieser Diskussion? Schreib einen kurzen Satz."
       title_or_link_placeholder: "Gib einen Titel ein oder füge einen Link ein"
       edit_reason_placeholder: "Warum bearbeitest du?"
-      show_edit_reason: "(Bearbeitungsgrund hinzufügen)"
       topic_featured_link_placeholder: "Gib einen Link, der mit dem Titel angezeigt wird."
       remove_featured_link: "Link aus Thema entfernen."
       reply_placeholder: "Schreib hier. Verwende Markdown, BBCode oder HTML zur Formatierung. Füge Bilder ein oder ziehe sie herein."

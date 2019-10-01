@@ -1102,7 +1102,6 @@ lv:
       title_placeholder: "Aprakstiet šis diskusijas saturu īsā teikumā!"
       title_or_link_placeholder: "Ierakstiet nosaukumu vai ievietojiet šeit saiti"
       edit_reason_placeholder: "kāpēc jūs rediģējat?"
-      show_edit_reason: "(pievienot rediģēšanas iemeslu)"
       topic_featured_link_placeholder: "Ievadiet saiti, kas redzama virsrakstā."
       reply_placeholder: "Rakstiet šeit. Izmantojiet Markdown, BBCode, vai HTML formatēšanai. Velciet vai ielīmējiet bildes."
       view_new_post: "Apskatīt jūsu jauno ierakstu."

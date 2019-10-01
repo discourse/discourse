@@ -1027,7 +1027,6 @@ bg:
       title_placeholder: "За какво става дума в дискусията с едно изречение?"
       title_or_link_placeholder: "Напишете заглавие или поставете линк тук"
       edit_reason_placeholder: "защо редактирате ?"
-      show_edit_reason: "(причина за редакцията)"
       reply_placeholder: "Пиши тук. Използвай Markdown, BBCode, или HTML за форматиране. Издърпайте или поставете изображенията."
       view_new_post: "Вижте публикацията."
       saving: "Запаметяване"

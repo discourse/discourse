@@ -1246,7 +1246,6 @@ vi:
       title_placeholder: "Tóm tắt lại thảo luận này trong một câu ngắn gọn"
       title_or_link_placeholder: "Nhập tiêu đề, hoặc dán đường dẫn vào đây"
       edit_reason_placeholder: "Tại sao bạn sửa"
-      show_edit_reason: "(thêm lý do sửa)"
       reply_placeholder: "Gõ ở đây. Sử dụng Markdown, BBCode, hoặc HTML để định dạng. Kéo hoặc dán ảnh."
       view_new_post: "Xem bài đăng mới của bạn. "
       saving: "Đang lưu"

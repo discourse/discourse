@@ -1464,7 +1464,6 @@ tr_TR:
       title_placeholder: "Tek cümleyle açıklamak gerekirse bu tartışmanın konusu nedir?"
       title_or_link_placeholder: "Buraya bir konu gir veya bir bağlantı paylaş"
       edit_reason_placeholder: "neden düzenleme yapıyorsun?"
-      show_edit_reason: "(düzenleme sebebi ekle)"
       topic_featured_link_placeholder: "Başlığı olan bir bağlantı gir."
       remove_featured_link: "Konudan bağlantıyı kaldır."
       reply_placeholder: "Buraya yaz. Biçimlendirmek için Markdown, BBCode ya da HTML kullanabilirsin. Resimleri sürükleyebilir ya da yapıştırabilirsin."

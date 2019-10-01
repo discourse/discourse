@@ -78,6 +78,10 @@ zh_TW:
           other: "%{count} 小時前"
         x_days:
           other: "%{count} 天前"
+        x_months:
+          other: "%{count} 個月前"
+        x_years:
+          other: "%{count} 年前"
       later:
         x_days:
           other: "%{count} 天後"
@@ -201,6 +205,7 @@ zh_TW:
       other: "{{count}} 個字元"
     related_messages:
       title: "相關訊息"
+      see_all: '參閱 @%{username} 的 <a href="%{path}">所有訊息</a>...'
     suggested_topics:
       title: "推薦的話題"
       pm_title: "推薦訊息"
@@ -271,6 +276,8 @@ zh_TW:
     banner:
       close: "關閉此橫幅"
       edit: "編輯此橫幅 >>"
+    pwa:
+      install_banner: "你希望在此裝置上 <a href>安裝 %{title} 嗎？</a>"
     choose_topic:
       none_found: "未找到任何話題。"
       title:
@@ -282,6 +289,7 @@ zh_TW:
         search: "以標題尋找訊息"
         placeholder: "輸入訊息標題"
     review:
+      order_by: "排序按照"
       in_reply_to: "回覆給"
       explain:
         total: "總計"
@@ -1360,7 +1368,6 @@ zh_TW:
       title_placeholder: "用一個簡短的句子來描述想討論的內容。"
       title_or_link_placeholder: "鍵入標題，或貼上一個連結在這裡"
       edit_reason_placeholder: "你為什麼做編輯?"
-      show_edit_reason: "(請加入編輯原因)"
       topic_featured_link_placeholder: "在標題裡輸入連結"
       remove_featured_link: "移除標題裡的連結"
       reply_placeholder: "在這裡輸入內文，可以使用 Markdown、BBCode 或 HTML 來格式化文字，也可以拖曳或貼上圖片。"
@@ -1484,7 +1491,9 @@ zh_TW:
         confirm_body: "成功! 通知已啟用"
         custom: "新的通知由{{username}}在%{site_title}"
       titles:
+        liked: "新的讚"
         watching_first_post: "新話題"
+        liked_consolidated: "新的讚"
         post_approved: "貼文已通過審核"
     upload_selector:
       title: "加入圖片"
