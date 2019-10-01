@@ -24,12 +24,16 @@ export default Ember.Mixin.create({
     Discourse.set("hasFocus", true);
 
     document.addEventListener("visibilitychange", onchange);
+    document.addEventListener("resume", onchange);
+    document.addEventListener("freeze", onchange);
   },
 
   reset() {
     this._super(...arguments);
 
     document.removeEventListener("visibilitychange", onchange);
+    document.removeEventListener("resume", onchange);
+    document.removeEventListener("freeze", onchange);
 
     onchange = undefined;
   }
