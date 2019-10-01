@@ -267,7 +267,7 @@ export default class {
   _setupTickListener() {
     // Create an interval timer if we don't have one.
     if (!this._interval) {
-      this._interval = setInterval(() => this.tick(), 1000);
+      this._interval = setInterval(() => Ember.run(() => this.tick()), 1000);
     }
   }
 

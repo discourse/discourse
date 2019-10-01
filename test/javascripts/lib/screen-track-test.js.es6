@@ -16,7 +16,7 @@ QUnit.module("lib:screen-track", {
 });
 
 // skip for now test leaks state
-QUnit.skip("Correctly flushes posts as needed", assert => {
+QUnit.test("Correctly flushes posts as needed", assert => {
   const timings = [];
 
   // prettier-ignore
