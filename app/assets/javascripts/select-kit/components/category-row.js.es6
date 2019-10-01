@@ -84,9 +84,9 @@ export default SelectKitRowComponent.extend({
   },
 
   @computed("category.description_text")
-  descriptionText(description) {
-    if (description) {
-      return this._formatCategoryDescription(description);
+  descriptionText(descriptionText) {
+    if (descriptionText) {
+      return this._formatCategoryDescription(descriptionText);
     }
   },
 

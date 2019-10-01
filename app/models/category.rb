@@ -261,7 +261,8 @@ class Category < ActiveRecord::Base
 
     @@cache ||= LruRedux::ThreadSafeCache.new(1000)
     @@cache.getset(self.description) do
-      Nokogiri::HTML.fragment(self.description).text.strip.html_safe
+      text = Nokogiri::HTML.fragment(self.description).text.strip
+      Rack::Utils.escape_html(text).html_safe
     end
   end
 
