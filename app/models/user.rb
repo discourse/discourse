@@ -1274,6 +1274,13 @@ class User < ActiveRecord::Base
     new_secure_identifier
   end
 
+  def second_factor_security_key_credential_ids
+    security_keys
+      .select(:credential_id)
+      .where(factor_type: UserSecurityKey.factor_types[:second_factor])
+      .pluck(:credential_id)
+  end
+
   protected
 
   def badge_grant

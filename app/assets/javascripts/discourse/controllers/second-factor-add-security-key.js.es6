@@ -1,5 +1,5 @@
 import ModalFunctionality from "discourse/mixins/modal-functionality";
-import { bufferToBase64 } from "discourse/lib/webauthn";
+import { bufferToBase64, stringToBuffer } from "discourse/lib/webauthn";
 
 // model for this controller is user.js.es6
 export default Ember.Controller.extend(ModalFunctionality, {
@@ -31,7 +31,9 @@ export default Ember.Controller.extend(ModalFunctionality, {
             name: response.rp_name
           },
           supported_algoriths: response.supported_algoriths,
-          user_secure_id: response.user_secure_id
+          user_secure_id: response.user_secure_id,
+          existing_active_credential_ids:
+            response.existing_active_credential_ids
         });
       })
       .catch(error => {
@@ -57,8 +59,22 @@ export default Ember.Controller.extend(ModalFunctionality, {
         pubKeyCredParams: this.supported_algoriths.map(alg => {
           return { type: "public-key", alg: alg };
         }),
+        excludeCredentials: this.existing_active_credential_ids.map(
+          credentialId => {
+            return {
+              type: "public-key",
+              id: stringToBuffer(atob(credentialId))
+            };
+          }
+        ),
         timeout: 20000,
-        attestation: "none"
+        attestation: "none",
+        authenticatorSelection: {
+          // see https://chromium.googlesource.com/chromium/src/+/master/content/browser/webauth/uv_preferred.md for why
+          // default value of preferred is not necesarrily what we want, it limits webauthn to only devices that support
+          // user verification, which usually requires entering a PIN
+          userVerification: "discouraged"
+        }
       };
 
       navigator.credentials

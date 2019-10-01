@@ -1224,7 +1224,8 @@ class UsersController < ApplicationController
       rp_id: Discourse.current_hostname,
       rp_name: SiteSetting.title,
       supported_algoriths: ::Webauthn::SUPPORTED_ALGORITHMS,
-      user_secure_id: current_user.create_or_fetch_secure_identifier
+      user_secure_id: current_user.create_or_fetch_secure_identifier,
+      existing_active_credential_ids: current_user.second_factor_security_key_credential_ids
     )
   end
 
@@ -1499,9 +1500,7 @@ class UsersController < ApplicationController
 
   def webauthn_security_key_challenge_and_allowed_credentials(user)
     return {} if !user.security_keys_enabled?
-    credential_ids = user.security_keys.select(:credential_id)
-      .where(factor_type: UserSecurityKey.factor_types[:second_factor])
-      .pluck(:credential_id)
+    credential_ids = user.second_factor_security_key_credential_ids
     {
       allowed_credential_ids: credential_ids,
       challenge: secure_session["staged-webauthn-challenge-#{user.id}"]
