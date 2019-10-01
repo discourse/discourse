@@ -1,3 +1,4 @@
+import pageVisible from "discourse/lib/page-visible";
 import { ajax } from "discourse/lib/ajax";
 
 // We use this class to track how long posts in a topic are on the screen.
@@ -239,7 +240,7 @@ export default class {
       this.flush();
     }
 
-    if (Discourse.get("hasFocus")) {
+    if (pageVisible()) {
       this._topicTime += diff;
 
       this._onscreen.forEach(
