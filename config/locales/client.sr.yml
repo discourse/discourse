@@ -879,7 +879,6 @@ sr:
       users_placeholder: "Dodaj korisnika"
       title_placeholder: "O čemu je ova diskusija u jednoj kratkoj rečenici?"
       edit_reason_placeholder: "zašto izmenjujete?"
-      show_edit_reason: "(dodaj razlog izmene)"
       reply_placeholder: "Kucaj ovde. Koristi Markdown, BBCode ili HTML za formatiranje teksta. Prevuci ili nalepi slike"
       view_new_post: "Pogledajte svoju novu poruku."
       saving: "Čuvanje"

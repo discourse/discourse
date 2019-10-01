@@ -1053,7 +1053,6 @@ sv:
       title_placeholder: "Vad handlar ämnet om i en kort mening?"
       title_or_link_placeholder: "Skriv in en titel, eller klistra in en länk här"
       edit_reason_placeholder: "varför redigerar du?"
-      show_edit_reason: "(lägg till anledningar för redigering)"
       topic_featured_link_placeholder: "Ange länken som visas med titeln"
       reply_placeholder: "Skriv här. Använd Markdown, BBCode eller HTML för formattering. Släpp eller klistra in bilder."
       view_new_post: "Visa ditt nya inlägg."

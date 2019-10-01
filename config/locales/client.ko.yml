@@ -1206,7 +1206,6 @@ ko:
       title_placeholder: "이야기 나누고자 하는 내용을 한문장으로 적는다면?"
       title_or_link_placeholder: "제목을 입력하거나, 링크를 붙여넣으세요"
       edit_reason_placeholder: "why are you editing?"
-      show_edit_reason: "(수정사유 추가)"
       topic_featured_link_placeholder: "타이틀과 함께 표시될 링크를 입력하세요."
       reply_placeholder: "여기에 타이핑 하세요. 마크다운 또는 BBCode, HTML 포맷을 이용하세요. 이미지를 끌어오거나 붙여넣기 하세요."
       view_new_post: "새로운 글을 볼 수 있습니다."

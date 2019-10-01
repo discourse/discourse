@@ -1271,7 +1271,6 @@ nb_NO:
       title_placeholder: "Oppsummert i en setning, hva handler denne diskusjonen om?"
       title_or_link_placeholder: "Skriv inn tittel eller lim inn en lenke her"
       edit_reason_placeholder: "hvorfor endrer du?"
-      show_edit_reason: "(legg till endringsbegrunnelse)"
       topic_featured_link_placeholder: "Skriv inn lenke vist med tittel."
       remove_featured_link: "Fjern lenke fra emnet."
       reply_placeholder: "Skriv her. Bruk Markdown, BBCode eller HTML for å formatere innholdet. Dra bilder hit eller lim dem inn."

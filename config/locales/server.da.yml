@@ -221,6 +221,7 @@ da:
     replies:
       one: "%{count} svar"
       other: "%{count} svarer"
+    last_reply: "Sidste svar"
     created: "Oprettet"
   no_mentions_allowed: "Beklager, du kan ikke nævne andre brugere."
   too_many_mentions:
@@ -392,7 +393,12 @@ da:
               same_as_username: "er det samme som dit brugernavn. Brug venligst en mere sikker adgangskode."
               same_as_email: "er det samme som din email. Brug venligst en mere sikker adgangskode."
               same_as_current: "er det samme som din nuværende adgangskode."
+              same_as_name: "er det samme som dit navn."
               unique_characters: "har for mange af de samme tegn. Brug venligst en mere sikkert adgangskode."
+            username:
+              same_as_password: "er det samme som dit kodeord"
+            name:
+              same_as_password: "er det samme som dit kodeord."
             ip_address:
               signup_not_allowed: "Tilmelding er ikke tilladt fra den aktuelle adresse."
         color_scheme_color:
@@ -414,6 +420,10 @@ da:
           attributes:
             execute_at:
               in_the_past: "skal være i fremtiden."
+        watched_word:
+          attributes:
+            word:
+              too_many: "For mange ord til den handling"
   uncategorized_category_name: "Andet"
   vip_category_name: "Lounge"
   vip_category_description: "En ekslusiv kategori der kun er tilgængelig for medlemmer med tillidsniveu 3 eller højere."
@@ -442,6 +452,7 @@ da:
     topic_prefix: "Kategoridefinition for %{category}"
     post_template: "%{replace_paragraph}\n\nBrug de følgende afsnit for en længere beskrivelse, eller introducere kategorien:\n\n- Hvorfor skal man anvende denne kategori? Hvad er formålet?\n\n- Hvordan er kategorien anderledes end de eksisterende kategorier?\n\n- Hvad skal emner i denne kategori indeholde?\n\n- Behøver vi denne kategori? Kan vi ikke flette indholdet ind i en eksisterende kategori, eller subkategori?\n"
     errors:
+      not_found: "Denne kategori blev ikke fundet!"
       uncategorized_parent: "Ukategoriserede kan ikke have en overordnede kategori"
       self_parent: "En underkategori kan ikke være sin egen overordnede kategori."
       depth: "Du kan ikke indlejre en underkategori i en anden underkategori."
@@ -552,6 +563,9 @@ da:
     title: "nulstil kodeord"
     success: "Dit kodeord er ændret og du er nu logget ind."
     success_unapproved: "Dit kodeord er ændret."
+  user_auth_tokens:
+    browser:
+      chrome: "Google Chrome"
   change_email:
     confirmed: "Din e-mail-adresse er opdateret."
     please_continue: "Fortsæt til %{site_name}"
@@ -614,6 +628,9 @@ da:
       short_description: "Du liker dette indlæg"
       long_form: "like dette"
   user_activity:
+    no_default:
+      self: "Du har endnu ingen aktivitet."
+      others: "Ingen aktivitet."
     no_bookmarks:
       others: "Ingen bogmærker"
     no_likes_given:
@@ -885,6 +902,8 @@ da:
     top_uploads:
       labels:
         filename: Filnavn
+        extension: Udvidelse
+        filesize: Filstørrelse
   dashboard:
     rails_env_warning: "Din server kører i %{env}-tilstand."
     host_names_warning: "Filen config/database.yml bruger localhost som værtsnavn. Opdatér den med sitets værtsnavn."
@@ -1459,6 +1478,8 @@ da:
       text_body_template: |2
 
         %{message}
+    account_exists:
+      title: "Konto findes allerede"
     digest:
       why: "Et kort resumé af %{site_link} siden dit sidste besøg %{last_seen_at}"
       since_last_visit: "Siden dit sidste besøg"
@@ -1543,6 +1564,11 @@ da:
     sender_body_blank: "brødtekst er tom"
   color_schemes:
     base_theme_name: "Base"
+    light: "Lys"
+    dark: "Mørk"
+    default_theme_name: "Lys"
+    light_theme_name: "Lys"
+    dark_theme_name: "Mørk"
   edit_this_page: "Rediger denne side"
   csv_export:
     boolean_yes: "Ja"

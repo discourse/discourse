@@ -1445,7 +1445,6 @@ it:
       title_placeholder: "In breve, di cosa tratta questo argomento?"
       title_or_link_placeholder: "Digita il titolo, o incolla qui il collegamento "
       edit_reason_placeholder: "perché stai scrivendo?"
-      show_edit_reason: "(aggiungi motivo della modifica)"
       topic_featured_link_placeholder: "Inserisci il collegamento mostrato con il titolo."
       remove_featured_link: "Rimuovi il collegamento dall'argomento."
       reply_placeholder: "Scrivi qui. Per formattare il testo usa Markdown, BBCode o HTML. Trascina o incolla le immagini."

@@ -1334,7 +1334,6 @@ hy:
       title_placeholder: "Համառոտ մեկ նախադասությամբ ներկայացրեք թե ինչի՞ մասին է քննարկումը:"
       title_or_link_placeholder: "Գրեք վերնագիրը կամ տեղադրեք հղումն այստեղ"
       edit_reason_placeholder: "Ո՞րն է խմբագրման պատճառը:"
-      show_edit_reason: "(ավելացրել խմբագրման պատճառ)"
       topic_featured_link_placeholder: "Մուտքագրել վերնագրի հետ ցուցադրվող հղում"
       remove_featured_link: "Հեռացնել հղումը թեմայից:"
       reply_placeholder: "Գրեք այստեղ: Օգտագործեք Markdown, BBCode, կամ HTML ֆորմատավորման համար: Քաշեք կամ տեղադրեք նկարներ:"

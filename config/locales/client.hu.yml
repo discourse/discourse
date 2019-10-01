@@ -1368,7 +1368,6 @@ hu:
       title_placeholder: "Mi lesz a témája ennek a beszélgetésnek, röviden?"
       title_or_link_placeholder: "Adj címet vagy másolj ide egy linket"
       edit_reason_placeholder: "miért szerkesztesz?"
-      show_edit_reason: "(szerkesztés okának hozzáadása)"
       remove_featured_link: "Hivatkozás eltávolítása a témából."
       reply_placeholder: "Ide írhatsz. A feltöltéshez húzz- vagy illessz be képet! A formázáshoz használhatsz Markdown-, BBCode- vagy HTML kódokat is."
       reply_placeholder_no_images: "Ide írj. Használhatsz Markdown-t, BBCode-ot, vagy HTML-t a formázáshoz."

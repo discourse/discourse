@@ -322,7 +322,12 @@ fa_IR:
       in_reply_to: "در پاسخ به"
       explain:
         why: "توضیح دهید که چرا این مورد در صف پایان یافت"
+        formula: "فرمول"
         total: "مجموع"
+        user_accuracy_bonus:
+          name: "دقت کاربر"
+        trust_level_bonus:
+          name: "سطح اعتماد"
       claim_help:
         optional: "می‌توانید این مورد را درخواست کنید تا دیگران را از بازنگری آن بازنگه دارید."
         required: "شما قبل از بازنگری موارد باید آن‌ها را درخواست دهید ."
@@ -594,6 +599,7 @@ fa_IR:
         remove_owner: "حذف توسط مالک"
         remove_owner_description: "حذف کاربر <b>%{username}</b> به عنوان مالک این گروه"
         owner: "مالک"
+        forbidden: "شما مجاز به دیدن کاربران نیستید."
       topics: "موضوعات"
       posts: "نوشته‌ها"
       mentions: "اشاره‌ها"
@@ -1272,6 +1278,7 @@ fa_IR:
       complete_email_found: "ما حساب کاربری که با ایمیل <b>%{email}</b>همخوانی دارد را پیدا کردیم، بزودی یک ایمیل با دستورالعمل بازیابی رمز دریافت می‌کنید."
       complete_username_not_found: "هیچ حساب کاربری که با <b>%{username}</b> همخوانی داشته باشد پیدا نشد"
       complete_email_not_found: "هیچ حساب کاربری که <b>%{email}</b> همخوانی داشته باشد پیدا نشد"
+      help: "رایانامه دریافت نکرده‌اید؟ ابتدا پوشهٔ اسپم را بررسی کنید.<p>مطمئن نیستید از کدام آدرس رایانامه استفاده کرده‌اید؟ یک آدرس رایانامه وارد کنید تا درصورت موجود بودن به شما بگوییم.</p><p>اگر به آدرس رایانامهٔ حساب کاربری خود دسترسی ندارید با <a href='%{basePath}/about'>کارکنان ما</a> تماس بگیرید.</p> "
       button_ok: "اوکی"
       button_help: "کمک"
     email_login:
@@ -1345,6 +1352,9 @@ fa_IR:
         name: "گیت هاب"
         title: "با گیت‌هاب"
         message: "اعتبارسنجی با گیت‌هاب (مطمئن شوید که بازدارنده‌های pop up فعال نباشند)"
+      discord:
+        name: "دیسکورد"
+        message: "اعتبارسنجی توسط دیسکورد"
     invites:
       accept_title: "دعوت‌نامه"
       welcome_to: "به %{site_name} خوش آمدید!"
@@ -1448,7 +1458,9 @@ fa_IR:
         title_missing: "عنوان الزامی است"
         title_too_short: "عنوان دست‌کم باید {{min}} نویسه باشد"
         title_too_long: "عنوان نمی‌تواند بیش‌تر از {{max}} نویسه باشد"
+        post_missing: "فرسته نمی‌تواند خالی باشد."
         post_length: "نوشته باید دست‌کم {{min}} نویسه داشته باشد"
+        try_like: "دکمه‌ی {{heart}} را امتحان کرده‌اید؟ "
         category_missing: "باید یک دسته‌بندی انتخاب کنید"
         tags_missing: "شما باید حداقل {{count}}برچسب انتخاب کنید"
       save_edit: "ذخیره ویرایش"
@@ -1467,7 +1479,6 @@ fa_IR:
       title_placeholder: "در یک جمله‌ی کوتاه بگویید که این موضوع در چه موردی است؟"
       title_or_link_placeholder: "عنوان را بنویسید،یا پیوند را بچسبانید"
       edit_reason_placeholder: "چرا ویرایش می‌کنید؟"
-      show_edit_reason: "(افزودن دلیل ویرایش)"
       topic_featured_link_placeholder: "پیوندی که با عنوان نمایش داده می‌شود را وارد کنید."
       remove_featured_link: "حذف لینک از موضوع"
       reply_placeholder: "اینجا بنویسید. برای قالب‌بندی متن از Markdown،‏ BBCode یا HTML استفاده کنید. عکس‌ها را به اینجا بکشید یا بچسبانید."
@@ -1648,6 +1659,7 @@ fa_IR:
       searching: "در حال جستجو..."
       post_format: "#{{post_number}} توسط {{username}}"
       results_page: "نتایج جستجو برای '{{term}}'"
+      more_results: "نتایج بیشتری موجود است. لطفاً معیارهای جست‌وجوی خود را محدودتر کنید."
       cant_find: "چیزی را که به دنبالش بودید نیافتید؟"
       start_new_topic: "شاید باید یک موضوع جدید را شروع کنید؟"
       or_search_google: "یا به‌جای این، جست‌وجو با گوگل را امتحان کنید:"
@@ -1817,7 +1829,9 @@ fa_IR:
       toggle_information: " تغییر وضعیت جزئیات موضوع"
       read_more_in_category: "می‌خواهید بیشتر بخوانید؟موضوعات دیگر را در {{catLink}} یا {{latestLink}} مرور کنید."
       read_more: "می‌خواهید بیشتر بخوانید؟ {{catLink}} یا {{latestLink}}."
+      group_request: "برای مشاهده این مبحث نیازمند درخواست عضویت در گروه  `{{name}}` می‌باشید"
       group_join: "برای مشاهده این مبحث نیازمند پیوستن به گروه `{{name}}` می‌باشید"
+      unread_indicator: "هیچ کاربری آخرین فرستهٔ این مبحث را نخوانده است."
       read_more_MF: "{ UNREAD, plural, =0 {} one { <a href='{basePath}/unread'>یک پیام خوانده نشده</a> } other { <a href='{basePath}/unread'># پیام خوانده نشده</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{و } false { } other{}} <a href='{basePath}/new'>1 موضوع جدید</a> } other { {BOTH, select, true{و } false { } other{}} <a href='{basePath}/new'># موضوع جدید</a> } } وجود دارد, یا {CATEGORY, select, true {نمایش سایر موضوعات دسته‌بندی {catLink}} false {{latestLink}} other {}}"
       browse_all_categories: جستوجوی همه‌ی دسته‌‌بندی‌ها
       view_latest_topics: مشاهده آخرین موضوع
@@ -2038,6 +2052,7 @@ fa_IR:
         success_email: "lما از طریق ایمیل دعوت نامه ارسال کردیم <B> {{emailOrUsername}} </ B>. هنگامی که به دعوت شما پاسخ داده شد ما به شما اطلاع خواهیم داد.برای پی گیری به تب دعوت ها در پنل کاربری مراجعه نمایید"
         success_username: "ما آن کاربر را برای شرکت در این جستار دعوت کردیم."
         error: "متاسفیم٬‌ ما آن شخص را نمی توانیم دعوت کنیم. شاید قبلا دعوت شده اند. (فراخوان ها تعداد محدودی دارند)"
+        success_existing_email: "یک کاربر با رایانامه <b>{{emailOrUsername}}</b> وجو دارد. ما آن کاربر را برای شرکت در این مبحث دعوت کردیم."
       login_reply: "برای پاسخ دادن وارد شوید"
       filters:
         n_posts:
@@ -2125,6 +2140,7 @@ fa_IR:
       deleted_by_author:
         one: "(نوشته های ارسال شده توسط نویسنده،بصورت خودکار در %{count} ساعت حذف می شود مگر اینکه پرچم شود)"
         other: "(نوشته های ارسال شده توسط نویسنده،بصورت خودکار در %{count} ساعت حذف می شود مگر اینکه پرچم شود)"
+      collapse: "جمع کردن"
       expand_collapse: "باز کردن/بستن"
       locked: "یکی از دست‌اندرکاران انجمن این پست را جهت جلوگیری از ویرایش قفل کرده است"
       gap:
@@ -2145,7 +2161,9 @@ fa_IR:
         create: "متأسفیم، در ایجاد نوشته‌ی شما خطایی روی داد. لطفاً دوباره تلاش کنید."
         edit: "متأسفیم، در ویرایش نوشته‌ی شما خطایی روی داد. لطفاً دوباره تلاش کنید."
         upload: "متأسفیم، در بارگذاری آن پرونده خطایی روی داد. لطفاً دوباره تلاش کنید."
+        file_too_large: "با عرض پوزش، حجم پرونده بسیار بالاست (بالاترین حجم قابل بارگذاری {{max_size_kb}} کیلوبایت است). چرا فایل‌های حجیم را در سرویس‌های ابری بارگذاری نمی‌کنید و پیوند آن را اینجا نمی‌چسبانید؟"
         too_many_uploads: "متأسفیم، هر بار تنها می‌توانید یک پرونده را بار‌گذاری کنید."
+        too_many_dragged_and_dropped_files: "با عرض پوزش، شما فقط می‌توانید {{max}} پرونده به صورت یک‌جا بارگذاری کنید."
         upload_not_authorized: "با عرض پوزش، فایلی که در حال‌ بارگذاری آن هستید مجاز نیست. (پسوند‌های قابل بارگذاری: {{authorized_extensions}})."
         image_upload_not_allowed_for_new_user: "با عرض پوزش، کاربران جدید نمی توانند تصویر بار‌گذاری کنند."
         attachment_upload_not_allowed_for_new_user: "با عرض پوزش، کاربران جدید نمی توانند فایل پیوست بار‌گذاری کنند."
@@ -2167,6 +2185,7 @@ fa_IR:
         reply: "آغاز ساخت یک پاسخ به این نوشته"
         like: "پسندیدن این نوشته"
         has_liked: "شما این نوشته را پسندیده‌اید"
+        read_indicator: "کاربرانی که این فرسته را خوانده‌اند."
         undo_like: "برداشتن پسند"
         edit: "ویرایش این نوشته"
         edit_action: "ویرایش"
@@ -2192,6 +2211,7 @@ fa_IR:
         lock_post_description: "ممانعت از ویرایش پست توسط فرستنده"
         unlock_post: "بازکردن پست"
         unlock_post_description: "اجازه به فرستنده پست برای ویرایش پست"
+        delete_topic_disallowed_modal: "شما دسترسی برای حذف این مبحث را ندارید. اگر واقعاً می‌خواهید حذف شود، یک علامت همراه دلیل برای خبردار کردن مدیر ثبت کنید."
         delete_topic_disallowed: "شما مجاز به حذف این تاپیک نمی‌باشید"
         delete_topic: "حذف موضوع"
         add_post_notice: "اطلاعیه کارکنان را اضافه کنید"
@@ -2199,6 +2219,9 @@ fa_IR:
         remove_timer: "حذف زمان‌سنج"
       actions:
         flag: "پرچم"
+        defer_flags:
+          one: "چشم‌پوشی از پرچم"
+          other: "چشم‌پوشی از پرچم‌ها"
         undo:
           off_topic: "برداشتن پرچم"
           spam: "برداشتن پرچم"
@@ -2232,6 +2255,7 @@ fa_IR:
           revert: "بازگشت به این بازبینی"
           edit_wiki: "ویرایش دانشنامه"
           edit_post: "ویرایش نوشته"
+          comparing_previous_to_current_out_of_total: "<strong>{{previous}}</strong>{{icon}}<strong>{{current}}</strong>/{{total}}"
         displays:
           inline:
             title: "نمایش خروجی رندر با اضافات و از بین بردن درون خطی"
@@ -3096,6 +3120,7 @@ fa_IR:
           theme: "قالب"
           component: "کامپوننت "
           components: "کامپوننت‌ها"
+          theme_name: "نام قالب"
           component_name: "نام کامپوننت"
           browse_themes: "مرور تم های انجمن"
           customize_desc: "شخصی‌سازی:"
@@ -3172,6 +3197,9 @@ fa_IR:
           theme_settings: "تنظیمات تم"
           no_settings: "این تم تنظیماتی ندارد."
           theme_translations: "ترجمه تم"
+          commits_behind:
+            one: "قالب %{count}تغییر دیگر نیاز دارد."
+            other: "قالب {{count}} تغییر دیگر نیاز دارد."
           scss:
             text: "سی اس اس"
             title: "کد CSS مد نظرتان را وارد کنید، از تمام کد‌های CSS و SCSS معتبر پشتیبانی می‌شود."
@@ -3234,11 +3262,15 @@ fa_IR:
         email_style:
           html: "قالب HTML"
           css: "سی اس اس"
+          reset: "بازگردانی به پیش‌فرض"
+          save_error_with_reason: "تغییرات شما ذخیره نشده‌است. %{error}"
       email:
         title: "ایمیل‌ها"
         settings: "تنظیمات"
         templates: "قالب‌ها"
         preview_digest: "پیشنمایش خلاصه"
+        advanced_test:
+          email: "پیام اصلی"
         sending_test: "فرستادن ایمیل آزمایشی..."
         error: "<b>خطا</b> - %{server_error}"
         test_error: "در ارسال ایمیل آزمایشی مشکلی وجود داشته است. لطفاً مجدداً تنظیمات ایمیل خود را بررسی کنید، از این که هاستتان اتصالات ایمیل را مسدود نکرده اطمینان حاصل کرده و مجدداً تلاش کنید."
@@ -3314,6 +3346,7 @@ fa_IR:
           do_nothing: "هیچ کاری نکن"
         staff_actions:
           all: "همه"
+          filter: "فیلتر:"
           title: "عملیات همکارا"
           clear_filters: "همه چیز را نشان بده "
           staff_user: "کاربر"
@@ -3366,7 +3399,11 @@ fa_IR:
             change_readonly_mode: "تغییر حالت فقط خواندنی"
             backup_download: "دانلود نسخه پشتیبان"
             backup_destroy: "حذف نسخه پشتیبان"
+            disabled_second_factor: "غیرفعا‌سازی احراز هویت دو مرحله ای"
             post_approved: "نوشته تایید شده"
+            change_name: "تغییر دادن نام"
+            approve_user: "کاربر پذیرفته‌شده"
+            change_theme_setting: "تغییر دادن تنظیمات قالب"
         screened_emails:
           title: "ایمیل ها نمایش داده شده"
           description: "وقتی کسی سعی می کند یک حساب جدید ایجاد کند، آدرس‌های ایمیل زیر بررسی و ثبت نام مسدود خواهد شد، و یا برخی از اقدام های دیگر انجام می شود."
@@ -3398,19 +3435,34 @@ fa_IR:
             text: "جمع کردن"
             title: "ساخت مسدود سازی زیر شبکه جدید اگر آنها آخرین 'min_ban_entries_for_roll_up' ورودی ها بودند."
         search_logs:
+          searches: "جستجوها"
           types:
             header: "سربرگ"
+            full_page: "صفحهٔ کامل"
         logster:
           title: "گزارش خطا"
       watched_words:
+        search: "جست‌وجو"
         clear_filter: "واضح"
+        show_words: "نمایش واژه‌ها"
         download: دانلود
         clear_all: پاکسازی همه
+        word_count:
+          one: "%{count} واژه"
+          other: "%{count} واژه"
         actions:
           block: "بستن"
+          censor: "سانسور"
+          require_approval: "نیازمند تصویب"
           flag: "پرچم"
+        action_descriptions:
+          block: "از فرستادن فرسته‌هایی که دارای این واژه‌ها هستند جلوگیری کنید. کاربر هنگام ارسال فرسته با پیام خطا مواجه می‌شود."
+          require_approval: "فرسته‌های دارای این واژه‌ها پیش از دیده شدن نیاز به تائید کارکنان دارند."
         form:
+          label: "واژه تازه:"
           add: "افزودن"
+          success: "موفقیت"
+          upload_successful: "بارگذاری با موفقیت انجام شد. واژه‌ها اضافه شدند."
         test:
           no_matches: "چیزی یافت نشد."
       impersonate:
@@ -3424,7 +3476,9 @@ fa_IR:
         last_emailed: "آخرین ایمیل فرستاده شده"
         not_found: "متاسفیم٬ این کاربر در سیستم ما وجود ندارد."
         id_not_found: "متاسفیم٬ این شناسه کاربری در سیستم ما وجود ندارد."
+        active: "فعال شد"
         show_emails: "ایمیل ها را نشان بده"
+        hide_emails: "مخفی کردن رایانامه‌ها"
         nav:
           new: "جدید"
           active: "فعال"
@@ -3457,10 +3511,15 @@ fa_IR:
         suspend_duration: "کاربر چه مدت در تعلیق خواهد بود؟"
         suspend_reason_label: "شما چرا معلق شده‌اید؟ این متن بر روی صفحه‌ی نمایه‌ی کاربر <b/>برای همه قابل مشاهده خواهد بود<b>، و در هنگام ورود به سیستم نیز به خود کاربر نشان داده خواهد شد. لطفاً خلاصه بنویسید."
         suspend_reason: "دلیل"
+        suspend_reason_placeholder: "دلیل تعلیق شدن"
+        suspend_message_placeholder: "به صورت اختیاری اطلاعات بیشتری درمورد تعلیق ارائه دهید تا به رایانامه کاربر ارسال شود."
         suspended_by: "تعلیق شده توسط"
         silence_reason: "دلیل"
         suspended_until: "(تا %{until})"
+        cant_suspend: "این کاربر نمی‌تواند معلق شود."
         delete_all_posts: "پاک کردن همه‌ی نوشته‌ها"
+        delete_posts_progress: "درحال حذف فرسته‌ها..."
+        penalty_post_edit: "ویرایش فرسته"
         delete_all_posts_confirm_MF: "شما در حال حذف {POSTS, plural, one {1 نوشته} other {# نوشته}} and {TOPICS, plural, one {1 نوشته} other {# موضوع}} هستید. ادامه می‌دهید؟"
         moderator: "مدیر؟ "
         admin: "مدیر ارشد؟"
@@ -3488,6 +3547,7 @@ fa_IR:
         private_topics_count: موضوعات خصوصی
         posts_read_count: نوشته‌های خوانده شده
         post_count: نوشته‌های ایجاد شده
+        second_factor_enabled: احراز هویت دو مرحله‌ای فعال شد
         topics_entered: " موضوعات بازدید شده"
         flags_given_count: پرچم‌های داده شده
         flags_received_count: پرچم‌های دریافت شده
@@ -3516,6 +3576,7 @@ fa_IR:
           other: "نمی توان همه نوشته ها را خذف کرد. چون تعداد کاربران از %{count} تعداد نوشته ها بیشتر است.(delete_all_posts_max)"
         delete_and_block: "آدرس IP و ایمیل را حذف و <b>مسدود</b>کن."
         delete_dont_block: "فقط حذف"
+        deleting_user: "درحال حذف کاربر..."
         deleted: "کاربر حذف شد."
         delete_failed: "خطایی در پاک کردن آن کاربر روی داد. پیش از تلاش برای پاک کردن کاربر، مطمئن شوید همه‌ی نوشته‌های او پاک شوند."
         send_activation_email: "ارسال ایمیل فعال‌سازی"
@@ -3633,8 +3694,10 @@ fa_IR:
         add_url: "اضافه کردن URL"
         add_host: "اضافه کردن هاست"
         uploaded_image_list:
+          label: "ویرایش فهرست"
           upload:
             label: "بارگذاری"
+            title: "بارگذاری تصویر(ها)"
         categories:
           all_results: "همه"
           required: "مورد نیاز"
@@ -3784,6 +3847,7 @@ fa_IR:
         modal:
           categories: "دسته‌بندی‌ها"
           topics: "موضوعات"
+          replace: "جایگزینی"
   wizard_js:
     wizard:
       done: "انجام شد"

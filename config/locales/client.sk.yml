@@ -1238,7 +1238,6 @@ sk:
       users_placeholder: "Pridať používateľa"
       title_placeholder: "O čom je této diskusia v jednej stručnej vete?"
       edit_reason_placeholder: "prečo upravujete?"
-      show_edit_reason: "(pridajte dôvod úpravy)"
       reply_placeholder: "Píšte sem. Formátujte pomocou Markdown, BBCode alebo HTML. Pretiahnite alebo vložte obrázky."
       view_new_post: "Zobraziť nový príspevok."
       saving: "Ukladanie"

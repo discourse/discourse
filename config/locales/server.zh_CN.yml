@@ -143,6 +143,7 @@ zh_CN:
       wrong_length:
         other: 长度错误（应为 %{count} 个字）
       other_than: "必须不为 %{count}"
+      sso_overrides_username: "当`sso_overrides_username`设置是启用的，用户名需要在SSO提供商处更新。"
     template:
       body: "有下列问题："
       header:

@@ -1183,7 +1183,6 @@ lt:
       title_placeholder: "Apibūdinkite apie ka bus ši diskusija vienu trumpu sakiniu"
       title_or_link_placeholder: "Įveskite pavadinimą, arba įklijuokite nuorodą čia"
       edit_reason_placeholder: "kodėl jūs redaguojate?"
-      show_edit_reason: "(pridėti redagavimo priežastį)"
       reply_placeholder: "Įrašyti čia. "
       view_new_post: "Peržiūrėksavo naują įrašą."
       saving: "Saugoma..."

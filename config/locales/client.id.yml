@@ -874,7 +874,6 @@ id:
       users_placeholder: "Tambahkan pengguna"
       title_placeholder: "Tentang apa diskusi ini dalam satu kalimat pendek?"
       title_or_link_placeholder: "Ketik judul, atau tempel tautan disini"
-      show_edit_reason: "(tambahkan alasan pengubahan)"
       topic_featured_link_placeholder: "Masukkan tautan yang terlihat dengan judul."
       remove_featured_link: "Hapus tautan dari topik"
       reply_placeholder: "Ketik disini. Gunakan Markdown, BBCode, atau HTML untuk memformat. Tarik atau tempel gambar."

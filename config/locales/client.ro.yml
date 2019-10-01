@@ -1192,7 +1192,6 @@ ro:
       title_placeholder: "Despre ce e vorba în acest subiect - pe scurt?"
       title_or_link_placeholder: "Introdu titlul, sau copiază aici un link"
       edit_reason_placeholder: "de ce editezi?"
-      show_edit_reason: "(adaugă motivul editării)"
       topic_featured_link_placeholder: "Introdu link afișat cu titlu."
       remove_featured_link: "Eliminați link-ul din discuție"
       reply_placeholder: "Scrie aici. Utilizează formatarea Markdown, BBCode sau HTML. Trage sau lipește imagini."

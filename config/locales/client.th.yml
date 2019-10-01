@@ -925,7 +925,6 @@ th:
       users_placeholder: "เพิ่มผู้ใช้"
       title_placeholder: "บทสนทนานี้เกี่ยวกับอะไร ขอสั้นๆ 1 ประโยค"
       edit_reason_placeholder: "ทำไมคุณถึงแก้ไข?"
-      show_edit_reason: "(เพิ่มสาเหตุที่แก้ไข)"
       reply_placeholder: "พิมพ์ที่นี่. ใช้ Markdown, BBCode หรือ HTML เพื่อจัดรูปแบบ สามารถลากหรือวางรูปภาพได้"
       view_new_post: "ดูโพสต์ใหม่ของคุณ"
       saving: "กำลังบันทึก"

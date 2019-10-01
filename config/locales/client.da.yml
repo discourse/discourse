@@ -95,6 +95,12 @@ da:
         x_days:
           one: "%{count} dag siden"
           other: "%{count} dage siden"
+        x_months:
+          one: "%{count} måned siden"
+          other: "%{count} måneder siden"
+        x_years:
+          one: "%{count} år siden"
+          other: "%{count} år siden"
       later:
         x_days:
           one: "%{count} dag senere"
@@ -314,6 +320,8 @@ da:
       in_reply_to: "som svar til"
       explain:
         total: "Total"
+        trust_level_bonus:
+          name: "tillidsniveau"
       claim_help:
         optional: "Du kan gøre krav på dette punkt, for at forhindre andre i at gennemgå det."
         required: "Du skal kræve punkter, før du kan gennemgå dem."
@@ -585,6 +593,7 @@ da:
         remove_owner: "Fjern som Ejer"
         remove_owner_description: "Fjern <b>%{username}</b> som ejer af denne gruppe"
         owner: "Ejer"
+        forbidden: "Du har ikke tilladelse til at se medlemmerne."
       topics: "Emner"
       posts: "Indlæg"
       mentions: "Omtaler"
@@ -1337,6 +1346,9 @@ da:
         name: "GitHub"
         title: "med GitHub"
         message: "Logger ind med GitHub (kontrollér at pop-op-blokering ikke er aktiv)"
+      discord:
+        name: "Discord"
+        title: "med Discord"
     invites:
       accept_title: "Invitation"
       welcome_to: "Velkommen til %{site_name}!"
@@ -1445,6 +1457,7 @@ da:
         title_missing: "Titlen er påkrævet"
         title_too_short: "Titlen skal være på mindst {{min}} tegn"
         title_too_long: "Titlen skal være kortere end {{max}} tegn."
+        post_missing: "Indlæg kan ikke være tomt"
         post_length: "Indlægget skal være på mindst {{min}} tegn."
         try_like: "Har du prøvet {{heart}}knappen?"
         category_missing: "Du skal vælge en kategori."
@@ -1465,7 +1478,6 @@ da:
       title_placeholder: "Hvad handler diskussionen om i korte træk?"
       title_or_link_placeholder: "Skriv titlen eller indsæt et link her"
       edit_reason_placeholder: "hvorfor redigerer du?"
-      show_edit_reason: "(tilføj en begrundelse for ændringen)"
       topic_featured_link_placeholder: "Indtast link som vises med titel."
       remove_featured_link: "Fjern link fra emne."
       reply_placeholder: "Skriv her. Brug Markdown, BBCode eller HTML til at formattere. Træk eller indsæt billeder."
@@ -1708,6 +1720,7 @@ da:
     go_back: "gå tilbage"
     not_logged_in_user: "bruger side, med oversigt over aktivitet og indstillinger"
     current_user: "gå til brugerside"
+    view_all: "vis alle"
     topics:
       new_messages_marker: "sidste besøg"
       bulk:
@@ -2194,6 +2207,7 @@ da:
         reply: "begynd at skrive et svar på dette indlæg"
         like: "like dette indlæg"
         has_liked: "Du liker dette indlæg"
+        read_indicator: "medlemmer der har læst dette indlæg"
         undo_like: "fortryd like"
         edit: "redigér dette indlæg"
         edit_action: "Rediger"
@@ -2895,6 +2909,8 @@ da:
           view_table: "tabel"
           view_graph: "graf"
           refresh_report: "Genopfrisk rapporten"
+          start_date: "Startdato (UTC)"
+          end_date: "Slutdato (UTC)"
           groups: "Alle grupper"
           disabled: "Denne rapport er deaktiveret"
           totals_for_sample: "Totaler for prøve"
@@ -2945,6 +2961,9 @@ da:
               staff: "Gruppeejer og hjælpeteam"
               owners: "Gruppeejere"
               description: "Administratorer kan se alle grupper."
+            members_visibility_levels:
+              title: "Hvem kan se medlemmer for denne gruppe?"
+              description: "Admins kan se medlemmer af alle grupper."
           membership:
             automatic: Automatisk
             trust_level: Tillidsniveau
@@ -3374,6 +3393,7 @@ da:
           warning: "Dette vil tilsidesætte alle relaterede sideindstillinger permanent."
           overridden: Dit websteds standard robots.txt-fil er tilsidesat.
         email_style:
+          html: "HTML skabelon"
           css: "CSS"
       email:
         title: "Emails"

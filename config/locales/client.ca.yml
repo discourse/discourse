@@ -329,8 +329,8 @@ ca:
         min_score_visibility: "Puntuació mínima per a visibilitat"
         score_to_hide: "Puntuació per a amagar la publicació"
         take_action_bonus:
-          name: 'ha actuat'
-          title: 'Quan un membre de l''equip responsable decideix actuar, es dóna una bonificació a la bandera. '
+          name: "ha actuat"
+          title: "Quan un membre de l'equip responsable decideix actuar, es dóna una bonificació a la bandera. "
         user_accuracy_bonus:
           name: "precisió de l’usuari"
           title: "Es dóna una bonificació als usuaris que hagin creat banderes amb les quals històricament s'hagi estat d'acord. "
@@ -1501,7 +1501,6 @@ ca:
       title_placeholder: "De què tracta aquesta discussió (en una frase curta)?"
       title_or_link_placeholder: "Escriviu aquí el títol o enganxeu-hi un enllaç"
       edit_reason_placeholder: "per què ho editeu?"
-      show_edit_reason: "(afegeix motiu de l'edició)"
       topic_featured_link_placeholder: "Introduïu un enllaç mostrat amb títol."
       remove_featured_link: "Elimina l'enllaç del tema."
       reply_placeholder: "Escriviu aquí. Feu servir Markdown, BBCode o HTML per a donar format. Arrossegueu o enganxeu imatges."
@@ -1611,7 +1610,7 @@ ca:
       invitee_accepted: "<span>{{username}}</span> ha acceptat la vostra invitació"
       moved_post: "<span>{{username}}</span> ha mogut {{description}}"
       linked: "<span>{{username}}</span> {{description}}"
-      granted_badge: "Ha guanyat '{{description}}'"
+      granted_badge: "Heu guanyat '{{description}}'"
       topic_reminder: "<span>{{username}}</span> {{description}}"
       watching_first_post: "<span>Tema nou</span> {{description}}"
       membership_request_accepted: "Membre acceptat en '{{group_name}}'"

@@ -112,6 +112,14 @@ bs_BA:
           one: "prije %{count} dan "
           few: "Prije par dana "
           other: "%{count} dana prije"
+        x_months:
+          one: "%{count} prije mjesec dana"
+          few: "%{count} mjeseca"
+          other: "%{count} mjeseca"
+        x_years:
+          one: "%{count} prije godinu dana"
+          few: "%{count} godina"
+          other: "%{count} godina"
       later:
         x_days:
           one: "Prije %{count} dan"
@@ -1511,7 +1519,6 @@ bs_BA:
       title_placeholder: "O čemu je ova diskusija u jednoj rečenici?"
       title_or_link_placeholder: "Ukucajte naziv, ili zalijepite link ovdje"
       edit_reason_placeholder: "zašto pravite izmjenu?"
-      show_edit_reason: "(dodaj razlog izmjene)"
       topic_featured_link_placeholder: "Unesite link prikazan sa nazivom"
       remove_featured_link: "Odstranite link sa teme."
       reply_placeholder: "Ovdje kucate vaš tekst. Koristite Markdown, BBcode ili HTML kako bi formatirali isti. Povucite ili zaljepite slike."

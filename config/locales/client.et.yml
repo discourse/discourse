@@ -1174,7 +1174,6 @@ et:
       title_placeholder: "Kuidas seda vestlust ühe lausega kirjeldada?"
       title_or_link_placeholder: "Kirjuta pealkiri või kleebi link siia"
       edit_reason_placeholder: "miks sa seda muudad?"
-      show_edit_reason: "(lisa muutmise põhjus)"
       topic_featured_link_placeholder: "Järgi pealkirjas näidatud viidet."
       remove_featured_link: "Eemalda teemast link."
       reply_placeholder: "Kirjuta siia. Kujundamiseks kasuta Markdown, BBCode, või HTML-i. Pildid võid siia lohistada või kleepida."

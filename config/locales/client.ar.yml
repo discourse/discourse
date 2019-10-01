@@ -1259,7 +1259,6 @@ ar:
       title_placeholder: "بجملة واحدة، صف ما الذي تود المناقشة فية؟"
       title_or_link_placeholder: "اكتب عنوانًا أو ألصق رابطًا"
       edit_reason_placeholder: "لماذا تقوم بالتعديل؟"
-      show_edit_reason: "(أضف سبب التعديل)"
       topic_featured_link_placeholder: "ضع رابطاً يظهر مع العنوان"
       remove_featured_link: "حذف الرابط من الموضوع"
       reply_placeholder: "اكتب ما تريد هنا. استخدم Markdown، أو BBCode، أو HTML للتنسيق. اسحب الصور أو ألصقها."

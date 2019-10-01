@@ -1471,7 +1471,6 @@ fr:
       title_placeholder: "Quel est le sujet en une courte phrase ?"
       title_or_link_placeholder: "Entrez un titre, ou copiez un lien ici"
       edit_reason_placeholder: "pourquoi modifiez-vous le message ?"
-      show_edit_reason: "(ajouter la raison de la modification)"
       topic_featured_link_placeholder: "Entrez un lien affiché avec le titre."
       remove_featured_link: "Retirer le lien du sujet"
       reply_placeholder: "Écrivez ici. Utilisez Markdown, BBCode, ou HTML pour mettre en forme. Glissez ou collez des images."

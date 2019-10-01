@@ -1267,7 +1267,6 @@ ja:
       title_placeholder: "トピックのタイトルを入力してください。"
       title_or_link_placeholder: "タイトルを記入するか、リンクを貼ってください"
       edit_reason_placeholder: "編集する理由は何ですか?"
-      show_edit_reason: "(編集理由を追加)"
       topic_featured_link_placeholder: "タイトルにリンクを入力してください。"
       remove_featured_link: "トピックからリンクを削除する。"
       reply_placeholder: "文章を入力してください。 Markdown, BBコード, HTMLが使用出来ます。 画像はドラッグアンドドロップで貼り付けられます。"

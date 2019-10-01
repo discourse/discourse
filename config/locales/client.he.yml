@@ -383,8 +383,8 @@ he:
         min_score_visibility: "ניקוד מזערי כדי שיופיע"
         score_to_hide: "ניקוד להסתרת הפוסט"
         take_action_bonus:
-          name: 'ננקטה פעולה'
-          title: 'כאשר חבר סגל בוחר לנקוט בפעולה הדגל מקבל בונוס.'
+          name: "ננקטה פעולה"
+          title: "כאשר חבר סגל בוחר לנקוט בפעולה הדגל מקבל בונוס."
         user_accuracy_bonus:
           name: "דיוק משתמש"
           title: "משתמשים שסימון הדגל שלהם קיבל הסכמה בעבר מקבלים בונוס."
@@ -1609,7 +1609,6 @@ he:
       title_placeholder: " במשפט אחד, במה עוסק הדיון הזה?"
       title_or_link_placeholder: "הקלידו כותרת, או הדביקו קישור כאן"
       edit_reason_placeholder: "מדוע ערכת?"
-      show_edit_reason: "(הוספת סיבת עריכה)"
       topic_featured_link_placeholder: "הזינו קישור שיוצג עם הכותרת."
       remove_featured_link: "הסר קישור מנושא"
       reply_placeholder: "הקלידו כאן. השתמשו ב Markdown, BBCode או HTML כדי לערוך. גררו או הדביקו תמונות."

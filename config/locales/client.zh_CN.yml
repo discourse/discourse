@@ -295,8 +295,10 @@ zh_CN:
       in_reply_to: "回复给"
       explain:
         title: "需审核评分"
+        formula: "公式"
         subtotal: "小计"
         total: "总请求数"
+        min_score_visibility: "可见时的最低分数"
         score_to_hide: "隐藏帖子的分数"
         trust_level_bonus:
           name: "信任等级"
@@ -1409,10 +1411,12 @@ zh_CN:
         title_missing: "标题为空"
         title_too_short: "标题过短，至少 {{min}} 个字"
         title_too_long: "标题过长，最多 {{max}} 个字"
+        post_missing: "帖子不能为空"
         post_length: "帖子至少应有 {{min}} 个字"
         try_like: "试试{{heart}}按钮？"
         category_missing: "未选择分类"
         tags_missing: "你必须至少选择{{count}}个标签"
+        topic_template_not_modified: "请通过编辑主题模板来为主题添加详情。"
       save_edit: "保存编辑"
       overwrite_edit: "覆盖编辑"
       reply_original: "回复原始主题"
@@ -1429,7 +1433,6 @@ zh_CN:
       title_placeholder: "一句话概况讨论内容…"
       title_or_link_placeholder: "键入标题，或粘贴一个链接在这里"
       edit_reason_placeholder: "编辑理由"
-      show_edit_reason: "添加理由"
       topic_featured_link_placeholder: "在标题里输入链接"
       remove_featured_link: "从主题中移除链接。"
       reply_placeholder: "在此键入。使用Markdown，BBCode，或HTML格式。可拖拽或粘贴图片。"
@@ -1772,6 +1775,7 @@ zh_CN:
       group_request: "你需要请求加入`{{name}}`群组才能查看此主题。"
       group_join: "你需要加入`{{name}}`群组以查看此主题"
       group_request_sent: "你加入群组的请求已发送。当被接受时你会收到通知。"
+      unread_indicator: "还没有成员读过此主题的最新帖子。"
       read_more_MF: "还有 { UNREAD, plural, =0 {} one { <a href='{basePath}/unread'>1 个未读主题</a>} other { <a href='{basePath}/unread'># 个未读主题</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{和 } false {} other{}} <a href='{basePath}/new'>1 个新</a>主题} other { {BOTH, select, true{和 } false {} other{}} <a href='{basePath}/new'># 个近期</a>主题} }可以阅读，或者{CATEGORY, select, true {浏览{catLink}中的其他主题} false {{latestLink}} other {}}"
       browse_all_categories: 浏览所有分类
       view_latest_topics: 查阅最新主题

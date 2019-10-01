@@ -329,8 +329,8 @@ nl:
         min_score_visibility: "Minimale score voor zichtbaarheid"
         score_to_hide: "Score voor verbergen van bericht"
         take_action_bonus:
-          name: 'heeft actie ondernomen'
-          title: 'Wanneer een staflid kiest voor het ondernemen van actie, wordt een bonus aan de markering gegeven.'
+          name: "heeft actie ondernomen"
+          title: "Wanneer een staflid kiest voor het ondernemen van actie, wordt een bonus aan de markering gegeven."
         user_accuracy_bonus:
           name: "gebruikersnauwkeurigheid"
           title: "Gebruikers waarvan markeringen in het verleden zijn geaccordeerd ontvangen een bonus."
@@ -1501,7 +1501,6 @@ nl:
       title_placeholder: "Waar gaat deze discussie over in één korte zin?"
       title_or_link_placeholder: "Typ de titel, of plak hier een koppeling"
       edit_reason_placeholder: "vanwaar deze bewerking?"
-      show_edit_reason: "(geef een reden)"
       topic_featured_link_placeholder: "Voer koppeling in die met titel wordt getoond."
       remove_featured_link: "Koppeling uit topic verwijderen."
       reply_placeholder: "Typ hier. Gebruik Markdown, BBCode of HTML voor opmaak. Sleep of plak afbeeldingen."

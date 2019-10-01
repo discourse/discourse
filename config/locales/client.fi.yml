@@ -1422,7 +1422,6 @@ fi:
       title_placeholder: "Kuvaile lyhyesti mistä tässä ketjussa on kyse?"
       title_or_link_placeholder: "Kirjoita otsikko tai liitä linkki tähän"
       edit_reason_placeholder: "miksi muokkaat viestiä?"
-      show_edit_reason: "(lisää syy muokkaukselle)"
       topic_featured_link_placeholder: "Tähän linkki, joka näytetään otsikon yhteydessä."
       remove_featured_link: "Poista ketjulinkki"
       reply_placeholder: "Kirjoita tähän. Käytä Markdownia, BBCodea tai HTML:ää muotoiluun. Raahaa tai liitä kuvia."

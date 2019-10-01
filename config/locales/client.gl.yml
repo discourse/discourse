@@ -873,7 +873,6 @@ gl:
       users_placeholder: "Engadir un usuario"
       title_placeholder: "Sobre que trata a discusión nunha soa frase?"
       edit_reason_placeholder: "por que estás editando?"
-      show_edit_reason: "(engadir unha razón para editar)"
       reply_placeholder: "Escribe aquí. Usa Markdown, BBCode ou HTML para formatar. Arrastra ou pega imaxes."
       view_new_post: "Ver a nova publicación."
       saving: "Gardando"

@@ -323,8 +323,8 @@ es:
         min_score_visibility: "Puntuación mínima para ser visible"
         score_to_hide: "Puntuación mínima para ocultar publicación"
         take_action_bonus:
-          name: 'acción tomada'
-          title: 'cuando un miembro del staff decide tomar acciones, se le otorga un bono al reporte'
+          name: "acción tomada"
+          title: "cuando un miembro del staff decide tomar acciones, se le otorga un bono al reporte"
         user_accuracy_bonus:
           name: "precisión del usuario"
           title: "Los usuarios con los que se ha coincidido en reportes anteriores reciben puntos extra."
@@ -1495,7 +1495,6 @@ es:
       title_placeholder: "En una frase breve, ¿de qué trata este tema?"
       title_or_link_placeholder: "Escribe un título o pega un enlace aquí"
       edit_reason_placeholder: "¿Por qué lo estás editando?"
-      show_edit_reason: "(añadir motivo de edición)"
       topic_featured_link_placeholder: "Ingresa el enlace mostrado con el título."
       remove_featured_link: "Eliminar enlace del tema."
       reply_placeholder: "Escribe aquí. Usa Markdown, BBCode o HTML para darle formato. Arrastra o pega imágenes."
