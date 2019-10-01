@@ -29,7 +29,6 @@ export default (filterArg, params) => {
             );
           }
           const record = this.store.createRecord("category", atts.category);
-          record.setupGroupsAndPermissions();
           this.site.updateCategory(record);
           return {
             category: Category.findBySlug(

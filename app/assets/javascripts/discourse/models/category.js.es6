@@ -1,30 +1,31 @@
 import { ajax } from "discourse/lib/ajax";
 import RestModel from "discourse/models/rest";
 import computed from "ember-addons/ember-computed-decorators";
-import { on } from "ember-addons/ember-computed-decorators";
 import PermissionType from "discourse/models/permission-type";
 
 const Category = RestModel.extend({
-  @on("init")
-  setupGroupsAndPermissions() {
-    const availableGroups = this.available_groups;
-    if (!availableGroups) {
-      return;
-    }
-    this.set("availableGroups", availableGroups);
+  availableGroups: Ember.computed.readOnly("available_groups"),
+  groupPermissions: Ember.computed.readOnly("group_permissions"),
 
-    const groupPermissions = this.group_permissions;
-    if (groupPermissions) {
-      this.set(
-        "permissions",
-        groupPermissions.map(elem => {
-          availableGroups.removeObject(elem.group_name);
-          return {
-            group_name: elem.group_name,
-            permission: PermissionType.create({ id: elem.permission_type })
-          };
-        })
-      );
+  @computed("groupPermissions.[]", "availableGroups.[]")
+  permissions(groupPermissions, availableGroups) {
+    if (groupPermissions && availableGroups) {
+      return groupPermissions.map(elem => {
+        availableGroups.removeObject(elem.group_name);
+        return {
+          group_name: elem.group_name,
+          permission: PermissionType.create({ id: elem.permission_type })
+        };
+      });
+    } else {
+      return Ember.A([
+        {
+          group_name: "everyone",
+          permission: PermissionType.create({ id: 1 })
+        },
+        { group_name: "admins", permission: PermissionType.create({ id: 2 }) },
+        { group_name: "crap", permission: PermissionType.create({ id: 3 }) }
+      ]);
     }
   },
 
@@ -159,15 +160,6 @@ const Category = RestModel.extend({
   removePermission(permission) {
     this.permissions.removeObject(permission);
     this.availableGroups.addObject(permission.group_name);
-  },
-
-  @computed
-  permissions() {
-    return Ember.A([
-      { group_name: "everyone", permission: PermissionType.create({ id: 1 }) },
-      { group_name: "admins", permission: PermissionType.create({ id: 2 }) },
-      { group_name: "crap", permission: PermissionType.create({ id: 3 }) }
-    ]);
   },
 
   @computed("topics")

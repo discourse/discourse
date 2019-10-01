@@ -88,7 +88,6 @@ export default Discourse.Route.extend({
         filter = `tags/c/${categorySlug}/${tagId}/l/${topicFilter}`;
       }
       if (category) {
-        category.setupGroupsAndPermissions();
         this.set("category", category);
       }
     } else if (this.additionalTags) {
