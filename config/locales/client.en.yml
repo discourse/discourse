@@ -385,8 +385,8 @@ en:
         min_score_visibility: "Minimum Score for Visibility"
         score_to_hide: "Score to Hide Post"
         take_action_bonus:
-          name: 'took action'
-          title: 'When a staff member chooses to take action the flag is given a bonus.'
+          name: "took action"
+          title: "When a staff member chooses to take action the flag is given a bonus."
         user_accuracy_bonus:
           name: "user accuracy"
           title: "Users whose flags have been historically agreed with are given a bonus."
@@ -1645,7 +1645,6 @@ en:
       title_placeholder: "What is this discussion about in one brief sentence?"
       title_or_link_placeholder: "Type title, or paste a link here"
       edit_reason_placeholder: "why are you editing?"
-      show_edit_reason: "(add edit reason)"
       topic_featured_link_placeholder: "Enter link shown with title."
       remove_featured_link: "Remove link from topic."
       reply_placeholder: "Type here. Use Markdown, BBCode, or HTML to format. Drag or paste images."
