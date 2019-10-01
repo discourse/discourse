@@ -25,7 +25,7 @@ function loadDraft(store, opts) {
   let draft = opts.draft;
   const draftKey = opts.draftKey;
   const draftSequence = opts.draftSequence;
-
+  
   try {
     if (draft && typeof draft === "string") {
       draft = JSON.parse(draft);
@@ -39,34 +39,21 @@ function loadDraft(store, opts) {
     ((draft.title && draft.title !== "") || (draft.reply && draft.reply !== ""))
   ) {
     const composer = store.createRecord("composer");
-    var serialized = Composer.serializedFieldsForDraft();
-    var serializedObject = {};
-    serialized.forEach( key=>{
-      serializedObject[key] = draft[key] ;
-    })
+    const serializedFields = Composer.serializedFieldsForDraft();
 
-    var attrs = {
+    let attrs = {
       draftKey,
       draftSequence,
-      action: draft.action,
-      title: draft.title,
-      categoryId: draft.categoryId || opts.categoryId,
-      postId: draft.postId,
-      archetypeId: draft.archetypeId,
-      reply: draft.reply,
-      metaData: draft.metaData,
-      usernames: draft.usernames,
       draft: true,
-      composerState: Composer.DRAFT,
-      composerTime: draft.composerTime,
-      typingTime: draft.typingTime,
-      whisper: draft.whisper,
-      tags: draft.tags,
-      noBump: draft.noBump,
+      composerState: Composer.DRAFT
     }
+    
+    serializedFields.forEach(f => {
+      attrs[f] = draft[f] || opts[f];
+    });
 
- attrs = Object.assign(attrs, serializedObject)
     composer.open(attrs);
+    
     return composer;
   }
 }
@@ -906,14 +893,6 @@ export default Ember.Controller.extend({
     composerModel.setProperties({
       composeState: Composer.OPEN,
       isWarning: false
-    });
-    var draftKeys = Composer.serializedFieldsForDraft();
-    var draftOpts = JSON.parse(opts.draft)
-    var currentModel = this.model;
-    draftKeys.forEach(function(k){
-          if(draftOpts[k]){
-            Ember.set(currentModel, k, draftOpts[k]);
-          }
     });
 
     if (opts.usernames && !this.get("model.targetUsernames")) {

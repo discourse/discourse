@@ -57,11 +57,21 @@ const CLOSED = "closed",
     tags: "topic.tags",
     featuredLink: "topic.featured_link"
   },
+  _draft_serializer = {
+    reply: 'reply',
+    action: 'action',
+    title: 'title',
+    categoryId: 'categoryId',
+    archetypeId: 'archetypeId',
+    whisper: 'whisper',
+    metaData: 'metaData',
+    composerTime: 'composerTime',
+    typingTime: 'typingTime',
+    postId: 'post.id',
+    usernames: 'targetUsernames',
+  },
+  _add_draft_fields = {},
   FAST_REPLY_LENGTH_THRESHOLD = 10000;
-
-const draft_serializer = {
- 
-}
 
 export const SAVE_LABELS = {
   [EDIT]: "composer.save_edit",
@@ -714,6 +724,11 @@ const Composer = RestModel.extend({
     if (!isEdit(opts.action) || !opts.post) {
       composer.appEvents.trigger("composer:reply-reloaded", composer);
     }
+    
+    // Ensure additional draft fields are set
+    Object.keys(_add_draft_fields).forEach(f => {
+      this.set(_add_draft_fields[f], opts[f]);
+    });
 
     return false;
   },
@@ -1006,28 +1021,9 @@ const Composer = RestModel.extend({
       Ember.run.cancel(this._clearingStatus);
       this._clearingStatus = null;
     }
-
-    let data = this.getProperties(
-      "reply",
-      "action",
-      "title",
-      "categoryId",
-      "archetypeId",
-      "whisper",
-      "metaData",
-      "composerTime",
-      "typingTime",
-      "tags",
-      "noBump"
-    );
-
-    data = Object.assign(data, {
-      usernames: this.targetUsernames,
-      postId: this.get("post.id")
-    });
-    var serializedFields = this.serialize(draft_serializer);
-    Object.assign(data,serializedFields)
-
+        
+    let data = this.serialize(_draft_serializer);
+    
     if (data.postId && !Ember.isEmpty(this.originalText)) {
       data.originalText = this.originalText;
     }
@@ -1103,16 +1099,16 @@ Composer.reopenClass({
     return Object.keys(_create_serializer);
   },
 
- serializeToDraft(fieldName, property){
+  serializeToDraft(fieldName, property){
     if (!property) {
       property = fieldName;
     }
-    draft_serializer[fieldName] = property;
-
+    _draft_serializer[fieldName] = property;
+    _add_draft_fields[fieldName] = property;
   },
 
   serializedFieldsForDraft() {
-    return Object.keys(draft_serializer);
+    return Object.keys(_draft_serializer);
   },
 
   // The status the compose view can have
