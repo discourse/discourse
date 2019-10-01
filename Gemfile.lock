@@ -353,7 +353,7 @@ GEM
       guess_html_encoding (>= 0.0.4)
       nokogiri (>= 1.6.0)
     ruby_dep (1.5.0)
-    rubyzip (1.2.3)
+    rubyzip (2.0.0)
     safe_yaml (1.0.5)
     sanitize (5.0.0)
       crass (~> 1.0.2)
