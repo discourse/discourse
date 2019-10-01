@@ -131,13 +131,24 @@ export default Ember.Component.extend(
       this._hideTopicInHeader();
       this.appEvents.off("post:highlight", this, "_highlightPost");
       this.appEvents.off("header:update-topic", this, "_updateTopic");
+
+      if (this._gotFocusHandler) {
+        Discourse.removeObserver("hasFocus", this._gotFocusHandler);
+        this._gotFocusHandler = null;
+      }
     },
 
-    @observes("Discourse.hasFocus")
     gotFocus() {
-      if (Discourse.get("hasFocus")) {
+      if (Discourse.hasFocus) {
         this.scrolled();
       }
+    },
+
+    init() {
+      this._super(...arguments);
+
+      this._gotFocusHandler = Ember.run.bind(this, this.gotFocus);
+      Discourse.addObserver("hasFocus", this._gotFocusHandler);
     },
 
     resetExamineDockCache() {
