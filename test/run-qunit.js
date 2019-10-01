@@ -43,7 +43,6 @@ async function runAllTests() {
         "--headless",
         "--no-sandbox",
         "--disable-dev-shm-usage",
-        "--disable-software-rasterizer",
         "--mute-audio",
         "--window-size=1440,900"
       ]
