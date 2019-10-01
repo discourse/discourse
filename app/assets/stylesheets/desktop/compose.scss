@@ -241,6 +241,9 @@ a.toggle-preview {
     &.fullscreen {
       // important needed because of inline styles when height is changed manually with grippie
       height: 100vh !important;
+      @supports (--custom: property) {
+        height: calc(var(--composer-vh, 1vh) * 100) !important;
+      }
       z-index: z("header") + 1;
       .d-editor-preview-wrapper {
         margin-top: 1%;
@@ -277,5 +280,11 @@ a.toggle-preview {
         left: 0;
       }
     }
+  }
+}
+
+.fullscreen-composer.keyboard-visible {
+  #reply-control.fullscreen {
+    top: 0px;
   }
 }

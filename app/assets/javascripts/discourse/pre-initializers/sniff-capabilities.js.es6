@@ -35,10 +35,14 @@ export default {
         caps.canPasteImages = caps.isChrome || caps.isFirefox;
       }
 
-      caps.isIOS =
-        /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+      caps.isIpadOS =
+        ua.indexOf("Mac OS") !== -1 &&
+        !/iPhone|iPod/.test(navigator.userAgent) &&
+        touch;
 
-      caps.isIpadOS = ua.indexOf("Mac OS") !== -1 && touch;
+      caps.isIOS =
+        (/iPhone|iPod/.test(navigator.userAgent) || caps.isIpadOS) &&
+        !window.MSStream;
     }
 
     // We consider high res a device with 1280 horizontal pixels. High DPI tablets like
