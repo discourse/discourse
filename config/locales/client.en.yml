@@ -969,6 +969,7 @@ en:
       second_factor:
         title: "Two Factor Authentication"
         enable: "Manage Two Factor Authentication"
+        forgot_password: "Forgot password?"
         confirm_password_description: "Please confirm your password to continue"
         label: "Code"
         rate_limit: "Please wait before trying another authentication code."
@@ -1000,9 +1001,10 @@ en:
           add: "Register Security Key"
           default_name: "Main Security Key"
           not_allowed_error: "The security key registration process either timed out or was cancelled."
+          already_added_error: "You have already registered this security key. You don’t have to register it again."
           edit: 'Edit Security Key'
           edit_description: 'Security Key Name'
-          disable: 'Disable'
+          delete: 'Delete'
 
       change_about:
         title: "Change About Me"
