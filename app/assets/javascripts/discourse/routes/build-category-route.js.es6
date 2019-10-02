@@ -200,6 +200,10 @@ export default (filterArg, params) => {
     actions: {
       setNotification(notification_level) {
         this.currentModel.setNotification(notification_level);
+      },
+
+      triggerRefresh() {
+        this.refresh();
       }
     }
   });
