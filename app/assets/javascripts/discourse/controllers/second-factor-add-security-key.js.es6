@@ -1,5 +1,9 @@
 import ModalFunctionality from "discourse/mixins/modal-functionality";
-import { bufferToBase64, stringToBuffer } from "discourse/lib/webauthn";
+import {
+  bufferToBase64,
+  stringToBuffer,
+  isWebauthnSupported
+} from "discourse/lib/webauthn";
 
 // model for this controller is user.js.es6
 export default Ember.Controller.extend(ModalFunctionality, {
@@ -11,7 +15,8 @@ export default Ember.Controller.extend(ModalFunctionality, {
     this.setProperties({
       errorMessage: null,
       loading: true,
-      securityKeyName: I18n.t("user.second_factor.security_key.default_name")
+      securityKeyName: I18n.t("user.second_factor.security_key.default_name"),
+      webauthnUnsupported: !isWebauthnSupported()
     });
 
     this.model
@@ -23,7 +28,9 @@ export default Ember.Controller.extend(ModalFunctionality, {
         }
 
         this.setProperties({
-          errorMessage: null,
+          errorMessage: isWebauthnSupported()
+            ? null
+            : I18n.t("login.security_key_support_missing_error"),
           loading: false,
           challenge: response.challenge,
           relayingParty: {
