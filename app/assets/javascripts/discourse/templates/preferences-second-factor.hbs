@@ -142,13 +142,12 @@
             disabled=loading
             label="continue"}}
 
-          {{resetPasswordProgress}}
-
           {{#unless showEnforcedNotice}}
             {{cancel-link route="preferences.account" args=model.username}}
           {{/unless}}
         </div>
         <div class="controls" style="margin-top: 5px">
+          {{resetPasswordProgress}}
           {{#unless resetPasswordLoading}}
             <a href="" class="instructions" {{action "resetPassword"}}>{{ i18n 'user.second_factor.forgot_password' }}</a>
           {{/unless}}
