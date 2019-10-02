@@ -33,6 +33,10 @@ export default Ember.Component.extend({
 
   _scheduleChartRendering() {
     Ember.run.schedule("afterRender", () => {
+      if (!this.element) {
+        return;
+      }
+
       this._renderChart(
         this.model,
         this.element.querySelector(".chart-canvas")
