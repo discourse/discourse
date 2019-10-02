@@ -2,7 +2,6 @@
 
 module ActiveSupport::Dependencies::ZeitwerkIntegration::Inflector
   CUSTOM_PATHS = {
-    'base' => 'Jobs',
     'canonical_url' => 'CanonicalURL',
     'clean_up_unmatched_ips' => 'CleanUpUnmatchedIPs',
     'homepage_constraint' => 'HomePageConstraint',
@@ -18,8 +17,9 @@ module ActiveSupport::Dependencies::ZeitwerkIntegration::Inflector
     'version' => 'Discourse',
   }
 
-  def self.camelize(basename, _abspath)
-    return basename.camelize if _abspath =~ /onceoff\.rb$/
+  def self.camelize(basename, abspath)
+    return basename.camelize if abspath =~ /onceoff\.rb$/
+    return 'Jobs' if abspath =~ /jobs\/base\.rb$/
     CUSTOM_PATHS.fetch(basename, basename.camelize)
   end
 end

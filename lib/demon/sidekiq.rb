@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-require "demon/demon_base"
+require "demon/base"
 
-class Demon::Sidekiq < ::Demon::DemonBase
+class Demon::Sidekiq < ::Demon::Base
 
   def self.prefix
     "sidekiq"
