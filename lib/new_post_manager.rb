@@ -40,7 +40,8 @@ class NewPostManager
 
     !!(
       args[:first_post_checks] &&
-      user.post_count == 0
+      user.post_count == 0 &&
+      user.topic_count == 0
     )
   end
 
