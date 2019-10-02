@@ -859,6 +859,23 @@ describe PostsController do
           expect(user).not_to be_silenced
         end
 
+        it "doesn't enqueue posts when user first creates a topic" do
+          user.user_stat.update_column(:topic_count, 1)
+
+          post "/posts.json", params: {
+            raw: 'this is the test content',
+            title: 'this is the test title for the topic',
+            composer_open_duration_msecs: 204,
+            typing_duration_msecs: 100,
+            topic_id: topic.id
+          }
+
+          expect(response.status).to eq(200)
+          parsed = ::JSON.parse(response.body)
+
+          expect(parsed["action"]).not_to be_present
+        end
+
         it "doesn't enqueue replies when the topic is closed" do
           topic = Fabricate(:closed_topic)
 
