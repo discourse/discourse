@@ -51,6 +51,12 @@ module SecondFactorManager
       self&.user_second_factors.backup_codes.exists?
   end
 
+  def security_keys_enabled?
+    !SiteSetting.enable_sso &&
+      SiteSetting.enable_local_logins &&
+      self&.security_keys.where(factor_type: UserSecurityKey.factor_types[:second_factor], enabled: true).exists?
+  end
+
   def remaining_backup_codes
     self&.user_second_factors&.backup_codes&.count
   end

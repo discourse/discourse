@@ -79,6 +79,10 @@ class User < ActiveRecord::Base
     where(method: UserSecondFactor.methods[:totp], enabled: true)
   }, class_name: "UserSecondFactor"
 
+  has_many :security_keys, -> {
+    where(enabled: true)
+  }, class_name: "UserSecurityKey"
+
   has_one :anonymous_user_master, class_name: 'AnonymousUser'
   has_one :anonymous_user_shadow, ->(record) { where(active: true) }, foreign_key: :master_user_id, class_name: 'AnonymousUser'
 
@@ -1261,6 +1265,20 @@ class User < ActiveRecord::Base
         LIMIT #{max_post_count + 1}
       ) x
     SQL
+  end
+
+  def create_or_fetch_secure_identifier
+    return secure_identifier if secure_identifier.present?
+    new_secure_identifier = SecureRandom.hex(20)
+    self.update(secure_identifier: new_secure_identifier)
+    new_secure_identifier
+  end
+
+  def second_factor_security_key_credential_ids
+    security_keys
+      .select(:credential_id)
+      .where(factor_type: UserSecurityKey.factor_types[:second_factor])
+      .pluck(:credential_id)
   end
 
   protected

@@ -14,6 +14,7 @@ export default RestrictedUserRoute.extend({
   setupController(controller, model) {
     controller.setProperties({ model, newUsername: model.get("username") });
     controller.set("loading", true);
+
     model
       .loadSecondFactorCodes("")
       .then(response => {
@@ -24,7 +25,8 @@ export default RestrictedUserRoute.extend({
             errorMessage: null,
             loaded: !response.password_required,
             dirty: !!response.password_required,
-            totps: response.totps
+            totps: response.totps,
+            security_keys: response.security_keys
           });
         }
       })

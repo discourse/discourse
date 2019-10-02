@@ -2170,4 +2170,47 @@ describe User do
       end
     end
   end
+
+  describe "Second-factor authenticators" do
+    describe "#totps" do
+      it "only includes enabled totp 2FA" do
+        enabled_totp_2fa = Fabricate(:user_second_factor_totp, user: user, name: 'Enabled TOTP', enabled: true)
+        disabled_totp_2fa = Fabricate(:user_second_factor_totp, user: user, name: 'Disabled TOTP', enabled: false)
+
+        expect(user.totps.map(&:id)).to eq([enabled_totp_2fa.id])
+      end
+    end
+
+    describe "#security_keys" do
+      it "only includes enabled security_key 2FA" do
+        enabled_security_key_2fa = Fabricate(:user_security_key_with_random_credential, user: user, name: 'Enabled YubiKey', enabled: true)
+        disabled_security_key_2fa = Fabricate(:user_security_key_with_random_credential, user: user, name: 'Disabled YubiKey', enabled: false)
+
+        expect(user.security_keys.map(&:id)).to eq([enabled_security_key_2fa.id])
+      end
+    end
+  end
+
+  describe 'Secure identifier for a user which is a string other than the ID used to identify the user in some cases e.g. security keys' do
+    describe '#create_or_fetch_secure_identifier' do
+      context 'if the user already has a secure identifier' do
+        let(:sec_ident) { SecureRandom.hex(20) }
+        before do
+          user.update(secure_identifier: sec_ident)
+        end
+
+        it 'returns the identifier' do
+          expect(user.create_or_fetch_secure_identifier).to eq(sec_ident)
+        end
+      end
+
+      context 'if the user already does not have a secure identifier' do
+        it 'creates one' do
+          expect(user.secure_identifier).to eq(nil)
+          user.create_or_fetch_secure_identifier
+          expect(user.reload.secure_identifier).not_to eq(nil)
+        end
+      end
+    end
+  end
 end
