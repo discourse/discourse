@@ -75,7 +75,7 @@ export function isWorkaroundActive() {
 function positioningWorkaround($fixedElement) {
   const caps = Discourse.__container__.lookup("capabilities:main");
 
-  if (!caps.isIOS || caps.isIpadOS || safariHacksDisabled()) {
+  if (!caps.isIOS || safariHacksDisabled()) {
     return;
   }
 
