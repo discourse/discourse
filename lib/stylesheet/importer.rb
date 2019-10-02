@@ -7,7 +7,7 @@ module Stylesheet
   class Importer < SassC::Importer
     include GlobalPath
 
-    THEME_TARGETS = %w{embedded_theme mobile_theme desktop_theme}
+    THEME_TARGETS ||= %w{embedded_theme mobile_theme desktop_theme}
 
     def self.special_imports
       @special_imports ||= {}
