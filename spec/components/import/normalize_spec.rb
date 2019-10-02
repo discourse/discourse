@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require "rails_helper"
-require_dependency "import/normalize"
 
 describe Import::Normalize do
   describe "#normalize_code_blocks" do

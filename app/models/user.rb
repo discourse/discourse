@@ -1,21 +1,5 @@
 # frozen_string_literal: true
 
-require_dependency 'jobs/base'
-require_dependency 'email'
-require_dependency 'email_token'
-require_dependency 'email_validator'
-require_dependency 'trust_level'
-require_dependency 'pbkdf2'
-require_dependency 'discourse'
-require_dependency 'post_destroyer'
-require_dependency 'user_name_suggester'
-require_dependency 'pretty_text'
-require_dependency 'url_helper'
-require_dependency 'letter_avatar'
-require_dependency 'promotion'
-require_dependency 'password_validator'
-require_dependency 'notification_serializer'
-
 class User < ActiveRecord::Base
   include Searchable
   include Roleable

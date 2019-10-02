@@ -1,19 +1,5 @@
 # frozen_string_literal: true
 
-require_dependency 'slug'
-require_dependency 'avatar_lookup'
-require_dependency 'topic_view'
-require_dependency 'rate_limiter'
-require_dependency 'text_sentinel'
-require_dependency 'text_cleaner'
-require_dependency 'archetype'
-require_dependency 'html_prettify'
-require_dependency 'discourse_tagging'
-require_dependency 'search_indexer'
-require_dependency 'list_controller'
-require_dependency 'topic_posters_summary'
-require_dependency 'topic_featured_users'
-
 class Topic < ActiveRecord::Base
   class UserExists < StandardError; end
   include ActionView::Helpers::SanitizeHelper

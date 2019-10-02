@@ -2,7 +2,7 @@
 
 module Jobs
 
-  class BadgeGrant < Jobs::Scheduled
+  class BadgeGrant < ::Jobs::Scheduled
     def self.run
       self.new.execute(nil)
     end

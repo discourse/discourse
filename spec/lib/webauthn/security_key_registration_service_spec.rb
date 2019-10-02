@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 require 'rails_helper'
-require 'webauthn/webauthn'
+require 'webauthn'
 require 'webauthn/security_key_registration_service'
 
 describe Webauthn::SecurityKeyRegistrationService do

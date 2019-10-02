@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Jobs
-  class CleanUpPostTimings < Jobs::Onceoff
+  class CleanUpPostTimings < ::Jobs::Onceoff
 
     # Remove post timings that are remnants of previous post moves
     # or other shenanigans and don't reference a valid user or post anymore.

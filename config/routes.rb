@@ -2,10 +2,6 @@
 
 require "sidekiq/web"
 require "mini_scheduler/web"
-require_dependency "admin_constraint"
-require_dependency "staff_constraint"
-require_dependency "homepage_constraint"
-require_dependency "permalink_constraint"
 
 # The following constants have been replaced with `RouteFormat` and are deprecated.
 USERNAME_ROUTE_FORMAT = /[%\w.\-]+?/ unless defined? USERNAME_ROUTE_FORMAT

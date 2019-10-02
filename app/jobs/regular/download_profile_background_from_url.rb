@@ -2,7 +2,7 @@
 
 module Jobs
 
-  class DownloadProfileBackgroundFromUrl < Jobs::Base
+  class DownloadProfileBackgroundFromUrl < ::Jobs::Base
     sidekiq_options retry: false
 
     def execute(args)

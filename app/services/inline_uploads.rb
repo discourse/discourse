@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require_dependency "pretty_text"
-
 class InlineUploads
   PLACEHOLDER = "__replace__"
   PATH_PLACEHOLDER = "__replace_path__"

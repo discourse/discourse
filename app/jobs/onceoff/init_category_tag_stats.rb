@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Jobs
-  class InitCategoryTagStats < Jobs::Onceoff
+  class InitCategoryTagStats < ::Jobs::Onceoff
     def execute_onceoff(args)
       DB.exec "DELETE FROM category_tag_stats"
 

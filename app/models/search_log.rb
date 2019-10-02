@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require_dependency 'enum'
-
 class SearchLog < ActiveRecord::Base
   validates_presence_of :term
 

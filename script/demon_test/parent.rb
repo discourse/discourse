@@ -4,7 +4,7 @@ require File.expand_path("../../../config/environment", __FILE__)
 
 puts "Parent is now loaded"
 
-class ForkExecDemon < Demon::Base
+class ForkExecDemon < Demon::DemonBase
   def self.prefix
     "fork-exec-child"
   end

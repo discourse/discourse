@@ -1,10 +1,6 @@
 # frozen_string_literal: true
 
-require_dependency 'validators/stripped_length_validator'
-
-module Validators; end
-
-class Validators::PostValidator < ActiveModel::Validator
+class PostValidator < ActiveModel::Validator
 
   def validate(record)
     presence(record)
@@ -51,7 +47,7 @@ class Validators::PostValidator < ActiveModel::Validator
       SiteSetting.post_length
     end
 
-    Validators::StrippedLengthValidator.validate(post, :raw, post.raw, range)
+    StrippedLengthValidator.validate(post, :raw, post.raw, range)
   end
 
   def raw_quality(post)

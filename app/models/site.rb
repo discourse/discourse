@@ -1,9 +1,6 @@
 # frozen_string_literal: true
 
 # A class we can use to serialize the site data
-require_dependency 'score_calculator'
-require_dependency 'trust_level'
-
 class Site
   include ActiveModel::Serialization
 

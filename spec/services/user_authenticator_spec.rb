@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require 'rails_helper'
-require_dependency 'user_authenticator'
 
 def github_auth(email_valid)
   {

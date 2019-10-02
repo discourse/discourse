@@ -1,14 +1,5 @@
 # frozen_string_literal: true
 
-require_dependency 'new_post_manager'
-require_dependency 'post_creator'
-require_dependency 'post_action_destroyer'
-require_dependency 'post_destroyer'
-require_dependency 'post_merger'
-require_dependency 'distributed_memoizer'
-require_dependency 'new_post_result_serializer'
-require_dependency 'post_locker'
-
 class PostsController < ApplicationController
 
   requires_login except: [

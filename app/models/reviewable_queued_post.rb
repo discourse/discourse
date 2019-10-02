@@ -1,8 +1,5 @@
 # frozen_string_literal: true
 
-require_dependency 'reviewable'
-require_dependency 'user_destroyer'
-
 class ReviewableQueuedPost < Reviewable
 
   after_create do

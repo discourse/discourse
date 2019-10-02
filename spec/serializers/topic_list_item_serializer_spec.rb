@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require 'rails_helper'
-require_dependency 'post_action'
 
 describe TopicListItemSerializer do
   let(:topic) do

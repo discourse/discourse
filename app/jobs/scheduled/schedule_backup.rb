@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Jobs
-  class ScheduleBackup < Jobs::Scheduled
+  class ScheduleBackup < ::Jobs::Scheduled
     daily at: 0.hours
     sidekiq_options retry: false
 

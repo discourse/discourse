@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Jobs
-  class CleanUpPostReplyKeys < Jobs::Scheduled
+  class CleanUpPostReplyKeys < ::Jobs::Scheduled
     every 1.day
 
     def execute(_)

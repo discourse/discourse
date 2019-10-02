@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require_dependency 'search'
-
 class SearchController < ApplicationController
 
   skip_before_action :check_xhr, only: :show

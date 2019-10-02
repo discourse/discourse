@@ -1,8 +1,5 @@
 # frozen_string_literal: true
 
-require_dependency "backup_restore/backup_store"
-require_dependency "s3_helper"
-
 module BackupRestore
   class S3BackupStore < BackupStore
     UPLOAD_URL_EXPIRES_AFTER_SECONDS ||= 21_600 # 6 hours

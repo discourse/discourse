@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require_dependency 'letter_avatar'
-
 class UserAvatarsController < ApplicationController
 
   skip_before_action :preload_json, :redirect_to_login_if_required, :check_xhr, :verify_authenticity_token, only: [:show, :show_letter, :show_proxy_letter]

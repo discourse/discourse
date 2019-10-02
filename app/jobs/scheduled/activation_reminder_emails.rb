@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Jobs
-  class ActivationReminderEmails < Jobs::Scheduled
+  class ActivationReminderEmails < ::Jobs::Scheduled
     every 2.hours
 
     def execute(args)

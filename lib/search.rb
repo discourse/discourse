@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require_dependency 'search/grouped_search_results'
-
 class Search
   DIACRITICS ||= /([\u0300-\u036f]|[\u1AB0-\u1AFF]|[\u1DC0-\u1DFF]|[\u20D0-\u20FF])/
 

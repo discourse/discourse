@@ -196,7 +196,6 @@ RSpec.configure do |config|
       SiteSetting.defaults.set_regardless_of_locale(k, v) if SiteSetting.respond_to? k
     end
 
-    require_dependency 'site_settings/local_process_provider'
     SiteSetting.provider = SiteSettings::LocalProcessProvider.new
 
     WebMock.disable_net_connect!

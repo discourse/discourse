@@ -886,7 +886,6 @@ task "uploads:analyze", [:cache_path, :limit] => :environment do |_, args|
 end
 
 task "uploads:fix_incorrect_extensions" => :environment do
-  require_dependency "upload_fixer"
   UploadFixer.fix_all_extensions
 end
 
@@ -895,7 +894,6 @@ task "uploads:recover_from_tombstone" => :environment do
 end
 
 task "uploads:recover" => :environment do
-  require_dependency "upload_recovery"
 
   dry_run = ENV["DRY_RUN"].present?
   stop_on_error = ENV["STOP_ON_ERROR"].present?

@@ -1,13 +1,5 @@
 # frozen_string_literal: true
 
-require_dependency 'pretty_text'
-require_dependency 'rate_limiter'
-require_dependency 'post_revisor'
-require_dependency 'enum'
-require_dependency 'post_analyzer'
-require_dependency 'validators/post_validator'
-require_dependency 'plugin/filter'
-
 require 'archetype'
 require 'digest/sha1'
 
@@ -55,7 +47,7 @@ class Post < ActiveRecord::Base
 
   has_many :user_actions, foreign_key: :target_post_id
 
-  validates_with ::Validators::PostValidator, unless: :skip_validation
+  validates_with PostValidator, unless: :skip_validation
 
   after_save :index_search
 

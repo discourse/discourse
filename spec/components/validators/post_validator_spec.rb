@@ -1,12 +1,11 @@
 # frozen_string_literal: true
 
 require 'rails_helper'
-require_dependency 'validators/post_validator'
 
-describe Validators::PostValidator do
+describe PostValidator do
   fab!(:topic) { Fabricate(:topic) }
   let(:post) { build(:post, topic: topic) }
-  let(:validator) { Validators::PostValidator.new({}) }
+  let(:validator) { PostValidator.new({}) }
 
   context "#post_body_validator" do
     it 'should not allow a post with an empty raw' do
@@ -16,7 +15,7 @@ describe Validators::PostValidator do
     end
 
     context "when empty raw can bypass validation" do
-      let(:validator) { Validators::PostValidator.new(skip_post_body: true) }
+      let(:validator) { PostValidator.new(skip_post_body: true) }
 
       it "should be allowed for empty raw based on site setting" do
         post.raw = ""

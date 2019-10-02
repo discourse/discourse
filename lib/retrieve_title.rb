@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require_dependency 'final_destination'
-
 module RetrieveTitle
   CRAWL_TIMEOUT = 1
 
