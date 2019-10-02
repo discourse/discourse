@@ -92,14 +92,6 @@ const Discourse = Ember.Application.extend(FocusEvent, {
     }
   },
 
-  // The classes of buttons to show on a post
-  @computed
-  postButtons() {
-    return Discourse.SiteSettings.post_menu.split("|").map(function(i) {
-      return i.replace(/\+/, "").capitalize();
-    });
-  },
-
   updateContextCount(count) {
     this.set("contextCount", count);
   },
