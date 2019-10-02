@@ -8,8 +8,8 @@ module DiscourseNarrativeBot
     PUBLIC_DISPLAY_BOT_HELP_KEY = 'discourse-narrative-bot:track-selector:display-bot-help'.freeze
 
     TRACKS = [
-      NewUserNarrative,
-      AdvancedUserNarrative
+      AdvancedUserNarrative,
+      NewUserNarrative
     ]
 
     TOPIC_ACTIONS = [
