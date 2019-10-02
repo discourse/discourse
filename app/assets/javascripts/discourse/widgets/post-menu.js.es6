@@ -525,6 +525,19 @@ export default createWidget("post-menu", {
       )
     ];
 
+    if (state.readers.length) {
+      const remaining = state.totalReaders - state.readers.length;
+      contents.push(
+        this.attach("small-user-list", {
+          users: state.readers,
+          addSelf: false,
+          listClassName: "who-read",
+          description: "post.actions.people.read",
+          count: remaining
+        })
+      );
+    }
+
     if (state.likedUsers.length) {
       const remaining = state.total - state.likedUsers.length;
       contents.push(
@@ -536,19 +549,6 @@ export default createWidget("post-menu", {
             remaining > 0
               ? "post.actions.people.like_capped"
               : "post.actions.people.like",
-          count: remaining
-        })
-      );
-    }
-
-    if (state.readers.length) {
-      const remaining = state.totalReaders - state.readers.length;
-      contents.push(
-        this.attach("small-user-list", {
-          users: state.readers,
-          addSelf: false,
-          listClassName: "who-read",
-          description: "post.actions.people.read",
           count: remaining
         })
       );
