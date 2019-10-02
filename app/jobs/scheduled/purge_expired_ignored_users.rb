@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Jobs
-  class PurgeExpiredIgnoredUsers < Jobs::Scheduled
+  class PurgeExpiredIgnoredUsers < ::Jobs::Scheduled
     every 1.day
 
     def execute(args)

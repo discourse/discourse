@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Jobs
-  class UpdatePrivateUploadsAcl < Jobs::Base
+  class UpdatePrivateUploadsAcl < ::Jobs::Base
     # only runs when SiteSetting.prevent_anons_from_downloading_files is updated
     def execute(args)
       return if !SiteSetting.enable_s3_uploads

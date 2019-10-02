@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Jobs
-  class SendDefaultWelcomeMessage < Jobs::Base
+  class SendDefaultWelcomeMessage < ::Jobs::Base
     def execute(args)
       if user = User.find_by(id: args[:user_id])
         type = user.invited_by ? 'welcome_invite' : 'welcome_user'

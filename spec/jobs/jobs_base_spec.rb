@@ -1,10 +1,9 @@
 # frozen_string_literal: true
 
 require 'rails_helper'
-require_dependency 'jobs/base'
 
-describe Jobs::Base do
-  class GoodJob < Jobs::Base
+describe ::Jobs::Base do
+  class GoodJob < ::Jobs::Base
     attr_accessor :count
     def execute(args)
       self.count ||= 0
@@ -12,7 +11,7 @@ describe Jobs::Base do
     end
   end
 
-  class BadJob < Jobs::Base
+  class BadJob < ::Jobs::Base
     attr_accessor :fail_count
 
     def execute(args)
@@ -39,13 +38,13 @@ describe Jobs::Base do
   end
 
   it 'delegates the process call to execute' do
-    Jobs::Base.any_instance.expects(:execute).with('hello' => 'world')
-    Jobs::Base.new.perform('hello' => 'world', 'sync_exec' => true)
+    ::Jobs::Base.any_instance.expects(:execute).with('hello' => 'world')
+    ::Jobs::Base.new.perform('hello' => 'world', 'sync_exec' => true)
   end
 
   it 'converts to an indifferent access hash' do
-    Jobs::Base.any_instance.expects(:execute).with(instance_of(HashWithIndifferentAccess))
-    Jobs::Base.new.perform('hello' => 'world', 'sync_exec' => true)
+    ::Jobs::Base.any_instance.expects(:execute).with(instance_of(HashWithIndifferentAccess))
+    ::Jobs::Base.new.perform('hello' => 'world', 'sync_exec' => true)
   end
 
 end

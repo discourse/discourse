@@ -1,8 +1,5 @@
 # frozen_string_literal: true
 
-require_dependency "backup_restore/backuper"
-require_dependency "backup_restore/restorer"
-
 module BackupRestore
 
   class OperationRunningError < RuntimeError; end

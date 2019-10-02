@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require_dependency 'category_serializer'
-
 class CategoriesController < ApplicationController
 
   requires_login except: [:index, :categories_and_latest, :categories_and_top, :show, :redirect, :find_by_slug]

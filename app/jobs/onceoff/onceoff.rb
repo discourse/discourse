@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
-class Jobs::Onceoff < Jobs::Base
+require_relative '../base.rb'
+
+class Jobs::Onceoff < ::Jobs::Base
   sidekiq_options retry: false
 
   def self.name_for(klass)

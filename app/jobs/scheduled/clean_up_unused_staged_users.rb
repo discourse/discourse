@@ -2,7 +2,7 @@
 
 module Jobs
 
-  class CleanUpUnusedStagedUsers < Jobs::Scheduled
+  class CleanUpUnusedStagedUsers < ::Jobs::Scheduled
     every 1.day
 
     def execute(args)

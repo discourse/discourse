@@ -1,10 +1,8 @@
 # frozen_string_literal: true
 
-require_dependency 'email/sender'
-
 module Jobs
 
-  class ProcessBulkInviteEmails < Jobs::Base
+  class ProcessBulkInviteEmails < ::Jobs::Base
 
     def execute(args)
       pending_invite_ids = Invite.where(emailed_status: Invite.emailed_status_types[:bulk_pending]).limit(Invite::BULK_INVITE_EMAIL_LIMIT).pluck(:id)

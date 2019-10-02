@@ -59,7 +59,7 @@ class DiscourseCLI < Thor
   desc "backup", "Backup a discourse forum"
   def backup(filename = nil)
     load_rails
-    require "backup_restore/backup_restore"
+    require "backup_restore"
     require "backup_restore/backuper"
 
     store = BackupRestore::BackupStore.create
@@ -117,7 +117,7 @@ class DiscourseCLI < Thor
     end
 
     load_rails
-    require "backup_restore/backup_restore"
+    require "backup_restore"
     require "backup_restore/restorer"
     require "backup_restore/backup_store"
 

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Jobs
-  class ClearWidthAndHeight < Jobs::Onceoff
+  class ClearWidthAndHeight < ::Jobs::Onceoff
     def execute_onceoff(args)
       # we have to clear all old uploads cause
       # we could have old versions of height / width

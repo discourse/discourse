@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require_dependency 'retrieve_title'
-
 class InlineOneboxer
 
   MIN_TITLE_LENGTH = 2

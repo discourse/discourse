@@ -1,11 +1,8 @@
 # frozen_string_literal: true
 
-require_dependency 'email/sender'
-require_dependency "email_backup_token"
-
 module Jobs
 
-  class DownloadBackupEmail < Jobs::Base
+  class DownloadBackupEmail < ::Jobs::Base
 
     sidekiq_options queue: 'critical'
 

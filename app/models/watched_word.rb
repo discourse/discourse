@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require_dependency 'enum'
-
 class WatchedWord < ActiveRecord::Base
 
   def self.actions

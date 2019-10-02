@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require_dependency "s3_helper"
-
 def brotli_s3_path(path)
   ext = File.extname(path)
   "#{path[0..-ext.length]}br#{ext}"

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Jobs::ReviewablePriorities < Jobs::Scheduled
+class Jobs::ReviewablePriorities < ::Jobs::Scheduled
   every 1.day
 
   # We need this many reviewables before we'll calculate priorities

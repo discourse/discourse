@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Jobs
-  class EnableBootstrapMode < Jobs::Base
+  class EnableBootstrapMode < ::Jobs::Base
     sidekiq_options queue: 'critical'
 
     def execute(args)

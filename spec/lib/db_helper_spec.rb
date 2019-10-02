@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 require 'rails_helper'
-require_dependency 'db_helper'
-require_dependency 'migration/column_dropper'
 
 RSpec.describe DbHelper do
   describe '.remap' do

@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require 'rails_helper'
-require_dependency 'email_updater'
 
 describe EmailUpdater do
   let(:old_email) { 'old.email@example.com' }

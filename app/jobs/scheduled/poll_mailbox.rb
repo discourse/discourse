@@ -1,13 +1,9 @@
 # frozen_string_literal: true
 
 require 'net/pop'
-require_dependency 'email/receiver'
-require_dependency 'email/processor'
-require_dependency 'email/sender'
-require_dependency 'email/message_builder'
 
 module Jobs
-  class PollMailbox < Jobs::Scheduled
+  class PollMailbox < ::Jobs::Scheduled
     every SiteSetting.pop3_polling_period_mins.minutes
     sidekiq_options retry: false
 

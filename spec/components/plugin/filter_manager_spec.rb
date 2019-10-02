@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require 'rails_helper'
-require_dependency 'plugin/filter_manager'
 
 describe Plugin::FilterManager do
   let(:instance) { Plugin::FilterManager.new }

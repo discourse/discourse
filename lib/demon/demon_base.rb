@@ -3,7 +3,7 @@
 module Demon; end
 
 # intelligent fork based demonizer
-class Demon::Base
+class Demon::DemonBase
 
   def self.demons
     @demons
@@ -57,7 +57,7 @@ class Demon::Base
   def alive?(pid = nil)
     pid ||= @pid
     if pid
-      Demon::Base.alive?(pid)
+      Demon::DemonBase.alive?(pid)
     else
       false
     end
@@ -143,7 +143,7 @@ class Demon::Base
   def already_running?
     if File.exists? pid_file
       pid = File.read(pid_file).to_i
-      if Demon::Base.alive?(pid)
+      if Demon::DemonBase.alive?(pid)
         return pid
       end
     end

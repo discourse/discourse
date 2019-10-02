@@ -1,9 +1,5 @@
 # frozen_string_literal: true
 
-require_dependency 'post_creator'
-require_dependency 'new_post_result'
-require_dependency 'word_watcher'
-
 # Determines what actions should be taken with new posts.
 #
 # The default action is to create the post, but this can be extended
@@ -127,7 +123,7 @@ class NewPostManager
     reason = post_needs_approval?(manager)
     return if reason == :skip
 
-    validator = Validators::PostValidator.new
+    validator = PostValidator.new
     post = Post.new(raw: manager.args[:raw])
     post.user = manager.user
     validator.validate(post)

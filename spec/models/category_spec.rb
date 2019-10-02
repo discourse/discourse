@@ -2,7 +2,6 @@
 # frozen_string_literal: true
 
 require 'rails_helper'
-require_dependency 'post_creator'
 
 describe Category do
   fab!(:user) { Fabricate(:user) }

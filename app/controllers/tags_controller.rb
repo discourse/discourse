@@ -1,10 +1,5 @@
 # frozen_string_literal: true
 
-require_dependency 'topic_list_responder'
-require_dependency 'topic_query_params'
-require_dependency 'topics_bulk_action'
-require_dependency 'topic_query'
-
 class TagsController < ::ApplicationController
   include TopicListResponder
   include TopicQueryParams

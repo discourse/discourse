@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require_dependency 'pinned_check'
-
 class ListableTopicSerializer < BasicTopicSerializer
 
   attributes :reply_count,

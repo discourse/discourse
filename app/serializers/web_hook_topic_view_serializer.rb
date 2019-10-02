@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require_dependency 'pinned_check'
-
 class WebHookTopicViewSerializer < TopicViewSerializer
   attributes :created_by,
              :last_poster

@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require 'rails_helper'
-require_dependency 'badge'
 
 describe Badge do
   it { is_expected.to belong_to(:badge_type) }

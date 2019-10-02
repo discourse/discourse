@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require_dependency 'slug'
-
 class Badge < ActiveRecord::Base
   # NOTE: These badge ids are not in order! They are grouped logically.
   #       When picking an id, *search* for it.

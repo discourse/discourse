@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require_dependency 'user'
-
 class UsernameValidator
   # Public: Perform the validation of a field in a given object
   # it adds the errors (if any) to the object that we're giving as parameter

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Jobs
-  class PushNotification < Jobs::Base
+  class PushNotification < ::Jobs::Base
     def execute(args)
       notification = args["payload"]
       notification["url"] = UrlHelper.absolute_without_cdn(notification["post_url"])

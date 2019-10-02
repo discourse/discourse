@@ -582,8 +582,6 @@ RSpec.describe Users::OmniauthCallbacksController do
     end
 
     context 'after changing email' do
-      require_dependency 'email_updater'
-
       def login(identity)
         OmniAuth.config.mock_auth[:google_oauth2] = OmniAuth::AuthHash.new(
           provider: 'google_oauth2',
