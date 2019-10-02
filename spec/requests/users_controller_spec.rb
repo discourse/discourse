@@ -200,7 +200,7 @@ describe UsersController do
         expect(response.status).to eq(200)
         expect(response.body).to have_tag("div#data-preloaded") do |element|
           json = JSON.parse(element.current_scope.attribute('data-preloaded').value)
-          expect(json['password_reset']).to include('{"is_developer":false,"admin":false,"second_factor_required":false,"backup_enabled":false}')
+          expect(json['password_reset']).to include('{"is_developer":false,"admin":false,"second_factor_required":false,"security_key_required":false,"backup_enabled":false}')
         end
 
         expect(session["password-#{token}"]).to be_blank
@@ -313,7 +313,7 @@ describe UsersController do
 
           expect(response.body).to have_tag("div#data-preloaded") do |element|
             json = JSON.parse(element.current_scope.attribute('data-preloaded').value)
-            expect(json['password_reset']).to include('{"is_developer":false,"admin":false,"second_factor_required":true,"backup_enabled":false}')
+            expect(json['password_reset']).to include('{"is_developer":false,"admin":false,"second_factor_required":true,"security_key_required":false,"backup_enabled":false}')
           end
 
           put "/u/password-reset/#{token}", params: {
@@ -338,6 +338,58 @@ describe UsersController do
             password: 'hg9ow8yHG32O',
             second_factor_token: ROTP::TOTP.new(second_factor.data).now,
             second_factor_method: UserSecondFactor.methods[:totp]
+          }
+
+          user.reload
+          expect(response.status).to eq(200)
+          expect(user.confirm_password?('hg9ow8yHG32O')).to eq(true)
+          expect(user.user_auth_tokens.count).to eq(1)
+        end
+      end
+
+      context 'security key authentication required' do
+        let!(:security_key) { Fabricate(:user_security_key, user: user, factor_type: UserSecurityKey.factor_types[:second_factor]) }
+
+        it 'preloads with a security key challenge and allowed credential ids' do
+          token = user.email_tokens.create!(email: user.email).token
+
+          get "/u/password-reset/#{token}"
+
+          expect(response.body).to have_tag("div#data-preloaded") do |element|
+            json = JSON.parse(element.current_scope.attribute('data-preloaded').value)
+            password_reset = JSON.parse(json['password_reset'])
+            expect(password_reset['challenge']).not_to eq(nil)
+            expect(password_reset['allowed_credential_ids']).to eq([security_key.credential_id])
+            expect(password_reset['security_key_required']).to eq(true)
+          end
+        end
+
+        it 'stages a webauthn challenge and rp-id for the user' do
+          token = user.email_tokens.create!(email: user.email).token
+
+          get "/u/password-reset/#{token}"
+
+          secure_session = SecureSession.new(session["secure_session_id"])
+          expect(secure_session["staged-webauthn-challenge-#{user.id}"]).not_to eq(nil)
+          expect(secure_session["staged-webauthn-rp-id-#{user.id}"]).to eq(Discourse.current_hostname)
+        end
+
+        it 'changes password with valid security key challenge and authentication' do
+          token = user.email_tokens.create(email: user.email).token
+
+          get "/u/password-reset/#{token}"
+
+          ::Webauthn::SecurityKeyAuthenticationService.any_instance.stubs(:authenticate_security_key).returns(true)
+
+          put "/u/password-reset/#{token}", params: {
+            password: 'hg9ow8yHG32O',
+            security_key_credential: {
+              signature: 'test',
+              clientData: 'test',
+              authenticatorData: 'test',
+              credentialId: 'test'
+            },
+            second_factor_method: UserSecondFactor.methods[:security_key]
           }
 
           user.reload
@@ -494,6 +546,55 @@ describe UsersController do
           put "/u/admin-login/#{email_token.token}", params: {
             second_factor_token: ROTP::TOTP.new(second_factor.data).now,
             second_factor_method: UserSecondFactor.methods[:totp]
+          }
+
+          expect(response).to redirect_to('/')
+          expect(session[:current_user_id]).to eq(admin.id)
+        end
+      end
+
+      describe 'when security key authentication required' do
+        fab!(:security_key) { Fabricate(:user_security_key, user: admin) }
+        fab!(:email_token) { Fabricate(:email_token, user: admin) }
+
+        it 'does not log in when token required' do
+          security_key
+          get "/u/admin-login/#{email_token.token}"
+          expect(response).not_to redirect_to('/')
+          expect(session[:current_user_id]).not_to eq(admin.id)
+          expect(response.body).to include(I18n.t('login.security_key_authenticate'))
+        end
+
+        describe 'invalid security key' do
+          it 'should display the right error' do
+            ::Webauthn::SecurityKeyAuthenticationService.any_instance.stubs(:authenticate_security_key).returns(false)
+
+            put "/u/admin-login/#{email_token.token}", params: {
+              security_key_credential: {
+                signature: 'test',
+                clientData: 'test',
+                authenticatorData: 'test',
+                credentialId: 'test'
+              }.to_json,
+              second_factor_method: UserSecondFactor.methods[:security_key]
+            }
+
+            expect(response.status).to eq(200)
+            expect(response.body).to include(I18n.t('login.security_key_invalid'))
+          end
+        end
+
+        it 'logs in when a valid security key is given' do
+          ::Webauthn::SecurityKeyAuthenticationService.any_instance.stubs(:authenticate_security_key).returns(true)
+
+          put "/u/admin-login/#{email_token.token}", params: {
+            security_key_credential: {
+              signature: 'test',
+              clientData: 'test',
+              authenticatorData: 'test',
+              credentialId: 'test'
+            }.to_json,
+            second_factor_method: UserSecondFactor.methods[:security_key]
           }
 
           expect(response).to redirect_to('/')
@@ -3539,5 +3640,89 @@ describe UsersController do
 
     end
 
+  end
+
+  describe '#list_second_factors' do
+    before do
+      sign_in(user)
+    end
+
+    context 'when SSO is enabled' do
+      before do
+        SiteSetting.sso_url = 'https://discourse.test/sso'
+        SiteSetting.enable_sso = true
+      end
+
+      it 'does not allow access' do
+        post "/u/second_factors.json"
+        expect(response.status).to eq(404)
+      end
+    end
+
+    context 'when local logins are not enabled' do
+      before do
+        SiteSetting.enable_local_logins = false
+      end
+
+      it 'does not allow access' do
+        post "/u/second_factors.json"
+        expect(response.status).to eq(404)
+      end
+    end
+
+    context 'when the site settings allow second factors' do
+      before do
+        SiteSetting.enable_local_logins = true
+        SiteSetting.enable_sso = false
+      end
+
+      context 'when the password parameter is not provided' do
+        let(:password) { '' }
+
+        before do
+          post "/u/second_factors.json", params: { password: password }
+        end
+
+        it 'returns password required response' do
+          expect(response.status).to eq(200)
+          response_body = JSON.parse(response.body)
+          expect(response_body['password_required']).to eq(true)
+        end
+      end
+
+      context 'when the password is provided' do
+        let(:user) { Fabricate(:user, password: '8555039dd212cc66ec68') }
+
+        context 'when the password is correct' do
+          let(:password) { '8555039dd212cc66ec68' }
+
+          it 'returns a list of enabled totps and security_key second factors' do
+            totp_second_factor = Fabricate(:user_second_factor_totp, user: user)
+            security_key_second_factor = Fabricate(:user_security_key, user: user, factor_type: UserSecurityKey.factor_types[:second_factor])
+
+            post "/u/second_factors.json", params: { password: password }
+
+            expect(response.status).to eq(200)
+            response_body = JSON.parse(response.body)
+            expect(response_body['totps'].map { |second_factor| second_factor['id'] }).to include(totp_second_factor.id)
+            expect(response_body['security_keys'].map { |second_factor| second_factor['id'] }).to include(security_key_second_factor.id)
+          end
+        end
+
+        context 'when the password is not correct' do
+          let(:password) { 'wrongpassword' }
+
+          it 'returns the incorrect password response' do
+
+            post "/u/second_factors.json", params: { password: password }
+
+            response_body = JSON.parse(response.body)
+            expect(response_body['error']).to eq(
+              I18n.t("login.incorrect_password")
+            )
+          end
+        end
+      end
+    end
   end
 end

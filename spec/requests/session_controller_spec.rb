@@ -65,6 +65,23 @@ RSpec.describe SessionController do
           expect(JSON.parse(response.body)["backup_codes_enabled"]).to eq(true)
         end
       end
+
+      context 'user has security key enabled' do
+        let!(:user_security_key) { Fabricate(:user_security_key, user: user) }
+
+        it "includes that information in the response" do
+          get "/session/email-login/#{email_token.token}.json"
+
+          expect(JSON.parse(response.body)["can_login"]).to eq(true)
+          expect(JSON.parse(response.body)["security_key_required"]).to eq(true)
+          expect(JSON.parse(response.body)["second_factor_required"]).to eq(nil)
+          expect(JSON.parse(response.body)["backup_codes_enabled"]).to eq(nil)
+          expect(JSON.parse(response.body)["allowed_credential_ids"]).to eq([user_security_key.credential_id])
+          secure_session = SecureSession.new(session["secure_session_id"])
+          expect(JSON.parse(response.body)["challenge"]).to eq(secure_session["staged-webauthn-challenge-#{user.id}"])
+          expect(secure_session["staged-webauthn-rp-id-#{user.id}"]).to eq(Discourse.current_hostname)
+        end
+      end
     end
   end
 

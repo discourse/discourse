@@ -77,12 +77,15 @@ GEM
       activesupport (>= 3.0.0)
       uniform_notifier (~> 1.11)
     byebug (11.0.1)
+    cbor (0.5.9.6)
     certified (1.0.0)
     chunky_png (1.3.11)
     coderay (1.1.2)
     colored2 (3.1.2)
     concurrent-ruby (1.1.5)
     connection_pool (2.2.2)
+    cose (0.9.0)
+      cbor (~> 0.5.9)
     cppjieba_rb (0.3.3)
     crack (0.4.3)
       safe_yaml (~> 1.0.0)
@@ -438,8 +441,10 @@ DEPENDENCIES
   bootsnap
   bullet
   byebug
+  cbor
   certified
   colored2
+  cose
   cppjieba_rb
   css_parser
   diffy

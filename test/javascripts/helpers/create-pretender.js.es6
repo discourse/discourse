@@ -330,6 +330,20 @@ export default function() {
         });
       }
 
+      if (data.password === "need-security-key") {
+        if (data.securityKeyCredential) {
+          return response({ username: "eviltrout" });
+        }
+
+        return response({
+          error: "Invalid Security Key",
+          reason: "invalid_security_key",
+          backup_enabled: true,
+          sent_to_email: "eviltrout@example.com",
+          current_email: "current@example.com"
+        });
+      }
+
       return response(400, { error: "invalid login" });
     });
 

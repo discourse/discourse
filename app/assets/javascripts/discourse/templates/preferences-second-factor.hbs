@@ -55,6 +55,33 @@
       </div>
 
       <div class="control-group">
+        <div class="controls">
+          <h2>{{i18n "user.second_factor.security_key.title"}}</h2>
+          {{d-button action=(action "createSecurityKey")
+            class="btn-primary new-security-key"
+            disabled=loading
+            label="user.second_factor.security_key.add"}}
+          {{#each security_keys as |security_key|}}
+            <div class="second-factor-item">
+              {{#if security_key.name}}
+                {{security_key.name}}
+              {{else}}
+                {{i18n "user.second_factor.security_key.default_name"}}
+              {{/if}}
+
+              {{#if isCurrentUser}}
+                {{d-button action=(action "editSecurityKey" security_key)
+                  class="btn-default btn-small btn-icon pad-left no-text edit"
+                  disabled=loading
+                  icon="pencil-alt"
+                }}
+              {{/if}}
+            </div>
+          {{/each}}
+        </div>
+      </div>
+
+      <div class="control-group">
         <div class="controls pref-second-factor-backup">
           <h2>{{i18n "user.second_factor_backup.title"}}</h2>
           {{#if model.second_factor_enabled}}

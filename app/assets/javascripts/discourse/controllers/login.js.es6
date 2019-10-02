@@ -8,6 +8,7 @@ import { escapeExpression, areCookiesEnabled } from "discourse/lib/utilities";
 import { extractError } from "discourse/lib/ajax-error";
 import computed from "ember-addons/ember-computed-decorators";
 import { SECOND_FACTOR_METHODS } from "discourse/models/user";
+import { getWebauthnCredential } from "discourse/lib/webauthn";
 
 // This is happening outside of the app via popup
 const AuthErrors = [
@@ -43,19 +44,20 @@ export default Ember.Controller.extend(ModalFunctionality, {
       loggedIn: false,
       secondFactorRequired: false,
       showSecondFactor: false,
+      showSecurityKey: false,
       showLoginButtons: true,
       awaitingApproval: false
     });
   },
 
-  @computed("showSecondFactor")
-  credentialsClass(showSecondFactor) {
-    return showSecondFactor ? "hidden" : "";
+  @computed("showSecondFactor", "showSecurityKey")
+  credentialsClass(showSecondFactor, showSecurityKey) {
+    return showSecondFactor || showSecurityKey ? "hidden" : "";
   },
 
-  @computed("showSecondFactor")
-  secondFactorClass(showSecondFactor) {
-    return showSecondFactor ? "" : "hidden";
+  @computed("showSecondFactor", "showSecurityKey")
+  secondFactorClass(showSecondFactor, showSecurityKey) {
+    return showSecondFactor || showSecurityKey ? "" : "hidden";
   },
 
   @computed("awaitingApproval", "hasAtLeastOneLoginButton")
@@ -64,6 +66,11 @@ export default Ember.Controller.extend(ModalFunctionality, {
     if (awaitingApproval) classes.push("awaiting-approval");
     if (hasAtLeastOneLoginButton) classes.push("has-alt-auth");
     return classes.join(" ");
+  },
+
+  @computed("showSecondFactor", "showSecurityKey")
+  disableLoginFields(showSecondFactor, showSecurityKey) {
+    return showSecondFactor || showSecurityKey;
   },
 
   @computed("canLoginLocalWithEmail")
@@ -109,15 +116,20 @@ export default Ember.Controller.extend(ModalFunctionality, {
           login: this.loginName,
           password: this.loginPassword,
           second_factor_token: this.secondFactorToken,
-          second_factor_method: this.secondFactorMethod
+          second_factor_method: this.secondFactorMethod,
+          security_key_credential: this.securityKeyCredential
         }
       }).then(
         result => {
           // Successful login
           if (result && result.error) {
             this.set("loggingIn", false);
+            const invalidSecurityKey = result.reason === "invalid_security_key";
+            const invalidSecondFactor =
+              result.reason === "invalid_second_factor";
+
             if (
-              result.reason === "invalid_second_factor" &&
+              (invalidSecondFactor || invalidSecurityKey) &&
               !this.secondFactorRequired
             ) {
               document.getElementById("modal-alert").style.display = "none";
@@ -126,15 +138,24 @@ export default Ember.Controller.extend(ModalFunctionality, {
                 secondFactorRequired: true,
                 showLoginButtons: false,
                 backupEnabled: result.backup_enabled,
-                showSecondFactor: true
+                showSecondFactor: invalidSecondFactor,
+                showSecurityKey: invalidSecurityKey,
+                secondFactorMethod: invalidSecurityKey
+                  ? SECOND_FACTOR_METHODS.SECURITY_KEY
+                  : SECOND_FACTOR_METHODS.TOTP,
+                securityKeyChallenge: result.challenge,
+                securityKeyAllowedCredentialIds: result.allowed_credential_ids
               });
 
-              Ember.run.schedule("afterRender", () =>
-                document
-                  .getElementById("second-factor")
-                  .querySelector("input")
-                  .focus()
-              );
+              // only need to focus the 2FA input for TOTP
+              if (!this.showSecurityKey) {
+                Ember.run.scheduleOnce("afterRender", () =>
+                  document
+                    .getElementById("second-factor")
+                    .querySelector("input")
+                    .focus()
+                );
+              }
 
               return;
             } else if (result.reason === "not_activated") {
@@ -286,6 +307,20 @@ export default Ember.Controller.extend(ModalFunctionality, {
         })
         .catch(e => this.flash(extractError(e), "error"))
         .finally(() => this.set("processingEmailLink", false));
+    },
+
+    authenticateSecurityKey() {
+      getWebauthnCredential(
+        this.securityKeyChallenge,
+        this.securityKeyAllowedCredentialIds,
+        credentialData => {
+          this.set("securityKeyCredential", credentialData);
+          this.send("login");
+        },
+        errorMessage => {
+          this.flash(errorMessage, "error");
+        }
+      );
     }
   },
 
