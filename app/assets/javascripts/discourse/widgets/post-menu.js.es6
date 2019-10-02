@@ -396,8 +396,7 @@ export default createWidget("post-menu", {
   },
 
   menuItems() {
-    let result = this.siteSettings.post_menu.split("|");
-    return result;
+    return this.siteSettings.post_menu.split("|").filter(Boolean);
   },
 
   html(attrs, state) {
