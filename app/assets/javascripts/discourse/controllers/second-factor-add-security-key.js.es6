@@ -109,6 +109,12 @@ export default Ember.Controller.extend(ModalFunctionality, {
               .finally(() => this.set("loading", false));
           },
           err => {
+            if (err.name === "InvalidStateError") {
+              return this.set(
+                "errorMessage",
+                I18n.t("user.second_factor.security_key.already_added_error")
+              );
+            }
             if (err.name === "NotAllowedError") {
               return this.set(
                 "errorMessage",

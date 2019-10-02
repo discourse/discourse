@@ -126,7 +126,7 @@
             {{text-field value=password
               id="password"
               type="password"
-              classNames="input-xxlarge"
+              classNames="input-large"
               autofocus="autofocus"}}
           </div>
           <div class='instructions'>
@@ -142,16 +142,14 @@
             disabled=loading
             label="continue"}}
 
-          {{d-button action=(action "resetPassword")
-            class="btn"
-            disabled=resetPasswordLoading
-            icon="envelope"
-            label='user.change_password.action'}}
-
-          {{resetPasswordProgress}}
-
           {{#unless showEnforcedNotice}}
-            {{cancel-link route="preferences.account" args= model.username}}
+            {{cancel-link route="preferences.account" args=model.username}}
+          {{/unless}}
+        </div>
+        <div class="controls" style="margin-top: 5px">
+          {{resetPasswordProgress}}
+          {{#unless resetPasswordLoading}}
+            <a href="" class="instructions" {{action "resetPassword"}}>{{ i18n 'user.second_factor.forgot_password' }}</a>
           {{/unless}}
         </div>
       </div>
