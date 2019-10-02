@@ -132,10 +132,14 @@ export default Ember.Component.extend(KeyEnterEscape, {
       $document.on(END_EVENTS, endDrag);
     });
 
-    if (window.visualViewport !== undefined) {
+    if (this.shouldUseVisualViewportListener()) {
       this.viewportResize();
       window.visualViewport.addEventListener("resize", this.viewportResize);
     }
+  },
+
+  shouldUseVisualViewportListener() {
+    return this.capabilities.isIOS && window.visualViewport !== undefined;
   },
 
   viewportResize() {
@@ -174,7 +178,7 @@ export default Ember.Component.extend(KeyEnterEscape, {
   willDestroyElement() {
     this._super(...arguments);
     this.appEvents.off("composer:resize", this, this.resize);
-    if (window.visualViewport !== undefined) {
+    if (this.shouldUseVisualViewportListener()) {
       window.visualViewport.removeEventListener("resize", this.viewportResize);
     }
   },
