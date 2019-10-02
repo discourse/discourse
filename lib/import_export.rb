@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "import_export/importer"
+require "import_export/base_exporter"
 require "import_export/category_structure_exporter"
 require "import_export/category_exporter"
 require "import_export/topic_exporter"

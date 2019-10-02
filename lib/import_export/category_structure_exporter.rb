@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "import_export/base_exporter"
-
 module ImportExport
   class CategoryStructureExporter < BaseExporter
 
