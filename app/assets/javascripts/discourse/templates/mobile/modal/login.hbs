@@ -40,8 +40,21 @@
           secondFactorMethod=secondFactorMethod
           secondFactorToken=secondFactorToken
           class=secondFactorClass
+          backupEnabled=backupEnabled
           isLogin=true}}
-          {{second-factor-input value=secondFactorToken inputId='login-second-factor' secondFactorMethod=secondFactorMethod backupEnabled=backupEnabled}}
+          {{#if showSecurityKey}}
+            {{#security-key-form
+              allowedCredentialIds=securityKeyAllowedCredentialIds
+              challenge=securityKeyChallenge
+              showSecurityKey=showSecurityKey
+              showSecondFactor=showSecondFactor
+              secondFactorMethod=secondFactorMethod
+              otherMethodAllowed=secondFactorRequired
+              action=(action "authenticateSecurityKey")}}
+            {{/security-key-form}}
+          {{else}}
+            {{second-factor-input value=secondFactorToken inputId='login-second-factor' secondFactorMethod=secondFactorMethod backupEnabled=backupEnabled}}
+          {{/if}}
         {{/second-factor-form}}
       </form>
     {{/if}}
@@ -54,11 +67,13 @@
     {{/if}}
 
     {{#if canLoginLocal}}
-      {{d-button action=(action "login")
-        icon="unlock"
-        label=loginButtonLabel
-        disabled=loginDisabled
-        class="btn btn-large btn-primary"}}
+      {{#unless showSecurityKey }}
+        {{d-button action=(action "login")
+          icon="unlock"
+          label=loginButtonLabel
+          disabled=loginDisabled
+          class="btn btn-large btn-primary"}}
+      {{/unless}}
 
       {{#if showSignupLink}}
         {{#d-button class="btn btn-large" id="new-account-link" action=(route-action "showCreateAccount")}}
