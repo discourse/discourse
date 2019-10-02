@@ -86,6 +86,22 @@ describe Topic do
           end
         end
       end
+
+      describe 'blocked words' do
+        describe 'when title contains watched words' do
+          it 'should not be valid' do
+            Fabricate(:watched_word, word: 'pineapple', action: WatchedWord.actions[:block])
+
+            topic.title = 'pen PinEapple apple pen is a complete sentence'
+
+            expect(topic).to_not be_valid
+
+            expect(topic.errors.full_messages.first).to include(I18n.t(
+              'contains_blocked_word', word: 'PinEapple'
+            ))
+          end
+        end
+      end
     end
   end
 
