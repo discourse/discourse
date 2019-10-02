@@ -50,14 +50,15 @@ module Jobs
       FileUtils.mkdir_p(UserExport.base_directory) unless Dir.exists?(UserExport.base_directory)
 
       # Generate a compressed CSV file
-
-      CSV.open(absolute_path, "w") do |csv|
-        csv << get_header if @entity != "report"
-        public_send(export_method).each { |d| csv << d }
+      begin
+        CSV.open(absolute_path, "w") do |csv|
+          csv << get_header if @entity != "report"
+          public_send(export_method).each { |d| csv << d }
+        end
+        compressed_file_path = Compression::Zip.new.compress(UserExport.base_directory, file_name)
+      ensure
+        File.delete(absolute_path)
       end
-
-      compressed_file_path = Compression::Zip.new.compress(UserExport.base_directory, file_name)
-      File.delete(absolute_path)
 
       # create upload
       upload = nil
