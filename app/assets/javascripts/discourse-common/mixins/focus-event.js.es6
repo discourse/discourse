@@ -35,7 +35,7 @@ export default Ember.Mixin.create({
       }
     } else {
       if (!Discourse.hasFocus) {
-        Discourse.setProperties({ hasFocus: true, notify: false });
+        Discourse.set("hasFocus", true);
         appEvents.trigger("discourse:focus-changed", true);
       }
     }
