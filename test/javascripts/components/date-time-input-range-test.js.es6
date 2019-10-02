@@ -39,10 +39,10 @@ async function pika(year, month, day) {
 const DEFAULT_DATE_TIME = new Date(2019, 0, 29, 14, 45);
 
 componentTest("default", {
-  template: `{{date-time-input-range from=date to=to}}`,
+  template: `{{date-time-input-range from=from to=to}}`,
 
   beforeEach() {
-    this.setProperties({ date: DEFAULT_DATE_TIME, to: null });
+    this.setProperties({ from: DEFAULT_DATE_TIME, to: null });
   },
 
   test(assert) {
@@ -63,7 +63,7 @@ componentTest("can switch panels", {
     assert.ok(exists(".panel.from.visible"));
     assert.notOk(exists(".panel.to.visible"));
 
-    await click(".panels .to-panel");
+    await click(".panels button.to-panel");
 
     assert.ok(exists(".panel.to.visible"));
     assert.notOk(exists(".panel.from.visible"));
@@ -82,22 +82,24 @@ componentTest("prevents toDate to be before fromDate", {
   },
 
   async test(assert) {
-    assert.notOk(exists(".error"));
+    assert.notOk(exists(".error"), "it begins with no error");
 
+    await click(".panels button.to-panel");
     await click(toDateInput());
     await pika(2019, 0, 1);
 
-    assert.ok(exists(".error"));
-    assert.ok(
-      this.to.getTime() === DEFAULT_DATE_TIME.getTime(),
-      "it didnt trigger a mutation"
-    );
+    assert.ok(exists(".error"), "it shows an error");
+    assert.deepEqual(this.to, DEFAULT_DATE_TIME, "it didnt trigger a mutation");
 
-    await click("button.to-panel");
+    await click(".panels button.to-panel");
     await click(toDateInput());
     await pika(2019, 0, 30);
 
-    assert.notOk(exists(".error"));
-    assert.ok(this.to.getTime() === new Date(2019, 0, 30, 14, 45).getTime());
+    assert.notOk(exists(".error"), "it removes the error");
+    assert.deepEqual(
+      this.to,
+      new Date(2019, 0, 30, 14, 45),
+      "it has changed the date"
+    );
   }
 });
