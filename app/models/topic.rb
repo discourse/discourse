@@ -33,6 +33,7 @@ class Topic < ActiveRecord::Base
     if deleted_at.nil?
       update_category_topic_count_by(-1)
       CategoryTagStat.topic_deleted(self) if self.tags.present?
+      DiscourseEvent.trigger(:topic_trashed, self)
     end
     super(trashed_by)
     self.topic_embed.trash! if has_topic_embed?
@@ -42,6 +43,7 @@ class Topic < ActiveRecord::Base
     unless deleted_at.nil?
       update_category_topic_count_by(1)
       CategoryTagStat.topic_recovered(self) if self.tags.present?
+      DiscourseEvent.trigger(:topic_recovered, self)
     end
 
     # Note parens are required because superclass doesn't take `recovered_by`
