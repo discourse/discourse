@@ -120,6 +120,8 @@ class TagsController < ::ApplicationController
   end
 
   def upload
+    require 'csv'
+
     guardian.ensure_can_admin_tags!
 
     file = params[:file] || params[:files].first
