@@ -85,15 +85,6 @@ class SiteSetting < ActiveRecord::Base
     force_https? ? "https" : "http"
   end
 
-  def self.default_categories_selected
-    [
-      SiteSetting.default_categories_watching.split("|"),
-      SiteSetting.default_categories_tracking.split("|"),
-      SiteSetting.default_categories_muted.split("|"),
-      SiteSetting.default_categories_watching_first_post.split("|")
-    ].flatten.to_set
-  end
-
   def self.min_redirected_to_top_period(duration)
     ListController.best_period_with_topics_for(duration)
   end
