@@ -10,13 +10,15 @@ module Compression
     end
 
     def decompress(dest_path, compressed_file_path, allow_non_root_folder: false)
-      get_compressed_file_stream(compressed_file_path) do |compressed_file|
-        available_size = calculate_available_size(compressed_file_path, compressed_file)
+      sanitized_compressed_file_path = sanitize_path(compressed_file_path)
+
+      get_compressed_file_stream(sanitized_compressed_file_path) do |compressed_file|
+        available_size = calculate_available_size
 
         entries_of(compressed_file).each do |entry|
           entry_path = build_entry_path(
-            compressed_file, dest_path,
-            compressed_file_path, entry,
+            compressed_file, sanitize_path(dest_path),
+            sanitized_compressed_file_path, entry,
             allow_non_root_folder
           )
 
@@ -32,7 +34,23 @@ module Compression
 
     private
 
-    def calculate_available_size(compressed_file_path, compressed_file)
+    def sanitize_path(filename)
+      Pathname.new(filename).realpath.to_s
+    end
+
+    # https://guides.rubyonrails.org/security.html#file-uploads
+    def sanitize_filename(filename)
+      filename.strip.tap do |name|
+        # NOTE: File.basename doesn't work right with Windows paths on Unix
+        # get only the filename, not the whole path
+        name.sub! /\A.*(\\|\/)/, ''
+        # Finally, replace all non alphanumeric, underscore
+        # or periods with underscore
+        name.gsub! /[^\w\.\-]/, '_'
+      end
+    end
+
+    def calculate_available_size
       1024**2 * (SiteSetting.decompressed_file_max_size_mb / 1.049) # Mb to Mib
     end
 

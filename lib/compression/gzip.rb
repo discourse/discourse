@@ -7,7 +7,7 @@ module Compression
     end
 
     def compress(path, target_name)
-      gzip_target = "#{path}/#{target_name}"
+      gzip_target = sanitize_path("#{path}/#{target_name}")
       Discourse::Utils.execute_command('gzip', '-5', gzip_target, failure_message: "Failed to gzip file.")
 
       "#{gzip_target}.gz"

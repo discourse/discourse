@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require_dependency 'compression/strategy'
 require 'rubygems/package'
 
 module Compression
@@ -10,10 +9,10 @@ module Compression
     end
 
     def compress(path, target_name)
-      tar_filename = "#{target_name}.tar"
+      tar_filename = sanitize_filename("#{target_name}.tar")
       Discourse::Utils.execute_command('tar', '--create', '--file', tar_filename, target_name, failure_message: "Failed to tar file.")
 
-      "#{path}/#{tar_filename}"
+      sanitize_path("#{path}/#{tar_filename}")
     end
 
     private

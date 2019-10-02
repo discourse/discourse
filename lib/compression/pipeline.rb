@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require_dependency 'compression/strategy'
-
 module Compression
   class Pipeline < Strategy
     def initialize(strategies)

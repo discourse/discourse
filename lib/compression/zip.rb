@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require 'zip'
-require_dependency 'compression/strategy'
 
 module Compression
   class Zip < Strategy
@@ -10,8 +9,8 @@ module Compression
     end
 
     def compress(path, target_name)
-      zip_filename = "#{path}/#{target_name}.zip"
-      absolute_path = "#{path}/#{target_name}"
+      absolute_path = sanitize_path("#{path}/#{target_name}")
+      zip_filename = "#{absolute_path}.zip"
 
       ::Zip::File.open(zip_filename, ::Zip::File::CREATE) do |zipfile|
         if File.directory?(absolute_path)

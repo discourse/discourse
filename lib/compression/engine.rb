@@ -1,10 +1,5 @@
 # frozen_string_literal: true
 
-require_dependency 'compression/zip'
-require_dependency 'compression/pipeline'
-require_dependency 'compression/gzip'
-require_dependency 'compression/tar'
-
 module Compression
   class Engine
     UnsupportedFileExtension = Class.new(StandardError)
