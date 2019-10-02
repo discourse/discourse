@@ -390,6 +390,7 @@ SQL
   end
 
   def self.trigger_post_read_count_update(post, groups, last_read_post_number, user_id)
+    return if !post
     return if groups.empty?
     opts = { readers_count: post.readers_count, reader_id: user_id }
     post.publish_change_to_clients!(:read, opts)
