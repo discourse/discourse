@@ -11,13 +11,17 @@ export function bufferToBase64(buffer) {
   return btoa(String.fromCharCode(...new Uint8Array(buffer)));
 }
 
+export function isWebauthnSupported() {
+  return typeof PublicKeyCredential !== "undefined";
+}
+
 export function getWebauthnCredential(
   challenge,
   allowedCredentialIds,
   successCallback,
   errorCallback
 ) {
-  if (typeof PublicKeyCredential === "undefined") {
+  if (!isWebauthnSupported()) {
     return errorCallback(I18n.t("login.security_key_support_missing_error"));
   }
 

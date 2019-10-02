@@ -22,9 +22,11 @@
 
     <div class="control-group">
       <div class="controls">
-        {{d-button action=(action "registerSecurityKey")
-          class="btn btn-primary add-totp"
-          label="user.second_factor.security_key.register"}}
+        {{#unless webauthnUnsupported}}
+          {{d-button action=(action "registerSecurityKey")
+            class="btn btn-primary add-totp"
+            label="user.second_factor.security_key.register"}}
+        {{/unless}}
       </div>
     </div>
   {{/conditional-loading-spinner}}
