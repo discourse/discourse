@@ -72,11 +72,11 @@
           icon="unlock"
           label=loginButtonLabel
           disabled=loginDisabled
-          class="btn btn-large btn-primary"}}
+          class="btn-large btn-primary"}}
       {{/unless}}
 
       {{#if showSignupLink}}
-        {{#d-button class="btn btn-large" id="new-account-link" action=(route-action "showCreateAccount")}}
+        {{#d-button class="btn-large" id="new-account-link" action=(route-action "showCreateAccount")}}
           {{i18n "create_account.title"}}
         {{/d-button}}
       {{/if}}
