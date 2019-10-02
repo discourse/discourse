@@ -99,6 +99,7 @@ module Discourse
     config.autoload_paths += Dir["#{config.root}/app"]
     config.autoload_paths += Dir["#{config.root}/app/jobs"]
     config.autoload_paths += Dir["#{config.root}/app/serializers"]
+    config.autoload_paths += Dir["#{config.root}/lib"]
     config.autoload_paths += Dir["#{config.root}/lib/active_record/connection_adapters"]
     config.autoload_paths += Dir["#{config.root}/lib/common_passwords"]
     config.autoload_paths += Dir["#{config.root}/lib/highlight_js"]
@@ -107,9 +108,6 @@ module Discourse
 
     Rails.autoloaders.main.ignore(Dir["#{config.root}/app/models/reports"])
 
-    if !Sidekiq.server?
-      config.autoload_paths += Dir["#{config.root}/lib"]
-    end
 
     # Only load the plugins named here, in the order given (default is alphabetical).
     # :all can be used as a placeholder for all plugins not explicitly named.
