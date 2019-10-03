@@ -115,6 +115,7 @@ function positioningWorkaround($fixedElement) {
   var blurredNow = function(evt) {
     if (
       !done &&
+      evt.srcElement !== document.activeElement &&
       $(document.activeElement)
         .parents()
         .toArray()
