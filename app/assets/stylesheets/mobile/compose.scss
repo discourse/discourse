@@ -21,7 +21,6 @@
     height: 250px;
     &.edit-title {
       height: 100%;
-      height: calc(var(--composer-vh, 1vh) * 100);
     }
   }
 
