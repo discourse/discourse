@@ -243,12 +243,12 @@ const AdminUser = Discourse.User.extend({
     this.set("originalTrustLevel", this.trust_level);
   },
 
-  dirty: propertyNotEqual("originalTrustLevel", "trustLevel.id"),
+  dirty: propertyNotEqual("originalTrustLevel", "trust_level"),
 
   saveTrustLevel() {
     return ajax(`/admin/users/${this.id}/trust_level`, {
       type: "PUT",
-      data: { level: this.get("trustLevel.id") }
+      data: { level: this.trust_level }
     })
       .then(() => window.location.reload())
       .catch(e => {
@@ -266,7 +266,7 @@ const AdminUser = Discourse.User.extend({
   },
 
   restoreTrustLevel() {
-    this.set("trustLevel.id", this.originalTrustLevel);
+    this.set("trust_level", this.originalTrustLevel);
   },
 
   lockTrustLevel(locked) {

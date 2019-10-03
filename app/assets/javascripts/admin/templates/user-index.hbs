@@ -369,8 +369,9 @@
     <div class="value">
       {{combo-box
         content=site.trustLevels
-        value=model.trustLevel.id
-        nameProperty="detailedName"}}
+        value=model.trust_level
+        nameProperty="detailedName"
+      }}
 
       {{#if model.dirty}}
         <div>
