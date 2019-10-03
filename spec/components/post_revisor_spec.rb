@@ -494,6 +494,19 @@ describe PostRevisor do
         expect(log.details).to eq("Hello world\n\n---\n\nlets totally update the body")
       end
 
+      it "doesn't log an edit when skip_staff_log is true" do
+        subject.revise!(
+          moderator,
+          { raw: "lets totally update the body" },
+          skip_staff_log: true
+        )
+        log = UserHistory.where(
+          acting_user_id: moderator.id,
+          action: UserHistory.actions[:post_edit]
+        ).first
+        expect(log).to be_blank
+      end
+
       it "doesn't log an edit when a staff member edits their own post" do
         revisor = PostRevisor.new(
           Fabricate(:post, user: moderator)
@@ -734,7 +747,7 @@ describe PostRevisor do
             let(:bumped_at) { 1.day.ago }
 
             before do
-              topic.update_attributes!(bumped_at: bumped_at)
+              topic.update!(bumped_at: bumped_at)
               create_hidden_tags(['important', 'secret'])
               topic = post.topic
               topic.tags = [Fabricate(:tag, name: "super"), Tag.where(name: "important").first, Fabricate(:tag, name: "stuff")]

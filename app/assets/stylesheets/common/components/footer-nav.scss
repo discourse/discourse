@@ -78,6 +78,11 @@ body.footer-nav-ipad {
     padding-bottom: 0; // resets safe-area-inset-bottom
   }
 
+  #reply-control,
+  #reply-control.fullscreen {
+    z-index: z("ipad-header-nav") + 1;
+  }
+
   &.docked .d-header {
     margin-top: $footer-nav-height;
   }

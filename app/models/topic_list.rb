@@ -1,8 +1,5 @@
 # frozen_string_literal: true
 
-require_dependency 'avatar_lookup'
-require_dependency 'primary_group_lookup'
-
 class TopicList
   include ActiveModel::Serialization
 
@@ -41,7 +38,8 @@ class TopicList
     :current_user,
     :tags,
     :shared_drafts,
-    :category
+    :category,
+    :publish_read_state
   )
 
   def initialize(filter, current_user, topics, opts = nil)
@@ -57,6 +55,8 @@ class TopicList
     if @opts[:tags]
       @tags = Tag.where(id: @opts[:tags]).all
     end
+
+    @publish_read_state = !!@opts[:publish_read_state]
   end
 
   def top_tags

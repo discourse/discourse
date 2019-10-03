@@ -12,9 +12,10 @@ module Middleware
     end
 
     class Helper
-      USER_AGENT = "HTTP_USER_AGENT"
-      RACK_SESSION = "rack.session"
-      ACCEPT_ENCODING = "HTTP_ACCEPT_ENCODING"
+      RACK_SESSION     = "rack.session"
+      USER_AGENT       = "HTTP_USER_AGENT"
+      ACCEPT_ENCODING  = "HTTP_ACCEPT_ENCODING"
+      DISCOURSE_RENDER = "HTTP_DISCOURSE_RENDER"
 
       def initialize(env)
         @env = env
@@ -28,7 +29,7 @@ module Middleware
         !@request.path.ends_with?('srv/status') &&
         @request[Auth::DefaultCurrentUserProvider::API_KEY].nil? &&
         @env[Auth::DefaultCurrentUserProvider::USER_API_KEY].nil? &&
-        CrawlerDetection.is_blocked_crawler?(@request.env['HTTP_USER_AGENT'])
+        CrawlerDetection.is_blocked_crawler?(@env[USER_AGENT])
       end
 
       def is_mobile=(val)
@@ -39,12 +40,11 @@ module Middleware
         @is_mobile ||=
           begin
             session = @env[RACK_SESSION]
-            # don't initialize params until later otherwise
-            # you get a broken params on the request
+            # don't initialize params until later
+            # otherwise you get a broken params on the request
             params = {}
-            user_agent = @env[USER_AGENT]
 
-            MobileDetection.resolve_mobile_view!(user_agent, params, session) ? :true : :false
+            MobileDetection.resolve_mobile_view!(@env[USER_AGENT], params, session) ? :true : :false
           end
 
         @is_mobile == :true
@@ -62,7 +62,8 @@ module Middleware
         @is_crawler ||=
           begin
             user_agent = @env[USER_AGENT]
-            if CrawlerDetection.crawler?(user_agent, @env["HTTP_VIA"])
+
+            if @env[DISCOURSE_RENDER] == "crawler" || CrawlerDetection.crawler?(user_agent, @env["HTTP_VIA"])
               :true
             else
               user_agent.downcase.include?("discourse") ? :true : :false
@@ -72,7 +73,7 @@ module Middleware
       end
 
       def cache_key
-        @cache_key ||= "ANON_CACHE_#{@env["HTTP_ACCEPT"]}_#{@env["HTTP_HOST"]}#{@env["REQUEST_URI"]}|m=#{is_mobile?}|c=#{is_crawler?}|b=#{has_brotli?}|t=#{theme_ids.join(",")}"
+        @cache_key ||= "ANON_CACHE_#{@env["HTTP_ACCEPT"]}_#{@env["HTTP_HOST"]}#{@env["REQUEST_URI"]}|m=#{is_mobile?}|c=#{is_crawler?}|b=#{has_brotli?}|t=#{theme_ids.join(",")}#{GlobalSetting.compress_anon_cache}"
       end
 
       def theme_ids
@@ -83,6 +84,10 @@ module Middleware
         else
           []
         end
+      end
+
+      def cache_key_count
+        @cache_key_count ||= "#{cache_key}_count"
       end
 
       def cache_key_body
@@ -122,7 +127,7 @@ module Middleware
       def logged_in_anon_limiter
         @logged_in_anon_limiter ||= RateLimiter.new(
           nil,
-          "logged_in_anon_cache_#{@env["HOST"]}/#{@env["REQUEST_URI"]}",
+          "logged_in_anon_cache_#{@env["HTTP_HOST"]}/#{@env["REQUEST_URI"]}",
           GlobalSetting.force_anonymous_min_per_10_seconds,
           10
         )
@@ -133,6 +138,7 @@ module Middleware
       end
 
       MIN_TIME_TO_CHECK = 0.05
+      ADP = "action_dispatch.request.parameters"
 
       def should_force_anonymous?
         if (queue_time = @env['REQUEST_QUEUE_SECONDS']) && get?
@@ -152,10 +158,31 @@ module Middleware
         !!(!has_auth_cookie? && get? && no_cache_bypass)
       end
 
-      def cached
-        if body = $redis.get(cache_key_body)
+      def compress(val)
+        if val && GlobalSetting.compress_anon_cache
+          require "lz4-ruby" if !defined?(LZ4)
+          LZ4::compress(val)
+        else
+          val
+        end
+      end
+
+      def decompress(val)
+        if val && GlobalSetting.compress_anon_cache
+          require "lz4-ruby" if !defined?(LZ4)
+          LZ4::uncompress(val)
+        else
+          val
+        end
+      end
+
+      def cached(env = {})
+        if body = decompress($redis.get(cache_key_body))
           if other = $redis.get(cache_key_other)
             other = JSON.parse(other)
+            if req_params = other[1].delete(ADP)
+              env[ADP] = req_params
+            end
             [other[0], other[1], [body]]
           end
         end
@@ -168,10 +195,28 @@ module Middleware
       # NOTE in an ideal world cache still serves out cached content except for one magic worker
       #  that fills it up, this avoids a herd killing you, we can probably do this using a job or redis tricks
       #  but coordinating this is tricky
-      def cache(result)
+      def cache(result, env = {})
+        return result if GlobalSetting.anon_cache_store_threshold == 0
+
         status, headers, response = result
 
         if status == 200 && cache_duration
+
+          if GlobalSetting.anon_cache_store_threshold > 1
+            count = $redis.eval(<<~REDIS, [cache_key_count], [cache_duration])
+              local current = redis.call("incr", KEYS[1])
+              redis.call("expire",KEYS[1],ARGV[1])
+              return current
+            REDIS
+
+            # technically lua will cast for us, but might as well be
+            # prudent here, hence the to_i
+            if count.to_i < GlobalSetting.anon_cache_store_threshold
+              headers["X-Discourse-Cached"] = "skip"
+              return [status, headers, response]
+            end
+          end
+
           headers_stripped = headers.dup.delete_if { |k, _| ["Set-Cookie", "X-MiniProfiler-Ids"].include? k }
           headers_stripped["X-Discourse-Cached"] = "true"
           parts = []
@@ -179,8 +224,17 @@ module Middleware
             parts << part
           end
 
-          $redis.setex(cache_key_body,  cache_duration, parts.join)
+          if req_params = env[ADP]
+            headers_stripped[ADP] = {
+              "action" => req_params["action"],
+              "controller" => req_params["controller"]
+            }
+          end
+
+          $redis.setex(cache_key_body,  cache_duration, compress(parts.join))
           $redis.setex(cache_key_other, cache_duration, [status, headers_stripped].to_json)
+
+          headers["X-Discourse-Cached"] = "store"
         else
           parts = response
         end
@@ -215,7 +269,7 @@ module Middleware
 
       result =
         if helper.cacheable?
-          helper.cached || helper.cache(@app.call(env))
+          helper.cached(env) || helper.cache(@app.call(env), env)
         else
           @app.call(env)
         end
@@ -225,7 +279,6 @@ module Middleware
       end
 
       result
-
     end
 
   end

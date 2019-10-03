@@ -1,10 +1,8 @@
 # frozen_string_literal: true
 
-require_dependency 'post'
-
 module Jobs
 
-  class NotifyMailingListSubscribers < Jobs::Base
+  class NotifyMailingListSubscribers < ::Jobs::Base
     include Skippable
 
     RETRY_TIMES = [5.minute, 15.minute, 30.minute, 45.minute, 90.minute, 180.minute, 300.minute]

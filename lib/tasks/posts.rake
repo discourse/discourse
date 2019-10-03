@@ -8,6 +8,11 @@ task 'posts:rebake' => :environment do
 end
 
 task 'posts:rebake_uncooked_posts' => :environment do
+  # rebaking uncooked posts can very quickly saturate sidekiq
+  # this provides an insurance policy so you can safely run and stop
+  # this rake task without worrying about your sidekiq imploding
+  Jobs.run_immediately!
+
   ENV['RAILS_DB'] ? rebake_uncooked_posts : rebake_uncooked_posts_all_sites
 end
 
@@ -24,8 +29,18 @@ def rebake_uncooked_posts
   rebaked = 0
   total = uncooked.count
 
-  uncooked.find_each do |post|
-    rebake_post(post)
+  ids = uncooked.pluck(:id)
+  # work randomly so you can run this job from lots of consoles if needed
+  ids.shuffle!
+
+  ids.each do |id|
+    # may have been cooked in interim
+    post = uncooked.where(id: id).first
+
+    if post
+      rebake_post(post)
+    end
+
     print_status(rebaked += 1, total)
   end
 
@@ -260,26 +275,6 @@ task 'posts:delete_all_likes' => :environment do
   UserStat.update_all(likes_given: 0, likes_received: 0) # clear user likes stats
   DirectoryItem.update_all(likes_given: 0, likes_received: 0) # clear user directory likes stats
   puts "", "#{likes_deleted} likes deleted!", ""
-end
-
-desc 'Defer all flags'
-task 'posts:defer_all_flags' => :environment do
-
-  active_flags = FlagQuery.flagged_post_actions('active')
-
-  flags_deferred = 0
-  total = active_flags.count
-
-  active_flags.each do |post_action|
-    begin
-      PostAction.defer_flags!(Post.find(post_action.post_id), Discourse.system_user)
-      print_status(flags_deferred += 1, total)
-    rescue
-      # skip
-    end
-  end
-
-  puts "", "#{flags_deferred} flags deferred!", ""
 end
 
 desc 'Refreshes each post that was received via email'

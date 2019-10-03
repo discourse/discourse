@@ -10,8 +10,10 @@ export default Ember.Mixin.create({
     if (searchDebounce) run.cancel(searchDebounce);
   },
 
-  searchTags(url, data, callback) {
-    this.startLoading();
+  searchTags(url, data, callback, options) {
+    options = options || {};
+
+    if (!options.background) this.startLoading();
 
     return ajax(Discourse.getURL(url), {
       quietMillis: 200,
@@ -21,10 +23,12 @@ export default Ember.Mixin.create({
     })
       .then(json => {
         this.set("asyncContent", callback(this, json));
-        this.autoHighlight();
+        if (!options.background) this.autoHighlight();
       })
       .catch(error => popupAjaxError(error))
-      .finally(() => this.stopLoading());
+      .finally(() => {
+        if (!options.background) this.stopLoading();
+      });
   },
 
   validateCreate(term) {

@@ -232,6 +232,7 @@ pt:
       stats: "Estatísticas do sítio"
       our_admins: "Os Nossos Administradores"
       our_moderators: "Os Nossos Moderadores"
+      moderators: "Moderadores"
       stat:
         all_time: "Sempre"
         last_7_days: "Últimos 7 Dias"
@@ -307,6 +308,8 @@ pt:
         placeholder: "escreva o título da mensagem aqui"
     review:
       in_reply_to: "Em resposta a"
+      explain:
+        total: "Total"
       claim_help:
         optional: "Pode reivindicar este item para prevenir que outras pessoas o revejam."
         required: "Deve reivindicar items antes de as poder rever."
@@ -784,7 +787,6 @@ pt:
         uploaded_avatar: "Foto personalizada"
         uploaded_avatar_empty: "Adicionar foto personalizada"
         upload_title: "Carregar a sua foto"
-        upload_picture: "Carregar Imagem"
         image_is_not_a_square: "Alerta: cortámos a sua imagem; o comprimento e a altura não eram iguais."
       change_profile_background:
         title: "Fundo de Perfil"
@@ -808,6 +810,7 @@ pt:
         title: "Contas Associadas"
         connect: "Associar"
         revoke: "Remover"
+        cancel: "Cancelar"
         not_connected: "(não associado)"
       name:
         title: "Nome"
@@ -1239,6 +1242,9 @@ pt:
       min_content_not_reached:
         one: "Selecione pelo menos {{count}} item."
         other: "Selecione pelo menos {{count}} itens."
+    date_time_picker:
+      from: De
+      to: Para
     emoji_picker:
       filter_placeholder: Pesquisar por emoji
       smileys_&_emotion: Smileys e Emojis
@@ -1292,7 +1298,6 @@ pt:
         title_missing: "O título é obrigatório"
         title_too_short: "O título tem que ter pelo menos {{min}} carateres."
         title_too_long: "O título não pode conter mais do que {{max}} carateres."
-        post_missing: "A publicação não pode estar vazia"
         post_length: "A publicação tem que ter pelo menos {{min}} carateres"
         try_like: "Já experimentou o botão {{heart}}?"
         category_missing: "Tem de escolher uma categoria"
@@ -1313,7 +1318,6 @@ pt:
       title_placeholder: "Numa breve frase, de que se trata esta discussão?"
       title_or_link_placeholder: "Digite o título, ou cole aqui uma hiperligação"
       edit_reason_placeholder: "Porque está a editar?"
-      show_edit_reason: "(adicione motivo da edição)"
       topic_featured_link_placeholder: "Inserir hiperligação mostrada com o título."
       remove_featured_link: "Remover hiperligação do tópico."
       reply_placeholder: "Digite aqui. Utilize Markdown, BBCode, ou HTML para formatar. Arraste ou cole imagens."
@@ -1399,7 +1403,6 @@ pt:
       title: "notificações de menções de @name, respostas às suas publicações e tópicos, mensagens, etc"
       none: "De momento, não é possível carregar as notificações."
       empty: "Não foram encontradas notificações."
-      more: "ver notificações antigas"
       mentioned: "<span>{{username}}</span> {{description}}"
       group_mentioned: "<span>{{username}}</span> {{description}}"
       quoted: "<span>{{username}}</span> {{description}}"
@@ -2532,8 +2535,6 @@ pt:
           view_table: "tabela"
           view_graph: "grafo"
           refresh_report: "Atualizar relatório"
-          start_date: "Data de Início"
-          end_date: "Data final"
           groups: "Todos os grupos"
           filters:
             group:
@@ -2757,7 +2758,7 @@ pt:
         copied_to_clipboard: "Copiado para a Área de Transferência"
         copy_to_clipboard_error: "Erro a copiar dados para a Área de Transferência"
         email_templates:
-          title: "Modelos de Email"
+          title: "E-mail"
           subject: "Assunto"
           multiple_subjects: "Este modelo de email tem múltiplos assuntos."
           body: "Corpo"
@@ -2831,6 +2832,8 @@ pt:
           love:
             name: "amor"
             description: "A cor do botão 'gosto'."
+        email_style:
+          css: "CSS"
       email:
         title: "Emails"
         settings: "Configurações"
@@ -2994,12 +2997,15 @@ pt:
           title: "Registo de Erros em Logs"
       watched_words:
         clear_filter: "Remover"
+        download: Transferir
+        clear_all: Remover Tudo
         actions:
           block: "Bloquear"
           flag: "Denunciar"
         form:
           add: "Adicionar"
-          upload: "Carregar"
+        test:
+          no_matches: "Não foram encontradas correspondências"
       impersonate:
         title: "Personificar"
         help: "Utilize este ferramenta de forma a personificar uma conta de utilizador para fins de depuração. Terá de encerrar a sessão assim que terminar."
@@ -3199,7 +3205,6 @@ pt:
       site_text:
         description: "Pode personalizar qualquer texto no seu fórum. Por favor comece por pesquisar abaixo:"
         search: "Pesquisar o texto que gostaria de editar"
-        title: "Conteúdo do Texto"
         edit: "editar"
         revert: "Reverter Alterações"
         revert_confirm: "Tem a certeza que quer reverter as suas alterações?"

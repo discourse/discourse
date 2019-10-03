@@ -1,7 +1,7 @@
 import { on, observes } from "ember-addons/ember-computed-decorators";
 import { findRawTemplate } from "discourse/lib/raw-templates";
 import { emojiUrlFor } from "discourse/lib/text";
-import KeyValueStore from "discourse/lib/key-value-store";
+
 import {
   extendedEmojiList,
   isSkinTonableEmoji,
@@ -10,21 +10,14 @@ import {
 import { safariHacksDisabled } from "discourse/lib/utilities";
 const { run } = Ember;
 
-const keyValueStore = new KeyValueStore("discourse_emojis_");
-const EMOJI_USAGE = "emojiUsage";
-const EMOJI_SELECTED_DIVERSITY = "emojiSelectedDiversity";
 const PER_ROW = 11;
 const customEmojis = _.keys(extendedEmojiList()).map(code => {
   return { code, src: emojiUrlFor(code) };
 });
 
-export function resetCache() {
-  keyValueStore.setObject({ key: EMOJI_USAGE, value: [] });
-  keyValueStore.setObject({ key: EMOJI_SELECTED_DIVERSITY, value: 1 });
-}
-
 export default Ember.Component.extend({
   automaticPositioning: true,
+  emojiStore: Ember.inject.service("emoji-store"),
 
   close() {
     this._unbindEvents();
@@ -46,11 +39,10 @@ export default Ember.Component.extend({
     this.$results = this.$picker.find(".results");
     this.$list = this.$picker.find(".list");
 
-    this.set(
-      "selectedDiversity",
-      keyValueStore.getObject(EMOJI_SELECTED_DIVERSITY) || 1
-    );
-    this.set("recentEmojis", keyValueStore.getObject(EMOJI_USAGE) || []);
+    this.setProperties({
+      selectedDiversity: this.emojiStore.diversity,
+      recentEmojis: this.emojiStore.favorites
+    });
 
     run.scheduleOnce("afterRender", this, function() {
       this._bindEvents();
@@ -88,18 +80,7 @@ export default Ember.Component.extend({
   _setup() {
     this.$picker = $(this.element.querySelector(".emoji-picker"));
     this.$modal = $(this.element.querySelector(".emoji-picker-modal"));
-
     this.appEvents.on("emoji-picker:close", this, "_closeEmojiPicker");
-
-    if (!keyValueStore.getObject(EMOJI_USAGE)) {
-      keyValueStore.setObject({ key: EMOJI_USAGE, value: [] });
-    } else if (_.isPlainObject(keyValueStore.getObject(EMOJI_USAGE))) {
-      // handle legacy format
-      keyValueStore.setObject({
-        key: EMOJI_USAGE,
-        value: _.keys(keyValueStore.getObject(EMOJI_USAGE))
-      });
-    }
   },
 
   @on("didUpdateAttrs")
@@ -116,10 +97,7 @@ export default Ember.Component.extend({
 
   @observes("selectedDiversity")
   selectedDiversityChanged() {
-    keyValueStore.setObject({
-      key: EMOJI_SELECTED_DIVERSITY,
-      value: this.selectedDiversity
-    });
+    this.emojiStore.diversity = this.selectedDiversity;
 
     $.each(
       this.$list.find(".emoji[data-loaded='1'].diversity"),
@@ -326,7 +304,7 @@ export default Ember.Component.extend({
       ".section[data-section='recent'] .clear-recent"
     );
     $recent.on("click", () => {
-      keyValueStore.setObject({ key: EMOJI_USAGE, value: [] });
+      this.emojiStore.favorites = [];
       this.set("recentEmojis", []);
       this._scrollTo(0);
       return false;
@@ -608,12 +586,8 @@ export default Ember.Component.extend({
   },
 
   _trackEmojiUsage(code) {
-    let recent = keyValueStore.getObject(EMOJI_USAGE) || [];
-    recent = recent.filter(r => r !== code);
-    recent.unshift(code);
-    recent.length = Math.min(recent.length, PER_ROW);
-    keyValueStore.setObject({ key: EMOJI_USAGE, value: recent });
-    this.set("recentEmojis", recent);
+    this.emojiStore.track(code);
+    this.set("recentEmojis", this.emojiStore.favorites.slice(0, PER_ROW));
   },
 
   _scrollTo(y) {

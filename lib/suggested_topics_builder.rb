@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require_dependency 'topic_list'
-
 class SuggestedTopicsBuilder
 
   attr_reader :excluded_topic_ids

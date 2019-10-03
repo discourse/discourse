@@ -5,11 +5,6 @@
 # Returns a TopicList object containing the topics found.
 #
 
-require_dependency 'topic_list'
-require_dependency 'suggested_topics_builder'
-require_dependency 'topic_query_sql'
-require_dependency 'avatar_lookup'
-
 class TopicQuery
   PG_MAX_INT ||= 2147483647
 
@@ -344,11 +339,13 @@ class TopicQuery
 
   def list_private_messages_group(user)
     list = private_messages_for(user, :group)
-    group_id = Group.where('name ilike ?', @options[:group_name]).pluck(:id).first
+    group = Group.where('name ilike ?', @options[:group_name]).select(:id, :publish_read_state).first
+    publish_read_state = !!group&.publish_read_state
     list = list.joins("LEFT JOIN group_archived_messages gm ON gm.topic_id = topics.id AND
-                      gm.group_id = #{group_id.to_i}")
+                      gm.group_id = #{group&.id&.to_i}")
     list = list.where("gm.id IS NULL")
-    create_list(:private_messages, {}, list)
+    list = append_read_state(list, group) if publish_read_state
+    create_list(:private_messages, { publish_read_state: publish_read_state }, list)
   end
 
   def list_private_messages_group_archive(user)
@@ -589,6 +586,11 @@ class TopicQuery
   end
 
   def apply_shared_drafts(result, category_id, options)
+
+    # PERF: avoid any penalty if there are no shared drafts enabled
+    # on some sites the cost can be high eg: gearbox
+    return result if SiteSetting.shared_drafts_category == ""
+
     drafts_category_id = SiteSetting.shared_drafts_category.to_i
     viewing_shared = category_id && category_id == drafts_category_id
     can_create_shared = guardian.can_create_shared_draft?
@@ -856,6 +858,7 @@ class TopicQuery
 
     list
   end
+
   def remove_muted_categories(list, user, opts = nil)
     category_id = get_category_id(opts[:exclude]) if opts
 
@@ -878,6 +881,7 @@ class TopicQuery
 
     list
   end
+
   def remove_muted_tags(list, user, opts = nil)
     if user.nil? || !SiteSetting.tagging_enabled || SiteSetting.remove_muted_tags_from_latest == 'never'
       return list
@@ -888,16 +892,9 @@ class TopicQuery
       return list
     end
 
-    showing_tag = if opts[:filter]
-      f = opts[:filter].split('/')
-      f[0] == 'tags' ? f[1] : nil
-    else
-      nil
-    end
-
     # if viewing the topic list for a muted tag, show all the topics
-    if showing_tag.present? && TagUser.lookup(user, :muted).joins(:tag).where('tags.name = ?', showing_tag).exists?
-      return list
+    if !opts[:no_tags] && opts[:tags].present?
+      return list if TagUser.lookup(user, :muted).joins(:tag).where('tags.name = ?', opts[:tags].first).exists?
     end
 
     if SiteSetting.remove_muted_tags_from_latest == 'always'
@@ -1056,5 +1053,17 @@ class TopicQuery
 
   def sanitize_sql_array(input)
     ActiveRecord::Base.public_send(:sanitize_sql_array, input.join(','))
+  end
+
+  def append_read_state(list, group)
+    group_id = group&.id
+    return list if group_id.nil?
+
+    selected_values = list.select_values.empty? ? ['topics.*'] : list.select_values
+    selected_values << "COALESCE(tg.last_read_post_number, 0) AS last_read_post_number"
+
+    list
+      .joins("LEFT OUTER JOIN topic_groups tg ON topics.id = tg.topic_id AND tg.group_id = #{group_id}")
+      .select(*selected_values)
   end
 end

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Jobs
-  class RunHeartbeat < Jobs::Base
+  class RunHeartbeat < ::Jobs::Base
 
     sidekiq_options queue: 'critical'
 

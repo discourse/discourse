@@ -159,6 +159,8 @@ class GroupsController < ApplicationController
 
   def posts
     group = find_group(:group_id)
+    guardian.ensure_can_see_group_members!(group)
+
     posts = group.posts_for(
       guardian,
       params.permit(:before_post_id, :category_id)
@@ -168,6 +170,8 @@ class GroupsController < ApplicationController
 
   def posts_feed
     group = find_group(:group_id)
+    guardian.ensure_can_see_group_members!(group)
+
     @posts = group.posts_for(
       guardian,
       params.permit(:before_post_id, :category_id)
@@ -203,6 +207,8 @@ class GroupsController < ApplicationController
 
   def members
     group = find_group(:group_id)
+
+    guardian.ensure_can_see_group_members!(group)
 
     limit = (params[:limit] || 20).to_i
     offset = params[:offset].to_i
@@ -542,10 +548,12 @@ class GroupsController < ApplicationController
             :incoming_email,
             :primary_group,
             :visibility_level,
+            :members_visibility_level,
             :name,
             :grant_trust_level,
             :automatic_membership_email_domains,
-            :automatic_membership_retroactive
+            :automatic_membership_retroactive,
+            :publish_read_state
           ])
 
           custom_fields = Group.editable_group_custom_fields

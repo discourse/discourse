@@ -444,68 +444,14 @@ describe WebHook do
       expect(payload["id"]).to eq(tag.id)
     end
 
-    # NOTE: Backwards compatibility, people should use reviewable instead
-    it 'should enqueue the right hooks for flag events' do
-      post = Fabricate(:post)
-      admin = Fabricate(:admin)
-      moderator = Fabricate(:moderator)
-      Fabricate(:flag_web_hook)
-
-      result = PostActionCreator.spam(admin, post)
+    it 'should enqueue the right hooks for notifications' do
+      Fabricate(:notification_web_hook)
+      notification = Fabricate(:notification)
       job_args = Jobs::EmitWebHookEvent.jobs.last["args"].first
 
-      expect(job_args["event_name"]).to eq("flag_created")
+      expect(job_args["event_name"]).to eq("notification_created")
       payload = JSON.parse(job_args["payload"])
-      expect(payload["id"]).to eq(result.post_action.id)
-
-      result.reviewable.perform(moderator, :agree_and_keep)
-      job_args = Jobs::EmitWebHookEvent.jobs.last["args"].first
-
-      expect(job_args["event_name"]).to eq("flag_agreed")
-      payload = JSON.parse(job_args["payload"])
-      expect(payload["id"]).to eq(result.post_action.id)
-
-      result = PostActionCreator.spam(Fabricate(:user), post)
-      result.reviewable.perform(moderator, :disagree)
-      job_args = Jobs::EmitWebHookEvent.jobs.last["args"].first
-
-      expect(job_args["event_name"]).to eq("flag_disagreed")
-      payload = JSON.parse(job_args["payload"])
-      expect(payload["id"]).to eq(result.post_action.id)
-
-      post = Fabricate(:post)
-      result = PostActionCreator.spam(admin, post)
-      result.reviewable.perform(moderator, :ignore)
-      job_args = Jobs::EmitWebHookEvent.jobs.last["args"].first
-
-      expect(job_args["event_name"]).to eq("flag_deferred")
-      payload = JSON.parse(job_args["payload"])
-      expect(payload["id"]).to eq(result.post_action.id)
-    end
-
-    # NOTE: Backwards compatibility, people should use reviewable instead
-    it 'should enqueue the right hooks for queued post events' do
-      Fabricate(:queued_post_web_hook)
-      reviewable = Fabricate(:reviewable_queued_post)
-      job_args = Jobs::EmitWebHookEvent.jobs.last["args"].first
-
-      expect(job_args["event_name"]).to eq("queued_post_created")
-      payload = JSON.parse(job_args["payload"])
-      expect(payload["id"]).to eq(reviewable.id)
-
-      reviewable.perform(Discourse.system_user, :approve_post)
-      job_args = Jobs::EmitWebHookEvent.jobs.last["args"].first
-
-      expect(job_args["event_name"]).to eq("approved_post")
-      payload = JSON.parse(job_args["payload"])
-      expect(payload["id"]).to eq(reviewable.id)
-
-      reviewable.perform(Discourse.system_user, :reject_post)
-      job_args = Jobs::EmitWebHookEvent.jobs.last["args"].first
-
-      expect(job_args["event_name"]).to eq("rejected_post")
-      payload = JSON.parse(job_args["payload"])
-      expect(payload["id"]).to eq(reviewable.id)
+      expect(payload["id"]).to eq(notification.id)
     end
 
     it 'should enqueue the right hooks for reviewables' do

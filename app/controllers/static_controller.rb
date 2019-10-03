@@ -1,8 +1,5 @@
 # frozen_string_literal: true
 
-require_dependency 'distributed_memoizer'
-require_dependency 'file_helper'
-
 class StaticController < ApplicationController
 
   skip_before_action :check_xhr, :redirect_to_login_if_required
@@ -135,7 +132,7 @@ class StaticController < ApplicationController
         if Discourse.store.external?
           begin
             file = FileHelper.download(
-              UrlHelper.absolute(favicon.url),
+              Discourse.store.cdn_url(favicon.url),
               max_file_size: favicon.filesize,
               tmp_file_name: FAVICON,
               follow_redirect: true

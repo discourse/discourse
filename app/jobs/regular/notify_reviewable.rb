@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Jobs::NotifyReviewable < Jobs::Base
+class Jobs::NotifyReviewable < ::Jobs::Base
 
   def execute(args)
     reviewable = Reviewable.find_by(id: args[:reviewable_id])

@@ -102,9 +102,9 @@ export default {
         data.append("url", href);
         data.append("post_id", postId);
         data.append("topic_id", topicId);
-        navigator.sendBeacon("/clicks/track", data);
+        navigator.sendBeacon(Discourse.getURL("/clicks/track"), data);
       } else {
-        trackPromise = ajax("/clicks/track", {
+        trackPromise = ajax(Discourse.getURL("/clicks/track"), {
           type: "POST",
           data: {
             url: href,

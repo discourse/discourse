@@ -2,7 +2,6 @@
 # frozen_string_literal: true
 
 require 'rails_helper'
-require_dependency 'post_creator'
 
 describe Category do
   fab!(:user) { Fabricate(:user) }
@@ -357,7 +356,7 @@ describe Category do
       c = Category.new
       expect(c.description_text).to be_nil
       c.description = "&lt;hello <a>test</a>."
-      expect(c.description_text).to eq("<hello test.")
+      expect(c.description_text).to eq("&lt;hello test.")
     end
   end
 

@@ -131,6 +131,29 @@ export default Ember.Component.extend(KeyEnterEscape, {
       $document.on(DRAG_EVENTS, throttledPerformDrag);
       $document.on(END_EVENTS, endDrag);
     });
+
+    if (this.shouldUseVisualViewportListener()) {
+      this.viewportResize();
+      window.visualViewport.addEventListener("resize", this.viewportResize);
+    }
+  },
+
+  shouldUseVisualViewportListener() {
+    return this.capabilities.isIOS && window.visualViewport !== undefined;
+  },
+
+  viewportResize() {
+    const composerVH = window.visualViewport.height * 0.01;
+
+    if (window.visualViewport.height !== window.innerHeight) {
+      document.documentElement.classList.add("keyboard-visible");
+    } else {
+      document.documentElement.classList.remove("keyboard-visible");
+    }
+    document.documentElement.style.setProperty(
+      "--composer-vh",
+      `${composerVH}px`
+    );
   },
 
   didInsertElement() {
@@ -155,6 +178,9 @@ export default Ember.Component.extend(KeyEnterEscape, {
   willDestroyElement() {
     this._super(...arguments);
     this.appEvents.off("composer:resize", this, this.resize);
+    if (this.shouldUseVisualViewportListener()) {
+      window.visualViewport.removeEventListener("resize", this.viewportResize);
+    }
   },
 
   click() {

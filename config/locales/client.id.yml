@@ -244,6 +244,8 @@ id:
       title:
         placeholder: "tulis judul topik disini"
     review:
+      explain:
+        total: "Total"
       delete: "Hapus"
       settings:
         save_changes: "Simpan perubahan"
@@ -580,7 +582,6 @@ id:
         uploaded_avatar: "Gambar kustom"
         uploaded_avatar_empty: "Tambah gambar kustom"
         upload_title: "Unggah gambar anda"
-        upload_picture: "Unggah Gambar"
         image_is_not_a_square: "Peringatan: kami telah memotong gambar anda; lebar dan tinggi tidak sama."
       change_profile_background:
         title: "Latar Belakang Profil"
@@ -595,6 +596,8 @@ id:
         authenticated: "Email anda sudah dikonfirmasi oleh {{provider}}"
         frequency:
           other: "Kami akan mengirimkan email kepada anda jika kami tidak melihat anda selama {{count}} menit."
+      associated_accounts:
+        cancel: "Batal"
       name:
         title: "Name"
         instructions: "Nama lengkap anda (opsional)"
@@ -843,6 +846,9 @@ id:
       loading: Diproses...
     select_kit:
       filter_placeholder: Cari...
+    date_time_picker:
+      from: Dari
+      to: Kepada
     emoji_picker:
       filter_placeholder: Cari emoji
       objects: Objek
@@ -855,7 +861,6 @@ id:
         title_missing: "Judul harus ada"
         title_too_short: "Judul setidaknya {{min}} karakter"
         title_too_long: "Judul tidak boleh lebih dari {{max}} karakter"
-        post_missing: "Tulisan tidak boleh kosong"
         post_length: "Tulisan setidaknya harus {{min}} karakter"
         category_missing: "Anda harus memilih kategori"
       save_edit: "Simpah Ubahan"
@@ -869,7 +874,6 @@ id:
       users_placeholder: "Tambahkan pengguna"
       title_placeholder: "Tentang apa diskusi ini dalam satu kalimat pendek?"
       title_or_link_placeholder: "Ketik judul, atau tempel tautan disini"
-      show_edit_reason: "(tambahkan alasan pengubahan)"
       topic_featured_link_placeholder: "Masukkan tautan yang terlihat dengan judul."
       remove_featured_link: "Hapus tautan dari topik"
       reply_placeholder: "Ketik disini. Gunakan Markdown, BBCode, atau HTML untuk memformat. Tarik atau tempel gambar."
@@ -897,7 +901,6 @@ id:
           label: "Topik Baru"
     notifications:
       empty: "Tidak ada pemberitahuan."
-      more: "lihat notifikasi sebelumnya"
       titles:
         watching_first_post: "topik baru"
     upload_selector:
@@ -1178,6 +1181,7 @@ id:
         new_style: "preview"
         delete: "Hapus"
         email_templates:
+          title: "Email"
           subject: "Judul"
           body: "Konten"
         theme:
@@ -1241,7 +1245,6 @@ id:
       watched_words:
         form:
           add: "Menambahkan"
-          upload: "Unggah"
       users:
         title: "Pengguna"
         last_emailed: "Terakhir Surel Dikirimkan"

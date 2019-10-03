@@ -139,7 +139,7 @@ export default function() {
     });
 
     this.get("/topics/private-messages/eviltrout.json", () => {
-      return response({ topic_list: { topics: [] } });
+      return response(fixturesByUrl["/topics/private-messages/eviltrout.json"]);
     });
 
     this.get("/topics/feature_stats.json", () => {
@@ -324,6 +324,20 @@ export default function() {
         return response({
           error: "Invalid Second Factor",
           reason: "invalid_second_factor",
+          backup_enabled: true,
+          sent_to_email: "eviltrout@example.com",
+          current_email: "current@example.com"
+        });
+      }
+
+      if (data.password === "need-security-key") {
+        if (data.securityKeyCredential) {
+          return response({ username: "eviltrout" });
+        }
+
+        return response({
+          error: "Invalid Security Key",
+          reason: "invalid_security_key",
           backup_enabled: true,
           sent_to_email: "eviltrout@example.com",
           current_email: "current@example.com"
@@ -604,7 +618,10 @@ export default function() {
     this.delete("/admin/badges/:id", success);
 
     this.get("/admin/logs/staff_action_logs.json", () => {
-      return response(200, { staff_action_logs: [], user_history_actions: [] });
+      return response(200, {
+        staff_action_logs: [],
+        extras: { user_history_actions: [] }
+      });
     });
 
     this.get("/admin/logs/watched_words", () => {

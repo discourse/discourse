@@ -125,8 +125,6 @@ ar:
   activemodel:
     errors:
       <<: *errors
-  invite:
-    not_found: "نموذج الدعوة الخاص بك ليس صالحاً. رجاء اتصل بمدير الموقع."
   bulk_invite:
     file_should_be_csv: "الملف المرفوع يجب أن يكون بنسق csv . "
     error: "حدث عطل أثناء رفع الملفّ. رجاء أعد المحاولة لاحقًا."
@@ -166,6 +164,7 @@ ar:
     permalink: "الرابط الثابت"
     imported_from: "هذا موضوع نقاش مصاحب للمدخل الأصلي على %{link}"
     in_reply_to: "◀ %{username}"
+    created: "أُنشئ في"
   no_mentions_allowed: "نأسف، لا يمكنك الإشارة إلى الغير."
   too_many_mentions:
     zero: "عذرا، لا يمكنك الإشارة إلى أحد في كلّ مشاركة."
@@ -679,6 +678,8 @@ ar:
       every_hour: "كل ساعة"
       daily: "يوميا"
       weekly: "أسبوعيا"
+      every_month: "كل شهر"
+      every_six_months: "كل ستة اشهر"
   user_api_key:
     title: "منح الصلاحية لدخول التطبيق"
     authorize: "منح الصلاحية"
@@ -701,6 +702,7 @@ ar:
         day: اليوم
     post_edits:
       labels:
+        edited_at: التاريخ
         post: مشاركة
         editor: مُصحح
         edit_reason: سبب
@@ -983,7 +985,6 @@ ar:
     email_token_valid_hours: "أمارات نسيان كلمة السّرّ/تنشيط الحساب صالحة لمدّة (n) ساعة."
     enable_badges: "تفعيل نظام الأوسمة."
     enable_whispers: "السماح للطاقم بعمل نقاشات سرية داخل الموضوعات."
-    allow_index_in_robots_txt: "حدّد في robots.txt إمكانيّة فهرسة محرّكات البحث في الوبّ هذا الموقع."
     email_domains_blacklist: "قائمة pipe-delimited المجالات البريد الإلكتروني الذي لا يسمح للمستخدمين تسجيل حسابات مع. مثال: mailinator.com | trashmail.net"
     email_domains_whitelist: "قائمة pipe-delimited من مجالات البريد الإلكتروني التي يجب على المستخدمين تسجيل حسابات مع. تحذير: لن يسمح للمستخدمين مع مجالات البريد الإلكتروني الأخرى غير المذكورة هنا!"
     log_out_strict: "عند الخروج، اخرج من كلّ جلسات المستخدم في كلّ الأجهزة"
@@ -1216,7 +1217,7 @@ ar:
       invalid_string_min_max: "يجب أن تكون الأحرف بين %{min} و %{max}."
       invalid_string_min: "يجب أن تكون على الأقل %{min} أحرف"
       invalid_string_max: "يجب ان لا تكون الاحرف اكثر من %{max} "
-      invalid_reply_by_email_address: "القيمة يجب أن تحتوي '%%{reply_key}' وتختلف عن إشعار البريد الإلكتروني."
+      invalid_reply_by_email_address: "القيمة يجب أن تحتوي '%{reply_key}' وتختلف عن إشعار البريد الإلكتروني."
       min_username_length_range: "لا يمكن أن تكون القيمة الدنيا أكبر من العليا."
       max_username_length_range: "لا يمكن أن تكون القيمة العليا أصغر من الدنيا."
   search:
@@ -1298,8 +1299,8 @@ ar:
     errors: "%{errors}"
     not_available: "غير متاح. جرّب %{suggestion} ؟"
     something_already_taken: "حدث خطأ ما, ربما اسم المستخدم و البريد الالكتروني مسجل مسبقا, جرب رابط نسيان كلمة المرور."
-    omniauth_error: "نأسف، حدث خطأ في استيثاق حسابك. لربمّا لم تقبل الاستيثاق؟"
     omniauth_error_unknown: "حدث خطأ ما في معالجة دخولك، الرجاء إعادة المحاولة."
+    omniauth_confirm_button: "استمر"
     new_registrations_disabled: "لا يُسمح بتسجيل حساب جديد بهذا الوقت "
     password_too_long: "كلمة السّرّ مقصورة على 200 محرف."
     email_too_long: "عنوان البريد الإلكترونيّ الذي قدّمته طويل جدًّا. لا يجب أن يزيد طول أسماء صناديق البريد على 254 محرفًا، ولا يجب أن يزيد طول أسماء النّطاقات على 253 محرفًا."

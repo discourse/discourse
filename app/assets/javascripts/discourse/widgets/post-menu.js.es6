@@ -52,6 +52,35 @@ export function buildButton(name, widget) {
   }
 }
 
+registerButton("read-count", attrs => {
+  if (attrs.showReadIndicator) {
+    const count = attrs.readCount;
+    if (count > 0) {
+      return {
+        action: "toggleWhoRead",
+        title: "post.controls.read_indicator",
+        className: "button-count read-indicator",
+        contents: count,
+        iconRight: true,
+        addContainer: false
+      };
+    }
+  }
+});
+
+registerButton("read", attrs => {
+  const readBySomeone = attrs.readCount > 0;
+  if (attrs.showReadIndicator && readBySomeone) {
+    return {
+      action: "toggleWhoRead",
+      title: "post.controls.read_indicator",
+      icon: "book-reader",
+      before: "read-count",
+      addContainer: false
+    };
+  }
+});
+
 function likeCount(attrs) {
   const count = attrs.likeCount;
 
@@ -341,7 +370,12 @@ export default createWidget("post-menu", {
   },
 
   defaultState() {
-    return { collapsed: true, likedUsers: [], adminVisible: false };
+    return {
+      collapsed: true,
+      likedUsers: [],
+      readers: [],
+      adminVisible: false
+    };
   },
 
   buildKey: attrs => `post-menu-${attrs.id}`,
@@ -362,8 +396,7 @@ export default createWidget("post-menu", {
   },
 
   menuItems() {
-    let result = this.siteSettings.post_menu.split("|");
-    return result;
+    return this.siteSettings.post_menu.split("|").filter(Boolean);
   },
 
   html(attrs, state) {
@@ -492,6 +525,19 @@ export default createWidget("post-menu", {
       )
     ];
 
+    if (state.readers.length) {
+      const remaining = state.totalReaders - state.readers.length;
+      contents.push(
+        this.attach("small-user-list", {
+          users: state.readers,
+          addSelf: false,
+          listClassName: "who-read",
+          description: "post.actions.people.read",
+          count: remaining
+        })
+      );
+    }
+
     if (state.likedUsers.length) {
       const remaining = state.total - state.likedUsers.length;
       contents.push(
@@ -525,9 +571,15 @@ export default createWidget("post-menu", {
 
   showMoreActions() {
     this.state.collapsed = false;
-    if (!this.state.likedUsers.length) {
-      return this.getWhoLiked();
-    }
+    const likesPromise = !this.state.likedUsers.length
+      ? this.getWhoLiked()
+      : Ember.RSVP.resolve();
+
+    return likesPromise.then(() => {
+      if (!this.state.readers.length && this.attrs.showReadIndicator) {
+        return this.getWhoRead();
+      }
+    });
   },
 
   like() {
@@ -562,6 +614,12 @@ export default createWidget("post-menu", {
     }
   },
 
+  refreshReaders() {
+    if (this.state.readers.length) {
+      return this.getWhoRead();
+    }
+  },
+
   getWhoLiked() {
     const { attrs, state } = this;
 
@@ -576,12 +634,30 @@ export default createWidget("post-menu", {
       });
   },
 
+  getWhoRead() {
+    const { attrs, state } = this;
+
+    return this.store.find("post-reader", { id: attrs.id }).then(users => {
+      state.readers = users.map(avatarAtts);
+      state.totalReaders = users.totalRows;
+    });
+  },
+
   toggleWhoLiked() {
     const state = this.state;
     if (state.likedUsers.length) {
       state.likedUsers = [];
     } else {
       return this.getWhoLiked();
+    }
+  },
+
+  toggleWhoRead() {
+    const state = this.state;
+    if (this.state.readers.length) {
+      state.readers = [];
+    } else {
+      return this.getWhoRead();
     }
   }
 });

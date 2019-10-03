@@ -167,6 +167,7 @@ const DEFAULT_LIST = [
   "iframe[marginheight]",
   "iframe[marginwidth]",
   "iframe[width]",
+  "iframe[allowfullscreen]",
   "img[alt]",
   "img[height]",
   "img[title]",

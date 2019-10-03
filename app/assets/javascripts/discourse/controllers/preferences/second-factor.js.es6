@@ -68,12 +68,14 @@ export default Ember.Controller.extend(CanCheckEmails, {
           errorMessage: null,
           loaded: true,
           totps: response.totps,
+          security_keys: response.security_keys,
           password: null,
           dirty: false
         });
         this.set(
           "model.second_factor_enabled",
-          response.totps && response.totps.length > 0
+          (response.totps && response.totps.length > 0) ||
+            (response.security_keys && response.security_keys.length > 0)
         );
       })
       .catch(e => this.handleError(e))
@@ -141,6 +143,31 @@ export default Ember.Controller.extend(CanCheckEmails, {
         title: "user.second_factor.totp.add"
       });
       controller.setProperties({
+        onClose: () => this.loadSecondFactors(),
+        markDirty: () => this.markDirty(),
+        onError: e => this.handleError(e)
+      });
+    },
+
+    createSecurityKey() {
+      const controller = showModal("second-factor-add-security-key", {
+        model: this.model,
+        title: "user.second_factor.security_key.add"
+      });
+      controller.setProperties({
+        onClose: () => this.loadSecondFactors(),
+        markDirty: () => this.markDirty(),
+        onError: e => this.handleError(e)
+      });
+    },
+
+    editSecurityKey(security_key) {
+      const controller = showModal("second-factor-edit-security-key", {
+        model: security_key,
+        title: "user.second_factor.security_key.edit"
+      });
+      controller.setProperties({
+        user: this.model,
         onClose: () => this.loadSecondFactors(),
         markDirty: () => this.markDirty(),
         onError: e => this.handleError(e)

@@ -57,7 +57,9 @@ class StylesheetsController < ApplicationController
 
     # Security note, safe due to route constraint
     underscore_digest = digest ? "_" + digest : ""
-    location = "#{Rails.root}/#{Stylesheet::Manager::CACHE_PATH}/#{target}#{underscore_digest}#{extension}"
+
+    cache_path = "#{Rails.root}/#{Stylesheet::Manager::CACHE_PATH}"
+    location = "#{cache_path}/#{target}#{underscore_digest}#{extension}"
 
     stylesheet_time = query.pluck(:created_at).first
 
@@ -71,6 +73,7 @@ class StylesheetsController < ApplicationController
 
     unless File.exist?(location)
       if current = query.limit(1).pluck(source_map ? :source_map : :content).first
+        FileUtils.mkdir_p(cache_path)
         File.write(location, current)
       else
         raise Discourse::NotFound

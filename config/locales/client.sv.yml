@@ -215,6 +215,7 @@ sv:
       stats: "Sitestatistik"
       our_admins: "Våra administratörer"
       our_moderators: "Våra moderatorer"
+      moderators: "Moderatorer"
       stat:
         all_time: "Alla dagar"
         last_7_days: "Senaste 7"
@@ -269,6 +270,8 @@ sv:
         placeholder: "skriv ämnets rubrik här"
     review:
       in_reply_to: "som svar till"
+      explain:
+        total: "Totalt"
       delete: "Radera"
       settings:
         save_changes: "Spara ändringar"
@@ -640,7 +643,6 @@ sv:
         uploaded_avatar: "Anpassad bild"
         uploaded_avatar_empty: "Lägg till en anpassad bild"
         upload_title: "Ladda upp din bild"
-        upload_picture: "Ladda upp bild"
         image_is_not_a_square: "Varning: vi beskar din bild; bredden och höjden var inte samma."
       change_profile_background:
         title: "Profilbakgrund"
@@ -660,6 +662,7 @@ sv:
           other: "Vi skickar bara e-post om du inte synts till de senaste {{count}} minuterna."
       associated_accounts:
         revoke: "Återkalla"
+        cancel: "Avbryt"
       name:
         title: "Namn"
         instructions: "ditt fullständiga namn (tillval)"
@@ -1007,6 +1010,9 @@ sv:
       alt: "Alt"
     conditional_loading_section:
       loading: Laddar...
+    date_time_picker:
+      from: Från
+      to: Till
     emoji_picker:
       flags: Flaggor
     composer:
@@ -1033,7 +1039,6 @@ sv:
         title_missing: "Du måste ange en rubrik"
         title_too_short: "Rubriken måste vara minst {{min}} tecken lång."
         title_too_long: "Rubriken får inte vara längre än {{max}} tecken"
-        post_missing: "Inlägg får inte vara tomma"
         post_length: "Inlägg måste vara minst {{min}} tecken långa."
         category_missing: "Du måste välja en kategori"
       save_edit: "Spara ändring"
@@ -1048,7 +1053,6 @@ sv:
       title_placeholder: "Vad handlar ämnet om i en kort mening?"
       title_or_link_placeholder: "Skriv in en titel, eller klistra in en länk här"
       edit_reason_placeholder: "varför redigerar du?"
-      show_edit_reason: "(lägg till anledningar för redigering)"
       topic_featured_link_placeholder: "Ange länken som visas med titeln"
       reply_placeholder: "Skriv här. Använd Markdown, BBCode eller HTML för formattering. Släpp eller klistra in bilder."
       view_new_post: "Visa ditt nya inlägg."
@@ -1096,7 +1100,6 @@ sv:
       title: "notiser från @namn-omnämnanden, svar på dina inlägg och ämnen, meddelanden, etc"
       none: "Kan inte ladda notiser just nu."
       empty: "Inga notifieringar hittades."
-      more: "visa äldre notifikationer"
       granted_badge: "Förtjänade '{{description}}'"
       popup:
         mentioned: '{{username}} nämnde dig i "{{topic}}" - {{site_title}}'
@@ -2122,8 +2125,6 @@ sv:
           view_table: "tabell"
           view_graph: "graf"
           refresh_report: "Uppdatera rapport"
-          start_date: "Startdatum"
-          end_date: "Slutdatum"
           groups: "Alla grupper"
           filters:
             group:
@@ -2345,7 +2346,7 @@ sv:
         opacity: "Opacitet"
         copy: "Kopiera"
         email_templates:
-          title: "E-postmallar"
+          title: "E-post"
           subject: "Ämne"
           multiple_subjects: "Den här e-postmallen har flera ämnen."
           body: "Huvuddel"
@@ -2418,6 +2419,8 @@ sv:
           love:
             name: "älska"
             description: "Gillaknappens färg."
+        email_style:
+          css: "CSS"
       email:
         title: "E-post"
         settings: "Inställningar"
@@ -2584,12 +2587,13 @@ sv:
           title: "Felprotokoll"
       watched_words:
         clear_filter: "Rensa"
+        download: Ladda ner
+        clear_all: Rensa alla
         actions:
           block: "Blockera"
           flag: "Flagga"
         form:
           add: "Lägg till"
-          upload: "Ladda upp"
       impersonate:
         title: "Imitera"
         help: "Använd det här verktyget för att imitera ett användarkonto för avlusningssyften. Du kommer behöva logga ut när du är klar."
@@ -2790,7 +2794,7 @@ sv:
       site_text:
         description: "Du kan anpassa all text på ditt forum. Börja genom att söka nedanför:"
         search: "Sök efter texten som du vill redigera"
-        title: "Textinnehåll"
+        title: "Text"
         edit: "redigera"
         revert: "Ångra ändringarna"
         revert_confirm: "Är du säker på att du vill ångra dina ändringar?"

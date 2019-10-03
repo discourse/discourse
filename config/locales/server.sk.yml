@@ -119,8 +119,6 @@ sk:
   activemodel:
     errors:
       <<: *errors
-  invite:
-    not_found: "Tvoj pozívací token je nesprávny. Prosím, kontaktujte administrátora stránky."
   bulk_invite:
     file_should_be_csv: "Nahrávaný súbor by mal byť typu CSV."
     error: "Počas nahrávanie súboru sa vyskytla chyba. Prosím, vyskúšajte ho nahraď znovu neskôr."
@@ -151,6 +149,7 @@ sk:
     permalink: "Trvalý odkaz"
     imported_from: "Toto je sprievodná diskusia k pôvodnej téme na %{link}"
     in_reply_to: "▶ %{username}"
+    created: "Vytvorené"
   no_mentions_allowed: "Ľutujeme, nesmiete zmieňovať iných používateľov"
   too_many_mentions:
     one: "Ľutujeme, v príspevku môžete zmieniť maximálne jedného používateľa."
@@ -591,6 +590,7 @@ sk:
         day: Deň
     post_edits:
       labels:
+        edited_at: Dátum
         post: Príspevok
         editor: Editor
         edit_reason: Dôvod
@@ -847,7 +847,6 @@ sk:
     top_page_default_timeframe: "Východzí interval pre presmerovanie na hlavnú stránku."
     email_token_valid_hours: "Platnosť tokenov pre Zabudnuté heslo a aktiváciu účtu v (n) hodinách."
     enable_badges: "Povoliť systém odznakov"
-    allow_index_in_robots_txt: "V súbore robots.txt nastaviť, že tieto stránky je povolené indexovať vyhľadávačmi."
     email_domains_blacklist: "Rúrou oddelený zoznam emailových domén, ktorých použitie nie je povolené pri registrácií. Napríklad: mailinator.com|trashmail.net"
     email_domains_whitelist: "Zoznam emailových domén oddelených zvislým oddelovačom \"|\", s použitím ktorých sa používateľ MUSÍ zaregistrovať. VAROVANIE: registrácia použivatelia s neuvedenými doménami nebude povolená!"
     log_out_strict: "Pri odhlasovaní odhlásiť VŠETKY sessiony používateľa, na všetkých zariadeniach."
@@ -1061,7 +1060,7 @@ sk:
       invalid_string_min_max: "Musí byť medzi %{min} a %{max} znakmi."
       invalid_string_min: "Musí byť minimálne %{min} znakov."
       invalid_string_max: "Nesmie byť viac ako %{max} znakov."
-      invalid_reply_by_email_address: "Hodnota musí obsahovať '%%{reply_key}' a byť odlišná od notifikačného emailu."
+      invalid_reply_by_email_address: "Hodnota musí obsahovať '%{reply_key}' a byť odlišná od notifikačného emailu."
       pop3_polling_host_is_empty: "Pred nastavením POP3 sťahovania musíte nastaviť 'pop3 adresu'."
       pop3_polling_username_is_empty: "Pred nastavením POP3 sťahovania musíte nastaviť 'pop3 používateľské meno'."
       pop3_polling_password_is_empty: "Pred nastavením POP3 sťahovania musíte nastaviť 'pop3 heslo'."
@@ -1137,8 +1136,8 @@ sk:
     errors: "%{errors}"
     not_available: "Nie je k dispozícii. Skúste %{suggestion}?"
     something_already_taken: "Niečo sa pokazilo, možno je tento užívateľ, alebo e-mail už registrovaný, vyskúšajte odkaz pre zabudnuté heslo"
-    omniauth_error: "Ľutujeme, nastala chyba pri autorizácii Vášho účtu. Povolili ste autorizáciu?"
     omniauth_error_unknown: "Niečo sa pokazilo počas prihlasovania, prosím skúste sa prihlásiť znova."
+    omniauth_confirm_button: "Pokračovať"
     new_registrations_disabled: "Registrácia nových účtov momentálne nie je povolená."
     password_too_long: "Dĺžka hesla je obmedzená na 200 znakov. "
     email_too_long: "Emailová adresa je príliš dlhá. Meno priečinka musí byť kratšie ako 254 znakov a meno domény musí byť kratšie ako 253 znakov."

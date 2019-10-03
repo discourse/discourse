@@ -2,8 +2,6 @@
 
 require 'rails_helper'
 
-require_dependency 'jobs/scheduled/clean_up_uploads'
-
 describe Jobs::CleanUpUploads do
 
   def fabricate_upload(attributes = {})

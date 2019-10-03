@@ -16,13 +16,13 @@ if rails_master?
 else
   # until rubygems gives us optional dependencies we are stuck with this
   # bundle update actionmailer actionpack actionview activemodel activerecord activesupport railties
-  gem 'actionmailer', '5.2.3'
-  gem 'actionpack', '5.2.3'
-  gem 'actionview', '5.2.3'
-  gem 'activemodel', '5.2.3'
-  gem 'activerecord', '5.2.3'
-  gem 'activesupport', '5.2.3'
-  gem 'railties', '5.2.3'
+  gem 'actionmailer', '6.0.0'
+  gem 'actionpack', '6.0.0'
+  gem 'actionview', '6.0.0'
+  gem 'activemodel', '6.0.0'
+  gem 'activerecord', '6.0.0'
+  gem 'activesupport', '6.0.0'
+  gem 'railties', '6.0.0'
   gem 'sprockets-rails'
 end
 
@@ -46,7 +46,7 @@ gem 'redis-namespace'
 
 gem 'active_model_serializers', '~> 0.8.3'
 
-gem 'onebox', '1.9.7'
+gem 'onebox', '1.9.13'
 
 gem 'http_accept_language', '~>2.0.5', require: false
 
@@ -74,6 +74,7 @@ gem 'unf', require: false
 gem 'email_reply_trimmer', '~> 0.1'
 
 # Forked until https://github.com/toy/image_optim/pull/162 is merged
+# https://github.com/discourse/image_optim
 gem 'discourse_image_optim', require: 'image_optim'
 gem 'multi_json'
 gem 'mustache'
@@ -113,6 +114,8 @@ gem 'execjs', require: false
 gem 'mini_racer'
 gem 'highline', '~> 1.7.0', require: false
 gem 'rack-protection' # security
+gem 'cbor', require: false
+gem 'cose', require: false
 
 # Gems used only for assets and not required in production environments by default.
 # Allow everywhere for now cause we are allowing asset debugging in production
@@ -139,7 +142,7 @@ group :test, :development do
   gem 'mocha', require: false
   gem 'rb-fsevent', require: RUBY_PLATFORM =~ /darwin/i ? 'rb-fsevent' : false
   gem 'rb-inotify', '~> 0.9', require: RUBY_PLATFORM =~ /linux/i ? 'rb-inotify' : false
-  gem 'rspec-rails', require: false
+  gem 'rspec-rails', '4.0.0.beta2', require: false
   gem 'shoulda-matchers', '~> 3.1', '>= 3.1.3', require: false
   gem 'rspec-html-matchers'
   gem 'pry-nav'
@@ -209,6 +212,7 @@ gem 'rubyzip', require: false
 gem 'sshkey', require: false
 
 gem 'rchardet', require: false
+gem 'lz4-ruby', require: false, platform: :mri
 
 if ENV["IMPORT"] == "1"
   gem 'mysql2'

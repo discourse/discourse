@@ -44,21 +44,21 @@ zh_CN:
         less_than_x_seconds:
           other: "%{count}秒内"
         x_seconds:
-          other: "%{count}秒前"
+          other: "%{count}秒"
         less_than_x_minutes:
           other: "%{count}分钟内"
         x_minutes:
-          other: "%{count}分钟前"
+          other: "%{count}分钟"
         about_x_hours:
-          other: "%{count}小时前"
+          other: "约%{count}小时"
         x_days:
-          other: "%{count}天前"
+          other: "%{count}天"
         x_months:
           other: "%{count} 个月"
         about_x_years:
           other: "%{count}年内"
         over_x_years:
-          other: "%{count}年前"
+          other: "> %{count}年"
         almost_x_years:
           other: "近%{count}年"
         date_month: "MMMDo"
@@ -78,6 +78,10 @@ zh_CN:
           other: "%{count}小时前"
         x_days:
           other: "%{count}天前"
+        x_months:
+          other: "%{count}个月前"
+        x_years:
+          other: "%{count}年前"
       later:
         x_days:
           other: "%{count}天后"
@@ -203,6 +207,7 @@ zh_CN:
       other: "%{count} 个字符"
     related_messages:
       title: "相关消息"
+      see_all: '查看来自@ %{username}的<a href="%{path}">所有消息</a> ...'
     suggested_topics:
       title: "推荐主题"
       pm_title: "推荐私信"
@@ -212,6 +217,7 @@ zh_CN:
       stats: "站点统计"
       our_admins: "我们的管理员"
       our_moderators: "我们的版主"
+      moderators: "版主"
       stat:
         all_time: "全部"
         last_7_days: "过去7天"
@@ -272,6 +278,8 @@ zh_CN:
     banner:
       close: "隐藏横幅。"
       edit: "编辑该横幅 >>"
+    pwa:
+      install_banner: "你想要<a href>安装%{title}在此设备上吗？</a>"
     choose_topic:
       none_found: "没有找到主题。"
       title:
@@ -285,6 +293,16 @@ zh_CN:
     review:
       order_by: "排序依据"
       in_reply_to: "回复给"
+      explain:
+        title: "需审核评分"
+        formula: "公式"
+        subtotal: "小计"
+        total: "总请求数"
+        min_score_visibility: "可见时的最低分数"
+        score_to_hide: "隐藏帖子的分数"
+        trust_level_bonus:
+          name: "信任等级"
+          title: "待审阅项目由较高信任级别且具有较高分数的用户创建的。"
       claim_help:
         optional: "你可以认领此条目以防止他人审核。"
         required: "在你审核之前你必须认领此条目。"
@@ -546,6 +564,7 @@ zh_CN:
         remove_owner: "撤销所有者"
         remove_owner_description: "把<b>%{username}</b>从群组所有者中移除"
         owner: "所有者"
+        forbidden: "你不可以查看成员列表。"
       topics: "主题"
       posts: "帖子"
       mentions: "提及"
@@ -812,6 +831,7 @@ zh_CN:
         copy_to_clipboard_error: "复制到剪贴板时出错"
         remaining_codes: "你有<strong>{{count}}</strong>个备份码"
         use: "<a href>使用备份码</a>"
+        enable_prerequisites: "你必须在生成备份代码之前启用主要第二因素。"
         codes:
           title: "备份码生成"
           description: "每个备份码只能使用一次。请存放于安全可读的地方。"
@@ -833,7 +853,15 @@ zh_CN:
         use: "<a href>Authenticator app</a>"
         enforced_notice: "在访问此站点之前，你需要启用双重身份验证。"
         disable: "停用"
+        disable_title: "禁用次要身份验证器"
+        disable_confirm: "确定禁用所有的两步验证吗？"
         edit: "编辑"
+        edit_title: "编辑次要身份验证器"
+        edit_description: "次要身份验证器名称"
+        totp:
+          title: "基于凭证的身份验证器"
+          add: "新增身份验证器"
+          default_name: "我的身份验证器"
       change_about:
         title: "更改个人信息"
         error: "提交修改时出错了"
@@ -858,7 +886,6 @@ zh_CN:
         uploaded_avatar: "自定义图片"
         uploaded_avatar_empty: "上传自定义图片"
         upload_title: "上传图片"
-        upload_picture: "上传图片"
         image_is_not_a_square: "注意：图片不是正方形的，我们裁剪了部分图像。"
       change_profile_background:
         title: "个人档背景"
@@ -883,7 +910,12 @@ zh_CN:
         title: "关联账户"
         connect: "连接"
         revoke: "撤销"
+        cancel: "取消"
         not_connected: "（没有连接）"
+        confirm_modal_title: "连接%{provider}帐号"
+        confirm_description:
+          account_specific: "你的%{provider}帐号“%{account_description}”会被用作认证。"
+          generic: "你的%{provider}帐号会被用作认证。"
       name:
         title: "昵称"
         instructions: "你的全名（可选）"
@@ -1271,6 +1303,9 @@ zh_CN:
         name: "GitHub"
         title: "GitHub 登录"
         message: "正在通过 GitHub 帐号验证登录（请确保浏览器没有禁止弹出窗口）"
+      discord:
+        name: "Discord"
+        message: "使用Discord验证"
     invites:
       accept_title: "邀请"
       welcome_to: "欢迎来到%{site_name}！"
@@ -1318,6 +1353,11 @@ zh_CN:
         other: "你只能选择 {{count}} 条记录。"
       min_content_not_reached:
         other: "选择至少{{count}}条。"
+    date_time_picker:
+      from: 从
+      to: 发至
+      errors:
+        to_before_from: "截至日期必须晚于开始日期。"
     emoji_picker:
       filter_placeholder: 查找表情符号
       smileys_&_emotion: 笑脸与表情
@@ -1376,6 +1416,7 @@ zh_CN:
         try_like: "试试{{heart}}按钮？"
         category_missing: "未选择分类"
         tags_missing: "你必须至少选择{{count}}个标签"
+        topic_template_not_modified: "请通过编辑主题模板来为主题添加详情。"
       save_edit: "保存编辑"
       overwrite_edit: "覆盖编辑"
       reply_original: "回复原始主题"
@@ -1392,7 +1433,6 @@ zh_CN:
       title_placeholder: "一句话概况讨论内容…"
       title_or_link_placeholder: "键入标题，或粘贴一个链接在这里"
       edit_reason_placeholder: "编辑理由"
-      show_edit_reason: "添加理由"
       topic_featured_link_placeholder: "在标题里输入链接"
       remove_featured_link: "从主题中移除链接。"
       reply_placeholder: "在此键入。使用Markdown，BBCode，或HTML格式。可拖拽或粘贴图片。"
@@ -1477,7 +1517,6 @@ zh_CN:
       title: "使用@提到你，回复你的内容、私信以及其他的通知"
       none: "现在无法载入通知"
       empty: "未发现通知"
-      more: "看历史通知"
       post_approved: "你的帖子已被审核"
       reviewable_items: "待审核帖子"
       mentioned: "<span>{{username}}</span> {{description}}"
@@ -1502,6 +1541,7 @@ zh_CN:
       granted_badge: "获得 “{{description}}”"
       topic_reminder: "<span>{{username}}</span> {{description}}"
       watching_first_post: "<span>新主题</span> {{description}}"
+      membership_request_accepted: "接受来自“{{group_name}}”的邀请"
       group_message_summary:
         other: "{{count}} 条私信在{{group_name}}组的收件箱中"
       popup:
@@ -1630,6 +1670,7 @@ zh_CN:
     go_back: "返回"
     not_logged_in_user: "显示当前活动和设置的用户页面"
     current_user: "转到用户页面"
+    view_all: "查看全部"
     topics:
       new_messages_marker: "上次访问"
       bulk:
@@ -1734,6 +1775,7 @@ zh_CN:
       group_request: "你需要请求加入`{{name}}`群组才能查看此主题。"
       group_join: "你需要加入`{{name}}`群组以查看此主题"
       group_request_sent: "你加入群组的请求已发送。当被接受时你会收到通知。"
+      unread_indicator: "还没有成员读过此主题的最新帖子。"
       read_more_MF: "还有 { UNREAD, plural, =0 {} one { <a href='{basePath}/unread'>1 个未读主题</a>} other { <a href='{basePath}/unread'># 个未读主题</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{和 } false {} other{}} <a href='{basePath}/new'>1 个新</a>主题} other { {BOTH, select, true{和 } false {} other{}} <a href='{basePath}/new'># 个近期</a>主题} }可以阅读，或者{CATEGORY, select, true {浏览{catLink}中的其他主题} false {{latestLink}} other {}}"
       browse_all_categories: 浏览所有分类
       view_latest_topics: 查阅最新主题
@@ -1899,6 +1941,9 @@ zh_CN:
         title: "标记"
         help: "背地里标记该帖以示警示，或发送关于它的私下通知"
         success_message: "你已经成功标记该主题。"
+      make_public:
+        title: "转换到公开主题"
+        choose_category: "请选择公共主题分类："
       feature_topic:
         title: "置顶主题"
         pin: "将该主题置于{{categoryLink}}分类最上方至"
@@ -2089,6 +2134,7 @@ zh_CN:
         reply: "开始撰写本帖的回复"
         like: "赞一下此帖"
         has_liked: "已赞"
+        read_indicator: "阅读了帖子的用户"
         undo_like: "取消赞"
         edit: "编辑本帖"
         edit_action: "编辑"
@@ -2142,6 +2188,7 @@ zh_CN:
           notify_user: "发送私信"
           bookmark: "收藏"
           like: "赞了它"
+          read: "阅读"
           like_capped:
             other: "和其他 {{count}} 人赞了它"
         by_you:
@@ -2195,7 +2242,7 @@ zh_CN:
       can: "能够&hellip; "
       none: "（未分类）"
       all: "所有分类"
-      choose: "分类&hellip；"
+      choose: "分类&hellip;"
       edit: "编辑"
       edit_dialog_title: "编辑: %{categoryName}"
       view: "浏览分类的主题"
@@ -2239,6 +2286,7 @@ zh_CN:
       special_warning: "警告：这个分类是已经自动建立好的分类，它的安全设置不能被更改。如果你不想要使用这个分类，直接删除它，而不是另作他用。"
       uncategorized_security_warning: "这是个特殊的分类。如果不知道应该话题属于哪个分类，那么请使用这个分类。这个分类没有安全设置。"
       uncategorized_general_warning: '这个分类很特别。它用作未选择分类的新主题的默认分类。如果要阻止此行为并强制选择分类，<a href="%{settingLink}">请在此处禁用此设置</a>。如果要更改名称或说明，请转到<a href="%{customizeLink}">自定义/文本内容</a>。'
+      pending_permission_change_alert: "你还没有添加%{group}到此分类；点击此按钮添加。"
       images: "图片"
       email_in: "自定义进站电子邮件地址："
       email_in_allow_strangers: "接受无账户的匿名用户的邮件"
@@ -2761,8 +2809,8 @@ zh_CN:
           view_table: "表格"
           view_graph: "图表"
           refresh_report: "刷新报告"
-          start_date: "开始日期"
-          end_date: "结束日期"
+          start_date: "开始日期（UTC）"
+          end_date: "结束日期（UTC）"
           groups: "所有群组"
           disabled: "此报告已禁用"
           totals_for_sample: "总计样本"
@@ -2808,10 +2856,14 @@ zh_CN:
             visibility_levels:
               title: "此群组对谁可见？"
               public: "所有人"
+              logged_on_users: "已登录用户"
               members: "群组拥有者，成员"
               staff: "群组拥有者及管理人员"
               owners: "群组拥有者"
               description: "管理员能看到所有群组。"
+            members_visibility_levels:
+              title: "谁可以看见这个群组的成员？"
+              description: "管理员可以查看所有群组的成员。"
           membership:
             automatic: 自动
             trust_level: 信任等级
@@ -2916,6 +2968,9 @@ zh_CN:
         reviewable_event:
           name: "需审核事件"
           details: "当新条目准备审核时及其状态更新时。"
+        notification_event:
+          name: "通知事件"
+          details: "当用户在其feed中收到通知时。"
         delivery_status:
           title: "分发状态"
           inactive: "不活跃"
@@ -3049,7 +3104,7 @@ zh_CN:
         copy_to_clipboard_error: "复制到剪贴板时出错"
         theme_owner: "禁止编辑，拥有者："
         email_templates:
-          title: "邮件模板"
+          title: "邮箱"
           subject: "主题"
           multiple_subjects: "这个邮件模板包括多个主题。"
           body: "内容"
@@ -3126,7 +3181,7 @@ zh_CN:
           delete_upload_confirm: "删除这个上传？（主题 CSS 可能会出问题！）"
           import_web_tip: "目录包含主题"
           import_web_advanced: "高级..."
-          import_file_tip: "包含主题的.tar.gz或.dcstyle.json文件"
+          import_file_tip: "包含主题的.tar.gz、.zip或.dcstyle.json文件"
           is_private: "主题在私有git存储库中"
           remote_branch: "分支名称（可选）"
           public_key: "授予对repo的以下公钥访问权限："
@@ -3144,6 +3199,7 @@ zh_CN:
           enable: "启用"
           disable: "停用"
           disabled: "此组件已被停用。"
+          disabled_by: "此组件已被禁用，操作者："
           required_version:
             error: "此主题已被自动禁用，因为它与此版本的Discourse不兼容。"
             minimum: "需要Discourse{{version}}版本或以上。"
@@ -3232,6 +3288,19 @@ zh_CN:
           love:
             name: "赞"
             description: "赞按钮的颜色。"
+        robots:
+          title: "覆盖你的站点的robots.txt文件："
+          warning: "这会永久性地覆盖所有相关的站点设置。"
+          overridden: 你的站点的默认robots.txt文件已被覆盖。
+        email_style:
+          title: "邮件样式"
+          heading: "自定义邮件样式"
+          html: "HTML模板"
+          css: "CSS"
+          reset: "重置为默认"
+          reset_confirm: "你确定要重设为默认值%{fieldName}并且丢弃所有修改吗？"
+          save_error_with_reason: "你的修改没有保存。%{error}"
+          instructions: "自定义所有HTML邮件渲染所使用的模板，使用CSS样式化。"
       email:
         title: "邮件"
         settings: "设置"
@@ -3465,6 +3534,13 @@ zh_CN:
         search: "搜索"
         clear_filter: "清除"
         show_words: "显示敏感词"
+        one_word_per_line: "每行一个词"
+        download: 下载
+        clear_all: 清除全部
+        clear_all_confirm_block: "你确定要清除所有封禁的敏感词吗？"
+        clear_all_confirm_censor: "你确定要清除所有审查的敏感词吗？"
+        clear_all_confirm_flag: "你确定要清除所有打旗标的敏感词吗？"
+        clear_all_confirm_require_approval: "你确定要清除所有需审核的敏感词吗？"
         word_count:
           other: "%{count}个敏感词"
         actions:
@@ -3484,8 +3560,14 @@ zh_CN:
           add: "新增"
           success: "成功"
           exists: "已存在"
-          upload: "上传"
+          upload: "从文件添加"
           upload_successful: "上传成功。敏感词已添加。"
+        test:
+          button_label: "测试"
+          modal_title: "测试“%{action}”敏感词"
+          description: "在下方输入文本以检查匹配的敏感词"
+          found_matches: "发现匹配："
+          no_matches: "无符合的结果"
       impersonate:
         title: "检视用户视角"
         help: "使用此工具来检视其他用户的账户以方便调试。你应该在完成后立即退出。"
@@ -3676,8 +3758,8 @@ zh_CN:
           likes_received: "获得赞"
           likes_received_days: "获得赞：独立天数"
           likes_received_users: "获得赞：每用户"
-          suspended: "禁止（所有时间）"
-          silenced: "禁言（所有时间）"
+          suspended: "禁止（最近6个月）"
+          silenced: "禁言（最近6个月）"
           qualifies: "符合信任等级3要求"
           does_not_qualify: "不符合信任等级3要求"
           will_be_promoted: "将在近期被提升。"
@@ -3729,7 +3811,7 @@ zh_CN:
       site_text:
         description: "你可以自定义论坛的任意文本。请按以下搜索："
         search: "搜索你想要编辑的文本"
-        title: "文本内容"
+        title: "文字"
         edit: "编辑"
         revert: "撤销更变"
         revert_confirm: "你确定要撤销你的更变吗？"
@@ -3824,7 +3906,7 @@ zh_CN:
         enabled: 启用徽章系统
         icon: 图标
         image: 图片
-        icon_help: "使用Font Awesome类"
+        icon_help: "输入一个Font Awsome图标的名称（使用前缀“far-”表示常规图标，“fab-”表示品牌图标）"
         image_help: "输入图像的URL（如果两者都设置，则覆盖图标）"
         query: 徽章查询（SQL）
         target_posts: 查询到的帖子

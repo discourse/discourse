@@ -1,8 +1,5 @@
 # frozen_string_literal: true
 
-require_dependency 'reviewable'
-require_dependency 'user_destroyer'
-
 class ReviewableQueuedPost < Reviewable
 
   after_create do
@@ -38,6 +35,7 @@ class ReviewableQueuedPost < Reviewable
     if pending? && guardian.can_delete_user?(created_by)
       actions.add(:delete_user) do |action|
         action.icon = 'trash-alt'
+        action.button_class = 'btn-danger'
         action.label = 'reviewables.actions.delete_user.title'
         action.confirm_message = 'reviewables.actions.delete_user.confirm'
       end

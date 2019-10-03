@@ -1,9 +1,5 @@
 # frozen_string_literal: true
 
-require_dependency 'post_creator'
-require_dependency 'new_post_result'
-require_dependency 'word_watcher'
-
 # Determines what actions should be taken with new posts.
 #
 # The default action is to create the post, but this can be extended
@@ -21,6 +17,14 @@ class NewPostManager
     sorted_handlers.map { |h| h[:proc] }
   end
 
+  def self.plugin_payload_attributes
+    @payload_attributes ||= []
+  end
+
+  def self.add_plugin_payload_attribute(attribute)
+    plugin_payload_attributes << attribute
+  end
+
   def self.clear_handlers!
     @sorted_handlers = []
   end
@@ -36,7 +40,8 @@ class NewPostManager
 
     !!(
       args[:first_post_checks] &&
-      user.post_count == 0
+      user.post_count == 0 &&
+      user.topic_count == 0
     )
   end
 
@@ -119,7 +124,7 @@ class NewPostManager
     reason = post_needs_approval?(manager)
     return if reason == :skip
 
-    validator = Validators::PostValidator.new
+    validator = PostValidator.new
     post = Post.new(raw: manager.args[:raw])
     post.user = manager.user
     validator.validate(post)
@@ -208,6 +213,9 @@ class NewPostManager
     %w(typing_duration_msecs composer_open_duration_msecs reply_to_post_number).each do |a|
       payload[a] = @args[a].to_i if @args[a]
     end
+
+    self.class.plugin_payload_attributes.each { |a| payload[a] = @args[a] if @args[a].present? }
+
     payload[:via_email] = true if !!@args[:via_email]
     payload[:raw_email] = @args[:raw_email] if @args[:raw_email].present?
 

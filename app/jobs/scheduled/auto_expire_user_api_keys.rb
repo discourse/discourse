@@ -2,7 +2,7 @@
 
 module Jobs
 
-  class AutoExpireUserApiKeys < Jobs::Scheduled
+  class AutoExpireUserApiKeys < ::Jobs::Scheduled
     every 1.day
 
     def execute(args)

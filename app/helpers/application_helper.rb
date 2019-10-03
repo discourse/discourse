@@ -2,14 +2,6 @@
 # frozen_string_literal: true
 require 'current_user'
 require 'canonical_url'
-require_dependency 'guardian'
-require_dependency 'unread'
-require_dependency 'age_words'
-require_dependency 'configurable_urls'
-require_dependency 'mobile_detection'
-require_dependency 'category_badge'
-require_dependency 'global_path'
-require_dependency 'emoji'
 
 module ApplicationHelper
   include CurrentUser
@@ -338,6 +330,12 @@ module ApplicationHelper
     current_user && current_user.trust_level >= 1 && SiteSetting.native_app_install_banner_ios
   end
 
+  def ios_app_argument
+    # argument only makes sense for DiscourseHub app
+    SiteSetting.ios_app_id == "1173672076" ?
+      ", app-argument=discourse://new?siteUrl=#{Discourse.base_url}" : ""
+  end
+
   def allow_plugins?
     !request.env[ApplicationController::NO_PLUGINS]
   end
@@ -378,7 +376,7 @@ module ApplicationHelper
     return "" if erbs.blank?
 
     result = +""
-    erbs.each { |erb| result << render(file: erb) }
+    erbs.each { |erb| result << render(inline: File.read(erb)) }
     result.html_safe
   end
 
@@ -431,17 +429,14 @@ module ApplicationHelper
 
   def theme_lookup(name)
     Theme.lookup_field(theme_ids, mobile_view? ? :mobile : :desktop, name)
-      &.html_safe
   end
 
   def theme_translations_lookup
     Theme.lookup_field(theme_ids, :translations, I18n.locale)
-      &.html_safe
   end
 
   def theme_js_lookup
     Theme.lookup_field(theme_ids, :extra_js, nil)
-      &.html_safe
   end
 
   def discourse_stylesheet_link_tag(name, opts = {})
@@ -475,6 +470,7 @@ module ApplicationHelper
       disable_custom_css: loading_admin?,
       highlight_js_path: HighlightJs.path,
       svg_sprite_path: SvgSprite.path(theme_ids),
+      enable_js_error_reporting: GlobalSetting.enable_js_error_reporting,
     }
 
     if Rails.env.development?

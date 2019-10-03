@@ -1,10 +1,5 @@
 # frozen_string_literal: true
 
-require_dependency 'guardian'
-require_dependency 'topic_query'
-require_dependency 'filter_best_posts'
-require_dependency 'gaps'
-
 class TopicView
   MEGA_TOPIC_POSTS_COUNT = 10000
   MIN_POST_READ_TIME = 4.0
@@ -107,6 +102,14 @@ class TopicView
     @can_review_topic = @guardian.can_review_topic?(@topic)
     @queued_posts_enabled = NewPostManager.queue_enabled?
     @personal_message = @topic.private_message?
+  end
+
+  def show_read_indicator?
+    return false unless @user || topic.private_message?
+
+    topic.allowed_groups.any? do |group|
+      group.publish_read_state? && group.users.include?(@user)
+    end
   end
 
   def canonical_path

@@ -306,7 +306,7 @@ def migrate_to_s3
   puts "*" * 30 + " DRY RUN " + "*" * 30 if dry_run
   puts "Migrating uploads to S3 for '#{db}'..."
 
-  if Upload.by_users.where("url NOT LIKE '//%' AND url NOT LIKE '/uploads/#{db}/original/_X/%'").exists?
+  if Upload.by_users.where("url NOT LIKE '//%' AND url NOT LIKE '#{GlobalSetting.relative_url_root}/uploads/#{db}/original/_X/%'").exists?
     puts <<~TEXT
       Some uploads were not migrated to the new scheme. Please run these commands in the rails console
 
@@ -886,7 +886,6 @@ task "uploads:analyze", [:cache_path, :limit] => :environment do |_, args|
 end
 
 task "uploads:fix_incorrect_extensions" => :environment do
-  require_dependency "upload_fixer"
   UploadFixer.fix_all_extensions
 end
 
@@ -895,7 +894,6 @@ task "uploads:recover_from_tombstone" => :environment do
 end
 
 task "uploads:recover" => :environment do
-  require_dependency "upload_recovery"
 
   dry_run = ENV["DRY_RUN"].present?
   stop_on_error = ENV["STOP_ON_ERROR"].present?

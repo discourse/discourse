@@ -8,7 +8,7 @@
     <description><![CDATA[<%= @rss_description %>]]></description>
     <% if @badge.user_badges.first.present? %>
       <atom:link href="<%= "#{@rss_link}.rss" %>" rel="self" type="application/rss+xml" />
-      <% @badge.user_badges.last(50).reverse_each do |user_badge| %>
+      <% @badge.user_badges.joins(:user).last(50).reverse_each do |user_badge| %>
         <item>
           <title><![CDATA[<%= "@#{user_badge.user.username}#{" #{user_badge.user.name}" if (user_badge.user.name.present? && SiteSetting.enable_names?)}" -%>]]></title>
           <discourse:grantedAt><%= user_badge.granted_at.rfc2822 %></discourse:grantedAt>

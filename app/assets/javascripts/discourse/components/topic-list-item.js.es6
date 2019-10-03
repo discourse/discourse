@@ -35,6 +35,47 @@ export const ListItemDefaults = {
   attributeBindings: ["data-topic-id"],
   "data-topic-id": Ember.computed.alias("topic.id"),
 
+  didInsertElement() {
+    this._super(...arguments);
+
+    if (this.includeUnreadIndicator) {
+      this.messageBus.subscribe(this.unreadIndicatorChannel, data => {
+        const nodeClassList = document.querySelector(
+          `.indicator-topic-${data.topic_id}`
+        ).classList;
+
+        if (data.show_indicator) {
+          nodeClassList.remove("read");
+        } else {
+          nodeClassList.add("read");
+        }
+      });
+    }
+  },
+
+  willDestroyElement() {
+    this._super(...arguments);
+
+    if (this.includeUnreadIndicator) {
+      this.messageBus.unsubscribe(this.unreadIndicatorChannel);
+    }
+  },
+
+  @computed("topic.id")
+  unreadIndicatorChannel(topicId) {
+    return `/private-messages/unread-indicator/${topicId}`;
+  },
+
+  @computed("topic.unread_by_group_member")
+  unreadClass(unreadByGroupMember) {
+    return unreadByGroupMember ? "" : "read";
+  },
+
+  @computed("topic.unread_by_group_member")
+  includeUnreadIndicator(unreadByGroupMember) {
+    return typeof unreadByGroupMember !== "undefined";
+  },
+
   @computed
   newDotText() {
     return this.currentUser && this.currentUser.trust_level > 0

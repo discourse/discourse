@@ -124,6 +124,12 @@ en:
         x_days:
           one: "%{count} day ago"
           other: "%{count} days ago"
+        x_months:
+          one: "%{count} month ago"
+          other: "%{count} months ago"
+        x_years:
+          one: "%{count} year ago"
+          other: "%{count} years ago"
       later:
         x_days:
           one: "%{count} day later"
@@ -262,7 +268,7 @@ en:
 
     related_messages:
       title: "Related Messages"
-      see_all: "See <a href=\"%{path}\">all messages</a> from @%{username}..."
+      see_all: 'See <a href="%{path}">all messages</a> from @%{username}...'
 
     suggested_topics:
       title: "Suggested Topics"
@@ -352,6 +358,9 @@ en:
       close: "Dismiss this banner."
       edit: "Edit this banner >>"
 
+    pwa:
+      install_banner: "Do you want to <a href>install %{title} on this device?</a>"
+
     choose_topic:
       none_found: "No topics found."
       title:
@@ -367,6 +376,26 @@ en:
     review:
       order_by: "Order by"
       in_reply_to: "in reply to"
+      explain:
+        why: "explain why this item ended up in the queue"
+        title: "Reviewable Scoring"
+        formula: "Formula"
+        subtotal: "Subtotal"
+        total: "Total"
+        min_score_visibility: "Minimum Score for Visibility"
+        score_to_hide: "Score to Hide Post"
+        take_action_bonus:
+          name: "took action"
+          title: "When a staff member chooses to take action the flag is given a bonus."
+        user_accuracy_bonus:
+          name: "user accuracy"
+          title: "Users whose flags have been historically agreed with are given a bonus."
+        trust_level_bonus:
+          name: "trust level"
+          title: "Reviewable items created by higher trust level users have a higher score."
+        type_bonus:
+          name: "type bonus"
+          title: "Certain reviewable types can be assigned a bonus by staff to make them a higher priority."
       claim_help:
         optional: "You can claim this item to prevent others from reviewing it."
         required: "You must claim items before you can review them."
@@ -651,6 +680,7 @@ en:
         remove_owner: "Remove as Owner"
         remove_owner_description: "Remove <b>%{username}</b> as an owner of this group"
         owner: "Owner"
+        forbidden: "You're not allowed to view the members."
       topics: "Topics"
       posts: "Posts"
       mentions: "Mentions"
@@ -802,9 +832,7 @@ en:
         perm_denied_btn: "Permission Denied"
         perm_denied_expl: "You denied permission for notifications. Allow notifications via your browser settings."
         disable: "Disable Notifications"
-        currently_enabled: ""
         enable: "Enable Notifications"
-        currently_disabled: ""
         each_browser_note: "Note: You have to change this setting on every browser you use."
         consent_prompt: "Do you want live notifications when people reply to your posts?"
       dismiss: "Dismiss"
@@ -932,7 +960,7 @@ en:
         copied_to_clipboard: "Copied to Clipboard"
         copy_to_clipboard_error: "Error copying data to Clipboard"
         remaining_codes: "You have <strong>{{count}}</strong> backup codes remaining."
-        use: "<a href>Use a backup code</a>"
+        use: "Use a backup code"
         enable_prerequisites: "You must enable a primary second factor before generating backup codes."
         codes:
           title: "Backup Codes Generated"
@@ -941,6 +969,7 @@ en:
       second_factor:
         title: "Two Factor Authentication"
         enable: "Manage Two Factor Authentication"
+        forgot_password: "Forgot password?"
         confirm_password_description: "Please confirm your password to continue"
         label: "Code"
         rate_limit: "Please wait before trying another authentication code."
@@ -953,7 +982,7 @@ en:
         extended_description: |
           Two factor authentication adds extra security to your account by requiring a one-time token in addition to your password. Tokens can be generated on <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>Android</a> and <a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS</a> devices.
         oauth_enabled_warning: "Please note that social logins will be disabled once two factor authentication has been enabled on your account."
-        use: "<a href>Use Authenticator app</a>"
+        use: "Use Authenticator app"
         enforced_notice: "You are required to enable two factor authentication before accessing this site."
         disable: "disable"
         disable_title: "Disable Second Factor"
@@ -961,10 +990,21 @@ en:
         edit: "Edit"
         edit_title: "Edit Second Factor"
         edit_description: "Second Factor Name"
+        enable_security_key_description: "When you have your physical security key prepared press the Register button below."
         totp:
           title: "Token-Based Authenticators"
           add: "New Authenticator"
           default_name: "My Authenticator"
+        security_key:
+          register: "Register"
+          title: 'Security Keys'
+          add: "Register Security Key"
+          default_name: "Main Security Key"
+          not_allowed_error: "The security key registration process either timed out or was cancelled."
+          already_added_error: "You have already registered this security key. You don’t have to register it again."
+          edit: 'Edit Security Key'
+          edit_description: 'Security Key Name'
+          delete: 'Delete'
 
       change_about:
         title: "Change About Me"
@@ -1025,7 +1065,7 @@ en:
         cancel: "Cancel"
         not_connected: "(not connected)"
         confirm_modal_title: "Connect %{provider} Account"
-        confirm_description: 
+        confirm_description:
           account_specific: "Your %{provider} account '%{account_description}' will be used for authentication."
           generic: "Your %{provider} account will be used for authentication."
 
@@ -1297,9 +1337,9 @@ en:
       enabled: "This site is in read only mode. Please continue to browse, but replying, likes, and other actions are disabled for now."
       login_disabled: "Login is disabled while the site is in read only mode."
       logout_disabled: "Logout is disabled while the site is in read only mode."
-    too_few_topics_and_posts_notice: "Let's <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>start the discussion!</a> There are <strong>%{currentTopics} / %{requiredTopics}</strong> topics and <strong>%{currentPosts} / %{requiredPosts}</strong> posts – visitors need more to read and reply to. Only staff can see this message."
-    too_few_topics_notice: "Let's <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>start the discussion!</a> There are <strong>%{currentTopics} / %{requiredTopics}</strong> topics – visitors need more to read and reply to. Only staff can see this message."
-    too_few_posts_notice: "Let's <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>start the discussion!</a> There are <strong>%{currentPosts} / %{requiredPosts}</strong> posts – visitors need more to read and reply to. Only staff can see this message."
+    too_few_topics_and_posts_notice: "Let's <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>start the discussion!</a> There are <strong>%{currentTopics}</strong> topics and <strong>%{currentPosts}</strong> posts. Visitors need more to read and reply to – we recommend at least <strong>%{requiredTopics}</strong> topics and <strong>%{requiredPosts}</strong> posts. Only staff can see this message."
+    too_few_topics_notice: "Let's <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>start the discussion!</a> There are <strong>%{currentTopics}</strong> topics. Visitors need more to read and reply to – we recommend at least <strong>%{requiredTopics}</strong> topics. Only staff can see this message."
+    too_few_posts_notice: "Let's <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>start the discussion!</a> There are <strong>%{currentPosts}</strong> posts. Visitors need more to read and reply to – we recommend at least <strong>%{requiredPosts}</strong> posts. Only staff can see this message."
     logs_error_rate_notice:
       # keys ending with _MF use message format, see https://meta.discourse.org/t/message-format-support-for-localization/7035 for details
       reached_hour_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# error/hour} other {# errors/hour}}</a> reached site setting limit of {limit, plural, one {# error/hour} other {# errors/hour}}."
@@ -1412,10 +1452,16 @@ en:
       password: "Password"
       second_factor_title: "Two Factor Authentication"
       second_factor_description: "Please enter the authentication code from your app:"
-      second_factor_backup: "<a href>Log in using a backup code</a>"
+      second_factor_backup: "Log in using a backup code"
       second_factor_backup_title: "Two Factor Backup"
       second_factor_backup_description: "Please enter one of your backup codes:"
-      second_factor: "<a href>Log in using Authenticator app</a>"
+      second_factor: "Log in using Authenticator app"
+      security_key_description: "When you have your physical security key prepared press the Authenticate with Security Key button below."
+      security_key_alternative: "Can't find your security key or want to use another method?"
+      security_key_authenticate: "Authenticate with Security Key"
+      security_key_not_allowed_error: "The security key authentication process either timed out or was cancelled."
+      security_key_no_matching_credential_error: "No matching credentials could be found in the provided security key."
+      security_key_support_missing_error: "Your current device or browser does not support the use of security keys. Please use a different method."
       email_placeholder: "email or username"
       caps_lock_warning: "Caps Lock is on"
       error: "Unknown error"
@@ -1467,6 +1513,13 @@ en:
         name: "GitHub"
         title: "with GitHub"
         message: "Authenticating with GitHub (make sure pop up blockers are not enabled)"
+      discord:
+        name: "Discord"
+        title: "with Discord"
+        message: "Authenticating with Discord"
+      second_factor_toggle:
+        totp: "Use an authenticator app instead"
+        backup_code: "Use a backup code instead"
     invites:
       accept_title: "Invitation"
       welcome_to: "Welcome to %{site_name}!"
@@ -1486,7 +1539,7 @@ en:
       apple_international: "Apple/International"
       google: "Google"
       twitter: "Twitter"
-      emoji_one: "Emoji One"
+      emoji_one: "JoyPixels (formerly EmojiOne)"
       win10: "Win10"
       google_classic: "Google Classic"
       facebook_messenger: "Facebook Messenger"
@@ -1589,11 +1642,12 @@ en:
         title_missing: "Title is required"
         title_too_short: "Title must be at least {{min}} characters"
         title_too_long: "Title can't be more than {{max}} characters"
-        post_missing: "Post can't be empty"
+        post_missing: "Post can’t be empty"
         post_length: "Post must be at least {{min}} characters"
         try_like: "Have you tried the {{heart}} button?"
         category_missing: "You must choose a category"
         tags_missing: "You must choose at least {{count}} tags"
+        topic_template_not_modified: "Please add details and specifics to your topic by editing the topic template."
 
       save_edit: "Save Edit"
       overwrite_edit: "Overwrite Edit"
@@ -1612,7 +1666,6 @@ en:
       title_placeholder: "What is this discussion about in one brief sentence?"
       title_or_link_placeholder: "Type title, or paste a link here"
       edit_reason_placeholder: "why are you editing?"
-      show_edit_reason: "(add edit reason)"
       topic_featured_link_placeholder: "Enter link shown with title."
       remove_featured_link: "Remove link from topic."
       reply_placeholder: "Type here. Use Markdown, BBCode, or HTML to format. Drag or paste images."
@@ -1703,7 +1756,6 @@ en:
       title: "notifications of @name mentions, replies to your posts and topics, messages, etc"
       none: "Unable to load notifications at this time."
       empty: "No notifications found."
-      more: "view older notifications"
       post_approved: "Your post was approved"
       reviewable_items: "items requiring review"
       mentioned: "<span>{{username}}</span> {{description}}"
@@ -1869,6 +1921,7 @@ en:
     go_back: "go back"
     not_logged_in_user: "user page with summary of current activity and preferences"
     current_user: "go to your user page"
+    view_all: "view all"
 
     topics:
       new_messages_marker: "last visit"
@@ -1984,6 +2037,7 @@ en:
       group_request: "You need to request membership to the `{{name}}` group to see this topic"
       group_join: "You need join the `{{name}}` group to see this topic"
       group_request_sent: "Your group membership request has been sent. You will be informed when it's accepted."
+      unread_indicator: "No member has read the last post of this topic yet."
 
       # keys ending with _MF use message format, see https://meta.discourse.org/t/message-format-support-for-localization/7035 for details
       read_more_MF: "There {
@@ -2417,6 +2471,7 @@ en:
         reply: "begin composing a reply to this post"
         like: "like this post"
         has_liked: "you've liked this post"
+        read_indicator: "members who read this post"
         undo_like: "undo like"
         edit: "edit this post"
         edit_action: "Edit"
@@ -2474,6 +2529,7 @@ en:
           notify_user: "sent a message"
           bookmark: "bookmarked this"
           like: "liked this"
+          read: "read this"
           like_capped:
             one: "and {{count}} other liked this"
             other: "and {{count}} others liked this"
@@ -3210,6 +3266,10 @@ en:
               staff: "Group owners and staff"
               owners: "Group owners"
               description: "Admins can see all groups."
+            members_visibility_levels:
+              title: "Who can see this group's members?"
+              description: "Admins can see members of all groups."
+            publish_read_state: "On group messages publish group read state"
 
           membership:
             automatic: Automatic
@@ -3317,6 +3377,9 @@ en:
         reviewable_event:
           name: "Reviewable Event"
           details: "When a new item is ready for review and when its status is updated."
+        notification_event:
+          name: "Notification Event"
+          details: "When a user receives a notification in their feed."
         delivery_status:
           title: "Delivery Status"
           inactive: "Inactive"
@@ -3572,7 +3635,7 @@ en:
             other: "Theme is {{count}} commits behind!"
           compare_commits: "(See new commits)"
           repo_unreachable: "Couldn't contact the Git repository of this theme. Error message:"
-          imported_from_archive: "This theme was imported from a .tar.gz file"
+          imported_from_archive: "This theme was imported from a .zip file"
           scss:
             text: "CSS"
             title: "Enter custom CSS, we accept all valid CSS and SCSS styles"

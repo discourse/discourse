@@ -63,6 +63,7 @@ module BackupRestore
       validate_metadata
 
       extract_dump
+      create_missing_discourse_functions
 
       if !can_restore_into_different_schema?
         log "Cannot restore into different schema, restoring in-place"
@@ -144,6 +145,7 @@ module BackupRestore
 
       @logs = []
       @readonly_mode_was_enabled = Discourse.readonly_mode?
+      @created_functions_for_table_columns = []
     end
 
     def listen_for_shutdown_signal
@@ -410,6 +412,8 @@ module BackupRestore
       log "Reloading site settings..."
       SiteSetting.refresh!
 
+      DiscourseEvent.trigger(:site_settings_restored)
+
       if @disable_emails && SiteSetting.disable_emails == 'no'
         log "Disabling outgoing emails for non-staff users..."
         user = User.find_by_email(@user_info[:email]) || Discourse.system_user
@@ -467,39 +471,44 @@ module BackupRestore
       uploads_folder = was_multisite ? "/" : "/uploads/#{current_db_name}/"
 
       if (old_base_url = BackupMetadata.value_for("base_url")) && old_base_url != Discourse.base_url
-        DbHelper.remap(old_base_url, Discourse.base_url)
+        remap(old_base_url, Discourse.base_url)
       end
 
       current_s3_base_url = SiteSetting.Upload.enable_s3_uploads ? SiteSetting.Upload.s3_base_url : nil
       if (old_s3_base_url = BackupMetadata.value_for("s3_base_url")) && old_base_url != current_s3_base_url
-        DbHelper.remap("#{old_s3_base_url}/", uploads_folder)
+        remap("#{old_s3_base_url}/", uploads_folder)
       end
 
       current_s3_cdn_url = SiteSetting.Upload.enable_s3_uploads ? SiteSetting.Upload.s3_cdn_url : nil
       if (old_s3_cdn_url = BackupMetadata.value_for("s3_cdn_url")) && old_s3_cdn_url != current_s3_cdn_url
         base_url = SiteSetting.Upload.enable_s3_uploads ? SiteSetting.Upload.s3_cdn_url : Discourse.base_url
-        DbHelper.remap("#{old_s3_cdn_url}/", UrlHelper.schemaless("#{base_url}#{uploads_folder}"))
+        remap("#{old_s3_cdn_url}/", UrlHelper.schemaless("#{base_url}#{uploads_folder}"))
 
         old_host = URI.parse(old_s3_cdn_url).host
         new_host = URI.parse(base_url).host
-        DbHelper.remap(old_host, new_host)
+        remap(old_host, new_host)
       end
 
       if (old_cdn_url = BackupMetadata.value_for("cdn_url")) && old_cdn_url != Discourse.asset_host
         base_url = Discourse.asset_host || Discourse.base_url
-        DbHelper.remap("#{old_cdn_url}/", UrlHelper.schemaless("#{base_url}/"))
+        remap("#{old_cdn_url}/", UrlHelper.schemaless("#{base_url}/"))
 
         old_host = URI.parse(old_cdn_url).host
         new_host = URI.parse(base_url).host
-        DbHelper.remap(old_host, new_host)
+        remap(old_host, new_host)
       end
 
       if previous_db_name != current_db_name
-        DbHelper.remap("uploads/#{previous_db_name}", "uploads/#{current_db_name}")
+        remap("uploads/#{previous_db_name}", "uploads/#{current_db_name}")
       end
 
     rescue => ex
       log "Something went wrong while remapping uploads.", ex
+    end
+
+    def remap(from, to)
+      puts "Remapping '#{from}' to '#{to}'"
+      DbHelper.remap(from, to, verbose: true, excluded_tables: ["backup_metadata"])
     end
 
     def migrate_to_s3
@@ -561,8 +570,46 @@ module BackupRestore
       log "Something went wrong while notifying user.", ex
     end
 
+    def create_missing_discourse_functions
+      log "Creating missing functions in the discourse_functions schema"
+
+      all_readonly_table_columns = []
+
+      Dir[Rails.root.join(Discourse::DB_POST_MIGRATE_PATH, "*.rb")].each do |path|
+        require path
+        class_name = File.basename(path, ".rb").sub(/^\d+_/, "").camelize
+        migration_class = class_name.constantize
+
+        if migration_class.const_defined?(:DROPPED_TABLES)
+          migration_class::DROPPED_TABLES.each do |table_name|
+            all_readonly_table_columns << [table_name]
+          end
+        end
+
+        if migration_class.const_defined?(:DROPPED_COLUMNS)
+          migration_class::DROPPED_COLUMNS.each do |table_name, column_names|
+            column_names.each do |column_name|
+              all_readonly_table_columns << [table_name, column_name]
+            end
+          end
+        end
+      end
+
+      existing_function_names = Migration::BaseDropper.existing_discourse_function_names.map { |name| "#{name}()" }
+
+      all_readonly_table_columns.each do |table_name, column_name|
+        function_name = Migration::BaseDropper.readonly_function_name(table_name, column_name, with_schema: false)
+
+        if !existing_function_names.include?(function_name)
+          Migration::BaseDropper.create_readonly_function(table_name, column_name)
+          @created_functions_for_table_columns << [table_name, column_name]
+        end
+      end
+    end
+
     def clean_up
       log "Cleaning stuff up..."
+      drop_created_discourse_functions
       remove_tmp_directory
       unpause_sidekiq
       disable_readonly_mode if Discourse.readonly_mode?
@@ -588,6 +635,15 @@ module BackupRestore
       ThemeField.force_recompilation!
       Theme.expire_site_cache!
       Stylesheet::Manager.cache.clear
+    end
+
+    def drop_created_discourse_functions
+      log "Dropping function from the discourse_functions schema"
+      @created_functions_for_table_columns.each do |table_name, column_name|
+        Migration::BaseDropper.drop_readonly_function(table_name, column_name)
+      end
+    rescue => ex
+      log "Something went wrong while dropping functions from the discourse_functions schema", ex
     end
 
     def disable_readonly_mode

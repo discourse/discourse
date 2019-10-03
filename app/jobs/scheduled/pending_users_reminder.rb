@@ -1,10 +1,8 @@
 # frozen_string_literal: true
 
-require_dependency 'admin_user_index_query'
-
 module Jobs
 
-  class PendingUsersReminder < Jobs::Scheduled
+  class PendingUsersReminder < ::Jobs::Scheduled
     every 1.hour
 
     def execute(args)

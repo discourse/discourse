@@ -7,7 +7,7 @@ export default Discourse.Route.extend({
     const params = this.paramsFor("associate-account");
     this.replaceWith(`preferences.account`, this.currentUser).then(() =>
       Ember.run.next(() =>
-        ajax(`/associate/${encodeURIComponent(params.token)}`)
+        ajax(`/associate/${encodeURIComponent(params.token)}.json`)
           .then(model => showModal("associate-account-confirm", { model }))
           .catch(popupAjaxError)
       )

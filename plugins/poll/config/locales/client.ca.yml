@@ -22,6 +22,8 @@ ca:
           title: "Els resultats es mostraran en <strong>votació</strong> ."
         closed:
           title: "Els resultats es mostraran una vegada <strong>tancada</strong> la votació."
+        staff:
+          title: "Els resultats només es mostren als membres de l'<strong>equip responsable</strong>."
       multiple:
         help:
           at_least_min_options:
@@ -54,9 +56,9 @@ ca:
       automatic_close:
         closes_in: "Es tanca en <strong>%{timeLeft}</strong> ."
         age: "Tancat <strong>%{age}</strong>"
-      error_while_toggling_status: "Ho sentim. S'ha produït un error en canviar l’estat d’aquesta enquesta."
+      error_while_toggling_status: "Ho sentim. S'ha produït un error en canviar l'estat d'aquesta enquesta."
       error_while_casting_votes: "Ho sentim. S'ha produït un error en l'emissió dels vostres vots."
-      error_while_fetching_voters: "Ho sentim. Hi ha hagut un error en mostrar els votants."
+      error_while_fetching_voters: "Hi ha hagut un error en mostrar els votants."
       ui_builder:
         title: Crea una enquesta
         insert: Insereix una enquesta
@@ -74,6 +76,7 @@ ca:
           always: Sempre visible
           vote: En votació
           closed: Quan estigui tancada
+          staff: Només l'equip responsable
         poll_config:
           max: Màxim
           min: Mínim

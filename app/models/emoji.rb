@@ -149,9 +149,10 @@ class Emoji
         name = e['name']
 
         # special cased as we prefer to keep these as symbols
-        next if name == 'registered'.freeze
-        next if name == 'copyright'.freeze
-        next if name == 'tm'.freeze
+        next if name == 'registered'
+        next if name == 'copyright'
+        next if name == 'tm'
+        next if name == 'left_right_arrow'
 
         code = replacement_code(e['code'])
         next unless code

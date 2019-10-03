@@ -1,12 +1,8 @@
 # frozen_string_literal: true
 
-require_dependency 'url_helper'
-require_dependency 'file_helper'
-require_dependency 'upload_creator'
-
 module Jobs
 
-  class PullHotlinkedImages < Jobs::Base
+  class PullHotlinkedImages < ::Jobs::Base
     sidekiq_options queue: 'low'
 
     def initialize
@@ -148,7 +144,7 @@ module Jobs
 
       if start_raw == post.raw && raw != post.raw
         changes = { raw: raw, edit_reason: I18n.t("upload.edit_reason") }
-        post.revise(Discourse.system_user, changes, bypass_bump: true)
+        post.revise(Discourse.system_user, changes, bypass_bump: true, skip_staff_log: true)
       elsif has_downloaded_image || has_new_large_image || has_new_broken_image
         post.trigger_post_process(bypass_bump: true)
       end

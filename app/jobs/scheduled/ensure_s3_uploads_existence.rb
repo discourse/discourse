@@ -2,7 +2,7 @@
 
 module Jobs
 
-  class EnsureS3UploadsExistence < Jobs::Scheduled
+  class EnsureS3UploadsExistence < ::Jobs::Scheduled
     every 1.day
 
     def execute(args)

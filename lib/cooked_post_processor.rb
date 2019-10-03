@@ -3,10 +3,6 @@
 # Post processing that we can do after a post has already been cooked.
 # For example, inserting the onebox content, or image sizes/thumbnails.
 
-require_dependency 'url_helper'
-require_dependency 'pretty_text'
-require_dependency 'quote_comparer'
-
 class CookedPostProcessor
   INLINE_ONEBOX_LOADING_CSS_CLASS = "inline-onebox-loading"
   INLINE_ONEBOX_CSS_CLASS = "inline-onebox"
@@ -510,13 +506,14 @@ class CookedPostProcessor
       map[url] = true
 
       if is_onebox
-        @has_oneboxes = true
-
-        Oneboxer.onebox(url,
+        onebox = Oneboxer.onebox(url,
           invalidate_oneboxes: !!@opts[:invalidate_oneboxes],
           user_id: @post&.user_id,
           category_id: @post&.topic&.category_id
         )
+
+        @has_oneboxes = true if onebox.present?
+        onebox
       else
         process_inline_onebox(element)
         false

@@ -191,9 +191,10 @@ basic:
   post_menu:
     client: true
     type: list
-    default: "like|share|flag|edit|bookmark|delete|admin|reply"
+    default: "read|like|share|flag|edit|bookmark|delete|admin|reply"
     allow_any: false
     choices:
+      - read
       - like
       - edit
       - flag
@@ -389,6 +390,16 @@ login:
     default: ""
     regex: "^[a-f0-9]+$"
     secret: true
+  enable_discord_logins:
+    default: false
+  discord_client_id:
+    default: ''
+  discord_secret:
+    default: ''
+    secret: true
+  discord_trusted_guilds:
+    default: ''
+    type: list
   enable_sso:
     client: true
     default: false
@@ -476,7 +487,7 @@ users:
   reserved_usernames:
     type: list
     list_type: compact
-    default: "admin|moderator|administrator|mod|sys|system|community|info|you|name|username|user|nickname|discourse|discourseorg|discourseforum|support|hp|account-created|password-reset|admin-login|confirm-admin|account-created|activate-account|confirm-email-token|authorize-email"
+    default: "admin|moderator|administrator|mod|sys|system|community|info|you|name|username|user|nickname|discourse|discourseorg|discourseforum|support|hp"
   min_password_length:
     client: true
     default: 10
@@ -689,7 +700,10 @@ posting:
     type: category
     default: ""
   post_edit_time_limit:
-    default: 86400
+    default: 1440
+    max: 10080
+  tl2_post_edit_time_limit:
+    default: 43200
     max: 525600
   edit_history_visible_to_public:
     client: true
@@ -845,6 +859,8 @@ posting:
     choices:
       - 4-spaces-indent
       - code-fences
+  embed_any_origin: false
+  embed_topics_list: false
   embed_truncate:
     default: true
   embed_support_markdown:
@@ -996,7 +1012,7 @@ email:
     default: ""
   mailgun_api_key:
     default: ""
-    regex: '^(key-\h{32}|\h{32}-\h{8}-\h{8})$'
+    regex: '^((key-)?\h{32}|\h{32}-\h{8}-\h{8})$'
     secret: true
   bounce_score_threshold:
     client: true
@@ -1060,7 +1076,7 @@ files:
     default: 50000
     max: 1024000
   theme_authorized_extensions:
-    default: "jpg|jpeg|png|woff|woff2|svg|eot|ttf|otf|gif"
+    default: "jpg|jpeg|png|woff|woff2|svg|eot|ttf|otf|gif|js"
     type: list
     list_type: compact
   authorized_extensions:
@@ -1118,7 +1134,9 @@ files:
     default: false
     client: true
     shadowed_by_global: true
-  s3_use_iam_profile: false
+  s3_use_iam_profile:
+    default: false
+    shadowed_by_global: true
   s3_access_key_id:
     default: ""
     secret: true
@@ -1207,6 +1225,9 @@ files:
     default: 5
     min: 0
     max: 20
+  decompressed_file_max_size_mb:
+    default: 1000
+    hidden: true
 
 trust:
   default_trust_level:
@@ -1931,6 +1952,14 @@ uncategorized:
   pwa_display_browser_regex:
     default: "iPad|iPhone"
     hidden: true
+
+  app_association_android:
+    default: ""
+    textarea: true
+
+  app_association_ios:
+    default: ""
+    textarea: true
 
   share_anonymized_statistics: true
 

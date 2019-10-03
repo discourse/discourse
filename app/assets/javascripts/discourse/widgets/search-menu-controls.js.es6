@@ -19,7 +19,7 @@ createWidget("search-term", {
     return {
       type: "text",
       value: attrs.value || "",
-      autocomplete: "off",
+      autocomplete: "discourse",
       placeholder: attrs.contextEnabled ? "" : I18n.t("search.title")
     };
   },

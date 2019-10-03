@@ -235,6 +235,8 @@ blockquote {
   // !important here otherwise it won't work.
   img {
     max-width: 100% !important;
+    object-fit: cover;
+    object-position: top;
   }
 }
 
@@ -639,7 +641,8 @@ blockquote > *:last-child {
   font-size: $font-down-1;
 }
 
-.who-liked {
+.who-liked,
+.who-read {
   transition: height 0.5s;
   a {
     margin: 0 0.25em 0.5em 0;

@@ -68,7 +68,7 @@ describe Stylesheet::Manager do
 
   describe 'digest' do
     after do
-      DiscoursePluginRegistry.stylesheets.delete "fake_file"
+      DiscoursePluginRegistry.reset!
     end
 
     it 'can correctly account for plugins in digest' do
@@ -77,7 +77,7 @@ describe Stylesheet::Manager do
       manager = Stylesheet::Manager.new(:desktop_theme, theme.id)
       digest1 = manager.digest
 
-      DiscoursePluginRegistry.stylesheets.add "fake_file"
+      DiscoursePluginRegistry.stylesheets["fake"] = Set.new(["fake_file"])
 
       manager = Stylesheet::Manager.new(:desktop_theme, theme.id)
       digest2 = manager.digest

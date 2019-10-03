@@ -206,6 +206,71 @@ RSpec.describe InlineUploads do
         MD
       end
 
+      it "should correct html and markdown uppercase references" do
+        md = <<~MD
+        [IMG]#{upload.url}[/IMG]
+        <IMG src="#{upload2.url}" />
+        <A class="attachment" href="#{upload3.url}">Text</A>
+        MD
+
+        expect(InlineUploads.process(md)).to eq(<<~MD)
+        ![](#{upload.short_url})
+        ![](#{upload2.short_url})
+        [Text|attachment](#{upload3.short_url})
+        MD
+      end
+
+      it "should correct image URLs with v parameters" do
+        md = <<~MD
+        <img src="#{upload.url}?v=1">
+
+        <img src="#{Discourse.base_url}#{upload.url}?v=2">
+
+        <img src="#{GlobalSetting.cdn_url}#{upload.url}?v=3">
+
+        #{Discourse.base_url}#{upload.url}?v=45
+
+        #{GlobalSetting.cdn_url}#{upload.url}?v=999
+        MD
+
+        expect(InlineUploads.process(md)).to eq(<<~MD)
+        ![](#{upload.short_url})
+
+        ![](#{upload.short_url})
+
+        ![](#{upload.short_url})
+
+        ![](#{upload.short_url})
+
+        ![](#{upload.short_url})
+        MD
+      end
+
+      context "subfolder" do
+        before do
+          global_setting :relative_url_root, "/community"
+          ActionController::Base.config.relative_url_root = "/community"
+        end
+
+        after do
+          ActionController::Base.config.relative_url_root = nil
+        end
+
+        it "should correct subfolder images" do
+          md = <<~MD
+            <img src="/community#{upload.url}">
+
+            #{Discourse.base_url}#{upload.url}
+          MD
+
+          expect(InlineUploads.process(md)).to eq(<<~MD)
+            ![](#{upload.short_url})
+
+            ![](#{upload.short_url})
+          MD
+        end
+      end
+
       it "should correct raw image URLs to the short url and paths" do
         md = <<~MD
         #{Discourse.base_url}#{upload.url}
@@ -290,6 +355,14 @@ RSpec.describe InlineUploads do
 
         <img src="#{upload.url}" width="5" height="4">
         <img src="#{upload.url}" width="5px" height="auto">
+
+        `<img src="#{upload.url}" alt="image inside code quotes">`
+
+        ```
+        <img src="#{upload.url}" alt="image inside code fences">
+        ```
+
+            <img src="#{upload.url}" alt="image inside code block">
         MD
 
         expect(InlineUploads.process(md)).to eq(<<~MD)
@@ -307,6 +380,14 @@ RSpec.describe InlineUploads do
 
         ![|5x4](#{upload.short_url})
         ![](#{upload.short_url})
+
+        `<img src="#{upload.url}" alt="image inside code quotes">`
+
+        ```
+        <img src="#{upload.url}" alt="image inside code fences">
+        ```
+
+            <img src="#{upload.url}" alt="image inside code block">
         MD
       end
 
@@ -342,7 +423,7 @@ RSpec.describe InlineUploads do
         expect(InlineUploads.process(md)).to eq(<<~MD)
         <h1></h1>
                         <a href="http://somelink.com">
-                          <img src="#{upload2.short_path}" alt="test" width="500" height="500">
+                          ![test|500x500](#{upload2.short_url})
                         </a>
 
                         <a href="http://somelink.com">
@@ -352,7 +433,7 @@ RSpec.describe InlineUploads do
 
         md = "<h1></h1>\r\n<a href=\"http://somelink.com\">\r\n        <img src=\"#{upload.url}\" alt=\"test\" width=\"500\" height=\"500\">\r\n</a>"
 
-        expect(InlineUploads.process(md)).to eq("<h1></h1>\r\n<a href=\"http://somelink.com\">\r\n        <img src=\"#{upload.short_path}\" alt=\"test\" width=\"500\" height=\"500\">\r\n</a>")
+        expect(InlineUploads.process(md)).to eq("<h1></h1>\r\n<a href=\"http://somelink.com\">\r\n        ![test|500x500](#{upload.short_url})\r\n</a>")
       end
 
       it "should correctly update image sources within anchor or paragraph tags" do
@@ -384,40 +465,27 @@ RSpec.describe InlineUploads do
 
         expect(InlineUploads.process(md)).to eq(<<~MD)
         <a href="http://somelink.com">
-
           ![test|500x500](#{upload.short_url})
-
         </a>
 
         <p>
-
           ![test](#{upload2.short_url})
-
         </p>
 
-        <a href="http://somelink.com">
+        <a href="http://somelink.com">![test|500x500](#{upload3.short_url})</a>
 
-          ![test|500x500](#{upload3.short_url})
-
-        </a>
-
-        <a href="http://somelink.com">
-
-          ![test|500x500](#{upload.short_url})
-
-        </a>
+        <a href="http://somelink.com">  ![test|500x500](#{upload.short_url})  </a>
 
         <a href="http://somelink.com">
 
 
-          ![test|500x500](#{upload.short_url})
+        ![test|500x500](#{upload.short_url})
 
         </a>
 
         <p>Test ![test|500x500](#{upload2.short_url})</p>
 
         <hr/>
-
         ![test|500x500](#{upload2.short_url})
         MD
       end

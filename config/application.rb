@@ -93,14 +93,20 @@ module Discourse
     # issue is image_optim crashes on missing dependencies
     config.assets.image_optim = false
 
-    # Custom directories with classes and modules you want to be autoloadable.
-    config.autoload_paths += Dir["#{config.root}/app/serializers"]
-    config.autoload_paths += Dir["#{config.root}/lib/validators/"]
-    config.autoload_paths += Dir["#{config.root}/app"]
+    config.autoloader = :zeitwerk
 
-    if Rails.env.development? && !Sidekiq.server?
-      config.autoload_paths += Dir["#{config.root}/lib"]
-    end
+    # Custom directories with classes and modules you want to be autoloadable.
+    config.autoload_paths += Dir["#{config.root}/app"]
+    config.autoload_paths += Dir["#{config.root}/app/jobs"]
+    config.autoload_paths += Dir["#{config.root}/app/serializers"]
+    config.autoload_paths += Dir["#{config.root}/lib"]
+    config.autoload_paths += Dir["#{config.root}/lib/active_record/connection_adapters"]
+    config.autoload_paths += Dir["#{config.root}/lib/common_passwords"]
+    config.autoload_paths += Dir["#{config.root}/lib/highlight_js"]
+    config.autoload_paths += Dir["#{config.root}/lib/i18n"]
+    config.autoload_paths += Dir["#{config.root}/lib/validators/"]
+
+    Rails.autoloaders.main.ignore(Dir["#{config.root}/app/models/reports"])
 
     # Only load the plugins named here, in the order given (default is alphabetical).
     # :all can be used as a placeholder for all plugins not explicitly named.
@@ -142,6 +148,10 @@ module Discourse
       activate-account.js
       auto-redirect.js
       wizard-start.js
+      locales/i18n.js
+      discourse/lib/webauthn.js
+      admin-login/admin-login.js
+      admin-login/admin-login.no-module.js
       onpopstate-handler.js
       embed-application.js
     }

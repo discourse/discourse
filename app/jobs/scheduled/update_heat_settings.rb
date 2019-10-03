@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Jobs
-  class UpdateHeatSettings < Jobs::Scheduled
+  class UpdateHeatSettings < ::Jobs::Scheduled
     every 1.month
 
     def execute(args)

@@ -91,6 +91,20 @@ RSpec.describe Admin::SiteTextsController do
         end
       end
 
+      it 'does not return overrides for keys that do not exist in English' do
+        SiteSetting.default_locale = :ru
+        TranslationOverride.create!(locale: :ru, translation_key: 'missing_plural_key.one', value: 'ONE')
+        TranslationOverride.create!(locale: :ru, translation_key: 'another_missing_key', value: 'foo')
+
+        get "/admin/customize/site_texts.json", params: { q: 'missing_plural_key' }
+        expect(response.status).to eq(200)
+        expect(JSON.parse(response.body)['site_texts']).to be_empty
+
+        get "/admin/customize/site_texts.json", params: { q: 'another_missing_key' }
+        expect(response.status).to eq(200)
+        expect(JSON.parse(response.body)['site_texts']).to be_empty
+      end
+
       context 'plural keys' do
         before do
           I18n.backend.store_translations(:en, colour: { one: '%{count} colour', other: '%{count} colours' })

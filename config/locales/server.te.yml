@@ -90,6 +90,7 @@ te:
     permalink: "శాస్వత లంకె"
     imported_from: "%{link} వద్ద మూల పద్దుకు జోడు చర్చా విషయం ఉంది."
     in_reply_to: "▶ %{username}"
+    created: "సృష్టించిన"
   no_mentions_allowed: "క్షమించాలి. మీరు ఇతర సభ్యులను ప్రస్తావించలేరు"
   no_mentions_allowed_newuser: "క్షమించాలి. కొత్త సభ్యులు ఇతర సభ్యులను ప్రస్తావించలేరు."
   no_images_allowed: "క్షమించాలి. కొత్త సభ్యులు టపాలో బొమ్మలు ఉంచలేరు."

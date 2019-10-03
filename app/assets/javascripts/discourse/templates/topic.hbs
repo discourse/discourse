@@ -24,6 +24,7 @@
               <span class="private-message-glyph">{{d-icon "envelope"}}</span>
             {{/if}}
               {{text-field id="edit-title" value=buffered.title maxlength=siteSettings.max_topic_title_length autofocus="true"}}
+
               {{#if showCategoryChooser}}
                 {{category-chooser
                   class="small"
@@ -32,10 +33,15 @@
               {{/if}}
 
               {{#if canEditTags}}
-                {{mini-tag-chooser filterable=true tags=buffered.tags categoryId=buffered.category_id}}
+                {{mini-tag-chooser
+                  filterable=true
+                  tags=(unbound buffered.tags)
+                  categoryId=(unbound buffered.category_id)
+                  onChangeTags=(action "topicTagsChanged")}}
               {{/if}}
 
               {{plugin-outlet name="edit-topic" args=(hash model=model buffered=buffered)}}
+
               <div class="edit-controls">
                 {{d-button action=(action "finishedEditingTopic") class="btn-primary submit-edit" icon="check"}}
                 {{d-button action=(action "cancelEditingTopic") class="btn-default cancel-edit" icon="times"}}
@@ -139,6 +145,7 @@
               topic=model
               expanded=info.topicProgressExpanded
               jumpToPost=(action "jumpToPost")}}
+              {{plugin-outlet name="before-topic-progress" args=(hash model=model jumpToPost=(action "jumpToPost"))}}
               {{#if info.renderAdminMenuButton}}
                 {{topic-admin-menu-button
                   topic=model
@@ -177,6 +184,7 @@
                   selectedPostsCount=selectedPostsCount
                   selectedQuery=selectedQuery
                   gaps=model.postStream.gaps
+                  showReadIndicator=model.show_read_indicator
                   showFlags=(action "showPostFlags")
                   editPost=(action "editPost")
                   showHistory=(route-action "showHistory")

@@ -102,6 +102,17 @@ class ReviewablesController < ApplicationController
     )
   end
 
+  def explain
+    reviewable = find_reviewable
+
+    render_serialized(
+      { reviewable: reviewable, scores: reviewable.explain_score },
+      ReviewableExplanationSerializer,
+      rest_serializer: true,
+      root: 'reviewable_explanation'
+    )
+  end
+
   def show
     reviewable = find_reviewable
 

@@ -105,6 +105,7 @@ lt:
     loading: "Kraunama diskusija..."
     permalink: "Nuoroda"
     in_reply_to: "▶ %{username}"
+    created: "Sukurta"
   no_mentions_allowed: "Apgailestaujame, tačiau jūs negalite minėti kitų vartotojų."
   too_many_mentions:
     one: "Apgailestaujame, tačiau jūs galite paminėti tik vieną vartotoją įraše"
@@ -454,6 +455,7 @@ lt:
         day: Diena
     post_edits:
       labels:
+        edited_at: Data
         post: Įrašai
         editor: Redaktorius
         author: Autorius
@@ -629,6 +631,7 @@ lt:
   login:
     admin_not_allowed_from_ip_address: "Tu negali prisijungti kaip administratorius iš šio IP adreso."
     errors: "%{errors}"
+    omniauth_confirm_button: "Tęsti"
     second_factor_title: "Dviejų veiksmų autentifikavimas"
   admin:
     email:

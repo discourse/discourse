@@ -105,8 +105,6 @@ be:
       random_mention:
         reply: |-
           Прывітанне! Для таго, каб высветліць, што я магу зрабіць, скажам, `@% {discobot_username}% {help_trigger}`.
-        tracks: |-
-          Зараз я ведаю, як зрабіць наступныя рэчы:`@% {Discobot_username}% {reset_trigger}% {default_track}`> Запускае адзін з наступных інтэрактыўных навучальных праграм:% {дарожкі}.
         bot_actions: |-
           `@% {Discobot_username}% {} dice_trigger 2d6`>: Game_die: 3, 6`@% {Discobot_username}% {quote_trigger}`>: Left_speech_bubble: _Carry з выпадковага акта дабрыні, без чакання ўзнагароды, упэўненага ў тым, што адзін дзень хто-то маглі б зрабіць тое ж самае для you_ & mdash; прынцэса Дыяна`@% {Discobot_username}% {magic_8_ball_trigger}`>: Crystal_ball: Вы можаце спадзявацца на яго
       do_not_understand:

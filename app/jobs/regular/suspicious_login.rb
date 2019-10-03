@@ -2,7 +2,7 @@
 
 module Jobs
 
-  class SuspiciousLogin < Jobs::Base
+  class SuspiciousLogin < ::Jobs::Base
 
     def execute(args)
       if UserAuthToken.is_suspicious(args[:user_id], args[:client_ip])

@@ -124,6 +124,7 @@ tr_TR:
     permalink: "Kalıcı Bağlantı"
     imported_from: "Bu ilave bir tartışmadır, asıl konu adresi %{link}"
     in_reply_to: "▶ %{username}"
+    created: "Oluşturuldu"
   no_mentions_allowed: "Üzgünüz, diğer kullanıcılardan bahsedemezsiniz."
   too_many_mentions:
     one: "Üzgünüz, bir gönderide sadece %{count} kullanıcıdan bahsedebilirsiniz."
@@ -469,6 +470,8 @@ tr_TR:
       every_hour: "saatlik"
       daily: "günlük"
       weekly: "haftalık"
+      every_month: "her ay"
+      every_six_months: "her altı ayda bir"
   user_api_key:
     title: "Uygulama erişimini yetkilendir"
     authorize: "Yetkilendir"
@@ -476,19 +479,23 @@ tr_TR:
     read_write: "okuma/yazma"
     otp_confirmation:
       confirm_title: "%{site_name} devam et"
+      confirm_button: Giriş yapmayı bitir
     no_trust_level: "Üzgünüz, kullanıcı APIsine erişmek için gerekli güvenilirlik seviyeniz yok"
   reports:
     default:
       labels:
+        count: say
         day: Gün
     post_edits:
       labels:
+        edited_at: Tarih
         post: Gönderi
         editor: Düzenleyici
         edit_reason: Sebep
     user_flagging_ratio:
       labels:
         user: Kullanıcı
+        score: Skor
     moderators_activity:
       labels:
         moderator: Moderatör
@@ -769,7 +776,6 @@ tr_TR:
     prioritize_username_in_ux: "Kullanıcı sayfası, kullanıcı kartı ve gönderilerde kullanıcı adını ilk olarak göster(devre dışı ise gerçek isim önce gözükür)"
     email_token_valid_hours: "Parolamı unuttum / hesap etkinleştirme jetonları (n) saat geçerlidir."
     enable_badges: "Rozet sistemini etkinleştir"
-    allow_index_in_robots_txt: "robots.txt dosyasında bu sitenin arama motorları tarafından dizinlenmesine izin verildiğini belirt."
     email_domains_blacklist: "Kullanıcıların kayıt olurken kullanamayacağı e-posta alan adlarının, dikey çizgilerle ayrıştırılmış listesi. Örneğin: mailinator.com|trashmail.net"
     email_domains_whitelist: "Kullanıcıların kayıt olurken kullanmak ZORUNDA olduğu e-posta alan adlarının, dikey çizgilerle ayrıştırılmış listesi. UYARI: Bu listede yer almayan e-posta alan adları kabul edilmeyecektir!"
     log_out_strict: "Çıkış yapılırken, kullanıcının tüm cihazlardaki TÜM seanslarını sonlandır"
@@ -1008,7 +1014,7 @@ tr_TR:
       invalid_string_min_max: "%{min} ile %{max} karakter arasında olmalı."
       invalid_string_min: "En az %{min} karakter olmalı."
       invalid_string_max: "En fazla %{max} karakter olabilir."
-      invalid_reply_by_email_address: "Değer '%%{reply_key}' içermeli ve bildiri e-postasından farklı olmalı."
+      invalid_reply_by_email_address: "Değer '%{reply_key}' içermeli ve bildiri e-postasından farklı olmalı."
       pop3_polling_authentication_failed: "POP3 kimlik doğrulaması başarısız. Lütfen pop3 bilgilerinizi kontrol edin."
       min_username_length_range: "En büyük değerin üstünde en küçük değer ayarlayamazsınız."
       max_username_length_range: "En küçük değer altında en büyük değer ayarlayamazsınız."
@@ -1077,8 +1083,8 @@ tr_TR:
     errors: "%{errors}"
     not_available: "Uygun değil. Bunu denemeye ne dersiniz? %{suggestion}"
     something_already_taken: "Bir şeyler ters gitti. Kullanıcı adı veya e-posta zaten kayıtlı olabilir. Parolamı unuttum bağlantısını deneyin."
-    omniauth_error: "Üzgünüz, hesabınız doğrulanırken bir hata oluştu. Doğrulama işlemini onaylamamış olabilir misiniz?"
     omniauth_error_unknown: "Girişiniz yapılırken bir şeyler ters gitti, lütfen tekrar deneyin."
+    omniauth_confirm_button: "Devam et"
     new_registrations_disabled: "Şu an yeni hesap oluşturulamıyor. "
     password_too_long: "Parolalar en fazla 200 karakter olabilir."
     email_too_long: "Vermiş olduğun e-posta çok uzun. E-posta kutusu isimleri 254, alan adı isimleri ise 253 karakterden daha uzun olamaz."
@@ -1708,8 +1714,15 @@ tr_TR:
       confirm_title: "Bildirimler etkin - %{site_title}"
       confirm_body: "Başarılı! Bildirimler etkinleştirildi."
   reviewables:
+    priorities:
+      low: "Düşük"
+      medium: "Orta"
+      high: "Yüksek"
     sensitivity:
       disabled: "Devredışı"
+      low: "Düşük"
+      medium: "Orta"
+      high: "Yüksek"
     actions:
       agree_and_keep:
         title: "Gönderiyi Sakla"

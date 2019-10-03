@@ -3,7 +3,6 @@
 #
 #  A wrapper around redis that namespaces keys with the current site id
 #
-require_dependency 'cache'
 
 class DiscourseRedis
   class FallbackHandler
@@ -23,17 +22,19 @@ class DiscourseRedis
     end
 
     def verify_master
-      synchronize { return if @thread && @thread.alive? }
+      synchronize do
+        return if @thread && @thread.alive?
 
-      @thread = Thread.new do
-        loop do
-          begin
-            thread = Thread.new { initiate_fallback_to_master }
-            thread.join
-            break if synchronize { @master }
-            sleep 5
-          ensure
-            thread.kill
+        @thread = Thread.new do
+          loop do
+            begin
+              thread = Thread.new { initiate_fallback_to_master }
+              thread.join
+              break if synchronize { @master }
+              sleep 5
+            ensure
+              thread.kill
+            end
           end
         end
       end

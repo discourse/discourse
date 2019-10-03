@@ -261,6 +261,16 @@ RSpec.describe ListController do
           expect(response.status).to eq(403)
         end
       end
+
+      describe 'group members visibility restricted to logged-on-users' do
+        before { group.update!(members_visibility_level: Group.visibility_levels[:logged_on_users]) }
+
+        it 'should return the right response' do
+          get "/topics/groups/#{group.name}.json"
+
+          expect(response.status).to eq(403)
+        end
+      end
     end
 
     describe 'for a normal user' do
@@ -310,7 +320,7 @@ RSpec.describe ListController do
     it 'renders latest RSS' do
       get "/latest.rss"
       expect(response.status).to eq(200)
-      expect(response.content_type).to eq('application/rss+xml')
+      expect(response.media_type).to eq('application/rss+xml')
     end
 
     it 'renders links correctly with subfolder' do
@@ -327,14 +337,14 @@ RSpec.describe ListController do
     it 'renders top RSS' do
       get "/top.rss"
       expect(response.status).to eq(200)
-      expect(response.content_type).to eq('application/rss+xml')
+      expect(response.media_type).to eq('application/rss+xml')
     end
 
     TopTopic.periods.each do |period|
       it "renders #{period} top RSS" do
         get "/top/#{period}.rss"
         expect(response.status).to eq(200)
-        expect(response.content_type).to eq('application/rss+xml')
+        expect(response.media_type).to eq('application/rss+xml')
       end
     end
   end
@@ -423,7 +433,7 @@ RSpec.describe ListController do
         it 'renders RSS' do
           get "/c/#{category.slug}.rss"
           expect(response.status).to eq(200)
-          expect(response.content_type).to eq('application/rss+xml')
+          expect(response.media_type).to eq('application/rss+xml')
         end
 
         it "renders RSS in subfolder correctly" do

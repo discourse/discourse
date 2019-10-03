@@ -21,7 +21,11 @@ import { defaultHomepage } from "discourse/lib/utilities";
 import { userPath } from "discourse/lib/url";
 import Category from "discourse/models/category";
 
-export const SECOND_FACTOR_METHODS = { TOTP: 1, BACKUP_CODE: 2 };
+export const SECOND_FACTOR_METHODS = {
+  TOTP: 1,
+  BACKUP_CODE: 2,
+  SECURITY_KEY: 3
+};
 
 const isForever = dt => moment().diff(dt, "years") < -500;
 
@@ -375,6 +379,19 @@ const User = RestModel.extend({
     });
   },
 
+  requestSecurityKeyChallenge() {
+    return ajax("/u/create_second_factor_security_key.json", {
+      type: "POST"
+    });
+  },
+
+  registerSecurityKey(credential) {
+    return ajax("/u/register_second_factor_security_key.json", {
+      data: credential,
+      type: "POST"
+    });
+  },
+
   createSecondFactorTotp() {
     return ajax("/u/create_second_factor_totp.json", {
       type: "POST"
@@ -401,6 +418,17 @@ const User = RestModel.extend({
     return ajax("/u/second_factor.json", {
       data: {
         second_factor_target: targetMethod,
+        name,
+        disable,
+        id
+      },
+      type: "PUT"
+    });
+  },
+
+  updateSecurityKey(id, name, disable) {
+    return ajax("/u/security_key.json", {
+      data: {
         name,
         disable,
         id
@@ -630,13 +658,9 @@ const User = RestModel.extend({
     );
   },
 
-  @computed("can_delete_account", "reply_count", "topic_count")
-  canDeleteAccount(canDeleteAccount, replyCount, topicCount) {
-    return (
-      !Discourse.SiteSettings.enable_sso &&
-      canDeleteAccount &&
-      (replyCount || 0) + (topicCount || 0) <= 1
-    );
+  @computed("can_delete_account")
+  canDeleteAccount(canDeleteAccount) {
+    return !Discourse.SiteSettings.enable_sso && canDeleteAccount;
   },
 
   delete: function() {

@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require 'rails_helper'
-require_dependency 'user_destroyer'
 
 describe UserDestroyer do
 
@@ -97,6 +96,16 @@ describe UserDestroyer do
       it "removes the queued post" do
         UserDestroyer.new(admin).destroy(user)
         expect(Reviewable.where(created_by_id: user.id).count).to eq(0)
+      end
+    end
+
+    context "with a reviewable user" do
+      let(:reviewable) { Fabricate(:reviewable, created_by: admin) }
+
+      it 'sets the reviewable user as rejected' do
+        UserDestroyer.new(admin).destroy(reviewable.target)
+
+        expect(reviewable.reload.status).to eq(Reviewable.statuses[:rejected])
       end
     end
 

@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require_dependency 'category_serializer'
-
 class CategoriesController < ApplicationController
 
   requires_login except: [:index, :categories_and_latest, :categories_and_top, :show, :redirect, :find_by_slug]
@@ -117,6 +115,8 @@ class CategoriesController < ApplicationController
   end
 
   def show
+    guardian.ensure_can_see!(@category)
+
     if Category.topic_create_allowed(guardian).where(id: @category.id).exists?
       @category.permission = CategoryGroup.permission_types[:full]
     end

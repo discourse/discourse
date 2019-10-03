@@ -4,16 +4,10 @@ require 'rails_helper'
 
 describe ExtraLocalesController do
   context 'show' do
-    it "caches for 24 hours if version is provided and it matches current hash" do
-      get "/extra-locales/admin", params: { v: ExtraLocalesController.bundle_js_hash('admin') }
-      expect(response.status).to eq(200)
-      expect(response.headers["Cache-Control"]).to eq("max-age=86400, public, immutable")
-    end
 
-    it "does not cache at all if version is invalid" do
-      get "/extra-locales/admin", params: { v: 'a' * 32 }
-      expect(response.status).to eq(200)
-      expect(response.headers["Cache-Control"]).not_to eq("max-age=86400, public, immutable")
+    it "won't work with a weird parameter" do
+      get "/extra-locales/-invalid..character!!"
+      expect(response.status).to eq(404)
     end
 
     it "needs a valid bundle" do
@@ -21,36 +15,56 @@ describe ExtraLocalesController do
       expect(response.status).to eq(403)
     end
 
-    it "won't work with a weird parameter" do
-      get "/extra-locales/-invalid..character!!"
-      expect(response.status).to eq(404)
+    it "requires staff access" do
+      get "/extra-locales/admin"
+      expect(response.status).to eq(403)
+
+      get "/extra-locales/wizard"
+      expect(response.status).to eq(403)
     end
 
-    context "with plugin" do
-      before do
-        JsLocaleHelper.clear_cache!
-        JsLocaleHelper.expects(:plugin_translations)
-          .with(any_of("en", "en_US"))
-          .returns("admin_js" => {
-            "admin" => {
-              "site_settings" => {
-                "categories" => {
-                  "github_badges" => "Github Badges"
+    context "logged in as a moderator" do
+
+      let(:moderator) { Fabricate(:moderator) }
+      before { sign_in(moderator) }
+
+      it "caches for 24 hours if version is provided and it matches current hash" do
+        get "/extra-locales/admin", params: { v: ExtraLocalesController.bundle_js_hash('admin') }
+        expect(response.status).to eq(200)
+        expect(response.headers["Cache-Control"]).to eq("max-age=86400, public, immutable")
+      end
+
+      it "does not cache at all if version is invalid" do
+        get "/extra-locales/admin", params: { v: 'a' * 32 }
+        expect(response.status).to eq(200)
+        expect(response.headers["Cache-Control"]).not_to eq("max-age=86400, public, immutable")
+      end
+
+      context "with plugin" do
+        before do
+          JsLocaleHelper.clear_cache!
+          JsLocaleHelper.expects(:plugin_translations)
+            .with(any_of("en", "en_US"))
+            .returns("admin_js" => {
+              "admin" => {
+                "site_settings" => {
+                  "categories" => {
+                    "github_badges" => "Github Badges"
+                  }
                 }
               }
-            }
-          }).at_least_once
-      end
+            }).at_least_once
+        end
 
-      after do
-        JsLocaleHelper.clear_cache!
-      end
+        after do
+          JsLocaleHelper.clear_cache!
+        end
 
-      it "includes plugin translations" do
-        get "/extra-locales/admin"
-
-        expect(response.status).to eq(200)
-        expect(response.body.include?("github_badges")).to eq(true)
+        it "includes plugin translations" do
+          get "/extra-locales/admin"
+          expect(response.status).to eq(200)
+          expect(response.body.include?("github_badges")).to eq(true)
+        end
       end
     end
   end

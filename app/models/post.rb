@@ -1,13 +1,5 @@
 # frozen_string_literal: true
 
-require_dependency 'pretty_text'
-require_dependency 'rate_limiter'
-require_dependency 'post_revisor'
-require_dependency 'enum'
-require_dependency 'post_analyzer'
-require_dependency 'validators/post_validator'
-require_dependency 'plugin/filter'
-
 require 'archetype'
 require 'digest/sha1'
 
@@ -55,7 +47,7 @@ class Post < ActiveRecord::Base
 
   has_many :user_actions, foreign_key: :target_post_id
 
-  validates_with ::Validators::PostValidator, unless: :skip_validation
+  validates_with PostValidator, unless: :skip_validation
 
   after_save :index_search
 
@@ -116,10 +108,19 @@ class Post < ActiveRecord::Base
   }
 
   scope :have_uploads, -> {
-    where(
-      "(posts.cooked LIKE '%<a %' OR posts.cooked LIKE '%<img %') AND (posts.cooked LIKE ? OR posts.cooked LIKE '%/original/%' OR posts.cooked LIKE '%/optimized/%' OR posts.cooked LIKE '%data-orig-src=%')",
-      "%/uploads/#{RailsMultisite::ConnectionManagement.current_db}/%"
-    )
+    where("
+          (
+            posts.cooked LIKE '%<a %' OR
+            posts.cooked LIKE '%<img %' OR
+            posts.cooked LIKE '%<video %'
+          ) AND (
+            posts.cooked LIKE ? OR
+            posts.cooked LIKE '%/original/%' OR
+            posts.cooked LIKE '%/optimized/%' OR
+            posts.cooked LIKE '%data-orig-src=%' OR
+            posts.cooked LIKE '%/uploads/short-url/%'
+          )", "%/uploads/#{RailsMultisite::ConnectionManagement.current_db}/%"
+        )
   }
 
   delegate :username, to: :user
@@ -168,6 +169,11 @@ class Post < ActiveRecord::Base
     if user && user.new_user_posting_on_first_day? && post_number && post_number > 1
       RateLimiter.new(user, "first-day-replies-per-day", SiteSetting.max_replies_in_first_day, 1.day.to_i)
     end
+  end
+
+  def readers_count
+    read_count = reads - 1 # Excludes poster
+    read_count < 0 ? 0 : read_count
   end
 
   def publish_change_to_clients!(type, opts = {})
@@ -922,10 +928,33 @@ class Post < ActiveRecord::Base
     ]
 
     fragments ||= Nokogiri::HTML::fragment(self.cooked)
-    links = fragments.css("a/@href", "img/@src").map { |media| media.value }.uniq
+
+    links = fragments.css("a/@href", "img/@src").map do |media|
+      src = media.value
+      next if src.blank?
+
+      if src.end_with?("/images/transparent.png") && (parent = media.parent)["data-orig-src"].present?
+        parent["data-orig-src"]
+      else
+        src
+      end
+    end.compact.uniq
+
     links.each do |src|
-      next if src.blank? || upload_patterns.none? { |pattern| src.split("?")[0] =~ pattern }
-      next if Rails.configuration.multisite && src.exclude?(current_db) && src.exclude?("short-url")
+      src = src.split("?")[0]
+
+      if src.start_with?("upload://")
+        sha1 = Upload.sha1_from_short_url(src)
+        yield(src, nil, sha1)
+        next
+      elsif src.include?("/uploads/short-url/")
+        sha1 = Upload.sha1_from_short_path(src)
+        yield(src, nil, sha1)
+        next
+      end
+
+      next if upload_patterns.none? { |pattern| src =~ pattern }
+      next if Rails.configuration.multisite && src.exclude?(current_db)
 
       src = "#{SiteSetting.force_https ? "https" : "http"}:#{src}" if src.start_with?("//")
       next unless Discourse.store.has_been_uploaded?(src) || (include_local_upload && src =~ /\A\/[^\/]/i)
@@ -953,7 +982,7 @@ class Post < ActiveRecord::Base
     missing_post_uploads = {}
     count = 0
 
-    DistributedMutex.synchronize("find_missing_uploads") do
+    DistributedMutex.synchronize("find_missing_uploads", validity: 30.minutes) do
       PostCustomField.where(name: Post::MISSING_UPLOADS).delete_all
       query = Post
         .have_uploads

@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require_dependency 'enum'
-
 class Group < ActiveRecord::Base
   include HasCustomFields
   include AnonCacheInvalidator
@@ -139,6 +137,59 @@ class Group < ActiveRecord::Base
                                  gu.user_id = :user_id AND
                                  gu.owner
           WHERE g.visibility_level = :owners
+
+        )
+      SQL
+
+      groups = groups.where(
+        sql,
+        Group.visibility_levels.to_h.merge(user_id: user&.id, is_staff: !!user&.staff?)
+      )
+
+    end
+
+    groups
+  }
+
+  scope :members_visible_groups, Proc.new { |user, order, opts|
+    groups = self.order(order || "name ASC")
+
+    if !opts || !opts[:include_everyone]
+      groups = groups.where("groups.id > 0")
+    end
+
+    unless user&.admin
+      sql = <<~SQL
+        groups.id IN (
+          SELECT g.id FROM groups g WHERE g.members_visibility_level = :public
+
+          UNION ALL
+
+          SELECT g.id FROM groups g
+          WHERE g.members_visibility_level = :logged_on_users AND :user_id IS NOT NULL
+
+          UNION ALL
+
+          SELECT g.id FROM groups g
+          JOIN group_users gu ON gu.group_id = g.id AND
+                                 gu.user_id = :user_id
+          WHERE g.members_visibility_level = :members
+
+          UNION ALL
+
+          SELECT g.id FROM groups g
+          LEFT JOIN group_users gu ON gu.group_id = g.id AND
+                                 gu.user_id = :user_id AND
+                                 gu.owner
+          WHERE g.members_visibility_level = :staff AND (gu.id IS NOT NULL OR :is_staff)
+
+          UNION ALL
+
+          SELECT g.id FROM groups g
+          JOIN group_users gu ON gu.group_id = g.id AND
+                                 gu.user_id = :user_id AND
+                                 gu.owner
+          WHERE g.members_visibility_level = :owners
 
         )
       SQL
@@ -304,6 +355,25 @@ class Group < ActiveRecord::Base
 
   def self.trust_group_ids
     (10..19).to_a
+  end
+
+  def set_message_default_notification_levels!(topic, ignore_existing: false)
+    group_users.pluck(:user_id, :notification_level).each do |user_id, notification_level|
+      next if user_id == -1
+      next if user_id == topic.user_id
+      next if ignore_existing && TopicUser.where(user_id: user_id, topic_id: topic.id).exists?
+
+      action =
+        case notification_level
+        when TopicUser.notification_levels[:tracking] then "track!"
+        when TopicUser.notification_levels[:regular]  then "regular!"
+        when TopicUser.notification_levels[:muted]    then "mute!"
+        when TopicUser.notification_levels[:watching] then "watch!"
+        else "track!"
+        end
+
+      topic.notifier.public_send(action, user_id)
+    end
   end
 
   def self.refresh_automatic_group!(name)
@@ -541,7 +611,7 @@ class Group < ActiveRecord::Base
 
   PUBLISH_CATEGORIES_LIMIT = 10
 
-  def add(user, notify: false)
+  def add(user, notify: false, automatic: false)
     self.users.push(user) unless self.users.include?(user)
 
     if notify
@@ -563,12 +633,15 @@ class Group < ActiveRecord::Base
       Discourse.request_refresh!(user_ids: [user.id])
     end
 
+    DiscourseEvent.trigger(:user_added_to_group, user, self, automatic: automatic)
+
     self
   end
 
   def remove(user)
     self.group_users.where(user: user).each(&:destroy)
     user.update_columns(primary_group_id: nil) if user.primary_group_id == self.id
+    DiscourseEvent.trigger(:user_removed_from_group, user, self)
   end
 
   def add_owner(user)
@@ -825,9 +898,11 @@ end
 #  visibility_level                   :integer          default(0), not null
 #  public_exit                        :boolean          default(FALSE), not null
 #  public_admission                   :boolean          default(FALSE), not null
+#  publish_read_state                 :boolean          default(FALSE), not null
 #  membership_request_template        :text
 #  messageable_level                  :integer          default(0)
 #  mentionable_level                  :integer          default(0)
+#  members_visibility_level           :integer          default(0), not null
 #
 # Indexes
 #

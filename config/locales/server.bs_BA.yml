@@ -16,6 +16,7 @@ bs_BA:
       short_no_year: "%B %-d"
       date_only: "%B %-d, %Y"
       long: "%B %-d, %Y, %l:%M%P"
+      no_day: "% B% Y"
   date:
     month_names: [~, Januar, Februar, Mart, April, Maj, Juni, Juli, August, Septembar, Oktobar, Novembar, Decembar]
     <<: *datetime_formats
@@ -36,10 +37,24 @@ bs_BA:
   anonymous: "Anoniman"
   remove_posts_deleted_by_author: "Izbrisan od strane autora"
   redirect_warning: "Nismo bili u stanju da verifikujemo da je link koji ste označili zapravo bio objavljen na forumu. Ukoliko u svakom slučaju želite da nastavite dalje, označite link ispod."
+  on_another_topic: "Na drugu temu"
   themes:
+    bad_color_scheme: "Ne može se ažurirati tema, nevažeća paleta boja"
     other_error: "Nešto je krenulo loše pri ažuriranju izgleda teme."
+    compile_error:
+      unrecognized_extension: "Neprepoznata ekstenzija datoteke: %{extension}"
     import_error:
+      generic: Došlo je do pogreške prilikom uvoza te teme
+      about_json: "Greška uvoza: about.json ne postoji ili je nevažeća"
+      about_json_values: "o .json sadrži nevažeće vrijednosti: %{errors}"
       git: "Greška prilikom kloniranja git repository-a, pristup je odbijen ili repositroy nije pronađen."
+      unpack_failed: "Otpakivanje datoteke nije uspelo"
+      unknown_file_type: "Datoteka koju ste učitali ne izgleda kao valjana tema diskursa."
+    errors:
+      component_no_user_selectable: "Komponente teme se ne mogu izabrati od korisnika"
+      component_no_default: "Komponente teme ne mogu biti podrazumevana tema"
+      component_no_color_scheme: "Komponente teme ne mogu imati palete boja"
+      no_multilevels_components: "Teme s dječjim temama ne mogu biti same teme djeteta"
     settings_errors:
       invalid_yaml: "Korišteni YAML fajl nije validan."
       data_type_not_a_number: "Postavka tipa `%{name}` nije podržana. Podržani tipovi su `integer`, `bool`, `list` i `enum`"
@@ -53,20 +68,43 @@ bs_BA:
       number_value_not_valid_min: "Mora biti veće ili jednako %{min}."
       number_value_not_valid_max: "Mora biti manje ili jednako %{max}."
       string_value_not_valid: "Nova vrijednost za dužinu nije u okviru dozvoljenih granica (range)."
+      string_value_not_valid_min_max: "Mora biti između %{min} i %{max} znakova."
       string_value_not_valid_min: "Mora biti najmanje %{min} Karaktera dugo."
       string_value_not_valid_max: "Mora biti najviše %{max} karaktera dugo."
+    locale_errors:
+      top_level_locale: "Ključ gornjeg nivoa u datoteci locale mora odgovarati nazivu jezika"
+      invalid_yaml: "Prevod YAML invalid"
   emails:
     incoming:
       default_subject: "Ova tema treba naslov"
       show_trimmed_content: "Prikaži skraćeni sadržaj"
+      maximum_staged_user_per_email_reached: "Dosegnut je maksimalni broj stupnjevanih korisnika kreiranih po e-pošti."
       no_subject: "(nema naslova)"
       no_body: "(nema teksta)"
+      missing_attachment: "(Nedostaje prilog %{filename})"
+      errors:
+        empty_email_error: "Dešava se kada je sirova pošta koju smo primili bila prazna."
+        no_message_id_error: "Dešava se kada pošta nema zaglavlje &#39;Message-Id&#39;."
+        auto_generated_email_error: "Dešava se kada je zaglavlje &#39;prvenstva&#39; postavljeno na: listu, bezvrijedno, skupno ili auto_reply, ili kada bilo koje drugo zaglavlje sadrži: automatsko slanje, automatsko odgovaranje ili automatsko generiranje."
+        no_body_detected_error: "Dešava se kada nismo mogli da izvučemo telo i nije bilo nikakvih vezanosti."
+        no_sender_detected_error: "Dešava se kada nismo mogli pronaći važeću adresu e-pošte u zaglavlju From."
+        from_reply_by_address_error: "Događa se kada se zaglavlje From poklapa s odgovorom na adresu e-pošte."
+        inactive_user_error: "Dešava se kada pošiljalac nije aktivan."
+        silenced_user_error: "Dešava se kada je pošiljalac utišan."
+        bad_destination_address: "Dešava se kada se nijedna adresa e-pošte u poljima To / Cc / Bcc ne podudara sa konfiguriranom dolaznom adresom e-pošte."
+        strangers_not_allowed_error: "Dešava se kada je korisnik pokušao da kreira novu temu u kategoriji u kojoj nije član."
+        insufficient_trust_level_error: "Dešava se kada korisnik pokuša da kreira novu temu u kategoriji za koju nema potreban nivo pouzdanosti."
+        reply_user_not_matching_error: "Događa se kada je stigao odgovor s druge adrese e-pošte na koju je obavijest poslana."
+        topic_not_found_error: "Dešava se kada je stigao odgovor, ali je srodna tema izbrisana."
+        topic_closed_error: "Dešava se kada je stigao odgovor, ali je srodna tema zatvorena."
+        bounced_email_error: "E-mail je izvještaj o odbijenoj e-pošti."
+        screened_email_error: "Dešava se kada je adresa e-pošte pošiljaoca već prikazana."
   errors: &errors
     messages:
       too_long_validation: "is limited to %{max} characters; you entered %{length}."
       invalid_boolean: "Invalid boolean."
       taken: "has already been taken"
-      exclusion: is reserved
+      exclusion: je rezvisan
       has_already_been_used: "već se koristi"
     embed:
       load_from_remote: "There was an error loading that post."
@@ -87,8 +125,9 @@ bs_BA:
     permalink: "Permalink"
     imported_from: "This is a companion discussion topic for the original entry at %{link}"
     in_reply_to: "▶ %{username}"
-  no_mentions_allowed: "Sorry, you can't mention other users."
-  no_mentions_allowed_newuser: "Sorry, new users can't mention other users."
+    created: "Kreiran"
+  no_mentions_allowed: "Žao nam je, ne možete spominjati druge korisnike."
+  no_mentions_allowed_newuser: "Žao nam je, novi korisnici ne mogu spominjati druge korisnike."
   no_images_allowed: "Sorry, new users can't put images in posts."
   no_attachments_allowed: "Sorry, new users can't put attachments in posts."
   no_links_allowed: "Sorry, new users can't put links in posts."
@@ -209,7 +248,7 @@ bs_BA:
       half_a_minute: "< 1m"
     distance_in_words_verbose:
       half_a_minute: "just now"
-      less_than_x_seconds: "just now"
+      less_than_x_seconds: "upravo sada"
       about_x_hours:
         one: "Pred %{count} sat"
         few: "Pred par sati"
@@ -296,21 +335,27 @@ bs_BA:
       every_hour: "po satu"
       daily: "dnevno"
       weekly: "sedmično"
+      every_month: "svaki mjesec"
+      every_six_months: "svakih šest mjeseci"
   user_api_key:
     otp_confirmation:
       confirm_title: "Nastavi ka %{site_name}"
+      confirm_button: Završi prijavu
   reports:
     default:
       labels:
+        count: Broji
         day: Day
     post_edits:
       labels:
+        edited_at: Datum
         post: Objava
         editor: Urednik
         edit_reason: Reason
     user_flagging_ratio:
       labels:
         user: User
+        score: bodovi
     moderators_activity:
       labels:
         moderator: Moderator
@@ -370,6 +415,12 @@ bs_BA:
         admin: Admin
         moderator: Moderator
         suspended: Suspended
+        silenced: Stišano
+    trending_search:
+      labels:
+        term: Term
+        searches: Pretraživanja
+        click_through: CTR
     emails:
       title: "Emails Sent"
       xaxis: "Day"
@@ -428,6 +479,7 @@ bs_BA:
     page_view_crawler_reqs:
       xaxis: "Day"
     page_view_total_reqs:
+      title: "Pagevieovi"
       xaxis: "Day"
     page_view_logged_in_mobile_reqs:
       xaxis: "Day"
@@ -453,6 +505,9 @@ bs_BA:
     mobile_visits:
       xaxis: "Day"
       yaxis: "Number of visits"
+    web_crawlers:
+      labels:
+        page_views: "Pagevieovi"
     suspicious_logins:
       labels:
         user: User
@@ -527,7 +582,6 @@ bs_BA:
     redirect_users_to_top_page: "Automatically redirect new and long absent users to the top page."
     email_token_valid_hours: "Forgot password / activate account tokens are valid for (n) hours."
     enable_badges: "Enable the badge system"
-    allow_index_in_robots_txt: "Specify in robots.txt that this site is allowed to be indexed by web search engines."
     email_domains_blacklist: "A list of email domains that users are not allowed to register accounts with. Example: mailinator.com trashmail.net"
     email_domains_whitelist: "A list of email domains that users MUST register accounts with. WARNING: Users with email domains other than those listed will not be allowed!"
     new_version_emails: "Send an email to the contact_email address when a new version of Discourse is available."
@@ -692,12 +746,13 @@ bs_BA:
     errors: "%{errors}"
     not_available: "Nije dostupno. Probaj %{suggestion}?"
     something_already_taken: "Something went wrong, perhaps the username or email is already registered. Try the forgot password link."
-    omniauth_error: "Sorry, there was an error authorizing your %{strategy} account. Perhaps you did not approve authorization?"
     omniauth_error_unknown: "Something went wrong processing your log in, please try again."
+    omniauth_confirm_button: "Nastavi"
     new_registrations_disabled: "New account registrations are not allowed at this time."
     password_too_long: "Passwords are limited to 200 characters."
     missing_user_field: "You have not completed all the user fields"
     second_factor_title: "Two Factor Authentication"
+    second_factor_backup_description: "Molim ukucajte jedan od vaši rezevni kodova"
   admin:
     email:
       sent_test: "sent!"
@@ -785,6 +840,7 @@ bs_BA:
     recent_topics: "Nove"
     see_more: "Više"
     search_title: "Pretraži stranicu"
+    search_button: "Pretraži"
   deleted: "obrisano"
   image: "slika"
   upload:
@@ -905,6 +961,8 @@ bs_BA:
         title: "Organizacija"
       colors:
         title: "Izgled"
+      themes_further_reading:
+        title: "Teme"
       homepage:
         fields:
           homepage_style:
@@ -917,12 +975,23 @@ bs_BA:
                 label: "Kategorije i Novije teme"
               categories_and_top_topics:
                 label: "Kategorije i Top teme"
+      emoji:
+        title: "Emoji"
   joined: "Registrovan"
   discourse_push_notifications:
     popup:
       confirm_title: "Obavijesti uključene - %{site_title}"
       confirm_body: "Uspješno! Obavijesti su sada uključene."
   reviewables:
+    priorities:
+      low: "Nisko"
+      medium: "Srednije"
+      high: "Visoko"
+    sensitivity:
+      disabled: "Neomogućen"
+      low: "Nisko"
+      medium: "Srednije"
+      high: "Visoko"
     actions:
       agree_and_keep:
         description: "Složij se sa prijavom ali ostavi prijavljenu objavu neizmjenjenom"
@@ -930,6 +999,7 @@ bs_BA:
         title: "Suspend User"
         description: "Složij se sa prijavom i suspendiraj prijavljenog korisnika (suspend)"
       agree_and_silence:
+        title: "Stišaj korisnika"
         description: "Složij se sa prijavom i utišaj prijavljenog korisnika (silence)"
       delete_spammer:
         title: "Obriši Spamera"
@@ -937,6 +1007,8 @@ bs_BA:
         title: "Delete"
       disagree:
         title: "Disagree"
+      ignore:
+        title: "Zanemari"
       approve:
         title: "Odobri"
       reject_user:

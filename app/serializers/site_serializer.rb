@@ -1,9 +1,5 @@
 # frozen_string_literal: true
 
-require_dependency 'discourse_tagging'
-require_dependency 'wizard'
-require_dependency 'wizard/builder'
-
 class SiteSerializer < ApplicationSerializer
 
   attributes(
@@ -34,7 +30,7 @@ class SiteSerializer < ApplicationSerializer
     :shared_drafts_category_id
   )
 
-  has_many :categories, serializer: BasicCategorySerializer, embed: :objects
+  has_many :categories, serializer: SiteCategorySerializer, embed: :objects
   has_many :trust_levels, embed: :objects
   has_many :archetypes, embed: :objects, serializer: ArchetypeSerializer
   has_many :user_fields, embed: :objects, serializer: UserFieldSerializer

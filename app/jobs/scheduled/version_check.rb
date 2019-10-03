@@ -1,10 +1,7 @@
 # frozen_string_literal: true
 
-require_dependency 'discourse_hub'
-require_dependency 'discourse_updates'
-
 module Jobs
-  class VersionCheck < Jobs::Scheduled
+  class VersionCheck < ::Jobs::Scheduled
     every 1.day
 
     def execute(args)

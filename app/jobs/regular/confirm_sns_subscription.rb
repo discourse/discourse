@@ -2,7 +2,7 @@
 
 module Jobs
 
-  class ConfirmSnsSubscription < Jobs::Base
+  class ConfirmSnsSubscription < ::Jobs::Base
     sidekiq_options retry: false
 
     def execute(args)

@@ -144,6 +144,7 @@ ro:
     permalink: "Link permanent"
     imported_from: "Acesta este un subiect de discuție adăugat la discuția originală de la %{link}"
     in_reply_to: "▶ %{username}"
+    created: "Creat"
   no_mentions_allowed: "Ne pare rău, nu poți menționa alți utilizatori."
   too_many_mentions:
     one: "Ne pare rău, poți menționa doar un utilizator într-o postare."
@@ -876,7 +877,6 @@ ro:
     email_token_valid_hours: "Tokenul uitat parolă / activează cont sunt valabili pentru (n) ore."
     enable_badges: "Activează sistemul de ecusoane"
     enable_whispers: "Permite membrilor echipei să comunice privat în cadrul subiectelor."
-    allow_index_in_robots_txt: "Specifică în robots.txt că acest site poate fi indexat de motoarele de căutare web."
     email_domains_blacklist: "O listă de domenii de email separate cu simbolul | (pipe) ale căror utilizatori nu au permisiunea să înregistreze conturi. Exemplu: mailinator.com|trashmail.net"
     email_domains_whitelist: "O listă de domenii de email (separate cu simbolul | (pipe)) cu care utilizatorii TREBUIE să se înregistreze. ATENȚIE: utilizatorii cu alte domenii de email decât cele listate nu vor avea permisiunea să se înregistreze."
     log_out_strict: "La ieșire, închide TOATE sesiunile pentru utilizator, pe toate dispozitivele."
@@ -1051,7 +1051,6 @@ ro:
     reset_bounce_score_after_days: "Resetează automat rata de ricoșeu după X zile."
     attachment_content_type_blacklist: "Lista cuvintelor cheie folosite pentru filtrarea atașamentelor în funcție de tipul de conținut."
     attachment_filename_blacklist: "Lista cuvintelor cheie folosite la filtrarea atașamentelor în funcție de numele fișierului."
-    enable_forwarded_emails: "[BETA] Permite utilizatorilor să creeze un subiect prin forward-area unui email."
     always_show_trimmed_content: "Arată întotdeauna partea trunchiată a emailurilor sosite. ATENȚIE: s-ar putea dezvălui adresele de email."
     manual_polling_enabled: "Trimite emailuri folosind API-ul pentru răspunsuri prin email."
     pop3_polling_enabled: "Folosește POP3 pentru răspunsuri prin email."
@@ -1176,8 +1175,8 @@ ro:
       invalid_string_min_max: "Trebuie să aibă între %{min} și %{max} caractere."
       invalid_string_min: "Trebuie să aibă %{min} caractere."
       invalid_string_max: "Nu trebuie să depășească %{max} caractere."
-      invalid_reply_by_email_address: "Valoarea trebuie să conțină '%%{reply_key}' și să fie diferită de emailul de notificare."
-      invalid_alternative_reply_by_email_addresses: "Toate valorile trebuie să conțină '%%{reply_key}' și să fie diferite de emailul de notificare."
+      invalid_reply_by_email_address: "Valoarea trebuie să conțină '%{reply_key}' și să fie diferită de emailul de notificare."
+      invalid_alternative_reply_by_email_addresses: "Toate valorile trebuie să conțină '%{reply_key}' și să fie diferite de emailul de notificare."
       pop3_polling_host_is_empty: "Trebuie să setezi „numele serverului de POP3” înainte să poți activa retragerea de emailuri prin POP3"
       pop3_polling_username_is_empty: "Trebuie să setezi „numele utilizator pe serverul POP3” înainte să poți activa retragerea de emailuri prin POP3."
       pop3_polling_password_is_empty: "Trebuie să setezi „parola pe serverul POP3” înainte să poți activa retragerea de emailuri prin POP3."
@@ -1262,8 +1261,8 @@ ro:
     errors: "%{errors}"
     not_available: "Nu este disponibil. Încearcă %{suggestion}?"
     something_already_taken: "Ceva nu a funcționat, poate numele de utilizator sau emailul este deja înregistrat. Încearcă opțiunea parola uitată."
-    omniauth_error: "Ne pare rău, a apărut o eroare la autorizarea contului tău. Poate că nu ai aprobat autorizarea?"
     omniauth_error_unknown: "Ceva a mers greșit la procesarea autentificării, te rugăm să încerci din nou."
+    omniauth_confirm_button: "Continuă"
     authenticator_error_no_valid_email: "Nu este permisă nicio adresă de email asociată cu %{account}. Ar trebui să îți configurezi contul cu o adresă de email diferită."
     new_registrations_disabled: "Înregistrarea de conturi noi nu este momentan permisă."
     password_too_long: "Parole sunt limitate la 200 caractere."
@@ -1311,20 +1310,6 @@ ro:
     private_topic_title: "Discuția #%{id}"
     post_hidden:
       subject_template: "Postare ascunsă din cauza marcajelor de avertizare ale comunității"
-      text_body_template: |
-        Salut,
-
-        Acesta este un mesaj automat de pe %{site_name} pentru a te informa că mesajul tău a fost ascuns.
-
-        %{base_url}%{url}
-
-        %{flag_reason}
-
-        Mai mulți membri ai comunității au marcat acestă postare cu marcaje de avertizare înainte ca ea să fie ascunsă, așa că te rugăm să îți revizuiești postarea pentru a ține cont de feedback-ul primit. **Îți poți edita postarea după %{edit_delay} minute, și ea va fi automat re-afișată**
-
-        Totuși, dacă postarea este ascunsă de comunitate pentru a doua oară, va rămâne așa până ce va fi gestionată de un membru al echipei -- și asta ar putea atrage și alte consecințe, inclusiv posibilitatea suspendării contului tău.
-
-        Pentru informații suplimentare, te rugăm să citești [ghidul comunității](%{base_url}/guidelines).
     welcome_user:
       subject_template: "Bine ai venit pe %{site_name}!"
     welcome_tl1_user:

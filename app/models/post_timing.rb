@@ -1,6 +1,4 @@
 # frozen_string_literal: true
-#
-require_dependency 'archetype'
 
 class PostTiming < ActiveRecord::Base
   belongs_to :topic
@@ -176,6 +174,7 @@ SQL
     topic_time = max_time_per_post if topic_time > max_time_per_post
 
     TopicUser.update_last_read(current_user, topic_id, highest_seen, new_posts_read, topic_time, opts)
+    TopicGroup.update_last_read(current_user, topic_id, highest_seen)
 
     if total_changed > 0
       current_user.reload

@@ -11,10 +11,10 @@
           {{/if}}
 
           <h3>
+            {{category-title-before category=c}}
             {{#if c.read_restricted}}
               {{d-icon 'lock'}}
             {{/if}}
-            {{category-title-before category=c}}
             {{c.name}}
           </h3>
         </a>

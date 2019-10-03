@@ -239,6 +239,7 @@ ro:
       stats: "Statisticile site-ului"
       our_admins: "Administratori"
       our_moderators: "Moderatori"
+      moderators: "Moderatori"
       stat:
         all_time: "Tot timpul"
         last_7_days: "Ultimele 7"
@@ -305,6 +306,8 @@ ro:
       title:
         placeholder: "Scrieți aici titlul subiectului"
     review:
+      explain:
+        total: "Total"
       delete: "Șterge"
       settings:
         save_changes: "Salvează schimbările"
@@ -733,7 +736,6 @@ ro:
         uploaded_avatar: "Poză preferată"
         uploaded_avatar_empty: "Adaugă poza preferată"
         upload_title: "Încarcă poza preferată"
-        upload_picture: "Încarcă poza"
         image_is_not_a_square: "Atenţie: poza este decupată, înălțimea și lățimea nu erau egale."
       change_profile_background:
         title: "Fundal pentru pagina de profil"
@@ -753,6 +755,7 @@ ro:
           other: "Vom trimite un email doar dacă nu te-am văzut în ultimele {{count}} de minute."
       associated_accounts:
         revoke: "Revocă"
+        cancel: "Anulează"
       name:
         title: "Nume"
         instructions: "Numele tău complet (opțional)"
@@ -1135,6 +1138,9 @@ ro:
       default_header_text: Selectează...
       no_content: Nu s-au găsit potriviri
       filter_placeholder: Caută...
+    date_time_picker:
+      from: De la
+      to: Către
     emoji_picker:
       filter_placeholder: Caută emoji
       objects: Obiecte
@@ -1171,7 +1177,6 @@ ro:
         title_missing: "Trebuie un titlu"
         title_too_short: "Titlul trebuie să aibă minim {{min}} (de) caractere"
         title_too_long: "Titlul nu poate avea mai mult de {{max}} (de) caractere"
-        post_missing: "Postarea nu poate fi goală"
         post_length: "Postarea trebuie să aibă minim {{min}} (de) caractere"
         category_missing: "Trebuie să alegi o categorie"
       save_edit: "Salvează editarea"
@@ -1187,7 +1192,6 @@ ro:
       title_placeholder: "Despre ce e vorba în acest subiect - pe scurt?"
       title_or_link_placeholder: "Introdu titlul, sau copiază aici un link"
       edit_reason_placeholder: "de ce editezi?"
-      show_edit_reason: "(adaugă motivul editării)"
       topic_featured_link_placeholder: "Introdu link afișat cu titlu."
       remove_featured_link: "Eliminați link-ul din discuție"
       reply_placeholder: "Scrie aici. Utilizează formatarea Markdown, BBCode sau HTML. Trage sau lipește imagini."
@@ -1254,7 +1258,6 @@ ro:
       title: "notificări la menționările @numelui tău, răspunsuri la postările sau subiectele tale, mesaje, etc."
       none: "Nu pot încărca notificările în acest moment."
       empty: "Nu au fost găsite notificări."
-      more: "vezi notificările mai vechi"
       mentioned: "<span>{{username}}</span> {{description}}"
       group_mentioned: "<span>{{username}}</span> {{description}}"
       quoted: "<span>{{username}}</span> {{description}}"
@@ -2417,8 +2420,6 @@ ro:
           view_table: "tabel"
           view_graph: "grafic"
           refresh_report: "Reactualizează raportul"
-          start_date: "Data de început "
-          end_date: "Data de sfârşit"
           groups: "Toate grupurile"
           filters:
             group:
@@ -2651,7 +2652,7 @@ ro:
         copy_to_clipboard_error: "Eroare la copierea datelor în clipboard"
         theme_owner: "Nemodificabil, deținut de:"
         email_templates:
-          title: "Șabloane de emailuri"
+          title: "Email"
           subject: "Subiect"
           multiple_subjects: "Acest șablon are mai multe subiecte"
           body: "Body"
@@ -2747,6 +2748,8 @@ ro:
           love:
             name: "apreciere"
             description: "Culoarea butonului de apreciere."
+        email_style:
+          css: "CSS"
       email:
         title: "Email"
         settings: "Opțiuni"
@@ -2934,6 +2937,8 @@ ro:
         search: "caută"
         clear_filter: "Șterge"
         show_words: "arată cuvinte"
+        download: Descărcare
+        clear_all: Deselectează tot
         actions:
           block: "Blochează"
           censor: "Cenzurează"
@@ -2943,7 +2948,9 @@ ro:
           label: "Cuvânt nou:"
           add: "Adaugă"
           success: "Succes"
-          upload: "Urcă"
+        test:
+          button_label: "Test"
+          no_matches: "Nu s-au găsit potriviri"
       impersonate:
         title: "Joacă rolul utilizatorului"
         help: "Folosește această unealtă pentru a imita un cont de utilizator pentru depanare. Va trebui să te deconectezi după ce termini."
@@ -3159,7 +3166,7 @@ ro:
       site_text:
         description: "Poți personaliza orice text pe forum. Te rugăm să începi prin a căuta mai jos:"
         search: "Caută textul pe care vrei să îl editezi"
-        title: "Conținut text"
+        title: "Text"
         edit: "Editează"
         revert: "Revocați schimbările"
         revert_confirm: "Ești sigur că vrei să revoci schimbările?"

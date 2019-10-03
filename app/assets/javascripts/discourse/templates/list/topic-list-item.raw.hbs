@@ -20,6 +20,9 @@
     {{~topic-featured-link topic}}
     {{~/if}}
     {{~raw-plugin-outlet name="topic-list-after-title"}}
+    {{~raw "list/unread-indicator" includeUnreadIndicator=includeUnreadIndicator 
+                                   topicId=topic.id 
+                                   unreadClass=unreadClass~}}
     {{~#if showTopicPostBadges}}
     {{~raw "topic-post-badges" unread=topic.unread newPosts=topic.displayNewPosts unseen=topic.unseen url=topic.lastUnreadUrl newDotText=newDotText}}
     {{~/if}}

@@ -164,6 +164,7 @@ ja:
     in_reply_to: "▶ %{username}"
     replies:
       other: "%{count}件のリプライ"
+    created: "作成者"
   no_mentions_allowed: "あなたは他のユーザーへメンションを送ることができません。"
   no_mentions_allowed_newuser: "申し訳ありませんが、新規ユーザはこのポストにおいて他のユーザをタグ付けできません。"
   no_images_allowed_trust: "ごめんなさい、ポストに画像を添付することができません"
@@ -177,7 +178,7 @@ ja:
   links_require_trust: "ごめんなさい、ポストにリンクを含めることはできません。"
   too_many_links:
     other: "ごめんなさい、新しいユーザーは一つのポストにつき%{count}個のリンクしか貼り付けられません。"
-  contains_blocked_words: "ポストに許可されていない言葉が含まれています: %{word}"
+  contains_blocked_word: "ポストに許可されていない言葉が含まれています: %{word}"
   spamming_host: "申し訳ありませんが、このホストへのリンクを貼ることはできません。"
   user_is_suspended: "凍結中のユーザーは投稿できません。"
   topic_not_found: "問題が発生しました。トピックがクローズしたか、閲覧中に削除された可能性があります。"
@@ -554,6 +555,7 @@ ja:
         day: 日
     post_edits:
       labels:
+        edited_at: 日付
         post: 投稿
         editor: 編集者
         edit_reason: 理由
@@ -826,7 +828,6 @@ ja:
     redirect_users_to_top_page: "新規ユーザーと長く不在のユーザーをトップページに自動的にリダイレクトさせる"
     email_token_valid_hours: "パスワードリマインダ、アカウントアクティベート時のトークンを何時間有効にするか"
     enable_badges: "バッジ機能を有効にする"
-    allow_index_in_robots_txt: "サーチエンジンにインデックスを許可するようにrobots.txtを指定する"
     email_domains_blacklist: "ユーザーがアカウント登録をすることができない、パイプ区切りのドメイン名のリスト。 例 : mailinator.com|trashmail.net"
     email_domains_whitelist: "ユーザー登録に必要なパイプ区切りのメールドメインのリスト。警告: 指定したメールドメイン以外のユーザは許可されません！"
     log_out_strict: "ログアウトした際に、そのユーザーの全デバイスのセッションをログアウトさせる"
@@ -1009,6 +1010,7 @@ ja:
       invalid_string_min_max: "文字数は%{min}と%{max}の間である必要があります"
       invalid_string_min: "少なくとも%{min}文字は必要です"
       invalid_string_max: "%{max}文字以下である必要があります"
+      invalid_reply_by_email_address: "値は'%{reply_key}'を含む必要があり、通知メールとは異なる必要があります"
       min_username_length_range: "最小値を最大値より上にすることはできません。"
   search:
     within_post: "#%{post_number} by %{username}"
@@ -1025,6 +1027,9 @@ ja:
   redirected_to_top_reasons:
     new_user: "コミュニティへようこそ！　これらが最も人気な最近のトピックです"
     not_seen_in_a_month: "お帰りなさい！　最近見かけませんでしたね。　これらがあなたが離れてから最も人気のトピックです"
+  move_posts:
+    existing_topic_moderator_post:
+      other: "%{count}つのポストが存在するトピックに統合されました：%{topic_link}"
   topic_statuses:
     autoclosed_message_max_posts:
       other: "このメッセージは%{count}つの返信に達した時に自動的に閉じます。"
@@ -1058,8 +1063,8 @@ ja:
     errors: "%{errors}"
     not_available: "それは利用できません。\"%{suggestion}\" はどうですか？"
     something_already_taken: "エラーが発生しました。ユーザ名またはメールアドレスが既に使用中の可能性があります。パスワードリセットを行ってください。"
-    omniauth_error: "あなたの アカウントの認可に失敗しました。アカウントの認可を許可したか確認してください"
     omniauth_error_unknown: "ログインに失敗しました。もう一度試してください。"
+    omniauth_confirm_button: "続く"
     new_registrations_disabled: "新規登録は現在行えません。"
     password_too_long: "パスワードは200文字までです"
     email_too_long: "メールアドレスが長過ぎます。アドレス部は254文字以内に、ドメイン部は253文字以内にする必要があります"
@@ -1173,35 +1178,9 @@ ja:
     post_hidden:
       title: "非表示の投稿"
       subject_template: "コミュニティーフラッグによって非表示にされた投稿"
-      text_body_template: |
-        こんにちは、
-
-        これは%{site_name}から、あなたの投稿が非表示になったことを自動的に知らせるメールです。
-
-        <%{base_url}%{url}>
-
-        %{flag_reason}
-
-        複数のコミュニティーメンバーが非表示になる前に、この投稿にフラッグを立てました。フィードバックを反映させた投稿の修正を検討してください。**あなたは%{edit_delay}分後に投稿を編集することが可能です。そして自動的に非表示では無くなります。
-
-        しかし、もしこの投稿がコミュニティーによって再度非表示になった場合、管理人が対処するまで非表示であり続けます。
-
-        追加のガイダンスについては、私たちのガイドラインを参照してください。 [community guidelines](%{base_url}/guidelines)
     post_hidden_again:
       title: "再度非表示"
       subject_template: "コミュニティーフラッグにより非表示になりました。"
-      text_body_template: |
-        こんにちは、
-
-        このメールは%{site_name}から、あなったの投稿が再度非表示になったことを自動的に知らせるメールです。
-
-        <%{base_url}%{url}>
-
-        %{flag_reason}
-
-        複数のコミュニティーメンバーが非表示になる前に、このポストにフラグを立てました。**なぜならこのポストは以前に非表示になったことがあるため、あなたの投稿は管理人が対処するまで非表示であり続けます。
-
-        つかのガイダンスについては、私たちのガイドラインを参照してください。[community guidelines](%{base_url}/guidelines)
     welcome_user:
       subject_template: "%{site_name} へようこそ!"
       text_body_template: |
@@ -1702,8 +1681,13 @@ ja:
     popup:
       confirm_body: "成功！通知を可能にしました！"
   reviewables:
+    priorities:
+      medium: "普通"
+      high: "高い"
     sensitivity:
       disabled: "利用不可"
+      medium: "普通"
+      high: "高い"
     actions:
       agree_and_suspend:
         title: "凍結中のユーザ"

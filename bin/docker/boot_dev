@@ -4,6 +4,7 @@ set -e
 SCRIPTPATH=$(cd "$(dirname "$0")" > /dev/null; pwd -P)
 SOURCE_DIR=$(cd "$SCRIPTPATH" > /dev/null; cd ../.. > /dev/null; pwd -P)
 DATA_DIR="$SOURCE_DIR/data/postgres"
+PLUGINS_DIR="$SOURCE_DIR/plugins"
 
 show_help() {
 cat <<EOF
@@ -40,7 +41,7 @@ while [ "${#@}" -ne "0" ]; do
             if [ -z "$2" ]; then
                 show_help
                 exit 0
-            else  
+            else
                 ENV_ARGS="--env-file=$2"
                 break
             fi
@@ -59,13 +60,34 @@ echo "Using data in:   ${DATA_DIR}"
 
 mkdir -p "${DATA_DIR}"
 
+mount_plugin_symlinks=""
+for symlink in $(find $PLUGINS_DIR -type l); do
+    # This deliberately does not use the `-f` option to canonicalize the value
+    # because 1) the BSD `readlink` does not support the option, and 2) a
+    # relative link would not work inside the container anyway.
+    symlink_value=$(readlink $symlink)
+    mount_plugin_symlinks+=" -v ${symlink_value}:${symlink_value}:delegated"
+done
+
 # 1080 mailcatcher
 # 3000 puma... if you must (but unicorn is preferred)
 # 9292 unicorn
 # 9405 prometheus exporter
 
 docker pull discourse/discourse_dev:release
-docker run -d -p 9405:9405 -p 1080:1080 -p 3000:3000 -p 9292:9292 -v "$DATA_DIR:/shared/postgres_data:delegated" -v "$SOURCE_DIR:/src:delegated" $ENV_ARGS --hostname=discourse --name=discourse_dev --restart=always discourse/discourse_dev:release /sbin/boot
+docker run -d \
+    -p 1080:1080 \
+    -p 3000:3000 \
+    -p 9292:9292 \
+    -p 9405:9405 \
+    -v "$DATA_DIR:/shared/postgres_data:delegated" \
+    -v "$SOURCE_DIR:/src:delegated" \
+    $mount_plugin_symlinks \
+    $ENV_ARGS \
+    --hostname=discourse \
+    --name=discourse_dev \
+    --restart=always \
+    discourse/discourse_dev:release /sbin/boot
 
 if [ "${initialize}" = "initialize" ]; then
     echo "Installing gems..."

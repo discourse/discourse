@@ -1,8 +1,5 @@
 # frozen_string_literal: true
 
-require_dependency 'url_helper'
-require_dependency 'upload_markdown'
-
 module ImportScripts
   class Uploader
     # Creates an upload.

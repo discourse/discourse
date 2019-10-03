@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require_dependency 'inline_oneboxer'
-
 module PrettyText
   module Helpers
     extend self

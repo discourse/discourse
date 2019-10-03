@@ -6,5 +6,11 @@ export default Ember.Controller.extend({
     this._super(...arguments);
 
     this.titleSorting = ["title"];
+  },
+
+  actions: {
+    selectTemplate(template) {
+      this.transitionToRoute("adminCustomizeEmailTemplates.edit", template);
+    }
   }
 });

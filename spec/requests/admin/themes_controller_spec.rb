@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require 'rails_helper'
-require_dependency 'theme_serializer'
 
 describe Admin::ThemesController do
   fab!(:admin) { Fabricate(:admin) }
@@ -51,7 +50,7 @@ describe Admin::ThemesController do
       expect(response.status).to eq(200)
 
       # Save the output in a temp file (automatically cleaned up)
-      file = Tempfile.new('archive.tar.zip')
+      file = Tempfile.new('archive.zip')
       file.write(response.body)
       file.rewind
       uploaded_file = Rack::Test::UploadedFile.new(file.path, "application/zip")
@@ -136,11 +135,19 @@ describe Admin::ThemesController do
       existing_theme = Fabricate(:theme, name: "Header Icons")
       other_existing_theme = Fabricate(:theme, name: "Some other name")
 
-      expect do
-        post "/admin/themes/import.json", params: { bundle: theme_archive, theme_id: other_existing_theme.id }
-      end.to change { Theme.count }.by (0)
+      messages = MessageBus.track_publish do
+        expect do
+          post "/admin/themes/import.json", params: { bundle: theme_archive, theme_id: other_existing_theme.id }
+        end.to change { Theme.count }.by (0)
+      end
       expect(response.status).to eq(201)
       json = ::JSON.parse(response.body)
+
+      # Ensure only one refresh message is sent.
+      # More than 1 is wasteful, and can trigger unusual race conditions in the client
+      # If this test fails, it probably means `theme.save` is being called twice - check any 'autosave' relations
+      file_change_messages = messages.filter { |m| m[:channel] == "/file-change" }
+      expect(file_change_messages.count).to eq(1)
 
       expect(json["theme"]["name"]).to eq("Some other name")
       expect(json["theme"]["id"]).to eq(other_existing_theme.id)
@@ -322,6 +329,22 @@ describe Admin::ThemesController do
       expect(theme.theme_translation_overrides.count).to eq(0)
     end
 
+    it 'checking for updates saves the remote_theme record' do
+      theme.remote_theme = RemoteTheme.create!(remote_url: "http://discourse.org", remote_version: "a", local_version: "a", commits_behind: 0)
+      theme.save!
+      ThemeStore::GitImporter.any_instance.stubs(:import!)
+      ThemeStore::GitImporter.any_instance.stubs(:commits_since).returns(["b", 1])
+
+      put "/admin/themes/#{theme.id}.json", params: {
+        theme: {
+          remote_check: true
+        }
+      }
+      theme.reload
+      expect(theme.remote_theme.remote_version).to eq("b")
+      expect(theme.remote_theme.commits_behind).to eq(1)
+    end
+
     it 'can disable component' do
       child = Fabricate(:theme, component: true)
 
@@ -383,6 +406,7 @@ describe Admin::ThemesController do
 
     it 'handles import errors on update' do
       theme.create_remote_theme!(remote_url: "https://example.com/repository")
+      theme.save!
 
       # RemoteTheme is extensively tested, and setting up the test scaffold is a large overhead
       # So use a stub here to test the controller

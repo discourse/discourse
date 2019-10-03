@@ -48,8 +48,16 @@ task 'db:drop' => [:load_config] do |_, args|
   end
 end
 
+begin
+  Rake::Task["db:migrate"].clear
+end
+
 # we need to run seed_fu every time we run rake db:migrate
 task 'db:migrate' => ['environment', 'set_locale'] do |_, args|
+  ActiveRecord::Tasks::DatabaseTasks.migrate
+
+  Rake::Task['db:_dump'].invoke
+
   SeedFu.seed(DiscoursePluginRegistry.seed_paths)
 
   unless Discourse.skip_post_deployment_migrations?
@@ -60,8 +68,6 @@ task 'db:migrate' => ['environment', 'set_locale'] do |_, args|
   end
 
   if MultisiteTestHelpers.load_multisite?
-    system("rake db:schema:dump")
-    system("RAILS_DB=discourse_test_multisite rake db:schema:load")
     system("RAILS_DB=discourse_test_multisite rake db:migrate")
   end
 end

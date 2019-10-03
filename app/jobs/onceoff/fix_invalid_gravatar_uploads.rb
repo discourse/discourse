@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Jobs
-  class FixInvalidGravatarUploads < Jobs::Onceoff
+  class FixInvalidGravatarUploads < ::Jobs::Onceoff
     def execute_onceoff(args)
       Upload.where(original_filename: "gravatar.png").find_each do |upload|
         # note, this still feels pretty expensive for a once off

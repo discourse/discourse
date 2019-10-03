@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require_dependency 'site_serializer'
-
 class SiteController < ApplicationController
   layout false
   skip_before_action :preload_json, :check_xhr

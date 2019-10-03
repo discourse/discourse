@@ -135,7 +135,7 @@ module Discourse
 
     SiteSetting.avatar_sizes.split("|").map(&:to_i).each do |size|
       PIXEL_RATIOS.each do |pixel_ratio|
-        set << size * pixel_ratio
+        set << (size * pixel_ratio).to_i
       end
     end
 
@@ -214,10 +214,30 @@ module Discourse
     end
   end
 
+  def self.find_plugin_css_assets(args)
+    plugins = self.find_plugins(args)
+
+    assets = []
+
+    targets = [nil]
+    targets << :mobile if args[:mobile_view]
+    targets << :desktop if args[:desktop_view]
+
+    targets.each do |target|
+      assets += plugins.find_all do |plugin|
+        plugin.css_asset_exists?(target)
+      end.map do |plugin|
+        target.nil? ? plugin.directory_name : "#{plugin.directory_name}_#{target}"
+      end
+    end
+
+    assets
+  end
+
   def self.find_plugin_js_assets(args)
     self.find_plugins(args).find_all do |plugin|
       plugin.js_asset_exists?
-    end.map { |plugin| "plugins/#{plugin.asset_name}" }
+    end.map { |plugin| "plugins/#{plugin.directory_name}" }
   end
 
   def self.assets_digest
@@ -239,7 +259,8 @@ module Discourse
     Auth::AuthProvider.new(authenticator: Auth::GoogleOAuth2Authenticator.new, frame_width: 850, frame_height: 500), # Custom icon implemented in client
     Auth::AuthProvider.new(authenticator: Auth::GithubAuthenticator.new, icon: "fab-github"),
     Auth::AuthProvider.new(authenticator: Auth::TwitterAuthenticator.new, icon: "fab-twitter"),
-    Auth::AuthProvider.new(authenticator: Auth::InstagramAuthenticator.new, icon: "fab-instagram")
+    Auth::AuthProvider.new(authenticator: Auth::InstagramAuthenticator.new, icon: "fab-instagram"),
+    Auth::AuthProvider.new(authenticator: Auth::DiscordAuthenticator.new, icon: "fab-discord", full_screen_login: true)
   ]
 
   def self.auth_providers

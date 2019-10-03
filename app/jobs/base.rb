@@ -187,7 +187,7 @@ module Jobs
     def perform(*args)
       opts = args.extract_options!.with_indifferent_access
 
-      if Jobs.run_later?
+      if ::Jobs.run_later?
         Sidekiq.redis do |r|
           r.set('last_job_perform_at', Time.now.to_i)
         end
@@ -275,7 +275,7 @@ module Jobs
     extend MiniScheduler::Schedule
 
     def perform(*args)
-      if (Jobs::Heartbeat === self) || !Discourse.readonly_mode?
+      if (::Jobs::Heartbeat === self) || !Discourse.readonly_mode?
         super
       end
     end
@@ -290,7 +290,8 @@ module Jobs
     end
 
     # If we are able to queue a job, do it
-    if Jobs.run_later?
+
+    if ::Jobs.run_later?
       hash = {
         'class' => klass,
         'args' => [opts]
@@ -361,7 +362,3 @@ module Jobs
     end
   end
 end
-
-Dir["#{Rails.root}/app/jobs/onceoff/*.rb"].each { |file| require_dependency file }
-Dir["#{Rails.root}/app/jobs/regular/*.rb"].each { |file| require_dependency file }
-Dir["#{Rails.root}/app/jobs/scheduled/*.rb"].each { |file| require_dependency file }

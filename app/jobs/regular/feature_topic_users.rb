@@ -2,7 +2,7 @@
 
 module Jobs
 
-  class FeatureTopicUsers < Jobs::Base
+  class FeatureTopicUsers < ::Jobs::Base
 
     def execute(args)
       topic_id = args[:topic_id]

@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require_dependency "site_icon_manager"
-
 DiscourseEvent.on(:site_setting_changed) do |name, old_value, new_value|
   # Enabling `must_approve_users` on an existing site is odd, so we assume that the
   # existing users are approved.

@@ -34,6 +34,12 @@ export default {
 
     // we do not want to start anything till document is complete
     messageBus.stop();
+
+    if (siteSettings.login_required && !user) {
+      // Endpoint is not available in this case, so don't try
+      return;
+    }
+
     // jQuery ready is called on "interactive" we want "complete"
     // Possibly change to document.addEventListener('readystatechange',...
     // but would only stop a handful of interval, message bus being delayed by

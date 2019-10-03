@@ -10,6 +10,7 @@ register_asset "stylesheets/common/poll.scss"
 register_asset "stylesheets/common/poll-ui-builder.scss"
 register_asset "stylesheets/desktop/poll.scss", :desktop
 register_asset "stylesheets/mobile/poll.scss", :mobile
+register_asset "stylesheets/mobile/poll-ui-builder.scss", :mobile
 
 register_svg_icon "far fa-check-square"
 
@@ -299,8 +300,6 @@ after_initialize do
     end
   end
 
-  require_dependency "application_controller"
-
   class DiscoursePoll::PollsController < ::ApplicationController
     requires_plugin PLUGIN_NAME
 
@@ -400,6 +399,8 @@ after_initialize do
 
     true
   end
+
+  allow_new_queued_post_payload_attribute("is_poll")
 
   NewPostManager.add_handler(1) do |manager|
     post = Post.new(raw: manager.args[:raw])

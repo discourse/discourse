@@ -1,3 +1,5 @@
+import DiscourseNavigation from "discourse/components/d-navigation";
+
 // Just add query params here to have them automatically passed to topic list filters.
 export const queryParams = {
   order: { replace: true, refreshModel: true },
@@ -31,6 +33,12 @@ export const addDiscoveryQueryParam = function(p, opts) {
   cOpts[p] = Ember.computed.alias(`discoveryTopics.${p}`);
   cOpts["queryParams"] = Object.keys(queryParams);
   Controller.reopen(cOpts);
+
+  if (opts && opts.persisted) {
+    DiscourseNavigation.reopen({
+      persistedQueryParams: queryParams
+    });
+  }
 };
 
 export default Controller;

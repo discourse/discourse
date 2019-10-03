@@ -122,7 +122,6 @@ ko:
     errors:
       <<: *errors
   invite:
-    not_found: "초대 토큰이 유효하지 않습니다. 사이트 관리자에게 문의하세요."
     user_exists: "<b>%{email}</b>님은 초대하지 않아도 됩니다. <a href='%{base_path}/u/%{username}/summary'>이미 회원이거든요!</a>"
   bulk_invite:
     file_should_be_csv: "업로드 파일은 CSV형식이어야 합니다."
@@ -161,6 +160,7 @@ ko:
     in_reply_to: "▶ %{username}"
     replies:
       other: "%{count} 댓글"
+    created: "생성일자"
   no_mentions_allowed: "죄송합니다, 다른 사용자를 언급할 수 없습니다."
   too_many_mentions:
     other: "죄송합니다, 이 포스트에서 %{count}명의 사용자만 언급할 수 있습니다."
@@ -659,6 +659,7 @@ ko:
         day: 일
     post_edits:
       labels:
+        edited_at: 날짜
         post: 글
         editor: 에디터
         edit_reason: 사유
@@ -987,7 +988,6 @@ ko:
     email_token_valid_hours: "비밀번호 찾기, 계정 활성화에 사용되는 토큰의 유효 기간(시간)"
     enable_badges: "배지 기능 사용"
     enable_whispers: "토픽 내 운영진 비공개 커뮤니케이션 허용"
-    allow_index_in_robots_txt: "이 사이트가 검색엔진에 의해 인덱스되는 것을 허용합니다.(robots.txt 수정)"
     email_domains_blacklist: "가입 금지된 이메일 도메인 목록, 파이프 기호로 구분. 예: mailinator.com|trashmail.net"
     email_domains_whitelist: "가입하려면 반드시 사용해야하는 이메일 도메인 목록, 파이프 기호로 구분. 경고: 이 목록외의 도메인으로는 가입이 안됩니다!"
     log_out_strict: "로그아웃 할때, 모든 장치에서 다같이 로그아웃"
@@ -1173,7 +1173,6 @@ ko:
     reset_bounce_score_after_days: "X 일 이후 반송 스코어 자동 초기화."
     attachment_content_type_blacklist: "콘텐츠 타입을 기준으로 첨부를 차단할 키워드 블랙리스트."
     attachment_filename_blacklist: "파일 이름을 기준으로 첨부를 차단할 키워드 블랙리스트."
-    enable_forwarded_emails: "[베타] 사용자가 이메일 포워딩으로 토픽을 생성할 수 있도록 허용"
     always_show_trimmed_content: "항상 수신 메일의 다듬어진 부분을 표시. 경고: 메일 주소가 드러날 수 있습니다."
     manual_polling_enabled: "이메일 답장을 위한 API를 사용하여 이메일 푸시"
     pop3_polling_enabled: "POP3를 이용한 이메일 설문조사"
@@ -1263,7 +1262,7 @@ ko:
       invalid_string_min_max: "글자 수가 %{min}자 이상 %{max}자 이하이어야 합니다."
       invalid_string_min: "글자수가 %{min}자 이상이어야 합니다."
       invalid_string_max: "글자 수가 %{max}자 이상이어야 합니다."
-      invalid_reply_by_email_address: "값이 반드시 '%%{reply_key}'를 갖고 있어야하며 알림 이메일과 달라야합니다."
+      invalid_reply_by_email_address: "값이 반드시 '%{reply_key}'를 갖고 있어야하며 알림 이메일과 달라야합니다."
       invalid_regex: "허용되지 않거나 올바르지 않은 정규표현식입니다."
       min_username_length_range: "최소값은 최대값보다 크게 설정할 수 없습니다."
       max_username_length_range: "최대값은 최소값보다 작게 설정할 수 없습니다."
@@ -1311,8 +1310,8 @@ ko:
     errors: "%{errors}"
     not_available: "불가능합니다. %{suggestion}"
     something_already_taken: "뭔가가 이상합니다. 아마도 계정의 아이디 또는 이메일이 이미 등록된것 같습니다. 비밀번호 찾기 링크를 이용해주세요."
-    omniauth_error: "죄송합니다, 회원님 계정을 인증하는데 오류가 발생했습니다. 인증을 회원님이 승인하지 않았을 수도 있습니다."
     omniauth_error_unknown: "로그인에 문제가 있습니다. 다시 시도해주세요."
+    omniauth_confirm_button: "계속"
     new_registrations_disabled: "지금은 새로 가입할 수 없습니다."
     password_too_long: "비밀번호는 200글자 이내만 허용됩니다."
     missing_user_field: "사용자 정보 입력을 덜 끝마쳤습니다."

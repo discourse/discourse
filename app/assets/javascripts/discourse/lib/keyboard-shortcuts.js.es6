@@ -441,7 +441,7 @@ export default {
 
     // Discard selection if it is not in viewport, so users can combine
     // keyboard shortcuts with mouse scrolling.
-    if ($selected.length !== 0) {
+    if ($selected.length !== 0 && !fast) {
       const offset = minimumOffset();
       const beginScreen = $(window).scrollTop() - offset;
       const endScreen = beginScreen + window.innerHeight + offset;

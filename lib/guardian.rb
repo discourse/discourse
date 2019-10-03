@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
-require_dependency 'guardian/category_guardian'
-require_dependency 'guardian/ensure_magic'
-require_dependency 'guardian/post_guardian'
-require_dependency 'guardian/topic_guardian'
-require_dependency 'guardian/user_guardian'
-require_dependency 'guardian/post_revision_guardian'
-require_dependency 'guardian/group_guardian'
-require_dependency 'guardian/tag_guardian'
+require 'guardian/category_guardian'
+require 'guardian/ensure_magic'
+require 'guardian/post_guardian'
+require 'guardian/topic_guardian'
+require 'guardian/user_guardian'
+require 'guardian/post_revision_guardian'
+require 'guardian/group_guardian'
+require 'guardian/tag_guardian'
 
 # The guardian is responsible for confirming access to various site resources and operations
 class Guardian
@@ -209,6 +209,26 @@ class Guardian
     true
   end
 
+  def can_see_group_members?(group)
+    return false if group.blank?
+    return true if group.members_visibility_level == Group.visibility_levels[:public]
+    return true if is_admin?
+    return true if is_staff? && group.members_visibility_level == Group.visibility_levels[:staff]
+    return true if authenticated? && group.members_visibility_level == Group.visibility_levels[:logged_on_users]
+    return false if user.blank?
+
+    membership = GroupUser.find_by(group_id: group.id, user_id: user.id)
+
+    return false unless membership
+
+    if !membership.owner
+      return false if group.members_visibility_level == Group.visibility_levels[:owners]
+      return false if group.members_visibility_level == Group.visibility_levels[:staff]
+    end
+
+    true
+  end
+
   def can_see_groups?(groups)
     return false if groups.blank?
     return true if groups.all? { |g| g.visibility_level == Group.visibility_levels[:public] }
@@ -387,7 +407,7 @@ class Guardian
     # User is authenticated
     authenticated? &&
     # Have to be a basic level at least
-    (@user.has_trust_level?(SiteSetting.min_trust_to_send_messages) || notify_moderators) &&
+    (is_group || @user.has_trust_level?(SiteSetting.min_trust_to_send_messages) || notify_moderators) &&
     # User disabled private message
     (is_staff? || is_group || target.user_option.allow_private_messages) &&
     # PMs are enabled

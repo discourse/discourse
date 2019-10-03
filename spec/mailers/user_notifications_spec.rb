@@ -344,7 +344,7 @@ describe UserNotifications do
       ]
       SiteSetting.post_excerpts_in_emails = true
       SiteSetting.post_excerpt_maxlength = paragraphs.first.length
-      response.update_attributes!(raw: paragraphs.join("\n\n"))
+      response.update!(raw: paragraphs.join("\n\n"))
       mail = UserNotifications.user_replied(
         user,
         post: response,

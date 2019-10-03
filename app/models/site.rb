@@ -1,9 +1,6 @@
 # frozen_string_literal: true
 
 # A class we can use to serialize the site data
-require_dependency 'score_calculator'
-require_dependency 'trust_level'
-
 class Site
   include ActiveModel::Serialization
 
@@ -34,7 +31,7 @@ class Site
   def categories
     @categories ||= begin
       categories = Category
-        .includes(:uploaded_logo, :uploaded_background)
+        .includes(:uploaded_logo, :uploaded_background, :tags, :tag_groups)
         .secured(@guardian)
         .joins('LEFT JOIN topics t on t.id = categories.topic_id')
         .select('categories.*, t.slug topic_slug')

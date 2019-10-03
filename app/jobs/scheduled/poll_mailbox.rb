@@ -1,13 +1,9 @@
 # frozen_string_literal: true
 
 require 'net/pop'
-require_dependency 'email/receiver'
-require_dependency 'email/processor'
-require_dependency 'email/sender'
-require_dependency 'email/message_builder'
 
 module Jobs
-  class PollMailbox < Jobs::Scheduled
+  class PollMailbox < ::Jobs::Scheduled
     every SiteSetting.pop3_polling_period_mins.minutes
     sidekiq_options retry: false
 
@@ -34,7 +30,7 @@ module Jobs
 
       if SiteSetting.pop3_polling_ssl
         if SiteSetting.pop3_polling_openssl_verify
-          pop3.enable_ssl
+          pop3.enable_ssl(max_version: OpenSSL::SSL::TLS1_2_VERSION)
         else
           pop3.enable_ssl(OpenSSL::SSL::VERIFY_NONE)
         end

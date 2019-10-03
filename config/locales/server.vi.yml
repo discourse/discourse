@@ -28,6 +28,7 @@ vi:
   loading: "Đang tải"
   sign_up: "Đăng ký"
   log_in: "Đăng nhập"
+  submit: "Gửi đi"
   disable_remote_images_download_reason: "Không thể tải ảnh về máy chủ vì không dung lượng lưu trữ."
   anonymous: "Ẩn danh"
   emails:
@@ -114,6 +115,7 @@ vi:
     permalink: "Liên kết cố định"
     imported_from: "Đây là cuộc thảo luận đi kèm chủ đề gốc tại %{link}"
     in_reply_to: "▶ %{username}"
+    created: "Tạo bởi"
   no_mentions_allowed: "Xin lỗi, bạn không thể nhắc tới thành viên khác."
   too_many_mentions:
     other: "Xin lỗi, bạn chỉ có thể nhắc tới %{count} thành viên trong một bài viết."
@@ -414,21 +416,27 @@ vi:
       every_hour: "hàng giờ"
       daily: "hàng ngày"
       weekly: "hàng tuần"
+      every_month: "mỗi tháng"
+      every_six_months: "mỗi sáu tháng"
   user_api_key:
     otp_confirmation:
       confirm_title: "Tiếp tục tới %{site_name}"
+      confirm_button: Kết thúc đăng nhập
   reports:
     default:
       labels:
+        count: Đếm
         day: Ngày
     post_edits:
       labels:
+        edited_at: ày
         post: Bài viết
         editor: Biên tập
         edit_reason: Lý do
     user_flagging_ratio:
       labels:
         user: Người dùng
+        score: Điểm số
     moderators_activity:
       labels:
         moderator: Điều hành
@@ -684,7 +692,6 @@ vi:
     top_page_default_timeframe: "Khung thời gian mặc định cho trang xem trên cùng."
     email_token_valid_hours: "Token quyên mật khẩu / kích hoạt tài khoản có giá trị trong (n) giờ."
     enable_badges: "Kích hoạt hệ thống huy hiệu"
-    allow_index_in_robots_txt: "Chỉ rõ trong robots.txt trang web này cho phép tạo chỉ mục bởi web search engines."
     email_domains_blacklist: "Một danh sách đuôi email mà người dùng không được phép dùng để đăng ký tài khoản. Ví dụ: maillinator.com|trashmail.net. Lưu ý mỗi tên miền cách nhau bởi dấu \"|\"."
     email_domains_whitelist: "Danh sách tên miền người dùng ĐƯỢC PHÉP đăng ký tài khoản. CẢNH BÁO: người dùng với tên miền email khác trong danh sách sẽ không được phép đăng ký!"
     log_out_strict: "Khi đăng xuất, đăng xuất TẤT CẢ session cho tất cả thiế bị"
@@ -916,7 +923,7 @@ vi:
       invalid_string_min_max: "Phải nằm giữa %{min} và %{max} ký tự."
       invalid_string_min: "Phải ít nhất %{min} ký tự."
       invalid_string_max: "Không nhiều hơn %{max} ký tự."
-      invalid_reply_by_email_address: "Giá trị phải chứa '%%{reply_key}' và phải khác với email thông báo."
+      invalid_reply_by_email_address: "Giá trị phải chứa '%{reply_key}' và phải khác với email thông báo."
       pop3_polling_host_is_empty: "Bạn phải thiết lập 'pop3 polling host' trước khi kích hoạt POP3 polling."
       pop3_polling_username_is_empty: "Bạn phải thiết lập 'pop3 polling username' trước khi kích hoạt POP3 polling."
       pop3_polling_password_is_empty: "Bạn phải thiết lập 'pop3 polling password' trước khi kích hoạt POP3 polling."
@@ -972,14 +979,15 @@ vi:
     errors: "%{errors}"
     not_available: "Không có sẵn. Thử %{suggestion}?"
     something_already_taken: "Có lỗi xảy ra, tên đăng nhập hoặc email đã được đăng ký. Thử sử dụng chức năng quên mật khẩu."
-    omniauth_error: "Xin lỗi, có lỗi khi xác thực tài khoản của bạn. Bạn không được duyệt chứng thực?"
     omniauth_error_unknown: "Cố lỗi xảy ra khi bạn đăng nhập, vui lòng thử lại."
+    omniauth_confirm_button: "Tiếp tục"
     new_registrations_disabled: "Đăng ký tài khoản mới không được cho phép tại thời điểm này."
     password_too_long: "Mật khẩu giới hạn không quá 200 ký tự."
     email_too_long: "Email bạn cung cấp quá dài. Địa chỉ email phải không quá 254 ký tự, và tên miền phải không quá 253 ký tự."
     reserved_username: "Tên đăng nhập không được cho phép."
     missing_user_field: "Bạn không hoàn tất tất cả các trường người dùng"
     already_logged_in: "Rất tiếc, có vẻ như bạn đang cố gắng để chấp nhận lời mời của một người dùng khác. Nếu bạn không phải là %{current_user}, xin vui lòng đăng xuất và thử lại."
+    second_factor_title: "Xác minh hai bước"
   admin:
     email:
       sent_test: "đã gửi!"
@@ -1366,6 +1374,15 @@ vi:
     step:
       forum_title:
         title: "Tên"
+      privacy:
+        title: "Truy cập"
+        fields:
+          privacy:
+            choices:
+              open:
+                label: "Công khai"
+              restricted:
+                label: "Riêng tư"
       contact:
         fields:
           contact_email:
@@ -1384,10 +1401,18 @@ vi:
                 label: "Các chuyên mục và chủ đề nổi bật"
               categories_and_latest_topics:
                 label: "Các chuyên mục và chủ đề mới"
+              categories_and_top_topics:
+                label: "Chuyên mục và Chủ đề nổi bật"
       emoji:
         title: "Emoji"
   joined: "Đã tham gia"
   reviewables:
+    priorities:
+      medium: "Trung bình"
+      high: "Cao"
+    sensitivity:
+      medium: "Trung bình"
+      high: "Cao"
     actions:
       agree_and_suspend:
         title: "Tạm khóa Thành viên"
@@ -1397,6 +1422,8 @@ vi:
         title: "Xóa"
       disagree:
         title: "Không đồng ý"
+      ignore:
+        title: "Bỏ qua"
       approve:
         title: "Duyệt"
       reject_user:

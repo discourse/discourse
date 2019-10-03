@@ -8,3 +8,5 @@
 bs_BA:
   site_settings:
     details_enabled: "Uključi opciju detalji. Ukoliko ovo izmijenite, morate odraditi ponovno pečenje svih postova koristeći: \"rake posts:rebake\"."
+  details:
+    excerpt_details: "(kliknite za više detalja)"

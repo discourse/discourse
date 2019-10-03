@@ -128,6 +128,15 @@
   }
 
   function _applyFormatting(dateTime, displayedTimezone, options) {
+    if (options.countdown) {
+      const diffTime = dateTime.diff(moment());
+      if (diffTime < 0) {
+        return I18n.t("discourse_local_dates.relative_dates.countdown.passed");
+      } else {
+        return moment.duration(diffTime).humanize();
+      }
+    }
+
     const sameTimezone = _isEqualZones(displayedTimezone, moment.tz.guess());
     const inCalendarRange = dateTime.isBetween(
       moment().subtract(2, "days"),
@@ -313,6 +322,7 @@
       options.displayedTimezone = $element.attr("data-displayed-timezone");
       options.format =
         $element.attr("data-format") || (options.time ? "LLL" : "LL");
+      options.countdown = $element.attr("data-countdown");
 
       processElement($element, options);
     });

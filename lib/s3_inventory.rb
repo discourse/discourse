@@ -30,51 +30,59 @@ class S3Inventory
       return
     end
 
-    DistributedMutex.synchronize("s3_inventory_list_missing_#{type}") do
-      download_inventory_files_to_tmp_directory
-      decompress_inventory_files
+    DistributedMutex.synchronize("s3_inventory_list_missing_#{type}", validity: 30.minutes) do
+      begin
+        files.each do |file|
+          next if File.exists?(file[:filename][0...-3])
 
-      multisite_prefix = "uploads/#{RailsMultisite::ConnectionManagement.current_db}/"
-      ActiveRecord::Base.transaction do
-        begin
-          connection.exec("CREATE TEMP TABLE #{table_name}(url text UNIQUE, etag text, PRIMARY KEY(etag, url))")
-          connection.copy_data("COPY #{table_name} FROM STDIN CSV") do
-            files.each do |file|
-              CSV.foreach(file[:filename][0...-3], headers: false) do |row|
-                key = row[CSV_KEY_INDEX]
-                next if Rails.configuration.multisite && key.exclude?(multisite_prefix)
-                url = File.join(Discourse.store.absolute_base_url, key)
-                connection.put_copy_data("#{url},#{row[CSV_ETAG_INDEX]}\n")
+          download_inventory_file_to_tmp_directory(file)
+          decompress_inventory_file(file)
+        end
+
+        multisite_prefix = "uploads/#{RailsMultisite::ConnectionManagement.current_db}/"
+        ActiveRecord::Base.transaction do
+          begin
+            connection.exec("CREATE TEMP TABLE #{table_name}(url text UNIQUE, etag text, PRIMARY KEY(etag, url))")
+            connection.copy_data("COPY #{table_name} FROM STDIN CSV") do
+              files.each do |file|
+                CSV.foreach(file[:filename][0...-3], headers: false) do |row|
+                  key = row[CSV_KEY_INDEX]
+                  next if Rails.configuration.multisite && key.exclude?(multisite_prefix)
+                  url = File.join(Discourse.store.absolute_base_url, key)
+                  connection.put_copy_data("#{url},#{row[CSV_ETAG_INDEX]}\n")
+                end
               end
             end
-          end
 
-          # backfilling etags
-          connection.async_exec("UPDATE #{model.table_name}
-            SET etag = #{table_name}.etag
-            FROM #{table_name}
-            WHERE #{model.table_name}.etag IS NULL
-              AND #{model.table_name}.url = #{table_name}.url")
+            # backfilling etags
+            connection.async_exec("UPDATE #{model.table_name}
+              SET etag = #{table_name}.etag
+              FROM #{table_name}
+              WHERE #{model.table_name}.etag IS NULL
+                AND #{model.table_name}.url = #{table_name}.url")
 
-          list_missing_post_uploads if type == "original"
+            list_missing_post_uploads if type == "original"
 
-          uploads = (model == Upload) ? model.by_users.where("created_at < ?", inventory_date) : model
-          missing_uploads = uploads
-            .joins("LEFT JOIN #{table_name} ON #{table_name}.etag = #{model.table_name}.etag")
-            .where("#{table_name}.etag IS NULL AND #{model.table_name}.etag IS NOT NULL")
+            uploads = (model == Upload) ? model.by_users.where("created_at < ?", inventory_date) : model
+            missing_uploads = uploads
+              .joins("LEFT JOIN #{table_name} ON #{table_name}.etag = #{model.table_name}.etag")
+              .where("#{table_name}.etag IS NULL AND #{model.table_name}.etag IS NOT NULL")
 
-          if (missing_count = missing_uploads.count) > 0
-            missing_uploads.select(:id, :url).find_each do |upload|
-              log upload.url
+            if (missing_count = missing_uploads.count) > 0
+              missing_uploads.select(:id, :url).find_each do |upload|
+                log upload.url
+              end
+
+              log "#{missing_count} of #{uploads.count} #{model.name.underscore.pluralize} are missing"
             end
 
-            log "#{missing_count} of #{uploads.count} #{model.name.underscore.pluralize} are missing"
+            Discourse.stats.set("missing_s3_#{model.table_name}", missing_count)
+          ensure
+            connection.exec("DROP TABLE #{table_name}") unless connection.nil?
           end
-
-          Discourse.stats.set("missing_s3_#{model.table_name}", missing_count)
-        ensure
-          connection.exec("DROP TABLE #{table_name}") unless connection.nil?
         end
+      ensure
+        cleanup!
       end
     end
   end
@@ -118,22 +126,18 @@ class S3Inventory
     log "#{missing[:count]} post uploads are missing."
   end
 
-  def download_inventory_files_to_tmp_directory
-    files.each do |file|
-      next if File.exists?(file[:filename])
+  def download_inventory_file_to_tmp_directory(file)
+    return if File.exists?(file[:filename])
 
-      log "Downloading inventory file '#{file[:key]}' to tmp directory..."
-      failure_message = "Failed to inventory file '#{file[:key]}' to tmp directory."
+    log "Downloading inventory file '#{file[:key]}' to tmp directory..."
+    failure_message = "Failed to inventory file '#{file[:key]}' to tmp directory."
 
-      @s3_helper.download_file(file[:key], file[:filename], failure_message)
-    end
+    @s3_helper.download_file(file[:key], file[:filename], failure_message)
   end
 
-  def decompress_inventory_files
-    files.each do |file|
-      log "Decompressing inventory file '#{file[:filename]}', this may take a while..."
-      Discourse::Utils.execute_command('gzip', '--decompress', file[:filename], failure_message: "Failed to decompress inventory file '#{file[:filename]}'.", chdir: tmp_directory)
-    end
+  def decompress_inventory_file(file)
+    log "Decompressing inventory file '#{file[:filename]}', this may take a while..."
+    Discourse::Utils.execute_command('gzip', '--decompress', file[:filename], failure_message: "Failed to decompress inventory file '#{file[:filename]}'.", chdir: tmp_directory)
   end
 
   def update_bucket_policy
@@ -173,6 +177,13 @@ class S3Inventory
 
   private
 
+  def cleanup!
+    files.each do |file|
+      File.delete(file[:filename]) if File.exists?(file[:filename])
+      File.delete(file[:filename][0...-3]) if File.exists?(file[:filename][0...-3])
+    end
+  end
+
   def connection
     @connection ||= ActiveRecord::Base.connection.raw_connection
   end
@@ -202,8 +213,7 @@ class S3Inventory
   def tmp_directory
     @tmp_directory ||= begin
       current_db = RailsMultisite::ConnectionManagement.current_db
-      timestamp = Time.now.strftime("%Y-%m-%d-%H%M%S")
-      directory = File.join(Rails.root, "tmp", INVENTORY_PREFIX, current_db, timestamp)
+      directory = File.join(Rails.root, "tmp", INVENTORY_PREFIX, current_db)
       FileUtils.mkdir_p(directory)
       directory
     end
@@ -255,6 +265,7 @@ class S3Inventory
     objects
   rescue Aws::Errors::ServiceError => e
     log("Failed to list inventory from S3", e)
+    []
   end
 
   def inventory_id

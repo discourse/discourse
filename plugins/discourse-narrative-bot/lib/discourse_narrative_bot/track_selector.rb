@@ -8,8 +8,8 @@ module DiscourseNarrativeBot
     PUBLIC_DISPLAY_BOT_HELP_KEY = 'discourse-narrative-bot:track-selector:display-bot-help'.freeze
 
     TRACKS = [
-      NewUserNarrative,
-      AdvancedUserNarrative
+      AdvancedUserNarrative,
+      NewUserNarrative
     ]
 
     TOPIC_ACTIONS = [
@@ -227,7 +227,7 @@ module DiscourseNarrativeBot
 
     def match_trigger?(trigger)
       discobot_username = self.discobot_user.username
-      regexp = Regexp.new("<a class=\"mention\".*>@#{discobot_username}</a> #{trigger}", 'i')
+      regexp = Regexp.new("<a class=\"mention\".*>@#{discobot_username}</a> #{trigger}</p>", 'i')
       match = @post.cooked.match(regexp)
 
       if @is_pm_to_bot

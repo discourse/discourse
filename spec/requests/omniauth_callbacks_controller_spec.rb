@@ -84,6 +84,79 @@ RSpec.describe Users::OmniauthCallbacksController do
       SiteSetting.enable_google_oauth2_logins = true
     end
 
+    it "should display the failure message if needed" do
+      get "/auth/failure"
+      expect(response.status).to eq(200)
+      expect(response.body).to include(I18n.t("login.omniauth_error.generic"))
+    end
+
+    describe "request" do
+      it "should error for non existant authenticators" do
+        post "/auth/fake_auth"
+        expect(response.status).to eq(404)
+        get "/auth/fake_auth"
+        expect(response.status).to eq(403)
+      end
+
+      it "should error for disabled authenticators" do
+        SiteSetting.enable_google_oauth2_logins = false
+        post "/auth/google_oauth2"
+        expect(response.status).to eq(404)
+        get "/auth/google_oauth2"
+        expect(response.status).to eq(403)
+      end
+
+      it "should handle common errors" do
+        OmniAuth::Strategies::GoogleOauth2.any_instance.stubs(:mock_request_call).raises(
+          OAuth::Unauthorized.new(mock().tap { |m| m.stubs(:code).returns(403); m.stubs(:message).returns("Message") })
+        )
+        post "/auth/google_oauth2"
+        expect(response.status).to eq(302)
+        expect(response.location).to include("/auth/failure?message=request_error")
+
+        OmniAuth::Strategies::GoogleOauth2.any_instance.stubs(:mock_request_call).raises(JWT::InvalidIatError.new)
+        post "/auth/google_oauth2"
+        expect(response.status).to eq(302)
+        expect(response.location).to include("/auth/failure?message=invalid_iat")
+      end
+
+      it "should only start auth with a POST request" do
+        post "/auth/google_oauth2"
+        expect(response.status).to eq(302)
+        get "/auth/google_oauth2"
+        expect(response.status).to eq(200)
+      end
+
+      context "with CSRF protection enabled" do
+        before { ActionController::Base.allow_forgery_protection = true }
+        after { ActionController::Base.allow_forgery_protection = false }
+
+        it "should be CSRF protected" do
+          post "/auth/google_oauth2"
+          expect(response.status).to eq(302)
+          expect(response.location).to include("/auth/failure?message=csrf_detected")
+
+          post "/auth/google_oauth2", params: { authenticity_token: "faketoken" }
+          expect(response.status).to eq(302)
+          expect(response.location).to include("/auth/failure?message=csrf_detected")
+
+          get "/session/csrf.json"
+          token = JSON.parse(response.body)["csrf"]
+
+          post "/auth/google_oauth2", params: { authenticity_token: token }
+          expect(response.status).to eq(302)
+        end
+
+        it "should not be CSRF protected if it is the only auth method" do
+          get "/auth/google_oauth2"
+          expect(response.status).to eq(200)
+          SiteSetting.enable_local_logins = false
+          get "/auth/google_oauth2"
+          expect(response.status).to eq(302)
+        end
+      end
+    end
+
     context "without an `omniauth.auth` env" do
       it "should return a 404" do
         get "/auth/eviltrout/callback"
@@ -213,7 +286,7 @@ RSpec.describe Users::OmniauthCallbacksController do
         expect(user.email_confirmed?).to eq(true)
       end
 
-      it "should activate/unstage staged user" do
+      it "should unstage staged user" do
         user.update!(staged: true, registration_ip_address: nil)
 
         user.reload
@@ -231,6 +304,22 @@ RSpec.describe Users::OmniauthCallbacksController do
         user.reload
         expect(user.staged).to eq(false)
         expect(user.registration_ip_address).to be_present
+      end
+
+      it "should activate user with matching email" do
+        user.update!(password: "securepassword", active: false, registration_ip_address: "1.1.1.1")
+
+        user.reload
+        expect(user.active).to eq(false)
+        expect(user.confirm_password?("securepassword")).to eq(true)
+
+        get "/auth/google_oauth2/callback.json"
+
+        user.reload
+        expect(user.active).to eq(true)
+
+        # Delete the password, it may have been set by someone else
+        expect(user.confirm_password?("securepassword")).to eq(false)
       end
 
       context 'when user has second factor enabled' do
@@ -348,7 +437,7 @@ RSpec.describe Users::OmniauthCallbacksController do
         end
 
         it "doesn't attempt redirect to external origin" do
-          get "/auth/google_oauth2?origin=https://example.com/external"
+          post "/auth/google_oauth2?origin=https://example.com/external"
           get "/auth/google_oauth2/callback"
 
           expect(response.status).to eq 302
@@ -359,7 +448,7 @@ RSpec.describe Users::OmniauthCallbacksController do
         end
 
         it "redirects to internal origin" do
-          get "/auth/google_oauth2?origin=http://test.localhost/t/123"
+          post "/auth/google_oauth2?origin=http://test.localhost/t/123"
           get "/auth/google_oauth2/callback"
 
           expect(response.status).to eq 302
@@ -370,7 +459,7 @@ RSpec.describe Users::OmniauthCallbacksController do
         end
 
         it "redirects to relative origin" do
-          get "/auth/google_oauth2?origin=/t/123"
+          post "/auth/google_oauth2?origin=/t/123"
           get "/auth/google_oauth2/callback"
 
           expect(response.status).to eq 302
@@ -381,7 +470,7 @@ RSpec.describe Users::OmniauthCallbacksController do
         end
 
         it "redirects with query" do
-          get "/auth/google_oauth2?origin=/t/123?foo=bar"
+          post "/auth/google_oauth2?origin=/t/123?foo=bar"
           get "/auth/google_oauth2/callback"
 
           expect(response.status).to eq 302
@@ -392,7 +481,7 @@ RSpec.describe Users::OmniauthCallbacksController do
         end
 
         it "removes authentication_data cookie on logout" do
-          get "/auth/google_oauth2?origin=https://example.com/external"
+          post "/auth/google_oauth2?origin=https://example.com/external"
           get "/auth/google_oauth2/callback"
 
           provider = log_in_user(Fabricate(:user))
@@ -440,7 +529,7 @@ RSpec.describe Users::OmniauthCallbacksController do
 
       it 'should not reconnect normally' do
         # Log in normally
-        get "/auth/google_oauth2"
+        post "/auth/google_oauth2"
         expect(response.status).to eq(302)
         expect(session[:auth_reconnect]).to eq(false)
 
@@ -450,7 +539,7 @@ RSpec.describe Users::OmniauthCallbacksController do
 
         # Log into another user
         OmniAuth.config.mock_auth[:google_oauth2].uid = "123456"
-        get "/auth/google_oauth2"
+        post "/auth/google_oauth2"
         expect(response.status).to eq(302)
         expect(session[:auth_reconnect]).to eq(false)
 
@@ -462,7 +551,7 @@ RSpec.describe Users::OmniauthCallbacksController do
 
       it 'should redirect to associate URL if parameter supplied' do
         # Log in normally
-        get "/auth/google_oauth2?reconnect=true"
+        post "/auth/google_oauth2?reconnect=true"
         expect(response.status).to eq(302)
         expect(session[:auth_reconnect]).to eq(true)
 
@@ -477,7 +566,7 @@ RSpec.describe Users::OmniauthCallbacksController do
         UserAssociatedAccount.find_by(user_id: user.id).destroy
 
         # Reconnect flow:
-        get "/auth/google_oauth2?reconnect=true"
+        post "/auth/google_oauth2?reconnect=true"
         expect(response.status).to eq(302)
         expect(session[:auth_reconnect]).to eq(true)
 
@@ -493,8 +582,6 @@ RSpec.describe Users::OmniauthCallbacksController do
     end
 
     context 'after changing email' do
-      require_dependency 'email_updater'
-
       def login(identity)
         OmniAuth.config.mock_auth[:google_oauth2] = OmniAuth::AuthHash.new(
           provider: 'google_oauth2',

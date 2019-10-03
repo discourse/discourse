@@ -238,6 +238,10 @@ export default Ember.Controller.extend(bufferedProperty("model"), {
       this.set("buffered.category_id", selection.value);
     },
 
+    topicTagsChanged({ target }) {
+      this.set("buffered.tags", target.value);
+    },
+
     deletePending(pending) {
       return ajax(`/review/${pending.id}`, { type: "DELETE" })
         .then(() => {
@@ -686,20 +690,7 @@ export default Ember.Controller.extend(bufferedProperty("model"), {
     },
 
     jumpToPost(postNumber) {
-      if (this.get("model.postStream.isMegaTopic")) {
-        this._jumpToPostNumber(postNumber);
-      } else {
-        const postStream = this.get("model.postStream");
-        let postId = postStream.findPostIdForPostNumber(postNumber);
-
-        // If we couldn't find the post, find the closest post to it
-        if (!postId) {
-          const closest = postStream.closestPostNumberFor(postNumber);
-          postId = postStream.findPostIdForPostNumber(closest);
-        }
-
-        this._jumpToPostId(postId);
-      }
+      this._jumpToPostNumber(postNumber);
     },
 
     jumpTop() {
@@ -1348,6 +1339,12 @@ export default Ember.Controller.extend(bufferedProperty("model"), {
               })
               .then(() => refresh({ id: data.id, refreshLikes: true }));
             break;
+          case "read": {
+            postStream
+              .triggerReadPost(data.id, data.readers_count)
+              .then(() => refresh({ id: data.id, refreshLikes: true }));
+            break;
+          }
           case "revised":
           case "rebaked": {
             postStream

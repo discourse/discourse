@@ -162,3 +162,7 @@ Fabricator(:post_via_email, from: :post) do
     incoming_email.user = post.user
   end
 end
+
+Fabricator(:whisper, from: :post) do
+  post_type Post.types[:whisper]
+end

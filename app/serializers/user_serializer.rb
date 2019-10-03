@@ -120,8 +120,7 @@ class UserSerializer < BasicUserSerializer
                      :mailing_list_posts_per_day,
                      :can_change_bio,
                      :user_api_keys,
-                     :user_auth_tokens,
-                     :user_auth_token_logs
+                     :user_auth_tokens
 
   untrusted_attributes :bio_raw,
                        :bio_cooked,
@@ -143,7 +142,7 @@ class UserSerializer < BasicUserSerializer
 
   def groups
     object.groups.order(:id)
-      .visible_groups(scope.user)
+      .visible_groups(scope.user).members_visible_groups(scope.user)
   end
 
   def group_users
@@ -207,15 +206,6 @@ class UserSerializer < BasicUserSerializer
       object.user_auth_tokens,
       each_serializer: UserAuthTokenSerializer,
       scope: scope
-    )
-  end
-
-  def user_auth_token_logs
-    ActiveModel::ArraySerializer.new(
-      object.user_auth_token_logs.where(
-        action: UserAuthToken::USER_ACTIONS
-      ).order(:created_at).reverse_order,
-      each_serializer: UserAuthTokenLogSerializer
     )
   end
 

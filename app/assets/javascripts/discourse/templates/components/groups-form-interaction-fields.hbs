@@ -14,6 +14,21 @@
       {{i18n 'admin.groups.manage.interaction.visibility_levels.description'}}
     </div>
   </div>
+
+  <div class="control-group">
+    <label for="visiblity">{{i18n 'admin.groups.manage.interaction.members_visibility_levels.title'}}</label>
+
+    {{combo-box name="alias"
+        valueAttribute="value"
+        value=model.members_visibility_level
+        content=visibilityLevelOptions
+        castInteger=true
+        class="groups-form-members-visibility-level"}}
+
+    <div class="control-instructions">
+      {{i18n 'admin.groups.manage.interaction.members_visibility_levels.description'}}
+    </div>
+  </div>
 {{/if}}
 
 <div class="control-group">
@@ -35,6 +50,16 @@
       value=model.messageable_level
       content=aliasLevelOptions
       class="groups-form-messageable-level"}}
+</div>
+
+<div class="control-group">
+  <label>
+    {{input type="checkbox"
+          checked=model.publish_read_state
+          class="groups-form-publish-read-state"}}
+
+    {{i18n 'admin.groups.manage.interaction.publish_read_state'}}
+  </label>
 </div>
 
 {{#if showEmailSettings}}

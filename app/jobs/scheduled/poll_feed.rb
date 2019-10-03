@@ -5,13 +5,9 @@
 #
 require 'digest/sha1'
 require 'excon'
-require_dependency 'final_destination'
-require_dependency 'post_creator'
-require_dependency 'post_revisor'
-require_dependency 'encodings'
 
 module Jobs
-  class PollFeed < Jobs::Scheduled
+  class PollFeed < ::Jobs::Scheduled
     every 5.minutes
 
     sidekiq_options retry: false
@@ -41,8 +37,6 @@ module Jobs
     def ensure_rss_loaded
       return if @@rss_loaded
       require 'rss'
-      require_dependency 'feed_item_accessor'
-      require_dependency 'feed_element_installer'
       @@rss_loaded = true
     end
 

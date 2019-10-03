@@ -1,0 +1,11 @@
+<div id='simple-container'>
+  <h2><%= t('login.omniauth_confirm_title', provider:(t "js.login.#{params[:provider]}.name", default: params[:provider])) %></h2>
+  <br/>
+
+  <%= form_tag do %>
+    <input type="hidden" name="full_screen_login" value="true">
+    <%= button_tag(type: "submit", class: "btn btn-primary") do %>
+        <%= SvgSprite.raw_svg('fa-plug') %><%= t 'login.omniauth_confirm_button' %>
+    <% end %>
+  <% end %>
+</div>

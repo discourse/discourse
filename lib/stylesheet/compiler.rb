@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-require_dependency 'stylesheet/common'
-require_dependency 'stylesheet/importer'
-require_dependency 'stylesheet/functions'
+require 'stylesheet/common'
+require 'stylesheet/importer'
+require 'stylesheet/functions'
 
 module Stylesheet
 
@@ -12,10 +12,12 @@ module Stylesheet
 
       if Importer.special_imports[asset.to_s]
         filename = "theme_#{options[:theme_id]}.scss"
-        file = "@import \"common/foundation/variables\"; @import \"theme_variables\"; @import \"#{asset}\";"
+        file = "@import \"common/foundation/variables\"; @import \"common/foundation/mixins\";"
+        file += " @import \"theme_variables\";" if Importer::THEME_TARGETS.include?(asset.to_s)
+        file += " @import \"#{asset}\";"
       else
         filename = "#{asset}.scss"
-        path = "#{ASSET_ROOT}/#{filename}"
+        path = "#{Stylesheet::Common::ASSET_ROOT}/#{filename}"
         file = File.read path
       end
 
@@ -35,7 +37,7 @@ module Stylesheet
                                  theme_id: options[:theme_id],
                                  theme: options[:theme],
                                  theme_field: options[:theme_field],
-                                 load_paths: [ASSET_ROOT])
+                                 load_paths: [Stylesheet::Common::ASSET_ROOT])
 
       result = engine.render
 

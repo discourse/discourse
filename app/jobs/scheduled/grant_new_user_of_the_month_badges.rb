@@ -1,9 +1,7 @@
 # frozen_string_literal: true
 
-require 'badge_granter'
-
 module Jobs
-  class GrantNewUserOfTheMonthBadges < Jobs::Scheduled
+  class GrantNewUserOfTheMonthBadges < ::Jobs::Scheduled
     every 1.day
 
     MAX_AWARDED = 2

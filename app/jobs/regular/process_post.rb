@@ -1,11 +1,10 @@
 # frozen_string_literal: true
 
 require 'image_sizer'
-require_dependency 'cooked_post_processor'
 
 module Jobs
 
-  class ProcessPost < Jobs::Base
+  class ProcessPost < ::Jobs::Base
 
     def execute(args)
       post = Post.find_by(id: args[:post_id])

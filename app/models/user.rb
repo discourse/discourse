@@ -1,21 +1,5 @@
 # frozen_string_literal: true
 
-require_dependency 'jobs/base'
-require_dependency 'email'
-require_dependency 'email_token'
-require_dependency 'email_validator'
-require_dependency 'trust_level'
-require_dependency 'pbkdf2'
-require_dependency 'discourse'
-require_dependency 'post_destroyer'
-require_dependency 'user_name_suggester'
-require_dependency 'pretty_text'
-require_dependency 'url_helper'
-require_dependency 'letter_avatar'
-require_dependency 'promotion'
-require_dependency 'password_validator'
-require_dependency 'notification_serializer'
-
 class User < ActiveRecord::Base
   include Searchable
   include Roleable
@@ -78,6 +62,10 @@ class User < ActiveRecord::Base
   has_many :totps, -> {
     where(method: UserSecondFactor.methods[:totp], enabled: true)
   }, class_name: "UserSecondFactor"
+
+  has_many :security_keys, -> {
+    where(enabled: true)
+  }, class_name: "UserSecurityKey"
 
   has_one :anonymous_user_master, class_name: 'AnonymousUser'
   has_one :anonymous_user_shadow, ->(record) { where(active: true) }, foreign_key: :master_user_id, class_name: 'AnonymousUser'
@@ -235,6 +223,9 @@ class User < ActiveRecord::Base
     ALWAYS = -1
     LAST_VISIT = -2
   end
+
+  MAX_SELF_DELETE_POST_COUNT ||= 1
+  MAX_STAFF_DELETE_POST_COUNT ||= 5
 
   def self.max_password_length
     200
@@ -434,25 +425,6 @@ class User < ActiveRecord::Base
 
   def should_validate_email_address?
     !skip_email_validation && !staged?
-  end
-
-  # Approve this user
-  def approve(approved_by, send_mail = true)
-    Discourse.deprecate("User#approve is deprecated. Please use the Reviewable API instead.", output_in_test: true, since: "2.3.0beta5", drop_from: "2.4")
-
-    # Backwards compatibility - in case plugins or something is using the old API which accepted
-    # either a Number or object. Probably should remove at some point
-    approved_by = User.find_by(id: approved_by) if approved_by.is_a?(Numeric)
-
-    if reviewable_user = ReviewableUser.find_by(target: self)
-      result = reviewable_user.perform(approved_by, :approve_user, send_email: send_mail)
-      if result.success?
-        Reviewable.set_approved_fields!(self, approved_by)
-        return true
-      end
-    end
-
-    false
   end
 
   def self.email_hash(email)
@@ -919,10 +891,8 @@ class User < ActiveRecord::Base
   def activate
     if email_token = self.email_tokens.active.where(email: self.email).first
       user = EmailToken.confirm(email_token.token, skip_reviewable: true)
-      self.update!(active: true) if user.nil?
-    else
-      self.update!(active: true)
     end
+    self.update!(active: true)
     create_reviewable
   end
 
@@ -1249,6 +1219,50 @@ class User < ActiveRecord::Base
     return if approved?
 
     Jobs.enqueue(:create_user_reviewable, user_id: self.id)
+  end
+
+  def has_more_posts_than?(max_post_count)
+    return true if user_stat && (user_stat.topic_count + user_stat.post_count) > max_post_count
+
+    DB.query_single(<<~SQL, user_id: self.id).first > max_post_count
+      SELECT COUNT(1)
+      FROM (
+        SELECT 1
+        FROM posts p
+               JOIN topics t ON (p.topic_id = t.id)
+        WHERE p.user_id = :user_id AND
+          p.deleted_at IS NULL AND
+          t.deleted_at IS NULL AND
+          (
+            t.archetype <> 'private_message' OR
+              EXISTS(
+                  SELECT 1
+                  FROM topic_allowed_users a
+                  WHERE a.topic_id = t.id AND a.user_id > 0 AND a.user_id <> :user_id
+                ) OR
+              EXISTS(
+                  SELECT 1
+                  FROM topic_allowed_groups g
+                  WHERE g.topic_id = p.topic_id
+                )
+            )
+        LIMIT #{max_post_count + 1}
+      ) x
+    SQL
+  end
+
+  def create_or_fetch_secure_identifier
+    return secure_identifier if secure_identifier.present?
+    new_secure_identifier = SecureRandom.hex(20)
+    self.update(secure_identifier: new_secure_identifier)
+    new_secure_identifier
+  end
+
+  def second_factor_security_key_credential_ids
+    security_keys
+      .select(:credential_id)
+      .where(factor_type: UserSecurityKey.factor_types[:second_factor])
+      .pluck(:credential_id)
   end
 
   protected

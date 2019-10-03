@@ -58,6 +58,7 @@
   }
 
   .category-box-inner {
+    box-sizing: border-box;
     width: 100%;
     padding: 0;
     display: flex;
@@ -138,6 +139,11 @@
       .subcategory-image-placeholder {
         display: inline-block;
         margin-right: 0.6em;
+      }
+      .subcategory-link {
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
       }
       .logo img {
         display: inline-block;

@@ -44,7 +44,7 @@
     <link rel="manifest" href="<%= Discourse.base_uri %>/manifest.webmanifest" crossorigin="use-credentials">
 
     <%- if include_ios_native_app_banner? %>
-        <meta name="apple-itunes-app" content="app-id=<%= SiteSetting.ios_app_id %>, app-argument=discourse://new?siteUrl=<%= Discourse.base_url %>">
+        <meta name="apple-itunes-app" content="app-id=<%= SiteSetting.ios_app_id %><%= ios_app_argument %>">
     <%- end %>
 
     <%= render partial: "common/discourse_stylesheet" %>

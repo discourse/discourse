@@ -3,7 +3,7 @@
 require 'excon'
 
 module Jobs
-  class EmitWebHookEvent < Jobs::Base
+  class EmitWebHookEvent < ::Jobs::Base
     PING_EVENT = 'ping'.freeze
     MAX_RETRY_COUNT = 4.freeze
     RETRY_BACKOFF = 5

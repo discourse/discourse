@@ -29,7 +29,10 @@ class BasicGroupSerializer < ApplicationSerializer
              :default_notification_level,
              :membership_request_template,
              :is_group_user,
-             :is_group_owner
+             :is_group_owner,
+             :members_visibility_level,
+             :can_see_members,
+             :publish_read_state
 
   def include_display_name?
     object.automatic
@@ -79,6 +82,10 @@ class BasicGroupSerializer < ApplicationSerializer
 
   def is_group_owner
     owner_group_ids.include?(object.id)
+  end
+
+  def can_see_members
+    scope.can_see_group_members?(object)
   end
 
   private

@@ -1,12 +1,5 @@
 # frozen_string_literal: true
 
-require_dependency 'enum'
-require_dependency 'reviewable/actions'
-require_dependency 'reviewable/conversation'
-require_dependency 'reviewable/editable_fields'
-require_dependency 'reviewable/perform_result'
-require_dependency 'reviewable_serializer'
-
 class Reviewable < ActiveRecord::Base
   class UpdateConflict < StandardError; end
 
@@ -38,6 +31,9 @@ class Reviewable < ActiveRecord::Base
 
   after_commit(on: :create) do
     DiscourseEvent.trigger(:reviewable_created, self)
+  end
+
+  after_commit(on: [:create, :update]) do
     Jobs.enqueue(:notify_reviewable, reviewable_id: self.id) if pending?
   end
 
@@ -73,6 +69,12 @@ class Reviewable < ActiveRecord::Base
       ignored: 3,
       deleted: 4
     )
+  end
+
+  # This number comes from looking at forums in the wild and what numbers work.
+  # As the site accumulates real data it'll be based on the site activity instead.
+  def self.typical_sensitivity
+    12.5
   end
 
   # Generate `pending?`, `rejected?`, etc helper methods
@@ -192,11 +194,13 @@ class Reviewable < ActiveRecord::Base
     return Float::MAX if sensitivity == 0
 
     ratio = sensitivity / Reviewable.sensitivity[:low].to_f
-    high = PluginStore.get('reviewables', "priority_#{Reviewable.priorities[:high]}")
-    return (10.0 * scale) if high.nil?
+    high = (
+      PluginStore.get('reviewables', "priority_#{Reviewable.priorities[:high]}") ||
+      typical_sensitivity
+    ).to_f
 
     # We want this to be hard to reach
-    (high.to_f * ratio) * scale
+    ((high.to_f * ratio) * scale).truncate(2)
   end
 
   def self.sensitivity_score(sensitivity, scale: 1.0)
@@ -476,6 +480,25 @@ class Reviewable < ActiveRecord::Base
       .group("date(reviewable_scores.created_at)")
       .order('date(reviewable_scores.created_at)')
       .count
+  end
+
+  def explain_score
+    DB.query(<<~SQL, reviewable_id: id)
+      SELECT rs.reviewable_id,
+        rs.user_id,
+        CASE WHEN (u.admin OR u.moderator) THEN 5.0 ELSE u.trust_level END AS trust_level_bonus,
+        us.flags_agreed,
+        us.flags_disagreed,
+        us.flags_ignored,
+        rs.score,
+        rs.take_action_bonus,
+        COALESCE(pat.score_bonus, 0.0) AS type_bonus
+      FROM reviewable_scores AS rs
+      INNER JOIN users AS u ON u.id = rs.user_id
+      LEFT OUTER JOIN user_stats AS us ON us.user_id = rs.user_id
+      LEFT OUTER JOIN post_action_types AS pat ON pat.id = rs.reviewable_score_type
+        WHERE rs.reviewable_id = :reviewable_id
+    SQL
   end
 
 protected

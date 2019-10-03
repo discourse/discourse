@@ -68,6 +68,7 @@ sr:
   embed:
     start_discussion: "Započnite diskusiju"
     continue: "Nastavite diskusiju"
+    created: "Napravljeno"
   no_links_allowed: "Žao nam je, novi korisnici ne mogu postavljati linkove u svoje postove."
   user_is_suspended: "Suspendovanim korisnicima nije dozvoljeno da objavljuju postove."
   topic_not_found: "Nešto se dogodilo. Možda je tema zatvorena ili izbrisana dok ste je gledali?"
@@ -229,7 +230,6 @@ sr:
     delete_email_logs_after_days: "Obriši email logove posle (N) dana. Uneti 0 za neograničeno čuvanje."
     block_auto_generated_emails: "Blokiraj dolazne email poruke prepoznate kao automatski generisane."
     ignore_by_title: "Ignoriši dolazne email poruke na osnovu njihovog naslova"
-    enable_forwarded_emails: "[BETA] Dozvoli korisnicima da kreiraju temu prosleđivanjem email poruke."
     pop3_polling_ssl: "Koristi SSL pri povezivanju na POP3 server. (Preporučeno)"
     pop3_polling_period_mins: "Period u minutima za proveru novih email poruka na POP3 nalogu. NAPOMENA: zahteva ponovno pokretanje. "
     pop3_polling_port: "Port za proveru POP3 naloga."

@@ -1,5 +1,8 @@
 import debounce from "discourse/lib/debounce";
-import { isAppleDevice, safariHacksDisabled } from "discourse/lib/utilities";
+import { safariHacksDisabled } from "discourse/lib/utilities";
+
+// TODO: remove calcHeight once iOS 13 adoption > 90%
+// In iOS 13 and up we use visualViewport API to calculate height
 
 // we can't tell what the actual visible window height is
 // because we cannot account for the height of the mobile keyboard
@@ -41,6 +44,11 @@ function calcHeight() {
       withoutKeyboard = smallViewport ? 340 : 370;
     }
 
+    // iPhone Xs Max and iPhone Xʀ
+    if (window.screen.height === 896) {
+      withoutKeyboard = smallViewport ? 410 : 440;
+    }
+
     // iPad can use innerHeight cause it renders nothing in the footer
     if (window.innerHeight > 920) {
       withoutKeyboard -= 45;
@@ -58,7 +66,6 @@ function calcHeight() {
 }
 
 let workaroundActive = false;
-let composingTopic = false;
 
 export function isWorkaroundActive() {
   return workaroundActive;
@@ -66,7 +73,9 @@ export function isWorkaroundActive() {
 
 // per http://stackoverflow.com/questions/29001977/safari-in-ios8-is-scrolling-screen-when-fixed-elements-get-focus/29064810
 function positioningWorkaround($fixedElement) {
-  if (!isAppleDevice() || safariHacksDisabled()) {
+  const caps = Discourse.__container__.lookup("capabilities:main");
+
+  if (!caps.isIOS || safariHacksDisabled()) {
     return;
   }
 
@@ -85,9 +94,14 @@ function positioningWorkaround($fixedElement) {
 
       fixedElement.style.position = "";
       fixedElement.style.top = "";
-      fixedElement.style.height = oldHeight;
 
-      Ember.run.later(() => $(fixedElement).removeClass("no-transition"), 500);
+      if (window.visualViewport === undefined) {
+        fixedElement.style.height = oldHeight;
+        Ember.run.later(
+          () => $(fixedElement).removeClass("no-transition"),
+          500
+        );
+      }
 
       $(window).scrollTop(originalScrollTop);
 
@@ -101,6 +115,7 @@ function positioningWorkaround($fixedElement) {
   var blurredNow = function(evt) {
     if (
       !done &&
+      evt.srcElement !== document.activeElement &&
       $(document.activeElement)
         .parents()
         .toArray()
@@ -124,8 +139,21 @@ function positioningWorkaround($fixedElement) {
     if (fixedElement.style.top === "0px") {
       if (this !== document.activeElement) {
         evt.preventDefault();
+
+        // this tricks safari into assuming current input is at top of the viewport
+        // via https://stackoverflow.com/questions/38017771/mobile-safari-prevent-scroll-page-when-focus-on-input
+        this.style.transform = "translateY(-200px)";
         this.focus();
+        let _this = this;
+        setTimeout(function() {
+          _this.style.transform = "none";
+        }, 50);
       }
+      return;
+    }
+
+    // don't trigger keyboard on disabled element (happens when a category is required)
+    if (this.disabled) {
       return;
     }
 
@@ -148,12 +176,11 @@ function positioningWorkaround($fixedElement) {
 
     fixedElement.style.top = "0px";
 
-    composingTopic = $("#reply-control .category-chooser").length > 0;
-
-    const height = calcHeight(composingTopic);
-    fixedElement.style.height = height + "px";
-
-    $(fixedElement).addClass("no-transition");
+    if (window.visualViewport === undefined) {
+      const height = calcHeight();
+      fixedElement.style.height = height + "px";
+      $(fixedElement).addClass("no-transition");
+    }
 
     evt.preventDefault();
     this.focus();

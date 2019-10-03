@@ -1020,6 +1020,24 @@ describe TopicQuery do
 
       expect(topics).to eq([])
     end
+
+    context "Calculating minimum unread count for a topic" do
+      before { group.update!(publish_read_state: true) }
+
+      let(:listed_message) do
+        TopicQuery.new(nil, group_name: group.name)
+          .list_private_messages_group(creator)
+          .topics.first
+      end
+
+      it 'returns the last read post number' do
+        topic_group = TopicGroup.create!(
+          topic: group_message, group: group, last_read_post_number: 10
+        )
+
+        expect(listed_message.last_read_post_number).to eq(topic_group.last_read_post_number)
+      end
+    end
   end
 
   context "shared drafts" do

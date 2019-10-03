@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require_dependency 'rate_limiter'
-
 class Invite < ActiveRecord::Base
   self.ignored_columns = %w{
     via_email

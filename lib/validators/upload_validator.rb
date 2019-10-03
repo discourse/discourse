@@ -4,7 +4,7 @@ require_dependency "file_helper"
 
 module Validators; end
 
-class Validators::UploadValidator < ActiveModel::Validator
+class UploadValidator < ActiveModel::Validator
 
   def validate(upload)
     # staff can upload any file in PM

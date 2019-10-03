@@ -4,16 +4,26 @@ import { SECOND_FACTOR_METHODS } from "discourse/models/user";
 export default Ember.Component.extend({
   @computed("secondFactorMethod")
   secondFactorTitle(secondFactorMethod) {
-    return secondFactorMethod === SECOND_FACTOR_METHODS.TOTP
-      ? I18n.t("login.second_factor_title")
-      : I18n.t("login.second_factor_backup_title");
+    switch (secondFactorMethod) {
+      case SECOND_FACTOR_METHODS.TOTP:
+        return I18n.t("login.second_factor_title");
+      case SECOND_FACTOR_METHODS.SECURITY_KEY:
+        return I18n.t("login.second_factor_title");
+      case SECOND_FACTOR_METHODS.BACKUP_CODE:
+        return I18n.t("login.second_factor_backup_title");
+    }
   },
 
   @computed("secondFactorMethod")
   secondFactorDescription(secondFactorMethod) {
-    return secondFactorMethod === SECOND_FACTOR_METHODS.TOTP
-      ? I18n.t("login.second_factor_description")
-      : I18n.t("login.second_factor_backup_description");
+    switch (secondFactorMethod) {
+      case SECOND_FACTOR_METHODS.TOTP:
+        return I18n.t("login.second_factor_description");
+      case SECOND_FACTOR_METHODS.SECURITY_KEY:
+        return I18n.t("login.security_key_description");
+      case SECOND_FACTOR_METHODS.BACKUP_CODE:
+        return I18n.t("login.second_factor_backup_description");
+    }
   },
 
   @computed("secondFactorMethod", "isLogin")
@@ -27,6 +37,13 @@ export default Ember.Component.extend({
         ? "user.second_factor_backup.use"
         : "user.second_factor.use";
     }
+  },
+
+  @computed("backupEnabled", "secondFactorMethod")
+  showToggleMethodLink(backupEnabled, secondFactorMethod) {
+    return (
+      backupEnabled && secondFactorMethod !== SECOND_FACTOR_METHODS.SECURITY_KEY
+    );
   },
 
   actions: {

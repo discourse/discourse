@@ -1,6 +1,6 @@
 # frozen_string_literal: true
-require_dependency 'content_security_policy/builder'
-require_dependency 'content_security_policy/extension'
+require 'content_security_policy/builder'
+require 'content_security_policy/extension'
 
 class ContentSecurityPolicy
   class << self

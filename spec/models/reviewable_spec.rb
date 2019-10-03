@@ -237,35 +237,65 @@ RSpec.describe Reviewable, type: :model do
 
   context "message bus notifications" do
     fab!(:moderator) { Fabricate(:moderator) }
+    let(:post) { Fabricate(:post) }
 
     it "triggers a notification on create" do
-      Jobs.expects(:enqueue).with(:notify_reviewable, has_key(:reviewable_id))
-      Fabricate(:reviewable_queued_post)
+      reviewable = Fabricate(:reviewable_queued_post)
+      job = Jobs::NotifyReviewable.jobs.last
+
+      expect(job["args"].first["reviewable_id"]).to eq(reviewable.id)
+    end
+
+    it "triggers a notification on update" do
+      reviewable = PostActionCreator.spam(moderator, post).reviewable
+      reviewable.perform(moderator, :disagree)
+
+      expect { PostActionCreator.spam(Fabricate(:user), post) }
+        .to change { reviewable.reload.status }
+        .from(Reviewable.statuses[:rejected])
+        .to(Reviewable.statuses[:pending])
+        .and change { Jobs::NotifyReviewable.jobs.size }
+        .by(1)
     end
 
     it "triggers a notification on pending -> approve" do
       reviewable = Fabricate(:reviewable_queued_post)
-      Jobs.stubs(:enqueue)
-      Jobs.expects(:enqueue).with(:notify_reviewable, has_key(:reviewable_id))
-      reviewable.perform(moderator, :approve_post)
+
+      expect do
+        reviewable.perform(moderator, :approve_post)
+      end.to change { Jobs::NotifyReviewable.jobs.size }.by(1)
+
+      job = Jobs::NotifyReviewable.jobs.last
+
+      expect(job["args"].first["reviewable_id"]).to eq(reviewable.id)
     end
 
     it "triggers a notification on pending -> reject" do
       reviewable = Fabricate(:reviewable_queued_post)
-      Jobs.expects(:enqueue).with(:notify_reviewable, has_key(:reviewable_id))
-      reviewable.perform(moderator, :reject_post)
+
+      expect do
+        reviewable.perform(moderator, :reject_post)
+      end.to change { Jobs::NotifyReviewable.jobs.size }.by(1)
+
+      job = Jobs::NotifyReviewable.jobs.last
+
+      expect(job["args"].first["reviewable_id"]).to eq(reviewable.id)
     end
 
     it "doesn't trigger a notification on approve -> reject" do
       reviewable = Fabricate(:reviewable_queued_post, status: Reviewable.statuses[:approved])
-      Jobs.expects(:enqueue).with(:notify_reviewable, has_key(:reviewable_id)).never
-      reviewable.perform(moderator, :reject_post)
+
+      expect do
+        reviewable.perform(moderator, :reject_post)
+      end.to_not change { Jobs::NotifyReviewable.jobs.size }
     end
 
     it "doesn't trigger a notification on reject -> approve" do
-      reviewable = Fabricate(:reviewable_queued_post, status: Reviewable.statuses[:approved])
-      Jobs.expects(:enqueue).with(:notify_reviewable, has_key(:reviewable_id)).never
-      reviewable.perform(moderator, :reject_post)
+      reviewable = Fabricate(:reviewable_queued_post, status: Reviewable.statuses[:rejected])
+
+      expect do
+        reviewable.perform(moderator, :approve_post)
+      end.to_not change { Jobs::NotifyReviewable.jobs.size }
     end
   end
 
@@ -309,11 +339,13 @@ RSpec.describe Reviewable, type: :model do
       expect(Reviewable.score_required_to_hide_post).to eq(40.0)
     end
 
-    it "returns 10 if we can't calculated any percentiles" do
+    it "returns a default if we can't calculated any percentiles" do
       SiteSetting.hide_post_sensitivity = Reviewable.sensitivity[:low]
-      expect(Reviewable.score_required_to_hide_post).to eq(10.0)
+      expect(Reviewable.score_required_to_hide_post).to eq(12.5)
       SiteSetting.hide_post_sensitivity = Reviewable.sensitivity[:medium]
-      expect(Reviewable.score_required_to_hide_post).to eq(10.0)
+      expect(Reviewable.score_required_to_hide_post).to eq(8.33)
+      SiteSetting.hide_post_sensitivity = Reviewable.sensitivity[:high]
+      expect(Reviewable.score_required_to_hide_post).to eq(4.16)
     end
 
     it "returns a fraction of the high percentile" do
@@ -330,37 +362,37 @@ RSpec.describe Reviewable, type: :model do
   end
 
   context ".spam_score_to_silence_new_user" do
-    it "returns 6 if we can't calculated any percentiles" do
+    it "returns a default value if we can't calculated any percentiles" do
       SiteSetting.silence_new_user_sensitivity = Reviewable.sensitivity[:low]
-      expect(Reviewable.spam_score_to_silence_new_user).to eq(6.0)
+      expect(Reviewable.spam_score_to_silence_new_user).to eq(7.5)
       SiteSetting.silence_new_user_sensitivity = Reviewable.sensitivity[:medium]
-      expect(Reviewable.spam_score_to_silence_new_user).to eq(6.0)
+      expect(Reviewable.spam_score_to_silence_new_user).to eq(4.99)
       SiteSetting.silence_new_user_sensitivity = Reviewable.sensitivity[:high]
-      expect(Reviewable.spam_score_to_silence_new_user).to eq(6.0)
+      expect(Reviewable.spam_score_to_silence_new_user).to eq(2.49)
     end
 
     it "returns a fraction of the high percentile" do
       Reviewable.set_priorities(high: 100.0)
       SiteSetting.silence_new_user_sensitivity = Reviewable.sensitivity[:disabled]
-      expect(Reviewable.spam_score_to_silence_new_user.to_f.truncate(2)).to eq(Float::MAX)
+      expect(Reviewable.spam_score_to_silence_new_user.to_f).to eq(Float::MAX)
       SiteSetting.silence_new_user_sensitivity = Reviewable.sensitivity[:low]
-      expect(Reviewable.spam_score_to_silence_new_user.to_f.truncate(2)).to eq(60.0)
+      expect(Reviewable.spam_score_to_silence_new_user.to_f).to eq(60.0)
       SiteSetting.silence_new_user_sensitivity = Reviewable.sensitivity[:medium]
-      expect(Reviewable.spam_score_to_silence_new_user.to_f.truncate(2)).to eq(39.99)
+      expect(Reviewable.spam_score_to_silence_new_user.to_f).to eq(39.99)
       SiteSetting.silence_new_user_sensitivity = Reviewable.sensitivity[:high]
-      expect(Reviewable.spam_score_to_silence_new_user.to_f.truncate(2)).to eq(19.99)
+      expect(Reviewable.spam_score_to_silence_new_user.to_f).to eq(19.99)
     end
   end
 
   context ".score_to_auto_close_topic" do
 
-    it "returns 25 if we can't calculated any percentiles" do
+    it "returns the default if we can't calculated any percentiles" do
       SiteSetting.auto_close_topic_sensitivity = Reviewable.sensitivity[:low]
-      expect(Reviewable.score_to_auto_close_topic).to eq(25.0)
+      expect(Reviewable.score_to_auto_close_topic).to eq(31.25)
       SiteSetting.auto_close_topic_sensitivity = Reviewable.sensitivity[:medium]
-      expect(Reviewable.score_to_auto_close_topic).to eq(25.0)
+      expect(Reviewable.score_to_auto_close_topic).to eq(20.83)
       SiteSetting.auto_close_topic_sensitivity = Reviewable.sensitivity[:high]
-      expect(Reviewable.score_to_auto_close_topic).to eq(25.0)
+      expect(Reviewable.score_to_auto_close_topic).to eq(10.41)
     end
 
     it "returns a fraction of the high percentile" do

@@ -33,11 +33,11 @@ class Reviewable < ActiveRecord::Base
     end
 
     class Action < Item
-      attr_accessor :icon, :label, :description, :confirm_message, :client_action
+      attr_accessor :icon, :button_class, :label, :description, :confirm_message, :client_action
 
-      def initialize(id, icon = nil, label = nil)
+      def initialize(id, icon = nil, button_class = nil, label = nil)
         super(id)
-        @icon, @label = icon, label
+        @icon, @button_class, @label = icon, button_class, label
       end
     end
 

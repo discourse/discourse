@@ -1,12 +1,5 @@
 # frozen_string_literal: true
 
-require_dependency 'markdown_linker'
-require_dependency 'email/message_builder'
-require_dependency 'age_words'
-require_dependency 'rtl'
-require_dependency 'discourse_ip_info'
-require_dependency 'browser_detection'
-
 class UserNotifications < ActionMailer::Base
   include UserNotificationsHelper
   include ApplicationHelper

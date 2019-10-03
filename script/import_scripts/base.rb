@@ -299,16 +299,8 @@ class ImportScripts::Base
     original_name = opts[:name]
     original_email = opts[:email] = opts[:email].downcase
 
-    # Allow the || operations to work with empty strings ''
-    opts[:username] = nil if opts[:username].blank?
-
-    if opts[:username].blank? ||
-      opts[:username].length < User.username_length.begin ||
-      opts[:username].length > User.username_length.end ||
-      !User.username_available?(opts[:username]) ||
-      !UsernameValidator.new(opts[:username]).valid_format?
-
-      opts[:username] = UserNameSuggester.suggest(opts[:username] || opts[:name].presence || opts[:email])
+    if !UsernameValidator.new(opts[:username]).valid_format? || !User.username_available?(opts[:username])
+      opts[:username] = UserNameSuggester.suggest(opts[:username].presence || opts[:name].presence || opts[:email])
     end
 
     unless opts[:email][EmailValidator.email_regex]

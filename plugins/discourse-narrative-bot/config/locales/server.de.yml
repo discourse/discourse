@@ -116,7 +116,8 @@ de:
         tracks: |-
           Ich weiß jetzt, wie man die folgenden Dinge macht:
 
-          `@%{discobot_username} %{reset_trigger} %{default_track}`> Startet eins der folgenden interaktiven Tutorials: %{tracks}.
+          `@%{discobot_username} %{reset_trigger} {Name-des-Tutorials}`
+          > Startet ein interaktives Tutorial. `{Name-des-Tutorials}` kann eins von: `%{tracks}` sein.
         bot_actions: |-
           `@%{discobot_username} %{dice_trigger} 2d6`
           > :game_die: 3, 6

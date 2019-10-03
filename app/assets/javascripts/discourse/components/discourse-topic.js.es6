@@ -110,6 +110,7 @@ export default Ember.Component.extend(
         }
       );
 
+      this.appEvents.on("discourse:focus-changed", this, "gotFocus");
       this.appEvents.on("post:highlight", this, "_highlightPost");
       this.appEvents.on("header:update-topic", this, "_updateTopic");
     },
@@ -129,13 +130,13 @@ export default Ember.Component.extend(
 
       // this happens after route exit, stuff could have trickled in
       this._hideTopicInHeader();
+      this.appEvents.off("discourse:focus-changed", this, "gotFocus");
       this.appEvents.off("post:highlight", this, "_highlightPost");
       this.appEvents.off("header:update-topic", this, "_updateTopic");
     },
 
-    @observes("Discourse.hasFocus")
-    gotFocus() {
-      if (Discourse.get("hasFocus")) {
+    gotFocus(hasFocus) {
+      if (hasFocus) {
         this.scrolled();
       }
     },

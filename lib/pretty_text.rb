@@ -3,10 +3,6 @@
 require 'mini_racer'
 require 'nokogiri'
 require 'erb'
-require_dependency 'url_helper'
-require_dependency 'excerpt_parser'
-require_dependency 'discourse_tagging'
-require_dependency 'pretty_text/helpers'
 
 module PrettyText
   @mutex = Mutex.new
@@ -186,19 +182,6 @@ module PrettyText
       DiscourseEvent.trigger(:markdown_context, context)
       baked = context.eval("__pt.cook(#{text.inspect})")
     end
-
-    # if baked.blank? && !(opts || {})[:skip_blank_test]
-    #   # we may have a js engine issue
-    #   test = markdown("a", skip_blank_test: true)
-    #   if test.blank?
-    #     Rails.logger.warn("Markdown engine appears to have crashed, resetting context")
-    #     reset_context
-    #     opts ||= {}
-    #     opts = opts.dup
-    #     opts[:skip_blank_test] = true
-    #     baked = markdown(text, opts)
-    #   end
-    # end
 
     baked
   end

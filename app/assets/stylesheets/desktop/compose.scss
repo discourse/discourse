@@ -230,6 +230,16 @@ a.toggle-preview {
   text-align: right;
 }
 
+html.keyboard-visible {
+  .grippie,
+  &:not(.fullscreen-composer) .toggle-fullscreen {
+    display: none;
+  }
+  #reply-control.open {
+    height: calc(var(--composer-vh, 1vh) * 100);
+  }
+}
+
 // fullscreen composer styles
 .fullscreen-composer {
   overflow: hidden;
@@ -241,6 +251,9 @@ a.toggle-preview {
     &.fullscreen {
       // important needed because of inline styles when height is changed manually with grippie
       height: 100vh !important;
+      @supports (--custom: property) {
+        height: calc(var(--composer-vh, 1vh) * 100) !important;
+      }
       z-index: z("header") + 1;
       .d-editor-preview-wrapper {
         margin-top: 1%;

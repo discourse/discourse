@@ -51,7 +51,8 @@ describe Jobs::PullHotlinkedImages do
 
       expect do
         Jobs::PullHotlinkedImages.new.execute(post_id: post.id)
-      end.to change { Upload.count }.by(1)
+      end.to change { Upload.count }.by(1) &
+             change { UserHistory.count }.by(0) # Should not add to the staff log
 
       expect(post.reload.raw).to eq("![](#{Upload.last.short_url})")
     end
@@ -76,7 +77,7 @@ describe Jobs::PullHotlinkedImages do
       expect(post.reload.raw).to eq(<<~RAW.chomp)
       <h1></h1>
                                 <a href="https://somelink.com">
-                                    <img alt="somelink" src="#{upload.short_path}" />
+                                    ![somelink](#{upload.short_url})
                                 </a>
       RAW
     end
