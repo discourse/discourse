@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-require 'import_export/zip_utils'
+require_dependency 'compression/zip'
 
 module ThemeStore; end
 
-class ThemeStore::TgzExporter
+class ThemeStore::ZipExporter
 
   def initialize(theme)
     @theme = theme
@@ -62,6 +62,6 @@ class ThemeStore::TgzExporter
   def export_package
     export_to_folder
 
-    Dir.chdir(@temp_folder) { ImportExport::ZipUtils.new.zip_directory(@temp_folder, @export_name) }
+    Dir.chdir(@temp_folder) { Compression::Zip.new.compress(@temp_folder, @export_name) }
   end
 end

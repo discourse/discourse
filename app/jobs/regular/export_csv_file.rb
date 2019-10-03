@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require 'csv'
-require 'zip'
 
 module Jobs
 
@@ -51,14 +50,14 @@ module Jobs
       FileUtils.mkdir_p(UserExport.base_directory) unless Dir.exists?(UserExport.base_directory)
 
       # Generate a compressed CSV file
-      csv_to_export = CSV.generate do |csv|
-        csv << get_header if @entity != "report"
-        public_send(export_method).each { |d| csv << d }
-      end
-
-      compressed_file_path = "#{absolute_path}.zip"
-      Zip::File.open(compressed_file_path, Zip::File::CREATE) do |zipfile|
-        zipfile.get_output_stream(file_name) { |f| f.puts csv_to_export }
+      begin
+        CSV.open(absolute_path, "w") do |csv|
+          csv << get_header if @entity != "report"
+          public_send(export_method).each { |d| csv << d }
+        end
+        compressed_file_path = Compression::Zip.new.compress(UserExport.base_directory, file_name)
+      ensure
+        File.delete(absolute_path)
       end
 
       # create upload
@@ -76,7 +75,7 @@ module Jobs
           if upload.persisted?
             user_export.update_columns(upload_id: upload.id)
           else
-            Rails.logger.warn("Failed to upload the file #{Discourse.base_uri}/export_csv/#{file_name}.gz")
+            Rails.logger.warn("Failed to upload the file #{compressed_file_path}")
           end
         end
 

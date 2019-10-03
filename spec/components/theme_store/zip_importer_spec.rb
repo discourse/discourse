@@ -3,10 +3,9 @@
 # frozen_string_literal: true
 
 require 'rails_helper'
-require 'theme_store/tgz_importer'
-require 'import_export/zip_utils'
+require 'theme_store/zip_importer'
 
-describe ThemeStore::TgzImporter do
+describe ThemeStore::ZipImporter do
   before do
     @temp_folder = "#{Pathname.new(Dir.tmpdir).realpath}/discourse_theme_#{SecureRandom.hex}"
 
@@ -24,11 +23,12 @@ describe ThemeStore::TgzImporter do
 
   it "can import a simple zipped theme" do
     Dir.chdir(@temp_folder) do
-      ImportExport::ZipUtils.new.zip_directory(@temp_folder, 'test')
+      Compression::Zip.new.compress(@temp_folder, 'test')
       FileUtils.rm_rf('test/')
     end
 
-    importer = ThemeStore::TgzImporter.new("#{@temp_folder}/test.zip")
+    file_name = 'test.zip'
+    importer = ThemeStore::ZipImporter.new("#{@temp_folder}/#{file_name}", file_name)
     importer.import!
 
     expect(importer["hello.txt"]).to eq("hello world")
@@ -42,7 +42,8 @@ describe ThemeStore::TgzImporter do
       `tar -cvzf test.tar.gz test/* 2> /dev/null`
     end
 
-    importer = ThemeStore::TgzImporter.new("#{@temp_folder}/test.tar.gz")
+    file_name = 'test.tar.gz'
+    importer = ThemeStore::ZipImporter.new("#{@temp_folder}/#{file_name}", file_name)
     importer.import!
 
     expect(importer["hello.txt"]).to eq("hello world")

@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 require 'rails_helper'
-require 'theme_store/tgz_exporter'
+require 'theme_store/zip_exporter'
 
-describe ThemeStore::TgzExporter do
+describe ThemeStore::ZipExporter do
   let!(:theme) do
     Fabricate(:theme, name: "Header Icons").tap do |theme|
       theme.set_field(target: :common, name: :body_tag, value: "<b>testtheme1</b>")
@@ -51,7 +51,7 @@ describe ThemeStore::TgzExporter do
   end
 
   let(:package) do
-    exporter = ThemeStore::TgzExporter.new(theme)
+    exporter = ThemeStore::ZipExporter.new(theme)
     filename = exporter.package_filename
     FileUtils.cp(filename, dir)
     exporter.cleanup!
@@ -63,7 +63,7 @@ describe ThemeStore::TgzExporter do
     file = 'discourse-header-icons.zip'
     dest = 'discourse-header-icons'
     Dir.chdir(dir) do
-      ImportExport::ZipUtils.new.unzip_directory(dir, file, allow_non_root_folder: true)
+      Compression::Zip.new.decompress(dir, file, allow_non_root_folder: true)
       `rm #{file}`
 
       folders = Dir.glob("**/*").reject { |f| File.file?(f) }
@@ -120,7 +120,7 @@ describe ThemeStore::TgzExporter do
 
   it "doesn't prepend 'discourse' to filename if already there" do
     theme.update!(name: "Discourse Header Icons")
-    exporter = ThemeStore::TgzExporter.new(theme)
+    exporter = ThemeStore::ZipExporter.new(theme)
     filename = exporter.package_filename
     exporter.cleanup!
     expect(filename).to end_with "/discourse-header-icons.zip"
