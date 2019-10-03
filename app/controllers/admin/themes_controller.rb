@@ -92,7 +92,7 @@ class Admin::ThemesController < Admin::AdminController
       theme_id = params[:theme_id]
       match_theme_by_name = !!params[:bundle] && !params.key?(:theme_id) # Old theme CLI behavior, match by name. Remove Jan 2020
       begin
-        @theme = RemoteTheme.update_tgz_theme(bundle.path, match_theme: match_theme_by_name, user: theme_user, theme_id: theme_id)
+        @theme = RemoteTheme.update_zipped_theme(bundle.path, bundle.original_filename, match_theme: match_theme_by_name, user: theme_user, theme_id: theme_id)
         log_theme_change(nil, @theme)
         render json: @theme, status: :created
       rescue RemoteTheme::ImportError => e
@@ -242,7 +242,7 @@ class Admin::ThemesController < Admin::AdminController
     @theme = Theme.find_by(id: params[:id])
     raise Discourse::InvalidParameters.new(:id) unless @theme
 
-    exporter = ThemeStore::TgzExporter.new(@theme)
+    exporter = ThemeStore::ZipExporter.new(@theme)
     file_path = exporter.package_filename
 
     headers['Content-Length'] = File.size(file_path).to_s

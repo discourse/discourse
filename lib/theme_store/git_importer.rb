@@ -30,7 +30,7 @@ class ThemeStore::GitImporter
     raise Discourse::InvalidParameters.new(:id) unless theme
     local_version = theme.remote_theme&.local_version
 
-    exporter = ThemeStore::TgzExporter.new(theme)
+    exporter = ThemeStore::ZipExporter.new(theme)
     local_temp_folder = exporter.export_to_folder
 
     Dir.chdir(@temp_folder) do

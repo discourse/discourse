@@ -30,8 +30,8 @@ class RemoteTheme < ActiveRecord::Base
     raise ImportError.new I18n.t("themes.import_error.about_json")
   end
 
-  def self.update_tgz_theme(filename, match_theme: false, user: Discourse.system_user, theme_id: nil)
-    importer = ThemeStore::TgzImporter.new(filename)
+  def self.update_zipped_theme(filename, original_filename, match_theme: false, user: Discourse.system_user, theme_id: nil)
+    importer = ThemeStore::ZipImporter.new(filename, original_filename)
     importer.import!
 
     theme_info = RemoteTheme.extract_theme_info(importer)
