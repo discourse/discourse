@@ -553,7 +553,6 @@ AdminUser.reopenClass({
   find(user_id) {
     return ajax(`/admin/users/${user_id}.json`).then(result => {
       result.loadedDetails = true;
-      console.log(result);
       return AdminUser.create(result);
     });
   },
