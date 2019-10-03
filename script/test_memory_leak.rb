@@ -95,6 +95,69 @@ if $jemalloc
   end
 end
 
+def render_table(array)
+  buffer = +""
+
+  width = array[0].map { |k| k.to_s.length }
+  cols = array[0].length
+
+  array.each do |row|
+    row.each_with_index do |val, i|
+      width[i] = [width[i].to_i, val.to_s.length].max
+    end
+  end
+
+  array[0].each_with_index do |col, i|
+    buffer << col.to_s.ljust(width[i], ' ')
+    if i == cols - 1
+      buffer << "\n"
+    else
+      buffer << ' | '
+    end
+  end
+
+  buffer << ("-" * (width.sum + width.length))
+  buffer << "\n"
+
+  array.drop(1).each do |row|
+    row.each_with_index do |val, i|
+      buffer << val.to_s.ljust(width[i], ' ')
+      if i == cols - 1
+        buffer << "\n"
+      else
+        buffer << ' | '
+      end
+    end
+  end
+
+  buffer
+end
+
+def mwrap_log
+  report = +""
+
+  Mwrap.quiet do
+    report << "Allocated bytes: #{Mwrap.total_bytes_allocated} Freed bytes: #{Mwrap.total_bytes_freed}\n"
+    report << "\n"
+
+    table = []
+    Mwrap.each(200000) do |loc, total, allocations, frees, age_sum, max_life|
+      table << [total, allocations - frees, frees == 0 ? -1 : (age_sum / frees.to_f).round(2), max_life, loc]
+    end
+
+    table.sort! { |a, b| b[1] <=> a[1] }
+    table = table[0..50]
+
+    table.prepend(["total", "delta", "mean_life", "max_life", "location"])
+
+    report << render_table(table)
+  end
+
+  report
+end
+
+Mwrap.clear
+
 if $mwrap
   $mwrap_baseline = Mwrap.total_bytes_allocated - Mwrap.total_bytes_freed
 end
@@ -105,4 +168,8 @@ $biggest_array_length = biggest_klass(Array).length
 
 100000.times do
   iter
+  if $mwrap
+    puts mwrap_log
+    GC.start(full_mark: true, immediate_sweep: true)
+  end
 end
