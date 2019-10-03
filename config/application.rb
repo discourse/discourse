@@ -54,6 +54,43 @@ if defined?(Bundler)
   Bundler.require(*bundler_groups)
 end
 
+def with_plugin_guard(&block)
+  begin
+    block.call
+  rescue => error
+    plugins_directory = Rails.root + 'plugins'
+
+    plugin_path = error.backtrace_locations.lazy.map do |location|
+      Pathname.new(location.absolute_path)
+        .ascend
+        .lazy
+        .find { |path| path.parent == plugins_directory }
+    end.next
+
+    raise unless plugin_path
+
+    stack_trace = error.backtrace.each_with_index.inject([]) do |messages, (line, index)|
+      if index == 0
+        messages << "#{line}: #{error} (#{error.class})"
+      else
+        messages << "\t#{index}: from #{line}"
+      end
+    end.reverse.join("\n")
+
+    STDERR.puts <<~MESSAGE
+      #{stack_trace}
+
+      ** INCOMPATIBLE PLUGIN **
+
+      You are unable to build Discourse due to errors in the plugin at
+      #{plugin_path}
+
+      Please try removing this plugin and rebuilding again!
+    MESSAGE
+    exit 1
+  end
+end
+
 module Discourse
   class Application < Rails::Application
 
@@ -266,7 +303,9 @@ module Discourse
         Discourse.activate_plugins!
       end
     else
-      Discourse.activate_plugins!
+      with_plugin_guard do
+        Discourse.activate_plugins!
+      end
     end
 
     Discourse.find_plugin_js_assets(include_disabled: true).each do |file|
@@ -301,7 +340,9 @@ module Discourse
       OpenID::Util.logger = Rails.logger
 
       # Load plugins
-      Discourse.plugins.each(&:notify_after_initialize)
+      with_plugin_guard do
+        Discourse.plugins.each(&:notify_after_initialize)
+      end
 
       # we got to clear the pool in case plugins connect
       ActiveRecord::Base.connection_handler.clear_active_connections!
