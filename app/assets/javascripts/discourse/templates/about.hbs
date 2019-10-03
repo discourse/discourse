@@ -28,9 +28,7 @@
         <section class='about admins'>
           <h3>{{d-icon "users"}} {{i18n 'about.our_admins'}}</h3>
 
-          {{#each model.admins as |a|}}
-            {{user-info user=a}}
-          {{/each}}
+          {{about-page-users users=model.admins}}
           <div class='clearfix'></div>
 
         </section>
@@ -45,9 +43,7 @@
           <h3>{{d-icon "users"}} {{i18n 'about.our_moderators'}}</h3>
 
           <div class='users'>
-            {{#each model.moderators as |m|}}
-              {{user-info user=m}}
-            {{/each}}
+            {{about-page-users users=model.moderators}}
           </div>
           <div class='clearfix'></div>
         </section>
@@ -62,9 +58,7 @@
           <section class='about category-moderators moderators-{{cm.category.slug}}'>
             <h3>{{category-link cm.category}}{{i18n "about.moderators"}}</h3>
             <div class='users'>
-              {{#each cm.moderators as |m|}}
-                {{user-info user=m}}
-              {{/each}}
+              {{about-page-users users=cm.moderators}}
             </div>
             <div class='clearfix'></div>
           </section>
