@@ -33,8 +33,12 @@
     </div>
 
     <div class="control-group">
-      <label class="control-label input-prepend">{{i18n 'user.second_factor.label'}}</label>
+      <label class="control-label input-prepend">{{i18n 'user.second_factor.name'}}</label>
+      <div class="controls">
+        {{second-factor-input value=secondFactorName inputId='second-factor-name'}}
+      </div>
 
+      <label class="control-label input-prepend">{{i18n 'user.second_factor.label'}}</label>
       <div class="controls">
         {{second-factor-input maxlength=6 value=secondFactorToken inputId='second-factor-token'}}
       </div>
