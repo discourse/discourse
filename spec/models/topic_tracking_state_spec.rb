@@ -89,7 +89,7 @@ describe TopicTrackingState do
 
         expect(message.channel).to eq('/private-messages/inbox')
         expect(message.data["topic_id"]).to eq(private_message_topic.id)
-        expect(message.user_ids).to eq(allowed_users.map(&:id))
+        expect(message.user_ids).to contain_exactly(*allowed_users.map(&:id))
       end
     end
 
