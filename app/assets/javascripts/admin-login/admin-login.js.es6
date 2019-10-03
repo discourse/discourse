@@ -27,10 +27,10 @@ export default function() {
     );
   };
 
-  var useTotp = I18n.t("login.second_factor_toggle.totp");
-  var useBackup = I18n.t("login.second_factor_toggle.backup_code");
-  var backupForm = document.getElementById("backup-second-factor-form");
-  var primaryForm = document.getElementById("primary-second-factor-form");
+  const useTotp = I18n.t("login.second_factor_toggle.totp");
+  const useBackup = I18n.t("login.second_factor_toggle.backup_code");
+  const backupForm = document.getElementById("backup-second-factor-form");
+  const primaryForm = document.getElementById("primary-second-factor-form");
   document.getElementById("toggle-form").onclick = function(event) {
     event.preventDefault();
     if (backupForm.style.display === "none") {
