@@ -9,7 +9,7 @@ export default {
     this.container = container;
 
     container
-      .lookup("app-events:main")
+      .lookup("service:app-events")
       .on("notifications:changed", this, "_updateTitle");
   },
 

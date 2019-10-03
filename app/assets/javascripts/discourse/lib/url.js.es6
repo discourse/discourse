@@ -398,6 +398,9 @@ const DiscourseURL = Ember.Object.extend({
     );
   },
 
+  // TODO: These container calls can be replaced eventually if we migrate this to a service
+  // object.
+
   /**
     @private
 
@@ -408,6 +411,10 @@ const DiscourseURL = Ember.Object.extend({
   **/
   get router() {
     return Discourse.__container__.lookup("router:main");
+  },
+
+  get appEvents() {
+    return Discourse.__container__.lookup("service:app-events");
   },
 
   // Get a controller. Note that currently it uses `__container__` which is not

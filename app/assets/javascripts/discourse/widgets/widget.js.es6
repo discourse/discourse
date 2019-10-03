@@ -111,7 +111,7 @@ export default class Widget {
     this.currentUser = register.lookup("current-user:main");
     this.capabilities = register.lookup("capabilities:main");
     this.store = register.lookup("service:store");
-    this.appEvents = register.lookup("app-events:main");
+    this.appEvents = register.lookup("service:app-events");
     this.keyValueStore = register.lookup("key-value-store:main");
 
     // Helps debug widgets

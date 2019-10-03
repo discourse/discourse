@@ -19,7 +19,7 @@
 //= require ./discourse/lib/hash
 //= require ./discourse/lib/load-script
 //= require ./discourse/lib/notification-levels
-//= require ./discourse/lib/app-events
+//= require ./discourse/services/app-events
 //= require ./discourse/lib/offset-calculator
 //= require ./discourse/lib/lock-on
 //= require ./discourse/lib/url

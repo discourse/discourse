@@ -1,5 +1,5 @@
 import { currentUser } from "helpers/qunit-helpers";
-import AppEvents from "discourse/lib/app-events";
+import AppEvents from "discourse/services/app-events";
 import Composer from "discourse/models/composer";
 import createStore from "helpers/create-store";
 
