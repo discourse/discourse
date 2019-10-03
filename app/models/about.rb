@@ -115,7 +115,7 @@ class About
   end
 
   def category_mods_limit
-    @category_mods_limit || 300
+    @category_mods_limit || 100
   end
 
   def category_mods_limit=(number)
