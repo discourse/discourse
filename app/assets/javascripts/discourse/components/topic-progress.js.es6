@@ -185,6 +185,10 @@ export default Ember.Component.extend({
     } else {
       $wrapper.css(wrapperDir, "1em");
     }
+
+    if (!isDocked) {
+      $wrapper.css("margin-bottom", "0px");
+    }
   },
 
   click(e) {
