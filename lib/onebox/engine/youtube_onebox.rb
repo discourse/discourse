@@ -134,6 +134,9 @@ module Onebox
         # https://developers.google.com/youtube/player_parameters#rel
         p['rel'] = 0 if params.include?('rel')
 
+        # https://developers.google.com/youtube/player_parameters#enablejsapi
+        p['enablejsapi'] = params['enablejsapi'] if params.include?('enablejsapi')
+
         URI.encode_www_form(p)
       end
 
