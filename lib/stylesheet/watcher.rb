@@ -44,6 +44,7 @@ module Stylesheet
           end
         rescue => e
           STDERR.puts "CSS change notifier crashed #{e}"
+          start
         end
       end
 
