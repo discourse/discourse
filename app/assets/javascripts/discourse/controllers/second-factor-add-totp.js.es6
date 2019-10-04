@@ -11,6 +11,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
     this.setProperties({
       errorMessage: null,
       secondFactorKey: null,
+      secondFactorName: null,
       secondFactorToken: null,
       showSecondFactorKey: false,
       secondFactorImage: null,
@@ -47,10 +48,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
       this.set("loading", true);
 
       this.model
-        .enableSecondFactorTotp(
-          this.secondFactorToken,
-          I18n.t("user.second_factor.totp.default_name")
-        )
+        .enableSecondFactorTotp(this.secondFactorToken, this.secondFactorName)
         .then(response => {
           if (response.error) {
             this.set("errorMessage", response.error);
