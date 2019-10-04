@@ -44,6 +44,12 @@
   .category-chooser {
     width: 50%;
   }
+
+  .modal-body.insert-link {
+    input {
+      min-width: 450px;
+    }
+  }
 }
 
 .edit-category-modal {

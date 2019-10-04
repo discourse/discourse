@@ -199,6 +199,12 @@
     &.full-height-modal {
       max-height: calc(100vh - 150px);
     }
+
+    &.insert-link {
+      input {
+        min-width: 300px;
+      }
+    }
     textarea {
       width: 99%;
       height: 80px;
