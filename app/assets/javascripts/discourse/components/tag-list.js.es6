@@ -24,7 +24,7 @@ export default Ember.Component.extend({
   @computed("tagGroupName")
   tagGroupNameClass(groupName) {
     if (groupName) {
-      var groupName = groupName
+      groupName = groupName
         .replace(/\s+/g, "-")
         .replace(/[!\"#$%&'\(\)\*\+,\.\/:;<=>\?\@\[\\\]\^`\{\|\}~]/g, "")
         .toLowerCase();
