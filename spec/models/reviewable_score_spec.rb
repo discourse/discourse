@@ -172,6 +172,13 @@ RSpec.describe ReviewableScore, type: :model do
         user_stat.flags_ignored = 2
         expect(ReviewableScore.user_flag_score(user).floor(2)).to eq(7.98)
       end
+
+      it 'return 0 if the accuracy_bonus would make the score negative' do
+        user.trust_level = 3
+        user_stat.flags_agreed = 0
+        user_stat.flags_disagreed = 1000
+        expect(ReviewableScore.user_flag_score(user)).to eq(0)
+      end
     end
   end
 

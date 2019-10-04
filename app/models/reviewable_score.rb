@@ -49,7 +49,8 @@ class ReviewableScore < ActiveRecord::Base
   #   1.0 + trust_level + user_accuracy_bonus
   #   (trust_level is 5 for staff)
   def self.user_flag_score(user)
-    1.0 + (user.staff? ? 5.0 : user.trust_level.to_f) + user_accuracy_bonus(user)
+    score = 1.0 + (user.staff? ? 5.0 : user.trust_level.to_f) + user_accuracy_bonus(user)
+    score >= 0 ? score : 0
   end
 
   # A user's accuracy bonus is:
