@@ -68,8 +68,22 @@ class ReviewableScore < ActiveRecord::Base
 
     total = (agreed + disagreed).to_f
     return 0.0 if total <= 5
+    accuracy_axis = 0.7
 
-    (agreed / total) * 5.0
+    percent_correct = agreed / total
+    positive_accuracy = percent_correct >= accuracy_axis
+
+    bottom = positive_accuracy ? accuracy_axis : 0.0
+    top = positive_accuracy ? 1.0 : accuracy_axis
+
+    absolute_distance = positive_accuracy ?
+                        percent_correct - bottom :
+                        top - percent_correct
+
+    axis_distance_multiplier = 1.0 / (top - bottom)
+    positivity_multiplier = positive_accuracy ? 1.0 : -1.0
+
+    absolute_distance * axis_distance_multiplier * positivity_multiplier * (Math.log(total, 4) * 5.0)
   end
 
   def reviewable_conversation
