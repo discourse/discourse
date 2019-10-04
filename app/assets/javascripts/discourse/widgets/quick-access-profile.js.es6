@@ -46,6 +46,11 @@ createWidgetFrom(QuickAccessPanel, "quick-access-profile", {
         content: I18n.t("user.private_messages")
       },
       {
+        icon: "pencil",
+        href: `${this.attrs.path}/activity/drafts`,
+        content: I18n.t("user_action_groups.15")
+      },
+      {
         icon: "cog",
         href: `${this.attrs.path}/preferences`,
         content: I18n.t("user.preferences")
