@@ -48,10 +48,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
       this.set("loading", true);
 
       this.model
-        .enableSecondFactorTotp(
-          this.secondFactorToken,
-          this.secondFactorName
-        )
+        .enableSecondFactorTotp(this.secondFactorToken, this.secondFactorName)
         .then(response => {
           if (response.error) {
             this.set("errorMessage", response.error);
