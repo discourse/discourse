@@ -94,8 +94,8 @@
     margin-bottom: 0;
   }
   .users-list {
-    .username .fa {
-      color: dark-light-choose($primary-medium, $secondary-medium);
+    .username .d-icon {
+      color: $primary-medium;
     }
   }
 }
