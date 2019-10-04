@@ -1,4 +1,5 @@
 import { findHelper } from "discourse-common/lib/helpers";
+import deprecated from "discourse-common/lib/deprecated";
 
 /* global requirejs, require */
 var classify = Ember.String.classify;
@@ -45,6 +46,14 @@ export function buildResolver(baseName) {
     },
 
     normalize(fullName) {
+      if (fullName === "app-events:main") {
+        deprecated(
+          "`app-events:main` has been replaced with `service:app-events`",
+          { since: "2.4.0" }
+        );
+        return "service:app-events";
+      }
+
       const split = fullName.split(":");
       if (split.length > 1) {
         const appBase = `${baseName}/${split[0]}s/`;

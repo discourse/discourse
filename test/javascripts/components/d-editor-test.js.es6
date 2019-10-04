@@ -704,7 +704,7 @@ testCase("replace-text event by default", async function(assert) {
   this.set("value", "red green blue");
 
   await this.container
-    .lookup("app-events:main")
+    .lookup("service:app-events")
     .trigger("composer:replace-text", "green", "yellow");
 
   assert.equal(this.value, "red green blue");
@@ -714,7 +714,7 @@ composerTestCase("replace-text event for composer", async function(assert) {
   this.set("value", "red green blue");
 
   await this.container
-    .lookup("app-events:main")
+    .lookup("service:app-events")
     .trigger("composer:replace-text", "green", "yellow");
 
   assert.equal(this.value, "red yellow blue");
@@ -800,7 +800,7 @@ composerTestCase("replace-text event for composer", async function(assert) {
       setTextareaSelection(textarea, start, start + len);
 
       this.container
-        .lookup("app-events:main")
+        .lookup("service:app-events")
         .trigger("composer:replace-text", "green", "yellow", { forceFocus: true });
 
       Ember.run.next(() => {

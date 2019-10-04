@@ -159,7 +159,7 @@ QUnit.testDone(function() {
   // ensures any event not removed is not leaking between tests
   // most likely in intialisers, other places (controller, component...)
   // should be fixed in code
-  var appEvents = window.Discourse.__container__.lookup("app-events:main");
+  var appEvents = window.Discourse.__container__.lookup("service:app-events");
   var events = appEvents.__proto__._events;
   Object.keys(events).forEach(function(eventKey) {
     var event = events[eventKey];
