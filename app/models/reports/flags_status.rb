@@ -11,7 +11,7 @@ Report.add_report("flags_status") do |report|
         number: :post_number,
         truncated_raw: :post_type
       },
-      title: I18n.t("reports.flags_status.labels.flag")
+      title: "reports.flags_status.labels.flag"
     },
     {
       type: :user,
@@ -20,7 +20,7 @@ Report.add_report("flags_status") do |report|
         id: :staff_id,
         avatar: :staff_avatar_template
       },
-      title: I18n.t("reports.flags_status.labels.assigned")
+      title: "reports.flags_status.labels.assigned"
     },
     {
       type: :user,
@@ -29,7 +29,7 @@ Report.add_report("flags_status") do |report|
         id: :poster_id,
         avatar: :poster_avatar_template
       },
-      title: I18n.t("reports.flags_status.labels.poster")
+      title: "reports.flags_status.labels.poster"
     },
     {
       type: :user,
@@ -38,12 +38,12 @@ Report.add_report("flags_status") do |report|
         id: :flagger_id,
         avatar: :flagger_avatar_template
         },
-      title: I18n.t("reports.flags_status.labels.flagger")
+      title: "reports.flags_status.labels.flagger"
     },
     {
       type: :seconds,
       property: :response_time,
-      title: I18n.t("reports.flags_status.labels.time_to_resolution")
+      title: "reports.flags_status.labels.time_to_resolution"
     }
   ]
 
@@ -158,13 +158,13 @@ Report.add_report("flags_status") do |report|
     end
 
     if row.agreed_by_id
-      data[:resolution] = I18n.t("reports.flags_status.values.agreed")
+      data[:resolution] = "reports.flags_status.values.agreed"
     elsif row.disagreed_by_id
-      data[:resolution] = I18n.t("reports.flags_status.values.disagreed")
+      data[:resolution] = "reports.flags_status.values.disagreed"
     elsif row.deferred_by_id
-      data[:resolution] = I18n.t("reports.flags_status.values.deferred")
+      data[:resolution] = "reports.flags_status.values.deferred"
     else
-      data[:resolution] = I18n.t("reports.flags_status.values.no_action")
+      data[:resolution] = "reports.flags_status.values.no_action"
     end
     data[:response_time] = row.responded_at ? row.responded_at - row.created_at : nil
     report.data << data

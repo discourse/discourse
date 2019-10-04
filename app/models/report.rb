@@ -20,12 +20,12 @@ class Report
       {
         type: :date,
         property: :x,
-        title: I18n.t("reports.default.labels.day")
+        title: "reports.default.labels.day"
       },
       {
         type: :number,
         property: :y,
-        title: I18n.t("reports.default.labels.count")
+        title: "reports.default.labels.count"
       },
     ]
   end
@@ -98,13 +98,12 @@ class Report
   end
 
   def as_json(options = nil)
-    description = I18n.t("reports.#{type}.description", default: "")
     {
       type: type,
-      title: I18n.t("reports.#{type}.title", default: nil),
-      xaxis: I18n.t("reports.#{type}.xaxis", default: nil),
-      yaxis: I18n.t("reports.#{type}.yaxis", default: nil),
-      description: description.presence ? description : nil,
+      title: "reports.#{type}.title",
+      xaxis: "reports.#{type}.xaxis",
+      yaxis: "reports.#{type}.yaxis",
+      description: "reports.#{type}.description",
       data: data,
       start_date: start_date&.iso8601,
       end_date: end_date&.iso8601,

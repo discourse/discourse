@@ -18,7 +18,7 @@ Report.add_report('top_uploads') do |report|
         :file_url,
         :file_name,
       ],
-      title: I18n.t("reports.top_uploads.labels.filename")
+      title: "reports.top_uploads.labels.filename"
     },
     {
       type: :user,
@@ -27,17 +27,17 @@ Report.add_report('top_uploads') do |report|
         id: :author_id,
         avatar: :author_avatar_template,
       },
-      title: I18n.t("reports.top_uploads.labels.author")
+      title: "reports.top_uploads.labels.author"
     },
     {
       type: :text,
       property: :extension,
-      title: I18n.t("reports.top_uploads.labels.extension")
+      title: "reports.top_uploads.labels.extension"
     },
     {
       type: :bytes,
       property: :filesize,
-      title: I18n.t("reports.top_uploads.labels.filesize")
+      title: "reports.top_uploads.labels.filesize"
     },
   ]
 

@@ -5,12 +5,12 @@ Report.add_report('web_crawlers') do |report|
     {
       type: :string,
       property: :user_agent,
-      title: I18n.t('reports.web_crawlers.labels.user_agent')
+      title: 'reports.web_crawlers.labels.user_agent'
     },
     {
       property: :count,
       type: :number,
-      title: I18n.t('reports.web_crawlers.labels.page_views')
+      title: 'reports.web_crawlers.labels.page_views'
     }
   ]
 

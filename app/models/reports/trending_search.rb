@@ -5,17 +5,17 @@ Report.add_report("trending_search") do |report|
     {
       property: :term,
       type: :text,
-      title: I18n.t("reports.trending_search.labels.term")
+      title: "reports.trending_search.labels.term"
     },
     {
       property: :searches,
       type: :number,
-      title: I18n.t("reports.trending_search.labels.searches")
+      title: "reports.trending_search.labels.searches"
     },
     {
       type: :percent,
       property: :ctr,
-      title: I18n.t("reports.trending_search.labels.click_through")
+      title: "reports.trending_search.labels.click_through"
     }
   ]
 

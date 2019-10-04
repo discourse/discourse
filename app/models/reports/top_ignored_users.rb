@@ -11,21 +11,21 @@ Report.add_report("top_ignored_users") do |report|
         username: :ignored_username,
         avatar: :ignored_user_avatar_template,
       },
-      title: I18n.t("reports.top_ignored_users.labels.ignored_user")
+      title: "reports.top_ignored_users.labels.ignored_user"
     },
     {
       type: :number,
       properties: [
         :ignores_count,
       ],
-      title: I18n.t("reports.top_ignored_users.labels.ignores_count")
+      title: "reports.top_ignored_users.labels.ignores_count"
     },
     {
       type: :number,
       properties: [
         :mutes_count,
       ],
-      title: I18n.t("reports.top_ignored_users.labels.mutes_count")
+      title: "reports.top_ignored_users.labels.mutes_count"
     }
   ]
 

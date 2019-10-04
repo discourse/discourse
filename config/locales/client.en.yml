@@ -997,14 +997,14 @@ en:
           default_name: "My Authenticator"
         security_key:
           register: "Register"
-          title: 'Security Keys'
+          title: "Security Keys"
           add: "Register Security Key"
           default_name: "Main Security Key"
           not_allowed_error: "The security key registration process either timed out or was cancelled."
           already_added_error: "You have already registered this security key. You don’t have to register it again."
-          edit: 'Edit Security Key'
-          edit_description: 'Security Key Name'
-          delete: 'Delete'
+          edit: "Edit Security Key"
+          edit_description: "Security Key Name"
+          delete: "Delete"
 
       change_about:
         title: "Change About Me"
@@ -3129,6 +3129,326 @@ en:
 
   # This section is exported to the javascript for i18n in the admin section
   admin_js:
+    reports:
+      default:
+        labels:
+          count: Count
+          percent: Percent
+          day: Day
+      post_edits:
+        title: "Post Edits"
+        labels:
+          edited_at: Date
+          post: Post
+          editor: Editor
+          author: Author
+          edit_reason: Reason
+        description: "Number of new post edits."
+      user_flagging_ratio:
+        title: "User Flagging Ratio"
+        labels:
+          user: User
+          agreed_flags: Agreed flags
+          disagreed_flags: Disagreed flags
+          ignored_flags: Ignored flags
+          score: Score
+        description: "List of users ordered by ratio of staff response to their flags (disagreed to agreed)."
+      moderators_activity:
+        title: "Moderator Activity"
+        labels:
+          moderator: Moderator
+          flag_count: Flags reviewed
+          time_read: Time reading
+          topic_count: Topics created
+          post_count: Posts created
+          pm_count: PMs created
+          revision_count: Revisions
+        description: List of moderator activity including flags reviewed, reading time, topics created, posts created, personal messages created, and revisions.
+      flags_status:
+        title: "Flags Status"
+        values:
+          agreed: Agreed
+          disagreed: Disagreed
+          deferred: Deferred
+          no_action: No action
+        labels:
+          flag: Type
+          assigned: Assigned
+          poster: Poster
+          flagger: Flagger
+          time_to_resolution: Resolution time
+        description: "List of flags' statuses including type of flag, poster, flagger, and time to resolution."
+      visits:
+        title: "User Visits"
+        xaxis: "Day"
+        yaxis: "Number of visits"
+        description: "Number of all user visits."
+      signups:
+        title: "Signups"
+        xaxis: "Day"
+        yaxis: "Number of signups"
+        description: "New account registrations for this period."
+      new_contributors:
+        title: "New Contributors"
+        xaxis: "Day"
+        yaxis: "Number of new contributors"
+        description: "Number of users who made their first post during this period."
+      consolidated_page_views:
+        title: "Consolidated Pageviews"
+        xaxis:
+          page_view_crawler: "Crawlers"
+          page_view_anon: "Anonymous users"
+          page_view_logged_in: "Logged in users"
+        yaxis: "Day"
+        description: "Pageviews for logged in users, anonymous users and crawlers."
+        labels:
+          post: Post
+          editor: Editor
+          author: Author
+          edit_reason: Reason
+      dau_by_mau:
+        title: "DAU/MAU"
+        xaxis: "Day"
+        yaxis: "DAU/MAU"
+        description: "Number of members that logged in in the last day divided by number of members that logged in in the last month – returns a % which indicates community 'stickiness'. Aim for >30%."
+      daily_engaged_users:
+        title: "Daily Engaged Users"
+        xaxis: "Day"
+        yaxis: "Engaged Users"
+        description: "Number of users that have liked or posted in the last day."
+      profile_views:
+        title: "User Profile Views"
+        xaxis: "Day"
+        yaxis: "Number of user profiles viewed"
+        description: "Total new views of user profiles."
+      topics:
+        title: "Topics"
+        xaxis: "Day"
+        yaxis: "Number of new topics"
+        description: "New topics created during this period."
+      posts:
+        title: "Posts"
+        xaxis: "Day"
+        yaxis: "Number of new posts"
+        description: "New posts created during this period"
+      likes:
+        title: "Likes"
+        xaxis: "Day"
+        yaxis: "Number of new likes"
+        description: "Number of new likes."
+      flags:
+        title: "Flags"
+        xaxis: "Day"
+        yaxis: "Number of flags"
+        description: "Number of new flags."
+      bookmarks:
+        title: "Bookmarks"
+        xaxis: "Day"
+        yaxis: "Number of new bookmarks"
+        description: "Number of new topics and posts bookmarked."
+      users_by_trust_level:
+        title: "Users per Trust Level"
+        xaxis: "Trust Level"
+        yaxis: "Number of Users"
+        labels:
+          level: Level
+        description: "Number of users grouped by trust level."
+        xaxis_labels:
+          0: "0"
+          1: "1"
+          2: "2"
+          3: "3"
+          4: "4"
+      users_by_type:
+        title: "Users per Type"
+        xaxis: "Type"
+        yaxis: "Number of Users"
+        labels:
+          type: Type
+        xaxis_labels:
+          admin: Admin
+          moderator: Moderator
+          suspended: Suspended
+          silenced: Silenced
+        description: "Number of users grouped by admin, moderator, suspended, and silenced."
+      trending_search:
+        title: Trending Search Terms
+        labels:
+          term: Term
+          searches: Searches
+          click_through: CTR
+        description: "Most popular search terms with their click-through rates."
+      emails:
+        title: "Emails Sent"
+        xaxis: "Day"
+        yaxis: "Number of Emails"
+        description: "Number of new emails sent."
+      user_to_user_private_messages:
+        title: "User-to-User (excluding replies)"
+        xaxis: "Day"
+        yaxis: "Number of messages"
+        description: "Number of newly initiated personal messages."
+      user_to_user_private_messages_with_replies:
+        title: "User-to-User (with replies)"
+        xaxis: "Day"
+        yaxis: "Number of messages"
+        description: "Number of all new personal messages and responses."
+      system_private_messages:
+        title: "System"
+        xaxis: "Day"
+        yaxis: "Number of messages"
+        description: "Number of personal messages sent automatically by the System."
+      moderator_warning_private_messages:
+        title: "Moderator Warning"
+        xaxis: "Day"
+        yaxis: "Number of messages"
+        description: "Number of warnings sent by personal messages from moderators."
+      notify_moderators_private_messages:
+        title: "Notify Moderators"
+        xaxis: "Day"
+        yaxis: "Number of messages"
+        description: "Number of times moderators have been privately notified by a flag."
+      notify_user_private_messages:
+        title: "Notify User"
+        xaxis: "Day"
+        yaxis: "Number of messages"
+        description: "Number of times users have been privately notified by a flag."
+      top_referrers:
+        title: "Top Referrers"
+        xaxis: "User"
+        num_clicks: "Clicks"
+        num_topics: "Topics"
+        labels:
+          user: "User"
+          num_clicks: "Clicks"
+          num_topics: "Topics"
+        description: "Users listed by number of clicks on links they have shared."
+      top_traffic_sources:
+        title: "Top Traffic Sources"
+        xaxis: "Domain"
+        num_clicks: "Clicks"
+        num_topics: "Topics"
+        num_users: "Users"
+        labels:
+          domain: Domain
+          num_clicks: Clicks
+          num_topics: Topics
+        description: "External sources that have linked to this site the most."
+      top_referred_topics:
+        title: "Top Referred Topics"
+        labels:
+          num_clicks: "Clicks"
+          topic: "Topic"
+        description: "Topics that have received the most clicks from external sources."
+      page_view_anon_reqs:
+        title: "Anonymous"
+        xaxis: "Day"
+        yaxis: "Anonymous Pageviews"
+        description: "Number of new pageviews by visitors not logged in to an account."
+      page_view_logged_in_reqs:
+        title: "Logged In"
+        xaxis: "Day"
+        yaxis: "Logged In Pageviews"
+        description: "Number of new pageviews from logged in users."
+      page_view_crawler_reqs:
+        title: "Web Crawler Pageviews"
+        xaxis: "Day"
+        yaxis: "Web Crawler Pageviews"
+        description: "Total pageviews from web crawlers over time."
+      page_view_total_reqs:
+        title: "Pageviews"
+        xaxis: "Day"
+        yaxis: "Total Pageviews"
+        description: "Number of new pageviews from all visitors."
+      page_view_logged_in_mobile_reqs:
+        title: "Logged In Pageviews"
+        xaxis: "Day"
+        yaxis: "Mobile Logged In Pageviews"
+        description: "Number of new pageviews from users on mobile devices and logged in to an account."
+      page_view_anon_mobile_reqs:
+        title: "Anon Pageviews"
+        xaxis: "Day"
+        yaxis: "Mobile Anon Pageviews"
+        description: "Number of new pageviews from visitors on a mobile device who are not logged in."
+      http_background_reqs:
+        title: "Background"
+        xaxis: "Day"
+        yaxis: "Requests used for live update and tracking"
+      http_2xx_reqs:
+        title: "Status 2xx (OK)"
+        xaxis: "Day"
+        yaxis: "Successful requests (Status 2xx)"
+      http_3xx_reqs:
+        title: "HTTP 3xx (Redirect)"
+        xaxis: "Day"
+        yaxis: "Redirect requests (Status 3xx)"
+      http_4xx_reqs:
+        title: "HTTP 4xx (Client Error)"
+        xaxis: "Day"
+        yaxis: "Client Errors (Status 4xx)"
+      http_5xx_reqs:
+        title: "HTTP 5xx (Server Error)"
+        xaxis: "Day"
+        yaxis: "Server Errors (Status 5xx)"
+      http_total_reqs:
+        title: "Total"
+        xaxis: "Day"
+        yaxis: "Total requests"
+      time_to_first_response:
+        title: "Time to first response"
+        xaxis: "Day"
+        yaxis: "Average time (hours)"
+        description: "Average time (in hours) of the first response to new topics."
+      topics_with_no_response:
+        title: "Topics with no response"
+        xaxis: "Day"
+        yaxis: "Total"
+        description: "Number of new topics created that did not receive a response."
+      mobile_visits:
+        title: "User Visits (mobile)"
+        xaxis: "Day"
+        yaxis: "Number of visits"
+        description: "Number of unique users who visited using a mobile device."
+      web_crawlers:
+        title: "Web Crawler User Agents"
+        labels:
+          user_agent: "User Agent"
+          page_views: "Pageviews"
+        description: "List of web crawler user agents, sorted by pageviews."
+      suspicious_logins:
+        title: "Suspicious Logins"
+        labels:
+          user: User
+          client_ip: Client IP
+          location: Location
+          browser: Browser
+          device: Device
+          os: Operating System
+          login_time: Login Time
+        description: "Details of new logins that differ suspiciously from previous logins."
+      staff_logins:
+        title: "Admin Logins"
+        labels:
+          user: User
+          location: Location
+          login_at: Login at
+        description: "List of admin login times with locations."
+      top_uploads:
+        title: "Top Uploads"
+        labels:
+          filename: Filename
+          extension: Extension
+          author: Author
+          filesize: File size
+        description: "List all uploads by extension, filesize and author."
+      top_ignored_users:
+        title: "Top Ignored / Muted Users"
+        labels:
+          ignored_user: Ignored User
+          ignores_count: Ignores count
+          mutes_count: Mutes count
+        description: "Users who have been muted and/or ignored by many other users."
+
     type_to_filter: "type to filter..."
 
     admin:

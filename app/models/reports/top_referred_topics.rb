@@ -13,12 +13,12 @@ Report.add_report('top_referred_topics') do |report|
         title: :topic_title,
         id: :topic_id
       },
-      title: I18n.t('reports.top_referred_topics.labels.topic')
+      title: 'reports.top_referred_topics.labels.topic'
     },
     {
       property: :num_clicks,
       type: :number,
-      title: I18n.t('reports.top_referred_topics.labels.num_clicks')
+      title: 'reports.top_referred_topics.labels.num_clicks'
     }
   ]
 

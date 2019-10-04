@@ -9,37 +9,37 @@ Report.add_report("moderators_activity") do |report|
         id: :user_id,
         avatar: :user_avatar_template,
       },
-      title: I18n.t("reports.moderators_activity.labels.moderator"),
+      title: "reports.moderators_activity.labels.moderator"
     },
     {
       property: :flag_count,
       type: :number,
-      title: I18n.t("reports.moderators_activity.labels.flag_count")
+      title: "reports.moderators_activity.labels.flag_count"
     },
     {
       type: :seconds,
       property: :time_read,
-      title: I18n.t("reports.moderators_activity.labels.time_read")
+      title: "reports.moderators_activity.labels.time_read"
     },
     {
       property: :topic_count,
       type: :number,
-      title: I18n.t("reports.moderators_activity.labels.topic_count")
+      title: "reports.moderators_activity.labels.topic_count"
     },
     {
       property: :pm_count,
       type: :number,
-      title: I18n.t("reports.moderators_activity.labels.pm_count")
+      title: "reports.moderators_activity.labels.pm_count"
     },
     {
       property: :post_count,
       type: :number,
-      title: I18n.t("reports.moderators_activity.labels.post_count")
+      title: "reports.moderators_activity.labels.post_count"
     },
     {
       property: :revision_count,
       type: :number,
-      title: I18n.t("reports.moderators_activity.labels.revision_count")
+      title: "reports.moderators_activity.labels.revision_count"
     }
   ]
 

@@ -11,17 +11,17 @@ Report.add_report("top_referrers") do |report|
         id: :user_id,
         avatar: :user_avatar_template,
       },
-      title: I18n.t("reports.top_referrers.labels.user")
+      title: "reports.top_referrers.labels.user"
     },
     {
       property: :num_clicks,
       type: :number,
-      title: I18n.t("reports.top_referrers.labels.num_clicks")
+      title: "reports.top_referrers.labels.num_clicks"
     },
     {
       property: :num_topics,
       type: :number,
-      title: I18n.t("reports.top_referrers.labels.num_topics")
+      title: "reports.top_referrers.labels.num_topics"
     }
   ]
 

@@ -19,11 +19,11 @@
           {{#unless showNotFoundError}}
           <li class="item report">
             <a href="{{model.reportUrl}}" class="report-url">
-              {{model.title}}
+              {{i18n model.title}}
             </a>
 
             {{#if model.description}}
-              <span class="info" data-tooltip="{{model.description}}">
+              <span class="info" data-tooltip="{{i18n model.description}}">
                 {{d-icon "question-circle"}}
               </span>
             {{/if}}
@@ -74,7 +74,7 @@
                 <a href="{{model.reportUrl}}" class="report-url">
                   <span>
                     {{#if model.title}}
-                      {{model.title}} —
+                      {{i18n model.title}} —
                     {{/if}}
                     {{i18n "admin.dashboard.reports.no_data"}}
                   </span>

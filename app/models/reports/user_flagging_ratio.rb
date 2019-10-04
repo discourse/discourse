@@ -15,27 +15,27 @@ Report.add_report("user_flagging_ratio") do |report|
         id: :user_id,
         avatar: :avatar_template,
       },
-      title: I18n.t("reports.user_flagging_ratio.labels.user")
+      title: "reports.user_flagging_ratio.labels.user"
     },
     {
       type: :number,
       property: :disagreed_flags,
-      title: I18n.t("reports.user_flagging_ratio.labels.disagreed_flags")
+      title: "reports.user_flagging_ratio.labels.disagreed_flags"
     },
     {
       type: :number,
       property: :agreed_flags,
-      title: I18n.t("reports.user_flagging_ratio.labels.agreed_flags")
+      title: "reports.user_flagging_ratio.labels.agreed_flags"
     },
     {
       type: :number,
       property: :ignored_flags,
-      title: I18n.t("reports.user_flagging_ratio.labels.ignored_flags")
+      title: "reports.user_flagging_ratio.labels.ignored_flags"
     },
     {
       type: :number,
       property: :score,
-      title: I18n.t("reports.user_flagging_ratio.labels.score")
+      title: "reports.user_flagging_ratio.labels.score"
     },
   ]
 

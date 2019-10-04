@@ -9,17 +9,17 @@ Report.add_report('top_traffic_sources') do |report|
   report.labels = [
     {
       property: :domain,
-      title: I18n.t('reports.top_traffic_sources.labels.domain')
+      title: 'reports.top_traffic_sources.labels.domain'
     },
     {
       property: :num_clicks,
       type: :number,
-      title: I18n.t('reports.top_traffic_sources.labels.num_clicks')
+      title: 'reports.top_traffic_sources.labels.num_clicks'
     },
     {
       property: :num_topics,
       type: :number,
-      title: I18n.t('reports.top_traffic_sources.labels.num_topics')
+      title: 'reports.top_traffic_sources.labels.num_topics'
     }
   ]
 

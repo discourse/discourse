@@ -13,16 +13,16 @@ Report.add_report("staff_logins") do |report|
         id: :user_id,
         avatar: :avatar_template,
       },
-      title: I18n.t("reports.staff_logins.labels.user")
+      title: "reports.staff_logins.labels.user"
     },
     {
       property: :location,
-      title: I18n.t("reports.staff_logins.labels.location")
+      title: "reports.staff_logins.labels.location"
     },
     {
       property: :created_at,
       type: :precise_date,
-      title: I18n.t("reports.staff_logins.labels.login_at")
+      title: "reports.staff_logins.labels.login_at"
     }
   ]
 

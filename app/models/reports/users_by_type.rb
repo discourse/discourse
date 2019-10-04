@@ -10,16 +10,16 @@ Report.add_report("users_by_type") do |report|
   report.labels = [
     {
       property: :x,
-      title: I18n.t("reports.users_by_type.labels.type")
+      title: "reports.users_by_type.labels.type"
     },
     {
       property: :y,
       type: :number,
-      title: I18n.t("reports.default.labels.count")
+      title: "reports.default.labels.count"
     }
   ]
 
-  label = Proc.new { |x| I18n.t("reports.users_by_type.xaxis_labels.#{x}") }
+  label = Proc.new { |x| "reports.users_by_type.xaxis_labels.#{x}" } 
   url = Proc.new { |key| "/admin/users/list/#{key}" }
 
   admins = User.real.admins.count

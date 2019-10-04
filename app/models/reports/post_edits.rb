@@ -10,7 +10,7 @@ Report.add_report('post_edits') do |report|
     {
       type: :date,
       property: :created_at,
-      title: I18n.t("reports.post_edits.labels.edited_at")
+      title: "reports.post_edits.labels.edited_at"
     },
     {
       type: :post,
@@ -19,7 +19,7 @@ Report.add_report('post_edits') do |report|
         number: :post_number,
         truncated_raw: :post_raw
       },
-      title: I18n.t("reports.post_edits.labels.post")
+      title: "reports.post_edits.labels.post"
     },
     {
       type: :user,
@@ -28,7 +28,7 @@ Report.add_report('post_edits') do |report|
         id: :editor_id,
         avatar: :editor_avatar_template,
       },
-      title: I18n.t("reports.post_edits.labels.editor")
+      title: "reports.post_edits.labels.editor"
     },
     {
       type: :user,
@@ -37,12 +37,12 @@ Report.add_report('post_edits') do |report|
         id: :author_id,
         avatar: :author_avatar_template,
       },
-      title: I18n.t("reports.post_edits.labels.author")
+      title: "reports.post_edits.labels.author"
     },
     {
       type: :text,
       property: :edit_reason,
-      title: I18n.t("reports.post_edits.labels.edit_reason")
+      title: "reports.post_edits.labels.edit_reason"
     },
   ]
 

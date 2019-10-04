@@ -5,12 +5,12 @@ Report.add_report("dau_by_mau") do |report|
     {
       type: :date,
       property: :x,
-      title: I18n.t("reports.default.labels.day")
+      title: "reports.default.labels.day"
     },
     {
       type: :percent,
       property: :y,
-      title: I18n.t("reports.default.labels.percent")
+      title: "reports.default.labels.percent"
     },
   ]
 
