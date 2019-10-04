@@ -40,9 +40,8 @@
         {{#each colors as |c|}}
           <tr class="{{if c.changed 'changed'}} {{if c.valid 'valid' 'invalid'}}">
             <td class="name" title={{c.name}}>
-              <b>{{c.translatedName}}</b>
-              <br/>
-              <span class="description">{{c.description}}</span>
+              <h3>{{c.translatedName}}</h3>
+              <p class="description">{{c.description}}</p>
             </td>
             <td class="hex">{{color-input hexValue=c.hex brightnessValue=c.brightness valid=c.valid}}</td>
             <td class="actions">
