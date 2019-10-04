@@ -13,7 +13,7 @@ export default {
       user.unread_notifications + user.unread_private_messages;
 
     container
-      .lookup("app-events:main")
+      .lookup("service:app-events")
       .on("notifications:changed", this, "_updateBadge");
   },
 

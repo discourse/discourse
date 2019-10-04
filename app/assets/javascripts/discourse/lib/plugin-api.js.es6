@@ -449,7 +449,7 @@ class PluginApi {
     ```
   **/
   onAppEvent(name, fn) {
-    const appEvents = this._lookupContainer("app-events:main");
+    const appEvents = this._lookupContainer("service:app-events");
     appEvents && appEvents.on(name, fn);
   }
 

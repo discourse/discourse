@@ -1,6 +1,6 @@
 import deprecated from "discourse-common/lib/deprecated";
 
-export default Ember.Object.extend(Ember.Evented, {
+export default Ember.Service.extend(Ember.Evented, {
   _events: {},
 
   on() {

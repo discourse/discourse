@@ -1,15 +1,15 @@
-import AppEvents from "discourse/lib/app-events";
 import Topic from "discourse/models/topic";
 import PostStream from "discourse/models/post-stream";
 import { Placeholder } from "discourse/lib/posts-with-placeholders";
 
 moduleFor("controller:topic", "controller:topic", {
-  needs: ["controller:composer", "controller:application"],
+  needs: [
+    "controller:composer",
+    "controller:application",
+    "service:app-events"
+  ],
   beforeEach() {
-    this.registry.register("app-events:main", AppEvents.create(), {
-      instantiate: false
-    });
-    this.registry.injection("controller", "appEvents", "app-events:main");
+    this.registry.injection("controller", "appEvents", "service:app-events");
   }
 });
 
