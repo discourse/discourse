@@ -13,14 +13,14 @@ class SiteSettings::DbProvider
   end
 
   def all
-    return [] unless table_exists?
+    return [] if !database_and_table_exists?
 
     # Not leaking out AR records, cause I want all editing to happen via this API
     DB.query("SELECT name, data_type, value FROM #{@model.table_name}")
   end
 
   def find(name)
-    return nil unless table_exists?
+    return nil if !database_and_table_exists?
 
     # Not leaking out AR records, cause I want all editing to happen via this API
     DB.query("SELECT name, data_type, value FROM #{@model.table_name} WHERE name = ?", name)
@@ -28,7 +28,7 @@ class SiteSettings::DbProvider
   end
 
   def save(name, value, data_type)
-    return unless table_exists?
+    return if !database_and_table_exists?
 
     model = @model.find_by(name: name)
     model ||= @model.new
@@ -44,7 +44,7 @@ class SiteSettings::DbProvider
   end
 
   def destroy(name)
-    return unless table_exists?
+    return if !database_and_table_exists?
 
     @model.where(name: name).destroy_all
   end
@@ -54,6 +54,16 @@ class SiteSettings::DbProvider
   end
 
   protected
+
+  def database_and_table_exists?
+    database_exists? && table_exists?
+  end
+
+  def database_exists?
+    ActiveRecord::Base.connection
+  rescue ActiveRecord::NoDatabaseError
+    false
+  end
 
   # table is not in the db yet, initial migration, etc
   def table_exists?
