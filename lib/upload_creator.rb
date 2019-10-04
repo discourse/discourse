@@ -197,6 +197,7 @@ class UploadCreator
     keep_jpeg &&= (filesize - new_size) > MIN_CONVERT_TO_JPEG_BYTES_SAVED
 
     if keep_jpeg
+      @file.close
       @file = jpeg_tempfile
       extract_image_info!
     else
@@ -227,16 +228,19 @@ class UploadCreator
   def downsize!
     3.times do
       original_size = filesize
-      downsized_pixels = [pixels, max_image_pixels].min / 2
+      down_tempfile = Tempfile.new(["down", ".#{@image_info.type}"])
 
       OptimizedImage.downsize(
         @file.path,
-        @file.path,
-        "#{downsized_pixels}@",
+        down_tempfile.path,
+        "50%",
         filename: @filename,
         allow_animation: allow_animation,
         raise_on_error: true
       )
+
+      @file.close
+      @file = down_tempfile
 
       extract_image_info!
 
