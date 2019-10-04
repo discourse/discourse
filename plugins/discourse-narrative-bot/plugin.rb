@@ -120,9 +120,9 @@ after_initialize do
     DiscourseNarrativeBot::Store.remove(self.id)
   end
 
-  self.add_model_callback(User, :after_commit, on: :create) do
-    if SiteSetting.discourse_narrative_bot_welcome_post_delay == 0 && !self.staged
-      self.enqueue_bot_welcome_post
+  self.on(:user_created) do |user|
+    if SiteSetting.discourse_narrative_bot_welcome_post_delay == 0 && !user.staged
+      user.enqueue_bot_welcome_post
     end
   end
 
