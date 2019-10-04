@@ -20,6 +20,8 @@ module Jobs
           notification.merge(client_id: client_id)
         end
 
+        next unless push_url
+
         result = Excon.post(push_url,
           body: payload.merge(notifications: notifications).to_json,
           headers: { 'Content-Type' => 'application/json', 'Accept' => 'application/json' }
