@@ -102,7 +102,7 @@ module Stylesheet
       targets = target ? [target] : ["desktop", "mobile", "admin"]
       Stylesheet::Manager.clear_core_cache!(targets)
       message = targets.map! do |name|
-        message = Stylesheet::Manager.stylesheet_data(name.to_sym, Stylesheet::Watcher.theme_id)
+        Stylesheet::Manager.stylesheet_data(name.to_sym, Stylesheet::Watcher.theme_id)
       end.flatten!
       MessageBus.publish '/file-change', message
     end
