@@ -80,7 +80,6 @@ module Stylesheet
                   end
                 end
 
-                target = long.match(/admin|desktop|mobile/)
                 {
                   basename: File.basename(long),
                   target: target,
