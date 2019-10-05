@@ -5,9 +5,6 @@ export default Ember.Controller.extend(ModalFunctionality, {
   linkUrl: "",
   linkText: "",
 
-  @computed()
-  title: () => "composer.link_dialog_title",
-
   onShow() {
     Ember.run.next(() =>
       $(this)
