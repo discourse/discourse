@@ -65,7 +65,6 @@ module Stylesheet
               paths.compact!
               paths.map! do |long|
                 plugin_name = nil
-
                 plugins_paths.each do |plugin_path|
                   if long.include?(plugin_path)
                     plugin_name = File.basename(plugin_path)
@@ -73,10 +72,18 @@ module Stylesheet
                   end
                 end
 
+                target = nil
+                if !plugin_name
+                  target_match = long.match(/admin|desktop|mobile/)
+                  if target_match&.length
+                    target = target_match[0]
+                  end
+                end
+
                 target = long.match(/admin|desktop|mobile/)
                 {
                   basename: File.basename(long),
-                  target: target&.length ? target[0] : nil,
+                  target: target,
                   plugin_name: plugin_name
                 }
               end
