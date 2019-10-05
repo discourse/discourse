@@ -44,9 +44,6 @@ module Stylesheet
           end
         rescue => e
           STDERR.puts "CSS change notifier crashed #{e}"
-          while @queue.length > 0
-            @queue.pop
-          end
           start
         end
       end
