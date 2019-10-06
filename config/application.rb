@@ -21,6 +21,7 @@ require 'action_mailer/railtie'
 require 'sprockets/railtie'
 
 # Plugin related stuff
+require_relative '../lib/plugin_initialization_guard'
 require_relative '../lib/discourse_event'
 require_relative '../lib/discourse_plugin'
 require_relative '../lib/discourse_plugin_registry'
@@ -266,7 +267,9 @@ module Discourse
         Discourse.activate_plugins!
       end
     else
-      Discourse.activate_plugins!
+      plugin_initialization_guard do
+        Discourse.activate_plugins!
+      end
     end
 
     Discourse.find_plugin_js_assets(include_disabled: true).each do |file|
@@ -301,7 +304,9 @@ module Discourse
       OpenID::Util.logger = Rails.logger
 
       # Load plugins
-      Discourse.plugins.each(&:notify_after_initialize)
+      plugin_initialization_guard do
+        Discourse.plugins.each(&:notify_after_initialize)
+      end
 
       # we got to clear the pool in case plugins connect
       ActiveRecord::Base.connection_handler.clear_active_connections!
