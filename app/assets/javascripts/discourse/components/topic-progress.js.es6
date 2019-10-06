@@ -161,7 +161,7 @@ export default Ember.Component.extend({
       : $("#topic-progress").outerHeight();
     const maximumOffset = $("#topic-bottom").offset().top + progressHeight;
     const windowHeight = $(window).height();
-    const composerHeight = $("#reply-control").height() || 0;
+    let composerHeight = $("#reply-control").height() || 0;
     const isDocked = offset >= maximumOffset - windowHeight + composerHeight;
     let bottom = $("body").height() - maximumOffset;
 
@@ -170,8 +170,15 @@ export default Ember.Component.extend({
       bottom += $iPadFooterNav.outerHeight();
     }
     const wrapperDir = $html.hasClass("rtl") ? "left" : "right";
+    const draftComposerHeight = 40;
 
     if (composerHeight > 0) {
+      const $iPhoneFooterNav = $(".footer-nav-visible .footer-nav");
+      const $replyDraft = $("#reply-control.draft");
+      if ($iPhoneFooterNav.outerHeight() && $replyDraft.outerHeight()) {
+        composerHeight =
+          $replyDraft.outerHeight() + $iPhoneFooterNav.outerHeight();
+      }
       $wrapper.css("bottom", isDocked ? bottom : composerHeight);
     } else {
       $wrapper.css("bottom", isDocked ? bottom : "");
@@ -186,9 +193,10 @@ export default Ember.Component.extend({
       $wrapper.css(wrapperDir, "1em");
     }
 
-    if (!isDocked) {
-      $wrapper.css("margin-bottom", "0px");
-    }
+    $wrapper.css(
+      "margin-bottom",
+      !isDocked && composerHeight > draftComposerHeight ? "0px" : ""
+    );
   },
 
   click(e) {
