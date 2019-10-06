@@ -23,7 +23,7 @@
     "jquery.autoellipsis": "https://github.com/pvdspek/jquery.autoellipsis",
     "jquery.cookie": "1.4.1",
     "magnific-popup": "1.1.0",
-    "markdown-it": "8.4.1",
+    "markdown-it": "10.0.0",
     "moment": "2.24.0",
     "moment-timezone": "0.5.25",
     "moment-timezone-names-translations": "https://github.com/discourse/moment-timezone-names-translations",
