@@ -378,6 +378,23 @@ pre.onebox code {
   white-space: normal;
 }
 
+// Onebox - Github - PR, Commit & Issue
+.onebox.githubpullrequest,
+.onebox.githubcommit,
+.onebox.githubissue {
+  .github-icon {
+    float: left;
+    margin-right: 10px;
+    fill: $primary-high;
+  }
+
+  .onebox-avatar-inline {
+    height: 1em;
+    width: 1em;
+    margin-right: 6px;
+  }
+}
+
 //Onebox - Github - Pull request
 .onebox-body .github-commit-status {
   background: #f5f5f5;
