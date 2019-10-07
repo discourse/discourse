@@ -1,0 +1,33 @@
+<div class="discourse-automation modal add-plan">
+  {{#d-modal-body title="discourse_automation.plan.form.add_plan"}}
+    {{partial "form-errors"}}
+
+    <div class="control">
+      <div class="input">
+        {{combo-box
+          none="discourse_automation.plan.form.choose_plan"
+          content=plannables
+          onSelect=(action "onSelectPlan")
+        }}
+      </div>
+    </div>
+
+    {{plan-form
+      plannable=plannable
+      plan=plan
+      workflow=workflow
+      onChangeField=(action "onChangeField")
+    }}
+  {{/d-modal-body}}
+
+  <div class="modal-footer">
+    {{d-button
+      action=(action "savePlan")
+      class="btn-primary"
+      label="save"
+      disabled=addPlanDisabled
+    }}
+
+    {{d-modal-cancel close=(route-action "closeModal")}}
+  </div>
+</div>

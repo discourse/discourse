@@ -1,0 +1,155 @@
+<div class="section workflow">
+  <div class="section-header">
+    <h3 class="title">Workflow</h3>
+
+    <div class="actions">
+      {{#if workflowChanged}}
+        {{d-button
+          action=(action "saveWorkflow")
+          class="btn-primary"
+          icon="check"
+        }}
+      {{/if}}
+
+      {{d-button
+        action=(action "destroyWorkflow")
+        class="btn-danger"
+        icon="trash-alt"
+      }}
+    </div>
+  </div>
+
+  <div class="section-body">
+    {{partial "form-errors"}}
+
+    {{input
+      value=(unbound model.name)
+      class="workflow-name"
+      insert-newline=(action "saveWorkflow")
+      input=(action "onWorkflowNameChanged")
+    }}
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-header">
+    <h3 class="title">Trigger</h3>
+    <div class="actions">
+      {{#if model.trigger}}
+        {{#if triggerHasOptions}}
+          {{d-button
+            action=(action "editTrigger" model.trigger)
+            icon="pencil-alt"
+          }}
+        {{/if}}
+        {{d-button
+          action=(action "destroyTrigger" model.trigger)
+          class="btn-danger"
+          icon="trash-alt"
+        }}
+      {{else}}
+        {{d-button
+          action=(action "addTrigger")
+          class="btn-primary"
+          icon="plus"
+        }}
+      {{/if}}
+    </div>
+  </div>
+
+  <div class="section-body">
+    {{#if model.trigger}}
+      <table>
+        <thead>
+          <th>
+            <td><b>Type</b></td>
+          </th>
+        </thead>
+        <tbody>
+          <tr>
+            <td>{{i18n (concat "discourse_automation.trigger." model.trigger.identifier ".title")}}</td>
+          </tr>
+        </tbody>
+      </table>
+
+      {{#if triggerHasOptions}}
+        <table>
+          <thead>
+            <th>
+              <td colspan="2"><b>Options</b></td>
+            </th>
+          </thead>
+          <tbody>
+            {{#if model.trigger.options}}
+              {{#each-in model.trigger.options as |option_key option|}}
+                <tr>
+                  <td>
+                    {{option_key}}
+                    {{#if (get model.trigger.triggerable.fields (concat option_key ".required"))}}
+                      *
+                    {{/if}}
+                  </td>
+                  <td>{{option.value}}</td>
+                </tr>
+              {{/each-in}}
+            {{/if}}
+          </tbody>
+        </table>
+      {{/if}}
+    {{/if}}
+  </div>
+</div>
+
+{{#if model.trigger}}
+  <div class="section">
+    <div class="section-header">
+      <h3 class="title">Plans</h3>
+      <div class="actions">
+        {{d-button
+          action=(action "addPlan")
+          class="btn-primary"
+          icon="plus"
+        }}
+      </div>
+    </div>
+
+    <div class="section-body">
+      {{#if model.plans}}
+        <table>
+          <thead>
+            <tr>
+              <th>Type</th>
+              <th>Delay</th>
+              <th></th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            {{#each model.plans as |plan|}}
+              <tr>
+                <td>
+                  {{i18n (concat "discourse_automation.plan." plan.identifier ".title")}}
+                </td>
+                <td>{{format-delay plan.delay}}</td>
+                <td>
+                  {{d-button
+                    icon="pencil-alt"
+                    action=(action "editPlan" plan)
+                  }}
+                </td>
+                <td>
+                  {{d-button
+                    class="btn-danger"
+                    icon="trash-alt"
+                    action=(action "destroyPlan" plan)}}
+                  </td>
+              </tr>
+            {{/each}}
+          </tbody>
+        </table>
+      {{else}}
+        <p>Plans are executed whenever your workflow is triggered, you can have as many plans as you want.</p>
+      {{/if}}
+    </div>
+  </div>
+{{/if}}

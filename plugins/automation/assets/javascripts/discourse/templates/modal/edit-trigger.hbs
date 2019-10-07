@@ -1,0 +1,30 @@
+<div class="discourse-automation modal edit-trigger">
+  {{#d-modal-body title="discourse_automation.trigger.form.edit_trigger"}}
+    {{partial "form-errors"}}
+
+    {{#conditional-loading-spinner condition=isLoadingTriggers}}
+      {{#each-in triggerable.fields as |name field|}}
+        {{workflow-field
+          name=name
+          field=field
+          object="trigger"
+          params=triggerParams
+          specification=triggerable.specification
+          workflow=workflow
+          onChange=(action "onChangeField")
+        }}
+      {{/each-in}}
+    {{/conditional-loading-spinner}}
+  {{/d-modal-body}}
+
+  <div class="modal-footer">
+    {{d-button
+      action=(action "saveTrigger")
+      class="btn-primary"
+      label="save"
+      disabled=addTriggerDisabled
+    }}
+
+    {{d-modal-cancel close=(route-action "closeModal")}}
+  </div>
+</div>

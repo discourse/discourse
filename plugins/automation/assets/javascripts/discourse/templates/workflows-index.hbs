@@ -1,0 +1,64 @@
+<div class="section workflowable">
+  {{#if model.workflowables.length}}
+    <div class="section-body">
+      {{#each model.workflowables as |workflowable|}}
+        <div class="workflowable-container">
+          <div class="workflowable">
+            <div class="workflowable-header">
+              <h4 class="workflowable-label">{{i18n (concat "discourse_automation.workflowables." workflowable.id ".label")}}</h4>
+              <p class="workflowable-description">{{i18n (concat "discourse_automation.workflowables." workflowable.id ".description")}}</p>
+            </div>
+            <div class="workflowable-footer">
+              {{d-button
+                action=(action "setupWorkflow" workflowable)
+                label="discourse_automation.workflowables.setup"
+              }}
+            </div>
+          </div>
+        </div>
+      {{/each}}
+    </div>
+  {{/if}}
+</div>
+
+<div class="section workflow">
+  <div class="section-header">
+    <h3 class="title">Workflows</h3>
+  </div>
+
+  {{#if model.workflows.length}}
+    <table class="workflows-list">
+      <thead>
+        <tr>
+          <th></th>
+          <th>Name</th>
+          <th>Trigger</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#each model.workflows as |workflow|}}
+          <tr>
+            <td><span class="workflow-{{if workflow.trigger 'active' 'inactive'}}"></span></td>
+            <td>{{workflow.name}}</td>
+            <td>
+              {{#if workflow.trigger}}
+                {{i18n (concat "discourse_automation.trigger." workflow.trigger.identifier ".title")}}
+              {{else}}
+                -
+              {{/if}}
+            </td>
+            <td>
+              {{d-button
+                icon="pencil-alt"
+                action=(action "editWorkflow" workflow)
+              }}
+            </td>
+          </tr>
+        {{/each}}
+      </tbody>
+    </table>
+  {{else}}
+    <p>Workflows are the root of Discourse Automation. They will hold the trigger of the workflow, and the plans executed when the workflow is triggered.</p>
+  {{/if}}
+</div>

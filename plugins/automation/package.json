@@ -1,0 +1,7 @@
+{
+  "dependencies": {
+    "babel-eslint": "^10.0.3",
+    "eslint": "^6.3.0",
+    "prettier": "^1.18.2"
+  }
+}

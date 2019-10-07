@@ -1,3 +1,77 @@
 en:
   js:
     discourse_automation:
+      title: Automation
+      workflowables:
+        setup: Set up this workflow
+        on_boarding:
+          label: On boarding
+          description: Send messages to new users joining a group.
+        empty_workflow:
+          label: Empty workflow
+          description: Base workflow, use it if you want to build a fully custom workflow.
+        secret_santa:
+          label: Secret santa
+          description: Secretly randomly assign users of a group to each others to find and send a gift for christmas.
+      workflows:
+        confirm_destroy: Are you sure you want to destroy this workflow?
+        form:
+          create_workflow: Create workflow
+      trigger:
+        confirm_destroy: Are you sure you want to destroy this trigger?
+        form:
+          add_trigger: Add a trigger
+          edit_trigger: Edit trigger
+          choose_trigger: Choose a trigger
+        on_group_joined:
+          title: Group joined
+          fields:
+            joined_group:
+              label: Group
+        on_user_created:
+          title: User created
+        every_hour:
+          title: Every hour
+        every_day:
+          title: Every day
+        every_ten_minutes:
+          title: Every ten minutes
+      plan:
+        delay:
+          label: Delays the executing of the plan (minutes)
+        confirm_destroy: Are you sure you want to destroy this plan?
+        form:
+          add_plan: Add a plan
+          edit_plan: Edit plan
+          choose_plan: Choose a plan
+        publish_random_topic:
+          title: Publish random topic
+          fields:
+            from_category_id:
+              label: Category origin of topics
+            to_category_id:
+              label: Category destination
+        send_custom_notification:
+          title: Send a notification
+          fields:
+            title:
+              label: Title
+            message:
+              label: Message
+            url:
+              label: URL
+            icon:
+              label: Icon
+            target_username:
+              label: User receiving the notification
+        send_personal_message:
+          title: Send personal message
+          fields:
+            title:
+              label: Message title
+            raw:
+              label: Message content
+            creator_username:
+              label: Username sending the message
+            target_username:
+              label: Username receiving the message

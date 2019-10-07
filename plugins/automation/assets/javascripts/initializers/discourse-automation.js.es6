@@ -1,6 +1,9 @@
 import { withPluginApi } from "discourse/lib/plugin-api";
 
-function initializeDiscourseAutomation() {}
+function initializeDiscourseAutomation(api) {
+  console.log("init", api);
+  api.addStorePluralization("workflow-action", "workflow-actions");
+}
 
 export default {
   name: "discourse-automation",
