@@ -764,4 +764,50 @@ module Discourse
   def self.skip_post_deployment_migrations?
     ['1', 'true'].include?(ENV["SKIP_POST_DEPLOYMENT_MIGRATIONS"]&.to_s)
   end
+
+  # this is used to preload as much stuff as possible prior to forking
+  # in turn this can conserve large amounts of memory on forking servers
+  def self.preload_rails!
+    return if @preloaded_rails
+
+    # load up all models and schema
+    (ActiveRecord::Base.connection.tables - %w[schema_migrations versions]).each do |table|
+      table.classify.constantize.first rescue nil
+    end
+
+    # ensure we have a full schema cache in case we missed something above
+    ActiveRecord::Base.connection.data_sources.each do |table|
+      ActiveRecord::Base.connection.schema_cache.add(table)
+    end
+
+    schema_cache = ActiveRecord::Base.connection.schema_cache
+
+    # load up schema cache for all multisite assuming all dbs have
+    # an identical schema
+    RailsMultisite::ConnectionManagement.each_connection do
+      dup_cache = schema_cache.dup
+      # this line is not really needed, but just in case the
+      # underlying implementation changes lets give it a shot
+      dup_cache.connection = nil
+      ActiveRecord::Base.connection.schema_cache = dup_cache
+      I18n.t(:posts)
+
+      # this will force Cppjieba to preload if any site has it
+      # enabled allowing it to be reused between all child processes
+      Search.prepare_data("test")
+    end
+
+    # router warm up
+    Rails.application.routes.recognize_path('abc') rescue nil
+
+    # preload discourse version
+    Discourse.git_version
+    Discourse.git_branch
+    Discourse.full_version
+
+    require 'actionview_precompiler'
+    ActionviewPrecompiler.precompile
+  ensure
+    @preloaded_rails = true
+  end
 end

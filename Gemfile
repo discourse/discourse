@@ -26,6 +26,10 @@ else
   gem 'sprockets-rails'
 end
 
+# this will eventually be added to rails,
+# allows us to precompile all our templates in the unicorn master
+gem 'actionview_precompiler', require: false
+
 gem 'seed-fu'
 
 gem 'mail', require: false
