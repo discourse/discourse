@@ -316,7 +316,10 @@ const Post = RestModel.extend({
     // need to wait to hear back from server (stuff may not be loaded)
 
     return Discourse.Post.updateBookmark(this.id, this.bookmarked)
-      .then(result => this.set("topic.bookmarked", result.topic_bookmarked))
+      .then(result => {
+        this.set("topic.bookmarked", result.topic_bookmarked);
+        this.appEvents.trigger("page:bookmark-post-toggled", this);
+      })
       .catch(error => {
         this.toggleProperty("bookmarked");
         if (bookmarkedTopic) {
