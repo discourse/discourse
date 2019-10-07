@@ -471,6 +471,8 @@ export default Ember.Controller.extend(bufferedProperty("model"), {
       const quoteState = this.quoteState;
       const postStream = this.get("model.postStream");
 
+      this.appEvents.trigger("page:compose-reply", topic);
+
       if (!postStream || !topic || !topic.get("details.can_create_post")) {
         return;
       }
