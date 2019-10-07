@@ -7,6 +7,7 @@ module TurboTests
       formatters = opts[:formatters]
       start_time = opts.fetch(:start_time) { Time.now }
       verbose = opts.fetch(:verbose, false)
+      fast_fail = opts.fetch(:fast_fail, nil)
 
       if verbose
         STDERR.puts "VERBOSE"
@@ -17,7 +18,8 @@ module TurboTests
       new(
         reporter: reporter,
         files: files,
-        verbose: verbose
+        verbose: verbose,
+        fast_fail: fast_fail
       ).run
     end
 
@@ -25,6 +27,7 @@ module TurboTests
       @reporter = opts[:reporter]
       @files = opts[:files]
       @verbose = opts[:verbose]
+      @fast_fail = opts[:fast_fail]
 
       @messages = Queue.new
       @threads = []
