@@ -1,12 +1,15 @@
-<a href="{{user.html_url}}">
-<img src="{{avatar}}" class="thumbnail onebox-avatar">
-</a>
+<svg width="60" height="60" class="github-icon" viewBox="0 0 14 16" version="1.1" aria-hidden="true"><path fill-rule="evenodd" d="M7 2.3c3.14 0 5.7 2.56 5.7 5.7s-2.56 5.7-5.7 5.7A5.71 5.71 0 0 1 1.3 8c0-3.14 2.56-5.7 5.7-5.7zM7 1C3.14 1 0 4.14 0 8s3.14 7 7 7 7-3.14 7-7-3.14-7-7-7zm1 3H6v5h2V4zm0 6H6v2h2v-2z"></path></svg>
 
-<h4><a href="{{link}}" target="_blank">{{title}}</a></h4>
+<h4>
+  <a href="{{user.html_url}}">
+    <img src="{{avatar}}" class="onebox-avatar-inline" height="20" width="20">
+  </a>
+  <a href="{{link}}" target="_blank">{{title}}</a>
+</h4>
 
 <div class="date" style="margin-top:10px;">
 	<div class="user" style="margin-top:10px;">
-	opened by <a href="{{user.html_url}}" target="_blank">{{user.login}}</a>
+	issue opened by <a href="{{user.html_url}}" target="_blank">{{user.login}}</a>
 	on <a href="{{link}}" target="_blank">{{created_at}}</a>
 	</div>
 	<div class="user">

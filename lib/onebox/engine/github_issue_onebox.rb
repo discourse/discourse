@@ -34,7 +34,7 @@ module Onebox
         ulink = URI(link)
         {
           link: @url,
-          title: "Issue: " + @raw["title"],
+          title: @raw["title"],
           content: short_content.gsub("<br>", "\n"),
           labels: @raw["labels"],
           user: @raw['user'],
