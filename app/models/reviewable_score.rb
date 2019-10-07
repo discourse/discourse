@@ -84,7 +84,8 @@ class ReviewableScore < ActiveRecord::Base
     axis_distance_multiplier = 1.0 / (top - bottom)
     positivity_multiplier = positive_accuracy ? 1.0 : -1.0
 
-    absolute_distance * axis_distance_multiplier * positivity_multiplier * (Math.log(total, 4) * 5.0)
+    (absolute_distance * axis_distance_multiplier * positivity_multiplier * (Math.log(total, 4) * 5.0))
+      .round(2)
   end
 
   def reviewable_conversation
