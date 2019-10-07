@@ -589,7 +589,7 @@ class UserNotifications < ActionMailer::Base
       end
 
       unless translation_override_exists
-        html = UserNotificationRenderer.with_view_paths(Rails.configuration.paths["app/views"]).render(
+        html = UserNotificationRenderer.instance.render(
           template: 'email/notification',
           format: :html,
           locals: { context_posts: context_posts,
