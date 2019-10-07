@@ -1,5 +1,8 @@
 import debounce from "discourse/lib/debounce";
-import { safariHacksDisabled } from "discourse/lib/utilities";
+import {
+  safariHacksDisabled,
+  iOSWithVisualViewport
+} from "discourse/lib/utilities";
 
 // TODO: remove calcHeight once iOS 13 adoption > 90%
 // In iOS 13 and up we use visualViewport API to calculate height
@@ -95,7 +98,7 @@ function positioningWorkaround($fixedElement) {
       fixedElement.style.position = "";
       fixedElement.style.top = "";
 
-      if (window.visualViewport === undefined) {
+      if (!iOSWithVisualViewport()) {
         fixedElement.style.height = oldHeight;
         Ember.run.later(
           () => $(fixedElement).removeClass("no-transition"),
@@ -176,7 +179,7 @@ function positioningWorkaround($fixedElement) {
 
     fixedElement.style.top = "0px";
 
-    if (window.visualViewport === undefined) {
+    if (!iOSWithVisualViewport()) {
       const height = calcHeight();
       fixedElement.style.height = height + "px";
       $(fixedElement).addClass("no-transition");
