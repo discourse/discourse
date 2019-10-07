@@ -20,6 +20,8 @@ GEM
       erubi (~> 1.4)
       rails-dom-testing (~> 2.0)
       rails-html-sanitizer (~> 1.1, >= 1.2.0)
+    actionview_precompiler (0.2.1)
+      actionview (>= 6.0.a)
     active_model_serializers (0.8.4)
       activemodel (>= 3.0)
     activejob (6.0.0)
@@ -428,6 +430,7 @@ DEPENDENCIES
   actionmailer (= 6.0.0)
   actionpack (= 6.0.0)
   actionview (= 6.0.0)
+  actionview_precompiler
   active_model_serializers (~> 0.8.3)
   activemodel (= 6.0.0)
   activerecord (= 6.0.0)
