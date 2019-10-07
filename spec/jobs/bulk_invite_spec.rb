@@ -8,9 +8,9 @@ describe Jobs::BulkInvite do
     fab!(:admin) { Fabricate(:admin) }
     fab!(:group1) { Fabricate(:group, name: 'group1') }
     fab!(:group2) { Fabricate(:group, name: 'group2') }
-    fab!(:topic) { Fabricate(:topic, id: 999) }
+    fab!(:topic) { Fabricate(:topic) }
     let(:email) { "test@discourse.org" }
-    let(:invites) { [{ email: 'test2@discourse.org' }, { email: 'test@discourse.org', groups: 'GROUP1;group2', topic_id: 999 }] }
+    let(:invites) { [{ email: 'test2@discourse.org' }, { email: 'test@discourse.org', groups: 'GROUP1;group2', topic_id: topic.id }] }
 
     it 'raises an error when the invites array is missing' do
       expect { Jobs::BulkInvite.new.execute(current_user_id: user.id) }
