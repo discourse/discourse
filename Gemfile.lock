@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    onebox (1.9.13)
+    onebox (1.9.14)
       htmlentities (~> 4.3)
       moneta (~> 1.0)
       multi_json (~> 1.11)
@@ -104,7 +104,7 @@ GEM
       ruby-progressbar (~> 1.7)
       unicode-display_width (~> 1.4.0)
     ruby-progressbar (1.10.0)
-    sanitize (5.0.0)
+    sanitize (5.1.0)
       crass (~> 1.0.2)
       nokogiri (>= 1.8.0)
       nokogumbo (~> 2.0)
