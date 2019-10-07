@@ -32,6 +32,12 @@ module Compression
       end
     end
 
+    def strip_directory(from, to)
+      sanitized_from = sanitize_path(from)
+      sanitized_to = sanitize_path(to)
+      FileUtils.mv(Dir.glob("#{sanitized_from}/**"), sanitized_to) if File.directory?(sanitized_from)
+    end
+
     private
 
     def sanitize_path(filename)

@@ -20,10 +20,10 @@ class ThemeStore::ZipImporter
     Dir.chdir(@temp_folder) do
       Compression::Engine.engine_for(@original_filename).tap do |engine|
         engine.decompress(@temp_folder, @filename)
+        filename = @filename.split('/').last.gsub(engine.extension, '')
+        unzipped_path = File.join(@temp_folder, filename)
+        engine.strip_directory(unzipped_path, @temp_folder)
       end
-
-      # --strip 1 equivalent
-      FileUtils.mv(Dir.glob("#{@temp_folder}/*/*"), @temp_folder)
     end
   rescue RuntimeError
     raise RemoteTheme::ImportError, I18n.t("themes.import_error.unpack_failed")
