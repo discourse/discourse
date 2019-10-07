@@ -7,6 +7,7 @@ import afterTransition from "discourse/lib/after-transition";
 import positioningWorkaround from "discourse/lib/safari-hacks";
 import { headerHeight } from "discourse/components/site-header";
 import KeyEnterEscape from "discourse/mixins/key-enter-escape";
+import { iOSWithVisualViewport } from "discourse/lib/utilities";
 
 const START_EVENTS = "touchstart mousedown";
 const DRAG_EVENTS = "touchmove mousemove";
@@ -132,14 +133,10 @@ export default Ember.Component.extend(KeyEnterEscape, {
       $document.on(END_EVENTS, endDrag);
     });
 
-    if (this.shouldUseVisualViewportListener()) {
+    if (iOSWithVisualViewport()) {
       this.viewportResize();
       window.visualViewport.addEventListener("resize", this.viewportResize);
     }
-  },
-
-  shouldUseVisualViewportListener() {
-    return this.capabilities.isIOS && window.visualViewport !== undefined;
   },
 
   viewportResize() {
@@ -178,7 +175,7 @@ export default Ember.Component.extend(KeyEnterEscape, {
   willDestroyElement() {
     this._super(...arguments);
     this.appEvents.off("composer:resize", this, this.resize);
-    if (this.shouldUseVisualViewportListener()) {
+    if (iOSWithVisualViewport()) {
       window.visualViewport.removeEventListener("resize", this.viewportResize);
     }
   },

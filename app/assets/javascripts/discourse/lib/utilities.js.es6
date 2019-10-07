@@ -544,6 +544,10 @@ export function isAppleDevice() {
 
 let iPadDetected = undefined;
 
+export function iOSWithVisualViewport() {
+  return isAppleDevice() && window.visualViewport !== undefined;
+}
+
 export function isiPad() {
   if (iPadDetected === undefined) {
     iPadDetected =
@@ -554,6 +558,8 @@ export function isiPad() {
 }
 
 export function safariHacksDisabled() {
+  if (iOSWithVisualViewport()) return false;
+
   let pref = localStorage.getItem("safari-hacks-disabled");
   let result = false;
   if (pref !== null) {
