@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddUserAccuracyBonusToReviewableScores < ActiveRecord::Migration[6.0]
   def up
     # Add user_accuracy_bonus to reviewable_scores
