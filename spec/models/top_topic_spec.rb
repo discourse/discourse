@@ -73,8 +73,8 @@ describe TopTopic do
       top_topics = TopTopic.all
 
       expect(top_topics.where(topic_id: topic_1.id).pluck(:yearly_score).first).to eq(27)
-      expect(top_topics.where(topic_id: topic_2.id).pluck(:yearly_score).first).to eq(18.301029995664)
-      expect(top_topics.where(topic_id: topic_3.id).pluck(:yearly_score).first).to eq(10.602059991328)
+      expect(top_topics.where(topic_id: topic_2.id).pluck(:yearly_score).first).to be_within(0.0000000001).of(18.301029995664)
+      expect(top_topics.where(topic_id: topic_3.id).pluck(:yearly_score).first).to be_within(0.0000000001).of(10.602059991328)
 
       # when 'top_topics_formula_log_views_multiplier' setting is changed
       SiteSetting.top_topics_formula_log_views_multiplier = 4
