@@ -707,6 +707,12 @@ export default Ember.Controller.extend(bufferedProperty("model"), {
       });
     },
 
+    jumpEnd() {
+      DiscourseURL.routeTo(this.get("model.lastPostUrl"), {
+        jumpEnd: true
+      });
+    },
+
     jumpUnread() {
       this._jumpToPostId(this.get("model.last_read_post_id"));
     },
