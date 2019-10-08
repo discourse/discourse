@@ -161,20 +161,26 @@ describe Plugin::Instance do
   end
 
   it 'patches the enabled? function for auth_providers if not defined' do
+    SimpleAuthenticator = Class.new(Auth::Authenticator) do
+      def name
+        "my_authenticator"
+      end
+    end
+
     plugin = Plugin::Instance.new
 
     # lets piggy back on another boolean setting, so we don't dirty our SiteSetting object
     SiteSetting.enable_badges = false
 
     # No enabled_site_setting
-    authenticator = Auth::Authenticator.new
+    authenticator = SimpleAuthenticator.new
     plugin.auth_provider(authenticator: authenticator)
     plugin.notify_before_auth
     expect(authenticator.enabled?).to eq(true)
 
     # With enabled site setting
     plugin = Plugin::Instance.new
-    authenticator = Auth::Authenticator.new
+    authenticator = SimpleAuthenticator.new
     plugin.auth_provider(enabled_setting: 'enable_badges', authenticator: authenticator)
     plugin.notify_before_auth
     expect(authenticator.enabled?).to eq(false)
@@ -183,7 +189,7 @@ describe Plugin::Instance do
     plugin = Plugin::Instance.new
 
     SiteSetting.enable_badges = true
-    authenticator = Class.new(Auth::Authenticator) do
+    authenticator = Class.new(SimpleAuthenticator) do
       def enabled?
         false
       end

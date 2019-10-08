@@ -197,17 +197,17 @@ RSpec.describe Users::OmniauthCallbacksController do
 
         get "/auth/google_oauth2/callback.json"
 
-        expect(response.status).to eq(200)
+        expect(response.status).to eq(302)
 
-        response_body = JSON.parse(response.body)
+        data = JSON.parse(cookies[:authentication_data])
 
-        expect(response_body["email"]).to eq(email)
-        expect(response_body["username"]).to eq("Some_Name")
-        expect(response_body["auth_provider"]).to eq("google_oauth2")
-        expect(response_body["email_valid"]).to eq(true)
-        expect(response_body["omit_username"]).to eq(false)
-        expect(response_body["name"]).to eq("Some Name")
-        expect(response_body["destination_url"]).to eq(destination_url)
+        expect(data["email"]).to eq(email)
+        expect(data["username"]).to eq("Some_Name")
+        expect(data["auth_provider"]).to eq("google_oauth2")
+        expect(data["email_valid"]).to eq(true)
+        expect(data["omit_username"]).to eq(false)
+        expect(data["name"]).to eq("Some Name")
+        expect(data["destination_url"]).to eq(destination_url)
       end
 
       it 'should include destination url in response' do
@@ -216,8 +216,8 @@ RSpec.describe Users::OmniauthCallbacksController do
 
         get "/auth/google_oauth2/callback.json"
 
-        response_body = JSON.parse(response.body)
-        expect(response_body["destination_url"]).to eq(destination_url)
+        data = JSON.parse(cookies[:authentication_data])
+        expect(data["destination_url"]).to eq(destination_url)
       end
     end
 
@@ -254,15 +254,15 @@ RSpec.describe Users::OmniauthCallbacksController do
 
         expect(events.map { |event| event[:event_name] }).to include(:user_logged_in, :user_first_logged_in)
 
-        expect(response.status).to eq(200)
+        expect(response.status).to eq(302)
 
-        response_body = JSON.parse(response.body)
+        data = JSON.parse(cookies[:authentication_data])
 
-        expect(response_body["authenticated"]).to eq(true)
-        expect(response_body["awaiting_activation"]).to eq(false)
-        expect(response_body["awaiting_approval"]).to eq(false)
-        expect(response_body["not_allowed_from_ip_address"]).to eq(false)
-        expect(response_body["admin_not_allowed_from_ip_address"]).to eq(false)
+        expect(data["authenticated"]).to eq(true)
+        expect(data["awaiting_activation"]).to eq(false)
+        expect(data["awaiting_approval"]).to eq(false)
+        expect(data["not_allowed_from_ip_address"]).to eq(false)
+        expect(data["admin_not_allowed_from_ip_address"]).to eq(false)
 
         user.reload
         expect(user.email_confirmed?).to eq(true)
@@ -280,7 +280,7 @@ RSpec.describe Users::OmniauthCallbacksController do
 
         expect(events.map { |event| event[:event_name] }).to include(:user_logged_in, :user_first_logged_in)
 
-        expect(response.status).to eq(200)
+        expect(response.status).to eq(302)
 
         user.reload
         expect(user.email_confirmed?).to eq(true)
@@ -299,7 +299,7 @@ RSpec.describe Users::OmniauthCallbacksController do
 
         expect(events.map { |event| event[:event_name] }).to include(:user_logged_in, :user_first_logged_in)
 
-        expect(response.status).to eq(200)
+        expect(response.status).to eq(302)
 
         user.reload
         expect(user.staged).to eq(false)
@@ -330,18 +330,18 @@ RSpec.describe Users::OmniauthCallbacksController do
         it 'should return the right response' do
           get "/auth/google_oauth2/callback.json"
 
-          expect(response.status).to eq(200)
+          expect(response.status).to eq(302)
 
-          response_body = JSON.parse(response.body)
+          data = JSON.parse(cookies[:authentication_data])
 
-          expect(response_body["email"]).to eq(user.email)
-          expect(response_body["omniauth_disallow_totp"]).to eq(true)
+          expect(data["email"]).to eq(user.email)
+          expect(data["omniauth_disallow_totp"]).to eq(true)
 
           user.update!(email: 'different@user.email')
           get "/auth/google_oauth2/callback.json"
 
-          expect(response.status).to eq(200)
-          expect(JSON.parse(response.body)["email"]).to eq(user.email)
+          expect(response.status).to eq(302)
+          expect(JSON.parse(cookies[:authentication_data])["email"]).to eq(user.email)
         end
       end
 
@@ -383,11 +383,11 @@ RSpec.describe Users::OmniauthCallbacksController do
         it 'should return the right response' do
           get "/auth/google_oauth2/callback.json"
 
-          expect(response.status).to eq(200)
+          expect(response.status).to eq(302)
 
-          response_body = JSON.parse(response.body)
+          data = JSON.parse(cookies[:authentication_data])
 
-          expect(response_body["destination_url"]).to match(/\/session\/sso_provider\?sso\=.*\&sig\=.*/)
+          expect(data["destination_url"]).to match(/\/session\/sso_provider\?sso\=.*\&sig\=.*/)
         end
       end
 
@@ -421,13 +421,13 @@ RSpec.describe Users::OmniauthCallbacksController do
         it 'should return the right response' do
           get "/auth/google_oauth2/callback.json"
 
-          expect(response.status).to eq(200)
+          expect(response.status).to eq(302)
 
-          response_body = JSON.parse(response.body)
+          data = JSON.parse(cookies[:authentication_data])
 
           expect(user.reload.active).to eq(false)
-          expect(response_body["authenticated"]).to eq(false)
-          expect(response_body["awaiting_activation"]).to eq(true)
+          expect(data["authenticated"]).to eq(false)
+          expect(data["awaiting_activation"]).to eq(true)
         end
       end
 
@@ -534,7 +534,7 @@ RSpec.describe Users::OmniauthCallbacksController do
         expect(session[:auth_reconnect]).to eq(false)
 
         get "/auth/google_oauth2/callback.json"
-        expect(response.status).to eq(200)
+        expect(response.status).to eq(302)
         expect(session[:current_user_id]).to eq(user.id)
 
         # Log into another user
@@ -544,7 +544,7 @@ RSpec.describe Users::OmniauthCallbacksController do
         expect(session[:auth_reconnect]).to eq(false)
 
         get "/auth/google_oauth2/callback.json"
-        expect(response.status).to eq(200)
+        expect(response.status).to eq(302)
         expect(session[:current_user_id]).to eq(user2.id)
         expect(UserAssociatedAccount.count).to eq(2)
       end
@@ -556,7 +556,7 @@ RSpec.describe Users::OmniauthCallbacksController do
         expect(session[:auth_reconnect]).to eq(true)
 
         get "/auth/google_oauth2/callback.json"
-        expect(response.status).to eq(200)
+        expect(response.status).to eq(302)
         expect(session[:current_user_id]).to eq(user.id)
 
         # Clear cookie after login
@@ -605,8 +605,8 @@ RSpec.describe Users::OmniauthCallbacksController do
         Rails.application.env_config["omniauth.auth"] = OmniAuth.config.mock_auth[:google_oauth2]
 
         get "/auth/google_oauth2/callback.json"
-        expect(response.status).to eq(200)
-        JSON.parse(response.body)
+        expect(response.status).to eq(302)
+        JSON.parse(cookies[:authentication_data])
       end
 
       it 'activates the correct email' do

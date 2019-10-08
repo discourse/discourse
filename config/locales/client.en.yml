@@ -1497,27 +1497,21 @@ en:
       google_oauth2:
         name: "Google"
         title: "with Google"
-        message: "Authenticating with Google (make sure pop up blockers are not enabled)"
       twitter:
         name: "Twitter"
         title: "with Twitter"
-        message: "Authenticating with Twitter (make sure pop up blockers are not enabled)"
       instagram:
         name: "Instagram"
         title: "with Instagram"
-        message: "Authenticating with Instagram (make sure pop up blockers are not enabled)"
       facebook:
         name: "Facebook"
         title: "with Facebook"
-        message: "Authenticating with Facebook (make sure pop up blockers are not enabled)"
       github:
         name: "GitHub"
         title: "with GitHub"
-        message: "Authenticating with GitHub (make sure pop up blockers are not enabled)"
       discord:
         name: "Discord"
         title: "with Discord"
-        message: "Authenticating with Discord"
       second_factor_toggle:
         totp: "Use an authenticator app instead"
         backup_code: "Use a backup code instead"
