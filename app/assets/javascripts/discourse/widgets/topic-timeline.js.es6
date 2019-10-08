@@ -187,7 +187,11 @@ createWidget("timeline-scrollarea", {
 
     if (this.state.position !== result.scrollPosition) {
       this.state.position = result.scrollPosition;
-      this.sendWidgetAction("updatePosition", result.position, result.scrollPosition);
+      this.sendWidgetAction(
+        "updatePosition",
+        result.position,
+        result.scrollPosition
+      );
     }
 
     return result;
