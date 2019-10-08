@@ -159,6 +159,7 @@ class Reviewable < ActiveRecord::Base
     type_bonus = PostActionType.where(id: reviewable_score_type).pluck(:score_bonus)[0] || 0
     take_action_bonus = take_action ? 5.0 : 0.0
     sub_total = (ReviewableScore.user_flag_score(user) + type_bonus + take_action_bonus)
+    user_accuracy_bonus = ReviewableScore.user_accuracy_bonus(user)
 
     # We can force a reviewable to hit the threshold, for example with queued posts
     if force_review && sub_total < Reviewable.min_score_for_priority
@@ -170,6 +171,7 @@ class Reviewable < ActiveRecord::Base
       status: ReviewableScore.statuses[:pending],
       reviewable_score_type: reviewable_score_type,
       score: sub_total,
+      user_accuracy_bonus: user_accuracy_bonus,
       meta_topic_id: meta_topic_id,
       take_action_bonus: take_action_bonus,
       created_at: created_at || Time.zone.now
@@ -491,6 +493,7 @@ class Reviewable < ActiveRecord::Base
         us.flags_disagreed,
         us.flags_ignored,
         rs.score,
+        rs.user_accuracy_bonus,
         rs.take_action_bonus,
         COALESCE(pat.score_bonus, 0.0) AS type_bonus
       FROM reviewable_scores AS rs
