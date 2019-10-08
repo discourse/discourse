@@ -941,6 +941,7 @@ const Composer = RestModel.extend({
 
         composer.clearState();
         composer.set("createdPost", createdPost);
+        this.appEvents.trigger("post:created", createdPost);
 
         if (addedToStream) {
           composer.set("composeState", CLOSED);
