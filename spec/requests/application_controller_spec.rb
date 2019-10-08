@@ -11,11 +11,6 @@ RSpec.describe ApplicationController do
       SiteSetting.login_required = true
     end
 
-    it "should carry-forward authComplete param to login page redirect" do
-      get "/?authComplete=true"
-      expect(response).to redirect_to('/login?authComplete=true')
-    end
-
     it "should never cache a login redirect" do
       get "/"
       expect(response.headers["Cache-Control"]).to eq("no-cache, no-store")

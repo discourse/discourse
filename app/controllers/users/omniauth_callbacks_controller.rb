@@ -71,18 +71,9 @@ class Users::OmniauthCallbacksController < ApplicationController
     else
       @auth_result.authenticator_name = authenticator.name
       complete_response_data
-
-      if provider&.full_screen_login || cookies['fsl']
-        cookies.delete('fsl')
-        cookies['_bypass_cache'] = true
-        cookies[:authentication_data] = @auth_result.to_client_hash.to_json
-        redirect_to @origin
-      else
-        respond_to do |format|
-          format.html
-          format.json { render json: @auth_result.to_client_hash }
-        end
-      end
+      cookies['_bypass_cache'] = true
+      cookies[:authentication_data] = @auth_result.to_client_hash.to_json
+      redirect_to @origin
     end
   end
 

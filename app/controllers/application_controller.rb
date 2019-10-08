@@ -724,9 +724,6 @@ class ApplicationController < ActionController::Base
         session[:destination_url] = destination_url
         redirect_to path('/session/sso')
         return
-      elsif params[:authComplete].present?
-        redirect_to path("/login?authComplete=true")
-        return
       else
         # save original URL in a cookie (javascript redirects after login in this case)
         cookies[:destination_url] = destination_url
