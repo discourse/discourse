@@ -384,14 +384,16 @@ pre.onebox code {
 .onebox.githubissue {
   .github-icon {
     float: left;
-    margin-right: 10px;
+    margin-right: 4px;
     fill: $primary-high;
+    width: 30px;
+    height: 30px;
   }
 
   .onebox-avatar-inline {
     height: 1em;
     width: 1em;
-    margin-right: 6px;
+    margin-right: 4px;
   }
 }
 
