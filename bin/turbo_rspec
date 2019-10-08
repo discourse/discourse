@@ -9,7 +9,7 @@ require 'optparse'
 requires = []
 formatters = []
 verbose = false
-fast_fail = nil
+fail_fast = nil
 
 OptionParser.new do |opts|
   opts.on("-r", "--require PATH", "Require a file.") do |filename|
@@ -37,9 +37,9 @@ OptionParser.new do |opts|
     verbose = true
   end
 
-  opts.on("--fast-fail=[N]") do |n|
+  opts.on("--fail-fast=[N]") do |n|
     n = Integer(n) rescue nil
-    fast_fail = (n.nil? || n < 1) ? 1 : n
+    fail_fast = (n.nil? || n < 1) ? 1 : n
   end
 
 end.parse!(ARGV)
@@ -64,7 +64,7 @@ success =
     formatters: formatters,
     files: ARGV.empty? ? ["spec"] : ARGV,
     verbose: verbose,
-    fast_fail: fast_fail
+    fail_fast: fail_fast
   )
 
 if success

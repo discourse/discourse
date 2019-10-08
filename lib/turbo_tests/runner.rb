@@ -7,7 +7,7 @@ module TurboTests
       formatters = opts[:formatters]
       start_time = opts.fetch(:start_time) { Time.now }
       verbose = opts.fetch(:verbose, false)
-      fast_fail = opts.fetch(:fast_fail, nil)
+      fail_fast = opts.fetch(:fail_fast, nil)
 
       if verbose
         STDERR.puts "VERBOSE"
@@ -19,7 +19,7 @@ module TurboTests
         reporter: reporter,
         files: files,
         verbose: verbose,
-        fast_fail: fast_fail
+        fail_fast: fail_fast
       ).run
     end
 
@@ -27,7 +27,7 @@ module TurboTests
       @reporter = opts[:reporter]
       @files = opts[:files]
       @verbose = opts[:verbose]
-      @fast_fail = opts[:fast_fail]
+      @fail_fast = opts[:fail_fast]
       @failure_count = 0
 
       @messages = Queue.new
@@ -218,7 +218,7 @@ module TurboTests
             example = FakeExample.from_obj(message[:example])
             @reporter.example_failed(example)
             @failure_count += 1
-            break if fast_fail_met
+            break if fail_fast_met
           when 'seed'
           when 'close'
           when 'exit'
@@ -236,8 +236,8 @@ module TurboTests
       end
     end
 
-    def fast_fail_met
-      return false if @fast_fail.nil? || @fast_fail < @failure_count
+    def fail_fast_met
+      return false if @fail_fast.nil? || @fail_fast < @failure_count
 
       @threads.each(&:kill)
       true
