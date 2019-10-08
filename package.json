@@ -43,6 +43,8 @@
     "chrome-launcher": "^0.10",
     "chrome-remote-interface": "^0.25",
     "eslint": "^4.19",
+    "eslint-config-discourse": "1.0.5",
+    "install-peerdeps": "^1.10.2",
     "lodash-cli": "https://github.com/lodash-archive/lodash-cli.git",
     "pretender": "^1.6",
     "prettier": "^1.18.2",
@@ -52,6 +54,7 @@
     "sinon": "^7.2.5"
   },
   "scripts": {
-    "preinstall": "node -e \"if(process.env.npm_execpath.indexOf('yarn') === -1) throw new Error('NPM is not supported, please use Yarn instead. ')\""
+    "preinstall": "node -e \"if(process.env.npm_execpath.indexOf('yarn') === -1) throw new Error('NPM is not supported, please use Yarn instead. ')\"",
+    "postinstall": "install-peerdeps --dev eslint-config-discourse -Y --extra-args \"--ignore-scripts\""
   }
 }
