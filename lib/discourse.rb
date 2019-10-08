@@ -71,13 +71,18 @@ module Discourse
 
   # When they don't have permission to do something
   class InvalidAccess < StandardError
-    attr_reader :obj, :custom_message, :opts
+    attr_reader :obj
+    attr_reader :opts
+    attr_reader :custom_message
+    attr_reader :group
+
     def initialize(msg = nil, obj = nil, opts = nil)
       super(msg)
 
       @opts = opts || {}
-      @custom_message = opts[:custom_message] if @opts[:custom_message]
       @obj = obj
+      @custom_message = opts[:custom_message] if @opts[:custom_message]
+      @group = opts[:group] if @opts[:group]
     end
   end
 
@@ -86,12 +91,15 @@ module Discourse
     attr_reader :status
     attr_reader :check_permalinks
     attr_reader :original_path
+    attr_reader :custom_message
 
-    def initialize(message = nil, status: 404, check_permalinks: false, original_path: nil)
+    def initialize(msg = nil, status: 404, check_permalinks: false, original_path: nil, custom_message: nil)
+      super(msg)
+
       @status = status
       @check_permalinks = check_permalinks
       @original_path = original_path
-      super(message)
+      @custom_message = custom_message
     end
   end
 

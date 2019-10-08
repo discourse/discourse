@@ -155,10 +155,6 @@ module TopicGuardian
     can_see_category?(topic.category)
   end
 
-  def can_see_topic_if_not_deleted?(topic)
-    can_see_topic?(topic, false)
-  end
-
   def can_get_access_to_topic?(topic)
     topic&.access_topic_via_group.present? && authenticated?
   end

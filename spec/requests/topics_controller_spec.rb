@@ -1229,12 +1229,13 @@ RSpec.describe TopicsController do
 
     describe 'when topic is not allowed' do
       it 'should return the right response' do
+        SiteSetting.detailed_404 = true
         sign_in(user)
 
         get "/t/#{private_topic.id}.json"
 
         expect(response.status).to eq(403)
-        expect(response.body).to eq(I18n.t('invalid_access'))
+        expect(response.body).to include(I18n.t('invalid_access'))
       end
     end
 
@@ -1379,108 +1380,224 @@ RSpec.describe TopicsController do
         end
       end
 
-      context 'anonymous' do
-        expected = {
-          normal_topic: 200,
-          secure_topic: 403,
-          private_topic: 403,
-          deleted_topic: 410,
-          deleted_secure_topic: 403,
-          deleted_private_topic: 403,
-          nonexist: 404,
-          secure_accessible_topic: 403
-        }
-        include_examples "various scenarios", expected
-      end
-
-      context 'anonymous with login required' do
+      context 'without detailed error pages' do
         before do
-          SiteSetting.login_required = true
-        end
-        expected = {
-          normal_topic: 302,
-          secure_topic: 302,
-          private_topic: 302,
-          deleted_topic: 302,
-          deleted_secure_topic: 302,
-          deleted_private_topic: 302,
-          nonexist: 302,
-          secure_accessible_topic: 302
-        }
-        include_examples "various scenarios", expected
-      end
-
-      context 'normal user' do
-        before do
-          sign_in(user)
+          SiteSetting.detailed_404 = false
         end
 
-        expected = {
-          normal_topic: 200,
-          secure_topic: 403,
-          private_topic: 403,
-          deleted_topic: 410,
-          deleted_secure_topic: 403,
-          deleted_private_topic: 403,
-          nonexist: 404,
-          secure_accessible_topic: 200
-        }
-        include_examples "various scenarios", expected
-      end
-
-      context 'allowed user' do
-        before do
-          sign_in(allowed_user)
+        context 'anonymous' do
+          expected = {
+            normal_topic: 200,
+            secure_topic: 404,
+            private_topic: 404,
+            deleted_topic: 404,
+            deleted_secure_topic: 404,
+            deleted_private_topic: 404,
+            nonexist: 404,
+            secure_accessible_topic: 404
+          }
+          include_examples "various scenarios", expected
         end
 
-        expected = {
-          normal_topic: 200,
-          secure_topic: 200,
-          private_topic: 200,
-          deleted_topic: 410,
-          deleted_secure_topic: 410,
-          deleted_private_topic: 410,
-          nonexist: 404,
-          secure_accessible_topic: 200
-        }
-        include_examples "various scenarios", expected
-      end
-
-      context 'moderator' do
-        before do
-          sign_in(moderator)
+        context 'anonymous with login required' do
+          before do
+            SiteSetting.login_required = true
+          end
+          expected = {
+            normal_topic: 302,
+            secure_topic: 302,
+            private_topic: 302,
+            deleted_topic: 302,
+            deleted_secure_topic: 302,
+            deleted_private_topic: 302,
+            nonexist: 302,
+            secure_accessible_topic: 302
+          }
+          include_examples "various scenarios", expected
         end
 
-        expected = {
-          normal_topic: 200,
-          secure_topic: 403,
-          private_topic: 403,
-          deleted_topic: 200,
-          deleted_secure_topic: 403,
-          deleted_private_topic: 403,
-          nonexist: 404,
-          secure_accessible_topic: 200
-        }
-        include_examples "various scenarios", expected
-      end
+        context 'normal user' do
+          before do
+            sign_in(user)
+          end
 
-      context 'admin' do
-        before do
-          sign_in(admin)
+          expected = {
+            normal_topic: 200,
+            secure_topic: 404,
+            private_topic: 404,
+            deleted_topic: 404,
+            deleted_secure_topic: 404,
+            deleted_private_topic: 404,
+            nonexist: 404,
+            secure_accessible_topic: 404
+          }
+          include_examples "various scenarios", expected
         end
 
-        expected = {
-          normal_topic: 200,
-          secure_topic: 200,
-          private_topic: 200,
-          deleted_topic: 200,
-          deleted_secure_topic: 200,
-          deleted_private_topic: 200,
-          nonexist: 404,
-          secure_accessible_topic: 200
-        }
-        include_examples "various scenarios", expected
+        context 'allowed user' do
+          before do
+            sign_in(allowed_user)
+          end
+
+          expected = {
+            normal_topic: 200,
+            secure_topic: 200,
+            private_topic: 200,
+            deleted_topic: 404,
+            deleted_secure_topic: 404,
+            deleted_private_topic: 404,
+            nonexist: 404,
+            secure_accessible_topic: 404
+          }
+          include_examples "various scenarios", expected
+        end
+
+        context 'moderator' do
+          before do
+            sign_in(moderator)
+          end
+
+          expected = {
+            normal_topic: 200,
+            secure_topic: 404,
+            private_topic: 404,
+            deleted_topic: 200,
+            deleted_secure_topic: 404,
+            deleted_private_topic: 404,
+            nonexist: 404,
+            secure_accessible_topic: 404
+          }
+          include_examples "various scenarios", expected
+        end
+
+        context 'admin' do
+          before do
+            sign_in(admin)
+          end
+
+          expected = {
+            normal_topic: 200,
+            secure_topic: 200,
+            private_topic: 200,
+            deleted_topic: 200,
+            deleted_secure_topic: 200,
+            deleted_private_topic: 200,
+            nonexist: 404,
+            secure_accessible_topic: 200
+          }
+          include_examples "various scenarios", expected
+        end
       end
+
+      context 'with detailed error pages' do
+        before do
+          SiteSetting.detailed_404 = true
+        end
+
+        context 'anonymous' do
+          expected = {
+            normal_topic: 200,
+            secure_topic: 403,
+            private_topic: 403,
+            deleted_topic: 410,
+            deleted_secure_topic: 403,
+            deleted_private_topic: 403,
+            nonexist: 404,
+            secure_accessible_topic: 403
+          }
+          include_examples "various scenarios", expected
+        end
+
+        context 'anonymous with login required' do
+          before do
+            SiteSetting.login_required = true
+          end
+          expected = {
+            normal_topic: 302,
+            secure_topic: 302,
+            private_topic: 302,
+            deleted_topic: 302,
+            deleted_secure_topic: 302,
+            deleted_private_topic: 302,
+            nonexist: 302,
+            secure_accessible_topic: 302
+          }
+          include_examples "various scenarios", expected
+        end
+
+        context 'normal user' do
+          before do
+            sign_in(user)
+          end
+
+          expected = {
+            normal_topic: 200,
+            secure_topic: 403,
+            private_topic: 403,
+            deleted_topic: 410,
+            deleted_secure_topic: 403,
+            deleted_private_topic: 403,
+            nonexist: 404,
+            secure_accessible_topic: 403
+          }
+          include_examples "various scenarios", expected
+        end
+
+        context 'allowed user' do
+          before do
+            sign_in(allowed_user)
+          end
+
+          expected = {
+            normal_topic: 200,
+            secure_topic: 200,
+            private_topic: 200,
+            deleted_topic: 410,
+            deleted_secure_topic: 410,
+            deleted_private_topic: 410,
+            nonexist: 404,
+            secure_accessible_topic: 403
+          }
+          include_examples "various scenarios", expected
+        end
+
+        context 'moderator' do
+          before do
+            sign_in(moderator)
+          end
+
+          expected = {
+            normal_topic: 200,
+            secure_topic: 403,
+            private_topic: 403,
+            deleted_topic: 200,
+            deleted_secure_topic: 403,
+            deleted_private_topic: 403,
+            nonexist: 404,
+            secure_accessible_topic: 403
+          }
+          include_examples "various scenarios", expected
+        end
+
+        context 'admin' do
+          before do
+            sign_in(admin)
+          end
+
+          expected = {
+            normal_topic: 200,
+            secure_topic: 200,
+            private_topic: 200,
+            deleted_topic: 200,
+            deleted_secure_topic: 200,
+            deleted_private_topic: 200,
+            nonexist: 404,
+            secure_accessible_topic: 200
+          }
+          include_examples "various scenarios", expected
+        end
+      end
+
     end
 
     it 'records a view' do
@@ -1637,7 +1754,7 @@ RSpec.describe TopicsController do
           [:json, :html].each do |format|
             get "/t/#{topic.slug}/#{topic.id}.#{format}", params: { api_key: "bad" }
 
-            expect(response.code.to_i).to be(403)
+            expect(response.code.to_i).to eq(403)
             expect(response.body).to include(I18n.t("invalid_access"))
           end
         end
