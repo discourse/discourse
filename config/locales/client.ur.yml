@@ -880,7 +880,6 @@ ur:
         copied_to_clipboard: "کلِپ بورڈ میں کاپی کر لیا گیا"
         copy_to_clipboard_error: "کلِپ بورڈ میں ڈیٹا کاپی کرنے پر خرابی کا سامنا کر نا پرا"
         remaining_codes: "آپ کے پاس <strong>{{count}}</strong> بیک اپ کوڈ باقی ہیں۔"
-        use: "<a href>ایک بیک اپ کوڈ استعمال کریں</a>"
         enable_prerequisites: "بیک اپ کوڈز تیار کرنے سے پہلے آپ کا ایک بنیادی دوسرا فیکٹر فعال کرنا ضروری ہے۔"
         codes:
           title: "بیک اپ کوڈز تیار"
@@ -889,6 +888,7 @@ ur:
         title: "دو فیکٹر توثیق"
         enable: "دو فیکٹر توثیق انتظام کریں"
         confirm_password_description: "جاری رکھنے کیلئے براہ کرم اپنے پاسوَرڈ کی تصدیق کریں"
+        name: "نام"
         label: "کَوڈ"
         rate_limit: "دوبارہ توثیقی کوڈ کی کوشش کرنے سے پہلے براہ کرم تھوڑا انتظار کریں۔"
         enable_description: |
@@ -900,7 +900,6 @@ ur:
         extended_description: |
           دو فیکٹر توثیق پاسوَرڈ کے ساتھ ساتھ ایک دفعہ کے ٹَوکن کو مانگ کر آپ کے اکاؤنٹ کیلئے اضافی سیکورٹی شامل کرتا ہے۔ ٹَوکن <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>اینڈرائڈ</a> اور <a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS</a> ڈیوائسوں پر تخلیق کیے جا سکتے ہیں۔
         oauth_enabled_warning: "براہ مہربانی نوٹ کریں کہ ایک بار جب آپ کے اکاؤنٹ پر دو فیکٹر توثیق فعال ہو جائے تو سَوشَل لاگ اِن غیر فعال ہوجائیں گے۔"
-        use: "<a href>اَوتھینٹیکَیٹر اَیپ کا استعمال کریں</a>"
         enforced_notice: "اِس سائٹ تک رسائی حاصل کرنے کیلئے آپ کا دو فیکٹر توثیق فعال کرنا ضروری ہے۔"
         disable: "غیر فعال"
         disable_title: "دوسرا فیکٹر غیر فعال کریں"
@@ -912,6 +911,9 @@ ur:
           title: "ٹوکن کی بنیاد پر تصديق کنندہ"
           add: "نیا تصديق کنندہ"
           default_name: "میرا تصديق کنندہ"
+        security_key:
+          register: "رجسٹر"
+          delete: 'حذف کریں'
       change_about:
         title: "\"میرے بارے میں\" تبدیل کریں"
         error: "اِس چیز کو تبدیل کرنے میں ایک خرابی کا سامنا کرنا پڑا۔"
@@ -1309,10 +1311,8 @@ ur:
       password: "پاسورڈ"
       second_factor_title: "دو فیکٹر توثیق"
       second_factor_description: "براہ مہربانی اپنی اَیپ میں سے توثیقی کَوڈ درج کریں:"
-      second_factor_backup: "<a href>بیک اپ کوڈ کا استعمال کرتے ہوئے لاگ اِن کریں</a>"
       second_factor_backup_title: "دو فیکٹر بیک اپ"
       second_factor_backup_description: "براہ مہربانی اپنے بیک اپ کوڈز میں سے ایک درج کریں:"
-      second_factor: "<a href>اَوتھینٹیکَیٹر اَیپ کا استعمال کرتے ہوئے لاگ اِن کریں</a>"
       email_placeholder: "اِی میل یا صارف نام"
       caps_lock_warning: "کیپس لاک آن ہے"
       error: "نامعلوم خرابی"
@@ -1366,6 +1366,9 @@ ur:
         name: "ڈِسکَورڈ"
         title: "ڈِسکَورڈ کے ساتھ"
         message: "ڈِسکَورڈ کے ساتھ تصدیق"
+      second_factor_toggle:
+        totp: "بجائے ایک اَوتھینٹیکَیٹر اَیپ کا استعمال کریں"
+        backup_code: "بجائے ایک بیک اپ کوڈ استعمال کریں"
     invites:
       accept_title: "دعوت نامہ"
       welcome_to: "%{site_name} پر خوش آمدید!"
@@ -1383,7 +1386,6 @@ ur:
       apple_international: "Apple/International"
       google: "Google"
       twitter: "Twitter"
-      emoji_one: "Emoji One"
       win10: "Win10"
       google_classic: "گُوگَل کلاسِک"
       facebook_messenger: "فَیس بُک مَیسنجر"
@@ -3344,7 +3346,6 @@ ur:
             other: "تِھیم {{count}} کَمِٹس پیچھے ہے!"
           compare_commits: "(نئے کَمِٹس دیکھیں)"
           repo_unreachable: "اِس تِھیم کی گِٹ رِیپَوزِٹَری سے رابطہ نہیں کیا جا سکا۔ تکنیکی خرابی کا پیغام:"
-          imported_from_archive: "یہ تِھیم ایک .tar.gz فائل سے درآمد کی گئی تھی"
           scss:
             text: "CSS"
             title: "اپنی مرضی کے مطابق CSS درج کریں، ہم تمام درست CSS اور SCSS سٹائلز قبول کرتے ہیں"

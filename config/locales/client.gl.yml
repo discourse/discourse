@@ -509,7 +509,10 @@ gl:
         disable: "Desactivar"
         enable: "Activar"
       second_factor:
+        name: "Nome"
         edit: "Editar"
+        security_key:
+          delete: 'Eliminar'
       change_about:
         title: "Cambiar «Verbo de min»"
       change_username:
@@ -832,7 +835,6 @@ gl:
       apple_international: "Apple/Internacional"
       google: "Google"
       twitter: "Twitter"
-      emoji_one: "Emoji One"
     shortcut_modifier_key:
       shift: "Maiús."
       ctrl: "Ctrl"

@@ -690,11 +690,15 @@ sw:
       second_factor:
         title: "Uhalalalishaji wa Viwango Viwili"
         confirm_password_description: "Thibitisha nywila yako kuendelea"
+        name: "Jina"
         label: "Kodi"
         disable_description: "Tafadhali andika kodi ya uthibitisho kutoka kwenye app yako"
         show_key_description: "Andika kwa mkono"
         oauth_enabled_warning: "Tafadhali jua kuwa kuingia kupitia mitandao itasitishwa kama uthibitisho wa kiwango cha pili umewezeshwa kwenye akaunti yako."
         edit: "Hariri"
+        security_key:
+          register: "Jisajili"
+          delete: 'Futa'
       change_about:
         title: "Badilisha Taarifa Zangu"
         error: "Hitilafu imetokea wakati wa kubadilisha namba hii."
@@ -1044,10 +1048,8 @@ sw:
       password: "Nywila"
       second_factor_title: "Uhalalalishaji wa Viwango Viwili"
       second_factor_description: "Tafadhali andika kodi ya uthibitisho kutoka kwenye app yako:"
-      second_factor_backup: "<a href>Ingia kutumia kodi ya backup </a>"
       second_factor_backup_title: "Backup kutumia steji mbili"
       second_factor_backup_description: "Samahani, Ingiza mojawapo ya kodi yako ya backup"
-      second_factor: "<a href>Ingia kutumia App ya Uthibitisho </a>"
       email_placeholder: "barua pepe au jina la mtumiaji"
       caps_lock_warning: "Caps Lock imewashwa"
       error: "Tatizo lilisojulikana"
@@ -1114,7 +1116,6 @@ sw:
       apple_international: "Apple/International"
       google: "Google"
       twitter: "Twitter"
-      emoji_one: "Ishara ya Kwanza"
       win10: "Win10"
       google_classic: "Google Classic"
       facebook_messenger: "Facebook Messenger"

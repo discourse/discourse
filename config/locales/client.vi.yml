@@ -772,11 +772,13 @@ vi:
         copied_to_clipboard: "Sao chép vào Clipboard"
         copy_to_clipboard_error: "Lỗi sao chép dữ liệu vào Clipboard"
         remaining_codes: "Bạn có <strong>{{count}}</strong> mã sao lưu còn lại."
-        use: "<a href>Sử dụng một mã sao lưu</a>"
       second_factor:
         title: "Xác minh hai bước"
+        name: "Tên"
         show_key_description: "Nhập thủ công"
         edit: "Sửa"
+        security_key:
+          delete: 'Xóa'
       change_about:
         title: "Thay đổi thông tin về tôi"
         error: "Có lỗi xảy ra khi thay đổi giá trị này."
@@ -1122,7 +1124,6 @@ vi:
       password: "Mật khẩu"
       second_factor_title: "Xác minh hai bước"
       second_factor_description: "Vui lòng nhập mã xác minh từ ứng dụng của bạn:"
-      second_factor_backup: "<a href>Đăng nhập sử dụng mã sao lưu</a>"
       email_placeholder: "Email hoặc tên đăng nhập "
       caps_lock_warning: "Phím Caps Lock đang được bật"
       error: "Không xác định được lỗi"
@@ -1183,7 +1184,6 @@ vi:
       apple_international: "Apple/International"
       google: "Google"
       twitter: "Twitter"
-      emoji_one: "Emoji One"
       win10: "Win10"
       google_classic: "Google Classic"
       facebook_messenger: "Facebook Messenger"

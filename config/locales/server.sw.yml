@@ -1044,7 +1044,6 @@ sw:
     username:
       short: "lazima ziwe herufi %{min} au zaidi"
       long: "isizidi herufi %{max}"
-      characters: "lazima ziwe namba, herufi, deshi, na mistari chini pekee"
       unique: "lazima iwe ya kipekee"
       blank: "lazima iwepo"
       must_begin_with_alphanumeric_or_underscore: "lazima ianze na herufi, namba au mstari chini pekee"

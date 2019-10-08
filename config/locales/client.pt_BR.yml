@@ -853,7 +853,6 @@ pt_BR:
         copied_to_clipboard: "Copiado para a Área de Transferência"
         copy_to_clipboard_error: "Erro ao copiar dados para a Área de Transferência"
         remaining_codes: "Você tem <strong>{{count}}</strong> códigos de backup restantes."
-        use: "<a href>Usar um código de backup</a>"
         enable_prerequisites: "Você deve habilitar um segundo fator primário antes de gerar códigos de backup."
         codes:
           title: "Códigos de Backup Gerados"
@@ -862,6 +861,7 @@ pt_BR:
         title: "Autenticação de Dois Fatores"
         enable: "Gerenciar Autenticação de Dois Fatores"
         confirm_password_description: "Por favor, confirme sua senha para continuar"
+        name: "Nome"
         label: "Código"
         rate_limit: "Por favor, aguarde antes de tentar outro código de autenticação."
         enable_description: |
@@ -873,7 +873,6 @@ pt_BR:
         extended_description: |
           A autenticação de dois fatores adiciona segurança extra à sua conta, exigindo um token único além da sua senha. Tokens podem ser gerados em dispositivos <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>Android</a> e <a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS</a>.
         oauth_enabled_warning: "Por favor, observe que os logins sociais serão desabilitados quando a autenticação de dois fatores for habilitada na sua conta."
-        use: "<a href>Usar um aplicativo autenticador</a>"
         enforced_notice: "Você precisa ativar a autenticação de dois fatores antes de acessar este site."
         disable: "Desabilitar"
         disable_title: "Desabilitar Segundo Fator"
@@ -885,6 +884,9 @@ pt_BR:
           title: "Autenticadores Baseados em Token"
           add: "Novo Autenticador"
           default_name: "Meu Autenticador"
+        security_key:
+          register: "Registro"
+          delete: 'Excluir'
       change_about:
         title: "Modificar Sobre Mim"
         error: "Houve um erro ao alterar este valor."
@@ -1284,10 +1286,8 @@ pt_BR:
       password: "Senha"
       second_factor_title: "Autenticação de Dois Fatores"
       second_factor_description: "Por favor, digite o código de autenticação do seu aplicativo:"
-      second_factor_backup: "<a href>Entrar usando um código de backup</a>"
       second_factor_backup_title: "Backup de Dois Fatores"
       second_factor_backup_description: "Por favor, insira um dos seus códigos de backup:"
-      second_factor: "<a href>Entrar usando um aplicativo autenticador</a>"
       email_placeholder: "e-mail ou nome de usuário"
       caps_lock_warning: "Caps Lock está ativado"
       error: "Erro desconhecido"
@@ -1339,6 +1339,9 @@ pt_BR:
         message: "Autenticando com GitHub (certifique-se de que os bloqueadores de pop-up estejam desabilitados)"
       discord:
         name: "Discord"
+      second_factor_toggle:
+        totp: "Use um aplicativo autenticador"
+        backup_code: "Use um código de backup"
     invites:
       accept_title: "Convite"
       welcome_to: "Bem vindo à %{site_name}!"
@@ -1356,7 +1359,6 @@ pt_BR:
       apple_international: "Apple/Internacional"
       google: "Google"
       twitter: "Twitter"
-      emoji_one: "Emoji One"
       win10: "Win10"
       google_classic: "Google Classic"
       facebook_messenger: "Facebook Messenger"
@@ -3304,7 +3306,6 @@ pt_BR:
             other: "o tema é {{count}} confirmado por trás"
           compare_commits: "(Ver novos commits)"
           repo_unreachable: "Não foi possível contatar o repositório Git deste tema. Mensagem de erro:"
-          imported_from_archive: "Este tema foi importado de um arquivo .tar.gz"
           scss:
             text: "CSS"
             title: "Digite CSS personalizado, aceitamos todos os estilos CSS e SCSS válidos"

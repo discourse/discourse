@@ -834,13 +834,13 @@ fi:
         copied_to_clipboard: "Kopioitiin leikepöydälle"
         copy_to_clipboard_error: "Virhe kopioimisessa leikepöydälle"
         remaining_codes: "Sinulla on <strong>{{count}}</strong> varakoodia jäljellä."
-        use: "<a href>Käytä varakoodi</a>"
         codes:
           title: "Varakoodit luotiin"
           description: "Jokaista näistä varakoodeista voi käyttää vain kerran. Säilö ne johonkin turvalliseen paikkaan, mistä kuitenkin löydät ne."
       second_factor:
         title: "Kaksivaiheinen tunnistautuminen"
         confirm_password_description: "Jatka vahvistamalla salasanasi"
+        name: "Nimi"
         label: "Koodi"
         rate_limit: "Odota hetki ennen toisen todennuskoodin tarjoamista."
         enable_description: |
@@ -852,9 +852,11 @@ fi:
         extended_description: |
           Kaksivaiheinen tunnistautuminen lisää tilisi tietoturvaa vaatimalla kertakäyttöisen koodin salasanan lisäksi. Koodeja voi luoda <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>Android-</a> ja <a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS</a>-laitteilla.
         oauth_enabled_warning: "Huomioi, ettet voi kirjautua some-tilien avulla, jos kaksivaiheinen tunnistautuminen on käytössä."
-        use: "<a href>Käytä Authenticator-sovellusta</a>"
         enforced_notice: "Kaksivaiheinen tunnistautuminen pitää ottaa käyttöön, jotta voi käyttää sivustoa."
         edit: "Muokkaa"
+        security_key:
+          register: "Rekisteröidy"
+          delete: 'Poista'
       change_about:
         title: "Muokkaa kuvaustasi"
         error: "Arvon muuttamisessa tapahtui virhe."
@@ -1242,10 +1244,8 @@ fi:
       password: "Salasana"
       second_factor_title: "Kaksivaiheinen tunnistautuminen"
       second_factor_description: "Syötä sovelluksen antama todennuskoodi:"
-      second_factor_backup: "<a href>Kirjaudu varakoodilla</a>"
       second_factor_backup_title: "Varakoodit"
       second_factor_backup_description: "Syötä yksi varakoodeistasi:"
-      second_factor: "<a href>Kirjaudu Authenticator-sovelluksella</a>"
       email_placeholder: "sähköposti tai käyttäjätunnus"
       caps_lock_warning: "Caps Lock on päällä"
       error: "Tuntematon virhe"
@@ -1297,6 +1297,9 @@ fi:
         message: "Todennetaan Githubin kautta (varmista, että ponnahdusikkunoiden esto ei ole päällä)"
       discord:
         name: "Discord"
+      second_factor_toggle:
+        totp: "Käytä todennussovellusta tämän sijaan"
+        backup_code: "Käytä varmuuskoodia tämän sijaan"
     invites:
       accept_title: "Kutsu"
       welcome_to: "Tervetuloa sivustolle %{site_name}!"
@@ -1314,7 +1317,6 @@ fi:
       apple_international: "Apple/Kansainvälinen"
       google: "Google"
       twitter: "Twitter"
-      emoji_one: "Emoji One"
       win10: "Win10"
       google_classic: "Google Classic"
       facebook_messenger: "Facebook Messenger"
@@ -3234,7 +3236,6 @@ fi:
             other: "Teema on {{count}} muutosta perässä!"
           compare_commits: "(Näytä uudet muutokset)"
           repo_unreachable: "Teeman Git-tietovarastoon yhdistäminen epäonnistui. Virheviesti:"
-          imported_from_archive: "Teema tuotiin .tar.gz-tiedostosta"
           scss:
             text: "CSS"
             title: "Lisää mukautettua CSS:ää, hyväksymme käyvät CSS- ja SCSS-tyylit"

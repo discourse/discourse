@@ -858,7 +858,6 @@ fr:
         copied_to_clipboard: "Copié dans le presse-papiers"
         copy_to_clipboard_error: "Erreur en copiant les données dans le presse-papiers"
         remaining_codes: "Vous avez <strong>{{count}}</strong> codes de secours restants."
-        use: "<a href>Utiliser un code de sauvegarde</a>"
         enable_prerequisites: "Vous devez activer un second facteur principal avant de générer des codes de sauvegarde."
         codes:
           title: "Codes de secours générés"
@@ -867,6 +866,7 @@ fr:
         title: "Authentification à deux facteurs"
         enable: "Paramètres d'authentification à deux facteurs"
         confirm_password_description: "Merci de confirmer votre mot de passe pour continuer"
+        name: "Nom"
         label: "Code"
         rate_limit: "Veuillez patienter avant d'essayer un autre code d'identification."
         enable_description: |
@@ -877,7 +877,6 @@ fr:
           Protéger votre compte avec des codes de sécurité à usage unique.
         extended_description: "L'authentification à deux facteurs ajoute une sécurité supplémentaire à votre compte en exigeant un jeton unique en \nplus de votre mot de passe. Les jetons peuvent être générés sur les appareils <a href=\"https://www.google.com/search?q=authenticator+apps+for+android\" target='_blank'>Android</a> et <a href=\"https://www.google.com/search?q=authenticator+apps+for+ios\">iOS</a>.\n"
         oauth_enabled_warning: "Veuillez noter que les connexions sociales seront désactivées une fois que l'authentification à deux facteurs aura été activée sur votre compte."
-        use: "<a href>Utiliser l'application Authenticator</a>"
         enforced_notice: "Vous devez activer l'authentification à deux facteurs pour accéder à ce site."
         disable: "désactiver"
         disable_title: "Désactiver le second facteur"
@@ -889,6 +888,9 @@ fr:
           title: "Authentificateurs à base de jetons"
           add: "Nouveau Authentificateur"
           default_name: "Mon Authentificateur"
+        security_key:
+          register: "Créer"
+          delete: 'Supprimer'
       change_about:
         title: "Modifier À propos de moi"
         error: "Il y a eu une erreur lors de la modification de cette valeur."
@@ -1288,10 +1290,8 @@ fr:
       password: "Mot de passe"
       second_factor_title: "Authentification à deux facteurs"
       second_factor_description: "Veuillez saisir le code d'authentification de votre app :"
-      second_factor_backup: "<a href>Se connecter avec un code de secours</a>"
       second_factor_backup_title: "Authentification à deux facteurs (code de secours)"
       second_factor_backup_description: "Veuillez entrer un de vos codes de secours :"
-      second_factor: "<a href>Se connecter avec une application</a>"
       email_placeholder: "courriel ou pseudo"
       caps_lock_warning: "Majuscules vérrouillées"
       error: "Erreur inconnue"
@@ -1343,6 +1343,9 @@ fr:
         message: "Authentification via GitHub (assurez-vous que les popups ne soient pas bloquées)"
       discord:
         name: "Discord"
+      second_factor_toggle:
+        totp: "Utilisez plutôt une application d'authentification"
+        backup_code: "Utilisez plutôt un code de secours"
     invites:
       accept_title: "Invitation"
       welcome_to: "Bienvenue sur %{site_name} !"
@@ -1360,7 +1363,6 @@ fr:
       apple_international: "Apple/International"
       google: "Google"
       twitter: "Twitter"
-      emoji_one: "Emoji One"
       win10: "Win10"
       google_classic: "Classique Google"
       facebook_messenger: "Facebook Messenger"
@@ -3329,7 +3331,6 @@ fr:
             other: "Le thème est en retard de {{count}} commits !"
           compare_commits: "(Voir les nouveaux changements)"
           repo_unreachable: "Le dépôt Git de ce thème reste inaccessible. Message d'erreur : "
-          imported_from_archive: "Ce thème a été importé d'un fichier .tar.gz"
           scss:
             text: "CSS"
             title: "Entrez du CSS personnalisé, nous acceptons tous les styles CSS et SCSS valides."

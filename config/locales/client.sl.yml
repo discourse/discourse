@@ -876,13 +876,13 @@ sl:
         copied_to_clipboard: "Prenešeno na odlagališče"
         copy_to_clipboard_error: "Napaka pri prenosu na odlagališče"
         remaining_codes: "Imate <strong>{{count}}</strong> rezervnih potrditvenih kod."
-        use: "<a href>Uporabi rezervno kodo</a>"
         codes:
           title: "Rezervne potrditvene kode ustvarjene"
           description: "Vsaka od rezervnih potrditvenih kod se lahko uporabi samo enkrat. Shranite jih na varno, ampak dostopno mesto."
       second_factor:
         title: "Preverjanje v dveh korakih"
         confirm_password_description: "Vnesite geslo za nadaljevanje"
+        name: "Polno ime"
         label: "Koda"
         rate_limit: "Počakajte preden uporabite novo potrditveno kodo."
         enable_description: |
@@ -892,9 +892,10 @@ sl:
         extended_description: |
           Preverjanje v dveh korakih omogoči dodatno varnost vašega računa saj za prijavo zahteva dodatno enkratno potrditveno kodo poleg vašega gesla. Potrditvene kode se lahko ustvarijo na <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>Android</a> ali <a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS</a> napravah.
         oauth_enabled_warning: "Preverjanje v dveh korakih bo onemogočila prijavo z družabnimi omrežji."
-        use: "<a href>Uporabi Authenticator aplikacijo</a>"
         enforced_notice: "Obvezno morate vklopiti preverjanje v dveh korakih za dostop to tega spletnega mesta."
         edit: "Uredi"
+        security_key:
+          delete: 'Izbriši'
       change_about:
         title: "Spremeni O meni"
         error: "Prišlo je do napake pri spreminjanju te vrednosti"
@@ -1304,10 +1305,8 @@ sl:
       password: "Geslo"
       second_factor_title: "Preverjanje v dveh korakih"
       second_factor_description: "Vnesite potrditveno kodo iz vaše aplikacije: "
-      second_factor_backup: "<a href>Prijava z rezervno potrditveno kodo</a>"
       second_factor_backup_title: "Rezervno preverjanje v dveh korakih"
       second_factor_backup_description: "Vnesite eno od rezervnih potrditvenih kod:"
-      second_factor: "<a href>Prijava preko Authenticator </a>"
       email_placeholder: "e-naslov ali uporabniško ime"
       caps_lock_warning: "Caps Lock je vključen"
       error: "Neznana napaka"
@@ -1357,6 +1356,9 @@ sl:
         name: "GitHub"
         title: "GitHub"
         message: "Preverjanje z GitHubom (pojavna okna morajo biti omogočena v brskalniku)"
+      second_factor_toggle:
+        totp: "Namesto tega uporabite authenticator aplikacijo"
+        backup_code: "Namesto tega uporabite rezervno potrditveno kodo"
     invites:
       accept_title: "Povabilo"
       welcome_to: "Dobrodošli na %{site_name}!"
@@ -1374,7 +1376,6 @@ sl:
       apple_international: "Apple/International"
       google: "Google"
       twitter: "Twitter"
-      emoji_one: "Emoji One"
       win10: "Win10"
       google_classic: "Google Classic"
       facebook_messenger: "Facebook Messenger"

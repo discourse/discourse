@@ -1983,7 +1983,6 @@ pt_BR:
       short: "deve ter no mínimo %{min} caracteres"
       long: "precisa ter não mais que ${max} caracteres"
       too_long: "é muito longo"
-      characters: "deve incluir apenas números, letras, traços e sublinhados"
       unique: "tem que ser único"
       blank: "tem que ser preenchido"
       must_begin_with_alphanumeric_or_underscore: "deve começar com uma letra, número ou um underline"

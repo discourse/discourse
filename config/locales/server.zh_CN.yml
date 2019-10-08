@@ -1945,7 +1945,6 @@ zh_CN:
       short: "必须超过 %{min} 个字"
       long: "必须不超过 %{max} 个字"
       too_long: "太长"
-      characters: "必须只包括数字、字母、连字号或下划线"
       unique: "已被使用"
       blank: "必须存在"
       must_begin_with_alphanumeric_or_underscore: "必须以字母、数字或下划线开头"

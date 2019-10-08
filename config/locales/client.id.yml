@@ -559,9 +559,12 @@ id:
         disable: "Nonaktifkan"
         enable: "Aktifkan"
       second_factor:
+        name: "Nama"
         label: "Kode"
         show_key_description: "Masukkan secara manual"
         edit: "Ubah"
+        security_key:
+          delete: 'Hapus'
       change_about:
         title: "Ganti Tentang Saya"
         error: "Ada kesalahan saat mengganti nilai ini"

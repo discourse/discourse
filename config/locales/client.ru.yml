@@ -960,7 +960,6 @@ ru:
         copied_to_clipboard: "Скопировано в буфер"
         copy_to_clipboard_error: "Ошибка при копировании данных в буфер омена"
         remaining_codes: "У вас осталось <strong>{{count}}</strong>резервных кодов"
-        use: "<a href>Использовать резервный код</a>"
         enable_prerequisites: "Вы должны включить первичный второй фактор перед генерацией резервных кодов."
         codes:
           title: "Резервные коды созданы"
@@ -968,7 +967,9 @@ ru:
       second_factor:
         title: "Двухфакторная аутентификация"
         enable: "Управление Двухфакторной Аутентификацией"
+        forgot_password: "Забыли пароль?"
         confirm_password_description: "Подтвердите ваш пароль чтобы продолжить"
+        name: "Имя"
         label: "Код"
         rate_limit: "Пожалуйста, подождите, прежде чем попробовать другой код аутентификации."
         enable_description: |
@@ -980,7 +981,6 @@ ru:
         extended_description: |
           Двухфакторная аутентификация повышает безопасность вашей учетной записи, требуя одноразовый токен в дополнение к вашему паролю. Токены могут быть сгенерированы на устройствах <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>Android</a> и <a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS</a>.
         oauth_enabled_warning: "Обратите внимание, что социальные логины будут отключены после включения двухфакторной аутентификации в вашей учетной записи."
-        use: "<a href>Используйте приложение для проверки подлинности</a>"
         enforced_notice: "Вы должны включить двухфакторную аутентификацию перед доступом к этому сайту."
         disable: "отключить"
         disable_title: "Отключить Второй Фактор"
@@ -992,6 +992,9 @@ ru:
           title: "Token-Based Аутентификация"
           add: "Новый Аутентификатор"
           default_name: "Мой Аутентификатор"
+        security_key:
+          register: "Зарегистрироваться"
+          delete: 'Удалить'
       change_about:
         title: "Изменить информацию обо мне"
         error: "При изменении значения произошла ошибка."
@@ -1416,10 +1419,8 @@ ru:
       password: "Пароль"
       second_factor_title: "Двухфакторная аутентификация"
       second_factor_description: "Введите код аутентификации из вашего приложения:"
-      second_factor_backup: "<a href>Войти с помощью запасного кода</a>"
       second_factor_backup_title: "Запасной вход двухфакторной аутентификации"
       second_factor_backup_description: "Введите запасной код:"
-      second_factor: "<a href>Войти с помощью программы аутентификации"
       email_placeholder: "E-mail или псевдоним"
       caps_lock_warning: "Caps Lock включен"
       error: "Неизвестная ошибка"
@@ -1473,6 +1474,9 @@ ru:
         name: "Discord"
         title: "с Discord"
         message: "Аутентификация с помощью Discord"
+      second_factor_toggle:
+        totp: "Вместо этого используйте приложение для проверки подлинности"
+        backup_code: "Вместо этого используйте резервный код"
     invites:
       accept_title: "Приглашение"
       welcome_to: "Добро пожаловать на %{site_name}!"
@@ -1490,7 +1494,6 @@ ru:
       apple_international: "Apple/International"
       google: "Google"
       twitter: "Twitter"
-      emoji_one: "Emoji One"
       win10: "Win10"
       google_classic: "Google Classic"
       facebook_messenger: "Facebook Messenger"
@@ -3581,7 +3584,6 @@ ru:
             other: "Тема находится на {{count}} коммитов сзади!"
           compare_commits: "(Смотрите новые коммиты)"
           repo_unreachable: "Не удалось связаться с Git-репозиторием этой темы. Сообщение об ошибке:"
-          imported_from_archive: "Эта тема была импортирована из .tar.gz файла"
           scss:
             text: "CSS"
             title: "Введите CSS; допускаются все стили CSS и SCSS"

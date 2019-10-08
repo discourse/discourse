@@ -439,7 +439,11 @@ be:
         enable: "Уключыць"
       second_factor:
         title: "Два фактары аўтэнтыфікацыі"
+        name: "імя"
         edit: "рэдагаваць"
+        security_key:
+          register: "рэгістрацыя"
+          delete: 'выдаліць'
       change_about:
         title: "Змяніць інфу аба мяне"
       change_username:
@@ -689,6 +693,9 @@ be:
       github:
         title: "праз GitHub"
         message: "Аўтэнтыфікацыя праз GitHub (праверце, каб блакавальнікі усплываючых вокнаў былі выключаны)"
+      second_factor_toggle:
+        totp: "Выкарыстоўвайце прыкладанне аутентификационное замест"
+        backup_code: "Выкарыстоўваць рэзервовы код замест"
     invites:
       welcome_to: "Сардэчна запрашаем да сайта %{site_name}!"
       name_label: "Назва"

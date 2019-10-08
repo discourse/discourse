@@ -856,11 +856,15 @@ hu:
       second_factor:
         title: "Két-faktoros hitelesítés"
         confirm_password_description: "Kérlek erősítsd meg a jelszavad a továbbhaladáshoz"
+        name: "Név"
         label: "Kód"
         disable_description: "Írd be az azonosító kódodat az alkalmazásból"
         show_key_description: "Manuális beírás"
         oauth_enabled_warning: "A közösségi bejelentkezések nem lesznek elérhetőek a fét-faktoros azonosítás aktiválása után a fiókhoz."
         edit: "Szerkesztés"
+        security_key:
+          register: "Regisztráció"
+          delete: 'Törlés'
       change_about:
         title: "Rólam megváltoztatása"
         error: "Hiba történt az adat módosításakor."
@@ -1215,9 +1219,7 @@ hu:
       password: "Jelszó"
       second_factor_title: "Kétlépcsős azonosítás"
       second_factor_description: "Kérlek írd be az azonosítási kódodat az alkalmazásodból"
-      second_factor_backup: "<a href>Jelentkezz be a biztonsági kód használatával</a>"
       second_factor_backup_description: "Kérlek írd be valamelyik biztonsági kódodat"
-      second_factor: "<a href>Jelentkezz be Hitelesítő alkalmazás használatával</a>"
       email_placeholder: "e-mail vagy felhasználónév"
       caps_lock_warning: "A Caps Lock be van kapcsolva"
       error: "Ismeretlen hiba"
@@ -1283,7 +1285,6 @@ hu:
       apple_international: "Apple/Nemzetközi"
       google: "Google"
       twitter: "Twitter"
-      emoji_one: "Emoji One"
       win10: "Win10"
       google_classic: "Google Classic"
       facebook_messenger: "Facebook Messenger"

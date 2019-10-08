@@ -751,11 +751,15 @@ nb_NO:
       second_factor:
         title: "Totrinnsverifisering"
         confirm_password_description: "Bekreft passordet ditt for å fortsette"
+        name: "Navn"
         label: "Kode"
         disable_description: "Vennligst oppgi autentiseringskoden fra appen"
         show_key_description: "Skriv inn manuelt"
         oauth_enabled_warning: "Vær oppmerksom på at sosiale login-metoder deaktiveres når tofaktor autentisering er aktivert på kontoen din."
         edit: "Rediger"
+        security_key:
+          register: "Registrer"
+          delete: 'Slett'
       change_about:
         title: "Rediger om meg"
         error: "Det oppstod en feil ved endring av denne verdien."
@@ -1110,10 +1114,8 @@ nb_NO:
       password: "Passord"
       second_factor_title: "Totrinnsverifisering"
       second_factor_description: "Skriv inn verifiseringskoden fra din app:"
-      second_factor_backup: "<a href>Logg inn med en reservekode</a>"
       second_factor_backup_title: "Tofaktor sikkerhetskode"
       second_factor_backup_description: "Vennligst skriv en av reservekodene dine:"
-      second_factor: "<a href>Logg inn med Authenticator-appen</a>"
       email_placeholder: "e-postadresse eller brukernavn"
       caps_lock_warning: "Caps Lock er på"
       error: "Ukjent feil"
@@ -1178,7 +1180,6 @@ nb_NO:
       apple_international: "Apple/Internasjonalt"
       google: "Google"
       twitter: "Twitter"
-      emoji_one: "Emoji One"
       win10: "Win10"
       google_classic: "Klassisk Google"
       facebook_messenger: "Facebook Meldingstjeneste"

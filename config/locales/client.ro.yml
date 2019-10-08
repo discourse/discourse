@@ -712,7 +712,11 @@ ro:
         copied_to_clipboard: "Copiat în clipboard"
         copy_to_clipboard_error: "Eroare la copierea datelor în clipboard"
       second_factor:
+        name: "Nume"
         edit: "Editează"
+        security_key:
+          register: "Înregistrare"
+          delete: 'Șterge'
       change_about:
         title: "Schimbare date personale"
         error: "A apărut o eroare la schimbarea acestei valori."
@@ -1119,7 +1123,6 @@ ro:
       apple_international: "Apple/International"
       google: "Google"
       twitter: "Twitter"
-      emoji_one: "Emoji One"
       win10: "Win10"
       google_classic: "Google clasic"
       facebook_messenger: "Facebook Messenger"

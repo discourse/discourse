@@ -882,13 +882,13 @@ pl_PL:
         enable_long: "Włącz kody zapasowe"
         copied_to_clipboard: "Skopiowane do schowka"
         copy_to_clipboard_error: "Wystąpił błąd w trakcie kopiowania do schowka"
-        use: "<a href>Użyj kodu zapasowego</a>"
         codes:
           title: "Wygenerowano kody zapasowe"
       second_factor:
         title: "Dwuskładnikowe uwierzytelnianie"
         enable: "Zarządzaj autentykacją dwuetapową"
         confirm_password_description: "Potwierdź swoje hasło, aby kontynuować"
+        name: "Imię"
         label: "Kod"
         rate_limit: "Poczekaj, zanim spróbujesz użyć innego kodu uwierzytelniającego."
         disable_description: "Podaj kod uwierzytelniający ze swojej aplikacji"
@@ -901,6 +901,10 @@ pl_PL:
         edit: "Edytuj"
         totp:
           title: "Uwierzytelnianie oparte na tokenach"
+        security_key:
+          register: "Zarejestruj"
+          edit: 'Edytuj Klucz Bezpieczeństwa'
+          delete: 'Usuń'
       change_about:
         title: "Zmień O mnie"
         error: "Wystąpił błąd podczas zmiany tej wartości."
@@ -1295,7 +1299,6 @@ pl_PL:
       second_factor_title: "Dwuskładnikowe uwierzytelnianie"
       second_factor_description: "Podaj kod uwierzytelniający ze swojej aplikacji:"
       second_factor_backup_description: "Proszę wprowadź jeden ze swoich zapasowych kodów:"
-      second_factor: "1"
       email_placeholder: "adres email lub nazwa użytkownika"
       caps_lock_warning: "Caps Lock jest włączony"
       error: "Nieznany błąd"
@@ -1361,7 +1364,6 @@ pl_PL:
       apple_international: "Apple/Międzynarodowy"
       google: "Google"
       twitter: "Twitter"
-      emoji_one: "Emoji One"
       win10: "Win10"
       google_classic: "Google Classic"
       facebook_messenger: "Facebook Messenger"
@@ -2722,6 +2724,7 @@ pl_PL:
         activity_metrics: Metryka aktywności
         general_tab: "Ogólne"
         security_tab: "Bezpieczeństwo"
+        reports_tab: "Zgłoszenia"
         report_filter_any: "każdy"
         too_many_requests: "Wykonałeś tę akcję zbyt wiele razy. Poczekaj, zanim spróbujesz ponownie."
         not_found_error: "Przepraszamy, ten raport nie istnieje."
@@ -2997,34 +3000,60 @@ pl_PL:
           long_title: "Zmodyfikuj kolory, kod CSS i kod HTML zawartości Twojej strony"
           edit: "Edytuj"
           edit_confirm: "To jest zdalny styl. Jeśli edytujesz CSS/HTML, twoje zmiany zostaną usunięte po ponownej aktualizacji motywu."
+          update_confirm_yes: "Tak, kontynuuj aktualizację"
           common: "Częste"
           desktop: "Komputer"
           mobile: "Mobilnie"
           settings: "Ustawienia"
+          translations: "Tłumaczenia"
           preview: "Podgląd"
+          show_advanced: "Pokaż pola zaawansowane"
+          hide_advanced: "Ukryj pola zaawansowane"
+          hide_unused_fields: "Ukryj nieużywane pola"
           is_default: "Motyw ustawiony jako domyślny"
           user_selectable: "Motyw może być ustawiany przez użytkowników"
+          color_scheme: "Paleta Kolorów"
           color_scheme_select: "Wybierz kolory, jakie mają być użyte w motywie"
           custom_sections: "Spersonalizowane sekcje:"
           theme_components: "Komponenty motywu"
+          inactive_themes: "Nieaktywne motywy:"
+          disabled_component_tooltip: "Ten komponent został wyłączony"
+          default_theme_tooltip: "Ten motyw jest domyślnym motywem witryny"
+          updates_available_tooltip: "Dostępne są aktualizacje dla tego motywu"
           collapse: Zwiń
           uploads: "Pliki"
           no_uploads: "Możesz załadować zasoby do swojego motywu np. fonty lub obrazy"
           add_upload: "Dodaj plik"
           upload_file_tip: "Wybierz plik do wysłania (png, woff2, itp.)"
           variable_name: "Nazwa zmiennej SCSS:"
+          variable_name_error:
+            must_be_unique: "Niepoprawna nazwa zmiennej. Musi być unikalna."
           upload: "Plik"
+          unsaved_changes_alert: "Nie zapisałeś jeszcze zmian, czy chcesz je odrzucić i przejść dalej?"
+          discard: "Odrzuć"
           css_html: "Własny CSS/HTML"
           edit_css_html: "Edytuj CSS/HTML"
           edit_css_html_help: "Nie modyfikowałeś CSS ani HTML"
           delete_upload_confirm: "Czy usunąć ten plik? (CSS motywu może przestać działać!)"
           import_web_tip: "Repozytorium zawierające motyw"
+          remote_branch: "Nazwa oddziału (opcjonalnie)"
           installed: "Zainstalowana"
           install_popular: "Popularne"
+          install_upload: "Z twojego urządzenia"
+          install_git_repo: "Z repozytorium git"
+          install_create: "Stwórz nowy"
           about_theme: "O stronie"
           license: "Licencja"
+          version: "Wersja:"
+          authors: "Autor:"
+          source_url: "Źródło"
           enable: "Włącz"
           disable: "Wyłącz"
+          disabled: "Ten komponent został wyłączony."
+          disabled_by: "Ten komponent został wyłączony przez"
+          required_version:
+            error: "Ten motyw został automatycznie wyłączony, ponieważ nie jest kompatybilny z tą wersją Discourse."
+          component_of: "Składnik:"
           update_to_latest: "Aktualizuj do najnowszego"
           check_for_updates: "Sprawdź dostępność aktualizacji"
           updating: "Trwa proces aktualizacji..."
@@ -3039,6 +3068,7 @@ pl_PL:
             few: "Motyw jest {{count}} aktualizacji w tyle!"
             many: "Motyw jest {{count}} aktualizacji w tyle!"
             other: "Motyw jest {{count}} aktualizacji w tyle!"
+          repo_unreachable: "Nie można skontaktować się z repozytorium Git tego motywu. Komunikat o błędzie:"
           scss:
             text: "CSS"
             title: "Wstaw własny CSS, przyjmujemy wszystkie prawidłowe style CSS i SCSS"
@@ -3063,8 +3093,16 @@ pl_PL:
           yaml:
             text: "YAML"
         colors:
+          select_base:
+            title: "Wybierz podstawową paletę kolorów"
+            description: "Paleta podstawowa:"
           title: "Kolory"
+          edit: "Edytuj palety kolorów"
+          long_title: "Palety kolorów"
+          about: "Zmodyfikuj kolory używane w swoich motywach. Utwórz nową paletę kolorów, aby rozpocząć."
+          new_name: "Nowa paleta kolorów"
           copy_name_prefix: "Kopia"
+          delete_confirm: "Usunąć tę paletę kolorów?"
           undo: "cofnij"
           undo_title: "Cofnij zmiany tego koloru od ostatniego zapisu"
           revert: "przywróć"
@@ -3100,11 +3138,15 @@ pl_PL:
             description: "Kolor przycisku lajkuj"
         email_style:
           css: "CSS"
+          reset: "Przywróć ustawienia domyślne"
       email:
         title: "Emaile"
         settings: "Ustawienia"
         templates: "Szablony"
         preview_digest: "Pokaż zestawienie aktywności"
+        advanced_test:
+          email: " Oryginalna wiadomość"
+          run: "Przeprowadź Test"
         sending_test: "Wysyłanie testowego emaila…"
         error: "<b>BŁAD</b> - %{server_error}"
         test_error: "Wystąpił problem podczas wysyłania testowego maila. Sprawdź ustawienia poczty, sprawdź czy Twój serwer nie blokuje połączeń pocztowych i spróbuj ponownie."
@@ -3227,6 +3269,7 @@ pl_PL:
             delete_category: "Usuń kategorię"
             create_category: "Dodaj nową kategorię"
             silence_user: "wycisz użytkownika"
+            unsilence_user: "cofnij wyciszenie użytkownika"
             grant_admin: "nadaj prawa admina"
             revoke_admin: "odbierz prawa admina"
             grant_moderation: "Przyznaj status moderatora"
@@ -3244,6 +3287,7 @@ pl_PL:
             backup_destroy: "Zniszcz kopię zapasową "
             reviewed_post: "przejrzane posty"
             custom_staff: "spersonalizowana akcja wtyczki"
+            post_rejected: "wpis odrzucony"
             change_name: "zmień nazwe"
         screened_emails:
           title: "Ekranowane emaile"
@@ -3291,6 +3335,7 @@ pl_PL:
         search: "szukaj"
         clear_filter: "Wyczyść"
         show_words: "pokaż słowa"
+        one_word_per_line: "Jedno słowo w wierszu"
         download: Pobierz
         clear_all: Wyczyść wszystko
         word_count:
@@ -3314,9 +3359,12 @@ pl_PL:
           placeholder_regexp: "wyrażenie regularne"
           add: "Dodaj"
           success: "Sukces"
+          exists: "Już istnieje"
+          upload: "Dodaj z pliku"
           upload_successful: "Przesyłanie zakończone sukcesem. Słowa zostały dodane."
         test:
           button_label: "Sprawdź"
+          description: "Wpisz tekst poniżej, aby sprawdzić dopasowania z obserwowanymi słowami"
           no_matches: "Nie znaleziono dopasowań"
       impersonate:
         title: "Zaloguj się na to konto"
@@ -3329,7 +3377,9 @@ pl_PL:
         last_emailed: "Ostatnio wysłano email"
         not_found: "Przepraszamu, taka nazwa użytkowanika nie istnieje w naszym systemie."
         id_not_found: "Przepraszamy, ten identyfikator użytkownika nie istnieje w naszym systemie."
+        active: "Aktywowane"
         show_emails: "Pokaż emaile"
+        hide_emails: "Ukryj e-maile"
         nav:
           new: "Nowi"
           active: "Aktywni"
@@ -3379,9 +3429,19 @@ pl_PL:
         suspended_until: "(do %{until})"
         cant_suspend: "Nie można zawiesić tego użytkownika."
         delete_all_posts: "Usuń wszystkie wpisy"
+        delete_posts_progress: "Usuwanie wpisów..."
+        delete_posts_failed: "Podczas usuwania wpisów wystąpił problem."
+        penalty_post_actions: "Co chcesz zrobić z powiązanym wpisem?"
         penalty_post_delete: "Usuń ten wpis"
+        penalty_post_delete_replies: "Usuń wpis + wszelkie odpowiedzi"
+        penalty_post_edit: "Edytuj wpis"
+        penalty_post_none: "Nic nie rób"
+        penalty_count: "Liczba Przewinień"
+        clear_penalty_history:
+          title: "Wyczyść Historię Przewinień"
         delete_all_posts_confirm_MF: "Zamierzasz usunąć {POSTS, plural, one {1 post} few {# posty} many {# postów} other {# postów}} i {TOPICS, plural, one {1 temat} few {# tematy} many {# tematów} other {# tematów}}. Czy jesteś pewien?"
         silence: "Wycisz"
+        unsilence: "Cofnij wyciszenie"
         silenced: "Wyciszony?"
         moderator: "Moderator?"
         admin: "Admin?"
@@ -3455,7 +3515,9 @@ pl_PL:
         activate_failed: "Wystąpił problem przy aktywacji konta użytkownika."
         deactivate_account: "Deaktywuj konto"
         deactivate_failed: "Wystąpił problem przy deaktywacji konta użytkownika."
+        unsilence_failed: "Wystąpił problem podczas odblokowywania wyciszenia użytkownika."
         silence_failed: "Wystąpił problem podczas wyciszania użytkownika."
+        silence_confirm: "Czy na pewno chcesz wyciszyć tego użytkownika? Nie będzie mógł tworzyć nowych tematów ani postów."
         silence_accept: "Tak, ucisz tego użytkownika"
         bounce_score: "Wskaźnik odbić"
         reset_bounce_score:
@@ -3558,6 +3620,7 @@ pl_PL:
         go_back: "Wróć do wyszukiwania"
         recommended: "Zalecamy zmianę poniższego tekstu, aby lepiej odpowiadał Twoim potrzebom:"
         show_overriden: "Pokaż tylko nadpisane"
+        more_than_50_results: "Istnieje ponad 50 wyników. Zawęź wyszukiwanie."
       settings:
         show_overriden: "Pokaż tylko nadpisane"
         reset: "przywróć domyślne"
@@ -3565,14 +3628,19 @@ pl_PL:
       site_settings:
         title: "Ustawienia"
         no_results: "Brak wyników wyszukiwania"
+        more_than_30_results: "Istnieje ponad 30 wyników. Zawęź wyszukiwanie lub wybierz kategorię."
         clear_filter: "Wyczyść"
         add_url: "dodaj URL"
         add_host: "dodaj host"
         add_group: "dodaj grupę"
         uploaded_image_list:
           label: "Edytuj listę"
+          empty: "Brak zdjęć. Prześlij jedno."
           upload:
             label: "Prześlij"
+            title: "Prześlij obrazek"
+        selectable_avatars:
+          title: "Lista awatarów, z których użytkownicy mogą wybierać"
         categories:
           all_results: "Wszystkie"
           required: "Wymagane"
@@ -3638,6 +3706,7 @@ pl_PL:
         enabled: Włącz odznakę
         icon: Ikona
         image: Grafika
+        image_help: "Wprowadź adres URL obrazu (zastępuje pole ikony, jeśli oba są ustawione)"
         query: "Zapytanie odznaki (SQL) "
         target_posts: Wpisy powiązane z odznaką
         auto_revoke: Codziennie uruchamiaj zapytanie odbierające odznakę
@@ -3672,6 +3741,7 @@ pl_PL:
             with_post_time: "<span class=\"username\">%{username}</span> za wpis w %{link} o <span class=\"time\">%{time}</span>"
             with_time: "<span class=\"username\">%{username}</span> o <span class=\"time\">%{time}</span>"
         badge_intro:
+          title: "Wybierz istniejącą odznakę lub utwórz nową, aby rozpocząć"
           what_are_badges_title: "Czym są odznaki?"
       emoji:
         title: "Emoji"

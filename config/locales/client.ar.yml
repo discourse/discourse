@@ -759,14 +759,16 @@ ar:
         copied_to_clipboard: "تم نسخه الى لوحة العمل"
         copy_to_clipboard_error: "خطأ في نسخ البيانات الى لوحة العمل"
       second_factor:
+        name: "الإسم"
         label: "كود"
         disable_description: "يرجى ادخال رمز التوثيق من التطبيق الخاص بك"
         show_key_description: "أضف يدويا"
         short_description: |
           قم بحماية الحساب الخاص بك مع رمز الامان ذو الاستخدام الواحد.
         oauth_enabled_warning: "يرجى الملاحظة ان تسجيل الدخول عن طريق حسابات مواقع التواصل الاجتماعي سيتم تعطيلها بمجرد تفعيل خاصية التوثيق بعاملين الحساب"
-        use: "<a href>استخدم تطبيق التوثيق</a>"
         edit: "عدّل"
+        security_key:
+          delete: 'أحذف'
       change_about:
         title: "تعديل عني"
         error: "حدث عطل أثناء تغيير هذه القيمة."
@@ -1182,7 +1184,6 @@ ar:
       apple_international: "Apple/International"
       google: "Google"
       twitter: "Twitter"
-      emoji_one: "Emoji One"
       win10: "Win10"
       google_classic: "Google Classic"
       facebook_messenger: "Facebook Messenger"

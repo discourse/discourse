@@ -1916,7 +1916,6 @@ fi:
     username:
       short: "täytyy olla vähintään %{min} merkkiä"
       long: "ei saa olla yli %{max} merkkiä"
-      characters: "vain numerot, kirjaimet (A-Z, a-z), tavuviivat ja alaviivat sallittu"
       unique: "täytyy olla uniikki"
       blank: "pakollinen kenttä"
       must_begin_with_alphanumeric_or_underscore: "täytyy alkaa kirjaimella, numerolla tai alaviivalla"

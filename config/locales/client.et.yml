@@ -678,10 +678,14 @@ et:
         copied_to_clipboard: "Kopeeritud lõikelauale"
       second_factor:
         confirm_password_description: "Palun kinnita jätkamiseks oma parooli"
+        name: "Nimi"
         label: "Kood"
         rate_limit: "Palun oota enne kui proovid mõnda teist autentimise koodi."
         show_key_description: "Sisesta käsitsi"
         edit: "Muuda"
+        security_key:
+          register: "Registreeru"
+          delete: 'Kustuta'
       change_about:
         title: "Muuda minu andmeid"
         error: "Välja muutmisel tekkis viga."
@@ -1092,7 +1096,6 @@ et:
       apple_international: "Apple/International"
       google: "Google"
       twitter: "Twitter"
-      emoji_one: "Emoji One"
       win10: "Win10"
       google_classic: "Google klassikaline"
       facebook_messenger: "Facebook Messenger"
