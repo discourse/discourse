@@ -862,7 +862,6 @@ da:
         copied_to_clipboard: "Kopierede til udklipsholder"
         copy_to_clipboard_error: "Fejl ved kopiering til udklipsholder"
         remaining_codes: "Du har <strong>{{count}}</strong> backup koder tilbage."
-        use: "<a href>Brug en backup kode</a>"
         enable_prerequisites: "Du skal aktivere en primær anden faktor, før du genererer backup koder."
         codes:
           title: "backup koder genereret"
@@ -871,6 +870,7 @@ da:
         title: "To-faktor godkendelse"
         enable: "Administrer To-faktor godkendelse"
         confirm_password_description: "Bekræft dit kodeord for at fortsætte"
+        name: "Navn"
         label: "Kode"
         rate_limit: "Vent venligst, før du prøver en anden godkendelseskode."
         enable_description: |
@@ -882,7 +882,6 @@ da:
         extended_description: |
           To-faktor godkendelse tilføjer ekstra sikkerhed til din konto ved at kræve en engangstoken ud over dit kodeord. Tokens kan genereres på <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>Android-</a> og <a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS-</a> enheder.
         oauth_enabled_warning: "Bemærk, at sociale logins deaktiveres, når To-faktor godkendelse er aktiveret på din konto."
-        use: "<a href>Brug Authenticator app</a>"
         enforced_notice: "Du skal aktivere To-faktor godkendelse før du kan gå ind på denne side."
         disable: "deaktiver"
         disable_title: "Deaktiver anden faktor"
@@ -894,6 +893,8 @@ da:
           title: "Token-baserede autentificatorer"
           add: "Ny autentifikator"
           default_name: "Min autentifikator"
+        security_key:
+          delete: 'Slet'
       change_about:
         title: "Skift “Om mig”"
         error: "Der opstod en fejl i ændringen af denne værdi."
@@ -1293,10 +1294,8 @@ da:
       password: "Adgangskode"
       second_factor_title: "To-faktor godkendelse"
       second_factor_description: "Indtast godkendelseskoden fra din app:"
-      second_factor_backup: "<a href>Log ind ved hjælp af en backup kode</a>"
       second_factor_backup_title: "To-faktor backup"
       second_factor_backup_description: "Indtast en af dine backup koder:"
-      second_factor: "<a href>Log ind med Authenticator-appen</a>"
       email_placeholder: "e-mail eller brugernavn"
       caps_lock_warning: "Caps Lock er sat til"
       error: "Ukendt fejl"
@@ -1366,7 +1365,6 @@ da:
       apple_international: "Apple/International"
       google: "Google"
       twitter: "Twitter"
-      emoji_one: "Første Emoji"
       win10: "Win10"
       google_classic: "Google Classic"
       facebook_messenger: "Facebook Messenger"
@@ -3318,7 +3316,6 @@ da:
             other: "Temaet er {{count}} 'commits' bagud!"
           compare_commits: "(Se nye 'commits')"
           repo_unreachable: "Kunne ikke kontakte Git-repository for dette tema. Fejl besked:"
-          imported_from_archive: "Dette tema blev importeret fra en .tar.gz-fil"
           scss:
             text: "CSS"
             title: "Angiv tilpasset CSS - vi accepterer alle gyldige CSS og SCSS-former"

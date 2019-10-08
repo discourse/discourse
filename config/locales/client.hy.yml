@@ -756,13 +756,13 @@ hy:
         copied_to_clipboard: "Կրնօրինակված է Փոխանակման հարթակում"
         copy_to_clipboard_error: "Փոխանակման հարթակում տվյալների կրկնօրինակման սխալ"
         remaining_codes: "Ձեզ մնացել է պահուստային <strong>{{count}}</strong> կոդ:"
-        use: "<a href>Օգտագործեք պահուստի կոդ</a>"
         codes:
           title: "Պահուստային Կոդերը Գեներացվել են"
           description: "Այս պահուստային կոդերից յուրաքանչյուրը կարող է օգտագործվել միայն մեկ անգամ: Պահեք դրանք ապահով, բայց հասանելի վայրում:"
       second_factor:
         title: "Երկգործոն վավերացում"
         confirm_password_description: "Շարունակելու համար խնդրում ենք հաստատել Ձեր գաղտնաբառը"
+        name: "Անուն"
         label: "Կոդ"
         rate_limit: "Խնդրում ենք սպասել՝ նախքան մեկ այլ վավերացման կոդ փորձելը:"
         enable_description: |
@@ -772,9 +772,11 @@ hy:
         extended_description: |
           Երկգործոն վավերացումն ավելացնում է էքստրա-անվտանգություն Ձեր հաշվին՝ պահանջելով մեկանգամյա կոդանշան(token)՝ ի հավելումն Ձեր գաղտնաբառին: Կոդանշանները կարող են գեներացվել <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>Android</a> և <a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS</a> սարքերով:
         oauth_enabled_warning: "Խնդրում ենք նկատի ունենալ, որ սոցիալական ցանցերով մուտքը կանջատվի, հենց որ երկգործոն վավերացումը միացվի Ձեր հաշվի համար:"
-        use: "<a href>Օգտագործեք Authenticator հավելվածը</a>"
         enforced_notice: "Դուք պարտավոր եք միացնել երկգործոն նույնականացումը՝ մինչ մուտք գործելը այս կայք:"
         edit: "Խմբագրել"
+        security_key:
+          register: "Գրանցվել"
+          delete: 'Ջնջել'
       change_about:
         title: "Փոփոխել Իմ Մասին բաժինը"
         error: "Այս արժեքը փոփոխելիս տեղի է ունեցել սխալ:"
@@ -1158,10 +1160,8 @@ hy:
       password: "Գաղտնաբառ"
       second_factor_title: "Երկգործոն Վավերացում"
       second_factor_description: "Խնդրում ենք Ձեր հավելվածից մուտքագրել վավերացման կոդը՝"
-      second_factor_backup: "<a href>Մուտք գործել օգտագործելով պահուստային կոդ</a>"
       second_factor_backup_title: "Երկգործոն Պահուստային Պատճենում (Two Factor Backup)"
       second_factor_backup_description: "Խնդրում ենք մուտքագրել ձեր պահուստային կոդերից որևէ մեկը՝"
-      second_factor: "<a href>Մուտք գործել օգտագործելով Authenticator հավելվածը</a>"
       email_placeholder: "էլ. հասցե կամ օգտանուն"
       caps_lock_warning: "Caps Lock-ը միացված է"
       error: "Անհայտ սխալ"
@@ -1212,6 +1212,9 @@ hy:
         message: "Վավերացում GitHub-ով (համոզվեք, որ փոփ-ափ արգելափակումները միացված չեն)"
       discord:
         name: "Discord"
+      second_factor_toggle:
+        totp: "Փոխարենը օգտագործել նույնականացման հավելվածը"
+        backup_code: "Փոխարենը օգտագործել պահուստային կոդը"
     invites:
       accept_title: "Հրավեր"
       welcome_to: "Բարի Գալուստ %{site_name}!"
@@ -1229,7 +1232,6 @@ hy:
       apple_international: "Apple/International"
       google: "Google"
       twitter: "Twitter"
-      emoji_one: "Emoji One"
       win10: "Win10"
       google_classic: "Google Classic"
       facebook_messenger: "Facebook Messenger"
@@ -3081,7 +3083,6 @@ hy:
             other: "Թեման {{count}} commit ետ է!"
           compare_commits: "(Տեսնել նոր commit-ները)"
           repo_unreachable: "Հնարավոր չէ կապ հաստատել այս թեմայի Git ռեպոզիտորիայի հետ: Սխալի հաղորդագրությունը՝ "
-          imported_from_archive: "Այս թեման ներմուծվել է .tar.gz ֆայլից"
           scss:
             text: "CSS"
             title: "Մուտքագրեք մասնավոր CSS, մենք ընդունում ենք բոլոր վավեր CSS և SCSS ոճերը"

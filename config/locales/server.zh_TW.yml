@@ -1895,7 +1895,6 @@ zh_TW:
       short: "必須至少 %{min} 個字"
       long: "不能超過 %{max} 個字"
       too_long: "過長"
-      characters: "必須只包含數字、英文字母、破折號（-）和底線（_）"
       unique: "必須是唯一的"
       blank: "必須存在"
       must_begin_with_alphanumeric_or_underscore: "必須以英數字或底線開頭"

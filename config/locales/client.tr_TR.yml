@@ -856,7 +856,6 @@ tr_TR:
         copied_to_clipboard: "Panoya kopyalandı"
         copy_to_clipboard_error: "Panoya kopyalanırken hata oluştu"
         remaining_codes: "<strong>{{count}}</strong> yedek kodun kaldı "
-        use: "<a href>Yedek kod kullan</a>"
         enable_prerequisites: "Yedek kodları oluşturmadan önce birincil ikinci faktörü etkinleştirmelisiniz."
         codes:
           title: "Yedek kod oluşturuldu"
@@ -865,6 +864,7 @@ tr_TR:
         title: "İki Faktörlü Kimlik Doğrulama"
         enable: "İki Adımlı Kimlik Doğrulamayı Düzenle"
         confirm_password_description: "Devam etmek için lütfen şifrenizi onaylayın"
+        name: "İsim"
         label: "Kod"
         rate_limit: "Yeni bir doğrulama kodu girmeden önce lütfen bekleyin."
         enable_description: |
@@ -876,7 +876,6 @@ tr_TR:
         extended_description: |
           İki faktörlü kimlik doğrulama, şifrenize ek olarak bir kerelik bir belirteç gerektirerek hesabınıza ekstra güvenlik sağlar. Tokenler <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>Android</a> ve <a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS</a> cihazlarda yaratılabilir.
         oauth_enabled_warning: "Hesabınızda iki faktörlü kimlik doğrulaması etkinleştirildikten sonra sosyal girişlerin devre dışı bırakılacağını lütfen unutmayın."
-        use: "<a href>Authenticator uygulamasını kullan</a>"
         enforced_notice: "Bu siteye erişmeden önce iki faktörlü kimlik doğrulamasını etkinleştirmeniz gerekir."
         disable: "devre dışı bırak"
         disable_title: "İkinci Faktör İnaktif"
@@ -888,6 +887,9 @@ tr_TR:
           title: "Token Tabanlı Doğrulayıcılar"
           add: "Yeni Doğrulayıcı"
           default_name: "Benim Doğrulayıcım"
+        security_key:
+          register: "Kayıt Ol"
+          delete: 'Sil'
       change_about:
         title: "\"Hakkımda\"yı Değiştir"
         error: "Bu değeri değiştirirken bir hata oluştu."
@@ -1281,10 +1283,8 @@ tr_TR:
       password: "Şifre"
       second_factor_title: "İki Faktörlü Kimlik Doğrulama"
       second_factor_description: "Lütfen uygulamadan \"Kimlik Doğrulama Kodu\"nu gir:"
-      second_factor_backup: "Yedek kodları kullanarak oturum açın"
       second_factor_backup_title: "İki Faktörlü Yedekleme"
       second_factor_backup_description: "Lütfen yedek kodlarından birini gir:"
-      second_factor: "Authenticator uygulamasını kullanarak oturum açın"
       email_placeholder: "e-posta veya kullanıcı adı"
       caps_lock_warning: "Caps Lock açık"
       error: "Bilinmeyen hata"
@@ -1355,7 +1355,6 @@ tr_TR:
       apple_international: "Apple/Uluslararası"
       google: "Google"
       twitter: "Twitter"
-      emoji_one: "Emoji One"
       win10: "Win10"
       google_classic: "Google Classic"
       facebook_messenger: "Facebook Messenger"

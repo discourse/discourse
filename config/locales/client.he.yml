@@ -960,7 +960,7 @@ he:
         copied_to_clipboard: "הועתק ללוח"
         copy_to_clipboard_error: "שגיאה בהעתקת מידע ללוח"
         remaining_codes: "יש לך <strong>{{count}}</strong> קודי גיבוי נותרים"
-        use: "<a href>שימוש בקוד גיבוי</a>"
+        use: "להשתמש בקוד גיבוי"
         enable_prerequisites: "עליך להפעיל אימות דו־שלבי עיקרי בטרם יצירת קודים כגיבוי."
         codes:
           title: "קודי גיבוי נוצרו"
@@ -968,7 +968,9 @@ he:
       second_factor:
         title: "אימות ב2 גורמים"
         enable: "ניהול אימות דו־שלבי"
+        forgot_password: "שכחת את הססמה?"
         confirm_password_description: "אנא אשר את סיסמתך בכדי להמשיך"
+        name: "שם"
         label: "קוד"
         rate_limit: "אנא המתינו לפני שתנסו קוד אישור אחר."
         enable_description: |
@@ -980,7 +982,7 @@ he:
         extended_description: |
           אימות ב2 גורמים מחזק את אבטחת המשתמש שלך על ידי אסימון אבטחה חד-פעמי בנוסף לסיסמה שלך. ניתן ליצור אסימונים על מכשיריAndroid</a> ו<a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS</a>.
         oauth_enabled_warning: "לידיעתך, כניסות מרשתות חברתיות ינוטרלו לאחר הפעלת אימות בשני שלבים בחשבונך."
-        use: "<a href>להשתמש ביישומון אימות</a>"
+        use: "להשתמש ביישומון אימות"
         enforced_notice: "עליך להפעיל אימות דו־שלבי בטרם הגישה לאתר הזה."
         disable: "נטרול"
         disable_title: "נטרול אימות דו־שלבי"
@@ -988,10 +990,21 @@ he:
         edit: "ערוך"
         edit_title: "עריכת אימות דו־שלבי"
         edit_description: "שם אימות דו־שלבי"
+        enable_security_key_description: "כשמפתח האבטחה הפיזי שלך מוכן יש ללחוץ על כפתור הרישום שלהלן."
         totp:
           title: "מאמתים מבוססי אסימונים"
           add: "מאמת חדש"
           default_name: "המאמת שלי"
+        security_key:
+          register: "הרשמה"
+          title: 'מפתחות אבטחה'
+          add: "רישום מפתח אבטחה"
+          default_name: "מפתח אבטחה עיקרי"
+          not_allowed_error: "זמן תהליך רישום מפתח האבטחה פג או שבוטל."
+          already_added_error: "כבר רשמת את מפתח האבטחה הזה. אין צורך לרשום אותו שוב."
+          edit: 'עריכת מפתח אבטחה'
+          edit_description: 'שם מפתח אבטחה'
+          delete: 'מחיקה'
       change_about:
         title: "שינוי בנוגע אליי"
         error: "ארעה שגיאה בשינוי ערך זה."
@@ -1416,10 +1429,16 @@ he:
       password: "סיסמה"
       second_factor_title: "אימות ב2 גורמים"
       second_factor_description: "אנא הכניסו את קוד האישור מהיישומון שלכם."
-      second_factor_backup: "<a href>כניסה באמצעות קוד גיבוי</a>"
+      second_factor_backup: "כניסה עם קוד גיבוי"
       second_factor_backup_title: "גיבוי דו־שלבי"
       second_factor_backup_description: "נא להקליד אחד מהקודים לגיבוי שלך:"
-      second_factor: "<a href>כניסה באמצעות יישומון אימות</a>"
+      second_factor: "כניסה עם יישומון אימות"
+      security_key_description: "כשמפתח האבטחה הפיזי שלך מוכן יש ללחוץ על כפתור האימות עם מפתח האבטחה שלהלן."
+      security_key_alternative: "לא הצלחת למצוא את מפתח האבטחה או שברצונך לנסות שיטה אחרת?"
+      security_key_authenticate: "אימות עם מפתח אבטחה"
+      security_key_not_allowed_error: "זמן תהליך אימות מפתח האבטחה פג או שבוטל."
+      security_key_no_matching_credential_error: "לא ניתן למצוא פרטי גישה במפתח האבטחה שסופק."
+      security_key_support_missing_error: "המכשיר או הדפדפן הנוכחי שלך לא תומך בשימוש במפתחות אבטחה, נא להשתמש בשיטה אחרת."
       email_placeholder: "דואר אלקטרוני או שם משתמש/ת"
       caps_lock_warning: "מקש Caps Lock לחוץ"
       error: "שגיאה לא ידועה"
@@ -1473,6 +1492,9 @@ he:
         name: "Discord"
         title: "עם Discord"
         message: "אימות עם Discord"
+      second_factor_toggle:
+        totp: "להשתמש ביישומון אימות במקום"
+        backup_code: "להשתמש בקוד גיבוי במקום"
     invites:
       accept_title: "הזמנה"
       welcome_to: "ברוך בואך אל %{site_name}!"
@@ -1490,7 +1512,7 @@ he:
       apple_international: "אפל/בינלאומי"
       google: "גוגל"
       twitter: "טוויטר"
-      emoji_one: "Emoji One"
+      emoji_one: "JoyPixels (לשעבר EmojiOne)"
       win10: "חלונות 10"
       google_classic: "Google Classic"
       facebook_messenger: "Facebook Messenger"
@@ -3583,7 +3605,7 @@ he:
             other: "ערכת העיצוב מעוכבת ב־{{count}} הגשות!"
           compare_commits: "(צפייה בהגשות חדשות)"
           repo_unreachable: "לא ניתן ליצור קשר עם מאגר ה־git של ערכת העיצוב הזו. הודעת השגיאה:"
-          imported_from_archive: "ערכת עיצוב זו ייובאה מקובץ ‎.tar.gz"
+          imported_from_archive: "ערכת עיצוב זו ייובאה מקובץ ‎.zip"
           scss:
             text: "CSS"
             title: "עריכת CSS מותאם, אנחנו מקבלים כל סגנון CSS ו SCSS תקני"

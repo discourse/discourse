@@ -621,7 +621,11 @@ sv:
         disable: "Inaktivera"
         enable: "Aktivera"
       second_factor:
+        name: "Namn"
         edit: "Redigera"
+        security_key:
+          register: "Registrera"
+          delete: 'Radera'
       change_about:
         title: "Ändra Om Mig"
         error: "Ett fel inträffade vid ändringen av det här värdet."
@@ -998,7 +1002,6 @@ sv:
       apple_international: "Apple/International"
       google: "Google"
       twitter: "Twitter"
-      emoji_one: "Emoji One"
       win10: "Win10"
     category_page_style:
       categories_only: "Endast kategorier"

@@ -49,6 +49,7 @@ he:
       about_json_values: "about.json מכיל ערכים שגויים: %{errors}"
       git: "שגיאה בעת שכפול מאגר git, הגישה נדחיתה או שהמאגר לא נמצא"
       unpack_failed: "חילוץ הקובץ נכשל"
+      file_too_big: "הקובץ גדול מדי ללא דחיסה."
       unknown_file_type: "הקובץ שהעלית הוא כפי הנראה אינה ערכת עיצוב תקנית של Discourse."
     errors:
       component_no_user_selectable: "רכיבי ערכת העיצוב לא יכולים להיות לבחירת המשתמש"
@@ -859,6 +860,20 @@ he:
       others: "אין תגובות."
     no_drafts:
       self: "אין לך טיוטות, ניתן להתחיל לכתוב תגובה בכל נושא שהוא והוא יישמר אוטומטית כטיוטה חדשה."
+  webauthn:
+    validation:
+      invalid_type_error: 'סוג ה־webauthn שסופק שגוי. הסוגים התקינים הם webauthn.get ו־webauthn.create.'
+      challenge_mismatch_error: 'האתגר שסופק לא תואם לאתגר שנוצר על ידי שרת האימות.'
+      invalid_origin_error: 'מקור בקשת האימות לא תואמת למקור השרת.'
+      malformed_attestation_error: 'איך שגיאה בעת פענוח נתוני העדות.'
+      invalid_relying_party_id_error: 'ה־Relying Party ID של בקשת האימות לא תואמת ל־Relying Party ID של השרת.'
+      user_verification_error: 'נדרש אימות משתמש.'
+      unsupported_public_key_algorithm_error: 'אלגוריתם המפתח הציבורי שסופק לא נתמך על ידי השרת.'
+      unsupported_attestation_format_error: 'תצורת העדות לא נתמכת על ידי השרת.'
+      credential_id_in_use_error: 'מזהה פרטי הגישה כבר בשימוש.'
+      public_key_error: 'אימות המפתח הציבורי עבור פרטי הגישה נכשל.'
+      ownership_error: 'מפתח האבטחה אינו בבעלות המשתמש.'
+      not_found_error: 'לא ניתן למצוא מפתח אבטחה עם מזהה פרטי הגישה שסופק.'
   topic_flag_types:
     spam:
       title: "ספאם"
@@ -2078,6 +2093,13 @@ he:
     autoclosed_disabled_lastpost: "הנושא הזה נפתח. ניתן להגיב תגובות חדשות."
     auto_deleted_by_timer: "יימחק אוטומטית על ידי שעון."
   login:
+    security_key_description: "כשמפתח האבטחה הפיזי שלך מוכן יש ללחוץ על כפתור האימות עם מפתח האבטחה שלהלן."
+    security_key_alternative: "לא הצלחת למצוא את מפתח האבטחה או שברצונך לנסות שיטה אחרת?"
+    security_key_authenticate: "אימות עם מפתח אבטחה"
+    security_key_not_allowed_error: "זמן תהליך אימות מפתח האבטחה פג או שבוטל."
+    security_key_no_matching_credential_error: "לא ניתן למצוא פרטי גישה במפתח האבטחה שסופק."
+    security_key_support_missing_error: "המכשיר או הדפדפן הנוכחי שלך לא תומך בשימוש במפתחות אבטחה, נא להשתמש בשיטה אחרת."
+    security_key_invalid: "אירעה שגיאה באימות מפתח האבטחה."
     not_approved: "חשבונך טרם אושר. יישלח אליך דואר אלקטרוני כשהוא יהיה מוכן להתחברות."
     incorrect_username_email_or_password: "שם משתמש, דואר אלקטרוני או סיסמה לא נכונים"
     incorrect_password: "ססמה שגויה"
@@ -2114,6 +2136,7 @@ he:
     second_factor_backup_description: "נא להכניס את אחד מהקודים לגיבוי שלך:"
     second_factor_backup_title: "קוד גיבוי לאימות דו־שלבי"
     invalid_second_factor_code: "קוד האימות שגוי. מותר להשתמש בכל קוד פעם אחת בלבד."
+    invalid_security_key: "מפתח אבטחה שגוי."
     second_factor_toggle:
       totp: "להשתמש ביישומון אימות במקום"
       backup_code: "להשתמש בקוד גיבוי במקום"
@@ -2130,7 +2153,7 @@ he:
       short: "חייבים להיות לפחות %{min} תווים"
       long: "נדרשים לא יותר מ-%{max} תווים"
       too_long: "ארוך מדי"
-      characters: "חייב לכלול מספרים, תווים, מקפים וקווים תחתונים בלבד"
+      characters: "חייב לכלול מספרים, אותיות, מינוסים, נקודות וקווים תחתיים בלבד"
       unique: "חייב להיות ייחודי"
       blank: "חייב להיות מלא"
       must_begin_with_alphanumeric_or_underscore: "חייב להתחיל באות, מספר, או קו תחתון"

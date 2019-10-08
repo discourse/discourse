@@ -765,6 +765,7 @@ cs:
       second_factor:
         title: "Dvoufázové přihlašování"
         confirm_password_description: "Prosíme před dalším krokem potvrďte své heslo"
+        name: "Jméno"
         label: "Kód"
         rate_limit: "Prosím počkejete před tím, než vyskoušíte další ověřovací kód."
         disable_description: "Zadejte prosím ověřovací kód z vaší aplikace"
@@ -773,6 +774,8 @@ cs:
           Dvoufaktorová autentizace přidává další bezpečnostní vrstvu k vašemu účtu, protože vedle hesla vyžaduje ještě i zadání jednorázového kódu, vytvořeného na zařízeních <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>Android</a> nebo <a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS</a>.
         oauth_enabled_warning: "Upozorňujeme, že možnost přihlásit se pomocí účtu ze sociální sítě bude vypnuta, jakmila bude na vašem účtu povolena dvoufaktorová autentizace."
         edit: "Upravit"
+        security_key:
+          delete: 'Smazat'
       change_about:
         title: "Změna o mně"
         error: "Došlo k chybě při pokusu změnit tuto hodnotu."
@@ -1161,10 +1164,8 @@ cs:
       password: "Heslo"
       second_factor_title: "Dvoufázové přihlašování"
       second_factor_description: "Prosím zadejte autentikační kód z vaší aplikace:"
-      second_factor_backup: "<a href>Přihlásit se záložním kódem</a>"
       second_factor_backup_title: "Dvoufaktorová autentizace"
       second_factor_backup_description: "Prosíme zadejte jeden ze svých záložních kódů:"
-      second_factor: "<a href>Přihlásit se aplikací Authenticator</a>"
       email_placeholder: "emailová adresa nebo uživatelské jméno"
       caps_lock_warning: "zapnutý Caps Lock"
       error: "Neznámá chyba"
@@ -1231,7 +1232,6 @@ cs:
       apple_international: "Apple/Mezinárodní"
       google: "Google"
       twitter: "Twitter"
-      emoji_one: "Emoji One"
       win10: "Win10"
       google_classic: "Google Classic"
       facebook_messenger: "Facebook Messenger"

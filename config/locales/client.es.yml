@@ -95,6 +95,12 @@ es:
         x_days:
           one: "hace %{count} día"
           other: "hace %{count} días"
+        x_months:
+          one: "Hace %{count} meses"
+          other: "Hace %{count} meses"
+        x_years:
+          one: "Hace %{count} años"
+          other: "Hace %{count} años"
       later:
         x_days:
           one: "%{count} día después"
@@ -257,7 +263,7 @@ es:
       created: "has marcado esta publicación"
       not_bookmarked: "marcar esta publicación"
       remove: "Eliminar marcador"
-      confirm_clear: "¿Estás seguro de que deseas borrar todos tus marcadores en este tema?"
+      confirm_clear: "¿Estás seguro de que deseas eliminar todos tus marcadores en este tema?"
     drafts:
       resume: "Reanudar"
       remove: "Eliminar"
@@ -344,7 +350,7 @@ es:
       unclaim:
         help: "eliminar esta reclamación"
       awaiting_approval: "Esperando aprobación"
-      delete: "Borrar"
+      delete: "Eliminar"
       settings:
         saved: "Guardado"
         save_changes: "Guardar cambios"
@@ -457,7 +463,7 @@ es:
           title: "Usuario"
       approval:
         title: "La publicación requiere aprobación"
-        description: "Hemos recibido tu nueva publicación, pero debe ser aprobada por un moderador antes de que aparezca. Por favor sé paciente."
+        description: "Hemos recibido tu nueva publicación, pero debe ser aprobada por un moderador antes de que aparezca. Por favor, sé paciente."
         pending_posts:
           one: "Tienes <strong>%{count}</strong> publicación pendiente."
           other: "Tienes <strong>{{count}}</strong> publicaciones pendientes."
@@ -715,7 +721,7 @@ es:
         button_text: "Descargar todos"
         confirm: "¿Seguro de que quieres descargar tus publicaciones?"
         success: "Descarga iniciada, se te notificará por mensaje cuando el proceso se haya completado."
-        rate_limit_error: "Solo se pueden descargar las publicaciones una vez al día. Por favor inténtalo de nuevo mañana."
+        rate_limit_error: "Solo se pueden descargar las publicaciones una vez al día. Por favor, inténtalo de nuevo mañana."
       new_private_message: "Mensaje nuevo"
       private_message: "Mensaje"
       private_messages: "Mensajes"
@@ -810,7 +816,7 @@ es:
       delete_account: "Eliminar mi cuenta"
       delete_account_confirm: "¿Estás seguro de que quieres eliminar permanentemente tu cuenta? ¡Esta acción no puede ser revertida!"
       deleted_yourself: "Tu cuenta se ha eliminado exitosamente."
-      delete_yourself_not_allowed: "Por favor contactar a un miembro del staff si deseas que se elimine tu cuenta."
+      delete_yourself_not_allowed: "Por favor, contacta a un miembro del staff si deseas que se elimine tu cuenta."
       unread_message_count: "Mensajes"
       admin_delete: "Eliminar"
       users: "Usuarios"
@@ -874,7 +880,7 @@ es:
         copied_to_clipboard: "Copiado al portapapeles"
         copy_to_clipboard_error: "Error al copiar datos al portapapeles"
         remaining_codes: "Tienes <strong>{{count}}</strong> códigos de respaldo restantes."
-        use: "<a href>Usar un código de respaldo</a>"
+        use: "Usar un código de respaldo"
         enable_prerequisites: "Debes habilitar un segundo factor primario antes de generar códigos de respaldo."
         codes:
           title: "Códigos de respaldo generados"
@@ -882,19 +888,21 @@ es:
       second_factor:
         title: "Autenticación en dos pasos"
         enable: "Gestionar autenticación en dos pasos"
-        confirm_password_description: "Por favor confirma tu contraseña para continuar"
+        forgot_password: "¿Olvidaste tu contraseña?"
+        confirm_password_description: "Por favor, confirma tu contraseña para continuar"
+        name: "Nombre"
         label: "Código"
-        rate_limit: "Por favor espera antes de intentar utilizar otro código de autenticación."
+        rate_limit: "Por favor, espera antes de intentar utilizar otro código de autenticación."
         enable_description: |
           Escanea este código QR en una aplicación que lo soporte (<a href="https://www.google.com/search?q=authenticator+apps+for+android" target="_blank">Android</a> – <a href="https://www.google.com/search?q=authenticator+apps+for+ios" target="_blank">iOS</a>) e ingresa el código de autenticación.
-        disable_description: "Por favor ingresa el código de autenticación que aparece en tu aplicación"
+        disable_description: "Por favor, ingresa el código de autenticación que aparece en tu aplicación"
         show_key_description: "Ingresa el código manualmente"
         short_description: |
           Protege tu cuenta mediante códigos de respaldo de un solo uso.
         extended_description: |
           La verificación en dos pasos incrementa la seguridad de tu cuenta al requerir un código de único solo uso además de tu contraseña. Los códigos se pueden generar tanto en dispositivos <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>Android</a> como <a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS</a>.
-        oauth_enabled_warning: "Por favor ten en cuenta que el acceso a tu cuenta a través de redes sociales se inhabilitará si activas la autenticación en dos pasos."
-        use: "<a href>Usar la app Authenticator</a>"
+        oauth_enabled_warning: "Por favor, ten en cuenta que el acceso a tu cuenta a través de redes sociales se inhabilitará si activas la autenticación en dos pasos."
+        use: "Usar app Authenticator"
         enforced_notice: "Se necesita que actives la autenticación en dos pasos antes de acceder a este sitio."
         disable: "inhabilitar"
         disable_title: "Inhabilitar segundo factor"
@@ -902,10 +910,21 @@ es:
         edit: "Editar"
         edit_title: "Editar segundo factor"
         edit_description: "Nombre del segundo factor"
+        enable_security_key_description: "Cuando tengas tu clave de seguridad física preparada, presione el botón de registro que se encuentra debajo."
         totp:
           title: "Autenticación basada en tokens"
           add: "Nuevo autenticador"
           default_name: "Mi autenticador"
+        security_key:
+          register: "Registrar"
+          title: 'Claves de seguridad'
+          add: "Clave de seguridad de registro"
+          default_name: "Clave de seguridad principal"
+          not_allowed_error: "El proceso de registro de clave de seguridad fue cancelado o se agotó el tiempo."
+          already_added_error: "Ya registraste esta clave de seguridad. No tienes que registrarla de nuevo."
+          edit: 'Editar clave de seguridad'
+          edit_description: 'Nombre de la clave de seguridad'
+          delete: 'Eliminar'
       change_about:
         title: "Cambiar «Acerca de mí»"
         error: "Ha ocurrido un error al cambiar este valor."
@@ -918,8 +937,8 @@ es:
         title: "Cambiar correo electrónico"
         taken: "Lo sentimos, ese correo electrónico no está disponible."
         error: "Ha ocurrido un error al cambiar tu correo electrónico. ¿Tal vez esa dirección ya se encuentra en uso?"
-        success: "Te hemos enviado un correo electrónico a esa dirección. Por favor sigue las instrucciones de confirmación."
-        success_staff: "Hemos enviado un correo electrónico a tu dirección actual. Por favor sigue las instrucciones de confirmación."
+        success: "Te hemos enviado un correo electrónico a esa dirección. Por favor, sigue las instrucciones de confirmación."
+        success_staff: "Hemos enviado un correo electrónico a tu dirección actual. Por favor, sigue las instrucciones de confirmación."
       change_avatar:
         title: "Cambiar tu imagen de perfil"
         gravatar: "<a href='//gravatar.com/emails' target='_blank'>Gravatar</a>, basado en"
@@ -945,7 +964,7 @@ es:
         sso_override_instructions: "El correo electrónico puede actualizarse desde el proveedor de SSO."
         instructions: "Nunca se mostrará al público."
         ok: "Te enviaremos un correo electrónico para confirmar"
-        invalid: "Por favor ingresa una dirección de correo electrónico válida"
+        invalid: "Por favor, ingresa una dirección de correo electrónico válida"
         authenticated: "Tu dirección de correo electrónico ha sido autenticada por {{provider}}"
         frequency_immediately: "Te enviaremos un correo electrónico inmediatamente si no has leído el asunto por el cual te estamos enviando el correo."
         frequency:
@@ -1158,9 +1177,9 @@ es:
         more_badges: "Más insignias"
         top_links: "Enlaces destacados"
         no_links: "No hay enlaces aún."
-        most_liked_by: "Los que dieron más me gusta"
-        most_liked_users: "Con más me gusta"
-        most_replied_to_users: "A quienes más respondiste"
+        most_liked_by: "Recibió mas me gusta de"
+        most_liked_users: "Dio más me gusta a"
+        most_replied_to_users: "Respondió más a"
         no_likes: "No hay ningún me gusta aún."
         top_categories: "Categorías destacadas"
         topics: "Temas"
@@ -1192,7 +1211,7 @@ es:
         unknown: "Error"
         not_found: "Página no encontrada"
       desc:
-        network: "Por favor revisa tu conexión."
+        network: "Por favor, revisa tu conexión."
         network_fixed: "Parece que ha vuelto."
         server: "Código de error: {{status}}"
         forbidden: "No tienes permitido ver esto."
@@ -1280,14 +1299,14 @@ es:
       title: "Restablecer contraseña"
       action: "Olvidé mi contraseña"
       invite: "Ingresa tu nombre de usuario o tu dirección de correo electrónico, y te enviaremos un correo para reestablecer tu contraseña."
-      reset: "Restablecer Contraseña"
+      reset: "Restablecer contraseña"
       complete_username: "Si una cuenta coincide con el nombre de usuario <b>%{username}</b>, en breve deberías recibir un correo electrónico con las instrucciones para reestablecer tu contraseña."
       complete_email: "Si una cuenta coincide con <b>%{email}</b>, en breve deberías recibir un correo electrónico con las instrucciones para reestablecer tu contraseña."
       complete_username_found: "Encontramos una cuenta que coincide con el usuario <b>%{username}</b>, en breve deberías recibir un correo electrónico con instrucciones para restablecer tu contraseña."
       complete_email_found: "Encontramos una cuenta que coincide con <b>%{email}</b>, deberías recibir en breve un correo electrónico con instrucciones para restablecer tu contraseña."
       complete_username_not_found: "No hay ninguna cuenta que coincida con el nombre de usuario <b>%{username}</b>"
       complete_email_not_found: "No hay ninguna cuenta que coincida con el correo electrónico <b>%{email}</b>"
-      help: "¿No te ha llegado el correo? Asegúrate de comprobar primero tu carpeta de correo no deseado. <p>¿No estás seguro de qué correo has usado? Ingresa tu correo electrónico y te avisaremos si lo tenemos registrado.</p><p>Si no tienes acceso al correo electrónico asociado a tu cuenta, por favor contacta <a href='%{basePath}/about'>a nuestro amable staff.</a></p>"
+      help: "¿No te ha llegado el correo? Asegúrate de comprobar primero tu carpeta de correo no deseado. <p>¿No estás seguro de qué correo has usado? Ingresa tu correo electrónico y te avisaremos si lo tenemos registrado.</p><p>Si no tienes acceso al correo electrónico asociado a tu cuenta, por favor, contacta <a href='%{basePath}/about'>a nuestro amable staff.</a></p>"
       button_ok: "OK"
       button_help: "Ayuda"
     email_login:
@@ -1307,18 +1326,24 @@ es:
       username: "Usuario"
       password: "Contraseña"
       second_factor_title: "Autenticación en dos pasos"
-      second_factor_description: "Por favor ingresa el código de autenticación desde tu aplicación:"
-      second_factor_backup: "<a href>Iniciar sesión usando un código de respaldo</a>"
+      second_factor_description: "Por favor, ingresa el código de autenticación desde tu aplicación:"
+      second_factor_backup: "Iniciar sesión utilizando un código de respaldo"
       second_factor_backup_title: "Respaldo de la autenticación en dos pasos"
       second_factor_backup_description: "Por favor, ingresa uno de los códigos de respaldo:"
-      second_factor: "<a href>Inicia sesión usando la app Authenticator</a>"
+      second_factor: "Iniciar sesión utilizando la app Authenticator"
+      security_key_description: "Cuando tengas tu clave de seguridad física preparada, presiona el botón de autenticar con clave de seguridad que se encuentra debajo."
+      security_key_alternative: "¿No encuentras tu clave de seguridad o quieres utilizar otro método?"
+      security_key_authenticate: "Autenticar con clave de seguridad"
+      security_key_not_allowed_error: "La autenticación de la clave de seguridad fue cancelada o se agotó el tiempo."
+      security_key_no_matching_credential_error: "No se encontraron credenciales que coincidan en la clave de seguridad provista."
+      security_key_support_missing_error: "Tu dispositivo o navegador actual no soporta el uso de claves de seguridad. Por favor, utiliza un método diferente."
       email_placeholder: "dirección de correo electrónico o nombre de usuario"
       caps_lock_warning: "El bloqueo de mayúsculas está activado"
       error: "Error desconocido"
       cookies_error: "Parece que tu navegador tiene deshabilitados los cookies. Es posible que no puedas iniciar sesión sin habilitarlos primero."
-      rate_limit: "Por favor espera un poco antes intentar iniciar sesión de nuevo."
-      blank_username: "Por favor ingresa tu correo electrónico o nombre de usuario."
-      blank_username_or_password: "Por favor ingresa tu correo electrónico o nombre de usuario y tu contraseña."
+      rate_limit: "Por favor, espera un poco antes intentar iniciar sesión de nuevo."
+      blank_username: "Por favor, ingresa tu correo electrónico o nombre de usuario."
+      blank_username_or_password: "Por favor, ingresa tu correo electrónico o nombre de usuario y tu contraseña."
       reset_password: "Restablecer contraseña"
       logging_in: "Iniciando Sesión..."
       or: "O"
@@ -1326,18 +1351,18 @@ es:
       awaiting_activation: "Tu cuenta está pendiente de activación, usa el enlace de «olvidé contraseña» para recibir otro correo electrónico de activación."
       awaiting_approval: "Tu cuenta todavía no ha sido aprobada por un miembro del staff. Recibirás un correo electrónico cuando sea aprobada."
       requires_invite: "Lo sentimos, solo se puede acceder a este foro mediante invitación."
-      not_activated: "No puedes iniciar sesión todavía. Anteriormente te hemos enviado un correo electrónico de activación a la dirección <b>{{sentTo}}</b>. Por favor sigue las instrucciones que allí se encuentran para activar tu cuenta."
+      not_activated: "No puedes iniciar sesión todavía. Anteriormente te hemos enviado un correo electrónico de activación a la dirección <b>{{sentTo}}</b>. Por favor, sigue las instrucciones que allí se encuentran para activar tu cuenta."
       not_allowed_from_ip_address: "No puedes iniciar sesión desde esa dirección IP."
       admin_not_allowed_from_ip_address: "No puedes iniciar sesión como administrador desde esta dirección IP."
       resend_activation_email: "Has clic aquí para enviar el correo electrónico de activación nuevamente."
-      omniauth_disallow_totp: "Tu cuenta tiene activada la autenticación en dos pasos. Por favor ingresa usando tu contraseña."
+      omniauth_disallow_totp: "Tu cuenta tiene activada la autenticación en dos pasos. Por favor, ingresa usando tu contraseña."
       resend_title: "Volver a enviar el correo electrónico de activación"
       change_email: "Cambiar dirección de correo electrónico"
       provide_new_email: "Ingresa una dirección de correo electrónico nueva y te reenviaremos el correo de confirmación."
       submit_new_email: "Actualizar dirección de correo electrónico"
       sent_activation_email_again: "Te hemos enviado otro correo electrónico de activación a <b>{{currentEmail}}</b>. Podría tardar algunos minutos en llegar; asegúrate de revisar la carpeta de correo no deseado."
       sent_activation_email_again_generic: "Te hemos enviado otro correo  electrónico de activación. Podría tardar algunos minutos en llegar. Asegúrate de revisar la carpeta de correo no deseado."
-      to_continue: "Por favor inicia sesión"
+      to_continue: "Por favor, inicia sesión"
       preferences: "Debes iniciar sesión para poder cambiar tus preferencias de usuario."
       forgot: "No me acuerdo de los detalles de mi cuenta."
       not_approved: "Tu cuenta aún no ha sido aprobada. Se te notificará por correo electrónico cuando todo esté listo para que inicies sesión."
@@ -1365,6 +1390,9 @@ es:
         name: "Discord"
         title: "con Discord"
         message: "Autenticando con Discord"
+      second_factor_toggle:
+        totp: "Usar una aplicación de autenticación en su lugar"
+        backup_code: "Usar un código de respaldo en su lugar"
     invites:
       accept_title: "Invitación"
       welcome_to: "¡Bienvenido a %{site_name}!"
@@ -1382,7 +1410,7 @@ es:
       apple_international: "Apple/Internacional"
       google: "Google"
       twitter: "Twitter"
-      emoji_one: "Emoji One"
+      emoji_one: "JoyPixels (anteriormente EmojiOne)"
       win10: "Win10"
       google_classic: "Google Classic"
       facebook_messenger: "Facebook Messenger"
@@ -1471,14 +1499,14 @@ es:
       reference_topic_title: "RE: {{title}}"
       error:
         title_missing: "Es necesario un título"
-        title_too_short: "El título debe tener por lo menos {{min}} caracteres."
+        title_too_short: "El título debe tener por lo menos {{min}} caracteres"
         title_too_long: "El título no puede tener más de {{max}} caracteres."
-        post_missing: "Las publicaciones no pueden estar vacías"
+        post_missing: "La publicación no puede estar vacía"
         post_length: "La publicación debe tener por lo menos {{min}} caracteres."
         try_like: "¿Has probado el botón {{heart}}?"
         category_missing: "Debes escoger una categoría."
         tags_missing: "Debes seleccionar al menos {{count}} etiquetas"
-        topic_template_not_modified: "Por favor agrega detalles y especificaciones a tu tema editando la plantilla de tema."
+        topic_template_not_modified: "Por favor, agrega detalles y especificaciones a tu tema editando la plantilla de tema."
       save_edit: "Guardar edición"
       overwrite_edit: "Sobrescribir edición"
       reply_original: "Responder en el tema original"
@@ -1678,7 +1706,7 @@ es:
       searching: "Buscando ..."
       post_format: "#{{post_number}} de {{username}}"
       results_page: "Resultados de búsqueda de «{{term}}»"
-      more_results: "Hay más resultados. Por favor restringe los criterios de búsqueda."
+      more_results: "Hay más resultados. Por favor, restringe los criterios de búsqueda."
       cant_find: "¿No puedes encontrar lo que estás buscando?"
       start_new_topic: "¿Y si creas un nuevo tema?"
       or_search_google: "O prueba buscar a través de Google:"
@@ -1712,12 +1740,12 @@ es:
           private: en mis mensajes
           bookmarks: he guardado
           first: son la primera publicación
-          pinned: destacados
-          unpinned: no destacados
+          pinned: son destacados
+          unpinned: son no destacados
           seen: he leído
           unseen: no he leído
           wiki: son tipo wiki
-          images: incluye imagen(es)
+          images: incluyen imágenes
           all_tags: todas las etiquetas anteriores
         statuses:
           label: Donde los temas
@@ -1826,7 +1854,7 @@ es:
         login_required: "Debes iniciar sesión para poder ver este tema."
       server_error:
         title: "No se pudo cargar el tema"
-        description: "Lo sentimos, no pudimos cargar el tema. Posiblemente se debe a problemas de conexión. Por favor inténtalo nuevamente más tarde. Si el problema persiste, por favor contáctanos."
+        description: "Lo sentimos, no pudimos cargar el tema. Posiblemente se debe a problemas de conexión. Por favor, inténtalo nuevamente más tarde. Si el problema persiste, por favor contáctanos."
       not_found:
         title: "Tema no encontrado"
         description: "Lo sentimos, no pudimos encontrar ese tema. ¿Tal vez fue eliminado por un moderador?"
@@ -1858,7 +1886,7 @@ es:
       suggest_create_topic: "¿Por qué no creas un tema?"
       jump_reply_up: saltar a la primera respuesta
       jump_reply_down: saltar a la última respuesta
-      deleted: "El tema ha sido borrado"
+      deleted: "El tema ha sido eliminado"
       topic_status_update:
         title: "Temporizador de temas"
         save: "Configurar temporizador"
@@ -1868,7 +1896,7 @@ es:
         when: "Cuando:"
         public_timer_types: Temporizadores de temas
         private_timer_types: Temporizadores de tema del usuario
-        time_frame_required: Por favor selecciona un plazo
+        time_frame_required: "Por favor, selecciona un plazo"
       auto_update_input:
         none: "Selecciona el plazo"
         later_today: "Más tarde durante el día de hoy"
@@ -1897,7 +1925,7 @@ es:
       auto_close:
         title: "Cerrar tema automaticamente"
         label: "Horas de cierre automático del tema:"
-        error: "Por favor ingrese un valor válido."
+        error: "Por favor, ingresa un valor válido."
         based_on_last_post: "No cerrar hasta que la última publicación en el tema tenga por lo menos esta antigüedad."
       auto_delete:
         title: "Eliminar tema automaticamente"
@@ -1910,7 +1938,7 @@ es:
         auto_close: "Este tema se cerrará automáticamente %{timeLeft}."
         auto_publish_to_category: "Este tema se publicará en <a href=%{categoryUrl}>#%{categoryName}</a> %{timeLeft}."
         auto_close_based_on_last_post: "Este tema se cerrará %{duration} después de la última respuesta."
-        auto_delete: "Este tema se borrará automáticamente %{timeLeft}."
+        auto_delete: "Este tema se eliminará automáticamente %{timeLeft}."
         auto_bump: "La fecha de este tema se actualizará %{timeLeft}."
         auto_reminder: "Te recordaremos sobre este tema %{timeLeft}."
       auto_close_title: "Configuración de cierre automático"
@@ -2020,7 +2048,7 @@ es:
         success_message: "Has reportado este tema correctamente."
       make_public:
         title: "Convertir en tema público"
-        choose_category: "Por favor elige una categoría para el tema público:"
+        choose_category: "Por favor, elige una categoría para el tema público:"
       feature_topic:
         title: "Características de este tema"
         pin: "Hacer que este tema aparezca de primero en la categoría {{categoryLink}} hasta"
@@ -2101,7 +2129,7 @@ es:
         radio_label: "Tema existente"
         instructions:
           one: "Por favor escoge el tema al que quieres mover ese post."
-          other: "Por favor escoge el tema al que quieres mover estas <b>{{count}}</b> publicaciones."
+          other: "Por favor, escoge el tema al que quieres mover estas <b>{{count}}</b> publicaciones."
       move_to_new_message:
         title: "Mover a un mensaje nuevo"
         action: "mover a un mensaje nuevo"
@@ -2118,7 +2146,7 @@ es:
         participants: "Participantes"
         instructions:
           one: "Por favor, selecciona el mensaje al que te gustaría mover el mensaje."
-          other: "Por favor selecciona el mensaje al que te gustaría mover los <b>{{count}}</b> mensajes."
+          other: "Por favor, selecciona el mensaje al que te gustaría mover los <b>{{count}}</b> mensajes."
       merge_posts:
         title: "Fusionar las publicaciones seleccionadas"
         action: "fusionar las publicaciones seleccionadas"
@@ -2130,13 +2158,13 @@ es:
         placeholder: "nombre de usuario del nuevo dueño"
         instructions:
           one: "Por favor escoge el nuevo dueño del post de <b>@{{old_user}}</b>"
-          other: "Por favor escoge el nuevo dueño de las {{count}} publicaciones de <b>@{{old_user}}</b>"
+          other: "Por favor, escoge el nuevo dueño de las {{count}} publicaciones de <b>@{{old_user}}</b>"
       change_timestamp:
         title: "Cambiar marca horaria..."
         action: "cambiar marca horaria"
         invalid_timestamp: "La marca horaria no puede ser en el futuro"
         error: "Hubo un error al cambiar la marca horaria de este tema."
-        instructions: "Por favor selecciona la nueva marca horaria del tema. Las publicaciones en el tema se actualizarán para mantener la diferencia de tiempo."
+        instructions: "Por favor, selecciona la nueva marca horaria del tema. Las publicaciones en el tema se actualizarán para mantener la diferencia de tiempo."
       multi_select:
         select: "seleccionar"
         selected: "seleccionados ({{count}})"
@@ -2199,9 +2227,9 @@ es:
         one: "A tí y a una persona le ha gustado este mensaje"
         other: "A tí y a otros {{count}} les han gustado este mensaje"
       errors:
-        create: "Lo sentimos, se produjo un error al crear tu publicación. Por favor inténtalo de nuevo."
-        edit: "Lo sentimos, se produjo un error al editar tu publicación. Por favor inténtalo de nuevo."
-        upload: "Lo sentimos, se produjo un error al subir este archivo. Por favor inténtalo de nuevo."
+        create: "Lo sentimos, se produjo un error al crear tu publicación. Por favor, inténtalo de nuevo."
+        edit: "Lo sentimos, se produjo un error al editar tu publicación. Por favor, inténtalo de nuevo."
+        upload: "Lo sentimos, se produjo un error al subir este archivo. Por favor, inténtalo de nuevo."
         file_too_large: "Lo sentimos, ese archivo es demasiado grande (el tamaño máximo es {{max_size_kb}} kb). ¿Por qué no lo subes a un servicio de almacenamiento en la nube y compartes el enlace luego?"
         too_many_uploads: "Lo sentimos, solo puedes subir un archivo a la vez."
         too_many_dragged_and_dropped_files: "Lo sentimos, solo puedes subir {{max}} archivos a la vez."
@@ -2258,9 +2286,9 @@ es:
         lock_post_description: "impedir que el usuario que realizó esta publicación la edite"
         unlock_post: "Desbloquear publicación"
         unlock_post_description: "permitir que el usuario que realizó esta publicación la edite"
-        delete_topic_disallowed_modal: "No tienes permiso para borrar este tema. Si de verdad quieres que se elimine, repórtalo y explica tus motivos a los moderadores."
-        delete_topic_disallowed: "no tienes permiso para borrar este tema"
-        delete_topic: "borrar tema"
+        delete_topic_disallowed_modal: "No tienes permiso para eliminar este tema. Si de verdad quieres que se elimine, repórtalo y explica tus motivos a los moderadores."
+        delete_topic_disallowed: "no tienes permiso para eliminar este tema"
+        delete_topic: "eliminar tema"
         add_post_notice: "Añadir aviso del staff"
         remove_post_notice: "Eliminar aviso del staff"
         remove_timer: "quitar temporizador"
@@ -2375,15 +2403,15 @@ es:
       name_placeholder: "Una o dos palabras máximo"
       color_placeholder: "Cualquier color web"
       delete_confirm: "¿Estás seguro de que quieres eliminar esta categoría?"
-      delete_error: "Se produjo un error al borrar la categoría."
+      delete_error: "Se produjo un error al eliminar la categoría."
       list: "Lista de categorías"
-      no_description: "Por favor agrega una descripción para esta categoría."
+      no_description: "Por favor, agrega una descripción para esta categoría."
       change_in_category_topic: "Editar descripción"
       already_used: "Este color ya ha sido usado para otra categoría"
       security: "Seguridad"
       special_warning: "Aviso: esta categoría se ajusta por defecto y las opciones de seguridad no pueden ser editadas. Si no deseas utilizarla, elimínala en vez de reutilizarla."
       uncategorized_security_warning: "Esta categoría es especial: se usa para temas que no tienen una categoría asignada y y no puede tener ajustes de seguridad."
-      uncategorized_general_warning: 'Esta categoría es especial. Se utiliza como la categoría predeterminada para los temas nuevos que no tienen una categoría seleccionada. Si deseas evitar este comportamiento y forzar la selección de categorías, <a href="%{settingLink}">por favor desactiva la opción aquí</a>. Si deseas cambiar el nombre o la descripción, ve a <a href="%{customizeLink}">Personalizar / Contenido de texto</a>.'
+      uncategorized_general_warning: 'Esta categoría es especial. Se utiliza como la categoría predeterminada para los temas nuevos que no tienen una categoría seleccionada. Si deseas evitar este comportamiento y forzar la selección de categorías, <a href="%{settingLink}">por favor, desactiva la opción aquí</a>. Si deseas cambiar el nombre o la descripción, ve a <a href="%{customizeLink}">Personalizar / Contenido de texto</a>.'
       pending_permission_change_alert: "No has agregado a %{group} a esta categoría. Haz clic en este botón para agregarlos."
       images: "Imágenes"
       email_in: "Dirección de correo electrónico personalizada para el correo entrante:"
@@ -2470,7 +2498,7 @@ es:
       official_warning: "Advertencia oficial"
       delete_spammer: "Eliminar spammer"
       delete_confirm_MF: "Estás a punto de eliminar {POSTS, plural, one {<b>1</b> post} other {<b>#</b> posts}} y {TOPICS, plural, one {<b>1</b> topic} other {<b>#</b> topics}} de este usuario, eliminar su cuenta, bloquear registros desde su dirección IP <b>{ip_address}</b>, y añadir su dirección de correo electrónico <b>{email}</b> a la lista de bloqueo permanente. ¿Estás seguro de que este usuario es un spammer?"
-      yes_delete_spammer: "Sí, borrar spammer"
+      yes_delete_spammer: "Sí, eliminar spammer"
       ip_address_missing: "(N/D)"
       hidden_email_address: "(oculto)"
       submit_tooltip: "Enviar el reporte privado"
@@ -2616,8 +2644,8 @@ es:
           other: "{{categoryName}} ({{count}})"
         help: "temas recientes en la categoría {{categoryName}}"
       top:
-        title: "Parte superior"
-        help: "los temas más con más actividad en el último año, mes, semana o día"
+        title: "Destacado"
+        help: "los temas con más actividad en el último año, mes, semana o día"
         all:
           title: "Siempre"
         yearly:
@@ -2636,8 +2664,8 @@ es:
         this_month: "Mes"
         this_week: "Semana"
         today: "Hoy"
-        other_periods: "ver parte superior"
-    browser_update: 'Desafortunadamente <a href="https://www.discourse.org/faq/#browser">tu navegador es demasiado antiguo para funcionar en este sitio</a>. Por favor <a href="https://browsehappy.com">actualiza tu navegador</a>.'
+        other_periods: "ver los destacados"
+    browser_update: 'Desafortunadamente <a href="https://www.discourse.org/faq/#browser">tu navegador es demasiado antiguo para funcionar en este sitio</a>. Por favor, <a href="https://browsehappy.com">actualiza tu navegador</a>.'
     permission_types:
       full: "Crear / Responder / Ver"
       create_post: "Responder / Ver"
@@ -2664,7 +2692,7 @@ es:
         new: "%{shortcut} Nuevos"
         unread: "%{shortcut} Sin leer"
         categories: "%{shortcut} Categorías"
-        top: "%{shortcut} Parte superior"
+        top: "%{shortcut} Destacado"
         bookmarks: "%{shortcut} Marcadores"
         profile: "%{shortcut} Perfil"
         messages: "%{shortcut} Mensajes"
@@ -2707,7 +2735,7 @@ es:
         flag: "%{shortcut} Reportar publicación"
         bookmark: "%{shortcut} Guardar publicación en marcadores"
         edit: "%{shortcut} Editar publicación"
-        delete: "%{shortcut} Borrar publicación"
+        delete: "%{shortcut} Eliminar publicación"
         mark_muted: "%{shortcut} Silenciar tema"
         mark_regular: "%{shortcut} Seguimiento normal del tema normal (por defecto)"
         mark_tracking: "%{shortcut} Seguir tema"
@@ -2720,7 +2748,7 @@ es:
         other: "Insignia ganada %{count} veces"
       granted_on: "Concedido el %{date}"
       others_count: "Otras personas con esta insignia (%{count})"
-      title: Insignia
+      title: Insignias
       allow_title: "Puedes usar esta insignia como título"
       multiple_grant: "Puedes ganar esta insignia varias veces"
       badge_count:
@@ -2766,8 +2794,8 @@ es:
       delete_tag: "Eliminar etiqueta"
       delete_confirm:
         one: "¿Estás seguro de querer borrar esta etiqueta y eliminarla de %{count} tema asignado?"
-        other: "¿Estás seguro de que quieres borrar esta etiqueta y eliminarla de los {{count}} temas a los que está asignada?"
-      delete_confirm_no_topics: "¿Estás seguro de que quieres borrar esta etiqueta?"
+        other: "¿Estás seguro de que quieres eliminar esta etiqueta y quitarla de los {{count}} temas a los que está asignada?"
+      delete_confirm_no_topics: "¿Estás seguro de que quieres eliminar esta etiqueta?"
       rename_tag: "Renombrar etiqueta"
       rename_instructions: "Elige un nuevo nombre para la etiqueta:"
       sort_by: "Ordenar por:"
@@ -2871,7 +2899,7 @@ es:
         up_to_date: "¡Estás actualizado!"
         critical_available: "Actualización crítica disponible."
         updates_available: "Hay actualizaciones disponibles."
-        please_upgrade: "¡Por favor actualiza!"
+        please_upgrade: "¡Por favor, actualiza!"
         no_check_performed: "Todavía no se ha realizado ninguna revisión de actualizaciones. Asegúrate de que sidekiq esté funcionando."
         stale_data: "No se ha realizado recientemente ninguna revisión de actualizaciones. Asegúrate de que sidekiq esté funcionando."
         version_check_pending: "Parece que has actualizado recientemente. ¡Fantástico!"
@@ -2901,7 +2929,7 @@ es:
         page_views: "Vistas de página"
         page_views_short: "Vistas de página"
         show_traffic_report: "Mostrar informe detallado del tráfico"
-        community_health: Salud de la Comunidad
+        community_health: Salud de la comunidad
         moderators_activity: Actividad de moderación
         whats_new_in_discourse: "¿Qué hay de nuevo en Discourse?"
         activity_metrics: Medidas de actividad
@@ -2912,9 +2940,9 @@ es:
         reports_tab: "Informes"
         report_filter_any: "cualquiera"
         disabled: Desactivado
-        timeout_error: "Lo sentimos, la solicitud está durando demasiado, por favor selecciona un periodo más corto"
+        timeout_error: "Lo sentimos, la solicitud está durando demasiado. Por favor, selecciona un periodo más corto"
         exception_error: "Lo sentimos, se produjo un error al ejecutar la consulta"
-        too_many_requests: Has realizado esta acción demasiadas veces. Por favor espera antes de intentarlo de nuevo.
+        too_many_requests: "Has realizado esta acción demasiadas veces. Por favor, espera antes de intentarlo de nuevo."
         not_found_error: "Lo sentimos, este reporte no existe"
         filter_reports: Filtrar informes
         reports:
@@ -2949,7 +2977,7 @@ es:
             category:
               label: Categoría
       commits:
-        latest_changes: "Cambios recientes: ¡por favor actualiza a menudo!"
+        latest_changes: "Cambios recientes: ¡por favor, actualiza a menudo!"
         by: "por"
       groups:
         new:
@@ -3002,9 +3030,9 @@ es:
         refresh: "Actualizar"
         about: "Edita la membresía de tu grupo y sus miembros aquí"
         group_members: "Miembros del grupo"
-        delete: "Borrar"
-        delete_confirm: "¿Borrar este grupo?"
-        delete_failed: "No se pudo borrar el grupo. Si este es un grupo automático, no se puede destruir."
+        delete: "Eliminar"
+        delete_confirm: "¿Eliminar este grupo?"
+        delete_failed: "No se pudo eliminar el grupo. Si este es un grupo automático, no se puede destruir."
         delete_owner_confirm: "¿Quitar los privilegios de propietario a «%{username}»?"
         add: "Añadir"
         custom: "Personalizado"
@@ -3164,7 +3192,7 @@ es:
           error: "Se produjo un error al subir el archivo «{{filename}}»: {{message}}"
         operations:
           is_running: "Hay una operación en proceso actualmente..."
-          failed: "La {{operation}} falló. Por favor revisa los registros"
+          failed: "La {{operation}} falló. Por favor, revisa los registros"
           cancel:
             label: "Cancelar"
             title: "Cancelar la operación actual"
@@ -3179,8 +3207,8 @@ es:
             title: "Enviar correo electrónico con enlace de descarga"
             alert: "El enlace para descargar esta copia de respaldo se te envió por correo electrónico."
           destroy:
-            title: "Borrar la copia de respaldo"
-            confirm: "¿Estás seguro de que quieres borrar esta copia de respaldo?"
+            title: "Quitar la copia de respaldo"
+            confirm: "¿Estás seguro de que quieres destruir esta copia de respaldo?"
           restore:
             is_disabled: "Restaurar está deshabilitado en la configuración del sitio."
             label: "Restaurar"
@@ -3196,7 +3224,7 @@ es:
         backup_storage_error: "Error de acceso al almacenamiento de respaldos: %{error_message}"
       export_csv:
         success: "Exportación iniciada, se te notificará a través de un mensaje cuando el proceso se haya completado."
-        failed: "La exportación falló. Por favor revisa los registros."
+        failed: "La exportación falló. Por favor, revisa los registros."
         button_text: "Exportar"
         button_title:
           user: "Exportar la lista completa de usuarios en formato CSV."
@@ -3252,8 +3280,8 @@ es:
           create_name: "Nombre"
           long_title: "Modificar los colores, CSS y contenidos HTML de su sitio"
           edit: "Editar"
-          edit_confirm: "Este es un tema remoto, si editas CSS/HTML, los cambios se borrarán la próxima vez que actualices el tema."
-          update_confirm: "Estos cambios locales se borrarán por la actualización. ¿Estás seguro de que quieres continuar?"
+          edit_confirm: "Este es un tema remoto, si editas CSS/HTML, los cambios se eliminarán la próxima vez que actualices el tema."
+          update_confirm: "Estos cambios locales se eliminarán por la actualización. ¿Estás seguro de que quieres continuar?"
           update_confirm_yes: "Sí, continuar con la actualización"
           common: "Común"
           desktop: "Escritorio"
@@ -3302,7 +3330,7 @@ es:
           css_html: "Personalizar CSS/HTML"
           edit_css_html: "Editar CSS/HTML"
           edit_css_html_help: "No has editado ningún CSS o HTML"
-          delete_upload_confirm: "¿Borrar este archivo? (¡El tema CSS puede dejar de funcionar!)"
+          delete_upload_confirm: "¿Eliminar este archivo? (¡El tema CSS puede dejar de funcionar!)"
           import_web_tip: "Repositorio que contiene el tema"
           import_web_advanced: "Avanzado..."
           import_file_tip: "archivo .tar.gz, .zip o .dcstyle.json que contiene un tema"
@@ -3343,7 +3371,7 @@ es:
             other: "¡El tema está {{count}} commits detrás!"
           compare_commits: "(Ver nuevos commits)"
           repo_unreachable: "No se ha podido contactar el repositorio Git de este tema. Mensaje de error:"
-          imported_from_archive: "Este tema se importó de un archivo .tar.gz"
+          imported_from_archive: "Este tema se importó desde un archivo .zip"
           scss:
             text: "CSS"
             title: "Ingresa el CSS personalizado, aceptamos todos los estilos válidos de CSS y SCSS"
@@ -3433,7 +3461,7 @@ es:
         preview_digest: "Vista previa de resumen"
         advanced_test:
           title: "Prueba avanzada"
-          desc: "Observa cómo Discourse procesa los correos electrónicos recibidos. Para poder procesar correctamente el correo electrónico, por favor pega acá abajo el mensaje de correo electrónico original completo."
+          desc: "Observa cómo Discourse procesa los correos electrónicos recibidos. Para poder procesar correctamente el correo electrónico, por favor, pega acá abajo el mensaje de correo electrónico original completo."
           email: "Mensaje original"
           run: "Realizar prueba"
           text: "Cuerpo del mensaje seleccionado"
@@ -3499,11 +3527,11 @@ es:
         performed_by: "Realizado por"
         no_results: "No hay historial de moderación disponible."
         actions:
-          delete_user: "Usuario borrado"
+          delete_user: "Usuario eliminado"
           suspend_user: "Usuario suspendido"
           silence_user: "Usuario silenciado"
-          delete_post: "Publicación borrada"
-          delete_topic: "Tema borrado"
+          delete_post: "Publicación eliminada"
+          delete_topic: "Tema eliminado"
           post_approved: "Publicación aprobada"
       logs:
         title: "Registros"
@@ -3538,14 +3566,14 @@ es:
           show: "Mostrar"
           modal_title: "Detalles"
           no_previous: "No existe un valor anterior."
-          deleted: "No hay un valor nuevo. El registro ha sido borrado."
+          deleted: "No hay un valor nuevo. El registro ha sido eliminado."
           actions:
-            delete_user: "borrar usuario"
+            delete_user: "eliminar usuario"
             change_trust_level: "cambiar nivel de confianza"
             change_username: "cambiar nombre de usuario"
             change_site_setting: "cambiar configuración del sitio"
             change_theme: "cambiar tema"
-            delete_theme: "borrar tema"
+            delete_theme: "eliminar tema"
             change_site_text: "cambiar textos del sitio"
             suspend_user: "suspender usuario"
             unsuspend_user: "desbloquear usuario"
@@ -3607,7 +3635,7 @@ es:
             web_hook_deactivate: "desactivar webhook"
             embeddable_host_create: "crear host insertable"
             embeddable_host_update: "actualizar host insertable"
-            embeddable_host_destroy: "borrar host insertable"
+            embeddable_host_destroy: "eliminar host insertable"
             change_theme_setting: "cambiar la configuración del tema"
             disable_theme_component: "deshabilitar componente de tema"
             enable_theme_component: "habilitar componente de tema"
@@ -3661,7 +3689,7 @@ es:
         show_words: "mostrar palabras"
         one_word_per_line: "Una palabra por línea"
         download: Descargar
-        clear_all: Borrar todo
+        clear_all: Eliminar todo
         clear_all_confirm_block: "¿Estás seguro de que quieres quitar todas las palabras agregadas a la acción «bloquear»?"
         clear_all_confirm_censor: "¿Estás seguro de que quieres quitar todas las palabras agregadas a la acción «censurar»?"
         clear_all_confirm_flag: "¿Estás seguro de que quieres quitar todas las palabras agregadas a la acción «reportar»?"
@@ -3760,7 +3788,7 @@ es:
         cant_suspend: "Este usuario no puede ser suspendido."
         delete_all_posts: "Eliminar todas las publicaciones"
         delete_posts_progress: "Eliminando publicaciones..."
-        delete_posts_failed: "Hubo un problema al borrar los mensajes."
+        delete_posts_failed: "Hubo un problema al eliminar los mensajes."
         penalty_post_actions: "¿Qué te gustaría hacer con la publicación asociada?"
         penalty_post_delete: "Eliminar la publicación"
         penalty_post_delete_replies: "Eliminar la publicación+ sus respuestas"
@@ -3768,7 +3796,7 @@ es:
         penalty_post_none: "No hacer nada"
         penalty_count: "Contador de faltas"
         clear_penalty_history:
-          title: "Borrar historial de faltas"
+          title: "Eliminado historial de faltas"
           description: "usuarios con faltas no pueden alcanzar NC3"
         delete_all_posts_confirm_MF: "Estás a punto de eliminar {POSTS, plural, one {1 post} other {# posts}} y {TOPICS, plural, one {1 topic} other {# topics}}. ¿Estás seguro?"
         silence: "Silenciar"
@@ -3787,7 +3815,7 @@ es:
         logged_out: "El usuario cerró sesión en todos los dispositivos"
         revoke_admin: "Revocar administración"
         grant_admin: "Conceder administración"
-        grant_admin_confirm: "Te hemos enviado un correo electrónico para verificar al nuevo administrador. Por favor abre el correo y sigue las instrucciones."
+        grant_admin_confirm: "Te hemos enviado un correo electrónico para verificar al nuevo administrador. Por favor, abre el correo y sigue las instrucciones."
         revoke_moderation: "Revocar moderación"
         grant_moderation: "Conceder moderación"
         unsuspend: "Desbloquear"
@@ -3823,7 +3851,7 @@ es:
         delete_posts_forbidden_because_staff: "No se pueden eliminar todos las publicaciones de administradores y moderadores."
         delete_forbidden:
           one: "Los usuarios no se pueden borrar si han sido registrados hace más de %{count} día, o si tienen publicaciones. Borra todas publicaciones antes de tratar de borrar un usuario."
-          other: "Los usuarios no se pueden eliminar si tienen publicaciones. Eliminar todas las publicaciones antes de tratar de borrar un usuario. (No se pueden eliminar las publicaciones que se hayan creado hace más de %{count} días)"
+          other: "Los usuarios no se pueden eliminar si tienen publicaciones. Elimina todas las publicaciones antes de tratar de eliminar a un usuario. (No se pueden eliminar las publicaciones que se hayan creado hace más de %{count} días)"
         cant_delete_all_posts:
           one: "No se pueden eliminar todos los posts. Algunos tienen más de %{count} día de antigüedad. (Ver la opción delete_user_max_post_age )"
           other: "No se pueden eliminar todas las publicaciones. Algunas publicaciones tienen más de %{count} días de antigüedad. (Ver la opción delete_user_max_post_age)"
@@ -3948,7 +3976,7 @@ es:
         go_back: "Volver a la búsqueda"
         recommended: "Recomendamos personalizar el siguiente texto para que se ajusten a tus necesidades:"
         show_overriden: "Solo mostrar sobrescritos"
-        more_than_50_results: "Hay más de 50 resultados. Por favor afina tu busqueda."
+        more_than_50_results: "Hay más de 50 resultados. Por favor, afina tu busqueda."
       settings:
         show_overriden: "Solo mostrar anulados"
         reset: "restablecer"
@@ -3963,7 +3991,7 @@ es:
         add_group: "añadir grupo"
         uploaded_image_list:
           label: "Editar lista"
-          empty: "No hay imágenes todavía. Por favor sube una."
+          empty: "No hay imágenes todavía. Por favor, sube una."
           upload:
             label: "Subir"
             title: "Subir imagen(es)"
@@ -4024,11 +4052,11 @@ es:
         expand: Expandir &hellip;
         revoke_confirm: "¿Estás seguro de que quieres revocar esta insignia?"
         edit_badges: Editar insignias
-        grant_badge: Condecer insignias
+        grant_badge: Condecer insignia
         granted_badges: Insignias concedidas
         grant: Conceder
         no_user_badges: "%{name} no ha recibido ninguna insignia."
-        no_badges: No hay insignias para conceder.
+        no_badges: No hay insignias que puedan ser concedidas.
         none_selected: "Selecciona una insignia para empezar"
         allow_title: Permitir que se use la insignia como título
         multiple_grant: Puede ser concedida varias veces
@@ -4038,7 +4066,7 @@ es:
         image: Imagen
         icon_help: "ingresa un nombre de icono de Font Awesome (usa el prefijo 'far-' para iconos regulares y 'fab-' para iconos de marca)"
         image_help: "Ingresa la URL de la imagen (sobrescribe el campo del icono si ambos están configurados)"
-        query: Consulta (SQL) para otorgar la insignia
+        query: Consulta de insignia (SQL)
         target_posts: Publicaciones destino de la consulta
         auto_revoke: Ejecutar diariamente la consulta de revocación
         show_posts: Mostrar la publicación por la cual se concedió la insignia en la página de insignias
@@ -4058,7 +4086,7 @@ es:
           error_help: "Mira los siguientes enlaces para ayudarte con las solicitudes de las insignias"
           bad_count_warning:
             header: "¡ADVERTENCIA!"
-            text: "Faltan algunas muestras muestras de concesiones. Esto ocurre cuando la solicitud de la insignia devuelve ID de usuarios o de publicaciones que no existen. Esto podría causar resultados inesperados más tarde - por favor revisa de nuevo tu solicitud."
+            text: "Faltan algunas muestras muestras de concesiones. Esto ocurre cuando la solicitud de la insignia devuelve ID de usuarios o de publicaciones que no existen. Esto podría causar resultados inesperados más tarde - por favor, revisa de nuevo tu solicitud."
           no_grant_count: "No hay insignias para asignar."
           grant_count:
             one: "<b>%{count}</b> medalla para conceder."
@@ -4143,7 +4171,7 @@ es:
       step: "%{current} de %{total}"
       upload: "Subir"
       uploading: "Subiendo..."
-      upload_error: "Lo sentimos, se produjo un error al subir este archivo. Por favor inténtalo de nuevo."
+      upload_error: "Lo sentimos, se produjo un error al subir este archivo. Por favor, inténtalo de nuevo."
       quit: "Tal vez más tarde"
       staff_count:
         one: "Tu comunidad tiene %{count} staff (tú). "

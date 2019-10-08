@@ -612,8 +612,12 @@ bg:
       second_factor:
         title: "Двуфакторно удостоверяване"
         confirm_password_description: "Моля, потвърдете паролата за да продължите"
+        name: "Име"
         label: "Код"
         edit: "Редактирай"
+        security_key:
+          register: "Регистриране"
+          delete: 'Изтрий'
       change_about:
         title: "Смяна на За мен"
         error: "Имаше грешка при промяна на тази стойност."
@@ -978,7 +982,6 @@ bg:
       apple_international: "Apple/International"
       google: "Google"
       twitter: "Twitter"
-      emoji_one: "Emoji One"
       win10: "Win10"
     shortcut_modifier_key:
       shift: "Shift"
@@ -2343,7 +2346,7 @@ bg:
             recover_topic: "възстанови темата"
             delete_post: "изтрий публикацията "
             impersonate: "представи "
-            anonymize_user: "анинимизирай потребител"
+            anonymize_user: "анoнимизирай потребител"
             roll_up: "върнете IP blocks"
             change_category_settings: "промени настройките на категорията"
             delete_category: "изтрий категория"

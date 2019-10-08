@@ -798,13 +798,13 @@ zh_TW:
         copied_to_clipboard: "複製至剪貼簿"
         copy_to_clipboard_error: "複製至剪貼簿時發生錯誤"
         remaining_codes: "你還剩下 <strong>{{count}}</strong> 個可使用的備用碼"
-        use: "<a href>使用備用碼</a>"
         codes:
           title: "已產生備用碼"
           description: "每個備用碼僅可使用一次。請將它們保存在安全且可被找到的地方。"
       second_factor:
         title: "兩步驟驗證"
         confirm_password_description: "請確認你的密碼以繼續"
+        name: "名稱"
         label: "代碼"
         rate_limit: "嘗試其他驗證代碼前請稍後"
         enable_description: |
@@ -816,9 +816,11 @@ zh_TW:
         extended_description: |
           二步驟驗證使用除了密碼外的一次性代碼來加強帳號安全性。可以使用<a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>Android</a>或<a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS</a>設備來產生代碼。
         oauth_enabled_warning: "請注意，一旦啟用二步驟驗證，將自動關閉社群登入。"
-        use: "<a href>使用身分驗證應用程式</a>"
         enforced_notice: "在進入網站前，需啟用兩個步驟驗證以增強帳號安全性"
         edit: "編輯"
+        security_key:
+          register: "註冊"
+          delete: '刪除'
       change_about:
         title: "修改關於我"
         error: "修改設定值時發生錯誤"
@@ -1195,10 +1197,8 @@ zh_TW:
       password: "密碼"
       second_factor_title: "兩步驟驗證"
       second_factor_description: "請輸入應用程式中的驗證碼："
-      second_factor_backup: "<a href>使用備用碼登入</a>"
       second_factor_backup_title: "兩步驟驗證備用"
       second_factor_backup_description: "請輸入一組您的備用碼"
-      second_factor: "<a href>使用身分驗證應用程式登入</a>"
       email_placeholder: "電子郵件地址或使用者名稱"
       caps_lock_warning: "大寫鎖定中"
       error: "未知的錯誤"
@@ -1247,6 +1247,9 @@ zh_TW:
         name: "GitHub"
         title: "使用 GitHub"
         message: "使用 GitHub 認証 (請確定你的網頁瀏覽器未阻擋彈出視窗)"
+      second_factor_toggle:
+        totp: "請改用身份驗證應用程式"
+        backup_code: "請改用備用碼"
     invites:
       accept_title: "邀請函"
       welcome_to: "歡迎來到 %{site_name}！"
@@ -1264,7 +1267,6 @@ zh_TW:
       apple_international: "Apple/國際化"
       google: "Google"
       twitter: "Twitter"
-      emoji_one: " Emoji One "
       win10: "Win10"
       google_classic: "Google Classic"
       facebook_messenger: "Facebook Messenger"
@@ -3093,7 +3095,6 @@ zh_TW:
             other: "佈景主題落後了{{count}}個變更！"
           compare_commits: "（查看新的提交）"
           repo_unreachable: "無法連線至此佈景主題的 Git 版本庫。錯誤訊息："
-          imported_from_archive: "此佈景主題是從 .tar.gz 檔輸入的。"
           scss:
             text: "CSS"
             title: "輸入自訂的 CSS，可接受所有有效的 CSS 及 SCSS。"

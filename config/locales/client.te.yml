@@ -414,7 +414,10 @@ te:
         disable: "అచేతనం"
         enable: "చేతనం"
       second_factor:
+        name: "పేరు"
         edit: "సవరించు"
+        security_key:
+          delete: 'తొలగించు'
       change_about:
         title: "నా గురించి మార్చు"
       change_username:
@@ -672,7 +675,6 @@ te:
       apple_international: "యాపిల్ , అంతర్జాతీయ"
       google: "గూగుల్"
       twitter: "ట్విట్టర్"
-      emoji_one: "ఇమెజి వన్"
     category_page_style:
       categories_only: "వర్గాలు మాత్రమే"
     conditional_loading_section:

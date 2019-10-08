@@ -1082,7 +1082,6 @@ ja:
     username:
       short: "少なくとも%{min}文字は必要です"
       long: "%{max}文字以下である必要があります"
-      characters: "英数字、ハイフン、アンダーバーのみ利用可能です"
       unique: "はユニークである必要があります"
       blank: "は空であってはなりません"
       must_begin_with_alphanumeric_or_underscore: "最初は英数字で始まる必要があります"

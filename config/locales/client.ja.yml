@@ -758,17 +758,19 @@ ja:
         copied_to_clipboard: "クリップボードにコピーしました"
         copy_to_clipboard_error: "クリップボードにコピーする際にエラーが発生しました"
         remaining_codes: "<strong>{{count}}</strong> 個のバックアップコードが残っています。"
-        use: "<a href>バックアップコードを使用</a>"
         codes:
           title: "バックアップコードが作られました"
       second_factor:
         title: "2段階認証"
         confirm_password_description: "続行するにはパスワードを入力してください"
+        name: "名前"
         label: "コード"
         show_key_description: "手動入力"
         oauth_enabled_warning: "アカウントで2段階認証が有効になると、ソーシャルログインは無効になります。"
         enforced_notice: "このサイトにアクセスするには2段階認証を有効にする必要があります。"
         edit: "編集"
+        security_key:
+          delete: '削除する'
       change_about:
         title: "プロフィールを変更"
         error: "変更中にエラーが発生しました。"
@@ -1188,7 +1190,6 @@ ja:
       apple_international: "Apple/International"
       google: "Google"
       twitter: "Twitter"
-      emoji_one: "Emoji One"
       win10: "Win10"
       google_classic: "Google Classic"
       facebook_messenger: "Facebookメッセンジャー"

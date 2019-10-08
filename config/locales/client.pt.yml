@@ -746,13 +746,13 @@ pt:
         copied_to_clipboard: "Copiado para a Área de Transferência"
         copy_to_clipboard_error: "Erro a copiar dados para a Área de Transferência"
         remaining_codes: "Restam <strong>{{count}}</strong> códigos de reserva."
-        use: "<a href>Usar um código de reserva</a>"
         codes:
           title: "Códigos de Reserva Gerados"
           description: "Cada um dos códigos de reserva só pode ser usado uma vez. Guarde-os num sítio seguro mas acessível."
       second_factor:
         title: "Autenticação em Dois Passos"
         confirm_password_description: "Por favor confirme a sua palavra-passe para continuar"
+        name: "Nome"
         label: "Código"
         rate_limit: "Por favor espere antes de voltar a tentar um código de autenticação."
         disable_description: "Por favor introduza o código de autenticação a partir da sua aplicação"
@@ -760,9 +760,11 @@ pt:
         extended_description: |
           A autenticação em dois passos adiciona segurança à sua conta ao pedir um código de utilização única além da sua palavra-passe. Os códigos podem ser gerados em dispositivos <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>Android</a> e <a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS</a>.
         oauth_enabled_warning: "Note que os logins com contas sociais vão ser desativados depois da autenticação em dois passos ser ativa na sua conta."
-        use: "<a href>Usar aplicação Authenticator</a>"
         enforced_notice: "É necessário ativar a autenticação em dois passos para aceder a este site."
         edit: "Editar"
+        security_key:
+          register: "Registar"
+          delete: 'Eliminar'
       change_about:
         title: "Modificar Sobre Mim"
         error: "Ocorreu um erro ao modificar este valor."
@@ -1144,10 +1146,8 @@ pt:
       password: "Palavra-passe"
       second_factor_title: "Autenticação em Dois Passos"
       second_factor_description: "Por favor introduza um código de autenticação a partir da sua aplicação:"
-      second_factor_backup: "<a href>Entrar com um código de reserva</a>"
       second_factor_backup_title: "Cópia de Segurança do Segundo Passo de Autenticação"
       second_factor_backup_description: "Por favor introduza um dos seus códigos de reserva:"
-      second_factor: "<a href>Entrar com a aplicação Authenticator</a>"
       email_placeholder: "e-mail ou nome de utilizador"
       caps_lock_warning: "Caps Lock está ligada"
       error: "Erro desconhecido"
@@ -1213,7 +1213,6 @@ pt:
       apple_international: "Apple/Internacional"
       google: "Google"
       twitter: "Twitter"
-      emoji_one: "Emoji One"
       win10: "Win10"
       google_classic: "Google Classic"
       facebook_messenger: "Facebook Messenger"

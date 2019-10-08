@@ -880,7 +880,6 @@ ca:
         copied_to_clipboard: "Copiat al porta-retalls."
         copy_to_clipboard_error: "Error copiant dades al porta-retalls"
         remaining_codes: "Us resten <strong>{{count}}</strong> codis de còpia de seguretat."
-        use: "<a href>Usa un codi de còpia de seguretat</a>"
         enable_prerequisites: "Cal habilitar un segon factor primari abans de generar codis de còpia de seguretat."
         codes:
           title: "Codis de còpia de seguretat generats"
@@ -889,6 +888,7 @@ ca:
         title: "Autenticació de dos factors"
         enable: "Gestiona l'autenticació de dos factors"
         confirm_password_description: "Confirmeu la contrasenya per a continuar"
+        name: "Nom"
         label: "Codi"
         rate_limit: "Espereu abans de provar un altre codi d'autenticació."
         enable_description: |
@@ -900,7 +900,6 @@ ca:
         extended_description: |
           L'autenticació de dos factors afegeix seguretat addicional al vostre compte exigint un testimoni únic a més de la vostra contrasenya. Es poden generar testimonis en dispositius <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>Android</a> i <a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS</a>.
         oauth_enabled_warning: "Observeu que els inicis de sessió amb xarxes socials seran deshabilitats quan l'autenticació de dos factors s'hagi activat en el vostre compte. "
-        use: "<a href>Fes servir una aplicació d'autenticador</a>"
         enforced_notice: "Cal que activeu l'autenticació de dos factors abans d'accedir a aquest lloc web."
         disable: "deshabilita"
         disable_title: "Deshabilita el segon factor"
@@ -912,6 +911,9 @@ ca:
           title: "Autenticadors basats en testimonis"
           add: "Autenticador nou"
           default_name: "El meu autenticador"
+        security_key:
+          register: "Registre"
+          delete: 'Suprimeix'
       change_about:
         title: "Canvia Quant a mi"
         error: "Hi ha hagut un error en canviar aquest valor"
@@ -1314,10 +1316,8 @@ ca:
       password: "Contrasenya"
       second_factor_title: "Autenticació de dos factors"
       second_factor_description: "Introduïu el codi d'autenticació de la vostra aplicació:"
-      second_factor_backup: "<a href>Inicia la sessió usant un codi de còpia de seguretat </a>"
       second_factor_backup_title: "Còpia de seguretat de dos factors"
       second_factor_backup_description: "Introduïu un dels vostres codis de còpia de seguretat:"
-      second_factor: "<a href>Inicia la sessió usant l'aplicació autenticadora</a>"
       email_placeholder: "correu electrònic o nom d'usuari"
       caps_lock_warning: "El bloqueig de majúscula és activat"
       error: "Error desconegut"
@@ -1371,6 +1371,9 @@ ca:
         name: "Discord"
         title: "amb Discord"
         message: "Autenticació amb Discord"
+      second_factor_toggle:
+        totp: "Utilitzeu una aplicació d'autenticació en comptes d'això"
+        backup_code: "Utilitzeu un codi de còpia de seguretat en comptes d'això"
     invites:
       accept_title: "Invitació"
       welcome_to: "Benvingut a %{site_name}!"
@@ -1388,7 +1391,6 @@ ca:
       apple_international: "Apple/Internacional"
       google: "Google"
       twitter: "Twitter"
-      emoji_one: "Emoji One"
       win10: "Win10"
       google_classic: "Google Classic"
       facebook_messenger: "Facebook Messenger"
@@ -3349,7 +3351,6 @@ ca:
             other: "L'aparença és {{count}} commits darrere!"
           compare_commits: "(Vegeu els commits nous)"
           repo_unreachable: "No s'ha pogut contactar amb el repositori git d'aquesta aparença. Missatge d'error:"
-          imported_from_archive: "Aquesta aparença s'ha importat d'un fitxer .tar.gz"
           scss:
             text: "CSS"
             title: "Introduïu el CSS personalitzat. Acceptem tots els estils CSS i SCSS vàlids."
@@ -3836,7 +3837,7 @@ ca:
         cant_delete_all_too_many_posts:
           one: "No es poden suprimir totes les publicacions perquè l'usuari té més d'%{count} publicació. (delete_all_posts_max)"
           other: "No es poden suprimir totes les publicacions perquè l'usuari té més de %{count} publicacions. (delete_all_posts_max)"
-        delete_confirm: "En general, és preferible fer anònims els usuaris en lloc web de suprimir-los, per a evitar que s'esborrin els continguts de les discussions existents. <br><br> Esteu SEGUR que voleu suprimir aquest usuari? Això és permanent!"
+        delete_confirm: "En general, és preferible fer anònims els usuaris en lloc de suprimir-los, per a evitar que s'esborrin els continguts de les discussions existents. <br><br> Esteu SEGUR que voleu suprimir aquest usuari? Això és permanent!"
         delete_and_block: "Suprimeix i <b>bloca</i> aquest correu electrònic i aquesta adreça IP"
         delete_dont_block: "Només suprimeix"
         deleting_user: "Suprimint l'usuari..."

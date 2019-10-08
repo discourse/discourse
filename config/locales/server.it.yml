@@ -1995,7 +1995,6 @@ it:
       short: "deve essere almeno di %{min} caratteri"
       long: "non deve essere più lungo di %{max} caratteri"
       too_long: "è troppo lungo"
-      characters: "deve includere solo numeri, lettere, trattini e trattini bassi"
       unique: "deve essere univoco"
       blank: "deve essere presente"
       must_begin_with_alphanumeric_or_underscore: "deve iniziare con una lettera, un numero o un underscore"
@@ -2223,7 +2222,7 @@ it:
     welcome_tl1_user:
       title: "Benvenuto utente LE1"
       subject_template: "Grazie per aver passato del tempo con noi"
-      text_body_template: "Ehilà! \n\nAbbiamo notato che hai ti sei dato un bel daffare con la lettura, il che è fantastico, quindi ti abbiamo promosso di un [Livello Esperienza!] (https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/)\n\nSiamo davvero felici che tu stia trascorrendo del tempo con noi e ci piacerebbe sapere di più su di te. Prenditi un momento per [compilare il tuo profilo] (%{base_url}/my/preferences/profile), o sentiti libero di [iniziare un nuovo argomento] (%{base_url}/categories).\n"
+      text_body_template: "Ehilà! \n\nAbbiamo notato che hai ti sei dato un bel daffare con la lettura, il che è fantastico, quindi ti abbiamo promosso di un [Livello di Esperienza!](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/)\n\nSiamo davvero felici che tu stia trascorrendo del tempo con noi e ci piacerebbe sapere di più su di te. Prenditi un momento per [compilare il tuo profilo](%{base_url}/my/preferences/profile), o sentiti libero di [iniziare un nuovo argomento](%{base_url}/categories).\n"
     welcome_invite:
       title: "Invito Benvenuto"
       subject_template: "Benvenuto su %{site_name}!"
@@ -2460,7 +2459,7 @@ it:
     email_reject_attachment:
       title: "Allegato e-mail respinto"
       subject_template: "[%{email_prefix}] Problema alla posta elettronica - allegato respinto"
-      text_body_template: "Sfortunatamente alcuni allegati nel tuo messaggio di posta elettronica a %{destination} (intitolato %{former_title}) sono stati rifiutati. \n\nDettagli:\n %{rejected_errors} \n\nSe ritieni che si tratti di un errore, [contatta un membro dello staff] (%{base_url}/about).\n"
+      text_body_template: "Sfortunatamente alcuni allegati nel tuo messaggio di posta elettronica a %{destination} (intitolato %{former_title}) sono stati rifiutati. \n\nDettagli:\n %{rejected_errors} \n\nSe ritieni che si tratti di un errore, [contatta un membro dello staff](%{base_url}/about).\n"
     email_reject_reply_not_allowed:
       title: "Email Rifiutate - Risposta Non Consentita"
       subject_template: "[%{email_prefix}] Problema alla posta elettronica - Risposta non consentita"

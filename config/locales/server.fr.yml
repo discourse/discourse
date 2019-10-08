@@ -2018,7 +2018,6 @@ fr:
       short: "doit être d'au moins %{min} caractères"
       long: "ne doit pas être supérieur à %{max} caractères"
       too_long: "est trop long"
-      characters: "doit uniquement contenir des chiffres, lettres, tirets et tirets bas."
       unique: "doit être unique"
       blank: "doit être présent"
       must_begin_with_alphanumeric_or_underscore: "doit commencer par une lettre, un chiffre ou un tiret bas"

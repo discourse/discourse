@@ -880,7 +880,6 @@ de:
         copied_to_clipboard: "Wurde in Zwischenablage kopiert"
         copy_to_clipboard_error: "Beim Kopieren in die Zwischenablage trat ein Fehler auf"
         remaining_codes: "Du hast noch <strong>{{count}}</strong> Wiederherstellungscodes übrig."
-        use: "Wiederherstellungscode verwenden"
         enable_prerequisites: "Du musst vor dem Generieren von Sicherungscodes einen primären zweiten Faktor aktivieren."
         codes:
           title: "Wiederherstellungscodes generiert"
@@ -889,6 +888,7 @@ de:
         title: "Zwei-Faktor-Authentifizierung"
         enable: "Zwei-Faktor-Authentifizierung verwalten"
         confirm_password_description: "Bitte bestätige dein Passwort um fortzufahren"
+        name: "Name"
         label: "Code"
         rate_limit: "Bitte warte ein wenig, bevor du es mit einem anderen Authentifizierungscode versuchst."
         enable_description: |
@@ -900,7 +900,6 @@ de:
         extended_description: |
           Zwei-Faktor-Authentifizierung (2FA) sichert dein Konto zusätzlich ab, indem sie zusätzlich zu deinem Passwort einen einmalig gültigen Code anfordert. Codes können auf <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>Android-</a> und <a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS-</a>-Geräten generiert werden.
         oauth_enabled_warning: "Beachte bitte, dass soziale Anmelde-Methoden deaktiviert werden, sobald die Zwei-Faktor-Authentifizierung für dein Konto aktiviert ist."
-        use: "Authentifizierungs-App verwenden"
         enforced_notice: "Du musst Zwei-Faktor-Authentifizierung aktivieren, bevor du auf diese Seite zugreifen kannst."
         disable: "deaktivieren"
         disable_title: "Zweiten Faktor deaktivieren"
@@ -912,6 +911,9 @@ de:
           title: "Token-basierte Authentifikatoren"
           add: "Neuer Authentifikator"
           default_name: "Mein Authentifikator"
+        security_key:
+          register: "Registrieren"
+          delete: 'Löschen'
       change_about:
         title: "„Über mich“ ändern"
         error: "Beim Ändern dieses Wertes ist ein Fehler aufgetreten."
@@ -1314,10 +1316,8 @@ de:
       password: "Passwort"
       second_factor_title: "Zwei-Faktor-Authentifizierung"
       second_factor_description: "Bitte gib den Authentifizierungscode aus deiner App ein:"
-      second_factor_backup: "<a href>Anmeldung mit einem Wiederherstellungscode</a>"
       second_factor_backup_title: "Zwei-Faktor-Wiederherstellung"
       second_factor_backup_description: "Bitte gib einen deiner Wiederherstellungs-Codes ein:"
-      second_factor: "<a href>Anmeldung mit Authenticator-App</a>"
       email_placeholder: "E-Mail oder Benutzername"
       caps_lock_warning: "Feststelltaste ist aktiviert"
       error: "Unbekannter Fehler"
@@ -1371,6 +1371,9 @@ de:
         name: "Discord"
         title: "mit Discord"
         message: "Authenitfizierung mit Discord"
+      second_factor_toggle:
+        totp: "Benutze stattdessen eine Authentifizierungs-App"
+        backup_code: "Benutze stattdessen einen Backup Code"
     invites:
       accept_title: "Einladung"
       welcome_to: "Willkommen bei %{site_name}!"
@@ -1388,7 +1391,6 @@ de:
       apple_international: "Apple"
       google: "Google"
       twitter: "Twitter"
-      emoji_one: "Emoji One"
       win10: "Windows 10"
       google_classic: "Google Classic"
       facebook_messenger: "Facebook Messenger"
@@ -3345,7 +3347,6 @@ de:
             other: "Theme liegt {{count}} Commits zurück!"
           compare_commits: "(Siehe neue Beiträge)"
           repo_unreachable: "Das Git-Repository dieses Themes konnte nicht kontaktiert werden. Fehlermeldung:"
-          imported_from_archive: "Dieses Theme wurde aus einer .tar.gz-Datei importiert."
           scss:
             text: "CSS"
             title: "Gib benutzerdefiniertes CSS ein, wir akzeptieren alle gültigen CSS und SCSS-Stile"

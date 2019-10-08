@@ -830,7 +830,6 @@ zh_CN:
         copied_to_clipboard: "已复制到剪贴板"
         copy_to_clipboard_error: "复制到剪贴板时出错"
         remaining_codes: "你有<strong>{{count}}</strong>个备份码"
-        use: "<a href>使用备份码</a>"
         enable_prerequisites: "你必须在生成备份代码之前启用主要第二因素。"
         codes:
           title: "备份码生成"
@@ -839,6 +838,7 @@ zh_CN:
         title: "双重验证"
         enable: "管理两步验证"
         confirm_password_description: "确认密码以继续"
+        name: "名称"
         label: "编码"
         rate_limit: "请等待另一个验证码。"
         enable_description: |
@@ -850,7 +850,6 @@ zh_CN:
         extended_description: |
           双重身份验证除了你的密码之外还需要一次性令牌，从而为你的帐户增加了额外的安全性。 可以在<a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>Android</a>和<a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS</a>设备。
         oauth_enabled_warning: "请注意，一旦你的帐户启用了双重身份验证，系统就会停用社交登录。"
-        use: "<a href>Authenticator app</a>"
         enforced_notice: "在访问此站点之前，你需要启用双重身份验证。"
         disable: "停用"
         disable_title: "禁用次要身份验证器"
@@ -862,6 +861,9 @@ zh_CN:
           title: "基于凭证的身份验证器"
           add: "新增身份验证器"
           default_name: "我的身份验证器"
+        security_key:
+          register: "注册"
+          delete: '删除'
       change_about:
         title: "更改个人信息"
         error: "提交修改时出错了"
@@ -1250,10 +1252,8 @@ zh_CN:
       password: "密码"
       second_factor_title: "双重验证"
       second_factor_description: "请输入来自 app 的验证码："
-      second_factor_backup: "<a href>使用备用码登录</a>"
       second_factor_backup_title: "两步验证备份"
       second_factor_backup_description: "请输入你的备份码："
-      second_factor: "<a href>使用Authenticator app登录</a>"
       email_placeholder: "电子邮件或者用户名"
       caps_lock_warning: "大写锁定开启"
       error: "未知错误"
@@ -1306,6 +1306,9 @@ zh_CN:
       discord:
         name: "Discord"
         message: "使用Discord验证"
+      second_factor_toggle:
+        totp: "改用身份验证APP"
+        backup_code: "使用备份码"
     invites:
       accept_title: "邀请"
       welcome_to: "欢迎来到%{site_name}！"
@@ -1323,7 +1326,6 @@ zh_CN:
       apple_international: "Apple/国际化"
       google: "Google"
       twitter: "Twitter"
-      emoji_one: "Emoji One"
       win10: "Win10"
       google_classic: "Google Classic"
       facebook_messenger: "Facebook Messenger"
@@ -3218,7 +3220,6 @@ zh_CN:
             other: "主题落后了 {{count}} 个变更！"
           compare_commits: "（查看新提交）"
           repo_unreachable: "无法联系此主题的Git存储库。错误信息："
-          imported_from_archive: "此主题是从.tar.gz文件导入的"
           scss:
             text: "CSS"
             title: "输入自定义 CSS，我们接受所有有效的 CSS 和 SCSS 样式"

@@ -868,7 +868,6 @@ fa_IR:
         copied_to_clipboard: "کپی شد"
         copy_to_clipboard_error: "خطا در کپی اطلاعات"
         remaining_codes: "شما <strong>{{count}}</strong>کد پشتیبان باقی مانده دارید."
-        use: "<a href>از کد پشتیبان استفاده کن</a>"
         enable_prerequisites: "شما باید قبل از ساخت کد‌های پشتیبانی یک تایید هویت دوعاملی اصلی را فعال کنید "
         codes:
           title: "کد پشتیبان تولید شد"
@@ -877,6 +876,7 @@ fa_IR:
         title: "احراز هویت دو مرحله ای"
         enable: "مدیریت تایید هوییت دوعاملی"
         confirm_password_description: "لطفا رمز عبور خود را تایید کنید تا ادامه دهیم."
+        name: "نام"
         label: "کد"
         rate_limit: "لطفا قبل از اینکه کد احراز هویت دیگری را تست کنید کمی صبر کنید"
         enable_description: |
@@ -888,7 +888,6 @@ fa_IR:
         extended_description: |
           احراز هویت دو عامله امنیت بیشتری به حساب کاربری شما میدهد، چرا که یک توکن یک بار مصرف علاوه بر رمز عبور خود خواهید داشت. توکن ها در ابزارهای <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>اندروید</a> و <a href="https://www.google.com/search?q=authenticator+apps+for+ios">IOS</a> قابل تولید هستند.
         oauth_enabled_warning: "دقت کنید وقتی احراز هویت دوعامله فعال شود، ورود با حساب شبکه های اجتماعی به حساب کاربری شما از کار میفتد."
-        use: "<a href>از اپلیکیشن احراز هویت استفاده کنید</a>"
         enforced_notice: "شما باید احراز هویت دو عامله را قبل از دسترسی به سایت فعال کنید"
         disable: "غیرفعال"
         disable_title: "غیر فعال کردن تایید دوعاملی"
@@ -900,6 +899,15 @@ fa_IR:
           title: "تایید برپایه توکن"
           add: "تایید کننده جدید"
           default_name: "تایید‌کننده من"
+        security_key:
+          register: "ثبت‌نام"
+          title: 'کلیدهای امنیتی'
+          add: "کلید امنیتی را ثبت کنید"
+          default_name: "کلید امنیتی اصلی"
+          not_allowed_error: "روند ثبت کلید امنیتی به پایان رسیده است یا لغو شده است."
+          edit: 'کلید امنیتی را ویرایش کنید'
+          edit_description: 'نام کلید امنیتی'
+          delete: 'حذف'
       change_about:
         title: "تغییر «درباره‌ی من»"
         error: "در فرآیند تغییر این مقدار خطایی روی داد."
@@ -1299,10 +1307,12 @@ fa_IR:
       password: "رمز‌عبور"
       second_factor_title: "احراز هویت دو مرحله ای"
       second_factor_description: "لطفا کد احراز هویت از اپ را وارد کنید:"
-      second_factor_backup: "<a href>ورود با کد پشتیبان</a>"
+      second_factor_backup: "ورود با استفاده از یک کد پشتیبان"
       second_factor_backup_title: "پشتیبان دو عامله"
       second_factor_backup_description: "لطفا یکی از کدهای پشتیبان را وارد کنید:"
-      second_factor: "<a href>ورود با اپلیکیشن احراز هویت</a>"
+      security_key_alternative: "نمی توانید کلید امنیتی خود را پیدا کنید یا می خواهید از روش دیگری استفاده کنید؟"
+      security_key_authenticate: "تأیید اعتبار با کلید امنیتی"
+      security_key_not_allowed_error: "روند تأیید اعتبار کلید امنیتی به پایان رسیده است یا لغو شده است."
       email_placeholder: "ایمیل یا نام‌کاربری"
       caps_lock_warning: "Caps Lock روشن است"
       error: "خطای ناشناخته"
@@ -1355,6 +1365,8 @@ fa_IR:
       discord:
         name: "دیسکورد"
         message: "اعتبارسنجی توسط دیسکورد"
+      second_factor_toggle:
+        backup_code: "به جای آن از یک کد پشتیبان استفاده کنید"
     invites:
       accept_title: "دعوت‌نامه"
       welcome_to: "به %{site_name} خوش آمدید!"
@@ -1372,7 +1384,6 @@ fa_IR:
       apple_international: "اپل/جهانی"
       google: "گوگل"
       twitter: "توئیتر"
-      emoji_one: "ایموجی وان"
       win10: "ویندوز 10"
       google_classic: "گوگل کلاسیک"
       facebook_messenger: "پیامرسان فیس بوک"
@@ -1454,6 +1465,7 @@ fa_IR:
       cannot_see_mention:
         category: "شما به {{username}} اشاره کردید ولی ایشان به دلیل نداشتن دسترسی به این دسته‌بندی، مطلع نخواهند شد. برای دسترسی باید آن‌ها را به گروهی که به این دسته‌بندی دسترسی دارند اضافه کنید."
         private: "شما به {{username}} اشاره کردید ولی به دلیل نداشتن دسترسی به این پیام خصوصی مطلع نخواهند شد. برای دسترسی باید آن‌ها را به این پیام خصوصی دعوت کنید."
+      duplicate_link: "به نظر می‌رسد پیوند شما به <b>{{domain}}</b> قبلاً در یک مبحث توسط <b>@ {{username}}</b> در <a href='{{post_url}}'>پاسخ به {{ago}} ارسال شده است</a> - مطمئن هستید که می خواهید دوباره آن را بفرستید؟"
       error:
         title_missing: "عنوان الزامی است"
         title_too_short: "عنوان دست‌کم باید {{min}} نویسه باشد"
@@ -1831,6 +1843,7 @@ fa_IR:
       read_more: "می‌خواهید بیشتر بخوانید؟ {{catLink}} یا {{latestLink}}."
       group_request: "برای مشاهده این مبحث نیازمند درخواست عضویت در گروه  `{{name}}` می‌باشید"
       group_join: "برای مشاهده این مبحث نیازمند پیوستن به گروه `{{name}}` می‌باشید"
+      group_request_sent: "درخواست عضویت شما در گروه ارسال شده است. در صورت پذیرش، شما مطلع خواهید شد."
       unread_indicator: "هیچ کاربری آخرین فرستهٔ این مبحث را نخوانده است."
       read_more_MF: "{ UNREAD, plural, =0 {} one { <a href='{basePath}/unread'>یک پیام خوانده نشده</a> } other { <a href='{basePath}/unread'># پیام خوانده نشده</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{و } false { } other{}} <a href='{basePath}/new'>1 موضوع جدید</a> } other { {BOTH, select, true{و } false { } other{}} <a href='{basePath}/new'># موضوع جدید</a> } } وجود دارد, یا {CATEGORY, select, true {نمایش سایر موضوعات دسته‌بندی {catLink}} false {{latestLink}} other {}}"
       browse_all_categories: جستوجوی همه‌ی دسته‌‌بندی‌ها
@@ -2236,6 +2249,9 @@ fa_IR:
           notify_user: "یک پیام ارسال شد"
           bookmark: "نشانه گذاری کن"
           like: "پسندیده شد"
+          like_capped:
+            one: "و {{count}} نفر دیگر این را دوست داشتند"
+            other: "و {{count}} نفر دیگر این را پسندیده‌اند."
         by_you:
           off_topic: "شما برای این مورد پرچم خارج از بحث زدید"
           spam: "شما برای این مورد پرچم هرزنامه زدید"
@@ -2244,6 +2260,14 @@ fa_IR:
           notify_user: "شما یک پیام به این کاربر ارسال کردید"
           bookmark: "این نوشته را نشانک زدید"
           like: "شما این نوشته را پسند کردید"
+      delete:
+        confirm:
+          one: "آیا مطمئن هستید که می خواهید آن پست را حذف کنید؟"
+          other: "آیا مطمئن هستید که می‌خواهید آن {{count}} فرسته را حذف کنید؟"
+      merge:
+        confirm:
+          one: "آیا مطمئن هستید که می خواهید آن پست ها را ادغام کنید؟"
+          other: "آیا مطمئن هستید که می‌خواهید آن {{count}} فرسته را ادغام کنید؟"
       revisions:
         controls:
           first: "بازبینی نخست"

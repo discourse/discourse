@@ -850,13 +850,13 @@ it:
         copied_to_clipboard: "Copiato nella Clipboard"
         copy_to_clipboard_error: "Errore durante la copia nella Clipboard"
         remaining_codes: "Ti sono rimasti <strong>{{count}}</strong> codici di backup."
-        use: "<a href>Usa un codice di backup</a>"
         codes:
           title: "Codici di backup generati"
           description: "Ciascuno di questi codici di backup può essere usato una sola volta. Conservali in un posto sicuro ma accessibile."
       second_factor:
         title: "Autenticazione a Due Fattori"
         confirm_password_description: "Per favore conferma la tua password per continuare"
+        name: "Nome"
         label: "Codice"
         rate_limit: "Per favore, attendi prima di provare un altro codice di autenticazione."
         enable_description: |
@@ -868,9 +868,11 @@ it:
         extended_description: |
           L'autenticazione a due fattori aggiunge ulteriore sicurezza al tuo account attraverso la richiesta di un token usa e getta oltre alla tua password. I token possono essere generati su dispositivi <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>Android</a> e <a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS</a> .
         oauth_enabled_warning: "Tieni presente che gli accessi ai social network saranno disabilitati dopo aver attivato l'autenticazione a due fattori nel tuo account."
-        use: "<a href>Usa l'applicazione Authenticator </a>"
         enforced_notice: "E' obbligatorio abilitare l'autenticazione a due fattori per accedere a questo sito."
         edit: "Modifica"
+        security_key:
+          register: "Registrare"
+          delete: 'Elimina'
       change_about:
         title: "Modifica i dati personali"
         error: "Si è verificato un errore durante la modifica del valore."
@@ -1265,10 +1267,8 @@ it:
       password: "Password"
       second_factor_title: "Autenticazione a due fattori"
       second_factor_description: "Per favore, inserisci il codice di autenticazione della tua app:"
-      second_factor_backup: "<a href>Connessione tramite codice di backup</a>"
       second_factor_backup_title: "Backup Due Fattori"
       second_factor_backup_description: "Per favore, inserisci uno dei tuoi codici di backup:"
-      second_factor: "<a href>Connessione tramite l'app Authenticator</a>"
       email_placeholder: "email o nome utente"
       caps_lock_warning: "Il Blocco Maiuscole è attivo"
       error: "Errore sconosciuto"
@@ -1320,6 +1320,9 @@ it:
         message: "Autenticazione con GitHub (assicurati che il blocco pop up non sia attivo)"
       discord:
         name: "Discord"
+      second_factor_toggle:
+        totp: "Utilizzare un'app di autenticazione"
+        backup_code: "Utilizza un codice di backup"
     invites:
       accept_title: "Invito"
       welcome_to: "Benvenuto su %{site_name}!"
@@ -1337,7 +1340,6 @@ it:
       apple_international: "Apple/Internazionale"
       google: "Google"
       twitter: "Twitter"
-      emoji_one: "Emoji One"
       win10: "Win10"
       google_classic: "Google Classic"
       facebook_messenger: "Facebook Messenger"
@@ -3255,7 +3257,6 @@ it:
             other: "Il tema è indietro di {{count}} aggiornamenti!"
           compare_commits: "(Vedi i nuovi commit)"
           repo_unreachable: "Impossibile accedere al Git repository di questo tema. Messaggio di errore:"
-          imported_from_archive: "Questo tema è stato importato da un file .tar.gz"
           scss:
             text: "CSS"
             title: "Inserire il CSS personalizzato, accettiamo tutti gli stili validi di CSS e SCSSpersonalizzato"

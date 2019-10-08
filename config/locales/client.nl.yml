@@ -880,7 +880,7 @@ nl:
         copied_to_clipboard: "Gekopieerd naar klembord"
         copy_to_clipboard_error: "Fout bij kopiëren van gegevens naar klembord"
         remaining_codes: "U hebt <strong>{{count}}</strong> back-upcodes over."
-        use: "<a href>Een back-upcode gebruiken</a>"
+        use: "Een back-upcode gebruiken"
         enable_prerequisites: "U moet een primaire tweede factor inschakelen voordat u back-upcodes genereert."
         codes:
           title: "Back-upcodes gegenereerd"
@@ -888,7 +888,9 @@ nl:
       second_factor:
         title: "Twee-factor-authenticatie"
         enable: "Twee-factor-authenticatie beheren"
+        forgot_password: "Wachtwoord vergeten?"
         confirm_password_description: "Bevestig uw wachtwoord om door te gaan"
+        name: "Naam"
         label: "Code"
         rate_limit: "Wacht even voordat u een andere authenticatiecode probeert."
         enable_description: |
@@ -900,7 +902,7 @@ nl:
         extended_description: |
           Twee-factor-authenticatie voegt extra beveiliging toe aan uw account door naast uw wachtwoord een eenmalige code te vereisen. Tokens kunnen op <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>Android</a>- en <a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS</a>-apparaten worden gegenereerd.
         oauth_enabled_warning: "Hou er rekening mee dat sociale aanmeldingen worden uitgeschakeld als u twee-factor-authenticatie op uw account inschakelt."
-        use: "<a href>Authenticator-app gebruiken</a>"
+        use: "Authenticator-app gebruiken"
         enforced_notice: "U dient twee-factor-authenticatie in te schakelen voordat u deze website bezoekt."
         disable: "uitschakelen"
         disable_title: "Tweede factor uitschakelen"
@@ -908,10 +910,21 @@ nl:
         edit: "Bewerken"
         edit_title: "Tweede factor bewerken"
         edit_description: "Naam van tweede factor"
+        enable_security_key_description: "Houd uw fysieke beveiligingssleutel gereed en klik op de onderstaande knop Registreren."
         totp:
           title: "Op tokens gebaseerde authenticators"
           add: "Nieuwe authenticator"
           default_name: "Mijn authenticator"
+        security_key:
+          register: "Registreren"
+          title: 'Beveiligingssleutels'
+          add: "Beveiligingssleutel registreren"
+          default_name: "Hoofdbeveiligingssleutel"
+          not_allowed_error: "Het registratieproces van de beveiligingssleutel had een time-out of is geannuleerd."
+          already_added_error: "U hebt deze beveiligingssleutel al geregistreerd. U hoeft deze niet opnieuw te registreren."
+          edit: 'Beveiligingssleutel bewerken'
+          edit_description: 'Naam van beveiligingssleutel'
+          delete: 'Verwijderen'
       change_about:
         title: "Over mij wijzigen"
         error: "Er is een fout opgetreden bij het wijzigen van deze waarde."
@@ -1314,10 +1327,16 @@ nl:
       password: "Wachtwoord"
       second_factor_title: "Twee-factor-authenticatie"
       second_factor_description: "Voer de authenticatiecode van uw app in:"
-      second_factor_backup: "<a href>Aanmelden met een back-upcode</a>"
+      second_factor_backup: "Aanmelden met een back-upcode"
       second_factor_backup_title: "Twee-factor-back-up"
       second_factor_backup_description: "Voer een van uw back-upcodes in:"
-      second_factor: "<a href>Aanmelden met authenticatie-app</a>"
+      second_factor: "Aanmelden met authenticator-app"
+      security_key_description: "Houd uw fysieke beveiligingssleutel gereed en klik op de onderstaande knop Authenticeren met beveiligingssleutel."
+      security_key_alternative: "Uw beveiligingssleutel niet gevonden of een andere methode gebruiken?"
+      security_key_authenticate: "Authenticeren met beveiligingssleutel"
+      security_key_not_allowed_error: "Het authenticatieproces van de beveiligingssleutel had een time-out of is geannuleerd."
+      security_key_no_matching_credential_error: "Geen referenties gevonden in de opgegeven beveiligingssleutel."
+      security_key_support_missing_error: "Uw huidige apparaat of browser ondersteunt geen gebruik van beveiligingssleutels. Gebruik een andere methode."
       email_placeholder: "e-mailadres of gebruikersnaam"
       caps_lock_warning: "Caps Lock staat aan"
       error: "Onbekende fout"
@@ -1371,6 +1390,9 @@ nl:
         name: "Discord"
         title: "met Discord"
         message: "Authenticeren met Discord"
+      second_factor_toggle:
+        totp: "Een authenticator-app gebruiken"
+        backup_code: "Een back-upcode gebruiken"
     invites:
       accept_title: "Uitnodiging"
       welcome_to: "Welkom bij %{site_name}!"
@@ -1388,7 +1410,7 @@ nl:
       apple_international: "Apple/International"
       google: "Google"
       twitter: "Twitter"
-      emoji_one: "Emoji One"
+      emoji_one: "JoyPixels (voorheen EmojiOne)"
       win10: "Win10"
       google_classic: "Google Klassiek"
       facebook_messenger: "Facebook Messenger"
@@ -3349,7 +3371,7 @@ nl:
             other: "Thema loopt {{count}} commits achter!"
           compare_commits: "(Nieuwe commits bekijken)"
           repo_unreachable: "Kon geen contact krijgen met de Git-repository van dit thema. Foutbericht:"
-          imported_from_archive: "Dit thema is vanuit een .tar.gz-bestand geïmporteerd"
+          imported_from_archive: "Dit thema is vanuit een .zip-bestand geïmporteerd"
           scss:
             text: "CSS"
             title: "Voer aangepaste CSS in; we accepteren alle geldige CSS- en SCSS-stijlen"

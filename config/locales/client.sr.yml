@@ -519,7 +519,10 @@ sr:
         disable: "Onemogući"
         enable: "Omogući"
       second_factor:
+        name: "Ime foruma"
         edit: "Izmeni"
+        security_key:
+          delete: 'Obriši'
       change_about:
         title: "Promijeni O meni"
       change_username:
@@ -845,7 +848,6 @@ sr:
       apple_international: "Apple/International"
       google: "Google"
       twitter: "Twitter"
-      emoji_one: "Emoji One"
     shortcut_modifier_key:
       alt: "Alt"
     conditional_loading_section:

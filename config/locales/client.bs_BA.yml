@@ -897,7 +897,6 @@ bs_BA:
         copied_to_clipboard: "Kopirano u međuspremnik"
         copy_to_clipboard_error: "Pogreška pri kopiranju podataka u međuspremnik"
         remaining_codes: "Imate <strong>preostale</strong> rezervne kodove <strong>{{count}}</strong> ."
-        use: "<a href>Koristite rezervnu šifru</a>"
         enable_prerequisites: "Morate omogućiti primarni drugi faktor prije generiranja rezervnih kodova."
         codes:
           title: "Generirani sigurnosni kodovi"
@@ -906,6 +905,7 @@ bs_BA:
         title: "Two Factor Authentication"
         enable: "Upravljanje autentifikacijom sa dva faktora"
         confirm_password_description: "Molimo vas da potvrdite šifru kako bi nastavili"
+        name: "Ime"
         label: "Šifra"
         rate_limit: "Pričekajte prije pokušaja drugog koda za provjeru autentičnosti."
         enable_description: |
@@ -917,7 +917,6 @@ bs_BA:
         extended_description: |
           Dvofaktorna autentifikacija dodaje dodatnu sigurnost vašem računu tako što zahtijeva dodatnu jednokratnu oznaku pored vaše lozinke. Tokeni se mogu generirati na <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>Android</a> i <a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS</a> uređajima.
         oauth_enabled_warning: "Imajte na umu da će ulogovanje korištenjem socijalnih mreža biti isključeno u momentu kad uključite two factor authentication (dvofaktorsku ovjeru autentičnosti) na vašem korisničkom računu."
-        use: "<a href>Koristite aplikaciju Autentifikator</a>"
         enforced_notice: "Morate omogućiti autentifikaciju s dva faktora prije pristupa ovoj web-lokaciji."
         disable: "onemogući"
         disable_title: "Onemogući Drugi Faktor"
@@ -929,6 +928,8 @@ bs_BA:
           title: "Autentikatori zasnovani na tokenu"
           add: "Novi Authenticator"
           default_name: "Moj Authenticator"
+        security_key:
+          delete: 'Izbriši'
       change_about:
         title: "Promjeni O meni"
         error: "Desila se greška prilikom promjene."
@@ -1335,10 +1336,8 @@ bs_BA:
       password: "Šifra"
       second_factor_title: "Two Factor Authentication"
       second_factor_description: "Molimo da unesete kod za ovjeru autentičnosti sa vaše aplikacije:"
-      second_factor_backup: "<a href>Prijavite se pomoću rezervnog koda</a>"
       second_factor_backup_title: "rezevna zaštita za dva faktora"
       second_factor_backup_description: "Molim ukucajte jedan od vaši rezevni kodova"
-      second_factor: "<a href>Prijavite se pomoću aplikacije Authenticator</a>"
       email_placeholder: "email ili korisnik"
       caps_lock_warning: "Uključena su vam velika slova"
       error: "Nepoznata greška"
@@ -1405,7 +1404,6 @@ bs_BA:
       apple_international: "Apple/International"
       google: "Google"
       twitter: "Twitter"
-      emoji_one: "Emoji One"
       win10: "Win10"
       google_classic: "Google Classic"
       facebook_messenger: "Facebook Messenger"
@@ -3380,7 +3378,6 @@ bs_BA:
             other: "Tema je {{count}} iza sebe!"
           compare_commits: "(Pogledajte nove unose)"
           repo_unreachable: "Nije moguće kontaktirati Git repozitorij ove teme. Poruka o grešci:"
-          imported_from_archive: "Ova tema je uvezena iz .tar.gz datoteke"
           scss:
             text: "Stylesheet"
             title: "Unesite prilagođeni CSS, prihvaćamo sve važeće CSS i SCSS stilove"

@@ -765,6 +765,7 @@ sk:
       second_factor:
         title: "Dvojfaktorová autentifikácia"
         confirm_password_description: "Pre pokračovanie potvrďte svoje heslo prosím"
+        name: "Meno"
         label: "Kód"
         rate_limit: "Prosím čakajte pred zadaním ďalšieho autentifikačného kódu"
         disable_description: "Prosím zadajte autentifikačný kód z vašej aplikácie"
@@ -772,6 +773,8 @@ sk:
         extended_description: |
           Dvojfaktorové prihlásenie pridáva dodatočné zabezpečenie Vášho účtu prostredníctvom zadávania jednorázových hesiel. Heslá môžu byť generované na <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>Android</a> a<a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS</a> zariadeniach.
         edit: "Upraviť"
+        security_key:
+          delete: 'Odstrániť'
       change_about:
         title: "Upraviť O mne"
         error: "Nastala chyba pri zmene tejto hodnoty."
@@ -1184,7 +1187,6 @@ sk:
       apple_international: "Apple/Medzinárodné"
       google: "Google"
       twitter: "Twitter"
-      emoji_one: "Emoji One"
       win10: "Win10"
     category_page_style:
       categories_only: "Iba kategórie"
