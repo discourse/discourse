@@ -145,6 +145,12 @@ RSpec.describe ApplicationController do
         topic = create_post.topic
         Permalink.create!(url: topic.relative_url, topic_id: topic.id + 1)
         topic.trash!
+
+        SiteSetting.detailed_404 = false
+        get topic.relative_url
+        expect(response.status).to eq(404)
+
+        SiteSetting.detailed_404 = true
         get topic.relative_url
         expect(response.status).to eq(410)
       end
@@ -204,7 +210,7 @@ RSpec.describe ApplicationController do
         response_body = response.body
 
         expect(response_body).to include(I18n.t('page_not_found.search_button'))
-        expect(response_body).to have_tag("input", with: { value: 'nopenope' })
+        expect(response_body).to have_tag("input", with: { value: 'nope nope' })
       end
 
       it 'should not include Google search if login_required is enabled' do

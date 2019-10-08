@@ -1067,31 +1067,16 @@ export default RestModel.extend({
   // Handles an error loading a topic based on a HTTP status code. Updates
   // the text to the correct values.
   errorLoading(result) {
-    const status = result.jqXHR.status;
-
     const topic = this.topic;
     this.set("loadingFilter", false);
     topic.set("errorLoading", true);
 
-    // If the result was 404 the post is not found
-    // If it was 410 the post is deleted and the user should not see it
-    if (status === 404 || status === 410) {
-      topic.set("notFoundHtml", result.jqXHR.responseText);
-      return;
+    const json = result.jqXHR.responseJSON;
+    if (json && json.extras && json.extras.html) {
+      topic.set("errorHtml", json.extras.html);
+    } else {
+      topic.set("errorMessage", I18n.t("topic.server_error.description"));
+      topic.set("noRetry", result.jqXHR.status === 403);
     }
-
-    // If the result is 403 it means invalid access
-    if (status === 403) {
-      topic.set("noRetry", true);
-      if (Discourse.User.current()) {
-        topic.set("message", I18n.t("topic.invalid_access.description"));
-      } else {
-        topic.set("message", I18n.t("topic.invalid_access.login_required"));
-      }
-      return;
-    }
-
-    // Otherwise supply a generic error message
-    topic.set("message", I18n.t("topic.server_error.description"));
   }
 });

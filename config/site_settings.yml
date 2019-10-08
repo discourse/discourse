@@ -1315,6 +1315,7 @@ trust:
     default: true
 
 security:
+  detailed_404: false
   enforce_second_factor:
     client: true
     type: enum
