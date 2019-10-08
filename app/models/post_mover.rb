@@ -64,6 +64,7 @@ class PostMover
     moving_all_posts = (@original_topic.posts.pluck(:id).sort == @post_ids.sort)
 
     create_temp_table
+    delete_invalid_post_timings
     move_each_post
     notify_users_that_posts_have_moved
     update_statistics
@@ -287,6 +288,20 @@ class PostMover
       WHERE mp.old_post_id <> mp.new_post_id
       ON CONFLICT (topic_id, post_number, user_id) DO UPDATE
         SET msecs = GREATEST(post_timings.msecs, excluded.msecs)
+    SQL
+  end
+
+  def delete_invalid_post_timings
+    DB.exec(<<~SQL, topid_id: destination_topic.id)
+      DELETE
+      FROM post_timings pt
+      WHERE pt.topic_id = :topid_id
+        AND NOT EXISTS(
+          SELECT 1
+          FROM posts p
+          WHERE p.topic_id = pt.topic_id
+            AND p.post_number = pt.post_number
+        )
     SQL
   end
 
