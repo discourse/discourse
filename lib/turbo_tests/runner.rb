@@ -28,6 +28,7 @@ module TurboTests
       @files = opts[:files]
       @verbose = opts[:verbose]
       @fast_fail = opts[:fast_fail]
+      @failure_count = 0
 
       @messages = Queue.new
       @threads = []
@@ -216,6 +217,8 @@ module TurboTests
           when 'example_failed'
             example = FakeExample.from_obj(message[:example])
             @reporter.example_failed(example)
+            @failure_count += 1
+            break if fast_fail_met
           when 'seed'
           when 'close'
           when 'exit'
@@ -231,6 +234,13 @@ module TurboTests
         end
       rescue Interrupt
       end
+    end
+
+    def fast_fail_met
+      return false if @fast_fail.nil? || @fast_fail < @failure_count
+
+      @threads.each(&:kill)
+      true
     end
   end
 end

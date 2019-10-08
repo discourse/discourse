@@ -37,10 +37,11 @@ OptionParser.new do |opts|
     verbose = true
   end
 
-  opts.on("--fail-fast", "--fail-fail=N") do |n|
-    n = Integer(n) rescue false
-    fail_fast = n ? n : 1
+  opts.on("--fast-fail=[N]") do |n|
+    n = Integer(n) rescue nil
+    fast_fail = (n.nil? || n < 1) ? 1 : n
   end
+
 end.parse!(ARGV)
 
 requires.each { |f| require(f) }
