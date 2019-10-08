@@ -142,11 +142,6 @@ export default Ember.Component.extend(KeyEnterEscape, {
   viewportResize() {
     const composerVH = window.visualViewport.height * 0.01;
 
-    if (window.visualViewport.height !== window.innerHeight) {
-      document.documentElement.classList.add("keyboard-visible");
-    } else {
-      document.documentElement.classList.remove("keyboard-visible");
-    }
     document.documentElement.style.setProperty(
       "--composer-vh",
       `${composerVH}px`
