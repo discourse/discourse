@@ -890,4 +890,5 @@ end
 #  index_categories_on_search_priority         (search_priority)
 #  index_categories_on_topic_count             (topic_count)
 #  unique_index_categories_on_name             (COALESCE(parent_category_id, '-1'::integer), name) UNIQUE
+#  unique_index_categories_on_slug             (COALESCE(parent_category_id, '-1'::integer), slug) UNIQUE
 #
