@@ -554,20 +554,38 @@ describe PostMover do
             expect(Notification.exists?(admin_notification.id)).to eq(true)
           end
 
-          it "moves post timings" do
-            some_user = Fabricate(:user)
-            create_post_timing(p1, some_user, 500)
-            create_post_timing(p2, some_user, 1000)
-            create_post_timing(p3, some_user, 1500)
-            create_post_timing(p4, some_user, 750)
+          context "post timings" do
+            fab!(:some_user) { Fabricate(:user) }
 
-            moved_to = topic.move_posts(user, [p1.id, p4.id], destination_topic_id: destination_topic.id)
+            it "successfully moves timings" do
+              create_post_timing(p1, some_user, 500)
+              create_post_timing(p2, some_user, 1000)
+              create_post_timing(p3, some_user, 1500)
+              create_post_timing(p4, some_user, 750)
 
-            expect(PostTiming.where(topic_id: topic.id, user_id: some_user.id).pluck(:post_number, :msecs))
-              .to contain_exactly([1, 500], [2, 1000], [3, 1500])
+              moved_to = topic.move_posts(user, [p1.id, p4.id], destination_topic_id: destination_topic.id)
 
-            expect(PostTiming.where(topic_id: moved_to.id, user_id: some_user.id).pluck(:post_number, :msecs))
-              .to contain_exactly([2, 500], [3, 750])
+              expect(PostTiming.where(topic_id: topic.id, user_id: some_user.id).pluck(:post_number, :msecs))
+                .to contain_exactly([1, 500], [2, 1000], [3, 1500])
+
+              expect(PostTiming.where(topic_id: moved_to.id, user_id: some_user.id).pluck(:post_number, :msecs))
+                .to contain_exactly([2, 500], [3, 750])
+            end
+
+            it "moves timings when post timing exists in destination topic" do
+              PostTiming.create!(
+                topic_id: destination_topic.id,
+                user_id: some_user.id,
+                post_number: 2,
+                msecs: 800
+              )
+              create_post_timing(p1, some_user, 500)
+
+              moved_to = topic.move_posts(user, [p1.id], destination_topic_id: destination_topic.id)
+
+              expect(PostTiming.where(topic_id: moved_to.id, user_id: some_user.id).pluck(:post_number, :msecs))
+                .to contain_exactly([2, 500])
+            end
           end
 
           context "read state and other stats per user" do
