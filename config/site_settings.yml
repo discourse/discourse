@@ -11,9 +11,6 @@
 # secret             - Set to true if input type should be password and value needs to be scrubbed from logs (default false).
 # enum               - The setting has a fixed set of allowed values, and only one can be chosen.
 #                      Set to the class name that defines the set.
-# shadowed_by_global - "Shadow" a site setting with a GlobalSetting. If the GlobalSetting
-#                      exists it will be used instead of the setting and the setting will be hidden.
-#                      Useful for things like API keys on multisite.
 # locale_default     - A hash which overrides according to `SiteSetting.default_locale`.
 #                      The key should be as the same as possible value of default_locale.
 #
@@ -44,7 +41,6 @@ required:
   notification_email:
     default: "noreply@unconfigured.discourse.org"
     type: email
-    shadowed_by_global: true
   site_contact_username:
     default: ""
     type: username
@@ -848,10 +844,8 @@ posting:
     default: 24
   auto_close_messages_post_count:
     default: 500
-    shadowed_by_global: true
   auto_close_topics_post_count:
     default: 10000
-    shadowed_by_global: true
   code_formatting_style:
     client: true
     type: enum
@@ -882,7 +876,6 @@ posting:
     hidden: true
     default: false
     client: true
-    shadowed_by_global: true
   old_post_notice_days:
     default: 14
     client: true
@@ -996,10 +989,8 @@ email:
     default: false
   disallow_reply_by_email_after_days:
     default: 90
-    shadowed_by_global: true
   delete_email_logs_after_days:
     default: 90
-    shadowed_by_global: true
   max_emails_per_day_per_user: 100
   enable_staged_users: true
   maximum_staged_users_per_email: 10
@@ -1123,46 +1114,36 @@ files:
   clean_orphan_uploads_grace_period_hours: 48
   purge_deleted_uploads_grace_period_days:
     default: 30
-    shadowed_by_global: true
   prevent_anons_from_downloading_files:
     default: false
     client: true
   enable_s3_uploads:
     default: false
     client: true
-    shadowed_by_global: true
   s3_use_iam_profile:
     default: false
-    shadowed_by_global: true
   s3_access_key_id:
     default: ""
     secret: true
-    shadowed_by_global: true
   s3_secret_access_key:
     default: ""
     secret: true
-    shadowed_by_global: true
   s3_region:
     default: "us-east-1"
     enum: "S3RegionSiteSetting"
-    shadowed_by_global: true
   s3_upload_bucket:
     default: ""
     regex: '^[a-z0-9\-\/_]+$' # can't use '.' when using HTTPS
-    shadowed_by_global: true
   s3_endpoint:
     default: ""
     regex: '^https?:\/\/.+[^\/]$'
-    shadowed_by_global: true
   s3_cdn_url:
     default: ""
     regex: '^https?:\/\/.+[^\/]$'
   s3_configure_tombstone_policy:
     default: true
-    shadowed_by_global: true
   enable_s3_inventory:
     default: false
-    shadowed_by_global: true
   allow_profile_backgrounds:
     client: true
     default: true
@@ -1185,13 +1166,11 @@ files:
   external_system_avatars_enabled:
     default: true
     client: true
-    shadowed_by_global: true
     validator: "ExternalSystemAvatarsValidator"
   external_system_avatars_url:
     default: "/letter_avatar_proxy/v4/letter/{first_letter}/{color}/{size}.png"
     client: true
     regex: '^((https?:)?\/)?\/.+[^\/]'
-    shadowed_by_global: true
   restrict_letter_avatar_colors:
     default: ""
     type: list
@@ -1326,7 +1305,6 @@ security:
       - "all"
   force_https:
     default: false
-    shadowed_by_global: true
   same_site_cookies:
     default: Lax
     type: enum
@@ -1364,7 +1342,6 @@ security:
     default: ""
     type: list
     list_type: compact
-    shadowed_by_global: true
   whitelist_internal_hosts:
     default: ""
     type: list
@@ -1499,11 +1476,9 @@ rate_limits:
   tl4_additional_likes_per_day_multiplier: 3
   alert_admins_if_errors_per_minute:
     client: true
-    shadowed_by_global: true
     default: 0
   alert_admins_if_errors_per_hour:
     client: true
-    shadowed_by_global: true
     default: 0
   max_prints_per_hour_per_user:
     default: 5
@@ -1640,35 +1615,28 @@ legal:
 backups:
   enable_backups:
     default: true
-    shadowed_by_global: true
     client: true
   readonly_mode_during_backup:
     default: false
   allow_restore:
     default: false
-    shadowed_by_global: true
   backup_location:
     default: "local"
     type: enum
     enum: "BackupLocationSiteSetting"
-    shadowed_by_global: true
     client: true
   maximum_backups:
     client: true
     default: 5
-    shadowed_by_global: true
   automatic_backups_enabled:
     default: true
-    shadowed_by_global: true
   backup_frequency:
     min: 1
     max: 30
     default: 7
-    shadowed_by_global: true
   s3_backup_bucket:
     default: ""
     regex: '^[a-z0-9\-\/]+$' # can't use '.' when using HTTPS
-    shadowed_by_global: true
   s3_disable_cleanup:
     default: false
   backup_time_of_day:
@@ -1679,13 +1647,10 @@ backups:
     default: 1
     min: 1
     max: 9
-    shadowed_by_global: true
   include_thumbnails_in_backups:
     default: false
-    shadowed_by_global: true
   include_s3_uploads_in_backups:
     default: false
-    shadowed_by_global: true
     hidden: true
 
 search:
@@ -1748,7 +1713,6 @@ uncategorized:
   version_checks:
     client: true
     default: true
-    shadowed_by_global: true
   new_version_emails: true
   send_welcome_message: true
 
@@ -2079,7 +2043,6 @@ user_api:
   allowed_user_api_push_urls:
     default: ""
     type: list
-    shadowed_by_global: true
   allowed_user_api_auth_redirects:
     default: "https://api.discourse.org/api/auth_redirect|discourse://auth_redirect"
     type: list
