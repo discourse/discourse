@@ -17,7 +17,8 @@ export function extraConnectorClass(name, obj) {
 const DefaultConnectorClass = {
   actions: {},
   shouldRender: () => true,
-  setupComponent() {}
+  setupComponent() {},
+  teardownComponent() {}
 };
 
 function findOutlets(collection, callback) {
