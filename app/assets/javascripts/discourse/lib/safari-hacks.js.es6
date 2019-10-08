@@ -140,7 +140,9 @@ function positioningWorkaround($fixedElement) {
       .find(".select-kit > button.is-focused")
       .removeClass("is-focused");
 
-    originalScrollTop = $(window).scrollTop();
+    if ($(window).scrollTop() > 0) {
+      originalScrollTop = $(window).scrollTop();
+    }
 
     setTimeout(function() {
       if (iOSWithVisualViewport()) {
