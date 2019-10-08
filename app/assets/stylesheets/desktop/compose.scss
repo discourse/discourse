@@ -230,16 +230,6 @@ a.toggle-preview {
   text-align: right;
 }
 
-html.keyboard-visible {
-  .grippie,
-  &:not(.fullscreen-composer) .toggle-fullscreen {
-    display: none;
-  }
-  #reply-control.open {
-    height: calc(var(--composer-vh, 1vh) * 100);
-  }
-}
-
 // fullscreen composer styles
 .fullscreen-composer {
   overflow: hidden;
