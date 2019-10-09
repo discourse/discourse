@@ -900,7 +900,11 @@ class TopicsController < ApplicationController
   end
 
   def slugs_do_not_match
-    params[:slug] && @topic_view.topic.slug != params[:slug]
+    if SiteSetting.slug_generation_method != "encoded"
+      params[:slug] && @topic_view.topic.slug != params[:slug]
+    else
+      params[:slug] && CGI.unescape(@topic_view.topic.slug) != params[:slug]
+    end
   end
 
   def redirect_to_correct_topic(topic, post_number = nil)
