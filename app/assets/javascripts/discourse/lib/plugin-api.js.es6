@@ -43,6 +43,7 @@ import Sharing from "discourse/lib/sharing";
 import { addComposerUploadHandler } from "discourse/components/composer-editor";
 import { addCategorySortCriteria } from "discourse/components/edit-category-settings";
 import { queryRegistry } from "discourse/widgets/widget";
+import Composer from "discourse/models/composer";
 
 // If you add any methods to the API ensure you bump up this number
 const PLUGIN_API_VERSION = "0.8.32";
@@ -842,6 +843,21 @@ class PluginApi {
    */
   addComposerUploadHandler(extensions, method) {
     addComposerUploadHandler(extensions, method);
+  }
+
+  /**
+   * Adds a field to draft serializer
+   *
+   * Example:
+   *
+   * api.serializeToDraft('key_set_in_model', 'field_name_in_payload');
+   *
+   * to keep both of them same
+   * api.serializeToDraft('field_name');
+   *
+   */
+  serializeToDraft(fieldName, property){
+    Composer.serialzeToDraft(fieldName, property);
   }
 
   /**
