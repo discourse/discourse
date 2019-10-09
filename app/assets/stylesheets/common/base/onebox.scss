@@ -382,18 +382,75 @@ pre.onebox code {
 .onebox.githubpullrequest,
 .onebox.githubcommit,
 .onebox.githubissue {
+  .onebox-body {
+    h4 {
+      margin-bottom: 5px;
+    }
+
+    > .github-icon {
+      // For backwards compatibility with old onebox
+      float: left;
+      margin-right: 5px;
+    }
+  }
+
+  .github-row {
+    display: flex;
+  }
+
+  .github-icon-container {
+    display: flex;
+    align-items: flex-start;
+    margin-right: 5px;
+  }
+
   .github-icon {
-    float: left;
-    margin-right: 4px;
     fill: $primary-high;
-    width: 30px;
-    height: 30px;
+    width: 40px;
+    height: 40px;
+  }
+
+  .branches {
+    font-size: $font-down-1;
+  }
+
+  .github-info {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+
+    > div {
+      margin: 2.5px 0;
+    }
+
+    > div:not(:last-child) {
+      margin-right: 15px;
+    }
+
+    .lines {
+      font-weight: bold;
+
+      .added {
+        color: $success;
+      }
+      .removed {
+        color: $danger;
+      }
+    }
   }
 
   .onebox-avatar-inline {
-    height: 1em;
-    width: 1em;
-    margin-right: 4px;
+    height: 20px;
+    width: 20px;
+    border-radius: 2px;
+    float: none;
+    margin: 0;
+    vertical-align: middle;
+    max-width: none;
+  }
+
+  .github-content {
+    margin: 5px 0 0 0;
   }
 }
 
