@@ -10,15 +10,15 @@ if (/(android)/i.test(navigator.userAgent)) {
 
   // Incrementing CACHE_VERSION will kick off the install event and force previously cached
   // resources to be cached again.
-  const CACHE_VERSION = 1;
+  var CACHE_VERSION = 1;
 
-  const CURRENT_CACHES = {
+  var CURRENT_CACHES = {
     offline: 'offline-v' + CACHE_VERSION
   };
 
-  const OFFLINE_URL = 'offline.html';
+  var OFFLINE_URL = 'offline.html';
 
-  const createCacheBustedRequest = function(url) {
+  var createCacheBustedRequest = function(url) {
     var headers = new Headers({
       'Discourse-Track-View': '0'
     });
@@ -113,7 +113,7 @@ if (/(android)/i.test(navigator.userAgent)) {
 
 }
 
-const idleThresholdTime = 1000 * 10; // 10 seconds
+var idleThresholdTime = 1000 * 10; // 10 seconds
 var lastAction = -1;
 
 function isIdle() {
