@@ -1,29 +1,40 @@
-<svg width="60" height="60" class="github-icon" viewBox="0 0 14 16" version="1.1" aria-hidden="true"><path fill-rule="evenodd" d="M7 2.3c3.14 0 5.7 2.56 5.7 5.7s-2.56 5.7-5.7 5.7A5.71 5.71 0 0 1 1.3 8c0-3.14 2.56-5.7 5.7-5.7zM7 1C3.14 1 0 4.14 0 8s3.14 7 7 7 7-3.14 7-7-3.14-7-7-7zm1 3H6v5h2V4zm0 6H6v2h2v-2z"></path></svg>
+<div class="github-row">
+  <div class="github-icon-container" title="Issue">
+	  <svg width="60" height="60" class="github-icon" viewBox="0 0 14 16" version="1.1" aria-hidden="true"><path fill-rule="evenodd" d="M7 2.3c3.14 0 5.7 2.56 5.7 5.7s-2.56 5.7-5.7 5.7A5.71 5.71 0 0 1 1.3 8c0-3.14 2.56-5.7 5.7-5.7zM7 1C3.14 1 0 4.14 0 8s3.14 7 7 7 7-3.14 7-7-3.14-7-7-7zm1 3H6v5h2V4zm0 6H6v2h2v-2z"></path></svg>
+  </div>
 
-<h4>
-  <a href="{{user.html_url}}">
-    <img src="{{avatar}}" class="onebox-avatar-inline" height="20" width="20">
-  </a>
-  <a href="{{link}}" target="_blank">{{title}}</a>
-</h4>
+  <div class="github-info-container">
+    <h4>
+      <a href="{{link}}" target="_blank">{{title}}</a>
+    </h4>
 
-<div class="date" style="margin-top:10px;">
-	<div class="user" style="margin-top:10px;">
-	issue opened by <a href="{{user.html_url}}" target="_blank">{{user.login}}</a>
-	on <a href="{{link}}" target="_blank">{{created_at}}</a>
-	</div>
-	<div class="user">
-	{{#closed_by}}
-	closed by <a href="{{html_url}}" target="_blank">{{login}}</a>
-	on <a href="{{link}}" target="_blank">{{closed_at}}</a>
-	{{/closed_by}}
-	</div>
+    <div class="github-info">
+      <div class="date">
+        opened <span class="discourse-local-date" data-format='ll' data-date="{{created_at_date}}" data-time="{{created_at_time}}" data-timezone="UTC">{{created_at}}</span>
+      </div>
+
+      {{#closed_at}}
+        <div class="date">
+          closed <span class="discourse-local-date" data-format='ll' data-date="{{closed_at_date}}" data-time="{{closed_at_time}}" data-timezone="UTC">{{closed_at}}</span>
+        </div>
+      {{/closed_at}}
+
+      <div class="user">
+        <a href="{{user.html_url}}" target="_blank">
+          <img alt="{{user.login}}" src="{{user.avatar_url}}" class="onebox-avatar-inline" width="20" height="20">
+          {{user.login}}
+        </a>
+      </div>
+    </div>
+  </div>
 </div>
 
-<p class='content' style="white-space: pre-wrap;">{{content}}</p>
-
-<div class='labels'>
-	{{#labels}}
- 	<span style="display:inline-block;margin-top:2px;background-color: #B8B8B8;padding: 2px;border-radius: 4px;color: #fff;margin-left: 3px;">{{name}}</span>
- 	{{/labels}}
+<div class="github-row">
+  <p class='github-content'>{{content}}</p>
 </div>
+
+{{#labels}}
+  <div class='labels'>
+    <span style="display:inline-block;margin-top:2px;background-color: #B8B8B8;padding: 2px;border-radius: 4px;color: #fff;margin-left: 3px;">{{name}}</span>
+  </div>
+{{/labels}}

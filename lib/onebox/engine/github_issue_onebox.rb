@@ -31,6 +31,9 @@ module Onebox
         short_content =  content_words[0..max_words].join(" ")
         short_content += "..." if content_words.length > max_words
 
+        created_at = Time.parse(@raw['created_at'])
+        closed_at = Time.parse(@raw['closed_at']) if @raw['closed_at']
+
         ulink = URI(link)
         {
           link: @url,
@@ -38,8 +41,12 @@ module Onebox
           content: short_content.gsub("<br>", "\n"),
           labels: @raw["labels"],
           user: @raw['user'],
-          created_at: @raw['created_at'].split("T")[0], #get only date for now
-          closed_at: (@raw['closed_at'].nil? ? "" : @raw['closed_at'].split("T")[0]),
+          created_at: created_at.strftime("%I:%M%p - %d %b %y %Z"),
+          created_at_date: created_at.strftime("%F"),
+          created_at_time: created_at.strftime("%T"),
+          closed_at: closed_at&.strftime("%I:%M%p - %d %b %y %Z"),
+          closed_at_date: closed_at&.strftime("%F"),
+          closed_at_time: closed_at&.strftime("%T"),
           closed_by: @raw['closed_by'],
           avatar: "https://avatars1.githubusercontent.com/u/#{@raw['user']['id']}?v=2&s=96",
           domain: "#{ulink.host}/#{ulink.path.split('/')[1]}/#{ulink.path.split('/')[2]}",

@@ -17,7 +17,8 @@ class Sanitize
         'video' => %w[controls height loop width autoplay muted poster],
         'path' => %w[d],
         'svg' => ['aria-hidden', 'width', 'height', 'viewbox'],
-        'div' => [:data], # any data-* attributes
+        'div' => [:data], # any data-* attributes,
+        'span' => [:data], # any data-* attributes
       },
 
       add_attributes: {
