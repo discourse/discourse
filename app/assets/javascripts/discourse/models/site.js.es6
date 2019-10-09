@@ -204,9 +204,9 @@ Site.reopenClass(Singleton, {
     }
 
     if (result.user_fields) {
-      result.user_fields = result.user_fields.map(uf =>
-        Ember.Object.create(uf)
-      );
+      result.user_fields = result.user_fields
+        .sort((a, b) => (a.position > b.position ? 1 : -1))
+        .map(uf => Ember.Object.create(uf));
     }
 
     return result;
