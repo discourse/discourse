@@ -77,11 +77,11 @@ class PostMover
 
     destination_topic.reload
     destination_topic
-  ensure
-    drop_temp_table
   end
 
   def create_temp_table
+    DB.exec("DROP TABLE IF EXISTS moved_posts") if Rails.env.test?
+
     DB.exec <<~SQL
       CREATE TEMPORARY TABLE moved_posts (
         old_topic_id INTEGER,
@@ -91,15 +91,11 @@ class PostMover
         new_topic_title VARCHAR,
         new_post_id INTEGER,
         new_post_number INTEGER
-      );
+      ) ON COMMIT DROP;
 
       CREATE INDEX moved_posts_old_post_number ON moved_posts(old_post_number);
       CREATE INDEX moved_posts_old_post_id ON moved_posts(old_post_id);
     SQL
-  end
-
-  def drop_temp_table
-    DB.exec("DROP TABLE IF EXISTS moved_posts")
   end
 
   def move_each_post
