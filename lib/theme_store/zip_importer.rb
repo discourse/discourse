@@ -20,9 +20,7 @@ class ThemeStore::ZipImporter
     Dir.chdir(@temp_folder) do
       Compression::Engine.engine_for(@original_filename).tap do |engine|
         engine.decompress(@temp_folder, @filename)
-        filename = @filename.split('/').last.gsub(engine.extension, '')
-        unzipped_path = File.join(@temp_folder, filename)
-        engine.strip_directory(unzipped_path, @temp_folder)
+        engine.strip_directory(@temp_folder, @temp_folder, relative: true)
       end
     end
   rescue RuntimeError
