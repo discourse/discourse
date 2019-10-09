@@ -68,7 +68,7 @@ const CLOSED = "closed",
     composerTime: "composerTime",
     typingTime: "typingTime",
     postId: "post.id",
-    usernames: "targetUsernames",
+    usernames: "targetUsernames"
   },
   _add_draft_fields = {},
   FAST_REPLY_LENGTH_THRESHOLD = 10000;
@@ -1099,7 +1099,7 @@ Composer.reopenClass({
     return Object.keys(_create_serializer);
   },
 
-  serializeToDraft(fieldName, property){
+  serializeToDraft(fieldName, property) {
     if (!property) {
       property = fieldName;
     }
