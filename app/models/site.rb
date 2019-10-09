@@ -25,7 +25,7 @@ class Site
   end
 
   def user_fields
-    UserField.all
+    UserField.order(:position).all
   end
 
   def categories
