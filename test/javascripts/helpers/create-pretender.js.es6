@@ -37,7 +37,7 @@ export default function() {
   const server = new Pretender(function() {
     // Autoload any `*-pretender` files
     Object.keys(requirejs.entries).forEach(e => {
-      let m = e.match(/^helpers\/([a-z]+)\-pretender$/);
+      let m = e.match(/^.*helpers\/([a-z-]+)\-pretender$/);
       if (m && m[1] !== "create") {
         let result = requirejs(e).default.call(this, helpers);
         if (m[1] === "fixture") {
