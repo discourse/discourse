@@ -3,6 +3,8 @@
   <thead>
     <th>{{i18n "admin.api.key"}}</th>
     <th>{{i18n "admin.api.user"}}</th>
+    <th>{{i18n "admin.api.created"}}</th>
+    <th>{{i18n "admin.api.last_used"}}</th>
     <th>&nbsp;</th>
   </thead>
   <tbody>
@@ -10,12 +12,25 @@
       <tr>
         <td class="key">{{k.key}}</td>
         <td class="key-user">
+          <div class="label">{{i18n 'admin.api.user'}}</div>
           {{#if k.user}}
             {{#link-to "adminUser" k.user}}
               {{avatar k.user imageSize="small"}}
             {{/link-to}}
           {{else}}
             {{i18n "admin.api.all_users"}}
+          {{/if}}
+        </td>
+        <td class="key-created">
+          <div class="label">{{i18n 'admin.api.created'}}</div>
+          {{format-date k.created_at}}
+        </td>
+        <td class="key-last-used">
+          <div class="label">{{i18n 'admin.api.last_used'}}</div>
+          {{#if k.last_used_at}}
+            {{format-date k.last_used_at}}
+          {{else}}
+            {{i18n "admin.api.never_used"}}
           {{/if}}
         </td>
         <td class="key-controls">

@@ -3302,6 +3302,9 @@ en:
         user: "User"
         title: "API"
         key: "API Key"
+        created: Created
+        last_used: Last Used
+        never_used: (never)
         generate: "Generate"
         regenerate: "Regenerate"
         revoke: "Revoke"
