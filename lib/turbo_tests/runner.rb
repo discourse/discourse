@@ -217,8 +217,10 @@ module TurboTests
           when 'example_failed'
             example = FakeExample.from_obj(message[:example])
             @reporter.example_failed(example)
-            @failure_count += 1
-            break if fail_fast_met
+            if fail_fast_met
+              @threads.each(&:kill)
+              break
+            end
           when 'seed'
           when 'close'
           when 'exit'
@@ -237,10 +239,7 @@ module TurboTests
     end
 
     def fail_fast_met
-      return false if @fail_fast.nil? || @fail_fast < @failure_count
-
-      @threads.each(&:kill)
-      true
+      !@fail_fast.nil? && @fail_fast >= (@failure_count += 1)
     end
   end
 end
