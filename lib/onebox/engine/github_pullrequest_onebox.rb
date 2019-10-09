@@ -23,7 +23,7 @@ module Onebox
       def data
         result = raw.clone
         result['link'] = link
-        
+
         created_at = Time.parse(result['created_at'])
         result['created_at'] = created_at.strftime("%I:%M%p - %d %b %y %Z")
         result['created_at_date'] = created_at.strftime("%F")
