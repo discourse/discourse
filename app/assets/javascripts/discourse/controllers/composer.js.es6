@@ -748,15 +748,15 @@ export default Ember.Controller.extend({
   },
 
   /**
-    Open the composer view
+   Open the composer view
 
-    @method open
-    @param {Object} opts Options for creating a post
-      @param {String} opts.action The action we're performing: edit, reply or createTopic
-      @param {Discourse.Post} [opts.post] The post we're replying to
-      @param {Discourse.Topic} [opts.topic] The topic we're replying to
-      @param {String} [opts.quote] If we're opening a reply from a quote, the quote we're making
-  **/
+   @method open
+   @param {Object} opts Options for creating a post
+   @param {String} opts.action The action we're performing: edit, reply or createTopic
+   @param {Discourse.Post} [opts.post] The post we're replying to
+   @param {Discourse.Topic} [opts.topic] The topic we're replying to
+   @param {String} [opts.quote] If we're opening a reply from a quote, the quote we're making
+   **/
   open(opts) {
     opts = opts || {};
 
