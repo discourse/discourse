@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 class GroupsController < ApplicationController
-  include ApplicationHelper
-
   requires_login only: [
     :set_notifications,
     :mentionable,
@@ -46,7 +44,7 @@ class GroupsController < ApplicationController
       raise Discourse::InvalidAccess.new(:enable_group_directory)
     end
 
-    page_size = mobile_device? ? 15 : 36
+    page_size = MobileDetection.mobile_device?(request.user_agent) ? 15 : 36
     page = params[:page]&.to_i || 0
     order = %w{name user_count}.delete(params[:order])
     dir = params[:asc] ? 'ASC' : 'DESC'
