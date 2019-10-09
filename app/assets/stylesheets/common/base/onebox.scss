@@ -452,6 +452,13 @@ pre.onebox code {
   .github-content {
     margin: 5px 0 0 0;
   }
+
+  .labels span {
+    // !important required to override inline style attribute
+    background-color: $primary-medium !important;
+    color: $secondary !important;
+    padding: 2px 4px !important;
+  }
 }
 
 //Onebox - Github - Pull request
