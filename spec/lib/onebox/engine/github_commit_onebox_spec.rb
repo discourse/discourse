@@ -58,8 +58,8 @@ describe Onebox::Engine::GithubCommitOnebox do
 
   describe "PR with commit URL" do
     before(:all) do
-      @link = "https://github.com/discourse/discourse/pull/4662/commits/803d023e2307309f8b776ab3b8b7e38ba91c0919"
-      @uri = "https://api.github.com/repos/discourse/discourse/commits/803d023e2307309f8b776ab3b8b7e38ba91c0919"
+      @link = "https://github.com/discourse/discourse/pull/4662/commit/803d023e2307309f8b776ab3b8b7e38ba91c0919"
+      @uri = "https://api.github.com/repos/discourse/discourse/commit/803d023e2307309f8b776ab3b8b7e38ba91c0919"
     end
 
     include_context "engines"
