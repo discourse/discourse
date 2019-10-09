@@ -33,6 +33,10 @@ export default Ember.Component.extend({
       if (e.which === 27 && this.dismissable) {
         Ember.run.next(() => $(".modal-header a.close").click());
       }
+
+      if (e.which === 13 && this.triggerClickOnEnter(e)) {
+        Ember.run.next(() => $(".modal-footer .btn-primary").click());
+      }
     });
 
     this.appEvents.on("modal:body-shown", this, "_modalBodyShown");
@@ -42,6 +46,18 @@ export default Ember.Component.extend({
   cleanUp() {
     $("html").off("keydown.discourse-modal");
     this.appEvents.off("modal:body-shown", this, "_modalBodyShown");
+  },
+
+  triggerClickOnEnter(e) {
+    // skip when in a form or a textarea element
+    if (
+      $(e.target).parents("form").length > 0 ||
+      (document.activeElement && document.activeElement.nodeName === "TEXTAREA")
+    ) {
+      return false;
+    }
+
+    return true;
   },
 
   mouseDown(e) {
