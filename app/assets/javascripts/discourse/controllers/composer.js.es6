@@ -25,7 +25,7 @@ function loadDraft(store, opts) {
   let draft = opts.draft;
   const draftKey = opts.draftKey;
   const draftSequence = opts.draftSequence;
-  
+
   try {
     if (draft && typeof draft === "string") {
       draft = JSON.parse(draft);
@@ -47,13 +47,13 @@ function loadDraft(store, opts) {
       draft: true,
       composerState: Composer.DRAFT
     }
-    
+
     serializedFields.forEach(f => {
       attrs[f] = draft[f] || opts[f];
     });
 
     composer.open(attrs);
-    
+
     return composer;
   }
 }
