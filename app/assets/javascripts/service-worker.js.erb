@@ -7,7 +7,7 @@ workbox.setConfig({
   debug: false
 });
 
-const cacheVersion = "1";
+var cacheVersion = "1";
 
 // Cache all GET requests, so Discourse can be used while offline
 workbox.routing.registerRoute(
@@ -24,7 +24,7 @@ workbox.routing.registerRoute(
   })
 );
 
-const idleThresholdTime = 1000 * 10; // 10 seconds
+var idleThresholdTime = 1000 * 10; // 10 seconds
 var lastAction = -1;
 
 function isIdle() {
