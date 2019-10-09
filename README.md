@@ -184,7 +184,7 @@ Adding Support for a new URL
 Whitelisted Generic Onebox caveats
 ----------------------------------
 
-The Whitelisted Generic Onebox has some caveats for it's use, beyond simply whitelisting the domain.
+The Whitelisted Generic Onebox has some caveats for its use, beyond simply whitelisting the domain.
 
   1. The domain must be whitelisted
   2. The URL you're oneboxing cannot be a root url (e.g. `http://example.com` won't work, but `http://example.com/page` will)
