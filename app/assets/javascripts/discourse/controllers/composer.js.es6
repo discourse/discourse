@@ -46,7 +46,7 @@ function loadDraft(store, opts) {
       draftSequence,
       draft: true,
       composerState: Composer.DRAFT
-    }
+    };
 
     serializedFields.forEach(f => {
       attrs[f] = draft[f] || opts[f];
