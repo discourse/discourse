@@ -51,7 +51,7 @@ export default Ember.Component.extend({
   triggerClickOnEnter(e) {
     // skip when in a form or a textarea element
     if (
-      $(e.target).parents("form").length > 0 ||
+      e.target.closest("form") ||
       (document.activeElement && document.activeElement.nodeName === "TEXTAREA")
     ) {
       return false;
