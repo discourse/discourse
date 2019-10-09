@@ -94,7 +94,7 @@ module Email
         html_override.gsub!("%{respond_instructions}", "")
       end
 
-      html = UserNotificationRenderer.instance.render(
+      html = UserNotificationRenderer.render(
         template: 'layouts/email_template',
         format: :html,
         locals: { html_body: html_override.html_safe }
