@@ -1317,27 +1317,21 @@ tr_TR:
       google_oauth2:
         name: "Google"
         title: "Google ile"
-        message: "Google ile kimlik doğrulaması yapılıyor (pop-up engelleyicilerin etkinleştirilmediğinden emin ol)"
       twitter:
         name: "Twitter"
         title: "Twitter ile"
-        message: "Twitter ile kimlik doğrulaması yapılıyor (pop-up engelleyicilerin etkinleştirilmediğinden emin ol)"
       instagram:
         name: "Instagram"
         title: "Instagram ile"
-        message: "Instagram ile kimlik doğrulaması yapılıyor (pop-up engelleyicilerin etkinleştirilmediğinden emin ol)"
       facebook:
         name: "Facebook"
         title: "Facebook ile"
-        message: "Facebook ile kimlik doğrulaması yapılıyor (pop-up engelleyicilerin etkinleştirilmediğinden emin ol)"
       github:
         name: "GitHub"
         title: "GitHub ile"
-        message: "GitHub ile kimlik doğrulaması yapılıyor (pop-up engelleyicilerin etkinleştirilmediğinden emin ol)"
       discord:
         name: "Discord"
         title: "Discord ile"
-        message: "Discord ile Kimlik Doğrulama"
     invites:
       accept_title: "Davet"
       welcome_to: "%{site_name} hoş geldin!"
@@ -2925,6 +2919,7 @@ tr_TR:
         user: "Kullanıcı"
         title: "API"
         key: "API Anahtarı"
+        created: Oluşturuldu
         generate: "Oluştur"
         regenerate: "Tekrar Oluştur"
         revoke: "İptal Et"

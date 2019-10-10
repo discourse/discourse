@@ -102,6 +102,8 @@ vi:
   not_found: "Không thể tìm thấy đường dẫn hoặc tài nguyên yêu cầu."
   invalid_access: "Bạn không được phép xem tài nguyên đã yêu cầu."
   read_only_mode_enabled: "Trang web đang ở chế độ chỉ đọc. Tất cả các tương tác đã bị tắt."
+  not_in_group:
+    join_group: "Tham gia nhóm"
   reading_time: "Thời gian đọc"
   likes: "Lượt Thích"
   too_many_replies:

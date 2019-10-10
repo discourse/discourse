@@ -1179,23 +1179,18 @@ pt:
       google_oauth2:
         name: "Google"
         title: "com Google"
-        message: "A autenticar com Google (certifique-se de que os bloqueadores de janela estão desativados)"
       twitter:
         name: "Twitter"
         title: "com Twitter"
-        message: "A autenticar com Twitter (certifique-se de que os bloqueadores de janela estão desativados)"
       instagram:
         name: "Instagram"
         title: "com Instagram"
-        message: "A autenticar com Instagram (certifique-se de que os bloqueadores de janela estão desativados)"
       facebook:
         name: "Facebook"
         title: "com Facebook"
-        message: "A autenticar com o Facebook (certifique-se de que os bloqueadores de janela estão desativados)"
       github:
         name: "GitHub"
         title: "com GitHub"
-        message: "A autenticar com GitHub (certifique-se de que os bloqueadores de janela estão desativados)"
     invites:
       accept_title: "Convite"
       welcome_to: "Bem-vindo a %{site_name}!"
@@ -2590,6 +2585,7 @@ pt:
         user: "Utilizador"
         title: "API"
         key: "Chave API"
+        created: Criado
         generate: "Gerar"
         regenerate: "Regenerar"
         revoke: "Revogar"

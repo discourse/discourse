@@ -1320,23 +1320,18 @@ pt_BR:
       google_oauth2:
         name: "Google"
         title: "com Google"
-        message: "Autenticando com Google (certifique-se de que os bloqueadores de pop-up estejam desabilitados)"
       twitter:
         name: "Twitter"
         title: "com Twitter"
-        message: "Autenticando com Twitter (certifique-se de que os bloqueadores de pop-up estejam desabilitados)"
       instagram:
         name: "Instagram"
         title: "com Instagram"
-        message: "Autenticando com Instagram (certifique-se de que os bloqueadores de pop-up estejam desabilitados)"
       facebook:
         name: "Facebook"
         title: "com Facebook"
-        message: "Autenticando com Facebook (certifique-se de que os bloqueadores de pop-up estejam desabilitados)"
       github:
         name: "GitHub"
         title: "com GitHub"
-        message: "Autenticando com GitHub (certifique-se de que os bloqueadores de pop-up estejam desabilitados)"
       discord:
         name: "Discord"
       second_factor_toggle:
@@ -2987,6 +2982,7 @@ pt_BR:
         user: "Usuário"
         title: "API"
         key: "Chave API"
+        created: Criado
         generate: "Gerar"
         regenerate: "Regenerar"
         revoke: "Revogar"

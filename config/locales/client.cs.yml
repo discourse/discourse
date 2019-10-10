@@ -1196,23 +1196,18 @@ cs:
       google_oauth2:
         name: "Google"
         title: "přes Google"
-        message: "Přihlašování přes Google (ujistěte se že nemáte zaplé blokování pop up oken)"
       twitter:
         name: "Twitter"
         title: "přes Twitter"
-        message: "Autentizuji přes Twitter (ujistěte se, že nemáte zablokovaná popup okna)"
       instagram:
         name: "Instagram"
         title: "s Instagramem"
-        message: "Autentizuji pres Instagram (ujistěte se, že nemáte zablokovaná popup okna)"
       facebook:
         name: "Facebook"
         title: "přes Facebook"
-        message: "Autentizuji přes Facebook (ujistěte se, že nemáte zablokovaná popup okna)"
       github:
         name: "GitHub"
         title: "přes GitHub"
-        message: "Autentizuji přes GitHub (ujistěte se, že nemáte zablokovaná popup okna)"
       discord:
         name: "Discord"
     invites:
@@ -2789,6 +2784,7 @@ cs:
         user: "Uživatel"
         title: "API"
         key: "API klíč"
+        created: Vytvořený
         generate: "Vygenerovat API klíč"
         regenerate: "Znovu-vygenerovat API klíč"
         revoke: "zrušit"

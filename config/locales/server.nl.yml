@@ -209,6 +209,12 @@ nl:
   invalid_grant_badge_reason_link: "Externe of ongeldige Discourse-koppeling is niet toegestaan in badge-reden"
   email_template_cant_be_modified: "Deze e-mailsjabloon kan niet worden aangepast."
   invalid_whisper_access: "Fluisterberichten zijn niet ingeschakeld, of u kunt geen fluisterberichten maken"
+  not_in_group:
+    title_topic: "U moet in een groep zitten om dit topic te zien."
+    title_category: "U moet in een groep zitten om deze categorie te zien."
+    request_membership: "Lidmaatschap aanvragen"
+    join_group: "Deelnemen aan groep"
+  deleted_topic: "Oeps! Dit topic is verwijderd en is niet meer beschikbaar."
   reading_time: "Leestijd"
   likes: "Likes"
   too_many_replies:
@@ -1310,6 +1316,7 @@ nl:
     notification_email: "Het Van:-e-mailadres adres dat wordt gebruikt voor het verzenden van alle essentiële systeem-e-mails. Het hier opgegeven domein moet goed ingestelde SPF-, DKIM- en reverse-PTR-records hebben om e-mails te doen aankomen."
     email_custom_headers: "Een door een pipe (|) gescheiden lijst van aangepaste e-mailheaders"
     email_subject: "Aanpasbare onderwerpnotatie voor standaard-e-mails. Zie <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801</a>"
+    detailed_404: "Biedt gebruikers meer informatie over waarom ze geen toegang hebben tot een bepaald topic. Opmerking: dit is minder veilig, omdat gebruikers dan weten of een URL naar een geldig topic verwijst."
     enforce_second_factor: "Dwingt gebruikers om twee-factor-authenticatie in te schakelen. Selecteer 'alle' om dit voor alle gebruikers te doen. Selecteer 'stafleden' om dit alleen voor stafleden te doen."
     force_https: "Gebruik van alleen HTTPS voor uw website afdwingen. WAARSCHUWING: schakel dit NIET in voordat u hebt geverifieerd dat HTTPS volledig is ingesteld en echt overal werkt! Hebt u ook uw CDN, alle sociale aanmeldingen en eventuele externe logo's / afhankelijkheden gecontroleerd om zeker te weten dat ze ook allemaal met HTTPS compatibel zijn?"
     same_site_cookies: "Cookies van dezelfde website gebruiken; deze vermijden alle aanvallen voor Cross Site Request Forgery in ondersteunde browsers (Lax of Strict). Waarschuwing: Strict werkt alleen op websites die aanmelding afdwingen en SSO gebruiken."

@@ -197,6 +197,8 @@ pl_PL:
   provider_not_found: "Nie masz dostępu do żądanego zasobu. Poświadczający uwierzytelnienie nie istnieje."
   read_only_mode_enabled: "Strona jest w trybie tylko do odczytu. Możliwość interakcji jest wyłączona."
   email_template_cant_be_modified: "Ten szablon e-mail nie może być zmodyfikowany"
+  not_in_group:
+    join_group: "Dołącz do grupy"
   reading_time: "Czas odczytu"
   likes: "Lajki"
   too_many_replies:

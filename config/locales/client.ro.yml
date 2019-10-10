@@ -1092,20 +1092,15 @@ ro:
       google_oauth2:
         name: "Google"
         title: "Google"
-        message: "Autentificare cu Google (Verifică browserul să nu blocheze ferestrele pop-up)"
       twitter:
         name: "Twitter"
         title: "Twitter"
-        message: "Autentificare cu Twitter (Verifică browserul să nu blocheze ferestrele pop-up)"
       instagram:
         title: "Instagram"
-        message: "Autentificare cu Instagram (Verifică browserul să nu blocheze ferestrele pop-up)"
       facebook:
         title: "Facebook"
-        message: "Autentificare cu Facebook (Verifică browserul să nu blocheze ferestrele pop-up)"
       github:
         title: "GitHub"
-        message: "Autentificare cu GitHub (Verifică browserul să nu blocheze ferestrele pop-up)"
     invites:
       accept_title: "Initație"
       welcome_to: "Bine ai venit la %{site_name}!"
@@ -2482,6 +2477,7 @@ ro:
         user: "Utilizator"
         title: "API"
         key: "Cheie API"
+        created: Creat
         generate: "Generare"
         regenerate: "Regenerare"
         revoke: "Revocă"

@@ -207,6 +207,8 @@ fi:
   invalid_grant_badge_reason_link: "Ulkoiset linkit ja epäkelvot Discourse-linkit eivät kelpaa ansiomerkin syyksi"
   email_template_cant_be_modified: "Tätä sähköpostipohjaa ei voi muokata"
   invalid_whisper_access: "Joko kuiskaukset eivät ole käytössä tai sinulla ei ole oikeutta kuiskata."
+  not_in_group:
+    join_group: "Liity ryhmään"
   reading_time: "Lukuaika"
   likes: "Tykkäykset"
   too_many_replies:

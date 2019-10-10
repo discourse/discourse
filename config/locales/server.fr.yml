@@ -208,6 +208,8 @@ fr:
   invalid_grant_badge_reason_link: "Lien discourse externe ou invalide pas permis dans la raison d'un badge"
   email_template_cant_be_modified: "Ce modèle de courriel ne peut pas être modifié"
   invalid_whisper_access: "Les murmures ne sont pas activés ou vous n'avez pas accès à la création des messages murmurés."
+  not_in_group:
+    join_group: "Rejoindre le groupe"
   reading_time: "Temps de lecture"
   likes: "J'aime"
   too_many_replies:

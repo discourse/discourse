@@ -1324,23 +1324,18 @@ fr:
       google_oauth2:
         name: "Google"
         title: "via Google"
-        message: "Authentification via Google (assurez-vous que les popups ne soient pas bloquées)"
       twitter:
         name: "Twitter"
         title: "via Twitter"
-        message: "Authentification via Twitter (assurez-vous que les popups ne soient pas bloquées)"
       instagram:
         name: "Instagram"
         title: "via Instagram"
-        message: "Authentification via Instagtram (assurez-vous que les popups ne soient pas bloquées)"
       facebook:
         name: "Facebook"
         title: "via Facebook"
-        message: "Authentification via Facebook (assurez-vous que les popups ne soient pas bloquées)"
       github:
         name: "GitHub"
         title: "via GitHub"
-        message: "Authentification via GitHub (assurez-vous que les popups ne soient pas bloquées)"
       discord:
         name: "Discord"
       second_factor_toggle:
@@ -3009,6 +3004,7 @@ fr:
         user: "Utilisateur"
         title: "API"
         key: "Clé API"
+        created: Créé
         generate: "Générer"
         regenerate: "Regénérer"
         revoke: "Révoquer"

@@ -1005,20 +1005,15 @@ lv:
       google_oauth2:
         name: "Google"
         title: "ar Google"
-        message: "Autorizēšanās ar Google (pārliecinieties, ka nav bloķēti uznirstošie logi)"
       twitter:
         name: "Twitter"
         title: "ar Twitter"
-        message: "Autorizēšanās ar Twitter (pārliecinieties, ka nav bloķēti uznirstošie logi)"
       instagram:
         title: "ar Instagram"
-        message: "Autorizēšanās ar Instagram (pārliecinieties, ka nav bloķēti uznirstošie logi)"
       facebook:
         title: "ar Facebook"
-        message: "Autorizēšanās ar Facebook (pārliecinieties, ka nav bloķēti uznirstošie logi)"
       github:
         title: "ar GitHub"
-        message: "Autorizēšanās ar GitHub (pārliecinieties, ka nav bloķēti uznirstošie logi)"
     invites:
       accept_title: "Ielūgums"
       welcome_to: "Laipni lūdzam %{site_name}!"
@@ -2288,6 +2283,7 @@ lv:
         user: "Lietotājs"
         title: "API"
         key: "API atslēga"
+        created: Radīts
         generate: "Radīt"
         regenerate: "Atkārtoti radīt"
         revoke: "Atsaukt"

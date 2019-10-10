@@ -1369,27 +1369,21 @@ nl:
       google_oauth2:
         name: "Google"
         title: "met Google"
-        message: "Authenticeren met Google (zorg ervoor dat pop-upblokkeringen zijn uitgeschakeld)"
       twitter:
         name: "Twitter"
         title: "met Twitter"
-        message: "Authenticeren met Twitter (zorg ervoor dat pop-upblokkeringen zijn uitgeschakeld)"
       instagram:
         name: "Instagram"
         title: "met Instagram"
-        message: "Authenticeren met Instagram (zorg ervoor dat pop-upblokkeringen zijn uitgeschakeld)"
       facebook:
         name: "Facebook"
         title: "met Facebook"
-        message: "Authenticeren met Facebook (zorg ervoor dat pop-upblokkeringen zijn uitgeschakeld)"
       github:
         name: "GitHub"
         title: "met GitHub"
-        message: "Authenticeren met GitHub (zorg ervoor dat pop-upblokkeringen zijn uitgeschakeld)"
       discord:
         name: "Discord"
         title: "met Discord"
-        message: "Authenticeren met Discord"
       second_factor_toggle:
         totp: "Een authenticator-app gebruiken"
         backup_code: "Een back-upcode gebruiken"
@@ -3049,6 +3043,9 @@ nl:
         user: "Gebruiker"
         title: "API"
         key: "API-sleutel"
+        created: Gemaakt
+        last_used: Laatst gebruikt
+        never_used: (nooit)
         generate: "Genereren"
         regenerate: "Opnieuw genereren"
         revoke: "Intrekken"

@@ -196,6 +196,8 @@ zh_TW:
   invalid_grant_badge_reason_link: "不允許外部或無效的 Discourse 連結。"
   email_template_cant_be_modified: "電子郵件範本無法修改"
   invalid_whisper_access: "沒有啟用私訊，或者您沒有權限發送私人訊息"
+  not_in_group:
+    join_group: "加入團隊"
   reading_time: "閱讀時間"
   likes: "個讚"
   too_many_replies:

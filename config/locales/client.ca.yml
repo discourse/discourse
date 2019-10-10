@@ -1350,27 +1350,21 @@ ca:
       google_oauth2:
         name: "Google"
         title: "amb Google"
-        message: "Autenticant amb Google (assegureu-vos que no teniu activats els blocadors de finestres emergents)"
       twitter:
         name: "Twitter"
         title: "amb Twitter"
-        message: "Autenticant amb Twitter (assegureu-vos que no teniu activats els blocadors de finestres emergents)"
       instagram:
         name: "Instagram"
         title: "amb Instagram"
-        message: "Autenticant amb Instagram (assegureu-vos que no teniu activats els blocadors de finestres emergents)"
       facebook:
         name: "Facebook"
         title: "amb Facebook"
-        message: "Autenticant amb Facebook (assegureu-vos que no teniu activats els blocadors de finestres emergents)"
       github:
         name: "GitHub"
         title: "amb GitHub"
-        message: "Autenticant amb GitHub (assegureu-vos que no teniu activats els blocadors de finestres emergents)"
       discord:
         name: "Discord"
         title: "amb Discord"
-        message: "Autenticació amb Discord"
       second_factor_toggle:
         totp: "Utilitzeu una aplicació d'autenticació en comptes d'això"
         backup_code: "Utilitzeu un codi de còpia de seguretat en comptes d'això"
@@ -3029,6 +3023,7 @@ ca:
         user: "Usuari"
         title: "API"
         key: "Clau API"
+        created: Creat
         generate: "Genera"
         regenerate: "Regenera"
         revoke: "Revoca"

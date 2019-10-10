@@ -1370,23 +1370,18 @@ bs_BA:
       google_oauth2:
         name: "Google"
         title: "koristeći Google"
-        message: "Prijava preko Google-a (osigurajte da pop up blokeri budu isključeni)"
       twitter:
         name: "Twitter"
         title: "koristeći Twitter"
-        message: "Prijava preko Twitter-a (osigurajte da pop up blokeri budu isključeni)"
       instagram:
         name: "Instagram"
         title: "koristeći Instagram"
-        message: "Prijava preko Instagrama (osigurajte da pop up blokeri budu isključeni)"
       facebook:
         name: "Facebook"
         title: "koristeći Facebook"
-        message: "Prijava preko Facebook-a (osigurajte da pop up blokeri budu isključeni)"
       github:
         name: "GitHub"
         title: "koristeći GitHub"
-        message: "Prijava preko GitHub-a (osigurajte da pop up blokeri budu isključeni)"
     invites:
       accept_title: "Pozivnica"
       welcome_to: "Dobrodošli na %{site_name}!"
@@ -3060,6 +3055,7 @@ bs_BA:
         user: "User"
         title: "API"
         key: "API Key"
+        created: Kreiran
         generate: "Generate"
         regenerate: "Regenerate"
         revoke: "Revoke"

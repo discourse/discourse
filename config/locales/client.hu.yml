@@ -1250,23 +1250,18 @@ hu:
       google_oauth2:
         name: "Google"
         title: "Google"
-        message: "Azonosítás a Google-lel (ellenőrizd, hogy a felugró ablakok engedélyezve vannak)"
       twitter:
         name: "Twitter"
         title: "Twitter"
-        message: "Azonosítás a Twitter-rel (ellenőrizd, hogy a felugró ablakok engedélyezve vannak)"
       instagram:
         name: "Instagram"
         title: "Instagram"
-        message: "Azonosítás Instagrammal (győződj meg róla hogy a felugró ablakok nincsenek engedélyezve)"
       facebook:
         name: "Facebook"
         title: "Facebook"
-        message: "Azonosítás a Facebook-kal (ellenőrizd, hogy a felugró ablakok engedélyezve vannak)"
       github:
         name: "GitHub"
         title: "GitHub"
-        message: "Azonosítás a GitHub-bal (ellenőrizd, hogy a felugró ablakok engedélyezve vannak)"
       discord:
         name: "Discord"
     invites:
@@ -2472,6 +2467,7 @@ hu:
         user: "Felhasználó"
         title: "API"
         key: "API kulcs"
+        created: Létrehozott
         generate: "Generálás"
         regenerate: "Regenerálás"
         revoke: "Visszavonás"

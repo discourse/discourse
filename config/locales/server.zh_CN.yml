@@ -203,6 +203,8 @@ zh_CN:
   invalid_grant_badge_reason_link: "徽章原因不允许外部或无效的discourse链接"
   email_template_cant_be_modified: "无法修改此邮件模板"
   invalid_whisper_access: "没有启用密语，或者你无权创建谜语帖子"
+  not_in_group:
+    join_group: "加入群组"
   reading_time: "阅读时间"
   likes: "赞"
   too_many_replies:

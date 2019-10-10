@@ -1278,23 +1278,18 @@ fi:
       google_oauth2:
         name: "Google"
         title: "Googlella"
-        message: "Todennetaan Googlen kautta (varmista, että ponnahdusikkunoiden esto ei ole päällä)"
       twitter:
         name: "Twitter"
         title: "Twitterillä"
-        message: "Todennetaan Twitterin kautta (varmista, että ponnahdusikkunoiden esto ei ole päällä)"
       instagram:
         name: "Instagram"
         title: "Instagramilla"
-        message: "Todennetaan Instagramin kautta (varmista, että ponnahdusikkunoiden esto ei ole päällä)"
       facebook:
         name: "Facebook"
         title: "Facebookilla"
-        message: "Todennetaan Facebookin kautta (varmista, että ponnahdusikkunoiden esto ei ole päällä)"
       github:
         name: "GitHub"
         title: "GitHubilla"
-        message: "Todennetaan Githubin kautta (varmista, että ponnahdusikkunoiden esto ei ole päällä)"
       discord:
         name: "Discord"
       second_factor_toggle:
@@ -2922,6 +2917,7 @@ fi:
         user: "Käyttäjä"
         title: "Rajapinta"
         key: "Rajapinnan avain"
+        created: Luotu
         generate: "Luo"
         regenerate: "Tee uusi"
         revoke: "Peruuta"

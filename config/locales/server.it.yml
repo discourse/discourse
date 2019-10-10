@@ -208,6 +208,8 @@ it:
   invalid_grant_badge_reason_link: "I collegamenti esterni o collegamenti a Discourse non validi non sono consentiti nella ragione di un Distintivo"
   email_template_cant_be_modified: "Questo modello di email non può essere modificato."
   invalid_whisper_access: "I Sussurri potrebbero non essere abilitati, oppure non hai il permesso di creare Messaggi Sussurri."
+  not_in_group:
+    join_group: "Partecipa al Gruppo"
   reading_time: "Tempo di lettura"
   likes: "Mi piace"
   too_many_replies:

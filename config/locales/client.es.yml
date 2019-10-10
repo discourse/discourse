@@ -1369,27 +1369,21 @@ es:
       google_oauth2:
         name: "Google"
         title: "con Google"
-        message: "Autenticando con Google (asegúrate de no tener habilitado ningún bloqueador de elementos emergentes)"
       twitter:
         name: "Twitter"
         title: "con Twitter"
-        message: "Autenticando con Twitter (asegúrate de no tener habilitado ningún bloqueador de elementos emergentes)"
       instagram:
         name: "Instagram"
         title: "con Instagram"
-        message: "Autenticando con Instagram (asegúrate de no tener habilitado ningún bloqueador de elementos emergentes)"
       facebook:
         name: "Facebook"
         title: "con Facebook"
-        message: "Autenticando con Facebook (asegúrate de no tener habilitado ningún bloqueador de elementos emergentes)"
       github:
         name: "GitHub"
         title: "con GitHub"
-        message: "Autenticando con GitHub (asegúrate de no tener habilitado ningún bloqueador de elementos emergentes)"
       discord:
         name: "Discord"
         title: "con Discord"
-        message: "Autenticando con Discord"
       second_factor_toggle:
         totp: "Usar una aplicación de autenticación en su lugar"
         backup_code: "Usar un código de respaldo en su lugar"
@@ -3049,6 +3043,7 @@ es:
         user: "Usuario"
         title: "API"
         key: "Clave de API"
+        created: Creado
         generate: "Generar clave de API"
         regenerate: "Regenerar"
         revoke: "Revocar"

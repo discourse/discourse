@@ -1286,26 +1286,20 @@ zh_CN:
       google_oauth2:
         name: "Google"
         title: "Google 登录"
-        message: "正在通过 Google 帐号验证登录（请确保浏览器没有禁止弹出窗口）"
       twitter:
         name: "Twitter"
         title: "Twitter 登录"
-        message: "正在通过 Twitter 帐号验证登录（请确保浏览器没有禁止弹出窗口）"
       instagram:
         name: "Instagram"
         title: "Instagram 登录"
-        message: "正在通过 Instagram 帐号验证登录（请确保浏览器没有禁止弹出窗口）"
       facebook:
         name: "Facebook"
         title: "Facebook 登录"
-        message: "正在通过 Facebook 帐号验证登录（请确保浏览器没有禁止弹出窗口）"
       github:
         name: "GitHub"
         title: "GitHub 登录"
-        message: "正在通过 GitHub 帐号验证登录（请确保浏览器没有禁止弹出窗口）"
       discord:
         name: "Discord"
-        message: "使用Discord验证"
       second_factor_toggle:
         totp: "改用身份验证APP"
         backup_code: "使用备份码"
@@ -2901,6 +2895,7 @@ zh_CN:
         user: "用户"
         title: "API"
         key: "API 密钥"
+        created: 创建时间
         generate: "生成"
         regenerate: "重新生成"
         revoke: "撤销"

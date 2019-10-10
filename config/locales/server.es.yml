@@ -209,6 +209,8 @@ es:
   invalid_grant_badge_reason_link: "El enlace externo o inválido de discourse no está permitido como motivo de la insignia."
   email_template_cant_be_modified: "Esta plantilla de correo electrónico no se puede modificar"
   invalid_whisper_access: "O los susurros no están habilitados o no tienes permitido crear susurros"
+  not_in_group:
+    join_group: "Unirse al grupo"
   reading_time: "Tiempo de lectura"
   likes: "Me gusta"
   too_many_replies:
@@ -362,7 +364,7 @@ es:
 
       - Las críticas constructivas son bienvenidas, pero recuerda criticar las *ideas*, no las personas.
 
-      Para más consejos, [visita las directrices de la comunidad](%{base_path}/directrices). Este panel solo aparecerá para tus primeros %{education_posts_text}.
+      Para más consejos, [visita las directrices de la comunidad](%{base_path}/guidelines). Este panel solo aparecerá para tus primeros %{education_posts_text}.
     avatar: |
       ### ¿Que tal si agregas una imagen para tu cuenta?
 
@@ -2289,7 +2291,7 @@ es:
 
         Sin embargo, si la publicación es ocultada por la comunidad una segunda vez, se mantendrá oculta hasta que un miembro del staff la gestione.
 
-        Para más consejos, por favor, consulta nuestras [directrices de la comunidad](%{base_url}/directrices).
+        Para más consejos, por favor, consulta nuestras [directrices de la comunidad](%{base_url}/guidelines).
     post_hidden_again:
       title: "Mensaje ocultado de nuevo"
       subject_template: "Mensaje ocultado debido a reportes de la comunidad, staff notificado"
@@ -2304,7 +2306,7 @@ es:
 
         La comunidad reportó esta publicación y ahora se encuentra oculta. **Dado que esta publicación se ha ocultado más de una vez, tu publicación se mantendrá oculta hasta que la gestione un miembro del staff.**
 
-        Para más consejos, por favor, consulta nuestras [directrices de la comunidad](%{base_url}/directrices).
+        Para más consejos, por favor, consulta nuestras [directrices de la comunidad](%{base_url}/guidelines).
     flags_disagreed:
       title: "Publicación reportada recuperada por el staff"
       subject_template: "Publicación reportada recuperada por el staff"

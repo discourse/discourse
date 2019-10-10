@@ -680,19 +680,15 @@ be:
       google_oauth2:
         name: "Google"
         title: "з Google"
-        message: "Аўтэнтыфікацыя праз Google (праверце, каб блакавальнікі усплываючых вокнаў былі выключаны)"
       twitter:
         name: "Twitter"
         title: "праз Twitter"
-        message: "Аўтэнтыфікацыя праз Twitter (праверце, каб блакавальнікі усплываючых вокнаў былі выключаны)"
       instagram:
         title: "праз Instagram"
       facebook:
         title: "праз Facebook"
-        message: "Аўтэнтыфікацыя праз Facebook (праверце, каб блакавальнікі усплываючых вокнаў былі выключаны)"
       github:
         title: "праз GitHub"
-        message: "Аўтэнтыфікацыя праз GitHub (праверце, каб блакавальнікі усплываючых вокнаў былі выключаны)"
       second_factor_toggle:
         totp: "Выкарыстоўвайце прыкладанне аутентификационное замест"
         backup_code: "Выкарыстоўваць рэзервовы код замест"
@@ -1270,6 +1266,7 @@ be:
         user: "Карыстальнік"
         title: "API"
         key: "ключ API"
+        created: створаны
         generate: "згенераваць"
         regenerate: "перегенерировать"
         revoke: "ануляваць"

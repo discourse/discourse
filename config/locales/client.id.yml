@@ -823,19 +823,14 @@ id:
       submit_new_email: "Perbarui Alamat Email"
       google_oauth2:
         title: "dengan Google"
-        message: "Autentikasi dengan Google (pastikan pop up blockers tidak dinyalakan)"
       twitter:
         title: "dengan Twitter"
-        message: "Autentikasi dengan Twitter (pastikan pop up blockers tidak dinyalakan)"
       instagram:
         title: "dengan Instagram"
-        message: "Autentikasi dengan Instagram (pastikan pop up blockers tidak dinyalakan)"
       facebook:
         title: "dengan Facebook"
-        message: "Autentikasi dengan Facebook (pastikan pop up blockers tidak dinyalakan)"
       github:
         title: "dengan GitHub"
-        message: "Autentikasi dengan GitHub (pastikan pop up blockers tidak dinyalakan)"
     invites:
       accept_title: "Undangan"
       welcome_to: "Selamat datang di %{site_name}!"
@@ -1159,6 +1154,7 @@ id:
         automatic: "Otomatis"
       api:
         user: "Pengguna"
+        created: Dibuat
       web_hooks:
         destroy: "Hapus"
         active: "Aktif"

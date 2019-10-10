@@ -136,6 +136,8 @@ fa_IR:
   not_found: "URL یا منبع درخواست شده یافت نشد."
   invalid_access: "شما اجازه مشاهده منبع درخواست شده را ندارید."
   read_only_mode_enabled: "سایت در حالت فقط خواندنی است. تعاملات غیرفعال هستند."
+  not_in_group:
+    join_group: "پیوستن به گروه"
   reading_time: "زمان مطالعه"
   likes: "پسند‌ها"
   too_many_replies:

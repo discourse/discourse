@@ -1103,23 +1103,18 @@ ko:
       google_oauth2:
         name: "구글"
         title: "with Google"
-        message: "구글을 통해 인증 중 (파업이 허용되어 있는지 확인해주세요.)"
       twitter:
         name: "트위터"
         title: "with Twitter"
-        message: "Twitter 인증 중(팝업 차단을 해제 하세요)"
       instagram:
         name: "인스타그램"
         title: "인스타그램"
-        message: "인스타그램으로 인증 중 (팝업이 허용되어 있는지 확인해주세요)"
       facebook:
         name: "페이스북"
         title: "with Facebook"
-        message: "Facebook 인증 중(팝업 차단을 해제 하세요)"
       github:
         name: "GitHub"
         title: "GitHub"
-        message: "GitHub 인증 중(팝업 차단을 해제 하세요)"
       second_factor_toggle:
         backup_code: "대신 백업 코드 사용"
     invites:
@@ -2442,6 +2437,7 @@ ko:
         user: "사용자"
         title: "API"
         key: "API 키"
+        created: 생성일자
         generate: "API 키 생성"
         regenerate: "API 키 재생성"
         revoke: "폐지"

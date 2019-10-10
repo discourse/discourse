@@ -1157,20 +1157,15 @@ sk:
       google_oauth2:
         name: "Google"
         title: "pomocou Google"
-        message: "Prihlásenie pomocou Google účtu (prosím uistite sa, že vyskakovacie okná sú povolené)"
       twitter:
         name: "Twitter"
         title: "pomocou Twitter účtu"
-        message: "Prihlásenie pomocou Twitter účtu (prosím uistite sa, že vyskakovacie okná sú povolené)"
       instagram:
         title: "so službou Instagram"
-        message: "Prihlásenie pomocou Instagram účtu (prosím uistite sa, že vyskakovacie okná sú povolené)"
       facebook:
         title: "pomocou stránky Facebook"
-        message: "Prihlásenie pomocou Facebook účtu (prosím uistite sa, že vyskakovacie okná sú povolené)"
       github:
         title: "pomocou GitHub"
-        message: "Prihlásenie pomocou GitHub účtu (prosím uistite sa, že vyskakovacie okná sú povolené)"
       discord:
         name: "Discord"
     invites:
@@ -2387,6 +2382,7 @@ sk:
         user: "Používateľ"
         title: "API"
         key: "API kľúč"
+        created: Vytvorené
         generate: "Generovať"
         regenerate: "Obnov"
         revoke: "Zrušiť"
