@@ -102,7 +102,7 @@ export default Ember.Mixin.create({
     $(this.element).off("keydown.setting-enter");
   }.on("willDestroyElement"),
 
-  _save() {
+  _save(callback) {
     Ember.warn("You should define a `_save` method", {
       id: "discourse.setting-component.missing-save"
     });
@@ -111,21 +111,23 @@ export default Ember.Mixin.create({
 
   actions: {
     save() {
-      this._save()
-        .then(() => {
-          this.set("validationMessage", null);
-          this.commitBuffer();
-          if (AUTO_REFRESH_ON_SAVE.includes(this.get("setting.setting"))) {
-            this.afterSave();
-          }
-        })
-        .catch(e => {
-          if (e.jqXHR.responseJSON && e.jqXHR.responseJSON.errors) {
-            this.set("validationMessage", e.jqXHR.responseJSON.errors[0]);
-          } else {
-            this.set("validationMessage", I18n.t("generic_error"));
-          }
-        });
+      this._save(result => {
+        result
+          .then(() => {
+            this.set("validationMessage", null);
+            this.commitBuffer();
+            if (AUTO_REFRESH_ON_SAVE.includes(this.get("setting.setting"))) {
+              this.afterSave();
+            }
+          })
+          .catch(e => {
+            if (e.jqXHR.responseJSON && e.jqXHR.responseJSON.errors) {
+              this.set("validationMessage", e.jqXHR.responseJSON.errors[0]);
+            } else {
+              this.set("validationMessage", I18n.t("generic_error"));
+            }
+          });
+      });
     },
 
     cancel() {
