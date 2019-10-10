@@ -33,8 +33,10 @@ module Compression
     end
 
     def strip_directory(from, to, relative: false)
-      sanitized_from = sanitize_path(from)
-      sanitized_to = sanitize_path(to)
+      sanitized_from = sanitize_path(from) rescue nil
+      sanitized_to = sanitize_path(to) rescue nil
+      return unless sanitized_from && sanitized_to
+
       glob_path = relative ? "#{sanitized_from}/*/*" : "#{sanitized_from}/**"
       FileUtils.mv(Dir.glob(glob_path), sanitized_to) if File.directory?(sanitized_from)
     end
