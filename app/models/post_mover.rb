@@ -318,7 +318,8 @@ class PostMover
       old_topic_id: original_topic.id,
       new_topic_id: destination_topic.id,
       old_highest_post_number: destination_topic.highest_post_number,
-      old_highest_staff_post_number: destination_topic.highest_staff_post_number
+      old_highest_staff_post_number: destination_topic.highest_staff_post_number,
+      target_users: posts.pluck(:user_id).push(user.id).uniq
     }
 
     DB.exec(<<~SQL, params)
@@ -351,6 +352,7 @@ class PostMover
            LEFT OUTER JOIN moved_posts le
                            ON (le.old_topic_id = tu.topic_id AND le.old_post_number <= tu.last_emailed_post_number)
       WHERE tu.topic_id = :old_topic_id
+        AND tu.user_id IN (:target_users)
         AND GREATEST(
                 tu.last_read_post_number,
                 tu.highest_seen_post_number,
