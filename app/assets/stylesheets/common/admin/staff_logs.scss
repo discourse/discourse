@@ -1,7 +1,7 @@
 // Styles for /admin/logs
 
 .web-hook-events {
-  border-bottom: dotted 1px dark-light-choose($primary-low-mid, $secondary);
+  border-bottom: dotted 1px $primary-low-mid;
   .heading-container {
     width: 100%;
     background-color: $primary-low;
@@ -399,10 +399,10 @@ table.screened-ip-addresses {
   cursor: pointer;
   .d-icon {
     margin-right: 0.25em;
-    color: dark-light-diff($primary, $secondary, 50%, -50%);
+    color: $primary-medium;
   }
   &:hover .d-icon {
-    color: $primary;
+    color: $danger;
   }
 }
 

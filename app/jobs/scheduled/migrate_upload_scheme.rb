@@ -2,7 +2,7 @@
 
 module Jobs
 
-  class MigrateUploadScheme < Jobs::Scheduled
+  class MigrateUploadScheme < ::Jobs::Scheduled
     every 10.minutes
     sidekiq_options retry: false
 

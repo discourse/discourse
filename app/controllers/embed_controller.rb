@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require_dependency 'topic_query_params'
-
 class EmbedController < ApplicationController
   include TopicQueryParams
 

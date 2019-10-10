@@ -1,10 +1,8 @@
 # frozen_string_literal: true
 
-require_dependency 'jobs/scheduled/grant_anniversary_badges'
-
 module Jobs
 
-  class FixRetroAnniversary < Jobs::Onceoff
+  class FixRetroAnniversary < ::Jobs::Onceoff
     def execute_onceoff(args)
       return unless SiteSetting.enable_badges
 

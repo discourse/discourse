@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 # Searches for a user by username or full text or name (if enabled in SiteSettings)
-require_dependency 'search'
-
 class UserSearch
 
   MAX_SIZE_PRIORITY_MENTION ||= 500

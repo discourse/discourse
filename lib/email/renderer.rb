@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require_dependency 'email/styles'
-
 module Email
   class Renderer
 
@@ -20,9 +18,7 @@ module Email
       style = if @message.html_part
         Email::Styles.new(@message.html_part.body.to_s, @opts)
       else
-        unstyled = UserNotificationRenderer.with_view_paths(
-          Rails.configuration.paths["app/views"]
-        ).render(
+        unstyled = UserNotificationRenderer.render(
           template: 'layouts/email_template',
           format: :html,
           locals: { html_body: PrettyText.cook(text).html_safe }

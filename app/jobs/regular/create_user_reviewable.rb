@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Jobs::CreateUserReviewable < Jobs::Base
+class Jobs::CreateUserReviewable < ::Jobs::Base
   attr_reader :reviewable
 
   def execute(args)

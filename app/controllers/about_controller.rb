@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require_dependency 'rate_limiter'
-
 class AboutController < ApplicationController
 
   requires_login only: [:live_post_counts]

@@ -52,3 +52,38 @@ QUnit.test("modal", async function(assert) {
     "ESC should not close the modal"
   );
 });
+
+acceptance("Modal Keyboard Events", { loggedIn: true });
+
+QUnit.test("modal-keyboard-events", async function(assert) {
+  await visit("/t/internationalization-localization/280");
+
+  await click(".toggle-admin-menu");
+  await click(".topic-admin-status-update button");
+  await keyEvent(".d-modal", "keydown", 13);
+
+  assert.ok(
+    find("#modal-alert:visible").length === 1,
+    "hitting Enter triggers modal action"
+  );
+  assert.ok(
+    find(".d-modal:visible").length === 1,
+    "hitting Enter does not dismiss modal due to alert error"
+  );
+
+  await keyEvent("#main-outlet", "keydown", 27);
+  assert.ok(
+    find(".d-modal:visible").length === 0,
+    "ESC should close the modal"
+  );
+
+  await click(".topic-body button.reply");
+
+  await click(".d-editor-button-bar .btn.link");
+
+  await keyEvent(".d-modal", "keydown", 13);
+  assert.ok(
+    find(".d-modal:visible").length === 0,
+    "modal should disappear on hitting Enter"
+  );
+});

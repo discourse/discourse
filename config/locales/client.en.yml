@@ -960,7 +960,7 @@ en:
         copied_to_clipboard: "Copied to Clipboard"
         copy_to_clipboard_error: "Error copying data to Clipboard"
         remaining_codes: "You have <strong>{{count}}</strong> backup codes remaining."
-        use: "<a href>Use a backup code</a>"
+        use: "Use a backup code"
         enable_prerequisites: "You must enable a primary second factor before generating backup codes."
         codes:
           title: "Backup Codes Generated"
@@ -969,7 +969,9 @@ en:
       second_factor:
         title: "Two Factor Authentication"
         enable: "Manage Two Factor Authentication"
+        forgot_password: "Forgot password?"
         confirm_password_description: "Please confirm your password to continue"
+        name: "Name"
         label: "Code"
         rate_limit: "Please wait before trying another authentication code."
         enable_description: |
@@ -981,7 +983,7 @@ en:
         extended_description: |
           Two factor authentication adds extra security to your account by requiring a one-time token in addition to your password. Tokens can be generated on <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>Android</a> and <a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS</a> devices.
         oauth_enabled_warning: "Please note that social logins will be disabled once two factor authentication has been enabled on your account."
-        use: "<a href>Use Authenticator app</a>"
+        use: "Use Authenticator app"
         enforced_notice: "You are required to enable two factor authentication before accessing this site."
         disable: "disable"
         disable_title: "Disable Second Factor"
@@ -989,10 +991,21 @@ en:
         edit: "Edit"
         edit_title: "Edit Second Factor"
         edit_description: "Second Factor Name"
+        enable_security_key_description: "When you have your physical security key prepared press the Register button below."
         totp:
           title: "Token-Based Authenticators"
           add: "New Authenticator"
           default_name: "My Authenticator"
+        security_key:
+          register: "Register"
+          title: 'Security Keys'
+          add: "Register Security Key"
+          default_name: "Main Security Key"
+          not_allowed_error: "The security key registration process either timed out or was cancelled."
+          already_added_error: "You have already registered this security key. You don’t have to register it again."
+          edit: 'Edit Security Key'
+          edit_description: 'Security Key Name'
+          delete: 'Delete'
 
       change_about:
         title: "Change About Me"
@@ -1440,10 +1453,16 @@ en:
       password: "Password"
       second_factor_title: "Two Factor Authentication"
       second_factor_description: "Please enter the authentication code from your app:"
-      second_factor_backup: "<a href>Log in using a backup code</a>"
+      second_factor_backup: "Log in using a backup code"
       second_factor_backup_title: "Two Factor Backup"
       second_factor_backup_description: "Please enter one of your backup codes:"
-      second_factor: "<a href>Log in using Authenticator app</a>"
+      second_factor: "Log in using Authenticator app"
+      security_key_description: "When you have your physical security key prepared press the Authenticate with Security Key button below."
+      security_key_alternative: "Can't find your security key or want to use another method?"
+      security_key_authenticate: "Authenticate with Security Key"
+      security_key_not_allowed_error: "The security key authentication process either timed out or was cancelled."
+      security_key_no_matching_credential_error: "No matching credentials could be found in the provided security key."
+      security_key_support_missing_error: "Your current device or browser does not support the use of security keys. Please use a different method."
       email_placeholder: "email or username"
       caps_lock_warning: "Caps Lock is on"
       error: "Unknown error"
@@ -1478,27 +1497,24 @@ en:
       google_oauth2:
         name: "Google"
         title: "with Google"
-        message: "Authenticating with Google (make sure pop up blockers are not enabled)"
       twitter:
         name: "Twitter"
         title: "with Twitter"
-        message: "Authenticating with Twitter (make sure pop up blockers are not enabled)"
       instagram:
         name: "Instagram"
         title: "with Instagram"
-        message: "Authenticating with Instagram (make sure pop up blockers are not enabled)"
       facebook:
         name: "Facebook"
         title: "with Facebook"
-        message: "Authenticating with Facebook (make sure pop up blockers are not enabled)"
       github:
         name: "GitHub"
         title: "with GitHub"
-        message: "Authenticating with GitHub (make sure pop up blockers are not enabled)"
       discord:
         name: "Discord"
         title: "with Discord"
-        message: "Authenticating with Discord"
+      second_factor_toggle:
+        totp: "Use an authenticator app instead"
+        backup_code: "Use a backup code instead"
     invites:
       accept_title: "Invitation"
       welcome_to: "Welcome to %{site_name}!"
@@ -1518,7 +1534,7 @@ en:
       apple_international: "Apple/International"
       google: "Google"
       twitter: "Twitter"
-      emoji_one: "Emoji One"
+      emoji_one: "JoyPixels (formerly EmojiOne)"
       win10: "Win10"
       google_classic: "Google Classic"
       facebook_messenger: "Facebook Messenger"
@@ -3286,6 +3302,9 @@ en:
         user: "User"
         title: "API"
         key: "API Key"
+        created: Created
+        last_used: Last Used
+        never_used: (never)
         generate: "Generate"
         regenerate: "Regenerate"
         revoke: "Revoke"
@@ -3614,7 +3633,7 @@ en:
             other: "Theme is {{count}} commits behind!"
           compare_commits: "(See new commits)"
           repo_unreachable: "Couldn't contact the Git repository of this theme. Error message:"
-          imported_from_archive: "This theme was imported from a .tar.gz file"
+          imported_from_archive: "This theme was imported from a .zip file"
           scss:
             text: "CSS"
             title: "Enter custom CSS, we accept all valid CSS and SCSS styles"

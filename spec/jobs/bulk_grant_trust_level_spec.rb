@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require 'rails_helper'
-require_dependency 'jobs/regular/bulk_grant_trust_level'
 
 describe Jobs::BulkGrantTrustLevel do
 

@@ -1,10 +1,5 @@
 # frozen_string_literal: true
 
-require_dependency 'site_settings/deprecated_settings'
-require_dependency 'site_settings/type_supervisor'
-require_dependency 'site_settings/defaults_provider'
-require_dependency 'site_settings/db_provider'
-
 module SiteSettingExtension
   include SiteSettings::DeprecatedSettings
 
@@ -137,7 +132,7 @@ module SiteSettingExtension
         hidden_settings << name
       end
 
-      if opts[:shadowed_by_global] && GlobalSetting.respond_to?(name)
+      if GlobalSetting.respond_to?(name)
         val = GlobalSetting.public_send(name)
 
         unless val.nil? || (val == ''.freeze)

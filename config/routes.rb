@@ -2,10 +2,6 @@
 
 require "sidekiq/web"
 require "mini_scheduler/web"
-require_dependency "admin_constraint"
-require_dependency "staff_constraint"
-require_dependency "homepage_constraint"
-require_dependency "permalink_constraint"
 
 # The following constants have been replaced with `RouteFormat` and are deprecated.
 USERNAME_ROUTE_FORMAT = /[%\w.\-]+?/ unless defined? USERNAME_ROUTE_FORMAT
@@ -379,6 +375,10 @@ Discourse::Application.routes.draw do
 
     post "#{root_path}/second_factors" => "users#list_second_factors"
     put "#{root_path}/second_factor" => "users#update_second_factor"
+
+    post "#{root_path}/create_second_factor_security_key" => "users#create_second_factor_security_key"
+    post "#{root_path}/register_second_factor_security_key" => "users#register_second_factor_security_key"
+    put "#{root_path}/security_key" => "users#update_security_key"
     post "#{root_path}/create_second_factor_totp" => "users#create_second_factor_totp"
     post "#{root_path}/enable_second_factor_totp" => "users#enable_second_factor_totp"
     put "#{root_path}/disable_second_factor" => "users#disable_second_factor"

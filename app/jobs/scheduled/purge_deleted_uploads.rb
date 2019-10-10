@@ -2,7 +2,7 @@
 
 module Jobs
 
-  class PurgeDeletedUploads < Jobs::Scheduled
+  class PurgeDeletedUploads < ::Jobs::Scheduled
     every 1.day
 
     def execute(args)

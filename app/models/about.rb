@@ -81,23 +81,44 @@ class About
   end
 
   def category_moderators
-    category_ids = Guardian.new(@user).allowed_category_ids
+    allowed_cats = Guardian.new(@user).allowed_category_ids
+    return [] if allowed_cats.blank?
+    cats_with_mods = Category.where.not(reviewable_by_group_id: nil).pluck(:id)
+    category_ids = cats_with_mods & allowed_cats
     return [] if category_ids.blank?
-    results = DB.query(<<~SQL, category_ids: category_ids)
-      SELECT c.id category_id, array_agg(gu.user_id) user_ids
+
+    per_cat_limit = category_mods_limit / category_ids.size
+    per_cat_limit = 1 if per_cat_limit < 1
+    results = DB.query(<<~SQL, category_ids: category_ids, per_cat_limit: per_cat_limit)
+      SELECT c.id category_id, user_ids
       FROM categories c
-      JOIN group_users gu
-      ON gu.group_id = reviewable_by_group_id
+      CROSS JOIN LATERAL (
+        SELECT ARRAY(
+          SELECT u.id
+          FROM users u
+          JOIN group_users gu
+          ON gu.group_id = c.reviewable_by_group_id AND gu.user_id = u.id
+          ORDER BY last_seen_at DESC
+          LIMIT :per_cat_limit
+        ) AS user_ids
+      ) user_ids
       WHERE c.id IN (:category_ids)
-      GROUP BY c.id
     SQL
     moderators = {}
-    User.where(id: results.map(&:user_ids).flatten).each do |user|
+    User.where(id: results.map(&:user_ids).flatten.uniq).each do |user|
       moderators[user.id] = user
     end
     moderators
     results.map do |row|
       CategoryMods.new(row.category_id, row.user_ids.map { |id| moderators[id] })
     end
+  end
+
+  def category_mods_limit
+    @category_mods_limit || 100
+  end
+
+  def category_mods_limit=(number)
+    @category_mods_limit = number
   end
 end

@@ -33,10 +33,11 @@
 
   form {
     min-width: 300px;
+    max-width: 100%;
   }
 
   #modal-alert {
-    max-width: 500px;
+    max-width: 100%;
     padding: s(2 4);
   }
 

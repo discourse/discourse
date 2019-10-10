@@ -7,7 +7,7 @@ module Stylesheet
   class Importer < SassC::Importer
     include GlobalPath
 
-    THEME_TARGETS = %w{embedded_theme mobile_theme desktop_theme}
+    THEME_TARGETS ||= %w{embedded_theme mobile_theme desktop_theme}
 
     def self.special_imports
       @special_imports ||= {}
@@ -202,7 +202,7 @@ module Stylesheet
 
     def imports(asset, parent_path)
       if asset[-1] == "*"
-        Dir["#{Stylesheet::ASSET_ROOT}/#{asset}.scss"].map do |path|
+        Dir["#{Stylesheet::Common::ASSET_ROOT}/#{asset}.scss"].map do |path|
           Import.new(asset[0..-2] + File.basename(path, ".*"))
         end
       elsif callback = Importer.special_imports[asset]

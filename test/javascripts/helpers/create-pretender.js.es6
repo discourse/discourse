@@ -37,7 +37,7 @@ export default function() {
   const server = new Pretender(function() {
     // Autoload any `*-pretender` files
     Object.keys(requirejs.entries).forEach(e => {
-      let m = e.match(/^helpers\/([a-z]+)\-pretender$/);
+      let m = e.match(/^.*helpers\/([a-z-]+)\-pretender$/);
       if (m && m[1] !== "create") {
         let result = requirejs(e).default.call(this, helpers);
         if (m[1] === "fixture") {
@@ -324,6 +324,20 @@ export default function() {
         return response({
           error: "Invalid Second Factor",
           reason: "invalid_second_factor",
+          backup_enabled: true,
+          sent_to_email: "eviltrout@example.com",
+          current_email: "current@example.com"
+        });
+      }
+
+      if (data.password === "need-security-key") {
+        if (data.securityKeyCredential) {
+          return response({ username: "eviltrout" });
+        }
+
+        return response({
+          error: "Invalid Security Key",
+          reason: "invalid_security_key",
           backup_enabled: true,
           sent_to_email: "eviltrout@example.com",
           current_email: "current@example.com"

@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 require 'uri'
-require_dependency "onebox/discourse_onebox_sanitize_config"
-require_dependency 'final_destination'
 
 Dir["#{Rails.root}/lib/onebox/engine/*_onebox.rb"].sort.each { |f| require f }
 
@@ -277,7 +275,7 @@ module Oneboxer
       options = {
         cache: {},
         max_width: 695,
-        sanitize_config: Sanitize::Config::DISCOURSE_ONEBOX
+        sanitize_config: Onebox::DiscourseOneboxSanitizeConfig::Config::DISCOURSE_ONEBOX
       }
 
       options[:cookie] = fd.cookie if fd.cookie

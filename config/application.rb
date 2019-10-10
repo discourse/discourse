@@ -21,6 +21,7 @@ require 'action_mailer/railtie'
 require 'sprockets/railtie'
 
 # Plugin related stuff
+require_relative '../lib/plugin_initialization_guard'
 require_relative '../lib/discourse_event'
 require_relative '../lib/discourse_plugin'
 require_relative '../lib/discourse_plugin_registry'
@@ -93,16 +94,20 @@ module Discourse
     # issue is image_optim crashes on missing dependencies
     config.assets.image_optim = false
 
-    config.autoloader = :classic
+    config.autoloader = :zeitwerk
 
     # Custom directories with classes and modules you want to be autoloadable.
-    config.autoload_paths += Dir["#{config.root}/app/serializers"]
-    config.autoload_paths += Dir["#{config.root}/lib/validators/"]
     config.autoload_paths += Dir["#{config.root}/app"]
+    config.autoload_paths += Dir["#{config.root}/app/jobs"]
+    config.autoload_paths += Dir["#{config.root}/app/serializers"]
+    config.autoload_paths += Dir["#{config.root}/lib"]
+    config.autoload_paths += Dir["#{config.root}/lib/active_record/connection_adapters"]
+    config.autoload_paths += Dir["#{config.root}/lib/common_passwords"]
+    config.autoload_paths += Dir["#{config.root}/lib/highlight_js"]
+    config.autoload_paths += Dir["#{config.root}/lib/i18n"]
+    config.autoload_paths += Dir["#{config.root}/lib/validators/"]
 
-    if Rails.env.development? && !Sidekiq.server?
-      config.autoload_paths += Dir["#{config.root}/lib"]
-    end
+    Rails.autoloaders.main.ignore(Dir["#{config.root}/app/models/reports"])
 
     # Only load the plugins named here, in the order given (default is alphabetical).
     # :all can be used as a placeholder for all plugins not explicitly named.
@@ -144,6 +149,10 @@ module Discourse
       activate-account.js
       auto-redirect.js
       wizard-start.js
+      locales/i18n.js
+      discourse/lib/webauthn.js
+      admin-login/admin-login.js
+      admin-login/admin-login.no-module.js
       onpopstate-handler.js
       embed-application.js
     }
@@ -258,7 +267,9 @@ module Discourse
         Discourse.activate_plugins!
       end
     else
-      Discourse.activate_plugins!
+      plugin_initialization_guard do
+        Discourse.activate_plugins!
+      end
     end
 
     Discourse.find_plugin_js_assets(include_disabled: true).each do |file|
@@ -293,7 +304,9 @@ module Discourse
       OpenID::Util.logger = Rails.logger
 
       # Load plugins
-      Discourse.plugins.each(&:notify_after_initialize)
+      plugin_initialization_guard do
+        Discourse.plugins.each(&:notify_after_initialize)
+      end
 
       # we got to clear the pool in case plugins connect
       ActiveRecord::Base.connection_handler.clear_active_connections!

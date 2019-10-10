@@ -1,10 +1,6 @@
 # frozen_string_literal: true
 
-require_dependency 'validators/stripped_length_validator'
-
-module Validators; end
-
-class Validators::PostValidator < ActiveModel::Validator
+class PostValidator < ActiveModel::Validator
 
   def validate(record)
     presence(record)
@@ -36,7 +32,7 @@ class Validators::PostValidator < ActiveModel::Validator
     return if options[:skip_post_body] || post.topic&.pm_with_non_human_user?
     stripped_length(post)
     raw_quality(post)
-    watched_words(post)
+    WatchedWordsValidator.new(attributes: [:raw]).validate(post) if !post.acting_user&.staged
   end
 
   def stripped_length(post)
@@ -51,25 +47,12 @@ class Validators::PostValidator < ActiveModel::Validator
       SiteSetting.post_length
     end
 
-    Validators::StrippedLengthValidator.validate(post, :raw, post.raw, range)
+    StrippedLengthValidator.validate(post, :raw, post.raw, range)
   end
 
   def raw_quality(post)
     sentinel = TextSentinel.body_sentinel(post.raw, private_message: private_message?(post))
     post.errors.add(:raw, I18n.t(:is_invalid)) unless sentinel.valid?
-  end
-
-  def watched_words(post)
-    if !post.acting_user&.staged && matches = WordWatcher.new(post.raw).should_block?.presence
-      if matches.size == 1
-        key = 'contains_blocked_word'
-        translation_args = { word: matches[0] }
-      else
-        key = 'contains_blocked_words'
-        translation_args = { words: matches.join(', ') }
-      end
-      post.errors.add(:base, I18n.t(key, translation_args))
-    end
   end
 
   # Ensure maximum amount of mentions in a post

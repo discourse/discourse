@@ -2,7 +2,7 @@
 
 module Jobs
 
-  class AutomaticGroupMembership < Jobs::Base
+  class AutomaticGroupMembership < ::Jobs::Base
 
     def execute(args)
       group_id = args[:group_id]

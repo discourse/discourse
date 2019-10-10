@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require 'rails_helper'
-require_dependency 'distributed_mutex'
 
 describe DistributedMutex do
   let(:key) { "test_mutex_key" }

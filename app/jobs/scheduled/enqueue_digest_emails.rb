@@ -2,7 +2,7 @@
 
 module Jobs
 
-  class EnqueueDigestEmails < Jobs::Scheduled
+  class EnqueueDigestEmails < ::Jobs::Scheduled
     every 30.minutes
 
     def execute(args)

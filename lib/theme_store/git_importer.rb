@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require_dependency 'theme_store/tgz_exporter'
-
 module ThemeStore; end
 
 class ThemeStore::GitImporter
@@ -32,7 +30,7 @@ class ThemeStore::GitImporter
     raise Discourse::InvalidParameters.new(:id) unless theme
     local_version = theme.remote_theme&.local_version
 
-    exporter = ThemeStore::TgzExporter.new(theme)
+    exporter = ThemeStore::ZipExporter.new(theme)
     local_temp_folder = exporter.export_to_folder
 
     Dir.chdir(@temp_folder) do

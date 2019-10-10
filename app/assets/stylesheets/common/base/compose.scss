@@ -483,3 +483,19 @@ div.ac-wrap {
     opacity: 0;
   }
 }
+
+body.ios-safari-composer-hacks {
+  #main-outlet,
+  header,
+  .grippie,
+  html:not(.fullscreen-composer) & .toggle-fullscreen {
+    display: none;
+  }
+
+  #reply-control {
+    top: 0px;
+    &.open {
+      height: calc(var(--composer-vh, 1vh) * 100);
+    }
+  }
+}

@@ -26,6 +26,10 @@ else
   gem 'sprockets-rails'
 end
 
+# this will eventually be added to rails,
+# allows us to precompile all our templates in the unicorn master
+gem 'actionview_precompiler', require: false
+
 gem 'seed-fu'
 
 gem 'mail', require: false
@@ -46,7 +50,7 @@ gem 'redis-namespace'
 
 gem 'active_model_serializers', '~> 0.8.3'
 
-gem 'onebox', '1.9.13'
+gem 'onebox', '1.9.17'
 
 gem 'http_accept_language', '~>2.0.5', require: false
 
@@ -114,6 +118,8 @@ gem 'execjs', require: false
 gem 'mini_racer'
 gem 'highline', '~> 1.7.0', require: false
 gem 'rack-protection' # security
+gem 'cbor', require: false
+gem 'cose', require: false
 
 # Gems used only for assets and not required in production environments by default.
 # Allow everywhere for now cause we are allowing asset debugging in production

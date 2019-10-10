@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-require_dependency 'stylesheet/common'
-require_dependency 'stylesheet/importer'
-require_dependency 'stylesheet/functions'
+require 'stylesheet/common'
+require 'stylesheet/importer'
+require 'stylesheet/functions'
 
 module Stylesheet
 
@@ -17,7 +17,7 @@ module Stylesheet
         file += " @import \"#{asset}\";"
       else
         filename = "#{asset}.scss"
-        path = "#{ASSET_ROOT}/#{filename}"
+        path = "#{Stylesheet::Common::ASSET_ROOT}/#{filename}"
         file = File.read path
       end
 
@@ -37,7 +37,7 @@ module Stylesheet
                                  theme_id: options[:theme_id],
                                  theme: options[:theme],
                                  theme_field: options[:theme_field],
-                                 load_paths: [ASSET_ROOT])
+                                 load_paths: [Stylesheet::Common::ASSET_ROOT])
 
       result = engine.render
 

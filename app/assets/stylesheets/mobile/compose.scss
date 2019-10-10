@@ -21,11 +21,10 @@
     height: 250px;
     &.edit-title {
       height: 100%;
-      height: calc(var(--composer-vh, 1vh) * 100);
     }
   }
 
-  html.keyboard-visible &.open {
+  body.ios-safari-composer-hacks &.open {
     height: calc(var(--composer-vh, 1vh) * 100);
     .reply-area {
       padding-bottom: 0px;

@@ -49,6 +49,7 @@ nl:
       about_json_values: "about.json bevat ongeldige waarden: %{errors}"
       git: "Fout bij klonen van git-repository; toegang is geweigerd of repository is niet gevonden"
       unpack_failed: "Uitpakken van bestand mislukt"
+      file_too_big: "Het niet-gecomprimeerde bestand is te groot."
       unknown_file_type: "Het bestand dat u hebt geüpload lijkt geen geldig Discourse-thema te zijn."
     errors:
       component_no_user_selectable: "Themaonderdelen kunnen niet door de gebruiker selecteerbaar zijn"
@@ -208,6 +209,12 @@ nl:
   invalid_grant_badge_reason_link: "Externe of ongeldige Discourse-koppeling is niet toegestaan in badge-reden"
   email_template_cant_be_modified: "Deze e-mailsjabloon kan niet worden aangepast."
   invalid_whisper_access: "Fluisterberichten zijn niet ingeschakeld, of u kunt geen fluisterberichten maken"
+  not_in_group:
+    title_topic: "U moet in een groep zitten om dit topic te zien."
+    title_category: "U moet in een groep zitten om deze categorie te zien."
+    request_membership: "Lidmaatschap aanvragen"
+    join_group: "Deelnemen aan groep"
+  deleted_topic: "Oeps! Dit topic is verwijderd en is niet meer beschikbaar."
   reading_time: "Leestijd"
   likes: "Likes"
   too_many_replies:
@@ -791,6 +798,20 @@ nl:
       others: "Geen antwoorden."
     no_drafts:
       self: "U hebt geen concepten; begin met het opstellen van een antwoord in een topic en het wordt automatisch als nieuw concept opgeslagen."
+  webauthn:
+    validation:
+      invalid_type_error: 'Het opgegeven type webauthn was ongeldig. Geldige typen zijn webauthn.get en webauthn.create.'
+      challenge_mismatch_error: 'De opgegeven vraag komt niet overeen met de door de authenticatieserver gegenereerde vraag.'
+      invalid_origin_error: 'De oorsprong van de authenticatieaanvraag komt niet overeen met de serveroorsprong.'
+      malformed_attestation_error: 'Er is een fout opgetreden bij het decoderen van de attestgegevens.'
+      invalid_relying_party_id_error: 'De Relying Party-ID van de authenticatieaanvraag komt niet overeen met de Relying Party-ID van de server.'
+      user_verification_error: 'Er is gebruikersverificatie vereist.'
+      unsupported_public_key_algorithm_error: 'Het opgegeven algoritme van de openbare sleutel wordt niet ondersteund door de server.'
+      unsupported_attestation_format_error: 'De attestation-indeling wordt niet ondersteund door de server.'
+      credential_id_in_use_error: 'De opgegeven referentie-ID is al in gebruik.'
+      public_key_error: 'De verificatie van de openbare sleutel voor de referentie is mislukt.'
+      ownership_error: 'De beveiligingssleutel behoort niet toe aan de gebruiker.'
+      not_found_error: 'Er kon geen beveiligingssleutel met de opgegeven referentie-ID worden gevonden.'
   topic_flag_types:
     spam:
       title: "Spam"
@@ -1295,6 +1316,7 @@ nl:
     notification_email: "Het Van:-e-mailadres adres dat wordt gebruikt voor het verzenden van alle essentiële systeem-e-mails. Het hier opgegeven domein moet goed ingestelde SPF-, DKIM- en reverse-PTR-records hebben om e-mails te doen aankomen."
     email_custom_headers: "Een door een pipe (|) gescheiden lijst van aangepaste e-mailheaders"
     email_subject: "Aanpasbare onderwerpnotatie voor standaard-e-mails. Zie <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801</a>"
+    detailed_404: "Biedt gebruikers meer informatie over waarom ze geen toegang hebben tot een bepaald topic. Opmerking: dit is minder veilig, omdat gebruikers dan weten of een URL naar een geldig topic verwijst."
     enforce_second_factor: "Dwingt gebruikers om twee-factor-authenticatie in te schakelen. Selecteer 'alle' om dit voor alle gebruikers te doen. Selecteer 'stafleden' om dit alleen voor stafleden te doen."
     force_https: "Gebruik van alleen HTTPS voor uw website afdwingen. WAARSCHUWING: schakel dit NIET in voordat u hebt geverifieerd dat HTTPS volledig is ingesteld en echt overal werkt! Hebt u ook uw CDN, alle sociale aanmeldingen en eventuele externe logo's / afhankelijkheden gecontroleerd om zeker te weten dat ze ook allemaal met HTTPS compatibel zijn?"
     same_site_cookies: "Cookies van dezelfde website gebruiken; deze vermijden alle aanvallen voor Cross Site Request Forgery in ondersteunde browsers (Lax of Strict). Waarschuwing: Strict werkt alleen op websites die aanmelding afdwingen en SSO gebruiken."
@@ -1970,6 +1992,13 @@ nl:
     autoclosed_disabled_lastpost: "Dit topic is nu geopend. Nieuwe reacties worden weer geaccepteerd."
     auto_deleted_by_timer: "Automatisch verwijderd door timer."
   login:
+    security_key_description: "Houd uw fysieke beveiligingssleutel gereed en klik op de onderstaande knop Authenticeren met beveiligingssleutel."
+    security_key_alternative: "Uw beveiligingssleutel niet gevonden of een andere methode gebruiken?"
+    security_key_authenticate: "Authenticeren met beveiligingssleutel"
+    security_key_not_allowed_error: "Het authenticatieproces van de beveiligingssleutel had een time-out of is geannuleerd."
+    security_key_no_matching_credential_error: "Geen referenties gevonden in de opgegeven beveiligingssleutel."
+    security_key_support_missing_error: "Uw huidige apparaat of browser ondersteunt geen gebruik van beveiligingssleutels. Gebruik een andere methode."
+    security_key_invalid: "Er is een fout opgetreden bij het valideren van de beveiligingssleutel."
     not_approved: "Uw account is nog niet goedgekeurd. U ontvangt een melding via e-mail zodra u zich kunt aanmelden."
     incorrect_username_email_or_password: "Onjuiste gebruikersnaam, e-mailadres of wachtwoord"
     incorrect_password: "Onjuist wachtwoord"
@@ -2006,6 +2035,7 @@ nl:
     second_factor_backup_description: "Voer een van uw back-upcodes in:"
     second_factor_backup_title: "Twee-factor-back-upcode"
     invalid_second_factor_code: "Ongeldige authenticatiecode. Elke code kan maar eenmaal worden gebruikt."
+    invalid_security_key: "Ongeldige beveiligingssleutel."
     second_factor_toggle:
       totp: "Een authenticator-app gebruiken"
       backup_code: "Een back-upcode gebruiken"
@@ -2022,7 +2052,7 @@ nl:
       short: "moet ten minste %{min} tekens zijn"
       long: "moet niet meer dan %{max} tekens zijn"
       too_long: "is te lang"
-      characters: "mag alleen cijfers, letters, streepjes en onderstrepingstekens bevatten"
+      characters: "mag alleen cijfers, letters, streepjes, punten en onderstrepingstekens bevatten"
       unique: "moet uniek zijn"
       blank: "mag niet leeg zijn"
       must_begin_with_alphanumeric_or_underscore: "moet met een letter, cijfer of onderstrepingsteken beginnen"

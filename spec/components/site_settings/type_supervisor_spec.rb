@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require 'rails_helper'
-require_dependency 'site_settings/type_supervisor'
 
 describe SiteSettings::TypeSupervisor do
   let :provider_local do

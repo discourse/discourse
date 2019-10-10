@@ -1,10 +1,5 @@
 # frozen_string_literal: true
 
-require_dependency 'rate_limiter'
-require_dependency 'system_message'
-require_dependency 'post_action_creator'
-require_dependency 'post_action_destroyer'
-
 class PostAction < ActiveRecord::Base
   include RateLimiter::OnCreateRecord
   include Trashable

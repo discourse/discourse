@@ -1,13 +1,5 @@
 # frozen_string_literal: true
 
-require_dependency 'distributed_cache'
-require_dependency 'stylesheet/compiler'
-require_dependency 'stylesheet/manager'
-require_dependency 'theme_settings_parser'
-require_dependency 'theme_settings_manager'
-require_dependency 'theme_translation_parser'
-require_dependency 'theme_translation_manager'
-
 class Theme < ActiveRecord::Base
 
   @cache = DistributedCache.new('theme')

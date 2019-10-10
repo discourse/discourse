@@ -93,6 +93,12 @@ const DiscourseURL = Ember.Object.extend({
       let elementId;
       let holder;
 
+      if (opts.jumpEnd) {
+        $(window).scrollTop($(document).height() - $(window).height());
+        _transitioning = false;
+        return;
+      }
+
       if (postNumber === 1 && !opts.anchor) {
         $(window).scrollTop(0);
         _transitioning = false;
@@ -347,7 +353,8 @@ const DiscourseURL = Ember.Object.extend({
 
           this.appEvents.trigger("post:highlight", closest);
           const jumpOpts = {
-            skipIfOnScreen: routeOpts.skipIfOnScreen
+            skipIfOnScreen: routeOpts.skipIfOnScreen,
+            jumpEnd: routeOpts.jumpEnd
           };
 
           const m = /#.+$/.exec(path);
@@ -398,6 +405,9 @@ const DiscourseURL = Ember.Object.extend({
     );
   },
 
+  // TODO: These container calls can be replaced eventually if we migrate this to a service
+  // object.
+
   /**
     @private
 
@@ -408,6 +418,10 @@ const DiscourseURL = Ember.Object.extend({
   **/
   get router() {
     return Discourse.__container__.lookup("router:main");
+  },
+
+  get appEvents() {
+    return Discourse.__container__.lookup("service:app-events");
   },
 
   // Get a controller. Note that currently it uses `__container__` which is not

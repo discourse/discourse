@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require_dependency "file_helper"
-
 class UploadMarkdown
   def initialize(upload)
     @upload = upload

@@ -3,7 +3,9 @@
 class ApiKeySerializer < ApplicationSerializer
 
   attributes :id,
-             :key
+             :key,
+             :last_used_at,
+             :created_at
 
   has_one :user, serializer: BasicUserSerializer, embed: :objects
 

@@ -1,9 +1,5 @@
 # frozen_string_literal: true
 
-require_dependency 'theme_settings_parser'
-require_dependency 'theme_translation_parser'
-require_dependency 'theme_javascript_compiler'
-
 class ThemeField < ActiveRecord::Base
 
   belongs_to :upload
@@ -64,7 +60,7 @@ class ThemeField < ActiveRecord::Base
   validates :name, format: { with: /\A[a-z_][a-z0-9_-]*\z/i },
                    if: Proc.new { |field| ThemeField.theme_var_type_ids.include?(field.type_id) }
 
-  BASE_COMPILER_VERSION = 12
+  BASE_COMPILER_VERSION = 13
   DEPENDENT_CONSTANTS = [BASE_COMPILER_VERSION,
                         GlobalSetting.cdn_url]
   COMPILER_VERSION = Digest::SHA1.hexdigest(DEPENDENT_CONSTANTS.join)

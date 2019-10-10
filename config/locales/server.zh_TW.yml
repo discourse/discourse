@@ -196,6 +196,8 @@ zh_TW:
   invalid_grant_badge_reason_link: "不允許外部或無效的 Discourse 連結。"
   email_template_cant_be_modified: "電子郵件範本無法修改"
   invalid_whisper_access: "沒有啟用私訊，或者您沒有權限發送私人訊息"
+  not_in_group:
+    join_group: "加入團隊"
   reading_time: "閱讀時間"
   likes: "個讚"
   too_many_replies:
@@ -1895,7 +1897,6 @@ zh_TW:
       short: "必須至少 %{min} 個字"
       long: "不能超過 %{max} 個字"
       too_long: "過長"
-      characters: "必須只包含數字、英文字母、破折號（-）和底線（_）"
       unique: "必須是唯一的"
       blank: "必須存在"
       must_begin_with_alphanumeric_or_underscore: "必須以英數字或底線開頭"

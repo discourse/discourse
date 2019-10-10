@@ -5,11 +5,6 @@
 # Returns a TopicList object containing the topics found.
 #
 
-require_dependency 'topic_list'
-require_dependency 'suggested_topics_builder'
-require_dependency 'topic_query_sql'
-require_dependency 'avatar_lookup'
-
 class TopicQuery
   PG_MAX_INT ||= 2147483647
 

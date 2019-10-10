@@ -21,6 +21,7 @@ import { wantsNewWindow } from "discourse/lib/intercept-click";
 import { translations } from "pretty-text/emoji/data";
 import { emojiSearch, isSkinTonableEmoji } from "pretty-text/emoji";
 import { emojiUrlFor } from "discourse/lib/text";
+import showModal from "discourse/lib/show-modal";
 
 // Our head can be a static string or a function that returns a string
 // based on input (like for numbered lists).
@@ -89,7 +90,7 @@ class Toolbar {
         id: "link",
         group: "insertions",
         shortcut: "K",
-        action: (...args) => this.context.send("showLinkModal", args)
+        sendAction: event => this.context.send("showLinkModal", event)
       });
     }
 
@@ -213,9 +214,6 @@ export function onToolbarCreate(func) {
 export default Ember.Component.extend({
   classNames: ["d-editor"],
   ready: false,
-  insertLinkHidden: true,
-  linkUrl: "",
-  linkText: "",
   lastSel: null,
   _mouseTrap: null,
   showLink: true,
@@ -946,21 +944,23 @@ export default Ember.Component.extend({
       }
     },
 
-    showLinkModal() {
+    showLinkModal(toolbarEvent) {
       if (this.disabled) {
         return;
       }
 
-      this.set("linkUrl", "");
-      this.set("linkText", "");
-
+      let linkText = "";
       this._lastSel = this._getSelected();
 
       if (this._lastSel) {
-        this.set("linkText", this._lastSel.value.trim());
+        linkText = this._lastSel.value.trim();
       }
 
-      this.set("insertLinkHidden", false);
+      showModal("insert-hyperlink").setProperties({
+        linkText: linkText,
+        _lastSel: this._lastSel,
+        toolbarEvent
+      });
     },
 
     formatCode() {
@@ -1002,29 +1002,6 @@ export default Ember.Component.extend({
             sel,
             `${preNewline}\`\`\`\n${sel.value}\n\`\`\`${postNewline}`
           );
-        }
-      }
-    },
-
-    insertLink() {
-      const origLink = this.linkUrl;
-      const linkUrl =
-        origLink.indexOf("://") === -1 ? `http://${origLink}` : origLink;
-      const sel = this._lastSel;
-
-      if (Ember.isEmpty(linkUrl)) {
-        return;
-      }
-
-      const linkText = this.linkText || "";
-      if (linkText.length) {
-        this._addText(sel, `[${linkText}](${linkUrl})`);
-      } else {
-        if (sel.value) {
-          this._addText(sel, `[${sel.value}](${linkUrl})`);
-        } else {
-          this._addText(sel, `[${origLink}](${linkUrl})`);
-          this._selectText(sel.start + 1, origLink.length);
         }
       }
     }

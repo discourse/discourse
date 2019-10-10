@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Jobs
-  class PurgeOldWebHookEvents < Jobs::Scheduled
+  class PurgeOldWebHookEvents < ::Jobs::Scheduled
     every 1.day
 
     def execute(_)

@@ -541,7 +541,10 @@ th:
         disable: "ปิดใช้งาน"
         enable: "เปิดใช้งาน"
       second_factor:
+        name: "ชื่อ"
         edit: "แก้ไข"
+        security_key:
+          delete: 'ลบ'
       change_about:
         title: "เปลี่ยนข้อมูลเกี่ยวกับฉัน"
         error: "เกิดความผิดพลาดในการแก้ไขค่านี้"
@@ -863,20 +866,15 @@ th:
       google_oauth2:
         name: "กูเกิ้ล"
         title: "ด้วย Google"
-        message: "กำลังตรวจสอบกับ Google (ต้องไม่ปิดกั้นป๊อปอัพ)"
       twitter:
         name: "ทวิตเตอร์"
         title: "ด้วย Twitter"
-        message: "กำลังตรวจสอบกับ Twitter (ต้องไม่ปิดกั้นป๊อปอัพ)"
       instagram:
         title: "ด้วย Instragram"
-        message: "เข้าใช้งานด้วย Instragram (โปรดแน่ใจว่าไม่ได้เปิดใช้งานการป้องกัน pop up)"
       facebook:
         title: "ด้วย Facebook"
-        message: "กำลังตรวจสอบกับ Facebook (ต้องไม่ปิดกั้นป๊อปอัพ)"
       github:
         title: "ด้วย GitHub"
-        message: "กำลังตรวจสอบกับ Github (ต้องไม่ปิดกั้นป๊อปอัพ)"
     invites:
       name_label: "ชื่อ"
       password_label: "ตั้งรหัสผ่าน"
@@ -884,7 +882,6 @@ th:
       apple_international: "แอปเปิ้ล/นานาชาติ"
       google: "กูเกิ้ล"
       twitter: "ทวิตเตอร์"
-      emoji_one: "Emoji One"
     shortcut_modifier_key:
       shift: "Shift"
       ctrl: "Ctrl"
@@ -1595,6 +1592,7 @@ th:
         user: "ผู้ใช้"
         title: "API"
         key: "API Key"
+        created: สร้างเมื่อ
         revoke: "เอาออก"
       web_hooks:
         save: "บันทึก"

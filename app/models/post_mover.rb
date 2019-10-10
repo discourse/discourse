@@ -64,6 +64,7 @@ class PostMover
     moving_all_posts = (@original_topic.posts.pluck(:id).sort == @post_ids.sort)
 
     create_temp_table
+    delete_invalid_post_timings
     move_each_post
     notify_users_that_posts_have_moved
     update_statistics
@@ -76,11 +77,11 @@ class PostMover
 
     destination_topic.reload
     destination_topic
-  ensure
-    drop_temp_table
   end
 
   def create_temp_table
+    DB.exec("DROP TABLE IF EXISTS moved_posts") if Rails.env.test?
+
     DB.exec <<~SQL
       CREATE TEMPORARY TABLE moved_posts (
         old_topic_id INTEGER,
@@ -90,15 +91,11 @@ class PostMover
         new_topic_title VARCHAR,
         new_post_id INTEGER,
         new_post_number INTEGER
-      );
+      ) ON COMMIT DROP;
 
       CREATE INDEX moved_posts_old_post_number ON moved_posts(old_post_number);
       CREATE INDEX moved_posts_old_post_id ON moved_posts(old_post_id);
     SQL
-  end
-
-  def drop_temp_table
-    DB.exec("DROP TABLE IF EXISTS moved_posts")
   end
 
   def move_each_post
@@ -287,6 +284,20 @@ class PostMover
       WHERE mp.old_post_id <> mp.new_post_id
       ON CONFLICT (topic_id, post_number, user_id) DO UPDATE
         SET msecs = GREATEST(post_timings.msecs, excluded.msecs)
+    SQL
+  end
+
+  def delete_invalid_post_timings
+    DB.exec(<<~SQL, topid_id: destination_topic.id)
+      DELETE
+      FROM post_timings pt
+      WHERE pt.topic_id = :topid_id
+        AND NOT EXISTS(
+          SELECT 1
+          FROM posts p
+          WHERE p.topic_id = pt.topic_id
+            AND p.post_number = pt.post_number
+        )
     SQL
   end
 

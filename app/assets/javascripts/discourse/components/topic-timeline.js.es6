@@ -3,7 +3,14 @@ import Docking from "discourse/mixins/docking";
 import { observes } from "ember-addons/ember-computed-decorators";
 import optionalService from "discourse/lib/optional-service";
 
-const headerPadding = () => parseInt($("#main-outlet").css("padding-top")) + 3;
+const headerPadding = () => {
+  let topPadding = parseInt($("#main-outlet").css("padding-top")) + 3;
+  const iPadNavHeight = $(".footer-nav-ipad .footer-nav").height();
+  if (iPadNavHeight) {
+    topPadding += iPadNavHeight;
+  }
+  return topPadding;
+};
 
 export default MountWidget.extend(Docking, {
   adminTools: optionalService(),

@@ -3,19 +3,6 @@
 # Builds a Mail::Message we can use for sending. Optionally supports using a template
 # for the body and subject
 module Email
-
-  module BuildEmailHelper
-    def build_email(*builder_args)
-      builder = Email::MessageBuilder.new(*builder_args)
-      headers(builder.header_args) if builder.header_args.present?
-      mail(builder.build_args).tap { |message|
-        if message && h = builder.html_part
-          message.html_part = h
-        end
-      }
-    end
-  end
-
   class MessageBuilder
     attr_reader :template_args
 
@@ -107,9 +94,7 @@ module Email
         html_override.gsub!("%{respond_instructions}", "")
       end
 
-      html = UserNotificationRenderer.with_view_paths(
-        Rails.configuration.paths["app/views"]
-      ).render(
+      html = UserNotificationRenderer.render(
         template: 'layouts/email_template',
         format: :html,
         locals: { html_body: html_override.html_safe }

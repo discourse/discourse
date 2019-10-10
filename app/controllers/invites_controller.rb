@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require_dependency 'rate_limiter'
-
 class InvitesController < ApplicationController
 
   requires_login only: [
@@ -170,6 +168,8 @@ class InvitesController < ApplicationController
   end
 
   def upload_csv
+    require 'csv'
+
     guardian.ensure_can_bulk_invite_to_forum!(current_user)
 
     hijack do

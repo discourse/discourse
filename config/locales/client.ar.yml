@@ -759,14 +759,16 @@ ar:
         copied_to_clipboard: "تم نسخه الى لوحة العمل"
         copy_to_clipboard_error: "خطأ في نسخ البيانات الى لوحة العمل"
       second_factor:
+        name: "الإسم"
         label: "كود"
         disable_description: "يرجى ادخال رمز التوثيق من التطبيق الخاص بك"
         show_key_description: "أضف يدويا"
         short_description: |
           قم بحماية الحساب الخاص بك مع رمز الامان ذو الاستخدام الواحد.
         oauth_enabled_warning: "يرجى الملاحظة ان تسجيل الدخول عن طريق حسابات مواقع التواصل الاجتماعي سيتم تعطيلها بمجرد تفعيل خاصية التوثيق بعاملين الحساب"
-        use: "<a href>استخدم تطبيق التوثيق</a>"
         edit: "عدّل"
+        security_key:
+          delete: 'أحذف'
       change_about:
         title: "تعديل عني"
         error: "حدث عطل أثناء تغيير هذه القيمة."
@@ -1151,20 +1153,15 @@ ar:
       google_oauth2:
         name: "غوغل"
         title: "عبر Google "
-        message: "تسجيل الدخول عبر Google (تأكد من السماح للـ pop up)"
       twitter:
         name: "Twitter"
         title: "عبر Twitter"
-        message: "تسجيل الدخول عبر Twitter (تأكد من السماح للـ pop up)"
       instagram:
         title: "عبر Instagram"
-        message: "تسجيل الدخول عبر Instagram (تأكد من السماح للـ pop up)"
       facebook:
         title: "عبر Facebook"
-        message: "تسجيل الدخول عبر Facebook (تأكد من السماح للـ pop up)"
       github:
         title: "عبر GitHub"
-        message: "تسجيل الدخول عبر GitHub (تأكد من السماح للـ pop up)"
     invites:
       accept_title: "دعوة"
       welcome_to: "مرحباً بك في %{site_name}!"
@@ -1182,7 +1179,6 @@ ar:
       apple_international: "Apple/International"
       google: "Google"
       twitter: "Twitter"
-      emoji_one: "Emoji One"
       win10: "Win10"
       google_classic: "Google Classic"
       facebook_messenger: "Facebook Messenger"
@@ -2648,6 +2644,7 @@ ar:
         user: "الاعضاء"
         title: "API"
         key: "مفتاح API"
+        created: أُنشئ في
         generate: "إنشاء"
         regenerate: "إعادة إنشاء"
         revoke: "الغاء"

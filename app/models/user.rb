@@ -1,21 +1,5 @@
 # frozen_string_literal: true
 
-require_dependency 'jobs/base'
-require_dependency 'email'
-require_dependency 'email_token'
-require_dependency 'email_validator'
-require_dependency 'trust_level'
-require_dependency 'pbkdf2'
-require_dependency 'discourse'
-require_dependency 'post_destroyer'
-require_dependency 'user_name_suggester'
-require_dependency 'pretty_text'
-require_dependency 'url_helper'
-require_dependency 'letter_avatar'
-require_dependency 'promotion'
-require_dependency 'password_validator'
-require_dependency 'notification_serializer'
-
 class User < ActiveRecord::Base
   include Searchable
   include Roleable
@@ -78,6 +62,10 @@ class User < ActiveRecord::Base
   has_many :totps, -> {
     where(method: UserSecondFactor.methods[:totp], enabled: true)
   }, class_name: "UserSecondFactor"
+
+  has_many :security_keys, -> {
+    where(enabled: true)
+  }, class_name: "UserSecurityKey"
 
   has_one :anonymous_user_master, class_name: 'AnonymousUser'
   has_one :anonymous_user_shadow, ->(record) { where(active: true) }, foreign_key: :master_user_id, class_name: 'AnonymousUser'
@@ -1261,6 +1249,20 @@ class User < ActiveRecord::Base
         LIMIT #{max_post_count + 1}
       ) x
     SQL
+  end
+
+  def create_or_fetch_secure_identifier
+    return secure_identifier if secure_identifier.present?
+    new_secure_identifier = SecureRandom.hex(20)
+    self.update(secure_identifier: new_secure_identifier)
+    new_secure_identifier
+  end
+
+  def second_factor_security_key_credential_ids
+    security_keys
+      .select(:credential_id)
+      .where(factor_type: UserSecurityKey.factor_types[:second_factor])
+      .pluck(:credential_id)
   end
 
   protected

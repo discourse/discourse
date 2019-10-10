@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require_dependency 'distributed_cache'
-
 class ColorScheme < ActiveRecord::Base
 
   # rubocop:disable Layout/AlignHash

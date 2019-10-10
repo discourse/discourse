@@ -203,6 +203,8 @@ zh_CN:
   invalid_grant_badge_reason_link: "徽章原因不允许外部或无效的discourse链接"
   email_template_cant_be_modified: "无法修改此邮件模板"
   invalid_whisper_access: "没有启用密语，或者你无权创建谜语帖子"
+  not_in_group:
+    join_group: "加入群组"
   reading_time: "阅读时间"
   likes: "赞"
   too_many_replies:
@@ -1945,7 +1947,6 @@ zh_CN:
       short: "必须超过 %{min} 个字"
       long: "必须不超过 %{max} 个字"
       too_long: "太长"
-      characters: "必须只包括数字、字母、连字号或下划线"
       unique: "已被使用"
       blank: "必须存在"
       must_begin_with_alphanumeric_or_underscore: "必须以字母、数字或下划线开头"

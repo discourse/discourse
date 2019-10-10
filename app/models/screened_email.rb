@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require_dependency 'screening_model'
-
 # A ScreenedEmail record represents an email address that is being watched,
 # typically when creating a new User account. If the email of the signup form
 # (or some other form) matches a ScreenedEmail record, an action can be

@@ -1,19 +1,5 @@
 # frozen_string_literal: true
 
-require_dependency 'slug'
-require_dependency 'avatar_lookup'
-require_dependency 'topic_view'
-require_dependency 'rate_limiter'
-require_dependency 'text_sentinel'
-require_dependency 'text_cleaner'
-require_dependency 'archetype'
-require_dependency 'html_prettify'
-require_dependency 'discourse_tagging'
-require_dependency 'search_indexer'
-require_dependency 'list_controller'
-require_dependency 'topic_posters_summary'
-require_dependency 'topic_featured_users'
-
 class Topic < ActiveRecord::Base
   class UserExists < StandardError; end
   include ActionView::Helpers::SanitizeHelper
@@ -47,6 +33,7 @@ class Topic < ActiveRecord::Base
     if deleted_at.nil?
       update_category_topic_count_by(-1)
       CategoryTagStat.topic_deleted(self) if self.tags.present?
+      DiscourseEvent.trigger(:topic_trashed, self)
     end
     super(trashed_by)
     self.topic_embed.trash! if has_topic_embed?
@@ -56,6 +43,7 @@ class Topic < ActiveRecord::Base
     unless deleted_at.nil?
       update_category_topic_count_by(1)
       CategoryTagStat.topic_recovered(self) if self.tags.present?
+      DiscourseEvent.trigger(:topic_recovered, self)
     end
 
     # Note parens are required because superclass doesn't take `recovered_by`
@@ -74,6 +62,7 @@ class Topic < ActiveRecord::Base
                     presence: true,
                     topic_title_length: true,
                     censored_words: true,
+                    watched_words: true,
                     quality_title: { unless: :private_message? },
                     max_emojis: true,
                     unique_among: { unless: Proc.new { |t| (SiteSetting.allow_duplicate_topic_titles? || t.private_message?) },

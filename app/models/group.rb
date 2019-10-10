@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require_dependency 'enum'
-
 class Group < ActiveRecord::Base
   include HasCustomFields
   include AnonCacheInvalidator

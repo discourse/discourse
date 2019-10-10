@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Jobs
-  class CleanUpExports < Jobs::Scheduled
+  class CleanUpExports < ::Jobs::Scheduled
     every 1.day
 
     def execute(args)

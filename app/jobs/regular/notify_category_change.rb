@@ -1,9 +1,7 @@
 # frozen_string_literal: true
 
-require_dependency "post_alerter"
-
 module Jobs
-  class NotifyCategoryChange < Jobs::Base
+  class NotifyCategoryChange < ::Jobs::Base
     def execute(args)
       post = Post.find_by(id: args[:post_id])
 

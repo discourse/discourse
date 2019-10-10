@@ -204,7 +204,7 @@ es:
         instructions: |-
           ¿Puedes intentar citarme cuando me respondes, así sé exactamente en qué parte me estás respondiendo?
 
-          > Si esto es café, por favor trae un poco de té; pero si es té, por favor trae un poco de café.
+          > Si esto es café, por favor, trae un poco de té; pero si es té, por favor, trae un poco de café.
           >
           > Una de las ventajas de hablar consigo mismo, es que sabes que al menos alguien está oyendo.
           >
@@ -244,7 +244,7 @@ es:
 
           O presiona en botón de emoji <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-smile.png" width="16" height="16"> en el editor.
 
-          (Si estás en un dispositivo móvil, puedes introducir directamente un emoji desde el teclado de tu dispositivo también.)
+          (Si estás en un dispositivo móvil, puedes ingresar directamente un emoji desde el teclado de tu dispositivo también.)
       mention:
         instructions: |-
           A veces quisieras captar la atención de alguien en un debate, aunque no le estés respondiendo a su mensaje directamente. Para esto, escribe `@` seguido del nombre del usuario que quieres mencionar.
@@ -252,12 +252,12 @@ es:
         reply: |-
           _¿¡Alguien dijo mi nombre!?_ :raised_hand: ¡Creo que tú lo hiciste! :wave: Bien, ¡aquí estoy! Gracias por mencionarme. :ok_hand:
         not_found: |-
-          No veo que hayas mencionado mi nombre en ningún lugar. :frowning: ¿Puedes intentar mencionarme como `@%{discobot_username}` de nuevo por favor?
+          No veo que hayas mencionado mi nombre en ningún lugar. :frowning: ¿Puedes intentar mencionarme como `@%{discobot_username}` de nuevo, por favor?
 
           (¡Sí! mi nombre de usuario se deletrea _disco_, como el baile de los años 70. [¡Me encanta la vida nocturna!](https://www.youtube.com/watch?v=B_wGI3_sGf8) :dancer:)
       flag:
         instructions: |-
-          Nos gustan nuestras discusiones amistosas y necesitamos tu ayuda para [mantener las cosas civilizadas](%{guidelines_url}). Si ves un problema, por favor repórtalo en privado para que el autor [o nuestro staff](%{about_url}) reciban una notificación.
+          Nos gustan nuestras discusiones amistosas y necesitamos tu ayuda para [mantener las cosas civilizadas](%{guidelines_url}). Si ves un problema, por favor, repórtalo en privado para que el autor [o nuestro staff](%{about_url}) reciban una notificación.
 
           > :imp: Escribí algo asqueroso aquí
 
@@ -336,7 +336,7 @@ es:
         instructions: |-
           ¡Oh no! Parece que accidentalmente eliminé una publicación nueva que acababa de crear para ti.
 
-          ¿Puedes por favor presionar el botón <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-rotate-left.png" width="16" height="16"> y **deshacer la eliminación**?
+          ¿Puedes presionar el botón <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-rotate-left.png" width="16" height="16"> y **deshacer la eliminación**, por favor?
         not_found: |-
           ¿Estás teniendo problemas? Recuerda que el botón <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> ver más mostrará más opciones y aparecerá el botón <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-rotate-left.png" width="16" height="16"> para recuperar un mensaje eliminado.
         reply: |-

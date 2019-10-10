@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require_dependency 'new_post_manager'
-
 class CurrentUserSerializer < BasicUserSerializer
 
   attributes :name,

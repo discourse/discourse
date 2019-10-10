@@ -1,12 +1,5 @@
 # frozen_string_literal: true
 
-require_dependency 'markdown_linker'
-require_dependency 'email/message_builder'
-require_dependency 'age_words'
-require_dependency 'rtl'
-require_dependency 'discourse_ip_info'
-require_dependency 'browser_detection'
-
 class UserNotifications < ActionMailer::Base
   include UserNotificationsHelper
   include ApplicationHelper
@@ -596,7 +589,7 @@ class UserNotifications < ActionMailer::Base
       end
 
       unless translation_override_exists
-        html = UserNotificationRenderer.with_view_paths(Rails.configuration.paths["app/views"]).render(
+        html = UserNotificationRenderer.render(
           template: 'email/notification',
           format: :html,
           locals: { context_posts: context_posts,

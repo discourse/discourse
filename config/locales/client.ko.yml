@@ -732,9 +732,12 @@ ko:
       second_factor:
         title: "이중 인증"
         confirm_password_description: "비밀번호를 확인해주세요."
+        name: "이름"
         label: "코드"
-        use: "<a href>OTP 앱 사용</a>"
         edit: "수정"
+        security_key:
+          register: "등록하기"
+          delete: '삭제'
       change_about:
         title: "내 소개 변경"
         error: "값을 바꾸는 중 에러가 발생했습니다."
@@ -1071,7 +1074,6 @@ ko:
       username: "아이디"
       password: "비밀번호"
       second_factor_title: "이중 인증"
-      second_factor_backup: "<a href>백업 코드를 사용해 로그인</a>"
       second_factor_backup_description: "백업 코드 중 하나를 입력하세요:"
       email_placeholder: "이메일 주소 또는 아이디"
       caps_lock_warning: "Caps Lock 켜짐"
@@ -1101,23 +1103,20 @@ ko:
       google_oauth2:
         name: "구글"
         title: "with Google"
-        message: "구글을 통해 인증 중 (파업이 허용되어 있는지 확인해주세요.)"
       twitter:
         name: "트위터"
         title: "with Twitter"
-        message: "Twitter 인증 중(팝업 차단을 해제 하세요)"
       instagram:
         name: "인스타그램"
         title: "인스타그램"
-        message: "인스타그램으로 인증 중 (팝업이 허용되어 있는지 확인해주세요)"
       facebook:
         name: "페이스북"
         title: "with Facebook"
-        message: "Facebook 인증 중(팝업 차단을 해제 하세요)"
       github:
         name: "GitHub"
         title: "GitHub"
-        message: "GitHub 인증 중(팝업 차단을 해제 하세요)"
+      second_factor_toggle:
+        backup_code: "대신 백업 코드 사용"
     invites:
       accept_title: "초대장"
       welcome_to: "%{site_name}에 오신것을 환영합니다."
@@ -1135,7 +1134,6 @@ ko:
       apple_international: "Apple/International"
       google: "구글"
       twitter: "트위터"
-      emoji_one: "Emoji One"
       win10: "Win10"
       google_classic: "Google 클래식"
       facebook_messenger: "Facebook 메신저"
@@ -2439,6 +2437,7 @@ ko:
         user: "사용자"
         title: "API"
         key: "API 키"
+        created: 생성일자
         generate: "API 키 생성"
         regenerate: "API 키 재생성"
         revoke: "폐지"

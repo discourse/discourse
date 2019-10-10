@@ -4,11 +4,7 @@ export default {
   initialize(container) {
     let lastAuthResult;
 
-    if (window.location.search.indexOf("authComplete=true") !== -1) {
-      // Happens when a popup social login loses connection to the parent window
-      lastAuthResult = localStorage.getItem("lastAuthResult");
-      localStorage.removeItem("lastAuthResult");
-    } else if (document.getElementById("data-authentication")) {
+    if (document.getElementById("data-authentication")) {
       // Happens for full screen logins
       lastAuthResult = document.getElementById("data-authentication").dataset
         .authenticationData;

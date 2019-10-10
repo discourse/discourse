@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require_dependency 'notification_levels'
-
 class TagUser < ActiveRecord::Base
   belongs_to :tag
   belongs_to :user

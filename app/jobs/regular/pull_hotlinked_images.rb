@@ -1,12 +1,8 @@
 # frozen_string_literal: true
 
-require_dependency 'url_helper'
-require_dependency 'file_helper'
-require_dependency 'upload_creator'
-
 module Jobs
 
-  class PullHotlinkedImages < Jobs::Base
+  class PullHotlinkedImages < ::Jobs::Base
     sidekiq_options queue: 'low'
 
     def initialize

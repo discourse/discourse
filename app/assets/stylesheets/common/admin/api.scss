@@ -167,12 +167,12 @@ table.api-keys {
 
   > p {
     padding-bottom: 10px;
-    border-bottom: darken($secondary, 10%) 1px solid;
+    border-bottom: $primary-low 1px solid;
   }
   .filters {
     margin: 5px 0;
     padding-bottom: 5px;
-    border-bottom: darken($secondary, 5%) 1px solid;
+    border-bottom: $primary-low 1px solid;
     .filter {
       margin-bottom: 1em;
     }

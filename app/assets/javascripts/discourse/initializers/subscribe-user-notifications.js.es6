@@ -18,7 +18,7 @@ export default {
   initialize(container) {
     const user = container.lookup("current-user:main");
     const bus = container.lookup("message-bus:main");
-    const appEvents = container.lookup("app-events:main");
+    const appEvents = container.lookup("service:app-events");
 
     if (user) {
       bus.subscribe("/reviewable_counts", data => {

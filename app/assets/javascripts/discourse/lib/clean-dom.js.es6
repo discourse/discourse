@@ -30,7 +30,7 @@ function _clean() {
   }
 
   // TODO: Avoid container lookup here
-  const appEvents = Discourse.__container__.lookup("app-events:main");
+  const appEvents = Discourse.__container__.lookup("service:app-events");
   appEvents.trigger("dom:clean");
 }
 
