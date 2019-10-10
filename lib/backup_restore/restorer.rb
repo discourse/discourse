@@ -92,6 +92,9 @@ module BackupRestore
       extract_uploads
 
       after_restore_hook
+    rescue Compression::Strategy::ExtractFailed
+      log "The uncompressed file is too big. Consider increasing the decompressed_theme_max_file_size_mb hidden setting."
+      rollback
     rescue SystemExit
       log "Restore process was cancelled!"
       rollback
@@ -138,7 +141,7 @@ module BackupRestore
 
       pipeline = Compression::Pipeline.new([Compression::Tar.new, Compression::Gzip.new])
 
-      unzipped_path = pipeline.decompress(@tmp_directory, @archive_filename)
+      unzipped_path = pipeline.decompress(@tmp_directory, @archive_filename, available_size)
       pipeline.strip_directory(unzipped_path, @tmp_directory)
     end
 
@@ -170,10 +173,14 @@ module BackupRestore
 
       log "Extracting dump file..."
 
-      Compression::Gzip.new.decompress(@tmp_directory, @dump_filename)
+      Compression::Gzip.new.decompress(@tmp_directory, @dump_filename, available_size)
     end
 
     protected
+
+    def available_size
+      SiteSetting.decompressed_backup_max_file_size_mb
+    end
 
     def ensure_restore_is_enabled
       raise BackupRestore::RestoreDisabledError unless Rails.env.development? || SiteSetting.allow_restore?
