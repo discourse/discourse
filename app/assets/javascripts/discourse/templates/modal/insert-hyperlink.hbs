@@ -1,6 +1,15 @@
 {{#d-modal-body title="composer.link_dialog_title" class="insert-link"}}
     <div class="inputs">
       {{text-field value=linkUrl placeholderKey="composer.link_url_placeholder" class="link-url"}}
+      {{#if searchResults}}
+        <div class="internal-link-results">
+          {{#each searchResults as |r index|}}
+            <a class="search-link" href="#" {{action "select" index}}>
+              {{r.fancy_title}}
+            </a>
+          {{/each}}
+        </div>
+      {{/if}}
     </div>
     <div class="inputs">
       {{text-field value=linkText placeholderKey="composer.link_optional_text" class="link-text"}}

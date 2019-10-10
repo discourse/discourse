@@ -70,4 +70,38 @@ QUnit.test("add a hyperlink to a reply", async assert => {
     "[Reset](http://somelink.com) textarea contents.",
     "adds link to a selected text"
   );
+
+  await fillIn(".d-editor-input", "");
+
+  await click(".d-editor button.link");
+  await fillIn(".modal-body .link-url", "http://google.com");
+  assert.equal(
+    find(".internal-link-results").length,
+    0,
+    "does not show internal links search dropdown when inputting a url"
+  );
+
+  await fillIn(".modal-body .link-url", "local");
+
+  assert.equal(
+    find(".internal-link-results").length,
+    1,
+    "shows internal links search dropdown when entering keywords"
+  );
+
+  await keyEvent(".insert-link", "keydown", 40);
+  await keyEvent(".insert-link", "keydown", 13);
+
+  assert.equal(
+    find(".internal-link-results").length,
+    0,
+    "search dropdown dismissed after selecting an internal link"
+  );
+
+  assert.ok(
+    find(".link-url")
+      .val()
+      .includes("http"),
+    "replaces link url field with internal link"
+  );
 });
