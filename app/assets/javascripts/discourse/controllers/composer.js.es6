@@ -39,26 +39,21 @@ function loadDraft(store, opts) {
     ((draft.title && draft.title !== "") || (draft.reply && draft.reply !== ""))
   ) {
     const composer = store.createRecord("composer");
+    const serializedFields = Composer.serializedFieldsForDraft();
 
-    composer.open({
+    let attrs = {
       draftKey,
       draftSequence,
-      action: draft.action,
-      title: draft.title,
-      categoryId: draft.categoryId || opts.categoryId,
-      postId: draft.postId,
-      archetypeId: draft.archetypeId,
-      reply: draft.reply,
-      metaData: draft.metaData,
-      usernames: draft.usernames,
       draft: true,
-      composerState: Composer.DRAFT,
-      composerTime: draft.composerTime,
-      typingTime: draft.typingTime,
-      whisper: draft.whisper,
-      tags: draft.tags,
-      noBump: draft.noBump
+      composerState: Composer.DRAFT
+    };
+
+    serializedFields.forEach(f => {
+      attrs[f] = draft[f] || opts[f];
     });
+
+    composer.open(attrs);
+
     return composer;
   }
 }
@@ -753,15 +748,15 @@ export default Ember.Controller.extend({
   },
 
   /**
-    Open the composer view
+   Open the composer view
 
-    @method open
-    @param {Object} opts Options for creating a post
-      @param {String} opts.action The action we're performing: edit, reply or createTopic
-      @param {Discourse.Post} [opts.post] The post we're replying to
-      @param {Discourse.Topic} [opts.topic] The topic we're replying to
-      @param {String} [opts.quote] If we're opening a reply from a quote, the quote we're making
-  **/
+   @method open
+   @param {Object} opts Options for creating a post
+   @param {String} opts.action The action we're performing: edit, reply or createTopic
+   @param {Discourse.Post} [opts.post] The post we're replying to
+   @param {Discourse.Topic} [opts.topic] The topic we're replying to
+   @param {String} [opts.quote] If we're opening a reply from a quote, the quote we're making
+   **/
   open(opts) {
     opts = opts || {};
 

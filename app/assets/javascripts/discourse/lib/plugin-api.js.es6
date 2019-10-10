@@ -43,6 +43,7 @@ import Sharing from "discourse/lib/sharing";
 import { addComposerUploadHandler } from "discourse/components/composer-editor";
 import { addCategorySortCriteria } from "discourse/components/edit-category-settings";
 import { queryRegistry } from "discourse/widgets/widget";
+import Composer from "discourse/models/composer";
 
 // If you add any methods to the API ensure you bump up this number
 const PLUGIN_API_VERSION = "0.8.32";
@@ -424,44 +425,44 @@ class PluginApi {
   }
 
   /**
-    Called whenever the "page" changes. This allows us to set up analytics
-    and other tracking.
+   Called whenever the "page" changes. This allows us to set up analytics
+   and other tracking.
 
-    To get notified when the page changes, you can install a hook like so:
+   To get notified when the page changes, you can install a hook like so:
 
-    ```javascript
-      api.onPageChange((url, title) => {
+   ```javascript
+   api.onPageChange((url, title) => {
         console.log('the page changed to: ' + url + ' and title ' + title);
       });
-    ```
-  **/
+   ```
+   **/
   onPageChange(fn) {
     this.onAppEvent("page:changed", data => fn(data.url, data.title));
   }
 
   /**
-    Listen for a triggered `AppEvent` from Discourse.
+   Listen for a triggered `AppEvent` from Discourse.
 
-    ```javascript
-      api.onAppEvent('inserted-custom-html', () => {
+   ```javascript
+   api.onAppEvent('inserted-custom-html', () => {
         console.log('a custom footer was rendered');
       });
-    ```
-  **/
+   ```
+   **/
   onAppEvent(name, fn) {
     const appEvents = this._lookupContainer("service:app-events");
     appEvents && appEvents.on(name, fn);
   }
 
   /**
-    Registers a function to generate custom avatar CSS classes
-    for a particular user.
+   Registers a function to generate custom avatar CSS classes
+   for a particular user.
 
-    Takes a function that will accept a user as a parameter
-    and return an array of CSS classes to apply.
+   Takes a function that will accept a user as a parameter
+   and return an array of CSS classes to apply.
 
-    ```javascript
-    api.customUserAvatarClasses(user => {
+   ```javascript
+   api.customUserAvatarClasses(user => {
       if (Ember.get(user, 'primary_group_name') === 'managers') {
         return ['managers'];
       }
@@ -842,6 +843,21 @@ class PluginApi {
    */
   addComposerUploadHandler(extensions, method) {
     addComposerUploadHandler(extensions, method);
+  }
+
+  /**
+   * Adds a field to draft serializer
+   *
+   * Example:
+   *
+   * api.serializeToDraft('key_set_in_model', 'field_name_in_payload');
+   *
+   * to keep both of them same
+   * api.serializeToDraft('field_name');
+   *
+   */
+  serializeToDraft(fieldName, property) {
+    Composer.serialzeToDraft(fieldName, property);
   }
 
   /**
