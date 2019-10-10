@@ -44,6 +44,13 @@ export default Ember.Controller.extend(ModalFunctionality, {
           e.stopPropagation();
         }
         break;
+      case 27:
+        if (this.searchResults.length) {
+          this.set("searchResults", []);
+          e.preventDefault();
+          e.stopPropagation();
+        }
+        break;
     }
   },
 
