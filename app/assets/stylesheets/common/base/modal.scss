@@ -208,6 +208,13 @@
 
       .inputs {
         position: relative;
+        .spinner {
+          position: absolute;
+          right: 8px;
+          top: -15px;
+          width: 10px;
+          height: 10px;
+        }
         .internal-link-results {
           position: absolute;
           top: 70%;

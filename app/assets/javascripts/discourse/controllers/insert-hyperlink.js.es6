@@ -2,46 +2,55 @@ import ModalFunctionality from "discourse/mixins/modal-functionality";
 import { searchForTerm } from "discourse/lib/search";
 import { observes } from "ember-addons/ember-computed-decorators";
 
+let searchTopics;
+
 export default Ember.Controller.extend(ModalFunctionality, {
   onShow() {
-    this.set("linkUrl", "");
-    this.set("linkText", "");
-    this.set("searchResults", []);
-    this.set("selectedRow", -1);
+    this.setProperties({
+      linkUrl: "",
+      linkText: "",
+      searchResults: [],
+      searchLoading: false,
+      selectedRow: -1
+    });
 
-    Ember.run.next(() => {
+    Ember.run.scheduleOnce("afterRender", () => {
       const element = document.querySelector(".insert-link");
 
-      element.addEventListener("keydown", e => {
-        switch (e.which) {
-          case 40:
-            this.selectRow(e, "down");
-            break;
-          case 38:
-            this.selectRow(e, "up");
-            break;
-          case 13:
-            // override Enter behaviour when a row is selected
-            if (this.selectedRow > -1) {
-              this.setUpdated(this.selectedRow);
-              element.querySelector("input.link-text").focus();
-              e.preventDefault();
-              e.stopPropagation();
-            }
-            break;
-        }
-      });
+      element.addEventListener("keydown", e => this.keyDown(e));
 
       element
         .closest(".modal-inner-container")
-        .addEventListener("mousedown", e => {
-          if (!e.target.closest(".inputs")) {
-            this.set("searchResults", []);
-          }
-        });
+        .addEventListener("mousedown", e => this.mouseDown(e));
 
       document.querySelector("input.link-url").focus();
     });
+  },
+
+  keyDown(e) {
+    switch (e.which) {
+      case 40:
+        this.selectRow(e, "down");
+        break;
+      case 38:
+        this.selectRow(e, "up");
+        break;
+      case 13:
+        // override Enter behaviour when a row is selected
+        if (this.selectedRow > -1) {
+          this.setUpdated(this.selectedRow);
+          document.querySelector("input.link-text").focus();
+          e.preventDefault();
+          e.stopPropagation();
+        }
+        break;
+    }
+  },
+
+  mouseDown(e) {
+    if (!e.target.closest(".inputs")) {
+      this.set("searchResults", []);
+    }
   },
 
   selectRow(e, direction) {
@@ -69,7 +78,10 @@ export default Ember.Controller.extend(ModalFunctionality, {
         this.set("linkText", topic.title);
       }
     }
-    this.set("selectedRow", -1);
+    this.setProperties({
+      searchResults: [],
+      selectedRow: -1
+    });
   },
 
   @observes("linkUrl")
@@ -77,15 +89,18 @@ export default Ember.Controller.extend(ModalFunctionality, {
     if (
       this.linkUrl &&
       this.linkUrl.length > 3 &&
-      !this.linkUrl.startsWith("http")
+      this.linkUrl.indexOf("http") === -1
     ) {
-      const searchTopics = function() {
+      searchTopics = () => {
+        this.set("searchLoading", true);
         searchForTerm(this.linkUrl, { typeFilter: "topic" }).then(results => {
           if (results && results.topics && results.topics.length > 0) {
             this.set("searchResults", results.topics);
           } else {
             this.set("searchResults", []);
           }
+
+          this.set("searchLoading", false);
         });
       };
 
@@ -93,6 +108,16 @@ export default Ember.Controller.extend(ModalFunctionality, {
     } else {
       this.set("searchResults", []);
     }
+  },
+
+  onClose() {
+    const element = document.querySelector(".insert-link");
+    element.removeEventListener("keydown", this.keyDown);
+    element
+      .closest(".modal-inner-container")
+      .removeEventListener("mousedown", this.mouseDown);
+
+    Ember.run.cancel(searchTopics);
   },
 
   actions: {
